@@ -17,9 +17,9 @@
 		"regional": "regional"
 	},
 	"damage": {
-		"SPECIAL": "speziellen Schaden",
-		"PHYSICAL": "physischen Schaden",
-		"TRUE": "absoluten Schaden"
+		"SPECIAL": "Spezial-Schaden",
+		"PHYSICAL": "Physischer-Schaden",
+		"TRUE": "Absolut-Schaden"
 	},
 	"ability": {
 		"SOFT_BOILED": "Weichei",
