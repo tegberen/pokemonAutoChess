@@ -1877,7 +1877,7 @@ export class Gengar extends Pokemon {
   ])
   rarity = Rarity.ULTRA
   stars = 3
-  hp = 430
+  hp = 400
   atk = 35
   speed = 60
   def = 10
@@ -3653,7 +3653,7 @@ export class Spheal extends Pokemon {
   stars = 1
   evolution = Pkm.SEALEO
   hp = 100
-  atk = 6
+  atk = 4
   speed = 46
   def = 4
   speDef = 4
@@ -3668,7 +3668,7 @@ export class Sealeo extends Pokemon {
   stars = 2
   evolution = Pkm.WALREIN
   hp = 250
-  atk = 12
+  atk = 8
   speed = 46
   def = 5
   speDef = 5
@@ -3682,7 +3682,7 @@ export class Walrein extends Pokemon {
   rarity = Rarity.EPIC
   stars = 3
   hp = 500
-  atk = 16
+  atk = 12
   speed = 46
   def = 6
   speDef = 6
@@ -10627,7 +10627,6 @@ export class Scorbunny extends Pokemon {
   rarity = Rarity.COMMON
   stars = 1
   evolution = Pkm.RABOOT
-  evolutionRule = new HatchEvolutionRule()
   hp = 70
   atk = 5
   speed = 67
@@ -10643,7 +10642,6 @@ export class Raboot extends Pokemon {
   rarity = Rarity.COMMON
   stars = 2
   evolution = Pkm.CINDERACE
-  evolutionRule = new HatchEvolutionRule()
   hp = 90
   atk = 12
   speed = 67
