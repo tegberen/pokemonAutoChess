@@ -1107,7 +1107,6 @@ export class Gible extends Pokemon {
   maxPP = 100
   range = 1
   skill = Ability.DRAGON_BREATH
-  regional = true
 }
 
 export class Gabite extends Pokemon {
@@ -1127,7 +1126,6 @@ export class Gabite extends Pokemon {
   maxPP = 100
   range = 1
   skill = Ability.DRAGON_BREATH
-  regional = true
 }
 
 export class Garchomp extends Pokemon {
@@ -1146,7 +1144,6 @@ export class Garchomp extends Pokemon {
   maxPP = 100
   range = 1
   skill = Ability.DRAGON_BREATH
-  regional = true
 }
 
 export class Roggenrola extends Pokemon {
@@ -1159,7 +1156,7 @@ export class Roggenrola extends Pokemon {
   speed = 37
   def = 8
   speDef = 6
-  maxPP = 110
+  maxPP = 95
   range = 2
   skill = Ability.ROCK_ARTILLERY
 }
@@ -1174,7 +1171,7 @@ export class Boldore extends Pokemon {
   speed = 37
   def = 12
   speDef = 10
-  maxPP = 110
+  maxPP = 90
   range = 2
   skill = Ability.ROCK_ARTILLERY
 }
@@ -1188,7 +1185,7 @@ export class Gigalith extends Pokemon {
   speed = 37
   def = 16
   speDef = 14
-  maxPP = 110
+  maxPP = 85
   range = 2
   skill = Ability.ROCK_ARTILLERY
 }
@@ -1855,7 +1852,7 @@ export class Gengar extends Pokemon {
   ])
   rarity = Rarity.ULTRA
   stars = 3
-  hp = 400
+  hp = 430
   atk = 35
   speed = 60
   def = 10
@@ -2292,7 +2289,7 @@ export class Solosis extends Pokemon {
   rarity = Rarity.ULTRA
   stars = 1
   evolution = Pkm.DUOSION
-  hp = 120
+  hp = 100
   atk = 6
   speed = 35
   def = 4
@@ -2307,7 +2304,7 @@ export class Duosion extends Pokemon {
   rarity = Rarity.ULTRA
   stars = 2
   evolution = Pkm.REUNICLUS
-  hp = 220
+  hp = 200
   atk = 10
   speed = 35
   def = 6
@@ -2321,7 +2318,7 @@ export class Reuniclus extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.PSYCHIC, Synergy.AMORPHOUS])
   rarity = Rarity.ULTRA
   stars = 3
-  hp = 320
+  hp = 400
   atk = 20
   speed = 35
   def = 8
@@ -2377,12 +2374,12 @@ export class Luxray extends Pokemon {
   ])
   rarity = Rarity.ULTRA
   stars = 3
-  hp = 350
+  hp = 420
   atk = 41
   speed = 47
   def = 14
   speDef = 14
-  maxPP = 70
+  maxPP = 60
   range = 1
   skill = Ability.VOLT_SWITCH
 }
@@ -2514,6 +2511,7 @@ export class Dratini extends Pokemon {
   maxPP = 100
   range = 1
   skill = Ability.DRAGON_BREATH
+  regional = true
 }
 
 export class Dragonair extends Pokemon {
@@ -2533,6 +2531,7 @@ export class Dragonair extends Pokemon {
   maxPP = 100
   range = 1
   skill = Ability.DRAGON_BREATH
+  regional = true
 }
 
 export class Dragonite extends Pokemon {
@@ -2551,6 +2550,7 @@ export class Dragonite extends Pokemon {
   maxPP = 100
   range = 1
   skill = Ability.DRAGON_BREATH
+  regional = true
 }
 
 export class Goomy extends Pokemon {
@@ -2821,7 +2821,7 @@ export class Rhyperior extends Pokemon {
   ])
   rarity = Rarity.ULTRA
   stars = 3
-  hp = 420
+  hp = 480
   atk = 36
   speed = 38
   def = 30
@@ -4364,7 +4364,7 @@ export class Golduck extends Pokemon {
 }
 
 export class Squirtle extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.WATER, Synergy.FIELD, Synergy.AQUATIC])
+  types = new SetSchema<Synergy>([Synergy.WATER, Synergy.FIELD])
   rarity = Rarity.UNCOMMON
   stars = 1
   evolution = Pkm.WARTORTLE
@@ -4379,7 +4379,7 @@ export class Squirtle extends Pokemon {
 }
 
 export class Wartortle extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.WATER, Synergy.FIELD, Synergy.AQUATIC])
+  types = new SetSchema<Synergy>([Synergy.WATER, Synergy.FIELD])
   rarity = Rarity.UNCOMMON
   stars = 2
   evolution = Pkm.BLASTOISE
@@ -4394,7 +4394,7 @@ export class Wartortle extends Pokemon {
 }
 
 export class Blastoise extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.WATER, Synergy.FIELD, Synergy.AQUATIC])
+  types = new SetSchema<Synergy>([Synergy.WATER, Synergy.FIELD])
   rarity = Rarity.UNCOMMON
   stars = 3
   hp = 250
@@ -8513,11 +8513,11 @@ export class Blissey extends Pokemon {
   ])
   rarity = Rarity.ULTRA
   stars = 3
-  hp = 520
+  hp = 600
   atk = 26
   speed = 43
-  def = 40
-  speDef = 50
+  def = 20
+  speDef = 30
   maxPP = 120
   range = 1
   skill = Ability.SOFT_BOILED
@@ -14125,8 +14125,8 @@ export class Kingambit extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.DARK, Synergy.STEEL, Synergy.HUMAN])
   rarity = Rarity.ULTRA
   stars = 3
-  hp = 450
-  atk = 50
+  hp = 440
+  atk = 44
   speed = 41
   def = 24
   speDef = 12
@@ -14285,8 +14285,8 @@ export class Ursaring extends Pokemon {
   rarity = Rarity.ULTRA
   stars = 2
   evolution = Pkm.URSALUNA
-  hp = 300
-  atk = 30
+  hp = 280
+  atk = 24
   speed = 41
   def = 12
   speDef = 10
@@ -14299,8 +14299,8 @@ export class Ursaluna extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.WILD, Synergy.GROUND])
   rarity = Rarity.ULTRA
   stars = 3
-  hp = 500
-  atk = 40
+  hp = 560
+  atk = 34
   speed = 41
   def = 24
   speDef = 20
@@ -14325,8 +14325,8 @@ export class UrsalunaBloodmoon extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.WILD, Synergy.GROUND])
   rarity = Rarity.ULTRA
   stars = 3
-  hp = 450
-  atk = 45
+  hp = 490
+  atk = 43
   speed = 41
   def = 28
   speDef = 14
@@ -16100,7 +16100,7 @@ export class Arctibax extends Pokemon {
   stars = 2
   evolution = Pkm.BAXCALIBUR
   hp = 270
-  atk = 35
+  atk = 30
   speed = 53
   def = 10
   speDef = 10
@@ -16113,8 +16113,8 @@ export class Baxcalibur extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.DRAGON, Synergy.ICE])
   rarity = Rarity.ULTRA
   stars = 3
-  hp = 450
-  atk = 55
+  hp = 540
+  atk = 45
   speed = 53
   def = 16
   speDef = 16
@@ -16465,10 +16465,9 @@ export class Rookidee extends Pokemon {
   speed = 46
   def = 8
   speDef = 4
-  maxPP = 90
+  maxPP = 95
   range = 1
   skill = Ability.STEEL_WING
-  regional = true
 }
 
 export class Corvisquire extends Pokemon {
@@ -16484,22 +16483,20 @@ export class Corvisquire extends Pokemon {
   maxPP = 90
   range = 1
   skill = Ability.STEEL_WING
-  regional = true
 }
 
 export class Corviknight extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.STEEL, Synergy.FLYING])
   rarity = Rarity.RARE
   stars = 3
-  hp = 250
+  hp = 280
   atk = 28
   speed = 46
-  def = 18
+  def = 23
   speDef = 12
-  maxPP = 90
+  maxPP = 85
   range = 1
   skill = Ability.STEEL_WING
-  regional = true
 }
 export class Turtonator extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.DRAGON, Synergy.FIRE])
@@ -16844,11 +16841,11 @@ export class Talonflame extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.FLYING, Synergy.FIRE])
   rarity = Rarity.ULTRA
   stars = 3
-  hp = 340
+  hp = 460
   atk = 37
   speed = 65
-  def = 18
-  speDef = 18
+  def = 14
+  speDef = 14
   maxPP = 100
   range = 2
   skill = Ability.FIRESTARTER
@@ -17009,8 +17006,8 @@ export class Gurdurr extends Pokemon {
   rarity = Rarity.ULTRA
   stars = 2
   evolution = Pkm.CONKELDURR
-  hp = 300
-  atk = 30
+  hp = 280
+  atk = 26
   speed = 39
   def = 12
   speDef = 6
@@ -17032,8 +17029,8 @@ export class Conkeldurr extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.FIGHTING, Synergy.HUMAN])
   rarity = Rarity.ULTRA
   stars = 3
-  hp = 450
-  atk = 45
+  hp = 560
+  atk = 36
   speed = 39
   def = 16
   speDef = 8
@@ -17860,14 +17857,14 @@ export class Tynamo extends Pokemon {
     Synergy.AQUATIC,
     Synergy.AMORPHOUS
   ])
-  rarity = Rarity.COMMON
+  rarity = Rarity.UNCOMMON
   stars = 1
   evolution = Pkm.EELEKTRIK
-  hp = 50
-  atk = 5
+  hp = 70
+  atk = 6
   speed = 41
-  def = 3
-  speDef = 3
+  def = 4
+  speDef = 4
   maxPP = 80
   range = 1
   skill = Ability.SUCTION_HEAL
@@ -17880,14 +17877,14 @@ export class Eelektrik extends Pokemon {
     Synergy.AQUATIC,
     Synergy.AMORPHOUS
   ])
-  rarity = Rarity.COMMON
+  rarity = Rarity.UNCOMMON
   stars = 2
   evolution = Pkm.EELEKTROSS
-  hp = 115
-  atk = 10
+  hp = 135
+  atk = 13
   speed = 41
-  def = 5
-  speDef = 5
+  def = 6
+  speDef = 6
   maxPP = 80
   range = 1
   skill = Ability.SUCTION_HEAL
@@ -17900,13 +17897,13 @@ export class Eelektross extends Pokemon {
     Synergy.AQUATIC,
     Synergy.AMORPHOUS
   ])
-  rarity = Rarity.COMMON
+  rarity = Rarity.UNCOMMON
   stars = 3
-  hp = 185
-  atk = 24
+  hp = 225
+  atk = 27
   speed = 41
-  def = 8
-  speDef = 8
+  def = 10
+  speDef = 10
   maxPP = 80
   range = 1
   skill = Ability.SUCTION_HEAL
