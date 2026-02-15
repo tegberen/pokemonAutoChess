@@ -8895,7 +8895,7 @@ export class MantisBladesStrategy extends AbilityStrategy {
     crit: boolean
   ) {
     super.process(pokemon, board, target, crit)
-    const damage = pokemon.stars === 1 ? 10 : pokemon.stars === 2 ? 20 : 40
+    const damage = pokemon.stars === 1 ? 30 : pokemon.stars === 2 ? 60 : 120
 
     for (const damageType of [
       AttackType.PHYSICAL,

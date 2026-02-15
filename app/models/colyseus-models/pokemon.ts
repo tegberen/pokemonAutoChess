@@ -2003,14 +2003,14 @@ export class PorygonZ extends Pokemon {
 
 export class Sewaddle extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.GRASS, Synergy.BUG])
-  rarity = Rarity.UNCOMMON
+  rarity = Rarity.ULTRA
   stars = 1
   evolution = Pkm.SWADLOON
-  hp = 60
-  atk = 5
+  hp = 140
+  atk = 13
   speed = 54
-  def = 3
-  speDef = 2
+  def = 12
+  speDef = 8
   maxPP = 100
   range = 1
   skill = Ability.MANTIS_BLADES
@@ -2018,14 +2018,14 @@ export class Sewaddle extends Pokemon {
 
 export class Swadloon extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.GRASS, Synergy.BUG])
-  rarity = Rarity.UNCOMMON
+  rarity = Rarity.ULTRA
   stars = 2
   evolution = Pkm.LEAVANNY
-  hp = 110
-  atk = 11
+  hp = 280
+  atk = 22
   speed = 54
-  def = 6
-  speDef = 3
+  def = 20
+  speDef = 12
   maxPP = 100
   range = 1
   skill = Ability.MANTIS_BLADES
@@ -2033,13 +2033,13 @@ export class Swadloon extends Pokemon {
 
 export class Leavanny extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.GRASS, Synergy.BUG])
-  rarity = Rarity.UNCOMMON
+  rarity = Rarity.ULTRA
   stars = 3
-  hp = 240
-  atk = 23
+  hp = 400
+  atk = 40
   speed = 54
-  def = 8
-  speDef = 6
+  def = 16
+  speDef = 12
   maxPP = 100
   range = 1
   skill = Ability.MANTIS_BLADES
