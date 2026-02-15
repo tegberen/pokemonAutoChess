@@ -3341,7 +3341,7 @@ export class Duskull extends Pokemon {
   speDef = 4
   maxPP = 100
   range = 2
-  skill = Ability.SHADOW_BALL
+  skill = Ability.TRICK_ROOM
 }
 
 export class Dusclops extends Pokemon {
@@ -3356,7 +3356,7 @@ export class Dusclops extends Pokemon {
   speDef = 9
   maxPP = 100
   range = 2
-  skill = Ability.SHADOW_BALL
+  skill = Ability.TRICK_ROOM
 }
 
 export class Dusknoir extends Pokemon {
@@ -3370,7 +3370,7 @@ export class Dusknoir extends Pokemon {
   speDef = 14
   maxPP = 100
   range = 2
-  skill = Ability.SHADOW_BALL
+  skill = Ability.TRICK_ROOM
 }
 
 export class Magnemite extends Pokemon {
@@ -10615,7 +10615,6 @@ export class Scorbunny extends Pokemon {
   maxPP = 80
   range = 3
   skill = Ability.PYRO_BALL
-  passive = Passive.HATCH
 }
 
 export class Raboot extends Pokemon {
@@ -10632,7 +10631,6 @@ export class Raboot extends Pokemon {
   maxPP = 80
   range = 3
   skill = Ability.PYRO_BALL
-  passive = Passive.HATCH
 }
 
 export class Cinderace extends Pokemon {
@@ -12802,7 +12800,7 @@ export class Liepard extends Pokemon {
 }
 
 export class Pancham extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.FIGHTING, Synergy.DARK])
+  types = new SetSchema<Synergy>([Synergy.FIGHTING, Synergy.DARK, Synergy.WILD])
   rarity = Rarity.RARE
   stars = 1
   evolution = Pkm.PANGORO
@@ -12819,7 +12817,7 @@ export class Pancham extends Pokemon {
 }
 
 export class Pangoro extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.FIGHTING, Synergy.DARK])
+  types = new SetSchema<Synergy>([Synergy.FIGHTING, Synergy.DARK, Synergy.WILD])
   rarity = Rarity.RARE
   stars = 2
   hp = 210
