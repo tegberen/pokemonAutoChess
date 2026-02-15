@@ -4374,7 +4374,7 @@ export class Squirtle extends Pokemon {
   def = 6
   speDef = 8
   maxPP = 100
-  range = 3
+  range = 1
   skill = Ability.HYDRO_PUMP
 }
 
@@ -4389,7 +4389,7 @@ export class Wartortle extends Pokemon {
   def = 8
   speDef = 10
   maxPP = 100
-  range = 3
+  range = 1
   skill = Ability.HYDRO_PUMP
 }
 
@@ -4403,7 +4403,7 @@ export class Blastoise extends Pokemon {
   def = 10
   speDef = 12
   maxPP = 100
-  range = 3
+  range = 1
   skill = Ability.HYDRO_PUMP
 }
 
@@ -6508,10 +6508,10 @@ export class CastformHail extends Pokemon {
 }
 
 export class Landorus extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.FLYING, Synergy.GROUND])
+  types = new SetSchema<Synergy>([Synergy.FLYING, Synergy.GROUND, Synergy.HUMAN])
   rarity = Rarity.LEGENDARY
   stars = 3
-  hp = 250
+  hp = 220
   atk = 27
   speed = 57
   def = 6
@@ -6523,11 +6523,11 @@ export class Landorus extends Pokemon {
 }
 
 export class Thundurus extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.FLYING, Synergy.ELECTRIC])
+  types = new SetSchema<Synergy>([Synergy.FLYING, Synergy.ELECTRIC, Synergy.HUMAN])
   rarity = Rarity.LEGENDARY
   stars = 3
-  hp = 250
-  atk = 26
+  hp = 220
+  atk = 27
   speed = 61
   def = 6
   speDef = 6
@@ -6538,11 +6538,11 @@ export class Thundurus extends Pokemon {
 }
 
 export class Tornadus extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.FLYING, Synergy.ICE])
+  types = new SetSchema<Synergy>([Synergy.FLYING, Synergy.ICE, Synergy.HUMAN])
   rarity = Rarity.LEGENDARY
   stars = 3
-  hp = 250
-  atk = 26
+  hp = 220
+  atk = 27
   speed = 61
   def = 6
   speDef = 6
@@ -6553,11 +6553,11 @@ export class Tornadus extends Pokemon {
 }
 
 export class Enamorus extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.FLYING, Synergy.FAIRY])
+  types = new SetSchema<Synergy>([Synergy.FLYING, Synergy.FAIRY, Synergy.HUMAN])
   rarity = Rarity.LEGENDARY
   stars = 3
-  hp = 250
-  atk = 26
+  hp = 220
+  atk = 27
   speed = 59
   def = 6
   speDef = 6
@@ -7060,15 +7060,15 @@ export class Mewtwo extends Pokemon {
 }
 
 export class Marshadow extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.GHOST, Synergy.FIGHTING])
+  types = new SetSchema<Synergy>([Synergy.GHOST, Synergy.FIGHTING, Synergy.HUMAN])
   rarity = Rarity.LEGENDARY
   stars = 3
   hp = 200
-  atk = 23
+  atk = 20
   speed = 65
-  def = 10
-  speDef = 10
-  maxPP = 125
+  def = 5
+  speDef = 5
+  maxPP = 140
   range = 1
   skill = Ability.SPECTRAL_THIEF
 }
