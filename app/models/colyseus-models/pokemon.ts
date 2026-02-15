@@ -2873,11 +2873,11 @@ export class Aggron extends Pokemon {
 }
 
 export class Whismur extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.NORMAL, Synergy.SOUND])
+  types = new SetSchema<Synergy>([Synergy.NORMAL, Synergy.SOUND, Synergy.MONSTER])
   rarity = Rarity.RARE
   stars = 1
   evolution = Pkm.LOUDRED
-  hp = 90
+  hp = 60
   atk = 6
   speed = 47
   def = 2
@@ -2887,11 +2887,11 @@ export class Whismur extends Pokemon {
   skill = Ability.ECHO
 }
 export class Loudred extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.NORMAL, Synergy.SOUND])
+  types = new SetSchema<Synergy>([Synergy.NORMAL, Synergy.SOUND, Synergy.MONSTER])
   rarity = Rarity.RARE
   stars = 2
   evolution = Pkm.EXPLOUD
-  hp = 150
+  hp = 120
   atk = 14
   speed = 47
   def = 4
@@ -2902,11 +2902,11 @@ export class Loudred extends Pokemon {
 }
 
 export class Exploud extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.NORMAL, Synergy.SOUND])
+  types = new SetSchema<Synergy>([Synergy.NORMAL, Synergy.SOUND, Synergy.MONSTER])
   rarity = Rarity.RARE
   stars = 3
-  hp = 300
-  atk = 24
+  hp = 240
+  atk = 22
   speed = 47
   def = 6
   speDef = 6
@@ -15448,7 +15448,7 @@ export class Garbodor extends Pokemon {
   speed = 49
   def = 10
   speDef = 10
-  maxPP = 100
+  maxPP = 90
   range = 1
   skill = Ability.GUNK_SHOT
   passive = Passive.RECYCLE
@@ -15456,11 +15456,10 @@ export class Garbodor extends Pokemon {
 }
 
 export class Grubbin extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.BUG, Synergy.ELECTRIC])
-  rarity = Rarity.HATCH
+  types = new SetSchema<Synergy>([Synergy.BUG, Synergy.ELECTRIC, Synergy.AMORPHOUS])
+  rarity = Rarity.RARE
   stars = 1
   evolution = Pkm.CHARJABUG
-  evolutionRule = new HatchEvolutionRule()
   hp = 75
   atk = 5
   speed = 39
@@ -15469,36 +15468,33 @@ export class Grubbin extends Pokemon {
   maxPP = 100
   range = 3
   skill = Ability.ZAP_CANNON
-  passive = Passive.HATCH
 }
 
 export class Charjabug extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.BUG, Synergy.ELECTRIC])
-  rarity = Rarity.HATCH
+  types = new SetSchema<Synergy>([Synergy.BUG, Synergy.ELECTRIC, Synergy.AMORPHOUS])
+  rarity = Rarity.RARE
   stars = 2
   evolution = Pkm.VIKAVOLT
-  evolutionRule = new HatchEvolutionRule()
-  hp = 130
+  hp = 160
   atk = 13
   speed = 39
   def = 6
   speDef = 6
-  maxPP = 100
+  maxPP = 85
   range = 3
   skill = Ability.ZAP_CANNON
-  passive = Passive.HATCH
 }
 
 export class Vikavolt extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.BUG, Synergy.ELECTRIC])
-  rarity = Rarity.HATCH
+  types = new SetSchema<Synergy>([Synergy.BUG, Synergy.ELECTRIC, Synergy.AMORPHOUS])
+  rarity = Rarity.RARE
   stars = 3
-  hp = 180
+  hp = 220
   atk = 24
   speed = 39
   def = 8
   speDef = 8
-  maxPP = 100
+  maxPP = 70
   range = 3
   skill = Ability.ZAP_CANNON
 }
