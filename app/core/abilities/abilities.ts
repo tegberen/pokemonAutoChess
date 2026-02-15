@@ -4110,6 +4110,42 @@ export class ShadowBallStrategy extends AbilityStrategy {
   }
 }
 
+export class TrickRoomStrategy extends AbilityStrategy {
+  process(
+    pokemon: PokemonEntity,
+    board: Board,
+    target: PokemonEntity,
+    crit: boolean
+  ) {
+    super.process(pokemon, board, target, crit)
+    
+    const damage = [20, 40, 80][pokemon.stars - 1] ?? 80
+    
+    if (target.speed >= pokemon.speed) {
+      const speedReduction = Math.floor(target.speed / 2)
+      target.addSpeed(-speedReduction, pokemon, 0, false)
+    } else {
+      target.handleSpecialDamage(damage, board, AttackType.SPECIAL, pokemon, crit)
+    }
+    
+    const cells = board.getAdjacentCells(
+      target.positionX,
+      target.positionY,
+      false
+    )
+    cells.forEach((cell) => {
+      if (cell && cell.value && cell.value.team !== pokemon.team) {
+        if (cell.value.speed >= pokemon.speed) {
+          const speedReduction = Math.floor(cell.value.speed / 2)
+          cell.value.addSpeed(-speedReduction, pokemon, 0, false)
+        } else {
+          cell.value.handleSpecialDamage(damage, board, AttackType.SPECIAL, pokemon, crit)
+        }
+      }
+    })
+  }
+}
+
 export class BugBuzzStrategy extends AbilityStrategy {
   process(
     pokemon: PokemonEntity,
@@ -16128,6 +16164,7 @@ export const AbilityStrategies: { [key in Ability]: AbilityStrategy } = {
   [Ability.STEAM_ERUPTION]: new SteamEruptionStrategy(),
   [Ability.APPLE_ACID]: new AppleAcidStrategy(),
   [Ability.SHADOW_BALL]: new ShadowBallStrategy(),
+  [Ability.TRICK_ROOM]: new TrickRoomStrategy(),
   [Ability.DIVE]: new DiveStrategy(),
   [Ability.SPIKY_SHIELD]: new SpikeArmorStrategy(),
   [Ability.FUTURE_SIGHT]: new FutureSightStrategy(),

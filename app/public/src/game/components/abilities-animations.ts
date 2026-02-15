@@ -1521,6 +1521,11 @@ export const AbilitiesAnimations: {
     duration: 1000,
     scale: 2
   }),
+  [Ability.TRICK_ROOM]: onTarget({ 
+    ability: Ability.WONDER_ROOM,
+    tint:  0xff90d0,
+    scale: 4         
+  }),
   [Ability.GRUDGE]: projectile({
     duration: 750,
     scale: 2,
