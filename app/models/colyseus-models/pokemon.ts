@@ -1910,44 +1910,44 @@ export class Alakazam extends Pokemon {
 
 export class Litwick extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.GHOST, Synergy.FIRE, Synergy.LIGHT])
-  rarity = Rarity.COMMON
+  rarity = Rarity.HATCH
   stars = 1
   evolution = Pkm.LAMPENT
-  hp = 50
+  hp = 70
   atk = 4
   speed = 51
   def = 2
   speDef = 2
-  maxPP = 100
+  maxPP = 40
   range = 3
   skill = Ability.HEX
 }
 
 export class Lampent extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.GHOST, Synergy.FIRE, Synergy.LIGHT])
-  rarity = Rarity.COMMON
+  rarity = Rarity.HATCH
   stars = 2
   evolution = Pkm.CHANDELURE
-  hp = 90
+  hp = 110
   atk = 9
   speed = 51
-  def = 3
-  speDef = 3
-  maxPP = 100
+  def = 4
+  speDef = 4
+  maxPP = 40
   range = 3
   skill = Ability.HEX
 }
 
 export class Chandelure extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.GHOST, Synergy.FIRE, Synergy.LIGHT])
-  rarity = Rarity.COMMON
+  rarity = Rarity.HATCH
   stars = 3
-  hp = 160
+  hp = 180
   atk = 14
   speed = 51
-  def = 4
-  speDef = 4
-  maxPP = 100
+  def = 6
+  speDef = 6
+  maxPP = 40
   range = 3
   skill = Ability.HEX
 }
@@ -3415,13 +3415,13 @@ export class Horsea extends Pokemon {
   rarity = Rarity.UNCOMMON
   stars = 1
   evolution = Pkm.SEADRA
-  hp = 70
-  atk = 6
+  hp = 50
+  atk = 5
   speed = 52
   def = 2
   speDef = 2
   maxPP = 100
-  range = 2
+  range = 3
   skill = Ability.WHIRLPOOL
 }
 
@@ -3430,13 +3430,13 @@ export class Seadra extends Pokemon {
   rarity = Rarity.UNCOMMON
   stars = 2
   evolution = Pkm.KINGDRA
-  hp = 140
-  atk = 12
+  hp = 100
+  atk = 9
   speed = 52
   def = 2
   speDef = 2
   maxPP = 100
-  range = 2
+  range = 3
   skill = Ability.WHIRLPOOL
 }
 
@@ -3444,13 +3444,13 @@ export class Kingdra extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.DRAGON, Synergy.WATER])
   rarity = Rarity.UNCOMMON
   stars = 3
-  hp = 250
-  atk = 24
+  hp = 200
+  atk = 20
   speed = 52
   def = 4
   speDef = 4
   maxPP = 100
-  range = 2
+  range = 3
   skill = Ability.WHIRLPOOL
 }
 
@@ -4834,6 +4834,7 @@ export class Caterpie extends Pokemon {
   maxPP = 100
   range = 2
   skill = Ability.STRING_SHOT
+  regional = true
 }
 
 export class Metapod extends Pokemon {
@@ -4849,6 +4850,7 @@ export class Metapod extends Pokemon {
   maxPP = 100
   range = 2
   skill = Ability.STRING_SHOT
+  regional = true
 }
 
 export class Butterfree extends Pokemon {
@@ -4867,6 +4869,7 @@ export class Butterfree extends Pokemon {
   maxPP = 100
   range = 2
   skill = Ability.STRING_SHOT
+  regional = true
 }
 
 export class Weedle extends Pokemon {
@@ -8299,7 +8302,7 @@ export class Hatterene extends Pokemon {
 }
 export class Fennekin extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.FIRE, Synergy.PSYCHIC, Synergy.HUMAN])
-  rarity = Rarity.COMMON
+  rarity = Rarity.HATCH
   stars = 1
   evolution = Pkm.BRAIXEN
   hp = 50
@@ -8307,34 +8310,34 @@ export class Fennekin extends Pokemon {
   speed = 58
   def = 2
   speDef = 2
-  maxPP = 80
+  maxPP = 60
   range = 2
   skill = Ability.MYSTICAL_FIRE
 }
 export class Braixen extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.FIRE, Synergy.PSYCHIC, Synergy.HUMAN])
-  rarity = Rarity.COMMON
+  rarity = Rarity.HATCH
   stars = 2
   evolution = Pkm.DELPHOX
-  hp = 100
+  hp = 90
   atk = 8
   speed = 58
   def = 2
   speDef = 4
-  maxPP = 80
+  maxPP = 60
   range = 2
   skill = Ability.MYSTICAL_FIRE
 }
 export class Delphox extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.FIRE, Synergy.PSYCHIC, Synergy.HUMAN])
-  rarity = Rarity.COMMON
+  rarity = Rarity.HATCH
   stars = 3
-  hp = 200
+  hp = 180
   atk = 16
   speed = 58
   def = 2
   speDef = 6
-  maxPP = 80
+  maxPP = 60
   range = 2
   skill = Ability.MYSTICAL_FIRE
 }
@@ -10583,50 +10586,50 @@ export class Staraptor extends Pokemon {
 }
 
 export class Scorbunny extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.FIRE, Synergy.FIELD, Synergy.HUMAN])
-  rarity = Rarity.HATCH
+  types = new SetSchema<Synergy>([Synergy.FIRE, Synergy.FIELD, Synergy.NORMAL])
+  rarity = Rarity.COMMON
   stars = 1
   evolution = Pkm.RABOOT
   evolutionRule = new HatchEvolutionRule()
-  hp = 75
+  hp = 70
   atk = 5
-  speed = 63
+  speed = 67
   def = 4
   speDef = 4
-  maxPP = 50
-  range = 2
+  maxPP = 80
+  range = 3
   skill = Ability.PYRO_BALL
   passive = Passive.HATCH
 }
 
 export class Raboot extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.FIRE, Synergy.FIELD, Synergy.HUMAN])
-  rarity = Rarity.HATCH
+  types = new SetSchema<Synergy>([Synergy.FIRE, Synergy.FIELD, Synergy.NORMAL])
+  rarity = Rarity.COMMON
   stars = 2
   evolution = Pkm.CINDERACE
   evolutionRule = new HatchEvolutionRule()
-  hp = 130
-  atk = 10
-  speed = 63
+  hp = 90
+  atk = 12
+  speed = 67
   def = 6
   speDef = 6
-  maxPP = 50
-  range = 2
+  maxPP = 80
+  range = 3
   skill = Ability.PYRO_BALL
   passive = Passive.HATCH
 }
 
 export class Cinderace extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.FIRE, Synergy.FIELD, Synergy.HUMAN])
-  rarity = Rarity.HATCH
+  types = new SetSchema<Synergy>([Synergy.FIRE, Synergy.FIELD, Synergy.NORMAL])
+  rarity = Rarity.COMMON
   stars = 3
-  hp = 180
-  atk = 17
-  speed = 63
+  hp = 150
+  atk = 21
+  speed = 67
   def = 9
   speDef = 9
-  maxPP = 50
-  range = 2
+  maxPP = 80
+  range = 3
   skill = Ability.PYRO_BALL
 }
 
@@ -13033,30 +13036,18 @@ export class Cherubi extends Pokemon {
     Synergy.LIGHT,
     Synergy.GOURMET
   ])
-  rarity = Rarity.EPIC
+  rarity = Rarity.COMMON
   stars = 1
-  evolutions = [Pkm.CHERRIM, Pkm.CHERRIM_SUNLIGHT]
-  evolutionRule = new CountEvolutionRule(3, (pokemon, player) => {
-    const hasLight =
-      (player.synergies.get(Synergy.LIGHT) ?? 0) >=
-      SynergyTriggers[Synergy.LIGHT][0]
-    if (
-      pokemon.positionX === player.lightX &&
-      pokemon.positionY === player.lightY &&
-      hasLight
-    ) {
-      return Pkm.CHERRIM_SUNLIGHT
-    }
-    return Pkm.CHERRIM
-  })
+  evolution = Pkm.CHERRIM
   hp = 90
-  atk = 6
+  atk = 4
   speed = 52
-  def = 2
+  def = 1
   speDef = 2
-  maxPP = 65
+  maxPP = 85
   range = 3
   skill = Ability.NATURAL_GIFT
+
   regional = true
 }
 
@@ -13066,36 +13057,19 @@ export class Cherrim extends Pokemon {
     Synergy.LIGHT,
     Synergy.GOURMET
   ])
-  rarity = Rarity.EPIC
+  rarity = Rarity.COMMON
   stars = 2
-  hp = 180
-  atk = 15
+  evolution = Pkm.CHERRIM_SUNLIGHT
+  hp = 110
+  atk = 10
   speed = 52
-  def = 4
+  def = 2
   speDef = 4
-  maxPP = 65
+  maxPP = 75
   range = 3
   skill = Ability.NATURAL_GIFT
-  passive = Passive.BLOSSOM
-  regional = true
-  onChangePosition(x: number, y: number, player: Player, state: GameState) {
-    super.onChangePosition(x, y, player, state)
-    const hasLight =
-      (player.synergies.get(Synergy.LIGHT) ?? 0) >=
-      SynergyTriggers[Synergy.LIGHT][0]
-    if (
-      (x === player.lightX && y === player.lightY && hasLight) ||
-      this.items.has(Item.SHINY_STONE)
-    ) {
-      player.transformPokemon(this, Pkm.CHERRIM_SUNLIGHT)
-    }
-  }
 
-  onItemGiven(item: Item, player: Player) {
-    if (item === Item.SHINY_STONE) {
-      player.transformPokemon(this, Pkm.CHERRIM_SUNLIGHT)
-    }
-  }
+  regional = true
 }
 
 export class CherrimSunlight extends Pokemon {
@@ -13104,30 +13078,18 @@ export class CherrimSunlight extends Pokemon {
     Synergy.LIGHT,
     Synergy.GOURMET
   ])
-  rarity = Rarity.EPIC
+  rarity = Rarity.COMMON
   stars = 3
-  hp = 250
-  atk = 30
+  hp = 220
+  atk = 16
   speed = 52
-  def = 6
-  speDef = 9
+  def = 4
+  speDef = 6
   maxPP = 65
   range = 3
   skill = Ability.NATURAL_GIFT
-  passive = Passive.BLOSSOM
+
   regional = true
-  onChangePosition(x: number, y: number, player: Player, state: GameState) {
-    super.onChangePosition(x, y, player, state)
-    const hasLight =
-      (player.synergies.get(Synergy.LIGHT) ?? 0) >=
-      SynergyTriggers[Synergy.LIGHT][0]
-    if (
-      (x !== player.lightX || y !== player.lightY || !hasLight) &&
-      !this.items.has(Item.SHINY_STONE)
-    ) {
-      player.transformPokemon(this, Pkm.CHERRIM)
-    }
-  }
 }
 
 export class Misdreavus extends Pokemon {
@@ -13838,11 +13800,11 @@ export class Comfey extends Pokemon {
 
 export class Lillipup extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.NORMAL, Synergy.FIELD])
-  rarity = Rarity.COMMON
+  rarity = Rarity.HATCH
   evolution = Pkm.HERDIER
   stars = 1
   hp = 60
-  atk = 6
+  atk = 7
   speed = 51
   def = 4
   speDef = 4
@@ -13853,14 +13815,14 @@ export class Lillipup extends Pokemon {
 
 export class Herdier extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.NORMAL, Synergy.FIELD])
-  rarity = Rarity.COMMON
+  rarity = Rarity.HATCH
   evolution = Pkm.STOUTLAND
   stars = 2
   hp = 120
-  atk = 11
+  atk = 16
   speed = 51
-  def = 6
-  speDef = 6
+  def = 8
+  speDef = 8
   maxPP = 100
   range = 1
   skill = Ability.RETALIATE
@@ -13868,13 +13830,13 @@ export class Herdier extends Pokemon {
 
 export class Stoutland extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.NORMAL, Synergy.FIELD])
-  rarity = Rarity.COMMON
+  rarity = Rarity.HATCH
   stars = 3
-  hp = 220
-  atk = 21
+  hp = 240
+  atk = 28
   speed = 51
-  def = 8
-  speDef = 8
+  def = 12
+  speDef = 12
   maxPP = 100
   range = 1
   skill = Ability.RETALIATE
@@ -18988,7 +18950,6 @@ export class Blipbug extends Pokemon {
   maxPP = 100
   range = 1
   skill = Ability.EXPANDING_FORCE
-  regional = true
 }
 
 export class Dottler extends Pokemon {
@@ -19004,7 +18965,6 @@ export class Dottler extends Pokemon {
   maxPP = 100
   range = 1
   skill = Ability.EXPANDING_FORCE
-  regional = true
 }
 
 export class Orbeetle extends Pokemon {
@@ -19019,7 +18979,6 @@ export class Orbeetle extends Pokemon {
   maxPP = 100
   range = 1
   skill = Ability.EXPANDING_FORCE
-  regional = true
 }
 
 export class Pachirisu extends Pokemon {
