@@ -1036,9 +1036,9 @@ export class MysticalFireStrategy extends AbilityStrategy {
     crit: boolean
   ) {
     super.process(pokemon, board, target, crit)
-    const damage = [20, 40, 80][pokemon.stars - 1] ?? 80
+    const damage = [20, 60, 120][pokemon.stars - 1] ?? 120
     target.handleSpecialDamage(damage, board, AttackType.SPECIAL, pokemon, crit)
-    target.addAbilityPower(-10, pokemon, 1, crit)
+    target.addAbilityPower(-20, pokemon, 1, crit)
   }
 }
 
