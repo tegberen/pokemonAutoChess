@@ -4077,7 +4077,7 @@ export class Blaziken extends Pokemon {
 }
 
 export class Treecko extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.GRASS, Synergy.MONSTER, Synergy.DRAGON])
+  types = new SetSchema<Synergy>([Synergy.DRAGON, Synergy.GRASS, Synergy.MONSTER])
   rarity = Rarity.UNCOMMON
   stars = 1
   evolution = Pkm.GROVYLE
@@ -4092,7 +4092,7 @@ export class Treecko extends Pokemon {
 }
 
 export class Grovyle extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.GRASS, Synergy.MONSTER, Synergy.DRAGON])
+  types = new SetSchema<Synergy>([Synergy.DRAGON, Synergy.GRASS, Synergy.MONSTER])
   rarity = Rarity.UNCOMMON
   stars = 2
   evolution = Pkm.SCEPTILE
@@ -4107,7 +4107,7 @@ export class Grovyle extends Pokemon {
 }
 
 export class Sceptile extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.GRASS, Synergy.MONSTER, Synergy.DRAGON])
+  types = new SetSchema<Synergy>([Synergy.DRAGON, Synergy.GRASS, Synergy.MONSTER])
   rarity = Rarity.UNCOMMON
   stars = 3
   hp = 200
@@ -8333,7 +8333,7 @@ export class Braixen extends Pokemon {
   hp = 90
   atk = 8
   speed = 58
-  def = 2
+  def = 4
   speDef = 4
   maxPP = 60
   range = 2
@@ -8344,10 +8344,10 @@ export class Delphox extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.FIRE, Synergy.PSYCHIC, Synergy.HUMAN])
   rarity = Rarity.HATCH
   stars = 3
-  hp = 180
+  hp = 200
   atk = 16
   speed = 58
-  def = 2
+  def = 6
   speDef = 6
   maxPP = 60
   range = 2
