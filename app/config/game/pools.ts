@@ -19,7 +19,6 @@ export const UniquePool = new Array<PkmProposition>(
   Pkm.UXIE,
   Pkm.MESPRIT,
   Pkm.AZELF,
-  PkmDuo.LATIOS_LATIAS,
   Pkm.LAPRAS,
   Pkm.ABSOL,
   Pkm.SPIRITOMB,
@@ -169,8 +168,6 @@ export const LegendaryPool = new Array<PkmProposition>(
   Pkm.NECROZMA,
   Pkm.XURKITREE,
   Pkm.NIHILEGO,
-  Pkm.PHEROMOSA,
-  Pkm.BUZZWOLE,
   Pkm.TORNADUS,
   Pkm.THUNDURUS,
   Pkm.LANDORUS,
@@ -197,5 +194,7 @@ export const LegendaryPool = new Array<PkmProposition>(
   Pkm.MANAPHY,
   Pkm.CHI_YU,
   Pkm.TYPE_NULL,
-  Pkm.BLACEPHALON
+  Pkm.BLACEPHALON,
+  PkmDuo.LATIOS_LATIAS,
+  PkmDuo.BUZZWOLE_PHEROMOSA
 )
