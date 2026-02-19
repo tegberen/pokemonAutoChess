@@ -623,6 +623,7 @@ export enum Pkm {
   METAPOD = "METAPOD",
   MEW = "MEW",
   MEWTWO = "MEWTWO",
+  SHADOW_MEWTWO = "SHADOW_MEWTWO",
   MIENFOO = "MIENFOO",
   MIENSHAO = "MIENSHAO",
   MIGHTYENA = "MIGHTYENA",
@@ -1343,6 +1344,7 @@ export const PkmIndex: { [key in Pkm]: string } = {
   [Pkm.DRAGONAIR]: "0148",
   [Pkm.DRAGONITE]: "0149",
   [Pkm.MEWTWO]: "0150",
+  [Pkm.SHADOW_MEWTWO]: "0150-0003",
   [Pkm.MEW]: "0151",
 
   // Gen 2
@@ -2659,6 +2661,7 @@ export const PkmFamily: { [key in Pkm]: Pkm } = {
   [Pkm.AZELF]: Pkm.AZELF,
   [Pkm.UXIE]: Pkm.UXIE,
   [Pkm.MEWTWO]: Pkm.MEWTWO,
+  [Pkm.SHADOW_MEWTWO]: Pkm.SHADOW_MEWTWO,
   [Pkm.KYUREM]: Pkm.KYUREM,
   [Pkm.RESHIRAM]: Pkm.RESHIRAM,
   [Pkm.ZEKROM]: Pkm.ZEKROM,

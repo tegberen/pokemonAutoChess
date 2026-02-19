@@ -325,6 +325,12 @@ class SpriteSheetProcessor {
           actions.add(conf.attack ?? AnimationType.Attack)
           actions.add(conf.ability ?? AnimationType.SpAttack)
           actions.add(conf.emote ?? AnimationType.Pose)
+          // other Animation types, check if on all pokemon?
+          actions.add(AnimationType.Charge)
+          actions.add(AnimationType.Rotate)
+          actions.add(AnimationType.Hover)
+          actions.add(AnimationType.Swing)
+          actions.add(AnimationType.Double)
 
           for (const action of actions) {
             let metadata = xmlData.AnimData.Anims.Anim.find(

@@ -1619,6 +1619,17 @@ export const AbilitiesAnimations: {
     duration: 500,
     tint: 0x2020ff
   }),
+  [Ability.DARK_NOVA]: skyfall({
+    ability: Ability.SUNSTEEL_STRIKE,
+    scale: 0.5,
+    duration: 500,
+    tint: 0xffe8ff,
+    hitAnim: onCaster({
+      ability: Ability.COUNTER,
+      scale: 2,
+      tint: 0xffe0e0
+    })
+  }),
   [Ability.ACROBATICS]: (args) =>
     projectile({
       startCoords: [args.targetX + 1, args.targetY + 1],

@@ -1808,6 +1808,13 @@ export const PokemonAnimations: {
     attackSprite: AttackSprite.PSYCHIC_RANGE,
     hitSprite: HitSprite.PSYCHIC_HIT
   },
+  [Pkm.SHADOW_MEWTWO]: {
+    attack: AnimationType.Shoot,
+    ability: AnimationType.Hop,
+    emote: AnimationType.Charge,
+    attackSprite: AttackSprite.DARK_RANGE,
+    hitSprite: HitSprite.DARK_HIT
+  },
   [Pkm.KYUREM]: {
     attack: AnimationType.Shoot,
     ability: AnimationType.Attack,
