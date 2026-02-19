@@ -3849,8 +3849,8 @@ export class Piplup extends Pokemon {
   hp = 60
   atk = 5
   speed = 44
-  def = 6
-  speDef = 10
+  def = 2
+  speDef = 3
   maxPP = 90
   range = 1
   skill = Ability.WAVE_SPLASH
@@ -3864,10 +3864,10 @@ export class Prinplup extends Pokemon {
   evolution = Pkm.EMPOLEON
   evolutionRule = new HatchEvolutionRule()
   hp = 160
-  atk = 9
+  atk = 10
   speed = 44
-  def = 8
-  speDef = 14
+  def = 6
+  speDef = 7
   maxPP = 90
   range = 1
   skill = Ability.WAVE_SPLASH
@@ -3879,10 +3879,10 @@ export class Empoleon extends Pokemon {
   rarity = Rarity.HATCH
   stars = 3
   hp = 280
-  atk = 17
+  atk = 15
   speed = 44
   def = 10
-  speDef = 18
+  speDef = 14
   maxPP = 90
   range = 1
   skill = Ability.WAVE_SPLASH
@@ -6884,7 +6884,7 @@ export class Spiritomb extends Pokemon {
 }
 
 export class Absol extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.WILD, Synergy.DARK])
+  types = new SetSchema<Synergy>([Synergy.WILD, Synergy.DARK, Synergy.FAIRY])
   rarity = Rarity.UNIQUE
   stars = 3
   hp = 200
@@ -10760,7 +10760,7 @@ export class Primarina extends Pokemon {
   rarity = Rarity.RARE
   stars = 3
   hp = 230
-  atk = 16
+  atk = 18
   speed = 44
   def = 4
   speDef = 8
@@ -11792,7 +11792,7 @@ export class Arbok extends Pokemon {
 }
 
 export class Carvanha extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.WATER, Synergy.DARK])
+  types = new SetSchema<Synergy>([Synergy.WATER, Synergy.DARK, Synergy.WILD])
   rarity = Rarity.RARE
   stars = 1
   evolution = Pkm.SHARPEDO
@@ -11808,7 +11808,7 @@ export class Carvanha extends Pokemon {
 }
 
 export class Sharpedo extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.WATER, Synergy.DARK])
+  types = new SetSchema<Synergy>([Synergy.WATER, Synergy.DARK, Synergy.WILD])
   rarity = Rarity.RARE
   stars = 2
   hp = 170
@@ -16733,7 +16733,7 @@ export class Zygarde100 extends Pokemon {
 }
 
 export class Sizzlipede extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.FIRE, Synergy.BUG])
+  types = new SetSchema<Synergy>([Synergy.FIRE, Synergy.BUG, Synergy.FIELD])
   rarity = Rarity.UNCOMMON
   stars = 1
   evolution = Pkm.CENTISKORCH
@@ -16749,7 +16749,7 @@ export class Sizzlipede extends Pokemon {
 }
 
 export class Centiskorch extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.FIRE, Synergy.BUG])
+  types = new SetSchema<Synergy>([Synergy.FIRE, Synergy.BUG, Synergy.FIELD])
   rarity = Rarity.UNCOMMON
   stars = 2
   hp = 140
