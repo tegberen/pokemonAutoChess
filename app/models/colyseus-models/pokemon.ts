@@ -5389,7 +5389,7 @@ export class Lugia extends Pokemon {
   evolution = Pkm.SHADOW_LUGIA
   stars = 3
   hp = 300
-  atk = 26
+  atk = 26  
   speed = 60
   def = 12
   speDef = 12
@@ -7037,6 +7037,8 @@ export class Mewtwo extends Pokemon {
     Synergy.ARTIFICIAL
   ])
   rarity = Rarity.LEGENDARY
+  evolution = Pkm.SHADOW_MEWTWO
+  evolutionRule = new ItemEvolutionRule([Item.DUSK_STONE])
   stars = 3
   hp = 200
   atk = 25
@@ -7046,6 +7048,26 @@ export class Mewtwo extends Pokemon {
   maxPP = 110
   range = 3
   skill = Ability.PSYSTRIKE
+  passive = Passive.MEWTWO
+}
+
+export class ShadowMewtwo extends Pokemon {
+  types = new SetSchema<Synergy>([
+    Synergy.PSYCHIC,
+    Synergy.MONSTER,
+    Synergy.ARTIFICIAL,
+    Synergy.DARK
+  ])
+  rarity = Rarity.LEGENDARY
+  stars = 4
+  hp = 250
+  atk = 25
+  speed = 67
+  def = 10
+  speDef = 10
+  maxPP = 90
+  range = 2
+  skill = Ability.DARK_NOVA
 }
 
 export class ShadowMewtwo extends Pokemon {

@@ -16400,6 +16400,65 @@ export class ShadowClawStrategy extends AbilityStrategy {
   }
 }
 
+export class DarkNovaStrategy extends AbilityStrategy {
+  canCritByDefault = true
+  process(
+    pokemon: PokemonEntity,
+    board: Board,
+    target: PokemonEntity,
+    crit: boolean
+  ) {
+    super.process(pokemon, board, target, crit, true)
+    const mostSurroundedCoordinate =
+      pokemon.state.getMostSurroundedCoordinateAvailablePlace(pokemon, board)
+    if (mostSurroundedCoordinate) {
+      pokemon.skydiveTo(
+        mostSurroundedCoordinate.x,
+        mostSurroundedCoordinate.y,
+        board
+      )
+      pokemon.commands.push(
+        new DelayedCommand(() => {
+          pokemon.broadcastAbility({
+            positionX: mostSurroundedCoordinate.x,
+            positionY: mostSurroundedCoordinate.y,
+            targetX: mostSurroundedCoordinate.x,
+            targetY: mostSurroundedCoordinate.y
+          })
+          const cells = board.getAdjacentCells(
+            mostSurroundedCoordinate.x,
+            mostSurroundedCoordinate.y
+          )
+          cells.forEach((cell) => {
+            if (cell.value && cell.value.team !== pokemon.team) {
+              cell.value.handleSpecialDamage(
+                60,
+                board,
+                AttackType.SPECIAL,
+                pokemon,
+                crit
+              )
+              const teleportationCell = board.getTeleportationCell(
+                cell.value.positionX,
+                cell.value.positionY,
+                cell.value.team
+              )
+              if (teleportationCell) {
+                cell.value.moveTo(
+                  teleportationCell.x,
+                  teleportationCell.y,
+                  board,
+                  true
+                )
+              }
+            }
+          })
+        }, 1000)
+      )
+    }
+  }
+}
+
 export * from "./hidden-power"
 
 export const AbilityStrategies: { [key in Ability]: AbilityStrategy } = {
@@ -16935,6 +16994,7 @@ export const AbilityStrategies: { [key in Ability]: AbilityStrategy } = {
   [Ability.ELECTRIFY]: new ElectrifyStrategy(),
   [Ability.HEADLONDING_RUSH]: new HeadlongRushStrategy(),
   [Ability.WAVE_SPLASH]: new WaveSplashStrategy(),
+  [Ability.DARK_NOVA]: new DarkNovaStrategy(),
   [Ability.TWISTER]: new TwisterStrategy(),
   [Ability.FOCUS_PUNCH]: new FocusPunchStrategy(),
   [Ability.HYPER_BEAM]: new HyperBeamStrategy(),
