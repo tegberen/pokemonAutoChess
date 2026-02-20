@@ -3198,7 +3198,13 @@ export class Pikachu extends Pokemon {
     if (item === Item.SURFBOARD) {
       player.transformPokemon(this, Pkm.PIKACHU_SURFER)
     }
+    if (item === Item.TRAINING_RIBBON) {
+      this.items.delete(Item.TRAINING_RIBBON)
+      player.transformPokemon(this, Pkm.PIKACHU_LIBRE)
+    }
   }
+
+
 }
 
 export class Raichu extends Pokemon {
@@ -5232,6 +5238,26 @@ export class PikachuSurfer extends Pokemon {
       player.transformPokemon(this, Pkm.PIKACHU)
     }
   }
+}
+
+export class PikachuLibre extends Pokemon {
+  types = new SetSchema<Synergy>([
+    Synergy.ELECTRIC,
+    Synergy.FIGHTING,
+    Synergy.FAIRY
+  ])
+  rarity = Rarity.SPECIAL
+  stars = 3
+  hp = 170
+  atk = 12
+  speed = 54
+  def = 7
+  speDef = 10
+  maxPP = 100
+  range = 1
+  skill = Ability.THUNDERCLAP_PRESS
+  passive = Passive.PIKACHU_LIBRE
+
 }
 
 export class Rattata extends Pokemon {
@@ -16733,7 +16759,7 @@ export class Zygarde100 extends Pokemon {
 }
 
 export class Sizzlipede extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.FIRE, Synergy.BUG, Synergy.FIELD])
+  types = new SetSchema<Synergy>([Synergy.FIRE, Synergy.BUG])
   rarity = Rarity.UNCOMMON
   stars = 1
   evolution = Pkm.CENTISKORCH
@@ -16749,7 +16775,7 @@ export class Sizzlipede extends Pokemon {
 }
 
 export class Centiskorch extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.FIRE, Synergy.BUG, Synergy.FIELD])
+  types = new SetSchema<Synergy>([Synergy.FIRE, Synergy.BUG])
   rarity = Rarity.UNCOMMON
   stars = 2
   hp = 140
@@ -21310,6 +21336,7 @@ export const PokemonClasses: Record<
   [Pkm.MINCCINO]: Minccino,
   [Pkm.CINCCINO]: Cinccino,
   [Pkm.PIKACHU_SURFER]: PikachuSurfer,
+  [Pkm.PIKACHU_LIBRE]: PikachuLibre,
   [Pkm.ESPURR]: Espurr,
   [Pkm.MEOWSTIC_MALE]: MeowsticMale,
   [Pkm.MEOWSTIC_FEMALE]: MeowsticFemale,
