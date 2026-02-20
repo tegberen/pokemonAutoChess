@@ -4540,17 +4540,17 @@ export class MeteorMashStrategy extends AbilityStrategy {
     crit: boolean
   ) {
     super.process(pokemon, board, target, crit)
-    const nbHits = 3 + (pokemon.status.psychicField ? 1 : 0)
+    const nbHits = [1, 2, 4][pokemon.stars - 1] ?? 1
+    const attackBoost = pokemon.status.psychicField ? 4 : 2
     const damage = pokemon.atk
     for (let n = 0; n < nbHits; n++) {
-      target.handleSpecialDamage(
-        damage,
-        board,
-        AttackType.SPECIAL,
-        pokemon,
-        crit
-      )
-      pokemon.addAttack(2, pokemon, 0, false)
+      const cells = board.getAdjacentCells(target.positionX, target.positionY, true)
+      cells.forEach((cell) => {
+        if (cell.value && cell.value.team !== pokemon.team) {
+          cell.value.handleSpecialDamage(damage, board, AttackType.SPECIAL, pokemon, crit)
+        }
+      })
+      pokemon.addAttack(attackBoost, pokemon, 1, crit)
     }
   }
 }
@@ -11712,6 +11712,47 @@ export class SurfStrategy extends AbilityStrategy {
   }
 }
 
+export class ThunderClapPressStrategy extends AbilityStrategy {
+  process(
+    pokemon: PokemonEntity,
+    board: Board,
+    target: PokemonEntity,
+    crit: boolean
+  ) {
+    super.process(pokemon, board, target, crit)
+    const damage = [25, 50, 100][pokemon.stars - 1] ?? 100
+    const duration = 4000
+
+    const cells = board.getCellsBetween(
+      pokemon.positionX,
+      pokemon.positionY,
+      target.positionX,
+      target.positionY
+    )
+
+    const targetsHit: Set<PokemonEntity> = new Set()
+    cells.forEach((cell) => {
+      if (cell.value && cell.value.team !== pokemon.team) {
+        targetsHit.add(cell.value)
+      }
+    })
+    targetsHit.add(target)
+
+    targetsHit.forEach((enemy) => {
+      enemy.status.triggerParalysis(duration, enemy, pokemon)
+      enemy.handleSpecialDamage(damage, board, AttackType.SPECIAL, pokemon, crit)
+      const teleportationCell = board.getTeleportationCell(
+        enemy.positionX,
+        enemy.positionY,
+        enemy.team
+      )
+      if (teleportationCell) {
+        enemy.moveTo(teleportationCell.x, teleportationCell.y, board, true)
+      }
+    })
+  }
+}
+
 export class HeadlongRushStrategy extends AbilityStrategy {
   process(
     pokemon: PokemonEntity,
@@ -16635,7 +16676,8 @@ export const AbilityStrategies: { [key in Ability]: AbilityStrategy } = {
   [Ability.ELECTRIFY]: new ElectrifyStrategy(),
   [Ability.HEADLONDING_RUSH]: new HeadlongRushStrategy(),
   [Ability.WAVE_SPLASH]: new WaveSplashStrategy(),
-  [Ability.DARK_NOVA]: new DarkNovaStrategy()
+  [Ability.DARK_NOVA]: new DarkNovaStrategy(),
+  [Ability.THUNDERCLAP_PRESS]: new ThunderClapPressStrategy(),
 }
 
 export function castAbility(

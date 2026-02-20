@@ -419,6 +419,7 @@ export enum Ability {
   CUT = "CUT",
   FLY = "FLY",
   SURF = "SURF",
+  THUNDERCLAP_PRESS = "THUNDERCLAP_PRESS",
   STRENGTH = "STRENGTH",
   FLASH = "FLASH",
   HARDEN = "HARDEN",

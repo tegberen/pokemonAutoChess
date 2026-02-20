@@ -302,7 +302,8 @@ export enum Item {
   LUCKY_RIBBON = "LUCKY_RIBBON",
   COVER_BAND = "COVER_BAND",
   EFFICIENT_BANDANNA = "EFFICIENT_BANDANNA",
-  NULLIFY_BANDANNA = "NULLIFY_BANDANNA"
+  NULLIFY_BANDANNA = "NULLIFY_BANDANNA",
+  TRAINING_RIBBON = "TRAINING_RIBBON"
 }
 
 export const MemoryDiscs = [
@@ -430,8 +431,9 @@ export const SpecialItems: Item[] = [
   Item.RUSTED_SWORD,
   Item.SCROLL_OF_WATERS,
   Item.SCROLL_OF_DARKNESS,
+  Item.TRAINING_RIBBON,
   Item.MEMORY_DISCS,
-  ...MemoryDiscs
+  ...MemoryDiscs,
 ] satisfies Item[]
 
 export const FishingRods = [

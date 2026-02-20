@@ -3199,7 +3199,13 @@ export class Pikachu extends Pokemon {
     if (item === Item.SURFBOARD) {
       player.transformPokemon(this, Pkm.PIKACHU_SURFER)
     }
+    if (item === Item.TRAINING_RIBBON) {
+      this.items.delete(Item.TRAINING_RIBBON)
+      player.transformPokemon(this, Pkm.PIKACHU_LIBRE)
+    }
   }
+
+
 }
 
 export class Raichu extends Pokemon {
@@ -3850,8 +3856,8 @@ export class Piplup extends Pokemon {
   hp = 60
   atk = 5
   speed = 44
-  def = 6
-  speDef = 10
+  def = 2
+  speDef = 3
   maxPP = 90
   range = 1
   skill = Ability.WAVE_SPLASH
@@ -3865,10 +3871,10 @@ export class Prinplup extends Pokemon {
   evolution = Pkm.EMPOLEON
   evolutionRule = new HatchEvolutionRule()
   hp = 160
-  atk = 9
+  atk = 10
   speed = 44
-  def = 8
-  speDef = 14
+  def = 6
+  speDef = 7
   maxPP = 90
   range = 1
   skill = Ability.WAVE_SPLASH
@@ -3880,10 +3886,10 @@ export class Empoleon extends Pokemon {
   rarity = Rarity.HATCH
   stars = 3
   hp = 280
-  atk = 17
+  atk = 15
   speed = 44
   def = 10
-  speDef = 18
+  speDef = 14
   maxPP = 90
   range = 1
   skill = Ability.WAVE_SPLASH
@@ -5234,6 +5240,26 @@ export class PikachuSurfer extends Pokemon {
       player.transformPokemon(this, Pkm.PIKACHU)
     }
   }
+}
+
+export class PikachuLibre extends Pokemon {
+  types = new SetSchema<Synergy>([
+    Synergy.ELECTRIC,
+    Synergy.FIGHTING,
+    Synergy.FAIRY
+  ])
+  rarity = Rarity.SPECIAL
+  stars = 3
+  hp = 170
+  atk = 12
+  speed = 54
+  def = 7
+  speDef = 10
+  maxPP = 100
+  range = 1
+  skill = Ability.THUNDERCLAP_PRESS
+  passive = Passive.PIKACHU_LIBRE
+
 }
 
 export class Rattata extends Pokemon {
@@ -6896,7 +6922,7 @@ export class Spiritomb extends Pokemon {
 }
 
 export class Absol extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.WILD, Synergy.DARK])
+  types = new SetSchema<Synergy>([Synergy.WILD, Synergy.DARK, Synergy.FAIRY])
   rarity = Rarity.UNIQUE
   stars = 3
   hp = 200
@@ -10761,7 +10787,7 @@ export class Primarina extends Pokemon {
   rarity = Rarity.RARE
   stars = 3
   hp = 230
-  atk = 16
+  atk = 18
   speed = 44
   def = 4
   speDef = 8
@@ -11793,7 +11819,7 @@ export class Arbok extends Pokemon {
 }
 
 export class Carvanha extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.WATER, Synergy.DARK])
+  types = new SetSchema<Synergy>([Synergy.WATER, Synergy.DARK, Synergy.WILD])
   rarity = Rarity.RARE
   stars = 1
   evolution = Pkm.SHARPEDO
@@ -11809,7 +11835,7 @@ export class Carvanha extends Pokemon {
 }
 
 export class Sharpedo extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.WATER, Synergy.DARK])
+  types = new SetSchema<Synergy>([Synergy.WATER, Synergy.DARK, Synergy.WILD])
   rarity = Rarity.RARE
   stars = 2
   hp = 170
@@ -21232,6 +21258,7 @@ export const PokemonClasses: Record<
   [Pkm.MINCCINO]: Minccino,
   [Pkm.CINCCINO]: Cinccino,
   [Pkm.PIKACHU_SURFER]: PikachuSurfer,
+  [Pkm.PIKACHU_LIBRE]: PikachuLibre,
   [Pkm.ESPURR]: Espurr,
   [Pkm.MEOWSTIC_MALE]: MeowsticMale,
   [Pkm.MEOWSTIC_FEMALE]: MeowsticFemale,
