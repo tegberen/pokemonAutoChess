@@ -325,6 +325,13 @@ class SpriteSheetProcessor {
           actions.add(conf.attack ?? AnimationType.Attack)
           actions.add(conf.ability ?? AnimationType.SpAttack)
           actions.add(conf.emote ?? AnimationType.Pose)
+          // extra animations
+          actions.add(AnimationType.Charge)
+          actions.add(AnimationType.Double)
+          actions.add(AnimationType.QuickStrike)
+          actions.add(AnimationType.Rotate)
+          actions.add(AnimationType.Shock)
+          actions.add(AnimationType.Swing)
 
           for (const action of actions) {
             let metadata = xmlData.AnimData.Anims.Anim.find(

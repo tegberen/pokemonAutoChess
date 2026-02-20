@@ -1617,6 +1617,10 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
         p.pokemon.items = new SetSchema<Item>()
         p.pokemon.addItems(values(substitute.items), player)
         substitute.items.clear()
+        // if is pikachu give item to trigger libre transformation
+        if (p.pokemon.name === Pkm.PIKACHU) {
+          player.items.push(Item.TRAINING_RIBBON)
+        }
         this.room.checkEvolutionsAfterPokemonAcquired(player.id)
         player.pokemonsTrainingInDojo.splice(
           player.pokemonsTrainingInDojo.indexOf(p),
