@@ -322,7 +322,8 @@ export enum Item {
   WARP_WAND = "WARP_WAND",
   SWITCHER_WAND = "SWITCHER_WAND",
   WHIRLWIND_WAND = "WHIRLWIND_WAND",
-  TUNNEL_WAND = "TUNNEL_WAND"
+  TUNNEL_WAND = "TUNNEL_WAND",
+  TRAINING_RIBBON = "TRAINING_RIBBON"
 }
 
 export const MemoryDiscs = [
@@ -453,6 +454,7 @@ export const SpecialItems: Item[] = [
   Item.RUSTED_SWORD,
   Item.SCROLL_OF_WATERS,
   Item.SCROLL_OF_DARKNESS,
+  Item.TRAINING_RIBBON,
   Item.MEMORY_DISCS,
   ...MemoryDiscs,
   Item.COMFEY,
