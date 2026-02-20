@@ -11709,6 +11709,47 @@ export class SurfStrategy extends AbilityStrategy {
   }
 }
 
+export class ThunderClapPressStrategy extends AbilityStrategy {
+  process(
+    pokemon: PokemonEntity,
+    board: Board,
+    target: PokemonEntity,
+    crit: boolean
+  ) {
+    super.process(pokemon, board, target, crit)
+    const damage = [25, 50, 100][pokemon.stars - 1] ?? 100
+    const duration = 4000
+
+    const cells = board.getCellsBetween(
+      pokemon.positionX,
+      pokemon.positionY,
+      target.positionX,
+      target.positionY
+    )
+
+    const targetsHit: Set<PokemonEntity> = new Set()
+    cells.forEach((cell) => {
+      if (cell.value && cell.value.team !== pokemon.team) {
+        targetsHit.add(cell.value)
+      }
+    })
+    targetsHit.add(target)
+
+    targetsHit.forEach((enemy) => {
+      enemy.status.triggerParalysis(duration, enemy, pokemon)
+      enemy.handleSpecialDamage(damage, board, AttackType.SPECIAL, pokemon, crit)
+      const teleportationCell = board.getTeleportationCell(
+        enemy.positionX,
+        enemy.positionY,
+        enemy.team
+      )
+      if (teleportationCell) {
+        enemy.moveTo(teleportationCell.x, teleportationCell.y, board, true)
+      }
+    })
+  }
+}
+
 export class HeadlongRushStrategy extends AbilityStrategy {
   process(
     pokemon: PokemonEntity,
@@ -17205,7 +17246,8 @@ export const AbilityStrategies: { [key in Ability]: AbilityStrategy } = {
   [Ability.CEASELESS_EDGE]: new CeaselessEdgeStrategy(),
   [Ability.MOUNTAIN_GALE]: new MountainGaleStrategy(),
   [Ability.TWINEEDLE]: new TwineedleStrategy(),
-  [Ability.ROCK_WRECKER]: new RockWreckerStrategy()
+  [Ability.ROCK_WRECKER]: new RockWreckerStrategy(),
+  [Ability.THUNDERCLAP_PRESS]: new ThunderClapPressStrategy(),
 }
 
 export function castAbility(
