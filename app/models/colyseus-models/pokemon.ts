@@ -18942,46 +18942,49 @@ export class Arboliva extends Pokemon {
 
 export class Chespin extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.GRASS, Synergy.FIGHTING])
-  rarity = Rarity.COMMON
+  rarity = Rarity.UNCOMMON
   stars = 1
   evolution = Pkm.QUILLADIN
   hp = 60
   atk = 7
   speed = 41
-  def = 5
+  def = 6
   speDef = 3
   maxPP = 100
   range = 1
   skill = Ability.SPIKY_SHIELD
+  regional = true
 }
 
 export class Quilladin extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.GRASS, Synergy.FIGHTING])
-  rarity = Rarity.COMMON
+  rarity = Rarity.UNCOMMON
   stars = 2
   evolution = Pkm.CHESNAUGHT
   hp = 120
   atk = 12
   speed = 41
-  def = 9
+  def = 10
   speDef = 5
   maxPP = 100
   range = 1
   skill = Ability.SPIKY_SHIELD
+  regional = true
 }
 
 export class Chesnaught extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.GRASS, Synergy.FIGHTING])
-  rarity = Rarity.COMMON
+  rarity = Rarity.UNCOMMON
   stars = 3
-  hp = 200
+  hp = 240
   atk = 23
   speed = 41
-  def = 15
+  def = 20
   speDef = 8
   maxPP = 100
   range = 1
   skill = Ability.SPIKY_SHIELD
+  regional = true
 }
 
 export class Nymble extends Pokemon {
