@@ -5062,7 +5062,7 @@ export class TripleArrowsStrategy extends AbilityStrategy {
             pokemon,
             crit
           )
-          cell.value.addDefense(-2, pokemon, false)
+          cell.value.addDefense(-2, pokemon, 0, false)
           cell.value.status.triggerFlinch(1000, cell.value, pokemon)
         }
       })
