@@ -4996,6 +4996,35 @@ export class SpiritShackleStrategy extends AbilityStrategy {
   }
 }
 
+export class TripleArrowsStrategy extends AbilityStrategy {
+  canCritByDefault = true
+  process(
+    pokemon: PokemonEntity,
+    board: Board,
+    target: PokemonEntity,
+    crit: boolean
+  ) {
+    super.process(pokemon, board, target, crit)
+    const damage = [5, 10, 20][pokemon.stars - 1] ?? 20
+
+    for (let i = 0; i < 3; i++) {
+      effectInLine(board, pokemon, target, (cell) => {
+        if (cell.value != null && cell.value.team !== pokemon.team) {
+          cell.value.handleSpecialDamage(
+            damage,
+            board,
+            AttackType.SPECIAL,
+            pokemon,
+            crit
+          )
+          cell.value.addDefense(-2, pokemon, false)
+          cell.value.status.triggerFlinch(1000, cell.value, pokemon)
+        }
+      })
+    }
+  }
+}
+
 export class WaterShurikenStrategy extends AbilityStrategy {
   process(
     pokemon: PokemonEntity,
@@ -16281,6 +16310,7 @@ export const AbilityStrategies: { [key in Ability]: AbilityStrategy } = {
   [Ability.AURORA_BEAM]: new AuroraBeamStrategy(),
   [Ability.AGILITY]: new AgilityStrategy(),
   [Ability.SPIRIT_SHACKLE]: new SpiritShackleStrategy(),
+  [Ability.TRIPLE_ARROWS]: new TripleArrowsStrategy(),
   [Ability.WATER_SHURIKEN]: new WaterShurikenStrategy(),
   [Ability.SHADOW_SNEAK]: new ShadowSneakStrategy(),
   [Ability.MACH_PUNCH]: new MachPunchStrategy(),

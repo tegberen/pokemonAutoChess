@@ -11569,50 +11569,76 @@ export class AlolanDugtrio extends Pokemon {
 
 export class Rowlet extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.GRASS, Synergy.FLYING, Synergy.GHOST])
-  rarity = Rarity.HATCH
+  rarity = Rarity.COMMON
   stars = 1
   evolution = Pkm.DARTIX
-  evolutionRule = new HatchEvolutionRule()
-  hp = 70
+  hp = 50
   atk = 5
   speed = 47
-  def = 4
-  speDef = 4
+  def = 2
+  speDef = 2
   maxPP = 100
   range = 3
   skill = Ability.SPIRIT_SHACKLE
-  passive = Passive.HATCH
 }
 
 export class Dartix extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.GRASS, Synergy.FLYING, Synergy.GHOST])
-  rarity = Rarity.HATCH
+  rarity = Rarity.COMMON
   stars = 2
-  evolution = Pkm.DECIDUEYE
-  evolutionRule = new HatchEvolutionRule()
-  hp = 130
+  evolutions = [Pkm.HISUI_DECIDUEYE, Pkm.DECIDUEYE]
+  evolutionRule = new CountEvolutionRule(
+    3,
+    (pokemon: Pokemon, player: IPlayer) => {
+      if (player.regionalPokemons.includes(Pkm.HISUI_DECIDUEYE)) {
+        return Pkm.HISUI_DECIDUEYE
+      } else {
+        return Pkm.DECIDUEYE
+      }
+    }
+  )
+  hp = 110
   atk = 9
   speed = 47
-  def = 4
-  speDef = 6
+  def = 2
+  speDef = 3
   maxPP = 100
   range = 3
   skill = Ability.SPIRIT_SHACKLE
-  passive = Passive.HATCH
 }
 
 export class Decidueye extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.GRASS, Synergy.FLYING, Synergy.GHOST])
-  rarity = Rarity.HATCH
+  rarity = Rarity.COMMON
   stars = 3
-  hp = 190
-  atk = 18
+  hp = 170
+  atk = 17
   speed = 47
-  def = 4
-  speDef = 8
+  def = 3
+  speDef = 4
   maxPP = 100
   range = 3
   skill = Ability.SPIRIT_SHACKLE
+}
+
+
+export class HisuiDecidueye extends Pokemon {
+  types = new SetSchema<Synergy>([Synergy.GRASS, Synergy.FLYING, Synergy.FIGHTING])
+  rarity = Rarity.COMMON
+  stars = 3
+  hp = 180
+  atk = 18
+  speed = 42
+  def = 4
+  speDef = 3
+  maxPP = 100
+  range = 3
+  skill = Ability.TRIPLE_ARROWS
+  regional = true
+  isInRegion(map: DungeonPMDO, state: GameState) {
+    const regionSynergies = RegionDetails[map]?.synergies
+    return regionSynergies.includes(Synergy.FIGHTING) ?? false
+  }
 }
 
 export class Zorua extends Pokemon {
@@ -20788,6 +20814,7 @@ export const PokemonClasses: Record<
   [Pkm.ROWLET]: Rowlet,
   [Pkm.DARTIX]: Dartix,
   [Pkm.DECIDUEYE]: Decidueye,
+  [Pkm.HISUI_DECIDUEYE]: HisuiDecidueye,
   [Pkm.ZORUA]: Zorua,
   [Pkm.ZOROARK]: Zoroark,
   [Pkm.HISUI_ZORUA]: HisuiZorua,

@@ -2125,6 +2125,17 @@ export const AbilitiesAnimations: {
     duration: 2000,
     oriented: true
   }),
+  [Ability.TRIPLE_ARROWS]: range(1, 3).map((i) =>
+    projectile({
+      ability: Ability.SPIRIT_SHACKLE,
+      scale: 0.8,
+      distance: 8,
+      duration: 1000,
+      oriented: true,
+      tint: 0xff0000,
+      tweenProps: { delay: i * 200 }
+    })
+  ),
   [Ability.RAZOR_LEAF]: projectile({ distance: 8, duration: 2000 }),
   [Ability.PSYCHO_CUT]: range(1, 3).map((i) =>
     projectile({
