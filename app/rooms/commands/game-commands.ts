@@ -1398,6 +1398,7 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
         this.state.townEncounter === TownEncounters.CELEBI ||
         (this.state.specialGameRule === SpecialGameRule.SHINY_HUNTER &&
           pveStage.shinyChance !== undefined) ||
+        this.state.specialGameRule === SpecialGameRule.SHINIEST_HUNTER ||
         chance(pveStage.shinyChance ?? 0)
     }
 
@@ -1890,7 +1891,8 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
           resetArraySchema(player.pveRewards, rewards)
 
           const rewardsPropositions =
-            this.state.shinyEncounter && this.state.stageLevel > 1
+            (this.state.shinyEncounter && this.state.stageLevel > 1) ||
+            this.state.specialGameRule === SpecialGameRule.SHINIEST_HUNTER
               ? pickNRandomIn(ShinyItems, 3)
               : (pveStage.getRewardsPropositions?.(player) ?? ([] as Item[]))
 
