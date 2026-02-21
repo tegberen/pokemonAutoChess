@@ -3885,6 +3885,13 @@ export const PokemonAnimations: {
     attackSprite: AttackSprite.FLYING_RANGE,
     hitSprite: HitSprite.FLYING_HIT
   },
+  [Pkm.HISUI_DECIDUEYE]: {
+    attack: AnimationType.Attack,
+    ability: AnimationType.Shoot,
+    emote: AnimationType.Charge,
+    attackSprite: AttackSprite.FLYING_RANGE,
+    hitSprite: HitSprite.FLYING_HIT
+  },
   [Pkm.ZORUA]: {
     attack: AnimationType.Attack,
     ability: AnimationType.Attack,
