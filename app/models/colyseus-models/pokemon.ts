@@ -7188,7 +7188,7 @@ export class Celebi extends Pokemon {
 }
 
 export class Victini extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.FIRE, Synergy.PSYCHIC])
+  types = new SetSchema<Synergy>([Synergy.FIRE, Synergy.PSYCHIC, Synergy.GOURMET])
   rarity = Rarity.LEGENDARY
   stars = 3
   hp = 300

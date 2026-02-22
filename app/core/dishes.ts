@@ -55,6 +55,7 @@ export const DishByPkm: { [pkm in Pkm]?: Item } = {
   [Pkm.BOUNSWEET]: Item.FRUIT_JUICE,
   [Pkm.STEENEE]: Item.FRUIT_JUICE,
   [Pkm.TSAREENA]: Item.FRUIT_JUICE,
+  [Pkm.VICTINI]: Item.TABASCO,
   [Pkm.FARFETCH_D]: Item.LEEK,
   [Pkm.GALARIAN_FARFETCH_D]: Item.LARGE_LEEK,
   [Pkm.SPINDA]: Item.SPINDA_COCKTAIL,
@@ -157,6 +158,13 @@ export const DishEffects: Record<(typeof Dishes)[number], Effect[]> = {
     new OnSpawnEffect((entity) => {
       entity.addSpeed(50, entity, 0, false)
     })
+  ],
+  TABASCO: [
+    new OnSpawnEffect((entity) => {
+      entity.addAbilityPower(100, entity, 0, false)
+      entity.effects.add(EffectEnum.SPECIAL_ATTACKS)
+    })
+
   ],
   HEARTY_STEW: [
     new OnSpawnEffect((entity) => {
