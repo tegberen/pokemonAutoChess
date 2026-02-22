@@ -7094,6 +7094,7 @@ export class Mewtwo extends Pokemon {
   maxPP = 110
   range = 3
   skill = Ability.PSYSTRIKE
+  passive = Passive.MEWTWO
 }
 
 export class ShadowMewtwo extends Pokemon {
