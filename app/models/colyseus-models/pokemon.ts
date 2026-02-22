@@ -7103,7 +7103,7 @@ export class ShadowMewtwo extends Pokemon {
   speed = 67
   def = 10
   speDef = 10
-  maxPP = 90
+  maxPP = 110
   range = 2
   skill = Ability.DARK_NOVA
 }
