@@ -4738,7 +4738,7 @@ export class SparklingAriaStrategy extends AbilityStrategy {
     crit: boolean
   ) {
     super.process(pokemon, board, target, crit)
-    const damage = [15, 25, 50][pokemon.stars - 1] ?? 15
+    const damage = [15, 30, 60][pokemon.stars - 1] ?? 60
     const cells = board.getAdjacentCells(target.positionX, target.positionY)
     target.handleSpecialDamage(damage, board, AttackType.SPECIAL, pokemon, crit)
     cells.forEach((cell) => {
