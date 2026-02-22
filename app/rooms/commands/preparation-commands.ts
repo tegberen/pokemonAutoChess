@@ -738,18 +738,23 @@ export class OnAddBotCommand extends Command<PreparationRoom, OnAddBotPayload> {
         let elo: FilterQuery<IBot> | undefined
 
         switch (difficulty) {
-          case BotDifficulty.EASY:
-            elo = { $lt: 800 }
+          case BotDifficulty.REGULAR:
+            elo = { $lt: 1300 }
             break
-          case BotDifficulty.MEDIUM:
-            elo = { $gte: 800, $lt: 1100 }
-            break
-          case BotDifficulty.HARD:
-            elo = { $gte: 1100, $lt: 1400 }
-            break
-          case BotDifficulty.EXTREME:
-            elo = { $gte: 1400 }
-            break
+          default:
+            elo = { $lt: 1300 }
+          //case BotDifficulty.EASY:
+          //  elo = { $lt: 800 }
+          //  break
+          //case BotDifficulty.MEDIUM:
+          //  elo = { $gte: 800, $lt: 1100 }
+          //  break
+          //case BotDifficulty.HARD:
+          //  elo = { $gte: 1100, $lt: 1400 }
+          //  break
+          //case BotDifficulty.EXTREME:
+          //  elo = { $gte: 1400 }
+          //  break
         }
 
         const existingBots = new Array<string>()

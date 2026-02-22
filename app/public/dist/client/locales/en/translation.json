@@ -4080,6 +4080,7 @@
 	"hard_bot": "Hard (1100-1400)",
 	"extreme_bot": "Extreme (>1400)",
 	"custom_bot": "Custom",
+  "regular_bot": "Regular",
 	"room_leader": "Room leader",
 	"room_password": "This room is private, password",
 	"ready": "Ready",

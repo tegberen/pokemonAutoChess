@@ -301,10 +301,13 @@ export default function PreparationMenu() {
             setBotDifficulty(parseInt(e.target.value))
           }}
         >
+          <option value={BotDifficulty.REGULAR}>{t("regular_bot")}</option>
+          {/*
           <option value={BotDifficulty.EASY}>{t("easy_bot")}</option>
           <option value={BotDifficulty.MEDIUM}>{t("normal_bot")}</option>
           <option value={BotDifficulty.HARD}>{t("hard_bot")}</option>
           <option value={BotDifficulty.EXTREME}>{t("extreme_bot")}</option>
+          */}
           <option value={BotDifficulty.CUSTOM}>{t("custom_bot")}</option>
         </select>
       </div>
