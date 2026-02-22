@@ -81,6 +81,7 @@
 - Lati-Duo moved from Unique: added FLYING, RANGE 3 → 4
 - Buzzwole and Pheromosa: are now Legendary Duo, no nerfs smile
 - Zygarde: added AMORPHOUS, nerfed HP
+- Victini: added GOURMET, Tabasco Dish
 
 # Misc
 - Added Shiniest Hunter: All PvE encounter are shiny 
