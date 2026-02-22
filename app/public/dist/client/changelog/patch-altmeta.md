@@ -6,9 +6,8 @@
 # Changes to Pokemon & Abilities
 - New Ability for Duskull line, Trick Room: If the target and adjacent enemies are faster than the user, halve their current speed. Otherwise, deal [20,40,80,SP] SPECIAL.
 - Reworked Ability Beldum line, Meteor Mash: Deal 1/2/4 times [100,SP]% of ATK as SPECIAL to the target and ADJACENT enemy Pokemon. Then increase the user's ATK by [2, SP] ([4, SP] if the user is in PSYCHIC_FIELD) on each hit.
-- Smolive Line: regular attacks now scale with AP, SPEED 25 → 42
-
-# Items
+- Smoliv line: regular attacks now scale with AP, SPEED 25 → 42
+- Reworked Ability Fennekin line: Deals [25,50,100,SP] SPECIAL to the target, reduces its AP by [10, SP]. Scorches the target tile and those flanking and behind it with embers. BOARD_EFFECT: embers deal 10 SPECIAL per second and BURN non FLYING or FIRE Pokémon that walk on it.
 - When Pikachu is send to the dojo, obtain a TRAINING_RIBBON. Can be used to evolve Pikachu into Pikachu Libre.
 
 # Changes to Rarity, Typings, etc.
@@ -34,6 +33,7 @@
 - Sceptile: Grass Dragon pogchamp
 - Greninja: moved to regional, Aquatic in Dark :kreygasm:
 - Torracat: nice Buff for Fire Field, with Scorbunny early into Cyndaquil late game
+- Eelektross: adjusted stats
 
 ## Rare
 - Corviknight: moved to regular, buffed HP and PP
@@ -70,6 +70,7 @@
 - Ludicolo: adjusted stats
 - Delphox: PP Buff for high single
 - Meowscarada: adjusted stats
+- Dragapult: added FOSSIL
 
 ## Unique
 - Absol: added FAIRY, ill add the Mega Evolutions at some point
