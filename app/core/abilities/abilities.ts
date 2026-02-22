@@ -1036,9 +1036,27 @@ export class MysticalFireStrategy extends AbilityStrategy {
     crit: boolean
   ) {
     super.process(pokemon, board, target, crit)
-    const damage = [20, 60, 120][pokemon.stars - 1] ?? 120
+    const damage = [25, 50, 100][pokemon.stars - 1] ?? 100
+
     target.handleSpecialDamage(damage, board, AttackType.SPECIAL, pokemon, crit)
-    target.addAbilityPower(-20, pokemon, 1, crit)
+    target.addAbilityPower(-10, pokemon, 1, crit)
+
+    const dx = target.positionX - pokemon.positionX
+    const dy = target.positionY - pokemon.positionY
+
+    const cells = board.getAdjacentCells(target.positionX, target.positionY, false)
+    cells
+      .filter((cell) => {
+        const cx = cell.x - target.positionX
+        const cy = cell.y - target.positionY
+        return cx * dx + cy * dy >= 0 // strictly behind the target
+      })
+      .forEach((cell) => {
+        board.addBoardEffect(cell.x, cell.y, EffectEnum.EMBER, pokemon.simulation)
+      }) 
+    // and target
+    board.addBoardEffect(target.positionX, target.positionY, EffectEnum.EMBER, pokemon.simulation)
+
   }
 }
 
@@ -5353,7 +5371,7 @@ export class HexStrategy extends AbilityStrategy {
     crit: boolean
   ) {
     super.process(pokemon, board, target, crit)
-    let damage = pokemon.stars === 3 ? 80 : pokemon.stars === 2 ? 40 : 20
+    let damage = pokemon.stars === 3 ? 60 : pokemon.stars === 2 ? 40 : 20
     if (target.status.hasNegativeStatus()) {
       damage = damage * 2
     }

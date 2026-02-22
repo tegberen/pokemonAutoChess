@@ -2696,7 +2696,7 @@ export class Lombre extends Pokemon {
   evolution = Pkm.LUDICOLO
   evolutionRule = new HatchEvolutionRule()
   hp = 130
-  atk = 12
+  atk = 14
   speed = 47
   def = 4
   speDef = 4
@@ -2715,7 +2715,7 @@ export class Ludicolo extends Pokemon {
   rarity = Rarity.HATCH
   stars = 3
   hp = 190
-  atk = 22
+  atk = 24
   speed = 47
   def = 6
   speDef = 6
@@ -8077,7 +8077,7 @@ export class Cradily extends Pokemon {
 }
 
 export class Cranidos extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.FOSSIL, Synergy.MONSTER])
+  types = new SetSchema<Synergy>([Synergy.ROCK, Synergy.FOSSIL, Synergy.MONSTER])
   rarity = Rarity.UNCOMMON
   stars = 1
   evolution = Pkm.RAMPARDOS
@@ -8093,7 +8093,7 @@ export class Cranidos extends Pokemon {
 }
 
 export class Rampardos extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.FOSSIL, Synergy.MONSTER])
+  types = new SetSchema<Synergy>([Synergy.ROCK, Synergy.FOSSIL, Synergy.MONSTER])
   rarity = Rarity.UNCOMMON
   stars = 2
   hp = 160
@@ -8108,7 +8108,7 @@ export class Rampardos extends Pokemon {
 }
 
 export class Kabuto extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.FOSSIL, Synergy.WATER])
+  types = new SetSchema<Synergy>([Synergy.ROCK, Synergy.WATER, Synergy.FOSSIL])
   rarity = Rarity.RARE
   stars = 1
   evolution = Pkm.KABUTOPS
@@ -8124,7 +8124,7 @@ export class Kabuto extends Pokemon {
 }
 
 export class Kabutops extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.FOSSIL, Synergy.WATER])
+  types = new SetSchema<Synergy>([Synergy.ROCK, Synergy.WATER, Synergy.FOSSIL])
   rarity = Rarity.RARE
   stars = 2
   hp = 190
@@ -8356,12 +8356,12 @@ export class Fennekin extends Pokemon {
   stars = 1
   evolution = Pkm.BRAIXEN
   evolutionRule = new HatchEvolutionRule()
-  hp = 50
-  atk = 4
+  hp = 70
+  atk = 5
   speed = 58
   def = 2
   speDef = 2
-  maxPP = 60
+  maxPP = 100
   range = 2
   skill = Ability.MYSTICAL_FIRE
   passive = Passive.HATCH
@@ -8372,12 +8372,12 @@ export class Braixen extends Pokemon {
   stars = 2
   evolution = Pkm.DELPHOX
   evolutionRule = new HatchEvolutionRule()
-  hp = 90
-  atk = 8
+  hp = 110
+  atk = 9
   speed = 58
   def = 4
   speDef = 4
-  maxPP = 60
+  maxPP = 100
   range = 2
   skill = Ability.MYSTICAL_FIRE
   passive = Passive.HATCH
@@ -8386,12 +8386,12 @@ export class Delphox extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.FIRE, Synergy.PSYCHIC, Synergy.HUMAN])
   rarity = Rarity.HATCH
   stars = 3
-  hp = 200
-  atk = 16
+  hp = 220
+  atk = 17
   speed = 58
-  def = 6
-  speDef = 6
-  maxPP = 60
+  def = 8
+  speDef = 8
+  maxPP = 100
   range = 2
   skill = Ability.MYSTICAL_FIRE
 }
