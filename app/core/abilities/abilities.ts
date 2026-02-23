@@ -181,6 +181,78 @@ export class GlaciateStrategy extends AbilityStrategy {
   }
 }
 
+export class IceBurnStrategy extends AbilityStrategy {
+  process(
+    pokemon: PokemonEntity,
+    board: Board,
+    target: PokemonEntity,
+    crit: boolean
+  ) {
+    super.process(pokemon, board, target, crit)
+    const iceSynergyLevel = pokemon.player?.synergies.get(Synergy.ICE) ?? 0
+    const fireSynergyLevel = pokemon.player?.synergies.get(Synergy.FIRE) ?? 0
+    const damage = 50 + iceSynergyLevel * 10 + fireSynergyLevel * 10
+
+    const cells = board.getAdjacentCells(target.positionX, target.positionY, true)
+    cells.forEach((cell) => {
+      if (cell.value && cell.value.team !== pokemon.team) {
+        cell.value.handleSpecialDamage(damage, board, AttackType.SPECIAL, pokemon, crit)
+        cell.value.status.triggerBurn(2000, cell.value, pokemon)
+      }
+    })
+
+    pokemon.simulation.room.clock.setTimeout(() => {
+      if (!pokemon.simulation || !pokemon.simulation.room || pokemon.simulation.finished) return
+      cells.forEach((cell) => {
+        if (cell.value && cell.value.team !== pokemon.team && cell.value.status.burn) {
+          pokemon.broadcastAbility({
+            targetX: cell.value.positionX,
+            targetY: cell.value.positionY,
+            skill: Ability.SHEER_COLD
+          })
+          cell.value.handleSpecialDamage(9999, board, AttackType.SPECIAL, pokemon, crit)
+        }
+      })
+    }, 4000)
+  }
+}
+
+export class FreezeShockStrategy extends AbilityStrategy {
+  process(
+    pokemon: PokemonEntity,
+    board: Board,
+    target: PokemonEntity,
+    crit: boolean
+  ) {
+    super.process(pokemon, board, target, crit)
+    const iceSynergyLevel = pokemon.player?.synergies.get(Synergy.ICE) ?? 0
+    const electricSynergyLevel = pokemon.player?.synergies.get(Synergy.ELECTRIC) ?? 0
+    const damage = 50 + iceSynergyLevel * 10 + electricSynergyLevel * 10
+
+    const cells = board.getAdjacentCells(target.positionX, target.positionY, true)
+    cells.forEach((cell) => {
+      if (cell.value && cell.value.team !== pokemon.team) {
+        cell.value.handleSpecialDamage(damage, board, AttackType.SPECIAL, pokemon, crit)
+        cell.value.status.triggerParalysis(2000, cell.value, pokemon)
+      }
+    })
+
+    pokemon.simulation.room.clock.setTimeout(() => {
+      if (!pokemon.simulation || !pokemon.simulation.room || pokemon.simulation.finished) return
+      cells.forEach((cell) => {
+        if (cell.value && cell.value.team !== pokemon.team && cell.value.status.paralysis) {
+          pokemon.broadcastAbility({
+            targetX: cell.value.positionX,
+            targetY: cell.value.positionY,
+            skill: Ability.SHEER_COLD
+          })
+          cell.value.handleSpecialDamage(9999, board, AttackType.SPECIAL, pokemon, crit)
+        }
+      })
+    }, 4000)
+  }
+}
+
 export class BeatUpStrategy extends AbilityStrategy {
   process(
     pokemon: PokemonEntity,
@@ -16585,6 +16657,8 @@ export const AbilityStrategies: { [key in Ability]: AbilityStrategy } = {
   [Ability.POISON_STING]: new PoisonStingStrategy(),
   [Ability.TRANSE]: new TranseStrategy(),
   [Ability.GLACIATE]: new GlaciateStrategy(),
+  [Ability.FREEZE_SHOCK]: new FreezeShockStrategy(),
+  [Ability.ICE_BURN]: new IceBurnStrategy(),
   [Ability.WOOD_HAMMER]: new WoodHammerStrategy(),
   [Ability.TRICK_OR_TREAT]: new TrickOrTreatStrategy(),
   [Ability.FREEZING_GLARE]: new FreezingGlareStrategy(),

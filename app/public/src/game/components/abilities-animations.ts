@@ -1518,6 +1518,12 @@ export const AbilitiesAnimations: {
   }),
   [Ability.BLUE_FLARE]: projectile({ scale: 3 }),
   [Ability.GLACIATE]: projectile({ scale: 3, duration: 1000 }),
+  [Ability.ICE_BURN]: [
+    projectile({ ability: Ability.BLUE_FLARE, scale: 3, tint: 0xC7E2E0 }), 
+  ],
+  [Ability.FREEZE_SHOCK]: [
+    projectile({ ability: Ability.FUSION_BOLT, scale: 3, tint: 0xC7E2E0 }), 
+  ],
   [Ability.WHEEL_OF_FIRE]: projectile({
     ease: "Power2",
     tweenProps: { yoyo: true }
