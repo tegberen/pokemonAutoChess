@@ -7140,15 +7140,48 @@ export class Marshadow extends Pokemon {
 export class Kyurem extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.DRAGON, Synergy.ICE])
   rarity = Rarity.LEGENDARY
+  evolutions = [Pkm.KYUREM_WHITE, Pkm.KYUREM_BLACK]
+  evolutionRule = new ItemEvolutionRule([Item.DNA_SPLICER])
   stars = 3
   hp = 200
   atk = 27
   speed = 55
-  def = 6
-  speDef = 12
+  def = 10
+  speDef = 10
   maxPP = 100
   range = 3
   skill = Ability.GLACIATE
+  afterSell(player: Player): void {
+    removeInArray(player.items, Item.DNA_SPLICER)
+  }
+}
+
+export class WhiteKyurem extends Pokemon {
+  types = new SetSchema<Synergy>([Synergy.DRAGON, Synergy.ICE, Synergy.FIRE])
+  rarity = Rarity.LEGENDARY
+  stars = 4
+  hp = 220
+  atk = 30
+  speed = 55
+  def = 10
+  speDef = 12
+  maxPP = 130
+  range = 3
+  skill = Ability.ICE_BURN
+}
+
+export class BlackKyurem extends Pokemon {
+  types = new SetSchema<Synergy>([Synergy.DRAGON, Synergy.ICE, Synergy.ELECTRIC])
+  rarity = Rarity.LEGENDARY
+  stars = 4
+  hp = 220
+  atk = 32
+  speed = 55
+  def = 12
+  speDef = 10
+  maxPP = 140
+  range = 3
+  skill = Ability.FREEZE_SHOCK
 }
 
 export class Reshiram extends Pokemon {
@@ -20580,6 +20613,8 @@ export const PokemonClasses: Record<
   [Pkm.MEWTWO]: Mewtwo,
   [Pkm.SHADOW_MEWTWO]: ShadowMewtwo,
   [Pkm.KYUREM]: Kyurem,
+  [Pkm.KYUREM_WHITE]: WhiteKyurem,
+  [Pkm.KYUREM_BLACK]: BlackKyurem,
   [Pkm.RESHIRAM]: Reshiram,
   [Pkm.ZEKROM]: Zekrom,
   [Pkm.CELEBI]: Celebi,

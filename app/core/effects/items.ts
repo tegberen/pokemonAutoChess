@@ -1013,6 +1013,20 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
     })
   ],
 
+  // should not "unevolve" to kyurem
+  [Item.DNA_SPLICER]: [
+    new OnItemDroppedEffect(({ pokemon, player }) => {
+      if (pokemon?.name === Pkm.KYUREM) {
+        player.transformPokemon(pokemon, Pkm.KYUREM_WHITE)
+      } else if (pokemon?.name === Pkm.KYUREM_WHITE) {
+        player.transformPokemon(pokemon, Pkm.KYUREM_BLACK)
+      } else if (pokemon?.name === Pkm.KYUREM_BLACK) {
+        player.transformPokemon(pokemon, Pkm.KYUREM_WHITE)
+      }
+      return false
+    })
+  ],
+
   [Item.ZYGARDE_CUBE]: [
     new OnItemDroppedEffect(({ pokemon, player }) => {
       if (pokemon?.passive === Passive.ZYGARDE) {
