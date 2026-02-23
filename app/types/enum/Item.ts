@@ -106,6 +106,7 @@ export enum Item {
   MAX_ELIXIR = "MAX_ELIXIR",
   METEORITE = "METEORITE",
   ROTOM_CATALOG = "ROTOM_CATALOG",
+  DNA_SPLICER = "DNA_SPLICER",
   TRASH = "TRASH",
   DYNAMAX_BAND = "DYNAMAX_BAND",
   SHINY_STONE = "SHINY_STONE",
@@ -424,6 +425,7 @@ export const SpecialItems: Item[] = [
   Item.RICH_MULCH,
   Item.AMAZE_MULCH,
   Item.ROTOM_CATALOG,
+  Item.DNA_SPLICER,
   Item.TEAL_MASK,
   Item.WELLSPRING_MASK,
   Item.CORNERSTONE_MASK,
@@ -461,7 +463,7 @@ export const ItemComponentsNoFossilOrScarf: Item[] = [
   Item.CHARCOAL,
   Item.MAGNET,
   Item.BLACK_GLASSES,
-  Item.TWISTED_SPOON
+  Item.TWISTED_SPOON,
 ]
 
 export const ItemComponentsNoScarf: Item[] = [
@@ -1070,6 +1072,7 @@ export const UnholdableItems = [
   ...MissionOrders,
   Item.METEORITE,
   Item.ROTOM_CATALOG,
+  Item.DNA_SPLICER,
   Item.MYSTERY_BOX,
   Item.TREASURE_BOX,
   Item.ZYGARDE_CUBE,
