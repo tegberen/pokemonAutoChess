@@ -1822,6 +1822,20 @@ export const PokemonAnimations: {
     attackSprite: AttackSprite.ICE_RANGE,
     hitSprite: HitSprite.ICE_HIT
   },
+  [Pkm.KYUREM_BLACK]: {
+    attack: AnimationType.Shoot,
+    ability: AnimationType.Attack,
+    emote: AnimationType.Charge,
+    attackSprite: AttackSprite.ELECTRIC_RANGE,
+    hitSprite: HitSprite.ELECTRIC_HIT
+  },
+  [Pkm.KYUREM_WHITE]: {
+    attack: AnimationType.Shoot,
+    ability: AnimationType.Attack,
+    emote: AnimationType.Charge,
+    attackSprite: AttackSprite.FIRE_RANGE,
+    hitSprite: HitSprite.FIRE_HIT
+  },
   [Pkm.RESHIRAM]: {
     attack: AnimationType.Attack,
     ability: AnimationType.Charge,

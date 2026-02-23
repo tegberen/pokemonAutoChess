@@ -68,7 +68,7 @@
 - Emboar: overall stronger
 - Serperior: added LIGHT
 - Ludicolo: adjusted stats
-- Delphox: PP Buff for high single
+- Delphox: adjusted stats
 - Meowscarada: adjusted stats
 - Dragapult: added FOSSIL
 
