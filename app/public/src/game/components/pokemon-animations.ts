@@ -420,9 +420,15 @@ export const PokemonAnimations: {
   },
   [Pkm.FERALIGATR]: {
     attack: AnimationType.Strike,
-    ability: AnimationType.Shoot,
+    ability: AnimationType.Charge,
     emote: AnimationType.Shoot,
     attackSprite: AttackSprite.WATER_MELEE
+  },
+  [Pkm.FERALIGATR_PIRATE]: {
+    attack: AnimationType.Strike,
+    ability: AnimationType.Shoot,
+    emote: AnimationType.Charge,
+    attackSprite: AttackSprite.DARK_MELEE
   },
   [Pkm.TREECKO]: {
     attack: AnimationType.Strike,

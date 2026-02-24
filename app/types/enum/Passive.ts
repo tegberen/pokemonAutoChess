@@ -189,5 +189,6 @@ export enum Passive {
   GALE_WINGS = "GALE_WINGS",
   FINIZEN = "FINIZEN",
   MEWTWO = "MEWTWO",
-  KYUREM = "KYUREM"
+  KYUREM = "KYUREM",
+  CROCONAW = "CROCONAW"
 }
