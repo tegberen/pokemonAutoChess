@@ -5451,17 +5451,48 @@ export class DeathWingStrategy extends AbilityStrategy {
     target: PokemonEntity,
     crit: boolean
   ) {
-    super.process(pokemon, board, target, crit)
-    const damage = 150
-    const { takenDamage } = target.handleSpecialDamage(
-      damage,
-      board,
-      AttackType.SPECIAL,
-      pokemon,
-      crit
+    super.process(pokemon, board, target, crit, true)
+    const corner = board.getTeleportationCell(
+      pokemon.positionX,
+      pokemon.positionY,
+      pokemon.team
     )
-    if (takenDamage > 0) {
-      pokemon.handleHeal(Math.round(0.75 * takenDamage), pokemon, 0, false)
+    if (corner) {
+      const targetX = target.positionX
+      const targetY = target.positionY
+      pokemon.moveTo(corner.x, corner.y, board, false)
+      pokemon.range = pokemon.baseRange + 10 // increase range
+      pokemon.commands.push(
+        new DelayedCommand(() => {
+          pokemon.range = pokemon.baseRange
+        }, 3000)
+      )
+      pokemon.commands.push(
+        new DelayedCommand(() => {
+          pokemon.broadcastAbility({
+            positionX: corner.x,
+            positionY: corner.y,
+            targetX: targetX,
+            targetY: targetY
+          })
+          let totalDamage = 0
+          effectInLine(board, pokemon, { positionX: targetX, positionY: targetY } as PokemonEntity, (cell) => {
+            if (cell.value != null && cell.value.team !== pokemon.team) {
+              const { takenDamage } = cell.value.handleSpecialDamage(
+                100,
+                board,
+                AttackType.SPECIAL,
+                pokemon,
+                crit
+              )
+              totalDamage += takenDamage
+            }
+          })
+          if (totalDamage > 0) {
+            pokemon.handleHeal(Math.round(0.75 * totalDamage), pokemon, 0, false)
+          }
+        }, 550)
+      )
     }
   }
 }

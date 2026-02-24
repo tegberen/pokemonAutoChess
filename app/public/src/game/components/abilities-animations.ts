@@ -1256,7 +1256,16 @@ export const AbilitiesAnimations: {
   }),
 
   [Ability.X_SCISSOR]: onTargetScale2,
-  [Ability.DEATH_WING]: onTargetScale2,
+  [Ability.DEATH_WING]: (args) => {
+    onCaster({
+      ability: Ability.MOONGEIST_BEAM,
+      tint: 0xBF1369,
+      origin: [0.5, 0],
+      oriented: true,
+      scale: 2.5,
+      rotation: -Math.PI / 2,
+    })(args)
+  },
   [Ability.GEOMANCY]: onCaster({
     positionOffset: [0, -50],
     depth: DEPTH.ABILITY_GROUND_LEVEL
