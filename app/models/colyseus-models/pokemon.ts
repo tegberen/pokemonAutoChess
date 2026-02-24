@@ -4585,7 +4585,12 @@ export class Croconaw extends Pokemon {
   ])
   rarity = Rarity.RARE
   stars = 2
-  evolution = Pkm.FERALIGATR
+  evolutions = [Pkm.FERALIGATR, Pkm.FERALIGATR_PIRATE]
+  evolutionRule = new CountEvolutionRule(3, (pokemon, player) => {
+    const aquaticCount = player.synergies.get(Synergy.AQUATIC) ?? 0
+    const darkCount = player.synergies.get(Synergy.DARK) ?? 0
+    return darkCount >= aquaticCount ? Pkm.FERALIGATR_PIRATE : Pkm.FERALIGATR
+  })
   hp = 130
   atk = 14
   speed = 50
@@ -4594,6 +4599,7 @@ export class Croconaw extends Pokemon {
   maxPP = 100
   range = 1
   skill = Ability.CRUNCH
+  passive = Passive.CROCONAW
 }
 
 export class Feraligatr extends Pokemon {
@@ -4601,6 +4607,24 @@ export class Feraligatr extends Pokemon {
     Synergy.WATER,
     Synergy.MONSTER,
     Synergy.AQUATIC
+  ])
+  rarity = Rarity.RARE
+  stars = 3
+  hp = 240
+  atk = 27
+  speed = 50
+  def = 10
+  speDef = 10
+  maxPP = 100
+  range = 1
+  skill = Ability.CRUNCH
+}
+
+export class FeraligatrPirate extends Pokemon {
+  types = new SetSchema<Synergy>([
+    Synergy.WATER,
+    Synergy.MONSTER,
+    Synergy.DARK,
   ])
   rarity = Rarity.RARE
   stars = 3
@@ -20340,6 +20364,7 @@ export const PokemonClasses: Record<
   [Pkm.TOTODILE]: Totodile,
   [Pkm.CROCONAW]: Croconaw,
   [Pkm.FERALIGATR]: Feraligatr,
+  [Pkm.FERALIGATR_PIRATE]: FeraligatrPirate,
   [Pkm.TREECKO]: Treecko,
   [Pkm.GROVYLE]: Grovyle,
   [Pkm.SCEPTILE]: Sceptile,

@@ -314,6 +314,7 @@ export enum Pkm {
   FEEBAS = "FEEBAS",
   FENNEKIN = "FENNEKIN",
   FERALIGATR = "FERALIGATR",
+  FERALIGATR_PIRATE = "FERALIGATR_PIRATE",
   FERROSEED = "FERROSEED",
   FERROTHORN = "FERROTHORN",
   FEZANDIPITI = "FEZANDIPITI",
@@ -1363,6 +1364,7 @@ export const PkmIndex: { [key in Pkm]: string } = {
   [Pkm.TOTODILE]: "0158",
   [Pkm.CROCONAW]: "0159",
   [Pkm.FERALIGATR]: "0160",
+  [Pkm.FERALIGATR_PIRATE]: "0160-9999",
   [Pkm.SENTRET]: "0161",
   [Pkm.FURRET]: "0162",
   [Pkm.HOOTHOOT]: "0163",
@@ -2496,6 +2498,7 @@ export const PkmFamily: { [key in Pkm]: Pkm } = {
   [Pkm.TOTODILE]: Pkm.TOTODILE,
   [Pkm.CROCONAW]: Pkm.TOTODILE,
   [Pkm.FERALIGATR]: Pkm.TOTODILE,
+  [Pkm.FERALIGATR_PIRATE]: Pkm.TOTODILE,
   [Pkm.TREECKO]: Pkm.TREECKO,
   [Pkm.GROVYLE]: Pkm.TREECKO,
   [Pkm.SCEPTILE]: Pkm.TREECKO,
@@ -3707,5 +3710,6 @@ export const NON_PMD_PKM_INDEXES: string[] = [
   "0532-0002", // Pillar Wood
   "0533-0002", // Pillar Iron
   "0534-0002", // Pillar Concrete,
-  "0025-9999" // Pikachu Surfer
+  "0025-9999", // Pikachu Surfer,
+  "0160-9999" // Feraligatr Pirate,
 ]
