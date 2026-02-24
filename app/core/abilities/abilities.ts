@@ -209,7 +209,7 @@ export class IceBurnStrategy extends AbilityStrategy {
           cell.value.handleSpecialDamage(9999, board, AttackType.SPECIAL, pokemon, crit)
         }
       })
-    }, 4000)
+    }, 5000)
   }
 }
 
@@ -245,7 +245,7 @@ export class FreezeShockStrategy extends AbilityStrategy {
           cell.value.handleSpecialDamage(9999, board, AttackType.SPECIAL, pokemon, crit)
         }
       })
-    }, 4000)
+    }, 5000)
   }
 }
 
@@ -13283,7 +13283,7 @@ export class ScaleShotStrategy extends AbilityStrategy {
       if (entityOnCell && entityOnCell.team !== pokemon.team) {
         entityOnCell.status.triggerArmorReduction(2000, entityOnCell)
         entityOnCell.handleSpecialDamage(
-          40,
+          20,
           board,
           AttackType.SPECIAL,
           pokemon,
@@ -13312,7 +13312,7 @@ export class ScaleShotStrategy extends AbilityStrategy {
             for (const cell of cellsBetween) {
               if (cell.value && cell.value.team !== pokemon.team) {
                 cell.value.handleSpecialDamage(
-                  cell.value.id === farthestTarget.id ? 20 : 10,
+                  cell.value.id === farthestTarget.id ? 10 : 5,
                   board,
                   AttackType.SPECIAL,
                   pokemon,
