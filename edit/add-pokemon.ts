@@ -331,6 +331,7 @@ class SpriteSheetProcessor {
           actions.add(AnimationType.Hover)
           actions.add(AnimationType.Swing)
           actions.add(AnimationType.Double)
+          actions.add(AnimationType.Strike)
 
           for (const action of actions) {
             let metadata = xmlData.AnimData.Anims.Anim.find(
@@ -597,9 +598,17 @@ function updateEmotionsAndCredits(
         portrait_credit: metadata.portrait_credit,
         sprite_credit: metadata.sprite_credit
       })
-    } else if (NON_PMD_PKM_INDEXES.includes(pkmIndex) === false) {
-      logger.warn(`No tracker information for ${pkmIndex}`)
-    }
+      } else if (NON_PMD_PKM_INDEXES.includes(pkmIndex)) {
+        const portraitPath = pkmIndex.replace(/(\d+)\-/g, "$1/")
+        const portraitDir = `../app/public/src/assets/portraits/${portraitPath}`
+        const emotionsAvailable = emotions.map((emotion) =>
+          fs.existsSync(`${portraitDir}/${emotion}.png`) ? 1 : 0
+        )
+        emotionsPerIndex.set(pkmIndex, emotionsAvailable)
+        logger.log(`${emotionsAvailable.filter((e) => e === 1).length} portraits found for ${formatPokemonName(pkmIndex)}`)
+      } else {
+        logger.warn(`No tracker information for ${pkmIndex}`)
+      }
   }
 
   // save when done
