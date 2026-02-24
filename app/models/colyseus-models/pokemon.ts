@@ -7153,6 +7153,7 @@ export class Kyurem extends Pokemon {
   maxPP = 100
   range = 3
   skill = Ability.GLACIATE
+  passive = Passive.KYUREM
   afterSell(player: Player): void {
     removeInArray(player.items, Item.DNA_SPLICER)
   }
@@ -7163,11 +7164,11 @@ export class WhiteKyurem extends Pokemon {
   rarity = Rarity.LEGENDARY
   stars = 4
   hp = 220
-  atk = 30
+  atk = 24
   speed = 55
   def = 10
   speDef = 12
-  maxPP = 130
+  maxPP = 120
   range = 3
   skill = Ability.ICE_BURN
 }
@@ -7177,7 +7178,7 @@ export class BlackKyurem extends Pokemon {
   rarity = Rarity.LEGENDARY
   stars = 4
   hp = 220
-  atk = 32
+  atk = 30
   speed = 55
   def = 12
   speDef = 10
@@ -7355,7 +7356,7 @@ export class DeoxysAttack extends Pokemon {
   rarity = Rarity.LEGENDARY
   stars = 3
   hp = 250
-  atk = 25
+  atk = 35
   speed = 73
   def = 4
   speDef = 4
@@ -7480,15 +7481,15 @@ export class HooH extends Pokemon {
 
 export class RoaringMoon extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.DRAGON, Synergy.DARK, Synergy.FOSSIL])
-  rarity = Rarity.LEGENDARY
+  rarity = Rarity.UNIQUE
   stars = 3
-  hp = 200
-  atk = 25
+  hp = 180
+  atk = 19
   speed = 61
-  def = 6
-  speDef = 9
-  maxPP = 130
-  range = 3
+  def = 4
+  speDef = 7
+  maxPP = 100
+  range = 2
   skill = Ability.SCALE_SHOT
 }
 
@@ -7670,14 +7671,14 @@ export class Bellossom extends Pokemon {
 }
 
 export class Amaura extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.FOSSIL, Synergy.ICE])
+  types = new SetSchema<Synergy>([Synergy.FOSSIL, Synergy.ICE, Synergy.LIGHT])
   rarity = Rarity.EPIC
   stars = 1
   evolution = Pkm.AURORUS
-  hp = 130
+  hp = 150  
   atk = 7
   speed = 44
-  def = 6
+  def = 4
   speDef = 6
   maxPP = 100
   range = 1
@@ -7686,13 +7687,13 @@ export class Amaura extends Pokemon {
 }
 
 export class Aurorus extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.FOSSIL, Synergy.ICE])
+  types = new SetSchema<Synergy>([Synergy.FOSSIL, Synergy.ICE, Synergy.LIGHT])
   rarity = Rarity.EPIC
   stars = 2
-  hp = 280
-  atk = 18
+  hp = 300
+  atk = 11
   speed = 44
-  def = 10
+  def = 6
   speDef = 10
   maxPP = 100
   range = 1
@@ -7705,11 +7706,11 @@ export class Carbink extends Pokemon {
   rarity = Rarity.EPIC
   stars = 1
   evolution = Pkm.DIANCIE
-  hp = 125
+  hp = 80
   atk = 7
   speed = 41
-  def = 8
-  speDef = 4
+  def = 20
+  speDef = 20
   maxPP = 100
   range = 1
   skill = Ability.DIAMOND_STORM
@@ -7720,11 +7721,11 @@ export class Diancie extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.FOSSIL, Synergy.ROCK, Synergy.FAIRY])
   rarity = Rarity.EPIC
   stars = 2
-  hp = 300
+  hp = 180
   atk = 10
   speed = 41
-  def = 16
-  speDef = 8
+  def = 30
+  speDef = 30
   maxPP = 100
   range = 1
   skill = Ability.DIAMOND_STORM
@@ -10868,7 +10869,7 @@ export class Gothorita extends Pokemon {
   speed = 46
   def = 3
   speDef = 4
-  maxPP = 90
+  maxPP = 100
   range = 3
   skill = Ability.FAKE_TEARS
 }
@@ -10882,7 +10883,7 @@ export class Gothitelle extends Pokemon {
   speed = 46
   def = 4
   speDef = 5
-  maxPP = 80
+  maxPP = 100
   range = 3
   skill = Ability.FAKE_TEARS
 }
