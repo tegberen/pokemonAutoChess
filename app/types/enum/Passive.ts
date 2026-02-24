@@ -194,4 +194,5 @@ export enum Passive {
   FINIZEN = "FINIZEN",
   COMMANDER = "COMMANDER",
   MEWTWO = "MEWTWO",
+  KYUREM = "KYUREM"
 }
