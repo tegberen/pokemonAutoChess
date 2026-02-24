@@ -198,4 +198,5 @@ export enum Passive {
   EISCUE_NOICE = "EISCUE_NOICE",
   WALL_OF_STONE = "WALL_OF_STONE",
   MEWTWO = "MEWTWO",
+  KYUREM = "KYUREM"
 }

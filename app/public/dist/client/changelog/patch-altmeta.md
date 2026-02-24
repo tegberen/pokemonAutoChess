@@ -9,6 +9,7 @@
 - Smoliv line: regular attacks now scale with AP, SPEED 25 → 42
 - Reworked Ability Fennekin line: Deals [25,50,100,SP] SPECIAL to the target, reduces its AP by [10, SP]. Scorches the target tile and those flanking and behind it with embers. BOARD_EFFECT: embers deal 10 SPECIAL per second and BURN non FLYING or FIRE Pokémon that walk on it.
 - When Pikachu is send to the dojo, obtain a TRAINING_RIBBON. Can be used to evolve Pikachu into Pikachu Libre.
+- Deoxys Attack: ATK 25 → 35
 
 # Changes to Rarity, Typings, etc.
 ## Common
@@ -52,6 +53,8 @@
 - Walrein: made it a HP Beast
 - Houndoom: added FIELD, nerfed stats
 - Dusknoir: added AMORPHOUS it can be a carry with SPEED, or be a disruptor with PP items, so it can be played in DARK, GHOST, AMORPHOUS
+- Aurorus: added LIGHT, adjusted stats
+- Diancie: nerfed HP, buffed DEF and SPE_DEF
 
 ## Ultra
 - Ultra Pokemon have twice the HP when evolving into their last form (except Rillaboom kekw)
@@ -75,6 +78,7 @@
 ## Unique
 - Absol: added FAIRY, ill add the Mega Evolutions at some point
 - Veluza: PP 100 → 60
+- Roaring Moon: adjusted stats and ability, lowered PP
 
 ## Legendary
 - Landorus, Thunderus, Tornadus, Enamorus, Marcus: added HUMAN, nerfed HP
