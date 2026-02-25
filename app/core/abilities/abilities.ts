@@ -9456,6 +9456,15 @@ export class CrunchStrategy extends AbilityStrategy {
     )
     if (death) {
       pokemon.handleHeal(Math.ceil(0.5 * target.maxHP), pokemon, 0, false)
+      if (pokemon.passive === Passive.FERALIGATR_PIRATE && pokemon.player) {
+        const moneyStolen = Math.min(target.player.money, 1)
+        if (target.player && moneyStolen > 0) {
+          target.player.addMoney(-moneyStolen, false, target)
+          pokemon.player.addMoney(moneyStolen, true, pokemon)
+          pokemon.count.moneyCount += moneyStolen
+        }
+
+      }
     }
   }
 }

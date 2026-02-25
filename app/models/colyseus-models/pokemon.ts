@@ -4636,6 +4636,7 @@ export class FeraligatrPirate extends Pokemon {
   maxPP = 100
   range = 1
   skill = Ability.CRUNCH
+  passive = Passive.FERALIGATR_PIRATE
 }
 
 export class Azurill extends Pokemon {
