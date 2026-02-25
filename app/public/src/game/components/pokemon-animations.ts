@@ -3478,7 +3478,6 @@ export const PokemonAnimations: {
     ability: AnimationType.Strike,
     emote: AnimationType.Charge,
     attackSprite: AttackSprite.DARK_MELEE,
-    hitSprite: HitSprite.DARK_MELEE
   },
   [Pkm.SNOM]: {
     attack: AnimationType.Shoot,
