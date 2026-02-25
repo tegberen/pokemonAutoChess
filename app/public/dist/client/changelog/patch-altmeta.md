@@ -2,6 +2,10 @@
 - Shadow Mewtwo
 - Pikachu Libre
 - Hisuian Decidueye
+- White Kyurem
+- Black Kyurem
+- Pirate Feraligatr
+- Hisuian Samurott
 
 # Changes to Pokemon & Abilities
 - New Ability for Duskull line, Trick Room: If the target and adjacent enemies are faster than the user, halve their current speed. Otherwise, deal [20,40,80,SP] SPECIAL.
@@ -10,6 +14,7 @@
 - Reworked Ability Fennekin line: Deals [25,50,100,SP] SPECIAL to the target, reduces its AP by [10, SP]. Scorches the target tile and those flanking and behind it with embers. BOARD_EFFECT: embers deal 10 SPECIAL per second and BURN non FLYING or FIRE Pokémon that walk on it.
 - When Pikachu is send to the dojo, obtain a TRAINING_RIBBON. Can be used to evolve Pikachu into Pikachu Libre.
 - Deoxys Attack: ATK 25 → 35
+- Reworked Yveltals Ability: Jump to the backline, then fire a beam in a line dealing [100,SP] SPECIAL to all enemy Pokémon. Heal for 75% of the damage dealt. Will stay in the backline with increased RANGE for 3 seconds.
 
 # Changes to Rarity, Typings, etc.
 ## Common
