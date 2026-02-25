@@ -164,7 +164,10 @@ export const server = defineServer({
               "https://uruwhy.online",
               "https://koala-pac.com",
               "https://pokev9.52kx.net",
-              "https://www.john-auto-chess.com/"
+              "https://john-auto-chess.com",
+              "wss://john-auto-chess.com",
+              "https://www.john-auto-chess.com",
+              "wss://www.john-auto-chess.com",
             ],
             scriptSrc: [
               "'self'",
