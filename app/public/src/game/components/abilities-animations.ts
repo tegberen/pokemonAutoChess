@@ -1321,6 +1321,15 @@ export const AbilitiesAnimations: {
     scale: 3,
     destroyOnComplete: true
   }),
+  [Ability.CEASELESS_EDGE]: projectile({
+    ability: Ability.SOLAR_BLADE,
+    distance: 1,
+    scale: 2,
+    oriented: true,
+    rotation: -Math.PI / 2,
+    duration: 400,
+    tint: 0xe83a3a
+  }),
   [Ability.WAVE_SPLASH]: projectile({
     distance: 2,
     duration: 600,

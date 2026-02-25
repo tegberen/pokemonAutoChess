@@ -10,3 +10,4 @@
 ![Black Kyurem](/assets/portraits/0646/0001/Surprised.png)
 ![White Kyurem](/assets/portraits/0646/0002/Surprised.png)
 ![Feraligatr Pirate](/assets/portraits/0160/9999/Surprised.png)
+![Hisuian Samurott](/assets/portraits/0503/0001/Surprised.png)
