@@ -1711,23 +1711,24 @@ export class Samurott extends Pokemon {
 }
 
 export class HisuiSamurott extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.WATER, Synergy.FIELD, Synergy.DARK])
+  types = new SetSchema<Synergy>([
+    Synergy.WATER,
+    Synergy.DARK,
+    Synergy.STEEL
+  ])
   rarity = Rarity.EPIC
   stars = 3
   hp = 280
   atk = 36
-  speed = 47
+  speed = 56
   def = 14
   speDef = 14
   maxPP = 100
   range = 1
   skill = Ability.CEASELESS_EDGE
   regional = true
-  isInRegion(map: DungeonPMDO | "town", state?: GameState): boolean {
-    const regionSynergies = RegionDetails[map]?.synergies
-    return regionSynergies?.includes(Synergy.DARK)
-  }
 }
+
 export class Larvitar extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.DARK, Synergy.MONSTER, Synergy.ROCK])
   rarity = Rarity.RARE

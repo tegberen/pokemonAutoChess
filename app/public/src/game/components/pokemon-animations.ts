@@ -3476,8 +3476,9 @@ export const PokemonAnimations: {
   [Pkm.HISUI_SAMUROTT]: {
     attack: AnimationType.Attack,
     ability: AnimationType.Strike,
-    emote: AnimationType.Shoot,
-    attackSprite: AttackSprite.DARK_MELEE
+    emote: AnimationType.Charge,
+    attackSprite: AttackSprite.DARK_MELEE,
+    hitSprite: HitSprite.DARK_MELEE
   },
   [Pkm.SNOM]: {
     attack: AnimationType.Shoot,
