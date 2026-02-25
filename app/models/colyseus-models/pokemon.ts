@@ -1676,7 +1676,15 @@ export class Dewott extends Pokemon {
   ])
   rarity = Rarity.EPIC
   stars = 2
-  evolution = Pkm.SAMUROTT
+  evolutions = [Pkm.SAMUROTT, Pkm.HISUI_SAMUROTT]
+  evolutionRule = new CountEvolutionRule(
+    3,
+    (pokemon: Pokemon, player: IPlayer) => {
+      if (player.regionalPokemons.includes(Pkm.HISUI_SAMUROTT))
+        return Pkm.HISUI_SAMUROTT
+      else return Pkm.SAMUROTT
+    }
+  )
   hp = 170
   atk = 15
   speed = 47
@@ -1703,6 +1711,25 @@ export class Samurott extends Pokemon {
   maxPP = 100
   range = 1
   skill = Ability.AQUA_TAIL
+}
+
+export class HisuiSamurott extends Pokemon {
+  types = new SetSchema<Synergy>([
+    Synergy.WATER,
+    Synergy.DARK,
+    Synergy.STEEL
+  ])
+  rarity = Rarity.EPIC
+  stars = 3
+  hp = 280
+  atk = 36
+  speed = 56
+  def = 14
+  speDef = 14
+  maxPP = 100
+  range = 1
+  skill = Ability.CEASELESS_EDGE
+  regional = true
 }
 
 export class Larvitar extends Pokemon {
@@ -20891,6 +20918,7 @@ export const PokemonClasses: Record<
   [Pkm.OSHAWOTT]: Oshawott,
   [Pkm.DEWOTT]: Dewott,
   [Pkm.SAMUROTT]: Samurott,
+  [Pkm.HISUI_SAMUROTT]: HisuiSamurott,
   [Pkm.SNOM]: Snom,
   [Pkm.FROSMOTH]: Frosmoth,
   [Pkm.WAILMER]: Wailmer,

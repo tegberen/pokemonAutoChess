@@ -4038,6 +4038,33 @@ export class AquaTailStrategy extends AbilityStrategy {
   }
 }
 
+export class CeaslessEdgeStrategy extends AbilityStrategy {
+  canCritByDefault = true
+  process(
+    pokemon: PokemonEntity,
+    board: Board,
+    target: PokemonEntity,
+    crit: boolean
+  ) {
+    super.process(pokemon, board, target, crit)
+    const damage = [1, 2, 3][pokemon.stars - 1] * pokemon.atk
+
+    const cells = board.getCellsInFront(pokemon, target, 1)
+    cells.forEach((cell) => {
+      if (cell.value && pokemon.team != cell.value.team) {
+        cell.value.handleSpecialDamage(
+          damage,
+          board,
+          AttackType.TRUE,
+          pokemon,
+          crit
+        )
+        board.addBoardEffect(cell.x, cell.y, EffectEnum.SPIKES, pokemon.simulation)
+      }
+    });
+  }
+}
+
 export class DragonBreathStrategy extends AbilityStrategy {
   process(
     pokemon: PokemonEntity,
@@ -17001,6 +17028,7 @@ export const AbilityStrategies: { [key in Ability]: AbilityStrategy } = {
   [Ability.PSYSHOCK]: new PsyShockStrategy(),
   [Ability.HEAVY_SLAM]: new HeavySlamStrategy(),
   [Ability.AQUA_TAIL]: new AquaTailStrategy(),
+  [Ability.CEASELESS_EDGE]: new CeaslessEdgeStrategy(),
   [Ability.HAIL]: new HailStrategy(),
   [Ability.RAPID_SPIN]: new RapidSpinStrategy(),
   [Ability.BOUNCE]: new BounceStrategy(),
