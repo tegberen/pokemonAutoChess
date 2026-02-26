@@ -270,6 +270,10 @@ export class OnPokemonCatchCommand extends Command<
         this.room.checkEvolutionsAfterPokemonAcquired(playerId)
       }
     } else if (wanderer.type === WandererType.OUTLAW) {
+      if (wanderer.pkm === Pkm.TOGEPI_MAFIA) {
+        // give additonally a random egg when Mafia Togepi pogchamp
+        giveRandomEgg(player, false)
+      }
       player.addMoney(OUTLAW_GOLD_REWARD, true, null)
       removeInArray(player.items, Item.WANTED_NOTICE)
     }
@@ -1927,8 +1931,10 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
 
         if (this.state.outlawStage != null) {
           if (this.state.stageLevel === this.state.outlawStage) {
-            player.spawnWanderingPokemon({
-              pkm: Pkm.DROWZEE,
+            const id = nanoid()
+            const wanderer = new Wanderer({
+              id,
+              pkm: pickRandomIn([Pkm.DROWZEE, Pkm.TOGEPI_MAFIA]),
               shiny: false,
               type: WandererType.OUTLAW,
               behavior: WandererBehavior.RUN_THROUGH,

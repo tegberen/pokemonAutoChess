@@ -2758,6 +2758,20 @@ export class Togepi extends Pokemon {
   skill = Ability.WISH
 }
 
+export class TogepiMafia extends Pokemon {
+  types = new SetSchema<Synergy>([Synergy.FAIRY, Synergy.NORMAL])
+  rarity = Rarity.SPECIAL
+  stars = 1
+  hp = 80
+  atk = 5
+  speed = 51
+  def = 2
+  speDef = 2
+  maxPP = 100
+  range = 2
+  skill = Ability.WISH
+}
+
 export class Togetic extends Pokemon {
   types = new SetSchema<Synergy>([
     Synergy.FAIRY,
@@ -10650,7 +10664,7 @@ export class Serperior extends Pokemon {
 }
 
 export class Starly extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.NORMAL, Synergy.FLYING])
+  types = new SetSchema<Synergy>([Synergy.NORMAL, Synergy.FLYING, Synergy.FIGHTING])
   rarity = Rarity.COMMON
   stars = 1
   evolution = Pkm.STARAVIA
@@ -10669,7 +10683,7 @@ export class Starly extends Pokemon {
 }
 
 export class Staravia extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.NORMAL, Synergy.FLYING])
+  types = new SetSchema<Synergy>([Synergy.NORMAL, Synergy.FLYING, Synergy.FIGHTING])
   rarity = Rarity.COMMON
   stars = 2
   evolution = Pkm.STARAPTOR
@@ -10688,7 +10702,28 @@ export class Staravia extends Pokemon {
 }
 
 export class Staraptor extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.NORMAL, Synergy.FLYING])
+  types = new SetSchema<Synergy>([Synergy.NORMAL, Synergy.FLYING, Synergy.FIGHTING])
+  rarity = Rarity.COMMON
+  stars = 3
+  evolution = Pkm.STARAPTOR_FASHION
+  evolutionRule = new ItemEvolutionRule([Item.SAFETY_GOGGLES])
+  hp = 200
+  atk = 19
+  speed = 57
+  def = 7
+  speDef = 7
+  maxPP = 100
+  range = 1
+  skill = Ability.BRAVE_BIRD
+  regional = true
+  isInRegion(map: DungeonPMDO, state?: GameState) {
+    return Object.keys(DungeonPMDO).indexOf(map) % 3 === 1
+  }
+  passive = Passive.STARAPTOR
+}
+
+export class StaraptorFashion extends Pokemon {
+  types = new SetSchema<Synergy>([Synergy.NORMAL, Synergy.FLYING, Synergy.FIGHTING])
   rarity = Rarity.COMMON
   stars = 3
   hp = 200
@@ -10699,6 +10734,7 @@ export class Staraptor extends Pokemon {
   maxPP = 100
   range = 1
   skill = Ability.BRAVE_BIRD
+  passive = Passive.STARAPTOR_FASHION
   regional = true
   isInRegion(map: DungeonPMDO, state?: GameState) {
     return Object.keys(DungeonPMDO).indexOf(map) % 3 === 1
@@ -10714,8 +10750,8 @@ export class Scorbunny extends Pokemon {
   hp = 70
   atk = 5
   speed = 67
-  def = 4
-  speDef = 4
+  def = 2
+  speDef = 2
   maxPP = 80
   range = 3
   skill = Ability.PYRO_BALL
@@ -10726,17 +10762,22 @@ export class Raboot extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.FIRE, Synergy.FIELD, Synergy.NORMAL])
   rarity = Rarity.COMMON
   stars = 2
-  evolution = Pkm.CINDERACE
-  evolutionRule = new HatchEvolutionRule()
+  evolutions = [Pkm.CINDERACE, Pkm.CINDERACE_PIRATE]
+  evolutionRule = new CountEvolutionRule(3, (pokemon, player) => {
+    const normalCount = player.synergies.get(Synergy.NORMAL) ?? 0
+    const darkCount = player.synergies.get(Synergy.DARK) ?? 0
+    return darkCount >= normalCount ? Pkm.CINDERACE_PIRATE: Pkm.CINDERACE
+  })
+
   hp = 90
   atk = 12
   speed = 67
-  def = 6
-  speDef = 6
+  def = 4
+  speDef = 4
   maxPP = 80
   range = 3
   skill = Ability.PYRO_BALL
-  passive = Passive.HATCH
+  passive = Passive.RABOOT
 }
 
 export class Cinderace extends Pokemon {
@@ -10746,11 +10787,26 @@ export class Cinderace extends Pokemon {
   hp = 150
   atk = 21
   speed = 67
-  def = 9
-  speDef = 9
+  def = 5
+  speDef = 5
   maxPP = 80
   range = 3
   skill = Ability.PYRO_BALL
+}
+
+export class CinderacePirate extends Pokemon {
+  types = new SetSchema<Synergy>([Synergy.FIRE, Synergy.FIELD, Synergy.DARK]) 
+  rarity = Rarity.COMMON
+  stars = 3
+  hp = 150
+  atk = 21
+  speed = 67
+  def = 5
+  speDef = 5
+  maxPP = 80
+  range = 3
+  skill = Ability.PYRO_BALL
+  passive = Passive.CINDERACE_PIRATE
 }
 
 export class AlolanGeodude extends Pokemon {
@@ -20803,6 +20859,7 @@ export const PokemonClasses: Record<
   [Pkm.STARLY]: Starly,
   [Pkm.STARAVIA]: Staravia,
   [Pkm.STARAPTOR]: Staraptor,
+  [Pkm.STARAPTOR_FASHION]: StaraptorFashion,
   [Pkm.CHIKORITA]: Chikorita,
   [Pkm.BAYLEEF]: Bayleef,
   [Pkm.MEGANIUM]: Meganium,
@@ -20862,6 +20919,7 @@ export const PokemonClasses: Record<
   [Pkm.RHYDON]: Rhydon,
   [Pkm.RHYPERIOR]: Rhyperior,
   [Pkm.TOGEPI]: Togepi,
+  [Pkm.TOGEPI_MAFIA]: TogepiMafia,
   [Pkm.TOGETIC]: Togetic,
   [Pkm.TOGEKISS]: Togekiss,
   [Pkm.DUSKULL]: Duskull,
@@ -21280,6 +21338,7 @@ export const PokemonClasses: Record<
   [Pkm.SCORBUNNY]: Scorbunny,
   [Pkm.RABOOT]: Raboot,
   [Pkm.CINDERACE]: Cinderace,
+  [Pkm.CINDERACE_PIRATE]: CinderacePirate,
   [Pkm.SANDSHREW]: Sandshrew,
   [Pkm.SANDSLASH]: Sandslash,
   [Pkm.ALOLAN_SANDSHREW]: AlolanSandshrew,
