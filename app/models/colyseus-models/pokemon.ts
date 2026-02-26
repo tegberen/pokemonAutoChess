@@ -3938,7 +3938,6 @@ export class Chimchar extends Pokemon {
   maxPP = 100
   range = 1
   skill = Ability.TORMENT
-  regional = true
 }
 
 export class Monferno extends Pokemon {
@@ -3958,7 +3957,6 @@ export class Monferno extends Pokemon {
   maxPP = 100
   range = 1
   skill = Ability.TORMENT
-  regional = true
 }
 
 export class Infernape extends Pokemon {
@@ -3977,11 +3975,10 @@ export class Infernape extends Pokemon {
   maxPP = 100
   range = 1
   skill = Ability.TORMENT
-  regional = true
 }
 
 export class Mudkip extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.WATER, Synergy.GROUND])
+  types = new SetSchema<Synergy>([Synergy.AQUATIC, Synergy.GROUND])
   rarity = Rarity.COMMON
   stars = 1
   evolution = Pkm.MARSHTOMP
@@ -4006,7 +4003,7 @@ export class Mudkip extends Pokemon {
 }
 
 export class Marshtomp extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.WATER, Synergy.GROUND])
+  types = new SetSchema<Synergy>([Synergy.AQUATIC, Synergy.GROUND])
   rarity = Rarity.COMMON
   stars = 2
   evolution = Pkm.SWAMPERT
@@ -4031,7 +4028,7 @@ export class Marshtomp extends Pokemon {
 }
 
 export class Swampert extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.WATER, Synergy.GROUND])
+  types = new SetSchema<Synergy>([Synergy.AQUATIC, Synergy.GROUND])
   rarity = Rarity.COMMON
   stars = 3
   hp = 200
@@ -4071,6 +4068,7 @@ export class Torchic extends Pokemon {
   maxPP = 100
   range = 1
   skill = Ability.BLAZE_KICK
+  regional = true
 }
 
 export class Combusken extends Pokemon {
@@ -4090,6 +4088,7 @@ export class Combusken extends Pokemon {
   maxPP = 100
   range = 1
   skill = Ability.BLAZE_KICK
+  regional = true
 }
 
 export class Blaziken extends Pokemon {
@@ -4108,6 +4107,7 @@ export class Blaziken extends Pokemon {
   maxPP = 100
   range = 1
   skill = Ability.BLAZE_KICK
+  regional = true
 }
 
 export class Treecko extends Pokemon {
@@ -5203,6 +5203,7 @@ export class Charmander extends Pokemon {
   maxPP = 100
   range = 1
   skill = Ability.BLAST_BURN
+  regional = true
 }
 
 export class Charmeleon extends Pokemon {
@@ -5218,6 +5219,7 @@ export class Charmeleon extends Pokemon {
   maxPP = 100
   range = 1
   skill = Ability.BLAST_BURN
+  regional = true
 }
 
 export class Charizard extends Pokemon {
@@ -5232,6 +5234,7 @@ export class Charizard extends Pokemon {
   maxPP = 100
   range = 1
   skill = Ability.BLAST_BURN
+  regional = true
 }
 
 export class Magikarp extends Pokemon {
@@ -10875,8 +10878,8 @@ export class Primarina extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.WATER, Synergy.FAIRY, Synergy.SOUND])
   rarity = Rarity.RARE
   stars = 3
-  hp = 230
-  atk = 18
+  hp = 220
+  atk = 21
   speed = 44
   def = 4
   speDef = 8
@@ -10899,7 +10902,7 @@ export class Gothita extends Pokemon {
   maxPP = 100
   range = 3
   skill = Ability.FAKE_TEARS
-
+  regional = true
 }
 
 export class Gothorita extends Pokemon {
@@ -10915,6 +10918,7 @@ export class Gothorita extends Pokemon {
   maxPP = 100
   range = 3
   skill = Ability.FAKE_TEARS
+  regional = true
 }
 
 export class Gothitelle extends Pokemon {
@@ -10929,6 +10933,7 @@ export class Gothitelle extends Pokemon {
   maxPP = 100
   range = 3
   skill = Ability.FAKE_TEARS
+  regional = true
 }
 
 export class Sandshrew extends Pokemon {
@@ -15621,6 +15626,7 @@ export class Grubbin extends Pokemon {
   maxPP = 100
   range = 3
   skill = Ability.ZAP_CANNON
+  regional = true
 }
 
 export class Charjabug extends Pokemon {
@@ -15631,11 +15637,12 @@ export class Charjabug extends Pokemon {
   hp = 160
   atk = 13
   speed = 39
-  def = 6
-  speDef = 6
+  def = 5
+  speDef = 5
   maxPP = 85
   range = 3
   skill = Ability.ZAP_CANNON
+  regional = true
 }
 
 export class Vikavolt extends Pokemon {
@@ -15643,13 +15650,14 @@ export class Vikavolt extends Pokemon {
   rarity = Rarity.RARE
   stars = 3
   hp = 220
-  atk = 24
+  atk = 22
   speed = 39
-  def = 8
-  speDef = 8
+  def = 6
+  speDef = 6
   maxPP = 70
   range = 3
   skill = Ability.ZAP_CANNON
+  regional = true
 }
 
 export class ShellosWestSea extends Pokemon {
