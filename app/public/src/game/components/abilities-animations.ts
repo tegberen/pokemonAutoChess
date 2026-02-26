@@ -927,6 +927,17 @@ export const AbilitiesAnimations: {
     rotation: Math.PI / 2,
     origin: [0.5, 1]
   }),
+  [Ability.WITHDRAW]: OrientationArray.map((orientation) =>
+    projectile({
+      orientation,
+      scale: 1.2,
+      distance: 8,
+      ability: "HYDRO_PUMP",
+      oriented: true,
+      rotation: -Math.PI / 2,
+      duration: 900
+    })
+  ),
   [Ability.SWALLOW]: onCaster({
     ability: Ability.HYDRO_PUMP,
     oriented: true,

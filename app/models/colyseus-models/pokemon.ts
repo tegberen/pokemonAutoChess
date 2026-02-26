@@ -4406,7 +4406,7 @@ export class Squirtle extends Pokemon {
   speDef = 8
   maxPP = 100
   range = 1
-  skill = Ability.HYDRO_PUMP
+  skill = Ability.WITHDRAW
 }
 
 export class Wartortle extends Pokemon {
@@ -4421,7 +4421,7 @@ export class Wartortle extends Pokemon {
   speDef = 10
   maxPP = 100
   range = 1
-  skill = Ability.HYDRO_PUMP
+  skill = Ability.WITHDRAW
 }
 
 export class Blastoise extends Pokemon {
@@ -4435,7 +4435,7 @@ export class Blastoise extends Pokemon {
   speDef = 12
   maxPP = 100
   range = 1
-  skill = Ability.HYDRO_PUMP
+  skill = Ability.WITHDRAW
 }
 
 export class Bellsprout extends Pokemon {

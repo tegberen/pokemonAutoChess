@@ -2858,6 +2858,50 @@ export class HydroPumpStrategy extends AbilityStrategy {
   }
 }
 
+export class WithdrawStrategy extends AbilityStrategy {
+  process(
+    pokemon: PokemonEntity,
+    board: Board,
+    target: PokemonEntity,
+    crit: boolean
+  ) {
+    super.process(pokemon, board, target, crit)
+    const damage = [20, 40, 60][pokemon.stars - 1] ?? 60
+    const cells = board.getAdjacentCells(pokemon.positionX, pokemon.positionY)
+
+    for (const cell of cells) {
+      if (cell.value && cell.value.team !== pokemon.team) {
+        const orientation = board.orientation(
+          pokemon.positionX,
+          pokemon.positionY,
+          cell.value.positionX,
+          cell.value.positionY,
+          pokemon,
+          undefined
+        )
+        const destination = board.getKnockBackPlace(
+          cell.value.positionX,
+          cell.value.positionY,
+          orientation
+        )
+        if (destination) {
+          cell.value.moveTo(destination.x, destination.y, board, true)
+          cell.value.cooldown = 500
+        }
+        cell.value.handleSpecialDamage(
+          damage,
+          board,
+          AttackType.SPECIAL,
+          pokemon,
+          crit
+        )
+      }
+    }
+    const boost = [2, 4, 8][pokemon.stars - 1] ?? 8
+    pokemon.addDefense(boost, pokemon, 1, true)
+  }
+}
+
 export class SolarBeamStrategy extends AbilityStrategy {
   process(
     pokemon: PokemonEntity,
@@ -16368,6 +16412,7 @@ export const AbilityStrategies: { [key in Ability]: AbilityStrategy } = {
   [Ability.THUNDER_SHOCK]: new ThunderShockStrategy(),
   [Ability.THUNDER]: new ThunderStrategy(),
   [Ability.HYDRO_PUMP]: new HydroPumpStrategy(),
+  [Ability.WITHDRAW]: new WithdrawStrategy(),
   [Ability.DRACO_METEOR]: new DracoMeteorStrategy(),
   [Ability.BLAZE_KICK]: new BlazeKickStrategy(),
   [Ability.WISH]: new WishStrategy(),
