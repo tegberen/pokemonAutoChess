@@ -1418,5 +1418,21 @@ export const PassiveEffects: Partial<
         }
       })
     })
+  ],
+  [Passive.CINDERACE_PIRATE]: [
+    new OnSimulationStartEffect(({ simulation, entity }) => {
+      const gold = entity.player.money
+      entity.addCritChance(gold, entity, 0, false)
+    })
+  ],
+  [Passive.STARAPTOR_FASHION]: [
+    new OnKillEffect(({ attacker }) => {
+      if (attacker.player) {
+        attacker.player.addMoney(1, true, attacker)
+        attacker.count.moneyCount += 1
+        attacker.count.amuletCoinCount += 1
+      }
+    })
   ]
+  
 }
