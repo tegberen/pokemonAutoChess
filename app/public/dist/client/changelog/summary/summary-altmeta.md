@@ -11,3 +11,6 @@
 ![White Kyurem](/assets/portraits/0646/0002/Surprised.png)
 ![Feraligatr Pirate](/assets/portraits/0160/9999/Surprised.png)
 ![Hisuian Samurott](/assets/portraits/0503/0001/Surprised.png)
+![Pirate Cinderace](/assets/portraits/0815/9999/Joyous.png)
+![Staraptor Fashion](/assets/portraits/0398/9999/Normal.png)
+![Mafia Togepi](/assets/portraits/0175/9999/Determined.png)

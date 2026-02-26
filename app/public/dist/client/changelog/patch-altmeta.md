@@ -6,6 +6,9 @@
 - Black Kyurem
 - Pirate Feraligatr
 - Hisuian Samurott
+- Pirate Cinderace
+- Fashion Staraptor
+- Mafia Togepi
 
 # Changes to Pokemon & Abilities
 - New Ability for Duskull line, Trick Room: If the target and adjacent enemies are faster than the user, halve their current speed. Otherwise, deal [20,40,80,SP] SPECIAL.
@@ -31,6 +34,7 @@
 - Charizard: moved to regional
 - Orbeetle: moved to regular
 - Swampert: removed WATER, added AQUUATIC
+- Staraptor: added FIGHTING
 
 ## Uncommon
 - Blastoise: adjusted stats for Tank Role
@@ -98,4 +102,5 @@
 - Victini: added GOURMET, Tabasco Dish
 
 # Misc
-- Added Shiniest Hunter: All PvE encounter are shiny 
+- Added Shiniest Hunter: All PvE encounter are shiny
+- New Fugitive
