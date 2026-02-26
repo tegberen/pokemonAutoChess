@@ -364,6 +364,13 @@ export const PokemonAnimations: {
     attackSprite: AttackSprite.FLYING_MELEE,
     hitSprite: HitSprite.FLYING_HIT
   },
+  [Pkm.STARAPTOR_FASHION]: {
+    attack: AnimationType.Attack,
+    ability: AnimationType.Charge,
+    emote: AnimationType.Shoot,
+    attackSprite: AttackSprite.FLYING_MELEE,
+    hitSprite: HitSprite.FLYING_HIT
+  },
   [Pkm.CHIKORITA]: {
     attack: AnimationType.Slam,
     ability: AnimationType.DeepBreath,
@@ -761,6 +768,13 @@ export const PokemonAnimations: {
     attack: AnimationType.Appeal,
     ability: AnimationType.Dance,
     emote: AnimationType.Dance,
+    attackSprite: AttackSprite.FLYING_RANGE,
+    hitSprite: HitSprite.FAIRY_HIT
+  },
+  [Pkm.TOGEPI_MAFIA]: {
+    attack: AnimationType.Attack,
+    ability: AnimationType.Charge,
+    emote: AnimationType.Rotate,
     attackSprite: AttackSprite.FLYING_RANGE,
     hitSprite: HitSprite.FAIRY_HIT
   },
@@ -3566,6 +3580,13 @@ export const PokemonAnimations: {
   [Pkm.CINDERACE]: {
     attack: AnimationType.Slam,
     ability: AnimationType.Kick,
+    emote: AnimationType.Shoot,
+    attackSprite: AttackSprite.FIRE_RANGE,
+    hitSprite: HitSprite.FIRE_HIT
+  },
+  [Pkm.CINDERACE_PIRATE]: {
+    attack: AnimationType.Shoot,
+    ability: AnimationType.Strike,
     emote: AnimationType.Shoot,
     attackSprite: AttackSprite.FIRE_RANGE,
     hitSprite: HitSprite.FIRE_HIT
