@@ -5695,7 +5695,7 @@ export class GalarianMoltres extends Pokemon {
   maxPP = 100
   range = 2
   skill = Ability.FIERY_WRATH
-  regional = true
+  regional = false
   isInRegion(map: DungeonPMDO) {
     const regionSynergies = RegionDetails[map]?.synergies
     return (
@@ -16539,7 +16539,7 @@ export class OgerponTeal extends Pokemon {
   onAcquired = (player: Player) => ogerponOnAcquired(player, null)
   afterSell = (player: Player) => ogerponOnSell(player)
   passive = Passive.OGERPON_TEAL
-  regional = true
+  regional = false
   isInRegion(map: DungeonPMDO): boolean {
     const regionSynergies = RegionDetails[map]?.synergies
     return regionSynergies?.includes(Synergy.FLORA)
@@ -16562,7 +16562,7 @@ export class OgerponTealMask extends Pokemon {
   onAcquired = (player: Player) => ogerponOnAcquired(player, Item.TEAL_MASK)
   afterSell = (player: Player) => ogerponOnSell(player)
   passive = Passive.OGERPON_TEAL
-  regional = true
+  regional = false
   isInRegion(map: DungeonPMDO): boolean {
     const regionSynergies = RegionDetails[map]?.synergies
     return regionSynergies?.includes(Synergy.FLORA)
@@ -16584,7 +16584,7 @@ export class OgerponWellspring extends Pokemon {
   onAcquired = (player: Player) => ogerponOnAcquired(player, null)
   afterSell = (player: Player) => ogerponOnSell(player)
   passive = Passive.OGERPON_WELLSPRING
-  regional = true
+  regional = false
   isInRegion(map: DungeonPMDO): boolean {
     const regionSynergies = RegionDetails[map]?.synergies
     return regionSynergies?.includes(Synergy.AQUATIC)
@@ -16608,7 +16608,7 @@ export class OgerponWellspringMask extends Pokemon {
     ogerponOnAcquired(player, Item.WELLSPRING_MASK)
   afterSell = (player: Player) => ogerponOnSell(player)
   passive = Passive.OGERPON_WELLSPRING
-  regional = true
+  regional = false
   isInRegion(map: DungeonPMDO): boolean {
     const regionSynergies = RegionDetails[map]?.synergies
     return regionSynergies?.includes(Synergy.AQUATIC)
@@ -16630,7 +16630,7 @@ export class OgerponHearthflame extends Pokemon {
   onAcquired = (player: Player) => ogerponOnAcquired(player, null)
   afterSell = (player: Player) => ogerponOnSell(player)
   passive = Passive.OGERPON_HEARTHFLAME
-  regional = true
+  regional = false
   isInRegion(map: DungeonPMDO): boolean {
     const regionSynergies = RegionDetails[map]?.synergies
     return regionSynergies?.includes(Synergy.FIRE)
@@ -16654,7 +16654,7 @@ export class OgerponHearthflameMask extends Pokemon {
     ogerponOnAcquired(player, Item.HEARTHFLAME_MASK)
   afterSell = (player: Player) => ogerponOnSell(player)
   passive = Passive.OGERPON_HEARTHFLAME
-  regional = true
+  regional = false
   isInRegion(map: DungeonPMDO): boolean {
     const regionSynergies = RegionDetails[map]?.synergies
     return regionSynergies?.includes(Synergy.FIRE)
@@ -16676,7 +16676,7 @@ export class OgerponCornerstone extends Pokemon {
   onAcquired = (player: Player) => ogerponOnAcquired(player, null)
   afterSell = (player: Player) => ogerponOnSell(player)
   passive = Passive.OGERPON_CORNERSTONE
-  regional = true
+  regional = false
   isInRegion(map: DungeonPMDO): boolean {
     const regionSynergies = RegionDetails[map]?.synergies
     return regionSynergies?.includes(Synergy.ROCK)
@@ -16700,7 +16700,7 @@ export class OgerponCornerstoneMask extends Pokemon {
     ogerponOnAcquired(player, Item.CORNERSTONE_MASK)
   afterSell = (player: Player) => ogerponOnSell(player)
   passive = Passive.OGERPON_CORNERSTONE
-  regional = true
+  regional = false
   isInRegion(map: DungeonPMDO): boolean {
     const regionSynergies = RegionDetails[map]?.synergies
     return regionSynergies?.includes(Synergy.ROCK)
