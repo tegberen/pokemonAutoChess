@@ -26,7 +26,10 @@
 - Mamoosh: added FOSSIL
 - Cherrim Sunlight: moved to regular (does not evolve via lightspot)
 - Shiftry: added ICE, nerfed SPE_DEF
-- Gothitelle: added DARK, adjusted stats
+- Gothitelle: moved to regional, added DARK, adjusted stats
+- Charizard: moved to regional
+- Orbeetle: moved to regular
+- Swampert: removed WATER, added AQUUATIC
 
 ## Uncommon
 - Blastoise: adjusted stats for Tank Role
@@ -48,11 +51,12 @@
 - Pangoro: added WILD
 - Sharpedo: added WILD
 - both Yamask forms: added FOSSIL
-- Vikavolt: added AMORPHOUS, small adjustments
+- Vikavolt: moved to regional, added AMORPHOUS, small adjustments
 - Primarina: moved to regional, adjusted stats
+- Blaziken: moved to regional
 
 ## Epic
-- Dragonite: regional, it does not have the new ability from Curry yet
+- Dragonite: moved to regular,it does not have the new ability from Curry yet
 - Typhlosion: adjusted stats
 - Gigalith: is now SOUND, reduced PP, nerfed HP
 - Walrein: made it a HP Beast
