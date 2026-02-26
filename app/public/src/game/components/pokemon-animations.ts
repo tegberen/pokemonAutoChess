@@ -92,21 +92,21 @@ export const PokemonAnimations: {
   },
   [Pkm.SQUIRTLE]: {
     attack: AnimationType.Shoot,
-    ability: AnimationType.DeepBreath,
+    ability: AnimationType.Withdraw,
     emote: AnimationType.Pose,
     attackSprite: AttackSprite.WATER_RANGE,
     hitSprite: HitSprite.WATER_HIT
   },
   [Pkm.WARTORTLE]: {
     attack: AnimationType.Ricochet,
-    ability: AnimationType.Shoot,
+    ability: AnimationType.Withdraw,
     emote: AnimationType.Shoot,
     attackSprite: AttackSprite.WATER_RANGE,
     hitSprite: HitSprite.WATER_HIT
   },
   [Pkm.BLASTOISE]: {
     attack: AnimationType.Ricochet,
-    ability: AnimationType.Shoot,
+    ability: AnimationType.Withdraw,
     emote: AnimationType.Shoot,
     attackSprite: AttackSprite.WATER_RANGE,
     hitSprite: HitSprite.WATER_HIT
