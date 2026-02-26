@@ -5086,7 +5086,6 @@ export class Seedot extends Pokemon {
   maxPP = 100
   range = 1
   skill = Ability.RAZOR_LEAF
-  regional = true
   isInRegion(map: DungeonPMDO, state: GameState) {
     const regionSynergies = RegionDetails[map]?.synergies ?? []
     return regionSynergies.includes(Synergy.DARK)
@@ -5106,7 +5105,6 @@ export class Nuzleaf extends Pokemon {
   maxPP = 100
   range = 1
   skill = Ability.RAZOR_LEAF
-  regional = true
   isInRegion(map: DungeonPMDO, state: GameState) {
     const regionSynergies = RegionDetails[map]?.synergies ?? []
     return regionSynergies.includes(Synergy.DARK)
@@ -5125,7 +5123,6 @@ export class Shiftry extends Pokemon {
   maxPP = 100
   range = 1
   skill = Ability.RAZOR_LEAF
-  regional = true
   isInRegion(map: DungeonPMDO, state: GameState) {
     const regionSynergies = RegionDetails[map]?.synergies ?? []
     return regionSynergies.includes(Synergy.DARK)
