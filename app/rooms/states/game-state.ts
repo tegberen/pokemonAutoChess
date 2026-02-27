@@ -50,6 +50,7 @@ export default class GameState extends Schema {
   @type("uint8") lightY = randomBetween(1, BOARD_HEIGHT / 2)
   @type("string") specialGameRule: SpecialGameRule | null = null
   @type("string") townEncounter: TownEncounter | null = null
+  @type("number") currentPveVariantIndex: number = 0
   time = StageDuration[0] * 1000
   updatePhaseNeeded = false
   botManager: BotManager = new BotManager()

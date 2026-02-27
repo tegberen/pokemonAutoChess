@@ -1415,14 +1415,19 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
     this.spawnWanderingPokemons()
 
     // PvE stage initialization
-    const pveStage = PVEStages[this.state.stageLevel]
-    if (pveStage) {
+    const pveStageBase = PVEStages[this.state.stageLevel]
+    if (pveStageBase) {
+      const allOptions = pveStageBase.variants
+        ? [pveStageBase, ...pveStageBase.variants]
+        : [pveStageBase]
+      this.state.currentPveVariantIndex = Math.floor(Math.random() * allOptions.length)
+
       this.state.shinyEncounter =
         this.state.townEncounter === TownEncounters.CELEBI ||
         (this.state.specialGameRule === SpecialGameRule.SHINY_HUNTER &&
-          pveStage.shinyChance !== undefined) ||
+          pveStageBase.shinyChance !== undefined) ||
         this.state.specialGameRule === SpecialGameRule.SHINIEST_HUNTER ||
-        chance(pveStage.shinyChance ?? 0)
+        chance(pveStageBase.shinyChance ?? 0)
     }
 
     return commands
@@ -1896,8 +1901,16 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
       }
     })
 
-    const pveStage = PVEStages[this.state.stageLevel]
-    if (pveStage) {
+    const pveStageBase = PVEStages[this.state.stageLevel]
+    if (pveStageBase) {
+      const allOptions = pveStageBase.variants
+        ? [pveStageBase, ...pveStageBase.variants]
+        : [pveStageBase]
+      const { variants, ...pveStage } = {
+        ...pveStageBase,
+        ...allOptions[this.state.currentPveVariantIndex]
+      }
+
       this.state.players.forEach((player: Player) => {
         if (player.alive) {
           player.opponentId = "pve"
