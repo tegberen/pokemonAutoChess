@@ -1421,7 +1421,7 @@ export const PassiveEffects: Partial<
   ],
   [Passive.CINDERACE_PIRATE]: [
     new OnSimulationStartEffect(({ simulation, entity }) => {
-      const gold = entity.player.money
+      const gold = entity.player?.money ?? 0
       entity.addCritChance(gold, entity, 0, false)
     })
   ],
