@@ -100,7 +100,25 @@ export const PVEStages: { [turn: number]: PVEStage } = {
         board: [
           [Pkm.SENTRET, 3, 1],
           [Pkm.SENTRET, 5, 1]
-        ]
+        ],
+        statBoosts: {
+          [Stat.ATK]: -2,
+          [Stat.DEF]: -6,
+          [Stat.SPE_DEF]: -6
+        }
+      },
+      {
+        name: "pkm.PATRAT",
+        avatar: Pkm.PATRAT,
+        board: [
+          [Pkm.PATRAT, 3, 1],
+          [Pkm.PATRAT, 5, 1]
+        ],
+        statBoosts: {
+          [Stat.ATK]: -6,
+          [Stat.DEF]: -3,
+          [Stat.SPE_DEF]: -3
+        }
       },
       {
         name: "pkm.BIDOOF",
@@ -188,6 +206,20 @@ export const PVEStages: { [turn: number]: PVEStage } = {
           [Pkm.PIDOVE, 5, 1],
           [Pkm.PIDOVE, 4, 2]
         ]
+      },
+      {
+        name: "pkm.DODUO",
+        avatar: Pkm.DODUO,
+        board: [
+          [Pkm.DODUO, 3, 1],
+          [Pkm.DODUO, 5, 1],
+          [Pkm.DODUO, 4, 2]
+        ],
+        statBoosts: {
+          [Stat.ATK]: -8,
+          [Stat.DEF]: -6,
+          [Stat.SPE_DEF]: -4
+        }
       }
     ],
     rewards: ItemComponentsNoFossilOrScarf,
