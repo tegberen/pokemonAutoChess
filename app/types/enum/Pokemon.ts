@@ -863,7 +863,6 @@ export enum Pkm {
   SEVIPER = "SEVIPER",
   SEWADDLE = "SEWADDLE",
   SHADOW_LUGIA = "SHADOW_LUGIA",
-  SHADOW_MEWTWO = "SHADOW_MEWTWO",
   SHARPEDO = "SHARPEDO",
   SHAYMIN = "SHAYMIN",
   SHAYMIN_SKY = "SHAYMIN_SKY",
@@ -3653,7 +3652,6 @@ export const PkmRegionalVariants: { [key in Pkm]?: readonly Pkm[] } = {
     Pkm.TAUROS_AQUA_BREED
   ],
   [Pkm.LUGIA]: [Pkm.SHADOW_LUGIA],
-  [Pkm.MEWTWO]: [Pkm.SHADOW_MEWTWO]
 } as const
 
 export function isRegionalVariant(a: Pkm, b: Pkm): boolean {
