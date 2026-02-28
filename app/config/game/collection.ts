@@ -33,13 +33,13 @@ export function getEmotionCost(emotion: Emotion, isShiny: boolean): number {
 
 // should be proportional to rarity
 export const BoosterPriceByRarity: { [key in Rarity]: number } = {
-  [Rarity.COMMON]: 600,
-  [Rarity.UNCOMMON]: 1000,
-  [Rarity.RARE]: 1000,
-  [Rarity.EPIC]: 900,
-  [Rarity.ULTRA]: 300,
-  [Rarity.UNIQUE]: 500,
-  [Rarity.LEGENDARY]: 250,
-  [Rarity.HATCH]: 300,
-  [Rarity.SPECIAL]: 500 // special is a bit more expensive due to unowns farming
+  [Rarity.COMMON]: 1,
+  [Rarity.UNCOMMON]: 1,
+  [Rarity.RARE]: 1,
+  [Rarity.EPIC]: 1,
+  [Rarity.ULTRA]: 1,
+  [Rarity.UNIQUE]: 1,
+  [Rarity.LEGENDARY]: 1,
+  [Rarity.HATCH]: 1,
+  [Rarity.SPECIAL]: 1 // special is a bit more expensive due to unowns farming
 }
