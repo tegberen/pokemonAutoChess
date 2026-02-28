@@ -7166,29 +7166,6 @@ export class ShadowMewtwo extends Pokemon {
   skill = Ability.DARK_NOVA
 }
 
-export class ShadowMewtwo extends Pokemon {
-  types = new SetSchema<Synergy>([
-    Synergy.PSYCHIC,
-    Synergy.MONSTER,
-    Synergy.DARK
-  ])
-  rarity = Rarity.LEGENDARY
-  stars = 3
-  hp = 200
-  atk = 25
-  speed = 67
-  def = 10
-  speDef = 10
-  maxPP = 110
-  range = 3
-  skill = Ability.PSYSTRIKE
-  regional = true
-  isInRegion(map: DungeonPMDO) {
-    const regionSynergies = RegionDetails[map]?.synergies
-    return regionSynergies?.includes(Synergy.DARK)
-  }
-}
-
 export class Marshadow extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.GHOST, Synergy.FIGHTING, Synergy.HUMAN])
   rarity = Rarity.LEGENDARY
