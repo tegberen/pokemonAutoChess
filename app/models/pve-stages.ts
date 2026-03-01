@@ -161,7 +161,8 @@ export const PVEStages: { [turn: number]: PVEStage } = {
         statBoosts: {
           [Stat.ATK]: -4,
           [Stat.DEF]: -8,
-          [Stat.SPE_DEF]: -4
+          [Stat.SPE_DEF]: -4,
+          [Stat.HP]: -10
         }
       }
     ],
@@ -192,7 +193,11 @@ export const PVEStages: { [turn: number]: PVEStage } = {
           [Pkm.STARLY, 3, 1],
           [Pkm.STARLY, 5, 1],
           [Pkm.STARLY, 4, 2]
-        ]
+        ],
+        statBoosts: {
+          [Stat.HP]: -10,
+          [Stat.ATK]: -2
+        }
       },
       {
         name: "pkm.PIDGEY",
@@ -201,7 +206,11 @@ export const PVEStages: { [turn: number]: PVEStage } = {
           [Pkm.PIDGEY, 3, 1],
           [Pkm.PIDGEY, 5, 1],
           [Pkm.PIDGEY, 4, 2]
-        ]
+        ],
+        statBoosts: {
+          [Stat.HP]: -10,
+          [Stat.ATK]: -2
+        }
       },
       {
         name: "pkm.PIDOVE",
@@ -210,7 +219,11 @@ export const PVEStages: { [turn: number]: PVEStage } = {
           [Pkm.PIDOVE, 3, 1],
           [Pkm.PIDOVE, 5, 1],
           [Pkm.PIDOVE, 4, 2]
-        ]
+        ],
+        statBoosts: {
+          [Stat.HP]: -10,
+          [Stat.ATK]: -2
+        }
       },
       {
         name: "pkm.DODUO",
@@ -223,7 +236,8 @@ export const PVEStages: { [turn: number]: PVEStage } = {
         statBoosts: {
           [Stat.ATK]: -8,
           [Stat.DEF]: -6,
-          [Stat.SPE_DEF]: -4
+          [Stat.SPE_DEF]: -4,
+          [Stat.HP]: -30
         }
       }
     ],
@@ -363,7 +377,8 @@ export const PVEStages: { [turn: number]: PVEStage } = {
           [Pkm.YVELTAL, 5, 1]
         ],
         statBoosts: {
-          [Stat.HP]: 50
+          [Stat.HP]: 100,
+          [Stat.PP]: +40
         }
       },
     ],
@@ -415,7 +430,7 @@ export const PVEStages: { [turn: number]: PVEStage } = {
           [Pkm.BLASTOISE, 6, 2]
         ],
         statBoosts: {
-          [Stat.HP]: 50,
+          [Stat.HP]: 100,
           [Stat.ATK]: +10
         }
       },
@@ -428,7 +443,8 @@ export const PVEStages: { [turn: number]: PVEStage } = {
           [Pkm.FERALIGATR, 6, 2]
         ],
         statBoosts: {
-          [Stat.HP]: 50
+          [Stat.HP]: 100,
+          [Stat.ATK]: +10
         }
       },
       {
@@ -440,7 +456,7 @@ export const PVEStages: { [turn: number]: PVEStage } = {
           [Pkm.SWAMPERT, 6, 2]
         ],
         statBoosts: {
-          [Stat.HP]: 50,
+          [Stat.HP]: 100,
           [Stat.ATK]: +10
         }
       },
@@ -453,7 +469,7 @@ export const PVEStages: { [turn: number]: PVEStage } = {
           [Pkm.EMPOLEON, 6, 2]
         ],
         statBoosts: {
-          [Stat.HP]: 50,
+          [Stat.HP]: 100,
           [Stat.ATK]: +10
         }
       },
@@ -466,7 +482,8 @@ export const PVEStages: { [turn: number]: PVEStage } = {
           [Pkm.SAMUROTT, 6, 2]
         ],
         statBoosts: {
-          [Stat.HP]: 50
+          [Stat.HP]: 100,
+          [Stat.ATK]: +10
         }
       },
       {
@@ -478,7 +495,7 @@ export const PVEStages: { [turn: number]: PVEStage } = {
           [Pkm.GRENINJA, 6, 2]
         ],
         statBoosts: {
-          [Stat.HP]: 50,
+          [Stat.HP]: 100,
           [Stat.ATK]: +10
         }
       },
@@ -491,7 +508,7 @@ export const PVEStages: { [turn: number]: PVEStage } = {
           [Pkm.PRIMARINA, 6, 2]
         ],
         statBoosts: {
-          [Stat.HP]: 50,
+          [Stat.HP]: 100,
           [Stat.ATK]: +10
         }
       },
@@ -504,8 +521,7 @@ export const PVEStages: { [turn: number]: PVEStage } = {
           [Pkm.INTELEON, 6, 2]
         ],
         statBoosts: {
-          [Stat.HP]: -50,
-          [Stat.ATK]: -10
+          [Stat.ATK]: +10
         }
       },
 
@@ -563,7 +579,7 @@ export const PVEStages: { [turn: number]: PVEStage } = {
           [Pkm.FEZANDIPITI, 6, 2]
         ],
         statBoosts: {
-          [Stat.HP]: 50
+          [Stat.HP]: 100
         }
       },
       {
@@ -576,7 +592,7 @@ export const PVEStages: { [turn: number]: PVEStage } = {
           [Pkm.OGERPON_TEAL_MASK, 6, 2]
         ],
         statBoosts: {
-          [Stat.HP]: 100
+          [Stat.HP]: 150
         }
       }
     ],

@@ -2839,7 +2839,8 @@
 		"WANTED_NOTICE": "Wanted Notice",
 		"TATSUGIRI_CURLY": "Tatsugiri Commander (Curly)",
 		"TATSUGIRI_DROOPY": "Tatsugiri Commander (Droopy)",
-		"TATSUGIRI_STRETCHY": "Tatsugiri Commander (Stretchy)"
+		"TATSUGIRI_STRETCHY": "Tatsugiri Commander (Stretchy)",
+    	"ELECTRIC_SEED": "Electric Seed"
 	},
 	"item_description": {
 		"FOSSIL_STONE": "A fossil of a Pokémon that lived in prehistoric times",
@@ -3150,7 +3151,8 @@
 		"WANTED_NOTICE": "Wanted: Fainted or Alive\n Reward: 10 GOLD",
 		"TATSUGIRI_CURLY": "Can command a Dondozo.",
 		"TATSUGIRI_DROOPY": "Can command a Dondozo.",
-		"TATSUGIRI_STRETCHY": "Can command a Dondozo."
+		"TATSUGIRI_STRETCHY": "Can command a Dondozo.",
+    	"ELECTRIC_SEED": "Gain 5 DEF, ELECTRIC_FIELD and all bonuses from the active ELECTRIC synergy."
 	},
 	"passive_description": {
 		"NONE": "No passive",
