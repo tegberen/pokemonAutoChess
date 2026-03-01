@@ -5600,7 +5600,7 @@ export class Yveltal extends Pokemon {
   speed = 57
   def = 12
   speDef = 12
-  maxPP = 100
+  maxPP = 90
   range = 1
   skill = Ability.DEATH_WING
 }
@@ -13708,7 +13708,7 @@ export class MausholdFour extends Pokemon {
 }
 
 export class Morpeko extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.DARK, Synergy.ELECTRIC])
+  types = new SetSchema<Synergy>([Synergy.DARK, Synergy.ELECTRIC, Synergy.GOURMET])
   rarity = Rarity.UNIQUE
   stars = 3
   hp = 200
@@ -13723,7 +13723,7 @@ export class Morpeko extends Pokemon {
 }
 
 export class MorpekoHangry extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.DARK, Synergy.ELECTRIC])
+  types = new SetSchema<Synergy>([Synergy.DARK, Synergy.ELECTRIC, Synergy.GOURMET])
   rarity = Rarity.UNIQUE
   stars = 3
   hp = 200

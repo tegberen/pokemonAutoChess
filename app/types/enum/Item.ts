@@ -325,7 +325,8 @@ export enum Item {
   SWITCHER_WAND = "SWITCHER_WAND",
   WHIRLWIND_WAND = "WHIRLWIND_WAND",
   TUNNEL_WAND = "TUNNEL_WAND",
-  TRAINING_RIBBON = "TRAINING_RIBBON"
+  TRAINING_RIBBON = "TRAINING_RIBBON",
+  ELECTRIC_SEED = "ELECTRIC_SEED",
 }
 
 export const MemoryDiscs = [
@@ -1007,7 +1008,8 @@ export const Dishes = [
   Item.TINY_MUSHROOM,
   Item.BIG_MUSHROOM,
   Item.BALM_MUSHROOM,
-  Item.RICE
+  Item.RICE,
+  Item.ELECTRIC_SEED
 ] satisfies Item[]
 
 export type Dish = (typeof Dishes)[number]

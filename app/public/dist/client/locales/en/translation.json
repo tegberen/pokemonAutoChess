@@ -3452,7 +3452,8 @@
 		"WARP_WAND": "Warp Wand",
 		"SWITCHER_WAND": "Switcher Wand",
 		"WHIRLWIND_WAND": "Whirlwind Wand",
-		"TUNNEL_WAND": "Tunnel Wand"
+		"TUNNEL_WAND": "Tunnel Wand",
+    	"ELECTRIC_SEED": "Electric Seed"
 	},
 	"item_description": {
 		"FOSSIL_STONE": "A fossil of a Pokémon that lived in prehistoric times",
@@ -3781,7 +3782,8 @@
 		"WARP_WAND": "Fairy attacks deal 20% additional SPECIAL and have [5,LK]% chance to teleport target on a cell far away",
 		"SWITCHER_WAND": "Fairy attacks deal 20% additional SPECIAL and have [5,LK]% chance to swap target position with farthest enemy",
 		"WHIRLWIND_WAND": "Fairy attacks deal 20% additional SPECIAL and have [5,LK]% chance to throw a whirlwind that makes all the units in its path to fly away.",
-		"TUNNEL_WAND": "Fairy attacks deal 20% additional SPECIAL. Wands SPECIAL has [5,LK]% chance to pass through the target to hit enemies in a line behind it."
+		"TUNNEL_WAND": "Fairy attacks deal 20% additional SPECIAL. Wands SPECIAL has [5,LK]% chance to pass through the target to hit enemies in a line behind it.",
+    	"ELECTRIC_SEED": "Gain 5 DEF, ELECTRIC_FIELD and all bonuses from the active ELECTRIC synergy."
 	},
 	"passive_description": {
 		"NONE": "No passive",
