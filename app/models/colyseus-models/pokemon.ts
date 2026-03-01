@@ -5587,7 +5587,7 @@ export class Zeraora extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.WILD, Synergy.ELECTRIC])
   rarity = Rarity.UNIQUE
   stars = 3
-  hp = 200
+  hp = 220
   atk = 16
   speed = 71
   def = 10
@@ -5644,7 +5644,7 @@ export class Miltank extends Pokemon {
   ])
   rarity = Rarity.UNIQUE
   stars = 3
-  hp = 200
+  hp = 250
   atk = 13
   speed = 57
   def = 10
@@ -6399,7 +6399,7 @@ export class Farfetchd extends Pokemon {
   ])
   rarity = Rarity.UNIQUE
   stars = 3
-  hp = 200
+  hp = 220
   atk = 20
   def = 8
   speDef = 8
@@ -6416,7 +6416,7 @@ export class GalarianFarfetchd extends Pokemon {
   ])
   rarity = Rarity.UNIQUE
   stars = 3
-  hp = 200
+  hp = 220
   atk = 20
   def = 8
   speDef = 8
@@ -6712,15 +6712,15 @@ export class Mawile extends Pokemon {
   types = new SetSchema<Synergy>([
     Synergy.STEEL,
     Synergy.FAIRY,
-    Synergy.MONSTER
+    Synergy.DARK
   ])
   rarity = Rarity.UNIQUE
   stars = 3
   hp = 180
-  atk = 16
+  atk = 18
   speed = 41
   def = 12
-  speDef = 12
+  speDef = 6
   maxPP = 80
   range = 1
   skill = Ability.PLAY_ROUGH
@@ -8526,7 +8526,7 @@ export class Guzzlord extends Pokemon {
   ])
   rarity = Rarity.LEGENDARY
   stars = 3
-  hp = 300
+  hp = 400
   atk = 25
   speed = 39
   def = 10
@@ -16025,8 +16025,8 @@ export class Pyukumuku extends Pokemon {
   hp = 150
   atk = 10
   speed = 27
-  def = 14
-  speDef = 14
+  def = 25
+  speDef = 25
   maxPP = 100
   range = 1
   skill = Ability.PURIFY

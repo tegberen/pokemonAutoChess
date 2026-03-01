@@ -681,7 +681,7 @@ const PyukumukuExplodeOnDeathEffect = new OnDeathEffect(
       pokemon.positionX,
       pokemon.positionY
     )
-    const damage = Math.round(0.5 * pokemon.maxHP)
+    const damage = Math.round(pokemon.maxHP)
     adjcells.forEach((cell) => {
       if (cell.value && pokemon.team != cell.value.team) {
         cell.value.handleSpecialDamage(
@@ -1183,8 +1183,8 @@ export const PassiveEffects: Partial<
   [Passive.GUZZLORD]: [
     new OnKillEffect(({ attacker }) => {
       if (attacker.items.has(Item.CHEF_HAT)) {
-        attacker.addAbilityPower(5, attacker, 0, false, true)
-        attacker.addMaxHP(10, attacker, 0, false, true)
+        attacker.addAbilityPower(10, attacker, 0, false, true)
+        attacker.addMaxHP(20, attacker, 0, false, true)
       }
     })
   ],

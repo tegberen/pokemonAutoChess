@@ -93,6 +93,12 @@
 - Absol: added FAIRY, ill add the Mega Evolutions at some point
 - Veluza: PP 100 → 60
 - Roaring Moon: adjusted stats and ability, lowered PP
+- Mawile: added DARK, remove MONSTER, nerfed SPE_DEF, buffed ATK
+- Pyukumuku: buffed Passive, buffed DEF and SPE_DEF
+- Farfetchd: small buff HP
+- GalarianFarfetchd: small buff HP
+- Zeraora: small buff HP
+- Miltank: buff HP
 
 ## Legendary
 - Landorus, Thunderus, Tornadus, Enamorus, Marcus: added HUMAN, nerfed HP
@@ -100,7 +106,8 @@
 - Buzzwole and Pheromosa: are now Legendary Duo, no nerfs smile
 - Zygarde: added AMORPHOUS, nerfed HP
 - Victini: added GOURMET, Tabasco Dish
-
+- Guzzlord: buffed HP, Passive
+ 
 # Misc
 - Added Shiniest Hunter: All PvE encounter are shiny
 - New Fugitive
