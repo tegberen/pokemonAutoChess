@@ -2819,7 +2819,8 @@
 		"COVER_BAND": "Cover Band",
 		"EFFICIENT_BANDANNA": "Efficient Bandanna",
 		"NULLIFY_BANDANNA": "Nullify Bandanna",
-		"WANTED_NOTICE": "Wanted Notice"
+		"WANTED_NOTICE": "Wanted Notice",
+    "ELECTRIC_SEED": "Electric Seed"
 	},
 	"item_description": {
 		"FOSSIL_STONE": "A fossil of a Pokémon that lived in prehistoric times",
@@ -3125,7 +3126,8 @@
 		"COVER_BAND": "If an ADJACENT ally is about to get KO with some incoming damage, the wearer takes the damage instead.",
 		"EFFICIENT_BANDANNA": "The holder and allies ADJACENT_IN_THE_SAME_ROW have their max PP reduced by 15%.",
 		"NULLIFY_BANDANNA": "Holder can no longer cast its ability. AP is converted to SHIELD, and PP are converted to bonus SPECIAL on next attack.",
-		"WANTED_NOTICE": "Wanted: Fainted or Alive\n Reward: 10 GOLD"
+		"WANTED_NOTICE": "Wanted: Fainted or Alive\n Reward: 10 GOLD",
+    "ELECTRIC_SEED": "Gain 5 DEF, ELECTRIC_FIELD and all bonuses from the active ELECTRIC synergy."
 	},
 	"passive_description": {
 		"NONE": "No passive",

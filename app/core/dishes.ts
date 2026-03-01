@@ -76,8 +76,10 @@ export const DishByPkm: { [pkm in Pkm]?: Item } = {
   [Pkm.DEERLING_SUMMER]: Item.TEA,
   [Pkm.SAWSBUCK_SUMMER]: Item.TEA,
   [Pkm.LECHONK]: Item.MUSHROOMS,
-  [Pkm.OINKOLOGNE_MALE]: Item.MUSHROOMS
+  [Pkm.OINKOLOGNE_MALE]: Item.MUSHROOMS,
   //[Pkm.OINKOLOGNE_FEMALE]: Item.MUSHROOMS
+  [Pkm.MORPEKO]: Item.ELECTRIC_SEED,
+  [Pkm.MORPEKO_HANGRY]: Item.ELECTRIC_SEED,
 }
 
 export const DishEffects: Record<(typeof Dishes)[number], Effect[]> = {
@@ -434,6 +436,27 @@ export const DishEffects: Record<(typeof Dishes)[number], Effect[]> = {
   RIBBON_SWEET: [
     new OnDishConsumedEffect(({ pokemon, entity, player }) => {
       entity?.addSpecialDefense(3, entity, 0, false, true)
+    })
+  ],
+  ELECTRIC_SEED: [
+    new OnSpawnEffect((entity) => {
+      entity.addDefense(5, entity, 0, false)
+
+      if (entity.types.has(Synergy.ELECTRIC) === false) {
+        entity.status.addElectricField(entity)
+        entity.types.add(Synergy.ELECTRIC)
+        entity.simulation.applySynergyEffects(entity, Synergy.ELECTRIC)
+        if (entity.player) {
+          const nbCellBatteries = values(entity.player.items).filter(
+            (item) => item === Item.CELL_BATTERY
+          ).length
+          if (nbCellBatteries > 0) {
+            entity.addSpeed(2 * nbCellBatteries, entity, 0, false)
+          }
+        }
+      } else {
+        entity.status.addElectricField(entity)
+      }
     })
   ]
 }
