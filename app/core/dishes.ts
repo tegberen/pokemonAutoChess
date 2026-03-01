@@ -82,7 +82,9 @@ export const DishByPkm: { [pkm in Pkm]?: Item | null } = {
   [Pkm.TATSUGIRI_CURLY]: null,
   [Pkm.TATSUGIRI_DROOPY]: null,
   [Pkm.TATSUGIRI_STRETCHY]: null,
-  [Pkm.GUZZLORD]: null
+  [Pkm.GUZZLORD]: null,
+  [Pkm.MORPEKO]: Item.ELECTRIC_SEED,
+  [Pkm.MORPEKO_HANGRY]: Item.ELECTRIC_SEED,
 }
 
 export const DishEffects: Record<(typeof Dishes)[number], Effect[]> = {
@@ -453,6 +455,27 @@ export const DishEffects: Record<(typeof Dishes)[number], Effect[]> = {
         entity?.addDefense(8, entity, 0, false)
       } else if (tatsugiriOnBoard?.name === Pkm.TATSUGIRI_STRETCHY) {
         entity?.addSpeed(25, entity, 0, false)
+      }
+    })
+  ],
+  ELECTRIC_SEED: [
+    new OnSpawnEffect((entity) => {
+      entity.addDefense(5, entity, 0, false)
+
+      if (entity.types.has(Synergy.ELECTRIC) === false) {
+        entity.status.addElectricField(entity)
+        entity.types.add(Synergy.ELECTRIC)
+        entity.simulation.applySynergyEffects(entity, Synergy.ELECTRIC)
+        if (entity.player) {
+          const nbCellBatteries = values(entity.player.items).filter(
+            (item) => item === Item.CELL_BATTERY
+          ).length
+          if (nbCellBatteries > 0) {
+            entity.addSpeed(2 * nbCellBatteries, entity, 0, false)
+          }
+        }
+      } else {
+        entity.status.addElectricField(entity)
       }
     })
   ]
