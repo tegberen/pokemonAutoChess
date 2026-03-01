@@ -757,7 +757,7 @@ const PyukumukuExplodeOnDeathEffect = new OnDeathEffect(
       pokemon.positionX,
       pokemon.positionY
     )
-    const damage = Math.round(0.5 * pokemon.maxHP)
+    const damage = Math.round(pokemon.maxHP)
     adjcells.forEach((cell) => {
       if (cell.value && pokemon.team != cell.value.team) {
         cell.value.handleSpecialDamage(
