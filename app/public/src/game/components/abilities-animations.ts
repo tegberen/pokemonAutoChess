@@ -1273,7 +1273,7 @@ export const AbilitiesAnimations: {
       tint: 0xBF1369,
       origin: [0.5, 0],
       oriented: true,
-      scale: 2.5,
+      scale: 3.5,
       rotation: -Math.PI / 2,
     })(args)
   },

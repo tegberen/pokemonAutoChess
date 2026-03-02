@@ -1403,7 +1403,10 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
     }
 
     if (
-      target.name === Pkm.MAGIKARP &&
+      (target.name === Pkm.MAGIKARP ||
+      target.name === Pkm.FEEBAS ||
+      target.name === Pkm.REMORAID ||
+      target.name === Pkm.WISHIWASHI) &&
       target.shiny &&
       target.simulation.stageLevel === 1 &&
       this.player
