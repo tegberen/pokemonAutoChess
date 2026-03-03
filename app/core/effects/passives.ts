@@ -1550,9 +1550,8 @@ export const PassiveEffects: Partial<
   ],
   [Passive.FINIZEN]: [
     new OnSimulationStartEffect(({ simulation, entity }) => {
-      if (entity.name === Pkm.PALAFIN_HERO) return
-      let nbAlliesKo = 0
-      let nbAllies = 0
+      let alliesKo = 0
+      let alliesNb = 0
       let transformed = false
 
       const transformToHero = () => {
