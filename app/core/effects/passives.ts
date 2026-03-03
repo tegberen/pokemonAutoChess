@@ -1390,13 +1390,16 @@ export const PassiveEffects: Partial<
     new OnSimulationStartEffect(({ simulation, entity }) => {
       let alliesKo = 0
       let alliesNb = 0
+      let transformed = false
       simulation.board.forEach((x, y, pkm) => {
         if (pkm && pkm.team === entity.team && pkm.id !== entity.id) {
           alliesNb++
           pkm.effectsSet.add(
             new OnDeathEffect(() => {
               alliesKo++
-              if (alliesKo >= 5 || alliesKo >= alliesNb) {
+              if (!(transformed) && (alliesKo >= 5 || alliesKo >= alliesNb)) {
+                transformed = true
+                console.log(`Transforming to Palafin Hero`)
                 entity.index = PkmIndex[Pkm.PALAFIN_HERO]
                 entity.name = Pkm.PALAFIN_HERO
                 // TODO: update stats to match the hero form
