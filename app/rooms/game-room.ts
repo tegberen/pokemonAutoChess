@@ -920,6 +920,11 @@ export default class GameRoom extends Room<{ state: GameState }> {
         player.titles.add(Title.GRAND_MASTER)
       }
 
+      const synergiesMap = new Map<Synergy, number>()
+      player.synergies.forEach((v, k) => {
+        v > 0 && synergiesMap.set(k, v)
+      })
+
       if (usr.elo != null && eligibleToELO) {
         let elo = computeElo(
           this.transformToSimplePlayer(player),
@@ -958,25 +963,25 @@ export default class GameRoom extends Room<{ state: GameState }> {
           )
         }
 
-        const dbrecord = this.transformToSimplePlayer(player)
-        const synergiesMap = new Map<Synergy, number>()
-        player.synergies.forEach((v, k) => {
-          v > 0 && synergiesMap.set(k, v)
-        })
-        DetailledStatistic.create({
-          time: Date.now(),
-          name: dbrecord.name,
-          pokemons: dbrecord.pokemons,
-          rank: dbrecord.rank,
-          nbplayers: humans.length + bots.length,
-          avatar: dbrecord.avatar,
-          playerId: dbrecord.id,
-          elo: elo,
-          synergies: synergiesMap,
-          gameMode: this.state.gameMode,
-          regions: player.regions
-        })
-
+        // const dbrecord = this.transformToSimplePlayer(player)
+        // const synergiesMap = new Map<Synergy, number>()
+        // player.synergies.forEach((v, k) => {
+        //   v > 0 && synergiesMap.set(k, v)
+        // })
+        // DetailledStatistic.create({
+        //   time: Date.now(),
+        //   name: dbrecord.name,
+        //   pokemons: dbrecord.pokemons,
+        //   rank: dbrecord.rank,
+        //   nbplayers: humans.length + bots.length,
+        //   avatar: dbrecord.avatar,
+        //   playerId: dbrecord.id,
+        //   elo: elo,
+        //   synergies: synergiesMap,
+        //   gameMode: this.state.gameMode,
+        //   regions: player.regions
+        // })
+        //
         if (usr.eventFinishTime == null) {
           const eventPointsGained = EventPointsPerRank[clamp(rank - 1, 0, 7)]
           usr.eventPoints = clamp(
@@ -1011,6 +1016,24 @@ export default class GameRoom extends Room<{ state: GameState }> {
             player.titles.add(Title.RUNNER)
           }
         }
+      }
+      if (
+        this.state.stageLevel >= MinStageForGameToCount
+      ) {
+        const dbrecord = this.transformToSimplePlayer(player)
+        DetailledStatistic.create({
+          time: Date.now(),
+          name: dbrecord.name,
+          pokemons: dbrecord.pokemons,
+          rank: dbrecord.rank,
+          nbplayers: humans.length + bots.length,
+          avatar: dbrecord.avatar,
+          playerId: dbrecord.id,
+          elo: usr.elo,
+          synergies: synergiesMap,
+          gameMode: this.state.gameMode,
+          regions: player.regions
+        })
       }
 
       if (player.life >= 100 && rank === 1) {
