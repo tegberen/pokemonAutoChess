@@ -33,7 +33,7 @@
 - Gothitelle: moved to regional, added DARK, adjusted stats
 - Charizard: moved to regional
 - Orbeetle: moved to regular
-- Swampert: removed WATER, added AQUUATIC
+- Swampert: removed WATER, added AQUATIC
 - Staraptor: added FIGHTING
 
 ## Uncommon
@@ -111,3 +111,4 @@
 # Misc
 - Added Shiniest Hunter: All PvE encounter are shiny
 - New Fugitive
+- Additional effect for ROCK: When KO'd, explode and deal TRUE and ARMOR_BREAK ADJACENT enemies. 
