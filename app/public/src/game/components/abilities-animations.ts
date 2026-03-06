@@ -1142,6 +1142,7 @@ export const AbilitiesAnimations: {
     shakeCamera({})
   ],
   [Ability.COUNTER]: onCasterScale2,
+  ["ROCK_EXPLOSION"]: onCasterScale4,
   [Ability.HIGH_HORSEPOWER]: onCaster({
     ability: Ability.COUNTER,
     scale: 2,

@@ -56,7 +56,7 @@ import Dps from "./dps"
 import {
   OnDishConsumedEffect,
   OnSimulationStartEffect,
-  OnSpawnEffect
+  OnSpawnEffect,
 } from "./effects/effect"
 import { WaterSpringEffect } from "./effects/passives"
 import {
@@ -72,7 +72,10 @@ import {
   onFlowerMonDeath,
   overgrowEffect,
   SoundCryEffect,
-  wildBerserkEffect
+  wildBerserkEffect,
+  rockDeathExplosionT1,
+  rockDeathExplosionT2,
+  rockDeathExplosionT3
 } from "./effects/synergies"
 import { getStrongestUnit, getUnitScore, PokemonEntity } from "./pokemon-entity"
 import { DelayedCommand } from "./simulation-command"
@@ -1012,6 +1015,7 @@ export default class Simulation extends Schema implements ISimulation {
         if (types.has(Synergy.ROCK)) {
           pokemon.addDefense(10, pokemon, 0, false)
           pokemon.effects.add(EffectEnum.BATTLE_ARMOR)
+          pokemon.effectsSet.add(rockDeathExplosionT1)
         }
         break
 
@@ -1019,6 +1023,7 @@ export default class Simulation extends Schema implements ISimulation {
         if (types.has(Synergy.ROCK)) {
           pokemon.addDefense(30, pokemon, 0, false)
           pokemon.effects.add(EffectEnum.MOUTAIN_RESISTANCE)
+          pokemon.effectsSet.add(rockDeathExplosionT2)
         }
         break
 
@@ -1026,6 +1031,7 @@ export default class Simulation extends Schema implements ISimulation {
         if (types.has(Synergy.ROCK)) {
           pokemon.addDefense(60, pokemon, 0, false)
           pokemon.effects.add(EffectEnum.DIAMOND_STORM)
+          pokemon.effectsSet.add(rockDeathExplosionT3)
         }
         break
 
