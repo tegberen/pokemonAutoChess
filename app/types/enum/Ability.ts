@@ -546,4 +546,5 @@ export enum Ability {
   SHADOW_FORCE = "SHADOW_FORCE",
   SHADOW_CLAW = "SHADOW_CLAW",
   DARK_NOVA = "DARK_NOVA",
+  FLING = "FLING",
 }

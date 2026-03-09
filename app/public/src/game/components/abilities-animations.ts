@@ -2824,7 +2824,11 @@ export const AbilitiesAnimations: {
     if (pokemon) {
       pokemon.superchargeAnimation(scene, false, true)
     }
-  }
+  },
+  [Ability.FLING]: projectile({
+    duration: 300,
+    scale: 0.7
+  }),
 }
 
 export function displayAbility(args: AbilityAnimationArgs) {

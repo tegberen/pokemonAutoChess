@@ -20443,6 +20443,21 @@ export class Toxapex extends Pokemon {
   additional = true
 }
 
+export class Passimian extends Pokemon {
+  types = new SetSchema<Synergy>([Synergy.FIGHTING, Synergy.FIELD])
+  rarity = Rarity.UNIQUE
+  stars = 3
+  hp = 170
+  atk = 19
+  speed = 50
+  def = 6
+  speDef = 4
+  maxPP = 100
+  range = 3
+  skill = Ability.FLING
+  passive = Passive.PASSIMIAN
+}
+
 export const PokemonClasses: Record<
   Pkm,
   new (
@@ -21616,7 +21631,8 @@ export const PokemonClasses: Record<
   [Pkm.PALAFIN]: Palafin,
   [Pkm.PALAFIN_HERO]: PalafinHero,
   [Pkm.MAREANIE]: Mareanie,
-  [Pkm.TOXAPEX]: Toxapex
+  [Pkm.TOXAPEX]: Toxapex,
+  [Pkm.PASSIMIAN]: Passimian,
 }
 
 // declare all the classes in colyseus schema TypeRegistry

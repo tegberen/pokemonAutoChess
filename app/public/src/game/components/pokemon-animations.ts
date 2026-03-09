@@ -7923,5 +7923,11 @@ export const PokemonAnimations: {
     emote: AnimationType.Shoot,
     attackSprite: AttackSprite.POISON_MELEE,
     shinyUnavailable: true
-  }
+  },
+  [Pkm.PASSIMIAN]: {
+    attack: AnimationType.SpAttack,
+    ability: AnimationType.Shoot,
+    emote: AnimationType.Charge,
+    hitSprite: HitSprite.FIGHTING_HIT
+  },
 }

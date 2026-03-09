@@ -335,6 +335,7 @@ class SpriteSheetProcessor {
           actions.add(AnimationType.Strike)
           actions.add(AnimationType.Withdraw)
           actions.add(AnimationType.Ricochet)
+          actions.add(AnimationType.SpAttack)
 
           for (const action of actions) {
             let metadata = xmlData.AnimData.Anims.Anim.find(

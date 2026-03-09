@@ -8,7 +8,7 @@ import { IStatus } from "../../types"
 import { Ability } from "../../types/enum/Ability"
 import { EffectEnum } from "../../types/enum/Effect"
 import { AttackType, Rarity, Team } from "../../types/enum/Game"
-import { Berries, Item, Tools } from "../../types/enum/Item"
+import { Berries, Item, Tools, NonSpecialBerries } from "../../types/enum/Item"
 import { Passive } from "../../types/enum/Passive"
 import { Pkm, PkmByIndex, PkmIndex } from "../../types/enum/Pokemon"
 import { Synergy } from "../../types/enum/Synergy"
@@ -16730,6 +16730,27 @@ export class DarkNovaStrategy extends AbilityStrategy {
   }
 }
 
+
+export class FlingStrategy extends AbilityStrategy {
+  process(
+    pokemon: PokemonEntity,
+    board: Board,
+    target: PokemonEntity,
+    crit: boolean
+  ) {
+    super.process(pokemon, board, target, crit)
+    const hasBerry = [...pokemon.items].some((item) =>
+      NonSpecialBerries.includes(item)
+    )
+    const berryCount = [...pokemon.items].filter((item) =>
+      NonSpecialBerries.includes(item)
+    ).length
+    const damage = hasBerry ? 120 : 60
+    pokemon.addPP(berryCount * 10, pokemon, 0, false)
+    target.handleSpecialDamage(damage, board, AttackType.SPECIAL, pokemon, crit)
+  }
+}
+
 export * from "./hidden-power"
 
 export const AbilityStrategies: { [key in Ability]: AbilityStrategy } = {
@@ -17280,6 +17301,7 @@ export const AbilityStrategies: { [key in Ability]: AbilityStrategy } = {
   [Ability.SHADOW_CLAW]: new ShadowClawStrategy(),
   [Ability.SHADOW_FORCE]: new ShadowForceStrategy(),
   [Ability.THUNDERCLAP_PRESS]: new ThunderClapPressStrategy(),
+  [Ability.FLING]: new FlingStrategy(),
 }
 
 export function castAbility(

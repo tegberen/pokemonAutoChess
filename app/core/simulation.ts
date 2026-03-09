@@ -413,6 +413,10 @@ export default class Simulation extends Schema implements ISimulation {
         pickRandomIn(CraftableItemsNoScarves.concat(NonSpecialBerries))
       )
     }
+    // passimian get random berry 
+    if (pokemon.passive === Passive.PASSIMIAN && pokemon.items.size < 3) {
+      pokemon.items.add(pickRandomIn(NonSpecialBerries))
+    }
     // wonderbox should be applied first so that wonderbox items effects can be applied after
     if (pokemon.items.has(Item.WONDER_BOX)) {
       pokemon.items.delete(Item.WONDER_BOX)
