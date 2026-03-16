@@ -2081,9 +2081,7 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
 
         if (this.state.outlawStage != null) {
           if (this.state.stageLevel === this.state.outlawStage) {
-            const id = nanoid()
-            const wanderer = new Wanderer({
-              id,
+            player.spawnWanderingPokemon({
               pkm: pickRandomIn([Pkm.DROWZEE, Pkm.TOGEPI_MAFIA]),
               shiny: false,
               type: WandererType.OUTLAW,

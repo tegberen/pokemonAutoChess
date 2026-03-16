@@ -16606,7 +16606,7 @@ export class DarkNovaStrategy extends AbilityStrategy {
   ) {
     super.process(pokemon, board, target, crit, true)
     const mostSurroundedCoordinate =
-      pokemon.state.getMostSurroundedCoordinateAvailablePlace(pokemon, board)
+      pokemon.state.getMostSurroundedCoordinateAvailablePlace(pokemon.team, board)
     if (mostSurroundedCoordinate) {
       pokemon.skydiveTo(
         mostSurroundedCoordinate.x,
