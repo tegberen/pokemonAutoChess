@@ -1550,35 +1550,24 @@ export const PassiveEffects: Partial<
   ],
   [Passive.FINIZEN]: [
     new OnSimulationStartEffect(({ simulation, entity }) => {
-      let alliesKo = 0
-      let alliesNb = 0
+      let nbAlliesKo = 0
+      let nbAllies = 0
       let transformed = false
-      simulation.board.forEach((x, y, pkm) => {
-        if (pkm && pkm.team === entity.team && pkm.id !== entity.id) {
-          alliesNb++
-          pkm.effectsSet.add(
-            new OnDeathEffect(() => {
-              alliesKo++
-              if (!(transformed) && (alliesKo >= 5 || alliesKo >= alliesNb)) {
-                transformed = true
-                console.log(`Transforming to Palafin Hero`)
-                entity.index = PkmIndex[Pkm.PALAFIN_HERO]
-                entity.name = Pkm.PALAFIN_HERO
-                // TODO: update stats to match the hero form
-                entity.addAttack(18, entity, 0, false)
-                entity.addSpeed(16, entity, 0, false)
-                entity.addDefense(5, entity, 0, false)
-                entity.addSpecialDefense(5, entity, 0, false)
-                entity.hp = entity.maxHP
-                if (entity.player) {
-                  entity.player.pokemonsPlayed.add(Pkm.PALAFIN_HERO)
-                  entity.player.transformPokemon(
-                    entity.refToBoardPokemon as Pokemon,
-                    Pkm.PALAFIN
-                  )
-                }
-              }
-            })
+
+      const transformToHero = () => {
+        transformed = true
+        entity.index = PkmIndex[Pkm.PALAFIN_HERO]
+        entity.name = Pkm.PALAFIN_HERO
+        entity.addAttack(18, entity, 0, false)
+        entity.addSpeed(16, entity, 0, false)
+        entity.addDefense(5, entity, 0, false)
+        entity.addSpecialDefense(5, entity, 0, false)
+        entity.hp = entity.maxHP
+        if (entity.player) {
+          entity.player.pokemonsPlayed.add(Pkm.PALAFIN_HERO)
+          entity.player.transformPokemon(
+            entity.refToBoardPokemon as Pokemon,
+            Pkm.PALAFIN
           )
         }
       }
@@ -1597,7 +1586,6 @@ export const PassiveEffects: Partial<
         }
       })
 
-      // edge case no allies: transform immediately
       if (nbAllies === 0) {
         transformToHero()
       }
