@@ -1550,8 +1550,8 @@ export const PassiveEffects: Partial<
   ],
   [Passive.FINIZEN]: [
     new OnSimulationStartEffect(({ simulation, entity }) => {
-      let alliesKo = 0
-      let alliesNb = 0
+      let nbAlliesKo = 0
+      let nbAllies = 0
       let transformed = false
 
       const transformToHero = () => {
@@ -1587,7 +1587,6 @@ export const PassiveEffects: Partial<
         }
       })
 
-      // edge case no allies: transform immediately
       if (nbAllies === 0) {
         transformToHero()
       }
