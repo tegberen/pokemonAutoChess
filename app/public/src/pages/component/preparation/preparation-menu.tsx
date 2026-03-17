@@ -296,6 +296,7 @@ export default function PreparationMenu() {
           }}
         >
           <option value={BotDifficulty.REGULAR}>{t("regular_bot")}</option>
+          <option value={BotDifficulty.UNREALISTIC}>{t("unrealistic_bot")}</option>
           {/*
           <option value={BotDifficulty.EASY}>{t("easy_bot")}</option>
           <option value={BotDifficulty.MEDIUM}>{t("normal_bot")}</option>

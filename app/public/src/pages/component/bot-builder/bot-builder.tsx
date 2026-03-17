@@ -356,12 +356,11 @@ export function SubmitBotModal(props: {
   visible: boolean
 }) {
   const { t } = useTranslation()
-
   const [loading, setLoading] = useState<boolean>(false)
   const [error, setError] = useState<string>("")
   const [success, setSuccess] = useState<boolean>(false)
 
-  async function submitBot() {
+  async function submitBot(testing: boolean) {
     if (loading) return
     setLoading(true)
     setError("")
@@ -374,7 +373,7 @@ export function SubmitBotModal(props: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`
         },
-        body: JSON.stringify(props.bot)
+        body: JSON.stringify({ ...props.bot, elo: testing ? 9999 : props.bot.elo })
       })
       if (res.ok) {
         setSuccess(true)
@@ -401,9 +400,14 @@ export function SubmitBotModal(props: {
       footer={
         <>
           {!success && !loading && !error && (
-            <button className="bubbly green" onClick={submitBot}>
-              {t("submit_your_bot")}
-            </button>
+            <>
+              <button className="bubbly green" onClick={() => submitBot(false)}>
+                {t("submit_your_bot")}
+              </button>
+              <button className="bubbly orange" onClick={() => submitBot(true)}>
+                {t("unrealistic_bot")}
+              </button>
+            </>
           )}
           {loading && <p>{t("loading")}</p>}
           {!loading && error && (
