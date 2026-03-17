@@ -2876,37 +2876,31 @@ export class WithdrawStrategy extends AbilityStrategy {
     crit: boolean
   ) {
     super.process(pokemon, board, target, crit)
-    const damage = [20, 40, 60][pokemon.stars - 1] ?? 60
-    const cells = board.getAdjacentCells(pokemon.positionX, pokemon.positionY)
+    const damage = [10, 25, 50][pokemon.stars - 1] ?? 50
 
-    for (const cell of cells) {
-      if (cell.value && cell.value.team !== pokemon.team) {
-        const orientation = board.orientation(
-          pokemon.positionX,
-          pokemon.positionY,
-          cell.value.positionX,
-          cell.value.positionY,
-          pokemon,
-          undefined
-        )
-        const destination = board.getKnockBackPlace(
-          cell.value.positionX,
-          cell.value.positionY,
-          orientation
-        )
-        if (destination) {
-          cell.value.moveTo(destination.x, destination.y, board, true)
-          cell.value.cooldown = 500
+    OrientationArray.forEach((orientation) => {
+      effectInOrientation(board, pokemon, orientation, (cell) => {
+        if (cell.value && cell.value.team !== pokemon.team) {
+          const destination = board.getKnockBackPlace(
+            cell.value.positionX,
+            cell.value.positionY,
+            orientation
+          )
+          if (destination) {
+            cell.value.moveTo(destination.x, destination.y, board, true)
+            cell.value.cooldown = 500
+          }
+          cell.value.handleSpecialDamage(
+            damage,
+            board,
+            AttackType.SPECIAL,
+            pokemon,
+            crit
+          )
         }
-        cell.value.handleSpecialDamage(
-          damage,
-          board,
-          AttackType.SPECIAL,
-          pokemon,
-          crit
-        )
-      }
-    }
+      })
+    })
+
     const boost = [2, 4, 8][pokemon.stars - 1] ?? 8
     pokemon.addDefense(boost, pokemon, 1, true)
   }
