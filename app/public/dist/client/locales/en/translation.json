@@ -1812,7 +1812,7 @@
 		"SEED_FLARE": "Emit a shockwave, deal [30,SP] SPECIAL to all enemy Pokémon in a 5 tile radius and decrease their SPE_DEF by 3",
 		"IRON_TAIL": "Swings its massive tail, hitting 3 enemy Pokémon in front, knocking them back and dealing [100,SP]% of user's DEF as SPECIAL",
 		"BLAST_BURN": "Deal [30,60,120,SP] SPECIAL to all ADJACENT enemy Pokémon.",
-    "FLARE_BLITZ": "Charge towards the target, dealing [120,SP] SPECIAL in a 2 tile radius. BURN the user for 3 seconds.",
+    "FLARE_BLITZ": "Charge towards the target, dealing [500,SP]% of ATK as PHYSICAL to all ADJACENT enemy Pokemon. BURN the user for 3 seconds.",
 		"CHARGE": "Until the end of the fight, attacks deal [100,SP]% additional SPECIAL (stackable).",
 		"DISCHARGE": "Deal [25,50,100,SP] SPECIAL to all ADJACENT enemy Pokémon and inflict them with PARALYSIS for 5 seconds.",
 		"SHOCKWAVE": "Deal [30,60,120,SP] SPECIAL to all enemies in a 2-range radius, +1 range if user is in an ELECTRIC_FIELD, -20% damage per tile from the user.",
@@ -3349,7 +3349,7 @@
 		"GALE_WINGS": "Drops embers on the ground when flying away. BOARD_EFFECT: embers deal 10 SPECIAL per second and BURN non FLYING or FIRE Pokémon that walk on it.",
 		"FINIZEN": "Transforms into Palafin Hero Form after 5 allies are KO'd (not counting spawns), or if this Pokémon is the last one standing. Regain all HP when that happens.",
 		"COMMANDER": "Tatsugiri cannot hold items. At the start of the fight, an ADJACENT Dondozo with a free item slot swallows Tatsugiri. Tatsugiri provides stats based on its form: \nCurly Form: +8 ATK\nDroopy Form: +8 DEF\nStretchy Form: +25 SPEED",
-    "CHARIZARD": "Charizard evolves into Mega Charizard X at Stage 25"
+    "CHARIZARD": "Gains a stack for each KO. Mega evolves after 40 stacks."
 	},
 	"stat": {
 		"ATK": "Attack",
