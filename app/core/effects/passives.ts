@@ -1644,5 +1644,64 @@ export const PassiveEffects: Partial<
     new OnKillEffect(({ attacker }) => {
       attacker.addStack()
     })
+  ],
+  [Passive.LOPUNNY]: [
+    new OnKillEffect(({ attacker }) => {
+      const effects = attacker.player.effects
+      if ( effects.has(EffectEnum.JUSTIFIED) || effects.has(EffectEnum.PURE_POWER)) {
+        attacker.addStack()
+      }
+    })
+  ],
+  [Passive.ALTARIA]: [
+    new OnKillEffect(({ attacker }) => {
+      const effects = attacker.player.effects
+      if ( effects.has(EffectEnum.DRAGON_DANCE) || effects.has(EffectEnum.MOON_FORCE)) {
+        attacker.addStack()
+      }
+    })
+  ],
+  [Passive.BANETTE]: [
+    new OnAbilityCastEffect((pokemon) => {
+       pokemon.addStack()
+    })
+  ],
+  [Passive.HOUNDOOOM]: [
+    new OnAbilityCastEffect((pokemon) => {
+       pokemon.addStack()
+    })
+  ],
+  [Passive.CAMERUPT]: [
+    new OnAbilityCastEffect((pokemon) => {
+      if (pokemon.simulation.weather !== Weather.SANDSTORM) return
+       pokemon.addStack()
+    })
+  ],
+  [Passive.STEELIX]: [
+    new OnSimulationStartEffect(({ entity, player }) => {
+      const fullyDugRows = [0, 8, 16].filter((startIdx) => {
+        const row = player.groundHoles.slice(startIdx, startIdx + BOARD_WIDTH)
+        return row.every((hole) => hole === 5)
+      }).length
+      for (let i = 0; i < fullyDugRows; i++) {
+        entity.addStack()
+      }
+    })
+  ],
+  [Passive.MANECTRIC]: [
+    () => new class extends PeriodicEffect {
+      constructor() {
+        super(
+          (pokemon) => {
+            if (pokemon.speed >= 250) {
+              pokemon.addStack()
+              pokemon.effectsSet.delete(this)
+            }
+          },
+          Passive.MANECTRIC,
+          1000
+        )
+      }
+    }()
   ]
 }
