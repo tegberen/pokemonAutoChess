@@ -2401,7 +2401,7 @@
 		"SEED_FLARE": "Emit a shockwave, deal [30,SP] SPECIAL to all enemy Pokémon in a 5 tile radius and decrease their SPE_DEF by 3",
 		"IRON_TAIL": "Swings its massive tail, hitting 3 enemy Pokémon in front, knocking them back and dealing [100,SP]% of user's DEF as SPECIAL",
 		"BLAST_BURN": "Deal [30,60,120,SP] SPECIAL to all ADJACENT enemy Pokémon.",
-    "FLARE_BLITZ": "Charge towards the target, dealing [120,SP] SPECIAL in a 2 tile radius. BURN the user for 3 seconds.",
+    "FLARE_BLITZ": "Charge towards the target, dealing [500,SP]% of ATK as PHYSICAL to all ADJACENT enemy Pokemon. BURN the user for 3 seconds.",
 		"CHARGE": "Until the end of the fight, attacks deal [100,SP]% additional SPECIAL (stackable).",
 		"DISCHARGE": "Deal [25,50,100,SP] SPECIAL to all ADJACENT enemy Pokémon and inflict them with PARALYSIS for 5 seconds.",
 		"SHOCKWAVE": "Deal [30,60,120,SP] SPECIAL to all enemies in a 2-range radius, +1 range if user is in an ELECTRIC_FIELD, -20% damage per tile from the user.",
