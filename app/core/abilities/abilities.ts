@@ -3252,6 +3252,31 @@ export class BlastBurnStrategy extends AbilityStrategy {
   }
 }
 
+export class FlareBlitzStrategy extends AbilityStrategy {
+  process(
+    pokemon: PokemonEntity,
+    board: Board,
+    target: PokemonEntity,
+    crit: boolean
+  ) {
+    super.process(pokemon, board, target, crit, true)
+    const damage = [30, 60, 90, 120][pokemon.stars - 1] ?? 120
+
+    pokemon.moveTo(target.positionX, target.positionY, board, false)
+    pokemon.broadcastAbility({
+      positionX: pokemon.positionX,
+      positionY: pokemon.positionY,
+      delay: 300
+    })
+    board.getCellsInRadius(pokemon.positionX, pokemon.positionY, 2, false).forEach((cell) => {
+      if (cell.value && cell.value.team !== pokemon.team) {
+        cell.value.handleSpecialDamage(damage, board, AttackType.SPECIAL, pokemon, crit)
+      }
+    })
+    pokemon.status.triggerBurn(3000, pokemon, pokemon)
+  }
+}
+
 export class TwisterStrategy extends AbilityStrategy {
   process(
     pokemon: PokemonEntity,
@@ -16978,6 +17003,7 @@ export const AbilityStrategies: { [key in Ability]: AbilityStrategy } = {
   [Ability.SOAK]: new SoakStrategy(),
   [Ability.IRON_TAIL]: new IronTailStrategy(),
   [Ability.BLAST_BURN]: new BlastBurnStrategy(),
+  [Ability.FLARE_BLITZ]: new FlareBlitzStrategy(),
   [Ability.CHARGE]: new ChargeStrategy(),
   [Ability.DISCHARGE]: new DischargeStrategy(),
   [Ability.SHOCKWAVE]: new ShockwaveStrategy(),
