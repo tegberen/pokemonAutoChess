@@ -1083,6 +1083,7 @@ export const AbilitiesAnimations: {
   [Ability.CHATTER]: onCasterScale2,
   [Ability.BOOMBURST]: onCaster({ ability: Ability.CHATTER, scale: 3 }),
   [Ability.BLAST_BURN]: onCasterScale3,
+  [Ability.FLARE_BLITZ]: onCasterScale3,
   [Ability.CHARGE]: onCaster({
     scale: 4,
     depth: DEPTH.ABILITY_BELOW_POKEMON,
