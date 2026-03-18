@@ -15,3 +15,11 @@
 ![Staraptor Fashion](/assets/portraits/0398/9999/Normal.png)
 ![Mafia Togepi](/assets/portraits/0175/9999/Determined.png)
 ![Mega Charizard X](/assets/portraits/0006/0001/Surprised.png)
+![Mega Lopunny](/assets/portraits/0428/0001/Normal.png)
+![Mega Camerupt](/assets/portraits/0323/0001/Normal.png)
+![Mega Houndoom](/assets/portraits/0229/0001/Normal.png)
+![Mega Steelix](/assets/portraits/0208/0001/Normal.png)
+![Mega Altaria](/assets/portraits/0334/0001/Normal.png)
+![Mega Banette](/assets/portraits/0354/0001/Normal.png)
+![Mega Manectric](/assets/portraits/0310/0001/Normal.png)
+
