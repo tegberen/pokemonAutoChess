@@ -1638,5 +1638,10 @@ export const PassiveEffects: Partial<
         attacker.count.amuletCoinCount += 1
       }
     })
+  ],
+  [Passive.CHARIZARD]: [
+    new OnKillEffect(({ attacker }) => {
+      attacker.addStack()
+    })
   ]
 }

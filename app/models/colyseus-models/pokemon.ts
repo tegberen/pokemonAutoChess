@@ -5227,11 +5227,8 @@ export class Charizard extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.DRAGON, Synergy.FIRE, Synergy.FLYING])
   rarity = Rarity.COMMON
   stars = 3
-  evolutionRule = new ConditionBasedEvolutionRule(
-    (pokemon: Pokemon, player: Player, stageLevel: number) => {
-      return stageLevel >= 25
-    }
-  )
+  evolutionRule = new StackBasedEvolutionRule()
+  stacksRequired: number = 40
   evolution = Pkm.MEGA_CHARIZARD_X
   hp = 220
   atk = 18
