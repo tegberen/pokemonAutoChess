@@ -9,6 +9,7 @@
 - Pirate Cinderace
 - Fashion Staraptor
 - Mafia Togepi
+- Mega Charizard X
 
 # Changes to Pokemon & Abilities
 - New Ability for Duskull line, Trick Room: If the target and adjacent enemies are faster than the user, halve their current speed. Otherwise, deal [20,40,80,SP] SPECIAL.
