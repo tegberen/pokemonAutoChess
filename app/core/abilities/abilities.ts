@@ -3251,17 +3251,17 @@ export class FlareBlitzStrategy extends AbilityStrategy {
     crit: boolean
   ) {
     super.process(pokemon, board, target, crit, true)
-    const damage = [30, 60, 90, 120][pokemon.stars - 1] ?? 120
+    const damage = ([2,3,4,5][pokemon.stars - 1] ?? 5) * pokemon.atk
 
     pokemon.moveTo(target.positionX, target.positionY, board, false)
     pokemon.broadcastAbility({
       positionX: pokemon.positionX,
       positionY: pokemon.positionY,
-      delay: 300
+      delay: 350
     })
-    board.getCellsInRadius(pokemon.positionX, pokemon.positionY, 2, false).forEach((cell) => {
+    board.getAdjacentCells(pokemon.positionX, pokemon.positionY).forEach((cell) => {
       if (cell.value && cell.value.team !== pokemon.team) {
-        cell.value.handleSpecialDamage(damage, board, AttackType.SPECIAL, pokemon, crit)
+        cell.value.handleSpecialDamage(damage, board, AttackType.PHYSICAL, pokemon, crit)
       }
     })
     pokemon.status.triggerBurn(3000, pokemon, pokemon)
