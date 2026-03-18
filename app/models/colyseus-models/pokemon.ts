@@ -5227,6 +5227,12 @@ export class Charizard extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.DRAGON, Synergy.FIRE, Synergy.FLYING])
   rarity = Rarity.COMMON
   stars = 3
+  evolutionRule = new ConditionBasedEvolutionRule(
+    (pokemon: Pokemon, player: Player, stageLevel: number) => {
+      return stageLevel >= 25
+    }
+  )
+  evolution = Pkm.MEGA_CHARIZARD_X
   hp = 220
   atk = 18
   speed = 57
@@ -5235,6 +5241,22 @@ export class Charizard extends Pokemon {
   maxPP = 100
   range = 1
   skill = Ability.BLAST_BURN
+  regional = true
+  passive = Passive.CHARIZARD
+}
+
+export class MegaCharizardX extends Pokemon {
+  types = new SetSchema<Synergy>([Synergy.DRAGON, Synergy.FIRE, Synergy.FLYING])
+  rarity = Rarity.COMMON
+  stars = 4
+  hp = 250
+  atk = 23
+  speed = 57
+  def = 12
+  speDef = 10
+  maxPP = 100
+  range = 1
+  skill = Ability.FLARE_BLITZ
   regional = true
 }
 
@@ -20812,6 +20834,7 @@ export const PokemonClasses: Record<
   [Pkm.CHARMANDER]: Charmander,
   [Pkm.CHARMELEON]: Charmeleon,
   [Pkm.CHARIZARD]: Charizard,
+  [Pkm.MEGA_CHARIZARD_X]: MegaCharizardX,
   [Pkm.SQUIRTLE]: Squirtle,
   [Pkm.WARTORTLE]: Wartortle,
   [Pkm.BLASTOISE]: Blastoise,

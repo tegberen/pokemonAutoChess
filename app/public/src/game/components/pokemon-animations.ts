@@ -90,6 +90,13 @@ export const PokemonAnimations: {
     attackSprite: AttackSprite.FIRE_MELEE,
     hitSprite: HitSprite.FIRE_HIT
   },
+  [Pkm.MEGA_CHARIZARD_X]: {
+    attack: AnimationType.Shoot,
+    ability: AnimationType.Swing,
+    emote: AnimationType.Charge,
+    attackSprite: AttackSprite.FIRE_MELEE,
+    hitSprite: HitSprite.FIRE_HIT
+  },
   [Pkm.SQUIRTLE]: {
     attack: AnimationType.Shoot,
     ability: AnimationType.Withdraw,
