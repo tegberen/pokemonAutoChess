@@ -475,7 +475,9 @@ export class Manectric extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.ELECTRIC, Synergy.FIELD])
   rarity = Rarity.RARE
   stars = 2
-  //evolution = Pkm.MEGA_MANECTRIC
+  evolution = Pkm.MEGA_MANECTRIC
+  evolutionRule = new StackBasedEvolutionRule()
+  stacksRequired = 20
   hp = 160
   atk = 14
   speed = 70
@@ -485,6 +487,7 @@ export class Manectric extends Pokemon {
   range = 1
   skill = Ability.THUNDER_FANG
   additional = true
+  passive = Passive.MANECTRIC
 }
 
 export class MegaManectric extends Pokemon {
@@ -498,8 +501,8 @@ export class MegaManectric extends Pokemon {
   speDef = 12
   maxPP = 100
   range = 1
-  skill = Ability.DEFAULT
-  //skill = Ability.THUNDER_FANG
+  skill = Ability.THUNDER_FANG
+  additional = true
 }
 
 export class Shuppet extends Pokemon {
@@ -522,7 +525,9 @@ export class Banette extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.GHOST, Synergy.ARTIFICIAL])
   rarity = Rarity.EPIC
   stars = 2
-  //evolution = Pkm.MEGA_BANETTE
+  evolution = Pkm.MEGA_BANETTE
+  evolutionRule = new StackBasedEvolutionRule()
+  stacksRequired: number = 20
   hp = 180
   atk = 20
   speed = 46
@@ -532,6 +537,7 @@ export class Banette extends Pokemon {
   range = 1
   skill = Ability.SHADOW_CLONE
   additional = true
+  passive = Passive.BANETTE
 }
 
 export class MegaBanette extends Pokemon {
@@ -545,8 +551,8 @@ export class MegaBanette extends Pokemon {
   speDef = 10
   maxPP = 100
   range = 1
-  //skill = Ability.SHADOW_CLONE
-  skill = Ability.DEFAULT
+  skill = Ability.SHADOW_CLONE
+  additional = true
 }
 
 export class Riolu extends Pokemon {
@@ -707,9 +713,11 @@ export class Altaria extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.DRAGON, Synergy.FAIRY, Synergy.SOUND])
   rarity = Rarity.EPIC
   stars = 2
-  //evolution = Pkm.MEGA_ALTARIA
-  hp = 170
-  atk = 15
+  evolution = Pkm.MEGA_ALTARIA
+  evolutionRule = new StackBasedEvolutionRule()
+  stacksRequired = 20
+  hp = 200
+  atk = 19
   speed = 51
   def = 8
   speDef = 8
@@ -717,6 +725,7 @@ export class Altaria extends Pokemon {
   range = 2
   skill = Ability.HYPER_VOICE
   additional = true
+  passive = Passive.ALTARIA
 }
 
 export class MegaAltaria extends Pokemon {
@@ -730,8 +739,8 @@ export class MegaAltaria extends Pokemon {
   speDef = 10
   maxPP = 100
   range = 2
-  //skill = Ability.HYPER_VOICE
-  skill = Ability.DEFAULT
+  skill = Ability.HYPER_VOICE
+  additional = true
 }
 
 export class Scyther extends Pokemon {
@@ -870,7 +879,9 @@ export class Lopunny extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.NORMAL, Synergy.FIGHTING])
   rarity = Rarity.UNCOMMON
   stars = 2
-  //evolution = Pkm.MEGA_LOPUNNY
+  evolutionRule = new StackBasedEvolutionRule()
+  stacksRequired: number = 20
+  evolution = Pkm.MEGA_LOPUNNY
   hp = 120
   atk = 13
   speed = 59
@@ -880,6 +891,7 @@ export class Lopunny extends Pokemon {
   range = 1
   skill = Ability.HIGH_JUMP_KICK
   regional = true
+  passive = Passive.LOPUNNY
 }
 
 export class MegaLopunny extends Pokemon {
@@ -893,8 +905,7 @@ export class MegaLopunny extends Pokemon {
   speDef = 10
   maxPP = 80
   range = 1
-  //skill = Ability.HIGH_JUMP_KICK
-  skill = Ability.DEFAULT
+  skill = Ability.HIGH_JUMP_KICK
   regional = true
 }
 
@@ -918,7 +929,9 @@ export class Steelix extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.ROCK, Synergy.GROUND, Synergy.STEEL])
   rarity = Rarity.EPIC
   stars = 2
-  //evolution = Pkm.MEGA_STEELIX
+  evolution = Pkm.MEGA_STEELIX
+  evolutionRule = new StackBasedEvolutionRule()
+  stacksRequired = 30
   hp = 200
   atk = 13
   speed = 35
@@ -928,6 +941,7 @@ export class Steelix extends Pokemon {
   range = 1
   skill = Ability.IRON_TAIL
   additional = true
+  passive = Passive.STEELIX
 }
 
 export class MegaSteelix extends Pokemon {
@@ -935,14 +949,13 @@ export class MegaSteelix extends Pokemon {
   rarity = Rarity.EPIC
   stars = 3
   hp = 350
-  atk = 22
+  atk = 19
   speed = 35
   def = 60
   speDef = 30
   maxPP = 100
   range = 1
-  skill = Ability.DEFAULT
-  //skill = Ability.IRON_TAIL
+  skill = Ability.IRON_TAIL
   additional = true
 }
 
@@ -966,7 +979,9 @@ export class Camerupt extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.FIRE, Synergy.FIELD, Synergy.GROUND])
   rarity = Rarity.EPIC
   stars = 2
-  //evolution = Pkm.MEGA_CAMERUPT
+  evolution = Pkm.MEGA_CAMERUPT
+  evolutionRule = new StackBasedEvolutionRule()
+  stacksRequired = 20
   hp = 210
   atk = 15
   speed = 38
@@ -976,21 +991,21 @@ export class Camerupt extends Pokemon {
   range = 1
   skill = Ability.ERUPTION
   regional = true
+  passive = Passive.CAMERUPT
 }
 
 export class MegaCamerupt extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.FIRE, Synergy.FIELD, Synergy.GROUND])
   rarity = Rarity.EPIC
   stars = 3
-  hp = 330
+  hp = 300
   atk = 24
   speed = 38
   def = 20
   speDef = 20
   maxPP = 120
   range = 1
-  skill = Ability.DEFAULT
-  //skill = Ability.ERUPTION
+  skill = Ability.ERUPTION
   regional = true
 }
 
@@ -2770,6 +2785,7 @@ export class TogepiMafia extends Pokemon {
   maxPP = 100
   range = 2
   skill = Ability.WISH
+  passive = Passive.TOGEPI_MAFIA
 }
 
 export class Togetic extends Pokemon {
@@ -3028,21 +3044,21 @@ export class Abomasnow extends Pokemon {
   regional = true
 }
 
-export class MegaAbomasnow extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.GRASS, Synergy.ICE, Synergy.MONSTER])
-  rarity = Rarity.EPIC
-  stars = 3
-  hp = 300
-  atk = 30
-  speed = 44
-  def = 14
-  speDef = 14
-  maxPP = 120
-  range = 1
-  skill = Ability.DEFAULT
-  //skill = Ability.SHEER_COLD
-  regional = true
-}
+// export class MegaAbomasnow extends Pokemon {
+//   types = new SetSchema<Synergy>([Synergy.GRASS, Synergy.ICE, Synergy.MONSTER])
+//   rarity = Rarity.EPIC
+//   stars = 3
+//   hp = 300
+//   atk = 30
+//   speed = 44
+//   def = 14
+//   speDef = 14
+//   maxPP = 120
+//   range = 1
+//   skill = Ability.DEFAULT
+//   //skill = Ability.SHEER_COLD
+//   regional = true
+// }
 
 export class Snorunt extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.GHOST, Synergy.ICE])
@@ -8812,8 +8828,10 @@ export class Houndoom extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.FIRE, Synergy.DARK])
   rarity = Rarity.EPIC
   stars = 2
-  //evolution = Pkm.MEGA_HOUNDOOM
-  hp = 175
+  evolution = Pkm.MEGA_HOUNDOOM
+  evolutionRule = new StackBasedEvolutionRule()
+  stacksRequired = 20
+  hp = 160
   atk = 24
   speed = 55
   def = 10
@@ -8822,21 +8840,21 @@ export class Houndoom extends Pokemon {
   range = 1
   skill = Ability.BEAT_UP
   additional = true
+  passive = Passive.HOUNDOOM
 }
 
 export class MegaHoundoom extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.FIRE, Synergy.DARK])
+  types = new SetSchema<Synergy>([Synergy.FIRE, Synergy.DARK, Synergy.FIELD])
   rarity = Rarity.EPIC
   stars = 3
-  hp = 280
-  atk = 35
+  hp = 240
+  atk = 30
   speed = 55
-  def = 16
-  speDef = 16
-  maxPP = 120
+  def = 15
+  speDef = 15
+  maxPP = 140
   range = 1
-  //skill = Ability.BEAT_UP
-  skill = Ability.DEFAULT
+  skill = Ability.BEAT_UP
   additional = true
 }
 
@@ -20991,7 +21009,7 @@ export const PokemonClasses: Record<
   [Pkm.HISUI_ARCANINE]: HisuiArcanine,
   [Pkm.ONIX]: Onix,
   [Pkm.STEELIX]: Steelix,
-  //[Pkm.MEGA_STEELIX]: MegaSteelix,
+  [Pkm.MEGA_STEELIX]: MegaSteelix,
   [Pkm.SCYTHER]: Scyther,
   [Pkm.SCIZOR]: Scizor,
   [Pkm.KLEAVOR]: Kleavor,
@@ -21040,7 +21058,7 @@ export const PokemonClasses: Record<
   [Pkm.MEDICHAM]: Medicham,
   [Pkm.NUMEL]: Numel,
   [Pkm.CAMERUPT]: Camerupt,
-  //[Pkm.MEGA_CAMERUPT]: MegaCamerupt,
+  [Pkm.MEGA_CAMERUPT]: MegaCamerupt,
   [Pkm.DARKRAI]: Darkrai,
   [Pkm.LITWICK]: Litwick,
   [Pkm.LAMPENT]: Lampent,
@@ -21167,7 +21185,7 @@ export const PokemonClasses: Record<
   [Pkm.ROSERADE]: Roserade,
   [Pkm.BUNEARY]: Buneary,
   [Pkm.LOPUNNY]: Lopunny,
-  //[Pkm.MEGA_LOPUNNY]: MegaLopunny,
+  [Pkm.MEGA_LOPUNNY]: MegaLopunny,
   [Pkm.AXEW]: Axew,
   [Pkm.FRAXURE]: Fraxure,
   [Pkm.HAXORUS]: Haxorus,
@@ -21179,10 +21197,10 @@ export const PokemonClasses: Record<
   [Pkm.PORYGON_Z]: PorygonZ,
   [Pkm.ELECTRIKE]: Electrike,
   [Pkm.MANECTRIC]: Manectric,
-  //[Pkm.MEGA_MANECTRIC]: MegaManectric,
+  [Pkm.MEGA_MANECTRIC]: MegaManectric,
   [Pkm.SHUPPET]: Shuppet,
   [Pkm.BANETTE]: Banette,
-  //[Pkm.MEGA_BANETTE]: MegaBanette,
+  [Pkm.MEGA_BANETTE]: MegaBanette,
   [Pkm.HONEDGE]: Honedge,
   [Pkm.DOUBLADE]: Doublade,
   [Pkm.AEGISLASH]: Aegislash,
@@ -21223,7 +21241,7 @@ export const PokemonClasses: Record<
   [Pkm.MELOETTA]: Meloetta,
   [Pkm.PIROUETTE_MELOETTA]: PirouetteMeloetta,
   [Pkm.ALTARIA]: Altaria,
-  //[Pkm.MEGA_ALTARIA]: MegaAltaria,
+  [Pkm.MEGA_ALTARIA]: MegaAltaria,
   [Pkm.CASTFORM]: Castform,
   [Pkm.CASTFORM_SUN]: CastformSun,
   [Pkm.CASTFORM_RAIN]: CastformRain,
@@ -21273,7 +21291,7 @@ export const PokemonClasses: Record<
   [Pkm.BLACEPHALON]: Blacephalon,
   [Pkm.HOUNDOUR]: Houndour,
   [Pkm.HOUNDOOM]: Houndoom,
-  //[Pkm.MEGA_HOUNDOOM]: MegaHoundoom,
+  [Pkm.MEGA_HOUNDOOM]: MegaHoundoom,
   [Pkm.CLAMPERL]: Clamperl,
   [Pkm.HUNTAIL]: Huntail,
   [Pkm.GOREBYSS]: Gorebyss,

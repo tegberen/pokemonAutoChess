@@ -1920,7 +1920,7 @@ export class HyperVoiceStrategy extends AbilityStrategy {
   ) {
     super.process(pokemon, board, target, crit)
 
-    const damage = [25, 50, 100][pokemon.stars - 1] ?? 200
+    const damage = [30, 60, 120][pokemon.stars - 1] ?? 120
     const confusionDuration = [1000, 2000, 3000][pokemon.stars - 1] ?? 3
 
     board.forEach((x: number, y: number, tg: PokemonEntity | undefined) => {
