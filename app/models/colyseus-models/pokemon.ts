@@ -931,7 +931,7 @@ export class Steelix extends Pokemon {
   stars = 2
   evolution = Pkm.MEGA_STEELIX
   evolutionRule = new StackBasedEvolutionRule()
-  stacksRequired = 30
+  stacksRequired = 25
   hp = 200
   atk = 13
   speed = 35
