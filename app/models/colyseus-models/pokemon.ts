@@ -477,7 +477,7 @@ export class Manectric extends Pokemon {
   stars = 2
   evolution = Pkm.MEGA_MANECTRIC
   evolutionRule = new StackBasedEvolutionRule()
-  stacksRequired = 20
+  stacksRequired = 12
   hp = 180
   atk = 17
   speed = 70
@@ -494,7 +494,7 @@ export class MegaManectric extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.ELECTRIC, Synergy.FIELD])
   rarity = Rarity.RARE
   stars = 3
-  hp = 250
+  hp = 300
   atk = 27
   speed = 70
   def = 12
@@ -527,7 +527,7 @@ export class Banette extends Pokemon {
   stars = 2
   evolution = Pkm.MEGA_BANETTE
   evolutionRule = new StackBasedEvolutionRule()
-  stacksRequired: number = 20
+  stacksRequired: number = 30
   hp = 180
   atk = 20
   speed = 46
@@ -8830,7 +8830,7 @@ export class Houndoom extends Pokemon {
   stars = 2
   evolution = Pkm.MEGA_HOUNDOOM
   evolutionRule = new StackBasedEvolutionRule()
-  stacksRequired = 20
+  stacksRequired = 30
   hp = 160
   atk = 24
   speed = 55
