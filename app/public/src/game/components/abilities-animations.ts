@@ -2969,6 +2969,7 @@ export const AbilitiesAnimations: {
       })
     })
   ],
+  [Ability.RISING_VOLTAGE]: onTarget({ positionOffset: [0, -70], scale: 0.9 }),
   ["SUPERCHARGE"]: ({ scene, pokemonsOnBoard, positionX, positionY }) => {
     const pokemon = pokemonsOnBoard.find(
       (p) => p.positionX === positionX && p.positionY === positionY
