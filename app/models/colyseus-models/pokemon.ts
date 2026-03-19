@@ -477,7 +477,7 @@ export class Manectric extends Pokemon {
   stars = 2
   evolution = Pkm.MEGA_MANECTRIC
   evolutionRule = new StackBasedEvolutionRule()
-  stacksRequired = 12
+  stacksRequired = 10
   hp = 180
   atk = 17
   speed = 70
@@ -715,7 +715,7 @@ export class Altaria extends Pokemon {
   stars = 2
   evolution = Pkm.MEGA_ALTARIA
   evolutionRule = new StackBasedEvolutionRule()
-  stacksRequired = 20
+  stacksRequired = 30
   hp = 200
   atk = 19
   speed = 51
@@ -931,7 +931,7 @@ export class Steelix extends Pokemon {
   stars = 2
   evolution = Pkm.MEGA_STEELIX
   evolutionRule = new StackBasedEvolutionRule()
-  stacksRequired = 25
+  stacksRequired = 20
   hp = 200
   atk = 13
   speed = 35
@@ -981,7 +981,7 @@ export class Camerupt extends Pokemon {
   stars = 2
   evolution = Pkm.MEGA_CAMERUPT
   evolutionRule = new StackBasedEvolutionRule()
-  stacksRequired = 20
+  stacksRequired = 30
   hp = 210
   atk = 15
   speed = 38
@@ -1446,7 +1446,7 @@ export class Gardevoir extends Pokemon {
   stars = 3
   evolution = Pkm.MEGA_GARDEVOIR
   evolutionRule = new StackBasedEvolutionRule()
-  stacksRequired: number = 12
+  stacksRequired: number = 10
   hp = 230
   atk = 26
   speed = 51
@@ -1486,7 +1486,7 @@ export class Gallade extends Pokemon {
   stars = 3
   evolution = Pkm.MEGA_GALLADE
   evolutionRule = new StackBasedEvolutionRule()
-  stacksRequired: number = 12
+  stacksRequired: number = 10
   hp = 260
   atk = 38
   speed = 51
@@ -4362,7 +4362,7 @@ export class Slowbro extends Pokemon {
   stars = 2
   evolution = Pkm.MEGA_SLOWBRO
   evolutionRule = new StackBasedEvolutionRule()
-  stacksRequired: number = 12
+  stacksRequired: number = 10
   hp = 160
   atk = 12
   speed = 35

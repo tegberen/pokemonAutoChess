@@ -1928,20 +1928,26 @@ export class HyperVoiceStrategy extends AbilityStrategy {
     crit: boolean
   ) {
     super.process(pokemon, board, target, crit)
-
     const damage = [30, 60, 120][pokemon.stars - 1] ?? 120
-    const confusionDuration = [1000, 2000, 3000][pokemon.stars - 1] ?? 3
-
+    const confusionDuration = [1000, 2000, 3000][pokemon.stars - 1] ?? 3000
+    let confusedCount = 0
     board.forEach((x: number, y: number, tg: PokemonEntity | undefined) => {
       if (tg && pokemon.team != tg.team && target.positionY == y) {
         tg.handleSpecialDamage(damage, board, AttackType.SPECIAL, pokemon, crit)
         if (chance(0.3, pokemon)) {
           tg.status.triggerConfusion(confusionDuration, tg, pokemon)
+          confusedCount++
         }
       }
     })
+    if (confusedCount > 0 && pokemon.passive === Passive.ALTARIA) {
+      for (let i = 0; i < confusedCount; i++) {
+        pokemon.addStack()
+      }
+    }
   }
 }
+
 export class ShadowCloneStrategy extends AbilityStrategy {
   process(
     pokemon: PokemonEntity,
