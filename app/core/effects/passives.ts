@@ -1706,5 +1706,54 @@ export const PassiveEffects: Partial<
         )
       }
     }()
-  ]
+  ],
+  [Passive.SLOWBRO]: [
+    () => new class extends PeriodicEffect {
+      constructor() {
+        super(
+          (pokemon) => {
+            if (pokemon.shield>= 250) {
+              pokemon.addStack()
+              pokemon.effectsSet.delete(this)
+            }
+          },
+          Passive.SLOWBRO,
+          1000
+        )
+      }
+    }()
+  ],
+  [Passive.MEDICHAM]: [
+    () => new class extends PeriodicEffect {
+      constructor() {
+        super(
+          (pokemon) => {
+            if (pokemon.atk>= 100) {
+              pokemon.addStack()
+              pokemon.effectsSet.delete(this)
+            }
+          },
+          Passive.MEDICHAM,
+          1000
+        )
+      }
+    }()
+  ],
+  [Passive.GARDEVOIR]: [
+    new OnKillEffect(({ attacker }) => {
+      if (!attacker.player) return
+      attacker.addStack()
+    })
+  ],
+  [Passive.GALLADE]: [
+    new OnKillEffect(({ attacker }) => {
+      if (!attacker.player) return
+      attacker.addStack()
+    })
+  ],
+  [Passive.ALAKAZAM]: [
+    new OnAbilityCastEffect((pokemon) => {
+      pokemon.addStack()
+    })
+  ],
 }
