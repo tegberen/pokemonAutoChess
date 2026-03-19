@@ -1569,6 +1569,7 @@ export const PassiveEffects: Partial<
   ],
   [Passive.LOPUNNY]: [
     new OnKillEffect(({ attacker }) => {
+      if (!attacker.player) return
       const effects = attacker.player.effects
       if ( effects.has(EffectEnum.JUSTIFIED) || effects.has(EffectEnum.PURE_POWER)) {
         attacker.addStack()
@@ -1577,6 +1578,7 @@ export const PassiveEffects: Partial<
   ],
   [Passive.ALTARIA]: [
     new OnKillEffect(({ attacker }) => {
+      if (!attacker.player) return
       const effects = attacker.player.effects
       if ( effects.has(EffectEnum.DRAGON_DANCE) || effects.has(EffectEnum.MOON_FORCE)) {
         attacker.addStack()
@@ -1601,6 +1603,7 @@ export const PassiveEffects: Partial<
   ],
   [Passive.STEELIX]: [
     new OnSimulationStartEffect(({ entity, player }) => {
+      if (!player) return
       const fullyDugRows = [0, 8, 16].filter((startIdx) => {
         const row = player.groundHoles.slice(startIdx, startIdx + BOARD_WIDTH)
         return row.every((hole) => hole === 5)
