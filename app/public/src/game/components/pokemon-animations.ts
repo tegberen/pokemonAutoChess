@@ -903,6 +903,13 @@ export const PokemonAnimations: {
     attackSprite: AttackSprite.PSYCHIC_RANGE,
     hitSprite: HitSprite.PSYCHIC_HIT
   },
+  [Pkm.MEGA_ALAKAZAM]: {
+    attack: AnimationType.Shoot,
+    ability: AnimationType.Charge,
+    emote: AnimationType.SpAttack,
+    attackSprite: AttackSprite.PSYCHIC_RANGE,
+    hitSprite: HitSprite.PSYCHIC_HIT
+  },
   [Pkm.GASTLY]: {
     attack: AnimationType.Shoot,
     ability: AnimationType.Lick,
@@ -1002,7 +1009,21 @@ export const PokemonAnimations: {
     attackSprite: AttackSprite.PSYCHIC_RANGE,
     hitSprite: HitSprite.PSYCHIC_HIT
   },
+  [Pkm.MEGA_GARDEVOIR]: {
+    attack: AnimationType.SpAttack,
+    ability: AnimationType.SpAttack,
+    emote: AnimationType.Shoot,
+    attackSprite: AttackSprite.PSYCHIC_RANGE,
+    hitSprite: HitSprite.PSYCHIC_HIT
+  },
   [Pkm.GALLADE]: {
+    attack: AnimationType.Strike,
+    ability: AnimationType.Shoot,
+    emote: AnimationType.RearUp,
+    attackSprite: AttackSprite.PSYCHIC_MELEE,
+    hitSprite: HitSprite.STEEL_HIT
+  },
+  [Pkm.MEGA_GALLADE]: {
     attack: AnimationType.Strike,
     ability: AnimationType.Shoot,
     emote: AnimationType.RearUp,
@@ -1469,6 +1490,13 @@ export const PokemonAnimations: {
     attackSprite: AttackSprite.PSYCHIC_RANGE,
     hitSprite: HitSprite.PSYCHIC_HIT
   },
+  [Pkm.MEGA_MEDICHAM]: {
+    attack: AnimationType.Charge,
+    ability: AnimationType.SpAttack,
+    emote: AnimationType.Shoot,
+    attackSprite: AttackSprite.PSYCHIC_RANGE,
+    hitSprite: HitSprite.PSYCHIC_HIT
+  },
   [Pkm.NUMEL]: {
     attack: AnimationType.Shoot,
     ability: AnimationType.RearUp,
@@ -1528,6 +1556,13 @@ export const PokemonAnimations: {
     attack: AnimationType.Attack,
     ability: AnimationType.Shoot,
     emote: AnimationType.Shake,
+    attackSprite: AttackSprite.WATER_MELEE,
+    hitSprite: HitSprite.WATER_HIT
+  },
+  [Pkm.MEGA_SLOWBRO]: {
+    attack: AnimationType.Attack,
+    ability: AnimationType.Twirl,
+    emote: AnimationType.Special1,
     attackSprite: AttackSprite.WATER_MELEE,
     hitSprite: HitSprite.WATER_HIT
   },
