@@ -467,7 +467,7 @@ export class Electrike extends Pokemon {
   speDef = 6
   maxPP = 100
   range = 1
-  skill = Ability.THUNDER_FANG
+  skill = Ability.RISING_VOLTAGE
   additional = true
 }
 
@@ -478,14 +478,14 @@ export class Manectric extends Pokemon {
   evolution = Pkm.MEGA_MANECTRIC
   evolutionRule = new StackBasedEvolutionRule()
   stacksRequired = 20
-  hp = 160
-  atk = 14
+  hp = 180
+  atk = 17
   speed = 70
   def = 8
   speDef = 8
   maxPP = 100
   range = 1
-  skill = Ability.THUNDER_FANG
+  skill = Ability.RISING_VOLTAGE
   additional = true
   passive = Passive.MANECTRIC
 }
@@ -501,7 +501,7 @@ export class MegaManectric extends Pokemon {
   speDef = 12
   maxPP = 100
   range = 1
-  skill = Ability.THUNDER_FANG
+  skill = Ability.RISING_VOLTAGE
   additional = true
 }
 
@@ -999,7 +999,7 @@ export class MegaCamerupt extends Pokemon {
   rarity = Rarity.EPIC
   stars = 3
   hp = 300
-  atk = 24
+  atk = 22
   speed = 38
   def = 20
   speDef = 20
