@@ -1669,7 +1669,7 @@ export class HighJumpKickStrategy extends AbilityStrategy {
   ) {
     super.process(pokemon, board, target, crit)
     const damage = [15, 30, 60][pokemon.stars - 1] ?? 60
-    const ppStolen = max(40)(target.pp)
+    const ppStolen = max([20,40,80][pokemon.stars -1] ?? 80)(target.pp)
     if (target.items.has(Item.TWIST_BAND) === false) {
       pokemon.addPP(ppStolen, pokemon, 0, false)
       target.addPP(-ppStolen, pokemon, 0, false)
