@@ -1667,7 +1667,7 @@ export const PassiveEffects: Partial<
        pokemon.addStack()
     })
   ],
-  [Passive.HOUNDOOOM]: [
+  [Passive.HOUNDOOM]: [
     new OnAbilityCastEffect((pokemon) => {
        pokemon.addStack()
     })
