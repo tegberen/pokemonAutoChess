@@ -1654,15 +1654,7 @@ export const PassiveEffects: Partial<
       }
     })
   ],
-  [Passive.ALTARIA]: [
-    new OnKillEffect(({ attacker }) => {
-      if (!attacker.player) return
-      const effects = attacker.player.effects
-      if ( effects.has(EffectEnum.DRAGON_DANCE) || effects.has(EffectEnum.MOON_FORCE)) {
-        attacker.addStack()
-      }
-    })
-  ],
+
   [Passive.BANETTE]: [
     new OnAbilityCastEffect((pokemon) => {
        pokemon.addStack()
@@ -1675,28 +1667,51 @@ export const PassiveEffects: Partial<
   ],
   [Passive.CAMERUPT]: [
     new OnAbilityCastEffect((pokemon) => {
-      if (pokemon.simulation.weather !== Weather.SANDSTORM) return
-       pokemon.addStack()
-    })
-  ],
-  [Passive.STEELIX]: [
-    new OnSimulationStartEffect(({ entity, player }) => {
-      if (!player) return
-      const fullyDugRows = [0, 8, 16].filter((startIdx) => {
-        const row = player.groundHoles.slice(startIdx, startIdx + BOARD_WIDTH)
-        return row.every((hole) => hole === 5)
-      }).length
-      for (let i = 0; i < fullyDugRows; i++) {
-        entity.addStack()
+      const { weather } = pokemon.simulation
+      pokemon.addStack()
+      if (weather === Weather.SANDSTORM || weather === Weather.DROUGHT) {
+        pokemon.addStack()
       }
     })
+  ],
+  // [Passive.STEELIX]: [
+  //   new OnSimulationStartEffect(({ entity, player }) => {
+  //     if (!player) return
+  //     const fullyDugRows = [0, 8, 16].filter((startIdx) => {
+  //       const row = player.groundHoles.slice(startIdx, startIdx + BOARD_WIDTH)
+  //       return row.every((hole) => hole === 5)
+  //     }).length
+  //     for (let i = 0; i < fullyDugRows; i++) {
+  //       entity.addStack()
+  //     }
+  //   })
+  // ],
+  [Passive.STEELIX]: [
+    () => new class extends OnDamageReceivedEffect {
+      accumulated = 0
+      stacksGiven = 0
+      constructor() {
+        super(({ pokemon, damage, damageBeforeReduction }) => {
+          const blocked = damageBeforeReduction - damage
+          if (blocked <= 0) return
+          this.accumulated += blocked
+          const newStacks = Math.floor(this.accumulated / 500)
+          if (newStacks > this.stacksGiven) {
+            for (let i = this.stacksGiven; i < newStacks; i++) {
+              pokemon.addStack()
+            }
+            this.stacksGiven = newStacks
+          }
+        }, Passive.STEELIX)
+      }
+    }()
   ],
   [Passive.MANECTRIC]: [
     () => new class extends PeriodicEffect {
       constructor() {
         super(
           (pokemon) => {
-            if (pokemon.speed >= 250) {
+            if (pokemon.speed >= 200) {
               pokemon.addStack()
               pokemon.effectsSet.delete(this)
             }
@@ -1712,7 +1727,7 @@ export const PassiveEffects: Partial<
       constructor() {
         super(
           (pokemon) => {
-            if (pokemon.shield>= 250) {
+            if (pokemon.shield>= 150) {
               pokemon.addStack()
               pokemon.effectsSet.delete(this)
             }
