@@ -22,4 +22,9 @@
 ![Mega Altaria](/assets/portraits/0334/0001/Normal.png)
 ![Mega Banette](/assets/portraits/0354/0001/Normal.png)
 ![Mega Manectric](/assets/portraits/0310/0001/Normal.png)
+![Mega Slowbro](/assets/portraits/0080/0002/Normal.png)
+![Mega Gallade](/assets/portraits/0475/0001/Normal.png)
+![Mega Gardevoir](/assets/portraits/0282/0001/Normal.png)
+![Mega Medicham](/assets/portraits/0308/0001/Normal.png)
+![Mega Alakazam](/assets/portraits/0065/0001/Normal.png)
 

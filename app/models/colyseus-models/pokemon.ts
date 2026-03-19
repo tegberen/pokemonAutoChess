@@ -1037,6 +1037,10 @@ export class Medicham extends Pokemon {
   ])
   rarity = Rarity.EPIC
   stars = 2
+  evolution = Pkm.MEGA_MEDICHAM
+  evolutionRule = new StackBasedEvolutionRule()
+  stacksRequired: number = 8
+
   hp = 160
   atk = 16
   speed = 51
@@ -1044,6 +1048,26 @@ export class Medicham extends Pokemon {
   speDef = 12
   maxPP = 100
   range = 2
+  skill = Ability.MEDITATE
+  additional = true
+  passive = Passive.MEDICHAM
+}
+
+export class MegaMedicham extends Pokemon {
+  types = new SetSchema<Synergy>([
+    Synergy.PSYCHIC,
+    Synergy.HUMAN,
+    Synergy.FIGHTING
+  ])
+  rarity = Rarity.EPIC
+  stars = 3
+  hp = 240
+  atk = 23
+  speed = 56
+  def = 16
+  speDef = 16
+  maxPP = 100
+  range = 3
   skill = Ability.MEDITATE
   additional = true
 }
@@ -1420,12 +1444,34 @@ export class Gardevoir extends Pokemon {
   ])
   rarity = Rarity.EPIC
   stars = 3
+  evolution = Pkm.MEGA_GARDEVOIR
+  evolutionRule = new StackBasedEvolutionRule()
+  stacksRequired: number = 12
   hp = 230
   atk = 26
   speed = 51
   def = 8
   speDef = 16
   maxPP = 95
+  range = 3
+  skill = Ability.FUTURE_SIGHT
+  passive = Passive.GARDEVOIR
+}
+
+export class MegaGardevoir extends Pokemon {
+  types = new SetSchema<Synergy>([
+    Synergy.PSYCHIC,
+    Synergy.FAIRY,
+    Synergy.HUMAN
+  ])
+  rarity = Rarity.EPIC
+  stars = 4
+  hp = 250
+  atk = 26
+  speed = 51
+  def = 12
+  speDef = 20
+  maxPP = 65
   range = 3
   skill = Ability.FUTURE_SIGHT
 }
@@ -1438,11 +1484,33 @@ export class Gallade extends Pokemon {
   ])
   rarity: Rarity = Rarity.EPIC
   stars = 3
+  evolution = Pkm.MEGA_GALLADE
+  evolutionRule = new StackBasedEvolutionRule()
+  stacksRequired: number = 12
   hp = 260
   atk = 38
   speed = 51
   def = 10
   speDef = 20
+  maxPP = 95
+  range = 1
+  skill = Ability.PSYCHO_CUT
+  passive = Passive.GALLADE
+}
+
+export class MegaGallade extends Pokemon {
+  types = new SetSchema<Synergy>([
+    Synergy.PSYCHIC,
+    Synergy.FIGHTING,
+    Synergy.HUMAN
+  ])
+  rarity = Rarity.EPIC
+  stars = 4
+  hp = 280
+  atk = 48
+  speed = 51
+  def = 14
+  speDef = 24
   maxPP = 95
   range = 1
   skill = Ability.PSYCHO_CUT
@@ -1936,11 +2004,29 @@ export class Alakazam extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.PSYCHIC, Synergy.HUMAN])
   rarity = Rarity.RARE
   stars = 3
+  evolution = Pkm.MEGA_ALAKAZAM
+  evolutionRule = new StackBasedEvolutionRule()
+  stacksRequired: number = 50
   hp = 230
   atk = 19
   speed = 63
   def = 8
   speDef = 16
+  maxPP = 50
+  range = 4
+  skill = Ability.TELEPORT
+  passive = Passive.ALAKAZAM
+}
+
+export class MegaAlakazam extends Pokemon {
+  types = new SetSchema<Synergy>([Synergy.PSYCHIC, Synergy.HUMAN])
+  rarity = Rarity.RARE
+  stars = 4
+  hp = 240
+  atk = 20
+  speed = 79
+  def = 10
+  speDef = 18
   maxPP = 50
   range = 4
   skill = Ability.TELEPORT
@@ -4274,11 +4360,30 @@ export class Slowbro extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.PSYCHIC, Synergy.WATER])
   rarity = Rarity.UNCOMMON
   stars = 2
+  evolution = Pkm.MEGA_SLOWBRO
+  evolutionRule = new StackBasedEvolutionRule()
+  stacksRequired: number = 12
   hp = 160
   atk = 12
   speed = 35
   def = 10
   speDef = 6
+  maxPP = 100
+  range = 1
+  skill = Ability.YAWN
+  additional = true
+  passive = Passive.SLOWBRO
+}
+
+export class MegaSlowbro extends Pokemon {
+  types = new SetSchema<Synergy>([Synergy.PSYCHIC, Synergy.WATER])
+  rarity = Rarity.UNCOMMON
+  stars = 3
+  hp = 240
+  atk = 17
+  speed = 35
+  def = 30
+  speDef = 12
   maxPP = 100
   range = 1
   skill = Ability.YAWN
@@ -20748,6 +20853,7 @@ export const PokemonClasses: Record<
   [Pkm.BLASTOISE]: Blastoise,
   [Pkm.SLOWPOKE]: Slowpoke,
   [Pkm.SLOWBRO]: Slowbro,
+  [Pkm.MEGA_SLOWBRO]: MegaSlowbro,
   [Pkm.SLOWKING]: Slowking,
   [Pkm.GEODUDE]: Geodude,
   [Pkm.GRAVELER]: Graveler,
@@ -20862,6 +20968,7 @@ export const PokemonClasses: Record<
   [Pkm.ABRA]: Abra,
   [Pkm.KADABRA]: Kadabra,
   [Pkm.ALAKAZAM]: Alakazam,
+  [Pkm.MEGA_ALAKAZAM]: MegaAlakazam,
   [Pkm.GASTLY]: Gastly,
   [Pkm.HAUNTER]: Haunter,
   [Pkm.GENGAR]: Gengar,
@@ -20877,6 +20984,7 @@ export const PokemonClasses: Record<
   [Pkm.RALTS]: Ralts,
   [Pkm.KIRLIA]: Kirlia,
   [Pkm.GARDEVOIR]: Gardevoir,
+  [Pkm.MEGA_GARDEVOIR]: MegaGardevoir,
   [Pkm.BAGON]: Bagon,
   [Pkm.SHELGON]: Shelgon,
   [Pkm.SALAMENCE]: Salamence,
@@ -20947,6 +21055,7 @@ export const PokemonClasses: Record<
   [Pkm.GLACEON]: Glaceon,
   [Pkm.MEDITITE]: Meditite,
   [Pkm.MEDICHAM]: Medicham,
+  [Pkm.MEGA_MEDICHAM]: MegaMedicham,
   [Pkm.NUMEL]: Numel,
   [Pkm.CAMERUPT]: Camerupt,
   [Pkm.MEGA_CAMERUPT]: MegaCamerupt,
@@ -21761,6 +21870,7 @@ export const PokemonClasses: Record<
   [Pkm.THWACKEY]: Thwackey,
   [Pkm.RILLABOOM]: Rillaboom,
   [Pkm.GALLADE]: Gallade,
+  [Pkm.MEGA_GALLADE]: MegaGallade,
   [Pkm.KUBFU]: Kubfu,
   [Pkm.URSHIFU_SINGLE]: UrshifuSingle,
   [Pkm.URSHIFU_RAPID]: UrshifuRapid,
