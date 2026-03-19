@@ -26,7 +26,8 @@
 - When Pikachu is send to the dojo, obtain a TRAINING_RIBBON. Can be used to evolve Pikachu into Pikachu Libre.
 - Deoxys Attack: ATK 25 → 35
 - Reworked Yveltals Ability: Jump to the backline, then fire a beam in a line dealing [100,SP] SPECIAL to all enemy Pokémon. Heal for 75% of the damage dealt. Will stay in the backline with increased RANGE for 3 seconds.
-- New Ability Squirtle line, Withdraw: Retreat into its shell while blasting out water, dealing [20,40,60, SP] SPECIAL damage to ADJACENT enemy Pokémon and pushing them back 1 tile. Increase the users DEF by [2,4,8,SP]. 
+- New Ability Squirtle line, Withdraw: Retreat into its shell while blasting out water, dealing [20,40,60, SP] SPECIAL damage to ADJACENT enemy Pokémon and pushing them back 1 tile. Increase the users DEF by [2,4,8,SP].
+- New Ability Electike line, Rising Voltage: The user gathers electric voltage and deals [30,60,120,SP] SPECIAL to the target. Gains ELECTRIC_FIELD and spreads it to all ADJACENT Pokémon. Double the damage, if the opponent has ELECTRIC_FIELD.
 
 # Changes to Rarity, Typings, etc.
 ## Common

@@ -9653,6 +9653,44 @@ export class ThunderFangStrategy extends AbilityStrategy {
   }
 }
 
+export class RisingVoltageStrategy extends AbilityStrategy {
+  process(
+    pokemon: PokemonEntity,
+    board: Board,
+    target: PokemonEntity,
+    crit: boolean
+  ) {
+    super.process(pokemon, board, target, crit)
+    let damage = [30, 60, 120][pokemon.stars - 1] ?? 120
+
+    // double damage if target already has electric field
+    if (target.status.electricField) {
+      damage *= 2
+    }
+
+    target.handleSpecialDamage(
+      damage,
+      board,
+      AttackType.SPECIAL,
+      pokemon,
+      crit,
+      true
+    )
+
+    // gain electric field
+    pokemon.status.electricField = true
+
+    // spread to all adjacent pokemon, allies and enemies
+    board
+      .getAdjacentCells(pokemon.positionX, pokemon.positionY)
+      .map((cell) => cell.value)
+      .filter((e): e is PokemonEntity => e != null)
+      .forEach((e) => {
+        e.status.electricField = true
+      })
+  }
+}
+
 export class TailWhipStrategy extends AbilityStrategy {
   process(
     pokemon: PokemonEntity,
@@ -17277,6 +17315,7 @@ export const AbilityStrategies: { [key in Ability]: AbilityStrategy } = {
   [Ability.FIRE_FANG]: new FireFangStrategy(),
   [Ability.ICE_FANG]: new IceFangStrategy(),
   [Ability.THUNDER_FANG]: new ThunderFangStrategy(),
+  [Ability.RISING_VOLTAGE]: new RisingVoltageStrategy(),
   [Ability.TAIL_WHIP]: new TailWhipStrategy(),
   [Ability.PSYSHIELD_BASH]: new PsyshieldBashStrategy(),
   [Ability.QUIVER_DANCE]: new QuiverDanceStrategy(),
