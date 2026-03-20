@@ -2604,6 +2604,9 @@ export class RockSlideStrategy extends AbilityStrategy {
     if (pokemon.stars === 3) {
       damage = 120
     }
+    if (pokemon.stars === 4) {
+      damage = 240
+    }
 
     if (target.types.has(Synergy.FLYING)) {
       damage = damage * 2
@@ -3555,7 +3558,7 @@ export class BiteStrategy extends AbilityStrategy {
     crit: boolean
   ) {
     super.process(pokemon, board, target, crit)
-    const damage = [40, 80, 120][pokemon.stars - 1] ?? 120
+    const damage = [40, 80, 120, 160][pokemon.stars - 1] ?? 120
     const { takenDamage } = target.handleSpecialDamage(
       damage,
       board,

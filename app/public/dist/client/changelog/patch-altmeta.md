@@ -22,6 +22,9 @@
 - Mega Gardevoir
 - Mega Medicham
 - Mega Alakazam
+- Mega Tyranitar
+- Mega Aerodactyl
+- Mega Diancie
 
 # Changes to Pokemon & Abilities
 - New Ability for Duskull line, Trick Room: If the target and adjacent enemies are faster than the user, halve their current speed. Otherwise, deal [20,40,80,SP] SPECIAL.

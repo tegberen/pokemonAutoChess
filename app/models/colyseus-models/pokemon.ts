@@ -497,11 +497,11 @@ export class MegaManectric extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.ELECTRIC, Synergy.FIELD])
   rarity = Rarity.RARE
   stars = 3
-  hp = 300
+  hp = 280
   atk = 27
   speed = 70
-  def = 12
-  speDef = 12
+  def = 10
+  speDef = 10
   maxPP = 100
   range = 1
   skill = Ability.RISING_VOLTAGE
@@ -530,7 +530,7 @@ export class Banette extends Pokemon {
   stars = 2
   evolution = Pkm.MEGA_BANETTE
   evolutionRule = new StackBasedEvolutionRule()
-  stacksRequired: number = 30
+  stacksRequired: number = 20
   hp = 180
   atk = 20
   speed = 46
@@ -547,7 +547,7 @@ export class MegaBanette extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.GHOST, Synergy.ARTIFICIAL])
   rarity = Rarity.EPIC
   stars = 3
-  hp = 300
+  hp = 240
   atk = 30
   speed = 46
   def = 8
@@ -718,7 +718,7 @@ export class Altaria extends Pokemon {
   stars = 2
   evolution = Pkm.MEGA_ALTARIA
   evolutionRule = new StackBasedEvolutionRule()
-  stacksRequired = 30
+  stacksRequired = 20
   hp = 200
   atk = 19
   speed = 51
@@ -735,8 +735,8 @@ export class MegaAltaria extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.DRAGON, Synergy.FAIRY, Synergy.SOUND])
   rarity = Rarity.EPIC
   stars = 3
-  hp = 260
-  atk = 24
+  hp = 240
+  atk = 22
   speed = 51
   def = 10
   speDef = 10
@@ -934,7 +934,7 @@ export class Steelix extends Pokemon {
   stars = 2
   evolution = Pkm.MEGA_STEELIX
   evolutionRule = new StackBasedEvolutionRule()
-  stacksRequired = 20
+  stacksRequired = 10
   hp = 200
   atk = 13
   speed = 35
@@ -951,11 +951,11 @@ export class MegaSteelix extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.ROCK, Synergy.GROUND, Synergy.STEEL])
   rarity = Rarity.EPIC
   stars = 3
-  hp = 350
+  hp = 300
   atk = 19
   speed = 35
   def = 60
-  speDef = 30
+  speDef = 12
   maxPP = 100
   range = 1
   skill = Ability.IRON_TAIL
@@ -984,7 +984,7 @@ export class Camerupt extends Pokemon {
   stars = 2
   evolution = Pkm.MEGA_CAMERUPT
   evolutionRule = new StackBasedEvolutionRule()
-  stacksRequired = 30
+  stacksRequired = 20
   hp = 210
   atk = 15
   speed = 38
@@ -1001,11 +1001,11 @@ export class MegaCamerupt extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.FIRE, Synergy.FIELD, Synergy.GROUND])
   rarity = Rarity.EPIC
   stars = 3
-  hp = 300
+  hp = 250
   atk = 22
   speed = 38
-  def = 20
-  speDef = 20
+  def = 22
+  speDef = 22
   maxPP = 120
   range = 1
   skill = Ability.ERUPTION
@@ -1042,7 +1042,7 @@ export class Medicham extends Pokemon {
   stars = 2
   evolution = Pkm.MEGA_MEDICHAM
   evolutionRule = new StackBasedEvolutionRule()
-  stacksRequired: number = 8
+  stacksRequired: number = 10
 
   hp = 160
   atk = 16
@@ -1849,11 +1849,29 @@ export class Tyranitar extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.DARK, Synergy.MONSTER, Synergy.ROCK])
   rarity = Rarity.RARE
   stars = 3
+  evolution = Pkm.MEGA_TYRANITAR
+  evolutionRule = new StackBasedEvolutionRule()
+  stacksRequired: number = 20
   hp = 210
   atk = 28
   speed = 45
   def = 16
   speDef = 10
+  maxPP = 90
+  range = 1
+  skill = Ability.BITE
+  passive = Passive.TYRANITAR
+}
+
+export class MegaTyranitar extends Pokemon {
+  types = new SetSchema<Synergy>([Synergy.DARK, Synergy.MONSTER, Synergy.ROCK])
+  rarity = Rarity.RARE
+  stars = 4
+  hp = 230
+  atk = 32
+  speed = 45
+  def = 20
+  speDef = 12
   maxPP = 90
   range = 1
   skill = Ability.BITE
@@ -7901,6 +7919,9 @@ export class Carbink extends Pokemon {
 export class Diancie extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.FOSSIL, Synergy.ROCK, Synergy.FAIRY])
   rarity = Rarity.EPIC
+  evolution = Pkm.MEGA_DIANCIE
+  evolutionRule = new StackBasedEvolutionRule()
+  stacksRequired = 10
   stars = 2
   hp = 180
   atk = 10
@@ -7911,6 +7932,23 @@ export class Diancie extends Pokemon {
   range = 1
   skill = Ability.DIAMOND_STORM
   additional = true
+  passive = Passive.DIANCIE
+}
+
+export class MegaDiancie extends Pokemon {
+  types = new SetSchema<Synergy>([Synergy.FOSSIL, Synergy.ROCK, Synergy.FAIRY])
+  rarity = Rarity.EPIC
+  stars = 3
+  hp = 200
+  atk = 25
+  speed = 41
+  def = 30
+  speDef = 30
+  maxPP = 100
+  range = 1
+  skill = Ability.DIAMOND_STORM
+  additional = true
+  passive = Passive.MEGA_DIANCIE
 }
 
 export class Sunkern extends Pokemon {
@@ -8506,12 +8544,30 @@ export class Tyrantrum extends Pokemon {
 export class Aerodactyl extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.ROCK, Synergy.FLYING, Synergy.FOSSIL])
   rarity = Rarity.UNIQUE
+  evolution = Pkm.MEGA_AERODACTYL
+  evolutionRule = new StackBasedEvolutionRule()
+  stacksRequired = 20
   stars = 3
   hp = 200
   atk = 14
   speed = 67
   def = 6
   speDef = 6
+  maxPP = 80
+  range = 1
+  skill = Ability.ROCK_SLIDE
+  passive = Passive.AERODACTYL
+}
+
+export class MegaAerodactyl extends Pokemon {
+  types = new SetSchema<Synergy>([Synergy.ROCK, Synergy.FLYING, Synergy.FOSSIL])
+  rarity = Rarity.UNIQUE
+  stars = 4
+  hp = 220
+  atk = 19
+  speed = 77
+  def = 8
+  speDef = 10
   maxPP = 80
   range = 1
   skill = Ability.ROCK_SLIDE
@@ -8948,7 +9004,7 @@ export class Houndoom extends Pokemon {
   stars = 2
   evolution = Pkm.MEGA_HOUNDOOM
   evolutionRule = new StackBasedEvolutionRule()
-  stacksRequired = 30
+  stacksRequired = 20
   hp = 160
   atk = 24
   speed = 55
@@ -8965,12 +9021,12 @@ export class MegaHoundoom extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.FIRE, Synergy.DARK, Synergy.FIELD])
   rarity = Rarity.EPIC
   stars = 3
-  hp = 240
-  atk = 30
-  speed = 55
+  hp = 250
+  atk = 25
+  speed = 57
   def = 15
   speDef = 15
-  maxPP = 140
+  maxPP = 120
   range = 1
   skill = Ability.BEAT_UP
   additional = true
@@ -20910,6 +20966,7 @@ export const PokemonClasses: Record<
   [Pkm.LARVITAR]: Larvitar,
   [Pkm.PUPITAR]: Pupitar,
   [Pkm.TYRANITAR]: Tyranitar,
+  [Pkm.MEGA_TYRANITAR]: MegaTyranitar,
   [Pkm.SLAKOTH]: Slakoth,
   [Pkm.VIGOROTH]: Vigoroth,
   [Pkm.SLAKING]: Slaking,
@@ -21071,6 +21128,7 @@ export const PokemonClasses: Record<
   [Pkm.ROTOM_MOW]: RotomMow,
   [Pkm.ROTOM_DRONE]: RotomDrone,
   [Pkm.AERODACTYL]: Aerodactyl,
+  [Pkm.MEGA_AERODACTYL]: MegaAerodactyl,
   [Pkm.SWABLU]: Swablu,
   [Pkm.CARVANHA]: Carvanha,
   [Pkm.PRIMAL_KYOGRE]: PrimalKyogre,
@@ -21184,6 +21242,7 @@ export const PokemonClasses: Record<
   [Pkm.GALVANTULA]: Galvantula,
   [Pkm.GENESECT]: Genesect,
   [Pkm.DIANCIE]: Diancie,
+  [Pkm.MEGA_DIANCIE]: MegaDiancie,
   [Pkm.HATENNA]: Hatenna,
   [Pkm.HATTREM]: Hattrem,
   [Pkm.HATTERENE]: Hatterene,
