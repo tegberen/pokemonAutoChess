@@ -57,8 +57,8 @@ import { GameStats, initialGameStats } from "../../types/interfaces/GameStats"
 import { IPokemonCollectionItemMongo } from "../../types/interfaces/UserMetadata"
 import { isIn, removeInArray } from "../../utils/array"
 import { getPokemonCustomFromAvatar } from "../../utils/avatar"
-import { getFirstAvailablePositionInBench, isOnBench } from "../../utils/board"
-import { min } from "../../utils/number"
+import { getFirstAvailablePositionInBench, isOnBench, getFirstAvailablePositionOnBoard } from "../../utils/board"
+import { max, min } from "../../utils/number"
 import {
   chance,
   pickNRandomIn,
@@ -404,6 +404,37 @@ export default class Player extends Schema implements IPlayer {
       values(this.board).filter((p) => p.stars >= 3).length >= 5
     ) {
       this.completeMissionOrder(Item.MISSION_ORDER_PINK)
+    }
+
+     if (
+      previousSynergies.get(Synergy.FIGHTING) !==
+      updatedSynergies.get(Synergy.FIGHTING)
+    ) {
+      this.updateSubstitutes()
+    }
+
+  }
+  updateSubstitutes() {
+    const fightingStep = getSynergyStep(this.synergies, Synergy.FIGHTING)
+    const substitutes = values(this.board).filter(
+      (p) => p.name === Pkm.SUBSTITUTE && p.passive === Passive.FIGHTING_SUBSTITUTE
+    )
+    const shouldHaveSubstitute = fightingStep >= 4
+
+    if (shouldHaveSubstitute && substitutes.length === 0) {
+      const freeSpace = getFirstAvailablePositionOnBoard(this.board, 1)
+      if (freeSpace) {
+        const substitute = PokemonFactory.createPokemonFromName(
+          Pkm.SUBSTITUTE,
+          this
+        )
+        substitute.passive = Passive.FIGHTING_SUBSTITUTE
+        substitute.positionX = freeSpace[0]
+        substitute.positionY = freeSpace[1]
+        this.board.set(substitute.id, substitute)
+      }
+    } else if (!shouldHaveSubstitute && substitutes.length > 0) {
+      substitutes.forEach((s) => this.board.delete(s.id))
     }
   }
 
