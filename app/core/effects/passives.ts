@@ -1707,12 +1707,16 @@ export const PassiveEffects: Partial<
   ],
   [Passive.MANECTRIC]: [
     () => new class extends PeriodicEffect {
+      stacksGiven = 0
       constructor() {
         super(
           (pokemon) => {
-            if (pokemon.speed >= 150) {
-              pokemon.addStack()
-              pokemon.effectsSet.delete(this)
+            const newStacks = Math.floor(pokemon.speed / 150)
+            if (newStacks > this.stacksGiven) {
+              for (let i = this.stacksGiven; i < newStacks; i++) {
+                pokemon.addStack()
+              }
+              this.stacksGiven = newStacks
             }
           },
           Passive.MANECTRIC,
