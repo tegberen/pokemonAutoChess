@@ -494,9 +494,9 @@ export class MegaManectric extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.ELECTRIC, Synergy.FIELD])
   rarity = Rarity.RARE
   stars = 3
-  hp = 280
-  atk = 27
-  speed = 70
+  hp = 240
+  atk = 24
+  speed = 74
   def = 10
   speDef = 10
   maxPP = 100
