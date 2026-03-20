@@ -52,6 +52,7 @@ import {
   OnStageStartEffect,
   PeriodicEffect
 } from "./effect"
+import { logger } from "../../utils/logger"
 
 export function drumBeat(pokemon: PokemonEntity, board: Board) {
   const speed = pokemon.status.paralysis ? pokemon.speed / 2 : pokemon.speed
@@ -1645,11 +1646,10 @@ export const PassiveEffects: Partial<
     })
   ],
   [Passive.LOPUNNY]: [
-    new OnKillEffect(({ attacker }) => {
-      if (!attacker.player) return
-      const effects = attacker.player.effects
-      if ( effects.has(EffectEnum.JUSTIFIED) || effects.has(EffectEnum.PURE_POWER)) {
-        attacker.addStack()
+    new OnAbilityCastEffect((pokemon) => {
+      const effects = pokemon.player.effects
+      if (effects.has(EffectEnum.JUSTIFIED) || effects.has(EffectEnum.PURE_POWER)) {
+        pokemon.addStack()
       }
     })
   ],
@@ -1710,7 +1710,7 @@ export const PassiveEffects: Partial<
       constructor() {
         super(
           (pokemon) => {
-            if (pokemon.speed >= 200) {
+            if (pokemon.speed >= 150) {
               pokemon.addStack()
               pokemon.effectsSet.delete(this)
             }
@@ -1739,12 +1739,16 @@ export const PassiveEffects: Partial<
   ],
   [Passive.MEDICHAM]: [
     () => new class extends PeriodicEffect {
+      stacksGiven = 0
       constructor() {
         super(
           (pokemon) => {
-            if (pokemon.atk>= 100) {
-              pokemon.addStack()
-              pokemon.effectsSet.delete(this)
+            const newStacks = Math.floor(pokemon.atk / 100)
+            if (newStacks > this.stacksGiven) {
+              for (let i = this.stacksGiven; i < newStacks; i++) {
+                pokemon.addStack()
+              }
+              this.stacksGiven = newStacks
             }
           },
           Passive.MEDICHAM,
@@ -1769,5 +1773,115 @@ export const PassiveEffects: Partial<
     new OnAbilityCastEffect((pokemon) => {
       pokemon.addStack()
     })
+  ],
+  [Passive.AERODACTYL]: [
+    new OnKillEffect(({ attacker,target }) => {
+      if (!attacker.player) return
+      attacker.addStack()
+      if (target.types.has(Synergy.FLYING)) {
+        attacker.addStack()
+      }
+    })
+  ],
+  [Passive.TYRANITAR]: [
+    new OnKillEffect(({ attacker }) => {
+      if (!attacker.player) return
+      if (
+        attacker.effects.has(EffectEnum.PURSUIT) ||
+        attacker.effects.has(EffectEnum.BRUTAL_SWING) ||
+        attacker.effects.has(EffectEnum.POWER_TRIP) ||
+        attacker.effects.has(EffectEnum.MERCILESS)
+      ) {
+        attacker.addStack()
+      }
+    }),
+    () => new class extends OnDamageReceivedEffect {
+      accumulated = 0
+      stacksGiven = 0
+      constructor() {
+        super(({ pokemon, damage, damageBeforeReduction }) => {
+          const blocked = damageBeforeReduction - damage
+          if (blocked <= 0) return
+          this.accumulated += blocked
+          const newStacks = Math.floor(this.accumulated / 300)
+          if (newStacks > this.stacksGiven) {
+            for (let i = this.stacksGiven; i < newStacks; i++) {
+              pokemon.addStack()
+            }
+            this.stacksGiven = newStacks
+          }
+        }, Passive.TYRANITAR)
+      }
+    }()
+  ],
+  [Passive.DIANCIE]: [
+    () => {
+      const effect = new class extends PeriodicEffect {
+        prevBurn = false
+        prevPoison = false
+        prevParalysis = false
+        prevConfusion = false
+        prevFreeze = false
+        prevSleep = false
+        prevWound = false
+        prevSilence = false
+        constructor() {
+          super(
+            (pokemon) => {
+              const s = pokemon.status
+              if (s.burn && !this.prevBurn) pokemon.addStack()
+              if (s.poisonStacks > 0 && !this.prevPoison) pokemon.addStack()
+              if (s.paralysis && !this.prevParalysis) pokemon.addStack()
+              if (s.confusion && !this.prevConfusion) pokemon.addStack()
+              if (s.freeze && !this.prevFreeze) pokemon.addStack()
+              if (s.sleep && !this.prevSleep) pokemon.addStack()
+              if (s.wound && !this.prevWound) pokemon.addStack()
+              if (s.silence && !this.prevSilence) pokemon.addStack()
+              this.prevBurn = s.burn
+              this.prevPoison = s.poisonStacks > 0
+              this.prevParalysis = s.paralysis
+              this.prevConfusion = s.confusion
+              this.prevFreeze = s.freeze
+              this.prevSleep = s.sleep
+              this.prevWound = s.wound
+              this.prevSilence = s.silence
+            },
+            Passive.DIANCIE,
+            500
+          )
+        }
+      }()
+      return effect
+    }
+  ],
+  [Passive.MEGA_DIANCIE]: [
+    () => {
+      const effect = new class extends PeriodicEffect {
+        constructor() {
+          super(
+            (pokemon) => {
+              const s = pokemon.status
+              if (
+                s.burn ||
+                s.poisonStacks > 0 ||
+                s.paralysis ||
+                s.confusion ||
+                s.freeze ||
+                s.sleep ||
+                s.wound ||
+                s.silence
+              ) {
+                pokemon.status.triggerMagicBounce(5000);
+                pokemon.status.triggerRuneProtect(5000, pokemon, pokemon)
+                pokemon.effectsSet.delete(effect)
+              }
+            },
+            Passive.MEGA_DIANCIE,
+            500
+          )
+        }
+      }()
+      return effect
+    }
   ],
 }
