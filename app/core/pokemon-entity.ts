@@ -254,6 +254,13 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
     targetEnemies = true,
     targetAllies = false
   ): boolean {
+    if (
+      this.name === Pkm.SUBSTITUTE &&
+      this.passive === Passive.FIGHTING_SUBSTITUTE &&
+      !attacker.types.has(Synergy.FIGHTING)
+    ) {
+      return false
+    }
     return (
       !this.status.untargettable &&
       ((targetAllies && this.team === attacker.team) ||
