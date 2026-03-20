@@ -27,4 +27,7 @@
 ![Mega Gardevoir](/assets/portraits/0282/0001/Normal.png)
 ![Mega Medicham](/assets/portraits/0308/0001/Normal.png)
 ![Mega Alakazam](/assets/portraits/0065/0001/Normal.png)
+![Mega Tyranitar](/assets/portraits/0248/0001/Normal.png)
+![Mega Aerodactyl](/assets/portraits/0142/0001/Normal.png)
+![Mega Diancie](/assets/portraits/0719/0001/Normal.png)
 
