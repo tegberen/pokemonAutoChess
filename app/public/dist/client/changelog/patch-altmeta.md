@@ -129,3 +129,4 @@
 - Added Shiniest Hunter: All PvE encounter are shiny
 - New Fugitive
 - Additional effect for ROCK: When KO'd, explode and deal TRUE and ARMOR_BREAK ADJACENT enemies. 
+- Additional effect for FIGHTING 8: Spawns a substitute as training dummy. The FIGHTING Pokemon that defeats the substitute will gain 3 ATK and 10 HP permanently.
