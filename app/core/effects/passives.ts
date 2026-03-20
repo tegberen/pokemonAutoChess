@@ -52,7 +52,6 @@ import {
   OnStageStartEffect,
   PeriodicEffect
 } from "./effect"
-import { logger } from "../../utils/logger"
 
 export function drumBeat(pokemon: PokemonEntity, board: Board) {
   const speed = pokemon.status.paralysis ? pokemon.speed / 2 : pokemon.speed
@@ -1649,6 +1648,7 @@ export const PassiveEffects: Partial<
   ],
   [Passive.LOPUNNY]: [
     new OnAbilityCastEffect((pokemon) => {
+      if (!pokemon.player) return
       const effects = pokemon.player.effects
       if (effects.has(EffectEnum.JUSTIFIED) || effects.has(EffectEnum.PURE_POWER)) {
         pokemon.addStack()
