@@ -62,6 +62,7 @@ import { WaterSpringEffect } from "./effects/passives"
 import {
   electricTripleAttackEffect,
   FightingKnockbackEffect,
+  FightingSubstituteKillEffect,
   FireHitEffect,
   FlyingProtectionEffect,
   GroundHoleEffect,
@@ -176,24 +177,16 @@ export default class Simulation extends Schema implements ISimulation {
 
     this.bluePlayer.board.forEach((pokemon) => {
       if (!isOnBench(pokemon)) {
-        this.addPokemon(
-          pokemon,
-          pokemon.positionX,
-          pokemon.positionY - 1,
-          Team.BLUE_TEAM
-        )
+        const team = pokemon.passive === Passive.FIGHTING_SUBSTITUTE ? Team.RED_TEAM : Team.BLUE_TEAM
+        this.addPokemon(pokemon, pokemon.positionX, pokemon.positionY - 1, team)
       }
     })
 
     const redBoard = this.redPlayer ? this.redPlayer.board : redPlayer.board
     redBoard.forEach((pokemon) => {
       if (!isOnBench(pokemon)) {
-        this.addPokemon(
-          pokemon,
-          pokemon.positionX,
-          5 - (pokemon.positionY - 1),
-          Team.RED_TEAM
-        )
+        const team = pokemon.passive === Passive.FIGHTING_SUBSTITUTE ? Team.BLUE_TEAM : Team.RED_TEAM
+        this.addPokemon(pokemon, pokemon.positionX, 5 - (pokemon.positionY - 1), team)
       }
     })
 
@@ -936,6 +929,7 @@ export default class Simulation extends Schema implements ISimulation {
         if (types.has(Synergy.FIGHTING)) {
           pokemon.effects.add(effect)
           pokemon.effectsSet.add(new FightingKnockbackEffect(effect))
+          pokemon.effectsSet.add(new FightingSubstituteKillEffect())
         }
         break
 
