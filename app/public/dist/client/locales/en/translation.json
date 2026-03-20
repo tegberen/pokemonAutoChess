@@ -3367,7 +3367,7 @@
     "STEELIX": "Gains one stack for every 1000 damage blocked. Mega evolves after 10 stacks.",
     "ALTARIA": "Gains one stack for each enemy inflicted with CONFUSION by its ability. Mega evolves after 20 stacks.",
     "CAMERUPT": "Gains a stack for each ability cast, two if under SANDSTORM or DROUGHT instead. Mega evolves after 20 stacks.",
-    "MANECTRIC": "Gains a stack each time it gets more than 150 SPEED. Mega evolves after 10 stacks.",
+    "MANECTRIC": "Gains a stack for every 150 SPEED. Mega evolves after 10 stacks.",
     "SLOWBRO": "Gain one stack, the first time it holds more than 150 SHIELD during the fight. Mega evolves after 10 stacks",
     "GARDEVOIR": "Gains a stack for each KO. Mega evolves after 10 stacks.",
     "GALLADE": "Gains a stack for each KO. Mega evolves after 10 stacks.",
