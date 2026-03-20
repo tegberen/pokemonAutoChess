@@ -3408,6 +3408,27 @@ export const PokemonAnimations: {
     attackSprite: AttackSprite.FAIRY_MELEE,
     hitSprite: HitSprite.ROCK_HIT
   },
+  [Pkm.MEGA_DIANCIE]: {
+    attack: AnimationType.Strike,
+    ability: AnimationType.Shoot,
+    emote: AnimationType.Charge,
+    attackSprite: AttackSprite.FAIRY_MELEE,
+    hitSprite: HitSprite.ROCK_HIT
+  },
+  [Pkm.MEGA_TYRANITAR]: {
+    attack: AnimationType.Strike,
+    ability: AnimationType.Shoot,
+    emote: AnimationType.Charge,
+    attackSprite: AttackSprite.DARK_MELEE,
+    hitSprite: HitSprite.DARK_HIT
+  },
+  [Pkm.MEGA_AERODACTYL]: {
+    attack: AnimationType.Strike,
+    ability: AnimationType.Shoot,
+    emote: AnimationType.Charge,
+    attackSprite: AttackSprite.ROCK_MELEE,
+    hitSprite: HitSprite.ROCK_HIT
+  },
   [Pkm.CHATOT]: {
     attack: AnimationType.Shoot,
     ability: AnimationType.Charge,
