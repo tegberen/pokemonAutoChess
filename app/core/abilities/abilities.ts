@@ -4396,8 +4396,8 @@ export class TrickRoomStrategy extends AbilityStrategy {
     if (target.speed >= pokemon.speed) {
       const speedReduction = Math.floor(target.speed / 2)
       target.addSpeed(-speedReduction, pokemon, 0, false)
-      target.triggerFatigue(5000, target)
-      target.triggerBlinded(5000, target)
+      target.status.triggerFatigue(5000, target)
+      target.status.triggerBlinded(5000, target)
     } else {
       target.handleSpecialDamage(damage, board, AttackType.SPECIAL, pokemon, crit)
     }
@@ -4412,8 +4412,8 @@ export class TrickRoomStrategy extends AbilityStrategy {
         if (cell.value.speed >= pokemon.speed) {
           const speedReduction = Math.floor(cell.value.speed / 2)
           cell.value.addSpeed(-speedReduction, pokemon, 0, false)
-          target.triggerFatigue(5000, target)
-          target.triggerBlinded(5000, target)
+          target.status.triggerFatigue(5000, target)
+          target.status.triggerBlinded(5000, target)
         } else {
           cell.value.handleSpecialDamage(damage, board, AttackType.SPECIAL, pokemon, crit)
         }
