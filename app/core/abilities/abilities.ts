@@ -1769,7 +1769,7 @@ export class FutureSightStrategy extends AbilityStrategy {
   requiresTarget = false
   process(pokemon: PokemonEntity, board: Board, target: null, crit: boolean) {
     super.process(pokemon, board, target, crit, true)
-    const damage = [15, 30, 60][pokemon.stars - 1] ?? 60
+    const damage = [10, 15, 20, 30][pokemon.stars - 1] ?? 20
     const count = 5
     const targets: PokemonEntity[] = board.cells
       .filter<PokemonEntity>(
@@ -2281,7 +2281,7 @@ export class PhantomForceStrategy extends AbilityStrategy {
   ) {
     super.process(pokemon, board, target, crit, true)
 
-    const silenceDuration = 2000
+    const silenceDuration = 2000 * (1 + pokemon.ap / 100) * (crit ? pokemon.critPower : 1)
     board.forEach((x: number, y: number, enemy: PokemonEntity | undefined) => {
       if (enemy && enemy.team !== pokemon.team) {
         enemy.status.triggerSilence(silenceDuration, enemy)
@@ -2323,7 +2323,7 @@ export class PhantomForceStrategy extends AbilityStrategy {
             if (cell.value && cell.value.team !== pokemon.team) {
               const isVulnerable =
                 cell.value.status.silence || cell.value.status.fatigue
-              const damage = isVulnerable ? 100 : 50
+              const damage = isVulnerable ? 200 : 100
               cell.value.handleSpecialDamage(
                 damage,
                 board,
@@ -4323,11 +4323,13 @@ export class TrickRoomStrategy extends AbilityStrategy {
   ) {
     super.process(pokemon, board, target, crit)
     
-    const damage = [20, 40, 80][pokemon.stars - 1] ?? 80
+    const damage = [40, 80, 160][pokemon.stars - 1] ?? 160
     
     if (target.speed >= pokemon.speed) {
       const speedReduction = Math.floor(target.speed / 2)
       target.addSpeed(-speedReduction, pokemon, 0, false)
+      target.triggerFatigue(5000, target)
+      target.triggerBlinded(5000, target)
     } else {
       target.handleSpecialDamage(damage, board, AttackType.SPECIAL, pokemon, crit)
     }
@@ -4342,6 +4344,8 @@ export class TrickRoomStrategy extends AbilityStrategy {
         if (cell.value.speed >= pokemon.speed) {
           const speedReduction = Math.floor(cell.value.speed / 2)
           cell.value.addSpeed(-speedReduction, pokemon, 0, false)
+          target.triggerFatigue(5000, target)
+          target.triggerBlinded(5000, target)
         } else {
           cell.value.handleSpecialDamage(damage, board, AttackType.SPECIAL, pokemon, crit)
         }
@@ -5278,7 +5282,7 @@ export class PsychoCutStrategy extends AbilityStrategy {
     crit: boolean
   ) {
     super.process(pokemon, board, target, crit)
-    const damage = [10, 20, 40][pokemon.stars - 1] ?? 40
+    const damage = [10, 15, 20, 30][pokemon.stars - 1] ?? 20
     effectInOrientation(board, pokemon, target, (cell) => {
       if (cell.value != null && cell.value.team !== pokemon.team) {
         for (let i = 0; i < 3; i++) {
