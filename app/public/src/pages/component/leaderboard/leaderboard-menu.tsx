@@ -41,8 +41,8 @@ export default function LeaderboardMenu() {
     >
       <h2>{t("leaderboard")}</h2>
       <TabList>
-        <Tab>{t("elo")}</Tab>
         <Tab>{t("level")}</Tab>
+        <Tab>{t("players")}</Tab>
         <Tab>{t("bots")}</Tab>
       </TabList>
       <TabPanel>
