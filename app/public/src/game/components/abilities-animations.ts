@@ -2601,6 +2601,42 @@ export const AbilitiesAnimations: {
       }
     })
   },
+  [Ability.PHANTOM_FORCE]: ({ scene, positionX, positionY, flip, ap }) => {
+    const [x, y] = transformEntityCoordinates(positionX, positionY, flip)
+
+    // All 9 cells (center + 8 adjacent) in grid units
+    const adjacentOffsets = [
+      [-1, -1], [0, -1], [1, -1],
+      [-1,  0], [1,  0],
+      [-1,  1], [0,  1], [1,  1]
+    ]
+
+    // Shuffle so sprites trigger in a random order
+    Phaser.Utils.Array.Shuffle(adjacentOffsets)
+
+    // Cell size in pixels (adjust to match your grid)
+    const CELL_SIZE = 96
+
+    adjacentOffsets.forEach(([dx, dy], i) => {
+
+      const offsetX = x + dx * CELL_SIZE
+      const offsetY = y + dy * CELL_SIZE
+
+      scene.time.delayedCall(i * 40, () => {
+        const sprite = scene.add
+          .sprite(offsetX, offsetY, "abilities", `${Ability.PHANTOM_FORCE}/000.png`)
+          ?.setScale(2 * (1 + ap / 200))
+        sprite.anims.play({
+          key: Ability.PHANTOM_FORCE,
+          frameRate: 16
+        })
+        scene.abilitiesVfxGroup?.add(sprite)
+        sprite.on(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
+          sprite.destroy()
+        })
+      })
+    })
+  },
 
   [Ability.TWISTER]: ({ scene, positionX, positionY, flip, ap }) => {
     let [x, y] = transformEntityCoordinates(positionX, positionY, flip)
