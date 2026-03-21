@@ -1842,7 +1842,7 @@ export class FutureSightStrategy extends AbilityStrategy {
   requiresTarget = false
   process(pokemon: PokemonEntity, board: Board, target: null, crit: boolean) {
     super.process(pokemon, board, target, crit, true)
-    const damage = [10, 15, 20, 30][pokemon.stars - 1] ?? 20
+    const damage = [10, 20, 30, 60][pokemon.stars - 1] ?? 30
     const count = 5
     const targets: PokemonEntity[] = board.cells
       .filter<PokemonEntity>(
@@ -5357,7 +5357,7 @@ export class PsychoCutStrategy extends AbilityStrategy {
     crit: boolean
   ) {
     super.process(pokemon, board, target, crit)
-    const damage = [10, 15, 20, 30][pokemon.stars - 1] ?? 20
+    const damage = [10, 20, 30, 40][pokemon.stars - 1] ?? 30
     effectInOrientation(board, pokemon, target, (cell) => {
       if (cell.value != null && cell.value.team !== pokemon.team) {
         for (let i = 0; i < 3; i++) {
