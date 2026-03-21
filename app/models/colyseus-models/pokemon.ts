@@ -1469,11 +1469,11 @@ export class MegaGardevoir extends Pokemon {
   ])
   rarity = Rarity.COMMON
   stars = 4
-  hp = 200
+  hp = 230
   atk = 18
   speed = 55
-  def = 5
-  speDef = 6
+  def = 6
+  speDef = 8
   maxPP = 85
   range = 3
   skill = Ability.FUTURE_SIGHT
@@ -1511,11 +1511,11 @@ export class MegaGallade extends Pokemon {
   ])
   rarity = Rarity.COMMON
   stars = 4
-  hp = 200
+  hp = 230
   atk = 24
   speed = 55
-  def = 5
-  speDef = 6
+  def = 6
+  speDef = 8
   maxPP = 95
   range = 1
   skill = Ability.PSYCHO_CUT
