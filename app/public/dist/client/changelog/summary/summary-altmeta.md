@@ -33,3 +33,23 @@
 ![Mega Diancie](/assets/portraits/0719/0001/Normal.png)
 ![Mega Gengar](/assets/portraits/0094/0001/Normal.png)
 
+## Requirements (Ping me for adjustments)
+![Charizard](/assets/portraits/0006/Normal.png)
+![Lopunny](/assets/portraits/0428/Normal.png)
+![Camerupt](/assets/portraits/0323/Normal.png)
+![Houndoom](/assets/portraits/0229/Normal.png)
+![Steelix](/assets/portraits/0208/Normal.png)
+![Altaria](/assets/portraits/0334/Normal.png)
+![Banette](/assets/portraits/0354/Normal.png)
+![Manectric](/assets/portraits/0310/Normal.png)
+![Slowbro](/assets/portraits/0080/Normal.png)
+![Gallade](/assets/portraits/0475/Normal.png)
+![Gardevoir](/assets/portraits/0282/Normal.png)
+![Medicham](/assets/portraits/0308/Normal.png)
+![Alakazam](/assets/portraits/0065/Normal.png)
+![Tyranitar](/assets/portraits/0248/Normal.png)
+![Aerodactyl](/assets/portraits/0142/Normal.png)
+![Diancie](/assets/portraits/0719/Normal.png)
+![Gengar](/assets/portraits/0094/Normal.png)
+
+

@@ -1,42 +1,32 @@
-# New Pokemons:
-- Shadow Mewtwo
-- Pikachu Libre
-- Hisuian Decidueye
-- White Kyurem
-- Black Kyurem
-- Pirate Feraligatr
-- Hisuian Samurott
-- Pirate Cinderace
-- Fashion Staraptor
-- Mafia Togepi
-- Mega Charizard X
-- Mega Lopunny
-- Mega Camerupt
-- Mega Houndoom
-- Mega Steelix
-- Mega Altaria
-- Mega Banette
-- Mega Manectric
-- Mega Slowbro
-- Mega Gallade
-- Mega Gardevoir
-- Mega Medicham
-- Mega Alakazam
-- Mega Tyranitar
-- Mega Aerodactyl
-- Mega Diancie
-- Mega Gengar
+# Abilities
+- Duskull - Trick Room: If the target and ADJACENT enemies are faster than the user, halve their current speed, apply FATIGUE and BLINDED for 5 seconds. Otherwise, deal [40,80,160,SP] SPECIAL.
+- Beldum - Meteor Mash: Deal 1/2/4 times [100,SP]% of ATK as SPECIAL to the target and ADJACENT enemy Pokemon. Then increase the user's ATK by [2, SP] ([4, SP] if the user is in PSYCHIC_FIELD) on each hit.
+- Fennekin - Mystical Fire: Deals [25,50,100,SP] SPECIAL to the target, reduces its AP by [10, SP]. Scorches the target tile and those flanking and behind it with embers. BOARD_EFFECT: embers deal 10 SPECIAL per second and BURN non FLYING or FIRE Pokémon that walk on it.
+- Yveltal - Oblivion Wing: Jump to the backline, then fire a beam in a line dealing [100,SP] SPECIAL to all enemy Pokémon. Heal for 75% of the damage dealt. Will stay in the backline with increased RANGE for 3 seconds.
+- Squirtle - Withdraw: Retreat into its shell while blasting out water, dealing [20,40,60, SP] SPECIAL damage to ADJACENT enemy Pokémon and pushing them back 1 tile. Increase the users DEF by [2,4,8,SP].
+- Electrike - Rising Voltage: The user gathers electric voltage and deals [30,60,120,SP] SPECIAL to the target. Gains ELECTRIC_FIELD and spreads it to all ADJACENT Pokémon. Double the damage, if the opponent has ELECTRIC_FIELD.
+- Mega Gengar - Phantom Force: Silence all enemy Pokémon for [2, SP] seconds, then vanish. After 1 second, reappear in the middle of the enemy team and deal [100, SP] SPECIAL damage to all ADJACENT enemy Pokémon. Double the damage to targets with SILENCE or FATIGUE.
+- Mega Charizard X - Flare Blitz: Charge towards the target, dealing [500,SP]% of ATK as PHYSICAL to all ADJACENT enemy Pokemon. BURN the user for 3 seconds.
+- Hisuian Decidueye - Triple Arrows: Shoot 3 Piercing Arrows in a line, dealing [5,10,20,SP] SPECIAL. Each arrow reduces the target's DEF by 2 and applies FLINCH for 1 second. Can crit by default.
+- Shadow Mewtwo - Dark Nova: Strike into the largest crowd, dealing [40, SP] SPECIAL to the target and ADJACENT enemy Pokémon, teleporting them away. Can crit by default.
+- Libre Pikachu - Thunderclap Press: The target is hit with an electric bodyslam and pushed away. It and all targets in the path are PARALYSIS for 4 seconds and take [25, 50, 100, SP] SPECIAL.
 
-# Changes to Pokemon & Abilities
-- New Ability for Duskull line, Trick Room: If the target and adjacent enemies are faster than the user, halve their current speed. Otherwise, deal [20,40,80,SP] SPECIAL.
-- Reworked Ability Beldum line, Meteor Mash: Deal 1/2/4 times [100,SP]% of ATK as SPECIAL to the target and ADJACENT enemy Pokemon. Then increase the user's ATK by [2, SP] ([4, SP] if the user is in PSYCHIC_FIELD) on each hit.
-- Smoliv line: regular attacks now scale with AP, SPEED 25 → 42
-- Reworked Ability Fennekin line: Deals [25,50,100,SP] SPECIAL to the target, reduces its AP by [10, SP]. Scorches the target tile and those flanking and behind it with embers. BOARD_EFFECT: embers deal 10 SPECIAL per second and BURN non FLYING or FIRE Pokémon that walk on it.
-- When Pikachu is send to the dojo, obtain a TRAINING_RIBBON. Can be used to evolve Pikachu into Pikachu Libre.
+
+# Stats
+- Guzzlord: HP 300 → 400
 - Deoxys Attack: ATK 25 → 35
-- Reworked Yveltals Ability: Jump to the backline, then fire a beam in a line dealing [100,SP] SPECIAL to all enemy Pokémon. Heal for 75% of the damage dealt. Will stay in the backline with increased RANGE for 3 seconds.
-- New Ability Squirtle line, Withdraw: Retreat into its shell while blasting out water, dealing [20,40,60, SP] SPECIAL damage to ADJACENT enemy Pokémon and pushing them back 1 tile. Increase the users DEF by [2,4,8,SP].
-- New Ability Electike line, Rising Voltage: The user gathers electric voltage and deals [30,60,120,SP] SPECIAL to the target. Gains ELECTRIC_FIELD and spreads it to all ADJACENT Pokémon. Double the damage, if the opponent has ELECTRIC_FIELD.
+- Smoliv: regular attacks now scale with AP, SPEED 25 → 42
+
+# Synergy
+- Additional effect for ROCK: When KO'd, explode and deal TRUE and ARMOR_BREAK ADJACENT enemies. 
+- Additional effect for FIGHTING 8: Spawns a substitute as training dummy. The FIGHTING Pokemon that defeats the substitute will gain 3 ATK and 10 HP permanently.
+
+# Misc
+- Level Leaderboard on frontpage
+- Added Shiniest Hunter: All PvE encounter are shiny
+- New Fugitive: Mafia Togepi that gives an egg upon capture
+- When Pikachu is send to the dojo, obtain a TRAINING_RIBBON. Can be used to evolve Pikachu into Pikachu Libre.
+
 
 # Changes to Rarity, Typings, etc.
 ## Common
@@ -48,11 +38,11 @@
 - Mamoosh: added FOSSIL
 - Cherrim Sunlight: moved to regular (does not evolve via lightspot)
 - Shiftry: added ICE, nerfed SPE_DEF
-- Gothitelle: moved to regional, added DARK, adjusted stats
 - Charizard: moved to regional
 - Orbeetle: moved to regular
 - Swampert: removed WATER, added AQUATIC
 - Staraptor: added FIGHTING
+- Gardevoir, Gallade: for Mega Quest
 
 ## Uncommon
 - Blastoise: adjusted stats for Tank Role
@@ -87,6 +77,8 @@
 - Dusknoir: added AMORPHOUS it can be a carry with SPEED, or be a disruptor with PP items, so it can be played in DARK, GHOST, AMORPHOUS
 - Aurorus: added LIGHT, adjusted stats
 - Diancie: nerfed HP, buffed DEF and SPE_DEF
+- Gengar: moved for Mega Quest
+- Gothitelle: added DARK, adjusted stats
 
 ## Ultra
 - Ultra Pokemon have twice the HP when evolving into their last form (except Rillaboom kekw)
@@ -95,6 +87,7 @@
 - Leavanny: wohooo
 - Kingambit: added HUMAN, nerfed HP
 - Reuniclus: buffed PP, added MONSTER
+- Dusknoir: provides support against high SPEED comps, and dmg against low SPEED comps
 
 ## Hatch
 - Stoutland: more bulky, pretty juicy ATK stat buff
@@ -114,7 +107,7 @@
 - Mawile: added DARK, remove MONSTER, nerfed SPE_DEF, buffed ATK
 - Pyukumuku: buffed Passive, buffed DEF and SPE_DEF
 - Farfetchd: small buff HP
-- GalarianFarfetchd: small buff HP
+- Galarian Farfetchd: small buff HP
 - Zeraora: small buff HP
 - Miltank: buff HP
 
@@ -126,8 +119,4 @@
 - Victini: added GOURMET, Tabasco Dish
 - Guzzlord: buffed HP, Passive
  
-# Misc
-- Added Shiniest Hunter: All PvE encounter are shiny
-- New Fugitive
-- Additional effect for ROCK: When KO'd, explode and deal TRUE and ARMOR_BREAK ADJACENT enemies. 
-- Additional effect for FIGHTING 8: Spawns a substitute as training dummy. The FIGHTING Pokemon that defeats the substitute will gain 3 ATK and 10 HP permanently.
+
