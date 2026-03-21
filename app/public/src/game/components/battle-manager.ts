@@ -254,6 +254,12 @@ export default class BattleManager {
         } else {
           pkm.skydiveDown()
         }
+      } else if (field === "vanishing") {
+        if (pokemon.status.vanishing) {
+          pkm.vanish()
+        } else {
+          pkm.unvanish()
+        }
       } else if (field === "wound") {
         if (pokemon.status.wound) {
           pkm.addWound()

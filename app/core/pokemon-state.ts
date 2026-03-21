@@ -120,7 +120,7 @@ export default abstract class PokemonState {
         target.count.dodgeCount += 1
       }
 
-      if (target.status.protect || target.status.skydiving) {
+      if (target.status.protect || target.status.skydiving || target.status.vanishing) {
         isAttackSuccessful = false
         damage = 0
       }
@@ -415,7 +415,7 @@ export default abstract class PokemonState {
       damage *= 2
     }
 
-    if (pokemon.status.protect || pokemon.status.skydiving) {
+    if (pokemon.status.protect || pokemon.status.skydiving || pokemon.status.vanishing) {
       death = false
       takenDamage = 0
     } else {
