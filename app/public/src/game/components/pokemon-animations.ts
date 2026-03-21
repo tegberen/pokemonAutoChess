@@ -931,6 +931,13 @@ export const PokemonAnimations: {
     attackSprite: AttackSprite.GHOST_RANGE,
     hitSprite: HitSprite.GHOST_HIT
   },
+  [Pkm.MEGA_GENGAR]: {
+    attack: AnimationType.Strike,
+    ability: AnimationType.Rotate,
+    emote: AnimationType.Shoot,
+    attackSprite: AttackSprite.GHOST_RANGE,
+    hitSprite: HitSprite.GHOST_HIT
+  },
   [Pkm.DRATINI]: {
     attack: AnimationType.Attack,
     ability: AnimationType.RearUp,

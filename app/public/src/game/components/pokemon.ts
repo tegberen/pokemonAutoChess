@@ -1359,6 +1359,20 @@ export default class PokemonSprite extends DraggableObject {
     }
   }
 
+  vanish() {
+    this.x = -1000
+    this.y = -1000
+  }
+  unvanish() {
+    const coords = transformEntityCoordinates(
+      this.positionX,
+      this.positionY,
+      this.flip
+    )
+    this.x = coords[0]
+    this.y = coords[1]
+  }
+
   addResurrection() {
     if (!this.resurrection) {
       this.resurrection = this.scene.add
