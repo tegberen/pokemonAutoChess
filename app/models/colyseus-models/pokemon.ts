@@ -11148,7 +11148,7 @@ export class Gothita extends Pokemon {
   speed = 46
   def = 5
   speDef = 6
-  maxPP = 100
+  maxPP = 80
   range = 3
   skill = Ability.FAKE_TEARS
 }
@@ -11163,7 +11163,7 @@ export class Gothorita extends Pokemon {
   speed = 46
   def = 8
   speDef = 9
-  maxPP = 100
+  maxPP = 75
   range = 3
   skill = Ability.FAKE_TEARS
 }
@@ -11177,7 +11177,7 @@ export class Gothitelle extends Pokemon {
   speed = 46
   def = 11
   speDef = 12
-  maxPP = 100
+  maxPP = 70
   range = 3
   skill = Ability.FAKE_TEARS
 }
