@@ -1978,7 +1978,10 @@ export class Gengar extends Pokemon {
   ])
   rarity = Rarity.ULTRA
   stars = 3
-  hp = 350
+  evolution = Pkm.MEGA_GENGAR
+  evolutionRule = new StackBasedEvolutionRule()
+  stacksRequired: number = 10
+  hp = 360
   atk = 35
   speed = 60
   def = 10
@@ -1986,6 +1989,25 @@ export class Gengar extends Pokemon {
   maxPP = 90
   range = 2
   skill = Ability.NIGHTMARE
+  passive = Passive.GENGAR
+}
+
+export class MegaGengar extends Pokemon {
+  types = new SetSchema<Synergy>([
+    Synergy.GHOST,
+    Synergy.POISON,
+    Synergy.AMORPHOUS
+  ])
+  rarity = Rarity.ULTRA
+  stars = 4
+  hp = 360
+  atk = 35
+  speed = 60
+  def = 10
+  speDef = 6
+  maxPP = 80
+  range = 2
+  skill = Ability.PHANTOM_FORCE
 }
 
 export class Abra extends Pokemon {
@@ -21028,6 +21050,7 @@ export const PokemonClasses: Record<
   [Pkm.GASTLY]: Gastly,
   [Pkm.HAUNTER]: Haunter,
   [Pkm.GENGAR]: Gengar,
+  [Pkm.MEGA_GENGAR]: MegaGengar,
   [Pkm.DRATINI]: Dratini,
   [Pkm.DRAGONAIR]: Dragonair,
   [Pkm.DRAGONITE]: Dragonite,

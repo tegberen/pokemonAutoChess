@@ -1035,6 +1035,9 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
       const silenceChance = 0.15
       if (chance(silenceChance, this)) {
         target.status.triggerSilence(2000, target, this)
+        if (this.name === Pkm.GENGAR) {
+          this.addStack()
+        }
       }
     }
 

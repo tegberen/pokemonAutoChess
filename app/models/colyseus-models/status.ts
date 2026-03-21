@@ -49,6 +49,7 @@ export default class Status extends Schema implements IStatus {
   @type("boolean") curseFate = false
   @type("boolean") enraged = false
   @type("boolean") skydiving = false
+  @type("boolean") vanishing = false
   @type("boolean") tree = false
   burnOrigin: PokemonEntity | undefined = undefined
   poisonOrigin: PokemonEntity | undefined = undefined
