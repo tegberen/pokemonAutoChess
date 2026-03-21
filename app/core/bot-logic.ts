@@ -27,7 +27,7 @@ import { isIn } from "../utils/array"
 import { logger } from "../utils/logger"
 import { clamp, min } from "../utils/number"
 
-export const MAX_BOTS_STAGE = 30
+export const MAX_BOTS_STAGE = 35
 
 export const DEFAULT_BOT_STATE = {
   steps: Array.from({ length: MAX_BOTS_STAGE + 1 }, () => ({
@@ -217,16 +217,16 @@ export function estimateElo(bot: IBot): number {
   const averageScore =
     scores.reduce((total, score) => total + score, 0) / scores.length
 
-  if (averageScore < 10) return 500
-  if (averageScore < 20) return 600
-  if (averageScore < 30) return 700
-  if (averageScore < 40) return 800
-  if (averageScore < 50) return 900
-  if (averageScore < 60) return 1000
-  if (averageScore < 70) return 1100
-  if (averageScore < 80) return 1200
-  if (averageScore < 90) return 1300
-  return 1400
+  if (averageScore < 10) return 800
+  if (averageScore < 20) return 900
+  if (averageScore < 30) return 1000
+  if (averageScore < 40) return 1100
+  if (averageScore < 50) return 1200
+  if (averageScore < 60) return 1300
+  if (averageScore < 70) return 1400
+  if (averageScore < 80) return 1500
+  if (averageScore < 90) return 1600
+  return 1600
 }
 
 export function validateBot(bot: IBot): string[] {
