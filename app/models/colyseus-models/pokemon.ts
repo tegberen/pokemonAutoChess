@@ -1398,17 +1398,18 @@ export class Ralts extends Pokemon {
     Synergy.FAIRY,
     Synergy.HUMAN
   ])
-  rarity = Rarity.EPIC
+  rarity = Rarity.COMMON
   stars = 1
   evolution = Pkm.KIRLIA
-  hp = 90
+  hp = 60
   atk = 6
   speed = 51
-  def = 4
-  speDef = 8
+  def = 2
+  speDef = 2
   maxPP = 95
   range = 3
   skill = Ability.FUTURE_SIGHT
+  regional = true
 }
 
 export class Kirlia extends Pokemon {
@@ -1417,7 +1418,7 @@ export class Kirlia extends Pokemon {
     Synergy.FAIRY,
     Synergy.HUMAN
   ])
-  rarity = Rarity.EPIC
+  rarity = Rarity.COMMON
   stars = 2
   evolutions = [Pkm.GARDEVOIR, Pkm.GALLADE]
   evolutionRule = new CountEvolutionRule(3, (pokemon, player) => {
@@ -1425,15 +1426,16 @@ export class Kirlia extends Pokemon {
     const fightingCount = player.synergies.get(Synergy.FIGHTING) ?? 0
     return fightingCount >= fairyCount ? Pkm.GALLADE : Pkm.GARDEVOIR
   })
-  hp = 130
+  hp = 100
   atk = 15
   speed = 51
-  def = 6
-  speDef = 10
+  def = 3
+  speDef = 3
   maxPP = 95
   range = 3
   skill = Ability.FUTURE_SIGHT
   passive = Passive.KIRLIA
+  regional = true
 }
 
 export class Gardevoir extends Pokemon {
@@ -1442,20 +1444,21 @@ export class Gardevoir extends Pokemon {
     Synergy.FAIRY,
     Synergy.HUMAN
   ])
-  rarity = Rarity.EPIC
+  rarity = Rarity.COMMON
   stars = 3
   evolution = Pkm.MEGA_GARDEVOIR
   evolutionRule = new StackBasedEvolutionRule()
-  stacksRequired: number = 10
-  hp = 230
-  atk = 26
+  stacksRequired: number = 30
+  hp = 190
+  atk = 16
   speed = 51
-  def = 8
-  speDef = 16
+  def = 4
+  speDef = 5
   maxPP = 95
   range = 3
   skill = Ability.FUTURE_SIGHT
   passive = Passive.GARDEVOIR
+  regional = true
 }
 
 export class MegaGardevoir extends Pokemon {
@@ -1464,16 +1467,17 @@ export class MegaGardevoir extends Pokemon {
     Synergy.FAIRY,
     Synergy.HUMAN
   ])
-  rarity = Rarity.EPIC
+  rarity = Rarity.COMMON
   stars = 4
-  hp = 250
-  atk = 26
-  speed = 51
-  def = 12
-  speDef = 20
-  maxPP = 65
+  hp = 200
+  atk = 18
+  speed = 55
+  def = 5
+  speDef = 6
+  maxPP = 85
   range = 3
   skill = Ability.FUTURE_SIGHT
+  regional = true
 }
 
 export class Gallade extends Pokemon {
@@ -1482,20 +1486,21 @@ export class Gallade extends Pokemon {
     Synergy.FIGHTING,
     Synergy.HUMAN
   ])
-  rarity: Rarity = Rarity.EPIC
+  rarity: Rarity = Rarity.COMMON
   stars = 3
   evolution = Pkm.MEGA_GALLADE
   evolutionRule = new StackBasedEvolutionRule()
-  stacksRequired: number = 10
-  hp = 260
-  atk = 38
+  stacksRequired: number = 30
+  hp = 190
+  atk = 20
   speed = 51
-  def = 10
-  speDef = 20
+  def = 4
+  speDef = 5
   maxPP = 95
   range = 1
   skill = Ability.PSYCHO_CUT
   passive = Passive.GALLADE
+  regional = true
 }
 
 export class MegaGallade extends Pokemon {
@@ -1504,16 +1509,17 @@ export class MegaGallade extends Pokemon {
     Synergy.FIGHTING,
     Synergy.HUMAN
   ])
-  rarity = Rarity.EPIC
+  rarity = Rarity.COMMON
   stars = 4
-  hp = 280
-  atk = 48
-  speed = 51
-  def = 14
-  speDef = 24
+  hp = 200
+  atk = 24
+  speed = 55
+  def = 5
+  speDef = 6
   maxPP = 95
   range = 1
   skill = Ability.PSYCHO_CUT
+  regional = true
 }
 
 export class Fuecoco extends Pokemon {
@@ -1939,13 +1945,13 @@ export class Gastly extends Pokemon {
     Synergy.POISON,
     Synergy.AMORPHOUS
   ])
-  rarity = Rarity.ULTRA
+  rarity = Rarity.EPIC
   stars = 1
   evolution = Pkm.HAUNTER
   hp = 90
   atk = 12
   speed = 60
-  def = 6
+  def = 5
   speDef = 6
   maxPP = 90
   range = 2
@@ -1958,15 +1964,15 @@ export class Haunter extends Pokemon {
     Synergy.POISON,
     Synergy.AMORPHOUS
   ])
-  rarity = Rarity.ULTRA
+  rarity = Rarity.EPIC
   stars = 2
   evolution = Pkm.GENGAR
-  hp = 180
-  atk = 22
+  hp = 170
+  atk = 17
   speed = 60
-  def = 8
-  speDef = 6
-  maxPP = 90
+  def = 7
+  speDef = 8
+  maxPP = 85
   range = 2
   skill = Ability.NIGHTMARE
 }
@@ -1977,17 +1983,17 @@ export class Gengar extends Pokemon {
     Synergy.POISON,
     Synergy.AMORPHOUS
   ])
-  rarity = Rarity.ULTRA
+  rarity = Rarity.EPIC
   stars = 3
   evolution = Pkm.MEGA_GENGAR
   evolutionRule = new StackBasedEvolutionRule()
   stacksRequired: number = 10
-  hp = 360
-  atk = 35
+  hp = 300
+  atk = 30
   speed = 60
-  def = 10
-  speDef = 6
-  maxPP = 90
+  def = 9
+  speDef = 10
+  maxPP = 80
   range = 2
   skill = Ability.NIGHTMARE
   passive = Passive.GENGAR
@@ -1999,14 +2005,14 @@ export class MegaGengar extends Pokemon {
     Synergy.POISON,
     Synergy.AMORPHOUS
   ])
-  rarity = Rarity.ULTRA
+  rarity = Rarity.EPIC
   stars = 4
-  hp = 360
-  atk = 35
+  hp = 320
+  atk = 30
   speed = 60
-  def = 10
-  speDef = 6
-  maxPP = 80
+  def = 11
+  speDef = 12
+  maxPP = 100
   range = 2
   skill = Ability.PHANTOM_FORCE
 }
@@ -3510,45 +3516,45 @@ export class Wigglytuff extends Pokemon {
 }
 
 export class Duskull extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.DARK, Synergy.GHOST])
-  rarity = Rarity.UNCOMMON
+  types = new SetSchema<Synergy>([Synergy.DARK, Synergy.GHOST, Synergy.AMORPHOUS])
+  rarity = Rarity.ULTRA
   stars = 1
   evolution = Pkm.DUSCLOPS
-  hp = 70
-  atk = 6
+  hp = 100
+  atk = 8
   speed = 39
-  def = 4
-  speDef = 4
-  maxPP = 100
+  def = 10
+  speDef = 10
+  maxPP = 90
   range = 2
   skill = Ability.SHADOW_BALL
 }
 
 export class Dusclops extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.DARK, Synergy.GHOST])
-  rarity = Rarity.UNCOMMON
+  types = new SetSchema<Synergy>([Synergy.DARK, Synergy.GHOST, Synergy.AMORPHOUS])
+  rarity = Rarity.ULTRA
   stars = 2
   evolution = Pkm.DUSKNOIR
-  hp = 140
-  atk = 12
+  hp = 200
+  atk = 14
   speed = 39
-  def = 7
-  speDef = 7
-  maxPP = 100
+  def = 20
+  speDef = 20
+  maxPP = 90
   range = 2
   skill = Ability.SHADOW_BALL
 }
 
 export class Dusknoir extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.DARK, Synergy.GHOST])
-  rarity = Rarity.UNCOMMON
+  types = new SetSchema<Synergy>([Synergy.DARK, Synergy.GHOST, Synergy.AMORPHOUS])
+  rarity = Rarity.ULTRA
   stars = 3
-  hp = 220
-  atk = 26
+  hp = 400
+  atk = 28
   speed = 39
-  def = 12
-  speDef = 12
-  maxPP = 100
+  def = 30
+  speDef = 30
+  maxPP = 90
   range = 2
   skill = Ability.SHADOW_BALL
 }
@@ -11134,49 +11140,46 @@ export class Primarina extends Pokemon {
 
 export class Gothita extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.PSYCHIC, Synergy.DARK, Synergy.HUMAN])
-  rarity = Rarity.COMMON
+  rarity = Rarity.EPIC
   stars = 1
   evolution = Pkm.GOTHORITA
-  hp = 60
-  atk = 4
+  hp = 90
+  atk = 6
   speed = 46
-  def = 2
-  speDef = 3
+  def = 5
+  speDef = 6
   maxPP = 100
   range = 3
   skill = Ability.FAKE_TEARS
-  regional = true
 }
 
 export class Gothorita extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.PSYCHIC, Synergy.DARK, Synergy.HUMAN])
-  rarity = Rarity.COMMON
+  rarity = Rarity.EPIC
   stars = 2
   evolution = Pkm.GOTHITELLE
-  hp = 100
-  atk = 7
+  hp = 130
+  atk = 15
   speed = 46
-  def = 3
-  speDef = 4
+  def = 8
+  speDef = 9
   maxPP = 100
   range = 3
   skill = Ability.FAKE_TEARS
-  regional = true
 }
 
 export class Gothitelle extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.PSYCHIC, Synergy.DARK, Synergy.HUMAN])
-  rarity = Rarity.COMMON
+  rarity = Rarity.EPIC
   stars = 3
-  hp = 170
-  atk = 17
+  hp = 230
+  atk = 26
   speed = 46
-  def = 4
-  speDef = 5
+  def = 11
+  speDef = 12
   maxPP = 100
   range = 3
   skill = Ability.FAKE_TEARS
-  regional = true
 }
 
 export class Sandshrew extends Pokemon {
@@ -17741,7 +17744,7 @@ export class Dragalge extends Pokemon {
 }
 
 export class Cubchoo extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.ICE, Synergy.FIELD, Synergy.AQUATIC])
+  types = new SetSchema<Synergy>([Synergy.ICE, Synergy.WILD, Synergy.AQUATIC])
   rarity = Rarity.EPIC
   stars = 1
   evolution = Pkm.BEARTIC
@@ -17757,7 +17760,7 @@ export class Cubchoo extends Pokemon {
 }
 
 export class Beartic extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.ICE, Synergy.FIELD, Synergy.AQUATIC])
+  types = new SetSchema<Synergy>([Synergy.ICE, Synergy.WILD, Synergy.AQUATIC])
   rarity = Rarity.EPIC
   stars = 2
   hp = 200
