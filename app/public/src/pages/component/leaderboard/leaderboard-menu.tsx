@@ -46,10 +46,10 @@ export default function LeaderboardMenu() {
         <Tab>{t("bots")}</Tab>
       </TabList>
       <TabPanel>
-        <PlayerLeaderboard />
+        <LevelLeaderboard />
       </TabPanel>
       <TabPanel>
-        <LevelLeaderboard />
+        <PlayerLeaderboard />
       </TabPanel>
       <TabPanel>
         <BotLeaderboard />
