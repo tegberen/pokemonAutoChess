@@ -1451,7 +1451,7 @@ export class Gardevoir extends Pokemon {
   stars = 3
   evolution = Pkm.MEGA_GARDEVOIR
   evolutionRule = new StackBasedEvolutionRule()
-  stacksRequired: number = 30
+  stacksRequired: number = 20
   hp = 190
   atk = 16
   speed = 51
@@ -1493,7 +1493,7 @@ export class Gallade extends Pokemon {
   stars = 3
   evolution = Pkm.MEGA_GALLADE
   evolutionRule = new StackBasedEvolutionRule()
-  stacksRequired: number = 30
+  stacksRequired: number = 20
   hp = 190
   atk = 20
   speed = 51
