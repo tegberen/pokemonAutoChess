@@ -2335,6 +2335,74 @@ export class NightmareStrategy extends AbilityStrategy {
   }
 }
 
+export class PhantomForceStrategy extends AbilityStrategy {
+  canCritByDefault = true
+  process(
+    pokemon: PokemonEntity,
+    board: Board,
+    target: PokemonEntity,
+    crit: boolean
+  ) {
+    super.process(pokemon, board, target, crit, true)
+
+    const silenceDuration = 2000
+    board.forEach((x: number, y: number, enemy: PokemonEntity | undefined) => {
+      if (enemy && enemy.team !== pokemon.team) {
+        enemy.status.triggerSilence(silenceDuration, enemy)
+      }
+    })
+
+    const opponentTeam =
+      pokemon.team === Team.BLUE_TEAM ? Team.RED_TEAM : Team.BLUE_TEAM
+    const mostSurroundedCoordinate =
+      pokemon.state.getMostSurroundedCoordinateAvailablePlace(opponentTeam, board)
+    if (mostSurroundedCoordinate) {
+      pokemon.broadcastAbility({
+        skill: Ability.NIGHTMARE,
+        positionX: pokemon.positionX,
+        positionY: pokemon.positionY
+      })
+      pokemon.status.vanishing = true
+      pokemon.commands.push(
+        new DelayedCommand(() => {
+          pokemon.moveTo(
+            mostSurroundedCoordinate.x,
+            mostSurroundedCoordinate.y,
+            board,
+            false
+          )
+          pokemon.status.vanishing = false
+          pokemon.resetCooldown(666) //cooldown, so its not invincible
+          pokemon.broadcastAbility({
+            positionX: mostSurroundedCoordinate.x,
+            positionY: mostSurroundedCoordinate.y,
+            targetX: mostSurroundedCoordinate.x,
+            targetY: mostSurroundedCoordinate.y
+          })
+          const cells = board.getAdjacentCells(
+            mostSurroundedCoordinate.x,
+            mostSurroundedCoordinate.y
+          )
+          cells.forEach((cell) => {
+            if (cell.value && cell.value.team !== pokemon.team) {
+              const isVulnerable =
+                cell.value.status.silence || cell.value.status.fatigue
+              const damage = isVulnerable ? 100 : 50
+              cell.value.handleSpecialDamage(
+                damage,
+                board,
+                AttackType.SPECIAL,
+                pokemon,
+                crit
+              )
+            }
+          })
+        }, 1000)
+      )
+    }
+  }
+}
+
 export class ToxicStrategy extends AbilityStrategy {
   process(
     pokemon: PokemonEntity,
@@ -17002,6 +17070,7 @@ export const AbilityStrategies: { [key in Ability]: AbilityStrategy } = {
   [Ability.EXPLOSION]: new ExplosionStrategy(),
   [Ability.CHLOROBLAST]: new ChloroblastStrategy(),
   [Ability.NIGHTMARE]: new NightmareStrategy(),
+  [Ability.PHANTOM_FORCE]: new PhantomForceStrategy(),
   [Ability.CLANGOROUS_SOUL]: new ClangorousSoulStrategy(),
   [Ability.BONEMERANG]: new BonemerangStrategy(),
   [Ability.SHADOW_BONE]: new ShadowBoneStrategy(),

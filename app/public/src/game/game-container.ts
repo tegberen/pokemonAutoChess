@@ -202,6 +202,7 @@ class GameContainer {
       "poisonStacks",
       "protect",
       "skydiving",
+      "vanishing",
       "psychicField",
       "resurrection",
       "resurrecting",
