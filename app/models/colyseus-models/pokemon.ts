@@ -3615,7 +3615,7 @@ export class Magnezone extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.ELECTRIC, Synergy.STEEL, Synergy.ARTIFICIAL])
   rarity = Rarity.UNCOMMON
   stars = 3
-  hp = 210
+  hp = 250
   atk = 15
   speed = 44
   def = 4
