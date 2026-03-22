@@ -457,7 +457,9 @@ class GameContainer {
         "luck",
         "shiny",
         "skill",
-        "supercharged"
+        "supercharged",
+        "aura"
+
       ]
     ) => {
       const $pokemon = this.$<Pokemon>(pokemon)

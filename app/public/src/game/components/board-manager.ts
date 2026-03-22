@@ -1014,6 +1014,11 @@ export default class BoardManager {
             pokemonSprite.superchargeAnimation(this.scene, false, false)
           }
           break
+        case "aura":
+          if (value === true && !previousValue) {
+            pokemonSprite.auraAnimation(this.scene)
+          }
+          break
       }
     }
   }
