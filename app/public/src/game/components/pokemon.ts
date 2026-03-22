@@ -277,7 +277,7 @@ export default class PokemonSprite extends DraggableObject {
         this.superchargeAnimation(scene, true, false)
       }
       if (!isEntity(pokemon) && pokemon.aura) {
-        this.auraAnimation(scene)
+        this.auraAnimation(scene, true, false)
       }
       this.emit("loaded")
     })

@@ -1026,7 +1026,7 @@ export default class BoardManager {
           break
         case "aura":
           if (value === true && !previousValue) {
-            pokemonSprite.auraAnimation(this.scene)
+            pokemonSprite.auraAnimation(this.scene, false, false)
           }
           break
       }
