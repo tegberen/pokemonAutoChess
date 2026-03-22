@@ -16885,7 +16885,7 @@ export class DarkNovaStrategy extends AbilityStrategy {
           cells.forEach((cell) => {
             if (cell.value && cell.value.team !== pokemon.team) {
               cell.value.handleSpecialDamage(
-                40,
+                60,
                 board,
                 AttackType.SPECIAL,
                 pokemon,
