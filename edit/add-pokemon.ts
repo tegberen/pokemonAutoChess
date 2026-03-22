@@ -359,6 +359,7 @@ class SpriteSheetProcessor {
           actions.add(AnimationType.Ricochet)
           actions.add(AnimationType.Twirl)
           actions.add(AnimationType.Special1)
+          actions.add(AnimationType.RearUp)
 
           for (const action of actions) {
             let metadata = xmlData.AnimData.Anims.Anim.find(

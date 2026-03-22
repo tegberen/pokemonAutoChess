@@ -276,6 +276,9 @@ export default class PokemonSprite extends DraggableObject {
       if (!isEntity(pokemon) && pokemon.supercharged) {
         this.superchargeAnimation(scene, true, false)
       }
+      if (!isEntity(pokemon) && pokemon.aura) {
+        this.auraAnimation(scene)
+      }
       this.emit("loaded")
     })
   }
@@ -816,6 +819,10 @@ export default class PokemonSprite extends DraggableObject {
         targetY: onEntity ? this.positionY : this.positionY - 1
       })
     }
+  }
+  auraAnimation(scene: GameScene | DebugScene, alreadyActive: boolean, onEntity: boolean) {
+    this.sprite.postFX.addGlow(0x5CB3FF, 4, 0, false, 0.1, 8)
+    this.emoteAnimation()
   }
 
   updateDishes(dishes: Item[]) {

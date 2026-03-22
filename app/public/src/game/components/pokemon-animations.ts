@@ -1230,6 +1230,12 @@ export const PokemonAnimations: {
     emote: AnimationType.Pose,
     attackSprite: AttackSprite.FIGHTING_RANGE
   },
+  [Pkm.MEGA_LUCARIO]: {
+    attack: AnimationType.Strike,
+    ability: AnimationType.Charge,
+    emote: AnimationType.RearUp,
+    attackSprite: AttackSprite.FIGHTING_RANGE
+  },
   [Pkm.MAGIKARP]: {
     attack: AnimationType.Attack,
     ability: AnimationType.Hop,

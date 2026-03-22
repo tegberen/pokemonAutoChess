@@ -3122,6 +3122,14 @@ export const AbilitiesAnimations: {
       pokemon.superchargeAnimation(scene, false, true)
     }
   },
+  ["AURA"]: ({ scene, pokemonsOnBoard, positionX, positionY }) => {
+    const pokemon = pokemonsOnBoard.find(
+      (p) => p.positionX === positionX && p.positionY === positionY
+    )
+    if (pokemon) {
+      pokemon.auraAnimation(scene, false, true)
+    }
+  },
   ["HEALTH_FEATHER"]: featherAnimation,
   ["MUSCLE_FEATHER"]: featherAnimation,
   ["RESIST_FEATHER"]: featherAnimation,
