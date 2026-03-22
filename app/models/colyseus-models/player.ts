@@ -422,6 +422,8 @@ export default class Player extends Schema implements IPlayer {
           this
         )
         substitute.passive = Passive.FIGHTING_SUBSTITUTE
+        substitute.canBeBenched = false
+        substitute.canBeSold = false
         substitute.positionX = freeSpace[0]
         substitute.positionY = freeSpace[1]
         this.board.set(substitute.id, substitute)
@@ -797,7 +799,7 @@ export default class Player extends Schema implements IPlayer {
     let legendaryCount = 0
     let count = 0
     this.board.forEach((pokemon) => {
-      if (!isOnBench(pokemon) && pokemon.passive !== Passive.INANIMATE) {
+        if (!isOnBench(pokemon) && pokemon.passive !== Passive.INANIMATE && pokemon.passive !== Passive.FIGHTING_SUBSTITUTE) {
         count++
         this.pokemonsPlayed.add(pokemon.name)
         if (pokemon.rarity === Rarity.LEGENDARY) {
