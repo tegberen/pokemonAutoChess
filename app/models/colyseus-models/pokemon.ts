@@ -5405,7 +5405,7 @@ export class Charizard extends Pokemon {
   rarity = Rarity.COMMON
   stars = 3
   evolutionRule = new StackBasedEvolutionRule()
-  stacksRequired: number = 30
+  stacksRequired: number = 20
   evolution = Pkm.MEGA_CHARIZARD_X
   hp = 220
   atk = 18

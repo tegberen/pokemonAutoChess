@@ -3363,7 +3363,7 @@
 		"GALE_WINGS": "Drops embers on the ground when flying away. BOARD_EFFECT: embers deal 10 SPECIAL per second and BURN non FLYING or FIRE Pokémon that walk on it.",
 		"FINIZEN": "Transforms into Palafin Hero Form after 5 allies are KO'd (not counting spawns), or if this Pokémon is the last one standing. Regain all HP when that happens.",
 		"COMMANDER": "Tatsugiri cannot hold items. At the start of the fight, an ADJACENT Dondozo with a free item slot swallows Tatsugiri. Tatsugiri provides stats based on its form: \nCurly Form: +8 ATK\nDroopy Form: +8 DEF\nStretchy Form: +25 SPEED",
-    "CHARIZARD": "Gains a stack for each KO. Mega evolves after 30 stacks.",
+    "CHARIZARD": "Gains a stack for each KO. Mega evolves after 20 stacks.",
     "LOPUNNY": "Gains a stack for each ability cast, on FIGHTING 8 or NORMAL 9. Mega evolves after 20 stacks.",
     "BANETTE": "Gains a stack for each summoned Clone. Mega evolves after 20 stacks.",
     "HOUNDOOM": "Gains a stack for each two summoned Houndour. Mega evolves after 20 stacks.",
