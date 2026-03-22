@@ -11455,7 +11455,7 @@ export class UnownE extends Pokemon {
   speed = 40
   def = 2
   speDef = 2
-  maxPP = 150
+  maxPP = 100
   range = 9
   skill = Ability.HIDDEN_POWER_E
   passive = Passive.UNOWN
@@ -11471,7 +11471,7 @@ export class UnownF extends Pokemon {
   speed = 40
   def = 2
   speDef = 2
-  maxPP = 150
+  maxPP = 100
   range = 9
   skill = Ability.HIDDEN_POWER_F
   passive = Passive.UNOWN
