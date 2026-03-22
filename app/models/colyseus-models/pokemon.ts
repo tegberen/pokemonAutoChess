@@ -94,6 +94,7 @@ export class Pokemon extends Schema implements IPokemon {
   @type("uint8") stacks: number = 0
   @type("uint8") stacksRequired: number = 0
   @type("boolean") supercharged: boolean = false
+  @type("boolean") aura: boolean = false
   dodge: number = 0
   deathCount: number = 0
   killCount: number = 0
@@ -580,6 +581,9 @@ export class Lucario extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.FIGHTING, Synergy.STEEL])
   rarity = Rarity.RARE
   stars = 2
+  evolution = Pkm.MEGA_LUCARIO
+  evolutionRule = new StackBasedEvolutionRule()
+  stacksRequired: number = 10
   hp = 170
   atk = 18
   speed = 54
@@ -589,6 +593,27 @@ export class Lucario extends Pokemon {
   range = 2
   skill = Ability.AURASPHERE
   additional = true
+  passive = Passive.LUCARIO
+}
+
+export class MegaLucario extends Pokemon {
+  types = new SetSchema<Synergy>([Synergy.FIGHTING, Synergy.STEEL])
+  rarity = Rarity.RARE
+  stars = 3
+  hp = 240
+  atk = 30
+  speed = 54
+  def = 12
+  speDef = 12
+  maxPP = 80
+  range = 2
+  skill = Ability.AURASPHERE
+  additional = true
+  onAcquired(player: Player) {
+    super.onAcquired(player)
+    this.aura = true
+  }
+  passive = Passive.AURA
 }
 
 export class Crabrawler extends Pokemon {
@@ -21207,6 +21232,7 @@ export const PokemonClasses: Record<
   [Pkm.KLEAVOR]: Kleavor,
   [Pkm.RIOLU]: Riolu,
   [Pkm.LUCARIO]: Lucario,
+  [Pkm.MEGA_LUCARIO]: MegaLucario,
   [Pkm.MAGIKARP]: Magikarp,
   [Pkm.RATTATA]: Rattata,
   [Pkm.ALOLAN_RATTATA]: AlolanRattata,
