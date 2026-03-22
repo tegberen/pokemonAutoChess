@@ -8670,8 +8670,8 @@ export class MagnetBombStrategy extends AbilityStrategy {
     crit: boolean
   ) {
     super.process(pokemon, board, target, crit)
-    const damage = [10, 20, 40][pokemon.stars - 1] ?? 40
-    const centerDamage = [20, 40, 80][pokemon.stars - 1] ?? 80
+    const damage = [15, 30, 60][pokemon.stars - 1] ?? 60
+    const centerDamage = [25, 50, 100][pokemon.stars - 1] ?? 100
     const lockDuration = 1500
 
     target.handleSpecialDamage(

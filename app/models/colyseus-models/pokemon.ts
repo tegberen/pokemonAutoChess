@@ -3620,7 +3620,7 @@ export class Magnezone extends Pokemon {
   rarity = Rarity.UNCOMMON
   stars = 3
   hp = 250
-  atk = 20
+  atk = 15
   speed = 44
   def = 4
   speDef = 4
