@@ -2818,7 +2818,7 @@
 		"SUCTION_HEAL": "Drains the energy from its targets, dealing [15,30,60,SP] SPECIAL in a 2 tiles range CONE and heals HP for 50% of the damage dealt.",
 		"ROOST": "Flies away and lands in the back line, SLEEP for 1 second and gaining [20,40,80,SP] SHIELD.",
 		"BEHEMOTH_BLADE": "Dash behind the target and deliver a powerful slash, dealing [100,SP] + [100,SP]% ATK as SPECIAL",
-		"HEAT_CRASH": "Crashes into the target, knocking it back and dealing [40,60,80,SP] SPECIAL. Does more damage the more ATK the user has compared to the target.",
+		"HEAT_CRASH": "Crashes into the target, knocking it back and dealing [40,60,80,SP] SPECIAL. Does more damage the more ATK the user has compared to the target. If the user hase more HP than the target, gain 100 AP and loose 20 SPEED.",
 		"LASER_BLADE": "Alternates between:\n1. Spins laser blade around, moving behind their target, gaining [25,SP] SHIELD and dealing [25,SP] SPECIAL to target and ADJACENT enemies on the path.\n2. Spins laser blade in front of them, dealing 2 times [25,SP] + ATK as SPECIAL.",
 		"ICICLE_MISSILE": "Launches [1,2,3] icicle missiles on enemies in the backline, dealing [50,SP] SPECIAL and inflicting FREEZE for 2 seconds.",
 		"ARM_THRUST": "Attacks [LK] 2 to 5 times, dealing [100,SP]% of ATK as PHYSICAL each time. Each hit may crit independently by default based on CRIT_CHANCE.",
