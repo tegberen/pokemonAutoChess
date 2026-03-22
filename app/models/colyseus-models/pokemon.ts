@@ -12447,11 +12447,11 @@ export class Emboar extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.WILD, Synergy.FIRE, Synergy.FIGHTING])
   rarity = Rarity.HATCH
   stars = 3
-  hp = 230
-  atk = 20
+  hp = 250
+  atk = 25
   speed = 46
-  def = 12
-  speDef = 12
+  def = 14
+  speDef = 14
   maxPP = 100
   range = 1
   skill = Ability.HEAT_CRASH
