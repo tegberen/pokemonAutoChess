@@ -1802,11 +1802,11 @@ export const PassiveEffects: Partial<
       }
     }),
     () => new class extends OnDamageReceivedEffect {
-      if (!pokemon.player) return
       accumulated = 0
       stacksGiven = 0
       constructor() {
         super(({ pokemon, damage, damageBeforeReduction }) => {
+          if (!pokemon.player) return
           const blocked = damageBeforeReduction - damage
           if (blocked <= 0) return
           this.accumulated += blocked
