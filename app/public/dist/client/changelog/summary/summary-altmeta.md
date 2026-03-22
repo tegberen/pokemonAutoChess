@@ -32,6 +32,7 @@
 ![Mega Aerodactyl](/assets/portraits/0142/0001/Normal.png)
 ![Mega Diancie](/assets/portraits/0719/0001/Normal.png)
 ![Mega Gengar](/assets/portraits/0094/0001/Normal.png)
+![Mega Lucario](/assets/portraits/0448/0001/Normal.png)
 
 ## Requirements (Ping me for adjustments)
 ![Charizard](/assets/portraits/0006/Normal.png)
@@ -51,5 +52,5 @@
 ![Aerodactyl](/assets/portraits/0142/Normal.png)
 ![Diancie](/assets/portraits/0719/Normal.png)
 ![Gengar](/assets/portraits/0094/Normal.png)
-
+![Lucario](/assets/portraits/0448/Normal.png)
 

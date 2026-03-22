@@ -1894,4 +1894,17 @@ export const PassiveEffects: Partial<
       return effect
     }
   ],
+  [Passive.AURA]: [
+    new OnSimulationStartEffect(({ entity }) => {
+      entity.broadcastAbility({ skill: "AURA" })
+      entity.addDodgeChance(0.1, entity, 0, false)
+    })
+  ],
+  [Passive.LUCARIO]: [
+    new OnKillEffect(({ attacker }) => {
+      if (attacker.isGhostOpponent) return
+      if (!attacker.player) return
+      attacker.addStack()
+    })
+  ],
 }

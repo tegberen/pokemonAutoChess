@@ -118,6 +118,10 @@ export default abstract class PokemonState {
         isAttackSuccessful = false
         damage = 0
         target.count.dodgeCount += 1
+        if (target.passive === Passive.AURA) {
+          target.addAttack(3, target, 0, false)
+          target.addAbilityPower(10, target, 0, false)
+        }
       }
 
       if (target.status.protect || target.status.skydiving || target.status.vanishing) {
