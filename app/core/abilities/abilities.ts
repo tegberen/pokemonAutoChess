@@ -13557,6 +13557,10 @@ export class HeatCrashStrategy extends AbilityStrategy {
       target.moveTo(knockbackCell.x, knockbackCell.y, board, true)
       target.cooldown = 500
     }
+    if (pokemon.hp > target.hp) {
+      pokemon.addAbilityPower(100, pokemon, 0, false)
+      pokemon.addSpeed(-20, pokemon, 0, false)
+    }
   }
 }
 
