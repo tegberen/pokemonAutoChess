@@ -3410,7 +3410,7 @@
     "DIANCIE": "Gains one stack each time it is affected by a negative status effect. Mega evolves after 10 stacks",
     "GENGAR": "Gains one stack each time it SILENCE an opponent. Mega evolves after 10 stacks",
     "MEGA_DIANCIE": "Trigger Magic Bounce for 5 seconds and RUNE_PROTECT itself, the first time it is affected by a negative status effect.",
-    "TYRANITAR": "Gains a stack for each 100 damage blocked or MONSTER stack. Mega evolves after 20 stacks.",
+    "TYRANITAR": "Gains a stack for each 200 damage blocked or MONSTER stack. Mega evolves after 20 stacks.",
     "AERODACTYL": "Gains one stack for each KO, two if the target was FLYING. Mega evolves after 20 stacks.",
     "FIGHTING_SUBSTITUTE": "When this Substitute is KO'ed, gain +3 Attack and +10 Max HP permanently. Only targetable by allied FIGHTING Pokémon."
 
