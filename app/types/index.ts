@@ -346,6 +346,7 @@ export interface IPokemon {
   killCount: number
   readonly hasEvolution: boolean
   supercharged: boolean
+  aura: boolean
 }
 
 export interface IExperienceManager {
