@@ -3612,7 +3612,7 @@ export class Magneton extends Pokemon {
   rarity = Rarity.UNCOMMON
   stars = 2
   evolution = Pkm.MAGNEZONE
-  hp = 110
+  hp = 150
   atk = 9
   speed = 44
   def = 2
@@ -3626,7 +3626,7 @@ export class Magnezone extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.ELECTRIC, Synergy.STEEL, Synergy.ARTIFICIAL])
   rarity = Rarity.UNCOMMON
   stars = 3
-  hp = 220
+  hp = 250
   atk = 15
   speed = 44
   def = 4
