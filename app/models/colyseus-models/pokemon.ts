@@ -5907,7 +5907,7 @@ export class GalarianMoltres extends Pokemon {
   maxPP = 100
   range = 2
   skill = Ability.FIERY_WRATH
-  regional = false
+  // regional = false
   isInRegion(map: DungeonPMDO) {
     const regionSynergies = RegionDetails[map]?.synergies
     return (
@@ -11450,7 +11450,7 @@ export class UnownE extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.PSYCHIC])
   rarity = Rarity.SPECIAL
   stars = 1
-  hp = 99999
+  hp = 100
   atk = 1
   speed = 40
   def = 2
@@ -11466,7 +11466,7 @@ export class UnownF extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.PSYCHIC])
   rarity = Rarity.SPECIAL
   stars = 1
-  hp = 99999
+  hp = 100
   atk = 1
   speed = 40
   def = 2
