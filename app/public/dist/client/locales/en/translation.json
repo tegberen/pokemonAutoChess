@@ -3965,7 +3965,7 @@
 		"EISCUE_ICE_FACE": "When casting its ability, its current SHIELD is converted to additional SPECIAL. When SHIELD is depleted or after casting its ability, Eiscue breaks into its Noice form.",
 		"WALL_OF_STONE": "At the start of the fight, Stakataka and all ROCK allies on the same row get 50 SHIELD and are LOCKED until their SHIELD is depleted.",
 
-    "CHARIZARD": "Gains a stack for each KO. Mega evolves after 40 stacks.",
+    "CHARIZARD": "Gains a stack for each KO. Mega evolves after 20 stacks.",
     "LOPUNNY": "Gains a stack for each ability cast, on FIGHTING 8 or NORMAL 9. Mega evolves after 20 stacks.",
     "BANETTE": "Gains a stack for each summoned Clone. Mega evolves after 20 stacks.",
     "HOUNDOOM": "Gains a stack for each two summoned Houndour. Mega evolves after 20 stacks.",
