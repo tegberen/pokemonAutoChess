@@ -4408,7 +4408,7 @@ export class Slowbro extends Pokemon {
   stars = 2
   evolution = Pkm.MEGA_SLOWBRO
   evolutionRule = new StackBasedEvolutionRule()
-  stacksRequired: number = 10
+  stacksRequired: number = 5
   hp = 160
   atk = 12
   speed = 35
@@ -5363,7 +5363,7 @@ export class Charizard extends Pokemon {
   rarity = Rarity.COMMON
   stars = 3
   evolutionRule = new StackBasedEvolutionRule()
-  stacksRequired: number = 40
+  stacksRequired: number = 30
   evolution = Pkm.MEGA_CHARIZARD_X
   hp = 220
   atk = 18

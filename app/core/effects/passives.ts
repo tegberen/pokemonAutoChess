@@ -1696,7 +1696,7 @@ export const PassiveEffects: Partial<
           const blocked = damageBeforeReduction - damage
           if (blocked <= 0) return
           this.accumulated += blocked
-          const newStacks = Math.floor(this.accumulated / 500)
+          const newStacks = Math.floor(this.accumulated / 200)
           if (newStacks > this.stacksGiven) {
             for (let i = this.stacksGiven; i < newStacks; i++) {
               pokemon.addStack()
@@ -1713,7 +1713,7 @@ export const PassiveEffects: Partial<
       constructor() {
         super(
           (pokemon) => {
-            const newStacks = Math.floor(pokemon.speed / 150)
+            const newStacks = Math.floor(pokemon.speed / 100)
             if (newStacks > this.stacksGiven) {
               for (let i = this.stacksGiven; i < newStacks; i++) {
                 pokemon.addStack()
@@ -1732,7 +1732,7 @@ export const PassiveEffects: Partial<
       constructor() {
         super(
           (pokemon) => {
-            if (pokemon.shield>= 150) {
+            if (pokemon.shield>= 100) {
               pokemon.addStack()
               pokemon.effectsSet.delete(this)
             }
@@ -1802,6 +1802,7 @@ export const PassiveEffects: Partial<
       }
     }),
     () => new class extends OnDamageReceivedEffect {
+      if (!pokemon.player) return
       accumulated = 0
       stacksGiven = 0
       constructor() {
@@ -1809,7 +1810,7 @@ export const PassiveEffects: Partial<
           const blocked = damageBeforeReduction - damage
           if (blocked <= 0) return
           this.accumulated += blocked
-          const newStacks = Math.floor(this.accumulated / 300)
+          const newStacks = Math.floor(this.accumulated / 100)
           if (newStacks > this.stacksGiven) {
             for (let i = this.stacksGiven; i < newStacks; i++) {
               pokemon.addStack()
