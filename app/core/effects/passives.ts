@@ -1564,12 +1564,14 @@ export const PassiveEffects: Partial<
   ],
   [Passive.CHARIZARD]: [
     new OnKillEffect(({ attacker }) => {
+      if (attacker.isGhostOpponent) return
       attacker.addStack()
     })
   ],
   [Passive.LOPUNNY]: [
     new OnAbilityCastEffect((pokemon) => {
       if (!pokemon.player) return
+      if (pokemon.isGhostOpponent) return
       const effects = pokemon.player.effects
       if (effects.has(EffectEnum.JUSTIFIED) || effects.has(EffectEnum.PURE_POWER)) {
         pokemon.addStack()
@@ -1579,16 +1581,19 @@ export const PassiveEffects: Partial<
 
   [Passive.BANETTE]: [
     new OnAbilityCastEffect((pokemon) => {
+       if (pokemon.isGhostOpponent) return
        pokemon.addStack()
     })
   ],
   [Passive.HOUNDOOM]: [
     new OnAbilityCastEffect((pokemon) => {
+       if (pokemon.isGhostOpponent) return
        pokemon.addStack()
     })
   ],
   [Passive.CAMERUPT]: [
     new OnAbilityCastEffect((pokemon) => {
+      if (pokemon.isGhostOpponent) return
       const { weather } = pokemon.simulation
       pokemon.addStack()
       if (weather === Weather.SANDSTORM || weather === Weather.DROUGHT) {
@@ -1596,24 +1601,13 @@ export const PassiveEffects: Partial<
       }
     })
   ],
-  // [Passive.STEELIX]: [
-  //   new OnSimulationStartEffect(({ entity, player }) => {
-  //     if (!player) return
-  //     const fullyDugRows = [0, 8, 16].filter((startIdx) => {
-  //       const row = player.groundHoles.slice(startIdx, startIdx + BOARD_WIDTH)
-  //       return row.every((hole) => hole === 5)
-  //     }).length
-  //     for (let i = 0; i < fullyDugRows; i++) {
-  //       entity.addStack()
-  //     }
-  //   })
-  // ],
   [Passive.STEELIX]: [
     () => new class extends OnDamageReceivedEffect {
       accumulated = 0
       stacksGiven = 0
       constructor() {
         super(({ pokemon, damage, damageBeforeReduction }) => {
+          if (pokemon.isGhostOpponent) return
           const blocked = damageBeforeReduction - damage
           if (blocked <= 0) return
           this.accumulated += blocked
@@ -1634,6 +1628,7 @@ export const PassiveEffects: Partial<
       constructor() {
         super(
           (pokemon) => {
+            if (pokemon.isGhostOpponent) return
             const newStacks = Math.floor(pokemon.speed / 100)
             if (newStacks > this.stacksGiven) {
               for (let i = this.stacksGiven; i < newStacks; i++) {
@@ -1654,6 +1649,7 @@ export const PassiveEffects: Partial<
         super(
           (pokemon) => {
             if (pokemon.shield>= 100) {
+              if (pokemon.isGhostOpponent) return
               pokemon.addStack()
               pokemon.effectsSet.delete(this)
             }
@@ -1670,6 +1666,7 @@ export const PassiveEffects: Partial<
       constructor() {
         super(
           (pokemon) => {
+            if (pokemon.isGhostOpponent) return
             const newStacks = Math.floor(pokemon.atk / 100)
             if (newStacks > this.stacksGiven) {
               for (let i = this.stacksGiven; i < newStacks; i++) {
@@ -1687,22 +1684,26 @@ export const PassiveEffects: Partial<
   [Passive.GARDEVOIR]: [
     new OnKillEffect(({ attacker }) => {
       if (!attacker.player) return
+      if (attacker.isGhostOpponent) return
       attacker.addStack()
     })
   ],
   [Passive.GALLADE]: [
     new OnKillEffect(({ attacker }) => {
       if (!attacker.player) return
+      if (attacker.isGhostOpponent) return
       attacker.addStack()
     })
   ],
   [Passive.ALAKAZAM]: [
     new OnAbilityCastEffect((pokemon) => {
+      if (pokemon.isGhostOpponent) return
       pokemon.addStack()
     })
   ],
   [Passive.AERODACTYL]: [
     new OnKillEffect(({ attacker,target }) => {
+      if (attacker.isGhostOpponent) return
       if (!attacker.player) return
       attacker.addStack()
       if (target.types.has(Synergy.FLYING)) {
@@ -1712,6 +1713,7 @@ export const PassiveEffects: Partial<
   ],
   [Passive.TYRANITAR]: [
     new OnKillEffect(({ attacker }) => {
+      if (attacker.isGhostOpponent) return
       if (!attacker.player) return
       if (
         attacker.effects.has(EffectEnum.PURSUIT) ||
@@ -1727,11 +1729,12 @@ export const PassiveEffects: Partial<
       stacksGiven = 0
       constructor() {
         super(({ pokemon, damage, damageBeforeReduction }) => {
+          if (pokemon.isGhostOpponent) return
           if (!pokemon.player) return
           const blocked = damageBeforeReduction - damage
           if (blocked <= 0) return
           this.accumulated += blocked
-          const newStacks = Math.floor(this.accumulated / 100)
+          const newStacks = Math.floor(this.accumulated / 200)
           if (newStacks > this.stacksGiven) {
             for (let i = this.stacksGiven; i < newStacks; i++) {
               pokemon.addStack()
@@ -1756,6 +1759,7 @@ export const PassiveEffects: Partial<
         constructor() {
           super(
             (pokemon) => {
+              if (pokemon.isGhostOpponent) return
               const s = pokemon.status
               if (s.burn && !this.prevBurn) pokemon.addStack()
               if (s.poisonStacks > 0 && !this.prevPoison) pokemon.addStack()
