@@ -16983,7 +16983,7 @@ export class Corviknight extends Pokemon {
   maxPP = 90
   range = 1
   skill = Ability.STEEL_WING
-  regional = true
+  passive = Passive.CORVIKNIGHT
 }
 export class Turtonator extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.DRAGON, Synergy.FIRE])
