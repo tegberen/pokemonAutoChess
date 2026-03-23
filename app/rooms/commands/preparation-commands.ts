@@ -743,13 +743,13 @@ export class OnAddBotCommand extends Command<PreparationRoom, OnAddBotPayload> {
 
         switch (difficulty) {
           case BotDifficulty.REGULAR:
-            elo = { $lt: 1300 }
+            elo = { $lt: 1600 }
             break
           case BotDifficulty.UNREALISTIC:
-            elo = { $gte: 1500 }
+            elo = { $gte: 1600 }
             break
           default:
-            elo = { $lt: 1300 }
+            elo = { $lt: 1600 }
           //case BotDifficulty.EASY:
           //  elo = { $lt: 800 }
           //  break
