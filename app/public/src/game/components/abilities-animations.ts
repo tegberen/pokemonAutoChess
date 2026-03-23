@@ -1268,6 +1268,7 @@ export const AbilitiesAnimations: {
   ],
   [Ability.COUNTER]: onCasterScale2,
   ["ROCK_EXPLOSION"]: onCasterScale4,
+  ["CORROSION"]: onCasterScale3,
   [Ability.HIGH_HORSEPOWER]: onCaster({
     ability: Ability.COUNTER,
     scale: 2,

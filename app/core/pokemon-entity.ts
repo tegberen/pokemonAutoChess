@@ -1052,6 +1052,13 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
       if (this.effects.has(EffectEnum.TOXIC)) {
         poisonChance = 1.0
       }
+      // buff poison "corossion" effect
+      if (this.effects.has(EffectEnum.TOXIC) && target.items.size > 0 && chance(0.1, this)) {
+        const items = [...target.items]
+        const randomItem = pickRandomIn(items)
+        target.removeItem(randomItem)
+        target.broadcastAbility({ skill: "CORROSION" }) // visual feedback
+      }
       if (target.player) {
         const nbSmellyClays = count(target.player.items, Item.SMELLY_CLAY)
         poisonChance -= nbSmellyClays * 0.15
