@@ -464,7 +464,7 @@ export class Electrike extends Pokemon {
   evolution = Pkm.MANECTRIC
   hp = 80
   atk = 6
-  speed = 70
+  speed = 74
   def = 6
   speDef = 6
   maxPP = 100
@@ -480,11 +480,11 @@ export class Manectric extends Pokemon {
   evolution = Pkm.MEGA_MANECTRIC
   evolutionRule = new StackBasedEvolutionRule()
   stacksRequired = 10
-  hp = 180
+  hp = 190
   atk = 17
-  speed = 70
-  def = 8
-  speDef = 8
+  speed = 74
+  def = 9
+  speDef = 9
   maxPP = 100
   range = 1
   skill = Ability.RISING_VOLTAGE
@@ -499,8 +499,8 @@ export class MegaManectric extends Pokemon {
   hp = 240
   atk = 24
   speed = 74
-  def = 10
-  speDef = 10
+  def = 12
+  speDef = 12
   maxPP = 100
   range = 1
   skill = Ability.RISING_VOLTAGE
