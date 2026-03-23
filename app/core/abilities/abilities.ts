@@ -11042,9 +11042,26 @@ export class SteelWingStrategy extends AbilityStrategy {
         crit
       )
     })
+
+    // trigger encounter during casting for now idk
+    if (pokemon.player) {
+      const tinkatonPresent = [...pokemon.player.wanderers.values()].some(
+        (w) => w.pkm === Pkm.TINKATON
+      )
+      if (!tinkatonPresent && Math.random() < 0.4) {
+        pokemon.player.spawnWanderingPokemon({
+          pkm: Pkm.TINKATON,
+          behavior: WandererBehavior.SPECTATE,
+          type: WandererType.DIALOG,
+          delay: 1500
+        })
+      }
+      if (tinkatonPresent) {
+        pokemon.status.triggerRage(2000, pokemon)
+      }
+    }
   }
 }
-
 class BideEffect extends PeriodicEffect {
   duration: number
   damageReceived: number = 0
