@@ -3198,15 +3198,16 @@ export class Abomasnow extends Pokemon {
   rarity = Rarity.EPIC
   stars = 2
   //evolution = Pkm.MEGA_ABOMASNOW
-  hp = 180
+  hp = 250
   atk = 20
   speed = 44
-  def = 10
-  speDef = 10
+  def = 12
+  speDef = 14
   maxPP = 120
   range = 1
   skill = Ability.SHEER_COLD
   regional = true
+  passive = Passive.ABOMASNOW
 }
 
 // export class MegaAbomasnow extends Pokemon {
@@ -9179,7 +9180,6 @@ export class Xatu extends Pokemon {
 
 export class Noibat extends Pokemon {
   types = new SetSchema<Synergy>([
-    Synergy.DRAGON,
     Synergy.SOUND,
     Synergy.FLYING
   ])
@@ -12186,7 +12186,7 @@ export class AlolanMuk extends Pokemon {
 }
 
 export class Ekans extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.POISON, Synergy.DARK])
+  types = new SetSchema<Synergy>([Synergy.POISON, Synergy.DARK, Synergy.MONSTER])
   rarity = Rarity.UNCOMMON
   stars = 1
   evolution = Pkm.ARBOK
@@ -12202,7 +12202,7 @@ export class Ekans extends Pokemon {
 }
 
 export class Arbok extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.POISON, Synergy.DARK])
+  types = new SetSchema<Synergy>([Synergy.POISON, Synergy.DARK, Synergy.MONSTER])
   rarity = Rarity.UNCOMMON
   stars = 2
   hp = 130
@@ -17746,9 +17746,8 @@ export class Incineroar extends Pokemon {
 
 export class Skrelp extends Pokemon {
   types = new SetSchema<Synergy>([
-    Synergy.DRAGON,
     Synergy.POISON,
-    Synergy.AQUATIC
+    Synergy.WATER
   ])
   rarity = Rarity.UNCOMMON
   stars = 1
@@ -17768,7 +17767,7 @@ export class Dragalge extends Pokemon {
   types = new SetSchema<Synergy>([
     Synergy.DRAGON,
     Synergy.POISON,
-    Synergy.AQUATIC
+    Synergy.WATER
   ])
   rarity = Rarity.UNCOMMON
   stars = 2
