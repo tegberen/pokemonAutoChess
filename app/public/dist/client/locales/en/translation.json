@@ -3387,8 +3387,8 @@
     "AURA": "Cloaking itself in aura, [10,LK] % chance to dodge attacks. Each time it dodges an attack, gain +3 ATK and +10 AP.",
     "CORVIKNIGHT": "An old rivalry dies hard. Corviknight goes RAGE when Tinkaton is watching.",
     "ABOMASNOW": "Abomasnow or Obamasnow. Think about it.",
-    "PRESENT": "The gifts draw a crowd. Has a [30,LK]% chance to attract a ICE Pokémon when casting Present."
-
+    "PRESENT": "The gifts draw a crowd. Has a [30,LK]% chance to attract a ICE Pokémon when casting Present.",
+    "MEGA_ALAKAZAM": "Bends a spoon to distract the target on hit. Has a [30,LK]% chance to BLINDED them for 2 seconds"
   },
 	"stat": {
 		"ATK": "Attack",

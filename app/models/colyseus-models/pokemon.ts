@@ -603,11 +603,11 @@ export class MegaLucario extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.FIGHTING, Synergy.STEEL])
   rarity = Rarity.RARE
   stars = 3
-  hp = 240
+  hp = 220
   atk = 30
   speed = 54
   def = 12
-  speDef = 12
+  speDef = 10
   maxPP = 80
   range = 2
   skill = Ability.AURASPHERE
@@ -2106,6 +2106,7 @@ export class MegaAlakazam extends Pokemon {
   maxPP = 50
   range = 4
   skill = Ability.TELEPORT
+  passive = Passive.MEGA_ALAKAZAM
 }
 
 export class Litwick extends Pokemon {
