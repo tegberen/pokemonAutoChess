@@ -799,4 +799,23 @@ export default class Shop {
 
     return Pkm.MELTAN
   }
+
+  presentPull(pokemon: IPokemonEntity, player: Player): Pkm | null {
+    const finals = player.getFinalizedLines()
+    const rarityProbabilities = RarityProbabilityPerLevel[player.experienceManager.level]
+    const presentPullRatePerRarity = {
+      [Rarity.COMMON]: rarityProbabilities[0],
+      [Rarity.UNCOMMON]: rarityProbabilities[1],
+      [Rarity.RARE]: rarityProbabilities[2],
+      [Rarity.EPIC]: rarityProbabilities[3],
+      [Rarity.ULTRA]: rarityProbabilities[4],
+      [Rarity.SPECIAL]: 0
+    }
+    const rarity = randomWeighted(presentPullRatePerRarity) ?? Rarity.COMMON
+    const icePkm = this.getRandomPokemonFromPool(rarity, player, finals, [
+      Synergy.ICE
+    ])
+    if (getPokemonData(icePkm).types.includes(Synergy.ICE)) return icePkm
+    return null
+  }
 }

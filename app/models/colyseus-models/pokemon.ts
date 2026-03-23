@@ -7156,6 +7156,7 @@ export class Delibird extends Pokemon {
   maxPP = 100
   range = 1
   skill = Ability.PRESENT
+  passive = Passive.PRESENT
 }
 
 export class IronBundle extends Pokemon {
