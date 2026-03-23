@@ -3893,20 +3893,34 @@ export class PresentStrategy extends AbilityStrategy {
     crit: boolean
   ) {
     super.process(pokemon, board, target, crit)
-    const chance = Math.pow(Math.random(), 1 - pokemon.luck / 100)
+    const roll = Math.pow(Math.random(), 1 - pokemon.luck / 100)
     /* 80 damage: 40%
        150 damage: 30%
        300 damage: 20%
        heal 50HP: 10%
     */
-    if (chance < 0.1) {
+    if (roll < 0.1) {
       target.handleHeal(50, pokemon, 0, false)
-    } else if (chance < 0.5) {
+    } else if (roll < 0.5) {
       target.handleSpecialDamage(80, board, AttackType.SPECIAL, pokemon, crit)
-    } else if (chance < 0.8) {
+    } else if (roll < 0.8) {
       target.handleSpecialDamage(150, board, AttackType.SPECIAL, pokemon, crit)
     } else {
       target.handleSpecialDamage(300, board, AttackType.SPECIAL, pokemon, crit)
+    }
+
+    if (chance(0.3, pokemon) && pokemon.player) {
+      const randomIcePkm = pokemon.simulation.room.state.shop.presentPull(
+        pokemon,
+        pokemon.player
+      )
+      if (randomIcePkm) {
+        pokemon.player.spawnWanderingPokemon({
+          pkm: randomIcePkm,
+          behavior: WandererBehavior.SPECTATE,
+          type: WandererType.CATCHABLE
+        })
+      }
     }
   }
 }

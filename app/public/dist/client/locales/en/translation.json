@@ -3386,7 +3386,8 @@
     "LUCARIO": "Gains a stack for each KO. Mega evolves after 10 stacks.",
     "AURA": "Cloaking itself in aura, [10,LK] % chance to dodge attacks. Each time it dodges an attack, gain +3 ATK and +10 AP.",
     "CORVIKNIGHT": "An old rivalry dies hard. Corviknight goes RAGE when Tinkaton is watching.",
-    "ABOMASNOW": "Abomasnow or Obamasnow. Think about it."
+    "ABOMASNOW": "Abomasnow or Obamasnow. Think about it.",
+    "PRESENT": "The gifts draw a crowd. Has a [30,LK]% chance to attract a ICE Pokémon when casting Present."
 
   },
 	"stat": {
