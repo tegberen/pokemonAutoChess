@@ -1906,4 +1906,11 @@ export const PassiveEffects: Partial<
       attacker.addStack()
     })
   ],
+  [Passive.MEGA_ALAKAZAM]: [
+    new OnHitEffect(({ attacker, target }) => {
+      if (chance(0.3, attacker)) {
+        target.status.triggerBlinded(2000, target)
+      }
+    })
+  ]
 }
