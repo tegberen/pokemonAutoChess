@@ -22,6 +22,7 @@
 # Synergy
 - Additional effect for ROCK: When KO'd, explode and deal TRUE and ARMOR_BREAK ADJACENT enemies. 
 - Additional effect for FIGHTING 8: Spawns a substitute as training dummy. The FIGHTING Pokemon that defeats the substitute will gain 3 ATK and 10 HP permanently.
+- Additional effect for POISON 7: [10,LK] % chance to corrode one of the target's items, destroying it for the rest of the fight.
 
 # Misc
 - Level Leaderboard on frontpage

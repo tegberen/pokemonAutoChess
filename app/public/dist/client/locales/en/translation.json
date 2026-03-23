@@ -2475,7 +2475,7 @@
 		"DEEP_MINER": "Gain 5 extra DEF and SPE_DEF for each fully dug row and +8 ATK when your half of the board is fully dug",
 		"POISONOUS": "[30,LK]% chance to POISONNED",
 		"VENOMOUS": "[60,LK]% chance to POISONNED. Max stacks of POISONNED +1",
-		"TOXIC": "[100,LK]% chance to POISONNED. Max stacks of POISONNED +2",
+		"TOXIC": "[100,LK]% chance to POISONNED. Max stacks of POISONNED +2. [10,LK]% chance to corrode one of the target's items, destroying it for the rest of the fight.",
 		"DRAGON_ENERGY": "Dragon's second synergy counts double (not the third)",
 		"DRAGON_SCALES": "Dragons gain 5 SHIELD for each STAR of all your DRAGON units on board",
 		"DRAGON_DANCE": "Dragons gain 1 SPEED and 1 AP for each STAR of all your DRAGON units on board",
