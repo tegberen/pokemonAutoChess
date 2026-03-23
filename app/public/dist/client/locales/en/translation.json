@@ -2363,7 +2363,7 @@
 		"EXPLOSION": "Deal [50,100,200,SP] SPECIAL to all ADJACENT enemy Pokémon. Damages user by the same amount.",
 		"CHLOROBLAST": "Deal [50,100,200,SP] SPECIAL to all ADJACENT enemy Pokémon. The user loses 50% of its max HP.",
 		"NIGHTMARE": "FATIGUE all enemy Pokémon for [2,4,6,ND=1] seconds. Any enemy suffering from a GHOST curse take [25,50,100,SP] SPECIAL.",
-    "PHANTOM_FORCE": "Silence all enemy Pokémon for [2, SP] seconds, then vanish. After 1 second, reappear in the middle of the enemy team and deal [100, SP] SPECIAL damage to all ADJACENT enemy Pokémon. Double the damage to targets with SILENCE or FATIGUE.",
+    "PHANTOM_FORCE": "SILENCE all enemy Pokémon for [2, SP] seconds, then vanish. After 1 second, reappear in the middle of the enemy team and deal [100, SP] SPECIAL to all ADJACENT enemy Pokémon. Double the damage to targets with SILENCE or FATIGUE.",
 		"CLANGOROUS_SOUL": "Buff the user's and ADJACENT allied Pokémon's ATK, DEF and SPE_DEF by [2,4,8,SP].",
 		"BONEMERANG": "Throw a bone like a boomerang through the enemy team, dealing 2 times [15,30,60,SP] SPECIAL to every enemy Pokémon in its path.",
 		"SHADOW_BONE": "Throw a bone that contains a spirit, dealing [30,60,120,SP] SPECIAL to every enemy Pokémon in its path with [50,LK]% chance to reduce DEF by [6,SP].",
@@ -3986,7 +3986,8 @@
     "AERODACTYL": "Gains one stack for each KO, two if the target was FLYING. Mega evolves after 20 stacks.",
     "FIGHTING_SUBSTITUTE": "When this Substitute is KO'ed, gain +3 Attack and +10 Max HP permanently. Only targetable by allied FIGHTING Pokémon.",
     "LUCARIO": "Gains a stack for each KO. Mega evolves after 10 stacks.",
-    "AURA": "Cloaking itself in aura, [10,LK] % chance to dodge attacks. Each time it dodges an attack, gain +3 ATK and +10 AP."
+    "AURA": "Cloaking itself in aura, [10,LK] % chance to dodge attacks. Each time it dodges an attack, gain +3 ATK and +10 AP.",
+    "CORVIKNIGHT": "An old rivalry dies hard. Corviknight goes RAGE when Tinkaton is watching."
 
   },
 	"stat": {
@@ -5089,7 +5090,8 @@
 		"magnemite": "Have you seen the fugitive ?",
 		"magnezone": "Listen, let the police do their job; as soon as I have more information, rest assured you will be the first to know.",
 		"xatu": "Let me open this treasure box for you...",
-		"lapras": "Ready to go? Then all aboard!"
+		"lapras": "Ready to go? Then all aboard!",
+    "tinkaton": "Fresh Corviknight parts for my hammer..."
 	},
 	"scribble": {
 		"EVERYONE_IS_HERE": "Everyone is here !",

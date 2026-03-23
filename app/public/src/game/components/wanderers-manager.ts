@@ -388,5 +388,10 @@ function getDialogsBySpecialWanderer(wanderer: Wanderer): {
       dialog: t("npc_dialog.lapras")
     }
   }
+  if (wanderer.pkm === Pkm.TINKATON) {
+    return {
+      dialog: t("npc_dialog.tinkaton")
+    }
+  }
   return {}
 }
