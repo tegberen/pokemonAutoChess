@@ -36,7 +36,7 @@ export const DEFAULT_BOT_STATE = {
   })) as IStep[],
   avatar: PkmIndex[Pkm.DITTO] + "/Normal",
   author: "",
-  elo: 1200,
+  elo: 1300,
   name: Pkm.DITTO,
   id: "",
   approved: false
@@ -217,14 +217,14 @@ export function estimateElo(bot: IBot): number {
   const averageScore =
     scores.reduce((total, score) => total + score, 0) / scores.length
 
-  if (averageScore < 10) return 800
-  if (averageScore < 20) return 900
-  if (averageScore < 30) return 1000
-  if (averageScore < 40) return 1100
-  if (averageScore < 50) return 1200
-  if (averageScore < 60) return 1300
-  if (averageScore < 70) return 1400
-  if (averageScore < 80) return 1500
+  if (averageScore < 10) return 900
+  if (averageScore < 20) return 1000
+  if (averageScore < 30) return 1200
+  if (averageScore < 40) return 1200
+  if (averageScore < 50) return 1300
+  if (averageScore < 60) return 1400
+  if (averageScore < 70) return 1500
+  if (averageScore < 80) return 1550
   if (averageScore < 90) return 1600
   return 1600
 }
