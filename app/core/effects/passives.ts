@@ -1907,6 +1907,13 @@ export const PassiveEffects: Partial<
       attacker.addStack()
     })
   ],
+  [Passive.GENGAR]: [
+    new OnKillEffect(({ attacker }) => {
+      if (attacker.isGhostOpponent) return
+      if (!attacker.player) return
+      attacker.addStack()
+    })
+  ],
   [Passive.MEGA_ALAKAZAM]: [
     new OnHitEffect(({ attacker, target }) => {
       if (chance(0.3, attacker)) {

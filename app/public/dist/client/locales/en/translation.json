@@ -3980,7 +3980,7 @@
     "ALAKAZAM": "Gains a stack for each teleport. Mega evolves after 50 stacks.",
     "MEDICHAM": "Gains a stack for every 100 ATK. Mega evolves after 10 stacks",
     "DIANCIE": "Gains one stack each time it is affected by a negative status effect. Mega evolves after 10 stacks",
-    "GENGAR": "Gains one stack each time it SILENCE an opponent. Mega evolves after 10 stacks",
+    "GENGAR": "Gains one stack each time it SILENCE an opponent and for each KO. Mega evolves after 10 stacks",
     "MEGA_DIANCIE": "Trigger Magic Bounce for 5 seconds and RUNE_PROTECT itself, the first time it is affected by a negative status effect.",
     "TYRANITAR": "Gains a stack for each 200 damage blocked or MONSTER stack. Mega evolves after 20 stacks.",
     "AERODACTYL": "Gains one stack for each KO, two if the target was FLYING. Mega evolves after 20 stacks.",
