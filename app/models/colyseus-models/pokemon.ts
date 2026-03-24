@@ -551,7 +551,7 @@ export class MegaBanette extends Pokemon {
   speed = 46
   def = 8
   speDef = 10
-  maxPP = 100
+  maxPP = 120
   range = 1
   skill = Ability.SHADOW_CLONE
   additional = true
@@ -6864,10 +6864,13 @@ export class Mawile extends Pokemon {
   types = new SetSchema<Synergy>([
     Synergy.STEEL,
     Synergy.FAIRY,
-    Synergy.DARK
+    Synergy.MONSTER
   ])
   rarity = Rarity.UNIQUE
   stars = 3
+  evolution = Pkm.MEGA_MAWILE
+  evolutionRule = new StackBasedEvolutionRule()
+  stacksRequired = 20
   hp = 180
   atk = 18
   speed = 41
@@ -6876,6 +6879,26 @@ export class Mawile extends Pokemon {
   maxPP = 80
   range = 1
   skill = Ability.PLAY_ROUGH
+  passive = Passive.MAWILE
+}
+
+export class MegaMawile extends Pokemon {
+  types = new SetSchema<Synergy>([
+    Synergy.STEEL,
+    Synergy.FAIRY,
+    Synergy.MONSTER
+  ])
+  rarity = Rarity.UNIQUE
+  stars = 4
+  hp = 220
+  atk = 23
+  speed = 41
+  def = 20
+  speDef = 6
+  maxPP = 80
+  range = 1
+  skill = Ability.PLAY_ROUGH
+  passive = Passive.MEGA_MAWILE
 }
 
 export class Phione extends Pokemon {
@@ -7135,6 +7158,10 @@ export class Absol extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.WILD, Synergy.DARK])
   rarity = Rarity.UNIQUE
   stars = 3
+  evolution = Pkm.MEGA_ABSOL
+  evolutionRule = new StackBasedEvolutionRule()
+  stacksRequired: number = 20
+
   hp = 200
   atk = 19
   speed = 49
@@ -7143,6 +7170,22 @@ export class Absol extends Pokemon {
   maxPP = 100
   range = 1
   skill = Ability.NIGHT_SLASH
+  passive = Passive.ABSOL
+}
+
+export class MegaAbsol extends Pokemon {
+  types = new SetSchema<Synergy>([Synergy.WILD, Synergy.DARK, Synergy.FAIRY])
+  rarity = Rarity.UNIQUE
+  stars = 4
+  hp = 220
+  atk = 24
+  speed = 65
+  def = 10
+  speDef = 10
+  maxPP = 100
+  range = 1
+  skill = Ability.NIGHT_SLASH
+  passive = Passive.SUPER_LUCK
 }
 
 export class Delibird extends Pokemon {
@@ -21210,6 +21253,7 @@ export const PokemonClasses: Record<
   [Pkm.PHIONE]: Phione,
   [Pkm.SPIRITOMB]: Spiritomb,
   [Pkm.ABSOL]: Absol,
+  [Pkm.MEGA_ABSOL]: MegaAbsol,
   [Pkm.LAPRAS]: Lapras,
   [Pkm.LATIAS]: Latias,
   [Pkm.LATIOS]: Latios,
@@ -21447,6 +21491,7 @@ export const PokemonClasses: Record<
   [Pkm.ALOLAN_VULPIX]: AlolanVulpix,
   [Pkm.ALOLAN_NINETALES]: AlolanNinetales,
   [Pkm.MAWILE]: Mawile,
+  [Pkm.MEGA_MAWILE]: MegaMawile,
   [Pkm.BUIZEL]: Buizel,
   [Pkm.FLOATZEL]: Floatzel,
   [Pkm.KECLEON]: Kecleon,
