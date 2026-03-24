@@ -2673,7 +2673,7 @@ export class RockSlideStrategy extends AbilityStrategy {
       damage = 120
     }
     if (pokemon.stars === 4) {
-      damage = 240
+      damage = 180
     }
 
     if (target.types.has(Synergy.FLYING)) {
@@ -6999,9 +6999,10 @@ export class PlayRoughStrategy extends AbilityStrategy {
     crit: boolean
   ) {
     super.process(pokemon, board, target, crit)
+    const damage = [30, 60, 120, 180][pokemon.stars - 1] ?? 180
     target.status.triggerCharm(2500, target, pokemon, false)
     target.handleSpecialDamage(
-      pokemon.stars === 3 ? 120 : pokemon.stars === 2 ? 60 : 30,
+      damage,
       board,
       AttackType.SPECIAL,
       pokemon,
@@ -8684,7 +8685,7 @@ export class NightSlashStrategy extends AbilityStrategy {
     crit: boolean
   ) {
     super.process(pokemon, board, target, crit)
-    const damage = [15, 30, 60][pokemon.stars - 1] ?? 60
+    const damage = [15, 30, 60, 120][pokemon.stars - 1] ?? 60
     target.handleSpecialDamage(damage, board, AttackType.SPECIAL, pokemon, crit)
   }
 }

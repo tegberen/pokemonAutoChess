@@ -1834,6 +1834,13 @@ export const PokemonAnimations: {
     attackSprite: AttackSprite.DARK_MELEE,
     hitSprite: HitSprite.DARK_HIT
   },
+  [Pkm.MEGA_ABSOL]: {
+    attack: AnimationType.Attack,
+    ability: AnimationType.Charge,
+    emote: AnimationType.Charge,
+    attackSprite: AttackSprite.DARK_MELEE,
+    hitSprite: HitSprite.DARK_HIT
+  },
   [Pkm.LAPRAS]: {
     attack: AnimationType.Attack,
     ability: AnimationType.RearUp,
@@ -3395,6 +3402,13 @@ export const PokemonAnimations: {
     hitSprite: HitSprite.WATER_HIT
   },
   [Pkm.MAWILE]: {
+    attack: AnimationType.Bite,
+    ability: AnimationType.Swing,
+    emote: AnimationType.Shoot,
+    attackSprite: AttackSprite.FIGHTING_MELEE,
+    hitSprite: HitSprite.STEEL_HIT
+  },
+  [Pkm.MEGA_MAWILE]: {
     attack: AnimationType.Bite,
     ability: AnimationType.Swing,
     emote: AnimationType.Shoot,

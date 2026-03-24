@@ -1842,5 +1842,39 @@ export const PassiveEffects: Partial<
         target.status.triggerBlinded(2000, target)
       }
     })
-  ]
+  ],
+  [Passive.ABSOL]: [
+    new OnKillEffect(({ attacker }) => {
+      if (attacker.isGhostOpponent) return
+      if (!attacker.player) return
+      attacker.addStack()
+    })
+  ],
+  [Passive.MAWILE]: [
+    new OnKillEffect(({ attacker }) => {
+      if (attacker.isGhostOpponent) return
+      if (!attacker.player) return
+      attacker.addStack()
+    })
+  ],
+  [Passive.MEGA_MAWILE]: [
+    new OnDamageReceivedEffect(({ pokemon, attacker, attackType}) => {
+      if (
+        attackType === AttackType.PHYSICAL &&
+        attacker &&
+        chance(0.1, pokemon)
+      ) {
+        attacker.status.triggerCharm(1000, attacker, pokemon)
+      }
+    })
+  ],
+  [Passive.SUPER_LUCK]: [
+    new OnSimulationStartEffect(({ simulation, entity }) => {
+      simulation.board.forEach((x, y, pkm) => {
+        if (pkm && pkm.team === entity.team) {
+          pkm.addCritChance(10, pkm, 0, false)
+        }
+      })
+    }, Passive.SUPER_LUCK)
+  ],
 }
