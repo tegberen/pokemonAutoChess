@@ -495,6 +495,10 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
 
     value = applyTwistBandBuff(this, value, caster)
 
+    if (value > 0 && this.effects.has(EffectEnum.SUBSPACE_SWELL_CHANNEL)) { // for palkia 
+      value = Math.round(value * 1.4)
+    }
+
     if (
       !(value > 0 && this.status.silence) &&
       !(value > 0 && this.status.protect) &&
@@ -510,7 +514,7 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
     caster: IPokemonEntity,
     apBoost: number,
     crit: boolean
-  ) {
+  ) { 
     value =
       value * (1 + (apBoost * caster.ap) / 100) * (crit ? caster.critPower : 1)
     value = applyBigEaterBeltStatBuff(this, value, caster)

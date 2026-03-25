@@ -5974,6 +5974,47 @@ export class Dialga extends Pokemon {
   maxPP = 110
   range = 1
   skill = Ability.ROAR_OF_TIME
+  onChangePosition(x: number, y: number, player: Player, state: GameState) {
+    super.onChangePosition(x, y, player, state)
+    if (y !== 3) {
+      player.transformPokemon(this, Pkm.ORIGIN_DIALGA)
+    }
+  }
+}
+
+export class OriginDialga extends Pokemon {
+  types = new SetSchema<Synergy>([Synergy.DRAGON, Synergy.STEEL])
+  rarity = Rarity.LEGENDARY
+  stars = 3
+  hp = 250
+  atk = 32
+  speed = 54
+  def = 10
+  speDef = 10
+  maxPP = 120
+  range = 2
+  skill = Ability.TEMPORAL_RUPTURE
+  onChangePosition(x: number, y: number, player: Player, state: GameState) {
+    super.onChangePosition(x, y, player, state)
+    if (y === 3) {
+      player.transformPokemon(this, Pkm.DIALGA)
+    }
+  }
+}
+
+export class PrimalDialga extends Pokemon {
+  types = new SetSchema<Synergy>([Synergy.DRAGON, Synergy.STEEL, Synergy.WILD])
+  rarity = Rarity.LEGENDARY
+  stars = 3
+  hp = 300
+  atk = 23
+  speed = 54
+  def = 10
+  speDef = 10
+  maxPP = 100
+  range = 1
+  skill = Ability.PRIMAL_ROAR
+  regional = true
 }
 
 export class Palkia extends Pokemon {
@@ -5988,6 +6029,32 @@ export class Palkia extends Pokemon {
   maxPP = 120
   range = 1
   skill = Ability.SPACIAL_REND
+  onChangePosition(x: number, y: number, player: Player, state: GameState) {
+    super.onChangePosition(x, y, player, state)
+    if (y !== 3) {
+      player.transformPokemon(this, Pkm.ORIGIN_PALKIA)
+    }
+  }
+}
+
+export class OriginPalkia extends Pokemon {
+  types = new SetSchema<Synergy>([Synergy.DRAGON, Synergy.WATER])
+  rarity = Rarity.LEGENDARY
+  stars = 3
+  hp = 250
+  atk = 32
+  speed = 57
+  def = 10
+  speDef = 10
+  maxPP = 120
+  range = 2
+  skill = Ability.SUBSPACE_SWELL
+  onChangePosition(x: number, y: number, player: Player, state: GameState) {
+    super.onChangePosition(x, y, player, state)
+    if (y === 3) {
+      player.transformPokemon(this, Pkm.PALKIA)
+    }
+  }
 }
 
 export class Meltan extends Pokemon {
@@ -21302,7 +21369,10 @@ export const PokemonClasses: Record<
   [Pkm.GALARIAN_ZAPDOS]: GalarianZapdos,
   [Pkm.GALARIAN_MOLTRES]: GalarianMoltres,
   [Pkm.DIALGA]: Dialga,
+  [Pkm.ORIGIN_DIALGA]: OriginDialga,
+  [Pkm.PRIMAL_DIALGA]: PrimalDialga,
   [Pkm.PALKIA]: Palkia,
+  [Pkm.ORIGIN_PALKIA]: OriginPalkia,
   [Pkm.SUICUNE]: Suicune,
   [Pkm.RAIKOU]: Raikou,
   [Pkm.ENTEI]: Entei,
