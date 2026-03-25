@@ -2138,6 +2138,80 @@ export class RoarOfTimeStrategy extends AbilityStrategy {
   }
 }
 
+class TemporalRuptureEffect extends PeriodicEffect {
+  duration: number
+  damageTracked: Map<PokemonEntity, number> = new Map()
+  monitors: OnDamageReceivedEffect[] = []
+
+  constructor(pokemon: PokemonEntity, duration: number, board: Board, crit: boolean) {
+    super(
+      (pokemon) => {
+        if (this.duration <= 0) {
+          // cleanup monitors
+          this.monitors.forEach((m) => {
+            board.cells.forEach((cell) => {
+              if (cell) cell.effectsSet.delete(m)
+            })
+          })
+          pokemon.broadcastAbility({ skill: Ability.TEMPORAL_RUPTURE })
+          this.damageTracked.forEach((damage, unit) => {
+            if (unit.hp <= 0) return
+            const amount = Math.round(damage) // define like thise for ap adjustments
+            if (unit.team !== pokemon.team) {
+              unit.handleSpecialDamage(amount, board, AttackType.TRUE, pokemon, crit)
+            } else {
+              unit.handleHeal(Math.round(amount * (1 + pokemon.ap / 100)), pokemon, 0, false)
+            }
+          })
+          pokemon.effectsSet.delete(this)
+        } else {
+          this.duration -= this.intervalMs
+        }
+      },
+      Ability.TEMPORAL_RUPTURE,
+      1000
+    )
+    this.duration = duration
+
+    // add monitor to every unit on the board
+    board.cells.forEach((unit) => {
+      if (!unit) return
+      const monitor = new OnDamageReceivedEffect(({ damage }) => {
+        this.damageTracked.set(unit, (this.damageTracked.get(unit) ?? 0) + damage)
+      }, Ability.TEMPORAL_RUPTURE)
+      this.monitors.push(monitor)
+      unit.effectsSet.add(monitor)
+    })
+  }
+}
+
+export class TemporalRuptureStrategy extends AbilityStrategy {
+  process(pokemon: PokemonEntity, board: Board, target: PokemonEntity, crit: boolean) {
+    super.process(pokemon, board, target, crit, true)
+    pokemon.effectsSet.add(new TemporalRuptureEffect(pokemon, 3000, board, crit))
+  }
+}
+
+export class PrimalRoarStrategy extends AbilityStrategy {
+  requiresTarget = false
+  process(pokemon: PokemonEntity, board: Board, target: null, crit: boolean) {
+    super.process(pokemon, board, target, crit)
+    pokemon.addAttack(10, pokemon, 1, crit)
+    pokemon.addSpeed(10, pokemon, 1, crit)
+    const rageDuration = pokemon.count.ult * 1000
+    board.cells
+      .filter<PokemonEntity>(
+        (cell): cell is PokemonEntity =>
+          cell !== undefined &&
+          cell.team === pokemon.team &&
+          cell.hp > 0
+      )
+      .forEach((ally) => {
+        ally.status.triggerRage(rageDuration, ally)
+      })
+  }
+}
+
 export class HealBlockStrategy extends AbilityStrategy {
   process(
     pokemon: PokemonEntity,
@@ -8954,6 +9028,64 @@ export class SpacialRendStrategy extends AbilityStrategy {
         )
       }
     }
+  }
+}
+
+class SubspaceSwellEffect extends PeriodicEffect {
+  duration: number
+  allyCasts: number = 0
+  castMonitors: OnAbilityCastEffect[] = []
+
+  constructor(pokemon: PokemonEntity, duration: number, board: Board, crit: boolean) {
+    super(
+      (pokemon) => {
+        if (this.duration <= 0) {
+          // cleanup channel effect from allies
+          board.cells.forEach((ally) => {
+            if (ally && ally.team === pokemon.team && ally !== pokemon) {
+              ally.effects.delete(EffectEnum.SUBSPACE_SWELL_CHANNEL)
+              this.castMonitors.forEach((m) => ally.effectsSet.delete(m))
+            }
+          })
+          // release burst
+          pokemon.broadcastAbility({ skill: Ability.SUBSPACE_SWELL })
+          const damage = Math.round(20 * Math.max(1, this.allyCasts))
+          board.getCellsInRadius(pokemon.positionX, pokemon.positionY, 4, false)
+            .forEach((cell) => {
+              if (cell.value && cell.value.team !== pokemon.team) {
+                cell.value.handleSpecialDamage(damage, board, AttackType.SPECIAL, pokemon, crit)
+              }
+            })
+          pokemon.effectsSet.delete(this)
+        } else {
+          this.duration -= this.intervalMs
+        }
+      },
+      Ability.SUBSPACE_SWELL,
+      500
+    )
+    this.duration = duration
+
+    // apply channel boost and cast monitor to each ally
+    board.cells.forEach((ally) => {
+      if (ally && ally.team === pokemon.team && ally !== pokemon) {
+        ally.effects.add(EffectEnum.SUBSPACE_SWELL_CHANNEL)
+        const monitor = new OnAbilityCastEffect(() => {
+          this.allyCasts++
+        }, Ability.SUBSPACE_SWELL)
+        this.castMonitors.push(monitor)
+        ally.effectsSet.add(monitor)
+      }
+    })
+  }
+}
+
+export class SubspaceSwellStrategy extends AbilityStrategy {
+  process(pokemon: PokemonEntity, board: Board, target: PokemonEntity, crit: boolean) {
+    super.process(pokemon, board, target, crit, true)
+    const alreadyChanneling = [...pokemon.effectsSet].some((e) => e.constructor.name === "SubspaceSwellEffect")
+    if (!alreadyChanneling)
+    pokemon.effectsSet.add(new SubspaceSwellEffect(pokemon, 3000, board, crit))
   }
 }
 
@@ -17142,6 +17274,9 @@ export const AbilityStrategies: { [key in Ability]: AbilityStrategy } = {
   [Ability.AROMATHERAPY]: new AromatherapyStrategy(),
   [Ability.DETECT]: new DetectStrategy(),
   [Ability.SPACIAL_REND]: new SpacialRendStrategy(),
+  [Ability.PRIMAL_ROAR]: new PrimalRoarStrategy(),
+  [Ability.TEMPORAL_RUPTURE]: new TemporalRuptureStrategy(),
+  [Ability.SUBSPACE_SWELL]: new SubspaceSwellStrategy(),
   [Ability.MULTI_ATTACK]: new MultiAttackStrategy(),
   [Ability.STICKY_WEB]: new StickyWebStrategy(),
   [Ability.ACCELEROCK]: new AccelerockStrategy(),

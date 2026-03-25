@@ -14,6 +14,9 @@
 ![Pirate Cinderace](/assets/portraits/0815/9999/Joyous.png)
 ![Staraptor Fashion](/assets/portraits/0398/9999/Normal.png)
 ![Mafia Togepi](/assets/portraits/0175/9999/Determined.png)
+![Origin Palkia](/assets/portraits/0484/0001/Normal.png)
+![Origin Dialga](/assets/portraits/0483/0001/Normal.png)
+![Primal Dialga](/assets/portraits/0483/0002/Normal.png)
 ## Mega Evolutions
 ![Mega Charizard X](/assets/portraits/0006/0001/Surprised.png)
 ![Mega Lopunny](/assets/portraits/0428/0001/Normal.png)
