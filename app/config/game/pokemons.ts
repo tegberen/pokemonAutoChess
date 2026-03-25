@@ -22,6 +22,10 @@ export const UnownsStage1 = [
   Pkm.UNOWN_T,
   Pkm.UNOWN_V,
   Pkm.UNOWN_W
+  Pkm.OgerponTeal
+  Pkm.OgerponWellspring
+  Pkm.OgerponHearthFlame
+  Pkm.OgerponCornerstone
 ]
 
 export const UnownsStage2 = [
