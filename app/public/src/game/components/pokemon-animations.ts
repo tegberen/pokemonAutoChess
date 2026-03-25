@@ -1360,13 +1360,32 @@ export const PokemonAnimations: {
     attack: AnimationType.Scratch,
     ability: AnimationType.RearUp,
     emote: AnimationType.Shoot,
-    attackSprite: AttackSprite.FIRE_RANGE
+    attackSprite: AttackSprite.DRAGON_MELEE
   },
+  [Pkm.ORIGIN_DIALGA]: {
+    attack: AnimationType.Attack,
+    ability: AnimationType.RearUp,
+    emote: AnimationType.Charge,
+    attackSprite: AttackSprite.DRAGON_RANGE
+  },
+  [Pkm.PRIMAL_DIALGA]: {
+    attack: AnimationType.Scratch,
+    ability: AnimationType.RearUp,
+    emote: AnimationType.Charge,
+    attackSprite: AttackSprite.DRAGON_MELEE
+   },
   [Pkm.PALKIA]: {
     attack: AnimationType.Attack,
     ability: AnimationType.RearUp,
     emote: AnimationType.Shoot,
     attackSprite: AttackSprite.DRAGON_MELEE
+  },
+  [Pkm.ORIGIN_PALKIA]: {
+    attack: AnimationType.Attack,
+    ability: AnimationType.Charge,
+    emote: AnimationType.Charge,
+    attackSprite: AttackSprite.DRAGON_MELEE,
+    hitSprite: HitSprite.FIRE_HIT
   },
   [Pkm.SUICUNE]: {
     attack: AnimationType.Shoot,
