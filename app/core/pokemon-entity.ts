@@ -497,6 +497,10 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
 
     value = applyTwistBandBuff(this, value, caster)
 
+    if (value > 0 && this.effects.has(EffectEnum.SUBSPACE_SWELL_CHANNEL)) { // for palkia 
+      value = Math.round(value * 1.4)
+    }
+
     if (
       !(value > 0 && this.status.silence) &&
       !(value > 0 && this.status.protect) &&
