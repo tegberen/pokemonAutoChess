@@ -1225,6 +1225,28 @@ export function transformToNoice(entity: PokemonEntity) {
   entity.shield = 0
 }
 
+const MewtwoOnKillEffect = new OnKillEffect(
+  ({ attacker: pokemon, target }) => {
+    if (pokemon.isGhostOpponent) return
+    if (!pokemon.player) return
+    const MAX_STACKS = 20
+    const currentStacks = pokemon.refToBoardPokemon.stacks
+    if (currentStacks < MAX_STACKS) {
+      pokemon.addStack()
+      if (pokemon.ap > (target?.ap ?? 0)) {
+        pokemon.addStack()
+      }
+      if (
+        pokemon.refToBoardPokemon.stacks >= MAX_STACKS &&
+        pokemon.player.items.includes(Item.MEWTWONITE_Y) === false
+      ) {
+        pokemon.player.items.push(Item.MEWTWONITE_Y)
+      }
+    }
+  },
+  Passive.MEWTWO
+)
+
 export const PassiveEffects: Partial<
   Record<Passive, (Effect | (() => Effect))[]>
 > = {
@@ -1956,4 +1978,5 @@ export const PassiveEffects: Partial<
       })
     }, Passive.SUPER_LUCK)
   ],
+  [Passive.MEWTWO]: [MewtwoOnKillEffect]
 }
