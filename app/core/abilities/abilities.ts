@@ -2280,7 +2280,7 @@ export class PrimalRoarStrategy extends AbilityStrategy {
           cell.hp > 0
       )
       .forEach((ally) => {
-        ally.status.triggerRage(rageDuration, ally)
+        ally.status.triggerRage(1000 + rageDuration, ally)
       })
   }
 }

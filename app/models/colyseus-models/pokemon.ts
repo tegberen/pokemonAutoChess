@@ -5947,10 +5947,11 @@ export class Dialga extends Pokemon {
       player.transformPokemon(this, Pkm.ORIGIN_DIALGA)
     }
   }
+  passive = Passive.DIALGA
 }
 
 export class OriginDialga extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.DRAGON, Synergy.STEEL])
+  types = new SetSchema<Synergy>([Synergy.DRAGON, Synergy.STEEL, Synergy.FLYING])
   rarity = Rarity.LEGENDARY
   stars = 3
   hp = 250
@@ -5958,7 +5959,7 @@ export class OriginDialga extends Pokemon {
   speed = 54
   def = 10
   speDef = 10
-  maxPP = 120
+  maxPP = 100
   range = 2
   skill = Ability.TEMPORAL_RUPTURE
   onChangePosition(x: number, y: number, player: Player, state: GameState) {
@@ -6006,10 +6007,11 @@ export class Palkia extends Pokemon {
       player.transformPokemon(this, Pkm.ORIGIN_PALKIA)
     }
   }
+  passive = Passive.PALKIA
 }
 
 export class OriginPalkia extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.DRAGON, Synergy.WATER])
+  types = new SetSchema<Synergy>([Synergy.DRAGON, Synergy.WATER, Synergy.FLYING])
   rarity = Rarity.LEGENDARY
   stars = 3
   hp = 250
@@ -6017,7 +6019,7 @@ export class OriginPalkia extends Pokemon {
   speed = 57
   def = 10
   speDef = 10
-  maxPP = 120
+  maxPP = 100
   range = 2
   skill = Ability.SUBSPACE_SWELL
   onChangePosition(x: number, y: number, player: Player, state: GameState) {

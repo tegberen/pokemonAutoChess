@@ -2364,7 +2364,7 @@
 	},
 	"ability_description": {
     "TEMPORAL_RUPTURE": "Channel for 3 seconds, then unleash a temporal pulse. All enemy Pokémon in a 4-tile radius take [100,SP]% of the damage received during the last 3 seconds as TRUE. Allies are healed for [100,SP]% HP of the damage they took in the last 3 seconds.",
-    "PRIMAL_ROAR": "Increase the user's ATK and SPEED by [10, SP] and RAGE all allied Pokémon for 1 second. Everytime the user uses this ability, increase the RAGE duration by 1 second.",
+    "PRIMAL_ROAR": "Increase the user's ATK and SPEED by [10, SP] and RAGE all allied Pokémon for 2 second. Everytime the user uses this ability, increase the RAGE duration by 1 second.",
     "SUBSPACE_SWELL": "Channel for 3 seconds. Allies gain 40% more PP from all sources. When the channel ends, unleash a burst in a 4-tile radius dealing [20,SP] SPECIAL times the amount of allies cast during the channel.",
 		"SOFT_BOILED": "Cure all status conditions and grant [20,40,80,SP] SHIELD to all allied Pokémon.",
 		"PRECIPICE_BLADES": "Deal [100,SP] SPECIAL to all enemy Pokémon in the same row or column as the user.",
@@ -4044,7 +4044,9 @@
     "ABSOL": "Gain one stack for each KO. Mega evolves after 20 stacks.",
     "MAWILE": "Gain one stack for each KO. Mega evolves after 20 stacks.",
     "MEGA_MAWILE": "Its docile face lulls foes off guard. When struck by a regular attack, [10,LK]% chance to CHARM the opponent for 1 second.",
-    "SUPER_LUCK": "Increase allies CRIT_CHANCE by +10."
+    "SUPER_LUCK": "Increase allies CRIT_CHANCE by +10.",
+    "PALKIA": "Palkia switches between its Altered Form and Origin Form depending on its position on the board.",
+    "DIALGA": "Dialga switches between its Altered Form and Origin Form depending on its position on the board."
   },
 	"stat": {
 		"ATK": "Attack",
