@@ -1252,6 +1252,7 @@ export const PassiveEffects: Partial<
 > = {
   [Passive.DURANT]: [DurantBugBuffEffect],
   [Passive.SHARED_VISION]: [SharedVisionEffect],
+  [Passive.SHARED_VISION_2]: [SharedVisionEffect],
   [Passive.METEOR]: [MiniorKernelOnAttackEffect],
   [Passive.KUBFU]: [KubfuOnKillEffect],
   [Passive.QWILFISH]: [QwilfishPassiveEffect],
