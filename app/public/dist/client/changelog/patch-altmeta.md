@@ -22,7 +22,7 @@
 # Synergy
 - Additional effect for ROCK: When KO'd, explode and deal TRUE and ARMOR_BREAK ADJACENT enemies. 
 - Additional effect for FIGHTING 8: Spawns a substitute as training dummy. The FIGHTING Pokemon that defeats the substitute will gain 3 ATK and 10 HP permanently.
-- Additional effect for POISON 7: [10,LK] % chance to corrode one of the target's items, destroying it for the rest of the fight.
+- Additional effect for POISON 7: [1,LK] % chance to corrode one of the target's items, destroying it for the rest of the fight when not RUNE_PROTECT.
 
 # Misc
 - Level Leaderboard on frontpage
@@ -72,7 +72,6 @@
 - Blaziken: moved to regional
 
 ## Epic
-- Dragonite: moved to regular,it does not have the new ability from Curry yet
 - Typhlosion: adjusted stats
 - Gigalith: is now SOUND, reduced PP, nerfed HP
 - Walrein: made it a HP Beast
@@ -104,7 +103,6 @@
 - Dragapult: added FOSSIL
 
 ## Unique
-- Absol: added FAIRY, ill add the Mega Evolutions at some point
 - Veluza: PP 100 → 60
 - Roaring Moon: adjusted stats and ability, lowered PP
 - Mawile: added DARK, remove MONSTER, nerfed SPE_DEF, buffed ATK

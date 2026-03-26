@@ -1874,7 +1874,21 @@ export const PokemonAnimations: {
     attackSprite: AttackSprite.PSYCHIC_RANGE,
     hitSprite: HitSprite.PSYCHIC_HIT
   },
+  [Pkm.MEGA_LATIAS]: {
+    attack: AnimationType.Shoot,
+    ability: AnimationType.Attack,
+    emote: AnimationType.RearUp,
+    attackSprite: AttackSprite.PSYCHIC_RANGE,
+    hitSprite: HitSprite.PSYCHIC_HIT
+  },
   [Pkm.LATIOS]: {
+    attack: AnimationType.Shoot,
+    ability: AnimationType.Attack,
+    emote: AnimationType.RearUp,
+    attackSprite: AttackSprite.PSYCHIC_RANGE,
+    hitSprite: HitSprite.PSYCHIC_HIT
+  },
+  [Pkm.MEGA_LATIOS]: {
     attack: AnimationType.Shoot,
     ability: AnimationType.Attack,
     emote: AnimationType.RearUp,

@@ -6490,7 +6490,7 @@ export class MistBallStrategy extends AbilityStrategy {
     crit: boolean
   ) {
     super.process(pokemon, board, target, crit)
-    const damage = 25
+    const damage = [25, 25, 25, 40][pokemon.stars - 1]
 
     effectInLine(board, pokemon, target, (cell) => {
       if (
@@ -6541,7 +6541,7 @@ export class LusterPurgeStrategy extends AbilityStrategy {
     crit: boolean
   ) {
     super.process(pokemon, board, target, crit)
-    const damage = 30
+    const damage = [25, 25, 25, 40][pokemon.stars - 1]
 
     effectInLine(board, pokemon, target, (cell) => {
       if (

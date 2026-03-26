@@ -120,6 +120,7 @@ export const UniquePool = new Array<PkmProposition>(
   Pkm.DONDOZO,
   Pkm.EISCUE_NOICE,
   Pkm.ROARING_MOON,
+  PkmDuo.LATIOS_LATIAS
 )
 
 export const LegendaryPool = new Array<PkmProposition>(
@@ -199,7 +200,6 @@ export const LegendaryPool = new Array<PkmProposition>(
   Pkm.CHI_YU,
   Pkm.TYPE_NULL,
   Pkm.BLACEPHALON,
-  PkmDuo.LATIOS_LATIAS,
   PkmDuo.BUZZWOLE_PHEROMOSA,
   Pkm.PRIMAL_DIALGA
 )
