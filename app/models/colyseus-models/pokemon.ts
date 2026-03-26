@@ -7370,33 +7370,71 @@ export class Lapras extends Pokemon {
 }
 
 export class Latias extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.DRAGON, Synergy.PSYCHIC, Synergy.FLYING])
-  rarity = Rarity.LEGENDARY
+  types = new SetSchema<Synergy>([Synergy.DRAGON, Synergy.PSYCHIC])
+  rarity = Rarity.UNIQUE
   stars = 3
+  evolution = Pkm.MEGA_LATIAS
+  evolutionRule = new ConditionBasedEvolutionRule(
+    (pokemon, player, stageLevel) => stageLevel >= 28
+  )
   hp = 120
   atk = 12
+  speed = 60
+  def = 4
+  speDef = 4
+  maxPP = 100
+  range = 3
+  skill = Ability.MIST_BALL
+  passive = Passive.SHARED_VISION
+}
+
+export class Latios extends Pokemon {
+  types = new SetSchema<Synergy>([Synergy.DRAGON, Synergy.PSYCHIC])
+  rarity = Rarity.UNIQUE
+  stars = 3
+  evolution = Pkm.MEGA_LATIOS
+  evolutionRule = new ConditionBasedEvolutionRule(
+    (pokemon, player, stageLevel) => stageLevel >= 28
+  )
+  hp = 120
+  atk = 12
+  speed = 60
+  def = 4
+  speDef = 4
+  maxPP = 100
+  range = 3
+  skill = Ability.LUSTER_PURGE
+  passive = Passive.SHARED_VISION
+}
+
+export class MegaLatias extends Pokemon {
+  types = new SetSchema<Synergy>([Synergy.DRAGON, Synergy.PSYCHIC, Synergy.FLYING])
+  rarity = Rarity.UNIQUE
+  stars = 4
+  hp = 140
+  atk = 14
   speed = 60
   def = 4
   speDef = 4
   maxPP = 100
   range = 4
   skill = Ability.MIST_BALL
-  passive = Passive.SHARED_VISION
+  passive = Passive.SHARED_VISION_2
 }
 
-export class Latios extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.DRAGON, Synergy.PSYCHIC, Synergy.FLYING])
-  rarity = Rarity.LEGENDARY
-  stars = 3
-  hp = 120
-  atk = 12
+export class MegaLatios extends Pokemon {
+  types = new SetSchema<Synergy>([Synergy.DRAGON, Synergy.PSYCHIC,Synergy.FLYING])
+  rarity = Rarity.UNIQUE
+  stars = 4
+  hp = 140
+  atk = 14
   speed = 60
   def = 4
   speDef = 4
   maxPP = 100
   range = 4
   skill = Ability.LUSTER_PURGE
-  passive = Passive.SHARED_VISION
+  passive = Passive.SHARED_VISION_2
 }
 
 export class Uxie extends Pokemon {
@@ -21284,6 +21322,8 @@ export const PokemonClasses: Record<
   [Pkm.LAPRAS]: Lapras,
   [Pkm.LATIAS]: Latias,
   [Pkm.LATIOS]: Latios,
+  [Pkm.MEGA_LATIOS]: MegaLatios,
+  [Pkm.MEGA_LATIAS]: MegaLatias,
   [Pkm.MESPRIT]: Mesprit,
   [Pkm.AZELF]: Azelf,
   [Pkm.UXIE]: Uxie,

@@ -39,6 +39,8 @@
 ![Mega Mawile](/assets/portraits/0303/0001/Normal.png)
 ![Mega Absol](/assets/portraits/0359/0001/Normal.png)
 ![Mega Mewtwo Y](/assets/portraits/0150/0002/Normal.png)
+![Mega Latias](/assets/portraits/0380/0001/Normal.png)
+![Mega Latios](/assets/portraits/0381/0001/Normal.png)
 
 ## Requirements (Ping me for adjustments)
 ![Charizard](/assets/portraits/0006/Normal.png)
@@ -62,4 +64,6 @@
 ![Mawile](/assets/portraits/0303/Normal.png)
 ![Absol](/assets/portraits/0359/Normal.png)
 ![Mewtwo Y](/assets/portraits/0150/Normal.png)
+![Latias](/assets/portraits/0380/Normal.png)
+![Latios](/assets/portraits/0381/Normal.png)
 
