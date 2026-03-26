@@ -1842,7 +1842,7 @@ export class FutureSightStrategy extends AbilityStrategy {
   requiresTarget = false
   process(pokemon: PokemonEntity, board: Board, target: null, crit: boolean) {
     super.process(pokemon, board, target, crit, true)
-    const damage = [10, 20, 30, 60][pokemon.stars - 1] ?? 30
+    const damage = [10, 20, 30, 40][pokemon.stars - 1] ?? 40
     const count = 5
     const targets: PokemonEntity[] = board.cells
       .filter<PokemonEntity>(
