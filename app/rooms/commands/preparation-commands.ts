@@ -742,6 +742,9 @@ export class OnAddBotCommand extends Command<PreparationRoom, OnAddBotPayload> {
         let elo: QueryFilter<IBot>["elo"] | undefined
 
         switch (difficulty) {
+          case BotDifficulty.NEWBIE:
+            elo = { $lt: 1100 }
+            break
           case BotDifficulty.REGULAR:
             elo = { $lt: 1600 }
             break
