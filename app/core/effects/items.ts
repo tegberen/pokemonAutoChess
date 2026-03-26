@@ -1053,6 +1053,14 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
       return false
     })
   ],
+  [Item.MEWTWONITE_Y]: [
+    new OnItemDroppedEffect(({ pokemon, player }) => {
+      if (pokemon?.name === Pkm.MEWTWO) {
+        player.transformPokemon(pokemon, Pkm.MEGA_MEWTWO_Y)
+      }
+      return false
+    })
+  ],
 
   [Item.ZYGARDE_CUBE]: [
     new OnItemDroppedEffect(({ pokemon, player }) => {

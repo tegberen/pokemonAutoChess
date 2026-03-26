@@ -1909,6 +1909,13 @@ export const PokemonAnimations: {
     attackSprite: AttackSprite.PSYCHIC_RANGE,
     hitSprite: HitSprite.PSYCHIC_HIT
   },
+  [Pkm.MEGA_MEWTWO_Y]: {
+    attack: AnimationType.Shoot,
+    ability: AnimationType.Charge,
+    emote: AnimationType.Pose,
+    attackSprite: AttackSprite.PSYCHIC_RANGE,
+    hitSprite: HitSprite.PSYCHIC_HIT
+  },
   [Pkm.SHADOW_MEWTWO]: {
     attack: AnimationType.Shoot,
     ability: AnimationType.Hop,
