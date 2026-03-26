@@ -1844,6 +1844,10 @@ export const AbilitiesAnimations: {
       tint: 0xffe0e0
     })
   }),
+  ["PSYCHIC_INFINITY"]: onTarget({
+    scale: 3,
+    positionOffset: [0, -90]
+  }),
   [Ability.ACROBATICS]: (args) =>
     projectile({
       startCoords: [args.targetX + 1, args.targetY + 1],
