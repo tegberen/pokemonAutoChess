@@ -4231,6 +4231,7 @@
 	"custom_bot": "Custom",
   "regular_bot": "Regular",
   "unrealistic_bot": "Unrealistic Bot",
+  "newbie_bot": "Beginner Bot",
 	"room_leader": "Room leader",
 	"room_password": "This room is private, password",
 	"ready": "Ready",
