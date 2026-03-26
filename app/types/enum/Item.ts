@@ -309,6 +309,7 @@ export enum Item {
   TATSUGIRI_STRETCHY = "TATSUGIRI_STRETCHY",
   TRAINING_RIBBON = "TRAINING_RIBBON",
   ELECTRIC_SEED = "ELECTRIC_SEED",
+  MEWTWONITE_Y = "MEWTWONITE_Y"
 }
 
 export const MemoryDiscs = [
@@ -438,6 +439,7 @@ export const SpecialItems: Item[] = [
   Item.RUSTED_SWORD,
   Item.SCROLL_OF_WATERS,
   Item.SCROLL_OF_DARKNESS,
+  Item.MEWTWONITE_Y,
   Item.TRAINING_RIBBON,
   Item.MEMORY_DISCS,
   ...MemoryDiscs,
@@ -1084,7 +1086,8 @@ export const UnholdableItems = [
   Item.BIG_NUGGET,
   Item.WANTED_NOTICE,
   Item.LEADERS_CREST,
-  Item.LAPRAS_PASSPORT
+  Item.LAPRAS_PASSPORT,
+  Item.MEWTWONITE_Y
 ] satisfies Item[]
 
 export const ConsumableItems = [
@@ -1111,5 +1114,6 @@ export const RemovableItems = [
   Item.TRASH,
   ...Tools,
   ...Scarves,
-  ...MemoryDiscs
+  ...MemoryDiscs,
+  Item.TRAINING_RIBBON
 ] satisfies Item[]

@@ -132,6 +132,7 @@ export const LegendaryPool = new Array<PkmProposition>(
   Pkm.MELOETTA,
   Pkm.MEW,
   Pkm.MEWTWO,
+  Pkm.SHADOW_MEWTWO,
   Pkm.ENTEI,
   Pkm.SUICUNE,
   Pkm.RAIKOU,
