@@ -17032,8 +17032,9 @@ export class DarkNovaStrategy extends AbilityStrategy {
     crit: boolean
   ) {
     super.process(pokemon, board, target, crit, true)
+    const opponentTeam = pokemon.team === Team.BLUE_TEAM ? Team.RED_TEAM : Team.BLUE_TEAM
     const mostSurroundedCoordinate =
-      pokemon.state.getMostSurroundedCoordinateAvailablePlace(pokemon.team, board)
+      pokemon.state.getMostSurroundedCoordinateAvailablePlace(opponentTeam, board)
     if (mostSurroundedCoordinate) {
       pokemon.skydiveTo(
         mostSurroundedCoordinate.x,
@@ -17134,6 +17135,22 @@ export class IceSpinnerStrategy extends AbilityStrategy {
         }, delay)
       )
       delay += 100
+    }
+  }
+}
+
+export class PsychicInfinityStrategy extends AbilityStrategy {
+  process(pokemon: PokemonEntity, board: Board, target: PokemonEntity, crit: boolean) {
+    super.process(pokemon, board, target, crit, true)
+    const enemies = board.cells.filter(
+      (cell) => cell && cell.team !== pokemon.team && cell.hp > 0
+    ) as PokemonEntity[]
+    const strongest = getStrongestUnit(enemies) ?? target
+    pokemon.broadcastAbility({ positionX: strongest.positionX, positionY: strongest.positionY })
+    strongest.handleSpecialDamage(120, board, AttackType.SPECIAL, pokemon, crit)
+    pokemon.addAbilityPower(-10, pokemon, 0, false)
+    if (pokemon.ap > 0 && pokemon.ap > strongest.ap) {
+      pokemon.addPP(pokemon.maxPP, pokemon, 0, false)
     }
   }
 }
@@ -17783,6 +17800,7 @@ export const AbilityStrategies: { [key in Ability]: AbilityStrategy } = {
   [Ability.HEADLONDING_RUSH]: new HeadlongRushStrategy(),
   [Ability.WAVE_SPLASH]: new WaveSplashStrategy(),
   [Ability.DARK_NOVA]: new DarkNovaStrategy(),
+  [Ability.PSYCHIC_INFINITY]: new PsychicInfinityStrategy(),
   [Ability.TWISTER]: new TwisterStrategy(),
   [Ability.FOCUS_PUNCH]: new FocusPunchStrategy(),
   [Ability.HYPER_BEAM]: new HyperBeamStrategy(),

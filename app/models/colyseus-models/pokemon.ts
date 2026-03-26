@@ -5531,7 +5531,6 @@ export class PikachuLibre extends Pokemon {
   range = 1
   skill = Ability.THUNDERCLAP_PRESS
   passive = Passive.PIKACHU_LIBRE
-
 }
 
 export class Rattata extends Pokemon {
@@ -6015,6 +6014,10 @@ export class PrimalDialga extends Pokemon {
   range = 1
   skill = Ability.PRIMAL_ROAR
   regional = true
+  isInRegion(map: DungeonPMDO, state?: GameState) {
+    const regionSynergies = RegionDetails[map]?.synergies
+    return regionSynergies.includes(Synergy.WILD)
+  }
 }
 
 export class Palkia extends Pokemon {
@@ -7440,7 +7443,6 @@ export class Mew extends Pokemon {
   skill = Ability.TELEPORT
   passive = Passive.SYNCHRO
 }
-
 export class Mewtwo extends Pokemon {
   types = new SetSchema<Synergy>([
     Synergy.PSYCHIC,
@@ -7448,6 +7450,9 @@ export class Mewtwo extends Pokemon {
     Synergy.ARTIFICIAL
   ])
   rarity = Rarity.LEGENDARY
+  evolution = Pkm.MEGA_MEWTWO_Y
+  evolutionRule = new ItemEvolutionRule([Item.MEWTWONITE_Y])
+  stacksRequired = 20
   stars = 3
   hp = 200
   atk = 25
@@ -7460,15 +7465,36 @@ export class Mewtwo extends Pokemon {
   passive = Passive.MEWTWO
 }
 
+export class MegaMewtwoY extends Pokemon {
+  types = new SetSchema<Synergy>([
+    Synergy.PSYCHIC,
+    Synergy.MONSTER,
+    Synergy.ARTIFICIAL
+  ])
+  rarity = Rarity.LEGENDARY
+  stars = 4
+  hp = 250
+  atk = 30
+  speed = 67
+  def = 10
+  speDef = 10
+  maxPP = 100
+  range = 3
+  skill = Ability.PSYCHIC_INFINITY
+  onAcquired(player: Player): void {
+    removeInArray(player.items, Item.MEWTWONITE_Y)
+    this.items.delete(Item.MEWTWONITE_Y)
+  }
+}
+
 export class ShadowMewtwo extends Pokemon {
   types = new SetSchema<Synergy>([
     Synergy.PSYCHIC,
     Synergy.MONSTER,
-    Synergy.ARTIFICIAL,
     Synergy.DARK
   ])
   rarity = Rarity.LEGENDARY
-  stars = 4
+  stars = 3
   hp = 250
   atk = 25
   speed = 67
@@ -7477,6 +7503,11 @@ export class ShadowMewtwo extends Pokemon {
   maxPP = 90
   range = 2
   skill = Ability.DARK_NOVA
+  regional = true
+  isInRegion(map: DungeonPMDO, state?: GameState) {
+    const regionSynergies = RegionDetails[map]?.synergies
+    return regionSynergies.includes(Synergy.DARK)
+  }
 }
 
 export class Marshadow extends Pokemon {
@@ -17847,14 +17878,10 @@ export class Incineroar extends Pokemon {
 }
 
 export class Skrelp extends Pokemon {
-<<<<<<< HEAD
-  types = new SetSchema<Synergy>([Synergy.POISON, Synergy.WATER])
-=======
   types = new SetSchema<Synergy>([
     Synergy.POISON,
     Synergy.WATER
   ])
->>>>>>> 50e836269 (skrelp changs for vimby)
   rarity = Rarity.UNCOMMON
   stars = 1
   evolution = Pkm.DRAGALGE
@@ -21442,6 +21469,7 @@ export const PokemonClasses: Record<
   [Pkm.AZELF]: Azelf,
   [Pkm.UXIE]: Uxie,
   [Pkm.MEWTWO]: Mewtwo,
+  [Pkm.MEGA_MEWTWO_Y]: MegaMewtwoY,
   [Pkm.SHADOW_MEWTWO]: ShadowMewtwo,
   [Pkm.KYUREM]: Kyurem,
   [Pkm.KYUREM_WHITE]: WhiteKyurem,
