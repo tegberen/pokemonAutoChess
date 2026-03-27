@@ -2502,6 +2502,10 @@ export const AbilitiesAnimations: {
       })(args)
     }
   },
+  ["HOOPA_PORTAL"]: onCaster({
+    scale: 4,
+    positionOffset: [0, -20]
+  }),
 
   [Ability.WATER_SHURIKEN]: (args) => {
     const orientations = [
