@@ -232,5 +232,6 @@ export enum Passive {
   ABSOL = "ABSOL",
   SUPER_LUCK = "SUPER_LUCK",
   PALKIA = "PALKIA",
-  DIALGA = "DIALGA"
+  DIALGA = "DIALGA",
+  SLITHER_WING = "SLITHER_WING"
 }

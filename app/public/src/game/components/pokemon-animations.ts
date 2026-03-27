@@ -1727,6 +1727,20 @@ export const PokemonAnimations: {
     attackSprite: AttackSprite.FIRE_RANGE,
     hitSprite: HitSprite.FIRE_HIT
   },
+  [Pkm.IRON_MOTH]: {
+    attack: AnimationType.Attack,
+    ability: AnimationType.Charge,
+    emote: AnimationType.RearUp,
+    attackSprite: AttackSprite.FIRE_RANGE,
+    hitSprite: HitSprite.FIRE_HIT
+  },
+  [Pkm.SLITHER_WING]: {
+    attack: AnimationType.Attack,
+    ability: AnimationType.Swing,
+    emote: AnimationType.Shoot,
+    attackSprite: AttackSprite.FIGHTING_MELEE,
+    hitSprite: HitSprite.FIGHTING_HIT
+  },
   [Pkm.LANDORUS]: {
     attack: AnimationType.Attack,
     ability: AnimationType.Shoot,
