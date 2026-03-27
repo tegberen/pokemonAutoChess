@@ -2414,7 +2414,7 @@
 		"THUNDER": "Lightning strikes up to 3 random enemies, inflicting [25,50,100,SP] SPECIAL with [30,LK]% chance to inflict PARALYSIS for 3 seconds",
 		"HYDRO_PUMP": "Deal [20,40,80,SP] SPECIAL to all enemies in a line.",
 		"DRACO_METEOR": "A meteor falls from the sky on target, dealing [30,60,120,150,SP] SPECIAL to target and ADJACENT opponents, then user loses 20 AP.",
-    "WITHDRAW": "Retreat into its shell while blasting out water in all directions, dealing [10,25,50, SP] SPECIAL damage to Pokémon hit and pushing them back 1 tile. Increase the users DEF by [2,4,8,SP].",
+    "WITHDRAW": "Retreat into its shell while blasting out water in all directions, dealing [10,25,50, SP] SPECIAL damage to Pokémon hit and pushing them back. Increase the users DEF by [2,4,8,SP].",
 		"DRACO_METEOR": "Deal [50,SP] SPECIAL to all enemy Pokémon.",
 		"BLAZE_KICK": "Deal [30,60,120,SP] SPECIAL and BURN the target for 2 seconds. If it already has BURN, deal +30% damage.",
 		"WISH": "Grant [30,60,120,SP] SHIELD and 1.5 second PROTECT to the lowest % HP ally.",
