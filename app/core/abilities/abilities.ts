@@ -7942,7 +7942,7 @@ export class UnboundStrategy extends AbilityStrategy {
                 pokemon.team,
                 true
               )
-              const scale = 1 + pokemon.ap / 100
+              const scale = (1 + pokemon.ap * 0.5 / 100) * (crit ? 1 + (pokemon.critPower - 1) * 0.5 : 1)
               entity.maxHP = Math.round(entity.maxHP * scale)
               entity.hp = entity.maxHP
               if (pokemon.player) pokemon.player.pokemonsPlayed.add(chosen)
