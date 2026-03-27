@@ -12,6 +12,7 @@
 - Libre Pikachu - Thunderclap Press: The target is hit with an electric bodyslam and pushed away. It and all targets in the path are PARALYSIS for 4 seconds and take [25, 50, 100, SP] SPECIAL.
 - Gothita - Fake Tears: Deal [10,20,30,SP] SPECIAL to all enemy Pokémon and inflict them with ARMOR_BREAK for 3 seconds. If already affected, remove [3,6,9] SPE_DEF.
 - Tepig - Heat Crash: Crashes into the target, knocking it back and dealing [40,60,80, SP] SPECIAL. Does more damage the more ATK the user has compared to the target. If the user hase more HP than the target, gain 100 AP and loose 20 SPEED.
+- Hoopa - Unbound: Tears open a dimensional ring and returns in its Unbound form — dragging a Legendary Pokémon along with it. The summoned Pokémon's HP increases with the user's AP.
 
 
 # Stats
