@@ -2763,6 +2763,107 @@ export class FieryDanceStrategy extends AbilityStrategy {
   }
 }
 
+export class AnachronismRepulsorStrategy extends AbilityStrategy {
+  process(
+    pokemon: PokemonEntity,
+    board: Board,
+    target: PokemonEntity,
+    crit: boolean
+  ) {
+    super.process(pokemon, board, target, crit)
+    const duration = 2000
+
+    let protectedCount = 0
+    board.forEach((x: number, y: number, ally: PokemonEntity | undefined) => {
+      if (
+        ally &&
+        ally.team === pokemon.team &&
+        (ally === pokemon || [...pokemon.types].some((type) => ally.types.has(type)))
+      ) {
+        protectedCount++
+      }
+    })
+    const baseDamage = 10 * protectedCount
+
+    board.forEach((x: number, y: number, ally: PokemonEntity | undefined) => {
+      if (
+        ally &&
+        ally.team === pokemon.team &&
+        (ally === pokemon || [...pokemon.types].some((type) => ally.types.has(type)))
+      ) {
+        board.getAdjacentCells(ally.positionX, ally.positionY).forEach((cell) => {
+          if (cell.value && cell.value.team !== ally.team) {
+            const isFossilOrAquatic =
+              cell.value.types.has(Synergy.AQUATIC) ||
+              cell.value.types.has(Synergy.FOSSIL)
+            const attackType = isFossilOrAquatic
+              ? AttackType.TRUE
+              : AttackType.SPECIAL
+            cell.value.handleSpecialDamage(
+              baseDamage,
+              board,
+              attackType,
+              ally,
+              crit
+            )
+          }
+        })
+
+        ally.status.triggerProtect(duration)
+        ally.broadcastAbility({
+          skill: Ability.ANACHRONISM_REPULSOR,
+          positionX: ally.positionX,
+          positionY: ally.positionY
+        })
+      }
+    })
+  }
+}
+
+export class SmashingWingStrategy extends AbilityStrategy {
+  requireTarget = false
+  process(
+    pokemon: PokemonEntity,
+    board: Board,
+    target: PokemonEntity,
+    crit: boolean
+  ) {
+    super.process(pokemon, board, target, crit, true)
+    const damage = 60
+
+
+    const mostSurroundedCoordinate =
+      pokemon.state.getMostSurroundedCoordinateAvailablePlace(
+        pokemon.team === Team.BLUE_TEAM ? Team.RED_TEAM : Team.BLUE_TEAM,
+        board
+      )
+
+    if (mostSurroundedCoordinate) {
+      pokemon.moveTo(mostSurroundedCoordinate.x, mostSurroundedCoordinate.y, board, false)
+      pokemon.commands.push(
+        new DelayedCommand(() => {
+          pokemon.broadcastAbility({
+            positionX: pokemon.positionX,
+            positionY: pokemon.positionY
+          })
+          board.getAdjacentCells(pokemon.positionX, pokemon.positionY).forEach((cell) => {
+            if (cell.value && cell.value.team !== pokemon.team) {
+              const isArtificialOrSteel = 
+                cell.value.types.has(Synergy.ARTIFICIAL) ||
+                cell.value.types.has(Synergy.STEEL)
+              const attackType = isArtificialOrSteel
+                ? AttackType.TRUE
+                : AttackType.SPECIAL
+              cell.value.handleSpecialDamage(damage, board, attackType, pokemon, crit)
+              cell.value.addAbilityPower(-20, pokemon, 0, false)
+            }
+          })
+        }, 300)
+      )
+    }
+  }
+}
+
 export class SeismicTossStrategy extends AbilityStrategy {
   process(
     pokemon: PokemonEntity,
@@ -17720,6 +17821,8 @@ export const AbilityStrategies: { [key in Ability]: AbilityStrategy } = {
   [Ability.STEEL_WING]: new SteelWingStrategy(),
   [Ability.YAWN]: new YawnStrategy(),
   [Ability.FIERY_DANCE]: new FieryDanceStrategy(),
+  [Ability.ANACHRONISM_REPULSOR]: new AnachronismRepulsorStrategy(),
+  [Ability.SMASHING_WING]: new SmashingWingStrategy(),  
   [Ability.BIDE]: new BideStrategy(),
   [Ability.SHORE_UP]: new ShoreUpStrategy(),
   [Ability.POISON_STING]: new PoisonStingStrategy(),
