@@ -14352,27 +14352,27 @@ export class MiniorKernelGreen extends Pokemon {
 
 export class Hoopa extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.PSYCHIC, Synergy.DARK, Synergy.GHOST])
-  rarity = Rarity.UNIQUE
+  rarity = Rarity.LEGENDARY
   stars = 3
-  hp = 180
-  atk = 15
+  hp = 250
+  atk = 25
   speed = 47
-  def = 6
-  speDef = 12
-  maxPP = 100
+  def = 10
+  speDef = 20
+  maxPP = 90
   range = 1
   skill = Ability.UNBOUND
 }
 
 export class HoopaUnbound extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.PSYCHIC, Synergy.DARK, Synergy.GHOST])
-  rarity = Rarity.UNIQUE
+  rarity = Rarity.LEGENDARY
   stars = 4
-  hp = 280
-  atk = 25
+  hp = 320
+  atk = 32
   speed = 47
-  def = 6
-  speDef = 12
+  def = 10
+  speDef = 20
   maxPP = 100
   range = 1
   skill = Ability.HYPERSPACE_FURY
