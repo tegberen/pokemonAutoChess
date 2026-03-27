@@ -7374,8 +7374,9 @@ export class Latias extends Pokemon {
   rarity = Rarity.UNIQUE
   stars = 3
   evolution = Pkm.MEGA_LATIAS
+
   evolutionRule = new ConditionBasedEvolutionRule(
-    (pokemon, player, stageLevel) => stageLevel >= 28
+    (pokemon, player) => player.life <= 30
   )
   hp = 120
   atk = 12
@@ -7394,7 +7395,7 @@ export class Latios extends Pokemon {
   stars = 3
   evolution = Pkm.MEGA_LATIOS
   evolutionRule = new ConditionBasedEvolutionRule(
-    (pokemon, player, stageLevel) => stageLevel >= 28
+    (pokemon, player) => player.life <= 30
   )
   hp = 120
   atk = 12
