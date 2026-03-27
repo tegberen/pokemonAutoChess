@@ -904,6 +904,8 @@ export const AbilitiesAnimations: {
   [Ability.GUILLOTINE]: onTargetScale3,
   [Ability.CROSS_POISON]: onTargetScale3,
   [Ability.FIERY_DANCE]: onTarget({ ability: Ability.FIRE_BLAST, scale: 2 }),
+  [Ability.ANACHRONISM_REPULSOR]: onCaster({scale: 1.8, positionOffset: [0, -30]}),
+  [Ability.SMASHING_WING]: onCaster({ scale: 5, depth: DEPTH.ABILITY_BELOW_POKEMON }),
   [Ability.FIRE_SPIN]: onTarget({ ability: Ability.MAGMA_STORM, scale: 2 }),
   [Ability.DRACO_ENERGY]: onTarget({ depth: DEPTH.ABILITY_BELOW_POKEMON }),
   [Ability.GRUDGE_DIVE]: projectile({

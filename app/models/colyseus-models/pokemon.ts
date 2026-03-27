@@ -6653,6 +6653,35 @@ export class Volcarona extends Pokemon {
   regional = true
 }
 
+export class IronMoth extends Pokemon {
+  types = new SetSchema<Synergy>([Synergy.FIRE, Synergy.POISON, Synergy.ARTIFICIAL])
+  rarity = Rarity.UNIQUE
+  stars = 3
+  hp = 170
+  atk = 17
+  speed = 61
+  def = 4
+  speDef = 4
+  maxPP = 120
+  range = 3
+  skill = Ability.ANACHRONISM_REPULSOR
+}
+
+export class SlitherWing extends Pokemon {
+  types = new SetSchema<Synergy>([Synergy.BUG, Synergy.FIGHTING, Synergy.FOSSIL])
+  rarity = Rarity.UNIQUE
+  stars = 3
+  hp = 190
+  atk = 20
+  speed = 51
+  def = 6
+  speDef = 8
+  maxPP = 100
+  range = 1
+  skill = Ability.SMASHING_WING
+  passive = Passive.SLITHER_WING
+}
+
 export class Chatot extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.FLYING, Synergy.SOUND])
   rarity = Rarity.UNIQUE
@@ -21489,6 +21518,8 @@ export const PokemonClasses: Record<
   [Pkm.VANILLUXE]: Vanilluxe,
   [Pkm.LARVESTA]: Larvesta,
   [Pkm.VOLCARONA]: Volcarona,
+  [Pkm.IRON_MOTH]: IronMoth,
+  [Pkm.SLITHER_WING]: SlitherWing,
   [Pkm.LANDORUS]: Landorus,
   [Pkm.THUNDURUS]: Thundurus,
   [Pkm.TORNADUS]: Tornadus,
