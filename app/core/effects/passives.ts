@@ -1978,5 +1978,24 @@ export const PassiveEffects: Partial<
       })
     }, Passive.SUPER_LUCK)
   ],
-  [Passive.MEWTWO]: [MewtwoOnKillEffect]
+  [Passive.MEWTWO]: [MewtwoOnKillEffect],
+  [Passive.SLITHER_WING]: [
+    new OnSimulationStartEffect(({ entity, simulation }) => {
+      simulation.board.getAdjacentCells(entity.positionX, entity.positionY).forEach((cell) => {
+        if (cell.value && cell.value.team === entity.team) {
+          const weatherMultiplier = simulation.weather === Weather.ZENITH ? 2 : 1
+          if (cell.value.types.has(Synergy.FIGHTING)) {
+            entity.addDefense(5 * weatherMultiplier, entity, 0, false)
+          }
+          if (cell.value.types.has(Synergy.FOSSIL)) {
+            entity.addMaxHP(10 * weatherMultiplier, entity, 0, false)
+            entity.hp = entity.maxHP
+          }
+          if (cell.value.types.has(Synergy.BUG)) {
+            entity.addAttack(5 * weatherMultiplier, entity, 0, false)
+          }
+        }
+      })
+    }, Passive.SLITHER_WING)
+  ],
 }

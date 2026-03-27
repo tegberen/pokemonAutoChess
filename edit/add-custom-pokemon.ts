@@ -40,7 +40,9 @@ const CUSTOM_POKEMON = [
 
      // "0483-0001",
      // "0483-0002",
-     // "0484-0001" origin forms
+     // "0484-0001", origin forms
+     // "0988", slither
+     // "0994" moth
      "0150-0002"
 
 
