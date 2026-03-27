@@ -91,6 +91,8 @@ import {
   HiddenPowerZStrategy
 } from "./hidden-power"
 
+import { LegendaryPool } from "../../config/game/pools"
+
 export class BlueFlareStrategy extends AbilityStrategy {
   process(
     pokemon: PokemonEntity,
@@ -7985,18 +7987,77 @@ export class AcidSprayStrategy extends AbilityStrategy {
   }
 }
 
+const HoopaLegendaryPool = LegendaryPool.filter((p): p is Pkm => p in Pkm)
 export class UnboundStrategy extends AbilityStrategy {
   requiresTarget = false
   process(pokemon: PokemonEntity, board: Board, target: null, crit: boolean) {
     super.process(pokemon, board, target, crit)
-    pokemon.index = PkmIndex[Pkm.HOOPA_UNBOUND]
-    pokemon.skill = Ability.HYPERSPACE_FURY
-    pokemon.addAttack(10, pokemon, 0, false)
-    pokemon.addMaxHP(100, pokemon, 0, false)
-    pokemon.toMovingState()
-    if (pokemon.player) {
-      pokemon.player.pokemonsPlayed.add(Pkm.HOOPA_UNBOUND)
-    }
+
+    // Portal open + vanish
+    pokemon.broadcastAbility({
+      skill: "HOOPA_PORTAL",
+      positionX: pokemon.positionX,
+      positionY: pokemon.positionY
+    })
+    pokemon.status.vanishing = true
+    pokemon.cooldown = 2000
+
+    pokemon.commands.push(
+      new DelayedCommand(() => {
+        // Transform while still invisible
+        pokemon.index = PkmIndex[Pkm.HOOPA_UNBOUND]
+        pokemon.skill = Ability.HYPERSPACE_FURY
+        pokemon.addAttack(7, pokemon, 0, false)
+        pokemon.addMaxHP(70, pokemon, 0, false)
+        pokemon.toMovingState()
+        if (pokemon.player) {
+          pokemon.player.pokemonsPlayed.add(Pkm.HOOPA_UNBOUND)
+        }
+
+        // Portal at Hoopa's position, then reappear after delay
+        pokemon.broadcastAbility({
+          skill: "HOOPA_PORTAL",
+          positionX: pokemon.positionX,
+          positionY: pokemon.positionY
+        })
+        pokemon.commands.push(
+          new DelayedCommand(() => {
+            pokemon.status.vanishing = false // reappear after portal plays
+          }, 200)
+        )
+
+        // Portal at legendary spawn position
+        const coord = pokemon.simulation.getClosestFreeCellToPokemonEntity(pokemon)
+        if (coord) {
+          pokemon.broadcastAbility({
+            skill: "HOOPA_PORTAL",
+            positionX: coord.x,
+            positionY: coord.y,
+            targetX: coord.x,
+            targetY: coord.y
+          })
+
+          // Spawn legendary after portal plays
+          pokemon.commands.push(
+            new DelayedCommand(() => {
+              const chosen = pickRandomIn(HoopaLegendaryPool)
+              const summoned = PokemonFactory.createPokemonFromName(chosen, pokemon.player)
+              const entity = pokemon.simulation.addPokemon(
+                summoned,
+                coord.x,
+                coord.y,
+                pokemon.team,
+                true
+              )
+              const scale = 1 + pokemon.ap / 100
+              entity.maxHP = Math.round(entity.maxHP * scale)
+              entity.hp = entity.maxHP
+              if (pokemon.player) pokemon.player.pokemonsPlayed.add(chosen)
+            }, 200)
+          )
+        }
+      }, 2000)
+    )
   }
 }
 
@@ -8010,13 +8071,13 @@ export class HyperspaceFuryStrategy extends AbilityStrategy {
     crit = chance(pokemon.critChance / 100, pokemon) // can crit by default with increased crit chance
     super.process(pokemon, board, target, crit, true)
     const nbHits = Math.round(
-      4 * (1 + pokemon.ap / 100) * (crit ? pokemon.critPower : 1)
+      6 * (1 + pokemon.ap / 100) * (crit ? pokemon.critPower : 1)
     )
     for (let i = 0; i < nbHits; i++) {
       target.addDefense(-1, pokemon, 0, false)
       target.addSpecialDefense(-1, pokemon, 0, false)
       target.handleSpecialDamage(
-        15,
+        20,
         board,
         AttackType.SPECIAL,
         pokemon,
