@@ -1993,8 +1993,8 @@ export class Haunter extends Pokemon {
   rarity = Rarity.EPIC
   stars = 2
   evolution = Pkm.GENGAR
-  hp = 170
-  atk = 17
+  hp = 160
+  atk = 16
   speed = 60
   def = 7
   speDef = 8
@@ -3225,8 +3225,8 @@ export class Snorunt extends Pokemon {
   rarity = Rarity.EPIC
   stars = 1
   evolution = Pkm.GLALIE
-  hp = 90
-  atk = 9
+  hp = 70
+  atk = 6
   speed = 60
   def = 4
   speDef = 4
@@ -3240,8 +3240,8 @@ export class Glalie extends Pokemon {
   rarity = Rarity.EPIC
   stars = 2
   evolution = Pkm.FROSLASS
-  hp = 170
-  atk = 17
+  hp = 110
+  atk = 12
   speed = 60
   def = 6
   speDef = 6
@@ -3954,6 +3954,7 @@ export class Nidoqueen extends Pokemon {
     const regionSynergies = RegionDetails[map]?.synergies
     return regionSynergies.includes(Synergy.POISON)
   }
+  passive = Passive.NIDOQUEEN
 }
 
 export class NidoranM extends Pokemon {
@@ -4010,6 +4011,7 @@ export class Nidoking extends Pokemon {
   maxPP = 90
   range = 1
   skill = Ability.HORN_ATTACK
+  passive = Passive.NIDOKING
 }
 
 export class Machop extends Pokemon {
@@ -4437,7 +4439,7 @@ export class Slowbro extends Pokemon {
   stars = 2
   evolution = Pkm.MEGA_SLOWBRO
   evolutionRule = new StackBasedEvolutionRule()
-  stacksRequired: number = 5
+  stacksRequired: number = 30
   hp = 160
   atk = 12
   speed = 35
@@ -4454,10 +4456,10 @@ export class MegaSlowbro extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.PSYCHIC, Synergy.WATER])
   rarity = Rarity.UNCOMMON
   stars = 3
-  hp = 240
-  atk = 17
+  hp = 220
+  atk = 16
   speed = 35
-  def = 30
+  def = 20
   speDef = 12
   maxPP = 100
   range = 1
@@ -11207,8 +11209,7 @@ export class Scorbunny extends Pokemon {
   rarity = Rarity.COMMON
   stars = 1
   evolution = Pkm.RABOOT
-  evolutionRule = new HatchEvolutionRule()
-  hp = 70
+  hp = 50
   atk = 5
   speed = 67
   def = 2
@@ -11230,7 +11231,7 @@ export class Raboot extends Pokemon {
     return darkCount >= normalCount ? Pkm.CINDERACE_PIRATE: Pkm.CINDERACE
   })
 
-  hp = 90
+  hp = 80
   atk = 12
   speed = 67
   def = 4
@@ -13713,7 +13714,7 @@ export class Cherubi extends Pokemon {
   rarity = Rarity.COMMON
   stars = 1
   evolution = Pkm.CHERRIM
-  hp = 90
+  hp = 60
   atk = 4
   speed = 52
   def = 1
@@ -13732,7 +13733,7 @@ export class Cherrim extends Pokemon {
   rarity = Rarity.COMMON
   stars = 2
   evolution = Pkm.CHERRIM_SUNLIGHT
-  hp = 110
+  hp = 100
   atk = 10
   speed = 52
   def = 2
@@ -13750,7 +13751,7 @@ export class CherrimSunlight extends Pokemon {
   ])
   rarity = Rarity.COMMON
   stars = 3
-  hp = 220
+  hp = 200
   atk = 16
   speed = 52
   def = 4
