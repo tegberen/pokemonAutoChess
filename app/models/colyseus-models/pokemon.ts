@@ -6628,8 +6628,8 @@ export class IronMoth extends Pokemon {
   rarity = Rarity.UNIQUE
   stars = 3
   hp = 170
-  atk = 17
-  speed = 61
+  atk = 14
+  speed = 70
   def = 4
   speDef = 4
   maxPP = 120
@@ -6641,8 +6641,8 @@ export class SlitherWing extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.BUG, Synergy.FIGHTING, Synergy.FOSSIL])
   rarity = Rarity.UNIQUE
   stars = 3
-  hp = 190
-  atk = 20
+  hp = 180
+  atk = 22
   speed = 51
   def = 6
   speDef = 8
@@ -12877,7 +12877,7 @@ export class Spectrier extends Pokemon {
   def = 10
   speDef = 20
   maxPP = 100
-  range = 1
+  range = 2
   skill = Ability.ASTRAL_BARRAGE
   passive = Passive.GRIM_NEIGH
 }
