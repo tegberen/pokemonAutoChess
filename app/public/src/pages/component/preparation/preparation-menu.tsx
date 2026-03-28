@@ -228,7 +228,7 @@ export default function PreparationMenu() {
   )
 
   const scribbleRule = gameMode === GameMode.CUSTOM_LOBBY &&
-    isAdmin &&
+    isOwner && //changed from isAdmin
     noElo && (
       <label>
         {t("game_modes.SCRIBBLE")}

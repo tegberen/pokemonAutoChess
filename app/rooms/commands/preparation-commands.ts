@@ -433,7 +433,7 @@ export class OnRoomChangeSpecialRule extends Command<
         return
       }
 
-      if (client.auth?.uid == this.state.ownerId && u.role === Role.ADMIN) {
+      if (client.auth?.uid == this.state.ownerId) {
         this.state.specialGameRule = specialRule
         if (specialRule != null) {
           this.state.noElo = true
