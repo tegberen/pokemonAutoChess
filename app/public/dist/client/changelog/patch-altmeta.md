@@ -19,6 +19,7 @@
 - Guzzlord: HP 300 → 400
 - Deoxys Attack: ATK 25 → 35
 - Smoliv: regular attacks now scale with AP, SPEED 25 → 42
+- Spectrier: Range 1 → 2
 
 # Synergy
 - Additional effect for ROCK: When KO'd, explode and deal TRUE and ARMOR_BREAK ADJACENT enemies. 
