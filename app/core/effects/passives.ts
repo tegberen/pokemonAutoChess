@@ -1750,7 +1750,7 @@ export const PassiveEffects: Partial<
       if (!pokemon.player) return
       if (pokemon.isGhostOpponent) return
       pokemon.addStack()
-      if (weather === Weather.RAIN) {
+      if (pokemon.simulation.weather === Weather.RAIN) {
         pokemon.addStack()
       }
     }, Passive.SLOWBRO)
