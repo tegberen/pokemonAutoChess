@@ -4758,7 +4758,7 @@ export const PokemonAnimations: {
     attack: AnimationType.Attack,
     ability: AnimationType.Shoot,
     emote: AnimationType.RearUp,
-    attackSprite: AttackSprite.GHOST_MELEE,
+    attackSprite: AttackSprite.GHOST_RANGE,
     hitSprite: HitSprite.GHOST_HIT
   },
   [Pkm.GLASTRIER]: {
