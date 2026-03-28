@@ -30,8 +30,9 @@
 - Added Shiniest Hunter: All PvE encounter are shiny
 - New Fugitive: Mafia Togepi that gives an egg upon capture
 - When Pikachu is send to the dojo, obtain a TRAINING_RIBBON. Can be used to evolve Pikachu into Pikachu Libre.
-
-
+- Smeargle's Scribble selectable in Custom Lobby's for non-admin users
+- No level requirement for Gadgets
+> It's a small side server, I don't expect you to grind levels here haha. You can host your own Smeargle Scribble in Custom Lobby's now, and meet up with your friends to play together.
 # Changes to Rarity, Typings, etc.
 ## Common
 - Cinderace: added NORMAL, removed HUMAN, replaced the role of Littwick and Cyndaquil in the early game
