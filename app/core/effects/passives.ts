@@ -52,6 +52,7 @@ import {
   OnStageStartEffect,
   PeriodicEffect
 } from "./effect"
+import { WandererBehavior, WandererType } from "../../types/enum/Wanderer"
 
 export function drumBeat(pokemon: PokemonEntity, board: Board) {
   const speed = pokemon.status.paralysis ? pokemon.speed / 2 : pokemon.speed
@@ -1744,21 +1745,14 @@ export const PassiveEffects: Partial<
     }()
   ],
   [Passive.SLOWBRO]: [
-    () => new class extends PeriodicEffect {
-      constructor() {
-        super(
-          (pokemon) => {
-            if (pokemon.shield>= 100) {
-              if (pokemon.isGhostOpponent) return
-              pokemon.addStack()
-              pokemon.effectsSet.delete(this)
-            }
-          },
-          Passive.SLOWBRO,
-          1000
-        )
+    new OnAbilityCastEffect((pokemon) => {
+      if (!pokemon.player) return
+      if (pokemon.isGhostOpponent) return
+      pokemon.addStack()
+      if (weather === Weather.RAIN) {
+        pokemon.addStack()
       }
-    }()
+    }, Passive.SLOWBRO)
   ],
   [Passive.MEDICHAM]: [
     () => new class extends PeriodicEffect {
@@ -1982,7 +1976,7 @@ export const PassiveEffects: Partial<
     new OnSimulationStartEffect(({ entity, simulation }) => {
       simulation.board.getAdjacentCells(entity.positionX, entity.positionY).forEach((cell) => {
         if (cell.value && cell.value.team === entity.team) {
-          const weatherMultiplier = simulation.weather === Weather.ZENITH ? 2 : 1
+          const weatherMultiplier = simulation.weather === Weather.DROUGHT ? 2 : 1
           if (cell.value.types.has(Synergy.FIGHTING)) {
             entity.addDefense(5 * weatherMultiplier, entity, 0, false)
           }
@@ -1997,4 +1991,37 @@ export const PassiveEffects: Partial<
       })
     }, Passive.SLITHER_WING)
   ],
+  [Passive.NIDOKING]: [
+    new OnSimulationStartEffect(({ entity, player }) => {
+      if (!player) return
+      const alreadyHasNidoF = values(player.board).some((p) =>
+        p.name === Pkm.NIDOQUEEN
+      )
+      if (alreadyHasNidoF) return
+      if (chance(0.5, entity)) {
+        player.spawnWanderingPokemon({
+          pkm: Pkm.NIDORANF,
+          behavior: WandererBehavior.SPECTATE,
+          type: WandererType.CATCHABLE
+        })
+      }
+    })
+  ],
+  [Passive.NIDOQUEEN]: [
+    new OnSimulationStartEffect(({ entity, player }) => {
+      if (!player) return
+      const alreadyHasNidoM = values(player.board).some((p) =>
+        p.name === Pkm.NIDOKING
+      )
+      if (alreadyHasNidoM) return
+      if (chance(0.5, entity)) {
+        player.spawnWanderingPokemon({
+          pkm: Pkm.NIDORANM,
+          behavior: WandererBehavior.SPECTATE,
+          type: WandererType.CATCHABLE
+        })
+      }
+    })
+  ],
+
 }
