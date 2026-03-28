@@ -11341,7 +11341,7 @@ export class SteelWingStrategy extends AbilityStrategy {
     })
 
     // trigger encounter during casting for now idk
-    if (pokemon.player) {
+    if (pokemon.player && pokemon.stars === 3) {
       const tinkatonPresent = [...pokemon.player.wanderers.values()].some(
         (w) => w.pkm === Pkm.TINKATON
       )
@@ -11359,6 +11359,7 @@ export class SteelWingStrategy extends AbilityStrategy {
     }
   }
 }
+
 class BideEffect extends PeriodicEffect {
   duration: number
   damageReceived: number = 0

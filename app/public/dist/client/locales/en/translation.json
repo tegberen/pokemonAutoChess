@@ -3428,7 +3428,7 @@
     "ALTARIA": "Gains one stack for each enemy inflicted with CONFUSION by its ability. Mega evolves after 20 stacks.",
     "CAMERUPT": "Gains a stack for each ability cast, two if under SANDSTORM or DROUGHT instead. Mega evolves after 20 stacks.",
     "MANECTRIC": "Gains a stack for every 100 SPEED. Mega evolves after 10 stacks.",
-    "SLOWBRO": "Gain one stack, the first time it holds more than 100 SHIELD during the fight. Mega evolves after 5 stacks",
+    "SLOWBRO": "Gain one stack for each ability cast, two if under RAIN. Mega evolves after 30 stacks",
     "GARDEVOIR": "Gains a stack for each KO. Mega evolves after 25 stacks.",
     "GALLADE": "Gains a stack for each KO. Mega evolves after 25 stacks.",
     "ALAKAZAM": "Gains a stack for each teleport. Mega evolves after 50 stacks.",
@@ -3451,7 +3451,9 @@
     "SUPER_LUCK": "Increase allies CRIT_CHANCE by +10.",
     "PALKIA": "Palkia switches between its Altered Form and Origin Form depending on its position on the board.",
     "DIALGA": "Dialga switches between its Altered Form and Origin Form depending on its position on the board.",
-    "SLITHER_WING": "At the start of fight, for each ADJACENT ally: FIGHTING grants +5 DEF, FOSSIL grants +10 HP, BUG grants +5 ATK. Doubled in ZENITH weather."
+    "SLITHER_WING": "At the start of fight, for each ADJACENT ally: FIGHTING grants +5 DEF, FOSSIL grants +10 HP, BUG grants +5 ATK. Doubled in DROUGHT weather.",
+    "NIDOQUEEN": "The queen of the family. Has a [50,LK]% chance to attract a catchable Nidoran♂ , if no Nidoking is on the board.",
+    "NIDOKING": "The king of the family. Has a [50,LK]% chance to attract a catchable Nidoran♀ , if no Nidoqueen is on the board."
   },
 	"stat": {
 		"ATK": "Attack",

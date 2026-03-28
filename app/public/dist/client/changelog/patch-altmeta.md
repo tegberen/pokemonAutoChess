@@ -61,7 +61,7 @@
 - Greninja: moved to regional, Aquatic in Dark :kreygasm:
 - Torracat: nice Buff for Fire Field, with Scorbunny early into Cyndaquil late game
 - Eelektross: adjusted stats
-
+- Nidoking and Nidoqueen: add Passive, to attract catchable Nidoran♀ and Nidoran♂ respectively
 ## Rare
 - Corviknight: moved to regular, buffed HP and PP
 - Exploud: added MONSTER, adjusted stats
