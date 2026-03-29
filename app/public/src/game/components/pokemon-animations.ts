@@ -376,7 +376,8 @@ export const PokemonAnimations: {
     ability: AnimationType.Charge,
     emote: AnimationType.Shoot,
     attackSprite: AttackSprite.FLYING_MELEE,
-    hitSprite: HitSprite.FLYING_HIT
+    hitSprite: HitSprite.FLYING_HIT,
+    shinyUnavailable: true
   },
   [Pkm.CHIKORITA]: {
     attack: AnimationType.Slam,
@@ -442,7 +443,8 @@ export const PokemonAnimations: {
     attack: AnimationType.Strike,
     ability: AnimationType.Shoot,
     emote: AnimationType.Charge,
-    attackSprite: AttackSprite.DARK_MELEE
+    attackSprite: AttackSprite.DARK_MELEE,
+    shinyUnavailable: true
   },
   [Pkm.TREECKO]: {
     attack: AnimationType.Strike,
@@ -1196,7 +1198,6 @@ export const PokemonAnimations: {
     attack: AnimationType.Attack,
     ability: AnimationType.Shoot,
     emote: AnimationType.Shoot,
-    shinyUnavailable: true,
     attackSprite: AttackSprite.ROCK_MELEE
   },
   [Pkm.SCYTHER]: {
@@ -1372,7 +1373,8 @@ export const PokemonAnimations: {
     attack: AnimationType.Scratch,
     ability: AnimationType.RearUp,
     emote: AnimationType.Charge,
-    attackSprite: AttackSprite.DRAGON_MELEE
+    attackSprite: AttackSprite.DRAGON_MELEE,
+    shinyUnavailable: true
    },
   [Pkm.PALKIA]: {
     attack: AnimationType.Attack,
@@ -1527,7 +1529,8 @@ export const PokemonAnimations: {
     ability: AnimationType.SpAttack,
     emote: AnimationType.Shoot,
     attackSprite: AttackSprite.PSYCHIC_RANGE,
-    hitSprite: HitSprite.PSYCHIC_HIT
+    hitSprite: HitSprite.PSYCHIC_HIT,
+    shinyUnavailable: true
   },
   [Pkm.NUMEL]: {
     attack: AnimationType.Shoot,
@@ -1547,7 +1550,7 @@ export const PokemonAnimations: {
     attack: AnimationType.Attack,
     ability: AnimationType.Attack,
     emote: AnimationType.Shoot,
-    attackSprite: AttackSprite.GROUND_MELEE
+    attackSprite: AttackSprite.GROUND_MELEE,
   },
   [Pkm.DARKRAI]: {
     attack: AnimationType.Attack,
@@ -3501,7 +3504,8 @@ export const PokemonAnimations: {
     ability: AnimationType.Shoot,
     emote: AnimationType.Charge,
     attackSprite: AttackSprite.DARK_MELEE,
-    hitSprite: HitSprite.DARK_HIT
+    hitSprite: HitSprite.DARK_HIT,
+    shinyUnavailable: true
   },
   [Pkm.MEGA_AERODACTYL]: {
     attack: AnimationType.Strike,
@@ -3733,7 +3737,8 @@ export const PokemonAnimations: {
     ability: AnimationType.Strike,
     emote: AnimationType.Shoot,
     attackSprite: AttackSprite.FIRE_RANGE,
-    hitSprite: HitSprite.FIRE_HIT
+    hitSprite: HitSprite.FIRE_HIT,
+    shinyUnavailable: true
   },
   [Pkm.POPPLIO]: {
     attack: AnimationType.Shoot,
