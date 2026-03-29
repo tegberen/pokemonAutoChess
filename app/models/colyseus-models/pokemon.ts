@@ -7014,7 +7014,7 @@ export class MegaMawile extends Pokemon {
   rarity = Rarity.UNIQUE
   stars = 4
   hp = 220
-  atk = 23
+  atk = 24
   speed = 41
   def = 20
   speDef = 6
@@ -7575,6 +7575,38 @@ export class Kyurem extends Pokemon {
   maxPP = 100
   range = 3
   skill = Ability.GLACIATE
+  passive = Passive.KYUREM
+  afterSell(player: Player): void {
+    removeInArray(player.items, Item.DNA_SPLICER)
+  }
+}
+
+export class WhiteKyurem extends Pokemon {
+  types = new SetSchema<Synergy>([Synergy.DRAGON, Synergy.ICE, Synergy.FIRE])
+  rarity = Rarity.LEGENDARY
+  stars = 4
+  hp = 220
+  atk = 27
+  speed = 55
+  def = 10
+  speDef = 12
+  maxPP = 100
+  range = 3
+  skill = Ability.ICE_BURN
+}
+
+export class BlackKyurem extends Pokemon {
+  types = new SetSchema<Synergy>([Synergy.DRAGON, Synergy.ICE, Synergy.ELECTRIC])
+  rarity = Rarity.LEGENDARY
+  stars = 4
+  hp = 220
+  atk = 27
+  speed = 55
+  def = 12
+  speDef = 10
+  maxPP = 100
+  range = 3
+  skill = Ability.FREEZE_SHOCK
 }
 
 export class Reshiram extends Pokemon {
