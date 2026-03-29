@@ -1,10 +1,10 @@
 import chalk from "chalk"
 import { Command } from "commander"
-import { findUp } from "find-up"
 import path from "path"
 import { pathToFileURL } from "url"
 import { createRequire } from "module"
 const require = createRequire(import.meta.url)
+const { findUp } = require("find-up")
 const program = new Command()
 program.description("Our New CLI")
 program.version("0.2.0")

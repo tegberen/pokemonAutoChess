@@ -2439,7 +2439,6 @@
 		"SHOCKWAVE": "Deal [30,60,120,SP] SPECIAL to all enemies in a 2-range radius, +1 range if user is in an ELECTRIC_FIELD, -20% damage per tile from the user.",
 		"BITE": "Deal [40,80,120, 160,SP] SPECIAL to the target and heal the user for 30% of the damage dealt. Cause the target to FLINCH for 5 seconds.",
 		"AQUA_TAIL": "Deal [30,60,100,SP] SPECIAL to the target and gain [30,60,100,SP] SHIELD.",
-    	"CEASELESS_EDGE": "Deal in a CONE [300, SP]% of users ATK as TRUE and throw metal spikes underneath them. Can crit by default.\nBOARD_EFFECT: spikes deal 10 TRUE per second and inflict ARMOR_BREAK onto non FLYING or STEEL Pokémon that walk on it.", 
 		"DRAGON_TAIL": "Deal [30,60,100,SP] SPECIAL to the target and increase the user's DEF and SPE_DEF by [2,4,6,SP].",
 		"DRAGON_BREATH": "Deal [25,50,100,SP] SPECIAL to the target and an enemy directly behind it.",
 		"ICICLE_CRASH": "Deal [20,40,80,SP] SPECIAL to the target and enemy Pokémon ADJACENT to it.",
@@ -2779,7 +2778,7 @@
 		"YAWN": "Gain [15,30,60,SP] SHIELD. Enemy Pokémon targeting the user are inflicted with FATIGUE for 3 seconds and lose 20 AP.",
 		"WISE_YAWN": "Grant the lowest HP ally [15,30,60,SP] SHIELD. Enemies attacking that ally suffer FATIGUE for 3 seconds and lose 20 AP.",
 		"FIERY_DANCE": "Cloaked in flames, the user dances and flaps its wings dealing [25,50,100,SP] SPECIAL to the target and raises their own AP by 30.",
-    "ANACHRONISM_REPULSOR": "Grants PROTECT to the user and all allies sharing a synergy type for 2 seconds. Each protected ally deals [10,SP] SPECIAL per protected unit to ADJACENT enemies. If enemies are FOSSIL or AQUATIC, deal TRUE instead.",
+    "ANACHRONISM_REPULSOR": "Grants PROTECT to the user and all allies sharing a synergy type for 2 seconds. Each protected ally deals [10,SP] SPECIAL per protected unit to ADJACENT enemies. Deals TRUE instead against FOSSIL or AQUATIC enemies.",
     "SMASHING_WING": "Dashes into the largest group of enemies, dealing [60, SP] SPECIAL and reducing their AP by 20. Deals TRUE instead against ARTIFICIAL or STEEL targets.",
 		"BIDE": "After 3 seconds, deal SPECIAL to ADJACENT enemy Pokémon equal to [200,SP]% of the damage received during this period.",
 		"SHORE_UP": "Heal for [20,25,SP]% HP, +[10,SP]% if the weather is SANDSTORM.",
@@ -3991,7 +3990,7 @@
 		"EISCUE_ICE_FACE": "When casting its ability, its current SHIELD is converted to additional SPECIAL. When SHIELD is depleted or after casting its ability, Eiscue breaks into its Noice form.",
 		"WALL_OF_STONE": "At the start of the fight, Stakataka and all ROCK allies on the same row get 50 SHIELD and are LOCKED until their SHIELD is depleted.",
 
-    "CHARIZARD": "Gains a stack for each KO. Mega evolves after 20 stacks.",
+    "CHARIZARD": "Gains a stack for each KO. Mega evolves after 25 stacks.",
     "LOPUNNY": "Gains a stack for each ability cast, on FIGHTING 8 or NORMAL 9. Mega evolves after 20 stacks.",
     "BANETTE": "Gains a stack for each summoned Clone. Mega evolves after 20 stacks.",
     "HOUNDOOM": "Gains a stack for each two summoned Houndour. Mega evolves after 20 stacks.",
@@ -4018,13 +4017,13 @@
     "MEGA_ALAKAZAM": "Bends a spoon to distract the target on hit. Has a [30,LK]% chance to BLINDED them for 2 seconds",
     "ABSOL": "Gain one stack for each KO. Mega evolves after 20 stacks.",
     "MAWILE": "Gain one stack for each KO. Mega evolves after 20 stacks.",
-    "MEGA_MAWILE": "Its docile face lulls foes off guard. When struck by a regular attack, [10,LK]% chance to CHARM the opponent for 1 second.",
+    "MEGA_MAWILE": "Its docile face lulls foes off guard. When struck by a regular attack, [20,LK]% chance to CHARM the opponent for 1 second.",
     "SUPER_LUCK": "Increase allies CRIT_CHANCE by +10.",
     "PALKIA": "Palkia switches between its Altered Form and Origin Form depending on its position on the board.",
     "DIALGA": "Dialga switches between its Altered Form and Origin Form depending on its position on the board.",
-    "SLITHER_WING": "At the start of fight, for each ADJACENT ally: FIGHTING grants +5 DEF, FOSSIL grants +10 HP, BUG grants +5 ATK. Doubled in DROUGHT weather.",
-    "NIDOQUEEN": "The queen of the family. Has a [50,LK]% chance to attract a catchable Nidoran♂ , if no Nidoking is on the board.",
-    "NIDOKING": "The king of the family. Has a [50,LK]% chance to attract a catchable Nidoran♀ , if no Nidoqueen is on the board."
+    "SLITHER_WING": "At the start of fight, for each ADJACENT ally: FIGHTING grants +5 DEF, FOSSIL grants +10 HP, BUG grants +5 ATK. Doubled in DROUGHT.",
+    "NIDOQUEEN": "The queen of the family. Has a [50,LK]% chance to attract a catchable Nidoran♂  when no Nidoking is on the board.",
+    "NIDOKING": "The king of the family. Has a [50,LK]% chance to attract a catchable Nidoran♀  when no Nidoqueen is on the board."
   },
 	"stat": {
 		"ATK": "Attack",
