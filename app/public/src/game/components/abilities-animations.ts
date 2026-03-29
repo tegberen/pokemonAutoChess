@@ -1851,7 +1851,7 @@ export const AbilitiesAnimations: {
   }),
   [Ability.DARK_NOVA]: skyfall({
     ability: Ability.SUNSTEEL_STRIKE,
-    scale: 0.5,
+    scale: 1,
     duration: 500,
     tint: 0xffe8ff,
     hitAnim: onCaster({
