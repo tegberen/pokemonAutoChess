@@ -1957,7 +1957,7 @@ export const PassiveEffects: Partial<
       if (
         attackType === AttackType.PHYSICAL &&
         attacker &&
-        chance(0.1, pokemon)
+        chance(0.2, pokemon)
       ) {
         attacker.status.triggerCharm(1000, attacker, pokemon)
       }

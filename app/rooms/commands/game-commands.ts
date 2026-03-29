@@ -91,7 +91,8 @@ import {
   SynergyGivenByItem,
   SynergyStones,
   Tools,
-  UnholdableItems
+  UnholdableItems,
+  ShinyItems
 } from "../../types/enum/Item"
 import { Passive } from "../../types/enum/Passive"
 import {
@@ -1802,7 +1803,7 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
             (this.state.shinyEncounter && this.state.stageLevel > 1) ||
             this.state.specialGameRule === SpecialGameRule.SHINIEST_HUNTER
               ? pickNRandomIn(ShinyItems, 3)
-              : (pveStage.getRewardsPropositions?.(player) ?? ([] as Item[]))
+              : (pveStage.getRewardsPropositions?.(player, false) ?? ([] as Item[]))
 
           resetArraySchema(player.pveRewardsPropositions, rewardsPropositions)
 

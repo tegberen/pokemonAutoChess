@@ -1828,8 +1828,8 @@ export class Samurott extends Pokemon {
 export class HisuiSamurott extends Pokemon {
   types = new SetSchema<Synergy>([
     Synergy.WATER,
-    Synergy.DARK,
-    Synergy.STEEL
+    Synergy.FIELD,
+    Synergy.DARK
   ])
   rarity = Rarity.EPIC
   stars = 3
@@ -7046,7 +7046,7 @@ export class MegaMawile extends Pokemon {
   rarity = Rarity.UNIQUE
   stars = 4
   hp = 220
-  atk = 23
+  atk = 24
   speed = 41
   def = 20
   speDef = 6
@@ -7621,11 +7621,11 @@ export class WhiteKyurem extends Pokemon {
   rarity = Rarity.LEGENDARY
   stars = 4
   hp = 220
-  atk = 24
+  atk = 27
   speed = 55
   def = 10
   speDef = 12
-  maxPP = 120
+  maxPP = 100
   range = 3
   skill = Ability.ICE_BURN
 }
@@ -7635,11 +7635,11 @@ export class BlackKyurem extends Pokemon {
   rarity = Rarity.LEGENDARY
   stars = 4
   hp = 220
-  atk = 30
+  atk = 27
   speed = 55
   def = 12
   speDef = 10
-  maxPP = 140
+  maxPP = 100
   range = 3
   skill = Ability.FREEZE_SHOCK
 }
