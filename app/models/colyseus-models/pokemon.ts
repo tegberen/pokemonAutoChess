@@ -3529,9 +3529,9 @@ export class Bulbasaur extends Pokemon {
   speed = 51
   def = 4
   speDef = 4
-  maxPP = 70
+  maxPP = 90
   range = 2
-  skill = Ability.MAGICAL_LEAF
+  skill = Ability.FRENZY_PLANT
 }
 
 export class Ivysaur extends Pokemon {
@@ -3544,9 +3544,9 @@ export class Ivysaur extends Pokemon {
   speed = 51
   def = 8
   speDef = 8
-  maxPP = 70
+  maxPP = 90
   range = 2
-  skill = Ability.MAGICAL_LEAF
+  skill = Ability.FRENZY_PLANT
 }
 
 export class Venusaur extends Pokemon {
@@ -3558,9 +3558,9 @@ export class Venusaur extends Pokemon {
   speed = 51
   def = 12
   speDef = 12
-  maxPP = 70
+  maxPP = 90
   range = 2
-  skill = Ability.MAGICAL_LEAF
+  skill = Ability.FRENZY_PLANT
 }
 
 export class Igglybuff extends Pokemon {

@@ -222,6 +222,33 @@ export class BlueFlareStrategy extends AbilityStrategy {
   }
 }
 
+export class FrenzyPlantStrategy extends AbilityStrategy {
+  process(
+    pokemon: PokemonEntity,
+    board: Board,
+    target: PokemonEntity,
+    crit: boolean
+  ) {
+    super.process(pokemon, board, target, crit)
+
+    const baseDamage = [10, 30, 60][pokemon.stars - 1] ?? 60
+
+    const adjacentEnemies = board
+      .getAdjacentCells(target.positionX, target.positionY)
+      .filter((cell) => cell.value && cell.value.team !== pokemon.team).length
+    const multiplier = Math.max(1, adjacentEnemies)
+    const damage = baseDamage * multiplier
+
+    for (let i = 0; i < 3; i++) {
+      pokemon.commands.push(
+        new DelayedCommand(() => {
+          target.handleSpecialDamage(damage, board, AttackType.SPECIAL, pokemon, crit)
+        }, i * 90)
+      )
+    }
+  }
+}
+
 export class FusionBoltStrategy extends AbilityStrategy {
   process(
     pokemon: PokemonEntity,
@@ -18078,7 +18105,8 @@ export const AbilityStrategies: { [key in Ability]: AbilityStrategy } = {
   [Ability.ROCK_WRECKER]: new RockWreckerStrategy(),
   [Ability.THUNDERCLAP_PRESS]: new ThunderClapPressStrategy(),
   [Ability.AQUA_STEP]: new AquaStepStrategy(),
-  [Ability.MAGNETIC_ABSORPTION]: new MagneticAbsorptionStrategy()
+  [Ability.MAGNETIC_ABSORPTION]: new MagneticAbsorptionStrategy(),
+  [Ability.FRENZY_PLANT]: new FrenzyPlantStrategy()
 }
 
 export function castAbility(
