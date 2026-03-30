@@ -2028,6 +2028,7 @@ export const PassiveEffects: Partial<
   [Passive.DANCER]: [
     new OnSimulationStartEffect(({ simulation, entity }) => {
       const dancers: PokemonEntity[] = []
+      const gain = [1,2,3][entity.stars - 1] ?? 1
 
       simulation.board.forEach((x, y, pkm) => {
         if (
@@ -2045,8 +2046,8 @@ export const PassiveEffects: Partial<
 
         const danceEffect = new PeriodicEffect(
           (pokemon) => {
-            pokemon.addSpeed(5, pokemon, 0, false)
-            pokemon.addPP(10, pokemon, 0, false)
+            pokemon.addSpeed(gain, pokemon, 0, false)
+            pokemon.addAttack(gain, pokemon, 0, false)
             pokemon.broadcastAbility({
               positionX: pokemon.positionX,
               positionY: pokemon.positionY,
@@ -2057,7 +2058,7 @@ export const PassiveEffects: Partial<
               .getCellsInRange(pokemon.positionX, pokemon.positionY, pokemon.range, false)
               .some((cell) => cell.value && cell.value.team !== pokemon.team)
 
-            if (pokemon.pp >= pokemon.maxPP || hasEnemyInRange) {
+            if (pokemon.pp >= ((pokemon.maxPP)/2) || hasEnemyInRange) {
               pokemon.status.lockedCooldown = 0
               pokemon.status.updateLocked(0, pokemon)
               pokemon.cooldown = 0  // triggers state machine transition to idle

@@ -360,6 +360,7 @@ class SpriteSheetProcessor {
           actions.add(AnimationType.Twirl)
           actions.add(AnimationType.Special1)
           actions.add(AnimationType.RearUp)
+          actions.add(AnimationType.Shake)
 
           for (const action of actions) {
             let metadata = xmlData.AnimData.Anims.Anim.find(

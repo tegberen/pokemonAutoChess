@@ -66,6 +66,12 @@ export const PokemonAnimations: {
     emote: AnimationType.Shoot,
     attackSprite: AttackSprite.FIGHTING_MELEE
   },
+  [Pkm.SANDY_SHOCKS]: {
+    attack: AnimationType.Attack,
+    ability: AnimationType.Shake,
+    emote: AnimationType.Charge,
+    attackSprite: AttackSprite.ELECTRIC_RANGE
+  },
   [Pkm.BULBASAUR]: {
     attack: AnimationType.Shoot,
     ability: AnimationType.Rotate,

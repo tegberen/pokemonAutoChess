@@ -764,6 +764,7 @@ export const AbilitiesAnimations: {
     scale: 1.5,
     positionOffset: [+5, -15]
   }),
+  [Ability.MAGNETIC_ABSORPTION]: onTarget({scale: 4, tint: 0xffce00, positionOffset: [0, -20] }),
   [Ability.DIAMOND_STORM]: onCasterScale2,
   [Ability.THRASH]: onCasterScale2,
   [Ability.HELPING_HAND]: onCasterScale2,
