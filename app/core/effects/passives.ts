@@ -2053,7 +2053,7 @@ export const PassiveEffects: Partial<
             })
 
             const hasEnemyInRange = simulation.board
-              .getCellsInRange(pokemon.positionX, pokemon.positionY, pokemon.range)
+              .getCellsInRange(pokemon.positionX, pokemon.positionY, pokemon.range, false)
               .some((cell) => cell.value && cell.value.team !== pokemon.team)
 
             if (pokemon.pp >= pokemon.maxPP || hasEnemyInRange) {
