@@ -136,6 +136,58 @@ export class AquaStepStrategy extends AbilityStrategy {
     )
   }
 }
+
+export class MagneticAbsorptionStrategy extends AbilityStrategy {
+  process(
+    pokemon: PokemonEntity,
+    board: Board,
+    target: PokemonEntity,
+    crit: boolean
+  ) {
+    super.process(pokemon, board, target, crit)
+
+    // User gains +1 range
+    pokemon.range += 1
+
+    // Move user 1 tile away from target
+    const orientation = board.orientation(
+      pokemon.positionX,
+      pokemon.positionY,
+      target.positionX,
+      target.positionY,
+      pokemon,
+      target
+    )
+    const oppositeOrientation = OrientationArray[(OrientationArray.indexOf(orientation) + 4) % 8]
+    const vector = OrientationVector[oppositeOrientation]
+    const retreatX = clamp(pokemon.positionX + vector[0], 0, board.columns - 1)
+    const retreatY = clamp(pokemon.positionY + vector[1], 0, board.rows - 1)
+    if (!board.getEntityOnCell(retreatX, retreatY)) {
+      pokemon.moveTo(retreatX, retreatY, board, false)
+    }
+
+    // Reduce target range or deal damage if already at 1
+    if (target.range <= 1) {
+      target.handleSpecialDamage(80, board, AttackType.SPECIAL, pokemon, crit)
+      target.status.triggerLocked(2000, target)
+    } else {
+      target.range -= 1
+    }
+
+    // Reduce adjacent enemy ranges or deal damage if already at 1
+    board.getAdjacentCells(target.positionX, target.positionY).forEach((cell) => {
+      if (cell.value && cell.value.team !== pokemon.team && cell.value !== target) {
+        if (cell.value.range <= 1) {
+          cell.value.handleSpecialDamage(50, board, AttackType.SPECIAL, pokemon, crit)
+          cell.value.status.triggerLocked(2000, target)
+        } else {
+          cell.value.range -= 1
+        }
+      }
+    })
+
+  }
+}
 export class BlueFlareStrategy extends AbilityStrategy {
   process(
     pokemon: PokemonEntity,
@@ -18025,7 +18077,8 @@ export const AbilityStrategies: { [key in Ability]: AbilityStrategy } = {
   [Ability.TWINEEDLE]: new TwineedleStrategy(),
   [Ability.ROCK_WRECKER]: new RockWreckerStrategy(),
   [Ability.THUNDERCLAP_PRESS]: new ThunderClapPressStrategy(),
-  [Ability.AQUA_STEP]: new AquaStepStrategy()
+  [Ability.AQUA_STEP]: new AquaStepStrategy(),
+  [Ability.MAGNETIC_ABSORPTION]: new MagneticAbsorptionStrategy()
 }
 
 export function castAbility(

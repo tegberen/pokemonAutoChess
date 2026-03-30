@@ -19,6 +19,7 @@
 ![Primal Dialga](/assets/portraits/0483/0002/Normal.png)
 ![Slitherwing](/assets/portraits/0988/Normal.png)
 ![Iron Moth](/assets/portraits/0994/Normal.png)
+![Sandy Shocks](/assets/portraits/0989/Normal.png)
 ![Quaxly](/assets/portraits/0912/Normal.png)
 ![Quaxwell](/assets/portraits/0913/Normal.png)
 ![Quaquaval](/assets/portraits/0914/Normal.png)

@@ -24,6 +24,7 @@
 	},
 	"ability": {
     "AQUA_STEP": "Aqua Step",
+    "MAGNETIC_ABSORPTION": "Magnetic Absorption",
 		"SOFT_BOILED": "Soft-Boiled",
 		"PRECIPICE_BLADES": "Precipice Blades",
 		"SONG_OF_DESIRE": "Song of Desire",
@@ -1480,6 +1481,7 @@
     "QUAXLY": "Quaxly",
     "QUAXWELL": "Quaxwell",
     "QUAQUAVAL": "Quaquaval",
+    "SANDY_SHOCKS": "Sandy Shocks",
 		"TANGELA": "Tangela",
 		"TANGROWTH": "Tangrowth",
 		"PSYDUCK": "Psyduck",
@@ -2374,6 +2376,7 @@
 	},
 	"ability_description": {
     "AQUA_STEP": "The user attacks with fluid dance steps, shifting to an ADJACENT unoccupied tile before dealing [25,50,100,SP] SPECIAL to the target and increasing the users SPEED by [10,15,20,SP]. If the user has more SPEED than the target, regain [10,15,20] PP.",
+    "MAGNETIC_ABSORPTION": "Absorbs RANGE from the target and ADJACENT enemies, reducing theirs by 1 and increasing the user's by 1. Deals [80, SP] SPECIAL and inflicts 3 seconds of LOCKED instead, to any enemy already at minimum RANGE. The user then moves 1 tile back.",
     "TEMPORAL_RUPTURE": "Channel for 3 seconds, then unleash a temporal pulse. All enemy Pokémon in a 4-tile radius take [100,SP]% of the damage received during the last 3 seconds as TRUE. Allies are healed for [100,SP]% HP of the damage they took in the last 3 seconds.",
     "PRIMAL_ROAR": "Increase the user's ATK and SPEED by [10, SP] and RAGE all allied Pokémon for 2 second. Everytime the user uses this ability, increase the RAGE duration by 1 second.",
     "SUBSPACE_SWELL": "Channel for 3 seconds. Allies gain 40% more PP from all sources. When the channel ends, unleash a burst in a 4-tile radius dealing [20,SP] SPECIAL times the amount of allies cast during the channel.",
@@ -4029,7 +4032,7 @@
     "SLITHER_WING": "At the start of fight, for each ADJACENT ally: FIGHTING grants +5 DEF, FOSSIL grants +10 HP, BUG grants +5 ATK. Doubled in DROUGHT.",
     "NIDOQUEEN": "The queen of the family. Has a [50,LK]% chance to attract a catchable Nidoran♂  when no Nidoking is on the board.",
     "NIDOKING": "The king of the family. Has a [50,LK]% chance to attract a catchable Nidoran♀  when no Nidoqueen is on the board.",
-    "DANCER": "At the start of the fight, dance with allies ADJACENT_IN_THE_SAME_ROW and gain +5 SPEED and +10 PP per second, while being LOCKED. When the PP is full or enemies are in RANGE, the dance stops."
+    "DANCER": "At the start of the fight, become LOCKED and dance with allies ADJACENT_IN_THE_SAME_ROW. Gain [1,2,3] SPEED and ATK until half the PP bar is filled or enemies are in RANGE."
   },
 	"stat": {
 		"ATK": "Attack",
