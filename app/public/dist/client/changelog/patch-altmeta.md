@@ -3,7 +3,7 @@
 - Beldum - Meteor Mash: Deal 1/2/4 times [100,SP]% of ATK as SPECIAL to the target and ADJACENT enemy Pokemon. Then increase the user's ATK by [2, SP] ([4, SP] if the user is in PSYCHIC_FIELD) on each hit.
 - Fennekin - Mystical Fire: Deals [25,50,100,SP] SPECIAL to the target, reduces its AP by [10, SP]. Scorches the target tile and those flanking and behind it with embers. BOARD_EFFECT: embers deal 10 SPECIAL per second and BURN non FLYING or FIRE Pokémon that walk on it.
 - Yveltal - Oblivion Wing: Jump to the backline, then fire a beam in a line dealing [100,SP] SPECIAL to all enemy Pokémon. Heal for 75% of the damage dealt. Will stay in the backline with increased RANGE for 3 seconds.
-- Squirtle - Withdraw: Retreat into its shell while blasting out water, dealing [20,40,60, SP] SPECIAL damage to ADJACENT enemy Pokémon and pushing them back 1 tile. Increase the users DEF by [2,4,8,SP].
+- Squirtle - Withdraw: Retreat into its shell while blasting out water, dealing [20,40,60, SP] SPECIAL damage to ADJACENT enemy Pokémon and pushing them back. Increase the users DEF by [2,4,8,SP].
 - Electrike - Rising Voltage: The user gathers electric voltage and deals [30,60,120,SP] SPECIAL to the target. Gains ELECTRIC_FIELD and spreads it to all ADJACENT Pokémon. Double the damage, if the opponent has ELECTRIC_FIELD.
 - Mega Gengar - Phantom Force: Silence all enemy Pokémon for [2, SP] seconds, then vanish. After 1 second, reappear in the middle of the enemy team and deal [100, SP] SPECIAL damage to all ADJACENT enemy Pokémon. Double the damage to targets with SILENCE or FATIGUE.
 - Mega Charizard X - Flare Blitz: Charge towards the target, dealing [500,SP]% of ATK as PHYSICAL to all ADJACENT enemy Pokemon. BURN the user for 3 seconds.
@@ -13,7 +13,7 @@
 - Gothita - Fake Tears: Deal [10,20,30,SP] SPECIAL to all enemy Pokémon and inflict them with ARMOR_BREAK for 3 seconds. If already affected, remove [3,6,9] SPE_DEF.
 - Tepig - Heat Crash: Crashes into the target, knocking it back and dealing [40,60,80, SP] SPECIAL. Does more damage the more ATK the user has compared to the target. If the user hase more HP than the target, gain 100 AP and loose 20 SPEED.
 - Hoopa - Unbound: Tears open a dimensional ring and returns in its Unbound form — dragging a Legendary Pokémon along with it. The summoned Pokémon's HP increases with the user's AP.
-
+- Bulbasaur - Frenzy Plant: "For each ADJACENT enemy surrounding the target, multiplies the damage of 3 root strikes dealing [10,20,40,SP] SPECIAL each",
 
 # Stats
 - Guzzlord: HP 300 → 400
