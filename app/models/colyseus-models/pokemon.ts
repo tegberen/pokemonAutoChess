@@ -456,6 +456,20 @@ export class Egg extends Pokemon {
   canHoldItems = false
 }
 
+export class SandyShocks extends Pokemon {
+  types = new SetSchema<Synergy>([Synergy.ELECTRIC, Synergy.GROUND, Synergy.FOSSIL])
+  rarity = Rarity.UNIQUE
+  stars = 3
+  hp = 220
+  atk = 14
+  speed = 57
+  def = 7
+  speDef = 7
+  maxPP = 100
+  range = 1
+  skill = Ability.MAGNETIC_ABSORPTION
+}
+
 export class Quaxly extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.WATER, Synergy.FIGHTING, Synergy.FLYING])
   rarity = Rarity.UNCOMMON
@@ -1824,7 +1838,6 @@ export class Oshawott extends Pokemon {
   maxPP = 100
   range = 1
   skill = Ability.AQUA_TAIL
-  passive = Passive.DANCER
 }
 
 export class Dewott extends Pokemon {
@@ -22547,7 +22560,8 @@ export const PokemonClasses: Record<
   [Pkm.CRUSTLE]: Crustle,
   [Pkm.QUAXLY]: Quaxly,
   [Pkm.QUAXWELL]: Quaxwell,
-  [Pkm.QUAQUAVAL]: Quaquaval
+  [Pkm.QUAQUAVAL]: Quaquaval,
+  [Pkm.SANDY_SHOCKS]: SandyShocks
 }
 
 // declare all the classes in colyseus schema TypeRegistry
