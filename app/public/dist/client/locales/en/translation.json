@@ -2373,7 +2373,7 @@
 		"ROCK_WRECKER": "Rock Wrecker"
 	},
 	"ability_description": {
-    "AQUA_STEP": "The user attacks with fluid dance steps, shifting to an ADJACENT unoccupied tile before dealing dealing [25,50,100,SP] SPECIAL to the target and increasing the users SPEED by [10,15,20,SP]. If the user has more SPEED than the target, regain [10,15,20] PP.",
+    "AQUA_STEP": "The user attacks with fluid dance steps, shifting to an ADJACENT unoccupied tile before dealing [25,50,100,SP] SPECIAL to the target and increasing the users SPEED by [10,15,20,SP]. If the user has more SPEED than the target, regain [10,15,20] PP.",
     "TEMPORAL_RUPTURE": "Channel for 3 seconds, then unleash a temporal pulse. All enemy Pokémon in a 4-tile radius take [100,SP]% of the damage received during the last 3 seconds as TRUE. Allies are healed for [100,SP]% HP of the damage they took in the last 3 seconds.",
     "PRIMAL_ROAR": "Increase the user's ATK and SPEED by [10, SP] and RAGE all allied Pokémon for 2 second. Everytime the user uses this ability, increase the RAGE duration by 1 second.",
     "SUBSPACE_SWELL": "Channel for 3 seconds. Allies gain 40% more PP from all sources. When the channel ends, unleash a burst in a 4-tile radius dealing [20,SP] SPECIAL times the amount of allies cast during the channel.",
