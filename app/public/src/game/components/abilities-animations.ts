@@ -759,6 +759,11 @@ export const AbilitiesAnimations: {
   ["PUFF_PINK"]: onTargetScale2,
   ["PUFF_GREEN"]: onTargetScale2,
   ["PUFF_BROWN"]: onTargetScale2,
+  [Ability.AQUA_STEP]: onCaster({
+    ability: Ability.AQUA_STEP,
+    scale: 1.5,
+    positionOffset: [+5, -15]
+  }),
   [Ability.DIAMOND_STORM]: onCasterScale2,
   [Ability.THRASH]: onCasterScale2,
   [Ability.HELPING_HAND]: onCasterScale2,

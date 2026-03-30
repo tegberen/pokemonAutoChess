@@ -48,6 +48,24 @@ export const PokemonAnimations: {
     emote: AnimationType.Hop,
     attackSprite: AttackSprite.NORMAL_MELEE
   },
+  [Pkm.QUAXLY]: {
+    attack: AnimationType.Attack,
+    ability: AnimationType.Swing,
+    emote: AnimationType.Shoot,
+    attackSprite: AttackSprite.FIGHTING_MELEE
+  },
+  [Pkm.QUAXWELL]: {
+    attack: AnimationType.Attack,
+    ability: AnimationType.Swing,
+    emote: AnimationType.Shoot,
+    attackSprite: AttackSprite.FIGHTING_MELEE
+  },
+  [Pkm.QUAQUAVAL]: {
+    attack: AnimationType.Attack,
+    ability: AnimationType.Swing,
+    emote: AnimationType.Shoot,
+    attackSprite: AttackSprite.FIGHTING_MELEE
+  },
   [Pkm.BULBASAUR]: {
     attack: AnimationType.Shoot,
     ability: AnimationType.Rotate,

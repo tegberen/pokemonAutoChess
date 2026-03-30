@@ -1,4 +1,7 @@
 export enum Pkm {
+  QUAXLY = "QUAXLY",
+  QUAXWELL = "QUAXWELL",
+  QUAQUAVAL = "QUAQUAVAL",
   ABOMASNOW = "ABOMASNOW",
   ABRA = "ABRA",
   ABSOL = "ABSOL",
@@ -2397,9 +2400,9 @@ export const PkmIndex: { [key in Pkm]: string } = {
   [Pkm.FUECOCO]: "0909",
   [Pkm.CROCALOR]: "0910",
   [Pkm.SKELEDIRGE]: "0911",
-  //[Pkm.QUAXLY]: "0912",
-  //[Pkm.QUAXWELL]: "0913",
-  //[Pkm.QUAQUAVAL]: "0914",
+  [Pkm.QUAXLY]: "0912",
+  [Pkm.QUAXWELL]: "0913",
+  [Pkm.QUAQUAVAL]: "0914",
   [Pkm.LECHONK]: "0915",
   [Pkm.OINKOLOGNE_MALE]: "0916",
   //[Pkm.OINKOLOGNE_FEMALE]: "0916-0003",
@@ -2523,6 +2526,9 @@ export const PkmByIndex: { [index: string]: Pkm } = Object.fromEntries(
 )
 
 export const PkmFamily: { [key in Pkm]: Pkm } = {
+  [Pkm.QUAXLY]: Pkm.QUAXLY,
+  [Pkm.QUAXWELL]: Pkm.QUAXLY,
+  [Pkm.QUAQUAVAL]: Pkm.QUAXLY,
   [Pkm.EGG]: Pkm.EGG,
   [Pkm.BULBASAUR]: Pkm.BULBASAUR,
   [Pkm.IVYSAUR]: Pkm.BULBASAUR,
