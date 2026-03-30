@@ -456,6 +456,53 @@ export class Egg extends Pokemon {
   canHoldItems = false
 }
 
+export class Quaxly extends Pokemon {
+  types = new SetSchema<Synergy>([Synergy.WATER, Synergy.FIGHTING, Synergy.FLYING])
+  rarity = Rarity.UNCOMMON
+  stars = 1
+  evolution = Pkm.QUAXWELL
+  hp = 70
+  atk = 5
+  speed = 59
+  def = 5
+  speDef = 5
+  maxPP = 100
+  range = 1
+  skill = Ability.AQUA_STEP
+  passive = Passive.DANCER
+}
+
+export class Quaxwell extends Pokemon {
+  types = new SetSchema<Synergy>([Synergy.WATER, Synergy.FIGHTING, Synergy.FLYING])
+  rarity = Rarity.UNCOMMON
+  stars = 2
+  evolution = Pkm.QUAQUAVAL
+  hp = 130
+  atk = 11
+  speed = 59
+  def = 8
+  speDef = 7
+  maxPP = 100
+  range = 1
+  skill = Ability.AQUA_STEP
+  passive = Passive.DANCER
+}
+
+export class Quaquaval extends Pokemon {
+  types = new SetSchema<Synergy>([Synergy.WATER, Synergy.FIGHTING, Synergy.FLYING])
+  rarity = Rarity.UNCOMMON
+  stars = 3
+  hp = 220
+  atk = 22
+  speed = 59
+  def = 10
+  speDef = 9
+  maxPP = 100
+  range = 1
+  skill = Ability.AQUA_STEP
+  passive = Passive.DANCER
+}
+
 export class Electrike extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.ELECTRIC, Synergy.FIELD])
   rarity = Rarity.RARE
@@ -1777,6 +1824,7 @@ export class Oshawott extends Pokemon {
   maxPP = 100
   range = 1
   skill = Ability.AQUA_TAIL
+  passive = Passive.DANCER
 }
 
 export class Dewott extends Pokemon {
@@ -12470,6 +12518,10 @@ export class Froakie extends Pokemon {
   range = 1
   skill = Ability.WATER_SHURIKEN
   regional = true
+  isInRegion(map: DungeonPMDO, state?: GameState) {
+    const regionSynergies = RegionDetails[map]?.synergies
+    return regionSynergies.includes(Synergy.DARK) || regionSynergies.includes(Synergy.AQUATIC)
+  }
 }
 
 export class Frogadier extends Pokemon {
@@ -12486,6 +12538,10 @@ export class Frogadier extends Pokemon {
   range = 1
   skill = Ability.WATER_SHURIKEN
   regional = true
+  isInRegion(map: DungeonPMDO, state?: GameState) {
+    const regionSynergies = RegionDetails[map]?.synergies
+    return regionSynergies.includes(Synergy.DARK) || regionSynergies.includes(Synergy.AQUATIC)
+  }
 }
 
 export class Greninja extends Pokemon {
@@ -12501,6 +12557,10 @@ export class Greninja extends Pokemon {
   range = 1
   skill = Ability.WATER_SHURIKEN
   regional = true
+  isInRegion(map: DungeonPMDO, state?: GameState) {
+    const regionSynergies = RegionDetails[map]?.synergies
+    return regionSynergies.includes(Synergy.DARK) || regionSynergies.includes(Synergy.AQUATIC)
+  }
 }
 
 export class Chingling extends Pokemon {
@@ -22483,7 +22543,10 @@ export const PokemonClasses: Record<
   [Pkm.EISCUE]: Eiscue,
   [Pkm.EISCUE_NOICE]: EiscueNoice,
   [Pkm.DWEBBLE]: Dwebble,
-  [Pkm.CRUSTLE]: Crustle
+  [Pkm.CRUSTLE]: Crustle,
+  [Pkm.QUAXLY]: Quaxly,
+  [Pkm.QUAXWELL]: Quaxwell,
+  [Pkm.QUAQUAVAL]: Quaquaval
 }
 
 // declare all the classes in colyseus schema TypeRegistry

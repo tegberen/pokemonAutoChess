@@ -2023,5 +2023,52 @@ export const PassiveEffects: Partial<
       }
     })
   ],
+  [Passive.DANCER]: [
+    new OnSimulationStartEffect(({ simulation, entity }) => {
+      const dancers: PokemonEntity[] = []
+
+      simulation.board.forEach((x, y, pkm) => {
+        if (
+          pkm &&
+          pkm.team === entity.team &&
+          y === entity.positionY &&
+          Math.abs(x - entity.positionX) <= 1
+        ) {
+          dancers.push(pkm)
+        }
+      })
+
+      dancers.forEach((dancer) => {
+        dancer.status.triggerLocked(99999, dancer)
+
+        const danceEffect = new PeriodicEffect(
+          (pokemon) => {
+            pokemon.addSpeed(5, pokemon, 0, false)
+            pokemon.addPP(10, pokemon, 0, false)
+            pokemon.broadcastAbility({
+              positionX: pokemon.positionX,
+              positionY: pokemon.positionY,
+              skill: Ability.ECHO
+            })
+
+            const hasEnemyInRange = simulation.board
+              .getCellsInRange(pokemon.positionX, pokemon.positionY, pokemon.range)
+              .some((cell) => cell.value && cell.value.team !== pokemon.team)
+
+            if (pokemon.pp >= pokemon.maxPP || hasEnemyInRange) {
+              pokemon.status.lockedCooldown = 0
+              pokemon.status.updateLocked(0, pokemon)
+              pokemon.cooldown = 0  // triggers state machine transition to idle
+              pokemon.effectsSet.delete(danceEffect)
+            }
+          },
+          Passive.DANCER,
+          1000
+        )
+
+        dancer.effectsSet.add(danceEffect)
+      })
+    })
+  ],
 
 }
