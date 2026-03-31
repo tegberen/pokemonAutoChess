@@ -19258,7 +19258,7 @@ export class Masquerain extends Pokemon {
 }
 
 export class Gossifleur extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.FLORA, Synergy.SOUND])
+  types = new SetSchema<Synergy>([Synergy.GRASS, Synergy.FLORA, Synergy.SOUND])
   rarity = Rarity.UNCOMMON
   stars = 1
   evolution = Pkm.ELDEGOSS
@@ -19274,7 +19274,7 @@ export class Gossifleur extends Pokemon {
 }
 
 export class Eldegoss extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.FLORA, Synergy.SOUND])
+  types = new SetSchema<Synergy>([Synergy.GRASS, Synergy.FLORA, Synergy.SOUND])
   rarity = Rarity.UNCOMMON
   stars = 2
   hp = 140
