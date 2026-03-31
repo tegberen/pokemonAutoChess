@@ -2041,8 +2041,8 @@ export const PassiveEffects: Partial<
       })
 
       dancers.forEach((dancer) => {
-        dancer.status.triggerLocked(99999, dancer)
-
+        dancer.status.tree = true  // use tree instead of locked
+        dancer.toIdleState()
         const danceEffect = new PeriodicEffect(
           (pokemon) => {
             pokemon.addSpeed(gain, pokemon, 0, false)
@@ -2052,22 +2052,18 @@ export const PassiveEffects: Partial<
               positionY: pokemon.positionY,
               skill: Ability.ECHO
             })
-
             const hasEnemyInRange = simulation.board
               .getCellsInRange(pokemon.positionX, pokemon.positionY, pokemon.range, false)
               .some((cell) => cell.value && cell.value.team !== pokemon.team)
-
-            if (pokemon.pp >= ((pokemon.maxPP)/2) || hasEnemyInRange) {
-              pokemon.status.lockedCooldown = 0
-              pokemon.status.updateLocked(0, pokemon)
-              pokemon.cooldown = 0  // triggers state machine transition to idle
+            if (pokemon.pp >= (pokemon.maxPP / 2) || hasEnemyInRange) {
+              pokemon.status.tree = false  // clear tree instead of locked
+              pokemon.toMovingState()
               pokemon.effectsSet.delete(danceEffect)
             }
           },
           Passive.DANCER,
           1000
         )
-
         dancer.effectsSet.add(danceEffect)
       })
     })
