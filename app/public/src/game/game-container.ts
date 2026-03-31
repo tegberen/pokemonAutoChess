@@ -259,6 +259,7 @@ class GameContainer {
       "attackCount",
       "tripleAttackCount",
       "upgradeCount",
+      "wideLensCount",
       "soulDewCount",
       "muscleBandCount",
       "machRibbonCount"

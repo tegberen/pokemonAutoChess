@@ -499,6 +499,8 @@ export default class BattleManager {
         }
       } else if (field === "upgradeCount") {
         pkm.itemsContainer.updateCount(Item.UPGRADE, value)
+      } else if (field === "wideLensCount") {
+        pkm.itemsContainer.updateCount(Item.WIDE_LENS, value)
       } else if (field === "soulDewCount") {
         pkm.itemsContainer.updateCount(Item.SOUL_DEW, value)
       } else if (field === "muscleBandCount") {
