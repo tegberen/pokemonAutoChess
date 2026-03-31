@@ -725,6 +725,16 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
       pokemon.count.upgradeCount = 0
     })
   ],
+  [Item.WIDE_LENS]: [
+    new OnAttackEffect(({ pokemon, target, board }) => {
+      pokemon.addCritChance(5, pokemon, 0, false)
+      pokemon.count.wideLensCount++
+    }),
+    new OnItemRemovedEffect((pokemon) => {
+      pokemon.addCritChance(-5 * pokemon.count.wideLensCount, pokemon, 0, false)
+      pokemon.count.wideLensCount = 0
+    })
+  ],
 
   [Item.MUSCLE_BAND]: [
     new OnDamageReceivedEffect(({ pokemon, damage }) => {
