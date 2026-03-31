@@ -4033,7 +4033,7 @@
     "SLITHER_WING": "At the start of fight, for each ADJACENT ally: FIGHTING grants +5 DEF, FOSSIL grants +10 HP, BUG grants +5 ATK. Doubled in DROUGHT.",
     "NIDOQUEEN": "The queen of the family. Has a [50,LK]% chance to attract a catchable Nidoran♂  when no Nidoking is on the board.",
     "NIDOKING": "The king of the family. Has a [50,LK]% chance to attract a catchable Nidoran♀  when no Nidoqueen is on the board.",
-    "DANCER": "At the start of the fight, become LOCKED and dance with allies ADJACENT_IN_THE_SAME_ROW. Gain [1,2,3] SPEED and ATK until half the PP bar is filled or enemies are in RANGE."
+    "DANCER": "At the start of the fight, start dancing with allies ADJACENT_IN_THE_SAME_ROW. Each second gain [1,2,3] SPEED and ATK until half the PP bar is filled or enemies are in RANGE."
   },
 	"stat": {
 		"ATK": "Attack",
