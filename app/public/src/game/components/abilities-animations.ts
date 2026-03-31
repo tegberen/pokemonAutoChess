@@ -842,7 +842,10 @@ export const AbilitiesAnimations: {
     ability: Ability.YAWN
   }),
   [Ability.MEDITATE]: onCasterScale2,
-  [Ability.MUD_BUBBLE]: onCasterScale2,
+  [Ability.MUD_BUBBLE]: [
+    onCasterScale2,
+    onCaster({ ability: Ability.SMASHING_WING, scale: 2.5, depth: DEPTH.ABILITY_BELOW_POKEMON, tint: 0x8B4513 })
+  ],
   [Ability.SOFT_BOILED]: onCasterScale2,
   [Ability.FAKE_TEARS]: onCasterScale2,
   [Ability.TEA_TIME]: onCasterScale2,

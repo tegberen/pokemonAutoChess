@@ -14,7 +14,11 @@
 - Tepig - Heat Crash: Crashes into the target, knocking it back and dealing [40,60,80, SP] SPECIAL. Does more damage the more ATK the user has compared to the target. If the user hase more HP than the target, gain 100 AP and loose 20 SPEED.
 - Hoopa - Unbound: Tears open a dimensional ring and returns in its Unbound form — dragging a Legendary Pokémon along with it. The summoned Pokémon's HP increases with the user's AP.
 - Bulbasaur - Frenzy Plant: For each ADJACENT enemy surrounding the target, multiplies the damage of 3 root strikes dealing [10,20,40,SP] SPECIAL each.
-- Flabebe - Fairy Wind: Restore [5,10,20,SP=0.5] PP to all allied Pokémon other than the user. Decrease the SPEED of all enemy Pokémon by [1, 5, 10].
+- Flabebe - Fairy Wind: Restore [5,10,20,SP=0.5] PP to all allied Pokémon other than the user and decrease the SPEED of all enemy Pokémon by [1, 5, 10].
+- Mudkip - Mud Bubble: Heal the user for [10,20,40,SP] HP, then BLINDED all ADJACENT enemy Pokémon for [1,2,4] seconds. If already BLINDED, deal [15,30,60,SP] SPECIAL instead.
+- Poliwhirl - Soak: Deal [20,40,80,SP] SPECIAL to the target and restore [10,10,20] PP to all allied Pokémon.
+- Torchic - Blaze Kick: Gain [10,20,40]% CRIT_CHANCE, then deal [30,60,120,SP] SPECIAL and BURN the target for 2 seconds. If it already has BURN, deal +30% damage. Can crit by default.
+- Pawmi - Double Shock: Emit a powerful electric shock, dealing [50,100,200,SP] SPECIAL to the target and inflict the user with PARALYSIS for 3 seconds. If the user has ELECTRIC_FIELD, discharge it and execute the target. 
 
 # Stats
 - Guzzlord: HP 300 → 400
