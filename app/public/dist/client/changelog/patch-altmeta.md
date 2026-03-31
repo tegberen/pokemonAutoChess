@@ -13,7 +13,8 @@
 - Gothita - Fake Tears: Deal [10,20,30,SP] SPECIAL to all enemy Pokémon and inflict them with ARMOR_BREAK for 3 seconds. If already affected, remove [3,6,9] SPE_DEF.
 - Tepig - Heat Crash: Crashes into the target, knocking it back and dealing [40,60,80, SP] SPECIAL. Does more damage the more ATK the user has compared to the target. If the user hase more HP than the target, gain 100 AP and loose 20 SPEED.
 - Hoopa - Unbound: Tears open a dimensional ring and returns in its Unbound form — dragging a Legendary Pokémon along with it. The summoned Pokémon's HP increases with the user's AP.
-- Bulbasaur - Frenzy Plant: "For each ADJACENT enemy surrounding the target, multiplies the damage of 3 root strikes dealing [10,20,40,SP] SPECIAL each",
+- Bulbasaur - Frenzy Plant: For each ADJACENT enemy surrounding the target, multiplies the damage of 3 root strikes dealing [10,20,40,SP] SPECIAL each.
+- Flabebe - Fairy Wind: Restore [5,10,20,SP=0.5] PP to all allied Pokémon other than the user. Decrease the SPEED of all enemy Pokémon by [1, 5, 10].
 
 # Stats
 - Guzzlord: HP 300 → 400
