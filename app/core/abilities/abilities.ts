@@ -3382,6 +3382,7 @@ export class DracoMeteorStrategy extends AbilityStrategy {
 }
 
 export class BlazeKickStrategy extends AbilityStrategy {
+  canCritByDefault = true
   process(
     pokemon: PokemonEntity,
     board: Board,
@@ -3390,9 +3391,11 @@ export class BlazeKickStrategy extends AbilityStrategy {
   ) {
     super.process(pokemon, board, target, crit)
     let damage = [30, 60, 120][pokemon.stars - 1] ?? 120
+    const critGain = [10, 20, 40][pokemon.stars - 1] ?? 40
     if (target.status.burn) {
       damage = Math.round(damage * 1.3)
     }
+    pokemon.addCritChance(critGain, pokemon, 0, false)
     target.status.triggerBurn(2000, target, pokemon)
     target.handleSpecialDamage(damage, board, AttackType.SPECIAL, pokemon, crit)
   }
@@ -3547,10 +3550,11 @@ export class SoakStrategy extends AbilityStrategy {
   ) {
     super.process(pokemon, board, target, crit)
     const damage = [20, 40, 80][pokemon.stars - 1] ?? 80
+    const ppGain = [10,10,20][pokemon.stars - 1] ?? 20
     target.handleSpecialDamage(damage, board, AttackType.SPECIAL, pokemon, crit)
     board.forEach((x: number, y: number, ally: PokemonEntity | undefined) => {
       if (ally && pokemon.team == ally.team) {
-        ally.addPP(10, pokemon, 0, false)
+        ally.addPP(ppGain, pokemon, 0, false)
       }
     })
   }
@@ -6805,9 +6809,22 @@ export class MudBubbleStrategy extends AbilityStrategy {
   requiresTarget = false
   process(pokemon: PokemonEntity, board: Board, target: null, crit: boolean) {
     super.process(pokemon, board, target, crit)
-    const heal = pokemon.stars === 3 ? 40 : pokemon.stars === 2 ? 20 : 10
+    const heal = [10,20,40] [pokemon.stars - 1] ?? 40
+    const blindDuration = [1000, 2000, 4000][pokemon.stars - 1] ?? 4000
+    const damage = [15, 30, 60][pokemon.stars - 1] ?? 60
+
     pokemon.handleHeal(heal, pokemon, 1, crit)
     pokemon.resetCooldown(250, pokemon.speed)
+
+    board.getAdjacentCells(pokemon.positionX, pokemon.positionY).forEach((cell) => {
+      if (cell.value && cell.value.team !== pokemon.team) {
+        if (cell.value.status.blinded) {
+          cell.value.handleSpecialDamage(damage, board, AttackType.SPECIAL, pokemon, crit)
+        } else {
+          cell.value.status.triggerBlinded(blindDuration, cell.value)
+        }
+      }
+    })
   }
 }
 
@@ -10440,7 +10457,7 @@ export class StoneEdgeStrategy extends AbilityStrategy {
 
     pokemon.status.triggerSilence(duration, pokemon, pokemon)
     pokemon.effects.add(EffectEnum.STONE_EDGE)
-    pokemon.addCritChance(20, pokemon, 1, false)
+    pokemon.addCritChance(30, pokemon, 0, false)
     pokemon.range += 2
     pokemon.commands.push(
       new DelayedCommand(() => {
@@ -11033,8 +11050,14 @@ export class DoubleShockStrategy extends AbilityStrategy {
   ) {
     super.process(pokemon, board, target, crit)
     pokemon.status.triggerParalysis(3000, pokemon, pokemon)
-    const damage = pokemon.stars === 3 ? 200 : pokemon.stars === 2 ? 100 : 50
-    target.handleSpecialDamage(damage, board, AttackType.SPECIAL, pokemon, crit)
+    const damage = [50, 100, 200][pokemon.stars - 1] ?? 200
+
+    if (pokemon.status.electricField) {
+      pokemon.status.electricField = false
+      target.handleSpecialDamage(9999, board, AttackType.SPECIAL, pokemon, crit)
+    } else {
+      target.handleSpecialDamage(damage, board, AttackType.SPECIAL, pokemon, crit)
+    }
   }
 }
 
