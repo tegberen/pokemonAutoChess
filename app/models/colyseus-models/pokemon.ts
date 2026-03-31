@@ -471,7 +471,7 @@ export class SandyShocks extends Pokemon {
 }
 
 export class Quaxly extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.WATER, Synergy.FIGHTING, Synergy.FLYING])
+  types = new SetSchema<Synergy>([Synergy.AQUATIC, Synergy.FIGHTING, Synergy.FLYING])
   rarity = Rarity.UNCOMMON
   stars = 1
   evolution = Pkm.QUAXWELL
@@ -487,7 +487,7 @@ export class Quaxly extends Pokemon {
 }
 
 export class Quaxwell extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.WATER, Synergy.FIGHTING, Synergy.FLYING])
+  types = new SetSchema<Synergy>([Synergy.AQUATIC, Synergy.FIGHTING, Synergy.FLYING])
   rarity = Rarity.UNCOMMON
   stars = 2
   evolution = Pkm.QUAQUAVAL
@@ -503,7 +503,7 @@ export class Quaxwell extends Pokemon {
 }
 
 export class Quaquaval extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.WATER, Synergy.FIGHTING, Synergy.FLYING])
+  types = new SetSchema<Synergy>([Synergy.AQUATIC, Synergy.FIGHTING, Synergy.FLYING])
   rarity = Rarity.UNCOMMON
   stars = 3
   hp = 220
