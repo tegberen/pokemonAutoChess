@@ -39,6 +39,7 @@
 - Smeargle's Scribble selectable in Custom Lobby's for non-admin users
 - No level requirement for Gadgets
 > It's a small side server, I don't expect you to grind levels here haha. You can host your own Smeargle Scribble in Custom Lobby's now, and meet up with your friends to play together.
+- Additional effect for WIDE_LENS: Attacks grant +5 CRIT_CHANCE (stackable) (removed base CRIT_CHANCE)
 # Changes to Rarity, Typings, etc.
 ## Common
 - Cinderace: added NORMAL, removed HUMAN, replaced the role of Littwick and Cyndaquil in the early game

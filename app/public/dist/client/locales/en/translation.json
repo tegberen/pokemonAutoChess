@@ -2958,7 +2958,7 @@
 		"WONDER_BOX": "At the beginning of each battle, WONDER_BOX is replaced by 2 temporary items (max 3 items held)",
 		"ABILITY_SHIELD": "When combat begins, the holder and allies ADJACENT_IN_THE_SAME_ROW receive 20% of their max HP as SHIELD and RUNE_PROTECT for 5 seconds",
 		"STICKY_BARB": "When struck by an attack at melee range, deal 3 + 15% of DEF as retaliation TRUE to the attacker, with [30,LK]% chance to inflict WOUND for 3 seconds.",
-		"WIDE_LENS": "The holder gains +2 RANGE",
+		"WIDE_LENS": "The holder gains +2 RANGE. Attacks grant +5 CRIT_CHANCE (stackable)",
 		"RAZOR_CLAW": "The holder gains +50% CRIT_CHANCE",
 		"SAFETY_GOGGLES": "Holder is immune to all negative status effects and to sandstorm damage",
 		"KINGS_ROCK": "+100 HP. 30% of max HP are gained as SHIELD when combat begins.",
