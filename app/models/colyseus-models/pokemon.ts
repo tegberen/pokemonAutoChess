@@ -9430,6 +9430,7 @@ export class Xatu extends Pokemon {
 
 export class Noibat extends Pokemon {
   types = new SetSchema<Synergy>([
+    Synergy.DRAGON,
     Synergy.SOUND,
     Synergy.FLYING
   ])
@@ -17987,6 +17988,7 @@ export class Incineroar extends Pokemon {
 
 export class Skrelp extends Pokemon {
   types = new SetSchema<Synergy>([
+    Synergy.DRAGON,
     Synergy.POISON,
     Synergy.WATER
   ])
@@ -18012,11 +18014,34 @@ export class Dragalge extends Pokemon {
   ])
   rarity = Rarity.UNCOMMON
   stars = 2
+  evolution = Pkm.MEGA_DRAGALGE
+  evolutionRule = new StackBasedEvolutionRule()
+  stacksRequired = 25
   hp = 130
   atk = 15
   speed = 39
   def = 4
   speDef = 4
+  maxPP = 100
+  range = 3
+  skill = Ability.SLUDGE_WAVE
+  additional = true
+  passive = Passive.DRAGALGE
+}
+
+export class MegaDragalge extends Pokemon {
+  types = new SetSchema<Synergy>([
+    Synergy.DRAGON,
+    Synergy.POISON,
+    Synergy.WATER
+  ])
+  rarity = Rarity.UNCOMMON
+  stars = 3
+  hp = 170
+  atk = 17
+  speed = 39
+  def = 8
+  speDef = 10
   maxPP = 100
   range = 3
   skill = Ability.SLUDGE_WAVE
@@ -19454,10 +19479,29 @@ export class Excadrill extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.GROUND, Synergy.STEEL])
   rarity = Rarity.RARE
   stars = 2
+  evolution = Pkm.MEGA_EXCADRILL
+  evolutionRule = new StackBasedEvolutionRule()
+  stacksRequired = 10
   hp = 180
   atk = 19
   speed = 56
   def = 8
+  speDef = 8
+  maxPP = 100
+  range = 1
+  skill = Ability.DRILL_RUN
+  additional = true
+  passive = Passive.EXCADRILL
+}
+
+export class MegaExcadrill extends Pokemon {
+  types = new SetSchema<Synergy>([Synergy.GROUND, Synergy.STEEL])
+  rarity = Rarity.RARE
+  stars = 3
+  hp = 220
+  atk = 30
+  speed = 56
+  def = 12
   speDef = 8
   maxPP = 100
   range = 1
@@ -22297,6 +22341,7 @@ export const PokemonClasses: Record<
   [Pkm.MEGA_DRAMPA]: MegaDrampa,
   [Pkm.SKRELP]: Skrelp,
   [Pkm.DRAGALGE]: Dragalge,
+  [Pkm.MEGA_DRAGALGE]: MegaDragalge,
   [Pkm.CUBCHOO]: Cubchoo,
   [Pkm.BEARTIC]: Beartic,
   [Pkm.NACLI]: Nacli,
@@ -22390,6 +22435,7 @@ export const PokemonClasses: Record<
   [Pkm.SWELLOW]: Swellow,
   [Pkm.DRILBUR]: Drilbur,
   [Pkm.EXCADRILL]: Excadrill,
+  [Pkm.MEGA_EXCADRILL]: MegaExcadrill,
   [Pkm.ROGGENROLA]: Roggenrola,
   [Pkm.BOLDORE]: Boldore,
   [Pkm.GIGALITH]: Gigalith,

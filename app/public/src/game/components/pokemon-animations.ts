@@ -6889,6 +6889,13 @@ export const PokemonAnimations: {
     attackSprite: AttackSprite.POISON_RANGE,
     hitSprite: HitSprite.POISON_HIT
   },
+  [Pkm.MEGA_DRAGALGE]: {
+    attack: AnimationType.Attack,
+    ability: AnimationType.Shoot,
+    emote: AnimationType.Shoot,
+    attackSprite: AttackSprite.POISON_RANGE,
+    hitSprite: HitSprite.POISON_HIT
+  },
   [Pkm.CUBCHOO]: {
     attack: AnimationType.Attack,
     ability: AnimationType.Shoot,
@@ -7501,6 +7508,13 @@ export const PokemonAnimations: {
     hitSprite: HitSprite.STEEL_HIT
   },
   [Pkm.EXCADRILL]: {
+    attack: AnimationType.Strike,
+    ability: AnimationType.Attack,
+    emote: AnimationType.Shoot,
+    attackSprite: AttackSprite.STEEL_MELEE,
+    hitSprite: HitSprite.STEEL_HIT
+  },
+  [Pkm.MEGA_EXCADRILL]: {
     attack: AnimationType.Strike,
     ability: AnimationType.Attack,
     emote: AnimationType.Shoot,
