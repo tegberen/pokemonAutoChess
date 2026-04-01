@@ -765,39 +765,28 @@ export const AbilitiesAnimations: {
     const { scene, targetX, targetY, flip, ap } = args
     const [tx, ty] = transformEntityCoordinates(targetX, targetY, flip)
 
-    const top = [[0, -80]]
-    const left = [[-50, -40], [-45, -10]]
-    const right = [[50, -40], [45, -10]]
+    const offsets = [
+      [0, -80], [-50, -40], [-45, -10], [50, -40], [45, -10]
+    ]
+    const [dx, dy] = pickRandomIn(offsets)
+    const flipX = flip ? -dx : dx
 
-    const chosen = [
-      pickRandomIn(top),
-      pickRandomIn(left),
-      pickRandomIn(right)
-]
-    chosen.forEach(([dx, dy], i) => {
-      const flipX = flip ? -dx : dx
-      scene.time.delayedCall(i * 90, () => {
-        const sprite = scene.add
-          .sprite(tx + flipX, ty + dy, "abilities", `${Ability.FRENZY_PLANT}/000.png`)
-          ?.setScale(4.5 * (1 + ap / 200))
-          ?.setFlipX(flip)
-        sprite.anims.play({ key: Ability.FRENZY_PLANT, frameRate: 16 })
-        scene.abilitiesVfxGroup?.add(sprite)
-        sprite.on(Phaser.Animations.Events.ANIMATION_COMPLETE, () => sprite.destroy())
-      })
-    })
+    const sprite = scene.add
+      .sprite(tx + flipX, ty + dy, "abilities", `${Ability.FRENZY_PLANT}/000.png`)
+      ?.setScale(4.5 * (1 + ap / 200))
+      ?.setFlipX(flip)
+    sprite.anims.play({ key: Ability.FRENZY_PLANT, frameRate: 16 })
+    scene.abilitiesVfxGroup?.add(sprite)
+    sprite.on(Phaser.Animations.Events.ANIMATION_COMPLETE, () => sprite.destroy())
 
-    // ARM_THRUST style green hits on target
-    for (let i = 0; i < 2; i++) {
-      tweenAnimation({
-        ability: Ability.BRICK_BREAK,
-        scale: 1.2,
-        startCoords: "target",
-        tint: 0x97AC97,
-        startPositionOffset: [randomBetween(-30, 30), randomBetween(-30, 30)],
-        tweenProps: { alpha: 0, delay: i * 250 }
-      })(args)
-    }
+    tweenAnimation({
+      ability: Ability.BRICK_BREAK,
+      scale: 1.2,
+      startCoords: "target",
+      tint: 0x97AC97,
+      startPositionOffset: [randomBetween(-30, 30), randomBetween(-30, 30)],
+      tweenProps: { alpha: 0 }
+    })(args)
   },
 
   [Ability.DIAMOND_STORM]: onCasterScale2,
