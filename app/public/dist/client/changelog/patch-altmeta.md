@@ -39,7 +39,11 @@
 - Smeargle's Scribble selectable in Custom Lobby's for non-admin users
 - No level requirement for Gadgets
 > It's a small side server, I don't expect you to grind levels here haha. You can host your own Smeargle Scribble in Custom Lobby's now, and meet up with your friends to play together.
+# Items
 - Additional effect for WIDE_LENS: Attacks grant +5 CRIT_CHANCE (stackable) (removed base CRIT_CHANCE)
+- Overbuff Sticky Barb: HP 15 → 30, DEF 6 → 12, 3 + 15% -> 6 + 30% of DEF as retaliation damage
+- Additional effect for HEAVY_DUTY_BOOTS: Once below 40% max HP, kick away the target and gain 10 DEF and 30 AP
+
 # Changes to Rarity, Typings, etc.
 ## Common
 - Cinderace: added NORMAL, removed HUMAN, replaced the role of Littwick and Cyndaquil in the early game
