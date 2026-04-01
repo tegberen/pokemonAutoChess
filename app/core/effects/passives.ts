@@ -2102,7 +2102,7 @@ export const PassiveEffects: Partial<
       if (attacker.isGhostOpponent) return
       if (!attacker.player) return
       attacker.addStack()
-      if (weather === Weather.SMOG) {
+      if (Weather === Weather.SMOG) {
         attacker.addStack()
       }
     })
