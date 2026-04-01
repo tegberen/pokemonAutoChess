@@ -2379,7 +2379,7 @@
 	"ability_description": {
     "AQUA_STEP": "The user attacks with fluid dance steps, shifting to an ADJACENT unoccupied tile before dealing [25,50,100,SP] SPECIAL to the target and increasing the users SPEED by [10,15,20,SP]. If the user has more SPEED than the target, regain [10,15,20] PP.",
     "MAGNETIC_ABSORPTION": "Absorbs RANGE from the target and ADJACENT enemies, reducing theirs by 1 and increasing the user's by 1. Deals [80, SP] SPECIAL and inflicts 3 seconds of LOCKED instead, to any enemy already at minimum RANGE. The user then moves 1 tile back.",
-    "FRENZY_PLANT": "Deal [10,30,60,SP] SPECIAL to the target 3 times in a row. The damage increases for each ADJACENT Pokémon to the target.",
+    "FRENZY_PLANT": "Strikes the target 3 times with enormous tree roots, dealing [10,25,50,SP] SPECIAL per hit, multiplied by the number of ADJACENT enemies surrounding the target. If the target is defeated, remaining roots lash out at the nearest enemy.",
     "TEMPORAL_RUPTURE": "Channel for 3 seconds, then unleash a temporal pulse. All enemy Pokémon in a 4-tile radius take [100,SP]% of the damage received during the last 3 seconds as TRUE. Allies are healed for [100,SP]% HP of the damage they took in the last 3 seconds.",
     "PRIMAL_ROAR": "Increase the user's ATK and SPEED by [10, SP] and RAGE all allied Pokémon for 2 second. Everytime the user uses this ability, increase the RAGE duration by 1 second.",
     "SUBSPACE_SWELL": "Channel for 3 seconds. Allies gain 40% more PP from all sources. When the channel ends, unleash a burst in a 4-tile radius dealing [20,SP] SPECIAL times the amount of allies cast during the channel.",
