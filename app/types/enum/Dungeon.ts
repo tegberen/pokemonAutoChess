@@ -1,4 +1,5 @@
 export enum DungeonMusic {
+  TROUBLE_IN_TOWN = "Trouble in Town",
   AEGIS_CAVE = "Aegis Cave",
   AMP_PLAINS = "Amp Plains",
   A_NEW_WORLD = "A New World",
