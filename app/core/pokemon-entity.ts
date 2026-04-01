@@ -406,6 +406,9 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
       if (attacker?.passive === Passive.BERSERK) {
         attacker.addAbilityPower(5, attacker, 0, false, false)
       }
+      if (attacker?.passive === Passive.BERSERK_2) {
+        attacker.addAbilityPower(5, attacker, 0, false, false)
+      }
 
       const damageResult = this.state.handleDamage({
         target: this,

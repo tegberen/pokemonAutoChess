@@ -2068,5 +2068,27 @@ export const PassiveEffects: Partial<
       })
     })
   ],
+  [Passive.BERSERK]: [
+    () => new class extends PeriodicEffect {
+      stacksGiven = 0
+      constructor() {
+        super(
+          (pokemon) => {
+            if (pokemon.isGhostOpponent) return
+            const newStacks = Math.floor(pokemon.ap/ 100)
+            if (newStacks > this.stacksGiven) {
+              for (let i = this.stacksGiven; i < newStacks; i++) {
+                pokemon.addStack()
+              }
+              this.stacksGiven = newStacks
+            }
+          },
+          Passive.BERSERK,
+          1000
+        )
+      }
+    }()
+  ],
+
 
 }
