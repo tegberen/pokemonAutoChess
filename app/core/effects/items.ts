@@ -68,6 +68,7 @@ import {
   PeriodicEffect
 } from "./effect"
 import { effectInOrientation } from "../../utils/orientation"
+import { Board, Cell } from "../board"
 
 export const blueOrbOnAttackEffect = new OnAttackEffect(
   ({ pokemon, target, board }) => {
