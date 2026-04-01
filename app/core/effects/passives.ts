@@ -2101,8 +2101,9 @@ export const PassiveEffects: Partial<
     new OnKillEffect(({ attacker }) => {
       if (attacker.isGhostOpponent) return
       if (!attacker.player) return
+      const { weather } = attacker.simulation
       attacker.addStack()
-      if (Weather === Weather.SMOG) {
+      if (weather === Weather.SMOG) {
         attacker.addStack()
       }
     })
