@@ -78,7 +78,7 @@ const pokemonsInfluencingWeather = new Map([
   [Weather.MISTY, [Pkm.ENAMORUS]],
   [Weather.RAIN, [Pkm.PRIMAL_KYOGRE, Pkm.CASTFORM_RAIN]],
   [Weather.SNOW, [Pkm.ARTICUNO, Pkm.CASTFORM_HAIL, Pkm.TORNADUS]],
-  [Weather.STORM, [Pkm.ZAPDOS, Pkm.THUNDURUS, Pkm.PRIMAL_KYOGRE]],
+  [Weather.STORM, [Pkm.ZAPDOS, Pkm.THUNDURUS, Pkm.PRIMAL_KYOGRE,Pkm.MEGA_DRAMPA]],
   [Weather.SANDSTORM, [Pkm.LANDORUS, Pkm.PRIMAL_GROUDON]],
   [Weather.NEUTRAL, [Pkm.MEGA_RAYQUAZA]]
 ])

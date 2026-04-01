@@ -6869,6 +6869,12 @@ export const PokemonAnimations: {
     emote: AnimationType.Charge,
     attackSprite: AttackSprite.DRAGON_RANGE
   },
+  [Pkm.MEGA_DRAMPA]: {
+    attack: AnimationType.Shoot,
+    ability: AnimationType.RearUp,
+    emote: AnimationType.Charge,
+    attackSprite: AttackSprite.DRAGON_RANGE
+  },
   [Pkm.SKRELP]: {
     attack: AnimationType.Attack,
     ability: AnimationType.Shoot,

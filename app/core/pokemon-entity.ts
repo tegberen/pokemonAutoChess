@@ -408,6 +408,9 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
         this.status.triggerBurn(3000, this, attacker)
         this.addSpecialDefense(-1, attacker, 0, false)
       }
+      if (attacker?.passive === Passive.BERSERK_2) {
+        attacker.addAbilityPower(5, attacker, 0, false, false)
+      }
 
       const damageResult = this.state.handleDamage({
         target: this,

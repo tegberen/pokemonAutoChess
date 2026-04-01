@@ -8021,6 +8021,9 @@ export class Drampa extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.DRAGON, Synergy.NORMAL])
   rarity = Rarity.UNIQUE
   stars = 3
+  evolution = Pkm.MEGA_DRAMPA
+  evolutionRule = new StackBasedEvolutionRule()
+  stacksRequired = 20
   hp = 250
   atk = 12
   speed = 37
@@ -8030,6 +8033,25 @@ export class Drampa extends Pokemon {
   range = 3
   skill = Ability.DRAGON_PULSE
   passive = Passive.DRAMPA
+}
+
+export class MegaDrampa extends Pokemon {
+  types = new SetSchema<Synergy>([
+    Synergy.DRAGON,
+    Synergy.NORMAL,
+    Synergy.ELECTRIC
+  ])
+  rarity = Rarity.UNIQUE
+  stars = 4
+  hp = 250
+  atk = 17
+  speed = 37
+  def = 10
+  speDef = 10
+  maxPP = 70
+  range = 3
+  skill = Ability.DRAGON_PULSE
+  passive = Passive.BERSERK_2
 }
 
 export class PrimalGroudon extends Pokemon {
@@ -22272,6 +22294,7 @@ export const PokemonClasses: Record<
   [Pkm.INCINEROAR]: Incineroar,
   [Pkm.CRYOGONAL]: Cryogonal,
   [Pkm.DRAMPA]: Drampa,
+  [Pkm.MEGA_DRAMPA]: MegaDrampa,
   [Pkm.SKRELP]: Skrelp,
   [Pkm.DRAGALGE]: Dragalge,
   [Pkm.CUBCHOO]: Cubchoo,
