@@ -2089,6 +2089,23 @@ export const PassiveEffects: Partial<
       }
     }()
   ],
+  [Passive.EXCADRILL]: [
+    new OnKillEffect(({ attacker }) => {
+      if (attacker.isGhostOpponent) return
+      if (!attacker.player) return
+      attacker.addStack()
+    })
+  ],
 
-
+  [Passive.DRAGALGE]: [
+    new OnKillEffect(({ attacker }) => {
+      if (attacker.isGhostOpponent) return
+      if (!attacker.player) return
+      attacker.addStack()
+      if (weather === Weather.SMOG) {
+        attacker.addStack()
+      }
+    })
+  ]
+  
 }

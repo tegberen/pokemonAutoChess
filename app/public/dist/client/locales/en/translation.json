@@ -1604,6 +1604,7 @@
     "MEGA_DRAMPA": "Mega Drampa",
 		"SKRELP": "Skrelp",
 		"DRAGALGE": "Dragalge",
+    "MEGA_DRAGALGE": "Mega Dragalge",
 		"CUBCHOO": "Cubchoo",
 		"BEARTIC": "Beartic",
 		"NACLI": "Nacli",
@@ -1692,6 +1693,7 @@
 		"SWELLOW": "Swellow",
 		"DRILBUR": "Drilbur",
 		"EXCADRILL": "Excadrill",
+    "MEGA_EXCADRILL": "Mega Excadrill",
 		"ROGGENROLA": "Roggenrola",
 		"BOLDORE": "Boldore",
 		"GIGALITH": "Gigalith",
@@ -4035,7 +4037,9 @@
     "SLITHER_WING": "At the start of fight, for each ADJACENT ally: FIGHTING grants +5 DEF, FOSSIL grants +10 HP, BUG grants +5 ATK. Doubled in DROUGHT.",
     "NIDOQUEEN": "The queen of the family. Has a [50,LK]% chance to attract a catchable Nidoran♂  when no Nidoking is on the board.",
     "NIDOKING": "The king of the family. Has a [50,LK]% chance to attract a catchable Nidoran♀  when no Nidoqueen is on the board.",
-    "DANCER": "At the start of the fight, start dancing with allies ADJACENT_IN_THE_SAME_ROW. Each second gain [1,2,3] SPEED and ATK until half the PP bar is filled or enemies are in RANGE."
+    "DANCER": "At the start of the fight, start dancing with allies ADJACENT_IN_THE_SAME_ROW. Each second gain [1,2,3] SPEED and ATK until half the PP bar is filled or enemies are in RANGE.",
+    "EXCADRILL": "Gain one stack for each KO. Mega evolves after 10 stacks.",
+    "DRAGALGE": "Gain one stack for each KO, two if under SMOG. Mega evolves after 25 stacks."
   },
 	"stat": {
 		"ATK": "Attack",

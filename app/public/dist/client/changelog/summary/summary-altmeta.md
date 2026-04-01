@@ -48,6 +48,8 @@
 ![Mega Latias](/assets/portraits/0380/0001/Normal.png)
 ![Mega Latios](/assets/portraits/0381/0001/Normal.png)
 ![Mega Drampa](/assets/portraits/0780/0001/Normal.png)
+![Mega Excadrill](/assets/portraits/0530/0001/Normal.png)
+![Mega Dragalge](/assets/portraits/0691/0001/Normal.png)
 
 ## Requirements (Ping me for adjustments)
 ![Charizard](/assets/portraits/0006/Normal.png)
@@ -74,4 +76,6 @@
 ![Latias](/assets/portraits/0380/Normal.png)
 ![Latios](/assets/portraits/0381/Normal.png)
 ![Drampa](/assets/portraits/0780/Normal.png)
+![Excadrill](/assets/portraits/0530/Normal.png)
+![Dragalge](/assets/portraits/0691/Normal.png)
 
