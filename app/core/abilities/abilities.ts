@@ -229,23 +229,42 @@ export class FrenzyPlantStrategy extends AbilityStrategy {
     target: PokemonEntity,
     crit: boolean
   ) {
-    super.process(pokemon, board, target, crit)
-
-    const baseDamage = [10, 30, 60][pokemon.stars - 1] ?? 60
-
+    super.process(pokemon, board, target, crit,true)
+    const baseDamage = [10, 25, 50][pokemon.stars - 1] ?? 50
     const adjacentEnemies = board
       .getAdjacentCells(target.positionX, target.positionY)
       .filter((cell) => cell.value && cell.value.team !== pokemon.team).length
     const multiplier = Math.max(1, adjacentEnemies)
     const damage = baseDamage * multiplier
 
-    for (let i = 0; i < 3; i++) {
+    let currentTarget = target
+    let hitsRemaining = 3
+
+    const strike = () => {
+      if (hitsRemaining <= 0 || !currentTarget || currentTarget.hp <= 0) return
       pokemon.commands.push(
         new DelayedCommand(() => {
-          target.handleSpecialDamage(damage, board, AttackType.SPECIAL, pokemon, crit)
-        }, i * 90)
+          pokemon.broadcastAbility({
+            positionX: pokemon.positionX,
+            positionY: pokemon.positionY,
+            targetX: currentTarget.positionX,
+            targetY: currentTarget.positionY
+          })
+          const { death } = currentTarget.handleSpecialDamage(
+            damage, board, AttackType.SPECIAL, pokemon, crit
+          )
+          hitsRemaining--
+          if (death && hitsRemaining > 0) {
+            const next = pokemon.state.getNearestTargetAtSight(pokemon, board)?.target
+            if (next) currentTarget = next
+          }
+          strike()
+        }, 90)
       )
     }
+
+  strike()
+
   }
 }
 
