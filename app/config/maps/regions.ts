@@ -770,7 +770,7 @@ export const RegionDetails: {
   },
   town: {
     synergies: [],
-    music: DungeonMusic.TREASURE_TOWN_STAGE_0,
+    music: DungeonMusic.STELIOS_KANTOS,
     regionalSpeciality: Item.NUTRITIOUS_EGG
   }
 }
