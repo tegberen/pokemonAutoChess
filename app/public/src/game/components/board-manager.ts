@@ -777,11 +777,11 @@ export default class BoardManager {
     this.mode = BoardMode.TOWN
     this.scene.setMap("town")
     if (this.state.stageLevel === PortalCarouselStages[0])
-      playMusic(this.scene, DungeonMusic.TREASURE_TOWN_STAGE_0)
+      playMusic(this.scene, DungeonMusic.STELIOS_KONTOS
     if (this.state.stageLevel === PortalCarouselStages[1])
-      playMusic(this.scene, DungeonMusic.TREASURE_TOWN_STAGE_10)
+      playMusic(this.scene, DungeonMusic.STELIOS_KONTOS)
     if (this.state.stageLevel === PortalCarouselStages[2])
-      playMusic(this.scene, DungeonMusic.TREASURE_TOWN_STAGE_20)
+      playMusic(this.scene, DungeonMusic.STELIOS_KONTOS)
     this.hideLightCell()
     this.hideBerryTrees()
     this.hideFlowerPots()

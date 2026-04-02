@@ -40,9 +40,9 @@ export default class LoadingManager {
 
     scene.load.image("town_tileset", "/assets/tilesets/Town/tileset.png")
     scene.load.tilemapTiledJSON("town", "/assets/tilesets/Town/town.json")
-    preloadMusic(scene, DungeonMusic.TREASURE_TOWN_STAGE_0)
-    preloadMusic(scene, DungeonMusic.TREASURE_TOWN_STAGE_10)
-    preloadMusic(scene, DungeonMusic.TREASURE_TOWN_STAGE_20)
+    preloadMusic(scene, DungeonMusic.STELIOS_KONTOS)
+    preloadMusic(scene, DungeonMusic.STELIOS_KONTOS)
+    preloadMusic(scene, DungeonMusic.STELIOS_KONTOS)
 
     scene.load.image("rain", "/assets/environment/rain.png")
     scene.load.image("sand", "/assets/environment/sand.png")
