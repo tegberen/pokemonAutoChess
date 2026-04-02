@@ -777,7 +777,7 @@ export default class BoardManager {
     this.mode = BoardMode.TOWN
     this.scene.setMap("town")
     if (this.state.stageLevel === PortalCarouselStages[0])
-      playMusic(this.scene, DungeonMusic.STELIOS_KONTOS
+      playMusic(this.scene, DungeonMusic.STELIOS_KONTOS)
     if (this.state.stageLevel === PortalCarouselStages[1])
       playMusic(this.scene, DungeonMusic.STELIOS_KONTOS)
     if (this.state.stageLevel === PortalCarouselStages[2])
