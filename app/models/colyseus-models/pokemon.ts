@@ -556,7 +556,7 @@ export class MegaManectric extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.ELECTRIC, Synergy.FIELD])
   rarity = Rarity.RARE
   stars = 3
-  hp = 240
+  hp = 230
   atk = 24
   speed = 74
   def = 12
@@ -661,7 +661,7 @@ export class MegaLucario extends Pokemon {
   rarity = Rarity.RARE
   stars = 3
   hp = 220
-  atk = 30
+  atk = 25
   speed = 54
   def = 12
   speDef = 10
@@ -984,7 +984,7 @@ export class MegaLopunny extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.NORMAL, Synergy.FIGHTING])
   rarity = Rarity.UNCOMMON
   stars = 3
-  hp = 250
+  hp = 220
   atk = 26
   speed = 59
   def = 10
@@ -1084,7 +1084,7 @@ export class MegaCamerupt extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.FIRE, Synergy.FIELD, Synergy.GROUND])
   rarity = Rarity.EPIC
   stars = 3
-  hp = 250
+  hp = 240
   atk = 22
   speed = 38
   def = 22
@@ -1535,7 +1535,7 @@ export class Gardevoir extends Pokemon {
   evolution = Pkm.MEGA_GARDEVOIR
   evolutionRule = new StackBasedEvolutionRule()
   stacksRequired: number = 25
-  hp = 190
+  hp = 180
   atk = 16
   speed = 51
   def = 4
@@ -1555,7 +1555,7 @@ export class MegaGardevoir extends Pokemon {
   ])
   rarity = Rarity.COMMON
   stars = 4
-  hp = 230
+  hp = 220
   atk = 18
   speed = 55
   def = 6
@@ -1577,7 +1577,7 @@ export class Gallade extends Pokemon {
   evolution = Pkm.MEGA_GALLADE
   evolutionRule = new StackBasedEvolutionRule()
   stacksRequired: number = 25
-  hp = 190
+  hp = 180
   atk = 20
   speed = 51
   def = 4
@@ -1597,7 +1597,7 @@ export class MegaGallade extends Pokemon {
   ])
   rarity = Rarity.COMMON
   stars = 4
-  hp = 230
+  hp = 220
   atk = 24
   speed = 55
   def = 6
@@ -2155,7 +2155,7 @@ export class MegaAlakazam extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.PSYCHIC, Synergy.HUMAN])
   rarity = Rarity.RARE
   stars = 4
-  hp = 240
+  hp = 220
   atk = 20
   speed = 79
   def = 10
@@ -2295,7 +2295,7 @@ export class Leavanny extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.GRASS, Synergy.BUG])
   rarity = Rarity.ULTRA
   stars = 3
-  hp = 400
+  hp = 560
   atk = 40
   speed = 54
   def = 16
@@ -3163,7 +3163,7 @@ export class Whismur extends Pokemon {
   speDef = 2
   maxPP = 90
   range = 2
-  skill = Ability.ECHO
+  skill = Ability.UPROAR
 }
 export class Loudred extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.NORMAL, Synergy.SOUND, Synergy.MONSTER])
@@ -3177,21 +3177,21 @@ export class Loudred extends Pokemon {
   speDef = 4
   maxPP = 85
   range = 2
-  skill = Ability.ECHO
+  skill = Ability.UPROAR
 }
 
 export class Exploud extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.NORMAL, Synergy.SOUND, Synergy.MONSTER])
   rarity = Rarity.RARE
   stars = 3
-  hp = 270
-  atk = 18
+  hp = 250
+  atk = 22
   speed = 47
   def = 6
   speDef = 6
   maxPP = 80
   range = 2
-  skill = Ability.ECHO
+  skill = Ability.UPROAR
 }
 
 export class Swinub extends Pokemon {
@@ -3620,7 +3620,7 @@ export class Duskull extends Pokemon {
   speed = 39
   def = 10
   speDef = 10
-  maxPP = 90
+  maxPP = 80
   range = 2
   skill = Ability.TRICK_ROOM
 }
@@ -3635,7 +3635,7 @@ export class Dusclops extends Pokemon {
   speed = 39
   def = 20
   speDef = 20
-  maxPP = 90
+  maxPP = 80
   range = 2
   skill = Ability.TRICK_ROOM
 }
@@ -3649,7 +3649,7 @@ export class Dusknoir extends Pokemon {
   speed = 39
   def = 30
   speDef = 30
-  maxPP = 90
+  maxPP = 80
   range = 2
   skill = Ability.TRICK_ROOM
 }
@@ -3898,7 +3898,7 @@ export class Scolipede extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.BUG, Synergy.POISON, Synergy.FIELD])
   rarity = Rarity.ULTRA
   stars = 3
-  hp = 320
+  hp = 440
   atk = 36
   speed = 72
   def = 14
@@ -5513,7 +5513,7 @@ export class MegaCharizardX extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.DRAGON, Synergy.FIRE, Synergy.FLYING])
   rarity = Rarity.COMMON
   stars = 4
-  hp = 250
+  hp = 240
   atk = 23
   speed = 57
   def = 12
@@ -6744,7 +6744,7 @@ export class SlitherWing extends Pokemon {
   rarity = Rarity.UNIQUE
   stars = 3
   hp = 180
-  atk = 22
+  atk = 20
   speed = 51
   def = 6
   speDef = 8
@@ -7659,9 +7659,9 @@ export class Marshadow extends Pokemon {
   hp = 200
   atk = 20
   speed = 65
-  def = 5
-  speDef = 5
-  maxPP = 140
+  def = 10
+  speDef = 10
+  maxPP = 125
   range = 1
   skill = Ability.SPECTRAL_THIEF
 }
@@ -9372,7 +9372,7 @@ export class MegaHoundoom extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.FIRE, Synergy.DARK, Synergy.FIELD])
   rarity = Rarity.EPIC
   stars = 3
-  hp = 250
+  hp = 240
   atk = 25
   speed = 57
   def = 15
@@ -12266,7 +12266,7 @@ export class Dartix extends Pokemon {
       }
     }
   )
-  hp = 110
+  hp = 100
   atk = 9
   speed = 47
   def = 2
@@ -13097,7 +13097,7 @@ export class Kartana extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.STEEL, Synergy.GRASS])
   rarity = Rarity.LEGENDARY
   stars = 3
-  hp = 200
+  hp = 250
   atk = 35
   speed = 60
   def = 20
@@ -14584,7 +14584,7 @@ export class Inteleon extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.WATER, Synergy.AQUATIC])
   rarity = Rarity.ULTRA
   stars = 3
-  hp = 360
+  hp = 400
   atk = 34
   speed = 63
   def = 12
@@ -18943,7 +18943,7 @@ export class Rillaboom extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.SOUND, Synergy.GRASS])
   rarity = Rarity.ULTRA
   stars = 3
-  hp = 400
+  hp = 500
   atk = 40
   speed = 58
   def = 20

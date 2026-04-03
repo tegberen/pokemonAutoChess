@@ -1498,7 +1498,7 @@ export const AbilitiesAnimations: {
       }
     ),
   [Ability.TEMPORAL_RUPTURE]: onCaster({ depth: DEPTH.ABILITY_BELOW_POKEMON, scale: 3}),
-  [Ability.PRIMAL_ROAR]: onCasterScale4,
+  [Ability.PRIMAL_ROAR]: onCaster({ scale: 2, positionOffset: [0, -40] }),
   [Ability.SUBSPACE_SWELL]: onCaster({ scale: 4, positionOffset: [+3,-50]}),
   [Ability.PETAL_BLIZZARD]: onCasterScale3,
   [Ability.NIGHTMARE]: onCaster({ origin: [0.5, 1] }),
