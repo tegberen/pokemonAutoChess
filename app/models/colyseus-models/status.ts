@@ -336,7 +336,7 @@ export default class Status extends Schema implements IStatus {
   }
 
   triggerArmorReduction(duration: number, pkm: PokemonEntity) {
-    if (!this.runeProtect) {
+    if (!this.runeProtect && pkm.passive !== Passive.SHELL_ARMOR) {
       this.armorReduction = true
 
       duration = this.applyStatusDurationReductions(duration, pkm)
