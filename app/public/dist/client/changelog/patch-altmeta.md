@@ -36,6 +36,7 @@
 - Additional effect for ROCK: When KO'd, explode and deal TRUE and ARMOR_BREAK ADJACENT enemies. 
 - Additional effect for FIGHTING 8: Spawns a substitute as training dummy. The FIGHTING Pokemon that defeats the substitute will gain 3 ATK and 10 HP permanently.
 - Additional effect for POISON 7: [1,LK] % chance to corrode one of the target's items, destroying it for the rest of the fight when not RUNE_PROTECT.
+- Buffed effect for FIRE 8: +4 ATK after every hit (FIRE_SHARD: +4 permanent ATK and SPEED)
 
 # Misc
 > It's a small side server, I don't expect you to grind levels here haha. You can host your own Smeargle Scribble in Custom Lobby's now, and meet up with your friends to play together.
