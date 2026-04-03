@@ -1126,8 +1126,8 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
   [Item.FIRE_SHARD]: [
     new OnItemDroppedEffect(({ pokemon, player, item }) => {
       if (pokemon.types.has(Synergy.FIRE) && player.life > 3) {
-        pokemon.atk += 3
-        pokemon.speed += 3
+        pokemon.atk += 4
+        pokemon.speed += 4
         player.life = min(1)(player.life - 3)
         removeInArray(player.items, item)
       }

@@ -12897,7 +12897,7 @@ export class DarkLariatStrategy extends AbilityStrategy {
               } else if (pokemon.effects.has(EffectEnum.BLAZE)) {
                 pokemon.addAttack(2, pokemon, 0, false)
               } else if (pokemon.effects.has(EffectEnum.DESOLATE_LAND)) {
-                pokemon.addAttack(3, pokemon, 0, false)
+                pokemon.addAttack(4, pokemon, 0, false)
               }
             }
           },
