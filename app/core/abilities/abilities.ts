@@ -3076,7 +3076,7 @@ export class WheelOfFireStrategy extends AbilityStrategy {
     target: PokemonEntity,
     crit: boolean
   ) {
-    const damage = [10, 20, 30][pokemon.stars - 1] ?? 30
+    const damage = [10, 30, 60][pokemon.stars - 1] ?? 60
     const farthestTarget =
       pokemon.state.getFarthestTarget(pokemon, board) ?? target
     super.process(pokemon, board, farthestTarget, crit)
