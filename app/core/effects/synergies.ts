@@ -302,7 +302,7 @@ export class FlyingProtectionEffect extends OnDamageReceivedEffect {
           new DelayedCommand(() => {
             if (destination.target?.maxHP > 0) {
               destination.target.handleSpecialDamage(
-                1.5 * pokemon.atk,
+                1.75 * pokemon.atk,
                 board,
                 AttackType.PHYSICAL,
                 pokemon,
