@@ -10566,7 +10566,7 @@ export class BulldozeStrategy extends AbilityStrategy {
     crit: boolean
   ) {
     super.process(pokemon, board, target, crit)
-    const damage = [25, 45, 85][pokemon.stars - 1] ?? 85
+    const damage = [25, 50, 100][pokemon.stars - 1] ?? 100
     const speedReduction = 10
     const adjacentsCells = board.getAdjacentCells(
       pokemon.positionX,
