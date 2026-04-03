@@ -88,6 +88,10 @@ export default abstract class PokemonState {
           target.count.crit++
         }
       }
+      if (crit && target.passive === Passive.SHELL_ARMOR) {
+        const defenseBuff = [3, 6, 12][target.stars - 1] ?? 0
+        target.addDefense(defenseBuff, target, 0, false)
+      }
 
       if (target.effects.has(EffectEnum.WONDER_ROOM)) {
         attackType = AttackType.SPECIAL

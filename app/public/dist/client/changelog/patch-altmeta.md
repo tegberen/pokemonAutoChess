@@ -7,7 +7,7 @@
 
 > While I try to keep things somewhat balanced, the games on this server are not meant to be. They are not balanced. Noooot balanced. It’s a small server, and I don’t collect data or run meta reports to fine-tune anything, so please bear with me. The general philosophy here is: if someone ever said “f*ck it, we should give [xyz], [abc] haha” as a joke or sarcastic comment about a Pokémon, I just changed and added it on this server for the memes.
 
-# Abilities
+# Abilities and Passives
 - Duskull - Trick Room: If the target and ADJACENT enemies are faster than the user, halve their current speed, apply FATIGUE and BLINDED for 5 seconds. Otherwise, deal [40,80,160,SP] SPECIAL.
 - Beldum - Meteor Mash: Deal 1/2/4 times [100,SP]% of ATK as SPECIAL to the target and ADJACENT enemy Pokemon. Then increase the user's ATK by [2, SP] ([4, SP] if the user is in PSYCHIC_FIELD) on each hit.
 - Fennekin - Mystical Fire: Deals [25,50,100,SP] SPECIAL to the target, reduces its AP by [10, SP]. Scorches the target tile and those flanking and behind it with embers. BOARD_EFFECT: embers deal 10 SPECIAL per second and BURN non FLYING or FIRE Pokémon that walk on it.
@@ -28,6 +28,8 @@
 - Poliwhirl - Soak: Deal [20,40,80,SP] SPECIAL to the target and restore [10,10,20] PP to all allied Pokémon.
 - Torchic - Blaze Kick: Gain [10,20,40]% CRIT_CHANCE, then deal [30,60,120,SP] SPECIAL and BURN the target for 2 seconds. If it already has BURN, deal +30% damage. Can crit by default.
 - Pawmi - Double Shock: Emit a powerful electric shock, dealing [50,100,200,SP] SPECIAL to the target and inflict the user with PARALYSIS for 3 seconds. If the user has ELECTRIC_FIELD, discharge it and execute the target. 
+- Corviknight - Passive: Chance to RAGE on ability cast
+- Turtwig - Passive [Shell Armor]: Gain [3,6,12] DEF when receiving critical attacks. The Pokémon is immune to ARMOR_BREAK.
 
 
 # Synergy Buffs

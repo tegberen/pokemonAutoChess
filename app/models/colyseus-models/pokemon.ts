@@ -2321,6 +2321,7 @@ export class Turtwig extends Pokemon {
   maxPP = 100
   range = 1
   skill = Ability.BULLDOZE
+  passive = Passive.SHELL_ARMOR
 }
 
 export class Grotle extends Pokemon {
@@ -2340,6 +2341,7 @@ export class Grotle extends Pokemon {
   maxPP = 100
   range = 1
   skill = Ability.BULLDOZE
+  passive = Passive.SHELL_ARMOR
 }
 
 export class Torterra extends Pokemon {
@@ -2358,6 +2360,7 @@ export class Torterra extends Pokemon {
   maxPP = 100
   range = 1
   skill = Ability.BULLDOZE
+  passive = Passive.SHELL_ARMOR
 }
 
 export class Deino extends Pokemon {
