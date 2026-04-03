@@ -44,9 +44,10 @@
 - When Pikachu is send to the dojo, obtain a TRAINING_RIBBON. Can be used to evolve Pikachu into Pikachu Libre (given an item slot is open).
 
 # Items
-- Additional effect for WIDE_LENS: Attacks grant +5 CRIT_CHANCE (stackable) (removed base CRIT_CHANCE)
+- Additional effect for WIDE_LENS: Attacks grant +5% CRIT_CHANCE (stackable) (removed base CRIT_CHANCE)
 - Turbo overbuffed Sticky Barb: HP 15 → 30, DEF 6 → 12, 3 + 15% -> 6 + 30% of DEF as retaliation damage (hehehehehe)
 - Additional effect for HEAVY_DUTY_BOOTS: Once below 40% max HP, kick away the target and gain 10 DEF and 30 AP
+- Additional effect for ABILITY_SHIELD: When the user and allies SHIELD is depleted, gain 30 AP.
 
 # Changes to Rarity, Typings, etc.
 ## Common

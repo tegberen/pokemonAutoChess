@@ -4145,7 +4145,7 @@ export class Prinplup extends Pokemon {
   maxPP = 90
   range = 1
   skill = Ability.WAVE_SPLASH
-  pasive = Passive.HATCH
+  passive = Passive.HATCH
 }
 
 export class Empoleon extends Pokemon {
@@ -9271,6 +9271,7 @@ export class Stakataka extends Pokemon {
   maxPP = 100
   range = 1
   skill = Ability.IRON_DEFENSE
+  passive = Passive.WALL_OF_STONE
 }
 
 export class Blacephalon extends Pokemon {
