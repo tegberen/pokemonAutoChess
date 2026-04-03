@@ -57,6 +57,7 @@ import {
   OnDishConsumedEffect,
   OnSimulationStartEffect,
   OnSpawnEffect,
+  OnShieldDepletedEffect
 } from "./effects/effect"
 import { WaterSpringEffect } from "./effects/passives"
 import {
@@ -678,11 +679,12 @@ export default class Simulation extends Schema implements ISimulation {
             )
             if (ally && ally.team === pokemon.team) {
               ally.addShield(Math.ceil(0.2 * ally.maxHP), ally, 0, false)
-              ally.status.triggerRuneProtect(
-                5000,
-                ally,
-                pokemon as PokemonEntity
-              )
+              ally.status.triggerRuneProtect(5000, ally, pokemon as PokemonEntity)
+              const shieldEffect = new OnShieldDepletedEffect(({ pokemon: p }) => {
+                p.addAbilityPower(30, p, 0, false)
+                p.effectsSet.delete(shieldEffect)
+              })
+              ally.effectsSet.add(shieldEffect)
             }
           })
         }
