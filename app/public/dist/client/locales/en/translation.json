@@ -2658,7 +2658,7 @@
 		"PRISMATIC_LASER": "The user shoots a 3-tile wide prismatic laser in a vertical straight line, dealing [60,SP] SPECIAL and pushing any enemy in its path.",
 		"NATURAL_GIFT": "Heal the most damaged allied Pokémon for [30,60,120,SP] HP and grant them RUNE_PROTECT for [1,2,3] seconds.",
 		"NIGHT_SHADE": "Deal [25,33,50,SP=0.5]% of target's max HP as TRUE.",
-		"CHARGE_BEAM": "Fire a concentrated bundle of electricity that propagates to a maximum of 3 ADJACENT enemy Pokémon, dealing [15,30,60,SP] SPECIAL to each.",
+		"CHARGE_BEAM": "Fire a concentrated bundle of electricity that propagates to a maximum of 4 ADJACENT enemy Pokémon, dealing [15,30,60,SP] SPECIAL to each.",
 		"POPULATION_BOMB": "Deal 10 SPECIAL [4,8,12,16,SP] times to the target.",
 		"SCREECH": "Reduce DEF of all enemies in a 2-range radius by [2,4,8,SP].",
 		"SAND_TOMB": "Deal [10,20,40,SP] SPECIAL to the target and inflict them with SILENCE and PARALYSIS for [3,5,8] seconds.",
