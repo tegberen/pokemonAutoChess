@@ -141,6 +141,7 @@
 - Guzzlord: 300 → 400 HP, buffed Passive
 - Spectrier: Range 1 → 2
 - Deoxys Attack: ATK 25 → 35
+- Xurkitree: 200 → 250 HP, 15 → 20 ATK, Ability: +1 target
  
 # Credits
 > Some of the Pokemon are not officially sprited yet, but there is access to them via the SkyTemple Discord server. I don't know how to credit them, so I will just do that here:

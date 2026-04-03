@@ -8096,7 +8096,7 @@ export class ChargeBeamStrategy extends AbilityStrategy {
   ) {
     super.process(pokemon, board, target, crit, false)
     const chain = [target]
-    const NB_MAX_TARGETS = 3
+    const NB_MAX_TARGETS = 4
     for (
       let n = 1, x = target.positionX, y = target.positionY;
       n < NB_MAX_TARGETS;
