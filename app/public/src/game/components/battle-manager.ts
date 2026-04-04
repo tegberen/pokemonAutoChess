@@ -477,6 +477,10 @@ export default class BattleManager {
         if (value > 0) {
           pkm.itemsContainer.updateCount(Item.GOLD_BOTTLE_CAP, value)
         }
+      } else if (field === "boosterEnergyCount") {
+        if (value > 0) {
+          pkm.itemsContainer.updateCount(Item.BOOSTER_ENERGY, value)
+        }
       } else if (field === "attackCount") {
         if (value !== 0) {
           if (

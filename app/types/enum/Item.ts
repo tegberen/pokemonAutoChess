@@ -171,6 +171,9 @@ export enum Item {
   CORNERSTONE_MASK = "CORNERSTONE_MASK",
   HEARTHFLAME_MASK = "HEARTHFLAME_MASK",
   ZYGARDE_CUBE = "ZYGARDE_CUBE",
+  ADAMANT_CRYSTAL = "ADAMANT_CRYSTAL",
+  LUSTROUS_GLOBE = "LUSTROUS_GLOBE",
+  BOOSTER_ENERGY = "BOOSTER_ENERGY",
   TM_RAGE = "TM_RAGE",
   TM_RETURN = "TM_RETURN",
   TM_COUNTER = "TM_COUNTER",
@@ -452,6 +455,8 @@ export const SpecialItems: Item[] = [
   Item.CORNERSTONE_MASK,
   Item.HEARTHFLAME_MASK,
   Item.ZYGARDE_CUBE,
+  Item.ADAMANT_CRYSTAL,
+  Item.LUSTROUS_GLOBE,
   Item.METEORITE,
   Item.AUSPICIOUS_ARMOR,
   Item.MALICIOUS_ARMOR,
@@ -649,7 +654,8 @@ export const ShinyItems = [
   Item.COMET_SHARD,
   Item.REPEAT_BALL,
   Item.GOLD_BOW,
-  Item.RED_SCALE
+  Item.RED_SCALE,
+  Item.BOOSTER_ENERGY
 ] satisfies Item[]
 
 export type ShinyItem = (typeof ShinyItems)[number]
@@ -1120,6 +1126,8 @@ export const UnholdableItems = [
   Item.MYSTERY_BOX,
   Item.TREASURE_BOX,
   Item.ZYGARDE_CUBE,
+  Item.ADAMANT_CRYSTAL,
+  Item.LUSTROUS_GLOBE,
   Item.SCROLL_OF_DARKNESS,
   Item.SCROLL_OF_WATERS,
   Item.AUSPICIOUS_ARMOR,

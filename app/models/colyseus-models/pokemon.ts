@@ -6006,17 +6006,21 @@ export class Dialga extends Pokemon {
   maxPP = 110
   range = 1
   skill = Ability.ROAR_OF_TIME
-  onChangePosition(x: number, y: number, player: Player, state: GameState) {
-    super.onChangePosition(x, y, player, state)
-    if (y !== 3) {
-      player.transformPokemon(this, Pkm.ORIGIN_DIALGA)
+
+  passive = Passive.DIALGA
+  onAcquired(player: Player) {
+    if (player.items.includes(Item.ADAMANT_CRYSTAL) === false) {
+      player.items.push(Item.ADAMANT_CRYSTAL)
     }
   }
-  passive = Passive.DIALGA
+  afterSell(player: Player): void {
+    removeInArray(player.items, Item.ADAMANT_CRYSTAL)
+  }
+
 }
 
 export class OriginDialga extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.DRAGON, Synergy.STEEL, Synergy.FLYING])
+  types = new SetSchema<Synergy>([Synergy.DRAGON, Synergy.STEEL])
   rarity = Rarity.LEGENDARY
   stars = 3
   hp = 250
@@ -6027,12 +6031,7 @@ export class OriginDialga extends Pokemon {
   maxPP = 100
   range = 2
   skill = Ability.TEMPORAL_RUPTURE
-  onChangePosition(x: number, y: number, player: Player, state: GameState) {
-    super.onChangePosition(x, y, player, state)
-    if (y === 3) {
-      player.transformPokemon(this, Pkm.DIALGA)
-    }
-  }
+
 }
 
 export class PrimalDialga extends Pokemon {
@@ -6066,17 +6065,20 @@ export class Palkia extends Pokemon {
   maxPP = 120
   range = 1
   skill = Ability.SPACIAL_REND
-  onChangePosition(x: number, y: number, player: Player, state: GameState) {
-    super.onChangePosition(x, y, player, state)
-    if (y !== 3) {
-      player.transformPokemon(this, Pkm.ORIGIN_PALKIA)
+
+  passive = Passive.PALKIA
+  onAcquired(player: Player) {
+    if (player.items.includes(Item.LUSTROUS_GLOBE) === false) {
+      player.items.push(Item.LUSTROUS_GLOBE)
     }
   }
-  passive = Passive.PALKIA
+  afterSell(player: Player): void {
+    removeInArray(player.items, Item.LUSTROUS_GLOBE)
+  }
 }
 
 export class OriginPalkia extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.DRAGON, Synergy.WATER, Synergy.FLYING])
+  types = new SetSchema<Synergy>([Synergy.DRAGON, Synergy.WATER])
   rarity = Rarity.LEGENDARY
   stars = 3
   hp = 250
@@ -6087,12 +6089,7 @@ export class OriginPalkia extends Pokemon {
   maxPP = 100
   range = 2
   skill = Ability.SUBSPACE_SWELL
-  onChangePosition(x: number, y: number, player: Player, state: GameState) {
-    super.onChangePosition(x, y, player, state)
-    if (y === 3) {
-      player.transformPokemon(this, Pkm.PALKIA)
-    }
-  }
+
 }
 
 export class Meltan extends Pokemon {
@@ -8794,8 +8791,8 @@ export class Huntail extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.FOSSIL, Synergy.WATER, Synergy.DARK])
   rarity = Rarity.EPIC
   stars = 2
-  hp = 140
-  atk = 30
+  hp = 200
+  atk = 24
   speed = 35
   def = 10
   speDef = 6

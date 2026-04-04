@@ -23,5 +23,6 @@ export default class Count extends Schema implements ICount {
   @type("uint8") wideLensCount = 0
   @type("uint8") soulDewCount = 0
   @type("uint8") soundCryCount = 0
+  @type("uint8") boosterEnergyCount = 0
   damageReceivedCount: number = 0
 }

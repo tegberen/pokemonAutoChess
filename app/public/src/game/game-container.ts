@@ -262,7 +262,8 @@ class GameContainer {
       "wideLensCount",
       "soulDewCount",
       "muscleBandCount",
-      "machRibbonCount"
+      "machRibbonCount",
+      "boosterEnergyCount"
     ] satisfies NonFunctionPropNames<Count>[]
 
     fieldsCount.forEach((field) => {
