@@ -6031,6 +6031,7 @@ export class OriginDialga extends Pokemon {
   maxPP = 100
   range = 2
   skill = Ability.TEMPORAL_RUPTURE
+  passive = Passive.DIALGA
 
 }
 
@@ -6089,6 +6090,7 @@ export class OriginPalkia extends Pokemon {
   maxPP = 100
   range = 2
   skill = Ability.SUBSPACE_SWELL
+  passive = Passive.PALKIA
 
 }
 
