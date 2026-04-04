@@ -93,7 +93,8 @@ export const GoldenEggItems = [
   Item.SACRED_ASH,
   Item.COMET_SHARD,
   Item.REPEAT_BALL,
-  Item.GOLD_BOW
+  Item.GOLD_BOW,
+  Item.BOOSTER_ENERGY
 ] satisfies ShinyItem[]
 
 // Synergy color mapping extracted from SVG fill colors

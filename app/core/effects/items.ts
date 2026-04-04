@@ -23,7 +23,8 @@ import {
   Sweets,
   SynergyGivenByItem,
   SynergyStones,
-  TMs
+  TMs,
+  ItemComponents
 } from "../../types/enum/Item"
 import { Passive } from "../../types/enum/Passive"
 import { NonPkm, Pkm, PkmFamily } from "../../types/enum/Pokemon"
@@ -824,6 +825,22 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
       }
     })
   ],
+  [Item.BOOSTER_ENERGY]: [
+    () => new class extends OnKillEffect {
+      killCount = 0
+      constructor() {
+        super(({ attacker }) => {
+          if (!attacker.player) return
+          this.killCount++
+          attacker.count.boosterEnergyCount++
+          if (this.killCount % 4 === 0) {
+            const component = pickRandomIn(ItemComponents)
+            attacker.player.items.push(component)
+          }
+        })
+      }
+    }()
+  ],
 
   [Item.SMOKE_BALL]: [smokeBallEffect],
 
@@ -1112,6 +1129,30 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
           player.transformPokemon(pokemon, Pkm.ZYGARDE_50)
         } else if (pokemon.name === Pkm.ZYGARDE_50) {
           player.transformPokemon(pokemon, Pkm.ZYGARDE_10)
+        }
+      }
+      return false // prevent item from being equipped
+    })
+  ],
+  [Item.ADAMANT_CRYSTAL]: [
+    new OnItemDroppedEffect(({ pokemon, player, item }) => {
+      if (pokemon?.passive === Passive.DIALGA) {
+        if (pokemon.name === Pkm.DIALGA) {
+          player.transformPokemon(pokemon, Pkm.ORIGIN_DIALGA)
+        } else if (pokemon.name === Pkm.ORIGIN_DIALGA) {
+          player.transformPokemon(pokemon, Pkm.DIALGA)
+        }
+      }
+      return false // prevent item from being equipped
+    })
+  ],
+  [Item.LUSTROUS_GLOBE]: [
+    new OnItemDroppedEffect(({ pokemon, player, item }) => {
+      if (pokemon?.passive === Passive.PALKIA) {
+        if (pokemon.name === Pkm.PALKIA) {
+          player.transformPokemon(pokemon, Pkm.ORIGIN_PALKIA)
+        } else if (pokemon.name === Pkm.ORIGIN_PALKIA) {
+          player.transformPokemon(pokemon, Pkm.PALKIA)
         }
       }
       return false // prevent item from being equipped
