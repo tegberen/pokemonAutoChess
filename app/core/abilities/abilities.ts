@@ -17478,8 +17478,8 @@ export class PsychicInfinityStrategy extends AbilityStrategy {
     ) as PokemonEntity[]
     const strongest = getStrongestUnit(enemies) ?? target
     pokemon.broadcastAbility({ positionX: strongest.positionX, positionY: strongest.positionY })
-    strongest.handleSpecialDamage(120, board, AttackType.SPECIAL, pokemon, crit)
-    pokemon.addAbilityPower(-10, pokemon, 0, false)
+    strongest.handleSpecialDamage(100, board, AttackType.SPECIAL, pokemon, crit)
+    pokemon.addAbilityPower(-20, pokemon, 0, false)
     if (pokemon.ap > 0 && pokemon.ap > strongest.ap) {
       pokemon.addPP(pokemon.maxPP, pokemon, 0, false)
     }
