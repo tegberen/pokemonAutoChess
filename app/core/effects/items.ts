@@ -1513,5 +1513,23 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
         }
       }
     })
-  ]
+  ],
+  [Item.EXP_CHARM]: [
+    new OnAttackReceivedEffect(({ pokemon, damage }) => {
+      if (damage <= 0) return
+      const ppGain = 5 + pokemon.count.expCharmCount
+      pokemon.addPP(ppGain, pokemon, 0, false)
+      if (chance(0.5, pokemon)) {
+        pokemon.count.expCharmCount++
+      }
+    }),
+    new OnDeathEffect(({ pokemon }) => {
+      if (pokemon.player && !pokemon.isGhostOpponent) {
+        pokemon.player.addExperience(1)
+      }
+    }),
+    new OnItemRemovedEffect((pokemon) => {
+      pokemon.count.expCharmCount = 0
+    })
+]
 }

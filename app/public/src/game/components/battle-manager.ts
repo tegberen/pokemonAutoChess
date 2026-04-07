@@ -481,6 +481,10 @@ export default class BattleManager {
         if (value > 0) {
           pkm.itemsContainer.updateCount(Item.BOOSTER_ENERGY, value)
         }
+      } else if (field === "expCharmCount") {
+        if (value > 0) {
+          pkm.itemsContainer.updateCount(Item.EXP_CHARM, value)
+        }
       } else if (field === "attackCount") {
         if (value !== 0) {
           if (
