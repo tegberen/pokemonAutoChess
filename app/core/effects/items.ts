@@ -466,6 +466,33 @@ function dropComfey({ pokemon, board }: OnDeathEffectArgs) {
   }
 }
 
+export class SootheBellEffect extends PeriodicEffect {
+  constructor() {
+    super(
+      (pokemon) => {
+        const board = pokemon.simulation.board
+        const lowestHealthAlly = (
+          board.cells.filter(
+            (cell) => cell && cell.team === pokemon.team
+          ) as PokemonEntity[]
+        ).sort((a, b) => a.hp - b.hp)[0]
+
+        if (lowestHealthAlly) {
+          lowestHealthAlly.addShield(30, pokemon, 0, false)
+          if (chance(0.5, pokemon)) {
+            const converted = lowestHealthAlly.shield
+            lowestHealthAlly.shield = 0
+            lowestHealthAlly.addMaxHP(converted, pokemon, 0, false)
+            lowestHealthAlly.handleHeal(converted, pokemon, 0, false)
+          }
+        }
+      },
+      Item.SOOTHE_BELL,
+      2000
+    )
+  }
+}
+
 export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
   ...Object.fromEntries(
     SynergyStones.map((stone) => [
@@ -1465,5 +1492,19 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
         }
       })
     }, Item.EFFICIENT_BANDANNA)
+  ],
+
+  [Item.SOOTHE_BELL]: [
+    new OnItemGainedEffect((pokemon) => {
+      pokemon.effectsSet.add(new SootheBellEffect())
+    }),
+    new OnItemRemovedEffect((pokemon) => {
+      for (const effect of pokemon.effectsSet) {
+        if (effect instanceof SootheBellEffect) {
+          pokemon.effectsSet.delete(effect)
+          break
+        }
+      }
+    })
   ]
 }

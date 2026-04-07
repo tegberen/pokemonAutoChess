@@ -4,6 +4,18 @@ import { Synergy } from "./Synergy"
 import { Weather } from "./Weather"
 
 export enum Item {
+  BINDING_BAND = "BINDING_BAND",
+  SOOTHE_BELL = "SOOTHE_BELL",
+  EXP_CHARM = "EXP_CHARM",
+  FAIRY_FEATHER = "FAIRY_FEATHER",
+  CLEAR_AMULET = "CLEAR_AMULET",
+  DESTINY_KNOT = "DESTINY_KNOT",
+  LUCKY_PUNCH = "LUCKY_PUNCH",
+  GRIP_CLAW = "GRIP_CLAW",
+  COVERT_CLOAK = "COVERT_CLOAK",
+  FLUFFY_TAIL = "FLUFFY_TAIL",
+  EVER_STONE = "EVER_STONE",
+  TIGHT_BELT = "TIGHT_BELT",
   FOSSIL_STONE = "FOSSIL_STONE",
   TWISTED_SPOON = "TWISTED_SPOON",
   MYSTIC_WATER = "MYSTIC_WATER",
@@ -472,6 +484,7 @@ export const ItemComponentsNoFossilOrScarf: Item[] = [
   Item.MAGNET,
   Item.BLACK_GLASSES,
   Item.TWISTED_SPOON,
+  Item.BINDING_BAND
 ]
 
 export const ItemComponentsNoScarf: Item[] = [
@@ -486,6 +499,17 @@ export const ItemComponents: Item[] = [
 ]
 
 export const ItemRecipe: { [key in Item]?: Item[] } = {
+  [Item.SOOTHE_BELL]: [Item.BINDING_BAND, Item.MIRACLE_SEED],
+  [Item.EXP_CHARM]: [Item.BINDING_BAND, Item.MYSTIC_WATER],
+  [Item.FAIRY_FEATHER]: [Item.BINDING_BAND, Item.HEART_SCALE],
+  [Item.CLEAR_AMULET]: [Item.BINDING_BAND, Item.NEVER_MELT_ICE],
+  [Item.DESTINY_KNOT]: [Item.BINDING_BAND, Item.CHARCOAL],
+  [Item.LUCKY_PUNCH]: [Item.BINDING_BAND, Item.MAGNET],
+  [Item.GRIP_CLAW]: [Item.BINDING_BAND, Item.BLACK_GLASSES],
+  [Item.COVERT_CLOAK]: [Item.BINDING_BAND, Item.TWISTED_SPOON],
+  [Item.EVER_STONE]: [Item.BINDING_BAND, Item.FOSSIL_STONE],
+  [Item.TIGHT_BELT]: [Item.BINDING_BAND, Item.SILK_SCARF],
+  [Item.FLUFFY_TAIL]: [Item.BINDING_BAND, Item.BINDING_BAND],
   [Item.OLD_AMBER]: [Item.FOSSIL_STONE, Item.FOSSIL_STONE],
   [Item.DAWN_STONE]: [Item.FOSSIL_STONE, Item.TWISTED_SPOON],
   [Item.WATER_STONE]: [Item.FOSSIL_STONE, Item.MYSTIC_WATER],
@@ -679,6 +703,7 @@ export const CraftableItemsNoScarves = CraftableItems.filter(
 ) as Item[]
 
 export const SynergyStones = [
+  Item.EVER_STONE,
   Item.OLD_AMBER,
   Item.DAWN_STONE,
   Item.WATER_STONE,
@@ -754,6 +779,7 @@ export const ToolsBuried: Tool[] = [
 ]
 
 export const SynergyItemsNoSpecial = [
+  Item.EVER_STONE,
   Item.OLD_AMBER,
   Item.DAWN_STONE,
   Item.WATER_STONE,
@@ -791,6 +817,7 @@ export const SynergyItems = [
 ] satisfies Item[]
 
 export const SynergyGivenByItem = {
+  [Item.EVER_STONE]: Synergy.ROCK,
   [Item.OLD_AMBER]: Synergy.FOSSIL,
   [Item.DAWN_STONE]: Synergy.PSYCHIC,
   [Item.WATER_STONE]: Synergy.WATER,
