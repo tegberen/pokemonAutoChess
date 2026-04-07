@@ -2,6 +2,18 @@ import { Stat } from "../../types/enum/Game"
 import { Item, ItemsSoldAtTown } from "../../types/enum/Item"
 
 export const ItemStats: { [item in Item]?: { [stat in Stat]?: number } } = {
+  [Item.BINDING_BAND]: { [Stat.LUCK]: 20 },
+  [Item.SOOTHE_BELL]: { [Stat.LUCK]: 20, [Stat.HP]: 30 },
+  [Item.EXP_CHARM]: { [Stat.LUCK]: 20, [Stat.PP]: 15 },
+  [Item.FAIRY_FEATHER]: { [Stat.LUCK]: 20, [Stat.DEF]: 12 },
+  [Item.CLEAR_AMULET]: { [Stat.LUCK]: 20, [Stat.SPE_DEF]: 20 },
+  [Item.DESTINY_KNOT]: { [Stat.LUCK]: 20, [Stat.ATK]: 6 },
+  [Item.LUCKY_PUNCH]: { [Stat.LUCK]: 20, [Stat.SPEED]: 30 },
+  [Item.GRIP_CLAW]: { [Stat.LUCK]: 20, [Stat.CRIT_CHANCE]: 20 },
+  [Item.COVERT_CLOAK]: { [Stat.LUCK]: 20, [Stat.AP]: 50 },
+  [Item.FLUFFY_TAIL]: { [Stat.LUCK]: 67 },
+  [Item.EVER_STONE]: { [Stat.LUCK]: 40 },
+  [Item.TIGHT_BELT]: { [Stat.LUCK]: 20, [Stat.SHIELD]: 50 },
   [Item.TWISTED_SPOON]: { [Stat.AP]: 10 },
   [Item.MAGNET]: { [Stat.SPEED]: 10 },
   [Item.BLACK_GLASSES]: { [Stat.CRIT_CHANCE]: 10 },
