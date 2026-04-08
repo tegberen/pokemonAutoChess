@@ -1531,5 +1531,87 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
     new OnItemRemovedEffect((pokemon) => {
       pokemon.count.expCharmCount = 0
     })
-  ]
+  ],
+  [Item.CLEAR_AMULET]: [
+    () => {
+      const effect = new class extends PeriodicEffect {
+        storedStatus: string | null = null
+        constructor() {
+          super(
+            (pokemon) => {
+              if (effect.storedStatus) return
+              const s = pokemon.status
+              if (s.burn) effect.storedStatus = "burn"
+              else if (s.poisonStacks > 0) effect.storedStatus = "poison"
+              else if (s.paralysis) effect.storedStatus = "paralysis"
+              else if (s.confusion) effect.storedStatus = "confusion"
+              else if (s.freeze) effect.storedStatus = "freeze"
+              else if (s.sleep) effect.storedStatus = "sleep"
+              else if (s.wound) effect.storedStatus = "wound"
+              else if (s.silence) effect.storedStatus = "silence"
+              else if (s.possessed) effect.storedStatus = "possessed"
+              else if (s.locked) effect.storedStatus = "locked"
+              else if (s.blinded) effect.storedStatus = "blinded"
+              else if (s.charm) effect.storedStatus = "charm"
+              else if (s.curse) effect.storedStatus = "curse"
+              else if (s.fatigue) effect.storedStatus = "fatigue"
+              else if (s.armorReduction) effect.storedStatus = "armorReduction"
+              else if (s.flinch) effect.storedStatus = "flinch"              
+
+              if (effect.storedStatus) {
+                pokemon.status.triggerRuneProtect(12000, pokemon, pokemon)
+                if (effect.storedStatus === "possessed") {
+                  pokemon.status.possessedCooldown = 0
+                  pokemon.team = pokemon.team === Team.BLUE_TEAM ? Team.RED_TEAM : Team.BLUE_TEAM
+                }
+              }
+            },
+            Item.CLEAR_AMULET,
+            500
+          )
+        }
+      }()
+      return effect
+    },
+    new OnAttackEffect(({ pokemon, target, board }) => {
+      const storedEffect = [...pokemon.effectsSet].find(
+        (e) => e instanceof PeriodicEffect && (e as any).storedStatus
+      ) as any
+      if (!storedEffect?.storedStatus) return
+      if (pokemon.effects.has(EffectEnum.CLEAR_AMULET_TRIGGERED)) return
+      pokemon.broadcastAbility({
+        skill: "FLASH",
+        tint: 0x6495ed,
+      })
+      pokemon.effects.add(EffectEnum.CLEAR_AMULET_TRIGGERED)
+
+      const cells = board.getCellsInRange(pokemon.positionX, pokemon.positionY, 4, false)
+      cells.forEach((cell) => {
+        if (!cell.value || cell.value.team === pokemon.team) return
+        const enemy = cell.value
+
+        switch (storedEffect.storedStatus) {
+          case "burn": enemy.status.triggerBurn(4000, enemy, pokemon); break
+          case "poison": enemy.status.triggerPoison(4000, enemy, pokemon); break
+          case "paralysis": enemy.status.triggerParalysis(4000, enemy, pokemon); break
+          case "confusion": enemy.status.triggerConfusion(4000, enemy, pokemon); break
+          case "freeze": enemy.status.triggerFreeze(4000, enemy, pokemon); break
+          case "sleep": enemy.status.triggerSleep(4000, enemy, pokemon); break
+          case "wound": enemy.status.triggerWound(4000, enemy, pokemon); break
+          case "silence": enemy.status.triggerSilence(4000, enemy, pokemon); break
+          case "possessed": enemy.status.triggerPossessed(4000, enemy, pokemon); break
+          case "locked": enemy.status.triggerLocked(4000, enemy, pokemon); break
+          case "blinded": enemy.status.triggerBlinded(4000, enemy, pokemon); break
+          case "charm": enemy.status.triggerCharm(4000, enemy, pokemon); break
+          case "curse": enemy.status.triggerCurse(4000, enemy); break
+          case "fatigue": enemy.status.triggerFatigue(4000, enemy, pokemon); break
+          case "armorReduction": enemy.status.triggerArmorReduction(4000, enemy); break
+          case "flinch": enemy.status.triggerFlinch(4000, enemy, pokemon); break
+        }
+      })
+    }),
+    new OnItemRemovedEffect((pokemon) => {
+      pokemon.effects.delete(EffectEnum.CLEAR_AMULET_TRIGGERED)
+    })
+  ],
 }
