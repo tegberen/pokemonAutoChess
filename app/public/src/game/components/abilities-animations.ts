@@ -837,8 +837,10 @@ export const AbilitiesAnimations: {
   ],
   [Ability.SOFT_BOILED]: onCasterScale2,
   [Ability.FAKE_TEARS]: onCasterScale2,
-  [Ability.FAKE_TEARS]: onCaster({ ability: Ability.FAKE_TEARS, scale: 1.5, tint: 0xff9900 }),
+  ["COVERT_CLOAK"]: onCaster({ ability: Ability.FAKE_TEARS, scale: 1.5, tint: 0xff9900 }),
   [Ability.TEA_TIME]: onCasterScale2,
+  ["SOOTHE_BELL"]: onTarget({ ability: "TEA_TIME", scale: 2 }),
+
   [Ability.FUTURE_SIGHT]: onCaster({ depth: DEPTH.ABILITY_BELOW_POKEMON }),
   [Ability.PETAL_DANCE]: onCasterScale2,
   [Ability.AROMATHERAPY]: onCasterScale2,
@@ -847,6 +849,7 @@ export const AbilitiesAnimations: {
   [Ability.RETURN]: onTarget({ ability: Ability.BRICK_BREAK, scale: 2 }),
   [Ability.BULK_UP]: onCasterScale2,
   [Ability.FLASH]: onCasterScale2,
+  ["CLEAR_AMULET"]: onCaster({ ability: "FLASH", tint: 0x87e5fa, scale: 2 }),
   [Ability.METEOR_MASH]: onTarget({ ability: Ability.FLASH }),
   [Ability.STEEL_WING]: onCasterScale2,
   [Ability.HYPNOSIS]: projectile({
