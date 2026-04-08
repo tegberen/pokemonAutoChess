@@ -1557,7 +1557,7 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
     }),
     new OnDeathEffect(({ pokemon }) => {
       if (pokemon.player && !pokemon.isGhostOpponent) {
-        pokemon.player.addExperience(1)
+        pokemon.player.addExperience(2)
       }
     }),
     new OnItemRemovedEffect((pokemon) => {
