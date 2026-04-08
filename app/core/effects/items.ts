@@ -1573,8 +1573,7 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
       if (!storedEffect?.storedStatus) return
       if (pokemon.effects.has(EffectEnum.CLEAR_AMULET_TRIGGERED)) return
       pokemon.broadcastAbility({
-        skill: "FLASH",
-        tint: 0x6495ed,
+        skill: "FLASH"
       })
       pokemon.effects.add(EffectEnum.CLEAR_AMULET_TRIGGERED)
 
@@ -1616,6 +1615,26 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
       if (!strongest) return
       strongest.addAttack(pokemon.atk, strongest, 0, false)
       strongest.addLuck(pokemon.luck, strongest, 0, false)
+    })
+  ],
+  [Item.LUCKY_PUNCH]: [
+    new OnAttackEffect(({ pokemon, target, board }) => {
+      if (!target || !chance(0.5, pokemon)) return
+      if (target.items.size === 0) return
+
+      const dx = Math.sign(target.positionX - pokemon.positionX)
+      const dy = Math.sign(target.positionY - pokemon.positionY)
+      const behindEntity = board.getEntityOnCell(
+        target.positionX + dx,
+        target.positionY + dy
+      )
+
+      if (!behindEntity || behindEntity.team !== target.team) return
+      if (behindEntity.items.size >= 3) return
+
+      const item = values(target.items)[0]!
+      target.removeItem(item)
+      behindEntity.addItem(item)
     })
   ],
 }
