@@ -23,13 +23,14 @@ import {
   SynergyGivenByItem,
   SynergyStones,
   TMs,
-  ItemComponents
+  ItemComponents,
+  CraftableItemsNoScarves
 } from "../../types/enum/Item"
 import { Passive } from "../../types/enum/Passive"
 import { NonPkm, Pkm, PkmFamily } from "../../types/enum/Pokemon"
 import { Synergy } from "../../types/enum/Synergy"
 import { WandererBehavior, WandererType } from "../../types/enum/Wanderer"
-import { isIn, removeInArray } from "../../utils/array"
+import { removeInArray, isIn } from "../../utils/array"
 import { getFreeSpaceOnBench, isOnBench } from "../../utils/board"
 import { distanceC } from "../../utils/distance"
 import { max, min } from "../../utils/number"
@@ -1707,6 +1708,29 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
     }),
     new OnItemRemovedEffect((pokemon) => {
       pokemon.addDodgeChance(-0.1, pokemon, 0, false)
+    })
+  ],
+  [Item.TIGHT_BELT]: [
+    new OnSimulationStartEffect(({ entity }) => {
+      entity.items.delete(Item.TIGHT_BELT)
+      const newItems: Item[] = []
+      for (let n = 0; n < 2; n++) {
+        const eligibleItems = CraftableItemsNoScarves.filter(
+          (i) =>
+            !isIn(SynergyStones, i) &&
+            !newItems.includes(i) &&
+            !entity.items.has(i) &&
+            i !== Item.TIGHT_BELT
+        )
+        newItems.push(pickRandomIn(eligibleItems))
+      }
+      newItems.forEach((item) => {
+        if (entity.items.size < 3) {
+          entity.items.add(item)
+          entity.applyItemEffect(item)
+        }
+      })
+      entity.status.triggerParalysis(300000, entity, entity)
     })
   ]
 }
