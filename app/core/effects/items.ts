@@ -45,7 +45,7 @@ import { AbilityStrategies } from "../abilities/abilities"
 import { DishByPkm } from "../dishes"
 import { ConditionBasedEvolutionRule } from "../evolution-rules"
 import { FlowerPotMons } from "../flower-pots"
-import { getUnitScore, PokemonEntity } from "../pokemon-entity"
+import { getUnitScore, PokemonEntity,getStrongestUnit } from "../pokemon-entity"
 import { DelayedCommand } from "../simulation-command"
 import {
   Effect,
@@ -1589,15 +1589,15 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
           case "paralysis": enemy.status.triggerParalysis(4000, enemy, pokemon); break
           case "confusion": enemy.status.triggerConfusion(4000, enemy, pokemon); break
           case "freeze": enemy.status.triggerFreeze(4000, enemy, pokemon); break
-          case "sleep": enemy.status.triggerSleep(4000, enemy, pokemon); break
+          case "sleep": enemy.status.triggerSleep(4000, enemy); break
           case "wound": enemy.status.triggerWound(4000, enemy, pokemon); break
           case "silence": enemy.status.triggerSilence(4000, enemy, pokemon); break
           case "possessed": enemy.status.triggerPossessed(4000, enemy, pokemon); break
-          case "locked": enemy.status.triggerLocked(4000, enemy, pokemon); break
-          case "blinded": enemy.status.triggerBlinded(4000, enemy, pokemon); break
+          case "locked": enemy.status.triggerLocked(4000, enemy); break
+          case "blinded": enemy.status.triggerBlinded(4000, enemy); break
           case "charm": enemy.status.triggerCharm(4000, enemy, pokemon); break
           case "curse": enemy.status.triggerCurse(4000, enemy); break
-          case "fatigue": enemy.status.triggerFatigue(4000, enemy, pokemon); break
+          case "fatigue": enemy.status.triggerFatigue(4000, enemy); break
           case "armorReduction": enemy.status.triggerArmorReduction(4000, enemy); break
           case "flinch": enemy.status.triggerFlinch(4000, enemy, pokemon); break
         }
@@ -1605,6 +1605,17 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
     }),
     new OnItemRemovedEffect((pokemon) => {
       pokemon.effects.delete(EffectEnum.CLEAR_AMULET_TRIGGERED)
+    })
+  ],
+  [Item.DESTINY_KNOT]: [
+    new OnDeathEffect(({ pokemon, board }) => {
+      const allies = board.cells.filter(
+        (cell) => cell && cell.team === pokemon.team && cell.id !== pokemon.id && cell.hp > 0
+      ) as PokemonEntity[]
+      const strongest = getStrongestUnit(allies)
+      if (!strongest) return
+      strongest.addAttack(pokemon.atk, strongest, 0, false)
+      strongest.addLuck(pokemon.luck, strongest, 0, false)
     })
   ],
 }
