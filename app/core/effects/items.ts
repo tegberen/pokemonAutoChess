@@ -493,6 +493,39 @@ export class SootheBellEffect extends PeriodicEffect {
   }
 }
 
+export class CovertCloakEffect extends PeriodicEffect {
+  constructor() {
+    super(
+      (pokemon) => {
+        const board = pokemon.simulation.board
+        pokemon.broadcastAbility({
+          skill: "COVERT_CLOAK"
+        })
+        board.getCellsInRange(pokemon.positionX, pokemon.positionY, pokemon.range, false)
+          .forEach((cell) => {
+            if (!cell.value || cell.value.team === pokemon.team) return
+            const enemy = cell.value
+            const apSteal = Math.min(10, enemy.ap)
+            enemy.addAbilityPower(-apSteal, enemy, 0, false)
+            pokemon.addAbilityPower(apSteal, pokemon, 0, false)
+            const damage = apSteal === 0 ? 10 : 5
+            enemy.handleSpecialDamage(
+              damage,
+              board,
+              AttackType.SPECIAL,
+              pokemon,
+              false,
+              false
+            )
+          })
+      },
+      Item.COVERT_CLOAK,
+      3000
+    )
+  }
+}
+
+
 export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
   ...Object.fromEntries(
     SynergyStones.map((stone) => [
@@ -1645,6 +1678,20 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
     new OnItemRemovedEffect((pokemon) => {
       pokemon.addCritChance(-10 * pokemon.count.gripClawCount, pokemon, 0, false)
       pokemon.count.gripClawCount = 0
+    })
+  ],
+
+  [Item.COVERT_CLOAK]: [
+    new OnItemGainedEffect((pokemon) => {
+      pokemon.effectsSet.add(new CovertCloakEffect())
+    }),
+    new OnItemRemovedEffect((pokemon) => {
+      for (const effect of pokemon.effectsSet) {
+        if (effect instanceof CovertCloakEffect) {
+          pokemon.effectsSet.delete(effect)
+          break
+        }
+      }
     })
   ],
 }

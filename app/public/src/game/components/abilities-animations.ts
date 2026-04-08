@@ -833,6 +833,7 @@ export const AbilitiesAnimations: {
   ],
   [Ability.SOFT_BOILED]: onCasterScale2,
   [Ability.FAKE_TEARS]: onCasterScale2,
+  [Ability.FAKE_TEARS]: onCaster({ ability: Ability.FAKE_TEARS, scale: 1.5, tint: 0xff9900 }),
   [Ability.TEA_TIME]: onCasterScale2,
   [Ability.FUTURE_SIGHT]: onCaster({ depth: DEPTH.ABILITY_BELOW_POKEMON }),
   [Ability.PETAL_DANCE]: onCasterScale2,
