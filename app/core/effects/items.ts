@@ -1644,4 +1644,14 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
       behindEntity.addItem(item)
     })
   ],
+  [Item.GRIP_CLAW]: [
+    new OnAttackEffect(({ pokemon, target, board }) => {
+      pokemon.addCritPower(10, pokemon, 0, false)
+      pokemon.count.gripClawCount++
+    }),
+    new OnItemRemovedEffect((pokemon) => {
+      pokemon.addCritChance(-10 * pokemon.count.gripClawCount, pokemon, 0, false)
+      pokemon.count.gripClawCount = 0
+    })
+  ],
 }

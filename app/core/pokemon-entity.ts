@@ -1467,6 +1467,7 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
     this.count.soulDewCount = 0
     this.count.upgradeCount = 0
     this.count.wideLensCount = 0
+    this.count.gripClawCount = 0
     this.count.soundCryCount = 0
 
     if (this.items.has(Item.SACRED_ASH)) {

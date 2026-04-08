@@ -515,6 +515,8 @@ export default class BattleManager {
         pkm.itemsContainer.updateCount(Item.MUSCLE_BAND, value)
       } else if (field === "machRibbonCount") {
         pkm.itemsContainer.updateCount(Item.MACH_RIBBON, value)
+      } else if (field === "gripClawCount") {
+        pkm.itemsContainer.updateCount(Item.GRIP_CLAW, value)
       }
     }
   }
