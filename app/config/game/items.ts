@@ -13,7 +13,7 @@ export const ItemStats: { [item in Item]?: { [stat in Stat]?: number } } = {
   [Item.COVERT_CLOAK]: { [Stat.LUCK]: 20, [Stat.AP]: 50 },
   [Item.FLUFFY_TAIL]: { [Stat.LUCK]: 30 },
   [Item.EVER_STONE]: { [Stat.LUCK]: 20 },
-  [Item.TIGHT_BELT]: { [Stat.LUCK]: 20, [Stat.SHIELD]: 50 },
+  [Item.TIGHT_BELT]: { [Stat.SHIELD]: 15 },
   [Item.TWISTED_SPOON]: { [Stat.AP]: 10 },
   [Item.MAGNET]: { [Stat.SPEED]: 10 },
   [Item.BLACK_GLASSES]: { [Stat.CRIT_CHANCE]: 10 },
