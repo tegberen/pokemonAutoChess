@@ -479,7 +479,12 @@ export class SootheBellEffect extends PeriodicEffect {
         ).sort((a, b) => a.hp - b.hp)[0]
 
         if (lowestHealthAlly) {
-          lowestHealthAlly.addShield(30, pokemon, 0, false)
+          pokemon.broadcastAbility({
+            skill: "SOOTHE_BELL",
+            targetX: lowestHealthAlly.positionX,
+            targetY: lowestHealthAlly.positionY
+          })
+          lowestHealthAlly.addShield(20, pokemon, 0, false)
           if (chance(0.5, pokemon)) {
             const converted = lowestHealthAlly.shield
             lowestHealthAlly.shield = 0
@@ -1542,8 +1547,8 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
     })
   ],
   [Item.EXP_CHARM]: [
-    new OnAttackReceivedEffect(({ pokemon, damage }) => {
-      if (damage <= 0) return
+    new OnAttackReceivedEffect(({ pokemon, totalDamage }) => {
+      if (totalDamage <= 0) return
       const ppGain = 5 + pokemon.count.expCharmCount
       pokemon.addPP(ppGain, pokemon, 0, false)
       if (chance(0.5, pokemon)) {
@@ -1607,7 +1612,7 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
       if (!storedEffect?.storedStatus) return
       if (pokemon.effects.has(EffectEnum.CLEAR_AMULET_TRIGGERED)) return
       pokemon.broadcastAbility({
-        skill: "FLASH"
+        skill: "CLEAR_AMULET"
       })
       pokemon.effects.add(EffectEnum.CLEAR_AMULET_TRIGGERED)
 

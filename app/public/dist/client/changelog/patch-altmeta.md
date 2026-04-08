@@ -7,31 +7,6 @@
 
 > While I try to keep things somewhat balanced, the games on this server are not meant to be. They are not balanced. Noooot balanced. It’s a small server, and I don’t collect data or run meta reports to fine-tune anything, so please bear with me. The general philosophy here is: if someone ever said “f*ck it, we should give [xyz], [abc] haha” as a joke or sarcastic comment about a Pokémon, I just changed and added it on this server for the memes.
 
-# Abilities and Passives
-- Duskull - Trick Room: If the target and ADJACENT enemies are faster than the user, halve their current speed, apply FATIGUE and BLINDED for 5 seconds. Otherwise, deal [40,80,160,SP] SPECIAL.
-- Beldum - Meteor Mash: Deal 1/2/4 times [100,SP]% of ATK as SPECIAL to the target and ADJACENT enemy Pokemon. Then increase the user's ATK by [2, SP] ([4, SP] if the user is in PSYCHIC_FIELD) on each hit.
-- Fennekin - Mystical Fire: Deals [25,50,100,SP] SPECIAL to the target, reduces its AP by [10, SP]. Scorches the target tile and those flanking and behind it with embers. BOARD_EFFECT: embers deal 10 SPECIAL per second and BURN non FLYING or FIRE Pokémon that walk on it.
-- Yveltal - Oblivion Wing: Jump to the backline, then fire a beam in a line dealing [100,SP] SPECIAL to all enemy Pokémon. Heal for 75% of the damage dealt. Will stay in the backline with increased RANGE for 3 seconds.
-- Squirtle - Withdraw: Retreat into its shell while blasting out water, dealing [20,40,60, SP] SPECIAL damage to ADJACENT enemy Pokémon and pushing them back. Increase the users DEF by [2,4,8,SP].
-- Electrike - Rising Voltage: The user gathers electric voltage and deals [30,60,120,SP] SPECIAL to the target. Gains ELECTRIC_FIELD and spreads it to all ADJACENT Pokémon. Double the damage, if the opponent has ELECTRIC_FIELD.
-- Mega Gengar - Phantom Force: Silence all enemy Pokémon for [2, SP] seconds, then vanish. After 1 second, reappear in the middle of the enemy team and deal [100, SP] SPECIAL damage to all ADJACENT enemy Pokémon. Double the damage to targets with SILENCE or FATIGUE.
-- Mega Charizard X - Flare Blitz: Charge towards the target, dealing [500,SP]% of ATK as PHYSICAL to all ADJACENT enemy Pokemon. BURN the user for 3 seconds.
-- Hisuian Decidueye - Triple Arrows: Shoot 3 Piercing Arrows in a line, dealing [5,10,20,SP] SPECIAL. Each arrow reduces the target's DEF by 2 and applies FLINCH for 1 second. Can crit by default.
-- Shadow Mewtwo - Dark Nova: Strike into the largest crowd, dealing [60, SP] SPECIAL to the target and ADJACENT enemy Pokémon, teleporting them away. Can crit by default.
-- Libre Pikachu - Thunderclap Press: The target is hit with an electric bodyslam and pushed away. It and all targets in the path are PARALYSIS for 4 seconds and take [25, 50, 100, SP] SPECIAL.
-- Gothita - Fake Tears: Deal [10,20,30,SP] SPECIAL to all enemy Pokémon and inflict them with ARMOR_BREAK for 3 seconds. If already affected, remove [3,6,9] SPE_DEF.
-- Tepig - Heat Crash: Crashes into the target, knocking it back and dealing [40,60,80, SP] SPECIAL. Does more damage the more ATK the user has compared to the target. If the user hase more HP than the target, gain 100 AP and loose 20 SPEED.
-- Hoopa - Unbound: Tears open a dimensional ring and returns in its Unbound form — dragging a Legendary Pokémon along with it. The summoned Pokémon's HP increases with the user's AP. (so so broken)
-- Bulbasaur - Frenzy Plant: Strikes the target 3 times with enormous tree roots, dealing [10,25,50,SP] SPECIAL per hit, multiplied by the number of ADJACENT enemies surrounding the target. If the target is defeated, remaining roots lash out at the nearest enemy.
-- Flabebe - Fairy Wind: Restore [5,10,20,SP=0.5] PP to all allied Pokémon other than the user and decrease the SPEED of all enemy Pokémon by [1, 5, 10].
-- Mudkip - Mud Bubble: Heal the user for [10,20,40,SP] HP, then BLINDED all ADJACENT enemy Pokémon for [1,2,4] seconds. If already BLINDED, deal [15,30,60,SP] SPECIAL instead.
-- Poliwhirl - Soak: Deal [20,40,80,SP] SPECIAL to the target and restore [10,10,20] PP to all allied Pokémon.
-- Torchic - Blaze Kick: Gain [10,20,40]% CRIT_CHANCE, then deal [30,60,120,SP] SPECIAL and BURN the target for 2 seconds. If it already has BURN, deal +30% damage. Can crit by default.
-- Pawmi - Double Shock: Emit a powerful electric shock, dealing [50,100,200,SP] SPECIAL to the target and inflict the user with PARALYSIS for 3 seconds. If the user has ELECTRIC_FIELD, discharge it and execute the target. 
-- Corviknight - Passive: Chance to RAGE on ability cast
-- Turtwig - Passive [Shell Armor]: Gain [3,6,12] DEF when receiving critical attacks. The Pokémon is immune to ARMOR_BREAK.
-
-
 # Synergy Buffs
 - Additional effect for ROCK: When KO'd, explode and deal TRUE and ARMOR_BREAK ADJACENT enemies. 
 - Additional effect for FIGHTING 8: Spawns a substitute as training dummy. The FIGHTING Pokemon that defeats the substitute will gain 3 ATK and 10 HP permanently.
@@ -159,7 +134,31 @@
 - Spectrier: Range 1 → 2
 - Deoxys Attack: ATK 25 → 35
 - Xurkitree: 200 → 250 HP, 15 → 20 ATK, Ability: +1 target
- 
+
+# Abilities and Passives
+- Duskull - Trick Room: If the target and ADJACENT enemies are faster than the user, halve their current speed, apply FATIGUE and BLINDED for 5 seconds. Otherwise, deal [40,80,160,SP] SPECIAL.
+- Beldum - Meteor Mash: Deal 1/2/4 times [100,SP]% of ATK as SPECIAL to the target and ADJACENT enemy Pokemon. Then increase the user's ATK by [2, SP] ([4, SP] if the user is in PSYCHIC_FIELD) on each hit.
+- Fennekin - Mystical Fire: Deals [25,50,100,SP] SPECIAL to the target, reduces its AP by [10, SP]. Scorches the target tile and those flanking and behind it with embers. BOARD_EFFECT: embers deal 10 SPECIAL per second and BURN non FLYING or FIRE Pokémon that walk on it.
+- Yveltal - Oblivion Wing: Jump to the backline, then fire a beam in a line dealing [100,SP] SPECIAL to all enemy Pokémon. Heal for 75% of the damage dealt. Will stay in the backline with increased RANGE for 3 seconds.
+- Squirtle - Witdraw: Retreat into its shell while blasting out water in all directions, dealing [10,25,50, SP] SPECIAL damage to Pokémon hit and pushing them back. Increase the users DEF by [2,4,8,SP].
+- Electrike - Rising Voltage: The user gathers electric voltage and deals [30,60,120,SP] SPECIAL to the target. Gains ELECTRIC_FIELD and spreads it to all ADJACENT Pokémon. Double the damage, if the opponent has ELECTRIC_FIELD.
+- Mega Gengar - Phantom Force: Silence all enemy Pokémon for [2, SP] seconds, then vanish. After 1 second, reappear in the middle of the enemy team and deal [100, SP] SPECIAL damage to all ADJACENT enemy Pokémon. Double the damage to targets with SILENCE or FATIGUE.
+- Mega Charizard X - Flare Blitz: Charge towards the target, dealing [500,SP]% of ATK as PHYSICAL to all ADJACENT enemy Pokemon. BURN the user for 3 seconds.
+- Hisuian Decidueye - Triple Arrows: Shoot 3 Piercing Arrows in a line, dealing [5,10,20,SP] SPECIAL. Each arrow reduces the target's DEF by 2 and applies FLINCH for 1 second. Can crit by default.
+- Shadow Mewtwo - Dark Nova: Strike into the largest crowd, dealing [60, SP] SPECIAL to the target and ADJACENT enemy Pokémon, teleporting them away. Can crit by default.
+- Libre Pikachu - Thunderclap Press: The target is hit with an electric bodyslam and pushed away. It and all targets in the path are PARALYSIS for 4 seconds and take [25, 50, 100, SP] SPECIAL.
+- Gothita - Fake Tears: Deal [10,20,30,SP] SPECIAL to all enemy Pokémon and inflict them with ARMOR_BREAK for 3 seconds. If already affected, remove [3,6,9] SPE_DEF.
+- Tepig - Heat Crash: Crashes into the target, knocking it back and dealing [40,60,80, SP] SPECIAL. Does more damage the more ATK the user has compared to the target. If the user hase more HP than the target, gain 100 AP and loose 20 SPEED.
+- Hoopa - Unbound: Tears open a dimensional ring and returns in its Unbound form — dragging a Legendary Pokémon along with it. The summoned Pokémon's HP increases with the user's AP. (so so broken)
+- Bulbasaur - Frenzy Plant: Strikes the target 3 times with enormous tree roots, dealing [10,25,50,SP] SPECIAL per hit, multiplied by the number of ADJACENT enemies surrounding the target. If the target is defeated, remaining roots lash out at the nearest enemy.
+- Flabebe - Fairy Wind: Restore [5,10,20,SP=0.5] PP to all allied Pokémon other than the user and decrease the SPEED of all enemy Pokémon by [1, 5, 10].
+- Mudkip - Mud Bubble: Heal the user for [10,20,40,SP] HP, then BLINDED all ADJACENT enemy Pokémon for [1,2,4] seconds. If already BLINDED, deal [15,30,60,SP] SPECIAL instead.
+- Poliwhirl - Soak: Deal [20,40,80,SP] SPECIAL to the target and restore [10,10,20] PP to all allied Pokémon.
+- Torchic - Blaze Kick: Gain [10,20,40]% CRIT_CHANCE, then deal [30,60,120,SP] SPECIAL and BURN the target for 2 seconds. If it already has BURN, deal +30% damage. Can crit by default.
+- Pawmi - Double Shock: Emit a powerful electric shock, dealing [50,100,200,SP] SPECIAL to the target and inflict the user with PARALYSIS for 3 seconds. If the user has ELECTRIC_FIELD, discharge it and execute the target. 
+- Corviknight - Passive: Chance to RAGE on ability cast
+- Turtwig - Passive [Shell Armor]: Gain [3,6,12] DEF when receiving critical attacks. The Pokémon is immune to ARMOR_BREAK.
+
 # Credits
 > Some of the Pokemon are not officially sprited yet, but there is access to them via the SkyTemple Discord server. I don't know how to credit them, so I will just do that here:
 - Mega Drampa: DeltaL, Pi, Soulja
