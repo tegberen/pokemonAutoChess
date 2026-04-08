@@ -209,6 +209,12 @@ export default abstract class PokemonState {
       if (pokemon.effects.has(EffectEnum.STONE_EDGE)) {
         physicalDamage += Math.round(pokemon.def * (1 + pokemon.ap / 100))
       }
+      if (pokemon.items.has(Item.FAIRY_FEATHER)) {
+        const fairyFeatherDamage = pokemon.def
+        if (chance(0.3, pokemon)) {
+          specialDamage += fairyFeatherDamage
+        }
+      }
 
       if (physicalDamage > 0) {
         // Apply attack physical damage

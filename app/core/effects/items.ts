@@ -1524,5 +1524,5 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
     new OnItemRemovedEffect((pokemon) => {
       pokemon.count.expCharmCount = 0
     })
-]
+  ]
 }
