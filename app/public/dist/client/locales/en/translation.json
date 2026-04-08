@@ -2976,8 +2976,8 @@
 	},
 	"item_description": {
     "BINDING_BAND": "+20 LUCK",
-    "SOOTHE_BELL": "Grant the lowest HP ally 30 SHIELD every 2 seconds. Has a [50,LK]% chance to convert that ally’s remaining Shield into HP.",
-    "EXP_CHARM": "The holder gains 5 PP after getting hit by an attack. [50,LK]% chance to increase that PP gain by 1 after each received hit. When the holder is KO, gain 1XP.",
+    "SOOTHE_BELL": "Grant the lowest HP ally 30 SHIELD every 2 seconds. Has a [50,LK]% chance to convert that ally’s remaining Shield into max HP.",
+    "EXP_CHARM": "The holder gains 5 PP after getting hit by an attack. [50,LK]% chance to increase that PP gain by 1 after each received hit. When the holder is KO, gain 1 XP.",
     "FAIRY_FEATHER": "Attacks have a [30,LK]% chance to deal the users current DEF as additional SPECIAL on attack",
     "CLEAR_AMULET": "The first time the holder is affected by a negative status effect, they store the effect and gain RUNE_PROTECT for 12 seconds. On the next attack, apply said negative effect to all enemies in a 4 tile radius for 4 seconds.",
     "DESTINY_KNOT": "Once the holder is KO, the STRONGEST ally gains the users current ATK and LUCK for the rest of the fight.",
