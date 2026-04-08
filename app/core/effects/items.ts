@@ -1694,4 +1694,12 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
       }
     })
   ],
+  [Item.FLUFFY_TAIL]: [
+    new OnItemGainedEffect((pokemon) => {
+      pokemon.addDodgeChance(0.1, pokemon, 0, false)
+    }),
+    new OnItemRemovedEffect((pokemon) => {
+      pokemon.addDodgeChance(-0.1, pokemon, 0, false)
+    })
+  ]
 }
