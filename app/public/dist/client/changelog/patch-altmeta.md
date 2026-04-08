@@ -48,11 +48,26 @@
 - When Pikachu is send to the dojo, obtain a TRAINING_RIBBON. Can be used to evolve Pikachu into Pikachu Libre (given an item slot is open).
 
 # Items
-- Additional effect for WIDE_LENS: Attacks grant +5% CRIT_CHANCE (stackable) (removed base CRIT_CHANCE)
-- Turbo overbuffed Sticky Barb: HP 15 → 30, DEF 6 → 12, 3 + 15% -> 6 + 30% of DEF as retaliation damage (hehehehehe)
-- Additional effect for HEAVY_DUTY_BOOTS: Once below 40% max HP, kick away the target and gain 10 DEF and 30 AP
-- Additional effect for ABILITY_SHIELD: When the user and allies SHIELD is depleted, gain 30 AP.
+## Additional Effects
+- WIDE_LENS: Attacks grant +5% CRIT_CHANCE (stackable) (removed base CRIT_CHANCE)
+- Turbo overbuff Sticky Barb: HP 15 → 30, DEF 6 → 12, 3 + 15% -> 6 + 30% of DEF as retaliation damage (hehehehehe)
+- HEAVY_DUTY_BOOTS: Once below 40% max HP, kick away the target and gain 10 DEF and 30 AP
+- ABILITY_SHIELD: When the user and allies SHIELD is depleted, gain 30 AP.
 
+## The BINDING_BAND
+- SOOTHE_BELL: Grant the lowest HP ally 30 SHIELD every 2 seconds. Has a [50,LK]% chance to convert that ally’s remaining SHIELD into HP.
+- EXP_CHARM: The holder gains 5 PP after getting hit by an attack. [50,LK]% chance to increase that PP gain by 1 after each received hit. When the holder is KO, gain 1 XP.
+- FAIRY_FEATHER: Attacks have a [30,LK]% chance to deal the users current DEF as additional SPECIAL on attack.
+- CLEAR_AMULET: The first time the holder is affected by a negative status effect, they store the effect and gain RUNE_PROTECT for 12 seconds. On the next attack, apply said negative effect to all enemies in a 4 tile radius for 4 seconds.
+- DESTINY_KNOT: Once the holder is KO, the STRONGEST ally gains the users current ATK and LUCK for the rest of the fight.
+- LUCKY_PUNCH: If the target has an ally directly behind it, there is a [50,LK]% chance the attack knocks the target’s item to that ally. (The target loses the item, and its ally gains it).
+- GRIP_CLAW: Attacks grant +10% CRIT_POWER. (stackable)
+- COVERT_CLOAK: Every 3 seconds, steal 10 AP from all enemies within RANGE and deal 5 SPECIAL. Deals double damage if the target has no AP.
+- FLUFFY_TAIL: Gains [10,LK]% dodge chance. The holder is immune to ARMOR_BREAK.
+- EVER_STONE: The holder gains the ROCK type.
+- TIGHT_BELT: At the beginning of each battle, TIGHT_BELT is replaced by 2 random items. The holder is PARALYSIS during the entire fight.
+
+> From the Wiki > Data section: Luck increases your chances in all draws, whether for critical hits, dodges, status on hit or any other effect mentioned with the LUCK symbol. Luck affects probabilities with this formula: P = baseP ^ (1 - LUCK /100);
 # Changes to Rarity, Typings, etc.
 ## Common
 - Cinderace: added NORMAL, removed HUMAN, replaced the role of Littwick and Cyndaquil in the early game
