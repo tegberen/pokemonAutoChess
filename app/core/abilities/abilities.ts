@@ -6984,7 +6984,7 @@ export class ShellSmashStrategy extends AbilityStrategy {
     crit: boolean
   ) {
     super.process(pokemon, board, target, crit)
-    const damage = pokemon.stars === 1 ? 15 : 30
+    const damage = [25, 50, 100][pokemon.stars - 1] ?? 100
     const cells = board.getAdjacentCells(pokemon.positionX, pokemon.positionY)
     cells.forEach((cell) => {
       if (cell && cell.value && cell.value.team !== pokemon.team) {
@@ -6997,11 +6997,11 @@ export class ShellSmashStrategy extends AbilityStrategy {
         )
       }
     })
-    pokemon.addAbilityPower(20, pokemon, 0, false)
-    pokemon.addAttack(2, pokemon, 0, false)
-    pokemon.addSpeed(20, pokemon, 0, false)
-    pokemon.addDefense(-2, pokemon, 0, false)
-    pokemon.addSpecialDefense(-2, pokemon, 0, false)
+    pokemon.addAbilityPower(25, pokemon, 0, false)
+    pokemon.addAttack(5, pokemon, 0, false)
+    pokemon.addSpeed(25, pokemon, 0, false)
+    pokemon.addDefense(-5, pokemon, 0, false)
+    pokemon.addSpecialDefense(-5, pokemon, 0, false)
   }
 }
 

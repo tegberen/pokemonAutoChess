@@ -2078,7 +2078,7 @@
 		"HIDDEN_POWER_QM": "The allied player gets 4 random Unown on their bench.",
 		"HIDDEN_POWER_EM": "Summon 4 random Unown, one at each corner of the battlefield.",
 		"POISON_JAB": "Deal [30,60,90,SP] SPECIAL, swap places with the target, and inflict both the target and the caster with POISONNED for 3 seconds.",
-		"SHELL_SMASH": "Deal [15,30,SP] SPECIAL to ADJACENT enemy Pokémon. Gain 2 ATK, 20 AP and 20 SPEED and lose 2 DEF and 2 SPE_DEF.",
+		"SHELL_SMASH": "Deal [25,50,100,SP] SPECIAL to ADJACENT enemy Pokémon. Gain 5 ATK, 25 AP and 25 SPEED and lose 5 DEF and 5 SPE_DEF.",
 		"HELPING_HAND": "Grant [30,60,100,SP] SHIELD to the 2 nearest allied Pokémon and double the damage of their next ability.",
 		"ASTRAL_BARRAGE": "Rush to a safe spot in the backline while sending [7,SP] small ghosts toward random enemy Pokémon, each dealing 20 SPECIAL.",
 		"WATERFALL": "Gain [50,100,150,SP] SHIELD, cure any negative status conditions and clear the tile of all BOARD_EFFECT.",
