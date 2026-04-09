@@ -9514,14 +9514,14 @@ export class Noivern extends Pokemon {
 
 export class Shellder extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.WATER, Synergy.ICE, Synergy.ROCK])
-  rarity = Rarity.UNCOMMON
+  rarity = Rarity.EPIC
   stars = 1
   evolution = Pkm.CLOYSTER
-  hp = 70
-  atk = 5
+  hp = 80
+  atk = 6
   speed = 47
-  def = 10
-  speDef = 4
+  def = 15
+  speDef = 5
   maxPP = 110
   range = 1
   skill = Ability.SHELL_SMASH
@@ -9530,13 +9530,13 @@ export class Shellder extends Pokemon {
 
 export class Cloyster extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.WATER, Synergy.ICE, Synergy.ROCK])
-  rarity = Rarity.UNCOMMON
+  rarity = Rarity.EPIC
   stars = 2
-  hp = 150
-  atk = 11
+  hp = 200
+  atk = 12
   speed = 47
-  def = 16
-  speDef = 4
+  def = 35
+  speDef = 10
   maxPP = 110
   range = 1
   skill = Ability.SHELL_SMASH
