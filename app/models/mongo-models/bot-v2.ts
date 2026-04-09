@@ -21,6 +21,7 @@ export interface IBot {
   avatar: string
   author: string
   elo: number
+  eloOverride?: number
   steps: IStep[]
   name: string
   id: string
@@ -97,6 +98,10 @@ const bot = new Schema(
     elo: {
       type: Number,
       required: true
+    },
+    eloOverride: {
+      type: Number,
+      required: false
     },
     steps: [step]
   },

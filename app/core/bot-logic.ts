@@ -210,6 +210,7 @@ export function rewriteBotRoundsRequiredto1(bot: IBot) {
 }
 
 export function estimateElo(bot: IBot): number {
+  if (bot.eloOverride != null) return bot.eloOverride
   const scores = bot.steps
     .map((step, stage) => getPowerEvaluation(getPowerScore(step.board), stage))
     .slice(3)

@@ -325,6 +325,23 @@ export default function BotBuilder() {
         <div>
           <ScoreIndicator value={powerEvaluation} />
         </div>
+        <label style={{ display: "flex", alignItems: "center", gap: "0.5em" }}>
+          Elo:
+          <input
+            type="number"
+            style={{ width: "80px" }}
+            placeholder="auto"
+            value={bot.eloOverride ?? ""}
+            onChange={(e) => {
+              const val = e.target.value
+              setBot({
+                ...bot,
+                eloOverride: val === "" ? undefined : Number(val),
+                elo: val === "" ? estimateElo(bot) : Number(val)
+              })
+            }}
+          />
+        </label>
       </div>
       <TeamBuilder
         bot={bot}
