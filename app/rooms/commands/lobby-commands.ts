@@ -92,7 +92,7 @@ export class OnJoinCommand extends Command<
         }
       } else {
         // create new user account
-        const starterBoosters = 3
+        const starterBoosters = 555
         const starterPokemon = pickRandomIn(Starters)
         const starterAvatar = PkmIndex[starterPokemon] + "/Normal"
         const randomName = generateRandomName(starterPokemon)
@@ -112,8 +112,8 @@ export class OnJoinCommand extends Command<
           wins: 0,
           exp: 0,
           level: 0,
-          elo: 1000,
-          maxElo: 1000,
+          elo: 1100,
+          maxElo: 1100,
           eventPoints: 0,
           maxEventPoints: 0,
           eventFinishTime: null,
