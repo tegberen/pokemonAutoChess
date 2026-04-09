@@ -7,7 +7,7 @@ export const ItemStats: { [item in Item]?: { [stat in Stat]?: number } } = {
   [Item.EXP_CHARM]: { [Stat.LUCK]: 20, [Stat.PP]: 15 },
   [Item.FAIRY_FEATHER]: { [Stat.LUCK]: 20, [Stat.DEF]: 12 },
   [Item.CLEAR_AMULET]: { [Stat.LUCK]: 20, [Stat.SPE_DEF]: 20 },
-  [Item.DESTINY_KNOT]: { [Stat.LUCK]: 20, [Stat.ATK]: 8 },
+  [Item.DESTINY_KNOT]: { [Stat.LUCK]: 20, [Stat.ATK]: 3 },
   [Item.LUCKY_PUNCH]: { [Stat.LUCK]: 20, [Stat.SPEED]: 30 },
   [Item.GRIP_CLAW]: { [Stat.LUCK]: 20, [Stat.CRIT_CHANCE]: 20 },
   [Item.COVERT_CLOAK]: { [Stat.LUCK]: 20, [Stat.AP]: 50, [Stat.RANGE]:1 },
