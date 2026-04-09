@@ -2,7 +2,33 @@ import { model, Schema } from "mongoose"
 import { Emotion } from "../../types"
 import { Item } from "../../types/enum/Item"
 import { Pkm } from "../../types/enum/Pokemon"
-import type { IBot } from "../../types/models/bot-v2"
+
+export interface IDetailledPokemon extends PkmWithCustom {
+  name: Pkm
+  x: number
+  y: number
+  items: Item[]
+  emotion?: Emotion
+  shiny?: boolean
+}
+
+export interface IStep {
+  board: IDetailledPokemon[]
+  roundsRequired: number
+}
+
+export interface IBot {
+  avatar: string
+  author: string
+  elo: number
+  eloOverride?: number
+  steps: IStep[]
+  name: string
+  id: string
+  approved: boolean
+}
+
+export type IBotLight = Omit<IBot, "steps"> & { valid: boolean }
 
 const pkm = new Schema({
   name: {
@@ -72,6 +98,10 @@ const bot = new Schema(
     elo: {
       type: Number,
       required: true
+    },
+    eloOverride: {
+      type: Number,
+      required: false
     },
     steps: [step]
   },
