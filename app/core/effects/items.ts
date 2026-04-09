@@ -481,7 +481,7 @@ export class SootheBellEffect extends PeriodicEffect {
             targetY: lowestHealthAlly.positionY
           })
           lowestHealthAlly.addShield(20, pokemon, 0, false)
-          if (chance(0.5, pokemon)) {
+          if (chance(0.3, pokemon)) {
             const converted = lowestHealthAlly.shield
             lowestHealthAlly.shield = 0
             lowestHealthAlly.addMaxHP(converted, pokemon, 0, false)
@@ -1558,13 +1558,13 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
       if (totalDamage <= 0) return
       const ppGain = 5 + pokemon.count.expCharmCount
       pokemon.addPP(ppGain, pokemon, 0, false)
-      if (chance(0.5, pokemon)) {
+      if (chance(0.3, pokemon)) {
         pokemon.count.expCharmCount++
       }
     }),
     new OnDeathEffect(({ pokemon }) => {
       if (pokemon.player && !pokemon.isGhostOpponent) {
-        pokemon.player.addExperience(2)
+        pokemon.player.addExperience(1)
       }
     }),
     new OnItemRemovedEffect((pokemon) => {
@@ -1598,7 +1598,7 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
               else if (s.flinch) effect.storedStatus = "flinch"              
 
               if (effect.storedStatus) {
-                pokemon.status.triggerRuneProtect(12000, pokemon, pokemon)
+                pokemon.status.triggerRuneProtect(10000, pokemon, pokemon)
                 if (effect.storedStatus === "possessed") {
                   pokemon.status.possessedCooldown = 0
                   pokemon.team = pokemon.team === Team.BLUE_TEAM ? Team.RED_TEAM : Team.BLUE_TEAM
@@ -1623,28 +1623,28 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
       })
       pokemon.effects.add(EffectEnum.CLEAR_AMULET_TRIGGERED)
 
-      const cells = board.getCellsInRange(pokemon.positionX, pokemon.positionY, 4, false)
+      const cells = board.getCellsInRange(pokemon.positionX, pokemon.positionY, 2, false)
       cells.forEach((cell) => {
         if (!cell.value || cell.value.team === pokemon.team) return
         const enemy = cell.value
 
         switch (storedEffect.storedStatus) {
-          case "burn": enemy.status.triggerBurn(4000, enemy, pokemon); break
-          case "poison": enemy.status.triggerPoison(4000, enemy, pokemon); break
-          case "paralysis": enemy.status.triggerParalysis(4000, enemy, pokemon); break
-          case "confusion": enemy.status.triggerConfusion(4000, enemy, pokemon); break
-          case "freeze": enemy.status.triggerFreeze(4000, enemy, pokemon); break
-          case "sleep": enemy.status.triggerSleep(4000, enemy); break
-          case "wound": enemy.status.triggerWound(4000, enemy, pokemon); break
-          case "silence": enemy.status.triggerSilence(4000, enemy, pokemon); break
-          case "possessed": enemy.status.triggerPossessed(4000, enemy, pokemon); break
-          case "locked": enemy.status.triggerLocked(4000, enemy); break
-          case "blinded": enemy.status.triggerBlinded(4000, enemy); break
-          case "charm": enemy.status.triggerCharm(4000, enemy, pokemon); break
-          case "curse": enemy.status.triggerCurse(4000, enemy); break
-          case "fatigue": enemy.status.triggerFatigue(4000, enemy); break
-          case "armorReduction": enemy.status.triggerArmorReduction(4000, enemy); break
-          case "flinch": enemy.status.triggerFlinch(4000, enemy, pokemon); break
+          case "burn": enemy.status.triggerBurn(2000, enemy, pokemon); break
+          case "poison": enemy.status.triggerPoison(2000, enemy, pokemon); break
+          case "paralysis": enemy.status.triggerParalysis(2000, enemy, pokemon); break
+          case "confusion": enemy.status.triggerConfusion(2000, enemy, pokemon); break
+          case "freeze": enemy.status.triggerFreeze(2000, enemy, pokemon); break
+          case "sleep": enemy.status.triggerSleep(2000, enemy); break
+          case "wound": enemy.status.triggerWound(2000, enemy, pokemon); break
+          case "silence": enemy.status.triggerSilence(2000, enemy, pokemon); break
+          case "possessed": enemy.status.triggerPossessed(2000, enemy, pokemon); break
+          case "locked": enemy.status.triggerLocked(2000, enemy); break
+          case "blinded": enemy.status.triggerBlinded(2000, enemy); break
+          case "charm": enemy.status.triggerCharm(2000, enemy, pokemon); break
+          case "curse": enemy.status.triggerCurse(2000, enemy); break
+          case "fatigue": enemy.status.triggerFatigue(2000, enemy); break
+          case "armorReduction": enemy.status.triggerArmorReduction(2000, enemy); break
+          case "flinch": enemy.status.triggerFlinch(2000, enemy, pokemon); break
         }
       })
     }),
@@ -1665,7 +1665,7 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
   ],
   [Item.LUCKY_PUNCH]: [
     new OnAttackEffect(({ pokemon, target, board }) => {
-      if (!target || !chance(0.5, pokemon)) return
+      if (!target || !chance(0.3, pokemon)) return
       if (target.items.size === 0) return
 
       const dx = Math.sign(target.positionX - pokemon.positionX)
