@@ -743,28 +743,29 @@ export class OnAddBotCommand extends Command<PreparationRoom, OnAddBotPayload> {
 
         switch (difficulty) {
           case BotDifficulty.NEWBIE:
-            elo = { $lt: 1100 }
+            elo = { $lt: 1050 }
+            break
+          case BotDifficulty.MEDIUM:
+            elo = { $gte: 1050, $lt: 1300 }
+            break
+          case BotDifficulty.HARD:
+            elo = { $gte: 1300, $lt: 1400 }
+            break
+          case BotDifficulty.EXTREME:
+            elo = { $gte: 1400, $lt: 1700 }
             break
           case BotDifficulty.REGULAR:
-            elo = { $lt: 1600 }
+            elo = { $gte: 1050, $lt: 1700 }
+            break
+          case BotDifficulty.SHINY:
+            elo = { $gte: 1700, $lt: 5000 }
             break
           case BotDifficulty.UNREALISTIC:
-            elo = { $gte: 1600 }
+            elo = { $gte: 9000 }
             break
           default:
-            elo = { $lt: 1600 }
-          //case BotDifficulty.EASY:
-          //  elo = { $lt: 800 }
-          //  break
-          //case BotDifficulty.MEDIUM:
-          //  elo = { $gte: 800, $lt: 1100 }
-          //  break
-          //case BotDifficulty.HARD:
-          //  elo = { $gte: 1100, $lt: 1400 }
-          //  break
-          //case BotDifficulty.EXTREME:
-          //  elo = { $gte: 1400 }
-          //  break
+            elo = { $lt: 1700 }
+
         }
 
         const existingBots = new Array<string>()

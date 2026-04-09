@@ -119,7 +119,8 @@ export enum BotDifficulty {
   CUSTOM,
   REGULAR,
   UNREALISTIC,
-  NEWBIE
+  NEWBIE,
+  SHINY
 }
 
 export enum PokemonTint {
