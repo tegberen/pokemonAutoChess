@@ -8,7 +8,6 @@ import { debounce } from "../../../../../utils/function"
 import { useAppDispatch, useAppSelector } from "../../../hooks"
 import {
   ban,
-  giveBooster,
   giveTitle,
   searchById,
   unban
@@ -183,20 +182,20 @@ function OtherProfileActions(props: {
   const [title, setTitle] = useState<Title>(user?.title || Title.ACE_TRAINER)
   // const [profileRole, setProfileRole] = useState<Role>(user?.role ?? Role.BASIC)
 
-  const giveButton =
-    user && role && role === Role.ADMIN ? (
-      <button
-        className="bubbly green"
-        onClick={() => {
-          giveBooster({
-            numberOfBoosters: Number(prompt("How many boosters ?")) || 1,
-            uid: user.uid
-          })
-        }}
-      >
-        {t("give_boosters")}
-      </button>
-    ) : null
+  // const giveButton =
+  //   user && role && role === Role.ADMIN ? (
+  //     <button
+  //       className="bubbly green"
+  //       onClick={() => {
+  //         giveBooster({
+  //           numberOfBoosters: Number(prompt("How many boosters ?")) || 1,
+  //           uid: user.uid
+  //         })
+  //       }}
+  //     >
+  //       {t("give_boosters")}
+  //     </button>
+  //   ) : null
 
   const banButton =
     user && role && (role === Role.ADMIN || role === Role.MODERATOR) ? (
@@ -304,7 +303,6 @@ function OtherProfileActions(props: {
 
   return role === Role.ADMIN || role === Role.MODERATOR ? (
     <>
-      {giveButton}
       {titleButton}
       {user?.banned ? unbanButton : banButton}
       {props.rightPanel === "game" ? chatHistoryButton : gameHistoryButton}
