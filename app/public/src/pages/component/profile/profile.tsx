@@ -9,7 +9,6 @@ import { useAppDispatch, useAppSelector } from "../../../hooks"
 import {
   ban,
   giveBooster,
-  giveRole,
   giveTitle,
   searchById,
   unban
@@ -182,7 +181,7 @@ function OtherProfileActions(props: {
   const role = useAppSelector((state) => state.network.profile?.role)
   const user = useAppSelector((state) => state.lobby.searchedUser)
   const [title, setTitle] = useState<Title>(user?.title || Title.ACE_TRAINER)
-  const [profileRole, setProfileRole] = useState<Role>(user?.role ?? Role.BASIC)
+  // const [profileRole, setProfileRole] = useState<Role>(user?.role ?? Role.BASIC)
 
   const giveButton =
     user && role && role === Role.ADMIN ? (
@@ -249,32 +248,32 @@ function OtherProfileActions(props: {
       </button>
     ) : null
 
-  const roleButton =
-    user && role && role === Role.ADMIN ? (
-      <div className="my-input-group">
-        <button
-          className="bubbly orange"
-          onClick={() => {
-            giveRole({ uid: user.uid, role: profileRole })
-            alert(`Role ${profileRole} given to ${user.displayName}`)
-          }}
-        >
-          {t("give_role")}
-        </button>
-        <select
-          value={profileRole}
-          onChange={(e) => {
-            setProfileRole(e.target.value as Role)
-          }}
-        >
-          {Object.keys(Role).map((r) => (
-            <option key={r} value={r}>
-              {t("role." + r).toUpperCase()}
-            </option>
-          ))}
-        </select>
-      </div>
-    ) : null
+  // const roleButton =
+  //   user && role && role === Role.ADMIN ? (
+  //     <div className="my-input-group">
+  //       <button
+  //         className="bubbly orange"
+  //         onClick={() => {
+  //           giveRole({ uid: user.uid, role: profileRole })
+  //           alert(`Role ${profileRole} given to ${user.displayName}`)
+  //         }}
+  //       >
+  //         {t("give_role")}
+  //       </button>
+  //       <select
+  //         value={profileRole}
+  //         onChange={(e) => {
+  //           setProfileRole(e.target.value as Role)
+  //         }}
+  //       >
+  //         {Object.keys(Role).map((r) => (
+  //           <option key={r} value={r}>
+  //             {t("role." + r).toUpperCase()}
+  //           </option>
+  //         ))}
+  //       </select>
+  //     </div>
+  //   ) : null
 
   const titleButton =
     user && role && role === Role.ADMIN ? (
@@ -306,7 +305,6 @@ function OtherProfileActions(props: {
   return role === Role.ADMIN || role === Role.MODERATOR ? (
     <>
       {giveButton}
-      {roleButton}
       {titleButton}
       {user?.banned ? unbanButton : banButton}
       {props.rightPanel === "game" ? chatHistoryButton : gameHistoryButton}
