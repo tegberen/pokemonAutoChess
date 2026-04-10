@@ -312,6 +312,7 @@ export enum Pkm {
   EELEKTRIK = "EELEKTRIK",
   EELEKTROSS = "EELEKTROSS",
   EEVEE = "EEVEE",
+  EEVEE_MAFIA = "EEVEE_MAFIA",
   EGG = "EGG",
   EISCUE = "EISCUE",
   EISCUE_NOICE = "EISCUE_NOICE",
@@ -1392,6 +1393,7 @@ export const PkmIndex: { [key in Pkm]: string } = {
   [Pkm.LAPRAS]: "0131",
   [Pkm.DITTO]: "0132",
   [Pkm.EEVEE]: "0133",
+  [Pkm.EEVEE_MAFIA]: "0133-9999",
   [Pkm.VAPOREON]: "0134",
   [Pkm.JOLTEON]: "0135",
   [Pkm.FLAREON]: "0136",
@@ -2720,6 +2722,7 @@ export const PkmFamily: { [key in Pkm]: Pkm } = {
   [Pkm.LUCARIO]: Pkm.RIOLU,
   [Pkm.MEGA_LUCARIO]: Pkm.RIOLU,
   [Pkm.EEVEE]: Pkm.EEVEE,
+  [Pkm.EEVEE_MAFIA]: Pkm.EEVEE,
   [Pkm.VAPOREON]: Pkm.EEVEE,
   [Pkm.JOLTEON]: Pkm.EEVEE,
   [Pkm.FLAREON]: Pkm.EEVEE,
@@ -3891,5 +3894,6 @@ export const NON_PMD_PKM_INDEXES: string[] = [
   "0160-9999", // Feraligatr Pirate,
   "0815-9999", // Cinderace Pirate,
   "0398-9999", // Staraptor Fashion,
-  "0175-9999", // Togepi Mafia
+  "0175-9999", // Togepi Mafia,
+  "0133-9999", // Eevee Mafia
 ]

@@ -6484,10 +6484,13 @@ export class Eevee extends Pokemon {
       Item.MOON_STONE,
       Item.LEAF_STONE,
       Item.DAWN_STONE,
-      Item.ICE_STONE
+      Item.ICE_STONE,
+      Item.EVER_STONE
     ],
     (pokemon, player, item) => {
       switch (item) {
+        case Item.EVER_STONE:
+          return Pkm.EEVEE_MAFIA
         case Item.WATER_STONE:
           return Pkm.VAPOREON
         case Item.FIRE_STONE:
@@ -6508,6 +6511,21 @@ export class Eevee extends Pokemon {
       }
     }
   )
+}
+
+
+export class EeveeMafia extends Pokemon {
+  types = new SetSchema<Synergy>([Synergy.NORMAL, Synergy.FIELD])
+  rarity = Rarity.SPECIAL
+  stars = 2
+  hp = 180
+  atk = 12
+  speed = 43
+  def = 6
+  speDef = 4
+  maxPP = 100
+  range = 1
+  skill = Ability.HAPPY_HOUR
 }
 
 export class Vaporeon extends Pokemon {
@@ -21599,6 +21617,7 @@ export const PokemonClasses: Record<
   [Pkm.REGIGIGAS]: Regigigas,
   [Pkm.GIRATINA]: Giratina,
   [Pkm.EEVEE]: Eevee,
+  [Pkm.EEVEE_MAFIA]: EeveeMafia,
   [Pkm.VAPOREON]: Vaporeon,
   [Pkm.JOLTEON]: Jolteon,
   [Pkm.FLAREON]: Flareon,

@@ -22,6 +22,7 @@
 ![Quaxly](/assets/portraits/0912/Normal.png)
 ![Quaxwell](/assets/portraits/0913/Normal.png)
 ![Quaquaval](/assets/portraits/0914/Normal.png)
+![Mafia Eevee](/assets/portraits/0133/9999/Determined.png)
 ## Mega Evolutions
 ![Mega Charizard X](/assets/portraits/0006/0001/Surprised.png)
 ![Mega Lopunny](/assets/portraits/0428/0001/Normal.png)
