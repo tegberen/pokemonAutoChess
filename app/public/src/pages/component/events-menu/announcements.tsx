@@ -8,9 +8,7 @@ import "./announcements.css"
 export function Announcements() {
   const { t } = useTranslation()
   const user = useAppSelector((state) => state.network.profile)
-  const canWrite = user
-    ? user.role === Role.ADMIN || user.role === Role.MODERATOR
-    : false
+  const canWrite = user != null
 
   return (
     <div className="announcements-container hidden-scrollable">

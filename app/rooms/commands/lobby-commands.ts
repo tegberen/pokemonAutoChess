@@ -289,7 +289,7 @@ export class OnNewMessageCommand extends Command<
       const user = this.room.users.get(client.auth.uid)
       if (
         user &&
-        [Role.ADMIN, Role.MODERATOR].includes(user.role) &&
+        [Role.ADMIN, Role.MODERATOR, Role.BASIC].includes(user.role) &&
         message != ""
       ) {
         this.state.addMessage(message, user.uid, user.displayName, user.avatar)
