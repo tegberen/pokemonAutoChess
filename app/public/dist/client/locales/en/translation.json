@@ -4080,7 +4080,6 @@
 	"open_boosters_hint": "Open boosters to unlock new avatars and complete your collection !",
 	"open_booster": "Open a Booster",
 	"lobby": "Lobby",
-	"announcements": "Announcements",
 	"twitch_streams": {
 		"title": "Streams",
 		"language": "Language: {{language}}",
@@ -4088,6 +4087,7 @@
 		"viewers": "{{count}} viewers",
 		"live_duration": "Live {{duration}}"
 	},
+	"announcements": "Chat",
 	"chat": "Chat",
 	"edit": "View/Edit",
 	"delete": "Delete",
