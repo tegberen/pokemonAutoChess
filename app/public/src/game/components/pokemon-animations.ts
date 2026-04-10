@@ -72,6 +72,12 @@ export const PokemonAnimations: {
     emote: AnimationType.Charge,
     attackSprite: AttackSprite.ELECTRIC_RANGE
   },
+  [Pkm.EEVEE_MAFIA]: {
+    attack: AnimationType.Attack,
+    ability: AnimationType.Charge,
+    emote: AnimationType.Shoot,
+    attackSprite: AttackSprite.NORMAL_MELEE
+  },
   [Pkm.BULBASAUR]: {
     attack: AnimationType.Shoot,
     ability: AnimationType.Rotate,

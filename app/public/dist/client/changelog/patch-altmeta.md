@@ -26,7 +26,7 @@
 # Items
 ## Additional Effects
 - WIDE_LENS: Attacks grant +5% CRIT_CHANCE (stackable) (removed base CRIT_CHANCE)
-- Turbo overbuff Sticky Barb: HP 15 → 30, DEF 6 → 12, 3 + 15% -> 6 + 30% of DEF as retaliation damage (hehehehehe)
+- Turbo overbuff STICKY_BARB: HP 15 → 30, DEF 6 → 12, 3 + 15% -> 6 + 30% of DEF as retaliation damage (hehehehehe)
 - HEAVY_DUTY_BOOTS: Once below 40% max HP, kick away the target and gain 10 DEF and 30 AP
 - ABILITY_SHIELD: When the user and allies SHIELD is depleted, gain 30 AP.
 
@@ -135,6 +135,9 @@
 - Spectrier: Range 1 → 2
 - Deoxys Attack: ATK 25 → 35
 - Xurkitree: 200 → 250 HP, 15 → 20 ATK, Ability: +1 target
+
+## Special
+- Mafia Eevee: via EVER_STONE
 
 # Abilities and Passives
 - Duskull - Trick Room: If the target and ADJACENT enemies are faster than the user, halve their current speed, apply FATIGUE and BLINDED for 5 seconds. Otherwise, deal [40,80,160,SP] SPECIAL.
