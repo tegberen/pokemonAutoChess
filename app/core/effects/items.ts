@@ -1659,7 +1659,7 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
       ) as PokemonEntity[]
       const strongest = getStrongestUnit(allies)
       if (!strongest) return
-      strongest.addAttack(pokemon.atk, strongest, 0, false)
+      strongest.addAttack(pokemon.baseAtk, strongest, 0, false)
       strongest.addLuck(pokemon.luck, strongest, 0, false)
     })
   ],
