@@ -32,13 +32,13 @@
 
 ## The BINDING_BAND
 - SOOTHE_BELL: Grant the lowest HP ally 20 SHIELD every 2 seconds. Has a [30,LK]% chance to convert that ally’s remaining SHIELD into HP.
-- EXP_CHARM: The holder gains 5 PP after getting hit by an attack. [30,LK]% chance to increase that PP gain by 1 after each received hit. When the holder is KO, gain 1 XP.
-- FAIRY_FEATHER: Attacks have a [30,LK]% chance to deal the users current DEF as additional SPECIAL on attack.
-- CLEAR_AMULET: The first time the holder is affected by a negative status effect, they store the effect and gain RUNE_PROTECT for 10 seconds. On the next attack, apply said negative effect to all enemies in a 2 tile radius for 2 seconds.
+- EXP_CHARM: The holder gains 3 PP after getting hit by an attack. [30,LK]% chance to increase that PP gain by 1 after each received hit. When the holder is KO, gain 1 XP.
+- FAIRY_FEATHER: Attacks have a [30,LK]% chance to deal 75% of the users current DEF as additional SPECIAL on attack.
+- CLEAR_AMULET: The first time the holder is affected by a negative status effect, they store the effect and gain RUNE_PROTECT for 10 seconds. On the next attack, apply said negative effect to all ADJACENT enemies for 5 seconds.
 - DESTINY_KNOT: Once the holder is KO, the STRONGEST ally gains the users current LUCK and base ATK for the rest of the fight.
 - LUCKY_PUNCH: If the target has an ally directly behind it, there is a [30,LK]% chance the attack knocks the target’s item to that ally. (The target loses the item, and its ally gains it).
 - GRIP_CLAW: Attacks grant +10% CRIT_POWER. (stackable)
-- COVERT_CLOAK: Every 3 seconds, steal 10 AP from all enemies within RANGE and deal 5 SPECIAL. That damage is doubled, if the target has no AP.
+- COVERT_CLOAK: Every 3 seconds, steal 5 AP from all enemies within RANGE and deal 5 SPECIAL. That damage is doubled, if the target has no AP.
 - FLUFFY_TAIL: Gains [10,LK]% dodge chance. The holder is immune to ARMOR_BREAK.
 - EVER_STONE: The holder gains the ROCK type.
 - TIGHT_BELT: At the beginning of each battle, TIGHT_BELT is replaced by 2 random items. The holder is PARALYSIS during the entire fight.
