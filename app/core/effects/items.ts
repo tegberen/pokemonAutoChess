@@ -511,7 +511,7 @@ export class CovertCloakEffect extends PeriodicEffect {
           .forEach((cell) => {
             if (!cell.value || cell.value.team === pokemon.team) return
             const enemy = cell.value
-            const apSteal = Math.min(10, enemy.ap)
+            const apSteal = Math.min(5, enemy.ap)
             enemy.addAbilityPower(-apSteal, enemy, 0, false)
             pokemon.addAbilityPower(apSteal, pokemon, 0, false)
             const damage = apSteal === 0 ? 10 : 5
@@ -1549,7 +1549,7 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
   [Item.EXP_CHARM]: [
     new OnAttackReceivedEffect(({ pokemon, totalDamage }) => {
       if (totalDamage <= 0) return
-      const ppGain = 5 + pokemon.count.expCharmCount
+      const ppGain = 3 + pokemon.count.expCharmCount
       pokemon.addPP(ppGain, pokemon, 0, false)
       if (chance(0.3, pokemon)) {
         pokemon.count.expCharmCount++
@@ -1616,28 +1616,28 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
       })
       pokemon.effects.add(EffectEnum.CLEAR_AMULET_TRIGGERED)
 
-      const cells = board.getCellsInRange(pokemon.positionX, pokemon.positionY, 2, false)
+      const cells = board.getAdjacentCells(pokemon.positionX, pokemon.positionY)
       cells.forEach((cell) => {
         if (!cell.value || cell.value.team === pokemon.team) return
         const enemy = cell.value
 
         switch (storedEffect.storedStatus) {
-          case "burn": enemy.status.triggerBurn(2000, enemy, pokemon); break
-          case "poison": enemy.status.triggerPoison(2000, enemy, pokemon); break
-          case "paralysis": enemy.status.triggerParalysis(2000, enemy, pokemon); break
-          case "confusion": enemy.status.triggerConfusion(2000, enemy, pokemon); break
-          case "freeze": enemy.status.triggerFreeze(2000, enemy, pokemon); break
-          case "sleep": enemy.status.triggerSleep(2000, enemy); break
-          case "wound": enemy.status.triggerWound(2000, enemy, pokemon); break
-          case "silence": enemy.status.triggerSilence(2000, enemy, pokemon); break
-          case "possessed": enemy.status.triggerPossessed(2000, enemy, pokemon); break
-          case "locked": enemy.status.triggerLocked(2000, enemy); break
-          case "blinded": enemy.status.triggerBlinded(2000, enemy); break
-          case "charm": enemy.status.triggerCharm(2000, enemy, pokemon); break
-          case "curse": enemy.status.triggerCurse(2000, enemy); break
-          case "fatigue": enemy.status.triggerFatigue(2000, enemy); break
-          case "armorReduction": enemy.status.triggerArmorReduction(2000, enemy); break
-          case "flinch": enemy.status.triggerFlinch(2000, enemy, pokemon); break
+          case "burn": enemy.status.triggerBurn(5000, enemy, pokemon); break
+          case "poison": enemy.status.triggerPoison(5000, enemy, pokemon); break
+          case "paralysis": enemy.status.triggerParalysis(5000, enemy, pokemon); break
+          case "confusion": enemy.status.triggerConfusion(5000, enemy, pokemon); break
+          case "freeze": enemy.status.triggerFreeze(5000, enemy, pokemon); break
+          case "sleep": enemy.status.triggerSleep(5000, enemy); break
+          case "wound": enemy.status.triggerWound(5000, enemy, pokemon); break
+          case "silence": enemy.status.triggerSilence(5000, enemy, pokemon); break
+          case "possessed": enemy.status.triggerPossessed(5000, enemy, pokemon); break
+          case "locked": enemy.status.triggerLocked(5000, enemy); break
+          case "blinded": enemy.status.triggerBlinded(5000, enemy); break
+          case "charm": enemy.status.triggerCharm(5000, enemy, pokemon); break
+          case "curse": enemy.status.triggerCurse(5000, enemy); break
+          case "fatigue": enemy.status.triggerFatigue(5000, enemy); break
+          case "armorReduction": enemy.status.triggerArmorReduction(5000, enemy); break
+          case "flinch": enemy.status.triggerFlinch(5000, enemy, pokemon); break
         }
       })
     }),
