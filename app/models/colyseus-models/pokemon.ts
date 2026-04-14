@@ -17518,10 +17518,15 @@ export class Kingler extends Pokemon {
 }
 
 export class Zygarde10 extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.DRAGON, Synergy.GROUND, Synergy.AMORPHOUS])
+  types = new SetSchema<Synergy>([Synergy.DRAGON, Synergy.GROUND])
   rarity = Rarity.LEGENDARY
   stars = 3
-  hp = 200
+  hp = 250
+  evolution = Pkm.MEGA_ZYGARDE
+
+  evolutionRule = new ConditionBasedEvolutionRule(
+    (pokemon, player) => player.life <= 30
+  )
   atk = 26
   speed = 62
   def = 8
@@ -17538,10 +17543,15 @@ export class Zygarde10 extends Pokemon {
 }
 
 export class Zygarde50 extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.DRAGON, Synergy.GROUND, Synergy.AMORPHOUS])
+  types = new SetSchema<Synergy>([Synergy.DRAGON, Synergy.GROUND])
   rarity = Rarity.LEGENDARY
   stars = 3
-  hp = 170
+  hp = 220
+  evolution = Pkm.MEGA_ZYGARDE
+
+  evolutionRule = new ConditionBasedEvolutionRule(
+    (pokemon, player) => player.life <= 30
+  )
   atk = 23
   speed = 55
   def = 5
@@ -17558,10 +17568,15 @@ export class Zygarde50 extends Pokemon {
 }
 
 export class Zygarde100 extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.DRAGON, Synergy.GROUND, Synergy.AMORPHOUS])
+  types = new SetSchema<Synergy>([Synergy.DRAGON, Synergy.GROUND])
   rarity = Rarity.LEGENDARY
-  stars = 4
-  hp = 300
+  stars = 3
+  evolution = Pkm.MEGA_ZYGARDE
+
+  evolutionRule = new ConditionBasedEvolutionRule(
+    (pokemon, player) => player.life <= 30
+  )
+  hp = 350
   atk = 28
   speed = 50
   def = 10
@@ -17569,6 +17584,20 @@ export class Zygarde100 extends Pokemon {
   maxPP = 100
   range = 2
   skill = Ability.CORE_ENFORCER
+}
+
+export class MegaZygarde extends Pokemon {
+  types = new SetSchema<Synergy>([Synergy.DRAGON, Synergy.GROUND, Synergy.AMORPHOUS])
+  rarity = Rarity.LEGENDARY
+  stars = 4
+  hp = 350
+  atk = 28
+  speed = 50
+  def = 10
+  speDef = 10
+  maxPP = 100
+  range = 2
+  skill = Ability.NIHIL_LIGHT
 }
 
 export class Sizzlipede extends Pokemon {
@@ -22371,6 +22400,7 @@ export const PokemonClasses: Record<
   [Pkm.ZYGARDE_10]: Zygarde10,
   [Pkm.ZYGARDE_50]: Zygarde50,
   [Pkm.ZYGARDE_100]: Zygarde100,
+  [Pkm.MEGA_ZYGARDE]: MegaZygarde,
   [Pkm.SIZZLIPEDE]: Sizzlipede,
   [Pkm.CENTISKORCH]: Centiskorch,
   [Pkm.STUFFUL]: Stufful,
