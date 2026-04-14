@@ -268,6 +268,36 @@ export class FrenzyPlantStrategy extends AbilityStrategy {
   }
 }
 
+export class NihilLightStrategy extends AbilityStrategy {
+  process(
+    pokemon: PokemonEntity,
+    board: Board,
+    target: PokemonEntity,
+    crit: boolean
+  ) {
+    super.process(pokemon, board, target, crit)
+    let distanceFromTarget = 0
+    effectInLine(board, pokemon, target, (cell) => {
+      if (cell.value != null && cell.value.team !== pokemon.team) {
+        const enemy = cell.value
+        const damage = Math.max(16, 80 - distanceFromTarget * 16)
+
+        enemy.handleSpecialDamage(damage, board, AttackType.TRUE, pokemon, crit)
+
+        if (enemy.atk !== enemy.baseAtk) {
+          enemy.addAttack(enemy.baseAtk - enemy.atk, pokemon, 0, false)
+        }
+        if (enemy.hp > enemy.baseHP) {
+          enemy.maxHP = enemy.baseHP
+          enemy.hp = Math.min(enemy.hp, enemy.baseHP)
+        }
+
+        distanceFromTarget++
+      }
+    })
+  }
+}
+
 export class FusionBoltStrategy extends AbilityStrategy {
   process(
     pokemon: PokemonEntity,
@@ -18007,6 +18037,7 @@ export const AbilityStrategies: { [key in Ability]: AbilityStrategy } = {
   [Ability.LANDS_WRATH]: new LandsWrathStrategy(),
   [Ability.THOUSAND_ARROWS]: new ThousandArrowsStrategy(),
   [Ability.CORE_ENFORCER]: new CoreEnforcerStrategy(),
+  [Ability.NIHIL_LIGHT]: new NihilLightStrategy(),
   [Ability.BURN_UP]: new BurnUpStrategy(),
   [Ability.POWER_HUG]: new PowerHugStrategy(),
   [Ability.MORTAL_SPIN]: new MortalSpinStrategy(),

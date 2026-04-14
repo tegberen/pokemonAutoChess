@@ -1214,7 +1214,8 @@ export enum Pkm {
   ZWEILOUS = "ZWEILOUS",
   ZYGARDE_10 = "ZYGARDE_10",
   ZYGARDE_50 = "ZYGARDE_50",
-  ZYGARDE_100 = "ZYGARDE_100"
+  ZYGARDE_100 = "ZYGARDE_100",
+  MEGA_ZYGARDE = "MEGA_ZYGARDE"
 }
 
 export const PkmIndex: { [key in Pkm]: string } = {
@@ -2162,6 +2163,7 @@ export const PkmIndex: { [key in Pkm]: string } = {
   [Pkm.ZYGARDE_10]: "0718-0001",
   [Pkm.ZYGARDE_50]: "0718",
   [Pkm.ZYGARDE_100]: "0718-0002",
+  [Pkm.MEGA_ZYGARDE]: "0718-0005",
   [Pkm.DIANCIE]: "0719",
   [Pkm.MEGA_DIANCIE]: "0719-0001",
   [Pkm.HOOPA]: "0720",
@@ -3516,6 +3518,7 @@ export const PkmFamily: { [key in Pkm]: Pkm } = {
   [Pkm.ZYGARDE_10]: Pkm.ZYGARDE_10,
   [Pkm.ZYGARDE_50]: Pkm.ZYGARDE_10,
   [Pkm.ZYGARDE_100]: Pkm.ZYGARDE_10,
+  [Pkm.MEGA_ZYGARDE]: Pkm.ZYGARDE_10,
   [Pkm.STUFFUL]: Pkm.STUFFUL,
   [Pkm.BEWEAR]: Pkm.STUFFUL,
   [Pkm.GLIMMET]: Pkm.GLIMMET,

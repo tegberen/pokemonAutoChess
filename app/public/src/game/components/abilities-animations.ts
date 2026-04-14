@@ -788,6 +788,26 @@ export const AbilitiesAnimations: {
       tweenProps: { alpha: 0 }
     })(args)
   },
+  [Ability.NIHIL_LIGHT]: [
+    (args) => {
+      const coordinates = transformEntityCoordinates(
+        args.positionX,
+        args.positionY,
+        args.flip
+      )
+      const [dx, dy] = OrientationVector[args.orientation]
+      return staticAnimation({
+        ability: Ability.DYNAMAX_CANNON,
+        x: coordinates[0] + dx * 16,
+        y: coordinates[1] - dy * 16,
+        tint: 0xc010ca,
+        depth: DEPTH.ABILITY_BELOW_POKEMON,
+        origin: [0.5, 0],
+        oriented: true,
+        rotation: -Math.PI / 2
+      })(args)
+    }
+  ],
 
   [Ability.DIAMOND_STORM]: onCasterScale2,
   [Ability.THRASH]: onCasterScale2,
