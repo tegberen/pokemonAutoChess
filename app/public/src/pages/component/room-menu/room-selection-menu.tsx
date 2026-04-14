@@ -17,18 +17,7 @@ export function RoomSelectionMenu(props: {
       header={t("new_game")}
       body={
         <ul>
-          <li
-            className="my-box"
-            onClick={() => props.onSelectMode(GameMode.CLASSIC)}
-          >
-            <img
-              src="assets/ui/game_modes/classic.png"
-              alt={t(`game_modes.${GameMode.CLASSIC}`)}
-              draggable="false"
-            />
-            <h2>{t(`game_modes.${GameMode.CLASSIC}`)}</h2>
-            <p>{t(`game_modes_descriptions.${GameMode.CLASSIC}`)}</p>
-          </li>
+
           <li
             className="my-box"
             onClick={() => props.onSelectMode(GameMode.RANKED)}
@@ -41,18 +30,7 @@ export function RoomSelectionMenu(props: {
             <h2>{t(`game_modes.${GameMode.RANKED}`)}</h2>
             <p>{t(`game_modes_descriptions.${GameMode.RANKED}`)}</p>
           </li>
-          <li
-            className="my-box"
-            onClick={() => props.onSelectMode(GameMode.SCRIBBLE)}
-          >
-            <img
-              src="assets/ui/game_modes/scribble.png"
-              alt={t(`game_modes.${GameMode.SCRIBBLE}`)}
-              draggable="false"
-            />
-            <h2>{t(`game_modes.${GameMode.SCRIBBLE}`)}</h2>
-            <p>{t(`game_modes_descriptions.${GameMode.SCRIBBLE}`)}</p>
-          </li>
+
           <li
             className="my-box"
             onClick={() => props.onSelectMode(GameMode.CUSTOM_LOBBY)}
