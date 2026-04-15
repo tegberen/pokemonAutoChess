@@ -125,11 +125,11 @@
 - Galarian Farfetchd: small buff HP
 - Zeraora: small buff HP
 - Miltank: buff HP
+- Scream Tail: SOUND, FOSSIL, MONSTER
 
 ## Legendary
 - Landorus, Thunderus, Tornadus, Enamorus, Marcus: added HUMAN, nerfed HP
 - Buzzwole and Pheromosa: are now Legendary Duo, no nerfs smile
-- Zygarde: added AMORPHOUS, nerfed HP
 - Victini: added GOURMET, Tabasco Dish
 - Guzzlord: 300 → 400 HP, buffed Passive
 - Spectrier: Range 1 → 2
