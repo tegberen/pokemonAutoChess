@@ -19076,13 +19076,13 @@ export class UrshifuSingle extends Pokemon {
 
 export class ScreamTail extends Pokemon {
   types = new SetSchema<Synergy>([
-    Synergy.PSYCHIC,
-    Synergy.FAIRY,
-    Synergy.SOUND
+    Synergy.SOUND,
+    Synergy.FOSSIL,
+    Synergy.MONSTER
   ])
   rarity = Rarity.UNIQUE
   stars = 3
-  hp = 210
+  hp = 200
   atk = 14
   speed = 71
   def = 8
