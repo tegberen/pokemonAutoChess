@@ -17525,7 +17525,7 @@ export class Zygarde10 extends Pokemon {
   evolution = Pkm.MEGA_ZYGARDE
 
   evolutionRule = new ConditionBasedEvolutionRule(
-    (pokemon, player) => player.life <= 30
+    (pokemon, player) => player.life <= 25
   )
   atk = 26
   speed = 62
@@ -17550,7 +17550,7 @@ export class Zygarde50 extends Pokemon {
   evolution = Pkm.MEGA_ZYGARDE
 
   evolutionRule = new ConditionBasedEvolutionRule(
-    (pokemon, player) => player.life <= 30
+    (pokemon, player) => player.life <= 25
   )
   atk = 23
   speed = 55
