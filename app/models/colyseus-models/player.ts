@@ -976,7 +976,8 @@ function initBuriedItems() {
       Item.LEFTOVERS,
       Item.COIN,
       Item.NUGGET,
-      Item.FOSSIL_STONE
+      Item.FOSSIL_STONE,
+      Item.CELL_BATTERY
     ])
   }
 
