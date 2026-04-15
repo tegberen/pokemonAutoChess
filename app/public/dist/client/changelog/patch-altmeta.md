@@ -75,6 +75,7 @@
 - Eelektross: adjusted stats
 - Nidoking and Nidoqueen: added passive, to attract catchable Nidoran♀ and Nidoran♂ respectively (yes I know it's a bit of a cheat)
 - Gossifleur: added GRASS
+- Garganacl: added HUMAN on last stage
 ## Rare
 - Corviknight: moved to regular, buffed HP and PP
 - Exploud: added MONSTER, adjusted stats
@@ -85,6 +86,7 @@
 - Vikavolt: moved to regional, added AMORPHOUS, small adjustments
 - Primarina: moved to regional, adjusted stats
 - Blaziken: moved to regional, buffed ability alot
+- Salazzle: RANGE 2 → 3, added MONSTER
 
 ## Epic
 - Typhlosion: adjusted stats
