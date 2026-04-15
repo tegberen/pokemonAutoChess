@@ -93,6 +93,27 @@ import {
 
 import { LegendaryPool } from "../../config/game/pools"
 
+export class LightOfRuinStrategy extends AbilityStrategy {
+  process(
+    pokemon: PokemonEntity,
+    board: Board,
+    target: PokemonEntity,
+    crit: boolean
+  ) {
+    super.process(pokemon, board, target, crit)
+    const nbPokemon = board.cells.filter(c => c != null).length
+    const damage = 30 * nbPokemon
+    effectInLine(board, pokemon, target, (cell) => {
+      if (cell.value != null && cell.value.team !== pokemon.team) {
+        cell.value.handleSpecialDamage(damage, board, AttackType.SPECIAL, pokemon, crit)
+      }
+    })
+    const lostMaxHP = Math.floor(pokemon.maxHP * 0.5)
+    pokemon.addMaxHP(-lostMaxHP, pokemon, 0, false)
+
+  }
+}
+
 export class AquaStepStrategy extends AbilityStrategy {
   process(
     pokemon: PokemonEntity,
@@ -18188,7 +18209,8 @@ export const AbilityStrategies: { [key in Ability]: AbilityStrategy } = {
   [Ability.THUNDERCLAP_PRESS]: new ThunderClapPressStrategy(),
   [Ability.AQUA_STEP]: new AquaStepStrategy(),
   [Ability.MAGNETIC_ABSORPTION]: new MagneticAbsorptionStrategy(),
-  [Ability.FRENZY_PLANT]: new FrenzyPlantStrategy()
+  [Ability.FRENZY_PLANT]: new FrenzyPlantStrategy(),
+  [Ability.LIGHT_OF_RUIN]: new LightOfRuinStrategy()
 }
 
 export function castAbility(

@@ -51,6 +51,7 @@
 ![Mega Excadrill](/assets/portraits/0530/0001/Normal.png)
 ![Mega Dragalge](/assets/portraits/0691/0001/Normal.png)
 ![Mega Zygarde](/assets/portraits/0718/0005/Normal.png)
+![Mega Floette Eternal](/assets/portraits/0670/0006/Normal.png)
 
 ## Requirements (Ping me for adjustments)
 ![Charizard](/assets/portraits/0006/Normal.png)
@@ -80,4 +81,5 @@
 ![Excadrill](/assets/portraits/0530/Normal.png)
 ![Dragalge](/assets/portraits/0691/Normal.png)
 ![Zygarde](/assets/portraits/0718/Normal.png)
+![Floette Eternal](/assets/portraits/0670/0005/Sad.png)
 

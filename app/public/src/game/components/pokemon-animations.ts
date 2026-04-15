@@ -2738,6 +2738,20 @@ export const PokemonAnimations: {
     attackSprite: AttackSprite.FLORA_RANGE,
     hitSprite: HitSprite.FAIRY_HIT
   },
+  [Pkm.FLOETTE_ETERNAL]: {
+    attack: AnimationType.Shoot,
+    ability: AnimationType.Charge,
+    emote: AnimationType.Shoot,
+    attackSprite: AttackSprite.FLORA_RANGE,
+    hitSprite: HitSprite.FAIRY_HIT
+  },
+  [Pkm.MEGA_FLOETTE_ETERNAL]: {
+    attack: AnimationType.Shoot,
+    ability: AnimationType.Charge,
+    emote: AnimationType.Shoot,
+    attackSprite: AttackSprite.FLORA_RANGE,
+    hitSprite: HitSprite.FAIRY_HIT
+  },
   [Pkm.FLORGES]: {
     attack: AnimationType.Appeal,
     ability: AnimationType.Charge,

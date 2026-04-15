@@ -23,6 +23,7 @@
 		"TRUE": "true damage"
 	},
 	"ability": {
+    "LIGHT_OF_RUIN": "Light of Ruin",
     "AQUA_STEP": "Aqua Step",
     "MAGNETIC_ABSORPTION": "Magnetic Absorption",
     "FRENZY_PLANT": "Frenzy Plant",
@@ -1008,6 +1009,8 @@
 		"FLOETTE_YELLOW": "Floette (Yellow)",
 		"FLOETTE_BLUE": "Floette (Blue)",
 		"FLOETTE_ORANGE": "Floette (Orange)",
+    "FLOETTE_ETERNAL": "Floette (Eternal)",
+    "MEGA_FLOETTE_ETERNAL": "Mega Floette (Eternal)",
 		"FLORGES": "Florges (Pink)",
 		"FLORGES_WHITE": "Florges (White)",
 		"FLORGES_YELLOW": "Florges (Yellow)",
@@ -1835,6 +1838,7 @@
 	},
 	
 	"ability_description": {
+    "LIGHT_OF_RUIN": "Deal [30,SP] SPECIAL to all enemy Pokémon in a line, multiplied by all allies and enemies on the board. Loose 50% of max HP.",
     "AQUA_STEP": "The user attacks with fluid dance steps, shifting to an ADJACENT unoccupied tile before dealing [25,50,100,SP] SPECIAL to the target and increasing the users SPEED by [10,15,20,SP]. If the user has more SPEED than the target, regain [10,15,20] PP.",
     "MAGNETIC_ABSORPTION": "Absorbs RANGE from the target and ADJACENT enemies, reducing theirs by 1 and increasing the user's by 1. Deals [80, SP] SPECIAL and inflicts 3 seconds of LOCKED instead, to any enemy already at minimum RANGE. The user then moves 1 tile back.",
     "FRENZY_PLANT": "Strikes the target 3 times with enormous tree roots, dealing [10,25,50,SP] SPECIAL per hit, multiplied by the number of ADJACENT enemies surrounding the target. If the target is defeated, remaining roots lash out at the nearest enemy.",
@@ -3527,7 +3531,8 @@
     "DANCER": "At the start of the fight, start dancing with allies ADJACENT_IN_THE_SAME_ROW. Each second gain [1,2,3] SPEED and ATK until half the PP bar is filled or enemies are in RANGE.",
     "EXCADRILL": "Gain one stack for each KO. Mega evolves after 10 stacks.",
     "DRAGALGE": "Gain one stack for each KO, two if under SMOG. Mega evolves after 25 stacks.",
-    "SHELL_ARMOR": "Gain [3,6,12] DEF when receiving critical attacks. The Pokémon is immune to ARMOR_BREAK."
+    "SHELL_ARMOR": "Gain [3,6,12] DEF when receiving critical attacks. The Pokémon is immune to ARMOR_BREAK.",
+    "FLOETTE_ETERNAL": "Gain one stack for each KO. Mega evolves after 20 stacks."
   },
 	"stat": {
 		"ATK": "Attack",

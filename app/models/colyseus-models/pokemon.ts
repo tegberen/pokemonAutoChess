@@ -456,6 +456,37 @@ export class Egg extends Pokemon {
   canHoldItems = false
 }
 
+export class FloetteEternal extends Pokemon {
+  types = new SetSchema<Synergy>([Synergy.FAIRY, Synergy.FLORA])
+  rarity = Rarity.UNIQUE
+  hp = 150
+  stars = 3
+  evolution = Pkm.MEGA_FLOETTE_ETERNAL
+  evolutionRule = new StackBasedEvolutionRule()
+  stacksRequired = 20
+  atk = 18
+  speed = 55
+  def = 6
+  speDef = 12
+  maxPP = 120
+  range = 3
+  skill = Ability.LIGHT_OF_RUIN
+  passive = Passive.FLOETTE_ETERNAL
+}
+export class MegaFloetteEternal extends Pokemon {
+  types = new SetSchema<Synergy>([Synergy.FAIRY, Synergy.FLORA])
+  rarity = Rarity.UNIQUE
+  stars = 4
+  hp = 200
+  atk = 18
+  speed = 55
+  def = 6
+  speDef = 12
+  maxPP = 120
+  range = 3
+  skill = Ability.LIGHT_OF_RUIN
+}
+
 export class SandyShocks extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.ELECTRIC, Synergy.GROUND, Synergy.FOSSIL])
   rarity = Rarity.UNIQUE
@@ -3805,6 +3836,8 @@ export class Floette extends Pokemon {
   skill = Ability.FAIRY_WIND
   passive = Passive.FLABEBE_COLOR
 }
+
+
 export class Florges extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.FAIRY, Synergy.FLORA])
   rarity = Rarity.UNCOMMON
@@ -21870,6 +21903,8 @@ export const PokemonClasses: Record<
   [Pkm.FLOETTE_ORANGE]: Floette,
   [Pkm.FLOETTE_WHITE]: Floette,
   [Pkm.FLOETTE_YELLOW]: Floette,
+  [Pkm.FLOETTE_ETERNAL]: FloetteEternal,
+  [Pkm.MEGA_FLOETTE_ETERNAL]: MegaFloetteEternal,
   [Pkm.FLORGES]: Florges,
   [Pkm.FLORGES_BLUE]: Florges,
   [Pkm.FLORGES_ORANGE]: Florges,

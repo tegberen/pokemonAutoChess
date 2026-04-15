@@ -14,6 +14,7 @@ export const PoolSize: { [key in Rarity]: [number, number, number] } = {
 }
 
 export const UniquePool = new Array<PkmProposition>(
+  Pkm.FLOETTE_ETERNAL,
   Pkm.SANDY_SHOCKS,
   Pkm.AERODACTYL,
   Pkm.CASTFORM,
