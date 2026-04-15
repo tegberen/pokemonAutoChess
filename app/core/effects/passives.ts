@@ -2108,6 +2108,14 @@ export const PassiveEffects: Partial<
         attacker.addStack()
       }
     })
+  ],
+  [Passive.FLOETTE_ETERNAL]: [
+    new OnKillEffect(({ attacker }) => {
+      if (attacker.isGhostOpponent) return
+      if (!attacker.player) return
+      attacker.addStack()
+
+    })
   ]
   
 }

@@ -812,6 +812,28 @@ export const AbilitiesAnimations: {
       })(args)
     }
   ],
+  [Ability.LIGHT_OF_RUIN]: [
+    (args) => {
+      const coordinates = transformEntityCoordinates(
+        args.positionX,
+        args.positionY,
+        args.flip
+      )
+      const [dx, dy] = OrientationVector[args.orientation]
+      return staticAnimation({
+        x: coordinates[0] + dx * 16,
+        y: coordinates[1] - dy * 16,
+        depth: DEPTH.ABILITY_BELOW_POKEMON,
+        origin: [0.5, 0],
+        oriented: true,
+        scale: 3,
+        tint: 0xd75b8c,
+        rotation: -Math.PI / 2,
+        flipY: true,
+        animOptions: { frameRate: 14 }  // lower = slower, default is usually 16
+      })(args)
+    }
+  ],
 
   [Ability.DIAMOND_STORM]: onCasterScale2,
   [Ability.THRASH]: onCasterScale2,
