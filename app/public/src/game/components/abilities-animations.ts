@@ -823,10 +823,9 @@ export const AbilitiesAnimations: {
         origin: [0.5, 0],
         oriented: true,
         scale: 3,
-        tint: 0xd75b8c,
         rotation: -Math.PI / 2,
         flipY: true,
-        animOptions: { frameRate: 14 }  // lower = slower, default is usually 16
+        animOptions: { frameRate: 12 }  // lower = slower, default is usually 16
       })(args)
     }
   ],

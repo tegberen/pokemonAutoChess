@@ -81,5 +81,5 @@
 ![Excadrill](/assets/portraits/0530/Normal.png)
 ![Dragalge](/assets/portraits/0691/Normal.png)
 ![Zygarde](/assets/portraits/0718/Normal.png)
-![Floette Eternal](/assets/portraits/0670/0005/Sad.png)
+![Floette Eternal](/assets/portraits/0670/0005/Normal.png)
 
