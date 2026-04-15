@@ -8317,7 +8317,7 @@ export class Carbink extends Pokemon {
 }
 
 export class Diancie extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.FOSSIL, Synergy.ROCK, Synergy.FAIRY])
+  types = new SetSchema<Synergy>([Synergy.ROCK, Synergy.FAIRY, Synergy.FOSSIL])
   rarity = Rarity.EPIC
   evolution = Pkm.MEGA_DIANCIE
   evolutionRule = new StackBasedEvolutionRule()
@@ -8336,7 +8336,7 @@ export class Diancie extends Pokemon {
 }
 
 export class MegaDiancie extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.FOSSIL, Synergy.ROCK, Synergy.FAIRY])
+  types = new SetSchema<Synergy>([Synergy.ROCK, Synergy.FAIRY, Synergy.FOSSIL])
   rarity = Rarity.EPIC
   stars = 3
   hp = 200
@@ -8557,7 +8557,7 @@ export class Archen extends Pokemon {
   def = 4
   speDef = 4
   maxPP = 90
-  range = 1
+  range = 2
   skill = Ability.ROCK_SMASH
   additional = true
 }
@@ -10187,32 +10187,32 @@ export class MrMime extends Pokemon {
 }
 
 export class Salandit extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.FIRE, Synergy.POISON])
+  types = new SetSchema<Synergy>([Synergy.FIRE, Synergy.POISON, Synergy.MONSTER])
   rarity = Rarity.RARE
   stars = 1
   evolution = Pkm.SALAZZLE
-  hp = 70
+  hp = 50
   atk = 6
   speed = 63
   def = 4
   speDef = 4
   maxPP = 100
-  range = 2
+  range = 3
   skill = Ability.FIRE_LASH
   additional = true
 }
 
 export class Salazzle extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.FIRE, Synergy.POISON])
+  types = new SetSchema<Synergy>([Synergy.FIRE, Synergy.POISON, Synergy.MONSTER])
   rarity = Rarity.RARE
   stars = 2
-  hp = 170
+  hp = 150
   atk = 14
   speed = 63
   def = 8
   speDef = 8
   maxPP = 100
-  range = 2
+  range = 3
   skill = Ability.FIRE_LASH
   additional = true
 }
@@ -18195,7 +18195,7 @@ export class MegaDragalge extends Pokemon {
 }
 
 export class Cubchoo extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.ICE, Synergy.WILD, Synergy.AQUATIC])
+  types = new SetSchema<Synergy>([Synergy.ICE, Synergy.AQUATIC, Synergy.WILD])
   rarity = Rarity.EPIC
   stars = 1
   evolution = Pkm.BEARTIC
@@ -18211,7 +18211,7 @@ export class Cubchoo extends Pokemon {
 }
 
 export class Beartic extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.ICE, Synergy.WILD, Synergy.AQUATIC])
+  types = new SetSchema<Synergy>([Synergy.ICE, Synergy.AQUATIC, Synergy.WILD])
   rarity = Rarity.EPIC
   stars = 2
   hp = 200
@@ -18256,7 +18256,7 @@ export class Naclstack extends Pokemon {
 }
 
 export class Garganacl extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.ROCK, Synergy.GOURMET])
+  types = new SetSchema<Synergy>([Synergy.ROCK, Synergy.GOURMET, Synergy.HUMAN])
   rarity = Rarity.UNCOMMON
   stars = 3
   hp = 280
