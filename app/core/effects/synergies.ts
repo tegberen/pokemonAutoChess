@@ -827,7 +827,7 @@ export const rockDeathExplosionT2 = new OnDeathEffect(
   EffectEnum.MOUTAIN_RESISTANCE
 )
 export const rockDeathExplosionT3 = new OnDeathEffect(
-  ({ board, pokemon }) => rockDeathExplosion(pokemon, board, 15, 3000),
+  ({ board, pokemon }) => rockDeathExplosion(pokemon, board, 20, 3000),
   EffectEnum.DIAMOND_STORM
 )
 
