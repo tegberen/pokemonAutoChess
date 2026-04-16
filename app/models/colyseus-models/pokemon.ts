@@ -18641,9 +18641,9 @@ export class Pecharunt extends Pokemon {
 
 export class Veluza extends Pokemon {
   types = new SetSchema<Synergy>([
-    Synergy.WATER,
     Synergy.PSYCHIC,
-    Synergy.GOURMET
+    Synergy.GOURMET,
+    Synergy.MONSTER
   ])
   rarity = Rarity.UNIQUE
   stars = 3

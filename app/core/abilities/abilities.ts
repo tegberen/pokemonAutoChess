@@ -2623,7 +2623,7 @@ export class PhantomForceStrategy extends AbilityStrategy {
   ) {
     super.process(pokemon, board, target, crit, true)
 
-    const silenceDuration = 2000 * (1 + pokemon.ap / 100) * (crit ? pokemon.critPower : 1)
+    const silenceDuration = 2000
     board.forEach((x: number, y: number, enemy: PokemonEntity | undefined) => {
       if (enemy && enemy.team !== pokemon.team) {
         enemy.status.triggerSilence(silenceDuration, enemy)
@@ -2665,7 +2665,7 @@ export class PhantomForceStrategy extends AbilityStrategy {
             if (cell.value && cell.value.team !== pokemon.team) {
               const isVulnerable =
                 cell.value.status.silence || cell.value.status.fatigue
-              const damage = isVulnerable ? 200 : 100
+              const damage = isVulnerable ? 140 : 70
               cell.value.handleSpecialDamage(
                 damage,
                 board,

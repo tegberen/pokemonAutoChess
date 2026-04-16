@@ -10,7 +10,7 @@
 # Synergy Buffs
 - Additional effect for ROCK: When KO'd, explode and deal TRUE and ARMOR_BREAK ADJACENT enemies. 
 - Additional effect for FIGHTING 8: Spawns a substitute as training dummy. The FIGHTING Pokemon that defeats the substitute will gain 3 ATK and 10 HP permanently.
-- Additional effect for POISON 7: [1,LK] % chance to corrode one of the target's items, destroying it for the rest of the fight when not RUNE_PROTECT.
+- Additional effect for POISON 7: [2,LK] % chance to corrode one of the target's items, destroying it for the rest of the fight when not RUNE_PROTECT.
 - Buffed effect for FIRE 8: +4 ATK after every hit (FIRE_SHARD: +4 permanent ATK and SPEED)
 - Buffed effect for FLYING 8: 175% PHYSICAL ATK on landing on their target
 
@@ -32,14 +32,22 @@
 
 ## The BINDING_BAND
 - SOOTHE_BELL: Grant the lowest HP ally 20 SHIELD every 2 seconds. Has a [30,LK]% chance to convert that ally’s remaining SHIELD into HP.
-- EXP_CHARM: The holder gains 3 PP after getting hit by an attack. [30,LK]% chance to increase that PP gain by 1 after each received hit. When the holder is KO, gain 1 XP.
+> It is a support item, that you should use on a ranged unit. Could also work on the frontline, when paired with some tank items. Otherwise +30 HP makes your backline holder less squishy!
+- EXP_CHARM: The holder gains 2 PP after getting hit by an attack. [30,LK]% chance to increase that PP gain by 1 after each received hit. When the holder is KO, gain 1 XP.
+> Good for loose streaker! Use it in the early game, to level faster and start catching up. Otherwise it is a tool to gain alot of PP when paired with a tank item like ROCKY_HELMET or POKE_DOLL. Also good to generate more PP, when having SHIELD.
 - FAIRY_FEATHER: Attacks have a [30,LK]% chance to deal 75% of the users current DEF as additional SPECIAL on attack.
-- CLEAR_AMULET: The first time the holder is affected by a negative status effect, they store the effect and gain RUNE_PROTECT for 10 seconds. On the next attack, apply said negative effect to all ADJACENT enemies for 5 seconds.
+> It's base DEF of 12 is enough, to work on any ranged unit to deal more damage. It is especially good on ranged ROCK units, like Solrock or Lunatone! Try to pair it with LOADED_DICE and SPEED items!
+- CLEAR_AMULET: The first time the holder is affected by any negative status effect, they will store the effect and gain RUNE_PROTECT for 10 seconds. On the next attack, apply said negative effect to all ADJACENT enemies for 5 seconds.
+> Better spread your GHOST team (evil laughter). Try to pair it with FLAME_ORB or TIGHT_BELT.
 - DESTINY_KNOT: Once the holder is KO, the STRONGEST ally gains the users current LUCK and base ATK for the rest of the fight.
-- LUCKY_PUNCH: If the target has an ally directly behind it, there is a [30,LK]% chance the attack knocks the target’s item to that ally. (The target loses the item, and its ally gains it).
+> A way to further buff your carry, when it is already fully itemized!
+- LUCKY_PUNCH: If the target has an ally directly behind it, there is a [30,LK]% chance the attack knocks the target’s item to that ally. (The target loses a random holded item, and its ally gains it).
+> Use your positioning knowledge to get rid of annoying tank items. Time to scout!
 - GRIP_CLAW: Attacks grant +10% CRIT_POWER. (stackable)
 - COVERT_CLOAK: Every 3 seconds, steal 5 AP from all enemies within RANGE and deal 5 SPECIAL. That damage is doubled, if the target has no AP.
+> This item is a way to make any 2 RANGE carry less vulnerable, by giving it one more. Try to pair it with POKEMONOMICON, or just use the 50 AP to deal alot of damage.
 - FLUFFY_TAIL: Gains [10,LK]% dodge chance. The holder is immune to ARMOR_BREAK.
+> If you survived GHOST Togekiss meta, beating this will be a breeze.
 - EVER_STONE: The holder gains the ROCK type.
 - TIGHT_BELT: At the beginning of each battle, TIGHT_BELT is replaced by 2 random items. The holder is PARALYSIS during the entire fight.
 
@@ -111,7 +119,7 @@
 ## Hatch
 - Stoutland: more bulky, pretty juicy ATK stat buff
 - Chandelure: changed it to SPECIAL Attacker mashine
-- Impoleon: lowered ATK, decent Buff for HP & PP
+- Empoleon: lowered ATK, decent Buff for HP & PP
 - Emboar: giga buff
 - Serperior: added LIGHT
 - Ludicolo: adjusted stats
@@ -120,7 +128,7 @@
 - Dragapult: added FOSSIL
 
 ## Unique
-- Veluza: PP 100 → 60
+- Veluza: PP 100 → 60, added MONSTER for WATER for avo
 - Roaring Moon: adjusted stats and ability, lowered PP
 - Pyukumuku: buffed Passive, buffed DEF and SPE_DEF
 - Farfetchd: small buff HP
