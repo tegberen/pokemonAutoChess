@@ -1549,9 +1549,9 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
   [Item.EXP_CHARM]: [
     new OnAttackReceivedEffect(({ pokemon, totalDamage }) => {
       if (totalDamage <= 0) return
-      const ppGain = 3 + pokemon.count.expCharmCount
+      const ppGain = 5 + pokemon.count.expCharmCount
       pokemon.addPP(ppGain, pokemon, 0, false)
-      if (chance(0.3, pokemon)) {
+      if (chance(0.3, pokemon) && pokemon.count.expCharmCount < 10) {
         pokemon.count.expCharmCount++
       }
     }),
