@@ -1016,7 +1016,7 @@ export class MegaLopunny extends Pokemon {
   rarity = Rarity.UNCOMMON
   stars = 3
   hp = 220
-  atk = 26
+  atk = 22
   speed = 59
   def = 10
   speDef = 10
@@ -1311,7 +1311,7 @@ export class Roggenrola extends Pokemon {
   speed = 37
   def = 8
   speDef = 6
-  maxPP = 95
+  maxPP = 100
   range = 2
   skill = Ability.ROCK_ARTILLERY
 }
@@ -1326,7 +1326,7 @@ export class Boldore extends Pokemon {
   speed = 37
   def = 12
   speDef = 10
-  maxPP = 90
+  maxPP = 100
   range = 2
   skill = Ability.ROCK_ARTILLERY
 }
@@ -1340,7 +1340,7 @@ export class Gigalith extends Pokemon {
   speed = 37
   def = 16
   speDef = 14
-  maxPP = 85
+  maxPP = 100
   range = 2
   skill = Ability.ROCK_ARTILLERY
 }
@@ -1566,7 +1566,7 @@ export class Gardevoir extends Pokemon {
   evolution = Pkm.MEGA_GARDEVOIR
   evolutionRule = new StackBasedEvolutionRule()
   stacksRequired: number = 25
-  hp = 180
+  hp = 170
   atk = 16
   speed = 51
   def = 4
@@ -1586,7 +1586,7 @@ export class MegaGardevoir extends Pokemon {
   ])
   rarity = Rarity.COMMON
   stars = 4
-  hp = 220
+  hp = 200
   atk = 18
   speed = 55
   def = 6
@@ -1608,7 +1608,7 @@ export class Gallade extends Pokemon {
   evolution = Pkm.MEGA_GALLADE
   evolutionRule = new StackBasedEvolutionRule()
   stacksRequired: number = 25
-  hp = 180
+  hp = 170
   atk = 20
   speed = 51
   def = 4
@@ -1628,7 +1628,7 @@ export class MegaGallade extends Pokemon {
   ])
   rarity = Rarity.COMMON
   stars = 4
-  hp = 220
+  hp = 200
   atk = 24
   speed = 55
   def = 6
@@ -1988,10 +1988,10 @@ export class MegaTyranitar extends Pokemon {
   rarity = Rarity.RARE
   stars = 4
   hp = 230
-  atk = 32
+  atk = 30
   speed = 45
-  def = 20
-  speDef = 12
+  def = 16
+  speDef = 10
   maxPP = 90
   range = 1
   skill = Ability.BITE
@@ -2105,10 +2105,10 @@ export class Gengar extends Pokemon {
   evolution = Pkm.MEGA_GENGAR
   evolutionRule = new StackBasedEvolutionRule()
   stacksRequired: number = 10
-  hp = 300
-  atk = 30
+  hp = 280
+  atk = 28
   speed = 60
-  def = 9
+  def = 8
   speDef = 10
   maxPP = 80
   range = 2
@@ -2124,11 +2124,11 @@ export class MegaGengar extends Pokemon {
   ])
   rarity = Rarity.EPIC
   stars = 4
-  hp = 320
+  hp = 300
   atk = 30
   speed = 60
-  def = 11
-  speDef = 12
+  def = 8
+  speDef = 10
   maxPP = 100
   range = 2
   skill = Ability.PHANTOM_FORCE
@@ -2188,7 +2188,7 @@ export class MegaAlakazam extends Pokemon {
   stars = 4
   hp = 220
   atk = 20
-  speed = 79
+  speed = 63
   def = 10
   speDef = 18
   maxPP = 50
@@ -5547,10 +5547,10 @@ export class MegaCharizardX extends Pokemon {
   rarity = Rarity.COMMON
   stars = 4
   hp = 240
-  atk = 23
+  atk = 20
   speed = 57
-  def = 12
-  speDef = 10
+  def = 10
+  speDef = 8
   maxPP = 100
   range = 1
   skill = Ability.FLARE_BLITZ
@@ -7454,7 +7454,7 @@ export class MegaAbsol extends Pokemon {
   stars = 4
   hp = 220
   atk = 24
-  speed = 65
+  speed = 49
   def = 10
   speDef = 10
   maxPP = 100
@@ -7517,7 +7517,7 @@ export class Latias extends Pokemon {
   evolution = Pkm.MEGA_LATIAS
 
   evolutionRule = new ConditionBasedEvolutionRule(
-    (pokemon, player) => player.life <= 30
+    (pokemon, player) => player.life <= 25
   )
   hp = 120
   atk = 12
@@ -7536,7 +7536,7 @@ export class Latios extends Pokemon {
   stars = 3
   evolution = Pkm.MEGA_LATIOS
   evolutionRule = new ConditionBasedEvolutionRule(
-    (pokemon, player) => player.life <= 30
+    (pokemon, player) => player.life <= 25
   )
   hp = 120
   atk = 12
@@ -7665,7 +7665,7 @@ export class MegaMewtwoY extends Pokemon {
   ])
   rarity = Rarity.LEGENDARY
   stars = 4
-  hp = 250
+  hp = 220
   atk = 30
   speed = 67
   def = 10
@@ -8965,9 +8965,9 @@ export class MegaAerodactyl extends Pokemon {
   stars = 4
   hp = 220
   atk = 19
-  speed = 77
-  def = 8
-  speDef = 10
+  speed = 67
+  def = 6
+  speDef = 8
   maxPP = 80
   range = 1
   skill = Ability.ROCK_SLIDE
