@@ -36,18 +36,18 @@
 - EXP_CHARM: The holder gains 2 PP after getting hit by an attack. [30,LK]% chance to increase that PP gain by 1 after each received hit. When the holder is KO, gain 1 XP.
 > Good for loose streaker! Use it in the early game, to level faster and start catching up. Otherwise it is a tool to gain alot of PP when paired with a tank item like ROCKY_HELMET or POKE_DOLL. Also good to generate more PP, when having SHIELD.
 - FAIRY_FEATHER: Attacks have a [30,LK]% chance to deal 75% of the users current DEF as additional SPECIAL on attack.
-> It's base DEF of 12 is enough, to work on any ranged unit to deal more damage. It is especially good on ranged ROCK units, like Solrock or Lunatone! Try to pair it with LOADED_DICE and SPEED items!
+> Its base DEF of 12 is enough, to work on any ranged unit to deal more damage. It is especially good on ranged ROCK units, like Solrock or Lunatone! Try to pair it with LOADED_DICE and SPEED items!
 - CLEAR_AMULET: The first time the holder is affected by any negative status effect, they will store the effect and gain RUNE_PROTECT for 10 seconds. On the next attack, apply said negative effect to all ADJACENT enemies for 5 seconds.
-> Better spread your GHOST team (evil laughter). Try to pair it with FLAME_ORB or TIGHT_BELT.
+> Better spread your GHOST team (evil laughter). Try to pair it with FLAME_ORB or TIGHT_BELT! Otherwise 20 SPE_DEF is always appreciated on your tank.
 - DESTINY_KNOT: Once the holder is KO, the STRONGEST ally gains the users current LUCK and base ATK for the rest of the fight.
-> A way to further buff your carry, when it is already fully itemized!
+> A way to further buff your carry, when it is already fully itemized! 
 - LUCKY_PUNCH: If the target has an ally directly behind it, there is a [30,LK]% chance the attack knocks the target’s item to that ally. (The target loses a random holded item, and its ally gains it).
 > Use your positioning knowledge to get rid of annoying tank items. Time to scout!
 - GRIP_CLAW: Attacks grant +10% CRIT_POWER. (stackable)
 - COVERT_CLOAK: Every 3 seconds, steal 5 AP from all enemies within RANGE and deal 5 SPECIAL. That damage is doubled, if the target has no AP.
-> This item is a way to make any 2 RANGE carry less vulnerable, by giving it one more. Try to pair it with POKEMONOMICON, or just use the 50 AP to deal alot of damage.
+> This item is a way to make any 2 RANGE carry less vulnerable, by giving it +1 more RANGE. Try to pair it with POKEMONOMICON, or just use the 50 AP to deal alot of damage. The AP stealing can help against PSYCHIC, ARTIFICIAL or DRAGON!
 - FLUFFY_TAIL: Gains [10,LK]% dodge chance. The holder is immune to ARMOR_BREAK.
-> If you survived GHOST Togekiss meta, beating this will be a breeze.
+> If you have survived GHOST Togekiss meta, beating this will be a breeze.
 - EVER_STONE: The holder gains the ROCK type.
 - TIGHT_BELT: At the beginning of each battle, TIGHT_BELT is replaced by 2 random items. The holder is PARALYSIS during the entire fight.
 
