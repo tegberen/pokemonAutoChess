@@ -819,15 +819,15 @@ export const pounceWandEffect = new OnAttackReceivedEffect(
 )
 
 export const rockDeathExplosionT1 = new OnDeathEffect(
-  ({ board, pokemon }) => rockDeathExplosion(pokemon, board, 10, 1000),
+  ({ board, pokemon }) => rockDeathExplosion(pokemon, board, 5, 1000),
   EffectEnum.BATTLE_ARMOR
 )
 export const rockDeathExplosionT2 = new OnDeathEffect(
-  ({ board, pokemon }) => rockDeathExplosion(pokemon, board, 20, 3000),
+  ({ board, pokemon }) => rockDeathExplosion(pokemon, board, 10, 2000),
   EffectEnum.MOUTAIN_RESISTANCE
 )
 export const rockDeathExplosionT3 = new OnDeathEffect(
-  ({ board, pokemon }) => rockDeathExplosion(pokemon, board, 30, 6000),
+  ({ board, pokemon }) => rockDeathExplosion(pokemon, board, 15, 3000),
   EffectEnum.DIAMOND_STORM
 )
 
@@ -845,11 +845,11 @@ function rockDeathExplosion(
     const target = cell.value
     if (!target || target.team === pokemon.team) return
 
-    const hasCritEffect = pokemon.effects.has(EffectEnum.ABILITY_CRIT)
-    const critRoll = chance(pokemon.critChance / 100, pokemon)
-    const crit = hasCritEffect && critRoll
+    //const hasCritEffect = pokemon.effects.has(EffectEnum.ABILITY_CRIT)
+    //const critRoll = chance(pokemon.critChance / 100, pokemon)
+    //const crit = hasCritEffect && critRoll
     //console.log(`[rockExplosion] hasCritEffect=${hasCritEffect} critRoll=${critRoll} crit=${crit}`)
-    target.handleSpecialDamage(damage, board, AttackType.TRUE, pokemon, crit)
+    target.handleSpecialDamage(damage, board, AttackType.TRUE, pokemon, false, false)
     target.status.triggerArmorReduction(armorBreakMs, target)
   })
 }
