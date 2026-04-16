@@ -744,10 +744,10 @@ export class OnAddBotCommand extends Command<PreparationRoom, OnAddBotPayload> {
 
         switch (difficulty) {
           case BotDifficulty.NEWBIE:
-            elo = { $lt: 1050 }
+            elo = { $lt: 900 }
             break
           case BotDifficulty.MEDIUM:
-            elo = { $gte: 1050, $lt: 1300 }
+            elo = { $gte: 900, $lt: 1300 }
             break
           case BotDifficulty.HARD:
             elo = { $gte: 1300, $lt: 1400 }
