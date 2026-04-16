@@ -2266,7 +2266,7 @@
 		"LANDS_WRATH": "The ground erupts, dealing 40 + [100,SP]% ATK as SPECIAL to the target and ADJACENT enemies, then lower their DEF and SPE_DEF by [5,SP].",
 		"THOUSAND_ARROWS": "33 energy arrows rain down on random tiles, dealing [60,SP] SPECIAL each. All enemies hit are LOCKED for 1 second.",
 		"CORE_ENFORCER": "Hits in a Z-shape area around the target, dealing [80,SP] SPECIAL and inflicting SILENCE for 3 seconds.",
-    "NIHIL_LIGHT": "Unleash a powerful light that defies all laws of nature, dealing [80,SP] TRUE to the first target and 20% less for each enemy behind. All enemies hit lose any ATK and HP gained during the fight.",
+    "NIHIL_LIGHT": "Unleash a powerful light that defies all laws of nature, dealing [80,SP] TRUE to the first target and 20% less for each enemy behind. All enemies hit lose any HP gained during the fight.",
 		"POWER_HUG": "Deal [40,80,SP] SPECIAL to the target. The target is LOCKED and PARALYSIS for 3 seconds.",
 		"MORTAL_SPIN": "Knock back any Pokémon targeting the user in melee range. Deal [20,30,40,SP] SPECIAL to any enemies hit, and apply POISONNED for 4 seconds",
 		"METAL_CLAW": "Deal [10,20,40,SP] TRUE to the target and raise the user's ATK by [2,4,6,SP].",

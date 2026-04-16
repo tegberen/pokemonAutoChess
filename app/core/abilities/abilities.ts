@@ -305,9 +305,6 @@ export class NihilLightStrategy extends AbilityStrategy {
 
         enemy.handleSpecialDamage(damage, board, AttackType.TRUE, pokemon, crit)
 
-        if (enemy.atk !== enemy.baseAtk) {
-          enemy.addAttack(enemy.baseAtk - enemy.atk, pokemon, 0, false)
-        }
         if (enemy.hp > enemy.baseHP) {
           enemy.maxHP = enemy.baseHP
           enemy.hp = Math.min(enemy.hp, enemy.baseHP)
