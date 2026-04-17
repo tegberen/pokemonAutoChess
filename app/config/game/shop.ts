@@ -69,6 +69,7 @@ export const RarityProbabilityPerLevel: { [key: number]: number[] } = {
 export const DITTO_RATE = 0.005
 export const MIN_STAGE_FOR_DITTO = 6
 export const EEVEE_RATE = 1 / 20
+export const MILCERY_RATE = 1 / 20
 export const KECLEON_RATE = 1 / 400
 export const ARCEUS_RATE = 1 / 400
 export const UNOWN_PSY3_NB_SHOPS_INTERVAL = 5

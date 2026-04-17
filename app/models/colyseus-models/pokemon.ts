@@ -18426,8 +18426,8 @@ export class Milcery extends Pokemon {
     Synergy.AMORPHOUS,
     Synergy.GOURMET
   ])
-  rarity = Rarity.UNIQUE
-  stars = 2
+  rarity = Rarity.SPECIAL
+  stars = 1
   evolutions = [
     Pkm.ALCREMIE_VANILLA,
     Pkm.ALCREMIE_RUBY,
@@ -18443,13 +18443,13 @@ export class Milcery extends Pokemon {
     [...Flavors],
     (pokemon, player, item: Item) => alcremieByFlavor[item]
   )
-  hp = 150
-  atk = 10
+  hp = 60
+  atk = 5
   speed = 41
   def = 2
-  speDef = 6
-  maxPP = 70
-  range = 2
+  speDef = 4
+  maxPP = 100
+  range = 3
   skill = Ability.DECORATE
   passive = Passive.CREAM
 }
@@ -18468,15 +18468,15 @@ export class AlcremieVanilla extends Pokemon {
     Synergy.AMORPHOUS,
     Synergy.GOURMET
   ])
-  rarity = Rarity.UNIQUE
-  stars = 3
-  hp = 180
-  atk = 16
+  rarity = Rarity.SPECIAL
+  stars = 2
+  hp = 120
+  atk = 10
   speed = 41
-  def = 6
-  speDef = 12
-  maxPP = 70
-  range = 2
+  def = 4
+  speDef = 8
+  maxPP = 100
+  range = 3
   skill = Ability.DECORATE
   passive = Passive.VANILLA_CREAM
   onAcquired = alcremieOnAcquired
@@ -18488,15 +18488,15 @@ export class AlcremieRuby extends Pokemon {
     Synergy.AMORPHOUS,
     Synergy.GOURMET
   ])
-  rarity = Rarity.UNIQUE
-  stars = 3
-  hp = 180
-  atk = 16
+  rarity = Rarity.SPECIAL
+  stars = 2
+  hp = 120
+  atk = 10
   speed = 41
-  def = 6
-  speDef = 12
-  maxPP = 70
-  range = 2
+  def = 4
+  speDef = 8
+  maxPP = 100
+  range = 3
   skill = Ability.DECORATE
   passive = Passive.RUBY_CREAM
   onAcquired = alcremieOnAcquired
@@ -18508,15 +18508,15 @@ export class AlcremieMatcha extends Pokemon {
     Synergy.AMORPHOUS,
     Synergy.GOURMET
   ])
-  rarity = Rarity.UNIQUE
-  stars = 3
-  hp = 180
-  atk = 16
+  rarity = Rarity.SPECIAL
+  stars = 2
+  hp = 120
+  atk = 10
   speed = 41
-  def = 6
-  speDef = 12
-  maxPP = 70
-  range = 2
+  def = 4
+  speDef = 8
+  maxPP = 100
+  range = 3
   skill = Ability.DECORATE
   passive = Passive.MATCHA_CREAM
   onAcquired = alcremieOnAcquired
@@ -18528,15 +18528,15 @@ export class AlcremieMint extends Pokemon {
     Synergy.AMORPHOUS,
     Synergy.GOURMET
   ])
-  rarity = Rarity.UNIQUE
-  stars = 3
-  hp = 180
-  atk = 16
+  rarity = Rarity.SPECIAL
+  stars = 2
+  hp = 120
+  atk = 10
   speed = 41
-  def = 6
-  speDef = 12
-  maxPP = 70
-  range = 2
+  def = 4
+  speDef = 8
+  maxPP = 100
+  range = 3
   skill = Ability.DECORATE
   passive = Passive.MINT_CREAM
   onAcquired = alcremieOnAcquired
@@ -18548,15 +18548,15 @@ export class AlcremieLemon extends Pokemon {
     Synergy.AMORPHOUS,
     Synergy.GOURMET
   ])
-  rarity = Rarity.UNIQUE
-  stars = 3
-  hp = 180
-  atk = 16
+  rarity = Rarity.SPECIAL
+  stars = 2
+  hp = 120
+  atk = 10
   speed = 41
-  def = 6
-  speDef = 12
-  maxPP = 70
-  range = 2
+  def = 4
+  speDef = 8
+  maxPP = 100
+  range = 3
   skill = Ability.DECORATE
   passive = Passive.LEMON_CREAM
   onAcquired = alcremieOnAcquired
@@ -18568,15 +18568,15 @@ export class AlcremieSalted extends Pokemon {
     Synergy.AMORPHOUS,
     Synergy.GOURMET
   ])
-  rarity = Rarity.UNIQUE
-  stars = 3
-  hp = 180
-  atk = 16
+  rarity = Rarity.SPECIAL
+  stars = 2
+  hp = 120
+  atk = 10
   speed = 41
-  def = 6
-  speDef = 12
-  maxPP = 70
-  range = 2
+  def = 4
+  speDef = 8
+  maxPP = 100
+  range = 3
   skill = Ability.DECORATE
   passive = Passive.SALTED_CREAM
   onAcquired = alcremieOnAcquired
@@ -18588,15 +18588,15 @@ export class AlcremieRubySwirl extends Pokemon {
     Synergy.AMORPHOUS,
     Synergy.GOURMET
   ])
-  rarity = Rarity.UNIQUE
-  stars = 3
-  hp = 180
-  atk = 16
+  rarity = Rarity.SPECIAL
+  stars = 2
+  hp = 120
+  atk = 10
   speed = 41
-  def = 6
-  speDef = 12
-  maxPP = 70
-  range = 2
+  def = 4
+  speDef = 8
+  maxPP = 100
+  range = 3
   skill = Ability.DECORATE
   passive = Passive.RUBY_SWIRL_CREAM
   onAcquired = alcremieOnAcquired
@@ -18608,15 +18608,15 @@ export class AlcremieCaramelSwirl extends Pokemon {
     Synergy.AMORPHOUS,
     Synergy.GOURMET
   ])
-  rarity = Rarity.UNIQUE
-  stars = 3
-  hp = 180
-  atk = 16
+  rarity = Rarity.SPECIAL
+  stars = 2
+  hp = 120
+  atk = 10
   speed = 41
-  def = 6
-  speDef = 12
-  maxPP = 70
-  range = 2
+  def = 4
+  speDef = 8
+  maxPP = 100
+  range = 3
   skill = Ability.DECORATE
   passive = Passive.CARAMEL_SWIRL_CREAM
   onAcquired = alcremieOnAcquired
@@ -18628,15 +18628,15 @@ export class AlcremieRainbowSwirl extends Pokemon {
     Synergy.AMORPHOUS,
     Synergy.GOURMET
   ])
-  rarity = Rarity.UNIQUE
-  stars = 3
-  hp = 180
-  atk = 16
+  rarity = Rarity.SPECIAL
+  stars = 2
+  hp = 120
+  atk = 10
   speed = 41
-  def = 6
-  speDef = 12
-  maxPP = 70
-  range = 2
+  def = 4
+  speDef = 8
+  maxPP = 100
+  range = 3
   skill = Ability.DECORATE
   passive = Passive.RAINBOW_SWIRL_CREAM
   onAcquired = alcremieOnAcquired

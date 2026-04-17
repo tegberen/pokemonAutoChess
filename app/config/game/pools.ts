@@ -95,7 +95,6 @@ export const UniquePool = new Array<PkmProposition>(
   Pkm.CRYOGONAL,
   Pkm.DRAMPA,
   Pkm.APPLIN,
-  Pkm.MILCERY,
   Pkm.VELUZA,
   Pkm.DURALUDON,
   Pkm.CHARCADET,
