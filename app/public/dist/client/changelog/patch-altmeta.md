@@ -93,8 +93,9 @@
 - both Yamask forms: added FOSSIL
 - Vikavolt: moved to regional, added AMORPHOUS, small adjustments
 - Primarina: moved to regional, adjusted stats
-- Blaziken: moved to regional, buffed ability alot
 - Salazzle: RANGE 2 → 3, added MONSTER
+- Dragapult: added FLYING, moved to regional
+- Blaziken: removed FLYING, adjusted stats, buffed ability → moved to regional
 
 ## Epic
 - Typhlosion: adjusted stats
@@ -125,7 +126,7 @@
 - Ludicolo: adjusted stats
 - Delphox: adjusted stats
 - Meowscarada: adjusted stats
-- Dragapult: added FOSSIL
+- Hydreigon: adjusted stats
 
 ## Unique
 - Veluza: PP 100 → 60, added MONSTER for WATER for avo
