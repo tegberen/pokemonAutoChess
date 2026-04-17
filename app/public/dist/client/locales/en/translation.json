@@ -1838,7 +1838,7 @@
 	},
 	
 	"ability_description": {
-    "LIGHT_OF_RUIN": "Deal [30,SP] SPECIAL to all enemy Pokémon in a line, multiplied by all allies and enemies on the board. Loose 50% of max HP.",
+    "LIGHT_OF_RUIN": "Deal [30,SP] SPECIAL to all enemy Pokémon in a line, multiplied by all allies and enemies on the board. Lose 50% of max HP.",
     "AQUA_STEP": "The user attacks with fluid dance steps, shifting to an ADJACENT unoccupied tile before dealing [25,50,100,SP] SPECIAL to the target and increasing the users SPEED by [10,15,20,SP]. If the user has more SPEED than the target, regain [10,15,20] PP.",
     "MAGNETIC_ABSORPTION": "Absorbs RANGE from the target and ADJACENT enemies, reducing theirs by 1 and increasing the user's by 1. Deals [80, SP] SPECIAL and inflicts 3 seconds of LOCKED instead, to any enemy already at minimum RANGE. The user then moves 1 tile back.",
     "FRENZY_PLANT": "Strikes the target 3 times with enormous tree roots, dealing [10,25,50,SP] SPECIAL per hit, multiplied by the number of ADJACENT enemies surrounding the target. If the target is defeated, remaining roots lash out at the nearest enemy.",
@@ -2564,7 +2564,7 @@
 		"DEEP_MINER": "Gain 5 extra DEF and SPE_DEF for each fully dug row and +8 ATK when your half of the board is fully dug",
 		"POISONOUS": "[30,LK]% chance to POISONNED",
 		"VENOMOUS": "[60,LK]% chance to POISONNED. Max stacks of POISONNED +1",
-		"TOXIC": "[100,LK]% chance to POISONNED. Max stacks of POISONNED +2. [1,LK]% chance to corrode one of the target's items, destroying it for the rest of the fight.",
+		"TOXIC": "[100,LK]% chance to POISONNED. Max stacks of POISONNED +2. [2,LK]% chance to corrode one of the target's items, destroying it for the rest of the fight.",
 		"DRAGON_ENERGY": "Dragon's second synergy counts double (not the third)",
 		"DRAGON_SCALES": "Dragons gain 5 SHIELD for each STAR of all your DRAGON units on board",
 		"DRAGON_DANCE": "Dragons gain 1 SPEED and 1 AP for each STAR of all your DRAGON units on board",
@@ -3487,7 +3487,7 @@
     "RABOOT": "Will evolve into Cinderace or Pirate Cinderace based on the dominant synergy between NORMAL and DARK",
     "STARAPTOR": "Staraptor is looking for a pair of SAFETY_GOGGLES",
     "STARAPTOR_FASHION": "Wears an  AMULET_COIN as fashion statement! Gain +1 GOLD each time it knocks out an opponent.",
-    "TOGEPI_MAFIA": "Rumour has it this fugitive drops an egg when caught.",
+    "TOGEPI_MAFIA": "Rumour has it, this fugitive drops an egg when caught.",
 		"KUBFU": "Gain 5 permanent AP when getting a KO with its ability, up to 10 KO after which you get SCROLL_OF_DARKNESS.\nGain 3 permanent SPEED when getting a KO with a basic attack, up to 10 KO after which you get the SCROLL_OF_WATERS.",
 		"VIGOROTH": "$t(pkm.VIGOROTH) is immune to SLEEP",
 		"SLAKING": "When waking up after being SLEEP, $t(pkm.SLAKING) gains RAGE for 3 seconds.",
