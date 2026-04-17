@@ -2397,9 +2397,10 @@ export class Torterra extends Pokemon {
 
 export class Deino extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.DRAGON, Synergy.DARK])
-  rarity = Rarity.RARE
+  rarity = Rarity.HATCH
   stars = 1
   evolution = Pkm.ZWEILOUS
+  evolutionRule = new HatchEvolutionRule()
   hp = 80
   atk = 5
   speed = 56
@@ -2408,14 +2409,15 @@ export class Deino extends Pokemon {
   maxPP = 100
   range = 2
   skill = Ability.DARK_HARVEST
-  regional = true
+  passive = Passive.HATCH
 }
 
 export class Zweilous extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.DRAGON, Synergy.DARK])
-  rarity = Rarity.RARE
+  rarity = Rarity.HATCH
   stars = 2
   evolution = Pkm.HYDREIGON
+  evolutionRule = new HatchEvolutionRule()
   hp = 130
   atk = 11
   speed = 56
@@ -2424,22 +2426,21 @@ export class Zweilous extends Pokemon {
   maxPP = 100
   range = 2
   skill = Ability.DARK_HARVEST
-  regional = true
+  passive = Passive.HATCH
 }
 
 export class Hydreigon extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.DRAGON, Synergy.DARK])
-  rarity = Rarity.RARE
+  rarity = Rarity.HATCH
   stars = 3
-  hp = 230
-  atk = 20
+  hp = 220
+  atk = 18
   speed = 56
   def = 8
   speDef = 8
   maxPP = 100
   range = 2
   skill = Ability.DARK_HARVEST
-  regional = true
 }
 
 export class Poliwag extends Pokemon {
@@ -4340,12 +4341,11 @@ export class Torchic extends Pokemon {
   types = new SetSchema<Synergy>([
     Synergy.FIRE,
     Synergy.FIGHTING,
-    Synergy.FLYING
   ])
   rarity = Rarity.RARE
   stars = 1
   evolution = Pkm.COMBUSKEN
-  hp = 80
+  hp = 90
   atk = 6
   speed = 51
   def = 6
@@ -4360,13 +4360,12 @@ export class Combusken extends Pokemon {
   types = new SetSchema<Synergy>([
     Synergy.FIRE,
     Synergy.FIGHTING,
-    Synergy.FLYING
   ])
   rarity = Rarity.RARE
   stars = 2
   evolution = Pkm.BLAZIKEN
-  hp = 150
-  atk = 11
+  hp = 170
+  atk = 14
   speed = 51
   def = 8
   speDef = 8
@@ -4380,12 +4379,11 @@ export class Blaziken extends Pokemon {
   types = new SetSchema<Synergy>([
     Synergy.FIRE,
     Synergy.FIGHTING,
-    Synergy.FLYING
   ])
   rarity = Rarity.RARE
   stars = 3
-  hp = 240
-  atk = 23
+  hp = 280
+  atk = 28
   speed = 51
   def = 10
   speDef = 10
@@ -11176,29 +11174,27 @@ export class Wailord extends Pokemon {
 }
 
 export class Dreepy extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.DRAGON, Synergy.GHOST, Synergy.FOSSIL])
-  rarity = Rarity.HATCH
+  types = new SetSchema<Synergy>([Synergy.DRAGON, Synergy.GHOST, Synergy.FLYING])
+  rarity = Rarity.RARE
   stars = 1
   evolution = Pkm.DRAKLOAK
-  evolutionRule = new HatchEvolutionRule()
   hp = 70
   atk = 5
   speed = 71
-  def = 6
-  speDef = 6
+  def = 4
+  speDef = 4
   maxPP = 100
   range = 2
   skill = Ability.DRAGON_DARTS
-  passive = Passive.HATCH
+  regional = true
 }
 
 export class Drakloak extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.DRAGON, Synergy.GHOST, Synergy.FOSSIL])
-  rarity = Rarity.HATCH
+  types = new SetSchema<Synergy>([Synergy.DRAGON, Synergy.GHOST, Synergy.FLYING])
+  rarity = Rarity.RARE
   stars = 2
   evolution = Pkm.DRAGAPULT
-  evolutionRule = new HatchEvolutionRule()
-  hp = 120
+  hp = 140
   atk = 12
   speed = 71
   def = 6
@@ -11206,21 +11202,22 @@ export class Drakloak extends Pokemon {
   maxPP = 100
   range = 2
   skill = Ability.DRAGON_DARTS
-  passive = Passive.HATCH
+  regional = true
 }
 
 export class Dragapult extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.DRAGON, Synergy.GHOST, Synergy.FOSSIL])
-  rarity = Rarity.HATCH
+  types = new SetSchema<Synergy>([Synergy.DRAGON, Synergy.GHOST, Synergy.FLYING])
+  rarity = Rarity.RARE
   stars = 3
-  hp = 170
-  atk = 21
+  hp = 220
+  atk = 22
   speed = 71
-  def = 6
-  speDef = 6
+  def = 8
+  speDef = 8
   maxPP = 100
   range = 2
   skill = Ability.DRAGON_DARTS
+  regional = true
 }
 
 export class Snivy extends Pokemon {
