@@ -113,7 +113,8 @@ export class FireHitEffect extends OnAttackEffect {
   }
 
   apply({ pokemon }) {
-    pokemon.addAttack(this.synergyLevel, pokemon, 0, false)
+    const bonus = [0, 1, 2, 4][this.synergyLevel] ?? 4
+    pokemon.addAttack(bonus, pokemon, 0, false)
     this.count += 1
   }
 }
