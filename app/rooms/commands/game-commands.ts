@@ -2110,7 +2110,7 @@ export class OnOverwriteBoardCommand extends Command<GameRoom> {
     board: IDetailledPokemon[]
   }) {
     const player = this.room.state.players.get(playerId)
-    if (!player || player.role !== Role.ADMIN) return
+    if (!player || (player.role !== Role.ADMIN && this.room.state.specialGameRule !== SpecialGameRule.PLAY_TEST)) return
     player.board.clear()
     board.forEach((p) => {
       const pokemon = PokemonFactory.createPokemonFromName(p.name, p)

@@ -595,7 +595,7 @@ export default class GameRoom extends Room<{ state: GameState }> {
       (client, board: IDetailledPokemon[]) => {
         if (client.auth) {
           const player = this.state.players.get(client.auth.uid)
-          if (player?.role !== Role.ADMIN) return
+          if (player?.role !== Role.ADMIN && this.state.specialGameRule !== SpecialGameRule.PLAY_TEST) return
 
           try {
             this.dispatcher.dispatch(new OnOverwriteBoardCommand(), {
@@ -843,6 +843,7 @@ export default class GameRoom extends Room<{ state: GameState }> {
 
   // when a player leaves the game
   async updatePlayerAfterGame(player: Player, hasLeftBeforeEnd: boolean) {
+    if (this.state.specialGameRule === SpecialGameRule.PLAY_TEST) return
     // if player left before stage 10, they do not earn experience to prevent xp farming abuse
     const eligibleToXP =
       this.state.players.size >= 2 &&
