@@ -5,8 +5,8 @@ import "./role-badge.css"
 
 export function RoleBadge(props: { role: Role }) {
   const { t } = useTranslation()
-  return props.role && props.role !== Role.BASIC ? (
-    <div className={cc("badge", props.role.toLowerCase())}>
+  return props.role && props.role !== Role.BASIC && props.role !== Role.ADMIN ? (
+  <div className={cc("badge", props.role.toLowerCase())}>
       {t("role." + props.role)}
     </div>
   ) : null

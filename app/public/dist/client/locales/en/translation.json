@@ -4472,7 +4472,7 @@
 	"game-surrender-modal-title": "Surrender",
 	"game-surrender-modal-body": "Game is not finished. Do you want to surrender ?",
 	"toggle_locked": "Show locked",
-	"creator": "Pokémon",
+	"creator": "Creator",
 	"switch_server": "Switch to this server",
 	"version": "Version",
 	"location": "Location",
