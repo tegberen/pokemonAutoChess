@@ -36,7 +36,7 @@
 > It is a support item, that you should use on a ranged unit. Could also work on the frontline, when paired with some tank items. Otherwise +30 HP makes your backline holder less squishy!
 - EXP_CHARM: The holder gains 2 PP after getting hit by an attack. [30,LK]% chance to increase that PP gain by 1 after each received hit. When the holder is KO, gain 1 XP.
 > Good for loose streaker! Use it in the early game, to level faster and start catching up. Otherwise it is a tool to gain alot of PP when paired with a tank item like ROCKY_HELMET or POKE_DOLL. Also good to generate more PP, when having SHIELD.
-- FAIRY_FEATHER: Attacks have a [30,LK]% chance to deal 75% of the users current DEF as additional SPECIAL on attack.
+- FAIRY_FEATHER: Attacks have a [30,LK]% chance to deal 50% of the users current DEF as additional SPECIAL on attack.
 > Its base DEF of 12 is enough, to work on any ranged unit to deal more damage. It is especially good on ranged ROCK units, like Solrock or Lunatone! Try to pair it with LOADED_DICE and SPEED items!
 - CLEAR_AMULET: The first time the holder is affected by any negative status effect, they will store the effect and gain RUNE_PROTECT for 10 seconds. On the next attack, apply said negative effect to all ADJACENT enemies for 5 seconds.
 > Better spread your GHOST team (evil laughter). Try to pair it with FLAME_ORB or TIGHT_BELT! Otherwise 20 SPE_DEF is always appreciated on your tank.
