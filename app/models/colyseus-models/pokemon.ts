@@ -459,7 +459,7 @@ export class Egg extends Pokemon {
 export class FloetteEternal extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.FAIRY, Synergy.FLORA])
   rarity = Rarity.UNIQUE
-  hp = 150
+  hp = 120
   stars = 3
   evolution = Pkm.MEGA_FLOETTE_ETERNAL
   evolutionRule = new StackBasedEvolutionRule()
@@ -18420,10 +18420,10 @@ export class Milcery extends Pokemon {
     (pokemon, player, item: Item) => alcremieByFlavor[item]
   )
   hp = 60
-  atk = 5
+  atk = 3
   speed = 41
-  def = 2
-  speDef = 4
+  def = 1
+  speDef = 2
   maxPP = 100
   range = 3
   skill = Ability.DECORATE
@@ -18446,11 +18446,11 @@ export class AlcremieVanilla extends Pokemon {
   ])
   rarity = Rarity.SPECIAL
   stars = 2
-  hp = 120
-  atk = 10
+  hp = 90
+  atk = 6
   speed = 41
-  def = 4
-  speDef = 8
+  def = 2
+  speDef = 4
   maxPP = 100
   range = 3
   skill = Ability.DECORATE
@@ -18466,11 +18466,11 @@ export class AlcremieRuby extends Pokemon {
   ])
   rarity = Rarity.SPECIAL
   stars = 2
-  hp = 120
-  atk = 10
+  hp = 90
+  atk = 6
   speed = 41
-  def = 4
-  speDef = 8
+  def = 2
+  speDef = 4
   maxPP = 100
   range = 3
   skill = Ability.DECORATE
@@ -18486,11 +18486,11 @@ export class AlcremieMatcha extends Pokemon {
   ])
   rarity = Rarity.SPECIAL
   stars = 2
-  hp = 120
-  atk = 10
+  hp = 90
+  atk = 6
   speed = 41
-  def = 4
-  speDef = 8
+  def = 2
+  speDef = 4
   maxPP = 100
   range = 3
   skill = Ability.DECORATE
@@ -18506,11 +18506,11 @@ export class AlcremieMint extends Pokemon {
   ])
   rarity = Rarity.SPECIAL
   stars = 2
-  hp = 120
-  atk = 10
+  hp = 90
+  atk = 6
   speed = 41
-  def = 4
-  speDef = 8
+  def = 2
+  speDef = 4
   maxPP = 100
   range = 3
   skill = Ability.DECORATE
@@ -18526,11 +18526,11 @@ export class AlcremieLemon extends Pokemon {
   ])
   rarity = Rarity.SPECIAL
   stars = 2
-  hp = 120
-  atk = 10
+  hp = 90
+  atk = 6
   speed = 41
-  def = 4
-  speDef = 8
+  def = 2
+  speDef = 4
   maxPP = 100
   range = 3
   skill = Ability.DECORATE
@@ -18546,11 +18546,11 @@ export class AlcremieSalted extends Pokemon {
   ])
   rarity = Rarity.SPECIAL
   stars = 2
-  hp = 120
-  atk = 10
+  hp = 90
+  atk = 6
   speed = 41
-  def = 4
-  speDef = 8
+  def = 2
+  speDef = 4
   maxPP = 100
   range = 3
   skill = Ability.DECORATE
@@ -18566,11 +18566,11 @@ export class AlcremieRubySwirl extends Pokemon {
   ])
   rarity = Rarity.SPECIAL
   stars = 2
-  hp = 120
-  atk = 10
+  hp = 90
+  atk = 6
   speed = 41
-  def = 4
-  speDef = 8
+  def = 2
+  speDef = 4
   maxPP = 100
   range = 3
   skill = Ability.DECORATE
@@ -18586,11 +18586,11 @@ export class AlcremieCaramelSwirl extends Pokemon {
   ])
   rarity = Rarity.SPECIAL
   stars = 2
-  hp = 120
-  atk = 10
+  hp = 90
+  atk = 6
   speed = 41
-  def = 4
-  speDef = 8
+  def = 2
+  speDef = 4
   maxPP = 100
   range = 3
   skill = Ability.DECORATE
@@ -18606,11 +18606,11 @@ export class AlcremieRainbowSwirl extends Pokemon {
   ])
   rarity = Rarity.SPECIAL
   stars = 2
-  hp = 120
-  atk = 10
+  hp = 90
+  atk = 6
   speed = 41
-  def = 4
-  speDef = 8
+  def = 2
+  speDef = 4
   maxPP = 100
   range = 3
   skill = Ability.DECORATE

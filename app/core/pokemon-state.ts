@@ -208,7 +208,7 @@ export default abstract class PokemonState {
         physicalDamage += Math.round(pokemon.def * (1 + pokemon.ap / 100))
       }
       if (pokemon.items.has(Item.FAIRY_FEATHER)) {
-        const fairyFeatherDamage = (pokemon.def * 0.75)
+        const fairyFeatherDamage = (pokemon.def * 0.5)
         if (chance(0.3, pokemon)) {
           specialDamage += fairyFeatherDamage
         }

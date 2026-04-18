@@ -102,7 +102,7 @@ export class LightOfRuinStrategy extends AbilityStrategy {
   ) {
     super.process(pokemon, board, target, crit)
     const nbPokemon = board.cells.filter(c => c != null).length
-    const damage = 30 * nbPokemon
+    const damage = 20 * nbPokemon
     effectInLine(board, pokemon, target, (cell) => {
       if (cell.value != null && cell.value.team !== pokemon.team) {
         cell.value.handleSpecialDamage(damage, board, AttackType.SPECIAL, pokemon, crit)
