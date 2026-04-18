@@ -148,6 +148,8 @@ export function ServerInfo(props: { server: ServerInfo }) {
         {server.discord && <DiscordButton url={server.discord} />}
       </header>
       <dl>
+        <dt>{t("creator")}</dt>
+        <dd>{server.creator}</dd>
         <dt>{t("location")}</dt>
         <dd>{server.location}</dd>
         <dt>{t("status_label")}</dt>
