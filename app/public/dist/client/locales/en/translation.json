@@ -2966,7 +2966,7 @@
     	"ELECTRIC_SEED": "Electric Seed"
 	},
 	"item_description": {
-    "BINDING_BAND": "+20 LUCK",
+    "BINDING_BAND": "+10 LUCK",
     "SOOTHE_BELL": "Grant the lowest HP ally 20 SHIELD every 2 seconds. Has a [30,LK]% chance to convert that ally’s remaining SHIELD into max HP.",
     "EXP_CHARM": "The holder gains 2 PP after getting hit by an attack. [30,LK]% chance to increase that PP gain by 1 after each received hit (max 10 stacks). When the holder is KO, gain 1 XP.",
     "FAIRY_FEATHER": "Attacks have a [30,LK]% chance to deal 50% of the users current DEF as additional SPECIAL on attack",
