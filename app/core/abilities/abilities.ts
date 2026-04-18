@@ -1872,7 +1872,7 @@ export class HighJumpKickStrategy extends AbilityStrategy {
     crit: boolean
   ) {
     super.process(pokemon, board, target, crit)
-    const damage = [15, 30, 90][pokemon.stars - 1] ?? 90
+    const damage = [15, 30, 45][pokemon.stars - 1] ?? 45
     const ppStolen = max([40,40,70][pokemon.stars -1] ?? 70)(target.pp)
     if (target.items.has(Item.TWIST_BAND) === false) {
       pokemon.addPP(ppStolen, pokemon, 0, false)
@@ -3711,7 +3711,7 @@ export class FlareBlitzStrategy extends AbilityStrategy {
     crit: boolean
   ) {
     super.process(pokemon, board, target, crit, true)
-    const damage = ([2,3,4,5][pokemon.stars - 1] ?? 5) * pokemon.atk
+    const damage = ([1,2,3,4][pokemon.stars - 1] ?? 4) * pokemon.atk
 
     pokemon.moveTo(target.positionX, target.positionY, board, false)
     pokemon.broadcastAbility({

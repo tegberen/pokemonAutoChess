@@ -2076,7 +2076,7 @@ export const PassiveEffects: Partial<
         super(
           (pokemon) => {
             if (pokemon.isGhostOpponent) return
-            const newStacks = Math.floor(pokemon.ap/ 100)
+            const newStacks = Math.floor(pokemon.ap/ 50)
             if (newStacks > this.stacksGiven) {
               for (let i = this.stacksGiven; i < newStacks; i++) {
                 pokemon.addStack()
