@@ -4724,6 +4724,7 @@
     "tinkaton": "Fresh Corviknight parts for my hammer..."
 	},
 	"scribble": {
+    "PLAY_TEST": "Playtest",
 		"EVERYONE_IS_HERE": "Everyone is here !",
 		"UNIQUE_STARTER": "Unique Starter",
 		"OMELETTE_COOK": "Omelette Cook",
@@ -4748,6 +4749,7 @@
 		"CHOSEN_ONES": "The Chosen Ones"
 	},
 	"scribble_description": {
+    "PLAY_TEST": "Game board can be overwritten via the team planner. Use it for testing and reproducing bugs!",
 		"EVERYONE_IS_HERE": "All the additional picks are available immediately",
 		"UNIQUE_STARTER": "Get a random Unique at stage 1",
 		"OMELETTE_COOK": "Get a Pokémon Egg after stage 1, 2 and 3",

@@ -22,6 +22,7 @@
 - Added new Fugitive: Mafia Togepi that gives an egg upon capture
 - When Pikachu is send to the dojo, obtain a TRAINING_RIBBON. Can be used to evolve Pikachu into Pikachu Libre (given an item slot is open).
 - 555 Boosters for new members, to motivate you playing here (not to make multiple accounts, please XD)
+- Playtest Smeargle Scribble: Can be used for testing and reproducing bugs. (No EXP)
 
 # Items
 ## Additional Effects

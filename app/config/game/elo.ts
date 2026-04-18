@@ -1,7 +1,7 @@
 import { EloRank } from "../../types/enum/EloRank"
 
 // games that finish before level 10 are not counted for XP and ELO gains to avoid potential abuse
-export const MinStageForGameToCount = 10
+export const MinStageForGameToCount = 15
 
 export const EloRankThreshold: { [key in EloRank]: number } = {
   [EloRank.LEVEL_BALL]: 0,
