@@ -1655,7 +1655,7 @@ export class Fuecoco extends Pokemon {
 }
 
 export class Crocalor extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.FIRE, Synergy.SOUND, Synergy.GHOST])
+  types = new SetSchema<Synergy>([Synergy.FIRE, Synergy.SOUND, Synergy.GHOST, Synergy.BUG])
   rarity = Rarity.EPIC
   stars = 2
   evolution = Pkm.SKELEDIRGE
