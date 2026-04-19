@@ -382,7 +382,7 @@ export default class MinigameManager {
     const chimecho = new PokemonSpecial({
       scene: this.scene,
       x: encounter === TownEncounters.CHIMECHO ? cx : 13.5 * 48,
-      y: encounter === TownEncounters.CHIMECHO ? cy : 25.25 * 48,
+      y: encounter === TownEncounters.CHIMECHO ? cy : 25 * 48,
       name: Pkm.CHIMECHO
     })  
 
