@@ -1463,32 +1463,34 @@ export class Seismitoad extends Pokemon {
 
 export class Bagon extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.DRAGON, Synergy.MONSTER])
-  rarity = Rarity.UNCOMMON
+  rarity = Rarity.COMMON
   stars = 1
   evolution = Pkm.SHELGON
-  hp = 70
+  hp = 50
   atk = 5
   speed = 57
-  def = 6
-  speDef = 6
+  def = 3
+  speDef = 3
   maxPP = 100
   range = 1
   skill = Ability.DRAGON_CLAW
+  regional = true
 }
 
 export class Shelgon extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.DRAGON, Synergy.MONSTER])
-  rarity = Rarity.UNCOMMON
+  rarity = Rarity.COMMON
   stars = 2
   evolution = Pkm.SALAMENCE
-  hp = 130
-  atk = 11
+  hp = 90
+  atk = 9
   speed = 57
-  def = 10
-  speDef = 6
+  def = 6
+  speDef = 3
   maxPP = 100
   range = 1
   skill = Ability.DRAGON_CLAW
+  regional = true
 }
 
 export class Salamence extends Pokemon {
@@ -1497,16 +1499,17 @@ export class Salamence extends Pokemon {
     Synergy.MONSTER,
     Synergy.FLYING
   ])
-  rarity = Rarity.UNCOMMON
+  rarity = Rarity.COMMON
   stars = 3
-  hp = 210
-  atk = 20
+  hp = 190
+  atk = 19
   speed = 57
-  def = 10
+  def = 6
   speDef = 6
   maxPP = 100
   range = 1
   skill = Ability.DRAGON_CLAW
+  regional = true
 }
 
 export class Ralts extends Pokemon {
@@ -5494,58 +5497,55 @@ export class Meowscarada extends Pokemon {
 
 export class Charmander extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.DRAGON, Synergy.FIRE])
-  rarity = Rarity.COMMON
+  rarity = Rarity.UNCOMMON
   stars = 1
   evolution = Pkm.CHARMELEON
-  hp = 60
+  hp = 80
   atk = 4
-  speed = 57
-  def = 3
-  speDef = 3
-  maxPP = 100
-  range = 1
-  skill = Ability.BLAST_BURN
-  regional = true
-}
-
-export class Charmeleon extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.DRAGON, Synergy.FIRE])
-  rarity = Rarity.COMMON
-  stars = 2
-  evolution = Pkm.CHARIZARD
-  hp = 120
-  atk = 8
   speed = 57
   def = 4
   speDef = 4
   maxPP = 100
   range = 1
   skill = Ability.BLAST_BURN
-  regional = true
+}
+
+export class Charmeleon extends Pokemon {
+  types = new SetSchema<Synergy>([Synergy.DRAGON, Synergy.FIRE])
+  rarity = Rarity.UNCOMMON
+  stars = 2
+  evolution = Pkm.CHARIZARD
+  hp = 140
+  atk = 8
+  speed = 57
+  def = 6
+  speDef = 6
+  maxPP = 100
+  range = 1
+  skill = Ability.BLAST_BURN
 }
 
 export class Charizard extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.DRAGON, Synergy.FIRE, Synergy.FLYING])
-  rarity = Rarity.COMMON
+  rarity = Rarity.UNCOMMON
   stars = 3
   evolutionRule = new StackBasedEvolutionRule()
-  stacksRequired: number = 25
+  stacksRequired: number = 20
   evolution = Pkm.MEGA_CHARIZARD_X
-  hp = 220
+  hp = 240
   atk = 18
   speed = 57
-  def = 5
-  speDef = 5
+  def = 8
+  speDef = 8
   maxPP = 100
   range = 1
   skill = Ability.BLAST_BURN
-  regional = true
   passive = Passive.CHARIZARD
 }
 
 export class MegaCharizardX extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.DRAGON, Synergy.FIRE, Synergy.FLYING])
-  rarity = Rarity.COMMON
+  rarity = Rarity.UNCOMMON
   stars = 4
   hp = 240
   atk = 20
@@ -5555,7 +5555,6 @@ export class MegaCharizardX extends Pokemon {
   maxPP = 100
   range = 1
   skill = Ability.FLARE_BLITZ
-  regional = true
 }
 
 export class Magikarp extends Pokemon {
