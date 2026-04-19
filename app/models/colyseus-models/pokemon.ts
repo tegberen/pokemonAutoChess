@@ -2354,6 +2354,7 @@ export class Turtwig extends Pokemon {
   range = 1
   skill = Ability.BULLDOZE
   passive = Passive.SHELL_ARMOR
+  regional = true
 }
 
 export class Grotle extends Pokemon {
@@ -2374,6 +2375,7 @@ export class Grotle extends Pokemon {
   range = 1
   skill = Ability.BULLDOZE
   passive = Passive.SHELL_ARMOR
+  regional = true
 }
 
 export class Torterra extends Pokemon {
@@ -2393,6 +2395,7 @@ export class Torterra extends Pokemon {
   range = 1
   skill = Ability.BULLDOZE
   passive = Passive.SHELL_ARMOR
+  regional = true
 }
 
 export class Deino extends Pokemon {
