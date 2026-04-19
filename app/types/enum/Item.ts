@@ -4,6 +4,13 @@ import { Synergy } from "./Synergy"
 import { Weather } from "./Weather"
 
 export enum Item {
+  AQUA_MONICA = "AQUA_MONICA",
+  FIERY_DRUM = "FIERY_DRUM",
+  GRASS_CORNET = "GRASS_CORNET",
+  ICY_FLUTE = "ICY_FLUTE",
+  ROCK_HORN = "ROCK_HORN",
+  SKY_MELODICA = "SKY_MELODICA",
+  TERRA_CYMBAL = "TERRA_CYMBAL",
   BINDING_BAND = "BINDING_BAND",
   SOOTHE_BELL = "SOOTHE_BELL",
   EXP_CHARM = "EXP_CHARM",
@@ -414,7 +421,14 @@ export const TownItems = [
   Item.PICNIC_SET,
   Item.WANTED_NOTICE,
   Item.LEADERS_CREST,
-  Item.LAPRAS_PASSPORT
+  Item.LAPRAS_PASSPORT,
+  Item.AQUA_MONICA,
+  Item.FIERY_DRUM,
+  Item.GRASS_CORNET,
+  Item.ICY_FLUTE,
+  Item.ROCK_HORN,
+  Item.SKY_MELODICA,
+  Item.TERRA_CYMBAL
 ] satisfies Item[]
 
 // should be excluded from carousels
@@ -630,7 +644,18 @@ export const Tools = [
   Item.TERRAIN_EXTENDER
 ] satisfies Item[]
 
+export const SevenTreasures = [
+  Item.AQUA_MONICA,
+  Item.FIERY_DRUM,
+  Item.GRASS_CORNET,
+  Item.ICY_FLUTE,
+  Item.ROCK_HORN,
+  Item.SKY_MELODICA,
+  Item.TERRA_CYMBAL
+] satisfies Item[]
+
 export type Tool = (typeof Tools)[number]
+export type SevenTreasures = (typeof SevenTreasures)[number]
 
 export const ArtificialItems = [
   Item.METAL_COAT,
@@ -1131,7 +1156,8 @@ export const UnholdableItems = [
   Item.LEADERS_CREST,
   Item.LAPRAS_PASSPORT,
   Item.RED_SCALE,
-  Item.MEWTWONITE_Y
+  Item.MEWTWONITE_Y,
+  ...SevenTreasures
 ] satisfies Item[]
 
 export const ConsumableItems = [

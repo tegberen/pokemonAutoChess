@@ -41,7 +41,8 @@ import {
   SynergyGems,
   SynergyGivenByGem,
   SynergyStones,
-  Tools
+  Tools,
+  SevenTreasures
 } from "../types/enum/Item"
 import { SpecialGameRule } from "../types/enum/SpecialGameRule"
 import { Synergy, SynergyArray } from "../types/enum/Synergy"
@@ -522,6 +523,11 @@ export class MiniGame {
       nbItemsToPick += 1
       maxCopiesPerItem = 1
       itemsSet = CraftableItemsNoScarves
+    }
+
+    if (encounter === TownEncounters.CHIMECHO) {
+      itemsSet = SevenTreasures
+      maxCopiesPerItem = 2
     }
 
     if (encounter === TownEncounters.KECLEON) {

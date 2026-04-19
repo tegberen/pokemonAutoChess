@@ -57,7 +57,8 @@ import {
   OnDishConsumedEffect,
   OnSimulationStartEffect,
   OnSpawnEffect,
-  OnShieldDepletedEffect
+  OnShieldDepletedEffect,
+  OnAbilityCastEffect
 } from "./effects/effect"
 import { WaterSpringEffect } from "./effects/passives"
 import {
@@ -490,6 +491,29 @@ export default class Simulation extends Schema implements ISimulation {
       pokemon.status.addElectricField(pokemon)
       pokemon.addSpeed(20, pokemon, 0, false)
       pokemon.addShield(30, pokemon, 0, false)
+    }
+    // apply effects of the Seven Treasures
+    if (pokemon.player) {
+      const instruments = [
+        { item: Item.AQUA_MONICA, effect: (p: PokemonEntity) => p.addPP(1, p, 0, false) },
+        { item: Item.FIERY_DRUM, effect: (p: PokemonEntity) => p.addAttack(1, p, 0, false) },
+        { item: Item.SKY_MELODICA, effect: (p: PokemonEntity) => p.addSpeed(1, p, 0, false) },
+        { item: Item.ICY_FLUTE, effect: (p: PokemonEntity) => p.addSpecialDefense(1, p, 0, false) },
+        { item: Item.ROCK_HORN, effect: (p: PokemonEntity) => p.addDefense(1, p, 0, false) },
+        { item: Item.GRASS_CORNET, effect: (p: PokemonEntity) => p.addMaxHP(1, p, 0, false) },
+        { item: Item.TERRA_CYMBAL, effect: (p: PokemonEntity) => p.addLuck(1, p, 0, false) },
+      ]
+
+      for (const { item, effect } of instruments) {
+        const nb = count(pokemon.player.items, item)
+        if (nb > 0) {
+          pokemon.effectsSet.add(new OnAbilityCastEffect((caster) => {
+            caster.simulation.board.cells
+              .filter((c): c is PokemonEntity => c != null && c.team === caster.team)
+              .forEach((ally) => effect(ally))
+          }))
+        }
+      }
     }
   }
 

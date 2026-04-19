@@ -30,6 +30,7 @@ export const TownEncountersByStage: {
     [Pkm.WOBBUFFET]: 1 / 20,
     [Pkm.KECLEON]: 1 / 20,
     [Pkm.ELECTIVIRE]: 1 / 20,
+    [Pkm.CHIMECHO]: 1 / 20,
     [Pkm.XATU]: 1 / 20,
     [Pkm.CINCCINO]: 1 / 20,
     [Pkm.MAROWAK]: 1 / 20,
@@ -41,6 +42,7 @@ export const TownEncountersByStage: {
     [Pkm.WOBBUFFET]: 1 / 20,
     [Pkm.CROAGUNK]: 1 / 20,
     [Pkm.ELECTIVIRE]: 1 / 20,
+    [Pkm.CHIMECHO]: 1 / 20,
     [Pkm.XATU]: 1 / 20,
     [Pkm.MAROWAK]: 1 / 20,
     [Pkm.SABLEYE]: 1 / 20,
@@ -50,6 +52,7 @@ export const TownEncountersByStage: {
   22: {
     [Pkm.KECLEON]: 1 / 20,
     [Pkm.ELECTIVIRE]: 1 / 20,
+    [Pkm.CHIMECHO]: 1 / 20,
     [Pkm.MAROWAK]: 1 / 20,
     [Pkm.SPINDA]: 1 / 20,
     [Pkm.REGIROCK]: 1 / 20,
@@ -59,6 +62,7 @@ export const TownEncountersByStage: {
   },
   27: {
     [Pkm.ELECTIVIRE]: 1 / 20,
+    [Pkm.CHIMECHO]: 1 / 20,
     [Pkm.MAROWAK]: 1 / 20,
     [Pkm.SPINDA]: 1 / 20,
     [Pkm.REGIROCK]: 1 / 20,
@@ -67,6 +71,7 @@ export const TownEncountersByStage: {
   },
   34: {
     [Pkm.ELECTIVIRE]: 1 / 20,
+    [Pkm.CHIMECHO]: 1 / 20,
     [Pkm.MAROWAK]: 1 / 20,
     [Pkm.SPINDA]: 1 / 20,
     [Pkm.REGIROCK]: 1 / 20,
