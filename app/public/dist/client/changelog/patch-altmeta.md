@@ -23,6 +23,7 @@
 - When Pikachu is send to the dojo, obtain a TRAINING_RIBBON. Can be used to evolve Pikachu into Pikachu Libre (given an item slot is open).
 - 555 Boosters for new members, to motivate you playing here (not to make multiple accounts, please XD)
 - Playtest Smeargle Scribble: Can be used for testing and reproducing bugs. (No EXP)
+- new town encounter: Chimecho
 
 # Items
 ## Additional Effects
@@ -181,6 +182,8 @@
 - Mega Drampa: DeltaL, Pi, Soulja
 - Mega Excadrill: DeltaL, Pi, Soulja
 - Mega Dragalge: DeltaL, Pi, Soulja
+- Mega Zygarde: DeltaL, Pi (GOATED)
+- Chimecho tent: from PMD Universe ˶ᵔ ᵕ ᵔ˶
 > Thank you alot, I will do the proper crediting when they are out on PMD Collab. Thanks to all the spriters really! Also thanks alot to all the additions from Non-SpriteCollab too!! They are awesome!
 
 - Song during Carousel: Stelio Kontos (American Dad! Cast)
