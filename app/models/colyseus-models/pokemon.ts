@@ -1077,7 +1077,7 @@ export class MegaSteelix extends Pokemon {
 }
 
 export class Numel extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.FIRE, Synergy.FIELD, Synergy.GROUND])
+  types = new SetSchema<Synergy>([Synergy.FIRE, Synergy.GROUND])
   rarity = Rarity.EPIC
   stars = 1
   evolution = Pkm.CAMERUPT
@@ -1093,7 +1093,7 @@ export class Numel extends Pokemon {
 }
 
 export class Camerupt extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.FIRE, Synergy.FIELD, Synergy.GROUND])
+  types = new SetSchema<Synergy>([Synergy.FIRE, Synergy.GROUND])
   rarity = Rarity.EPIC
   stars = 2
   evolution = Pkm.MEGA_CAMERUPT
@@ -1112,7 +1112,7 @@ export class Camerupt extends Pokemon {
 }
 
 export class MegaCamerupt extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.FIRE, Synergy.FIELD, Synergy.GROUND])
+  types = new SetSchema<Synergy>([Synergy.FIRE, Synergy.GROUND])
   rarity = Rarity.EPIC
   stars = 3
   hp = 240
@@ -13702,7 +13702,7 @@ export class Lumineon extends Pokemon {
 }
 
 export class Stunky extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.DARK, Synergy.POISON])
+  types = new SetSchema<Synergy>([Synergy.DARK, Synergy.POISON, Synergy.FIELD])
   rarity = Rarity.EPIC
   stars = 1
   evolution = Pkm.SKUNTANK
@@ -13719,7 +13719,7 @@ export class Stunky extends Pokemon {
 }
 
 export class Skuntank extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.DARK, Synergy.POISON])
+  types = new SetSchema<Synergy>([Synergy.DARK, Synergy.POISON, Synergy.FIELD])
   rarity = Rarity.EPIC
   stars = 2
   hp = 280
@@ -17634,7 +17634,7 @@ export class MegaZygarde extends Pokemon {
 }
 
 export class Sizzlipede extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.FIRE, Synergy.BUG])
+  types = new SetSchema<Synergy>([Synergy.FIRE, Synergy.BUG, Synergy.FIELD])
   rarity = Rarity.UNCOMMON
   stars = 1
   evolution = Pkm.CENTISKORCH
@@ -17650,7 +17650,7 @@ export class Sizzlipede extends Pokemon {
 }
 
 export class Centiskorch extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.FIRE, Synergy.BUG])
+  types = new SetSchema<Synergy>([Synergy.FIRE, Synergy.BUG, Synergy.FIELD])
   rarity = Rarity.UNCOMMON
   stars = 2
   hp = 140
