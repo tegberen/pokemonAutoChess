@@ -1,6 +1,7 @@
 import { Pkm } from "./Pokemon"
 
 export const TownEncounters = {
+  [Pkm.CHIMECHO]: Pkm.CHIMECHO,
   [Pkm.KECLEON]: Pkm.KECLEON,
   [Pkm.CHANSEY]: Pkm.CHANSEY,
   [Pkm.ELECTIVIRE]: Pkm.ELECTIVIRE,

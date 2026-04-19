@@ -378,6 +378,14 @@ export default class MinigameManager {
   addVillagers(encounter: TownEncounter | null, podium: ILeaderboardInfo[]) {
     const cx = 980,
       cy = 404
+
+    const chimecho = new PokemonSpecial({
+      scene: this.scene,
+      x: encounter === TownEncounters.CHIMECHO ? cx : 13.5 * 48,
+      y: encounter === TownEncounters.CHIMECHO ? cy : 25.25 * 48,
+      name: Pkm.CHIMECHO
+    })  
+
     const kecleon = new PokemonSpecial({
       scene: this.scene,
       x: encounter === TownEncounters.KECLEON ? cx - 24 : 34 * 48,
@@ -594,6 +602,7 @@ export default class MinigameManager {
     })
 
     this.villagers.push(
+      chimecho,
       kecleon,
       kecleonShiny,
       electivire,
