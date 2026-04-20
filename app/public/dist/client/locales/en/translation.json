@@ -653,6 +653,7 @@
 		"CROCONAW": "Croconaw",
 		"FERALIGATR": "Feraligatr",
     "FERALIGATR_PIRATE": "Pirate Feraligatr",
+    "MEGA_FERALIGATR": "Mega Feraligatr",
 		"TREECKO": "Treecko",
 		"GROVYLE": "Grovyle",
 		"SCEPTILE": "Sceptile",
@@ -3579,7 +3580,9 @@
     "EXCADRILL": "Gain one stack for each KO. Mega evolves after 10 stacks.",
     "DRAGALGE": "Gain one stack for each KO, two if under SMOG. Mega evolves after 25 stacks.",
     "SHELL_ARMOR": "Gain [3,6,12] DEF when receiving critical attacks. The Pokémon is immune to ARMOR_BREAK.",
-    "FLOETTE_ETERNAL": "Gain one stack for each KO. Mega evolves after 20 stacks."
+    "FLOETTE_ETERNAL": "Gain one stack for each KO. Mega evolves after 20 stacks.",
+    "FERALIGATR": "Gain one stack for each KO. Mega evolves after 20 stacks.",
+    "MEGA_FERALIGATR": "If the target is KO'ed, gain permanently 1 SPEED and 1 AP for each STAR on your board."
   },
 	"stat": {
 		"ATK": "Attack",
