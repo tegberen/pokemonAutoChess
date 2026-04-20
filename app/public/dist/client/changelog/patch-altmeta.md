@@ -23,7 +23,8 @@
 - When Pikachu is send to the dojo, obtain a TRAINING_RIBBON. Can be used to evolve Pikachu into Pikachu Libre (given an item slot is open).
 - 555 Boosters for new members, to motivate you playing here (not to make multiple accounts, please XD)
 - Playtest Smeargle Scribble: Can be used for testing and reproducing bugs. (No EXP)
-- new town encounter: Chimecho
+- new town encounter - Chimecho: grants a melodic treasure to every player.
+- buff town encounter - Spinda: now uses inverse user control
 
 # Items
 ## Additional Effects
@@ -70,6 +71,7 @@
 - Staraptor: added FIGHTING
 - Gardevoir, Gallade: for Mega Quest
 - Smoliv: regular attacks now scale with AP, SPEED 25 → 42
+- Salamence: adjusted stats, to regional
 
 ## Uncommon
 - Blastoise: adjusted stats for Tank Role
@@ -86,6 +88,7 @@
 - Nidoking and Nidoqueen: added passive, to attract catchable Nidoran♀ and Nidoran♂ respectively (yes I know it's a bit of a cheat)
 - Gossifleur: added GRASS
 - Garganacl: added HUMAN on last stage
+- Charizard: adjusted stats
 ## Rare
 - Corviknight: moved to regular, buffed HP and PP
 - Exploud: added MONSTER, adjusted stats
@@ -98,6 +101,7 @@
 - Salazzle: RANGE 2 → 3, added MONSTER
 - Dragapult: added FLYING, moved to regional
 - Blaziken: removed FLYING, adjusted stats, buffed ability → moved to regional
+- Torterra: moved to regional, added Passive
 
 ## Epic
 - Typhlosion: adjusted stats

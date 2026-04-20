@@ -441,7 +441,7 @@ export default class GameRoom extends Room<{ state: GameState }> {
       (client, message: { x: number; y: number }) => {
         try {
           if (client.auth) {
-            this.miniGame.applyVector(client.auth.uid, message.x, message.y)
+            this.miniGame.applyVector(client.auth.uid, message.x, message.y, this.state.townEncounter)
           }
         } catch (error) {
           logger.error(error)
