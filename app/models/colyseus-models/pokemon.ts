@@ -1688,43 +1688,43 @@ export class Skeledirge extends Pokemon {
 
 export class Budew extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.GRASS, Synergy.POISON, Synergy.BABY])
-  rarity = Rarity.EPIC
+  rarity = Rarity.RARE
   stars = 1
   evolution = Pkm.ROSELIA
-  hp = 90
+  hp = 60
   atk = 5
   speed = 54
   def = 2
   speDef = 2
-  maxPP = 100
+  maxPP = 120
   range = 3
   skill = Ability.PETAL_DANCE
 }
 
 export class Roselia extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.GRASS, Synergy.POISON, Synergy.FLORA])
-  rarity = Rarity.EPIC
+  rarity = Rarity.RARE
   stars = 2
   evolution = Pkm.ROSERADE
-  hp = 130
-  atk = 15
+  hp = 120
+  atk = 10
   speed = 54
-  def = 2
-  speDef = 2
-  maxPP = 100
+  def = 3
+  speDef = 3
+  maxPP = 110
   range = 3
   skill = Ability.PETAL_DANCE
 }
 
 export class Roserade extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.GRASS, Synergy.POISON, Synergy.FLORA])
-  rarity = Rarity.EPIC
+  rarity = Rarity.RARE
   stars = 3
-  hp = 230
-  atk = 17
+  hp = 200
+  atk = 15
   speed = 54
-  def = 2
-  speDef = 2
+  def = 4
+  speDef = 4
   maxPP = 100
   range = 3
   skill = Ability.PETAL_DANCE
@@ -3024,17 +3024,18 @@ export class Ludicolo extends Pokemon {
 
 export class Togepi extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.FAIRY, Synergy.NORMAL, Synergy.BABY])
-  rarity = Rarity.RARE
+  rarity = Rarity.EPIC
   stars = 1
   evolution = Pkm.TOGETIC
   hp = 80
-  atk = 5
+  atk = 8
   speed = 51
-  def = 2
-  speDef = 2
+  def = 8
+  speDef = 8
   maxPP = 100
   range = 2
   skill = Ability.WISH
+  passive = Passive.GOOD_LUCK
 }
 
 export class TogepiMafia extends Pokemon {
@@ -3042,10 +3043,10 @@ export class TogepiMafia extends Pokemon {
   rarity = Rarity.SPECIAL
   stars = 1
   hp = 80
-  atk = 5
+  atk = 8
   speed = 51
-  def = 2
-  speDef = 2
+  def = 8
+  speDef = 8
   maxPP = 100
   range = 2
   skill = Ability.WISH
@@ -3058,17 +3059,18 @@ export class Togetic extends Pokemon {
     Synergy.NORMAL,
     Synergy.FLYING
   ])
-  rarity = Rarity.RARE
+  rarity = Rarity.EPIC
   stars = 2
   evolution = Pkm.TOGEKISS
-  hp = 150
-  atk = 10
+  hp = 160
+  atk = 16
   speed = 51
-  def = 2
-  speDef = 2
+  def = 10
+  speDef = 10
   maxPP = 100
   range = 2
   skill = Ability.WISH
+  passive = Passive.GOOD_LUCK
 }
 
 export class Togekiss extends Pokemon {
@@ -3077,16 +3079,17 @@ export class Togekiss extends Pokemon {
     Synergy.NORMAL,
     Synergy.FLYING
   ])
-  rarity = Rarity.RARE
+  rarity = Rarity.EPIC
   stars = 3
-  hp = 260
-  atk = 24
+  hp = 320
+  atk = 32
   speed = 51
-  def = 2
-  speDef = 2
+  def = 12
+  speDef = 12
   maxPP = 100
   range = 2
   skill = Ability.WISH
+  passive = Passive.GOOD_LUCK
 }
 
 export class Rhyhorn extends Pokemon {
@@ -3562,44 +3565,44 @@ export class AlolanRaichu extends Pokemon {
 
 export class Bulbasaur extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.GRASS, Synergy.POISON, Synergy.FLORA])
-  rarity = Rarity.RARE
+  rarity = Rarity.EPIC
   stars = 1
   evolution = Pkm.IVYSAUR
-  hp = 80
-  atk = 5
+  hp = 100
+  atk = 6
   speed = 51
   def = 4
-  speDef = 4
-  maxPP = 90
+  speDef = 8
+  maxPP = 70
   range = 2
   skill = Ability.FRENZY_PLANT
 }
 
 export class Ivysaur extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.GRASS, Synergy.POISON, Synergy.FLORA])
-  rarity = Rarity.RARE
+  rarity = Rarity.EPIC
   stars = 2
   evolution = Pkm.VENUSAUR
-  hp = 130
-  atk = 9
+  hp = 150
+  atk = 12
   speed = 51
   def = 8
-  speDef = 8
-  maxPP = 90
+  speDef = 12
+  maxPP = 70
   range = 2
   skill = Ability.FRENZY_PLANT
 }
 
 export class Venusaur extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.GRASS, Synergy.POISON, Synergy.FLORA])
-  rarity = Rarity.RARE
+  rarity = Rarity.EPIC
   stars = 3
-  hp = 240
-  atk = 17
+  hp = 320
+  atk = 24
   speed = 51
   def = 12
-  speDef = 12
-  maxPP = 90
+  speDef = 16
+  maxPP = 70
   range = 2
   skill = Ability.FRENZY_PLANT
 }
@@ -13028,14 +13031,14 @@ export class Dustox extends Pokemon {
 
 export class Tinkatink extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.STEEL, Synergy.FAIRY])
-  rarity = Rarity.EPIC
+  rarity = Rarity.RARE
   stars = 1
   evolution = Pkm.TINKATUFF
-  hp = 100
-  atk = 10
+  hp = 80
+  atk = 8
   speed = 55
   def = 6
-  speDef = 6
+  speDef = 10
   maxPP = 120
   range = 1
   skill = Ability.GIGATON_HAMMER
@@ -13043,14 +13046,14 @@ export class Tinkatink extends Pokemon {
 
 export class Tinkatuff extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.STEEL, Synergy.FAIRY])
-  rarity = Rarity.EPIC
+  rarity = Rarity.RARE
   stars = 2
   evolution = Pkm.TINKATON
-  hp = 200
-  atk = 20
+  hp = 150
+  atk = 15
   speed = 55
   def = 8
-  speDef = 8
+  speDef = 12
   maxPP = 120
   range = 1
   skill = Ability.GIGATON_HAMMER
@@ -13058,13 +13061,13 @@ export class Tinkatuff extends Pokemon {
 
 export class Tinkaton extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.STEEL, Synergy.FAIRY])
-  rarity = Rarity.EPIC
+  rarity = Rarity.RARE
   stars = 3
-  hp = 300
-  atk = 40
+  hp = 250
+  atk = 30
   speed = 55
-  def = 16
-  speDef = 16
+  def = 10
+  speDef = 14
   maxPP = 120
   range = 1
   skill = Ability.GIGATON_HAMMER
@@ -17310,49 +17313,49 @@ export class IronHands extends Pokemon {
 }
 
 export class Rookidee extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.STEEL, Synergy.FLYING])
+  types = new SetSchema<Synergy>([Synergy.FLYING])
   rarity = Rarity.RARE
   stars = 1
   evolution = Pkm.CORVISQUIRE
-  hp = 80
+  hp = 100
   atk = 8
   speed = 46
   def = 8
   speDef = 4
-  maxPP = 95
+  maxPP = 100
   range = 1
   skill = Ability.STEEL_WING
 }
 
 export class Corvisquire extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.STEEL, Synergy.FLYING])
+  types = new SetSchema<Synergy>([Synergy.FLYING])
   rarity = Rarity.RARE
   stars = 2
   evolution = Pkm.CORVIKNIGHT
-  hp = 150
-  atk = 14
+  hp = 170
+  atk = 15
   speed = 46
-  def = 13
+  def = 14
   speDef = 8
-  maxPP = 90
+  maxPP = 100
   range = 1
   skill = Ability.STEEL_WING
 }
 
 export class Corviknight extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.STEEL, Synergy.FLYING])
+  types = new SetSchema<Synergy>([Synergy.FLYING, Synergy.STEEL])
   rarity = Rarity.RARE
   stars = 3
-  hp = 280
-  atk = 28
+  hp = 250
+  atk = 30
   speed = 46
-  def = 23
+  def = 24
   speDef = 12
-  maxPP = 85
+  maxPP = 100
   range = 1
   skill = Ability.STEEL_WING
-  passive = Passive.CORVIKNIGHT
 }
+
 export class Turtonator extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.DRAGON, Synergy.FIRE])
   rarity = Rarity.UNIQUE
