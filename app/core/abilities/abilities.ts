@@ -251,7 +251,7 @@ export class FrenzyPlantStrategy extends AbilityStrategy {
     crit: boolean
   ) {
     super.process(pokemon, board, target, crit,true)
-    const baseDamage = [10, 25, 50][pokemon.stars - 1] ?? 50
+    const baseDamage = [15, 30, 60][pokemon.stars - 1] ?? 60
     const adjacentEnemies = board
       .getAdjacentCells(target.positionX, target.positionY)
       .filter((cell) => cell.value && cell.value.team !== pokemon.team).length
@@ -2075,7 +2075,7 @@ export class PetalDanceStrategy extends AbilityStrategy {
   process(pokemon: PokemonEntity, board: Board, target: null, crit: boolean) {
     super.process(pokemon, board, target, crit, true)
 
-    const damage = [20, 30, 50][pokemon.stars - 1] ?? 50
+    const damage = [20, 30, 40][pokemon.stars - 1] ?? 40
     const count = [3, 4, 5][pokemon.stars - 1] ?? 5
 
     const enemies = board.cells.filter(
@@ -6446,7 +6446,7 @@ export class GigatonHammerStrategy extends AbilityStrategy {
       damage = 200
     }
     if (pokemon.stars === 3) {
-      damage = 400
+      damage = 300
     }
     pokemon.status.triggerFatigue(6000, pokemon)
     target.handleSpecialDamage(damage, board, AttackType.SPECIAL, pokemon, crit)
