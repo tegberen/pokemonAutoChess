@@ -379,6 +379,18 @@ export default class MinigameManager {
     const cx = 980,
       cy = 404
 
+    const totodile = new PokemonSpecial({
+      scene: this.scene,
+      x: 2 * 48,
+      y: 2.1 * 48,
+      name: Pkm.TOTODILE,
+      orientation: Orientation.DOWN,
+      animation: PokemonActionState.IDLE,
+      dialog: t("thanks_for_playing_jac"),
+      dialogTitle: "Tegberen",
+      emotion: Emotion.HAPPY
+    })
+
     const chimecho = new PokemonSpecial({
       scene: this.scene,
       x: encounter === TownEncounters.CHIMECHO ? cx : 13.5 * 48,
@@ -602,6 +614,7 @@ export default class MinigameManager {
     })
 
     this.villagers.push(
+      totodile,
       chimecho,
       kecleon,
       kecleonShiny,
