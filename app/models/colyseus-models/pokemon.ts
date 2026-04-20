@@ -4946,6 +4946,9 @@ export class Feraligatr extends Pokemon {
   ])
   rarity = Rarity.RARE
   stars = 3
+  evolution = Pkm.MEGA_FERALIGATR
+  evolutionRule = new StackBasedEvolutionRule()
+  stacksRequired = 20
   hp = 240
   atk = 27
   speed = 50
@@ -4954,6 +4957,26 @@ export class Feraligatr extends Pokemon {
   maxPP = 100
   range = 1
   skill = Ability.CRUNCH
+  passive = Passive.FERALIGATR
+}
+
+export class MegaFeraligatr extends Pokemon {
+  types = new SetSchema<Synergy>([
+    Synergy.WATER,
+    Synergy.MONSTER,
+    Synergy.AQUATIC
+  ])
+  rarity = Rarity.RARE
+  stars = 4
+  hp = 270
+  atk = 30
+  speed = 50
+  def = 14
+  speDef = 10
+  maxPP = 100
+  range = 1
+  skill = Ability.CRUNCH
+  passive = Passive.MEGA_FERALIGATR
 }
 
 export class FeraligatrPirate extends Pokemon {
@@ -21562,6 +21585,7 @@ export const PokemonClasses: Record<
   [Pkm.CROCONAW]: Croconaw,
   [Pkm.FERALIGATR]: Feraligatr,
   [Pkm.FERALIGATR_PIRATE]: FeraligatrPirate,
+  [Pkm.MEGA_FERALIGATR]: MegaFeraligatr,
   [Pkm.TREECKO]: Treecko,
   [Pkm.GROVYLE]: Grovyle,
   [Pkm.SCEPTILE]: Sceptile,

@@ -476,6 +476,13 @@ export const PokemonAnimations: {
     attackSprite: AttackSprite.DARK_MELEE,
     shinyUnavailable: true
   },
+  [Pkm.MEGA_FERALIGATR]: {
+    attack: AnimationType.Attack,
+    ability: AnimationType.Bite,
+    emote: AnimationType.Charge,
+    attackSprite: AttackSprite.WATER_MELEE,
+    shinyUnavailable: true
+  },  
   [Pkm.TREECKO]: {
     attack: AnimationType.Strike,
     ability: AnimationType.Pose,

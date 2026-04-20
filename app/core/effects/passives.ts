@@ -2115,6 +2115,25 @@ export const PassiveEffects: Partial<
       attacker.addStack()
 
     })
-  ]
+  ],
+  [Passive.FERALIGATR]: [
+    new OnKillEffect(({ attacker }) => {
+      if (attacker.isGhostOpponent) return
+      if (!attacker.player) return
+      attacker.addStack()
+
+    })
+  ],
+  [Passive.MEGA_FERALIGATR]: [
+    new OnKillEffect(({ attacker }) => {
+      if (!attacker.player) return
+      const totalStars = values(attacker.player.board).reduce(
+        (acc, p) => acc + (!isOnBench(p) ? p.stars : 0),
+        0
+      )
+      attacker.addSpeed(totalStars, attacker, 0, false, true)
+      attacker.addAbilityPower(totalStars, attacker, 0, false, true)
+    })
+  ],
   
 }
