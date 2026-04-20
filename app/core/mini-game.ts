@@ -775,11 +775,12 @@ export class MiniGame {
     })
   }
 
-  applyVector(id: string, x: number, y: number) {
+  applyVector(id: string, x: number, y: number, encounter?: TownEncounter | null) {
     const avatar = this.avatars?.get(id)
     if (avatar && avatar.timer <= 0) {
-      avatar.targetX = avatar.x + x
-      avatar.targetY = avatar.y - y
+      const isSpinda = encounter === TownEncounters.SPINDA
+      avatar.targetX = avatar.x + (isSpinda ? -x : x)
+      avatar.targetY = avatar.y - (isSpinda ? -y : y)
       this.updatePlayerVector(id)
     }
   }
