@@ -2743,7 +2743,8 @@ export const PokemonAnimations: {
     ability: AnimationType.Charge,
     emote: AnimationType.Shoot,
     attackSprite: AttackSprite.FLORA_RANGE,
-    hitSprite: HitSprite.FAIRY_HIT
+    hitSprite: HitSprite.FAIRY_HIT,
+    shinyUnavailable: true
   },
   [Pkm.MEGA_FLOETTE_ETERNAL]: {
     attack: AnimationType.Shoot,
