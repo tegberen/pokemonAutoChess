@@ -381,11 +381,11 @@ export default class MinigameManager {
 
     const totodile = new PokemonSpecial({
       scene: this.scene,
-      x: 2 * 48,
-      y: 2.1 * 48,
+      x: 1 * 48,
+      y: 2 * 48,
       name: Pkm.TOTODILE,
       orientation: Orientation.DOWN,
-      animation: PokemonActionState.IDLE,
+      animation: PokemonActionState.SLEEP,
       dialog: t("thanks_for_playing_jac"),
       dialogTitle: "Tegberen",
       emotion: Emotion.HAPPY
