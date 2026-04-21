@@ -52,6 +52,7 @@
 ![Mega Dragalge](/assets/portraits/0691/0001/Normal.png)
 ![Mega Zygarde](/assets/portraits/0718/0005/Normal.png)
 ![Mega Floette Eternal](/assets/portraits/0670/0006/Normal.png)
+![Mega Feraligatr](/assets/portraits/0160/0001/Normal.png)
 
 ## Requirements (Ping me for adjustments)
 ![Charizard](/assets/portraits/0006/Normal.png)
@@ -82,4 +83,5 @@
 ![Dragalge](/assets/portraits/0691/Normal.png)
 ![Zygarde](/assets/portraits/0718/Normal.png)
 ![Floette Eternal](/assets/portraits/0670/0005/Normal.png)
+![Feraligatr](/assets/portraits/0160/Normal.png)
 
