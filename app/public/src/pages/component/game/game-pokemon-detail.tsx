@@ -107,6 +107,9 @@ export function GamePokemonDetail(props: {
           return acc + itemStatBonus
         }, s.value)
       }
+      if (s.stat === Stat.SPEED) {
+        s.value = Math.min(s.value, 300)
+      }
       return s
     })
   }, [

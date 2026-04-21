@@ -68,7 +68,7 @@ export class Pokemon extends Schema implements IPokemon {
   @type("string") evolution: Pkm = Pkm.DEFAULT
   @type("int8") positionX = -1
   @type("int8") positionY = -1
-  @type("uint8") speed = DEFAULT_SPEED
+  @type("uint16") speed = DEFAULT_SPEED
   @type("uint8") def: number = 1
   @type("uint8") speDef: number = 1
   @type("uint16") atk: number = 1
