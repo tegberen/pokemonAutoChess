@@ -4954,7 +4954,7 @@ export class MegaFeraligatr extends Pokemon {
   ])
   rarity = Rarity.RARE
   stars = 4
-  hp = 270
+  hp = 240
   atk = 30
   speed = 50
   def = 14

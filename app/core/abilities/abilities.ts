@@ -10155,7 +10155,7 @@ export class CrunchStrategy extends AbilityStrategy {
     crit: boolean
   ) {
     super.process(pokemon, board, target, crit)
-    const damage = [40, 80, 160, 240][pokemon.stars - 1] ?? 240
+    const damage = [40, 80, 160][pokemon.stars - 1] ?? 160
     const { death } = target.handleSpecialDamage(
       damage,
       board,
