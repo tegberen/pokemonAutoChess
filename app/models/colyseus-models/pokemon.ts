@@ -13496,6 +13496,15 @@ export class Bidoof extends Pokemon {
   range = 1
   skill = Ability.SUPER_FANG
   additional = true
+  passive = Passive.PILLAR
+  onChangePosition(x: number, y: number, player: Player, state: GameState) {
+    super.onChangePosition(x, y, player, state)
+    updatePillars(player, Pkm.BIDOOF, Pkm.PILLAR_WOOD)
+  }
+  afterSell(player) {
+    updatePillars(player, Pkm.BIDOOF, Pkm.PILLAR_WOOD)
+  }
+  afterEvolve = pillarEvolve(Pkm.PILLAR_WOOD, Pkm.PILLAR_WOOD) // stays wood
 }
 
 export class Bibarel extends Pokemon {
@@ -13511,6 +13520,15 @@ export class Bibarel extends Pokemon {
   range = 1
   skill = Ability.SUPER_FANG
   additional = true
+  passive = Passive.PILLAR
+  onChangePosition(x: number, y: number, player: Player, state: GameState) {
+    super.onChangePosition(x, y, player, state)
+    updatePillars(player, Pkm.BIBAREL, Pkm.PILLAR_WOOD)
+  }
+  afterSell(player) {
+    updatePillars(player, Pkm.BIBAREL, Pkm.PILLAR_WOOD)
+  }
+
 }
 
 export class Spinda extends Pokemon {
@@ -17872,12 +17890,23 @@ export class Malamar extends Pokemon {
   additional = true
 }
 
+const PILLAR_SOURCES: Partial<Record<Pkm, Pkm>> = {
+  [Pkm.TIMBURR]: Pkm.PILLAR_WOOD,
+  [Pkm.BIDOOF]: Pkm.PILLAR_WOOD,
+  [Pkm.BIBAREL]: Pkm.PILLAR_WOOD,
+  [Pkm.GURDURR]: Pkm.PILLAR_IRON,
+  [Pkm.CONKELDURR]: Pkm.PILLAR_CONCRETE,
+}
+
 const updatePillars = (player: Player, pkm: Pkm, pillarPkm: Pkm) => {
   const pkmOnBoard = values(player.board).filter(
-    (p) => p.name === pkm && p.positionY > 0
+    (p) => PILLAR_SOURCES[p.name] === pillarPkm && p.positionY > 0
   )
   const pillars = values(player.board).filter((p) => p.name === pillarPkm)
-  const nbPillars = pkmOnBoard.length * (pkm === Pkm.CONKELDURR ? 2 : 1)
+  const nbPillars = pkmOnBoard.reduce(
+    (acc, p) => acc + (p.name === Pkm.CONKELDURR ? 2 : 1),
+    0
+  )
   if (pillars.length < nbPillars) {
     for (let i = 0; i < nbPillars - pillars.length; i++) {
       const freeSpace = getFirstAvailablePositionOnBoard(player.board, 1)
@@ -17902,14 +17931,13 @@ const pillarEvolve =
     pokemonsBeforeEvolution: Pokemon[]
     player: Player
   }) => {
-    const pkmOnBoard = values(params.player.board).filter(
-      (p) =>
-        p.name === params.pokemonsBeforeEvolution[0].name && p.positionY > 0
-    )
     const pillars = values(params.player.board).filter(
       (p) => p.name === pillarToRemove
     )
-    for (let i = 0; i < pillars.length - pkmOnBoard.length; i++) {
+    const totalSources = values(params.player.board).filter(
+      (p) => PILLAR_SOURCES[p.name] === pillarToRemove && p.positionY > 0
+    ).length
+    for (let i = 0; i < pillars.length - totalSources; i++) {
       params.player.board.delete(pillars[i].id)
     }
     const coords =
