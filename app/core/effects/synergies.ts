@@ -70,6 +70,20 @@ export class MonsterKillEffect extends OnKillEffect {
     attacker.addMaxHP(lifeBoost, attacker, 0, false)
     this.hpBoosted += lifeBoost
     this.count += 1
+
+    if (
+      !attacker.isGhostOpponent &&
+      this.synergyLevel === SynergyEffects[Synergy.MONSTER].indexOf(EffectEnum.MERCILESS) &&
+      attacker.simulation.board.cells.every(
+        (p) => !p || p.team === attacker.team || (!p.hp && !p.status?.resurrecting)
+      )
+    ) {
+      attacker.addAttack(3, attacker, 0, false, true)
+      attacker.addAbilityPower(10, attacker, 0, false, true)
+      attacker.addMaxHP(10, attacker, 0, false, true)
+      attacker.handleHeal(10, attacker, 0, false)
+    }
+
     if (attacker.items.has(Item.BERSERK_GENE)) {
       attacker.status.triggerConfusion(3000, attacker, attacker)
     }
