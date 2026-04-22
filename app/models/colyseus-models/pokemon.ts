@@ -9620,14 +9620,14 @@ export class Floatzel extends Pokemon {
 
 export class Ponyta extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.FIRE, Synergy.FIELD])
-  rarity = Rarity.EPIC
+  rarity = Rarity.UNCOMMON
   stars = 1
   evolution = Pkm.RAPIDASH
-  hp = 90
-  atk = 11
+  hp = 60
+  atk = 6
   speed = 59
-  def = 6
-  speDef = 6
+  def = 3
+  speDef = 5
   maxPP = 60
   range = 1
   skill = Ability.FLAME_CHARGE
@@ -9635,13 +9635,13 @@ export class Ponyta extends Pokemon {
 }
 export class Rapidash extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.FIRE, Synergy.FIELD])
-  rarity = Rarity.EPIC
+  rarity = Rarity.UNCOMMON
   stars = 2
-  hp = 220
-  atk = 21
+  hp = 140
+  atk = 14
   speed = 59
-  def = 10
-  speDef = 10
+  def = 5
+  speDef = 7
   maxPP = 60
   range = 1
   skill = Ability.FLAME_CHARGE
@@ -9654,14 +9654,14 @@ export class GalarianPonyta extends Pokemon {
     Synergy.PSYCHIC,
     Synergy.LIGHT
   ])
-  rarity = Rarity.EPIC
+  rarity = Rarity.UNCOMMON
   stars = 1
   evolution = Pkm.GALARIAN_RAPIDASH
-  hp = 90
-  atk = 8
+  hp = 60
+  atk = 6
   speed = 59
-  def = 6
-  speDef = 6
+  def = 3
+  speDef = 5
   maxPP = 80
   range = 1
   skill = Ability.PASTEL_VEIL
@@ -9674,13 +9674,13 @@ export class GalarianRapidash extends Pokemon {
     Synergy.PSYCHIC,
     Synergy.LIGHT
   ])
-  rarity = Rarity.EPIC
+  rarity = Rarity.UNCOMMON
   stars = 2
-  hp = 220
-  atk = 18
+  hp = 140
+  atk = 14
   speed = 59
-  def = 10
-  speDef = 10
+  def = 5
+  speDef = 7
   maxPP = 80
   range = 1
   skill = Ability.PASTEL_VEIL
@@ -10030,50 +10030,52 @@ export class Naganadel extends Pokemon {
 
 export class Growlithe extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.FIRE, Synergy.FIELD])
-  rarity = Rarity.UNCOMMON
+  rarity = Rarity.EPIC
   stars = 1
   evolution = Pkm.ARCANINE
-  hp = 75
-  atk = 5
+  hp = 140
+  atk = 10
   speed = 55
-  def = 4
-  speDef = 4
-  maxPP = 80
+  def = 6
+  speDef = 6
+  maxPP = 100
   range = 1
   skill = Ability.FIRE_FANG
   additional = true
+  passive = Passive.INTIMIDATE
 }
 
 export class Arcanine extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.FIRE, Synergy.FIELD])
-  rarity = Rarity.UNCOMMON
+  rarity = Rarity.EPIC
   stars = 2
-  hp = 140
-  atk = 13
+  hp = 300
+  atk = 20
   speed = 55
   def = 10
   speDef = 10
-  maxPP = 80
+  maxPP = 100
   range = 1
   skill = Ability.FIRE_FANG
   additional = true
+  passive = Passive.INTIMIDATE
 }
 
 export class HisuiGrowlithe extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.FIRE, Synergy.ROCK, Synergy.FIELD])
-  rarity = Rarity.UNCOMMON
+  rarity = Rarity.EPIC
   stars = 1
   evolution = Pkm.HISUI_ARCANINE
-  hp = 75
-  atk = 5
+  hp = 140
+  atk = 12
   speed = 54
-  def = 6
-  speDef = 4
+  def = 8
+  speDef = 6
   maxPP = 100
   range = 1
   skill = Ability.DOUBLE_EDGE
-  regional = true
   additional = true
+  regional = true
   isInRegion(map: DungeonPMDO, state: GameState) {
     const regionSynergies = RegionDetails[map]?.synergies
     return (
@@ -10081,22 +10083,23 @@ export class HisuiGrowlithe extends Pokemon {
       regionSynergies.includes(Synergy.ROCK)
     )
   }
+  passive = Passive.INTIMIDATE
 }
 
 export class HisuiArcanine extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.FIRE, Synergy.ROCK, Synergy.FIELD])
-  rarity = Rarity.UNCOMMON
+  rarity = Rarity.EPIC
   stars = 2
-  hp = 140
-  atk = 11
+  hp = 300
+  atk = 22
   speed = 54
   def = 12
   speDef = 10
   maxPP = 100
   range = 1
   skill = Ability.DOUBLE_EDGE
-  regional = true
   additional = true
+  regional = true
   isInRegion(map: DungeonPMDO, state: GameState) {
     const regionSynergies = RegionDetails[map]?.synergies
     return (
@@ -10104,6 +10107,7 @@ export class HisuiArcanine extends Pokemon {
       regionSynergies.includes(Synergy.ROCK)
     )
   }
+  passive = Passive.INTIMIDATE
 }
 
 export class Smoochum extends Pokemon {

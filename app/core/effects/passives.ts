@@ -2136,5 +2136,12 @@ export const PassiveEffects: Partial<
       attacker.addAbilityPower(totalStars, attacker, 0, false, true)
     })
   ],
+  [Passive.INTIMIDATE]: [
+    new OnAttackEffect(({ attacker, target }) => {
+      if (chance(0.3, attacker)) {
+        target.status.triggerFlinch(3000, target, attacker)
+      }
+    })
+  ],
   
 }

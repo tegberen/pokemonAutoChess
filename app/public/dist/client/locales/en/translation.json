@@ -1948,8 +1948,8 @@
 		"ELECTRO_BOOST": "All allied ELECTRIC Pokémon receive RUNE_PROTECT for 5 seconds.",
 		"ELECTRO_WEB": "Deal [15,30,60,SP] SPECIAL to all ADJACENT enemy Pokémon and steal [15,30,60,SP] SPEED.",
     "MYSTICAL_FIRE": "Deals [25,50,100,SP] SPECIAL to the target, reduces its AP by [10, SP]. Scorches the target tile and those flanking and behind it with embers. BOARD_EFFECT: embers deal 10 SPECIAL per second and BURN non FLYING or FIRE Pokémon that walk on it.",
-		"FLAME_CHARGE": "Dash into the enemy team's back line and deal [30,60,120,SP] SPECIAL to all enemy Pokémon in the path.",
-		"PASTEL_VEIL": "Dash to the farthest ally. Grant [20,40,80,SP] SHIELD to the user and all allied Pokémon on the way and cure their negative status conditions.",
+		"FLAME_CHARGE": "Dash into the enemy team's back line and deal [20,30,40,SP] SPECIAL to all enemy Pokémon in the path.",
+		"PASTEL_VEIL": "Dash to the farthest ally. Grant [10,20,30,SP] SHIELD to the user and all allied Pokémon on the way and cure their negative status conditions.",
 		"LEECH_SEED": "POISONNED the target for [3,6,12] seconds and heal the user for [20,40,80,SP] HP.",
 		"LOCK_ON": "Lock on the target. The next attack cannot miss and deals [200,SP]% additional TRUE.",
 		"DISABLE": "Deal [15,30,60,SP] SPECIAL to the target and SILENCE them and all ADJACENT enemy Pokémon for [2,3,4] seconds.",
@@ -2195,8 +2195,8 @@
 		"SPARK": "Fire a spark charged with electricity at the target, dealing [30,60,90,SP] SPECIAL. The spark can bounce up to 4 times between ADJACENT enemy Pokémon. Each rebound halves the SPECIAL.",
 		"CRUNCH": "Deal [40,80,160,SP] SPECIAL to the target. If it knocks out the target, heal for 50% of the target's max HP.",
 		"CROSS_POISON": "Deal [30,60,120,SP] SPECIAL to the target and enemy Pokémon ADJACENT to them and inflict them with POISONNED for 2 seconds.",
-		"DOUBLE_EDGE": "Deal [55,110,220,SP] PHYSICAL to target. The user hurts itself for [20,40,60,SP] PHYSICAL.",
-		"FIRE_FANG": "Deal [30,60,120,SP] SPECIAL to the target and apply BURN for 2 seconds.",
+		"DOUBLE_EDGE": "Deal [120,180,240,SP] PHYSICAL to target. If not holding PROTECTIVE_PADS, the user hurts itself for [30,60,90,SP] PHYSICAL.",
+		"FIRE_FANG": "Deal [60,120,240,SP] SPECIAL to the target and apply BURN for 5 seconds.",
 		"ICE_FANG": "Deal [30,60,120,SP] SPECIAL and apply FREEZE for [1,1.5,2,ND=1] seconds.",
 		"THUNDER_FANG": "Deal [30,60,120,SP] SPECIAL and inflict PARALYSIS for 3 seconds.",
     "RISING_VOLTAGE": "The user gathers electric voltage and deals [30,60,120,SP] SPECIAL to the target. Gains ELECTRIC_FIELD and spreads it to all ADJACENT Pokémon. Double the damage, if the opponent has ELECTRIC_FIELD.",
@@ -3582,7 +3582,8 @@
     "SHELL_ARMOR": "Gain [3,6,12] DEF when receiving critical attacks. The Pokémon is immune to ARMOR_BREAK.",
     "FLOETTE_ETERNAL": "Gain one stack for each KO. Mega evolves after 20 stacks.",
     "FERALIGATR": "Gain one stack for each KO. Mega evolves after 20 stacks.",
-    "MEGA_FERALIGATR": "If the target is KO'ed, gain permanently 1 SPEED and 1 AP for each STAR on your board."
+    "MEGA_FERALIGATR": "If the target is KO'ed, gain permanently 1 SPEED and 1 AP for each STAR on your board.",
+    "INTIMIDATE": "When attacking, has a [30,LK]% chance to FLINCH the target for 3 seconds."
   },
 	"stat": {
 		"ATK": "Attack",

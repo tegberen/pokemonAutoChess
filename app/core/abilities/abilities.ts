@@ -1304,7 +1304,7 @@ export class FlameChargeStrategy extends AbilityStrategy {
   ) {
     super.process(pokemon, board, target, crit, true)
 
-    const damage = [30, 60, 120][pokemon.stars - 1] ?? 120
+    const damage = [20, 30, 40][pokemon.stars - 1] ?? 40
     const farthestCoordinate =
       board.getFarthestTargetCoordinateAvailablePlace(pokemon)
     const targetsHit: Set<PokemonEntity> = new Set()
@@ -2336,8 +2336,8 @@ export class DoubleEdgeStrategy extends AbilityStrategy {
   ) {
     super.process(pokemon, board, target, crit)
 
-    const damage = [55, 110, 220][pokemon.stars - 1] ?? 220
-    const recoil = [20, 40, 60][pokemon.stars - 1] ?? 60
+    const damage = [120, 180, 240][pokemon.stars - 1] ?? 240
+    const recoil = [30, 60, 90][pokemon.stars - 1] ?? 90
     target.handleSpecialDamage(
       damage,
       board,
@@ -10214,7 +10214,7 @@ export class FireFangStrategy extends AbilityStrategy {
     crit: boolean
   ) {
     super.process(pokemon, board, target, crit)
-    const damage = [30, 60, 120][pokemon.stars - 1] ?? 120
+    const damage = [60, 120, 240][pokemon.stars - 1] ?? 240
     target.handleSpecialDamage(
       damage,
       board,
@@ -10223,7 +10223,7 @@ export class FireFangStrategy extends AbilityStrategy {
       crit,
       true
     )
-    target.status.triggerBurn(2000, target, pokemon)
+    target.status.triggerBurn(5000, target, pokemon)
   }
 }
 
@@ -11160,7 +11160,7 @@ export class PastelVeilStrategy extends AbilityStrategy {
   ) {
     super.process(pokemon, board, target, crit, true)
 
-    const shield = [20, 40, 80][pokemon.stars - 1] ?? 80
+    const shield = [10, 20, 30][pokemon.stars - 1] ?? 30
     const farthestCoordinate = board.getFarthestTargetCoordinateAvailablePlace(
       pokemon,
       true
