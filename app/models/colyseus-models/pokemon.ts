@@ -15106,6 +15106,10 @@ export class Lickitung extends Pokemon {
   range = 1
   skill = Ability.LICK
   regional = true
+  isInRegion(map: DungeonPMDO, state?: GameState) {
+    const regionSynergies = RegionDetails[map]?.synergies
+    return regionSynergies.includes(Synergy.NORMAL) || regionSynergies.includes(Synergy.GOURMET)
+  }
 }
 
 export class Lickilicky extends Pokemon {
@@ -15125,6 +15129,10 @@ export class Lickilicky extends Pokemon {
   range = 1
   skill = Ability.LICK
   regional = true
+  isInRegion(map: DungeonPMDO, state?: GameState) {
+    const regionSynergies = RegionDetails[map]?.synergies
+    return regionSynergies.includes(Synergy.NORMAL) || regionSynergies.includes(Synergy.GOURMET)
+  }
 }
 
 export class Kangaskhan extends Pokemon {
