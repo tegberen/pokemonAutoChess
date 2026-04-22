@@ -15086,39 +15086,41 @@ export class Araquanid extends Pokemon {
 
 export class Lickitung extends Pokemon {
   types = new SetSchema<Synergy>([
-    Synergy.WILD,
     Synergy.NORMAL,
-    Synergy.GOURMET
+    Synergy.GOURMET,
+    Synergy.MONSTER
   ])
-  rarity = Rarity.UNCOMMON
+  rarity = Rarity.RARE
   stars = 1
   evolution = Pkm.LICKILICKY
-  hp = 70
-  atk = 5
+  hp = 80
+  atk = 6
   speed = 41
-  def = 4
-  speDef = 4
+  def = 6
+  speDef = 6
   maxPP = 90
   range = 1
   skill = Ability.LICK
+  regional = true
 }
 
 export class Lickilicky extends Pokemon {
   types = new SetSchema<Synergy>([
-    Synergy.WILD,
     Synergy.NORMAL,
-    Synergy.GOURMET
+    Synergy.GOURMET,
+    Synergy.MONSTER
   ])
-  rarity = Rarity.UNCOMMON
+  rarity = Rarity.RARE
   stars = 2
-  hp = 150
-  atk = 10
+  hp = 160
+  atk = 14
   speed = 41
-  def = 7
-  speDef = 7
+  def = 8
+  speDef = 8
   maxPP = 90
   range = 1
   skill = Ability.LICK
+  regional = true
 }
 
 export class Kangaskhan extends Pokemon {

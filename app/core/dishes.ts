@@ -266,7 +266,7 @@ export const DishEffects: Record<(typeof Dishes)[number], Effect[]> = {
   ],
   RAGE_CANDY_BAR: [
     new OnSpawnEffect((entity) => {
-      entity.addAttack(10, entity, 0, false)
+      entity.addAttack(15, entity, 0, false)
     })
   ],
   ROCK_SALT: [
