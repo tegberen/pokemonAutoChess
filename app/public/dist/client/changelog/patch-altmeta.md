@@ -129,6 +129,7 @@
 - Kingambit: added HUMAN
 - Reuniclus: added MONSTER
 - Dusknoir: with SPEED items and REAPER_CLOTH, it is a carry. Otherwise with PP items, it should provide support
+- Granbull: to regular, added WILD, removed FIELD
 
 ## Hatch
 - Stoutland: 
