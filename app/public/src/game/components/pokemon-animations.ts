@@ -1214,7 +1214,7 @@ export const PokemonAnimations: {
   [Pkm.HISUI_ARCANINE]: {
     attack: AnimationType.Attack,
     ability: AnimationType.QuickStrike,
-    emote: AnimationType.Shoot,
+    emote: AnimationType.Hop,
     attackSprite: AttackSprite.FIRE_MELEE
   },
   [Pkm.ONIX]: {

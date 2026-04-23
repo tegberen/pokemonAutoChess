@@ -1,8 +1,6 @@
 # Comments
 > Since Mega Evolutions are probably pretty far down the roadmap for the main server, I decided to add them here instead. I have absolutely no idea how to properly program a real Mega Evolution mechanic, so I just reused the Poipole/Kubfu-style evolution method. I mostly threw them in for fun - so the sprites actually see some use. Looking towards its real mechanic in the future, yahoooo.
 
-> A lot of the additions on this server aren’t official, so they’ll likely be removed once the official versions are added. Most are based on existing idea threads, while others take inspiration from the trading card game. Bare with me if I implented them poorly (and or overbuffed some aspects kekw).
-
 > Overall, I have changed the unit distribution to make it feel like a different set to the main server. With different openings and a different late game.
 
 > While I try to keep things somewhat balanced, the games on this server are not meant to be. They are not balanced. Noooot balanced. It’s a small server, and I don’t collect data or run meta reports to fine-tune anything, so please bear with me. The general philosophy here is: if someone ever said “f*ck it, we should give [xyz], [abc] haha” as a joke or sarcastic comment about a Pokémon, I just changed and added it on this server for the memes.
@@ -40,123 +38,130 @@
 - EXP_CHARM: The holder gains 2 PP after getting hit by an attack. [30,LK]% chance to increase that PP gain by 1 after each received hit. When the holder is KO, gain 1 XP.
 > Good for loose streaker! Use it in the early game, to level faster and start catching up. Otherwise it is a tool to gain alot of PP when paired with a tank item like ROCKY_HELMET or POKE_DOLL. Also good to generate more PP, when having SHIELD.
 - FAIRY_FEATHER: Attacks have a [30,LK]% chance to deal 50% of the users current DEF as additional SPECIAL on attack.
-> Its base DEF of 12 is enough, to work on any ranged unit to deal more damage. It is especially good on ranged ROCK units, like Solrock or Lunatone! Try to pair it with LOADED_DICE and SPEED items!
+> Its base DEF of 20 is enough, to work on any ranged unit to let it deal more damage. It is especially good on ranged ROCK units, like Solrock or Lunatone! Try to pair it with LOADED_DICE and SPEED items!
 - CLEAR_AMULET: The first time the holder is affected by any negative status effect, they will store the effect and gain RUNE_PROTECT for 10 seconds. On the next attack, apply said negative effect to all ADJACENT enemies for 5 seconds.
-> Better spread your GHOST team (evil laughter). Try to pair it with FLAME_ORB or TIGHT_BELT! Otherwise 20 SPE_DEF is always appreciated on your tank.
+> Could be interesting with FLAME_ORB or TIGHT_BELT! Otherwise 20 SPE_DEF is always appreciated on your tank.
 - DESTINY_KNOT: Once the holder is KO, the STRONGEST ally gains the users current LUCK and base ATK for the rest of the fight.
 > A way to further buff your carry, when it is already fully itemized! 
 - LUCKY_PUNCH: If the target has an ally directly behind it, there is a [30,LK]% chance the attack knocks the target’s item to that ally. (The target loses a random holded item, and its ally gains it).
 > Use your positioning knowledge to get rid of annoying tank items. Time to scout!
 - GRIP_CLAW: Attacks grant +10% CRIT_POWER. (stackable)
-- COVERT_CLOAK: Every 3 seconds, steal 5 AP from all enemies within RANGE and deal 5 SPECIAL. That damage is doubled, if the target has no AP.
-> This item is a way to make any 2 RANGE carry less vulnerable, by giving it +1 more RANGE. Try to pair it with POKEMONOMICON, or just use the 50 AP to deal alot of damage. The AP stealing can help against PSYCHIC, ARTIFICIAL or DRAGON!
+- COVERT_CLOAK: Every 3 seconds, steal 10 AP from all enemies within RANGE and deal 10 SPECIAL to them.
+> This item is a way to make any 2 RANGE carry less vulnerable, by giving it +1 more RANGE. Try to pair it with POKEMONOMICON, or just use the 50 AP to deal alot of damage. The AP stealing can help against PSYCHIC, ARTIFICIAL or DRAGON comps!
 - FLUFFY_TAIL: Gains [10,LK]% dodge chance. The holder is immune to ARMOR_BREAK.
 > If you have survived GHOST Togekiss meta, beating this will be a breeze.
 - EVER_STONE: The holder gains the ROCK type.
 - TIGHT_BELT: At the beginning of each battle, TIGHT_BELT is replaced by 2 random items. The holder is PARALYSIS during the entire fight.
 
 > From the Wiki > Data section: Luck increases your chances in all draws, whether for critical hits, dodges, status on hit or any other effect mentioned with the LUCK symbol. Luck affects probabilities with this formula: P = baseP ^ (1 - LUCK /100);
-# Changes to Rarity, Typings, etc.
+# Changes to Rarity, Typings, etc. with adjusted stats!
 ## Common
-- Cinderace: added NORMAL, removed HUMAN, replaced the role of Littwick and Cyndaquil in the early game
-- Butterfree: moved to regional
-- Goodra: adjusted stats
+- Cinderace: added NORMAL, removed HUMAN
+- Butterfree: to regional
+- Goodra:
 - Kingdra: RANGE 2 → 3
 - Decidueye: also has regional form now, as ranged FIGHTING unit
 - Mamoosh: added FOSSIL
-- Cherrim Sunlight: moved to regular (does not evolve via lightspot)
-- Shiftry: added ICE, nerfed SPE_DEF
+- Cherrim Sunlight: to regular (does not evolve via lightspot)
+- Shiftry: added ICE
 - Charizard: moved to regional
 - Orbeetle: moved to regular
 - Swampert: removed WATER, added AQUATIC
 - Staraptor: added FIGHTING
-- Gardevoir, Gallade: for Mega Quest
+- Gardevoir, Gallade:
 - Smoliv: regular attacks now scale with AP, SPEED 25 → 42
-- Salamence: adjusted stats, to regional
+- Salamence: to regional
 
 ## Uncommon
-- Blastoise: adjusted stats for Tank Role
+- Blastoise: Range 1 → 2, new ability
 - Nidoking and Nidoqueen: added MONSTER, removed FIELD
-- Wigglytuff: replaced Stoutland as Tank Role
+- Wigglytuff: RANGE 1 → 2, tank role
 - Chestnaught: light HP, DEF Buff, moved to regional since GRASS FIGHTING is filled by Rowlet line
-- Froslass: Swapped with Walrein
-- Grimmsnarl: HP Buff cause Dark sucks
+- Froslass:
+- Grimmsnarl:
 - Magnezone: added ARTIFICIAL, buffed PP
-- Sceptile: Grass Dragon pogchamp
-- Greninja: moved to AQUATIC and DARK regional
-- Torracat: nice Buff for Fire Field, with Scorbunny early into Cyndaquil late game
-- Eelektross: adjusted stats
+- Sceptile:
+- Greninja: to regional (DARK)
+- Torracat: 
+- Florges: buffed ability effect
 - Nidoking and Nidoqueen: added passive, to attract catchable Nidoran♀ and Nidoran♂ respectively (yes I know it's a bit of a cheat)
 - Gossifleur: added GRASS
-- Garganacl: added HUMAN on last stage
-- Charizard: adjusted stats
+- Garganacl: added HUMAN (last stage)
+- Charizard:
+- Rapidash:
 ## Rare
-- Corviknight: moved to regular, buffed HP, removed STEEL until last stage
-- Exploud: added MONSTER, adjusted stats
-- Pawmot: added FIELD for more electric field shenanigans, buffed ability alot
+- Corviknight: to regular (STEEL only last stage)
+- Exploud: added MONSTER
+- Manectric: new ability
+- Pawmot: added FIELD, buffed ability effect 
 - Pangoro: added WILD
 - Sharpedo: added WILD
 - both Yamask forms: added FOSSIL
-- Vikavolt: moved to regional, added AMORPHOUS, small adjustments
-- Primarina: moved to regional, adjusted stats
+- Vikavolt: to regional, added AMORPHOUS
+- Primarina: to regional (WATER / FAIRY)
 - Salazzle: RANGE 2 → 3, added MONSTER
-- Dragapult: added FLYING, moved to regional
-- Blaziken: removed FLYING, adjusted stats, buffed ability → moved to regional
-- Torterra: moved to regional, added Passive
-- Roserade: adjusted stats
-- Tinkaton: adjusted stats
+- Dragapult: to regional, added FLYING
+- Blaziken: to regional, removed FLYING, buffed ability effect
+- Torterra: to regional (GRASS / GROUND) , added passive
+- Roserade: 
+- Tinkaton:
+- Lickitung: to regional (NORMAL / GOURMET)
 
 ## Epic
-- Typhlosion: adjusted stats
-- Gigalith: is now SOUND, reduced PP, nerfed HP
-- Walrein: made it a HP Beast, swapped with Froslass
-- Houndoom: added FIELD, nerfed stats
-- Dusknoir: added AMORPHOUS it can be a carry with SPEED, or be a disruptor with PP items, so it can be played in DARK, GHOST, AMORPHOUS
-- Aurorus: added LIGHT, adjusted stats
-- Diancie: nerfed HP, buffed DEF and SPE_DEF
-- Gengar: moved for Dusknoir
-- Gothitelle: added DARK, adjusted stats
-- Togekiss: adjusted stats, LUCK passive
-- Venusaur: adjusted stats
+- Typhlosion: 
+- Gigalith: added SOUND
+- Walrein: 
+- Houndoom: added FIELD
+- Aurorus: added LIGHT
+- Diancie: 
+- Gengar: 
+- Gothitelle: added DARK, buffed ability effect
+- Cloyster: 
+- Togekiss: added passive
+- Venusaur: new ability
+- Arcanine: added passive
 
 ## Ultra
-- Ultra Pokemon have twice the HP when evolving into their last form (except Rillaboom kekw)
+> Ultra Pokemon have twice the HP when 3 STAR
 - Intellion: RANGE 3 → 4
-- Ursaluna: more ATK
-- Leavanny: wohooo
-- Kingambit: added HUMAN, nerfed HP
-- Reuniclus: buffed PP, added MONSTER
+- Ursaluna: 
+- Leavanny:
+- Kingambit: added HUMAN
+- Reuniclus: added MONSTER
 - Dusknoir: with SPEED items and REAPER_CLOTH, it is a carry. Otherwise with PP items, it should provide support
 
 ## Hatch
-- Stoutland: more bulky, pretty juicy ATK stat buff
-- Chandelure: changed it to SPECIAL Attacker mashine
-- Empoleon: lowered ATK, decent Buff for HP & PP
-- Emboar: giga buff
+- Stoutland: 
+- Chandelure: SPECIAL carry
+- Empoleon:
+- Emboar: buffed ability effect
 - Serperior: added LIGHT
-- Ludicolo: adjusted stats
-- Delphox: adjusted stats
-- Meowscarada: adjusted stats
-- Hydreigon: adjusted stats
+- Ludicolo:
+- Delphox: buffed ability effect
+- Meowscarada:
+- Hydreigon:
 
 ## Unique
-- Veluza: PP 100 → 60, added MONSTER for WATER for avo
-- Roaring Moon: adjusted stats and ability, lowered PP
-- Pyukumuku: buffed Passive, buffed DEF and SPE_DEF
-- Farfetchd: small buff HP
-- Galarian Farfetchd: small buff HP
-- Zeraora: small buff HP
-- Miltank: buff HP
-- Scream Tail: SOUND, FOSSIL, MONSTER
+- Veluza: PP 100 → 60, added MONSTER, removed WATER 
+- Roaring Moon:
+- Pyukumuku: buffed passive
+- Farfetchd: buffed HP
+- Galarian Farfetchd: buffed HP
+- Zeraora: buffed HP
+- Miltank: buffed HP
+- Scream Tail: changed to SOUND, FOSSIL, MONSTER
+- Morpeko: added ELECTRIC, ELECTRIC_SEED
 
 ## Legendary
-- Landorus, Thunderus, Tornadus, Enamorus, Marcus: added HUMAN, nerfed HP
+- Landorus, Thunderus, Tornadus, Enamorus, Marcus: added HUMAN
 - Buzzwole and Pheromosa: are now Legendary Duo, no nerfs smile
-- Victini: added GOURMET, Tabasco Dish
-- Guzzlord: 300 → 400 HP, buffed Passive
+- Yveltal: new ability
+- Victini: added GOURMET, TABASCO
+- Guzzlord: 300 → 400 HP, buffed passive
 - Spectrier: Range 1 → 2
 - Deoxys Attack: ATK 25 → 35
 - Xurkitree: 200 → 250 HP, 15 → 20 ATK, Ability: +1 target
+- Hoopa: buffed ability effect
 
 ## Special
 - Mafia Eevee: via EVER_STONE
@@ -183,7 +188,6 @@
 - Poliwhirl - Soak: Deal [20,40,80,SP] SPECIAL to the target and restore [10,10,20] PP to all allied Pokémon.
 - Torchic - Blaze Kick: Gain [10,20,40]% CRIT_CHANCE, then deal [30,60,120,SP] SPECIAL and BURN the target for 2 seconds. If it already has BURN, deal +30% damage. Can crit by default.
 - Pawmi - Double Shock: Emit a powerful electric shock, dealing [50,100,200,SP] SPECIAL to the target and inflict the user with PARALYSIS for 3 seconds. If the user has ELECTRIC_FIELD, discharge it and execute the target. 
-- Corviknight - Passive: Chance to RAGE on ability cast
 - Turtwig - Passive [Shell Armor]: Gain [3,6,12] DEF when receiving critical attacks. The Pokémon is immune to ARMOR_BREAK.
 
 # Credits
@@ -192,6 +196,7 @@
 - Mega Excadrill: DeltaL, Pi, Soulja
 - Mega Dragalge: DeltaL, Pi, Soulja
 - Mega Zygarde: DeltaL, Pi (GOATED)
+- Mega Feraligatr: DeltaL, Pi (GOATED again)
 - Chimecho tent: from PMD Universe ˶ᵔ ᵕ ᵔ˶
 > Thank you alot, I will do the proper crediting when they are out on PMD Collab. Thanks to all the spriters really! Also thanks alot to all the additions from Non-SpriteCollab too!! They are awesome!
 

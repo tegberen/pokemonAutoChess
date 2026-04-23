@@ -2357,6 +2357,11 @@ export class Turtwig extends Pokemon {
   skill = Ability.BULLDOZE
   passive = Passive.SHELL_ARMOR
   regional = true
+  isInRegion(map: DungeonPMDO, state?: GameState) {
+    const regionSynergies = RegionDetails[map]?.synergies
+    return regionSynergies.includes(Synergy.GRASS) || regionSynergies.includes(Synergy.GROUND)
+  }
+
 }
 
 export class Grotle extends Pokemon {
@@ -2378,6 +2383,10 @@ export class Grotle extends Pokemon {
   skill = Ability.BULLDOZE
   passive = Passive.SHELL_ARMOR
   regional = true
+  isInRegion(map: DungeonPMDO, state?: GameState) {
+    const regionSynergies = RegionDetails[map]?.synergies
+    return regionSynergies.includes(Synergy.GRASS) || regionSynergies.includes(Synergy.GROUND)
+  }
 }
 
 export class Torterra extends Pokemon {
@@ -2398,6 +2407,10 @@ export class Torterra extends Pokemon {
   skill = Ability.BULLDOZE
   passive = Passive.SHELL_ARMOR
   regional = true
+  isInRegion(map: DungeonPMDO, state?: GameState) {
+    const regionSynergies = RegionDetails[map]?.synergies
+    return regionSynergies.includes(Synergy.GRASS) || regionSynergies.includes(Synergy.GROUND)
+  }
 }
 
 export class Deino extends Pokemon {
@@ -11477,6 +11490,10 @@ export class Popplio extends Pokemon {
   range = 3
   skill = Ability.SPARKLING_ARIA
   regional = true
+  isInRegion(map: DungeonPMDO, state?: GameState) {
+    const regionSynergies = RegionDetails[map]?.synergies
+    return regionSynergies.includes(Synergy.WATER) || regionSynergies.includes(Synergy.FAIRY)
+  }
 }
 
 export class Brionne extends Pokemon {
@@ -11493,6 +11510,10 @@ export class Brionne extends Pokemon {
   range = 3
   skill = Ability.SPARKLING_ARIA
   regional = true
+  inRegion(map: DungeonPMDO, state?: GameState) {
+    const regionSynergies = RegionDetails[map]?.synergies
+    return regionSynergies.includes(Synergy.WATER) || regionSynergies.includes(Synergy.FAIRY)
+  }
 }
 
 export class Primarina extends Pokemon {
@@ -11508,6 +11529,10 @@ export class Primarina extends Pokemon {
   range = 3
   skill = Ability.SPARKLING_ARIA
   regional = true
+  isInRegion(map: DungeonPMDO, state?: GameState) {
+    const regionSynergies = RegionDetails[map]?.synergies
+    return regionSynergies.includes(Synergy.WATER) || regionSynergies.includes(Synergy.FAIRY)
+  }
 }
 
 export class Gothita extends Pokemon {
@@ -12612,7 +12637,7 @@ export class Froakie extends Pokemon {
   regional = true
   isInRegion(map: DungeonPMDO, state?: GameState) {
     const regionSynergies = RegionDetails[map]?.synergies
-    return regionSynergies.includes(Synergy.DARK) || regionSynergies.includes(Synergy.AQUATIC)
+    return regionSynergies.includes(Synergy.DARK)
   }
 }
 
@@ -12632,7 +12657,7 @@ export class Frogadier extends Pokemon {
   regional = true
   isInRegion(map: DungeonPMDO, state?: GameState) {
     const regionSynergies = RegionDetails[map]?.synergies
-    return regionSynergies.includes(Synergy.DARK) || regionSynergies.includes(Synergy.AQUATIC)
+    return regionSynergies.includes(Synergy.DARK)
   }
 }
 
@@ -12651,7 +12676,7 @@ export class Greninja extends Pokemon {
   regional = true
   isInRegion(map: DungeonPMDO, state?: GameState) {
     const regionSynergies = RegionDetails[map]?.synergies
-    return regionSynergies.includes(Synergy.DARK) || regionSynergies.includes(Synergy.AQUATIC)
+    return regionSynergies.includes(Synergy.DARK)
   }
 }
 

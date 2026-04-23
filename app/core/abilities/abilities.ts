@@ -3133,7 +3133,7 @@ export class WheelOfFireStrategy extends AbilityStrategy {
     target: PokemonEntity,
     crit: boolean
   ) {
-    const damage = [10, 30, 60][pokemon.stars - 1] ?? 60
+    const damage = [20, 40, 60][pokemon.stars - 1] ?? 60
     const farthestTarget =
       pokemon.state.getFarthestTarget(pokemon, board) ?? target
     super.process(pokemon, board, farthestTarget, crit)
@@ -3217,11 +3217,11 @@ export class InfernalParadeStrategy extends AbilityStrategy {
         enemy.status.triggerBurn(3000, enemy, pokemon)
       }
 
-      enemy.handleSpecialDamage(30, board, AttackType.SPECIAL, pokemon, crit)
+      enemy.handleSpecialDamage(60, board, AttackType.SPECIAL, pokemon, crit)
       enemy.commands.push(
         new DelayedCommand(() => {
           enemy.handleSpecialDamage(
-            30,
+            60,
             board,
             AttackType.SPECIAL,
             pokemon,
