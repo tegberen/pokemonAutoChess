@@ -73,7 +73,7 @@
 - Salamence: to regional
 
 ## Uncommon
-- Blastoise: Range 1 → 2, new ability
+- Blastoise: Range 3 → 1, new ability
 - Nidoking and Nidoqueen: added MONSTER, removed FIELD
 - Wigglytuff: RANGE 1 → 2, tank role
 - Chestnaught: light HP, DEF Buff, moved to regional since GRASS FIGHTING is filled by Rowlet line
@@ -106,6 +106,7 @@
 - Roserade: 
 - Tinkaton:
 - Lickitung: to regional (NORMAL / GOURMET)
+- Swellow: Range 1 → 2, added NORMAL
 
 ## Epic
 - Typhlosion: 

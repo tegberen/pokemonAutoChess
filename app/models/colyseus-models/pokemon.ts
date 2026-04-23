@@ -15461,7 +15461,7 @@ export class Watchog extends Pokemon {
 }
 
 export class Taillow extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.WILD, Synergy.FLYING])
+  types = new SetSchema<Synergy>([Synergy.WILD, Synergy.FLYING, Synergy.NORMAL])
   rarity = Rarity.RARE
   stars = 1
   evolution = Pkm.SWELLOW
@@ -15471,21 +15471,21 @@ export class Taillow extends Pokemon {
   def = 6
   speDef = 5
   maxPP = 100
-  range = 1
+  range = 2
   skill = Ability.AIR_SLASH
 }
 
 export class Swellow extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.WILD, Synergy.FLYING])
+  types = new SetSchema<Synergy>([Synergy.WILD, Synergy.FLYING, Synergy.NORMAL])
   rarity = Rarity.RARE
   stars = 2
-  hp = 170
-  atk = 16
+  hp = 140
+  atk = 18
   speed = 80
   def = 11
   speDef = 9
   maxPP = 100
-  range = 1
+  range = 2
   skill = Ability.AIR_SLASH
 }
 
