@@ -1208,19 +1208,19 @@ export const PokemonAnimations: {
   [Pkm.HISUI_GROWLITHE]: {
     attack: AnimationType.Attack,
     ability: AnimationType.Attack,
-    emote: AnimationType.Shoot,
+    emote: AnimationType.Rumble,
     attackSprite: AttackSprite.FIRE_MELEE
   },
   [Pkm.HISUI_ARCANINE]: {
     attack: AnimationType.Attack,
     ability: AnimationType.QuickStrike,
-    emote: AnimationType.Hop,
+    emote: AnimationType.Rumble,
     attackSprite: AttackSprite.FIRE_MELEE
   },
   [Pkm.ONIX]: {
     attack: AnimationType.Shoot,
     ability: AnimationType.Swing,
-    emote: AnimationType.Shoot,
+    emote: AnimationType.Rumble,
     attackSprite: AttackSprite.ROCK_MELEE,
     hitSprite: HitSprite.ROCK_HIT
   },
