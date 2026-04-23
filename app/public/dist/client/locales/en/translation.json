@@ -2999,7 +2999,7 @@
     "SKY_MELODICA": "Each ally cast grants +1 SPEED to the whole team",
     "TERRA_CYMBAL": "Each ally cast grants +1 LUCK to the whole team",  
     "BINDING_BAND": "+10 LUCK",
-    "SOOTHE_BELL": "Grant the lowest HP ally 20 SHIELD every 2 seconds. Has a [30,LK]% chance to convert that ally’s remaining SHIELD into max HP.",
+    "SOOTHE_BELL": "Grant the lowest HP ally 30 SHIELD every 2 seconds. Has a [30,LK]% chance to convert that ally’s remaining SHIELD into max HP.",
     "EXP_CHARM": "The holder gains 2 PP after getting hit by an attack. [30,LK]% chance to increase that PP gain by 1 after each received hit (max 10 stacks). When the holder is KO, gain 1 XP.",
     "FAIRY_FEATHER": "Attacks have a [30,LK]% chance to deal 50% of the users current DEF as additional SPECIAL on attack",
     "CLEAR_AMULET": "The first time the holder is affected by any negative status effect, they store the effect and gain RUNE_PROTECT for 10 seconds. On the next attack, apply said negative effect to all ADJACENT enemies for 5 seconds.",

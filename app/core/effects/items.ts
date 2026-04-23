@@ -480,7 +480,7 @@ export class SootheBellEffect extends PeriodicEffect {
             targetX: lowestHealthAlly.positionX,
             targetY: lowestHealthAlly.positionY
           })
-          lowestHealthAlly.addShield(20, pokemon, 0, false)
+          lowestHealthAlly.addShield(30, pokemon, 0, false)
           if (chance(0.3, pokemon)) {
             const converted = lowestHealthAlly.shield
             lowestHealthAlly.shield = 0
