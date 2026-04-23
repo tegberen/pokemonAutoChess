@@ -2137,11 +2137,12 @@ export const PassiveEffects: Partial<
     })
   ],
   [Passive.INTIMIDATE]: [
-    new OnAttackEffect(({ attacker, target }) => {
-      if (chance(0.3, attacker)) {
-        target.status.triggerFlinch(3000, attacker)
+    new OnAttackEffect(({ pokemon, target }) => {
+      if (!target) return
+      if (chance(0.3, pokemon)) {
+        target.status.triggerFlinch(3000, pokemon)
       }
     })
-  ],
+  ]
   
 }
