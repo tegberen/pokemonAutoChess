@@ -1302,11 +1302,11 @@ export class Garchomp extends Pokemon {
 }
 
 export class Roggenrola extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.ROCK, Synergy.LIGHT])
+  types = new SetSchema<Synergy>([Synergy.ROCK, Synergy.LIGHT, Synergy.SOUND])
   rarity = Rarity.EPIC
   stars = 1
   evolution = Pkm.BOLDORE
-  hp = 90
+  hp = 70
   atk = 4
   speed = 37
   def = 8
@@ -1317,11 +1317,11 @@ export class Roggenrola extends Pokemon {
 }
 
 export class Boldore extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.ROCK, Synergy.LIGHT])
+  types = new SetSchema<Synergy>([Synergy.ROCK, Synergy.LIGHT,Synergy.SOUND])
   rarity = Rarity.EPIC
   stars = 2
   evolution = Pkm.GIGALITH
-  hp = 170
+  hp = 150
   atk = 7
   speed = 37
   def = 12
@@ -1920,23 +1920,24 @@ export class Samurott extends Pokemon {
 }
 
 export class HisuiSamurott extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.WATER, Synergy.FIELD, Synergy.DARK])
+  types = new SetSchema<Synergy>([
+    Synergy.WATER,
+    Synergy.DARK,
+    Synergy.STEEL
+  ])
   rarity = Rarity.EPIC
   stars = 3
   hp = 280
   atk = 36
-  speed = 47
+  speed = 56
   def = 14
   speDef = 14
   maxPP = 100
   range = 1
   skill = Ability.CEASELESS_EDGE
   regional = true
-  isInRegion(map: DungeonPMDO | "town", state?: GameState): boolean {
-    const regionSynergies = RegionDetails[map]?.synergies
-    return regionSynergies?.includes(Synergy.DARK)
-  }
 }
+
 export class Larvitar extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.DARK, Synergy.MONSTER, Synergy.ROCK])
   rarity = Rarity.RARE
@@ -3004,8 +3005,9 @@ export class Lombre extends Pokemon {
   rarity = Rarity.HATCH
   stars = 2
   evolution = Pkm.LUDICOLO
-  hp = 110
-  atk = 12
+  evolutionRule = new HatchEvolutionRule()
+  hp = 130
+  atk = 14
   speed = 47
   def = 4
   speDef = 4
@@ -3023,8 +3025,8 @@ export class Ludicolo extends Pokemon {
   ])
   rarity = Rarity.HATCH
   stars = 3
-  hp = 220
-  atk = 22
+  hp = 190
+  atk = 24
   speed = 47
   def = 6
   speDef = 6
@@ -3047,6 +3049,10 @@ export class Togepi extends Pokemon {
   range = 2
   skill = Ability.WISH
   passive = Passive.GOOD_LUCK
+  beforeSimulationStart({ teamEffects }: { teamEffects: Set<EffectEnum> }) {
+    teamEffects.add(EffectEnum.GOOD_LUCK)
+  }
+
 }
 
 export class TogepiMafia extends Pokemon {
@@ -3082,6 +3088,10 @@ export class Togetic extends Pokemon {
   range = 2
   skill = Ability.WISH
   passive = Passive.GOOD_LUCK
+  beforeSimulationStart({ teamEffects }: { teamEffects: Set<EffectEnum> }) {
+    teamEffects.add(EffectEnum.GOOD_LUCK)
+  }
+
 }
 
 export class Togekiss extends Pokemon {
@@ -3101,6 +3111,10 @@ export class Togekiss extends Pokemon {
   range = 2
   skill = Ability.WISH
   passive = Passive.GOOD_LUCK
+  beforeSimulationStart({ teamEffects }: { teamEffects: Set<EffectEnum> }) {
+    teamEffects.add(EffectEnum.GOOD_LUCK)
+  }
+
 }
 
 export class Rhyhorn extends Pokemon {
@@ -3527,7 +3541,13 @@ export class Pikachu extends Pokemon {
     if (item === Item.SURFBOARD) {
       player.transformPokemon(this, Pkm.PIKACHU_SURFER)
     }
+    if (item === Item.TRAINING_RIBBON) {
+      this.items.delete(Item.TRAINING_RIBBON)
+      player.transformPokemon(this, Pkm.PIKACHU_LIBRE)
+    }
   }
+
+
 }
 
 export class Raichu extends Pokemon {
@@ -3720,7 +3740,7 @@ export class Magneton extends Pokemon {
   rarity = Rarity.UNCOMMON
   stars = 2
   evolution = Pkm.MAGNEZONE
-  hp = 110
+  hp = 150
   atk = 9
   speed = 44
   def = 2
@@ -3869,7 +3889,7 @@ export class Florges extends Pokemon {
 }
 
 export class Chikorita extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.FLORA, Synergy.FAIRY])
+  types = new SetSchema<Synergy>([Synergy.FAIRY, Synergy.FLORA])
   rarity = Rarity.SPECIAL
   stars = 1
   evolution = Pkm.BAYLEEF
@@ -3884,7 +3904,7 @@ export class Chikorita extends Pokemon {
 }
 
 export class Bayleef extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.FLORA, Synergy.FAIRY])
+  types = new SetSchema<Synergy>([Synergy.FAIRY, Synergy.FLORA])
   rarity = Rarity.SPECIAL
   stars = 2
   evolution = Pkm.MEGANIUM
@@ -3899,7 +3919,7 @@ export class Bayleef extends Pokemon {
 }
 
 export class Meganium extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.FLORA, Synergy.FAIRY])
+  types = new SetSchema<Synergy>([Synergy.FAIRY, Synergy.FLORA])
   rarity = Rarity.SPECIAL
   stars = 3
   hp = 220
@@ -4182,8 +4202,8 @@ export class Piplup extends Pokemon {
   hp = 60
   atk = 5
   speed = 44
-  def = 6
-  speDef = 10
+  def = 2
+  speDef = 3
   maxPP = 90
   range = 1
   skill = Ability.WAVE_SPLASH
@@ -4197,10 +4217,10 @@ export class Prinplup extends Pokemon {
   evolution = Pkm.EMPOLEON
   evolutionRule = new HatchEvolutionRule()
   hp = 160
-  atk = 9
+  atk = 10
   speed = 44
-  def = 8
-  speDef = 14
+  def = 6
+  speDef = 7
   maxPP = 90
   range = 1
   skill = Ability.WAVE_SPLASH
@@ -4212,10 +4232,10 @@ export class Empoleon extends Pokemon {
   rarity = Rarity.HATCH
   stars = 3
   hp = 280
-  atk = 17
+  atk = 15
   speed = 44
   def = 10
-  speDef = 18
+  speDef = 14
   maxPP = 90
   range = 1
   skill = Ability.WAVE_SPLASH
@@ -4238,7 +4258,6 @@ export class Chimchar extends Pokemon {
   maxPP = 100
   range = 1
   skill = Ability.TORMENT
-  regional = true
 }
 
 export class Monferno extends Pokemon {
@@ -4258,7 +4277,6 @@ export class Monferno extends Pokemon {
   maxPP = 100
   range = 1
   skill = Ability.TORMENT
-  regional = true
 }
 
 export class Infernape extends Pokemon {
@@ -4277,11 +4295,10 @@ export class Infernape extends Pokemon {
   maxPP = 100
   range = 1
   skill = Ability.TORMENT
-  regional = true
 }
 
 export class Mudkip extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.WATER, Synergy.GROUND])
+  types = new SetSchema<Synergy>([Synergy.AQUATIC, Synergy.GROUND])
   rarity = Rarity.COMMON
   stars = 1
   evolution = Pkm.MARSHTOMP
@@ -4306,7 +4323,7 @@ export class Mudkip extends Pokemon {
 }
 
 export class Marshtomp extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.WATER, Synergy.GROUND])
+  types = new SetSchema<Synergy>([Synergy.AQUATIC, Synergy.GROUND])
   rarity = Rarity.COMMON
   stars = 2
   evolution = Pkm.SWAMPERT
@@ -4331,7 +4348,7 @@ export class Marshtomp extends Pokemon {
 }
 
 export class Swampert extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.WATER, Synergy.GROUND])
+  types = new SetSchema<Synergy>([Synergy.AQUATIC, Synergy.GROUND])
   rarity = Rarity.COMMON
   stars = 3
   hp = 200
@@ -4370,6 +4387,7 @@ export class Torchic extends Pokemon {
   maxPP = 100
   range = 1
   skill = Ability.BLAZE_KICK
+  regional = true
 }
 
 export class Combusken extends Pokemon {
@@ -4388,6 +4406,7 @@ export class Combusken extends Pokemon {
   maxPP = 100
   range = 1
   skill = Ability.BLAZE_KICK
+  regional = true
 }
 
 export class Blaziken extends Pokemon {
@@ -4405,6 +4424,7 @@ export class Blaziken extends Pokemon {
   maxPP = 100
   range = 1
   skill = Ability.BLAZE_KICK
+  regional = true
 }
 
 export class Treecko extends Pokemon {
@@ -4427,7 +4447,7 @@ export class Grovyle extends Pokemon {
   rarity = Rarity.UNCOMMON
   stars = 2
   evolution = Pkm.SCEPTILE
-  hp = 110
+  hp = 120
   atk = 12
   speed = 68
   def = 6
@@ -4441,7 +4461,7 @@ export class Sceptile extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.DRAGON, Synergy.GRASS, Synergy.MONSTER])
   rarity = Rarity.UNCOMMON
   stars = 3
-  hp = 200
+  hp = 210
   atk = 23
   speed = 68
   def = 8
@@ -4505,14 +4525,14 @@ export class Typhlosion extends Pokemon {
 
 export class HisuianTyphlosion extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.FIRE, Synergy.FIELD, Synergy.GHOST])
-  rarity = Rarity.UNCOMMON
+  rarity = Rarity.EPIC
   stars = 3
-  hp = 230
-  atk = 24
+  hp = 320
+  atk = 28
   speed = 51
   def = 6
-  speDef = 6
-  maxPP = 100
+  speDef = 10
+  maxPP = 80
   range = 2
   skill = Ability.INFERNAL_PARADE
   passive = Passive.HISUIAN_TYPHLOSION
@@ -4756,7 +4776,7 @@ export class Blastoise extends Pokemon {
 }
 
 export class Bellsprout extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.GRASS, Synergy.FLORA])
+  types = new SetSchema<Synergy>([Synergy.POISON, Synergy.FLORA])
   rarity = Rarity.SPECIAL
   stars = 1
   evolution = Pkm.WEEPINBELL
@@ -4771,7 +4791,7 @@ export class Bellsprout extends Pokemon {
 }
 
 export class Weepinbell extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.GRASS, Synergy.FLORA])
+  types = new SetSchema<Synergy>([Synergy.POISON, Synergy.FLORA])
   rarity = Rarity.SPECIAL
   stars = 2
   evolution = Pkm.VICTREEBEL
@@ -4786,7 +4806,7 @@ export class Weepinbell extends Pokemon {
 }
 
 export class Victreebel extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.GRASS, Synergy.FLORA])
+  types = new SetSchema<Synergy>([Synergy.POISON, Synergy.FLORA])
   rarity = Rarity.SPECIAL
   stars = 3
   hp = 200
@@ -4926,7 +4946,12 @@ export class Croconaw extends Pokemon {
   ])
   rarity = Rarity.RARE
   stars = 2
-  evolution = Pkm.FERALIGATR
+  evolutions = [Pkm.FERALIGATR, Pkm.FERALIGATR_PIRATE]
+  evolutionRule = new CountEvolutionRule(3, (pokemon, player) => {
+    const aquaticCount = player.synergies.get(Synergy.AQUATIC) ?? 0
+    const darkCount = player.synergies.get(Synergy.DARK) ?? 0
+    return darkCount >= aquaticCount ? Pkm.FERALIGATR_PIRATE : Pkm.FERALIGATR
+  })
   hp = 130
   atk = 14
   speed = 50
@@ -4935,6 +4960,7 @@ export class Croconaw extends Pokemon {
   maxPP = 100
   range = 1
   skill = Ability.CRUNCH
+  passive = Passive.CROCONAW
 }
 
 export class Feraligatr extends Pokemon {
@@ -4976,6 +5002,25 @@ export class MegaFeraligatr extends Pokemon {
   range = 1
   skill = Ability.CRUNCH
   passive = Passive.MEGA_FERALIGATR
+}
+
+export class FeraligatrPirate extends Pokemon {
+  types = new SetSchema<Synergy>([
+    Synergy.WATER,
+    Synergy.MONSTER,
+    Synergy.DARK,
+  ])
+  rarity = Rarity.RARE
+  stars = 3
+  hp = 240
+  atk = 27
+  speed = 50
+  def = 10
+  speDef = 10
+  maxPP = 100
+  range = 1
+  skill = Ability.CRUNCH
+  passive = Passive.FERALIGATR_PIRATE
 }
 
 export class Azurill extends Pokemon {
@@ -5398,7 +5443,7 @@ export class Jumpluff extends Pokemon {
 }
 
 export class Seedot extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.GRASS, Synergy.DARK])
+  types = new SetSchema<Synergy>([Synergy.GRASS, Synergy.DARK, Synergy.ICE])
   rarity = Rarity.COMMON
   stars = 1
   evolution = Pkm.NUZLEAF
@@ -5406,7 +5451,7 @@ export class Seedot extends Pokemon {
   atk = 6
   speed = 51
   def = 4
-  speDef = 4
+  speDef = 2
   maxPP = 100
   range = 1
   skill = Ability.RAZOR_LEAF
@@ -5417,7 +5462,7 @@ export class Seedot extends Pokemon {
 }
 
 export class Nuzleaf extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.GRASS, Synergy.DARK])
+  types = new SetSchema<Synergy>([Synergy.GRASS, Synergy.DARK, Synergy.ICE])
   rarity = Rarity.COMMON
   stars = 2
   evolution = Pkm.SHIFTRY
@@ -5425,7 +5470,7 @@ export class Nuzleaf extends Pokemon {
   atk = 9
   speed = 51
   def = 6
-  speDef = 6
+  speDef = 3
   maxPP = 100
   range = 1
   skill = Ability.RAZOR_LEAF
@@ -5436,14 +5481,14 @@ export class Nuzleaf extends Pokemon {
 }
 
 export class Shiftry extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.GRASS, Synergy.DARK])
+  types = new SetSchema<Synergy>([Synergy.GRASS, Synergy.DARK, Synergy.ICE])
   rarity = Rarity.COMMON
   stars = 3
   hp = 200
   atk = 21
   speed = 51
   def = 8
-  speDef = 8
+  speDef = 4
   maxPP = 100
   range = 1
   skill = Ability.RAZOR_LEAF
@@ -5455,43 +5500,47 @@ export class Shiftry extends Pokemon {
 
 export class Sprigatito extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.GRASS, Synergy.FLORA, Synergy.DARK])
-  rarity = Rarity.COMMON
+  rarity = Rarity.HATCH
   stars = 1
   evolution = Pkm.FLORAGATO
-  hp = 55
-  atk = 5
+  evolutionRule = new HatchEvolutionRule()
+  hp = 70
+  atk = 7
   speed = 63
-  def = 2
-  speDef = 2
+  def = 4
+  speDef = 4
   maxPP = 100
   range = 2
   skill = Ability.FLOWER_TRICK
+  passive = Passive.HATCH
 }
 
 export class Floragato extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.GRASS, Synergy.FLORA, Synergy.DARK])
-  rarity = Rarity.COMMON
+  rarity = Rarity.HATCH
   stars = 2
   evolution = Pkm.MEOWSCARADA
-  hp = 105
-  atk = 8
+  evolutionRule = new HatchEvolutionRule()
+  hp = 120
+  atk = 12
   speed = 63
-  def = 3
-  speDef = 3
+  def = 5
+  speDef = 5
   maxPP = 100
   range = 2
   skill = Ability.FLOWER_TRICK
+  passive = Passive.HATCH
 }
 
 export class Meowscarada extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.GRASS, Synergy.FLORA, Synergy.DARK])
-  rarity = Rarity.COMMON
+  rarity = Rarity.HATCH
   stars = 3
-  hp = 180
-  atk = 19
+  hp = 230
+  atk = 23
   speed = 63
-  def = 4
-  speDef = 4
+  def = 6
+  speDef = 6
   maxPP = 100
   range = 2
   skill = Ability.FLOWER_TRICK
@@ -7656,6 +7705,7 @@ export class Mewtwo extends Pokemon {
   maxPP = 110
   range = 3
   skill = Ability.PSYSTRIKE
+  passive = Passive.MEWTWO
 }
 
 export class MegaMewtwoY extends Pokemon {
@@ -7720,12 +7770,14 @@ export class Marshadow extends Pokemon {
 export class Kyurem extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.DRAGON, Synergy.ICE])
   rarity = Rarity.LEGENDARY
+  evolutions = [Pkm.KYUREM_WHITE, Pkm.KYUREM_BLACK]
+  evolutionRule = new ItemEvolutionRule([Item.DNA_SPLICER])
   stars = 3
   hp = 200
   atk = 27
   speed = 55
-  def = 6
-  speDef = 12
+  def = 10
+  speDef = 10
   maxPP = 100
   range = 3
   skill = Ability.GLACIATE
@@ -7811,7 +7863,7 @@ export class Celebi extends Pokemon {
 }
 
 export class Victini extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.FIRE, Synergy.PSYCHIC])
+  types = new SetSchema<Synergy>([Synergy.FIRE, Synergy.PSYCHIC, Synergy.GOURMET])
   rarity = Rarity.LEGENDARY
   stars = 3
   hp = 300
@@ -7932,7 +7984,7 @@ export class DeoxysAttack extends Pokemon {
   rarity = Rarity.LEGENDARY
   stars = 3
   hp = 250
-  atk = 25
+  atk = 35
   speed = 73
   def = 4
   speDef = 4
@@ -8057,15 +8109,15 @@ export class HooH extends Pokemon {
 
 export class RoaringMoon extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.DRAGON, Synergy.DARK, Synergy.FOSSIL])
-  rarity = Rarity.LEGENDARY
+  rarity = Rarity.UNIQUE
   stars = 3
-  hp = 200
-  atk = 25
+  hp = 180
+  atk = 19
   speed = 61
-  def = 6
-  speDef = 9
-  maxPP = 130
-  range = 3
+  def = 4
+  speDef = 7
+  maxPP = 100
+  range = 2
   skill = Ability.SCALE_SHOT
 }
 
@@ -8126,7 +8178,7 @@ export class Drampa extends Pokemon {
   maxPP = 80
   range = 3
   skill = Ability.DRAGON_PULSE
-  passive = Passive.DRAMPA
+  passive = Passive.BERSERK
 }
 
 export class MegaDrampa extends Pokemon {
@@ -8269,14 +8321,14 @@ export class Bellossom extends Pokemon {
 }
 
 export class Amaura extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.FOSSIL, Synergy.ICE])
+  types = new SetSchema<Synergy>([Synergy.FOSSIL, Synergy.ICE, Synergy.LIGHT])
   rarity = Rarity.EPIC
   stars = 1
   evolution = Pkm.AURORUS
-  hp = 130
+  hp = 150  
   atk = 7
   speed = 44
-  def = 6
+  def = 4
   speDef = 6
   maxPP = 100
   range = 1
@@ -8285,13 +8337,13 @@ export class Amaura extends Pokemon {
 }
 
 export class Aurorus extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.FOSSIL, Synergy.ICE])
+  types = new SetSchema<Synergy>([Synergy.FOSSIL, Synergy.ICE, Synergy.LIGHT])
   rarity = Rarity.EPIC
   stars = 2
-  hp = 280
-  atk = 18
+  hp = 300
+  atk = 11
   speed = 44
-  def = 10
+  def = 6
   speDef = 10
   maxPP = 100
   range = 1
@@ -8304,11 +8356,11 @@ export class Carbink extends Pokemon {
   rarity = Rarity.EPIC
   stars = 1
   evolution = Pkm.DIANCIE
-  hp = 125
+  hp = 80
   atk = 7
   speed = 41
-  def = 8
-  speDef = 4
+  def = 20
+  speDef = 20
   maxPP = 100
   range = 1
   skill = Ability.DIAMOND_STORM
@@ -8322,11 +8374,11 @@ export class Diancie extends Pokemon {
   evolutionRule = new StackBasedEvolutionRule()
   stacksRequired = 10
   stars = 2
-  hp = 300
+  hp = 180
   atk = 10
   speed = 41
-  def = 16
-  speDef = 8
+  def = 30
+  speDef = 30
   maxPP = 100
   range = 1
   skill = Ability.DIAMOND_STORM
@@ -8742,7 +8794,7 @@ export class Cradily extends Pokemon {
 }
 
 export class Cranidos extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.FOSSIL, Synergy.MONSTER])
+  types = new SetSchema<Synergy>([Synergy.ROCK, Synergy.FOSSIL, Synergy.MONSTER])
   rarity = Rarity.UNCOMMON
   stars = 1
   evolution = Pkm.RAMPARDOS
@@ -8758,7 +8810,7 @@ export class Cranidos extends Pokemon {
 }
 
 export class Rampardos extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.FOSSIL, Synergy.MONSTER])
+  types = new SetSchema<Synergy>([Synergy.ROCK, Synergy.FOSSIL, Synergy.MONSTER])
   rarity = Rarity.UNCOMMON
   stars = 2
   hp = 160
@@ -8773,7 +8825,7 @@ export class Rampardos extends Pokemon {
 }
 
 export class Kabuto extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.FOSSIL, Synergy.WATER])
+  types = new SetSchema<Synergy>([Synergy.ROCK, Synergy.WATER, Synergy.FOSSIL])
   rarity = Rarity.RARE
   stars = 1
   evolution = Pkm.KABUTOPS
@@ -8789,7 +8841,7 @@ export class Kabuto extends Pokemon {
 }
 
 export class Kabutops extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.FOSSIL, Synergy.WATER])
+  types = new SetSchema<Synergy>([Synergy.ROCK, Synergy.WATER, Synergy.FOSSIL])
   rarity = Rarity.RARE
   stars = 2
   hp = 190
@@ -9039,12 +9091,12 @@ export class Fennekin extends Pokemon {
   stars = 1
   evolution = Pkm.BRAIXEN
   evolutionRule = new HatchEvolutionRule()
-  hp = 50
-  atk = 4
+  hp = 70
+  atk = 5
   speed = 58
   def = 2
   speDef = 2
-  maxPP = 60
+  maxPP = 100
   range = 2
   skill = Ability.MYSTICAL_FIRE
   passive = Passive.HATCH
@@ -9055,12 +9107,12 @@ export class Braixen extends Pokemon {
   stars = 2
   evolution = Pkm.DELPHOX
   evolutionRule = new HatchEvolutionRule()
-  hp = 90
-  atk = 8
+  hp = 110
+  atk = 9
   speed = 58
   def = 4
   speDef = 4
-  maxPP = 60
+  maxPP = 100
   range = 2
   skill = Ability.MYSTICAL_FIRE
   passive = Passive.HATCH
@@ -9069,12 +9121,12 @@ export class Delphox extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.FIRE, Synergy.PSYCHIC, Synergy.HUMAN])
   rarity = Rarity.HATCH
   stars = 3
-  hp = 180
-  atk = 16
+  hp = 220
+  atk = 17
   speed = 58
-  def = 2
-  speDef = 6
-  maxPP = 60
+  def = 8
+  speDef = 8
+  maxPP = 100
   range = 2
   skill = Ability.MYSTICAL_FIRE
 }
@@ -10746,7 +10798,7 @@ export class Tentacruel extends Pokemon {
 }
 
 export class Snubull extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.FAIRY, Synergy.WILD])
+  types = new SetSchema<Synergy>([Synergy.WILD, Synergy.FAIRY])
   rarity = Rarity.ULTRA
   stars = 1
   evolution = Pkm.GRANBULL
@@ -10758,10 +10810,11 @@ export class Snubull extends Pokemon {
   maxPP = 70
   range = 1
   skill = Ability.ROAR
+  regional = true
 }
 
 export class Granbull extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.FAIRY, Synergy.WILD])
+  types = new SetSchema<Synergy>([Synergy.WILD, Synergy.FAIRY])
   rarity = Rarity.ULTRA
   stars = 2
   hp = 280
@@ -10772,6 +10825,7 @@ export class Granbull extends Pokemon {
   maxPP = 70
   range = 1
   skill = Ability.ROAR
+  regional = true
 }
 
 export class TypeNull extends Pokemon {
@@ -11484,7 +11538,7 @@ export class Popplio extends Pokemon {
   speed = 44
   def = 4
   speDef = 4
-  maxPP = 70
+  maxPP = 100
   range = 3
   skill = Ability.SPARKLING_ARIA
   regional = true
@@ -11504,7 +11558,7 @@ export class Brionne extends Pokemon {
   speed = 44
   def = 4
   speDef = 6
-  maxPP = 70
+  maxPP = 100
   range = 3
   skill = Ability.SPARKLING_ARIA
   regional = true
@@ -11518,12 +11572,12 @@ export class Primarina extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.WATER, Synergy.FAIRY, Synergy.SOUND])
   rarity = Rarity.RARE
   stars = 3
-  hp = 190
-  atk = 20
+  hp = 220
+  atk = 21
   speed = 44
   def = 4
   speDef = 8
-  maxPP = 70
+  maxPP = 100
   range = 3
   skill = Ability.SPARKLING_ARIA
   regional = true
@@ -12300,11 +12354,10 @@ export class AlolanDugtrio extends Pokemon {
 
 export class Rowlet extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.GRASS, Synergy.FLYING, Synergy.GHOST])
-  rarity = Rarity.HATCH
+  rarity = Rarity.COMMON
   stars = 1
   evolution = Pkm.DARTIX
-  evolutionRule = new HatchEvolutionRule()
-  hp = 70
+  hp = 50
   atk = 5
   speed = 47
   def = 2
@@ -12351,38 +12404,26 @@ export class Decidueye extends Pokemon {
   maxPP = 100
   range = 3
   skill = Ability.SPIRIT_SHACKLE
-  passive = Passive.HATCH
 }
 
-export class Dartix extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.GRASS, Synergy.FLYING, Synergy.GHOST])
-  rarity = Rarity.HATCH
-  stars = 2
-  evolution = Pkm.DECIDUEYE
-  evolutionRule = new HatchEvolutionRule()
-  hp = 130
-  atk = 9
-  speed = 47
-  def = 4
-  speDef = 6
-  maxPP = 100
-  range = 3
-  skill = Ability.SPIRIT_SHACKLE
-  passive = Passive.HATCH
-}
 
-export class Decidueye extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.GRASS, Synergy.FLYING, Synergy.GHOST])
-  rarity = Rarity.HATCH
+export class HisuiDecidueye extends Pokemon {
+  types = new SetSchema<Synergy>([Synergy.GRASS, Synergy.FLYING, Synergy.FIGHTING])
+  rarity = Rarity.COMMON
   stars = 3
-  hp = 190
+  hp = 180
   atk = 18
-  speed = 47
+  speed = 42
   def = 4
-  speDef = 8
+  speDef = 3
   maxPP = 100
   range = 3
-  skill = Ability.SPIRIT_SHACKLE
+  skill = Ability.TRIPLE_ARROWS
+  regional = true
+  isInRegion(map: DungeonPMDO, state: GameState) {
+    const regionSynergies = RegionDetails[map]?.synergies
+    return regionSynergies.includes(Synergy.FIGHTING) ?? false
+  }
 }
 
 export class Zorua extends Pokemon {
@@ -12589,7 +12630,7 @@ export class Arbok extends Pokemon {
 }
 
 export class Carvanha extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.WATER, Synergy.DARK])
+  types = new SetSchema<Synergy>([Synergy.WILD, Synergy.WATER, Synergy.DARK])
   rarity = Rarity.RARE
   stars = 1
   evolution = Pkm.SHARPEDO
@@ -12605,7 +12646,7 @@ export class Carvanha extends Pokemon {
 }
 
 export class Sharpedo extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.WATER, Synergy.DARK])
+  types = new SetSchema<Synergy>([Synergy.WILD,Synergy.WATER, Synergy.DARK])
   rarity = Rarity.RARE
   stars = 2
   hp = 170
@@ -13644,7 +13685,7 @@ export class Liepard extends Pokemon {
 }
 
 export class Pancham extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.FIGHTING, Synergy.DARK, Synergy.WILD])
+  types = new SetSchema<Synergy>([Synergy.WILD, Synergy.DARK, Synergy.FIGHTING])
   rarity = Rarity.RARE
   stars = 1
   evolution = Pkm.PANGORO
@@ -13661,7 +13702,7 @@ export class Pancham extends Pokemon {
 }
 
 export class Pangoro extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.FIGHTING, Synergy.DARK, Synergy.WILD])
+  types = new SetSchema<Synergy>([Synergy.WILD, Synergy.DARK, Synergy.FIGHTING])
   rarity = Rarity.RARE
   stars = 2
   hp = 210
@@ -13919,8 +13960,6 @@ export class Cherubi extends Pokemon {
   maxPP = 85
   range = 3
   skill = Ability.NATURAL_GIFT
-
-  regional = true
 }
 
 export class Cherrim extends Pokemon {
@@ -13940,8 +13979,6 @@ export class Cherrim extends Pokemon {
   maxPP = 75
   range = 3
   skill = Ability.NATURAL_GIFT
-
-  regional = true
 }
 
 export class CherrimSunlight extends Pokemon {
@@ -13960,8 +13997,6 @@ export class CherrimSunlight extends Pokemon {
   maxPP = 65
   range = 3
   skill = Ability.NATURAL_GIFT
-
-  regional = true
 }
 
 export class Misdreavus extends Pokemon {
@@ -16380,7 +16415,7 @@ export class Grubbin extends Pokemon {
   maxPP = 100
   range = 3
   skill = Ability.ZAP_CANNON
-  passive = Passive.HATCH
+  regional = true
 }
 
 export class Charjabug extends Pokemon {
@@ -16391,26 +16426,27 @@ export class Charjabug extends Pokemon {
   hp = 160
   atk = 13
   speed = 39
-  def = 6
-  speDef = 6
-  maxPP = 100
+  def = 5
+  speDef = 5
+  maxPP = 85
   range = 3
   skill = Ability.ZAP_CANNON
-  passive = Passive.HATCH
+  regional = true
 }
 
 export class Vikavolt extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.BUG, Synergy.ELECTRIC, Synergy.AMORPHOUS])
   rarity = Rarity.RARE
   stars = 3
-  hp = 180
-  atk = 24
+  hp = 220
+  atk = 22
   speed = 39
-  def = 8
-  speDef = 8
-  maxPP = 100
+  def = 6
+  speDef = 6
+  maxPP = 70
   range = 3
   skill = Ability.ZAP_CANNON
+  regional = true
 }
 
 export class ShellosWestSea extends Pokemon {
@@ -18161,7 +18197,7 @@ export class Litten extends Pokemon {
   rarity = Rarity.UNCOMMON
   stars = 1
   evolution = Pkm.TORRACAT
-  hp = 95
+  hp = 90
   atk = 8
   speed = 44
   def = 4
@@ -18263,7 +18299,7 @@ export class MegaDragalge extends Pokemon {
 }
 
 export class Cubchoo extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.ICE, Synergy.AQUATIC, Synergy.WILD])
+  types = new SetSchema<Synergy>([Synergy.WILD, Synergy.ICE, Synergy.AQUATIC])
   rarity = Rarity.EPIC
   stars = 1
   evolution = Pkm.BEARTIC
@@ -18279,7 +18315,7 @@ export class Cubchoo extends Pokemon {
 }
 
 export class Beartic extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.ICE, Synergy.AQUATIC, Synergy.WILD])
+  types = new SetSchema<Synergy>([Synergy.WILD,Synergy.ICE, Synergy.AQUATIC])
   rarity = Rarity.EPIC
   stars = 2
   hp = 200
@@ -19023,7 +19059,7 @@ export class Zacian extends Pokemon {
 }
 
 export class ZacianCrowned extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.FAIRY, Synergy.WILD, Synergy.STEEL])
+  types = new SetSchema<Synergy>([Synergy.WILD, Synergy.FAIRY, Synergy.STEEL])
   rarity = Rarity.LEGENDARY
   stars = 4
   hp = 260
@@ -19880,12 +19916,13 @@ export class Smoliv extends Pokemon {
   evolution = Pkm.DOLLIV
   hp = 60
   atk = 5
-  speed = 25
+  speed = 42
   def = 2
   speDef = 3
   maxPP = 90
   range = 2
   skill = Ability.TERRAIN_PULSE
+  passive = Passive.SPECIAL_ATTACK
 }
 
 export class Dolliv extends Pokemon {
@@ -19899,12 +19936,13 @@ export class Dolliv extends Pokemon {
   evolution = Pkm.ARBOLIVA
   hp = 110
   atk = 10
-  speed = 25
+  speed = 42
   def = 3
   speDef = 5
   maxPP = 90
   range = 2
   skill = Ability.TERRAIN_PULSE
+  passive = Passive.SPECIAL_ATTACK
 }
 
 export class Arboliva extends Pokemon {
@@ -19917,56 +19955,60 @@ export class Arboliva extends Pokemon {
   stars = 3
   hp = 200
   atk = 16
-  speed = 25
+  speed = 42
   def = 6
   speDef = 8
   maxPP = 90
   range = 2
   skill = Ability.TERRAIN_PULSE
+  passive = Passive.SPECIAL_ATTACK
 }
 
 export class Chespin extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.GRASS, Synergy.FIGHTING])
-  rarity = Rarity.COMMON
+  rarity = Rarity.UNCOMMON
   stars = 1
   evolution = Pkm.QUILLADIN
   hp = 60
   atk = 7
   speed = 41
-  def = 5
+  def = 6
   speDef = 3
   maxPP = 100
   range = 1
   skill = Ability.SPIKY_SHIELD
+  regional = true
 }
 
 export class Quilladin extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.GRASS, Synergy.FIGHTING])
-  rarity = Rarity.COMMON
+  rarity = Rarity.UNCOMMON
   stars = 2
   evolution = Pkm.CHESNAUGHT
   hp = 120
   atk = 12
   speed = 41
-  def = 9
+  def = 10
   speDef = 5
   maxPP = 100
   range = 1
   skill = Ability.SPIKY_SHIELD
+  regional = true
 }
 
 export class Chesnaught extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.GRASS, Synergy.FIGHTING])
-  rarity = Rarity.COMMON
+  rarity = Rarity.UNCOMMON
   stars = 3
-  hp = 200
+  hp = 240
   atk = 23
   speed = 41
-  def = 15
+  def = 20
   speDef = 8
   maxPP = 100
   range = 1
   skill = Ability.SPIKY_SHIELD
+  regional = true
 }
 
 export class Nymble extends Pokemon {
@@ -21221,7 +21263,7 @@ export class GreatTusk extends Pokemon {
   speDef = 4
   maxPP = 100
   range = 1
-  skill = Ability.HEADLONG_RUSH
+  skill = Ability.HEADLONDING_RUSH
 }
 
 export class Finizen extends Pokemon {
@@ -21836,6 +21878,8 @@ export const PokemonClasses: Record<
   [Pkm.MEGA_MEWTWO_Y]: MegaMewtwoY,
   [Pkm.SHADOW_MEWTWO]: ShadowMewtwo,
   [Pkm.KYUREM]: Kyurem,
+  [Pkm.KYUREM_WHITE]: WhiteKyurem,
+  [Pkm.KYUREM_BLACK]: BlackKyurem,
   [Pkm.RESHIRAM]: Reshiram,
   [Pkm.ZEKROM]: Zekrom,
   [Pkm.CELEBI]: Celebi,
@@ -22155,6 +22199,7 @@ export const PokemonClasses: Record<
   [Pkm.ROWLET]: Rowlet,
   [Pkm.DARTIX]: Dartix,
   [Pkm.DECIDUEYE]: Decidueye,
+  [Pkm.HISUI_DECIDUEYE]: HisuiDecidueye,
   [Pkm.ZORUA]: Zorua,
   [Pkm.ZOROARK]: Zoroark,
   [Pkm.HISUI_ZORUA]: HisuiZorua,
@@ -22633,6 +22678,7 @@ export const PokemonClasses: Record<
   [Pkm.MINCCINO]: Minccino,
   [Pkm.CINCCINO]: Cinccino,
   [Pkm.PIKACHU_SURFER]: PikachuSurfer,
+  [Pkm.PIKACHU_LIBRE]: PikachuLibre,
   [Pkm.ESPURR]: Espurr,
   [Pkm.MEOWSTIC_MALE]: MeowsticMale,
   [Pkm.MEOWSTIC_FEMALE]: MeowsticFemale,

@@ -486,7 +486,7 @@ export default class Shop {
         )
       }
       if (
-        stageLevel === PortalCarouselStages[0] && player.pokemonsProposition.includes(Pkm.MILCERY) === false && chance(MILCERY_RATE) &&
+        stageLevel === PortalCarouselStages[0] && pokemonsProposed.includes(Pkm.MILCERY) === false && chance(MILCERY_RATE) &&
         state.specialGameRule !== SpecialGameRule.FIRST_PARTNER &&
         state.specialGameRule !== SpecialGameRule.UNIQUE_STARTER
       ) {
