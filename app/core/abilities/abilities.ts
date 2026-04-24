@@ -6187,7 +6187,7 @@ export class FireSpinStrategy extends AbilityStrategy {
     crit: boolean
   ) {
     super.process(pokemon, board, target, crit)
-    const damage = [25, 50, 100][pokemon.stars - 1] ?? 100
+    const multiplier = [0.5, 1, 2][pokemon.stars - 1] ?? 2
     const cells = board.getAdjacentCells(
       target.positionX,
       target.positionY,
@@ -6196,7 +6196,7 @@ export class FireSpinStrategy extends AbilityStrategy {
     cells.forEach((cell) => {
       if (cell.value && pokemon.team != cell.value.team) {
         cell.value.handleSpecialDamage(
-          damage,
+          multiplier * pokemon.atk,
           board,
           AttackType.SPECIAL,
           pokemon,

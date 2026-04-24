@@ -11051,7 +11051,7 @@ export class Vulpix extends Pokemon {
 }
 
 export class Ninetales extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.FIRE, Synergy.PSYCHIC])
+  types = new SetSchema<Synergy>([Synergy.FIRE, Synergy.PSYCHIC, Synergy.GHOST])
   rarity = Rarity.RARE
   stars = 2
   hp = 170
@@ -11091,7 +11091,7 @@ export class AlolanVulpix extends Pokemon {
 }
 
 export class AlolanNinetales extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.ICE, Synergy.FAIRY])
+  types = new SetSchema<Synergy>([Synergy.ICE, Synergy.FAIRY, Synergy.AMORPHOUS])
   rarity = Rarity.RARE
   stars = 2
   hp = 170

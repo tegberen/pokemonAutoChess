@@ -2028,7 +2028,7 @@
 		"HEAL_ORDER": "Deal [25,45,65,SP] SPECIAL to ADJACENT enemy Pokémon and heal ADJACENT allied Pokémon for [25,45,65,SP] HP.",
 		"SHELL_TRAP": "The user's SHIELD explodes, dealing [50,SP] SPECIAL + current SHIELD to all ADJACENT enemy Pokémon. If the user has no SHIELD, gain [75,SP] SHIELD instead.",
 		"DIG": "Dig underground and reappear next to the farthest enemy Pokémon, dealing [10,20,40,SP] SPECIAL to all enemy Pokémon in the path.",
-		"FIRE_SPIN": "Deal [25,50,100,SP] SPECIAL and BURN for 3 seconds the target and enemy Pokémon ADJACENT to them.",
+		"FIRE_SPIN": "Deal [50,100,200,SP]% of ATK as SPECIAL to the target and ADJACENT enemy Pokémon and BURN them for 3 seconds.",
 		"SEARING_SHOT": "An inferno of scarlet flames torches everything around Victini. Deal [50,SP] SPECIAL to all enemy Pokémon within 2 tiles of the user and BURN them for 3 seconds.",
 		"SPLASH": "The user just flops and splashes around to no effect at all...",
 		"PECK": "Deal [10,30,50,SP] SPECIAL to the target.",

@@ -107,6 +107,8 @@
 - Tinkaton:
 - Lickitung: to regional (NORMAL / GOURMET)
 - Swellow: Range 1 → 2, added NORMAL
+- Ninetales: added GHOST, changed ability effect
+- Alolan Ninetales: added AMORPHOUS
 
 ## Epic
 - Typhlosion: 
