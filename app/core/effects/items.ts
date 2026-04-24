@@ -1030,7 +1030,7 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
           attacker.positionY
         ) === 1
       ) {
-        const damage = Math.round(6 + 0.3 * pokemon.def)
+        const damage = Math.round(6 + 0.15 * pokemon.def)
         attacker.handleDamage({
           damage,
           board: pokemon.simulation.board,
