@@ -5598,7 +5598,7 @@ export class MegaCharizardX extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.DRAGON, Synergy.FIRE, Synergy.FLYING])
   rarity = Rarity.UNCOMMON
   stars = 4
-  hp = 240
+  hp = 260
   atk = 20
   speed = 57
   def = 10
@@ -18550,7 +18550,7 @@ export class Milcery extends Pokemon {
     [...Flavors],
     (pokemon, player, item: Item) => alcremieByFlavor[item]
   )
-  hp = 60
+  hp = 40
   atk = 3
   speed = 41
   def = 1
@@ -18577,7 +18577,7 @@ export class AlcremieVanilla extends Pokemon {
   ])
   rarity = Rarity.SPECIAL
   stars = 2
-  hp = 90
+  hp = 80
   atk = 6
   speed = 41
   def = 2
@@ -18597,7 +18597,7 @@ export class AlcremieRuby extends Pokemon {
   ])
   rarity = Rarity.SPECIAL
   stars = 2
-  hp = 90
+  hp = 80
   atk = 6
   speed = 41
   def = 2
@@ -18617,7 +18617,7 @@ export class AlcremieMatcha extends Pokemon {
   ])
   rarity = Rarity.SPECIAL
   stars = 2
-  hp = 90
+  hp = 80
   atk = 6
   speed = 41
   def = 2
@@ -18637,7 +18637,7 @@ export class AlcremieMint extends Pokemon {
   ])
   rarity = Rarity.SPECIAL
   stars = 2
-  hp = 90
+  hp = 80
   atk = 6
   speed = 41
   def = 2
@@ -18657,7 +18657,7 @@ export class AlcremieLemon extends Pokemon {
   ])
   rarity = Rarity.SPECIAL
   stars = 2
-  hp = 90
+  hp = 80
   atk = 6
   speed = 41
   def = 2
@@ -18677,7 +18677,7 @@ export class AlcremieSalted extends Pokemon {
   ])
   rarity = Rarity.SPECIAL
   stars = 2
-  hp = 90
+  hp = 80
   atk = 6
   speed = 41
   def = 2
@@ -18697,7 +18697,7 @@ export class AlcremieRubySwirl extends Pokemon {
   ])
   rarity = Rarity.SPECIAL
   stars = 2
-  hp = 90
+  hp = 80
   atk = 6
   speed = 41
   def = 2
@@ -18717,7 +18717,7 @@ export class AlcremieCaramelSwirl extends Pokemon {
   ])
   rarity = Rarity.SPECIAL
   stars = 2
-  hp = 90
+  hp = 80
   atk = 6
   speed = 41
   def = 2
@@ -18737,7 +18737,7 @@ export class AlcremieRainbowSwirl extends Pokemon {
   ])
   rarity = Rarity.SPECIAL
   stars = 2
-  hp = 90
+  hp = 80
   atk = 6
   speed = 41
   def = 2
