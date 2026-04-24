@@ -6835,7 +6835,7 @@ export class IronMoth extends Pokemon {
   speed = 70
   def = 4
   speDef = 4
-  maxPP = 120
+  maxPP = 140
   range = 3
   skill = Ability.ANACHRONISM_REPULSOR
 }
