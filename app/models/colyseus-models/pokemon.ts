@@ -14745,7 +14745,7 @@ export class Comfey extends Pokemon {
 }
 
 export class Lillipup extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.NORMAL, Synergy.FIELD])
+  types = new SetSchema<Synergy>([Synergy.NORMAL, Synergy.FIELD, Synergy.GROUND])
   rarity = Rarity.HATCH
   evolution = Pkm.HERDIER
   evolutionRule = new HatchEvolutionRule()
@@ -14763,7 +14763,7 @@ export class Lillipup extends Pokemon {
 }
 
 export class Herdier extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.NORMAL, Synergy.FIELD])
+  types = new SetSchema<Synergy>([Synergy.NORMAL, Synergy.FIELD, Synergy.GROUND])
   rarity = Rarity.HATCH
   evolution = Pkm.STOUTLAND
   evolutionRule = new HatchEvolutionRule()
@@ -14780,7 +14780,7 @@ export class Herdier extends Pokemon {
 }
 
 export class Stoutland extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.NORMAL, Synergy.FIELD])
+  types = new SetSchema<Synergy>([Synergy.NORMAL, Synergy.FIELD, Synergy.GROUND])
   rarity = Rarity.HATCH
   stars = 3
   hp = 300
