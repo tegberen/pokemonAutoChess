@@ -1017,7 +1017,10 @@ export default class GameRoom extends Room<{ state: GameState }> {
         DetailledStatistic.create({
           time: Date.now(),
           name: dbrecord.name,
-          pokemons: dbrecord.pokemons,
+          pokemons: dbrecord.pokemons.map((p) => ({
+            ...p,
+            items: Array.from(p.items).map(String)
+          })),
           rank: dbrecord.rank,
           nbplayers: humans.length + bots.length,
           avatar: dbrecord.avatar,

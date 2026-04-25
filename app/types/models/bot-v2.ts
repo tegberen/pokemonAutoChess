@@ -20,6 +20,7 @@ export interface IBot {
   avatar: string
   author: string
   elo: number
+  eloOverride?: number  
   steps: IStep[]
   name: string
   id: string

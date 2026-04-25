@@ -2,6 +2,7 @@ import { model, Schema } from "mongoose"
 import { Emotion } from "../../types"
 import { Item } from "../../types/enum/Item"
 import { Pkm } from "../../types/enum/Pokemon"
+import { PkmWithCustom } from "../../types"
 
 export interface IDetailledPokemon extends PkmWithCustom {
   name: Pkm

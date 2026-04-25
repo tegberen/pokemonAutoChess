@@ -44,6 +44,7 @@ import {
   OnSimulationStartEffect,
   OnSpawnEffect
 } from "./effect"
+import { Board } from "../board"
 
 export class MonsterKillEffect extends OnKillEffect {
   hpBoosted: number = 0

@@ -21263,7 +21263,7 @@ export class GreatTusk extends Pokemon {
   speDef = 4
   maxPP = 100
   range = 1
-  skill = Ability.HEADLONDING_RUSH
+  skill = Ability.HEADLONG_RUSH
 }
 
 export class Finizen extends Pokemon {
