@@ -14750,7 +14750,7 @@ export class Lillipup extends Pokemon {
   evolution = Pkm.HERDIER
   evolutionRule = new HatchEvolutionRule()
   stars = 1
-  hp = 60
+  hp = 80
   atk = 7
   speed = 51
   def = 4
@@ -14768,7 +14768,7 @@ export class Herdier extends Pokemon {
   evolution = Pkm.STOUTLAND
   evolutionRule = new HatchEvolutionRule()
   stars = 2
-  hp = 120
+  hp = 140
   atk = 16
   speed = 51
   def = 8
@@ -14783,7 +14783,7 @@ export class Stoutland extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.NORMAL, Synergy.FIELD])
   rarity = Rarity.HATCH
   stars = 3
-  hp = 240
+  hp = 300
   atk = 28
   speed = 51
   def = 12
