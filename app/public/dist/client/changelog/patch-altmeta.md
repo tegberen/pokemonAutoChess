@@ -78,10 +78,10 @@
 - Wigglytuff: RANGE 2 → 1, tank role
 - Chestnaught: light HP, DEF Buff, moved to regional since GRASS FIGHTING is filled by Rowlet line
 - Froslass:
-- Grimmsnarl:
+- Grimmsnarl: to (all) regional
 - Magnezone: added ARTIFICIAL
 - Sceptile:
-- Greninja: to regional (DARK)
+- Greninja: to regional (WATER)
 - Torracat: 
 - Florges: buffed ability effect
 - Nidoking and Nidoqueen: added passive, to attract catchable Nidoran♀ and Nidoran♂ respectively (yes I know it's a bit of a cheat)
