@@ -1030,7 +1030,7 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
           attacker.positionY
         ) === 1
       ) {
-        const damage = Math.round(6 + 0.15 * pokemon.def)
+        const damage = Math.round(3 + 0.15 * pokemon.def)
         attacker.handleDamage({
           damage,
           board: pokemon.simulation.board,
@@ -1664,7 +1664,7 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
   ],
   [Item.LUCKY_PUNCH]: [
     new OnAttackEffect(({ pokemon, target, board }) => {
-      if (!target || !chance(0.3, pokemon)) return
+      if (!target || !chance(0.5, pokemon)) return
       if (target.items.size === 0) return
 
       const dx = Math.sign(target.positionX - pokemon.positionX)

@@ -28,13 +28,13 @@
 # Items
 ## Additional Effects
 - WIDE_LENS: Attacks grant +5% CRIT_CHANCE (stackable) (removed base CRIT_CHANCE)
-- Turbo overbuff STICKY_BARB: HP 15 → 30, DEF 6 → 12, 3 + 15% -> 6 + 30% of DEF as retaliation damage (hehehehehe)
+- STICKY_BARB: HP 15 → 30, DEF 6 → 15
 - HEAVY_DUTY_BOOTS: Once below 40% max HP, kick away the target and gain 10 DEF and 30 AP
 - ABILITY_SHIELD: When the user and allies SHIELD is depleted, gain 30 AP.
 
 ## The BINDING_BAND
 - SOOTHE_BELL: Grant the lowest HP ally 30 SHIELD every 2 seconds. Has a [30,LK]% chance to convert that ally’s remaining SHIELD into HP.
-> It is a support item, that you should use on a ranged unit. Could also work on the frontline, when paired with some tank items. Otherwise +30 HP makes your backline holder less squishy!
+> It is a support item, that you should use on a ranged unit. Could also work on the frontline, when paired with some tank items. Otherwise +50 HP makes your backline holder less squishy!
 - EXP_CHARM: The holder gains 2 PP after getting hit by an attack. [30,LK]% chance to increase that PP gain by 1 after each received hit. When the holder is KO, gain 1 XP.
 > Good for loose streaker! Use it in the early game, to level faster and start catching up. Otherwise it is a tool to gain alot of PP when paired with a tank item like ROCKY_HELMET or POKE_DOLL. Also good to generate more PP, when having SHIELD.
 - FAIRY_FEATHER: Attacks have a [30,LK]% chance to deal 50% of the users current DEF as additional SPECIAL on attack.
@@ -43,7 +43,7 @@
 > Could be interesting with FLAME_ORB or TIGHT_BELT! Otherwise 20 SPE_DEF is always appreciated on your tank.
 - DESTINY_KNOT: Once the holder is KO, the STRONGEST ally gains the users current LUCK and base ATK for the rest of the fight.
 > A way to further buff your carry, when it is already fully itemized! 
-- LUCKY_PUNCH: If the target has an ally directly behind it, there is a [30,LK]% chance the attack knocks the target’s item to that ally. (The target loses a random holded item, and its ally gains it).
+- LUCKY_PUNCH: If the target has an ally directly behind it, there is a [50,LK]% chance the attack knocks the target’s item to that ally. (The target loses a random holded item, and its ally gains it).
 > Use your positioning knowledge to get rid of annoying tank items. Time to scout!
 - GRIP_CLAW: Attacks grant +10% CRIT_POWER. (stackable)
 - COVERT_CLOAK: Every 3 seconds, steal 10 AP from all enemies within RANGE and deal 10 SPECIAL to them.
@@ -75,11 +75,11 @@
 ## Uncommon
 - Blastoise: Range 3 → 1, new ability
 - Nidoking and Nidoqueen: added MONSTER, removed FIELD
-- Wigglytuff: RANGE 1 → 2, tank role
+- Wigglytuff: RANGE 2 → 1, tank role
 - Chestnaught: light HP, DEF Buff, moved to regional since GRASS FIGHTING is filled by Rowlet line
 - Froslass:
 - Grimmsnarl:
-- Magnezone: added ARTIFICIAL, buffed PP
+- Magnezone: added ARTIFICIAL
 - Sceptile:
 - Greninja: to regional (DARK)
 - Torracat: 

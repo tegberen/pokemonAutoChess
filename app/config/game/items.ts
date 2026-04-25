@@ -55,7 +55,7 @@ export const ItemStats: { [item in Item]?: { [stat in Stat]?: number } } = {
   [Item.LOADED_DICE]: { [Stat.SPEED]: 10, [Stat.SPE_DEF]: 3, [Stat.LUCK]: 30 },
   [Item.PUNCHING_GLOVE]: { [Stat.SPEED]: 10, [Stat.ATK]: 3 },
   [Item.MUSCLE_BAND]: { [Stat.SPEED]: 10, [Stat.DEF]: 3 },
-  [Item.STICKY_BARB]: { [Stat.DEF]: 12, [Stat.HP]: 30 },
+  [Item.STICKY_BARB]: { [Stat.DEF]: 15, [Stat.HP]: 30 },
   [Item.ABILITY_SHIELD]: { [Stat.AP]: 10 },
   [Item.WIDE_LENS]: {
     [Stat.RANGE]: 2,
