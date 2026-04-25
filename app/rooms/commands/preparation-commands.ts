@@ -63,7 +63,7 @@ export class OnJoinCommand extends Command<
       }
       this.state.addMessage({
         authorId: "server",
-        payload: "Remember to change from >>Regular Mix<< to >>Beginner or Medium<< for the first few games. (っᵔ◡ᵔ)っ"
+        payload: "Remember to change >Add Bot< from >>Regular Mix<< to >>Beginner or Medium<< for the first few games. (っᵔ◡ᵔ)っ"
       })
 
       const u = await UserMetadata.findOne({ uid: auth.uid })
