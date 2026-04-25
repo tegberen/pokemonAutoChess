@@ -4068,7 +4068,7 @@ export class BiteStrategy extends AbilityStrategy {
     crit: boolean
   ) {
     super.process(pokemon, board, target, crit)
-    const damage = [40, 80, 120, 160][pokemon.stars - 1] ?? 120
+    const damage = [40, 80, 120][pokemon.stars - 1] ?? 120
     const { takenDamage } = target.handleSpecialDamage(
       damage,
       board,

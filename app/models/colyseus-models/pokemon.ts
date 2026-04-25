@@ -1974,7 +1974,7 @@ export class Tyranitar extends Pokemon {
   stars = 3
   evolution = Pkm.MEGA_TYRANITAR
   evolutionRule = new StackBasedEvolutionRule()
-  stacksRequired: number = 20
+  stacksRequired: number = 25
   hp = 210
   atk = 28
   speed = 45
