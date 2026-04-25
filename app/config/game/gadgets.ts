@@ -32,37 +32,37 @@ export const GADGETS: Record<GadgetName, Gadget> = {
   bag: {
     name: "bag",
     icon: "school-bag",
-    levelRequired: 1
+    levelRequired: 0
   },
   team_planner: {
     name: "team_planner",
     icon: "team-builder",
-    levelRequired: 2
+    levelRequired: 0
   },
   jukebox: {
     name: "jukebox",
     icon: "compact-disc",
-    levelRequired: 5
+    levelRequired: 0
   },
   palette: {
     name: "palette",
     icon: "palette",
-    levelRequired: 10
+    levelRequired: 0
   },
   synergy_wheel: {
     name: "synergy_wheel",
     icon: "synergy-wheel",
-    levelRequired: 15
+    levelRequired: 0
   },
   gameboy: {
     name: "gameboy",
     icon: "gameboy",
-    levelRequired: 20
+    levelRequired: 0
   },
   pokeguesser: {
     name: "pokeguesser",
     icon: "pokeguesser",
-    levelRequired: 30
+    levelRequired: 0
   },
   bot_builder: {
     name: "bot_builder",
@@ -74,12 +74,12 @@ export const GADGETS: Record<GadgetName, Gadget> = {
   tier_list_maker: {
     name: "tier_list_maker",
     icon: "tier-list",
-    levelRequired: 50
+    levelRequired: 0
   },
   sprite_tracker: {
     name: "sprite_tracker",
     icon: "pokemon-sprite",
-    levelRequired: 60
+    levelRequired: 0
   }
 } as const
 
