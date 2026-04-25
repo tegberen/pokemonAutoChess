@@ -2798,8 +2798,8 @@ export class Haxorus extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.DRAGON])
   rarity = Rarity.HATCH
   stars = 3
-  hp = 200
-  atk = 27
+  hp = 220
+  atk = 29
   speed = 62
   def = 15
   speDef = 12
@@ -14751,7 +14751,7 @@ export class Lillipup extends Pokemon {
   evolutionRule = new HatchEvolutionRule()
   stars = 1
   hp = 80
-  atk = 7
+  atk = 9
   speed = 51
   def = 4
   speDef = 4
@@ -14783,7 +14783,7 @@ export class Stoutland extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.NORMAL, Synergy.FIELD, Synergy.GROUND])
   rarity = Rarity.HATCH
   stars = 3
-  hp = 300
+  hp = 270
   atk = 28
   speed = 51
   def = 12
