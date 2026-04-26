@@ -800,7 +800,8 @@ export default class GameRoom extends Room<{ state: GameState }> {
           for (let i = 0; i < bots.length; i++) {
             const botPlayer = bots[i]
             const bot = await BotV2.findOne({ id: botPlayer.id })
-            if (bot) {
+            const isNonSpecialRule = this.state.specialGameRule == null
+            if (bot && isNonSpecialRule) {
               bot.elo = computeElo(
                 this.transformToSimplePlayer(botPlayer),
                 botPlayer.rank,
