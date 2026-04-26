@@ -161,7 +161,7 @@
 - Buzzwole and Pheromosa: are now Legendary Duo, no nerfs smile
 - Yveltal: new ability
 - Victini: added GOURMET, TABASCO
-- Guzzlord: 300 → 400 HP, buffed passive
+- Guzzlord: 300 → 400 HP
 - Spectrier: Range 1 → 2
 - Deoxys Attack: ATK 25 → 35
 - Xurkitree: 200 → 250 HP, 15 → 20 ATK, Ability: +1 target
