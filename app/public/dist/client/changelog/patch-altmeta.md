@@ -81,7 +81,7 @@
 - Grimmsnarl: to (all) regional
 - Magnezone: added ARTIFICIAL
 - Sceptile:
-- Greninja: to regional (WATER)
+- Greninja: to regular
 - Torracat: 
 - Florges: buffed ability effect
 - Nidoking and Nidoqueen: added passive, to attract catchable Nidoran♀ and Nidoran♂ respectively (yes I know it's a bit of a cheat)
@@ -89,6 +89,8 @@
 - Garganacl: added HUMAN (last stage)
 - Charizard:
 - Rapidash:
+- Vikavolt: to regular, added AMORPHOUS
+
 ## Rare
 - Corviknight: to regular (STEEL only last stage)
 - Exploud: added MONSTER
@@ -97,11 +99,10 @@
 - Pangoro: added WILD
 - Sharpedo: added WILD
 - both Yamask forms: added FOSSIL
-- Vikavolt: to regional, added AMORPHOUS
 - Primarina: to regional (WATER / FAIRY)
 - Salazzle: RANGE 2 → 3, added MONSTER
 - Dragapult: to regional, added FLYING
-- Blaziken: to regional, removed FLYING, buffed ability effect
+- Blaziken: buffed ability effect
 - Torterra: to regional (GRASS / GROUND) , added passive
 - Roserade: 
 - Tinkaton:

@@ -4375,6 +4375,7 @@ export class Torchic extends Pokemon {
   types = new SetSchema<Synergy>([
     Synergy.FIRE,
     Synergy.FIGHTING,
+    Synergy.FLYING
   ])
   rarity = Rarity.RARE
   stars = 1
@@ -4387,18 +4388,18 @@ export class Torchic extends Pokemon {
   maxPP = 100
   range = 1
   skill = Ability.BLAZE_KICK
-  regional = true
 }
 
 export class Combusken extends Pokemon {
   types = new SetSchema<Synergy>([
     Synergy.FIRE,
     Synergy.FIGHTING,
+    Synergy.FLYING
   ])
   rarity = Rarity.RARE
   stars = 2
   evolution = Pkm.BLAZIKEN
-  hp = 170
+  hp = 150
   atk = 14
   speed = 51
   def = 8
@@ -4406,17 +4407,17 @@ export class Combusken extends Pokemon {
   maxPP = 100
   range = 1
   skill = Ability.BLAZE_KICK
-  regional = true
 }
 
 export class Blaziken extends Pokemon {
   types = new SetSchema<Synergy>([
     Synergy.FIRE,
     Synergy.FIGHTING,
+    Synergy.FLYING
   ])
   rarity = Rarity.RARE
   stars = 3
-  hp = 280
+  hp = 250
   atk = 28
   speed = 51
   def = 10
@@ -4424,7 +4425,6 @@ export class Blaziken extends Pokemon {
   maxPP = 100
   range = 1
   skill = Ability.BLAZE_KICK
-  regional = true
 }
 
 export class Treecko extends Pokemon {
@@ -12673,11 +12673,6 @@ export class Froakie extends Pokemon {
   maxPP = 80
   range = 1
   skill = Ability.WATER_SHURIKEN
-  regional = true
-  isInRegion(map: DungeonPMDO, state?: GameState) {
-    const regionSynergies = RegionDetails[map]?.synergies
-    return regionSynergies.includes(Synergy.WATER)
-  }
 }
 
 export class Frogadier extends Pokemon {
@@ -12693,11 +12688,6 @@ export class Frogadier extends Pokemon {
   maxPP = 75
   range = 1
   skill = Ability.WATER_SHURIKEN
-  regional = true
-  isInRegion(map: DungeonPMDO, state?: GameState) {
-    const regionSynergies = RegionDetails[map]?.synergies
-    return regionSynergies.includes(Synergy.WATER)
-  }
 }
 
 export class Greninja extends Pokemon {
@@ -12712,11 +12702,6 @@ export class Greninja extends Pokemon {
   maxPP = 70
   range = 1
   skill = Ability.WATER_SHURIKEN
-  regional = true
-  isInRegion(map: DungeonPMDO, state?: GameState) {
-    const regionSynergies = RegionDetails[map]?.synergies
-    return regionSynergies.includes(Synergy.WATER)
-  }
 }
 
 export class Chingling extends Pokemon {
@@ -16392,11 +16377,27 @@ export class Garbodor extends Pokemon {
 
 export class Grubbin extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.BUG, Synergy.ELECTRIC, Synergy.AMORPHOUS])
-  rarity = Rarity.RARE
+  rarity = Rarity.UNCOMMON
   stars = 1
   evolution = Pkm.CHARJABUG
-  hp = 75
+  hp = 70
   atk = 5
+  speed = 39
+  def = 3
+  speDef = 3
+  maxPP = 100
+  range = 3
+  skill = Ability.ZAP_CANNON
+  regional = true
+}
+
+export class Charjabug extends Pokemon {
+  types = new SetSchema<Synergy>([Synergy.BUG, Synergy.ELECTRIC, Synergy.AMORPHOUS])
+  rarity = Rarity.UNCOMMON
+  stars = 2
+  evolution = Pkm.VIKAVOLT
+  hp = 120
+  atk = 11
   speed = 39
   def = 4
   speDef = 4
@@ -16406,32 +16407,16 @@ export class Grubbin extends Pokemon {
   regional = true
 }
 
-export class Charjabug extends Pokemon {
+export class Vikavolt extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.BUG, Synergy.ELECTRIC, Synergy.AMORPHOUS])
-  rarity = Rarity.RARE
-  stars = 2
-  evolution = Pkm.VIKAVOLT
-  hp = 160
-  atk = 13
+  rarity = Rarity.UNCOMMON
+  stars = 3
+  hp = 180
+  atk = 17
   speed = 39
   def = 5
   speDef = 5
-  maxPP = 85
-  range = 3
-  skill = Ability.ZAP_CANNON
-  regional = true
-}
-
-export class Vikavolt extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.BUG, Synergy.ELECTRIC, Synergy.AMORPHOUS])
-  rarity = Rarity.RARE
-  stars = 3
-  hp = 220
-  atk = 22
-  speed = 39
-  def = 6
-  speDef = 6
-  maxPP = 70
+  maxPP = 100
   range = 3
   skill = Ability.ZAP_CANNON
   regional = true
