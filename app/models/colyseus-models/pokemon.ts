@@ -11145,7 +11145,7 @@ export class AlolanVulpix extends Pokemon {
 }
 
 export class AlolanNinetales extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.ICE, Synergy.FAIRY, Synergy.AMORPHOUS])
+  types = new SetSchema<Synergy>([Synergy.ICE, Synergy.FAIRY, Synergy.FIELD])
   rarity = Rarity.RARE
   stars = 2
   hp = 170
