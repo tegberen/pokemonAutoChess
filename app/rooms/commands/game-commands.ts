@@ -1933,9 +1933,12 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
         }
 
         if (this.state.outlawStage != null) {
+          const outlawPkm = simpleHashSeededCoinFlip(this.state.preparationId + "outlaw") 
+            ? Pkm.DROWZEE 
+            : Pkm.TOGEPI_MAFIA
           if (this.state.stageLevel === this.state.outlawStage) {
             player.spawnWanderingPokemon({
-              pkm: pickRandomIn([Pkm.DROWZEE, Pkm.TOGEPI_MAFIA]),
+              pkm: outlawPkm,
               shiny: false,
               type: WandererType.OUTLAW,
               behavior: WandererBehavior.RUN_THROUGH,

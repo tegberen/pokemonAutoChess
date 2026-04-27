@@ -104,8 +104,13 @@ export function spawnDIAYAvatar(player: Player): Pokemon {
 }
 
 export function pickFirstPartners(player: Player, state: GameState): Pkm[] {
-  const coinFlip = simpleHashSeededCoinFlip(state.preparationId)
-  const rarityPartner = coinFlip ? Rarity.COMMON : Rarity.UNCOMMON
+  const rarities = [Rarity.COMMON, Rarity.UNCOMMON, Rarity.RARE, Rarity.EPIC]
+  const hash = Array.from(state.preparationId).reduce(
+    (acc, char) => acc + char.charCodeAt(0),
+    0
+  )
+  const rarityIndex = hash % 4
+  const rarityPartner = rarities[rarityIndex]
   return getRegularsTier1(PRECOMPUTED_POKEMONS_PER_RARITY[rarityPartner])
     .filter((p) => getPokemonData(p).stages === 3)
     .map((pkm) => {
