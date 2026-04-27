@@ -16388,7 +16388,6 @@ export class Grubbin extends Pokemon {
   maxPP = 100
   range = 3
   skill = Ability.ZAP_CANNON
-  regional = true
 }
 
 export class Charjabug extends Pokemon {
@@ -16404,7 +16403,6 @@ export class Charjabug extends Pokemon {
   maxPP = 100
   range = 3
   skill = Ability.ZAP_CANNON
-  regional = true
 }
 
 export class Vikavolt extends Pokemon {
@@ -16419,7 +16417,6 @@ export class Vikavolt extends Pokemon {
   maxPP = 100
   range = 3
   skill = Ability.ZAP_CANNON
-  regional = true
 }
 
 export class ShellosWestSea extends Pokemon {
