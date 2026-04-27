@@ -6888,9 +6888,9 @@ export class MudBubbleStrategy extends AbilityStrategy {
   requiresTarget = false
   process(pokemon: PokemonEntity, board: Board, target: null, crit: boolean) {
     super.process(pokemon, board, target, crit)
-    const heal = [10,20,40] [pokemon.stars - 1] ?? 40
-    const blindDuration = [1000, 2000, 4000][pokemon.stars - 1] ?? 4000
-    const damage = [15, 30, 60][pokemon.stars - 1] ?? 60
+    const heal = [20,40,80] [pokemon.stars - 1] ?? 80
+    const blindDuration = [2000, 4000, 6000][pokemon.stars - 1] ?? 6000
+    const damage = [30, 60, 120][pokemon.stars - 1] ?? 120
 
     pokemon.handleHeal(heal, pokemon, 1, crit)
     pokemon.resetCooldown(250, pokemon.speed)
@@ -10614,8 +10614,8 @@ export class BulldozeStrategy extends AbilityStrategy {
     crit: boolean
   ) {
     super.process(pokemon, board, target, crit)
-    const damage = [25, 50, 100][pokemon.stars - 1] ?? 100
-    const speedReduction = 10
+    const damage = [15, 30, 60][pokemon.stars - 1] ?? 60
+    const speedReduction = [5, 5, 10][pokemon.stars - 1] ?? 10
     const adjacentsCells = board.getAdjacentCells(
       pokemon.positionX,
       pokemon.positionY,

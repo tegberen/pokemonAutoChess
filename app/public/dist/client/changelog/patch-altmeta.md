@@ -66,11 +66,11 @@
 - Shiftry: added ICE
 - Charizard: moved to regional
 - Orbeetle: moved to regular
-- Swampert: removed WATER, added AQUATIC
 - Staraptor: added FIGHTING
 - Gardevoir, Gallade:
 - Smoliv: regular attacks now scale with AP, SPEED 25 → 42
 - Salamence: to regional
+- Torterra: to regional (GRASS / GROUND) , added passive
 
 ## Uncommon
 - Blastoise: Range 3 → 1, new ability
@@ -103,13 +103,14 @@
 - Salazzle: RANGE 2 → 3, added MONSTER
 - Dragapult: to regional, added FLYING
 - Blaziken: buffed ability effect
-- Torterra: to regional (GRASS / GROUND) , added passive
 - Roserade: 
 - Tinkaton:
 - Lickitung: to regional (NORMAL / GOURMET)
 - Swellow: Range 1 → 2, added NORMAL
 - Ninetales: added GHOST, changed ability effect
 - Alolan Ninetales: added FIELD
+- Swampert: removed WATER, added AQUATIC
+
 
 ## Epic
 - Typhlosion: 

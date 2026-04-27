@@ -2345,14 +2345,14 @@ export class Turtwig extends Pokemon {
     Synergy.GROUND,
     Synergy.MONSTER
   ])
-  rarity = Rarity.RARE
+  rarity = Rarity.COMMON
   stars = 1
   evolution = Pkm.GROTLE
-  hp = 80
-  atk = 5
+  hp = 60
+  atk = 4
   speed = 43
-  def = 7
-  speDef = 5
+  def = 4
+  speDef = 4
   maxPP = 100
   range = 1
   skill = Ability.BULLDOZE
@@ -2371,13 +2371,13 @@ export class Grotle extends Pokemon {
     Synergy.GROUND,
     Synergy.MONSTER
   ])
-  rarity = Rarity.RARE
+  rarity = Rarity.COMMON
   stars = 2
   evolution = Pkm.TORTERRA
-  hp = 150
-  atk = 9
+  hp = 120
+  atk = 8
   speed = 43
-  def = 12
+  def = 8
   speDef = 6
   maxPP = 100
   range = 1
@@ -2396,10 +2396,10 @@ export class Torterra extends Pokemon {
     Synergy.GROUND,
     Synergy.MONSTER
   ])
-  rarity = Rarity.RARE
+  rarity = Rarity.COMMON
   stars = 3
-  hp = 280
-  atk = 21
+  hp = 180
+  atk = 18
   speed = 43
   def = 16
   speDef = 8
@@ -4299,10 +4299,10 @@ export class Infernape extends Pokemon {
 
 export class Mudkip extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.AQUATIC, Synergy.GROUND])
-  rarity = Rarity.COMMON
+  rarity = Rarity.RARE
   stars = 1
   evolution = Pkm.MARSHTOMP
-  hp = 65
+  hp = 80
   atk = 5
   speed = 44
   def = 4
@@ -4324,14 +4324,14 @@ export class Mudkip extends Pokemon {
 
 export class Marshtomp extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.AQUATIC, Synergy.GROUND])
-  rarity = Rarity.COMMON
+  rarity = Rarity.RARE
   stars = 2
   evolution = Pkm.SWAMPERT
-  hp = 130
-  atk = 9
+  hp = 140
+  atk = 10
   speed = 44
-  def = 6
-  speDef = 6
+  def = 8
+  speDef = 8
   maxPP = 60
   range = 1
   skill = Ability.MUD_BUBBLE
@@ -4349,13 +4349,13 @@ export class Marshtomp extends Pokemon {
 
 export class Swampert extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.AQUATIC, Synergy.GROUND])
-  rarity = Rarity.COMMON
+  rarity = Rarity.RARE
   stars = 3
-  hp = 200
+  hp = 280
   atk = 20
   speed = 44
-  def = 10
-  speDef = 10
+  def = 12
+  speDef = 12
   maxPP = 60
   range = 1
   skill = Ability.MUD_BUBBLE

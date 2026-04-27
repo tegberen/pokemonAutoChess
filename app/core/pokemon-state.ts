@@ -89,7 +89,7 @@ export default abstract class PokemonState {
         }
       }
       if (crit && target.passive === Passive.SHELL_ARMOR) {
-        const defenseBuff = [3, 6, 12][target.stars - 1] ?? 0
+        const defenseBuff = [1, 3, 6][target.stars - 1] ?? 0
         target.addDefense(defenseBuff, target, 0, false)
       }
 
