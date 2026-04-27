@@ -137,7 +137,7 @@
 - Granbull: to regular, added WILD, removed FIELD
 
 ## Hatch
-- Stoutland: 
+- Stoutland: added GROUND
 - Chandelure: SPECIAL carry
 - Empoleon:
 - Emboar: buffed ability effect
@@ -190,11 +190,11 @@
 - Hoopa - Unbound: Tears open a dimensional ring and returns in its Unbound form — dragging a Legendary Pokémon along with it. The summoned Pokémon's HP increases with the user's AP. (so so broken)
 - Bulbasaur - Frenzy Plant: Strikes the target 3 times with enormous tree roots, dealing [10,30,60,SP] SPECIAL per hit, multiplied by the number of ADJACENT enemies surrounding the target. If the target is defeated, remaining roots lash out at the nearest enemy.
 - Flabebe - Fairy Wind: Restore [5,10,20,SP=0.5] PP to all allied Pokémon other than the user and decrease the SPEED of all enemy Pokémon by [1, 5, 10].
-- Mudkip - Mud Bubble: Heal the user for [10,20,40,SP] HP, then BLINDED all ADJACENT enemy Pokémon for [1,2,4] seconds. If already BLINDED, deal [15,30,60,SP] SPECIAL instead.
+- Mudkip - Mud Bubble: Heal the user for [20,40,80,SP] HP, then BLINDED all ADJACENT enemy Pokémon for [2,4,6] seconds. If already BLINDED, deal [30,60,120,SP] SPECIAL instead.
 - Poliwhirl - Soak: Deal [20,40,80,SP] SPECIAL to the target and restore [10,10,20] PP to all allied Pokémon.
 - Torchic - Blaze Kick: Gain [10,20,40]% CRIT_CHANCE, then deal [30,60,120,SP] SPECIAL and BURN the target for 2 seconds. If it already has BURN, deal +30% damage. Can crit by default.
 - Pawmi - Double Shock: Emit a powerful electric shock, dealing [50,100,200,SP] SPECIAL to the target and inflict the user with PARALYSIS for 3 seconds. If the user has ELECTRIC_FIELD, discharge it and execute the target. 
-- Turtwig - Passive [Shell Armor]: Gain [3,6,12] DEF when receiving critical attacks. The Pokémon is immune to ARMOR_BREAK.
+- Turtwig - Passive [Shell Armor]: Gain [1,3,6] DEF when receiving critical attacks. The Pokémon is immune to ARMOR_BREAK.
 
 # Credits
 > Some of the Pokemon are not officially sprited yet, but there is access to them via the SkyTemple Discord server. I don't know how to credit them, so I will just do that here:

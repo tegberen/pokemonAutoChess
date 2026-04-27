@@ -2189,11 +2189,11 @@ export class MegaAlakazam extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.PSYCHIC, Synergy.HUMAN])
   rarity = Rarity.RARE
   stars = 4
-  hp = 220
-  atk = 20
+  hp = 230
+  atk = 19
   speed = 63
-  def = 10
-  speDef = 18
+  def = 8
+  speDef = 16
   maxPP = 50
   range = 4
   skill = Ability.TELEPORT
@@ -14613,7 +14613,7 @@ export class Hoopa extends Pokemon {
   speed = 47
   def = 10
   speDef = 20
-  maxPP = 90
+  maxPP = 120
   range = 1
   skill = Ability.UNBOUND
 }
@@ -14622,8 +14622,8 @@ export class HoopaUnbound extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.PSYCHIC, Synergy.DARK, Synergy.GHOST])
   rarity = Rarity.LEGENDARY
   stars = 4
-  hp = 320
-  atk = 32
+  hp = 300
+  atk = 30
   speed = 47
   def = 10
   speDef = 20
