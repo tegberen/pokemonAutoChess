@@ -124,7 +124,8 @@ import {
   chance,
   pickNRandomIn,
   pickRandomIn,
-  randomBetween
+  randomBetween,
+  simpleHashSeededCoinFlip
 } from "../../utils/random"
 import { resetArraySchema, values } from "../../utils/schemas"
 import { getWeather } from "../../utils/weather"
