@@ -14196,7 +14196,7 @@ export class HeatCrashStrategy extends AbilityStrategy {
   ) {
     super.process(pokemon, board, target, crit)
     // Crashes into the target, knocking it back and dealing [40,60,80,SP] SPECIAL. Does more damage the more ATK the user has compared to the target.
-    let damage = [40, 60, 120][pokemon.stars - 1] ?? 120
+    let damage = [40, 60, 80][pokemon.stars - 1] ?? 80
     const attackDifference = pokemon.atk - target.atk
     damage += attackDifference * 2
     target.handleSpecialDamage(damage, board, AttackType.SPECIAL, pokemon, crit)

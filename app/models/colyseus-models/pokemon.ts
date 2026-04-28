@@ -12942,47 +12942,43 @@ export class Shuckle extends Pokemon {
 
 export class Tepig extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.WILD, Synergy.FIRE, Synergy.FIGHTING])
-  rarity = Rarity.HATCH
+  rarity = Rarity.COMMON
   stars = 1
   evolution = Pkm.PIGNITE
-  evolutionRule = new HatchEvolutionRule()
-  hp = 75
-  atk = 7
+  hp = 50
+  atk = 5
+  speed = 46
+  def = 2
+  speDef = 2
+  maxPP = 100
+  range = 1
+  skill = Ability.HEAT_CRASH
+}
+
+export class Pignite extends Pokemon {
+  types = new SetSchema<Synergy>([Synergy.WILD, Synergy.FIRE, Synergy.FIGHTING])
+  rarity = Rarity.COMMON
+  stars = 2
+  evolution = Pkm.EMBOAR
+  hp = 100
+  atk = 10
   speed = 46
   def = 4
   speDef = 4
   maxPP = 100
   range = 1
   skill = Ability.HEAT_CRASH
-  passive = Passive.HATCH
-}
-
-export class Pignite extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.WILD, Synergy.FIRE, Synergy.FIGHTING])
-  rarity = Rarity.HATCH
-  stars = 2
-  evolution = Pkm.EMBOAR
-  evolutionRule = new HatchEvolutionRule()
-  hp = 150
-  atk = 12
-  speed = 46
-  def = 8
-  speDef = 8
-  maxPP = 100
-  range = 1
-  skill = Ability.HEAT_CRASH
-  passive = Passive.HATCH
 }
 
 export class Emboar extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.WILD, Synergy.FIRE, Synergy.FIGHTING])
-  rarity = Rarity.HATCH
+  rarity = Rarity.COMMON
   stars = 3
-  hp = 250
-  atk = 25
+  hp = 200
+  atk = 20
   speed = 46
-  def = 14
-  speDef = 14
+  def = 8
+  speDef = 8
   maxPP = 100
   range = 1
   skill = Ability.HEAT_CRASH
