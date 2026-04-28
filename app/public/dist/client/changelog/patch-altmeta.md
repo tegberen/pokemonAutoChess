@@ -101,7 +101,7 @@
 - both Yamask forms: added FOSSIL
 - Primarina: to regional (WATER / FAIRY)
 - Salazzle: RANGE 2 → 3, added MONSTER
-- Dragapult: to regional, added FLYING
+- Dragapult: to regional (DRAGON / GHOST) , added FLYING
 - Blaziken: buffed ability effect
 - Roserade: 
 - Tinkaton:

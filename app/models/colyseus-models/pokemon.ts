@@ -11244,6 +11244,10 @@ export class Dreepy extends Pokemon {
   range = 2
   skill = Ability.DRAGON_DARTS
   regional = true
+  isInRegion(map: DungeonPMDO, state?: GameState) {
+    const regionSynergies = RegionDetails[map]?.synergies
+    return regionSynergies.includes(Synergy.DRAGON) || regionSynergies.includes(Synergy.GHOST)
+  }
 }
 
 export class Drakloak extends Pokemon {
@@ -11260,6 +11264,10 @@ export class Drakloak extends Pokemon {
   range = 2
   skill = Ability.DRAGON_DARTS
   regional = true
+  isInRegion(map: DungeonPMDO, state?: GameState) {
+    const regionSynergies = RegionDetails[map]?.synergies
+    return regionSynergies.includes(Synergy.DRAGON) || regionSynergies.includes(Synergy.GHOST)
+  }
 }
 
 export class Dragapult extends Pokemon {
@@ -11275,6 +11283,10 @@ export class Dragapult extends Pokemon {
   range = 2
   skill = Ability.DRAGON_DARTS
   regional = true
+  isInRegion(map: DungeonPMDO, state?: GameState) {
+    const regionSynergies = RegionDetails[map]?.synergies
+    return regionSynergies.includes(Synergy.DRAGON) || regionSynergies.includes(Synergy.GHOST)
+  }
 }
 
 export class Snivy extends Pokemon {
