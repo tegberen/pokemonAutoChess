@@ -9624,7 +9624,7 @@ export class Shellder extends Pokemon {
   speed = 47
   def = 15
   speDef = 5
-  maxPP = 110
+  maxPP = 90
   range = 1
   skill = Ability.SHELL_SMASH
   additional = true
@@ -9639,7 +9639,7 @@ export class Cloyster extends Pokemon {
   speed = 47
   def = 35
   speDef = 10
-  maxPP = 110
+  maxPP = 90
   range = 1
   skill = Ability.SHELL_SMASH
   additional = true
