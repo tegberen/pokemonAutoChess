@@ -360,6 +360,7 @@ export class OnDragDropPokemonCommand extends Command<
           // Meltan can merge with Melmetal
           const melmetal = player.getPokemonAt(x, y)!
           melmetal.addMaxHP(50)
+          melmetal.addAttack(5)
           pokemon.items.forEach((item) => {
             player.items.push(item)
           })

@@ -171,6 +171,7 @@
 ## Special
 - Mafia Eevee: via EVER_STONE
 - Milcery: 5% chance to appear at stage 0
+- Meltan: buff passive
 
 # Abilities and Passives
 - Duskull - Trick Room: If the target and ADJACENT enemies are faster than the user, halve their current speed, apply FATIGUE and BLINDED for 5 seconds. Otherwise, deal [40,80,160,SP] SPECIAL.
