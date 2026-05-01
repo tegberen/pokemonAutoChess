@@ -501,7 +501,7 @@ export default class Simulation extends Schema implements ISimulation {
         { item: Item.SKY_MELODICA, effect: (p: PokemonEntity) => p.addSpeed(5, p, 0, false) },
         { item: Item.ICY_FLUTE, effect: (p: PokemonEntity) => p.addSpecialDefense(3, p, 0, false) },
         { item: Item.ROCK_HORN, effect: (p: PokemonEntity) => p.addDefense(3, p, 0, false) },
-        { item: Item.GRASS_CORNET, effect: (p: PokemonEntity) => p.addMaxHP(5, p, 0, false) },
+        { item: Item.GRASS_CORNET, effect: (p: PokemonEntity) => p.addMaxHP(10, p, 0, false) },
         { item: Item.TERRA_CYMBAL, effect: (p: PokemonEntity) => p.addLuck(2, p, 0, false) },
       ]
 

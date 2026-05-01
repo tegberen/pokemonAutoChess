@@ -2993,7 +2993,7 @@
 	"item_description": {
     "AQUA_MONICA": "Each ally cast grants +2 PP to the whole team",
     "FIERY_DRUM": "Each ally cast grants +2 ATK to the whole team",
-    "GRASS_CORNET": "Each ally cast grants +5 HP to the whole team",
+    "GRASS_CORNET": "Each ally cast grants +10 HP to the whole team",
     "ICY_FLUTE": "Each ally cast grants +3 SPE_DEF to the whole team",
     "ROCK_HORN": "Each ally cast grants +3 DEF to the whole team",
     "SKY_MELODICA": "Each ally cast grants +5 SPEED to the whole team",
