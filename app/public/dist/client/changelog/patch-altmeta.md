@@ -189,7 +189,7 @@
 - Tepig - Heat Crash: Crashes into the target, knocking it back and dealing [40,60,80, SP] SPECIAL. Does more damage the more ATK the user has compared to the target. If the user hase more HP than the target, gain 20 SPEED.
 - Hoopa - Unbound: Tears open a dimensional ring and returns in its Unbound form — dragging a Legendary Pokémon along with it. The summoned Pokémon's HP increases with the user's AP. (so so broken)
 - Bulbasaur - Frenzy Plant: Strikes the target 3 times with enormous tree roots, dealing [10,30,60,SP] SPECIAL per hit, multiplied by the number of ADJACENT enemies surrounding the target. If the target is defeated, remaining roots lash out at the nearest enemy.
-- Flabebe - Fairy Wind: Restore [5,10,20,SP=0.5] PP to all allied Pokémon other than the user and decrease the SPEED of all enemy Pokémon by [1, 5, 10].
+- Flabebe - Fairy Wind: Restore [5,10,20,SP=0.5] PP to all allied Pokémon other than the user and decrease the SPEED of all enemy Pokémon by [2, 4, 8].
 - Mudkip - Mud Bubble: Heal the user for [20,40,80,SP] HP, then BLINDED all ADJACENT enemy Pokémon for [2,4,6] seconds. If already BLINDED, deal [30,60,120,SP] SPECIAL instead.
 - Poliwhirl - Soak: Deal [20,40,80,SP] SPECIAL to the target and restore [10,10,20] PP to all allied Pokémon.
 - Torchic - Blaze Kick: Gain [10,20,40]% CRIT_CHANCE, then deal [30,60,120,SP] SPECIAL and BURN the target for 2 seconds. If it already has BURN, deal +30% damage. Can crit by default.

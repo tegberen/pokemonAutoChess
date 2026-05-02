@@ -924,6 +924,7 @@ export const AbilitiesAnimations: {
   [Ability.LEECH_LIFE]: onTargetScale2,
   [Ability.THIEF]: onTargetScale2,
   [Ability.STUN_SPORE]: onTargetScale2,
+  ["STUN_SPORE_PINK"]: onTarget({ ability: "STUN_SPORE", tint: 0xff69b4, scale: 1.2 }),
   [Ability.CRABHAMMER]: onTargetScale2,
   [Ability.JAW_LOCK]: onTarget({
     ability: Ability.ICE_FANG,

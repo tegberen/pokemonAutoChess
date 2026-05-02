@@ -1828,13 +1828,20 @@ export class FairyWindStrategy extends AbilityStrategy {
   requiresTarget = false
   process(pokemon: PokemonEntity, board: Board, target: null, crit: boolean) {
     super.process(pokemon, board, target, crit)
-    const ppGain = [5, 10, 20][pokemon.stars - 1] ?? 0
-    const debuf = [1, 5, 10][pokemon.stars - 1] ?? 0
+    const ppGain = [5, 10, 20][pokemon.stars - 1] ?? 20
+    const debuf = [2, 4, 8][pokemon.stars - 1] ?? 8
     board.forEach((x: number, y: number, tg: PokemonEntity | undefined) => {
       if (tg && pokemon.team === tg.team && tg.id !== pokemon.id) {
         tg.addPP(ppGain, pokemon, 0.5, crit)
       }
       if (tg && pokemon.team !== tg.team) {
+        pokemon.broadcastAbility({
+          skill: "STUN_SPORE_PINK",
+          positionX: pokemon.positionX,
+          positionY: pokemon.positionY,
+          targetX: tg.positionX,
+          targetY: tg.positionY
+        })
         tg.addSpeed(-debuf, pokemon, 0, false)
       }
     })
