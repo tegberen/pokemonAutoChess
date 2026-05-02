@@ -832,7 +832,7 @@ export class Altaria extends Pokemon {
   stars = 2
   evolution = Pkm.MEGA_ALTARIA
   evolutionRule = new StackBasedEvolutionRule()
-  stacksRequired = 20
+  stacksRequired = 10
   hp = 200
   atk = 19
   speed = 51
@@ -849,11 +849,11 @@ export class MegaAltaria extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.DRAGON, Synergy.FAIRY, Synergy.SOUND])
   rarity = Rarity.EPIC
   stars = 3
-  hp = 240
-  atk = 22
+  hp = 220
+  atk = 19
   speed = 51
-  def = 10
-  speDef = 10
+  def = 8
+  speDef = 8
   maxPP = 100
   range = 2
   skill = Ability.HYPER_VOICE
@@ -18244,7 +18244,7 @@ export class Dragalge extends Pokemon {
   stars = 2
   evolution = Pkm.MEGA_DRAGALGE
   evolutionRule = new StackBasedEvolutionRule()
-  stacksRequired = 25
+  stacksRequired = 15
   hp = 130
   atk = 15
   speed = 39
@@ -18265,11 +18265,11 @@ export class MegaDragalge extends Pokemon {
   ])
   rarity = Rarity.UNCOMMON
   stars = 3
-  hp = 170
+  hp = 150
   atk = 17
   speed = 39
-  def = 8
-  speDef = 10
+  def = 4
+  speDef = 4
   maxPP = 100
   range = 3
   skill = Ability.SLUDGE_WAVE
