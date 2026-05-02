@@ -43,7 +43,7 @@
 > Could be interesting with FLAME_ORB or TIGHT_BELT! Otherwise 20 SPE_DEF is always appreciated on your tank.
 - DESTINY_KNOT: Once the holder is KO, the STRONGEST ally gains the users current LUCK and base ATK for the rest of the fight.
 > A way to further buff your carry, when it is already fully itemized! 
-- LUCKY_PUNCH: If the target has an ally directly behind it, there is a [50,LK]% chance the attack knocks the target’s item to that ally. (The target loses a random holded item, and its ally gains it).
+- LUCKY_PUNCH: If the target has an ally directly behind it, the attack knocks a random held item from the target to that ally. When an item is knocked off, [30, LK]% chance to inflict CONFUSION for 2 seconds.
 > Use your positioning knowledge to get rid of annoying tank items. Time to scout!
 - GRIP_CLAW: Attacks grant +10% CRIT_POWER. (stackable)
 - COVERT_CLOAK: Every 3 seconds, steal 10 AP from all enemies within RANGE and deal 10 SPECIAL to them.

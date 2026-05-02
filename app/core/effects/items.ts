@@ -1664,7 +1664,7 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
   ],
   [Item.LUCKY_PUNCH]: [
     new OnAttackEffect(({ pokemon, target, board }) => {
-      if (!target || !chance(0.5, pokemon)) return
+      if (!target) return
       if (target.items.size === 0) return
 
       const dx = Math.sign(target.positionX - pokemon.positionX)
@@ -1680,6 +1680,9 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
       const item = values(target.items)[0]!
       target.removeItem(item)
       behindEntity.addItem(item)
+      if (chance(0.3, pokemon)) {
+        target.status.triggerConfusion(2000, target, pokemon)
+      }
     })
   ],
   [Item.GRIP_CLAW]: [
