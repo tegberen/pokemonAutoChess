@@ -459,7 +459,7 @@ export const DishEffects: Record<(typeof Dishes)[number], Effect[]> = {
   ],
   ELECTRIC_SEED: [
     new OnSpawnEffect((entity) => {
-      entity.addDefense(5, entity, 0, false)
+      entity.addDefense(25, entity, 0, false)
 
       if (entity.types.has(Synergy.ELECTRIC) === false) {
         entity.status.addElectricField(entity)
