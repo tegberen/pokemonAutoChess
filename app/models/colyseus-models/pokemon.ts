@@ -7504,7 +7504,7 @@ export class MegaAbsol extends Pokemon {
   rarity = Rarity.UNIQUE
   stars = 4
   hp = 220
-  atk = 24
+  atk = 21
   speed = 49
   def = 10
   speDef = 10

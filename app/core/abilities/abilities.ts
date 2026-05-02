@@ -9258,7 +9258,7 @@ export class NightSlashStrategy extends AbilityStrategy {
     crit: boolean
   ) {
     super.process(pokemon, board, target, crit)
-    const damage = [15, 30, 60, 120][pokemon.stars - 1] ?? 60
+    const damage = [15, 30, 60][pokemon.stars - 1] ?? 60
     target.handleSpecialDamage(damage, board, AttackType.SPECIAL, pokemon, crit)
   }
 }
