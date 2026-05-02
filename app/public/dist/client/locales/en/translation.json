@@ -1926,7 +1926,7 @@
 		"VENOSHOCK": "Deal [30,60,120,SP] SPECIAL to the target. The damage is doubled if the target suffers from POISONNED.",
 		"LEECH_LIFE": "Deal [20,40,80,SP] SPECIAL to the target and heal the user for 100% of the damage dealt.",
 		"HAPPY_HOUR": "Increase the ATK of all allied Pokémon by [2,4,7,SP].",
-		"TELEPORT": "Teleport the user to a corner of the battlefield. The user's next attack deals [15,30,60,SP] extra SPECIAL.",
+		"TELEPORT": "Teleport the user to a corner of the battlefield. The user's next attack deals [15,30,60,120,SP] extra SPECIAL.",
 		"NASTY_PLOT": "Increase the user's ATK by [10,SP].",
 		"TAKE_HEART": "The user harnesses bravery to cure their status conditions and increase their ATK by [8,SP] and SPE_DEF by [8,SP].",
 		"HEART_SWAP": "Deal [100,SP] SPECIAL to the target then steals all its AP and SPE_DEF buffs. The user's status conditions are passed on to the target and healed for the user.",
