@@ -497,12 +497,12 @@ export default class Simulation extends Schema implements ISimulation {
     if (pokemon.player) {
       const instruments = [
         { item: Item.AQUA_MONICA, effect: (p: PokemonEntity) => p.addPP(2, p, 0, false) },
-        { item: Item.FIERY_DRUM, effect: (p: PokemonEntity) => p.addAttack(2, p, 0, false) },
+        { item: Item.FIERY_DRUM, effect: (p: PokemonEntity) => p.addAttack(3, p, 0, false) },
         { item: Item.SKY_MELODICA, effect: (p: PokemonEntity) => p.addSpeed(5, p, 0, false) },
-        { item: Item.ICY_FLUTE, effect: (p: PokemonEntity) => p.addSpecialDefense(3, p, 0, false) },
-        { item: Item.ROCK_HORN, effect: (p: PokemonEntity) => p.addDefense(3, p, 0, false) },
+        { item: Item.ICY_FLUTE, effect: (p: PokemonEntity) => p.addSpecialDefense(4, p, 0, false) },
+        { item: Item.ROCK_HORN, effect: (p: PokemonEntity) => p.addDefense(4, p, 0, false) },
         { item: Item.GRASS_CORNET, effect: (p: PokemonEntity) => p.addMaxHP(10, p, 0, false) },
-        { item: Item.TERRA_CYMBAL, effect: (p: PokemonEntity) => p.addLuck(2, p, 0, false) },
+        { item: Item.TERRA_CYMBAL, effect: (p: PokemonEntity) => p.addLuck(3, p, 0, false) },
       ]
 
       for (const { item, effect } of instruments) {
