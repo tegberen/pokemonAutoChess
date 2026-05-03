@@ -125,6 +125,9 @@
 - Togekiss: added passive
 - Venusaur: new ability
 - Arcanine: added passive
+- Kommo-O: restrict to regional (DRAGON / FIGHTING)
+- Skeledirge: to regional
+- Escavalier: to regional for Volcarona
 
 ## Ultra
 > Ultra Pokemon have twice the HP when 3 STAR

@@ -1306,12 +1306,12 @@ export class Roggenrola extends Pokemon {
   rarity = Rarity.EPIC
   stars = 1
   evolution = Pkm.BOLDORE
-  hp = 70
+  hp = 90
   atk = 4
   speed = 37
   def = 8
   speDef = 6
-  maxPP = 100
+  maxPP = 90
   range = 2
   skill = Ability.ROCK_ARTILLERY
 }
@@ -1321,12 +1321,12 @@ export class Boldore extends Pokemon {
   rarity = Rarity.EPIC
   stars = 2
   evolution = Pkm.GIGALITH
-  hp = 150
+  hp = 170
   atk = 7
   speed = 37
   def = 12
   speDef = 10
-  maxPP = 100
+  maxPP = 90
   range = 2
   skill = Ability.ROCK_ARTILLERY
 }
@@ -1335,12 +1335,12 @@ export class Gigalith extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.ROCK, Synergy.LIGHT, Synergy.SOUND])
   rarity = Rarity.EPIC
   stars = 3
-  hp = 260
+  hp = 280
   atk = 17
   speed = 37
   def = 16
   speDef = 14
-  maxPP = 100
+  maxPP = 90
   range = 2
   skill = Ability.ROCK_ARTILLERY
 }
@@ -1655,6 +1655,7 @@ export class Fuecoco extends Pokemon {
   maxPP = 60
   range = 3
   skill = Ability.TORCH_SONG
+  regional = true
 }
 
 export class Crocalor extends Pokemon {
@@ -1670,6 +1671,7 @@ export class Crocalor extends Pokemon {
   maxPP = 60
   range = 3
   skill = Ability.TORCH_SONG
+  regional = true
 }
 
 export class Skeledirge extends Pokemon {
@@ -1684,6 +1686,7 @@ export class Skeledirge extends Pokemon {
   maxPP = 60
   range = 3
   skill = Ability.TORCH_SONG
+  regional = true
 }
 
 export class Budew extends Pokemon {
@@ -1922,8 +1925,8 @@ export class Samurott extends Pokemon {
 export class HisuiSamurott extends Pokemon {
   types = new SetSchema<Synergy>([
     Synergy.WATER,
-    Synergy.DARK,
-    Synergy.STEEL
+    Synergy.FIELD,
+    Synergy.DARK
   ])
   rarity = Rarity.EPIC
   stars = 3
@@ -2018,6 +2021,10 @@ export class JangmoO extends Pokemon {
   range = 1
   skill = Ability.CLANGOROUS_SOUL
   regional = true
+  isInRegion(map: DungeonPMDO, state?: GameState) {
+    const regionSynergies = RegionDetails[map]?.synergies
+    return regionSynergies.includes(Synergy.DRAGON) || regionSynergies.includes(Synergy.FIGHTING)
+  }
 }
 
 export class HakamoO extends Pokemon {
@@ -2038,6 +2045,10 @@ export class HakamoO extends Pokemon {
   range = 1
   skill = Ability.CLANGOROUS_SOUL
   regional = true
+  isInRegion(map: DungeonPMDO, state?: GameState) {
+    const regionSynergies = RegionDetails[map]?.synergies
+    return regionSynergies.includes(Synergy.DRAGON) || regionSynergies.includes(Synergy.FIGHTING)
+  }
 }
 
 export class KommoO extends Pokemon {
@@ -2057,6 +2068,10 @@ export class KommoO extends Pokemon {
   range = 1
   skill = Ability.CLANGOROUS_SOUL
   regional = true
+  isInRegion(map: DungeonPMDO, state?: GameState) {
+    const regionSynergies = RegionDetails[map]?.synergies
+    return regionSynergies.includes(Synergy.DRAGON) || regionSynergies.includes(Synergy.FIGHTING)
+  }
 }
 
 export class Gastly extends Pokemon {
@@ -6808,7 +6823,7 @@ export class Larvesta extends Pokemon {
   maxPP = 100
   range = 3
   skill = Ability.FIERY_DANCE
-  regional = true
+  additional = true
 }
 
 export class Volcarona extends Pokemon {
@@ -6823,7 +6838,7 @@ export class Volcarona extends Pokemon {
   maxPP = 100
   range = 3
   skill = Ability.FIERY_DANCE
-  regional = true
+  additional = true
 }
 
 export class IronMoth extends Pokemon {
@@ -21492,7 +21507,7 @@ export class Karrablast extends Pokemon {
   maxPP = 100
   range = 1
   skill = Ability.TWINEEDLE
-  additional = true
+  regional = true
 }
 
 export class Escavalier extends Pokemon {
@@ -21507,7 +21522,7 @@ export class Escavalier extends Pokemon {
   maxPP = 100
   range = 1
   skill = Ability.TWINEEDLE
-  additional = true
+  regional = true
 }
 
 export class Eiscue extends Pokemon {
