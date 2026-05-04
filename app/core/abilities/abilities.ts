@@ -6640,6 +6640,7 @@ export class MagmaStormStrategy extends AbilityStrategy {
 }
 
 export class SlashingClawStrategy extends AbilityStrategy {
+  canCritByDefault = true
   process(
     pokemon: PokemonEntity,
     board: Board,
