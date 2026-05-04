@@ -6477,10 +6477,10 @@ export class TaurosAquaBreed extends Pokemon {
 }
 
 export class Heracross extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.BUG, Synergy.FIGHTING])
+  types = new SetSchema<Synergy>([Synergy.BUG, Synergy.FIGHTING, Synergy.FLORA])
   rarity = Rarity.UNIQUE
   stars = 3
-  hp = 190
+  hp = 185
   atk = 21
   speed = 52
   def = 6
