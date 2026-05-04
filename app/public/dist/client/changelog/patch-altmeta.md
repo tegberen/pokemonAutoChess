@@ -177,7 +177,7 @@
 - Meltan: buff passive
 
 # Abilities and Passives
-- Duskull - Trick Room: If the target and ADJACENT enemies are faster than the user, halve their current speed, apply FATIGUE and BLINDED for 5 seconds. Otherwise, deal [40,80,160,SP] SPECIAL.
+- Duskull - Trick Room: If the target and ADJACENT enemies are faster than the user, halve their current speed, apply FATIGUE and BLINDED for 5 seconds. Otherwise, deal [50,100,200,SP] SPECIAL.
 - Beldum - Meteor Mash: Deal 1/2/4 times [100,SP]% of ATK as SPECIAL to the target and ADJACENT enemy Pokemon. Then increase the user's ATK by [2, SP] ([4, SP] if the user is in PSYCHIC_FIELD) on each hit.
 - Fennekin - Mystical Fire: Deals [25,50,100,SP] SPECIAL to the target, reduces its AP by [10, SP]. Scorches the target tile and those flanking and behind it with embers. BOARD_EFFECT: embers deal 10 SPECIAL per second and BURN non FLYING or FIRE Pokémon that walk on it.
 - Yveltal - Oblivion Wing: Jump to the backline, then fire a beam in a line dealing [100,SP] SPECIAL to all enemy Pokémon. Heal for 75% of the damage dealt. Will stay in the backline with increased RANGE for 3 seconds.

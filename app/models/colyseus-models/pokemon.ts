@@ -3697,7 +3697,7 @@ export class Duskull extends Pokemon {
   stars = 1
   evolution = Pkm.DUSCLOPS
   hp = 100
-  atk = 8
+  atk = 10
   speed = 39
   def = 10
   speDef = 10
@@ -3712,7 +3712,7 @@ export class Dusclops extends Pokemon {
   stars = 2
   evolution = Pkm.DUSKNOIR
   hp = 200
-  atk = 14
+  atk = 20
   speed = 39
   def = 20
   speDef = 20
@@ -3726,7 +3726,7 @@ export class Dusknoir extends Pokemon {
   rarity = Rarity.ULTRA
   stars = 3
   hp = 400
-  atk = 28
+  atk = 30
   speed = 39
   def = 30
   speDef = 30
