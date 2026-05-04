@@ -2829,11 +2829,11 @@ export class Dratini extends Pokemon {
     Synergy.FLYING,
     Synergy.AQUATIC
   ])
-  rarity = Rarity.EPIC
+  rarity = Rarity.RARE
   stars = 1
   evolution = Pkm.DRAGONAIR
-  hp = 90
-  atk = 7
+  hp = 80
+  atk = 5
   speed = 51
   def = 8
   speDef = 8
@@ -2848,14 +2848,14 @@ export class Dragonair extends Pokemon {
     Synergy.FLYING,
     Synergy.AQUATIC
   ])
-  rarity = Rarity.EPIC
+  rarity = Rarity.RARE
   stars = 2
   evolution = Pkm.DRAGONITE
-  hp = 150
-  atk = 15
+  hp = 120
+  atk = 12
   speed = 51
-  def = 13
-  speDef = 13
+  def = 10
+  speDef = 10
   maxPP = 100
   range = 1
   skill = Ability.TWISTER
@@ -2867,13 +2867,13 @@ export class Dragonite extends Pokemon {
     Synergy.FLYING,
     Synergy.AQUATIC
   ])
-  rarity = Rarity.EPIC
+  rarity = Rarity.RARE
   stars = 3
-  hp = 290
-  atk = 28
+  hp = 250
+  atk = 22
   speed = 51
-  def = 20
-  speDef = 20
+  def = 12
+  speDef = 12
   maxPP = 100
   range = 1
   skill = Ability.TWISTER
@@ -17398,30 +17398,30 @@ export class IronHands extends Pokemon {
 }
 
 export class Rookidee extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.FLYING])
-  rarity = Rarity.RARE
+  types = new SetSchema<Synergy>([Synergy.FLYING, Synergy.STEEL])
+  rarity = Rarity.EPIC
   stars = 1
   evolution = Pkm.CORVISQUIRE
   hp = 100
-  atk = 8
+  atk = 10
   speed = 46
-  def = 8
-  speDef = 4
+  def = 10
+  speDef = 5
   maxPP = 100
   range = 1
   skill = Ability.STEEL_WING
 }
 
 export class Corvisquire extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.FLYING])
-  rarity = Rarity.RARE
+  types = new SetSchema<Synergy>([Synergy.FLYING, Synergy.STEEL])
+  rarity = Rarity.EPIC
   stars = 2
   evolution = Pkm.CORVIKNIGHT
-  hp = 170
-  atk = 15
+  hp = 180
+  atk = 18
   speed = 46
-  def = 14
-  speDef = 8
+  def = 15
+  speDef = 10
   maxPP = 100
   range = 1
   skill = Ability.STEEL_WING
@@ -17429,13 +17429,13 @@ export class Corvisquire extends Pokemon {
 
 export class Corviknight extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.FLYING, Synergy.STEEL])
-  rarity = Rarity.RARE
+  rarity = Rarity.EPIC
   stars = 3
-  hp = 250
-  atk = 30
+  hp = 350
+  atk = 35
   speed = 46
-  def = 24
-  speDef = 12
+  def = 30
+  speDef = 15
   maxPP = 100
   range = 1
   skill = Ability.STEEL_WING

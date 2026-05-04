@@ -92,7 +92,6 @@
 - Vikavolt: to regular, added AMORPHOUS
 
 ## Rare
-- Corviknight: to regular (STEEL only last stage)
 - Exploud: added MONSTER
 - Manectric: new ability
 - Pawmot: added FIELD, buffed ability effect 
@@ -110,6 +109,7 @@
 - Ninetales: added GHOST, changed ability effect
 - Alolan Ninetales: added FIELD
 - Swampert: removed WATER, added AQUATIC
+- Dragonite: 
 
 
 ## Epic
@@ -128,6 +128,7 @@
 - Kommo-O: restrict to regional (DRAGON / FIGHTING)
 - Skeledirge: to regional
 - Escavalier: to regional for Volcarona
+- Corviknight: to regular
 
 ## Ultra
 > Ultra Pokemon have twice the HP when 3 STAR
