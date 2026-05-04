@@ -9635,7 +9635,7 @@ export class Shellder extends Pokemon {
   stars = 1
   evolution = Pkm.CLOYSTER
   hp = 80
-  atk = 6
+  atk = 8
   speed = 47
   def = 15
   speDef = 5
@@ -9650,7 +9650,7 @@ export class Cloyster extends Pokemon {
   rarity = Rarity.EPIC
   stars = 2
   hp = 200
-  atk = 12
+  atk = 18
   speed = 47
   def = 35
   speDef = 10
