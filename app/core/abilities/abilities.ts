@@ -13460,8 +13460,8 @@ export class DecorateStrategy extends AbilityStrategy {
   requiresTarget = false
   process(pokemon: PokemonEntity, board: Board, target: null, crit: boolean) {
     super.process(pokemon, board, target, crit, true)
-    const atkBoost = [1, 2, 3][pokemon.stars - 1] ?? 8
-    const apBoost = [10, 20, 30][pokemon.stars - 1] ?? 50
+    const atkBoost = [1, 2, 3][pokemon.stars - 1] ?? 3
+    const apBoost = [10, 20, 30][pokemon.stars - 1] ?? 30
     const nearestAllies = pokemon.state.getNearestAllies(pokemon, board)
     const strongestNearestAlly = getStrongestUnit(nearestAllies)
     if (strongestNearestAlly) {
@@ -13491,7 +13491,7 @@ export class DecorateStrategy extends AbilityStrategy {
       } else if (pokemon.name === Pkm.ALCREMIE_CARAMEL_SWIRL) {
         strongestNearestAlly.addCritPower(80, pokemon, 1, crit)
       } else if (pokemon.name === Pkm.ALCREMIE_RAINBOW_SWIRL) {
-        strongestNearestAlly.addPP(60, pokemon, 1, crit)
+        strongestNearestAlly.addPP(40, pokemon, 1, crit)
       }
     }
   }

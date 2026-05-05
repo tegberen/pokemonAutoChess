@@ -3489,7 +3489,7 @@
 		"SALTED_CREAM": "Upon casting, the SALTED_FLAVOR heals [40,SP] HP and adds [15,SP] DEF to the decorated ally",
 		"RUBY_SWIRL_CREAM": "Upon casting, the RUBY_SWIRL_FLAVOR adds [10,SP] ATK to the decorated ally",
 		"CARAMEL_SWIRL_CREAM": "Upon casting, the CARAMEL_SWIRL_FLAVOR adds [80,SP] % CRIT_POWER to the decorated ally",
-		"RAINBOW_SWIRL_CREAM": "Upon casting, the RAINBOW_SWIRL_FLAVOR adds [60,SP] PP to the decorated ally",
+		"RAINBOW_SWIRL_CREAM": "Upon casting, the RAINBOW_SWIRL_FLAVOR adds [40,SP] PP to the decorated ally",
 		"DURALUDON": "Duraludon is looking for a ARTIFICIAL tool",
 		"CHARCADET": "Defeating the Mew duo will grant Charchadet with an AUSPICIOUS_ARMOR or a MALICIOUS_ARMOR based on your dominant synergy between PSYCHIC or GHOST",
 		"ZACIAN": "Zacian seeks an epic battle with the legendary birds to reclaim its RUSTED_SWORD",
