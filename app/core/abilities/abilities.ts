@@ -158,6 +158,22 @@ export class AquaStepStrategy extends AbilityStrategy {
   }
 }
 
+export class LuminaCrashStrategy extends AbilityStrategy {
+  process(
+    pokemon: PokemonEntity,
+    board: Board,
+    target: PokemonEntity,
+    crit: boolean
+  ) {
+    super.process(pokemon, board, target, crit)
+    const baseDamage = [10,20,40][pokemon.stars - 1] ?? 40
+    const damageMultiplier = [2, 4, 8][pokemon.stars - 1] ?? 8
+    const damage = baseDamage + target.speDef * damageMultiplier  
+    target.handleSpecialDamage(damage, board, AttackType.SPECIAL, pokemon, crit)
+    target.addSpecialDefense(-target.speDef, pokemon, 0, false)
+  }
+}
+
 export class MagneticAbsorptionStrategy extends AbilityStrategy {
   process(
     pokemon: PokemonEntity,
@@ -18220,7 +18236,8 @@ export const AbilityStrategies: { [key in Ability]: AbilityStrategy } = {
   [Ability.AQUA_STEP]: new AquaStepStrategy(),
   [Ability.MAGNETIC_ABSORPTION]: new MagneticAbsorptionStrategy(),
   [Ability.FRENZY_PLANT]: new FrenzyPlantStrategy(),
-  [Ability.LIGHT_OF_RUIN]: new LightOfRuinStrategy()
+  [Ability.LIGHT_OF_RUIN]: new LightOfRuinStrategy(),
+  [Ability.LUMINA_CRASH]: new LuminaCrashStrategy()
 }
 
 export function castAbility(

@@ -517,6 +517,39 @@ export class Quaxly extends Pokemon {
   passive = Passive.DANCER
 }
 
+export class Flittle extends Pokemon {
+  types = new SetSchema<Synergy>([Synergy.PSYCHIC, Synergy.LIGHT, Synergy.FLYING])
+  rarity = Rarity.UNCOMMON
+  stars = 1
+  evolution = Pkm.ESPATHRA
+  hp = 70
+  atk = 5
+  speed = 59
+  def = 6
+  speDef = 4
+  maxPP = 100
+  range = 1
+  skill = Ability.LUMINA_CRASH
+  passive = Passive.CLEAR_WING
+  additional = true
+}
+
+export class Espathra extends Pokemon {
+  types = new SetSchema<Synergy>([Synergy.PSYCHIC, Synergy.LIGHT, Synergy.FLYING])
+  rarity = Rarity.UNCOMMON
+  stars = 2
+  hp = 140
+  atk = 14
+  speed = 59
+  def = 8
+  speDef = 6
+  maxPP = 100
+  range = 1
+  skill = Ability.LUMINA_CRASH
+  passive = Passive.CLEAR_WING
+  additional = true
+}
+
 export class Quaxwell extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.AQUATIC, Synergy.FIGHTING, Synergy.FLYING])
   rarity = Rarity.UNCOMMON
@@ -22813,6 +22846,8 @@ export const PokemonClasses: Record<
   [Pkm.QUAXLY]: Quaxly,
   [Pkm.QUAXWELL]: Quaxwell,
   [Pkm.QUAQUAVAL]: Quaquaval,
+  [Pkm.FLITTLE]: Flittle,
+  [Pkm.ESPATHRA]: Espathra,
   [Pkm.SANDY_SHOCKS]: SandyShocks
 }
 
