@@ -174,6 +174,27 @@ export class LuminaCrashStrategy extends AbilityStrategy {
   }
 }
 
+export class TreasureRushStrategy extends AbilityStrategy {
+  process(
+    pokemon: PokemonEntity,
+    board: Board,
+    target: PokemonEntity,
+    crit: boolean
+  ) {
+    super.process(pokemon, board, target, crit)
+    const damage = [30, 60, 90][pokemon.stars - 1] ?? 90
+    const goldCost = 1
+    const atkGain = [1, 2, 3][pokemon.stars - 1] ?? 3
+
+    if (pokemon.player && pokemon.player.money >= goldCost) {
+      pokemon.player.addMoney(-goldCost, false, pokemon)
+      pokemon.addAttack(atkGain, pokemon, 0, false, true)
+    }
+
+    target.handleSpecialDamage(damage, board, AttackType.SPECIAL, pokemon, crit)
+  }
+}
+
 export class MagneticAbsorptionStrategy extends AbilityStrategy {
   process(
     pokemon: PokemonEntity,
@@ -18237,7 +18258,8 @@ export const AbilityStrategies: { [key in Ability]: AbilityStrategy } = {
   [Ability.MAGNETIC_ABSORPTION]: new MagneticAbsorptionStrategy(),
   [Ability.FRENZY_PLANT]: new FrenzyPlantStrategy(),
   [Ability.LIGHT_OF_RUIN]: new LightOfRuinStrategy(),
-  [Ability.LUMINA_CRASH]: new LuminaCrashStrategy()
+  [Ability.LUMINA_CRASH]: new LuminaCrashStrategy(),
+  [Ability.TREASURE_RUSH]: new TreasureRushStrategy()
 }
 
 export function castAbility(

@@ -550,6 +550,41 @@ export class Espathra extends Pokemon {
   additional = true
 }
 
+export class GalarMeowth extends Pokemon {
+  types = new SetSchema<Synergy>([Synergy.STEEL])
+  rarity = Rarity.RARE
+  stars = 1
+  evolution = Pkm.PERRSERKER
+  hp = 80
+  atk = 7
+  speed = 62
+  def = 6
+  speDef = 6
+  maxPP = 100
+  range = 1
+  skill = Ability.TREASURE_RUSH
+  regional = true
+  additional = true
+}
+
+export class Perrserker extends Pokemon {
+  types = new SetSchema<Synergy>([Synergy.STEEL, Synergy.WILD])
+  rarity = Rarity.RARE
+  stars = 2
+  hp = 200
+  atk = 17
+  speed = 62
+  def = 6
+  speDef = 6
+  maxPP = 100
+  range = 1
+  skill = Ability.TREASURE_RUSH
+  regional = true
+  additional = true
+  passive = Passive.STEELY_SPIRIT
+}
+
+
 export class Quaxwell extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.AQUATIC, Synergy.FIGHTING, Synergy.FLYING])
   rarity = Rarity.UNCOMMON
@@ -12690,7 +12725,7 @@ export class Arbok extends Pokemon {
 }
 
 export class Carvanha extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.WILD, Synergy.WATER, Synergy.DARK])
+  types = new SetSchema<Synergy>([Synergy.WATER, Synergy.DARK])
   rarity = Rarity.RARE
   stars = 1
   evolution = Pkm.SHARPEDO
@@ -13726,7 +13761,7 @@ export class Liepard extends Pokemon {
 }
 
 export class Pancham extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.WILD, Synergy.DARK, Synergy.FIGHTING])
+  types = new SetSchema<Synergy>([Synergy.DARK, Synergy.FIGHTING])
   rarity = Rarity.RARE
   stars = 1
   evolution = Pkm.PANGORO
@@ -18325,7 +18360,7 @@ export class MegaDragalge extends Pokemon {
 }
 
 export class Cubchoo extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.WILD, Synergy.ICE, Synergy.AQUATIC])
+  types = new SetSchema<Synergy>([Synergy.ICE, Synergy.AQUATIC])
   rarity = Rarity.EPIC
   stars = 1
   evolution = Pkm.BEARTIC
@@ -22848,6 +22883,8 @@ export const PokemonClasses: Record<
   [Pkm.QUAQUAVAL]: Quaquaval,
   [Pkm.FLITTLE]: Flittle,
   [Pkm.ESPATHRA]: Espathra,
+  [Pkm.GALAR_MEOWTH]: GalarMeowth,
+  [Pkm.PERRSERKER]: Perrserker,
   [Pkm.SANDY_SHOCKS]: SandyShocks
 }
 

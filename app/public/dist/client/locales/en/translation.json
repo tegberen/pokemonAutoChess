@@ -26,6 +26,7 @@
     "LIGHT_OF_RUIN": "Light of Ruin",
     "AQUA_STEP": "Aqua Step",
     "LUMINA_CRASH": "Lumina Crash",
+    "TREASURE_RUSH": "Treasure Rush",
     "MAGNETIC_ABSORPTION": "Magnetic Absorption",
     "FRENZY_PLANT": "Frenzy Plant",
 		"SOFT_BOILED": "Soft-Boiled",
@@ -1491,6 +1492,8 @@
     "QUAQUAVAL": "Quaquaval",
     "FLITTLE": "Flittle",
     "ESPATHRA": "Espathra",
+    "GALAR_MEOWTH": "Galar Meowth",
+    "PERRSERKER": "Perrserker",
     "SANDY_SHOCKS": "Sandy Shocks",
 		"TANGELA": "Tangela",
 		"TANGROWTH": "Tangrowth",
@@ -1845,6 +1848,7 @@
     "LIGHT_OF_RUIN": "Deal [20,SP] SPECIAL to all enemy Pokémon in a line, multiplied by all allies and enemies on the board. Lose 50% of max HP.",
     "AQUA_STEP": "The user attacks with fluid dance steps, shifting to an ADJACENT unoccupied tile before dealing [25,50,100,SP] SPECIAL to the target and increasing the users SPEED by [10,15,20,SP]. If the user has more SPEED than the target, regain [10,15,20] PP.",
     "LUMINA_CRASH": "Deal [10,20,40,SP] + [200,400,800,SP] % of targets SPE_DEF as SPECIAL to the target, then remove all SPE_DEF.",
+    "TREASURE_RUSH": "Deals [30,60,90,SP] SPECIAL to the target. Spends 1 GOLD and increase the user's ATK permanently by [1,2,3].",
     "MAGNETIC_ABSORPTION": "Absorbs RANGE from the target and ADJACENT enemies, reducing theirs by 1 and increasing the user's by 1. Deals [80, SP] SPECIAL and inflicts 3 seconds of LOCKED instead, to any enemy already at minimum RANGE. The user then moves 1 tile back.",
     "FRENZY_PLANT": "Strikes the target 3 times with enormous tree roots, dealing [15,30,60,SP] SPECIAL per hit, multiplied by the number of ADJACENT enemies surrounding the target. If the target is defeated, remaining roots lash out at the nearest enemy.",
     "TEMPORAL_RUPTURE": "Channel for 3 seconds, then unleash a temporal pulse. All enemy Pokémon in a 4-tile radius take [100,SP]% of the damage received during the last 3 seconds as TRUE. Allies are healed for [100,SP]% HP of the damage they took in the last 3 seconds.",
@@ -3587,7 +3591,8 @@
     "FLOETTE_ETERNAL": "Gain one stack for each KO. Mega evolves after 20 stacks.",
     "FERALIGATR": "Gain one stack for each KO. Mega evolves after 20 stacks.",
     "MEGA_FERALIGATR": "If the target is KO'ed, gain permanently 1 SPEED and 1 AP for each STAR on your board.",
-    "INTIMIDATE": "When attacking, has a [30,LK]% chance to FLINCH the target for 3 seconds."
+    "INTIMIDATE": "When attacking, has a [30,LK]% chance to FLINCH the target for 3 seconds.",
+    "STEELY_SPIRIT": "Allies ADJACENT_IN_THE_SAME_ROW deal 10% of their ATK as TRUE."
   },
 	"stat": {
 		"ATK": "Attack",

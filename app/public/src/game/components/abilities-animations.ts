@@ -765,6 +765,11 @@ export const AbilitiesAnimations: {
     positionOffset: [+5, -15]
   }),
   [Ability.LUMINA_CRASH]: onTargetScale2,
+  [Ability.TREASURE_RUSH]: onCaster({
+    ability: Ability.GOLD_RUSH,
+    duration: 300,
+  }),
+
   [Ability.MAGNETIC_ABSORPTION]: onTarget({scale: 4, tint: 0xf1c232, positionOffset: [0, -20] }),
   [Ability.FRENZY_PLANT]: (args) => {
     const { scene, targetX, targetY, flip, ap } = args

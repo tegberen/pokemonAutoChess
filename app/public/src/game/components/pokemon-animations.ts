@@ -73,6 +73,20 @@ export const PokemonAnimations: {
     attackSprite: AttackSprite.PSYCHIC_MELEE,
     shinyUnavailable: true
   },
+  [Pkm.GALAR_MEOWTH]: {
+    attack: AnimationType.Attack,
+    ability: AnimationType.Charge,
+    emote: AnimationType.Shoot,
+    attackSprite: AttackSprite.STEEL_MELEE,
+    shinyUnavailable: true
+  },
+  [Pkm.PERRSERKER]: {
+    attack: AnimationType.Attack,
+    ability: AnimationType.Charge,
+    emote: AnimationType.Shoot,
+    attackSprite: AttackSprite.STEEL_MELEE,
+    shinyUnavailable: true
+  },
   [Pkm.QUAQUAVAL]: {
     attack: AnimationType.Attack,
     ability: AnimationType.Swing,
