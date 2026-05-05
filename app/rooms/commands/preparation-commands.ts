@@ -750,16 +750,16 @@ export class OnAddBotCommand extends Command<PreparationRoom, OnAddBotPayload> {
             elo = { $lt: 900 }
             break
           case BotDifficulty.MEDIUM:
-            elo = { $gte: 900, $lt: 1300 }
+            elo = { $gte: 900, $lt: 1250 }
             break
           case BotDifficulty.HARD:
-            elo = { $gte: 1300, $lt: 1400 }
+            elo = { $gte: 1250, $lt: 1350 }
             break
           case BotDifficulty.EXTREME:
-            elo = { $gte: 1400, $lt: 1700 }
+            elo = { $gte: 1350, $lt: 1700 }
             break
           case BotDifficulty.REGULAR:
-            elo = { $gte: 1050, $lt: 1700 }
+            elo = { $gte: 1100, $lt: 1700 }
             break
           case BotDifficulty.SHINY:
             elo = { $gte: 1700, $lt: 5000 }
