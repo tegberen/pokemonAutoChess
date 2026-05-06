@@ -2007,6 +2007,10 @@ export class HisuiSamurott extends Pokemon {
   range = 1
   skill = Ability.CEASELESS_EDGE
   regional = true
+  isInRegion(map: DungeonPMDO, state: GameState) {
+    const regionSynergies = RegionDetails[map]?.synergies ?? []
+    return regionSynergies.includes(Synergy.DARK)
+  }
 }
 
 export class Larvitar extends Pokemon {
