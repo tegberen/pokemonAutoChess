@@ -766,8 +766,7 @@ export const AbilitiesAnimations: {
   }),
   [Ability.LUMINA_CRASH]: onTargetScale2,
   [Ability.TREASURE_RUSH]: onCaster({
-    ability: Ability.GOLD_RUSH,
-    duration: 300,
+    ability: Ability.GOLD_RUSH
   }),
 
   [Ability.MAGNETIC_ABSORPTION]: onTarget({scale: 4, tint: 0xf1c232, positionOffset: [0, -20] }),
