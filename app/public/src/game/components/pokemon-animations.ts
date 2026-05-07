@@ -100,6 +100,13 @@ export const PokemonAnimations: {
     attackSprite: AttackSprite.STEEL_MELEE,
     shinyUnavailable: true
   },
+  [Pkm.MEGA_ZERAORA]: {
+    attack: AnimationType.Strike,
+    ability: AnimationType.Attack,
+    emote: AnimationType.RearUp,
+    attackSprite: AttackSprite.WILD_MELEE,
+    hitSprite: HitSprite.ELECTRIC_HIT
+  },
   [Pkm.QUAQUAVAL]: {
     attack: AnimationType.Attack,
     ability: AnimationType.Swing,

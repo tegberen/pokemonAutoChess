@@ -1264,6 +1264,7 @@
 		"SILVALLY_FAIRY": "Silvally",
 		"TYPE_NULL": "Type: Null",
 		"ZERAORA": "Zeraora",
+    "MEGA_ZERAORA": "Mega Zeraora",
 		"XERNEAS": "Xerneas",
 		"YVELTAL": "Yveltal",
 		"MARSHADOW": "Marshadow",
@@ -3597,7 +3598,8 @@
     "FERALIGATR": "Gain one stack for each KO. Mega evolves after 20 stacks.",
     "MEGA_FERALIGATR": "If the target is KO'ed, gain permanently 1 SPEED and 1 AP for each STAR on your board.",
     "INTIMIDATE": "When attacking, has a [30,LK]% chance to FLINCH the target for 3 seconds.",
-    "STEELY_SPIRIT": "Allies ADJACENT_IN_THE_SAME_ROW deal 10% of their ATK as TRUE."
+    "STEELY_SPIRIT": "Allies ADJACENT_IN_THE_SAME_ROW deal 10% of their ATK as TRUE.",
+    "ZERAORA": "Gains a stack for each KO. Mega evolves after 20 stacks."
   },
 	"stat": {
 		"ATK": "Attack",

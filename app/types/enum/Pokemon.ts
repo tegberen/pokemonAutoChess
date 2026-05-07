@@ -9,6 +9,7 @@ export enum Pkm {
   SANDY_SHOCKS = "SANDY_SHOCKS",
   MEGA_DRAMPA = "MEGA_DRAMPA",
   MEGA_SKARMORY = "MEGA_SKARMORY",
+  MEGA_ZERAORA = "MEGA_ZERAORA",
   ABOMASNOW = "ABOMASNOW",
   ABRA = "ABRA",
   ABSOL = "ABSOL",
@@ -2298,6 +2299,7 @@ export const PkmIndex: { [key in Pkm]: string } = {
   [Pkm.STAKATAKA]: "0805",
   [Pkm.BLACEPHALON]: "0806",
   [Pkm.ZERAORA]: "0807",
+  [Pkm.MEGA_ZERAORA]: "0807-0001",
   [Pkm.MELTAN]: "0808",
   [Pkm.MELMETAL]: "0809",
 
@@ -3217,6 +3219,7 @@ export const PkmFamily: { [key in Pkm]: Pkm } = {
   [Pkm.SILVALLY_DARK]: Pkm.TYPE_NULL,
   [Pkm.SILVALLY_FAIRY]: Pkm.TYPE_NULL,
   [Pkm.ZERAORA]: Pkm.ZERAORA,
+  [Pkm.MEGA_ZERAORA]: Pkm.ZERAORA,
   [Pkm.XERNEAS]: Pkm.XERNEAS,
   [Pkm.YVELTAL]: Pkm.YVELTAL,
   [Pkm.TYPE_NULL]: Pkm.TYPE_NULL,

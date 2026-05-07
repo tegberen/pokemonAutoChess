@@ -61,6 +61,7 @@
 ![Mega Floette Eternal](/assets/portraits/0670/0006/Normal.png)
 ![Mega Feraligatr](/assets/portraits/0160/0001/Normal.png)
 ![Mega Skarmory](/assets/portraits/0227/0001/Normal.png)
+![Mega Zeraora](/assets/portraits/0807/0001/Normal.png)
 
 ## Requirements (Ping me for adjustments)
 ![Charizard](/assets/portraits/0006/Normal.png)
@@ -93,4 +94,5 @@
 ![Floette Eternal](/assets/portraits/0670/0005/Normal.png)
 ![Feraligatr](/assets/portraits/0160/Normal.png)
 ![Skarmory](/assets/portraits/0227/Normal.png)
+![Zeraora](/assets/portraits/0807/Normal.png)
 

@@ -6033,8 +6033,27 @@ export class Zeraora extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.WILD, Synergy.ELECTRIC])
   rarity = Rarity.UNIQUE
   stars = 3
+  evolution = Pkm.MEGA_ZERAORA
+  evolutionRule = new StackBasedEvolutionRule()
+  stacksRequired: number = 20
+
   hp = 220
   atk = 16
+  speed = 71
+  def = 10
+  speDef = 10
+  maxPP = 100
+  range = 1
+  skill = Ability.PLASMA_FIST
+  passive = Passive.ZERAORA
+}
+
+export class MegaZeraora extends Pokemon {
+  types = new SetSchema<Synergy>([Synergy.WILD, Synergy.ELECTRIC, Synergy.FIGHTING])
+  rarity = Rarity.UNIQUE
+  stars = 4
+  hp = 240
+  atk = 18
   speed = 71
   def = 10
   speDef = 10
@@ -22353,6 +22372,7 @@ export const PokemonClasses: Record<
   [Pkm.HOOPA]: Hoopa,
   [Pkm.HOOPA_UNBOUND]: HoopaUnbound,
   [Pkm.ZERAORA]: Zeraora,
+  [Pkm.MEGA_ZERAORA]: MegaZeraora,
   [Pkm.XERNEAS]: Xerneas,
   [Pkm.YVELTAL]: Yveltal,
   [Pkm.MARSHADOW]: Marshadow,
