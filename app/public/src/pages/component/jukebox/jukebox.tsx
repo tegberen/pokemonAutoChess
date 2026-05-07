@@ -37,15 +37,19 @@ export default function Jukebox(props: {
     const gameScene = getGameScene()
     if (gameScene) {
       gameScene.music?.destroy()
-      setLoading(true)
-      gameScene.cache.audio.events.on("add", (cache, key) => {
-        if (key === "music_" + name) {
-          playMusic(gameScene, name)
-          setLoading(false)
-        }
-      })
-      preloadMusic(gameScene, name)
-      gameScene.load.start()
+      if (gameScene.cache.audio.exists("music_" + name)) {
+        playMusic(gameScene, name)
+      } else {
+        setLoading(true)
+        gameScene.cache.audio.events.on("add", (cache, key) => {
+          if (key === "music_" + name) {
+            playMusic(gameScene, name)
+            setLoading(false)
+          }
+        })
+        preloadMusic(gameScene, name)
+        gameScene.load.start()
+      }
     }
   }
 
