@@ -2157,5 +2157,13 @@ export const PassiveEffects: Partial<
         }
       })
     })
+  ],
+  [Passive.SKARMORY_PRE]: [
+    new OnKillEffect(({ attacker }) => {
+      if (attacker.isGhostOpponent) return
+      if (!attacker.player) return
+      attacker.addStack()
+
+    })
   ]
 }

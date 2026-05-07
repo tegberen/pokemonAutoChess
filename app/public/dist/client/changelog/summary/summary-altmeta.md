@@ -29,6 +29,7 @@
 ![Perrserker](/assets/portraits/0863/Normal.png)
 ![Galarian Mr. Mime](/assets/portraits/0122/0001/Normal.png)
 
+
 ## Mega Evolutions
 ![Mega Charizard X](/assets/portraits/0006/0001/Surprised.png)
 ![Mega Lopunny](/assets/portraits/0428/0001/Normal.png)
@@ -59,6 +60,7 @@
 ![Mega Zygarde](/assets/portraits/0718/0005/Normal.png)
 ![Mega Floette Eternal](/assets/portraits/0670/0006/Normal.png)
 ![Mega Feraligatr](/assets/portraits/0160/0001/Normal.png)
+![Mega Skarmory](/assets/portraits/0227/0001/Normal.png)
 
 ## Requirements (Ping me for adjustments)
 ![Charizard](/assets/portraits/0006/Normal.png)
@@ -90,4 +92,5 @@
 ![Zygarde](/assets/portraits/0718/Normal.png)
 ![Floette Eternal](/assets/portraits/0670/0005/Normal.png)
 ![Feraligatr](/assets/portraits/0160/Normal.png)
+![Skarmory](/assets/portraits/0227/Normal.png)
 

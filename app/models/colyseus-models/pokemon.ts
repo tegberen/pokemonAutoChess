@@ -17266,11 +17266,29 @@ export class Barbaracle extends Pokemon {
 export class Skarmory extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.STEEL, Synergy.FLYING])
   rarity = Rarity.UNIQUE
+  evolution = Pkm.MEGA_SKARMORY
+  evolutionRule = new StackBasedEvolutionRule()
+  stacksRequired = 20
   stars = 3
-  hp = 190
-  atk = 18
+  hp = 200
+  atk = 20
   speed = 47
   def = 16
+  speDef = 8
+  maxPP = 80
+  range = 1
+  skill = Ability.ROAR
+  passive = Passive.SKARMORY_PRE
+}
+
+export class MegaSkarmory extends Pokemon {
+  types = new SetSchema<Synergy>([Synergy.STEEL, Synergy.FLYING])
+  rarity = Rarity.UNIQUE
+  stars = 4
+  hp = 220
+  atk = 24
+  speed = 47
+  def = 12
   speDef = 8
   maxPP = 80
   range = 1
@@ -22644,6 +22662,7 @@ export const PokemonClasses: Record<
   [Pkm.BINACLE]: Binacle,
   [Pkm.BARBARACLE]: Barbaracle,
   [Pkm.SKARMORY]: Skarmory,
+  [Pkm.MEGA_SKARMORY]: MegaSkarmory,
   [Pkm.DURANT]: Durant,
   [Pkm.OGERPON_TEAL]: OgerponTeal,
   [Pkm.OGERPON_TEAL_MASK]: OgerponTealMask,
