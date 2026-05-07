@@ -4073,9 +4073,10 @@ export class Spheal extends Pokemon {
   speed = 46
   def = 4
   speDef = 4
-  maxPP = 90
+  maxPP = 80
   range = 1
   skill = Ability.ICE_BALL
+  passive = Passive.ICE_BODY
 }
 
 export class Sealeo extends Pokemon {
@@ -4088,9 +4089,10 @@ export class Sealeo extends Pokemon {
   speed = 46
   def = 5
   speDef = 5
-  maxPP = 85
+  maxPP = 80
   range = 1
   skill = Ability.ICE_BALL
+  passive = Passive.ICE_BODY
 }
 
 export class Walrein extends Pokemon {
@@ -4105,6 +4107,7 @@ export class Walrein extends Pokemon {
   maxPP = 80
   range = 1
   skill = Ability.ICE_BALL
+  passive = Passive.ICE_BODY
 }
 
 export class NidoranF extends Pokemon {

@@ -6616,9 +6616,9 @@ export class IceBallStrategy extends AbilityStrategy {
     crit: boolean
   ) {
     super.process(pokemon, board, target, crit)
-    const baseDamage = [10, 20, 30][pokemon.stars - 1] ?? 30
-    const multiplier = [0.5, 1, 1.5][pokemon.stars - 1] ?? 1.5
-    const speDefBoost = 10
+    const baseDamage = [10, 20, 40][pokemon.stars - 1] ?? 40
+    const multiplier = [0.5, 1, 2][pokemon.stars - 1] ?? 2
+    const speDefBoost = [10, 10, 20][pokemon.stars - 1] ?? 20
 
     pokemon.addSpecialDefense(speDefBoost, pokemon, 0, false)
     target.handleSpecialDamage(

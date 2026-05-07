@@ -2165,5 +2165,20 @@ export const PassiveEffects: Partial<
       attacker.addStack()
 
     })
+  ],
+  [Passive.ICE_BODY]: [
+    new OnSimulationStartEffect(({ entity }) => {
+      const iceBodyEffect = new PeriodicEffect(
+        (pokemon) => {
+          const { weather } = pokemon.simulation
+          if (weather === Weather.SNOW) {
+            pokemon.handleHeal(0.1 * pokemon.maxHP, pokemon, 0, false)
+          }
+        },
+        Passive.ICE_BODY,
+        2000
+      )
+      entity.effectsSet.add(iceBodyEffect)
+    })
   ]
 }
