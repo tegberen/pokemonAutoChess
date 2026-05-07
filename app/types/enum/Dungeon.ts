@@ -1,5 +1,8 @@
 export enum DungeonMusic {
   TROUBLE_IN_TOWN = "Trouble in Town",
+  JOHN_REI_TOWN_STAGE_0 = "John Rei Town Stage 0",
+  JOHN_REI_TOWN_STAGE_10 = "John Rei Town Stage 10",
+  JOHN_REI_TOWN_STAGE_20 = "John Rei Town Stage 20",
   STELIOS_KONTOS = "Stelios Kontos",
   AEGIS_CAVE = "Aegis Cave",
   AMP_PLAINS = "Amp Plains",

@@ -210,9 +210,7 @@
 - Chimecho tent: from PMD Universe ˶ᵔ ᵕ ᵔ˶
 > Thank you alot, I will do the proper crediting when they are out on PMD Collab. Thanks to all the spriters really! Also thanks alot to all the additions from Non-SpriteCollab too!! They are awesome!
 
-- Song during Carousel: Stelio Kontos (American Dad! Cast)
-> For now it's funny, but I will remove it at some point hahaha
-- Song in Juke Box - Trouble In Town (John Rei - .jahey, my goat)
+- Song during Carousels & in Juke Box - Trouble In Town (John Rei - .jahey, my goat!!)
 - Patch Poster Image: I just stole that from spanishcrow, my beloved friend and artist :^D
 > Thanks for the devs to create such an amazing game!
 
