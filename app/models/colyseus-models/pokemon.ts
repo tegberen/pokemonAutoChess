@@ -10297,7 +10297,15 @@ export class MimeJr extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.FAIRY, Synergy.PSYCHIC, Synergy.BABY])
   rarity = Rarity.UNCOMMON
   stars = 1
-  evolution = Pkm.MR_MIME
+  evolutions = [Pkm.MR_MIME, Pkm.GALARIAN_MR_MIME]
+  evolutionRule = new CountEvolutionRule(
+    3,
+    (pokemon: Pokemon, player: IPlayer) => {
+      if (player.regionalPokemons.includes(Pkm.GALARIAN_MR_MIME))
+        return Pkm.GALARIAN_MR_MIME 
+      else return Pkm.MR_MIME
+    }
+  )
   hp = 60
   atk = 5
   speed = 54
@@ -10326,6 +10334,33 @@ export class MrMime extends Pokemon {
   range = 2
   skill = Ability.MIMIC
   additional = true
+}
+
+export class GalarianMrMime extends Pokemon {
+  types = new SetSchema<Synergy>([
+    Synergy.FAIRY,
+    Synergy.PSYCHIC,
+    Synergy.ICE
+  ])
+  rarity = Rarity.UNCOMMON
+  stars = 2   
+  hp = 150
+  atk = 11
+  speed = 54
+  def = 4
+  speDef = 7
+  maxPP = 100
+  range = 2
+  skill = Ability.SURPRISING_HAND
+  additional = true
+  regional = true
+  isInRegion(map: DungeonPMDO, state: GameState) {
+    const regionSynergies = RegionDetails[map]?.synergies
+    return (
+      (!state || state.additionalPokemons.includes(Pkm.MIME_JR)) &&
+      regionSynergies.includes(Synergy.ICE)
+    )
+  }
 }
 
 export class Salandit extends Pokemon {
@@ -22294,6 +22329,7 @@ export const PokemonClasses: Record<
   [Pkm.ARBOK]: Arbok,
   [Pkm.MIME_JR]: MimeJr,
   [Pkm.MR_MIME]: MrMime,
+  [Pkm.GALARIAN_MR_MIME]: GalarianMrMime,
   [Pkm.ORIGIN_GIRATINA]: OriginGiratina,
   [Pkm.MELMETAL]: Melmetal,
   [Pkm.HOOPA]: Hoopa,

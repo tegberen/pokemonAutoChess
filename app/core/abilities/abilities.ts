@@ -158,6 +158,31 @@ export class AquaStepStrategy extends AbilityStrategy {
   }
 }
 
+export class SurprisingHandStrategy extends AbilityStrategy {
+  process(
+    pokemon: PokemonEntity,
+    board: Board,
+    target: PokemonEntity,
+    crit: boolean
+  ) {
+    super.process(pokemon, board, target, crit)
+
+    const adjacentAllies = board
+      .getAdjacentCells(pokemon.positionX, pokemon.positionY)
+      .filter((cell) => cell.value && cell.value.team === pokemon.team && cell.value !== pokemon)
+      .map((cell) => cell.value!)
+
+    target.items.forEach((item) => {
+      if (pokemon.items.size < 3) {
+        pokemon.addItem(item)
+      } else {
+        const ally = adjacentAllies.find((a) => a.items.size < 3)
+        if (ally) ally.addItem(item)
+      }
+    })
+  }
+}
+
 export class LuminaCrashStrategy extends AbilityStrategy {
   process(
     pokemon: PokemonEntity,
@@ -18260,7 +18285,8 @@ export const AbilityStrategies: { [key in Ability]: AbilityStrategy } = {
   [Ability.FRENZY_PLANT]: new FrenzyPlantStrategy(),
   [Ability.LIGHT_OF_RUIN]: new LightOfRuinStrategy(),
   [Ability.LUMINA_CRASH]: new LuminaCrashStrategy(),
-  [Ability.TREASURE_RUSH]: new TreasureRushStrategy()
+  [Ability.TREASURE_RUSH]: new TreasureRushStrategy(),
+  [Ability.SURPRISING_HAND]: new SurprisingHandStrategy()
 }
 
 export function castAbility(

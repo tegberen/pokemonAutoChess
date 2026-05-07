@@ -25,6 +25,7 @@
 	"ability": {
     "LIGHT_OF_RUIN": "Light of Ruin",
     "AQUA_STEP": "Aqua Step",
+    "SURPRISING_HAND": "Surprising Hand",
     "LUMINA_CRASH": "Lumina Crash",
     "TREASURE_RUSH": "Treasure Rush",
     "MAGNETIC_ABSORPTION": "Magnetic Absorption",
@@ -1236,6 +1237,7 @@
 		"ARBOK": "Arbok",
 		"MIME_JR": "Mime Jr.",
 		"MR_MIME": "Mr. Mime",
+    "GALARIAN_MR_MIME": "Galarian Mr. Mime",
 		"ORIGIN_GIRATINA": "Giratina (Origin)",
 		"PIROUETTE_MELOETTA": "Meloetta (Pirouette)",
 		"MELTAN": "Meltan",
@@ -1847,6 +1849,7 @@
 	"ability_description": {
     "LIGHT_OF_RUIN": "Deal [20,SP] SPECIAL to all enemy Pokémon in a line, multiplied by all allies and enemies on the board. Lose 50% of max HP.",
     "AQUA_STEP": "The user attacks with fluid dance steps, shifting to an ADJACENT unoccupied tile before dealing [25,50,100,SP] SPECIAL to the target and increasing the users SPEED by [10,15,20,SP]. If the user has more SPEED than the target, regain [10,15,20] PP.",
+    "SURPRISING_HAND": "Copy as many items from the target as the user can carry, otherwise share them to ADJACENT allies with free item slots.",
     "LUMINA_CRASH": "Deal [10,20,40,SP] + [200,400,800,SP] % of targets SPE_DEF as SPECIAL to the target, then remove all SPE_DEF.",
     "TREASURE_RUSH": "Deals [30,60,90,SP] SPECIAL to the target. Spends 1 GOLD and increase the user's ATK permanently by [1,2,3].",
     "MAGNETIC_ABSORPTION": "Absorbs RANGE from the target and ADJACENT enemies, reducing theirs by 1 and increasing the user's by 1. Deals [80, SP] SPECIAL and inflicts 3 seconds of LOCKED instead, to any enemy already at minimum RANGE. The user then moves 1 tile back.",

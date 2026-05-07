@@ -87,6 +87,12 @@ export const PokemonAnimations: {
     attackSprite: AttackSprite.STEEL_MELEE,
     shinyUnavailable: true
   },
+  [Pkm.GALARIAN_MR_MIME]: {
+    attack: AnimationType.Attack,
+    ability: AnimationType.Charge,
+    emote: AnimationType.Charge,
+    attackSprite: AttackSprite.ICE_RANGE
+  },
   [Pkm.QUAQUAVAL]: {
     attack: AnimationType.Attack,
     ability: AnimationType.Swing,

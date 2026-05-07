@@ -27,6 +27,8 @@
 ![Espathra](/assets/portraits/0956/Normal.png)
 ![Galarian Meowth](/assets/portraits/0052/0002/Normal.png)
 ![Perrserker](/assets/portraits/0863/Normal.png)
+![Galarian Mr. Mime](/assets/portraits/0122/0001/Normal.png)
+
 ## Mega Evolutions
 ![Mega Charizard X](/assets/portraits/0006/0001/Surprised.png)
 ![Mega Lopunny](/assets/portraits/0428/0001/Normal.png)
