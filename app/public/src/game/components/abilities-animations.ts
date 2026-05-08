@@ -1641,6 +1641,8 @@ export const AbilitiesAnimations: {
     duration: 400,
     tint: 0xe83a3a
   }),
+  [Ability.PSYBLADE]: onTarget({ ability: Ability.SLASHING_CLAW }),
+
   [Ability.WAVE_SPLASH]: projectile({
     distance: 2,
     duration: 600,

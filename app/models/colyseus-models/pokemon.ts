@@ -16743,6 +16743,20 @@ export class HisuiBraviary extends Pokemon {
   }
 }
 
+export class IronLeaves extends Pokemon {
+  types = new SetSchema<Synergy>([Synergy.GRASS, Synergy.PSYCHIC, Synergy.ARTIFICIAL])
+  rarity = Rarity.LEGENDARY
+  stars = 3
+  hp = 300
+  atk = 30
+  speed = 59
+  def = 10
+  speDef = 10
+  maxPP = 100
+  range = 1
+  skill = Ability.PSYBLADE
+}
+
 export class Klefki extends Pokemon {
   types = new SetSchema<Synergy>([
     Synergy.STEEL,
@@ -22995,7 +23009,8 @@ export const PokemonClasses: Record<
   [Pkm.ESPATHRA]: Espathra,
   [Pkm.GALAR_MEOWTH]: GalarMeowth,
   [Pkm.PERRSERKER]: Perrserker,
-  [Pkm.SANDY_SHOCKS]: SandyShocks
+  [Pkm.SANDY_SHOCKS]: SandyShocks,
+  [Pkm.IRON_LEAVES]: IronLeaves
 }
 
 // declare all the classes in colyseus schema TypeRegistry

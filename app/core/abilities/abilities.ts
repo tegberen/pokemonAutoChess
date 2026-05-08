@@ -266,6 +266,39 @@ export class EsperWingStrategy extends AbilityStrategy {
   }
 }
 
+export class PsybladeStrategy extends AbilityStrategy {
+  process(
+    pokemon: PokemonEntity,
+    board: Board,
+    target: PokemonEntity,
+    crit: boolean
+  ) {
+    super.process(pokemon, board, target, crit)
+    const damage = Math.round(pokemon.maxHP * 0.3)
+
+    const cells = board.getCellsInFront(pokemon, target, 1)
+    cells.forEach((cell) => {
+      if (cell.value && cell.value.team !== pokemon.team) {
+        const { takenDamage } = cell.value.handleSpecialDamage(
+          damage,
+          board,
+          AttackType.SPECIAL,
+          pokemon,
+          crit
+        )
+        if (pokemon.status.grassField) {
+          pokemon.handleHeal(0.3 * takenDamage, pokemon, 0, false)
+        }
+      }
+    })
+
+    if (pokemon.status.psychicField) {
+      pokemon.addPP(Math.round(0.03 * pokemon.maxHP), pokemon, 0, false)
+    }
+
+  }
+}
+
 export class MagneticAbsorptionStrategy extends AbilityStrategy {
   process(
     pokemon: PokemonEntity,
@@ -18328,6 +18361,7 @@ export const AbilityStrategies: { [key in Ability]: AbilityStrategy } = {
   [Ability.THUNDERCLAP_PRESS]: new ThunderClapPressStrategy(),
   [Ability.AQUA_STEP]: new AquaStepStrategy(),
   [Ability.ESPER_WING]: new EsperWingStrategy(),
+  [Ability.PSYBLADE]: new PsybladeStrategy(),
   [Ability.MAGNETIC_ABSORPTION]: new MagneticAbsorptionStrategy(),
   [Ability.FRENZY_PLANT]: new FrenzyPlantStrategy(),
   [Ability.LIGHT_OF_RUIN]: new LightOfRuinStrategy(),

@@ -113,6 +113,12 @@ export const PokemonAnimations: {
     emote: AnimationType.Charge,
     attackSprite: AttackSprite.PSYCHIC_MELEE
   },
+  [Pkm.IRON_LEAVES]: {
+    attack: AnimationType.Strike,
+    ability: AnimationType.Strike,
+    emote: AnimationType.RearUp,
+    attackSprite: AttackSprite.GRASS_MELEE
+  },
   [Pkm.QUAQUAVAL]: {
     attack: AnimationType.Attack,
     ability: AnimationType.Swing,
