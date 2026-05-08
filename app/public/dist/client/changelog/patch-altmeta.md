@@ -129,6 +129,7 @@
 - Skeledirge: to regional
 - Escavalier: to regional for Volcarona
 - Corviknight: to regular
+- Garchomp: new ability
 
 ## Ultra
 > Ultra Pokemon have twice the HP when 3 STAR
@@ -199,6 +200,9 @@
 - Torchic - Blaze Kick: Gain [10,20,40]% CRIT_CHANCE, then deal [30,60,120,SP] SPECIAL and BURN the target for 2 seconds. If it already has BURN, deal +30% damage. Can crit by default.
 - Pawmi - Double Shock: Emit a powerful electric shock, dealing [50,100,200,SP] SPECIAL to the target and inflict the user with PARALYSIS for 3 seconds. If the user has ELECTRIC_FIELD, discharge it and execute the target. 
 - Turtwig - Passive [Shell Armor]: Gain [1,3,6] DEF when receiving critical attacks. The Pokémon is immune to ARMOR_BREAK.
+- Spheal - Passive [Ice Body]: Under SNOW, regain 10% of its max HP every 2 seconds.
+- Gible - Earthquake: Deals [25,50,100,SP] SPECIAL to all Pokémon in a [1,2,3] tile radius of the user.
+
 
 # Credits
 > Some of the Pokemon are not officially sprited yet, but there is access to them via the SkyTemple Discord server. I don't know how to credit them, so I will just do that here:

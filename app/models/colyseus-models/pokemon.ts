@@ -1329,7 +1329,7 @@ export class Gible extends Pokemon {
   speDef = 8
   maxPP = 100
   range = 1
-  skill = Ability.DRAGON_BREATH
+  skill = Ability.EARTH_QUAKE
 }
 
 export class Gabite extends Pokemon {
@@ -1348,7 +1348,7 @@ export class Gabite extends Pokemon {
   speDef = 10
   maxPP = 100
   range = 1
-  skill = Ability.DRAGON_BREATH
+  skill = Ability.EARTH_QUAKE
 }
 
 export class Garchomp extends Pokemon {
@@ -1366,7 +1366,7 @@ export class Garchomp extends Pokemon {
   speDef = 12
   maxPP = 100
   range = 1
-  skill = Ability.DRAGON_BREATH
+  skill = Ability.EARTH_QUAKE
 }
 
 export class Roggenrola extends Pokemon {

@@ -220,6 +220,33 @@ export class TreasureRushStrategy extends AbilityStrategy {
   }
 }
 
+export class EarthQuakeStrategy extends AbilityStrategy {
+  process(
+    pokemon: PokemonEntity,
+    board: Board,
+    target: PokemonEntity,
+    crit: boolean
+  ) {
+    super.process(pokemon, board, target, crit)
+    const damage = [25, 50, 100][pokemon.stars - 1] ?? 100
+    const range = [1, 2, 3][pokemon.stars - 1] ?? 3
+    board
+      .getCellsInRadius(pokemon.positionX, pokemon.positionY, range, false)
+      .forEach((cell) => {
+        if (cell.value) {
+          cell.value.handleSpecialDamage(
+            damage,
+            board,
+            AttackType.SPECIAL,
+            pokemon,
+            crit
+          )
+        }
+      })
+    pokemon.broadcastAbility({ skill: `${Ability.EARTH_QUAKE}_${pokemon.stars}` })
+  }
+}
+
 export class MagneticAbsorptionStrategy extends AbilityStrategy {
   process(
     pokemon: PokemonEntity,
@@ -18286,7 +18313,8 @@ export const AbilityStrategies: { [key in Ability]: AbilityStrategy } = {
   [Ability.LIGHT_OF_RUIN]: new LightOfRuinStrategy(),
   [Ability.LUMINA_CRASH]: new LuminaCrashStrategy(),
   [Ability.TREASURE_RUSH]: new TreasureRushStrategy(),
-  [Ability.SURPRISING_HAND]: new SurprisingHandStrategy()
+  [Ability.SURPRISING_HAND]: new SurprisingHandStrategy(),
+  [Ability.EARTH_QUAKE]: new EarthQuakeStrategy()
 }
 
 export function castAbility(
