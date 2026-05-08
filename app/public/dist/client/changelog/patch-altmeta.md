@@ -80,13 +80,13 @@
 - Froslass:
 - Grimmsnarl: to (all) regional
 - Magnezone: added ARTIFICIAL
-- Sceptile:
+- Sceptile: added DRAGON after 2 STAR
 - Greninja: to regular
 - Torracat: 
 - Florges: buffed ability effect
 - Nidoking and Nidoqueen: added passive, to attract catchable Nidoran♀ and Nidoran♂ respectively (yes I know it's a bit of a cheat)
 - Gossifleur: added GRASS
-- Garganacl: added HUMAN (last stage)
+- Garganacl: added HUMAN after 3 STAR
 - Charizard:
 - Rapidash:
 - Vikavolt: to regular, added AMORPHOUS
@@ -152,7 +152,7 @@
 - Hydreigon:
 
 ## Unique
-- Veluza: PP 100 → 60, added MONSTER, removed WATER 
+- Veluza: added MONSTER, removed WATER 
 - Roaring Moon:
 - Pyukumuku: buffed passive
 - Farfetchd: buffed HP
@@ -161,6 +161,7 @@
 - Miltank: buffed HP
 - Scream Tail: changed to SOUND, FOSSIL, MONSTER
 - Morpeko: added ELECTRIC, ELECTRIC_SEED
+- Cryogonal: removed AMORPHOUS, added ROCK, MONSTER
 
 ## Legendary
 - Landorus, Thunderus, Tornadus, Enamorus, Marcus: added HUMAN
@@ -172,6 +173,10 @@
 - Deoxys Attack: ATK 25 → 35
 - Xurkitree: 200 → 250 HP, 15 → 20 ATK, Ability: +1 target
 - Hoopa: buffed ability effect
+- Groudon: now GROUND FIRE, becomes MONSTER with RED_ORB
+- Kyogre: now WATER ELECTRIC, becomes MONSTER with BLUE_ORB
+- Heatran: added MONSTER
+- Ogerpon: becomes MONSTER with TEAL_MASK, WELLSPRING_MASK, HEARTHFLAME_MASK or CORNERSTONE_MASK
 
 ## Special
 - Mafia Eevee: via EVER_STONE

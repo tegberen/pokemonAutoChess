@@ -4518,7 +4518,7 @@ export class Blaziken extends Pokemon {
 }
 
 export class Treecko extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.DRAGON, Synergy.GRASS, Synergy.MONSTER])
+  types = new SetSchema<Synergy>([Synergy.GRASS, Synergy.MONSTER])
   rarity = Rarity.UNCOMMON
   stars = 1
   evolution = Pkm.GROVYLE
@@ -6634,7 +6634,7 @@ export class Regigigas extends Pokemon {
 }
 
 export class Kyogre extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.WATER, Synergy.MONSTER])
+  types = new SetSchema<Synergy>([Synergy.WATER, Synergy.ELECTRIC])
   rarity = Rarity.LEGENDARY
   stars = 3
   evolution = Pkm.PRIMAL_KYOGRE
@@ -6651,7 +6651,7 @@ export class Kyogre extends Pokemon {
 }
 
 export class Groudon extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.GROUND, Synergy.MONSTER])
+  types = new SetSchema<Synergy>([Synergy.GROUND, Synergy.FIRE])
   rarity = Rarity.LEGENDARY
   stars = 3
   evolution = Pkm.PRIMAL_GROUDON
@@ -7826,7 +7826,7 @@ export class MegaMewtwoY extends Pokemon {
   rarity = Rarity.LEGENDARY
   stars = 4
   hp = 220
-  atk = 30
+  atk = 27
   speed = 67
   def = 10
   speDef = 10
@@ -8189,7 +8189,7 @@ export class Cresselia extends Pokemon {
 }
 
 export class Heatran extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.FIRE, Synergy.STEEL])
+  types = new SetSchema<Synergy>([Synergy.FIRE, Synergy.STEEL, Synergy.MONSTER])
   rarity = Rarity.LEGENDARY
   stars = 3
   hp = 280
@@ -8259,11 +8259,11 @@ export class Heatmor extends Pokemon {
 }
 
 export class Cryogonal extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.ICE, Synergy.AMORPHOUS])
+  types = new SetSchema<Synergy>([Synergy.ICE, Synergy.ROCK, Synergy.MONSTER])
   rarity = Rarity.UNIQUE
   stars = 3
-  hp = 200
-  atk = 15
+  hp = 140
+  atk = 14
   speed = 59
   def = 4
   speDef = 16
@@ -8312,8 +8312,8 @@ export class MegaDrampa extends Pokemon {
 export class PrimalGroudon extends Pokemon {
   types = new SetSchema<Synergy>([
     Synergy.GROUND,
-    Synergy.MONSTER,
-    Synergy.FIRE
+    Synergy.FIRE,
+    Synergy.MONSTER
   ])
   rarity = Rarity.LEGENDARY
   stars = 4
@@ -17407,7 +17407,7 @@ export class OgerponTeal extends Pokemon {
 }
 
 export class OgerponTealMask extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.GRASS, Synergy.FLORA])
+  types = new SetSchema<Synergy>([Synergy.GRASS, Synergy.FLORA, Synergy.MONSTER])
   rarity = Rarity.LEGENDARY
   stars = 3
   hp = 200
@@ -17452,7 +17452,7 @@ export class OgerponWellspring extends Pokemon {
 }
 
 export class OgerponWellspringMask extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.GRASS, Synergy.AQUATIC])
+  types = new SetSchema<Synergy>([Synergy.GRASS, Synergy.AQUATIC, Synergy.MONSTER])
   rarity = Rarity.LEGENDARY
   stars = 3
   hp = 200
@@ -17498,7 +17498,7 @@ export class OgerponHearthflame extends Pokemon {
 }
 
 export class OgerponHearthflameMask extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.GRASS, Synergy.FIRE])
+  types = new SetSchema<Synergy>([Synergy.GRASS, Synergy.FIRE, Synergy.MONSTER])
   rarity = Rarity.LEGENDARY
   stars = 3
   hp = 200
@@ -17544,7 +17544,7 @@ export class OgerponCornerstone extends Pokemon {
 }
 
 export class OgerponCornerstoneMask extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.GRASS, Synergy.ROCK])
+  types = new SetSchema<Synergy>([Synergy.GRASS, Synergy.ROCK, Synergy.MONSTER])
   rarity = Rarity.LEGENDARY
   stars = 3
   hp = 200
@@ -18419,7 +18419,6 @@ export class Incineroar extends Pokemon {
 
 export class Skrelp extends Pokemon {
   types = new SetSchema<Synergy>([
-    Synergy.DRAGON,
     Synergy.POISON,
     Synergy.WATER
   ])
@@ -18961,7 +18960,7 @@ export class Veluza extends Pokemon {
   speed = 45
   def = 5
   speDef = 4
-  maxPP = 60
+  maxPP = 100
   range = 1
   skill = Ability.FILLET_AWAY
 }
