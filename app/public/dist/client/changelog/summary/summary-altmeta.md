@@ -28,6 +28,7 @@
 ![Galarian Meowth](/assets/portraits/0052/0002/Normal.png)
 ![Perrserker](/assets/portraits/0863/Normal.png)
 ![Galarian Mr. Mime](/assets/portraits/0122/0001/Normal.png)
+![Hisuian Braviary](/assets/portraits/0628/Normal.png)
 
 
 ## Mega Evolutions

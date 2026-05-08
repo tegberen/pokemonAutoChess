@@ -2534,6 +2534,12 @@ export const AbilitiesAnimations: {
     })
   ),
   [Ability.RAZOR_LEAF]: projectile({ distance: 8, duration: 2000 }),
+  [Ability.ESPER_WING]: [
+    projectile({
+      ability: "MAGICAL_LEAF",
+      tint: 0xDA70D6,
+    })
+  ],
   [Ability.PSYCHO_CUT]: range(1, 3).map((i) =>
     projectile({
       distance: 8,

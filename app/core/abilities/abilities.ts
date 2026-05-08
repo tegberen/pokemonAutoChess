@@ -247,6 +247,25 @@ export class EarthQuakeStrategy extends AbilityStrategy {
   }
 }
 
+export class EsperWingStrategy extends AbilityStrategy {
+  canCritByDefault = true 
+  process(
+    pokemon: PokemonEntity,
+    board: Board,
+    target: PokemonEntity,
+    crit: boolean
+  ) {
+    super.process(pokemon, board, target, crit)
+
+    const damageMultiplier = [0.5, 1, 2][pokemon.stars - 1] ?? 2
+    const damage = pokemon.speed * damageMultiplier
+    const speedBoost = [5, 10, 20][pokemon.stars - 1] ?? 20
+
+    target.handleSpecialDamage(damage, board, AttackType.SPECIAL, pokemon, crit)
+    pokemon.addSpeed(speedBoost, pokemon, 0, false)
+  }
+}
+
 export class MagneticAbsorptionStrategy extends AbilityStrategy {
   process(
     pokemon: PokemonEntity,
@@ -18308,6 +18327,7 @@ export const AbilityStrategies: { [key in Ability]: AbilityStrategy } = {
   [Ability.ROCK_WRECKER]: new RockWreckerStrategy(),
   [Ability.THUNDERCLAP_PRESS]: new ThunderClapPressStrategy(),
   [Ability.AQUA_STEP]: new AquaStepStrategy(),
+  [Ability.ESPER_WING]: new EsperWingStrategy(),
   [Ability.MAGNETIC_ABSORPTION]: new MagneticAbsorptionStrategy(),
   [Ability.FRENZY_PLANT]: new FrenzyPlantStrategy(),
   [Ability.LIGHT_OF_RUIN]: new LightOfRuinStrategy(),

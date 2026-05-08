@@ -15634,31 +15634,33 @@ export class Watchog extends Pokemon {
 
 export class Taillow extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.WILD, Synergy.FLYING, Synergy.NORMAL])
-  rarity = Rarity.RARE
+  rarity = Rarity.UNCOMMON
   stars = 1
   evolution = Pkm.SWELLOW
   hp = 70
   atk = 7
   speed = 80
-  def = 6
-  speDef = 5
+  def = 4
+  speDef = 3
   maxPP = 100
   range = 2
   skill = Ability.AIR_SLASH
+  regional = true
 }
 
 export class Swellow extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.WILD, Synergy.FLYING, Synergy.NORMAL])
-  rarity = Rarity.RARE
+  rarity = Rarity.UNCOMMON
   stars = 2
-  hp = 140
-  atk = 18
+  hp = 130
+  atk = 15
   speed = 80
-  def = 11
-  speDef = 9
+  def = 8
+  speDef = 7
   maxPP = 100
   range = 2
   skill = Ability.AIR_SLASH
+  regional = true
 }
 
 export class Spinarak extends Pokemon {
@@ -16687,33 +16689,58 @@ export class GastrodonEastSea extends Pokemon {
 
 export class Rufflet extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.WILD, Synergy.FLYING])
-  rarity = Rarity.UNCOMMON
+  rarity = Rarity.RARE
   stars = 1
-  evolution = Pkm.BRAVIARY
-  hp = 70
-  atk = 7
+  evolutions = [Pkm.BRAVIARY, Pkm.HISUI_BRAVIARY]
+  evolutionRule = new CountEvolutionRule(
+    3,
+    (pokemon: Pokemon, player: IPlayer) => {
+      if (player.regionalPokemons.includes(Pkm.HISUI_BRAVIARY))
+        return Pkm.HISUI_BRAVIARY
+      else return Pkm.BRAVIARY
+    }
+  )
+  hp = 80
+  atk = 8
   speed = 51
-  def = 4
-  speDef = 4
+  def = 5
+  speDef = 5
   maxPP = 100
   range = 1
   skill = Ability.CRUSH_CLAW
-  regional = true
 }
 
 export class Braviary extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.WILD, Synergy.FLYING])
-  rarity = Rarity.UNCOMMON
+  rarity = Rarity.RARE
   stars = 2
-  hp = 160
-  atk = 15
+  hp = 170
+  atk = 20
   speed = 51
-  def = 8
-  speDef = 8
+  def = 9
+  speDef = 9
   maxPP = 100
   range = 1
   skill = Ability.CRUSH_CLAW
+}
+
+export class HisuiBraviary extends Pokemon {
+  types = new SetSchema<Synergy>([Synergy.WILD, Synergy.FLYING, Synergy.PSYCHIC])
+  rarity = Rarity.RARE
+  stars = 2
+  hp = 170
+  atk = 14
+  speed = 51
+  def = 9
+  speDef = 9
+  maxPP = 70
+  range = 2
+  skill = Ability.ESPER_WING
   regional = true
+  isInRegion(map: DungeonPMDO, state?: GameState) {
+    const regionSynergies = RegionDetails[map]?.synergies
+    return regionSynergies.includes(Synergy.PSYCHIC)
+  }
 }
 
 export class Klefki extends Pokemon {
@@ -22650,6 +22677,7 @@ export const PokemonClasses: Record<
   [Pkm.MUSHARNA]: Musharna,
   [Pkm.RUFFLET]: Rufflet,
   [Pkm.BRAVIARY]: Braviary,
+  [Pkm.HISUI_BRAVIARY]: HisuiBraviary,
   [Pkm.HEATMOR]: Heatmor,
   [Pkm.KLEFKI]: Klefki,
   [Pkm.HAWLUCHA]: Hawlucha,

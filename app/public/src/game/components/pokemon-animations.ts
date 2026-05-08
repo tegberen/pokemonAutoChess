@@ -107,6 +107,12 @@ export const PokemonAnimations: {
     attackSprite: AttackSprite.WILD_MELEE,
     hitSprite: HitSprite.ELECTRIC_HIT
   },
+  [Pkm.HISUI_BRAVIARY]: {
+    attack: AnimationType.Strike,
+    ability: AnimationType.Shoot,
+    emote: AnimationType.Charge,
+    attackSprite: AttackSprite.PSYCHIC_MELEE
+  },
   [Pkm.QUAQUAVAL]: {
     attack: AnimationType.Attack,
     ability: AnimationType.Swing,
