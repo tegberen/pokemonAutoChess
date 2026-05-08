@@ -38,7 +38,7 @@
 - EXP_CHARM: The holder gains 2 PP after getting hit by an attack. [30,LK]% chance to increase that PP gain by 1 after each received hit. When the holder is KO, gain 1 XP.
 > Good for loose streaker! Use it in the early game, to level faster and start catching up. Otherwise it is a tool to gain alot of PP when paired with a tank item like ROCKY_HELMET or POKE_DOLL. Also good to generate more PP, when having SHIELD.
 - FAIRY_FEATHER: Attacks have a [30,LK]% chance to deal 50% of the users current DEF as additional SPECIAL on attack.
-> Its base DEF of 20 is enough, to work on any ranged unit to let it deal more damage. It is especially good on ranged ROCK units, like Solrock or Lunatone! Try to pair it with LOADED_DICE and SPEED items!
+> Its base DEF of 20 is enough, to work on any ranged unit to let it deal more damage. It is especially good on ranged ROCK units, like Snorunt, Solrock or Nihilego! Try to pair it with LOADED_DICE and SPEED items!
 - CLEAR_AMULET: The first time the holder is affected by any negative status effect, they will store the effect and gain RUNE_PROTECT for 10 seconds. On the next attack, apply said negative effect to all ADJACENT enemies for 5 seconds.
 > Could be interesting with FLAME_ORB or TIGHT_BELT! Otherwise 20 SPE_DEF is always appreciated on your tank.
 - DESTINY_KNOT: Once the holder is KO, the STRONGEST ally gains the users current LUCK and base ATK for the rest of the fight.
@@ -90,6 +90,7 @@
 - Charizard:
 - Rapidash:
 - Vikavolt: to regular, added AMORPHOUS
+- Froslass: added ROCK
 
 ## Rare
 - Exploud: added MONSTER
@@ -130,6 +131,7 @@
 - Escavalier: to regional for Volcarona
 - Corviknight: to regular
 - Garchomp: new ability
+- Wattrel: added AQUATIC
 
 ## Ultra
 > Ultra Pokemon have twice the HP when 3 STAR

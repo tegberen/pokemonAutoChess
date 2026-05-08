@@ -2059,7 +2059,7 @@
 		"ENTANGLING_THREAD": "Deal [10,20,40,SP] SPECIAL to the target and ADJACENT enemies and inflict them with PARALYSIS 4 seconds.",
 		"SILVER_WIND": "Dash to the farthest reachable enemy, dealing [20,40,80,SP] SPECIAL to all enemy Pokémon in the path. Then gain 1 ATK, 1 DEF, 1 SPE_DEF, 10 AP and 10 SPEED.",
 		"POISON_POWDER": "Dash to the farthest reachable enemy, dealing [20,40,80,SP] SPECIAL to all enemy Pokémon in the path and inflicting them with POISONNED for 3 seconds.",
-		"ICY_WIND": "Deal [25,50,100,SP] SPECIAL to all enemy Pokémon in a line behind the target and decrease their SPEED by [10,20,40].",
+		"ICY_WIND": "Deal [25,50,100,SP] SPECIAL to all enemy Pokémon in a line behind the target and decrease their SPEED by [5,10,20].",
 		"GIGATON_HAMMER": "Deal [100,200,300,SP] SPECIAL to the target and inflict the user with FATIGUE for 6 seconds.",
 		"ACROBATICS": "Deal [20,40,80,SP] SPECIAL and move to a tile at good distance from its target. Move further away if not holding any item.",
 		"ABSORB": "Deal [30,60,120,SP] SPECIAL to the target and heal ADJACENT allied Pokémon for [3,6,12,SP] HP.",

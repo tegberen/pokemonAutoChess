@@ -3441,11 +3441,11 @@ export class Abomasnow extends Pokemon {
 // }
 
 export class Snorunt extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.GHOST, Synergy.ICE])
+  types = new SetSchema<Synergy>([Synergy.GHOST, Synergy.ICE, Synergy.ROCK])
   rarity = Rarity.UNCOMMON
   stars = 1
   evolution = Pkm.GLALIE
-  hp = 70
+  hp = 60
   atk = 6
   speed = 60
   def = 3
@@ -3456,30 +3456,30 @@ export class Snorunt extends Pokemon {
 }
 
 export class Glalie extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.GHOST, Synergy.ICE])
+  types = new SetSchema<Synergy>([Synergy.GHOST, Synergy.ICE, Synergy.ROCK])
   rarity = Rarity.UNCOMMON
   stars = 2
   evolution = Pkm.FROSLASS
-  hp = 110
-  atk = 12
+  hp = 100
+  atk = 10
   speed = 60
   def = 3
   speDef = 4
-  maxPP = 90
+  maxPP = 100
   range = 3
   skill = Ability.ICY_WIND
 }
 
 export class Froslass extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.GHOST, Synergy.ICE])
+  types = new SetSchema<Synergy>([Synergy.GHOST, Synergy.ICE, Synergy.ROCK])
   rarity = Rarity.UNCOMMON
   stars = 3
-  hp = 200
-  atk = 19
+  hp = 180
+  atk = 18
   speed = 60
   def = 3
   speDef = 5
-  maxPP = 80
+  maxPP = 100
   range = 3
   skill = Ability.ICY_WIND
 }
@@ -15996,7 +15996,7 @@ export class Hypno extends Pokemon {
 }
 
 export class Wattrel extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.FLYING, Synergy.ELECTRIC])
+  types = new SetSchema<Synergy>([Synergy.FLYING, Synergy.ELECTRIC, Synergy.AQUATIC])
   rarity = Rarity.EPIC
   stars = 1
   evolution = Pkm.KILOWATTREL
@@ -16013,7 +16013,7 @@ export class Wattrel extends Pokemon {
 }
 
 export class Kilowattrel extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.FLYING, Synergy.ELECTRIC])
+  types = new SetSchema<Synergy>([Synergy.FLYING, Synergy.ELECTRIC, Synergy.AQUATIC])
   rarity = Rarity.EPIC
   stars = 2
   hp = 190
