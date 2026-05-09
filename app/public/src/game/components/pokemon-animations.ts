@@ -6748,8 +6748,8 @@ export const PokemonAnimations: {
     attackSprite: AttackSprite.DRAGON_GREEN_RANGE
   },
   [Pkm.MEGA_ZYGARDE]: {
-    attack: AnimationType.Attack,
-    ability: AnimationType.Shoot,
+    attack: AnimationType.Shoot,
+    ability: AnimationType.SpAttack,
     emote: AnimationType.Charge,
     attackSprite: AttackSprite.DRAGON_GREEN_RANGE,
     shinyUnavailable: true
