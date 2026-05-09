@@ -9,6 +9,7 @@
     "@assetpack/plugin-texture-packer": "file:./plugin-texture-packer-fork"
   },
   "scripts": {
-    "assetpack": "assetpack -c .assetpack.js"
+    "assetpack": "assetpack -c .assetpack.js",
+    "postinstall": "patch-package"
   }
 }
