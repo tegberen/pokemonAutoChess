@@ -22,10 +22,13 @@
 - When Pikachu is send to the dojo, obtain a TRAINING_RIBBON. Can be used to evolve Pikachu into Pikachu Libre (given an item slot is open).
 - 555 Boosters for new members, to motivate you playing here (not to make multiple accounts, please XD)
 - Playtest Smeargle Scribble: Can be used for testing and reproducing bugs. (No EXP)
-- new town encounter - Chimecho: grants a melodic treasure to every player.
+- new town encounter - Chimecho: grants a melodic treasure to every player
 - buff town encounter - Spinda: now uses inverse user control
 
 # Items
+## Chimecho Town Encounter
+- FIERY_DRUM, GRASS_CORNET, ICY_FLUTE, ROCK_HORN, SKY_MELODICA, TERRA_CYMBAL
+
 ## Additional Effects
 - WIDE_LENS: Attacks grant +5% CRIT_CHANCE (stackable) (removed base CRIT_CHANCE)
 - STICKY_BARB: HP 15 → 30, DEF 6 → 15
