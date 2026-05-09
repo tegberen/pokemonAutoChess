@@ -1968,7 +1968,7 @@
 		"DYNAMIC_PUNCH": "Deal [40,80,160,SP] SPECIAL to the target and inflict them with CONFUSION for [2,4,6] seconds.",
 		"ELECTRO_BOOST": "All allied ELECTRIC Pokémon receive RUNE_PROTECT for 5 seconds.",
 		"ELECTRO_WEB": "Deal [15,30,60,SP] SPECIAL to all ADJACENT enemy Pokémon and steal [15,30,60,SP] SPEED.",
-    "MYSTICAL_FIRE": "Deals [25,50,100,SP] SPECIAL to the target, reduces its AP by [10, SP]. Scorches the target tile and those flanking and behind it with embers. BOARD_EFFECT: embers deal 10 SPECIAL per second and BURN non FLYING or FIRE Pokémon that walk on it.",
+    "MYSTICAL_FIRE": "Explodes on the target and ADJACENT enemies, hitting 4 times. Each hit deals [30,SP]% ATK as SPECIAL and reduces AP by [3,SP]. If a hit drops their AP below 0, they are BURN for [1,2,3,SP] seconds.",
 		"FLAME_CHARGE": "Dash into the enemy team's back line and deal [20,30,40,SP] SPECIAL to all enemy Pokémon in the path.",
 		"PASTEL_VEIL": "Dash to the farthest ally. Grant [10,20,30,SP] SHIELD to the user and all allied Pokémon on the way and cure their negative status conditions.",
 		"LEECH_SEED": "POISONNED the target for [3,6,12] seconds and heal the user for [20,40,80,SP] HP.",

@@ -1412,27 +1412,32 @@ export class MysticalFireStrategy extends AbilityStrategy {
     crit: boolean
   ) {
     super.process(pokemon, board, target, crit)
-    const damage = [25, 50, 100][pokemon.stars - 1] ?? 100
 
-    target.handleSpecialDamage(damage, board, AttackType.SPECIAL, pokemon, crit)
-    target.addAbilityPower(-10, pokemon, 1, crit)
+    const cells = board.getAdjacentCells(
+      target.positionX,
+      target.positionY,
+      true
+    )
+    const burnDuration = Math.round(
+      ([1000, 2000, 3000][pokemon.stars - 1] ?? 3000) *
+        (1 + pokemon.ap / 100) *
+        (crit ? pokemon.critPower : 1)
+    )
 
-    const dx = target.positionX - pokemon.positionX
-    const dy = target.positionY - pokemon.positionY
+    cells.forEach((cell) => {
+      if (!cell.value || cell.value.team === pokemon.team) return
+      const enemy = cell.value
 
-    const cells = board.getAdjacentCells(target.positionX, target.positionY, false)
-    cells
-      .filter((cell) => {
-        const cx = cell.x - target.positionX
-        const cy = cell.y - target.positionY
-        return cx * dx + cy * dy >= 0 // strictly behind the target
-      })
-      .forEach((cell) => {
-        board.addBoardEffect(cell.x, cell.y, EffectEnum.EMBER, pokemon.simulation)
-      }) 
-    // and target
-    board.addBoardEffect(target.positionX, target.positionY, EffectEnum.EMBER, pokemon.simulation)
+      for (let i = 0; i < 4; i++) {
+        enemy.handleSpecialDamage(pokemon.atk * 0.3, board, AttackType.SPECIAL, pokemon, crit)
+        enemy.addAbilityPower(-3, pokemon, 1, crit)
+        if (enemy.ap < 0) {
+          enemy.status.triggerBurn(burnDuration, enemy, pokemon)
+        }
+      }
+    })
 
+    pokemon.broadcastAbility({ skill: Ability.MYSTICAL_FIRE })
   }
 }
 
