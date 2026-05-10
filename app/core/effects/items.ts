@@ -605,7 +605,7 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
 
       const shieldReceiver = alliesSortByLowestDef[0]
       if (shieldReceiver) {
-        swordReceiver.addItem(Item.RUSTED_SHIELD)
+        shieldReceiver.addItem(Item.RUSTED_SHIELD)
       }
     })
   ],
