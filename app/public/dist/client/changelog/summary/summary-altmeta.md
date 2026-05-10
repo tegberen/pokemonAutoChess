@@ -30,6 +30,8 @@
 ![Galarian Mr. Mime](/assets/portraits/0122/0001/Normal.png)
 ![Hisuian Braviary](/assets/portraits/0628/0001/Normal.png)
 ![Iron Leaves](/assets/portraits/1010/Normal.png)
+![Zamazenta](/assets/portraits/0889/Normal.png)
+![Zamazenta Crowned](/assets/portraits/0889/0001/Normal.png)
 
 
 ## Mega Evolutions

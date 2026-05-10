@@ -14342,6 +14342,38 @@ export class BehemothBladeStrategy extends AbilityStrategy {
   }
 }
 
+export class BehemothBashStrategy extends AbilityStrategy {
+  process(
+    pokemon: PokemonEntity,
+    board: Board,
+    target: PokemonEntity,
+    crit: boolean
+  ) {
+    super.process(pokemon, board, target, crit)
+    const damage = 100 + 2 * pokemon.def
+    target.handleSpecialDamage(damage, board, AttackType.SPECIAL, pokemon, crit)
+
+    const orientation = board.orientation(
+      pokemon.positionX,
+      pokemon.positionY,
+      target.positionX,
+      target.positionY,
+      pokemon,
+      undefined
+    )
+
+    const destination = board.getKnockBackPlace(
+      target.positionX,
+      target.positionY,
+      orientation
+    )
+
+    if (destination) {
+      pokemon.moveTo(destination.x, destination.y, board, false)
+    }
+  }
+}
+
 export class HeatCrashStrategy extends AbilityStrategy {
   process(
     pokemon: PokemonEntity,
@@ -18266,6 +18298,7 @@ export const AbilityStrategies: { [key in Ability]: AbilityStrategy } = {
   [Ability.SUCTION_HEAL]: new SuctionHealStrategy(),
   [Ability.ROOST]: new RoostStrategy(),
   [Ability.BEHEMOTH_BLADE]: new BehemothBladeStrategy(),
+  [Ability.BEHEMOTH_BASH]: new BehemothBashStrategy(),
   [Ability.HEAT_CRASH]: new HeatCrashStrategy(),
   [Ability.LASER_BLADE]: new LaserBladeStrategy(),
   [Ability.ICICLE_MISSILE]: new IcicleMissileStrategy(),

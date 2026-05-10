@@ -19252,6 +19252,37 @@ export class ZacianCrowned extends Pokemon {
   skill = Ability.BEHEMOTH_BLADE
 }
 
+export class Zamazenta extends Pokemon {
+  types = new SetSchema<Synergy>([Synergy.WILD, Synergy.FIGHTING])
+  rarity = Rarity.LEGENDARY
+  evolution = Pkm.ZAMAZENTA_CROWNED
+  evolutionRule = new ItemEvolutionRule([Item.RUSTED_SHIELD])
+  stars = 3
+  hp = 260
+  atk = 22
+  speed = 69
+  def = 11
+  speDef = 11
+  maxPP = 100
+  range = 1
+  skill = Ability.BEHEMOTH_BASH
+  passive = Passive.ZAMAZENTA
+}
+
+export class ZamazentaCrowned extends Pokemon {
+  types = new SetSchema<Synergy>([Synergy.WILD, Synergy.FIGHTING, Synergy.STEEL])
+  rarity = Rarity.LEGENDARY
+  stars = 4
+  hp = 260
+  atk = 22
+  speed = 69
+  def = 12
+  speDef = 12
+  maxPP = 100
+  range = 1
+  skill = Ability.BEHEMOTH_BASH
+}
+
 export class IronValiant extends Pokemon {
   types = new SetSchema<Synergy>([
     Synergy.FIGHTING,
@@ -22835,6 +22866,8 @@ export const PokemonClasses: Record<
   [Pkm.UNFEZANT]: Unfezant,
   [Pkm.ZACIAN]: Zacian,
   [Pkm.ZACIAN_CROWNED]: ZacianCrowned,
+  [Pkm.ZAMAZENTA]: Zamazenta,
+  [Pkm.ZAMAZENTA_CROWNED]: ZamazentaCrowned,
   [Pkm.IRON_VALIANT]: IronValiant,
   [Pkm.PANCHAM]: Pancham,
   [Pkm.PANGORO]: Pangoro,

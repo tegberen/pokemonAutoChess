@@ -555,6 +555,9 @@ export const PVEStages: { [turn: number]: PVEStage } = {
         if (p.name === Pkm.ZACIAN) {
           return [Item.RUSTED_SWORD]
         }
+        if (p.name === Pkm.ZAMAZENTA) {
+          return [Item.RUSTED_SHIELD]
+        }
         if (p.name === Pkm.KYUREM) {
           return [Item.DNA_SPLICER]
         }

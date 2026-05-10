@@ -1336,6 +1336,10 @@ export const AbilitiesAnimations: {
     rotation: -Math.PI / 2,
     tint: 0xffc0ff
   }),
+  [Ability.BEHEMOTH_BASH]: onCaster({
+    oriented: true,
+    scale: 1.7
+  }),
   [Ability.MUDDY_WATER]: onTarget({ origin: [0.5, 1] }),
   [Ability.FAIRY_LOCK]: onTargetScale1,
   [Ability.STEAM_ERUPTION]: onTargetScale3,

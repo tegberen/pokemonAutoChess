@@ -7307,6 +7307,21 @@ export const PokemonAnimations: {
     attackSprite: AttackSprite.FAIRY_MELEE,
     hitSprite: HitSprite.STEEL_HIT
   },
+  [Pkm.ZAMAZENTA]: {
+    attack: AnimationType.Attack,
+    ability: AnimationType.Shoot,
+    emote: AnimationType.Charge,
+    attackSprite: AttackSprite.FIGHTING_MELEE,
+    shinyUnavailable: true
+  },
+  [Pkm.ZAMAZENTA_CROWNED]: {
+    attack: AnimationType.Attack,
+    ability: AnimationType.Shoot,
+    emote: AnimationType.Charge,
+    attackSprite: AttackSprite.FIGHTING_MELEE,
+    hitSprite: HitSprite.STEEL_HIT,
+    shinyUnavailable: true
+  },
   [Pkm.IRON_VALIANT]: {
     attack: AnimationType.Slice,
     ability: AnimationType.Twirl,

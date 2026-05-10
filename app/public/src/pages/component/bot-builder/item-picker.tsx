@@ -55,6 +55,7 @@ export default function ItemPicker(props: {
       key: "special_items",
       items: [
         Item.RUSTED_SWORD,
+        Item.RUSTED_SHIELD,
         Item.TEAL_MASK,
         Item.WELLSPRING_MASK,
         Item.CORNERSTONE_MASK,

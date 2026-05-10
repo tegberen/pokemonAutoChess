@@ -583,6 +583,32 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
       }
     })
   ],
+
+  [Item.RUSTED_SHIELD]: [
+    new OnItemGainedEffect((pokemon) => {
+      pokemon.addDefense(25, pokemon, 0, false)
+    }),
+    new OnItemRemovedEffect((pokemon) => {
+      pokemon.addDefense(-25, pokemon, 0, false)
+    }),
+    new OnDeathEffect(({ pokemon, board }) => {
+      pokemon.items.delete(Item.RUSTED_SHIELD)
+      const alliesSortByLowestDef = (
+        board.cells.filter(
+          (p) =>
+            p &&
+            p.team === pokemon.team &&
+            p.id !== pokemon.id &&
+            p.items.size < 3
+        ) as PokemonEntity[]
+      ).sort((a, b) => a.def - b.def)
+
+      const shieldReceiver = alliesSortByLowestDef[0]
+      if (shieldReceiver) {
+        swordReceiver.addItem(Item.RUSTED_SHIELD)
+      }
+    })
+  ],
   [Item.SOUL_DEW]: [
     new OnItemGainedEffect((pokemon) => {
       pokemon.effectsSet.add(new SoulDewEffect())

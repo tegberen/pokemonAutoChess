@@ -192,6 +192,7 @@ export const LegendaryPool = new Array<PkmProposition>(
   Pkm.KELDEO,
   Pkm.PECHARUNT,
   Pkm.ZACIAN,
+  Pkm.ZAMAZENTA,
   Pkm.IRON_VALIANT,
   Pkm.OKIDOGI,
   Pkm.MUNKIDORI,
