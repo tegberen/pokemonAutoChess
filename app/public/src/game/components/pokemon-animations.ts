@@ -119,6 +119,14 @@ export const PokemonAnimations: {
     emote: AnimationType.RearUp,
     attackSprite: AttackSprite.GRASS_MELEE
   },
+  [Pkm.TING_LU]: {
+    attack: AnimationType.Attack,
+    ability: AnimationType.Shoot,
+    emote: AnimationType.Charge,
+    attackSprite: AttackSprite.DARK_MELEE,
+    shinyUnavailable: true
+
+  },
   [Pkm.QUAQUAVAL]: {
     attack: AnimationType.Attack,
     ability: AnimationType.Swing,

@@ -584,6 +584,19 @@ export class Perrserker extends Pokemon {
   passive = Passive.STEELY_SPIRIT
 }
 
+export class TingLu extends Pokemon {
+  types = new SetSchema<Synergy>([Synergy.DARK, Synergy.GROUND])
+  rarity = Rarity.LEGENDARY
+  stars = 3
+  hp = 300
+  atk = 30
+  speed = 28
+  def = 20
+  speDef = 12
+  maxPP = 100
+  range = 1
+  skill = Ability.CURSED_LAND
+}
 
 export class Quaxwell extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.AQUATIC, Synergy.FIGHTING, Synergy.FLYING])
@@ -23042,7 +23055,8 @@ export const PokemonClasses: Record<
   [Pkm.GALAR_MEOWTH]: GalarMeowth,
   [Pkm.PERRSERKER]: Perrserker,
   [Pkm.SANDY_SHOCKS]: SandyShocks,
-  [Pkm.IRON_LEAVES]: IronLeaves
+  [Pkm.IRON_LEAVES]: IronLeaves,
+  [Pkm.TING_LU]: TingLu
 }
 
 // declare all the classes in colyseus schema TypeRegistry

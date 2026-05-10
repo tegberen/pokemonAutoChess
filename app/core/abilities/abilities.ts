@@ -299,6 +299,45 @@ export class PsybladeStrategy extends AbilityStrategy {
   }
 }
 
+export class CursedLandStrategy extends AbilityStrategy {
+  process(
+    pokemon: PokemonEntity,
+    board: Board,
+    target: PokemonEntity,
+    crit: boolean
+  ) {
+    super.process(pokemon, board, target, crit)
+    const silenceDuration = Math.round(
+      2000 * (1 + pokemon.ap / 100) * (crit ? pokemon.critPower : 1)
+    )
+
+    const roll = pickRandomIn([0, 1])
+
+    board.getCellsInRadius(pokemon.positionX, pokemon.positionY, 2, false)
+      .forEach((cell) => {
+        if (!cell.value) return
+        const entity = cell.value
+
+        if (entity.team === pokemon.team) {
+          entity.addAbilityPower(25, pokemon, 1, crit)
+          return
+        }
+
+        if (roll === 0) {
+          entity.handleSpecialDamage(
+            Math.ceil(entity.maxHP*0.5),
+            board,
+            AttackType.SPECIAL,
+            pokemon,
+            crit
+          )
+        } else {
+          entity.status.triggerSilence(silenceDuration, entity, pokemon)
+        }
+      })
+  }
+}
+
 export class MagneticAbsorptionStrategy extends AbilityStrategy {
   process(
     pokemon: PokemonEntity,
@@ -18400,6 +18439,7 @@ export const AbilityStrategies: { [key in Ability]: AbilityStrategy } = {
   [Ability.AQUA_STEP]: new AquaStepStrategy(),
   [Ability.ESPER_WING]: new EsperWingStrategy(),
   [Ability.PSYBLADE]: new PsybladeStrategy(),
+  [Ability.CURSED_LAND]: new CursedLandStrategy(),
   [Ability.MAGNETIC_ABSORPTION]: new MagneticAbsorptionStrategy(),
   [Ability.FRENZY_PLANT]: new FrenzyPlantStrategy(),
   [Ability.LIGHT_OF_RUIN]: new LightOfRuinStrategy(),

@@ -823,6 +823,13 @@ export const AbilitiesAnimations: {
     scale: 1.4,
     tint: 0x35c1a8
   }),
+  [Ability.CURSED_LAND]: onCaster({
+    scale: 4,
+    tint: 0x6a329f,
+    positionOffset: [+2, -40],
+    depth: DEPTH.ABILITY_BELOW_POKEMON,
+    animOptions: { frameRate: 12 }
+  }),
   [Ability.MAGNETIC_ABSORPTION]: onTarget({scale: 4, tint: 0xf1c232, positionOffset: [0, -20] }),
   [Ability.FRENZY_PLANT]: (args) => {
     const { scene, targetX, targetY, flip, ap } = args
