@@ -3587,7 +3587,7 @@
     "GARDEVOIR": "Gains a stack for each KO. Mega evolves after 25 stacks.",
     "GALLADE": "Gains a stack for each KO. Mega evolves after 25 stacks.",
     "ALAKAZAM": "Gains a stack for each teleport. Mega evolves after 50 stacks.",
-    "MEDICHAM": "Gains a stack for every 100 ATK. Mega evolves after 10 stacks",
+    "MEDICHAM": "Gains a stack for every 50 ATK. Mega evolves after 10 stacks",
     "DIANCIE": "Gains one stack each time it is affected by a negative status effect. Mega evolves after 10 stacks",
     "GENGAR": "Gains one stack each time it SILENCE an opponent and for each KO. Mega evolves after 10 stacks",
     "MEGA_DIANCIE": "Trigger Magic Bounce for 5 seconds and RUNE_PROTECT itself, the first time it is affected by a negative status effect.",
