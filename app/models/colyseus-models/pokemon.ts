@@ -19253,7 +19253,7 @@ export class ZacianCrowned extends Pokemon {
 }
 
 export class Zamazenta extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.WILD, Synergy.FIGHTING])
+  types = new SetSchema<Synergy>([Synergy.FIELD, Synergy.FIGHTING])
   rarity = Rarity.LEGENDARY
   evolution = Pkm.ZAMAZENTA_CROWNED
   evolutionRule = new ItemEvolutionRule([Item.RUSTED_SHIELD])
@@ -19270,7 +19270,7 @@ export class Zamazenta extends Pokemon {
 }
 
 export class ZamazentaCrowned extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.WILD, Synergy.FIGHTING, Synergy.STEEL])
+  types = new SetSchema<Synergy>([Synergy.FIELD, Synergy.FIGHTING, Synergy.STEEL])
   rarity = Rarity.LEGENDARY
   stars = 4
   hp = 260
