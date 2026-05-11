@@ -40,11 +40,11 @@ export const ItemStats: { [item in Item]?: { [stat in Stat]?: number } } = {
   [Item.SHELL_BELL]: { [Stat.ATK]: 5, [Stat.SPE_DEF]: 5 },
   [Item.HEAVY_DUTY_BOOTS]: { [Stat.AP]: 50, [Stat.DEF]: 12 },
   [Item.AQUA_EGG]: { [Stat.PP]: 30 },
-  [Item.BLUE_ORB]: { [Stat.PP]: 15, [Stat.ATK]: 8},
+  [Item.BLUE_ORB]: { [Stat.PP]: 15, [Stat.SPEED]: 10 },
   [Item.SCOPE_LENS]: { [Stat.PP]: 15, [Stat.CRIT_CHANCE]: 25 },
   [Item.STAR_DUST]: { [Stat.SPE_DEF]: 10, [Stat.PP]: 15 },
   [Item.GREEN_ORB]: { [Stat.HP]: 15 },
-  [Item.DEEP_SEA_TOOTH]: { [Stat.SPEED]: 30, [Stat.PP]: 15 },
+  [Item.DEEP_SEA_TOOTH]: { [Stat.ATK]: 7, [Stat.PP]: 15 },
   [Item.SMOKE_BALL]: { [Stat.CRIT_CHANCE]: 10 },
   [Item.XRAY_VISION]: { [Stat.SPEED]: 50 },
   [Item.RAZOR_FANG]: {

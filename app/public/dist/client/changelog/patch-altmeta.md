@@ -26,11 +26,6 @@
 - buff town encounter - Spinda: now uses inverse user control
 
 # Items
-
-## Changes
-- swapped BLUE_ORB and DEEP_SEA_TOOTH recipe
-- BLUE_ORB: Every 3 attacks, unleashes a chain lightning that bounces to the 3 closest enemies, dealing 30% of ATK as SPECIAL and burning the same amount as PP
-
 ## Chimecho Town Encounter
 - FIERY_DRUM, GRASS_CORNET, ICY_FLUTE, ROCK_HORN, SKY_MELODICA, TERRA_CYMBAL
 
