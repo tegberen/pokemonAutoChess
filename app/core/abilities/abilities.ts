@@ -9929,7 +9929,7 @@ export class BloodMoonStrategy extends AbilityStrategy {
     crit: boolean
   ) {
     super.process(pokemon, board, target, crit)
-    const damage = Math.round(2 * pokemon.atk)
+    const damage = Math.round(5 * pokemon.atk)
     effectInLine(board, pokemon, target, (cell) => {
       if (cell.value != null && cell.value.team !== pokemon.team) {
         cell.value.handleSpecialDamage(

@@ -15382,7 +15382,7 @@ export class Ursaring extends Pokemon {
   stars = 2
   evolution = Pkm.URSALUNA
   hp = 280
-  atk = 29
+  atk = 24
   speed = 41
   def = 12
   speDef = 10
@@ -15396,7 +15396,7 @@ export class Ursaluna extends Pokemon {
   rarity = Rarity.ULTRA
   stars = 3
   hp = 560
-  atk = 34
+  atk = 29
   speed = 41
   def = 24
   speDef = 20
@@ -15422,11 +15422,11 @@ export class UrsalunaBloodmoon extends Pokemon {
   rarity = Rarity.ULTRA
   stars = 3
   hp = 490
-  atk = 43
+  atk = 38
   speed = 41
   def = 28
   speDef = 14
-  maxPP = 100
+  maxPP = 120
   range = 1
   skill = Ability.BLOOD_MOON
   beforeSimulationStart({
