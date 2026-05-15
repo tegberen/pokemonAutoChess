@@ -830,6 +830,11 @@ export const AbilitiesAnimations: {
     depth: DEPTH.ABILITY_BELOW_POKEMON,
     animOptions: { frameRate: 12 }
   }),
+  [Ability.MAGNETIC_FLUX]: onCaster({
+    scale: 2.7,
+    depth: DEPTH.ABILITY_BELOW_POKEMON,
+    positionOffset: [0, -10]
+  }),
   [Ability.MAGNETIC_ABSORPTION]: onTarget({scale: 4, tint: 0xf1c232, positionOffset: [0, -20] }),
   [Ability.FRENZY_PLANT]: (args) => {
     const { scene, targetX, targetY, flip, ap } = args
@@ -1265,7 +1270,7 @@ export const AbilitiesAnimations: {
   }),
   [Ability.DISCHARGE]: onCasterScale3,
   [Ability.SHOCKWAVE]: onCasterScale3,
-  [Ability.OVERDRIVE]: onCasterScale2,
+  [Ability.OVERDRIVE]: onCaster({ scale: 3, positionOffset: [0, -20] }),
   [Ability.SMOG]: onCaster({ scale: 4, depth: DEPTH.ABILITY_MINOR }),
   [Ability.POISON_GAS]: onCaster({
     ability: Ability.SMOG,

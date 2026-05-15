@@ -5534,9 +5534,16 @@ export const PokemonAnimations: {
     attack: AnimationType.Attack,
     ability: AnimationType.Shock,
     emote: AnimationType.Shoot,
-    attackSprite: AttackSprite.ELECTRIC_MELEE,
+    attackSprite: AttackSprite.ELECTRIC_RANGE,
     hitSprite: HitSprite.SOUND_HIT
   },
+  [Pkm.TOXTRICITY_LOW_KEY]: {
+    attack: AnimationType.Attack,
+    ability: AnimationType.Shock,
+    emote: AnimationType.Shoot,
+    attackSprite: AttackSprite.ELECTRIC_MELEE,
+    hitSprite: HitSprite.SOUND_HIT
+  },  
   [Pkm.BRUXISH]: {
     attack: AnimationType.Bite,
     ability: AnimationType.Shoot,

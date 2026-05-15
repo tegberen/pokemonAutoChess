@@ -9194,7 +9194,7 @@ export class OverdriveStrategy extends AbilityStrategy {
           pokemon.positionX,
           pokemon.positionY
         )
-        const damage = pokemon.atk * (1.2 - 0.2 * (distance - 1))
+        const damage = pokemon.atk * (1.4 - 0.2 * (distance - 1))
         cell.value.handleSpecialDamage(
           damage,
           board,
@@ -9203,6 +9203,44 @@ export class OverdriveStrategy extends AbilityStrategy {
           crit,
           true
         )
+      }
+    })
+  }
+}
+
+export class MagneticFluxStrategy extends AbilityStrategy {
+  process(
+    pokemon: PokemonEntity,
+    board: Board,
+    target: PokemonEntity,
+    crit: boolean
+  ) {
+    super.process(pokemon, board, target, crit)
+    const buffAmount = 15 * (1 + pokemon.ap / 100) * (crit ? pokemon.critPower : 1)
+    const duration = 5000
+    const cells = board.getCellsInRadius(
+      pokemon.positionX,
+      pokemon.positionY,
+      2,
+      false
+    )
+    cells.forEach((cell) => {
+      if (cell.value && cell.value.team === pokemon.team) {
+        const ally = cell.value
+        ally.broadcastAbility({
+          skill: Ability.MAGNETIC_FLUX,
+          positionX: ally.positionX,
+          positionY: ally.positionY
+        })
+        ally.addDefense(buffAmount, pokemon, 0, false)
+        ally.addSpecialDefense(buffAmount, pokemon, 0, false)
+        if (!ally.status.electricField) {
+          pokemon.simulation.room.clock.setTimeout(() => {
+            if (!pokemon.simulation || !pokemon.simulation.room || pokemon.simulation.finished) return
+            ally.addDefense(-buffAmount, pokemon, 0, false)
+            ally.addSpecialDefense(-buffAmount, pokemon, 0, false)
+          }, duration)
+        }
       }
     })
   }
@@ -18160,6 +18198,7 @@ export const AbilityStrategies: { [key in Ability]: AbilityStrategy } = {
   [Ability.AURASPHERE]: new AuraSphereStrategy(),
   [Ability.SKETCH]: new SketchStrategy(),
   [Ability.OVERDRIVE]: new OverdriveStrategy(),
+  [Ability.MAGNETIC_FLUX]: new MagneticFluxStrategy(),  
   [Ability.LOVELY_KISS]: new LovelyKissStrategy(),
   [Ability.TRANSFORM]: new TransformStrategy(),
   [Ability.PSYCHIC_FANGS]: new PsychicFangsStrategy(),

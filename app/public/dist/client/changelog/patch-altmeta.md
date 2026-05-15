@@ -114,6 +114,7 @@
 - Alolan Ninetales: added FIELD
 - Swampert: removed WATER, added AQUATIC
 - Dragonite: 
+- Toxtricity: form based on the dominant synergy between ELECTRIC and POISON
 
 
 ## Epic

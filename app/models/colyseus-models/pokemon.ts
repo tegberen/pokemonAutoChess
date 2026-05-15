@@ -15131,7 +15131,12 @@ export class Toxel extends Pokemon {
     Synergy.POISON
   ])
   rarity = Rarity.RARE
-  evolution = Pkm.TOXTRICITY
+  evolutions = [Pkm.TOXTRICITY, Pkm.TOXTRICITY_LOW_KEY]
+  evolutionRule = new CountEvolutionRule(3, (pokemon, player) => {
+    const electricCount = player.synergies.get(Synergy.ELECTRIC) ?? 0
+    const poisonCount = player.synergies.get(Synergy.POISON) ?? 0
+    return electricCount >= poisonCount ? Pkm.TOXTRICITY : Pkm.TOXTRICITY_LOW_KEY  
+  })
   stars = 1
   hp = 80
   atk = 8
@@ -15142,6 +15147,7 @@ export class Toxel extends Pokemon {
   range = 1
   skill = Ability.OVERDRIVE
   regional = true
+  passive = Passive.TOXEL
 }
 
 export class Toxtricity extends Pokemon {
@@ -15158,8 +15164,27 @@ export class Toxtricity extends Pokemon {
   def = 6
   speDef = 6
   maxPP = 90
-  range = 1
+  range = 2
   skill = Ability.OVERDRIVE
+  regional = true
+}
+
+export class ToxtricityLowKey extends Pokemon {
+  types = new SetSchema<Synergy>([
+    Synergy.SOUND,
+    Synergy.ELECTRIC,
+    Synergy.POISON
+  ])
+  rarity = Rarity.RARE
+  stars = 2
+  hp = 160
+  atk = 20
+  speed = 49
+  def = 6
+  speDef = 6
+  maxPP = 90
+  range = 1
+  skill = Ability.MAGNETIC_FLUX
   regional = true
 }
 
@@ -22607,6 +22632,7 @@ export const PokemonClasses: Record<
   [Pkm.SMEARGLE]: Smeargle,
   [Pkm.TOXEL]: Toxel,
   [Pkm.TOXTRICITY]: Toxtricity,
+  [Pkm.TOXTRICITY_LOW_KEY]: ToxtricityLowKey,
   [Pkm.BRUXISH]: Bruxish,
   [Pkm.SUBSTITUTE]: Substitute,
   [Pkm.CYCLIZAR]: Cyclizar,

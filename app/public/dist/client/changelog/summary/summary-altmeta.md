@@ -33,6 +33,7 @@
 ![Zamazenta](/assets/portraits/0889/Normal.png)
 ![Zamazenta Crowned](/assets/portraits/0889/0001/Normal.png)
 ![Ting Lu](/assets/portraits/1003/Normal.png)
+![Toxtricity Low Key](/assets/portraits/0849/0001/Normal.png)
 
 
 ## Mega Evolutions
