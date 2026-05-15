@@ -619,7 +619,7 @@ export function applyWandEffects(
     board,
     AttackType.SPECIAL,
     pokemon,
-    crit,
+    false,
     false
   )
 
@@ -654,7 +654,7 @@ export function applyWandEffects(
                   board,
                   AttackType.SPECIAL,
                   pokemon,
-                  crit,
+                  false,
                   false
                 )
               takenDamage += additionalDamage
@@ -675,7 +675,7 @@ export function applyWandEffects(
             board,
             AttackType.SPECIAL,
             pokemon,
-            crit,
+            false,
             false
           )
         }
@@ -767,7 +767,7 @@ export function applyWandEffects(
                   board,
                   AttackType.SPECIAL,
                   pokemon,
-                  crit,
+                  false,
                   false
                 )
               takenDamage += tunnelTakenDamage
