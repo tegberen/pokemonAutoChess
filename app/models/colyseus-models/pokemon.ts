@@ -6188,7 +6188,7 @@ export class GalarianMoltres extends Pokemon {
 }
 
 export class Pinsir extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.WILD, Synergy.BUG, FIGHTING])
+  types = new SetSchema<Synergy>([Synergy.WILD, Synergy.BUG, Synergy.FIGHTING])
   rarity = Rarity.UNIQUE
   stars = 3
   hp = 190
