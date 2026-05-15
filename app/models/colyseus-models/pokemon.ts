@@ -1733,7 +1733,7 @@ export class Fuecoco extends Pokemon {
   speed = 46
   def = 4
   speDef = 2
-  maxPP = 60
+  maxPP = 100
   range = 3
   skill = Ability.TORCH_SONG
   regional = true
@@ -1749,7 +1749,7 @@ export class Crocalor extends Pokemon {
   speed = 46
   def = 6
   speDef = 4
-  maxPP = 60
+  maxPP = 80
   range = 3
   skill = Ability.TORCH_SONG
   regional = true
@@ -2033,7 +2033,7 @@ export class Larvitar extends Pokemon {
   evolution = Pkm.PUPITAR
   hp = 75
   atk = 7
-  speed = 45
+  speed = 39
   def = 8
   speDef = 4
   maxPP = 90
@@ -2048,7 +2048,7 @@ export class Pupitar extends Pokemon {
   evolution = Pkm.TYRANITAR
   hp = 130
   atk = 14
-  speed = 45
+  speed = 39
   def = 12
   speDef = 8
   maxPP = 90
@@ -2065,7 +2065,7 @@ export class Tyranitar extends Pokemon {
   stacksRequired: number = 25
   hp = 210
   atk = 28
-  speed = 45
+  speed = 39
   def = 16
   speDef = 10
   maxPP = 90
@@ -6188,7 +6188,7 @@ export class GalarianMoltres extends Pokemon {
 }
 
 export class Pinsir extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.WILD, Synergy.BUG])
+  types = new SetSchema<Synergy>([Synergy.WILD, Synergy.BUG, FIGHTING])
   rarity = Rarity.UNIQUE
   stars = 3
   hp = 190
@@ -7968,7 +7968,7 @@ export class Zekrom extends Pokemon {
 export class Celebi extends Pokemon {
   types = new SetSchema<Synergy>([
     Synergy.GRASS,
-    Synergy.PSYCHIC,
+    Synergy.FAIRY,
     Synergy.FLORA
   ])
   rarity = Rarity.LEGENDARY
@@ -8947,7 +8947,7 @@ export class Rampardos extends Pokemon {
 }
 
 export class Kabuto extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.ROCK, Synergy.WATER, Synergy.FOSSIL])
+  types = new SetSchema<Synergy>([Synergy.FOSSIL, Synergy.WATER, Synergy.BUG])
   rarity = Rarity.RARE
   stars = 1
   evolution = Pkm.KABUTOPS
@@ -8963,7 +8963,7 @@ export class Kabuto extends Pokemon {
 }
 
 export class Kabutops extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.ROCK, Synergy.WATER, Synergy.FOSSIL])
+  types = new SetSchema<Synergy>([Synergy.FOSSIL, Synergy.WATER, Synergy.BUG])
   rarity = Rarity.RARE
   stars = 2
   hp = 190
@@ -20009,7 +20009,7 @@ export class MegaExcadrill extends Pokemon {
 }
 
 export class Togedemaru extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.ELECTRIC, Synergy.STEEL])
+  types = new SetSchema<Synergy>([Synergy.ELECTRIC, Synergy.STEEL, Synergy.FIELD])
   rarity = Rarity.UNIQUE
   stars = 3
   hp = 200

@@ -115,6 +115,7 @@
 - Swampert: removed WATER, added AQUATIC
 - Dragonite: 
 - Toxtricity: form based on the dominant synergy between ELECTRIC and POISON
+- Kabutops: added BUG
 
 
 ## Epic
@@ -168,6 +169,8 @@
 - Scream Tail: changed to SOUND, FOSSIL, MONSTER
 - Morpeko: added ELECTRIC, ELECTRIC_SEED
 - Cryogonal: removed AMORPHOUS, added ROCK, MONSTER
+- Togedemaru: added FIELD,
+- Pinsir: added FIGHTING
 
 ## Legendary
 - Landorus, Thunderus, Tornadus, Enamorus, Marcus: added HUMAN
@@ -182,7 +185,8 @@
 - Groudon: now GROUND FIRE, becomes MONSTER with RED_ORB
 - Kyogre: now WATER ELECTRIC, becomes MONSTER with BLUE_ORB
 - Heatran: added MONSTER
-- Ogerpon: becomes MONSTER with TEAL_MASK, WELLSPRING_MASK, HEARTHFLAME_MASK or CORNERSTONE_MASK
+- Ogerpon: becomes MONSTER with TEAL_MASK, WELLSPRING_MASK, HEARTHFLAME_MASK or CORNERSTONE_MASK,
+- Celebi: added FAIRY, removed PSYCHIC
 
 ## Special
 - Mafia Eevee: via EVER_STONE
