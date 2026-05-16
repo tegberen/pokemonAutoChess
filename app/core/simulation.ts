@@ -999,7 +999,7 @@ export default class Simulation extends Schema implements ISimulation {
       case EffectEnum.PRECOGNITION:
         if (types.has(Synergy.PSYCHIC)) {
           pokemon.effects.add(EffectEnum.PRECOGNITION)
-          pokemon.addAbilityPower(50, pokemon, 0, false)
+          pokemon.addAbilityPower(30, pokemon, 0, false)
         }
         break
 
