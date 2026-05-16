@@ -641,9 +641,13 @@ export default class Simulation extends Schema implements ISimulation {
             .filter((p, i, arr) => arr.findIndex((x) => x.name === p.name) === i)
           const spawns: IPokemon[] = []
           const pickWild = (rarity: Rarity, tier: number) => {
-            const randomWild = pickRandomIn(
-              candidates.filter((p) => p.rarity === rarity && p.stars === tier)
-            )
+            const randomWild =
+              pickRandomIn(candidates.filter((p) => p.rarity === rarity && p.stars === tier)) ??
+              (candidates.length === 0 ? pickRandomIn([
+                getPokemonData(Pkm.MAREEP),
+                getPokemonData(Pkm.REGIROCK),
+                getPokemonData(Pkm.TOTODILE)
+              ]) : undefined)
             if (randomWild) {
               spawns.push(randomWild)
             } else {
