@@ -640,7 +640,7 @@ export default class Simulation extends Schema implements ISimulation {
             .flatMap((type) => PRECOMPUTED_POKEMONS_PER_TYPE[type] ?? [])
             .map((p) => getPokemonData(p))
             .filter((p, i, arr) => arr.findIndex((x) => x.name === p.name) === i)
-          const spawns: IPokemon[] = []
+          const spawns: IPokemonData[] = []
           const pickWild = (rarity: Rarity, tier: number) => {
             const randomWild =
               pickRandomIn(candidates.filter((p) => p.rarity === rarity && p.stars === tier)) ??
@@ -702,7 +702,7 @@ export default class Simulation extends Schema implements ISimulation {
       if (
         this.room.state.specialGameRule === SpecialGameRule.HALLOWEEN &&
         player &&
-        player.synergies.get(Synergy.GHOST) >= 16
+        (player?.synergies.get(Synergy.GHOST) ?? 0) >= 16
       ) {
         const ghost = PokemonFactory.createPokemonFromName(Pkm.GHOST)
         const coord = this.getFirstFreeCell(teamIndex)
