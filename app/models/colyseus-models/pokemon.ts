@@ -409,6 +409,20 @@ export class Pokemon extends Schema implements IPokemon {
   }
 }
 
+export class Ghost extends Pokemon {
+  types = new SetSchema<Synergy>([Synergy.GHOST])
+  rarity = Rarity.SPECIAL
+  stars = 1
+  hp = 300
+  atk = 30
+  speed = 67
+  def = 10
+  speDef = 10
+  maxPP = 10
+  range = 2
+  skill = Ability.MISSING_NO
+}
+
 export class Ditto extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.AMORPHOUS])
   rarity = Rarity.SPECIAL
@@ -21839,6 +21853,7 @@ export const PokemonClasses: Record<
   ) => Pokemon
 > = {
   [Pkm.DEFAULT]: Pokemon,
+  [Pkm.GHOST]: Ghost,
   [Pkm.DITTO]: Ditto,
   [Pkm.BULBASAUR]: Bulbasaur,
   [Pkm.IVYSAUR]: Ivysaur,

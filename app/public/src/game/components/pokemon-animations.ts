@@ -32,6 +32,13 @@ export const DEFAULT_POKEMON_ANIMATION_CONFIG: Required<PokemonAnimationConfig> 
 export const PokemonAnimations: {
   [key in Pkm]: PokemonAnimationConfig
 } = {
+  [Pkm.GHOST]: {
+    attack: AnimationType.Attack,
+    ability: AnimationType.Charge,
+    emote: AnimationType.Rotate,
+    shinyUnavailable: true,
+    attackSprite: AttackSprite.GHOST_RANGE
+  },
   [Pkm.DEFAULT]: {
     attack: AnimationType.Attack,
     ability: AnimationType.Attack,

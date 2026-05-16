@@ -237,6 +237,11 @@ export default class Player extends Schema implements IPlayer {
       for (let i = 0; i < 4; i++)
         this.items.push(pickRandomIn(ItemComponentsNoFossilOrScarf))
     }
+
+    if (state.specialGameRule === SpecialGameRule.HALLOWEEN) {
+      this.bonusSynergies.set(Synergy.GHOST, 8)
+      this.updateSynergies()
+    }
   }
 
   addExperience(value: number) {

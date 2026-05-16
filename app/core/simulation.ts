@@ -83,6 +83,7 @@ import {
 } from "./effects/synergies"
 import { getStrongestUnit, getUnitScore, PokemonEntity } from "./pokemon-entity"
 import { DelayedCommand } from "./simulation-command"
+import { SpecialGameRule } from "../types/enum/SpecialGameRule"
 
 export default class Simulation extends Schema implements ISimulation {
   @type("string") weather: Weather = Weather.NEUTRAL
@@ -697,6 +698,18 @@ export default class Simulation extends Schema implements ISimulation {
           })
         }
       })
+
+      if (
+        this.room.state.specialGameRule === SpecialGameRule.HALLOWEEN &&
+        player &&
+        player.synergies.get(Synergy.GHOST) >= 16
+      ) {
+        const ghost = PokemonFactory.createPokemonFromName(Pkm.GHOST)
+        const coord = this.getFirstFreeCell(teamIndex)
+        if (coord) {
+          this.addPokemon(ghost, coord.x, coord.y, teamIndex, true)
+        }
+      }
     }
 
     // SUPPORT ITEMS EFFECTS (exp share, gracidea etc)
@@ -1706,7 +1719,7 @@ export default class Simulation extends Schema implements ISimulation {
     const opponentsCursable = shuffleArray([...opponentTeam.values()]).filter(
       (p) => p.hp > 0
     ) as PokemonEntity[]
-    const curser = values(team).find((e) => e.types.has(Synergy.GHOST))
+    const curser = values(team).find((e) => e.types.has(Synergy.GHOST)) ?? values(team)[0]
     // the curser is not important, we just need a reference to an opponent for stat debuffs
     if (!curser) return
 

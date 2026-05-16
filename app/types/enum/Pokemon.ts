@@ -1,4 +1,5 @@
 export enum Pkm {
+  GHOST = "GHOST",
   QUAXLY = "QUAXLY",
   QUAXWELL = "QUAXWELL",
   QUAQUAVAL = "QUAQUAVAL",
@@ -1235,6 +1236,7 @@ export enum Pkm {
 }
 
 export const PkmIndex: { [key in Pkm]: string } = {
+  [Pkm.GHOST]: "9999",
   [Pkm.DEFAULT]: "0000",
   [Pkm.EGG]: "0000-0004",
   [Pkm.SUBSTITUTE]: "0000-0001",
@@ -2562,6 +2564,7 @@ export const PkmByIndex: { [index: string]: Pkm } = Object.fromEntries(
 )
 
 export const PkmFamily: { [key in Pkm]: Pkm } = {
+  [Pkm.GHOST]: Pkm.GHOST,
   [Pkm.QUAXLY]: Pkm.QUAXLY,
   [Pkm.QUAXWELL]: Pkm.QUAXLY,
   [Pkm.QUAQUAVAL]: Pkm.QUAXLY,
@@ -3942,5 +3945,6 @@ export const NON_PMD_PKM_INDEXES: string[] = [
   "0815-9999", // Cinderace Pirate,
   "0398-9999", // Staraptor Fashion,
   "0175-9999", // Togepi Mafia,
-  "0133-9999", // Eevee Mafia
+  "0133-9999", // Eevee Mafia,
+  "9999" // Ghost
 ]

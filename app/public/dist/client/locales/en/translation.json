@@ -23,6 +23,7 @@
 		"TRUE": "true damage"
 	},
 	"ability": {
+    "MISSING_NO": "Missing No.",
     "LIGHT_OF_RUIN": "Light of Ruin",
     "AQUA_STEP": "Aqua Step",
     "SURPRISING_HAND": "Surprising Hand",
@@ -604,6 +605,7 @@
 	"pkm": {
 		"DEFAULT": "MissingNo.",
 		"EGG": "Egg",
+    "GHOST": "Ghost",
 		"DITTO": "Ditto",
 		"BULBASAUR": "Bulbasaur",
 		"IVYSAUR": "Ivysaur",
@@ -1861,6 +1863,7 @@
 	},
 	
 	"ability_description": {
+    "MISSING_NO": "All enemy Pokémon loose their RUNE_PROTECT",
     "LIGHT_OF_RUIN": "Deal [20,SP] SPECIAL to all enemy Pokémon in a line, multiplied by all allies and enemies on the board. Lose 50% of max HP.",
     "AQUA_STEP": "The user attacks with fluid dance steps, shifting to an ADJACENT unoccupied tile before dealing [25,50,100,SP] SPECIAL to the target and increasing the users SPEED by [10,15,20,SP]. If the user has more SPEED than the target, regain [10,15,20] PP.",
     "SURPRISING_HAND": "Copy as many items from the target as the user can carry, otherwise share them to ADJACENT allies with free item slots.",
@@ -4803,7 +4806,8 @@
 		"GO_BIG_OR_GO_HOME": "Go big or go home",
 		"FAMILY_OUTING": "Family Outing",
 		"UNOWN_SPELL": "Unown Spell",
-		"CHOSEN_ONES": "The Chosen Ones"
+		"CHOSEN_ONES": "The Chosen Ones",
+    "HALLOWEEN": "Halloween"
 	},
 	"scribble_description": {
     "PLAY_TEST": "Game board can be overwritten via the team planner. Use it for testing and reproducing bugs!",
@@ -4828,7 +4832,8 @@
 		"GO_BIG_OR_GO_HOME": "Units gain 5 max HP and grow in size at every stage.",
 		"FAMILY_OUTING": "Pokémon from the same family all count towards synergy levels. ",
 		"UNOWN_SPELL": "Unowns are spectating your fights and are casting spells on both teams each round.",
-		"CHOSEN_ONES": "The add picks you choose evolve immediately and gain bonus stats."
+		"CHOSEN_ONES": "The add picks you choose evolve immediately and gain bonus stats.",
+    "HALLOWEEN": "Everyone GHOST 8, GHOST 16 summons Ghost"
 	},
 	"town_encounter_description": {
 		"KECLEON": "Kecleon sells Synergy items for {{cost}} GOLD",

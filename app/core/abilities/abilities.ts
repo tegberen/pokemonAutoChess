@@ -93,6 +93,22 @@ import {
 
 import { LegendaryPool } from "../../config/game/pools"
 
+export class MissingNoStrategy extends AbilityStrategy {
+  process(
+    pokemon: PokemonEntity,
+    board: Board,
+    target: PokemonEntity,
+    crit: boolean
+  ) {
+    super.process(pokemon, board, target, crit)
+    board.cells.forEach((entity) => {
+      if (entity && entity.team !== pokemon.team) {
+        entity.status.runeProtect = false
+      }
+    })
+  }
+}
+
 export class LightOfRuinStrategy extends AbilityStrategy {
   process(
     pokemon: PokemonEntity,
@@ -18485,7 +18501,8 @@ export const AbilityStrategies: { [key in Ability]: AbilityStrategy } = {
   [Ability.LUMINA_CRASH]: new LuminaCrashStrategy(),
   [Ability.TREASURE_RUSH]: new TreasureRushStrategy(),
   [Ability.SURPRISING_HAND]: new SurprisingHandStrategy(),
-  [Ability.EARTH_QUAKE]: new EarthQuakeStrategy()
+  [Ability.EARTH_QUAKE]: new EarthQuakeStrategy(),
+  [Ability.MISSING_NO]: new MissingNoStrategy()
 }
 
 export function castAbility(
