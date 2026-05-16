@@ -2013,7 +2013,7 @@
 		"ANCHOR_SHOT": "Grab the farthest enemy Pokémon and deal [20,40,80,SP] SPECIAL.",
 		"MAGNET_RISE": "Grant PROTECT for 2 seconds and [10,SP]% dodge chance to the user and to the [2,4,6] ADJACENT allied Pokémon with the lowest health.",
 		"ATTRACT": "Inflict [1,2,3] random enemy Pokémon with CHARM for [1,SP] seconds.",
-		"WATER_PULSE": "Deal [75,150,SP] SPECIAL to the target and ADJACENT enemy Pokémon and inflict them with CONFUSION for 2 seconds.",
+		"WATER_PULSE": "Deal [70,140,SP] SPECIAL to the target and ADJACENT enemy Pokémon with [30,LK]% chance to inflict them with CONFUSION for 2 seconds.",
 		"PLAY_ROUGH": "Deal [30,60,120,SP] SPECIAL to the target and inflict it with CHARM for 2.5 seconds.",
 		"AERIAL_ACE": "Deal [25,50,100,SP] TRUE to the target.",
 		"PARABOLIC_CHARGE": "Heal the user for [25,50] HP and deal [25,50,100,SP] SPECIAL to the target. Excess HP is converted into SPECIAL.",
@@ -2141,7 +2141,7 @@
 		"FAKE_OUT": "Deal [40,80,150,SP] SPECIAL to the target and reduce the user's AP by 30. Inflict the target with FLINCH for 3 seconds unless the user's AP was negative.",
 		"FELL_STINGER": "Deal [400,SP]% of ATK as SPECIAL to the target. If it knocks out the target, gain 30% of base ATK.",
 		"GULP_MISSILE": "Shoot an $t(pkm.ARROKUDA) with full PP at the target, dealing [50,SP] SPECIAL to the target. There is a [20,LK]% chance a $t(pkm.PIKACHU) will be fired instead.",
-		"SCHOOLING": "Deal [10,SP]% of the user's max HP as SPECIAL to the target and ADJACENT enemy Pokémon. If a Wishiwashi is on the bench, it joins the school and gives 50 permanent max HP to the user.",
+		"SCHOOLING": "Deal [15,SP]% of the user's max HP as SPECIAL to the target and ADJACENT enemy Pokémon. If a Wishiwashi is on the bench, it joins the school and gives 50 permanent max HP to the user.",
 		"DOUBLE_SHOCK": "Emit a powerful electric shock, dealing [50,100,200,SP] SPECIAL to the target and inflict the user with PARALYSIS for 3 seconds.",
 		"PURIFY": "Cure negative status conditions and heal the user for [15,30,60,SP] HP.",
 		"CHARM": "Inflict the target with CHARM for 3 seconds and reduce their ATK by [2,3,4,SP] (min 1).",
@@ -3259,7 +3259,7 @@
 		"FEEBAS": "6 Feebas evolve in Milotic",
 		"WISHIWASHI": "3 Wishiwashi evolve in School Form",
 		"MELOETTA": "Meloetta switches between its Pirouette Forme and Aria Forme depending on its position on the board",
-		"UNOWN": "Unown cannot hold items and vanish after one fight or after casting their ability",
+		"UNOWN": "Unown cannot hold items and vanish after casting their ability",
 		"GLISCOR": "First stack of POISONNED heals this Pokémon instead of taking damage",
 		"GRIM_NEIGH": "When the Pokémon knocks out an enemy, it emits a grim neigh that increases its AP by 30",
 		"CHILLING_NEIGH": "When the Pokémon knocks out an enemy, it emits a chilling neigh that increases its ATK by 5",
@@ -4050,7 +4050,8 @@
 		"music_volume": "Music Volume",
 		"previous_music": "Previous music",
 		"next_music": "Next music",
-		"random_music": "Random music"
+		"random_music": "Random music",
+		"music_credits": "Music credits"
 	},
 	"toggle_fullscreen": "Toggle fullscreen",
 	"filters": "Filters",
@@ -4267,6 +4268,8 @@
 		"bag_desc": "Used to store your collection and boosters cards",
 		"team_planner": "Team Planner",
 		"team_planner_desc": "Prepare your composition in advance",
+		"certificate": "Certificate",
+		"certificate_desc": "Unlocks Ranked mode and participating in Tournaments",
 		"bot_builder": "Bot Builder",
 		"bot_builder_desc": "Create your own bots and submit them to have a chance to be included in the game",
 		"jukebox": "Jukebox",
@@ -4456,12 +4459,18 @@
 		"MASTER_BALL": "Master Ball",
 		"BEAST_BALL": "Beast Ball"
 	},
-	"room_is_private": "This room is private. Enter password",
-	"game_full": "This group is full",
-	"game_already_started": "Game has already started",
-	"min_rank_not_reached": "Your rank is not high enough to play this ranked match",
-	"max_rank_not_reached": "Your rank is too high to play this ranked match",
-	"blacklisted": "You have been kicked from this match",
+	"room_menu": {
+		"game_full": "This group is full",
+		"game_already_started": "Game has already started",
+		"room_is_private": "This room is private. Enter password",
+		"blacklisted": "You have been kicked from this match",
+		"min_rank_not_reached": "Your rank is not high enough to play this ranked match",
+		"max_rank_not_reached": "Your rank is too high to play this ranked match",
+		"ranked_mode_locked": "Ranked mode is locked. You need to reach level {{requiredLevel}} to unlock it."
+	},
+	"tournament": {
+		"tournament_mode_locked": "You need to reach level {{requiredLevel}} to participate in tournaments."
+	},
 	"npc_dialog": {
 		"welcome": "Welcome !",
 		"tell_price": "{{price}} GOLD each !",

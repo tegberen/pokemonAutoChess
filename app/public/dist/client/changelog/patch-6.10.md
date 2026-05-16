@@ -11,6 +11,12 @@
 - Skwovet
 - Greedent
 
+# Changes to Game modes
+
+> We are trying a new approach to discourage some people from creating multiple accounts and playing ranked games at a level that is not theirs, or from polluting the leaderboard with multiple accounts (a.k.a. smurfing). This rule will inevitably impact new players ; no approach is perfect, we hope it's an acceptable compromise.
+
+- Ranked gamemode and participating in Tournaments now require to have an account of level 10 or higher
+
 # Changes to Synergies
 
 > This fairy rework is minor, the base effect of special damage on fairy attacks is unchanged, but the added random effects are fun and thematic for fairy. This is also a first attempt of a "build your own synergy" with 256 different combinations of wands.
@@ -19,6 +25,11 @@
 - Change to Flying: the selection of the destination cell when flying away is now smarter: it now considers the farthest free cells with at least one enemy at attack range, and the minimum of threats around.
 - Dark melee Pokémon have increased priority movement for their first jump. That means they land their first attack slightly faster (-200ms on average), but this also prevents the opponent backline to move and leave a gap for assassins to infiltrate.
 - Fighing 8 "Justified" is now "Coaching": no longer reduce hits taken before throwing, but instead gives a Training Bag. Each round, FIGHTING Pokémon on the bench with a training bag or a pillar on their left will train, gaining 4 ATK and 10% base max HP permanently. Pillars can now be put on bench.
+
+> We simplify the rules and oddities around Unown management to make Psychic easier to play, especially for beginners
+
+- Unowns no longer disappear after one fight if they did not cast their ability
+- Unowns, when disappearing after casting their ability, leave a reminescence that gives 1 point in Psychic synergy but only for the next automatic shop assignment. This allows to chain Unown shops when playing Psychic 7 with a Unown on board.
 
 # Changes to Pokemon & Abilities
 
@@ -44,6 +55,7 @@
 - Fuecoco PP: 60/60/60 → 80/70/60
 - Revert Popplio buff from 5.7 ; PP 70 → 80
 - Buff Scream Tail: Attack 14 → 16, Defense: 8 → 12
+- Nerf Water Pulse (Clawitzer): damage 75/150 → 70/140, 100% → 30% confusion chance
 
 > Chimecho was performing badly at low elo and very well at high elo. The passive is the main culprit, giving incredible value when played in sound 6 and fully surrounded with sound allies. These specific conditions were not often met at low elo, but highly optimized at high elo, creating a huge power gap for this Pokémon. We change the range and passive to both reduce its power ceiling and make it more intuitive and less conditional.
 
@@ -55,6 +67,7 @@
 - Improve Dream Eater: will no longer be stuck in a cast loop if the target has immunity to sleep, and will target an enemy that can be put to sleep if the main target is immune.
 - Buff Mystical Fire (Fennekin): AP reduction increased from 10 to 20, and new visual animation.
 - Buff Egg Bomb (Exeggcute): Eggs brought by the ability now hatch the next round immediately
+- Buff Schooling (Wishiwashi): 10% → 15% max HP special damage
 
 # Changes to Items
 
@@ -98,4 +111,5 @@
 - Added a new player Elo distribution report tab in Meta Report that shows the player rank distribution chart by Elo ranks.
 - New gadget: Sprite Tracker, showing SpriteCollab entries missing in PAC with smart form filters, grouped normal/shiny previews, and direct links to SpriteCollab.
 - Added a key shortcut to open the Meta Report (default M, can be changed in options)
+- Thanks to John Rei, we have a new music in the jukebox and 3 alternate versions of the Treasure Town musics
 - New title: Legionnaire, obtained by making a Falinks formation with 8 troopers or more.
