@@ -633,14 +633,16 @@ export default class Simulation extends Schema implements ISimulation {
       }
 
       board.forEach((pokemon) => {
-        if (pokemon.items.has(Item.WHITE_FLUTE) && !isOnBench(pokemon)) {
-          const wilds = PRECOMPUTED_POKEMONS_PER_TYPE[Synergy.WILD].map((p) =>
-            getPokemonData(p)
-          )
-          const spawns: IPokemonData[] = []
+        if (pokemon.items.has(Item.GOLD_MASK) && !isOnBench(pokemon)) {
+          const sharedTypes = [...pokemon.types]
+          const candidates = sharedTypes
+            .flatMap((type) => PRECOMPUTED_POKEMONS_PER_TYPE[type] ?? [])
+            .map((p) => getPokemonData(p))
+            .filter((p, i, arr) => arr.findIndex((x) => x.name === p.name) === i)
+          const spawns: IPokemon[] = []
           const pickWild = (rarity: Rarity, tier: number) => {
             const randomWild = pickRandomIn(
-              wilds.filter((p) => p.rarity === rarity && p.stars === tier)
+              candidates.filter((p) => p.rarity === rarity && p.stars === tier)
             )
             if (randomWild) {
               spawns.push(randomWild)
@@ -666,21 +668,21 @@ export default class Simulation extends Schema implements ISimulation {
             pickWild(Rarity.RARE, 1)
             pickWild(Rarity.EPIC, 1)
           } else if (this.stageLevel <= 25) {
-            pickWild(Rarity.UNCOMMON, 2)
-            pickWild(Rarity.RARE, 1)
+            pickWild(Rarity.UNCOMMON, 3)
+            pickWild(Rarity.RARE, 2)
             pickWild(Rarity.EPIC, 1)
           } else if (this.stageLevel <= 30) {
-            pickWild(Rarity.RARE, 2)
-            pickWild(Rarity.EPIC, 1)
-            pickWild(Rarity.EPIC, 1)
+            pickWild(Rarity.UNCOMMON, 3)
+            pickWild(Rarity.RARE, 3)
+            pickWild(Rarity.EPIC, 2)
           } else if (this.stageLevel <= 35) {
-            pickWild(Rarity.RARE, 2)
-            pickWild(Rarity.EPIC, 2)
-            pickWild(Rarity.UNIQUE, 3)
+            pickWild(Rarity.UNCOMMON, 3)
+            pickWild(Rarity.RARE, 3)
+            pickWild(Rarity.EPIC, 3)
           } else {
-            pickWild(Rarity.EPIC, 2)
             pickWild(Rarity.UNIQUE, 3)
-            pickWild(Rarity.ULTRA, 2)
+            pickWild(Rarity.ULTRA, 3)
+            pickWild(Rarity.LEGENDARY, 3)
           }
 
           spawns.forEach((spawn) => {

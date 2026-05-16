@@ -99,7 +99,7 @@ export const GoldenEggItems = [
   Item.SHINY_STONE,
   Item.RARE_CANDY,
   Item.EVIOLITE,
-  Item.WHITE_FLUTE,
+  Item.GOLD_MASK,
   Item.GOLD_BOTTLE_CAP,
   Item.ABSORB_BULB,
   Item.SACRED_ASH,

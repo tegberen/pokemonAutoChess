@@ -35,6 +35,10 @@
 - HEAVY_DUTY_BOOTS: Once below 40% max HP, kick away the target and gain 10 DEF and 30 AP
 - ABILITY_SHIELD: When the user and allies SHIELD is depleted, gain 30 AP.
 
+## Shiny
+- BOOSTER_ENERGY: The capsule fills with energy. For every 4 KO's during the fight, gain a random component
+- GOLD_MASK: replaces White Flute, now spawns Pokemon that share a type with the holder
+
 ## The BINDING_BAND
 - SOOTHE_BELL: Grant the lowest HP ally 30 SHIELD every 2 seconds. Has a [30,LK]% chance to convert that ally’s remaining SHIELD into HP.
 > It is a support item, that you should use on a ranged unit. Could also work on the frontline, when paired with some tank items. Otherwise +50 HP makes your backline holder less squishy!
