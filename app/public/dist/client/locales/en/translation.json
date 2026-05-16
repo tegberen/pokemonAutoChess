@@ -2436,8 +2436,7 @@
 		"MOUNTAIN_GALE": "Hurls [1,3] giant chunks of ice randomly at target and ADJACENT enemies, inflicting FLINCH for 3 seconds then [40,SP] SPECIAL per projectile. If user has Bergmite on their back, they are thrown as well for the same damage.",
 		"TWINEEDLE": "Deals [25,50,80,SP] SPECIAL to the target twice. The first hit can crit by default, and the second hit has [40,LK]% chance to apply POISONNED for 4 seconds.",
 		"ROCK_WRECKER": "Launches a huge boulder at the target, inflicting FLINCH for 2 seconds then [80,160,SP] SPECIAL. Then user gets FATIGUE for 4 seconds.",
-    	"THUNDERCLAP_PRESS": "The target is hit with an electric bodyslam and pushed away. It and all targets in the path are PARALYSIS for 4 seconds and take [25, 50, 100, SP] SPECIAL.",
-    	"THUNDERCLAP_PRESS": "The target is hit with an electric bodyslam and pushed away. It and all targets in the path are PARALYSIS for 4 seconds and take [25, 50, 100, SP] SPECIAL.",
+    "THUNDERCLAP_PRESS": "The target is hit with an electric bodyslam and pushed away. It and all targets in the path are PARALYSIS for 4 seconds and take [25, 50, 100, SP] SPECIAL.",
 		"SHADOW_CLAW": "Slash enemies in front of the user, dealing [20,40,60,SP] SPECIAL and healing HP for 25% of the damage dealt. If only one enemy is hit, deals [60,100,140,SP] SPECIAL."
 	},
 	"effect": {
