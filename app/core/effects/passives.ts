@@ -1966,12 +1966,33 @@ export const PassiveEffects: Partial<
   ],
   [Passive.SUPER_LUCK]: [
     new OnSimulationStartEffect(({ simulation, entity }) => {
+      const teamEffects = entity.team === Team.BLUE_TEAM ? simulation.blueEffects : simulation.redEffects
+      if (teamEffects.has(EffectEnum.SUPER_LUCK)) return
+      teamEffects.add(EffectEnum.SUPER_LUCK)
       simulation.board.forEach((x, y, pkm) => {
         if (pkm && pkm.team === entity.team) {
           pkm.addCritChance(10, pkm, 0, false)
         }
       })
     }, Passive.SUPER_LUCK)
+  ],
+  [Passive.GOOD_LUCK]: [
+    new OnSimulationStartEffect(({ simulation, entity }) => {
+      const teamEffects = entity.team === Team.BLUE_TEAM ? simulation.blueEffects : simulation.redEffects
+      if (teamEffects.has(EffectEnum.GOOD_LUCK)) return
+      teamEffects.add(EffectEnum.GOOD_LUCK)
+      const highestStars = Math.max(
+        ...simulation.board.cells
+          .filter((p) => p && p.team === entity.team && p.passive === Passive.GOOD_LUCK)
+          .map((p) => p!.stars)
+      )
+      const luckBuff = [5, 10, 20][highestStars - 1] ?? 10
+      simulation.board.forEach((x, y, pkm) => {
+        if (pkm && pkm.team === entity.team) {
+          pkm.addLuck(luckBuff, pkm, 0, false)
+        }
+      })
+    }, Passive.GOOD_LUCK)
   ],
   [Passive.MEWTWO]: [MewtwoOnKillEffect],
   [Passive.SLITHER_WING]: [

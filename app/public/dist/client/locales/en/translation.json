@@ -3502,7 +3502,7 @@
 		"DARMANITAN_ZEN": "In Zen mode, attacks deal SPECIAL that scales with AP and heal for 100% of damage dealt. Transforms back into Standard Mode when fully healed.",
 		"GALARIAN_DARMANITAN_ZEN": "In Zen mode, can no longer move or attack, but every second, heals [10,SP] HP, deals [25,SP]% of user's ATK as SPECIAL to ADJACENT enemies and BURN them.",
 		"BAD_LUCK": "Reduce all opponents LUCK by 20",
-		"GOOD_LUCK": "Increase the LUCK of all allies by 20",
+		"GOOD_LUCK": "Increase the LUCK of all allies by [5,10,20]",
 		"PRIMEAPE": "Primeape becomes angrier when knocked out, gaining 1 permanent ATK. After Primeape is knocked out 10 times, it evolves into Annihilape.",
 		"ZYGARDE": "Zygarde cells emerge from fully dug holes every second to join Zygarde, giving it 1 max HP each. When 95 cells have been collected, transforms into its complete form. Mega evolves when facing great danger.",
 		"GLIMMORA": "Once below 50% max HP, throws toxic spikes in a 2x3 rectangle in front of itself, dealing 20 SPECIAL. Toxic spikes apply POISONNED to Pokémon, unless they are POISON.",

@@ -3149,10 +3149,6 @@ export class Togepi extends Pokemon {
   range = 2
   skill = Ability.WISH
   passive = Passive.GOOD_LUCK
-  beforeSimulationStart({ teamEffects }: { teamEffects: Set<EffectEnum> }) {
-    teamEffects.add(EffectEnum.GOOD_LUCK)
-  }
-
 }
 
 export class TogepiMafia extends Pokemon {
@@ -3188,10 +3184,6 @@ export class Togetic extends Pokemon {
   range = 2
   skill = Ability.WISH
   passive = Passive.GOOD_LUCK
-  beforeSimulationStart({ teamEffects }: { teamEffects: Set<EffectEnum> }) {
-    teamEffects.add(EffectEnum.GOOD_LUCK)
-  }
-
 }
 
 export class Togekiss extends Pokemon {
@@ -3211,10 +3203,6 @@ export class Togekiss extends Pokemon {
   range = 2
   skill = Ability.WISH
   passive = Passive.GOOD_LUCK
-  beforeSimulationStart({ teamEffects }: { teamEffects: Set<EffectEnum> }) {
-    teamEffects.add(EffectEnum.GOOD_LUCK)
-  }
-
 }
 
 export class Rhyhorn extends Pokemon {
