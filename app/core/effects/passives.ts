@@ -2187,6 +2187,14 @@ export const PassiveEffects: Partial<
 
     })
   ],
+  [Passive.ZERAORA]: [
+    new OnKillEffect(({ attacker }) => {
+      if (attacker.isGhostOpponent) return
+      if (!attacker.player) return
+      attacker.addStack()
+
+    })
+  ],
   [Passive.ICE_BODY]: [
     new OnSimulationStartEffect(({ entity }) => {
       const iceBodyEffect = new PeriodicEffect(
