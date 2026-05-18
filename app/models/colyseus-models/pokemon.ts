@@ -14776,11 +14776,11 @@ export class Hoopa extends Pokemon {
   rarity = Rarity.LEGENDARY
   stars = 3
   hp = 250
-  atk = 25
+  atk = 20
   speed = 47
   def = 10
   speDef = 20
-  maxPP = 120
+  maxPP = 140
   range = 1
   skill = Ability.UNBOUND
 }
