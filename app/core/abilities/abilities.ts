@@ -113,20 +113,19 @@ export class ForestsCurseStrategy extends AbilityStrategy {
   process(pokemon: PokemonEntity, board: Board, target: PokemonEntity, crit: boolean) {
     super.process(pokemon, board, target, crit, true)
     let cursedTarget = target
-    if (target.types.has(Synergy.GRASS)) {
+    if (target.status.grassField) {
       const nonGrassEnemy = board.cells.find(
-        (p) => p && p.team !== pokemon.team && !p.types.has(Synergy.GRASS)
+        (p) => p && p.team !== pokemon.team && !p.status.grassField
       ) as PokemonEntity | undefined
       if (!nonGrassEnemy) return
       cursedTarget = nonGrassEnemy
     }
-    cursedTarget.types.add(Synergy.GRASS)
     pokemon.broadcastAbility({
       skill: Ability.FORESTS_CURSE,
       targetX: cursedTarget.positionX,
       targetY: cursedTarget.positionY
     })
-    pokemon.simulation.applySynergyEffects(cursedTarget, Synergy.GRASS)
+    cursedTarget.status.grassField = true
   }
 }
 

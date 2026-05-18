@@ -1866,7 +1866,7 @@
 	"ability_description": {
     "MISSING_NO": "All enemy Pokémon loose their RUNE_PROTECT",
     "LIGHT_OF_RUIN": "Deal [20,SP] SPECIAL to all enemy Pokémon in a line, multiplied by all allies and enemies on the board. Lose 50% of max HP.",
-    "FORESTS_CURSE": "Adds GRASS synergy to an enemy without it for the rest of the fight.",
+    "FORESTS_CURSE": "Adds GRASS_FIELD to an enemy without it for the rest of the fight.",
     "AQUA_STEP": "The user attacks with fluid dance steps, shifting to an ADJACENT unoccupied tile before dealing [25,50,100,SP] SPECIAL to the target and increasing the users SPEED by [10,15,20,SP]. If the user has more SPEED than the target, regain [10,15,20] PP.",
     "SURPRISING_HAND": "Copy as many items from the target as the user can carry, otherwise share them to ADJACENT allies with free item slots.",
     "LUMINA_CRASH": "Deal [10,20,40,SP] + [200,400,800,SP] % of targets SPE_DEF as SPECIAL to the target, then remove all SPE_DEF.",
@@ -3628,7 +3628,7 @@
     "STEELY_SPIRIT": "Allies ADJACENT_IN_THE_SAME_ROW deal 10% of their ATK as TRUE.",
     "ZERAORA": "Gains a stack for each KO. Mega evolves after 20 stacks.",
     "ICE_BODY": "Under SNOW, regain 10% of its max HP every 2 seconds.",
-    "FORESTS_CURSE": "When the user is KO'ed, all enemy Pokémon with GRASS synergy are CURSE and KO after [8,4,2] seconds."
+    "FORESTS_CURSE": "When the user is KO'ed, all enemy Pokémon with GRASS_FIELD are CURSE and KO after [8,4,2] seconds."
   },
 	"stat": {
 		"ATK": "Attack",
