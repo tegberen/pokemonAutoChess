@@ -109,6 +109,27 @@ export class MissingNoStrategy extends AbilityStrategy {
   }
 }
 
+export class ForestsCurseStrategy extends AbilityStrategy {
+  process(pokemon: PokemonEntity, board: Board, target: PokemonEntity, crit: boolean) {
+    super.process(pokemon, board, target, crit, true)
+    let cursedTarget = target
+    if (target.types.has(Synergy.GRASS)) {
+      const nonGrassEnemy = board.cells.find(
+        (p) => p && p.team !== pokemon.team && !p.types.has(Synergy.GRASS)
+      ) as PokemonEntity | undefined
+      if (!nonGrassEnemy) return
+      cursedTarget = nonGrassEnemy
+    }
+    cursedTarget.types.add(Synergy.GRASS)
+    pokemon.broadcastAbility({
+      skill: Ability.FORESTS_CURSE,
+      targetX: cursedTarget.positionX,
+      targetY: cursedTarget.positionY
+    })
+    pokemon.simulation.applySynergyEffects(cursedTarget, Synergy.GRASS)
+  }
+}
+
 export class LightOfRuinStrategy extends AbilityStrategy {
   process(
     pokemon: PokemonEntity,
@@ -18502,7 +18523,8 @@ export const AbilityStrategies: { [key in Ability]: AbilityStrategy } = {
   [Ability.TREASURE_RUSH]: new TreasureRushStrategy(),
   [Ability.SURPRISING_HAND]: new SurprisingHandStrategy(),
   [Ability.EARTH_QUAKE]: new EarthQuakeStrategy(),
-  [Ability.MISSING_NO]: new MissingNoStrategy()
+  [Ability.MISSING_NO]: new MissingNoStrategy(),
+  [Ability.FORESTS_CURSE]: new ForestsCurseStrategy()
 }
 
 export function castAbility(

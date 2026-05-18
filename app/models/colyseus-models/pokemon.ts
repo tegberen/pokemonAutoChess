@@ -14484,8 +14484,9 @@ export class Phantump extends Pokemon {
   speDef = 4
   maxPP = 100
   range = 1
-  skill = Ability.POLTERGEIST
+  skill = Ability.FORESTS_CURSE
   additional = true
+  passive = Passive.FORESTS_CURSE
 }
 
 export class Trevenant extends Pokemon {
@@ -14503,8 +14504,9 @@ export class Trevenant extends Pokemon {
   speDef = 8
   maxPP = 100
   range = 1
-  skill = Ability.POLTERGEIST
+  skill = Ability.FORESTS_CURSE
   additional = true
+  passive = Passive.FORESTS_CURSE
 }
 
 export class Qwilfish extends Pokemon {

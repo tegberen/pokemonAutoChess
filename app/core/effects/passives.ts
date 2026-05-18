@@ -1206,6 +1206,18 @@ const superchargeTadbulb = (
     })
 }
 
+const ForestsCurseDeathEffect = new OnDeathEffect(
+  ({ pokemon, board }) => {
+    const curseDuration = [8000, 4000, 2000][pokemon.stars - 1] ?? 2000
+    board.cells.forEach((p) => {
+      if (p && p.team !== pokemon.team && p.types.has(Synergy.GRASS)) {
+        p.status.triggerCurse(curseDuration, p)
+      }
+    })
+  },
+  Passive.FORESTS_CURSE
+)
+
 export function transformToIceFace(
   entity: PokemonEntity,
   isBattleStart: boolean
@@ -2209,5 +2221,6 @@ export const PassiveEffects: Partial<
       )
       entity.effectsSet.add(iceBodyEffect)
     })
-  ]
+  ],
+  [Passive.FORESTS_CURSE]: [ForestsCurseDeathEffect]
 }

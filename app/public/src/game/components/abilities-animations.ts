@@ -814,6 +814,10 @@ export const AbilitiesAnimations: {
   [`${Ability.EARTH_QUAKE}_1`]: [earthQuakeAnim(1), shakeCamera({ duration: 800, intensity: 0.004 })],
   [`${Ability.EARTH_QUAKE}_2`]: [earthQuakeAnim(2), shakeCamera({ duration: 800, intensity: 0.004 })],
   [`${Ability.EARTH_QUAKE}_3`]: [earthQuakeAnim(3), shakeCamera({ duration: 800, intensity: 0.004 })],
+  [Ability.FORESTS_CURSE]: onTarget({
+    scale: 2,
+    depth: DEPTH.ABILITY_BELOW_POKEMON
+  }),
   [Ability.LUMINA_CRASH]: onTargetScale2,
   [Ability.TREASURE_RUSH]: onCaster({
     ability: Ability.GOLD_RUSH
