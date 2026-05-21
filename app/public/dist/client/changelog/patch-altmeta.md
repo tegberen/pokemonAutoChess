@@ -36,6 +36,7 @@
 - STICKY_BARB: HP 15 → 30, DEF 6 → 15
 - HEAVY_DUTY_BOOTS: Once below 40% max HP, kick away the target and gain 10 DEF and 30 AP
 - ABILITY_SHIELD: When the user and allies SHIELD is depleted, gain 30 AP.
+- LUCKY_RIBBON: Negates critical bonus damage from all incoming critical hits.
 
 ## Shiny
 - BOOSTER_ENERGY: The capsule fills with energy. For every 4 KO's during the fight, gain a random component

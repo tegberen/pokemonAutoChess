@@ -63,7 +63,7 @@ export default abstract class PokemonState {
       const crit = chance(critChance, pokemon)
 
       if (crit) {
-        if (target.items.has(Item.ROCKY_HELMET) === false) {
+        if (target.items.has(Item.ROCKY_HELMET) === false && target.items.has(Item.LUCKY_RIBBON) === false) {
           let reductionFactor = 1.0
           if (target.effects.has(EffectEnum.BATTLE_ARMOR)) {
             reductionFactor -= 0.3

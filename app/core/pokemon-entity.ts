@@ -397,7 +397,7 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
       ) {
         specialDamage *= 1.2
       }
-      if (crit && attacker && this.items.has(Item.ROCKY_HELMET) === false) {
+      if (crit && attacker && this.items.has(Item.ROCKY_HELMET) === false && this.items.has(Item.LUCKY_RIBBON) === false) {
         specialDamage *= attacker.critPower
       }
       if (

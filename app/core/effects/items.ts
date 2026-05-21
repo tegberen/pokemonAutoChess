@@ -1560,11 +1560,11 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
     }, Item.EFFICIENT_BANDANNA)
   ],
 
-  [Item.LUCKY_RIBBON]: [
-    new OnSimulationStartEffect(({ entity }) => {
-      entity.addDodgeChance(0.15, entity, 0, false)
-    }, Item.LUCKY_RIBBON)
-  ],
+  // [Item.LUCKY_RIBBON]: [
+  //   new OnSimulationStartEffect(({ entity }) => {
+  //     entity.addDodgeChance(0.15, entity, 0, false)
+  //   }, Item.LUCKY_RIBBON)
+  // ],
   [Item.SOOTHE_BELL]: [
     new OnItemGainedEffect((pokemon) => {
       pokemon.effectsSet.add(new SootheBellEffect())
