@@ -68,8 +68,9 @@
 ![Mega Feraligatr](/assets/portraits/0160/0001/Normal.png)
 ![Mega Skarmory](/assets/portraits/0227/0001/Normal.png)
 ![Mega Zeraora](/assets/portraits/0807/0001/Normal.png)
+![Mega Darkrai](/assets/portraits/0491/0002/Normal.png)
 
-## Requirements (Ping me for adjustments)
+## Hover to see Mega Evolutions Requirements
 ![Charizard](/assets/portraits/0006/Normal.png)
 ![Lopunny](/assets/portraits/0428/Normal.png)
 ![Camerupt](/assets/portraits/0323/Normal.png)
@@ -101,4 +102,5 @@
 ![Feraligatr](/assets/portraits/0160/Normal.png)
 ![Skarmory](/assets/portraits/0227/Normal.png)
 ![Zeraora](/assets/portraits/0807/Normal.png)
+![Darkrai](/assets/portraits/0491/Normal.png)
 

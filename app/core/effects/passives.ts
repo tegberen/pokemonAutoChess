@@ -2222,5 +2222,12 @@ export const PassiveEffects: Partial<
       entity.effectsSet.add(iceBodyEffect)
     })
   ],
-  [Passive.FORESTS_CURSE]: [ForestsCurseDeathEffect]
+  [Passive.FORESTS_CURSE]: [ForestsCurseDeathEffect],
+  [Passive.DARKRAI]: [
+    new OnKillEffect(({ attacker }) => {
+      if (attacker.isGhostOpponent) return
+      if (!attacker.player) return
+      attacker.addStack()
+    })
+  ]
 }

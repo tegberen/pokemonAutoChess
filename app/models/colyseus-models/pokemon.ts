@@ -6909,6 +6909,9 @@ export class Darkrai extends Pokemon {
   ])
   rarity = Rarity.LEGENDARY
   stars = 3
+  evolution = Pkm.MEGA_DARKRAI
+  evolutionRule = new StackBasedEvolutionRule()
+  stacksRequired = 20
   hp = 250
   atk = 22
   speed = 65
@@ -6917,6 +6920,23 @@ export class Darkrai extends Pokemon {
   maxPP = 120
   range = 2
   skill = Ability.DARK_VOID
+  passive = Passive.DARKRAI
+}
+
+export class MegaDarkrai extends Pokemon {
+  types = new SetSchema<Synergy>([Synergy.DARK, Synergy.GHOST, Synergy.AMORPHOUS])
+  rarity = Rarity.LEGENDARY
+  stars = 4
+  evolution = Pkm.DARKRAI
+  hp = 250
+  atk = 27
+  speed = 65
+  def = 4
+  speDef = 4
+  maxPP = 120
+  range = 2
+  skill = Ability.DARK_VOID
+  passive = Passive.BAD_DREAMS
 }
 
 export class Larvesta extends Pokemon {
@@ -22085,6 +22105,7 @@ export const PokemonClasses: Record<
   [Pkm.CAMERUPT]: Camerupt,
   [Pkm.MEGA_CAMERUPT]: MegaCamerupt,
   [Pkm.DARKRAI]: Darkrai,
+  [Pkm.MEGA_DARKRAI]: MegaDarkrai,
   [Pkm.LITWICK]: Litwick,
   [Pkm.LAMPENT]: Lampent,
   [Pkm.CHANDELURE]: Chandelure,

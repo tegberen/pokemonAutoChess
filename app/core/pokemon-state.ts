@@ -60,7 +60,7 @@ export default abstract class PokemonState {
         )
         critChance += 0.01 * distance
       }
-      const crit = chance(critChance, pokemon)
+      const crit = chance(critChance, pokemon) || (target.status.sleep && pokemon.passive === Passive.BAD_DREAMS)
 
       if (crit) {
         if (target.items.has(Item.ROCKY_HELMET) === false && target.items.has(Item.LUCKY_RIBBON) === false) {

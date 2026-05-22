@@ -1670,6 +1670,13 @@ export const PokemonAnimations: {
     attackSprite: AttackSprite.DARK_RANGE,
     hitSprite: HitSprite.DARK_HIT
   },
+  [Pkm.MEGA_DARKRAI]: {
+    attack: AnimationType.Attack,
+    ability: AnimationType.Shoot,
+    emote: AnimationType.Charge,
+    attackSprite: AttackSprite.GHOST_RANGE,
+    hitSprite: HitSprite.GHOST_HIT
+  },
   [Pkm.LITWICK]: {
     attack: AnimationType.Sink,
     ability: AnimationType.Pose,

@@ -835,6 +835,7 @@
 		"CAMERUPT": "Camerupt",
 		"MEGA_CAMERUPT": "Mega Camerupt",
 		"DARKRAI": "Darkrai",
+    "MEGA_DARKRAI": "Mega Darkrai",
 		"LITWICK": "Litwick",
 		"LAMPENT": "Lampent",
 		"CHANDELURE": "Chandelure",
@@ -3629,7 +3630,9 @@
     "STEELY_SPIRIT": "Allies ADJACENT_IN_THE_SAME_ROW deal 10% of their ATK as TRUE.",
     "ZERAORA": "Gains a stack for each KO. Mega evolves after 20 stacks.",
     "ICE_BODY": "Under SNOW, regain 10% of its max HP every 2 seconds.",
-    "FORESTS_CURSE": "When the user is KO'ed, all enemy Pokémon with GRASS_FIELD are CURSE and KO after [8,4,2] seconds."
+    "FORESTS_CURSE": "When the user is KO'ed, all enemy Pokémon with GRASS_FIELD are CURSE and KO after [8,4,2] seconds.",
+    "DARKRAI": "Gain one stack for each KO. Mega evolves after 20 stacks.",
+    "BAD_DREAMS": "When the target is SLEEP, attacks are guaranteed to critically hit."
   },
 	"stat": {
 		"ATK": "Attack",
