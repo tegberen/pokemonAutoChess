@@ -13681,7 +13681,7 @@ export class Exeggcute extends Pokemon {
 }
 
 export class Exeggutor extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.FLORA, Synergy.PSYCHIC])
+  types = new SetSchema<Synergy>([Synergy.FLORA, Synergy.PSYCHIC, Synergy.GOURMET])
   rarity = Rarity.EPIC
   stars = 2
   hp = 300
@@ -13699,7 +13699,7 @@ export class AlolanExeggutor extends Pokemon {
   types = new SetSchema<Synergy>([
     Synergy.DRAGON,
     Synergy.FLORA,
-    Synergy.PSYCHIC
+    Synergy.GOURMET
   ])
   rarity = Rarity.EPIC
   stars = 2

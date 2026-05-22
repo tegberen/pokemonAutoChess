@@ -806,6 +806,10 @@ export const AbilitiesAnimations: {
   ["PUFF_PINK"]: onTargetScale2,
   ["PUFF_GREEN"]: onTargetScale2,
   ["PUFF_BROWN"]: onTargetScale2,
+  ["COCONUT"]: projectile({
+    duration: 500,
+    scale: 3
+  }),
   [Ability.AQUA_STEP]: onCaster({
     ability: Ability.AQUA_STEP,
     scale: 1.5,

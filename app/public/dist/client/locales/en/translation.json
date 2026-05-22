@@ -3026,7 +3026,9 @@
 		"SWITCHER_WAND": "Switcher Wand",
 		"WHIRLWIND_WAND": "Whirlwind Wand",
 		"TUNNEL_WAND": "Tunnel Wand",
-    "ELECTRIC_SEED": "Electric Seed"
+    "ELECTRIC_SEED": "Electric Seed",
+    "COCONUT_MILK": "Coconut Milk",
+    "COCONUT_MALASADA": "Coconut Malasada"
 	},
 	"item_description": {
     "AQUA_MONICA": "Each ally cast grants +2 PP to the whole team",
@@ -3377,7 +3379,9 @@
 		"SWITCHER_WAND": "Fairy attacks deal 20% additional SPECIAL and have [5,LK]% chance to swap target position with farthest enemy",
 		"WHIRLWIND_WAND": "Fairy attacks deal 20% additional SPECIAL and have [5,LK]% chance to throw a whirlwind that makes all the units in its path to fly away.",
 		"TUNNEL_WAND": "Fairy attacks deal 20% additional SPECIAL. Wands SPECIAL has [5,LK]% chance to pass through the target to hit enemies in a line behind it.",
-    "ELECTRIC_SEED": "Gain 25 DEF, ELECTRIC_FIELD and all bonuses from the active ELECTRIC synergy."
+    "ELECTRIC_SEED": "Gain 25 DEF, ELECTRIC_FIELD and all bonuses from the active ELECTRIC synergy.",
+    "COCONUT_MILK": "After each ability cast, drop a coconut on the next available target, dealing [50,SP]% of max PP as SPECIAL.",
+    "COCONUT_MALASADA": "Gain +2 RANGE. [30, LK]% chance to apply CONFUSION for 2 seconds on attack."
 	},
 	"passive_description": {
 		"NONE": "No passive",

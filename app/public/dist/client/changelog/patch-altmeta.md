@@ -145,6 +145,8 @@
 - Corviknight: to regular
 - Garchomp: new ability
 - Wattrel: added AQUATIC
+- Exeggutor: added GOURMET, COCONUT_MILK
+- Alolan Exeggutor: added GOURMET for PSYCHIC, COCONUT_MALASADA 
 
 ## Ultra
 > Ultra Pokemon have twice the HP when 3 STAR

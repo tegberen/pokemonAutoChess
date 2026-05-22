@@ -12,8 +12,12 @@ import {
   OnDishConsumedEffect,
   OnHitEffect,
   OnSpawnEffect,
-  PeriodicEffect
+  PeriodicEffect,
+  OnAbilityCastEffect,
+  OnAttackEffect,
+  OnSimulationStartEffect
 } from "./effects/effect"
+import { AttackType } from "../types/enum/Game"
 
 export const DishByPkm: { [pkm in Pkm]?: Item | null } = {
   [Pkm.LICKITUNG]: Item.RAGE_CANDY_BAR,
@@ -85,6 +89,8 @@ export const DishByPkm: { [pkm in Pkm]?: Item | null } = {
   [Pkm.GUZZLORD]: null,
   [Pkm.MORPEKO]: Item.ELECTRIC_SEED,
   [Pkm.MORPEKO_HANGRY]: Item.ELECTRIC_SEED,
+  [Pkm.EXEGGUTOR]: Item.COCONUT_MILK,
+  [Pkm.ALOLAN_EXEGGUTOR]: Item.COCONUT_MALASADA
 }
 
 export const DishEffects: Record<(typeof Dishes)[number], Effect[]> = {
@@ -475,6 +481,30 @@ export const DishEffects: Record<(typeof Dishes)[number], Effect[]> = {
         }
       } else {
         entity.status.addElectricField(entity)
+      }
+    })
+  ],
+  [Item.COCONUT_MILK]: [
+    new OnAbilityCastEffect((pokemon, board, target, crit) => {
+      const actualTarget = target ?? pokemon.state.getNearestTargetAtSight(pokemon, board)?.target
+      if (!actualTarget) return
+      pokemon.broadcastAbility({
+        skill: "COCONUT",
+        targetX: actualTarget.positionX,
+        targetY: actualTarget.positionY
+      })
+      const damage = Math.round(0.5 * pokemon.maxPP)
+      const { takenDamage, death } = actualTarget.handleSpecialDamage(damage, board, AttackType.SPECIAL, pokemon, crit, true)
+    })
+  ],
+  [Item.COCONUT_MALASADA]: [
+    new OnSimulationStartEffect(({ entity }) => {
+      entity.range += 2
+    }),
+    new OnAttackEffect(({ pokemon, target }) => {
+      if (!target) return
+      if (chance(0.3, pokemon)) {
+        target.status.triggerConfusion(2000, target, pokemon)
       }
     })
   ]
