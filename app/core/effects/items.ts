@@ -1765,5 +1765,12 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
       })
       entity.status.triggerParalysis(300000, entity, entity)
     })
+  ],
+  [Item.WHITE_FLUTE]: [
+    new OnAttackEffect(({ pokemon, target }) => {
+      if (target && pokemon.speed > target.speed && chance(0.3, pokemon)) {
+        target.status.triggerArmorReduction(3000, target)
+      }
+    })
   ]
 }

@@ -135,7 +135,7 @@ export enum Item {
   RARE_CANDY = "RARE_CANDY",
   EVIOLITE = "EVIOLITE",
   RED_SCALE = "RED_SCALE",
-  // WHITE_FLUTE = "WHITE_FLUTE",
+  WHITE_FLUTE = "WHITE_FLUTE",
   GOLD_MASK = "GOLD_MASK",
   GOLD_BOTTLE_CAP = "GOLD_BOTTLE_CAP",
   ABSORB_BULB = "ABSORB_BULB",
@@ -664,7 +664,8 @@ export const Tools = [
   Item.POKERUS_VIAL,
   Item.MAX_ELIXIR,
   Item.EXP_SHARE,
-  Item.TERRAIN_EXTENDER
+  Item.TERRAIN_EXTENDER,
+  Item.WHITE_FLUTE
 ] satisfies Item[]
 
 export const SevenTreasures = [
@@ -856,7 +857,8 @@ export const SynergyItemsNoSpecial = [
   Item.BERSERK_GENE,
   Item.SURFBOARD,
   Item.INCENSE,
-  Item.FRIEND_BOW
+  Item.FRIEND_BOW,
+  Item.WHITE_FLUTE
 ] satisfies Item[]
 
 export const SynergyItems = [
@@ -920,7 +922,8 @@ export const SynergyGivenByItem = {
   [Item.MONSTER_MEMORY]: Synergy.MONSTER,
   [Item.AQUATIC_MEMORY]: Synergy.AQUATIC,
   [Item.DRAGON_MEMORY]: Synergy.DRAGON,
-  [Item.FLORA_MEMORY]: Synergy.FLORA
+  [Item.FLORA_MEMORY]: Synergy.FLORA,
+  [Item.WHITE_FLUTE]: Synergy.WILD
 } satisfies Record<(typeof SynergyItems)[number], Synergy>
 
 export const SynergyGivenByGem: Record<(typeof SynergyGems)[number], Synergy> =
