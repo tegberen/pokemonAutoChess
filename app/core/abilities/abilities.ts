@@ -126,6 +126,7 @@ export class ForestsCurseStrategy extends AbilityStrategy {
       targetY: cursedTarget.positionY
     })
     cursedTarget.status.grassField = true
+    pokemon.addPP(5, pokemon, 1, crit)
   }
 }
 

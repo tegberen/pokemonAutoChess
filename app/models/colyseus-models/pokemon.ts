@@ -2094,7 +2094,7 @@ export class MegaTyranitar extends Pokemon {
   stars = 4
   hp = 230
   atk = 30
-  speed = 45
+  speed = 39
   def = 16
   speDef = 10
   maxPP = 90
