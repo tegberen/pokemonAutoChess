@@ -24,7 +24,6 @@ export const TownEncountersByStage: {
     [Pkm.MAKUHITA]: 1 / 20,
     [Pkm.MAGNEZONE]: 1 / 20,
     [Pkm.LAPRAS]: 1 / 20,
-    [Pkm.LUDICOLO]: 1 / 20
   },
   12: {
     [Pkm.KANGASKHAN]: 1 / 20,

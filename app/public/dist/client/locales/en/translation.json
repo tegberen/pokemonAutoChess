@@ -2453,7 +2453,7 @@
 		"GUTS": "Guts",
 		"STURDY": "Sturdy",
 		"DEFIANT": "Defiant",
-		"JUSTIFIED": "Justified",
+    "COACHING": "Coaching",
 		"PRECOGNITION": "Precognition",
 		"AURA": "Aura",
 		"TRANSCENDENCE": "Transcendence",
@@ -2570,7 +2570,7 @@
 		"GUTS": "Blocks 3 damage",
 		"STURDY": "Blocks 6 damage",
 		"DEFIANT": "Blocks 9 damage",
-		"JUSTIFIED": "Blocks 12 damage. Throws the target after 8 hits blocked. Spawns a subsitute as training dummy. The FIGHTING Pokémon that defeats it gains 3 ATK and 10 HP permanently.",
+    "COACHING": "Blocks 12 damage. Get a Training Bag. Each stage, FIGHTING Pokémon on the bench with a training bag or a pillar on their left will train and gain 4 ATK and 10% base max HP permanently.",
 		"PRECOGNITION": "+30 AP. A Unown appears every 5 shops.",
 		"AURA": "+100 AP. A Unown appears every 3 shops.",
 		"TRANSCENDENCE": "+150 AP. Get a Unown shop and a free shop reroll after every fight and every 10 shop rerolls.",
@@ -3489,7 +3489,7 @@
 		"MEGA_SABLEYE": "Mega Sableye gains RUNE_PROTECT for the entire fight",
 		"MELMETAL": "Melmetal can't gain SPEED. Bonus SPEED is converted into ATK (10 SPEED: 5 ATK)",
 		"SKARMORY": "At the start of the fight, Skarmory scatters spikes around the field. BOARD_EFFECT: spikes deal 10 TRUE per second and inflict ARMOR_BREAK onto non FLYING or STEEL Pokémon that walk on it.",
-    "SKARMORY_PRE": "Gains a stack for each KO. Mega evolves after 10 stacks",
+    "SKARMORY_PRE": "Gains a stack for each KO. Mega evolves after 20 stacks",
 		"DURANT": "Durant basic attacks deals 1 extra TRUE for each BUG ally on your board",
 		"OGERPON_TEAL": "Ogerpon can wear TEAL_MASK, HEARTHFLAME_MASK, WELLSPRING_MASK and CORNERSTONE_MASK to change its appearance.\nUpon casting, gain [6,SP] ATK for each ADJACENT enemy.",
 		"OGERPON_WELLSPRING": "Ogerpon can wear TEAL_MASK, HEARTHFLAME_MASK, WELLSPRING_MASK and CORNERSTONE_MASK to change its appearance.\nUpon casting, gives [50,SP] HP and [25,SP] PP to ADJACENT allies.",
@@ -3598,7 +3598,6 @@
 		"MEGA_DIANCIE": "Trigger Magic Bounce for 5 seconds and RUNE_PROTECT itself, the first time it is affected by a negative status effect.",
 		"TYRANITAR": "Gains a stack for each 200 damage blocked or MONSTER stack. Mega evolves after 25 stacks.",
 		"AERODACTYL": "Gains one stack for each KO, two if the target was FLYING. Mega evolves after 20 stacks.",
-		"FIGHTING_SUBSTITUTE": "When this Substitute is KO'ed, gain +3 Attack and +10 Max HP permanently. Only targetable by allied FIGHTING Pokémon.",
 		"LUCARIO": "Gains a stack for each KO. Mega evolves after 10 stacks.",
 		"AURA": "Cloaking itself in aura, [10,LK] % chance to dodge attacks. Each time it dodges an attack, gain +3 ATK and +10 AP.",
 		"ABOMASNOW": "Abomasnow or Obamasnow. Think about it.",
@@ -4788,7 +4787,7 @@
 		"MAGNEZONE": "Magnezone is looking for an outlaw and offers a reward to find them",
 		"KINGAMBIT": "Kingambit has given the player in first place the LEADERS_CREST. Beat them in battle to earn extra GOLD!",
 		"LAPRAS": "Lapras offers a ride to go to a different region.",
-		"LUDICOLO": "Ludicolo celebrates the carnival and offers instruments to join in the festivities."
+    "CHIMECHO": "Chimecho grants a melodic treasure to every player"
 	},
 	"loading_hints": {
 		"tab_out": "Don't tab out! Loading is paused when this browser window is inactive.",

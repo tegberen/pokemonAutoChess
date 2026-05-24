@@ -889,13 +889,3 @@ function rockDeathExplosion(
     target.status.triggerArmorReduction(armorBreakMs, target)
   })
 }
-
-export class FightingSubstituteKillEffect extends OnKillEffect {
-  constructor() {
-    super(({ attacker, target }: OnKillEffectArgs) => {
-      if (target.passive !== Passive.FIGHTING_SUBSTITUTE) return
-      attacker.addAttack(3, attacker, 0, false, true)
-      attacker.addMaxHP(10, attacker, 0, false, true)
-    })
-  }
-}
