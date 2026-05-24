@@ -7,17 +7,24 @@ import {
   RegionDetails,
   SynergyTriggers
 } from "../../config"
+import { SynergyEffects } from "../../config/game/synergies"
 import {
   ConditionBasedEvolutionRule,
   CountEvolutionRule,
-  EvolutionRule,
+  type EvolutionRule,
   HatchEvolutionRule,
   ItemEvolutionRule,
   StackBasedEvolutionRule
 } from "../../core/evolution-rules"
-import Simulation from "../../core/simulation"
-import GameState from "../../rooms/states/game-state"
-import { Emotion, IPlayer, IPokemon, IPokemonEntity, Title } from "../../types"
+import type Simulation from "../../core/simulation"
+import type GameState from "../../rooms/states/game-state"
+import {
+  Emotion,
+  type IPlayer,
+  type IPokemon,
+  type IPokemonEntity,
+  Title
+} from "../../types"
 import { Ability } from "../../types/enum/Ability"
 import { DungeonPMDO } from "../../types/enum/Dungeon"
 import { EffectEnum } from "../../types/enum/Effect"
@@ -51,9 +58,8 @@ import { getFirstAvailablePositionInBench, isOnBench } from "../../utils/board"
 import { distanceC } from "../../utils/distance"
 import { clamp, min } from "../../utils/number"
 import { schemaValues } from "../../utils/schemas"
-import { SynergyEffects } from "../effects"
-import PokemonFactory from "../pokemon-factory"
-import Player from "./player"
+import type Player from "./player"
+import { getPkmWithCustom } from "./pokemon-customs"
 
 export class Pokemon extends Schema implements IPokemon {
   @type("string") id: string
@@ -172,10 +178,6 @@ export class Pokemon extends Schema implements IPokemon {
       })
       player.items.push(...itemsToRemove)
       this.removeItems(itemsToRemove, player)
-    }
-    if (y === 0 && this.tm === Ability.SKILL_SWAP) {
-      this.skill = Ability.SKILL_SWAP
-      this.maxPP = 100
     }
   }
 
@@ -848,14 +850,14 @@ export class Tsareena extends Pokemon {
 
 export class Buneary extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.NORMAL, Synergy.FIGHTING])
-  rarity = Rarity.UNCOMMON
+  rarity = Rarity.RARE
   stars = 1
   evolution = Pkm.LOPUNNY
-  hp = 60
-  atk = 6
+  hp = 65
+  atk = 7
   speed = 59
   def = 6
-  speDef = 6
+  speDef = 7
   maxPP = 80
   range = 1
   skill = Ability.HIGH_JUMP_KICK
@@ -864,14 +866,14 @@ export class Buneary extends Pokemon {
 
 export class Lopunny extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.NORMAL, Synergy.FIGHTING])
-  rarity = Rarity.UNCOMMON
+  rarity = Rarity.RARE
   stars = 2
   //evolution = Pkm.MEGA_LOPUNNY
-  hp = 120
-  atk = 13
+  hp = 125
+  atk = 15
   speed = 59
   def = 8
-  speDef = 8
+  speDef = 10
   maxPP = 80
   range = 1
   skill = Ability.HIGH_JUMP_KICK
@@ -880,7 +882,7 @@ export class Lopunny extends Pokemon {
 
 export class MegaLopunny extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.NORMAL, Synergy.FIGHTING])
-  rarity = Rarity.UNCOMMON
+  rarity = Rarity.RARE
   stars = 3
   hp = 250
   atk = 26
@@ -2940,8 +2942,8 @@ export class Swinub extends Pokemon {
   hp = 65
   atk = 4
   speed = 51
-  def = 6
-  speDef = 4
+  def = 5
+  speDef = 3
   maxPP = 100
   range = 1
   skill = Ability.ICICLE_CRASH
@@ -2955,8 +2957,8 @@ export class Piloswine extends Pokemon {
   hp = 120
   atk = 8
   speed = 51
-  def = 10
-  speDef = 8
+  def = 8
+  speDef = 6
   maxPP = 100
   range = 1
   skill = Ability.ICICLE_CRASH
@@ -5393,7 +5395,6 @@ export class Lugia extends Pokemon {
     Synergy.PSYCHIC
   ])
   rarity = Rarity.LEGENDARY
-  evolution = Pkm.SHADOW_LUGIA
   stars = 3
   hp = 300
   atk = 26
@@ -6629,7 +6630,7 @@ export class Mawile extends Pokemon {
   stars = 3
   hp = 180
   atk = 18
-  speed = 41
+  speed = 47
   def = 12
   speDef = 12
   maxPP = 80
@@ -6880,10 +6881,10 @@ export class Spiritomb extends Pokemon {
   rarity = Rarity.UNIQUE
   stars = 3
   hp = 150
-  atk = 15
+  atk = 18
   speed = 36
-  def = 8
-  speDef = 8
+  def = 12
+  speDef = 12
   maxPP = 108
   range = 1
   skill = Ability.SOUL_TRAP
@@ -7852,12 +7853,12 @@ export class Archen extends Pokemon {
   stars = 1
   evolution = Pkm.ARCHEOPS
   hp = 70
-  atk = 4
+  atk = 6
   speed = 60
-  def = 4
-  speDef = 4
+  def = 3
+  speDef = 3
   maxPP = 90
-  range = 1
+  range = 2
   skill = Ability.ROCK_SMASH
   additional = true
 }
@@ -7867,10 +7868,10 @@ export class Archeops extends Pokemon {
   rarity = Rarity.UNCOMMON
   stars = 2
   hp = 130
-  atk = 10
+  atk = 13
   speed = 60
-  def = 8
-  speDef = 8
+  def = 6
+  speDef = 6
   maxPP = 100
   range = 2
   skill = Ability.ROCK_SMASH
@@ -8462,7 +8463,14 @@ export class Ninjask extends Pokemon {
     // also gain sheninja if free space on bench
     const x = getFirstAvailablePositionInBench(player.board)
     if (x !== null) {
-      const pokemon = PokemonFactory.createPokemonFromName(Pkm.SHEDINJA, player)
+      const pkmWithCustom = getPkmWithCustom(
+        PkmIndex[Pkm.SHEDINJA],
+        player.pokemonCustoms
+      )
+      const shiny = pkmWithCustom.shiny ?? false
+      const emotion = pkmWithCustom.emotion ?? Emotion.NORMAL
+      const pokemon = new Shedinja(Pkm.SHEDINJA, shiny, emotion)
+      pokemon.maxHP = pokemon.hp
       pokemon.positionX = x
       pokemon.positionY = 0
       player.board.set(pokemon.id, pokemon)
@@ -12088,7 +12096,7 @@ export class Shuckle extends Pokemon {
   speed = 27
   def = 40
   speDef = 40
-  maxPP = 90
+  maxPP = 50
   range = 1
   skill = Ability.BIDE
 }
@@ -18875,11 +18883,7 @@ export class Sandaconda extends Pokemon {
 }
 
 export class Dunsparce extends Pokemon {
-  types = new SetSchema<Synergy>([
-    Synergy.NORMAL,
-    Synergy.GROUND,
-    Synergy.FLYING
-  ])
+  types = new SetSchema<Synergy>([Synergy.NORMAL, Synergy.GROUND, Synergy.BUG])
   rarity = Rarity.UNIQUE
   evolution = Pkm.DUDUNSPARCE
   evolutionRule = new ConditionBasedEvolutionRule(
@@ -18903,11 +18907,7 @@ export class Dunsparce extends Pokemon {
 }
 
 export class Dudunsparse extends Pokemon {
-  types = new SetSchema<Synergy>([
-    Synergy.NORMAL,
-    Synergy.GROUND,
-    Synergy.FLYING
-  ])
+  types = new SetSchema<Synergy>([Synergy.NORMAL, Synergy.GROUND, Synergy.BUG])
   rarity = Rarity.UNIQUE
   stars = 4
   hp = 260
@@ -19061,7 +19061,7 @@ export class Blipbug extends Pokemon {
   speed = 58
   def = 4
   speDef = 4
-  maxPP = 100
+  maxPP = 85
   range = 1
   skill = Ability.EXPANDING_FORCE
   regional = true
@@ -19077,7 +19077,7 @@ export class Dottler extends Pokemon {
   speed = 58
   def = 7
   speDef = 7
-  maxPP = 100
+  maxPP = 85
   range = 1
   skill = Ability.EXPANDING_FORCE
   regional = true
@@ -19092,7 +19092,7 @@ export class Orbeetle extends Pokemon {
   speed = 58
   def = 10
   speDef = 10
-  maxPP = 100
+  maxPP = 85
   range = 1
   skill = Ability.EXPANDING_FORCE
   regional = true

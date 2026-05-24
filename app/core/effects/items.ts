@@ -9,9 +9,9 @@ import { EffectEnum } from "../../types/enum/Effect"
 import { AttackType, PokemonActionState, Team } from "../../types/enum/Game"
 import {
   AbilityPerTM,
-  Dish,
+  type Dish,
   DishesGoingToInventory,
-  FishingRod,
+  type FishingRod,
   Flavors,
   HerbaMysticas,
   Item,
@@ -44,18 +44,19 @@ import { AbilityStrategies } from "../abilities/abilities"
 import { DishByPkm } from "../dishes"
 import { ConditionBasedEvolutionRule } from "../evolution-rules"
 import { FlowerPotMons } from "../flower-pots"
-import { getUnitScore, PokemonEntity } from "../pokemon-entity"
+import type { PokemonEntity } from "../pokemon-entity"
 import { DelayedCommand } from "../simulation-command"
+import { getUnitScore } from "../unit-score";
 import {
   BeforeAttackEffect,
-  Effect,
+  type Effect,
   OnAbilityCastEffect,
   OnAttackEffect,
   OnAttackReceivedEffect,
   OnDamageDealtEffect,
   OnDamageReceivedEffect,
   OnDeathEffect,
-  OnDeathEffectArgs,
+  type OnDeathEffectArgs,
   OnHitEffect,
   OnItemDroppedEffect,
   OnItemGainedEffect,
@@ -360,6 +361,7 @@ export class DojoTicketOnItemDroppedEffect extends OnItemDroppedEffect {
         returnStage: room.state.stageLevel + ([3, 4, 5][ticketLevel - 1] ?? 5)
       })
       removeInArray(player.items, item)
+      player.updateSynergies()
       return false // prevent item from being equipped
     })
   }
@@ -431,7 +433,7 @@ const chefCookEffect = new OnStageStartEffect(({ pokemon, player, room }) => {
               (p) =>
                 p.canEat &&
                 !p.dishes.has(dish) &&
-                !isOnBench(p) &&
+                isOnBench(chef) === isOnBench(p) &&
                 distanceC(
                   chef.positionX,
                   chef.positionY,

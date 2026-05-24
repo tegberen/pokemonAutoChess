@@ -1,6 +1,6 @@
 import { Command } from "@colyseus/command"
 import { SetSchema, StateView } from "@colyseus/schema"
-import { Client, updateLobby } from "colyseus"
+import { type Client, updateLobby } from "colyseus"
 import {
   AdditionalPicksStages,
   BOARD_SIDE_HEIGHT,
@@ -24,7 +24,8 @@ import {
   TREASURE_BOX_LIFE_THRESHOLD,
   UNOWN_ENCOUNTER_CHANCE
 } from "../../config"
-import { castAbility } from "../../core/abilities/abilities"
+import { AbilityStrategies } from "../../core/abilities/abilities"
+import { castAbility } from "../../core/abilities/cast"
 import {
   OnItemDroppedEffect,
   OnStageStartEffect
@@ -42,9 +43,12 @@ import { selectMatchups } from "../../core/matchmaking"
 import { canSell, PokemonEntity } from "../../core/pokemon-entity"
 import Simulation from "../../core/simulation"
 import { getLevelUpCost } from "../../models/colyseus-models/experience-manager"
-import Player from "../../models/colyseus-models/player"
+import type Player from "../../models/colyseus-models/player"
 import { PlayerChoice } from "../../models/colyseus-models/player-choice"
-import { Pokemon, PokemonClasses } from "../../models/colyseus-models/pokemon"
+import {
+  type Pokemon,
+  PokemonClasses
+} from "../../models/colyseus-models/pokemon"
 import { getSynergyStep } from "../../models/colyseus-models/synergies"
 import UserMetadata from "../../models/mongo-models/user-metadata"
 import PokemonFactory, {
@@ -56,14 +60,16 @@ import { getBuyPrice, getSellPrice } from "../../models/shop"
 import { updatePlayerTitlesAfterFight } from "../../models/titles"
 import {
   Emotion,
-  IClient,
-  IDragDropCombineMessage,
-  IDragDropItemMessage,
-  IDragDropMessage,
+  type IClient,
+  type IDragDropCombineMessage,
+  type IDragDropItemMessage,
+  type IDragDropMessage,
   Role,
   Title,
+  TMPerAbility,
   Transfer
 } from "../../types"
+import { Ability } from "../../types/enum/Ability"
 import { DungeonPMDO } from "../../types/enum/Dungeon"
 import { EffectEnum } from "../../types/enum/Effect"
 import {
@@ -106,7 +112,7 @@ import { Synergy } from "../../types/enum/Synergy"
 import { TownEncounters } from "../../types/enum/TownEncounter"
 import { WandererBehavior, WandererType } from "../../types/enum/Wanderer"
 import type { IDetailledPokemon } from "../../types/models/bot-v2"
-import { DisplayText } from "../../types/strings/DisplayText"
+import type { DisplayText } from "../../types/strings/DisplayText"
 import { isIn, removeInArray } from "../../utils/array"
 import { getAvatarString } from "../../utils/avatar"
 import {
@@ -128,7 +134,8 @@ import {
 } from "../../utils/random"
 import { resetArraySchema, schemaValues } from "../../utils/schemas"
 import { getWeather } from "../../utils/weather"
-import GameRoom from "../game-room"
+import type GameRoom from "../game-room"
+import type GameState from "../states/game-state"
 
 export class OnBuyPokemonCommand extends Command<
   GameRoom,
@@ -434,7 +441,8 @@ export class OnDragDropPokemonCommand extends Command<
     if (pokemonToSwap) {
       pokemonToSwap.positionX = pokemon.positionX
       pokemonToSwap.positionY = pokemon.positionY
-      pokemonToSwap.onChangePosition(
+      changePokemonPosition(
+        pokemonToSwap,
         pokemon.positionX,
         pokemon.positionY,
         player,
@@ -443,7 +451,7 @@ export class OnDragDropPokemonCommand extends Command<
     }
     pokemon.positionX = x
     pokemon.positionY = y
-    pokemon.onChangePosition(x, y, player, this.state)
+    changePokemonPosition(pokemon, x, y, player, this.state)
   }
 }
 
@@ -843,7 +851,7 @@ export class OnDragDropItemCommand extends Command<
       }
     } else {
       if (
-        (isIn(SynergyStones, item) || item === Item.FRIEND_BOW) &&
+        isIn(SynergyStones, item) &&
         pokemon.types.has(SynergyGivenByItem[item])
       ) {
         // prevent combining into a synergy stone on a pokemon that already has this synergy
@@ -1569,7 +1577,8 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
             if (coordinates) {
               pokemon.positionX = coordinates[0]
               pokemon.positionY = coordinates[1]
-              pokemon.onChangePosition(
+              changePokemonPosition(
+                pokemon,
                 coordinates[0],
                 coordinates[1],
                 player,
@@ -1887,7 +1896,13 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
               player.team,
               simulation
             )
-            castAbility(caster.skill, caster, simulation.board, null, false)
+            castAbility(
+              AbilityStrategies[caster.skill],
+              caster,
+              simulation.board,
+              null,
+              false
+            )
           }, 10000)
         })
       })
@@ -2086,5 +2101,22 @@ export class OnOverwriteBoardCommand extends Command<GameRoom> {
     })
     player.updateSynergies()
     player.boardSize = this.room.getTeamSize(player.board)
+  }
+}
+
+function changePokemonPosition(
+  pokemon: Pokemon,
+  x: number,
+  y: number,
+  player: Player,
+  state: GameState
+) {
+  pokemon.onChangePosition(x, y, player, state)
+  if (y === 0 && pokemon.tm && TMPerAbility.has(pokemon.tm)) {
+    player.items.push(TMPerAbility.get(pokemon.tm)!)
+    pokemon.tm = Ability.DEFAULT
+    const { skill: baseSkill, pp: baseMaxPP } = getPokemonData(pokemon.name)
+    pokemon.skill = baseSkill
+    pokemon.maxPP = baseMaxPP
   }
 }
