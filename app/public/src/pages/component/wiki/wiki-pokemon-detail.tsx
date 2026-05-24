@@ -19,7 +19,7 @@ export default function WikiPokemonDetail(props: {
   pokemon: Pkm
   selectPkm: (pkm: Pkm) => void
 }) {
-  const { t } = useTranslation()
+  const { t: tBase } = useTranslation(); const t = tBase as any
   const pokemon = useMemo(() => {
     const pokemon = PokemonFactory.createPokemonFromName(props.pokemon)
     pokemon.pp = pokemon.maxPP

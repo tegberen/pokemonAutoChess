@@ -1,4 +1,4 @@
-import Player from "../models/colyseus-models/player"
+import type Player from "../models/colyseus-models/player"
 import { BotV2 } from "../models/mongo-models/bot-v2"
 import PokemonFactory from "../models/pokemon-factory"
 import { AbilityPerTM, Emotion, TMs } from "../types"
@@ -24,7 +24,7 @@ export default class Bot {
     try {
       const data = await BotV2.findOne({ id: this.player.id }, ["steps"])
       if (data) {
-        this.scenario = data
+        this.scenario = data as unknown as IBot
         this.updatePlayerTeam()
       }
     } catch (error) {

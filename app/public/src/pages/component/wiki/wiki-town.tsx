@@ -5,14 +5,14 @@ import {
 } from "../../../../../config"
 import { PkmIndex } from "../../../../../types/enum/Pokemon"
 import {
-  TownEncounter,
+  type TownEncounter,
   TownEncounters
 } from "../../../../../types/enum/TownEncounter"
 import { addIconsToDescription } from "../../utils/descriptions"
 import PokemonPortrait from "../pokemon-portrait"
 
 export default function WikiTown() {
-  const { t } = useTranslation()
+  const { t: tBase } = useTranslation(); const t = tBase as any
   return (
     <div id="wiki-town">
       <div className="my-box" style={{ marginBottom: "0.5em" }}>

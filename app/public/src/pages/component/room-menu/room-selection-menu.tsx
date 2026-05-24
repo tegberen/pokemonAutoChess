@@ -1,5 +1,8 @@
 import { useTranslation } from "react-i18next"
+import { GADGETS } from "../../../../../config/game/gadgets"
+import { Role } from "../../../../../types"
 import { GameMode } from "../../../../../types/enum/Game"
+import { useAppSelector } from "../../../hooks"
 import { Modal } from "../modal/modal"
 import "./room-selection-menu.css"
 
@@ -9,6 +12,9 @@ export function RoomSelectionMenu(props: {
   onSelectMode: (mode: GameMode) => void
 }) {
   const { t } = useTranslation()
+  const profile = useAppSelector((state) => state.network.profile)
+  const profileLevel = profile?.level ?? 0
+
   return (
     <Modal
       show={props.show}

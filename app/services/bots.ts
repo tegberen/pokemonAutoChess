@@ -1,7 +1,8 @@
 import { logger } from "colyseus"
-import { mongo } from "mongoose"
+import type { mongo } from "mongoose"
 import { BotV2 } from "../models/mongo-models/bot-v2"
-import { IUserMetadataMongo } from "../types/interfaces/UserMetadata"
+import type { Pkm } from "../types/enum/Pokemon"
+import type { IUserMetadataMongo } from "../types/interfaces/UserMetadata"
 import type { IBot, IStep } from "../types/models/bot-v2"
 import { discordService } from "./discord"
 
@@ -52,7 +53,7 @@ export async function fetchBotsList(
       }))
 
       // Use push.apply to add elements without creating intermediate arrays
-      allBots.push(...processedBots)
+      allBots.push(...processedBots as unknown as IBotListItem[]) 
 
       if (botsData.length < pageSize) {
         // Last chunk
@@ -86,7 +87,7 @@ export async function fetchBot(id: string): Promise<IBot | null> {
 }
 
 export async function addBotToDatabase(bot: {
-  name: string
+  name: Pkm
   avatar: string
   elo: number
   author: string
@@ -108,8 +109,8 @@ export async function addBotToDatabase(bot: {
   })
 
   logger.info(`Bot with id ${resultCreate.id} created`)
-  discordService.announceBotCreation(resultCreate)
-  return resultCreate
+  discordService.announceBotCreation(resultCreate as unknown as IBot)
+  return resultCreate as unknown as IBot
 }
 
 export async function deleteBotFromDatabase(

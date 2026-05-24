@@ -1,4 +1,5 @@
-import { Dispatch, SetStateAction } from "react"
+import Phaser from "phaser"
+import type { Dispatch, SetStateAction } from "react"
 import { useTranslation } from "react-i18next"
 import { Tab, TabList, TabPanel, Tabs } from "react-tabs"
 import { isThemeUnlocked, THEMES } from "../../../../../config"
@@ -10,7 +11,7 @@ import { usePreferences } from "../../../preferences"
 import { selectLanguage } from "../../../stores/NetworkStore"
 import { getGameScene } from "../../game"
 import { Checkbox } from "../checkbox/checkbox"
-import { Page } from "../main-sidebar/main-sidebar"
+import type { Page } from "../main-sidebar/main-sidebar"
 import { Modal } from "../modal/modal"
 import GameFiles from "./game-files"
 import KeybindInfo from "./keybind-info"
@@ -53,7 +54,7 @@ export default function GameOptionsModal(props: {
 
         <TabPanel>
           <label style={{ width: "100%" }}>
-            {t("music_volume")}: {preferences.musicVolume} %
+            {t("jukebox.music_volume")}: {preferences.musicVolume} %
             <input
               type="range"
               min="0"

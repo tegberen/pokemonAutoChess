@@ -1,9 +1,9 @@
-import { RoomAvailable } from "@colyseus/sdk"
+import type { RoomAvailable } from "@colyseus/sdk"
 import firebase from "firebase/compat/app"
 import { useCallback, useEffect, useRef, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { useNavigate } from "react-router"
-import GameState from "../../../rooms/states/game-state"
+import type GameState from "../../../rooms/states/game-state"
 import { Transfer } from "../../../types"
 import { throttle } from "../../../utils/function"
 import { joinLobbyRoom } from "../game/lobby-logic"
@@ -88,7 +88,7 @@ export default function Lobby() {
       <MainSidebar
         page="main_lobby"
         leave={signOut}
-        leaveLabel={t("sign_out")}
+        leaveLabel={t("auth.sign_out")}
       />
       <div className="lobby-container">
         <MainLobby />

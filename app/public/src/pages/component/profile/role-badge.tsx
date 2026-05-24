@@ -4,7 +4,7 @@ import { cc } from "../../utils/jsx"
 import "./role-badge.css"
 
 export function RoleBadge(props: { role: Role }) {
-  const { t } = useTranslation()
+  const { t: tBase } = useTranslation(); const t = tBase as any
   return props.role && props.role !== Role.BASIC && props.role !== Role.ADMIN ? (
   <div className={cc("badge", props.role.toLowerCase())}>
       {t("role." + props.role)}

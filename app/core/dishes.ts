@@ -1,14 +1,14 @@
 import { FIGHTING_PHASE_DURATION, getBaseAltForm } from "../config"
 import { Title } from "../types"
 import { EffectEnum } from "../types/enum/Effect"
-import { Berries, Dishes, Item } from "../types/enum/Item"
+import { Berries, type Dishes, Item } from "../types/enum/Item"
 import { Pkm } from "../types/enum/Pokemon"
 import { Synergy } from "../types/enum/Synergy"
 import { chance } from "../utils/random"
-import { values } from "../utils/schemas"
+import { schemaValues } from "../utils/schemas"
 import { AbilityStrategies } from "./abilities/abilities"
 import {
-  Effect,
+  type Effect,
   OnDishConsumedEffect,
   OnHitEffect,
   OnSpawnEffect,
@@ -90,7 +90,9 @@ export const DishByPkm: { [pkm in Pkm]?: Item | null } = {
   [Pkm.MORPEKO]: Item.ELECTRIC_SEED,
   [Pkm.MORPEKO_HANGRY]: Item.ELECTRIC_SEED,
   [Pkm.EXEGGUTOR]: Item.COCONUT_MILK,
-  [Pkm.ALOLAN_EXEGGUTOR]: Item.COCONUT_MALASADA
+  [Pkm.ALOLAN_EXEGGUTOR]: Item.COCONUT_MALASADA,
+  [Pkm.SKWOVET]: Item.BERRIES,
+  [Pkm.GREEDENT]: Item.BERRIES
 }
 
 export const DishEffects: Record<(typeof Dishes)[number], Effect[]> = {
@@ -121,6 +123,7 @@ export const DishEffects: Record<(typeof Dishes)[number], Effect[]> = {
       )
     })
   ],
+  BERRIES: [],
   BINDING_MOCHI: [
     new OnSpawnEffect((entity) => {
       entity.effects.add(EffectEnum.BINDING_MOCHI)
@@ -263,10 +266,10 @@ export const DishEffects: Record<(typeof Dishes)[number], Effect[]> = {
         entity.player.titles.add(Title.POFFIN_MASTER)
       }
 
-      values(entity.items)
+      schemaValues(entity.items)
         .filter((item) => Berries.includes(item))
         .forEach((item) => {
-          entity.eatBerry(item, undefined, true)
+          entity.eatBerry(item, undefined, true, 0, false)
         })
     })
   ],
@@ -451,7 +454,8 @@ export const DishEffects: Record<(typeof Dishes)[number], Effect[]> = {
   RICE: [
     new OnDishConsumedEffect(({ pokemon, entity, player }) => {
       entity?.addShield(50, entity, 0, false)
-      const tatsugiriOnBoard = values(player.board).find(
+      if(!player) return
+      const tatsugiriOnBoard = schemaValues(player.board).find(
         (e) => e && getBaseAltForm(e.name) === Pkm.TATSUGIRI_CURLY
       )
       if (tatsugiriOnBoard?.name === Pkm.TATSUGIRI_CURLY) {
@@ -472,7 +476,7 @@ export const DishEffects: Record<(typeof Dishes)[number], Effect[]> = {
         entity.types.add(Synergy.ELECTRIC)
         entity.simulation.applySynergyEffects(entity, Synergy.ELECTRIC)
         if (entity.player) {
-          const nbCellBatteries = values(entity.player.items).filter(
+          const nbCellBatteries = schemaValues(entity.player.items).filter(
             (item) => item === Item.CELL_BATTERY
           ).length
           if (nbCellBatteries > 0) {

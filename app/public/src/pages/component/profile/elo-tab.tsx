@@ -6,7 +6,7 @@ import {
   ELO_DECAY_NB_GAMES_REQUIRED,
   EloRankThreshold
 } from "../../../../../config"
-import { IGameRecord } from "../../../../../models/colyseus-models/game-record"
+import type { IGameRecord } from "../../../../../models/colyseus-models/game-record"
 import { EloRank } from "../../../../../types/enum/EloRank"
 import { GameMode } from "../../../../../types/enum/Game"
 import { getRank } from "../../../../../utils/elo"
@@ -64,7 +64,7 @@ export function EloTab() {
     }
   }, [user?.uid])
 
-  return user ? (
+  return user && rank ? (
     <div className="elo-tab">
       <p>{t("rank")}:</p>
       <img
@@ -75,11 +75,11 @@ export function EloTab() {
           maxWidth: "100%"
         }}
         src={"assets/ranks/" + rank + ".svg"}
-        alt={t("elorank." + rank)}
-        title={t("elorank." + rank)}
+        alt={t(`elorank.${rank}`)}
+        title={t(`elorank.${rank}`)}
       />
       <p style={{ fontSize: "1.2em", fontWeight: "bold" }}>
-        {t("elorank." + rank)}
+        {t(`elorank.${rank}`)}
       </p>
       <p>
         {t("profile.elo_tab.current_elo")}: {user.elo}

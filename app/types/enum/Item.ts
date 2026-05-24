@@ -1,4 +1,4 @@
-import { reverseMap } from "../../utils/map"
+import { objToMap, reverseMap } from "../../utils/map"
 import { Ability } from "./Ability"
 import { Synergy } from "./Synergy"
 import { Weather } from "./Weather"
@@ -234,6 +234,7 @@ export enum Item {
   BIG_MUSHROOM = "BIG_MUSHROOM",
   BALM_MUSHROOM = "BALM_MUSHROOM",
   RICE = "RICE",
+  BERRIES = "BERRIES",
   POFFIN = "POFFIN",
   ROCK_SALT = "ROCK_SALT",
   NUTRITIOUS_EGG = "NUTRITIOUS_EGG",
@@ -432,6 +433,16 @@ export const DojoTickets = [
   Item.GOLD_DOJO_TICKET
 ] satisfies Item[]
 
+export const SevenTreasures = [
+  Item.AQUA_MONICA,
+  Item.FIERY_DRUM,
+  Item.GRASS_CORNET,
+  Item.ICY_FLUTE,
+  Item.ROCK_HORN,
+  Item.SKY_MELODICA,
+  Item.TERRA_CYMBAL
+] satisfies Item[]
+
 export const TownItems = [
   Item.TREASURE_BOX,
   Item.AMULET_COIN,
@@ -440,6 +451,7 @@ export const TownItems = [
   Item.RECYCLE_TICKET,
   ...DojoTickets,
   ...MissionOrders,
+  ...SevenTreasures,
   Item.EGG_FOR_SELL,
   Item.PICNIC_SET,
   Item.WANTED_NOTICE,
@@ -670,15 +682,6 @@ export const Tools = [
   Item.WHITE_FLUTE
 ] satisfies Item[]
 
-export const SevenTreasures = [
-  Item.AQUA_MONICA,
-  Item.FIERY_DRUM,
-  Item.GRASS_CORNET,
-  Item.ICY_FLUTE,
-  Item.ROCK_HORN,
-  Item.SKY_MELODICA,
-  Item.TERRA_CYMBAL
-] satisfies Item[]
 
 export type Tool = (typeof Tools)[number]
 export type SevenTreasures = (typeof SevenTreasures)[number]
@@ -1031,6 +1034,10 @@ export const AbilityPerTM: { [item in Item]?: Ability } = {
   [Item.TM_SKILL_SWAP]: Ability.SKILL_SWAP
 }
 
+export const TMPerAbility = reverseMap(
+  objToMap(AbilityPerTM as Record<Item, Ability>)
+)
+
 export const Dishes = [
   Item.OLIVE_OIL,
   Item.RAGE_CANDY_BAR,
@@ -1079,7 +1086,8 @@ export const Dishes = [
   Item.RICE,
   Item.ELECTRIC_SEED,
   Item.COCONUT_MILK,
-  Item.COCONUT_MALASADA
+  Item.COCONUT_MALASADA,
+  Item.BERRIES
 ] satisfies Item[]
 
 export type Dish = (typeof Dishes)[number]
@@ -1182,6 +1190,7 @@ export const UnholdableItems = [
   ...SynergyGems,
   ...Mulches,
   ...MissionOrders,
+  ...SevenTreasures,
   Item.METEORITE,
   Item.ROTOM_CATALOG,
   Item.DNA_SPLICER,

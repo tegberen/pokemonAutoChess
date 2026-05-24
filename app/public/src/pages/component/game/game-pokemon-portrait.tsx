@@ -1,17 +1,18 @@
-import React, { useEffect, useMemo, useState } from "react"
+import type React from "react"
+import { useEffect, useMemo, useState } from "react"
 import { Tooltip } from "react-tooltip"
 import { RarityColor } from "../../../../../config"
 import { CountEvolutionRule } from "../../../../../core/evolution-rules"
-import { Pokemon } from "../../../../../models/colyseus-models/pokemon"
+import type { Pokemon } from "../../../../../models/colyseus-models/pokemon"
 import {
   getPkmWithCustom,
-  PokemonCustoms
+  type PokemonCustoms
 } from "../../../../../models/colyseus-models/pokemon-customs"
 import PokemonFactory from "../../../../../models/pokemon-factory"
 import { getBuyPrice } from "../../../../../models/shop"
-import { Pkm, PkmFamily } from "../../../../../types/enum/Pokemon"
+import { type Pkm, PkmFamily } from "../../../../../types/enum/Pokemon"
 import { getPortraitSrc } from "../../../../../utils/avatar"
-import { values } from "../../../../../utils/schemas"
+import { schemaValues } from "../../../../../utils/schemas"
 import {
   selectConnectedPlayer,
   selectSpectatedPlayer,
@@ -141,13 +142,13 @@ export default function GamePokemonPortrait(props: {
 
   const gainedSynergies =
     pokemonEvolution && willEvolve
-      ? values(pokemonEvolution.types).filter(
+      ? schemaValues(pokemonEvolution.types).filter(
           (type) => !pokemon.types.has(type)
         )
       : []
   const lostSynergies =
     pokemonEvolution && willEvolve
-      ? values(pokemon.types).filter(
+      ? schemaValues(pokemon.types).filter(
           (type) => !pokemonEvolution.types.has(type)
         )
       : []

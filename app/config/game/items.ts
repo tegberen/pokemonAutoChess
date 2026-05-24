@@ -1,5 +1,5 @@
 import { Stat } from "../../types/enum/Game"
-import { Item, ItemsSoldAtTown } from "../../types/enum/Item"
+import { Item, type ItemsSoldAtTown } from "../../types/enum/Item"
 
 export const ItemStats: { [item in Item]?: { [stat in Stat]?: number } } = {
   [Item.BINDING_BAND]: { [Stat.LUCK]: 10 },

@@ -469,6 +469,7 @@ export enum Pkm {
   GRAVELER = "GRAVELER",
   GREAT_TUSK = "GREAT_TUSK",
   GREAVARD = "GREAVARD",
+  GREEDENT = "GREEDENT",
   GRENINJA = "GRENINJA",
   GRIMER = "GRIMER",
   GRIMMSNARL = "GRIMMSNARL",
@@ -573,6 +574,7 @@ export enum Pkm {
   KLINK = "KLINK",
   KLINKLANG = "KLINKLANG",
   KOFFING = "KOFFING",
+  KOMALA = "KOMALA",
   KOMMO_O = "KOMMO_O",
   KRABBY = "KRABBY",
   KRICKETOT = "KRICKETOT",
@@ -967,9 +969,11 @@ export enum Pkm {
   SKORUPI = "SKORUPI",
   SKRELP = "SKRELP",
   SKUNTANK = "SKUNTANK",
+  SKWOVET = "SKWOVET",
   SLAKING = "SLAKING",
   SLAKOTH = "SLAKOTH",
   SLIGOO = "SLIGOO",
+  SLITHER_WING = "SLITHER_WING",
   SLOWBRO = "SLOWBRO",
   SLOWKING = "SLOWKING",
   SLOWPOKE = "SLOWPOKE",
@@ -994,6 +998,7 @@ export enum Pkm {
   SPECTRIER = "SPECTRIER",
   SPEWPA = "SPEWPA",
   SPHEAL = "SPHEAL",
+  SPIDOPS = "SPIDOPS",
   SPINARAK = "SPINARAK",
   SPINDA = "SPINDA",
   SPIRITOMB = "SPIRITOMB",
@@ -1039,6 +1044,7 @@ export enum Pkm {
   TAPU_FINI = "TAPU_FINI",
   TAPU_KOKO = "TAPU_KOKO",
   TAPU_LELE = "TAPU_LELE",
+  TAROUNTULA = "TAROUNTULA",
   TATSUGIRI_CURLY = "TATSUGIRI_CURLY",
   TATSUGIRI_DROOPY = "TATSUGIRI_DROOPY",
   TATSUGIRI_STRETCHY = "TATSUGIRI_STRETCHY",
@@ -1173,7 +1179,6 @@ export enum Pkm {
   VOLCANION = "VOLCANION",
   VOLCARONA = "VOLCARONA",
   IRON_MOTH = "IRON_MOTH",
-  SLITHER_WING = "SLITHER_WING",
   VOLTORB = "VOLTORB",
   VULLABY = "VULLABY",
   VULPIX = "VULPIX",
@@ -2062,7 +2067,6 @@ export const PkmIndex: { [key in Pkm]: string } = {
   [Pkm.LARVESTA]: "0636",
   [Pkm.VOLCARONA]: "0637",
   [Pkm.IRON_MOTH]: "0994",
-  [Pkm.SLITHER_WING]: "0988",
   [Pkm.COBALION]: "0638",
   [Pkm.TERRAKION]: "0639",
   [Pkm.VIRIZION]: "0640",
@@ -2274,7 +2278,7 @@ export const PkmIndex: { [key in Pkm]: string } = {
   [Pkm.MINIOR_KERNEL_BLUE]: "0774-0005",
   [Pkm.MINIOR_KERNEL_ORANGE]: "0774-0002",
   [Pkm.MINIOR_KERNEL_GREEN]: "0774-0004",
-  //[Pkm.KOMALA]: "0775",
+  [Pkm.KOMALA]: "0775",
   [Pkm.TURTONATOR]: "0776",
   [Pkm.TOGEDEMARU]: "0777",
   [Pkm.MIMIKYU]: "0778",
@@ -2325,8 +2329,8 @@ export const PkmIndex: { [key in Pkm]: string } = {
   [Pkm.SOBBLE]: "0816",
   [Pkm.DRIZZILE]: "0817",
   [Pkm.INTELEON]: "0818",
-  //[Pkm.SKWOVET]: "0819",
-  //[Pkm.GREEDENT]: "0820",
+  [Pkm.SKWOVET]: "0819",
+  [Pkm.GREEDENT]: "0820",
   [Pkm.ROOKIDEE]: "0821",
   [Pkm.CORVISQUIRE]: "0822",
   [Pkm.CORVIKNIGHT]: "0823",
@@ -2446,8 +2450,8 @@ export const PkmIndex: { [key in Pkm]: string } = {
   [Pkm.LECHONK]: "0915",
   [Pkm.OINKOLOGNE_MALE]: "0916",
   //[Pkm.OINKOLOGNE_FEMALE]: "0916-0003",
-  //[Pkm.TAROUNTULA]: "0917",
-  //[Pkm.SPIDOPS]: "0918",
+  [Pkm.TAROUNTULA]: "0917",
+  [Pkm.SPIDOPS]: "0918",
   [Pkm.NYMBLE]: "0919",
   [Pkm.LOKIX]: "0920",
   [Pkm.PAWMI]: "0921",
@@ -2521,7 +2525,7 @@ export const PkmIndex: { [key in Pkm]: string } = {
   [Pkm.SCREAM_TAIL]: "0985",
   //[Pkm.BRUTE_BONNET]: "0986",
   [Pkm.FLUTTER_MANE]: "0987",
-  //[Pkm.SLITHER_WING]: "0988",
+  [Pkm.SLITHER_WING]: "0988",
   [Pkm.SANDY_SHOCKS]: "0989",
   //[Pkm.IRON_THREADS]: "0990",
   [Pkm.IRON_BUNDLE]: "0991",
@@ -3799,7 +3803,12 @@ export const PkmFamily: { [key in Pkm]: Pkm } = {
   [Pkm.EISCUE]: Pkm.EISCUE,
   [Pkm.EISCUE_NOICE]: Pkm.EISCUE,
   [Pkm.DWEBBLE]: Pkm.DWEBBLE,
-  [Pkm.CRUSTLE]: Pkm.DWEBBLE
+  [Pkm.CRUSTLE]: Pkm.DWEBBLE,
+  [Pkm.SKWOVET]: Pkm.SKWOVET,
+  [Pkm.GREEDENT]: Pkm.SKWOVET,
+  [Pkm.KOMALA]: Pkm.KOMALA,
+  [Pkm.TAROUNTULA]: Pkm.TAROUNTULA,
+  [Pkm.SPIDOPS]: Pkm.TAROUNTULA,
 }
 
 export const PkmRegionalVariants: { [key in Pkm]?: readonly Pkm[] } = {
@@ -3930,14 +3939,13 @@ export const UnownsForScribble: Pkm[] = [
   Pkm.UNOWN_QUESTION
 ]
 
-export const NonPkm: Pkm[] = [
-  Pkm.SUBSTITUTE,
-  Pkm.EGG,
+export const Pillars = [
   Pkm.PILLAR_WOOD,
   Pkm.PILLAR_IRON,
-  Pkm.PILLAR_CONCRETE,
-  Pkm.DEFAULT
-]
+  Pkm.PILLAR_CONCRETE
+] satisfies readonly Pkm[]
+
+export const NonPkm: Pkm[] = [Pkm.SUBSTITUTE, Pkm.EGG, ...Pillars, Pkm.DEFAULT]
 
 export const NON_PMD_PKM_INDEXES: string[] = [
   "0532-0002", // Pillar Wood

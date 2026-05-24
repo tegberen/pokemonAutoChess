@@ -1,13 +1,13 @@
 import { BOARD_WIDTH } from "../../config"
+import { SynergyEffects } from "../../config/game/synergies"
 import {
   BasculinWhite,
-  Pokemon,
+  type Pokemon,
   PokemonClasses
 } from "../../models/colyseus-models/pokemon"
 import { getSynergyStep } from "../../models/colyseus-models/synergies"
-import { SynergyEffects } from "../../models/effects"
 import PokemonFactory from "../../models/pokemon-factory"
-import { Transfer } from "../../types"
+import { Title, Transfer } from "../../types"
 import { Ability } from "../../types/enum/Ability"
 import { EffectEnum } from "../../types/enum/Effect"
 import { AttackType, PokemonActionState, Team } from "../../types/enum/Game"
@@ -16,7 +16,7 @@ import {
   ConsumableItems,
   Flavors,
   Item,
-  OgerponMasks,
+  type OgerponMasks,
   SpecialBerries,
   SynergyFlavors
 } from "../../types/enum/Item"
@@ -29,18 +29,20 @@ import { isOnBench } from "../../utils/board"
 import { distanceC } from "../../utils/distance"
 import { max, min } from "../../utils/number"
 import { chance, pickRandomIn } from "../../utils/random"
-import { values } from "../../utils/schemas"
-import { castAbility } from "../abilities/abilities"
-import { Board, Cell } from "../board"
-import { getStrongestUnit, PokemonEntity } from "../pokemon-entity"
+import { schemaValues } from "../../utils/schemas"
+import { AbilityStrategies } from "../abilities/abilities"
+import { castAbility } from "../abilities/cast"
+import type { Board, Cell } from "../board"
+import type { PokemonEntity } from "../pokemon-entity"
 import { DelayedCommand } from "../simulation-command"
+import { getStrongestUnit } from "../unit-score"
 import {
-  Effect,
+  type Effect,
   OnAbilityCastEffect,
   OnAttackEffect,
   OnDamageReceivedEffect,
   OnDeathEffect,
-  OnDeathEffectArgs,
+  type OnDeathEffectArgs,
   OnHitEffect,
   OnItemDroppedEffect,
   OnKillEffect,
@@ -53,6 +55,9 @@ import {
   PeriodicEffect
 } from "./effect"
 import { WandererBehavior, WandererType } from "../../types/enum/Wanderer"
+import { AccelerationEffect } from "./passives/acceleration"
+import { BergmiteOnBackEffect } from "./passives/bergmite-on-back"
+import { FalinksFormationEffect } from "./passives/falinks-formation"
 
 export function drumBeat(pokemon: PokemonEntity, board: Board) {
   const speed = pokemon.status.paralysis ? pokemon.speed / 2 : pokemon.speed
@@ -61,7 +66,7 @@ export function drumBeat(pokemon: PokemonEntity, board: Board) {
     // CAST ABILITY
     const target = pokemon.state.getNearestTargetAtSight(pokemon, board)?.target
     if (target) {
-      castAbility(pokemon.skill, pokemon, board, target)
+      castAbility(AbilityStrategies[pokemon.skill], pokemon, board, target)
     }
     return
   }
@@ -243,25 +248,27 @@ const KubfuOnKillEffect = new OnKillEffect(
       if (nbBuffsSpeed < MAX_BUFFS) {
         pokemon.addSpeed(SPEED_BUFF_PER_KILL, pokemon, 0, false, true)
         nbBuffsSpeed++
-        if (
-          nbBuffsSpeed === MAX_BUFFS &&
-          pokemon.player &&
-          pokemon.player.items.includes(Item.SCROLL_OF_WATERS) === false
-        ) {
-          pokemon.player.items.push(Item.SCROLL_OF_WATERS)
-        }
+      }
+      if (
+        nbBuffsSpeed >= MAX_BUFFS &&
+        pokemon.name === Pkm.KUBFU &&
+        pokemon.player &&
+        pokemon.player.items.includes(Item.SCROLL_OF_WATERS) === false
+      ) {
+        pokemon.player.items.push(Item.SCROLL_OF_WATERS)
       }
     } else {
       if (nbBuffsAP < MAX_BUFFS) {
         pokemon.addAbilityPower(AP_BUFF_PER_KILL, pokemon, 0, false, true)
         nbBuffsAP++
-        if (
-          nbBuffsAP === MAX_BUFFS &&
-          pokemon.player &&
-          pokemon.player.items.includes(Item.SCROLL_OF_DARKNESS) === false
-        ) {
-          pokemon.player.items.push(Item.SCROLL_OF_DARKNESS)
-        }
+      }
+      if (
+        nbBuffsAP >= MAX_BUFFS &&
+        pokemon.name === Pkm.KUBFU &&
+        pokemon.player &&
+        pokemon.player.items.includes(Item.SCROLL_OF_DARKNESS) === false
+      ) {
+        pokemon.player.items.push(Item.SCROLL_OF_DARKNESS)
       }
     }
 
@@ -311,17 +318,6 @@ export const WaterSpringEffect = new OnAbilityCastEffect((pokemon, board) => {
     }
   })
 }, Passive.WATER_SPRING)
-
-export class AccelerationEffect extends OnMoveEffect {
-  accelerationStacks = 0
-
-  constructor() {
-    super((pkm) => {
-      pkm.addSpeed(15, pkm, 0, false)
-      this.accelerationStacks += 1
-    }, Passive.ACCELERATION)
-  }
-}
 
 const MimikuBustedTransformEffect = new OnDamageReceivedEffect(
   ({ pokemon }) => {
@@ -538,7 +534,7 @@ const MilceryFlavorEffect = new OnStageStartEffect(({ player, pokemon }) => {
   SynergyArray.forEach((synergy) => {
     surroundingSynergies.set(synergy, 0)
   })
-  const adjacentAllies = values(player.board).filter(
+  const adjacentAllies = schemaValues(player.board).filter(
     (p) =>
       isOnBench(p) === false &&
       distanceC(
@@ -701,40 +697,6 @@ class SynchroEffect extends PeriodicEffect {
   }
 }
 
-export class FalinksFormationEffect extends OnSpawnEffect {
-  stacks = 0
-
-  constructor() {
-    super((pkm) => {
-      if (!pkm.player) return
-      const troopers = values(pkm.player.board).filter(
-        (p) =>
-          p.name === Pkm.FALINKS_TROOPER && p.positionY === 0 && p.id !== pkm.id
-      )
-      this.stacks = troopers.length
-      if (this.stacks > 0) {
-        pkm.addAttack(this.stacks * 1, pkm, 0, false)
-        pkm.addDefense(this.stacks * 1, pkm, 0, false)
-        pkm.addShield(this.stacks * 30, pkm, 0, false)
-      }
-    }, Passive.FALINKS)
-  }
-}
-
-export class BergmiteOnBackEffect extends OnSpawnEffect {
-  stacks = 0
-
-  constructor() {
-    super((pkm) => {
-      if (!pkm.player) return
-      const bergmites = values(pkm.player.board).filter(
-        (p) => p.name === Pkm.BERGMITE && p.positionY === 0 && p.id !== pkm.id
-      )
-      this.stacks = bergmites.length
-    }, Passive.AVALUGG)
-  }
-}
-
 const ogerponMaskDropEffect = (
   mask: (typeof OgerponMasks)[number],
   from: Pkm,
@@ -776,7 +738,7 @@ const PyukumukuExplodeOnDeathEffect = new OnDeathEffect(
 
 const comfeyEquipOnSimulationStartEffect = new OnSimulationStartEffect(
   ({ simulation, team, entity }) => {
-    const alliesWithFreeSlots = values(team).filter(
+    const alliesWithFreeSlots = schemaValues(team).filter(
       (p) =>
         p.name !== Pkm.COMFEY &&
         p.items.size < 3 &&
@@ -869,6 +831,7 @@ const commanderPassive = new OnSimulationStartEffect(
 
 const conversionEffect = new OnSimulationStartEffect(
   ({ simulation, player, entity }) => {
+    if (!player) return
     const opponent =
       simulation.bluePlayerId === player.id
         ? simulation.redPlayer
@@ -899,7 +862,7 @@ const conversionEffect = new OnSimulationStartEffect(
     // when converting to dragon, no double synergy but gains the AP/AS/SHIELD based on opponent team
     if (synergyCopied === Synergy.DRAGON) {
       const opponentTeam = simulation.getOpponentTeam(player.id)!
-      const dragonLevel = values(opponentTeam).reduce(
+      const dragonLevel = schemaValues(opponentTeam).reduce(
         (acc, p) => acc + (p.types.has(Synergy.DRAGON) ? p.stars : 0),
         0
       )
@@ -980,7 +943,9 @@ const spawnPhioneFromAquaEggOnSimulationStartEffect =
       )
       if (coord) {
         const phione = PokemonFactory.createPokemonFromName(Pkm.PHIONE, player)
-        player.pokemonsPlayed.add(Pkm.PHIONE)
+        if (player) {
+          player.pokemonsPlayed.add(Pkm.PHIONE)
+        }
         simulation.addPokemon(phione, coord.x, coord.y, entity.team, true)
       }
     }
@@ -1283,6 +1248,16 @@ export const PassiveEffects: Partial<
   ],
   [Passive.VIGOROTH]: [
     new OnSpawnEffect((pkm) => pkm.effects.add(EffectEnum.IMMUNITY_SLEEP))
+  ],
+  [Passive.COMATOSE]: [
+    new OnSpawnEffect((pkm) => {
+      pkm.status.sleep = true
+      pkm.status.sleepCooldown = 1000
+      pkm.effects.add(EffectEnum.IMMUNITY_BURN)
+      pkm.effects.add(EffectEnum.IMMUNITY_POISON)
+      pkm.effects.add(EffectEnum.IMMUNITY_FREEZE)
+      pkm.effects.add(EffectEnum.IMMUNITY_PARALYSIS)
+    })
   ],
   [Passive.MEGA_SABLEYE]: [
     new OnSpawnEffect((entity) =>
@@ -1688,7 +1663,7 @@ export const PassiveEffects: Partial<
       if (!pokemon.player) return
       if (pokemon.isGhostOpponent) return
       const effects = pokemon.player.effects
-      if (effects.has(EffectEnum.JUSTIFIED) || effects.has(EffectEnum.PURE_POWER)) {
+      if (effects.has(EffectEnum.COACHING) || effects.has(EffectEnum.PURE_POWER)) {
         pokemon.addStack()
       }
     })
@@ -2029,7 +2004,7 @@ export const PassiveEffects: Partial<
   [Passive.NIDOKING]: [
     new OnSimulationStartEffect(({ entity, player }) => {
       if (!player) return
-      const alreadyHasNidoF = values(player.board).some((p) =>
+      const alreadyHasNidoF = schemaValues(player.board).some((p) =>
         p.name === Pkm.NIDOQUEEN
       )
       if (alreadyHasNidoF) return
@@ -2045,7 +2020,7 @@ export const PassiveEffects: Partial<
   [Passive.NIDOQUEEN]: [
     new OnSimulationStartEffect(({ entity, player }) => {
       if (!player) return
-      const alreadyHasNidoM = values(player.board).some((p) =>
+      const alreadyHasNidoM = schemaValues(player.board).some((p) =>
         p.name === Pkm.NIDOKING
       )
       if (alreadyHasNidoM) return
@@ -2056,50 +2031,6 @@ export const PassiveEffects: Partial<
           type: WandererType.CATCHABLE
         })
       }
-    })
-  ],
-  [Passive.DANCER]: [
-    new OnSimulationStartEffect(({ simulation, entity }) => {
-      const dancers: PokemonEntity[] = []
-      const gain = [1,2,3][entity.stars - 1] ?? 1
-
-      simulation.board.forEach((x, y, pkm) => {
-        if (
-          pkm &&
-          pkm.team === entity.team &&
-          y === entity.positionY &&
-          Math.abs(x - entity.positionX) <= 1
-        ) {
-          dancers.push(pkm)
-        }
-      })
-
-      dancers.forEach((dancer) => {
-        dancer.status.tree = true  // use tree instead of locked
-        dancer.toIdleState()
-        const danceEffect = new PeriodicEffect(
-          (pokemon) => {
-            pokemon.addSpeed(gain, pokemon, 0, false)
-            pokemon.addAttack(gain, pokemon, 0, false)
-            pokemon.broadcastAbility({
-              positionX: pokemon.positionX,
-              positionY: pokemon.positionY,
-              skill: Ability.ECHO
-            })
-            const hasEnemyInRange = simulation.board
-              .getCellsInRange(pokemon.positionX, pokemon.positionY, pokemon.range, false)
-              .some((cell) => cell.value && cell.value.team !== pokemon.team)
-            if (pokemon.pp >= (pokemon.maxPP / 2) || hasEnemyInRange) {
-              pokemon.status.tree = false  // clear tree instead of locked
-              pokemon.toMovingState()
-              pokemon.effectsSet.delete(danceEffect)
-            }
-          },
-          Passive.DANCER,
-          1000
-        )
-        dancer.effectsSet.add(danceEffect)
-      })
     })
   ],
   [Passive.BERSERK]: [
@@ -2161,7 +2092,7 @@ export const PassiveEffects: Partial<
   [Passive.MEGA_FERALIGATR]: [
     new OnKillEffect(({ attacker }) => {
       if (!attacker.player) return
-      const totalStars = values(attacker.player.board).reduce(
+      const totalStars = schemaValues(attacker.player.board).reduce(
         (acc, p) => acc + (!isOnBench(p) ? p.stars : 0),
         0
       )

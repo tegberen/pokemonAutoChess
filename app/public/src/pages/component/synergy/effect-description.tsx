@@ -1,9 +1,9 @@
 import { useTranslation } from "react-i18next"
-import { EffectEnum } from "../../../../../types/enum/Effect"
+import type { SynergyEffect } from "../../../../../config/game/synergies"
 import { addIconsToDescription } from "../../utils/descriptions"
 
-export function EffectDescriptionComponent(props: { effect: EffectEnum }) {
-  const { t } = useTranslation()
+export function EffectDescriptionComponent(props: { effect: SynergyEffect }) {
+  const { t: tBase } = useTranslation(); const t = tBase as any
   const description = t(`effect_description.${props.effect}`)
   return (
     <p className="synergy-description">{addIconsToDescription(description)}</p>

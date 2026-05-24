@@ -1,7 +1,7 @@
 import { ARMOR_FACTOR, FIGHTING_PHASE_DURATION } from "../config"
-import Player from "../models/colyseus-models/player"
-import { SynergyEffects } from "../models/effects"
-import { IPokemonEntity, Transfer } from "../types"
+import { SynergyEffects } from "../config/game/synergies"
+import type Player from "../models/colyseus-models/player"
+import { type IPokemonEntity, Transfer } from "../types"
 import { EffectEnum } from "../types/enum/Effect"
 import {
   AttackType,
@@ -26,7 +26,7 @@ import {
   PeriodicEffect
 } from "./effects/effect"
 import { applyWandEffects, humanHealEffect } from "./effects/synergies"
-import { PokemonEntity } from "./pokemon-entity"
+import type { PokemonEntity } from "./pokemon-entity"
 
 export default abstract class PokemonState {
   name: string = ""
@@ -131,12 +131,16 @@ export default abstract class PokemonState {
         damage = 0
       }
 
-      const { takenDamage, death } = pokemon.types.has(Synergy.FAIRY) 
-        ? applyWandEffects(pokemon, target, damage, crit)
-        : { takenDamage: 0, death: false }
-
-      totalTakenDamage += takenDamage
-      if (death) hasAttackKilled = true
+      if (pokemon.types.has(Synergy.FAIRY)) {
+        const { takenDamage, death } = applyWandEffects(
+          pokemon,
+          target,
+          damage,
+          crit
+        )
+        totalTakenDamage += takenDamage
+        if (death) hasAttackKilled = true
+      }
 
       if (pokemon.effects.has(EffectEnum.CHARGE)) {
         const chargeDamage = damage * pokemon.count.ult * (1 + pokemon.ap / 100)
@@ -160,7 +164,7 @@ export default abstract class PokemonState {
       } else if (pokemon.effects.has(EffectEnum.CORKSCREW_CRASH)) {
         trueDamagePart += 1.0
       } else if (pokemon.effects.has(EffectEnum.MAX_MELTDOWN)) {
-        trueDamagePart += 1.2
+        trueDamagePart += 1.25
       }
       if (pokemon.items.has(Item.RED_ORB)) {
         trueDamagePart += 0.25
@@ -565,9 +569,9 @@ export default abstract class PokemonState {
           pokemon.effects.has(EffectEnum.GUTS) ||
           pokemon.effects.has(EffectEnum.STURDY) ||
           pokemon.effects.has(EffectEnum.DEFIANT) ||
-          pokemon.effects.has(EffectEnum.JUSTIFIED)
+          pokemon.effects.has(EffectEnum.COACHING)
         ) {
-          const damageBlocked = pokemon.effects.has(EffectEnum.JUSTIFIED)
+          const damageBlocked = pokemon.effects.has(EffectEnum.COACHING)
             ? 12
             : pokemon.effects.has(EffectEnum.DEFIANT)
               ? 9
@@ -894,7 +898,7 @@ export default abstract class PokemonState {
     if (
       (pokemon.status.resurrecting ||
         pokemon.status.freeze ||
-        pokemon.status.sleep) &&
+        (pokemon.status.sleep && pokemon.passive !== Passive.COMATOSE)) &&
       pokemon.state.name !== "idle"
     ) {
       pokemon.toIdleState()
@@ -1014,27 +1018,6 @@ export default abstract class PokemonState {
 
     if (pokemon.items.has(Item.METRONOME)) {
       pokemon.addPP(5, pokemon, 0, false)
-    }
-
-    if (pokemon.items.has(Item.GREEN_ORB)) {
-      const adjacentCells = board.getAdjacentCells(
-        pokemon.positionX,
-        pokemon.positionY,
-        true
-      )
-      for (const cell of adjacentCells) {
-        if (cell.value && cell.value.team === pokemon.team) {
-          const { overheal } = cell.value.handleHeal(
-            0.03 * cell.value.maxHP,
-            pokemon,
-            0,
-            false
-          )
-          if (overheal > 0) {
-            cell.value.addPP(0.3 * overheal, pokemon, 0, false)
-          }
-        }
-      }
     }
 
     if (
