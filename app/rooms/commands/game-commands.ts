@@ -77,7 +77,8 @@ import {
   GamePhaseState,
   PokemonActionState,
   Team,
-  GameMode
+  GameMode,
+  Rarity
 } from "../../types/enum/Game"
 import {
   ConsumableItems,
@@ -284,6 +285,59 @@ export class OnPokemonCatchCommand extends Command<
       removeInArray(player.items, Item.WANTED_NOTICE)
     }
   }
+}
+
+function sendPokemonToPartner(
+  state: GameState,
+  room: GameRoom,
+  sender: Player,
+  pokemon: Pokemon,
+  item: Item
+) {
+  const partner = state.players.get(sender.doubleUpPartnerId)
+  if (!partner || !partner.alive) return
+
+  // Consume the Prison Bottle and start cooldown
+  removeInArray(sender.items, item)
+  const cooldown =
+    pokemon.rarity === Rarity.EPIC ||
+    pokemon.rarity === Rarity.LEGENDARY ||
+    pokemon.rarity === Rarity.UNIQUE ||
+    pokemon.rarity === Rarity.ULTRA
+      ? 5
+      : 3
+  sender.doubleUpSendCooldown = state.stageLevel + cooldown
+
+  // Remove from sender's board
+  sender.board.delete(pokemon.id)
+  sender.updateSynergies()
+  sender.boardSize = room.getTeamSize(sender.board)
+
+  // Place Pokemon on partner's bench
+  room.clock.setTimeout(() => {
+    const freeX = getFirstAvailablePositionInBench(partner.board)
+    if (freeX === null) {
+      // Partner bench full — return to sender and refund bottle
+      const senderX = getFirstAvailablePositionInBench(sender.board)
+      if (senderX !== null) {
+        pokemon.positionX = senderX
+        pokemon.positionY = 0
+        sender.board.set(pokemon.id, pokemon)
+        sender.updateSynergies()
+        sender.items.push(Item.PRISON_BOTTLE)
+        sender.doubleUpSendCooldown = 0
+      }
+      return
+    }
+    pokemon.items.forEach(item => sender.items.push(item))
+    pokemon.items.clear()
+    pokemon.positionX = freeX
+    pokemon.positionY = 0
+    partner.board.set(pokemon.id, pokemon)
+    partner.updateSynergies()
+    partner.boardSize = room.getTeamSize(partner.board)
+    room.checkEvolutionsAfterPokemonAcquired(partner.id)
+  }, 500)
 }
 
 export class OnDragDropPokemonCommand extends Command<
@@ -765,6 +819,15 @@ export class OnDragDropItemCommand extends Command<
         })
         return
       }
+    }
+    if (
+      item === Item.PRISON_BOTTLE &&
+      this.state.gameMode === GameMode.DOUBLE_UP &&
+      this.state.phase === GamePhaseState.PICK &&
+      isOnBench(pokemon)
+    ) {
+      sendPokemonToPartner(this.state, this.room, player, pokemon, item)
+      return
     }
 
     if (UnholdableItems.includes(item) && !ConsumableItems.includes(item)) {
@@ -1858,6 +1921,18 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
     this.state.players.forEach((player: Player) => {
       player.wanderers.clear()
     })
+    // Double Up: restore Prison Bottle when cooldown has expired
+    if (this.state.gameMode === GameMode.DOUBLE_UP) {
+      this.state.players.forEach((player: Player) => {
+        if (
+          player.alive &&
+          this.state.stageLevel >= player.doubleUpSendCooldown &&
+          !player.items.includes(Item.PRISON_BOTTLE)
+        ) {
+          player.items.push(Item.PRISON_BOTTLE)
+        }
+      })
+    }
   }
 
   initializeTownPhase() {
