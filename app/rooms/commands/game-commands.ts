@@ -1058,6 +1058,9 @@ export class OnUpdateCommand extends Command<
           }
         })
 
+        if (this.state.gameMode === GameMode.DOUBLE_UP) {
+          this.checkDoubleUpReinforcements()
+        }
         if (everySimulationFinished && !this.state.updatePhaseNeeded) {
           // wait for 3 seconds victory anim before moving to next stage
           this.state.time = 3000
@@ -1069,6 +1072,77 @@ export class OnUpdateCommand extends Command<
       if (this.state.updatePhaseNeeded && this.state.time < 0) {
         return [new OnUpdatePhaseCommand()]
       }
+    }
+  }
+  checkDoubleUpReinforcements() {
+    this.state.simulations.forEach((sim) => {
+      if (!sim.finished || sim.reinforcementsSent) return
+      if (Date.now() - sim.finishedAt < 3000) return
+      if (!sim.winnerId) return // draw, no reinforcements
+
+      // Ghost battle where the ghost side wins → no reinforcements
+      if (sim.isGhostBattle && sim.winnerId === sim.redPlayerId) return
+
+      const winnerIsBlue = sim.winnerId === sim.bluePlayerId
+      const winnerPlayer = winnerIsBlue ? sim.bluePlayer : sim.redPlayer
+      if (!winnerPlayer) return // PVE fight
+
+      // Find partner's running sim via doubleUpPartnerId on the Player
+      const partnerPlayer = this.state.players.get(winnerPlayer.doubleUpPartnerId)
+      if (!partnerPlayer?.alive) return
+
+      const partnerSim = this.state.simulations.get(partnerPlayer.simulationId)
+      if (!partnerSim || partnerSim.finished || !partnerSim.started) return
+
+      sim.reinforcementsSent = true
+      this.sendReinforcements(sim, partnerSim)
+    })
+  }
+
+  sendReinforcements(source: Simulation, target: Simulation) {
+    const winnerIsBlue = source.winnerId === source.bluePlayerId
+    const winnerPlayer = winnerIsBlue ? source.bluePlayer : source.redPlayer
+    if (!winnerPlayer) return
+
+		const partnerIsBlue = target.bluePlayer?.id === winnerPlayer.doubleUpPartnerId
+    const partnerTeam = partnerIsBlue ? Team.BLUE_TEAM : Team.RED_TEAM
+
+    if (!partnerIsBlue && target.redPlayer?.id !== winnerPlayer.doubleUpPartnerId) {
+      logger.warn(
+        `[DoubleUp] sendReinforcements: winner ${winnerPlayer.id} not found in target simulation`
+      )
+      return
+    }
+
+    const winningTeam = winnerIsBlue ? source.blueTeam : source.redTeam
+    const survivors: PokemonEntity[] = []
+    winningTeam.forEach((e) => {
+      if (e.hp > 0) survivors.push(e as PokemonEntity)
+    })
+    if (survivors.length === 0) return
+
+    logger.info(
+      `[DoubleUp] Sending ${survivors.length} reinforcement(s) from ${winnerPlayer.name} to partner's fight`
+    )
+
+    for (const entity of survivors) {
+      const coord = target.getFirstFreeCell(partnerTeam)
+      if (!coord) {
+        logger.warn(`[DoubleUp] No free cell for reinforcement — stopping`)
+        break
+      }
+      const reinforcement = target.addPokemon(
+        entity.refToBoardPokemon as Pokemon,
+        coord.x,
+        coord.y,
+        partnerTeam,
+        true
+      )
+      reinforcement.hp = Math.min(entity.hp, reinforcement.maxHP)
+      reinforcement.pp = 0
+      Array.from(reinforcement.effects).forEach(e => reinforcement.effects.delete(e))
+      entity.effects.forEach(e => reinforcement.effects.add(e))
+      reinforcement.effectsSet = new Set(entity.effectsSet)
     }
   }
 }
