@@ -386,6 +386,21 @@ function offerTradeItem(state: GameState, player: Player, item: Item) {
   )
   if (partnerCroagunk) partnerCroagunk.data = ""
 }
+export class OnCancelTradeOfferCommand extends Command<
+  GameRoom,
+  { playerId: string }
+> {
+  execute({ playerId }) {
+    const player = this.state.players.get(playerId)
+    if (!player?.doubleUpTradeOffer) return
+    const croagunk = [...player.wanderers.values()].find(
+      (w) => w.type === WandererType.CROAGUNK_TRADE
+    )
+    player.items.push(player.doubleUpTradeOffer as Item)
+    player.doubleUpTradeOffer = ""
+    if (croagunk) croagunk.data = ""
+  }
+}
 
 export class OnDragDropPokemonCommand extends Command<
   GameRoom,
@@ -1984,7 +1999,10 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
         w => w.type === WandererType.CROAGUNK_TRADE
       )
       player.wanderers.clear()
-      if (croagunk) player.wanderers.set(croagunk.id, croagunk)
+      if (croagunk) {
+        croagunk.data = "" // clear item before syncing
+        player.wanderers.set(croagunk.id, croagunk)
+      }
     })
     // Double Up: restore Prison Bottle when cooldown has expired
     if (this.state.gameMode === GameMode.DOUBLE_UP) {

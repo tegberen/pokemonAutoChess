@@ -375,14 +375,19 @@ export default class WanderersManager {
       dialog: t("npc_dialog.croagunk_trade"),
       dialogTitle: t("npc_dialog.croagunk_trade_title")
     })
-    if (wanderer.data) {
-      this.croagunkSprite.updateDishes([wanderer.data as Item])
-    }
+    this.croagunkSprite.on("pointerdown", (pointer: Phaser.Input.Pointer) => {
+      if (pointer.button === 0) {
+        this.scene.room?.send(Transfer.CANCEL_TRADE_OFFER)
+      }
+    })
   }
 
-  updateCroagunkItem(item: string) {
+  updateCroagunkItem(myOffer: string, partnerOffer: string = "") {
     if (this.croagunkSprite) {
-      this.croagunkSprite.updateDishes(item ? [item as Item] : [])
+      const dishes: Item[] = []
+      if (myOffer) dishes.push(myOffer as Item)
+      if (partnerOffer) dishes.push(partnerOffer as Item)
+      this.croagunkSprite.updateDishes(dishes)
     }
   }
 
