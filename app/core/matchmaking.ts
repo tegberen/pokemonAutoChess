@@ -4,6 +4,8 @@ import type { IPlayer } from "../types"
 import { sum } from "../utils/array"
 import { pickRandomIn, shuffleArray } from "../utils/random"
 import { schemaValues } from "../utils/schemas"
+import { GameMode } from "../types/enum/Game"
+import { logger } from "../utils/logger"
 
 export type Matchup = {
   bluePlayer: Player
@@ -72,7 +74,7 @@ function completeMatchupCombination(
     )
     if (remainingMatchups.length === 0) {
       // no more matchups, need to complete with a ghost matchup
-      return completeMatchupCombination([...combination], matchups, players)
+      return [combination]
     }
     return remainingMatchups.flatMap((m) =>
       completeMatchupCombination([...combination, m], matchups, players)
@@ -80,7 +82,53 @@ function completeMatchupCombination(
   }
 }
 
+function selectDoubleUpMatchups(state: GameState): Matchup[] {
+  const players = shuffleArray(
+    schemaValues(state.players).filter((p) => p.alive)
+  )
+  if (players.length <= 1) return []
+
+  // Same as getAllPossibleMatchups but excludes same-team pairs
+  const matchups: Matchup[] = []
+  for (let i = 0; i < players.length; i++) {
+    for (let j = i + 1; j < players.length; j++) {
+      const bluePlayer = players[i], redPlayer = players[j]
+      if (bluePlayer.doubleUpTeamId === redPlayer.doubleUpTeamId) continue
+      matchups.push({
+        bluePlayer,
+        redPlayer,
+        count: getCount(bluePlayer, redPlayer, false),
+        distance: getDistance(bluePlayer, redPlayer, false)
+      })
+    }
+  }
+
+  // Reuse existing combination logic
+  const matchupCombinations = completeMatchupCombination([], matchups, players)
+
+  const matchupCombinationsCount = matchupCombinations.map((c) =>
+    sum(c.map((m) => m.count))
+  )
+  const lowestTotalCount = Math.min(...matchupCombinationsCount)
+  const lowestCountCombinations = matchupCombinations.filter(
+    (_, i) => matchupCombinationsCount[i] === lowestTotalCount
+  )
+
+  const matchupCombinationsDistance = lowestCountCombinations.map((c) =>
+    sum(c.map((m) => m.distance))
+  )
+  const maxDistance = Math.max(...matchupCombinationsDistance)
+  const bestCombinations = lowestCountCombinations.filter(
+    (_, i) => matchupCombinationsDistance[i] === maxDistance
+  )
+
+  return pickRandomIn(bestCombinations)
+}
+
 export function selectMatchups(state: GameState): Matchup[] {
+  if (state.gameMode === GameMode.DOUBLE_UP) {
+    return selectDoubleUpMatchups(state)
+  }
   /* step 1) establish all the matchups possible with players alive and their associated count
   count = number of times A fought B or his ghost) + (number of times B fought A or his ghost) */
   const players = shuffleArray(

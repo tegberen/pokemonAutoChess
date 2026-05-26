@@ -30,7 +30,7 @@ import { getRank } from "../../utils/elo"
 import { logger } from "../../utils/logger"
 import { max } from "../../utils/number"
 import { cleanProfanity } from "../../utils/profanity-filter"
-import { pickRandomIn } from "../../utils/random"
+import { pickRandomIn, shuffleArray } from "../../utils/random"
 import { schemaEntries, schemaValues } from "../../utils/schemas"
 import type PreparationRoom from "../preparation-room"
 
@@ -219,6 +219,25 @@ export class OnGameStartRequestCommand extends Command<
         return
       }
 
+      if (this.state.gameMode === GameMode.DOUBLE_UP) {
+        if (this.state.users.size < 4) {
+          this.state.addMessage({
+            authorId: "Server",
+            payload: `Double Up requires at least 4 players.`,
+            avatar: "0079/Sigh"
+          })
+          return
+        }
+        if (this.state.users.size % 2 !== 0) {
+          this.state.addMessage({
+            authorId: "Server",
+            payload: `Double Up requires an even number of players.`,
+            avatar: "0079/Sigh"
+          })
+          return
+        }
+      }
+
       if (!allUsersReady && this.state.gameMode === GameMode.CUSTOM_LOBBY) {
         this.state.addMessage({
           authorId: "Server",
@@ -276,6 +295,17 @@ export class OnGameStartRequestCommand extends Command<
         this.state.gameStartedAt = new Date().toISOString()
         this.room.lock()
         this.room.autoDispose = true // re-enable auto dispose for tournament games
+        if (this.state.gameMode === GameMode.DOUBLE_UP) {
+          const userList = shuffleArray(schemaValues(this.state.users))
+          for (let i = 0; i < userList.length - 1; i += 2) {
+            const a = userList[i], b = userList[i + 1]
+            const teamId = `team-${i / 2}`
+            a.doubleUpPartnerId = b.uid
+            a.doubleUpTeamId = teamId
+            b.doubleUpPartnerId = a.uid
+            b.doubleUpTeamId = teamId
+          }
+        }
         const gameRoom = await matchMaker.createRoom("game", {
           users: Object.fromEntries(schemaEntries(this.state.users)),
           name: this.state.name,

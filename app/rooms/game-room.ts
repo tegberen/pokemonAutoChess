@@ -177,6 +177,8 @@ export default class GameRoom extends Room<{ state: GameState }> {
       tournamentId,
       bracketId
     })
+
+    if (gameMode === GameMode.DOUBLE_UP) noElo = true
     // logger.debug(options);
     this.state = new GameState(
       preparationId,
@@ -283,6 +285,8 @@ export default class GameRoom extends Room<{ state: GameState }> {
           )
           this.state.players.set(user.uid, player)
           this.state.botManager.addBot(player)
+          player.doubleUpPartnerId = users[id].doubleUpPartnerId ?? ""
+          player.doubleUpTeamId = users[id].doubleUpTeamId ?? ""
         } else {
           const leanUser = await UserMetadata.findOne({ uid: id }).lean()
           const user = leanUser ? toLeanUserMetadata(leanUser) : null
@@ -304,6 +308,8 @@ export default class GameRoom extends Room<{ state: GameState }> {
 
             this.state.players.set(user.uid, player)
             this.state.shop.assignShop(player, false, this.state)
+            player.doubleUpPartnerId = users[id].doubleUpPartnerId ?? ""
+            player.doubleUpTeamId = users[id].doubleUpTeamId ?? ""
 
             if (
               this.state.specialGameRule === SpecialGameRule.EVERYONE_IS_HERE
@@ -1325,6 +1331,9 @@ export default class GameRoom extends Room<{ state: GameState }> {
   }
 
   rankPlayers() {
+    if (this.state.gameMode === GameMode.DOUBLE_UP) {
+      return this.rankPlayersDoubleUp()
+    }
     const rankArray = new Array<{ id: string; life: number; level: number }>()
     this.state.players.forEach((player) => {
       if (!player.alive) {
@@ -1356,6 +1365,28 @@ export default class GameRoom extends Room<{ state: GameState }> {
       if (player) {
         player.rank = index + 1
       }
+    })
+  }
+  rankPlayersDoubleUp() {
+    // Group alive players by team, sum their life and level
+    const teamMap = new Map<string, { life: number; level: number; ids: string[] }>()
+    this.state.players.forEach((player) => {
+      if (!player.alive) return
+      const entry = teamMap.get(player.doubleUpTeamId) ?? { life: 0, level: 0, ids: [] }
+      entry.life += player.life
+      entry.level += player.experienceManager.level
+      entry.ids.push(player.id)
+      teamMap.set(player.doubleUpTeamId, entry)
+    })
+
+    const teamArray = [...teamMap.values()]
+    teamArray.sort((a, b) => b.life - a.life || b.level - a.level)
+
+    teamArray.forEach((team, index) => {
+      team.ids.forEach((id) => {
+        const player = this.state.players.get(id)
+        if (player) player.rank = index + 1
+      })
     })
   }
 

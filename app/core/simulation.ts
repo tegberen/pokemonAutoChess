@@ -23,7 +23,8 @@ import {
   Orientation,
   PokemonActionState,
   Rarity,
-  Team
+  Team,
+  GameMode
 } from "../types/enum/Game"
 import {
   CraftableItemsNoScarves,
@@ -1654,7 +1655,8 @@ export default class Simulation extends Schema implements ISimulation {
           opponentTeam,
           this.stageLevel
         )
-        if (!isGhostPlayer) {
+        const isPVE = this.redPlayerId === "pve"
+        if (!isGhostPlayer && (isPVE || this.room.state.gameMode !== GameMode.DOUBLE_UP)) {
           player.life -= playerDamage
           if (playerDamage > 0) {
             client?.send(Transfer.PLAYER_DAMAGE, playerDamage)

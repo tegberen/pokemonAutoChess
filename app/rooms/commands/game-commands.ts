@@ -76,7 +76,8 @@ import {
   BattleResult,
   GamePhaseState,
   PokemonActionState,
-  Team
+  Team,
+  GameMode
 } from "../../types/enum/Game"
 import {
   ConsumableItems,
@@ -1108,6 +1109,10 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
   }
 
   checkEndGame(): boolean {
+    if (this.state.gameMode === GameMode.DOUBLE_UP) {
+      return this.checkEndGameDoubleUp()
+    }
+
     const playersAlive = schemaValues(this.state.players).filter((p) => p.alive)
 
     if (playersAlive.length <= 1) {
@@ -1130,6 +1135,28 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
         this.room.disconnect()
       }, 30 * 1000)
 
+      return true
+    }
+
+    return false
+  }
+
+  checkEndGameDoubleUp(): boolean {
+    const playersAlive = schemaValues(this.state.players).filter((p) => p.alive)
+    const aliveTeams = new Set(playersAlive.map((p) => p.doubleUpTeamId))
+
+    if (aliveTeams.size <= 1) {
+      this.state.gameFinished = true
+      playersAlive.forEach((winner) => {
+        const client = this.room.clients.find(
+          (cli) => cli.auth.uid === winner.id
+        )
+        if (client) client.send(Transfer.FINAL_RANK, 1)
+      })
+      this.clock.setTimeout(() => {
+        this.room.broadcast(Transfer.GAME_END)
+        this.room.disconnect()
+      }, 30 * 1000)
       return true
     }
 
@@ -1624,6 +1651,13 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
       if (!simulation.finished) {
         simulation.onFinish()
       }
+    })
+    if (this.state.gameMode === GameMode.DOUBLE_UP) {
+      this.applyDoubleUpDamage()
+      this.syncTeamLife()
+    }
+    // stop all simulations
+    this.state.simulations.forEach((simulation) => {
       simulation.stop()
     })
 
@@ -1706,6 +1740,43 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
       // Update Bots after unown deletion so unown in bot boards are not deleted
       this.state.botManager.updateBots()
     }
+
+  }
+  applyDoubleUpDamage() {
+    this.state.simulations.forEach((sim) => {
+      if (sim.isGhostBattle) return
+      if (sim.redPlayerId === "pve") return
+
+      const loserIsBlue = sim.winnerId === sim.redPlayerId
+      const loserIsRed = sim.winnerId === sim.bluePlayerId
+      if (!loserIsBlue && !loserIsRed) return // draw
+
+      const losingPlayer = loserIsBlue ? sim.bluePlayer : sim.redPlayer
+      const winningTeam = loserIsBlue ? sim.redTeam : sim.blueTeam
+      if (!losingPlayer || !losingPlayer.alive) return
+
+      const damage = this.room.computeRoundDamage(winningTeam, this.state.stageLevel)
+      losingPlayer.life -= damage
+      if (damage > 0) {
+        const client = this.room.clients.find((c) => c.auth.uid === losingPlayer.id)
+        client?.send(Transfer.PLAYER_DAMAGE, damage)
+      }
+    })
+  }
+
+  syncTeamLife() {
+    const teams = new Map<string, Player[]>()
+    this.state.players.forEach((p) => {
+      if (!p.doubleUpTeamId || !p.alive) return
+      if (!teams.has(p.doubleUpTeamId)) teams.set(p.doubleUpTeamId, [])
+      teams.get(p.doubleUpTeamId)!.push(p)
+    })
+    teams.forEach((players) => {
+      const minLife = Math.min(...players.map((p) => p.life))
+      players.forEach((p) => {
+        p.life = minLife
+      })
+    })
   }
 
   stopTownPhase() {

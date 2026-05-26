@@ -4892,13 +4892,15 @@
 		"RANKED": "Ranked Match",
 		"SCRIBBLE": "Smeargle's Scribble",
 		"CUSTOM_LOBBY": "Custom room",
-		"TOURNAMENT": "Tournament"
+		"TOURNAMENT": "Tournament",
+    "DOUBLE_UP": "Double Up"
 	},
 	"game_modes_descriptions": {
 		"CLASSIC": "The casual PAC Experience !\n8 players, Elo disabled, open to everyone.",
 		"RANKED": "For competitors ! 8 players, Elo enabled\nRestricted to players close to your rank",
 		"SCRIBBLE": "Play for fun ! 8 players, Elo disabled\nA new special rule is added for this game.",
 		"CUSTOM_LOBBY": "Create a private room to play with your friends or with bots",
+    "DOUBLE_UP": "2v2 team mode",
 		"TOURNAMENT": "This match is part of a tournament. Check Discord for upcoming events."
 	},
 	"dendrogram": {

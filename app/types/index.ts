@@ -255,6 +255,8 @@ export interface IPlayer {
   shopFreeRolls: number
   streak: number
   interest: number
+  doubleUpPartnerId: string
+  doubleUpTeamId: string
   opponentId: string
   opponentName: string
   opponentAvatar: string

@@ -274,7 +274,7 @@ export default function PreparationMenu() {
       </div>
     )
 
-  const botControls = gameMode === GameMode.CUSTOM_LOBBY &&
+  const botControls = ( gameMode === GameMode.CUSTOM_LOBBY || gameMode === GameMode.DOUBLE_UP ) && 
     (isOwner || isAdmin) && (
       <div className="my-input-group">
         <button
