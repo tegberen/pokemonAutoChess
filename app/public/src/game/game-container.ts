@@ -555,11 +555,14 @@ class GameContainer {
 
     $player.items.onChange((value, key) => {
       if (player.id === this.playerIdSpectated) {
-        //logger.debug("changed", value, key, player.items)
         this.gameScene?.itemsContainer?.render(player.items)
       }
     })
-
+    $player.listen("doubleUpTradeOffer", (offer: string) => {
+      if (player.id === this.playerIdSpectated) {
+        this.gameScene?.wandererManager?.updateCroagunkItem(offer)
+      }
+    })
     $player.synergies.onChange((level, synergy) => {
       if (
         player.id === this.playerIdSpectated &&

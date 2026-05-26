@@ -4484,7 +4484,9 @@
 		"magnemite": "Have you seen the fugitive ?",
 		"magnezone": "Listen, let the police do their job; as soon as I have more information, rest assured you will be the first to know.",
 		"xatu": "Let me open this treasure box for you...",
-		"lapras": "Ready to go? Then all aboard!"
+		"lapras": "Ready to go? Then all aboard!",
+    "croagunk_trade": "Meh-heh-heh! Drop an item on me to trade it with your partner!",
+    "croagunk_trade_title": "Croagunk"
 	},
 	"scribble": {
 		"EVERYONE_IS_HERE": "Everyone is here !",

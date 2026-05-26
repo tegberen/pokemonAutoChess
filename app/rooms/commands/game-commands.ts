@@ -99,7 +99,8 @@ import {
   SynergyGivenByItem,
   SynergyStones,
   Tools,
-  UnholdableItems
+  UnholdableItems,
+  DoubleUpTradeableItems
 } from "../../types/enum/Item"
 import { Passive } from "../../types/enum/Passive"
 import {
@@ -338,6 +339,52 @@ function sendPokemonToPartner(
     partner.boardSize = room.getTeamSize(partner.board)
     room.checkEvolutionsAfterPokemonAcquired(partner.id)
   }, 500)
+}
+
+function offerTradeItem(state: GameState, player: Player, item: Item) {
+  if (!DoubleUpTradeableItems.includes(item)) return
+  const croagunk = [...player.wanderers.values()].find(
+    (w) => w.type === WandererType.CROAGUNK_TRADE
+  )
+  if (!croagunk) return
+  // If already offered, refund previous item before accepting new one
+  if (player.doubleUpTradeOffer) {
+    player.items.push(player.doubleUpTradeOffer as Item)
+    player.doubleUpTradeOffer = ""
+    croagunk.data = ""
+  }
+  removeInArray(player.items, item)
+  player.doubleUpTradeOffer = item
+  croagunk.data = item
+  const partner = state.players.get(player.doubleUpPartnerId)
+  if (!partner?.alive || !partner.doubleUpTradeOffer) return
+  // Both offered — check compatibility before swapping
+  const partnerItem = partner.doubleUpTradeOffer as Item
+  const playerOffersComponent = ItemComponentsNoScarf.includes(item)
+  const partnerOffersComponent = ItemComponentsNoScarf.includes(partnerItem)
+  if (playerOffersComponent !== partnerOffersComponent) {
+    // Mismatch — refund both, clear visuals
+    player.items.push(item)
+    player.doubleUpTradeOffer = ""
+    croagunk.data = ""
+    partner.items.push(partnerItem)
+    partner.doubleUpTradeOffer = ""
+    const partnerCroagunk = [...partner.wanderers.values()].find(
+      (w) => w.type === WandererType.CROAGUNK_TRADE
+    )
+    if (partnerCroagunk) partnerCroagunk.data = ""
+    return
+  }
+  // Both same type — execute swap
+  player.items.push(partnerItem)
+  partner.items.push(item)
+  player.doubleUpTradeOffer = ""
+  partner.doubleUpTradeOffer = ""
+  croagunk.data = ""
+  const partnerCroagunk = [...partner.wanderers.values()].find(
+    (w) => w.type === WandererType.CROAGUNK_TRADE
+  )
+  if (partnerCroagunk) partnerCroagunk.data = ""
 }
 
 export class OnDragDropPokemonCommand extends Command<
@@ -763,6 +810,16 @@ export class OnDragDropItemCommand extends Command<
       }
       client.send(Transfer.DRAG_DROP_CANCEL, message)
       return
+    } else if (zone  === "croagunk-trade-zone") {
+      if (
+        this.state.gameMode === GameMode.DOUBLE_UP &&
+        this.state.phase === GamePhaseState.PICK
+      ) {
+        offerTradeItem(this.state, player, item)
+      } else {
+        client.send(Transfer.DRAG_DROP_CANCEL, message)
+        return
+      }
     } else {
       const x = index % BOARD_WIDTH
       const y = Math.floor(index / BOARD_WIDTH)
@@ -1807,7 +1864,11 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
       this.room.setMetadata({ stageLevel: this.state.stageLevel })
       this.computeIncome(isPVE, this.state.specialGameRule)
       this.state.players.forEach((player: Player) => {
+        const croagunk = [...player.wanderers.values()].find(
+          w => w.type === WandererType.CROAGUNK_TRADE
+        )
         player.wanderers.clear()
+        if (croagunk) player.wanderers.set(croagunk.id, croagunk)
         if (player.alive) {
           // Fake bots XP bar
           if (player.isBot) {
@@ -1919,7 +1980,11 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
   stopTownPhase() {
     this.room.miniGame.stop(this.room.state)
     this.state.players.forEach((player: Player) => {
+      const croagunk = [...player.wanderers.values()].find(
+        w => w.type === WandererType.CROAGUNK_TRADE
+      )
       player.wanderers.clear()
+      if (croagunk) player.wanderers.set(croagunk.id, croagunk)
     })
     // Double Up: restore Prison Bottle when cooldown has expired
     if (this.state.gameMode === GameMode.DOUBLE_UP) {
@@ -1930,6 +1995,32 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
           !player.items.includes(Item.PRISON_BOTTLE)
         ) {
           player.items.push(Item.PRISON_BOTTLE)
+        }
+      })
+    }
+    // need to clear item sprite when refunded (= failed trade)
+    if (this.state.gameMode === GameMode.DOUBLE_UP) {
+      this.state.players.forEach((player: Player) => {
+        if (player.doubleUpTradeOffer) {
+          player.items.push(player.doubleUpTradeOffer as Item)
+          player.doubleUpTradeOffer = ""
+          const croagunk = [...player.wanderers.values()].find(
+            (w) => w.type === WandererType.CROAGUNK_TRADE
+          ) 
+          if (croagunk) croagunk.data = ""
+        }
+        if (player.alive) {
+          const hasCroagunk = [...player.wanderers.values()].some(
+            w => w.type === WandererType.CROAGUNK_TRADE
+          )
+          if (!hasCroagunk) {
+            player.spawnWanderingPokemon({
+              pkm: Pkm.CROAGUNK,
+              shiny: false,
+              type: WandererType.CROAGUNK_TRADE,
+              behavior: WandererBehavior.SPECTATE
+            })
+          }
         }
       })
     }
@@ -1981,6 +2072,14 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
     this.state.time = FIGHTING_PHASE_DURATION
     this.state.roundTime = Math.round(this.state.time / 1000)
     updateLobby(this.room)
+    if (this.state.gameMode === GameMode.DOUBLE_UP) {
+      this.state.players.forEach((player: Player) => {
+        if (player.doubleUpTradeOffer) {
+          player.items.push(player.doubleUpTradeOffer as Item)
+          player.doubleUpTradeOffer = ""
+        }
+      })
+    }
     this.state.players.forEach((player: Player) => {
       if (player.alive) {
         player.registerPlayedPokemons()

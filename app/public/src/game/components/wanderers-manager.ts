@@ -19,6 +19,7 @@ import { DEPTH } from "../depths"
 import type GameScene from "../scenes/game-scene"
 import PokemonSprite from "./pokemon"
 import PokemonSpecial from "./pokemon-special"
+import { transformBoardCoordinates } from "../../pages/utils/utils"
 
 const DEFAULT_WANDERER_SPEED = 0.25
 
@@ -30,6 +31,7 @@ List of wanderers:
 
 export default class WanderersManager {
   scene: GameScene
+  croagunkSprite: PokemonSpecial | null = null
 
   constructor(scene: GameScene) {
     this.scene = scene
@@ -49,6 +51,8 @@ export default class WanderersManager {
       this.addDialogWanderer(wanderer)
     } else if (wanderer.type === WandererType.OUTLAW) {
       this.addOutlawWanderer(wanderer)
+    } else if (wanderer.type === WandererType.CROAGUNK_TRADE) {
+      this.addCroagunkTrader(wanderer)
     }
   }
 
@@ -355,6 +359,33 @@ export default class WanderersManager {
       }
     })
   }
+
+  addCroagunkTrader(wanderer: Wanderer) {
+    if (this.croagunkSprite) {
+      this.croagunkSprite.destroy()
+      this.croagunkSprite = null
+    }
+    const [x, y] = transformBoardCoordinates(8, 0)
+    this.croagunkSprite = new PokemonSpecial({
+      scene: this.scene,
+      x,
+      y,
+      name: Pkm.CROAGUNK,
+      orientation: Orientation.DOWNLEFT,
+      dialog: t("npc_dialog.croagunk_trade"),
+      dialogTitle: t("npc_dialog.croagunk_trade_title")
+    })
+    if (wanderer.data) {
+      this.croagunkSprite.updateDishes([wanderer.data as Item])
+    }
+  }
+
+  updateCroagunkItem(item: string) {
+    if (this.croagunkSprite) {
+      this.croagunkSprite.updateDishes(item ? [item as Item] : [])
+    }
+  }
+
 }
 
 function getDialogsBySpecialWanderer(wanderer: Wanderer): {
