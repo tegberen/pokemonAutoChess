@@ -39,7 +39,7 @@ import {
   HatchEvolutionRule
 } from "../../core/evolution-rules"
 import { getFlowerPotsUnlocked } from "../../core/flower-pots"
-import { selectMatchups } from "../../core/matchmaking"
+import { selectMatchups, selectDoubleUpMatchups} from "../../core/matchmaking"
 import { canSell, PokemonEntity } from "../../core/pokemon-entity"
 import Simulation from "../../core/simulation"
 import { getLevelUpCost } from "../../models/colyseus-models/experience-manager"
@@ -2151,7 +2151,10 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
         }
       })
     } else {
-      const matchups = selectMatchups(this.state)
+      const matchups = 
+        this.state.gameMode === GameMode.DOUBLE_UP
+          ? selectDoubleUpMatchups(this.state)
+          : selectMatchups(this.state)
       this.state.simulationPaused = true // 2 seconds pause for portal transition animation
 
       matchups.forEach((matchup) => {
