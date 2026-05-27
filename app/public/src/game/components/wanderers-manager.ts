@@ -365,7 +365,7 @@ export default class WanderersManager {
       this.croagunkSprite.destroy()
       this.croagunkSprite = null
     }
-    const [x, y] = transformBoardCoordinates(8, 0)
+    const [x, y] = transformBoardCoordinates(7.5, 0.4)
     this.croagunkSprite = new PokemonSpecial({
       scene: this.scene,
       x,

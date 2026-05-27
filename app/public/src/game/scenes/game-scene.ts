@@ -463,7 +463,7 @@ export default class GameScene extends Scene {
       zone.setData({ x, y, index: i })
     }
     
-    const [croagunkX, croagunkY] = transformBoardCoordinates(8, 0)
+    const [croagunkX, croagunkY] = transformBoardCoordinates(7.5, 0.4)
     const croagunkZone = this.add.zone(croagunkX, croagunkY, 96, 96)
     croagunkZone.setRectangleDropZone(96, 96)
     croagunkZone.setName("croagunk-trade-zone")
