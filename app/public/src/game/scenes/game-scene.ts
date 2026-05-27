@@ -659,7 +659,7 @@ export default class GameScene extends Scene {
             (this.room?.state.phase == GamePhaseState.PICK ||
               dropZone.getData("y") == 0)
           ) {
-            if (gameObject.name === "PRISON_BOTTLE") {
+            if (gameObject.name === "PRISON_BOTTLE" && this.room?.state.phase === GamePhaseState.PICK && dropZone.getData("y") === 0) {
               console.log("prison bottle drop x:", dropZone.getData("x"), "y:", dropZone.getData("y"))
               this.board?.playItemDropAnimation(dropZone.getData("x"), 0)
             }

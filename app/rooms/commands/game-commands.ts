@@ -307,7 +307,7 @@ function sendPokemonToPartner(
     pokemon.rarity === Rarity.ULTRA
       ? 5
       : 3
-  sender.doubleUpSendCooldown = state.stageLevel + cooldown
+  sender.doubleUpSendCooldown =  cooldown
 
   // Remove from sender's board
   sender.board.delete(pokemon.id)
@@ -1439,6 +1439,11 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
     this.state.time =
       (StageDuration[this.state.stageLevel] ?? StageDuration.DEFAULT) * 1000
 
+    if (this.state.stageLevel === 1 && this.state.gameMode === GameMode.DOUBLE_UP) {
+      this.state.players.forEach((player: Player) => {
+        player.items.push(Item.PRISON_BOTTLE)
+      })
+    }
     if (
       [2, 4].includes(this.state.stageLevel) &&
       this.state.specialGameRule === SpecialGameRule.TECHNOLOGIC
@@ -1865,6 +1870,18 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
       this.applyDoubleUpDamage()
       this.syncTeamLife()
     }
+
+    // Double Up: countdown Prison Bottle cooldown
+    if (this.state.gameMode === GameMode.DOUBLE_UP) {
+      this.state.players.forEach((player: Player) => {
+        if (player.alive && player.doubleUpSendCooldown > 0) {
+          player.doubleUpSendCooldown--
+          if (player.doubleUpSendCooldown === 0) {
+            player.items.push(Item.PRISON_BOTTLE)
+          }
+        }
+      })
+    }    
     // stop all simulations
     this.state.simulations.forEach((simulation) => {
       simulation.stop()
@@ -2004,18 +2021,6 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
         player.wanderers.set(croagunk.id, croagunk)
       }
     })
-    // Double Up: restore Prison Bottle when cooldown has expired
-    if (this.state.gameMode === GameMode.DOUBLE_UP) {
-      this.state.players.forEach((player: Player) => {
-        if (
-          player.alive &&
-          this.state.stageLevel >= player.doubleUpSendCooldown &&
-          !player.items.includes(Item.PRISON_BOTTLE)
-        ) {
-          player.items.push(Item.PRISON_BOTTLE)
-        }
-      })
-    }
     // need to clear item sprite when refunded (= failed trade)
     if (this.state.gameMode === GameMode.DOUBLE_UP) {
       this.state.players.forEach((player: Player) => {
