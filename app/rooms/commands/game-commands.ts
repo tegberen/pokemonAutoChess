@@ -22,7 +22,8 @@ import {
   StageDuration,
   SynergyTriggers,
   TREASURE_BOX_LIFE_THRESHOLD,
-  UNOWN_ENCOUNTER_CHANCE
+  UNOWN_ENCOUNTER_CHANCE,
+  ArmoryAssistStages
 } from "../../config"
 import { AbilityStrategies } from "../../core/abilities/abilities"
 import { castAbility } from "../../core/abilities/cast"
@@ -139,6 +140,7 @@ import { resetArraySchema, schemaValues } from "../../utils/schemas"
 import { getWeather } from "../../utils/weather"
 import type GameRoom from "../game-room"
 import type GameState from "../states/game-state"
+import { LowPriceOptions, MiddlePriceOptions, HighPriceOptions, ArmoryOptions } from "../../types/enum/ArmoryOptions"
 
 export class OnBuyPokemonCommand extends Command<
   GameRoom,
@@ -1513,6 +1515,32 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
       // update regional pokemons in case some regional variants of add picks are now available
       this.state.players.forEach((p) => p.updateRegionalPool(this.state, false))
     }
+
+    // if (this.state.gameMode === GameMode.DOUBLE_UP && ArmoryAssistStages.includes(this.state.stageLevel)){
+    //   let firstGroup : Player[] = [];
+    //   let secondGroup : Player[] = [];
+    //   // Make groups by user id
+    //   this.state.players.forEach((p) => {
+    //     if (p.id < p.doubleUpPartnerId) firstGroup.push(p);
+    //     else secondGroup.push(p);
+    //   })
+    //   const partnersToPrompt = 
+    //     (this.state.stageLevel === ArmoryAssistStages[0] || this.state.stageLevel === ArmoryAssistStages[2]) ? firstGroup : secondGroup;
+
+    //   partnersToPrompt.forEach((p) => {
+    //     const armoryChoices : ArmoryOptions[] = [];
+    //     armoryChoices.push(pickRandomIn(LowPriceOptions));
+    //     armoryChoices.push(pickRandomIn(MiddlePriceOptions));
+    //     armoryChoices.push(pickRandomIn(HighPriceOptions));
+
+    //     p.choices.push(
+    //         new PlayerChoice({
+    //           type: "armory_assist",
+    //           armoryOptions: armoryChoices,
+    //         })
+    //       )
+    //   })
+    // }
 
     const commands = new Array<Command>()
 

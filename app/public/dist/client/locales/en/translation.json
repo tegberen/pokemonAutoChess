@@ -2553,6 +2553,17 @@
 		"LUNCH_BREAK": "The Chef cook two dishes and feed the two STRONGEST ADJACENT allies after every round.",
 		"BANQUET": "Gain a second CHEF_HAT."
 	},
+	"armory": {
+		"BERRY_BUNDLE": "Berry Bundle",
+		"UNOWN_BUNDLE": "Unown Bundle",
+		"SWEETS_BUNDLE": "Sweets Bundle",
+		"DITTO_BUNDLE": "Ditto Bundle",
+		"GEMS_BUNDLE": "Gems Bundle",
+    	"EPIC_BUNDLE": "Epic Rarity Bundle",
+		"ULTRA_BUNDLE": "Ultra Rarity Bundle",
+		"UNIQUE_BUNDLE": "Unique Rarity Bundle",
+		"LEGENDARY_BUNDLE": "Legendary Rarity Bundle"
+	},
 	"item": {
 		"FOSSIL_STONE": "Fossil Stone",
 		"TWISTED_SPOON": "Twisted Spoon",
@@ -2882,6 +2893,17 @@
 		"ROCK_HORN": "Rock Horn",
 		"SKY_MELODICA": "Sky Melodica",
 		"TERRA_CYMBAL": "Terra Cymbal"
+	},
+	"armory_description": {
+		"BERRY_BUNDLE": "Gift 7 random $t(item.BERRIES) to your partner. Wouldn't be a problem if you used the koffing berries.",
+		"UNOWN_BUNDLE": "Gift 3 random $t(pkm.UNOWN) to your partner. Your partner needs to have at least 3 free spaces on the bench.",
+		"SWEETS_BUNDLE": "Gift 5 random $t(item.SWEETS) to your partner.",
+		"DITTO_BUNDLE": "Gift a $t(pkm.DITTO) to your partner. Your partner needs to have at least one free space on the bench.",
+		"GEMS_BUNDLE": "Gift 2 synergy gems to your partner. They will match 2 synergies between your partner's 3 highest synergies.",
+    	"EPIC_BUNDLE": "Gift a random 2 STAR STAR Epic Pokémon to your partner. It will have your partner's highest active synergy.",
+		"ULTRA_BUNDLE": "Gift 2 random 1 STAR Ultra Pokémon to your partner. Each of them will have a synergy between your partner's 3 highest synergies.",
+		"UNIQUE_BUNDLE": "Gift a random Unique Pokémon to your partner. It will have your partner's highest active synergy.",
+		"LEGENDARY_BUNDLE": "Gift a random Unique Pokémon to your partner. It will have your partner's highest active synergy."
 	},
 	"item_description": {
 		"FOSSIL_STONE": "A fossil of a Pokémon that lived in prehistoric times",
@@ -4069,6 +4091,7 @@
 		"choose_unique": "Choose one Unique for your team. You only get to choose once, make it count!",
 		"choose_legendary": "Choose one Legendary for your team. You only get to choose once, make it count!",
 		"choose_wand": "Choose one Wand to give additional effects to your Fairy Pokémon attacks",
+		"choose_armory": "Choose one gift to send to your partner",
 		"free_slot_hint": "You must have one free slot on the bench, or two for Duos"
 	},
 	"hide": "Hide",
