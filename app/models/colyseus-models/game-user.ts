@@ -30,8 +30,8 @@ export class GameUser extends Schema implements IGameUser {
   @type("boolean") anonymous: boolean
   @type("string") twitchLogin: string
   @type("string") twitchDisplayName: string
-  doubleUpPartnerId: string = ""
-  doubleUpTeamId: string = ""
+  @type("string") doubleUpPartnerId: string = ""
+  @type("string") doubleUpTeamId: string = ""
 
   constructor(
     uid: string,
