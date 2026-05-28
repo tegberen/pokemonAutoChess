@@ -7,8 +7,14 @@ export enum LowPriceOptions {
 
 export enum MiddlePriceOptions {
     GEMSBUNDLE = "GEMS_BUNDLE",
+    COMMONBUNDLE = "COMMON_BUNDLE",
+    UNCOMMONBUNDLE = "UNCOMMON_BUNDLE",
+    RAREBUNDLE = "RARE_BUNDLE",
     EPICBUNDLE = "EPIC_BUNDLE",
-    ULTRABUNDLE = "ULTRA_BUNDLE"
+    ULTRABUNDLE = "ULTRA_BUNDLE",
+    POTION = "POTION",
+    DELUXE_BOX = "DELUXE_BOX"
+
 }
 
 export enum HighPriceOptions {
