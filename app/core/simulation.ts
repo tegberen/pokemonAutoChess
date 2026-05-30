@@ -1,5 +1,5 @@
 import { MapSchema, Schema, type } from "@colyseus/schema"
-import { BOARD_HEIGHT, BOARD_WIDTH } from "../config"
+import { BOARD_HEIGHT, BOARD_WIDTH, BOARD_SIDE_HEIGHT } from "../config"
 import { SynergyEffects } from "../config/game/synergies"
 import type Player from "../models/colyseus-models/player"
 import type { Pokemon } from "../models/colyseus-models/pokemon"
@@ -338,7 +338,7 @@ export default class Simulation extends Schema implements ISimulation {
 
   getFirstFreeCell(team: Team): { x: number; y: number } | null {
     if (team === Team.BLUE_TEAM) {
-      for (let y = 0; y < this.board.rows; y++) {
+      for (let y = 0; y <= BOARD_SIDE_HEIGHT - 1; y++) {
         for (let x = 0; x < this.board.columns; x++) {
           if (
             this.board.isOnBoard(x, y) &&
@@ -349,7 +349,7 @@ export default class Simulation extends Schema implements ISimulation {
         }
       }
     } else {
-      for (let y = this.board.rows - 1; y >= 0; y--) {
+      for (let y = this.board.rows - 1; y >= this.board.rows - BOARD_SIDE_HEIGHT; y--) {
         for (let x = this.board.columns - 1; x >= 0; x--) {
           if (
             this.board.isOnBoard(x, y) &&
