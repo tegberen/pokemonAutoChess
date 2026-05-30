@@ -140,7 +140,7 @@ import { resetArraySchema, schemaValues } from "../../utils/schemas"
 import { getWeather } from "../../utils/weather"
 import type GameRoom from "../game-room"
 import type GameState from "../states/game-state"
-import { LowPriceOptions, MiddlePriceOptions, HighPriceOptions, ArmoryOptions } from "../../types/enum/ArmoryOptions"
+import { FreeOptions, PaidOptions, ArmoryOptions } from "../../types/enum/ArmoryOptions"
 
 export class OnBuyPokemonCommand extends Command<
   GameRoom,
@@ -1258,14 +1258,10 @@ export class OnUpdateCommand extends Command<
     })
     if (survivors.length === 0) return
 
-    logger.info(
-      `[DoubleUp] Sending ${survivors.length} reinforcement(s) from ${winnerPlayer.name} to partner's fight`
-    )
-
     for (const entity of survivors) {
       const coord = target.getFirstFreeCell(partnerTeam)
       if (!coord) {
-        logger.warn(`[DoubleUp] No free cell for reinforcement — stopping`)
+        // logger.warn(`[DoubleUp] No free cell for reinforcement — stopping`)
         break
       }
       const reinforcement = target.addPokemon(
@@ -1516,31 +1512,31 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
       this.state.players.forEach((p) => p.updateRegionalPool(this.state, false))
     }
 
-    // if (this.state.gameMode === GameMode.DOUBLE_UP && ArmoryAssistStages.includes(this.state.stageLevel)){
-    //   let firstGroup : Player[] = [];
-    //   let secondGroup : Player[] = [];
-    //   // Make groups by user id
-    //   this.state.players.forEach((p) => {
-    //     if (p.id < p.doubleUpPartnerId) firstGroup.push(p);
-    //     else secondGroup.push(p);
-    //   })
-    //   const partnersToPrompt = 
-    //     (this.state.stageLevel === ArmoryAssistStages[0] || this.state.stageLevel === ArmoryAssistStages[2]) ? firstGroup : secondGroup;
+    if (this.state.gameMode === GameMode.DOUBLE_UP && ArmoryAssistStages.includes(this.state.stageLevel)){
+      let firstGroup : Player[] = [];
+      let secondGroup : Player[] = [];
+      // Make groups by user id
+      this.state.players.forEach((p) => {
+        if (p.id < p.doubleUpPartnerId) firstGroup.push(p);
+        else secondGroup.push(p);
+      })
+      const partnersToPrompt = 
+        (this.state.stageLevel === ArmoryAssistStages[0] || this.state.stageLevel === ArmoryAssistStages[2]) ? firstGroup : secondGroup;
 
-    //   partnersToPrompt.forEach((p) => {
-    //     const armoryChoices : ArmoryOptions[] = [];
-    //     armoryChoices.push(pickRandomIn(LowPriceOptions));
-    //     armoryChoices.push(pickRandomIn(MiddlePriceOptions));
-    //     armoryChoices.push(pickRandomIn(HighPriceOptions));
+      partnersToPrompt.forEach((p) => {
+        const armoryChoices : ArmoryOptions[] = [];
+        armoryChoices.push(pickRandomIn(FreeOptions));
+        const paidOptions = pickNRandomIn([...Object.values(PaidOptions)], 2)
+        paidOptions.forEach((op) => armoryChoices.push(op))
 
-    //     p.choices.push(
-    //         new PlayerChoice({
-    //           type: "armory_assist",
-    //           armoryOptions: armoryChoices,
-    //         })
-    //       )
-    //   })
-    // }
+        p.choices.push(
+            new PlayerChoice({
+              type: "armory_assist",
+              armoryOptions: armoryChoices,
+            })
+          )
+      })
+    }
 
     const commands = new Array<Command>()
 

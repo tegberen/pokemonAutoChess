@@ -27,7 +27,7 @@ import { isIn } from "../../../../../utils/array"
 import { ItemDetailTooltip } from "../../../game/components/item-detail"
 import { addIconsToDescription } from "../../utils/descriptions"
 import SynergyIcon from "../icons/synergy-icon"
-import { LowPriceOptions, MiddlePriceOptions, HighPriceOptions } from "../../../../../types/enum/ArmoryOptions"
+import { FreeOptions, PaidOptions } from "../../../../../types/enum/ArmoryOptions"
 import { BundleDetailTooltip } from "../../../game/components/bundle-detail"
 
 function ItemList(props: { items: readonly Item[]; icon?: string }) {
@@ -165,7 +165,7 @@ export default function WikiItems() {
         <h2>{t("wiki.items.bundles")}</h2>
         <p>{t("wiki.items.bundles_description")}</p>
         <ul className="town">
-          {[...Object.values(LowPriceOptions), ...Object.values(MiddlePriceOptions), ...Object.values(HighPriceOptions)].map((bundle) => (
+          {[...Object.values(FreeOptions), ...Object.values(PaidOptions)].map((bundle) => (
             <li key={bundle} data-tooltip-id="bundle-detail-tooltip" data-tooltip-content={bundle}>
               <img
                 src={`assets/item/${bundle}.png`}

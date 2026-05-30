@@ -108,6 +108,8 @@ import {
   OnCancelTradeOfferCommand
 } from "./commands/game-commands"
 import GameState from "./states/game-state"
+import { ArmoryOptionsPrice } from "../types/enum/ArmoryOptions"
+import { armoryGiftService } from "../services/armory-options"
 
 export default class GameRoom extends Room<{ state: GameState }> {
   dispatcher: Dispatcher<this>
@@ -368,6 +370,23 @@ export default class GameRoom extends Room<{ state: GameState }> {
         if (!this.state.gameFinished && client.auth) {
           try {
             this.pickChoice(
+              client.auth.uid,
+              message.choiceId,
+              message.choiceIndex
+            )
+          } catch (error) {
+            logger.error(error)
+          }
+        }
+      }
+    )
+
+    this.onMessage(
+      Transfer.ARMORY_GIFT,
+      (client, message: { choiceId: string; choiceIndex: number; partnerId: string }) => {
+        if (!this.state.gameFinished && client.auth) {
+          try {
+            this.pickGift(
               client.auth.uid,
               message.choiceId,
               message.choiceIndex
@@ -1211,6 +1230,43 @@ export default class GameRoom extends Room<{ state: GameState }> {
     })
 
     return size
+  }
+
+  pickGift(
+    playerId: string,
+    choiceId: string,
+    choiceIndex: number
+  ) {
+    const player = this.state.players.get(playerId)
+    if (!player) return
+    const partner = this.state.players.get(player.doubleUpPartnerId)
+    if (!partner) return
+
+    const choice = player.choices.find((c) => c.id === choiceId)
+    if (
+      !choice ||
+      choiceIndex < 0 ||
+      choiceIndex >= choice.armoryOptions?.length
+    )
+      return
+    
+      
+    if (choice.armoryOptions.length > 0) {
+      const gift = choice.armoryOptions[choiceIndex]
+      if (gift && (player.money < ArmoryOptionsPrice[gift])) {
+        // Show warning not enough gold
+        return
+      }
+      const giftEffect = armoryGiftService[gift]
+
+      // Process each gift - each armory option has its corresponding function to trigger
+      const res = giftEffect?.(partner);
+
+      if (!res) return
+      player.money -= ArmoryOptionsPrice[gift]
+    }
+
+    removeInArray(player.choices, choice)
   }
 
   pickChoice(
