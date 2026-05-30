@@ -4688,7 +4688,18 @@
 			"luck_formula": "LUCK influencia as probabilidades com esta fórmula: P = baseP ^ (1 - sorte/100); por exemplo, um Pokémon com 10% de CRIT_CHANCE e 50 de LUCK terá, na verdade, 0,1^(1-50/100) = ~31,62% de CRIT_CHANCE.",
 			"xp": "XP",
 			"experience": "Experiência"
-		}
+		},
+    "double_up": {
+      "shared_hp": "Sua barra de vida é compartilhada com seu parceiro. Você recebe metade do dano usual por luta, mas ao final de cada rodada sua equipe sofre a pior das duas perdas.",
+      "trade_desc": "Arraste e solte itens ou componentes no Croagunk para trocar com seu parceiro. As trocas só estão disponíveis durante a fase de preparação. (Se você colocar um item no Croagunk mas seu parceiro não oferecer uma contraproposta antes do início da fase de batalha, o item retorna à sua bancada). Clique com o botão esquerdo em um item colocado para cancelá-lo. Você verá a proposta de item do seu parceiro flutuando abaixo do Croagunk, e vice-versa. A Garrafa Prisão só pode ser usada em Pokémon Únicos e Lendários após o Estágio do Duo Lendário da Torre.",
+      "trade_rules": "Apenas componentes básicos e seus itens criados são negociáveis. Lenços, ferramentas e itens brilhantes são excluídos. As trocas devem ser item por item ou componente por componente — trocas incompatíveis são canceladas.",
+      "prison_bottle_desc": "Você começa com uma Garrafa Prisão. Arraste-a sobre um Pokémon na bancada para enviá-lo à bancada do seu parceiro durante a fase de preparação. Os itens carregados pelo Pokémon enviado serão removidos antes do envio. Dependendo da raridade do Pokémon, há um tempo de recarga antes que a Garrafa Prisão reapareça. Pokémon ÚNICOS e LENDÁRIOS são pesados demais para o Hoopa — não podem ser enviados!",
+      "prison_bottle_cooldown_long": "ÉPICO, ULTRA: 5 rodadas de recarga",
+      "prison_bottle_cooldown_short": "COMUM, INCOMUM, RARO, ESPECIAL, CHOCO: 3 rodadas de recarga",
+      "reinforcements_desc": "Se você derrotar seu oponente antes do seu parceiro terminar a rodada, seus Pokémon se juntarão à batalha deles como reforços. Sinergias ativas, itens equipados e estatísticas permanentes da sua equipe serão mantidos. Seus Pokémon não contribuirão nem ganharão novos efeitos de sinergia da equipe do seu parceiro. Há um atraso de 3 segundos antes da chegada dos reforços.",
+      "gift_desc": "Nos estágios 15–16 e 25–26. Envie ao seu parceiro um pacote de presente contendo Pokémon, gemas, itens e muito mais — pagos ou gratuitos. Certifique-se de que seu parceiro tenha um espaço livre na bancada antes de enviar um Pokémon! Certifique-se de ter ouro suficiente! Os presentes podem virar o jogo, então escolha com sabedoria.",
+      "lobby_desc": "Abra uma sala e selecione seu parceiro. Bots podem ser adicionados. Nenhum elo é ganho ou perdido. Boa sorte! Que o melhor time vença ٩(^ᗜ^ )و ´- vinper & tegberen"
+    }
 	},
 	"errors": {
 		"USER_INACTIVE": "Você foi expulso por inatividade a fim de economizar recursos do servidor",
@@ -4771,6 +4782,7 @@
 		"RANKED": "Jogo Rankeado",
 		"SCRIBBLE": "Garabato do Smeargle",
 		"CUSTOM_LOBBY": "Jogo personalizado",
+    "DOUBLE_UP": "Dupla Batalha",
 		"TOURNAMENT": "Torneio"
 	},
 	"game_modes_descriptions": {
@@ -4778,6 +4790,7 @@
 		"RANKED": "Competitivo ! 8 jogadores, COM alteração no Elo\nRestrito a jogadores com um ranque próximo ao seu",
 		"SCRIBBLE": "Jogue por diversão! 8 jogadores, SEM alteração no Elo\nUma regra especial é adicionada a esse modo de jogo.",
 		"CUSTOM_LOBBY": "Cria uma sala privada para jogar com seus amigos ou com robôs.",
+    "DOUBLE_UP": "Una-se a um parceiro e sobreviva a todos os outros duos!",
 		"TOURNAMENT": "Essa partida é parte de um torneio. Veja no Discord para eventos futuros."
 	},
 	"dendrogram": {
