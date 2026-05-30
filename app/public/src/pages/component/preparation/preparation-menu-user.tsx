@@ -8,12 +8,15 @@ import { EloBadge } from "../profile/elo-badge"
 import { InlineAvatar } from "../profile/inline-avatar"
 import "./preparation-menu-user.css"
 import { preference } from "../../../preferences"
+import { GameMode } from "../../../../../types/enum/Game"
+import { selectPartner } from "../../../network"
 
 export default function PreparationMenuUser(props: {
   key: string
   user: IGameUser
   isOwner: boolean
   ownerId: string
+  colorIndex?: number
 }) {
   const { t } = useTranslation()
   const user = useAppSelector((state) => state.preparation.user)
@@ -35,12 +38,22 @@ export default function PreparationMenuUser(props: {
       title={t("kick_user")}
     />
   ) : null
+  const gameMode = useAppSelector((state) => state.preparation.gameMode)
+  const users = useAppSelector((state) => state.preparation.users)
+  const myUid = user?.uid
+  const isDoubleUp = gameMode === GameMode.DOUBLE_UP
+  const isMe = props.user.uid === myUid
+  const myPartner = users.find((u) => u.uid === myUid)?.doubleUpPartnerId
+  const isPaired = myPartner === props.user.uid
+  const DOUBLE_UP_TEAM_COLORS = ["#f9e07f", "#f4a7b9", "#a8e6e6", "#b8e6a0"]
+  const teamColor = isDoubleUp ? DOUBLE_UP_TEAM_COLORS[(props.colorIndex ?? 0) % DOUBLE_UP_TEAM_COLORS.length] : undefined
 
   return (
     <div
       className={`my-container player my-box preparation-menu-user ${
         props.user.ready ? "ready" : "not-ready"
       }`}
+      style={isDoubleUp && teamColor ? { borderColor: teamColor } : undefined}
     >
       <EloBadge elo={props.user?.elo} />
       <InlineAvatar
@@ -52,6 +65,14 @@ export default function PreparationMenuUser(props: {
         twitchDisplayName={props.user?.twitchDisplayName || undefined}
       />
       {preference("colorblindMode") && props.user.ready && t("ready")}
+      {isDoubleUp && !isMe && (
+        <button
+          className={`bubbly ${isPaired ? "green" : "orange"}`}
+          onClick={() => selectPartner(props.user.uid)}
+        >
+          {isPaired ? "✔ Partner" : "Partner?"}
+        </button>
+      )}
       {removeButton}
     </div>
   )

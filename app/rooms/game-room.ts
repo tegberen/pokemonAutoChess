@@ -104,9 +104,12 @@ import {
   OnShopRerollCommand,
   OnSpectateCommand,
   OnSwitchBenchAndBoardCommand,
-  OnUpdateCommand
+  OnUpdateCommand,
+  OnCancelTradeOfferCommand
 } from "./commands/game-commands"
 import GameState from "./states/game-state"
+import { ArmoryOptionsPrice } from "../types/enum/ArmoryOptions"
+import { armoryGiftService } from "../services/armory-options"
 
 export default class GameRoom extends Room<{ state: GameState }> {
   dispatcher: Dispatcher<this>
@@ -177,6 +180,8 @@ export default class GameRoom extends Room<{ state: GameState }> {
       tournamentId,
       bracketId
     })
+
+    if (gameMode === GameMode.DOUBLE_UP) noElo = true
     // logger.debug(options);
     this.state = new GameState(
       preparationId,
@@ -283,6 +288,8 @@ export default class GameRoom extends Room<{ state: GameState }> {
           )
           this.state.players.set(user.uid, player)
           this.state.botManager.addBot(player)
+          player.doubleUpPartnerId = users[id].doubleUpPartnerId ?? ""
+          player.doubleUpTeamId = users[id].doubleUpTeamId ?? ""
         } else {
           const leanUser = await UserMetadata.findOne({ uid: id }).lean()
           const user = leanUser ? toLeanUserMetadata(leanUser) : null
@@ -304,6 +311,8 @@ export default class GameRoom extends Room<{ state: GameState }> {
 
             this.state.players.set(user.uid, player)
             this.state.shop.assignShop(player, false, this.state)
+            player.doubleUpPartnerId = users[id].doubleUpPartnerId ?? ""
+            player.doubleUpTeamId = users[id].doubleUpTeamId ?? ""
 
             if (
               this.state.specialGameRule === SpecialGameRule.EVERYONE_IS_HERE
@@ -361,6 +370,23 @@ export default class GameRoom extends Room<{ state: GameState }> {
         if (!this.state.gameFinished && client.auth) {
           try {
             this.pickChoice(
+              client.auth.uid,
+              message.choiceId,
+              message.choiceIndex
+            )
+          } catch (error) {
+            logger.error(error)
+          }
+        }
+      }
+    )
+
+    this.onMessage(
+      Transfer.ARMORY_GIFT,
+      (client, message: { choiceId: string; choiceIndex: number; partnerId: string }) => {
+        if (!this.state.gameFinished && client.auth) {
+          try {
+            this.pickGift(
               client.auth.uid,
               message.choiceId,
               message.choiceIndex
@@ -545,6 +571,17 @@ export default class GameRoom extends Room<{ state: GameState }> {
         }
       }
     )
+    this.onMessage(Transfer.CANCEL_TRADE_OFFER, (client) => {
+      if (client.auth) {
+        try {
+          this.dispatcher.dispatch(new OnCancelTradeOfferCommand(), {
+            playerId: client.auth.uid
+          })
+        } catch (e) {
+          logger.error("cancel trade offer error", e)
+        }
+      }
+    })
 
     this.onMessage(Transfer.PICK_BERRY, async (client, index) => {
       if (!this.state.gameFinished && client.auth) {
@@ -1241,6 +1278,43 @@ export default class GameRoom extends Room<{ state: GameState }> {
     return size
   }
 
+  pickGift(
+    playerId: string,
+    choiceId: string,
+    choiceIndex: number
+  ) {
+    const player = this.state.players.get(playerId)
+    if (!player) return
+    const partner = this.state.players.get(player.doubleUpPartnerId)
+    if (!partner) return
+
+    const choice = player.choices.find((c) => c.id === choiceId)
+    if (
+      !choice ||
+      choiceIndex < 0 ||
+      choiceIndex >= choice.armoryOptions?.length
+    )
+      return
+    
+      
+    if (choice.armoryOptions.length > 0) {
+      const gift = choice.armoryOptions[choiceIndex]
+      if (gift && (player.money < ArmoryOptionsPrice[gift])) {
+        // Show warning not enough gold
+        return
+      }
+      const giftEffect = armoryGiftService[gift]
+
+      // Process each gift - each armory option has its corresponding function to trigger
+      const res = giftEffect?.(partner);
+
+      if (!res) return
+      player.money -= ArmoryOptionsPrice[gift]
+    }
+
+    removeInArray(player.choices, choice)
+  }
+
   pickChoice(
     playerId: string,
     choiceId: string,
@@ -1367,10 +1441,16 @@ export default class GameRoom extends Room<{ state: GameState }> {
         }
       })
     }
+    if (this.state.gameMode === GameMode.DOUBLE_UP) {
+      damage = Math.ceil(stageLevel / 2)
+    }
     return damage
   }
 
   rankPlayers() {
+    if (this.state.gameMode === GameMode.DOUBLE_UP) {
+      return this.rankPlayersDoubleUp()
+    }
     const rankArray = new Array<{ id: string; life: number; level: number }>()
     this.state.players.forEach((player) => {
       if (!player.alive) {
@@ -1402,6 +1482,28 @@ export default class GameRoom extends Room<{ state: GameState }> {
       if (player) {
         player.rank = index + 1
       }
+    })
+  }
+  rankPlayersDoubleUp() {
+    // Group alive players by team, sum their life and level
+    const teamMap = new Map<string, { life: number; level: number; ids: string[] }>()
+    this.state.players.forEach((player) => {
+      if (!player.alive) return
+      const entry = teamMap.get(player.doubleUpTeamId) ?? { life: 0, level: 0, ids: [] }
+      entry.life += player.life
+      entry.level += player.experienceManager.level
+      entry.ids.push(player.id)
+      teamMap.set(player.doubleUpTeamId, entry)
+    })
+
+    const teamArray = [...teamMap.values()]
+    teamArray.sort((a, b) => b.life - a.life || b.level - a.level)
+
+    teamArray.forEach((team, index) => {
+      team.ids.forEach((id) => {
+        const player = this.state.players.get(id)
+        if (player) player.rank = index + 1
+      })
     })
   }
 

@@ -26,6 +26,9 @@
 - buff town encounter - Spinda: now uses inverse user control
 - Added Halloween: Everyone starts with GHOST 8, GHOST 16 summons Ghost
 
+## Gamemode
+- New Gamemode: Double Up - Team up with your partner and outlast every other duo!
+
 # Items
 ## Chimecho Town Encounter
 - FIERY_DRUM, GRASS_CORNET, ICY_FLUTE, ROCK_HORN, SKY_MELODICA, TERRA_CYMBAL

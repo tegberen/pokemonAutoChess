@@ -134,7 +134,10 @@ export enum Transfer {
   RECONNECT_PROMPT = "RECONNECT_PROMPT",
   OVERWRITE_BOARD = "OVERWRITE_BOARD",
   NOTIFICATIONS = "NOTIFICATIONS",
-  NOTIFICATION_SEEN = "NOTIFICATION_SEEN"
+  NOTIFICATION_SEEN = "NOTIFICATION_SEEN",
+  CANCEL_TRADE_OFFER = "CANCEL_TRADE_OFFER",
+  SELECT_PARTNER = "SELECT_PARTNER",
+  ARMORY_GIFT = "ARMORY_GIFT"
 }
 
 export enum ReadWriteMode {
@@ -255,6 +258,8 @@ export interface IPlayer {
   shopFreeRolls: number
   streak: number
   interest: number
+  doubleUpPartnerId: string
+  doubleUpTeamId: string
   opponentId: string
   opponentName: string
   opponentAvatar: string

@@ -194,7 +194,9 @@ export default function Preparation() {
           "title",
           "ready",
           "twitchLogin",
-          "twitchDisplayName"
+          "twitchDisplayName",
+          "doubleUpPartnerId",
+          "doubleUpTeamId"
         ] satisfies NonFunctionPropNames<GameUser>[]
 
         fields.forEach((field) => {

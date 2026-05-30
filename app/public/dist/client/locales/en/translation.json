@@ -2664,6 +2664,22 @@
 		"LUNCH_BREAK": "The Chef cook two dishes and feed the two STRONGEST ADJACENT allies after every round.",
 		"BANQUET": "Gain a second CHEF_HAT."
 	},
+	"armory": {
+		"POTION": "Potion",
+		"DELUXE_BOX": "Deluxe Box",
+		"BERRY_BUNDLE": "Berry Bundle",
+		"UNOWN_BUNDLE": "Unown Bundle",
+		"SWEETS_BUNDLE": "Sweets Bundle",
+		"DITTO_BUNDLE": "Ditto Bundle",
+		"GEMS_BUNDLE": "Gems Bundle",
+		"COMMON_BUNDLE": "Common Rarity Bundle",
+		"UNCOMMON_BUNDLE": "Uncommon Rarity Bundle",
+		"RARE_BUNDLE": "Rare Rarity Bundle",
+		"EPIC_BUNDLE": "Epic Rarity Bundle",
+		"ULTRA_BUNDLE": "Ultra Rarity Bundle",
+		"UNIQUE_BUNDLE": "Unique Rarity Bundle",
+		"LEGENDARY_BUNDLE": "Legendary Rarity Bundle"
+	},
 	"item": {
     "AQUA_MONICA": "Aqua Monica",
     "FIERY_DRUM": "Fiery Drum",
@@ -2981,6 +2997,7 @@
 		"MISSION_ORDER_PINK": "Mission Order - Evolve!",
 		"LEADERS_CREST": "Leader's Crest",
 		"LAPRAS_PASSPORT": "Lapras Travel Pass",
+    "PRISON_BOTTLE": "Prison Bottle",
 		"SILK_SCARF": "Silk Scarf",
 		"FRIEND_BOW": "Friend Bow",
 		"BLACK_BELT": "Black Belt",
@@ -3016,6 +3033,22 @@
     "COCONUT_MILK": "Coconut Milk",
     "COCONUT_MALASADA": "Coconut Malasada",
     "BERRIES": "Berries"
+	},
+	"armory_description": {
+		"POTION": "A potion that heals 10 player HP of the team",
+		"DELUXE_BOX" : "Gift 3 random items to your partner.",
+		"BERRY_BUNDLE": "Gift 7 random $t(item.BERRIES) to your partner. Wouldn't be a problem if you used the koffing berries.",
+		"UNOWN_BUNDLE": "Gift 5 random Unown to your partner. Your partner needs to have at least 3 free spaces on the bench.",
+		"SWEETS_BUNDLE": "Gift 5 random $t(item.SWEETS) to your partner.",
+		"DITTO_BUNDLE": "Gift a Ditto to your partner. Your partner needs to have at least one free space on the bench.",
+		"GEMS_BUNDLE": "Gift 3 synergy gems to your partner.",
+		"COMMON_BUNDLE": "Gift a random 3 STAR Common Pokémon to your partner. It will match your partner's highest active synergy.",
+		"UNCOMMON_BUNDLE": "Gift a random 2 STAR Additional or Regional Uncommon Pokémon to your partner. It will match your partner's highest active synergy.",
+		"RARE_BUNDLE": "Gift a random 2 STAR Additional or Regional Rare Pokémon to your partner. It will match your partner's highest active synergy.",
+		"EPIC_BUNDLE": "Gift a random 2 STAR Additional or Regional Epic Pokémon to your partner. It will have your partner's highest active synergy.",
+		"ULTRA_BUNDLE": "Gift a random 1 STAR Ultra Pokémon to your partner. It will have one of your partner's 2 highest active synergy.",
+		"UNIQUE_BUNDLE": "Gift a random Unique Pokémon to your partner. It will have your partner's highest active synergy.",
+		"LEGENDARY_BUNDLE": "Gift a random Legendary Pokémon to your partner. It will have your partner's highest active synergy."
 	},
 	"item_description": {
 		"AQUA_MONICA": "Each ally cast grants +2 PP to the whole team",
@@ -3335,6 +3368,7 @@
 		"MISSION_ORDER_GOLD": "Complete this mission to earn 30 GOLD:\n earn 200 GOLD in total during the game",
 		"LEADERS_CREST": "When another player beats you in battle, they get an additional 4 GOLD and take the LEADERS_CREST.",
 		"LAPRAS_PASSPORT": "Lapras offers a ride to go to a different region. Use the passport on a Pokémon to influence the destination based on its synergies.",
+    "PRISON_BOTTLE": "Borrow Hoopa’s power to send a Pokémon from your bench to your partner’s bench. Items will be stripped off. (Preparation phase)",
 		"SILK_SCARF": "Combine it with other item components to make all kinds of scarves, bands and bows. Those items will be removed if you lower down NORMAL synergy level.",
 		"FRIEND_BOW": "The holder gains the NORMAL type.",
 		"BLACK_BELT": "Critical attacks provide 33% of the damage dealt as SHIELD.",
@@ -4292,6 +4326,7 @@
 		"choose_unique": "Choose one Unique for your team. You only get to choose once, make it count!",
 		"choose_legendary": "Choose one Legendary for your team. You only get to choose once, make it count!",
 		"choose_wand": "Choose one Wand to give additional effects to your Fairy Pokémon attacks",
+		"choose_armory": "Choose one gift to send to your partner",
 		"free_slot_hint": "You must have one free slot on the bench, or two for Duos"
 	},
 	"hide": "Hide",
@@ -4713,7 +4748,9 @@
 		"magnezone": "Listen, let the police do their job; as soon as I have more information, rest assured you will be the first to know.",
 		"xatu": "Let me open this treasure box for you...",
 		"lapras": "Ready to go? Then all aboard!",
-    "tinkaton": "Is that a Corviknight?"
+    "tinkaton": "Is that a Corviknight?",
+    "croagunk_trade": "Meh-heh-heh! Drop an item on me to trade it with your partner!",
+    "croagunk_trade_title": "Croagunk"
 	},
 	"scribble": {
 		"EVERYONE_IS_HERE": "Everyone is here !",
@@ -4905,7 +4942,9 @@
 			"wands": "Wands",
 			"wands_description": "Wands give additional effects to FAIRY Pokémon attacks.",
 			"cell_battery_description": "After reaching max level in ELECTRIC synergy, your Pokémon charge CELL_BATTERY with their attacks, that you can consume to supercharge an ELECTRIC Pokémon for the next fight.",
-			"fire_shard_description": "After reaching max level in FIRE synergy, every round you can use FIRE_SHARD to sacrifice your player HP and buff a FIRE Pokémon."
+			"fire_shard_description": "After reaching max level in FIRE synergy, every round you can use FIRE_SHARD to sacrifice your player HP and buff a FIRE Pokémon.",
+      "bundles": "Bundles",
+      "bundles_description": "Bundles are gifts for the game mode Double Up"
 		},
 		"statistics": {
 			"stat_description": {
@@ -4984,7 +5023,18 @@
 			"pool_size_per_category_description": "The Pokémon you find in shops are taken from a pool shared by all players. The number of specimens of each Pokémon in the pool depends on its rarity and its number of evolution stages.",
 			"xp": "XP",
 			"experience": "Experience"
-		}
+		},
+    "double_up": {
+      "shared_hp": "Your health pool is shared with your partner. You take half the usual damage per fight, but at the end of each round your team takes the worse of the two losses.",
+      "trade_desc": "Drag and drop items or components onto Croagunk to trade with your partner. Trading is only available during the preparation phase. (If you place an item on Croagunk but your partner doesn't offer a counter-trade before the battle phase begins, the item is returned to your bench). Left-click a placed item to cancel it. You will see your partners item proposal hovering below Croagunk, vice versa. Prison Bottle can only be used on Unique and Legendary Pokemon after Tower Legendary Duo Stage",
+      "trade_rules": "Only basic components and their crafted items are tradable. Scarves, tools, and shiny items are excluded. Trades must be item-for-item or component-for-component — mismatched trades are cancelled.",
+      "prison_bottle_desc": "You start with a Prison Bottle. Drag it onto a benched Pokémon to send it to your partners bench during the preparation phase. Items held by the sent Pokémon will be removed before sending. Depending on the Pokémon's rarity, there is a cooldown before the Prison Bottle reappears, before you can send it again. UNIQUE and LEGENDARY Pokemon are too heavy for Hoopa - cannot be sent!",
+      "prison_bottle_cooldown_long": "EPIC, ULTRA: 5 rounds cooldown",
+      "prison_bottle_cooldown_short": "COMMON, UNCOMMON, RARE, SPECIAL, HATCH: 3 rounds cooldown",
+      "reinforcements_desc": "If you defeat your opponent before your partner finishes their round, your Pokémon will join their battle as reinforcements. Active synergies, itemization, and permanent stats from your team will carry over. Your Pokémon will not contribute to or gain any new synergy effects from your partner's team. There is a 3-second delay before reinforcements arrive.",
+      "gift_desc": "At stages 15–16 and 25–26. Send your partner a gift bundle containing Pokémon, gems, items, and more — paid or free. Make sure your partner has a free bench slot before sending a Pokémon! Make sure you have enough Gold! Gifts can turn the tide of the game, so choose wisely.",
+      "lobby_desc": "Open a lobby and select your partner. Bots can be added. No elo lost or gained. Good Luck! May the best team win ٩(^ᗜ^ )و ´- vinper & tegberen"
+    }
 	},
 	"errors": {
 		"title": "Error",
@@ -5129,13 +5179,15 @@
 		"RANKED": "Ranked Match",
 		"SCRIBBLE": "Smeargle's Scribble",
 		"CUSTOM_LOBBY": "Custom room",
-		"TOURNAMENT": "Tournament"
+		"TOURNAMENT": "Tournament",
+    "DOUBLE_UP": "Double Up"
 	},
 	"game_modes_descriptions": {
 		"CLASSIC": "The casual PAC Experience !\n8 players, Elo disabled, open to everyone.",
 		"RANKED": "For competitors ! 8 players, Elo enabled\nRestricted to players close to your rank",
 		"SCRIBBLE": "Play for fun ! 8 players, Elo disabled\nA new special rule is added for this game.",
 		"CUSTOM_LOBBY": "Create a private room to play with your friends or with bots",
+    "DOUBLE_UP": "Team up with a partner and outlast every other duo!",
 		"TOURNAMENT": "This match is part of a tournament. Check Discord for upcoming events."
 	},
 	"dendrogram": {

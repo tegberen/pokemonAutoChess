@@ -13,7 +13,7 @@ import { isIn } from "../../../../../utils/array"
 import { DEPTH } from "../../../game/depths"
 import { selectConnectedPlayer, useAppSelector } from "../../../hooks"
 import type { IDetailledPokemon } from "../../../models/bot-v2"
-import { pickChoice } from "../../../network"
+import { pickChoice, pickArmoryGift } from "../../../network"
 import { getGameScene } from "../../game"
 import { playSound, SOUNDS } from "../../utils/audio"
 import { addIconsToDescription } from "../../utils/descriptions"
@@ -21,6 +21,7 @@ import { LocalStoreKeys, localStore } from "../../utils/store"
 import GamePokemonDuoPortrait from "./game-pokemon-duo-portrait"
 import GamePokemonPortrait from "./game-pokemon-portrait"
 import "./game-choice.css"
+import { ArmoryOptions, ArmoryOptionsPrice } from "../../../../../types/enum/ArmoryOptions"
 
 function isPokemonChoice(choice: PlayerChoice): boolean {
   return choice.pokemons.length > 0
@@ -86,6 +87,8 @@ export default function GameChoice() {
     message = t("player_choices.choose_item")
   } else if (choice.type === "wand") {
     message = t("player_choices.choose_wand")
+  } else if (choice.type === "armory_assist") {
+    message = t("player_choices.choose_armory")
   }
 
   return (
@@ -169,7 +172,7 @@ export default function GameChoice() {
               )
             })}
           </div>
-        ) : (
+        ) : choice.items.length > 0 ? (
           <div className="game-choice-items-list">
             {choice.items.map((item: Item, index) => (
               <div
@@ -192,7 +195,32 @@ export default function GameChoice() {
               </div>
             ))}
           </div>
-        )}
+        ) : <div className="game-choice-items-list">
+            {choice.armoryOptions.map((option: ArmoryOptions, index) => (
+              <div
+                className="my-box active clickable"
+                key={`${choice.id}-${index}`}
+                onClick={(event) => {
+                  event.stopPropagation()
+                  playSound(SOUNDS.BUTTON_CLICK)
+                  pickArmoryGift(choice.id, index)
+                }}
+              >
+                {<img
+                  style={{ width: "4rem", height: "4rem" }}
+                  src={"assets/item/" + option + ".png"}
+                />}
+                <h3 style={{ margin: "0.25em 0" }}>{t(`armory.${option}`)}</h3>
+                <p style={{ marginBottom: "0.5em" }}>
+                  {addIconsToDescription(t(`armory_description.${option}`))}
+                </p>
+                <p style={{ marginBottom: "0.5em", fontWeight: "bold"}}>
+                  {ArmoryOptionsPrice[option]} GOLD
+                </p>
+              </div>
+            ))}
+          </div>
+        }
 
         {isBenchFull && choice.pokemons.length > 0 && (
           <p>{t("player_choices.free_slot_hint")}</p>
