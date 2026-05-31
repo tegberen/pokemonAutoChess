@@ -42,3 +42,6 @@
 .emote-menu li img:not(.locked) {
   cursor: var(--cursor-hover);
 }
+.emote-menu .item-emotes {
+  background-color: var(--color-bg-primary);
+}
