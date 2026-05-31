@@ -1757,7 +1757,7 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
                 } else if (
                   pokemon.evolutionRule.type === EvolutionRuleType.STACK
                 ) {
-                  EvolutionManager.tryEvolve(pokemon, player, pokemon.stacks)
+                  EvolutionManager.tryEvolve(pokemon, player)
                 }
               })
             }, 1000)

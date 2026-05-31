@@ -1806,8 +1806,7 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
     ) {
       const pokemonEvolved = EvolutionManager.tryEvolve(
         this.refToBoardPokemon as Pokemon,
-        this.player,
-        this.stacks
+        this.player
       )
       if (pokemonEvolved) {
         // evolve mid-fight ; does not gain immediately the new stats, this will be done at the end of the fight
