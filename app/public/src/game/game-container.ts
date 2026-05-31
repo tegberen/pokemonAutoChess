@@ -532,7 +532,7 @@ class GameContainer {
           null
         )
         toast(i, {
-          containerId: player.rank.toString(),
+          containerId: player.id,
           className: "toast-new-pokemon"
         })
       }
