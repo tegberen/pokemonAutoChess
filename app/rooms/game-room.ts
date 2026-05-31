@@ -1438,28 +1438,39 @@ export default class GameRoom extends Room<{ state: GameState }> {
       }
     })
   }
+
   rankPlayersDoubleUp() {
-    // Group alive players by team, sum their life and level
-    const teamMap = new Map<string, { life: number; level: number; ids: string[] }>()
+    const teamMap = new Map<string, { life: number; level: number; ids: string[]; alive: boolean; eliminationRound: number }>() 
     this.state.players.forEach((player) => {
-      if (!player.alive) return
-      const entry = teamMap.get(player.doubleUpTeamId) ?? { life: 0, level: 0, ids: [] }
+      if (!teamMap.has(player.doubleUpTeamId)) {
+        teamMap.set(player.doubleUpTeamId, { life: 0, level: 0, ids: [], alive: false, eliminationRound: 999 })
+      }
+      const entry = teamMap.get(player.doubleUpTeamId)!
+      entry.eliminationRound = Math.min(entry.eliminationRound, player.doubleUpEliminationRound)
       entry.life += player.life
       entry.level += player.experienceManager.level
       entry.ids.push(player.id)
-      teamMap.set(player.doubleUpTeamId, entry)
+      entry.alive = entry.alive || player.alive
+    })
+    const teamArray = [...teamMap.values()]
+    teamArray.sort((a, b) => {
+      if (a.alive !== b.alive) return a.alive ? -1 : 1
+      if (!a.alive && !b.alive) {
+        if (a.eliminationRound !== b.eliminationRound) {
+          return b.eliminationRound - a.eliminationRound // later death = better rank?
+        }
+      }
+      return b.life - a.life || b.level - a.level
     })
 
-    const teamArray = [...teamMap.values()]
-    teamArray.sort((a, b) => b.life - a.life || b.level - a.level)
-
-    teamArray.forEach((team, index) => {
+    teamArray.forEach((team, i) => {
       team.ids.forEach((id) => {
         const player = this.state.players.get(id)
-        if (player) player.rank = index + 1
+        if (player) player.rank = i + 1
       })
     })
   }
+
 
   onRoomDeleted(roomId) {
     if (this.roomId === roomId) {

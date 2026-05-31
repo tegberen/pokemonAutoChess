@@ -27,13 +27,15 @@ let colorIndex = 0
   })
 
 const sortedPlayers = [...players].sort((a, b) => {
-    if (gameMode === "DOUBLE_UP") {
-      if (a.doubleUpTeamId !== b.doubleUpTeamId) {
-        return a.doubleUpTeamId.localeCompare(b.doubleUpTeamId)
-      }
+  if (gameMode === "DOUBLE_UP") {
+    if (a.doubleUpTeamId !== b.doubleUpTeamId) {
+      if (a.life !== b.life) return b.life - a.life
+      return a.doubleUpTeamId.localeCompare(b.doubleUpTeamId)
     }
-    return a.rank - b.rank
-  })
+    return a.id.localeCompare(b.id)
+  }
+  return a.rank - b.rank
+})
 
   return (
     <div style={style}>
