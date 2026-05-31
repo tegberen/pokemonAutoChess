@@ -65,7 +65,7 @@ export default function PreparationMenuUser(props: {
         twitchDisplayName={props.user?.twitchDisplayName || undefined}
       />
       {preference("colorblindMode") && props.user.ready && t("ready")}
-      {isDoubleUp && !isMe && (
+      {isDoubleUp && !isMe && !isPaired && (  
         <button
           className={`bubbly ${isPaired ? "green" : "orange"}`}
           onClick={() => selectPartner(props.user.uid)}

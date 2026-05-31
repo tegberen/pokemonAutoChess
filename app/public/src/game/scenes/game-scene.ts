@@ -465,7 +465,7 @@ export default class GameScene extends Scene {
     
     const [croagunkX, croagunkY] = transformBoardCoordinates(7.5, 0.4)
     const croagunkZone = this.add.zone(croagunkX, croagunkY, 96, 96)
-    croagunkZone.setRectangleDropZone(96, 96)
+    croagunkZone.setRectangleDropZone(130,130)
     croagunkZone.setName("croagunk-trade-zone")
 
     this.input.on("pointerdown", (pointer) => {

@@ -116,6 +116,7 @@ export default class Player extends Schema implements IPlayer {
   @type("string") doubleUpTeamId: string = ""
   @type("uint8") doubleUpSendCooldown: number = 0
   @type("string") doubleUpTradeOffer: string = ""
+  @type("uint8") doubleUpEliminationRound: number = 999
   @type("string") spectatedPlayerId: string
   @type("uint8") boardSize: number = 0
   @type(["string"]) items = new ArraySchema<Item>()

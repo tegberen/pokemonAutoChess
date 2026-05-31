@@ -18,6 +18,7 @@ import type GameScene from "../scenes/game-scene"
 import EmoteMenu from "./emote-menu"
 import LifeBar from "./life-bar"
 import PokemonSprite from "./pokemon"
+import { Item, ItemComponents } from "../../../../types/enum/Item"
 
 export default class PokemonAvatar extends PokemonSprite {
   scene: GameScene
@@ -64,6 +65,7 @@ export default class PokemonAvatar extends PokemonSprite {
     }
     this.setDepth(DEPTH.POKEMON)
     this.sendEmote = throttle(this.sendEmote, 1000).bind(this)
+    this.sendItemEmote = this.sendItemEmote.bind(this)
   }
 
   registerKeys() {
@@ -214,7 +216,8 @@ export default class PokemonAvatar extends PokemonSprite {
         this.scene as GameScene,
         this.pokemon.index,
         this.pokemon.shiny,
-        this.sendEmote
+        this.sendEmote,
+        this.sendItemEmote
       )
       this.add(this.emoteMenu)
     }
@@ -267,6 +270,12 @@ export default class PokemonAvatar extends PokemonSprite {
       this.playAnimation()
     }
   }
+
+  sendItemEmote(item: Item) {
+    console.log("sendItemEmote", item)
+    showEmote("item/" + item)
+    this.hideEmoteMenu()
+  }
 }
 
 export class EmoteBubble extends GameObjects.DOMElement {
@@ -280,7 +289,9 @@ export class EmoteBubble extends GameObjects.DOMElement {
       "game-emote-bubble " + (isOpponent ? "opponent" : "current")
 
     const emoteImg = document.createElement("img")
-    emoteImg.src = getAvatarSrc(emoteAvatar)
+    emoteImg.src = emoteAvatar.startsWith("item/")
+      ? `assets/${emoteAvatar}.png`
+      : getAvatarSrc(emoteAvatar)
 
     this.dom.appendChild(emoteImg)
     this.setElement(this.dom)

@@ -312,7 +312,8 @@ function sendPokemonToPartner(
     pokemon.rarity === Rarity.EPIC ||
     pokemon.rarity === Rarity.LEGENDARY ||
     pokemon.rarity === Rarity.UNIQUE ||
-    pokemon.rarity === Rarity.ULTRA
+    pokemon.rarity === Rarity.ULTRA ||
+    pokemon.rarity === Rarity.SPECIAL
       ? 5
       : 3
   sender.doubleUpSendCooldown =  cooldown
@@ -907,7 +908,7 @@ export class OnDragDropItemCommand extends Command<
       this.state.phase === GamePhaseState.PICK &&
       isOnBench(pokemon)
     ) {
-      if (pokemon.rarity === Rarity.UNIQUE || pokemon.rarity === Rarity.LEGENDARY) {
+      if (pokemon.rarity === Rarity.UNIQUE || pokemon.rarity === Rarity.LEGENDARY || pokemon.name === Pkm.EGG) {
         client.send(Transfer.DRAG_DROP_CANCEL, message)
         return
       }
@@ -1288,6 +1289,13 @@ export class OnUpdateCommand extends Command<
       entity.effects.forEach(e => reinforcement.effects.add(e))
       reinforcement.effectsSet = new Set(entity.effectsSet)
     }
+    //
+    const winnerClient = this.room.clients.find(
+      (cli) => cli.auth.uid === winnerPlayer.id
+    )
+    winnerClient?.send(Transfer.DOUBLE_UP_REINFORCEMENT_SENT, {
+      partnerPlayerId: winnerPlayer.doubleUpPartnerId
+    })
   }
 }
 
@@ -1432,6 +1440,10 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
           })
         }
         player.alive = false
+        player.doubleUpEliminationRound = this.state.stageLevel
+        if (this.state.gameMode === GameMode.DOUBLE_UP) {
+          this.room.rankPlayers()
+        }
         player.spectatedPlayerId = player.id // spectate self to not show KO players on another player side
         const client = this.room.clients.find(
           (cli) => cli.auth.uid === player.id

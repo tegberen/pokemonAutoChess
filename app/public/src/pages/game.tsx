@@ -576,7 +576,18 @@ export default function Game() {
       })
 
       room.onMessage(Transfer.GAME_END, leave)
-
+      room.onMessage(
+        Transfer.DOUBLE_UP_REINFORCEMENT_SENT,
+        ({ partnerPlayerId }: { partnerPlayerId: string }) => {
+          const partnerPlayer = room.state.players.get(partnerPlayerId)
+          if (!partnerPlayer) return
+          const simulation = room.state.simulations.get(partnerPlayer.simulationId)
+          if (!simulation) return
+          getGameScene()?.battle?.clear()
+          gameContainer.setPlayer(partnerPlayer)
+          gameContainer.setSimulation(simulation)
+        }
+      )
       room.onMessage(Transfer.DRAG_DROP_CANCEL, (message) =>
         gameContainer.handleDragDropCancel(message)
       )
@@ -657,6 +668,19 @@ export default function Game() {
       })
 
       $state.listen("phase", (newPhase, previousPhase) => {
+        // if we were spectating partner's fight via reinforcements, go back to our own board
+        if (
+          newPhase === GamePhaseState.PICK &&
+          store.getState().game.playerIdSpectated !== gameContainer.uid &&
+          room.state.players.get(gameContainer.uid)?.alive
+        ) {
+          const myPlayer = room.state.players.get(gameContainer.uid)
+          if (myPlayer) {
+            gameContainer.setPlayer(myPlayer)
+            const simulation = room.state.simulations.get(myPlayer.simulationId)
+            if (simulation) gameContainer.setSimulation(simulation)
+          }
+        }
         if (gameContainer.game) {
           const g = getGameScene()
           if (g) {
