@@ -1705,6 +1705,43 @@ export const PassiveEffects: Partial<
       }
     })
   ],
+  [Passive.VESPIQUEN]: [
+    new OnChangePositionEffect(({ newY, pokemon }) => {
+      console.log(`[VESPIQUEN] newY=${newY} pokemon=${pokemon.name}`)
+      if (newY === 1) {
+        pokemon.range = 3
+        pokemon.skill = Ability.ATTACK_ORDER
+      } else if (newY === 2) {
+        pokemon.range = 2
+        pokemon.skill = Ability.HEAL_ORDER
+      } else if (newY === 3) {
+        pokemon.range = 1
+        pokemon.skill = Ability.DEFEND_ORDER
+      }
+    })
+  ],
+  [Passive.DUNSPARCE]: [
+    new OnAbilityCastEffect((pokemon, board) => {
+      const familyMembers: PokemonEntity[] = board.cells.filter<PokemonEntity>(
+        (entity): entity is PokemonEntity =>
+          entity != null &&
+          entity.team === pokemon.team &&
+          PkmFamily[entity.name] === PkmFamily[pokemon.name]
+      )
+      familyMembers.forEach((entity) => {
+        if (!pokemon.player) return
+        entity.addStack()
+      })
+    }),
+    new OnGroundDiggingEffect(({ pokemon }) => {
+      pokemon.stacks += 1
+    })
+  ],
+  [Passive.ORTHWORM]: [
+    new OnGroundDiggingEffect(({ pokemon }) => {
+      pokemon.addMaxHP(5)
+    })
+  ],
   [Passive.PRISM]: [
     new OnSpotlightChangeEffect(({ pokemon, player, inSpotlight }) => {
       if (pokemon.name === Pkm.NECROZMA && inSpotlight) {
