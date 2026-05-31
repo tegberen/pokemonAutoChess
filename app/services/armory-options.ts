@@ -1,5 +1,5 @@
+import { getBaseAltForm, PkmsWithAltForms } from "../config"
 import Player from "../models/colyseus-models/player"
-import Synergies from "../models/colyseus-models/synergies"
 import PokemonFactory from "../models/pokemon-factory"
 import { getPokemonData } from "../models/precomputed/precomputed-pokemon-data"
 import { PRECOMPUTED_POKEMONS_PER_RARITY } from "../models/precomputed/precomputed-rarity"
@@ -19,10 +19,10 @@ const giftAmountOfItem = (toPlayer: Player, amount: number, itemName: string): b
         const randomSweets = pickNRandomIn(Sweets, amount)
         randomSweets.forEach((sweet) => toPlayer.items.push(sweet))
     } else if (itemName === "GEMS"){
-        const randomGems = pickNRandomIn(SynergyGems, 3)
+        const randomGems = pickNRandomIn(SynergyGems, amount)
         randomGems.forEach((gem) => toPlayer.items.push(gem))
     } else if (itemName === "COMBINED_ITEMS"){
-        const randomCombinedItems = pickNRandomIn(CraftableItemsNoScarves, 3)
+        const randomCombinedItems = pickNRandomIn(CraftableItemsNoScarves, amount)
         randomCombinedItems.forEach((x) => toPlayer.items.push(x))
     }
     else {
@@ -79,7 +79,7 @@ const giftRandomPokemonByRarity = (toPlayer: Player, rarity: Rarity): boolean =>
             break
     }
 
-    const nbOfSynergies = rarity === Rarity.ULTRA ? 2 : 1
+    const nbOfSynergies = (rarity === Rarity.ULTRA || rarity === Rarity.LEGENDARY) ? 2 : 1
     var wantedSynergy = toPlayer.synergies.getTopSynergies(nbOfSynergies)
     if (wantedSynergy.includes(Synergy.BABY)) {
         wantedSynergy = toPlayer.synergies.getTopSynergies(nbOfSynergies + 1)
@@ -89,6 +89,7 @@ const giftRandomPokemonByRarity = (toPlayer: Player, rarity: Rarity): boolean =>
     const pkmByRarity = PRECOMPUTED_POKEMONS_PER_RARITY[rarity]
     const pkmByRarityWithWantedSyns = pkmByRarity.filter((p) => {
         const pkmData = getPokemonData(p)
+        if (PkmsWithAltForms.includes(p) && getBaseAltForm(p) !== p) return false
         if (pkmData.stars !== wantedStars) return false
         if (shouldBeRegionalOrAdditional && !(pkmData.additional || pkmData.regional)) return false
         if (!shouldBeRegionalOrAdditional && (pkmData.additional || pkmData.regional)) return false
@@ -100,6 +101,7 @@ const giftRandomPokemonByRarity = (toPlayer: Player, rarity: Rarity): boolean =>
         })
         return res
     })
+    //console.log(pkmByRarityWithWantedSyns)
     if (pkmByRarityWithWantedSyns.length === 0) pkmByRarityWithWantedSyns.push(Pkm.UNOWN_A) //Fallback if no Pokémon satisfy the filter
     const pkm = pickRandomIn(pkmByRarityWithWantedSyns)
     
@@ -130,7 +132,7 @@ export const armoryGiftService: { [key in ArmoryOptions ]? : (playerId: Player) 
     
     [PaidOptions.GEMSBUNDLE] : (playerId: Player) => giftAmountOfItem(playerId, 3, "GEMS"),
     [PaidOptions.POTION] : (playerId: Player) => giftPotion(playerId),
-    [PaidOptions.DELUXE_BOX] : (playerId: Player) => giftAmountOfItem(playerId, 3, "COMBINED_ITEMS"),
+    [PaidOptions.DELUXE_BOX] : (playerId: Player) => giftAmountOfItem(playerId, 2, "COMBINED_ITEMS"),
     [PaidOptions.COMMONBUNDLE] : (playerId: Player) => giftRandomPokemonByRarity(playerId, Rarity.COMMON),
     [PaidOptions.UNCOMMONBUNDLE] : (playerId: Player) => giftRandomPokemonByRarity(playerId, Rarity.UNCOMMON),
     [PaidOptions.RAREBUNDLE] : (playerId: Player) => giftRandomPokemonByRarity(playerId, Rarity.RARE),

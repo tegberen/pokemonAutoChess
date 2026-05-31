@@ -40,7 +40,7 @@ export const ArmoryOptionsPrice: { [key in ArmoryOptions ] : number } = {
     [PaidOptions.EPICBUNDLE] : 12,
     [PaidOptions.ULTRABUNDLE] : 5,
     [PaidOptions.UNIQUEBUNDLE] : 15,
-    [PaidOptions.LEGENDARYBUNDLE] : 30,
+    [PaidOptions.LEGENDARYBUNDLE] : 40,
 }
 
 export type ArmoryOptions = FreeOptions | PaidOptions

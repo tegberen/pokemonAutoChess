@@ -3036,7 +3036,7 @@
 	},
 	"armory_description": {
 		"POTION": "A potion that heals 10 player HP of the team",
-		"DELUXE_BOX" : "Gift 3 random items to your partner.",
+		"DELUXE_BOX" : "Gift 2 random completed items to your partner.",
 		"BERRY_BUNDLE": "Gift 7 random $t(item.BERRIES) to your partner. Wouldn't be a problem if you used the koffing berries.",
 		"UNOWN_BUNDLE": "Gift 5 random Unown to your partner. Your partner needs to have at least 3 free spaces on the bench.",
 		"SWEETS_BUNDLE": "Gift 5 random $t(item.SWEETS) to your partner.",
@@ -3046,9 +3046,9 @@
 		"UNCOMMON_BUNDLE": "Gift a random 2 STAR Additional or Regional Uncommon Pokémon to your partner. It will match your partner's highest active synergy.",
 		"RARE_BUNDLE": "Gift a random 2 STAR Additional or Regional Rare Pokémon to your partner. It will match your partner's highest active synergy.",
 		"EPIC_BUNDLE": "Gift a random 2 STAR Additional or Regional Epic Pokémon to your partner. It will have your partner's highest active synergy.",
-		"ULTRA_BUNDLE": "Gift a random 1 STAR Ultra Pokémon to your partner. It will have one of your partner's 2 highest active synergy.",
+		"ULTRA_BUNDLE": "Gift a random 1 STAR Ultra Pokémon to your partner. It will have one of your partner's 2 highest active synergies.",
 		"UNIQUE_BUNDLE": "Gift a random Unique Pokémon to your partner. It will have your partner's highest active synergy.",
-		"LEGENDARY_BUNDLE": "Gift a random Legendary Pokémon to your partner. It will have your partner's highest active synergy."
+		"LEGENDARY_BUNDLE": "Gift a random Legendary Pokémon to your partner. It will have one of your partner's 2 highest active synergies."
 	},
 	"item_description": {
 		"AQUA_MONICA": "Each ally cast grants +2 PP to the whole team",
