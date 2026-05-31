@@ -67,7 +67,7 @@ import {
 import type { IPokemonCollectionItemMongo } from "../../types/interfaces/UserMetadata"
 import { isIn, removeInArray } from "../../utils/array"
 import { getPokemonCustomFromAvatar } from "../../utils/avatar"
-import { getFirstAvailablePositionInBench, isOnBench } from "../../utils/board"
+import { getFirstAvailablePositionInBench, getFirstAvailablePositionOnBoard, isOnBench } from "../../utils/board"
 import { max, min } from "../../utils/number"
 import {
   chance,
@@ -697,7 +697,7 @@ export default class Player extends Schema implements IPlayer {
       if (currentPillars.length < nbExpectedPillars) {
         const nbPillarsToAdd = nbExpectedPillars - currentPillars.length
         for (let i = 0; i < nbPillarsToAdd; i++) {
-          const freeSpace = getFirstAvailablePositionInBench(this.board)
+          const freeSpace = getFirstAvailablePositionOnBoard(this.board, 1)
           if (freeSpace) {
             const pillar = PokemonFactory.createPokemonFromName(
               Pillars[rank],

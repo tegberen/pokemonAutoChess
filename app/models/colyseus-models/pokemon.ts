@@ -13744,7 +13744,7 @@ export class Bidoof extends Pokemon {
     super.onChangePosition(x, y, player, state)
     player.updatePillars()
   }
-  afterSell(player: Player) {
+  afterSell(player: Player) : void {
     player.updatePillars()
   }
   afterEvolve({ player }: { pokemonEvolved: Pokemon; pokemonsBeforeEvolution: Pokemon[]; player: Player }) {
@@ -13770,7 +13770,7 @@ export class Bibarel extends Pokemon {
     super.onChangePosition(x, y, player, state)
     player.updatePillars()
   }
-  afterSell(player: Player) {
+  afterSell(player: Player) : void {
     player.updatePillars()
   }
 }
@@ -18228,10 +18228,10 @@ export class Timburr extends Pokemon {
     super.onChangePosition(x, y, player, state)
     player.updatePillars()
   }
-  afterSell(player) {
+  afterSell(player : Player) : void {
     player.updatePillars()
   }
-  afterEvolve(player) {
+  afterEvolve({ player }: { pokemonEvolved: Pokemon; pokemonsBeforeEvolution: Pokemon[]; player: Player }) {
     player.updatePillars()
   }
 }
@@ -18254,10 +18254,10 @@ export class Gurdurr extends Pokemon {
     super.onChangePosition(x, y, player, state)
     player.updatePillars()
   }
-  afterSell(player) {
+  afterSell(player : Player) : void {
     player.updatePillars()
   }
-  afterEvolve(player) {
+  afterEvolve({ player }: { pokemonEvolved: Pokemon; pokemonsBeforeEvolution: Pokemon[]; player: Player }) {
     player.updatePillars()
   }
 }
@@ -18279,7 +18279,7 @@ export class Conkeldurr extends Pokemon {
     super.onChangePosition(x, y, player, state)
     player.updatePillars()
   }
-  afterSell(player) {
+  afterSell(player : Player) {
     player.updatePillars()
   }
 }
