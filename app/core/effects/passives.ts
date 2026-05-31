@@ -831,7 +831,7 @@ const commanderPassive = new OnSimulationStartEffect(
 
 const conversionEffect = new OnSimulationStartEffect(
   ({ simulation, player, entity }) => {
-    if (!player) return
+    if (!player || entity.isSpawn) return
     const opponent =
       simulation.bluePlayerId === player.id
         ? simulation.redPlayer
