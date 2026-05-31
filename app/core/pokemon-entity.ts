@@ -21,6 +21,7 @@ import {
   Title,
   Transfer
 } from "../types"
+import { EvolutionRuleType } from "../types/EvolutionRules"
 import { Ability } from "../types/enum/Ability"
 import { EffectEnum } from "../types/enum/Effect"
 import {
@@ -47,8 +48,8 @@ import { count, isIn } from "../utils/array"
 import { isOnBench } from "../utils/board"
 import { distanceC, distanceM } from "../utils/distance"
 import { isPlainFunction } from "../utils/function"
-import { clamp, min, roundToNDigits } from "../utils/number"
 import { chance, pickNRandomIn, pickRandomIn } from "../utils/random"
+import { clamp, max, min, roundToNDigits } from "../utils/number"
 import { schemaValues } from "../utils/schemas"
 import AttackingState from "./attacking-state"
 import type { Board } from "./board"
@@ -73,6 +74,7 @@ import {
   FlyingProtectionEffect,
   MonsterKillEffect
 } from "./effects/synergies"
+import { EvolutionManager } from "./evolution-logic/evolution-manager"
 import { IdleState } from "./idle-state"
 import MovingState from "./moving-state"
 import type PokemonState from "./pokemon-state"
@@ -597,10 +599,10 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
   ) {
     value =
       value * (1 + (apBoost * caster.ap) / 100) * (crit ? caster.critPower : 1)
-    value = applyBigEaterBeltStatBuff(this, value, caster)
+    value = applyBigEaterBeltStatBuff(this, value, caster, 3)
     value = applyTwistBandBuff(this, value, caster)
 
-    this.dodge = clamp(this.dodge + value, 0, 0.9)
+    this.dodge = max(0.9)(this.dodge + value)
   }
 
   addAbilityPower(
@@ -1797,11 +1799,15 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
     this.refToBoardPokemon.stacks += amount
     this.stacks = this.refToBoardPokemon.stacks
     //logger.debug(`${this.name} gained a stack (${this.stacks}/${this.stacksRequired})`)
-    if (this.stacks === this.stacksRequired) {
-      const pokemonEvolved = this.refToBoardPokemon.evolutionRule.tryEvolve(
+    if (
+      this.refToBoardPokemon.evolutionRule.type === EvolutionRuleType.STACK &&
+      this.stacksRequired > 0 &&
+      this.stacks === this.stacksRequired
+    ) {
+      const pokemonEvolved = EvolutionManager.tryEvolve(
         this.refToBoardPokemon as Pokemon,
         this.player,
-        this.simulation.stageLevel
+        this.stacks
       )
       if (pokemonEvolved) {
         // evolve mid-fight ; does not gain immediately the new stats, this will be done at the end of the fight

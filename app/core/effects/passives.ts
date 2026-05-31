@@ -7,7 +7,7 @@ import {
 } from "../../models/colyseus-models/pokemon"
 import { getSynergyStep } from "../../models/colyseus-models/synergies"
 import PokemonFactory from "../../models/pokemon-factory"
-import { Title, Transfer } from "../../types"
+import { RemovableItems, Transfer } from "../../types"
 import { Ability } from "../../types/enum/Ability"
 import { EffectEnum } from "../../types/enum/Effect"
 import { AttackType, PokemonActionState, Team } from "../../types/enum/Game"
@@ -18,13 +18,15 @@ import {
   Item,
   type OgerponMasks,
   SpecialBerries,
-  SynergyFlavors
+  SynergyFlavors,
+  SynergyItems
 } from "../../types/enum/Item"
 import { Passive } from "../../types/enum/Passive"
 import { Pkm, PkmFamily, PkmIndex } from "../../types/enum/Pokemon"
+import { SpecialGameRule } from "../../types/enum/SpecialGameRule"
 import { Synergy, SynergyArray } from "../../types/enum/Synergy"
 import { Weather } from "../../types/enum/Weather"
-import { removeInArray } from "../../utils/array"
+import { isIn, removeInArray } from "../../utils/array"
 import { isOnBench } from "../../utils/board"
 import { distanceC } from "../../utils/distance"
 import { max, min } from "../../utils/number"
@@ -40,9 +42,12 @@ import {
   type Effect,
   OnAbilityCastEffect,
   OnAttackEffect,
+  OnChangePositionEffect,
   OnDamageReceivedEffect,
   OnDeathEffect,
   type OnDeathEffectArgs,
+  OnEvolutionEffect,
+  OnGroundDiggingEffect,
   OnHitEffect,
   OnItemDroppedEffect,
   OnKillEffect,
@@ -51,6 +56,7 @@ import {
   OnShieldDepletedEffect,
   OnSimulationStartEffect,
   OnSpawnEffect,
+  OnSpotlightChangeEffect,
   OnStageStartEffect,
   PeriodicEffect
 } from "./effect"
@@ -831,7 +837,7 @@ const commanderPassive = new OnSimulationStartEffect(
 
 const conversionEffect = new OnSimulationStartEffect(
   ({ simulation, player, entity }) => {
-    if (!player) return
+    if (!player || entity.isSpawn) return
     const opponent =
       simulation.bluePlayerId === player.id
         ? simulation.redPlayer
@@ -957,7 +963,12 @@ const stonjournerPowerSpotOnSimulationStartEffect = new OnSimulationStartEffect(
       .getAdjacentCells(entity.positionX, entity.positionY)
       .forEach((cell) => {
         if (cell.value && cell.value.team === entity.team) {
-          cell.value.addAbilityPower(50, cell.value, 0, false)
+          cell.value.addAbilityPower(
+            entity.inSpotlight ? 100 : 50,
+            cell.value,
+            0,
+            false
+          )
         }
       })
   },
@@ -1665,6 +1676,41 @@ export const PassiveEffects: Partial<
       const effects = pokemon.player.effects
       if (effects.has(EffectEnum.COACHING) || effects.has(EffectEnum.PURE_POWER)) {
         pokemon.addStack()
+      }
+    })
+  ],
+  [Passive.MELOETTA]: [
+    new OnChangePositionEffect(({ newY, pokemon, player }) => {
+      if (newY === 3 && pokemon.name === Pkm.MELOETTA) {
+        player.transformPokemon(pokemon, Pkm.PIROUETTE_MELOETTA)
+      }
+      if (newY !== 3 && pokemon.name === Pkm.PIROUETTE_MELOETTA) {
+        player.transformPokemon(pokemon, Pkm.MELOETTA)
+      }
+    })
+  ],
+  [Passive.RKS_SYSTEM]: [
+    new OnChangePositionEffect(({ newY, pokemon, player, state }) => {
+      if (newY === 0) {
+        const itemsToRemove = schemaValues(pokemon.items).filter((item) => {
+          return (
+            isIn(RemovableItems, item) ||
+            (state?.specialGameRule === SpecialGameRule.SLAMINGO &&
+              item !== Item.RARE_CANDY) ||
+            isIn(SynergyItems, item)
+          )
+        })
+        player.items.push(...itemsToRemove)
+        pokemon.removeItems(itemsToRemove, player)
+      }
+    })
+  ],
+  [Passive.PRISM]: [
+    new OnSpotlightChangeEffect(({ pokemon, player, inSpotlight }) => {
+      if (pokemon.name === Pkm.NECROZMA && inSpotlight) {
+        player.transformPokemon(pokemon, Pkm.ULTRA_NECROZMA)
+      } else if (pokemon.name === Pkm.ULTRA_NECROZMA && !inSpotlight) {
+        player.transformPokemon(pokemon, Pkm.NECROZMA)
       }
     })
   ],
