@@ -2877,7 +2877,7 @@ export class PhantomForceStrategy extends AbilityStrategy {
             if (cell.value && cell.value.team !== pokemon.team) {
               const isVulnerable =
                 cell.value.status.silence || cell.value.status.fatigue
-              const damage = isVulnerable ? 140 : 70
+              const damage = isVulnerable ? 120 : 60
               cell.value.handleSpecialDamage(
                 damage,
                 board,
@@ -13747,25 +13747,25 @@ export class DecorateStrategy extends AbilityStrategy {
       strongestNearestAlly.addAbilityPower(apBoost, pokemon, 1, crit)
 
       if (pokemon.name === Pkm.ALCREMIE_VANILLA) {
-        strongestNearestAlly.addShield(80, pokemon, 1, crit)
+        strongestNearestAlly.addShield(50, pokemon, 1, crit)
       } else if (pokemon.name === Pkm.ALCREMIE_RUBY) {
-        strongestNearestAlly.addSpeed(30, pokemon, 1, crit)
+        strongestNearestAlly.addSpeed(20, pokemon, 1, crit)
       } else if (pokemon.name === Pkm.ALCREMIE_MATCHA) {
-        strongestNearestAlly.addMaxHP(40, pokemon, 1, crit)
+        strongestNearestAlly.addMaxHP(30, pokemon, 1, crit)
       } else if (pokemon.name === Pkm.ALCREMIE_MINT) {
-        strongestNearestAlly.handleHeal(40, pokemon, 1, crit)
-        strongestNearestAlly.addSpecialDefense(15, pokemon, 1, crit)
+        strongestNearestAlly.handleHeal(30, pokemon, 1, crit)
+        strongestNearestAlly.addSpecialDefense(10, pokemon, 1, crit)
       } else if (pokemon.name === Pkm.ALCREMIE_LEMON) {
-        strongestNearestAlly.addCritChance(40, pokemon, 1, crit)
+        strongestNearestAlly.addCritChance(30, pokemon, 1, crit)
       } else if (pokemon.name === Pkm.ALCREMIE_SALTED) {
-        strongestNearestAlly.handleHeal(40, pokemon, 1, crit)
-        strongestNearestAlly.addDefense(15, pokemon, 1, crit)
+        strongestNearestAlly.handleHeal(30, pokemon, 1, crit)
+        strongestNearestAlly.addDefense(10, pokemon, 1, crit)
       } else if (pokemon.name === Pkm.ALCREMIE_RUBY_SWIRL) {
-        strongestNearestAlly.addAttack(10, pokemon, 1, crit)
+        strongestNearestAlly.addAttack(8, pokemon, 1, crit)
       } else if (pokemon.name === Pkm.ALCREMIE_CARAMEL_SWIRL) {
-        strongestNearestAlly.addCritPower(80, pokemon, 1, crit)
+        strongestNearestAlly.addCritPower(30, pokemon, 1, crit)
       } else if (pokemon.name === Pkm.ALCREMIE_RAINBOW_SWIRL) {
-        strongestNearestAlly.addPP(40, pokemon, 1, crit)
+        strongestNearestAlly.addPP(30, pokemon, 1, crit)
       }
     }
   }

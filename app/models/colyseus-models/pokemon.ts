@@ -783,7 +783,7 @@ export class MegaLucario extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.FIGHTING, Synergy.STEEL])
   rarity = Rarity.RARE
   stars = 3
-  hp = 220
+  hp = 200
   atk = 25
   speed = 54
   def = 12
@@ -1107,8 +1107,8 @@ export class MegaLopunny extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.NORMAL, Synergy.FIGHTING])
   rarity = Rarity.UNCOMMON
   stars = 3
-  hp = 220
-  atk = 22
+  hp = 200
+  atk = 20
   speed = 59
   def = 10
   speDef = 10
@@ -1158,9 +1158,9 @@ export class MegaSteelix extends Pokemon {
   rarity = Rarity.EPIC
   stars = 3
   hp = 300
-  atk = 19
+  atk = 13
   speed = 35
-  def = 60
+  def = 40
   speDef = 12
   maxPP = 100
   range = 1
@@ -1681,7 +1681,7 @@ export class MegaGardevoir extends Pokemon {
   ])
   rarity = Rarity.COMMON
   stars = 4
-  hp = 200
+  hp = 190
   atk = 18
   speed = 55
   def = 6
@@ -1723,8 +1723,8 @@ export class MegaGallade extends Pokemon {
   ])
   rarity = Rarity.COMMON
   stars = 4
-  hp = 200
-  atk = 24
+  hp = 190
+  atk = 22
   speed = 55
   def = 6
   speDef = 8
@@ -2073,7 +2073,7 @@ export class Tyranitar extends Pokemon {
   stars = 3
   evolution = Pkm.MEGA_TYRANITAR
   evolutionRule = new StackBasedEvolutionRule()
-  stacksRequired: number = 25
+  stacksRequired: number = 30
   hp = 210
   atk = 28
   speed = 39
@@ -2198,8 +2198,8 @@ export class Haunter extends Pokemon {
   rarity = Rarity.EPIC
   stars = 2
   evolution = Pkm.GENGAR
-  hp = 160
-  atk = 16
+  hp = 150
+  atk = 15
   speed = 60
   def = 7
   speDef = 8
@@ -2219,8 +2219,8 @@ export class Gengar extends Pokemon {
   evolution = Pkm.MEGA_GENGAR
   evolutionRule = new StackBasedEvolutionRule()
   stacksRequired: number = 10
-  hp = 280
-  atk = 28
+  hp = 270
+  atk = 27
   speed = 60
   def = 8
   speDef = 10
@@ -3186,8 +3186,8 @@ export class Togetic extends Pokemon {
   rarity = Rarity.EPIC
   stars = 2
   evolution = Pkm.TOGEKISS
-  hp = 160
-  atk = 16
+  hp = 150
+  atk = 15
   speed = 51
   def = 10
   speDef = 10
@@ -6271,7 +6271,7 @@ export class OriginDialga extends Pokemon {
   speed = 54
   def = 10
   speDef = 10
-  maxPP = 100
+  maxPP = 120
   range = 2
   skill = Ability.TEMPORAL_RUPTURE
   passive = Passive.DIALGA
@@ -6330,7 +6330,7 @@ export class OriginPalkia extends Pokemon {
   speed = 57
   def = 10
   speDef = 10
-  maxPP = 100
+  maxPP = 120
   range = 2
   skill = Ability.SUBSPACE_SWELL
   passive = Passive.PALKIA
@@ -7643,7 +7643,7 @@ export class MegaAbsol extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.WILD, Synergy.DARK, Synergy.FAIRY])
   rarity = Rarity.UNIQUE
   stars = 4
-  hp = 220
+  hp = 200
   atk = 21
   speed = 49
   def = 10
@@ -7744,7 +7744,7 @@ export class MegaLatias extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.DRAGON, Synergy.PSYCHIC, Synergy.FLYING])
   rarity = Rarity.UNIQUE
   stars = 4
-  hp = 140
+  hp = 120
   atk = 14
   speed = 60
   def = 4
@@ -7759,7 +7759,7 @@ export class MegaLatios extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.DRAGON, Synergy.PSYCHIC,Synergy.FLYING])
   rarity = Rarity.UNIQUE
   stars = 4
-  hp = 140
+  hp = 120
   atk = 14
   speed = 60
   def = 4
@@ -8530,7 +8530,7 @@ export class MegaDiancie extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.ROCK, Synergy.FAIRY, Synergy.FOSSIL])
   rarity = Rarity.EPIC
   stars = 3
-  hp = 200
+  hp = 180
   atk = 25
   speed = 41
   def = 30
@@ -17414,7 +17414,7 @@ export class MegaSkarmory extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.STEEL, Synergy.FLYING])
   rarity = Rarity.UNIQUE
   stars = 4
-  hp = 220
+  hp = 200
   atk = 24
   speed = 47
   def = 12
@@ -18731,7 +18731,7 @@ export class Milcery extends Pokemon {
     [...Flavors],
     (pokemon, player, item: Item) => alcremieByFlavor[item]
   )
-  hp = 40
+  hp = 30
   atk = 3
   speed = 41
   def = 1
@@ -18758,7 +18758,7 @@ export class AlcremieVanilla extends Pokemon {
   ])
   rarity = Rarity.SPECIAL
   stars = 2
-  hp = 80
+  hp = 60
   atk = 6
   speed = 41
   def = 2
@@ -18778,7 +18778,7 @@ export class AlcremieRuby extends Pokemon {
   ])
   rarity = Rarity.SPECIAL
   stars = 2
-  hp = 80
+  hp = 60
   atk = 6
   speed = 41
   def = 2
@@ -18798,7 +18798,7 @@ export class AlcremieMatcha extends Pokemon {
   ])
   rarity = Rarity.SPECIAL
   stars = 2
-  hp = 80
+  hp = 60
   atk = 6
   speed = 41
   def = 2
@@ -18818,7 +18818,7 @@ export class AlcremieMint extends Pokemon {
   ])
   rarity = Rarity.SPECIAL
   stars = 2
-  hp = 80
+  hp = 60
   atk = 6
   speed = 41
   def = 2
@@ -18838,7 +18838,7 @@ export class AlcremieLemon extends Pokemon {
   ])
   rarity = Rarity.SPECIAL
   stars = 2
-  hp = 80
+  hp = 60
   atk = 6
   speed = 41
   def = 2
@@ -18858,7 +18858,7 @@ export class AlcremieSalted extends Pokemon {
   ])
   rarity = Rarity.SPECIAL
   stars = 2
-  hp = 80
+  hp = 60
   atk = 6
   speed = 41
   def = 2
@@ -18878,7 +18878,7 @@ export class AlcremieRubySwirl extends Pokemon {
   ])
   rarity = Rarity.SPECIAL
   stars = 2
-  hp = 80
+  hp = 60
   atk = 6
   speed = 41
   def = 2
@@ -18898,7 +18898,7 @@ export class AlcremieCaramelSwirl extends Pokemon {
   ])
   rarity = Rarity.SPECIAL
   stars = 2
-  hp = 80
+  hp = 60
   atk = 6
   speed = 41
   def = 2
@@ -18918,7 +18918,7 @@ export class AlcremieRainbowSwirl extends Pokemon {
   ])
   rarity = Rarity.SPECIAL
   stars = 2
-  hp = 80
+  hp = 60
   atk = 6
   speed = 41
   def = 2
@@ -19961,7 +19961,7 @@ export class MegaExcadrill extends Pokemon {
   rarity = Rarity.RARE
   stars = 3
   hp = 220
-  atk = 30
+  atk = 25
   speed = 56
   def = 12
   speDef = 8
