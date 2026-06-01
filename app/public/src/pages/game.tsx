@@ -679,6 +679,7 @@ export default function Game() {
             gameContainer.setPlayer(myPlayer)
             const simulation = room.state.simulations.get(myPlayer.simulationId)
             if (simulation) gameContainer.setSimulation(simulation)
+            room.send(Transfer.SPECTATE, gameContainer.uid)
           }
         }
         if (gameContainer.game) {
