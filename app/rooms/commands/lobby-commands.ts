@@ -708,6 +708,7 @@ export class OpenGameCommand extends Command<
       roomName = "Classic"
     } else if (gameMode === GameMode.DOUBLE_UP) {
       roomName = "Double Up"
+      ownerId = user.uid
     }
 
     const newRoom = await matchMaker.createRoom("preparation", {

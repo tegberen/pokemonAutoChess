@@ -315,7 +315,7 @@ export default function PreparationMenu() {
     </p>
   )
 
-  const readyButton = (gameMode === GameMode.CUSTOM_LOBBY || !isReady) &&
+  const readyButton = (gameMode === GameMode.CUSTOM_LOBBY || gameMode === GameMode.DOUBLE_UP || !isReady) &&
     users.length > 0 && (
       <button
         className={cc("bubbly", "ready-button", isReady ? "green" : "orange")}
@@ -358,7 +358,11 @@ export default function PreparationMenu() {
               users.forEach((u) => {
                 if (paired.has(u.uid)) return
                 const partner = users.find(
-                  (p) => p.uid === u.doubleUpPartnerId && u.doubleUpPartnerId !== ""
+                  (p) =>
+                    p.uid === u.doubleUpPartnerId &&
+                    u.doubleUpPartnerId !== "" &&
+                    p.doubleUpPartnerId === u.uid &&
+                    !paired.has(p.uid)  // add this check
                 )
                 if (partner) {
                   groups.push([u, partner])
