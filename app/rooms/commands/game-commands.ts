@@ -1582,7 +1582,7 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
         chance(pveStage.shinyChance ?? 0)
     }
 
-    if ([1, 24].includes(this.state.stageLevel) && this.state.gameMode === GameMode.DOUBLE_UP) {
+    if ([14, 24].includes(this.state.stageLevel)) {
       this.state.players.forEach((player: Player) => {
         if (player.alive && !player.isBot) {
           player.spawnWanderingPokemon({
