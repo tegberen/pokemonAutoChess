@@ -1443,11 +1443,11 @@ export default class GameRoom extends Room<{ state: GameState }> {
     const teamMap = new Map<string, { life: number; level: number; ids: string[]; alive: boolean; eliminationRound: number }>() 
     this.state.players.forEach((player) => {
       if (!teamMap.has(player.doubleUpTeamId)) {
-        teamMap.set(player.doubleUpTeamId, { life: 0, level: 0, ids: [], alive: false, eliminationRound: 999 })
+        teamMap.set(player.doubleUpTeamId, { life: Infinity, level: 0, ids: [], alive: false, eliminationRound: 999 })
       }
       const entry = teamMap.get(player.doubleUpTeamId)!
       entry.eliminationRound = Math.min(entry.eliminationRound, player.doubleUpEliminationRound)
-      entry.life += player.life
+      entry.life = Math.min(entry.life === 0 && entry.ids.length === 0 ? Infinity : entry.life, player.life)
       entry.level += player.experienceManager.level
       entry.ids.push(player.id)
       entry.alive = entry.alive || player.alive
