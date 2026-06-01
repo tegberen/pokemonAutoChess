@@ -494,6 +494,7 @@
 		"FLOATZEL": "Floatzel",
 		"MAWILE": "Mawile",
 		"KECLEON": "Kecleon",
+    "KECLEON_PURPLE": "Kecleon (Purple)",
 		"CARBINK": "Carbink",
 		"DIANCIE": "Diancie",
 		"CHATOT": "Chatot",
@@ -4519,7 +4520,9 @@
 		"xatu": "Let me open this treasure box for you...",
 		"lapras": "Ready to go? Then all aboard!",
     "croagunk_trade": "Meh-heh-heh! Drop an item on me to trade it with your partner!",
-    "croagunk_trade_title": "Croagunk"
+    "croagunk_trade_title": "Croagunk",
+    "kecleon_preview": "The gift shop is coming up! Hold your gold and free your bench space, kec kec kec!",
+    "kecleon": "Kecleon"
 	},
 	"scribble": {
 		"EVERYONE_IS_HERE": "Everyone is here !",

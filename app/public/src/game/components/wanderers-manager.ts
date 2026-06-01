@@ -425,5 +425,11 @@ function getDialogsBySpecialWanderer(wanderer: Wanderer): {
       dialog: t("npc_dialog.lapras")
     }
   }
+  if (wanderer.pkm === Pkm.KECLEON_PURPLE) {
+    return {
+      dialog: t("npc_dialog.kecleon_preview"),
+      dialogTitle: t("npc_dialog.kecleon")
+    }
+  }
   return {}
 }

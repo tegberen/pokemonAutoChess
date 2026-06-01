@@ -6360,6 +6360,22 @@ export class Kecleon extends Pokemon {
   passive = Passive.PROTEAN2
 }
 
+export class KecleonPurple extends Pokemon {
+  types = new SetSchema<Synergy>([])
+  rarity = Rarity.SPECIAL
+  stars = 3
+  hp = 200
+  atk = 22
+  speed = 38
+  def = 6
+  speDef = 6
+  maxPP = 100
+  range = 1
+  skill = Ability.ILLUSION
+  passive = Passive.PROTEAN2
+  regional = true
+}
+
 function updateCastform(pokemon: Pokemon, weather: Weather, player: Player) {
   let weatherForm: Pkm = Pkm.CASTFORM
   if (weather === Weather.SNOW) {
@@ -21247,6 +21263,7 @@ export const PokemonClasses: Record<
   [Pkm.BUIZEL]: Buizel,
   [Pkm.FLOATZEL]: Floatzel,
   [Pkm.KECLEON]: Kecleon,
+  [Pkm.KECLEON_PURPLE]: KecleonPurple,
   [Pkm.CARBINK]: Carbink,
   [Pkm.CHATOT]: Chatot,
   [Pkm.GOOMY]: Goomy,
