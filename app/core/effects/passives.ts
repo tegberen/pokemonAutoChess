@@ -2243,5 +2243,13 @@ export const PassiveEffects: Partial<
       if (!attacker.player) return
       attacker.addStack()
     })
+  ],
+  [Passive.PILLAR]: [
+    new OnChangePositionEffect(({ player }) => {
+      player.updatePillars()
+    }),
+    new OnEvolutionEffect(({ player }) => {
+      player.updatePillars()
+    })
   ]
 }

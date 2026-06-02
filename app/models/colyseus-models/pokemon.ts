@@ -18244,10 +18244,6 @@ export class Timburr extends Pokemon {
   range = 1
   skill = Ability.COLUMN_CRUSH
   passive = Passive.PILLAR
-  onChangePosition(x: number, y: number, player: Player, state: GameState) {
-    super.onChangePosition(x, y, player, state)
-    player.updatePillars()
-  }
   afterSell(player : Player) : void {
     player.updatePillars()
   }
@@ -18270,10 +18266,6 @@ export class Gurdurr extends Pokemon {
   range = 1
   skill = Ability.COLUMN_CRUSH
   passive = Passive.PILLAR
-  onChangePosition(x: number, y: number, player: Player, state: GameState) {
-    super.onChangePosition(x, y, player, state)
-    player.updatePillars()
-  }
   afterSell(player : Player) : void {
     player.updatePillars()
   }
@@ -18295,10 +18287,6 @@ export class Conkeldurr extends Pokemon {
   range = 1
   skill = Ability.COLUMN_CRUSH
   passive = Passive.PILLAR
-  onChangePosition(x: number, y: number, player: Player, state: GameState) {
-    super.onChangePosition(x, y, player, state)
-    player.updatePillars()
-  }
   afterSell(player : Player) {
     player.updatePillars()
   }
