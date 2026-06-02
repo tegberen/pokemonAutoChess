@@ -2908,7 +2908,7 @@
 		"DELUXE_BOX" : "Gift 2 random completed items to your partner.",
 		"TOOL_BUNDLE" : "Gift 2 random tools to your partner.",
 		"BERRY_BUNDLE": "Gift 7 random $t(item.BERRIES) to your partner. Wouldn't be a problem if you used the koffing berries.",
-		"UNOWN_BUNDLE": "Gift 5 random Unown to your partner. Your partner needs to have at least 3 free spaces on the bench.",
+		"UNOWN_BUNDLE": "Gift 5 random Unown to your partner.",
 		"SWEETS_BUNDLE": "Gift 5 random $t(item.SWEETS) to your partner.",
 		"HATCH_BUNDLE": "Gift 2 random Hatch Pokémon to your partner. They come freshly hatched, so no omelettes allowed.",
 		"TICKET_BUNDLE": "Gift a bundle containing a $t(item.EXCHANGE_TICKET), a $t(item.RECYCLE_TICKET) and a $t(item.BRONZE_DOJO_TICKET) to your partner.",
