@@ -3,7 +3,7 @@ import Player from "../models/colyseus-models/player"
 import PokemonFactory from "../models/pokemon-factory"
 import { getPokemonData } from "../models/precomputed/precomputed-pokemon-data"
 import { PRECOMPUTED_POKEMONS_PER_RARITY } from "../models/precomputed/precomputed-rarity"
-import { Berries, CraftableItemsNoScarves, Item, Sweets, SynergyGems } from "../types"
+import { Berries, CraftableItemsNoScarves, Item, Sweets, SynergyGems, SynergyGivenByGem } from "../types"
 import { FreeOptions, PaidOptions, ArmoryOptions } from "../types/enum/ArmoryOptions"
 import { Rarity } from "../types/enum/Game"
 import { Pkm, Unowns } from "../types/enum/Pokemon"
@@ -20,7 +20,15 @@ const giftAmountOfItem = (toPlayer: Player, amount: number, itemName: string): b
         randomSweets.forEach((sweet) => toPlayer.items.push(sweet))
     } else if (itemName === "GEMS"){
         const randomGems = pickNRandomIn(SynergyGems, amount)
-        randomGems.forEach((gem) => toPlayer.items.push(gem))
+        randomGems.forEach((gem) => {
+            const type = SynergyGivenByGem[gem]
+                              toPlayer.bonusSynergies.set(
+                                type,
+                                (toPlayer.bonusSynergies.get(type) ?? 0) + 1
+                              )
+            toPlayer.items.push(gem)
+        })
+        toPlayer.updateSynergies()
     } else if (itemName === "COMBINED_ITEMS"){
         const randomCombinedItems = pickNRandomIn(CraftableItemsNoScarves, amount)
         randomCombinedItems.forEach((x) => toPlayer.items.push(x))
