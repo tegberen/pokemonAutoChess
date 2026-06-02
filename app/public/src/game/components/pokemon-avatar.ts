@@ -285,6 +285,10 @@ export default class PokemonAvatar extends PokemonSprite {
     showEmote("item/" + item)
     this.hideEmoteMenu()
   }
+  sendTextEmote(text: string) {
+    showEmote("text/" + text)
+    this.hideEmoteMenu()
+  }
 }
 
 export class EmoteBubble extends GameObjects.DOMElement {
