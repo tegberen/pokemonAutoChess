@@ -1,9 +1,10 @@
+import { EvolutionTime, getBaseAltForm, PkmsWithAltForms } from "../config"
 import Player from "../models/colyseus-models/player"
 import Synergies from "../models/colyseus-models/synergies"
 import PokemonFactory from "../models/pokemon-factory"
 import { getPokemonData } from "../models/precomputed/precomputed-pokemon-data"
 import { PRECOMPUTED_POKEMONS_PER_RARITY } from "../models/precomputed/precomputed-rarity"
-import { Berries, CraftableItemsNoScarves, Item, Sweets, SynergyGems, SynergyGivenByGem } from "../types"
+import { Berries, CraftableItemsNoScarves, Item, Sweets, SynergyGems, SynergyGivenByGem, Tools } from "../types"
 import { FreeOptions, PaidOptions, ArmoryOptions } from "../types/enum/ArmoryOptions"
 import { Rarity } from "../types/enum/Game"
 import { Pkm, Unowns } from "../types/enum/Pokemon"
@@ -32,6 +33,22 @@ const giftAmountOfItem = (toPlayer: Player, amount: number, itemName: string): b
     } else if (itemName === "COMBINED_ITEMS"){
         const randomCombinedItems = pickNRandomIn(CraftableItemsNoScarves, 3)
         randomCombinedItems.forEach((x) => toPlayer.items.push(x))
+    } else if (itemName === "TOOLS"){
+        const randomTools = pickNRandomIn(Tools, amount)
+        randomTools.forEach((x) => toPlayer.items.push(x))
+    }
+    else {
+        return false;
+    }
+    
+    return true
+}
+
+const giftSetOfItems = (toPlayer: Player, itemName: string): boolean => {
+    if (itemName === "TICKETS") {
+        toPlayer.items.push(Item.EXCHANGE_TICKET)
+        toPlayer.items.push(Item.RECYCLE_TICKET)
+        toPlayer.items.push(Item.BRONZE_DOJO_TICKET)
     }
     else {
         return false;
@@ -59,6 +76,29 @@ const giftAmountOfPokemon = (toPlayer: Player, amount: number, pokemon: Pkm): bo
         toPlayer.board.set(replacement.id, replacement)
         replacement.onAcquired(toPlayer)
     }
+
+    return true
+}
+
+const giftHatchPokemon = (toPlayer: Player, amount: number): boolean => {
+    const spaceInBench = getFreeSpaceOnBench(toPlayer.board)
+    if (spaceInBench < amount) return false
+
+    const hatchList = PRECOMPUTED_POKEMONS_PER_RARITY.HATCH.filter((p) => getPokemonData(p).stars === 1)
+
+    let randomHatches = pickNRandomIn(hatchList, amount)
+
+    randomHatches.forEach((pkm) => {
+        const replacement = PokemonFactory.createPokemonFromName(getPokemonData(pkm).name, toPlayer)
+        const freeCellX = getFirstAvailablePositionInBench(toPlayer.board)
+    
+        if (freeCellX === null) return false
+        replacement.stacksRequired = EvolutionTime.EVOLVE_HATCH
+        replacement.positionX = freeCellX
+        replacement.positionY = 0
+        toPlayer.board.set(replacement.id, replacement)
+        replacement.onAcquired(toPlayer)
+    })
 
     return true
 }
@@ -135,10 +175,13 @@ export const armoryGiftService: { [key in ArmoryOptions ]? : (playerId: Player) 
     [FreeOptions.SWEETSBUNDLE]: (playerId: Player) => giftAmountOfItem(playerId, 5, "SWEETS"),
     [FreeOptions.UNOWNBUNDLE]: (playerId: Player) => giftAmountOfPokemon(playerId, 5, Pkm.UNOWN_A),
     [FreeOptions.DITTOBUNDLE]: (playerId: Player) => giftAmountOfPokemon(playerId, 1, Pkm.DITTO),
+    [FreeOptions.TICKETBUNDLE] : (playerId: Player) => giftSetOfItems(playerId, "TICKETS"),
+    [FreeOptions.HATCHBUNDLE] : (playerId: Player) => giftHatchPokemon(playerId, 2),
     
     [PaidOptions.GEMSBUNDLE] : (playerId: Player) => giftAmountOfItem(playerId, 3, "GEMS"),
     [PaidOptions.POTION] : (playerId: Player) => giftPotion(playerId),
-    [PaidOptions.DELUXE_BOX] : (playerId: Player) => giftAmountOfItem(playerId, 3, "COMBINED_ITEMS"),
+    [PaidOptions.DELUXE_BOX] : (playerId: Player) => giftAmountOfItem(playerId, 2, "COMBINED_ITEMS"),
+    [PaidOptions.TOOLBUNDLE] : (playerId: Player) => giftAmountOfItem(playerId, 2, "TOOLS"),
     [PaidOptions.COMMONBUNDLE] : (playerId: Player) => giftRandomPokemonByRarity(playerId, Rarity.COMMON),
     [PaidOptions.UNCOMMONBUNDLE] : (playerId: Player) => giftRandomPokemonByRarity(playerId, Rarity.UNCOMMON),
     [PaidOptions.RAREBUNDLE] : (playerId: Player) => giftRandomPokemonByRarity(playerId, Rarity.RARE),

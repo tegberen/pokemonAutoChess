@@ -3,15 +3,15 @@ export enum FreeOptions {
     UNOWNBUNDLE = "UNOWN_BUNDLE",
     SWEETSBUNDLE = "SWEETS_BUNDLE",
     DITTOBUNDLE = "DITTO_BUNDLE",
-    // GOLDBUNDLE = "GOLD_BUNDLE",
-    // PICNICBUNDLE = "PICNIC_BUNDLE",
-    // EGGBUNDLE = "EGG_BUNDLE"
+    TICKETBUNDLE = "TICKET_BUNDLE",
+    HATCHBUNDLE = "HATCH_BUNDLE"
 }
 
 export enum PaidOptions {
     GEMSBUNDLE = "GEMS_BUNDLE",
     POTION = "POTION",
     DELUXE_BOX = "DELUXE_BOX",
+    TOOLBUNDLE = "TOOL_BUNDLE",
 
     COMMONBUNDLE = "COMMON_BUNDLE",
     UNCOMMONBUNDLE = "UNCOMMON_BUNDLE",
@@ -27,13 +27,13 @@ export const ArmoryOptionsPrice: { [key in ArmoryOptions ] : number } = {
     [FreeOptions.UNOWNBUNDLE] : 0,
     [FreeOptions.SWEETSBUNDLE] : 0,
     [FreeOptions.DITTOBUNDLE] : 0,
-    // [FreeOptions.GOLDBUNDLE] : 0,
-    // [FreeOptions.PICNICBUNDLE] : 0,
-    // [FreeOptions.EGGBUNDLE] : 0,
+    [FreeOptions.TICKETBUNDLE] : 0,
+    [FreeOptions.HATCHBUNDLE] : 0,
 
     [PaidOptions.GEMSBUNDLE] : 5,
     [PaidOptions.POTION] : 5,
     [PaidOptions.DELUXE_BOX] : 15,
+    [PaidOptions.TOOLBUNDLE] : 15,
     [PaidOptions.COMMONBUNDLE] : 15,
     [PaidOptions.UNCOMMONBUNDLE] : 6,
     [PaidOptions.RAREBUNDLE] : 9,
