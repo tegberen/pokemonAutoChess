@@ -586,6 +586,7 @@ export default function Game() {
           getGameScene()?.battle?.clear()
           gameContainer.setPlayer(partnerPlayer)
           gameContainer.setSimulation(simulation)
+          room.send(Transfer.SPECTATE, partnerPlayerId)
         }
       )
       room.onMessage(Transfer.DRAG_DROP_CANCEL, (message) =>
