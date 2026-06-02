@@ -393,6 +393,19 @@ export default class MinigameManager {
       dialogTitle: "Tegberen",
       emotion: Emotion.HAPPY
     })
+    //add vinper
+    const unown_a = new PokemonSpecial({
+      scene: this.scene,
+      x: 29 * 48,
+      y: 22.5 * 48,
+      name: Pkm.UNOWN_A,
+      orientation: Orientation.DOWN,
+      animation: PokemonActionState.SLEEP,
+      dialog: t("thanks_for_playing_jac"),
+      dialogTitle: "Vinper",
+      emotion: Emotion.HAPPY
+    })
+
 
     const chimecho = new PokemonSpecial({
       scene: this.scene,
@@ -617,6 +630,7 @@ export default class MinigameManager {
     })
 
     this.villagers.push(
+      unown_a,
       totodile,
       chimecho,
       kecleon,

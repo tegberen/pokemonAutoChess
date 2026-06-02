@@ -186,7 +186,7 @@ export class AquaStepStrategy extends AbilityStrategy {
           pokemon,
           crit
         )
-        pokemon.addSpeed(speedGain, pokemon, 1, true)
+        pokemon.addSpeed(speedGain, pokemon, 1, crit)
       }, 300)
     )
   }
@@ -2018,7 +2018,7 @@ export class FairyWindStrategy extends AbilityStrategy {
   process(pokemon: PokemonEntity, board: Board, target: null, crit: boolean) {
     super.process(pokemon, board, target, crit)
     const ppGain = [5, 10, 20][pokemon.stars - 1] ?? 20
-    const debuf = [2, 4, 8][pokemon.stars - 1] ?? 8
+    const debuf = [2, 4, 6][pokemon.stars - 1] ?? 6
     board.forEach((x: number, y: number, tg: PokemonEntity | undefined) => {
       if (tg && pokemon.team === tg.team && tg.id !== pokemon.id) {
         tg.addPP(ppGain, pokemon, 0.5, crit)
@@ -2234,7 +2234,7 @@ export class FutureSightStrategy extends AbilityStrategy {
   requiresTarget = false
   process(pokemon: PokemonEntity, board: Board, target: null, crit: boolean) {
     super.process(pokemon, board, target, crit, true)
-    const damage = [10, 20, 30, 40][pokemon.stars - 1] ?? 40
+    const damage = [10, 15, 20, 30][pokemon.stars - 1] ?? 30
     const count = 5
     const enemies = board.cells.filter<PokemonEntity>(
       (p): p is PokemonEntity => p !== undefined && p.team !== pokemon.team
@@ -3536,7 +3536,7 @@ export class WithdrawStrategy extends AbilityStrategy {
     crit: boolean
   ) {
     super.process(pokemon, board, target, crit)
-    const damage = [10, 25, 50][pokemon.stars - 1] ?? 50
+    const damage = [10, 20, 40][pokemon.stars - 1] ?? 40
 
     OrientationArray.forEach((orientation) => {
       effectInOrientation(board, pokemon, orientation, (cell) => {
@@ -3716,7 +3716,7 @@ export class NaturalGiftStrategy extends AbilityStrategy {
         (cell) => cell && cell.team === pokemon.team
       ) as PokemonEntity[]
     ).sort((a, b) => a.hp / a.maxHP - b.hp / b.maxHP)[0]
-    const heal = [30, 60, 90][pokemon.stars - 1] ?? 90
+    const heal = [20, 40, 80][pokemon.stars - 1] ?? 80
 
     if (lowestHealthAlly) {
       lowestHealthAlly.handleHeal(heal, pokemon, 1, crit)
@@ -8687,7 +8687,7 @@ export class UnboundStrategy extends AbilityStrategy {
                 true
               )
               const scale = (1 + pokemon.ap * 0.5 / 100) * (crit ? 1 + (pokemon.critPower - 1) * 0.5 : 1)
-              entity.maxHP = Math.round(entity.maxHP * scale)
+              entity.maxHP = Math.round(entity.maxHP * scale / 2) // half scaling
               entity.hp = entity.maxHP
               if (pokemon.player) pokemon.player.pokemonsPlayed.add(chosen)
             }, 200)

@@ -537,7 +537,7 @@ export class SootheBellEffect extends PeriodicEffect {
         }
       },
       Item.SOOTHE_BELL,
-      2000
+      3000
     )
   }
 }

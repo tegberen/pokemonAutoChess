@@ -261,6 +261,7 @@ export interface IPlayer {
   interest: number
   doubleUpPartnerId: string
   doubleUpTeamId: string
+  doubleUpEliminationRound: number
   opponentId: string
   opponentName: string
   opponentAvatar: string

@@ -7078,6 +7078,22 @@ export class Kecleon extends Pokemon {
   passive = Passive.PROTEAN2
 }
 
+export class KecleonPurple extends Pokemon {
+  types = new SetSchema<Synergy>([])
+  rarity = Rarity.SPECIAL
+  stars = 3
+  hp = 200
+  atk = 22
+  speed = 38
+  def = 6
+  speDef = 6
+  maxPP = 100
+  range = 1
+  skill = Ability.ILLUSION
+  passive = Passive.PROTEAN2
+  regional = true
+}
+
 function updateCastform(pokemon: Pokemon, weather: Weather, player: Player) {
   let weatherForm: Pkm = Pkm.CASTFORM
   if (weather === Weather.SNOW) {
@@ -8006,7 +8022,7 @@ export class Celebi extends Pokemon {
   rarity = Rarity.LEGENDARY
   stars = 3
   hp = 250
-  atk = 25
+  atk = 20
   speed = 57
   def = 10
   speDef = 10
@@ -11807,7 +11823,7 @@ export class Gothita extends Pokemon {
   speed = 46
   def = 5
   speDef = 6
-  maxPP = 80
+  maxPP = 100
   range = 3
   skill = Ability.FAKE_TEARS
 }
@@ -11822,7 +11838,7 @@ export class Gothorita extends Pokemon {
   speed = 46
   def = 8
   speDef = 9
-  maxPP = 80
+  maxPP = 90
   range = 3
   skill = Ability.FAKE_TEARS
 }
@@ -18229,6 +18245,7 @@ export class Timburr extends Pokemon {
   skill = Ability.COLUMN_CRUSH
   passive = Passive.PILLAR
   onChangePosition(x: number, y: number, player: Player, state: GameState) {
+    super.onChangePosition(x, y, player, state)
     player.updatePillars()
   }
   afterSell(player : Player) : void {
@@ -18254,6 +18271,7 @@ export class Gurdurr extends Pokemon {
   skill = Ability.COLUMN_CRUSH
   passive = Passive.PILLAR
   onChangePosition(x: number, y: number, player: Player, state: GameState) {
+    super.onChangePosition(x, y, player, state)
     player.updatePillars()
   }
   afterSell(player : Player) : void {
@@ -18278,6 +18296,7 @@ export class Conkeldurr extends Pokemon {
   skill = Ability.COLUMN_CRUSH
   passive = Passive.PILLAR
   onChangePosition(x: number, y: number, player: Player, state: GameState) {
+    super.onChangePosition(x, y, player, state)
     player.updatePillars()
   }
   afterSell(player : Player) {
@@ -22411,6 +22430,7 @@ export const PokemonClasses: Record<
   [Pkm.BUIZEL]: Buizel,
   [Pkm.FLOATZEL]: Floatzel,
   [Pkm.KECLEON]: Kecleon,
+  [Pkm.KECLEON_PURPLE]: KecleonPurple,
   [Pkm.CARBINK]: Carbink,
   [Pkm.CHATOT]: Chatot,
   [Pkm.GOOMY]: Goomy,
