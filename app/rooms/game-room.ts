@@ -694,9 +694,10 @@ export default class GameRoom extends Room<{ state: GameState }> {
     if (pendingGame?.gameId === this.roomId) {
       // user reconnected without reconnection token (new browser/machine/session)
       clearPendingGame(this.presence, client.auth.uid)
-    } else if (pendingGame != null && !pendingGame.isExpired) {
-      client.leave(CloseCodes.USER_IN_ANOTHER_GAME)
     }
+    // else if (pendingGame != null && !pendingGame.isExpired) {
+    //   client.leave(CloseCodes.USER_IN_ANOTHER_GAME)
+    // }
   }
 
   async onDrop(client: Client, code: number) {
