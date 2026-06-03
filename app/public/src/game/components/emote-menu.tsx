@@ -3,7 +3,7 @@ import ReactDOM from "react-dom/client"
 import { useTranslation } from "react-i18next"
 import { getAvailableEmotions } from "../../../../models/precomputed/precomputed-emotions"
 import type { IPlayer } from "../../../../types"
-import { AvatarEmotions, type Emotion } from "../../../../types/enum/Emotion"
+import { AvatarEmotions, Emotion } from "../../../../types/enum/Emotion"
 import { logger } from "../../../../utils/logger"
 import PokemonPortrait from "../../pages/component/pokemon-portrait"
 import { cc } from "../../pages/utils/jsx"
@@ -19,6 +19,7 @@ export function EmoteMenuComponent(props: {
   sendEmote: (emotion: Emotion) => void
   sendItemEmote: (item: Item) => void
   sendTextEmote: (text: string) => void
+  sendDittoEmote: () => void
 }) {
   const { t } = useTranslation()
   const availableEmotions = getAvailableEmotions(props.index, props.shiny)
@@ -45,16 +46,22 @@ export function EmoteMenuComponent(props: {
               </li>
             )
           })}
+          <li key="ditto">
+            <PokemonPortrait
+              portrait={{ index: "0132", shiny: false, emotion: Emotion.NORMAL}}
+              title="Ditto"
+              onClick={() => props.sendDittoEmote()}
+            />
+          </li>
         </ul>
       )}
       <ul className="item-emotes">
-        { ItemComponents.filter((item) => item !== Item.SILK_SCARF).map((item) => (
+        {ItemComponents.filter((item) => item !== Item.SILK_SCARF).map((item) => (
           <li key={item} onClick={() => props.sendItemEmote(item)}>
             <img src={`assets/item/${item}.png`} title={item} />
           </li>
         ))}
       </ul>
-
       <ul className="text-emotes">
         {["⇌ ?", "✗", "OK", "ME"].map((text) => (
           <li key={text} onClick={() => props.sendTextEmote(text)}>
@@ -74,7 +81,8 @@ export default class EmoteMenu extends GameObjects.DOMElement {
     shiny: boolean,
     sendEmote: (emotion: Emotion) => void,
     sendItemEmote: (item: Item) => void,
-    sendTextEmote: (text: string) => void
+    sendTextEmote: (text: string) => void,
+    sendDittoEmote: () => void
   ) {
     super(scene, -350, -150)
     const state = store.getState()
@@ -92,6 +100,7 @@ export default class EmoteMenu extends GameObjects.DOMElement {
           sendEmote={sendEmote}
           sendItemEmote={sendItemEmote}
           sendTextEmote={sendTextEmote}
+          sendDittoEmote={sendDittoEmote}
         />
       )
     } else {

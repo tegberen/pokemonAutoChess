@@ -80,10 +80,10 @@ export class OnJoinCommand extends Command<
         this.room.presence,
         client.auth.uid
       )
-      if (pendingGame != null && !pendingGame.isExpired) {
-        client.leave(CloseCodes.USER_IN_ANOTHER_GAME)
-        return
-      }
+      // if (pendingGame != null && !pendingGame.isExpired) {
+      //   client.leave(CloseCodes.USER_IN_ANOTHER_GAME)
+      //   return
+      // }
 
       if (
         this.state.ownerId == "" &&
