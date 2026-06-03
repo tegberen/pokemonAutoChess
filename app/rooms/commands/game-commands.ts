@@ -951,7 +951,8 @@ export class OnDragDropItemCommand extends Command<
       pokemon.name === Pkm.SUBSTITUTE ||
       pokemon.name === Pkm.PILLAR_WOOD ||
       pokemon.name === Pkm.PILLAR_IRON ||
-      pokemon.name === Pkm.PILLAR_CONCRETE
+      pokemon.name === Pkm.PILLAR_CONCRETE ||
+      pokemon.items.has(Item.RARE_CANDY)
     ) {
       client.send(Transfer.DRAG_DROP_CANCEL, message)
       return
