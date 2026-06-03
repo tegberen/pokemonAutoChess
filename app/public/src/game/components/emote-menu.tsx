@@ -18,6 +18,7 @@ export function EmoteMenuComponent(props: {
   shiny: boolean
   sendEmote: (emotion: Emotion) => void
   sendItemEmote: (item: Item) => void
+  sendTextEmote: (text: string) => void
 }) {
   const { t } = useTranslation()
   const availableEmotions = getAvailableEmotions(props.index, props.shiny)
@@ -53,6 +54,14 @@ export function EmoteMenuComponent(props: {
           </li>
         ))}
       </ul>
+
+      <ul className="text-emotes">
+        {["⇌ ?", "✗", "OK", "ME"].map((text) => (
+          <li key={text} onClick={() => props.sendTextEmote(text)}>
+            <span style={{ fontSize: "1.5em", fontWeight: "bold", padding: "4px 8px", cursor: "pointer" }}>{text}</span>
+          </li>
+        ))}
+      </ul>
     </div>
   )
 }
@@ -64,7 +73,8 @@ export default class EmoteMenu extends GameObjects.DOMElement {
     avatarIndex: string,
     shiny: boolean,
     sendEmote: (emotion: Emotion) => void,
-    sendItemEmote: (item: Item) => void
+    sendItemEmote: (item: Item) => void,
+    sendTextEmote: (text: string) => void
   ) {
     super(scene, -350, -150)
     const state = store.getState()
@@ -81,6 +91,7 @@ export default class EmoteMenu extends GameObjects.DOMElement {
           shiny={shiny}
           sendEmote={sendEmote}
           sendItemEmote={sendItemEmote}
+          sendTextEmote={sendTextEmote}
         />
       )
     } else {

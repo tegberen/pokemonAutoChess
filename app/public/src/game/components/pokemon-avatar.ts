@@ -66,6 +66,7 @@ export default class PokemonAvatar extends PokemonSprite {
     this.setDepth(DEPTH.POKEMON)
     this.sendEmote = throttle(this.sendEmote, 1000).bind(this)
     this.sendItemEmote = this.sendItemEmote.bind(this)
+    this.sendTextEmote = this.sendTextEmote.bind(this)
   }
 
   registerKeys() {
@@ -217,7 +218,8 @@ export default class PokemonAvatar extends PokemonSprite {
         this.pokemon.index,
         this.pokemon.shiny,
         this.sendEmote,
-        this.sendItemEmote
+        this.sendItemEmote,
+        this.sendTextEmote
       )
       this.add(this.emoteMenu)
     }
@@ -276,6 +278,10 @@ export default class PokemonAvatar extends PokemonSprite {
     showEmote("item/" + item)
     this.hideEmoteMenu()
   }
+  sendTextEmote(text: string) {
+    showEmote("text/" + text)
+    this.hideEmoteMenu()
+  }
 }
 
 export class EmoteBubble extends GameObjects.DOMElement {
@@ -289,11 +295,23 @@ export class EmoteBubble extends GameObjects.DOMElement {
       "game-emote-bubble " + (isOpponent ? "opponent" : "current")
 
     const emoteImg = document.createElement("img")
-    emoteImg.src = emoteAvatar.startsWith("item/")
-      ? `assets/${emoteAvatar}.png`
-      : getAvatarSrc(emoteAvatar)
-
-    this.dom.appendChild(emoteImg)
+    if (emoteAvatar.startsWith("item/")) {
+      emoteImg.src = `assets/${emoteAvatar}.png`
+      this.dom.appendChild(emoteImg)
+    } else if (emoteAvatar.startsWith("text/")) {
+      const text = emoteAvatar.replace("text/", "")
+      const span = document.createElement("span")
+      span.textContent = text
+      span.style.fontSize = "3em"
+      span.style.fontWeight = "bold"
+      span.style.padding = "4px 8px"
+      span.style.cursor = "white"
+      span.style.textShadow = "1px 1px 2px black"
+      this.dom.appendChild(span)
+    } else {
+      emoteImg.src = getAvatarSrc(emoteAvatar)
+      this.dom.appendChild(emoteImg)
+    }
     this.setElement(this.dom)
   }
 }
