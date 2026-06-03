@@ -457,14 +457,7 @@ export const TownItems = [
   Item.PICNIC_SET,
   Item.WANTED_NOTICE,
   Item.LEADERS_CREST,
-  Item.LAPRAS_PASSPORT,
-  Item.AQUA_MONICA,
-  Item.FIERY_DRUM,
-  Item.GRASS_CORNET,
-  Item.ICY_FLUTE,
-  Item.ROCK_HORN,
-  Item.SKY_MELODICA,
-  Item.TERRA_CYMBAL
+  Item.LAPRAS_PASSPORT
 ] satisfies Item[]
 
 // should be excluded from carousels

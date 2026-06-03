@@ -11675,7 +11675,7 @@ export class Cinderace extends Pokemon {
   speed = 67
   def = 5
   speDef = 5
-  maxPP = 80
+  maxPP = 90
   range = 3
   skill = Ability.PYRO_BALL
 }
@@ -11685,7 +11685,7 @@ export class CinderacePirate extends Pokemon {
   rarity = Rarity.COMMON
   stars = 3
   hp = 150
-  atk = 21
+  atk = 18
   speed = 67
   def = 5
   speDef = 5
@@ -18966,7 +18966,7 @@ export class Veluza extends Pokemon {
   rarity = Rarity.UNIQUE
   stars = 3
   hp = 180
-  atk = 20
+  atk = 16
   speed = 45
   def = 5
   speDef = 4

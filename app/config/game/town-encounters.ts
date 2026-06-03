@@ -14,7 +14,6 @@ export const TownEncountersByStage: {
   [stageLevel: number]: { [encounter in TownEncounter]?: number }
 } = {
   4: {
-    [Pkm.CHIMECHO]: 1 / 20,
     [Pkm.WIGGLYTUFF]: 1 / 20,
     [Pkm.CHANSEY]: 1 / 20,
     [Pkm.MEOWTH]: 1 / 20,
@@ -30,7 +29,6 @@ export const TownEncountersByStage: {
     [Pkm.WOBBUFFET]: 1 / 20,
     [Pkm.KECLEON]: 1 / 20,
     [Pkm.ELECTIVIRE]: 1 / 20,
-    [Pkm.CHIMECHO]: 1 / 20,
     [Pkm.XATU]: 1 / 20,
     [Pkm.CINCCINO]: 1 / 20,
     [Pkm.MAROWAK]: 1 / 20,

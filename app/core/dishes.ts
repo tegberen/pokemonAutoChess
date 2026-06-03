@@ -346,9 +346,9 @@ export const DishEffects: Record<(typeof Dishes)[number], Effect[]> = {
   SMOKED_FILET: [
     new OnDishConsumedEffect(({ pokemon, entity, player }) => {
       if (entity) {
-        entity.addMaxHP(-5, entity, 0, false, true)
-        entity.addAttack(5, entity, 0, false, true)
-        entity.addAbilityPower(10, entity, 0, false, true)
+        entity.addMaxHP(-4, entity, 0, false, true)
+        entity.addAttack(4, entity, 0, false, true)
+        entity.addAbilityPower(8, entity, 0, false, true)
       }
     })
   ],
