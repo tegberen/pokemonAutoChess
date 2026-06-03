@@ -904,10 +904,19 @@ export class OnDragDropItemCommand extends Command<
       this.state.phase === GamePhaseState.PICK &&
       isOnBench(pokemon)
     ) {
-      if (pokemon.rarity === Rarity.UNIQUE || pokemon.rarity === Rarity.LEGENDARY || pokemon.name === Pkm.EGG) {
-        client.send(Transfer.DRAG_DROP_CANCEL, message)
-        return
-      }
+    if (
+      pokemon.rarity === Rarity.UNIQUE ||
+      pokemon.rarity === Rarity.LEGENDARY ||
+      pokemon.name === Pkm.EGG ||
+      pokemon.name === Pkm.SUBSTITUTE ||
+      pokemon.name === Pkm.PILLAR_WOOD ||
+      pokemon.name === Pkm.PILLAR_IRON ||
+      pokemon.name === Pkm.PILLAR_CONCRETE ||
+      pokemon.items.has(Item.RARE_CANDY)
+    ) {
+      client.send(Transfer.DRAG_DROP_CANCEL, message)
+      return
+    }
       sendPokemonToPartner(this.state, this.room, player, pokemon, item)
       return
     }
