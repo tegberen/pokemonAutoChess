@@ -214,8 +214,9 @@ export default function GameChoice() {
                 <p style={{ marginBottom: "0.5em" }}>
                   {addIconsToDescription(t(`armory_description.${option}`))}
                 </p>
-                <p style={{ marginBottom: "0.5em", fontWeight: "bold"}}>
-                  {ArmoryOptionsPrice[option]} GOLD
+                <p style={{ marginBottom: "0.5em", fontWeight: "bold", fontSize: "1.5rem"}}>
+                  {ArmoryOptionsPrice[option]} 
+                  <img className="icon-money" src="/assets/icons/money.svg" alt="$" style={{ marginLeft: "0.25em", width: "1.5rem", height: "1.5rem" }}/>
                 </p>
               </div>
             ))}

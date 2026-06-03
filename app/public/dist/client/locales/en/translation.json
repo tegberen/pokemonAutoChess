@@ -2906,7 +2906,7 @@
 	"armory_description": {
 		"POTION": "A potion that heals 10 player HP of the team",
 		"DELUXE_BOX" : "Gift 2 random completed items to your partner.",
-		"TOOL_BUNDLE" : "Gift 2 random tools to your partner.",
+		"TOOL_BUNDLE" : "Gift 3 random tools to your partner.",
 		"BERRY_BUNDLE": "Gift 7 random $t(item.BERRIES) to your partner. Wouldn't be a problem if you used the koffing berries.",
 		"UNOWN_BUNDLE": "Gift 5 random Unown to your partner.",
 		"SWEETS_BUNDLE": "Gift 5 random $t(item.SWEETS) to your partner.",

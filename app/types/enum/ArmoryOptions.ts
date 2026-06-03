@@ -33,7 +33,7 @@ export const ArmoryOptionsPrice: { [key in ArmoryOptions ] : number } = {
     [PaidOptions.GEMSBUNDLE] : 5,
     [PaidOptions.POTION] : 5,
     [PaidOptions.DELUXE_BOX] : 15,
-    [PaidOptions.TOOLBUNDLE] : 15,
+    [PaidOptions.TOOLBUNDLE] : 20,
     [PaidOptions.COMMONBUNDLE] : 15,
     [PaidOptions.UNCOMMONBUNDLE] : 6,
     [PaidOptions.RAREBUNDLE] : 9,
