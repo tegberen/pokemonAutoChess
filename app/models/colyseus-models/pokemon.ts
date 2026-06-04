@@ -8071,9 +8071,6 @@ export class Jirachi extends Pokemon {
   range = 3
   skill = Ability.DOOM_DESIRE
   passive = Passive.GOOD_LUCK
-  beforeSimulationStart({ teamEffects }: { teamEffects: Set<EffectEnum> }) {
-    teamEffects.add(EffectEnum.GOOD_LUCK)
-  }
 }
 
 export class Arceus extends Pokemon {
