@@ -670,8 +670,8 @@ export class MegaManectric extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.ELECTRIC, Synergy.FIELD])
   rarity = Rarity.RARE
   stars = 3
-  hp = 230
-  atk = 24
+  hp = 220
+  atk = 20
   speed = 74
   def = 12
   speDef = 12
@@ -3339,7 +3339,7 @@ export class Loudred extends Pokemon {
   speed = 47
   def = 4
   speDef = 4
-  maxPP = 85
+  maxPP = 90
   range = 2
   skill = Ability.UPROAR
 }
@@ -3349,11 +3349,11 @@ export class Exploud extends Pokemon {
   rarity = Rarity.RARE
   stars = 3
   hp = 250
-  atk = 22
+  atk = 20
   speed = 47
   def = 6
   speDef = 6
-  maxPP = 80
+  maxPP = 90
   range = 2
   skill = Ability.UPROAR
 }
@@ -4604,12 +4604,12 @@ export class Quilava extends Pokemon {
       else return Pkm.TYPHLOSION
     }
   } satisfies CountEvolutionRule
-  hp = 120
-  atk = 12
+  hp = 150
+  atk = 15
   speed = 51
   def = 4
   speDef = 6
-  maxPP = 90
+  maxPP = 100
   range = 2
   skill = Ability.WHEEL_OF_FIRE
 }
@@ -4623,7 +4623,7 @@ export class Typhlosion extends Pokemon {
   speed = 51
   def = 6
   speDef = 10
-  maxPP = 80
+  maxPP = 100
   range = 2
   skill = Ability.WHEEL_OF_FIRE
 }
@@ -4637,7 +4637,7 @@ export class HisuianTyphlosion extends Pokemon {
   speed = 51
   def = 6
   speDef = 10
-  maxPP = 80
+  maxPP = 100
   range = 2
   skill = Ability.INFERNAL_PARADE
   passive = Passive.HISUIAN_TYPHLOSION
@@ -7865,7 +7865,7 @@ export class Mewtwo extends Pokemon {
   rarity = Rarity.LEGENDARY
   evolution = Pkm.MEGA_MEWTWO_Y
   evolutionRule = { type: EvolutionRuleType.ITEM, itemsTriggeringEvolution: [Item.MEWTWONITE_Y] } as ItemEvolutionRule
-  stacksRequired = 20
+  stacksRequired = 30
   stars = 3
   hp = 200
   atk = 25
@@ -8036,7 +8036,7 @@ export class Victini extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.FIRE, Synergy.PSYCHIC, Synergy.GOURMET])
   rarity = Rarity.LEGENDARY
   stars = 3
-  hp = 300
+  hp = 250
   atk = 27
   speed = 57
   def = 10
@@ -8071,9 +8071,6 @@ export class Jirachi extends Pokemon {
   range = 3
   skill = Ability.DOOM_DESIRE
   passive = Passive.GOOD_LUCK
-  beforeSimulationStart({ teamEffects }: { teamEffects: Set<EffectEnum> }) {
-    teamEffects.add(EffectEnum.GOOD_LUCK)
-  }
 }
 
 export class Arceus extends Pokemon {
@@ -11671,7 +11668,7 @@ export class Cinderace extends Pokemon {
   rarity = Rarity.COMMON
   stars = 3
   hp = 150
-  atk = 21
+  atk = 19
   speed = 67
   def = 5
   speDef = 5
@@ -11685,7 +11682,7 @@ export class CinderacePirate extends Pokemon {
   rarity = Rarity.COMMON
   stars = 3
   hp = 150
-  atk = 18
+  atk = 16
   speed = 67
   def = 5
   speDef = 5
@@ -11838,7 +11835,7 @@ export class Gothorita extends Pokemon {
   speed = 46
   def = 8
   speDef = 9
-  maxPP = 90
+  maxPP = 100
   range = 3
   skill = Ability.FAKE_TEARS
 }
@@ -11852,7 +11849,7 @@ export class Gothitelle extends Pokemon {
   speed = 46
   def = 11
   speDef = 12
-  maxPP = 80
+  maxPP = 100
   range = 3
   skill = Ability.FAKE_TEARS
 }
@@ -15362,11 +15359,11 @@ export class Lickitung extends Pokemon {
   rarity = Rarity.RARE
   stars = 1
   evolution = Pkm.LICKILICKY
-  hp = 80
+  hp = 75
   atk = 6
   speed = 41
-  def = 6
-  speDef = 6
+  def = 5
+  speDef = 5
   maxPP = 90
   range = 1
   skill = Ability.LICK
@@ -15385,11 +15382,11 @@ export class Lickilicky extends Pokemon {
   ])
   rarity = Rarity.RARE
   stars = 2
-  hp = 160
+  hp = 150
   atk = 14
   speed = 41
-  def = 8
-  speDef = 8
+  def = 7
+  speDef = 7
   maxPP = 90
   range = 1
   skill = Ability.LICK
@@ -18965,8 +18962,8 @@ export class Veluza extends Pokemon {
   ])
   rarity = Rarity.UNIQUE
   stars = 3
-  hp = 180
-  atk = 16
+  hp = 150
+  atk = 15
   speed = 45
   def = 5
   speDef = 4

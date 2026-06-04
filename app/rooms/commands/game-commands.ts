@@ -321,6 +321,11 @@ function sendPokemonToPartner(
 
   // Remove from sender's board
   sender.board.delete(pokemon.id)
+  const itemsToReturn = schemaValues(pokemon.items)
+  pokemon.removeItems(itemsToReturn, sender)
+  itemsToReturn.forEach((item) => {
+    sender.items.push(item)
+  })
   sender.updateSynergies()
   sender.boardSize = room.getTeamSize(sender.board)
 
@@ -340,8 +345,6 @@ function sendPokemonToPartner(
       }
       return
     }
-    pokemon.items.forEach(item => sender.items.push(item))
-    pokemon.items.clear()
     pokemon.positionX = freeX
     pokemon.positionY = 0
     partner.board.set(pokemon.id, pokemon)
