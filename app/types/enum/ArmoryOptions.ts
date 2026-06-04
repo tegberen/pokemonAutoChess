@@ -4,7 +4,8 @@ export enum FreeOptions {
     SWEETSBUNDLE = "SWEETS_BUNDLE",
     DITTOBUNDLE = "DITTO_BUNDLE",
     TICKETBUNDLE = "TICKET_BUNDLE",
-    HATCHBUNDLE = "HATCH_BUNDLE"
+    HATCHBUNDLE = "HATCH_BUNDLE",
+    REGIONBUNDLE = "REGION_BUNDLE"
 }
 
 export enum PaidOptions {
@@ -29,6 +30,7 @@ export const ArmoryOptionsPrice: { [key in ArmoryOptions ] : number } = {
     [FreeOptions.DITTOBUNDLE] : 0,
     [FreeOptions.TICKETBUNDLE] : 0,
     [FreeOptions.HATCHBUNDLE] : 0,
+    [FreeOptions.REGIONBUNDLE] : 0,
 
     [PaidOptions.GEMSBUNDLE] : 5,
     [PaidOptions.POTION] : 5,

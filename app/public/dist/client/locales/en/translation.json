@@ -2571,7 +2571,8 @@
 		"EPIC_BUNDLE": "Epic Rarity Bundle",
 		"ULTRA_BUNDLE": "Ultra Rarity Bundle",
 		"UNIQUE_BUNDLE": "Unique Rarity Bundle",
-		"LEGENDARY_BUNDLE": "Legendary Rarity Bundle"
+		"LEGENDARY_BUNDLE": "Legendary Rarity Bundle",
+		"REGION_BUNDLE": "Regional Rolls Bundle"
 	},
 	"item": {
 		"FOSSIL_STONE": "Fossil Stone",
@@ -2920,7 +2921,8 @@
 		"EPIC_BUNDLE": "Gift a random 2 STAR Additional or Regional Epic Pokémon to your partner. It will have your partner's highest active synergy.",
 		"ULTRA_BUNDLE": "Gift a random 1 STAR Ultra Pokémon to your partner. It will have one of your partner's 2 highest active synergy.",
 		"UNIQUE_BUNDLE": "Gift a random Unique Pokémon to your partner. It will have your partner's highest active synergy.",
-		"LEGENDARY_BUNDLE": "Gift a random Legendary Pokémon to your partner. It will have your partner's highest active synergy."
+		"LEGENDARY_BUNDLE": "Gift a random Legendary Pokémon to your partner. It will have one of your partner's 2 highest active synergies.",
+		"REGION_BUNDLE": "Gift a $t(item.LAPRAS_PASSPORT) to your partner and 10 free shop rolls. Let's get those regionals!"
 	},
 	"item_description": {
 		"FOSSIL_STONE": "A fossil of a Pokémon that lived in prehistoric times",

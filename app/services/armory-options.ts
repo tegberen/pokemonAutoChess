@@ -50,6 +50,10 @@ const giftSetOfItems = (toPlayer: Player, itemName: string): boolean => {
         toPlayer.items.push(Item.RECYCLE_TICKET)
         toPlayer.items.push(Item.BRONZE_DOJO_TICKET)
     }
+    else if(itemName === "REGION"){
+        toPlayer.items.push(Item.LAPRAS_PASSPORT)
+        toPlayer.shopFreeRolls += 10
+    }
     else {
         return false;
     }
@@ -178,6 +182,7 @@ export const armoryGiftService: { [key in ArmoryOptions ]? : (toPlayer: Player, 
     [FreeOptions.DITTOBUNDLE]: (toPlayer: Player, fromPlayer: Player) => giftAmountOfPokemon(toPlayer, 1, Pkm.DITTO),
     [FreeOptions.TICKETBUNDLE] : (toPlayer: Player, fromPlayer: Player) => giftSetOfItems(toPlayer, "TICKETS"),
     [FreeOptions.HATCHBUNDLE] : (toPlayer: Player, fromPlayer: Player) => giftHatchPokemon(toPlayer, 2),
+    [FreeOptions.REGIONBUNDLE] : (toPlayer: Player, fromPlayer: Player) => giftSetOfItems(toPlayer, "REGION"),
     
     [PaidOptions.GEMSBUNDLE] : (toPlayer: Player, fromPlayer: Player) => giftAmountOfItem(toPlayer, 3, "GEMS"),
     [PaidOptions.POTION] : (toPlayer: Player, fromPlayer: Player) => giftPotion(toPlayer, fromPlayer),
