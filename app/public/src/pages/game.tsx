@@ -854,7 +854,7 @@ export default function Game() {
                   {t("level")} {value}
                 </p>,
                 {
-                  containerId: player.rank.toString(),
+                  containerId: player.id,
                   className: "toast-level-up"
                 }
               )

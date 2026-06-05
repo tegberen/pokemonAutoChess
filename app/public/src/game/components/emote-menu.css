@@ -45,6 +45,7 @@
 .emote-menu .item-emotes {
   background-color: var(--color-bg-primary);
 }
+
 .emote-menu .text-emotes {
   display: grid;
   grid-template-columns: 1fr 1fr;
