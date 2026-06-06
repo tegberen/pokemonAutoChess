@@ -172,7 +172,7 @@ const giftRandomPokemonByRarity = (toPlayer: Player, rarity: Rarity): boolean =>
 
 const giftPotion = (toPlayer: Player, fromPlayer: Player): boolean => {
     toPlayer.life = Math.min(100, (toPlayer.life + 10))
-    fromPlayer.life = Math.min(100, (toPlayer.life + 10))
+    fromPlayer.life = Math.min(100, (fromPlayer.life + 10))
     return true
 }
 
