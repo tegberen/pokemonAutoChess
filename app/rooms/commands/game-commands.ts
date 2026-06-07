@@ -1286,15 +1286,67 @@ export class OnUpdateCommand extends Command<
         coord.x,
         coord.y,
         partnerTeam,
-        true
+        true,
+        true // skip synergy effects from partner
       )
+      // negative status effects are not carried over, therefore do not bring over (most) positive status effects
+      // positive effects we ignore: spikeArmor, magigBounce, reflect, pokerus, rage
+
+      // bring over light status and exception for these two positive status effects: runeProtect, resurrection
+      reinforcement.status.light = entity.status.light
+      reinforcement.status.resurrection = entity.status.resurrection
+      reinforcement.status.runeProtect = entity.status.runeProtect
+      reinforcement.status.runeProtectCooldown = entity.status.runeProtectCooldown
+
+      // bring over current active fields (debatable, since technically positie status in wiki)
+      reinforcement.status.grassField = entity.status.grassField
+      reinforcement.status.fairyField = entity.status.fairyField
+      reinforcement.status.psychicField = entity.status.psychicField
+      reinforcement.status.electricField = entity.status.electricField
+
+      // bring over current stats
+      reinforcement.atk = entity.atk
+      reinforcement.def = entity.def
+      reinforcement.speDef = entity.speDef
+      reinforcement.ap = entity.ap
+      reinforcement.speed = entity.speed
+      reinforcement.critChance = entity.critChance
+      reinforcement.critPower = entity.critPower
+      reinforcement.range = entity.range
+      reinforcement.luck = entity.luck
+      reinforcement.dodge = entity.dodge
+      reinforcement.shield = entity.shield
+      reinforcement.maxHP = entity.maxHP
       reinforcement.hp = Math.min(entity.hp, reinforcement.maxHP)
       reinforcement.pp = 0
+
+      // bring over item stack counts to prevent double-stacking from current stats
+      // TODO: after merge, add JAC specifig item counts: WIDE_LENS, GRIP_CLAW, EXP_CHARM
+      reinforcement.count.muscleBandCount = entity.count.muscleBandCount
+      reinforcement.count.machRibbonCount = entity.count.machRibbonCount
+      reinforcement.count.upgradeCount = entity.count.upgradeCount
+      reinforcement.count.soulDewCount = entity.count.soulDewCount
+      reinforcement.count.soundCryCount = entity.count.soundCryCount
+
+      // overwrite with players synergy effects
       Array.from(reinforcement.effects).forEach(e => reinforcement.effects.delete(e))
       entity.effects.forEach(e => reinforcement.effects.add(e))
       reinforcement.effectsSet = new Set(entity.effectsSet)
     }
-    //
+    // apply ghost curses, outside the loop to avoid multiple applications
+    const opponentTeam = partnerTeam === Team.BLUE_TEAM ? Team.RED_TEAM : Team.BLUE_TEAM
+    const ghostCurseEffects = [
+      EffectEnum.CURSE_OF_VULNERABILITY,
+      EffectEnum.CURSE_OF_WEAKNESS,
+      EffectEnum.CURSE_OF_TORMENT,
+      EffectEnum.CURSE_OF_FATE
+    ]
+    ghostCurseEffects.forEach(curse => {
+      if (survivors.some(e => e.effects.has(curse))) {
+        target.applyCurse(curse, opponentTeam)
+      }
+    })
+
     const winnerClient = this.room.clients.find(
       (cli) => cli.auth.uid === winnerPlayer.id
     )
