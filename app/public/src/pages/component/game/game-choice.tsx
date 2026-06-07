@@ -98,6 +98,11 @@ export default function GameChoice() {
         style={{ visibility: visible ? "visible" : "hidden" }}
       >
         {message && <h2>{message}</h2>}
+        {choices.length > 1 && (
+          <p style={{ textAlign: "center", opacity: 0.7, fontSize: "0.9em" }}>
+            {t("player_choices.more_choices", { count: choices.length - 1 })}
+          </p>
+        )}
 
         {choice.pokemons.length > 0 ? (
           <div className="game-choice-pokemons-list">
