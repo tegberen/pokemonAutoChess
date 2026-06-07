@@ -4111,7 +4111,8 @@
 		"choose_legendary": "Choose one Legendary for your team. You only get to choose once, make it count!",
 		"choose_wand": "Choose one Wand to give additional effects to your Fairy Pokémon attacks",
 		"choose_armory": "Choose one gift to send to your partner",
-		"free_slot_hint": "You must have one free slot on the bench, or two for Duos"
+		"free_slot_hint": "You must have one free slot on the bench, or two for Duos",
+		"more_choices": "{{count}} more choice(s) after this one!"
 	},
 	"hide": "Hide",
 	"show": "Show",
