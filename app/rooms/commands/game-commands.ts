@@ -1370,6 +1370,9 @@ export class OnUpdateCommand extends Command<
       reinforcement.count.upgradeCount = entity.count.upgradeCount
       reinforcement.count.soulDewCount = entity.count.soulDewCount
       reinforcement.count.soundCryCount = entity.count.soundCryCount
+      reinforcement.count.wideLensCount = entity.count.wideLensCount
+      reinforcement.count.gripClawCount = entity.count.gripClawCount
+      reinforcement.count.expCharmCount = entity.count.expCharmCount
 
       // overwrite with players synergy effects
       Array.from(reinforcement.effects).forEach(e => reinforcement.effects.delete(e))
