@@ -291,14 +291,15 @@ export default class Simulation extends Schema implements ISimulation {
     x: number,
     y: number,
     team: Team,
-    isSpawn = false
+    isSpawn = false,
+    skipSynergyEffects = false
   ) {
     const player = team === Team.BLUE_TEAM ? this.bluePlayer : this.redPlayer
     const pokemonEntity = new PokemonEntity(pokemon, x, y, team, this)
     pokemonEntity.isSpawn = isSpawn
     pokemonEntity.orientation =
       team === Team.BLUE_TEAM ? Orientation.UPRIGHT : Orientation.DOWNLEFT
-    this.applySynergyEffects(pokemonEntity)
+    if (!skipSynergyEffects) this.applySynergyEffects(pokemonEntity)
     this.applyItemsEffects(pokemonEntity)
 
     this.board.setEntityOnCell(
