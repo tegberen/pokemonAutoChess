@@ -13,7 +13,7 @@ export default function GameExperience() {
   const experienceManager = useAppSelector(
     (state) => state.game.experienceManager
   )
-  const isLevelMax = experienceManager.level >= MAX_LEVEL
+  const isLevelMax = experienceManager.level >= experienceManager.maxLevel
   const specialGameRule = useAppSelector((state) => state.game.specialGameRule)
   const levelUpCost = getLevelUpCost(specialGameRule)
   const goldToLevelUp = isLevelMax
@@ -26,6 +26,13 @@ export default function GameExperience() {
   const canLevelup =
     !isLevelMax && spectatedPlayer && spectatedPlayer.money >= levelUpCost
 
+  console.log({
+    level: experienceManager.level,
+    maxLevel: experienceManager.maxLevel,
+    experience: experienceManager.experience,
+    expNeeded: experienceManager.expNeeded,
+    isLevelMax
+  })
   return (
     <div className="game-experience">
       <span>

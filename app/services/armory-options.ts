@@ -1,3 +1,4 @@
+import { schemeObservable10 } from "d3"
 import { EvolutionTime, getBaseAltForm, PkmsWithAltForms } from "../config"
 import Player from "../models/colyseus-models/player"
 import PokemonFactory from "../models/pokemon-factory"
@@ -176,7 +177,12 @@ const giftPotion = (toPlayer: Player, fromPlayer: Player): boolean => {
     return true
 }
 
+const giftMaxLevel = (toPlayer: Player): boolean => {
+    toPlayer.experienceManager.maxLevel = 10
+    return true
+}
 export const armoryGiftService: { [key in ArmoryOptions ]? : (toPlayer: Player, fromPlayer: Player) => boolean } = {
+    [PaidOptions.LEVELBUNDLE] : (toPlayer: Player, fromPlayer: Player) => giftMaxLevel(toPlayer),
     [FreeOptions.BERRYBUNDLE]: (toPlayer: Player, fromPlayer: Player) => giftAmountOfItem(toPlayer, 7, "BERRIES"),
     [FreeOptions.SWEETSBUNDLE]: (toPlayer: Player, fromPlayer: Player) => giftAmountOfItem(toPlayer, 5, "SWEETS"),
     [FreeOptions.UNOWNBUNDLE]: (toPlayer: Player, fromPlayer: Player) => giftAmountOfPokemon(toPlayer, 5, Pkm.UNOWN_A),

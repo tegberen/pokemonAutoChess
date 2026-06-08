@@ -10,7 +10,7 @@ export default class ExperienceManager
   @type("uint8") level: number
   @type("uint8") experience: number
   @type("uint8") expNeeded: number
-  maxLevel: number
+  @type("uint8") maxLevel: number
 
   constructor() {
     super()
@@ -26,10 +26,10 @@ export default class ExperienceManager
 
   addExperience(quantity: number) {
     let expToAdd = quantity
-    while (this.checkForLevelUp(expToAdd)) {
+    while (this.checkForLevelUp(expToAdd) && this.checkForLevelUp(expToAdd)) {
       expToAdd -= ExpTable[this.level]
       this.level += 1
-      this.expNeeded = ExpTable[this.level]
+      this.expNeeded = ExpTable[this.level] ?? 255
     }
   }
 
