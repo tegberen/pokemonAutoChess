@@ -7865,7 +7865,7 @@ export class Mewtwo extends Pokemon {
   rarity = Rarity.LEGENDARY
   evolution = Pkm.MEGA_MEWTWO_Y
   evolutionRule = { type: EvolutionRuleType.ITEM, itemsTriggeringEvolution: [Item.MEWTWONITE_Y] } as ItemEvolutionRule
-  stacksRequired = 30
+  stacksRequired = 20
   stars = 3
   hp = 200
   atk = 25
