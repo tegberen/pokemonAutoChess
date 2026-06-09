@@ -1818,6 +1818,9 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
         this.index = pokemonEvolved.index
         this.name = pokemonEvolved.name
         this.refToBoardPokemon = pokemonEvolved
+        if (pokemonEvolved.passive === Passive.AURA) {
+          this.refToBoardPokemon.aura = true
+        }
       }
     }
     return

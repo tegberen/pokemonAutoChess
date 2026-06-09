@@ -825,7 +825,8 @@ export default class PokemonSprite extends DraggableObject {
     }
   }
   auraAnimation(scene: GameScene | DebugScene, alreadyActive: boolean, onEntity: boolean) {
-    (this.sprite as any).postFX.addGlow(0x5CB3FF, 4, 0, false, 0.1, 8)
+    this.sprite.enableFilters()
+    this.sprite.filters?.internal.addGlow(0x00BFFF, 12, 0, 0.2)
     this.emoteAnimation()
   }
 
