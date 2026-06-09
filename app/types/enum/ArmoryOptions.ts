@@ -5,7 +5,8 @@ export enum FreeOptions {
     DITTOBUNDLE = "DITTO_BUNDLE",
     TICKETBUNDLE = "TICKET_BUNDLE",
     HATCHBUNDLE = "HATCH_BUNDLE",
-    REGIONBUNDLE = "REGION_BUNDLE"
+    REGIONBUNDLE = "REGION_BUNDLE",
+    EVOLVEBUNDLE = "EVOLVE_BUNDLE"
 }
 
 export enum PaidOptions {
@@ -13,6 +14,7 @@ export enum PaidOptions {
     POTION = "POTION",
     DELUXE_BOX = "DELUXE_BOX",
     TOOLBUNDLE = "TOOL_BUNDLE",
+    EXPBUNDLE = "EXP_BUNDLE",
 
     COMMONBUNDLE = "COMMON_BUNDLE",
     UNCOMMONBUNDLE = "UNCOMMON_BUNDLE",
@@ -31,6 +33,7 @@ export const ArmoryOptionsPrice: { [key in ArmoryOptions ] : number } = {
     [FreeOptions.TICKETBUNDLE] : 0,
     [FreeOptions.HATCHBUNDLE] : 0,
     [FreeOptions.REGIONBUNDLE] : 0,
+    [FreeOptions.EVOLVEBUNDLE] : 0,
 
     [PaidOptions.GEMSBUNDLE] : 5,
     [PaidOptions.POTION] : 5,
@@ -43,6 +46,7 @@ export const ArmoryOptionsPrice: { [key in ArmoryOptions ] : number } = {
     [PaidOptions.ULTRABUNDLE] : 5,
     [PaidOptions.UNIQUEBUNDLE] : 15,
     [PaidOptions.LEGENDARYBUNDLE] : 40,
+    [PaidOptions.EXPBUNDLE] : 30,
 }
 
 export type ArmoryOptions = FreeOptions | PaidOptions

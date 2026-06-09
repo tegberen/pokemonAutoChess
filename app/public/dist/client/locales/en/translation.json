@@ -2572,7 +2572,9 @@
 		"ULTRA_BUNDLE": "Ultra Rarity Bundle",
 		"UNIQUE_BUNDLE": "Unique Rarity Bundle",
 		"LEGENDARY_BUNDLE": "Legendary Rarity Bundle",
-		"REGION_BUNDLE": "Regional Rolls Bundle"
+		"REGION_BUNDLE": "Regional Rolls Bundle",
+		"EXP_BUNDLE": "Level Up Bundle",
+		"EVOLVE_BUNDLE": "Evolution Bundle"
 	},
 	"item": {
 		"FOSSIL_STONE": "Fossil Stone",
@@ -2922,7 +2924,9 @@
 		"ULTRA_BUNDLE": "Gift a random 1 STAR Ultra Pokémon to your partner. It will have one of your partner's 2 highest active synergies.",
 		"UNIQUE_BUNDLE": "Gift a random Unique Pokémon to your partner. It will have your partner's highest active synergy.",
 		"LEGENDARY_BUNDLE": "Gift a random Legendary Pokémon to your partner. It will have one of your partner's 2 highest active synergies.",
-		"REGION_BUNDLE": "Gift a $t(item.LAPRAS_PASSPORT) to your partner and 10 free shop rolls. Let's get those regionals!"
+		"REGION_BUNDLE": "Gift a $t(item.LAPRAS_PASSPORT) to your partner and 10 free shop rolls. Let's get those regionals!",
+		"EXP_BUNDLE": "Make your partner gain 40 Experience and set their max level to 10. Amofus angle.",
+		"EVOLVE_BUNDLE": "Evolve one random Pokémon from your partner's board. If no Pokémon on the board can evolve, one of them will receive a big stat-boost."
 	},
 	"item_description": {
 		"FOSSIL_STONE": "A fossil of a Pokémon that lived in prehistoric times",

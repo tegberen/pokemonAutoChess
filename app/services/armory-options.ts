@@ -1,5 +1,7 @@
 import { EvolutionTime, getBaseAltForm, PkmsWithAltForms } from "../config"
+import { EvolutionManager } from "../core/evolution-logic/evolution-manager"
 import Player from "../models/colyseus-models/player"
+import { Pokemon } from "../models/colyseus-models/pokemon"
 import PokemonFactory from "../models/pokemon-factory"
 import { getPokemonData } from "../models/precomputed/precomputed-pokemon-data"
 import { PRECOMPUTED_POKEMONS_PER_RARITY } from "../models/precomputed/precomputed-rarity"
@@ -152,7 +154,7 @@ const giftRandomPokemonByRarity = (toPlayer: Player, rarity: Rarity): boolean =>
         })
         return res
     })
-    //console.log(pkmByRarityWithWantedSyns)
+    
     if (pkmByRarityWithWantedSyns.length === 0) pkmByRarityWithWantedSyns.push(Pkm.UNOWN_A) //Fallback if no Pokémon satisfy the filter
     const pkm = pickRandomIn(pkmByRarityWithWantedSyns)
     
@@ -176,6 +178,39 @@ const giftPotion = (toPlayer: Player, fromPlayer: Player): boolean => {
     return true
 }
 
+const evolveRandomPokemonInBoard = (toPlayer: Player): boolean => {
+    let pokemonThatCanEvolve : Pokemon[] = []
+    let otherPokemon : Pokemon[] = []
+    toPlayer.board.forEach((pkm : Pokemon) => {
+        if (pkm.hasEvolution) pokemonThatCanEvolve.push(pkm)
+        else otherPokemon.push(pkm)
+    })
+    console.log(`Pkm that evolve: ${pokemonThatCanEvolve}`)
+    console.log(`Pkm in board: ${otherPokemon}`)
+
+    if (pokemonThatCanEvolve.length !== 0) {
+        const randomPkm = pickRandomIn(pokemonThatCanEvolve)
+        EvolutionManager.evolve(randomPkm, toPlayer)
+    } else {
+        if (otherPokemon.length === 0) return false // deny bundle if no units in board
+        const randomPkm2 = pickRandomIn(otherPokemon)
+        randomPkm2.addMaxHP(200)
+        randomPkm2.addAttack(10)
+        randomPkm2.addAbilityPower(50)
+        randomPkm2.addDefense(5)
+        randomPkm2.addSpecialDefense(5)
+        randomPkm2.addSpeed(20)
+        randomPkm2.addLuck(15)
+    }
+    return true
+}
+
+const giftExperienceAndRaiseLevelCap = (toPlayer: Player): boolean => {
+    toPlayer.experienceManager.maxLevel = 10
+    toPlayer.addExperience(40)
+    return true
+}
+
 export const armoryGiftService: { [key in ArmoryOptions ]? : (toPlayer: Player, fromPlayer: Player) => boolean } = {
     [FreeOptions.BERRYBUNDLE]: (toPlayer: Player, fromPlayer: Player) => giftAmountOfItem(toPlayer, 7, "BERRIES"),
     [FreeOptions.SWEETSBUNDLE]: (toPlayer: Player, fromPlayer: Player) => giftAmountOfItem(toPlayer, 5, "SWEETS"),
@@ -184,6 +219,7 @@ export const armoryGiftService: { [key in ArmoryOptions ]? : (toPlayer: Player, 
     [FreeOptions.TICKETBUNDLE] : (toPlayer: Player, fromPlayer: Player) => giftSetOfItems(toPlayer, "TICKETS"),
     [FreeOptions.HATCHBUNDLE] : (toPlayer: Player, fromPlayer: Player) => giftHatchPokemon(toPlayer, 2),
     [FreeOptions.REGIONBUNDLE] : (toPlayer: Player, fromPlayer: Player) => giftSetOfItems(toPlayer, "REGION"),
+    [FreeOptions.EVOLVEBUNDLE] : (toPlayer: Player, fromPlayer: Player) => evolveRandomPokemonInBoard(toPlayer),
     
     [PaidOptions.GEMSBUNDLE] : (toPlayer: Player, fromPlayer: Player) => giftAmountOfItem(toPlayer, 3, "GEMS"),
     [PaidOptions.POTION] : (toPlayer: Player, fromPlayer: Player) => giftPotion(toPlayer, fromPlayer),
@@ -196,4 +232,5 @@ export const armoryGiftService: { [key in ArmoryOptions ]? : (toPlayer: Player, 
     [PaidOptions.ULTRABUNDLE] : (toPlayer: Player, fromPlayer: Player) => giftRandomPokemonByRarity(toPlayer, Rarity.ULTRA),
     [PaidOptions.UNIQUEBUNDLE] : (toPlayer: Player, fromPlayer: Player) => giftRandomPokemonByRarity(toPlayer, Rarity.UNIQUE),
     [PaidOptions.LEGENDARYBUNDLE] : (toPlayer: Player, fromPlayer: Player) => giftRandomPokemonByRarity(toPlayer, Rarity.LEGENDARY),
+    [PaidOptions.EXPBUNDLE] : (toPlayer: Player, fromPlayer: Player) => giftExperienceAndRaiseLevelCap(toPlayer),
 }
