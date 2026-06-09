@@ -207,7 +207,7 @@ const evolveRandomPokemonInBoard = (toPlayer: Player): boolean => {
 
 const giftExperienceAndRaiseLevelCap = (toPlayer: Player): boolean => {
     toPlayer.experienceManager.maxLevel = 10
-    toPlayer.addExperience(40)
+    toPlayer.addExperience(32)
     return true
 }
 
@@ -219,8 +219,8 @@ export const armoryGiftService: { [key in ArmoryOptions ]? : (toPlayer: Player, 
     [FreeOptions.TICKETBUNDLE] : (toPlayer: Player, fromPlayer: Player) => giftSetOfItems(toPlayer, "TICKETS"),
     [FreeOptions.HATCHBUNDLE] : (toPlayer: Player, fromPlayer: Player) => giftHatchPokemon(toPlayer, 2),
     [FreeOptions.REGIONBUNDLE] : (toPlayer: Player, fromPlayer: Player) => giftSetOfItems(toPlayer, "REGION"),
-    [FreeOptions.EVOLVEBUNDLE] : (toPlayer: Player, fromPlayer: Player) => evolveRandomPokemonInBoard(toPlayer),
     
+    [PaidOptions.EVOLVEBUNDLE] : (toPlayer: Player, fromPlayer: Player) => evolveRandomPokemonInBoard(toPlayer),
     [PaidOptions.GEMSBUNDLE] : (toPlayer: Player, fromPlayer: Player) => giftAmountOfItem(toPlayer, 3, "GEMS"),
     [PaidOptions.POTION] : (toPlayer: Player, fromPlayer: Player) => giftPotion(toPlayer, fromPlayer),
     [PaidOptions.DELUXE_BOX] : (toPlayer: Player, fromPlayer: Player) => giftAmountOfItem(toPlayer, 2, "COMBINED_ITEMS"),
