@@ -185,8 +185,6 @@ const evolveRandomPokemonInBoard = (toPlayer: Player): boolean => {
         if (pkm.hasEvolution) pokemonThatCanEvolve.push(pkm)
         else otherPokemon.push(pkm)
     })
-    console.log(`Pkm that evolve: ${pokemonThatCanEvolve}`)
-    console.log(`Pkm in board: ${otherPokemon}`)
 
     if (pokemonThatCanEvolve.length !== 0) {
         const randomPkm = pickRandomIn(pokemonThatCanEvolve)
