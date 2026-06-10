@@ -17,6 +17,7 @@ import {
 import { isIn } from "../../../../../utils/array"
 import { ItemDetailTooltip } from "../../../game/components/item-detail"
 import { cc } from "../../utils/jsx"
+import { FreeOptions, PaidOptions } from "../../../../../types/enum/ArmoryOptions"
 
 export default function ItemPicker(props: {
   selected?: PkmWithCustom | Item
@@ -60,6 +61,11 @@ export default function ItemPicker(props: {
             label: t("wands"),
             key: "wands",
             items: Wands
+          },
+          {
+            label: t("bundles"),
+            key: "bundles",
+            items: [...Object.values(FreeOptions), ...Object.values(PaidOptions)] as unknown as Item[]
           }
         ]
       : []),
