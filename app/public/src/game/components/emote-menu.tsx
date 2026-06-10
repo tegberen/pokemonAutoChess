@@ -63,7 +63,7 @@ export function EmoteMenuComponent(props: {
         ))}
       </ul>
       <ul className="text-emotes">
-        {["⇌ ?", "✗", "OK", "ME"].map((text) => (
+        {["ME", "YOU", "FREE ⛶", "⇌ ?", "✗", "OK"].map((text) => (
           <li key={text} onClick={() => props.sendTextEmote(text)}>
             <span style={{ fontSize: "1.5em", fontWeight: "bold", padding: "4px 8px", cursor: "pointer" }}>{text}</span>
           </li>
