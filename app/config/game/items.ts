@@ -3,7 +3,7 @@ import { Item, type ItemsSoldAtTown } from "../../types/enum/Item"
 
 export const ItemStats: { [item in Item]?: { [stat in Stat]?: number } } = {
   [Item.BINDING_BAND]: { [Stat.LUCK]: 10 },
-  [Item.SOOTHE_BELL]: { [Stat.LUCK]: 10, [Stat.HP]: 50 },
+  [Item.SOOTHE_BELL]: { [Stat.LUCK]: 10, [Stat.HP]: 30 },
   [Item.EXP_CHARM]: { [Stat.LUCK]: 10, [Stat.PP]: 15 },
   [Item.FAIRY_FEATHER]: { [Stat.LUCK]: 10, [Stat.DEF]: 20 },
   [Item.CLEAR_AMULET]: { [Stat.LUCK]: 10, [Stat.SPE_DEF]: 20 },

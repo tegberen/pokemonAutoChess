@@ -46,7 +46,7 @@
 
 ## The BINDING_BAND
 - SOOTHE_BELL: Grant the lowest HP ally 30 SHIELD every 3 seconds. Has a [30,LK]% chance to convert that ally’s remaining SHIELD into HP.
-> It is a support item, that you should use on a ranged unit. Could also work on the frontline, when paired with some tank items. Otherwise +50 HP makes your backline holder less squishy!
+> It is a support item, that you should use on a ranged unit. Could also work on the frontline, when paired with some tank items.
 - EXP_CHARM: The holder gains 2 PP after getting hit by an attack. [30,LK]% chance to increase that PP gain by 1 after each received hit. When the holder is KO, gain 1 XP.
 > Good for loose streaker! Use it in the early game, to level faster and start catching up. Otherwise it is a tool to gain alot of PP when paired with a tank item like ROCKY_HELMET or POKE_DOLL. Also good to generate more PP, when having SHIELD.
 - FAIRY_FEATHER: Attacks have a [30,LK]% chance to deal 50% of the users current DEF as additional SPECIAL on attack.
