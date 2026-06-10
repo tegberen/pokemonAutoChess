@@ -1305,16 +1305,13 @@ export class OnUpdateCommand extends Command<
     const partnerTeam = partnerIsBlue ? Team.BLUE_TEAM : Team.RED_TEAM
 
     if (!partnerIsBlue && target.redPlayer?.id !== winnerPlayer.doubleUpPartnerId) {
-      logger.warn(
-        `[DoubleUp] sendReinforcements: winner ${winnerPlayer.id} not found in target simulation`
-      )
       return
     }
 
     const winningTeam = winnerIsBlue ? source.blueTeam : source.redTeam
     const survivors: PokemonEntity[] = []
     winningTeam.forEach((e) => {
-      if (e.hp > 0) survivors.push(e as PokemonEntity)
+      if (e.hp > 0 && !e.name.startsWith("UNOWN")) survivors.push(e as PokemonEntity)
     })
     if (survivors.length === 0) return
 
@@ -1332,6 +1329,13 @@ export class OnUpdateCommand extends Command<
         true,
         true // skip synergy effects from partner
       )
+      reinforcement.sourcePlayer = winnerPlayer
+      // e.g. comfey will be attached here
+      entity.items.forEach(item => {
+        if (!reinforcement.items.has(item)) {
+          reinforcement.items.add(item)
+        }
+      })
       // negative status effects are not carried over, therefore do not bring over (most) positive status effects
       // positive effects we ignore: spikeArmor, magigBounce, reflect, pokerus, rage
 

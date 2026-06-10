@@ -147,6 +147,7 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
   refToBoardPokemon: IPokemon
   commands = new Array<SimulationCommand>()
   effectsSet = new Set<EffectClass>()
+  sourcePlayer: Player | undefined = undefined
 
   constructor(
     pokemon: IPokemon,
@@ -284,6 +285,7 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
   }
 
   get player(): Player | undefined {
+    if (this.sourcePlayer) return this.sourcePlayer
     const player =
       this.baseTeam === Team.BLUE_TEAM
         ? this.simulation.bluePlayer
