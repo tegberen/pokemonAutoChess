@@ -1987,6 +1987,7 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
     if (this.state.gameMode === GameMode.DOUBLE_UP) {
       this.applyDoubleUpDamage()
       this.syncTeamLife()
+      this.room.rankPlayers()
     }
 
     // Double Up: countdown Prison Bottle cooldown
