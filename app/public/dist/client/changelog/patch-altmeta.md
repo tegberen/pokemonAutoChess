@@ -59,7 +59,7 @@
 > Use your positioning knowledge to get rid of annoying tank items. Time to scout!
 - GRIP_CLAW: Attacks grant +10% CRIT_POWER. (stackable)
 - COVERT_CLOAK: Every 3 seconds, steal 10 AP from all enemies within RANGE and deal 10 SPECIAL to them.
-> This item is a way to make any 2 RANGE carry less vulnerable, by giving it +1 more RANGE. Try to pair it with POKEMONOMICON, or just use the 50 AP to deal alot of damage. The AP stealing can help against PSYCHIC, ARTIFICIAL or DRAGON comps!
+> This item is a way to make any 2 RANGE carry less vulnerable, by giving it +1 more RANGE. Try to pair it with POKEMONOMICON, or just use the 30 AP to deal alot of damage. The AP stealing can help against PSYCHIC, ARTIFICIAL or DRAGON comps!
 - FLUFFY_TAIL: Gains [15,LK]% dodge chance. The holder is immune to ARMOR_BREAK.
 > If you have survived GHOST Togekiss meta, beating this will be a breeze.
 - EVER_STONE: The holder gains the ROCK type.
