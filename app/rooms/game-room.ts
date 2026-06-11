@@ -1264,6 +1264,7 @@ export default class GameRoom extends Room<{ state: GameState }> {
       const res = giftEffect?.(partner, player);
 
       if (!res) return
+      player.doubleUpGifts.push(gift)
       player.money -= ArmoryOptionsPrice[gift]
     }
 

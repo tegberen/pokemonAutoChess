@@ -36,6 +36,7 @@ import type { Pkm } from "./enum/Pokemon"
 import type { Synergy } from "./enum/Synergy"
 import type { Weather } from "./enum/Weather"
 import type { GameStats } from "./interfaces/GameStats"
+import { ArmoryOptions } from "./enum/ArmoryOptions"
 
 export * from "./enum/Emotion"
 export * from "./enum/FlowerPot"
@@ -262,6 +263,7 @@ export interface IPlayer {
   doubleUpPartnerId: string
   doubleUpTeamId: string
   doubleUpEliminationRound: number
+  doubleUpGifts: ArraySchema<ArmoryOptions>
   opponentId: string
   opponentName: string
   opponentAvatar: string
