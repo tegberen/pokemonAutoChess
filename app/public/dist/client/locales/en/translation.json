@@ -2574,7 +2574,8 @@
 		"LEGENDARY_BUNDLE": "Legendary Rarity Bundle",
 		"REGION_BUNDLE": "Regional Rolls Bundle",
 		"EXP_BUNDLE": "Level Up Bundle",
-		"EVOLVE_BUNDLE": "Evolution Bundle"
+		"EVOLVE_BUNDLE": "Evolution Bundle",
+		"COOKING_BUNDLE": "Cooking Bundle"
 	},
 	"item": {
 		"FOSSIL_STONE": "Fossil Stone",
@@ -2912,8 +2913,8 @@
 		"TOOL_BUNDLE" : "Gift 3 random tools to your partner.",
 		"BERRY_BUNDLE": "Gift 7 random $t(item.BERRIES) to your partner. Wouldn't be a problem if you used the koffing berries.",
 		"UNOWN_BUNDLE": "Gift 5 random Unown to your partner.",
-		"SWEETS_BUNDLE": "Gift 5 random $t(item.SWEETS) to your partner.",
-		"HATCH_BUNDLE": "Gift 2 random Hatch Pokémon to your partner. They come freshly hatched, so no omelettes allowed.",
+		"SWEETS_BUNDLE": "Gift 7 random $t(item.SWEETS) to your partner.",
+		"HATCH_BUNDLE": "Gift 2 random Hatch Pokémon to your partner. Trained in the Dojo from a young age. 5% chance to receive a Golden Egg instead.",
 		"TICKET_BUNDLE": "Gift a bundle containing a $t(item.EXCHANGE_TICKET), a $t(item.RECYCLE_TICKET) and a $t(item.BRONZE_DOJO_TICKET) to your partner.",
 		"DITTO_BUNDLE": "Gift a Ditto to your partner. Your partner needs to have at least one free space on the bench.",
 		"GEMS_BUNDLE": "Gift 3 synergy gems to your partner.",
@@ -2926,7 +2927,8 @@
 		"LEGENDARY_BUNDLE": "Gift a random Legendary Pokémon to your partner. It will have one of your partner's 2 highest active synergies.",
 		"REGION_BUNDLE": "Gift a $t(item.LAPRAS_PASSPORT) to your partner and 10 free shop rolls. Let's get those regionals!",
 		"EXP_BUNDLE": "Your partner gains 32 experience and their max level is set to 10. Amofus angle.",
-		"EVOLVE_BUNDLE": "Evolve one random Pokémon from your partner's board. If no Pokémon on the board can evolve, one of them will receive a big stat-boost."
+		"EVOLVE_BUNDLE": "Evolve one random Pokémon from your partner's board. If no Pokémon on the board can evolve, one of them will receive a big stat-boost.",
+		"COOKING_BUNDLE": "Give a random dish to every Pokémon on your partner's board and bench. On top of that get one mushroom of each type and a picnic set. Bon appetit!"
 	},
 	"item_description": {
 		"FOSSIL_STONE": "A fossil of a Pokémon that lived in prehistoric times",
