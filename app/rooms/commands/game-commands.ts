@@ -1655,8 +1655,8 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
 
       partnersToPrompt.forEach((p) => {
         const armoryChoices : ArmoryOptions[] = [];
-        armoryChoices.push(pickRandomIn(FreeOptions));
-        const paidOptions = pickNRandomIn([...Object.values(PaidOptions)], 2)
+        armoryChoices.push(pickRandomIn([...Object.values(FreeOptions)].filter((gift) => !p.doubleUpGifts.includes(gift))));
+        const paidOptions = pickNRandomIn([...Object.values(PaidOptions)].filter((gift) => !p.doubleUpGifts.includes(gift)), 2)
         paidOptions.forEach((op) => armoryChoices.push(op))
 
         p.choices.push(
