@@ -18,6 +18,7 @@ import { isIn } from "../../../../../utils/array"
 import { ItemDetailTooltip } from "../../../game/components/item-detail"
 import { cc } from "../../utils/jsx"
 import { FreeOptions, PaidOptions } from "../../../../../types/enum/ArmoryOptions"
+import { BundleDetailTooltip } from "../../../game/components/bundle-detail"
 
 export default function ItemPicker(props: {
   selected?: PkmWithCustom | Item
@@ -106,7 +107,7 @@ export default function ItemPicker(props: {
               className={cc("item", {
                 selected: item === props.selected
               })}
-              data-tooltip-id="item-detail-tooltip"
+              data-tooltip-id={t.key === "bundles" ? "bundle-detail-tooltip" : "item-detail-tooltip"} 
               data-tooltip-content={item}
               onClick={() => props.selectEntity?.(item)}
               draggable
@@ -116,6 +117,7 @@ export default function ItemPicker(props: {
         </TabPanel>
       ))}
       <ItemDetailTooltip />
+      <BundleDetailTooltip /> 
     </Tabs>
   )
 }
