@@ -91,7 +91,7 @@ export default function ItemPicker(props: {
           {t.items.map((item) => (
             <img
               key={item}
-              src={"assets/item/" + Item[item] + ".png"}
+              src={"assets/item/" + item + ".png"}
               className={cc("item", {
                 selected: item === props.selected
               })}
