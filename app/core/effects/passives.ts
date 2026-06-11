@@ -2227,7 +2227,7 @@ export const PassiveEffects: Partial<
         (pokemon) => {
           const { weather } = pokemon.simulation
           if (weather === Weather.SNOW) {
-            pokemon.handleHeal(0.1 * pokemon.maxHP, pokemon, 0, false)
+            pokemon.handleHeal(0.2 * pokemon.maxHP, pokemon, 0, false)
           }
         },
         Passive.ICE_BODY,

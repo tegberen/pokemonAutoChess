@@ -1394,7 +1394,7 @@ export class Roggenrola extends Pokemon {
   speed = 37
   def = 8
   speDef = 6
-  maxPP = 90
+  maxPP = 100
   range = 2
   skill = Ability.ROCK_ARTILLERY
 }
@@ -1409,7 +1409,7 @@ export class Boldore extends Pokemon {
   speed = 37
   def = 12
   speDef = 10
-  maxPP = 90
+  maxPP = 100
   range = 2
   skill = Ability.ROCK_ARTILLERY
 }
@@ -1423,7 +1423,7 @@ export class Gigalith extends Pokemon {
   speed = 37
   def = 16
   speDef = 14
-  maxPP = 90
+  maxPP = 100
   range = 2
   skill = Ability.ROCK_ARTILLERY
 }
@@ -1830,7 +1830,7 @@ export class Slakoth extends Pokemon {
   speed = 57
   def = 10
   speDef = 8
-  maxPP = 100
+  maxPP = 140
   range = 1
   skill = Ability.SLACK_OFF
   regional = true
@@ -1846,7 +1846,7 @@ export class Vigoroth extends Pokemon {
   speed = 57
   def = 10
   speDef = 8
-  maxPP = 100
+  maxPP = 140
   range = 1
   skill = Ability.SLACK_OFF
   passive = Passive.VIGOROTH
@@ -1862,7 +1862,7 @@ export class Slaking extends Pokemon {
   speed = 57
   def = 14
   speDef = 10
-  maxPP = 100
+  maxPP = 140
   range = 1
   skill = Ability.SLACK_OFF
   passive = Passive.SLAKING
@@ -4083,7 +4083,7 @@ export class Spheal extends Pokemon {
   stars = 1
   evolution = Pkm.SEALEO
   hp = 100
-  atk = 4
+  atk = 6
   speed = 46
   def = 4
   speDef = 4
@@ -4099,7 +4099,7 @@ export class Sealeo extends Pokemon {
   stars = 2
   evolution = Pkm.WALREIN
   hp = 250
-  atk = 8
+  atk = 10
   speed = 46
   def = 5
   speDef = 5
@@ -4114,7 +4114,7 @@ export class Walrein extends Pokemon {
   rarity = Rarity.EPIC
   stars = 3
   hp = 500
-  atk = 12
+  atk = 14
   speed = 46
   def = 6
   speDef = 6
@@ -4583,8 +4583,8 @@ export class Cyndaquil extends Pokemon {
   hp = 90
   atk = 7
   speed = 51
-  def = 2
-  speDef = 2
+  def = 4
+  speDef = 4
   maxPP = 100
   range = 2
   skill = Ability.WHEEL_OF_FIRE
@@ -4604,11 +4604,11 @@ export class Quilava extends Pokemon {
       else return Pkm.TYPHLOSION
     }
   } satisfies CountEvolutionRule
-  hp = 150
-  atk = 15
+  hp = 160
+  atk = 16
   speed = 51
-  def = 4
-  speDef = 6
+  def = 8
+  speDef = 10
   maxPP = 100
   range = 2
   skill = Ability.WHEEL_OF_FIRE
@@ -4619,10 +4619,10 @@ export class Typhlosion extends Pokemon {
   rarity = Rarity.EPIC
   stars = 3
   hp = 320
-  atk = 28
+  atk = 32
   speed = 51
-  def = 6
-  speDef = 10
+  def = 12
+  speDef = 14
   maxPP = 100
   range = 2
   skill = Ability.WHEEL_OF_FIRE
@@ -4633,10 +4633,10 @@ export class HisuianTyphlosion extends Pokemon {
   rarity = Rarity.EPIC
   stars = 3
   hp = 320
-  atk = 28
+  atk = 32
   speed = 51
-  def = 6
-  speDef = 10
+  def = 12
+  speDef = 14
   maxPP = 100
   range = 2
   skill = Ability.INFERNAL_PARADE
@@ -11632,7 +11632,7 @@ export class Scorbunny extends Pokemon {
   speed = 67
   def = 2
   speDef = 2
-  maxPP = 80
+  maxPP = 90
   range = 3
   skill = Ability.PYRO_BALL
 }
@@ -11657,7 +11657,7 @@ export class Raboot extends Pokemon {
   speed = 67
   def = 4
   speDef = 4
-  maxPP = 80
+  maxPP = 90
   range = 3
   skill = Ability.PYRO_BALL
   passive = Passive.RABOOT
@@ -11682,7 +11682,7 @@ export class CinderacePirate extends Pokemon {
   rarity = Rarity.COMMON
   stars = 3
   hp = 150
-  atk = 16
+  atk = 15
   speed = 67
   def = 5
   speDef = 5

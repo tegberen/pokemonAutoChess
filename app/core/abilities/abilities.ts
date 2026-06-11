@@ -465,7 +465,7 @@ export class FrenzyPlantStrategy extends AbilityStrategy {
     crit: boolean
   ) {
     super.process(pokemon, board, target, crit,true)
-    const baseDamage = [15, 30, 60][pokemon.stars - 1] ?? 60
+    const baseDamage = [20, 40, 80][pokemon.stars - 1] ?? 80
     const adjacentEnemies = board
       .getAdjacentCells(target.positionX, target.positionY)
       .filter((cell) => cell.value && cell.value.team !== pokemon.team).length
@@ -957,7 +957,7 @@ export class SlackOffStrategy extends AbilityStrategy {
   process(pokemon: PokemonEntity, board: Board, target: null, crit: boolean) {
     super.process(pokemon, board, target, crit)
     pokemon.status.clearNegativeStatus(pokemon, pokemon)
-    const healFactor = 0.3
+    const healFactor = 1
     pokemon.handleHeal(pokemon.maxHP * healFactor, pokemon, 1, crit)
     pokemon.status.triggerSleep(3000, pokemon)
   }
@@ -15205,6 +15205,9 @@ export class RockArtilleryStrategy extends AbilityStrategy {
                 pokemon,
                 crit
               )
+              if (chance(0.3, pokemon)) {
+                targetCell.value.status.triggerLocked(1000, targetCell.value)
+              }
             }
           }, i * 100)
         )
