@@ -321,11 +321,6 @@ function sendPokemonToPartner(
 
   // Remove from sender's board
   sender.board.delete(pokemon.id)
-  const itemsToReturn = schemaValues(pokemon.items)
-  pokemon.removeItems(itemsToReturn, sender)
-  itemsToReturn.forEach((item) => {
-    sender.items.push(item)
-  })
   sender.updateSynergies()
   sender.boardSize = room.getTeamSize(sender.board)
 
@@ -345,6 +340,14 @@ function sendPokemonToPartner(
       }
       return
     }
+    // success: remove items
+    const itemsToReturn = schemaValues(pokemon.items)
+    pokemon.removeItems(itemsToReturn, sender)
+    itemsToReturn.forEach((item) => {
+      sender.items.push(item)
+    })
+    sender.updateSynergies()
+
     pokemon.positionX = freeX
     pokemon.positionY = 0
     partner.board.set(pokemon.id, pokemon)
@@ -1331,11 +1334,8 @@ export class OnUpdateCommand extends Command<
       )
       reinforcement.sourcePlayer = winnerPlayer
       // e.g. comfey will be attached here
-      entity.items.forEach(item => {
-        if (!reinforcement.items.has(item)) {
-          reinforcement.items.add(item)
-        }
-      })
+      reinforcement.items.clear()
+      entity.items.forEach(item => reinforcement.items.add(item))
       // negative status effects are not carried over, therefore do not bring over (most) positive status effects
       // positive effects we ignore: spikeArmor, magigBounce, reflect, pokerus, rage
 
