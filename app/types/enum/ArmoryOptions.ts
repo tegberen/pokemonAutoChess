@@ -6,6 +6,7 @@ export enum FreeOptions {
     TICKETBUNDLE = "TICKET_BUNDLE",
     HATCHBUNDLE = "HATCH_BUNDLE",
     REGIONBUNDLE = "REGION_BUNDLE",
+    COOKINGBUNDLE = "COOKING_BUNDLE",
 }
 
 export enum PaidOptions {
@@ -33,6 +34,7 @@ export const ArmoryOptionsPrice: { [key in ArmoryOptions ] : number } = {
     [FreeOptions.TICKETBUNDLE] : 0,
     [FreeOptions.HATCHBUNDLE] : 0,
     [FreeOptions.REGIONBUNDLE] : 0,
+    [FreeOptions.COOKINGBUNDLE] : 0,
     
     [PaidOptions.EVOLVEBUNDLE] : 15,
     [PaidOptions.GEMSBUNDLE] : 5,

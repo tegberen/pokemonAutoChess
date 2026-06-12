@@ -1,17 +1,19 @@
+import { SetSchema } from "@colyseus/schema"
 import { EvolutionTime, getBaseAltForm, PkmsWithAltForms } from "../config"
+import { giveRandomEgg } from "../core/eggs"
 import { EvolutionManager } from "../core/evolution-logic/evolution-manager"
 import Player from "../models/colyseus-models/player"
 import { Pokemon } from "../models/colyseus-models/pokemon"
 import PokemonFactory from "../models/pokemon-factory"
 import { getPokemonData } from "../models/precomputed/precomputed-pokemon-data"
 import { PRECOMPUTED_POKEMONS_PER_RARITY } from "../models/precomputed/precomputed-rarity"
-import { Berries, CraftableItemsNoScarves, Item, Sweets, SynergyGems, SynergyGivenByGem, Tools } from "../types"
+import { Berries, CraftableItemsNoScarves, Dishes, IPokemon, Item, Sweets, SynergyGems, SynergyGivenByGem, Tools } from "../types"
 import { FreeOptions, PaidOptions, ArmoryOptions } from "../types/enum/ArmoryOptions"
 import { Rarity } from "../types/enum/Game"
 import { Pkm, Unowns } from "../types/enum/Pokemon"
 import { Synergy } from "../types/enum/Synergy"
 import { getFirstAvailablePositionInBench, getFreeSpaceOnBench } from "../utils/board"
-import { pickNRandomIn, pickRandomIn } from "../utils/random"
+import { pickNRandomIn, pickRandomIn, randomWeighted } from "../utils/random"
 
 const giftAmountOfItem = (toPlayer: Player, amount: number, itemName: string): boolean => {
     if (itemName === "BERRIES") {
@@ -89,21 +91,29 @@ const giftHatchPokemon = (toPlayer: Player, amount: number): boolean => {
     const spaceInBench = getFreeSpaceOnBench(toPlayer.board)
     if (spaceInBench < amount) return false
 
-    const hatchList = PRECOMPUTED_POKEMONS_PER_RARITY.HATCH.filter((p) => getPokemonData(p).stars === 1)
-
-    let randomHatches = pickNRandomIn(hatchList, amount)
-
-    randomHatches.forEach((pkm) => {
-        const replacement = PokemonFactory.createPokemonFromName(getPokemonData(pkm).name, toPlayer)
-        const freeCellX = getFirstAvailablePositionInBench(toPlayer.board)
+    var d = Math.random() // 5% chance of getting a golden egg
+    if (d > 0.05) {
+        const hatchList = PRECOMPUTED_POKEMONS_PER_RARITY.HATCH.filter((p) => getPokemonData(p).stars === 1)
     
-        if (freeCellX === null) return false
-        replacement.stacksRequired = EvolutionTime.EVOLVE_HATCH
-        replacement.positionX = freeCellX
-        replacement.positionY = 0
-        toPlayer.board.set(replacement.id, replacement)
-        replacement.onAcquired(toPlayer)
-    })
+        let randomHatches = pickNRandomIn(hatchList, amount)
+    
+        randomHatches.forEach((pkm) => {
+            const replacement = PokemonFactory.createPokemonFromName(getPokemonData(pkm).name, toPlayer)
+            const freeCellX = getFirstAvailablePositionInBench(toPlayer.board)
+        
+            if (freeCellX === null) return false
+            replacement.stacksRequired = EvolutionTime.EVOLVE_HATCH
+            replacement.positionX = freeCellX
+            replacement.positionY = 0
+            replacement.addMaxHP(50)
+            replacement.addAttack(5)
+            replacement.addAbilityPower(15)
+            toPlayer.board.set(replacement.id, replacement)
+            replacement.onAcquired(toPlayer)
+        })
+    } else {
+        giveRandomEgg(toPlayer, true)
+    }
 
     return true
 }
@@ -209,14 +219,42 @@ const giftExperienceAndRaiseLevelCap = (toPlayer: Player): boolean => {
     return true
 }
 
+const giftFoodAndPicnic = (toPlayer: Player): boolean => {
+    toPlayer.board.forEach((p: IPokemon) => {
+        if (p.canEat) {
+            let randomDish = pickRandomIn(Dishes.filter((d) => d !== Item.HERBA_MYSTICA))
+            if (randomDish === Item.SWEETS) {
+                randomDish = pickRandomIn(Sweets)
+            } else if (randomDish === Item.MUSHROOMS) {
+                randomDish =
+                    randomWeighted({
+                    [Item.TINY_MUSHROOM]: 77,
+                    [Item.BIG_MUSHROOM]: 20,
+                    [Item.BALM_MUSHROOM]: 3
+                    }) ?? Item.TINY_MUSHROOM
+            }
+
+            p.dishes.add(randomDish)
+        }
+    })
+
+    toPlayer.items.push(Item.TINY_MUSHROOM)
+    toPlayer.items.push(Item.BIG_MUSHROOM)
+    toPlayer.items.push(Item.BALM_MUSHROOM)
+    toPlayer.items.push(Item.PICNIC_SET)
+
+    return true
+}
+
 export const armoryGiftService: { [key in ArmoryOptions ]? : (toPlayer: Player, fromPlayer: Player) => boolean } = {
     [FreeOptions.BERRYBUNDLE]: (toPlayer: Player, fromPlayer: Player) => giftAmountOfItem(toPlayer, 7, "BERRIES"),
-    [FreeOptions.SWEETSBUNDLE]: (toPlayer: Player, fromPlayer: Player) => giftAmountOfItem(toPlayer, 5, "SWEETS"),
+    [FreeOptions.SWEETSBUNDLE]: (toPlayer: Player, fromPlayer: Player) => giftAmountOfItem(toPlayer, 7, "SWEETS"),
     [FreeOptions.UNOWNBUNDLE]: (toPlayer: Player, fromPlayer: Player) => giftAmountOfPokemon(toPlayer, 5, Pkm.UNOWN_A),
     [FreeOptions.DITTOBUNDLE]: (toPlayer: Player, fromPlayer: Player) => giftAmountOfPokemon(toPlayer, 1, Pkm.DITTO),
     [FreeOptions.TICKETBUNDLE] : (toPlayer: Player, fromPlayer: Player) => giftSetOfItems(toPlayer, "TICKETS"),
     [FreeOptions.HATCHBUNDLE] : (toPlayer: Player, fromPlayer: Player) => giftHatchPokemon(toPlayer, 2),
     [FreeOptions.REGIONBUNDLE] : (toPlayer: Player, fromPlayer: Player) => giftSetOfItems(toPlayer, "REGION"),
+    [FreeOptions.COOKINGBUNDLE] : (toPlayer: Player, fromPlayer: Player) => giftFoodAndPicnic(toPlayer),
     
     [PaidOptions.EVOLVEBUNDLE] : (toPlayer: Player, fromPlayer: Player) => evolveRandomPokemonInBoard(toPlayer),
     [PaidOptions.GEMSBUNDLE] : (toPlayer: Player, fromPlayer: Player) => giftAmountOfItem(toPlayer, 3, "GEMS"),
