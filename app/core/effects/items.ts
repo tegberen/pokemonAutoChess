@@ -558,7 +558,7 @@ export class CovertCloakEffect extends PeriodicEffect {
             enemy.addAbilityPower(-apSteal, enemy, 0, false)
             pokemon.addAbilityPower(apSteal, pokemon, 0, false)
             enemy.handleSpecialDamage(
-              10,
+              5,
               board,
               AttackType.SPECIAL,
               pokemon,
