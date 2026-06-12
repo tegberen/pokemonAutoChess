@@ -3124,7 +3124,7 @@
 		"GREEN_ORB": "Holder and ADJACENT allies regain 3% of their max HP every second. 30% of overheal is converted to PP.",
 		"DEEP_SEA_TOOTH": "The holder attacks restore 5 additional PP. If the attack knocks out the target, restore 15 additional PP.",
 		"SMOKE_BALL": "Once below 40% max HP, drop the smoke ball, gain 70 SHIELD and jump to a tile away. Every ADJACENT enemy is PARALYSIS and BLINDED for 4 seconds.",
-		"XRAY_VISION": "Holder is immune to SLEEP and their attacks can no longer miss.",
+		"XRAY_VISION": "Holder is immune to SLEEP and their attacks can no longer miss. Attacks have [30,LK] % chance to inflict FLINCH for 3 seconds.",
 		"RAZOR_FANG": "+100% CRIT_POWER. Critical attacks apply ARMOR_BREAK for 2 seconds.",
 		"PROTECTIVE_PADS": "Holder deals double damage against units with  SHIELD, and is protected from recoil damage and retaliation effects.",
 		"LOADED_DICE": "Attacks have [50,LK]% chance to also hit the lowest health enemy ADJACENT to target for 75% of the damage, which also trigger on-hit effects.",

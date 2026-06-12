@@ -555,8 +555,10 @@ export class CovertCloakEffect extends PeriodicEffect {
             if (!cell.value || cell.value.team === pokemon.team) return
             const enemy = cell.value
             const apSteal = Math.min(10, enemy.ap)
-            enemy.addAbilityPower(-apSteal, enemy, 0, false)
-            pokemon.addAbilityPower(apSteal, pokemon, 0, false)
+            if (enemy.items.has(Item.TWIST_BAND) === false) {
+              enemy.addAbilityPower(-apSteal, enemy, 0, false)
+              pokemon.addAbilityPower(-apSteal, pokemon, 0, false)
+            }
             enemy.handleSpecialDamage(
               5,
               board,
@@ -775,7 +777,14 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
   [Item.XRAY_VISION]: [
     new OnItemGainedEffect((pokemon) => {
       pokemon.effects.add(EffectEnum.IMMUNITY_SLEEP)
+    }),
+    new OnAttackEffect(({ pokemon, target }) => {
+      if (!target) return
+      if (chance(0.3, pokemon)) {
+        target.status.triggerFlinch(3000, pokemon)
+      }
     })
+
   ],
 
   [Item.POKERUS_VIAL]: [
