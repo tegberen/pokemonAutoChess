@@ -1171,6 +1171,9 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
     new OnAbilityCastEffect((pokemon) => {
       pokemon.addShield(Math.round(0.5 * pokemon.maxPP), pokemon, 0, false)
       pokemon.count.starDustCount++
+    }),
+    new OnItemGainedEffect((pokemon) => {
+      pokemon.effects.add(EffectEnum.IMMUNITY_BURN)
     })
   ],
 
