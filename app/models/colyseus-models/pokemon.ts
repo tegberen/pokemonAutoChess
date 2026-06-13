@@ -11628,11 +11628,11 @@ export class Scorbunny extends Pokemon {
   stars = 1
   evolution = Pkm.RABOOT
   hp = 50
-  atk = 5
+  atk = 4
   speed = 67
   def = 2
   speDef = 2
-  maxPP = 90
+  maxPP = 100
   range = 3
   skill = Ability.PYRO_BALL
 }
@@ -11653,11 +11653,11 @@ export class Raboot extends Pokemon {
   } as const
 
   hp = 80
-  atk = 12
+  atk = 7
   speed = 67
   def = 4
   speDef = 4
-  maxPP = 90
+  maxPP = 100
   range = 3
   skill = Ability.PYRO_BALL
   passive = Passive.RABOOT
@@ -11668,11 +11668,11 @@ export class Cinderace extends Pokemon {
   rarity = Rarity.COMMON
   stars = 3
   hp = 150
-  atk = 19
+  atk = 15
   speed = 67
   def = 5
   speDef = 5
-  maxPP = 90
+  maxPP = 100
   range = 3
   skill = Ability.PYRO_BALL
 }
@@ -11682,11 +11682,11 @@ export class CinderacePirate extends Pokemon {
   rarity = Rarity.COMMON
   stars = 3
   hp = 150
-  atk = 15
+  atk = 12
   speed = 67
   def = 5
   speDef = 5
-  maxPP = 80
+  maxPP = 100
   range = 3
   skill = Ability.PYRO_BALL
   passive = Passive.CINDERACE_PIRATE
