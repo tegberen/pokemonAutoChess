@@ -146,7 +146,7 @@ export class LightOfRuinStrategy extends AbilityStrategy {
         cell.value.handleSpecialDamage(damage, board, AttackType.SPECIAL, pokemon, crit)
       }
     })
-    const lostMaxHP = Math.floor(pokemon.maxHP * 0.5)
+    const lostMaxHP = Math.floor(pokemon.maxHP * 0.75)
     pokemon.addMaxHP(-lostMaxHP, pokemon, 0, false)
 
   }
