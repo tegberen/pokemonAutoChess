@@ -1174,6 +1174,9 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
     }),
     new OnItemGainedEffect((pokemon) => {
       pokemon.effects.add(EffectEnum.IMMUNITY_BURN)
+      pokemon.status.burn = false,
+      pokemon.status.burnCooldown = 0,
+      pokemon.status.burnOrigin = undefined
     })
   ],
 
