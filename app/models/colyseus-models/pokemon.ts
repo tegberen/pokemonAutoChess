@@ -119,6 +119,7 @@ export class Pokemon extends Schema implements IPokemon {
   canBeSold = true
   baseSkill: Ability = Ability.DEFAULT
   baseMaxPP: number = 100
+  boosterEnergyCount: number= 0
 
   constructor(name: Pkm, shiny = false, emotion = Emotion.NORMAL) {
     super()

@@ -967,22 +967,21 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
     })
   ],
   [Item.BOOSTER_ENERGY]: [
-    () => new class extends OnKillEffect {
-      killCount = 0
-      constructor() {
-        super(({ attacker }) => {
-          if (!attacker.player) return
-          this.killCount++
-          attacker.count.boosterEnergyCount++
-          if (this.killCount % 4 === 0) {
-            const component = pickRandomIn(ItemComponents)
-            attacker.player.items.push(component)
-          }
-        })
-      }
-    }()
-  ],
+    new OnKillEffect(({ attacker }) => {
+      if (!attacker.player) return
 
+      const pokemon = attacker.refToBoardPokemon
+      pokemon.boosterEnergyCount = (pokemon.boosterEnergyCount ?? 0) + 1
+
+      const stack = pokemon.boosterEnergyCount % 5
+      attacker.count.boosterEnergyCount = stack === 0 ? 5 : stack
+
+      if (pokemon.boosterEnergyCount % 5 === 0) {
+        const component = pickRandomIn(ItemComponents)
+        attacker.player.items.push(component)
+      }
+    })
+  ],
   [Item.SMOKE_BALL]: [smokeBallEffect],
 
   [Item.COMFEY]: [
@@ -1862,6 +1861,14 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
     new OnAttackEffect(({ pokemon, target }) => {
       if (target && pokemon.speed > target.speed && chance(0.3, pokemon)) {
         target.status.triggerArmorReduction(3000, target)
+      }
+    })
+  ],
+  [Item.FAIRY_FEATHER]: [
+    new OnAttackEffect(({ pokemon, target }) => {
+      if (!target) return
+      if (target && chance(0.3, pokemon) && target.items.has(Item.TWIST_BAND) === false) {
+        target.addAttack(-2, target, 0, false)
       }
     })
   ]

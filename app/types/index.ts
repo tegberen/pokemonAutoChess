@@ -355,6 +355,7 @@ export interface IPokemon {
   readonly hasEvolution: boolean
   supercharged: boolean
   aura: boolean
+  boosterEnergyCount: number
 }
 
 export interface IExperienceManager {
