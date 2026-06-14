@@ -554,7 +554,7 @@ export class CovertCloakEffect extends PeriodicEffect {
           .forEach((cell) => {
             if (!cell.value || cell.value.team === pokemon.team) return
             const enemy = cell.value
-            const apSteal = Math.min(10, enemy.ap)
+            const apSteal = Math.min(5, enemy.ap)
             if (enemy.items.has(Item.TWIST_BAND) === false) {
               enemy.addAbilityPower(-apSteal, enemy, 0, false)
               pokemon.addAbilityPower(-apSteal, pokemon, 0, false)
@@ -570,7 +570,7 @@ export class CovertCloakEffect extends PeriodicEffect {
           })
       },
       Item.COVERT_CLOAK,
-      3000
+      4000
     )
   }
 }
