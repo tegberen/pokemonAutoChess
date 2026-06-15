@@ -915,6 +915,16 @@ export class OnDragDropItemCommand extends Command<
       pokemon.name === Pkm.PILLAR_WOOD ||
       pokemon.name === Pkm.PILLAR_IRON ||
       pokemon.name === Pkm.PILLAR_CONCRETE ||
+      pokemon.name === Pkm.EEVEE ||
+      pokemon.name === Pkm.EEVEE_MAFIA ||
+      pokemon.name === Pkm.VAPOREON ||
+      pokemon.name === Pkm.JOLTEON ||
+      pokemon.name === Pkm.FLAREON ||
+      pokemon.name === Pkm.ESPEON ||
+      pokemon.name === Pkm.UMBREON ||
+      pokemon.name === Pkm.LEAFEON ||
+      pokemon.name === Pkm.GLACEON ||
+      pokemon.name === Pkm.SYLVEON ||
       pokemon.items.has(Item.RARE_CANDY)
     ) {
       client.send(Transfer.DRAG_DROP_CANCEL, message)
