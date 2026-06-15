@@ -561,21 +561,21 @@ export const PokemonAnimations: {
     attack: AnimationType.Strike,
     ability: AnimationType.Pose,
     emote: AnimationType.Shoot,
-    attackSprite: AttackSprite.GRASS_MELEE,
+    attackSprite: AttackSprite.GRASS_RANGE,
     hitSprite: HitSprite.GRASS_HIT
   },
   [Pkm.GROVYLE]: {
     attack: AnimationType.Attack,
     ability: AnimationType.Strike,
     emote: AnimationType.Shoot,
-    attackSprite: AttackSprite.GRASS_MELEE,
+    attackSprite: AttackSprite.GRASS_RANGE,
     hitSprite: HitSprite.GRASS_HIT
   },
   [Pkm.SCEPTILE]: {
     attack: AnimationType.Attack,
     ability: AnimationType.Strike,
     emote: AnimationType.Shoot,
-    attackSprite: AttackSprite.GRASS_MELEE,
+    attackSprite: AttackSprite.GRASS_RANGE,
     hitSprite: HitSprite.GRASS_HIT
   },
   [Pkm.TORCHIC]: {

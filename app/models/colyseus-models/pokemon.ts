@@ -4540,10 +4540,10 @@ export class Treecko extends Pokemon {
   hp = 70
   atk = 4
   speed = 68
-  def = 5
-  speDef = 5
+  def = 2
+  speDef = 3
   maxPP = 100
-  range = 1
+  range = 2
   skill = Ability.LEAF_BLADE
 }
 
@@ -4555,10 +4555,10 @@ export class Grovyle extends Pokemon {
   hp = 120
   atk = 12
   speed = 68
-  def = 6
-  speDef = 6
+  def = 3
+  speDef = 4
   maxPP = 100
-  range = 1
+  range = 2
   skill = Ability.LEAF_BLADE
 }
 
@@ -4569,10 +4569,10 @@ export class Sceptile extends Pokemon {
   hp = 210
   atk = 23
   speed = 68
-  def = 8
-  speDef = 8
+  def = 4
+  speDef = 5
   maxPP = 100
-  range = 1
+  range = 2
   skill = Ability.LEAF_BLADE
 }
 
