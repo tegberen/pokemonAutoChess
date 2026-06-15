@@ -6282,7 +6282,7 @@ export class OriginDialga extends Pokemon {
 }
 
 export class PrimalDialga extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.DRAGON, Synergy.STEEL, Synergy.WILD])
+  types = new SetSchema<Synergy>([Synergy.DRAGON, Synergy.WILD, Synergy.STEEL])
   rarity = Rarity.LEGENDARY
   stars = 3
   hp = 300

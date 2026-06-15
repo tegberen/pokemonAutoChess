@@ -284,7 +284,7 @@ export function getWildChance(player: IPlayer, stageLevel: number): number {
   const isPVE = stageLevel === 0 || stageLevel in PVEStages
   const wildLevel = getSynergyStep(player.synergies, Synergy.WILD)
   // 6% base chance in PvE stage or if Wild is active
-  const baseChance = isPVE || wildLevel > 0 ? 6 : 0
+  const baseChance = isPVE || wildLevel > 0 ? 8 : 0 // since no low elo player
   // each star of a pokemon with wild synergy gives 0.5% wild chance
   const nbWildStars = schemaValues(player.board)
     .filter((p) => p.types.has(Synergy.WILD) && isOnBench(p) === false)
