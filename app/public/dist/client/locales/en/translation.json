@@ -1853,7 +1853,7 @@
 		"SILK_TRAP": "Silk Trap"
 	},
 	"ability_description": {
-    "MISSING_NO": "All enemy Pokémon loose their RUNE_PROTECT",
+    "MISSING_NO": "All enemy Pokémon lose their RUNE_PROTECT",
     "LIGHT_OF_RUIN": "Deal [20,SP] SPECIAL to all enemy Pokémon in a line, multiplied by all allies and enemies on the board. Lose 75% of max HP.",
     "FORESTS_CURSE": "Adds GRASS_FIELD to an enemy without it for the rest of the fight. Regain [5,SP] PP.",
     "AQUA_STEP": "Shift to an ADJACENT unoccupied tile with fluid dance steps before dealing [25,50,100,SP] SPECIAL to the target and increasing user SPEED by [10,15,20,SP].",
