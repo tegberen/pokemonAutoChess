@@ -81,12 +81,13 @@ import {
   wildBerserkEffect,
   rockDeathExplosionT1,
   rockDeathExplosionT2,
-  rockDeathExplosionT3
+  rockDeathExplosionT3,
+  DarkSubstituteEffect
 } from "./effects/synergies"
 import { PokemonEntity } from "./pokemon-entity"
 import { DelayedCommand } from "./simulation-command"
 import { SpecialGameRule } from "../types/enum/SpecialGameRule"
-import { getStrongestUnit, getUnitScore } from "./unit-score"
+import { getStrongestUnit, getStrongestUnits, getUnitScore } from "./unit-score"
 
 export default class Simulation extends Schema implements ISimulation {
   @type("string") weather: Weather = Weather.NEUTRAL
@@ -668,6 +669,28 @@ export default class Simulation extends Schema implements ISimulation {
       }
     }
 
+    // DARK SUBSTITUTE - decide which units are eligible to trigger at fight start
+    for (const board of [blueBoard, redBoard]) {
+      const teamIndex = board === blueBoard ? Team.BLUE_TEAM : Team.RED_TEAM
+      const effects = board === blueBoard ? this.blueEffects : this.redEffects
+
+      const darkTier = effects.has(EffectEnum.BEAT_UP) ? 3
+        : effects.has(EffectEnum.ASSURANCE) ? 2
+        : effects.has(EffectEnum.HONE_CLAWS) ? 1 : 0
+
+      if (darkTier > 0) {
+        const darkMeleeEntities = (teamIndex === Team.BLUE_TEAM
+          ? [...this.blueTeam.values()]
+          : [...this.redTeam.values()]
+        ).filter(
+          (e: IPokemonEntity) => e.types.has(Synergy.DARK) && e.range === 1 && e.hp > 0 && !e.isSpawn
+        )
+        getStrongestUnits(darkMeleeEntities, darkTier).forEach((e: IPokemonEntity) => {
+          ;(e as PokemonEntity).darkSubstituteEligible = true
+        })
+      }
+    }
+
     // SUPPORT ITEMS EFFECTS (exp share, gracidea etc)
     for (const team of [this.blueTeam, this.redTeam]) {
       team.forEach((pokemon) => {
@@ -845,30 +868,30 @@ export default class Simulation extends Schema implements ISimulation {
     const player = pokemon.player
     const types = pokemon.types
     switch (effect) {
-      case EffectEnum.HONE_CLAWS:
-        if (types.has(Synergy.DARK)) {
-          pokemon.addCritChance(30, pokemon, 0, false)
-          pokemon.addCritPower(30, pokemon, 0, false)
-          pokemon.effects.add(EffectEnum.HONE_CLAWS)
-        }
-        break
-
-      case EffectEnum.ASSURANCE:
-        if (types.has(Synergy.DARK)) {
-          pokemon.addCritChance(40, pokemon, 0, false)
-          pokemon.addCritPower(50, pokemon, 0, false)
-          pokemon.effects.add(EffectEnum.ASSURANCE)
-        }
-        break
-
-      case EffectEnum.BEAT_UP:
-        if (types.has(Synergy.DARK)) {
-          pokemon.addCritChance(50, pokemon, 0, false)
-          pokemon.addCritPower(80, pokemon, 0, false)
-          pokemon.effects.add(EffectEnum.BEAT_UP)
-        }
-        break
-
+    case EffectEnum.HONE_CLAWS:
+      if (types.has(Synergy.DARK)) {
+        pokemon.addCritChance(30, pokemon, 0, false)
+        pokemon.addCritPower(30, pokemon, 0, false)
+        pokemon.effects.add(EffectEnum.HONE_CLAWS)
+        pokemon.effectsSet.add(new DarkSubstituteEffect(EffectEnum.HONE_CLAWS))
+      }
+      break
+    case EffectEnum.ASSURANCE:
+      if (types.has(Synergy.DARK)) {
+        pokemon.addCritChance(40, pokemon, 0, false)
+        pokemon.addCritPower(50, pokemon, 0, false)
+        pokemon.effects.add(EffectEnum.ASSURANCE)
+        pokemon.effectsSet.add(new DarkSubstituteEffect(EffectEnum.ASSURANCE))
+      }
+      break
+    case EffectEnum.BEAT_UP:
+      if (types.has(Synergy.DARK)) {
+        pokemon.addCritChance(50, pokemon, 0, false)
+        pokemon.addCritPower(80, pokemon, 0, false)
+        pokemon.effects.add(EffectEnum.BEAT_UP)
+        pokemon.effectsSet.add(new DarkSubstituteEffect(EffectEnum.BEAT_UP))
+      }
+      break
       case EffectEnum.ANCIENT_POWER:
       case EffectEnum.ELDER_POWER:
       case EffectEnum.FORGOTTEN_POWER:

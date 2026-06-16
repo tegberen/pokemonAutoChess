@@ -30,7 +30,7 @@ import { FlowerMonByPot, getFlowerPotsUnlocked } from "../flower-pots"
 import type { PokemonEntity } from "../pokemon-entity"
 import type Simulation from "../simulation"
 import { DelayedCommand } from "../simulation-command"
-import { getUnitScore } from "../unit-score"
+import { getUnitScore, getStrongestUnits } from "../unit-score"
 import {
   OnAbilityCastEffect,
   OnAttackEffect,
@@ -987,5 +987,101 @@ export const cloneBugs = ({
         }
       }
     }
+  }
+}
+
+export class DarkSubstituteEffect extends OnDamageReceivedEffect {
+  triggered: boolean = false
+  synergyLevel: number
+
+  constructor(effect: EffectEnum) {
+    super(({ pokemon, board }) => {
+      if (
+        pokemon.hp <= 0 ||
+        pokemon.hp > 0.4 * pokemon.maxHP ||
+        pokemon.range !== 1 ||
+        this.triggered ||
+        !pokemon.darkSubstituteEligible
+      ) return
+
+      const target = pokemon.simulation.entities.find(
+        (e) => e.id === pokemon.targetEntityId
+      ) as PokemonEntity | undefined
+      if (!target) return
+
+      const originX = pokemon.positionX
+      const originY = pokemon.positionY
+
+      const flyAwayCell = board.getSafePlaceAwayFrom(
+        pokemon.positionX,
+        pokemon.positionY,
+        pokemon.team
+      )
+      if (!flyAwayCell) return
+
+      pokemon.moveTo(flyAwayCell.x, flyAwayCell.y, board, false)
+      this.triggered = true
+      pokemon.broadcastAbility({ skill: "SUBSTITUTE" })
+
+      const adjacentEmptyCells = board
+        .getAdjacentCells(flyAwayCell.x, flyAwayCell.y)
+        .filter((v) => v.value === undefined)
+      if (adjacentEmptyCells.length > 0) {
+        target.moveTo(adjacentEmptyCells[0].x, adjacentEmptyCells[0].y, board, true)
+      }
+
+      const substitute = PokemonFactory.createPokemonFromName(
+        Pkm.SUBSTITUTE,
+        pokemon.player
+      )
+      pokemon.simulation.addPokemon(substitute, originX, originY, pokemon.team, true, true)
+
+      const substituteEntity = board.getEntityOnCell(originX, originY)
+      if (!substituteEntity) return
+
+      const substituteHP = Math.round(pokemon.maxHP * 0.5)
+      substituteEntity.hp = substituteHP
+      substituteEntity.maxHP = substituteHP
+
+      board.cells
+        .filter((p) => p?.targetEntityId === pokemon.id)
+        .forEach((p) => { p!.targetEntityId = substituteEntity.id })
+
+      if (this.synergyLevel >= 1) {
+        substituteEntity.effectsSet.add(
+          new OnDeathEffect(({ pokemon: sub, board: subBoard }) => {
+            sub.broadcastAbility({ skill: "DARK_SUBSTITUTE" })
+            subBoard
+              .getAdjacentCells(sub.positionX, sub.positionY)
+              .forEach((cell) => {
+                if (cell.value && cell.value.team !== pokemon.team) {
+                  cell.value.status.triggerBlinded(3000, cell.value)
+                }
+              })
+          })
+        )
+      }
+
+      if (this.synergyLevel >= 2) {
+        board
+          .getAdjacentCells(originX, originY)
+          .forEach((cell) => {
+            if (cell.value && cell.value.team !== pokemon.team && cell.value.hp > 0) {
+              cell.value.setTarget(substituteEntity)
+              pokemon.broadcastAbility({
+                skill: "TAUNT_HIT",
+                targetX: cell.value.positionX,
+                targetY: cell.value.positionY
+              })
+            }
+          })
+      }
+    })
+
+    this.synergyLevel = [
+      EffectEnum.HONE_CLAWS,
+      EffectEnum.ASSURANCE,
+      EffectEnum.BEAT_UP
+    ].indexOf(effect)
   }
 }

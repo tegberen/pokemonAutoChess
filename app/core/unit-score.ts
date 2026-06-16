@@ -23,3 +23,15 @@ export function getStrongestUnit<T extends IPokemon | IPokemonEntity>(
   const bestScore = Math.max(...pokemonScores)
   return pickRandomIn(pokemons.filter((p, i) => pokemonScores[i] === bestScore))
 }
+
+export function getStrongestUnits<T extends IPokemon | IPokemonEntity>(
+  pokemons: T[],
+  n: number
+): T[] {
+  const pokemonScores = pokemons.map((pokemon) => getUnitScore(pokemon))
+  return pokemons
+    .map((p, i) => ({ p, score: pokemonScores[i] }))
+    .sort((a, b) => b.score - a.score)
+    .slice(0, n)
+    .map((x) => x.p)
+}

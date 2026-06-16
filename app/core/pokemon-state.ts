@@ -487,6 +487,10 @@ export default abstract class PokemonState {
       if (attacker && attacker.status.fairyField) {
         damage *= 1.2
       }
+      // dark pokemon do more damage to BLINDED status
+      if (attacker && pokemon.status.blinded && attacker.effects.has(EffectEnum.BEAT_UP)) {
+        damage *= 1.2
+      }
 
       if (
         attacker &&

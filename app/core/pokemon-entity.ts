@@ -148,6 +148,8 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
   commands = new Array<SimulationCommand>()
   effectsSet = new Set<EffectClass>()
   sourcePlayer: Player | undefined = undefined
+  darkSubstituteTriggered: boolean = false
+  darkSubstituteEligible: boolean = false
 
   constructor(
     pokemon: IPokemon,
