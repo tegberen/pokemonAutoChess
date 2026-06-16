@@ -16451,9 +16451,9 @@ export class Spoink extends Pokemon {
   speed = 51
   def = 8
   speDef = 12
-  maxPP = 100
+  maxPP = 60
   range = 1
-  skill = Ability.BOUNCE
+  skill = Ability.MAGIC_BOUNCE
   regional = true
 }
 
@@ -16466,9 +16466,9 @@ export class Grumpig extends Pokemon {
   speed = 51
   def = 12
   speDef = 20
-  maxPP = 100
+  maxPP = 60
   range = 1
-  skill = Ability.BOUNCE
+  skill = Ability.MAGIC_BOUNCE
   regional = true
 }
 

@@ -394,8 +394,9 @@ export const DishEffects: Record<(typeof Dishes)[number], Effect[]> = {
     })
   ],
   TEA: [
-    new OnSpawnEffect((entity) => {
-      entity.addPP(80, entity, 0, false)
+    new OnAttackEffect(({ pokemon, target }) => {
+      if (!target) return
+      pokemon.addPP(10, pokemon, 0, false)
     })
   ],
   TINY_MUSHROOM: [

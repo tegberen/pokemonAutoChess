@@ -820,10 +820,12 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
 
   [Item.GOLD_BOTTLE_CAP]: [
     new OnItemGainedEffect((pokemon) => {
-      pokemon.addCritPower(pokemon.player?.money ?? 0, pokemon, 0, false)
+      const atkValue = (pokemon.player?.money ?? 0) * 0.5
+      pokemon.addAttack(atkValue, pokemon, 0, false)
     }),
     new OnItemRemovedEffect((pokemon) => {
-      pokemon.addCritPower(-(pokemon.player?.money ?? 0), pokemon, 0, false)
+      const atkValue = (pokemon.player?.money ?? 0) * 0.5
+      pokemon.addAttack(-atkValue, pokemon, 0, false)
     }),
     new OnKillEffect(({ attacker, target, board }) => {
       if (attacker.player) {
