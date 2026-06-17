@@ -1528,7 +1528,7 @@ export class FlameChargeStrategy extends AbilityStrategy {
   ) {
     super.process(pokemon, board, target, crit, true)
 
-    const damage = [20, 30, 40][pokemon.stars - 1] ?? 40
+    const damage = [20, 30, 100][pokemon.stars - 1] ?? 100
     const farthestCoordinate =
       board.getFarthestTargetCoordinateAvailablePlace(pokemon)
     const targetsHit: Set<PokemonEntity> = new Set()

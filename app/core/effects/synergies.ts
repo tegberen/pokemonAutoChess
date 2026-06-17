@@ -998,7 +998,7 @@ export class DarkSubstituteEffect extends OnDamageReceivedEffect {
     super(({ pokemon, board }) => {
       if (
         pokemon.hp <= 0 ||
-        pokemon.hp > 0.4 * pokemon.maxHP ||
+        pokemon.hp > 0.5 * pokemon.maxHP ||
         pokemon.range !== 1 ||
         this.triggered ||
         !pokemon.darkSubstituteEligible
@@ -1076,6 +1076,29 @@ export class DarkSubstituteEffect extends OnDamageReceivedEffect {
             }
           })
       }
+
+      // detonate substitute on kill
+      pokemon.effectsSet.add(
+        new OnKillEffect(({ attacker, board: killBoard }) => {
+          const sub = attacker.simulation.entities.find(
+            e => e.name === Pkm.SUBSTITUTE && e.team === attacker.team && e.hp > 0
+          )
+          if (!sub) return
+          sub.hp = 0;
+          (sub as PokemonEntity).state.triggerDeath(sub as PokemonEntity, attacker, killBoard, AttackType.TRUE)
+        })
+      )
+      // detonate substitute on death
+      pokemon.effectsSet.add(
+        new OnDeathEffect(({ pokemon: assassin, board: deathBoard }) => {
+          const sub = assassin.simulation.entities.find(
+            e => e.name === Pkm.SUBSTITUTE && e.team === assassin.team && e.hp > 0
+          )
+          if (!sub) return
+          sub.hp = 0;
+          (sub as PokemonEntity).state.triggerDeath(sub as PokemonEntity, assassin, deathBoard, AttackType.TRUE)
+        })
+      )
     })
 
     this.synergyLevel = [

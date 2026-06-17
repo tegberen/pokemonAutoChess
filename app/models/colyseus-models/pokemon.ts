@@ -7914,7 +7914,7 @@ export class ShadowMewtwo extends Pokemon {
   speed = 67
   def = 10
   speDef = 10
-  maxPP = 90
+  maxPP = 110
   range = 2
   skill = Ability.DARK_NOVA
   regional = true
@@ -16451,7 +16451,7 @@ export class Spoink extends Pokemon {
   speed = 51
   def = 8
   speDef = 12
-  maxPP = 60
+  maxPP = 100
   range = 1
   skill = Ability.MAGIC_BOUNCE
   regional = true
@@ -16466,7 +16466,7 @@ export class Grumpig extends Pokemon {
   speed = 51
   def = 12
   speDef = 20
-  maxPP = 60
+  maxPP = 100
   range = 1
   skill = Ability.MAGIC_BOUNCE
   regional = true
