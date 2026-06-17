@@ -616,16 +616,25 @@ export class Board {
     })
 
     if (selectedCell === null && farthestTarget) {
-      // no adjacent free cells around farthest targets, fallback to closest free cell of farthest target
-      const freeCell = this.getClosestAvailablePlace(
-        farthestTarget.positionX,
-        farthestTarget.positionY
-      )
-      if (freeCell) {
-        selectedCell = { ...freeCell, target: farthestTarget }
+      // fallback: find any free cell adjacent to any enemy
+      const allEnemies = this.cells.filter(
+        e => e && e.isTargettableBy(pokemon, true, false)
+      ) as PokemonEntity[]
+      
+      for (const enemy of allEnemies) {
+        const freeCells = this.getAdjacentCells(enemy.positionX, enemy.positionY)
+          .filter(cell => this.getEntityOnCell(cell.x, cell.y) === undefined)
+        if (freeCells.length > 0) {
+          // pick the one farthest from pokemon's current position
+          freeCells.sort((a, b) =>
+            distanceM(pokemon.positionX, pokemon.positionY, b.x, b.y) -
+            distanceM(pokemon.positionX, pokemon.positionY, a.x, a.y)
+          )
+          selectedCell = { x: freeCells[0].x, y: freeCells[0].y, distance: 0, target: enemy }
+          break
+        }
       }
     }
-
     return selectedCell
   }
 
