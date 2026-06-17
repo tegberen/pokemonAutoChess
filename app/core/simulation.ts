@@ -674,7 +674,8 @@ export default class Simulation extends Schema implements ISimulation {
       const teamIndex = board === blueBoard ? Team.BLUE_TEAM : Team.RED_TEAM
       const effects = board === blueBoard ? this.blueEffects : this.redEffects
 
-      const darkTier = effects.has(EffectEnum.BEAT_UP) ? 3
+      const darkTier = effects.has(EffectEnum.FALSE_SURRENDER) ? 4
+        : effects.has(EffectEnum.BEAT_UP) ? 3
         : effects.has(EffectEnum.ASSURANCE) ? 2
         : effects.has(EffectEnum.HONE_CLAWS) ? 1 : 0
 
@@ -890,6 +891,14 @@ export default class Simulation extends Schema implements ISimulation {
         pokemon.addCritPower(80, pokemon, 0, false)
         pokemon.effects.add(EffectEnum.BEAT_UP)
         pokemon.effectsSet.add(new DarkSubstituteEffect(EffectEnum.BEAT_UP))
+      }
+      break
+    case EffectEnum.FALSE_SURRENDER:
+      if (types.has(Synergy.DARK)) {
+        pokemon.addCritChance(50, pokemon, 0, false)
+        pokemon.addCritPower(80, pokemon, 0, false)
+        pokemon.effects.add(EffectEnum.FALSE_SURRENDER)
+        pokemon.effectsSet.add(new DarkSubstituteEffect(EffectEnum.FALSE_SURRENDER))
       }
       break
       case EffectEnum.ANCIENT_POWER:

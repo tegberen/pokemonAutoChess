@@ -46,7 +46,8 @@ export const SynergyEffects = {
   [Synergy.DARK]: [
     EffectEnum.HONE_CLAWS,
     EffectEnum.ASSURANCE,
-    EffectEnum.BEAT_UP
+    EffectEnum.BEAT_UP,
+    EffectEnum.FALSE_SURRENDER
   ],
   [Synergy.STEEL]: [
     EffectEnum.STEEL_SURGE,
@@ -184,7 +185,7 @@ export const SynergyTriggers: { [key in Synergy]: number[] } = {
   [Synergy.ELECTRIC]: [3, 5, 7],
   [Synergy.FIGHTING]: [2, 4, 6, 8],
   [Synergy.PSYCHIC]: [2, 5, 7],
-  [Synergy.DARK]: [3, 5, 7],
+  [Synergy.DARK]: [3, 5, 7, 9],
   [Synergy.STEEL]: [2, 4, 6, 8],
   [Synergy.GROUND]: [2, 4, 6, 8],
   [Synergy.POISON]: [3, 5, 7],

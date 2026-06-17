@@ -1077,15 +1077,28 @@ export class DarkSubstituteEffect extends OnDamageReceivedEffect {
           })
       }
 
+      const leapedTargetId = target.id
+      let vanishTriggered = false
       // detonate substitute on kill
       pokemon.effectsSet.add(
-        new OnKillEffect(({ attacker, board: killBoard }) => {
+        new OnKillEffect(({ attacker, target, board: killBoard }) => { 
           const sub = attacker.simulation.entities.find(
             e => e.name === Pkm.SUBSTITUTE && e.team === attacker.team && e.hp > 0
           )
-          if (!sub) return
-          sub.hp = 0;
-          (sub as PokemonEntity).state.triggerDeath(sub as PokemonEntity, attacker, killBoard, AttackType.TRUE)
+          if (sub) {
+            sub.hp = 0;
+            (sub as PokemonEntity).state.triggerDeath(sub as PokemonEntity, attacker, killBoard, AttackType.TRUE)
+          }
+          // Dark 9: vanish after kill
+          if (this.synergyLevel >= 3 && !vanishTriggered && target.id === leapedTargetId) { 
+            vanishTriggered = true
+            attacker.status.untargettable = true
+            attacker.commands.push(
+              new DelayedCommand(() => {
+                attacker.status.untargettable = false
+              }, 5000)
+            )
+          }
         })
       )
       // detonate substitute on death
@@ -1104,7 +1117,8 @@ export class DarkSubstituteEffect extends OnDamageReceivedEffect {
     this.synergyLevel = [
       EffectEnum.HONE_CLAWS,
       EffectEnum.ASSURANCE,
-      EffectEnum.BEAT_UP
+      EffectEnum.BEAT_UP,
+      EffectEnum.FALSE_SURRENDER
     ].indexOf(effect)
   }
 }

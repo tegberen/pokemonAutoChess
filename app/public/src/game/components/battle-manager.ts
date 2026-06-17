@@ -409,6 +409,9 @@ export default class BattleManager {
         } else if (previousValue === true) {
           pkm.removeRageEffect(pokemon.items.has(Item.BERSERK_GENE))
         }
+      } else if (field === "untargettable") {
+        console.log("untargettable changed", pokemon.status.untargettable)
+        pkm.sprite.setAlpha(pokemon.status.untargettable ? 0.5 : 1)
       }
     }
   }

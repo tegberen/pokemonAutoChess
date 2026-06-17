@@ -488,7 +488,7 @@ export default abstract class PokemonState {
         damage *= 1.2
       }
       // dark pokemon do more damage to BLINDED status
-      if (attacker && pokemon.status.blinded && attacker.effects.has(EffectEnum.BEAT_UP)) {
+      if (attacker && pokemon.status.blinded && (attacker.effects.has(EffectEnum.BEAT_UP) || attacker.effects.has(EffectEnum.FALSE_SURRENDER))) {
         damage *= 1.2
       }
 

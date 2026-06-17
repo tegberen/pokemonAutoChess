@@ -223,7 +223,8 @@ class GameContainer {
       "blinded",
       "magicBounce",
       "reflect",
-      "tree"
+      "tree",
+      "untargettable"
     ] satisfies NonFunctionPropNames<Status>[]
 
     statusFields.forEach((field) => {

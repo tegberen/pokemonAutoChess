@@ -56,6 +56,7 @@ export default class Status extends Schema implements IStatus {
   @type("boolean") skydiving = false
   @type("boolean") vanishing = false
   @type("boolean") tree = false
+  @type("boolean") untargettable = false
   burnOrigin: PokemonEntity | undefined = undefined
   poisonOrigin: PokemonEntity | undefined = undefined
   silenceOrigin: PokemonEntity | undefined = undefined
@@ -90,7 +91,6 @@ export default class Status extends Schema implements IStatus {
   blindCooldown = 0
   enrageDelay = 35000
   ccCooldown = 0
-  untargettable = false
 
   constructor(simulation: ISimulation) {
     super()
