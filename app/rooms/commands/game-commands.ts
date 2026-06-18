@@ -1490,6 +1490,9 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
   }
 
   checkDeath() {
+    const newlyDead: Player[] = []
+
+    // Pass 1: mark all dead, release shop/board
     this.state.players.forEach((player: Player) => {
       if (player.life <= 0 && player.alive) {
         if (!player.isBot) {
@@ -1502,16 +1505,21 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
         }
         player.alive = false
         player.doubleUpEliminationRound = this.state.stageLevel
-        if (this.state.gameMode === GameMode.DOUBLE_UP) {
-          this.room.rankPlayers()
-        }
-        player.spectatedPlayerId = player.id // spectate self to not show KO players on another player side
-        const client = this.room.clients.find(
-          (cli) => cli.auth.uid === player.id
-        )
-        if (client) {
-          client.send(Transfer.FINAL_RANK, player.rank)
-        }
+        player.spectatedPlayerId = player.id
+        newlyDead.push(player)
+      }
+    })
+
+    // Pass 2: rank all dead together
+    if (newlyDead.length > 0 && this.state.gameMode === GameMode.DOUBLE_UP) {
+      this.room.rankPlayers()
+    }
+
+    // Pass 3: send correct rank to each
+    newlyDead.forEach((player) => {
+      const client = this.room.clients.find(cli => cli.auth.uid === player.id)
+      if (client) {
+        client.send(Transfer.FINAL_RANK, player.rank)
       }
     })
   }
