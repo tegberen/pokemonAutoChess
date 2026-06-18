@@ -5558,26 +5558,22 @@ export class FakeTearsStrategy extends AbilityStrategy {
   ) {
     super.process(pokemon, board, target, crit)
     const damage = [10, 20, 30][pokemon.stars - 1] ?? 30
-    const shred = [3, 6, 12][pokemon.stars - 1] ?? 12
-
-    board.forEach((x: number, y: number, value: PokemonEntity | undefined) => {
-      if (value && pokemon.team != value.team) {
-        if (value.status.armorReduction) {
-          value.status.triggerArmorReduction(3000, value)
-          value.addSpecialDefense(-shred, pokemon, 0, false)
-        } else {
-          value.status.triggerArmorReduction(3000, value)
+    const shred = [3, 6, 9][pokemon.stars - 1] ?? 9
+    board
+      .getCellsInRadius(pokemon.positionX, pokemon.positionY, 5, true)
+      .forEach((cell) => {
+        if (cell.value && cell.value.team !== pokemon.team) {
+          const enemy = cell.value
+          if (enemy.status.armorReduction) {
+            enemy.status.triggerArmorReduction(3000, enemy)
+            enemy.addSpecialDefense(-shred, pokemon, 0, false)
+          } else {
+            enemy.status.triggerArmorReduction(3000, enemy)
+          }
+          pokemon.broadcastAbility({ positionX: cell.x, positionY: cell.y })
+          enemy.handleSpecialDamage(damage, board, AttackType.SPECIAL, pokemon, crit)
         }
-        pokemon.broadcastAbility({ positionX: x, positionY: y })
-        value.handleSpecialDamage(
-          damage,
-          board,
-          AttackType.SPECIAL,
-          pokemon,
-          crit
-        )
-      }
-    })
+      })
   }
 }
 
