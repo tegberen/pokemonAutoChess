@@ -17866,7 +17866,6 @@ export class OrderUpStrategy extends AbilityStrategy {
 }
 
 export class DarkNovaStrategy extends AbilityStrategy {
-  canCritByDefault = true
   process(
     pokemon: PokemonEntity,
     board: Board,
@@ -17898,7 +17897,7 @@ export class DarkNovaStrategy extends AbilityStrategy {
           cells.forEach((cell) => {
             if (cell.value && cell.value.team !== pokemon.team) {
               cell.value.handleSpecialDamage(
-                60,
+                80,
                 board,
                 AttackType.SPECIAL,
                 pokemon,

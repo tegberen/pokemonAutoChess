@@ -1096,7 +1096,7 @@ export class DarkSubstituteEffect extends OnDamageReceivedEffect {
             attacker.commands.push(
               new DelayedCommand(() => {
                 attacker.status.untargettable = false
-              }, 5000)
+              }, 3000)
             )
           }
         })
