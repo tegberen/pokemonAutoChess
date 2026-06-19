@@ -2179,7 +2179,7 @@ export const PassiveEffects: Partial<
         (acc, p) => acc + (!isOnBench(p) ? p.stars : 0),
         0
       )
-      attacker.addSpeed(totalStars, attacker, 0, false, true)
+      attacker.addSpeed(1, attacker, 0, false, true)
       attacker.addAbilityPower(totalStars, attacker, 0, false, true)
     })
   ],
