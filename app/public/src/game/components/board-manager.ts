@@ -215,6 +215,17 @@ export default class BoardManager {
     )
 
     this.animationManager.animatePokemon(pokemonUI, pokemon.action, false)
+    if (pokemon.action === PokemonActionState.EXPLORING) {
+      pokemonUI.orientation = Orientation.DOWN
+      this.animationManager.animatePokemon(
+        pokemonUI,
+        PokemonActionState.EXPLORING,
+        false,
+        true // loop the walk while away
+      )
+      pokemonUI.setAlpha(0.3)
+      pokemonUI.draggable = false
+    }
     this.pokemons.get(pokemonUI.id)?.destroy()
     this.pokemons.set(pokemonUI.id, pokemonUI)
 
@@ -846,7 +857,11 @@ export default class BoardManager {
     this.hideGroundHoles()
     this.hideTrainingBag()
     this.removePokemonsOnBoard()
-    this.scene.board?.pokemons.forEach((p) => p.setAlpha(1))
+    this.scene.board?.pokemons.forEach((p) => {
+      if (p.pokemon.action !== PokemonActionState.EXPLORING) {
+        p.setAlpha(1)
+      }
+    })
     this.scene.closeTooltips()
     this.scene.input.setDragState(this.scene.input.activePointer, 0)
 
@@ -1009,7 +1024,73 @@ export default class BoardManager {
           ) {
             this.animateTrainingBag()
           }
-          break
+          if (value === PokemonActionState.EXPLORING) {
+            pokemonSprite.orientation = Orientation.DOWN
+            this.animationManager.animatePokemon(
+              pokemonSprite, PokemonActionState.EXPLORING, false, true
+            )
+            const [, baseY] = transformBoardCoordinates(pokemon.positionX, pokemon.positionY)
+            this.scene.tweens.add({
+              targets: pokemonSprite,
+              y: baseY + 100,
+              alpha: 0,
+              ease: "Sine.easeIn",
+              duration: 1000,
+              onComplete: () => {
+                if (!pokemonSprite?.scene) return
+                // snap straight to resting position while still invisible
+                pokemonSprite.y = baseY
+                // now ghost-fade in, no movement
+                this.scene.tweens.add({
+                  targets: pokemonSprite,
+                  alpha: 0.3,
+                  ease: "Sine.easeInOut",
+                  duration: 800,
+                  onComplete: () => {
+                    if (!pokemonSprite?.scene) return
+                    pokemonSprite.draggable = false
+                  }
+                })
+              }
+            })
+          }
+        if (previousValue === PokemonActionState.EXPLORING && value !== PokemonActionState.EXPLORING) {
+          const [, baseY] = transformBoardCoordinates(pokemon.positionX, pokemon.positionY)
+          pokemonSprite.alpha = 0.3
+          // step 1: fade out from dimmed (0.3) to fully invisible, no movement
+          this.scene.tweens.add({
+            targets: pokemonSprite,
+            alpha: 0,
+            ease: "Sine.easeInOut",
+            duration: 800,
+            onComplete: () => {
+              if (!pokemonSprite?.scene) return
+              // step 2: position below, ready to walk up
+              pokemonSprite.y = baseY + 100
+              pokemonSprite.orientation = Orientation.UP
+              this.animationManager.animatePokemon(
+                pokemonSprite, PokemonActionState.EXPLORING, false, true
+              )
+              // step 3: walk up from below while fading back in to full color
+              this.scene.tweens.add({
+                targets: pokemonSprite,
+                y: baseY,
+                alpha: 1,
+                ease: "Sine.easeOut",
+                duration: 1400,
+                onComplete: () => {
+                  if (!pokemonSprite?.scene) return
+                  pokemonSprite.draggable = true
+                  pokemonSprite.orientation = Orientation.DOWNLEFT
+                  this.animationManager.animatePokemon(
+                    pokemonSprite, PokemonActionState.IDLE, false
+                  )
+                }
+              })
+            }
+          })
+        }
+        break
 
         case "hp":
         case "maxHP": {

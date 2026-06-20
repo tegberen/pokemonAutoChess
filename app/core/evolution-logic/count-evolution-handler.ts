@@ -9,6 +9,7 @@ import { logger } from "../../utils/logger"
 import { shuffleArray } from "../../utils/random"
 import { schemaValues } from "../../utils/schemas"
 import { carryOverPermanentStats, EvolutionHandler } from "./evolution-handler"
+import { PokemonActionState } from "../../types/enum/Game"
 
 export class CountEvolutionHandler extends EvolutionHandler {
   numberRequired: number
@@ -32,7 +33,8 @@ export class CountEvolutionHandler extends EvolutionHandler {
     }
 
     const copies = schemaValues(player.board).filter(
-      (p) => p.index === pokemon.index && !p.items.has(Item.EVIOLITE)
+      (p) => p.index === pokemon.index && !p.items.has(Item.EVIOLITE) &&
+        p.action !== PokemonActionState.EXPLORING
     )
     return copies.length >= this.numberRequired
   }
@@ -51,7 +53,7 @@ export class CountEvolutionHandler extends EvolutionHandler {
     }
 
     const copies = schemaValues(player.board).filter(
-      (p) => p.index === pokemon.index && !p.items.has(Item.EVIOLITE)
+      (p) => p.index === pokemon.index && !p.items.has(Item.EVIOLITE) && p.action !== PokemonActionState.EXPLORING
     )
     return copies.length === this.numberRequired - 1
   }
@@ -70,6 +72,7 @@ export class CountEvolutionHandler extends EvolutionHandler {
       if (
         pkm.index == pokemon.index &&
         !pkm.items.has(Item.EVIOLITE) &&
+        pkm.action !== PokemonActionState.EXPLORING &&
         pokemonsBeforeEvolution.length < this.numberRequired
       ) {
         // logger.debug(pkm.name, pokemon.name)

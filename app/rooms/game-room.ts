@@ -1221,7 +1221,8 @@ export default class GameRoom extends Room<{ state: GameState }> {
     player.board.forEach((pokemon) => {
       if (
         pokemon.hasEvolution &&
-        pokemon.evolutionRule.type === EvolutionRuleType.COUNT
+        pokemon.evolutionRule.type === EvolutionRuleType.COUNT &&
+        pokemon.action !== PokemonActionState.EXPLORING
       ) {
         const pokemonEvolved = EvolutionManager.tryEvolve(pokemon, player)
         if (pokemonEvolved) {

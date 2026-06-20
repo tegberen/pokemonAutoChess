@@ -80,7 +80,8 @@ export default function ItemPicker(props: {
         Item.WELLSPRING_MASK,
         Item.CORNERSTONE_MASK,
         Item.HEARTHFLAME_MASK,
-        ...MemoryDiscs
+        ...MemoryDiscs,
+        Item.LETTER
       ]
     }
   ]

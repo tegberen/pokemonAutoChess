@@ -485,8 +485,7 @@ export class OnDragDropPokemonCommand extends Command<
               message.updateBoard = false
             }
           } else if (dropOnBench) {
-            this.swapPokemonPositions(player, pokemon, x, y)
-            success = true
+            success = this.swapPokemonPositions(player, pokemon, x, y)
           }
         } else if (
           pokemon.name === Pkm.MELTAN &&
@@ -503,8 +502,7 @@ export class OnDragDropPokemonCommand extends Command<
           success = true
         } else if (dropOnBench && dropFromBench) {
           // Drag and drop pokemons through bench has no limitation
-          this.swapPokemonPositions(player, pokemon, x, y)
-          success = true
+          success = this.swapPokemonPositions(player, pokemon, x, y)
         } else if (this.state.phase == GamePhaseState.PICK) {
           // On pick, allow to drop on / from board
           const teamSize = this.room.getTeamSize(player.board)
@@ -528,8 +526,7 @@ export class OnDragDropPokemonCommand extends Command<
               )
             ) {
               // From board to bench (bench to bench is already handled)
-              this.swapPokemonPositions(player, pokemon, x, y)
-              success = true
+              success = this.swapPokemonPositions(player, pokemon, x, y)
             }
           } else if (
             pokemon.canBePlaced &&
@@ -547,8 +544,7 @@ export class OnDragDropPokemonCommand extends Command<
             )
           ) {
             // Prevents a pokemon to go on the board only if it's adding a pokemon from the bench on a full board
-            this.swapPokemonPositions(player, pokemon, x, y)
-            success = true
+            success = this.swapPokemonPositions(player, pokemon, x, y)
           }
         }
       }
@@ -570,8 +566,19 @@ export class OnDragDropPokemonCommand extends Command<
     }
   }
 
-  swapPokemonPositions(player: Player, pokemon: Pokemon, x: number, y: number) {
+  swapPokemonPositions(
+    player: Player,
+    pokemon: Pokemon,
+    x: number,
+    y: number
+  ): boolean {
     const pokemonToSwap = player.getPokemonAt(x, y)
+    if (
+      pokemon.action === PokemonActionState.EXPLORING ||
+      pokemonToSwap?.action === PokemonActionState.EXPLORING
+    ) {
+      return false // can't swap explorer pokemons
+    }
     if (pokemonToSwap) {
       const oldX = pokemonToSwap.positionX
       const oldY = pokemonToSwap.positionY
@@ -600,6 +607,7 @@ export class OnDragDropPokemonCommand extends Command<
       player,
       state: this.state
     })
+    return true
   }
 }
 
@@ -896,6 +904,21 @@ export class OnDragDropItemCommand extends Command<
       client.send(Transfer.DRAG_DROP_CANCEL, message)
       return
     }
+    if (item === Item.LETTER && isOnBench(pokemon) && pokemon.types.has(Synergy.FLYING)) {
+      pokemon.action = PokemonActionState.EXPLORING
+      player.pokemonsExploring.push({
+        pokemonId: pokemon.id,
+        returnStage: this.state.stageLevel + 2
+      })
+      removeInArray(player.items, item)
+      client.send(Transfer.DRAG_DROP_CANCEL, message) // don't run normal item-equip logic below
+      return
+    }
+
+    if (pokemon.action === PokemonActionState.EXPLORING) {
+      client.send(Transfer.DRAG_DROP_CANCEL, message)
+      return
+    }
 
     const onItemDroppedEffects: OnItemDroppedEffect[] = [
       ...(ItemEffects[item]?.filter(
@@ -1109,6 +1132,9 @@ export class OnSellPokemonCommand extends Command<
     if (!pokemon) return
     if (!isOnBench(pokemon) && this.state.phase === GamePhaseState.FIGHT) {
       return // can't sell a pokemon currently fighting
+    }
+    if (pokemon.action === PokemonActionState.EXPLORING) {
+      return // can't sell an explorer pokemon
     }
 
     if (canSell(pokemon.name, this.state.specialGameRule) === false) {
@@ -1728,6 +1754,28 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
   updatePlayerBetweenStages(player: Player) {
     const board = schemaValues(player.board)
 
+    const explorersReturning = player.pokemonsExploring.filter((e) => e.returnStage === this.state.stageLevel)
+
+    explorersReturning.forEach((e) => {
+      const pokemon = player.board.get(e.pokemonId)
+      if (pokemon) {
+        pokemon.action = PokemonActionState.IDLE
+      }
+    })
+
+    player.pokemonsExploring = player.pokemonsExploring.filter((e) => e.returnStage > this.state.stageLevel)
+
+    if (explorersReturning.length > 0) {
+      this.room.checkEvolutionsAfterPokemonAcquired(player.id)
+    }
+    if (
+      getSynergyStep(player.synergies, Synergy.FLYING) === 4 &&
+      player.items.includes(Item.LETTER) === false && 
+      player.pokemonsExploring.length === 0
+    ) {
+      player.items.push(Item.LETTER)
+    }
+
     if (
       getSynergyStep(player.synergies, Synergy.FIRE) === 4 &&
       player.items.includes(Item.FIRE_SHARD) === false &&
@@ -2012,7 +2060,7 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
         const numberOfPokemonsToMove = maxTeamSize - teamSize
         for (let i = 0; i < numberOfPokemonsToMove; i++) {
           const pokemon = schemaValues(player.board)
-            .filter((p) => isOnBench(p) && p.canBePlaced)
+            .filter((p) => isOnBench(p) && p.canBePlaced && p.action !== PokemonActionState.EXPLORING)
             .sort((a, b) => a.positionX - b.positionX)[0]
           if (pokemon) {
             const coordinates = getFirstAvailablePositionOnBoard(

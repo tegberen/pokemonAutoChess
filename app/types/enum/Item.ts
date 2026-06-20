@@ -355,7 +355,8 @@ export enum Item {
   ELECTRIC_SEED = "ELECTRIC_SEED",
   MEWTWONITE_Y = "MEWTWONITE_Y",
   COCONUT_MILK = "COCONUT_MILK",
-  COCONUT_MALASADA = "COCONUT_MALASADA"
+  COCONUT_MALASADA = "COCONUT_MALASADA",
+  LETTER = "LETTER"
 }
 
 export const MemoryDiscs = [
@@ -509,7 +510,8 @@ export const SpecialItems: Item[] = [
   Item.COMFEY,
   Item.TATSUGIRI_CURLY,
   Item.TATSUGIRI_DROOPY,
-  Item.TATSUGIRI_STRETCHY
+  Item.TATSUGIRI_STRETCHY,
+  Item.LETTER
 ] satisfies Item[]
 
 export const FishingRods = [
@@ -1225,7 +1227,8 @@ export const UnholdableItems = [
   Item.LAPRAS_PASSPORT,
   Item.RED_SCALE,
   Item.MEWTWONITE_Y,
-  ...SevenTreasures
+  ...SevenTreasures,
+  Item.LETTER
 ] satisfies Item[]
 
 export const ConsumableItems = [

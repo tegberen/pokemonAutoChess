@@ -3048,7 +3048,9 @@
     "ELECTRIC_SEED": "Electric Seed",
     "COCONUT_MILK": "Coconut Milk",
     "COCONUT_MALASADA": "Coconut Malasada",
-    "BERRIES": "Berries"
+    "BERRIES": "Berries",
+    		"LETTER": "Letter"
+
 	},
 	"armory_description": {
 		"POTION": "A potion that heals 10 player HP of the team",
@@ -3426,7 +3428,8 @@
     "ELECTRIC_SEED": "Gain 25 DEF, ELECTRIC_FIELD and all bonuses from the active ELECTRIC synergy.",
     "COCONUT_MILK": "After each ability cast, drop a coconut on the next available target, dealing [50,SP]% of max PP as SPECIAL.",
     "COCONUT_MALASADA": "Gain +2 RANGE. [30, LK]% chance to apply CONFUSION for 2 seconds on attack.",
-    "BERRIES": "Forage a random berry for the Chef to hold. If no free item slots, it goes to your inventory."
+    "BERRIES": "Forage a random berry for the Chef to hold. If no free item slots, it goes to your inventory.",
+                "LETTER": "An important letter. A benched FLYING Pokémon that delivers it will be rewarded with a powerful Seed. It will return in 2 stages."
 
 	},
 	"passive_description": {

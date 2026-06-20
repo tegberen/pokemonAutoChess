@@ -327,6 +327,8 @@ export default class AnimationManager {
         return config.eat
       case PokemonActionState.WALK:
         return config.walk
+      case PokemonActionState.EXPLORING:
+        return config.walk
       case PokemonActionState.ATTACK:
       case PokemonActionState.TRAINING:
         return config.attack
