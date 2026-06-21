@@ -30,6 +30,7 @@ import {
   CraftableItemsNoScarves,
   Item,
   NonSpecialBerries,
+  Seeds,
   SynergyStones,
   WeatherRocksByWeather
 } from "../types/enum/Item"
@@ -88,6 +89,8 @@ import { PokemonEntity } from "./pokemon-entity"
 import { DelayedCommand } from "./simulation-command"
 import { SpecialGameRule } from "../types/enum/SpecialGameRule"
 import { getStrongestUnit, getStrongestUnits, getUnitScore } from "./unit-score"
+import { SeedEffects } from "./seeds"
+import { Effect } from "./effects/effect"
 
 export default class Simulation extends Schema implements ISimulation {
   @type("string") weather: Weather = Weather.NEUTRAL
@@ -228,32 +231,68 @@ export default class Simulation extends Schema implements ISimulation {
 
   start() {
     this.started = true
-    // post simulation start hooks
+
+    // Seeds targeting the strongest ally / random ally - decided once,
+    // BEFORE OnSimulationStartEffect fires below, so those effects can
+    // read the flags correctly
     for (const [player, team] of [
       [this.bluePlayer, this.blueTeam] as const,
       [this.redPlayer, this.redTeam] as const
     ]) {
-      team.forEach((entity: PokemonEntity) => {
-        const boardPokemon = entity.refToBoardPokemon as Pokemon
-        if (boardPokemon && boardPokemon.dishes.size > 0) {
-          boardPokemon.dishes.forEach((dish) => {
-            this.applyDishEffects(dish, boardPokemon, entity, player)
-          })
-          boardPokemon.action = PokemonActionState.IDLE
-          boardPokemon.dishes.clear() // consume all dishes
+      if (!player) continue
+      const strongestAllySeeds = [
+        Item.DECOY_SEED,
+          Item.REVIVER_SEED,
+          Item.TINY_REVIVER_SEED,
+          Item.WARP_SEED
+        ]
+        if (strongestAllySeeds.some((seed) => player.items.includes(seed))) {
+          const entities = [...team.values()].filter(
+            (e): e is PokemonEntity => e.hp > 0 && !e.isSpawn
+          )
+          if (entities.length > 0) {
+            const strongest = getStrongestUnit(entities)
+            strongest.isStrongestAllyThisFight = true
+          }
         }
+        // DOOM_SEED - random Flying ally, decided once
+        if (player.items.includes(Item.DOOM_SEED)) {
+          const flyingAllies = [...team.values()].filter(
+            (e): e is PokemonEntity =>
+              e.hp > 0 && !e.isSpawn && e.types.has(Synergy.FLYING)
+          )
+          if (flyingAllies.length > 0) {
+            const chosen = pickRandomIn(flyingAllies)
+            chosen.isDoomSeedTarget = true
+          }
+        }
+      }
 
-        entity.getEffects(OnSimulationStartEffect).forEach((effect) => {
-          effect.apply({
-            simulation: this,
-            player: entity.player,
-            team,
-            entity
+      // post simulation start hooks
+      for (const [player, team] of [
+        [this.bluePlayer, this.blueTeam] as const,
+        [this.redPlayer, this.redTeam] as const
+      ]) {
+        team.forEach((entity: PokemonEntity) => {
+          const boardPokemon = entity.refToBoardPokemon as Pokemon
+          if (boardPokemon && boardPokemon.dishes.size > 0) {
+            boardPokemon.dishes.forEach((dish) => {
+              this.applyDishEffects(dish, boardPokemon, entity, player)
+            })
+            boardPokemon.action = PokemonActionState.IDLE
+            boardPokemon.dishes.clear() // consume all dishes
+          }
+          entity.getEffects(OnSimulationStartEffect).forEach((effect) => {
+            effect.apply({
+              simulation: this,
+              player: entity.player,
+              team,
+              entity
+            })
           })
         })
-      })
+      }
     }
-  }
 
   getEffects(playerId: string) {
     return playerId === this.bluePlayer?.id
@@ -534,6 +573,17 @@ export default class Simulation extends Schema implements ISimulation {
           }))
         }
       }
+    }
+    // apply seed effects for Flying 8
+    if (pokemon.player) {
+      Seeds.forEach((seed) => {
+        if (pokemon.player!.items.includes(seed)) {
+          const seedEffects = SeedEffects[seed]
+          seedEffects?.forEach((effect) => {
+            pokemon.effectsSet.add(effect)
+          })
+        }
+      })
     }
   }
 
@@ -1541,6 +1591,14 @@ export default class Simulation extends Schema implements ISimulation {
   onFinish() {
     this.finishedAt = Date.now()
     this.finished = true
+
+    // remove seeds, just single fight bonus
+    ;[this.bluePlayer, this.redPlayer].forEach((player) => {
+      if (!player) return
+        Seeds.forEach((seed) => {
+          removeInArray(player.items, seed)
+        })
+    })
 
     if (this.blueTeam.size === 0 && this.redTeam.size > 0) {
       this.winnerId = this.redPlayerId

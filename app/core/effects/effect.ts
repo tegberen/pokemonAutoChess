@@ -457,3 +457,22 @@ export class OnGroundDiggingEffect extends Effect {
     super(effect, origin)
   }
 }
+
+export interface OnSkyDiveAttackEffectArgs {
+  pokemon: PokemonEntity
+  target: PokemonEntity
+  board: Board
+  damage: number
+  crit: boolean
+  death: boolean
+}
+
+export class OnSkyDiveAttackEffect extends Effect {
+  apply(args: OnSkyDiveAttackEffectArgs) {}
+  constructor(
+    effect?: (args: OnSkyDiveAttackEffectArgs) => void,
+    origin?: EffectOrigin
+  ) {
+    super(effect, origin)
+  }
+}

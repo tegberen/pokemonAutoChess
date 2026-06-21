@@ -2621,7 +2621,7 @@
 		"TAILWIND": "Fly away once under 20% HP",
 		"FEATHER_DANCE": "Get PROTECT for 2 seconds after flying away",
 		"MAX_AIRSTREAM": "Fly away twice when under 50% HP and 20% HP",
-		"SKYDIVE": "Now perform skydive attacks, dealing 175% PHYSICAL ATK on landing on their target",
+		"SKYDIVE": "Now perform skydive attacks, dealing 150% PHYSICAL ATK on landing on their target",
 		"COTTONWEED": "Get an Hoppip Flower Pot",
 		"FLYCATCHER": "Get a Bellsprout Flower Pot",
 		"FRAGRANT": "Get a Chikorita Flower Pot",
@@ -3049,7 +3049,29 @@
     "COCONUT_MILK": "Coconut Milk",
     "COCONUT_MALASADA": "Coconut Malasada",
     "BERRIES": "Berries",
-    		"LETTER": "Letter"
+    		"LETTER": "Letter",
+		"BAN_SEED": "Ban Seed",
+		"BLAST_SEED": "Blast Seed",
+		"BLINKER_SEED": "Blinker Seed",
+		"DECOY_SEED": "Decoy Seed",
+		"DOOM_SEED": "Doom Seed",
+		"EMPOWERMENT_SEED": "Empowerment Seed",
+		"ENERGY_SEED": "Energy Seed",
+		"EYEDROP_SEED": "Eyedrop Seed",
+		"HEAL_SEED": "Heal Seed",
+		"JOY_SEED": "Joy Seed",
+		"LIFE_SEED": "Life Seed",
+		"PLAIN_SEED": "Plain Seed",
+		"PURE_SEED": "Pure Seed",
+		"QUICK_SEED": "Quick Seed",
+		"REVIVER_SEED": "Reviver Seed",
+		"SLEEP_SEED": "Sleep Seed",
+		"STUN_SEED": "Stun Seed",
+		"TINY_REVIVER_SEED": "Tiny Reviver Seed",
+		"TOTTER_SEED": "Totter Seed",
+		"TRAINING_SEED": "Training Seed",
+		"VIOLENT_SEED": "Violent Seed",
+		"WARP_SEED": "Warp Seed"
 
 	},
 	"armory_description": {
@@ -3429,7 +3451,29 @@
     "COCONUT_MILK": "After each ability cast, drop a coconut on the next available target, dealing [50,SP]% of max PP as SPECIAL.",
     "COCONUT_MALASADA": "Gain +2 RANGE. [30, LK]% chance to apply CONFUSION for 2 seconds on attack.",
     "BERRIES": "Forage a random berry for the Chef to hold. If no free item slots, it goes to your inventory.",
-                "LETTER": "An important letter. A benched FLYING Pokémon that delivers it will be rewarded with a powerful Seed. It will return in 2 stages."
+                "LETTER": "An important letter. A benched FLYING Pokémon that delivers it will be rewarded with a powerful Seed. It will return in 2 stages.",
+		"BAN_SEED": "All Sky Dive attacks deal 300% of user ATK. The user and the target are SILENCE for 5s.",
+		"BLAST_SEED": "At the start of the fight, all FLYING allies gain 100% of the users base ATK and are BURN for the rest of the fight.",
+		"BLINKER_SEED": "All Sky Dive attacks deal 300% of user ATK. Apply smoke to the target and ADJACENT tiles. Pokemon in the smoke are BLINDED.",
+		"DECOY_SEED": "Before the STRONGEST ally Sky Dive Attack, spawn a Substitute with 50% of user max HP. The substitute taunts all enemy Pokémon in a 3-tile radius",
+		"DOOM_SEED": "At the start of the fight, a random ally Sky Dive attacks immediately with cursed energy. The target is CURSE and KO'd after 4s.",
+		"EMPOWERMENT_SEED": "All Sky Dive attacks, are guaranteed to critically hit.",
+		"ENERGY_SEED": "At the start of the fight, FLYING allies in the front row gain 200% of base DEF, middle row gain 100% of base SPE_DEF, back row gain 50% of base ATK.",
+		"EYEDROP_SEED": "At the start of the fight, all FLYING allies gain +2 RANGE and their attacks can no longer miss. After the Sky Dive attacks, FLINCH the target for 5s.",
+		"HEAL_SEED": "All Sky Dive attacks, give SHIELD for 150% of the damage dealt.",
+		"JOY_SEED": "In the next fight, all allies have a [30,LK]% chance to gain 1 random component for each of their own KO's.",
+		"LIFE_SEED": "At the start of the fight, all FLYING allies gain 5 max HP for each ADJACENT free tile.",
+		"PLAIN_SEED": "A useless seed.",
+		"PURE_SEED": "After the Sky Dive attacks, FLYING allies gain RUNE_PROTECT for the rest of the fight.",
+		"QUICK_SEED": "At the start of the fight, all FLYING allies gain 3 SPEED for each ADJACENT free tile",
+		"REVIVER_SEED": "After the Sky Dive attack of the STRONGEST ally, give RESURRECTION to two random allied Pokémon.",
+		"SLEEP_SEED": "All Sky Dive attacks deal 300% of user ATK. The user and the target are SLEEP for 3s.",
+		"STUN_SEED": "All Sky Dive attacks deal 300% of user ATK. The user and the target are PARALYSIS for 3s.",
+		"TINY_REVIVER_SEED": "After the Sky Dive attack of the STRONGEST ally, give RESURRECTION to one random allied Pokémon and raise its current SPEED and ATK by 50%",
+		"TOTTER_SEED": "All Sky Dive attacks deal 300% of user ATK. The user and the target are CONFUSION for 3s.",
+		"TRAINING_SEED": "In the next fight, FLYING allies gain permanently 3 ATK, 5 SPEED and 10 max HP for each of their own KO's.",
+		"VIOLENT_SEED": "After the Sky Dive attacks, all FLYING allies are RAGE for 2s.",
+		"WARP_SEED": "After the Sky Dive attack of the STRONGEST ally, warp the opponent to a new region."
 
 	},
 	"passive_description": {
@@ -4988,7 +5032,9 @@
 			"cell_battery_description": "After reaching max level in ELECTRIC synergy, your Pokémon charge CELL_BATTERY with their attacks, that you can consume to supercharge an ELECTRIC Pokémon for the next fight.",
 			"fire_shard_description": "After reaching max level in FIRE synergy, every round you can use FIRE_SHARD to sacrifice your player HP and buff a FIRE Pokémon.",
       "bundles": "Bundles",
-      "bundles_description": "Bundles are gifts for the game mode Double Up. Some bundles require free benchspace, others require alot of gold."
+      "bundles_description": "Bundles are gifts for the game mode Double Up. Some bundles require free benchspace, others require alot of gold.",
+			"letter_description": "After reaching max level in FLYING synergy, your benched Pokémon can be used as postal service.",
+			"seeds_description": "Seeds are unholdable items received by FLYING Pokémon returning from delivering a LETTER. At the start of the fight, they apply powerful effects to the Pokémon on your board. Their effect lasts for one fight only, a new LETTER can be sent afterwards."
 		},
 		"statistics": {
 			"stat_description": {

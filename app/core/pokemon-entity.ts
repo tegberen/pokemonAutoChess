@@ -65,6 +65,7 @@ import {
   OnItemGainedEffect,
   OnItemRemovedEffect,
   OnKillEffect,
+  OnSkyDiveAttackEffect,
   OnSpawnEffect
 } from "./effects/effect"
 import { ItemEffects } from "./effects/items"
@@ -150,6 +151,8 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
   sourcePlayer: Player | undefined = undefined
   darkSubstituteTriggered: boolean = false
   darkSubstituteEligible: boolean = false
+  isStrongestAllyThisFight: boolean = false
+  isDoomSeedTarget: boolean = false
 
   constructor(
     pokemon: IPokemon,
@@ -1329,7 +1332,7 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
       .forEach((p) => p?.addPP(p.maxPP - p.pp, p, 0, false))
   }
 
-  flyAway(
+flyAway(
     board: Board,
     shouldSkydive = this.effects.has(EffectEnum.SKYDIVE),
     shouldProtect = this.effects.has(EffectEnum.FEATHER_DANCE) ||
@@ -1337,6 +1340,43 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
       this.effects.has(EffectEnum.MAX_AIRSTREAM)
   ): { x: number; y: number; target: PokemonEntity } | null {
     const flyAwayCell = board.getFlyAwayCell(this)
+    const hasDecoySeed =
+      this.player?.items.includes(Item.DECOY_SEED) &&
+      this.isStrongestAllyThisFight
+    const decoyOriginX = this.positionX
+    const decoyOriginY = this.positionY
+
+    const spawnDecoySubstitute = () => {
+      if (!hasDecoySeed) return
+      const substitute = PokemonFactory.createPokemonFromName(
+        Pkm.SUBSTITUTE,
+        this.player
+      )
+      this.simulation.addPokemon(
+        substitute,
+        decoyOriginX,
+        decoyOriginY,
+        this.team,
+        true,
+        true
+      )
+      const substituteEntity = board.getEntityOnCell(
+        decoyOriginX,
+        decoyOriginY
+      )
+      if (substituteEntity) {
+        const subHP = Math.round(this.maxHP * 0.5)
+        substituteEntity.hp = subHP
+        substituteEntity.maxHP = subHP
+        board
+          .getCellsInRadius(decoyOriginX, decoyOriginY, 3, false)
+          .forEach((cell) => {
+            if (cell.value && cell.value.team !== this.team) {
+              cell.value.setTarget(substituteEntity)
+            }
+          })
+      }
+    }
 
     if (flyAwayCell && this.passive === Passive.GALE_WINGS) {
       board
@@ -1364,6 +1404,7 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
         targetY: flyAwayCell.target.positionY
       })
       this.skydiveTo(flyAwayCell.x, flyAwayCell.y, board)
+      spawnDecoySubstitute()
       this.setTarget(flyAwayCell.target)
       this.commands.push(
         new DelayedCommand(() => {
@@ -1379,19 +1420,45 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
       this.commands.push(
         new DelayedCommand(() => {
           if (flyAwayCell.target?.hp > 0) {
-            flyAwayCell.target.handleSpecialDamage(
-              1.5 * this.atk,
+            const ccSeeds = [
+              Item.STUN_SEED,
+              Item.SLEEP_SEED,
+              Item.BAN_SEED,
+              Item.TOTTER_SEED,
+              Item.BLINKER_SEED
+            ]
+            const hasCcSeed = ccSeeds.some((seed) =>
+              this.player?.items.includes(seed)
+            )
+            const skydiveMultiplier = hasCcSeed ? 3 : 1.5
+            const damage = skydiveMultiplier * this.atk
+            const crit = this.player?.items.includes(Item.EMPOWERMENT_SEED)
+              ? true
+              : chance(this.critChance / 100, this)
+            const skydiveResult = flyAwayCell.target.handleSpecialDamage(
+              damage,
               board,
               AttackType.PHYSICAL,
               this,
-              chance(this.critChance / 100, this),
+              crit,
               false
             )
+            this.getEffects(OnSkyDiveAttackEffect).forEach((effect) => {
+              effect.apply({
+                pokemon: this,
+                target: flyAwayCell.target,
+                board,
+                damage,
+                crit,
+                death: skydiveResult.death
+              })
+            })
           }
         }, 1000)
       )
     } else if (flyAwayCell) {
       this.moveTo(flyAwayCell.x, flyAwayCell.y, board, false)
+      spawnDecoySubstitute()
     }
 
     // make enemies lose aggro after target flies away

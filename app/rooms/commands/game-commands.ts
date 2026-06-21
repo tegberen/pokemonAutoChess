@@ -103,7 +103,8 @@ import {
   Tools,
   UnholdableItems,
   ShinyItems,
-  DoubleUpTradeableItems
+  DoubleUpTradeableItems,
+  Seeds
 } from "../../types/enum/Item"
 import { Passive } from "../../types/enum/Passive"
 import {
@@ -1760,6 +1761,7 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
       const pokemon = player.board.get(e.pokemonId)
       if (pokemon) {
         pokemon.action = PokemonActionState.IDLE
+        player.items.push(pickRandomIn(Seeds))
       }
     })
 

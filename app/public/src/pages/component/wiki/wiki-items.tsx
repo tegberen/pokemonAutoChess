@@ -10,6 +10,7 @@ import {
   ItemRecipe,
   MemoryDiscs,
   Mulches,
+  Seeds,
   ShinyItems,
   SpecialItems,
   SynergyGems,
@@ -379,6 +380,17 @@ export default function WikiItems() {
         <p>{addIconsToDescription(t("wiki.items.fire_shard_description"))}</p>
         <ul>
           <ItemList items={[Item.FIRE_SHARD]} />
+        </ul>
+        <h3>
+          <SynergyIcon type={Synergy.FLYING} /> {t("item.LETTER")}
+        </h3>
+        <p>{addIconsToDescription(t("wiki.items.letter_description"))}</p>
+        <ul>
+          <ItemList items={[Item.LETTER]} />
+        </ul>
+        <p>{addIconsToDescription(t("wiki.items.seeds_description"))}</p>
+        <ul>
+          <ItemList items={Seeds} />
         </ul>
       </article>
 

@@ -356,7 +356,29 @@ export enum Item {
   MEWTWONITE_Y = "MEWTWONITE_Y",
   COCONUT_MILK = "COCONUT_MILK",
   COCONUT_MALASADA = "COCONUT_MALASADA",
-  LETTER = "LETTER"
+  LETTER = "LETTER",
+  BAN_SEED = "BAN_SEED",
+  BLAST_SEED = "BLAST_SEED",
+  BLINKER_SEED = "BLINKER_SEED",
+  DECOY_SEED = "DECOY_SEED",
+  DOOM_SEED = "DOOM_SEED",
+  EMPOWERMENT_SEED = "EMPOWERMENT_SEED",
+  ENERGY_SEED = "ENERGY_SEED",
+  EYEDROP_SEED = "EYEDROP_SEED",
+  HEAL_SEED = "HEAL_SEED",
+  JOY_SEED = "JOY_SEED",
+  LIFE_SEED = "LIFE_SEED",
+  PLAIN_SEED = "PLAIN_SEED",
+  PURE_SEED = "PURE_SEED",
+  QUICK_SEED = "QUICK_SEED",
+  REVIVER_SEED = "REVIVER_SEED",
+  SLEEP_SEED = "SLEEP_SEED",
+  STUN_SEED = "STUN_SEED",
+  TINY_REVIVER_SEED = "TINY_REVIVER_SEED",
+  TOTTER_SEED = "TOTTER_SEED",
+  TRAINING_SEED = "TRAINING_SEED",
+  VIOLENT_SEED = "VIOLENT_SEED",
+  WARP_SEED = "WARP_SEED"
 }
 
 export const MemoryDiscs = [
@@ -1102,6 +1124,33 @@ export const Dishes = [
 
 export type Dish = (typeof Dishes)[number]
 
+export const Seeds = [
+  Item.BAN_SEED,
+  Item.BLAST_SEED,
+  Item.BLINKER_SEED,
+  Item.DECOY_SEED,
+  Item.DOOM_SEED,
+  Item.EMPOWERMENT_SEED,
+  Item.ENERGY_SEED,
+  Item.EYEDROP_SEED,
+  Item.HEAL_SEED,
+  Item.JOY_SEED,
+  Item.LIFE_SEED,
+  Item.PLAIN_SEED,
+  Item.PURE_SEED,
+  Item.QUICK_SEED,
+  Item.REVIVER_SEED,
+  Item.SLEEP_SEED,
+  Item.STUN_SEED,
+  Item.TINY_REVIVER_SEED,
+  Item.TOTTER_SEED,
+  Item.TRAINING_SEED,
+  Item.VIOLENT_SEED,
+  Item.WARP_SEED
+] satisfies Item[]
+
+export type Seeds = (typeof Seeds)[number]
+
 export const Mushrooms = [
   Item.TINY_MUSHROOM,
   Item.BIG_MUSHROOM,
@@ -1228,7 +1277,8 @@ export const UnholdableItems = [
   Item.RED_SCALE,
   Item.MEWTWONITE_Y,
   ...SevenTreasures,
-  Item.LETTER
+  Item.LETTER,
+  ...Seeds
 ] satisfies Item[]
 
 export const ConsumableItems = [
