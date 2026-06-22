@@ -357,6 +357,7 @@ export enum Item {
   COCONUT_MILK = "COCONUT_MILK",
   COCONUT_MALASADA = "COCONUT_MALASADA",
   LETTER = "LETTER",
+  SHARP_BEAK = "SHARP_BEAK",
   BAN_SEED = "BAN_SEED",
   BLAST_SEED = "BLAST_SEED",
   BLINKER_SEED = "BLINKER_SEED",
@@ -533,7 +534,8 @@ export const SpecialItems: Item[] = [
   Item.TATSUGIRI_CURLY,
   Item.TATSUGIRI_DROOPY,
   Item.TATSUGIRI_STRETCHY,
-  Item.LETTER
+  Item.LETTER,
+  Item.SHARP_BEAK
 ] satisfies Item[]
 
 export const FishingRods = [

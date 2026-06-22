@@ -1,22 +1,20 @@
+import { Transfer } from "../types"
+import { DungeonPMDO } from "../types/enum/Dungeon"
 import { EffectEnum } from "../types/enum/Effect"
-import { type Seeds, Item, ItemComponents } from "../types/enum/Item"
+import { Rarity, Team } from "../types/enum/Game"
+import { type Seeds, CraftableNoStonesOrScarves, Item, ItemComponents, ItemComponentsNoScarf } from "../types/enum/Item"
+import { Pkm } from "../types/enum/Pokemon"
 import { Synergy } from "../types/enum/Synergy"
-import { AttackType, Team } from "../types/enum/Game"
+import { WandererBehavior, WandererType } from "../types/enum/Wanderer"
 import { chance, pickNRandomIn, pickRandomIn } from "../utils/random"
 import {
   type Effect,
-  OnSpawnEffect,
-  OnSkyDiveAttackEffect,
+  OnKillEffect,
   OnSimulationStartEffect,
-  OnKillEffect
+  OnSkyDiveAttackEffect,
+  OnSpawnEffect
 } from "./effects/effect"
 import { PokemonEntity } from "./pokemon-entity"
-import PokemonFactory from "../models/pokemon-factory"
-import { Pkm } from "../types/enum/Pokemon"
-import { Transfer } from "../types"
-import { DungeonPMDO } from "../types/enum/Dungeon"
-import { WandererType, WandererBehavior } from "../types/enum/Wanderer"
-import { DelayedCommand } from "./simulation-command"
 
 export const SeedEffects: Record<(typeof Seeds)[number], Effect[]> = {
   // ---- Group 1: CC seeds, 300% Sky Dive damage + status on user & target ----
@@ -202,7 +200,7 @@ export const SeedEffects: Record<(typeof Seeds)[number], Effect[]> = {
   JOY_SEED: [
     new OnKillEffect(({ attacker }) => {
       if (!attacker.types.has(Synergy.FLYING)) return
-      if (attacker.player && chance(0.3, attacker)) { 
+      if (attacker.player && chance(0.4, attacker)) { 
         attacker.player.items.push(pickRandomIn(ItemComponents))
       }
     })
@@ -274,4 +272,30 @@ export const SeedEffects: Record<(typeof Seeds)[number], Effect[]> = {
   // "DECOY_SEED": -> checked in pokemon-entity.ts fly away
   DECOY_SEED: []
 
+}
+
+const EXPLORER_BONUS_TABLE: Partial<
+  Record<Rarity, { nothing: number; component: number; fullItem: number; sharpBeak: number }>
+> = {
+  [Rarity.COMMON]: { nothing: 1, component: 0, fullItem: 0, sharpBeak: 0 },
+  [Rarity.UNCOMMON]: { nothing: 0.5, component: 0.5, fullItem: 0, sharpBeak: 0 },
+  [Rarity.RARE]: { nothing: 0.4, component: 0.5, fullItem: 0.7, sharpBeak: 0.03 },
+  [Rarity.EPIC]: { nothing: 0.2, component: 0.5, fullItem: 0.2, sharpBeak: 0.10 },
+  [Rarity.ULTRA]: { nothing: 0, component: 0.5, fullItem: 0.3, sharpBeak: 0.20 },
+  [Rarity.UNIQUE]: { nothing: 0, component: 0, fullItem: 0.5, sharpBeak: 0.5 },
+  [Rarity.LEGENDARY]: { nothing: 0, component: 0, fullItem: 0, sharpBeak: 1 },
+  [Rarity.SPECIAL]: { nothing: 0, component: 0, fullItem: 1, sharpBeak: 0 }
+}
+
+export function rollExplorerBonusReward(rarity: Rarity): Item | null {
+  const table = EXPLORER_BONUS_TABLE[rarity]
+  if (!table) return null
+  const roll = Math.random()
+  let threshold = table.nothing
+  if (roll < threshold) return null
+  threshold += table.component
+  if (roll < threshold) return pickRandomIn(ItemComponentsNoScarf)
+  threshold += table.fullItem
+  if (roll < threshold) return pickRandomIn(CraftableNoStonesOrScarves)
+  return Item.SHARP_BEAK
 }

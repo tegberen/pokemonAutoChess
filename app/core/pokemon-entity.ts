@@ -1441,7 +1441,7 @@ flyAway(
               AttackType.PHYSICAL,
               this,
               crit,
-              false
+              this.items.has(Item.SHARP_BEAK)
             )
             this.getEffects(OnSkyDiveAttackEffect).forEach((effect) => {
               effect.apply({

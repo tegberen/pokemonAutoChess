@@ -3,11 +3,12 @@ import { SetSchema, StateView } from "@colyseus/schema"
 import { type Client, updateLobby } from "colyseus"
 import {
   AdditionalPicksStages,
+  ArmoryAssistStages,
   BOARD_SIDE_HEIGHT,
   BOARD_WIDTH,
   FIGHTING_PHASE_DURATION,
-  GOLDEN_BERRY_TREE_TYPES,
   getAltFormForPlayer,
+  GOLDEN_BERRY_TREE_TYPES,
   ITEM_CAROUSEL_BASE_DURATION,
   ItemCarouselStages,
   ItemSellPricesAtTown,
@@ -22,8 +23,7 @@ import {
   StageDuration,
   SynergyTriggers,
   TREASURE_BOX_LIFE_THRESHOLD,
-  UNOWN_ENCOUNTER_CHANCE,
-  ArmoryAssistStages
+  UNOWN_ENCOUNTER_CHANCE
 } from "../../config"
 import { AbilityStrategies } from "../../core/abilities/abilities"
 import { castAbility } from "../../core/abilities/cast"
@@ -39,8 +39,9 @@ import { PassiveEffects } from "../../core/effects/passives"
 import { giveRandomEgg } from "../../core/eggs"
 import { EvolutionManager } from "../../core/evolution-logic/evolution-manager"
 import { getFlowerPotsUnlocked } from "../../core/flower-pots"
-import { selectMatchups, selectDoubleUpMatchups} from "../../core/matchmaking"
+import { selectDoubleUpMatchups, selectMatchups } from "../../core/matchmaking"
 import { canSell, PokemonEntity } from "../../core/pokemon-entity"
+import { rollExplorerBonusReward } from "../../core/seeds"
 import Simulation from "../../core/simulation"
 import { getLevelUpCost } from "../../models/colyseus-models/experience-manager"
 import type Player from "../../models/colyseus-models/player"
@@ -72,21 +73,23 @@ import {
 } from "../../types"
 import { EvolutionRuleType } from "../../types/EvolutionRules"
 import { Ability } from "../../types/enum/Ability"
+import { ArmoryOptions, FreeOptions, PaidOptions } from "../../types/enum/ArmoryOptions"
 import { DungeonPMDO } from "../../types/enum/Dungeon"
 import { EffectEnum } from "../../types/enum/Effect"
 import {
   BattleResult,
+  GameMode,
   GamePhaseState,
   PokemonActionState,
-  Team,
-  GameMode,
-  Rarity
+  Rarity,
+  Team
 } from "../../types/enum/Game"
 import {
   ConsumableItems,
   CraftableItemsNoScarves,
   CraftableNoStonesOrScarves,
   Dishes,
+  DoubleUpTradeableItems,
   Item,
   ItemComponents,
   ItemComponentsNoFossilOrScarf,
@@ -95,16 +98,15 @@ import {
   ItemsSoldAtTown,
   Mulches,
   Scarves,
+  Seeds,
+  ShinyItems,
   Sweets,
   SynergyGems,
   SynergyGivenByGem,
   SynergyGivenByItem,
   SynergyStones,
   Tools,
-  UnholdableItems,
-  ShinyItems,
-  DoubleUpTradeableItems,
-  Seeds
+  UnholdableItems
 } from "../../types/enum/Item"
 import { Passive } from "../../types/enum/Passive"
 import {
@@ -144,7 +146,6 @@ import { resetArraySchema, schemaValues } from "../../utils/schemas"
 import { getWeather } from "../../utils/weather"
 import type GameRoom from "../game-room"
 import type GameState from "../states/game-state"
-import { FreeOptions, PaidOptions, ArmoryOptions } from "../../types/enum/ArmoryOptions"
 
 export class OnBuyPokemonCommand extends Command<
   GameRoom,
@@ -907,9 +908,15 @@ export class OnDragDropItemCommand extends Command<
     }
     if (item === Item.LETTER && isOnBench(pokemon) && pokemon.types.has(Synergy.FLYING)) {
       pokemon.action = PokemonActionState.EXPLORING
+      const returnDelay = 
+        pokemon.name === Pkm.PELIPPER // Easter Egg Pelipper 
+          ? 1
+          : pokemon.items.has(Item.SHARP_BEAK)
+            ? 1
+            : 2
       player.pokemonsExploring.push({
         pokemonId: pokemon.id,
-        returnStage: this.state.stageLevel + 2
+        returnStage: this.state.stageLevel + returnDelay
       })
       removeInArray(player.items, item)
       client.send(Transfer.DRAG_DROP_CANCEL, message) // don't run normal item-equip logic below
@@ -1762,6 +1769,20 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
       if (pokemon) {
         pokemon.action = PokemonActionState.IDLE
         player.items.push(pickRandomIn(Seeds))
+        const bonus = rollExplorerBonusReward(pokemon.rarity)
+        if (bonus) {
+          player.items.push(bonus)
+        }
+        // Corviknight Easter Egg
+        if (pokemon.name === Pkm.CORVIKNIGHT) {
+          const position = getFirstAvailablePositionInBench(player.board)
+          if (position !== null) {
+            const mareep = PokemonFactory.createPokemonFromName(Pkm.MAREEP, player)
+            mareep.positionX = position
+            mareep.positionY = 0
+            player.board.set(mareep.id, mareep)
+          }
+        }
       }
     })
 
