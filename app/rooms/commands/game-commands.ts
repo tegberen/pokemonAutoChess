@@ -909,11 +909,13 @@ export class OnDragDropItemCommand extends Command<
     if (item === Item.LETTER && isOnBench(pokemon) && pokemon.types.has(Synergy.FLYING)) {
       pokemon.action = PokemonActionState.EXPLORING
       const returnDelay = 
-        pokemon.name === Pkm.PELIPPER // Easter Egg Pelipper 
-          ? 1
-          : pokemon.items.has(Item.SHARP_BEAK)
+        pokemon.name === Pkm.GYARADOS // Easter Egg Gyarados
+          ? 5
+          :pokemon.name === Pkm.PELIPPER // Easter Egg Pelipper 
             ? 1
-            : 2
+            : pokemon.items.has(Item.SHARP_BEAK)
+              ? 1
+              : 2
       player.pokemonsExploring.push({
         pokemonId: pokemon.id,
         returnStage: this.state.stageLevel + returnDelay
@@ -1768,12 +1770,12 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
       const pokemon = player.board.get(e.pokemonId)
       if (pokemon) {
         pokemon.action = PokemonActionState.IDLE
-        player.items.push(pickRandomIn(Seeds))
-        const bonus = rollExplorerBonusReward(pokemon.rarity)
-        if (bonus) {
-          player.items.push(bonus)
-        }
-        // Corviknight Easter Egg
+        const seed = pickRandomIn(Seeds)
+        const bonus = pokemon.name === Pkm.GYARADOS
+          ? null
+          : rollExplorerBonusReward(pokemon.rarity)
+        const client = this.room.clients.find((c) => c.auth.uid === player.id)
+
         if (pokemon.name === Pkm.CORVIKNIGHT) {
           const position = getFirstAvailablePositionInBench(player.board)
           if (position !== null) {
@@ -1783,6 +1785,18 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
             player.board.set(mareep.id, mareep)
           }
         }
+
+        this.room.clock.setTimeout(() => {
+          player.items.push(seed)
+          if (bonus) player.items.push(bonus)
+          if (pokemon.name === Pkm.GYARADOS) player.items.push(Item.RED_SCALE)
+          if (client) {
+            const dishes: Item[] = [seed]
+            if (bonus) dishes.push(bonus)
+            if (pokemon.name === Pkm.GYARADOS) dishes.push(Item.RED_SCALE)
+            client.send(Transfer.COOK, { pokemonId: pokemon.id, dishes })
+          }
+        }, 2750)
       }
     })
 

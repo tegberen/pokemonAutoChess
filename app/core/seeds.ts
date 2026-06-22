@@ -3,9 +3,7 @@ import { DungeonPMDO } from "../types/enum/Dungeon"
 import { EffectEnum } from "../types/enum/Effect"
 import { Rarity, Team } from "../types/enum/Game"
 import { type Seeds, CraftableNoStonesOrScarves, Item, ItemComponents, ItemComponentsNoScarf } from "../types/enum/Item"
-import { Pkm } from "../types/enum/Pokemon"
 import { Synergy } from "../types/enum/Synergy"
-import { WandererBehavior, WandererType } from "../types/enum/Wanderer"
 import { chance, pickNRandomIn, pickRandomIn } from "../utils/random"
 import {
   type Effect,
@@ -243,6 +241,8 @@ export const SeedEffects: Record<(typeof Seeds)[number], Effect[]> = {
   WARP_SEED: [
     new OnSkyDiveAttackEffect(({ pokemon, target }) => {
       if (!pokemon.isStrongestAllyThisFight) return
+      target.status.triggerConfusion(5000, target, pokemon)
+      //start warping
       const opponent = target.player
       if (!opponent) return
       const room = pokemon.simulation.room
@@ -250,17 +250,11 @@ export const SeedEffects: Record<(typeof Seeds)[number], Effect[]> = {
       const maps = Object.values(DungeonPMDO).filter((m) => m !== previousMap)
       const newMap = pickRandomIn(maps)
       room.broadcast(Transfer.PRELOAD_MAPS, [newMap])
-      opponent.spawnWanderingPokemon({
-        pkm: Pkm.LAPRAS,
-        type: WandererType.DIALOG,
-        behavior: WandererBehavior.SPECTATE,
-        data: newMap
-      })
       room.clock.setTimeout(() => {
         opponent.map = newMap
         opponent.regions.push(newMap)
         opponent.updateRegionalPool(room.state, true, previousMap)
-      }, 10000)
+      }, 500)
     })
   ],
   // ---- Group 6: misc ----
