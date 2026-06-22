@@ -3138,7 +3138,7 @@
 		"ICE_STONE": "The holder gains the ICE type",
 		"CHOICE_SPECS": "The holder gains 100 bonus AP",
 		"SOUL_DEW": "During combat, the holder gains 5 AP and 5 PP every second",
-		"UPGRADE": "Attacks grant +5 SPEED (stackable)",
+		"UPGRADE": "Attacks grant +5 SPEED and +5 AP (stackable)",
 		"REAPER_CLOTH": "The holder's ability can now critically strike based on CRIT_CHANCE. If the ability can already critically strike by default, increase CRIT_POWER by 50% instead.",
 		"POKEMONOMICON": "When the holder deals SPECIAL, they BURN the target for 3 seconds and reduce its SPE_DEF by 1.",
 		"POWER_LENS": "The amount of SPECIAL blocked by SPE_DEF is inflicted back to the attacker",

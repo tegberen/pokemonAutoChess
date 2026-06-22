@@ -33,7 +33,7 @@ export const ItemStats: { [item in Item]?: { [stat in Stat]?: number } } = {
   [Item.ICE_STONE]: { [Stat.SPE_DEF]: 6 },
   [Item.CHOICE_SPECS]: { [Stat.AP]: 100 },
   [Item.SOUL_DEW]: {},
-  [Item.UPGRADE]: { [Stat.AP]: 10, [Stat.SPEED]: 10 },
+  [Item.UPGRADE]: {},
   [Item.REAPER_CLOTH]: { [Stat.AP]: 10, [Stat.CRIT_CHANCE]: 20 },
   [Item.POKEMONOMICON]: { [Stat.AP]: 30, [Stat.ATK]: 3 },
   [Item.POWER_LENS]: { [Stat.SPE_DEF]: 10, [Stat.AP]: 10 },

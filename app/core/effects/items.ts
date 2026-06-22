@@ -881,10 +881,12 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
   [Item.UPGRADE]: [
     new OnAttackEffect(({ pokemon, target, board }) => {
       pokemon.addSpeed(5, pokemon, 0, false)
+      pokemon.addAbilityPower(5, pokemon, 0, false)
       pokemon.count.upgradeCount++
     }),
     new OnItemRemovedEffect((pokemon) => {
       pokemon.addSpeed(-5 * pokemon.count.upgradeCount, pokemon, 0, false)
+      pokemon.addAbilityPower(-5 * pokemon.count.upgradeCount, pokemon, 0, false)
       pokemon.count.upgradeCount = 0
     })
   ],

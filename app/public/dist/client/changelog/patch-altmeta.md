@@ -10,9 +10,9 @@
 - Additional effect for POISON 7: [2,LK] % chance to corrode one of the target's items, destroying it for the rest of the fight when not RUNE_PROTECT.
 - Additional effect for MONSTER 8: If the target is the last enemy on the board, permanently gain 3 ATK, 10 AP and 10 max HP.
 - Buffed effect for FIRE 8: +4 ATK after every hit (FIRE_SHARD: +4 permanent ATK and SPEED)
-- Buffed effect for FLYING 8: 175% PHYSICAL ATK on landing on their target
 - changed PSYCHIC 3 to 2, nerfed AP to 30
 - Additional effect for DARK: now escapes with the target when below 40% HP
+- Additional effect for FLYING: receive a LETTER
 
 # Misc
 > It's a small side server, I don't expect you to grind levels here haha. You can host your own Smeargle Scribble in Custom Lobby's now, and meet up with your friends to play together.
