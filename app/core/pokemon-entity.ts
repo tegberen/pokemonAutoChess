@@ -1093,7 +1093,10 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
         target.status.triggerWound(3000, target, this)
       }
     }
-    if (this.hasSynergyEffect(Synergy.FLYING)) {
+    if (this.effects.has(EffectEnum.FEATHER_DANCE) ||
+        this.effects.has(EffectEnum.MAX_AIRSTREAM) ||
+        this.effects.has(EffectEnum.SKYDIVE)
+    ) {
       if (chance(0.3, this)) {
         target.addAttack(-2, this, 0, false)
       }
