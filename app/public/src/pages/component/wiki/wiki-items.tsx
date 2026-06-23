@@ -250,7 +250,18 @@ export default function WikiItems() {
             </tr>
           </tbody>
         </table>
+        <h3>
+          <SynergyIcon type={Synergy.FLYING} /> {t("item.LETTER")}
+        </h3>
+        <p>{addIconsToDescription(t("wiki.items.letter_description"))}</p>
+        <ul>
+          <ItemList items={[Item.LETTER, Item.SHARP_BEAK]} />
 
+        </ul>
+        <p>{addIconsToDescription(t("wiki.items.seeds_description"))}</p>
+        <ul>
+          <ItemList items={Seeds} />
+        </ul>
         <h3>
           <SynergyIcon type={Synergy.ARTIFICIAL} /> {t("tools")}
         </h3>
@@ -381,17 +392,7 @@ export default function WikiItems() {
         <ul>
           <ItemList items={[Item.FIRE_SHARD]} />
         </ul>
-        <h3>
-          <SynergyIcon type={Synergy.FLYING} /> {t("item.LETTER")}
-        </h3>
-        <p>{addIconsToDescription(t("wiki.items.letter_description"))}</p>
-        <ul>
-          <ItemList items={[Item.LETTER]} />
-        </ul>
-        <p>{addIconsToDescription(t("wiki.items.seeds_description"))}</p>
-        <ul>
-          <ItemList items={Seeds} />
-        </ul>
+
       </article>
 
       <ItemDetailTooltip />

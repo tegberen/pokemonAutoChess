@@ -3861,7 +3861,7 @@
 		"HUMAN": "HUMAN Pokémon heal for a percentage of the damage they deal with attacks and abilities, and can learn a new ability with TMs and HMs.",
 		"AQUATIC": "AQUATIC Pokémon mitigate status afflictions for all your team. After 7 seconds, a tidal wave cleans up negative status and field effects, heals your AQUATIC allies, and knocks back and damages enemies.",
 		"BUG": "At the start of combat spawns a copy of your STRONGEST BUG Pokémon.",
-		"FLYING": "FLYING Pokémon fly away when they fall under a certain amount of HP unless affected by PARALYSIS, FREEZE, LOCKED or SLEEP. Your whole team gives SPEED when activated.",
+		"FLYING": "FLYING Pokémon fly away when they fall under a certain amount of HP unless affected by PARALYSIS, FREEZE, LOCKED or SLEEP. Your whole team gives SPEED when activated. Benched Pokémon can be used as postal service. They get paid with seeds. Pokémon with increased rarity tend to look out for lost items, returning with bonus rewards from their delivery.",
 		"FLORA": "When a FLORA Pokémon is KO'd, a Flower Pot blossoms and you collect RICH_MULCH. Higher STAR units give more mulch, which can be used to evolve your Flower Pots.",
 		"FAIRY": "FAIRY Pokémon use wands to deal additional SPECIAL and various effects with their attacks.{{additionalInfo}}",
 		"FAIRY_WANDS": "\nWands equipped: {{wands}}",
@@ -5038,8 +5038,8 @@
 			"fire_shard_description": "After reaching max level in FIRE synergy, every round you can use FIRE_SHARD to sacrifice your player HP and buff a FIRE Pokémon.",
       "bundles": "Bundles",
       "bundles_description": "Bundles are gifts for the game mode Double Up. Some bundles require free benchspace, others require alot of gold.",
-			"letter_description": "After reaching max level in FLYING synergy, your benched Pokémon can be used as postal service. They get paid with seeds. Pokémon with increased rarity tend to look out for lost items, returning with bonus rewards from their delivery.",
-			"seeds_description": "Seeds are unholdable items received by FLYING Pokémon returning from delivering a LETTER. At the start of the fight, they apply powerful effects to the Pokémon on your board. Their effect lasts for one fight only, a new Letter can be sent afterwards."
+			"letter_description": "After reaching max level in FLYING synergy, your benched Pokémon can be used as postal service by using the LETTER on a benched Pokémon. They get paid with seeds. Sometimes find other items during the journey like SHARP_BEAK.",
+			"seeds_description": "Seeds are unholdable items. At the start of the fight, they apply powerful effects to the Pokémon on your board. Their effect lasts for one fight only, a new Letter can be sent afterwards."
 		},
 		"statistics": {
 			"stat_description": {
