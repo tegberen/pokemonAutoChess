@@ -437,6 +437,8 @@ export default class Player extends Schema implements IPlayer {
 
     if (previousSynergies.get(Synergy.FLYING) != updatedSynergies.get(Synergy.FLYING)) {
       this.updateLetters(previousSynergies, updatedSynergies)
+    } else if (getSynergyStep(updatedSynergies, Synergy.FLYING) === 4) {
+      this.grantLetterIfEligible()
     }
   }
 
