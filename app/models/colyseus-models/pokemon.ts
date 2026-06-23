@@ -2643,6 +2643,7 @@ export class Politoed extends Pokemon {
   maxPP = 90
   range = 2
   skill = Ability.SOAK
+  passive = Passive.DRIZZLE
 }
 
 export class Poliwrath extends Pokemon {
@@ -14354,7 +14355,6 @@ export class Wingull extends Pokemon {
   range = 2
   skill = Ability.WHIRLWIND
   additional = true
-  passive = Passive.DRIZZLE
 }
 
 export class Pelipper extends Pokemon {
@@ -14370,7 +14370,7 @@ export class Pelipper extends Pokemon {
   range = 2
   skill = Ability.WHIRLWIND
   additional = true
-  passive = Passive.DRIZZLE
+  passive = Passive.PELIPPER
 }
 
 export class Murkrow extends Pokemon {

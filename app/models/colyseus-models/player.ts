@@ -434,6 +434,44 @@ export default class Player extends Schema implements IPlayer {
     ) {
       this.completeMissionOrder(Item.MISSION_ORDER_PINK)
     }
+
+    if (previousSynergies.get(Synergy.FLYING) != updatedSynergies.get(Synergy.FLYING)) {
+      this.updateLetters(previousSynergies, updatedSynergies)
+    }
+  }
+
+  grantLetterIfEligible() {
+    const hasDragonite = schemaValues(this.board).some(
+      (p) => p.name === Pkm.DRAGONITE
+    )
+    const maxConcurrent = hasDragonite ? 2 : 1
+    const hasFlying8 = getSynergyStep(this.synergies, Synergy.FLYING) === 4
+    if (!hasFlying8) return
+
+    let granted = 0
+    while (granted < maxConcurrent) {
+      const totalActive =
+        this.items.filter((i) => i === Item.LETTER).length +
+        this.pokemonsExploring.length
+      if (totalActive >= maxConcurrent) break
+      this.items.push(Item.LETTER)
+      granted++
+    }
+  }
+  updateLetters(
+    previousSynergies: Map<Synergy, number>,
+    updatedSynergies: Map<Synergy, number>
+  ) {
+    const previousFlyingStep = getSynergyStep(previousSynergies, Synergy.FLYING)
+    const newFlyingStep = getSynergyStep(updatedSynergies, Synergy.FLYING)
+    if (newFlyingStep === 4 && previousFlyingStep < 4) {
+      this.grantLetterIfEligible()
+    } else if (newFlyingStep < 4 && previousFlyingStep === 4) {
+      let safetyLimit = 10
+      while (this.items.includes(Item.LETTER) && safetyLimit-- > 0) {
+        removeInArray(this.items, Item.LETTER)
+      }
+    }
   }
 
   updateArtificialItems(

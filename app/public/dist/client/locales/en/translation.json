@@ -3734,7 +3734,8 @@
 		"BAD_DREAMS": "When the target is SLEEP, attacks are guaranteed to critically hit.",
   
 		"VESPIQUEN": "Vespiquen's RANGE and ability differs based on the row it starts in.\nBUG synergy effect does not spawn a copy of Vespiquen but 2 Combee instead.",
-		"DRAGONITE": "Gain another LETTER."
+		"DRAGONITE": "Gain another LETTER. Usually is very fast with delivering.",
+		"PELIPPER": "Allied FLYING Pokémon, deliver their LETTER faster."
 	},
 	"stat": {
 		"ATK": "Attack",
