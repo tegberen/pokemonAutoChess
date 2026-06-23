@@ -557,7 +557,7 @@ export class CovertCloakEffect extends PeriodicEffect {
             const apSteal = Math.min(5, enemy.ap)
             if (enemy.items.has(Item.TWIST_BAND) === false) {
               enemy.addAbilityPower(-apSteal, enemy, 0, false)
-              pokemon.addAbilityPower(-apSteal, pokemon, 0, false)
+              pokemon.addAbilityPower(apSteal, pokemon, 0, false)
             }
             enemy.handleSpecialDamage(
               5,
