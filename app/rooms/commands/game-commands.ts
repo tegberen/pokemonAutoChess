@@ -913,11 +913,15 @@ export class OnDragDropItemCommand extends Command<
       }
       pokemon.action = PokemonActionState.EXPLORING
 
-      const fastReturners = [Pkm.PELIPPER, Pkm.WINGULL, Pkm.DRAGONITE]
-      const returnDelay =
-        pokemon.name === Pkm.GYARADOS ? 5
-        : fastReturners.includes(pokemon.name) || pokemon.items.has(Item.SHARP_BEAK) ? 1
-        : 2
+      const hasPelipper = schemaValues(player.board).some(
+        (p) => p.name === Pkm.PELIPPER
+      )
+      const baseDelay = pokemon.name === Pkm.GYARADOS
+        ? 5
+        : pokemon.items.has(Item.SHARP_BEAK) || pokemon.name === Pkm.DRAGONITE
+          ? 1
+          : 2
+      const returnDelay = Math.max(1, baseDelay - (hasPelipper ? 1 : 0))
 
       player.pokemonsExploring.push({
         pokemonId: pokemon.id,
@@ -1807,19 +1811,7 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
 
     if (explorersReturning.length > 0) {
       this.room.checkEvolutionsAfterPokemonAcquired(player.id)
-    }
-    const hasDragonite = schemaValues(player.board).some(
-      (p) => p.name === Pkm.DRAGONITE
-    )
-    const maxConcurrent = hasDragonite ? 2 : 1
-
-    while (
-      getSynergyStep(player.synergies, Synergy.FLYING) === 4 &&
-      player.items.filter((i) => i === Item.LETTER).length +
-        player.pokemonsExploring.length <
-        maxConcurrent
-    ) {
-      player.items.push(Item.LETTER)
+      player.grantLetterIfEligible()
     }
 
     if (
