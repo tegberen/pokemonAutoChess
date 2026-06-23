@@ -273,7 +273,7 @@ const EXPLORER_BONUS_TABLE: Partial<
 > = {
   [Rarity.COMMON]: { nothing: 1, component: 0, fullItem: 0, sharpBeak: 0 },
   [Rarity.UNCOMMON]: { nothing: 0.5, component: 0.5, fullItem: 0, sharpBeak: 0 },
-  [Rarity.RARE]: { nothing: 0.4, component: 0.5, fullItem: 0.7, sharpBeak: 0.03 },
+  [Rarity.RARE]: { nothing: 0.4, component: 0.5, fullItem: 0.07, sharpBeak: 0.03 },
   [Rarity.EPIC]: { nothing: 0.2, component: 0.5, fullItem: 0.2, sharpBeak: 0.10 },
   [Rarity.ULTRA]: { nothing: 0, component: 0.5, fullItem: 0.3, sharpBeak: 0.20 },
   [Rarity.UNIQUE]: { nothing: 0, component: 0, fullItem: 0.5, sharpBeak: 0.5 },
