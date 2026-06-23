@@ -1093,6 +1093,11 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
         target.status.triggerWound(3000, target, this)
       }
     }
+    if (this.hasSynergyEffect(Synergy.FLYING)) {
+      if (chance(0.3, this)) {
+        target.addAttack(-2, this, 0, false)
+      }
+    }
 
     if (this.simulation.weather === Weather.ZENITH && this.player) {
       const nbSunStones = count(this.player.items, Item.SUN_STONE)
