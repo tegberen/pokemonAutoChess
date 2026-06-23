@@ -2251,5 +2251,16 @@ export const PassiveEffects: Partial<
     new OnEvolutionEffect(({ player }) => {
       player.updatePillars()
     })
+  ],
+  [Passive.INFILTRATOR]: [
+    new OnAttackEffect(({ pokemon, target }) => {
+      if (!target) return
+      target.status.reflectCooldown = 0
+      target.status.reflect = false
+      target.status.protectCooldown = 0
+      target.status.protect = false
+      target.status.magicBounce = false
+      target.status.magicBounceCooldown = 0
+    })
   ]
 }

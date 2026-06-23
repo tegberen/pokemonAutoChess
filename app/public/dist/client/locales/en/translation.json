@@ -3735,7 +3735,8 @@
   
 		"VESPIQUEN": "Vespiquen's RANGE and ability differs based on the row it starts in.\nBUG synergy effect does not spawn a copy of Vespiquen but 2 Combee instead.",
 		"DRAGONITE": "Gain another LETTER. Usually is very fast with delivering.",
-		"PELIPPER": "Allied FLYING Pokémon, deliver their LETTER faster."
+		"PELIPPER": "Allied FLYING Pokémon, deliver their LETTER faster.",
+		"INFILTRATOR": "On attack, destroy PROTECT, Magic Bounce and Reflect."
 	},
 	"stat": {
 		"ATK": "Attack",

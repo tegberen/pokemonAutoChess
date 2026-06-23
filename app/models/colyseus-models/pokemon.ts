@@ -5235,6 +5235,7 @@ export class Crobat extends Pokemon {
   maxPP = 100
   range = 2
   skill = Ability.LEECH_LIFE
+  passive = Passive.INFILTRATOR
 }
 
 export class Mareep extends Pokemon {
@@ -6967,7 +6968,7 @@ export class Larvesta extends Pokemon {
 }
 
 export class Volcarona extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.FIRE, Synergy.BUG])
+  types = new SetSchema<Synergy>([Synergy.FIRE, Synergy.BUG, Synergy.FLYING])
   rarity = Rarity.EPIC
   stars = 2
   hp = 200
@@ -10503,7 +10504,7 @@ export class Venonat extends Pokemon {
   def = 4
   speDef = 4
   maxPP = 80
-  range = 1
+  range = 2
   skill = Ability.BUG_BUZZ
   additional = true
 }
