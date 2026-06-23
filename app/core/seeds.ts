@@ -83,7 +83,7 @@ export const SeedEffects: Record<(typeof Seeds)[number], Effect[]> = {
       const freeAdjacent = adjacentCells.filter(
         (cell) => cell.value === undefined
       ).length
-      entity.addMaxHP(5 * freeAdjacent, entity, 0, false)
+      entity.addMaxHP(10 * freeAdjacent, entity, 0, false)
     })
   ],
 
@@ -104,7 +104,7 @@ export const SeedEffects: Record<(typeof Seeds)[number], Effect[]> = {
       const freeAdjacent = adjacentCells.filter(
         (cell) => cell.value === undefined
       ).length
-      entity.addSpeed(3 * freeAdjacent, entity, 0, false)
+      entity.addSpeed(10 * freeAdjacent, entity, 0, false)
     })
   ],
 
@@ -118,11 +118,11 @@ export const SeedEffects: Record<(typeof Seeds)[number], Effect[]> = {
       const midRow = isRedTeam ? 4 : 1
       const backRow = isRedTeam ? 5 : 0
       if (entity.positionY === frontRow) {
-        entity.addDefense(entity.baseDef * 2, entity, 0, false)
+        entity.addDefense(entity.baseDef * 3, entity, 0, false)
       } else if (entity.positionY === midRow) {
-        entity.addSpecialDefense(entity.baseSpeDef, entity, 0, false)
+        entity.addSpecialDefense(entity.baseSpeDef * 2, entity, 0, false)
       } else if (entity.positionY === backRow) {
-        entity.addAttack(0.5 * entity.baseAtk, entity, 0, false)
+        entity.addAttack(entity.baseAtk, entity, 0, false)
       }
     })
   ],
@@ -140,11 +140,11 @@ export const SeedEffects: Record<(typeof Seeds)[number], Effect[]> = {
 
   // ---- Group 3: fight-start, Flying-only ----
 
-  // "BLAST_SEED": "At the start of the fight, all allies gain 100% of the users base ATK and are BURN for the rest of the fight."
+  // "BLAST_SEED": "At the start of the fight, all allies gain 150% of the users base ATK and are BURN for the rest of the fight."
   BLAST_SEED: [
     new OnSpawnEffect((entity, player, isSpawn) => {
       if (!entity.types.has(Synergy.FLYING)) return
-      entity.addAttack(entity.baseAtk, entity, 0, false)
+      entity.addAttack(entity.baseAtk * 2, entity, 0, false)
       entity.status.triggerBurn(300000, entity, entity)
     })
   ],
@@ -152,20 +152,21 @@ export const SeedEffects: Record<(typeof Seeds)[number], Effect[]> = {
   // ---- Group 4: team-wide Sky Dive modifiers ----
 
 
-  // "EYEDROP_SEED": "All allies gain +2 RANGE. Sky Dive attacks FLINCH the target for 5s."
+  // "EYEDROP_SEED": "All allies gain +2 RANGE. Sky Dive attacks FLINCH the target for 5s and gain 50 SPEED". -> up to 100 SPEED
   EYEDROP_SEED: [
     new OnSimulationStartEffect(({ entity }) => {
-      entity.range += 2
+      entity.range += 3
     }),
     new OnSkyDiveAttackEffect(({ pokemon, target }) => {
       target.status.triggerFlinch(5000, target, pokemon)
+      pokemon.addSpeed(50, pokemon, 0, false)
     })
   ],
 
   // "HEAL_SEED": "All Sky Dive attacks grant the user SHIELD equal to 100% of the damage dealt." note: PROTECT pokemon cannot heal, thus SHIELD
   HEAL_SEED: [
     new OnSkyDiveAttackEffect(({ pokemon, damage }) => {
-      pokemon.addShield(damage * 1.5, pokemon, 0, false)
+      pokemon.addShield(damage * 3, pokemon, 0, false)
     })
   ],
 
@@ -173,6 +174,7 @@ export const SeedEffects: Record<(typeof Seeds)[number], Effect[]> = {
   PURE_SEED: [
     new OnSkyDiveAttackEffect(({ pokemon }) => {
       pokemon.status.triggerRuneProtect(300000, pokemon, pokemon)
+      pokemon.addAbilityPower(100, pokemon, 0, false, false)
     })
   ],
 
@@ -180,9 +182,9 @@ export const SeedEffects: Record<(typeof Seeds)[number], Effect[]> = {
   TRAINING_SEED: [
     new OnKillEffect(({ attacker }) => {
       if (!attacker.types.has(Synergy.FLYING)) return
-      attacker.addAttack(3, attacker, 0, false, true)
-      attacker.addSpeed(5, attacker, 0, false, true)
-      attacker.addMaxHP(10, attacker, 0, false, true)
+      attacker.addAttack(5, attacker, 0, false, true)
+      attacker.addSpeed(10, attacker, 0, false, true)
+      attacker.addMaxHP(20, attacker, 0, false, true)
     })
   ],
 
@@ -190,7 +192,7 @@ export const SeedEffects: Record<(typeof Seeds)[number], Effect[]> = {
   VIOLENT_SEED: [
     new OnSkyDiveAttackEffect(({ pokemon }) => {
       if (!pokemon.types.has(Synergy.FLYING)) return
-      pokemon.status.triggerRage(2000, pokemon)
+      pokemon.status.triggerRage(4000, pokemon)
     })
   ],
 
@@ -198,7 +200,7 @@ export const SeedEffects: Record<(typeof Seeds)[number], Effect[]> = {
   JOY_SEED: [
     new OnKillEffect(({ attacker }) => {
       if (!attacker.types.has(Synergy.FLYING)) return
-      if (attacker.player && chance(0.4, attacker)) { 
+      if (attacker.player && chance(0.5, attacker)) { 
         attacker.player.items.push(pickRandomIn(ItemComponents))
       }
     })
@@ -231,8 +233,8 @@ export const SeedEffects: Record<(typeof Seeds)[number], Effect[]> = {
         ally.status.addResurrection(ally)
       })
       allies.forEach((ally) => {
-        ally.addSpeed(0.5 * ally.speed, ally, 0, false)
-        ally.addAttack(0.5 * ally.atk, ally, 0, false)
+        ally.addSpeed(ally.speed, ally, 0, false)
+        ally.addAttack(ally.atk, ally, 0, false)
       })
     })
   ],
@@ -262,7 +264,11 @@ export const SeedEffects: Record<(typeof Seeds)[number], Effect[]> = {
   // "PLAIN_SEED":  lowroll sad bear
   PLAIN_SEED: [],
   // "EMPOWERMENT_SEED":  -> checked in pokemon-entity.ts fly away
-  EMPOWERMENT_SEED: [],
+  EMPOWERMENT_SEED: [
+    new OnSimulationStartEffect(({ entity }) => {
+      entity.addCritPower(100, entity, 0, false)
+    })  
+  ],
   // "DECOY_SEED": -> checked in pokemon-entity.ts fly away
   DECOY_SEED: []
 
@@ -273,9 +279,9 @@ const EXPLORER_BONUS_TABLE: Partial<
 > = {
   [Rarity.COMMON]: { nothing: 1, component: 0, fullItem: 0, sharpBeak: 0 },
   [Rarity.UNCOMMON]: { nothing: 0.5, component: 0.5, fullItem: 0, sharpBeak: 0 },
-  [Rarity.RARE]: { nothing: 0.4, component: 0.5, fullItem: 0.7, sharpBeak: 0.03 },
-  [Rarity.EPIC]: { nothing: 0.2, component: 0.5, fullItem: 0.2, sharpBeak: 0.10 },
-  [Rarity.ULTRA]: { nothing: 0, component: 0.5, fullItem: 0.3, sharpBeak: 0.20 },
+  [Rarity.RARE]: { nothing: 0.4, component: 0.5, fullItem: 0.05, sharpBeak: 0.05 },
+  [Rarity.EPIC]: { nothing: 0.2, component: 0.4, fullItem: 0.2, sharpBeak: 0.2 },
+  [Rarity.ULTRA]: { nothing: 0, component: 0.4, fullItem: 0.3, sharpBeak: 0.3 },
   [Rarity.UNIQUE]: { nothing: 0, component: 0, fullItem: 0.5, sharpBeak: 0.5 },
   [Rarity.LEGENDARY]: { nothing: 0, component: 0, fullItem: 0, sharpBeak: 1 },
   [Rarity.SPECIAL]: { nothing: 0, component: 0, fullItem: 1, sharpBeak: 0 }

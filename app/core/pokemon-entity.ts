@@ -1365,11 +1365,11 @@ flyAway(
         decoyOriginY
       )
       if (substituteEntity) {
-        const subHP = Math.round(this.maxHP * 0.5)
+        const subHP = Math.round(this.maxHP)
         substituteEntity.hp = subHP
         substituteEntity.maxHP = subHP
         board
-          .getCellsInRadius(decoyOriginX, decoyOriginY, 3, false)
+          .getCellsInRadius(decoyOriginX, decoyOriginY, 4, false)
           .forEach((cell) => {
             if (cell.value && cell.value.team !== this.team) {
               cell.value.setTarget(substituteEntity)
@@ -1430,7 +1430,7 @@ flyAway(
             const hasCcSeed = ccSeeds.some((seed) =>
               this.player?.items.includes(seed)
             )
-            const skydiveMultiplier = hasCcSeed ? 3 : 1.5
+            const skydiveMultiplier = hasCcSeed ? 5 : 1.5
             const damage = skydiveMultiplier * this.atk
             const crit = this.player?.items.includes(Item.EMPOWERMENT_SEED)
               ? true
