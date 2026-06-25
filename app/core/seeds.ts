@@ -124,7 +124,7 @@ export const SeedEffects: Record<(typeof Seeds)[number], Effect[]> = {
       } else if (entity.positionY === midRow) {
         entity.addSpecialDefense(entity.baseSpeDef * 2, entity, 0, false)
       } else if (entity.positionY === backRow) {
-        entity.addAttack(entity.baseAtk, entity, 0, false)
+        entity.addAttack(entity.baseAtk * 0.5, entity, 0, false)
       }
     })
   ],
@@ -146,7 +146,7 @@ export const SeedEffects: Record<(typeof Seeds)[number], Effect[]> = {
   BLAST_SEED: [
     new OnSpawnEffect((entity, player, isSpawn) => {
       if (!entity.types.has(Synergy.FLYING)) return
-      entity.addAttack(entity.baseAtk * 2, entity, 0, false)
+      entity.addAttack(entity.baseAtk, entity, 0, false)
       entity.status.triggerBurn(300000, entity, entity)
     })
   ],
@@ -161,14 +161,14 @@ export const SeedEffects: Record<(typeof Seeds)[number], Effect[]> = {
     }),
     new OnSkyDiveAttackEffect(({ pokemon, target }) => {
       target.status.triggerFlinch(5000, target, pokemon)
-      pokemon.addSpeed(50, pokemon, 0, false)
+      pokemon.addSpeed(25, pokemon, 0, false)
     })
   ],
 
   // "HEAL_SEED": "All Sky Dive attacks grant the user SHIELD equal to 100% of the damage dealt." note: PROTECT pokemon cannot heal, thus SHIELD
   HEAL_SEED: [
     new OnSkyDiveAttackEffect(({ pokemon, damage }) => {
-      pokemon.addShield(damage * 3, pokemon, 0, false)
+      pokemon.addShield(damage * 2, pokemon, 0, false)
     })
   ],
 
@@ -176,7 +176,7 @@ export const SeedEffects: Record<(typeof Seeds)[number], Effect[]> = {
   PURE_SEED: [
     new OnSkyDiveAttackEffect(({ pokemon }) => {
       pokemon.status.triggerRuneProtect(300000, pokemon, pokemon)
-      pokemon.addAbilityPower(100, pokemon, 0, false, false)
+      pokemon.addAbilityPower(50, pokemon, 0, false, false)
     })
   ],
 
@@ -184,9 +184,9 @@ export const SeedEffects: Record<(typeof Seeds)[number], Effect[]> = {
   TRAINING_SEED: [
     new OnKillEffect(({ attacker }) => {
       if (!attacker.types.has(Synergy.FLYING)) return
-      attacker.addAttack(5, attacker, 0, false, true)
-      attacker.addSpeed(10, attacker, 0, false, true)
-      attacker.addMaxHP(20, attacker, 0, false, true)
+      attacker.addAttack(3, attacker, 0, false, true)
+      attacker.addSpeed(5, attacker, 0, false, true)
+      attacker.addMaxHP(10, attacker, 0, false, true)
     })
   ],
 
@@ -194,7 +194,7 @@ export const SeedEffects: Record<(typeof Seeds)[number], Effect[]> = {
   VIOLENT_SEED: [
     new OnSkyDiveAttackEffect(({ pokemon }) => {
       if (!pokemon.types.has(Synergy.FLYING)) return
-      pokemon.status.triggerRage(4000, pokemon)
+      pokemon.status.triggerRage(3000, pokemon)
     })
   ],
 
