@@ -1,3 +1,4 @@
+import Player from "../models/colyseus-models/player"
 import { Transfer } from "../types"
 import { DungeonPMDO } from "../types/enum/Dungeon"
 import { EffectEnum } from "../types/enum/Effect"
@@ -5,6 +6,7 @@ import { Rarity, Team } from "../types/enum/Game"
 import { type Seeds, CraftableNoStonesOrScarves, Item, ItemComponents, ItemComponentsNoScarf } from "../types/enum/Item"
 import { Synergy } from "../types/enum/Synergy"
 import { chance, pickNRandomIn, pickRandomIn } from "../utils/random"
+import { schemaValues } from "../utils/schemas"
 import {
   type Effect,
   OnKillEffect,
@@ -274,28 +276,45 @@ export const SeedEffects: Record<(typeof Seeds)[number], Effect[]> = {
 
 }
 
-const EXPLORER_BONUS_TABLE: Partial<
-  Record<Rarity, { nothing: number; component: number; fullItem: number; sharpBeak: number }>
-> = {
-  [Rarity.COMMON]: { nothing: 1, component: 0, fullItem: 0, sharpBeak: 0 },
-  [Rarity.UNCOMMON]: { nothing: 0.5, component: 0.5, fullItem: 0, sharpBeak: 0 },
-  [Rarity.RARE]: { nothing: 0.4, component: 0.5, fullItem: 0.05, sharpBeak: 0.05 },
-  [Rarity.EPIC]: { nothing: 0.2, component: 0.4, fullItem: 0.2, sharpBeak: 0.2 },
-  [Rarity.ULTRA]: { nothing: 0, component: 0.4, fullItem: 0.3, sharpBeak: 0.3 },
-  [Rarity.UNIQUE]: { nothing: 0, component: 0, fullItem: 0.5, sharpBeak: 0.5 },
-  [Rarity.LEGENDARY]: { nothing: 0, component: 0, fullItem: 0, sharpBeak: 1 },
-  [Rarity.SPECIAL]: { nothing: 0, component: 0, fullItem: 1, sharpBeak: 0 }
+type ExplorerBonusRow = {
+  nothing: number
+  bigNugget: number
+  nugget: number
+  rustyCoin: number
+  component: number
+  fullItem: number
+  sharpBeak: number
 }
 
-export function rollExplorerBonusReward(rarity: Rarity): Item | null {
+const EXPLORER_BONUS_TABLE: Partial<Record<Rarity, ExplorerBonusRow>> = {
+  [Rarity.COMMON]:    { nothing: 0.20, bigNugget: 0.05, nugget: 0.15, rustyCoin: 0.60, component: 0,    fullItem: 0,    sharpBeak: 0    },
+  [Rarity.UNCOMMON]:  { nothing: 0.20, bigNugget: 0,    nugget: 0.20, rustyCoin: 0.50, component: 0.05, fullItem: 0.05,  sharpBeak: 0    },
+  [Rarity.RARE]:      { nothing: 0.20, bigNugget: 0,    nugget: 0.10, rustyCoin: 0.10, component: 0.50, fullItem: 0.05, sharpBeak: 0.05 },
+  [Rarity.EPIC]:      { nothing: 0.20, bigNugget: 0,    nugget: 0,    rustyCoin: 0,    component: 0.40, fullItem: 0.25, sharpBeak: 0.15 },
+  [Rarity.ULTRA]:     { nothing: 0.20, bigNugget: 0,    nugget: 0,    rustyCoin: 0,    component: 0.30, fullItem: 0.25, sharpBeak: 0.25 },
+  [Rarity.UNIQUE]:    { nothing: 0.20, bigNugget: 0,    nugget: 0,    rustyCoin: 0,    component: 0.20, fullItem: 0.10, sharpBeak: 0.50 },
+  [Rarity.LEGENDARY]: { nothing: 0.20, bigNugget: 0,    nugget: 0,    rustyCoin: 0,    component: 0,    fullItem: 0.10, sharpBeak: 0.70 },
+  [Rarity.SPECIAL]:   { nothing: 0.20, bigNugget: 0,    nugget: 0,    rustyCoin: 0,    component: 0,    fullItem: 0.80, sharpBeak: 0    }
+}
+
+export function rollExplorerBonusReward(rarity: Rarity, player: Player): Item | null {
   const table = EXPLORER_BONUS_TABLE[rarity]
   if (!table) return null
   const roll = Math.random()
   let threshold = table.nothing
   if (roll < threshold) return null
+  threshold += table.bigNugget
+  if (roll < threshold) return Item.BIG_NUGGET
+  threshold += table.nugget
+  if (roll < threshold) return Item.NUGGET
+  threshold += table.rustyCoin
+  if (roll < threshold) return Item.COIN
   threshold += table.component
   if (roll < threshold) return pickRandomIn(ItemComponentsNoScarf)
   threshold += table.fullItem
   if (roll < threshold) return pickRandomIn(CraftableNoStonesOrScarves)
-  return Item.SHARP_BEAK
+  const alreadyHasSharpBeak =
+    player.items.includes(Item.SHARP_BEAK) ||
+    schemaValues(player.board).some((p) => p.items.has(Item.SHARP_BEAK))
+  return alreadyHasSharpBeak ? pickRandomIn(CraftableNoStonesOrScarves) : Item.SHARP_BEAK
 }

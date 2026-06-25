@@ -1780,7 +1780,7 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
         const seed = pickRandomIn(Seeds)
         const bonus = pokemon.name === Pkm.GYARADOS
           ? null
-          : rollExplorerBonusReward(pokemon.rarity)
+          : rollExplorerBonusReward(pokemon.rarity, player)
         const client = this.room.clients.find((c) => c.auth.uid === player.id)
 
         if (pokemon.name === Pkm.CORVIKNIGHT) {
@@ -1793,17 +1793,30 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
           }
         }
 
-        this.room.clock.setTimeout(() => {
-          player.items.push(seed)
-          if (bonus) player.items.push(bonus)
-          if (pokemon.name === Pkm.GYARADOS) player.items.push(Item.RED_SCALE)
-          if (client) {
-            const dishes: Item[] = [seed]
-            if (bonus) dishes.push(bonus)
-            if (pokemon.name === Pkm.GYARADOS) dishes.push(Item.RED_SCALE)
-            client.send(Transfer.COOK, { pokemonId: pokemon.id, dishes })
-          }
-        }, 2750)
+    this.room.clock.setTimeout(() => {
+      player.items.push(seed)
+      if (bonus) {
+        if (bonus === Item.COIN) {
+          player.addMoney(1, true, null)
+          client?.send(Transfer.PLAYER_INCOME, 1)
+        } else if (bonus === Item.NUGGET) {
+          player.addMoney(3, true, null)
+          client?.send(Transfer.PLAYER_INCOME, 3)
+        } else if (bonus === Item.BIG_NUGGET) {
+          player.addMoney(10, true, null)
+          client?.send(Transfer.PLAYER_INCOME, 10)
+        } else {
+          player.items.push(bonus)
+        }
+      }
+      if (pokemon.name === Pkm.GYARADOS) player.items.push(Item.RED_SCALE)
+      if (client) {
+        const dishes: Item[] = [seed]
+        if (bonus) dishes.push(bonus)
+        if (pokemon.name === Pkm.GYARADOS) dishes.push(Item.RED_SCALE)
+        client.send(Transfer.COOK, { pokemonId: pokemon.id, dishes })
+      }
+    }, 2750)
       }
     })
 

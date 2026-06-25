@@ -1308,5 +1308,6 @@ export const RemovableItems = [
   ...Tools,
   ...Scarves,
   ...MemoryDiscs,
-  Item.TRAINING_RIBBON
+  Item.TRAINING_RIBBON,
+  Item.SHARP_BEAK
 ] satisfies Item[]

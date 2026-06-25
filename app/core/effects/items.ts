@@ -1875,5 +1875,15 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
         target.addAttack(-2, target, 0, false)
       }
     })
+  ],
+  [Item.SHARP_BEAK]: [
+    new OnItemGainedEffect((pokemon) => {
+      if (!pokemon.types.has(Synergy.FLYING)) return  
+      pokemon.addAttack(pokemon.baseAtk, pokemon, 0, false)
+    }),
+    new OnItemRemovedEffect((pokemon) => {
+      if (!pokemon.types.has(Synergy.FLYING)) return
+      pokemon.addAttack(-pokemon.baseAtk, pokemon, 0, false)
+    })
   ]
 }
