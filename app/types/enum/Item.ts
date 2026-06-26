@@ -51,6 +51,7 @@ export enum Item {
   POWER_LENS = "POWER_LENS",
   SHELL_BELL = "SHELL_BELL",
   HEAVY_DUTY_BOOTS = "HEAVY_DUTY_BOOTS",
+  RELIC_CROWN = "RELIC_CROWN",
   AQUA_EGG = "AQUA_EGG",
   BLUE_ORB = "BLUE_ORB",
   SCOPE_LENS = "SCOPE_LENS",
@@ -587,7 +588,8 @@ export const ItemRecipe: { [key in Item]?: Item[] } = {
   [Item.ABILITY_SHIELD]: [Item.TWISTED_SPOON, Item.MIRACLE_SEED],
   [Item.POWER_LENS]: [Item.TWISTED_SPOON, Item.NEVER_MELT_ICE],
   [Item.POKEMONOMICON]: [Item.TWISTED_SPOON, Item.CHARCOAL],
-  [Item.HEAVY_DUTY_BOOTS]: [Item.TWISTED_SPOON, Item.HEART_SCALE],
+  // [Item.HEAVY_DUTY_BOOTS]: [Item.TWISTED_SPOON, Item.HEART_SCALE],
+  [Item.RELIC_CROWN]: [Item.TWISTED_SPOON, Item.HEART_SCALE],
   [Item.COVERT_CLOAK]: [Item.BINDING_BAND, Item.TWISTED_SPOON],
   [Item.AQUA_EGG]: [Item.MYSTIC_WATER, Item.MYSTIC_WATER],
   [Item.BLUE_ORB]: [Item.MYSTIC_WATER, Item.MAGNET],
@@ -710,7 +712,8 @@ export const Tools = [
   Item.MAX_ELIXIR,
   Item.EXP_SHARE,
   Item.TERRAIN_EXTENDER,
-  Item.WHITE_FLUTE
+  Item.WHITE_FLUTE,
+  Item.HEAVY_DUTY_BOOTS
 ] satisfies Item[]
 
 

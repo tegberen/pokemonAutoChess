@@ -1338,6 +1338,23 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
       )
       .map((c) => c.value)
       .forEach((p) => p?.addPP(p.maxPP - p.pp, p, 0, false))
+
+    board
+      .getCellsInRadius(this.positionX, this.positionY, 2, false)
+      .filter(
+        (c) =>
+          c.value?.items.has(Item.RELIC_CROWN) &&
+          c.value?.team === this.team
+      )
+      .map((c) => c.value)
+      .forEach((p) => {
+        if (p) {
+          p.handleHeal(Math.floor(p.maxHP * 0.1), p, 0, false)
+          p.addDefense(5, p, 0, false)
+          p.addSpecialDefense(5, p, 0, false)
+          p.addAbilityPower(10, p, 0, false)
+        }
+      })
   }
 
 flyAway(

@@ -740,37 +740,6 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
   [Item.HEAVY_DUTY_BOOTS]: [
     new OnItemGainedEffect((pokemon) => {
       pokemon.effects.add(EffectEnum.IMMUNITY_LOCKED)
-    }),
-    new OnDamageReceivedEffect(({ pokemon, board, attacker }) => {
-      if (
-        attacker &&
-        pokemon.hp <= 0.4 * pokemon.maxHP &&
-        !pokemon.effects.has(EffectEnum.HEAVY_DUTY_BOOTS_PROC)
-      ) {
-        pokemon.effects.add(EffectEnum.HEAVY_DUTY_BOOTS_PROC)
-        pokemon.addDefense(10, pokemon, 0, false)
-        pokemon.addAbilityPower(30, pokemon, 0, false)
-        let farthestEmptyCell: Cell | null = null
-        effectInOrientation(board, pokemon, attacker, (cell) => {
-          if (!cell.value) farthestEmptyCell = cell
-        })
-        if (farthestEmptyCell && attacker.canBeMoved) {
-          pokemon.broadcastAbility({
-            skill: Ability.THUNDEROUS_KICK,
-            positionX: attacker.positionX,
-            positionY: attacker.positionY,
-            targetX: attacker.positionX,
-            targetY: attacker.positionY
-          })
-          attacker.moveTo(
-            (farthestEmptyCell as Cell).x,
-            (farthestEmptyCell as Cell).y,
-            board,
-            true
-          )
-          attacker.cooldown = 500
-        }
-      }
     })
   ],
 
