@@ -3145,7 +3145,7 @@
 		"POWER_LENS": "The amount of SPECIAL blocked by SPE_DEF is inflicted back to the attacker",
 		"SHELL_BELL": "Holder heals for 33% of all damages inflicted",
 		"HEAVY_DUTY_BOOTS": "Holder is immune to any BOARD_EFFECT, forced displacement and LOCKED.",
-		"RELIC_CROWN": "When an ally within a 2-tile radius is KO'd, heal the holder for 10% of their max HP and gain +5 DEF, +5 SPE_DEF and +10 AP.",
+		"RELIC_CROWN": "When an ally within a 2-tile radius is KO'd, increase and heal 10% of their max HP and gain +5 DEF, +5 SPE_DEF and +10 AP.",
 		"AQUA_EGG": "The holder regains 20% of its max PP after casting its ability, + 2 PP for each cast done in the fight",
 		"BLUE_ORB": "Every 3 attacks, unleashes a chain lightning that bounces to the 2 closest enemies, dealing 10 SPECIAL and burning 15 PP",
 		"SCOPE_LENS": "Critical attacks steal 10 PP from the target.",
