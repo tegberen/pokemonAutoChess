@@ -194,7 +194,7 @@ export const SeedEffects: Record<(typeof Seeds)[number], Effect[]> = {
   VIOLENT_SEED: [
     new OnSkyDiveAttackEffect(({ pokemon }) => {
       if (!pokemon.types.has(Synergy.FLYING)) return
-      pokemon.status.triggerRage(3000, pokemon)
+      pokemon.status.triggerRage(2000, pokemon)
     })
   ],
 
@@ -202,7 +202,7 @@ export const SeedEffects: Record<(typeof Seeds)[number], Effect[]> = {
   JOY_SEED: [
     new OnKillEffect(({ attacker }) => {
       if (!attacker.types.has(Synergy.FLYING)) return
-      if (attacker.player && chance(0.5, attacker)) { 
+      if (attacker.player && chance(0.3, attacker)) { 
         attacker.player.items.push(pickRandomIn(ItemComponents))
       }
     })
@@ -217,7 +217,7 @@ export const SeedEffects: Record<(typeof Seeds)[number], Effect[]> = {
         (c): c is PokemonEntity =>
           c instanceof PokemonEntity && c.team === pokemon.team
       )
-      pickNRandomIn(allies, 3).forEach((ally) => {
+      pickNRandomIn(allies, 2).forEach((ally) => {
         ally.status.addResurrection(ally)
       })
     })
@@ -245,7 +245,7 @@ export const SeedEffects: Record<(typeof Seeds)[number], Effect[]> = {
   WARP_SEED: [
     new OnSkyDiveAttackEffect(({ pokemon, target }) => {
       if (!pokemon.isStrongestAllyThisFight) return
-      target.status.triggerConfusion(5000, target, pokemon)
+      target.status.triggerConfusion(7000, target, pokemon)
       //start warping
       const opponent = target.player
       if (!opponent) return
@@ -268,7 +268,7 @@ export const SeedEffects: Record<(typeof Seeds)[number], Effect[]> = {
   // "EMPOWERMENT_SEED":  -> checked in pokemon-entity.ts fly away
   EMPOWERMENT_SEED: [
     new OnSimulationStartEffect(({ entity }) => {
-      entity.addCritPower(100, entity, 0, false)
+      entity.addCritPower(50, entity, 0, false)
     })  
   ],
   // "DECOY_SEED": -> checked in pokemon-entity.ts fly away
