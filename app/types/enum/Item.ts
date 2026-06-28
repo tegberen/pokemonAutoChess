@@ -352,7 +352,6 @@ export enum Item {
   SWITCHER_WAND = "SWITCHER_WAND",
   WHIRLWIND_WAND = "WHIRLWIND_WAND",
   TUNNEL_WAND = "TUNNEL_WAND",
-  TRAINING_RIBBON = "TRAINING_RIBBON",
   ELECTRIC_SEED = "ELECTRIC_SEED",
   MEWTWONITE_Y = "MEWTWONITE_Y",
   COCONUT_MILK = "COCONUT_MILK",
@@ -528,7 +527,6 @@ export const SpecialItems: Item[] = [
   Item.SCROLL_OF_WATERS,
   Item.SCROLL_OF_DARKNESS,
   Item.MEWTWONITE_Y,
-  Item.TRAINING_RIBBON,
   Item.MEMORY_DISCS,
   ...MemoryDiscs,
   Item.COMFEY,
@@ -1311,6 +1309,5 @@ export const RemovableItems = [
   ...Tools,
   ...Scarves,
   ...MemoryDiscs,
-  Item.TRAINING_RIBBON,
   Item.SHARP_BEAK
 ] satisfies Item[]

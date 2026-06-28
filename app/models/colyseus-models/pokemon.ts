@@ -3643,13 +3643,7 @@ export class Pikachu extends Pokemon {
     if (item === Item.SURFBOARD) {
       player.transformPokemon(this, Pkm.PIKACHU_SURFER)
     }
-    if (item === Item.TRAINING_RIBBON) {
-      this.items.delete(Item.TRAINING_RIBBON)
-      player.transformPokemon(this, Pkm.PIKACHU_LIBRE)
-    }
   }
-
-
 }
 
 export class Raichu extends Pokemon {
@@ -5796,11 +5790,11 @@ export class PikachuLibre extends Pokemon {
   ])
   rarity = Rarity.SPECIAL
   stars = 3
-  hp = 170
-  atk = 12
+  hp = 120
+  atk = 8
   speed = 54
-  def = 7
-  speDef = 10
+  def = 4
+  speDef = 6
   maxPP = 100
   range = 1
   skill = Ability.THUNDERCLAP_PRESS

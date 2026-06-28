@@ -313,7 +313,7 @@ export class FightingKnockbackEffect extends OnDamageReceivedEffect {
       pokemon.count.fightingBlockCount > 0 &&
       pokemon.count.fightingBlockCount % 10 === 0
     ) {
-      pokemon.status.triggerRage(4000, pokemon)
+      pokemon.status.triggerRage(2000, pokemon)
     }
     // Fighting knockback
     if (

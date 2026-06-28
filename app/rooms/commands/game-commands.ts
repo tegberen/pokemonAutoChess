@@ -2052,10 +2052,7 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
         p.pokemon.items = new SetSchema<Item>()
         p.pokemon.addItems(schemaValues(substitute.items), player)
         substitute.items.clear()
-        // if is pikachu give item to trigger libre transformation
-        if (p.pokemon.name === Pkm.PIKACHU) {
-          player.items.push(Item.TRAINING_RIBBON)
-        }
+
         this.room.checkEvolutionsAfterPokemonAcquired(player.id)
         player.pokemonsTrainingInDojo.splice(
           player.pokemonsTrainingInDojo.indexOf(p),
@@ -2247,6 +2244,12 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
             }
 
             if (pokemon.action === PokemonActionState.TRAINING) {
+              if (pokemon.name === Pkm.PIKACHU) {
+                const libre = player.transformPokemon(pokemon, Pkm.PIKACHU_LIBRE)
+                libre.addAttack(4)
+                libre.addMaxHP(Math.ceil(0.1 * getPokemonData(Pkm.PIKACHU_LIBRE).hp))
+                return
+              }
               pokemon.addAttack(4)
               pokemon.addMaxHP(Math.ceil(0.1 * getPokemonData(pokemon.name).hp))
               pokemon.action = PokemonActionState.IDLE

@@ -13057,8 +13057,8 @@ export class ThunderClapPressStrategy extends AbilityStrategy {
     crit: boolean
   ) {
     super.process(pokemon, board, target, crit)
-    const damage = [25, 50, 100][pokemon.stars - 1] ?? 100
-    const duration = 4000
+    const damage = [15, 30, 60][pokemon.stars - 1] ?? 60
+    const duration = 3000
 
     const cells = board.getCellsBetween(
       pokemon.positionX,

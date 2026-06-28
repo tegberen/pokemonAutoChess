@@ -20,7 +20,7 @@
 - No level requirement for Gadgets, except Bot Builder yikes
 - Added Shiniest Hunter: All PvE encounter are shiny
 - Added new Fugitive: Mafia Togepi that gives an egg upon capture
-- When Pikachu is send to the dojo, obtain a TRAINING_RIBBON. Can be used to evolve Pikachu into Pikachu Libre (given an item slot is open).
+- Pikachu can punch the bag
 - 555 Boosters for new members, to motivate you playing here (not to make multiple accounts, please XD)
 - Playtest Smeargle Scribble: Can be used for testing and reproducing bugs. (No EXP)
 - new town encounter - Chimecho: grants a melodic treasure to every player

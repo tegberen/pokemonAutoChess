@@ -172,7 +172,7 @@ export default class Simulation extends Schema implements ISimulation {
             // OnBenchedDuringFightEffect should be applied here
             if (
               teamEffects.has(EffectEnum.COACHING) &&
-              pokemon.types.has(Synergy.FIGHTING)
+              pokemon.types.has(Synergy.FIGHTING) || pokemon.name === Pkm.PIKACHU
             ) {
               fightingTrainingEffect.apply({
                 pokemon,
