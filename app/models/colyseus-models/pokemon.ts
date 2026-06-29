@@ -16373,7 +16373,7 @@ export class Tangela extends Pokemon {
   types = new SetSchema<Synergy>([
     Synergy.GRASS,
     Synergy.MONSTER,
-    Synergy.FOSSIL
+    Synergy.GOURMET
   ])
   rarity = Rarity.UNCOMMON
   evolution = Pkm.TANGROWTH
@@ -16393,7 +16393,7 @@ export class Tangrowth extends Pokemon {
   types = new SetSchema<Synergy>([
     Synergy.GRASS,
     Synergy.MONSTER,
-    Synergy.FOSSIL
+    Synergy.GOURMET
   ])
   rarity = Rarity.UNCOMMON
   stars = 2

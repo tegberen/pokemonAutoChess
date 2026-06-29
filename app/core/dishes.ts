@@ -15,7 +15,8 @@ import {
   PeriodicEffect,
   OnAbilityCastEffect,
   OnAttackEffect,
-  OnSimulationStartEffect
+  OnSimulationStartEffect,
+  OnDamageDealtEffect
 } from "./effects/effect"
 import { AttackType } from "../types/enum/Game"
 
@@ -92,7 +93,9 @@ export const DishByPkm: { [pkm in Pkm]?: Item | null } = {
   [Pkm.EXEGGUTOR]: Item.COCONUT_MILK,
   [Pkm.ALOLAN_EXEGGUTOR]: Item.COCONUT_MALASADA,
   [Pkm.SKWOVET]: Item.BERRIES,
-  [Pkm.GREEDENT]: Item.BERRIES
+  [Pkm.GREEDENT]: Item.BERRIES,
+  [Pkm.TANGELA]: Item.BIG_ROOT,
+  [Pkm.TANGROWTH]: Item.BIG_ROOT
 }
 
 export const DishEffects: Record<(typeof Dishes)[number], Effect[]> = {
@@ -511,6 +514,12 @@ export const DishEffects: Record<(typeof Dishes)[number], Effect[]> = {
       if (chance(0.3, pokemon)) {
         target.status.triggerConfusion(2000, target, pokemon)
       }
+    })
+  ],
+  [Item.BIG_ROOT]: [
+    new OnDamageDealtEffect(({ pokemon, damage, target }) => {
+      if (target.id === pokemon.id) return // prevent healing from self-inflicted damage (e.g. Flame Orb)
+      pokemon.handleHeal(Math.ceil(0.33 * damage), pokemon, 0, false)
     })
   ]
 }

@@ -356,6 +356,7 @@ export enum Item {
   MEWTWONITE_Y = "MEWTWONITE_Y",
   COCONUT_MILK = "COCONUT_MILK",
   COCONUT_MALASADA = "COCONUT_MALASADA",
+  BIG_ROOT = "BIG_ROOT",
   LETTER = "LETTER",
   SHARP_BEAK = "SHARP_BEAK",
   BAN_SEED = "BAN_SEED",
@@ -1121,6 +1122,7 @@ export const Dishes = [
   Item.RICE,
   Item.ELECTRIC_SEED,
   Item.COCONUT_MILK,
+  Item.BIG_ROOT,
   Item.COCONUT_MALASADA,
   Item.BERRIES
 ] satisfies Item[]
