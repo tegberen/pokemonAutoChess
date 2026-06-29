@@ -1458,7 +1458,7 @@ export class Metang extends Pokemon {
   stars = 2
   evolution = Pkm.METAGROSS
   hp = 180
-  atk = 18
+  atk = 16
   speed = 47
   def = 18
   speDef = 12
@@ -1476,7 +1476,7 @@ export class Metagross extends Pokemon {
   rarity = Rarity.EPIC
   stars = 3
   hp = 300
-  atk = 40
+  atk = 32
   speed = 47
   def = 24
   speDef = 16
