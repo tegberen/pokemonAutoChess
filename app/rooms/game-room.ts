@@ -64,7 +64,11 @@ import { EvolutionRuleType } from "../types/EvolutionRules"
 import { CloseCodes } from "../types/enum/CloseCodes"
 import type { EloRank } from "../types/enum/EloRank"
 import { GameMode, PokemonActionState, Rarity } from "../types/enum/Game"
-import { type Item, Wands } from "../types/enum/Item"
+import {
+  type Item,
+  UnholdableItemsToSaveForStats,
+  Wands
+} from "../types/enum/Item"
 import { Passive } from "../types/enum/Passive"
 import {
   Pkm,
@@ -91,6 +95,7 @@ import { shuffleArray } from "../utils/random"
 import { schemaValues } from "../utils/schemas"
 import {
   OnBuyPokemonCommand,
+  OnDevCommand,
   OnDragDropCombineCommand,
   OnDragDropItemCommand,
   OnDragDropPokemonCommand,
@@ -645,6 +650,16 @@ export default class GameRoom extends Room<{ state: GameState }> {
         }
       }
     )
+
+    this.onMessage(Transfer.DEV, (client, message) => {
+      if (process.env.MODE === "dev") {
+        try {
+          this.dispatcher.dispatch(new OnDevCommand(), message)
+        } catch (error) {
+          logger.error("dev command error", message)
+        }
+      }
+    })
   }
 
   startGame() {
@@ -900,10 +915,10 @@ export default class GameRoom extends Room<{ state: GameState }> {
     })
 
     let shouldRefetchEventLeaderboard = false
-    const eligibleToELO =
-      !this.state.noElo &&
+    const eligibleToELO = true //TEMP
+    /*!this.state.noElo &&
       (this.state.stageLevel >= MinStageForGameToCount || hasLeftBeforeEnd) &&
-      humans.length >= 2
+      humans.length >= 2*/
 
     const rank = player.rank
     const exp = ExpPlace[rank - 1]
@@ -993,6 +1008,7 @@ export default class GameRoom extends Room<{ state: GameState }> {
           )
         }
 
+        // stats recording disabled on this fork
         // const dbrecord = this.transformToSimplePlayer(player)
         // const synergiesMap = new Map<Synergy, number>()
         // player.synergies.forEach((v, k) => {
@@ -1001,7 +1017,12 @@ export default class GameRoom extends Room<{ state: GameState }> {
         // DetailledStatistic.create({
         //   time: Date.now(),
         //   name: dbrecord.name,
-        //   pokemons: dbrecord.pokemons,
+        //   pokemons: dbrecord.pokemons.map((pokemon) => ({
+        //     ...pokemon,
+        //     items: Array.from(pokemon.items ?? []).map(
+        //       (item) => item.toString() as Item
+        //     )
+        //   })),
         //   rank: dbrecord.rank,
         //   nbplayers: humans.length + bots.length,
         //   avatar: dbrecord.avatar,
@@ -1009,10 +1030,16 @@ export default class GameRoom extends Room<{ state: GameState }> {
         //   elo: elo,
         //   synergies: synergiesMap,
         //   gameMode: this.state.gameMode,
-        //   regions: player.regions
+        //   regions: player.regions,
+        //   unholdableItems: schemaValues(player.items).filter((item) =>
+        //     isIn(UnholdableItemsToSaveForStats, item)
+        //   )
         // })
-        //
-        if (usr.eventFinishTime == null) {
+
+        if (
+          usr.eventFinishTime == null &&
+          getCurrentGameEvent() === GameEvent.VICTORY_ROAD
+        ) {
           try {
             const eventPointsGained =
               VictoryRoadPointsPerRank[clamp(rank - 1, 0, 7)]
@@ -1062,7 +1089,9 @@ export default class GameRoom extends Room<{ state: GameState }> {
           name: dbrecord.name,
           pokemons: dbrecord.pokemons.map((p) => ({
             ...p,
-            items: Array.from(p.items).map(String)
+            items: Array.from(p.items ?? []).map(
+              (item) => item.toString() as Item
+            )
           })),
           rank: dbrecord.rank,
           nbplayers: humans.length + bots.length,
@@ -1195,7 +1224,11 @@ export default class GameRoom extends Room<{ state: GameState }> {
     return simplePlayer
   }
 
-  spawnOnBench(player: Player, pkm: Pkm, anim: "fishing" | "spawn" = "spawn") {
+  spawnOnBench(
+    player: Player,
+    pkm: Pkm,
+    anim: "fishing" | "nest" | "spawn" = "spawn"
+  ) {
     const pokemon = PokemonFactory.createPokemonFromName(pkm, player)
     const x = getFirstAvailablePositionInBench(player.board)
     if (x !== null) {
@@ -1203,6 +1236,8 @@ export default class GameRoom extends Room<{ state: GameState }> {
       pokemon.positionY = 0
       if (anim === "fishing") {
         pokemon.action = PokemonActionState.FISH
+      } else if (anim === "nest") {
+        pokemon.action = PokemonActionState.NEST
       }
 
       player.board.set(pokemon.id, pokemon)

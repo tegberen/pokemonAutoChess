@@ -7,8 +7,7 @@ import {
   getRegionTint,
   ItemStats,
   PortalCarouselStages,
-  RegionDetails,
-  SynergyTriggers
+  RegionDetails
 } from "../../../../config"
 import { getMusicAlt } from "../../../../config/game/music"
 import {
@@ -17,6 +16,7 @@ import {
 } from "../../../../core/flower-pots"
 import type Player from "../../../../models/colyseus-models/player"
 import { PokemonAvatarModel } from "../../../../models/colyseus-models/pokemon-avatar"
+import { getSynergyTier } from "../../../../models/colyseus-models/synergies"
 import PokemonFactory from "../../../../models/pokemon-factory"
 import { getPokemonData } from "../../../../models/precomputed/precomputed-pokemon-data"
 import { type PVEStage, PVEStages } from "../../../../models/pve-stages"
@@ -45,7 +45,6 @@ import { Weather } from "../../../../types/enum/Weather"
 import type { NonFunctionPropNames } from "../../../../types/HelperTypes"
 import { isOnBench } from "../../../../utils/board"
 import { logger } from "../../../../utils/logger"
-import { max } from "../../../../utils/number"
 import { randomBetween } from "../../../../utils/random"
 import { schemaValues } from "../../../../utils/schemas"
 import { GamePokemonDetailDOMWrapper } from "../../pages/component/game/game-pokemon-detail"
@@ -283,8 +282,8 @@ export default class BoardManager {
 
   showLightCell() {
     this.hideLightCell()
-    const lightCount = this.player.synergies.get(Synergy.LIGHT)
-    if (lightCount && lightCount >= SynergyTriggers[Synergy.LIGHT][0]) {
+    const lightTier = getSynergyTier(this.player.synergies, Synergy.LIGHT)
+    if (lightTier > 0) {
       const coordinates = transformBoardCoordinates(this.lightX, this.lightY)
       this.lightCell = this.scene.add.sprite(
         coordinates[0],
@@ -306,10 +305,9 @@ export default class BoardManager {
   renderBerryTrees() {
     this.berryTrees.forEach((tree) => tree.destroy())
     this.berryTrees = []
-    const grassLevel = this.player.synergies.get(Synergy.GRASS) ?? 0
-    const nbTrees = max(3)(
-      SynergyTriggers[Synergy.GRASS].filter((n) => n <= grassLevel).length
-    )
+    const grassTier = getSynergyTier(this.player.synergies, Synergy.GRASS)
+    const nbTreesPerTier = [0, 1, 2, 3, 3]
+    const nbTrees = nbTreesPerTier[grassTier] ?? 0
 
     for (let i = 0; i < nbTrees; i++) {
       const tree = new BerryTree(
@@ -328,12 +326,11 @@ export default class BoardManager {
   }
 
   getNbFlowerPots(): number {
-    const floraLevel = this.player.synergies.get(Synergy.FLORA) ?? 0
-    let nbPots = SynergyTriggers[Synergy.FLORA].filter(
-      (n) => n <= floraLevel
-    ).length
+    const floraTier = getSynergyTier(this.player.synergies, Synergy.FLORA)
+    const nbPotsPerTier = [0, 1, 2, 3, 4][floraTier] ?? 0
+    let nbPots = nbPotsPerTier[floraTier]
     if (
-      floraLevel >= 6 &&
+      floraTier >= 4 &&
       this.player.flowerPots.every((p) => p.evolution === Pkm.DEFAULT)
     ) {
       nbPots = 5
@@ -508,8 +505,8 @@ export default class BoardManager {
 
   renderTrainingBag() {
     this.hideTrainingBag()
-    const fightingLevel = this.player.synergies.get(Synergy.FIGHTING) ?? 0
-    if (fightingLevel >= SynergyTriggers[Synergy.FIGHTING][3]) {
+    const fightingTier = getSynergyTier(this.player.synergies, Synergy.FIGHTING)
+    if (fightingTier >= 4) {
       this.trainingRack = this.scene.add
         .sprite(605, 775, "training_bag", "rack.png")
         .setScale(1.5)
@@ -1218,18 +1215,30 @@ export default class BoardManager {
     return benchSize
   }
 
-  showEmote(playerId: string, emote?: string) {
+  showEmote(playerOrPokemonId: string, emote?: string) {
     const avatars = [
       this.playerAvatar,
       this.opponentAvatar,
       ...this.scoutingAvatars
     ]
-    const player = avatars.find((a) => a?.playerId === playerId)
+    const player = avatars.find((a) => a?.playerId === playerOrPokemonId)
     if (player) {
       this.animationManager.play(player, PokemonAnimations[player.name].emote)
 
       if (emote) {
         player.drawSpeechBubble(emote, player === this.opponentAvatar)
+      }
+    } else {
+      const pokemonSprite = this.pokemons.get(playerOrPokemonId)
+      if (pokemonSprite) {
+        this.animationManager.play(
+          pokemonSprite,
+          PokemonAnimations[pokemonSprite.name].emote
+        )
+
+        if (emote) {
+          pokemonSprite.drawSpeechBubble(emote, player === this.opponentAvatar)
+        }
       }
     }
   }

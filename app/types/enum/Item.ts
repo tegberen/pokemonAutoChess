@@ -142,7 +142,7 @@ export enum Item {
   GOLD_BOTTLE_CAP = "GOLD_BOTTLE_CAP",
   ABSORB_BULB = "ABSORB_BULB",
   SACRED_ASH = "SACRED_ASH",
-  COMET_SHARD = "COMET_SHARD",
+  STAR_PIECE = "STAR_PIECE",
   REPEAT_BALL = "REPEAT_BALL",
   GOLD_BOW = "GOLD_BOW",
   DAMP_ROCK = "DAMP_ROCK",
@@ -206,7 +206,7 @@ export enum Item {
   TM_PAYDAY = "TM_PAYDAY",
   TM_FOCUS_PUNCH = "TM_FOCUS_PUNCH",
   TM_HYPER_BEAM = "TM_HYPER_BEAM",
-  TM_PROTECT = "TM_PROTECT",
+  TM_SUBSTITUTE = "TM_SUBSTITUTE",
   TM_SKILL_SWAP = "TM_SKILL_SWAP",
   CHEF_HAT = "CHEF_HAT",
   PICNIC_SET = "PICNIC_SET",
@@ -380,7 +380,9 @@ export enum Item {
   TOTTER_SEED = "TOTTER_SEED",
   TRAINING_SEED = "TRAINING_SEED",
   VIOLENT_SEED = "VIOLENT_SEED",
-  WARP_SEED = "WARP_SEED"
+  WARP_SEED = "WARP_SEED",
+  COMET_SHARD = "COMET_SHARD",
+  BALL = "BALL"
 }
 
 export const MemoryDiscs = [
@@ -535,7 +537,8 @@ export const SpecialItems: Item[] = [
   Item.TATSUGIRI_DROOPY,
   Item.TATSUGIRI_STRETCHY,
   Item.LETTER,
-  Item.SHARP_BEAK
+  Item.SHARP_BEAK,
+  Item.BALL
 ] satisfies Item[]
 
 export const FishingRods = [
@@ -742,6 +745,7 @@ export const ShinyItems = [
   Item.GOLD_BOTTLE_CAP,
   Item.ABSORB_BULB,
   Item.SACRED_ASH,
+  Item.STAR_PIECE,
   Item.COMET_SHARD,
   Item.REPEAT_BALL,
   Item.GOLD_BOW,
@@ -1006,7 +1010,7 @@ export const CraftableNoStonesOrScarves: Item[] =
     (item) => SynergyGivenByItem.hasOwnProperty(item) === false
   )
 
-export const Wands: Item[] = [
+export const Wands = [
   Item.BLAST_WAND,
   Item.HP_SWAP_WAND,
   Item.SPIRIT_WAND,
@@ -1023,7 +1027,7 @@ export const Wands: Item[] = [
   Item.SWITCHER_WAND,
   Item.WHIRLWIND_WAND,
   Item.TUNNEL_WAND
-]
+] satisfies Item[]
 
 export const OgerponMasks: Item[] = [
   Item.TEAL_MASK,
@@ -1037,23 +1041,23 @@ export const TMsBronze = [
   Item.TM_RETURN,
   Item.TM_COUNTER,
   Item.TM_DISABLE
-]
+] satisfies Item[]
 
 export const TMsSilver = [
   Item.TM_BULK_UP,
   Item.TM_CHARGE,
   Item.TM_REFLECT,
   Item.TM_PAYDAY
-]
+] satisfies Item[]
 
 export const TMsGold = [
   Item.TM_FOCUS_PUNCH,
   Item.TM_HYPER_BEAM,
-  Item.TM_PROTECT,
+  Item.TM_SUBSTITUTE,
   Item.TM_SKILL_SWAP
-]
+] satisfies Item[]
 
-export const TMs = [...TMsBronze, ...TMsSilver, ...TMsGold]
+export const TMs = [...TMsBronze, ...TMsSilver, ...TMsGold] satisfies Item[]
 
 export const AbilityPerTM: { [item in Item]?: Ability } = {
   [Item.TM_RAGE]: Ability.RAGE,
@@ -1066,7 +1070,7 @@ export const AbilityPerTM: { [item in Item]?: Ability } = {
   [Item.TM_PAYDAY]: Ability.PAYDAY,
   [Item.TM_FOCUS_PUNCH]: Ability.FOCUS_PUNCH,
   [Item.TM_HYPER_BEAM]: Ability.HYPER_BEAM,
-  [Item.TM_PROTECT]: Ability.PROTECT,
+  [Item.TM_SUBSTITUTE]: Ability.SUBSTITUTE,
   [Item.TM_SKILL_SWAP]: Ability.SKILL_SWAP
 }
 
@@ -1286,6 +1290,8 @@ export const UnholdableItems = [
   ...Seeds
 ] satisfies Item[]
 
+export type UnholdableItem = (typeof UnholdableItems)[number]
+
 export const ConsumableItems = [
   ...TMs,
   ...Dishes,
@@ -1302,7 +1308,8 @@ export const ConsumableItems = [
   Item.SCROLL_OF_DARKNESS,
   Item.SCROLL_OF_WATERS,
   Item.AUSPICIOUS_ARMOR,
-  Item.MALICIOUS_ARMOR
+  Item.MALICIOUS_ARMOR,
+  Item.SOOTHE_BELL
 ] satisfies Item[]
 
 export const RemovableItems = [
@@ -1313,3 +1320,11 @@ export const RemovableItems = [
   ...MemoryDiscs,
   Item.SHARP_BEAK
 ] satisfies Item[]
+
+export const UnholdableItemsToSaveForStats = [
+  Item.GIMMIGHOUL_COIN,
+  ...Wands,
+  ...SynergyGems,
+  ...SevenTreasures,
+  ...WeatherRocks
+] satisfies UnholdableItem[]

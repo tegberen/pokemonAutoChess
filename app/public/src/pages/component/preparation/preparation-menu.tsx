@@ -87,7 +87,7 @@ export default function PreparationMenu() {
   }, [nbUsersReady, users.length, allUsersReady])
 
   const humans = users.filter((u) => !u.isBot)
-  const isEligibleForELO = gameMode === GameMode.CLASSIC || humans.length >= 2
+  const isEligibleForELO = gameMode === GameMode.RANKED
   const averageElo =
     humans.length > 0
       ? Math.round(humans.reduce((acc, u) => acc + u.elo, 0) / humans.length)
@@ -302,6 +302,9 @@ export default function PreparationMenu() {
           <option value={BotDifficulty.MEDIUM}>{t("normal_bot")}</option>
           <option value={BotDifficulty.HARD}>{t("hard_bot")}</option>
           <option value={BotDifficulty.EXTREME}>{t("extreme_bot")}</option>
+          <option value={BotDifficulty.MASTER}>
+            {t("bot_difficulty.MASTER")}
+          </option>
           <option value={BotDifficulty.SHINY}>{t("shiny_bot")}</option>
           <option value={BotDifficulty.UNREALISTIC}>{t("unrealistic_bot")}</option>
           <option value={BotDifficulty.CUSTOM}>{t("custom_bot")}</option>

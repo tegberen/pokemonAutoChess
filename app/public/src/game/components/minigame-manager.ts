@@ -590,9 +590,17 @@ export default class MinigameManager {
 
     const kingambit = new PokemonSpecial({
       scene: this.scene,
-      x: encounter === TownEncounters.KINGAMBIT ? cx : 44.5 * 48,
-      y: encounter === TownEncounters.KINGAMBIT ? cy : 5 * 48,
-      name: Pkm.KINGAMBIT
+      x: encounter === TownEncounters.KINGAMBIT ? cx : 47.5 * 48,
+      y: encounter === TownEncounters.KINGAMBIT ? cy : 10.5 * 48,
+      name: Pkm.KINGAMBIT,
+      orientation:
+        encounter === TownEncounters.KINGAMBIT
+          ? Orientation.DOWN
+          : Orientation.RIGHT,
+      animation:
+        encounter === TownEncounters.KINGAMBIT
+          ? PokemonActionState.IDLE
+          : PokemonActionState.ATTACK
     })
 
     const lapras = new PokemonSpecial({
@@ -600,7 +608,10 @@ export default class MinigameManager {
       x: encounter === TownEncounters.LAPRAS ? cx : 0 * 48,
       y: encounter === TownEncounters.LAPRAS ? cy : 3.75 * 48,
       name: Pkm.LAPRAS,
-      animation: PokemonActionState.WALK,
+      animation:
+        encounter === TownEncounters.LAPRAS
+          ? PokemonActionState.IDLE
+          : PokemonActionState.WALK,
       orientation:
         encounter === TownEncounters.LAPRAS
           ? Orientation.DOWN
@@ -657,6 +668,7 @@ export default class MinigameManager {
       magnezone,
       kingambit,
       lapras,
+      chimecho,
       ...podiumPokemons
     )
 

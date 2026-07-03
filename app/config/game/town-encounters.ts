@@ -21,7 +21,7 @@ export const TownEncountersByStage: {
     [Pkm.CINCCINO]: 1 / 20,
     [Pkm.MAROWAK]: 1 / 20,
     [Pkm.MAKUHITA]: 1 / 20,
-    [Pkm.MAGNEZONE]: 1 / 20,
+    [Pkm.MAGNEZONE]: 1 / 40,
     [Pkm.LAPRAS]: 1 / 20,
   },
   12: {

@@ -1,9 +1,12 @@
 import { MapSchema, Schema, type } from "@colyseus/schema"
 import { BOARD_HEIGHT, BOARD_WIDTH, BOARD_SIDE_HEIGHT } from "../config"
-import { SynergyEffects } from "../config/game/synergies"
+import {
+  AMORPHOUS_HP_BUFF_PER_SYNERGY_TIER,
+  AMORPHOUS_SPEED_BUFF_PER_SYNERGY_TIER,
+  SynergyTiers
+} from "../config/game/synergies"
 import type Player from "../models/colyseus-models/player"
 import type { Pokemon } from "../models/colyseus-models/pokemon"
-import { getSynergyStep } from "../models/colyseus-models/synergies"
 import PokemonFactory from "../models/pokemon-factory"
 import { getPokemonData } from "../models/precomputed/precomputed-pokemon-data"
 import { PRECOMPUTED_POKEMONS_PER_TYPE } from "../models/precomputed/precomputed-types"
@@ -39,22 +42,18 @@ import { Pkm } from "../types/enum/Pokemon"
 import { Synergy } from "../types/enum/Synergy"
 import { Weather, WeatherEffects } from "../types/enum/Weather"
 import type { IPokemonData } from "../types/interfaces/PokemonData"
-import { count, isIn, removeInArray } from "../utils/array"
+import { count, deduplicateArray, isIn, removeInArray } from "../utils/array"
 import { getAvatarString } from "../utils/avatar"
 import { isOnBench } from "../utils/board"
 import { logger } from "../utils/logger"
 import { max } from "../utils/number"
-import {
-  chance,
-  pickRandomIn,
-  randomBetween,
-  shuffleArray
-} from "../utils/random"
+import { pickRandomIn, randomBetween, shuffleArray } from "../utils/random"
 import { schemaValues } from "../utils/schemas"
-import { AbilityStrategies, type SurfStrategy } from "./abilities/abilities"
+import { AbilityStrategies } from "./abilities/abilities"
+import type { SurfStrategy } from "./abilities/surf"
 import { Board } from "./board"
-import { DishEffects } from "./dishes"
 import Dps from "./dps"
+import { DishEffects } from "./effects/dishes"
 import {
   OnDishConsumedEffect,
   OnSimulationStartEffect,
@@ -76,7 +75,6 @@ import {
   normalShieldEffect,
   OnFieldDeathEffect,
   onFlowerMonDeath,
-  overgrowEffect,
   pounceWandEffect,
   SoundCryEffect,
   wildBerserkEffect,
@@ -195,7 +193,7 @@ export default class Simulation extends Schema implements ISimulation {
     this.winnerId = ""
     this.stormLightningTimer = randomBetween(4000, 8000)
     if (
-      SynergyEffects[Synergy.AQUATIC].some(
+      SynergyTiers[Synergy.AQUATIC].some(
         (e) => this.blueEffects.has(e) || this.redEffects.has(e)
       )
     ) {
@@ -366,6 +364,13 @@ export default class Simulation extends Schema implements ISimulation {
     }
     this.entities.push(pokemonEntity)
 
+    /*
+    Effects appliance order:
+    1) Synergy effects
+    2) Item effects
+    3) OnSpawn effects (can include effects coming from synergies/items)
+    */
+
     pokemon.onSpawn({ entity: pokemonEntity, simulation: this, isSpawn })
     pokemonEntity.getEffects(OnSpawnEffect).forEach((effect) => {
       effect.apply(pokemonEntity, player, isSpawn)
@@ -518,7 +523,7 @@ export default class Simulation extends Schema implements ISimulation {
     }
 
     if (singleType) {
-      const effect = SynergyEffects[singleType].find((e) => allyEffects.has(e))
+      const effect = SynergyTiers[singleType].find((e) => allyEffects.has(e))
       if (effect && !pokemon.effects.has(effect)) {
         apply(effect)
       }
@@ -531,7 +536,7 @@ export default class Simulation extends Schema implements ISimulation {
     if (
       (singleType === Synergy.SOUND ||
         (!singleType && pokemon.types.has(Synergy.SOUND))) &&
-      !SynergyEffects[Synergy.SOUND].some((e) => allyEffects.has(e))
+      !SynergyTiers[Synergy.SOUND].some((e) => allyEffects.has(e))
     ) {
       // allow sound pokemon to always wake up allies without searching through the board twice
       pokemon.effectsSet.add(new SoundCryEffect())
@@ -815,71 +820,8 @@ export default class Simulation extends Schema implements ISimulation {
       })
     }
 
-    // TARGET SELECTION EFFECTS (ghost curse, comet shard etc)
+    // TARGET SELECTION EFFECTS (ghost curse)
     for (const team of [this.blueTeam, this.redTeam]) {
-      team.forEach((pokemon) => {
-        if (pokemon.items.has(Item.COMET_SHARD)) {
-          pokemon.commands.push(
-            new DelayedCommand(() => {
-              const farthestCoordinate =
-                this.board.getFarthestTargetCoordinateAvailablePlace(pokemon)
-              if (farthestCoordinate) {
-                const target = farthestCoordinate.target as PokemonEntity
-                pokemon.skydiveTo(
-                  farthestCoordinate.x,
-                  farthestCoordinate.y,
-                  this.board
-                )
-                pokemon.setTarget(target)
-                pokemon.status.triggerProtect(2000)
-                pokemon.commands.push(
-                  new DelayedCommand(() => {
-                    pokemon.simulation.room.broadcast(Transfer.ABILITY, {
-                      id: pokemon.simulation.id,
-                      skill: "COMET_CRASH",
-                      positionX: farthestCoordinate.x,
-                      positionY: farthestCoordinate.y,
-                      targetX: target.positionX,
-                      targetY: target.positionY
-                    })
-                  }, 500)
-                )
-
-                pokemon.commands.push(
-                  new DelayedCommand(() => {
-                    if (target?.hp > 0) {
-                      const crit = chance(pokemon.critChance / 100, pokemon)
-                      target.handleSpecialDamage(
-                        3 * pokemon.atk,
-                        this.board,
-                        AttackType.SPECIAL,
-                        pokemon as PokemonEntity,
-                        crit,
-                        false
-                      )
-                      this.board
-                        .getAdjacentCells(target.positionX, target.positionY)
-                        .forEach((cell) => {
-                          if (cell.value && cell.value.team !== pokemon.team) {
-                            cell.value.handleSpecialDamage(
-                              pokemon.atk,
-                              this.board,
-                              AttackType.SPECIAL,
-                              pokemon as PokemonEntity,
-                              crit,
-                              false
-                            )
-                          }
-                        })
-                    }
-                  }, 1000)
-                )
-              }
-            }, 100)
-          )
-        }
-      })
-
       const teamEffects =
         team === this.blueTeam ? this.blueEffects : this.redEffects
       const opponentTeam =
@@ -975,9 +917,6 @@ export default class Simulation extends Schema implements ISimulation {
       case EffectEnum.OVERGROW:
         if (types.has(Synergy.GRASS)) {
           pokemon.effects.add(effect)
-          if (effect === EffectEnum.OVERGROW) {
-            pokemon.effectsSet.add(overgrowEffect)
-          }
         }
         break
 
@@ -1369,10 +1308,9 @@ export default class Simulation extends Schema implements ISimulation {
       case EffectEnum.SHAPELESS:
       case EffectEnum.ETHEREAL: {
         const activeSynergies = player?.synergies.countActiveSynergies() || 0
-        const speedFactor =
-          [1, 3, 5][SynergyEffects[Synergy.AMORPHOUS].indexOf(effect)] ?? 0
-        const hpFactor =
-          [3, 6, 10][SynergyEffects[Synergy.AMORPHOUS].indexOf(effect)] ?? 0
+        const tier = SynergyTiers[Synergy.AMORPHOUS].indexOf(effect) + 1
+        const speedFactor = AMORPHOUS_SPEED_BUFF_PER_SYNERGY_TIER[tier] ?? 0
+        const hpFactor = AMORPHOUS_HP_BUFF_PER_SYNERGY_TIER[tier] ?? 0
         pokemon.effects.add(effect)
         pokemon.addSpeed(speedFactor * activeSynergies, pokemon, 0, false)
         pokemon.addMaxHP(hpFactor * activeSynergies, pokemon, 0, false)
@@ -1753,7 +1691,7 @@ export default class Simulation extends Schema implements ISimulation {
       // Handle weather rock collection
       if (
         this.weather !== Weather.NEUTRAL &&
-        getSynergyStep(player.synergies, Synergy.ROCK) > 0 &&
+        player.synergies.hasSynergyActive(Synergy.ROCK) &&
         !isGhostPlayer &&
         !isPvE // No weather rocks collected for PvE rounds
       ) {
@@ -1827,7 +1765,11 @@ export default class Simulation extends Schema implements ISimulation {
       if (enemyWithHighestAP) {
         enemyWithHighestAP.addAbilityPower(-30, curser, 0, false)
         enemyWithHighestAP.status.curseTorment = true
-        enemyWithHighestAP.status.triggerFatigue(30000, enemyWithHighestAP)
+        enemyWithHighestAP.status.triggerFatigue(
+          30000,
+          enemyWithHighestAP,
+          null
+        )
       }
     }
 

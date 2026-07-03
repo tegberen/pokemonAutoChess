@@ -1,3 +1,4 @@
+import { DEPTH } from "../../../game/depths"
 import { useAppSelector } from "../../../hooks"
 import GamePlayer from "./game-player"
 import "./game-players.css"
@@ -31,7 +32,7 @@ let colorIndex = 0
 const sortedPlayers = sortPlayersByRankAndTeam(players, gameMode)
 
   return (
-    <div id="game-players">
+    <div id="game-players" style={{ zIndex: DEPTH.PLAYER_ICON }}>
       {sortedPlayers.map((p, i) => (
         <GamePlayer
           key={p.id}

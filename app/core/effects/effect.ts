@@ -64,6 +64,7 @@ export class OnItemGainedEffect extends Effect {
   override apply(pokemon: PokemonEntity, item: Item) {}
 }
 
+// item effect applied when item is removed during a fight (stolen, destroyed, consummed...)
 export class OnItemRemovedEffect extends Effect {
   constructor(effect?: (pokemon: PokemonEntity, item: Item) => void) {
     super(effect)
@@ -93,7 +94,8 @@ export class OnStageStartEffect extends Effect {
 interface OnChangePositionEffectArgs {
   pokemon: Pokemon
   player: Player
-  state: GameState
+  state?: GameState // can be undefined for bots updatePlayerTeam method
+  room?: GameRoom   // can be undefined for bots updatePlayerTeam method
   oldX: number
   oldY: number
   newX: number

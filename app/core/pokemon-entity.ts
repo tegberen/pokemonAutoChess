@@ -7,7 +7,7 @@ import {
   MAX_SPEED,
   ON_ATTACK_MANA
 } from "../config"
-import { SynergyEffects } from "../config/game/synergies"
+import { SynergyTiers } from "../config/game/synergies"
 import Count from "../models/colyseus-models/count"
 import Player from "../models/colyseus-models/player"
 import { type Pokemon, PokemonClasses } from "../models/colyseus-models/pokemon"
@@ -285,7 +285,7 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
         (targetEnemies && this.team !== attacker.team) ||
         (attacker.effects.has(EffectEnum.MERCILESS) &&
           attacker.id !== this.id &&
-          this.hp <= 0.1 * this.maxHP))
+          this.hp <= 10))
     )
   }
 
@@ -316,7 +316,7 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
   }
 
   hasSynergyEffect(synergy: Synergy): boolean {
-    return SynergyEffects[synergy].some((effect) => this.effects.has(effect))
+    return SynergyTiers[synergy].some((effect) => this.effects.has(effect))
   }
 
   resetCooldown(baseDuration: number, speed = this.speed) {
@@ -374,7 +374,7 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
               (this.effects.has(EffectEnum.ABILITY_CRIT) &&
                 chance(this.critChance / 100, this))
             const bounceDamage = Math.round(
-              ([0.5, 1][this.stars - 1] ?? 1) *
+              ([0.5, 1, 2, 4][this.stars - 1] ?? 4) *
                 damage *
                 (1 + this.ap / 100) *
                 (bounceCrit ? this.critPower : 1)
@@ -412,8 +412,17 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
       ) {
         specialDamage *= 1.2
       }
-      if (crit && attacker && this.items.has(Item.ROCKY_HELMET) === false && this.items.has(Item.LUCKY_RIBBON) === false) {
-        specialDamage *= attacker.critPower
+      if (
+        crit &&
+        attacker &&
+        this.items.has(Item.ROCKY_HELMET) === false &&
+        this.items.has(Item.LUCKY_RIBBON) === false
+      ) {
+        const nbBlackAugurite = this.player
+          ? count(this.player.items, Item.BLACK_AUGURITE)
+          : 0
+        const reductionFactor = 1 - 0.1 * nbBlackAugurite
+        specialDamage *= attacker.critPower * reductionFactor
       }
       if (
         attacker &&
@@ -853,7 +862,7 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
     const default_types = getPokemonData(this.name).types
     if (type && !default_types.includes(type)) {
       this.types.delete(type)
-      SynergyEffects[type].forEach((effectName) => {
+      SynergyTiers[type].forEach((effectName) => {
         this.effects.delete(effectName)
         this.effectsSet.forEach((effect) => {
           if (effect.origin === effectName) this.effectsSet.delete(effect)
@@ -1628,7 +1637,7 @@ flyAway(
           .forEach((effect: FlyingProtectionEffect) => {
             effect.flyingProtection = 0 // prevent flying effects twice
           })
-        SynergyEffects[Synergy.FOSSIL].forEach((e) =>
+        SynergyTiers[Synergy.FOSSIL].forEach((e) =>
           spawnedEntity.effects.delete(e)
         )
       })
@@ -1822,6 +1831,10 @@ flyAway(
 
     if (this.effects.has(EffectEnum.BERRY_JUICE)) {
       this.addShield(100, this, 0, false)
+    }
+
+    if (this.effects.has(EffectEnum.OVERGROW)) {
+      this.addAbilityPower(50, this, 0, false)
     }
   }
 

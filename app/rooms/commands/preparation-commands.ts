@@ -9,6 +9,7 @@ import {
   MAX_PLAYERS_PER_GAME,
   MIN_HUMAN_PLAYERS
 } from "../../config"
+import { GADGETS } from "../../config/game/gadgets"
 import {
   getPendingGame,
   isPlayerTimeout,
@@ -33,7 +34,6 @@ import { cleanProfanity } from "../../utils/profanity-filter"
 import { pickRandomIn, shuffleArray } from "../../utils/random"
 import { schemaEntries, schemaValues } from "../../utils/schemas"
 import type PreparationRoom from "../preparation-room"
-import { GADGETS } from "../../config/game/gadgets"
 
 function autoAssignPartner(state: PreparationRoom["state"], uid: string) {
   if (state.gameMode !== GameMode.DOUBLE_UP) return
@@ -139,7 +139,10 @@ export class OnJoinCommand extends Command<
           return
         }
 
-        if (this.state.gameMode === GameMode.RANKED && u.level < GADGETS.certificate.levelRequired) {
+        if (
+          this.state.gameMode === GameMode.RANKED &&
+          u.level < GADGETS.certificate.levelRequired
+        ) {
           client.leave(CloseCodes.USER_RANK_TOO_LOW)
           return
         }
@@ -860,6 +863,9 @@ export class OnAddBotCommand extends Command<PreparationRoom, OnAddBotPayload> {
             break
           case BotDifficulty.EXTREME:
             elo = { $gte: 1450, $lt: 1700 }
+            break
+          case BotDifficulty.MASTER:
+            elo = { $gte: 1700 }
             break
           case BotDifficulty.REGULAR:
             elo = { $gte: 1100, $lt: 1700 }

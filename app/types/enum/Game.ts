@@ -38,6 +38,7 @@ export enum PokemonActionState {
   EAT = "Eat",
   FISH = "Fish",
   BLOSSOM = "Blossom",
+  NEST = "Nest",
   TRAINING = "Training"
 }
 
@@ -116,6 +117,7 @@ export enum BattleResult {
 }
 
 export enum BotDifficulty {
+  BEGINNER,
   EASY,
   MEDIUM,
   HARD,
@@ -124,7 +126,8 @@ export enum BotDifficulty {
   REGULAR,
   UNREALISTIC,
   NEWBIE,
-  SHINY
+  SHINY,
+  MASTER
 }
 
 export enum PokemonTint {
