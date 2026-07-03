@@ -13,7 +13,7 @@ export class RoarStrategy extends AbilityStrategy {
     crit: boolean
   ) {
     super.process(pokemon, board, target, crit)
-    const damage = [20, 40, 80, 160][pokemon.stars - 1] ?? 160
+    const damage = [20, 40, 80, 100, 200][pokemon.stars - 1] ?? 200
 
     target.handleSpecialDamage(damage, board, AttackType.SPECIAL, pokemon, crit)
     let farthestEmptyCell: Cell | null = null

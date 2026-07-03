@@ -11,8 +11,10 @@ export class ChargeBeamStrategy extends AbilityStrategy {
     crit: boolean
   ) {
     super.process(pokemon, board, target, crit, false)
+    // gain flat ap
+    pokemon.addAbilityPower(50, pokemon, 0, false)
     const chain = [target]
-    const NB_MAX_TARGETS = 4
+    const NB_MAX_TARGETS = 3
     for (
       let n = 1, x = target.positionX, y = target.positionY;
       n < NB_MAX_TARGETS;

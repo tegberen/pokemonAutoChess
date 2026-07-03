@@ -12,7 +12,7 @@ export class TrickRoomStrategy extends AbilityStrategy {
   ) {
     super.process(pokemon, board, target, crit)
     
-    const damage = [50, 100, 200][pokemon.stars - 1] ?? 200
+    const damage = [50, 100, 200, 400][pokemon.stars - 1] ?? 400
     
     if (target.speed >= pokemon.speed) {
       const speedReduction = Math.floor(target.speed / 2)

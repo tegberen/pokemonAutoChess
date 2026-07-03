@@ -381,7 +381,6 @@ export enum Item {
   TRAINING_SEED = "TRAINING_SEED",
   VIOLENT_SEED = "VIOLENT_SEED",
   WARP_SEED = "WARP_SEED",
-  COMET_SHARD = "COMET_SHARD",
   BALL = "BALL"
 }
 
@@ -746,7 +745,6 @@ export const ShinyItems = [
   Item.ABSORB_BULB,
   Item.SACRED_ASH,
   Item.STAR_PIECE,
-  Item.COMET_SHARD,
   Item.REPEAT_BALL,
   Item.GOLD_BOW,
   Item.RED_SCALE,

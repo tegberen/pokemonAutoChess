@@ -12,7 +12,7 @@ export class WithdrawStrategy extends AbilityStrategy {
     crit: boolean
   ) {
     super.process(pokemon, board, target, crit)
-    const damage = [10, 20, 40][pokemon.stars - 1] ?? 40
+    const damage = [10, 20, 40, 80][pokemon.stars - 1] ?? 80
 
     OrientationArray.forEach((orientation) => {
       effectInOrientation(board, pokemon, orientation, (cell) => {
@@ -37,7 +37,7 @@ export class WithdrawStrategy extends AbilityStrategy {
       })
     })
 
-    const boost = [2, 4, 8][pokemon.stars - 1] ?? 8
+    const boost = [2, 4, 8, 16][pokemon.stars - 1] ?? 16
     pokemon.addDefense(boost, pokemon, 1, true)
   }
 }

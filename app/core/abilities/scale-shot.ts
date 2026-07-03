@@ -12,6 +12,8 @@ export class ScaleShotStrategy extends AbilityStrategy {
     crit: boolean
   ) {
     super.process(pokemon, board, target, crit, true)
+    const damageAdjacent = [5, 10, 20, 40][pokemon.stars - 1] ?? 40
+    const damageFarthest = [3, 5, 10, 20][pokemon.stars - 1] ?? 20
     pokemon.status.triggerArmorReduction(2000, pokemon)
     const scalePositions = new Array<{ x: number; y: number; delay: number }>()
 
@@ -48,7 +50,7 @@ export class ScaleShotStrategy extends AbilityStrategy {
       if (entityOnCell && entityOnCell.team !== pokemon.team) {
         entityOnCell.status.triggerArmorReduction(2000, entityOnCell)
         entityOnCell.handleSpecialDamage(
-          20,
+          damageAdjacent,
           board,
           AttackType.SPECIAL,
           pokemon,
@@ -83,7 +85,7 @@ export class ScaleShotStrategy extends AbilityStrategy {
             for (const cell of cellsBetween) {
               if (cell.value && cell.value.team !== pokemon.team) {
                 cell.value.handleSpecialDamage(
-                  cell.value.id === farthestTarget.id ? 10 : 5,
+                  cell.value.id === farthestTarget.id ? damageFarthest * 2 : damageFarthest,
                   board,
                   AttackType.SPECIAL,
                   pokemon,

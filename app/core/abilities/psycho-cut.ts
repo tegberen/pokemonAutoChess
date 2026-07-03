@@ -14,7 +14,7 @@ export class PsychoCutStrategy extends AbilityStrategy {
     crit: boolean
   ) {
     super.process(pokemon, board, target, crit)
-    const damage = [10, 20, 30, 40][pokemon.stars - 1] ?? 30
+    const damage = [10, 20, 30, 40, 80][pokemon.stars - 1] ?? 80
     effectInOrientation(board, pokemon, target, (cell) => {
       if (cell.value != null && cell.value.team !== pokemon.team) {
         for (let i = 0; i < 3; i++) {

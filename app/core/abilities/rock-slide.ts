@@ -12,20 +12,11 @@ export class RockSlideStrategy extends AbilityStrategy {
     crit: boolean
   ) {
     super.process(pokemon, board, target, crit)
-    let damage = 30
-    if (pokemon.stars === 2) {
-      damage = 60
-    }
-    if (pokemon.stars === 3) {
-      damage = 120
-    }
-    if (pokemon.stars === 4) {
-      damage = 180
-    }
-
+    const damage = [30, 60, 120, 150, 300][pokemon.stars - 1] ?? 300
     if (target.types.has(Synergy.FLYING)) {
-      damage = damage * 2
+      target.handleSpecialDamage(damage * 2, board, AttackType.SPECIAL, pokemon, crit)
+    } else {
+      target.handleSpecialDamage(damage, board, AttackType.SPECIAL, pokemon, crit)
     }
-    target.handleSpecialDamage(damage, board, AttackType.SPECIAL, pokemon, crit)
   }
 }

@@ -11,7 +11,7 @@ export class FlareBlitzStrategy extends AbilityStrategy {
     crit: boolean
   ) {
     super.process(pokemon, board, target, crit, true)
-    const damage = ([1,2,3,4][pokemon.stars - 1] ?? 4) * pokemon.atk
+    const damage = ([1,2,3,4,5][pokemon.stars - 1] ?? 5) * pokemon.atk
 
     pokemon.moveTo(target.positionX, target.positionY, board, false)
     pokemon.broadcastAbility({

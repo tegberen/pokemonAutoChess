@@ -11,7 +11,7 @@ export class RisingVoltageStrategy extends AbilityStrategy {
     crit: boolean
   ) {
     super.process(pokemon, board, target, crit)
-    let damage = [30, 60, 120][pokemon.stars - 1] ?? 120
+    let damage = [30, 60, 120, 240][pokemon.stars - 1] ?? 240
 
     // double damage if target already has electric field
     if (target.status.electricField) {

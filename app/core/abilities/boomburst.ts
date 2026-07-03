@@ -12,7 +12,7 @@ export class BoomBurstStrategy extends AbilityStrategy {
   ) {
     // Deal 60 special damage to all adjacent units including allies
     super.process(pokemon, board, target, crit)
-    const damage = 100
+    const damage = [20, 40, 80, 160][pokemon.stars - 1] ?? 160
     board
       .getAdjacentCells(pokemon.positionX, pokemon.positionY, false)
       .forEach((cell) => {

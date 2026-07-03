@@ -12,6 +12,7 @@ export class OblivionWingStrategy extends AbilityStrategy {
     crit: boolean
   ) {
     super.process(pokemon, board, target, crit, true)
+    const damage = [90,120,150,300][pokemon.stars - 1] ?? 300
     const corner = board.getTeleportationCell(
       pokemon.positionX,
       pokemon.positionY,
@@ -39,7 +40,7 @@ export class OblivionWingStrategy extends AbilityStrategy {
           effectInLine(board, pokemon, { positionX: targetX, positionY: targetY } as PokemonEntity, (cell) => {
             if (cell.value != null && cell.value.team !== pokemon.team) {
               const { takenDamage } = cell.value.handleSpecialDamage(
-                100,
+                damage,
                 board,
                 AttackType.SPECIAL,
                 pokemon,

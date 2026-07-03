@@ -12,7 +12,7 @@ export class EarthQuakeStrategy extends AbilityStrategy {
     crit: boolean
   ) {
     super.process(pokemon, board, target, crit)
-    const damage = [25, 50, 100][pokemon.stars - 1] ?? 100
+    const damage = [25, 50, 100, 200][pokemon.stars - 1] ?? 200
     const range = [1, 2, 3][pokemon.stars - 1] ?? 3
     board
       .getCellsInRadius(pokemon.positionX, pokemon.positionY, range, false)

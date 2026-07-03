@@ -6,7 +6,6 @@ import { Item } from "../../app/types/enum/Item"
 import { logger } from "../../app/utils/logger"
 
 const itemsToReplace = new Map<string, Item>([
-  ["WHITE_FLUTE", Item.GOLD_MASK],
   ["COMET_SHARD", Item.STAR_PIECE],
   ["TM_PROTECT", Item.TM_SUBSTITUTE]
 ])

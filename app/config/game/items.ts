@@ -101,7 +101,6 @@ export const ItemStats: { [item in Item]?: { [stat in Stat]?: number } } = {
     [Stat.CRIT_CHANCE]: 30
   },
   [Item.BOOSTER_ENERGY]: { [Stat.PP]: 30, [Stat.SPEED]: 50 },
-  [Item.COMET_SHARD]: { [Stat.ATK]: 15 },
   [Item.STAR_PIECE]: {},
   [Item.SHINY_STONE]: { [Stat.AP]: 50 },
   [Item.ABSORB_BULB]: { [Stat.DEF]: 20, [Stat.SPE_DEF]: 20 },

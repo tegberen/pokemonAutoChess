@@ -11,7 +11,7 @@ export class PlayRoughStrategy extends AbilityStrategy {
     crit: boolean
   ) {
     super.process(pokemon, board, target, crit)
-    const damage = [30, 60, 120, 180][pokemon.stars - 1] ?? 180
+    const damage = [30, 60, 120, 150, 300][pokemon.stars - 1] ?? 300
     target.status.triggerCharm(2500, target, pokemon, false)
     target.handleSpecialDamage(
       damage,

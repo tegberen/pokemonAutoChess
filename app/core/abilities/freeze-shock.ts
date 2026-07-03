@@ -15,8 +15,8 @@ export class FreezeShockStrategy extends AbilityStrategy {
     super.process(pokemon, board, target, crit)
     const iceSynergyLevel = pokemon.player?.synergies.get(Synergy.ICE) ?? 0
     const electricSynergyLevel = pokemon.player?.synergies.get(Synergy.ELECTRIC) ?? 0
-    const baseDamage = [10, 30, 50, 70][pokemon.stars - 1] ?? 70
-    const extraDamage = [10, 10, 10, 20][pokemon.stars - 1] ?? 20
+    const baseDamage = [5, 10, 30, 50, 70][pokemon.stars - 1] ?? 70
+    const extraDamage = [10, 10, 10, 10, 20][pokemon.stars - 1] ?? 20
     const damage = baseDamage + iceSynergyLevel * extraDamage + electricSynergyLevel * extraDamage
 
     const cells = board.getAdjacentCells(target.positionX, target.positionY, true)

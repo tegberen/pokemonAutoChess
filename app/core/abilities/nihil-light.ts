@@ -12,7 +12,7 @@ export class NihilLightStrategy extends AbilityStrategy {
     crit: boolean
   ) {
     super.process(pokemon, board, target, crit)
-    const damageBase = [20, 40, 80, 120][pokemon.stars - 1] ?? 120
+    const damageBase = [10,20,40,80,160][pokemon.stars - 1] ?? 160
     let distanceFromTarget = 0
     effectInLine(board, pokemon, target, (cell) => {
       if (cell.value != null && cell.value.team !== pokemon.team) {

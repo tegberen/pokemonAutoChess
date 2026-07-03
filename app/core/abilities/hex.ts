@@ -11,10 +11,11 @@ export class HexStrategy extends AbilityStrategy {
     crit: boolean
   ) {
     super.process(pokemon, board, target, crit)
-    let damage = pokemon.stars === 3 ? 60 : pokemon.stars === 2 ? 40 : 20
+    const damage = [20, 40, 60, 120] [pokemon.stars - 1] ?? 120
     if (target.status.hasNegativeStatus()) {
-      damage = damage * 2
+      target.handleSpecialDamage(damage * 2, board, AttackType.SPECIAL, pokemon, crit)
+    } else {
+      target.handleSpecialDamage(damage, board, AttackType.SPECIAL, pokemon, crit)
     }
-    target.handleSpecialDamage(damage, board, AttackType.SPECIAL, pokemon, crit)
   }
 }

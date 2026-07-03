@@ -24,10 +24,11 @@ class TemporalRuptureEffect extends PeriodicEffect {
           this.damageTracked.forEach((damage, unit) => {
             if (unit.hp <= 0) return
             const amount = Math.round(damage) // define like thise for ap adjustments
+            const damageMultiplier = [0.5, 0.75, 1, 2][pokemon.stars - 1] ?? 2
             if (unit.team !== pokemon.team) {
-              unit.handleSpecialDamage(amount, board, AttackType.TRUE, pokemon, crit)
+              unit.handleSpecialDamage(amount * damageMultiplier, board, AttackType.TRUE, pokemon, crit)
             } else {
-              unit.handleHeal(Math.round(amount * (1 + pokemon.ap / 100)), pokemon, 0, false)
+              unit.handleHeal(Math.round(amount * damageMultiplier * (1 + pokemon.ap / 100)), pokemon, 0, false)
             }
           })
           pokemon.effectsSet.delete(this)

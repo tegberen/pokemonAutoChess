@@ -25,7 +25,8 @@ class SubspaceSwellEffect extends PeriodicEffect {
           })
           // release burst
           pokemon.broadcastAbility({ skill: Ability.SUBSPACE_SWELL })
-          const damage = Math.round(20 * Math.max(1, this.allyCasts))
+          const baseDamage = [5, 10, 20, 40][pokemon.stars - 1] ?? 40
+          const damage = Math.round(baseDamage* Math.max(1, this.allyCasts))
           board.getCellsInRadius(pokemon.positionX, pokemon.positionY, 4, false)
             .forEach((cell) => {
               if (cell.value && cell.value.team !== pokemon.team) {

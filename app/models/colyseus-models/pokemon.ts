@@ -14604,7 +14604,7 @@ export class Xurkitree extends Pokemon {
   ])
   rarity = Rarity.LEGENDARY
   stars = 3
-  hp = 250
+  hp = 220
   atk = 20
   speed = 52
   def = 6
@@ -19439,12 +19439,12 @@ export class ScreamTail extends Pokemon {
   ])
   rarity = Rarity.UNIQUE
   stars = 3
-  hp = 200
+  hp = 170
   atk = 14
   speed = 71
   def = 12
   speDef = 12
-  maxPP = 80
+  maxPP = 100
   range = 1
   skill = Ability.BOOMBURST
 }
