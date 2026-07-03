@@ -254,7 +254,7 @@ export const AMORPHOUS_HP_BUFF_PER_SYNERGY_TIER = [0, 3, 6, 10]
 export const GROUND_DEF_BUFF_PER_SYNERGY_TIER = [0, 1, 2, 3, 3]
 export const GROUND_ATK_BUFF_PER_SYNERGY_TIER = [0, 3, 5, 8, 8]
 
-export const FIRE_ATK_BUFF_PER_SYNERGY_TIER = [0, 0, 1, 2, 3]
+export const FIRE_ATK_BUFF_PER_SYNERGY_TIER = [0, 0, 1, 2, 4]
 
 export const SOUND_ATK_BUFF_PER_SYNERGY_TIER = [0, 2, 1, 1]
 export const SOUND_SPEED_BUFF_PER_SYNERGY_TIER = [0, 0, 5, 5]

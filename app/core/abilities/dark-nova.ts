@@ -12,7 +12,7 @@ export class DarkNovaStrategy extends AbilityStrategy {
     crit: boolean
   ) {
     super.process(pokemon, board, target, crit, true)
-    const damage = [20, 40, 80, 120][pokemon.stars - 1] ?? 120
+    const damage = [20, 40, 60, 120][pokemon.stars - 1] ?? 120
     const opponentTeam = pokemon.team === Team.BLUE_TEAM ? Team.RED_TEAM : Team.BLUE_TEAM
     const mostSurroundedCoordinate =
       pokemon.state.getMostSurroundedCoordinateAvailablePlace(opponentTeam, board)
