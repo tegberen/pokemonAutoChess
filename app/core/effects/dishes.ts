@@ -100,7 +100,7 @@ export const DishEffects: Record<(typeof Dishes)[number], Effect[]> = {
   ],
   [Item.TABASCO]: [
     new OnSpawnEffect((entity) => {
-      entity.addAbilityPower(75, entity, 0, false)
+      entity.addAbilityPower(50, entity, 0, false)
       entity.effects.add(EffectEnum.SPECIAL_ATTACKS)
     })
   ],
