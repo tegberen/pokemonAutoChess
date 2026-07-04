@@ -12,7 +12,7 @@ export class TripleArrowsStrategy extends AbilityStrategy {
     crit: boolean
   ) {
     super.process(pokemon, board, target, crit)
-    const damage = [5, 10, 20, 40][pokemon.stars - 1] ?? 40
+    const damage = [10, 20, 40, 80][pokemon.stars - 1] ?? 80
 
     for (let i = 0; i < 3; i++) {
       effectInLine(board, pokemon, target, (cell) => {

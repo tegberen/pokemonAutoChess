@@ -32,7 +32,7 @@ export class WhirlpoolStrategy extends AbilityStrategy {
 
     if (targetsHit.size === 0) targetsHit.add(target) // guarantee at least the target is hit
     targetsHit.forEach((enemy) => {
-      const multiplier = [1, 1, 1, 2][pokemon.stars - 1] ?? 2
+      const multiplier = [1, 1.15, 1.25, 2.5][pokemon.stars - 1] ?? 2.5
       for (let i = 0; i < 4; i++) {
         enemy.handleSpecialDamage(
           pokemon.atk * multiplier,

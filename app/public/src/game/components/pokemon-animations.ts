@@ -5127,14 +5127,14 @@ export const PokemonAnimations: {
     attack: AnimationType.Attack,
     ability: AnimationType.Shoot,
     emote: AnimationType.Dance,
-    attackSprite: AttackSprite.WATER_MELEE,
+    attackSprite: AttackSprite.WATER_RANGE,
     hitSprite: HitSprite.WATER_HIT
   },
   [Pkm.WHISCASH]: {
     attack: AnimationType.Attack,
     ability: AnimationType.Shoot,
     emote: AnimationType.Dance,
-    attackSprite: AttackSprite.WATER_MELEE,
+    attackSprite: AttackSprite.WATER_RANGE,
     hitSprite: HitSprite.WATER_HIT
   },
   [Pkm.SCRAGGY]: {

@@ -120,9 +120,9 @@ export const SeedEffects: Record<(typeof Seeds)[number], Effect[]> = {
       const midRow = isRedTeam ? 4 : 1
       const backRow = isRedTeam ? 5 : 0
       if (entity.positionY === frontRow) {
-        entity.addDefense(entity.baseDef * 3, entity, 0, false)
+        entity.addDefense(entity.baseDef * 2, entity, 0, false)
       } else if (entity.positionY === midRow) {
-        entity.addSpecialDefense(entity.baseSpeDef * 2, entity, 0, false)
+        entity.addSpecialDefense(entity.baseSpeDef * 1.5, entity, 0, false)
       } else if (entity.positionY === backRow) {
         entity.addAttack(entity.baseAtk * 0.5, entity, 0, false)
       }

@@ -25,7 +25,7 @@ export class DireClawStrategy extends AbilityStrategy {
         break
     }
 
-    const damage = [15, 30, 60, 120][pokemon.stars - 1] ?? 120
+    const damage = [25, 50, 100, 200][pokemon.stars - 1] ?? 200
     target.handleSpecialDamage(damage, board, AttackType.SPECIAL, pokemon, crit)
   }
 }

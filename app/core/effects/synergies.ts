@@ -542,7 +542,7 @@ export function applyWandEffects(
   let specialDamageFactor = 0
 
   for (const wand of wands) {
-    specialDamageFactor += 0.2
+    specialDamageFactor += 0.15
     switch (wand) {
       case Item.CONFUSE_WAND: {
         if (chance(0.05, pokemon)) {
@@ -574,7 +574,7 @@ export function applyWandEffects(
       }
       case Item.BLAST_WAND: {
         if (crit) {
-          specialDamageFactor += 0.2
+          specialDamageFactor += 0.15
           pokemon.broadcastAbility({ skill: "PUFF_PINK" })
         }
         break
@@ -618,7 +618,7 @@ export function applyWandEffects(
         break
       }
       case Item.TWO_EDGED_WAND: {
-        specialDamageFactor += 0.2
+        specialDamageFactor += 0.15
         break
       }
     }
@@ -1022,7 +1022,7 @@ export class DarkSubstituteEffect extends OnDamageReceivedEffect {
       const substituteEntity = board.getEntityOnCell(originX, originY)
       if (!substituteEntity) return
 
-      const substituteHP = Math.round(pokemon.maxHP * 0.5)
+      const substituteHP = Math.round(pokemon.maxHP * 0.25)
       substituteEntity.hp = substituteHP
       substituteEntity.maxHP = substituteHP
 

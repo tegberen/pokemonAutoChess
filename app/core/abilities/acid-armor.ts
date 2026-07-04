@@ -13,6 +13,7 @@ export class AcidArmorStrategy extends AbilityStrategy {
   ) {
     super.process(pokemon, board, target, crit)
     const defGain = [3, 6, 12, 25][pokemon.stars - 1] ?? 25
+    const defReduction = [1, 2, 4, 8][pokemon.stars - 1] ?? 8
     pokemon.addDefense(defGain, pokemon, 1, crit)
     let count = 4
     const acidHitEffect = new OnDamageReceivedEffect(
@@ -26,7 +27,7 @@ export class AcidArmorStrategy extends AbilityStrategy {
             attacker.positionY
           ) === 1
         ) {
-          attacker.addDefense(-1, pokemon, 0, false)
+          attacker.addDefense(-defReduction, pokemon, 0, false)
         }
         count--
         if (count <= 0) {

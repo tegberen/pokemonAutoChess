@@ -989,21 +989,21 @@ export default class Simulation extends Schema implements ISimulation {
       case EffectEnum.PRECOGNITION:
         if (types.has(Synergy.PSYCHIC)) {
           pokemon.effects.add(EffectEnum.PRECOGNITION)
-          pokemon.addAbilityPower(30, pokemon, 0, false)
+          pokemon.addAbilityPower(40, pokemon, 0, false)
         }
         break
 
       case EffectEnum.AURA:
         if (types.has(Synergy.PSYCHIC)) {
           pokemon.effects.add(EffectEnum.AURA)
-          pokemon.addAbilityPower(100, pokemon, 0, false)
+          pokemon.addAbilityPower(80, pokemon, 0, false)
         }
         break
 
       case EffectEnum.TRANSCENDENCE:
         if (types.has(Synergy.PSYCHIC)) {
           pokemon.effects.add(EffectEnum.TRANSCENDENCE)
-          pokemon.addAbilityPower(150, pokemon, 0, false)
+          pokemon.addAbilityPower(120, pokemon, 0, false)
         }
         break
 
@@ -1268,7 +1268,7 @@ export default class Simulation extends Schema implements ISimulation {
           pokemon.status.triggerRuneProtect(8000, pokemon, pokemon)
           pokemon.addDefense(0.5 * pokemon.baseDef, pokemon, 0, false)
           pokemon.addSpecialDefense(0.5 * pokemon.baseSpeDef, pokemon, 0, false)
-          pokemon.addShield(100, pokemon, 0, false)
+          pokemon.addShield(120, pokemon, 0, false)
           pokemon.status.addResurrection(pokemon)
         }
         break

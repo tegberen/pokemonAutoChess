@@ -1106,7 +1106,7 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
         this.effects.has(EffectEnum.MAX_AIRSTREAM) ||
         this.effects.has(EffectEnum.SKYDIVE)
     ) {
-      if (chance(0.3, this)) {
+      if (chance(0.15, this)) {
         target.addAttack(-2, this, 0, false)
       }
     }
@@ -1400,7 +1400,7 @@ flyAway(
         decoyOriginY
       )
       if (substituteEntity) {
-        const subHP = Math.round(this.maxHP)
+        const subHP = Math.round(this.maxHP * 0.5)
         substituteEntity.hp = subHP
         substituteEntity.maxHP = subHP
         board
