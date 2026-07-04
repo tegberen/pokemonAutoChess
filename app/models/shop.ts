@@ -3,7 +3,6 @@ import {
   BuyPrices,
   DITTO_RATE,
   EEVEE_RATE,
-  MILCERY_RATE,
   FALINKS_TROOPER_RATE,
   FishRarityProbability,
   getAltFormForPlayer,
@@ -494,12 +493,6 @@ export default class Shop {
         )
       }
       if (
-        stageLevel === PortalCarouselStages[0] && pokemonsProposed.includes(Pkm.MILCERY) === false && chance(MILCERY_RATE) &&
-        state.specialGameRule !== SpecialGameRule.FIRST_PARTNER &&
-        state.specialGameRule !== SpecialGameRule.UNIQUE_STARTER
-      ) {
-        selected = Pkm.MILCERY
-      } else if (
         stageLevel === PortalCarouselStages[0] &&
         pokemonsProposed.includes(Pkm.EEVEE) === false &&
         (chance(EEVEE_RATE) || initialCandidatesEmpty) &&
