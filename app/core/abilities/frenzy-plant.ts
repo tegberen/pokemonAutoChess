@@ -13,7 +13,7 @@ export class FrenzyPlantStrategy extends AbilityStrategy {
     crit: boolean
   ) {
     super.process(pokemon, board, target, crit,true)
-    const baseDamage = [20, 40, 80, 160][pokemon.stars - 1] ?? 160
+    const baseDamage = [15, 30, 60, 120][pokemon.stars - 1] ?? 120
     const adjacentEnemies = board
       .getAdjacentCells(target.positionX, target.positionY)
       .filter((cell) => cell.value && cell.value.team !== pokemon.team).length
