@@ -112,6 +112,10 @@ export function computeSynergies(
       pkm.types.clear()
     }
 
+    if (specialGameRule === SpecialGameRule.KAIJU_BATTLE) {
+      pkm.types.add(Synergy.MONSTER)
+    }
+
     addSynergiesGivenByItems(pkm)
     if (pkm.positionY != 0) {
       const family =
@@ -187,7 +191,12 @@ export function computeSynergies(
       for (let i = 0; i < nbDynamicSynergies; i++) {
         const type = synergiesSorted[i]
         if (type && !pkm.types.has(type) && synergies.get(type)! > 0) {
-          pkm.types.add(type)
+          if (type === Synergy.DRAGON) {
+            // dragon always goes first, before Monster given by Kaiju Battle and other types
+            pkm.types = new SetSchema<Synergy>([Synergy.DRAGON, ...pkm.types])
+          } else {
+            pkm.types.add(type)
+          }
           synergies.set(type, (synergies.get(type) ?? 0) + 1)
           //apply dragon double synergies just for Arceus & Kecleon if Dragon
           if (type === Synergy.DRAGON) {

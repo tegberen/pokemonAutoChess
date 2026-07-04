@@ -333,6 +333,9 @@ export default class Simulation extends Schema implements ISimulation {
     skipSynergyEffects = false
   ) {
     const player = team === Team.BLUE_TEAM ? this.bluePlayer : this.redPlayer
+    if (this.room?.state.specialGameRule === SpecialGameRule.KAIJU_BATTLE) {
+      pokemon.types.add(Synergy.MONSTER)
+    }
     const pokemonEntity = new PokemonEntity(pokemon, x, y, team, this)
     pokemonEntity.isSpawn = isSpawn
     pokemonEntity.orientation =

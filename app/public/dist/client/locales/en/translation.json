@@ -4889,7 +4889,8 @@
 		"CHOSEN_ONES": "The Chosen Ones",
 		"PLAY_TEST": "Play Test",
 		"HALLOWEEN": "Halloween",
-		"SHINIEST_HUNTER": "Shiniest Hunter"
+		"SHINIEST_HUNTER": "Shiniest Hunter",
+		"KAIJU_BATTLE": "Kaiju Battle"
 	},
 	"scribble_description": {
 		"EVERYONE_IS_HERE": "All the additional picks are available immediately",
@@ -4914,7 +4915,8 @@
 		"CHOSEN_ONES": "The add picks you choose evolve immediately and gain bonus stats.",
 		"PLAY_TEST": "Play Test Mode: Summon the board from Team Planner",
 		"HALLOWEEN": "Everyone is GHOST 8. GHOST 16 summons Ghost",
-		"SHINIEST_HUNTER": "All PvE encounters are shiny"
+		"SHINIEST_HUNTER": "All PvE encounters are shiny",
+		"KAIJU_BATTLE": "Every Pokémon that is not MONSTER gains the MONSTER type"
 	},
 	"town_encounter_description": {
 		"KECLEON": "Kecleon sells Synergy items for {{cost}} GOLD",
