@@ -907,6 +907,39 @@ export class OnDragDropItemCommand extends Command<
       client.send(Transfer.DRAG_DROP_CANCEL, message)
       return
     }
+
+    if (item === Item.SPEAKER) {
+      let requestSent = false
+      if (
+        this.state.gameMode === GameMode.DOUBLE_UP &&
+        player.doubleUpPartnerId
+      ) {
+        const partner = this.state.players.get(player.doubleUpPartnerId)
+        if (partner && partner.alive) {
+          this.room.clients
+            .filter((cli) => cli.auth?.uid === partner.id)
+            .forEach((cli) =>
+              cli.send(Transfer.SPEAKER_REQUEST, {
+                playerId: player.id,
+                pokemon: pokemon!.name
+              })
+            )
+          requestSent = true
+        }
+      }
+      client.send(
+        Transfer.DRAG_DROP_CANCEL,
+        requestSent
+          ? {
+              ...message,
+              text: "request_sent" satisfies DisplayText,
+              pokemonId: pokemon.id
+            }
+          : message
+      )
+      return
+    }
+
     if (item === Item.LETTER && isOnBench(pokemon) && pokemon.types.has(Synergy.FLYING)) {
       if (pokemon.action === PokemonActionState.EXPLORING) {
         client.send(Transfer.DRAG_DROP_CANCEL, message)

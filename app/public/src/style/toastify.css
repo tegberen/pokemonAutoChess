@@ -37,3 +37,33 @@
   height: 40px;
   image-rendering: pixelated;
 }
+
+.toast .Toastify__toast.toast-speaker-request {
+  right: 76px;
+}
+
+.toast-speaker-request {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.toast-speaker-request img.portrait {
+  display: block;
+  width: 40px;
+  height: 40px;
+  image-rendering: pixelated;
+  border: 1px solid rgba(0, 0, 0, 0.6);
+  border-radius: 6px;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.35);
+}
+
+.toast-speaker-request p {
+  margin: 0 4px;
+  max-width: 180px;
+}
+
+.toast-speaker-request p {
+  margin: 0 4px;
+  max-width: 160px;
+}

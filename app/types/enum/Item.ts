@@ -321,6 +321,7 @@ export enum Item {
   MISSION_ORDER_GOLD = "MISSION_ORDER_GOLD",
   LEADERS_CREST = "LEADERS_CREST",
   LAPRAS_PASSPORT = "LAPRAS_PASSPORT",
+  SPEAKER = "SPEAKER",
   CELL_BATTERY = "CELL_BATTERY",
   SILK_SCARF = "SILK_SCARF",
   FRIEND_BOW = "FRIEND_BOW",
@@ -537,6 +538,7 @@ export const SpecialItems: Item[] = [
   Item.TATSUGIRI_STRETCHY,
   Item.LETTER,
   Item.SHARP_BEAK,
+  Item.SPEAKER,
   Item.BALL
 ] satisfies Item[]
 
@@ -1285,6 +1287,7 @@ export const UnholdableItems = [
   Item.MEWTWONITE_Y,
   ...SevenTreasures,
   Item.LETTER,
+  Item.SPEAKER,
   ...Seeds
 ] satisfies Item[]
 

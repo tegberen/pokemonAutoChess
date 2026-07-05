@@ -31,13 +31,13 @@ import { ConnectionStatus } from "../../../types/enum/ConnectionStatus"
 import { GamePhaseState, Team } from "../../../types/enum/Game"
 import type { Item } from "../../../types/enum/Item"
 import { Passive } from "../../../types/enum/Passive"
-import type { Pkm } from "../../../types/enum/Pokemon"
+import { type Pkm, PkmIndex } from "../../../types/enum/Pokemon"
 import type { Synergy } from "../../../types/enum/Synergy"
 import { GameEvent } from "../../../types/events"
 import type { NonFunctionPropNames } from "../../../types/HelperTypes"
 import type { DisplayText } from "../../../types/strings/DisplayText"
 import type { ErrorMessage } from "../../../types/strings/ErrorMessage"
-import { getAvatarString } from "../../../utils/avatar"
+import { getAvatarString, getPortraitSrc } from "../../../utils/avatar"
 import { logger } from "../../../utils/logger"
 import { schemaValues } from "../../../utils/schemas"
 import GameContainer from "../game/game-container"
@@ -489,6 +489,34 @@ export default function Game() {
           g.board.showEmote(message.id, message?.emote)
         }
       })
+
+      room.onMessage(
+        Transfer.SPEAKER_REQUEST,
+        ({ playerId, pokemon }: { playerId: string; pokemon: Pkm }) => {
+          const sender = room.state.players.get(playerId)
+          if (!sender) return
+          toast(
+            <div className="toast-speaker-request">
+              <img
+                className="portrait"
+                src={getPortraitSrc(PkmIndex[pokemon])}
+                alt={pokemon}
+              />
+              <p>
+                {t("speaker_request", {
+                  player: sender.name,
+                  pokemon: t(`pkm.${pokemon}`)
+                })}
+              </p>
+            </div>,
+            {
+              containerId: playerId,
+              className: "toast-speaker-request",
+              autoClose: 5000
+            }
+          )
+        }
+      )
 
       room.onMessage(
         Transfer.COOK,

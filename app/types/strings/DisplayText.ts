@@ -10,3 +10,4 @@ export type DisplayText =
   | "full"
   | "already_held"
   | "bark"
+  | "request_sent"

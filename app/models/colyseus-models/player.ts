@@ -27,6 +27,7 @@ import { Ability } from "../../types/enum/Ability"
 import type { DungeonPMDO } from "../../types/enum/Dungeon"
 import {
   BattleResult,
+  GameMode,
   PokemonActionState,
   Rarity,
   Team
@@ -273,6 +274,11 @@ export default class Player extends Schema implements IPlayer {
     if (state.specialGameRule === SpecialGameRule.HALLOWEEN) {
       this.bonusSynergies.set(Synergy.GHOST, 8)
       this.updateSynergies()
+    }
+
+    if (state.gameMode === GameMode.DOUBLE_UP && !isBot) {
+      // used to request a pokemon to your partner
+      this.items.push(Item.SPEAKER)
     }
   }
 
