@@ -11,12 +11,8 @@ export class ClangorousSoulStrategy extends AbilityStrategy {
   ) {
     super.process(pokemon, board, target, crit)
     const buff = [2, 4, 8, 16][pokemon.stars - 1] ?? 16
+    const cells = board.getCellsInRange(pokemon.positionX, pokemon.positionY, pokemon.range, true)
 
-    const cells = board.getAdjacentCells(
-      pokemon.positionX,
-      pokemon.positionY,
-      true
-    )
     cells.forEach((cell) => {
       if (cell.value && pokemon.team == cell.value.team) {
         cell.value.addAttack(buff, pokemon, 1, crit)

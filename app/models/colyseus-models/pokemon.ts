@@ -19439,11 +19439,11 @@ export class ScreamTail extends Pokemon {
   ])
   rarity = Rarity.UNIQUE
   stars = 3
-  hp = 170
+  hp = 140
   atk = 14
   speed = 71
-  def = 12
-  speDef = 12
+  def = 6
+  speDef = 7
   maxPP = 100
   range = 1
   skill = Ability.BOOMBURST
