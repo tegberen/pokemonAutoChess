@@ -39,6 +39,7 @@ import {
 } from "../../types/enum/Item"
 import { Passive } from "../../types/enum/Passive"
 import { Pillars, Pkm } from "../../types/enum/Pokemon"
+import { SpecialGameRule } from "../../types/enum/SpecialGameRule"
 import { Synergy } from "../../types/enum/Synergy"
 import { isIn } from "../../utils/array"
 import { getFreeSpaceOnBench, isOnBench } from "../../utils/board"
@@ -87,8 +88,14 @@ export class MonsterKillEffect extends OnKillEffect {
     const attackBoost =
       MONSTER_ATTACK_BUFF_PER_SYNERGY_TIER[this.synergyTier] ?? 0
     const apBoost = MONSTER_AP_BUFF_PER_SYNERGY_TIER[this.synergyTier] ?? 0
-    const hpGain =
+    let hpGain =
       MONSTER_MAX_HP_BUFF_FACTOR_PER_SYNERGY_TIER[this.synergyTier] ?? 0
+    if (
+      attacker.simulation.room.state.specialGameRule ===
+      SpecialGameRule.KAIJU_BATTLE
+    ) {
+      hpGain *= 3
+    }
     const lifeBoost = hpGain * target.maxHP
     attacker.addAttack(attackBoost, attacker, 0, false)
     attacker.addAbilityPower(apBoost, attacker, 0, false)
