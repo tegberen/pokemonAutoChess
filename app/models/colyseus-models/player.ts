@@ -179,6 +179,9 @@ export default class Player extends Schema implements IPlayer {
   randomComponentsGiven: Item[] = []
   randomEggsGiven: Pkm[] = []
   flowerPotsSpawnOrder: FlowerPot[] = shuffleArray([...FlowerPots])
+  fairyWandChoicesRolls: Item[][] = FAIRY_WANDS_BY_SYNERGY_LEVEL.map(
+    (wandsForLevel) => pickNRandomIn(wandsForLevel, 3)
+  )
   lightX: number
   lightY: number
   ghost: boolean = false
@@ -729,7 +732,7 @@ export default class Player extends Schema implements IPlayer {
           this.choices.push(
             new PlayerChoice({
               type: "wand",
-              items: pickNRandomIn(FAIRY_WANDS_BY_SYNERGY_LEVEL[i], 3)
+              items: [...this.fairyWandChoicesRolls[i]]
             })
           )
         }

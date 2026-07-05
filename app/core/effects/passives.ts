@@ -1795,6 +1795,11 @@ export const PassiveEffects: Partial<
 
   [Passive.ILLUSION]: [
     new OnChangePositionEffect(({ newX, newY, pokemon, player }) => {
+      if (newY === 0) {
+        // benched: revert to original form, no disguise on the bench
+        pokemon.index = PkmIndex[pokemon.name]
+        return
+      }
       const allyOnTheLeft = schemaValues(player.board).find(
         (p) => p.positionX === newX - 1 && p.positionY === newY
       )

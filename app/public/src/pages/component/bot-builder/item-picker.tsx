@@ -69,11 +69,6 @@ export default function ItemPicker(props: {
     ...(props.showUnholdableItems
       ? [
           {
-            label: t("wands"),
-            key: "wands",
-            items: Wands
-          },
-          {
             label: t("bundles"),
             key: "bundles",
             items: [...Object.values(FreeOptions), ...Object.values(PaidOptions)] as unknown as Item[]
@@ -134,7 +129,7 @@ export default function ItemPicker(props: {
               return (
                 <img
                   key={item}
-                  src={"assets/item/" + Item[item] + ".png"}
+                  src={"assets/item/" + item + ".png"}
                   className={cc("item", {
                     selected: item === props.selected
                   })}

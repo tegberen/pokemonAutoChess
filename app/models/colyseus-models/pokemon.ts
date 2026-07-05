@@ -1634,7 +1634,7 @@ export class Kirlia extends Pokemon {
     }
   } satisfies CountEvolutionRule
   hp = 130
-  atk = 15
+  atk = 9
   speed = 51
   def = 3
   speDef = 3

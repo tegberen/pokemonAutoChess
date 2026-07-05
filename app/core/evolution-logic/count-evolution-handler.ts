@@ -32,8 +32,10 @@ export class CountEvolutionHandler extends EvolutionHandler {
       return false
     }
 
+    // match by name and not by index, because Illusion disguises (Zorua)
+    // temporarily change the index of the board pokemon
     const copies = schemaValues(player.board).filter(
-      (p) => p.index === pokemon.index && !p.items.has(Item.EVIOLITE) &&
+      (p) => p.name === pokemon.name && !p.items.has(Item.EVIOLITE) &&
         p.action !== PokemonActionState.EXPLORING
     )
     return copies.length >= this.numberRequired
@@ -53,7 +55,7 @@ export class CountEvolutionHandler extends EvolutionHandler {
     }
 
     const copies = schemaValues(player.board).filter(
-      (p) => p.index === pokemon.index && !p.items.has(Item.EVIOLITE) && p.action !== PokemonActionState.EXPLORING
+      (p) => p.name === pokemon.name && !p.items.has(Item.EVIOLITE) && p.action !== PokemonActionState.EXPLORING
     )
     return copies.length === this.numberRequired - 1
   }
@@ -70,7 +72,7 @@ export class CountEvolutionHandler extends EvolutionHandler {
 
     player.board.forEach((pkm, id) => {
       if (
-        pkm.index == pokemon.index &&
+        pkm.name === pokemon.name &&
         !pkm.items.has(Item.EVIOLITE) &&
         pkm.action !== PokemonActionState.EXPLORING &&
         pokemonsBeforeEvolution.length < this.numberRequired
