@@ -97,7 +97,8 @@ export default class Synergies extends MapSchema<number, Synergy> {
 export function computeSynergies(
   board: IPokemon[],
   bonusSynergies?: Map<Synergy, number>,
-  specialGameRule?: SpecialGameRule | null
+  specialGameRule?: SpecialGameRule | null,
+  avatarSynergy?: Synergy | null
 ): Map<Synergy, number> {
   const synergies = new Map<Synergy, number>()
   Object.keys(Synergy).forEach((key) => {
@@ -112,8 +113,19 @@ export function computeSynergies(
       pkm.types.clear()
     }
 
-    if (specialGameRule === SpecialGameRule.KAIJU_BATTLE) {
-      pkm.types.add(Synergy.MONSTER)
+    const typeGivenByRule =
+      specialGameRule === SpecialGameRule.KAIJU_BATTLE
+        ? Synergy.MONSTER
+        : specialGameRule === SpecialGameRule.AVATAR
+          ? avatarSynergy
+          : null
+    if (typeGivenByRule && !pkm.types.has(typeGivenByRule)) {
+      if (typeGivenByRule === Synergy.DRAGON) {
+        // dragon always goes first
+        pkm.types = new SetSchema<Synergy>([Synergy.DRAGON, ...pkm.types])
+      } else {
+        pkm.types.add(typeGivenByRule)
+      }
     }
 
     addSynergiesGivenByItems(pkm)

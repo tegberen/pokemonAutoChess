@@ -692,7 +692,9 @@ export default class MinigameManager {
       this.showEncounterDescription(
         t(`scribble.${specialGameRule}`) +
           " - " +
-          t(`scribble_description.${specialGameRule}`)
+          t(`scribble_description.${specialGameRule}`, {
+            type: this.scene.room?.state.avatarSynergy ?? ""
+          })
       )
     }
   }

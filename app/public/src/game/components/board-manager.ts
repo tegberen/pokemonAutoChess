@@ -1250,7 +1250,9 @@ export default class BoardManager {
       y: 396,
       name: Pkm.SMEARGLE,
       orientation: Orientation.DOWNLEFT,
-      dialog: t(`scribble_description.${specialGameRule}`),
+      dialog: t(`scribble_description.${specialGameRule}`, {
+        type: this.state.avatarSynergy ?? ""
+      }),
       dialogTitle: t(`scribble.${specialGameRule}`)
     })
   }

@@ -199,6 +199,7 @@ export default class Player extends Schema implements IPlayer {
     ticketLevel: number
   }[] = []
   specialGameRule: SpecialGameRule | null = null // its easier to duplicate this here and in gamestate than passing gamestate everywhere we need it
+  avatarSynergy: Synergy | null = null // synergy given to all pokemon in Avatar scribble, rolled once per game
   shopsSinceLastUnownShop: number = 0
   regions: DungeonPMDO[] = []
   unownReminiscences: number = 0
@@ -229,6 +230,7 @@ export default class Player extends Schema implements IPlayer {
     this.role = role
     this.pokemonCustoms = new PokemonCustoms(pokemonCollection)
     this.specialGameRule = state.specialGameRule
+    this.avatarSynergy = state.avatarSynergy
     this.flowerPots = initFlowerPots(this)
     const avatarCustom = getPokemonCustomFromAvatar(avatar)
     const avatarInCollection = pokemonCollection.get(
@@ -357,7 +359,8 @@ export default class Player extends Schema implements IPlayer {
     let updatedSynergies = computeSynergies(
       pokemons,
       this.bonusSynergies,
-      this.specialGameRule
+      this.specialGameRule,
+      this.avatarSynergy
     )
 
     const normalNeedsRecomputing = this.updateScarves(

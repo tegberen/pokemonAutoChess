@@ -24,6 +24,7 @@ import { GameMode, GamePhaseState } from "../../types/enum/Game"
 import type { Item } from "../../types/enum/Item"
 import type { Pkm } from "../../types/enum/Pokemon"
 import { SpecialGameRule } from "../../types/enum/SpecialGameRule"
+import { Synergy } from "../../types/enum/Synergy"
 import type { TownEncounter } from "../../types/enum/TownEncounter"
 import { Weather } from "../../types/enum/Weather"
 import { pickRandomIn, randomBetween } from "../../utils/random"
@@ -49,6 +50,7 @@ export default class GameState extends Schema {
   @type("uint8") lightX = randomBetween(0, BOARD_WIDTH - 1)
   @type("uint8") lightY = randomBetween(1, BOARD_HEIGHT / 2)
   @type("string") specialGameRule: SpecialGameRule | null = null
+  @type("string") avatarSynergy: Synergy | null = null
   @type("string") townEncounter: TownEncounter | null = null
   @type("number") currentPveVariantIndex: number = 0
   time = StageDuration[0] * 1000
@@ -93,6 +95,12 @@ export default class GameState extends Schema {
       this.specialGameRule = pickRandomIn(Object.values(SpecialGameRule))
     } else {
       this.specialGameRule = specialGameRule
+    }
+
+    if (this.specialGameRule === SpecialGameRule.AVATAR) {
+      this.avatarSynergy = pickRandomIn(
+        Object.values(Synergy).filter((s) => s !== Synergy.BABY)
+      )
     }
   }
 }
