@@ -226,13 +226,14 @@ export const gameSlice: Slice<GameStateStore> = createSlice({
     setSimulation: (state, action: PayloadAction<Simulation>) => {
       if (
         state.playerIdSpectated === action.payload.bluePlayerId ||
+        state.playerIdSpectated === action.payload.bluePartnerPlayerId ||
         state.playerIdSpectated === action.payload.redPlayerId
       ) {
         state.simulationIdSpectated = action.payload.id
         state.teamSpectated =
-          state.playerIdSpectated === action.payload.bluePlayerId
-            ? Team.BLUE_TEAM
-            : Team.RED_TEAM
+          state.playerIdSpectated === action.payload.redPlayerId
+            ? Team.RED_TEAM
+            : Team.BLUE_TEAM
         state.weather = action.payload.weather
         state.blueDpsMeter = new Array<IDps>()
         state.redDpsMeter = new Array<IDps>()

@@ -846,7 +846,8 @@ const conversionEffect = new OnSimulationStartEffect(
   ({ simulation, player, entity }) => {
     if (!player || entity.isSpawn) return
     const opponent =
-      simulation.bluePlayerId === player.id
+      simulation.bluePlayerId === player.id ||
+      simulation.bluePartnerPlayerId === player.id
         ? simulation.redPlayer
         : simulation.bluePlayer
     if (!opponent) return

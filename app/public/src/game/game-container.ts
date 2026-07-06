@@ -86,6 +86,7 @@ class GameContainer {
   initializeSimulation(simulation: Simulation) {
     if (
       simulation.bluePlayerId === this.player?.id ||
+      simulation.bluePartnerPlayerId === this.player?.id ||
       (simulation.redPlayerId === this.player?.id && !simulation.isGhostBattle)
     ) {
       this.setSimulation(simulation)
@@ -94,8 +95,16 @@ class GameContainer {
     const $simulation = this.$<Simulation>(simulation)
 
     $simulation.listen("winnerId", (winnerId) => {
-      if (this.gameScene?.board?.player.simulationId === simulation.id) {
-        this.gameScene.board.victoryAnimation(winnerId)
+      const board = this.gameScene?.board
+      if (board?.player.simulationId === simulation.id) {
+        if (
+          winnerId === simulation.bluePlayerId &&
+          board.player.id === simulation.bluePartnerPlayerId
+        ) {
+          // Double Up shared PVE fight: the partner shares the blue side victory
+          winnerId = board.player.id
+        }
+        board.victoryAnimation(winnerId)
       }
     })
 

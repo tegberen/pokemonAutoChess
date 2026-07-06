@@ -60,6 +60,11 @@ export default function WikiDoubleUp() {
       </section>
 
       <section className="my-box">
+        <h2>6. Shared Wild Battles</h2>
+        <p>{t("wiki.double_up.shared_pve_desc")}</p>
+      </section>
+
+      <section className="my-box">
         <h2>Starting a Lobby</h2>
         <p>{t("wiki.double_up.lobby_desc")}</p>
       </section>

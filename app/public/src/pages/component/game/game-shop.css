@@ -154,6 +154,18 @@
   gap: 0.5em;
   align-items: center;
   text-align: center;
+  position: relative;
+}
+
+/* dev-only stage skip button, absolutely positioned so it does not
+   disturb the game-experience grid layout */
+.game-experience .skip-stage-button.bubbly {
+  position: absolute;
+  right: calc(100% + 6px);
+  top: 5px;
+  font-size: 1em;
+  padding: 0.25em 0.5em;
+  white-space: nowrap;
 }
 
 .game-experience > span {

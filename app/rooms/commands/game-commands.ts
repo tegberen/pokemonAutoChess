@@ -2491,8 +2491,31 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
         ...allOptions[this.state.currentPveVariantIndex]
       }
 
-      this.state.players.forEach((player: Player) => {
-        if (player.alive) {
+      // In Double Up, both players of a team fight together in one shared
+      // fight against a strengthened PVE encounter
+      const groups: Player[][] = []
+      if (this.state.gameMode === GameMode.DOUBLE_UP) {
+        const teams = new Map<string, Player[]>()
+        this.state.players.forEach((player: Player) => {
+          if (!player.alive) return
+          if (player.doubleUpTeamId) {
+            if (!teams.has(player.doubleUpTeamId)) {
+              teams.set(player.doubleUpTeamId, [])
+            }
+            teams.get(player.doubleUpTeamId)!.push(player)
+          } else {
+            groups.push([player])
+          }
+        })
+        teams.forEach((teamPlayers) => groups.push(teamPlayers))
+      } else {
+        this.state.players.forEach((player: Player) => {
+          if (player.alive) groups.push([player])
+        })
+      }
+
+      groups.forEach((group) => {
+        group.forEach((player) => {
           player.opponentId = "pve"
           player.opponentName = pveStage.name
           player.opponentAvatar = getAvatarString(
@@ -2515,25 +2538,37 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
               : (pveStage.getRewardsPropositions?.(player, false) ?? ([] as Item[]))
 
           resetArraySchema(player.pveRewardsPropositions, rewardsPropositions)
+        })
 
-          const pveBoard = PokemonFactory.makePveBoard(
-            pveStage,
-            this.state.shinyEncounter,
-            this.state.townEncounter
+        const [player, partner] = group
+        const pveBoard = PokemonFactory.makePveBoard(
+          pveStage,
+          this.state.shinyEncounter,
+          this.state.townEncounter
+        )
+        if (group.length > 1) {
+          PokemonFactory.scalePveBoardForDoubleUp(
+            pveBoard,
+            group,
+            this.state.stageLevel
           )
-          const weather = getWeather(player, null, pveBoard)
-          const simulation = new Simulation(
-            crypto.randomUUID(),
-            this.room,
-            player,
-            { id: "pve", board: pveBoard },
-            this.state.stageLevel,
-            weather
-          )
-          player.simulationId = simulation.id
-          this.state.simulations.set(simulation.id, simulation)
-          simulation.start()
         }
+        const weather = getWeather(player, partner ?? null, pveBoard)
+        const simulation = new Simulation(
+          crypto.randomUUID(),
+          this.room,
+          player,
+          { id: "pve", board: pveBoard },
+          this.state.stageLevel,
+          weather,
+          false,
+          partner
+        )
+        group.forEach((p) => {
+          p.simulationId = simulation.id
+        })
+        this.state.simulations.set(simulation.id, simulation)
+        simulation.start()
       })
     } else {
       const matchups = 
@@ -2599,7 +2634,11 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
     if (this.state.specialGameRule === SpecialGameRule.UNOWN_SPELL) {
       this.state.simulations.forEach((simulation) => {
         const unown = pickRandomIn(UnownsForScribble)
-        ;[simulation.bluePlayer, simulation.redPlayer].forEach((player) => {
+        ;[
+          simulation.bluePlayer,
+          simulation.bluePartnerPlayer,
+          simulation.redPlayer
+        ].forEach((player) => {
           if (
             !player ||
             (simulation.isGhostBattle && player === simulation.redPlayer)

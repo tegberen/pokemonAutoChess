@@ -72,7 +72,10 @@ export default class BattleManager {
   }
 
   get flip() {
-    return this.player.id !== this.simulation?.bluePlayerId
+    return (
+      this.player.id !== this.simulation?.bluePlayerId &&
+      this.player.id !== this.simulation?.bluePartnerPlayerId
+    )
   }
 
   buildPokemons() {

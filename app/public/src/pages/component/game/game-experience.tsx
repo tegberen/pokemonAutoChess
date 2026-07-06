@@ -3,7 +3,7 @@ import { Tooltip } from "react-tooltip"
 import { MAX_LEVEL } from "../../../../../config"
 import { getLevelUpCost } from "../../../../../models/colyseus-models/experience-manager"
 import { selectSpectatedPlayer, useAppSelector } from "../../../hooks"
-import { levelClick } from "../../../network"
+import { levelClick, skipStage } from "../../../network"
 import { addIconsToDescription } from "../../utils/descriptions"
 import { Money } from "../icons/money"
 
@@ -31,6 +31,15 @@ export default function GameExperience() {
       <span>
         {t("lvl")} {experienceManager.level}
       </span>
+      {process.env.MODE === "dev" && (
+        <button
+          className="bubbly orange skip-stage-button"
+          title="Skip stage (dev only)"
+          onClick={() => skipStage()}
+        >
+          SKIP
+        </button>
+      )}
       <button
         className="bubbly orange buy-xp-button"
         title={t("buy_xp_tooltip", { cost: levelUpCost })}

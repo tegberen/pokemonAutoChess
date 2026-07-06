@@ -384,6 +384,7 @@ export interface ISimulation {
   redDpsMeter: MapSchema<Dps>
   bluePlayerId: string
   redPlayerId: string
+  bluePartnerPlayerId: string
   broadcastToSpectators(transfer: Transfer, data: any): void
 }
 

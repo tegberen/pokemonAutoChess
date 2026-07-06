@@ -216,6 +216,11 @@ export function lockShop() {
   rooms.game?.send(Transfer.LOCK)
 }
 
+export function skipStage() {
+  // dev command, ignored by the server when not running in dev mode
+  rooms.game?.send(Transfer.DEV, { action: "skipStage" })
+}
+
 export function levelClick() {
   rooms.game?.send(Transfer.LEVEL_UP)
 }

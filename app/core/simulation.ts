@@ -105,6 +105,7 @@ export default class Simulation extends Schema implements ISimulation {
   @type("string") id: string
   @type("string") bluePlayerId: string
   @type("string") redPlayerId: string
+  @type("string") bluePartnerPlayerId: string = ""
   @type("boolean") isGhostBattle: boolean
   @type("boolean") started: boolean
   room: GameRoom
@@ -117,6 +118,9 @@ export default class Simulation extends Schema implements ISimulation {
   stageLevel = 0
   bluePlayer: Player | undefined
   redPlayer: Player | undefined
+  // Double Up shared PVE fights: the partner fights alongside the blue player
+  bluePartnerPlayer: Player | undefined
+  bluePartnerEffects = new Set<EffectEnum>()
   blueAbilitiesCast: Ability[] = []
   redAbilitiesCast: Ability[] = []
   stormLightningTimer = 0
@@ -133,15 +137,18 @@ export default class Simulation extends Schema implements ISimulation {
     redPlayer: Player | { id: "pve"; board: MapSchema<Pokemon> },
     stageLevel: number,
     weather: Weather,
-    isGhostBattle = false
+    isGhostBattle = false,
+    bluePartnerPlayer?: Player
   ) {
     super()
     this.id = id
     this.room = room
     this.bluePlayer = bluePlayer
     this.redPlayer = redPlayer.id === "pve" ? undefined : (redPlayer as Player)
+    this.bluePartnerPlayer = bluePartnerPlayer
     this.bluePlayerId = bluePlayer.id
     this.redPlayerId = redPlayer.id
+    this.bluePartnerPlayerId = bluePartnerPlayer?.id ?? ""
     this.stageLevel = stageLevel
     this.weather = weather
     this.isGhostBattle = isGhostBattle
@@ -150,6 +157,9 @@ export default class Simulation extends Schema implements ISimulation {
 
     this.bluePlayer.effects.forEach((e) => this.blueEffects.add(e))
     this.redPlayer?.effects.forEach((e) => this.redEffects.add(e))
+    this.bluePartnerPlayer?.effects.forEach((e) =>
+      this.bluePartnerEffects.add(e)
+    )
 
     // beforeSimulationStart hooks
     const playerEffects: [
@@ -158,6 +168,7 @@ export default class Simulation extends Schema implements ISimulation {
       Set<EffectEnum>
     ][] = [
       [this.bluePlayer, this.blueEffects, this.redEffects],
+      [this.bluePartnerPlayer, this.bluePartnerEffects, this.redEffects],
       [this.redPlayer, this.redEffects, this.blueEffects]
     ]
     for (const [player, teamEffects, opponentEffects] of playerEffects) {
@@ -199,7 +210,10 @@ export default class Simulation extends Schema implements ISimulation {
     this.stormLightningTimer = randomBetween(4000, 8000)
     if (
       SynergyTiers[Synergy.AQUATIC].some(
-        (e) => this.blueEffects.has(e) || this.redEffects.has(e)
+        (e) =>
+          this.blueEffects.has(e) ||
+          this.redEffects.has(e) ||
+          this.bluePartnerEffects.has(e)
       )
     ) {
       this.tidalWaveTimer = 7000
@@ -215,6 +229,29 @@ export default class Simulation extends Schema implements ISimulation {
     redBoard.forEach((pokemon) => {
       if (!isOnBench(pokemon)) {
         this.addPokemon(pokemon, pokemon.positionX, 5 - (pokemon.positionY - 1), Team.RED_TEAM)
+      }
+    })
+
+    // Double Up shared PVE fight: the partner board joins the blue side,
+    // shifted to the closest free cell if their usual spot is already taken
+    this.bluePartnerPlayer?.board.forEach((pokemon) => {
+      if (!isOnBench(pokemon)) {
+        const coord = this.getClosestFreeCellTo(
+          pokemon.positionX,
+          pokemon.positionY - 1,
+          Team.BLUE_TEAM
+        )
+        if (coord) {
+          this.addPokemon(
+            pokemon,
+            coord.x,
+            coord.y,
+            Team.BLUE_TEAM,
+            false,
+            false,
+            this.bluePartnerPlayer
+          )
+        }
       }
     })
 
@@ -240,6 +277,7 @@ export default class Simulation extends Schema implements ISimulation {
     // read the flags correctly
     for (const [player, team] of [
       [this.bluePlayer, this.blueTeam] as const,
+      [this.bluePartnerPlayer, this.blueTeam] as const,
       [this.redPlayer, this.redTeam] as const
     ]) {
       if (!player) continue
@@ -272,15 +310,12 @@ export default class Simulation extends Schema implements ISimulation {
       }
 
       // post simulation start hooks
-      for (const [player, team] of [
-        [this.bluePlayer, this.blueTeam] as const,
-        [this.redPlayer, this.redTeam] as const
-      ]) {
+      for (const team of [this.blueTeam, this.redTeam]) {
         team.forEach((entity: PokemonEntity) => {
           const boardPokemon = entity.refToBoardPokemon as Pokemon
           if (boardPokemon && boardPokemon.dishes.size > 0) {
             boardPokemon.dishes.forEach((dish) => {
-              this.applyDishEffects(dish, boardPokemon, entity, player)
+              this.applyDishEffects(dish, boardPokemon, entity, entity.player)
             })
             boardPokemon.action = PokemonActionState.IDLE
             boardPokemon.dishes.clear() // consume all dishes
@@ -300,13 +335,16 @@ export default class Simulation extends Schema implements ISimulation {
   getEffects(playerId: string) {
     return playerId === this.bluePlayer?.id
       ? this.blueEffects
-      : playerId === this.redPlayer?.id
-        ? this.redEffects
-        : undefined
+      : playerId === this.bluePartnerPlayer?.id
+        ? this.bluePartnerEffects
+        : playerId === this.redPlayer?.id
+          ? this.redEffects
+          : undefined
   }
 
   getDpsMeter(playerId: string) {
-    return playerId === this.bluePlayer?.id
+    return playerId === this.bluePlayer?.id ||
+      playerId === this.bluePartnerPlayer?.id
       ? this.blueDpsMeter
       : playerId === this.redPlayer?.id
         ? this.redDpsMeter
@@ -314,7 +352,8 @@ export default class Simulation extends Schema implements ISimulation {
   }
 
   getTeam(playerId: string) {
-    return playerId === this.bluePlayer?.id
+    return playerId === this.bluePlayer?.id ||
+      playerId === this.bluePartnerPlayer?.id
       ? this.blueTeam
       : playerId === this.redPlayer?.id
         ? this.redTeam
@@ -322,7 +361,8 @@ export default class Simulation extends Schema implements ISimulation {
   }
 
   getOpponentTeam(playerId: string) {
-    return playerId === this.bluePlayer?.id
+    return playerId === this.bluePlayer?.id ||
+      playerId === this.bluePartnerPlayer?.id
       ? this.redTeam
       : playerId === this.redPlayer?.id
         ? this.blueTeam
@@ -335,9 +375,12 @@ export default class Simulation extends Schema implements ISimulation {
     y: number,
     team: Team,
     isSpawn = false,
-    skipSynergyEffects = false
+    skipSynergyEffects = false,
+    sourcePlayer?: Player
   ) {
-    const player = team === Team.BLUE_TEAM ? this.bluePlayer : this.redPlayer
+    const player =
+      sourcePlayer ??
+      (team === Team.BLUE_TEAM ? this.bluePlayer : this.redPlayer)
     if (this.room?.state.specialGameRule === SpecialGameRule.KAIJU_BATTLE) {
       pokemon.types.add(Synergy.MONSTER)
     }
@@ -349,6 +392,7 @@ export default class Simulation extends Schema implements ISimulation {
     }
     const pokemonEntity = new PokemonEntity(pokemon, x, y, team, this)
     pokemonEntity.isSpawn = isSpawn
+    if (sourcePlayer) pokemonEntity.sourcePlayer = sourcePlayer
     pokemonEntity.orientation =
       team === Team.BLUE_TEAM ? Orientation.UPRIGHT : Orientation.DOWNLEFT
     if (!skipSynergyEffects) this.applySynergyEffects(pokemonEntity)
@@ -596,8 +640,13 @@ export default class Simulation extends Schema implements ISimulation {
   }
 
   applySynergyEffects(pokemon: PokemonEntity, singleType?: Synergy) {
+    // in Double Up shared PVE fights, the partner's units use their own synergies
     const allyEffects =
-      pokemon.team === Team.BLUE_TEAM ? this.blueEffects : this.redEffects
+      this.bluePartnerPlayer && pokemon.player === this.bluePartnerPlayer
+        ? this.bluePartnerEffects
+        : pokemon.team === Team.BLUE_TEAM
+          ? this.blueEffects
+          : this.redEffects
     const apply = (effect) => {
       this.applyEffect(pokemon, effect)
     }
@@ -708,12 +757,36 @@ export default class Simulation extends Schema implements ISimulation {
     - target selection effects (ghost curse, comet shard etc)
     */
 
-    // SPAWNS (bug, rotom, white flute, etc)
-    for (const board of [blueBoard, redBoard]) {
-      const teamIndex = board === blueBoard ? Team.BLUE_TEAM : Team.RED_TEAM
-      const player = board === blueBoard ? this.bluePlayer : this.redPlayer
-      const effects = board === blueBoard ? this.blueEffects : this.redEffects
+    const sides: {
+      board: MapSchema<Pokemon>
+      teamIndex: Team
+      player: Player | undefined
+      effects: Set<EffectEnum>
+    }[] = [
+      {
+        board: blueBoard,
+        teamIndex: Team.BLUE_TEAM,
+        player: this.bluePlayer,
+        effects: this.blueEffects
+      },
+      {
+        board: redBoard,
+        teamIndex: Team.RED_TEAM,
+        player: this.redPlayer,
+        effects: this.redEffects
+      }
+    ]
+    if (this.bluePartnerPlayer) {
+      sides.splice(1, 0, {
+        board: this.bluePartnerPlayer.board,
+        teamIndex: Team.BLUE_TEAM,
+        player: this.bluePartnerPlayer,
+        effects: this.bluePartnerEffects
+      })
+    }
 
+    // SPAWNS (bug, rotom, white flute, etc)
+    for (const { board, teamIndex, player, effects } of sides) {
       if (
         [
           EffectEnum.COCOON,
@@ -805,10 +878,7 @@ export default class Simulation extends Schema implements ISimulation {
     }
 
     // DARK SUBSTITUTE - decide which units are eligible to trigger at fight start
-    for (const board of [blueBoard, redBoard]) {
-      const teamIndex = board === blueBoard ? Team.BLUE_TEAM : Team.RED_TEAM
-      const effects = board === blueBoard ? this.blueEffects : this.redEffects
-
+    for (const { teamIndex, player, effects } of sides) {
       const darkTier = effects.has(EffectEnum.FALSE_SURRENDER) ? 4
         : effects.has(EffectEnum.BEAT_UP) ? 3
         : effects.has(EffectEnum.ASSURANCE) ? 2
@@ -819,7 +889,8 @@ export default class Simulation extends Schema implements ISimulation {
           ? [...this.blueTeam.values()]
           : [...this.redTeam.values()]
         ).filter(
-          (e: IPokemonEntity) => e.types.has(Synergy.DARK) && e.range === 1 && e.hp > 0 && !e.isSpawn
+          (e: IPokemonEntity) => e.types.has(Synergy.DARK) && e.range === 1 && e.hp > 0 && !e.isSpawn &&
+            e.player === player // only consider own units in Double Up shared fights
         )
         getStrongestUnits(darkMeleeEntities, darkTier).forEach((e: IPokemonEntity) => {
           ;(e as PokemonEntity).darkSubstituteEligible = true
@@ -901,11 +972,9 @@ export default class Simulation extends Schema implements ISimulation {
     }
 
     // TARGET SELECTION EFFECTS (ghost curse)
-    for (const team of [this.blueTeam, this.redTeam]) {
-      const teamEffects =
-        team === this.blueTeam ? this.blueEffects : this.redEffects
+    for (const { teamIndex, effects: teamEffects } of sides) {
       const opponentTeam =
-        team === this.blueTeam ? Team.RED_TEAM : Team.BLUE_TEAM
+        teamIndex === Team.BLUE_TEAM ? Team.RED_TEAM : Team.BLUE_TEAM
 
       if (
         teamEffects.has(EffectEnum.CURSE_OF_VULNERABILITY) ||
@@ -1508,7 +1577,7 @@ export default class Simulation extends Schema implements ISimulation {
           pkm.shieldDone
         )
 
-      pkm.update(dt, this.board, this.bluePlayer)
+      pkm.update(dt, this.board, pkm.player ?? this.bluePlayer)
     })
 
     this.redTeam.forEach((pkm, key) => {
@@ -1616,7 +1685,7 @@ export default class Simulation extends Schema implements ISimulation {
     this.finished = true
 
     // remove seeds, just single fight bonus
-    ;[this.bluePlayer, this.redPlayer].forEach((player) => {
+    ;[this.bluePlayer, this.bluePartnerPlayer, this.redPlayer].forEach((player) => {
       if (!player) return
         Seeds.forEach((seed) => {
           removeInArray(player.items, seed)
@@ -1650,10 +1719,13 @@ export default class Simulation extends Schema implements ISimulation {
     }
 
     // Handle battle results and rewards for both players
+    // sideId is the id compared against winnerId (the partner in Double Up
+    // shared PVE fights wins/loses with the blue side)
     const playersToProcess = [
       {
         player: this.redPlayer,
         playerId: this.redPlayerId,
+        sideId: this.redPlayerId,
         opponentTeam: this.blueTeam,
         opponentPlayer: this.bluePlayer,
         opponentPlayerId: this.bluePlayerId
@@ -1661,15 +1733,27 @@ export default class Simulation extends Schema implements ISimulation {
       {
         player: this.bluePlayer,
         playerId: this.bluePlayerId,
+        sideId: this.bluePlayerId,
         opponentTeam: this.redTeam,
         opponentPlayer: this.redPlayer,
         opponentPlayerId: this.redPlayerId
       }
     ]
+    if (this.bluePartnerPlayer) {
+      playersToProcess.push({
+        player: this.bluePartnerPlayer,
+        playerId: this.bluePartnerPlayer.id,
+        sideId: this.bluePlayerId,
+        opponentTeam: this.redTeam,
+        opponentPlayer: this.redPlayer,
+        opponentPlayerId: this.redPlayerId
+      })
+    }
 
     for (const {
       player,
       playerId,
+      sideId,
       opponentTeam,
       opponentPlayer,
       opponentPlayerId
@@ -1688,10 +1772,10 @@ export default class Simulation extends Schema implements ISimulation {
       if (isPVEPlayer) continue
       const isGhostPlayer = this.id !== player.simulationId
       const isGhostOpponent =
-        playerId === this.bluePlayerId && this.isGhostBattle
+        sideId === this.bluePlayerId && this.isGhostBattle
       const isPvE = opponentPlayerId === "pve"
       const battleResult =
-        this.winnerId === playerId
+        this.winnerId === sideId
           ? BattleResult.WIN
           : this.winnerId === opponentPlayerId
             ? BattleResult.DEFEAT
@@ -1730,7 +1814,7 @@ export default class Simulation extends Schema implements ISimulation {
       const client = this.room.clients.find((cli) => cli.auth.uid === playerId)
 
       // Handle win/loss outcomes
-      if (this.winnerId === playerId) {
+      if (this.winnerId === sideId) {
         // WIN
         if (!isPvE && !isGhostPlayer) {
           // no extra gold from PvE wins
@@ -1876,7 +1960,12 @@ export default class Simulation extends Schema implements ISimulation {
   }
 
   handleTidalWaveForTeam(team: Team) {
-    const effects = team === Team.RED_TEAM ? this.redEffects : this.blueEffects
+    const effects =
+      team === Team.RED_TEAM
+        ? this.redEffects
+        : this.bluePartnerPlayer
+          ? new Set([...this.blueEffects, ...this.bluePartnerEffects])
+          : this.blueEffects
 
     const tidalWaveLevel =
       effects.has(EffectEnum.WATER_VEIL) || effects.has(EffectEnum.SURGE_SURFER)

@@ -954,7 +954,9 @@ export const cloneBugs = ({
           coord.x,
           coord.y,
           teamIndex,
-          true
+          true,
+          false,
+          player
         )
         if (pokemonCloned.items.has(Item.SHED_SHELL)) {
           const team =

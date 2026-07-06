@@ -26,6 +26,29 @@ export type PVEStagesNames =
   | "super_ancients"
   | "legendary_giants"
 
+// Double Up: the team fights one shared PVE encounter, scaled dynamically
+// to the combined power of both boards
+export const DOUBLE_UP_PVE_POWER_FACTOR = 1.0 // target power relative to the duo's boards
+export const DOUBLE_UP_PVE_MIN_SCALE = 1.25 // never weaker than this × solo encounter
+export const DOUBLE_UP_PVE_MAX_SCALE = 10
+
+// scaled bosses gain more bulk than damage: hp × scale^1.2, atk × scale^0.8
+export const DOUBLE_UP_PVE_HP_BIAS = 1.2
+
+// below parity early game, parity at stage 10, then well beyond it since
+// items and synergies make boards much stronger than their raw stats
+export function getDoubleUpPvePowerFactor(stageLevel: number): number {
+  const factor =
+    stageLevel < 10 ? 0.4 + 0.06 * stageLevel : 1 + 0.15 * (stageLevel - 10)
+  return DOUBLE_UP_PVE_POWER_FACTOR * factor
+}
+
+// per-stage tuning multiplier applied to the final stat scale
+export const DOUBLE_UP_PVE_STAGE_TUNING: { [stageLevel: number]: number } = {
+  1: 0.95,
+  9: 0.9
+}
+
 export type PVEStage = {
   name: PVEStagesNames
   avatar: Pkm
@@ -186,67 +209,168 @@ export const PVEStages: { [turn: number]: PVEStage } = {
   },
 
   3: {
-    name: "pkm.SPEAROW",
-    avatar: Pkm.SPEAROW,
-    board: [
-      [Pkm.SPEAROW, 3, 1],
-      [Pkm.SPEAROW, 5, 1],
-      [Pkm.SPEAROW, 4, 2]
-    ],
+    // one random mini-boss, normalized to 150 HP / 10 ATK / 0 DEF / 0 SPE_DEF,
+    // with an AP malus increasing with rarity (stronger abilities)
+    name: "pkm.RAPIDASH",
+    avatar: Pkm.RAPIDASH,
+    board: [[Pkm.RAPIDASH, 4, 2]],
+    statBoosts: {
+      [Stat.HP]: 10,
+      [Stat.ATK]: -4,
+      [Stat.DEF]: -5,
+      [Stat.SPE_DEF]: -7,
+      [Stat.AP]: -10
+    },
     variants: [
       {
-        name: "pkm.STARLY",
-        avatar: Pkm.STARLY,
-        board: [
-          [Pkm.STARLY, 3, 1],
-          [Pkm.STARLY, 5, 1],
-          [Pkm.STARLY, 4, 2]
-        ],
-        statBoosts: {
-          [Stat.HP]: -10,
-          [Stat.ATK]: -2
-        }
+        name: "pkm.LARVITAR",
+        avatar: Pkm.LARVITAR,
+        board: [[Pkm.LARVITAR, 4, 2]],
+        statBoosts: { [Stat.HP]: 75, [Stat.ATK]: 3, [Stat.DEF]: -5, [Stat.SPE_DEF]: -4 }
       },
       {
-        name: "pkm.PIDGEY",
-        avatar: Pkm.PIDGEY,
-        board: [
-          [Pkm.PIDGEY, 3, 1],
-          [Pkm.PIDGEY, 5, 1],
-          [Pkm.PIDGEY, 4, 2]
-        ],
-        statBoosts: {
-          [Stat.HP]: -10,
-          [Stat.ATK]: -2
-        }
+        name: "pkm.SANDSHREW",
+        avatar: Pkm.SANDSHREW,
+        board: [[Pkm.SANDSHREW, 4, 2]],
+        statBoosts: { [Stat.HP]: 60, [Stat.ATK]: 5, [Stat.DEF]: -6, [Stat.SPE_DEF]: -3 }
       },
       {
-        name: "pkm.PIDOVE",
-        avatar: Pkm.PIDOVE,
-        board: [
-          [Pkm.PIDOVE, 3, 1],
-          [Pkm.PIDOVE, 5, 1],
-          [Pkm.PIDOVE, 4, 2]
-        ],
-        statBoosts: {
-          [Stat.HP]: -10,
-          [Stat.ATK]: -2
-        }
+        name: "pkm.PYUKUMUKU",
+        avatar: Pkm.PYUKUMUKU,
+        board: [[Pkm.PYUKUMUKU, 4, 2]],
+        statBoosts: { [Stat.DEF]: -25, [Stat.SPE_DEF]: -25, [Stat.AP]: -40 }
       },
       {
-        name: "pkm.DODUO",
-        avatar: Pkm.DODUO,
-        board: [
-          [Pkm.DODUO, 3, 1],
-          [Pkm.DODUO, 5, 1],
-          [Pkm.DODUO, 4, 2]
-        ],
-        statBoosts: {
-          [Stat.ATK]: -8,
-          [Stat.DEF]: -6,
-          [Stat.SPE_DEF]: -4,
-          [Stat.HP]: -30
-        }
+        name: "pkm.GASTRODON_EAST_SEA",
+        avatar: Pkm.GASTRODON_EAST_SEA,
+        board: [[Pkm.GASTRODON_EAST_SEA, 4, 2]],
+        statBoosts: { [Stat.HP]: -120, [Stat.ATK]: -9, [Stat.DEF]: -10, [Stat.SPE_DEF]: -12, [Stat.AP]: -30 }
+      },
+      {
+        name: "pkm.FENNEKIN",
+        avatar: Pkm.FENNEKIN,
+        board: [[Pkm.FENNEKIN, 4, 2]],
+        statBoosts: { [Stat.HP]: 70, [Stat.ATK]: 5, [Stat.DEF]: -4, [Stat.SPE_DEF]: -4 }
+      },
+      {
+        name: "pkm.SHINX",
+        avatar: Pkm.SHINX,
+        board: [[Pkm.SHINX, 4, 2]],
+        statBoosts: { [Stat.HP]: 30, [Stat.ATK]: -3, [Stat.DEF]: -10, [Stat.SPE_DEF]: -10, [Stat.AP]: -30 }
+      },
+      {
+        name: "pkm.MEGA_MAWILE",
+        avatar: Pkm.MEGA_MAWILE,
+        board: [[Pkm.MEGA_MAWILE, 4, 2]],
+        statBoosts: { [Stat.HP]: -70, [Stat.ATK]: -13, [Stat.DEF]: -20, [Stat.SPE_DEF]: -6, [Stat.AP]: -50 }
+      },
+      {
+        name: "pkm.GLACEON",
+        avatar: Pkm.GLACEON,
+        board: [[Pkm.GLACEON, 4, 2]],
+        statBoosts: { [Stat.HP]: 30, [Stat.ATK]: -2, [Stat.DEF]: -6, [Stat.SPE_DEF]: -4, [Stat.AP]: -10 }
+      },
+      {
+        name: "pkm.KECLEON",
+        avatar: Pkm.KECLEON,
+        board: [[Pkm.KECLEON, 4, 2]],
+        statBoosts: { [Stat.HP]: -50, [Stat.ATK]: -12, [Stat.DEF]: -6, [Stat.SPE_DEF]: -6, [Stat.AP]: -40 }
+      },
+      {
+        name: "pkm.SLITHER_WING",
+        avatar: Pkm.SLITHER_WING,
+        board: [[Pkm.SLITHER_WING, 4, 2]],
+        statBoosts: { [Stat.HP]: -30, [Stat.ATK]: -10, [Stat.DEF]: -6, [Stat.SPE_DEF]: -8, [Stat.AP]: -40 }
+      },
+      {
+        name: "pkm.MUDSDALE",
+        avatar: Pkm.MUDSDALE,
+        board: [[Pkm.MUDSDALE, 4, 2]],
+        statBoosts: { [Stat.HP]: -100, [Stat.ATK]: -16, [Stat.DEF]: -12, [Stat.SPE_DEF]: -8, [Stat.AP]: -30 }
+      },
+      {
+        name: "pkm.HISUI_ARCANINE",
+        avatar: Pkm.HISUI_ARCANINE,
+        board: [[Pkm.HISUI_ARCANINE, 4, 2]],
+        statBoosts: { [Stat.HP]: -150, [Stat.ATK]: -12, [Stat.DEF]: -12, [Stat.SPE_DEF]: -10, [Stat.AP]: -30 }
+      },
+      {
+        name: "pkm.CRAMORANT",
+        avatar: Pkm.CRAMORANT,
+        board: [[Pkm.CRAMORANT, 4, 2]],
+        statBoosts: { [Stat.HP]: -50, [Stat.ATK]: -9, [Stat.DEF]: -6, [Stat.SPE_DEF]: -6, [Stat.AP]: -40 }
+      },
+      {
+        name: "pkm.GALARIAN_ZIGZAGOON",
+        avatar: Pkm.GALARIAN_ZIGZAGOON,
+        board: [[Pkm.GALARIAN_ZIGZAGOON, 4, 2]],
+        statBoosts: { [Stat.HP]: 70, [Stat.ATK]: 4, [Stat.DEF]: -10, [Stat.SPE_DEF]: -4 }
+      },
+      {
+        name: "pkm.MAGCARGO",
+        avatar: Pkm.MAGCARGO,
+        board: [[Pkm.MAGCARGO, 4, 2]],
+        statBoosts: { [Stat.HP]: -30, [Stat.ATK]: -6, [Stat.DEF]: -16, [Stat.SPE_DEF]: -10, [Stat.AP]: -20 }
+      },
+      {
+        name: "pkm.BRELOOM",
+        avatar: Pkm.BRELOOM,
+        board: [[Pkm.BRELOOM, 4, 2]],
+        statBoosts: { [Stat.HP]: -20, [Stat.ATK]: -8, [Stat.DEF]: -6, [Stat.SPE_DEF]: -6, [Stat.AP]: -10 }
+      },
+      {
+        name: "pkm.RABOOT",
+        avatar: Pkm.RABOOT,
+        board: [[Pkm.RABOOT, 4, 2]],
+        statBoosts: { [Stat.HP]: 70, [Stat.ATK]: 3, [Stat.DEF]: -4, [Stat.SPE_DEF]: -4, [Stat.AP]: -10 }
+      },
+      {
+        name: "pkm.DUCKLETT",
+        avatar: Pkm.DUCKLETT,
+        board: [[Pkm.DUCKLETT, 4, 2]],
+        statBoosts: { [Stat.HP]: 45, [Stat.ATK]: -1, [Stat.DEF]: -6, [Stat.SPE_DEF]: -6, [Stat.AP]: -10 }
+      },
+      {
+        name: "pkm.TOTODILE",
+        avatar: Pkm.TOTODILE,
+        board: [[Pkm.TOTODILE, 4, 2]],
+        statBoosts: { [Stat.HP]: 75, [Stat.ATK]: 3, [Stat.DEF]: -4, [Stat.SPE_DEF]: -4 }
+      },
+      {
+        name: "pkm.LUCARIO",
+        avatar: Pkm.LUCARIO,
+        board: [[Pkm.LUCARIO, 4, 2]],
+        statBoosts: { [Stat.HP]: -20, [Stat.ATK]: -8, [Stat.DEF]: -8, [Stat.SPE_DEF]: -8, [Stat.AP]: -20 }
+      },
+      {
+        name: "pkm.CLEFFA",
+        avatar: Pkm.CLEFFA,
+        board: [[Pkm.CLEFFA, 4, 2]],
+        statBoosts: { [Stat.HP]: 80, [Stat.ATK]: 5, [Stat.DEF]: -2, [Stat.SPE_DEF]: -2 }
+      },
+      {
+        name: "pkm.MACHOP",
+        avatar: Pkm.MACHOP,
+        board: [[Pkm.MACHOP, 4, 2]],
+        statBoosts: { [Stat.HP]: 80, [Stat.ATK]: 4, [Stat.DEF]: -6, [Stat.SPE_DEF]: -6 }
+      },
+      {
+        name: "pkm.ARBOLIVA",
+        avatar: Pkm.ARBOLIVA,
+        board: [[Pkm.ARBOLIVA, 4, 2]],
+        statBoosts: { [Stat.HP]: -50, [Stat.ATK]: -6, [Stat.DEF]: -6, [Stat.SPE_DEF]: -8, [Stat.AP]: -10 }
+      },
+      {
+        name: "pkm.UNOWN_A",
+        avatar: Pkm.UNOWN_A,
+        board: [[Pkm.UNOWN_A, 4, 2]],
+        statBoosts: { [Stat.HP]: 50, [Stat.ATK]: 9, [Stat.DEF]: -2, [Stat.SPE_DEF]: -2 }
+      },
+      {
+        name: "pkm.PIKACHU_SURFER",
+        avatar: Pkm.PIKACHU_SURFER,
+        board: [[Pkm.PIKACHU_SURFER, 4, 2]],
+        statBoosts: { [Stat.HP]: 30, [Stat.ATK]: 2, [Stat.DEF]: -4, [Stat.SPE_DEF]: -6, [Stat.AP]: -10 }
       }
     ],
     rewards: ItemComponentsNoFossilOrScarf,
@@ -279,6 +403,32 @@ export const PVEStages: { [turn: number]: PVEStage } = {
         board: [
           [Pkm.WISHIWASHI_SCHOOL, 4, 2]
         ]
+      },
+      {
+        name: "pkm.WHISCASH",
+        avatar: Pkm.WHISCASH,
+        board: [[Pkm.WHISCASH, 4, 2]],
+        statBoosts: {
+          [Stat.HP]: 50,
+          [Stat.ATK]: 4
+        }
+      },
+      {
+        name: "pkm.DONDOZO",
+        avatar: Pkm.DONDOZO,
+        board: [[Pkm.DONDOZO, 4, 2]],
+        statBoosts: {
+          [Stat.HP]: 50,
+          [Stat.ATK]: 8
+        }
+      },
+      {
+        name: "pkm.WAILORD",
+        avatar: Pkm.WAILORD,
+        board: [[Pkm.WAILORD, 4, 2]],
+        statBoosts: {
+          [Stat.ATK]: 10
+        }
       }
     ],
     marowakItems: [[Item.KINGS_ROCK]],
@@ -295,41 +445,88 @@ export const PVEStages: { [turn: number]: PVEStage } = {
     avatar: Pkm.MEWTWO,
     emotion: Emotion.DETERMINED,
     board: [
-      [Pkm.MEWTWO, 0, 1],
-      [Pkm.MEW, 7, 1]
+      [Pkm.MEWTWO, 0, 2],
+      [Pkm.MEW, 7, 2]
     ],
     variants: [
       {
         name: "pkm.SOLROCK",
         avatar: Pkm.SOLROCK,
         board: [
-          [Pkm.SOLROCK, 0, 1],
-          [Pkm.LUNATONE, 7, 1]
+          [Pkm.SOLROCK, 0, 2],
+          [Pkm.LUNATONE, 7, 2]
         ]
       },
       {
         name: "pkm.ARMAROUGE",
         avatar: Pkm.ARMAROUGE,
         board: [
-          [Pkm.ARMAROUGE, 0, 1],
-          [Pkm.CERULEDGE, 7, 1]
+          [Pkm.ARMAROUGE, 0, 2],
+          [Pkm.CERULEDGE, 7, 2]
         ]
       },
       {
         name: "pkm.LATIOS",
         avatar: Pkm.LATIOS,
         board: [
-          [Pkm.LATIAS, 0, 1],
-          [Pkm.LATIOS, 7, 1]
+          [Pkm.LATIAS, 0, 2],
+          [Pkm.LATIOS, 7, 2]
         ]
       },
       {
         name: "pkm.MANAPHY",
         avatar: Pkm.MANAPHY,
         board: [
-          [Pkm.MANAPHY, 0, 1],
-          [Pkm.PHIONE, 7, 1]
+          [Pkm.MANAPHY, 0, 2],
+          [Pkm.PHIONE, 7, 2]
         ]
+      },
+      {
+        name: "pkm.HITMONCHAN",
+        avatar: Pkm.HITMONCHAN,
+        board: [
+          [Pkm.HITMONCHAN, 0, 2],
+          [Pkm.HITMONLEE, 7, 2]
+        ],
+        statBoosts: {
+          [Stat.HP]: 30
+        }
+      },
+      {
+        name: "pkm.GARDEVOIR",
+        avatar: Pkm.GARDEVOIR,
+        board: [
+          [Pkm.GARDEVOIR, 0, 2],
+          [Pkm.GALLADE, 7, 2]
+        ],
+        statBoosts: {
+          [Stat.HP]: 50,
+          [Stat.ATK]: 4
+        }
+      },
+      {
+        name: "pkm.PLUSLE",
+        avatar: Pkm.PLUSLE,
+        board: [
+          [Pkm.PLUSLE, 0, 2],
+          [Pkm.MINUN, 7, 2]
+        ],
+        statBoosts: {
+          [Stat.HP]: 100,
+          [Stat.ATK]: 6,
+          [Stat.PP]: +20
+        }
+      },
+      {
+        name: "pkm.PINSIR",
+        avatar: Pkm.PINSIR,
+        board: [
+          [Pkm.PINSIR, 0, 2],
+          [Pkm.HERACROSS, 7, 2]
+        ],
+        statBoosts: {
+          [Stat.HP]: 40
+        }
       },
     ],
     marowakItems: [[Item.METAL_COAT], [Item.DEEP_SEA_TOOTH]],
@@ -377,28 +574,96 @@ export const PVEStages: { [turn: number]: PVEStage } = {
     avatar: Pkm.LUGIA,
     emotion: Emotion.DETERMINED,
     board: [
-      [Pkm.LUGIA, 3, 1],
-      [Pkm.HO_OH, 5, 1]
+      [Pkm.LUGIA, 3, 2],
+      [Pkm.HO_OH, 5, 2]
     ],
     variants: [
       {
         name: "pkm.SOLGALEO",
         avatar: Pkm.SOLGALEO,
         board: [
-          [Pkm.SOLGALEO, 3, 1],
-          [Pkm.LUNALA, 5, 1]
+          [Pkm.SOLGALEO, 3, 2],
+          [Pkm.LUNALA, 5, 2]
         ]
       },
       {
         name: "pkm.XERNEAS",
         avatar: Pkm.XERNEAS,
         board: [
-          [Pkm.XERNEAS, 3, 1],
-          [Pkm.YVELTAL, 5, 1]
+          [Pkm.XERNEAS, 3, 2],
+          [Pkm.YVELTAL, 5, 2]
         ],
         statBoosts: {
           [Stat.HP]: 100,
           [Stat.PP]: +40
+        }
+      },
+      {
+        name: "pkm.DARKRAI",
+        avatar: Pkm.DARKRAI,
+        board: [
+          [Pkm.CRESSELIA, 3, 2],
+          [Pkm.DARKRAI, 5, 2]
+        ],
+        statBoosts: {
+          [Stat.HP]: 100,
+          [Stat.ATK]: 5,
+          [Stat.DEF]: 5,
+          [Stat.SPE_DEF]: 5
+        }
+      },
+      {
+        name: "pkm.ORIGIN_DIALGA",
+        avatar: Pkm.ORIGIN_DIALGA,
+        board: [
+          [Pkm.ORIGIN_DIALGA, 3, 2],
+          [Pkm.ORIGIN_PALKIA, 5, 2]
+        ],
+        statBoosts: {
+          [Stat.HP]: 50,
+          [Stat.DEF]: 5,
+          [Stat.SPE_DEF]: 5,
+          [Stat.PP]: +40
+        }
+      },
+      {
+        name: "pkm.ZEKROM",
+        avatar: Pkm.ZEKROM,
+        board: [
+          [Pkm.ZEKROM, 3, 2],
+          [Pkm.RESHIRAM, 5, 2]
+        ],
+        statBoosts: {
+          [Stat.HP]: 150,
+          [Stat.DEF]: 5,
+          [Stat.SPE_DEF]: 5
+        }
+      },
+      {
+        name: "pkm.ZACIAN_CROWNED",
+        avatar: Pkm.ZACIAN_CROWNED,
+        board: [
+          [Pkm.ZACIAN_CROWNED, 3, 2],
+          [Pkm.ZAMAZENTA_CROWNED, 5, 2]
+        ],
+        statBoosts: {
+          [Stat.HP]: 100,
+          [Stat.DEF]: 5,
+          [Stat.SPE_DEF]: 5
+        }
+      },
+      {
+        name: "pkm.MARSHADOW",
+        avatar: Pkm.MARSHADOW,
+        board: [[Pkm.MARSHADOW, 4, 2]],
+        marowakItems: [[Item.STAR_PIECE, Item.SACRED_ASH]],
+        statBoosts: {
+          [Stat.HP]: 450,
+          [Stat.ATK]: 20,
+          [Stat.DEF]: 10,
+          [Stat.SPE_DEF]: 10,
+          [Stat.SPEED]: 10,
+          [Stat.PP]: +50
         }
       },
     ],
@@ -720,7 +985,7 @@ export const PVEStages: { [turn: number]: PVEStage } = {
       [Pkm.DIALGA, 2, 3],
       [Pkm.GIRATINA, 4, 3],
       [Pkm.PALKIA, 6, 3],
-      [Pkm.ARCEUS, 4, 1]
+      [Pkm.ARCEUS, 4, 2]
     ],
     statBoosts: {
       [Stat.HP]: 200,
