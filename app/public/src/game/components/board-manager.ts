@@ -11,6 +11,10 @@ import {
 } from "../../../../config"
 import { getMusicAlt } from "../../../../config/game/music"
 import {
+  ScribbleShapeTint,
+  unpackScribbleCell
+} from "../../../../config/game/scribble-shapes"
+import {
   FLOWER_POTS_POSITIONS_BLUE,
   FlowerPotMons
 } from "../../../../core/flower-pots"
@@ -38,7 +42,7 @@ import {
 } from "../../../../types/enum/Game"
 import { Item } from "../../../../types/enum/Item"
 import { Pkm, PkmByIndex } from "../../../../types/enum/Pokemon"
-import type { SpecialGameRule } from "../../../../types/enum/SpecialGameRule"
+import { SpecialGameRule } from "../../../../types/enum/SpecialGameRule"
 import { Synergy } from "../../../../types/enum/Synergy"
 import { TownEncounters } from "../../../../types/enum/TownEncounter"
 import { Weather } from "../../../../types/enum/Weather"
@@ -63,6 +67,7 @@ import { DEPTH } from "../depths"
 import type GameScene from "../scenes/game-scene"
 import { displayBoost } from "./abilities-animations"
 import { BerryTree } from "./berry-tree"
+import { GameDialog } from "./game-dialog"
 import PokemonSprite from "./pokemon"
 import PokemonAvatar from "./pokemon-avatar"
 import PokemonSpecial from "./pokemon-special"
@@ -91,6 +96,8 @@ export default class BoardManager {
   lightX: number
   lightY: number
   lightCell: Phaser.GameObjects.Sprite | null
+  scribbleCells: Phaser.GameObjects.Sprite[] = []
+  scribbleLabels: GameDialog[] = []
   berryTrees: BerryTree[] = []
   flowerPots: Phaser.GameObjects.Sprite[] = []
   flowerPokemonsInPots: PokemonSprite[] = []
@@ -256,6 +263,7 @@ export default class BoardManager {
 
     if (this.mode === BoardMode.PICK) {
       this.showLightCell()
+      this.showScribbleShapes()
     }
 
     this.player.board.forEach((pokemon) => {
@@ -300,6 +308,113 @@ export default class BoardManager {
   hideLightCell() {
     this.lightCell?.destroy()
     this.lightCell = null
+  }
+
+  showScribbleShapes() {
+    this.hideScribbleShapes()
+    if (this.specialGameRule !== SpecialGameRule.LIGHT_SHOW) return
+    const labelAnchors: {
+      label: GameDialog
+      dialog: string
+      x: number
+      y: number
+    }[] = []
+    this.player.scribbleShapes.forEach((shape) => {
+      const cellCoordinates = shape.cells.map((cell) => {
+        const { x, y } = unpackScribbleCell(cell)
+        return transformBoardCoordinates(x, y)
+      })
+      cellCoordinates.forEach(([x, y]) => {
+        const sprite = this.scene.add.sprite(
+          x,
+          y,
+          "abilities",
+          "LIGHT_CELL/000.png"
+        )
+        sprite.setDepth(DEPTH.LIGHT_CELL)
+        sprite.setScale(2, 2)
+        sprite.anims.play("LIGHT_CELL")
+        sprite.setTint(ScribbleShapeTint[shape.shapeType])
+        this.scribbleCells.push(sprite)
+      })
+
+      // always visible effect label above the shape, so that players don't
+      // need to open the Smeargle dialog to know what each shape does
+      const dialog = t(`scribble_shape_effect.${shape.shapeType}`)
+      const xs = cellCoordinates.map(([x]) => x)
+      const topY = Math.min(...cellCoordinates.map(([, y]) => y))
+      const label = new GameDialog({
+        scene: this.scene,
+        dialog,
+        extraClass: "scribble-shape-label"
+      })
+      // tint the label border like the shape cells so they stay associated
+      // even when the label had to be pushed away from the shape
+      label.dom.style.borderColor = `#${ScribbleShapeTint[shape.shapeType]
+        .toString(16)
+        .padStart(6, "0")}`
+      this.scene.add.existing(label)
+      labelAnchors.push({
+        label,
+        dialog,
+        x: (Math.min(...xs) + Math.max(...xs)) / 2,
+        y: topY - 72
+      })
+      this.scribbleLabels.push(label)
+    })
+
+    // push labels up while they would overlap another shape's label
+    const layoutLabels = (
+      getHalfWidth: (anchor: (typeof labelAnchors)[number]) => number
+    ) => {
+      const placed: { x: number; y: number; halfWidth: number }[] = []
+      labelAnchors.forEach((anchor) => {
+        const halfWidth = getHalfWidth(anchor)
+        let y = anchor.y
+        while (
+          placed.some(
+            (p) =>
+              Math.abs(p.x - anchor.x) < p.halfWidth + halfWidth &&
+              Math.abs(p.y - y) < 40
+          )
+        ) {
+          y -= 44
+        }
+        placed.push({ x: anchor.x, y, halfWidth })
+        anchor.label.setPosition(anchor.x, y)
+      })
+    }
+
+    // first layout from an estimate, then refine with the real rendered
+    // widths once the label DOM has been painted (stat keywords are replaced
+    // with icons, so the estimate can be off)
+    layoutLabels(({ dialog }) => dialog.length * 5 + 20)
+    this.scene.time.delayedCall(100, () => {
+      if (labelAnchors.some(({ label }) => !label.scene)) return // labels were destroyed in the meantime
+      layoutLabels(
+        ({ label, dialog }) =>
+          (label.dom.offsetWidth || dialog.length * 10) / 2 + 8
+      )
+    })
+  }
+
+  hideScribbleShapes() {
+    this.scribbleCells.forEach((sprite) => sprite.destroy())
+    this.scribbleCells = []
+    this.scribbleLabels.forEach((label) => label.destroy())
+    this.scribbleLabels = []
+  }
+
+  // called when the player's scribble shapes change during the pick phase,
+  // after picking the second shape drawn by Smeargle
+  refreshScribbleShapes() {
+    if (this.mode !== BoardMode.PICK) return
+    this.showScribbleShapes()
+    if (this.specialGameRule != null) {
+      this.smeargle?.destroy()
+      this.smeargle = null
+      this.addSmeargle(this.specialGameRule)
+    }
   }
 
   renderBerryTrees() {
@@ -768,6 +883,7 @@ export default class BoardManager {
     // logger.debug('battleMode');
     this.mode = BoardMode.BATTLE
     this.hideLightCell()
+    this.hideScribbleShapes()
     if (!phaseJustChanged) this.removePokemonsOnBoard() // remove immediately board sprites if arriving in battle mode
     this.scene.closeTooltips()
     this.scene.input.setDragState(this.scene.input.activePointer, 0)
@@ -849,6 +965,7 @@ export default class BoardManager {
       playMusic(this.scene, getMusicAlt(DungeonMusic.TREASURE_TOWN_STAGE_20))
     }
     this.hideLightCell()
+    this.hideScribbleShapes()
     this.hideBerryTrees()
     this.hideFlowerPots()
     this.hideGroundHoles()
@@ -1244,15 +1361,21 @@ export default class BoardManager {
   }
 
   addSmeargle(specialGameRule: SpecialGameRule) {
+    let dialog = t(`scribble_description.${specialGameRule}`, {
+      type: this.state.avatarSynergy ?? ""
+    })
+    if (specialGameRule === SpecialGameRule.LIGHT_SHOW) {
+      this.player.scribbleShapes.forEach((shape) => {
+        dialog += `\n• ${t(`scribble_shape.${shape.shapeType}`)}: ${t(`scribble_shape_effect.${shape.shapeType}`)}`
+      })
+    }
     this.smeargle = new PokemonSpecial({
       scene: this.scene,
       x: 1512,
       y: 396,
       name: Pkm.SMEARGLE,
       orientation: Orientation.DOWNLEFT,
-      dialog: t(`scribble_description.${specialGameRule}`, {
-        type: this.state.avatarSynergy ?? ""
-      }),
+      dialog,
       dialogTitle: t(`scribble.${specialGameRule}`)
     })
   }

@@ -221,6 +221,21 @@ p:last-child {
   max-width: 300px;
 }
 
+.game-dialog .game-dialog-text {
+  white-space: pre-line;
+}
+
+.game-dialog.scribble-shape-label {
+  font-size: 0.8rem;
+  max-width: none;
+  padding: 0 0.35em;
+  pointer-events: none;
+}
+
+.game-dialog.scribble-shape-label .game-dialog-text {
+  white-space: nowrap;
+}
+
 .game-dialog .game-dialog-title {
   background-color: var(--color-bg-secondary);
   text-transform: capitalize;

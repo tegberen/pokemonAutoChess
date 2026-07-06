@@ -7,7 +7,9 @@ import {
   RegionDetails,
   SynergyTiersThresholds
 } from "../../config"
+import type { ScribbleShapeType } from "../../config/game/scribble-shapes"
 import { CollectionUtils } from "../../core/collection"
+import { ScribbleShape } from "./scribble-shape"
 import { OnSpotlightChangeEffect } from "../../core/effects/effect"
 import { PassiveEffects } from "../../core/effects/passives"
 import { carryOverPermanentStats } from "../../core/evolution-logic/evolution-handler"
@@ -143,6 +145,8 @@ export default class Player extends Schema implements IPlayer {
   @type([PlayerChoice]) choices = new ArraySchema<PlayerChoice>()
   @type(["string"]) pveRewards = new ArraySchema<Item>()
   @type(["string"]) pveRewardsPropositions = new ArraySchema<Item>()
+  @type(["string"]) scribbleShapesCollected = new ArraySchema<ScribbleShapeType>()
+  @type([ScribbleShape]) scribbleShapes = new ArraySchema<ScribbleShape>()
   @type("float32") loadingProgress: number = 0
   @type(["string"]) berryTreesType: Item[] = pickNRandomIn(NonSpecialBerries, 3)
   @type(["uint8"]) berryTreesStages: number[] = [1, 1, 1]

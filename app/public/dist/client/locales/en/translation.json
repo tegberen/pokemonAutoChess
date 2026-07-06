@@ -4421,6 +4421,7 @@
 		"choose_legendary": "Choose one Legendary for your team. You only get to choose once, make it count!",
 		"choose_wand": "Choose one Wand to give additional effects to your Fairy Pokémon attacks",
 		"choose_armory": "Choose one gift to send to your partner",
+		"choose_scribble_shape": "Choose the second shape Smeargle will draw on your board",
 		"free_slot_hint": "You must have one free slot on the bench, or two for Duos",
 		"more_choices": "{{count}} more choice(s) after this one!"
 	},
@@ -4895,7 +4896,8 @@
 		"HALLOWEEN": "Halloween",
 		"SHINIEST_HUNTER": "Shiniest Hunter",
 		"KAIJU_BATTLE": "Kaiju Battle",
-		"AVATAR": "Avatar"
+		"AVATAR": "Avatar",
+		"LIGHT_SHOW": "Light Show"
 	},
 	"scribble_description": {
 		"EVERYONE_IS_HERE": "All the additional picks are available immediately",
@@ -4922,7 +4924,46 @@
 		"HALLOWEEN": "Everyone is GHOST 8. GHOST 16 summons Ghost",
 		"SHINIEST_HUNTER": "All PvE encounters are shiny",
 		"KAIJU_BATTLE": "Every Pokémon that is not MONSTER gains the MONSTER type. The HP gain is tripled.",
-		"AVATAR": "Every Pokémon that is not {{type}} gains the {{type}} type."
+		"AVATAR": "Every Pokémon that is not {{type}} gains the {{type}} type.",
+		"LIGHT_SHOW": "Every 3 stages, Smeargle draws a glowing shape on your board and you choose a second one. Pokémon starting a fight on a lit cell gain that shape's bonus:"
+	},
+	"scribble_shape": {
+		"DOT": "Dot",
+		"LINE": "Line",
+		"COLUMN": "Column",
+		"L": "L",
+		"SQUARE": "Square",
+		"T": "T",
+		"TRIANGLE": "Triangle",
+		"ZIGZAG": "Zigzag",
+		"DIAGONAL": "Diagonal",
+		"X": "X",
+		"PLUS": "Plus",
+		"RING": "Ring"
+	},
+	"scribble_shape_already_collected": "Already in the sketchbook",
+	"scribble_shape_not_collected": "Not in the sketchbook yet",
+	"scribble_sketchbook": "Smeargle's Sketchbook",
+	"scribble_sketchbook_hint": "Place a Pokémon on every cell of a shape to collect it. Shapes are checked when the fight starts.",
+	"scribble_sketchbook_milestone_0": "Recycle Ticket",
+	"scribble_sketchbook_milestone_1": "2 random components",
+	"scribble_sketchbook_milestone_2": "Ditto",
+	"scribble_sketchbook_milestone_3": "10 free rolls",
+	"scribble_sketchbook_milestone_4": "20 player HP",
+	"scribble_sketchbook_milestone_5": "Unique Pokémon",
+	"scribble_shape_effect": {
+		"DOT": "+50% ATK and +50 AP",
+		"LINE": "+50% ATK",
+		"COLUMN": "+100% SPE_DEF",
+		"L": "+30 LUCK",
+		"SQUARE": "+100% DEF",
+		"T": "+50 AP",
+		"TRIANGLE": "Starts the fight with 30% PP",
+		"ZIGZAG": "+5 SPEED on each attack",
+		"DIAGONAL": "+30 SPEED",
+		"X": "+30 CRIT_CHANCE and +30 CRIT_POWER",
+		"PLUS": "+30% HP",
+		"RING": "SHIELD equal to 40% HP"
 	},
 	"town_encounter_description": {
 		"KECLEON": "Kecleon sells Synergy items for {{cost}} GOLD",

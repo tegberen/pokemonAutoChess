@@ -16,6 +16,7 @@ import {
   OUTLAW_GOLD_REWARD,
   PkmsWithAltForms,
   PORTAL_CAROUSEL_BASE_DURATION,
+  UniquePool,
   PortalCarouselStages,
   SHARDS_PER_SHINY_UNOWN_WANDERER,
   SHARDS_PER_UNOWN_WANDERER,
@@ -24,6 +25,12 @@ import {
   TREASURE_BOX_LIFE_THRESHOLD,
   UNOWN_ENCOUNTER_CHANCE
 } from "../../config"
+import {
+  buildScribbleShapeBag,
+  placeScribbleShapeCompatibleWith,
+  rollScribbleShapes,
+  unpackScribbleCell
+} from "../../config/game/scribble-shapes"
 import { AbilityStrategies } from "../../core/abilities/abilities"
 import { castAbility } from "../../core/abilities/cast"
 import {
@@ -48,6 +55,7 @@ import {
   PlayerChoice,
   type PlayerChoiceType
 } from "../../models/colyseus-models/player-choice"
+import { ScribbleShape } from "../../models/colyseus-models/scribble-shape"
 import {
   type Pokemon,
   PokemonClasses
@@ -111,6 +119,7 @@ import {
 import { Passive } from "../../types/enum/Passive"
 import {
   Pkm,
+  PkmDuos,
   PkmIndex,
   PkmRegionalVariants,
   Unowns,
@@ -1668,6 +1677,48 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
       })
     }
     if (
+      this.state.specialGameRule === SpecialGameRule.LIGHT_SHOW &&
+      this.state.stageLevel % 3 === 1
+    ) {
+      // every 3 stages, Smeargle draws one glowing shape on each player's
+      // board and proposes 3 more to choose a second one from. Shapes not yet
+      // collected in the sketchbook are prioritized.
+      this.state.players.forEach((player: Player) => {
+        if (!player.alive) return
+        player.choices
+          .filter((choice) => choice.type === "scribble_shape")
+          .forEach((choice) => removeInArray(player.choices, choice))
+        const queue = buildScribbleShapeBag([
+          ...player.scribbleShapesCollected
+        ])
+        player.scribbleShapes.clear()
+        if (player.isBot) {
+          // bots don't make choices, they get both shapes drawn directly
+          rollScribbleShapes(queue.slice(0, 2)).forEach(
+            ({ shapeType, cells }) => {
+              player.scribbleShapes.push(new ScribbleShape(shapeType, cells))
+            }
+          )
+        } else {
+          const proposedShapes = queue.slice(1, 4)
+          // the first shape is placed so that it cannot block any of the
+          // 3 shapes proposed for the second drawing
+          const cells = placeScribbleShapeCompatibleWith(
+            queue[0],
+            proposedShapes
+          )
+          player.scribbleShapes.push(new ScribbleShape(queue[0], cells))
+          player.choices.push(
+            new PlayerChoice({
+              type: "scribble_shape",
+              scribbleShapes: proposedShapes
+            })
+          )
+        }
+      })
+    }
+
+    if (
       [2, 4].includes(this.state.stageLevel) &&
       this.state.specialGameRule === SpecialGameRule.TECHNOLOGIC
     ) {
@@ -2095,17 +2146,17 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
         "item",
         "starter",
         "unique",
-        "legendary"
+        "legendary",
+        "scribble_shape"
       ]
       player.choices
         .filter((choice) => autoPickChoices.includes(choice.type))
         .forEach((choice) => {
-          const randomPick = randomBetween(
-            0,
-            choice.pokemons
-              ? choice.pokemons.length - 1
-              : choice.items.length - 1
-          )
+          const nbOptions =
+            choice.pokemons.length ||
+            choice.items.length ||
+            choice.scribbleShapes.length
+          const randomPick = randomBetween(0, nbOptions - 1)
           this.room.pickChoice(player.id, choice.id, randomPick, true)
         })
     })
@@ -2344,6 +2395,68 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
     })
   }
 
+  updateScribbleSketchbooks() {
+    this.state.players.forEach((player: Player) => {
+      if (!player.alive || player.isBot) return
+      player.scribbleShapes.forEach((shape) => {
+        if (player.scribbleShapesCollected.includes(shape.shapeType)) return
+        const isShapeFilled = shape.cells.every((cell) => {
+          const { x, y } = unpackScribbleCell(cell)
+          return schemaValues(player.board).some(
+            (pokemon) => pokemon.positionX === x && pokemon.positionY === y
+          )
+        })
+        if (isShapeFilled) {
+          player.scribbleShapesCollected.push(shape.shapeType)
+          this.giveSketchbookMilestoneReward(player)
+        }
+      })
+    })
+  }
+
+  giveSketchbookMilestoneReward(player: Player) {
+    switch (player.scribbleShapesCollected.length) {
+      case 2:
+        player.items.push(Item.RECYCLE_TICKET)
+        break
+      case 4:
+        player.items.push(pickRandomIn(ItemComponents))
+        player.items.push(pickRandomIn(ItemComponents))
+        break
+      case 6: {
+        const ditto = PokemonFactory.createPokemonFromName(Pkm.DITTO, player)
+        ditto.positionX = getFirstAvailablePositionInBench(player.board) ?? 0
+        ditto.positionY = 0
+        player.board.set(ditto.id, ditto)
+        break
+      }
+      case 8:
+        player.shopFreeRolls += 10
+        break
+      case 10:
+        player.life = Math.min(100, player.life + 20)
+        break
+      case 12: {
+        const topSynergy = player.synergies.getTopSynergies()[0]
+        const singleUniques = UniquePool.filter(
+          (p): p is Pkm => !(p in PkmDuos)
+        )
+        const matchingUniques = singleUniques.filter((p) =>
+          getPokemonData(p).types.includes(topSynergy)
+        )
+        const unique = pickRandomIn(
+          matchingUniques.length > 0 ? matchingUniques : singleUniques
+        )
+        const pokemon = PokemonFactory.createPokemonFromName(unique, player)
+        pokemon.positionX = getFirstAvailablePositionInBench(player.board) ?? 0
+        pokemon.positionY = 0
+        player.board.set(pokemon.id, pokemon)
+        player.pokemonsPlayed.add(unique)
+        break
+      }
+    }
+  }
+
   initializeFightingPhase() {
     this.state.simulations.clear()
     this.state.phase = GamePhaseState.FIGHT
@@ -2363,6 +2476,10 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
         player.registerPlayedPokemons()
       }
     })
+
+    if (this.state.specialGameRule === SpecialGameRule.LIGHT_SHOW) {
+      this.updateScribbleSketchbooks()
+    }
 
     const pveStageBase = PVEStages[this.state.stageLevel]
     if (pveStageBase) {

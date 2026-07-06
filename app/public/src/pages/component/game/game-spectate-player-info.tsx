@@ -6,6 +6,7 @@ import { Money } from "../icons/money"
 import PokemonPortrait from "../pokemon-portrait"
 import { GameAdditionalPokemonsIcon } from "./game-additional-pokemons"
 import { GameRegionalPokemonsIcon } from "./game-regional-pokemons"
+import { GameScribbleSketchbookIcon } from "./game-scribble-sketchbook"
 import { GameStreakInfo } from "./game-streak-info"
 import "./game-spectate-player-info.css"
 
@@ -25,6 +26,7 @@ export default function GameSpectatePlayerInfo() {
       >
         <GameAdditionalPokemonsIcon />
         <GameRegionalPokemonsIcon />
+        <GameScribbleSketchbookIcon />
 
         <PokemonPortrait avatar={spectatedPlayer.avatar} />
         <span className="player-name">

@@ -1,0 +1,123 @@
+/* with a third icon in the pools column, switch to a 2-column grid
+   so the icons don't overflow the shop bar height */
+.game-additional-pools:has(.scribble-sketchbook-icon) {
+  display: grid;
+  grid-template-columns: auto auto;
+  align-content: center;
+  justify-content: center;
+}
+
+/* on smaller screens the pools become a horizontal row (see game-shop.css),
+   keep that behavior with the third icon to avoid horizontal clipping */
+@media (aspect-ratio < 4 / 3) {
+  .game-additional-pools:has(.scribble-sketchbook-icon) {
+    display: flex;
+    flex-direction: row;
+  }
+}
+
+.scribble-sketchbook-icon {
+  padding: 5px;
+  position: relative;
+}
+
+.scribble-sketchbook-icon img {
+  width: 2em;
+  height: 2em;
+  display: block;
+}
+
+.scribble-sketchbook-icon > span {
+  position: absolute;
+  bottom: -0.5em;
+  right: -0.25em;
+  font-size: 0.7em;
+  background-color: var(--color-bg-primary);
+  border: 1px solid var(--color-bg-secondary);
+  border-radius: 6px;
+  padding: 0 3px;
+}
+
+.game-scribble-sketchbook {
+  max-width: 340px;
+}
+
+.game-scribble-sketchbook h2 {
+  font-size: 1.2em;
+  margin: 0 0 0.25em 0;
+}
+
+.scribble-sketchbook-progress {
+  position: relative;
+  height: 8px;
+  background-color: var(--color-bg-secondary);
+  border-radius: 4px;
+  margin: 0.5em 0 0.5em 0;
+}
+
+.scribble-sketchbook-progress-fill {
+  height: 100%;
+  background-color: gold;
+  border-radius: 4px;
+}
+
+.scribble-sketchbook-milestones {
+  list-style: none;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 1em;
+  padding: 0;
+  margin: 0 0 0.5em 0;
+  font-size: 0.8em;
+  opacity: 0.8;
+}
+
+.scribble-sketchbook-milestones li.reached {
+  color: gold;
+}
+
+.scribble-sketchbook-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+}
+
+.scribble-sketchbook-entry {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: end;
+  gap: 4px;
+  padding: 6px 2px;
+  border: 1px dashed var(--color-bg-secondary);
+  border-radius: 6px;
+  font-size: 0.8em;
+  opacity: 0.6;
+}
+
+.scribble-sketchbook-entry.collected {
+  border-style: solid;
+  opacity: 1;
+}
+
+.scribble-shape-glyph {
+  display: grid;
+  grid-auto-rows: 8px;
+  gap: 1px;
+  justify-content: center;
+}
+
+.scribble-shape-glyph span {
+  border-radius: 2px;
+}
+
+.game-choice-scribble-shape-glyph {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 70px;
+}
+
+.game-choice-scribble-shape-glyph .scribble-shape-glyph {
+  transform: scale(2);
+}

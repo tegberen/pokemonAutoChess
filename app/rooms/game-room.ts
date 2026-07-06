@@ -15,6 +15,7 @@ import {
   VictoryRoadPointsPerRank
 } from "../config"
 import { GADGETS } from "../config/game/gadgets"
+import { placeScribbleShape } from "../config/game/scribble-shapes"
 import { computeElo } from "../core/elo"
 import { EvolutionManager } from "../core/evolution-logic/evolution-manager"
 import { MiniGame } from "../core/mini-game"
@@ -28,6 +29,7 @@ import {
 import type { IGameUser } from "../models/colyseus-models/game-user"
 import Player from "../models/colyseus-models/player"
 import type { Pokemon } from "../models/colyseus-models/pokemon"
+import { ScribbleShape } from "../models/colyseus-models/scribble-shape"
 import { updatePlayerExpeditionsAfterGame } from "../models/expeditions"
 import { BotV2 } from "../models/mongo-models/bot-v2"
 import DetailledStatistic from "../models/mongo-models/detailled-statistic-v2"
@@ -1363,7 +1365,10 @@ export default class GameRoom extends Room<{ state: GameState }> {
     if (
       !choice ||
       choiceIndex < 0 ||
-      choiceIndex >= (choice.pokemons?.length || choice.items?.length)
+      choiceIndex >=
+        (choice.pokemons?.length ||
+          choice.items?.length ||
+          choice.scribbleShapes?.length)
     )
       return
 
@@ -1461,6 +1466,18 @@ export default class GameRoom extends Room<{ state: GameState }> {
         player.updateFairyWands()
       } else {
         player.items.push(item)
+      }
+    }
+
+    if (choice.type === "scribble_shape") {
+      const shapeType = choice.scribbleShapes[choiceIndex]
+      const occupiedCells: number[] = []
+      player.scribbleShapes.forEach((shape) =>
+        occupiedCells.push(...shape.cells)
+      )
+      const cells = placeScribbleShape(shapeType, occupiedCells)
+      if (cells !== null) {
+        player.scribbleShapes.push(new ScribbleShape(shapeType, cells))
       }
     }
 

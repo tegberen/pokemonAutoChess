@@ -20,6 +20,7 @@ import { addIconsToDescription } from "../../utils/descriptions"
 import { LocalStoreKeys, localStore } from "../../utils/store"
 import GamePokemonDuoPortrait from "./game-pokemon-duo-portrait"
 import GamePokemonPortrait from "./game-pokemon-portrait"
+import { ScribbleShapeGlyph } from "./game-scribble-sketchbook"
 import "./game-choice.css"
 import { ArmoryOptions, ArmoryOptionsPrice } from "../../../../../types/enum/ArmoryOptions"
 
@@ -89,6 +90,8 @@ export default function GameChoice() {
     message = t("player_choices.choose_wand")
   } else if (choice.type === "armory_assist") {
     message = t("player_choices.choose_armory")
+  } else if (choice.type === "scribble_shape") {
+    message = t("player_choices.choose_scribble_shape")
   }
 
   return (
@@ -173,6 +176,48 @@ export default function GameChoice() {
                       </p>
                     </div>
                   )}
+                </div>
+              )
+            })}
+          </div>
+        ) : choice.scribbleShapes.length > 0 ? (
+          <div className="game-choice-items-list">
+            {choice.scribbleShapes.map((shapeType, index) => {
+              const isCollected =
+                connectedPlayer?.scribbleShapesCollected.includes(shapeType) ??
+                false
+              return (
+                <div
+                  className="my-box active clickable game-choice-scribble-shape"
+                  key={`${choice.id}-${index}`}
+                  onClick={(event) => {
+                    event.stopPropagation()
+                    playSound(SOUNDS.BUTTON_CLICK)
+                    pickChoice(choice.id, index)
+                  }}
+                >
+                  <div className="game-choice-scribble-shape-glyph">
+                    <ScribbleShapeGlyph shapeType={shapeType} collected={true} />
+                  </div>
+                  <h3 style={{ margin: "0.25em 0" }}>
+                    {t(`scribble_shape.${shapeType}`)}
+                  </h3>
+                  <p style={{ marginBottom: "0.5em" }}>
+                    {addIconsToDescription(
+                      t(`scribble_shape_effect.${shapeType}`)
+                    )}
+                  </p>
+                  <p
+                    className="help"
+                    style={{
+                      marginBottom: "0.5em",
+                      color: isCollected ? "gold" : undefined
+                    }}
+                  >
+                    {isCollected
+                      ? t("scribble_shape_already_collected")
+                      : t("scribble_shape_not_collected")}
+                  </p>
                 </div>
               )
             })}

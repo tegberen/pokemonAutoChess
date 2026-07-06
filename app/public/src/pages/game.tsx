@@ -899,6 +899,20 @@ export default function Game() {
         $player.listen("loadingProgress", (value) => {
           dispatch(setLoadingProgress({ id: player.id, value: value }))
         })
+        $player.scribbleShapesCollected.onChange(() => {
+          dispatch(
+            changePlayer({
+              id: player.id,
+              field: "scribbleShapesCollected",
+              value: schemaValues(player.scribbleShapesCollected)
+            })
+          )
+        })
+        $player.scribbleShapes.onChange(() => {
+          if (player.id === store.getState().game.playerIdSpectated) {
+            getGameScene()?.board?.refreshScribbleShapes()
+          }
+        })
         $player.listen("map", (newMap) => {
           if (player.id === store.getState().game.playerIdSpectated) {
             const gameScene = getGameScene()

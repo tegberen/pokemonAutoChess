@@ -15,6 +15,7 @@ import type Synergies from "../models/colyseus-models/synergies"
 import type { Effects } from "../models/effects"
 import type GameRoom from "../rooms/game-room"
 import type { AttackSprite } from "./Animation"
+import type { ScribbleShapeType } from "../config/game/scribble-shapes"
 import type { EvolutionRule } from "./EvolutionRules"
 import type { Ability } from "./enum/Ability"
 import type { DungeonPMDO } from "./enum/Dungeon"
@@ -308,6 +309,7 @@ export interface IPlayer {
   regions: DungeonPMDO[]
   gameStats: GameStats
   groundHoles: number[]
+  scribbleShapesCollected: ArraySchema<ScribbleShapeType>
 }
 
 export interface IPokemon {
