@@ -935,7 +935,7 @@ export default class PokemonSprite extends DraggableObject {
 
   addStatusEffectsSprites(pokemon: IPokemonEntity) {
     if (pokemon.status.light) {
-      this.addLight()
+      this.addLight(pokemon.status.lightTint)
     }
     if (pokemon.status.wound) {
       this.addWound()
@@ -1482,13 +1482,14 @@ export default class PokemonSprite extends DraggableObject {
     }
   }
 
-  addLight() {
+  addLight(tint = 0) {
     if (this.light) return
     this.light = this.scene.add
       .sprite(0, 0, "abilities", "LIGHT_CELL/000.png")
       .setScale(1.5, 1.5)
       .setDepth(DEPTH.LIGHT_CELL)
     this.light.anims.play("LIGHT_CELL")
+    if (tint) this.light.setTint(tint)
     this.add(this.light)
     this.sendToBack(this.light)
   }

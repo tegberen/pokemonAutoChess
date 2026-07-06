@@ -2,6 +2,7 @@ import { MapSchema, Schema, type } from "@colyseus/schema"
 import { BOARD_HEIGHT, BOARD_WIDTH, BOARD_SIDE_HEIGHT } from "../config"
 import {
   packScribbleCell,
+  ScribbleShapeTint,
   ScribbleShapeType
 } from "../config/game/scribble-shapes"
 import {
@@ -457,6 +458,9 @@ export default class Simulation extends Schema implements ISimulation {
     shapeType: ScribbleShapeType,
     entity: PokemonEntity
   ) {
+    // pokemon lit by a scribble shape keep their light spot during the fight
+    entity.status.light = true
+    entity.status.lightTint = ScribbleShapeTint[shapeType]
     switch (shapeType) {
       case ScribbleShapeType.DOT:
         entity.addAttack(Math.ceil(entity.atk * 0.5), entity, 0, false)
