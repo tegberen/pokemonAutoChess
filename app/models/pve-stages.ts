@@ -46,11 +46,16 @@ export function getDoubleUpPvePowerFactor(stageLevel: number): number {
 // per-stage tuning multiplier applied to the final stat scale
 export const DOUBLE_UP_PVE_STAGE_TUNING: { [stageLevel: number]: number } = {
   1: 0.6,
+  2: 0.6,
+  3: 0.6,
   9: 0.6,
   14: 0.6,
   19: 0.6,
   24: 0.6,
-  28: 0.6
+  28: 0.6,
+  32: 0.6,
+  36: 0.6,
+  40: 0.6
 }
 
 export type PVEStage = {
