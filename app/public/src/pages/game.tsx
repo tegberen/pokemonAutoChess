@@ -67,6 +67,7 @@ import {
   setLoadingProgress,
   setMaxInterest,
   setMoney,
+  setFinale,
   setNoELO,
   setPhase,
   setPodium,
@@ -519,6 +520,30 @@ export default function Game() {
       )
 
       room.onMessage(
+        Transfer.FINALE_START,
+        ({ playerIds }: { playerIds: string[] }) => {
+          const finalists = playerIds
+            .map((id) => room.state.players.get(id)?.name)
+            .filter((name): name is string => Boolean(name))
+          toast(
+            <div className="toast-finale">
+              <p>
+                {t("finale.announcement", {
+                  player1: finalists[0] ?? "?",
+                  player2: finalists[1] ?? "?"
+                })}
+              </p>
+            </div>,
+            {
+              containerId: uid,
+              className: "toast-finale",
+              autoClose: 8000
+            }
+          )
+        }
+      )
+
+      room.onMessage(
         Transfer.COOK,
         async (message: { pokemonId: string; dishes: Item[] }) => {
           const g = getGameScene()
@@ -733,6 +758,10 @@ export default function Game() {
 
       $state.listen("noElo", (value) => {
         dispatch(setNoELO(value))
+      })
+
+      $state.listen("finale", (value) => {
+        dispatch(setFinale(value))
       })
 
       $state.listen("specialGameRule", (value) => {

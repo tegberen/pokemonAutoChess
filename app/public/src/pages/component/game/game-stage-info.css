@@ -26,6 +26,14 @@
   text-align: center;
 }
 
+#game-stage-info .finale-badge {
+  margin-left: 0.5em;
+  padding: 0 0.4em;
+  border: var(--border-thin);
+  border-radius: 4px;
+  letter-spacing: 0.1em;
+}
+
 #detail-stage p {
   margin: 0 0.25em;
 }

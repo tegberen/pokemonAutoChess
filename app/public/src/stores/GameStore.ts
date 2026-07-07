@@ -30,6 +30,7 @@ export interface GameStateStore {
   simulations: ISimulation[]
   stageLevel: number
   noElo: boolean
+  finale: boolean
   specialGameRule: SpecialGameRule | null
   playerIdSpectated: string
   simulationIdSpectated: string
@@ -64,6 +65,7 @@ const initialState: GameStateStore = {
   stageLevel: 0,
   weather: Weather.NEUTRAL,
   noElo: false,
+  finale: false,
   playerIdSpectated: "",
   simulationIdSpectated: "",
   teamSpectated: Team.BLUE_TEAM,
@@ -105,6 +107,9 @@ export const gameSlice: Slice<GameStateStore> = createSlice({
     },
     setNoELO: (state, action: PayloadAction<boolean>) => {
       state.noElo = action.payload
+    },
+    setFinale: (state, action: PayloadAction<boolean>) => {
+      state.finale = action.payload
     },
     setSpecialGameRule: (
       state,
@@ -332,6 +337,7 @@ export const {
   setStageLevel,
   setWeather,
   setNoELO,
+  setFinale,
   setSpecialGameRule,
   addPlayer,
   removePlayer,

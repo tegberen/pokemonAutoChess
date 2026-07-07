@@ -67,3 +67,12 @@
   margin: 0 4px;
   max-width: 160px;
 }
+
+.toast .Toastify__toast.toast-finale {
+  right: 76px;
+}
+
+.toast-finale p {
+  margin: 0 4px;
+  max-width: 200px;
+}
