@@ -13,7 +13,7 @@ export class ScaleShotStrategy extends AbilityStrategy {
   ) {
     super.process(pokemon, board, target, crit, true)
     const damageAdjacent = [5, 10, 20, 40][pokemon.stars - 1] ?? 40
-    const damageFarthest = [3, 5, 10, 20][pokemon.stars - 1] ?? 20
+    const damageFarthest = [1, 3, 5, 10][pokemon.stars - 1] ?? 10
     pokemon.status.triggerArmorReduction(2000, pokemon)
     const scalePositions = new Array<{ x: number; y: number; delay: number }>()
 
