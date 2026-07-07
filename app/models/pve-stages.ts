@@ -33,7 +33,7 @@ export const DOUBLE_UP_PVE_MIN_SCALE = 1.25 // never weaker than this × solo en
 export const DOUBLE_UP_PVE_MAX_SCALE = 10
 
 // scaled bosses gain more bulk than damage: hp × scale^1.2, atk × scale^0.8
-export const DOUBLE_UP_PVE_HP_BIAS = 1.2
+export const DOUBLE_UP_PVE_HP_BIAS = 1.4
 
 // below parity early game, parity at stage 10, then well beyond it since
 // items and synergies make boards much stronger than their raw stats
@@ -45,11 +45,12 @@ export function getDoubleUpPvePowerFactor(stageLevel: number): number {
 
 // per-stage tuning multiplier applied to the final stat scale
 export const DOUBLE_UP_PVE_STAGE_TUNING: { [stageLevel: number]: number } = {
-  1: 0.9,
-  9: 0.8,
-  19: 0.8,
-  24: 0.75,
-  28: 0.75
+  1: 0.6,
+  9: 0.6,
+  14: 0.6,
+  19: 0.6,
+  24: 0.6,
+  28: 0.6
 }
 
 export type PVEStage = {
