@@ -9,6 +9,7 @@ import {
 } from "../../config"
 import type { ScribbleShapeType } from "../../config/game/scribble-shapes"
 import { CollectionUtils } from "../../core/collection"
+import { getAvailableEmotions } from "../precomputed/precomputed-emotions"
 import { ScribbleShape } from "./scribble-shape"
 import { OnSpotlightChangeEffect } from "../../core/effects/effect"
 import { PassiveEffects } from "../../core/effects/passives"
@@ -243,10 +244,18 @@ export default class Player extends Schema implements IPlayer {
     )
     const emotesUnlocked =
       CollectionUtils.getEmotionsUnlocked(avatarInCollection)
+    const unlockAllEmotes =
+      typeof process !== "undefined" &&
+      process.env.UNLOCK_ALL_COLLECTION === "true"
     this.emotesUnlocked = (
-      (avatarCustom.shiny
-        ? emotesUnlocked.shinyEmotions
-        : emotesUnlocked.emotions) ?? []
+      unlockAllEmotes
+        ? getAvailableEmotions(
+            PkmIndex[avatarCustom.name],
+            avatarCustom.shiny ?? false
+          )
+        : (avatarCustom.shiny
+            ? emotesUnlocked.shinyEmotions
+            : emotesUnlocked.emotions) ?? []
     ).join(",")
 
     this.lightX = state.lightX
