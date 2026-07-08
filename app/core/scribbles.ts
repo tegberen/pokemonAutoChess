@@ -1,16 +1,25 @@
-import { getAltFormForPlayer, PkmsWithAltForms } from "../config"
+import {
+  BoosterRarityProbability,
+  EmotionCost,
+  getAltFormForPlayer,
+  PkmsWithAltForms
+} from "../config"
 import type Player from "../models/colyseus-models/player"
 import type { Pokemon } from "../models/colyseus-models/pokemon"
 import PokemonFactory from "../models/pokemon-factory"
+import { getAvailableEmotions } from "../models/precomputed/precomputed-emotions"
 import { getPokemonData, getRegularsTier1 } from "../models/precomputed/precomputed-pokemon-data"
 import { PRECOMPUTED_POKEMONS_PER_RARITY } from "../models/precomputed/precomputed-rarity"
+import { PokemonAnimations } from "../public/src/game/components/pokemon-animations"
 import type GameState from "../rooms/states/game-state"
+import { Ability } from "../types/enum/Ability"
+import { Emotion } from "../types/enum/Emotion"
 import { Rarity } from "../types/enum/Game"
-import { Pkm, PkmRegionalVariants } from "../types/enum/Pokemon"
+import { Pkm, PkmFamily, PkmIndex, PkmRegionalVariants, Unowns } from "../types/enum/Pokemon"
 import { getPokemonCustomFromAvatar } from "../utils/avatar"
 import { getFirstAvailablePositionInBench } from "../utils/board"
 import { min } from "../utils/number"
-import { pickRandomIn, simpleHashSeededCoinFlip } from "../utils/random"
+import { chance, pickRandomIn, randomWeighted, simpleHashSeededCoinFlip } from "../utils/random"
 import { getUnitPowerScore } from "./bot-logic"
 import { createRandomEgg } from "./eggs"
 
@@ -78,6 +87,15 @@ export function spawnDIAYAvatar(player: Player): Pokemon {
   avatar.positionX = getFirstAvailablePositionInBench(player.board) ?? 0
   avatar.positionY = 0
 
+  applyScribbleStarterStats(avatar, player, powerScore)
+  return avatar
+}
+
+export function applyScribbleStarterStats(
+  avatar: Pokemon,
+  player: Player,
+  powerScore: number
+) {
   if (avatar.name === Pkm.EGG) {
     powerScore = 5
     if (avatar.shiny) {
@@ -85,7 +103,7 @@ export function spawnDIAYAvatar(player: Player): Pokemon {
     }
   }
   if (avatar.rarity === Rarity.HATCH) {
-    powerScore = [5, 6, 7][avatar.stars] ?? 7
+    powerScore = [4, 5, 6][avatar.stars] ?? 6
   }
   if (avatar.rarity === Rarity.SPECIAL) {
     powerScore = [1, 3, 7, 7][avatar.stars - 1] ?? 7
@@ -99,7 +117,90 @@ export function spawnDIAYAvatar(player: Player): Pokemon {
   const bonusHP = Math.round(150 - powerScore * 30)
   avatar.maxHP = min(10)(avatar.maxHP + bonusHP)
   avatar.hp = avatar.maxHP
-  return avatar
+}
+
+export function getScribbleStarterPowerScore(name: Pkm): number {
+  let powerScore = getUnitPowerScore(name)
+  switch (name) {
+    case Pkm.COSMOG:
+    case Pkm.POIPOLE:
+    case Pkm.CHIMECHO:
+    case Pkm.GIMMIGHOUL:
+      powerScore = 5
+      break
+    case Pkm.COSMOEM:
+      powerScore = 6
+      break
+    case Pkm.NAGANADEL:
+    case Pkm.GHOLDENGO:
+      powerScore = 8
+      break
+  }
+  return powerScore
+}
+
+export const SMEARGLE_PACK_SIZE = 10
+
+export type SmearglePackCard = {
+  name: Pkm
+  shiny: boolean
+  emotion: Emotion
+}
+
+export function createSmearglePackPropositions(
+  player: Player,
+  size = SMEARGLE_PACK_SIZE
+): SmearglePackCard[] {
+  const propositions: SmearglePackCard[] = []
+  const families = new Set<Pkm>()
+  let attempts = 0
+  const maxAttempts = size * 30
+
+  while (propositions.length < size && attempts < maxAttempts) {
+    attempts++
+    const rarity =
+      randomWeighted<Rarity>(BoosterRarityProbability) ?? Rarity.COMMON
+    const candidates = (PRECOMPUTED_POKEMONS_PER_RARITY[rarity] ?? [])
+      .map((p) => PkmFamily[p]) // normalize to the tier-1 base of the family
+      .filter(
+        (base) =>
+          getPokemonData(base).skill !== Ability.DEFAULT &&
+          Unowns.includes(base) === false &&
+          families.has(base) === false
+      )
+    if (candidates.length === 0) continue
+
+    let pkm = pickRandomIn(candidates)
+    if (pkm in PkmRegionalVariants) {
+      const regionalVariants = PkmRegionalVariants[pkm]!.filter((p) =>
+        player.regionalPokemons.includes(p)
+      )
+      if (regionalVariants.length > 0) pkm = pickRandomIn(regionalVariants)
+    }
+    if (PkmsWithAltForms.includes(pkm)) {
+      pkm = getAltFormForPlayer(pkm, player)
+    }
+
+    const family = PkmFamily[pkm]
+    if (families.has(family)) continue
+    families.add(family)
+
+    // shiny + emotion picked exactly like a real collection booster card
+    const shiny =
+      chance(0.05) && PokemonAnimations[pkm]?.shinyUnavailable !== true
+    const availableEmotions = getAvailableEmotions(PkmIndex[pkm], shiny)
+    const emotion =
+      randomWeighted<Emotion>(
+        availableEmotions.reduce(
+          (o, e) => ({ ...o, [e]: 1 / EmotionCost[e] }),
+          {}
+        )
+      ) ?? Emotion.NORMAL
+
+    propositions.push({ name: pkm, shiny, emotion })
+  }
+
+  return propositions
 }
 
 export function pickFirstPartners(player: Player, state: GameState): Pkm[] {

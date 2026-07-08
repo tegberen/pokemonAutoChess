@@ -1,5 +1,6 @@
 import { Schema, type } from "@colyseus/schema"
 import type { ScribbleShapeType } from "../../config/game/scribble-shapes"
+import type { Emotion } from "../../types/enum/Emotion"
 import type { Item } from "../../types/enum/Item"
 import type { PkmProposition } from "../../types/enum/Pokemon"
 import { ArmoryOptions } from "../../types/enum/ArmoryOptions"
@@ -22,6 +23,9 @@ export class PlayerChoice extends Schema {
   @type(["string"]) pokemons: PkmProposition[] = []
   @type(["string"]) armoryOptions: ArmoryOptions[] = []
   @type(["string"]) scribbleShapes: ScribbleShapeType[] = []
+  @type(["boolean"]) shinies: boolean[] = []
+  @type(["string"]) emotions: Emotion[] = []
+  @type("boolean") canReroll: boolean = false
 
   constructor(args: {
     type: PlayerChoiceType
@@ -29,6 +33,9 @@ export class PlayerChoice extends Schema {
     pokemons?: PkmProposition[]
     armoryOptions?: ArmoryOptions[]
     scribbleShapes?: ScribbleShapeType[]
+    shinies?: boolean[]
+    emotions?: Emotion[]
+    canReroll?: boolean
   }) {
     super()
     this.id = crypto.randomUUID()
@@ -37,5 +44,8 @@ export class PlayerChoice extends Schema {
     if (args.pokemons) this.pokemons = args.pokemons
     if (args.armoryOptions) this.armoryOptions = args.armoryOptions
     if (args.scribbleShapes) this.scribbleShapes = args.scribbleShapes
+    if (args.shinies) this.shinies = args.shinies
+    if (args.emotions) this.emotions = args.emotions
+    if (args.canReroll) this.canReroll = args.canReroll
   }
 }

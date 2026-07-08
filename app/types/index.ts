@@ -105,6 +105,7 @@ export enum Transfer {
   SET_ROLE = "SET_ROLE",
   GIVE_TITLE = "GIVE_TITLE",
   CHOICE = "CHOICE",
+  REROLL_CHOICE = "REROLL_CHOICE",
   KICK = "KICK",
   DELETE_ROOM = "DELETE_ROOM",
   BAN = "BAN",

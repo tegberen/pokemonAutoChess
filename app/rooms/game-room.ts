@@ -20,6 +20,11 @@ import { computeElo } from "../core/elo"
 import { EvolutionManager } from "../core/evolution-logic/evolution-manager"
 import { MiniGame } from "../core/mini-game"
 import {
+  applyScribbleStarterStats,
+  createSmearglePackPropositions,
+  getScribbleStarterPowerScore
+} from "../core/scribbles"
+import {
   clearPendingGame,
   clearPendingGamesOnRoomDispose,
   getPendingGame,
@@ -28,6 +33,7 @@ import {
 } from "../core/pending-game-manager"
 import type { IGameUser } from "../models/colyseus-models/game-user"
 import Player from "../models/colyseus-models/player"
+import { PlayerChoice } from "../models/colyseus-models/player-choice"
 import type { Pokemon } from "../models/colyseus-models/pokemon"
 import { ScribbleShape } from "../models/colyseus-models/scribble-shape"
 import { updatePlayerExpeditionsAfterGame } from "../models/expeditions"
@@ -382,6 +388,19 @@ export default class GameRoom extends Room<{ state: GameState }> {
               message.choiceId,
               message.choiceIndex
             )
+          } catch (error) {
+            logger.error(error)
+          }
+        }
+      }
+    )
+
+    this.onMessage(
+      Transfer.REROLL_CHOICE,
+      (client, message: { choiceId: string }) => {
+        if (!this.state.gameFinished && client.auth) {
+          try {
+            this.rerollChoice(client.auth.uid, message.choiceId)
           } catch (error) {
             logger.error(error)
           }
@@ -1353,6 +1372,30 @@ export default class GameRoom extends Room<{ state: GameState }> {
     removeInArray(player.choices, choice)
   }
 
+  rerollChoice(playerId: string, choiceId: string) {
+    const player = this.state.players.get(playerId)
+    if (!player) return
+    const index = player.choices.findIndex((c) => c.id === choiceId)
+    if (index === -1) return
+    const choice = player.choices[index]
+    if (
+      !choice.canReroll ||
+      this.state.specialGameRule !== SpecialGameRule.SMEARGLE_PACK
+    )
+      return
+
+    // replace the choice with a fresh pack (new id) so the client sees the
+    // choices array change and re-opens a new booster. One reroll = 2 packs.
+    const pack = createSmearglePackPropositions(player)
+    player.choices[index] = new PlayerChoice({
+      type: "starter",
+      pokemons: pack.map((card) => card.name),
+      shinies: pack.map((card) => card.shiny),
+      emotions: pack.map((card) => card.emotion),
+      canReroll: false
+    })
+  }
+
   pickChoice(
     playerId: string,
     choiceId: string,
@@ -1436,6 +1479,24 @@ export default class GameRoom extends Room<{ state: GameState }> {
 
       if (choice.type === "starter") {
         player.firstPartner = pokemonsObtained[0].name
+        if (this.state.specialGameRule === SpecialGameRule.SMEARGLE_PACK) {
+          const starter = pokemonsObtained[0]
+          // keep the shiny/emotion the player saw on the card
+          const shiny = choice.shinies[choiceIndex] ?? false
+          const emotion = choice.emotions[choiceIndex]
+          starter.shiny = shiny
+          if (emotion) starter.emotion = emotion
+          // apply the DIAY balancing (nerf/buff by power score) to the picked unit
+          applyScribbleStarterStats(
+            starter,
+            player,
+            getScribbleStarterPowerScore(starter.name)
+          )
+          // bonus reward for picking a shiny card
+          if (shiny) {
+            player.addMoney(10, true, null)
+          }
+        }
       }
 
       pokemonsObtained.forEach((pokemon) => {

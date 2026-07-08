@@ -1,0 +1,63 @@
+/* Full-screen catcher: blocks clicks on the board behind, but is NOT dimmed —
+   only the framed panel around the cards is dimmed. */
+.smeargle-pack-backdrop {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
+}
+
+.smeargle-pack-page {
+  position: relative;
+  width: 1440px;
+  max-width: 76vw;
+  height: 68vh;
+  padding: 1em 1em 0.5em;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  color: var(--color-fg-primary);
+  background: rgba(0, 0, 0, 0.55);
+  border: 4px solid rgba(255, 255, 255, 0.15);
+  border-radius: 1.5em;
+  box-shadow: 0 0.5em 2em rgba(0, 0, 0, 0.5);
+}
+
+.smeargle-pack-page p.help {
+  font-size: 200%;
+  text-shadow: 2px 2px 0 black;
+  margin: 0;
+}
+
+.smeargle-pack-page .actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5em;
+  margin-top: auto;
+  padding-top: 0.5em;
+}
+
+.smeargle-pack-page .actions .booster-count {
+  font-size: 200%;
+  font-weight: bold;
+}
+
+.smeargle-pack-page .actions img {
+  height: 48px;
+  width: 48px;
+  image-rendering: pixelated;
+}
+
+.smeargle-pack-page .booster-card {
+  transition: scale 0.12s ease-out;
+}
+
+.smeargle-pack-page .booster-card:hover {
+  scale: 1.08;
+  z-index: 10;
+}

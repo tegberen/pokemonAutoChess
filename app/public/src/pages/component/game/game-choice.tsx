@@ -20,6 +20,7 @@ import { addIconsToDescription } from "../../utils/descriptions"
 import { LocalStoreKeys, localStore } from "../../utils/store"
 import GamePokemonDuoPortrait from "./game-pokemon-duo-portrait"
 import GamePokemonPortrait from "./game-pokemon-portrait"
+import GameSmearglePack from "./game-smeargle-pack"
 import { ScribbleShapeGlyph } from "./game-scribble-sketchbook"
 import "./game-choice.css"
 import { ArmoryOptions, ArmoryOptionsPrice } from "../../../../../types/enum/ArmoryOptions"
@@ -69,6 +70,20 @@ export default function GameChoice() {
   }
 
   const choice = choices[0] // only display one choice at a time, the others will be displayed after the first one is picked
+
+  if (
+    choice.type === "starter" &&
+    choice.pokemons.length > 0 &&
+    specialGameRule === SpecialGameRule.SMEARGLE_PACK
+  ) {
+    return (
+      <GameSmearglePack
+        key={choice.id}
+        choice={choice}
+        disabled={isBenchFull}
+      />
+    )
+  }
 
   let message: string | null = null
   if (choice.type === "addPick") {

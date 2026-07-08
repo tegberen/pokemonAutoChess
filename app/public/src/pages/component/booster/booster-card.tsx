@@ -17,9 +17,16 @@ interface BoosterCardProps {
   card: BoosterCard
   flipped: boolean
   onFlip: () => void
+  // hide the collection-only "+X shards" / "new" footer (e.g. in-game picks)
+  hideReward?: boolean
 }
 
-export function BoosterCard({ card, flipped, onFlip }: BoosterCardProps) {
+export function BoosterCard({
+  card,
+  flipped,
+  onFlip,
+  hideReward
+}: BoosterCardProps) {
   const { t } = useTranslation()
   const pokemonData = getPokemonData(card.name)
   const style = {
@@ -54,7 +61,7 @@ export function BoosterCard({ card, flipped, onFlip }: BoosterCardProps) {
               {t(`emotion.${card.emotion}`)}
             </span>
           </p>
-          {card.new ? (
+          {hideReward ? null : card.new ? (
             <p className="new">{t("new")}</p>
           ) : (
             <p className="dust">

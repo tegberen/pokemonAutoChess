@@ -33,7 +33,10 @@ import {
   UNOWN_PSY7_NB_SHOPS_INTERVAL,
   UniquePool
 } from "../config"
-import { pickFirstPartners } from "../core/scribbles"
+import {
+  createSmearglePackPropositions,
+  pickFirstPartners
+} from "../core/scribbles"
 import type GameState from "../rooms/states/game-state"
 import type { IPokemon, IPokemonEntity } from "../types"
 import { EffectEnum } from "../types/enum/Effect"
@@ -379,6 +382,27 @@ export default class Shop {
     portalSynergies: Synergy[]
   ) {
     const stageLevel = state.stageLevel
+
+    // SMEARGLE_PACK: at the starter stage, offer a booster of Pokemon to pick one
+    // starter from (reusing the "starter" pick pipeline), then skip the normal
+    // synergy/item-based proposition generation below.
+    if (
+      stageLevel === PortalCarouselStages[0] &&
+      state.specialGameRule === SpecialGameRule.SMEARGLE_PACK
+    ) {
+      const pack = createSmearglePackPropositions(player)
+      player.choices.push(
+        new PlayerChoice({
+          type: "starter",
+          pokemons: pack.map((card) => card.name),
+          shinies: pack.map((card) => card.shiny),
+          emotions: pack.map((card) => card.emotion),
+          canReroll: true // one reroll = 2 packs total
+        })
+      )
+      return
+    }
+
     const typeByStage: { [stage: number]: PlayerChoiceType } = {
       [PortalCarouselStages[0]]: "starter",
       [PortalCarouselStages[1]]: "unique",
