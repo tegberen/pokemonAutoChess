@@ -64,11 +64,13 @@
   vertical-align: middle;
 }
 
-.pokemon-collection-item .dust > img {
-  width: 20px;
-  height: 20px;
-  image-rendering: pixelated;
-  margin: 2px 2px 2px calc(2px + 0.25em);
-  border-radius: 50%;
-  border: 1px solid black;
+.pokemon-collection-item > p.emotion {
+  display: block;
+  width: 80px;
+  box-sizing: border-box;
+  padding: 1px 4px;
+  font-size: 0.7em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

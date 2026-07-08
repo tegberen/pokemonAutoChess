@@ -4,12 +4,15 @@ import { GADGETS_UNLOCKED_BY_LEVEL } from "../../config/game/gadgets"
 import { CollectionUtils } from "../../core/collection"
 import { notificationsService } from "../../services/notifications"
 import { Emotion, Role, Title } from "../../types"
+import { Pkm, PkmIndex } from "../../types/enum/Pokemon"
 import type {
+  IPokemonCollectionItemClient,
   IPokemonCollectionItemMongo,
   IUserMetadataJSON,
   IUserMetadataLean,
   IUserMetadataMongo
 } from "../../types/interfaces/UserMetadata"
+import { getAvailableEmotions } from "../precomputed/precomputed-emotions"
 
 const userMetadataSchema = new Schema({
   uid: {
@@ -166,12 +169,61 @@ export function toLeanUserMetadata(
   } as IUserMetadataMongo
 }
 
+// When UNLOCK_ALL_COLLECTION is enabled, every player's profile is served with a
+// fully-unlocked collection. This is computed in-memory at read time and is never
+// persisted, so the database is left untouched.
+const UNLOCK_ALL_COLLECTION = process.env.UNLOCK_ALL_COLLECTION === "true"
+
+let fullUnlockedCollectionCache: {
+  [index: string]: IPokemonCollectionItemClient
+} | null = null
+
+// Build (once) a client collection with every available emote + shiny unlocked
+// for every collectible Pokemon. getEmotionMask maps via CollectionEmotions
+// ordering, matching the on-disk bit layout and skipping shiny-unavailable mons.
+function getFullUnlockedCollection(): {
+  [index: string]: IPokemonCollectionItemClient
+} {
+  if (fullUnlockedCollectionCache) return fullUnlockedCollectionCache
+  const full: { [index: string]: IPokemonCollectionItemClient } = {}
+  for (const pkm of Object.values(Pkm)) {
+    const index = PkmIndex[pkm]
+    if (!index || index in full) continue
+    const normal = getAvailableEmotions(index, false)
+    const shiny = getAvailableEmotions(index, true)
+    if (normal.length === 0 && shiny.length === 0) continue // no portrait
+    const mask = CollectionUtils.getEmotionMask(normal, shiny)
+    full[index] = {
+      id: index,
+      dust: 0,
+      played: 0,
+      selectedEmotion: Emotion.NORMAL,
+      selectedShiny: false,
+      unlockedb64: CollectionUtils.encodeBase64(mask)
+    }
+  }
+  fullUnlockedCollectionCache = full
+  return full
+}
+
 export function toUserMetadataJSON(user): IUserMetadataJSON {
   const pokemonCollection: {
     [index: string]: IUserMetadataJSON["pokemonCollection"][string]
   } = {}
+  if (UNLOCK_ALL_COLLECTION) {
+    // Seed with the fully-unlocked collection, then overlay the player's real
+    // dust / played / selection below while keeping the full unlocked mask.
+    const full = getFullUnlockedCollection()
+    for (const index in full) {
+      pokemonCollection[index] = { ...full[index] }
+    }
+  }
   user.pokemonCollection.forEach((item, index) => {
-    pokemonCollection[index] = CollectionUtils.toCollectionItemClient(item)
+    const client = CollectionUtils.toCollectionItemClient(item)
+    if (UNLOCK_ALL_COLLECTION && pokemonCollection[index]) {
+      client.unlockedb64 = pokemonCollection[index].unlockedb64
+    }
+    pokemonCollection[index] = client
   })
   return {
     ...user.toObject(),

@@ -1,19 +1,14 @@
 import { useCallback, useEffect, useMemo, useState } from "react"
 import { useTranslation } from "react-i18next"
-import {
-  BoosterPriceByRarity,
-  PkmAltForms,
-  PkmAltFormsByPkm
-} from "../../../../../config"
+import { PkmAltForms, PkmAltFormsByPkm } from "../../../../../config"
 import { getAvailableEmotions } from "../../../../../models/precomputed/precomputed-emotions"
-import { getPokemonData } from "../../../../../models/precomputed/precomputed-pokemon-data"
 import { Emotion } from "../../../../../types"
 import { type Pkm, PkmIndex } from "../../../../../types/enum/Pokemon"
 import type { IPokemonCollectionItemUnpacked } from "../../../../../types/interfaces/UserMetadata"
 import { getAvatarSrc, getPortraitSrc } from "../../../../../utils/avatar"
 import { PokemonAnimations } from "../../../game/components/pokemon-animations"
 import { useAppDispatch, useAppSelector } from "../../../hooks"
-import { buyBooster, buyEmotion, changeSelectedEmotion } from "../../../network"
+import { buyEmotion, changeSelectedEmotion } from "../../../network"
 import { changeAvatar } from "../../../stores/NetworkStore"
 import { cc } from "../../utils/jsx"
 import { LocalStoreKeys, useLocalStore } from "../../utils/store"
@@ -50,8 +45,6 @@ export default function PokemonEmotionsModal(props: {
   }, [props.pokemon])
   const shardIndex = PkmIndex[props.pokemon]
   const index = PkmIndex[selectedVariant]
-  const rarity = getPokemonData(selectedVariant).rarity
-  const boosterCost = BoosterPriceByRarity[rarity]
 
   const availableEmotions = getAvailableEmotions(index, false)
   const shinyAvailableEmotions = getAvailableEmotions(index, true)
@@ -168,10 +161,6 @@ export default function PokemonEmotionsModal(props: {
                 </select>
               </div>
             )}
-            <p className="dust">
-              <img src={getPortraitSrc(index)} className="dust" alt="dust" />
-              {shards} {t("shards")}{" "}
-            </p>
           </>
         }
         body={
@@ -265,18 +254,6 @@ export default function PokemonEmotionsModal(props: {
                 }}
                 alt="avatar"
               />
-            </button>
-
-            <button
-              className="bubbly orange"
-              disabled={shards < boosterCost}
-              onClick={() => {
-                setRequestError(null)
-                buyBooster({ index }).catch(onError)
-              }}
-            >
-              {t("collection.buy_booster", { cost: boosterCost })}
-              <img src={getPortraitSrc(index)} className="dust" alt="dust" />
             </button>
 
             {item.selectedEmotion != null &&

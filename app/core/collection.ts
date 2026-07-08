@@ -172,6 +172,14 @@ export class CollectionUtils {
     emotion: Emotion,
     shiny: boolean = false
   ): boolean {
+    // Server-side override: treat every emote as unlocked so equipping is never
+    // rejected. Guarded so it is a no-op in the browser bundle (no `process`).
+    if (
+      typeof process !== "undefined" &&
+      process.env.UNLOCK_ALL_COLLECTION === "true"
+    ) {
+      return true
+    }
     const index = this.EMOTION_VALUES.indexOf(emotion)
     if (index === -1) return false
 

@@ -6,7 +6,6 @@ import { Tab, TabList, TabPanel, Tabs } from "react-tabs"
 import type { IGameRecord } from "../../../../../models/colyseus-models/game-record"
 import { type ISuggestionUser, Role, Title } from "../../../../../types"
 import { debounce } from "../../../../../utils/function"
-import { keys } from "../../../../../utils/object"
 import { useAppDispatch, useAppSelector } from "../../../hooks"
 import {
   ban,
@@ -16,7 +15,6 @@ import {
 } from "../../../network"
 import { setSearchedUser } from "../../../stores/LobbyStore"
 import { AccountTab } from "./account-tab"
-import { AvatarTab } from "./avatar-tab"
 import { EloTab } from "./elo-tab"
 import { GadgetsTab } from "./gadgets-tab"
 import GameHistory from "./game-history"
@@ -147,7 +145,6 @@ function MyProfileMenu() {
     <Tabs>
       <TabList>
         <Tab>{t("profile.progress.title")}</Tab>
-        <Tab>{t("avatar")}</Tab>
         <Tab>{t("title_label")}</Tab>
         <Tab>{t("gadgets")}</Tab>
         <Tab>{t("profile.elo_tab.title")}</Tab>
@@ -156,9 +153,6 @@ function MyProfileMenu() {
 
       <TabPanel>
         <ProgressTab />
-      </TabPanel>
-      <TabPanel>
-        <AvatarTab />
       </TabPanel>
       <TabPanel>
         <TitleTab />

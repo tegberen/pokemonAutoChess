@@ -65,8 +65,6 @@ export function MainSidebar(props: MainSidebarProps) {
 
   const version = pkg.version
 
-  const numberOfBooster = profile?.booster ?? 0
-
   useEffect(() => {
     if (!sidebarRef.current) {
       return
@@ -198,18 +196,6 @@ export function MainSidebar(props: MainSidebarProps) {
             {t("collection.title")}
           </NavLink>
         )}
-        {(page === "main_lobby" || page === "preparation") &&
-          profileLevel >= GADGETS.bag.levelRequired && (
-            <NavLink
-              location="booster"
-              svg="booster"
-              className="blue"
-              handleClick={changeModal}
-              shimmer={numberOfBooster > 0}
-            >
-              {t("boosters")}
-            </NavLink>
-          )}
         <NavLink
           location="wiki"
           svg="wiki"

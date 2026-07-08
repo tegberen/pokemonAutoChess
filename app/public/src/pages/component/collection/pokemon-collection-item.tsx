@@ -1,9 +1,9 @@
 import type { Dispatch, SetStateAction } from "react"
+import { useTranslation } from "react-i18next"
 import { getAvailableEmotions } from "../../../../../models/precomputed/precomputed-emotions"
 import { Emotion } from "../../../../../types/enum/Emotion"
 import type { Pkm } from "../../../../../types/enum/Pokemon"
 import type { IPokemonCollectionItemUnpacked } from "../../../../../types/interfaces/UserMetadata"
-import { getPortraitSrc } from "../../../../../utils/avatar"
 import { cc } from "../../utils/jsx"
 import PokemonPortrait from "../pokemon-portrait"
 import type { CollectionFilterState } from "./pokemon-collection"
@@ -20,6 +20,7 @@ export default function PokemonCollectionItem(props: {
   filterState: CollectionFilterState
   setPokemon: Dispatch<SetStateAction<Pkm | "">>
 }) {
+  const { t } = useTranslation()
   if (getAvailableEmotions(props.index, false).length === 0) {
     return null
   }
@@ -47,9 +48,8 @@ export default function PokemonCollectionItem(props: {
       {props.filterState.mode === "pokedex" ? (
         <p>{props.item?.played ?? 0}</p>
       ) : (
-        <p className="dust">
-          <span>{props.item?.dust ?? 0}</span>
-          <img src={getPortraitSrc(props.index)} />
+        <p className="emotion">
+          {t(`emotion.${props.item?.selectedEmotion ?? Emotion.NORMAL}`)}
         </p>
       )}
     </div>

@@ -31,6 +31,36 @@ export type CollectionMutationResult = {
   userDoc: IUserMetadataMongo
 }
 
+const UNLOCK_ALL_COLLECTION = process.env.UNLOCK_ALL_COLLECTION === "true"
+
+/**
+ * Returns the user's collection item for an index, creating a fully-unlocked one
+ * on demand when UNLOCK_ALL_COLLECTION is enabled and the player has no entry yet.
+ * This lets write paths (equip / buy) succeed for Pokemon the player never owned,
+ * persisting only the single Pokemon they interact with (no bulk DB migration).
+ */
+function ensureUnlockedCollectionItem(
+  mongoUser: IUserMetadataMongo,
+  index: string
+): IPokemonCollectionItemMongo | undefined {
+  let item = mongoUser.pokemonCollection.get(index)
+  if (!item && UNLOCK_ALL_COLLECTION && PkmByIndex.hasOwnProperty(index)) {
+    item = {
+      id: index,
+      unlocked: CollectionUtils.getEmotionMask(
+        getAvailableEmotions(index, false),
+        getAvailableEmotions(index, true)
+      ),
+      dust: 0,
+      selectedEmotion: Emotion.NORMAL,
+      selectedShiny: false,
+      played: 0
+    }
+    mongoUser.pokemonCollection.set(index, item)
+  }
+  return item
+}
+
 export async function changeSelectedEmotionForUser(
   uid: string,
   index: string,
@@ -40,7 +70,7 @@ export async function changeSelectedEmotionForUser(
   const mongoUser = await UserMetadata.findOne({ uid })
   if (!mongoUser) return null
 
-  const mongoItem = mongoUser.pokemonCollection.get(index)
+  const mongoItem = ensureUnlockedCollectionItem(mongoUser, index)
   if (!mongoItem) return null
 
   if (
@@ -78,8 +108,8 @@ export async function buyEmotionForUser(
   const cost = getEmotionCost(emotion, shiny)
   const shardIndex = PkmIndex[getBaseAltForm(PkmByIndex[index])]
 
-  const mongoItem = mongoUser.pokemonCollection.get(index)
-  const mongoShardItem = mongoUser.pokemonCollection.get(shardIndex)
+  const mongoItem = ensureUnlockedCollectionItem(mongoUser, index)
+  const mongoShardItem = ensureUnlockedCollectionItem(mongoUser, shardIndex)
   if (!mongoItem || !mongoShardItem) return null
 
   if (CollectionUtils.hasUnlocked(mongoItem.unlocked, emotion, shiny)) {

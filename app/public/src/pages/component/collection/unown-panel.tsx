@@ -1,9 +1,8 @@
 import { type Dispatch, type SetStateAction, useMemo } from "react"
-import { BoosterPriceByRarity, getEmotionCost } from "../../../../../config"
+import { getEmotionCost } from "../../../../../config"
 import { getAvailableEmotions } from "../../../../../models/precomputed/precomputed-emotions"
 import { getPokemonData } from "../../../../../models/precomputed/precomputed-pokemon-data"
 import { Emotion } from "../../../../../types/enum/Emotion"
-import { Rarity } from "../../../../../types/enum/Game"
 import { Pkm, PkmIndex, Unowns } from "../../../../../types/enum/Pokemon"
 import type { IPokemonCollectionItemUnpacked } from "../../../../../types/interfaces/UserMetadata"
 import { PokemonAnimations } from "../../../game/components/pokemon-animations"
@@ -97,32 +96,19 @@ export default function UnownPanel(props: {
   const filteredUnowns = useMemo<CollectionItem[]>(
     () =>
       unowns
-        .filter(({ item, isNew, isUnlocked, isFavorite, isUnlockable }) => {
-          const boosterCost = BoosterPriceByRarity[Rarity.SPECIAL]
-          if (
-            props.filterState.filter === "refundable" &&
-            item.dust < boosterCost
-          )
-            return false
-          if (props.filterState.filter === "new" && !isNew) return false
-          if (props.filterState.filter === "unlocked" && !isUnlocked)
-            return false
-          if (props.filterState.filter === "unlockable" && !isUnlockable)
-            return false
-          if (props.filterState.filter === "locked" && isUnlocked) return false
+        .filter(({ isFavorite }) => {
           if (props.filterState.filter === "favorite" && !isFavorite)
             return false
 
           return true
         })
         .sort((a, b) => {
-          if (props.filterState.sort === "index") {
-            return PkmIndex[a.pkm].localeCompare(PkmIndex[b.pkm])
-          } else {
-            return (b.item?.dust ?? 0) - (a.item?.dust ?? 0)
+          if (props.filterState.sort === "played") {
+            return (b.item?.played ?? 0) - (a.item?.played ?? 0)
           }
+          return PkmIndex[a.pkm].localeCompare(PkmIndex[b.pkm])
         }),
-    [props.filterState.sort, props.filterState.filter, props.filterState.mode]
+    [props.filterState.sort, props.filterState.filter]
   )
 
   return (

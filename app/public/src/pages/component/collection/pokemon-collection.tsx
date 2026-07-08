@@ -12,19 +12,16 @@ import { Tab, TabList, TabPanel, Tabs } from "react-tabs"
 import { AutoSizer } from "react-virtualized-auto-sizer"
 import { Grid } from "react-window"
 import {
-  BoosterPriceByRarity,
   getAllAltForms,
   getEmotionCost,
   PkmAltForms
 } from "../../../../../config"
 import { getAvailableEmotions } from "../../../../../models/precomputed/precomputed-emotions"
 import { getPokemonData } from "../../../../../models/precomputed/precomputed-pokemon-data"
-import { precomputedPokemonsImplemented } from "../../../../../models/precomputed/precomputed-pokemons"
 import { Ability } from "../../../../../types/enum/Ability"
 import type { Emotion } from "../../../../../types/enum/Emotion"
 import { Passive } from "../../../../../types/enum/Passive"
 import {
-  NonPkm,
   Pkm,
   PkmFamily,
   PkmIndex
@@ -46,15 +43,8 @@ const CELL_HEIGHT = 118
 
 export type CollectionFilterState = {
   mode: "collection" | "shiny" | "pokedex"
-  filter:
-    | "all"
-    | "unlockable"
-    | "locked"
-    | "unlocked"
-    | "refundable"
-    | "new"
-    | "favorite"
-  sort: "index" | "shards" | "played" | "unlocked"
+  filter: "all" | "favorite"
+  sort: "index" | "played"
 }
 
 type CollectionItem = {
@@ -66,102 +56,34 @@ type CollectionItem = {
   isUnlockable: boolean
 }
 
-const listPokemons = precomputedPokemonsImplemented.filter(
-  (pokemon) =>
-    PkmAltForms.includes(pokemon.name) === false &&
-    NonPkm.includes(pokemon.name) === false
-)
 
 export default function PokemonCollection() {
   const { t } = useTranslation()
   const [selectedPokemon, setSelectedPokemon] = useState<Pkm | "">("")
 
-  const prevFilterState = useMemo(() => {
+  const prevFilterState = useMemo<CollectionFilterState>(() => {
     const prevState = localStore.get(LocalStoreKeys.COLLECTION_FILTER)
     return {
-      mode: prevState?.mode ?? "collection",
-      filter: prevState?.filter ?? "unlockable",
-      sort: prevState?.sort ?? "index"
+      mode: (["collection", "shiny", "pokedex"] as const).includes(
+        prevState?.mode
+      )
+        ? prevState.mode
+        : "collection",
+      filter: (["all", "favorite"] as const).includes(prevState?.filter)
+        ? prevState.filter
+        : "all",
+      sort: (["index", "played"] as const).includes(prevState?.sort)
+        ? prevState.sort
+        : "index"
     }
   }, [])
 
   const [filterState, setFilterState] =
     useState<CollectionFilterState>(prevFilterState)
 
-  const [count, setCount] = useState<number>(0)
-  const [total, setTotal] = useState<number>(0)
-  const pokemonCollection = useAppSelector(
-    (state) => state.network.profile?.pokemonCollection
-  )
-  const collection = useMemo(() => {
-    return pokemonCollection ? [...pokemonCollection.values()] : []
-  }, [pokemonCollection])
-
-  const updateCount = useCallback(
-    function updateCount() {
-      switch (filterState.mode) {
-        case "pokedex":
-          setCount(
-            listPokemons.filter((pkm) => {
-              const collectionItem = collection.find(
-                (item) => item.id === pkm.index
-              )
-              return collectionItem && collectionItem.played > 0
-            }).length
-          )
-          setTotal(listPokemons.length)
-          break
-        case "shiny":
-          setCount(
-            listPokemons.filter((pkm) => {
-              const collectionItem = collection.find(
-                (item) => item.id === pkm.index
-              )
-              return collectionItem && collectionItem.shinyEmotions.length > 0
-            }).length
-          )
-          setTotal(
-            listPokemons.filter(
-              (p) => !PokemonAnimations[p.name]?.shinyUnavailable
-            ).length
-          )
-          break
-        default:
-          setCount(
-            listPokemons.filter((pkm) => {
-              const collectionItem = collection.find(
-                (item) => item.id === pkm.index
-              )
-              return (
-                collectionItem &&
-                (collectionItem.emotions.length > 0 ||
-                  collectionItem.shinyEmotions.length > 0)
-              )
-            }).length
-          )
-          setTotal(listPokemons.length)
-          break
-      }
-    },
-    [filterState.mode]
-  )
-
   useEffect(() => {
     localStore.set(LocalStoreKeys.COLLECTION_FILTER, filterState)
-    updateCount()
   }, [filterState])
-
-  useEffect(() => {
-    if (
-      filterState.mode === "pokedex" &&
-      ["unlockable", "refundable", "new"].includes(filterState.filter)
-    ) {
-      setFilterState({
-        ...filterState,
-        filter: "all"
-      })
-    }
-  }, [filterState.mode, filterState.filter])
 
   return (
     <div id="pokemon-collection">
@@ -180,50 +102,17 @@ export default function PokemonCollection() {
           <option value={"pokedex"}>{t("pokedex")}</option>
         </select>
 
-        <p>
-          {filterState.mode === "shiny"
-            ? t("shiny_hunter")
-            : filterState.mode === "pokedex"
-              ? t("pokedex")
-              : t("unlocked")}
-          : {count} / {total}
-        </p>
-
         <select
           value={filterState.filter}
           onChange={(e) =>
             setFilterState({
               ...filterState,
-              filter: e.target.value as
-                | "all"
-                | "unlockable"
-                | "locked"
-                | "unlocked"
-                | "refundable"
-                | "new"
-                | "favorite"
+              filter: e.target.value as "all" | "favorite"
             })
           }
         >
           <option value={"all"}>{t("collection.show_all")}</option>
           <option value={"favorite"}>{t("collection.show_favorites")}</option>
-          {filterState.mode !== "pokedex" && (
-            <option value={"unlockable"}>
-              {t("collection.show_unlockable")}
-            </option>
-          )}
-          <option value={"locked"}>{t("collection.show_locked")}</option>
-          <option value={"unlocked"}>{t("collection.show_unlocked")}</option>
-          {filterState.mode !== "pokedex" && (
-            <>
-              <option value={"refundable"}>
-                {t("collection.show_refundable")}
-              </option>
-              <option value={"new"}>
-                {t("collection.show_newly_obtained")}
-              </option>
-            </>
-          )}
         </select>
 
         <select
@@ -231,15 +120,11 @@ export default function PokemonCollection() {
           onChange={(e) =>
             setFilterState({
               ...filterState,
-              sort: e.target.value as "index" | "shards" | "played" | "unlocked"
+              sort: e.target.value as "index" | "played"
             })
           }
         >
           <option value={"index"}>{t("collection.sort_by_index")}</option>
-          <option value={"shards"}>{t("collection.sort_by_shards")}</option>
-          <option value={"unlocked"}>
-            {t("collection.sort_by_emotes_unlocked")}
-          </option>
           <option value={"played"}>{t("collection.sort_by_played")}</option>
         </select>
 
@@ -319,29 +204,16 @@ export function PokemonCollectionList(props: {
 
   const pokemonsSorted = useMemo(() => {
     return (Object.values(Pkm) as Pkm[]).sort((a: Pkm, b: Pkm) => {
-      if (props.filterState.sort === "index") {
-        return PkmFamily[a] === PkmFamily[b]
-          ? getPokemonData(a).stars - getPokemonData(b).stars
-          : PkmIndex[PkmFamily[a]].localeCompare(PkmIndex[PkmFamily[b]])
-      } else if (props.filterState.sort === "played") {
+      if (props.filterState.sort === "played") {
         return (
           (getItem(PkmIndex[b])?.played ?? 0) -
           (getItem(PkmIndex[a])?.played ?? 0)
         )
-      } else if (props.filterState.sort === "unlocked") {
-        const configA = getItem(PkmIndex[a])
-        const configB = getItem(PkmIndex[b])
-        return (
-          (configB?.emotions.length ?? 0) +
-          (configB?.shinyEmotions.length ?? 0) -
-          ((configA?.emotions.length ?? 0) +
-            (configA?.shinyEmotions.length ?? 0))
-        )
-      } else {
-        return (
-          (getItem(PkmIndex[b])?.dust ?? 0) - (getItem(PkmIndex[a])?.dust ?? 0)
-        )
       }
+      // default: sort by index
+      return PkmFamily[a] === PkmFamily[b]
+        ? getPokemonData(a).stars - getPokemonData(b).stars
+        : PkmIndex[PkmFamily[a]].localeCompare(PkmIndex[PkmFamily[b]])
     })
   }, [props.filterState.sort, getItem])
 
@@ -393,8 +265,6 @@ export function PokemonCollectionList(props: {
         )
 
         const isFavorite = favorites.includes(pkm)
-        const rarity = pokemonData.rarity
-        const boosterCost = BoosterPriceByRarity[rarity]
 
         const availableEmotions = getAvailableEmotions(pokemonData.index, false)
         const shinyAvailableEmotions = getAvailableEmotions(
@@ -416,13 +286,6 @@ export function PokemonCollectionList(props: {
                 !PokemonAnimations[pkm]?.shinyUnavailable
             ))
 
-        if (props.filterState.filter === "refundable" && dust < boosterCost)
-          return null
-        if (props.filterState.filter === "new" && !isNew) return null
-        if (props.filterState.filter === "unlocked" && !isUnlocked) return null
-        if (props.filterState.filter === "unlockable" && !isUnlockable)
-          return null
-        if (props.filterState.filter === "locked" && isUnlocked) return null
         if (props.filterState.filter === "favorite" && !isFavorite) return null
 
         return {
