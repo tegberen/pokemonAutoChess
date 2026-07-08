@@ -48,6 +48,7 @@ export default class MinigameManager {
   display: boolean
   animationManager: AnimationManager
   villagers: PokemonSpecial[] = []
+  townDecorations: Phaser.GameObjects.Sprite[] = []
   encounterDescription: GameDialog | null = null
 
   constructor(
@@ -85,6 +86,8 @@ export default class MinigameManager {
       }
     })
     this.villagers = []
+    this.townDecorations.forEach((decoration) => decoration?.destroy())
+    this.townDecorations = []
     this.encounterDescription?.destroy()
   }
 
@@ -660,6 +663,21 @@ export default class MinigameManager {
         dialog: champ.name,
         dialogTitle: t("double_up_champion")
       })
+    })
+
+    // larger x = right, larger y = down
+    // Use "EMBER" or "BURN" 
+    const flameTiles: [number, number][] = [
+      [31, 11.3],
+      [37, 11.3]
+    ]
+    flameTiles.forEach(([flameTileX, flameTileY]) => {
+      const flame = this.scene.add
+        .sprite(flameTileX * 48, flameTileY * 48, "abilities", "EMBER/000.png")
+        .setScale(1.8)
+        .setDepth(DEPTH.POKEMON)
+      flame.anims.play("EMBER")
+      this.townDecorations.push(flame)
     })
 
     this.villagers.push(
