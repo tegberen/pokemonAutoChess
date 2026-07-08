@@ -52,6 +52,7 @@ export interface GameStateStore {
   emotesUnlocked: Emotion[]
   additionalPokemons: Pkm[]
   podium: ILeaderboardInfo[]
+  doubleUpChampions: ILeaderboardInfo[]
 }
 
 const initialState: GameStateStore = {
@@ -85,7 +86,8 @@ const initialState: GameStateStore = {
   emotesUnlocked: [],
   additionalPokemons: new Array<Pkm>(),
   specialGameRule: null,
-  podium: new Array<ILeaderboardInfo>()
+  podium: new Array<ILeaderboardInfo>(),
+  doubleUpChampions: new Array<ILeaderboardInfo>()
 }
 
 export const gameSlice: Slice<GameStateStore> = createSlice({
@@ -313,6 +315,10 @@ export const gameSlice: Slice<GameStateStore> = createSlice({
       state.podium = action.payload
     },
 
+    setDoubleUpChampions(state, action: PayloadAction<ILeaderboardInfo[]>) {
+      state.doubleUpChampions = action.payload
+    },
+
     leaveGame: () => initialState
   }
 })
@@ -352,7 +358,8 @@ export const {
   changeShop,
   refreshShopUI,
   setItemsProposition,
-  setPodium
+  setPodium,
+  setDoubleUpChampions
 } = gameSlice.actions
 
 export default gameSlice.reducer

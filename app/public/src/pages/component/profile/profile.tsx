@@ -11,6 +11,7 @@ import {
   ban,
   giveTitle,
   searchById,
+  setDoubleUpChampion,
   unban
 } from "../../../network"
 import { setSearchedUser } from "../../../stores/LobbyStore"
@@ -300,9 +301,34 @@ function OtherProfileActions(props: {
       </div>
     ) : null
 
+  const championButtons =
+    user && role && role === Role.ADMIN ? (
+      <div className="my-input-group">
+        <button
+          className="bubbly blue"
+          onClick={() => {
+            setDoubleUpChampion({ uid: user.uid, slot: 0 })
+            alert(`${user.displayName} set as Double-Up Champion (Left)`)
+          }}
+        >
+          {t("set_double_up_champion_left")}
+        </button>
+        <button
+          className="bubbly blue"
+          onClick={() => {
+            setDoubleUpChampion({ uid: user.uid, slot: 1 })
+            alert(`${user.displayName} set as Double-Up Champion (Right)`)
+          }}
+        >
+          {t("set_double_up_champion_right")}
+        </button>
+      </div>
+    ) : null
+
   return role === Role.ADMIN || role === Role.MODERATOR ? (
     <>
       {titleButton}
+      {championButtons}
       {user?.banned ? unbanButton : banButton}
       {props.rightPanel === "game" ? chatHistoryButton : gameHistoryButton}
       {currentUid && user && user.uid !== currentUid && (

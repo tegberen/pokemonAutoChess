@@ -9,8 +9,10 @@ import {
 import { GADGETS } from "../../config/game/gadgets"
 import { CollectionUtils } from "../../core/collection"
 import { getPendingGame } from "../../core/pending-game-manager"
+import { setDoubleUpChampionUid } from "../../models/mongo-models/double-up-champions"
 import UserMetadata from "../../models/mongo-models/user-metadata"
 import { discordService } from "../../services/discord"
+import { fetchDoubleUpChampions } from "../../services/leaderboard"
 import { notificationsService } from "../../services/notifications"
 import { Emotion, Role, type Title, Transfer } from "../../types"
 import { CloseCodes } from "../../types/enum/CloseCodes"
@@ -168,6 +170,32 @@ export class GiveTitleCommand extends Command<
             targetUser.titles.push(title)
           }
         }
+      }
+    } catch (error) {
+      logger.error(error)
+    }
+  }
+}
+
+export class SetDoubleUpChampionCommand extends Command<
+  CustomLobbyRoom,
+  { client: Client; uid: string; slot: number }
+> {
+  async execute({
+    client,
+    uid,
+    slot
+  }: {
+    client: Client
+    uid: string
+    slot: number
+  }) {
+    try {
+      const u = this.room.users.get(client.auth.uid)
+      if (u && u.role && u.role === Role.ADMIN && (slot === 0 || slot === 1)) {
+        await setDoubleUpChampionUid(slot, uid)
+        // refresh the cached champions so /leaderboards reflects the change immediately
+        await fetchDoubleUpChampions()
       }
     } catch (error) {
       logger.error(error)

@@ -986,7 +986,8 @@ export default class BoardManager {
     this.updateScoutingAvatars(true)
     this.scene.minigameManager?.addVillagers(
       this.scene.room?.state.townEncounter ?? null,
-      store.getState().game.podium
+      store.getState().game.podium,
+      store.getState().game.doubleUpChampions
     )
   }
 
@@ -1372,7 +1373,7 @@ export default class BoardManager {
     this.smeargle = new PokemonSpecial({
       scene: this.scene,
       x: 1512,
-      y: 396,
+      y: 396 - 48 * 1.4,
       name: Pkm.SMEARGLE,
       orientation: Orientation.DOWNLEFT,
       dialog,

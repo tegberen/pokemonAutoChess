@@ -67,6 +67,7 @@ import {
   setLoadingProgress,
   setMaxInterest,
   setMoney,
+  setDoubleUpChampions,
   setFinale,
   setNoELO,
   setPhase,
@@ -398,6 +399,7 @@ export default function Game() {
         .then((res) => res.json())
         .then((data) => {
           dispatch(setPodium(data.leaderboard.slice(0, 3)))
+          dispatch(setDoubleUpChampions(data.doubleUpChampions ?? []))
         })
     } catch (e) {
       console.error("error fetching leaderboard", e)

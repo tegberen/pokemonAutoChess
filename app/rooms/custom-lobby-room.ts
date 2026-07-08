@@ -48,6 +48,7 @@ import {
   OnSearchByIdCommand,
   RemoveMessageCommand,
   SelectLanguageCommand,
+  SetDoubleUpChampionCommand,
   UnbanUserCommand
 } from "./commands/lobby-commands"
 import {
@@ -287,6 +288,17 @@ export default class CustomLobbyRoom extends Room {
       Transfer.GIVE_TITLE,
       (client, { uid, title }: { uid: string; title: Title }) => {
         this.dispatcher.dispatch(new GiveTitleCommand(), { client, uid, title })
+      }
+    )
+
+    this.onMessage(
+      Transfer.SET_DOUBLE_UP_CHAMPION,
+      (client, { uid, slot }: { uid: string; slot: number }) => {
+        this.dispatcher.dispatch(new SetDoubleUpChampionCommand(), {
+          client,
+          uid,
+          slot
+        })
       }
     )
 

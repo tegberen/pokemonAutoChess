@@ -1,3 +1,4 @@
+import { getDoubleUpChampionUids } from "../models/mongo-models/double-up-champions"
 import UserMetadata from "../models/mongo-models/user-metadata"
 import type {
   ILeaderboardBotInfo,
@@ -10,6 +11,7 @@ let leaderboard = new Array<ILeaderboardInfo>()
 let levelLeaderboard = new Array<ILeaderboardInfo>()
 let botLeaderboard = new Array<ILeaderboardBotInfo>()
 let eventLeaderboard = new Array<ILeaderboardInfo>()
+let doubleUpChampions = new Array<ILeaderboardInfo>()
 
 export function fetchLeaderboards() {
   logger.info("Refreshing leaderboards...")
@@ -17,7 +19,8 @@ export function fetchLeaderboards() {
     fetchUserLeaderboard(),
     fetchBotsLeaderboard(),
     fetchLevelLeaderboard(),
-    fetchEventLeaderboard()
+    fetchEventLeaderboard(),
+    fetchDoubleUpChampions()
   ])
 }
 
@@ -118,11 +121,39 @@ export async function fetchEventLeaderboard() {
   return eventLeaderboard
 }
 
+export async function fetchDoubleUpChampions() {
+  const uids = (await getDoubleUpChampionUids()).filter((uid) => uid !== "")
+  const users = await UserMetadata.find(
+    { uid: { $in: uids } },
+    ["displayName", "avatar", "elo", "uid", "twitchLogin", "twitchDisplayName"]
+  ).lean()
+
+  // preserve the admin-chosen slot order (left, right)
+  doubleUpChampions = uids
+    .map((uid, i): ILeaderboardInfo | null => {
+      const user = users.find((u) => u.uid === uid)
+      if (!user) return null
+      return {
+        name: user.displayName,
+        rank: i + 1,
+        avatar: user.avatar,
+        value: user.elo,
+        id: user.uid,
+        twitchLogin: user.twitchLogin,
+        twitchDisplayName: user.twitchDisplayName
+      }
+    })
+    .filter((info): info is ILeaderboardInfo => info != null)
+
+  return doubleUpChampions
+}
+
 export function getLeaderboard() {
   return {
     leaderboard,
     botLeaderboard,
     levelLeaderboard,
-    eventLeaderboard
+    eventLeaderboard,
+    doubleUpChampions
   }
 }

@@ -378,7 +378,11 @@ export default class MinigameManager {
     }
   }
 
-  addVillagers(encounter: TownEncounter | null, podium: ILeaderboardInfo[]) {
+  addVillagers(
+    encounter: TownEncounter | null,
+    podium: ILeaderboardInfo[],
+    doubleUpChampions: ILeaderboardInfo[] = []
+  ) {
     const cx = 980,
       cy = 404
 
@@ -465,7 +469,7 @@ export default class MinigameManager {
 
     const meowth = new PokemonSpecial({
       scene: this.scene,
-      x: encounter === TownEncounters.MEOWTH ? cx : 38 * 48,
+      x: encounter === TownEncounters.MEOWTH ? cx : 39 * 48,
       y: encounter === TownEncounters.MEOWTH ? cy : 7 * 48,
       name: Pkm.MEOWTH
     })
@@ -551,8 +555,8 @@ export default class MinigameManager {
 
     const makuhita = new PokemonSpecial({
       scene: this.scene,
-      x: encounter === TownEncounters.MAKUHITA ? cx : 36 * 48,
-      y: encounter === TownEncounters.MAKUHITA ? cy : 8.25 * 48,
+      x: encounter === TownEncounters.MAKUHITA ? cx : 37.7 * 48,
+      y: encounter === TownEncounters.MAKUHITA ? cy : 8.5 * 48,
       name: Pkm.MAKUHITA
     })
 
@@ -640,6 +644,24 @@ export default class MinigameManager {
       return champion
     })
 
+    const championsX = 32.8 * 48 // move the pair left/right
+    const championsY = 9.1 * 48 // move the pair up/down
+    const championsSpacing = 48 * 1.5 // horizontal gap between champion 1 (left) and 2 (right)
+    const championVillagers = doubleUpChampions.map((champ, slot) => {
+      const { name, shiny } = getPokemonCustomFromAvatar(champ.avatar)
+      return new PokemonSpecial({
+        scene: this.scene,
+        x: championsX + slot * championsSpacing,
+        y: championsY,
+        name,
+        shiny,
+        orientation: Orientation.DOWN,
+        animation: PokemonActionState.IDLE,
+        dialog: champ.name,
+        dialogTitle: t("double_up_champion")
+      })
+    })
+
     this.villagers.push(
       unown_a,
       totodile,
@@ -669,7 +691,8 @@ export default class MinigameManager {
       kingambit,
       lapras,
       chimecho,
-      ...podiumPokemons
+      ...podiumPokemons,
+      ...championVillagers
     )
 
     const specialGameRule = this.scene.room?.state?.specialGameRule

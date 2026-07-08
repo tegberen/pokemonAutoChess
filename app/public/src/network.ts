@@ -412,6 +412,10 @@ export function giveTitle(params: { uid: string; title: Title }) {
   rooms.lobby?.send(Transfer.GIVE_TITLE, params)
 }
 
+export function setDoubleUpChampion(params: { uid: string; slot: number }) {
+  rooms.lobby?.send(Transfer.SET_DOUBLE_UP_CHAMPION, params)
+}
+
 export function kick(playerId: string) {
   rooms.preparation?.send(Transfer.KICK, playerId)
 }
