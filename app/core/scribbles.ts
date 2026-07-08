@@ -103,7 +103,7 @@ export function applyScribbleStarterStats(
     }
   }
   if (avatar.rarity === Rarity.HATCH) {
-    powerScore = [4, 5, 6][avatar.stars] ?? 6
+    powerScore = [4, 5, 6][avatar.stars - 1] ?? 6
   }
   if (avatar.rarity === Rarity.SPECIAL) {
     powerScore = [1, 3, 7, 7][avatar.stars - 1] ?? 7
