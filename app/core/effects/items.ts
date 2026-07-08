@@ -793,21 +793,21 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
 
   [Item.DYNAMAX_BAND]: [
     new OnItemGainedEffect((pokemon) => {
-      pokemon.addMaxHP(2 * pokemon.baseHP, pokemon, 0, false)
+      pokemon.addMaxHP(pokemon.baseHP, pokemon, 0, false)
     }),
     new OnItemRemovedEffect((pokemon) => {
-      pokemon.addMaxHP(-2 * pokemon.baseHP, pokemon, 0, false)
+      pokemon.addMaxHP(pokemon.baseHP, pokemon, 0, false)
     })
   ],
 
   [Item.GOLD_BOTTLE_CAP]: [
     new OnItemGainedEffect((pokemon) => {
-      const atkValue = (pokemon.player?.money ?? 0) * 0.5
-      pokemon.addAttack(atkValue, pokemon, 0, false)
+      const atkValue = (pokemon.player?.money ?? 0)
+      pokemon.addAttack(atkValue/3, pokemon, 0, false)
     }),
     new OnItemRemovedEffect((pokemon) => {
-      const atkValue = (pokemon.player?.money ?? 0) * 0.5
-      pokemon.addAttack(-atkValue, pokemon, 0, false)
+      const atkValue = (pokemon.player?.money ?? 0)
+      pokemon.addAttack(-atkValue/3, pokemon, 0, false)
     }),
     new OnKillEffect(({ attacker, target, board }) => {
       if (attacker.player) {
@@ -835,18 +835,16 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
       const repeatBallValue = Math.floor(
         ((pokemon.player?.gameStats.rerollCount ?? 0) +
           pokemon.simulation.stageLevel) /
-          2
+          3
       )
-      pokemon.addShield(repeatBallValue * 2, pokemon, 0, false)
       pokemon.addSpeed(repeatBallValue, pokemon, 0, false)
     }),
     new OnItemRemovedEffect((pokemon) => {
       const repeatBallValue = Math.floor(
         ((pokemon.player?.gameStats.rerollCount ?? 0) +
           pokemon.simulation.stageLevel) /
-          2
+          3
       )
-      pokemon.addShield(-repeatBallValue * 2, pokemon, 0, false)
       pokemon.addSpeed(-repeatBallValue, pokemon, 0, false)
     })
   ],

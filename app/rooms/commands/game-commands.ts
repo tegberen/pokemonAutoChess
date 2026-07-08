@@ -1678,7 +1678,7 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
           income += max(5)(player.streak)
         }
         income += 5
-        income += nbRedScales * 5
+        income += nbRedScales * 3
         player.addMoney(income, true, null)
         if (income > 0) {
           const client = this.room.clients.find(

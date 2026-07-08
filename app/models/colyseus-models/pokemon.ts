@@ -2547,8 +2547,8 @@ export class Zweilous extends Pokemon {
   hp = 130
   atk = 11
   speed = 56
-  def = 6
-  speDef = 6
+  def = 5
+  speDef = 5
   maxPP = 100
   range = 2
   skill = Ability.DARK_HARVEST
@@ -2559,11 +2559,11 @@ export class Hydreigon extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.DRAGON, Synergy.DARK])
   rarity = Rarity.HATCH
   stars = 3
-  hp = 220
-  atk = 18
+  hp = 200
+  atk = 15
   speed = 56
-  def = 8
-  speDef = 8
+  def = 6
+  speDef = 6
   maxPP = 100
   range = 2
   skill = Ability.DARK_HARVEST
