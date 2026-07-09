@@ -171,7 +171,7 @@ export function addIconsToDescription(
         const maxTier = params?.stages ? params.stages + 1 : 5
         const tierValues =
           params?.stars && !params?.showAbilityTiers
-            ? [array[params.stars - 1]] // only show relevant tier
+            ? [array[Math.min(params.stars, array.length) - 1]] // only show relevant tier (clamp to last value when the ability has fewer tiers than stars)
             : array.slice(0, maxTier) // show tier scaling
 
         icon = (
