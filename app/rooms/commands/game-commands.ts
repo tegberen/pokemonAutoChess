@@ -1731,6 +1731,13 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
     this.state.time =
       (StageDuration[this.state.stageLevel] ?? StageDuration.DEFAULT) * 1000
 
+    if (
+      this.state.stageLevel === 1 &&
+      this.state.specialGameRule === SpecialGameRule.SMEARGLE_PACK
+    ) {
+      this.state.time += 10000
+    }
+
     if (this.state.stageLevel === 1 && this.state.gameMode === GameMode.DOUBLE_UP) {
       this.state.players.forEach((player: Player) => {
         player.items.push(Item.PRISON_BOTTLE)
