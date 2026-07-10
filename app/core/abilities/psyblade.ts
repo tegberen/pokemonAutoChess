@@ -11,7 +11,7 @@ export class PsybladeStrategy extends AbilityStrategy {
     crit: boolean
   ) {
     super.process(pokemon, board, target, crit)
-    const percent = [0.3, 0.3, 0.3, 0.6][pokemon.stars - 1] ?? 0.6
+    const percent = [0.2, 0.4, 0.6, 1.2][pokemon.stars - 1] ?? 1.2
     const damage = Math.round(pokemon.maxHP * percent)
 
     const cells = board.getCellsInFront(pokemon, target, 1)
@@ -25,7 +25,7 @@ export class PsybladeStrategy extends AbilityStrategy {
           crit
         )
         if (pokemon.status.grassField) {
-          pokemon.handleHeal(0.3 * takenDamage, pokemon, 0, false)
+          pokemon.handleHeal(takenDamage, pokemon, 0, false)
         }
       }
     })
