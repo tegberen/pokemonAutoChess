@@ -43,6 +43,7 @@ import {
   removeTournamentBracket,
   resetLobby,
   setCcu,
+  setEventNpc,
   setSearchedUser,
   updateTournament
 } from "../stores/LobbyStore"
@@ -132,6 +133,28 @@ export async function joinLobbyRoom(
 
           $state.listen("ccu", (value) => {
             dispatch(setCcu(value))
+          })
+
+          $state.listen("eventNpcEnabled", (value) => {
+            dispatch(setEventNpc({ enabled: value }))
+          })
+          $state.listen("eventNpcPokemon", (value) => {
+            dispatch(setEventNpc({ pokemon: value }))
+          })
+          $state.listen("eventNpcTitle", (value) => {
+            dispatch(setEventNpc({ title: value }))
+          })
+          $state.listen("eventNpcMessage", (value) => {
+            dispatch(setEventNpc({ message: value }))
+          })
+          $state.listen("eventNpcOrientation", (value) => {
+            dispatch(setEventNpc({ orientation: value }))
+          })
+          $state.listen("eventNpcEmotion", (value) => {
+            dispatch(setEventNpc({ emotion: value }))
+          })
+          $state.listen("eventNpcAnimation", (value) => {
+            dispatch(setEventNpc({ animation: value }))
           })
 
           $state.tournaments.onAdd((tournament) => {

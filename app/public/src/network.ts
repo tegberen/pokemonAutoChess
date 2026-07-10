@@ -520,6 +520,18 @@ export function createTournament(params: { name: string; startDate: string }) {
   rooms.lobby?.send(Transfer.NEW_TOURNAMENT, params)
 }
 
+export function setEventNpc(params: {
+  enabled: boolean
+  pokemon: string
+  title: string
+  message: string
+  orientation: string
+  animation: string
+  emotion: string
+}) {
+  rooms.lobby?.send(Transfer.SET_EVENT_NPC, params)
+}
+
 export function selectPartner(partnerId: string) {
   rooms.preparation?.send(Transfer.SELECT_PARTNER, partnerId)
 }

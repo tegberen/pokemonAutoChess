@@ -49,6 +49,7 @@ import {
   RemoveMessageCommand,
   SelectLanguageCommand,
   SetDoubleUpChampionCommand,
+  SetEventNpcCommand,
   UnbanUserCommand
 } from "./commands/lobby-commands"
 import {
@@ -302,6 +303,41 @@ export default class CustomLobbyRoom extends Room {
       }
     )
 
+    this.onMessage(
+      Transfer.SET_EVENT_NPC,
+      (
+        client,
+        {
+          enabled,
+          pokemon,
+          title,
+          message,
+          orientation,
+          animation,
+          emotion
+        }: {
+          enabled: boolean
+          pokemon: string
+          title: string
+          message: string
+          orientation: string
+          animation: string
+          emotion: string
+        }
+      ) => {
+        this.dispatcher.dispatch(new SetEventNpcCommand(), {
+          client,
+          enabled,
+          pokemon,
+          title,
+          message,
+          orientation,
+          animation,
+          emotion
+        })
+      }
+    )
+
     this.onMessage(Transfer.DELETE_ACCOUNT, (client) => {
       this.dispatcher.dispatch(new DeleteAccountCommand(), { client })
     })
@@ -424,6 +460,7 @@ export default class CustomLobbyRoom extends Room {
     this.initCronJobs()
     //this.fetchChat()
     this.fetchTournaments()
+    this.state.fetchEventNpc()
   }
 
   async onAuth(

@@ -67,7 +67,7 @@ export default class PokemonSpecial extends PokemonSprite {
   }
 
   openDetail() {
-    if (this.dialog) {
+    if (this.dialog || this.dialogTitle) {
       const s = this.scene as GameScene
       if (s.lastPokemonDetail && s.lastPokemonDetail != this) {
         s.lastPokemonDetail.closeDetail()
@@ -76,7 +76,7 @@ export default class PokemonSpecial extends PokemonSprite {
 
       this.detail = new GameDialog({
         scene: this.scene,
-        dialog: this.dialog,
+        dialog: this.dialog ?? "",
         dialogTitle: this.dialogTitle,
         portrait: {
           index: this.pokemon.index,

@@ -29,6 +29,7 @@ import {
   transformMiniGameXCoordinate,
   transformMiniGameYCoordinate
 } from "../../pages/utils/utils"
+import store from "../../stores"
 import type AnimationManager from "../animation-manager"
 import { DEPTH } from "../depths"
 import type GameScene from "../scenes/game-scene"
@@ -647,6 +648,27 @@ export default class MinigameManager {
       return champion
     })
 
+    // Announcement NPC via Admin panel
+    const eventNpc = store.getState().lobby.eventNpc
+    const eventNpcVillager =
+      eventNpc?.enabled && Object.values(Pkm).includes(eventNpc.pokemon as Pkm)
+        ? new PokemonSpecial({
+            scene: this.scene,
+            // relative to the podium pokemon (podium is at x 6.5*48, y 12.5*48)
+            x: (6.5 + 3.5) * 48,
+            y: 14 * 48,
+            name: eventNpc.pokemon as Pkm,
+            orientation:
+              (eventNpc.orientation as Orientation) || Orientation.DOWN,
+            animation:
+              (eventNpc.animation as PokemonActionState) ||
+              PokemonActionState.IDLE,
+            dialog: eventNpc.message || undefined,
+            dialogTitle: eventNpc.title || undefined,
+            emotion: (eventNpc.emotion as Emotion) || undefined
+          })
+        : null
+
     const championsX = 32.8 * 48 // move the pair left/right
     const championsY = 9.1 * 48 // move the pair up/down
     const championsSpacing = 48 * 1.5 // horizontal gap between champion 1 (left) and 2 (right)
@@ -710,7 +732,8 @@ export default class MinigameManager {
       lapras,
       chimecho,
       ...podiumPokemons,
-      ...championVillagers
+      ...championVillagers,
+      ...(eventNpcVillager ? [eventNpcVillager] : [])
     )
 
     const specialGameRule = this.scene.room?.state?.specialGameRule

@@ -2,6 +2,7 @@ import { ArraySchema, Schema, type } from "@colyseus/schema"
 import Message from "../../models/colyseus-models/message"
 import { TournamentSchema } from "../../models/colyseus-models/tournament"
 import chatV2 from "../../models/mongo-models/chat-v2"
+import eventNpc, { type IEventNpc } from "../../models/mongo-models/event-npc"
 import tournament from "../../models/mongo-models/tournament"
 import type { ITournament } from "../../types/interfaces/Tournament"
 import { logger } from "../../utils/logger"
@@ -10,6 +11,14 @@ export default class LobbyState extends Schema {
   @type([Message]) messages = new ArraySchema<Message>()
   @type([TournamentSchema]) tournaments = new ArraySchema<TournamentSchema>()
   @type("number") ccu = 0
+  // Admin-configured announcement NPC shown in town
+  @type("boolean") eventNpcEnabled = false
+  @type("string") eventNpcPokemon = ""
+  @type("string") eventNpcTitle = ""
+  @type("string") eventNpcMessage = ""
+  @type("string") eventNpcOrientation = ""
+  @type("string") eventNpcAnimation = ""
+  @type("string") eventNpcEmotion = ""
 
   addMessage(
     payload: string,
@@ -78,5 +87,29 @@ export default class LobbyState extends Schema {
         this.tournaments.splice(tournamentIndex, 1)
       }
     })
+  }
+
+  async setEventNpc(config: IEventNpc) {
+    this.eventNpcEnabled = config.enabled
+    this.eventNpcPokemon = config.pokemon
+    this.eventNpcTitle = config.title
+    this.eventNpcMessage = config.message
+    this.eventNpcOrientation = config.orientation
+    this.eventNpcAnimation = config.animation
+    this.eventNpcEmotion = config.emotion
+    await eventNpc.findOneAndUpdate({}, config, { upsert: true })
+  }
+
+  async fetchEventNpc() {
+    const doc = await eventNpc.findOne().exec()
+    if (doc) {
+      this.eventNpcEnabled = doc.enabled ?? false
+      this.eventNpcPokemon = doc.pokemon ?? ""
+      this.eventNpcTitle = doc.title ?? ""
+      this.eventNpcMessage = doc.message ?? ""
+      this.eventNpcOrientation = doc.orientation ?? ""
+      this.eventNpcAnimation = doc.animation ?? ""
+      this.eventNpcEmotion = doc.emotion ?? ""
+    }
   }
 }

@@ -18,6 +18,16 @@ import type {
 } from "../../../types/interfaces/LeaderboardInfo"
 import type { IUserMetadataClient } from "../../../types/interfaces/UserMetadata"
 
+export interface IEventNpcState {
+  enabled: boolean
+  pokemon: string
+  title: string
+  message: string
+  orientation: string
+  animation: string
+  emotion: string
+}
+
 export interface IUserLobbyState {
   messages: IChatV2[]
   leaderboard: ILeaderboardInfo[]
@@ -32,6 +42,7 @@ export interface IUserLobbyState {
   language: Language
   tournaments: TournamentSchema[]
   ccu: number
+  eventNpc: IEventNpcState
 }
 
 const initialState: IUserLobbyState = {
@@ -47,7 +58,16 @@ const initialState: IUserLobbyState = {
   gameRooms: [],
   searchedUser: undefined,
   tournaments: [],
-  ccu: 0
+  ccu: 0,
+  eventNpc: {
+    enabled: false,
+    pokemon: "",
+    title: "",
+    message: "",
+    orientation: "",
+    animation: "",
+    emotion: ""
+  }
 }
 
 export const lobbySlice = createSlice({
@@ -86,6 +106,12 @@ export const lobbySlice = createSlice({
     setCcu: (state, action: PayloadAction<number>) => {
       state.ccu = action.payload
     },
+    setEventNpc: (
+      state,
+      action: PayloadAction<Partial<IEventNpcState>>
+    ) => {
+      state.eventNpc = { ...state.eventNpc, ...action.payload }
+    },
     addRoom: (state, action: PayloadAction<RoomAvailable>) => {
       const metadata: IPreparationMetadata | IGameMetadata =
         action.payload.metadata
@@ -118,7 +144,12 @@ export const lobbySlice = createSlice({
     ) => {
       state.searchedUser = action.payload
     },
-    resetLobby: () => initialState,
+    // preserve the announcement NPC config so it stays available in-game,
+    // where the lobby room is left (and this slice would otherwise be wiped)
+    resetLobby: (state) => ({
+      ...initialState,
+      eventNpc: { ...state.eventNpc }
+    }),
     addTournament: (state, action: PayloadAction<TournamentSchema>) => {
       // remove previous potential duplicate
       state.tournaments = state.tournaments.filter(
@@ -227,6 +258,7 @@ export const {
   addRoom,
   removeRoom,
   setCcu,
+  setEventNpc,
   setSearchedUser,
   resetLobby,
   addTournament,

@@ -177,6 +177,57 @@ export class GiveTitleCommand extends Command<
   }
 }
 
+export class SetEventNpcCommand extends Command<
+  CustomLobbyRoom,
+  {
+    client: Client
+    enabled: boolean
+    pokemon: string
+    title: string
+    message: string
+    orientation: string
+    animation: string
+    emotion: string
+  }
+> {
+  async execute({
+    client,
+    enabled,
+    pokemon,
+    title,
+    message,
+    orientation,
+    animation,
+    emotion
+  }: {
+    client: Client
+    enabled: boolean
+    pokemon: string
+    title: string
+    message: string
+    orientation: string
+    animation: string
+    emotion: string
+  }) {
+    try {
+      const u = this.room.users.get(client.auth.uid)
+      if (u && u.role && u.role === Role.ADMIN) {
+        await this.state.setEventNpc({
+          enabled: !!enabled,
+          pokemon: pokemon ?? "",
+          title: title ?? "",
+          message: message ?? "",
+          orientation: orientation ?? "",
+          animation: animation ?? "",
+          emotion: emotion ?? ""
+        })
+      }
+    } catch (error) {
+      logger.error(error)
+    }
+  }
+}
+
 export class SetDoubleUpChampionCommand extends Command<
   CustomLobbyRoom,
   { client: Client; uid: string; slot: number }
