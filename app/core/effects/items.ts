@@ -793,10 +793,10 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
 
   [Item.DYNAMAX_BAND]: [
     new OnItemGainedEffect((pokemon) => {
-      pokemon.addMaxHP(pokemon.baseHP, pokemon, 0, false)
+      pokemon.addMaxHP(2 * pokemon.baseHP, pokemon, 0, false)
     }),
     new OnItemRemovedEffect((pokemon) => {
-      pokemon.addMaxHP(pokemon.baseHP, pokemon, 0, false)
+      pokemon.addMaxHP(-2 * pokemon.baseHP, pokemon, 0, false)
     })
   ],
 
@@ -835,16 +835,18 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
       const repeatBallValue = Math.floor(
         ((pokemon.player?.gameStats.rerollCount ?? 0) +
           pokemon.simulation.stageLevel) /
-          3
+          2
       )
+      pokemon.addShield(repeatBallValue * 2, pokemon, 0, false)
       pokemon.addSpeed(repeatBallValue, pokemon, 0, false)
     }),
     new OnItemRemovedEffect((pokemon) => {
       const repeatBallValue = Math.floor(
         ((pokemon.player?.gameStats.rerollCount ?? 0) +
           pokemon.simulation.stageLevel) /
-          3
+          2
       )
+      pokemon.addShield(-repeatBallValue * 2, pokemon, 0, false)
       pokemon.addSpeed(-repeatBallValue, pokemon, 0, false)
     })
   ],

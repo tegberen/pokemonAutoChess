@@ -1678,7 +1678,7 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
           income += max(5)(player.streak)
         }
         income += 5
-        income += nbRedScales * 3
+        income += nbRedScales * 5
         player.addMoney(income, true, null)
         if (income > 0) {
           const client = this.room.clients.find(
@@ -2603,9 +2603,14 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
             ([] as Item[])
           resetArraySchema(player.pveRewards, rewards)
 
+          const gaveShinyItemReward = rewards.some((item) =>
+            isIn(ShinyItems, item)
+          )
+
           const rewardsPropositions =
-            (this.state.shinyEncounter && this.state.stageLevel > 1) ||
-            this.state.specialGameRule === SpecialGameRule.SHINIEST_HUNTER
+            !gaveShinyItemReward &&
+            ((this.state.shinyEncounter && this.state.stageLevel > 1) ||
+              this.state.specialGameRule === SpecialGameRule.SHINIEST_HUNTER)
               ? pickNRandomIn(ShinyItems, 3)
               : (pveStage.getRewardsPropositions?.(player, false) ?? ([] as Item[]))
 

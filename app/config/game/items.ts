@@ -90,18 +90,20 @@ export const ItemStats: { [item in Item]?: { [stat in Stat]?: number } } = {
   [Item.RUNNING_SHOES]: { [Stat.SPEED]: 15 },
   [Item.WHITE_FLUTE]: { [Stat.SPEED]: 15 },
   [Item.EVIOLITE]: {
-    [Stat.HP]: 50,
-    [Stat.ATK]: 5,
-    [Stat.AP]: 20,
-    [Stat.DEF]: 5,
-    [Stat.SPE_DEF]: 5
+    [Stat.HP]: 100,
+    [Stat.ATK]: 10,
+    [Stat.AP]: 50,
+    [Stat.DEF]: 10,
+    [Stat.SPE_DEF]: 10
   },
-  [Item.GOLD_BOTTLE_CAP]: {},
-  [Item.BOOSTER_ENERGY]: { [Stat.PP]: 30 },
+  [Item.GOLD_BOTTLE_CAP]: {
+    [Stat.LUCK]: 50
+  },
+  [Item.BOOSTER_ENERGY]: { [Stat.PP]: 30, [Stat.SPEED]: 50 },
   [Item.STAR_PIECE]: {},
-  [Item.SHINY_STONE]: {},
-  [Item.ABSORB_BULB]: { [Stat.DEF]: 10, [Stat.SPE_DEF]: 10 },
-  [Item.GOLD_BOW]: {},
+  [Item.SHINY_STONE]: { [Stat.AP]: 50 },
+  [Item.ABSORB_BULB]: { [Stat.DEF]: 20, [Stat.SPE_DEF]: 20 },
+  [Item.GOLD_BOW]: { [Stat.SHIELD]: 50 },
   [Item.TEAL_MASK]: { [Stat.SHIELD]: 100, [Stat.SPEED]: 30 },
   [Item.WELLSPRING_MASK]: { [Stat.SHIELD]: 100, [Stat.SPE_DEF]: 10 },
   [Item.CORNERSTONE_MASK]: { [Stat.SHIELD]: 100, [Stat.DEF]: 10 },
@@ -120,8 +122,7 @@ export const ItemStats: { [item in Item]?: { [stat in Stat]?: number } } = {
   [Item.TATSUGIRI_CURLY]: { [Stat.ATK]: 8 },
   [Item.TATSUGIRI_DROOPY]: { [Stat.DEF]: 8 },
   [Item.TATSUGIRI_STRETCHY]: { [Stat.SPEED]: 25 },
-  [Item.SHARP_BEAK]: { [Stat.AP]: 100 },
-  [Item.RARE_CANDY]: { [Stat.AP]: -30, [Stat.HP]: -20, [Stat.SPEED]: -10 }
+  [Item.SHARP_BEAK]: { [Stat.AP]: 100 }
 }
 
 export const ItemSellPricesAtTown: { [item in ItemsSoldAtTown]?: number } = {

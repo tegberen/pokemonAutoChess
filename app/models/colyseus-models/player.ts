@@ -205,6 +205,7 @@ export default class Player extends Schema implements IPlayer {
     ticketLevel: number
   }[] = []
   specialGameRule: SpecialGameRule | null = null // its easier to duplicate this here and in gamestate than passing gamestate everywhere we need it
+  gameMode: GameMode = GameMode.CUSTOM_LOBBY // duplicated from gamestate for the same reason as specialGameRule
   avatarSynergy: Synergy | null = null // synergy given to all pokemon in Avatar scribble, rolled once per game
   shopsSinceLastUnownShop: number = 0
   regions: DungeonPMDO[] = []
@@ -236,6 +237,7 @@ export default class Player extends Schema implements IPlayer {
     this.role = role
     this.pokemonCustoms = new PokemonCustoms(pokemonCollection)
     this.specialGameRule = state.specialGameRule
+    this.gameMode = state.gameMode
     this.avatarSynergy = state.avatarSynergy
     this.flowerPots = initFlowerPots(this)
     const avatarCustom = getPokemonCustomFromAvatar(avatar)
@@ -398,6 +400,15 @@ export default class Player extends Schema implements IPlayer {
       it's not as easy as just decrementing by 1 in updatedSynergies map count
       */
       updatedSynergies = computeSynergies(pokemons, this.bonusSynergies)
+    }
+
+    if (this.gameMode === GameMode.DOUBLE_UP) {
+      // In Double Up, the Baby synergy caps at its second tier (Baby 5):
+      const babyCap = SynergyTiersThresholds[Synergy.BABY][1]
+      const babyCount = updatedSynergies.get(Synergy.BABY) ?? 0
+      if (babyCount > babyCap) {
+        updatedSynergies.set(Synergy.BABY, babyCap)
+      }
     }
 
     const previousLight = previousSynergies.get(Synergy.LIGHT) ?? 0

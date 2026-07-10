@@ -17,6 +17,7 @@ import {
   PkmFamily,
   PkmRegionalVariants
 } from "../../../../../types/enum/Pokemon"
+import { GameMode } from "../../../../../types/enum/Game"
 import { SpecialGameRule } from "../../../../../types/enum/SpecialGameRule"
 import { Synergy } from "../../../../../types/enum/Synergy"
 import type { IPokemonData } from "../../../../../types/interfaces/PokemonData"
@@ -56,6 +57,7 @@ export default function SynergyDetailComponent(props: {
   const stageLevel = useAppSelector((state) => state.game.stageLevel)
   const spectatedPlayer = useAppSelector(selectSpectatedPlayer)
   const specialGameRule = useAppSelector((state) => state.game.specialGameRule)
+  const gameMode = useAppSelector((state) => state.game.gameMode)
 
   const thresholdReached = SynergyTiersThresholds[props.type]
     .filter((n) => n <= props.value)
@@ -161,6 +163,16 @@ export default function SynergyDetailComponent(props: {
       </p>
 
       {SynergyTiers[props.type].map((tier: SynergyTier, i: number) => {
+        // In Double Up, the Baby synergy is capped at its second tier (Baby 5),
+        // so hide the unreachable third tier (Baby 7 / Golden Eggs)
+        if (
+          gameMode === GameMode.DOUBLE_UP &&
+          props.type === Synergy.BABY &&
+          SynergyTiersThresholds[props.type][i] >
+            SynergyTiersThresholds[Synergy.BABY][1]
+        ) {
+          return null
+        }
         const isCurrentTier =
           thresholdReached === SynergyTiersThresholds[props.type][i]
         return (

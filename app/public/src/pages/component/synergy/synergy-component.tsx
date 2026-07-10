@@ -1,6 +1,7 @@
 import { useTranslation } from "react-i18next"
 import { SynergyTiersThresholds } from "../../../../../config"
-import type { Synergy } from "../../../../../types/enum/Synergy"
+import { GameMode } from "../../../../../types/enum/Game"
+import { Synergy } from "../../../../../types/enum/Synergy"
 import { selectSpectatedPlayer, useAppSelector } from "../../../hooks"
 import { getGameScene } from "../../game"
 import SynergyIcon from "../icons/synergy-icon"
@@ -19,6 +20,7 @@ export default function SynergyComponent(props: {
   const isActive = thresholdReached > 0
 
   const spectatedPlayer = useAppSelector(selectSpectatedPlayer)
+  const gameMode = useAppSelector((state) => state.game.gameMode)
   const highlightSynergy = (type: Synergy) => {
     const scene = getGameScene()
     if (!scene) return
@@ -98,8 +100,19 @@ export default function SynergyComponent(props: {
             justifyContent: "space-evenly"
           }}
         >
-          {SynergyTiersThresholds[props.type].map((t) => {
-            return (
+          {SynergyTiersThresholds[props.type]
+            .filter(
+              // In Double Up, the Baby synergy caps at its second tier (Baby 5),
+              // so hide the unreachable third threshold (Baby 7 / Golden Eggs)
+              (threshold) =>
+                !(
+                  gameMode === GameMode.DOUBLE_UP &&
+                  props.type === Synergy.BABY &&
+                  threshold > SynergyTiersThresholds[Synergy.BABY][1]
+                )
+            )
+            .map((t) => {
+              return (
               <span
                 key={t}
                 style={{
