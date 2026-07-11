@@ -22,7 +22,8 @@ import {
 import { DungeonMusic, type DungeonPMDO } from "../../../../types/enum/Dungeon"
 import { GamePhaseState } from "../../../../types/enum/Game"
 import { type Item, ItemRecipe, Mulches } from "../../../../types/enum/Item"
-import type { Pkm } from "../../../../types/enum/Pokemon"
+import { type Pkm, PkmFamily } from "../../../../types/enum/Pokemon"
+import { SpecialGameRule } from "../../../../types/enum/SpecialGameRule"
 import { isIn } from "../../../../utils/array"
 import { throttle } from "../../../../utils/function"
 import { logger } from "../../../../utils/logger"
@@ -713,6 +714,14 @@ export default class GameScene extends Scene {
       }
       this.pokemonDragged = null
       this.itemDragged = null
+      // JUGGERNAUT: ensure the champion feed-target highlight is cleared on drop
+      if (
+        this.room?.state.specialGameRule === SpecialGameRule.JUGGERNAUT &&
+        this.pokemonHovered
+      ) {
+        this.clearHovered(this.pokemonHovered.sprite)
+        this.pokemonHovered = null
+      }
     })
 
     this.input.on(
@@ -741,6 +750,30 @@ export default class GameScene extends Scene {
         ) {
           // pokemon dragged above board zone: highlight the cell
           dropZone.getData("sprite")?.setFrame(1)
+
+          // JUGGERNAUT: highlight the champion when a feed-copy is dragged over it
+          const player = this.room?.state.players.get(this.uid!)
+          if (
+            this.room?.state.specialGameRule === SpecialGameRule.JUGGERNAUT &&
+            player?.firstPartner &&
+            this.board?.pokemons
+          ) {
+            const pokemonOnCell = [...this.board.pokemons.values()].find(
+              (p) =>
+                p.positionX === dropZone.getData("x") &&
+                p.positionY === dropZone.getData("y")
+            )
+            if (
+              pokemonOnCell &&
+              pokemonOnCell !== gameObject &&
+              pokemonOnCell.pokemon.name === player.firstPartner &&
+              gameObject.pokemon.name !== player.firstPartner &&
+              PkmFamily[gameObject.pokemon.name] ===
+                PkmFamily[player.firstPartner]
+            ) {
+              this.setPokemonHovered(pokemonOnCell)
+            }
+          }
         }
 
         if (
@@ -812,6 +845,21 @@ export default class GameScene extends Scene {
           gameObject instanceof PokemonSprite
         ) {
           dropZone.getData("sprite")?.setFrame(0)
+          // JUGGERNAUT: clear the champion feed-target highlight on the left cell
+          if (
+            this.room?.state.specialGameRule === SpecialGameRule.JUGGERNAUT &&
+            this.board?.pokemons
+          ) {
+            const pokemonOnCell = [...this.board.pokemons.values()].find(
+              (p) =>
+                p.positionX === dropZone.getData("x") &&
+                p.positionY === dropZone.getData("y")
+            )
+            if (pokemonOnCell && this.pokemonHovered === pokemonOnCell) {
+              this.clearHovered(pokemonOnCell.sprite)
+              this.pokemonHovered = null
+            }
+          }
         }
 
         if (
@@ -868,9 +916,8 @@ export default class GameScene extends Scene {
       this.clearHovered(this.pokemonHovered.sprite)
     }
     this.pokemonHovered = pokemonSprite
-    const thickness = Math.round(
-      1 + Math.log(pokemonSprite.pokemon.def + pokemonSprite.pokemon.speDef)
-    )
+    // border thickness scales off HP (bulk), matching the sprite size
+    const thickness = Math.round(1 + Math.log(pokemonSprite.pokemon.maxHP))
     this.setHovered(pokemonSprite.sprite, thickness)
   }
 
@@ -883,8 +930,15 @@ export default class GameScene extends Scene {
       | undefined
     existingOutline?.destroy()
 
+    // outline is in texture space, so keep a constant on-screen width (base
+    // scale is 2) and cap it so big sprites don't get a thick blocky border
+    const MAX_SCREEN_THICKNESS = 6
+    const scale = Math.max(2, sprite.scaleX)
+    const screenThickness = Math.min(thickness * 2, MAX_SCREEN_THICKNESS)
+    const adjustedThickness = Math.max(1, Math.round(screenThickness / scale))
+
     const outline = sprite.filters!.internal.addRexOutline({
-      thickness,
+      thickness: adjustedThickness,
       outlineColor: 0xffffff
     })
     sprite.setData("rexOutlineController", outline)

@@ -26,4 +26,5 @@ export enum SpecialGameRule {
   AVATAR = "AVATAR",
   LIGHT_SHOW = "LIGHT_SHOW",
   SMEARGLE_PACK = "SMEARGLE_PACK",
+  JUGGERNAUT = "JUGGERNAUT",
 }

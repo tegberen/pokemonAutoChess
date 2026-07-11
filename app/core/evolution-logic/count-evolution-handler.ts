@@ -3,7 +3,8 @@ import type { Pokemon } from "../../models/colyseus-models/pokemon"
 import PokemonFactory from "../../models/pokemon-factory"
 import { Item, ItemComponents } from "../../types"
 import type { CountEvolutionRule } from "../../types/EvolutionRules"
-import { Pkm } from "../../types/enum/Pokemon"
+import { Pkm, PkmFamily } from "../../types/enum/Pokemon"
+import { SpecialGameRule } from "../../types/enum/SpecialGameRule"
 import { isOnBench } from "../../utils/board"
 import { logger } from "../../utils/logger"
 import { shuffleArray } from "../../utils/random"
@@ -19,8 +20,19 @@ export class CountEvolutionHandler extends EvolutionHandler {
     this.numberRequired = evolutionRule.numberRequired
   }
 
+  // JUGGERNAUT: the champion's 1-star copies are feed material and must never
+  // auto-combine into a 2-star. Normal team units (other families) evolve as usual.
+  isJuggernautChampionCopy(pokemon: Pokemon, player: Player): boolean {
+    return (
+      player.specialGameRule === SpecialGameRule.JUGGERNAUT &&
+      player.firstPartner !== undefined &&
+      PkmFamily[pokemon.name] === PkmFamily[player.firstPartner]
+    )
+  }
+
   canEvolve(pokemon: Pokemon, player: Player): boolean {
     if (!pokemon.hasEvolution) return false
+    if (this.isJuggernautChampionCopy(pokemon, player)) return false
 
     // special case for Avalugg passive, didnt find a better way to do it
     if (
@@ -43,6 +55,7 @@ export class CountEvolutionHandler extends EvolutionHandler {
 
   canEvolveIfGettingOne(pokemon: Pokemon, player: Player): boolean {
     if (!pokemon.hasEvolution) return false
+    if (this.isJuggernautChampionCopy(pokemon, player)) return false
 
     // special case for Avalugg passive, didnt find a better way to do it
     if (

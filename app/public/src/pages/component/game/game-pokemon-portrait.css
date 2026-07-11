@@ -45,6 +45,28 @@
   box-shadow: 0 0 4px #ffffff80;
 }
 
+/* JUGGERNAUT: feed-copies get a crisp pulsing ring (0 blur) colored by the stat
+   they feed (--juggernaut-color), framed by a thin dark outline on both sides */
+.game-pokemon-portrait.juggernaut-copy {
+  border-color: var(--juggernaut-color, #ffd94a);
+  animation: juggernaut-copy-flash 1s ease-in-out infinite alternate;
+}
+
+@keyframes juggernaut-copy-flash {
+  from {
+    box-shadow:
+      0 0 0 1px #4a4a4a,
+      0 0 0 2px var(--juggernaut-color, #ffd94a),
+      0 0 0 3px #4a4a4a;
+  }
+  to {
+    box-shadow:
+      0 0 0 1px #4a4a4a,
+      0 0 0 4px var(--juggernaut-color, #ffd94a),
+      0 0 0 5px #4a4a4a;
+  }
+}
+
 .game-pokemon-portrait.disabled {
   filter: contrast(0.8) brightness(0.8);
 }

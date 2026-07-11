@@ -5,7 +5,7 @@ import {
   PkmsWithAltForms
 } from "../config"
 import type Player from "../models/colyseus-models/player"
-import type { Pokemon } from "../models/colyseus-models/pokemon"
+import { type Pokemon, PokemonClasses } from "../models/colyseus-models/pokemon"
 import PokemonFactory from "../models/pokemon-factory"
 import { getAvailableEmotions } from "../models/precomputed/precomputed-emotions"
 import { getPokemonData, getRegularsTier1 } from "../models/precomputed/precomputed-pokemon-data"
@@ -201,6 +201,107 @@ export function createSmearglePackPropositions(
   }
 
   return propositions
+}
+
+// JUGGERNAUT: pick a fully-evolved champion from one shared rarity (stats
+// normalized), grow it by feeding 1-star copies of itself.
+export const JuggernautRarities = [
+  Rarity.COMMON,
+  Rarity.UNCOMMON,
+  Rarity.RARE,
+  Rarity.EPIC,
+  Rarity.ULTRA
+]
+
+// stat-normalization tuning knobs (playtest-tunable)
+export const JUGGERNAUT_STAT_TARGET = { hp: 150, atk: 10, def: 10, speDef: 10 }
+export const JUGGERNAUT_COMPRESSION_K = 0.3
+
+export function getJuggernautRarity(state: GameState): Rarity {
+  // deterministic per lobby, so every player draws from the same rarity
+  const hash = Array.from(state.preparationId).reduce(
+    (acc, char) => acc + char.charCodeAt(0),
+    0
+  )
+  return JuggernautRarities[hash % JuggernautRarities.length]
+}
+
+// fully-evolved final forms of a rarity (incl. additional/regional; regionals
+// are region-gated later by the proposition machinery)
+export function getJuggernautChampionPool(rarity: Rarity): Pkm[] {
+  return (PRECOMPUTED_POKEMONS_PER_RARITY[rarity] ?? []).filter((p) => {
+    const d = getPokemonData(p)
+    return (
+      d.stages >= 2 && // multi-stage line, so a distinct 1-star base can be fed
+      d.stars === d.stages && // fully evolved final form
+      d.skill !== Ability.DEFAULT &&
+      Unowns.includes(p) === false
+    )
+  })
+}
+
+export function pickJuggernautChampions(player: Player, state: GameState): Pkm[] {
+  const rarity = getJuggernautRarity(state)
+  return getJuggernautChampionPool(rarity).map((pkm) => {
+    if (pkm in PkmRegionalVariants) {
+      const regionalVariants = PkmRegionalVariants[pkm]!.filter((p) =>
+        player.regionalPokemons.includes(p)
+      )
+      if (regionalVariants.length > 0) pkm = pickRandomIn(regionalVariants)
+    }
+    if (PkmsWithAltForms.includes(pkm)) {
+      pkm = getAltFormForPlayer(pkm, player)
+    }
+    return pkm
+  })
+}
+
+// average base statline of the shared-rarity champion pool (memoized per rarity)
+const juggernautPoolMeanCache = new Map<
+  Rarity,
+  { hp: number; atk: number; def: number; speDef: number }
+>()
+
+export function getJuggernautPoolMean(rarity: Rarity) {
+  const cached = juggernautPoolMeanCache.get(rarity)
+  if (cached) return cached
+  const pool = getJuggernautChampionPool(rarity)
+  const totals = { hp: 0, atk: 0, def: 0, speDef: 0 }
+  for (const pkm of pool) {
+    const p = new PokemonClasses[pkm](pkm)
+    totals.hp += p.hp
+    totals.atk += p.atk
+    totals.def += p.def
+    totals.speDef += p.speDef
+  }
+  const n = Math.max(1, pool.length)
+  const mean = {
+    hp: totals.hp / n,
+    atk: totals.atk / n,
+    def: totals.def / n,
+    speDef: totals.speDef / n
+  }
+  juggernautPoolMeanCache.set(rarity, mean)
+  return mean
+}
+
+// Normalize the champion's HP/ATK/DEF/Sp.DEF toward a shared baseline via
+// additive compression: normalized = target + (natural - poolMean) * k.
+export function applyJuggernautStats(champion: Pokemon, state: GameState) {
+  const rarity = getJuggernautRarity(state)
+  const mean = getJuggernautPoolMean(rarity)
+  const t = JUGGERNAUT_STAT_TARGET
+  const k = JUGGERNAUT_COMPRESSION_K
+  const normalize = (natural: number, target: number, m: number) =>
+    Math.max(1, Math.round(target + (natural - m) * k))
+
+  // use the model's add* setters (delta) so clamping and maxHP stay consistent
+  champion.addAttack(normalize(champion.atk, t.atk, mean.atk) - champion.atk)
+  champion.addDefense(normalize(champion.def, t.def, mean.def) - champion.def)
+  champion.addSpecialDefense(
+    normalize(champion.speDef, t.speDef, mean.speDef) - champion.speDef
+  )
+  champion.addMaxHP(normalize(champion.hp, t.hp, mean.hp) - champion.hp)
 }
 
 export function pickFirstPartners(player: Player, state: GameState): Pkm[] {

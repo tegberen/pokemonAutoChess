@@ -109,6 +109,8 @@ export default class Player extends Schema implements IPlayer {
   @type("string") avatar: string
   @type({ map: Pokemon }) board = new MapSchema<Pokemon>()
   @view() @type(["string"]) shop = new ArraySchema<Pkm>()
+  // JUGGERNAUT: stat (color) fed by each shop copy, parallel to `shop` ("" if not a copy)
+  @view() @type(["string"]) shopJuggernautStats = new ArraySchema<string>()
   @type(ExperienceManager) experienceManager = new ExperienceManager()
   @type({ map: "uint8" }) synergies = new Synergies()
   @type("uint16") money = process.env.MODE == "dev" ? 999 : 5
@@ -191,7 +193,7 @@ export default class Player extends Schema implements IPlayer {
   lightX: number
   lightY: number
   ghost: boolean = false
-  firstPartner: Pkm | undefined
+  @type("string") firstPartner: Pkm | undefined
   hasLeftGame: boolean = false
   bonusSynergies: Map<Synergy, number> = new Map<Synergy, number>()
   pokemonsExploring: {

@@ -4907,7 +4907,8 @@
 		"SHINIEST_HUNTER": "Shiniest Hunter",
 		"KAIJU_BATTLE": "Kaiju Battle",
 		"AVATAR": "Avatar",
-		"LIGHT_SHOW": "Light Show"
+		"LIGHT_SHOW": "Light Show",
+		"JUGGERNAUT": "Juggernaut"
 	},
 	"scribble_description": {
 		"EVERYONE_IS_HERE": "All the additional picks are available immediately",
@@ -4936,7 +4937,8 @@
 		"SHINIEST_HUNTER": "All PvE encounters are shiny",
 		"KAIJU_BATTLE": "Every Pokémon that is not MONSTER gains the MONSTER type. The HP gain is tripled.",
 		"AVATAR": "Every Pokémon that is not {{type}} gains the {{type}} type.",
-		"LIGHT_SHOW": "Every 3 stages, Smeargle draws a glowing shape on your board and you choose a second one. Pokémon starting a fight on a lit cell gain that shape's bonus:"
+		"LIGHT_SHOW": "Every 3 stages, Smeargle draws a glowing shape on your board and you choose a second one. Pokémon starting a fight on a lit cell gain that shape's bonus:",
+		"JUGGERNAUT": "Pick a Pokémon — the Juggernaut. The shop keeps offering 1 STAR copies of it. Drag a copy onto the Juggernaut to permanently boost its HP and other stats!"
 	},
 	"scribble_shape": {
 		"DOT": "Dot",

@@ -56,6 +56,7 @@ import {
   changeDpsMeter,
   changePlayer,
   changeShop,
+  changeShopJuggernautStats,
   leaveGame,
   removeDpsMeter,
   removePlayer,
@@ -854,6 +855,11 @@ export default function Game() {
           $player.shop.onChange((pkm: Pkm, index: number) => {
             dispatch(changeShop({ value: pkm, index }))
           })
+          $player.shopJuggernautStats.onChange(
+            (stat: string, index: number) => {
+              dispatch(changeShopJuggernautStats({ value: stat, index }))
+            }
+          )
           $player.listen("shopLocked", (value) => {
             dispatch(setShopLocked(value))
           })
@@ -998,6 +1004,7 @@ export default function Game() {
           "rank",
           "regionalPokemons",
           "streak",
+          "firstPartner",
           "title",
           "eggChance",
           "goldenEggChance",

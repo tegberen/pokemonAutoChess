@@ -11,7 +11,12 @@ import {
 import PokemonFactory from "../../../../../models/pokemon-factory"
 import { getBuyPrice } from "../../../../../models/shop"
 import { EvolutionRuleType } from "../../../../../types/EvolutionRules"
+import {
+  JuggernautStatColor,
+  Stat
+} from "../../../../../types/enum/Game"
 import { type Pkm, PkmFamily } from "../../../../../types/enum/Pokemon"
+import { SpecialGameRule } from "../../../../../types/enum/SpecialGameRule"
 import { getPortraitSrc } from "../../../../../utils/avatar"
 import { schemaValues } from "../../../../../utils/schemas"
 import {
@@ -67,6 +72,9 @@ export default function GamePokemonPortrait(props: {
 
   const specialGameRule = useAppSelector((state) => state.game.specialGameRule)
   const stageLevel = useAppSelector((state) => state.game.stageLevel)
+  const shopJuggernautStats = useAppSelector(
+    (state) => state.game.shopJuggernautStats
+  )
 
   const isOnAnotherBoard = spectatedPlayerId !== currentPlayerUid
 
@@ -111,11 +119,31 @@ export default function GamePokemonPortrait(props: {
     : (pokemon.evolutions[0] ?? pokemon.evolution)
   let pokemonEvolution = PokemonFactory.createPokemonFromName(evolutionName)
 
+  // JUGGERNAUT: a champion feed-copy (a lower form of the champion's family, not
+  // the champion itself). Copies never combine, and each is colored by the stat
+  // it feeds.
+  const isJuggernautCopy =
+    specialGameRule === SpecialGameRule.JUGGERNAUT &&
+    connectedPlayer?.firstPartner != null &&
+    pokemon.name !== connectedPlayer.firstPartner &&
+    PkmFamily[pokemon.name] === PkmFamily[connectedPlayer.firstPartner]
+
+  const juggernautStat = !isJuggernautCopy
+    ? ""
+    : props.origin === "shop"
+      ? (shopJuggernautStats[props.index] ?? "")
+      : (pokemon.juggernautStat ?? "")
+  const juggernautColor = juggernautStat
+    ? JuggernautStatColor[juggernautStat as Stat]
+    : undefined
+
   const willEvolve =
+    !isJuggernautCopy &&
     pokemon.evolutionRule.type === EvolutionRuleType.COUNT &&
     count === pokemon.evolutionRule.numberRequired - 1
 
   const shouldShimmer =
+    !isJuggernautCopy &&
     pokemon.evolutionRule.type === EvolutionRuleType.COUNT &&
     ((count > 0 && pokemon.hasEvolution) ||
       (countEvol > 0 && pokemonEvolution.hasEvolution))
@@ -161,12 +189,18 @@ export default function GamePokemonPortrait(props: {
       className={cc("my-box", "clickable", "game-pokemon-portrait", {
         shimmer: shouldShimmer,
         disabled: !canBuy && props.origin === "shop",
-        planned: props.inPlanner ?? false
+        planned: props.inPlanner ?? false,
+        "juggernaut-copy":
+          !!juggernautColor &&
+          (props.origin === "shop" || props.origin === "team")
       })}
       style={{
         backgroundColor: rarityColor,
         borderColor: rarityColor,
-        backgroundImage: `url("${getCachedPortrait(pokemonInPortrait.index, customs)}")`
+        backgroundImage: `url("${getCachedPortrait(pokemonInPortrait.index, customs)}")`,
+        ...(juggernautColor
+          ? ({ "--juggernaut-color": juggernautColor } as React.CSSProperties)
+          : {})
       }}
       onClick={(e) => {
         if (canBuy && props.click) props.click(e)

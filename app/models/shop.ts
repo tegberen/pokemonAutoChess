@@ -10,6 +10,7 @@ import {
   HIGH_ROLLER_CHANCE,
   HONEY_CHANCE,
   INCENSE_CHANCE,
+  JUGGERNAUT_COPY_RATE,
   KECLEON_RATE,
   LegendaryPool,
   MIN_STAGE_FOR_DITTO,
@@ -35,12 +36,13 @@ import {
 } from "../config"
 import {
   createSmearglePackPropositions,
-  pickFirstPartners
+  pickFirstPartners,
+  pickJuggernautChampions
 } from "../core/scribbles"
 import type GameState from "../rooms/states/game-state"
 import type { IPokemon, IPokemonEntity } from "../types"
 import { EffectEnum } from "../types/enum/Effect"
-import { Rarity } from "../types/enum/Game"
+import { JuggernautFeedStats, Rarity } from "../types/enum/Game"
 import {
   type FishingRod,
   Item,
@@ -280,6 +282,14 @@ export default class Shop {
   }
 
   releasePokemon(pkm: Pkm, player: Player, state: GameState) {
+    if (
+      state.specialGameRule === SpecialGameRule.JUGGERNAUT &&
+      player.firstPartner &&
+      PkmFamily[pkm] === PkmFamily[player.firstPartner]
+    ) {
+      // champion copies are pool-independent; never return them to the pool
+      return
+    }
     const { stars, rarity, regional } = getPokemonData(pkm)
     const baseline = getPokemonBaseline(pkm)
     let entityNumber = stars >= 3 ? 9 : stars === 2 ? 3 : 1
@@ -308,6 +318,29 @@ export default class Shop {
     }
   }
 
+  // JUGGERNAUT: assign a random stat (color) to each copy slot ("" otherwise);
+  // reset=true re-rolls colors on a full shop
+  syncJuggernautShopStats(player: Player, state: GameState, reset = false) {
+    if (state.specialGameRule !== SpecialGameRule.JUGGERNAUT) return
+    while (player.shopJuggernautStats.length < SHOP_SIZE) {
+      player.shopJuggernautStats.push("")
+    }
+    for (let i = 0; i < SHOP_SIZE; i++) {
+      const pkm = player.shop[i]
+      const isCopy =
+        player.firstPartner != null &&
+        pkm !== Pkm.DEFAULT &&
+        PkmFamily[pkm] === PkmFamily[player.firstPartner]
+      if (isCopy) {
+        if (reset || !player.shopJuggernautStats[i]) {
+          player.shopJuggernautStats[i] = pickRandomIn(JuggernautFeedStats)
+        }
+      } else {
+        player.shopJuggernautStats[i] = ""
+      }
+    }
+  }
+
   refillShop(player: Player, state: GameState, specificTypes?: Synergy[]) {
     // No need to release pokemons since they won't be changed
     player.shop.forEach((pokemon, i) => {
@@ -321,6 +354,7 @@ export default class Shop {
         )
       }
     })
+    this.syncJuggernautShopStats(player, state)
   }
 
   assignShop(player: Player, manualRefresh: boolean, state: GameState) {
@@ -362,6 +396,7 @@ export default class Shop {
       for (let i = 0; i < SHOP_SIZE; i++) {
         player.shop[i] = this.pickPokemon(player, state, i)
       }
+      this.syncJuggernautShopStats(player, state, true)
     }
   }
 
@@ -425,6 +460,8 @@ export default class Shop {
         allCandidates = [...UniquePool]
       } else if (state.specialGameRule === SpecialGameRule.FIRST_PARTNER) {
         allCandidates = pickFirstPartners(player, state)
+      } else if (state.specialGameRule === SpecialGameRule.JUGGERNAUT) {
+        allCandidates = pickJuggernautChampions(player, state)
       }
     }
 
@@ -435,7 +472,9 @@ export default class Shop {
 
     const nbPropositions =
       stageLevel === PortalCarouselStages[0]
-        ? NB_STARTERS
+        ? state.specialGameRule === SpecialGameRule.JUGGERNAUT
+          ? 5 // JUGGERNAUT offers more champions to choose from
+          : NB_STARTERS
         : NB_UNIQUE_PROPOSITIONS
     const pokemonsProposed: PkmProposition[] = []
     const itemsProposed: Item[] = []
@@ -521,7 +560,8 @@ export default class Shop {
         pokemonsProposed.includes(Pkm.EEVEE) === false &&
         (chance(EEVEE_RATE) || initialCandidatesEmpty) &&
         state.specialGameRule !== SpecialGameRule.FIRST_PARTNER &&
-        state.specialGameRule !== SpecialGameRule.UNIQUE_STARTER
+        state.specialGameRule !== SpecialGameRule.UNIQUE_STARTER &&
+        state.specialGameRule !== SpecialGameRule.JUGGERNAUT
       ) {
         selected = Pkm.EEVEE
         itemsProposed[i] = Item.FOSSIL_STONE
@@ -621,6 +661,16 @@ export default class Shop {
     noSpecial = false,
     specificTypes?: Synergy[]
   ): Pkm {
+    if (
+      state.specialGameRule === SpecialGameRule.JUGGERNAUT &&
+      player.firstPartner &&
+      !noSpecial &&
+      chance(JUGGERNAUT_COPY_RATE)
+    ) {
+      // pool-independent 1-star copy of the player's champion, at a fixed rate
+      return PkmFamily[player.firstPartner]
+    }
+
     if (
       state.specialGameRule !== SpecialGameRule.DITTO_PARTY &&
       chance(DITTO_RATE) &&

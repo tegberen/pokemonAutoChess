@@ -90,8 +90,12 @@ import {
   BattleResult,
   GameMode,
   GamePhaseState,
+  JUGGERNAUT_BASE_HP_BONUS,
+  JuggernautFeedStats,
+  JuggernautStatFlatAmount,
   PokemonActionState,
   Rarity,
+  Stat,
   Team
 } from "../../types/enum/Game"
 import {
@@ -120,6 +124,7 @@ import { Passive } from "../../types/enum/Passive"
 import {
   Pkm,
   PkmDuos,
+  PkmFamily,
   PkmIndex,
   PkmRegionalVariants,
   Unowns,
@@ -175,6 +180,14 @@ export class OnBuyPokemonCommand extends Command<
     if (!player || !player.alive || !name || name === Pkm.DEFAULT) return
 
     const pokemon = PokemonFactory.createPokemonFromName(name, player)
+    if (
+      this.state.specialGameRule === SpecialGameRule.JUGGERNAUT &&
+      player.firstPartner &&
+      PkmFamily[name] === PkmFamily[player.firstPartner]
+    ) {
+      // remember which stat this champion copy will feed (its shop color)
+      pokemon.juggernautStat = player.shopJuggernautStats[index] ?? ""
+    }
     const isEvolution =
       pokemon.evolutionRule &&
       pokemon.evolutionRule.type === EvolutionRuleType.COUNT &&
@@ -207,6 +220,9 @@ export class OnBuyPokemonCommand extends Command<
       player.shopFreeRolls -= 1
     } else {
       player.shop[index] = Pkm.DEFAULT
+      if (player.shopJuggernautStats.length > index) {
+        player.shopJuggernautStats[index] = ""
+      }
     }
 
     this.room.checkEvolutionsAfterPokemonAcquired(playerId)
@@ -484,6 +500,17 @@ export class OnDragDropPokemonCommand extends Command<
               pkm,
               player
             )
+            // JUGGERNAUT: a cloned feed-copy keeps the stat (color) it feeds;
+            // cloning the juggernaut itself (no stat) rolls a random one
+            replaceDitto.juggernautStat = pokemonToClone.juggernautStat
+            if (
+              this.state.specialGameRule === SpecialGameRule.JUGGERNAUT &&
+              player.firstPartner &&
+              PkmFamily[replaceDitto.name] === PkmFamily[player.firstPartner] &&
+              !replaceDitto.juggernautStat
+            ) {
+              replaceDitto.juggernautStat = pickRandomIn(JuggernautFeedStats)
+            }
             replaceDitto.onAcquired(player)
             pokemon.items.forEach((item) => {
               player.items.push(item)
@@ -512,6 +539,28 @@ export class OnDragDropPokemonCommand extends Command<
             player.items.push(item)
           })
           player.board.delete(pokemon.id)
+          success = true
+        } else if (
+          this.state.specialGameRule === SpecialGameRule.JUGGERNAUT &&
+          player.firstPartner &&
+          pokemon.name !== player.firstPartner &&
+          PkmFamily[pokemon.name] === PkmFamily[player.firstPartner] &&
+          player.getPokemonAt(x, y)?.name === player.firstPartner
+        ) {
+          // JUGGERNAUT: feed a copy — every feed grants HP, its color adds a stat
+          // (green grants the bigger HP amount instead of base HP + a stat)
+          const champion = player.getPokemonAt(x, y)!
+          const feedStat = (pokemon.juggernautStat as Stat) || Stat.HP
+          if (feedStat !== Stat.HP) {
+            champion.addMaxHP(JUGGERNAUT_BASE_HP_BONUS)
+          }
+          champion.applyStat(feedStat, JuggernautStatFlatAmount[feedStat] ?? 0)
+          pokemon.items.forEach((item) => {
+            player.items.push(item)
+          })
+          player.board.delete(pokemon.id)
+          // clean up any pillar the fed copy left behind (Timburr line)
+          player.updatePillars()
           success = true
         } else if (dropOnBench && dropFromBench) {
           // Drag and drop pokemons through bench has no limitation

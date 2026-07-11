@@ -162,6 +162,41 @@ export enum Damage {
   TRUE = "TRUE"
 }
 
+// JUGGERNAUT: each shop feed-copy is one of these colored variants; feeding
+// grants HP plus the color's stat (see amounts below)
+export const JuggernautFeedStats: Stat[] = [
+  Stat.HP,
+  Stat.ATK,
+  Stat.DEF,
+  Stat.SPE_DEF,
+  Stat.SPEED,
+  Stat.AP,
+  Stat.CRIT_CHANCE
+]
+
+export const JuggernautStatColor: Partial<Record<Stat, string>> = {
+  [Stat.HP]: "#43a047", // green
+  [Stat.ATK]: "#c62828", // dark red
+  [Stat.DEF]: "#1565c0", // dark blue
+  [Stat.SPE_DEF]: "#ab47bc", // purple
+  [Stat.SPEED]: "#fb8c00", // orange
+  [Stat.AP]: "#6a1b9a", // dark purple
+  [Stat.CRIT_CHANCE]: "#90a4ae" // grey
+}
+
+// every feed grants this much HP so the sprite always grows; non-green copies
+// add their color's stat on top, green grants the bigger HP amount instead
+export const JUGGERNAUT_BASE_HP_BONUS = 50
+export const JuggernautStatFlatAmount: Partial<Record<Stat, number>> = {
+  [Stat.HP]: 100, // green
+  [Stat.ATK]: 5,
+  [Stat.DEF]: 5,
+  [Stat.SPE_DEF]: 5,
+  [Stat.SPEED]: 10,
+  [Stat.AP]: 10,
+  [Stat.CRIT_CHANCE]: 10
+}
+
 export enum Team {
   BLUE_TEAM = 0,
   RED_TEAM = 1

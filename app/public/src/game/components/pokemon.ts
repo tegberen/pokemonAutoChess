@@ -249,6 +249,11 @@ export default class PokemonSprite extends DraggableObject {
     }
     this.add(this.itemsContainer)
 
+    if (!isEntity(pokemon) && pokemon.juggernautStat) {
+      // JUGGERNAUT: show which stat this champion feed-copy grants
+      this.addJuggernautStatIcon(scene, pokemon.juggernautStat)
+    }
+
     if (isEntity(pokemon)) {
       this.setLifeBar(pokemon, scene)
     } else {
@@ -1629,6 +1634,14 @@ export default class PokemonSprite extends DraggableObject {
       this.floatingTween.stop()
       this.floatingTween = undefined
     }
+  }
+
+  // JUGGERNAUT: floating stat icon above a feed-copy, showing which stat it grants
+  addJuggernautStatIcon(scene: GameScene | DebugScene, stat: string) {
+    const icon = new GameObjects.Image(scene, 0, -52, `stat-${stat}`)
+      .setScale(1)
+      .setDepth(DEPTH.POKEMON + 1)
+    this.add(icon)
   }
 
   addFlowerTrick() {

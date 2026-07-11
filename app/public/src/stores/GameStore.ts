@@ -44,6 +44,7 @@ export interface GameStateStore {
   shopLocked: boolean
   experienceManager: IExperienceManager
   shop: Pkm[]
+  shopJuggernautStats: string[]
   itemsProposition: Item[]
   pokemonsProposition: PkmProposition[]
   weather: Weather
@@ -79,6 +80,7 @@ const initialState: GameStateStore = {
   shopLocked: false,
   experienceManager: new ExperienceManager(),
   shop: new Array<Pkm>(),
+  shopJuggernautStats: new Array<string>(),
   itemsProposition: new Array<Item>(),
   pokemonsProposition: new Array<Pkm>(),
   blueDpsMeter: new Array<IDps>(),
@@ -173,6 +175,12 @@ export const gameSlice: Slice<GameStateStore> = createSlice({
       action: PayloadAction<{ index: number; value: Pkm }>
     ) => {
       state.shop[action.payload.index] = action.payload.value
+    },
+    changeShopJuggernautStats: (
+      state,
+      action: PayloadAction<{ index: number; value: string }>
+    ) => {
+      state.shopJuggernautStats[action.payload.index] = action.payload.value
     },
     refreshShopUI: (state) => {
       state.shop = state.shop.slice()
@@ -356,6 +364,7 @@ export const {
   setShopLocked,
   changePlayer,
   changeShop,
+  changeShopJuggernautStats,
   refreshShopUI,
   setItemsProposition,
   setPodium,

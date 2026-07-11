@@ -257,6 +257,8 @@ export interface IPlayer {
   avatar: string
   board: MapSchema<Pokemon>
   shop: ArraySchema<Pkm>
+  shopJuggernautStats: ArraySchema<string>
+  firstPartner: Pkm | undefined
   simulationId: string
   team: Team
   experienceManager: ExperienceManager
@@ -364,6 +366,7 @@ export interface IPokemon {
   supercharged: boolean
   aura: boolean
   boosterEnergyCount: number
+  juggernautStat: string
 }
 
 export interface IExperienceManager {

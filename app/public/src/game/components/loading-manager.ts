@@ -62,6 +62,15 @@ export default class LoadingManager {
     scene.load.image("money", "/assets/icons/money.svg")
     scene.load.image("arrowDown", "/assets/ui/arrowDown.png")
 
+    // JUGGERNAUT: stat icons shown above champion feed-copies
+    scene.load.image("stat-HP", "/assets/icons/HP.png")
+    scene.load.image("stat-ATK", "/assets/icons/ATK.png")
+    scene.load.image("stat-DEF", "/assets/icons/DEF.png")
+    scene.load.image("stat-SPE_DEF", "/assets/icons/SPE_DEF.png")
+    scene.load.image("stat-SPEED", "/assets/icons/SPEED.png")
+    scene.load.image("stat-AP", "/assets/icons/AP.png")
+    scene.load.image("stat-CRIT_CHANCE", "/assets/icons/CRIT_CHANCE.png")
+
     scene.load.spritesheet({
       key: "cell",
       url: "/assets/ui/cell.png",

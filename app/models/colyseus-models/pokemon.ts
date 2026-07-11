@@ -103,6 +103,8 @@ export class Pokemon extends Schema implements IPokemon {
   @type("uint8") stacksRequired: number = 0
   @type("boolean") supercharged: boolean = false
   @type("boolean") aura: boolean = false
+  // JUGGERNAUT: stat this copy feeds into the champion when merged ("" = HP/none)
+  @type("string") juggernautStat: string = ""
   dodge: number = 0
   deathCount: number = 0
   killCount: number = 0
