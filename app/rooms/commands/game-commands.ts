@@ -543,9 +543,12 @@ export class OnDragDropPokemonCommand extends Command<
         } else if (
           this.state.specialGameRule === SpecialGameRule.JUGGERNAUT &&
           player.firstPartner &&
-          pokemon.name !== player.firstPartner &&
           PkmFamily[pokemon.name] === PkmFamily[player.firstPartner] &&
-          player.getPokemonAt(x, y)?.name === player.firstPartner
+          player.getPokemonAt(x, y) != null &&
+          PkmFamily[player.getPokemonAt(x, y)!.name] ===
+            PkmFamily[player.firstPartner] &&
+          pokemon.stars < player.getPokemonAt(x, y)!.stars
+          // match the champion by family + higher star level (not exact name)
         ) {
           // JUGGERNAUT: feed a copy — every feed grants HP, its color adds a stat
           // (green grants the bigger HP amount instead of base HP + a stat)

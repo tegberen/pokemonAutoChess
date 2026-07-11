@@ -1497,9 +1497,6 @@ export default class GameRoom extends Room<{ state: GameState }> {
           if (shiny) {
             player.addMoney(10, true, null)
           }
-        } else if (this.state.specialGameRule === SpecialGameRule.JUGGERNAUT) {
-          // normalize the champion's statline toward the shared baseline
-          applyJuggernautStats(pokemonsObtained[0], this.state)
         }
       }
 
@@ -1522,6 +1519,13 @@ export default class GameRoom extends Room<{ state: GameState }> {
           player.addMoney(sellPrice, true, null)
         }
       })
+
+      if (
+        choice.type === "starter" &&
+        this.state.specialGameRule === SpecialGameRule.JUGGERNAUT
+      ) {
+        applyJuggernautStats(pokemonsObtained[0], this.state)
+      }
     }
 
     if (choice.items.length > 0) {

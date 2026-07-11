@@ -766,10 +766,11 @@ export default class GameScene extends Scene {
             if (
               pokemonOnCell &&
               pokemonOnCell !== gameObject &&
-              pokemonOnCell.pokemon.name === player.firstPartner &&
-              gameObject.pokemon.name !== player.firstPartner &&
               PkmFamily[gameObject.pokemon.name] ===
-                PkmFamily[player.firstPartner]
+                PkmFamily[player.firstPartner] &&
+              PkmFamily[pokemonOnCell.pokemon.name] ===
+                PkmFamily[player.firstPartner] &&
+              gameObject.pokemon.stars < pokemonOnCell.pokemon.stars
             ) {
               this.setPokemonHovered(pokemonOnCell)
             }
