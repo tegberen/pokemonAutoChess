@@ -114,6 +114,7 @@ import {
   Scarves,
   Seeds,
   ShinyItems,
+  SpecialItems,
   Sweets,
   SynergyGivenByItem,
   SynergyStones,
@@ -576,7 +577,7 @@ export class OnDragDropPokemonCommand extends Command<
           }
           champion.applyStat(feedStat, JuggernautStatFlatAmount[feedStat] ?? 0)
           pokemon.items.forEach((item) => {
-            player.items.push(item)
+            if (!SpecialItems.includes(item)) player.items.push(item)
           })
           player.board.delete(pokemon.id)
           // clean up any pillar the fed copy left behind (Timburr line)
