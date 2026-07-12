@@ -33,6 +33,7 @@ export default function GameStageInfo() {
   const stageLevel = useAppSelector((state) => state.game.stageLevel)
   const gameMode = useAppSelector((state) => state.game.gameMode)
   const finale = useAppSelector((state) => state.game.finale)
+  const spectatorCount = useAppSelector((state) => state.game.spectatorCount)
 
   if (!spectatedPlayer) return null
 
@@ -174,6 +175,26 @@ export default function GameStageInfo() {
               document.body
             )}
             <GameModeIcon gameMode={gameMode} />
+          </div>
+        )}
+
+        {spectatorCount > 0 && (
+          <div
+            className="spectators-information"
+            data-tooltip-id="detail-spectators"
+          >
+            {ReactDOM.createPortal(
+              <Tooltip
+                id="detail-spectators"
+                className="custom-theme-tooltip"
+                place="bottom"
+              >
+                <p>{t("spectators_watching", { count: spectatorCount })}</p>
+              </Tooltip>,
+              document.body
+            )}
+            <img src={`/assets/ui/spectate.svg`} />
+            <span className="spectators-count">{spectatorCount}</span>
           </div>
         )}
 

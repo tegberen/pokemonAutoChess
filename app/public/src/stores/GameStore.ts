@@ -55,6 +55,7 @@ export interface GameStateStore {
   podium: ILeaderboardInfo[]
   doubleUpChampions: ILeaderboardInfo[]
   smeargleScribbleChampion: ILeaderboardInfo[]
+  spectatorCount: number
 }
 
 const initialState: GameStateStore = {
@@ -91,7 +92,8 @@ const initialState: GameStateStore = {
   specialGameRule: null,
   podium: new Array<ILeaderboardInfo>(),
   doubleUpChampions: new Array<ILeaderboardInfo>(),
-  smeargleScribbleChampion: new Array<ILeaderboardInfo>()
+  smeargleScribbleChampion: new Array<ILeaderboardInfo>(),
+  spectatorCount: 0
 }
 
 export const gameSlice: Slice<GameStateStore> = createSlice({
@@ -336,6 +338,10 @@ export const gameSlice: Slice<GameStateStore> = createSlice({
       state.smeargleScribbleChampion = action.payload
     },
 
+    setSpectatorCount: (state, action: PayloadAction<number>) => {
+      state.spectatorCount = action.payload
+    },
+
     leaveGame: () => initialState
   }
 })
@@ -378,7 +384,8 @@ export const {
   setItemsProposition,
   setPodium,
   setDoubleUpChampions,
-  setSmeargleScribbleChampion
+  setSmeargleScribbleChampion,
+  setSpectatorCount
 } = gameSlice.actions
 
 export default gameSlice.reducer

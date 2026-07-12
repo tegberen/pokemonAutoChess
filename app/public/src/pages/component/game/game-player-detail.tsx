@@ -5,6 +5,7 @@ import { getDistance } from "../../../../../core/matchmaking"
 import type { IPlayer } from "../../../../../types"
 import { BattleResult } from "../../../../../types/enum/Game"
 import type { Pkm } from "../../../../../types/enum/Pokemon"
+import type { Synergy } from "../../../../../types/enum/Synergy"
 import { getAvatarSrc } from "../../../../../utils/avatar"
 import { selectConnectedPlayer, useAppSelector } from "../../../hooks"
 import { Life } from "../icons/life"
@@ -12,14 +13,20 @@ import { Money } from "../icons/money"
 
 export default function GamePlayerDetail(props: { player: IPlayer }) {
   const { t } = useTranslation()
-  const synergyList = useMemo(
-    () =>
-      [...props.player.synergies.entries()]
-        .filter(([syn, val]) => val >= SynergyTiersThresholds[syn]?.[0])
-        .sort((a, b) => b[1] - a[1])
-        .map(([syn]) => syn),
-    [props.player.synergies]
-  )
+  const synergyList = useMemo(() => {
+    const synergies = props.player.synergies
+    // synergies may be a Synergies/Map instance (has .entries) or, transiently,
+    // a plain object cloned into the store — handle both to avoid crashing.
+    const entries = (
+      typeof synergies?.entries === "function"
+        ? [...synergies.entries()]
+        : Object.entries(synergies ?? {})
+    ) as [Synergy, number][]
+    return entries
+      .filter(([syn, val]) => val >= SynergyTiersThresholds[syn]?.[0])
+      .sort((a, b) => b[1] - a[1])
+      .map(([syn]) => syn)
+  }, [props.player.synergies])
 
   const connectedPlayer = useAppSelector(selectConnectedPlayer)
   const distance =

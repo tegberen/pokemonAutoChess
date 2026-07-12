@@ -78,6 +78,7 @@ import {
   setShopFreeRolls,
   setShopLocked,
   setSpecialGameRule,
+  setSpectatorCount,
   setStageLevel,
   setStreak,
   setSynergies,
@@ -1026,9 +1027,14 @@ export default function Game() {
           })
         })
 
-        $player.synergies.onChange(() => {
+        const updateSynergies = () =>
           dispatch(setSynergies({ id: player.id, value: player.synergies }))
-        })
+        $player.synergies.onChange(updateSynergies)
+        // onChange does not fire for existing players (e.g. a spectator or a
+        // reconnecting client joining an in-progress game), which would leave
+        // the store holding the JSON-cloned plain object from addPlayer instead
+        // of an iterable Synergies instance. Dispatch once now to guarantee it.
+        updateSynergies()
 
         $player.groundHoles.onChange((value) => {
           if (player.id === store.getState().game.playerIdSpectated) {
@@ -1067,6 +1073,11 @@ export default function Game() {
 
       $state.spectators.onAdd((uid) => {
         gameContainer.initializeSpectactor(uid)
+        dispatch(setSpectatorCount(room.state.spectators.size))
+      })
+
+      $state.spectators.onRemove(() => {
+        dispatch(setSpectatorCount(room.state.spectators.size))
       })
     }
   }, [
