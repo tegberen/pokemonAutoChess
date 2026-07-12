@@ -1,4 +1,5 @@
 import { getDoubleUpChampionUids } from "../models/mongo-models/double-up-champions"
+import { getSmeargleScribbleChampionUid } from "../models/mongo-models/smeargle-scribble-champion"
 import UserMetadata from "../models/mongo-models/user-metadata"
 import type {
   ILeaderboardBotInfo,
@@ -12,6 +13,7 @@ let levelLeaderboard = new Array<ILeaderboardInfo>()
 let botLeaderboard = new Array<ILeaderboardBotInfo>()
 let eventLeaderboard = new Array<ILeaderboardInfo>()
 let doubleUpChampions = new Array<ILeaderboardInfo>()
+let smeargleScribbleChampion = new Array<ILeaderboardInfo>()
 
 export function fetchLeaderboards() {
   logger.info("Refreshing leaderboards...")
@@ -20,7 +22,8 @@ export function fetchLeaderboards() {
     fetchBotsLeaderboard(),
     fetchLevelLeaderboard(),
     fetchEventLeaderboard(),
-    fetchDoubleUpChampions()
+    fetchDoubleUpChampions(),
+    fetchSmeargleScribbleChampion()
   ])
 }
 
@@ -148,12 +151,38 @@ export async function fetchDoubleUpChampions() {
   return doubleUpChampions
 }
 
+export async function fetchSmeargleScribbleChampion() {
+  const uid = await getSmeargleScribbleChampionUid()
+  smeargleScribbleChampion = []
+  if (uid) {
+    const user = await UserMetadata.findOne(
+      { uid },
+      ["displayName", "avatar", "elo", "uid", "twitchLogin", "twitchDisplayName"]
+    ).lean()
+    if (user) {
+      smeargleScribbleChampion = [
+        {
+          name: user.displayName,
+          rank: 1,
+          avatar: user.avatar,
+          value: user.elo,
+          id: user.uid,
+          twitchLogin: user.twitchLogin,
+          twitchDisplayName: user.twitchDisplayName
+        }
+      ]
+    }
+  }
+  return smeargleScribbleChampion
+}
+
 export function getLeaderboard() {
   return {
     leaderboard,
     botLeaderboard,
     levelLeaderboard,
     eventLeaderboard,
-    doubleUpChampions
+    doubleUpChampions,
+    smeargleScribbleChampion
   }
 }

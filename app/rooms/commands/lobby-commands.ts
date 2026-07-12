@@ -10,9 +10,13 @@ import { GADGETS } from "../../config/game/gadgets"
 import { CollectionUtils } from "../../core/collection"
 import { getPendingGame } from "../../core/pending-game-manager"
 import { setDoubleUpChampionUid } from "../../models/mongo-models/double-up-champions"
+import { setSmeargleScribbleChampionUid } from "../../models/mongo-models/smeargle-scribble-champion"
 import UserMetadata from "../../models/mongo-models/user-metadata"
 import { discordService } from "../../services/discord"
-import { fetchDoubleUpChampions } from "../../services/leaderboard"
+import {
+  fetchDoubleUpChampions,
+  fetchSmeargleScribbleChampion
+} from "../../services/leaderboard"
 import { notificationsService } from "../../services/notifications"
 import { Emotion, Role, type Title, Transfer } from "../../types"
 import { CloseCodes } from "../../types/enum/CloseCodes"
@@ -247,6 +251,24 @@ export class SetDoubleUpChampionCommand extends Command<
         await setDoubleUpChampionUid(slot, uid)
         // refresh the cached champions so /leaderboards reflects the change immediately
         await fetchDoubleUpChampions()
+      }
+    } catch (error) {
+      logger.error(error)
+    }
+  }
+}
+
+export class SetSmeargleScribbleChampionCommand extends Command<
+  CustomLobbyRoom,
+  { client: Client; uid: string }
+> {
+  async execute({ client, uid }: { client: Client; uid: string }) {
+    try {
+      const u = this.room.users.get(client.auth.uid)
+      if (u && u.role && u.role === Role.ADMIN) {
+        await setSmeargleScribbleChampionUid(uid)
+        // refresh the cached champion so /leaderboards reflects the change immediately
+        await fetchSmeargleScribbleChampion()
       }
     } catch (error) {
       logger.error(error)

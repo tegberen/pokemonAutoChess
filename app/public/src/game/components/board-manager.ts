@@ -987,7 +987,8 @@ export default class BoardManager {
     this.scene.minigameManager?.addVillagers(
       this.scene.room?.state.townEncounter ?? null,
       store.getState().game.podium,
-      store.getState().game.doubleUpChampions
+      store.getState().game.doubleUpChampions,
+      store.getState().game.smeargleScribbleChampion
     )
   }
 

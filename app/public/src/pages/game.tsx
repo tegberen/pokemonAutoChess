@@ -73,6 +73,7 @@ import {
   setNoELO,
   setPhase,
   setPodium,
+  setSmeargleScribbleChampion,
   setRoundTime,
   setShopFreeRolls,
   setShopLocked,
@@ -401,6 +402,9 @@ export default function Game() {
         .then((data) => {
           dispatch(setPodium(data.leaderboard.slice(0, 3)))
           dispatch(setDoubleUpChampions(data.doubleUpChampions ?? []))
+          dispatch(
+            setSmeargleScribbleChampion(data.smeargleScribbleChampion ?? [])
+          )
         })
     } catch (e) {
       console.error("error fetching leaderboard", e)

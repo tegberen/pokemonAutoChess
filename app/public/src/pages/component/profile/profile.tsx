@@ -12,6 +12,7 @@ import {
   giveTitle,
   searchById,
   setDoubleUpChampion,
+  setSmeargleScribbleChampion,
   unban
 } from "../../../network"
 import { setSearchedUser } from "../../../stores/LobbyStore"
@@ -321,6 +322,15 @@ function OtherProfileActions(props: {
           }}
         >
           {t("set_double_up_champion_right")}
+        </button>
+        <button
+          className="bubbly blue"
+          onClick={() => {
+            setSmeargleScribbleChampion({ uid: user.uid })
+            alert(`${user.displayName} set as Smeargle Scribble Champion`)
+          }}
+        >
+          {t("set_smeargle_scribble_champion")}
         </button>
       </div>
     ) : null

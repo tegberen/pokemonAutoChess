@@ -416,6 +416,10 @@ export function setDoubleUpChampion(params: { uid: string; slot: number }) {
   rooms.lobby?.send(Transfer.SET_DOUBLE_UP_CHAMPION, params)
 }
 
+export function setSmeargleScribbleChampion(params: { uid: string }) {
+  rooms.lobby?.send(Transfer.SET_SMEARGLE_SCRIBBLE_CHAMPION, params)
+}
+
 export function kick(playerId: string) {
   rooms.preparation?.send(Transfer.KICK, playerId)
 }

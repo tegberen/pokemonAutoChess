@@ -54,6 +54,7 @@ export interface GameStateStore {
   additionalPokemons: Pkm[]
   podium: ILeaderboardInfo[]
   doubleUpChampions: ILeaderboardInfo[]
+  smeargleScribbleChampion: ILeaderboardInfo[]
 }
 
 const initialState: GameStateStore = {
@@ -89,7 +90,8 @@ const initialState: GameStateStore = {
   additionalPokemons: new Array<Pkm>(),
   specialGameRule: null,
   podium: new Array<ILeaderboardInfo>(),
-  doubleUpChampions: new Array<ILeaderboardInfo>()
+  doubleUpChampions: new Array<ILeaderboardInfo>(),
+  smeargleScribbleChampion: new Array<ILeaderboardInfo>()
 }
 
 export const gameSlice: Slice<GameStateStore> = createSlice({
@@ -327,6 +329,13 @@ export const gameSlice: Slice<GameStateStore> = createSlice({
       state.doubleUpChampions = action.payload
     },
 
+    setSmeargleScribbleChampion(
+      state,
+      action: PayloadAction<ILeaderboardInfo[]>
+    ) {
+      state.smeargleScribbleChampion = action.payload
+    },
+
     leaveGame: () => initialState
   }
 })
@@ -368,7 +377,8 @@ export const {
   refreshShopUI,
   setItemsProposition,
   setPodium,
-  setDoubleUpChampions
+  setDoubleUpChampions,
+  setSmeargleScribbleChampion
 } = gameSlice.actions
 
 export default gameSlice.reducer

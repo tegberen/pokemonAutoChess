@@ -385,7 +385,8 @@ export default class MinigameManager {
   addVillagers(
     encounter: TownEncounter | null,
     podium: ILeaderboardInfo[],
-    doubleUpChampions: ILeaderboardInfo[] = []
+    doubleUpChampions: ILeaderboardInfo[] = [],
+    smeargleScribbleChampion: ILeaderboardInfo[] = []
   ) {
     const cx = 980,
       cy = 404
@@ -547,8 +548,8 @@ export default class MinigameManager {
 
     const munchlax = new PokemonSpecial({
       scene: this.scene,
-      x: encounter === TownEncounters.MUNCHLAX ? cx : 34 * 48,
-      y: encounter === TownEncounters.MUNCHLAX ? cy : 17 * 48,
+      x: encounter === TownEncounters.MUNCHLAX ? cx : 36 * 48,
+      y: encounter === TownEncounters.MUNCHLAX ? cy : 16 * 48,
       name: Pkm.MUNCHLAX,
       orientation: Orientation.DOWNLEFT,
       animation:
@@ -687,11 +688,33 @@ export default class MinigameManager {
       })
     })
 
+    // SmeargleScribblePodium — single-user podium rendered where unown_a stands.
+    //   x/y are tile coordinates (1 tile = 48px); larger x = right, larger y = down.
+    const smeargleScribbleX = 32.5 * 48
+    const smeargleScribbleY = 17 * 48
+    const smeargleScribblePodium = smeargleScribbleChampion.map((champ) => {
+      const { name, shiny } = getPokemonCustomFromAvatar(champ.avatar)
+      const champion = new PokemonSpecial({
+        scene: this.scene,
+        x: smeargleScribbleX,
+        y: smeargleScribbleY,
+        name,
+        shiny,
+        orientation: Orientation.DOWN,
+        animation: PokemonActionState.IDLE,
+        dialog: champ.name,
+        dialogTitle: t("smeargle_scribble_champion")
+      })
+      champion.sprite.setDepth(DEPTH.POKEMON)
+      return champion
+    })
+
     // larger x = right, larger y = down
     // Use "EMBER" or "BURN" 
     const flameTiles: [number, number][] = [
       [31, 11.3],
-      [37, 11.3]
+      [37, 11.3],
+      [35, 16.3] // temp position — adjust to place the third flame
     ]
     flameTiles.forEach(([flameTileX, flameTileY]) => {
       const flame = this.scene.add
@@ -733,6 +756,7 @@ export default class MinigameManager {
       chimecho,
       ...podiumPokemons,
       ...championVillagers,
+      ...smeargleScribblePodium,
       ...(eventNpcVillager ? [eventNpcVillager] : [])
     )
 

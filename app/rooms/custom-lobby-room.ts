@@ -50,6 +50,7 @@ import {
   SelectLanguageCommand,
   SetDoubleUpChampionCommand,
   SetEventNpcCommand,
+  SetSmeargleScribbleChampionCommand,
   UnbanUserCommand
 } from "./commands/lobby-commands"
 import {
@@ -299,6 +300,16 @@ export default class CustomLobbyRoom extends Room {
           client,
           uid,
           slot
+        })
+      }
+    )
+
+    this.onMessage(
+      Transfer.SET_SMEARGLE_SCRIBBLE_CHAMPION,
+      (client, { uid }: { uid: string }) => {
+        this.dispatcher.dispatch(new SetSmeargleScribbleChampionCommand(), {
+          client,
+          uid
         })
       }
     )
