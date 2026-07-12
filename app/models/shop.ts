@@ -98,6 +98,12 @@ export function getSellPrice(
   if (specialGameRule === SpecialGameRule.FREE_MARKET && name !== Pkm.EGG)
     return 0
 
+  if (specialGameRule === SpecialGameRule.JUGGERNAUT) {
+    // match the reduced copy buy price (no buy-low-sell-high glitch)
+    if (pokemon.rarity === Rarity.UNIQUE) return 6
+    if (pokemon.rarity === Rarity.LEGENDARY) return 7
+  }
+
   const duo = Object.entries(PkmDuos).find(([key, duo]) => duo.includes(name))
 
   let price = 1
@@ -158,6 +164,13 @@ export function getBuyPrice(
   specialGameRule?: SpecialGameRule | null
 ): number {
   if (specialGameRule === SpecialGameRule.FREE_MARKET) return 0
+
+  if (specialGameRule === SpecialGameRule.JUGGERNAUT) {
+    // Unique/Legendary champion copies are cheaper than their normal price
+    const rarity = getPokemonData(name).rarity
+    if (rarity === Rarity.UNIQUE) return 6
+    if (rarity === Rarity.LEGENDARY) return 7
+  }
 
   let price: number
 

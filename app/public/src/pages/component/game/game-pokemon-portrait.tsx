@@ -119,20 +119,14 @@ export default function GamePokemonPortrait(props: {
     : (pokemon.evolutions[0] ?? pokemon.evolution)
   let pokemonEvolution = PokemonFactory.createPokemonFromName(evolutionName)
 
-  // JUGGERNAUT: a champion feed-copy (a lower form of the champion's family, not
-  // the champion itself). Copies never combine, and each is colored by the stat
-  // it feeds.
-  const isJuggernautCopy =
-    specialGameRule === SpecialGameRule.JUGGERNAUT &&
-    connectedPlayer?.firstPartner != null &&
-    pokemon.name !== connectedPlayer.firstPartner &&
-    PkmFamily[pokemon.name] === PkmFamily[connectedPlayer.firstPartner]
-
-  const juggernautStat = !isJuggernautCopy
-    ? ""
-    : props.origin === "shop"
-      ? (shopJuggernautStats[props.index] ?? "")
-      : (pokemon.juggernautStat ?? "")
+  // JUGGERNAUT: a feed-copy is identified by its non-empty juggernautStat
+  const juggernautStat =
+    specialGameRule === SpecialGameRule.JUGGERNAUT
+      ? props.origin === "shop"
+        ? (shopJuggernautStats[props.index] ?? "")
+        : (pokemon.juggernautStat ?? "")
+      : ""
+  const isJuggernautCopy = juggernautStat !== ""
   const juggernautColor = juggernautStat
     ? JuggernautStatColor[juggernautStat as Stat]
     : undefined

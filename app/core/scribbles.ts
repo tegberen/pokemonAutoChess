@@ -210,8 +210,24 @@ export const JuggernautRarities = [
   Rarity.UNCOMMON,
   Rarity.RARE,
   Rarity.EPIC,
-  Rarity.ULTRA
+  Rarity.ULTRA,
+  Rarity.UNIQUE,
+  Rarity.LEGENDARY
 ]
+
+// Families banned from being champions (add any form to ban the whole line)
+export const JuggernautBans: Pkm[] = [
+  Pkm.HOUNDOUR, // Houndoom line
+  Pkm.BANETTE // Banette line
+]
+const JuggernautBannedFamilies = new Set(JuggernautBans.map((p) => PkmFamily[p]))
+
+// Lines offered as their pre-evolution so the player picks the final form in-game
+// (Milcery -> flavor item -> chosen Alcremie); their finals are excluded from the pool
+export const JuggernautPreEvolutionChampions: Pkm[] = [Pkm.MILCERY]
+const JuggernautPreEvoFamilies = new Set(
+  JuggernautPreEvolutionChampions.map((p) => PkmFamily[p])
+)
 
 // stat-normalization tuning knobs (playtest-tunable)
 export const JUGGERNAUT_STAT_TARGET = { hp: 150, atk: 10, def: 10, speDef: 10 }
@@ -227,17 +243,33 @@ export function getJuggernautRarity(state: GameState): Rarity {
 }
 
 // fully-evolved final forms of a rarity (incl. additional/regional; regionals
-// are region-gated later by the proposition machinery)
+// are region-gated later by the proposition machinery). Unique/Legendary are
+// single-stage, so their "1-star copy" is the champion itself.
 export function getJuggernautChampionPool(rarity: Rarity): Pkm[] {
-  return (PRECOMPUTED_POKEMONS_PER_RARITY[rarity] ?? []).filter((p) => {
+  const minStages =
+    rarity === Rarity.UNIQUE || rarity === Rarity.LEGENDARY ? 1 : 2
+  const pool = (PRECOMPUTED_POKEMONS_PER_RARITY[rarity] ?? []).filter((p) => {
     const d = getPokemonData(p)
     return (
-      d.stages >= 2 && // multi-stage line, so a distinct 1-star base can be fed
+      d.stages >= minStages &&
       d.stars === d.stages && // fully evolved final form
       d.skill !== Ability.DEFAULT &&
-      Unowns.includes(p) === false
+      Unowns.includes(p) === false &&
+      JuggernautBannedFamilies.has(PkmFamily[p]) === false &&
+      // final forms of pre-evolution lines are excluded; the pre-evo is offered instead
+      JuggernautPreEvoFamilies.has(PkmFamily[p]) === false
     )
   })
+  // offer the pre-evolution champion(s) of this rarity (e.g. Milcery)
+  for (const pkm of JuggernautPreEvolutionChampions) {
+    if (
+      getPokemonData(pkm).rarity === rarity &&
+      JuggernautBannedFamilies.has(PkmFamily[pkm]) === false
+    ) {
+      pool.push(pkm)
+    }
+  }
+  return pool
 }
 
 export function pickJuggernautChampions(player: Player, state: GameState): Pkm[] {

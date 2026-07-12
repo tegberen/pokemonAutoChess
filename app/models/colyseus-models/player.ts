@@ -359,6 +359,18 @@ export default class Player extends Schema implements IPlayer {
   transformPokemon(pokemon: Pokemon, newEntry: Pkm): Pokemon {
     const newPokemon = PokemonFactory.createPokemonFromName(newEntry, this)
     carryOverPermanentStats(newPokemon, [pokemon])
+    // JUGGERNAUT: a form change keeps the feed-copy flag and re-nulls copies
+    newPokemon.juggernautStat = pokemon.juggernautStat
+    if (
+      newPokemon.juggernautStat !== "" &&
+      (getPokemonData(newPokemon.name).rarity === Rarity.UNIQUE ||
+        getPokemonData(newPokemon.name).rarity === Rarity.LEGENDARY)
+    ) {
+      newPokemon.atk = 0
+      newPokemon.def = 0
+      newPokemon.speDef = 0
+      newPokemon.ap = -100
+    }
     pokemon.items.forEach((item) => {
       newPokemon.addItem(item, this)
       if (item === Item.SHINY_CHARM) {

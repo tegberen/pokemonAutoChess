@@ -185,8 +185,16 @@ export class OnBuyPokemonCommand extends Command<
       player.firstPartner &&
       PkmFamily[name] === PkmFamily[player.firstPartner]
     ) {
-      // remember which stat this champion copy will feed (its shop color)
+      // remember which stat this copy feeds (its shop color)
       pokemon.juggernautStat = player.shopJuggernautStats[index] ?? ""
+      // Unique/Legendary copies are feed-only: null their combat stats
+      const rarity = getPokemonData(name).rarity
+      if (rarity === Rarity.UNIQUE || rarity === Rarity.LEGENDARY) {
+        pokemon.atk = 0
+        pokemon.def = 0
+        pokemon.speDef = 0
+        pokemon.ap = -100
+      }
     }
     const isEvolution =
       pokemon.evolutionRule &&
@@ -500,8 +508,7 @@ export class OnDragDropPokemonCommand extends Command<
               pkm,
               player
             )
-            // JUGGERNAUT: a cloned feed-copy keeps the stat (color) it feeds;
-            // cloning the juggernaut itself (no stat) rolls a random one
+            // cloned copy keeps its stat; cloning the champion rolls a random one
             replaceDitto.juggernautStat = pokemonToClone.juggernautStat
             if (
               this.state.specialGameRule === SpecialGameRule.JUGGERNAUT &&
@@ -510,6 +517,18 @@ export class OnDragDropPokemonCommand extends Command<
               !replaceDitto.juggernautStat
             ) {
               replaceDitto.juggernautStat = pickRandomIn(JuggernautFeedStats)
+            }
+            // Unique/Legendary feed-copies are feed-only: null combat stats
+            const dittoRarity = getPokemonData(replaceDitto.name).rarity
+            if (
+              replaceDitto.juggernautStat !== "" &&
+              (dittoRarity === Rarity.UNIQUE ||
+                dittoRarity === Rarity.LEGENDARY)
+            ) {
+              replaceDitto.atk = 0
+              replaceDitto.def = 0
+              replaceDitto.speDef = 0
+              replaceDitto.ap = -100
             }
             replaceDitto.onAcquired(player)
             pokemon.items.forEach((item) => {
@@ -543,15 +562,13 @@ export class OnDragDropPokemonCommand extends Command<
         } else if (
           this.state.specialGameRule === SpecialGameRule.JUGGERNAUT &&
           player.firstPartner &&
-          PkmFamily[pokemon.name] === PkmFamily[player.firstPartner] &&
+          pokemon.juggernautStat !== "" && // dragged is a feed copy (has a color)
           player.getPokemonAt(x, y) != null &&
           PkmFamily[player.getPokemonAt(x, y)!.name] ===
             PkmFamily[player.firstPartner] &&
-          pokemon.stars < player.getPokemonAt(x, y)!.stars
-          // match the champion by family + higher star level (not exact name)
+          player.getPokemonAt(x, y)!.juggernautStat === "" // target is the champion
         ) {
-          // JUGGERNAUT: feed a copy — every feed grants HP, its color adds a stat
-          // (green grants the bigger HP amount instead of base HP + a stat)
+          // feed a copy: every feed grants HP, its color adds a stat (green = bigger HP)
           const champion = player.getPokemonAt(x, y)!
           const feedStat = (pokemon.juggernautStat as Stat) || Stat.HP
           if (feedStat !== Stat.HP) {
