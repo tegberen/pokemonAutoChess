@@ -70,6 +70,7 @@ export default class LoadingManager {
     scene.load.image("stat-SPEED", "/assets/icons/SPEED.png")
     scene.load.image("stat-AP", "/assets/icons/AP.png")
     scene.load.image("stat-CRIT_CHANCE", "/assets/icons/CRIT_CHANCE.png")
+    scene.load.image("stat-CRIT_POWER", "/assets/icons/CRIT_POWER.png")
 
     scene.load.spritesheet({
       key: "cell",

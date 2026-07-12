@@ -171,7 +171,8 @@ export const JuggernautFeedStats: Stat[] = [
   Stat.SPE_DEF,
   Stat.SPEED,
   Stat.AP,
-  Stat.CRIT_CHANCE
+  Stat.CRIT_CHANCE,
+  Stat.CRIT_POWER
 ]
 
 export const JuggernautStatColor: Partial<Record<Stat, string>> = {
@@ -181,7 +182,8 @@ export const JuggernautStatColor: Partial<Record<Stat, string>> = {
   [Stat.SPE_DEF]: "#ab47bc", // purple
   [Stat.SPEED]: "#fb8c00", // orange
   [Stat.AP]: "#6a1b9a", // dark purple
-  [Stat.CRIT_CHANCE]: "#90a4ae" // grey
+  [Stat.CRIT_CHANCE]: "#90a4ae", // grey
+  [Stat.CRIT_POWER]: "#fdd835" // gold
 }
 
 // every feed grants this much HP so the sprite always grows; non-green copies
@@ -194,7 +196,8 @@ export const JuggernautStatFlatAmount: Partial<Record<Stat, number>> = {
   [Stat.SPE_DEF]: 5,
   [Stat.SPEED]: 10,
   [Stat.AP]: 10,
-  [Stat.CRIT_CHANCE]: 10
+  [Stat.CRIT_CHANCE]: 10,
+  [Stat.CRIT_POWER]: 10
 }
 
 export enum Team {

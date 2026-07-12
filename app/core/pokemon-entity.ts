@@ -187,6 +187,8 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
     this.atk = pokemon.atk
     this.def = pokemon.def
     this.speDef = pokemon.speDef
+    this.critChance = pokemon.critChance
+    this.critPower = pokemon.critPower
     this.maxHP = pokemon.maxHP
     this.maxPP = pokemon.maxPP
     this.hp = pokemon.hp
