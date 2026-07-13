@@ -1,6 +1,9 @@
 import { useTranslation } from "react-i18next"
 import { TechnicalTerms } from "../../../../../types/strings/TechnicalTerm"
-import { addIconsToDescription } from "../../utils/descriptions"
+import {
+  addIconsToDescription,
+  DocumentedEffects
+} from "../../utils/descriptions"
 import "./wiki-glossary.css"
 
 export default function WikiGlossary() {
@@ -30,6 +33,16 @@ export default function WikiGlossary() {
           <dt>{addIconsToDescription("TRUE")}</dt>
           <dd>{addIconsToDescription(t("wiki.glossary.TRUE"))}</dd>
         </div>
+      </dl>
+
+      <h3>{t("wiki.glossary.board_effects")}</h3>
+      <dl>
+        {DocumentedEffects.map((effect) => (
+          <div key={effect} className="my-box glossary-term">
+            <dt>{addIconsToDescription(effect)}</dt>
+            <dd>{addIconsToDescription(t(`board_effect_description.${effect}`))}</dd>
+          </div>
+        ))}
       </dl>
 
       <h3>{t("technical_terms.title")}</h3>

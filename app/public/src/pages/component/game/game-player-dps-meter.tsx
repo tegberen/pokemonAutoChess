@@ -1,6 +1,6 @@
 import { useMemo } from "react"
 import { useTranslation } from "react-i18next"
-import type { IDps } from "../../../../../types"
+import { SYNTHETIC_DPS_IDS, type IDps } from "../../../../../types"
 import GameDps from "./game-dps"
 
 type GamePlayerDpsMeterInput = {
@@ -13,14 +13,21 @@ export default function GamePlayerDpsMeter({
   const { t } = useTranslation()
   const sortedDps = useMemo(
     () =>
-      [...dpsMeter].sort((a, b) => {
-        return (
-          b.physicalDamage +
-          b.specialDamage +
-          b.trueDamage -
-          (a.physicalDamage + a.specialDamage + a.trueDamage)
+      dpsMeter
+        // hide synthetic effect rows (Tidal Wave, Curse) that dealt no damage
+        .filter(
+          (d) =>
+            !SYNTHETIC_DPS_IDS.has(d.id) ||
+            d.physicalDamage + d.specialDamage + d.trueDamage > 0
         )
-      }),
+        .sort((a, b) => {
+          return (
+            b.physicalDamage +
+            b.specialDamage +
+            b.trueDamage -
+            (a.physicalDamage + a.specialDamage + a.trueDamage)
+          )
+        }),
     [dpsMeter]
   )
 

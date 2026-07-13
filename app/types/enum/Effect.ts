@@ -196,3 +196,14 @@ export const BoardEffects = [
 ] as const
 
 export type BoardEffect = (typeof BoardEffects)[number]
+
+// board effects documented in ability descriptions and the wiki glossary, shown
+// with their icon (from assets/icons/<NAME>.svg). Curse is a Status, handled there.
+export const DocumentedBoardEffects = [
+  EffectEnum.EMBER,
+  EffectEnum.HAIL,
+  EffectEnum.SPIKES,
+  EffectEnum.STEALTH_ROCKS,
+  EffectEnum.POISON_GAS,
+  EffectEnum.TOXIC_SPIKES
+] as const

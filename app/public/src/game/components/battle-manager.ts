@@ -1221,7 +1221,8 @@ export default class BattleManager {
     amount,
     type,
     index,
-    id
+    id,
+    sourceId
   }: {
     x: number
     y: number
@@ -1229,6 +1230,7 @@ export default class BattleManager {
     type: AttackType
     index: string
     id: string
+    sourceId?: string
   }) {
     if (this.simulation?.id === id) {
       const coordinates = transformEntityCoordinates(x, y, this.flip)
@@ -1238,7 +1240,15 @@ export default class BattleManager {
           : type === AttackType.SPECIAL
             ? "#5f9ff9" // should be the same than var(--color-special) but phaser cant use css variables
             : "#f7d51d" // should be the same than var(--color-true) but phaser cant use css variables
-      this.displayTween(color, coordinates, index, amount)
+      // board effects (sourceId) show their icon; regular hits show the attacker portrait
+      const portraitKey = sourceId
+        ? `effect-icon-${sourceId}`
+        : `portrait-${index}`
+      // effect icons are monochrome svgs, so fill them with the damage color
+      const tintFill = sourceId
+        ? Number.parseInt(color.slice(1), 16)
+        : undefined
+      this.displayTween(color, coordinates, portraitKey, amount, tintFill)
       displayHit(
         this.scene,
         PokemonAnimations[PkmByIndex[index]]?.hitSprite ??
@@ -1268,15 +1278,16 @@ export default class BattleManager {
     if (this.simulation?.id === id) {
       const coordinates = transformEntityCoordinates(x, y, this.flip)
       const color = type === HealType.HEAL ? "#92cc41" : "#8d8d8d"
-      this.displayTween(color, coordinates, index, amount)
+      this.displayTween(color, coordinates, `portrait-${index}`, amount)
     }
   }
 
   displayTween(
     color: string,
     coordinates: number[],
-    index: string,
-    amount: number
+    portraitKey: string,
+    amount: number,
+    tintFill?: number
   ) {
     if (!this.scene.sys.displayList) return // prevents an exception
     const fontSize =
@@ -1299,23 +1310,38 @@ export default class BattleManager {
     }
     const dy = Math.round(50 * (Math.random() - 0.5))
 
-    const image = this.scene.add.existing(
-      new GameObjects.Image(this.scene, 0, 0, `portrait-${index}`)
-        .setScale(0.5, 0.5)
-        .setOrigin(0, 0)
-    )
     const text = this.scene.add.existing(
       new GameObjects.Text(this.scene, 25, 0, amount.toFixed(0), textStyle)
     )
-    image.setDepth(DEPTH.DAMAGE_PORTRAIT)
     text.setDepth(DEPTH.DAMAGE_TEXT)
+    const children: GameObjects.GameObject[] = [text]
+
+    // portraitKey is either an attacker portrait or a board-effect icon; skip
+    // the image if its texture isn't loaded (e.g. a not-yet-added effect svg)
+    if (this.scene.textures.exists(portraitKey)) {
+      const image = this.scene.add.existing(
+        new GameObjects.Image(this.scene, 0, 0, portraitKey).setOrigin(0, 0)
+      )
+      if (tintFill !== undefined) {
+        // effect icons are monochrome svgs that also rasterize much larger than
+        // a portrait; recolor the whole shape and clamp the size
+        image
+          .setDisplaySize(24, 24)
+          .setTint(tintFill)
+          .setTintMode(Phaser.TintModes.FILL)
+      } else {
+        image.setScale(0.5, 0.5)
+      }
+      image.setDepth(DEPTH.DAMAGE_PORTRAIT)
+      children.push(image)
+    }
 
     const container = this.scene.add.existing(
       new GameObjects.Container(
         this.scene,
         coordinates[0] + 30,
         coordinates[1] + dy,
-        [text, image]
+        children
       )
     )
 

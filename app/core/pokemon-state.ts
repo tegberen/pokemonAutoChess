@@ -1,7 +1,15 @@
 import { ARMOR_FACTOR, FIGHTING_PHASE_DURATION } from "../config"
 import { SynergyTiers } from "../config/game/synergies"
 import type Player from "../models/colyseus-models/player"
-import { type IPokemonEntity, Transfer } from "../types"
+import {
+  DPS_EMBER_ID,
+  DPS_HAIL_ID,
+  DPS_SANDSTORM_ID,
+  DPS_SPIKES_ID,
+  DPS_STEALTH_ROCKS_ID,
+  type IPokemonEntity,
+  Transfer
+} from "../types"
 import { EffectEnum } from "../types/enum/Effect"
 import {
   AttackType,
@@ -965,13 +973,21 @@ export default abstract class PokemonState {
           pokemon.types.has(Synergy.GROUND) === false &&
           pokemon.items.has(Item.SAFETY_GOGGLES) === false
         ) {
-          pokemon.handleDamage({
+          const { takenDamage } = pokemon.handleDamage({
             damage: sandstormDamage,
             board,
             attackType: AttackType.SPECIAL,
             attacker: null,
             shouldTargetGainMana: false
           })
+          // Sandstorm is board-wide weather with no caster; credit its chip to
+          // the enemy team's Sandstorm row (see creditSyntheticDamage).
+          pokemon.simulation.creditSyntheticDamage(
+            pokemon,
+            DPS_SANDSTORM_ID,
+            AttackType.SPECIAL,
+            takenDamage
+          )
         }
       }
     }
@@ -1061,13 +1077,19 @@ export default abstract class PokemonState {
       !pokemon.types.has(Synergy.ROCK) &&
       !pokemon.items.has(Item.HEAVY_DUTY_BOOTS)
     ) {
-      pokemon.handleDamage({
+      const { takenDamage } = pokemon.handleDamage({
         damage: 10,
         board,
         attackType: AttackType.PHYSICAL,
         attacker: null,
         shouldTargetGainMana: true
       })
+      pokemon.simulation.creditSyntheticDamage(
+        pokemon,
+        DPS_STEALTH_ROCKS_ID,
+        AttackType.PHYSICAL,
+        takenDamage
+      )
       pokemon.status.triggerWound(1000, pokemon, undefined)
     }
 
@@ -1077,13 +1099,19 @@ export default abstract class PokemonState {
       !pokemon.types.has(Synergy.STEEL) &&
       !pokemon.items.has(Item.HEAVY_DUTY_BOOTS)
     ) {
-      pokemon.handleDamage({
+      const { takenDamage } = pokemon.handleDamage({
         damage: 10,
         board,
         attackType: AttackType.TRUE,
         attacker: null,
         shouldTargetGainMana: true
       })
+      pokemon.simulation.creditSyntheticDamage(
+        pokemon,
+        DPS_SPIKES_ID,
+        AttackType.TRUE,
+        takenDamage
+      )
       pokemon.status.triggerArmorReduction(1000, pokemon)
     }
 
@@ -1100,13 +1128,19 @@ export default abstract class PokemonState {
       !pokemon.types.has(Synergy.ICE) &&
       !pokemon.items.has(Item.HEAVY_DUTY_BOOTS)
     ) {
-      pokemon.handleDamage({
+      const { takenDamage } = pokemon.handleDamage({
         damage: 10,
         board,
         attackType: AttackType.SPECIAL,
         attacker: null,
         shouldTargetGainMana: true
       })
+      pokemon.simulation.creditSyntheticDamage(
+        pokemon,
+        DPS_HAIL_ID,
+        AttackType.SPECIAL,
+        takenDamage
+      )
       pokemon.status.triggerFreeze(1000, pokemon, undefined)
       pokemon.effects.delete(EffectEnum.HAIL)
     }
@@ -1116,13 +1150,19 @@ export default abstract class PokemonState {
       !(pokemon.types.has(Synergy.FIRE) || pokemon.types.has(Synergy.FLYING)) &&
       !pokemon.items.has(Item.HEAVY_DUTY_BOOTS)
     ) {
-      pokemon.handleDamage({
+      const { takenDamage } = pokemon.handleDamage({
         damage: 10,
         board,
         attackType: AttackType.SPECIAL,
         attacker: null,
         shouldTargetGainMana: true
       })
+      pokemon.simulation.creditSyntheticDamage(
+        pokemon,
+        DPS_EMBER_ID,
+        AttackType.SPECIAL,
+        takenDamage
+      )
       pokemon.status.triggerBurn(1100, pokemon, null)
     }
   }

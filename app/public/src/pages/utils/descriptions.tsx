@@ -1,5 +1,6 @@
 import { t } from "i18next"
 import React, { type ReactElement } from "react"
+import { DocumentedBoardEffects } from "../../../../types/enum/Effect"
 import { Damage, Stat } from "../../../../types/enum/Game"
 import { Item } from "../../../../types/enum/Item"
 import {
@@ -22,11 +23,23 @@ const Weathers = keys(Weather)
 const Synergies = keys(Synergy)
 const Items = keys(Item)
 
+// board-effect tiles plus the AQUATIC tidal wave and the two weather damage
+// sources — all rendered with an icon from assets/icons/<TOKEN>.svg and
+// documented in the wiki glossary
+export const DocumentedEffects = [
+  ...DocumentedBoardEffects,
+  "TIDAL_WAVE",
+  "SANDSTORM_DAMAGE",
+  "THUNDER_STRUCK_DAMAGE",
+  "CURSE_STATS"
+] as const
+
 export const iconRegExp = new RegExp(
   `(?<=\\W|^)(?:${[
     ...DamageTypes,
     ...Stats,
     ...DocumentedStatuses,
+    ...DocumentedEffects,
     ...Weathers,
     ...Synergies,
     ...Items,
@@ -109,6 +122,18 @@ export function addIconsToDescription(
               })}
             >
               {t(`status.${token}`)}
+            </span>
+          </span>
+        )
+      } else if (isIn(DocumentedEffects, token)) {
+        icon = (
+          <span
+            className="description-icon board-effect"
+            title={t(`board_effect_description.${token}`)}
+          >
+            <img src={`assets/icons/${token}.svg`} />
+            <span className="board-effect-label">
+              {t(`board_effect.${token}`)}
             </span>
           </span>
         )
@@ -304,6 +329,11 @@ export function addIconsToHtml(
           iconHTML = `<span class="description-icon status" title="${t(`status_description.${token}`)}">
             <img src="assets/icons/${token}.svg" />
             <span class="status-label${isPositive ? " positive" : ""}">${t(`status.${token}`)}</span>
+          </span>`
+        } else if (isIn(DocumentedEffects, token)) {
+          iconHTML = `<span class="description-icon board-effect" title="${t(`board_effect_description.${token}`)}">
+            <img src="assets/icons/${token}.svg" />
+            <span class="board-effect-label">${t(`board_effect.${token}`)}</span>
           </span>`
         } else if (isIn(Weathers, token)) {
           iconHTML = `<span class="description-icon weather" title="${t(`weather_description.${token}`)}">

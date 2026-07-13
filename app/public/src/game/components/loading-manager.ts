@@ -12,6 +12,7 @@ import { getPortraitSrc } from "../../../../utils/avatar"
 import { schemaValues } from "../../../../utils/schemas"
 import atlas from "../../assets/atlas.json"
 import { preloadMusic } from "../../pages/utils/audio"
+import { SYNTHETIC_DPS_DISPLAY } from "../../pages/component/game/synthetic-dps"
 import GameScene from "../scenes/game-scene"
 import { loadCompressedAtlas } from "./pokemon"
 
@@ -61,6 +62,13 @@ export default class LoadingManager {
 
     scene.load.image("money", "/assets/icons/money.svg")
     scene.load.image("arrowDown", "/assets/ui/arrowDown.png")
+
+    // icons shown on floating damage numbers dealt by board effects (no
+    // attacker). Use load.svg (not load.image) so the transparent background is
+    // preserved — otherwise the tint fills an opaque box instead of the shape.
+    for (const [id, { icon }] of Object.entries(SYNTHETIC_DPS_DISPLAY)) {
+      scene.load.svg(`effect-icon-${id}`, `/${icon}`, { width: 64, height: 64 })
+    }
 
     // JUGGERNAUT: stat icons shown above champion feed-copies
     scene.load.image("stat-HP", "/assets/icons/HP.png")

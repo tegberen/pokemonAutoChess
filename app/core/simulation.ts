@@ -17,6 +17,8 @@ import { getPokemonData } from "../models/precomputed/precomputed-pokemon-data"
 import { PRECOMPUTED_POKEMONS_PER_TYPE } from "../models/precomputed/precomputed-types"
 import type GameRoom from "../rooms/game-room"
 import {
+  DPS_STORM_ID,
+  DPS_TIDAL_WAVE_ID,
   type IPokemon,
   type IPokemonEntity,
   type ISimulation,
@@ -341,6 +343,57 @@ export default class Simulation extends Schema implements ISimulation {
         : playerId === this.redPlayer?.id
           ? this.redEffects
           : undefined
+  }
+
+  // Returns (creating on first use) the synthetic Battle-Stats row that a board
+  // effect accumulates its damage/heal into, on the given team's meter. `id` is
+  // one of the SYNTHETIC_DPS_IDS (e.g. tidal-wave, curse); the client renders it
+  // by that id, so the row's name is not used for display.
+  getOrCreateSyntheticDps(team: Team, id: string): Dps {
+    const meter =
+      team === Team.BLUE_TEAM ? this.blueDpsMeter : this.redDpsMeter
+    let dps = meter.get(id)
+    if (!dps) {
+      dps = new Dps(id, id)
+      meter.set(id, dps)
+    }
+    return dps
+  }
+
+  // Credit damage that has no attacker (board effects, weather, curse…) to the
+  // synthetic Battle-Stats row `id`, on the team opposing the victim — so it
+  // reads as damage inflicted on the enemy team, like a real attacker would.
+  creditSyntheticDamage(
+    victim: PokemonEntity,
+    id: string,
+    attackType: AttackType,
+    amount: number
+  ) {
+    if (amount <= 0) return
+    const team =
+      victim.team === Team.BLUE_TEAM ? Team.RED_TEAM : Team.BLUE_TEAM
+    const dps = this.getOrCreateSyntheticDps(team, id)
+    // clamp at the uint16 ceiling: these rows accumulate across the whole team
+    // and whole fight, so without this a large aggregate would wrap to a small
+    // garbage value when Colyseus serializes the field.
+    if (attackType === AttackType.PHYSICAL)
+      dps.physicalDamage = Math.min(65535, dps.physicalDamage + amount)
+    else if (attackType === AttackType.SPECIAL)
+      dps.specialDamage = Math.min(65535, dps.specialDamage + amount)
+    else dps.trueDamage = Math.min(65535, dps.trueDamage + amount)
+
+    // This damage has no attacker, so handleDamage never emitted a floating
+    // number. Emit one here, tagged with the effect id (sourceId) so the client
+    // draws the effect's icon instead of an attacker portrait.
+    this.broadcastToSpectators(Transfer.POKEMON_DAMAGE, {
+      index: "",
+      sourceId: id,
+      type: attackType,
+      amount: Math.round(amount),
+      x: victim.positionX,
+      y: victim.positionY,
+      id: this.id
+    })
   }
 
   getDpsMeter(playerId: string) {
@@ -1627,13 +1680,21 @@ export default class Simulation extends Schema implements ISimulation {
             pokemonOnCell.addSpeed(20, pokemonOnCell, 0, false)
             pokemonOnCell.addShield(30, pokemonOnCell, 0, false)
           } else {
-            pokemonOnCell.handleDamage({
+            const { takenDamage } = pokemonOnCell.handleDamage({
               damage: 100,
               board: this.board,
               attackType: AttackType.SPECIAL,
               attacker: null,
               shouldTargetGainMana: false
             })
+            // Storm lightning is board-wide weather with no caster; credit its
+            // strike to the enemy team's Storm row (see creditSyntheticDamage).
+            this.creditSyntheticDamage(
+              pokemonOnCell,
+              DPS_STORM_ID,
+              AttackType.SPECIAL,
+              takenDamage
+            )
           }
         }
         this.room.broadcast(Transfer.BOARD_EVENT, {
@@ -2025,21 +2086,45 @@ export default class Simulation extends Schema implements ISimulation {
           if (pokemonHit.team === team) {
             pokemonHit.status.clearNegativeStatus(pokemonHit)
             if (pokemonHit.types.has(Synergy.AQUATIC) || healAll) {
-              pokemonHit.handleHeal(
+              const { healReceived } = pokemonHit.handleHeal(
                 tidalWaveLevel * 0.1 * pokemonHit.maxHP,
                 pokemonHit,
                 0,
                 false
               )
+              if (healReceived > 0) {
+                // The game just recorded this heal as the Pokémon healing
+                // itself. Take that amount back off the Pokémon and add it to
+                // the Tidal Wave row instead, so the wave's healing shows on
+                // its own line in the Battle Stats. Math.max(0, ...) stops
+                // healDone from going negative (this number type can't store
+                // negatives and would jump to a huge value instead).
+                pokemonHit.healDone = Math.max(
+                  0,
+                  pokemonHit.healDone - healReceived
+                )
+                const waveDps = this.getOrCreateSyntheticDps(
+                  team,
+                  DPS_TIDAL_WAVE_ID
+                )
+                // clamp at the uint16 ceiling (see creditSyntheticDamage)
+                waveDps.heal = Math.min(65535, waveDps.heal + healReceived)
+              }
             }
           } else {
-            pokemonHit.handleDamage({
+            const { takenDamage } = pokemonHit.handleDamage({
               damage: tidalWaveLevel * 0.05 * pokemonHit.maxHP,
               board: this.board,
               attackType: AttackType.TRUE,
               attacker: null,
               shouldTargetGainMana: false
             })
+            this.creditSyntheticDamage(
+              pokemonHit,
+              DPS_TIDAL_WAVE_ID,
+              AttackType.TRUE,
+              takenDamage
+            )
             let newY = y
             if (isRed) {
               while (

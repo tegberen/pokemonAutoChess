@@ -1,6 +1,6 @@
 import { useMemo } from "react"
 import { useTranslation } from "react-i18next"
-import type { IDps } from "../../../../../types"
+import { SYNTHETIC_DPS_IDS, type IDps } from "../../../../../types"
 import GameDpsHeal from "./game-dps-heal"
 
 export default function GamePlayerHpsMeter({
@@ -11,9 +11,12 @@ export default function GamePlayerHpsMeter({
   const { t } = useTranslation()
   const sortedHps = useMemo(
     () =>
-      [...dpsMeter].sort((a, b) => {
-        return b.shield + b.heal - (a.shield + a.heal)
-      }),
+      dpsMeter
+        // hide synthetic effect rows (e.g. Curse) that did no healing/shielding
+        .filter((d) => !SYNTHETIC_DPS_IDS.has(d.id) || d.heal + d.shield > 0)
+        .sort((a, b) => {
+          return b.shield + b.heal - (a.shield + a.heal)
+        }),
     [dpsMeter]
   )
 

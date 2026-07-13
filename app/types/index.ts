@@ -403,6 +403,33 @@ export interface ISimulationCommand {
   execute(): void
 }
 
+export const DPS_TIDAL_WAVE_ID = "tidal-wave"
+export const DPS_CURSE_ID = "curse"
+export const DPS_SANDSTORM_ID = "sandstorm"
+export const DPS_STORM_ID = "storm"
+export const DPS_SPIKES_ID = "spikes"
+export const DPS_STEALTH_ROCKS_ID = "stealth-rocks"
+export const DPS_HAIL_ID = "hail"
+export const DPS_EMBER_ID = "ember"
+export const DPS_POISON_GAS_ID = "poison-gas"
+export const DPS_TOXIC_SPIKES_ID = "toxic-spikes"
+
+// Synthetic Battle-Stats rows that aggregate a board effect's damage/heal across
+// a whole team, rather than belonging to a single Pokémon. They must be kept out
+// of per-unit records and only shown on the tabs where they carry real numbers.
+export const SYNTHETIC_DPS_IDS: ReadonlySet<string> = new Set([
+  DPS_TIDAL_WAVE_ID,
+  DPS_CURSE_ID,
+  DPS_SANDSTORM_ID,
+  DPS_STORM_ID,
+  DPS_SPIKES_ID,
+  DPS_STEALTH_ROCKS_ID,
+  DPS_HAIL_ID,
+  DPS_EMBER_ID,
+  DPS_POISON_GAS_ID,
+  DPS_TOXIC_SPIKES_ID
+])
+
 export interface IDps {
   update(
     physicalDamage: number,

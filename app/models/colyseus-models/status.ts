@@ -4,6 +4,10 @@ import type { Board } from "../../core/board"
 import { transformToIceFace } from "../../core/effects/passives"
 import type { PokemonEntity } from "../../core/pokemon-entity"
 import {
+  DPS_CURSE_ID,
+  DPS_EMBER_ID,
+  DPS_POISON_GAS_ID,
+  DPS_TOXIC_SPIKES_ID,
   type IPokemonEntity,
   type ISimulation,
   type IStatus,
@@ -441,7 +445,9 @@ export default class Status extends Schema implements IStatus {
 
   updateBurn(dt: number, pkm: PokemonEntity, board: Board) {
     if (this.burnDamageCooldown - dt <= 0) {
-      if (this.burnOrigin) {
+      // Ember-tile burn has a null origin; still let it deal its DoT so it isn't
+      // a damageless debuff (see the Ember credit below).
+      if (this.burnOrigin || pkm.effects.has(EffectEnum.EMBER)) {
         let burnDamage = pkm.maxHP * 0.05
         if (pkm.simulation.weather === Weather.DROUGHT) {
           burnDamage *= 1.3
@@ -483,13 +489,22 @@ export default class Status extends Schema implements IStatus {
 
         burnDamage = Math.round(burnDamage)
         if (burnDamage > 0) {
-          pkm.handleDamage({
+          const { takenDamage } = pkm.handleDamage({
             damage: burnDamage,
             board,
             attackType: AttackType.TRUE,
-            attacker: this.burnOrigin,
+            attacker: this.burnOrigin ?? null,
             shouldTargetGainMana: true
           })
+          if (this.burnOrigin === undefined) {
+            // No caster (ember tile): credit the burn DoT to the Ember row.
+            pkm.simulation.creditSyntheticDamage(
+              pkm,
+              DPS_EMBER_ID,
+              AttackType.TRUE,
+              takenDamage
+            )
+          }
         }
         this.burnDamageCooldown = 1000
       }
@@ -652,13 +667,32 @@ export default class Status extends Schema implements IStatus {
       if (poisonDamage < 0) {
         pkm.handleHeal(Math.round(-poisonDamage), pkm, 0, false)
       } else if (poisonDamage > 0) {
-        pkm.handleDamage({
+        const { takenDamage } = pkm.handleDamage({
           damage: min(1)(Math.round(poisonDamage)),
           board,
           attackType: AttackType.TRUE,
           attacker: this.poisonOrigin ?? null,
           shouldTargetGainMana: false
         })
+        if (this.poisonOrigin === undefined) {
+          // Poison Gas / Toxic Spikes apply poison with no origin, so this tick
+          // would go unattributed. Credit it to that effect's Battle-Stats row.
+          if (pkm.effects.has(EffectEnum.POISON_GAS)) {
+            pkm.simulation.creditSyntheticDamage(
+              pkm,
+              DPS_POISON_GAS_ID,
+              AttackType.TRUE,
+              takenDamage
+            )
+          } else if (pkm.effects.has(EffectEnum.TOXIC_SPIKES)) {
+            pkm.simulation.creditSyntheticDamage(
+              pkm,
+              DPS_TOXIC_SPIKES_ID,
+              AttackType.TRUE,
+              takenDamage
+            )
+          }
+        }
       }
 
       if (pkm.effects.has(EffectEnum.POISON_GAS)) {
@@ -1089,13 +1123,22 @@ export default class Status extends Schema implements IStatus {
     this.curseCooldown -= dt
     if (this.curseCooldown <= 0) {
       this.curse = false
-      pokemon.handleDamage({
+      const { takenDamage } = pokemon.handleDamage({
         damage: 9999,
         board,
         attacker: null,
         attackType: AttackType.TRUE,
         shouldTargetGainMana: false
       })
+      // Curse is inflicted by the enemy team's Ghost synergy, so credit the HP
+      // it destroys to that team's Curse row in the Battle Stats. (The 9999 is
+      // an overkill value; takenDamage is the real HP removed.)
+      pokemon.simulation.creditSyntheticDamage(
+        pokemon,
+        DPS_CURSE_ID,
+        AttackType.TRUE,
+        takenDamage
+      )
       pokemon.simulation.room.broadcast(Transfer.ABILITY, {
         id: pokemon.simulation.id,
         skill: "CURSE_EFFECT",

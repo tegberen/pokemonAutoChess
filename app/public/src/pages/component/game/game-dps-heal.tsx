@@ -3,6 +3,7 @@ import type { IDps } from "../../../../../types"
 import { usePreference } from "../../../preferences"
 import PokemonPortrait from "../pokemon-portrait"
 import ProgressBar from "../progress-bar/progress-bar"
+import { getSyntheticDpsDisplay } from "./synthetic-dps"
 
 export default function GameDpsHeal(props: {
   maxHeal: number
@@ -10,9 +11,19 @@ export default function GameDpsHeal(props: {
 }) {
   const { t } = useTranslation()
   const [colorblindMode] = usePreference("colorblindMode")
+  const synthetic = getSyntheticDpsDisplay(props.dpsMeter.id)
   return (
     <div className="game-dps-bar">
-      <PokemonPortrait avatar={props.dpsMeter.name} />
+      {synthetic ? (
+        <img
+          src={synthetic.icon}
+          className="pokemon-portrait"
+          title={t(synthetic.labelKey)}
+          alt={t(synthetic.labelKey)}
+        />
+      ) : (
+        <PokemonPortrait avatar={props.dpsMeter.name} />
+      )}
       <div className="game-dps-progress-wrapper">
         <p>{props.dpsMeter.heal + props.dpsMeter.shield}</p>
         <ProgressBar className="my-progress is-primary">

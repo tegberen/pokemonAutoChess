@@ -23,6 +23,7 @@ import {
   FlowerPots,
   type IPlayer,
   type Role,
+  SYNTHETIC_DPS_IDS,
   Title
 } from "../../types"
 import { EvolutionRuleType } from "../../types/EvolutionRules"
@@ -1114,7 +1115,13 @@ export default class Player extends Schema implements IPlayer {
 
     const dps = simulation.getDpsMeter(this.id)
     if (dps) {
-      const dpsList = schemaValues(dps)
+      // These records track each Pokémon's personal best (most damage or
+      // healing done by a single unit). Leave the synthetic effect rows
+      // (Tidal Wave, Curse) out of it: they're team-wide totals, not real
+      // Pokémon, so they shouldn't set one of these "best single unit" records.
+      const dpsList = schemaValues(dps).filter(
+        (d) => !SYNTHETIC_DPS_IDS.has(d.id)
+      )
       this.gameStats.maxHeal = Math.max(
         this.gameStats.maxHeal,
         ...dpsList.map((d) => d.heal)

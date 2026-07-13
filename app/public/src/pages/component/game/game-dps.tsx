@@ -3,13 +3,24 @@ import type { IDps } from "../../../../../types"
 import { usePreference } from "../../../preferences"
 import PokemonPortrait from "../pokemon-portrait"
 import ProgressBar from "../progress-bar/progress-bar"
+import { getSyntheticDpsDisplay } from "./synthetic-dps"
 
 export default function GameDps(props: { maxDamage: number; dps: IDps }) {
   const { t } = useTranslation()
   const [colorblindMode] = usePreference("colorblindMode")
+  const synthetic = getSyntheticDpsDisplay(props.dps.id)
   return (
     <div className="game-dps-bar">
-      <PokemonPortrait avatar={props.dps.name} />
+      {synthetic ? (
+        <img
+          src={synthetic.icon}
+          className="pokemon-portrait"
+          title={t(synthetic.labelKey)}
+          alt={t(synthetic.labelKey)}
+        />
+      ) : (
+        <PokemonPortrait avatar={props.dps.name} />
+      )}
       <div className="game-dps-progress-wrapper">
         <p>
           {props.dps.physicalDamage +
