@@ -217,8 +217,9 @@ export const JuggernautRarities = [
 
 // Families banned from being champions (add any form to ban the whole line)
 export const JuggernautBans: Pkm[] = [
-  Pkm.HOUNDOUR, // Houndoom line
-  Pkm.BANETTE // Banette line
+  Pkm.HOUNDOUR,
+  Pkm.SHUPPET,
+  Pkm.TOTODILE
 ]
 const JuggernautBannedFamilies = new Set(JuggernautBans.map((p) => PkmFamily[p]))
 
