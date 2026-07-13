@@ -293,6 +293,11 @@ export default class Player extends Schema implements IPlayer {
       this.updateSynergies()
     }
 
+    if (state.specialGameRule === SpecialGameRule.OVERTIME) {
+      this.life = 200
+      this.experienceManager.maxLevel = 10
+    }
+
     if (state.gameMode === GameMode.DOUBLE_UP && !isBot) {
       // used to request a pokemon to your partner
       this.items.push(Item.SPEAKER)
