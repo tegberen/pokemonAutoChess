@@ -219,7 +219,8 @@ export const JuggernautRarities = [
 export const JuggernautBans: Pkm[] = [
   Pkm.HOUNDOUR,
   Pkm.SHUPPET,
-  Pkm.TOTODILE
+  Pkm.TOTODILE,
+  Pkm.MARSHADOW
 ]
 const JuggernautBannedFamilies = new Set(JuggernautBans.map((p) => PkmFamily[p]))
 
