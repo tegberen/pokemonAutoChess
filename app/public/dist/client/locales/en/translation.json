@@ -4257,6 +4257,8 @@
 	"smeargle_scribble_short": "Scribble",
 	"smeargle_scribble_hint": "Smeargle scribbles a new random rule applied during the entire game.",
 	"no_rule": "No special rule",
+	"random_rule": "Random rule",
+	"random_rule_hint": "Pick a random special rule",
 	"classic_hint": "The game will automatically start when 8 players joined",
 	"password_protected": "Private game (password protected)",
 	"private": "Private",

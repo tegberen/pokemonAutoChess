@@ -536,15 +536,15 @@ export class OnRoomChangeSpecialRule extends Command<
           this.state.noElo = true
           this.room.setNoElo(true)
         }
-        const leader = this.state.users.get(client.auth.uid)
-        this.room.state.addMessage({
-          author: "Server",
-          authorId: "server",
-          payload: `Smeargle's Scribble mode has been ${
-            specialRule ? "enabled" : "disabled"
-          } for this game. Players need to ready again.`,
-          avatar: leader?.avatar
-        })
+        // const leader = this.state.users.get(client.auth.uid)
+        // this.room.state.addMessage({
+        //   author: "Server",
+        //   authorId: "server",
+        //   payload: `Smeargle's Scribble mode has been ${
+        //     specialRule ? "enabled" : "disabled"
+        //   } for this game. Players need to ready again.`,
+        //   avatar: leader?.avatar
+        // })
 
         this.state.users.forEach((user) => {
           if (!user.isBot) user.ready = false
@@ -678,11 +678,14 @@ export class OnLeaveCommand extends Command<
               this.state.ownerId = newOwner.uid
               this.state.ownerName = newOwner.name
               this.room.setMetadata({ ownerName: this.state.ownerName })
-              this.room.setName(
-                `${newOwner.name}'${
-                  newOwner.name.endsWith("s") ? "" : "s"
-                } room`
-              )
+              // keep a custom scribble room name; only default-rename otherwise
+              if (this.state.specialGameRule == null) {
+                this.room.setName(
+                  `${newOwner.name}'${
+                    newOwner.name.endsWith("s") ? "" : "s"
+                  } room`
+                )
+              }
               this.room.state.addMessage({
                 authorId: "server",
                 payload: `The new room leader is ${newOwner.name}`,

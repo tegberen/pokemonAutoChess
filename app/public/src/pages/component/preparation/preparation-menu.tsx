@@ -14,6 +14,7 @@ import { SpecialGameRule } from "../../../../../types/enum/SpecialGameRule"
 import { formatMinMaxRanks } from "../../../../../utils/elo"
 import { throttle } from "../../../../../utils/function"
 import { max } from "../../../../../utils/number"
+import { pickRandomIn } from "../../../../../utils/random"
 import { setTitleNotificationIcon } from "../../../../../utils/window"
 import { useAppSelector } from "../../../hooks"
 import {
@@ -27,6 +28,7 @@ import {
   setSpecialRule,
   toggleReady
 } from "../../../network"
+import { addIconsToDescription } from "../../utils/descriptions"
 import { cc } from "../../utils/jsx"
 import { GameModeIcon } from "../icons/game-mode-icon"
 import { BotSelectModal } from "./bot-select-modal"
@@ -138,6 +140,17 @@ export default function PreparationMenu() {
 
   const changeSpecialRule = (rule: SpecialGameRule | "none") => {
     setSpecialRule(rule === "none" ? null : rule)
+    if (rule !== "none") {
+      changeRoomName(t(`scribble.${rule}`))
+    }
+  }
+
+  const pickRandomRule = () => {
+    const rules = Object.values(SpecialGameRule).filter(
+      (rule) =>
+        rule !== SpecialGameRule.PLAY_TEST && rule !== specialGameRule
+    )
+    changeSpecialRule(pickRandomIn(rules))
   }
 
   const headerMessage = (
@@ -152,7 +165,18 @@ export default function PreparationMenu() {
       {(gameMode === GameMode.SCRIBBLE || specialGameRule != null) && (
         <p>
           <GameModeIcon gameMode={gameMode} />
-          {t("smeargle_scribble_hint")}
+          {specialGameRule != null ? (
+            <>
+              <b>{t(`scribble.${specialGameRule}`)}</b>:{" "}
+              {addIconsToDescription(
+                t(`scribble_description.${specialGameRule}`, {
+                  type: "(random Synergy)"
+                })
+              )}
+            </>
+          ) : (
+            t("smeargle_scribble_hint")
+          )}
         </p>
       )}
 
@@ -234,20 +258,38 @@ export default function PreparationMenu() {
   const scribbleRule = gameMode === GameMode.CUSTOM_LOBBY &&
     isOwner && //changed from isAdmin
     noElo && (
-      <label>
-        {t("game_modes.SCRIBBLE")}
-        <select
-          onChange={(e) => changeSpecialRule(e.target.value as SpecialGameRule)}
-          value={specialGameRule ?? "none"}
+      <div
+        style={{
+          display: "inline-flex",
+          alignItems: "center",
+          gap: "0.5em",
+          marginLeft: "auto"
+        }}
+      >
+        <label>
+          {t("game_modes.SCRIBBLE")}
+          <select
+            onChange={(e) =>
+              changeSpecialRule(e.target.value as SpecialGameRule)
+            }
+            value={specialGameRule ?? "none"}
+          >
+            <option value="none">{t("no_rule")}</option>
+            {keys(SpecialGameRule).map((rule) => (
+              <option key={rule} value={rule}>
+                {t(`scribble.${rule}`)}
+              </option>
+            ))}
+          </select>
+        </label>
+        <button
+          className="bubbly blue"
+          onClick={pickRandomRule}
+          title={t("random_rule_hint")}
         >
-          <option value="none">{t("no_rule")}</option>
-          {keys(SpecialGameRule).map((rule) => (
-            <option key={rule} value={rule}>
-              {t(`scribble.${rule}`)}
-            </option>
-          ))}
-        </select>
-      </label>
+          {t("random_rule")}
+        </button>
+      </div>
     )
 
   const roomNameInput = gameMode === GameMode.CUSTOM_LOBBY &&
@@ -407,11 +449,8 @@ export default function PreparationMenu() {
       </div>
 
       <div className="actions">
-        <div>
-          {roomNameInput}
-          <div className="spacer" />
-          {scribbleRule}
-        </div>
+        <div>{roomNameInput}</div>
+        <div>{scribbleRule}</div>
 
         {(BOTS_ENABLED || isAdmin) && <div>{botControls}</div>}
 
