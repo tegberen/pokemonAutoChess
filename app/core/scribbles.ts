@@ -91,6 +91,12 @@ export function spawnDIAYAvatar(player: Player): Pokemon {
   return avatar
 }
 
+// Per-family AP adjustments to the whole line
+export const SCRIBBLE_STARTER_AP_OVERRIDES: Partial<Record<Pkm, number>> = {
+  [Pkm.HOUNDOUR]: -50,
+  [Pkm.SHUPPET]: -50
+}
+
 export function applyScribbleStarterStats(
   avatar: Pokemon,
   player: Player,
@@ -117,6 +123,11 @@ export function applyScribbleStarterStats(
   const bonusHP = Math.round(150 - powerScore * 30)
   avatar.maxHP = min(10)(avatar.maxHP + bonusHP)
   avatar.hp = avatar.maxHP
+
+  const apOverride = SCRIBBLE_STARTER_AP_OVERRIDES[PkmFamily[avatar.name]]
+  if (apOverride) {
+    avatar.addAbilityPower(apOverride)
+  }
 }
 
 export function getScribbleStarterPowerScore(name: Pkm): number {
