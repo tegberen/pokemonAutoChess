@@ -1,7 +1,9 @@
 import type { SchemaCallbackProxy } from "@colyseus/schema"
 import { getStateCallbacks, type Room } from "@colyseus/sdk"
-import { t as tBase} from "i18next"
+import { t as tBase } from "i18next"
+
 const t = tBase as any
+
 import Phaser from "phaser"
 import MoveToPlugin from "phaser4-rex-plugins/plugins/moveto-plugin"
 import OutlinePlugin from "phaser4-rex-plugins/plugins/outlinefilter-plugin"
@@ -181,7 +183,8 @@ class GameContainer {
       "stars",
       "types",
       "stacks",
-      "stacksRequired"
+      "stacksRequired",
+      "awakening"
     ] satisfies (NonFunctionPropNames<PokemonEntity> & keyof IPokemonEntity)[]
 
     fields.forEach((field) => {
@@ -476,8 +479,10 @@ class GameContainer {
         "shiny",
         "skill",
         "supercharged",
-        "aura"
-
+        "aura",
+        "awakening",
+        "awakeningRock",
+        "awakeningCharge"
       ]
     ) => {
       const $pokemon = this.$<Pokemon>(pokemon)
@@ -579,11 +584,20 @@ class GameContainer {
     $player.listen("doubleUpTradeOffer", (offer: string) => {
       if (player.id === this.playerIdSpectated) {
         const partner = this.room.state.players.get(player.doubleUpPartnerId)
-        this.gameScene?.wandererManager?.updateCroagunkItem(offer, partner?.doubleUpTradeOffer ?? "")
+        this.gameScene?.wandererManager?.updateCroagunkItem(
+          offer,
+          partner?.doubleUpTradeOffer ?? ""
+        )
       }
-      if (player.id === this.room.state.players.get(this.playerIdSpectated)?.doubleUpPartnerId) {
+      if (
+        player.id ===
+        this.room.state.players.get(this.playerIdSpectated)?.doubleUpPartnerId
+      ) {
         const me = this.room.state.players.get(this.playerIdSpectated)
-        this.gameScene?.wandererManager?.updateCroagunkItem(me?.doubleUpTradeOffer ?? "", offer)
+        this.gameScene?.wandererManager?.updateCroagunkItem(
+          me?.doubleUpTradeOffer ?? "",
+          offer
+        )
       }
     })
     $player.synergies.onChange((level, synergy) => {

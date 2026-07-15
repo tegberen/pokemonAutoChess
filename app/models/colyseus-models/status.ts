@@ -13,6 +13,7 @@ import {
   type IStatus,
   Transfer
 } from "../../types"
+import { Awakening } from "../../types/enum/Awakening"
 import { EffectEnum } from "../../types/enum/Effect"
 import { AttackType, Stat, Team } from "../../types/enum/Game"
 import { Item } from "../../types/enum/Item"
@@ -674,6 +675,18 @@ export default class Status extends Schema implements IStatus {
           attacker: this.poisonOrigin ?? null,
           shouldTargetGainMana: false
         })
+        // SMELLY_CLAY awakening
+        board
+          .getCellsInRadius(pkm.positionX, pkm.positionY, 2, false)
+          .forEach((cell) => {
+            if (
+              cell.value &&
+              cell.value.team !== pkm.team &&
+              cell.value.awakening === Awakening.SMELLY_CLAY
+            ) {
+              cell.value.handleHeal(0.25 * takenDamage, cell.value, 0, false)
+            }
+          })
         if (this.poisonOrigin === undefined) {
           // Poison Gas / Toxic Spikes apply poison with no origin, so this tick
           // would go unattributed. Credit it to that effect's Battle-Stats row.

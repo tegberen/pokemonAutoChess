@@ -11,6 +11,7 @@ import PokemonFactory from "../../../../../models/pokemon-factory"
 import { getPokemonData } from "../../../../../models/precomputed/precomputed-pokemon-data"
 import type { Emotion, IPokemon, IPokemonEntity } from "../../../../../types"
 import { Ability } from "../../../../../types/enum/Ability"
+import { Awakening } from "../../../../../types/enum/Awakening"
 import { Stat } from "../../../../../types/enum/Game"
 import {
   AbilityPerTM,
@@ -55,7 +56,8 @@ export function GamePokemonDetail(props: {
   emotion?: Emotion
   isAlly?: boolean
 }) {
-  const { t: tBase } = useTranslation(); const t = tBase as any
+  const { t: tBase } = useTranslation()
+  const t = tBase as any
   const pokemon = useMemo<IPokemon | IPokemonEntity | null>(() => {
     if (!props.pokemon) {
       return null
@@ -373,6 +375,39 @@ export function GamePokemonDetail(props: {
               />
             </div>
           )}
+        </div>
+      )}
+
+      {/* Awakened effect — shown both on the prep board and during the fight
+          (the entity carries `awakening` too). */}
+      {pokemon.awakening !== Awakening.NONE && (
+        <div className="game-pokemon-detail-passive">
+          <p>
+            {addIconsToDescription(
+              t(`effect_description.CRYSTALLISE_${pokemon.awakening}`),
+              { ap: pokemon.ap, luck: pokemon.luck, stars: pokemon.stars }
+            )}
+          </p>
+        </div>
+      )}
+
+      {/* Crystallisation in progress — prep board only */}
+      {!isEntity(pokemon) && pokemon.awakeningRock !== "" && (
+        <div className="game-pokemon-detail-passive">
+          <p>
+            {t("awakening.charging", {
+              rock: t(`item.${pokemon.awakeningRock}`),
+              defaultValue: "Crystallising with {{rock}}…"
+            })}
+          </p>
+          <div className="game-pokemon-detail-passive-bar">
+            <GameTooltipBar
+              type="AWAKENING"
+              value={pokemon.awakeningCharge}
+              maxValue={3}
+              graduationStep={1}
+            />
+          </div>
         </div>
       )}
 

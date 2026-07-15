@@ -1,0 +1,34 @@
+import { Synergy } from "./Synergy"
+
+export const ROCK_AWAKENING_TIER = 4
+
+export enum Awakening {
+  NONE = "NONE",
+  HEAT_ROCK = "HEAT_ROCK",
+  SUN_STONE = "SUN_STONE",
+  DAMP_ROCK = "DAMP_ROCK",
+  ICY_ROCK = "ICY_ROCK",
+  SMOOTH_ROCK = "SMOOTH_ROCK",
+  BLACK_AUGURITE = "BLACK_AUGURITE",
+  FLOAT_STONE = "FLOAT_STONE",
+  ELECTRIC_QUARTZ = "ELECTRIC_QUARTZ",
+  MIST_STONE = "MIST_STONE",
+  BLOOD_STONE = "BLOOD_STONE",
+  SMELLY_CLAY = "SMELLY_CLAY",
+  ODD_KEYSTONE = "ODD_KEYSTONE"
+}
+
+export const AwakeningTypes: Partial<Record<Awakening, Synergy>> = {
+  [Awakening.SUN_STONE]: Synergy.GRASS,
+  [Awakening.HEAT_ROCK]: Synergy.FIRE,
+  [Awakening.DAMP_ROCK]: Synergy.WATER,
+  [Awakening.ICY_ROCK]: Synergy.ICE,
+  [Awakening.SMOOTH_ROCK]: Synergy.GROUND,
+  [Awakening.BLACK_AUGURITE]: Synergy.DARK,
+  [Awakening.FLOAT_STONE]: Synergy.FLYING,
+  [Awakening.ELECTRIC_QUARTZ]: Synergy.ELECTRIC,
+  [Awakening.MIST_STONE]: Synergy.FAIRY,
+  [Awakening.BLOOD_STONE]: Synergy.WILD,
+  [Awakening.SMELLY_CLAY]: Synergy.POISON,
+  [Awakening.ODD_KEYSTONE]: Synergy.GHOST
+}

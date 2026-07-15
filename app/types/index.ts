@@ -1,4 +1,5 @@
 import type { ArraySchema, MapSchema, SetSchema } from "@colyseus/schema"
+import type { ScribbleShapeType } from "../config/game/scribble-shapes"
 import type { Board } from "../core/board"
 import type Dps from "../core/dps"
 import type { Effect as EffectClass } from "../core/effects/effect"
@@ -15,9 +16,10 @@ import type Synergies from "../models/colyseus-models/synergies"
 import type { Effects } from "../models/effects"
 import type GameRoom from "../rooms/game-room"
 import type { AttackSprite } from "./Animation"
-import type { ScribbleShapeType } from "../config/game/scribble-shapes"
 import type { EvolutionRule } from "./EvolutionRules"
 import type { Ability } from "./enum/Ability"
+import type { ArmoryOptions } from "./enum/ArmoryOptions"
+import type { Awakening } from "./enum/Awakening"
 import type { DungeonPMDO } from "./enum/Dungeon"
 import type { BoardEffect, EffectEnum } from "./enum/Effect"
 import type { EloRank } from "./enum/EloRank"
@@ -37,7 +39,6 @@ import type { Pkm } from "./enum/Pokemon"
 import type { Synergy } from "./enum/Synergy"
 import type { Weather } from "./enum/Weather"
 import type { GameStats } from "./interfaces/GameStats"
-import { ArmoryOptions } from "./enum/ArmoryOptions"
 
 export * from "./enum/Emotion"
 export * from "./enum/FlowerPot"
@@ -366,6 +367,9 @@ export interface IPokemon {
   readonly hasEvolution: boolean
   supercharged: boolean
   aura: boolean
+  awakening: Awakening
+  awakeningRock: string
+  awakeningCharge: number
   boosterEnergyCount: number
   juggernautStat: string
 }
@@ -592,6 +596,7 @@ export interface IPokemonEntity {
   skill: Ability
   tm: Ability
   passive: Passive
+  awakening: Awakening
   status: Status
   count: Count
   critPower: number

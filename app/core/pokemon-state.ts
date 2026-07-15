@@ -10,6 +10,7 @@ import {
   type IPokemonEntity,
   Transfer
 } from "../types"
+import { Awakening } from "../types/enum/Awakening"
 import { EffectEnum } from "../types/enum/Effect"
 import {
   AttackType,
@@ -86,7 +87,6 @@ export default abstract class PokemonState {
             reductionFactor -= 0.7
           }
           reductionFactor -= 0.1 * nbBlackAugurite
-
           const damageWithoutCrit = damage
           const damageAfterCrit = damage * pokemon.critPower
           const critPartOfTheDamage = damageAfterCrit - damageWithoutCrit
@@ -602,6 +602,14 @@ export default abstract class PokemonState {
         reducedDamage = damage / (1 + ARMOR_FACTOR * speDef)
       } else if (attackType == AttackType.TRUE) {
         reducedDamage = damage
+      }
+
+      if (pokemon.awakening === Awakening.BLACK_AUGURITE) {
+        const reductionChance = pokemon.critChance / 100
+        if (chance(reductionChance, pokemon)) {
+          const damageReduction = Math.min(0.15 * (pokemon.critPower / 100), 0.7)
+          reducedDamage = reducedDamage * (1 - damageReduction)
+        }
       }
 
       if (attackType !== AttackType.TRUE) {

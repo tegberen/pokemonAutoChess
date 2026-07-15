@@ -114,7 +114,8 @@ export const SynergyTiers = {
   [Synergy.ROCK]: [
     EffectEnum.BATTLE_ARMOR,
     EffectEnum.MOUTAIN_RESISTANCE,
-    EffectEnum.DIAMOND_STORM
+    EffectEnum.DIAMOND_STORM,
+    EffectEnum.CRYSTALLISATION
   ],
   [Synergy.GHOST]: [
     EffectEnum.CURSE_OF_VULNERABILITY,
@@ -197,7 +198,7 @@ export const SynergyTiersThresholds: { [key in Synergy]: number[] } = {
   [Synergy.BUG]: [2, 4, 6, 8],
   [Synergy.FLYING]: [2, 4, 6, 8],
   [Synergy.FLORA]: [3, 4, 5, 6],
-  [Synergy.ROCK]: [2, 4, 6],
+  [Synergy.ROCK]: [2, 4, 6, 8],
   [Synergy.GHOST]: [2, 4, 6, 8],
   [Synergy.FAIRY]: [2, 4, 6, 8],
   [Synergy.ICE]: [2, 4, 6, 8],

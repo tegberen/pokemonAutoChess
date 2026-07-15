@@ -14,6 +14,7 @@ import type Status from "../../../../models/colyseus-models/status"
 import { getPokemonData } from "../../../../models/precomputed/precomputed-pokemon-data"
 import type { IBoardEvent, IPokemonEntity } from "../../../../types"
 import { Ability } from "../../../../types/enum/Ability"
+import { Awakening } from "../../../../types/enum/Awakening"
 import { EffectEnum } from "../../../../types/enum/Effect"
 import {
   AttackType,
@@ -589,6 +590,13 @@ export default class BattleManager {
                 })
               }
             }
+          }
+          break
+
+        case "awakening":
+          // Awakened Pokémon keep their crystalline glow during the fight.
+          if (pokemon.awakening !== Awakening.NONE) {
+            pkmSprite.setAwakening(3, "", pokemon.awakening)
           }
           break
 

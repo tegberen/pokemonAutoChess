@@ -26,6 +26,7 @@ import {
   AttackSpriteScale
 } from "../../../../types/Animation"
 import { Ability } from "../../../../types/enum/Ability"
+import { Awakening } from "../../../../types/enum/Awakening"
 import {
   Orientation,
   PokemonActionState,
@@ -124,6 +125,11 @@ export default class PokemonSprite extends DraggableObject {
   curseTorment: GameObjects.Sprite | undefined
   curseFate: GameObjects.Sprite | undefined
   light: GameObjects.Sprite | undefined
+  awakeningGlow: Phaser.Filters.Glow | undefined
+  awakeningGlowTween: Phaser.Tweens.Tween | undefined
+  awakeningCrystal: GameObjects.Sprite | undefined
+  awakeningSurgeTimer: Phaser.Time.TimerEvent | undefined
+  awakeningBar: GameObjects.Graphics | undefined
   playerId: string
   shouldShowTooltip: boolean
   flip: boolean
@@ -295,6 +301,16 @@ export default class PokemonSprite extends DraggableObject {
       if (!isEntity(pokemon) && pokemon.aura) {
         this.auraAnimation(scene, true, false)
       }
+      if (
+        !isEntity(pokemon) &&
+        (pokemon.awakeningRock !== "" || pokemon.awakening !== Awakening.NONE)
+      ) {
+        this.setAwakening(
+          pokemon.awakeningCharge,
+          pokemon.awakeningRock,
+          pokemon.awakening
+        )
+      }
       this.emit("loaded")
     })
   }
@@ -395,6 +411,10 @@ export default class PokemonSprite extends DraggableObject {
 
   destroy(fromScene?: boolean | undefined): void {
     const g = <GameScene>this.scene
+    this.awakeningGlowTween?.remove()
+    this.awakeningGlowTween = undefined
+    this.awakeningSurgeTimer?.remove()
+    this.awakeningSurgeTimer = undefined
     super.destroy(fromScene)
     this.closeDetail()
     this.unloadAnimations(
@@ -878,10 +898,203 @@ export default class PokemonSprite extends DraggableObject {
       })
     }
   }
-  auraAnimation(scene: GameScene | DebugScene, alreadyActive: boolean, onEntity: boolean) {
+  auraAnimation(
+    scene: GameScene | DebugScene,
+    alreadyActive: boolean,
+    onEntity: boolean
+  ) {
     this.sprite.enableFilters()
-    this.sprite.filters?.internal.addGlow(0x00BFFF, 12, 0, 0.2)
+    this.sprite.filters?.internal.addGlow(0x00bfff, 12, 0, 0.2)
     this.emoteAnimation()
+  }
+
+  crystalliseAnimation(withEmote = false) {
+    this.displayAnimation("CRYSTALLISE")
+    if (withEmote) this.emoteIfIdle()
+  }
+
+  crystalliseShatterAnimation() {
+    this.displayAnimation("CRYSTALLISE_SHATTER")
+    this.emoteIfIdle()  
+  }
+  emoteIfIdle() {
+    if (
+      this.action === PokemonActionState.IDLE && 
+      !this.animationLocked
+    ){ 
+      this.emoteAnimation()
+    }
+  }
+
+  static readonly CRYSTALLISE_COLOR = 0xd694de
+
+  static readonly AWAKENING_COLORS: Partial<Record<Item, number>> = {
+    [Item.SUN_STONE]: 0xdd9a61, 
+    [Item.HEAT_ROCK]: 0xfc819e,
+    [Item.DAMP_ROCK]: 0x5ac3c7,
+    [Item.ICY_ROCK]: 0x60b6e8,
+    [Item.SMOOTH_ROCK]: 0xffdd66,
+    [Item.FLOAT_STONE]: 0xffffff,
+    [Item.ELECTRIC_QUARTZ]: 0x60b6e8,
+    [Item.MIST_STONE]: 0xed94b6,
+    [Item.BLOOD_STONE]: 0xa83330,
+    [Item.SMELLY_CLAY]: 0xbdff5e,
+    [Item.ODD_KEYSTONE]: 0xc79dff,
+    [Item.BLACK_AUGURITE]: 0x362d2d
+  }
+
+  setAwakening(charge: number, rock: string, awakening: string) {
+    const awakened = awakening !== Awakening.NONE
+    if (!awakened && rock === "") {
+      this.awakeningGlowTween?.remove()
+      this.awakeningGlowTween = undefined
+      if (this.awakeningGlow) this.awakeningGlow.outerStrength = 0
+      this.removeAwakeningCharge()
+      return
+    }
+    const level = awakened ? 3 : Math.max(0, Math.min(3, charge))
+    const color = awakened
+      ? (PokemonSprite.AWAKENING_COLORS[awakening as Item] ?? 0x8ef6ff)
+      : PokemonSprite.CRYSTALLISE_COLOR
+
+    // Progressive glow
+    const outerStrength = awakened ? 3 : 1 + level  // 1 / 3 / 5, 8 awakened
+    const scale = awakened ? 0.25 : 0.15
+    this.sprite.enableFilters()
+    if (!this.awakeningGlow) {
+      this.awakeningGlow =
+        this.sprite.filters?.internal.addGlow(color, outerStrength, 0, scale) ??
+        undefined
+    } else {
+      this.awakeningGlow.color = color
+      this.awakeningGlow.outerStrength = outerStrength
+      this.awakeningGlow.scale = scale
+    }
+
+    // Dynamic aura: pulse + shimmer of Pokémon
+    this.awakeningGlowTween?.remove()
+    if (this.awakeningGlow) {
+      const glow = this.awakeningGlow
+      const base = Phaser.Display.Color.IntegerToColor(color)
+      const light = Phaser.Display.Color.IntegerToColor(
+        Phaser.Display.Color.GetColor(
+          Math.round(base.red + (255 - base.red) * 0.2),
+          Math.round(base.green + (255 - base.green) * 0.2),
+          Math.round(base.blue + (255 - base.blue) * 0.2)
+        )
+      )
+      this.awakeningGlowTween = this.scene.tweens.addCounter({
+        from: 0,
+        to: 100,
+        duration: 1400,
+        yoyo: true,
+        repeat: -1,
+        ease: "Sine.easeInOut",
+        onUpdate: (tween) => {
+          const t = tween.getValue(0) ?? 0
+          const f = t / 100
+          const c = Phaser.Display.Color.Interpolate.ColorWithColor(
+            base,
+            light,
+            100,
+            t
+          )
+          glow.color = Phaser.Display.Color.GetColor(c.r, c.g, c.b)
+          glow.outerStrength = outerStrength + f * 2
+          glow.scale = scale + f * 0.06
+        }
+      })
+    }
+
+    // Weather rock to the left of the charge bar, below the Pokémon
+    if (rock !== "" && !awakened) {
+      const rockX = -46
+      const rockY = 37
+      const rockScale = 0.32
+      if (!this.awakeningCrystal) {
+        this.awakeningCrystal = this.scene.add
+          .sprite(rockX, rockY, "item", `${rock}.png`)
+          .setScale(rockScale)
+        this.add(this.awakeningCrystal)
+        this.bringToTop(this.awakeningCrystal)
+        this.startAwakeningRockAnim(rockScale)
+      }
+      this.drawAwakeningBar(level, color)
+    } else {
+      this.removeAwakeningCharge()
+    }
+  }
+
+  // Periodic throb of the weather rock
+  startAwakeningRockAnim(rockScale: number) {
+    this.awakeningSurgeTimer = this.scene.time.addEvent({
+      delay: 1800,
+      startAt: 1200,
+      loop: true,
+      callback: () => {
+        const c = this.awakeningCrystal
+        if (!c) return
+        this.scene.tweens.add({
+          targets: c,
+          scale: rockScale * 1.18,
+          duration: 300,
+          yoyo: true,
+          ease: "Sine.easeInOut"
+        })
+      }
+    })
+  }
+
+  drawAwakeningBar(charge: number, color: number) {
+    const barWidth = 52
+    const innerBarWidth = barWidth - 2
+    const barBgColor = 0x303030
+    const segments = 3
+    const y = 34 // below the Pokémon so it doesn't cut across the sprite
+
+    if (!this.awakeningBar) {
+      this.awakeningBar = this.scene.add.graphics()
+      this.add(this.awakeningBar)
+      this.bringToTop(this.awakeningBar)
+    }
+    const g = this.awakeningBar
+    g.clear()
+    g.translateCanvas(-barWidth / 2, y)
+
+    g.fillStyle(0x000000)
+    g.fillRoundedRect(0, 0, barWidth, 8, 2)
+
+    g.save()
+    g.translateCanvas(1, 1)
+    g.fillStyle(barBgColor, 1)
+    g.fillRect(0, 0, innerBarWidth, 6)
+    g.fillStyle(color, 1)
+    g.fillRect(0, 0, (charge / segments) * innerBarWidth, 6)
+
+    const segmentSize = innerBarWidth / segments
+    g.lineStyle(1, barBgColor)
+    g.beginPath()
+    for (let i = 1; i < segments; i++) {
+      g.moveTo(i * segmentSize, 0)
+      g.lineTo(i * segmentSize, 4)
+    }
+    g.closePath()
+    g.strokePath()
+    g.restore()
+  }
+
+  // Remove the charging-only visuals (rock + its animation + bar); keeps glow.
+  removeAwakeningCharge() {
+    this.awakeningSurgeTimer?.remove()
+    this.awakeningSurgeTimer = undefined
+    if (this.awakeningCrystal) {
+      this.remove(this.awakeningCrystal, true)
+      this.awakeningCrystal = undefined
+    }
+    if (this.awakeningBar) {
+      this.remove(this.awakeningBar, true)
+      this.awakeningBar = undefined
+    }
   }
 
   updateDishes(dishes: Item[]) {

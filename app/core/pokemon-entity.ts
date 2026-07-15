@@ -39,6 +39,7 @@ import {
   SynergyGivenByItem,
   SynergyStones
 } from "../types/enum/Item"
+import { Awakening } from "../types/enum/Awakening"
 import { Passive } from "../types/enum/Passive"
 import { Pkm } from "../types/enum/Pokemon"
 import { SpecialGameRule } from "../types/enum/SpecialGameRule"
@@ -69,6 +70,7 @@ import {
   OnSpawnEffect
 } from "./effects/effect"
 import { ItemEffects } from "./effects/items"
+import { AwakeningEffects } from "./effects/awakening"
 import { PassiveEffects } from "./effects/passives"
 import {
   FireHitEffect,
@@ -117,6 +119,7 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
   @type("string") skill: Ability
   @type("string") tm: Ability
   @type("string") passive: Passive
+  @type("string") awakening: Awakening = Awakening.NONE
   @type(Status) status: Status
   @type(Count) count: Count
   @type("uint16") healDone: number
@@ -226,6 +229,17 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
 
     this.passive = Passive.NONE
     this.changePassive(pokemon.passive)
+
+    this.awakening = pokemon.awakening
+    if (this.awakening !== Awakening.NONE) {
+      // The awakened type is already on pokemon.types (added by computeSynergies
+      // so it also counts during prep) and copied above; here we just attach the
+      // per-rock combat effects.
+      for (const effect of AwakeningEffects[this.awakening] ?? []) {
+        if (isPlainFunction(effect)) this.effectsSet.add(effect())
+        else if (effect instanceof EffectClass) this.effectsSet.add(effect)
+      }
+    }
   }
 
   update(dt: number, board: Board, player: Player | undefined) {
@@ -1323,6 +1337,19 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
     this.getEffects(OnDeathEffect).forEach((effect) =>
       effect.apply({ pokemon: this, board, attacker })
     )
+
+    // FLOAT_STONE awakening: allies gain +10 SPEED when a ROCK ally is KO'd
+    if (this.types.has(Synergy.ROCK)) {
+      board.cells.forEach((ally) => {
+        if (
+          ally &&
+          ally.team === this.team &&
+          ally.awakening === Awakening.FLOAT_STONE
+        ) {
+          ally.addSpeed(10, ally, 0, false)
+        }
+      })
+    }
 
     if (this.status.curseVulnerability) {
       this.simulation.applyCurse(EffectEnum.CURSE_OF_VULNERABILITY, this.team)

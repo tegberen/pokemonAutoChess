@@ -26,6 +26,7 @@ import {
   Transfer
 } from "../types"
 import { Ability } from "../types/enum/Ability"
+import { Awakening } from "../types/enum/Awakening"
 import { EffectEnum } from "../types/enum/Effect"
 import {
   AttackType,
@@ -1261,10 +1262,10 @@ export default class Simulation extends Schema implements ISimulation {
           pokemon.effectsSet.add(rockDeathExplosionT1)
         }
         break
-
-      case EffectEnum.MOUTAIN_RESISTANCE:
+      
+      case EffectEnum.MOUTAIN_RESISTANCE: 
         if (types.has(Synergy.ROCK)) {
-          pokemon.addDefense(25, pokemon, 0, false)
+          pokemon.addDefense(20, pokemon, 0, false) // pre-emptive nerf
           pokemon.effects.add(EffectEnum.MOUTAIN_RESISTANCE)
           pokemon.effectsSet.add(rockDeathExplosionT2)
         }
@@ -1272,7 +1273,15 @@ export default class Simulation extends Schema implements ISimulation {
 
       case EffectEnum.DIAMOND_STORM:
         if (types.has(Synergy.ROCK)) {
-          pokemon.addDefense(50, pokemon, 0, false)
+          pokemon.addDefense(40, pokemon, 0, false) 
+          pokemon.effects.add(EffectEnum.DIAMOND_STORM)
+          pokemon.effectsSet.add(rockDeathExplosionT3)
+        }
+        break
+
+      case EffectEnum.CRYSTALLISATION:
+        if (types.has(Synergy.ROCK)) {
+          pokemon.addDefense(40, pokemon, 0, false)
           pokemon.effects.add(EffectEnum.DIAMOND_STORM)
           pokemon.effectsSet.add(rockDeathExplosionT3)
         }
@@ -1674,6 +1683,11 @@ export default class Simulation extends Schema implements ISimulation {
               0,
               false
             )
+          }
+          // ELECTRIC_QUARTZ awakening: charge up when THUNDER_STRUCK
+          if (pokemonOnCell.awakening === Awakening.ELECTRIC_QUARTZ) {
+            pokemonOnCell.addSpeed(5, pokemonOnCell, 0, false)
+            pokemonOnCell.addShield(10, pokemonOnCell, 0, false)
           }
           if (pokemonOnCell.types.has(Synergy.ELECTRIC)) {
             pokemonOnCell.status.addElectricField(pokemonOnCell)

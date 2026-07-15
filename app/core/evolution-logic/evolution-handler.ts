@@ -7,6 +7,7 @@ import type {
   EvolutionRule
 } from "../../types/EvolutionRules"
 import { Ability } from "../../types/enum/Ability"
+import { Awakening } from "../../types/enum/Awakening"
 import { Stat } from "../../types/enum/Game"
 import type { Pkm } from "../../types/enum/Pokemon"
 import { sum } from "../../utils/array"
@@ -89,5 +90,20 @@ export function carryOverPermanentStats(
       pokemonEvolved.skill = pokemonEvolved.tm
     }
     pokemonEvolved.maxPP = 100
+  }
+
+  // carry over the AWAKENING: a fully-awakened unit keeps its buff on the
+  // evolved form; otherwise a mid-charge unit keeps its charge. First match wins.
+  const awakenedBefore = pokemonsBeforeEvolution.find(
+    (p) => p.awakening !== Awakening.NONE
+  )
+  const chargingBefore = pokemonsBeforeEvolution.find(
+    (p) => p.awakeningRock !== ""
+  )
+  if (awakenedBefore) {
+    pokemonEvolved.awakening = awakenedBefore.awakening
+  } else if (chargingBefore) {
+    pokemonEvolved.awakeningRock = chargingBefore.awakeningRock
+    pokemonEvolved.awakeningCharge = chargingBefore.awakeningCharge
   }
 }

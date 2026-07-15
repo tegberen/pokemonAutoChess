@@ -813,6 +813,13 @@ export const AbilitiesAnimations: {
     duration: 500,
     scale: 3
   }),
+  // projectile for DAMP_ROCK awakening.
+  ["WATER_RANGE"]: projectile({
+    ability: "WATER/range",
+    textureKey: "attacks",
+    duration: 400,
+    scale: 5
+  }),
   [Ability.AQUA_STEP]: onCaster({
     ability: Ability.AQUA_STEP,
     scale: 1.5,
@@ -1501,6 +1508,16 @@ export const AbilitiesAnimations: {
   ],
   [Ability.COUNTER]: onCasterScale2,
   ["ROCK_EXPLOSION"]: onCasterScale4,
+  ["CRYSTALLISE"]:  onCaster({
+    scale: 4,
+    positionOffset: [+7, -15],
+    depth: DEPTH.ABILITY_BELOW_POKEMON
+  }),
+  ["CRYSTALLISE_SHATTER"]: onCaster({
+    scale: 4,
+    positionOffset: [+7, -15],
+    depth: DEPTH.ABILITY_BELOW_POKEMON
+  }),
   ["CORROSION"]: onCasterScale4,
   [Ability.HIGH_HORSEPOWER]: onCaster({
     ability: Ability.COUNTER,

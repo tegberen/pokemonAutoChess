@@ -4,7 +4,7 @@ import type { Stat } from "../../../../../types/enum/Game"
 import { clamp } from "../../../../../utils/number"
 import "./game-tooltip-bar.css"
 
-type BarType = "HP_ALLY" | "HP_ENEMY" | "PP" | "XP"
+type BarType = "HP_ALLY" | "HP_ENEMY" | "PP" | "XP" | "AWAKENING"
 
 interface GameTooltipBarProps {
   value: number | undefined
@@ -19,6 +19,7 @@ const BAR_COLORS: Record<BarType | "SHIELD", string> = {
   HP_ENEMY: "#e76e55",
   PP: "#5f9ff9",
   XP: "#eeeeee",
+  AWAKENING: "#d797df",
   SHIELD: "linear-gradient(to bottom, #ffffff, #c0c0c0)"
 }
 
@@ -26,7 +27,8 @@ const BAR_LABELS: Record<BarType, `stat.${Stat}` | ""> = {
   HP_ALLY: "stat.HP",
   HP_ENEMY: "stat.HP",
   PP: "stat.PP",
-  XP: ""
+  XP: "",
+  AWAKENING: ""
 }
 
 export const GameTooltipBar: React.FC<GameTooltipBarProps> = ({

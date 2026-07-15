@@ -661,7 +661,10 @@ export default class Player extends Schema implements IPlayer {
   }
 
   updateWeatherRocks() {
-    const nbWeatherRocks = getSynergyTier(this.synergies, Synergy.ROCK)
+    const nbWeatherRocks = Math.min(
+      3,
+      getSynergyTier(this.synergies, Synergy.ROCK)
+    )
 
     let weatherRockInInventory
     do {
@@ -674,8 +677,15 @@ export default class Player extends Schema implements IPlayer {
     } while (weatherRockInInventory != -1)
 
     if (nbWeatherRocks > 0) {
-      const rocksCollected = this.weatherRocks.slice(-nbWeatherRocks)
-      this.items.push(...rocksCollected)
+      // Weather rocks currently locked into an awakening charge are in use and
+      // must NOT be handed back to the bench until the Pokémon shatters
+      const nbCharging = schemaValues(this.board).filter(
+        (p) => p.awakeningRock !== ""
+      ).length
+      const nbInInventory = Math.max(0, nbWeatherRocks - nbCharging)
+      if (nbInInventory > 0) {
+        this.items.push(...this.weatherRocks.slice(-nbInInventory))
+      }
     }
   }
 

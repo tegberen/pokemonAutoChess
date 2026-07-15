@@ -40,6 +40,7 @@ import {
   Stat,
   Team
 } from "../../../../types/enum/Game"
+import { Awakening } from "../../../../types/enum/Awakening"
 import { Item } from "../../../../types/enum/Item"
 import { Pkm, PkmByIndex } from "../../../../types/enum/Pokemon"
 import { SpecialGameRule } from "../../../../types/enum/SpecialGameRule"
@@ -88,6 +89,7 @@ export default class BoardManager {
   gameMode: GameMode
   mode: BoardMode
   animationManager: AnimationManager
+  shatteredIds = new Set<string>()
   playerAvatar: PokemonAvatar | null
   opponentAvatar: PokemonAvatar | null
   scoutingAvatars: PokemonAvatar[] = []
@@ -220,6 +222,18 @@ export default class BoardManager {
       false
     )
 
+    pokemonUI.once("loaded", () => {
+      if (pokemon.awakeningRock !== "") {
+        pokemonUI.crystalliseAnimation()
+      } else if (
+        pokemon.awakening !== Awakening.NONE &&
+        !this.shatteredIds.has(pokemon.id)
+      ) {
+        pokemonUI.crystalliseShatterAnimation()
+        this.shatteredIds.add(pokemon.id)
+      }
+    })
+
     this.animationManager.animatePokemon(pokemonUI, pokemon.action, false)
     if (pokemon.action === PokemonActionState.EXPLORING) {
       pokemonUI.orientation = Orientation.DOWN
@@ -283,7 +297,10 @@ export default class BoardManager {
     if (this.state.stageLevel in PVEStages && this.mode === BoardMode.PICK) {
       const base = PVEStages[this.state.stageLevel]
       const allOptions = base.variants ? [base, ...base.variants] : [base]
-      const resolvedStage = { ...base, ...allOptions[this.state.currentPveVariantIndex] }
+      const resolvedStage = {
+        ...base,
+        ...allOptions[this.state.currentPveVariantIndex]
+      }
       this.addPvePokemons(resolvedStage, phaseJustChanged)
     }
   }
@@ -1143,9 +1160,15 @@ export default class BoardManager {
           if (value === PokemonActionState.EXPLORING) {
             pokemonSprite.orientation = Orientation.DOWN
             this.animationManager.animatePokemon(
-              pokemonSprite, PokemonActionState.EXPLORING, false, true
+              pokemonSprite,
+              PokemonActionState.EXPLORING,
+              false,
+              true
             )
-            const [, baseY] = transformBoardCoordinates(pokemon.positionX, pokemon.positionY)
+            const [, baseY] = transformBoardCoordinates(
+              pokemon.positionX,
+              pokemon.positionY
+            )
             this.scene.tweens.add({
               targets: pokemonSprite,
               y: baseY + 100,
@@ -1170,43 +1193,54 @@ export default class BoardManager {
               }
             })
           }
-        if (previousValue === PokemonActionState.EXPLORING && value !== PokemonActionState.EXPLORING) {
-          const [, baseY] = transformBoardCoordinates(pokemon.positionX, pokemon.positionY)
-          pokemonSprite.alpha = 0.3
-          // step 1: fade out from dimmed (0.3) to fully invisible, no movement
-          this.scene.tweens.add({
-            targets: pokemonSprite,
-            alpha: 0,
-            ease: "Sine.easeInOut",
-            duration: 800,
-            onComplete: () => {
-              if (!pokemonSprite?.scene) return
-              // step 2: position below, ready to walk up
-              pokemonSprite.y = baseY + 100
-              pokemonSprite.orientation = Orientation.UP
-              this.animationManager.animatePokemon(
-                pokemonSprite, PokemonActionState.EXPLORING, false, true
-              )
-              // step 3: walk up from below while fading back in to full color
-              this.scene.tweens.add({
-                targets: pokemonSprite,
-                y: baseY,
-                alpha: 1,
-                ease: "Sine.easeOut",
-                duration: 1400,
-                onComplete: () => {
-                  if (!pokemonSprite?.scene) return
-                  pokemonSprite.draggable = true
-                  pokemonSprite.orientation = Orientation.DOWNLEFT
-                  this.animationManager.animatePokemon(
-                    pokemonSprite, PokemonActionState.IDLE, false
-                  )
-                }
-              })
-            }
-          })
-        }
-        break
+          if (
+            previousValue === PokemonActionState.EXPLORING &&
+            value !== PokemonActionState.EXPLORING
+          ) {
+            const [, baseY] = transformBoardCoordinates(
+              pokemon.positionX,
+              pokemon.positionY
+            )
+            pokemonSprite.alpha = 0.3
+            // step 1: fade out from dimmed (0.3) to fully invisible, no movement
+            this.scene.tweens.add({
+              targets: pokemonSprite,
+              alpha: 0,
+              ease: "Sine.easeInOut",
+              duration: 800,
+              onComplete: () => {
+                if (!pokemonSprite?.scene) return
+                // step 2: position below, ready to walk up
+                pokemonSprite.y = baseY + 100
+                pokemonSprite.orientation = Orientation.UP
+                this.animationManager.animatePokemon(
+                  pokemonSprite,
+                  PokemonActionState.EXPLORING,
+                  false,
+                  true
+                )
+                // step 3: walk up from below while fading back in to full color
+                this.scene.tweens.add({
+                  targets: pokemonSprite,
+                  y: baseY,
+                  alpha: 1,
+                  ease: "Sine.easeOut",
+                  duration: 1400,
+                  onComplete: () => {
+                    if (!pokemonSprite?.scene) return
+                    pokemonSprite.draggable = true
+                    pokemonSprite.orientation = Orientation.DOWNLEFT
+                    this.animationManager.animatePokemon(
+                      pokemonSprite,
+                      PokemonActionState.IDLE,
+                      false
+                    )
+                  }
+                })
+              }
+            })
+          }
+          break
 
         case "hp":
         case "maxHP": {
@@ -1297,6 +1331,26 @@ export default class BoardManager {
         case "aura":
           if (value === true && !previousValue) {
             pokemonSprite.auraAnimation(this.scene, false, false)
+          }
+          break
+
+        case "awakeningCharge":
+        case "awakeningRock":
+        case "awakening":
+          pokemonSprite.setAwakening(
+            pokemon.awakeningCharge,
+            pokemon.awakeningRock,
+            pokemon.awakening
+          )
+          if (
+            field === "awakeningRock" &&
+            pokemon.awakeningRock !== "" &&
+            (previousValue as string | undefined) === ""
+          ) {
+            pokemonSprite.crystalliseAnimation(true) // first drag: with emote
+          }
+          if (pokemonSprite.detail instanceof GamePokemonDetailDOMWrapper) {
+            pokemonSprite.detail.updatePokemon(pokemonSprite.pokemon)
           }
           break
       }

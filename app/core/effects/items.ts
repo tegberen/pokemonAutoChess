@@ -6,17 +6,20 @@ import { PVEStages } from "../../models/pve-stages"
 import { Title, Transfer } from "../../types"
 import { EvolutionRuleType } from "../../types/EvolutionRules"
 import { Ability } from "../../types/enum/Ability"
+import { Awakening, ROCK_AWAKENING_TIER } from "../../types/enum/Awakening"
 import { DungeonPMDO } from "../../types/enum/Dungeon"
 import { EffectEnum } from "../../types/enum/Effect"
 import { AttackType, PokemonActionState, Team } from "../../types/enum/Game"
 import {
   AbilityPerTM,
+  CraftableItemsNoScarves,
   type Dish,
   DishesGoingToInventory,
   type FishingRod,
   Flavors,
   HerbaMysticas,
   Item,
+  ItemComponents,
   ItemRecipe,
   MemoryDiscs,
   NonSpecialBerries,
@@ -26,14 +29,13 @@ import {
   SynergyGivenByItem,
   SynergyStones,
   TMs,
-  ItemComponents,
-  CraftableItemsNoScarves
+  WeatherRocks
 } from "../../types/enum/Item"
 import { Passive } from "../../types/enum/Passive"
 import { NonPkm, Pkm, PkmFamily } from "../../types/enum/Pokemon"
 import { Synergy } from "../../types/enum/Synergy"
 import { WandererBehavior, WandererType } from "../../types/enum/Wanderer"
-import { removeInArray, isIn } from "../../utils/array"
+import { isIn, removeInArray } from "../../utils/array"
 import { getFreeSpaceOnBench, isOnBench } from "../../utils/board"
 import { distanceC, distanceM } from "../../utils/distance"
 import { max, min } from "../../utils/number"
@@ -45,12 +47,12 @@ import {
 } from "../../utils/random"
 import { schemaValues } from "../../utils/schemas"
 import { AbilityStrategies } from "../abilities/abilities"
+import { Board, Cell, effectInOrientation } from "../board"
 import { EvolutionManager } from "../evolution-logic/evolution-manager"
 import { FlowerPotMons } from "../flower-pots"
-import { PokemonEntity } from "../pokemon-entity"
-import { getStrongestUnit } from "../unit-score"
+import type { PokemonEntity } from "../pokemon-entity"
 import { DelayedCommand } from "../simulation-command"
-import { getUnitScore } from "../unit-score"
+import { getStrongestUnit, getUnitScore } from "../unit-score"
 import {
   BeforeAttackEffect,
   type Effect,
@@ -73,8 +75,6 @@ import {
   OnStageStartEffect,
   PeriodicEffect
 } from "./effect"
-import { effectInOrientation } from "../board"
-import { Board, Cell } from "../board"
 
 export const blueOrbOnAttackEffect = new OnAttackEffect(
   ({ pokemon, target, board }) => {
@@ -563,7 +563,13 @@ export class CovertCloakEffect extends PeriodicEffect {
         pokemon.broadcastAbility({
           skill: "COVERT_CLOAK"
         })
-        board.getCellsInRange(pokemon.positionX, pokemon.positionY, pokemon.range, false)
+        board
+          .getCellsInRange(
+            pokemon.positionX,
+            pokemon.positionY,
+            pokemon.range,
+            false
+          )
           .forEach((cell) => {
             if (!cell.value || cell.value.team === pokemon.team) return
             const enemy = cell.value
@@ -587,7 +593,6 @@ export class CovertCloakEffect extends PeriodicEffect {
     )
   }
 }
-
 
 export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
   ...Object.fromEntries(
@@ -690,7 +695,7 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
   [Item.PUNCHING_GLOVE]: [
     new OnHitEffect(({ attacker, target, board }) => {
       target.handleDamage({
-        damage: Math.round(0.10 * target.maxHP),
+        damage: Math.round(0.1 * target.maxHP),
         board,
         attackType: AttackType.PHYSICAL,
         attacker,
@@ -766,7 +771,6 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
         target.status.triggerFlinch(3000, pokemon)
       }
     })
-
   ],
 
   [Item.POKERUS_VIAL]: [
@@ -802,12 +806,12 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
 
   [Item.GOLD_BOTTLE_CAP]: [
     new OnItemGainedEffect((pokemon) => {
-      const atkValue = (pokemon.player?.money ?? 0)
-      pokemon.addAttack(atkValue/3, pokemon, 0, false)
+      const atkValue = pokemon.player?.money ?? 0
+      pokemon.addAttack(atkValue / 3, pokemon, 0, false)
     }),
     new OnItemRemovedEffect((pokemon) => {
-      const atkValue = (pokemon.player?.money ?? 0)
-      pokemon.addAttack(-atkValue/3, pokemon, 0, false)
+      const atkValue = pokemon.player?.money ?? 0
+      pokemon.addAttack(-atkValue / 3, pokemon, 0, false)
     }),
     new OnKillEffect(({ attacker, target, board }) => {
       if (attacker.player) {
@@ -868,7 +872,12 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
     }),
     new OnItemRemovedEffect((pokemon) => {
       pokemon.addSpeed(-5 * pokemon.count.upgradeCount, pokemon, 0, false)
-      pokemon.addAbilityPower(-5 * pokemon.count.upgradeCount, pokemon, 0, false)
+      pokemon.addAbilityPower(
+        -5 * pokemon.count.upgradeCount,
+        pokemon,
+        0,
+        false
+      )
       pokemon.count.upgradeCount = 0
     })
   ],
@@ -1161,9 +1170,9 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
     }),
     new OnItemGainedEffect((pokemon) => {
       pokemon.effects.add(EffectEnum.IMMUNITY_BURN)
-      pokemon.status.burn = false,
-      pokemon.status.burnCooldown = 0,
-      pokemon.status.burnOrigin = undefined
+      ;(pokemon.status.burn = false),
+        (pokemon.status.burnCooldown = 0),
+        (pokemon.status.burnOrigin = undefined)
     })
   ],
 
@@ -1689,7 +1698,7 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
   ],
   [Item.CLEAR_AMULET]: [
     () => {
-      const effect = new class extends PeriodicEffect {
+      const effect = new (class extends PeriodicEffect {
         storedStatus: string | null = null
         constructor() {
           super(
@@ -1711,13 +1720,16 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
               else if (s.curse) effect.storedStatus = "curse"
               else if (s.fatigue) effect.storedStatus = "fatigue"
               else if (s.armorReduction) effect.storedStatus = "armorReduction"
-              else if (s.flinch) effect.storedStatus = "flinch"              
+              else if (s.flinch) effect.storedStatus = "flinch"
 
               if (effect.storedStatus) {
                 pokemon.status.triggerRuneProtect(10000, pokemon, pokemon)
                 if (effect.storedStatus === "possessed") {
                   pokemon.status.possessedCooldown = 0
-                  pokemon.team = pokemon.team === Team.BLUE_TEAM ? Team.RED_TEAM : Team.BLUE_TEAM
+                  pokemon.team =
+                    pokemon.team === Team.BLUE_TEAM
+                      ? Team.RED_TEAM
+                      : Team.BLUE_TEAM
                 }
               }
             },
@@ -1725,7 +1737,7 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
             500
           )
         }
-      }()
+      })()
       return effect
     },
     new OnAttackEffect(({ pokemon, target, board }) => {
@@ -1745,22 +1757,54 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
         const enemy = cell.value
 
         switch (storedEffect.storedStatus) {
-          case "burn": enemy.status.triggerBurn(5000, enemy, pokemon); break
-          case "poison": enemy.status.triggerPoison(5000, enemy, pokemon); break
-          case "paralysis": enemy.status.triggerParalysis(5000, enemy, pokemon); break
-          case "confusion": enemy.status.triggerConfusion(5000, enemy, pokemon); break
-          case "freeze": enemy.status.triggerFreeze(5000, enemy, pokemon); break
-          case "sleep": enemy.status.triggerSleep(5000, enemy); break
-          case "wound": enemy.status.triggerWound(5000, enemy, pokemon); break
-          case "silence": enemy.status.triggerSilence(5000, enemy, pokemon); break
-          case "possessed": enemy.status.triggerPossessed(5000, enemy, pokemon); break
-          case "locked": enemy.status.triggerLocked(5000, enemy); break
-          case "blinded": enemy.status.triggerBlinded(5000, enemy, pokemon); break
-          case "charm": enemy.status.triggerCharm(5000, enemy, pokemon); break
-          case "curse": enemy.status.triggerCurse(5000, enemy); break
-          case "fatigue": enemy.status.triggerFatigue(5000, enemy, pokemon); break
-          case "armorReduction": enemy.status.triggerArmorReduction(5000, enemy); break
-          case "flinch": enemy.status.triggerFlinch(5000, enemy, pokemon); break
+          case "burn":
+            enemy.status.triggerBurn(5000, enemy, pokemon)
+            break
+          case "poison":
+            enemy.status.triggerPoison(5000, enemy, pokemon)
+            break
+          case "paralysis":
+            enemy.status.triggerParalysis(5000, enemy, pokemon)
+            break
+          case "confusion":
+            enemy.status.triggerConfusion(5000, enemy, pokemon)
+            break
+          case "freeze":
+            enemy.status.triggerFreeze(5000, enemy, pokemon)
+            break
+          case "sleep":
+            enemy.status.triggerSleep(5000, enemy)
+            break
+          case "wound":
+            enemy.status.triggerWound(5000, enemy, pokemon)
+            break
+          case "silence":
+            enemy.status.triggerSilence(5000, enemy, pokemon)
+            break
+          case "possessed":
+            enemy.status.triggerPossessed(5000, enemy, pokemon)
+            break
+          case "locked":
+            enemy.status.triggerLocked(5000, enemy)
+            break
+          case "blinded":
+            enemy.status.triggerBlinded(5000, enemy, pokemon)
+            break
+          case "charm":
+            enemy.status.triggerCharm(5000, enemy, pokemon)
+            break
+          case "curse":
+            enemy.status.triggerCurse(5000, enemy)
+            break
+          case "fatigue":
+            enemy.status.triggerFatigue(5000, enemy, pokemon)
+            break
+          case "armorReduction":
+            enemy.status.triggerArmorReduction(5000, enemy)
+            break
+          case "flinch":
+            enemy.status.triggerFlinch(5000, enemy, pokemon)
+            break
         }
       })
     }),
@@ -1771,7 +1815,11 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
   [Item.DESTINY_KNOT]: [
     new OnDeathEffect(({ pokemon, board }) => {
       const allies = board.cells.filter(
-        (cell) => cell && cell.team === pokemon.team && cell.id !== pokemon.id && cell.hp > 0
+        (cell) =>
+          cell &&
+          cell.team === pokemon.team &&
+          cell.id !== pokemon.id &&
+          cell.hp > 0
       ) as PokemonEntity[]
       const strongest = getStrongestUnit(allies)
       if (!strongest) return
@@ -1808,7 +1856,12 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
       pokemon.count.gripClawCount++
     }),
     new OnItemRemovedEffect((pokemon) => {
-      pokemon.addCritChance(-10 * pokemon.count.gripClawCount, pokemon, 0, false)
+      pokemon.addCritChance(
+        -10 * pokemon.count.gripClawCount,
+        pokemon,
+        0,
+        false
+      )
       pokemon.count.gripClawCount = 0
     })
   ],
@@ -1867,14 +1920,18 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
   [Item.FAIRY_FEATHER]: [
     new OnAttackEffect(({ pokemon, target }) => {
       if (!target) return
-      if (target && chance(0.3, pokemon) && target.items.has(Item.TWIST_BAND) === false) {
+      if (
+        target &&
+        chance(0.3, pokemon) &&
+        target.items.has(Item.TWIST_BAND) === false
+      ) {
         target.addAttack(-2, target, 0, false)
       }
     })
   ],
   [Item.SHARP_BEAK]: [
     new OnItemGainedEffect((pokemon) => {
-      if (!pokemon.types.has(Synergy.FLYING)) return  
+      if (!pokemon.types.has(Synergy.FLYING)) return
       pokemon.addAttack(pokemon.baseAtk, pokemon, 0, false)
     }),
     new OnItemRemovedEffect((pokemon) => {
@@ -1982,4 +2039,41 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
       }
     })
   ]
+}
+// AWAKENING: dropping a weather rock on a Rock-synergy Pokémon starts
+// crystallising it instead of equipping the rock. The rock is consumed into a
+// charge that fills over the next prep rounds (see updatePlayerBetweenStages).
+// Multiple Pokémon can be awakened, but a single Pokémon that is already
+// charging or already awakened cannot start another.
+const weatherRockAwakeningEffect = new OnItemDroppedEffect(
+  ({ pokemon, player, item }) => {
+    // Weather rocks are never equipped — they either crystallise a Rock Pokémon
+    // (only at Rock 8) or stay on the bench, where they set the weather.
+    if (
+      !pokemon.types.has(Synergy.ROCK) ||
+      isOnBench(pokemon) ||
+      getSynergyTier(player.synergies, Synergy.ROCK) < ROCK_AWAKENING_TIER ||
+      pokemon.awakening !== Awakening.NONE ||
+      pokemon.awakeningRock !== ""
+    ) {
+      return false // reject: the rock stays on the bench
+    }
+    // Commit: the rock is locked onto this Pokémon and starts charging. Resync
+    // the weather rocks so the now-in-use rock leaves the bench (and the Rock
+    // synergy won't hand it straight back).
+    pokemon.awakeningRock = item
+    pokemon.awakeningCharge = 0
+    player.updateWeatherRocks()
+    return false // consumed into the charge, not equipped
+  }
+)
+
+// AWAKENING: every weather rock, when dropped on a Rock Pokémon, starts the
+// crystallisation charge instead of being equipped. Guard against double
+// registration (this module can be re-evaluated by the dev hot-reloader).
+for (const rock of WeatherRocks) {
+  const effects = (ItemEffects[rock] ??= [])
+  if (!effects.includes(weatherRockAwakeningEffect)) {
+    effects.push(weatherRockAwakeningEffect)
+  }
 }

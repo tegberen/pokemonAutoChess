@@ -1,6 +1,7 @@
 import { MapSchema, SetSchema } from "@colyseus/schema"
 import { SynergyTiers, SynergyTiersThresholds } from "../../config"
 import type { IPlayer, IPokemon } from "../../types"
+import { AwakeningTypes } from "../../types/enum/Awakening"
 import type { EffectEnum } from "../../types/enum/Effect"
 import { SynergyGivenByItem } from "../../types/enum/Item"
 import { Passive } from "../../types/enum/Passive"
@@ -129,6 +130,8 @@ export function computeSynergies(
     }
 
     addSynergiesGivenByItems(pkm)
+    const awakeningType = AwakeningTypes[pkm.awakening]
+    if (awakeningType) pkm.types.add(awakeningType)
     if (pkm.positionY != 0) {
       const family =
         specialGameRule === SpecialGameRule.FAMILY_OUTING
