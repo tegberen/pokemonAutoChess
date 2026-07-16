@@ -265,5 +265,35 @@ export const AwakeningEffects: Partial<
       pokemon.simulation.applyCurse(EffectEnum.CURSE_OF_WEAKNESS, enemyTeam)
       pokemon.simulation.applyCurse(EffectEnum.CURSE_OF_TORMENT, enemyTeam)
     })
+  ],
+  [Awakening.METAL_ALLOY]: [
+    new OnAttackEffect(({ pokemon, target, board }) => {
+      if (target) {
+        if (chance(0.05, pokemon) && target.range > 1 && !target.items.has(Item.PROTECTIVE_PADS)) {
+          target.range -= 1
+          pokemon.range += 1
+        } else {
+          const orientation = board.orientation(
+            pokemon.positionX,
+            pokemon.positionY,
+            target.positionX,
+            target.positionY,
+            pokemon,
+            undefined
+          )
+          for (let i = 0; i < pokemon.range; i++) {
+            const destination = board.getKnockBackPlace(
+              target.positionX,
+              target.positionY,
+              orientation
+            )
+            if (!destination) break
+            target.moveTo(destination.x, destination.y, board, true)
+          }
+          target.status.triggerLocked(2000, target)
+        }
+      }
+    })
   ]
+
 }

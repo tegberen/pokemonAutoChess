@@ -703,6 +703,8 @@ class GameContainer {
           this.gameScene.weatherManager.addSmog()
         } else if (value === Weather.MURKY) {
           this.gameScene.weatherManager.addMurky()
+        } else if (value === Weather.MAGNET_STORM) {
+          this.gameScene.weatherManager.addAurora()
         }
       }
     }

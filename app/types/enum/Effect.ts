@@ -112,6 +112,7 @@ export enum EffectEnum {
   STORM = "STORM",
   NIGHT = "NIGHT",
   WINDY = "WINDY",
+  MAGNET_STORM = "MAGNET_STORM",
   BLOODMOON = "BLOODMOON",
   SMOG = "SMOG",
   SMOKE = "SMOKE",

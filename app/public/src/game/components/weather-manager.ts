@@ -9,6 +9,9 @@ export default class WeatherManager {
   colorFilter: Phaser.GameObjects.Rectangle | undefined
   particlesEmitters: Phaser.GameObjects.Particles.ParticleEmitter[]
   image: Phaser.GameObjects.Image | undefined
+  images: Phaser.GameObjects.Image[]
+  graphics: Phaser.GameObjects.Graphics[]
+  timers: Phaser.Time.TimerEvent[]
   tweens: Phaser.Tweens.Tween[]
   fxs: Phaser.Filters.Controller[]
 
@@ -16,6 +19,9 @@ export default class WeatherManager {
     this.scene = scene
     this.screen = new Phaser.Geom.Rectangle(0, 0, 3000, 2000)
     this.particlesEmitters = []
+    this.images = []
+    this.graphics = []
+    this.timers = []
     this.tweens = []
     this.fxs = []
   }
@@ -584,6 +590,206 @@ export default class WeatherManager {
     )
   }
 
+  addAurora() {
+    const arcColors = [0xefe726, 0xb4436e, 0xa80155, 0x950274]
+    const sparkTints = [0xf0c698, 0xefe726, 0xb4436e, 0xa80155, 0x950274]
+    const auroraPalette = [
+      0xf0c698, // cream
+      0xefe726, // yellow
+      0xb4436e, // rose
+      0xa80155, // magenta
+      0x950274, // purple
+      0xa80155, // magenta
+      0xb4436e // rose
+    ]
+
+    const strips = [
+      { min: -40, max: 470 },
+      { min: 1500, max: 1990 }
+    ]
+
+    // --- textures ------------------------------------------------------
+    // soft radial glow (for the faint background haze)
+    const glowKey = "aurora-blob"
+    if (!this.scene.textures.exists(glowKey)) {
+      const size = 256
+      const tex = this.scene.textures.createCanvas(glowKey, size, size)
+      if (tex) {
+        const ctx = tex.getContext()
+        const r = size / 2
+        const glow = ctx.createRadialGradient(r, r, 0, r, r, r)
+        glow.addColorStop(0, "rgba(255,255,255,1)")
+        glow.addColorStop(0.4, "rgba(255,255,255,0.55)")
+        glow.addColorStop(1, "rgba(255,255,255,0)")
+        ctx.fillStyle = glow
+        ctx.fillRect(0, 0, size, size)
+        tex.refresh()
+      }
+    }
+    //---  the metallic sparks
+    const sparkKey = "steel-spark"
+    if (!this.scene.textures.exists(sparkKey)) {
+      const w = 8
+      const h = 48
+      const tex = this.scene.textures.createCanvas(sparkKey, w, h)
+      if (tex) {
+        const ctx = tex.getContext()
+        const g = ctx.createLinearGradient(0, 0, 0, h)
+        g.addColorStop(0, "rgba(255,255,255,0)")
+        g.addColorStop(0.5, "rgba(255,255,255,1)")
+        g.addColorStop(1, "rgba(255,255,255,0)")
+        ctx.fillStyle = g
+        ctx.fillRect(0, 0, w, h)
+        tex.refresh()
+      }
+    }
+
+    // --- dark backing layer (rendered first, so it sits UNDER the aurora)
+    for (const strip of strips) {
+      const cx = (strip.min + strip.max) / 2
+      const backing = this.scene.add.existing(
+        new Phaser.GameObjects.Image(this.scene, cx, 520, glowKey)
+          .setOrigin(0.5)
+          .setDepth(DEPTH.WEATHER_FX)
+          .setBlendMode(Phaser.BlendModes.MULTIPLY)
+          .setTint(0x241830)
+          .setScale(3.6, 7.2)
+          .setAlpha(0.45)
+      )
+      this.images.push(backing)
+    }
+
+    // --- soft aurora base layer
+    const count = 12
+    for (let i = 0; i < count; i++) {
+      const onLeft = i % 2 === 0
+      const strip = onLeft ? strips[0] : strips[1]
+      const x = strip.min + Phaser.Math.Between(0, strip.max - strip.min)
+      const y = 120 + (760 / (count - 1)) * i + Phaser.Math.Between(-40, 40)
+      const baseAlpha = 0.16 + Phaser.Math.FloatBetween(0, 0.08)
+      const blob = this.scene.add.existing(
+        new Phaser.GameObjects.Image(this.scene, x, y, glowKey)
+          .setOrigin(0.5)
+          .setDepth(DEPTH.WEATHER_FX)
+          .setBlendMode(Phaser.BlendModes.SCREEN)
+          .setTint(auroraPalette[i % auroraPalette.length])
+          .setScale(2.4, 4.0)
+          .setAlpha(baseAlpha)
+      )
+      this.images.push(blob)
+
+      // cross-fade brightness in place
+      this.tweens.push(
+        this.scene.tweens.add({
+          targets: blob,
+          alpha: { from: baseAlpha * 0.4, to: baseAlpha + 0.12 },
+          duration: 2600 + Phaser.Math.Between(0, 2200),
+          delay: Phaser.Math.Between(0, 2000),
+          yoyo: true,
+          repeat: -1,
+          ease: "sine.inout"
+        })
+      )
+
+      // breathing size + tiny sway so the aurora flows
+      this.tweens.push(
+        this.scene.tweens.add({
+          targets: blob,
+          scaleX: { from: 2.2, to: 2.8 },
+          scaleY: { from: 3.7, to: 4.4 },
+          x: x + Phaser.Math.Between(-50, 50),
+          duration: 3500 + Phaser.Math.Between(0, 2500),
+          yoyo: true,
+          repeat: -1,
+          ease: "sine.inout"
+        })
+      )
+    }
+
+    // --- fast, sharp metallic sparks streaking upward
+    for (const strip of strips) {
+      this.particlesEmitters.push(
+        this.scene.add.particles(0, 0, sparkKey, {
+          x: { min: strip.min - 40, max: strip.max + 40 },
+          y: { min: 120, max: 960 },
+          frequency: 80,
+          quantity: 1,
+          lifespan: { min: 350, max: 1000 },
+          speedX: { min: -30, max: 30 },
+          speedY: { min: -300, max: -140 },
+          scale: { start: 1.0, end: 0.2 },
+          alpha: { start: 1, end: 0 },
+          rotate: { min: -12, max: 12 },
+          tint: sparkTints,
+          blendMode: "ADD"
+        })
+      )
+    }
+
+    // --- crackling lightning arcs
+    const makeBolt = (x: number, y0: number, y1: number) => {
+      const segs = Phaser.Math.Between(5, 9)
+      const pts: { x: number; y: number }[] = [{ x, y: y0 }]
+      for (let s = 1; s <= segs; s++) {
+        const t = s / segs
+        const yy = Phaser.Math.Linear(y0, y1, t)
+        const jitter = s === segs ? 0 : Phaser.Math.Between(-45, 45)
+        pts.push({ x: x + jitter, y: yy })
+      }
+      return pts
+    }
+    const stroke = (
+      g: Phaser.GameObjects.Graphics,
+      pts: { x: number; y: number }[]
+    ) => {
+      g.beginPath()
+      g.moveTo(pts[0].x, pts[0].y)
+      for (let s = 1; s < pts.length; s++) g.lineTo(pts[s].x, pts[s].y)
+      g.strokePath()
+    }
+    const spawnArc = () => {
+      const strip = Phaser.Utils.Array.GetRandom(strips)
+      const x = Phaser.Math.Between(strip.min, strip.max)
+      const y0 = Phaser.Math.Between(80, 260)
+      const y1 = Phaser.Math.Between(560, 940)
+      const color = Phaser.Utils.Array.GetRandom(arcColors)
+      const pts = makeBolt(x, y0, y1)
+      const g = this.scene.add
+        .graphics()
+        .setDepth(DEPTH.WEATHER_FX)
+        .setBlendMode(Phaser.BlendModes.ADD)
+      g.lineStyle(8, color, 0.22)
+      stroke(g, pts)
+      g.lineStyle(2.5, 0xffffff, 0.95)
+      stroke(g, pts)
+      this.graphics.push(g)
+      this.tweens.push(
+        this.scene.tweens.add({
+          targets: g,
+          alpha: 0,
+          duration: Phaser.Math.Between(110, 260),
+          ease: "cubic.in",
+          onComplete: () => {
+            g.destroy()
+            const idx = this.graphics.indexOf(g)
+            if (idx >= 0) this.graphics.splice(idx, 1)
+          }
+        })
+      )
+    }
+    // bursty crackle: every tick, fire 0-2 bolts so gaps and clusters happen
+    this.timers.push(
+      this.scene.time.addEvent({
+        delay: 280,
+        loop: true,
+        callback: () => {
+          const n = Phaser.Math.Between(0, 2)
+          for (let k = 0; k < n; k++) spawnArc()
+        }
+      })
+    )
+  }
+
   setTownDaytime(stageLevel: number) {
     // ambient light based on day time
     let red = 255,
@@ -634,6 +840,18 @@ export default class WeatherManager {
     if (this.image) {
       this.image.destroy()
       this.image = undefined
+    }
+    if (this.images) {
+      this.images.forEach((image) => image.destroy())
+      this.images = []
+    }
+    if (this.timers) {
+      this.timers.forEach((timer) => timer.remove(false))
+      this.timers = []
+    }
+    if (this.graphics) {
+      this.graphics.forEach((g) => g.destroy())
+      this.graphics = []
     }
     if (this.tweens) {
       this.tweens.forEach((tween) => tween.destroy())

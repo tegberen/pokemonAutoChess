@@ -15,7 +15,8 @@ export enum Awakening {
   MIST_STONE = "MIST_STONE",
   BLOOD_STONE = "BLOOD_STONE",
   SMELLY_CLAY = "SMELLY_CLAY",
-  ODD_KEYSTONE = "ODD_KEYSTONE"
+  ODD_KEYSTONE = "ODD_KEYSTONE",
+  METAL_ALLOY = "METAL_ALLOY"
 }
 
 export const AwakeningTypes: Partial<Record<Awakening, Synergy>> = {
@@ -30,5 +31,6 @@ export const AwakeningTypes: Partial<Record<Awakening, Synergy>> = {
   [Awakening.MIST_STONE]: Synergy.FAIRY,
   [Awakening.BLOOD_STONE]: Synergy.WILD,
   [Awakening.SMELLY_CLAY]: Synergy.POISON,
-  [Awakening.ODD_KEYSTONE]: Synergy.GHOST
+  [Awakening.ODD_KEYSTONE]: Synergy.GHOST,
+  [Awakening.METAL_ALLOY]: Synergy.STEEL
 }

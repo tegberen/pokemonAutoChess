@@ -16214,6 +16214,7 @@ export class Solgaleo extends Pokemon {
     this.maxHP = this.hp
     player.titles.add(Title.STARGAZER)
   }
+  passive = Passive.MAGNET_STORM
 }
 
 export class Lunala extends Pokemon {
@@ -16237,6 +16238,7 @@ export class Lunala extends Pokemon {
     this.maxHP = this.hp
     player.titles.add(Title.STARGAZER)
   }
+  passive = Passive.MURKY
 }
 
 export class Magearna extends Pokemon {

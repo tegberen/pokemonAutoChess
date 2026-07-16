@@ -1,5 +1,5 @@
 import { MapSchema, Schema, type } from "@colyseus/schema"
-import { BOARD_HEIGHT, BOARD_WIDTH, BOARD_SIDE_HEIGHT } from "../config"
+import { BOARD_HEIGHT, BOARD_WIDTH, BOARD_SIDE_HEIGHT, DEFAULT_SPEED } from "../config"
 import {
   packScribbleCell,
   ScribbleShapeTint,
@@ -11,7 +11,7 @@ import {
   SynergyTiers
 } from "../config/game/synergies"
 import type Player from "../models/colyseus-models/player"
-import type { Pokemon } from "../models/colyseus-models/pokemon"
+import { PokemonClasses, type Pokemon } from "../models/colyseus-models/pokemon"
 import PokemonFactory from "../models/pokemon-factory"
 import { getPokemonData } from "../models/precomputed/precomputed-pokemon-data"
 import { PRECOMPUTED_POKEMONS_PER_TYPE } from "../models/precomputed/precomputed-types"
@@ -46,11 +46,11 @@ import {
   WeatherRocksByWeather
 } from "../types/enum/Item"
 import { Passive } from "../types/enum/Passive"
-import { Pkm } from "../types/enum/Pokemon"
+import { Pkm, PkmByIndex } from "../types/enum/Pokemon"
 import { Synergy } from "../types/enum/Synergy"
 import { Weather, WeatherEffects } from "../types/enum/Weather"
 import type { IPokemonData } from "../types/interfaces/PokemonData"
-import { count, deduplicateArray, isIn, removeInArray } from "../utils/array"
+import { count, isIn, removeInArray } from "../utils/array"
 import { getAvatarString } from "../utils/avatar"
 import { isOnBench } from "../utils/board"
 import { logger } from "../utils/logger"
@@ -93,11 +93,9 @@ import {
   DarkSubstituteEffect
 } from "./effects/synergies"
 import { PokemonEntity } from "./pokemon-entity"
-import { DelayedCommand } from "./simulation-command"
 import { SpecialGameRule } from "../types/enum/SpecialGameRule"
-import { getStrongestUnit, getStrongestUnits, getUnitScore } from "./unit-score"
+import { getStrongestUnit, getStrongestUnits } from "./unit-score"
 import { SeedEffects } from "./seeds"
-import { Effect } from "./effects/effect"
 
 export default class Simulation extends Schema implements ISimulation {
   @type("string") weather: Weather = Weather.NEUTRAL
@@ -1029,6 +1027,31 @@ export default class Simulation extends Schema implements ISimulation {
       })
     }
 
+    // METAL_ALLOY shield
+    for (const team of [this.blueTeam, this.redTeam]) {
+      team.forEach((pokemon) => {
+        const allyEffects =
+          this.bluePartnerPlayer && pokemon.player === this.bluePartnerPlayer
+            ? this.bluePartnerEffects
+            : pokemon.team === Team.BLUE_TEAM
+              ? this.blueEffects
+              : this.redEffects
+        if (!allyEffects.has(EffectEnum.MAGNET_STORM)) return
+        const player = pokemon.player
+        const nbMetalAlloys = player ? count(player.items, Item.METAL_ALLOY) : 0
+        if (nbMetalAlloys > 0) {
+          const adjacentCells = this.board.getAdjacentCells(
+            pokemon.positionX,
+            pokemon.positionY
+          )
+          const freeAdjacentCells = adjacentCells.filter(
+            (c) => c.value === undefined
+          ).length
+          pokemon.addShield(freeAdjacentCells * 5 * nbMetalAlloys, pokemon, 0, false)
+        }
+      })
+    }
+
     // TARGET SELECTION EFFECTS (ghost curse)
     for (const { teamIndex, effects: teamEffects } of sides) {
       const opponentTeam =
@@ -1615,6 +1638,17 @@ export default class Simulation extends Schema implements ISimulation {
         const nbMistStones = player ? count(player.items, Item.MIST_STONE) : 0
         if (nbMistStones > 0) {
           pokemon.addSpecialDefense(3 * nbMistStones, "environment", 0, false)
+        }
+        break
+      }
+
+      case EffectEnum.MAGNET_STORM: {
+        // compute shield in applyPostEffects
+        const PkmClass = PokemonClasses[PkmByIndex[pokemon.index]]
+        const baseSpeed = PkmClass ? new PkmClass(pokemon.name).speed : DEFAULT_SPEED
+        const isFastSteel = pokemon.types.has(Synergy.STEEL) && baseSpeed > 50
+        if (!isFastSteel) {
+          pokemon.addSpeed(50 - baseSpeed, "environment", 0, false)
         }
         break
       }
