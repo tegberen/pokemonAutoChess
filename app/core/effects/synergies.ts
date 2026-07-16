@@ -27,6 +27,7 @@ import PokemonFactory, {
 import { type FlowerPot, type IPokemon, Title, Transfer } from "../../types"
 import { EvolutionRuleType } from "../../types/EvolutionRules"
 import { Ability } from "../../types/enum/Ability"
+import { Awakening } from "../../types/enum/Awakening"
 import { EffectEnum } from "../../types/enum/Effect"
 import { AttackType, PokemonActionState, Team } from "../../types/enum/Game"
 import {
@@ -943,6 +944,22 @@ export const cloneBugs = ({
     ) {
       const clone = PokemonFactory.createPokemonFromName(clonePkm, player)
       clone.stacks = pokemonCloned.stacks
+
+      if (pokemonCloned.awakening === Awakening.STICKY_GLOB) {
+        const team =
+          teamIndex === Team.BLUE_TEAM
+            ? simulation.blueTeam
+            : simulation.redTeam
+        const awakenedEntity = schemaValues(team).find(
+          (p) => p.refToBoardPokemon.id === pokemonCloned.id
+        )
+        const luckHolder = awakenedEntity ?? pokemonCloned
+        pokemonCloned.items.forEach((item) => {
+          if (chance(0.3, luckHolder)) {
+            clone.items.add(item)
+          }
+        })
+      }
 
       const coord = simulation.getClosestFreeCellToPokemon(
         pokemonCloned,

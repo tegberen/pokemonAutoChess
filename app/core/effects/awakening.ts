@@ -294,6 +294,8 @@ export const AwakeningEffects: Partial<
         }
       }
     })
-  ]
+  ],
 
+  // handled in effects/synergies.ts 
+  [Awakening.STICKY_GLOB]: []
 }

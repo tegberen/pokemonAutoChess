@@ -964,13 +964,19 @@ export default class Status extends Schema implements IStatus {
         this.paralysis = true
       }
       duration = apBoost && origin ? duration * (1 + origin.ap / 100) : duration
-      if (pkm.simulation.weather === Weather.STORM) {
+      if (pkm.simulation.weather === Weather.PLAGUE) {
         duration *= 1.3
-        const nbElectricQuartz = pkm.player
-          ? count(pkm.player.items, Item.ELECTRIC_QUARTZ)
+      }
+      if (
+        pkm.simulation.weather === Weather.PLAGUE &&
+        pkm.player &&
+        count(pkm.player.items, Item.STICKY_GLOB) > 0
+      ) {
+        const nbStickyGlobs = pkm.player
+          ? count(pkm.player.items, Item.STICKY_GLOB)
           : 0
-        if (nbElectricQuartz > 0) {
-          duration *= 1 - 0.2 * nbElectricQuartz
+        if (nbStickyGlobs > 0) {
+          duration *= 1 - 0.2 * nbStickyGlobs
         }
       }
 
@@ -1204,8 +1210,17 @@ export default class Status extends Schema implements IStatus {
       !pkm.effects.has(EffectEnum.IMMUNITY_LOCKED) &&
       this.ccCooldown <= 0
     ) {
-      if (pkm.status.enraged) {
-        duration = duration / 2
+      if (pkm.simulation.weather === Weather.STORM) {
+        duration *= 1.3
+      }
+      // if (pkm.status.enraged) { // not mentioned in wiki 
+      //   duration = duration / 2
+      // }
+      const nbElectricQuartz = pkm.player
+        ? count(pkm.player.items, Item.ELECTRIC_QUARTZ)
+        : 0
+      if (nbElectricQuartz > 0) {
+        duration *= 1 - 0.2 * nbElectricQuartz
       }
 
       duration = this.applyStatusDurationReductions(duration, pkm)

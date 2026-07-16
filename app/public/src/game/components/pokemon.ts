@@ -930,18 +930,19 @@ export default class PokemonSprite extends DraggableObject {
 
   static readonly AWAKENING_COLORS: Partial<Record<Item, number>> = {
     [Item.SUN_STONE]: 0xdd9a61, 
-    [Item.HEAT_ROCK]: 0xfc819e,
-    [Item.DAMP_ROCK]: 0x5ac3c7,
-    [Item.ICY_ROCK]: 0x60b6e8,
+    [Item.HEAT_ROCK]: 0xfc8e26,
+    [Item.DAMP_ROCK]: 0x2d9ef6,
+    [Item.ICY_ROCK]: 0x78aeb5,
     [Item.SMOOTH_ROCK]: 0xffdd66,
-    [Item.FLOAT_STONE]: 0xffffff,
-    [Item.ELECTRIC_QUARTZ]: 0x60b6e8,
+    [Item.FLOAT_STONE]: 0xb2e9ff,
+    [Item.ELECTRIC_QUARTZ]: 0xf0f047,
     [Item.MIST_STONE]: 0xed94b6,
-    [Item.BLOOD_STONE]: 0xa83330,
+    [Item.BLOOD_STONE]: 0xa92434,
     [Item.SMELLY_CLAY]: 0xbdff5e,
-    [Item.ODD_KEYSTONE]: 0xc79dff,
-    [Item.BLACK_AUGURITE]: 0x362d2d,
-    [Item.METAL_ALLOY]: 0x3cb4e5
+    [Item.ODD_KEYSTONE]: 0x866cab,
+    [Item.BLACK_AUGURITE]: 0x000000,
+    [Item.METAL_ALLOY]: 0x3cb4e5,
+    [Item.STICKY_GLOB]: 0xfdfc66
   }
 
   setAwakening(charge: number, rock: string, awakening: string) {

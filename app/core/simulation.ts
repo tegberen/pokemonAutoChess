@@ -55,7 +55,7 @@ import { getAvatarString } from "../utils/avatar"
 import { isOnBench } from "../utils/board"
 import { logger } from "../utils/logger"
 import { max } from "../utils/number"
-import { pickRandomIn, randomBetween, shuffleArray } from "../utils/random"
+import { chance, pickRandomIn, randomBetween, shuffleArray } from "../utils/random"
 import { schemaValues } from "../utils/schemas"
 import { AbilityStrategies } from "./abilities/abilities"
 import type { SurfStrategy } from "./abilities/surf"
@@ -1649,6 +1649,52 @@ export default class Simulation extends Schema implements ISimulation {
         const isFastSteel = pokemon.types.has(Synergy.STEEL) && baseSpeed > 50
         if (!isFastSteel) {
           pokemon.addSpeed(50 - baseSpeed, "environment", 0, false)
+        }
+        break
+      }
+
+      case EffectEnum.PLAGUE: {
+        pokemon.effectsSet.add(
+          new OnAttackEffect(({ pokemon, target, board }) => {
+            if (!target) return
+            const nbAllies =
+              board.cells.filter(
+                (entity) => entity && entity.team === pokemon.team
+              ).length - 1
+            if (nbAllies > 0) {
+              target.handleDamage({
+                damage: nbAllies,
+                board,
+                attackType: pokemon.types.has(Synergy.BUG)
+                  ? AttackType.TRUE
+                  : AttackType.SPECIAL,
+                attacker: pokemon,
+                shouldTargetGainMana: true
+              })
+            }
+          }, Passive.PLAGUE)
+        )
+
+        const nbStickyGlobs = pokemon.player
+          ? count(pokemon.player.items, Item.STICKY_GLOB)
+          : 0
+        if (nbStickyGlobs > 0) {
+          pokemon.effectsSet.add(
+            new OnAttackEffect(({ pokemon, target, board }) => {
+              if (target && chance(0.1*nbStickyGlobs, pokemon)) {
+                board.addBoardEffect(
+                  target.positionX,
+                  target.positionY,
+                  EffectEnum.STICKY_WEB,
+                  pokemon.simulation
+                )
+                pokemon.broadcastAbility({
+                  positionX: target.positionX,
+                  positionY: target.positionY
+                })
+              }
+            }, Passive.PLAGUE)
+          )
         }
         break
       }

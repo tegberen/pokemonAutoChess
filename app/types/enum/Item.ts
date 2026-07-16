@@ -158,6 +158,7 @@ export enum Item {
   ODD_KEYSTONE = "ODD_KEYSTONE",
   SUN_STONE = "SUN_STONE",
   METAL_ALLOY = "METAL_ALLOY",
+  STICKY_GLOB = "STICKY_GLOB",
   NORMAL_GEM = "NORMAL_GEM",
   GRASS_GEM = "GRASS_GEM",
   FIRE_GEM = "FIRE_GEM",
@@ -769,7 +770,8 @@ export const WeatherRocks = [
   Item.BLOOD_STONE,
   Item.SMELLY_CLAY,
   Item.ODD_KEYSTONE,
-  Item.METAL_ALLOY
+  Item.METAL_ALLOY,
+  Item.STICKY_GLOB
 ] satisfies Item[]
 
 export const WeatherRocksByWeather = new Map([
@@ -786,6 +788,7 @@ export const WeatherRocksByWeather = new Map([
   [Weather.NIGHT, Item.BLACK_AUGURITE],
   [Weather.BLOODMOON, Item.BLOOD_STONE],
   [Weather.MAGNET_STORM, Item.METAL_ALLOY],
+  [Weather.PLAGUE, Item.STICKY_GLOB],
   [Weather.NEUTRAL, null]
 ]) satisfies Map<Weather, (typeof WeatherRocks)[number] | null>
 

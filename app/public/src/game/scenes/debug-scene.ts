@@ -548,6 +548,8 @@ export class DebugScene extends Phaser.Scene {
       this.weatherManager.addMurky()
     } else if (weather === Weather.MAGNET_STORM) {
       this.weatherManager.addAurora()
+    } else if (weather === Weather.PLAGUE) {
+      this.weatherManager.addPlague()
     } else if (weather === "dawn") {
       this.weatherManager.setTownDaytime(0)
     } else if (weather === "sunset") {

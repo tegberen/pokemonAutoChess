@@ -705,6 +705,8 @@ class GameContainer {
           this.gameScene.weatherManager.addMurky()
         } else if (value === Weather.MAGNET_STORM) {
           this.gameScene.weatherManager.addAurora()
+        } else if (value === Weather.PLAGUE) {
+          this.gameScene.weatherManager.addPlague()
         }
       }
     }

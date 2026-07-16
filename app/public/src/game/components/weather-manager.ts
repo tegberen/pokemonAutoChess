@@ -605,7 +605,7 @@ export default class WeatherManager {
 
     const strips = [
       { min: -40, max: 470 },
-      { min: 1500, max: 1990 }
+      { min: 1500, max: 1950 }
     ]
 
     // --- textures ------------------------------------------------------
@@ -787,6 +787,158 @@ export default class WeatherManager {
           for (let k = 0; k < n; k++) spawnArc()
         }
       })
+    )
+  }
+
+  addPlague() {
+    // --- dead-ground pall: a dark, desaturated brown-green haze that drains
+    // the life out of the battlefield so nothing looks alive underneath
+    this.colorFilter = this.scene.add.existing(
+      new Phaser.GameObjects.Rectangle(
+        this.scene,
+        1500,
+        1000,
+        3000,
+        2000,
+        0x14160e,
+        0.42
+      ).setDepth(DEPTH.WEATHER_FX)
+    )
+    // faint, uneven "rot" throb so the darkness feels alive with decay
+    this.tweens.push(
+      this.scene.tweens.add({
+        targets: this.colorFilter,
+        alpha: { from: 0.38, to: 0.5 },
+        duration: 3600,
+        yoyo: true,
+        repeat: -1,
+        ease: "sine.inout"
+      })
+    )
+
+    // --- tiny, noisy "bug" speck texture, generated once. A couple of offset
+    // dark dots give each speck an irregular, grainy silhouette.
+    const bugKey = "plague-bug"
+    if (!this.scene.textures.exists(bugKey)) {
+      const size = 6
+      const tex = this.scene.textures.createCanvas(bugKey, size, size)
+      if (tex) {
+        const ctx = tex.getContext()
+        ctx.fillStyle = "rgba(20,22,10,1)"
+        ctx.fillRect(1, 2, 3, 2) // body
+        ctx.fillRect(3, 1, 2, 2) // head / offset chunk
+        ctx.fillRect(0, 3, 2, 1) // trailing leg speck
+        tex.refresh()
+      }
+    }
+
+    // muddy green-brown carapaces, a couple lighter so the swarm still reads
+    const bugTints = [0x2b3316, 0x39401c, 0x222c12, 0x161c0c, 0x47501f]
+
+    // Spawn from a border frame (canvas is 1950x1000) and cull anything that
+    // reaches the centre, so the middle of the field (where the units fight)
+    // stays clean while the bugs teem thickest at the edges and thin inward.
+    const bands = [
+      new Phaser.Geom.Rectangle(0, 0, 300, 1000), // left
+      new Phaser.Geom.Rectangle(1650, 0, 300, 1000), // right
+      new Phaser.Geom.Rectangle(300, 0, 1350, 160), // top
+      new Phaser.Geom.Rectangle(300, 840, 1350, 160) // bottom
+    ]
+    // single custom emit zone that scatters points across all four bands
+    // (Phaser 4 does not reliably honour an array of emit zones)
+    const emitZone = {
+      type: "random" as const,
+      source: {
+        getRandomPoint: (vec: Phaser.Types.Math.Vector2Like) => {
+          const band = Phaser.Utils.Array.GetRandom(bands)
+          vec.x = band.x + Math.random() * band.width
+          vec.y = band.y + Math.random() * band.height
+          return vec
+        }
+      }
+    }
+    const cleanCenter = new Phaser.Geom.Rectangle(300, 160, 1350, 680)
+
+    // --- dark substrate haze so the swarm emerges from gloom at the edges
+    // rather than popping against clean dark ground
+    const hazeKey = "plague-haze"
+    if (!this.scene.textures.exists(hazeKey)) {
+      const size = 256
+      const tex = this.scene.textures.createCanvas(hazeKey, size, size)
+      if (tex) {
+        const ctx = tex.getContext()
+        const r = size / 2
+        const glow = ctx.createRadialGradient(r, r, 0, r, r, r)
+        glow.addColorStop(0, "rgba(255,255,255,0.9)")
+        glow.addColorStop(0.5, "rgba(255,255,255,0.4)")
+        glow.addColorStop(1, "rgba(255,255,255,0)")
+        ctx.fillStyle = glow
+        ctx.fillRect(0, 0, size, size)
+        tex.refresh()
+      }
+    }
+    for (let i = 0; i < 10; i++) {
+      const p = new Phaser.Math.Vector2()
+      emitZone.source.getRandomPoint(p)
+      const baseAlpha = 0.1 + Phaser.Math.FloatBetween(0, 0.08)
+      const haze = this.scene.add.existing(
+        new Phaser.GameObjects.Image(this.scene, p.x, p.y, hazeKey)
+          .setOrigin(0.5)
+          .setDepth(DEPTH.WEATHER_FX)
+          .setBlendMode(Phaser.BlendModes.MULTIPLY)
+          .setTint(0x1c2410)
+          .setScale(Phaser.Math.FloatBetween(2.2, 3.4))
+          .setAlpha(baseAlpha)
+      )
+      this.images.push(haze)
+      this.tweens.push(
+        this.scene.tweens.add({
+          targets: haze,
+          alpha: { from: baseAlpha * 0.5, to: baseAlpha + 0.06 },
+          duration: 3000 + Phaser.Math.Between(0, 2500),
+          delay: Phaser.Math.Between(0, 2000),
+          yoyo: true,
+          repeat: -1,
+          ease: "sine.inout"
+        })
+      )
+    }
+
+    // dense swarm darting in every direction — reads as millions of crawling
+    // bugs eating everything. Several layers of size/speed give teeming depth.
+    const swarm = (
+      frequency: number,
+      quantity: number,
+      speed: number,
+      scale: number,
+      lifespan: { min: number; max: number },
+      alphaStart = 1
+    ) =>
+      this.scene.add
+        .particles(0, 0, bugKey, {
+          emitZone,
+          deathZone: { source: cleanCenter, type: "onEnter" },
+          frequency,
+          quantity,
+          lifespan,
+          speedX: { min: -speed, max: speed },
+          speedY: { min: -speed, max: speed },
+          scale: { min: scale * 0.55, max: scale },
+          rotate: { min: 0, max: 360 },
+          alpha: { start: alphaStart, end: 0 },
+          tint: bugTints
+        })
+        .setDepth(DEPTH.WEATHER_FX)
+
+    this.particlesEmitters.push(
+      // fast tiny flies flickering everywhere
+      swarm(6, 7, 150, 0.6, { min: 500, max: 1100 }),
+      // mid layer
+      swarm(9, 8, 95, 0.85, { min: 700, max: 1400 }),
+      // slower, slightly larger crawlers
+      swarm(14, 6, 50, 1.1, { min: 1000, max: 2000 }),
+      // big, out-of-focus foreground bugs streaking past the "camera" for depth
+      swarm(69, 1, 260, 3.2, { min: 350, max: 700 }, 0.5)
     )
   }
 
