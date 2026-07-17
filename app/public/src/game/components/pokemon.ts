@@ -1071,8 +1071,10 @@ export default class PokemonSprite extends DraggableObject {
     g.translateCanvas(1, 1)
     g.fillStyle(barBgColor, 1)
     g.fillRect(0, 0, innerBarWidth, 6)
+
+    const overshoot = charge > 0 && charge < segments ? 1.5 : 0 // small over flow 
     g.fillStyle(color, 1)
-    g.fillRect(0, 0, (charge / segments) * innerBarWidth, 6)
+    g.fillRect(0, 0, (charge / segments) * innerBarWidth + overshoot, 6)
 
     const segmentSize = innerBarWidth / segments
     g.lineStyle(1, barBgColor)
