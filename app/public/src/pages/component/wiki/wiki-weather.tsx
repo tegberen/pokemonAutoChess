@@ -115,5 +115,6 @@ const pokemonsInfluencingWeather = new Map([
   [Weather.MAGNET_STORM, [Pkm.SOLGALEO]],
   [Weather.MURKY, [Pkm.LUNALA]],
   [Weather.BLOODMOON, [Pkm.URSALUNA_BLOODMOON]],
-  [Weather.ECLIPSE, [Pkm.SOLGALEO, Pkm.LUNALA, Pkm.LUNATONE]]
+  [Weather.ECLIPSE, [Pkm.SOLGALEO, Pkm.LUNALA, Pkm.LUNATONE]],
+  [Weather.FLOOD, [Pkm.LUGIA]]
 ])

@@ -56,6 +56,7 @@ import { isOnBench } from "../utils/board"
 import { logger } from "../utils/logger"
 import { max } from "../utils/number"
 import { chance, pickRandomIn, randomBetween, shuffleArray } from "../utils/random"
+import { OrientationVector } from "../utils/orientation"
 import { schemaValues } from "../utils/schemas"
 import { AbilityStrategies } from "./abilities/abilities"
 import type { SurfStrategy } from "./abilities/surf"
@@ -127,6 +128,7 @@ export default class Simulation extends Schema implements ISimulation {
   redAbilitiesCast: Ability[] = []
   stormLightningTimer = 0
   tidalWaveTimer = 0
+  floodWaveTimer = 0
   tidalWaveCounter = 0
   entities: IPokemonEntity[] = []
   finishedAt: number = 0
@@ -219,6 +221,9 @@ export default class Simulation extends Schema implements ISimulation {
       )
     ) {
       this.tidalWaveTimer = 7000
+    }
+    if (this.weather === Weather.FLOOD) {
+      this.floodWaveTimer = 3000
     }
 
     this.bluePlayer.board.forEach((pokemon) => {
@@ -1827,6 +1832,14 @@ export default class Simulation extends Schema implements ISimulation {
       }
     }
 
+    if (this.weather === Weather.FLOOD) {
+      this.floodWaveTimer -= dt
+      if (this.floodWaveTimer <= 0 && !this.finished) {
+        this.floodWaveTimer = 3000
+        this.handleFloodWave()
+      }
+    }
+
     if (this.tidalWaveTimer > 0) {
       this.tidalWaveTimer -= dt
       if (this.tidalWaveTimer <= 0) {
@@ -2145,6 +2158,107 @@ export default class Simulation extends Schema implements ISimulation {
     }
   }
 
+  handleFloodWave() {
+    const WAVE_KNOCKBACK = 3
+    const WAVE_WIDTH = 2 // tiles, matching the FLOOD_WAVE sprite
+    const orientation = pickRandomIn([
+      Orientation.UP,
+      Orientation.DOWN,
+      Orientation.LEFT,
+      Orientation.RIGHT
+    ])
+    // physics uses the raw orientation; the client renders vertical waves with
+    // an inverted Y vs the board, so only the sprite travels the flipped one
+    const spriteOrientation =
+      orientation === Orientation.UP
+        ? Orientation.DOWN
+        : orientation === Orientation.DOWN
+          ? Orientation.UP
+          : orientation
+    const [dx, dy] = OrientationVector[orientation]
+    const horizontal = dx !== 0
+
+    // a 2-tile-wide wave sweeps along a random strip perpendicular to its travel
+    const line = horizontal
+      ? randomBetween(0, this.board.rows - WAVE_WIDTH)
+      : randomBetween(0, this.board.columns - WAVE_WIDTH)
+
+    this.room.broadcast(Transfer.ABILITY, {
+      id: this.id,
+      skill: "FLOOD_WAVE",
+      positionX: horizontal ? 0 : line,
+      positionY: horizontal ? line : 0,
+      targetX: WAVE_WIDTH,
+      targetY: 0,
+      orientation: spriteOrientation
+    })
+
+    const entities = this.board.cells.filter(
+      (e): e is PokemonEntity =>
+        e != null &&
+        e.hp > 0 &&
+        (horizontal
+          ? e.positionY >= line && e.positionY < line + WAVE_WIDTH
+          : e.positionX >= line && e.positionX < line + WAVE_WIDTH)
+    )
+    // push the Pokémon nearest the wave's leading edge first so they don't
+    // block the ones behind them
+    entities.sort(
+      (a, b) =>
+        b.positionX * dx + b.positionY * dy -
+        (a.positionX * dx + a.positionY * dy)
+    )
+
+    for (const pkm of entities) {
+      if (pkm.types.has(Synergy.AQUATIC)) {
+        const { healReceived } = pkm.handleHeal(0.03 * pkm.maxHP, pkm, 0, false)
+        if (healReceived > 0) {
+          // fold flood heal into the Tidal Wave row of the Battle Stats
+          pkm.healDone = Math.max(0, pkm.healDone - healReceived)
+          const waveDps = this.getOrCreateSyntheticDps(
+            pkm.team,
+            DPS_TIDAL_WAVE_ID
+          )
+          waveDps.heal = Math.min(65535, waveDps.heal + healReceived)
+        }
+      } else {
+        const { takenDamage } = pkm.handleDamage({
+          damage: 0.03 * pkm.maxHP,
+          board: this.board,
+          attackType: AttackType.TRUE,
+          attacker: null,
+          shouldTargetGainMana: false
+        })
+        // fold flood damage into the Tidal Wave row of the Battle Stats
+        this.creditSyntheticDamage(
+          pkm,
+          DPS_TIDAL_WAVE_ID,
+          AttackType.TRUE,
+          takenDamage
+        )
+      }
+
+      const nbPearlStones = pkm.player
+        ? count(pkm.player.items, Item.PEARL_STONE)
+        : 0
+      if (nbPearlStones > 0) {
+        pkm.addShield(10 * nbPearlStones, pkm, 0, false)
+      }
+
+      // knockback in the wave's direction, resisted by 1 tile per pearl stone
+      const tiles = Math.max(0, WAVE_KNOCKBACK - nbPearlStones)
+      for (let i = 0; i < tiles; i++) {
+        const dest = this.board.getKnockBackPlace(
+          pkm.positionX,
+          pkm.positionY,
+          orientation
+        )
+        if (!dest) break
+        pkm.moveTo(dest.x, dest.y, this.board, true)
+      }
+    }
+  }
+
   addCastformToBoard(team: Team) {
     const player = team === Team.RED_TEAM ? this.redPlayer : this.bluePlayer
     // adapt to the active weather on spawn (mirrors updateCastform forms)
@@ -2283,13 +2397,26 @@ export default class Simulation extends Schema implements ISimulation {
                 newY++
               }
             }
+            // pearl stones resist the wave's knockback by 1 tile each and grant
+            // 10 shield per stone when hit
+            const nbPearlStones = pokemonHit.player
+              ? count(pokemonHit.player.items, Item.PEARL_STONE)
+              : 0
+            if (nbPearlStones > 0) {
+              const dist = Math.max(0, Math.abs(newY - y) - nbPearlStones)
+              newY = isRed ? y - dist : y + dist
+              pokemonHit.addShield(10 * nbPearlStones, pokemonHit, 0, false)
+            }
             if (newY !== y) {
               pokemonHit.moveTo(x, newY, this.board, true) // push enemies away
               pokemonHit.cooldown = 500
             }
           }
 
-          if (pokemonHit.items.has(Item.SURFBOARD)) {
+          if (
+            pokemonHit.items.has(Item.SURFBOARD) ||
+            pokemonHit.awakening === Awakening.PEARL_STONE
+          ) {
             const surf = AbilityStrategies[Ability.SURF] as SurfStrategy
             surf.process(
               pokemonHit,

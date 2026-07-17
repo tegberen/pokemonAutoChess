@@ -6029,14 +6029,15 @@ export class Lugia extends Pokemon {
   ])
   rarity = Rarity.LEGENDARY
   stars = 3
-  hp = 300
-  atk = 26
+  hp = 280
+  atk = 22
   speed = 60
   def = 12
   speDef = 12
   maxPP = 80
   range = 1
   skill = Ability.SKY_ATTACK
+  passive = Passive.FLOOD
 }
 
 export class ShadowLugia extends Pokemon {

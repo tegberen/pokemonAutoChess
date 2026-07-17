@@ -19,7 +19,8 @@ export enum Weather {
   NEUTRAL = "NEUTRAL",
   MAGNET_STORM = "MAGNET_STORM",
   PLAGUE = "PLAGUE",
-  ECLIPSE = "ECLIPSE"
+  ECLIPSE = "ECLIPSE",
+  FLOOD = "FLOOD"
 }
 
 export const WeatherEffects: ReadonlyMap<Weather, EffectEnum> = new Map([
@@ -37,7 +38,8 @@ export const WeatherEffects: ReadonlyMap<Weather, EffectEnum> = new Map([
   [Weather.STORM, EffectEnum.STORM],
   [Weather.MAGNET_STORM, EffectEnum.MAGNET_STORM],
   [Weather.PLAGUE, EffectEnum.PLAGUE],
-  [Weather.ECLIPSE, EffectEnum.ECLIPSE]
+  [Weather.ECLIPSE, EffectEnum.ECLIPSE],
+  [Weather.FLOOD, EffectEnum.FLOOD]
 ])
 
 export const PassivesAssociatedToWeather: Map<Weather, Passive[]> = new Map([
@@ -52,7 +54,8 @@ export const PassivesAssociatedToWeather: Map<Weather, Passive[]> = new Map([
   [Weather.WINDY, [Passive.WINDY]],
   [Weather.NEUTRAL, [Passive.AIRLOCK]],
   [Weather.MAGNET_STORM, [Passive.MAGNET_STORM]],
-  [Weather.MURKY, [Passive.MURKY]]
+  [Weather.MURKY, [Passive.MURKY]],
+  [Weather.FLOOD, [Passive.FLOOD]]
 ])
 
 export const WeatherAssociatedToSynergy: Map<Synergy, Weather> = new Map([
@@ -71,7 +74,8 @@ export const WeatherAssociatedToSynergy: Map<Synergy, Weather> = new Map([
   [Synergy.NORMAL, Weather.NEUTRAL],
   [Synergy.STEEL, Weather.MAGNET_STORM],
   [Synergy.BUG, Weather.PLAGUE],
-  [Synergy.PSYCHIC, Weather.ECLIPSE]
+  [Synergy.PSYCHIC, Weather.ECLIPSE],
+  [Synergy.AQUATIC, Weather.FLOOD]
 ])
 
 export const SynergyAssociatedToWeather = reverseMap(WeatherAssociatedToSynergy)

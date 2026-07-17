@@ -304,5 +304,7 @@ export const AwakeningEffects: Partial<
       entity.addAbilityPower(entity.def, entity, 0, false)
       entity.addPP(Math.round(0.5 * entity.def), entity, 0, false)
     })
-  ]
+  ],
+
+  [Awakening.PEARL_STONE]: []
 }

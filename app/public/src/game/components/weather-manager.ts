@@ -1119,6 +1119,148 @@ export default class WeatherManager {
     )
   }
 
+  addFlood() {
+    this.colorFilter = this.scene.add.existing(
+      new Phaser.GameObjects.Rectangle(
+        this.scene,
+        1500,
+        1000,
+        3000,
+        2000,
+        0x1c5a7a,
+        0.28
+      ).setDepth(DEPTH.WEATHER_FX)
+    )
+
+    // bubble texture used by the incoming wavefronts
+    const bubbleKey = "flood-bubble"
+    if (!this.scene.textures.exists(bubbleKey)) {
+      const size = 28
+      const tex = this.scene.textures.createCanvas(bubbleKey, size, size)
+      if (tex) {
+        const ctx = tex.getContext()
+        const r = size / 2
+        const fill = ctx.createRadialGradient(r, r, 0, r, r, r)
+        fill.addColorStop(0, "rgba(200,235,255,0.15)")
+        fill.addColorStop(1, "rgba(200,235,255,0)")
+        ctx.fillStyle = fill
+        ctx.beginPath()
+        ctx.arc(r, r, r - 1, 0, Math.PI * 2)
+        ctx.fill()
+        ctx.strokeStyle = "rgba(215,242,255,0.9)"
+        ctx.lineWidth = 2
+        ctx.beginPath()
+        ctx.arc(r, r, r - 2, 0, Math.PI * 2)
+        ctx.stroke()
+        ctx.fillStyle = "rgba(255,255,255,0.9)"
+        ctx.beginPath()
+        ctx.arc(r - 3, r - 4, 1.5, 0, Math.PI * 2)
+        ctx.fill()
+        tex.refresh()
+      }
+    }
+
+    // a diagonal wavefront of bubble splashes rolls across the board (top-down,
+    // coming in from NE / SW / NW / SE), one or several at a time
+    const spawnWave = (
+      dir: { dx: number; dy: number },
+      delay: number,
+      intensity: number
+    ) => {
+      const inv = 1 / Math.SQRT2
+      const tx = dir.dx * inv
+      const ty = dir.dy * inv // unit travel direction
+      const px = -ty
+      const py = tx // unit vector along the wavefront line
+
+      const fx = 975 - tx * 1500 // start well off the entering edge
+      const fy = 500 - ty * 1500
+      const frontHalf = 1000
+      const travelDist = 3000
+      const n = Math.round(Phaser.Math.Between(80, 120) * intensity)
+      for (let i = 0; i < n; i++) {
+        const along = Phaser.Math.FloatBetween(-frontHalf, frontHalf)
+        const jitter = Phaser.Math.FloatBetween(-70, 70)
+        const sx = fx + px * along + tx * jitter
+        const sy = fy + py * along + ty * jitter
+        const baseScale =
+          Phaser.Math.FloatBetween(0.06, 0.15) * (0.75 + 0.25 * intensity)
+        const baseAlpha = Phaser.Math.FloatBetween(0.55, 0.9)
+        const b = this.scene.add.existing(
+          new Phaser.GameObjects.Image(this.scene, sx, sy, bubbleKey)
+            .setDepth(DEPTH.WEATHER_FX)
+            .setScale(baseScale)
+            .setAlpha(0)
+        )
+        this.images.push(b)
+        this.tweens.push(
+          this.scene.tweens.add({
+            targets: b,
+            x: sx + tx * travelDist,
+            y: sy + ty * travelDist,
+            delay,
+            duration: Phaser.Math.Between(2400, 3400),
+            ease: "linear",
+            onUpdate: (tween) => {
+              // the crest rises toward the camera at mid-travel, then drops back
+              // — a wave crashing in while still moving across the board
+              const crest = Math.sin(Math.PI * tween.progress)
+              b.setScale(baseScale * (1 + 1.4 * crest))
+              b.setAlpha(baseAlpha * (0.25 + 0.75 * crest))
+            },
+            onComplete: () => {
+              b.destroy()
+              const idx = this.images.indexOf(b)
+              if (idx >= 0) this.images.splice(idx, 1)
+            }
+          })
+        )
+      }
+    }
+
+    this.timers.push(
+      this.scene.time.addEvent({
+        delay: 5200,
+        loop: true,
+        callback: () => {
+          // a wave is really its splatter: a light leading splash, the main
+          // crest, then a trailing splash — all from the same direction
+          const dir = Phaser.Utils.Array.GetRandom([
+            { dx: 1, dy: 1 },
+            { dx: -1, dy: 1 },
+            { dx: 1, dy: -1 },
+            { dx: -1, dy: -1 }
+          ])
+          spawnWave(dir, 0, 0.35) // pre-splatter
+          spawnWave(dir, 550, 1) // main wave
+          spawnWave(dir, 1250, 0.45) // post-splatter
+        }
+      })
+    )
+
+    // a couple of slow drifting mist banks reusing the clouds sprite, tinted
+    // watery, so the surface reads as flooded rather than just tinted
+    this.image = this.scene.add.existing(
+      new Phaser.GameObjects.Image(this.scene, 1000, 520, "clouds")
+        .setTint(0x4a8fb0)
+        .setScale(3, 1.6)
+        .setOrigin(0.5)
+        .setDepth(DEPTH.WEATHER_FX)
+        .setAlpha(0.18)
+    )
+    this.tweens.push(
+      this.scene.tweens.add({
+        targets: this.image,
+        x: 1100,
+        alpha: { from: 0.12, to: 0.22 },
+        duration: 6000,
+        yoyo: true,
+        repeat: -1,
+        ease: "sine.inout"
+      })
+    )
+  }
+
   setTownDaytime(stageLevel: number) {
     // ambient light based on day time
     let red = 255,

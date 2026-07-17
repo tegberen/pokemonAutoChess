@@ -2663,6 +2663,7 @@
 		"CRYSTALLISE_METAL_ALLOY": "ON_ATTACK [5, LK] % chance to absorb 1 RANGE from the target. If the target can't lose RANGE, push back the target and apply LOCKED for 2s instead. The push back distance increases relative to user RANGE.",
 		"CRYSTALLISE_STICKY_GLOB": "Every held item has a [30, LK]% chance to be copied to the BUG clone",
 		"CRYSTALLISE_ECLIPSE_STONE": "At the start of the fight, gain 100% of DEF as AP and 50% of DEF as starting PP.",
+		"CRYSTALLISE_PEARL_STONE": "The user casts Surf when hit by the big TIDAL_WAVE.",
 		"CURSE_OF_VULNERABILITY": "The enemy with the highest DEF + SPE_DEF lose 5 of it and is FLINCH",
 		"CURSE_OF_WEAKNESS": "Also, the enemy with the highest ATK lose 20% of it and is PARALYSIS",
 		"CURSE_OF_TORMENT": "Also, the enemy with the highest AP lose 30 of it and is FATIGUE",
@@ -2884,6 +2885,7 @@
 		"METAL_ALLOY": "Metal Alloy",
 		"STICKY_GLOB": "Sticky Glob",
 		"ECLIPSE_STONE": "Eclipse Stone",
+		"PEARL_STONE": "Pearl String",
 		"UTILITY_UMBRELLA": "Utility Umbrella",
 		"NORMAL_GEM": "Normal Gem",
 		"GRASS_GEM": "Grass Gem",
@@ -3294,6 +3296,7 @@
 		"METAL_ALLOY": "Counts for 3 towards MAGNET_STORM. Under MAGNET_STORM, your team gains 5 SHIELD for each ADJACENT free tile.\n\nAllows a ROCK Pokémon to undergo Crystallisation, Awakening it as a STEEL type.",
 		"STICKY_GLOB": "Counts for 3 towards PLAGUE. Under PLAGUE, your team recovers from PARALYSIS 20% faster. [10, LK]% chance to throw a sticky web ON_ATTACK.\n\nAllows a ROCK Pokémon to undergo Crystallisation, Awakening it as a BUG type.",
 		"ECLIPSE_STONE": "Counts for 3 towards ECLIPSE. Under ECLIPSE, your team has a [5, LK]% chance to steal 5 AP ON_ATTACK.\n\nAllows a ROCK Pokémon to undergo Crystallisation, Awakening it as a PSYCHIC type.",
+		"PEARL_STONE": "Counts for 3 towards FLOOD. Under FLOOD, when hit by any wave your team resist the knockback by 1 tile and gains 10 SHIELD.\n\nAllows a ROCK Pokémon to undergo Crystallisation, Awakening it as a AQUATIC type.",
 		"UTILITY_UMBRELLA": "The holder and allies ADJACENT_IN_THE_SAME_ROW take -70% negative status duration and status damage (BURN and POISON).",
 		"NORMAL_GEM": "+1 to NORMAL synergy",
 		"GRASS_GEM": "+1 to GRASS synergy",
@@ -3559,7 +3562,7 @@
 		"WINDY": "Change weather to WINDY",
 		"MAGNET_STORM": "Change weather to MAGNET_STORM",
 		"MURKY": "Change weather to MURKY",
-		"LUGIA": "Lugia looks for a DUSK_STONE",
+		"FLOOD": "Change weather to FLOOD",
 		"MEWTWO": "Gain 1 stack for each KO, 2 stacks if the user has more AP than the target. Receive MEWTWONITE_Y when fully stacked. Can be used to Mega Evolve.",
 		"KYUREM": "Obtain the DNA_SPLICER after defeating the legendary birds",
 		"LANDORUS": "Change weather to SANDSTORM or WINDY based on your dominant synergy between GROUND and FLYING",
@@ -4152,7 +4155,8 @@
 		"MURKY": "Murky",
 		"MAGNET_STORM": "Magnet Storm",
 		"PLAGUE": "Plague",
-		"ECLIPSE": "Eclipse"
+		"ECLIPSE": "Eclipse",
+		"FLOOD": "Flood"
 	},
 	"weather_description": {
 		"NEUTRAL": "Normal weather. No effects.",
@@ -4170,7 +4174,8 @@
 		"MURKY": "-30 LUCK (GHOST are immune)\n+30% SILENCE duration",
 		"MAGNET_STORM": "Sets base SPEED to 50 (STEEL Pokémon above 50 base SPEED are unaffected)",
 		"PLAGUE": "Attacks deal 1 SPECIAL per ally (TRUE if BUG)\n+30% PARALYSIS duration",
-		"ECLIPSE": "-10% max PP\n-30% FATIGUE and SILENCE duration"
+		"ECLIPSE": "-10% max PP\n-30% FATIGUE and SILENCE duration",
+		"FLOOD": "Every 3 seconds, small waves flood in, knocking all Pokémon back 3 tiles and dealing 3% max HP as TRUE (heals AQUATIC instead)."
 	},
 	"board_effect": {
 		"EMBER": "Ember",

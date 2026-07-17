@@ -25,5 +25,6 @@ export const WeatherThreshold: { [weather in Weather]: number } = {
   [Weather.MURKY]: 8,
   [Weather.MAGNET_STORM]: 8,
   [Weather.PLAGUE]: 8,
-  [Weather.ECLIPSE]: 8
+  [Weather.ECLIPSE]: 8,
+  [Weather.FLOOD]: 8
 }

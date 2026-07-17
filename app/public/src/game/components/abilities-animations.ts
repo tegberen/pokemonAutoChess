@@ -221,6 +221,67 @@ function tidalWaveAnimation(args: AbilityAnimationArgs) {
   scene.abilitiesVfxGroup?.add(wave)
 }
 
+function floodWaveAnimation(args: AbilityAnimationArgs) {
+  const { scene, positionX, positionY, targetX, orientation, flip } = args
+  const width = targetX || 2
+  const offset = (width - 1) / 2 // centre the sprite on the strip of columns/rows
+  let startCoords: number[]
+  let endCoords: number[]
+  if (orientation === Orientation.DOWN) {
+    startCoords = transformEntityCoordinates(positionX + offset, -2, flip)
+    endCoords = transformEntityCoordinates(positionX + offset, 8, flip)
+  } else if (orientation === Orientation.UP) {
+    startCoords = transformEntityCoordinates(positionX + offset, 8, flip)
+    endCoords = transformEntityCoordinates(positionX + offset, -2, flip)
+  } else if (orientation === Orientation.RIGHT) {
+    startCoords = transformEntityCoordinates(-2, positionY + offset, flip)
+    endCoords = transformEntityCoordinates(8, positionY + offset, flip)
+  } else {
+    startCoords = transformEntityCoordinates(8, positionY + offset, flip)
+    endCoords = transformEntityCoordinates(-2, positionY + offset, flip)
+  }
+  // the sprite's crest is drawn at its top; rotate so the crest leads the
+  // actual on-screen travel direction. Deriving it from the start/end pixels
+  // handles every orientation correctly, including the inverted board Y axis.
+  const rotation =
+    Math.atan2(
+      endCoords[1] - startCoords[1],
+      endCoords[0] - startCoords[0]
+    ) +
+    Math.PI / 2
+  const frame = Phaser.Math.Between(0, 2)
+  const wave = scene.add
+    .sprite(
+      startCoords[0],
+      startCoords[1],
+      "abilities",
+      `FLOOD_WAVE/00${frame}.png`
+    )
+    .setOrigin(0.5, 0.5)
+    .setDepth(DEPTH.ABILITY_MINOR)
+    .setScale(3) // FLOOD_WAVE sprite is already trimmed to 2 tiles wide
+    .setAlpha(0)
+    .setRotation(rotation)
+  scene.tweens.add({
+    targets: wave,
+    x: endCoords[0],
+    y: endCoords[1],
+    ease: "linear",
+    duration: 1200,
+    onComplete: () => {
+      wave.destroy()
+    },
+    onUpdate: function (tween) {
+      if (tween.progress < 0.2) {
+        wave.setAlpha(tween.progress * 5)
+      } else if (tween.progress > 0.8) {
+        wave.setAlpha((1 - tween.progress) * 5)
+      }
+    }
+  })
+  scene.abilitiesVfxGroup?.add(wave)
+}
+
 const UNOWNS_PER_ABILITY = new Map([
   [
     Ability.HIDDEN_POWER_A,
@@ -3068,6 +3129,7 @@ export const AbilitiesAnimations: {
   },
 
   ["TIDAL_WAVE"]: tidalWaveAnimation,
+  ["FLOOD_WAVE"]: floodWaveAnimation,
 
   [Ability.COLUMN_CRUSH]: (args) => {
     const distance = min(1)(

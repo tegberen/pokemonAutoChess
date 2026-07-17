@@ -709,6 +709,8 @@ class GameContainer {
           this.gameScene.weatherManager.addPlague()
         } else if (value === Weather.ECLIPSE) {
           this.gameScene.weatherManager.addEclipse()
+        } else if (value === Weather.FLOOD) {
+          this.gameScene.weatherManager.addFlood()
         }
       }
     }
