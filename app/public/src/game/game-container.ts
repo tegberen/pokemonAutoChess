@@ -707,6 +707,8 @@ class GameContainer {
           this.gameScene.weatherManager.addAurora()
         } else if (value === Weather.PLAGUE) {
           this.gameScene.weatherManager.addPlague()
+        } else if (value === Weather.ECLIPSE) {
+          this.gameScene.weatherManager.addEclipse()
         }
       }
     }

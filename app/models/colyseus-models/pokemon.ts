@@ -6555,7 +6555,7 @@ export class Lunatone extends Pokemon {
   maxPP = 80
   range = 2
   skill = Ability.COSMIC_POWER_MOON
-  passive = Passive.NIGHT
+  passive = Passive.ECLIPSE_OR_NIGHT
 }
 
 export class Solrock extends Pokemon {
@@ -16201,7 +16201,7 @@ export class Solgaleo extends Pokemon {
     this.maxHP = this.hp
     player.titles.add(Title.STARGAZER)
   }
-  passive = Passive.MAGNET_STORM
+  passive = Passive.ECLIPSE_OR_MAGNET_STORM
 }
 
 export class Lunala extends Pokemon {
@@ -16225,7 +16225,7 @@ export class Lunala extends Pokemon {
     this.maxHP = this.hp
     player.titles.add(Title.STARGAZER)
   }
-  passive = Passive.MURKY
+  passive = Passive.ECLIPSE_OR_MURKY
 }
 
 export class Magearna extends Pokemon {

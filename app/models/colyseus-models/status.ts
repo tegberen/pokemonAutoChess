@@ -545,6 +545,9 @@ export default class Status extends Schema implements IStatus {
       if (pkm.simulation.weather === Weather.MURKY) {
         duration *= 1.3
       }
+      if (pkm.simulation.weather === Weather.ECLIPSE) {
+        duration *= 0.7
+      }
 
       duration = this.applyStatusDurationReductions(duration, pkm)
 
@@ -575,6 +578,9 @@ export default class Status extends Schema implements IStatus {
   ) {
     if (!this.runeProtect) {
       duration = apBoost && origin ? duration * (1 + origin.ap / 100) : duration
+      if (pkm.simulation.weather === Weather.ECLIPSE) {
+        duration *= 0.7
+      }
       duration = this.applyStatusDurationReductions(duration, pkm)
 
       this.fatigue = true

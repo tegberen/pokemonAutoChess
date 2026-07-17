@@ -296,6 +296,13 @@ export const AwakeningEffects: Partial<
     })
   ],
 
-  // handled in effects/synergies.ts 
-  [Awakening.STICKY_GLOB]: []
+  // handled in effects/synergies.ts
+  [Awakening.STICKY_GLOB]: [],
+
+  [Awakening.ECLIPSE_STONE]: [
+    new OnSimulationStartEffect(({ entity }) => {
+      entity.addAbilityPower(entity.def, entity, 0, false)
+      entity.addPP(Math.round(0.5 * entity.def), entity, 0, false)
+    })
+  ]
 }

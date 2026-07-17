@@ -550,6 +550,8 @@ export class DebugScene extends Phaser.Scene {
       this.weatherManager.addAurora()
     } else if (weather === Weather.PLAGUE) {
       this.weatherManager.addPlague()
+    } else if (weather === Weather.ECLIPSE) {
+      this.weatherManager.addEclipse()
     } else if (weather === "dawn") {
       this.weatherManager.setTownDaytime(0)
     } else if (weather === "sunset") {

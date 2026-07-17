@@ -2662,6 +2662,7 @@
 		"CRYSTALLISE_ODD_KEYSTONE":  "Gain +1 LUCK and +2 AP for each dodged attack. On ROCK explosion inflict Curse of Weakness on enemies with higher ATK and Curse of Torment on enemies with higher AP than the user.",
 		"CRYSTALLISE_METAL_ALLOY": "ON_ATTACK [5, LK] % chance to absorb 1 RANGE from the target. If the target can't lose RANGE, push back the target and apply LOCKED for 2s instead. The push back distance increases relative to user RANGE.",
 		"CRYSTALLISE_STICKY_GLOB": "Every held item has a [30, LK]% chance to be copied to the BUG clone",
+		"CRYSTALLISE_ECLIPSE_STONE": "At the start of the fight, gain 100% of DEF as AP and 50% of DEF as starting PP.",
 		"CURSE_OF_VULNERABILITY": "The enemy with the highest DEF + SPE_DEF lose 5 of it and is FLINCH",
 		"CURSE_OF_WEAKNESS": "Also, the enemy with the highest ATK lose 20% of it and is PARALYSIS",
 		"CURSE_OF_TORMENT": "Also, the enemy with the highest AP lose 30 of it and is FATIGUE",
@@ -2882,6 +2883,7 @@
 		"ODD_KEYSTONE": "Odd Stone",
 		"METAL_ALLOY": "Metal Alloy",
 		"STICKY_GLOB": "Sticky Glob",
+		"ECLIPSE_STONE": "Eclipse Stone",
 		"UTILITY_UMBRELLA": "Utility Umbrella",
 		"NORMAL_GEM": "Normal Gem",
 		"GRASS_GEM": "Grass Gem",
@@ -3291,6 +3293,7 @@
 		"ODD_KEYSTONE": "Counts for 3 towards MURKY. Under MURKY, your team gains 10 LUCK and -10% negative status duration, and resist to CURSE 1 second longer.\n\nAllows a ROCK Pokémon to undergo Crystallisation, Awakening it as a GHOST type.",
 		"METAL_ALLOY": "Counts for 3 towards MAGNET_STORM. Under MAGNET_STORM, your team gains 5 SHIELD for each ADJACENT free tile.\n\nAllows a ROCK Pokémon to undergo Crystallisation, Awakening it as a STEEL type.",
 		"STICKY_GLOB": "Counts for 3 towards PLAGUE. Under PLAGUE, your team recovers from PARALYSIS 20% faster. [10, LK]% chance to throw a sticky web ON_ATTACK.\n\nAllows a ROCK Pokémon to undergo Crystallisation, Awakening it as a BUG type.",
+		"ECLIPSE_STONE": "Counts for 3 towards ECLIPSE. Under ECLIPSE, your team has a [5, LK]% chance to steal 5 AP ON_ATTACK.\n\nAllows a ROCK Pokémon to undergo Crystallisation, Awakening it as a PSYCHIC type.",
 		"UTILITY_UMBRELLA": "The holder and allies ADJACENT_IN_THE_SAME_ROW take -70% negative status duration and status damage (BURN and POISON).",
 		"NORMAL_GEM": "+1 to NORMAL synergy",
 		"GRASS_GEM": "+1 to GRASS synergy",
@@ -3565,6 +3568,9 @@
 		"ENAMORUS": "Change weather to MISTY or WINDY based on your dominant synergy between FAIRY and FLYING",
 		"DROUGHT_OR_SANDSTORM": "Change weather to DROUGHT or SANDSTORM based on your dominant synergy between FIRE and GROUND",
 		"DROUGHT_OR_ZENITH": "Change weather to DROUGHT or ZENITH based on your dominant synergy between FIRE and LIGHT",
+		"ECLIPSE_OR_MAGNET_STORM": "Change weather to ECLIPSE or MAGNET_STORM based on your dominant synergy between PSYCHIC and STEEL",
+		"ECLIPSE_OR_MURKY": "Change weather to ECLIPSE or MURKY based on your dominant synergy between PSYCHIC and GHOST",
+		"ECLIPSE_OR_NIGHT": "Change weather to ECLIPSE or NIGHT based on your dominant synergy between PSYCHIC and DARK",
 		"RAIN_OR_STORM": "Change weather to RAIN or STORM based on your dominant synergy between WATER and ELECTRIC",
 		"AIRLOCK": "Change weather to NEUTRAL",
 		"SHARED_VISION": "Shared Vision: All Pokémon with Shared Vision will attack the same target, if at range. Rumour has it they will Mega Evolve when facing great danger.",
@@ -4145,7 +4151,8 @@
 		"SMOG": "Smog",
 		"MURKY": "Murky",
 		"MAGNET_STORM": "Magnet Storm",
-		"PLAGUE": "Plague"
+		"PLAGUE": "Plague",
+		"ECLIPSE": "Eclipse"
 	},
 	"weather_description": {
 		"NEUTRAL": "Normal weather. No effects.",
@@ -4162,7 +4169,8 @@
 		"SMOG": "-15% accuracy\n+30% POISONNED duration",
 		"MURKY": "-30 LUCK (GHOST are immune)\n+30% SILENCE duration",
 		"MAGNET_STORM": "Sets base SPEED to 50 (STEEL Pokémon above 50 base SPEED are unaffected)",
-		"PLAGUE": "Attacks deal 1 SPECIAL per ally (TRUE if BUG)\n+30% PARALYSIS duration"
+		"PLAGUE": "Attacks deal 1 SPECIAL per ally (TRUE if BUG)\n+30% PARALYSIS duration",
+		"ECLIPSE": "-10% max PP\n-30% FATIGUE and SILENCE duration"
 	},
 	"board_effect": {
 		"EMBER": "Ember",

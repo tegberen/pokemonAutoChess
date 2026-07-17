@@ -1707,6 +1707,25 @@ export default class Simulation extends Schema implements ISimulation {
         break
       }
 
+      case EffectEnum.ECLIPSE: {
+        pokemon.maxPP = Math.round(pokemon.maxPP * 0.9)
+
+        const nbEclipseStones = pokemon.player
+          ? count(pokemon.player.items, Item.ECLIPSE_STONE)
+          : 0
+        if (nbEclipseStones > 0) {
+          pokemon.effectsSet.add(
+            new OnAttackEffect(({ pokemon, target }) => {
+              if (target && chance(0.05*nbEclipseStones, pokemon)) {
+                target.addAbilityPower(-5*nbEclipseStones, pokemon, 0, false)
+                pokemon.addAbilityPower(5*nbEclipseStones, pokemon, 0, false)
+              }
+            }, EffectEnum.ECLIPSE)
+          )
+        }
+        break
+      }
+
       default:
         break
     }

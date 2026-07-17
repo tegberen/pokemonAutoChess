@@ -942,6 +942,183 @@ export default class WeatherManager {
     )
   }
 
+  addEclipse() {
+    // the field stays bathed in warm sunlight underneath
+    this.colorFilter = this.scene.add.existing(
+      new Phaser.GameObjects.Rectangle(
+        this.scene,
+        1500,
+        1000,
+        3000,
+        2000,
+        0xffe0a0,
+        0.1
+      ).setDepth(DEPTH.WEATHER_FX)
+    )
+
+    // a soft dark void that creeps in from the bottom-right corner and keeps
+    // growing until it blankets the whole board
+    const shadowKey = "eclipse-shadow"
+    if (!this.scene.textures.exists(shadowKey)) {
+      const size = 512
+      const tex = this.scene.textures.createCanvas(shadowKey, size, size)
+      if (tex) {
+        const ctx = tex.getContext()
+        const r = size / 2
+        const g = ctx.createRadialGradient(r, r, 0, r, r, r)
+        g.addColorStop(0, "rgba(20,12,44,1)")
+        g.addColorStop(0.82, "rgba(20,12,44,1)")
+        g.addColorStop(1, "rgba(20,12,44,0)") // soft leading edge
+        ctx.fillStyle = g
+        ctx.fillRect(0, 0, size, size)
+        tex.refresh()
+      }
+    }
+    // centred on the bottom-right corner so the darkness is densest there
+    const shadow = this.scene.add.existing(
+      new Phaser.GameObjects.Image(this.scene, 1950, 1000, shadowKey)
+        .setScale(0.6)
+        .setAlpha(0)
+        .setDepth(DEPTH.WEATHER_FX)
+    )
+    this.images.push(shadow)
+    // fade the void up, then grow it steadily to swallow the board
+    this.tweens.push(
+      this.scene.tweens.add({
+        targets: shadow,
+        alpha: 0.29,
+        duration: 2000,
+        ease: "sine.out"
+      })
+    )
+    this.tweens.push(
+      this.scene.tweens.add({
+        targets: shadow,
+        scale: 9,
+        duration: 7000,
+        ease: "sine.out"
+      })
+    )
+
+    // psychic "third eyes"
+    const eyeKey = "eclipse-eye"
+    if (!this.scene.textures.exists(eyeKey)) {
+      const w = 128
+      const h = 112
+      const tex = this.scene.textures.createCanvas(eyeKey, w, h)
+      if (tex) {
+        const ctx = tex.getContext()
+        const cx = w / 2
+        const cy = h / 2
+        const eyeW = 58
+        const eyeH = 36
+
+        // almond shaped   
+        const almond = () => {
+          ctx.beginPath()
+          ctx.moveTo(cx - eyeW, cy)
+          ctx.bezierCurveTo(cx - eyeW * 0.4, cy - eyeH, cx + eyeW * 0.4, cy - eyeH, cx + eyeW, cy)
+          ctx.bezierCurveTo(cx + eyeW * 0.4, cy + eyeH, cx - eyeW * 0.4, cy + eyeH, cx - eyeW, cy)
+          ctx.closePath()
+        }
+
+        // soft inner glow, clipped to the eye so it never bleeds past the border
+        ctx.save()
+        almond()
+        ctx.clip()
+        const glow = ctx.createRadialGradient(cx, cy, 0, cx, cy, eyeW)
+        glow.addColorStop(0, "rgba(205,140,255,0.55)")
+        glow.addColorStop(1, "rgba(205,140,255,0)")
+        ctx.fillStyle = glow
+        ctx.fillRect(0, 0, w, h)
+        ctx.restore()
+
+        // coloured outline
+        ctx.strokeStyle = "rgba(232,205,255,0.95)"
+        ctx.lineWidth = 3
+        almond()
+        ctx.stroke()
+        tex.refresh()
+      }
+    }
+
+    const activeEyes: Phaser.GameObjects.Image[] = []
+    const removeEye = (eye: Phaser.GameObjects.Image) => {
+      eye.destroy()
+      let idx = this.images.indexOf(eye)
+      if (idx >= 0) this.images.splice(idx, 1)
+      idx = activeEyes.indexOf(eye)
+      if (idx >= 0) activeEyes.splice(idx, 1)
+    }
+
+    const spawnEye = () => {
+      const size = Phaser.Math.FloatBetween(1.0, 1.9) // a bit bigger
+      const peak = Phaser.Math.FloatBetween(0.48, 0.64)
+      const radius = size * 75 // rough footprint used for spacing
+
+      // find a spot clear of every eye currently on screen
+      let x = 0
+      let y = 0
+      let placed = false
+      for (let tries = 0; tries < 15 && !placed; tries++) {
+        x = Phaser.Math.Between(180, 1770)
+        y = Phaser.Math.Between(140, 880)
+        placed = activeEyes.every((e) => {
+          const er = (e.getData("radius") as number) ?? 75
+          return Phaser.Math.Distance.Between(x, y, e.x, e.y) > radius + er
+        })
+      }
+      if (!placed) return
+
+      const eye = this.scene.add.existing(
+        new Phaser.GameObjects.Image(this.scene, x, y, eyeKey)
+          .setScale(size, size * 0.06)
+          .setAlpha(0)
+          .setAngle(Phaser.Math.Between(-12, 12))
+          .setDepth(DEPTH.WEATHER_FX)
+      )
+      eye.setData("radius", radius)
+      this.images.push(eye)
+      activeEyes.push(eye)
+      this.tweens.push(
+        this.scene.tweens.add({
+          targets: eye,
+          scaleY: size,
+          alpha: peak,
+          duration: 1400,
+          ease: "sine.out",
+          onComplete: () => {
+            this.tweens.push(
+              this.scene.tweens.add({
+                targets: eye,
+                alpha: 0,
+                delay: 2500,
+                duration: 1600,
+                ease: "sine.in",
+                onComplete: () => removeEye(eye)
+              })
+            )
+          }
+        })
+      )
+    }
+
+    this.timers.push(
+      this.scene.time.delayedCall(7000, () => {
+        this.timers.push(
+          this.scene.time.addEvent({
+            delay: 1750,
+            loop: true,
+            callback: () => {
+              const n = Phaser.Math.Between(0, 2)
+              for (let k = 0; k < n; k++) spawnEye()
+            }
+          })
+        )
+      })
+    )
+  }
+
   setTownDaytime(stageLevel: number) {
     // ambient light based on day time
     let red = 255,

@@ -270,6 +270,51 @@ export function getWeather(
             (boardWeatherScore.get(dominant) ?? 0) + 100
           )
         }
+
+        if (pkm.passive === Passive.ECLIPSE_OR_MAGNET_STORM) {
+          const nbPsychic = schemaValues(board).filter((p) =>
+            p.types.has(Synergy.PSYCHIC)
+          ).length
+          const nbSteel = schemaValues(board).filter((p) =>
+            p.types.has(Synergy.STEEL)
+          ).length
+          const dominant =
+            nbPsychic >= nbSteel ? Weather.ECLIPSE : Weather.MAGNET_STORM
+          boardWeatherScore.set(
+            dominant,
+            (boardWeatherScore.get(dominant) ?? 0) + 100
+          )
+        }
+
+        if (pkm.passive === Passive.ECLIPSE_OR_MURKY) {
+          const nbPsychic = schemaValues(board).filter((p) =>
+            p.types.has(Synergy.PSYCHIC)
+          ).length
+          const nbGhost = schemaValues(board).filter((p) =>
+            p.types.has(Synergy.GHOST)
+          ).length
+          const dominant =
+            nbPsychic >= nbGhost ? Weather.ECLIPSE : Weather.MURKY
+          boardWeatherScore.set(
+            dominant,
+            (boardWeatherScore.get(dominant) ?? 0) + 100
+          )
+        }
+
+        if (pkm.passive === Passive.ECLIPSE_OR_NIGHT) {
+          const nbPsychic = schemaValues(board).filter((p) =>
+            p.types.has(Synergy.PSYCHIC)
+          ).length
+          const nbDark = schemaValues(board).filter((p) =>
+            p.types.has(Synergy.DARK)
+          ).length
+          const dominant =
+            nbPsychic >= nbDark ? Weather.ECLIPSE : Weather.NIGHT
+          boardWeatherScore.set(
+            dominant,
+            (boardWeatherScore.get(dominant) ?? 0) + 100
+          )
+        }
       }
     })
   }
