@@ -466,6 +466,9 @@ export default class Status extends Schema implements IStatus {
           burnDamage *= 0.5
         }
 
+        if (pkm.effects.has(EffectEnum.UTILITY_UMBRELLA)) {
+          burnDamage *= 0.3
+        }
         if (pkm.effects.has(EffectEnum.SWIFT_SWIM)) {
           burnDamage *= 0.7
         } else if (pkm.effects.has(EffectEnum.HYDRATION)) {
@@ -653,6 +656,9 @@ export default class Status extends Schema implements IStatus {
         poisonDamage *= 0.5
       }
 
+      if (pkm.effects.has(EffectEnum.UTILITY_UMBRELLA)) {
+        poisonDamage *= 0.3
+      }
       if (pkm.effects.has(EffectEnum.SWIFT_SWIM)) {
         poisonDamage *= 0.7
       } else if (pkm.effects.has(EffectEnum.HYDRATION)) {
@@ -1355,6 +1361,10 @@ export default class Status extends Schema implements IStatus {
     duration: number,
     pkm: IPokemonEntity
   ): number {
+
+    if (pkm.effects.has(EffectEnum.UTILITY_UMBRELLA)) {
+      duration = Math.round(duration * 0.3)
+    }
     if (pkm.effects.has(EffectEnum.SWIFT_SWIM)) {
       duration = Math.round(duration * 0.7)
     } else if (pkm.effects.has(EffectEnum.HYDRATION)) {

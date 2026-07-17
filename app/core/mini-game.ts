@@ -593,6 +593,13 @@ export class MiniGame {
       items.push(...pickNRandomIn(SynergyGems, 4))
     }
 
+    if (encounter === TownEncounters.CASTFORM) {
+      const nbUmbrellas = Math.ceil(this.alivePlayers.length / 2)
+      for (let i = 0; i < nbUmbrellas; i++) {
+        items.push(Item.UTILITY_UMBRELLA)
+      }
+    }
+
     for (let j = 0; j < nbItemsToPick; j++) {
       let item,
         count,

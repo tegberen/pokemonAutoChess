@@ -795,6 +795,23 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
     })
   ],
 
+  [Item.UTILITY_UMBRELLA]: [
+    new OnSimulationStartEffect(({ entity, simulation }) => {
+      entity.effects.add(EffectEnum.UTILITY_UMBRELLA)
+      simulation.board
+        .getAdjacentCells(entity.positionX, entity.positionY)
+        .forEach((cell) => {
+          if (
+            cell.value &&
+            cell.y === entity.positionY &&
+            cell.value.team === entity.team
+          ) {
+            cell.value.effects.add(EffectEnum.UTILITY_UMBRELLA)
+          }
+        })
+    })
+  ],
+
   [Item.DYNAMAX_BAND]: [
     new OnItemGainedEffect((pokemon) => {
       pokemon.addMaxHP(2 * pokemon.baseHP, pokemon, 0, false)

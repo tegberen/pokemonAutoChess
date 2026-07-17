@@ -1822,7 +1822,8 @@ export default class BoardManager {
     const adjacentEffectsItems = [
       Item.ABILITY_SHIELD,
       Item.GRACIDEA_FLOWER,
-      Item.EFFICIENT_BANDANNA
+      Item.EFFICIENT_BANDANNA,
+      Item.UTILITY_UMBRELLA
     ]
 
     const shouldDisplayLeft = positionX > 0
@@ -1840,6 +1841,9 @@ export default class BoardManager {
             break
           case Item.EFFICIENT_BANDANNA:
             statBoost = Stat.PP
+            break
+          case Item.UTILITY_UMBRELLA:
+            statBoost = Stat.SHIELD
             break
         }
         if (statBoost) {

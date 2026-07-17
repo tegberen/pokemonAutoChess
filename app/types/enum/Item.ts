@@ -159,6 +159,7 @@ export enum Item {
   SUN_STONE = "SUN_STONE",
   METAL_ALLOY = "METAL_ALLOY",
   STICKY_GLOB = "STICKY_GLOB",
+  UTILITY_UMBRELLA = "UTILITY_UMBRELLA",
   NORMAL_GEM = "NORMAL_GEM",
   GRASS_GEM = "GRASS_GEM",
   FIRE_GEM = "FIRE_GEM",
@@ -492,6 +493,7 @@ export const TownItems = [
 // should be excluded from carousels
 export const SpecialItems: Item[] = [
   Item.PRISON_BOTTLE,
+  Item.UTILITY_UMBRELLA,
   ...TownItems,
   Item.COIN,
   Item.NUGGET,

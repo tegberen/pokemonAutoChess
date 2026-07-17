@@ -16,6 +16,7 @@ export const TownEncounters = {
   [Pkm.MUNCHLAX]: Pkm.MUNCHLAX,
   [Pkm.SABLEYE]: Pkm.SABLEYE,
   [Pkm.CELEBI]: Pkm.CELEBI,
+  [Pkm.CASTFORM]: Pkm.CASTFORM,
   [Pkm.MAKUHITA]: Pkm.MAKUHITA,
   [Pkm.CROAGUNK]: Pkm.CROAGUNK,
   [Pkm.WIGGLYTUFF]: Pkm.WIGGLYTUFF,

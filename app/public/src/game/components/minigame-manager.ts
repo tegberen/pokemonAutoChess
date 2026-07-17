@@ -632,6 +632,13 @@ export default class MinigameManager {
       lapras.moveManager.moveTo(8 * 48, 4 * 48)
     }
 
+    const castform = new PokemonSpecial({
+      scene: this.scene,
+      x: encounter === TownEncounters.CASTFORM ? cx : 1 * 48,
+      y: encounter === TownEncounters.CASTFORM ? cy : 14.5 * 48,
+      name: Pkm.CASTFORM
+    })
+
     const podiumPokemons = podium.map((p, rank) => {
       const { name, shiny } = getPokemonCustomFromAvatar(p.avatar)
       const champion = new PokemonSpecial({
@@ -753,6 +760,7 @@ export default class MinigameManager {
       magnezone,
       kingambit,
       lapras,
+      castform,
       chimecho,
       ...podiumPokemons,
       ...championVillagers,

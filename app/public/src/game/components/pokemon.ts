@@ -27,6 +27,7 @@ import {
 } from "../../../../types/Animation"
 import { Ability } from "../../../../types/enum/Ability"
 import { Awakening } from "../../../../types/enum/Awakening"
+import { EffectEnum } from "../../../../types/enum/Effect"
 import {
   Orientation,
   PokemonActionState,
@@ -1225,6 +1226,9 @@ export default class PokemonSprite extends DraggableObject {
     }
     if (pokemon.status.reflect) {
       this.addReflectShieldAnim(0xff3030)
+    }
+    if (pokemon.effects.has(EffectEnum.UTILITY_UMBRELLA)) {
+      this.addReflectShieldAnim(0x88ccff)
     }
     if (pokemon.status.electricField) {
       this.addElectricField()
