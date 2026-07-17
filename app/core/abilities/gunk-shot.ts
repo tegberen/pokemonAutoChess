@@ -11,7 +11,7 @@ export class GunkShotStrategy extends AbilityStrategy {
     crit: boolean
   ) {
     super.process(pokemon, board, target, crit)
-    const damage = [50, 100, 200, 400][pokemon.stars - 1] ?? 400
+    const damage = [25, 50, 100, 200][pokemon.stars - 1] ?? 200
     const baseDuration = [2000, 4000, 8000, 16000][pokemon.stars - 1] ?? 16000
     const duration = Math.round(
       baseDuration * (1 + pokemon.ap / 100) * (crit ? pokemon.critPower : 1)

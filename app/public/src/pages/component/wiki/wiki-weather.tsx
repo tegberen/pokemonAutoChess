@@ -113,5 +113,6 @@ const pokemonsInfluencingWeather = new Map([
   [Weather.SANDSTORM, [Pkm.LANDORUS, Pkm.PRIMAL_GROUDON]],
   [Weather.NEUTRAL, [Pkm.MEGA_RAYQUAZA]],
   [Weather.MAGNET_STORM, [Pkm.SOLGALEO]],
-  [Weather.MURKY, [Pkm.LUNALA]]
+  [Weather.MURKY, [Pkm.LUNALA]],
+  [Weather.BLOODMOON, [Pkm.URSALUNA_BLOODMOON]]
 ])

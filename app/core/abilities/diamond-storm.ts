@@ -11,7 +11,7 @@ export class DiamondStormStrategy extends AbilityStrategy {
     crit: boolean
   ) {
     super.process(pokemon, board, target, crit)
-    const damageFactor = [1, 1, 1.5, 3][pokemon.stars - 1] ?? 3
+    const damageFactor = [0.5, 1, 1.5, 2, 4][pokemon.stars - 1] ?? 4
     const damage = pokemon.def * damageFactor
     const cells = board.getAdjacentCells(pokemon.positionX, pokemon.positionY)
     cells.forEach((cell) => {

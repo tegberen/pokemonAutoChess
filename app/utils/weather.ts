@@ -114,6 +114,45 @@ export function getWeather(
                 (playerWeatherScore.get(Weather.STORM) ?? 0) + 2
               )
             }
+            if (
+              pkm.passive === Passive.SMOG_WEATHER &&
+              weather === Weather.SMOG
+            ) {
+              boardWeatherScore.set(
+                Weather.SMOG,
+                (boardWeatherScore.get(Weather.SMOG) ?? 0) + 2
+              )
+              playerWeatherScore.set(
+                Weather.SMOG,
+                (playerWeatherScore.get(Weather.SMOG) ?? 0) + 2
+              )
+            }
+            if (
+              pkm.passive === Passive.MISTY_WEATHER &&
+              weather === Weather.MISTY
+            ) {
+              boardWeatherScore.set(
+                Weather.MISTY,
+                (boardWeatherScore.get(Weather.MISTY) ?? 0) + 2
+              )
+              playerWeatherScore.set(
+                Weather.MISTY,
+                (playerWeatherScore.get(Weather.MISTY) ?? 0) + 2
+              )
+            }
+            if (
+              pkm.passive === Passive.SNOW_WEATHER &&
+              weather === Weather.SNOW
+            ) {
+              boardWeatherScore.set(
+                Weather.SNOW,
+                (boardWeatherScore.get(Weather.SNOW) ?? 0) + 2
+              )
+              playerWeatherScore.set(
+                Weather.SNOW,
+                (playerWeatherScore.get(Weather.SNOW) ?? 0) + 2
+              )
+            }
             if (pkm.passive !== Passive.CASTFORM) {
               playerWeatherScore.set(
                 weather,

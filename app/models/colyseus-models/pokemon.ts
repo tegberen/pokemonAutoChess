@@ -3504,7 +3504,6 @@ export class Abomasnow extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.GRASS, Synergy.ICE, Synergy.MONSTER])
   rarity = Rarity.EPIC
   stars = 2
-  //evolution = Pkm.MEGA_ABOMASNOW
   hp = 250
   atk = 20
   speed = 44
@@ -3514,24 +3513,8 @@ export class Abomasnow extends Pokemon {
   range = 1
   skill = Ability.SHEER_COLD
   regional = true
-  passive = Passive.ABOMASNOW
+  passive = Passive.SNOW_WEATHER
 }
-
-// export class MegaAbomasnow extends Pokemon {
-//   types = new SetSchema<Synergy>([Synergy.GRASS, Synergy.ICE, Synergy.MONSTER])
-//   rarity = Rarity.EPIC
-//   stars = 3
-//   hp = 300
-//   atk = 30
-//   speed = 44
-//   def = 14
-//   speDef = 14
-//   maxPP = 120
-//   range = 1
-//   skill = Ability.DEFAULT
-//   //skill = Ability.SHEER_COLD
-//   regional = true
-// }
 
 export class Snorunt extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.GHOST, Synergy.ICE, Synergy.ROCK])
@@ -8677,44 +8660,47 @@ export class Aurorus extends Pokemon {
 
 export class Carbink extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.FOSSIL, Synergy.ROCK, Synergy.FAIRY])
-  rarity = Rarity.EPIC
-  stars = 1
+  rarity = Rarity.UNIQUE
+  stars = 2
   evolution = Pkm.DIANCIE
-  hp = 80
-  atk = 7
+  evolutionRule = {
+    type: EvolutionRuleType.STATE,
+    condition: (pokemon: IPokemon) => pokemon.awakening !== Awakening.NONE
+  } as const
+  hp = 150
+  atk = 15
   speed = 41
   def = 20
   speDef = 20
   maxPP = 100
   range = 1
   skill = Ability.DIAMOND_STORM
-  additional = true
+  passive = Passive.CARBINK
 }
 
 export class Diancie extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.ROCK, Synergy.FAIRY, Synergy.FOSSIL])
-  rarity = Rarity.EPIC
+  rarity = Rarity.LEGENDARY
   evolution = Pkm.MEGA_DIANCIE
   evolutionRule = { type: EvolutionRuleType.STACK } as const
   stacksRequired = 10
-  stars = 2
-  hp = 180
-  atk = 10
+  stars = 3
+  hp = 200
+  atk = 20
   speed = 41
   def = 30
   speDef = 30
   maxPP = 100
   range = 1
   skill = Ability.DIAMOND_STORM
-  additional = true
   passive = Passive.DIANCIE
 }
 
 export class MegaDiancie extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.ROCK, Synergy.FAIRY, Synergy.FOSSIL])
-  rarity = Rarity.EPIC
-  stars = 3
-  hp = 180
+  rarity = Rarity.LEGENDARY
+  stars = 4
+  hp = 250
   atk = 25
   speed = 41
   def = 30
@@ -8722,7 +8708,6 @@ export class MegaDiancie extends Pokemon {
   maxPP = 100
   range = 1
   skill = Ability.DIAMOND_STORM
-  additional = true
   passive = Passive.MEGA_DIANCIE
 }
 
@@ -13764,7 +13749,7 @@ export class Koffing extends Pokemon {
     Synergy.ARTIFICIAL,
     Synergy.AMORPHOUS
   ])
-  rarity = Rarity.UNCOMMON
+  rarity = Rarity.EPIC
   stars = 1
   evolutions = [Pkm.WEEZING, Pkm.GALARIAN_WEEZING]
   evolutionRule = {
@@ -13776,8 +13761,8 @@ export class Koffing extends Pokemon {
       else return Pkm.WEEZING
     }
   } satisfies CountEvolutionRule
-  hp = 65
-  atk = 5
+  hp = 120
+  atk = 9
   speed = 44
   def = 8
   speDef = 4
@@ -13793,17 +13778,18 @@ export class Weezing extends Pokemon {
     Synergy.ARTIFICIAL,
     Synergy.AMORPHOUS
   ])
-  rarity = Rarity.UNCOMMON
+  rarity = Rarity.EPIC
   stars = 2
-  hp = 155
-  atk = 10
+  hp = 220
+  atk = 16
   speed = 44
-  def = 12
+  def = 14
   speDef = 7
   maxPP = 60
   range = 1
   skill = Ability.SMOG
   additional = true
+  passive = Passive.SMOG_WEATHER
 }
 
 export class GalarianWeezing extends Pokemon {
@@ -13812,14 +13798,14 @@ export class GalarianWeezing extends Pokemon {
     Synergy.ARTIFICIAL,
     Synergy.FAIRY
   ])
-  rarity = Rarity.UNCOMMON
+  rarity = Rarity.EPIC
   stars = 2
-  hp = 155
-  atk = 10
+  hp = 220
+  atk = 16
   speed = 44
-  def = 12
+  def = 14
   speDef = 7
-  maxPP = 100
+  maxPP = 80
   range = 1
   skill = Ability.STRANGE_STEAM
   additional = true
@@ -13828,6 +13814,7 @@ export class GalarianWeezing extends Pokemon {
     const regionSynergies = RegionDetails[map]?.synergies
     return regionSynergies.includes(Synergy.FAIRY)
   }
+  passive = Passive.MISTY_WEATHER
 }
 
 export class Clauncher extends Pokemon {
@@ -16871,14 +16858,14 @@ export class Golurk extends Pokemon {
 
 export class Trubbish extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.POISON, Synergy.ARTIFICIAL])
-  rarity = Rarity.EPIC
+  rarity = Rarity.UNCOMMON
   evolution = Pkm.GARBODOR
   stars = 1
-  hp = 110
-  atk = 8
+  hp = 65
+  atk = 5
   speed = 49
-  def = 6
-  speDef = 6
+  def = 5
+  speDef = 5
   maxPP = 100
   range = 1
   skill = Ability.GUNK_SHOT
@@ -16888,13 +16875,13 @@ export class Trubbish extends Pokemon {
 
 export class Garbodor extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.POISON, Synergy.ARTIFICIAL])
-  rarity = Rarity.EPIC
+  rarity = Rarity.UNCOMMON
   stars = 2
-  hp = 230
-  atk = 14
+  hp = 145
+  atk = 10
   speed = 49
-  def = 10
-  speDef = 10
+  def = 9
+  speDef = 9
   maxPP = 90
   range = 1
   skill = Ability.GUNK_SHOT

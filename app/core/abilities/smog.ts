@@ -13,7 +13,7 @@ export class SmogStrategy extends AbilityStrategy {
   ) {
     super.process(pokemon, board, target, crit)
     const cells = board.getCellsInFront(pokemon, target)
-    const damage = [10, 20, 40, 80][pokemon.stars - 1] ?? 80
+    const damage = [30, 60, 120, 240][pokemon.stars - 1] ?? 240
 
     cells.forEach((cell) => {
       board.addBoardEffect(cell.x, cell.y, EffectEnum.SMOKE, pokemon.simulation)
