@@ -711,6 +711,8 @@ class GameContainer {
           this.gameScene.weatherManager.addEclipse()
         } else if (value === Weather.FLOOD) {
           this.gameScene.weatherManager.addFlood()
+        } else if (value === Weather.ELDER_STORM) {
+          this.gameScene.weatherManager.addElderStorm()
         }
       }
     }

@@ -13,6 +13,7 @@ export default class WeatherManager {
   graphics: Phaser.GameObjects.Graphics[]
   timers: Phaser.Time.TimerEvent[]
   tweens: Phaser.Tweens.Tween[]
+  containers: Phaser.GameObjects.Container[]
   fxs: Phaser.Filters.Controller[]
 
   constructor(scene: Phaser.Scene) {
@@ -23,6 +24,7 @@ export default class WeatherManager {
     this.graphics = []
     this.timers = []
     this.tweens = []
+    this.containers = []
     this.fxs = []
   }
 
@@ -1261,6 +1263,461 @@ export default class WeatherManager {
     )
   }
 
+  addElderStorm() {
+    // centre on the real battlefield (from the board cell transform) so the eye
+    // lines up with the arena: cells span x 672..1344, y 184..664 (centres)
+    const cx = 1008
+    const cy = 424
+    const tilt = 0.5 // vertical squash ≈ 30° view onto the plane
+
+    // --- gloom: tints the whole scene and is the fallback fill behind the
+    // clouds, so any area the vortex doesn't reach is still storm-coloured (no
+    // hard boundary anywhere)
+    this.colorFilter = this.scene.add.existing(
+      new Phaser.GameObjects.Rectangle(
+        this.scene,
+        1500,
+        1000,
+        3000,
+        2000,
+        0x201024,
+        0.34
+      ).setDepth(DEPTH.WEATHER_FX)
+    )
+    this.tweens.push(
+      this.scene.tweens.add({
+        targets: this.colorFilter,
+        alpha: { from: 0.3, to: 0.42 },
+        duration: 4600,
+        yoyo: true,
+        repeat: -1,
+        ease: "sine.inout"
+      })
+    )
+
+    // --- soft radial glow texture (white, tinted per-use) for the currents
+    const glowKey = "elder-glow"
+    if (!this.scene.textures.exists(glowKey)) {
+      const size = 256
+      const tex = this.scene.textures.createCanvas(glowKey, size, size)
+      if (tex) {
+        const ctx = tex.getContext()
+        const r = size / 2
+        const g = ctx.createRadialGradient(r, r, 0, r, r, r)
+        g.addColorStop(0, "rgba(255,255,255,1)")
+        g.addColorStop(0.45, "rgba(255,255,255,0.5)")
+        g.addColorStop(1, "rgba(255,255,255,0)")
+        ctx.fillStyle = g
+        ctx.fillRect(0, 0, size, size)
+        tex.refresh()
+      }
+    }
+
+    // Vortex geometry, in texture px (the texture is drawn at high res so the
+    // cloud puffs stay fine even though the sprite is scaled up a lot). The eye
+    // and wall land at these radii * ringScale in world space.
+    const innerR = 150 // clear eye radius
+    const peakR = 225 // cloud wall crest
+    const wallOuter = 330 // outer limit of wall detail
+    const ringScale = 700 / innerR // eye world-radius ≈ 700px (whole board fits)
+
+    // --- vortex texture: a clear eye, a cloudy wall, then a SOLID cloud fill
+    // sustained all the way to the edge. The outer fill is radially symmetric,
+    // so rotation never opens a gap and there is no outer ring edge — the cloud
+    // just runs off the board. Wall puffs give the rim its churn.
+    const vortexKey = "elder-vortex-v3"
+    if (!this.scene.textures.exists(vortexKey)) {
+      const size = 1024
+      const tex = this.scene.textures.createCanvas(vortexKey, size, size)
+      if (tex) {
+        const ctx = tex.getContext()
+        const r = size / 2
+        // base: transparent eye -> ramp -> sustained (slightly translucent) fill
+        // to the edge. Sitting a touch below full opacity lets the billows below
+        // read as rolling masses with depth between them.
+        const base = ctx.createRadialGradient(r, r, 0, r, r, r)
+        base.addColorStop(0, "rgba(255,255,255,0)")
+        base.addColorStop(innerR / r, "rgba(255,255,255,0)")
+        base.addColorStop(peakR / r, "rgba(255,255,255,0.82)")
+        base.addColorStop(1, "rgba(255,255,255,0.82)")
+        ctx.fillStyle = base
+        ctx.fillRect(0, 0, size, size)
+        // cloudy wall detail (visible where the base is still ramping)
+        for (let i = 0; i < 1800; i++) {
+          const t = Math.random()
+          const rr = innerR + t * (wallOuter - innerR)
+          const theta =
+            Math.random() * Math.PI * 2 +
+            ((rr - innerR) / (wallOuter - innerR)) * 1.6 // spiral curl
+          const x = r + Math.cos(theta) * rr
+          const y = r + Math.sin(theta) * rr
+          const w =
+            rr < peakR
+              ? (rr - innerR) / (peakR - innerR)
+              : 1 - (rr - peakR) / (wallOuter - peakR)
+          const ww = Math.max(0, Math.min(1, w))
+          const blob = Phaser.Math.Linear(5, 20, ww)
+          const alpha = 0.1 * ww
+          const grad = ctx.createRadialGradient(x, y, 0, x, y, blob)
+          grad.addColorStop(0, `rgba(255,255,255,${alpha})`)
+          grad.addColorStop(1, "rgba(255,255,255,0)")
+          ctx.fillStyle = grad
+          ctx.beginPath()
+          ctx.arc(x, y, blob, 0, Math.PI * 2)
+          ctx.fill()
+        }
+        // outer billows: big, soft, sparse masses across the whole outer field
+        // so the far cloud rolls in 3D (with the layers spinning at different
+        // speeds) instead of being a flat wall
+        for (let i = 0; i < 1400; i++) {
+          const rr = peakR + Math.random() * (r - peakR)
+          const theta =
+            Math.random() * Math.PI * 2 +
+            ((rr - innerR) / (r - innerR)) * 2.4 // long banding sweep
+          const x = r + Math.cos(theta) * rr
+          const y = r + Math.sin(theta) * rr
+          const blob = Phaser.Math.Linear(22, 72, Math.random())
+          const alpha = 0.03 + 0.05 * Math.random()
+          const grad = ctx.createRadialGradient(x, y, 0, x, y, blob)
+          grad.addColorStop(0, `rgba(255,255,255,${alpha})`)
+          grad.addColorStop(1, "rgba(255,255,255,0)")
+          ctx.fillStyle = grad
+          ctx.beginPath()
+          ctx.arc(x, y, blob, 0, Math.PI * 2)
+          ctx.fill()
+        }
+        tex.refresh()
+      }
+    }
+
+    // --- the vortex lives in a container tilted ~30° toward the ground: its
+    // children rotate in-plane, then the container foreshortens Y, so the ring
+    // spins like a hurricane seen at an angle instead of tumbling like a coin
+    const vortex = this.scene.add
+      .container(cx, cy)
+      .setDepth(DEPTH.WEATHER_FX)
+      .setScale(1, tilt)
+    this.containers.push(vortex)
+
+    // --- inner tint: eases the harsh brightness gap between a bright battlefield
+    // and the dark storm wall. Faint over the centre so the fight stays readable,
+    // deepening toward the eye rim to meet the cloud, then gone under the wall.
+    const eyeTintKey = "elder-eyetint"
+    if (!this.scene.textures.exists(eyeTintKey)) {
+      const size = 1024
+      const tex = this.scene.textures.createCanvas(eyeTintKey, size, size)
+      if (tex) {
+        const ctx = tex.getContext()
+        const r = size / 2
+        const g = ctx.createRadialGradient(r, r, 0, r, r, r)
+        g.addColorStop(0, "rgba(255,255,255,0.1)")
+        g.addColorStop((innerR * 0.5) / r, "rgba(255,255,255,0.12)")
+        g.addColorStop(innerR / r, "rgba(255,255,255,0.45)")
+        g.addColorStop((innerR + (peakR - innerR) * 0.55) / r, "rgba(255,255,255,0)")
+        g.addColorStop(1, "rgba(255,255,255,0)")
+        ctx.fillStyle = g
+        ctx.fillRect(0, 0, size, size)
+        tex.refresh()
+      }
+    }
+    const eyeTint = new Phaser.GameObjects.Image(this.scene, 0, 0, eyeTintKey)
+      .setOrigin(0.5)
+      .setBlendMode(Phaser.BlendModes.NORMAL)
+      .setTint(0x201024)
+      .setScale(ringScale)
+      .setAlpha(0.9)
+    vortex.add(eyeTint)
+
+    // Stacked cloud layers twirling the same way at different speeds. A shared
+    // warm-purple family (plum -> mauve-brown -> shadow) so the tints blend
+    // instead of fighting; all dark + NORMAL-blended so it reads as storm cloud.
+    const donutLayers = [
+      { scale: ringScale, alpha: 0.55, tint: 0x3a2246, duration: 26000 },
+      { scale: ringScale * 0.94, alpha: 0.5, tint: 0x4a2f3e, duration: 17000 },
+      { scale: ringScale * 1.03, alpha: 0.42, tint: 0x160b1a, duration: 21000 },
+      // faint inner haze: a slightly smaller copy so a whisper of tint bleeds
+      // just inside the eye rim, easing the clear->cloud edge (very subtle)
+      { scale: ringScale * 0.92, alpha: 0.09, tint: 0x5a3a5e, duration: 30000 }
+    ]
+    for (const layer of donutLayers) {
+      const donut = new Phaser.GameObjects.Image(this.scene, 0, 0, vortexKey)
+        .setOrigin(0.5)
+        .setBlendMode(Phaser.BlendModes.NORMAL)
+        .setTint(layer.tint)
+        .setScale(layer.scale)
+        .setAlpha(layer.alpha)
+      vortex.add(donut)
+      // continuous rotation = the hurricane twirling
+      this.tweens.push(
+        this.scene.tweens.add({
+          targets: donut,
+          angle: 360,
+          duration: layer.duration,
+          repeat: -1,
+          ease: "linear"
+        })
+      )
+      // slow breathe on scale + alpha so the wall of cloud churns and pulses
+      this.tweens.push(
+        this.scene.tweens.add({
+          targets: donut,
+          scale: layer.scale * 1.04,
+          alpha: layer.alpha * 0.78,
+          duration: 5200,
+          yoyo: true,
+          repeat: -1,
+          ease: "sine.inout"
+        })
+      )
+    }
+
+    // --- currents: bright energy caught in the wall of cloud, riding the band.
+    // A round glow stretched along the tangent reads as a fast-moving streak.
+    const currentColors = [0xc6a2f0, 0xd9a24e] // soft lilac + warm gold
+    const bandR = peakR * ringScale // ride the wall crest
+    const spawnCurrent = (opts: {
+      alpha: number
+      scale: number
+      duration: number
+      sweep: number
+      stretch: number
+    }) => {
+      const a0 = Phaser.Math.FloatBetween(0, Math.PI * 2)
+      const rr = bandR * Phaser.Math.FloatBetween(0.82, 1.12)
+      const cur = new Phaser.GameObjects.Image(
+        this.scene,
+        Math.cos(a0) * rr,
+        Math.sin(a0) * rr,
+        glowKey
+      )
+        .setOrigin(0.5)
+        .setBlendMode(Phaser.BlendModes.ADD)
+        .setTint(Phaser.Utils.Array.GetRandom(currentColors))
+        .setAlpha(0)
+      vortex.add(cur)
+      const driver = { p: 0 }
+      this.tweens.push(
+        this.scene.tweens.add({
+          targets: driver,
+          p: 1,
+          duration: opts.duration,
+          ease: "sine.inout",
+          onUpdate: () => {
+            const ang = a0 + opts.sweep * driver.p // same direction as the spin
+            const fade = Math.sin(Math.PI * driver.p)
+            cur
+              .setPosition(Math.cos(ang) * rr, Math.sin(ang) * rr)
+              .setRotation(ang + Math.PI / 2) // lie along the tangent
+              .setScale(
+                opts.scale * opts.stretch * (0.7 + 0.5 * fade),
+                opts.scale * (0.55 + 0.3 * fade)
+              )
+              .setAlpha(opts.alpha * fade)
+          },
+          onComplete: () => cur.destroy()
+        })
+      )
+    }
+
+    // gentle constant drift so the cloud is always subtly moving
+    this.timers.push(
+      this.scene.time.addEvent({
+        delay: 850,
+        loop: true,
+        callback: () =>
+          spawnCurrent({
+            alpha: 0.16,
+            scale: 1.0,
+            duration: Phaser.Math.Between(3200, 4200),
+            sweep: Phaser.Math.FloatBetween(0.5, 1.0),
+            stretch: 2.2
+          })
+      })
+    )
+
+    // every 2s (matching the weather's stat-buff cadence) a stronger current
+    // rips around the eye — the reminder that this is a hurricane
+    this.timers.push(
+      this.scene.time.addEvent({
+        delay: 2000,
+        loop: true,
+        callback: () => {
+          const n = Phaser.Math.Between(2, 3)
+          for (let k = 0; k < n; k++) {
+            spawnCurrent({
+              alpha: 0.5,
+              scale: 1.3,
+              duration: Phaser.Math.Between(1100, 1500),
+              sweep: Phaser.Math.FloatBetween(1.6, 2.4),
+              stretch: 3.0
+            })
+          }
+        }
+      })
+    )
+
+    // --- orbiting cloud wisps: soft, cloud-tinted masses that ride around the
+    // eye so the whole wall visibly turns (not just the bright currents). Spread
+    // across the wall + outer field, long-lived, NORMAL-blended so they read as
+    // cloud rather than glow.
+    const wispTints = [0x4a2f3e, 0x3a2246, 0x5a3a5e]
+    const spawnWisp = () => {
+      const a0 = Phaser.Math.FloatBetween(0, Math.PI * 2)
+      const rr = bandR * Phaser.Math.FloatBetween(0.7, 1.5) // wall + outer field
+      const sweep = Phaser.Math.FloatBetween(1.2, 2.6)
+      const baseAlpha = Phaser.Math.FloatBetween(0.1, 0.22)
+      const baseScale = Phaser.Math.FloatBetween(1.6, 3.2)
+      const wisp = new Phaser.GameObjects.Image(
+        this.scene,
+        Math.cos(a0) * rr,
+        Math.sin(a0) * rr,
+        glowKey
+      )
+        .setOrigin(0.5)
+        .setBlendMode(Phaser.BlendModes.NORMAL)
+        .setTint(Phaser.Utils.Array.GetRandom(wispTints))
+        .setAlpha(0)
+      vortex.add(wisp)
+      const driver = { p: 0 }
+      this.tweens.push(
+        this.scene.tweens.add({
+          targets: driver,
+          p: 1,
+          duration: Phaser.Math.Between(4500, 7500),
+          ease: "sine.inout",
+          onUpdate: () => {
+            const ang = a0 + sweep * driver.p // same direction as the spin
+            const fade = Math.sin(Math.PI * driver.p)
+            wisp
+              .setPosition(Math.cos(ang) * rr, Math.sin(ang) * rr)
+              .setRotation(ang + Math.PI / 2) // stretch along the tangent
+              .setScale(
+                baseScale * 1.9 * (0.8 + 0.3 * fade),
+                baseScale * (0.9 + 0.3 * fade)
+              )
+              .setAlpha(baseAlpha * fade)
+          },
+          onComplete: () => wisp.destroy()
+        })
+      )
+    }
+    this.timers.push(
+      this.scene.time.addEvent({
+        delay: 480,
+        loop: true,
+        callback: () => {
+          const n = Phaser.Math.Between(1, 2)
+          for (let k = 0; k < n; k++) spawnWisp()
+        }
+      })
+    )
+
+    // --- glow-motes: a sparse, always-on sprinkle that eases in and out as it
+    // rides the spin — a soft rose counterpoint to the explosive white surges
+    const moteColors = [0xe878c8, 0xf0a0d8]
+    const spawnGlowMote = () => {
+      const a0 = Phaser.Math.FloatBetween(0, Math.PI * 2)
+      const rr = bandR * Phaser.Math.FloatBetween(0.8, 1.2)
+      const sweep = Phaser.Math.FloatBetween(0.3, 0.6) // gentle, with the spin
+      const baseScale = Phaser.Math.FloatBetween(0.05, 0.11)
+      const mote = new Phaser.GameObjects.Image(
+        this.scene,
+        Math.cos(a0) * rr,
+        Math.sin(a0) * rr,
+        glowKey
+      )
+        .setOrigin(0.5)
+        .setBlendMode(Phaser.BlendModes.ADD)
+        .setTint(Phaser.Utils.Array.GetRandom(moteColors))
+        .setAlpha(0)
+      vortex.add(mote)
+      const driver = { p: 0 }
+      this.tweens.push(
+        this.scene.tweens.add({
+          targets: driver,
+          p: 1,
+          duration: Phaser.Math.Between(1000, 1700),
+          ease: "sine.inout",
+          onUpdate: () => {
+            const ang = a0 + sweep * driver.p // rides the spin
+            const env = Math.sin(Math.PI * driver.p) // glow in and out
+            const flick = 0.7 + 0.3 * Math.sin(driver.p * Math.PI * 6)
+            mote
+              .setPosition(Math.cos(ang) * rr, Math.sin(ang) * rr)
+              .setRotation(ang + Math.PI / 2)
+              .setScale(baseScale * 2.2, baseScale)
+              .setAlpha(0.8 * env * flick)
+          },
+          onComplete: () => mote.destroy()
+        })
+      )
+    }
+    this.timers.push(
+      this.scene.time.addEvent({
+        delay: 650,
+        loop: true,
+        callback: () => {
+          if (Math.random() < 0.85) spawnGlowMote() // keep it sparse
+        }
+      })
+    )
+
+    // --- energetic sparks: come in explosive surges. A cluster of long, sharp
+    // streaks rips along one stretch of the wall, flares instantly, then decays.
+    // Not lightning — aether embers snapping around in the hurricane's spin.
+    const sparkColors = [0xe8c6ff, 0xffe6a6, 0xffffff]
+    const spawnSparkSurge = () => {
+      const base = Phaser.Math.FloatBetween(0, Math.PI * 2) // where the surge hits
+      const n = Phaser.Math.Between(3, 6)
+      for (let k = 0; k < n; k++) {
+        const a0 = base + Phaser.Math.FloatBetween(-0.25, 0.25)
+        const rr = bandR * Phaser.Math.FloatBetween(0.85, 1.15)
+        // always sweep with the spin (clockwise), never against it
+        const sweep = Phaser.Math.FloatBetween(0.7, 1.3) // long fast arc
+        const baseScale = Phaser.Math.FloatBetween(0.06, 0.13)
+        const spark = new Phaser.GameObjects.Image(
+          this.scene,
+          Math.cos(a0) * rr,
+          Math.sin(a0) * rr,
+          glowKey
+        )
+          .setOrigin(0.5)
+          .setBlendMode(Phaser.BlendModes.ADD)
+          .setTint(Phaser.Utils.Array.GetRandom(sparkColors))
+          .setAlpha(0)
+        vortex.add(spark)
+        const driver = { p: 0 }
+        this.tweens.push(
+          this.scene.tweens.add({
+            targets: driver,
+            p: 1,
+            delay: Phaser.Math.Between(0, 160), // stagger so the surge ripples
+            duration: Phaser.Math.Between(450, 800),
+            ease: "sine.out",
+            onUpdate: () => {
+              const ang = a0 + sweep * driver.p // rides the spin
+              const rad = rr + Math.sin(driver.p * Math.PI) * 14 // bows outward
+              const env = Math.pow(1 - driver.p, 1.3) // flare instantly, decay
+              spark
+                .setPosition(Math.cos(ang) * rad, Math.sin(ang) * rad)
+                .setRotation(ang + Math.PI / 2)
+                .setScale(baseScale * 5.5, baseScale * 0.8) // long, sharp streak
+                .setAlpha(env)
+            },
+            onComplete: () => spark.destroy()
+          })
+        )
+      }
+    }
+    this.timers.push(
+      this.scene.time.addEvent({
+        delay: 700,
+        loop: true,
+        callback: () => spawnSparkSurge()
+      })
+    )
+  }
+
   setTownDaytime(stageLevel: number) {
     // ambient light based on day time
     let red = 255,
@@ -1327,6 +1784,10 @@ export default class WeatherManager {
     if (this.tweens) {
       this.tweens.forEach((tween) => tween.destroy())
       this.tweens = []
+    }
+    if (this.containers) {
+      this.containers.forEach((container) => container.destroy())
+      this.containers = []
     }
     if (this.fxs) {
       this.fxs.forEach((effect) => effect.destroy())

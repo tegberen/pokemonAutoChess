@@ -73,7 +73,6 @@ export const UniquePool = new Array<PkmProposition>(
   Pkm.KANGASKHAN,
   Pkm.DRUDDIGON,
   Pkm.COSMOG,
-  Pkm.SCYTHER,
   Pkm.ZANGOOSE,
   Pkm.SMEARGLE,
   Pkm.STANTLER,

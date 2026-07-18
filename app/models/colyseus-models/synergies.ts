@@ -131,7 +131,13 @@ export function computeSynergies(
 
     addSynergiesGivenByItems(pkm)
     const awakeningType = AwakeningTypes[pkm.awakening]
-    if (awakeningType) pkm.types.add(awakeningType)
+    if (awakeningType) {
+      if (awakeningType === Synergy.DRAGON) {
+        pkm.types = new SetSchema<Synergy>([awakeningType, ...pkm.types])
+      } else {
+        pkm.types.add(awakeningType)
+      }
+    }
     if (pkm.positionY != 0) {
       const family =
         specialGameRule === SpecialGameRule.FAMILY_OUTING

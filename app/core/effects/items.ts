@@ -2064,6 +2064,18 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
 // charging or already awakened cannot start another.
 const weatherRockAwakeningEffect = new OnItemDroppedEffect(
   ({ pokemon, player, item }) => {
+    // A Pokémon that item-evolves from this weather rock (e.g. Scyther +
+    // METAL_ALLOY → Scizor / BLACK_AUGURITE → Kleavor) evolves on drop, and the
+    // rock is NOT consumed — it returns to the bench to keep setting the weather.
+    if (
+      pokemon.evolutionRule.type === EvolutionRuleType.ITEM &&
+      pokemon.evolutionRule.itemsTriggeringEvolution.includes(item) &&
+      !pokemon.items.has(Item.EVIOLITE)
+    ) {
+      EvolutionManager.evolve(pokemon, player, item)
+      return false // not equipped; the rock stays on the bench
+    }
+
     // Weather rocks are never equipped — they either crystallise a Rock Pokémon
     // (only at Rock 8) or stay on the bench, where they set the weather.
     if (
@@ -2071,7 +2083,9 @@ const weatherRockAwakeningEffect = new OnItemDroppedEffect(
       isOnBench(pokemon) ||
       getSynergyTier(player.synergies, Synergy.ROCK) < ROCK_AWAKENING_TIER ||
       pokemon.awakening !== Awakening.NONE ||
-      pokemon.awakeningRock !== ""
+      pokemon.awakeningRock !== "" ||
+      // only the strongest can ascend to dragonhood: ELDER_CRYSTAL needs a 3-STAR
+      (item === Item.ELDER_CRYSTAL && pokemon.stars < 3)
     ) {
       return false // reject: the rock stays on the bench
     }

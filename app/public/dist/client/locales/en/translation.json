@@ -2251,7 +2251,7 @@
 		"MUDDY_WATER": "Spurt muddy water at up to 3 enemy Pokémon in front of the user, dealing [40,80,160,320,SP] SPECIAL and applying WOUND and ARMOR_BREAK for 4 seconds.",
 		"ANCIENT_POWER": "Launch rocks at the target, dealing [40,80,120,200,SP] SPECIAL. Raise the user's AP by 25.",
 		"MOON_DREAM": "Put the target to SLEEP for [3,6,9,18] seconds and grant [10,20,30,60,SP] SHIELD to the 3 allied Pokémon closest to the target.",
-		"STONE_AXE": "Deal [30,40,50,100,SP] TRUE to the target and lay sharp stones around them. BOARD_EFFECT: stones deal 10 PHYSICAL per second and WOUND non ROCK Pokémon that walk on it.",
+		"STONE_AXE": "Deal [30,40,50,100,SP] TRUE to the target and lay STEALTH_ROCKS around them. BOARD_EFFECT: stones deal 10 PHYSICAL per second and WOUND non ROCK Pokémon that walk on it.",
 		"FLASH": "Opponents within a 3-tiles radius are BLINDED for [2,4,6,12,SP,ND=1] seconds.",
 		"CRUSH_CLAW": "Reduce the target's DEF by [5,10,15,20] then perform two quick strikes, each dealing [100,100,100,200,SP]% of ATK as PHYSICAL.",
 		"FIRE_LASH": "Apply ARMOR_BREAK for 4 seconds and deal [30,60,120,240,SP] SPECIAL to the target.",
@@ -2322,7 +2322,7 @@
 		"FREEZE_DRY": "Deals [30,50,70,140,SP] + 100% of the user's SPE_DEF as SPECIAL to the target. If target is KO, it explodes, and throws sharp ice at ADJACENT enemies dealing [10,20,30,60,SP] + 50% of the user's SPE_DEF as SPECIAL.",
 		"DRAGON_PULSE": "A shockwave from the user's gaping mouth deals [10,15,20,40,80,SP] SPECIAL to the target and ADJACENT enemies. The shockwave then reverberates through the enemies.",
 		"FROST_BREATH": "Blows a cold breath, dealing [35,70,140,280,SP] SPECIAL to enemies in a 2-tiles range CONE, with [50,LK]% chance to FREEZE for 2 seconds. Can crit by default.",
-		"SALT_CURE": "Within a 2-tiles radius, allies gain [10,20,40,80,SP] SHIELD and have their status afflictions cured. Enemies suffer from BURN for 3 seconds, doubled if they are WATER, STEEL or GHOST.",
+		"SALT_CURE": "Within a 2-tiles radius, allies gain [15,30,60,120,SP] SHIELD and have their status afflictions cured. Enemies suffer from BURN for 5 seconds, doubled if they are WATER, STEEL or GHOST.",
 		"SPICY_EXTRACT": "Make the [1,2,3,6] closest allies RAGE for [2,SP] seconds",
 		"SWEET_SCENT": "Enemies in a 3-range radius can no longer dodge attacks, lose [4,6,8,10,SP] SPE_DEF and [10,12,15,20,SP] SPEED and have [30,LK]% chance to be CHARM for 1 second",
 		"SWALLOW": "Store power and boosts its DEF and SPE_DEF by 3 up to 3 times. If below 25% HP, swallow instead, restoring [20,SP]% of max HP per stack and consuming all stacks. If over 3 stacks, spit up, dealing [40,80,150,300,SP] SPECIAL to all enemies in front and consuming all stacks.",
@@ -2373,7 +2373,7 @@
 		"HORN_LEECH": "Drains the target's energy, dealing [200,200,300,500,SP]% of user ATK as SPECIAL and healing for 50% of the damage dealt. 50% of the overheal is converted to SHIELD.",
 		"DRILL_RUN": "Charges through the target like a drill, dealing [15,30,60,120,SP] TRUE and swapping position. If there's another target behind in the same direction, immediately cast the ability again on that target. Can crit by default.",
 		"DRILL_PECK": "Charges through the target like a drill, dealing [30,60,120,240,SP] SPECIAL and swapping position. If there's another target behind in the same direction, immediately cast the ability again on that target.",
-		"ROCK_ARTILLERY": "Throws [10,15,25,50] rocks at random enemies, each landing randomly on their target or an ADJACENT tile, each dealing [20,30,40,80,SP] SPECIAL with a [30,LK]% chance to inflict LOCKED for 1 second.",
+		"ROCK_ARTILLERY": "Throws [10,20,30,50] rocks at random enemies, each landing randomly on their target or an ADJACENT tile, each dealing [20,30,40,80,SP] SPECIAL with a [30,LK]% chance to inflict LOCKED for 2 second.",
 		"ZING_ZAP": "Rolls behind the target, dealing [30,60,90,180,SP] SPECIAL and inflicting FLINCH for 3 seconds. If the target suffers from PARALYSIS, gain [10,20,40,80,SP] SHIELD.",
 		"NO_RETREAT": "Gain 1 DEF and 1 SPE_DEF per Falinks on your team. Troopers tackle target for [20,20,20,40,SP] SPECIAL each.",
 		"TACKLE": "Deal [20,40,60,120,SP] SPECIAL to the target.",
@@ -2664,6 +2664,7 @@
 		"CRYSTALLISE_STICKY_GLOB": "Every held item has a [30, LK]% chance to be copied to the BUG clone",
 		"CRYSTALLISE_ECLIPSE_STONE": "At the start of the fight, gain 100% of DEF as AP and 50% of DEF as starting PP.",
 		"CRYSTALLISE_PEARL_STONE": "The user casts Surf when hit by the big TIDAL_WAVE.",
+		"CRYSTALLISE_ELDER_CRYSTAL": "Attacks have [1,LK]% chance per STAR on your board to deal the targets remaining SHIELD as PHYSICAL, SPECIAL or TRUE ON_ATTACK.",
 		"CURSE_OF_VULNERABILITY": "The enemy with the highest DEF + SPE_DEF lose 5 of it and is FLINCH",
 		"CURSE_OF_WEAKNESS": "Also, the enemy with the highest ATK lose 20% of it and is PARALYSIS",
 		"CURSE_OF_TORMENT": "Also, the enemy with the highest AP lose 30 of it and is FATIGUE",
@@ -2886,6 +2887,7 @@
 		"STICKY_GLOB": "Sticky Glob",
 		"ECLIPSE_STONE": "Eclipse Stone",
 		"PEARL_STONE": "Pearl String",
+		"ELDER_CRYSTAL": "Elder Crystal",
 		"UTILITY_UMBRELLA": "Utility Umbrella",
 		"NORMAL_GEM": "Normal Gem",
 		"GRASS_GEM": "Grass Gem",
@@ -3297,6 +3299,7 @@
 		"STICKY_GLOB": "Counts for 3 towards PLAGUE. Under PLAGUE, your team recovers from PARALYSIS 20% faster. [10, LK]% chance to throw a sticky web ON_ATTACK.\n\nAllows a ROCK Pokémon to undergo Crystallisation, Awakening it as a BUG type.",
 		"ECLIPSE_STONE": "Counts for 3 towards ECLIPSE. Under ECLIPSE, your team has a [5, LK]% chance to steal 5 AP ON_ATTACK.\n\nAllows a ROCK Pokémon to undergo Crystallisation, Awakening it as a PSYCHIC type.",
 		"PEARL_STONE": "Counts for 3 towards FLOOD. Under FLOOD, when hit by any wave your team resist the knockback by 1 tile and gains 10 SHIELD.\n\nAllows a ROCK Pokémon to undergo Crystallisation, Awakening it as a AQUATIC type.",
+"ELDER_CRYSTAL": "Counts as 3 towards ELDER_STORM. Under ELDER_STORM, your team takes -15% less damage from Pokémon with SHIELD.\n\nOnly the strongest can ascend to dragonhood. 3 STAR ROCK Pokémon can undergo Crystallisation with this weather rock.",
 		"UTILITY_UMBRELLA": "The holder and allies ADJACENT_IN_THE_SAME_ROW take -70% negative status duration and status damage (BURN and POISON).",
 		"NORMAL_GEM": "+1 to NORMAL synergy",
 		"GRASS_GEM": "+1 to GRASS synergy",
@@ -3563,6 +3566,7 @@
 		"MAGNET_STORM": "Change weather to MAGNET_STORM",
 		"MURKY": "Change weather to MURKY",
 		"FLOOD": "Change weather to FLOOD",
+		"ELDER_STORM": "Change weather to ELDER_STORM",
 		"MEWTWO": "Gain 1 stack for each KO, 2 stacks if the user has more AP than the target. Receive MEWTWONITE_Y when fully stacked. Can be used to Mega Evolve.",
 		"KYUREM": "Obtain the DNA_SPLICER after defeating the legendary birds",
 		"LANDORUS": "Change weather to SANDSTORM or WINDY based on your dominant synergy between GROUND and FLYING",
@@ -4156,7 +4160,8 @@
 		"MAGNET_STORM": "Magnet Storm",
 		"PLAGUE": "Plague",
 		"ECLIPSE": "Eclipse",
-		"FLOOD": "Flood"
+		"FLOOD": "Flood",
+		"ELDER_STORM": "Elder Storm"
 	},
 	"weather_description": {
 		"NEUTRAL": "Normal weather. No effects.",
@@ -4175,7 +4180,8 @@
 		"MAGNET_STORM": "Sets base SPEED to 50 (STEEL Pokémon above 50 base SPEED are unaffected)",
 		"PLAGUE": "Attacks deal 1 SPECIAL per ally (TRUE if BUG)\n+30% PARALYSIS duration",
 		"ECLIPSE": "-10% max PP\n-30% FATIGUE and SILENCE duration",
-		"FLOOD": "Every 3 seconds, small waves flood in, knocking all Pokémon back 3 tiles and dealing 3% max HP as TRUE (heals AQUATIC instead)."
+		"FLOOD": "Every 3 seconds, small waves flood in, knocking all Pokémon back 3 tiles and dealing 3% max HP as TRUE (heals AQUATIC instead).",
+		"ELDER_STORM": "Every 2 seconds, gain +1 SPEED and +2 AP (+5 SHIELD if DRAGON)"
 	},
 	"board_effect": {
 		"EMBER": "Ember",

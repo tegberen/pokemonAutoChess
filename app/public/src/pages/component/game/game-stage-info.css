@@ -153,3 +153,12 @@
   margin: 0 0.25em;
   line-height: 40px;
 }
+
+/* the tall 40px line-height drops "vertical-align: bottom" icons to the floor
+   of the line; centre them so they sit level with the text instead */
+#detail-weather .description-icon > img,
+#detail-weather img.description-icon,
+#detail-map .description-icon > img,
+#detail-map img.description-icon {
+  vertical-align: -0.25em;
+}

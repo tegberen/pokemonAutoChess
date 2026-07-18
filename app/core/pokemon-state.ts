@@ -538,6 +538,18 @@ export default abstract class PokemonState {
       }
 
       if (
+        pokemon.simulation.weather === Weather.ELDER_STORM &&
+        attacker &&
+        attacker.shield > 0 &&
+        pokemon.player
+      ) {
+        const nbDragonCrystals = count(pokemon.player.items, Item.ELDER_CRYSTAL)
+        if (nbDragonCrystals > 0) {
+          damage *= Math.max(0, 1 - 0.15 * nbDragonCrystals)
+        }
+      }
+
+      if (
         pokemon.status.freeze &&
         attacker &&
         attacker.effects.has(EffectEnum.SHEER_COLD)

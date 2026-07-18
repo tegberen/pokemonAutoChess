@@ -975,62 +975,54 @@ export class MegaAltaria extends Pokemon {
 
 export class Scyther extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.BUG, Synergy.FLYING])
-  rarity = Rarity.UNIQUE
-  stars = 3
-  hp = 170
-  atk = 17
+  rarity = Rarity.EPIC
+  stars = 1
+  evolutions = [Pkm.SCIZOR, Pkm.KLEAVOR]
+  evolutionRule = {
+    type: EvolutionRuleType.ITEM,
+    itemsTriggeringEvolution: [Item.METAL_ALLOY, Item.BLACK_AUGURITE],
+    divergentEvolution: (pokemon, player, item) =>
+      item === Item.BLACK_AUGURITE ? Pkm.KLEAVOR : Pkm.SCIZOR
+  } satisfies ItemEvolutionRule
+  hp = 120
+  atk = 12
   speed = 59
-  def = 10
-  speDef = 10
+  def = 6
+  speDef = 6
   maxPP = 80
   range = 1
   skill = Ability.X_SCISSOR
+  regional = true
 }
 
 export class Scizor extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.BUG, Synergy.STEEL])
-  rarity = Rarity.UNIQUE
-  stars = 3
-  hp = 170
-  atk = 22
+  rarity = Rarity.EPIC
+  stars = 2
+  hp = 160
+  atk = 19
   speed = 42
-  def = 14
-  speDef = 10
+  def = 8
+  speDef = 8
   maxPP = 80
   range = 1
   skill = Ability.BULLET_PUNCH
-  regional = true
-  isInRegion(map: DungeonPMDO, state?: GameState) {
-    const regionSynergies = RegionDetails[map]?.synergies
-    return (
-      regionSynergies.includes(Synergy.STEEL) ||
-      regionSynergies.includes(Synergy.ARTIFICIAL) ||
-      regionSynergies.includes(Synergy.FIGHTING)
-    )
-  }
+
 }
 
 export class Kleavor extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.BUG, Synergy.ROCK])
-  rarity = Rarity.UNIQUE
-  stars = 3
-  hp = 170
-  atk = 22
+  rarity = Rarity.EPIC
+  stars = 2
+  hp = 160
+  atk = 19
   speed = 55
-  def = 14
+  def = 10
   speDef = 6
   maxPP = 80
   range = 1
   skill = Ability.STONE_AXE
-  regional = true
-  isInRegion(map: DungeonPMDO, state?: GameState) {
-    const regionSynergies = RegionDetails[map]?.synergies
-    return (
-      regionSynergies.includes(Synergy.ROCK) ||
-      regionSynergies.includes(Synergy.FOSSIL) ||
-      regionSynergies.includes(Synergy.DARK)
-    )
-  }
+
 }
 
 export class Bounsweet extends Pokemon {
@@ -8498,11 +8490,11 @@ export class MegaDrampa extends Pokemon {
   rarity = Rarity.UNIQUE
   stars = 4
   hp = 250
-  atk = 17
+  atk = 12
   speed = 37
-  def = 10
-  speDef = 10
-  maxPP = 70
+  def =  6
+  speDef = 6
+  maxPP = 80
   range = 3
   skill = Ability.DRAGON_PULSE
   passive = Passive.BERSERK_2
@@ -9523,6 +9515,7 @@ export class Eternatus extends Pokemon {
   maxPP = 125
   range = 1
   skill = Ability.DYNAMAX_CANNON
+  passive = Passive.ELDER_STORM
 }
 
 export class Nincada extends Pokemon {
@@ -22113,7 +22106,7 @@ export class Karrablast extends Pokemon {
   maxPP = 100
   range = 1
   skill = Ability.TWINEEDLE
-  regional = true
+  additional = true
 }
 
 export class Escavalier extends Pokemon {
@@ -22128,7 +22121,7 @@ export class Escavalier extends Pokemon {
   maxPP = 100
   range = 1
   skill = Ability.TWINEEDLE
-  regional = true
+  additional = true
 }
 
 export class Eiscue extends Pokemon {

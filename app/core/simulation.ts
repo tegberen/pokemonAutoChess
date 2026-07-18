@@ -129,6 +129,7 @@ export default class Simulation extends Schema implements ISimulation {
   stormLightningTimer = 0
   tidalWaveTimer = 0
   floodWaveTimer = 0
+  elderStormTimer = 0
   tidalWaveCounter = 0
   entities: IPokemonEntity[] = []
   finishedAt: number = 0
@@ -224,6 +225,9 @@ export default class Simulation extends Schema implements ISimulation {
     }
     if (this.weather === Weather.FLOOD) {
       this.floodWaveTimer = 3000
+    }
+    if (this.weather === Weather.ELDER_STORM) {
+      this.elderStormTimer = 2000
     }
 
     this.bluePlayer.board.forEach((pokemon) => {
@@ -1837,6 +1841,22 @@ export default class Simulation extends Schema implements ISimulation {
       if (this.floodWaveTimer <= 0 && !this.finished) {
         this.floodWaveTimer = 3000
         this.handleFloodWave()
+      }
+    }
+
+    if (this.weather === Weather.ELDER_STORM) {
+      this.elderStormTimer -= dt
+      if (this.elderStormTimer <= 0 && !this.finished) {
+        this.elderStormTimer = 2000
+        const empower = (pkm: IPokemonEntity) => {
+          pkm.addSpeed(1, pkm, 0, false)
+          pkm.addAbilityPower(2, pkm, 0, false)
+          if (pkm.types.has(Synergy.DRAGON)) {
+            pkm.addShield(5, pkm, 0, false)
+          }
+        }
+        this.blueTeam.forEach(empower)
+        this.redTeam.forEach(empower)
       }
     }
 

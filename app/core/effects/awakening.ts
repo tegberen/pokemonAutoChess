@@ -13,8 +13,10 @@ import {
   OnSimulationStartEffect,
   PeriodicEffect
 } from "./effect"
-import { chance } from "../../utils/random"
+import { chance, pickRandomIn } from "../../utils/random"
 import { Item } from "../../types"
+import { schemaValues } from "../../utils/schemas"
+import { isOnBench } from "../../utils/board"
 
 const O = EffectEnum.CRYSTALLISATION // effect origin tag
 
@@ -306,5 +308,32 @@ export const AwakeningEffects: Partial<
     })
   ],
 
-  [Awakening.PEARL_STONE]: []
+  [Awakening.PEARL_STONE]: [],
+
+  // "Attacks have [1,LK]% chance per STAR on your board to deal the target's
+  // remaining SHIELD as PHYSICAL, SPECIAL or TRUE ON_ATTACK"
+  [Awakening.ELDER_CRYSTAL]: [
+    new OnAttackEffect(({ pokemon, target, board }) => {
+      if (!target || target.shield <= 0 || !pokemon.player) return
+      const totalStars = schemaValues(pokemon.player.board).reduce(
+        (acc, p) => acc + (!isOnBench(p) ? p.stars : 0),
+        0
+      )
+      if (chance(0.01 * totalStars, pokemon)) {
+        const attackType = pickRandomIn([
+          AttackType.PHYSICAL,
+          AttackType.SPECIAL,
+          AttackType.TRUE
+        ])
+        target.handleSpecialDamage(
+          target.shield,
+          board,
+          attackType,
+          pokemon,
+          false,
+          false
+        )
+      }
+    })
+  ]
 }

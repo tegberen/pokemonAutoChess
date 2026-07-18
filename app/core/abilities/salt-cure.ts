@@ -12,7 +12,7 @@ export class SaltCureStrategy extends AbilityStrategy {
   ) {
     super.process(pokemon, board, target, crit)
     // Adjacent allies gain [10,20,40,80] SHIELD and their status afflictions cured. Adjacent WATER, STEEL or GHOST enemies suffer from BURN for 5 seconds.
-    const shield = [10, 20, 40, 80][pokemon.stars - 1] ?? 80
+    const shield = [15, 30, 60, 120][pokemon.stars - 1] ?? 80
     const cells = board.getCellsInRadius(
       pokemon.positionX,
       pokemon.positionY,
@@ -30,9 +30,9 @@ export class SaltCureStrategy extends AbilityStrategy {
             cell.value.types.has(Synergy.STEEL) ||
             cell.value.types.has(Synergy.GHOST)
           ) {
-            cell.value.status.triggerBurn(6000, cell.value, pokemon)
+            cell.value.status.triggerBurn(10000, cell.value, pokemon)
           } else {
-            cell.value.status.triggerBurn(3000, cell.value, pokemon)
+            cell.value.status.triggerBurn(5000, cell.value, pokemon)
           }
         }
       }

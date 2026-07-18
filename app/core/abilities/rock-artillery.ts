@@ -10,7 +10,7 @@ export class RockArtilleryStrategy extends AbilityStrategy {
   requiresTarget = false
   process(pokemon: PokemonEntity, board: Board, target: null, crit: boolean) {
     super.process(pokemon, board, target, crit, true)
-    const numberOfRocks = [10, 15, 25, 50][pokemon.stars - 1] ?? 50
+    const numberOfRocks = [10, 20, 30, 50][pokemon.stars - 1] ?? 50
     const damage = [20, 30, 40, 80][pokemon.stars - 1] ?? 80
 
     const enemies = board.cells.filter(
@@ -42,7 +42,7 @@ export class RockArtilleryStrategy extends AbilityStrategy {
                 crit
               )
               if (chance(0.3, pokemon)) {
-                targetCell.value.status.triggerLocked(1000, targetCell.value)
+                targetCell.value.status.triggerLocked(2000, targetCell.value)
               }
             }
           }, i * 100)
