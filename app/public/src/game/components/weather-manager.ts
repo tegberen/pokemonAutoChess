@@ -1912,6 +1912,270 @@ export default class WeatherManager {
     )
   }
 
+  addMeteorShower() {
+    // A warm, dusty paleo-era sky (like drought/zenith) streaked with distant
+    // falling meteors. The big impacts on the board are separate per-strike
+    // events (battle-manager BOARD_EVENT).
+    this.colorFilter = this.scene.add.existing(
+      new Phaser.GameObjects.Rectangle(
+        this.scene,
+        1500,
+        1000,
+        3000,
+        2000,
+        0xc0601c,
+        0.3
+      ).setDepth(DEPTH.WEATHER_FX)
+    )
+    this.tweens.push(
+      this.scene.tweens.add({
+        targets: this.colorFilter,
+        alpha: { from: 0.26, to: 0.38 },
+        duration: 3400,
+        yoyo: true,
+        repeat: -1,
+        ease: "sine.inout"
+      })
+    )
+
+    // meteor streak texture, drawn as chunky pixel-art to match the game: a
+    // blocky white-hot head with a stepped, dashed warm tail. Low-res + NEAREST
+    // filtering so it stays crisp pixels when scaled up.
+    const streakKey = "meteor-streak"
+    const streakW = 52
+    if (!this.scene.textures.exists(streakKey)) {
+      const h = 9
+      const tex = this.scene.textures.createCanvas(streakKey, streakW, h)
+      if (tex) {
+        const ctx = tex.getContext()
+        ctx.imageSmoothingEnabled = false
+        const cy = 4 // centre row
+        const px = (x: number, y: number, c: string) => {
+          ctx.fillStyle = c
+          ctx.fillRect(x, y, 1, 1)
+        }
+        const WHITE = "#ffffff",
+          PALE = "#ffe9a0",
+          ORANGE = "#ff9a3c",
+          DEEP = "#e0561a"
+        // tail: single-pixel steps from faint dashes to a solid warm core
+        for (let x = 6; x < 47; x++) {
+          const t = (x - 6) / 40 // 0 at tail tip → 1 near head
+          if (t < 0.5 && x % 3 === 0) continue // far tail breaks into dashes
+          const c = t > 0.85 ? PALE : t > 0.55 ? ORANGE : DEEP
+          px(x, cy, c)
+          if (t > 0.72) {
+            px(x, cy - 1, c) // thickens toward the head
+            px(x, cy + 1, c)
+          }
+        }
+        // blocky white-hot head with a pale tip
+        for (const [x, y] of [
+          [47, cy - 1],
+          [48, cy - 1],
+          [47, cy],
+          [48, cy],
+          [49, cy],
+          [47, cy + 1],
+          [48, cy + 1]
+        ] as const) {
+          px(x, y, WHITE)
+        }
+        px(50, cy, PALE)
+        px(46, cy, PALE)
+        tex.refresh()
+        tex.setFilter(Phaser.Textures.FilterMode.NEAREST)
+      }
+    }
+
+    // periodically send a distant meteor streaking diagonally across the sky,
+    // travelling down and to the right (matching the impact strikes)
+    const angle = Math.PI * 0.28 // down and to the right
+    const spawnStreak = () => {
+      // always start off-screen, above the top edge, so they streak in from far
+      // away instead of popping into existence mid-board
+      const startX = Phaser.Math.Between(-300, 1200)
+      const startY = Phaser.Math.Between(-320, -60)
+      const dist = Phaser.Math.Between(700, 1200)
+      // derive duration from speed (px/ms): a natural mix of slow drifters and
+      // quick zips. Averaging two rolls gives a triangular spread — mid speeds
+      // common, extremes uncommon.
+      const speed =
+        (Phaser.Math.FloatBetween(0.85, 1.7) +
+          Phaser.Math.FloatBetween(0.85, 1.7)) /
+        2
+      const duration = Math.round(dist / speed)
+      const streak = this.scene.add.existing(
+        new Phaser.GameObjects.Image(this.scene, startX, startY, streakKey)
+          .setRotation(angle)
+          .setScale(Phaser.Math.FloatBetween(2.6, 5.0)) // chunky pixels
+          .setAlpha(0)
+          .setBlendMode(Phaser.BlendModes.SCREEN)
+          .setDepth(DEPTH.WEATHER_FX)
+      )
+      this.images.push(streak)
+      const endX = startX + Math.cos(angle) * dist
+      const endY = startY + Math.sin(angle) * dist
+      this.tweens.push(
+        this.scene.tweens.add({
+          targets: streak,
+          x: endX,
+          y: endY,
+          alpha: { from: 0.9, to: 0 },
+          duration,
+          ease: "sine.in",
+          onComplete: () => {
+            streak.destroy()
+            this.images = this.images.filter((i) => i !== streak)
+          }
+        })
+      )
+    }
+    this.timers.push(
+      this.scene.time.addEvent({
+        delay: 640, // 30% less frequent
+        loop: true,
+        callback: () => {
+          const n = Phaser.Math.Between(1, 2)
+          for (let i = 0; i < n; i++) spawnStreak()
+        }
+      })
+    )
+
+    // ---- paleo atmosphere: ground heat + drifting dust motes ----------------
+    // soft radial helper texture, tinted per use (ground glow / dust motes)
+    const softKey = "meteor-soft"
+    if (!this.scene.textures.exists(softKey)) {
+      const size = 256
+      const tex = this.scene.textures.createCanvas(softKey, size, size)
+      if (tex) {
+        const ctx = tex.getContext()
+        const r = size / 2
+        const g = ctx.createRadialGradient(r, r, 0, r, r, r)
+        g.addColorStop(0, "rgba(255,255,255,1)")
+        g.addColorStop(0.5, "rgba(255,255,255,0.5)")
+        g.addColorStop(1, "rgba(255,255,255,0)")
+        ctx.fillStyle = g
+        ctx.fillRect(0, 0, size, size)
+        tex.refresh()
+      }
+    }
+
+    // a warm heat glow hugging the ground, breathing to feel like shimmering air
+    const groundGlow = this.scene.add.existing(
+      new Phaser.GameObjects.Image(this.scene, 1008, 700, softKey)
+        .setScale(6, 1.6)
+        .setTint(0xff7a1e)
+        .setAlpha(0.12)
+        .setBlendMode(Phaser.BlendModes.SCREEN)
+        .setDepth(DEPTH.WEATHER_FX)
+    )
+    this.images.push(groundGlow)
+    this.tweens.push(
+      this.scene.tweens.add({
+        targets: groundGlow,
+        alpha: { from: 0.1, to: 0.22 },
+        scaleY: { from: 1.6, to: 1.9 },
+        duration: 2600,
+        yoyo: true,
+        repeat: -1,
+        ease: "sine.inout"
+      })
+    )
+
+    // very subtle drifting dust motes — a faint dusty haze suspended in the hot
+    // primordial air, barely there, slowly wafting down and to the right
+    const spawnMote = () => {
+      const x = Phaser.Math.Between(640, 1380)
+      const y = Phaser.Math.Between(180, 620)
+      const mote = this.scene.add.existing(
+        new Phaser.GameObjects.Image(this.scene, x, y, softKey)
+          .setScale(Phaser.Math.FloatBetween(0.04, 0.1))
+          .setTint(0xd8b48c) // warm tan dust
+          .setAlpha(0)
+          .setBlendMode(Phaser.BlendModes.SCREEN)
+          .setDepth(DEPTH.WEATHER_FX)
+      )
+      this.images.push(mote)
+      this.tweens.push(
+        this.scene.tweens.add({
+          targets: mote,
+          x: x + Phaser.Math.Between(30, 90),
+          y: y + Phaser.Math.Between(20, 70),
+          alpha: { from: 0.1, to: 0 },
+          duration: Phaser.Math.Between(3200, 5200),
+          ease: "sine.inout",
+          onComplete: () => {
+            mote.destroy()
+            this.images = this.images.filter((i) => i !== mote)
+          }
+        })
+      )
+    }
+    this.timers.push(
+      this.scene.time.addEvent({
+        delay: 420,
+        loop: true,
+        callback: spawnMote
+      })
+    )
+
+    // horizon fire glow: a warm border that creeps in from the screen edges,
+    // as if distant eruptions set the sky ablaze. Screen-fixed so it frames the
+    // view without ever covering the units.
+    const vignetteKey = "meteor-horizon"
+    if (!this.scene.textures.exists(vignetteKey)) {
+      const size = 512
+      const tex = this.scene.textures.createCanvas(vignetteKey, size, size)
+      if (tex) {
+        const ctx = tex.getContext()
+        ctx.clearRect(0, 0, size, size)
+        const edge = Math.round(size * 0.14) // thin band hugging the outer edge
+        const warm = (a: number) => `rgba(255,85,20,${a})`
+        // one warm→transparent gradient band per edge (corners overlap = hotter)
+        const bands: [number, number, number, number, number, number][] = [
+          [0, 0, 0, edge, size, edge], // top
+          [0, size, 0, size - edge, size, edge], // bottom
+          [0, 0, edge, 0, edge, size], // left
+          [size, 0, size - edge, 0, edge, size] // right
+        ]
+        for (const [x0, y0, x1, y1, w, h] of bands) {
+          const g = ctx.createLinearGradient(x0, y0, x1, y1)
+          g.addColorStop(0, warm(0.85))
+          g.addColorStop(1, warm(0))
+          ctx.fillStyle = g
+          ctx.fillRect(Math.min(x0, x1), Math.min(y0, y1), w, h)
+        }
+        tex.refresh()
+      }
+    }
+    const cam = this.scene.cameras.main
+    const horizon = this.scene.add.existing(
+      new Phaser.GameObjects.Image(
+        this.scene,
+        cam.width / 2,
+        cam.height / 2,
+        vignetteKey
+      )
+        .setScrollFactor(0)
+        .setDisplaySize(cam.width, cam.height)
+        .setBlendMode(Phaser.BlendModes.SCREEN)
+        .setAlpha(0.3)
+        .setDepth(DEPTH.WEATHER_FX)
+    )
+    this.images.push(horizon)
+    this.tweens.push(
+      this.scene.tweens.add({
+        targets: horizon,
+        alpha: { from: 0.24, to: 0.48 },
+        duration: 3200,
+        yoyo: true,
+        repeat: -1,
+        ease: "sine.inout"
+      })
+    )
+  }
+
   setTownDaytime(stageLevel: number) {
     // ambient light based on day time
     let red = 255,

@@ -2666,6 +2666,7 @@
 		"CRYSTALLISE_PEARL_STONE": "The user casts Surf when hit by the big TIDAL_WAVE.",
 		"CRYSTALLISE_ELDER_CRYSTAL": "Attacks have [1,LK]% chance per STAR on your board to deal the targets remaining SHIELD as PHYSICAL, SPECIAL or TRUE ON_ATTACK.",
 		"CRYSTALLISE_DISTORTION_SLATE": "ON_ATTACK, [5, LK]% chance to infflict the target and ADJACENT enemy Pokémon with a random BOARD_EFFECT.",
+		"CRYSTALLISE_FOSSIL_FRAGMENT": "Fossil revive with HP instead of SHIELD. If hit by METEOR_DAMAGE, increase user ATK by 100% base ATK.", 
 		"CURSE_OF_VULNERABILITY": "The enemy with the highest DEF + SPE_DEF lose 5 of it and is FLINCH",
 		"CURSE_OF_WEAKNESS": "Also, the enemy with the highest ATK lose 20% of it and is PARALYSIS",
 		"CURSE_OF_TORMENT": "Also, the enemy with the highest AP lose 30 of it and is FATIGUE",
@@ -2890,6 +2891,7 @@
 		"PEARL_STONE": "Pearl String",
 		"ELDER_CRYSTAL": "Elder Crystal",
 		"DISTORTION_SLATE": "Distortion Slate",
+		"FOSSIL_FRAGMENT": "Fossil Fragment",
 		"UTILITY_UMBRELLA": "Utility Umbrella",
 		"NORMAL_GEM": "Normal Gem",
 		"GRASS_GEM": "Grass Gem",
@@ -3303,6 +3305,7 @@
 		"PEARL_STONE": "Counts for 3 towards FLOOD. Under FLOOD, when hit by any wave your team resist the knockback by 1 tile and gains 10 SHIELD.\n\nAllows a ROCK Pokémon to undergo Crystallisation, Awakening it as a AQUATIC type.",
 "ELDER_CRYSTAL": "Counts as 3 towards ELDER_STORM. Under ELDER_STORM, your team takes -15% less damage from Pokémon with SHIELD.\n\nOnly the strongest can ascend to dragonhood. 3 STAR ROCK Pokémon can undergo Crystallisation with this weather rock.",
 "DISTORTION_SLATE": "Counts as 3 towards DISTORTION. Under DISTORTION, your team recovers from ARMOR_BREAK 30% faster.\n\nAllows a ROCK Pokémon to undergo Crystallisation, Awakening it as a ARTIFICIAL type.",
+"FOSSIL_FRAGMENT": "Counts as 3 towards METEOR_SHOWER. Under METEOR_SHOWER, your team gains 10% of incoming PHYSICAL as SHIELD (after damage mitigation).\n\nAllows a ROCK Pokémon to undergo Crystallisation, Awakening it as a FOSSIL type.",
 		"UTILITY_UMBRELLA": "The holder and allies ADJACENT_IN_THE_SAME_ROW take -70% negative status duration and status damage (BURN and POISON).",
 		"NORMAL_GEM": "+1 to NORMAL synergy",
 		"GRASS_GEM": "+1 to GRASS synergy",
@@ -3571,6 +3574,7 @@
 		"FLOOD": "Change weather to FLOOD",
 		"ELDER_STORM": "Change weather to ELDER_STORM",
 		"DISTORTION": "Change weather to DISTORTION",
+		"METEOR_SHOWER": "Change weather to METEOR_SHOWER",
 		"MEWTWO": "Gain 1 stack for each KO, 2 stacks if the user has more AP than the target. Receive MEWTWONITE_Y when fully stacked. Can be used to Mega Evolve.",
 		"KYUREM": "Obtain the DNA_SPLICER after defeating the legendary birds",
 		"LANDORUS": "Change weather to SANDSTORM or WINDY based on your dominant synergy between GROUND and FLYING",
@@ -3623,6 +3627,7 @@
 		"MISTY_WEATHER": "The Pokémon counts as 3 for MISTY",
 		"SNOW_WEATHER": "The Pokémon counts as 3 for ICE",
 		"CARBINK": "Spontanious mutations have been observed during Crystallisation.",
+		"SCYTHER": "Scyther is looking for METAL_ALLOY or BLACK_AUGURITE",
 		"GLUTTON": "Permanently gains max HP when eating: 10 HP for each berry, 20 HP for each dish, 30 HP when cooking as a Chef",
 		"COMFEY": "Comfey cannot hold items. At the start of the fight, the STRONGEST nearest ally with a free item slot wears Comfey and gains its base max HP, ATK, DEF and SPE_DEF. Comfey casts its ability at the same time as its holder. When its holder is KO, Comfey fights on its own.",
 		"HISUIAN_TYPHLOSION": "The Pokémon inflicts 20% extra damage on a BURN or SILENCE target",
@@ -3657,7 +3662,7 @@
 		"LUVDISC": "The allies on its left and on its right fall in love, and share the best value of their respective ATK, AP, DEF and SPE_DEF at the start of the fight",
 		"MANTYKE": "When Mantyke is on board, gain [33,LK]% chance to fish a Remoraid with your fishing rod. Evolves into Mantine if a Remoraid is next to it.",
 		"MANTINE": "When Mantine is on board, gain [33,LK]% chance to fish a Remoraid with your fishing rod.",
-		"SABLEYE": "Sableye is looking for a RED_ORB",
+		"SABLEYE": "Crystallisation unleashes its Mega Evolution.",
 		"MEGA_SABLEYE": "Mega Sableye gains RUNE_PROTECT for the entire fight",
 		"MELMETAL": "Melmetal can't gain SPEED. Bonus SPEED is converted into ATK (10 SPEED: 5 ATK)",
 		"SKARMORY": "BOARD_EFFECT: At the start of the fight, Skarmory scatters SPIKES around the field.",
@@ -4166,7 +4171,8 @@
 		"ECLIPSE": "Eclipse",
 		"FLOOD": "Flood",
 		"ELDER_STORM": "Elder Storm",
-		"DISTORTION": "Distortion"
+		"DISTORTION": "Distortion",
+		"METEOR_SHOWER": "Meteor Shower"
 	},
 	"weather_description": {
 		"NEUTRAL": "Normal weather. No effects.",
@@ -4187,7 +4193,8 @@
 		"ECLIPSE": "-10% max PP\n-30% FATIGUE and SILENCE duration",
 		"FLOOD": "Every 3 seconds, small waves flood in, knocking all Pokémon back 3 tiles and dealing 3% max HP as TRUE (heals AQUATIC instead).",
 		"ELDER_STORM": "Every 2 seconds, +1 SPEED and +2 AP (+5 SHIELD if DRAGON)",
-		"DISTORTION": "Every 5 seconds, ARMOR_BREAK for 2 seconds (ARTIFICIAL are immune)"
+		"DISTORTION": "Every 5 seconds, ARMOR_BREAK for 2 seconds (ARTIFICIAL are immune)",
+		"METEOR_SHOWER": "Every 7 seconds, a Meteor crashes onto a tile, damaging it and all ADJACENT tiles for 100 PHYSICAL (FOSSIL gain 50% of base ATK when hit)."
 	},
 	"board_effect": {
 		"EMBER": "Ember",
@@ -4199,6 +4206,7 @@
 		"TIDAL_WAVE": "Tidal Wave",
 		"SANDSTORM_DAMAGE": "Sandstorm Damage",
 		"THUNDER_STRUCK_DAMAGE": "Thunder Struck Damage",
+		"METEOR_DAMAGE": "Meteor Damage",
 		"CURSE_STATS": "Curse"
 	},
 	"board_effect_description": {
@@ -4211,6 +4219,7 @@
 		"TIDAL_WAVE": "Every 7 seconds it clears negative status and field effects, heals AQUATIC allies, and knocks back and damages enemies for a portion of their max HP.",
 		"SANDSTORM_DAMAGE": "Damage from the SANDSTORM weather: 5 SPECIAL per second to every non GROUND Pokémon on the board.",
 		"THUNDER_STRUCK_DAMAGE": "Damage from lightning during the STORM weather: 100 SPECIAL to a random Pokémon (ELECTRIC are supercharged instead).",
+		"METEOR_DAMAGE": "Damage from the METEOR_SHOWER weather: 100 PHYSICAL to the tile and ADJACENT tiles.",
 		"CURSE_STATS": "Damage from KO'd Pokémon through CURSE."
 	},
 	"emotion": {
@@ -5451,6 +5460,7 @@
 		"ember": "Ember",
 		"poison_gas": "Poison Gas",
 		"toxic_spikes": "Toxic Spikes",
+		"meteor_shower": "Meteor Shower (Fossil)",
 		"physical_damage_dealt": "Physical damage dealt",
 		"special_damage_dealt": "Special damage dealt",
 		"true_damage_dealt": "True damage dealt",

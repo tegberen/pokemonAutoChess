@@ -704,6 +704,25 @@ export default abstract class PokemonState {
       takenDamage += Math.min(residualDamage, pokemon.hp)
 
       if (
+        pokemon.simulation.weather === Weather.METEOR_SHOWER &&
+        attackType === AttackType.PHYSICAL &&
+        pokemon.player
+      ) {
+        const nbFossilFragments = count(
+          pokemon.player.items,
+          Item.FOSSIL_FRAGMENT
+        )
+        if (nbFossilFragments > 0) {
+          pokemon.addShield(
+            Math.round(0.1 * nbFossilFragments * reducedDamage),
+            pokemon,
+            0,
+            false
+          )
+        }
+      }
+
+      if (
         pokemon.items.has(Item.SHINY_CHARM) &&
         pokemon.hp - residualDamage < 0.3 * pokemon.maxHP
       ) {
@@ -732,15 +751,23 @@ export default abstract class PokemonState {
           : pokemon.effects.has(EffectEnum.ELDER_POWER)
             ? 0.7
             : 0.4
-        pokemon.addShield(shield, pokemon, 0, false)
 
-        //  When the Fossil Synergy effect is triggered, the received shield takes a maximum initial damage equal to 50% of the shield amount
-        const damageOnShield = max(0.5 * shield)(residualDamage)
+        if (pokemon.awakening === Awakening.FOSSIL_FRAGMENT) {
+          const damageOnRevive = max(0.5 * shield)(residualDamage)
+          takenDamage += damageOnRevive
+          pokemon.handleHeal(shield - damageOnRevive, pokemon, 0, false)
+          residualDamage = 0
+        } else {
+          pokemon.addShield(shield, pokemon, 0, false)
 
-        pokemon.shieldDamageTaken += damageOnShield
-        takenDamage += damageOnShield
-        pokemon.shield -= damageOnShield
-        residualDamage = 0
+          //  When the Fossil Synergy effect is triggered, the received shield takes a maximum initial damage equal to 50% of the shield amount
+          const damageOnShield = max(0.5 * shield)(residualDamage)
+
+          pokemon.shieldDamageTaken += damageOnShield
+          takenDamage += damageOnShield
+          pokemon.shield -= damageOnShield
+          residualDamage = 0
+        }
 
         pokemon.addAttack(pokemon.baseAtk * attackBonus, pokemon, 0, false)
         pokemon.resetCooldown(500)

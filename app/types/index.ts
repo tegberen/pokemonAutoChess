@@ -21,7 +21,7 @@ import type { Ability } from "./enum/Ability"
 import type { ArmoryOptions } from "./enum/ArmoryOptions"
 import type { Awakening } from "./enum/Awakening"
 import type { DungeonPMDO } from "./enum/Dungeon"
-import type { BoardEffect, EffectEnum } from "./enum/Effect"
+import type { EffectEnum } from "./enum/Effect"
 import type { EloRank } from "./enum/EloRank"
 import type { Emotion } from "./enum/Emotion"
 import type { FlowerPot } from "./enum/FlowerPot"
@@ -417,6 +417,7 @@ export const DPS_HAIL_ID = "hail"
 export const DPS_EMBER_ID = "ember"
 export const DPS_POISON_GAS_ID = "poison-gas"
 export const DPS_TOXIC_SPIKES_ID = "toxic-spikes"
+export const DPS_METEOR_SHOWER_ID = "meteor-shower"
 
 // Synthetic Battle-Stats rows that aggregate a board effect's damage/heal across
 // a whole team, rather than belonging to a single Pokémon. They must be kept out
@@ -431,7 +432,8 @@ export const SYNTHETIC_DPS_IDS: ReadonlySet<string> = new Set([
   DPS_HAIL_ID,
   DPS_EMBER_ID,
   DPS_POISON_GAS_ID,
-  DPS_TOXIC_SPIKES_ID
+  DPS_TOXIC_SPIKES_ID,
+  DPS_METEOR_SHOWER_ID
 ])
 
 export interface IDps {
@@ -794,7 +796,9 @@ export enum Title {
 
 export interface IBoardEvent {
   simulationId: string
-  effect: BoardEffect
+  // broadcast visual event: a persistent BoardEffect (spikes, smoke, …) or a
+  // transient weather strike (LIGHTNING_STRIKE, METEOR_SHOWER)
+  effect: EffectEnum
   x: number
   y: number
 }

@@ -993,6 +993,7 @@ export class Scyther extends Pokemon {
   range = 1
   skill = Ability.X_SCISSOR
   regional = true
+  passive = Passive.SCYTHER
 }
 
 export class Scizor extends Pokemon {
@@ -9099,7 +9100,7 @@ export class Cradily extends Pokemon {
 
 export class Cranidos extends Pokemon {
   types = new SetSchema<Synergy>([
-    Synergy.ROCK,
+    Synergy.DRAGON,
     Synergy.FOSSIL,
     Synergy.MONSTER
   ])
@@ -9119,7 +9120,7 @@ export class Cranidos extends Pokemon {
 
 export class Rampardos extends Pokemon {
   types = new SetSchema<Synergy>([
-    Synergy.ROCK,
+    Synergy.DRAGON,
     Synergy.FOSSIL,
     Synergy.MONSTER
   ])
@@ -13703,16 +13704,16 @@ export class Carnivine extends Pokemon {
 }
 
 export class Sableye extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.DARK, Synergy.GHOST])
-  evolutionRule = {
-    type: EvolutionRuleType.ITEM,
-    itemsTriggeringEvolution: [Item.RED_ORB]
-  } satisfies ItemEvolutionRule
+  types = new SetSchema<Synergy>([Synergy.DARK, Synergy.GHOST, Synergy.ROCK])
   evolution = Pkm.MEGA_SABLEYE
+  evolutionRule = {
+    type: EvolutionRuleType.STATE,
+    condition: (pokemon: IPokemon) => pokemon.awakening !== Awakening.NONE
+  } as const
   rarity = Rarity.UNIQUE
   stars = 3
   hp = 200
-  atk = 13
+  atk = 9
   speed = 41
   def = 8
   speDef = 8
@@ -13723,14 +13724,14 @@ export class Sableye extends Pokemon {
 }
 
 export class MegaSableye extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.DARK, Synergy.GHOST])
+  types = new SetSchema<Synergy>([Synergy.DARK, Synergy.GHOST, Synergy.ROCK])
   rarity = Rarity.UNIQUE
   stars = 4
-  hp = 200
-  atk = 13
+  hp = 220
+  atk = 9
   speed = 31
-  def = 12
-  speDef = 12
+  def = 20 
+  speDef = 16
   maxPP = 100
   range = 1
   skill = Ability.KNOCK_OFF

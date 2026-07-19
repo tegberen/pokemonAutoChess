@@ -2,6 +2,7 @@ import Phaser, { GameObjects } from "phaser"
 import {
   BOARD_HEIGHT,
   BOARD_WIDTH,
+  CELL_WIDTH,
   MaxTroopersPerPkm
 } from "../../../../config"
 import { getAttackTimings } from "../../../../core/attacking-state"
@@ -1207,6 +1208,94 @@ export default class BattleManager {
         alpha: 1,
         duration: 200,
         delay: 800
+      })
+    }
+
+    if (event.effect === EffectEnum.METEOR_SHOWER) {
+      const [cx, cy] = coordinates
+      const field = CELL_WIDTH * 2.7 // covers the 3x3 impact area
+
+      // soft radial texture (feathered edges) shared by the shadow + heat glow,
+      // so neither reads as a hard-edged blob against the pixel art
+      const soft = 256
+      const softKey = "soft-radial"
+      if (!this.scene.textures.exists(softKey)) {
+        const tex = this.scene.textures.createCanvas(softKey, soft, soft)
+        if (tex) {
+          const ctx = tex.getContext()
+          const r = soft / 2
+          const g = ctx.createRadialGradient(r, r, 0, r, r, r)
+          g.addColorStop(0, "rgba(255,255,255,1)")
+          g.addColorStop(0.5, "rgba(255,255,255,0.5)")
+          g.addColorStop(1, "rgba(255,255,255,0)")
+          ctx.fillStyle = g
+          ctx.fillRect(0, 0, soft, soft)
+          tex.refresh()
+        }
+      }
+
+      // 2. the DRACO_METEOR clip already has the fall + impact baked in, so we
+      // play it in place at the cell and let it run to completion
+      const meteor = this.scene.add.sprite(
+        cx,
+        cy,
+        "abilities",
+        `${Ability.DRACO_METEOR}/000.png`
+      )
+      meteor.setDepth(DEPTH.WEATHER_FX).setOrigin(0.5, 0.9).setScale(2.2)
+      meteor.anims.play(Ability.DRACO_METEOR)
+      const fallDuration = meteor.anims.currentAnim?.duration ?? 500
+
+      // 1. soft dark shadow telegraph on the ground, growing in as it descends
+      const shSX = field / soft
+      const shSY = (field * 0.5) / soft
+      const shadow = this.scene.add
+        .image(cx, cy, softKey)
+        .setDepth(DEPTH.BOARD_EFFECT_GROUND_LEVEL)
+        .setTint(0x140a06)
+        .setAlpha(0.12)
+        .setScale(shSX * 0.4, shSY * 0.4)
+      this.scene.tweens.add({
+        targets: shadow,
+        scaleX: shSX,
+        scaleY: shSY,
+        alpha: 0.4,
+        duration: fallDuration,
+        ease: "quad.in"
+      })
+
+      // 3. soft lingering heat glow — blooms during the impact frames (a bit
+      // before the clip fully ends), then dwells to show the searing heat
+      this.scene.time.delayedCall(Math.max(0, fallDuration - 250), () => {
+        // clear the telegraph shadow as the meteor lands
+        this.scene.tweens.add({
+          targets: shadow,
+          alpha: 0,
+          duration: 180,
+          onComplete: () => shadow.destroy()
+        })
+        const htSX = (field * 0.85) / soft
+        const htSY = (field * 0.45) / soft
+        const heat = this.scene.add
+          .image(cx, cy, softKey)
+          .setDepth(DEPTH.WEATHER_FX)
+          .setTint(0xff7020)
+          .setBlendMode(Phaser.BlendModes.SCREEN)
+          .setAlpha(0.6)
+          .setScale(htSX, htSY)
+        this.scene.tweens.add({
+          targets: heat,
+          alpha: 0,
+          scaleX: htSX * 1.25,
+          scaleY: htSY * 1.25,
+          duration: 1500,
+          ease: "sine.out",
+          onComplete: () => heat.destroy()
+        })
+      })
+
+      meteor.once(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
+        meteor.destroy()
       })
     }
   }

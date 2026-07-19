@@ -558,6 +558,8 @@ export class DebugScene extends Phaser.Scene {
       this.weatherManager.addElderStorm()
     } else if (weather === Weather.DISTORTION) {
       this.weatherManager.addDistortion()
+    } else if (weather === Weather.METEOR_SHOWER) {
+      this.weatherManager.addMeteorShower()
     } else if (weather === "dawn") {
       this.weatherManager.setTownDaytime(0)
     } else if (weather === "sunset") {

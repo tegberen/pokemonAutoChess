@@ -359,5 +359,6 @@ export const AwakeningEffects: Partial<
         })
       }
     })
-  ]
+  ],
+  [Awakening.FOSSIL_FRAGMENT]: []
 }

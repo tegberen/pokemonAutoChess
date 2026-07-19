@@ -17,6 +17,7 @@ import { getPokemonData } from "../models/precomputed/precomputed-pokemon-data"
 import { PRECOMPUTED_POKEMONS_PER_TYPE } from "../models/precomputed/precomputed-types"
 import type GameRoom from "../rooms/game-room"
 import {
+  DPS_METEOR_SHOWER_ID,
   DPS_STORM_ID,
   DPS_TIDAL_WAVE_ID,
   type IPokemon,
@@ -131,6 +132,7 @@ export default class Simulation extends Schema implements ISimulation {
   floodWaveTimer = 0
   elderStormTimer = 0
   distortionTimer = 0
+  meteorShowerTimer = 0
   tidalWaveCounter = 0
   entities: IPokemonEntity[] = []
   finishedAt: number = 0
@@ -232,6 +234,9 @@ export default class Simulation extends Schema implements ISimulation {
     }
     if (this.weather === Weather.DISTORTION) {
       this.distortionTimer = 5000
+    }
+    if (this.weather === Weather.METEOR_SHOWER) {
+      this.meteorShowerTimer = 7000
     }
 
     this.bluePlayer.board.forEach((pokemon) => {
@@ -1875,6 +1880,45 @@ export default class Simulation extends Schema implements ISimulation {
         }
         this.blueTeam.forEach(distort)
         this.redTeam.forEach(distort)
+      }
+    }
+
+    if (this.weather === Weather.METEOR_SHOWER) {
+      this.meteorShowerTimer -= dt
+      if (this.meteorShowerTimer <= 0 && !this.finished) {
+        this.meteorShowerTimer = 7000
+        const x = randomBetween(0, this.board.columns - 1)
+        const y = randomBetween(0, this.board.rows - 1)
+        const strike = (pkm: PokemonEntity | undefined) => {
+          if (!pkm) return
+          const { takenDamage } = pkm.handleDamage({
+            damage: 100,
+            board: this.board,
+            attackType: AttackType.PHYSICAL,
+            attacker: null,
+            shouldTargetGainMana: false
+          })
+          this.creditSyntheticDamage(
+            pkm,
+            DPS_METEOR_SHOWER_ID,
+            AttackType.PHYSICAL,
+            takenDamage
+          )
+          if (pkm.types.has(Synergy.FOSSIL)) {
+            const ratio =
+              pkm.awakening === Awakening.FOSSIL_FRAGMENT ? 1 : 0.5
+            pkm.addAttack(ratio * pkm.baseAtk, pkm, 0, false)
+          }
+        }
+        this.board
+          .getAdjacentCells(x, y, true)
+          .forEach((cell) => strike(cell.value))
+        this.room.broadcast(Transfer.BOARD_EVENT, {
+          simulationId: this.id,
+          effect: EffectEnum.METEOR_SHOWER,
+          x,
+          y
+        })
       }
     }
 

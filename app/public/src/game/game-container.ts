@@ -715,6 +715,8 @@ class GameContainer {
           this.gameScene.weatherManager.addElderStorm()
         } else if (value === Weather.DISTORTION) {
           this.gameScene.weatherManager.addDistortion()
+        } else if (value === Weather.METEOR_SHOWER) {
+          this.gameScene.weatherManager.addMeteorShower()
         }
       }
     }

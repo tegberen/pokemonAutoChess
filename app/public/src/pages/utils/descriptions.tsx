@@ -31,6 +31,7 @@ export const DocumentedEffects = [
   "TIDAL_WAVE",
   "SANDSTORM_DAMAGE",
   "THUNDER_STRUCK_DAMAGE",
+  "METEOR_DAMAGE",
   "CURSE_STATS"
 ] as const
 

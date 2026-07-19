@@ -2,6 +2,7 @@ import {
   DPS_CURSE_ID,
   DPS_EMBER_ID,
   DPS_HAIL_ID,
+  DPS_METEOR_SHOWER_ID,
   DPS_POISON_GAS_ID,
   DPS_SANDSTORM_ID,
   DPS_SPIKES_ID,
@@ -25,6 +26,7 @@ type GameStatsLabelKey =
   | "game_stats.ember"
   | "game_stats.poison_gas"
   | "game_stats.toxic_spikes"
+  | "game_stats.meteor_shower"
 
 export const SYNTHETIC_DPS_DISPLAY: Record<
   string,
@@ -69,6 +71,10 @@ export const SYNTHETIC_DPS_DISPLAY: Record<
   [DPS_TOXIC_SPIKES_ID]: {
     icon: "assets/icons/TOXIC_SPIKES.svg",
     labelKey: "game_stats.toxic_spikes"
+  },
+  [DPS_METEOR_SHOWER_ID]: {
+    icon: "assets/icons/METEOR_DAMAGE.svg",
+    labelKey: "game_stats.meteor_shower"
   }
 }
 
