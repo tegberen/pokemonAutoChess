@@ -609,10 +609,20 @@ export default class WeatherManager {
       0xb4436e // rose
     ]
 
-    const strips = [
-      { min: -40, max: 470 },
-      { min: 1500, max: 1950 }
-    ]
+    // full-width sky region (the canvas is ~1950 wide) — the aurora now washes
+    // uniformly across the whole sky instead of two side curtains
+    const region = { minX: -40, maxX: 1990, minY: 60, maxY: 980 }
+
+    // uniform greyish base tint. The aurora/sparks/lightning are all additive
+    // (SCREEN/ADD) and only read against a darker canvas. MULTIPLY (rather than
+    // a normal overlay) crushes bright map regions — grass, sand — down toward
+    // dark while barely touching already-dark regions, so the weather reads the
+    // same everywhere. Rendered first so it sits under the glow.
+    this.colorFilter = this.scene.add.existing(
+      new Phaser.GameObjects.Rectangle(this.scene, 1500, 1000, 3000, 2000, 0x282b34, 0.55)
+        .setBlendMode(Phaser.BlendModes.MULTIPLY)
+        .setDepth(DEPTH.WEATHER_FX)
+    )
 
     // --- textures ------------------------------------------------------
     // soft radial glow (for the faint background haze)
@@ -650,97 +660,121 @@ export default class WeatherManager {
       }
     }
 
-    // --- dark backing layer (rendered first, so it sits UNDER the aurora)
-    for (const strip of strips) {
-      const cx = (strip.min + strip.max) / 2
-      const backing = this.scene.add.existing(
-        new Phaser.GameObjects.Image(this.scene, cx, 520, glowKey)
-          .setOrigin(0.5)
-          .setDepth(DEPTH.WEATHER_FX)
-          .setBlendMode(Phaser.BlendModes.MULTIPLY)
-          .setTint(0x241830)
-          .setScale(3.6, 7.2)
-          .setAlpha(0.45)
-      )
-      this.images.push(backing)
+    // --- soft aurora, spread evenly over the whole sky ------------------
+    // a jittered grid of wide, overlapping blobs so the colour blends into one
+    // continuous aurora wash rather than distinct curtains
+    const cols = 6
+    const rows = 4
+    let colorIndex = 0
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c < cols; c++) {
+        const x =
+          region.minX +
+          ((c + 0.5) / cols) * (region.maxX - region.minX) +
+          Phaser.Math.Between(-70, 70)
+        const y =
+          region.minY +
+          ((r + 0.5) / rows) * (region.maxY - region.minY) +
+          Phaser.Math.Between(-60, 60)
+        const baseAlpha = 0.09 + Phaser.Math.FloatBetween(0, 0.05)
+        const blob = this.scene.add.existing(
+          new Phaser.GameObjects.Image(this.scene, x, y, glowKey)
+            .setOrigin(0.5)
+            .setDepth(DEPTH.WEATHER_FX)
+            .setBlendMode(Phaser.BlendModes.SCREEN)
+            .setTint(auroraPalette[colorIndex++ % auroraPalette.length])
+            .setScale(3.2, 3.0) // wide + overlapping → uniform coverage
+            .setAlpha(baseAlpha)
+        )
+        this.images.push(blob)
+
+        // The sky stays present — no fade in/out. Instead each blob slowly
+        // wanders on X and Y at *different* periods (a lissajous drift) so the
+        // coloured blobs keep sliding over one another and mixing. Brightness
+        // only drifts gently and never dips low, so the aurora never vanishes.
+        this.tweens.push(
+          this.scene.tweens.add({
+            targets: blob,
+            x: x + Phaser.Math.Between(-180, 180),
+            scaleX: { from: 2.9, to: 3.8 },
+            alpha: { from: baseAlpha * 0.75, to: baseAlpha * 1.35 },
+            duration: 5000 + Phaser.Math.Between(0, 2800),
+            delay: Phaser.Math.Between(0, 2200),
+            yoyo: true,
+            repeat: -1,
+            ease: "sine.inout"
+          })
+        )
+        this.tweens.push(
+          this.scene.tweens.add({
+            targets: blob,
+            y: y + Phaser.Math.Between(-130, 130),
+            scaleY: { from: 2.7, to: 3.5 },
+            duration: 6500 + Phaser.Math.Between(0, 3000), // different period → wander
+            delay: Phaser.Math.Between(0, 2200),
+            yoyo: true,
+            repeat: -1,
+            ease: "sine.inout"
+          })
+        )
+      }
     }
 
-    // --- soft aurora base layer
-    const count = 12
-    for (let i = 0; i < count; i++) {
-      const onLeft = i % 2 === 0
-      const strip = onLeft ? strips[0] : strips[1]
-      const x = strip.min + Phaser.Math.Between(0, strip.max - strip.min)
-      const y = 120 + (760 / (count - 1)) * i + Phaser.Math.Between(-40, 40)
-      const baseAlpha = 0.16 + Phaser.Math.FloatBetween(0, 0.08)
-      const blob = this.scene.add.existing(
-        new Phaser.GameObjects.Image(this.scene, x, y, glowKey)
-          .setOrigin(0.5)
+    // --- fast, sharp metallic sparks streaking upward, across the whole width.
+    // Spawned as tracked Images (not a particle emitter) so they survive a
+    // spectate round-trip and get cleaned up the same way as the other effects.
+    const spawnUpSpark = () => {
+      const x = Phaser.Math.Between(region.minX, region.maxX)
+      const y = Phaser.Math.Between(region.minY + 60, region.maxY)
+      const s = Phaser.Math.FloatBetween(0.7, 1.0)
+      const spark = this.scene.add.existing(
+        new Phaser.GameObjects.Image(this.scene, x, y, sparkKey)
           .setDepth(DEPTH.WEATHER_FX)
-          .setBlendMode(Phaser.BlendModes.SCREEN)
-          .setTint(auroraPalette[i % auroraPalette.length])
-          .setScale(2.4, 4.0)
-          .setAlpha(baseAlpha)
+          .setBlendMode(Phaser.BlendModes.ADD)
+          .setTint(Phaser.Utils.Array.GetRandom(sparkTints))
+          .setRotation(Phaser.Math.FloatBetween(-0.2, 0.2))
+          .setScale(s)
+          .setAlpha(1)
       )
-      this.images.push(blob)
-
-      // cross-fade brightness in place
+      this.images.push(spark)
       this.tweens.push(
         this.scene.tweens.add({
-          targets: blob,
-          alpha: { from: baseAlpha * 0.4, to: baseAlpha + 0.12 },
-          duration: 2600 + Phaser.Math.Between(0, 2200),
-          delay: Phaser.Math.Between(0, 2000),
-          yoyo: true,
-          repeat: -1,
-          ease: "sine.inout"
-        })
-      )
-
-      // breathing size + tiny sway so the aurora flows
-      this.tweens.push(
-        this.scene.tweens.add({
-          targets: blob,
-          scaleX: { from: 2.2, to: 2.8 },
-          scaleY: { from: 3.7, to: 4.4 },
-          x: x + Phaser.Math.Between(-50, 50),
-          duration: 3500 + Phaser.Math.Between(0, 2500),
-          yoyo: true,
-          repeat: -1,
-          ease: "sine.inout"
+          targets: spark,
+          y: y - Phaser.Math.Between(120, 320), // streak upward
+          x: x + Phaser.Math.Between(-40, 40),
+          scaleX: s * 0.2,
+          scaleY: s * 0.2,
+          alpha: 0,
+          duration: Phaser.Math.Between(400, 1000),
+          ease: "sine.out",
+          onComplete: () => {
+            spark.destroy()
+            this.images = this.images.filter((im) => im !== spark)
+          }
         })
       )
     }
+    this.timers.push(
+      this.scene.time.addEvent({
+        delay: 55,
+        loop: true,
+        callback: () => {
+          const n = Phaser.Math.Between(1, 2)
+          for (let k = 0; k < n; k++) spawnUpSpark()
+        }
+      })
+    )
 
-    // --- fast, sharp metallic sparks streaking upward
-    for (const strip of strips) {
-      this.particlesEmitters.push(
-        this.scene.add.particles(0, 0, sparkKey, {
-          x: { min: strip.min - 40, max: strip.max + 40 },
-          y: { min: 120, max: 960 },
-          frequency: 80,
-          quantity: 1,
-          lifespan: { min: 350, max: 1000 },
-          speedX: { min: -30, max: 30 },
-          speedY: { min: -300, max: -140 },
-          scale: { start: 1.0, end: 0.2 },
-          alpha: { start: 1, end: 0 },
-          rotate: { min: -12, max: 12 },
-          tint: sparkTints,
-          blendMode: "ADD"
-        })
-      )
-    }
-
-    // --- crackling lightning arcs
-    const makeBolt = (x: number, y0: number, y1: number) => {
+    // --- crackling lightning arcs, forking down from the top of the sky
+    const makeBolt = (x0: number, y0: number, x1: number, y1: number) => {
       const segs = Phaser.Math.Between(5, 9)
-      const pts: { x: number; y: number }[] = [{ x, y: y0 }]
+      const pts: { x: number; y: number }[] = [{ x: x0, y: y0 }]
       for (let s = 1; s <= segs; s++) {
         const t = s / segs
         const yy = Phaser.Math.Linear(y0, y1, t)
+        const xx = Phaser.Math.Linear(x0, x1, t)
         const jitter = s === segs ? 0 : Phaser.Math.Between(-45, 45)
-        pts.push({ x: x + jitter, y: yy })
+        pts.push({ x: xx + jitter, y: yy })
       }
       return pts
     }
@@ -753,13 +787,17 @@ export default class WeatherManager {
       for (let s = 1; s < pts.length; s++) g.lineTo(pts[s].x, pts[s].y)
       g.strokePath()
     }
+    const regionH = region.maxY - region.minY
     const spawnArc = () => {
-      const strip = Phaser.Utils.Array.GetRandom(strips)
-      const x = Phaser.Math.Between(strip.min, strip.max)
-      const y0 = Phaser.Math.Between(80, 260)
-      const y1 = Phaser.Math.Between(560, 940)
+      // originate above the top edge of the sky and fork downward, drifting
+      // sideways as they descend so they don't read as vertical mid-screen lines.
+      // All derived from `region` so the bolts stay aligned if the region changes
+      const x0 = Phaser.Math.Between(region.minX, region.maxX)
+      const y0 = region.minY - Phaser.Math.Between(20, 120)
+      const x1 = x0 + Phaser.Math.Between(-180, 180)
+      const y1 = region.minY + Phaser.Math.Between(regionH * 0.4, regionH * 0.92)
       const color = Phaser.Utils.Array.GetRandom(arcColors)
-      const pts = makeBolt(x, y0, y1)
+      const pts = makeBolt(x0, y0, x1, y1)
       const g = this.scene.add
         .graphics()
         .setDepth(DEPTH.WEATHER_FX)
@@ -786,11 +824,68 @@ export default class WeatherManager {
     // bursty crackle: every tick, fire 0-2 bolts so gaps and clusters happen
     this.timers.push(
       this.scene.time.addEvent({
-        delay: 280,
+        delay: 350,
         loop: true,
         callback: () => {
           const n = Phaser.Math.Between(0, 2)
           for (let k = 0; k < n; k++) spawnArc()
+        }
+      })
+    )
+
+    // --- rare jagged white sparks snapping across the sky: small electric
+    // texture that fires only occasionally
+    const spawnCrackle = () => {
+      const x0 = Phaser.Math.Between(region.minX, region.maxX)
+      const y0 = Phaser.Math.Between(region.minY, region.maxY)
+      const ang = Phaser.Math.FloatBetween(0, Math.PI * 2)
+      const len = Phaser.Math.Between(45, 120)
+      const x1 = x0 + Math.cos(ang) * len
+      const y1 = y0 + Math.sin(ang) * len
+      // perpendicular unit vector for jitter proportional to the bolt length
+      const perpX = -Math.sin(ang)
+      const perpY = Math.cos(ang)
+      const segs = Phaser.Math.Between(3, 5)
+      const pts: { x: number; y: number }[] = [{ x: x0, y: y0 }]
+      for (let s = 1; s <= segs; s++) {
+        const t = s / segs
+        const j =
+          s === segs ? 0 : Phaser.Math.FloatBetween(-1, 1) * len * 0.2
+        pts.push({
+          x: Phaser.Math.Linear(x0, x1, t) + perpX * j,
+          y: Phaser.Math.Linear(y0, y1, t) + perpY * j
+        })
+      }
+      const g = this.scene.add
+        .graphics()
+        .setDepth(DEPTH.WEATHER_FX)
+        .setBlendMode(Phaser.BlendModes.ADD)
+      g.lineStyle(4, 0xbcd4ff, 0.25)
+      stroke(g, pts)
+      g.lineStyle(1.5, 0xffffff, 0.9) // jagged white core
+      stroke(g, pts)
+      this.graphics.push(g)
+      this.tweens.push(
+        this.scene.tweens.add({
+          targets: g,
+          alpha: 0,
+          duration: Phaser.Math.Between(90, 200),
+          ease: "cubic.in",
+          onComplete: () => {
+            g.destroy()
+            const idx = this.graphics.indexOf(g)
+            if (idx >= 0) this.graphics.splice(idx, 1)
+          }
+        })
+      )
+    }
+    // rare: most ticks fire nothing, an occasional single spark
+    this.timers.push(
+      this.scene.time.addEvent({
+        delay: 700,
+        loop: true,
+        callback: () => {
+          if (Math.random() < 0.5) spawnCrackle()
         }
       })
     )
@@ -1226,7 +1321,7 @@ export default class WeatherManager {
 
     this.timers.push(
       this.scene.time.addEvent({
-        delay: 5200,
+        delay: 4160, // +25% cadence (was 5200)
         loop: true,
         callback: () => {
           // a wave is really its splatter: a light leading splash, the main
@@ -1276,7 +1371,9 @@ export default class WeatherManager {
 
     // --- gloom: tints the whole scene and is the fallback fill behind the
     // clouds, so any area the vortex doesn't reach is still storm-coloured (no
-    // hard boundary anywhere)
+    // hard boundary anywhere). MULTIPLY (rather than a normal overlay) crushes
+    // bright map regions — grass, sand — toward the storm-purple so the weather
+    // reads the same over bright and dark ground alike.
     this.colorFilter = this.scene.add.existing(
       new Phaser.GameObjects.Rectangle(
         this.scene,
@@ -1285,13 +1382,15 @@ export default class WeatherManager {
         3000,
         2000,
         0x201024,
-        0.34
-      ).setDepth(DEPTH.WEATHER_FX)
+        0.4
+      )
+        .setBlendMode(Phaser.BlendModes.MULTIPLY)
+        .setDepth(DEPTH.WEATHER_FX)
     )
     this.tweens.push(
       this.scene.tweens.add({
         targets: this.colorFilter,
-        alpha: { from: 0.3, to: 0.42 },
+        alpha: { from: 0.36, to: 0.45 }, // another ~10% less gloom → brighter
         duration: 4600,
         yoyo: true,
         repeat: -1,

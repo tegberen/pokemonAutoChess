@@ -133,6 +133,9 @@ export default class Simulation extends Schema implements ISimulation {
   elderStormTimer = 0
   distortionTimer = 0
   meteorShowerTimer = 0
+  // meteor impacts are queued so the damage lands ~1s after the visual starts,
+  // in sync with the on-screen meteor striking down
+  meteorStrikeQueue: { x: number; y: number; delay: number }[] = []
   tidalWaveCounter = 0
   entities: IPokemonEntity[] = []
   finishedAt: number = 0
@@ -1889,37 +1892,52 @@ export default class Simulation extends Schema implements ISimulation {
         this.meteorShowerTimer = 7000
         const x = randomBetween(0, this.board.columns - 1)
         const y = randomBetween(0, this.board.rows - 1)
-        const strike = (pkm: PokemonEntity | undefined) => {
-          if (!pkm) return
-          const { takenDamage } = pkm.handleDamage({
-            damage: 100,
-            board: this.board,
-            attackType: AttackType.PHYSICAL,
-            attacker: null,
-            shouldTargetGainMana: false
-          })
-          this.creditSyntheticDamage(
-            pkm,
-            DPS_METEOR_SHOWER_ID,
-            AttackType.PHYSICAL,
-            takenDamage
-          )
-          if (pkm.types.has(Synergy.FOSSIL)) {
-            const ratio =
-              pkm.awakening === Awakening.FOSSIL_FRAGMENT ? 1 : 0.5
-            pkm.addAttack(ratio * pkm.baseAtk, pkm, 0, false)
-          }
-        }
-        this.board
-          .getAdjacentCells(x, y, true)
-          .forEach((cell) => strike(cell.value))
+        // start the falling-meteor visual now; queue the damage to land ~1s
+        // later so it hits when the meteor visually strikes down
         this.room.broadcast(Transfer.BOARD_EVENT, {
           simulationId: this.id,
           effect: EffectEnum.METEOR_SHOWER,
           x,
           y
         })
+        this.meteorStrikeQueue.push({ x, y, delay: 1000 })
       }
+    }
+
+    // apply queued meteor impacts once their fall delay elapses; occupants are
+    // re-evaluated at impact time, so it hits whoever stands there on landing
+    if (this.meteorStrikeQueue.length > 0) {
+      this.meteorStrikeQueue = this.meteorStrikeQueue.filter((m) => {
+        m.delay -= dt
+        if (m.delay > 0) return true
+        if (!this.finished) {
+          const strike = (pkm: PokemonEntity | undefined) => {
+            if (!pkm) return
+            const { takenDamage } = pkm.handleDamage({
+              damage: 100,
+              board: this.board,
+              attackType: AttackType.PHYSICAL,
+              attacker: null,
+              shouldTargetGainMana: false
+            })
+            this.creditSyntheticDamage(
+              pkm,
+              DPS_METEOR_SHOWER_ID,
+              AttackType.PHYSICAL,
+              takenDamage
+            )
+            if (pkm.types.has(Synergy.FOSSIL)) {
+              const ratio =
+                pkm.awakening === Awakening.FOSSIL_FRAGMENT ? 1 : 0.5
+              pkm.addAttack(ratio * pkm.baseAtk, pkm, 0, false)
+            }
+          }
+          this.board
+            .getAdjacentCells(m.x, m.y, true)
+            .forEach((cell) => strike(cell.value))
+        }
+        return false
+      })
     }
 
     if (this.tidalWaveTimer > 0) {
