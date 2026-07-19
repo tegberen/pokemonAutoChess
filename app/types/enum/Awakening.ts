@@ -20,7 +20,8 @@ export enum Awakening {
   STICKY_GLOB = "STICKY_GLOB",
   ECLIPSE_STONE = "ECLIPSE_STONE",
   PEARL_STONE = "PEARL_STONE",
-  ELDER_CRYSTAL = "ELDER_CRYSTAL"
+  ELDER_CRYSTAL = "ELDER_CRYSTAL",
+  DISTORTION_SLATE = "DISTORTION_SLATE"
 }
 
 export const AwakeningTypes: Partial<Record<Awakening, Synergy>> = {
@@ -40,5 +41,6 @@ export const AwakeningTypes: Partial<Record<Awakening, Synergy>> = {
   [Awakening.STICKY_GLOB]: Synergy.BUG,
   [Awakening.ECLIPSE_STONE]: Synergy.PSYCHIC,
   [Awakening.PEARL_STONE]: Synergy.AQUATIC,
-  [Awakening.ELDER_CRYSTAL]: Synergy.DRAGON
+  [Awakening.ELDER_CRYSTAL]: Synergy.DRAGON,
+  [Awakening.DISTORTION_SLATE]: Synergy.ARTIFICIAL
 }

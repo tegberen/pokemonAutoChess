@@ -12,8 +12,10 @@ export default class WeatherManager {
   images: Phaser.GameObjects.Image[]
   graphics: Phaser.GameObjects.Graphics[]
   timers: Phaser.Time.TimerEvent[]
-  tweens: Phaser.Tweens.Tween[]
+  tweens: Phaser.Tweens.BaseTween[]
   containers: Phaser.GameObjects.Container[]
+  tileSprites: Phaser.GameObjects.TileSprite[]
+  rectangles: Phaser.GameObjects.Rectangle[]
   fxs: Phaser.Filters.Controller[]
 
   constructor(scene: Phaser.Scene) {
@@ -25,6 +27,8 @@ export default class WeatherManager {
     this.timers = []
     this.tweens = []
     this.containers = []
+    this.tileSprites = []
+    this.rectangles = []
     this.fxs = []
   }
 
@@ -1718,6 +1722,196 @@ export default class WeatherManager {
     )
   }
 
+  addDistortion() {
+    // A weather that doesn't exist IRL: the arena reads as a corrupted simulation
+    // — space is physically warped (WebGL displacement), overlaid with a uniform
+    // holographic grid + scanlines, and periodically the whole field glitches.
+    // Full-arena footprint so the look stays identical over bright OR dark maps.
+    const ax = 1500,
+      ay = 1000,
+      aw = 3000,
+      ah = 2000
+
+    // ---- 1. consistent base tint -------------------------------------------
+    // A near-opaque dark indigo compresses the underlying scene's brightness so
+    // a sunlit town and a midnight cave both settle to the same sci-fi gloom.
+    this.colorFilter = this.scene.add.existing(
+      new Phaser.GameObjects.Rectangle(this.scene, ax, ay, aw, ah, 0x160a2e, 0.55)
+        .setDepth(DEPTH.WEATHER_FX)
+    )
+    this.tweens.push(
+      this.scene.tweens.add({
+        targets: this.colorFilter,
+        alpha: { from: 0.5, to: 0.6 },
+        duration: 3200,
+        yoyo: true,
+        repeat: -1,
+        ease: "sine.inout"
+      })
+    )
+    // additive violet/cyan energy wash for the colour grade (SCREEN keeps it
+    // uniform: it lifts the flattened base by the same amount everywhere)
+    const energyWash = this.scene.add.graphics().setDepth(DEPTH.WEATHER_FX)
+    energyWash.setBlendMode(Phaser.BlendModes.SCREEN)
+    energyWash.fillStyle(0x4a2a9c, 1)
+    energyWash.fillRect(0, 0, aw, ah)
+    energyWash.setAlpha(0.1)
+    this.graphics.push(energyWash)
+    this.tweens.push(
+      this.scene.tweens.add({
+        targets: energyWash,
+        alpha: { from: 0.07, to: 0.16 },
+        duration: 2600,
+        yoyo: true,
+        repeat: -1,
+        ease: "sine.inout"
+      })
+    )
+
+    // ---- 3. holographic grid + scanlines (uniform digital overlay) ---------
+    // A seamless tile of neon grid lines + fine scanlines, scrolled a single
+    // period on loop so the whole field shimmers evenly (no localized hotspots).
+    const gridKey = "distortion-grid"
+    const tile = 48 // grid + scroll period
+    if (!this.scene.textures.exists(gridKey)) {
+      const tex = this.scene.textures.createCanvas(gridKey, tile, tile)
+      if (tex) {
+        const ctx = tex.getContext()
+        ctx.clearRect(0, 0, tile, tile)
+        // grid lines (cyan)
+        ctx.strokeStyle = "rgba(120,235,255,0.5)"
+        ctx.lineWidth = 1
+        ctx.strokeRect(0.5, 0.5, tile, tile)
+        // fine scanlines every 6px (violet-white)
+        ctx.fillStyle = "rgba(190,170,255,0.22)"
+        for (let y = 0; y < tile; y += 6) ctx.fillRect(0, y, tile, 1)
+        tex.refresh()
+      }
+    }
+    const grid = this.scene.add
+      .tileSprite(ax, ay, aw, ah, gridKey)
+      .setBlendMode(Phaser.BlendModes.SCREEN)
+      .setAlpha(0.17)
+      .setDepth(DEPTH.WEATHER_FX)
+    this.tileSprites.push(grid)
+    // slow diagonal scroll of the grid = the simulation "flowing"
+    this.tweens.push(
+      this.scene.tweens.add({
+        targets: grid,
+        tilePositionX: tile,
+        tilePositionY: tile,
+        duration: 6000,
+        loop: -1,
+        ease: "linear"
+      })
+    )
+    // subtle brightness flicker on the whole grid
+    this.tweens.push(
+      this.scene.tweens.add({
+        targets: grid,
+        alpha: { from: 0.14, to: 0.23 },
+        duration: 1800,
+        yoyo: true,
+        repeat: -1,
+        ease: "sine.inout"
+      })
+    )
+
+    // ---- 4. glitch tear bands ----------------------------------------------
+    // Occasional screen-wide horizontal tears for texture. Muted cyan/violet
+    // palette (never white). They snap in fast and explosive, hold for a beat,
+    // then fade back out. Only one tear is ever on screen at a time.
+    let glitchActive = false
+    const glitchPulse = () => {
+      glitchActive = true
+      const split = Phaser.Math.Between(8, 18)
+      const bands: Phaser.GameObjects.Rectangle[] = []
+      const nbBands = Phaser.Math.Between(1, 3)
+      for (let i = 0; i < nbBands; i++) {
+        const band = this.scene.add.existing(
+          new Phaser.GameObjects.Rectangle(
+            this.scene,
+            ax + Phaser.Math.Between(-split, split),
+            Phaser.Math.Between(240, 620),
+            aw,
+            Phaser.Math.Between(3, 12),
+            Phaser.Math.RND.pick([0x18f0ff, 0xb0a0ff, 0xff2d7a, 0xffe066]),
+            1
+          )
+            .setBlendMode(Phaser.BlendModes.SCREEN)
+            .setAlpha(0)
+            .setDepth(DEPTH.WEATHER_FX)
+        )
+        bands.push(band)
+        // tracked so clearWeather() tears them down if the fight ends mid-tear
+        this.rectangles.push(band)
+      }
+      // Procedurally build an erratic "dying signal" timeline so every tear
+      // dies to its own rhythm: snap in, then a random mix of steady HOLDs and
+      // quick flicker bursts. Holds dim and flickers grow more frequent toward
+      // the end, as if the energy is slowly running out; then a final fade.
+      const peak = Phaser.Math.FloatBetween(0.15, 0.18)
+      const steps: object[] = []
+      // ~20% of tears stutter in with a flicker; the rest snap in cleanly
+      if (Math.random() < 0.2) {
+        const flickers = Phaser.Math.Between(2, 4)
+        for (let k = 0; k < flickers; k++) {
+          steps.push({ alpha: peak, duration: Phaser.Math.Between(20, 40) })
+          steps.push({ alpha: 0.02, duration: Phaser.Math.Between(20, 40) })
+        }
+        steps.push({ alpha: peak, duration: Phaser.Math.Between(30, 50) })
+      } else {
+        steps.push({
+          alpha: peak,
+          duration: Phaser.Math.Between(35, 55),
+          ease: "quad.out"
+        })
+      }
+      const beats = Phaser.Math.Between(2, 4)
+      for (let i = 0; i < beats; i++) {
+        const drain = i / beats // 0 → 1 across the tear's life
+        if (Math.random() < 0.12 + 0.28 * drain) {
+          // an occasional quick flicker, snapping back to full brightness
+          const n = Phaser.Math.Between(1, 2)
+          for (let f = 0; f < n; f++) {
+            steps.push({
+              alpha: Phaser.Math.FloatBetween(0.03, 0.07),
+              duration: Phaser.Math.Between(28, 48),
+              yoyo: true
+            })
+          }
+        } else {
+          // a steady hold at full brightness — the light does not dim
+          steps.push({ alpha: peak, duration: Phaser.Math.Between(1100, 1500) })
+        }
+      }
+      // it's light — it doesn't fade, it just cuts out
+      steps.push({ alpha: 0, duration: 0 })
+      const chain = this.scene.tweens.chain({
+        targets: bands,
+        tweens: steps,
+        onComplete: () => {
+          bands.forEach((b) => b.destroy())
+          // drop the now-destroyed bands from the tracking array
+          this.rectangles = this.rectangles.filter((r) => !bands.includes(r))
+          glitchActive = false
+        }
+      })
+      // tracked so clearWeather() stops the timeline on phase change
+      this.tweens.push(chain)
+    }
+    // slow, irregular cadence — but never start a new tear while one is live
+    this.timers.push(
+      this.scene.time.addEvent({
+        delay: 2200,
+        loop: true,
+        callback: () => {
+          if (!glitchActive && Math.random() < 0.6) glitchPulse()
+        }
+      })
+    )
+  }
+
   setTownDaytime(stageLevel: number) {
     // ambient light based on day time
     let red = 255,
@@ -1788,6 +1982,14 @@ export default class WeatherManager {
     if (this.containers) {
       this.containers.forEach((container) => container.destroy())
       this.containers = []
+    }
+    if (this.tileSprites) {
+      this.tileSprites.forEach((ts) => ts.destroy())
+      this.tileSprites = []
+    }
+    if (this.rectangles) {
+      this.rectangles.forEach((r) => r.destroy())
+      this.rectangles = []
     }
     if (this.fxs) {
       this.fxs.forEach((effect) => effect.destroy())

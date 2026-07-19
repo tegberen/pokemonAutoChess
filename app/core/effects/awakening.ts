@@ -1,6 +1,6 @@
 import { AttackType, Team } from "../../types/enum/Game"
 import { Awakening } from "../../types/enum/Awakening"
-import { EffectEnum } from "../../types/enum/Effect"
+import { BoardEffects, EffectEnum } from "../../types/enum/Effect"
 import { distanceC } from "../../utils/distance"
 import { DelayedCommand } from "../simulation-command"
 import {
@@ -333,6 +333,30 @@ export const AwakeningEffects: Partial<
           false,
           false
         )
+      }
+    })
+  ],
+
+  [Awakening.DISTORTION_SLATE]: [
+    new OnAttackEffect(({ pokemon, target, board }) => {
+      if (!target) return
+      if (chance(0.05, pokemon)) {
+        const boardEffect = pickRandomIn(BoardEffects)
+        const cells = board.getAdjacentCells(
+          target.positionX,
+          target.positionY,
+          true
+        )
+        cells.forEach((cell) => {
+          if (cell.value && cell.value.team === target.team) {
+            board.addBoardEffect(
+              cell.x,
+              cell.y,
+              boardEffect,
+              pokemon.simulation
+            )
+          }
+        })
       }
     })
   ]

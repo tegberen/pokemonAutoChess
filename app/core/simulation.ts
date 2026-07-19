@@ -130,6 +130,7 @@ export default class Simulation extends Schema implements ISimulation {
   tidalWaveTimer = 0
   floodWaveTimer = 0
   elderStormTimer = 0
+  distortionTimer = 0
   tidalWaveCounter = 0
   entities: IPokemonEntity[] = []
   finishedAt: number = 0
@@ -228,6 +229,9 @@ export default class Simulation extends Schema implements ISimulation {
     }
     if (this.weather === Weather.ELDER_STORM) {
       this.elderStormTimer = 2000
+    }
+    if (this.weather === Weather.DISTORTION) {
+      this.distortionTimer = 5000
     }
 
     this.bluePlayer.board.forEach((pokemon) => {
@@ -1857,6 +1861,20 @@ export default class Simulation extends Schema implements ISimulation {
         }
         this.blueTeam.forEach(empower)
         this.redTeam.forEach(empower)
+      }
+    }
+
+    if (this.weather === Weather.DISTORTION) {
+      this.distortionTimer -= dt
+      if (this.distortionTimer <= 0 && !this.finished) {
+        this.distortionTimer = 5000
+        const distort = (pkm: PokemonEntity) => {
+          // ARTIFICIAL Pokémon are immune to the reality-warping distortion
+          if (pkm.types.has(Synergy.ARTIFICIAL)) return
+          pkm.status.triggerArmorReduction(2000, pkm)
+        }
+        this.blueTeam.forEach(distort)
+        this.redTeam.forEach(distort)
       }
     }
 

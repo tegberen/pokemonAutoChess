@@ -2665,6 +2665,7 @@
 		"CRYSTALLISE_ECLIPSE_STONE": "At the start of the fight, gain 100% of DEF as AP and 50% of DEF as starting PP.",
 		"CRYSTALLISE_PEARL_STONE": "The user casts Surf when hit by the big TIDAL_WAVE.",
 		"CRYSTALLISE_ELDER_CRYSTAL": "Attacks have [1,LK]% chance per STAR on your board to deal the targets remaining SHIELD as PHYSICAL, SPECIAL or TRUE ON_ATTACK.",
+		"CRYSTALLISE_DISTORTION_SLATE": "ON_ATTACK, [5, LK]% chance to infflict the target and ADJACENT enemy Pokémon with a random BOARD_EFFECT.",
 		"CURSE_OF_VULNERABILITY": "The enemy with the highest DEF + SPE_DEF lose 5 of it and is FLINCH",
 		"CURSE_OF_WEAKNESS": "Also, the enemy with the highest ATK lose 20% of it and is PARALYSIS",
 		"CURSE_OF_TORMENT": "Also, the enemy with the highest AP lose 30 of it and is FATIGUE",
@@ -2888,6 +2889,7 @@
 		"ECLIPSE_STONE": "Eclipse Stone",
 		"PEARL_STONE": "Pearl String",
 		"ELDER_CRYSTAL": "Elder Crystal",
+		"DISTORTION_SLATE": "Distortion Slate",
 		"UTILITY_UMBRELLA": "Utility Umbrella",
 		"NORMAL_GEM": "Normal Gem",
 		"GRASS_GEM": "Grass Gem",
@@ -3300,6 +3302,7 @@
 		"ECLIPSE_STONE": "Counts for 3 towards ECLIPSE. Under ECLIPSE, your team has a [5, LK]% chance to steal 5 AP ON_ATTACK.\n\nAllows a ROCK Pokémon to undergo Crystallisation, Awakening it as a PSYCHIC type.",
 		"PEARL_STONE": "Counts for 3 towards FLOOD. Under FLOOD, when hit by any wave your team resist the knockback by 1 tile and gains 10 SHIELD.\n\nAllows a ROCK Pokémon to undergo Crystallisation, Awakening it as a AQUATIC type.",
 "ELDER_CRYSTAL": "Counts as 3 towards ELDER_STORM. Under ELDER_STORM, your team takes -15% less damage from Pokémon with SHIELD.\n\nOnly the strongest can ascend to dragonhood. 3 STAR ROCK Pokémon can undergo Crystallisation with this weather rock.",
+"DISTORTION_SLATE": "Counts as 3 towards DISTORTION. Under DISTORTION, your team recovers from ARMOR_BREAK 30% faster.\n\nAllows a ROCK Pokémon to undergo Crystallisation, Awakening it as a ARTIFICIAL type.",
 		"UTILITY_UMBRELLA": "The holder and allies ADJACENT_IN_THE_SAME_ROW take -70% negative status duration and status damage (BURN and POISON).",
 		"NORMAL_GEM": "+1 to NORMAL synergy",
 		"GRASS_GEM": "+1 to GRASS synergy",
@@ -3567,6 +3570,7 @@
 		"MURKY": "Change weather to MURKY",
 		"FLOOD": "Change weather to FLOOD",
 		"ELDER_STORM": "Change weather to ELDER_STORM",
+		"DISTORTION": "Change weather to DISTORTION",
 		"MEWTWO": "Gain 1 stack for each KO, 2 stacks if the user has more AP than the target. Receive MEWTWONITE_Y when fully stacked. Can be used to Mega Evolve.",
 		"KYUREM": "Obtain the DNA_SPLICER after defeating the legendary birds",
 		"LANDORUS": "Change weather to SANDSTORM or WINDY based on your dominant synergy between GROUND and FLYING",
@@ -4161,7 +4165,8 @@
 		"PLAGUE": "Plague",
 		"ECLIPSE": "Eclipse",
 		"FLOOD": "Flood",
-		"ELDER_STORM": "Elder Storm"
+		"ELDER_STORM": "Elder Storm",
+		"DISTORTION": "Distortion"
 	},
 	"weather_description": {
 		"NEUTRAL": "Normal weather. No effects.",
@@ -4181,7 +4186,8 @@
 		"PLAGUE": "Attacks deal 1 SPECIAL per ally (TRUE if BUG)\n+30% PARALYSIS duration",
 		"ECLIPSE": "-10% max PP\n-30% FATIGUE and SILENCE duration",
 		"FLOOD": "Every 3 seconds, small waves flood in, knocking all Pokémon back 3 tiles and dealing 3% max HP as TRUE (heals AQUATIC instead).",
-		"ELDER_STORM": "Every 2 seconds, gain +1 SPEED and +2 AP (+5 SHIELD if DRAGON)"
+		"ELDER_STORM": "Every 2 seconds, +1 SPEED and +2 AP (+5 SHIELD if DRAGON)",
+		"DISTORTION": "Every 5 seconds, ARMOR_BREAK for 2 seconds (ARTIFICIAL are immune)"
 	},
 	"board_effect": {
 		"EMBER": "Ember",

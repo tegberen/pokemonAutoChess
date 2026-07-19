@@ -352,6 +352,21 @@ export default class Status extends Schema implements IStatus {
 
       duration = this.applyStatusDurationReductions(duration, pkm)
 
+      if (
+        pkm.simulation.weather === Weather.DISTORTION &&
+        pkm.player
+      ) {
+        const nbDistortionSlates = count(
+          pkm.player.items,
+          Item.DISTORTION_SLATE
+        )
+        if (nbDistortionSlates > 0) {
+          duration = Math.round(
+            duration * Math.max(0, 1 - 0.3 * nbDistortionSlates)
+          )
+        }
+      }
+
       if (duration > this.armorReductionCooldown) {
         this.armorReductionCooldown = Math.round(duration)
       }
