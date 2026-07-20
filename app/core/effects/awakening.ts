@@ -381,5 +381,21 @@ export const AwakeningEffects: Partial<
       O,
       250
     )
+  ],
+
+  [Awakening.PEAT_BLOCK]: [
+    new OnDeathEffect(({ pokemon, board }) => {
+      const allies = board
+        .getCellsInRadius(pokemon.positionX, pokemon.positionY, 2, false)
+        .filter((cell) => cell.value != null && cell.value.team === pokemon.team)
+      if (allies.length === 0) return
+      const defShare = Math.floor(pokemon.def / allies.length)
+      const speedShare = Math.floor(pokemon.speed / allies.length)
+      allies.forEach((cell) => {
+        if (!cell.value) return
+        if (defShare > 0) cell.value.addDefense(defShare, cell.value, 0, false)
+        if (speedShare > 0) cell.value.addSpeed(speedShare, cell.value, 0, false)
+      })
+    })
   ]
 }

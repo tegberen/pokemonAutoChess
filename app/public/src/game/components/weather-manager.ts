@@ -1,4 +1,12 @@
 import Phaser from "phaser"
+import {
+  BOARD_HEIGHT,
+  BOARD_WIDTH,
+  BOARD_X_START,
+  BOARD_Y_START,
+  CELL_HEIGHT,
+  CELL_WIDTH
+} from "../../../../config"
 import { preference } from "../../preferences"
 import { DEPTH } from "../depths"
 import type GameScene from "../scenes/game-scene"
@@ -2436,6 +2444,242 @@ export default class WeatherManager {
         ease: "sine.inout"
       })
     )
+  }
+
+  addHardTerrain() {
+    // Hard Terrain isn't weather in the sky — it's the ground itself: a parched,
+    // sun-baked plain. We etch a network of dried-mud cracks onto the play board
+    // (only there — it's the terrain) and lay a light dry wash over the scene.
+
+    // The play board is BOARD_WIDTH x BOARD_HEIGHT cells; derive its pixel rect
+    // from the same constants the pokemon are positioned with.
+    const boardW = BOARD_WIDTH * CELL_WIDTH
+    const boardH = BOARD_HEIGHT * CELL_HEIGHT
+    const boardCenterX = BOARD_X_START + (CELL_WIDTH * (BOARD_WIDTH - 1)) / 2
+    const topCellY =
+      BOARD_Y_START - CELL_HEIGHT * (BOARD_HEIGHT + 1) + CELL_HEIGHT / 2
+    const bottomCellY = BOARD_Y_START - CELL_HEIGHT * 2 + CELL_HEIGHT / 2
+    const boardCenterY = (topCellY + bottomCellY) / 2
+
+    this.colorFilter = this.scene.add.existing(
+      new Phaser.GameObjects.Rectangle(this.scene, 1500, 1000, 3000, 2000, 0x6b5a34, 0.12)
+        .setDepth(DEPTH.WEATHER_FX)
+    )
+
+    // Build (once) a seamless cracked-earth texture. A Voronoi diagram gives the
+    // characteristic dried-mud plates; pixels near a cell boundary (where the
+    // nearest two seeds are equidistant) are the dark cracks, everything else is
+    // transparent so the underlying ground shows through between the fissures.
+    const key = "cracked-earth"
+    const size = 768
+    if (!this.scene.textures.exists(key)) {
+      const tex = this.scene.textures.createCanvas(key, size, size)
+      if (tex) {
+        const ctx = tex.getContext()
+        const crackWidth = 9 // px band around each cell boundary (fat cracks)
+        const yStretch = 2.8 // >1 strongly widens the plates (penalises vertical distance)
+        // Random seeds keep the natural chaos, but reject any that land too close
+        // (in the same stretched metric) to one already placed — otherwise the fat
+        // cracks fully fill a too-small plate, leaving it shaded solid.
+        const seeds: [number, number][] = []
+        const minDistSq = 100 * 100
+        let attempts = 0
+        while (seeds.length < 32 && attempts < 3000) {
+          attempts++
+          const px = Math.random() * size
+          const py = Math.random() * size
+          const tooClose = seeds.some(([sx, sy]) => {
+            let dx = Math.abs(px - sx)
+            dx = Math.min(dx, size - dx)
+            let dy = Math.abs(py - sy)
+            dy = Math.min(dy, size - dy)
+            dy *= yStretch
+            return dx * dx + dy * dy < minDistSq
+          })
+          if (!tooClose) seeds.push([px, py])
+        }
+        const img = ctx.createImageData(size, size)
+        const data = img.data
+        for (let y = 0; y < size; y++) {
+          for (let x = 0; x < size; x++) {
+            let d1 = Infinity
+            let d2 = Infinity // nearest & 2nd-nearest squared distances
+            for (const [sx, sy] of seeds) {
+              // toroidal distance keeps the tile seamless
+              let dx = Math.abs(x - sx)
+              dx = Math.min(dx, size - dx)
+              let dy = Math.abs(y - sy)
+              dy = Math.min(dy, size - dy)
+              dy *= yStretch // stretch cells horizontally
+              const dsq = dx * dx + dy * dy
+              if (dsq < d1) {
+                d2 = d1
+                d1 = dsq
+              } else if (dsq < d2) {
+                d2 = dsq
+              }
+            }
+            const edge = Math.sqrt(d2) - Math.sqrt(d1) // ~0 on a boundary
+            const t = Math.max(0, 1 - edge / crackWidth)
+            const idx = (y * size + x) * 4
+            data[idx] = 34 // dark earth-brown crack
+            data[idx + 1] = 25
+            data[idx + 2] = 16
+            data[idx + 3] = Math.round(Math.pow(t, 1.6) * 215)
+          }
+        }
+        ctx.putImageData(img, 0, 0)
+        tex.refresh()
+      }
+    }
+
+    // Etch the cracks onto the board only, below the units. The X tile scale
+    // maps one texture across the board width (~one repeat, so no obvious tiling
+    // and just a handful of big slabs); the smaller Y scale foreshortens the
+    // pattern so it lies on the ground plane at the game's top-down angle.
+    const cracks = this.scene.add
+      .tileSprite(boardCenterX, boardCenterY, boardW, boardH, key)
+      .setTileScale(0.5, 0.34)
+      .setAlpha(0.55)
+      .setDepth(DEPTH.BOARD_EFFECT_GROUND_LEVEL)
+    this.tileSprites.push(cracks)
+
+    // A gentle dry breeze drifting across the plain (same left-to-right direction
+    // as the tumbleweeds) — the WINDY streaks, but slow, sparse and faded.
+    this.particlesEmitters.push(
+      this.scene.add
+        .particles(0, 0, "wind", {
+          x: { min: -150, max: 0 },
+          y: { min: boardCenterY - boardH, max: boardCenterY + boardH },
+          deathZone: {
+            source: new Phaser.Geom.Rectangle(-200, 0, 3400, 2000),
+            type: "onLeave"
+          },
+          frequency: 170,
+          speedX: { min: 220, max: 360 },
+          speedY: { min: -25, max: 25 },
+          lifespan: 5000,
+          scale: { min: 0.7, max: 1.3 },
+          tint: 0xcdbb8c,
+          alpha: 0.42
+        })
+        .setDepth(DEPTH.WEATHER_FX)
+    )
+
+    this.addTumbleweeds(boardCenterX, boardCenterY, boardW, boardH)
+  }
+
+  // Cowboy-movie tumbleweeds: a few tangled balls of dry brush rolling steadily
+  // left-to-right across the field, spinning as they go.
+  private addTumbleweeds(
+    boardCenterX: number,
+    boardCenterY: number,
+    boardW: number,
+    boardH: number
+  ) {
+    const key = "tumbleweed"
+    // Draw at a slightly reduced resolution and upscale with nearest-neighbour
+    // filtering: same brush ball, just a touch blockier.
+    const size = 40
+    if (!this.scene.textures.exists(key)) {
+      const tex = this.scene.textures.createCanvas(key, size, size)
+      if (tex) {
+        const ctx = tex.getContext()
+        const c = size / 2
+        const r = size / 2 - 2
+        ctx.lineCap = "round"
+        // A ball of dry brush: curved twigs radiating from near the centre, some
+        // overshooting the edge for a wispy, uneven silhouette.
+        const strokes = 64
+        const step = (Math.PI * 2) / strokes
+        for (let i = 0; i < strokes; i++) {
+          // even angular spacing + jitter, so the twigs cover the whole ball
+          // instead of clumping and leaving a bald wedge
+          const ang = i * step + (Math.random() - 0.5) * step * 1.6
+          const innerR = r * (0.05 + Math.random() * 0.35)
+          const outerR = r * (0.55 + Math.random() * 0.5) // some past the rim
+          const bend = (Math.random() - 0.5) * 1.1
+          const midAng = ang + bend * 0.5
+          const midR = (innerR + outerR) * 0.5 + r * 0.12
+          const shade = 80 + Math.floor(Math.random() * 70)
+          ctx.strokeStyle = `rgba(${shade},${Math.round(shade * 0.7)},${Math.round(
+            shade * 0.35
+          )},${0.4 + Math.random() * 0.45})`
+          ctx.lineWidth = 0.8 + Math.random() * 1.4
+          ctx.beginPath()
+          ctx.moveTo(c + Math.cos(ang) * innerR, c + Math.sin(ang) * innerR)
+          ctx.quadraticCurveTo(
+            c + Math.cos(midAng) * midR,
+            c + Math.sin(midAng) * midR,
+            c + Math.cos(ang + bend) * outerR,
+            c + Math.sin(ang + bend) * outerR
+          )
+          ctx.stroke()
+        }
+        tex.refresh()
+        tex.setFilter(Phaser.Textures.FilterMode.NEAREST) // crisp upscaled pixels
+      }
+    }
+
+    // Start far off-screen to the left so they roll IN from the distance and
+    // cover the full width of the field before rolling off the right.
+    const startX = boardCenterX - boardW / 2 - 950
+    const endX = boardCenterX + boardW / 2 + 250
+    const count = 3
+    for (let i = 0; i < count; i++) {
+      // stagger them across different rows of the field
+      const baseY = boardCenterY - boardH * 0.3 + (i / (count - 1)) * boardH * 0.6
+      // (64 / size) keeps the same on-screen footprint now the texture is small
+      const scale = (0.75 + i * 0.2) * 0.8 * (64 / size)
+      const tw = this.scene.add
+        .image(startX, baseY, key)
+        .setScale(scale)
+        .setAlpha(0.9)
+        .setDepth(DEPTH.PROJECTILE)
+      this.images.push(tw)
+
+      const crossDuration = 9800 + i * 1900
+
+      // Spin must match the roll or it looks like a sliding pinwheel: one full
+      // turn per circumference travelled (roll without slipping).
+      const radius = (size / 2) * scale
+      const rotations = (endX - startX) / (2 * Math.PI * radius)
+      const spinDuration = crossDuration / rotations
+
+      // Hop roughly once per turn so the bounces feel tied to the roll.
+      const hopDuration = spinDuration
+
+      this.tweens.push(
+        // roll continuously across; no repeatDelay so it never waits on the side,
+        // only the staggered start and differing speeds space them out
+        this.scene.tweens.add({
+          targets: tw,
+          x: endX,
+          duration: crossDuration,
+          delay: i * 2400,
+          repeat: -1,
+          ease: "linear"
+        }),
+        // roll-matched spin
+        this.scene.tweens.add({
+          targets: tw,
+          angle: 360,
+          duration: spinDuration,
+          repeat: -1,
+          ease: "linear"
+        }),
+        // hop arcs over the uneven ground: decelerate up, accelerate down (yoyo
+        // mirrors the ease) for a gravity-like bounce rather than a smooth float
+        this.scene.tweens.add({
+          targets: tw,
+          y: baseY - 22,
+          duration: hopDuration,
+          yoyo: true,
+          repeat: -1,
+          ease: "quad.out"
+        })
+      )
+    }
   }
 
   clearWeather() {

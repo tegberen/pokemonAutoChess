@@ -562,6 +562,8 @@ export class DebugScene extends Phaser.Scene {
       this.weatherManager.addMeteorShower()
     } else if (weather === Weather.CLOUDY) {
       this.weatherManager.addCloudy()
+    } else if (weather === Weather.TERRAIN) {
+      this.weatherManager.addHardTerrain()
     } else if (weather === "dawn") {
       this.weatherManager.setTownDaytime(0)
     } else if (weather === "sunset") {

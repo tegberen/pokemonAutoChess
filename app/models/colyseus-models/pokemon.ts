@@ -2082,7 +2082,7 @@ export class Pupitar extends Pokemon {
   stars = 2
   evolution = Pkm.TYRANITAR
   hp = 130
-  atk = 14
+  atk = 12
   speed = 39
   def = 9
   speDef = 8
@@ -2099,7 +2099,7 @@ export class Tyranitar extends Pokemon {
   evolutionRule = { type: EvolutionRuleType.STACK } as const
   stacksRequired: number = 30
   hp = 210
-  atk = 28
+  atk = 26
   speed = 39
   def = 12
   speDef = 10
@@ -5099,11 +5099,11 @@ export class Golem extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.GROUND, Synergy.ROCK])
   rarity = Rarity.COMMON
   stars = 3
-  hp = 200
+  hp = 220
   atk = 17
   speed = 39
   def = 12
-  speDef = 12
+  speDef = 8
   maxPP = 100
   range = 1
   skill = Ability.ROCK_SLIDE
@@ -6576,7 +6576,7 @@ export class Regirock extends Pokemon {
   speed = 41
   def = 20
   speDef = 15
-  maxPP = 100
+  maxPP = 120
   range = 1
   skill = Ability.STEALTH_ROCKS
 }
@@ -9268,7 +9268,7 @@ export class Relicanth extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.ROCK, Synergy.WATER, Synergy.FOSSIL])
   rarity = Rarity.UNIQUE
   stars = 3
-  hp = 220
+  hp = 200
   atk = 13
   speed = 43
   def = 14
@@ -9321,7 +9321,7 @@ export class Aerodactyl extends Pokemon {
   speed = 67
   def = 6
   speDef = 6
-  maxPP = 80
+  maxPP = 100
   range = 1
   skill = Ability.ROCK_SLIDE
   passive = Passive.AERODACTYL
@@ -9336,7 +9336,7 @@ export class MegaAerodactyl extends Pokemon {
   speed = 67
   def = 6
   speDef = 8
-  maxPP = 80
+  maxPP = 100
   range = 1
   skill = Ability.ROCK_SLIDE
 }
@@ -11930,11 +11930,11 @@ export class AlolanGolem extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.ELECTRIC, Synergy.ROCK])
   rarity = Rarity.COMMON
   stars = 3
-  hp = 200
+  hp = 220
   atk = 17
   speed = 39
   def = 12
-  speDef = 12
+  speDef = 8
   maxPP = 100
   range = 1
   skill = Ability.DISCHARGE
@@ -15756,6 +15756,7 @@ export class UrsalunaBloodmoon extends Pokemon {
   onAcquired(player: Player) {
     player.titles.add(Title.BLOODY)
   }
+  passive = Passive.BLOODMOON_WEATHER
 }
 
 export class Aipom extends Pokemon {

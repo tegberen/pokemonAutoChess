@@ -66,7 +66,9 @@ import Dps from "./dps"
 import { DishEffects } from "./effects/dishes"
 import {
   OnAttackEffect,
+  OnAttackReceivedEffect,
   OnDishConsumedEffect,
+  OnMoveEffect,
   OnSimulationStartEffect,
   OnSpawnEffect,
   OnShieldDepletedEffect,
@@ -1739,13 +1741,43 @@ export default class Simulation extends Schema implements ISimulation {
             new OnAttackEffect(({ pokemon, target, board }) => {
               if (!target) return
               target.handleDamage({
-                damage: Math.round(0.02 * nbCloudOrbs * target.maxHP),
+                damage: Math.round(0.01 * nbCloudOrbs * target.maxHP),
                 board,
                 attackType: AttackType.SPECIAL,
                 attacker: pokemon,
                 shouldTargetGainMana: true
               })
             }, EffectEnum.CLOUDY)
+          )
+        }
+        break
+      }
+
+      case EffectEnum.TERRAIN: {
+        pokemon.effectsSet.add(
+          new OnMoveEffect((pkm) => {
+            pkm.addSpeed(1, pkm, 0, false)
+          })
+        )
+
+        const nbPeatBlocks = pokemon.player
+          ? count(pokemon.player.items, Item.PEAT_BLOCK)
+          : 0
+        if (nbPeatBlocks > 0) {
+          pokemon.effectsSet.add(
+            new OnAttackReceivedEffect(({ pokemon, board }) => {
+              board
+                .getAdjacentCells(pokemon.positionX, pokemon.positionY)
+                .forEach((cell) => {
+                  if (
+                    cell.value &&
+                    cell.value.team !== pokemon.team &&
+                    chance(0.05 * nbPeatBlocks, pokemon)
+                  ) {
+                    cell.value.addSpeed(-3, pokemon, 0, false)
+                  }
+                })
+            }, EffectEnum.TERRAIN)
           )
         }
         break

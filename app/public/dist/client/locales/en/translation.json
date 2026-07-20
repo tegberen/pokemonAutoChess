@@ -2668,6 +2668,7 @@
 		"CRYSTALLISE_DISTORTION_SLATE": "ON_ATTACK, [5, LK]% chance to infflict the target and ADJACENT enemy Pokémon with a random BOARD_EFFECT.",
 		"CRYSTALLISE_FOSSIL_FRAGMENT": "Fossil revive with HP instead of SHIELD. If hit by METEOR_DAMAGE, increase user ATK by 100% base ATK.",
 		"CRYSTALLISE_CLOUD_ORB": "When the user is affected by a negative status effect, lose 20% of current DEF for the next 5 seconds and gain RUNE_PROTECT for 5 seconds.",
+		"CRYSTALLISE_PEAT_BLOCK": "When the user is KO'd, distribute its current DEF and SPEED equally among allies within a 2-tile radius.",
 		"CURSE_OF_VULNERABILITY": "The enemy with the highest DEF + SPE_DEF lose 5 of it and is FLINCH",
 		"CURSE_OF_WEAKNESS": "Also, the enemy with the highest ATK lose 20% of it and is PARALYSIS",
 		"CURSE_OF_TORMENT": "Also, the enemy with the highest AP lose 30 of it and is FATIGUE",
@@ -2894,6 +2895,7 @@
 		"DISTORTION_SLATE": "Distortion Slate",
 		"FOSSIL_FRAGMENT": "Fossil Fragment",
 		"CLOUD_ORB": "Cloud Orb",
+		"PEAT_BLOCK": "Peat Block",
 		"UTILITY_UMBRELLA": "Utility Umbrella",
 		"NORMAL_GEM": "Normal Gem",
 		"GRASS_GEM": "Grass Gem",
@@ -3308,7 +3310,8 @@
 		"ELDER_CRYSTAL": "Counts as 3 towards ELDER_STORM. Under ELDER_STORM, your team takes -15% less damage from Pokémon with SHIELD.\n\nOnly the strongest can ascend to dragonhood. 3 STAR ROCK Pokémon can undergo Crystallisation with this weather rock.",
 		"DISTORTION_SLATE": "Counts as 3 towards DISTORTION. Under DISTORTION, your team recovers from ARMOR_BREAK 30% faster.\n\nAllows a ROCK Pokémon to undergo Crystallisation, Awakening it as a ARTIFICIAL type.",
 		"FOSSIL_FRAGMENT": "Counts as 3 towards METEOR_SHOWER. Under METEOR_SHOWER, your team gains 10% of incoming PHYSICAL as SHIELD (after damage mitigation).\n\nAllows a ROCK Pokémon to undergo Crystallisation, Awakening it as a FOSSIL type.",
-		"CLOUD_ORB": "Counts as 3 towards CLOUDY. Under CLOUDY, your team deals 2% of target's max HP as SPECIAL damage.\n\nAllows a ROCK Pokémon to undergo Crystallisation, Awakening it as a AMORPHOUS type.",
+		"CLOUD_ORB": "Counts as 3 towards CLOUDY. Under CLOUDY, your team deals 1% of target's max HP as SPECIAL damage.\n\nAllows a ROCK Pokémon to undergo Crystallisation, Awakening it as a AMORPHOUS type.",
+		"PEAT_BLOCK": "Counts as 3 towards TERRAIN. Under TERRAIN, your team retaliates against ADJACENT enemies. [5,LK]% chance to slow their SPEED by 3 when hit.\n\nAllows a ROCK Pokémon to undergo Crystallisation, awakening it as a FIELD type.",
 		"UTILITY_UMBRELLA": "The holder and allies ADJACENT_IN_THE_SAME_ROW take -70% negative status duration and status damage (BURN and POISON).",
 		"NORMAL_GEM": "+1 to NORMAL synergy",
 		"GRASS_GEM": "+1 to GRASS synergy",
@@ -3655,6 +3658,7 @@
 		"BURMY": "Burmy evolves into Wormadam if you get 3 Burmy with the same cloak, or into Mothim at stage 20 after moving to a region that doesn't have its cloak type",
 		"PSYDUCK": "Has [10,LK]% chance to get CONFUSION when taking a hit. Every time it gets CONFUSION, gain 100 AP",
 		"BLOODMOON": "Changes form during BLOODMOON",
+		"BLOODMOON_WEATHER": "Change weather to BLOODMOON",
 		"RECYCLE": "Feed it with a berry to gain 15 permanent max HP, or with another consumable item to gain 30 permanent max HP and get TRASH in return",
 		"DREAM_CATCHER": "If its target is SLEEP, its attacks give 10 SHIELD to the 3 closest allies",
 		"SLOW_START": "Starts with -30 SPEED. When PP bar is full, gains 30 SPEED and 10 ATK.",
@@ -4176,7 +4180,8 @@
 		"ELDER_STORM": "Elder Storm",
 		"DISTORTION": "Distortion",
 		"METEOR_SHOWER": "Meteor Shower",
-		"CLOUDY": "Cloudy"
+		"CLOUDY": "Cloudy",
+		"TERRAIN": "Hard Terrain"
 	},
 	"weather_description": {
 		"NEUTRAL": "Normal weather. No effects.",
@@ -4199,7 +4204,8 @@
 		"ELDER_STORM": "Every 2 seconds, +1 SPEED and +2 AP (+5 SHIELD if DRAGON)",
 		"DISTORTION": "Every 5 seconds, ARMOR_BREAK for 2 seconds (ARTIFICIAL are immune)",
 		"METEOR_SHOWER": "Every 7 seconds, a Meteor crashes onto a tile, damaging it and all ADJACENT tiles for 100 PHYSICAL (FOSSIL gain 50% of base ATK when hit).",
-		"CLOUDY": "+10% max PP\n+30% RUNE_PROTECT duration"
+		"CLOUDY": "+10% max PP\n+30% RUNE_PROTECT duration",
+		"TERRAIN": "+1 SPEED for each tile moved"
 	},
 	"board_effect": {
 		"EMBER": "Ember",
@@ -5128,7 +5134,7 @@
 			"items_label": "Items",
 			"synergies_label": "Synergies",
 			"statistics_label": "Statistics",
-			"weather_label": "Weather",
+			"weather_label": "Weather (Environment)",
 			"town_label": "Town",
 			"dungeon_label": "Regions",
 			"glossary_label": "Glossary",
@@ -5210,7 +5216,7 @@
 			"gems_not_buried_description": "Some other gems are exclusive to certain merchants encountered in town or to certain rewards:",
 			"you_may_also_find_in_the_ground": "You may also find in the ground:",
 			"weather_rocks": "Weather Rocks",
-			"weather_rocks_description": "Weather rocks are found after fighting under a certain weather with ROCK synergy active, and provide bonuses to your team when this weather is active. Their effects can be cumulated. Allows your ROCK Pokémon to undergo Crystallisation.",
+			"weather_rocks_description": "Weather rocks are found after fighting under a certain weather (or environment) with ROCK synergy active, and provide bonuses to your team when this weather is active. Their effects can be cumulated. Allows your ROCK Pokémon to undergo Crystallisation.",
 			"tm_description": "HUMAN synergy gives you TM when activated. They can be used to change the ability of a HUMAN Pokémon.",
 			"berries": "Berries",
 			"berries_description": "When GRASS synergy is active, you can collect berries by clicking on the berry trees next to your avatar.",
@@ -5247,7 +5253,7 @@
 			}
 		},
 		"weather": {
-			"weather_dominant_hint": "The dominant type of Pokémon on the board during a battle can influence the weather, which has various effects on all of your team's and opponent's Pokémon.",
+			"weather_dominant_hint": "The dominant type of Pokémon on the board during a battle can influence the weather (or environment), which has various effects on all of your team's and opponent's Pokémon.",
 			"weather_dominant_hint2": "It requires a certain number of Pokémon of a type on the board to change the weather. Some powerful Pokémon can also change weather by their own."
 		},
 		"stages": {

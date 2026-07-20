@@ -30,5 +30,6 @@ export const WeatherThreshold: { [weather in Weather]: number } = {
   [Weather.ELDER_STORM]: 8,
   [Weather.DISTORTION]: 8,
   [Weather.METEOR_SHOWER]: 8,
-  [Weather.CLOUDY]: 8
+  [Weather.CLOUDY]: 8,
+  [Weather.TERRAIN]: 8
 }

@@ -719,6 +719,8 @@ class GameContainer {
           this.gameScene.weatherManager.addMeteorShower()
         } else if (value === Weather.CLOUDY) {
           this.gameScene.weatherManager.addCloudy()
+        } else if (value === Weather.TERRAIN) {
+          this.gameScene.weatherManager.addHardTerrain()
         }
       }
     }
