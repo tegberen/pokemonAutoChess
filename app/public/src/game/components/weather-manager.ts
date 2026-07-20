@@ -2315,6 +2315,129 @@ export default class WeatherManager {
     )
   }
 
+  addCloudy() {
+    // Top-down overcast: the SHADOWS of clouds passing overhead slide across the
+    // board in one direction. A seamless tile of soft dark blobs is stretched
+    // over the whole arena and scrolled horizontally, so the shadows drift
+    // left-to-right uniformly over both bright and dark maps. A faint global dim
+    // sets the overcast mood.
+    const ax = 1500,
+      ay = 1000,
+      aw = 3000,
+      ah = 2000
+
+    // Overcast wash: a flat, uniform ~12% cool grey-blue over the whole arena so
+    // the sun reads as hidden behind cloud. Kept as a simple rectangle on
+    // purpose — the drifting shadow patches below already supply the texture and
+    // motion; a second textured haze layer would only muddy that read.
+    this.colorFilter = this.scene.add.existing(
+      new Phaser.GameObjects.Rectangle(this.scene, ax, ay, aw, ah, 0x44505f, 0.12)
+        .setDepth(DEPTH.WEATHER_FX)
+    )
+
+    // Build (once) a seamless tile of soft cloud SHADOWS. A single radial blob
+    // reads as a dot; a real cloud shadow is lumpy and irregular, so each cloud
+    // is a cluster of overlapping soft puffs (wider than tall). Every puff fades
+    // fully to transparent before the tile edge, so the borders stay transparent
+    // and the tile repeats without visible seams.
+    // The tile height is sized to the vertical band actually shown at this tile
+    // scale (ah / tileScale ≈ 512), so clouds placed across the tile's full
+    // height cover the screen top-to-bottom instead of only the middle.
+    const shadowKey = "cloud-shadows"
+    const tileW = 640
+    const tileH = 512
+    const tileScale = 4
+    if (!this.scene.textures.exists(shadowKey)) {
+      const tex = this.scene.textures.createCanvas(shadowKey, tileW, tileH)
+      if (tex) {
+        const ctx = tex.getContext()
+        ctx.clearRect(0, 0, tileW, tileH)
+
+        // Relative [dx, dy, radius] puffs forming one lumpy, elongated cloud.
+        const puffs: [number, number, number][] = [
+          [-82, 6, 44],
+          [-46, -14, 58],
+          [-8, -22, 54],
+          [30, -14, 50],
+          [70, -2, 42],
+          [98, 8, 32],
+          [44, 20, 46],
+          [4, 26, 50],
+          [-40, 22, 46],
+          [-74, 18, 34]
+        ]
+        const drawCloud = (
+          cx: number,
+          cy: number,
+          scale: number,
+          alpha: number,
+          flip: 1 | -1
+        ) => {
+          for (const [dx, dy, r] of puffs) {
+            const px = cx + flip * dx * scale
+            const py = cy + dy * scale
+            const pr = r * scale
+            const grad = ctx.createRadialGradient(px, py, 0, px, py, pr)
+            grad.addColorStop(0, `rgba(42,46,54,${alpha})`)
+            grad.addColorStop(0.65, `rgba(42,46,54,${alpha * 0.72})`)
+            grad.addColorStop(1, "rgba(42,46,54,0)")
+            ctx.fillStyle = grad
+            ctx.fillRect(0, 0, tileW, tileH)
+          }
+        }
+
+        // 3 BIG clouds spread across the FULL tile height (one high enough to
+        // reach the top of the screen), kept clear of the left/right edges so
+        // the horizontal scroll stays seamless. Puffs stack softly, so a low
+        // per-puff alpha still builds a believable shadow.
+        drawCloud(190, 100, 1.3, 0.18, 1)
+        drawCloud(450, 250, 1.3, 0.17, -1)
+        drawCloud(280, 415, 1.25, 0.2, 1)
+
+        tex.refresh()
+      }
+    }
+
+    const shadows = this.scene.add
+      .tileSprite(ax, ay, aw, ah, shadowKey)
+      .setTileScale(tileScale)
+      .setAlpha(0.9)
+      .setDepth(DEPTH.WEATHER_FX)
+    this.tileSprites.push(shadows)
+
+    // Scroll the texture so the shadows sweep left-to-right (decreasing
+    // tilePositionX moves the sampled pattern rightward). One tile period per
+    // loop keeps the motion seamless.
+    this.tweens.push(
+      this.scene.tweens.add({
+        targets: shadows,
+        tilePositionX: -tileW,
+        duration: 34000,
+        loop: -1,
+        ease: "linear"
+      }),
+      // Give the clouds some life: breathe the tile scale on each axis at
+      // different rates so the shadows slowly stretch, swell and morph as they
+      // drift, instead of sliding as one rigid pattern.
+      this.scene.tweens.add({
+        targets: shadows,
+        tileScaleX: tileScale * 1.08,
+        duration: 12000,
+        yoyo: true,
+        loop: -1,
+        ease: "sine.inout"
+      }),
+      this.scene.tweens.add({
+        targets: shadows,
+        tileScaleY: tileScale * 1.06,
+        duration: 8000,
+        yoyo: true,
+        loop: -1,
+        ease: "sine.inout"
+      })
+    )
+  }
+
   clearWeather() {
     this.particlesEmitters.forEach((emitter) => emitter.destroy())
     this.particlesEmitters = []

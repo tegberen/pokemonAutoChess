@@ -360,5 +360,26 @@ export const AwakeningEffects: Partial<
       }
     })
   ],
-  [Awakening.FOSSIL_FRAGMENT]: []
+  [Awakening.FOSSIL_FRAGMENT]: [],
+
+  [Awakening.CLOUD_ORB]: [
+    new PeriodicEffect(
+      (pokemon) => {
+        if (pokemon.status.hasNegativeStatus() && !pokemon.status.runeProtect) {
+          const defLoss = Math.round(0.2 * pokemon.def)
+          if (defLoss > 0) {
+            pokemon.addDefense(-defLoss, pokemon, 0, false)
+            pokemon.commands.push(
+              new DelayedCommand(() => {
+                pokemon.addDefense(defLoss, pokemon, 0, false)
+              }, 5000)
+            )
+          }
+          pokemon.status.triggerRuneProtect(5000, pokemon, pokemon)
+        }
+      },
+      O,
+      250
+    )
+  ]
 }

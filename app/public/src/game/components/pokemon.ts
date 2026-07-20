@@ -947,7 +947,9 @@ export default class PokemonSprite extends DraggableObject {
     [Item.ECLIPSE_STONE]: 0xb955d2,
     [Item.PEARL_STONE]: 0x14c8c8,
     [Item.ELDER_CRYSTAL]: 0xbb6584,
-    [Item.DISTORTION_SLATE]: 0xe7e7e7
+    [Item.DISTORTION_SLATE]: 0xe7e7e7,
+    [Item.FOSSIL_FRAGMENT]: 0xc5c657,
+    [Item.CLOUD_ORB]: 0xb380c2
   }
 
   setAwakening(charge: number, rock: string, awakening: string) {

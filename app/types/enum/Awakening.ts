@@ -22,7 +22,8 @@ export enum Awakening {
   PEARL_STONE = "PEARL_STONE",
   ELDER_CRYSTAL = "ELDER_CRYSTAL",
   DISTORTION_SLATE = "DISTORTION_SLATE",
-  FOSSIL_FRAGMENT = "FOSSIL_FRAGMENT"
+  FOSSIL_FRAGMENT = "FOSSIL_FRAGMENT",
+  CLOUD_ORB = "CLOUD_ORB"
 }
 
 export const AwakeningTypes: Partial<Record<Awakening, Synergy>> = {
@@ -44,5 +45,6 @@ export const AwakeningTypes: Partial<Record<Awakening, Synergy>> = {
   [Awakening.PEARL_STONE]: Synergy.AQUATIC,
   [Awakening.ELDER_CRYSTAL]: Synergy.DRAGON,
   [Awakening.DISTORTION_SLATE]: Synergy.ARTIFICIAL,
-  [Awakening.FOSSIL_FRAGMENT]: Synergy.FOSSIL
+  [Awakening.FOSSIL_FRAGMENT]: Synergy.FOSSIL,
+  [Awakening.CLOUD_ORB]: Synergy.AMORPHOUS
 }

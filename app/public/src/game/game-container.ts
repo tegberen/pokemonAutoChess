@@ -717,6 +717,8 @@ class GameContainer {
           this.gameScene.weatherManager.addDistortion()
         } else if (value === Weather.METEOR_SHOWER) {
           this.gameScene.weatherManager.addMeteorShower()
+        } else if (value === Weather.CLOUDY) {
+          this.gameScene.weatherManager.addCloudy()
         }
       }
     }

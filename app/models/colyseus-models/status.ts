@@ -1039,6 +1039,9 @@ export default class Status extends Schema implements IStatus {
     pokemon: IPokemonEntity,
     origin: IPokemonEntity
   ) {
+    if (pokemon.simulation.weather === Weather.CLOUDY) {
+      timer = Math.round(timer * 1.3)
+    }
     this.runeProtect = true
     this.clearNegativeStatus(pokemon, origin)
     if (timer > this.runeProtectCooldown) {

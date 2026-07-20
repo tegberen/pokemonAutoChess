@@ -1728,6 +1728,29 @@ export default class Simulation extends Schema implements ISimulation {
         break
       }
 
+      case EffectEnum.CLOUDY: {
+        pokemon.maxPP = Math.round(pokemon.maxPP * 1.1)
+
+        const nbCloudOrbs = pokemon.player
+          ? count(pokemon.player.items, Item.CLOUD_ORB)
+          : 0
+        if (nbCloudOrbs > 0) {
+          pokemon.effectsSet.add(
+            new OnAttackEffect(({ pokemon, target, board }) => {
+              if (!target) return
+              target.handleDamage({
+                damage: Math.round(0.02 * nbCloudOrbs * target.maxHP),
+                board,
+                attackType: AttackType.SPECIAL,
+                attacker: pokemon,
+                shouldTargetGainMana: true
+              })
+            }, EffectEnum.CLOUDY)
+          )
+        }
+        break
+      }
+
       case EffectEnum.ECLIPSE: {
         pokemon.maxPP = Math.round(pokemon.maxPP * 0.9)
 
