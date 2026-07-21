@@ -2803,7 +2803,13 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
             this.state.stageLevel
           )
         }
-        const weather = getWeather(player, partner ?? null, pveBoard)
+        const weather = getWeather(
+          player,
+          partner ?? null,
+          pveBoard,
+          false,
+          this.state.townEncounters.has(Pkm.CASTFORM)
+        )
         const simulation = new Simulation(
           crypto.randomUUID(),
           this.room,
@@ -2833,7 +2839,8 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
           bluePlayer,
           redPlayer,
           redPlayer.board,
-          ghost
+          ghost,
+          this.state.townEncounters.has(Pkm.CASTFORM)
         )
         const simulationId = crypto.randomUUID()
 

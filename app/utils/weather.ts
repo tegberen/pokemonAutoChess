@@ -2,7 +2,7 @@ import type { MapSchema } from "@colyseus/schema"
 import { WeatherThreshold } from "../config"
 import type Player from "../models/colyseus-models/player"
 import type { Pokemon } from "../models/colyseus-models/pokemon"
-import { WeatherByWeatherRocks } from "../types/enum/Item"
+import { Item, WeatherByWeatherRocks } from "../types/enum/Item"
 import { Passive } from "../types/enum/Passive"
 import { Synergy } from "../types/enum/Synergy"
 import {
@@ -10,6 +10,7 @@ import {
   Weather,
   WeatherAssociatedToSynergy
 } from "../types/enum/Weather"
+import { count } from "./array"
 import { hasKey } from "./map"
 import { schemaValues } from "./schemas"
 
@@ -42,7 +43,9 @@ export function getWeather(
   bluePlayer: Player,
   redPlayer: Player | null,
   redPlayerBoard: MapSchema<Pokemon, string>,
-  isGhostBattle = false
+  isGhostBattle = false,
+  // Castform town encounter lowers everyone's activation threshold by 1
+  castformEncounter = false
 ): Weather {
   function getDominantWeather(
     count: Map<Weather, number>,
@@ -60,9 +63,16 @@ export function getWeather(
   }
 
   const boardWeatherScore = new Map<Weather, number>()
+  // per-player contributions, used to attribute the dominant weather to whoever
+  // is driving it (so the *other* player's Utility Umbrellas oppose it)
+  const blueWeatherScore = new Map<Weather, number>()
+  const redWeatherScore = new Map<Weather, number>()
 
   // weather rocks
-  for (const player of [bluePlayer, redPlayer]) {
+  for (const [player, playerScore] of [
+    [bluePlayer, blueWeatherScore],
+    [redPlayer, redWeatherScore]
+  ] as const) {
     if (player === null) continue
     player.items.forEach((item) => {
       if (hasKey(WeatherByWeatherRocks, item)) {
@@ -71,12 +81,18 @@ export function getWeather(
           weatherBoosted,
           (boardWeatherScore.get(weatherBoosted) ?? 0) + 3
         )
+        playerScore.set(
+          weatherBoosted,
+          (playerScore.get(weatherBoosted) ?? 0) + 3
+        )
       }
     })
   }
 
   for (const board of [bluePlayer.board, redPlayerBoard]) {
-    const playerWeatherScore = new Map<Weather, number>()
+    // reuse the persistent per-player map so it also feeds weather attribution
+    const playerWeatherScore =
+      board === bluePlayer.board ? blueWeatherScore : redWeatherScore
     board.forEach((pkm) => {
       if (pkm.positionY != 0) {
 
@@ -289,12 +305,24 @@ export function getWeather(
 
   //logger.debug("boardWeatherScore", boardWeatherScore)
   const dominantWeather = getDominantWeather(boardWeatherScore)
-  if (
-    dominantWeather &&
-    (boardWeatherScore.get(dominantWeather) ?? 0) >=
-      WeatherThreshold[dominantWeather]
-  ) {
-    return dominantWeather
+  if (dominantWeather) {
+    // whoever contributes more owns the weather; the opposing player's Utility
+    // Umbrellas raise the count needed to activate it
+    const blueContribution = blueWeatherScore.get(dominantWeather) ?? 0
+    const redContribution = redWeatherScore.get(dominantWeather) ?? 0
+    const opponent = blueContribution >= redContribution ? redPlayer : bluePlayer
+    const umbrellas = opponent
+      ? count(opponent.items, Item.UTILITY_UMBRELLA)
+      : 0
+
+    const threshold =
+      WeatherThreshold[dominantWeather] -
+      (castformEncounter ? 1 : 0) +
+      umbrellas
+
+    if ((boardWeatherScore.get(dominantWeather) ?? 0) >= threshold) {
+      return dominantWeather
+    }
   }
   return Weather.NEUTRAL
 }

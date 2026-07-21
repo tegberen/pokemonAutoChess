@@ -495,13 +495,13 @@ export const TownItems = [
   Item.PICNIC_SET,
   Item.WANTED_NOTICE,
   Item.LEADERS_CREST,
-  Item.LAPRAS_PASSPORT
+  Item.LAPRAS_PASSPORT,
+  Item.UTILITY_UMBRELLA
 ] satisfies Item[]
 
 // should be excluded from carousels
 export const SpecialItems: Item[] = [
   Item.PRISON_BOTTLE,
-  Item.UTILITY_UMBRELLA,
   ...TownItems,
   Item.COIN,
   Item.NUGGET,
@@ -1320,7 +1320,8 @@ export const UnholdableItems = [
   ...SevenTreasures,
   Item.LETTER,
   Item.SPEAKER,
-  ...Seeds
+  ...Seeds,
+  Item.UTILITY_UMBRELLA
 ] satisfies Item[]
 
 export type UnholdableItem = (typeof UnholdableItems)[number]

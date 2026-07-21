@@ -298,14 +298,6 @@ export default class Simulation extends Schema implements ISimulation {
   start() {
     this.started = true
 
-    // Castform town encounter: once it has occurred in this game, a Castform
-    // fights on both sides every battle. Spawn before the start hooks below so
-    // its own synergy/item/start effects are applied like any other unit.
-    if (this.room.state.townEncounters.has(Pkm.CASTFORM)) {
-      this.addCastformToBoard(Team.BLUE_TEAM)
-      this.addCastformToBoard(Team.RED_TEAM)
-    }
-
     // Seeds targeting the strongest ally / random ally - decided once,
     // BEFORE OnSimulationStartEffect fires below, so those effects can
     // read the flags correctly
@@ -2445,27 +2437,6 @@ export default class Simulation extends Schema implements ISimulation {
         if (!dest) break
         pkm.moveTo(dest.x, dest.y, this.board, true)
       }
-    }
-  }
-
-  addCastformToBoard(team: Team) {
-    const player = team === Team.RED_TEAM ? this.redPlayer : this.bluePlayer
-    // adapt to the active weather on spawn (mirrors updateCastform forms)
-    let form = Pkm.CASTFORM
-    if (this.weather === Weather.SNOW) {
-      form = Pkm.CASTFORM_HAIL
-    } else if (this.weather === Weather.RAIN) {
-      form = Pkm.CASTFORM_RAIN
-    } else if (
-      this.weather === Weather.DROUGHT ||
-      this.weather === Weather.ZENITH
-    ) {
-      form = Pkm.CASTFORM_SUN
-    }
-    const castform = PokemonFactory.createPokemonFromName(form, player)
-    const coord = this.getFirstFreeCell(team)
-    if (coord) {
-      this.addPokemon(castform, coord.x, coord.y, team, true)
     }
   }
 
