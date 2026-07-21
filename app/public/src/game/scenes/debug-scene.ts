@@ -121,6 +121,7 @@ export class DebugScene extends Phaser.Scene {
     this.pokemonSprite.orientation = orientation
     this.pokemonSprite.pokemon.positionX = 3
     this.pokemonSprite.pokemon.positionY = 3
+    this.pokemonSprite.setDepth(DEPTH.POKEMON)
 
     this.pokemonSprite.sprite.setTint(
       getRegionTint(this.mapName, preference("colorblindMode"))
@@ -183,9 +184,9 @@ export class DebugScene extends Phaser.Scene {
           "town_tileset",
           "town_tileset"
         )!
-        this.map.createLayer("layer0", tileset, 0, 0)?.setScale(2, 2)
-        this.map.createLayer("layer1", tileset, 0, 0)?.setScale(2, 2)
-        this.map.createLayer("layer2", tileset, 0, 0)?.setScale(2, 2)
+        this.map.createLayer("layer0", tileset, 0, 0)?.setScale(2, 2).setDepth(DEPTH.GROUND)
+        this.map.createLayer("layer1", tileset, 0, 0)?.setScale(2, 2).setDepth(DEPTH.GROUND)
+        this.map.createLayer("layer2", tileset, 0, 0)?.setScale(2, 2).setDepth(DEPTH.GROUND)
         playMusic(this as any, RegionDetails[mapName].music)
         resolve()
       })
@@ -218,7 +219,10 @@ export class DebugScene extends Phaser.Scene {
             layer.name,
             mapName + "/" + layer.name
           )!
-          map.createLayer(layer.name, tileset, 0, 0)?.setScale(2, 2)
+          map
+            .createLayer(layer.name, tileset, 0, 0)
+            ?.setScale(2, 2)
+            .setDepth(DEPTH.GROUND)
         })
         playMusic(this as any, RegionDetails[mapName].music)
       })
@@ -281,7 +285,9 @@ export class DebugScene extends Phaser.Scene {
       this.scene.scene.add.sprite(320, 580, "flower_pots", "BLUE.png"),
       this.scene.scene.add.sprite(420, 580, "flower_pots", "PINK.png")
     ]
-    this.landscape.forEach((sprite) => sprite.setScale(2).setTint(tint))
+    this.landscape.forEach((sprite) =>
+      sprite.setScale(2).setTint(tint).setDepth(DEPTH.GROUND_DECORATION)
+    )
   }
 
   applyStatusAnimation(
@@ -564,6 +570,8 @@ export class DebugScene extends Phaser.Scene {
       this.weatherManager.addCloudy()
     } else if (weather === Weather.TERRAIN) {
       this.weatherManager.addHardTerrain()
+    } else if (weather === Weather.BLOSSOM) {
+      this.weatherManager.addBlossom()
     } else if (weather === "dawn") {
       this.weatherManager.setTownDaytime(0)
     } else if (weather === "sunset") {

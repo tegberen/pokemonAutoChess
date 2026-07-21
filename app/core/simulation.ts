@@ -97,6 +97,7 @@ import {
   DarkSubstituteEffect
 } from "./effects/synergies"
 import { PokemonEntity } from "./pokemon-entity"
+import { DelayedCommand } from "./simulation-command"
 import { SpecialGameRule } from "../types/enum/SpecialGameRule"
 import { getStrongestUnit, getStrongestUnits } from "./unit-score"
 import { SeedEffects } from "./seeds"
@@ -517,6 +518,39 @@ export default class Simulation extends Schema implements ISimulation {
     pokemonEntity.getEffects(OnSpawnEffect).forEach((effect) => {
       effect.apply(pokemonEntity, player, isSpawn)
     })
+
+    if (isSpawn && this.weather === Weather.BLOSSOM) {
+      const apGain = pokemonEntity.types.has(Synergy.FLORA) ? 50 : 25
+      pokemonEntity.addAbilityPower(apGain, pokemonEntity, 0, false)
+
+      // Deferred one tick so abilities that finalize the spawn's maxHP after addPokemon (e.g. Shadow
+      // Clone) are accounted for before the shield is computed.
+      pokemonEntity.commands.push(
+        new DelayedCommand(() => {
+          this.board
+            .getCellsInRadius(
+              pokemonEntity.positionX,
+              pokemonEntity.positionY,
+              2,
+              false
+            )
+            .forEach((cell) => {
+              if (!cell.value || cell.value.team === pokemonEntity.team) return
+              const nbBlossomShards = cell.value.player
+                ? count(cell.value.player.items, Item.BLOSSOM_SHARD)
+                : 0
+              if (nbBlossomShards > 0) {
+                cell.value.addShield(
+                  Math.round(0.05 * nbBlossomShards * pokemonEntity.maxHP),
+                  cell.value,
+                  0,
+                  false
+                )
+              }
+            })
+        }, 0)
+      )
+    }
 
     if (
       !isSpawn &&

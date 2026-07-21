@@ -160,7 +160,8 @@ const pokemonsInfluencingWeather = new Map([
   [Weather.BLOODMOON, [Pkm.URSALUNA_BLOODMOON]],
   [Weather.ECLIPSE, [Pkm.SOLGALEO, Pkm.LUNALA, Pkm.LUNATONE]],
   [Weather.FLOOD, [Pkm.LUGIA]],
-  [Weather.ELDER_STORM, [Pkm.ETERNATUS]]
+  [Weather.ELDER_STORM, [Pkm.ETERNATUS]],
+  [Weather.BLOSSOM, [Pkm.XERNEAS]]
 ])
 
 // All Pokémon that boost a weather via a *_WEATHER_SUPPORT passive (on either

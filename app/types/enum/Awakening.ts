@@ -24,7 +24,8 @@ export enum Awakening {
   DISTORTION_SLATE = "DISTORTION_SLATE",
   FOSSIL_FRAGMENT = "FOSSIL_FRAGMENT",
   CLOUD_ORB = "CLOUD_ORB",
-  PEAT_BLOCK = "PEAT_BLOCK"
+  PEAT_BLOCK = "PEAT_BLOCK",
+  BLOSSOM_SHARD = "BLOSSOM_SHARD"
 }
 
 export const AwakeningTypes: Partial<Record<Awakening, Synergy>> = {
@@ -48,5 +49,6 @@ export const AwakeningTypes: Partial<Record<Awakening, Synergy>> = {
   [Awakening.DISTORTION_SLATE]: Synergy.ARTIFICIAL,
   [Awakening.FOSSIL_FRAGMENT]: Synergy.FOSSIL,
   [Awakening.CLOUD_ORB]: Synergy.AMORPHOUS,
-  [Awakening.PEAT_BLOCK]: Synergy.FIELD
+  [Awakening.PEAT_BLOCK]: Synergy.FIELD,
+  [Awakening.BLOSSOM_SHARD]: Synergy.FLORA
 }

@@ -1740,7 +1740,6 @@ export const PassiveEffects: Partial<
   ],
   [Passive.VESPIQUEN]: [
     new OnChangePositionEffect(({ newY, pokemon }) => {
-      console.log(`[VESPIQUEN] newY=${newY} pokemon=${pokemon.name}`)
       if (newY === 1) {
         pokemon.range = 3
         pokemon.skill = Ability.ATTACK_ORDER

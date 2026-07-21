@@ -2682,6 +2682,88 @@ export default class WeatherManager {
     }
   }
 
+  addBlossom() {
+    // Cherry blossom petals drifting over the field on a soft breeze, reusing
+    // the petal frame from the PETAL_DANCE ability atlas.
+    const petalFrame = "PETAL_DANCE_PROJECTILE/000.png"
+
+    // soft warm-pink wash
+    this.colorFilter = this.scene.add.existing(
+      new Phaser.GameObjects.Rectangle(
+        this.scene,
+        1500,
+        1000,
+        3000,
+        2000,
+        0xffdfea,
+        0.066
+      ).setDepth(DEPTH.WEATHER_FX)
+    )
+
+    // enter from the upper-left, flow rightward across the field
+    const source = {
+      x: { min: -150, max: 0 },
+      y: { min: -150, max: 900 }
+    }
+    const deathZoneSource = new Phaser.Geom.Rectangle(-200, -200, 2600, 2400)
+
+    // shared motion for every petal so the flow reads steady
+    const baseConfig = {
+      frame: petalFrame,
+      ...source,
+      deathZone: { source: deathZoneSource, type: "onLeave" as const },
+      gravityY: 6,
+      speedX: { min: 168, max: 232 },
+      speedY: { min: 20, max: 60 },
+      lifespan: 12000,
+      rotate: { min: 0, max: 360 },
+      scale: { min: 0.4, max: 0.85 },
+      alpha: { min: 0.6, max: 1 }
+    }
+
+    // ambient trickle so the sky is never fully empty
+    this.particlesEmitters.push(
+      this.scene.add
+        .particles(0, 0, "abilities", {
+          ...baseConfig,
+          frequency: 197,
+          quantity: 1
+        })
+        .setDepth(DEPTH.BOARD_EFFECT_AIR_LEVEL)
+    )
+
+    // periodic swells: a short continuous burst from a wide spawn band, so
+    // petals string out horizontally along the flow rather than as one wall
+    const swell = this.scene.add
+      .particles(0, 0, "abilities", {
+        ...baseConfig,
+        x: { min: -450, max: 0 },
+        frequency: 35,
+        quantity: 1,
+        emitting: false
+      })
+      .setDepth(DEPTH.BOARD_EFFECT_AIR_LEVEL)
+    this.particlesEmitters.push(swell)
+
+    // ~40% of waves are a heavier, longer gust for variety
+    const spawnSwell = () => {
+      const big = Math.random() < 0.4
+      swell.setFrequency(big ? 5 : 11, 1)
+      swell.start()
+      this.timers.push(
+        this.scene.time.delayedCall(big ? 3200 : 1900, () => swell.stop())
+      )
+    }
+    spawnSwell()
+    this.timers.push(
+      this.scene.time.addEvent({
+        delay: 13500,
+        loop: true,
+        callback: spawnSwell
+      })
+    )
+  }
+
   clearWeather() {
     this.particlesEmitters.forEach((emitter) => emitter.destroy())
     this.particlesEmitters = []

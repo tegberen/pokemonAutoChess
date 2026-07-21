@@ -1979,7 +1979,7 @@
 		"MYSTICAL_FIRE": "Circling the target with four flames, explodes on the target and ADJACENT enemies. Each hit deals [30,SP]% ATK as SPECIAL and reduces AP by [3,SP]. If a hit drops their AP below 0, they are BURN for [1,2,3,6,SP] seconds.",
 		"FLAME_CHARGE": "Dash into the enemy team's back line and deal [20,30,100,200,SP] SPECIAL to all enemy Pokémon in the path.",
 		"PASTEL_VEIL": "Dash to the farthest ally. Grant [10,20,30,60,SP] SHIELD to the user and all allied Pokémon on the way and cure their negative status conditions.",
-		"LEECH_SEED": "POISONNED the target for [3,6,12,24] seconds and heal the user for [20,40,80,160,SP] HP.",
+		"LEECH_SEED": "POISONNED the target for [4,8,16,32] seconds and heal the user for [25,50,100,200,SP] HP.",
 		"LOCK_ON": "Lock on the target. The next attack cannot miss and deals [200,200,200,500,SP]% additional TRUE.",
 		"DISABLE": "Deal [12,25,50,100,SP] SPECIAL to the target and all ADJACENT enemy Pokémon and SILENCE them for [2,3,4,8] seconds.",
 		"RAZOR_WIND": "Deal [20,40,80,160,SP] SPECIAL to the target. Can crit by default.",
@@ -2669,6 +2669,7 @@
 		"CRYSTALLISE_FOSSIL_FRAGMENT": "Fossil revive with HP instead of SHIELD. If hit by METEOR_DAMAGE, increase user ATK by 100% base ATK.",
 		"CRYSTALLISE_CLOUD_ORB": "When the user is affected by a negative status effect, lose 20% of current DEF for the next 5 seconds and gain RUNE_PROTECT for 5 seconds.",
 		"CRYSTALLISE_PEAT_BLOCK": "When the user is KO'd, distribute its current DEF and SPEED equally among allies within a 2-tile radius.",
+		"CRYSTALLISE_BLOSSOM_SHARD": "After casting its ability, the user regains 5% of its max PP for each ADJACENT ally.",
 		"CURSE_OF_VULNERABILITY": "The enemy with the highest DEF + SPE_DEF lose 5 of it and is FLINCH",
 		"CURSE_OF_WEAKNESS": "Also, the enemy with the highest ATK lose 20% of it and is PARALYSIS",
 		"CURSE_OF_TORMENT": "Also, the enemy with the highest AP lose 30 of it and is FATIGUE",
@@ -2896,6 +2897,7 @@
 		"FOSSIL_FRAGMENT": "Fossil Fragment",
 		"CLOUD_ORB": "Cloud Orb",
 		"PEAT_BLOCK": "Peat Block",
+		"BLOSSOM_SHARD": "Blossom Shard",
 		"UTILITY_UMBRELLA": "Utility Umbrella",
 		"NORMAL_GEM": "Normal Gem",
 		"GRASS_GEM": "Grass Gem",
@@ -3312,6 +3314,7 @@
 		"FOSSIL_FRAGMENT": "Counts as 3 towards METEOR_SHOWER. Under METEOR_SHOWER, your team gains 10% of incoming PHYSICAL as SHIELD (after damage mitigation).\n\nAllows a ROCK Pokémon to undergo Crystallisation, Awakening it as a FOSSIL type.",
 		"CLOUD_ORB": "Counts as 3 towards CLOUDY. Under CLOUDY, your team deals 1% of target's max HP as SPECIAL damage.\n\nAllows a ROCK Pokémon to undergo Crystallisation, Awakening it as a AMORPHOUS type.",
 		"PEAT_BLOCK": "Counts as 3 towards TERRAIN. Under TERRAIN, your team retaliates against ADJACENT enemies. [5,LK]% chance to slow their SPEED by 3 when hit.\n\nAllows a ROCK Pokémon to undergo Crystallisation, awakening it as a FIELD type.",
+		"BLOSSOM_SHARD": "Counts as 3 towards BLOSSOM. Under BLOSSOM, each time an enemy spawns within a 2-tile radius of one of your units, gain SHIELD equal to 5% of its max HP.\n\nAllows a ROCK Pokémon to undergo Crystallisation, awakening it as a FLORA type.",
 		"UTILITY_UMBRELLA": "The holder and allies ADJACENT_IN_THE_SAME_ROW take -70% negative status duration and status damage (BURN and POISON).",
 		"NORMAL_GEM": "+1 to NORMAL synergy",
 		"GRASS_GEM": "+1 to GRASS synergy",
@@ -3623,7 +3626,7 @@
 		"MOXIE": "Every time an enemy Pokémon is KO, it gains ATK equal to its stars",
 		"ILLUMISE_VOLBEAT": "Illumise and Volbeat gain 5 PP per second for each other member of their species alive on the board",
 		"PRISM": "Necrozma switches between its Ultra form and Normal form depending on its exposure to LIGHT",
-		"BLOSSOM": "Cherrim switches between its Sunlight form and Normal form depending on its exposure to LIGHT",
+		"BLOSSOM": "Change weather to BLOSSOM",
 		"SPECIAL_ATTACK": "Basic attacks deal SPECIAL and scale with AP",
 		"NINCADA": "After evolving, get Shedinja as well if you have a free space on your bench",
 		"FAMILY": "The Pokémon grows with time (turn 15 and turn 20)",
@@ -3646,6 +3649,7 @@
 		"DISTORTION_WEATHER_SUPPORT": "The Pokémon counts as 3 for DISTORTION",
 		"CLOUDY_WEATHER_SUPPORT": "The Pokémon counts as 3 for CLOUDY",
 		"HARD_TERRAIN_WEATHER_SUPPORT": "The Pokémon counts as 3 for TERRAIN",
+		"BLOSSOM_WEATHER_SUPPORT": "The Pokémon counts as 3 for BLOSSOM",
 		"CARBINK": "Spontanious mutations have been observed during Crystallisation.",
 		"SCYTHER": "Scyther is looking for METAL_ALLOY or BLACK_AUGURITE",
 		"GLUTTON": "Permanently gains max HP when eating: 10 HP for each berry, 20 HP for each dish, 30 HP when cooking as a Chef",
@@ -4194,7 +4198,8 @@
 		"DISTORTION": "Distortion",
 		"METEOR_SHOWER": "Meteor Shower",
 		"CLOUDY": "Cloudy",
-		"TERRAIN": "Hard Terrain"
+		"TERRAIN": "Hard Terrain",
+		"BLOSSOM": "Blossom"
 	},
 	"weather_description": {
 		"NEUTRAL": "Normal weather. No effects.",
@@ -4218,7 +4223,8 @@
 		"DISTORTION": "Every 5 seconds, ARMOR_BREAK for 2 seconds (ARTIFICIAL are immune)",
 		"METEOR_SHOWER": "Every 7 seconds, a Meteor crashes onto a tile, damaging it and all ADJACENT tiles for 100 PHYSICAL (FOSSIL gain 50% of base ATK when hit).",
 		"CLOUDY": "+10% max PP\n+30% RUNE_PROTECT duration",
-		"TERRAIN": "+1 SPEED for each tile moved"
+		"TERRAIN": "+1 SPEED for each tile moved",
+		"BLOSSOM": "Spawns gain 25 AP (50 if FLORA)"
 	},
 	"board_effect": {
 		"EMBER": "Ember",

@@ -397,5 +397,23 @@ export const AwakeningEffects: Partial<
         if (speedShare > 0) cell.value.addSpeed(speedShare, cell.value, 0, false)
       })
     })
+  ],
+
+  [Awakening.BLOSSOM_SHARD]: [
+    new OnAbilityCastEffect((pokemon, board) => {
+      const nbAdjacentAllies = board
+        .getAdjacentCells(pokemon.positionX, pokemon.positionY)
+        .filter(
+          (cell) => cell.value != null && cell.value.team === pokemon.team
+        ).length
+      if (nbAdjacentAllies > 0) {
+        pokemon.addPP(
+          Math.round(0.05 * pokemon.maxPP * nbAdjacentAllies),
+          pokemon,
+          0,
+          false
+        )
+      }
+    })
   ]
 }

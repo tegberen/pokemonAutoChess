@@ -9074,31 +9074,31 @@ export class Carracosta extends Pokemon {
 }*/
 
 export class Lileep extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.FOSSIL, Synergy.GRASS, Synergy.FLORA])
+  types = new SetSchema<Synergy>([Synergy.ROCK, Synergy.AQUATIC, Synergy.FLORA])
   rarity = Rarity.RARE
   stars = 1
   evolution = Pkm.CRADILY
-  hp = 70
+  hp = 80
   atk = 7
   speed = 39
   def = 4
-  speDef = 4
-  maxPP = 100
+  speDef = 6
+  maxPP = 80
   range = 2
   skill = Ability.LEECH_SEED
   additional = true
 }
 
 export class Cradily extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.FOSSIL, Synergy.GRASS, Synergy.FLORA])
+  types = new SetSchema<Synergy>([Synergy.ROCK, Synergy.AQUATIC, Synergy.FLORA])
   rarity = Rarity.RARE
   stars = 2
-  hp = 150
+  hp = 180
   atk = 22
   speed = 39
   def = 6
-  speDef = 6
-  maxPP = 100
+  speDef = 9
+  maxPP = 80
   range = 2
   skill = Ability.LEECH_SEED
   additional = true
@@ -9697,6 +9697,7 @@ export class Xerneas extends Pokemon {
   maxPP = 100
   range = 3
   skill = Ability.GEOMANCY
+  passive = Passive.BLOSSOM
 }
 
 export class TapuFini extends Pokemon {
@@ -13338,6 +13339,7 @@ export class Bonsley extends Pokemon {
   range = 1
   skill = Ability.WOOD_HAMMER
   passive = Passive.SUDOWOODO
+  passive2 = Passive.BLOSSOM_WEATHER_SUPPORT
   additional = true
 }
 
@@ -13354,6 +13356,7 @@ export class Sudowoodo extends Pokemon {
   range = 1
   skill = Ability.WOOD_HAMMER
   passive = Passive.SUDOWOODO
+  passive2 = Passive.BLOSSOM_WEATHER_SUPPORT
   additional = true
 }
 

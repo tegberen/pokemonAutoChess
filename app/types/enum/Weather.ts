@@ -25,7 +25,8 @@ export enum Weather {
   DISTORTION = "DISTORTION",
   METEOR_SHOWER = "METEOR_SHOWER",
   CLOUDY = "CLOUDY",
-  TERRAIN = "TERRAIN"
+  TERRAIN = "TERRAIN",
+  "BLOSSOM" = "BLOSSOM"
 }
 
 export const WeatherEffects: ReadonlyMap<Weather, EffectEnum> = new Map([
@@ -49,7 +50,8 @@ export const WeatherEffects: ReadonlyMap<Weather, EffectEnum> = new Map([
   [Weather.DISTORTION, EffectEnum.DISTORTION],
   [Weather.METEOR_SHOWER, EffectEnum.METEOR_SHOWER],
   [Weather.CLOUDY, EffectEnum.CLOUDY],
-  [Weather.TERRAIN, EffectEnum.TERRAIN]
+  [Weather.TERRAIN, EffectEnum.TERRAIN],
+  [Weather.BLOSSOM, EffectEnum.BLOSSOM]
 ])
 
 export const PassivesAssociatedToWeather: Map<Weather, Passive[]> = new Map([
@@ -69,7 +71,8 @@ export const PassivesAssociatedToWeather: Map<Weather, Passive[]> = new Map([
   [Weather.ELDER_STORM, [Passive.ELDER_STORM]],
   [Weather.DISTORTION, [Passive.DISTORTION]],
   [Weather.METEOR_SHOWER, [Passive.METEOR_SHOWER]],
-  [Weather.CLOUDY, [Passive.CLOUDY]]
+  [Weather.CLOUDY, [Passive.CLOUDY]],
+  [Weather.BLOSSOM, [Passive.BLOSSOM]]
 ])
 
 export const WeatherAssociatedToSynergy: Map<Synergy, Weather> = new Map([
@@ -94,7 +97,8 @@ export const WeatherAssociatedToSynergy: Map<Synergy, Weather> = new Map([
   [Synergy.ARTIFICIAL, Weather.DISTORTION],
   [Synergy.FOSSIL, Weather.METEOR_SHOWER],
   [Synergy.AMORPHOUS, Weather.CLOUDY],
-  [Synergy.FIELD, Weather.TERRAIN]
+  [Synergy.FIELD, Weather.TERRAIN],
+  [Synergy.FLORA, Weather.BLOSSOM]
 ])
 
 export const SynergyAssociatedToWeather = reverseMap(WeatherAssociatedToSynergy)
