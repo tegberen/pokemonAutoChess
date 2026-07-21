@@ -182,6 +182,18 @@ export default function WikiPokemonDetail(props: {
             </dd>
           </>
         )}
+        {pokemonData.passive2 !== Passive.NONE && (
+          <>
+            <dt>{t("wiki.pokemons.passive")}</dt>
+            <dd>
+              <p>
+                {addIconsToDescription(
+                  t(`passive_description.${pokemonData.passive2}`)
+                )}
+              </p>
+            </dd>
+          </>
+        )}
       </dl>
     </div>
   )

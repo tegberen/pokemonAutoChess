@@ -794,7 +794,7 @@ export const AbilityStrategies: { [key in Ability]: AbilityStrategy } = {
   [Ability.BLAZE_KICK]: new BlazeKickStrategy(),
   [Ability.BLEAKWIND_STORM]: new BleakwindStormStrategy(),
   [Ability.BLIZZARD]: new BlizzardStrategy(),
-  [Ability.BLOOD_MOON]: new BloodMoonStrategy(),
+  [Ability.BLOODMOON_ABILITY]: new BloodMoonStrategy(),
   [Ability.BLUE_FLARE]: new BlueFlareStrategy(),
   [Ability.BODY_SLAM]: new BodySlamStrategy(),
   [Ability.BOLT_BEAK]: new BoltBeakStrategy(),

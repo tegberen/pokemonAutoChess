@@ -260,6 +260,23 @@
   margin: 0;
 }
 
+#wiki-weather .wiki-weather-toolbar {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-bottom: 0.5em;
+}
+
+#wiki-weather .weather-support {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5em;
+  border-top: 1px solid #ffffff30;
+  padding-top: 0.5em;
+  margin-top: auto;
+}
+
 #wiki-ability .my-box ul {
   display: flex;
   flex-wrap: wrap;

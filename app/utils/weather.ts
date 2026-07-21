@@ -13,6 +13,30 @@ import {
 import { hasKey } from "./map"
 import { schemaValues } from "./schemas"
 
+// Passives that boost a specific weather by +2 (on top of the +1 the unit gives
+// from its matching synergy). A unit may carry one on either passive slot.
+export const WeatherSupportPassives: Partial<Record<Passive, Weather>> = {
+  [Passive.SANDSTORM_WEATHER_SUPPORT]: Weather.SANDSTORM,
+  [Passive.RAIN_WEATHER_SUPPORT]: Weather.RAIN,
+  [Passive.STORM_WEATHER_SUPPORT]: Weather.STORM,
+  [Passive.SMOG_WEATHER_SUPPORT]: Weather.SMOG,
+  [Passive.MISTY_WEATHER_SUPPORT]: Weather.MISTY,
+  [Passive.SNOW_WEATHER_SUPPORT]: Weather.SNOW,
+  [Passive.WINDY_WEATHER_SUPPORT]: Weather.WINDY,
+  [Passive.NIGHT_WEATHER_SUPPORT]: Weather.NIGHT,
+  [Passive.ZENITH_WEATHER_SUPPORT]: Weather.ZENITH,
+  [Passive.DROUGHT_WEATHER_SUPPORT]: Weather.DROUGHT,
+  [Passive.MURKY_WEATHER_SUPPORT]: Weather.MURKY,
+  [Passive.BLOODMOON_WEATHER_SUPPORT]: Weather.BLOODMOON,
+  [Passive.MAGNET_STORM_WEATHER_SUPPORT]: Weather.MAGNET_STORM,
+  [Passive.PLAGUE_WEATHER_SUPPORT]: Weather.PLAGUE,
+  [Passive.ECLIPSE_WEATHER_SUPPORT]: Weather.ECLIPSE,
+  [Passive.FLOOD_WEATHER_SUPPORT]: Weather.FLOOD,
+  [Passive.DISTORTION_WEATHER_SUPPORT]: Weather.DISTORTION,
+  [Passive.CLOUDY_WEATHER_SUPPORT]: Weather.CLOUDY,
+  [Passive.HARD_TERRAIN_WEATHER_SUPPORT]: Weather.TERRAIN
+}
+
 export function getWeather(
   bluePlayer: Player,
   redPlayer: Player | null,
@@ -54,9 +78,10 @@ export function getWeather(
     const playerWeatherScore = new Map<Weather, number>()
     board.forEach((pkm) => {
       if (pkm.positionY != 0) {
-        if (pkm.passive) {
+
+        for (const passive of [pkm.passive, pkm.passive2]) {
           const weather = [...PassivesAssociatedToWeather.keys()].find((key) =>
-            PassivesAssociatedToWeather.get(key)!.includes(pkm.passive)
+            PassivesAssociatedToWeather.get(key)!.includes(passive)
           )
           if (weather) {
             boardWeatherScore.set(
@@ -78,81 +103,6 @@ export function getWeather(
               (boardWeatherScore.get(weather) ?? 0) + 1
             )
 
-            if (
-              pkm.passive === Passive.SAND_STREAM &&
-              weather === Weather.SANDSTORM
-            ) {
-              boardWeatherScore.set(
-                Weather.SANDSTORM,
-                (boardWeatherScore.get(Weather.SANDSTORM) ?? 0) + 2
-              )
-              playerWeatherScore.set(
-                Weather.SANDSTORM,
-                (playerWeatherScore.get(Weather.SANDSTORM) ?? 0) + 2
-              )
-            }
-            if (pkm.passive === Passive.DRIZZLE && weather === Weather.RAIN) {
-              boardWeatherScore.set(
-                Weather.RAIN,
-                (boardWeatherScore.get(Weather.RAIN) ?? 0) + 2
-              )
-              playerWeatherScore.set(
-                Weather.RAIN,
-                (playerWeatherScore.get(Weather.RAIN) ?? 0) + 2
-              )
-            }
-            if (
-              pkm.passive === Passive.WIND_POWER &&
-              weather === Weather.STORM
-            ) {
-              boardWeatherScore.set(
-                Weather.STORM,
-                (boardWeatherScore.get(Weather.STORM) ?? 0) + 2
-              )
-              playerWeatherScore.set(
-                Weather.STORM,
-                (playerWeatherScore.get(Weather.STORM) ?? 0) + 2
-              )
-            }
-            if (
-              pkm.passive === Passive.SMOG_WEATHER &&
-              weather === Weather.SMOG
-            ) {
-              boardWeatherScore.set(
-                Weather.SMOG,
-                (boardWeatherScore.get(Weather.SMOG) ?? 0) + 2
-              )
-              playerWeatherScore.set(
-                Weather.SMOG,
-                (playerWeatherScore.get(Weather.SMOG) ?? 0) + 2
-              )
-            }
-            if (
-              pkm.passive === Passive.MISTY_WEATHER &&
-              weather === Weather.MISTY
-            ) {
-              boardWeatherScore.set(
-                Weather.MISTY,
-                (boardWeatherScore.get(Weather.MISTY) ?? 0) + 2
-              )
-              playerWeatherScore.set(
-                Weather.MISTY,
-                (playerWeatherScore.get(Weather.MISTY) ?? 0) + 2
-              )
-            }
-            if (
-              pkm.passive === Passive.SNOW_WEATHER &&
-              weather === Weather.SNOW
-            ) {
-              boardWeatherScore.set(
-                Weather.SNOW,
-                (boardWeatherScore.get(Weather.SNOW) ?? 0) + 2
-              )
-              playerWeatherScore.set(
-                Weather.SNOW,
-                (playerWeatherScore.get(Weather.SNOW) ?? 0) + 2
-              )
-            }
             if (pkm.passive !== Passive.CASTFORM) {
               playerWeatherScore.set(
                 weather,
@@ -161,6 +111,23 @@ export function getWeather(
             }
           }
         })
+
+        // A weather-support passive (on either slot) adds +2 to its weather,
+        // regardless of synergy: a unit with the matching synergy reaches +3
+        // (its +1 above plus this +2); one without still contributes +2.
+        for (const p of [pkm.passive, pkm.passive2]) {
+          const supportedWeather = WeatherSupportPassives[p]
+          if (supportedWeather) {
+            boardWeatherScore.set(
+              supportedWeather,
+              (boardWeatherScore.get(supportedWeather) ?? 0) + 2
+            )
+            playerWeatherScore.set(
+              supportedWeather,
+              (playerWeatherScore.get(supportedWeather) ?? 0) + 2
+            )
+          }
+        }
       }
     })
 
@@ -260,10 +227,10 @@ export function getWeather(
         if (pkm.passive === Passive.DROUGHT_OR_ZENITH) {
           const nbLight = schemaValues(board).filter((p) =>
             p.types.has(Synergy.LIGHT)
-          )
+          ).length
           const nbFire = schemaValues(board).filter((p) =>
             p.types.has(Synergy.FIRE)
-          )
+          ).length
           const dominant = nbLight >= nbFire ? Weather.ZENITH : Weather.DROUGHT
           boardWeatherScore.set(
             dominant,

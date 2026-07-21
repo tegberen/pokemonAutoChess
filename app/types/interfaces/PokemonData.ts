@@ -9,6 +9,7 @@ export interface IPokemonData {
   index: string
   skill: Ability
   passive: Passive
+  passive2: Passive
   stars: number
   rarity: Rarity
   additional: boolean

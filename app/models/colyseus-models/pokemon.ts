@@ -95,6 +95,7 @@ export class Pokemon extends Schema implements IPokemon {
   @type("string") skill: Ability = Ability.DEFAULT
   @type("string") tm: Ability = Ability.DEFAULT
   @type("string") passive: Passive = Passive.NONE
+  @type("string") passive2: Passive = Passive.NONE
   @type({ set: "string" }) items = new SetSchema<Item>()
   @type({ set: "string" }) dishes = new SetSchema<Item>()
   @type("boolean") shiny: boolean
@@ -924,7 +925,7 @@ export class Thievul extends Pokemon {
 }
 
 export class Swablu extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.FAIRY, Synergy.SOUND])
+  types = new SetSchema<Synergy>([Synergy.FAIRY, Synergy.AMORPHOUS])
   rarity = Rarity.EPIC
   stars = 1
   evolution = Pkm.ALTARIA
@@ -937,10 +938,11 @@ export class Swablu extends Pokemon {
   range = 2
   skill = Ability.HYPER_VOICE
   additional = true
+  passive2 = Passive.CLOUDY_WEATHER_SUPPORT
 }
 
 export class Altaria extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.DRAGON, Synergy.FAIRY, Synergy.SOUND])
+  types = new SetSchema<Synergy>([Synergy.DRAGON, Synergy.FAIRY, Synergy.AMORPHOUS])
   rarity = Rarity.EPIC
   stars = 2
   evolution = Pkm.MEGA_ALTARIA
@@ -956,10 +958,11 @@ export class Altaria extends Pokemon {
   skill = Ability.HYPER_VOICE
   additional = true
   passive = Passive.ALTARIA
+  passive2 = Passive.CLOUDY_WEATHER_SUPPORT
 }
 
 export class MegaAltaria extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.DRAGON, Synergy.FAIRY, Synergy.SOUND])
+  types = new SetSchema<Synergy>([Synergy.DRAGON, Synergy.FAIRY, Synergy.AMORPHOUS])
   rarity = Rarity.EPIC
   stars = 3
   hp = 220
@@ -971,10 +974,11 @@ export class MegaAltaria extends Pokemon {
   range = 2
   skill = Ability.HYPER_VOICE
   additional = true
+  passive2 = Passive.CLOUDY_WEATHER_SUPPORT
 }
 
 export class Scyther extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.BUG, Synergy.FLYING])
+  types = new SetSchema<Synergy>([Synergy.WILD, Synergy.BUG])
   rarity = Rarity.EPIC
   stars = 1
   evolutions = [Pkm.SCIZOR, Pkm.KLEAVOR]
@@ -984,46 +988,43 @@ export class Scyther extends Pokemon {
     divergentEvolution: (pokemon, player, item) =>
       item === Item.BLACK_AUGURITE ? Pkm.KLEAVOR : Pkm.SCIZOR
   } satisfies ItemEvolutionRule
-  hp = 120
-  atk = 12
+  hp = 160
+  atk = 16
   speed = 59
   def = 6
   speDef = 6
   maxPP = 80
   range = 1
   skill = Ability.X_SCISSOR
-  regional = true
   passive = Passive.SCYTHER
 }
 
 export class Scizor extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.BUG, Synergy.STEEL])
+  types = new SetSchema<Synergy>([Synergy.WILD, Synergy.BUG, Synergy.STEEL])
   rarity = Rarity.EPIC
   stars = 2
-  hp = 160
-  atk = 19
+  hp = 220
+  atk = 24
   speed = 42
-  def = 8
-  speDef = 8
+  def = 10
+  speDef = 10
   maxPP = 80
   range = 1
   skill = Ability.BULLET_PUNCH
-
 }
 
 export class Kleavor extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.BUG, Synergy.ROCK])
+  types = new SetSchema<Synergy>([Synergy.WILD, Synergy.BUG, Synergy.ROCK])
   rarity = Rarity.EPIC
   stars = 2
-  hp = 160
-  atk = 19
+  hp = 220
+  atk = 22
   speed = 55
-  def = 10
-  speDef = 6
+  def = 12
+  speDef = 8
   maxPP = 80
   range = 1
   skill = Ability.STONE_AXE
-
 }
 
 export class Bounsweet extends Pokemon {
@@ -2687,7 +2688,6 @@ export class Politoed extends Pokemon {
   maxPP = 90
   range = 2
   skill = Ability.SOAK
-  passive = Passive.DRIZZLE
 }
 
 export class Poliwrath extends Pokemon {
@@ -3491,6 +3491,8 @@ export class Snover extends Pokemon {
   range = 1
   skill = Ability.SHEER_COLD
   regional = true
+  passive2 = Passive.SNOW_WEATHER_SUPPORT
+
 }
 
 export class Abomasnow extends Pokemon {
@@ -3506,7 +3508,7 @@ export class Abomasnow extends Pokemon {
   range = 1
   skill = Ability.SHEER_COLD
   regional = true
-  passive = Passive.SNOW_WEATHER
+  passive2 = Passive.SNOW_WEATHER_SUPPORT
 }
 
 export class Snorunt extends Pokemon {
@@ -6022,11 +6024,11 @@ export class Lugia extends Pokemon {
   ])
   rarity = Rarity.LEGENDARY
   stars = 3
-  hp = 280
-  atk = 22
+  hp = 250
+  atk = 26
   speed = 60
   def = 12
-  speDef = 12
+  speDef = 14
   maxPP = 80
   range = 1
   skill = Ability.SKY_ATTACK
@@ -6041,14 +6043,15 @@ export class ShadowLugia extends Pokemon {
   ])
   rarity = Rarity.LEGENDARY
   stars = 3
-  hp = 300
+  hp = 250
   atk = 26
   speed = 60
   def = 12
-  speDef = 12
+  speDef = 14
   maxPP = 80
   range = 1
   skill = Ability.SKY_ATTACK_SHADOW
+  passive = Passive.NIGHT
   regional = true
   isInRegion(map: DungeonPMDO, state: GameState) {
     const regionSynergies = RegionDetails[map]?.synergies ?? []
@@ -7050,6 +7053,7 @@ export class Larvesta extends Pokemon {
   range = 3
   skill = Ability.FIERY_DANCE
   additional = true
+  passive2 = Passive.DROUGHT_WEATHER_SUPPORT
 }
 
 export class Volcarona extends Pokemon {
@@ -7065,6 +7069,7 @@ export class Volcarona extends Pokemon {
   range = 3
   skill = Ability.FIERY_DANCE
   additional = true
+  passive2 = Passive.DROUGHT_WEATHER_SUPPORT
 }
 
 export class IronMoth extends Pokemon {
@@ -8499,6 +8504,7 @@ export class MegaDrampa extends Pokemon {
   range = 3
   skill = Ability.DRAGON_PULSE
   passive = Passive.BERSERK_2
+  passive2 = Passive.STORM
 }
 
 export class PrimalGroudon extends Pokemon {
@@ -9534,6 +9540,7 @@ export class Nincada extends Pokemon {
   skill = Ability.WONDER_GUARD
   passive = Passive.NINCADA
   additional = true
+  passive2 = Passive.PLAGUE_WEATHER_SUPPORT
 }
 
 export class Ninjask extends Pokemon {
@@ -9566,6 +9573,7 @@ export class Ninjask extends Pokemon {
       player.board.set(pokemon.id, pokemon)
     }
   }
+  passive2 = Passive.PLAGUE_WEATHER_SUPPORT
 }
 
 export class Shedinja extends Pokemon {
@@ -9582,6 +9590,7 @@ export class Shedinja extends Pokemon {
   skill = Ability.WONDER_GUARD
   passive = Passive.WONDER_GUARD
   additional = true
+  passive2 = Passive.PLAGUE_WEATHER_SUPPORT
 }
 
 export class Happiny extends Pokemon {
@@ -9988,6 +9997,7 @@ export class Buizel extends Pokemon {
   range = 1
   skill = Ability.AQUA_JET
   additional = true
+  passive2 = Passive.FLOOD_WEATHER_SUPPORT
 }
 export class Floatzel extends Pokemon {
   types = new SetSchema<Synergy>([
@@ -10006,6 +10016,7 @@ export class Floatzel extends Pokemon {
   range = 1
   skill = Ability.AQUA_JET
   additional = true
+  passive2 = Passive.FLOOD_WEATHER_SUPPORT
 }
 
 export class Ponyta extends Pokemon {
@@ -12123,18 +12134,19 @@ export class AlolanSandslash extends Pokemon {
 
 export class Nosepass extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.ROCK, Synergy.STEEL])
-  rarity = Rarity.UNCOMMON
+  rarity = Rarity.EPIC
   stars = 1
   evolution = Pkm.PROBOPASS
-  hp = 70
-  atk = 5
+  hp = 110
+  atk = 10
   speed = 38
-  def = 6
-  speDef = 6
-  maxPP = 100
+  def = 10
+  speDef = 10
+  maxPP = 90
   range = 2
   skill = Ability.MAGNET_RISE
   additional = true
+  passive2 = Passive.MAGNET_STORM_WEATHER_SUPPORT
 }
 
 export class Probopass extends Pokemon {
@@ -12143,17 +12155,18 @@ export class Probopass extends Pokemon {
     Synergy.STEEL,
     Synergy.ELECTRIC
   ])
-  rarity = Rarity.UNCOMMON
+  rarity = Rarity.EPIC
   stars = 2
-  hp = 140
-  atk = 11
+  hp = 200
+  atk = 16
   speed = 38
-  def = 16
-  speDef = 16
-  maxPP = 100
+  def = 20
+  speDef = 22
+  maxPP = 90
   range = 2
   skill = Ability.MAGNET_RISE
   additional = true
+  passive2 = Passive.MAGNET_STORM_WEATHER_SUPPORT
 }
 
 export class Woobat extends Pokemon {
@@ -13784,7 +13797,7 @@ export class Weezing extends Pokemon {
   range = 1
   skill = Ability.SMOG
   additional = true
-  passive = Passive.SMOG_WEATHER
+  passive2 = Passive.SMOG_WEATHER_SUPPORT
 }
 
 export class GalarianWeezing extends Pokemon {
@@ -13809,7 +13822,7 @@ export class GalarianWeezing extends Pokemon {
     const regionSynergies = RegionDetails[map]?.synergies
     return regionSynergies.includes(Synergy.FAIRY)
   }
-  passive = Passive.MISTY_WEATHER
+  passive2 = Passive.MISTY_WEATHER_SUPPORT
 }
 
 export class Clauncher extends Pokemon {
@@ -13880,19 +13893,19 @@ export class Yanmega extends Pokemon {
 
 export class Helioptile extends Pokemon {
   types = new SetSchema<Synergy>([
-    Synergy.NORMAL,
+    Synergy.DRAGON,
     Synergy.ELECTRIC,
     Synergy.LIGHT
   ])
-  rarity = Rarity.EPIC
+  rarity = Rarity.UNCOMMON
   stars = 1
   evolution = Pkm.HELIOLISK
-  hp = 75
-  atk = 7
+  hp = 60
+  atk = 5
   speed = 60
-  def = 4
-  speDef = 4
-  maxPP = 80
+  def = 3
+  speDef = 3
+  maxPP = 100
   range = 3
   skill = Ability.PARABOLIC_CHARGE
   passive = Passive.DRY_SKIN
@@ -13901,18 +13914,18 @@ export class Helioptile extends Pokemon {
 
 export class Heliolisk extends Pokemon {
   types = new SetSchema<Synergy>([
-    Synergy.NORMAL,
+    Synergy.DRAGON,
     Synergy.ELECTRIC,
     Synergy.LIGHT
   ])
-  rarity = Rarity.EPIC
+  rarity = Rarity.UNCOMMON
   stars = 2
-  hp = 170
-  atk = 17
+  hp = 130
+  atk = 11
   speed = 60
-  def = 6
-  speDef = 6
-  maxPP = 80
+  def = 5
+  speDef = 5
+  maxPP = 100
   range = 3
   skill = Ability.PARABOLIC_CHARGE
   passive = Passive.DRY_SKIN
@@ -14042,15 +14055,15 @@ export class Baltoy extends Pokemon {
     Synergy.PSYCHIC,
     Synergy.ARTIFICIAL
   ])
-  rarity = Rarity.EPIC
+  rarity = Rarity.RARE
   stars = 1
   evolution = Pkm.CLAYDOL
-  hp = 80
+  hp = 70
   atk = 8
   speed = 49
-  def = 8
-  speDef = 8
-  maxPP = 70
+  def = 5
+  speDef = 7
+  maxPP = 85
   range = 2
   skill = Ability.CONFUSION
   additional = true
@@ -14062,14 +14075,14 @@ export class Claydol extends Pokemon {
     Synergy.PSYCHIC,
     Synergy.ARTIFICIAL
   ])
-  rarity = Rarity.EPIC
+  rarity = Rarity.RARE
   stars = 2
-  hp = 180
+  hp = 150
   atk = 15
   speed = 49
-  def = 12
-  speDef = 12
-  maxPP = 70
+  def = 8
+  speDef = 10
+  maxPP = 85
   range = 2
   skill = Ability.CONFUSION
   additional = true
@@ -14154,6 +14167,7 @@ export class Barboach extends Pokemon {
   skill = Ability.FISSURE
   passive = Passive.AQUA_VEIL
   additional = true
+  passive2 = Passive.RAIN_WEATHER_SUPPORT
 }
 
 export class Whiscash extends Pokemon {
@@ -14170,6 +14184,7 @@ export class Whiscash extends Pokemon {
   skill = Ability.FISSURE
   passive = Passive.AQUA_VEIL
   additional = true
+  passive2 = Passive.RAIN_WEATHER_SUPPORT
 }
 
 export class Scraggy extends Pokemon {
@@ -14399,12 +14414,11 @@ export class Misdreavus extends Pokemon {
   types = new SetSchema<Synergy>([
     Synergy.GHOST,
     Synergy.FAIRY,
-    Synergy.AMORPHOUS
   ])
   rarity = Rarity.EPIC
   stars = 1
   evolution = Pkm.MISMAGIUS
-  hp = 80
+  hp = 85
   atk = 6
   speed = 59
   def = 4
@@ -14413,17 +14427,17 @@ export class Misdreavus extends Pokemon {
   range = 3
   skill = Ability.NIGHT_SHADE
   additional = true
+  passive2 = Passive.MURKY_WEATHER_SUPPORT
 }
 
 export class Mismagius extends Pokemon {
   types = new SetSchema<Synergy>([
     Synergy.GHOST,
     Synergy.FAIRY,
-    Synergy.AMORPHOUS
   ])
   rarity = Rarity.EPIC
   stars = 2
-  hp = 160
+  hp = 165
   atk = 18
   speed = 59
   def = 4
@@ -14432,6 +14446,7 @@ export class Mismagius extends Pokemon {
   range = 3
   skill = Ability.NIGHT_SHADE
   additional = true
+  passive2 = Passive.MURKY_WEATHER_SUPPORT
 }
 
 export class Doduo extends Pokemon {
@@ -14510,7 +14525,7 @@ export class Hippopotas extends Pokemon {
   range = 1
   skill = Ability.SAND_TOMB
   additional = true
-  passive = Passive.SAND_STREAM
+  passive2 = Passive.SANDSTORM_WEATHER_SUPPORT
 }
 
 export class Hippodown extends Pokemon {
@@ -14526,14 +14541,14 @@ export class Hippodown extends Pokemon {
   range = 1
   skill = Ability.SAND_TOMB
   additional = true
-  passive = Passive.SAND_STREAM
+  passive2 = Passive.SANDSTORM_WEATHER_SUPPORT
 }
 
 export class Ducklett extends Pokemon {
   types = new SetSchema<Synergy>([
-    Synergy.AQUATIC,
     Synergy.FLYING,
-    Synergy.SOUND
+    Synergy.SOUND,
+    Synergy.AQUATIC,
   ])
   rarity = Rarity.EPIC
   stars = 1
@@ -14547,13 +14562,14 @@ export class Ducklett extends Pokemon {
   range = 2
   skill = Ability.FEATHER_DANCE
   additional = true
+  passive2 = Passive.WINDY_WEATHER_SUPPORT
 }
 
 export class Swanna extends Pokemon {
   types = new SetSchema<Synergy>([
-    Synergy.AQUATIC,
     Synergy.FLYING,
-    Synergy.SOUND
+    Synergy.SOUND,
+    Synergy.AQUATIC,
   ])
   rarity = Rarity.EPIC
   stars = 2
@@ -14566,6 +14582,7 @@ export class Swanna extends Pokemon {
   range = 2
   skill = Ability.FEATHER_DANCE
   additional = true
+  passive2 = Passive.WINDY_WEATHER_SUPPORT
 }
 
 export class Wingull extends Pokemon {
@@ -15716,7 +15733,7 @@ export class Ursaluna extends Pokemon {
   maxPP = 100
   range = 1
   skill = Ability.FURY_SWIPES
-  passive = Passive.BLOODMOON
+  passive = Passive.BLOODMOON_FORM_CHANGE
   beforeSimulationStart({
     weather,
     player
@@ -15741,7 +15758,7 @@ export class UrsalunaBloodmoon extends Pokemon {
   speDef = 14
   maxPP = 120
   range = 1
-  skill = Ability.BLOOD_MOON
+  skill = Ability.BLOODMOON_ABILITY
   beforeSimulationStart({
     weather,
     player
@@ -15756,7 +15773,7 @@ export class UrsalunaBloodmoon extends Pokemon {
   onAcquired(player: Player) {
     player.titles.add(Title.BLOODY)
   }
-  passive = Passive.BLOODMOON_WEATHER
+  passive = Passive.BLOODMOON
 }
 
 export class Aipom extends Pokemon {
@@ -16020,7 +16037,7 @@ export class Ariados extends Pokemon {
 }
 
 export class Rockruff extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.WILD, Synergy.ROCK])
+  types = new SetSchema<Synergy>([Synergy.ROCK])
   rarity = Rarity.EPIC
   stars = 1
   evolution = Pkm.LYCANROC_DUSK
@@ -16032,6 +16049,7 @@ export class Rockruff extends Pokemon {
   maxPP = 100
   range = 1
   skill = Ability.ACCELEROCK
+  additional = true
 }
 
 function updateLycanroc(pokemon: Pokemon, weather: Weather, player: Player) {
@@ -16058,11 +16076,13 @@ export class LycanrocDusk extends Pokemon {
   maxPP = 100
   range = 1
   skill = Ability.ACCELEROCK
+  additional = true
   passive = Passive.LYCANROC
 
   beforeSimulationStart({ weather, player }) {
     updateLycanroc(this, weather, player)
   }
+  passive2 = Passive.BLOODMOON_WEATHER_SUPPORT
 }
 
 export class LycanrocNight extends Pokemon {
@@ -16077,11 +16097,13 @@ export class LycanrocNight extends Pokemon {
   maxPP = 100
   range = 1
   skill = Ability.ACCELEROCK
+  additional = true
   passive = Passive.LYCANROC
 
   beforeSimulationStart({ weather, player }) {
     updateLycanroc(this, weather, player)
   }
+  passive2 = Passive.NIGHT_WEATHER_SUPPORT
 }
 
 export class LycanrocDay extends Pokemon {
@@ -16096,11 +16118,13 @@ export class LycanrocDay extends Pokemon {
   maxPP = 100
   range = 1
   skill = Ability.ACCELEROCK
+  additional = true
   passive = Passive.LYCANROC
 
   beforeSimulationStart({ weather, player }) {
     updateLycanroc(this, weather, player)
   }
+  passive2 = Passive.ZENITH_WEATHER_SUPPORT
 }
 
 export class Druddigon extends Pokemon {
@@ -16347,7 +16371,7 @@ export class Wattrel extends Pokemon {
   range = 2
   skill = Ability.SPARK
   additional = true
-  passive = Passive.WIND_POWER
+  passive2 = Passive.STORM_WEATHER_SUPPORT
 }
 
 export class Kilowattrel extends Pokemon {
@@ -16367,7 +16391,7 @@ export class Kilowattrel extends Pokemon {
   range = 2
   skill = Ability.SPARK
   additional = true
-  passive = Passive.WIND_POWER
+  passive2 = Passive.STORM_WEATHER_SUPPORT
 }
 
 export const burmyDivergentEvolutionRule = (
@@ -18526,6 +18550,7 @@ export class Inkay extends Pokemon {
   range = 1
   skill = Ability.TOPSY_TURVY
   additional = true
+  passive2 = Passive.ECLIPSE_WEATHER_SUPPORT
 }
 
 export class Malamar extends Pokemon {
@@ -18545,6 +18570,7 @@ export class Malamar extends Pokemon {
   range = 1
   skill = Ability.TOPSY_TURVY
   additional = true
+  passive2 = Passive.ECLIPSE_WEATHER_SUPPORT
 }
 
 export class Timburr extends Pokemon {
@@ -18675,40 +18701,42 @@ export class PillarConcrete extends Pokemon {
 export class Elgyem extends Pokemon {
   types = new SetSchema<Synergy>([
     Synergy.PSYCHIC,
-    Synergy.MONSTER,
-    Synergy.LIGHT
+    Synergy.LIGHT,
+    Synergy.ARTIFICIAL,
   ])
-  rarity = Rarity.RARE
+  rarity = Rarity.EPIC
   stars = 1
   evolution = Pkm.BEHEEYEM
-  hp = 70
-  atk = 8
+  hp = 80
+  atk = 12
   speed = 38
   def = 4
   speDef = 4
-  maxPP = 90
-  range = 2
+  maxPP = 80
+  range = 3
   skill = Ability.WONDER_ROOM
   additional = true
+  passive2 = Passive.DISTORTION_WEATHER_SUPPORT
 }
 
 export class Beheeyem extends Pokemon {
   types = new SetSchema<Synergy>([
     Synergy.PSYCHIC,
-    Synergy.MONSTER,
-    Synergy.LIGHT
+    Synergy.LIGHT,
+    Synergy.ARTIFICIAL,
   ])
-  rarity = Rarity.RARE
+  rarity = Rarity.EPIC
   stars = 2
-  hp = 150
-  atk = 18
+  hp = 160
+  atk = 22
   speed = 38
   def = 8
   speDef = 8
-  maxPP = 90
-  range = 2
+  maxPP = 80
+  range = 3
   skill = Ability.WONDER_ROOM
   additional = true
+  passive2 = Passive.DISTORTION_WEATHER_SUPPORT
 }
 
 export class Litten extends Pokemon {
@@ -18756,7 +18784,7 @@ export class Incineroar extends Pokemon {
 }
 
 export class Skrelp extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.POISON, Synergy.WATER])
+  types = new SetSchema<Synergy>([Synergy.DRAGON, Synergy.POISON, Synergy.WATER])
   rarity = Rarity.UNCOMMON
   stars = 1
   evolution = Pkm.DRAGALGE
@@ -21236,6 +21264,7 @@ export class Skiddo extends Pokemon {
   range = 1
   skill = Ability.CITY_SHUTTLE
   additional = true
+  passive2 = Passive.HARD_TERRAIN_WEATHER_SUPPORT
 }
 
 export class Gogoat extends Pokemon {
@@ -21251,6 +21280,7 @@ export class Gogoat extends Pokemon {
   range = 1
   skill = Ability.CITY_SHUTTLE
   additional = true
+  passive2 = Passive.HARD_TERRAIN_WEATHER_SUPPORT
 }
 
 export class Bunnelby extends Pokemon {
@@ -22169,7 +22199,13 @@ export class Dwebble extends Pokemon {
   maxPP = 100
   range = 1
   skill = Ability.ROCK_WRECKER
-  additional = true
+  regional = true
+  isInRegion(map: DungeonPMDO, state?: GameState) {
+    const regionSynergies = RegionDetails[map]?.synergies
+    return (
+      regionSynergies.includes(Synergy.BUG)
+    )
+  }
 }
 
 export class Crustle extends Pokemon {
@@ -22184,7 +22220,13 @@ export class Crustle extends Pokemon {
   maxPP = 100
   range = 1
   skill = Ability.ROCK_WRECKER
-  additional = true
+  regional = true
+  isInRegion(map: DungeonPMDO, state?: GameState) {
+    const regionSynergies = RegionDetails[map]?.synergies
+    return (
+      regionSynergies.includes(Synergy.BUG)
+    )
+  }
 }
 
 export class Skwovet extends Pokemon {

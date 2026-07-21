@@ -351,6 +351,7 @@ export interface IPokemon {
   skill: Ability
   tm: Ability
   passive: Passive
+  passive2: Passive
   items: SetSchema<Item>
   dishes: SetSchema<Item>
   shiny: boolean
@@ -598,6 +599,7 @@ export interface IPokemonEntity {
   skill: Ability
   tm: Ability
   passive: Passive
+  passive2: Passive
   awakening: Awakening
   status: Status
   count: Count

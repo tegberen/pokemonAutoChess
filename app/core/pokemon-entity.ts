@@ -119,6 +119,7 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
   @type("string") skill: Ability
   @type("string") tm: Ability
   @type("string") passive: Passive
+  @type("string") passive2: Passive = Passive.NONE
   @type("string") awakening: Awakening = Awakening.NONE
   @type(Status) status: Status
   @type(Count) count: Count
@@ -229,6 +230,7 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
 
     this.passive = Passive.NONE
     this.changePassive(pokemon.passive)
+    this.passive2 = pokemon.passive2
 
     this.awakening = pokemon.awakening
     if (this.awakening !== Awakening.NONE) {

@@ -16,6 +16,7 @@ precomputedPokemons.forEach((pokemon) => {
   data.set(pokemon.name, {
     skill: pokemon.skill,
     passive: pokemon.passive,
+    passive2: pokemon.passive2,
     stars: pokemon.stars,
     rarity: pokemon.rarity,
     additional: pokemon.additional,
@@ -68,6 +69,7 @@ export function getPokemonData(name: Pkm): IPokemonData {
     stages: 1,
     skill: Ability.DEFAULT,
     passive: Passive.NONE,
+    passive2: Passive.NONE,
     types: [],
     evolution: null,
     evolutions: []

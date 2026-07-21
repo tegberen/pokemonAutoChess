@@ -1313,7 +1313,7 @@ export const AbilitiesAnimations: {
       depth: DEPTH.ABILITY_BELOW_POKEMON
     })
   ],
-  [Ability.BLOOD_MOON]: [
+  [Ability.BLOODMOON_ABILITY]: [
     onCaster({ ability: "COSMIC_POWER", tint: 0xff5060, origin: [0.5, 1] }),
     (args) => {
       const coordinates = transformEntityCoordinates(

@@ -378,6 +378,26 @@ export function GamePokemonDetail(props: {
         </div>
       )}
 
+      {/* Secondary passive (e.g. a weather-support passive) */}
+      {pokemon.passive2 !== Passive.NONE && (
+        <div className="game-pokemon-detail-passive">
+          <p>
+            {addIconsToDescription(
+              t(`passive_description.${pokemon.passive2}`, {
+                stacks: pokemon.stacks
+              }),
+              {
+                ap: pokemon.ap,
+                luck: pokemon.luck,
+                stars,
+                stages: getPokemonData(pokemon.name).stages,
+                showAbilityTiers: props.origin === "wiki"
+              }
+            )}
+          </p>
+        </div>
+      )}
+
       {/* Awakened effect — shown both on the prep board and during the fight
           (the entity carries `awakening` too). */}
       {pokemon.awakening !== Awakening.NONE && (

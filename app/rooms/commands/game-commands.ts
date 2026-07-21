@@ -2279,10 +2279,9 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
       // board; a charging Pokémon parked on the bench simply pauses.
       if (pokemon.awakeningRock !== "" && !isOnBench(pokemon)) {
         if (
-          getSynergyTier(player.synergies, Synergy.ROCK) < ROCK_AWAKENING_TIER
+          getSynergyTier(player.synergies, Synergy.ROCK) < ROCK_AWAKENING_TIER ||
+          !pokemon.types.has(Synergy.ROCK)
         ) {
-          // dropped below Rock 8: crystallisation is cancelled — reset the
-          // charge and hand the rock back to the bench.
           pokemon.awakeningRock = ""
           pokemon.awakeningCharge = 0
           player.updateWeatherRocks()
