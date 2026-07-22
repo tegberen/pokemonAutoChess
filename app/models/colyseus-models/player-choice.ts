@@ -20,6 +20,8 @@ export class PlayerChoice extends Schema {
   @type("string") id: string
   @type("string") type: PlayerChoiceType
   @type(["string"]) items: Item[] = []
+  // SIX_PACK: optional second component paired with each pokemon proposition
+  @type(["string"]) items2: Item[] = []
   @type(["string"]) pokemons: PkmProposition[] = []
   @type(["string"]) armoryOptions: ArmoryOptions[] = []
   @type(["string"]) scribbleShapes: ScribbleShapeType[] = []
@@ -30,6 +32,7 @@ export class PlayerChoice extends Schema {
   constructor(args: {
     type: PlayerChoiceType
     items?: Item[]
+    items2?: Item[]
     pokemons?: PkmProposition[]
     armoryOptions?: ArmoryOptions[]
     scribbleShapes?: ScribbleShapeType[]
@@ -41,6 +44,7 @@ export class PlayerChoice extends Schema {
     this.id = crypto.randomUUID()
     this.type = args.type
     if (args.items) this.items = args.items
+    if (args.items2) this.items2 = args.items2
     if (args.pokemons) this.pokemons = args.pokemons
     if (args.armoryOptions) this.armoryOptions = args.armoryOptions
     if (args.scribbleShapes) this.scribbleShapes = args.scribbleShapes

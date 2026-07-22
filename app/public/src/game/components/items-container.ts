@@ -12,6 +12,7 @@ import {
   Wands,
   WeatherRocks
 } from "../../../../types/enum/Item"
+import { SpecialGameRule } from "../../../../types/enum/SpecialGameRule"
 import { isIn } from "../../../../utils/array"
 import { schemaValues } from "../../../../utils/schemas"
 import { DEPTH } from "../depths"
@@ -44,8 +45,17 @@ export default class ItemsContainer extends GameObjects.Container {
   render(inventory: SetSchema<Item> | ArraySchema<Item>) {
     this.removeAll(true)
 
-    const itemSize = this.pokemonId === null ? 70 : 25
-    const ITEMS_PER_COLUMN = 6
+    // SIX_PACK: up to 6 items laid out in columns of 3 (items 4-6 beside 1-3),
+    // shrunk to 90% while keeping the original spacing so they stay readable.
+    const isSixPack =
+      this.pokemonId !== null &&
+      this.scene.room?.state?.specialGameRule === SpecialGameRule.SIX_PACK
+
+    const step = this.pokemonId === null ? 70 : 25 // spacing between item slots
+    const scale = isSixPack ? 0.9 : 1
+    // nudge the columns left a touch so they sit over the sprite's edge
+    const xOffset = isSixPack ? -8 : 0
+    const ITEMS_PER_COLUMN = isSixPack ? 3 : 6
     const items = schemaValues(inventory)
 
     this.items = []
@@ -53,18 +63,20 @@ export default class ItemsContainer extends GameObjects.Container {
       .sort((a, b) => this.getOrderPriority(b) - this.getOrderPriority(a))
       .forEach((item, i) => {
         this.items.push(item)
-        const x = -1 * itemSize * Math.floor(i / ITEMS_PER_COLUMN)
-        const y = (i % ITEMS_PER_COLUMN) * itemSize
-        this.add(
-          new ItemContainer(
-            this.scene,
-            x,
-            y,
-            item,
-            this.pokemonId,
-            this.playerId
-          )
+        // extra columns extend right (away from the sprite) in six-pack, else left
+        const columnDir = isSixPack ? 1 : -1
+        const x = xOffset + columnDir * step * Math.floor(i / ITEMS_PER_COLUMN)
+        const y = (i % ITEMS_PER_COLUMN) * step
+        const itemContainer = new ItemContainer(
+          this.scene,
+          x,
+          y,
+          item,
+          this.pokemonId,
+          this.playerId
         )
+        if (scale !== 1) itemContainer.setScale(scale)
+        this.add(itemContainer)
       })
   }
 

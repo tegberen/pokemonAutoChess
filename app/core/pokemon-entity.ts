@@ -3,6 +3,7 @@ import {
   ARMOR_FACTOR,
   DEFAULT_CRIT_CHANCE,
   DEFAULT_CRIT_POWER,
+  getItemCapacity,
   ItemStats,
   MAX_SPEED,
   ON_ATTACK_MANA
@@ -807,8 +808,11 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
 
   addItem(item: Item, permanent = false) {
     const type = SynergyGivenByItem[item]
+    const itemCapacity = getItemCapacity(
+      this.simulation.room?.state.specialGameRule
+    )
     if (
-      this.items.size >= 3 ||
+      this.items.size >= itemCapacity ||
       (isIn(SynergyStones, item) && this.types.has(type)) ||
       ((item === Item.EVIOLITE || item === Item.RARE_CANDY) &&
         !this.refToBoardPokemon.hasEvolution) ||
@@ -825,7 +829,7 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
       permanent &&
       !this.isGhostOpponent &&
       this.refToBoardPokemon.items.has(item) == false &&
-      this.refToBoardPokemon.items.size < 3
+      this.refToBoardPokemon.items.size < itemCapacity
     ) {
       this.refToBoardPokemon.items.add(item)
     }

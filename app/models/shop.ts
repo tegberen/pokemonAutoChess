@@ -491,6 +491,9 @@ export default class Shop {
         : NB_UNIQUE_PROPOSITIONS
     const pokemonsProposed: PkmProposition[] = []
     const itemsProposed: Item[] = []
+    // SIX_PACK: a second component paired with each starter proposition
+    const itemsProposed2: Item[] = []
+    const isSixPack = state.specialGameRule === SpecialGameRule.SIX_PACK
 
     for (let i = 0; i < nbPropositions; i++) {
       let synergyWanted: Synergy | undefined = portalSynergies[i]
@@ -567,6 +570,11 @@ export default class Shop {
             (c) => itemsProposed.includes(c) === false
           )
         )
+        if (isSixPack) {
+          itemsProposed2[i] = pickRandomIn(
+            ItemComponentsNoFossilOrScarf.filter((c) => c !== itemsProposed[i])
+          )
+        }
       }
       if (
         stageLevel === PortalCarouselStages[0] &&
@@ -600,7 +608,8 @@ export default class Shop {
       new PlayerChoice({
         type,
         pokemons: pokemonsProposed,
-        items: itemsProposed
+        items: itemsProposed,
+        items2: itemsProposed2
       })
     )
   }

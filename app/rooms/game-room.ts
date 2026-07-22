@@ -1551,12 +1551,22 @@ export default class GameRoom extends Room<{ state: GameState }> {
     }
 
     if (choice.items.length > 0) {
-      const item = choice.items[choiceIndex]
-      if (isIn(Wands, item)) {
-        player.fairyWands.push(item)
-        player.updateFairyWands()
-      } else {
-        player.items.push(item)
+      const grantItem = (it: Item) => {
+        if (isIn(Wands, it)) {
+          player.fairyWands.push(it)
+          player.updateFairyWands()
+        } else {
+          player.items.push(it)
+        }
+      }
+      grantItem(choice.items[choiceIndex])
+      // SIX_PACK: pokemon picks and item choices carry a paired second item
+      const secondItem = choice.items2[choiceIndex]
+      if (
+        this.state.specialGameRule === SpecialGameRule.SIX_PACK &&
+        secondItem
+      ) {
+        grantItem(secondItem)
       }
     }
 

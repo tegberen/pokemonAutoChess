@@ -12,6 +12,7 @@ import {
   ITEM_CAROUSEL_BASE_DURATION,
   ItemCarouselStages,
   ItemSellPricesAtTown,
+  getItemCapacity,
   MAX_PLAYERS_PER_GAME,
   OUTLAW_GOLD_REWARD,
   PkmsWithAltForms,
@@ -1164,7 +1165,7 @@ export class OnDragDropItemCommand extends Command<
 
     // check if full items and nothing to combine
     if (
-      pokemon.items.size >= 3 &&
+      pokemon.items.size >= getItemCapacity(this.state.specialGameRule) &&
       !(isBasicItem && existingBasicItemToCombine) &&
       !isIn(UnholdableItems, item)
     ) {
@@ -1915,6 +1916,11 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
       this.state.players.forEach((player: Player) => {
         if (!player.isBot) {
           const items = pickNRandomIn(ItemComponentsNoScarf, 3)
+          // SIX_PACK: a second component paired with each add-pick proposition
+          const items2 =
+            this.state.specialGameRule === SpecialGameRule.SIX_PACK
+              ? pickNRandomIn(ItemComponentsNoScarf, 3)
+              : undefined
           const pokemons: Pkm[] = []
           for (let i = 0; i < 3; i++) {
             const p = pool.pop()
@@ -1938,7 +1944,8 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
             new PlayerChoice({
               type: "addPick",
               pokemons,
-              items
+              items,
+              items2
             })
           )
           remainingAddPicks--
@@ -2460,10 +2467,16 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
               player.choices.push(
                 new PlayerChoice({
                   type: "item",
-                  items: schemaValues(player.pveRewardsPropositions)
+                  items: schemaValues(player.pveRewardsPropositions),
+                  // SIX_PACK: each item option comes paired with a second item
+                  items2:
+                    player.pveRewardsPropositions2.length > 0
+                      ? schemaValues(player.pveRewardsPropositions2)
+                      : undefined
                 })
               )
               player.pveRewardsPropositions.clear()
+              player.pveRewardsPropositions2.clear()
             }
           }
 
@@ -2788,6 +2801,21 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
                 ([] as Item[]))
 
           resetArraySchema(player.pveRewardsPropositions, rewardsPropositions)
+
+          // SIX_PACK: pair each reward proposition with a second item —
+          // a component early, but a full/completed item after stage 20
+          const sixPackPairPool =
+            this.state.stageLevel > PortalCarouselStages[2]
+              ? CraftableItemsNoScarves
+              : ItemComponentsNoScarf
+          const rewardsPropositions2 =
+            this.state.specialGameRule === SpecialGameRule.SIX_PACK
+              ? rewardsPropositions.map(() => pickRandomIn(sixPackPairPool))
+              : []
+          resetArraySchema(
+            player.pveRewardsPropositions2,
+            rewardsPropositions2
+          )
         })
 
         const [player, partner] = group

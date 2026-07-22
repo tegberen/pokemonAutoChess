@@ -149,6 +149,8 @@ export default class Player extends Schema implements IPlayer {
   @type([PlayerChoice]) choices = new ArraySchema<PlayerChoice>()
   @type(["string"]) pveRewards = new ArraySchema<Item>()
   @type(["string"]) pveRewardsPropositions = new ArraySchema<Item>()
+  // SIX_PACK: second item paired with each reward proposition (same order)
+  @type(["string"]) pveRewardsPropositions2 = new ArraySchema<Item>()
   @type(["string"]) scribbleShapesCollected = new ArraySchema<ScribbleShapeType>()
   @type([ScribbleShape]) scribbleShapes = new ArraySchema<ScribbleShape>()
   @type("float32") loadingProgress: number = 0

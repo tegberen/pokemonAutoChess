@@ -126,6 +126,7 @@ export default function GameChoice() {
           <div className="game-choice-pokemons-list">
             {choice.pokemons.map((proposition, index) => {
               const item = choice.items[index]
+              const item2 = choice.items2[index]
               return (
                 <div
                   key={`${choice.id}-${index}`}
@@ -189,6 +190,32 @@ export default function GameChoice() {
                       <p>
                         {addIconsToDescription(t(`item_description.${item}`))}
                       </p>
+                      {item2 && isIn(ShinyItems, item2) === false && (
+                        <>
+                          <hr
+                            style={{
+                              border: "none",
+                              borderTop: "1px solid var(--color-fg-primary)",
+                              opacity: 0.25,
+                              margin: "0.4em auto",
+                              width: "80%"
+                            }}
+                          />
+                          <img
+                            style={{
+                              width: "2rem",
+                              height: "2rem",
+                              verticalAlign: "middle"
+                            }}
+                            src={"assets/item/" + item2 + ".png"}
+                          />
+                          <p>
+                            {addIconsToDescription(
+                              t(`item_description.${item2}`)
+                            )}
+                          </p>
+                        </>
+                      )}
                     </div>
                   )}
                 </div>
@@ -239,26 +266,52 @@ export default function GameChoice() {
           </div>
         ) : choice.items.length > 0 ? (
           <div className="game-choice-items-list">
-            {choice.items.map((item: Item, index) => (
-              <div
-                className="my-box active clickable"
-                key={`${choice.id}-${index}`}
-                onClick={(event) => {
-                  event.stopPropagation()
-                  playSound(SOUNDS.BUTTON_CLICK)
-                  pickChoice(choice.id, index)
-                }}
-              >
-                <img
-                  style={{ width: "4rem", height: "4rem" }}
-                  src={"assets/item/" + item + ".png"}
-                />
-                <h3 style={{ margin: "0.25em 0" }}>{t(`item.${item}`)}</h3>
-                <p style={{ marginBottom: "0.5em" }}>
-                  {addIconsToDescription(t(`item_description.${item}`))}
-                </p>
-              </div>
-            ))}
+            {choice.items.map((item: Item, index) => {
+              const item2 = choice.items2[index]
+              return (
+                <div
+                  className="my-box active clickable"
+                  key={`${choice.id}-${index}`}
+                  onClick={(event) => {
+                    event.stopPropagation()
+                    playSound(SOUNDS.BUTTON_CLICK)
+                    pickChoice(choice.id, index)
+                  }}
+                >
+                  <img
+                    style={{ width: "4rem", height: "4rem" }}
+                    src={"assets/item/" + item + ".png"}
+                  />
+                  <h3 style={{ margin: "0.25em 0" }}>{t(`item.${item}`)}</h3>
+                  <p style={{ marginBottom: "0.5em" }}>
+                    {addIconsToDescription(t(`item_description.${item}`))}
+                  </p>
+                  {item2 && (
+                    <>
+                      <hr
+                        style={{
+                          border: "none",
+                          borderTop: "1px solid var(--color-fg-primary)",
+                          opacity: 0.25,
+                          margin: "0.4em auto",
+                          width: "80%"
+                        }}
+                      />
+                      <img
+                        style={{ width: "4rem", height: "4rem" }}
+                        src={"assets/item/" + item2 + ".png"}
+                      />
+                      <h3 style={{ margin: "0.25em 0" }}>
+                        {t(`item.${item2}`)}
+                      </h3>
+                      <p style={{ marginBottom: "0.5em" }}>
+                        {addIconsToDescription(t(`item_description.${item2}`))}
+                      </p>
+                    </>
+                  )}
+                </div>
+              )
+            })}
           </div>
         ) : <div className="game-choice-items-list">
             {choice.armoryOptions.map((option: ArmoryOptions, index) => (

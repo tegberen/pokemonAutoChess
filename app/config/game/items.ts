@@ -1,5 +1,18 @@
 import { Stat } from "../../types/enum/Game"
 import { Item, type ItemsSoldAtTown } from "../../types/enum/Item"
+import { SpecialGameRule } from "../../types/enum/SpecialGameRule"
+
+// Default number of items a Pokémon can hold. The SIX_PACK scribble raises it.
+export const MAX_ITEMS_HELD = 3
+export const SIX_PACK_ITEMS_HELD = 6
+
+export function getItemCapacity(
+  specialGameRule?: SpecialGameRule | null
+): number {
+  return specialGameRule === SpecialGameRule.SIX_PACK
+    ? SIX_PACK_ITEMS_HELD
+    : MAX_ITEMS_HELD
+}
 
 export const ItemStats: { [item in Item]?: { [stat in Stat]?: number } } = {
   [Item.BINDING_BAND]: { [Stat.LUCK]: 10 },

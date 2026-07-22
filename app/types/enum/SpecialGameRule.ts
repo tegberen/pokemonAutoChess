@@ -28,4 +28,5 @@ export enum SpecialGameRule {
   SMEARGLE_PACK = "SMEARGLE_PACK",
   JUGGERNAUT = "JUGGERNAUT",
   OVERTIME = "OVERTIME",
+  SIX_PACK = "SIX_PACK",
 }

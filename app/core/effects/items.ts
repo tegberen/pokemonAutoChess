@@ -1,4 +1,4 @@
-import { ARMOR_FACTOR, RegionDetails } from "../../config"
+import { ARMOR_FACTOR, getItemCapacity, RegionDetails } from "../../config"
 import { DishByPkm } from "../../config/game/dishes"
 import { getSynergyTier } from "../../models/colyseus-models/synergies"
 import PokemonFactory from "../../models/pokemon-factory"
@@ -1901,8 +1901,11 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
         )
         newItems.push(pickRandomIn(eligibleItems))
       }
+      const itemCapacity = getItemCapacity(
+        entity.simulation.room?.state.specialGameRule
+      )
       newItems.forEach((item) => {
-        if (entity.items.size < 3) {
+        if (entity.items.size < itemCapacity) {
           entity.items.add(item)
           entity.applyItemEffect(item)
         }

@@ -5037,7 +5037,8 @@
 		"AVATAR": "Avatar",
 		"LIGHT_SHOW": "Light Show",
 		"JUGGERNAUT": "Juggernaut",
-		"OVERTIME": "Overtime"
+		"OVERTIME": "Overtime",
+		"SIX_PACK": "Six Pack"
 	},
 	"scribble_description": {
 		"EVERYONE_IS_HERE": "All the additional picks are available immediately",
@@ -5068,7 +5069,8 @@
 		"AVATAR": "Every Pokémon that is not {{type}} gains the {{type}} type.",
 		"LIGHT_SHOW": "Every 3 stages, Smeargle draws a glowing shape on your board and you choose a second one. Pokémon starting a fight on a lit cell gain that shape's bonus:",
 		"JUGGERNAUT": "Pick a Pokémon — the Juggernaut. The shop keeps offering 1 STAR copies of it. Drag a copy onto the Juggernaut to permanently boost its HP and other stats!",
-		"OVERTIME": "Everyone starts with 200 HP and can reach level 10."
+		"OVERTIME": "Everyone starts with 200 HP and can reach level 10.",
+		"SIX_PACK": "Pokémon can hold up to 6 items instead of 3. More items and components can be found throughout the game."
 	},
 	"scribble_shape": {
 		"DOT": "Dot",

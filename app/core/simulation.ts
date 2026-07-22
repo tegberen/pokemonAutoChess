@@ -1,5 +1,5 @@
 import { MapSchema, Schema, type } from "@colyseus/schema"
-import { BOARD_HEIGHT, BOARD_WIDTH, BOARD_SIDE_HEIGHT, DEFAULT_SPEED } from "../config"
+import { BOARD_HEIGHT, BOARD_WIDTH, BOARD_SIDE_HEIGHT, DEFAULT_SPEED, getItemCapacity } from "../config"
 import {
   packScribbleCell,
   ScribbleShapeTint,
@@ -740,8 +740,9 @@ export default class Simulation extends Schema implements ISimulation {
         wonderboxItems.push(pickRandomIn(eligibleItems))
       }
 
+      const itemCapacity = getItemCapacity(this.room?.state.specialGameRule)
       wonderboxItems.forEach((item) => {
-        if (pokemon.items.size < 3) {
+        if (pokemon.items.size < itemCapacity) {
           pokemon.items.add(item)
         }
       })

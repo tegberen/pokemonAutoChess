@@ -171,7 +171,9 @@ export default class BoardManager {
       if (this.pveChest && this.pveChestGroup) {
         const rewards = [
           ...schemaValues(this.player.pveRewards),
-          ...schemaValues(this.player.pveRewardsPropositions)
+          ...schemaValues(this.player.pveRewardsPropositions),
+          // SIX_PACK: also glitter out the paired components for each proposition
+          ...schemaValues(this.player.pveRewardsPropositions2)
         ]
         this.openChest(this.pveChestGroup, this.pveChest, rewards)
       }
