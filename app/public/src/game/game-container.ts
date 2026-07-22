@@ -576,7 +576,15 @@ class GameContainer {
       )
     })
 
+    // keep the store's live items reference fresh for the weather forecast
+    const refreshStoreItems = () =>
+      store.dispatch(
+        changePlayer({ id: player.id, field: "items", value: player.items })
+      )
+    $player.items.onAdd(refreshStoreItems)
+    $player.items.onRemove(refreshStoreItems)
     $player.items.onChange((value, key) => {
+      refreshStoreItems()
       if (player.id === this.playerIdSpectated) {
         this.gameScene?.itemsContainer?.render(player.items)
       }

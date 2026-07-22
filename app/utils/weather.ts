@@ -39,6 +39,45 @@ export const WeatherSupportPassives: Partial<Record<Passive, Weather>> = {
   [Passive.BLOSSOM_WEATHER_SUPPORT]: Weather.BLOSSOM
 }
 
+export function getPlayerWeatherScores(
+  board: MapSchema<Pokemon, string>,
+  items: Iterable<Item>
+): Map<Weather, number> {
+  const scores = new Map<Weather, number>()
+  const add = (weather: Weather, amount: number) =>
+    scores.set(weather, (scores.get(weather) ?? 0) + amount)
+
+  for (const item of items) {
+    if (hasKey(WeatherByWeatherRocks, item)) {
+      add(WeatherByWeatherRocks.get(item)!, 3)
+    }
+  }
+
+  board.forEach((pkm) => {
+    if (pkm.positionY === 0) return
+
+    for (const passive of [pkm.passive, pkm.passive2]) {
+      const weather = [...PassivesAssociatedToWeather.keys()].find((key) =>
+        PassivesAssociatedToWeather.get(key)!.includes(passive)
+      )
+      if (weather) add(weather, 100)
+    }
+
+    pkm.types.forEach((type) => {
+      if (WeatherAssociatedToSynergy.has(type) && pkm.passive !== Passive.CASTFORM) {
+        add(WeatherAssociatedToSynergy.get(type)!, 1)
+      }
+    })
+
+    for (const p of [pkm.passive, pkm.passive2]) {
+      const supportedWeather = WeatherSupportPassives[p]
+      if (supportedWeather) add(supportedWeather, 2)
+    }
+  })
+
+  return scores
+}
+
 export function getWeather(
   bluePlayer: Player,
   redPlayer: Player | null,

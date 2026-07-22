@@ -4176,6 +4176,7 @@
 		"LEGIONNAIRE": "Make a Falinks formation with 8 troopers or more",
 		"FIVE_STARS": "Play with a five stars Pokémon in your team"
 	},
+	"weather_forecast": "Weather forecast",
 	"weather": {
 		"NEUTRAL": "Calm weather",
 		"ZENITH": "Zenith",
@@ -4332,6 +4333,7 @@
 	"team": "Team",
 	"bench": "Bench",
 	"synergies": "Synergies",
+	"effects": "Effects",
 	"join_as_guest": "Join as Guest",
 	"welcome": "Welcome",
 	"stage": "Stage",

@@ -80,6 +80,7 @@ import {
   setSpecialGameRule,
   setSpectatorCount,
   setStageLevel,
+  setWeatherThreshold,
   setStreak,
   setSynergies,
   setWeather,
@@ -762,6 +763,10 @@ export default function Game() {
 
       $state.listen("stageLevel", (value) => {
         dispatch(setStageLevel(value))
+      })
+
+      $state.listen("weatherThreshold", (value) => {
+        dispatch(setWeatherThreshold(value))
       })
 
       $state.listen("noElo", (value) => {

@@ -48,6 +48,7 @@ export interface GameStateStore {
   itemsProposition: Item[]
   pokemonsProposition: PkmProposition[]
   weather: Weather
+  weatherThreshold: number
   blueDpsMeter: IDps[]
   redDpsMeter: IDps[]
   emotesUnlocked: Emotion[]
@@ -68,6 +69,7 @@ const initialState: GameStateStore = {
   simulations: new Array<ISimulation>(),
   stageLevel: 0,
   weather: Weather.NEUTRAL,
+  weatherThreshold: 8,
   noElo: false,
   finale: false,
   playerIdSpectated: "",
@@ -242,6 +244,9 @@ export const gameSlice: Slice<GameStateStore> = createSlice({
         state.weather = action.payload.value
       }
     },
+    setWeatherThreshold: (state, action: PayloadAction<number>) => {
+      state.weatherThreshold = action.payload
+    },
     setSimulation: (state, action: PayloadAction<Simulation>) => {
       if (
         state.playerIdSpectated === action.payload.bluePlayerId ||
@@ -365,6 +370,7 @@ export const {
   setPhase,
   setStageLevel,
   setWeather,
+  setWeatherThreshold,
   setNoELO,
   setFinale,
   setSpecialGameRule,

@@ -72,7 +72,8 @@ export const PassivesAssociatedToWeather: Map<Weather, Passive[]> = new Map([
   [Weather.DISTORTION, [Passive.DISTORTION]],
   [Weather.METEOR_SHOWER, [Passive.METEOR_SHOWER]],
   [Weather.CLOUDY, [Passive.CLOUDY]],
-  [Weather.BLOSSOM, [Passive.BLOSSOM]]
+  [Weather.BLOSSOM, [Passive.BLOSSOM]],
+  [Weather.BLOODMOON, [Passive.BLOODMOON]]
 ])
 
 export const WeatherAssociatedToSynergy: Map<Synergy, Weather> = new Map([

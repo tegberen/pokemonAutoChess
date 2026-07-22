@@ -283,6 +283,9 @@ export class MiniGame {
       state.townEncounter = encounter ?? null
       if (encounter) {
         state.townEncounters.add(encounter)
+        if (encounter === TownEncounters.CASTFORM) {
+          state.weatherThreshold = 7
+        }
         // add a fixed blocked circle collision body around encounter
         const body = Bodies.circle(this.centerX, this.centerY, 20, {
           isStatic: true,

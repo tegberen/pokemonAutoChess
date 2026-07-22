@@ -4,7 +4,49 @@
   color: var(--color-fg-primary);
   font-size: 1em;
   overflow-y: auto;
+  overflow-x: hidden;
   padding: 0;
+}
+
+.synergies-container .effects-tabs {
+  display: flex;
+  flex-flow: column;
+  min-height: 0;
+  flex: 1;
+  padding-top: 6px;
+}
+
+.synergies-container .react-tabs__tab-list {
+  display: flex;
+  margin: 0;
+  padding: 0;
+  flex: none;
+  border-bottom: var(--border-thin);
+}
+
+.synergies-container .react-tabs__tab {
+  flex: 1 1 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0.2em 0.4em;
+  cursor: pointer;
+}
+
+.synergies-container .react-tabs__tab img {
+  height: 26px;
+  width: auto;
+}
+
+.synergies-container .react-tabs__tab--selected {
+  background: var(--color-bg-secondary);
+}
+
+.synergies-container .react-tabs__tab-panel--selected {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 #game-wrapper .synergies-container {
@@ -12,6 +54,7 @@
   left: 0.5%;
   top: 9%;
   padding: 0;
+  width: 15.5em;
   max-height: 70%;
 }
 

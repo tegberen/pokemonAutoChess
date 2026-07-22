@@ -23,6 +23,7 @@ export const TownEncountersByStage: {
     [Pkm.MAKUHITA]: 1 / 20,
     [Pkm.MAGNEZONE]: 1 / 40,
     [Pkm.LAPRAS]: 1 / 20,
+    [Pkm.CASTFORM]: 1 / 20
   },
   12: {
     [Pkm.KANGASKHAN]: 1 / 20,
@@ -34,7 +35,8 @@ export const TownEncountersByStage: {
     [Pkm.MAROWAK]: 1 / 20,
     [Pkm.SABLEYE]: 1 / 20,
     [Pkm.MAKUHITA]: 1 / 20,
-    [Pkm.CELEBI]: 1 / 40
+    [Pkm.CELEBI]: 1 / 40,
+    [Pkm.CASTFORM]: 1 / 20
   },
   17: {
     [Pkm.WOBBUFFET]: 1 / 20,

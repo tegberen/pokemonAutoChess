@@ -53,6 +53,7 @@ export default class GameState extends Schema {
   @type("string") specialGameRule: SpecialGameRule | null = null
   @type("string") avatarSynergy: Synergy | null = null
   @type("string") townEncounter: TownEncounter | null = null
+  @type("number") weatherThreshold: number = 8
   @type("number") currentPveVariantIndex: number = 0
   time = StageDuration[0] * 1000
   updatePhaseNeeded = false
