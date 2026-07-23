@@ -1,0 +1,161 @@
+/* with the seed bag button present, lay the pools out as two columns
+   (Additional above Regional in the first column, Seed Bag to the right),
+   mirroring the scribble-sketchbook 2-column behavior */
+.game-additional-pools:has(.game-seed-bag-icon) {
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-rows: auto auto;
+  align-content: center;
+  justify-content: center;
+  gap: 0.5em;
+}
+
+@media (aspect-ratio < 4 / 3) {
+  .game-additional-pools:has(.game-seed-bag-icon) {
+    display: flex;
+    flex-direction: row;
+  }
+}
+
+/* the pouch itself is a button (light blue, like the reroll button), so it
+   gets the usual hover/active response and opens the popover on click */
+.game-seed-bag-icon {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* seed-bag games: widen the shop bar a little so the bigger pouch fits without
+   the row overflowing and cutting its border on the left/right */
+.game-shop.my-container:has(.game-seed-bag-icon) {
+  left: 4vw;
+  right: 4vw;
+}
+
+/* big square button (~a shop slot; shorter than a shop pokemon so the bar
+   height is unchanged), pouch centered vertically next to the stacked icons.
+   The SEED_BAG icon keeps its natural size, centered inside. */
+.game-additional-pools:has(.game-seed-bag-icon) .game-seed-bag-icon {
+  grid-row: 1 / 3;
+  align-self: center;
+}
+
+.game-seed-bag-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 5.5em;
+  height: 5.5em;
+  padding: 0;
+}
+
+.game-seed-bag-button img {
+  width: 2.5em;
+  height: 2.5em;
+  display: block;
+}
+
+/* popover panel (matches the .custom-theme-tooltip look), anchored above the
+   button and centered, so its bottom stays put and it never re-centers */
+.game-seed-bag-popover {
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1060;
+  /* no padding: the header/description are full-width secondary bars flush to
+     the (clipped) rounded corners, and the body pads itself horizontally */
+  padding: 0;
+  border: var(--border-thick);
+  border-radius: 12px;
+  overflow: hidden;
+  background-color: var(--color-bg-primary);
+  color: var(--color-fg-primary);
+}
+
+/* popup content — sized ~25% larger than the base icon grid for readability */
+.game-seed-bag {
+  width: 375px;
+}
+
+/* darker "selected" header bar, analogous to the selected tab in the Effects
+   panel (container is bg-primary, the selected element is bg-secondary) */
+.game-seed-bag h2 {
+  font-size: 1.4em;
+  margin: 0 0 0.5em 0;
+  padding: 5px 10px;
+  background-color: var(--color-bg-secondary);
+  border-bottom: var(--border-thin);
+}
+
+.game-seed-bag .help {
+  margin: 0 0 0.5em 0;
+  padding: 0 10px;
+  font-size: 0.9em;
+  opacity: 0.8;
+}
+
+.game-seed-bag-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+  gap: 5px;
+  padding: 0 10px;
+}
+
+/* inactive vs active mirror how the Effects panel renders synergies:
+   active = secondary background + thin border, inactive = transparent */
+.game-seed-bag-slot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  border: var(--border-thin);
+  border-color: transparent;
+  border-radius: 12px;
+  background-color: rgba(84, 89, 107, 0);
+  cursor: var(--cursor-hover, pointer);
+}
+
+.game-seed-bag-slot img {
+  width: 50px;
+  height: 50px;
+  image-rendering: pixelated;
+}
+
+/* soft response on the seed you're about to click: a light translucent grey
+   (much gentler than the opaque tertiary) plus the black border */
+.game-seed-bag-slot:not(.active):hover {
+  background-color: rgba(84, 89, 107, 0.4);
+  border-color: black;
+}
+
+/* selected seed, same as an active synergy: darker fill + thin black border */
+.game-seed-bag-slot.active {
+  background-color: var(--color-bg-secondary);
+  border: var(--border-thin);
+}
+
+/* fixed height keeps the popover from resizing when the armed seed (and thus
+   its description) changes */
+/* secondary-background footer bar, full width like the header. Tall enough to
+   show the longest seed description without scrolling, and fixed so switching
+   seeds never resizes the popover */
+.game-seed-bag-active-desc {
+  margin-top: 0.5em;
+  padding: 5px 10px;
+  background-color: var(--color-bg-secondary);
+  border-top: var(--border-thin);
+  height: 9.5em;
+  overflow-y: auto;
+}
+
+.game-seed-bag-active-desc h3 {
+  margin: 0 0 0.25em 0;
+  font-size: 1em;
+}
+
+.game-seed-bag-active-desc p {
+  margin: 0;
+  font-size: 0.85em;
+}

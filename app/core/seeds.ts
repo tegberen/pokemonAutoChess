@@ -23,7 +23,6 @@ export const SeedEffects: Record<(typeof Seeds)[number], Effect[]> = {
   BAN_SEED: [
     new OnSkyDiveAttackEffect(({ pokemon, target }) => {
       target.status.triggerSilence(3000, target, pokemon)
-      pokemon.status.triggerSilence(3000, pokemon, pokemon)
     })
   ],
 
@@ -53,7 +52,6 @@ export const SeedEffects: Record<(typeof Seeds)[number], Effect[]> = {
   SLEEP_SEED: [
     new OnSkyDiveAttackEffect(({ pokemon, target }) => {
       target.status.triggerSleep(3000, target)
-      pokemon.status.triggerSleep(3000, pokemon)
     })
   ],
 
@@ -61,7 +59,6 @@ export const SeedEffects: Record<(typeof Seeds)[number], Effect[]> = {
   STUN_SEED: [
     new OnSkyDiveAttackEffect(({ pokemon, target }) => {
       target.status.triggerParalysis(3000, target, pokemon)
-      pokemon.status.triggerParalysis(3000, pokemon, pokemon)
     })
   ],
 
@@ -69,7 +66,6 @@ export const SeedEffects: Record<(typeof Seeds)[number], Effect[]> = {
   TOTTER_SEED: [
     new OnSkyDiveAttackEffect(({ pokemon, target }) => {
       target.status.triggerConfusion(3000, target, pokemon)
-      pokemon.status.triggerConfusion(3000, pokemon, pokemon)
     })
   ],
 
@@ -120,11 +116,11 @@ export const SeedEffects: Record<(typeof Seeds)[number], Effect[]> = {
       const midRow = isRedTeam ? 4 : 1
       const backRow = isRedTeam ? 5 : 0
       if (entity.positionY === frontRow) {
-        entity.addDefense(entity.baseDef * 2, entity, 0, false)
+        entity.addDefense(entity.baseDef, entity, 0, false)
       } else if (entity.positionY === midRow) {
-        entity.addSpecialDefense(entity.baseSpeDef * 1.5, entity, 0, false)
+        entity.addSpecialDefense(entity.baseSpeDef, entity, 0, false)
       } else if (entity.positionY === backRow) {
-        entity.addAttack(entity.baseAtk * 0.5, entity, 0, false)
+        entity.addAttack(entity.baseAtk * 0.25, entity, 0, false)
       }
     })
   ],
@@ -146,7 +142,7 @@ export const SeedEffects: Record<(typeof Seeds)[number], Effect[]> = {
   BLAST_SEED: [
     new OnSpawnEffect((entity, player, isSpawn) => {
       if (!entity.types.has(Synergy.FLYING)) return
-      entity.addAttack(entity.baseAtk, entity, 0, false)
+      entity.addAttack(entity.baseAtk * 0.5, entity, 0, false)
       entity.status.triggerBurn(300000, entity, entity)
     })
   ],
@@ -161,7 +157,7 @@ export const SeedEffects: Record<(typeof Seeds)[number], Effect[]> = {
     }),
     new OnSkyDiveAttackEffect(({ pokemon, target }) => {
       target.status.triggerFlinch(5000, target, pokemon)
-      pokemon.addSpeed(25, pokemon, 0, false)
+      pokemon.addSpeed(20, pokemon, 0, false)
     })
   ],
 
@@ -184,9 +180,8 @@ export const SeedEffects: Record<(typeof Seeds)[number], Effect[]> = {
   TRAINING_SEED: [
     new OnKillEffect(({ attacker }) => {
       if (!attacker.types.has(Synergy.FLYING)) return
-      attacker.addAttack(3, attacker, 0, false, true)
-      attacker.addSpeed(5, attacker, 0, false, true)
-      attacker.addMaxHP(10, attacker, 0, false, true)
+      attacker.addAttack(1, attacker, 0, false, true)
+      attacker.addSpeed(2, attacker, 0, false, true)
     })
   ],
 
@@ -202,7 +197,7 @@ export const SeedEffects: Record<(typeof Seeds)[number], Effect[]> = {
   JOY_SEED: [
     new OnKillEffect(({ attacker }) => {
       if (!attacker.types.has(Synergy.FLYING)) return
-      if (attacker.player && chance(0.3, attacker)) { 
+      if (attacker.player && chance(0.05, attacker)) { 
         attacker.player.items.push(pickRandomIn(ItemComponents))
       }
     })
@@ -235,7 +230,6 @@ export const SeedEffects: Record<(typeof Seeds)[number], Effect[]> = {
         ally.status.addResurrection(ally)
       })
       allies.forEach((ally) => {
-        ally.addSpeed(ally.speed, ally, 0, false)
         ally.addAttack(ally.atk, ally, 0, false)
       })
     })
@@ -268,7 +262,7 @@ export const SeedEffects: Record<(typeof Seeds)[number], Effect[]> = {
   // "EMPOWERMENT_SEED":  -> checked in pokemon-entity.ts fly away
   EMPOWERMENT_SEED: [
     new OnSimulationStartEffect(({ entity }) => {
-      entity.addCritPower(50, entity, 0, false)
+      entity.addCritPower(25, entity, 0, false)
     })  
   ],
   // "DECOY_SEED": -> checked in pokemon-entity.ts fly away

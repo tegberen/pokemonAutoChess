@@ -313,7 +313,7 @@ export default class Simulation extends Schema implements ISimulation {
           Item.TINY_REVIVER_SEED,
           Item.WARP_SEED
         ]
-        if (strongestAllySeeds.some((seed) => player.items.includes(seed))) {
+        if (strongestAllySeeds.some((seed) => player.activeSeed === seed)) {
           const entities = [...team.values()].filter(
             (e): e is PokemonEntity => e.hp > 0 && !e.isSpawn
           )
@@ -323,7 +323,7 @@ export default class Simulation extends Schema implements ISimulation {
           }
         }
         // DOOM_SEED - random Flying ally, decided once
-        if (player.items.includes(Item.DOOM_SEED)) {
+        if (player.activeSeed === Item.DOOM_SEED) {
           const flyingAllies = [...team.values()].filter(
             (e): e is PokemonEntity =>
               e.hp > 0 && !e.isSpawn && e.types.has(Synergy.FLYING)
@@ -822,16 +822,14 @@ export default class Simulation extends Schema implements ISimulation {
         }
       }
     }
-    // apply seed effects for Flying 8
+    // apply seed effects for Flying 8 - only the armed seed from the Seed Bag
     if (pokemon.player) {
-      Seeds.forEach((seed) => {
-        if (pokemon.player!.items.includes(seed)) {
-          const seedEffects = SeedEffects[seed]
-          seedEffects?.forEach((effect) => {
-            pokemon.effectsSet.add(effect)
-          })
-        }
-      })
+      const activeSeed = pokemon.player.activeSeed
+      if (activeSeed && isIn(Seeds, activeSeed)) {
+        SeedEffects[activeSeed]?.forEach((effect) => {
+          pokemon.effectsSet.add(effect)
+        })
+      }
     }
   }
 
@@ -2065,13 +2063,8 @@ export default class Simulation extends Schema implements ISimulation {
     this.finishedAt = Date.now()
     this.finished = true
 
-    // remove seeds, just single fight bonus
-    ;[this.bluePlayer, this.bluePartnerPlayer, this.redPlayer].forEach((player) => {
-      if (!player) return
-        Seeds.forEach((seed) => {
-          removeInArray(player.items, seed)
-        })
-    })
+    // Seeds now persist in the Seed Bag (items); the armed seed stays armed
+    // across rounds, so nothing is stripped here anymore.
 
     if (this.blueTeam.size === 0 && this.redTeam.size > 0) {
       this.winnerId = this.redPlayerId

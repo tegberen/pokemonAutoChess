@@ -5,6 +5,7 @@ import {
   Berries,
   Dishes,
   type Item,
+  Seeds,
   ShinyItems,
   SpecialItems,
   TMs,
@@ -15,6 +16,7 @@ import {
 import { SpecialGameRule } from "../../../../types/enum/SpecialGameRule"
 import { isIn } from "../../../../utils/array"
 import { schemaValues } from "../../../../utils/schemas"
+import store from "../../stores"
 import { DEPTH } from "../depths"
 import type GameScene from "../scenes/game-scene"
 import ItemContainer from "./item-container"
@@ -56,7 +58,12 @@ export default class ItemsContainer extends GameObjects.Container {
     // nudge the columns left a touch so they sit over the sprite's edge
     const xOffset = isSixPack ? -8 : 0
     const ITEMS_PER_COLUMN = isSixPack ? 3 : 6
-    const items = schemaValues(inventory)
+    let items = schemaValues(inventory)
+
+    if (this.pokemonId === null) {
+      const activeSeed = store.getState().game.activeSeed
+      items = items.filter((it) => !isIn(Seeds, it) || it === activeSeed)
+    }
 
     this.items = []
     items
@@ -81,6 +88,7 @@ export default class ItemsContainer extends GameObjects.Container {
   }
 
   getOrderPriority(item: Item): number {
+    if (isIn(Seeds, item)) return 20 // armed seed always first in the inventory
     if (isIn(SpecialItems, item)) return 10
     if (isIn(WeatherRocks, item)) return 3
     if (isIn(TMs, item)) return 5

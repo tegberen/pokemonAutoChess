@@ -75,6 +75,7 @@ import type { EloRank } from "../types/enum/EloRank"
 import { GameMode, PokemonActionState, Rarity } from "../types/enum/Game"
 import {
   type Item,
+  Seeds,
   UnholdableItemsToSaveForStats,
   Wands
 } from "../types/enum/Item"
@@ -410,6 +411,19 @@ export default class GameRoom extends Room<{ state: GameState }> {
     )
 
     this.onMessage(
+      Transfer.SELECT_SEED,
+      (client, message: { seed?: unknown } | undefined) => {
+        if (!this.state.gameFinished && client.auth && message) {
+          try {
+            this.selectSeed(client.auth.uid, message.seed)
+          } catch (error) {
+            logger.error(error)
+          }
+        }
+      }
+    )
+
+    this.onMessage(
       Transfer.ARMORY_GIFT,
       (client, message: { choiceId: string; choiceIndex: number; partnerId: string }) => {
         if (!this.state.gameFinished && client.auth) {
@@ -728,6 +742,12 @@ export default class GameRoom extends Room<{ state: GameState }> {
       throw "Account banned"
     }
     this.dispatcher.dispatch(new OnJoinCommand(), { client })
+    // `activeSeed` is a plain (non-schema) field, so push the current value to
+    // the client explicitly on join, otherwise its Seed Bag highlight is blank.
+    const joiningPlayer = this.state.players.get(client.auth.uid)
+    if (joiningPlayer?.activeSeed) {
+      client.send(Transfer.SELECT_SEED, joiningPlayer.activeSeed)
+    }
     const pendingGame = await getPendingGame(this.presence, client.auth.uid)
     if (pendingGame?.gameId === this.roomId) {
       // user reconnected without reconnection token (new browser/machine/session)
@@ -768,6 +788,10 @@ export default class GameRoom extends Room<{ state: GameState }> {
     // if the user reconnects, we clear the pending game and recall the OnJoinCommand
     clearPendingGame(this.presence, client.auth.uid)
     this.dispatcher.dispatch(new OnJoinCommand(), { client })
+    const reconnectingPlayer = this.state.players.get(client.auth.uid)
+    if (reconnectingPlayer?.activeSeed) {
+      client.send(Transfer.SELECT_SEED, reconnectingPlayer.activeSeed)
+    }
   }
 
   async onLeave(client: Client, code: number) {
@@ -1417,6 +1441,19 @@ export default class GameRoom extends Room<{ state: GameState }> {
       emotions: pack.map((card) => card.emotion),
       canReroll: false
     })
+  }
+
+  // Arm a seed from the player's Seed Bag. Validates the request is a real seed
+  // the player actually owns (in `items`), then stores it as the plain
+  // `activeSeed` field and echoes it back so the client highlight stays in sync.
+  selectSeed(playerId: string, seed: unknown) {
+    const player = this.state.players.get(playerId)
+    if (!player) return
+    if (typeof seed !== "string" || !isIn(Seeds, seed)) return
+    if (!player.items.includes(seed)) return
+    player.activeSeed = seed
+    const client = this.clients.find((c) => c.auth?.uid === playerId)
+    client?.send(Transfer.SELECT_SEED, player.activeSeed)
   }
 
   pickChoice(

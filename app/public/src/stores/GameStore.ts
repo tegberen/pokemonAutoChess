@@ -57,6 +57,7 @@ export interface GameStateStore {
   doubleUpChampions: ILeaderboardInfo[]
   smeargleScribbleChampion: ILeaderboardInfo[]
   spectatorCount: number
+  activeSeed: Item | ""
 }
 
 const initialState: GameStateStore = {
@@ -95,7 +96,8 @@ const initialState: GameStateStore = {
   podium: new Array<ILeaderboardInfo>(),
   doubleUpChampions: new Array<ILeaderboardInfo>(),
   smeargleScribbleChampion: new Array<ILeaderboardInfo>(),
-  spectatorCount: 0
+  spectatorCount: 0,
+  activeSeed: ""
 }
 
 export const gameSlice: Slice<GameStateStore> = createSlice({
@@ -347,6 +349,10 @@ export const gameSlice: Slice<GameStateStore> = createSlice({
       state.spectatorCount = action.payload
     },
 
+    setActiveSeed: (state, action: PayloadAction<Item | "">) => {
+      state.activeSeed = action.payload
+    },
+
     leaveGame: () => initialState
   }
 })
@@ -391,7 +397,8 @@ export const {
   setPodium,
   setDoubleUpChampions,
   setSmeargleScribbleChampion,
-  setSpectatorCount
+  setSpectatorCount,
+  setActiveSeed
 } = gameSlice.actions
 
 export default gameSlice.reducer

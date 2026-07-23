@@ -44,6 +44,7 @@ import {
   type MissionOrder,
   NonSpecialBerries,
   type ScarfItem,
+  Seeds,
   SynergyGemsBuried,
   SynergyGivenByItem,
   TMsBronze,
@@ -187,6 +188,7 @@ export default class Player extends Schema implements IPlayer {
   buriedItems: (Item | null)[] = initBuriedItems()
   tms: Item[] = pickRandomTMs()
   weatherRocks: Item[] = []
+  activeSeed: Seeds | "" = ""
   randomComponentsGiven: Item[] = []
   randomEggsGiven: Pkm[] = []
   flowerPotsSpawnOrder: FlowerPot[] = shuffleArray([...FlowerPots])
@@ -528,6 +530,19 @@ export default class Player extends Schema implements IPlayer {
       granted++
     }
   }
+
+  addSeedToBag(rolledSeed: Item): Seeds | null {
+    const unowned = Seeds.filter((s) => !this.items.includes(s))
+    if (unowned.length === 0) return null // already owns every seed
+    const seed: Seeds =
+      isIn(Seeds, rolledSeed) && !this.items.includes(rolledSeed)
+        ? rolledSeed
+        : pickRandomIn(unowned)
+    this.items.push(seed)
+    if (this.activeSeed === "") this.activeSeed = seed
+    return seed
+  }
+
   updateLetters(
     previousSynergies: Map<Synergy, number>,
     updatedSynergies: Map<Synergy, number>

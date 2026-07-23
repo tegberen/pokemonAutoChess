@@ -77,6 +77,7 @@ import {
   setRoundTime,
   setShopFreeRolls,
   setShopLocked,
+  setActiveSeed,
   setSpecialGameRule,
   setSpectatorCount,
   setStageLevel,
@@ -465,6 +466,15 @@ export default function Game() {
       room.onMessage(Transfer.FINAL_RANK, (finalRank) => {
         setFinalRank(finalRank)
         setFinalRankVisibility(FinalRankVisibility.VISIBLE)
+      })
+
+      room.onMessage(Transfer.SELECT_SEED, (seed: Item | "") => {
+        dispatch(setActiveSeed(seed))
+        const scene = getGameScene()
+        const player = room.state.players.get(uid)
+        if (scene?.itemsContainer && player) {
+          scene.itemsContainer.render(player.items)
+        }
       })
 
       room.onMessage(Transfer.PRELOAD_MAPS, async (maps) => {

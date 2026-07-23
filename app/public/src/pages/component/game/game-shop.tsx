@@ -8,6 +8,7 @@ import GameRarityPercentage from "./game-rarity-percentage"
 import GameRefresh from "./game-refresh"
 import { GameRegionalPokemonsIcon } from "./game-regional-pokemons"
 import { GameScribbleSketchbookIcon } from "./game-scribble-sketchbook"
+import { GameSeedBagIcon } from "./game-seed-bag"
 import GameStore from "./game-store"
 import { GameStreakInfo } from "./game-streak-info"
 import { GameTeamInfo } from "./game-team-info"
@@ -37,6 +38,7 @@ export default function GameShop() {
           <GameAdditionalPokemonsIcon />
           <GameRegionalPokemonsIcon />
           <GameScribbleSketchbookIcon />
+          <GameSeedBagIcon />
         </div>
         <GameStore />
         <GameExperience />

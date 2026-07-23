@@ -10,6 +10,7 @@ import type PreparationState from "../../rooms/states/preparation-state"
 import { type Emotion, type Role, type Title, Transfer } from "../../types"
 import type { Booster } from "../../types/Booster"
 import { CloseCodes } from "../../types/enum/CloseCodes"
+import type { Item } from "../../types/enum/Item"
 import type { EloRank } from "../../types/enum/EloRank"
 import type { BotDifficulty } from "../../types/enum/Game"
 import type { MaintenanceOrder } from "../../types/enum/MaintenanceOrder"
@@ -235,6 +236,10 @@ export function pickChoice(choiceId: string, choiceIndex: number) {
 
 export function rerollChoice(choiceId: string) {
   rooms.game?.send(Transfer.REROLL_CHOICE, { choiceId })
+}
+
+export function selectSeed(seed: Item) {
+  rooms.game?.send(Transfer.SELECT_SEED, { seed })
 }
 
 export function pickArmoryGift(choiceId: string, choiceIndex: number){

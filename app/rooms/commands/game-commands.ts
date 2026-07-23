@@ -2063,7 +2063,7 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
       const pokemon = player.board.get(e.pokemonId)
       if (pokemon) {
         pokemon.action = PokemonActionState.IDLE
-        const seed = pickRandomIn(Seeds)
+        const rolledSeed = pickRandomIn(Seeds)
         const bonus =
           pokemon.name === Pkm.GYARADOS
             ? null
@@ -2084,7 +2084,9 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
         }
 
         this.room.clock.setTimeout(() => {
-          player.items.push(seed)
+          const seed = player.addSeedToBag(rolledSeed)
+
+          if (seed) client?.send(Transfer.SELECT_SEED, player.activeSeed)
           if (bonus) {
             if (bonus === Item.COIN) {
               player.addMoney(1, true, null)
@@ -2101,10 +2103,13 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
           }
           if (pokemon.name === Pkm.GYARADOS) player.items.push(Item.RED_SCALE)
           if (client) {
-            const dishes: Item[] = [seed]
+            const dishes: Item[] = []
+            if (seed) dishes.push(seed)
             if (bonus) dishes.push(bonus)
             if (pokemon.name === Pkm.GYARADOS) dishes.push(Item.RED_SCALE)
-            client.send(Transfer.COOK, { pokemonId: pokemon.id, dishes })
+            if (dishes.length > 0) {
+              client.send(Transfer.COOK, { pokemonId: pokemon.id, dishes })
+            }
           }
         }, 2750)
       }
