@@ -221,10 +221,11 @@ export const JuggernautRarities = [
   Rarity.UNCOMMON,
   Rarity.RARE,
   Rarity.EPIC,
-  Rarity.ULTRA,
-  Rarity.UNIQUE,
-  Rarity.LEGENDARY
+  Rarity.ULTRA
 ]
+
+export const JUGGERNAUT_CHANCE = 1 / 40
+export const JuggernautRareRarities = [Rarity.UNIQUE, Rarity.LEGENDARY]
 
 // Families banned from being champions (add any form to ban the whole line)
 export const JuggernautBans: Pkm[] = [
@@ -252,6 +253,11 @@ export function getJuggernautRarity(state: GameState): Rarity {
     (acc, char) => acc + char.charCodeAt(0),
     0
   )
+  if (hash % Math.round(1 / JUGGERNAUT_CHANCE) === 0) {
+    return JuggernautRareRarities[
+      Math.floor(hash / 40) % JuggernautRareRarities.length
+    ]
+  }
   return JuggernautRarities[hash % JuggernautRarities.length]
 }
 
