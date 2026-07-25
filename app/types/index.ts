@@ -261,6 +261,7 @@ export interface IPlayer {
   board: MapSchema<Pokemon>
   shop: ArraySchema<Pkm>
   shopJuggernautStats: ArraySchema<string>
+  bazaarSlots: ArraySchema<string>
   firstPartner: Pkm | undefined
   simulationId: string
   team: Team

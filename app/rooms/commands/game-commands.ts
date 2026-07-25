@@ -45,6 +45,10 @@ import {
   OnStageStartEffect
 } from "../../core/effects/effect"
 import { ItemEffects } from "../../core/effects/items"
+import {
+  bazaarOfferNeedsBench,
+  grantBazaarOffer
+} from "../../core/bazaar"
 import { PassiveEffects } from "../../core/effects/passives"
 import { SynergyEffects } from "../../core/effects/synergies"
 import { giveRandomEgg } from "../../core/eggs"
@@ -189,8 +193,33 @@ export class OnBuyPokemonCommand extends Command<
     )
       return
     const player = this.state.players.get(playerId)
-    const name = player?.shop[index]
-    if (!player || !player.alive || !name || name === Pkm.DEFAULT) return
+    if (!player || !player.alive) return
+
+    // BAZAAR: this slot holds a purchasable item offer instead of a Pokémon
+    const bazaarSlot = player.bazaarShop ? player.bazaarSlots[index] : ""
+    if (bazaarSlot) {
+      const offer = JSON.parse(bazaarSlot) as {
+        item: string
+        price: number
+        kind: string
+      }
+      const needsBench = bazaarOfferNeedsBench(offer.kind)
+      const canBuy =
+        player.money >= offer.price &&
+        (!needsBench || getFreeSpaceOnBench(player.board) > 0)
+      if (!canBuy) return
+      player.money -= offer.price
+      grantBazaarOffer(offer, player)
+      // one purchase per bazaar: advance to a regular shop and spend the bazaar's
+      // free reroll, same as picking from an unown shop
+      this.state.shop.assignShop(player, true, this.state)
+      if (player.shopFreeRolls > 0) player.shopFreeRolls -= 1
+      this.room.checkEvolutionsAfterPokemonAcquired(playerId)
+      return
+    }
+
+    const name = player.shop[index]
+    if (!name || name === Pkm.DEFAULT) return
 
     let pokemon = PokemonFactory.createPokemonFromName(name, player)
 
@@ -278,8 +307,18 @@ export class OnRemoveFromShopCommand extends Command<
     )
       return
     const player = this.state.players.get(playerId)
-    const name = player?.shop[index]
-    if (!player || !player.alive || !name || name === Pkm.DEFAULT) return
+    if (!player || !player.alive) return
+
+    // BAZAAR item slot: no Pokémon underneath, just clear the offer
+    if (player.bazaarShop && player.bazaarSlots[index]) {
+      player.bazaarSlots[index] = ""
+      player.shop[index] = Pkm.DEFAULT
+      player.shopLocked = true
+      return
+    }
+
+    const name = player.shop[index]
+    if (!name || name === Pkm.DEFAULT) return
 
     const cost = getBuyPrice(name, this.state.specialGameRule)
     if (player.money >= cost) {
@@ -2579,6 +2618,10 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
             if (!player.shopLocked) {
               if (player.shop.every((p) => Unowns.includes(p))) {
                 // player stayed on unown shop and did nothing, so we remove its free roll
+                player.shopFreeRolls -= 1
+              }
+              if (player.bazaarShop && player.shopFreeRolls > 0) {
+                // player left a bazaar shop untouched, so its free roll is spent
                 player.shopFreeRolls -= 1
               }
 

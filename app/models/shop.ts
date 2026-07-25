@@ -35,6 +35,7 @@ import {
   UNOWN_PSY7_NB_SHOPS_INTERVAL,
   UniquePool
 } from "../config"
+import { BAZAAR_SHOP_INTERVAL, createBazaarShopOffers } from "../core/bazaar"
 import {
   createSmearglePackPropositions,
   pickFirstPartners,
@@ -360,7 +361,37 @@ export default class Shop {
     }
   }
 
+  private ensureBazaarSlots(player: Player, size: number) {
+    while (player.bazaarSlots.length < size) {
+      player.bazaarSlots.push("")
+    }
+  }
+
+  assignBazaarShop(player: Player, state: GameState) {
+    const size = getShopSize(state.specialGameRule, state.stageLevel)
+    this.ensureBazaarSlots(player, size)
+    const offers = createBazaarShopOffers()
+    for (let i = 0; i < player.bazaarSlots.length; i++) {
+      if (i < size && offers[i]) {
+        player.shop[i] = Pkm.DEFAULT
+        player.bazaarSlots[i] = JSON.stringify(offers[i])
+      } else {
+        player.bazaarSlots[i] = ""
+      }
+    }
+    player.bazaarShop = true
+    player.shopFreeRolls += 1
+  }
+
+  clearBazaarShop(player: Player) {
+    player.bazaarShop = false
+    for (let i = 0; i < player.bazaarSlots.length; i++) {
+      player.bazaarSlots[i] = ""
+    }
+  }
+
   refillShop(player: Player, state: GameState, specificTypes?: Synergy[]) {
+    if (player.bazaarShop) return
     // No need to release pokemons since they won't be changed
     player.shop.forEach((pokemon, i) => {
       if (pokemon === Pkm.MAGIKARP || pokemon === Pkm.DEFAULT) {
@@ -378,6 +409,20 @@ export default class Shop {
 
   assignShop(player: Player, manualRefresh: boolean, state: GameState) {
     player.shop.forEach((pkm) => this.releasePokemon(pkm, player, state))
+
+    if (state.specialGameRule === SpecialGameRule.BAZAAR) {
+      const shopKey = state.stageLevel + player.gameStats.rerollCount
+      if (
+        shopKey > 0 &&
+        shopKey % BAZAAR_SHOP_INTERVAL === 0 &&
+        shopKey !== player.bazaarLastShopKey
+      ) {
+        player.bazaarLastShopKey = shopKey
+        this.assignBazaarShop(player, state)
+        return
+      }
+      this.clearBazaarShop(player)
+    }
 
     let psychicLevel = player.synergies.get(Synergy.PSYCHIC) ?? 0
 
@@ -425,6 +470,7 @@ export default class Shop {
     specificTypes: Synergy[]
   ) {
     player.shop.forEach((pkm) => this.releasePokemon(pkm, player, state))
+    this.clearBazaarShop(player)
     for (let i = 0; i < getShopSize(state.specialGameRule, state.stageLevel); i++) {
       player.shop[i] = this.pickPokemon(player, state, i, true, specificTypes)
     }

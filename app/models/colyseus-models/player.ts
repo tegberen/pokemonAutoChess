@@ -113,6 +113,16 @@ export default class Player extends Schema implements IPlayer {
   @view() @type(["string"]) shop = new ArraySchema<Pkm>()
   // JUGGERNAUT: stat (color) fed by each shop copy, parallel to `shop` ("" if not a copy)
   @view() @type(["string"]) shopJuggernautStats = new ArraySchema<string>()
+  // BAZAAR: per-slot item offers for a bazaar shop (parallel to `shop`); each
+  // entry is a JSON-encoded offer, or "" when the slot has no offer. Kept as a
+  // primitive string array so client `.onChange` fires reliably on every reroll.
+  @view() @type(["string"]) bazaarSlots = new ArraySchema<string>()
+  // server-only (undecorated to stay within the 64-field schema limit): the
+  // client infers a bazaar shop from `bazaarSlots` content instead.
+  bazaarShop = false
+  // server-only: the shop key (stage + rerolls) at which the last bazaar was
+  // shown, so the free replacement shop after a buy doesn't re-trigger one
+  bazaarLastShopKey = -1
   @type(ExperienceManager) experienceManager = new ExperienceManager()
   @type({ map: "uint8" }) synergies = new Synergies()
   @type("uint16") money = process.env.MODE == "dev" ? 999 : 5

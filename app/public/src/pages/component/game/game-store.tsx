@@ -7,10 +7,13 @@ import { buyInShop } from "../../../network"
 import { getGameScene } from "../../game"
 import { playSound, SOUNDS } from "../../utils/audio"
 import { LocalStoreKeys, localStore } from "../../utils/store"
+import { ItemDetailTooltip } from "../../../game/components/item-detail"
+import GameBazaarPortrait from "./game-bazaar-portrait"
 import GamePokemonPortrait from "./game-pokemon-portrait"
 
 export default function GameStore() {
   const shop = useAppSelector((state) => state.game.shop)
+  const bazaarOffers = useAppSelector((state) => state.game.bazaarOffers)
   const [teamPlanner, setTeamPlanner] = useState<IDetailledPokemon[]>(
     localStore.get(LocalStoreKeys.TEAM_PLANNER)
   )
@@ -34,6 +37,32 @@ export default function GameStore() {
   return (
     <ul className="game-pokemons-store">
       {shop.map((pokemon, index) => {
+        const bazaarOffer = bazaarOffers[index]
+        if (bazaarOffer) {
+          return (
+            <GameBazaarPortrait
+              key={"shop" + index}
+              offer={bazaarOffer}
+              onMouseEnter={() => {
+                if (scene) {
+                  if (scene.pokemonHovered) {
+                    scene.clearHovered(scene.pokemonHovered.sprite)
+                  }
+                  scene.pokemonHovered = null
+                  scene.shopIndexHovered = index
+                }
+              }}
+              onMouseLeave={() => {
+                if (scene) scene.shopIndexHovered = null
+              }}
+              click={() => {
+                playSound(SOUNDS.BUTTON_CLICK)
+                buyInShop(index)
+                if (scene) scene.shopIndexHovered = null
+              }}
+            />
+          )
+        }
         if (pokemon != Pkm.DEFAULT) {
           return (
             <GamePokemonPortrait
@@ -74,6 +103,7 @@ export default function GameStore() {
           )
         }
       })}
+      {bazaarOffers.some(Boolean) && <ItemDetailTooltip />}
     </ul>
   )
 }

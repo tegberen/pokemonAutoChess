@@ -20,6 +20,12 @@ import type { ILeaderboardInfo } from "../../../types/interfaces/LeaderboardInfo
 import { schemaEntries } from "../../../utils/schemas"
 import { getGameScene } from "../pages/game"
 
+export interface IBazaarOffer {
+  item: string
+  price: number
+  kind: string
+}
+
 export interface GameStateStore {
   afterGameId: string
   gameMode: GameMode
@@ -45,6 +51,7 @@ export interface GameStateStore {
   experienceManager: IExperienceManager
   shop: Pkm[]
   shopJuggernautStats: string[]
+  bazaarOffers: (IBazaarOffer | null)[]
   itemsProposition: Item[]
   pokemonsProposition: PkmProposition[]
   weather: Weather
@@ -86,6 +93,7 @@ const initialState: GameStateStore = {
   experienceManager: new ExperienceManager(),
   shop: new Array<Pkm>(),
   shopJuggernautStats: new Array<string>(),
+  bazaarOffers: new Array<IBazaarOffer | null>(),
   itemsProposition: new Array<Item>(),
   pokemonsProposition: new Array<Pkm>(),
   blueDpsMeter: new Array<IDps>(),
@@ -189,6 +197,13 @@ export const gameSlice: Slice<GameStateStore> = createSlice({
       action: PayloadAction<{ index: number; value: string }>
     ) => {
       state.shopJuggernautStats[action.payload.index] = action.payload.value
+    },
+    setBazaarSlot: (
+      state,
+      action: PayloadAction<{ index: number; offer: IBazaarOffer | null }>
+    ) => {
+      state.bazaarOffers[action.payload.index] = action.payload.offer
+      state.bazaarOffers = state.bazaarOffers.slice()
     },
     refreshShopUI: (state) => {
       state.shop = state.shop.slice()
@@ -392,6 +407,7 @@ export const {
   changePlayer,
   changeShop,
   changeShopJuggernautStats,
+  setBazaarSlot,
   refreshShopUI,
   setItemsProposition,
   setPodium,

@@ -4568,6 +4568,9 @@
 	"next_level": "Next level",
 	"increase_level_hint": "Increase your level to raise your chances to get higher tier Pokémon.",
 	"refresh_gold_hint": "Refresh shop for 1 gold",
+	"next_bazaar_hint_one": "Next Bazaar shop in {{count}} shop",
+	"next_bazaar_hint_other": "Next Bazaar shop in {{count}} shops",
+	"bazaar_current_hint": "This is a Bazaar shop!",
 	"refresh": "Reroll",
 	"pve_stages": "PvE Stages",
 	"carousel_stages": "Carousel Stages",
@@ -4667,6 +4670,7 @@
 	"components": "Components",
 	"craftable_items": "Craftable",
 	"consumable_item": "Consumable",
+	"bazaar_potion": "Potion: restores 10 HP to your life total",
 	"unholdable_item": "Unholdable",
 	"removable_item": "Removable",
 	"food": "Food",
@@ -5044,7 +5048,8 @@
 		"JUGGERNAUT": "Juggernaut",
 		"OVERTIME": "Overtime",
 		"SIX_PACK": "Six Pack",
-		"EVOLUTION_LAB": "Evolution Lab"
+		"EVOLUTION_LAB": "Evolution Lab",
+		"BAZAAR": "The Bazaar"
 	},
 	"scribble_description": {
 		"EVERYONE_IS_HERE": "All the additional picks are available immediately!",
@@ -5077,7 +5082,8 @@
 		"JUGGERNAUT": "Pick a Pokémon — the Juggernaut. The shop keeps offering 1 STAR copies of it. Drag a copy onto the Juggernaut to permanently boost its HP and other stats!",
 		"OVERTIME": "Everyone starts with 200 HP and can reach level 10.",
 		"SIX_PACK": "Pokémon can hold up to 6 items instead of 3. More items and components can be found throughout the game.",
-		"EVOLUTION_LAB": "Welcome to the Evolution Lab! Every Pokémon can be found here, but the lab follows its own rules..."
+		"EVOLUTION_LAB": "Welcome to the Evolution Lab! Every Pokémon can be found here, but the lab follows its own rules...",
+		"BAZAAR": "The Bazaar visits the town!"
 	},
 	"scribble_shape": {
 		"DOT": "Dot",

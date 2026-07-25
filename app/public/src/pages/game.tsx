@@ -57,6 +57,8 @@ import {
   changePlayer,
   changeShop,
   changeShopJuggernautStats,
+  setBazaarSlot,
+  type IBazaarOffer,
   leaveGame,
   removeDpsMeter,
   removePlayer,
@@ -880,6 +882,14 @@ export default function Game() {
               dispatch(changeShopJuggernautStats({ value: stat, index }))
             }
           )
+          $player.bazaarSlots.onChange((json: string, index: number) => {
+            dispatch(
+              setBazaarSlot({
+                index,
+                offer: json ? (JSON.parse(json) as IBazaarOffer) : null
+              })
+            )
+          })
           $player.listen("shopLocked", (value) => {
             dispatch(setShopLocked(value))
           })

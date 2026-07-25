@@ -30,9 +30,12 @@ export enum SpecialGameRule {
   OVERTIME = "OVERTIME",
   SIX_PACK = "SIX_PACK",
   EVOLUTION_LAB = "EVOLUTION_LAB",
+  BAZAAR = "BAZAAR",
 }
 
 export const RulesWithAllPokemonsAvailable: SpecialGameRule[] = [
   SpecialGameRule.EVERYONE_IS_HERE,
   SpecialGameRule.EVOLUTION_LAB
 ]
+
+export const BAZAAR_SHOP_INTERVAL = 8
