@@ -618,7 +618,8 @@ export const PVEStages: { [turn: number]: PVEStage } = {
           [Stat.HP]: 100,
           [Stat.ATK]: 5,
           [Stat.DEF]: 5,
-          [Stat.SPE_DEF]: 5
+          [Stat.SPE_DEF]: 5,
+          [Stat.AP]: -50
         }
       },
       {
