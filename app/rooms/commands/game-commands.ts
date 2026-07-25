@@ -12,7 +12,9 @@ import {
   ITEM_CAROUSEL_BASE_DURATION,
   ItemCarouselStages,
   ItemSellPricesAtTown,
+  EVOLUTION_LAB_REWARD_COMPONENTS,
   getItemCapacity,
+  getRerollCost,
   MAX_PLAYERS_PER_GAME,
   OUTLAW_GOLD_REWARD,
   PkmsWithAltForms,
@@ -122,6 +124,8 @@ import {
   ShinyItems,
   SpecialItems,
   Sweets,
+  SynergyGems,
+  SynergyGivenByGem,
   SynergyGivenByItem,
   SynergyStones,
   Tools,
@@ -186,7 +190,20 @@ export class OnBuyPokemonCommand extends Command<
     const name = player?.shop[index]
     if (!player || !player.alive || !name || name === Pkm.DEFAULT) return
 
-    const pokemon = PokemonFactory.createPokemonFromName(name, player)
+    let pokemon = PokemonFactory.createPokemonFromName(name, player)
+
+    if (
+      this.state.specialGameRule === SpecialGameRule.EVOLUTION_LAB &&
+      pokemon.hasEvolution
+    ) {
+      const evolutionName = EvolutionManager.getEvolution(
+        pokemon,
+        player,
+        this.state.stageLevel
+      )
+      pokemon = PokemonFactory.createPokemonFromName(evolutionName, player)
+    }
+
     if (
       this.state.specialGameRule === SpecialGameRule.JUGGERNAUT &&
       player.firstPartner &&
@@ -1310,7 +1327,10 @@ export class OnShopRerollCommand extends Command<GameRoom, string> {
   execute(id) {
     const player = this.state.players.get(id)
     if (!player || !player.alive) return
-    const rollCost = player.shopFreeRolls > 0 ? 0 : 1
+    const rollCost =
+      player.shopFreeRolls > 0
+        ? 0
+        : getRerollCost(this.state.specialGameRule)
     const canRoll = (player?.money ?? 0) >= rollCost
 
     if (canRoll) {
@@ -1901,8 +1921,35 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
       })
     }
 
-    // Additional pick stages
+    // EVOLUTION_LAB replaces add-picks with a reward choice
     if (
+      AdditionalPicksStages.includes(this.state.stageLevel) &&
+      !this.state.finale &&
+      this.state.specialGameRule === SpecialGameRule.EVOLUTION_LAB
+    ) {
+      this.state.players.forEach((player: Player) => {
+        if (player.isBot) return
+        const topSynergies = player.synergies.getTopSynergies(2)
+        const gemCandidates = topSynergies
+          .map((syn) => SynergyGems.find((g) => SynergyGivenByGem[g] === syn))
+          .filter((g): g is (typeof SynergyGems)[number] => g != null)
+        const gem =
+          gemCandidates.length > 0
+            ? pickRandomIn(gemCandidates)
+            : pickRandomIn([...SynergyGems])
+        const components = pickNRandomIn(
+          ItemComponentsNoScarf,
+          EVOLUTION_LAB_REWARD_COMPONENTS
+        )
+        player.choices.push(
+          new PlayerChoice({
+            type: "evolution_lab_reward",
+            items: [gem],
+            items2: components
+          })
+        )
+      })
+    } else if (
       AdditionalPicksStages.includes(this.state.stageLevel) &&
       !this.state.finale
     ) {
@@ -2392,7 +2439,8 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
         "starter",
         "unique",
         "legendary",
-        "scribble_shape"
+        "scribble_shape",
+        "evolution_lab_reward"
       ]
       player.choices
         .filter((choice) => autoPickChoices.includes(choice.type))

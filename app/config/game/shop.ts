@@ -1,6 +1,34 @@
 import { Rarity } from "../../types/enum/Game"
+import { SpecialGameRule } from "../../types/enum/SpecialGameRule"
 
 export const SHOP_SIZE = 6
+
+export function getShopSize(
+  specialGameRule?: SpecialGameRule | null,
+  stageLevel = 0
+): number {
+  if (specialGameRule === SpecialGameRule.EVOLUTION_LAB) {
+    if (stageLevel < 10) return 3
+    if (stageLevel < 20) return 4
+    if (stageLevel < 30) return 5
+    return SHOP_SIZE
+  }
+  return SHOP_SIZE
+}
+
+export const REROLL_COST = 1
+export const EVOLUTION_LAB_REROLL_COST = 5
+
+export function getRerollCost(specialGameRule?: SpecialGameRule | null): number {
+  return specialGameRule === SpecialGameRule.EVOLUTION_LAB
+    ? EVOLUTION_LAB_REROLL_COST
+    : REROLL_COST
+}
+
+export const EVOLUTION_LAB_REWARD_COMPONENTS = 3
+export const EVOLUTION_LAB_REWARD_REROLLS = 2
+export const EVOLUTION_LAB_REWARD_EXP = 12
+
 export const NB_STARTERS = 3
 export const NB_UNIQUE_PROPOSITIONS = 6
 

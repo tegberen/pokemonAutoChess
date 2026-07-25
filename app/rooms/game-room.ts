@@ -4,6 +4,8 @@ import { type Client, CloseCode, Room } from "colyseus"
 import admin from "firebase-admin"
 import {
   ALLOWED_GAME_RECONNECTION_TIME,
+  EVOLUTION_LAB_REWARD_EXP,
+  EVOLUTION_LAB_REWARD_REROLLS,
   ExpPlace,
   getCurrentGameEvent,
   MAX_LOADING_TIME,
@@ -76,6 +78,8 @@ import { GameMode, PokemonActionState, Rarity } from "../types/enum/Game"
 import {
   type Item,
   Seeds,
+  SynergyGems,
+  SynergyGivenByGem,
   UnholdableItemsToSaveForStats,
   Wands
 } from "../types/enum/Item"
@@ -86,7 +90,10 @@ import {
   PkmIndex,
   PkmRegionalVariants
 } from "../types/enum/Pokemon"
-import { SpecialGameRule } from "../types/enum/SpecialGameRule"
+import {
+  RulesWithAllPokemonsAvailable,
+  SpecialGameRule
+} from "../types/enum/SpecialGameRule"
 import type { Synergy } from "../types/enum/Synergy"
 import { GameEvent } from "../types/events"
 import type { IPokemonCollectionItemMongo } from "../types/interfaces/UserMetadata"
@@ -225,7 +232,10 @@ export default class GameRoom extends Room<{ state: GameState }> {
       PRECOMPUTED_POKEMONS_PER_RARITY.EPIC
     )
 
-    if (this.state.specialGameRule !== SpecialGameRule.EVERYONE_IS_HERE) {
+    if (
+      !this.state.specialGameRule ||
+      !RulesWithAllPokemonsAvailable.includes(this.state.specialGameRule)
+    ) {
       /* based on the season, we remove the Deerling seasonal forms to only keep the current season's form */
       // Determine season based on precise date, not just month
       const now = new Date()
@@ -272,7 +282,10 @@ export default class GameRoom extends Room<{ state: GameState }> {
     shuffleArray(this.additionalRarePool)
     shuffleArray(this.additionalEpicPool)
 
-    if (this.state.specialGameRule === SpecialGameRule.EVERYONE_IS_HERE) {
+    if (
+      this.state.specialGameRule &&
+      RulesWithAllPokemonsAvailable.includes(this.state.specialGameRule)
+    ) {
       this.additionalUncommonPool.forEach((p) =>
         this.state.shop.addAdditionalPokemon(p, this.state)
       )
@@ -331,7 +344,10 @@ export default class GameRoom extends Room<{ state: GameState }> {
             player.doubleUpTeamId = users[id].doubleUpTeamId ?? ""
 
             if (
-              this.state.specialGameRule === SpecialGameRule.EVERYONE_IS_HERE
+              this.state.specialGameRule &&
+              RulesWithAllPokemonsAvailable.includes(
+                this.state.specialGameRule
+              )
             ) {
               PRECOMPUTED_REGIONAL_MONS.forEach((p) => {
                 if (getPokemonData(p).stars === 1) {
@@ -1465,8 +1481,35 @@ export default class GameRoom extends Room<{ state: GameState }> {
     const player = this.state.players.get(playerId)
     if (!player) return
     const choice = player.choices.find((c) => c.id === choiceId)
+    if (!choice) return
+
+    if (choice.type === "evolution_lab_reward") {
+      if (choiceIndex === 0) {
+        const gem = choice.items[0]
+        if (gem && isIn(SynergyGems, gem)) {
+          // a gem activates its synergy via bonusSynergies; holding it does nothing
+          const type = SynergyGivenByGem[gem]
+          player.bonusSynergies.set(
+            type,
+            (player.bonusSynergies.get(type) ?? 0) + 1
+          )
+          player.items.push(gem)
+          player.updateSynergies()
+        }
+      } else if (choiceIndex === 1) {
+        choice.items2.forEach((component) => player.items.push(component))
+      } else if (choiceIndex === 2) {
+        player.shopFreeRolls += EVOLUTION_LAB_REWARD_REROLLS
+      } else if (choiceIndex === 3) {
+        player.addExperience(EVOLUTION_LAB_REWARD_EXP)
+      } else {
+        return
+      }
+      removeInArray(player.choices, choice)
+      return
+    }
+
     if (
-      !choice ||
       choiceIndex < 0 ||
       choiceIndex >=
         (choice.pokemons?.length ||
@@ -1539,6 +1582,21 @@ export default class GameRoom extends Room<{ state: GameState }> {
 
       if (choice.type === "starter") {
         player.firstPartner = pokemonsObtained[0].name
+
+        if (this.state.specialGameRule === SpecialGameRule.EVOLUTION_LAB) {
+          pokemonsObtained = pokemonsObtained.map((p) =>
+            p.hasEvolution && p.name !== Pkm.EEVEE
+              ? PokemonFactory.createPokemonFromName(
+                  EvolutionManager.getEvolution(
+                    p,
+                    player,
+                    this.state.stageLevel
+                  ),
+                  player
+                )
+              : p
+          )
+        }
         if (this.state.specialGameRule === SpecialGameRule.SMEARGLE_PACK) {
           const starter = pokemonsObtained[0]
           // keep the shiny/emotion the player saw on the card

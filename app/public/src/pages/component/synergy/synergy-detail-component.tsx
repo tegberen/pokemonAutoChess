@@ -18,7 +18,7 @@ import {
   PkmRegionalVariants
 } from "../../../../../types/enum/Pokemon"
 import { GameMode } from "../../../../../types/enum/Game"
-import { SpecialGameRule } from "../../../../../types/enum/SpecialGameRule"
+import { RulesWithAllPokemonsAvailable } from "../../../../../types/enum/SpecialGameRule"
 import { Synergy } from "../../../../../types/enum/Synergy"
 import type { IPokemonData } from "../../../../../types/interfaces/PokemonData"
 import { isOnBench } from "../../../../../utils/board"
@@ -75,7 +75,8 @@ export default function SynergyDetailComponent(props: {
     ].additionalPokemons.filter(
       (p) =>
         additionalPokemons.includes(baseVariant(PkmFamily[p])) ||
-        specialGameRule === SpecialGameRule.EVERYONE_IS_HERE
+        (specialGameRule != null &&
+          RulesWithAllPokemonsAvailable.includes(specialGameRule))
     )
   ).map((p) => getPokemonData(p as Pkm))
 

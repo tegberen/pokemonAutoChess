@@ -2,7 +2,7 @@ import { useTranslation } from "react-i18next"
 import { Tooltip } from "react-tooltip"
 import { RarityColor } from "../../../../../config"
 import { getPokemonData } from "../../../../../models/precomputed/precomputed-pokemon-data"
-import { SpecialGameRule } from "../../../../../types/enum/SpecialGameRule"
+import { RulesWithAllPokemonsAvailable } from "../../../../../types/enum/SpecialGameRule"
 import { selectConnectedPlayer, useAppSelector } from "../../../hooks"
 import SynergyIcon from "../icons/synergy-icon"
 import { getCachedPortrait } from "./game-pokemon-portrait"
@@ -36,7 +36,10 @@ export function GameAdditionalPokemons() {
   )
   const currentPlayer = useAppSelector(selectConnectedPlayer)
 
-  if (specialGameRule === SpecialGameRule.EVERYONE_IS_HERE) {
+  if (
+    specialGameRule != null &&
+    RulesWithAllPokemonsAvailable.includes(specialGameRule)
+  ) {
     return (
       <div className="game-additional-pokemons">
         <p>{t("scribble.EVERYONE_IS_HERE")}</p>

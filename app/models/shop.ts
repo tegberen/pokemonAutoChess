@@ -28,6 +28,7 @@ import {
   REPEAT_BALL_UNIQUE_INTERVAL,
   SellPrices,
   SHOP_SIZE,
+  getShopSize,
   SynergyTiersThresholds,
   UNOWN_PSY3_NB_SHOPS_INTERVAL,
   UNOWN_PSY5_NB_SHOPS_INTERVAL,
@@ -99,9 +100,14 @@ export function getSellPrice(
     return 0
 
   if (specialGameRule === SpecialGameRule.JUGGERNAUT) {
-    // match the reduced copy buy price (no buy-low-sell-high glitch)
+    // match the reduced copy buy price
     if (pokemon.rarity === Rarity.UNIQUE) return 6
     if (pokemon.rarity === Rarity.LEGENDARY) return 7
+  }
+
+  // sell for buy price since pokemons evolve on purchase
+  if (specialGameRule === SpecialGameRule.EVOLUTION_LAB && name !== Pkm.EGG) {
+    return getBuyPrice(name, specialGameRule)
   }
 
   const duo = Object.entries(PkmDuos).find(([key, duo]) => duo.includes(name))
@@ -398,7 +404,7 @@ export default class Shop {
       player.shopsSinceLastUnownShop = 0
       const unowns = getUnownsPoolPerStage(state.stageLevel)
       const chosenUnowns: Pkm[] = []
-      for (let i = 0; i < SHOP_SIZE; i++) {
+      for (let i = 0; i < getShopSize(state.specialGameRule, state.stageLevel); i++) {
         const availableUnowns = unowns.filter((u) => !chosenUnowns.includes(u))
         const randomUnown = pickRandomIn(availableUnowns)
         chosenUnowns.push(randomUnown)
@@ -406,7 +412,7 @@ export default class Shop {
       }
     } else {
       // Regular shop
-      for (let i = 0; i < SHOP_SIZE; i++) {
+      for (let i = 0; i < getShopSize(state.specialGameRule, state.stageLevel); i++) {
         player.shop[i] = this.pickPokemon(player, state, i)
       }
       this.syncJuggernautShopStats(player, state, true)
@@ -419,7 +425,7 @@ export default class Shop {
     specificTypes: Synergy[]
   ) {
     player.shop.forEach((pkm) => this.releasePokemon(pkm, player, state))
-    for (let i = 0; i < SHOP_SIZE; i++) {
+    for (let i = 0; i < getShopSize(state.specialGameRule, state.stageLevel); i++) {
       player.shop[i] = this.pickPokemon(player, state, i, true, specificTypes)
     }
   }

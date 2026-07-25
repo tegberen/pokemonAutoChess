@@ -4548,6 +4548,10 @@
 		"choose_wand": "Choose one Wand to give additional effects to your Fairy Pokémon attacks",
 		"choose_armory": "Choose one gift to send to your partner",
 		"choose_scribble_shape": "Choose the second shape Smeargle will draw on your board",
+		"choose_evolution_lab_reward": "Choose one reward",
+		"evolution_lab_components": "+{{count}} components",
+		"evolution_lab_rerolls": "+{{count}} free shop rerolls",
+		"evolution_lab_exp": "+{{count}} EXP",
 		"smeargle_pack_hint": "Open the booster, then pick a Pokémon to be your starter",
 		"smeargle_pack_reveal": "Open the booster",
 		"free_slot_hint": "You must have one free slot on the bench, or two for Duos",
@@ -5038,10 +5042,11 @@
 		"LIGHT_SHOW": "Light Show",
 		"JUGGERNAUT": "Juggernaut",
 		"OVERTIME": "Overtime",
-		"SIX_PACK": "Six Pack"
+		"SIX_PACK": "Six Pack",
+		"EVOLUTION_LAB": "Evolution Lab"
 	},
 	"scribble_description": {
-		"EVERYONE_IS_HERE": "All the additional picks are available immediately",
+		"EVERYONE_IS_HERE": "All the additional picks are available immediately!",
 		"UNIQUE_STARTER": "Get a random Unique at stage 1",
 		"OMELETTE_COOK": "Get a Pokémon Egg after stage 1, 2 and 3",
 		"DITTO_PARTY": "Start with 5 Ditto on your bench. Ditto cannot be found in the shop and cannot be sold.",
@@ -5070,7 +5075,8 @@
 		"LIGHT_SHOW": "Every 3 stages, Smeargle draws a glowing shape on your board and you choose a second one. Pokémon starting a fight on a lit cell gain that shape's bonus:",
 		"JUGGERNAUT": "Pick a Pokémon — the Juggernaut. The shop keeps offering 1 STAR copies of it. Drag a copy onto the Juggernaut to permanently boost its HP and other stats!",
 		"OVERTIME": "Everyone starts with 200 HP and can reach level 10.",
-		"SIX_PACK": "Pokémon can hold up to 6 items instead of 3. More items and components can be found throughout the game."
+		"SIX_PACK": "Pokémon can hold up to 6 items instead of 3. More items and components can be found throughout the game.",
+		"EVOLUTION_LAB": "Welcome to the Evolution Lab! Every Pokémon can be found here, but the lab follows its own rules..."
 	},
 	"scribble_shape": {
 		"DOT": "Dot",

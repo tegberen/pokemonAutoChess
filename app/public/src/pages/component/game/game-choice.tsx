@@ -1,5 +1,9 @@
 import { useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
+import {
+  EVOLUTION_LAB_REWARD_EXP,
+  EVOLUTION_LAB_REWARD_REROLLS
+} from "../../../../../config"
 import type { PlayerChoice } from "../../../../../models/colyseus-models/player-choice"
 import { type Item, ShinyItems } from "../../../../../types/enum/Item"
 import {
@@ -107,6 +111,8 @@ export default function GameChoice() {
     message = t("player_choices.choose_armory")
   } else if (choice.type === "scribble_shape") {
     message = t("player_choices.choose_scribble_shape")
+  } else if (choice.type === "evolution_lab_reward") {
+    message = t("player_choices.choose_evolution_lab_reward")
   }
 
   return (
@@ -122,7 +128,91 @@ export default function GameChoice() {
           </p>
         )}
 
-        {choice.pokemons.length > 0 ? (
+        {choice.type === "evolution_lab_reward" ? (
+          <div className="game-choice-items-list game-choice-reward-list">
+            <div
+              className="my-box active clickable"
+              onClick={(event) => {
+                event.stopPropagation()
+                playSound(SOUNDS.BUTTON_CLICK)
+                pickChoice(choice.id, 0)
+              }}
+            >
+              <img
+                style={{ width: "4rem", height: "4rem" }}
+                src={"assets/item/" + choice.items[0] + ".png"}
+              />
+              <h3 style={{ margin: "0.25em 0" }}>
+                {t(`item.${choice.items[0]}`)}
+              </h3>
+              <p style={{ marginBottom: "0.5em" }}>
+                {addIconsToDescription(t(`item_description.${choice.items[0]}`))}
+              </p>
+            </div>
+
+            <div
+              className="my-box active clickable"
+              onClick={(event) => {
+                event.stopPropagation()
+                playSound(SOUNDS.BUTTON_CLICK)
+                pickChoice(choice.id, 1)
+              }}
+            >
+              <div style={{ display: "flex", gap: "0.25em" }}>
+                {choice.items2.map((component, i) => (
+                  <img
+                    key={i}
+                    style={{ width: "3rem", height: "3rem" }}
+                    src={"assets/item/" + component + ".png"}
+                  />
+                ))}
+              </div>
+              <p style={{ margin: "0.25em 0" }}>
+                {t("player_choices.evolution_lab_components", {
+                  count: choice.items2.length
+                })}
+              </p>
+            </div>
+
+            <div
+              className="my-box active clickable"
+              onClick={(event) => {
+                event.stopPropagation()
+                playSound(SOUNDS.BUTTON_CLICK)
+                pickChoice(choice.id, 2)
+              }}
+            >
+              <img
+                style={{ width: "4rem", height: "4rem" }}
+                src={"/assets/ui/refresh.svg"}
+              />
+              <p style={{ margin: "0.25em 0" }}>
+                {t("player_choices.evolution_lab_rerolls", {
+                  count: EVOLUTION_LAB_REWARD_REROLLS
+                })}
+              </p>
+            </div>
+
+            <div
+              className="my-box active clickable"
+              onClick={(event) => {
+                event.stopPropagation()
+                playSound(SOUNDS.BUTTON_CLICK)
+                pickChoice(choice.id, 3)
+              }}
+            >
+              <img
+                style={{ width: "4rem", height: "4rem" }}
+                src={"assets/icons/EXP.svg"}
+              />
+              <p style={{ margin: "0.25em 0" }}>
+                {t("player_choices.evolution_lab_exp", {
+                  count: EVOLUTION_LAB_REWARD_EXP
+                })}
+              </p>
+            </div>
+          </div>
+        ) : choice.pokemons.length > 0 ? (
           <div className="game-choice-pokemons-list">
             {choice.pokemons.map((proposition, index) => {
               const item = choice.items[index]

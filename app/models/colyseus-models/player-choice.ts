@@ -15,6 +15,8 @@ export type PlayerChoiceType =
   | "wand"
   | "armory_assist"
   | "scribble_shape"
+  // rolled gem stored in `items[0]`, components in `items2`
+  | "evolution_lab_reward"
 
 export class PlayerChoice extends Schema {
   @type("string") id: string
