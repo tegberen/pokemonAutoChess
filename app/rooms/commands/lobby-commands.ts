@@ -733,20 +733,9 @@ export class JoinOrOpenRoomCommand extends Command<
         break
       }
 
-      case GameMode.DOUBLE_UP: {
-        const existingDoubleUp = this.room.rooms?.find(
-          (room) =>
-            room.name === "preparation" &&
-            room.metadata?.gameMode === GameMode.DOUBLE_UP &&
-            room.clients < MAX_PLAYERS_PER_GAME
-        )
-        if (existingDoubleUp) {
-          client.send(Transfer.REQUEST_ROOM, existingDoubleUp.roomId)
-        } else {
-          return [new OpenGameCommand().setPayload({ gameMode, client })]
-        }
-        break
-      }
+      case GameMode.DOUBLE_UP:
+        // like custom lobbies, always open a new room instead of joining the existing one
+        return [new OpenGameCommand().setPayload({ gameMode, client })]
     }
   }
 }

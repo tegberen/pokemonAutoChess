@@ -359,9 +359,8 @@ export class DojoTicketOnItemDroppedEffect extends OnItemDroppedEffect {
         Pkm.SUBSTITUTE,
         player
       )
-      const items = schemaValues(pokemon.items)
-      substitute.addItems(items, player)
-      pokemon.removeItems(items, player)
+      /* the training pokemon keeps holding its items while away: the substitute
+      can't hold items, so handing them over would destroy them */
       const pokemonLeaving =
         player.getPokemonAt(pokemon.positionX, pokemon.positionY) || pokemon // re-fetch pokemon in case it has been transformed
       substitute.id = pokemonLeaving.id

@@ -292,8 +292,8 @@ export default function PreparationMenu() {
       </div>
     )
 
-  const roomNameInput = gameMode === GameMode.CUSTOM_LOBBY &&
-    (isModerator || isAdmin) &&
+  const roomNameInput = ( gameMode === GameMode.CUSTOM_LOBBY || gameMode === GameMode.DOUBLE_UP ) &&
+    (isOwner || isModerator || isAdmin) &&
     user &&
     !user.anonymous && (
       <div className="my-input-group">
