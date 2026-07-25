@@ -13,6 +13,8 @@ import {
   ItemCarouselStages,
   ItemSellPricesAtTown,
   EVOLUTION_LAB_REWARD_COMPONENTS,
+  EVOLUTION_LAB_REWARD_OPTIONS,
+  EvolutionLabRewardKinds,
   getItemCapacity,
   getRerollCost,
   MAX_PLAYERS_PER_GAME,
@@ -1929,23 +1931,31 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
     ) {
       this.state.players.forEach((player: Player) => {
         if (player.isBot) return
-        const topSynergies = player.synergies.getTopSynergies(2)
-        const gemCandidates = topSynergies
-          .map((syn) => SynergyGems.find((g) => SynergyGivenByGem[g] === syn))
-          .filter((g): g is (typeof SynergyGems)[number] => g != null)
-        const gem =
-          gemCandidates.length > 0
-            ? pickRandomIn(gemCandidates)
-            : pickRandomIn([...SynergyGems])
-        const components = pickNRandomIn(
-          ItemComponentsNoScarf,
-          EVOLUTION_LAB_REWARD_COMPONENTS
+        const rewards = pickNRandomIn(
+          [...EvolutionLabRewardKinds],
+          EVOLUTION_LAB_REWARD_OPTIONS
         )
+        const items: Item[] = []
+        if (rewards.includes("gem")) {
+          const gemCandidates = player.synergies
+            .getTopSynergies(2)
+            .map((syn) => SynergyGems.find((g) => SynergyGivenByGem[g] === syn))
+            .filter((g): g is (typeof SynergyGems)[number] => g != null)
+          items.push(
+            gemCandidates.length > 0
+              ? pickRandomIn(gemCandidates)
+              : pickRandomIn([...SynergyGems])
+          )
+        }
+        const items2 = rewards.includes("components")
+          ? pickNRandomIn(ItemComponentsNoScarf, EVOLUTION_LAB_REWARD_COMPONENTS)
+          : []
         player.choices.push(
           new PlayerChoice({
             type: "evolution_lab_reward",
-            items: [gem],
-            items2: components
+            rewards,
+            items,
+            items2
           })
         )
       })
@@ -2446,9 +2456,11 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
         .filter((choice) => autoPickChoices.includes(choice.type))
         .forEach((choice) => {
           const nbOptions =
-            choice.pokemons.length ||
-            choice.items.length ||
-            choice.scribbleShapes.length
+            choice.type === "evolution_lab_reward"
+              ? choice.rewards.length
+              : choice.pokemons.length ||
+                choice.items.length ||
+                choice.scribbleShapes.length
           const randomPick = randomBetween(0, nbOptions - 1)
           this.room.pickChoice(player.id, choice.id, randomPick, true)
         })

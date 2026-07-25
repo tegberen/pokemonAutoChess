@@ -57,6 +57,12 @@
   justify-content: center;
 }
 
+.evolution-lab-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25em;
+}
+
 .game-choice-pokemons-list .game-pokemon-portrait {
   margin: 0 auto;
 }

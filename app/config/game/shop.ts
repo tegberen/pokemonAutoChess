@@ -28,6 +28,17 @@ export function getRerollCost(specialGameRule?: SpecialGameRule | null): number 
 export const EVOLUTION_LAB_REWARD_COMPONENTS = 3
 export const EVOLUTION_LAB_REWARD_REROLLS = 2
 export const EVOLUTION_LAB_REWARD_EXP = 12
+export const EVOLUTION_LAB_REWARD_GOLD = 8
+
+export const EvolutionLabRewardKinds = [
+  "gem",
+  "components",
+  "gold",
+  "rerolls",
+  "exp"
+] as const
+export type EvolutionLabRewardKind = (typeof EvolutionLabRewardKinds)[number]
+export const EVOLUTION_LAB_REWARD_OPTIONS = 2
 
 export const NB_STARTERS = 3
 export const NB_UNIQUE_PROPOSITIONS = 6

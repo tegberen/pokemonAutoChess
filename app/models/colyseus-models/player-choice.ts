@@ -15,7 +15,7 @@ export type PlayerChoiceType =
   | "wand"
   | "armory_assist"
   | "scribble_shape"
-  // rolled gem stored in `items[0]`, components in `items2`
+  // reward kinds in `rewards`; any rolled gem in `items[0]`, components in `items2`
   | "evolution_lab_reward"
 
 export class PlayerChoice extends Schema {
@@ -27,6 +27,7 @@ export class PlayerChoice extends Schema {
   @type(["string"]) pokemons: PkmProposition[] = []
   @type(["string"]) armoryOptions: ArmoryOptions[] = []
   @type(["string"]) scribbleShapes: ScribbleShapeType[] = []
+  @type(["string"]) rewards: string[] = []
   @type(["boolean"]) shinies: boolean[] = []
   @type(["string"]) emotions: Emotion[] = []
   @type("boolean") canReroll: boolean = false
@@ -38,6 +39,7 @@ export class PlayerChoice extends Schema {
     pokemons?: PkmProposition[]
     armoryOptions?: ArmoryOptions[]
     scribbleShapes?: ScribbleShapeType[]
+    rewards?: string[]
     shinies?: boolean[]
     emotions?: Emotion[]
     canReroll?: boolean
@@ -50,6 +52,7 @@ export class PlayerChoice extends Schema {
     if (args.pokemons) this.pokemons = args.pokemons
     if (args.armoryOptions) this.armoryOptions = args.armoryOptions
     if (args.scribbleShapes) this.scribbleShapes = args.scribbleShapes
+    if (args.rewards) this.rewards = args.rewards
     if (args.shinies) this.shinies = args.shinies
     if (args.emotions) this.emotions = args.emotions
     if (args.canReroll) this.canReroll = args.canReroll

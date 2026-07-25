@@ -5,6 +5,7 @@ import admin from "firebase-admin"
 import {
   ALLOWED_GAME_RECONNECTION_TIME,
   EVOLUTION_LAB_REWARD_EXP,
+  EVOLUTION_LAB_REWARD_GOLD,
   EVOLUTION_LAB_REWARD_REROLLS,
   ExpPlace,
   getCurrentGameEvent,
@@ -1483,8 +1484,10 @@ export default class GameRoom extends Room<{ state: GameState }> {
     const choice = player.choices.find((c) => c.id === choiceId)
     if (!choice) return
 
+    // resolved here before the generic validation, which assumes homogeneous options
     if (choice.type === "evolution_lab_reward") {
-      if (choiceIndex === 0) {
+      const reward = choice.rewards[choiceIndex]
+      if (reward === "gem") {
         const gem = choice.items[0]
         if (gem && isIn(SynergyGems, gem)) {
           // a gem activates its synergy via bonusSynergies; holding it does nothing
@@ -1496,11 +1499,13 @@ export default class GameRoom extends Room<{ state: GameState }> {
           player.items.push(gem)
           player.updateSynergies()
         }
-      } else if (choiceIndex === 1) {
+      } else if (reward === "components") {
         choice.items2.forEach((component) => player.items.push(component))
-      } else if (choiceIndex === 2) {
+      } else if (reward === "gold") {
+        player.addMoney(EVOLUTION_LAB_REWARD_GOLD, true, null)
+      } else if (reward === "rerolls") {
         player.shopFreeRolls += EVOLUTION_LAB_REWARD_REROLLS
-      } else if (choiceIndex === 3) {
+      } else if (reward === "exp") {
         player.addExperience(EVOLUTION_LAB_REWARD_EXP)
       } else {
         return
