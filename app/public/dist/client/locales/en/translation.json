@@ -3312,7 +3312,7 @@
 		"ELDER_CRYSTAL": "Counts as 3 towards ELDER_STORM. Under ELDER_STORM, your team takes -15% less damage from Pokémon with SHIELD.\n\nOnly the strongest can ascend to dragonhood. 3 STAR ROCK Pokémon can undergo Crystallisation with this weather rock.",
 		"DISTORTION_SLATE": "Counts as 3 towards DISTORTION. Under DISTORTION, your team recovers from ARMOR_BREAK 30% faster.\n\nAllows a ROCK Pokémon to undergo Crystallisation, Awakening it as a ARTIFICIAL type.",
 		"FOSSIL_FRAGMENT": "Counts as 3 towards METEOR_SHOWER. Under METEOR_SHOWER, your team gains 10% of incoming PHYSICAL as SHIELD (after damage mitigation).\n\nAllows a ROCK Pokémon to undergo Crystallisation, Awakening it as a FOSSIL type.",
-		"CLOUD_ORB": "Counts as 3 towards CLOUDY. Under CLOUDY, your team deals 1% of target's max HP as SPECIAL damage.\n\nAllows a ROCK Pokémon to undergo Crystallisation, Awakening it as a AMORPHOUS type.",
+		"CLOUD_ORB": "Counts as 3 towards CLOUDY. Under CLOUDY, your team deals 1% of target's max HP as SPECIAL ON_ATTACK.\n\nAllows a ROCK Pokémon to undergo Crystallisation, Awakening it as a AMORPHOUS type.",
 		"PEAT_BLOCK": "Counts as 3 towards TERRAIN. Under TERRAIN, your team retaliates against ADJACENT enemies. [5,LK]% chance to slow their SPEED by 3 when hit.\n\nAllows a ROCK Pokémon to undergo Crystallisation, awakening it as a FIELD type.",
 		"BLOSSOM_SHARD": "Counts as 3 towards BLOSSOM. Under BLOSSOM, each time an enemy spawns within a 2-tile radius of one of your units, gain SHIELD equal to 5% of its max HP.\n\nAllows a ROCK Pokémon to undergo Crystallisation, awakening it as a FLORA type.",
 		"UTILITY_UMBRELLA": "Your opponent needs 1 additional count to activate their weather for each UTILITY_UMBRELLA in your inventory.",
