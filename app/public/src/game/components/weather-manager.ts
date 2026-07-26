@@ -605,6 +605,7 @@ export default class WeatherManager {
   }
 
   addAurora() {
+    const fadeIn = 1200
     const arcColors = [0xefe726, 0xb4436e, 0xa80155, 0x950274]
     const sparkTints = [0xf0c698, 0xefe726, 0xb4436e, 0xa80155, 0x950274]
     const auroraPalette = [
@@ -626,10 +627,21 @@ export default class WeatherManager {
     // a normal overlay) crushes bright map regions — grass, sand — down toward
     // dark while barely touching already-dark regions, so the weather reads the
     // same everywhere. Rendered first so it sits under the glow.
+    const tintAlpha = 0.50 // brighten/darken base tint
     this.colorFilter = this.scene.add.existing(
-      new Phaser.GameObjects.Rectangle(this.scene, 1500, 1000, 3000, 2000, 0x282b34, 0.55)
+      new Phaser.GameObjects.Rectangle(this.scene, 1500, 1000, 3000, 2000, 0x282b34, tintAlpha)
         .setBlendMode(Phaser.BlendModes.MULTIPLY)
         .setDepth(DEPTH.WEATHER_FX)
+        .setAlpha(0)
+    )
+    // ease the tint in
+    this.tweens.push(
+      this.scene.tweens.add({
+        targets: this.colorFilter,
+        alpha: tintAlpha,
+        duration: fadeIn,
+        ease: "sine.out"
+      })
     )
 
     // --- textures ------------------------------------------------------
@@ -692,9 +704,21 @@ export default class WeatherManager {
             .setBlendMode(Phaser.BlendModes.SCREEN)
             .setTint(auroraPalette[colorIndex++ % auroraPalette.length])
             .setScale(3.2, 3.0) // wide + overlapping → uniform coverage
-            .setAlpha(baseAlpha)
+            .setAlpha(0)
         )
         this.images.push(blob)
+
+        // ease each blob in, staggered across the grid so the aurora washes in
+        const entranceDelay = (r * cols + c) * 60
+        this.tweens.push(
+          this.scene.tweens.add({
+            targets: blob,
+            alpha: baseAlpha,
+            duration: fadeIn,
+            delay: entranceDelay,
+            ease: "sine.out"
+          })
+        )
 
         // The sky stays present — no fade in/out. Instead each blob slowly
         // wanders on X and Y at *different* periods (a lissajous drift) so the
@@ -707,7 +731,7 @@ export default class WeatherManager {
             scaleX: { from: 2.9, to: 3.8 },
             alpha: { from: baseAlpha * 0.75, to: baseAlpha * 1.35 },
             duration: 5000 + Phaser.Math.Between(0, 2800),
-            delay: Phaser.Math.Between(0, 2200),
+            delay: fadeIn + entranceDelay + Phaser.Math.Between(0, 2200),
             yoyo: true,
             repeat: -1,
             ease: "sine.inout"
@@ -719,7 +743,7 @@ export default class WeatherManager {
             y: y + Phaser.Math.Between(-130, 130),
             scaleY: { from: 2.7, to: 3.5 },
             duration: 6500 + Phaser.Math.Between(0, 3000), // different period → wander
-            delay: Phaser.Math.Between(0, 2200),
+            delay: fadeIn + entranceDelay + Phaser.Math.Between(0, 2200),
             yoyo: true,
             repeat: -1,
             ease: "sine.inout"
@@ -763,13 +787,17 @@ export default class WeatherManager {
       )
     }
     this.timers.push(
-      this.scene.time.addEvent({
-        delay: 55,
-        loop: true,
-        callback: () => {
-          const n = Phaser.Math.Between(1, 2)
-          for (let k = 0; k < n; k++) spawnUpSpark()
-        }
+      this.scene.time.delayedCall(fadeIn, () => {
+        this.timers.push(
+          this.scene.time.addEvent({
+            delay: 55,
+            loop: true,
+            callback: () => {
+              const n = Phaser.Math.Between(1, 2)
+              for (let k = 0; k < n; k++) spawnUpSpark()
+            }
+          })
+        )
       })
     )
 
@@ -829,15 +857,21 @@ export default class WeatherManager {
         })
       )
     }
-    // bursty crackle: every tick, fire 0-2 bolts so gaps and clusters happen
+    // bursty crackle: every tick, fire 0-2 bolts so gaps and clusters happen.
+    // Delayed so the lightning eases in after the aurora wash rather than
+    // snapping on instantly.
     this.timers.push(
-      this.scene.time.addEvent({
-        delay: 350,
-        loop: true,
-        callback: () => {
-          const n = Phaser.Math.Between(0, 2)
-          for (let k = 0; k < n; k++) spawnArc()
-        }
+      this.scene.time.delayedCall(fadeIn, () => {
+        this.timers.push(
+          this.scene.time.addEvent({
+            delay: 350,
+            loop: true,
+            callback: () => {
+              const n = Phaser.Math.Between(0, 2)
+              for (let k = 0; k < n; k++) spawnArc()
+            }
+          })
+        )
       })
     )
 
@@ -889,12 +923,16 @@ export default class WeatherManager {
     }
     // rare: most ticks fire nothing, an occasional single spark
     this.timers.push(
-      this.scene.time.addEvent({
-        delay: 700,
-        loop: true,
-        callback: () => {
-          if (Math.random() < 0.5) spawnCrackle()
-        }
+      this.scene.time.delayedCall(fadeIn, () => {
+        this.timers.push(
+          this.scene.time.addEvent({
+            delay: 700,
+            loop: true,
+            callback: () => {
+              if (Math.random() < 0.5) spawnCrackle()
+            }
+          })
+        )
       })
     )
   }
@@ -1390,15 +1428,25 @@ export default class WeatherManager {
         3000,
         2000,
         0x201024,
-        0.4
+        0
       )
         .setBlendMode(Phaser.BlendModes.MULTIPLY)
         .setDepth(DEPTH.WEATHER_FX)
     )
+    // ease the gloom in rather than snapping on
     this.tweens.push(
       this.scene.tweens.add({
         targets: this.colorFilter,
-        alpha: { from: 0.36, to: 0.45 }, // another ~10% less gloom → brighter
+        alpha: 0.29, // ~20% less tint than before
+        duration: 2000,
+        ease: "sine.out"
+      })
+    )
+    this.tweens.push(
+      this.scene.tweens.add({
+        targets: this.colorFilter,
+        alpha: { from: 0.29, to: 0.36 }, // ~20% less gloom
+        delay: 2000,
         duration: 4600,
         yoyo: true,
         repeat: -1,
@@ -1508,7 +1556,17 @@ export default class WeatherManager {
       .container(cx, cy)
       .setDepth(DEPTH.WEATHER_FX)
       .setScale(1, tilt)
+      .setAlpha(0)
     this.containers.push(vortex)
+    // let the whole vortex swirl in instead of popping on
+    this.tweens.push(
+      this.scene.tweens.add({
+        targets: vortex,
+        alpha: 1,
+        duration: 2000,
+        ease: "sine.out"
+      })
+    )
 
     // --- inner tint: eases the harsh brightness gap between a bright battlefield
     // and the dark storm wall. Faint over the centre so the fight stays readable,
@@ -1536,19 +1594,19 @@ export default class WeatherManager {
       .setBlendMode(Phaser.BlendModes.NORMAL)
       .setTint(0x201024)
       .setScale(ringScale)
-      .setAlpha(0.9)
+      .setAlpha(0.72)
     vortex.add(eyeTint)
 
     // Stacked cloud layers twirling the same way at different speeds. A shared
     // warm-purple family (plum -> mauve-brown -> shadow) so the tints blend
     // instead of fighting; all dark + NORMAL-blended so it reads as storm cloud.
     const donutLayers = [
-      { scale: ringScale, alpha: 0.55, tint: 0x3a2246, duration: 26000 },
-      { scale: ringScale * 0.94, alpha: 0.5, tint: 0x4a2f3e, duration: 17000 },
-      { scale: ringScale * 1.03, alpha: 0.42, tint: 0x160b1a, duration: 21000 },
+      { scale: ringScale, alpha: 0.55, tint: 0x3a2246, duration: 32500 },
+      { scale: ringScale * 0.94, alpha: 0.5, tint: 0x4a2f3e, duration: 21250 },
+      { scale: ringScale * 1.03, alpha: 0.42, tint: 0x160b1a, duration: 26250 },
       // faint inner haze: a slightly smaller copy so a whisper of tint bleeds
       // just inside the eye rim, easing the clear->cloud edge (very subtle)
-      { scale: ringScale * 0.92, alpha: 0.09, tint: 0x5a3a5e, duration: 30000 }
+      { scale: ringScale * 0.92, alpha: 0.09, tint: 0x5a3a5e, duration: 37500 }
     ]
     for (const layer of donutLayers) {
       const donut = new Phaser.GameObjects.Image(this.scene, 0, 0, vortexKey)
@@ -1658,7 +1716,7 @@ export default class WeatherManager {
             spawnCurrent({
               alpha: 0.5,
               scale: 1.3,
-              duration: Phaser.Math.Between(1100, 1500),
+              duration: Phaser.Math.Between(1500, 1900),
               sweep: Phaser.Math.FloatBetween(1.6, 2.4),
               stretch: 3.0
             })
@@ -1803,7 +1861,7 @@ export default class WeatherManager {
             targets: driver,
             p: 1,
             delay: Phaser.Math.Between(0, 160), // stagger so the surge ripples
-            duration: Phaser.Math.Between(450, 800),
+            duration: Phaser.Math.Between(750, 1100),
             ease: "sine.out",
             onUpdate: () => {
               const ang = a0 + sweep * driver.p // rides the spin
