@@ -706,19 +706,21 @@ export default class Player extends Schema implements IPlayer {
     } while (weatherRockInInventory != -1)
 
     if (nbWeatherRocks > 0) {
-      // Weather rocks currently locked into an awakening charge are in use and
-      // must NOT be handed back to the bench until the Pokémon shatters.
-      // Bound by how many rocks have actually been collected (weatherRocks) and
-      // not just the tier cap, otherwise a single collected rock could be dropped
-      // to crystallise several units in the same round.
-      const nbCharging = schemaValues(this.board).filter(
-        (p) => p.awakeningRock !== ""
-      ).length
+      // The rocks you're entitled to hold: the most-recently collected ones, up
+      // to the tier cap (and never more than you've actually collected).
       const nbOwned = Math.min(nbWeatherRocks, this.weatherRocks.length)
-      const nbInInventory = Math.max(0, nbOwned - nbCharging)
-      if (nbInInventory > 0) {
-        this.items.push(...this.weatherRocks.slice(-nbInInventory))
-      }
+      const inInventory = this.weatherRocks.slice(-nbOwned)
+      // Remove the SPECIFIC rocks currently locked into an awakening charge, by
+      // type — they're in use until the Pokémon shatters. Removing by type (not
+      // just by count) matters when the collected rocks are mixed: dropping the
+      // icy rock must keep your fossil fragments, not trim whichever is last.
+      schemaValues(this.board).forEach((p) => {
+        if (p.awakeningRock !== "") {
+          const idx = inInventory.indexOf(p.awakeningRock as Item)
+          if (idx !== -1) inInventory.splice(idx, 1)
+        }
+      })
+      this.items.push(...inInventory)
     }
   }
 
