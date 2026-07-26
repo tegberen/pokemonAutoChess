@@ -14,13 +14,14 @@ export default function GameRefresh() {
   const { t } = useTranslation()
   const shopFreeRolls = useAppSelector((state) => state.game.shopFreeRolls)
   const specialGameRule = useAppSelector((state) => state.game.specialGameRule)
-  const cost = shopFreeRolls > 0 ? 0 : getRerollCost(specialGameRule)
+  const stageLevel = useAppSelector((state) => state.game.stageLevel)
+  const cost =
+    shopFreeRolls > 0 ? 0 : getRerollCost(specialGameRule, stageLevel)
 
   // BAZAAR: show how many shops away the next bazaar is. It appears when
   // (stage + rerolls) is a multiple of BAZAAR_SHOP_INTERVAL — the same numbers
   // the player sees on screen — so the countdown is easy to reason about.
   const isBazaar = specialGameRule === SpecialGameRule.BAZAAR
-  const stageLevel = useAppSelector((state) => state.game.stageLevel)
   const rerollCount = useAppSelector(
     (state) => selectConnectedPlayer(state)?.gameStats?.rerollCount ?? 0
   )

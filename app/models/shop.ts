@@ -530,6 +530,10 @@ export default class Shop {
       }
     }
 
+    if (state.specialGameRule === SpecialGameRule.EVOLUTION_LAB) {
+      allCandidates = allCandidates.filter((p) => p !== Pkm.COSMOG)
+    }
+
     // ensure we have at least one synergy per proposition
     if (portalSynergies.length > NB_UNIQUE_PROPOSITIONS) {
       portalSynergies = pickNRandomIn(portalSynergies, NB_UNIQUE_PROPOSITIONS)
@@ -747,6 +751,7 @@ export default class Shop {
 
     if (
       state.specialGameRule !== SpecialGameRule.DITTO_PARTY &&
+      state.specialGameRule !== SpecialGameRule.EVOLUTION_LAB &&
       chance(DITTO_RATE) &&
       state.stageLevel >= MIN_STAGE_FOR_DITTO &&
       !noSpecial

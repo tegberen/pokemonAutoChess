@@ -227,12 +227,21 @@ export class OnBuyPokemonCommand extends Command<
       this.state.specialGameRule === SpecialGameRule.EVOLUTION_LAB &&
       pokemon.hasEvolution
     ) {
-      const evolutionName = EvolutionManager.getEvolution(
-        pokemon,
-        player,
-        this.state.stageLevel
-      )
-      pokemon = PokemonFactory.createPokemonFromName(evolutionName, player)
+      // keep Bergmite as 1-star once its evolution is on board, so it can still
+      // be carried by Avalugg / Hisui Avalugg
+      const keepBergmite =
+        name === Pkm.BERGMITE &&
+        schemaValues(player.board).some(
+          (p) => p.name === Pkm.AVALUGG || p.name === Pkm.HISUI_AVALUGG
+        )
+      if (!keepBergmite) {
+        const evolutionName = EvolutionManager.getEvolution(
+          pokemon,
+          player,
+          this.state.stageLevel
+        )
+        pokemon = PokemonFactory.createPokemonFromName(evolutionName, player)
+      }
     }
 
     if (
@@ -1371,7 +1380,7 @@ export class OnShopRerollCommand extends Command<GameRoom, string> {
     const rollCost =
       player.shopFreeRolls > 0
         ? 0
-        : getRerollCost(this.state.specialGameRule)
+        : getRerollCost(this.state.specialGameRule, this.state.stageLevel)
     const canRoll = (player?.money ?? 0) >= rollCost
 
     if (canRoll) {

@@ -17,12 +17,18 @@ export function getShopSize(
 }
 
 export const REROLL_COST = 1
-export const EVOLUTION_LAB_REROLL_COST = 5
 
-export function getRerollCost(specialGameRule?: SpecialGameRule | null): number {
-  return specialGameRule === SpecialGameRule.EVOLUTION_LAB
-    ? EVOLUTION_LAB_REROLL_COST
-    : REROLL_COST
+export function getRerollCost(
+  specialGameRule?: SpecialGameRule | null,
+  stageLevel = 0
+): number {
+  if (specialGameRule === SpecialGameRule.EVOLUTION_LAB) {
+    if (stageLevel < 10) return 5
+    if (stageLevel < 20) return 4
+    if (stageLevel < 30) return 3
+    return 2
+  }
+  return REROLL_COST
 }
 
 export const EVOLUTION_LAB_REWARD_COMPONENTS = 3
