@@ -12,17 +12,12 @@ import {
 } from "../types/enum/Item"
 import { Pkm } from "../types/enum/Pokemon"
 import { getFirstAvailablePositionInBench } from "../utils/board"
-import {
-  pickNRandomIn,
-  pickRandomIn,
-  randomWeighted,
-  shuffleArray
-} from "../utils/random"
+import { pickRandomIn, randomWeighted, shuffleArray } from "../utils/random"
 import { createRandomEgg } from "./eggs"
 
 export { BAZAAR_SHOP_INTERVAL } from "../types/enum/SpecialGameRule"
 
-export type BazaarOfferKind =
+export type BazaarOfferCategory =
   | "berry"
   | "bronze_dojo"
   | "magikarp"
@@ -41,17 +36,16 @@ export type BazaarOfferKind =
   | "gem"
   | "amulet_coin"
 
-export const BAZAAR_POTION_KEY = "POTION"
 export const BAZAAR_POTION_HEAL = 10
 
-const BazaarTier1Kinds: BazaarOfferKind[] = [
-  "berry",
-  "bronze_dojo",
-  "magikarp",
-  "sweet"
-]
+const BazaarLowWeights: Partial<Record<BazaarOfferCategory, number>> = {
+  berry: 1,
+  bronze_dojo: 1,
+  magikarp: 1,
+  sweet: 1
+}
 
-const BazaarTier2Weights: Partial<Record<BazaarOfferKind, number>> = {
+const BazaarMidWeights: Partial<Record<BazaarOfferCategory, number>> = {
   component: 3,
   silver_dojo: 1,
   egg: 1,
@@ -61,19 +55,39 @@ const BazaarTier2Weights: Partial<Record<BazaarOfferKind, number>> = {
   picnic_set: 1
 }
 
-const BazaarTier3Kinds: BazaarOfferKind[] = [
-  "completed_item",
-  "artificial_item",
-  "gold_dojo",
-  "potion",
-  "gem",
-  "amulet_coin"
-]
+const BazaarHighWeights: Partial<Record<BazaarOfferCategory, number>> = {
+  completed_item: 8,
+  artificial_item: 4,
+  gem: 5,
+  amulet_coin: 1,
+  potion: 1,
+  gold_dojo: 1
+}
+
+const BazaarOfferPrice: Record<BazaarOfferCategory, number> = {
+  berry: 0,
+  magikarp: 1,
+  sweet: 1,
+  bronze_dojo: 4,
+  component: 5,
+  egg: 5,
+  recycle: 4,
+  exchange_ticket: 4,
+  lapras_ticket: 4,
+  picnic_set: 5,
+  silver_dojo: 8,
+  completed_item: 10,
+  artificial_item: 10,
+  potion: 10,
+  gem: 10,
+  amulet_coin: 10,
+  gold_dojo: 12
+}
 
 export type BazaarOfferData = {
   item: string
   price: number
-  kind: BazaarOfferKind
+  category: BazaarOfferCategory
 }
 
 const BazaarSweets: Item[] = [
@@ -84,8 +98,8 @@ const BazaarSweets: Item[] = [
   Item.BALM_MUSHROOM
 ]
 
-function resolveBazaarItem(kind: BazaarOfferKind): string {
-  switch (kind) {
+function resolveBazaarItem(category: BazaarOfferCategory): string {
+  switch (category) {
     case "berry":
       return pickRandomIn(Berries)
     case "sweet":
@@ -119,58 +133,81 @@ function resolveBazaarItem(kind: BazaarOfferKind): string {
     case "egg":
       return Pkm.EGG
     case "potion":
-      return BAZAAR_POTION_KEY
+      return Item.POTION
   }
 }
 
-const makeOffer = (kind: BazaarOfferKind, price: number): BazaarOfferData => ({
-  item: resolveBazaarItem(kind),
-  price,
-  kind
+const makeOffer = (category: BazaarOfferCategory): BazaarOfferData => ({
+  item: resolveBazaarItem(category),
+  price: BazaarOfferPrice[category],
+  category
 })
 
-// sampling without replacement
-function pickNWeightedDistinct(
-  weights: Partial<Record<BazaarOfferKind, number>>,
-  n: number
-): BazaarOfferKind[] {
-  const pool = { ...weights }
-  const result: BazaarOfferKind[] = []
-  while (result.length < n) {
-    const pick = randomWeighted<BazaarOfferKind>(pool)
-    if (!pick) break
-    result.push(pick)
-    delete pool[pick]
+// draw `count` offers from a weighted category pool, sampling WITH replacement but
+// keeping every resolved item distinct — so the same category may repeat as long as
+// it yields a different item (e.g. two different sweets), while identical items
+// and single-item categories (tickets, potion...) never duplicate. usedItems is shared
+// across the whole shop.
+function drawBazaarOffers(
+  weights: Partial<Record<BazaarOfferCategory, number>>,
+  count: number,
+  usedItems: Set<string>
+): BazaarOfferData[] {
+  const offers: BazaarOfferData[] = []
+  let attempts = 0
+  const maxAttempts = count * 50
+  while (offers.length < count && attempts < maxAttempts) {
+    attempts++
+    const category = randomWeighted<BazaarOfferCategory>(weights)
+    if (!category) break
+    const offer = makeOffer(category)
+    if (usedItems.has(offer.item)) continue
+    usedItems.add(offer.item)
+    offers.push(offer)
   }
-  return result
+  return offers
 }
 
-// 3x 1-gold, 2x 5-gold, 1x 10-gold, all distinct kinds
-export function createBazaarShopOffers(): BazaarOfferData[] {
+function getBazaarTierCounts(stageLevel: number): {
+  low: number
+  mid: number
+  high: number
+} {
+  if (stageLevel < 15) return { low: 3, mid: 2, high: 1 }
+  if (stageLevel < 25) return { low: 2, mid: 2, high: 2 }
+  return { low: 1, mid: 2, high: 3 }
+}
+
+export function createBazaarShopOffers(stageLevel: number): BazaarOfferData[] {
+  const { low, mid, high } = getBazaarTierCounts(stageLevel)
+  const usedItems = new Set<string>()
   const offers: BazaarOfferData[] = [
-    ...pickNRandomIn(BazaarTier1Kinds, 3).map((k) => makeOffer(k, 1)),
-    ...pickNWeightedDistinct(BazaarTier2Weights, 2).map((k) => makeOffer(k, 5)),
-    makeOffer(pickRandomIn(BazaarTier3Kinds), 10)
+    ...drawBazaarOffers(BazaarLowWeights, low, usedItems),
+    ...drawBazaarOffers(BazaarMidWeights, mid, usedItems),
+    ...drawBazaarOffers(BazaarHighWeights, high, usedItems)
   ]
   shuffleArray(offers)
   return offers
 }
 
-export function bazaarOfferNeedsBench(kind: string): boolean {
-  return kind === "magikarp" || kind === "egg"
+export function bazaarOfferNeedsBench(category: string): boolean {
+  return category === "magikarp" || category === "egg"
 }
 
 export function grantBazaarOffer(
-  offer: { item: string; kind: string },
+  offer: { item: string; category: string },
   player: Player
 ): void {
-  const kind = offer.kind as BazaarOfferKind
-  switch (kind) {
+  const category = offer.category as BazaarOfferCategory
+  switch (category) {
     case "magikarp":
     case "egg": {
       const pokemon =
-        kind === "egg"
-          ? createRandomEgg(player, false)
+        category === "egg"
+          ? PokemonFactory.createPokemonFromName(
+              createRandomEgg(player, false).evolution,
+              player
+            )
           : PokemonFactory.createPokemonFromName(Pkm.MAGIKARP, player)
       pokemon.positionX = getFirstAvailablePositionInBench(player.board) ?? 0
       pokemon.positionY = 0

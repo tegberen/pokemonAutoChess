@@ -370,7 +370,7 @@ export default class Shop {
   assignBazaarShop(player: Player, state: GameState) {
     const size = getShopSize(state.specialGameRule, state.stageLevel)
     this.ensureBazaarSlots(player, size)
-    const offers = createBazaarShopOffers()
+    const offers = createBazaarShopOffers(state.stageLevel)
     for (let i = 0; i < player.bazaarSlots.length; i++) {
       if (i < size && offers[i]) {
         player.shop[i] = Pkm.DEFAULT

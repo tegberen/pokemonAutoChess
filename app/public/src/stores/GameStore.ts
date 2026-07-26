@@ -23,7 +23,7 @@ import { getGameScene } from "../pages/game"
 export interface IBazaarOffer {
   item: string
   price: number
-  kind: string
+  category: string
 }
 
 export interface GameStateStore {

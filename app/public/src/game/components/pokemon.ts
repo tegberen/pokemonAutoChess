@@ -940,7 +940,7 @@ export default class PokemonSprite extends DraggableObject {
     [Item.BLOOD_STONE]: 0xa92434,
     [Item.SMELLY_CLAY]: 0xbdff5e,
     [Item.ODD_KEYSTONE]: 0x866cab,
-    [Item.BLACK_AUGURITE]: 0x000000,
+    [Item.BLACK_AUGURITE]: 0x734b6e,
     [Item.METAL_ALLOY]: 0x3cb4e5,
     [Item.STICKY_GLOB]: 0xfdfc66,
     [Item.ECLIPSE_STONE]: 0xb955d2,

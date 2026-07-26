@@ -201,9 +201,9 @@ export class OnBuyPokemonCommand extends Command<
       const offer = JSON.parse(bazaarSlot) as {
         item: string
         price: number
-        kind: string
+        category: string
       }
-      const needsBench = bazaarOfferNeedsBench(offer.kind)
+      const needsBench = bazaarOfferNeedsBench(offer.category)
       const canBuy =
         player.money >= offer.price &&
         (!needsBench || getFreeSpaceOnBench(player.board) > 0)

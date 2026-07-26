@@ -11,8 +11,8 @@ export class SeedFlareStrategy extends AbilityStrategy {
     crit: boolean
   ) {
     super.process(pokemon, board, target, crit)
-    const damage = [20, 25, 30, 60][pokemon.stars - 1] ?? 60
-    const spDefDebuff = [-3, -3, -3, -6][pokemon.stars - 1] ?? -6
+    const damage = [10, 20, 30, 40, 80][pokemon.stars - 1] ?? 80
+    const spDefDebuff = [-3, -3, -3, -3, -6][pokemon.stars - 1] ?? -6
 
     board
       .getCellsInRadius(pokemon.positionX, pokemon.positionY, 5, false)
