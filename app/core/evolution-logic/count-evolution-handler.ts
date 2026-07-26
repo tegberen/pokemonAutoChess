@@ -1,3 +1,4 @@
+import { getItemCapacity } from "../../config/game/items"
 import type Player from "../../models/colyseus-models/player"
 import type { Pokemon } from "../../models/colyseus-models/pokemon"
 import PokemonFactory from "../../models/pokemon-factory"
@@ -141,8 +142,13 @@ export class CountEvolutionHandler extends EvolutionHandler {
       ...itemsCompleteOnBench
     ]
 
+    const itemCapacity = getItemCapacity(player.specialGameRule)
+
     for (const item of itemsCompleteToAdd) {
-      if (pokemonEvolved.items.has(item) || pokemonEvolved.items.size >= 3) {
+      if (
+        pokemonEvolved.items.has(item) ||
+        pokemonEvolved.items.size >= itemCapacity
+      ) {
         player.items.push(item)
       } else {
         pokemonEvolved.items.add(item)
@@ -163,7 +169,7 @@ export class CountEvolutionHandler extends EvolutionHandler {
         schemaValues(pokemonEvolved.items).some((i) =>
           ItemComponents.includes(i)
         ) ||
-        pokemonEvolved.items.size >= 3
+        pokemonEvolved.items.size >= itemCapacity
       ) {
         player.items.push(itemComponent)
       } else {

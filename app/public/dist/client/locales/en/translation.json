@@ -2665,7 +2665,7 @@
 		"CRYSTALLISE_ECLIPSE_STONE": "At the start of the fight, gain 100% of DEF as AP and 50% of DEF as starting PP.",
 		"CRYSTALLISE_PEARL_STONE": "The user casts Surf when hit by the big TIDAL_WAVE.",
 		"CRYSTALLISE_ELDER_CRYSTAL": "Attacks have [1,LK]% chance per STAR on your board to deal the targets remaining SHIELD as PHYSICAL, SPECIAL or TRUE ON_ATTACK.",
-		"CRYSTALLISE_DISTORTION_SLATE": "ON_ATTACK, [5, LK]% chance to infflict the target and ADJACENT enemy Pokémon with a random BOARD_EFFECT.",
+		"CRYSTALLISE_DISTORTION_SLATE": "ON_ATTACK, [5, LK]% chance to inflict the target and ADJACENT enemy Pokémon with a random BOARD_EFFECT.",
 		"CRYSTALLISE_FOSSIL_FRAGMENT": "Fossil revive with HP instead of SHIELD. If hit by METEOR_DAMAGE, increase user ATK by 100% base ATK.",
 		"CRYSTALLISE_CLOUD_ORB": "When the user is affected by a negative status effect, lose 20% of current DEF for the next 5 seconds and gain RUNE_PROTECT for 5 seconds.",
 		"CRYSTALLISE_PEAT_BLOCK": "When the user is KO'd, distribute its current DEF and SPEED equally among allies within a 2-tile radius.",
