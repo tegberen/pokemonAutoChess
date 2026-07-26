@@ -29,6 +29,7 @@ export interface IPreferencesState {
   showDetailsOnHover: boolean
   showDamageNumbers: boolean
   showEvolutions: boolean
+  showWeatherRocks: boolean
   showAltForms: boolean
   showRegularPool: boolean
   showAdditionalPool: boolean
@@ -58,6 +59,7 @@ const defaultPreferences: IPreferencesState = {
   showDetailsOnHover: false,
   showDamageNumbers: true,
   showEvolutions: true,
+  showWeatherRocks: true,
   showAltForms: true,
   showRegularPool: true,
   showAdditionalPool: true,

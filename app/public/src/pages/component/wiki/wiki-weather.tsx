@@ -5,7 +5,7 @@ import {
   getPokemonData,
   PRECOMPUTED_POKEMONS_DATA
 } from "../../../../../models/precomputed/precomputed-pokemon-data"
-import { WeatherRocks } from "../../../../../types/enum/Item"
+import { WeatherRocksByWeather } from "../../../../../types/enum/Item"
 import { Pkm, PkmFamily } from "../../../../../types/enum/Pokemon"
 import {
   SynergyAssociatedToWeather,
@@ -14,6 +14,7 @@ import {
 import { getPortraitSrc } from "../../../../../utils/avatar"
 import { WeatherSupportPassives } from "../../../../../utils/weather"
 import { usePreferences } from "../../../preferences"
+import { ItemDetailTooltip } from "../../../game/components/item-detail"
 import { addIconsToDescription } from "../../utils/descriptions"
 import { cc } from "../../utils/jsx"
 import { Checkbox } from "../checkbox/checkbox"
@@ -34,6 +35,12 @@ export default function WikiWeather() {
           checked={preferences.showEvolutions}
           onToggle={(checked) => setPreferences({ showEvolutions: checked })}
           label={t("show_evolutions")}
+          isDark
+        />
+        <Checkbox
+          checked={preferences.showWeatherRocks}
+          onToggle={(checked) => setPreferences({ showWeatherRocks: checked })}
+          label={t("show_weather_rocks")}
           isDark
         />
       </div>
@@ -75,7 +82,9 @@ export default function WikiWeather() {
                   </li>
                 ))}
             </ul>
-            {(weatherSupportPokemons.get(weather) ?? []).length > 0 && (
+            {((weatherSupportPokemons.get(weather) ?? []).length > 0 ||
+              (preferences.showWeatherRocks &&
+                WeatherRocksByWeather.get(weather))) && (
               <div className="weather-support">
                 <ul>
                   {(preferences.showEvolutions
@@ -100,6 +109,19 @@ export default function WikiWeather() {
                         </div>
                       </li>
                     ))}
+                  {preferences.showWeatherRocks &&
+                    WeatherRocksByWeather.get(weather) && (
+                      <li key="weather-rock" className="weather-rock-cell">
+                        <img
+                          className="weather-rock"
+                          src={`assets/item/${WeatherRocksByWeather.get(weather)}.png`}
+                          data-tooltip-id="item-detail-tooltip"
+                          data-tooltip-content={WeatherRocksByWeather.get(
+                            weather
+                          )}
+                        />
+                      </li>
+                    )}
                 </ul>
               </div>
             )}
@@ -107,36 +129,8 @@ export default function WikiWeather() {
         ))}
       </ul>
 
-      <div className="my-box" style={{ marginTop: "0.5em" }}>
-        <h2>{t("wiki.weather.awakenings", { defaultValue: "Awakenings" })}</h2>
-        <p className="description">
-          {addIconsToDescription(t("effect_description.CRYSTALLISATION"))}
-        </p>
-        <br />
-        <table className="wiki-weather-awakenings">
-          <tbody>
-            {WeatherRocks.map((rock) => (
-              <tr key={rock}>
-                <td style={{ whiteSpace: "nowrap", verticalAlign: "top" }}>
-                  <img
-                    src={`assets/item/${rock}.png`}
-                    alt={t(`item.${rock}`)}
-                    style={{ width: "40px", verticalAlign: "middle" }}
-                  />{" "}
-                  {t(`item.${rock}`)}
-                </td>
-                <td className="description">
-                  {addIconsToDescription(
-                    t(`effect_description.CRYSTALLISE_${rock}`)
-                  )}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-
       <GamePokemonDetailTooltip origin="wiki" />
+      <ItemDetailTooltip />
     </div>
   )
 }
@@ -161,7 +155,7 @@ const pokemonsInfluencingWeather = new Map([
   [Weather.ECLIPSE, [Pkm.SOLGALEO, Pkm.LUNALA, Pkm.LUNATONE]],
   [Weather.FLOOD, [Pkm.LUGIA]],
   [Weather.ELDER_STORM, [Pkm.ETERNATUS]],
-  [Weather.BLOSSOM, [Pkm.XERNEAS]]
+  [Weather.BLOSSOM, [Pkm.SHAYMIN_SKY]]
 ])
 
 // All Pokémon that boost a weather via a *_WEATHER_SUPPORT passive (on either

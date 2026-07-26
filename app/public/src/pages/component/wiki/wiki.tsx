@@ -1,6 +1,7 @@
 import { useTranslation } from "react-i18next"
 import { Tab, TabList, TabPanel, Tabs } from "react-tabs"
 import WikiAbility from "./wiki-ability"
+import WikiAwakening from "./wiki-awakening"
 import WikiData from "./wiki-data"
 import WikiFaq from "./wiki-faq"
 import WikiGlossary from "./wiki-glossary"
@@ -32,6 +33,7 @@ export default function Wiki({ inGame = false }: { inGame: boolean }) {
           <Tab key="title-double-up">Double Up</Tab>
           <Tab key="title-pokemon">{t("wiki.nav.pokemons_label")}</Tab>
           <Tab key="title-ability">{t("wiki.nav.abilities_label")}</Tab>
+          <Tab key="title-awakening">{t("wiki.nav.awakening_label")}</Tab>
           <Tab key="title-items">{t("wiki.nav.items_label")}</Tab>
           <Tab key="title-types">{t("wiki.nav.synergies_label")}</Tab>
           <Tab key="title-statistic">{t("wiki.nav.statistics_label")}</Tab>
@@ -62,6 +64,9 @@ export default function Wiki({ inGame = false }: { inGame: boolean }) {
         </TabPanel>
         <TabPanel key="ability">
           <WikiAbility />
+        </TabPanel>
+        <TabPanel key="awakening">
+          <WikiAwakening />
         </TabPanel>
         <TabPanel key="items">
           <WikiItems />

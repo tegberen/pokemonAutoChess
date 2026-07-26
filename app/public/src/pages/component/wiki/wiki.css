@@ -277,6 +277,23 @@
   margin-top: auto;
 }
 
+#wiki-weather .weather-support > ul {
+  flex: 1;
+  width: 100%;
+}
+
+#wiki-weather .weather-support .weather-rock-cell {
+  margin-left: auto;
+}
+
+#wiki-weather .weather-support .weather-rock {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  vertical-align: middle;
+  cursor: help;
+}
+
 #wiki-ability .my-box ul {
   display: flex;
   flex-wrap: wrap;

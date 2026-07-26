@@ -8364,7 +8364,7 @@ export class ShayminSky extends Pokemon {
   maxPP = 100
   range = 3
   skill = Ability.SEED_FLARE
-  passive = Passive.ZENITH
+  passive = Passive.BLOSSOM
 }
 
 export class Cresselia extends Pokemon {
@@ -9697,7 +9697,6 @@ export class Xerneas extends Pokemon {
   maxPP = 100
   range = 3
   skill = Ability.GEOMANCY
-  passive = Passive.BLOSSOM
 }
 
 export class TapuFini extends Pokemon {
