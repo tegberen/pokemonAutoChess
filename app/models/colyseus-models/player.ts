@@ -113,20 +113,10 @@ export default class Player extends Schema implements IPlayer {
   @view() @type(["string"]) shop = new ArraySchema<Pkm>()
   // JUGGERNAUT: stat (color) fed by each shop copy, parallel to `shop` ("" if not a copy)
   @view() @type(["string"]) shopJuggernautStats = new ArraySchema<string>()
-  // BAZAAR: per-slot item offers for a bazaar shop (parallel to `shop`); each
-  // entry is a JSON-encoded offer, or "" when the slot has no offer. Kept as a
-  // primitive string array so client `.onChange` fires reliably on every reroll.
-  @view() @type(["string"]) bazaarSlots = new ArraySchema<string>()
-  // server-only (undecorated to stay within the 64-field schema limit): the
-  // client infers a bazaar shop from `bazaarSlots` content instead.
-  bazaarShop = false
-  // server-only: the shop key (stage + rerolls) at which the last bazaar was
-  // shown, so the free replacement shop after a buy doesn't re-trigger one
-  bazaarLastShopKey = -1
   @type(ExperienceManager) experienceManager = new ExperienceManager()
   @type({ map: "uint8" }) synergies = new Synergies()
   @type("uint16") money = process.env.MODE == "dev" ? 999 : 5
-  @type("int16") life = 100
+  @type("int16") life = process.env.MODE == "dev" ? 1000 : 100
   @view() @type("boolean") shopLocked: boolean = false
   @view() @type("uint8") shopFreeRolls: number = 0
   @type("uint8") streak: number = 0
@@ -209,6 +199,18 @@ export default class Player extends Schema implements IPlayer {
   lightY: number
   ghost: boolean = false
   @type("string") firstPartner: Pkm | undefined
+  // BAZAAR: per-slot item offers, parallel to `shop`; each entry is a JSON-encoded
+  // offer or "" when the slot has none. Declared LAST (highest field index) on
+  // purpose: adding a @type field earlier in the class shifts the wire index of
+  // every field after it, so clients still on an older bundle mis-decode those
+  // shifted fields and desync until they refresh. Keeping it last preserves every
+  // existing field's index. Primitive string array so client `.onChange` fires reliably.
+  @view() @type(["string"]) bazaarSlots = new ArraySchema<string>()
+  // server-only (undecorated): the client infers a bazaar shop from bazaarSlots content
+  bazaarShop = false
+  // server-only: shop key (stage + rerolls) of the last bazaar shown, so the free
+  // replacement shop after a buy doesn't re-trigger one
+  bazaarLastShopKey = -1
   hasLeftGame: boolean = false
   bonusSynergies: Map<Synergy, number> = new Map<Synergy, number>()
   pokemonsExploring: {
