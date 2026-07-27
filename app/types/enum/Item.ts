@@ -794,6 +794,8 @@ export const WeatherRocks = [
   Item.BLOSSOM_SHARD
 ] satisfies Item[]
 
+export type WeatherRock = (typeof WeatherRocks)[number]
+
 export const WeatherRocksByWeather = new Map([
   [Weather.DROUGHT, Item.HEAT_ROCK],
   [Weather.ZENITH, Item.SUN_STONE],

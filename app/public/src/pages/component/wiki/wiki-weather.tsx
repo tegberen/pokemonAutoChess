@@ -1,11 +1,15 @@
 import { useTranslation } from "react-i18next"
+import { Tooltip } from "react-tooltip"
 
 import { WeatherThreshold } from "../../../../../config"
 import {
   getPokemonData,
   PRECOMPUTED_POKEMONS_DATA
 } from "../../../../../models/precomputed/precomputed-pokemon-data"
-import { WeatherRocksByWeather } from "../../../../../types/enum/Item"
+import {
+  WeatherRock,
+  WeatherRocksByWeather
+} from "../../../../../types/enum/Item"
 import { Pkm, PkmFamily } from "../../../../../types/enum/Pokemon"
 import {
   SynergyAssociatedToWeather,
@@ -20,8 +24,13 @@ import { cc } from "../../utils/jsx"
 import { Checkbox } from "../checkbox/checkbox"
 import { GamePokemonDetailTooltip } from "../game/game-pokemon-detail"
 import SynergyIcon from "../icons/synergy-icon"
+import { AwakeningCard } from "./wiki-awakening"
 
-export default function WikiWeather() {
+export default function WikiWeather({
+  onGoToAwakening
+}: {
+  onGoToAwakening?: () => void
+}) {
   const { t } = useTranslation()
   const [preferences, setPreferences] = usePreferences()
   return (
@@ -43,6 +52,17 @@ export default function WikiWeather() {
           label={t("show_weather_rocks")}
           isDark
         />
+        {onGoToAwakening && (
+          <button
+            type="button"
+            className="bubbly blue"
+            onClick={onGoToAwakening}
+            style={{ marginLeft: "auto" }}
+          >
+            <img src="/assets/icons/AWAKENING.svg" alt="" aria-hidden="true" />
+            {t("wiki.weather.awakenings", { defaultValue: "Awakening" })}
+          </button>
+        )}
       </div>
       <ul>
         {Object.values(Weather).map((weather: Weather) => (
@@ -113,6 +133,14 @@ export default function WikiWeather() {
                     WeatherRocksByWeather.get(weather) && (
                       <li key="weather-rock" className="weather-rock-cell">
                         <img
+                          className="weather-awakening-icon"
+                          src="/assets/icons/AWAKENING.svg"
+                          data-tooltip-id="weather-awakening-tooltip"
+                          data-tooltip-content={WeatherRocksByWeather.get(
+                            weather
+                          )}
+                        />
+                        <img
                           className="weather-rock"
                           src={`assets/item/${WeatherRocksByWeather.get(weather)}.png`}
                           data-tooltip-id="item-detail-tooltip"
@@ -131,6 +159,17 @@ export default function WikiWeather() {
 
       <GamePokemonDetailTooltip origin="wiki" />
       <ItemDetailTooltip />
+      <Tooltip
+        id="weather-awakening-tooltip"
+        className="custom-theme-tooltip"
+        render={({ content }) =>
+          content ? (
+            <div className="weather-awakening-tooltip-card">
+              <AwakeningCard rock={content as WeatherRock} />
+            </div>
+          ) : null
+        }
+      />
     </div>
   )
 }

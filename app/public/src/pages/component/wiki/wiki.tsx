@@ -1,3 +1,4 @@
+import { useState } from "react"
 import { useTranslation } from "react-i18next"
 import { Tab, TabList, TabPanel, Tabs } from "react-tabs"
 import WikiAbility from "./wiki-ability"
@@ -20,9 +21,31 @@ import "./wiki.css"
 
 export default function Wiki({ inGame = false }: { inGame: boolean }) {
   const { t } = useTranslation()
+  const tabKeys = [
+    ...(inGame ? [] : ["faq", "tutorials"]),
+    "double-up",
+    "pokemon",
+    "ability",
+    "awakening",
+    "items",
+    "types",
+    "statistic",
+    "status",
+    "weather",
+    "stages",
+    "town",
+    "dungeon",
+    "glossary",
+    "data"
+  ]
+  const [selectedIndex, setSelectedIndex] = useState(0)
+  const goToTab = (key: string) => {
+    const index = tabKeys.indexOf(key)
+    if (index >= 0) setSelectedIndex(index)
+  }
   return (
     <div id="wiki-page">
-      <Tabs>
+      <Tabs selectedIndex={selectedIndex} onSelect={setSelectedIndex}>
         <TabList>
           {!inGame && (
             <>
@@ -66,7 +89,7 @@ export default function Wiki({ inGame = false }: { inGame: boolean }) {
           <WikiAbility />
         </TabPanel>
         <TabPanel key="awakening">
-          <WikiAwakening />
+          <WikiAwakening onGoToWeather={() => goToTab("weather")} />
         </TabPanel>
         <TabPanel key="items">
           <WikiItems />
@@ -81,7 +104,7 @@ export default function Wiki({ inGame = false }: { inGame: boolean }) {
           <WikiStatus />
         </TabPanel>
         <TabPanel key="weather">
-          <WikiWeather />
+          <WikiWeather onGoToAwakening={() => goToTab("awakening")} />
         </TabPanel>
         <TabPanel key="stages">
           <WikiStages />

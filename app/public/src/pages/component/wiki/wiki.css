@@ -284,6 +284,9 @@
 
 #wiki-weather .weather-support .weather-rock-cell {
   margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 0.3em;
 }
 
 #wiki-weather .weather-support .weather-rock {
@@ -292,6 +295,42 @@
   object-fit: contain;
   vertical-align: middle;
   cursor: help;
+}
+
+#wiki-weather .weather-support .weather-awakening-icon {
+  width: 42px;
+  height: 42px;
+  object-fit: contain;
+  cursor: help;
+  padding: 2px;
+  border: var(--border-thin);
+  border-radius: 8px;
+  background-color: var(--color-bg-secondary);
+}
+
+#wiki-weather .wiki-weather-toolbar .bubbly img {
+  width: 20px;
+  height: 20px;
+  vertical-align: middle;
+  margin-right: 0.3em;
+}
+
+#wiki-awakening .wiki-awakening-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5em;
+}
+
+#wiki-awakening .wiki-awakening-heading h2 {
+  margin: 0;
+}
+
+#wiki-awakening .wiki-awakening-heading button img {
+  width: 20px;
+  height: 20px;
+  vertical-align: middle;
+  margin-right: 0.3em;
 }
 
 #wiki-awakening .wiki-awakening-list {
@@ -303,14 +342,14 @@
   gap: 0.5em;
 }
 
-#wiki-awakening .wiki-awakening-card {
+.wiki-awakening-card {
   margin: 0;
   display: flex;
   flex-flow: column;
   gap: 0.4em;
 }
 
-#wiki-awakening .wiki-awakening-card-header {
+.wiki-awakening-card-header {
   display: flex;
   align-items: center;
   gap: 0.5em;
@@ -319,18 +358,46 @@
   cursor: help;
 }
 
-#wiki-awakening .wiki-awakening-card-header img {
+.wiki-awakening-card-header img {
   width: 40px;
   height: 40px;
   object-fit: contain;
 }
 
-#wiki-awakening .wiki-awakening-card-header h3 {
+.wiki-awakening-card-header h3 {
   margin: 0;
 }
 
-#wiki-awakening .wiki-awakening-card .description {
+.wiki-awakening-card-title {
+  display: flex;
+  flex-flow: column;
+}
+
+.wiki-awakening-card-title h3 {
   margin: 0;
+}
+
+.wiki-awakening-card-tag {
+  display: flex;
+  align-items: center;
+  gap: 0.25em;
+  font-size: 0.85em;
+  color: var(--color-fg-secondary);
+  white-space: nowrap;
+}
+
+.wiki-awakening-card-tag img {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+}
+
+.wiki-awakening-card .description {
+  margin: 0;
+}
+
+.weather-awakening-tooltip-card {
+  width: 320px;
 }
 
 #wiki-ability .my-box ul {
