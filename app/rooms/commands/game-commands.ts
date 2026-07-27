@@ -2806,7 +2806,7 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
         player.shopFreeRolls += 10
         break
       case 10:
-        player.life = Math.min(100, player.life + 20)
+        player.life = Math.min(player.maxLife, player.life + 20)
         break
       case 12: {
         const topSynergy = player.synergies.getTopSynergies()[0]

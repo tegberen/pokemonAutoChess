@@ -12,33 +12,24 @@ export default function WikiAwakening() {
         <p className="description">
           {addIconsToDescription(t("effect_description.CRYSTALLISATION"))}
         </p>
-        <br />
-        <table className="wiki-weather-awakenings">
-          <tbody>
-            {WeatherRocks.map((rock) => (
-              <tr key={rock}>
-                <td
-                  style={{ whiteSpace: "nowrap", verticalAlign: "top" }}
-                  data-tooltip-id="item-detail-tooltip"
-                  data-tooltip-content={rock}
-                >
-                  <img
-                    src={`assets/item/${rock}.png`}
-                    alt={t(`item.${rock}`)}
-                    style={{ width: "40px", verticalAlign: "middle" }}
-                  />{" "}
-                  {t(`item.${rock}`)}
-                </td>
-                <td className="description">
-                  {addIconsToDescription(
-                    t(`effect_description.CRYSTALLISE_${rock}`)
-                  )}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
       </div>
+      <ul className="wiki-awakening-list">
+        {WeatherRocks.map((rock) => (
+          <li key={rock} className="wiki-awakening-card my-box">
+            <div
+              className="wiki-awakening-card-header"
+              data-tooltip-id="item-detail-tooltip"
+              data-tooltip-content={rock}
+            >
+              <img src={`assets/item/${rock}.png`} alt={t(`item.${rock}`)} />
+              <h3>{t(`item.${rock}`)}</h3>
+            </div>
+            <p className="description">
+              {addIconsToDescription(t(`effect_description.CRYSTALLISE_${rock}`))}
+            </p>
+          </li>
+        ))}
+      </ul>
       <ItemDetailTooltip />
     </div>
   )

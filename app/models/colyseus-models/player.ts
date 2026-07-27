@@ -229,6 +229,7 @@ export default class Player extends Schema implements IPlayer {
   shopsSinceLastUnownShop: number = 0
   regions: DungeonPMDO[] = []
   unownReminiscences: number = 0
+  maxLife: number = 100
 
   constructor(
     id: string,
@@ -257,6 +258,10 @@ export default class Player extends Schema implements IPlayer {
     this.pokemonCustoms = new PokemonCustoms(pokemonCollection)
     this.specialGameRule = state.specialGameRule
     this.gameMode = state.gameMode
+    if (state.scribbleExtended) {
+      this.maxLife = 150
+      this.life = this.maxLife
+    }
     this.avatarSynergy = state.avatarSynergy
     this.flowerPots = initFlowerPots(this)
     const avatarCustom = getPokemonCustomFromAvatar(avatar)

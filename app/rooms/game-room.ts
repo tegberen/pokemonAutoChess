@@ -159,6 +159,7 @@ export default class GameRoom extends Room<{ state: GameState }> {
     noElo,
     gameMode,
     specialGameRule,
+    scribbleExtended,
     minRank,
     maxRank,
     tournamentId,
@@ -171,6 +172,7 @@ export default class GameRoom extends Room<{ state: GameState }> {
     noElo: boolean
     gameMode: GameMode
     specialGameRule: SpecialGameRule | null
+    scribbleExtended?: boolean
     minRank: EloRank | null
     maxRank: EloRank | null
     tournamentId: string | null
@@ -214,7 +216,8 @@ export default class GameRoom extends Room<{ state: GameState }> {
       gameMode,
       minRank,
       maxRank,
-      specialGameRule
+      specialGameRule,
+      scribbleExtended ?? false
     )
     this.miniGame.create(
       this.state.avatars,

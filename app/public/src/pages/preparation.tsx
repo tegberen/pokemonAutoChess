@@ -43,12 +43,15 @@ import {
   setOwnerName,
   setPassword,
   setSpecialGameRule,
+  setScribbleExtended,
   setUser,
   setWhiteList
 } from "../stores/PreparationStore"
+import { Tab, TabList, TabPanel, Tabs } from "react-tabs"
 import Chat from "./component/chat/chat"
 import { MainSidebar } from "./component/main-sidebar/main-sidebar"
 import PreparationMenu from "./component/preparation/preparation-menu"
+import PreparationSettings from "./component/preparation/preparation-settings"
 import { ConnectionStatusNotification } from "./component/system/connection-status-notification"
 import { playSound, SOUNDS } from "./utils/audio"
 import { LocalStoreKeys, localStore } from "./utils/store"
@@ -167,6 +170,10 @@ export default function Preparation() {
 
       $state.listen("specialGameRule", (value, previousValue) => {
         dispatch(setSpecialGameRule(value))
+      })
+
+      $state.listen("scribbleExtended", (value, previousValue) => {
+        dispatch(setScribbleExtended(value))
       })
 
       $state.users.onAdd((user) => {
@@ -317,12 +324,36 @@ export default function Preparation() {
       />
       <main>
         <PreparationMenu />
-        <div className="my-container custom-bg chat-container">
-          <h2>{user?.anonymous ? t("chat_disabled_anonymous") : t("chat")}</h2>
-          <Chat
-            source="preparation"
-            canWrite={user ? !user.anonymous : false}
-          />
+        <div className="preparation-side my-container custom-bg">
+          <Tabs className="preparation-side-tabs" forceRenderTabPanel>
+            <TabList>
+              <Tab>
+                <img
+                  src="assets/icons/LOBBY_SETTINGS.svg"
+                  alt=""
+                  className="tab-icon"
+                />
+                {t("lobby_settings")}
+              </Tab>
+              <Tab>
+                <img
+                  src="assets/icons/LOBBY_CHAT.svg"
+                  alt=""
+                  className="tab-icon"
+                />
+                {t("chat")}
+              </Tab>
+            </TabList>
+            <TabPanel>
+              <PreparationSettings />
+            </TabPanel>
+            <TabPanel>
+              <Chat
+                source="preparation"
+                canWrite={user ? !user.anonymous : false}
+              />
+            </TabPanel>
+          </Tabs>
         </div>
       </main>
       <ConnectionStatusNotification />

@@ -42,6 +42,18 @@
   align-content: start;
   gap: 1em;
   flex: 1;
+  /* min-height:0 lets this flex child shrink below its content so it can
+     scroll internally instead of overflowing onto the actions panel when the
+     lobby fills up (up to 8 players) */
+  min-height: 0;
+  overflow-y: auto;
+  padding-right: 0.25em;
+}
+
+/* keep the settings panel + ready/start bar pinned and fully visible no matter
+   how many players are in the lobby */
+.preparation-menu .actions {
+  flex-shrink: 0;
 }
 
 .preparation-menu-users .pokemon-portrait {
@@ -57,7 +69,70 @@
   margin-top: 0.25em;
 }
 
-.preparation-menu .actions span {
+.preparation-menu .actions > .actions-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  margin-top: 0.5em;
+}
+
+.preparation-settings .no-settings {
+  font-size: 0.9em;
+  text-align: center;
+  opacity: 0.85;
+}
+
+/* each setting is stacked: label on its own line, control row beneath, so the
+   control gets the full width and nothing reflows when the option changes */
+.preparation-settings .lobby-settings {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75em;
+}
+
+.lobby-setting {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25em;
+}
+
+.lobby-setting > .setting-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25em;
+  font-weight: bold;
+  color: var(--color-fg-primary);
+}
+
+.lobby-setting > .setting-control {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+}
+
+.lobby-setting .setting-icon {
+  width: 1.4em;
+  height: 1.4em;
+  vertical-align: middle;
+}
+
+/* the field fills the row; changing the option can't resize it */
+.lobby-setting .setting-control select,
+.lobby-setting .setting-control input {
+  flex: 1;
+  min-width: 0;
+  text-overflow: ellipsis;
+}
+
+/* unify the action buttons so short labels (e.g. "Add") match wider ones
+   (e.g. "Random rule") */
+.lobby-setting .setting-control .bubbly {
+  flex: 0 0 auto;
+  min-width: 7.5em;
+  text-align: center;
+}
+
+.lobby-setting .room-password {
   color: var(--color-fg-primary);
   text-shadow: 1px 1px 2px black;
 }

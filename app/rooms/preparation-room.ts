@@ -20,6 +20,7 @@ import { schemaValues } from "../utils/schemas"
 import {
   OnAddBotCommand,
   OnChangeNoEloCommand,
+  OnChangeScribbleExtendedCommand,
   OnGameStartRequestCommand,
   OnJoinCommand,
   OnKickPlayerCommand,
@@ -258,6 +259,18 @@ export default class PreparationRoom extends Room<{ state: PreparationState }> {
         this.dispatcher.dispatch(new OnChangeNoEloCommand(), {
           client,
           message
+        })
+      } catch (error) {
+        logger.error(error)
+      }
+    })
+
+    this.onMessage(Transfer.CHANGE_SCRIBBLE_EXTENDED, (client, extended) => {
+      logger.info(Transfer.CHANGE_SCRIBBLE_EXTENDED, this.roomName, extended)
+      try {
+        this.dispatcher.dispatch(new OnChangeScribbleExtendedCommand(), {
+          client,
+          extended
         })
       } catch (error) {
         logger.error(error)

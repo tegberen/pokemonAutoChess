@@ -216,7 +216,7 @@ export function grantBazaarOffer(
       break
     }
     case "potion":
-      player.life = Math.min(100, player.life + BAZAAR_POTION_HEAL)
+      player.life = Math.min(player.maxLife, player.life + BAZAAR_POTION_HEAL)
       break
     case "gem": {
       const gem = offer.item as Item

@@ -23,6 +23,7 @@ export interface IUserPreparationState {
   user: GameUser | undefined
   gameMode: GameMode
   specialGameRule: SpecialGameRule | null
+  scribbleExtended: boolean
   whitelist: string[]
   blacklist: string[]
 }
@@ -41,6 +42,7 @@ const initialState: IUserPreparationState = {
   maxRank: null,
   gameMode: GameMode.CUSTOM_LOBBY,
   specialGameRule: null,
+  scribbleExtended: false,
   whitelist: [],
   blacklist: []
 }
@@ -106,6 +108,9 @@ export const preparationSlice = createSlice({
     ) => {
       state.specialGameRule = action.payload
     },
+    setScribbleExtended: (state, action: PayloadAction<boolean>) => {
+      state.scribbleExtended = action.payload
+    },
     setMinRank: (state, action: PayloadAction<EloRank | null>) => {
       state.minRank = action.payload
     },
@@ -144,6 +149,7 @@ export const {
   setBlackList,
   setGameMode,
   setSpecialGameRule,
+  setScribbleExtended,
   resetPreparation
 } = preparationSlice.actions
 

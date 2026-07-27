@@ -15,7 +15,7 @@
 }
 
 .preparation-page .preparation-menu,
-.preparation-page .chat-container {
+.preparation-page .preparation-side {
   height: calc(100vh - 8vw);
 }
 
@@ -23,15 +23,90 @@
   flex: 0 1 50em;
 }
 
-.preparation-page .chat-container {
+/* right column: one framed window (like the left panel) with a tabbed header.
+   padding:0 + overflow:hidden lets the header/content reach the rounded frame */
+.preparation-page .preparation-side {
   flex: 0 1 30em;
   display: flex;
   flex-direction: column;
+  min-height: 0;
+  padding: 0;
+  overflow: hidden;
 }
 
-.preparation-page .chat-container h2 {
-  font-size: 1.5em;
-  text-align: center;
+.preparation-side-tabs {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
+/* tabbed header: equal-width cells separated by the game's black dividers */
+.preparation-side-tabs .react-tabs__tab-list {
+  display: flex;
+  margin: 0;
+  padding: 0;
+  gap: 0;
+  border-bottom: none;
+}
+
+.preparation-side-tabs .react-tabs__tab {
+  flex: 1 1 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4em;
+  font-size: 1.15em;
+  padding: 0.5em 1em;
+  bottom: 0;
+  border-top: none;
+  border-bottom: var(--border-thin);
+  border-left: var(--border-thin);
+  border-right: var(--border-thin);
+  border-radius: 0;
+  margin-right: -1px; /* prevents a double-thick center border */
+  /* same palette as the left sidebar menu buttons */
+  background: var(--color-bg-secondary);
+  color: var(--color-fg-primary);
+}
+
+.preparation-side-tabs .react-tabs__tab:last-child {
+  margin-right: 0;
+}
+
+/* hover uses the sidebar's accent highlight */
+.preparation-side-tabs .react-tabs__tab:hover {
+  background: var(--color-bg-accent);
+}
+
+/* active tab: accent highlight, baseline dropped so it connects to the panel */
+.preparation-side-tabs .react-tabs__tab--selected {
+  background: var(--color-bg-accent);
+  color: var(--color-fg-primary);
+  border-bottom-color: transparent;
+}
+
+.preparation-side-tabs .tab-icon {
+  width: 1.4em;
+  height: 1.4em;
+}
+
+/* the active panel fills the column; its content manages its own scroll */
+.preparation-side-tabs .react-tabs__tab-panel--selected {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 0.6em;
+  background: rgba(0, 0, 0, 0.22); /* same tint as the active tab */
+}
+
+/* settings list scrolls if it gets long */
+.preparation-side-tabs .preparation-settings {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
 }
 
 .preparation-page > footer {
@@ -48,13 +123,14 @@
   }
 
   .preparation-page .preparation-menu,
-  .preparation-page .chat-container {
+  .preparation-page .preparation-side {
+    height: auto;
     min-height: initial;
     overflow: auto;
     margin-bottom: 1em;
   }
 
-  .preparation-page .chat-container {
-    padding-bottom: 60px;
+  .preparation-page .preparation-side {
+    display: block;
   }
 }

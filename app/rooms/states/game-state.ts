@@ -51,6 +51,7 @@ export default class GameState extends Schema {
   @type("uint8") lightX = randomBetween(0, BOARD_WIDTH - 1)
   @type("uint8") lightY = randomBetween(1, BOARD_HEIGHT / 2)
   @type("string") specialGameRule: SpecialGameRule | null = null
+  scribbleExtended = false
   @type("string") avatarSynergy: Synergy | null = null
   @type("string") townEncounter: TownEncounter | null = null
   @type("number") weatherThreshold: number = 8
@@ -81,9 +82,11 @@ export default class GameState extends Schema {
     gameMode: GameMode,
     minRank: EloRank | null,
     maxRank: EloRank | null,
-    specialGameRule: SpecialGameRule | null
+    specialGameRule: SpecialGameRule | null,
+    scribbleExtended = false
   ) {
     super()
+    this.scribbleExtended = scribbleExtended
     this.preparationId = preparationId
     this.startTime = Date.now()
     this.name = name

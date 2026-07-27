@@ -15,6 +15,7 @@ export interface IPreparationState {
   name: string
   minRank: EloRank | null
   gameMode: GameMode
+  scribbleExtended: boolean
 }
 
 export default class PreparationState
@@ -35,6 +36,7 @@ export default class PreparationState
   @type("boolean") noElo: boolean
   @type(["string"]) whitelist: string[]
   @type(["string"]) blacklist: string[]
+  @type("boolean") scribbleExtended = false
   abortOnPlayerLeave?: AbortController
 
   constructor(params: {

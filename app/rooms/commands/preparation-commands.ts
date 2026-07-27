@@ -375,6 +375,7 @@ export class OnGameStartRequestCommand extends Command<
           noElo: this.state.noElo,
           gameMode: this.state.gameMode,
           specialGameRule: this.state.specialGameRule,
+          scribbleExtended: this.state.scribbleExtended,
           tournamentId: this.room.metadata?.tournamentId,
           bracketId: this.room.metadata?.bracketId,
           minRank: this.state.minRank
@@ -582,6 +583,42 @@ export class OnChangeNoEloCommand extends Command<
             noElo ? "disabled" : "enabled"
           } for this game. Players need to ready again.`,
           avatar: leader?.avatar
+        })
+
+        this.state.users.forEach((user) => {
+          if (!user.isBot) user.ready = false
+        })
+      }
+    } catch (error) {
+      logger.error(error)
+    }
+  }
+}
+
+export class OnChangeScribbleExtendedCommand extends Command<
+  PreparationRoom,
+  {
+    client: Client
+    extended: boolean
+  }
+> {
+  execute({ client, extended }) {
+    try {
+      // Scribble has no lobby owner, so any player in the room may toggle it;
+      // other game modes keep this owner-gated
+      const isAllowed =
+        this.state.gameMode === GameMode.SCRIBBLE ||
+        client.auth?.uid === this.state.ownerId
+      if (isAllowed && this.state.scribbleExtended != extended) {
+        this.state.scribbleExtended = extended
+        const author = this.state.users.get(client.auth?.uid ?? "")
+        this.room.state.addMessage({
+          author: "Server",
+          authorId: "server",
+          payload: `${
+            extended ? "Extended (150 HP)" : "Standard (100 HP)"
+          } mode has been enabled for this game. Players need to ready again.`,
+          avatar: author?.avatar
         })
 
         this.state.users.forEach((user) => {

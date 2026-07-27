@@ -213,6 +213,10 @@ export function setNoElo(noElo: boolean) {
   rooms.preparation?.send(Transfer.CHANGE_NO_ELO, noElo)
 }
 
+export function setScribbleExtended(extended: boolean) {
+  rooms.preparation?.send(Transfer.CHANGE_SCRIBBLE_EXTENDED, extended)
+}
+
 export function lockShop() {
   rooms.game?.send(Transfer.LOCK)
 }
