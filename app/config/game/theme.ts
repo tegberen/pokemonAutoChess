@@ -14,7 +14,10 @@ export const THEMES = [
   "autumn",
   "redsea",
   "zengarden",
-  "deerling"
+  "deerling",
+  "beyondtheforecast",
+  "diancie",
+  "rock"
 ] as const
 
 export type Theme = (typeof THEMES)[number]
