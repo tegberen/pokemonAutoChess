@@ -655,6 +655,31 @@ export class OnKickPlayerCommand extends Command<
               this.room.setMetadata({
                 blacklist: this.room.metadata.blacklist.concat(userId)
               })
+              // kicking removes the user from state before `leave` fires, so
+              // OnLeaveCommand can't reassign ownership — do it here if the
+              // kicked player was the host
+              if (userId === this.state.ownerId) {
+                const newOwner = schemaValues(this.state.users).find(
+                  (u) => u.uid !== userId && !u.isBot
+                )
+                if (newOwner) {
+                  this.state.ownerId = newOwner.uid
+                  this.state.ownerName = newOwner.name
+                  this.room.setMetadata({ ownerName: this.state.ownerName })
+                  if (this.state.specialGameRule == null) {
+                    this.room.setName(
+                      `${newOwner.name}'${
+                        newOwner.name.endsWith("s") ? "" : "s"
+                      } room`
+                    )
+                  }
+                  this.room.state.addMessage({
+                    authorId: "server",
+                    payload: `The new room leader is ${newOwner.name}`,
+                    avatar: newOwner.avatar
+                  })
+                }
+              }
               cli.leave(CloseCodes.USER_KICKED)
             } else {
               this.room.state.addMessage({
