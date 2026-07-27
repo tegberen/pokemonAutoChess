@@ -93,11 +93,6 @@ export default function RoomMenu() {
         </Tab>
 
         <Tab>
-          <GameModeIcon gameMode={GameMode.RANKED} />
-          <span>{t(`game_modes.${GameMode.RANKED}`)}</span>
-        </Tab>
-
-        <Tab>
           <GameModeIcon gameMode={GameMode.CUSTOM_LOBBY} />
           <span>{t(`game_modes.${GameMode.CUSTOM_LOBBY}`)}</span>
         </Tab>
@@ -115,15 +110,6 @@ export default function RoomMenu() {
       </TabPanel>
       <TabPanel>
         <IngameRoomsList />
-      </TabPanel>
-      <TabPanel>
-        <IngameRoomsList gameMode={GameMode.CLASSIC} />
-      </TabPanel>
-      <TabPanel>
-        <IngameRoomsList gameMode={GameMode.RANKED} />
-      </TabPanel>
-      <TabPanel>
-        <IngameRoomsList gameMode={GameMode.SCRIBBLE} />
       </TabPanel>
       <TabPanel>
         <IngameRoomsList gameMode={GameMode.CUSTOM_LOBBY} />

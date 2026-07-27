@@ -91,10 +91,6 @@ export class OnJoinCommand extends Command<
       ) {
         this.state.ownerId = auth.uid
       }
-      this.state.addMessage({
-        authorId: "server",
-        payload: "Remember to change >Add Bot< from >>Regular Mix<< to >>Beginner or Medium<< for the first few games. (っᵔ◡ᵔ)っ"
-      })
 
       const u = await UserMetadata.findOne({ uid: auth.uid })
       if (!u) {
@@ -972,10 +968,6 @@ export class OnAddBotCommand extends Command<PreparationRoom, OnAddBotPayload> {
 
         this.room.updatePlayersInfo()
         autoAssignPartner(this.state, bot.id)
-        this.room.state.addMessage({
-          authorId: "server",
-          payload: `Bot ${bot.name} added.`
-        })
       }
     } catch (error) {
       logger.error(error)
@@ -1001,11 +993,8 @@ export class OnRemoveBotCommand extends Command<
           partner.doubleUpTeamId = ""
         }
       }
-      if (name && this.state.users.delete(target)) {
-        this.room.state.addMessage({
-          authorId: "server",
-          payload: `Bot ${name} removed.`
-        })
+      if (name) {
+        this.state.users.delete(target)
       }
       if (bot?.doubleUpPartnerId) {
         autoAssignPartner(this.state, bot.doubleUpPartnerId)

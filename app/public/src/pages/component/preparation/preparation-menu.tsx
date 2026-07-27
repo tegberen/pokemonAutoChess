@@ -2,7 +2,6 @@ import firebase from "firebase/compat/app"
 import { useEffect } from "react"
 import { useTranslation } from "react-i18next"
 import {
-  BOTS_ENABLED,
   EloRankThreshold,
   MAX_PLAYERS_PER_GAME
 } from "../../../../../config"
@@ -45,6 +44,9 @@ export default function PreparationMenu() {
   )
 
   const gameMode = useAppSelector((state) => state.preparation.gameMode)
+  const scribbleExtended = useAppSelector(
+    (state) => state.preparation.scribbleExtended
+  )
 
   const isReady = users.find((user) => user.uid === uid)?.ready
   const nbUsersReady = users.filter((user) => user.ready).length
@@ -113,6 +115,16 @@ export default function PreparationMenu() {
         </p>
       )}
 
+      {(gameMode === GameMode.CUSTOM_LOBBY ||
+        gameMode === GameMode.SCRIBBLE) && (
+        <p>
+          <img src="assets/icons/HP.png" alt="HP" />
+          {scribbleExtended
+            ? t("scribble_extended_on")
+            : t("scribble_extended_off")}
+        </p>
+      )}
+
       {gameMode === GameMode.CLASSIC && (
         <p>
           <GameModeIcon gameMode={gameMode} />
@@ -120,33 +132,17 @@ export default function PreparationMenu() {
         </p>
       )}
 
-      {noElo === true ? (
-        <p>
-          <img
-            alt={t("no_elo")}
-            title={t("no_elo_hint")}
-            className="noelo icon"
-            src="/assets/ui/noelo.png"
-          />
-          {t("no_elo_hint")}
-        </p>
-      ) : isEligibleForELO ? (
-        <p>
-          {t("eligible_elo_hint")} {t("average_elo")}: {averageElo} ;{" "}
-          {t("GLHF")}
-          {" !"}
-        </p>
-      ) : users.length > 1 ? (
-        <p>{t("not_eligible_elo_hint")}</p>
-      ) : null}
+      {noElo !== true &&
+        (isEligibleForELO ? (
+          <p>
+            {t("eligible_elo_hint")} {t("average_elo")}: {averageElo} ;{" "}
+            {t("GLHF")}
+            {" !"}
+          </p>
+        ) : users.length > 1 ? (
+          <p>{t("not_eligible_elo_hint")}</p>
+        ) : null)}
 
-      {gameMode === GameMode.CUSTOM_LOBBY && users.length === 1 && (
-        <p>
-          {BOTS_ENABLED
-            ? t("add_bot_or_wait_hint")
-            : t("wait_for_players_hint")}
-        </p>
-      )}
     </>
   )
 

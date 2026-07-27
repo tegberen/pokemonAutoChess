@@ -6,7 +6,7 @@ import { useNavigate } from "react-router"
 import { MAX_LOADING_TIME } from "../../../../../config"
 import type GameState from "../../../../../rooms/states/game-state"
 import { type IGameMetadata, Role, Transfer } from "../../../../../types"
-import type { GameMode } from "../../../../../types/enum/Game"
+import { GameMode } from "../../../../../types/enum/Game"
 import { throttle } from "../../../../../utils/function"
 import { useAppDispatch, useAppSelector } from "../../../hooks"
 import { client, leaveRoom, rooms } from "../../../network"
@@ -20,7 +20,11 @@ export function IngameRoomsList({ gameMode }: { gameMode?: GameMode }) {
   const dispatch = useAppDispatch()
   const gameRooms: RoomAvailable[] = useAppSelector(
     (state) => state.lobby.gameRooms
-  ).filter((r) => !gameMode || r.metadata.gameMode === gameMode)
+  ).filter((r) =>
+    gameMode
+      ? r.metadata.gameMode === gameMode
+      : r.metadata.gameMode !== GameMode.RANKED
+  )
   const navigate = useNavigate()
   const [isJoining, setJoining] = useState<boolean>(false)
   const [sortBy, setSortBy] = useState<"stage" | "elo" | "name">("stage")

@@ -160,6 +160,12 @@
   padding: 0 0.5em;
 }
 
+.emote-button-icon {
+  width: 1.2em;
+  height: 1.2em;
+  vertical-align: middle;
+}
+
 .chat-message-container.emote-message {
   width: fit-content;
   min-width: unset;

@@ -122,7 +122,11 @@ export default function Chat(props: { source: ChatRoom; canWrite: boolean }) {
                 title="Emotes"
                 onClick={() => setShowEmotes(!showEmotes)}
               >
-                😊
+                <img
+                  src="assets/icons/LOBBY_EMOTIONS.svg"
+                  alt="Emotes"
+                  className="emote-button-icon"
+                />
               </button>
             )}
           </form>

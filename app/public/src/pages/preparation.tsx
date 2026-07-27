@@ -329,29 +329,29 @@ export default function Preparation() {
             <TabList>
               <Tab>
                 <img
-                  src="assets/icons/LOBBY_SETTINGS.svg"
-                  alt=""
-                  className="tab-icon"
-                />
-                {t("lobby_settings")}
-              </Tab>
-              <Tab>
-                <img
                   src="assets/icons/LOBBY_CHAT.svg"
                   alt=""
                   className="tab-icon"
                 />
                 {t("chat")}
               </Tab>
+              <Tab>
+                <img
+                  src="assets/icons/LOBBY_SETTINGS.svg"
+                  alt=""
+                  className="tab-icon"
+                />
+                {t("lobby_settings")}
+              </Tab>
             </TabList>
-            <TabPanel>
-              <PreparationSettings />
-            </TabPanel>
             <TabPanel>
               <Chat
                 source="preparation"
                 canWrite={user ? !user.anonymous : false}
               />
+            </TabPanel>
+            <TabPanel>
+              <PreparationSettings />
             </TabPanel>
           </Tabs>
         </div>
