@@ -4363,6 +4363,7 @@
 	"no_rule": "No special rule",
 	"random_rule": "Random rule",
 	"random_rule_hint": "Pick a random special rule",
+	"scribble_pick_rule_hint": "Browse all rules and their descriptions",
 	"classic_hint": "The game will automatically start when 8 players joined",
 	"password_protected": "Private game (password protected)",
 	"private": "Private",

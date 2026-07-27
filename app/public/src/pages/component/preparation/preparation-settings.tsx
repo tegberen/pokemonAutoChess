@@ -14,6 +14,9 @@ import {
   setScribbleExtended,
   setSpecialRule
 } from "../../../network"
+import { addIconsToDescription } from "../../utils/descriptions"
+import { cc } from "../../utils/jsx"
+import { Modal } from "../modal/modal"
 import { BotSelectModal } from "./bot-select-modal"
 import "./preparation-menu.css"
 
@@ -21,6 +24,8 @@ export default function PreparationSettings() {
   const { t } = useTranslation()
   const [inputValue, setInputValue] = useState<string>("")
   const [showBotSelectModal, setShowBotSelectModal] = useState(false)
+  const [showRulePicker, setShowRulePicker] = useState(false)
+  const [ruleQuery, setRuleQuery] = useState("")
   const [botDifficulty, setBotDifficulty] = useState<BotDifficulty>(
     BotDifficulty.REGULAR
   )
@@ -103,11 +108,29 @@ export default function PreparationSettings() {
     <div className="lobby-setting">
       <span className="setting-label">{t("lobby_visibility")}</span>
       <div className="setting-control">
-        {password && (
-          <span className="room-password">
-            {t("room_password")}: <b>{password}</b>
-          </span>
-        )}
+        {password &&
+          (() => {
+            // highlight the word "private" in red (falls back gracefully if a
+            // localized string doesn't contain it)
+            const label = t("room_password")
+            const idx = label.toLowerCase().indexOf("private")
+            return (
+              <span className="room-password">
+                {idx === -1 ? (
+                  label
+                ) : (
+                  <>
+                    {label.slice(0, idx)}
+                    <span className="private-word">
+                      {label.slice(idx, idx + "private".length)}
+                    </span>
+                    {label.slice(idx + "private".length)}
+                  </>
+                )}
+                : <b>{password}</b>
+              </span>
+            )
+          })()}
         <button
           className="bubbly blue"
           onClick={togglePrivate}
@@ -125,17 +148,13 @@ export default function PreparationSettings() {
     <div className="lobby-setting">
       <span className="setting-label">{t("game_modes.SCRIBBLE")}</span>
       <div className="setting-control">
-        <select
-          onChange={(e) => changeSpecialRule(e.target.value as SpecialGameRule)}
-          value={specialGameRule ?? "none"}
+        <button
+          className="rule-pick-button"
+          onClick={() => setShowRulePicker(true)}
+          title={t("scribble_pick_rule_hint")}
         >
-          <option value="none">{t("no_rule")}</option>
-          {keys(SpecialGameRule).map((rule) => (
-            <option key={rule} value={rule}>
-              {t(`scribble.${rule}`)}
-            </option>
-          ))}
-        </select>
+          {specialGameRule ? t(`scribble.${specialGameRule}`) : t("no_rule")}
+        </button>
         <button
           className="bubbly blue"
           onClick={pickRandomRule}
@@ -145,6 +164,81 @@ export default function PreparationSettings() {
         </button>
       </div>
     </div>
+  )
+
+  const pickRule = (rule: SpecialGameRule | "none") => {
+    changeSpecialRule(rule)
+    setShowRulePicker(false)
+  }
+
+  // newest rules first (the enum lists them chronologically, so reverse it)
+  const filteredRules = [...keys(SpecialGameRule)].reverse().filter((rule) => {
+    const q = ruleQuery.trim().toLowerCase()
+    if (!q) return true
+    return (
+      t(`scribble.${rule}`).toLowerCase().includes(q) ||
+      t(`scribble_description.${rule}`).toLowerCase().includes(q)
+    )
+  })
+
+  const rulePickerModal = (
+    <Modal
+      show={showRulePicker}
+      onClose={() => setShowRulePicker(false)}
+      className="rule-picker"
+      header={t("game_modes.SCRIBBLE")}
+      body={
+        <>
+          <div className="rule-picker-toolbar">
+            <input
+              type="text"
+              className="rule-search"
+              placeholder={t("search")}
+              value={ruleQuery}
+              onChange={(e) => setRuleQuery(e.target.value)}
+            />
+            <button
+              className="bubbly blue"
+              onClick={() => {
+                pickRandomRule()
+                setShowRulePicker(false)
+              }}
+              title={t("random_rule_hint")}
+            >
+              {t("random_rule")}
+            </button>
+          </div>
+          <ul className="rule-list">
+            <li
+              className={cc("my-box", "rule-card", "no-rule", {
+                selected: specialGameRule == null
+              })}
+              onClick={() => pickRule("none")}
+            >
+              <h3>{t("no_rule")}</h3>
+            </li>
+            {filteredRules.map((rule) => (
+              <li
+                key={rule}
+                className={cc("my-box", "rule-card", {
+                  selected: specialGameRule === rule
+                })}
+                onClick={() => pickRule(rule as SpecialGameRule)}
+              >
+                <h3>{t(`scribble.${rule}`)}</h3>
+                <p>
+                  {addIconsToDescription(
+                    t(`scribble_description.${rule}`, {
+                      type: "(random Synergy)"
+                    })
+                  )}
+                </p>
+              </li>
+            ))}
+          </ul>
+        </>
+      }
+    />
   )
 
   const playerHpSetting = (gameMode === GameMode.SCRIBBLE ||
@@ -227,6 +321,8 @@ export default function PreparationSettings() {
       ) : (
         <p className="no-settings">{t("wait_for_players_hint")}</p>
       )}
+
+      {rulePickerModal}
 
       {isOwner && showBotSelectModal && (
         <BotSelectModal

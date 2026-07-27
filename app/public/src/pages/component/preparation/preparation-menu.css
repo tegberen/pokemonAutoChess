@@ -10,7 +10,7 @@
 .preparation-menu h1 {
   text-align: center;
   color: var(--color-fg-primary);
-  text-shadow: 2px 2px 2px black;
+  text-shadow: 2px 2px 0 var(--color-shadow);
 }
 
 .preparation-menu p,
@@ -21,7 +21,18 @@
 
 .preparation-menu header p {
   text-align: center;
-  margin-bottom: 0.5em;
+  margin: 0 auto 0.5em;
+  padding: 0.25em 0.6em;
+  max-width: fit-content;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  text-shadow: none;
+}
+
+.preparation-menu header p .description-icon > img,
+.preparation-menu header p img.description-icon,
+.preparation-menu header p .synergy-icon {
+  vertical-align: middle;
 }
 
 .preparation-menu header img {
@@ -42,16 +53,11 @@
   align-content: start;
   gap: 1em;
   flex: 1;
-  /* min-height:0 lets this flex child shrink below its content so it can
-     scroll internally instead of overflowing onto the actions panel when the
-     lobby fills up (up to 8 players) */
   min-height: 0;
   overflow-y: auto;
   padding-right: 0.25em;
 }
 
-/* keep the settings panel + ready/start bar pinned and fully visible no matter
-   how many players are in the lobby */
 .preparation-menu .actions {
   flex-shrink: 0;
 }
@@ -82,8 +88,6 @@
   opacity: 0.85;
 }
 
-/* each setting is stacked: label on its own line, control row beneath, so the
-   control gets the full width and nothing reflows when the option changes */
 .preparation-settings .lobby-settings {
   display: flex;
   flex-direction: column;
@@ -116,7 +120,6 @@
   vertical-align: middle;
 }
 
-/* the field fills the row; changing the option can't resize it */
 .lobby-setting .setting-control select,
 .lobby-setting .setting-control input {
   flex: 1;
@@ -124,8 +127,6 @@
   text-overflow: ellipsis;
 }
 
-/* unify the action buttons so short labels (e.g. "Add") match wider ones
-   (e.g. "Random rule") */
 .lobby-setting .setting-control .bubbly {
   flex: 0 0 auto;
   min-width: 7.5em;
@@ -135,6 +136,116 @@
 .lobby-setting .room-password {
   color: var(--color-fg-primary);
   text-shadow: 1px 1px 2px black;
+}
+
+.lobby-setting .room-password .private-word {
+  color: #e76e55;
+  font-weight: bold;
+}
+
+.lobby-setting .setting-control .rule-pick-button {
+  flex: 1;
+  min-width: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5em;
+  padding: 4px 8px;
+  border: var(--border-thin);
+  border-radius: 12px;
+  background-color: var(--color-bg-secondary);
+  color: var(--color-fg-primary);
+  font: inherit;
+  font-weight: normal;
+  cursor: var(--cursor-hover);
+  box-shadow:
+    inset -6px -6px 0px 0px #00000030,
+    var(--shadow-clickable);
+}
+
+.lobby-setting .setting-control .rule-pick-button::after {
+  content: "▾";
+  flex: 0 0 auto;
+  font-size: 1.5em;
+  line-height: 1;
+  opacity: 0.7;
+}
+
+.lobby-setting .setting-control select::picker-icon {
+  font-size: 1em;
+  opacity: 0.7;
+}
+
+.lobby-setting .setting-control .rule-pick-button:hover {
+  background-color: var(--color-bg-primary);
+}
+
+.modal.rule-picker {
+  max-width: 60em;
+  width: 90vw;
+}
+
+.rule-picker .rule-picker-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  margin-bottom: 0.75em;
+}
+
+.rule-picker .rule-search {
+  flex: 1;
+  min-width: 0;
+}
+
+.rule-picker .rule-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(15em, 1fr));
+  gap: 0.6em;
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+.rule-picker .rule-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25em;
+  padding: 0.6em 0.75em;
+  cursor: var(--cursor-hover);
+  border: var(--border-thin);
+}
+
+.rule-picker .rule-card h3 {
+  margin: 0;
+  padding-bottom: 0.3em;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  color: var(--color-fg-primary);
+}
+
+.rule-picker .rule-card.no-rule h3 {
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.rule-picker .rule-card p {
+  margin: 0;
+  font-size: 0.85em;
+  line-height: 1.3;
+}
+
+.rule-picker .rule-card.no-rule {
+  align-items: center;
+  justify-content: center;
+}
+
+.rule-picker .rule-card:hover {
+  background: var(--color-bg-accent);
+}
+
+.rule-picker .rule-card.selected {
+  background: var(--color-bg-accent);
 }
 
 @media (width <= 640px) {
