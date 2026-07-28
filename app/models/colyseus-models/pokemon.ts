@@ -18052,7 +18052,7 @@ export class Corviknight extends Pokemon {
 }
 
 export class Turtonator extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.DRAGON, Synergy.FIRE])
+  types = new SetSchema<Synergy>([Synergy.DRAGON, Synergy.FIRE, Synergy.ROCK])
   rarity = Rarity.UNIQUE
   stars = 3
   hp = 200
