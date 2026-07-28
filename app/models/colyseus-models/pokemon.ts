@@ -12718,7 +12718,7 @@ export class Dugtrio extends Pokemon {
 }
 
 export class Wiglett extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.GROUND, Synergy.WATER])
+  types = new SetSchema<Synergy>([Synergy.WATER, Synergy.ROCK])
   rarity = Rarity.UNCOMMON
   stars = 1
   evolution = Pkm.WUGTRIO
@@ -12734,7 +12734,7 @@ export class Wiglett extends Pokemon {
 }
 
 export class Wugtrio extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.GROUND, Synergy.WATER])
+  types = new SetSchema<Synergy>([Synergy.WATER, Synergy.ROCK])
   rarity = Rarity.UNCOMMON
   stars = 2
   hp = 165
