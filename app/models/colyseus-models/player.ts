@@ -188,7 +188,6 @@ export default class Player extends Schema implements IPlayer {
   buriedItems: (Item | null)[] = initBuriedItems()
   tms: Item[] = pickRandomTMs()
   weatherRocks: Item[] = []
-  activeSeed: Seeds | "" = ""
   randomComponentsGiven: Item[] = []
   randomEggsGiven: Pkm[] = []
   flowerPotsSpawnOrder: FlowerPot[] = shuffleArray([...FlowerPots])
@@ -550,14 +549,28 @@ export default class Player extends Schema implements IPlayer {
 
   addSeedToBag(rolledSeed: Item): Seeds | null {
     const unowned = Seeds.filter((s) => !this.items.includes(s))
-    if (unowned.length === 0) return null // already owns every seed
+    if (unowned.length === 0) return null
     const seed: Seeds =
       isIn(Seeds, rolledSeed) && !this.items.includes(rolledSeed)
         ? rolledSeed
         : pickRandomIn(unowned)
     this.items.push(seed)
-    if (this.activeSeed === "") this.activeSeed = seed
     return seed
+  }
+
+  get activeSeed(): Seeds | "" {
+    const seed = this.items.find((i) => isIn(Seeds, i))
+    return isIn(Seeds, seed) ? seed : ""
+  }
+
+  armSeed(seed: Seeds) {
+    const i = this.items.indexOf(seed)
+    if (i === -1) return
+    const firstSeedIdx = this.items.findIndex((it) => isIn(Seeds, it))
+    if (firstSeedIdx === -1 || firstSeedIdx === i) return
+    const previouslyActive = this.items[firstSeedIdx]
+    this.items[firstSeedIdx] = seed
+    this.items[i] = previouslyActive
   }
 
   updateLetters(

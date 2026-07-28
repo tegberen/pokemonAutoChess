@@ -16,7 +16,6 @@ import {
 import { SpecialGameRule } from "../../../../types/enum/SpecialGameRule"
 import { isIn } from "../../../../utils/array"
 import { schemaValues } from "../../../../utils/schemas"
-import store from "../../stores"
 import { DEPTH } from "../depths"
 import type GameScene from "../scenes/game-scene"
 import ItemContainer from "./item-container"
@@ -61,7 +60,7 @@ export default class ItemsContainer extends GameObjects.Container {
     let items = schemaValues(inventory)
 
     if (this.pokemonId === null) {
-      const activeSeed = store.getState().game.activeSeed
+      const activeSeed = items.find((it) => isIn(Seeds, it))
       items = items.filter((it) => !isIn(Seeds, it) || it === activeSeed)
     }
 
@@ -88,7 +87,7 @@ export default class ItemsContainer extends GameObjects.Container {
   }
 
   getOrderPriority(item: Item): number {
-    if (isIn(Seeds, item)) return 20 // armed seed always first in the inventory
+    if (isIn(Seeds, item)) return 20
     if (isIn(SpecialItems, item)) return 10
     if (isIn(WeatherRocks, item)) return 3
     if (isIn(TMs, item)) return 5

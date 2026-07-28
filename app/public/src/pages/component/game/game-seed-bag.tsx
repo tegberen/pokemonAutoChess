@@ -9,36 +9,44 @@ import { playSound, SOUNDS } from "../../utils/audio"
 import { addIconsToDescription } from "../../utils/descriptions"
 import "./game-seed-bag.css"
 
-// The Seed Bag is just the seeds already sitting in the player's items (they
-// persist across fights now). `activeSeed` (the armed seed) comes from
-// state.game.activeSeed, pushed by the server via Transfer.SELECT_SEED
-// (activeSeed is a plain, non-schema field). Clicking a seed arms it.
 function useOwnedSeeds(): Item[] {
   const player = useAppSelector(selectConnectedPlayer)
-  return player?.items
-    ? schemaValues(player.items).filter((i): i is Item => isIn(Seeds, i))
-    : []
+  if (!player?.items) return []
+  const seeds = schemaValues(player.items).filter((i): i is Item =>
+    isIn(Seeds, i)
+  )
+  return seeds.filter((s, idx) => seeds.indexOf(s) === idx)
 }
 
 export function GameSeedBag() {
   const { t } = useTranslation()
   const ownedSeeds = useOwnedSeeds()
-  const activeSeed = useAppSelector((state) => state.game.activeSeed)
+  const derivedActive: Item | "" = ownedSeeds[0] ?? ""
+
+  const [pendingActive, setPendingActive] = useState<Item | "">("")
+  const activeSeed: Item | "" = pendingActive || derivedActive
+
+  useEffect(() => {
+    if (pendingActive && pendingActive === derivedActive) setPendingActive("")
+  }, [pendingActive, derivedActive])
 
   const arm = (seed: Item) => {
     if (seed === activeSeed) return
     playSound(SOUNDS.BUTTON_CLICK)
+    setPendingActive(seed)
     selectSeed(seed)
   }
 
-  const activeIsValid = activeSeed !== "" && isIn(Seeds, activeSeed)
+  const activeIsValid = isIn(Seeds, activeSeed)
+
+  const displaySeeds = Seeds.filter((s) => ownedSeeds.includes(s))
 
   return (
     <div className="game-seed-bag">
       <h2>{t("seed_bag.title")}</h2>
       <p className="help">{t("seed_bag.hint")}</p>
       <div className="game-seed-bag-grid">
-        {ownedSeeds.map((seed, index) => (
+        {displaySeeds.map((seed, index) => (
           <div
             key={`seed-bag-${seed}-${index}`}
             className={
@@ -51,7 +59,6 @@ export function GameSeedBag() {
           </div>
         ))}
       </div>
-      {/* fixed-height so switching seeds doesn't resize (and jump) the popover */}
       <div className="game-seed-bag-active-desc">
         {activeIsValid && (
           <>
@@ -70,8 +77,6 @@ export function GameSeedBagIcon() {
   const [open, setOpen] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
 
-  // close the popover on outside click or Escape (it stays open while
-  // interacting inside it, e.g. clicking a seed to arm it)
   useEffect(() => {
     if (!open) return
     const onPointerDown = (e: PointerEvent) => {
@@ -88,7 +93,6 @@ export function GameSeedBagIcon() {
     }
   }, [open])
 
-  // the icon only appears once the player owns at least one seed
   if (ownedSeeds.length === 0) return null
 
   return (

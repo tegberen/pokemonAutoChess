@@ -822,7 +822,7 @@ export default class Simulation extends Schema implements ISimulation {
         }
       }
     }
-    // apply seed effects for Flying 8 - only the armed seed from the Seed Bag
+    // apply seed effects for Flying 8
     if (pokemon.player) {
       const activeSeed = pokemon.player.activeSeed
       if (activeSeed && isIn(Seeds, activeSeed)) {
@@ -2062,9 +2062,6 @@ export default class Simulation extends Schema implements ISimulation {
   onFinish() {
     this.finishedAt = Date.now()
     this.finished = true
-
-    // Seeds now persist in the Seed Bag (items); the armed seed stays armed
-    // across rounds, so nothing is stripped here anymore.
 
     if (this.blueTeam.size === 0 && this.redTeam.size > 0) {
       this.winnerId = this.redPlayerId

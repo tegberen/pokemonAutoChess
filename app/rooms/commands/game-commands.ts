@@ -2190,8 +2190,6 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
 
         this.room.clock.setTimeout(() => {
           const seed = player.addSeedToBag(rolledSeed)
-
-          if (seed) client?.send(Transfer.SELECT_SEED, player.activeSeed)
           if (bonus) {
             if (bonus === Item.COIN) {
               player.addMoney(1, true, null)
