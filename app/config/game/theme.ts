@@ -18,7 +18,8 @@ export const THEMES = [
   "beyondtheforecast",
   "diancie",
   "rock",
-  "hotspring"
+  "hotspring",
+  "bazaar"
 ] as const
 
 export type Theme = (typeof THEMES)[number]
