@@ -1134,7 +1134,7 @@ export class DarkSubstituteEffect extends OnDamageReceivedEffect {
 
 const giveFireShardEffect = new OnStageStartEffect(({ player }) => {
   if (
-    getSynergyTier(player.synergies, Synergy.FIRE) === 4 &&
+    getSynergyTier(player.synergies, Synergy.FIRE) > 2 &&
     player.items.includes(Item.FIRE_SHARD) === false &&
     player.life > 2
   ) {
@@ -1242,6 +1242,7 @@ export const SynergyEffects: Partial<
   Record<EffectEnum, (Effect | (() => Effect))[]>
 > = {
   [EffectEnum.HEART_OF_THE_SWARM]: [bugSwarmSpawnEffect],
+  [EffectEnum.BLAZE]: [giveFireShardEffect],
   [EffectEnum.DESOLATE_LAND]: [giveFireShardEffect],
   [EffectEnum.INGRAIN]: [growBerryTreesEffect],
   [EffectEnum.GROWTH]: [growBerryTreesEffect],

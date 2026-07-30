@@ -189,7 +189,8 @@ export enum EffectEnum {
   CLEAR_AMULET_TRIGGERED = "CLEAR_AMULET_TRIGGERED",
   STEELY_SPIRIT_BONUS = "STEELY_SPIRIT_BONUS",
   SUPER_LUCK = "SUPER_LUCK",
-  NO_PP_GAIN = "NO_PP_GAIN"
+  NO_PP_GAIN = "NO_PP_GAIN",
+  LAVA = "LAVA"
 }
 
 export const BoardEffects = [
@@ -203,7 +204,8 @@ export const BoardEffects = [
   EffectEnum.STICKY_WEB,
   EffectEnum.COTTON_BALL,
   EffectEnum.HAIL,
-  EffectEnum.EMBER
+  EffectEnum.EMBER,
+  EffectEnum.LAVA
 ] as const
 
 export type BoardEffect = (typeof BoardEffects)[number]

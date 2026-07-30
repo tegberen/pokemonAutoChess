@@ -1067,12 +1067,13 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
       }
     }
 
-    if (this.hasSynergyEffect(Synergy.FIRE)) {
-      const burnChance = 0.3
-      if (chance(burnChance, this)) {
-        target.status.triggerBurn(3000, target, this)
-      }
-    }
+    //// Remove burn effect on hit from fire synergy
+    // if (this.hasSynergyEffect(Synergy.FIRE)) {
+    //   const burnChance = 0.3
+    //   if (chance(burnChance, this)) {
+    //     target.status.triggerBurn(3000, target, this)
+    //   }
+    // }
 
     if (this.hasSynergyEffect(Synergy.MONSTER)) {
       const flinchChance = 0.3

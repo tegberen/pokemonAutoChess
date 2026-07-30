@@ -28,7 +28,7 @@ import {
 } from "../types"
 import { Ability } from "../types/enum/Ability"
 import { Awakening } from "../types/enum/Awakening"
-import { EffectEnum } from "../types/enum/Effect"
+import { BoardEffects, EffectEnum } from "../types/enum/Effect"
 import {
   AttackType,
   BattleResult,
@@ -143,6 +143,8 @@ export default class Simulation extends Schema implements ISimulation {
   entities: IPokemonEntity[] = []
   finishedAt: number = 0
   reinforcementsSent: boolean = false
+  redFireVolcanoTimer = 0
+  blueFireVolcanoTimer = 0
 
   constructor(
     id: string,
@@ -243,6 +245,18 @@ export default class Simulation extends Schema implements ISimulation {
     }
     if (this.weather === Weather.METEOR_SHOWER) {
       this.meteorShowerTimer = 7000
+    }
+
+    if (this.blueEffects.has(EffectEnum.FLAME_BODY)) {
+      this.blueFireVolcanoTimer = 5000
+    } else if(this.blueEffects.has(EffectEnum.WILDFIRE) || this.blueEffects.has(EffectEnum.BLAZE) || this.blueEffects.has(EffectEnum.DESOLATE_LAND)) {
+      this.blueFireVolcanoTimer = 3000
+    }
+
+    if (this.redEffects.has(EffectEnum.FLAME_BODY)) {
+      this.redFireVolcanoTimer = 5000
+    } else if(this.redEffects.has(EffectEnum.WILDFIRE) || this.redEffects.has(EffectEnum.BLAZE) || this.redEffects.has(EffectEnum.DESOLATE_LAND)) {
+      this.redFireVolcanoTimer = 3000
     }
 
     this.bluePlayer.board.forEach((pokemon) => {
@@ -2035,6 +2049,20 @@ export default class Simulation extends Schema implements ISimulation {
         }
       }
     }
+
+    if (this.redFireVolcanoTimer > 0) {
+      this.redFireVolcanoTimer -= dt
+      if (this.redFireVolcanoTimer <= 0){
+        this.handleVolcanoEruptionForTeam(Team.RED_TEAM)
+      }
+    }
+
+    if (this.blueFireVolcanoTimer > 0) {
+      this.blueFireVolcanoTimer -= dt
+      if (this.blueFireVolcanoTimer <= 0){
+        this.handleVolcanoEruptionForTeam(Team.BLUE_TEAM)
+      }
+    }
   }
 
   stop() {
@@ -2429,6 +2457,68 @@ export default class Simulation extends Schema implements ISimulation {
         pkm.moveTo(dest.x, dest.y, this.board, true)
       }
     }
+  }
+
+  handleVolcanoEruptionForTeam(team: Team) {
+    const effects =
+      team === Team.RED_TEAM
+        ? this.redEffects
+        : this.bluePartnerPlayer
+          ? new Set([...this.blueEffects, ...this.bluePartnerEffects])
+          : this.blueEffects
+
+    const fireEruptionLevel =
+      effects.has(EffectEnum.DESOLATE_LAND) || effects.has(EffectEnum.BLAZE)
+        ? 3
+        : effects.has(EffectEnum.WILDFIRE)
+          ? 2
+          : effects.has(EffectEnum.FLAME_BODY)
+            ? 1
+            : 0
+
+    if (fireEruptionLevel > 0) {
+      this.triggerVolcanoEruption(team, fireEruptionLevel)
+    }
+  }
+
+  triggerVolcanoEruption(
+    team: Team,
+    volcanoEruptionLevel: number
+  ) {
+    const isRed = team === Team.RED_TEAM
+    const rowRange = isRed
+    ? [...Array(this.board.rows).keys()]
+    : [...Array(this.board.rows).keys()].reverse()
+    
+    const freeTiles : Array<[number,number]> = []
+    
+    // Get tiles where there is no lava
+    for (const y of rowRange) {
+      for (let x = 0; x < this.board.columns; x++) {
+        const index = y * this.board.columns + x
+        const isLavaEffectOnCell = this.board.boardEffects[index].has(EffectEnum.LAVA)
+        if (!isLavaEffectOnCell) freeTiles.push([x,y])
+      }
+    }
+    
+    if (freeTiles.length === 0) return
+
+    const randomTile = pickRandomIn(freeTiles)
+
+    this.room.broadcast(Transfer.ABILITY, {
+      id: this.id,
+      skill: "FIRE_VOLCANO_ERUPTION",
+      targetX: randomTile[0],
+      targetY: randomTile[1],
+    })
+
+    // Lower synergy levels add lava in a 1-range cross pattern, higher levels increase the range to 2
+    const affectedArea = volcanoEruptionLevel > 2 ? 2 : 1
+    // Add lava to target cell and surroundings
+    this.board.getCellsInRange(randomTile[0], randomTile[1], affectedArea, true).forEach(x => this.board.addBoardEffect(x.x, x.y, EffectEnum.LAVA, this))
+    
+    if (isRed) this.redFireVolcanoTimer = [5000,5000,3000][volcanoEruptionLevel - 1]
+    else this.blueFireVolcanoTimer = [5000,5000,3000][volcanoEruptionLevel - 1]
   }
 
   handleTidalWaveForTeam(team: Team) {

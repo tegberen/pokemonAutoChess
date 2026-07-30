@@ -181,7 +181,7 @@ export type SynergyTier<T extends Synergy = Synergy> =
 export const SynergyTiersThresholds: { [key in Synergy]: number[] } = {
   [Synergy.NORMAL]: [3, 5, 7, 9],
   [Synergy.GRASS]: [3, 5, 7, 9],
-  [Synergy.FIRE]: [2, 4, 6, 8],
+  [Synergy.FIRE]: [3, 5, 7, 9],
   [Synergy.WATER]: [3, 6, 9],
   [Synergy.ELECTRIC]: [3, 5, 7],
   [Synergy.FIGHTING]: [2, 4, 6, 8],
@@ -255,7 +255,7 @@ export const AMORPHOUS_HP_BUFF_PER_SYNERGY_TIER = [0, 3, 6, 10]
 export const GROUND_DEF_BUFF_PER_SYNERGY_TIER = [0, 1, 2, 3, 3]
 export const GROUND_ATK_BUFF_PER_SYNERGY_TIER = [0, 3, 5, 8, 8]
 
-export const FIRE_ATK_BUFF_PER_SYNERGY_TIER = [0, 0, 1, 2, 4]
+export const FIRE_ATK_BUFF_PER_SYNERGY_TIER = [0, 1, 2, 3, 4]
 
 export const SOUND_ATK_BUFF_PER_SYNERGY_TIER = [0, 2, 1, 1]
 export const SOUND_SPEED_BUFF_PER_SYNERGY_TIER = [0, 0, 5, 5]

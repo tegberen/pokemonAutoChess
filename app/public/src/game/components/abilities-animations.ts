@@ -2273,6 +2273,12 @@ export const AbilitiesAnimations: {
     startPositionOffset: [72, 72]
   }),
 
+  ["FIRE_VOLCANO_ERUPTION"]: projectile({
+    scale: 1.5,
+    startCoords: "target",
+    startPositionOffset: [72, 72]
+  }),
+
   [Ability.THOUSAND_ARROWS]: (args) =>
     projectile({
       startCoords: [args.targetX, BOARD_HEIGHT - 1, false],
