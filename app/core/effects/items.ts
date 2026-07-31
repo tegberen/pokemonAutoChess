@@ -2045,8 +2045,7 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
 // AWAKENING: dropping a weather rock on a Rock-synergy Pokémon starts
 // crystallising it instead of equipping the rock. The rock is consumed into a
 // charge that fills over the next prep rounds (see updatePlayerBetweenStages).
-// Multiple Pokémon can be awakened, but a single Pokémon that is already
-// charging or already awakened cannot start another.
+// Only one crystallisation can run at a time
 const weatherRockAwakeningEffect = new OnItemDroppedEffect(
   ({ pokemon, player, item }) => {
     // A Pokémon that item-evolves from this weather rock (e.g. Scyther +
@@ -2069,7 +2068,7 @@ const weatherRockAwakeningEffect = new OnItemDroppedEffect(
       getSynergyTier(player.synergies, Synergy.ROCK) < ROCK_AWAKENING_TIER ||
       pokemon.awakening !== Awakening.NONE ||
       pokemon.awakeningRock !== "" ||
-      // only the strongest can ascend to dragonhood: ELDER_CRYSTAL needs a 3-STAR
+      schemaValues(player.board).some((p) => p.awakeningRock !== "") ||
       (item === Item.ELDER_CRYSTAL && pokemon.stars < 3)
     ) {
       return false // reject: the rock stays on the bench

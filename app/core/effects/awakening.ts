@@ -49,8 +49,8 @@ export const AwakeningEffects: Partial<
     () => {
       let overheated = false
       return new OnAttackEffect(({ pokemon, board }) => {
-        pokemon.addAttack(2, pokemon, 0, false)
-        if (!overheated && pokemon.atk >= 4 * pokemon.baseAtk) {
+        pokemon.addAttack(4, pokemon, 0, false)
+        if (!overheated && pokemon.atk >= 10 * pokemon.baseAtk) {
           overheated = true
           pokemon.status.triggerRage(4000, pokemon)
           if (!pokemon.items.has(Item.PROTECTIVE_PADS)) {
@@ -325,8 +325,9 @@ export const AwakeningEffects: Partial<
           AttackType.SPECIAL,
           AttackType.TRUE
         ])
+        const damage = target.shield + target.speed
         target.handleSpecialDamage(
-          target.shield,
+          damage,
           board,
           attackType,
           pokemon,
