@@ -88,6 +88,12 @@ export default function RoomItem(props: {
         ) + " "}
         {props.room.metadata?.name}
       </span>
+      {props.room.metadata?.gameMode === GameMode.CUSTOM_LOBBY &&
+        props.room.metadata?.scribbleExtended && (
+          <span className="hp-badge" title={t("player_hp")}>
+            150 HP
+          </span>
+      )}
       {props.room.metadata?.passwordProtected && (
         <img
           alt={t("private")}
@@ -99,15 +105,6 @@ export default function RoomItem(props: {
       {props.room.metadata?.gameMode === GameMode.SCRIBBLE && (
         <GameModeIcon gameMode={GameMode.SCRIBBLE} />
       )}
-      {props.room.metadata?.noElo &&
-        props.room.metadata?.gameMode === GameMode.CUSTOM_LOBBY && (
-          <img
-            alt={t("no_elo")}
-            title={t("no_elo")}
-            className="noelo gamemode icon"
-            src="/assets/ui/noelo.png"
-          />
-        )}
       {props.room.metadata?.gameMode === GameMode.CLASSIC && (
         <GameModeIcon gameMode={GameMode.CLASSIC} />
       )}

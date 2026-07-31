@@ -677,6 +677,7 @@ export interface IPreparationMetadata {
   playersInfo: string[]
   tournamentId: string | null
   bracketId: string | null
+  scribbleExtended: boolean
 }
 
 export interface IGameMetadata {

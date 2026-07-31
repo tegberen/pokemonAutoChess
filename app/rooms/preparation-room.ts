@@ -81,6 +81,10 @@ export default class PreparationRoom extends Room<{ state: PreparationState }> {
     await this.setMetadata(<IPreparationMetadata>{ gameStartedAt })
   }
 
+  async setScribbleExtended(scribbleExtended: boolean) {
+    await this.setMetadata(<IPreparationMetadata>{ scribbleExtended })
+  }
+
   onCreate(options: {
     ownerId?: string
     roomName: string
@@ -121,7 +125,8 @@ export default class PreparationRoom extends Room<{ state: PreparationState }> {
       passwordProtected: !!(
         options.password && options.password.trim().length > 0
       ),
-      type: "preparation"
+      type: "preparation",
+      scribbleExtended: false
     })
     this.maxClients = 8
     if (options.gameMode === GameMode.TOURNAMENT) {

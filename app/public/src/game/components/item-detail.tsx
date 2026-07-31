@@ -13,7 +13,8 @@ import {
   ItemRecipe,
   RemovableItems,
   ShinyItems,
-  UnholdableItems
+  UnholdableItems,
+  WeatherRocks
 } from "../../../../types/enum/Item"
 import { isIn } from "../../../../utils/array"
 import { entries } from "../../../../utils/object"
@@ -104,6 +105,15 @@ export function ItemDetailTooltipContent({
       <p className="game-item-detail-description">
         {addIconsToDescription(t(`item_description.${item}`))}
       </p>
+      {isIn(WeatherRocks, item) && (
+        <div className="game-item-detail-awakening">
+          <div className="game-item-detail-awakening-label">
+            <img src="/assets/icons/AWAKENING.svg" alt="" aria-hidden="true" />
+            {t("wiki.weather.awakenings", { defaultValue: "Awakening" })}
+          </div>
+          {addIconsToDescription(t(`effect_description.CRYSTALLISE_${item}`))}
+        </div>
+      )}
       {recipes.length > 0 && showItemCombinationsTooltip && (
         <div className="game-item-detail-combinations">
           {recipes.map(([result, recipe]) => {

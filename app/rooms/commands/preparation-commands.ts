@@ -607,6 +607,7 @@ export class OnChangeScribbleExtendedCommand extends Command<
         client.auth?.uid === this.state.ownerId
       if (isAllowed && this.state.scribbleExtended != extended) {
         this.state.scribbleExtended = extended
+        this.room.setScribbleExtended(extended)
         const author = this.state.users.get(client.auth?.uid ?? "")
         this.room.state.addMessage({
           author: "Server",
@@ -666,13 +667,6 @@ export class OnKickPlayerCommand extends Command<
                   this.state.ownerId = newOwner.uid
                   this.state.ownerName = newOwner.name
                   this.room.setMetadata({ ownerName: this.state.ownerName })
-                  if (this.state.specialGameRule == null) {
-                    this.room.setName(
-                      `${newOwner.name}'${
-                        newOwner.name.endsWith("s") ? "" : "s"
-                      } room`
-                    )
-                  }
                   this.room.state.addMessage({
                     authorId: "server",
                     payload: `The new room leader is ${newOwner.name}`,
@@ -737,13 +731,6 @@ export class OnLeaveCommand extends Command<
               this.state.ownerName = newOwner.name
               this.room.setMetadata({ ownerName: this.state.ownerName })
               // keep a custom scribble room name; only default-rename otherwise
-              if (this.state.specialGameRule == null) {
-                this.room.setName(
-                  `${newOwner.name}'${
-                    newOwner.name.endsWith("s") ? "" : "s"
-                  } room`
-                )
-              }
               this.room.state.addMessage({
                 authorId: "server",
                 payload: `The new room leader is ${newOwner.name}`,

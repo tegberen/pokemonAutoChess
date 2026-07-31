@@ -78,6 +78,12 @@ export default function RoomMenu() {
   const hasTournamentLobbies = gameRooms.some(
     (r) => r.metadata.gameMode === GameMode.TOURNAMENT
   )
+  const hasDoubleUpLobbies = gameRooms.some(
+    (r) => r.metadata.gameMode === GameMode.DOUBLE_UP
+  )
+  const hasCustomLobbies = gameRooms.some(
+    (r) => r.metadata.gameMode === GameMode.CUSTOM_LOBBY
+  )
 
   return (
     <Tabs className="my-container room-menu custom-bg hidden-scrollable">
@@ -92,14 +98,22 @@ export default function RoomMenu() {
           <span>{t("in_game")}</span>
         </Tab>
 
-        <Tab>
-          <GameModeIcon gameMode={GameMode.CUSTOM_LOBBY} />
-          <span>{t(`game_modes.${GameMode.CUSTOM_LOBBY}`)}</span>
-        </Tab>
         {hasTournamentLobbies && (
           <Tab>
             <GameModeIcon gameMode={GameMode.TOURNAMENT} />
             <span>{t(`game_modes.${GameMode.TOURNAMENT}`)}</span>
+          </Tab>
+        )}
+        {hasDoubleUpLobbies && (
+          <Tab>
+            <GameModeIcon gameMode={GameMode.DOUBLE_UP} />
+            <span>{t(`game_modes.${GameMode.DOUBLE_UP}`)}</span>
+          </Tab>
+        )}
+        {hasCustomLobbies && (
+          <Tab>
+            <GameModeIcon gameMode={GameMode.CUSTOM_LOBBY} />
+            <span>{t(`game_modes.${GameMode.CUSTOM_LOBBY}`)}</span>
           </Tab>
         )}
       </TabList>
@@ -111,12 +125,19 @@ export default function RoomMenu() {
       <TabPanel>
         <IngameRoomsList />
       </TabPanel>
-      <TabPanel>
-        <IngameRoomsList gameMode={GameMode.CUSTOM_LOBBY} />
-      </TabPanel>
       {hasTournamentLobbies && (
         <TabPanel>
           <IngameRoomsList gameMode={GameMode.TOURNAMENT} />
+        </TabPanel>
+      )}
+      {hasDoubleUpLobbies && (
+        <TabPanel>
+          <IngameRoomsList gameMode={GameMode.DOUBLE_UP} />
+        </TabPanel>
+      )}
+      {hasCustomLobbies && (
+        <TabPanel>
+          <IngameRoomsList gameMode={GameMode.CUSTOM_LOBBY} />
         </TabPanel>
       )}
 

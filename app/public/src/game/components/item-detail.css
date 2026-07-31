@@ -9,6 +9,7 @@
     "icon name"
     "icon stats"
     "description description"
+    "awakening awakening"
     "combinations combinations";
 }
 
@@ -91,6 +92,38 @@
 .react-tooltip .game-item-detail-description:last-child {
   margin-bottom: -5px;
   border-radius: 0 0 8px 8px;
+}
+
+.game-item-detail-awakening {
+  grid-area: awakening;
+  background-color: var(--color-bg-secondary);
+  border-top: var(--border-thin);
+  padding: 0.25em 0.5em;
+  margin: 0 -5px 4px -5px;
+  font-size: 0.8em;
+  z-index: 2;
+  white-space: pre-line;
+}
+
+.game-item-detail-awakening:last-child,
+.react-tooltip .game-item-detail-awakening:last-child {
+  margin-bottom: -5px;
+  border-radius: 0 0 8px 8px;
+}
+
+.game-item-detail-awakening-label {
+  display: flex;
+  align-items: center;
+  gap: 0.3em;
+  margin-bottom: 0.2em;
+  font-weight: 500;
+  color: var(--color-fg-secondary);
+}
+
+.game-item-detail-awakening-label img {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
 }
 
 .game-item-detail-combinations {
