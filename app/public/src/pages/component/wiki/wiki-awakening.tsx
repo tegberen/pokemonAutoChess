@@ -55,11 +55,13 @@ export default function WikiAwakening({
         </p>
       </div>
       <ul className="wiki-awakening-list">
-        {WeatherRocks.map((rock) => (
-          <li key={rock} className="my-box">
-            <AwakeningCard rock={rock} />
-          </li>
-        ))}
+        {[...WeatherRocks]
+          .sort((a, b) => t(`item.${a}`).localeCompare(t(`item.${b}`)))
+          .map((rock) => (
+            <li key={rock} className="my-box">
+              <AwakeningCard rock={rock} />
+            </li>
+          ))}
       </ul>
       <ItemDetailTooltip />
     </div>

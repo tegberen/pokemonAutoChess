@@ -993,7 +993,7 @@ export default class GameRoom extends Room<{ state: GameState }> {
     })
 
     let shouldRefetchEventLeaderboard = false
-    const eligibleToELO = true //TEMP
+    const eligibleToELO = this.state.gameMode !== GameMode.SCRIBBLE
     /*!this.state.noElo &&
       (this.state.stageLevel >= MinStageForGameToCount || hasLeftBeforeEnd) &&
       humans.length >= 2*/

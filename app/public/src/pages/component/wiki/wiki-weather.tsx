@@ -65,7 +65,9 @@ export default function WikiWeather({
         )}
       </div>
       <ul>
-        {Object.values(Weather).map((weather: Weather) => (
+        {Object.values(Weather)
+          .sort((a, b) => t(`weather.${a}`).localeCompare(t(`weather.${b}`)))
+          .map((weather: Weather) => (
           <li key={weather} className="my-box">
             <header>
               <img
