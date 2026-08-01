@@ -44,6 +44,7 @@ import {
   setPassword,
   setSpecialGameRule,
   setScribbleExtended,
+  setWhimsy,
   setUser,
   setWhiteList
 } from "../stores/PreparationStore"
@@ -174,6 +175,10 @@ export default function Preparation() {
 
       $state.listen("scribbleExtended", (value, previousValue) => {
         dispatch(setScribbleExtended(value))
+      })
+
+      $state.listen("whimsy", (value, previousValue) => {
+        dispatch(setWhimsy(value))
       })
 
       $state.users.onAdd((user) => {

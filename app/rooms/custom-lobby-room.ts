@@ -25,7 +25,7 @@ import UserMetadata, {
 import { notificationsService } from "../services/notifications"
 import { type Emotion, Role, type Title, Transfer } from "../types"
 import { CloseCodes } from "../types/enum/CloseCodes"
-import type { GameMode } from "../types/enum/Game"
+import type { GameMode, RoomRequest } from "../types/enum/Game"
 import type { Language } from "../types/enum/Language"
 import { MaintenanceOrder } from "../types/enum/MaintenanceOrder"
 import type { ITournament } from "../types/interfaces/Tournament"
@@ -145,7 +145,7 @@ export default class CustomLobbyRoom extends Room {
 
     this.onMessage(
       Transfer.REQUEST_ROOM,
-      async (client, gameMode: GameMode) => {
+      async (client, gameMode: RoomRequest) => {
         this.dispatcher.dispatch(new JoinOrOpenRoomCommand(), {
           client,
           gameMode

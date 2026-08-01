@@ -4081,7 +4081,8 @@
 		"SURVEY_CORPS": "Survey Corps",
 		"GUILDMASTER": "Guildmaster",
 		"LEGIONNAIRE": "Legionnaire",
-		"FIVE_STARS": "★★★★★"
+		"FIVE_STARS": "★★★★★",
+		"WHIMSY": "Whimsy"
 	},
 	"title_description": {
 		"NOVICE": "Play your first game",
@@ -4179,7 +4180,8 @@
 		"SURVEY_CORPS": "Complete a Battle mission expedition",
 		"GUILDMASTER": "Complete a rank S expedition",
 		"LEGIONNAIRE": "Make a Falinks formation with 8 troopers or more",
-		"FIVE_STARS": "Play with a five stars Pokémon in your team"
+		"FIVE_STARS": "Play with a five stars Pokémon in your team",
+		"WHIMSY": "Win a Whimsy Weekend Scribble with your partner"
 	},
 	"weather_forecast": "Weather forecast",
 	"weather": {
@@ -4360,6 +4362,9 @@
 	"ranked_game_hint": "This game is restricted to players close to your current rank",
 	"smeargle_scribble_short": "Scribble",
 	"smeargle_scribble_hint": "Smeargle scribbles a new random rule applied during the entire game.",
+	"whimsy_weekend": "Whimsy Weekend",
+	"whimsy_weekend_description": "Team up with a partner and outlast every other duo, with a random Smeargle's Scribble rule in play!",
+	"whimsy_weekend_ends_in": "Whimsy Weekend ends in {{time}}",
 	"scribble_extended_label": "Player",
 	"scribble_extended_on": "Extended (150 HP)",
 	"scribble_extended_off": "Standard (100 HP)",
@@ -4540,6 +4545,7 @@
 		"rock": "Rock Land",
 		"hotspring": "Hot Spring",
 		"bazaar": "Bazaar",
+		"whimsicott": "Whimsicott",
 		"origin": "Origin"
 	},
 	"jukebox": {

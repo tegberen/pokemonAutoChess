@@ -98,6 +98,7 @@ export default class PreparationRoom extends Room<{ state: PreparationState }> {
     blacklist?: string[]
     tournamentId?: string
     bracketId?: string
+    whimsy?: boolean
   }) {
     logger.info("create Preparation ", this.roomId)
     // logger.debug(options);
@@ -126,7 +127,8 @@ export default class PreparationRoom extends Room<{ state: PreparationState }> {
         options.password && options.password.trim().length > 0
       ),
       type: "preparation",
-      scribbleExtended: false
+      scribbleExtended: false,
+      whimsy: options.whimsy ?? false
     })
     this.maxClients = 8
     if (options.gameMode === GameMode.TOURNAMENT) {

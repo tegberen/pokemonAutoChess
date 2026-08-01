@@ -24,6 +24,7 @@ export interface IUserPreparationState {
   gameMode: GameMode
   specialGameRule: SpecialGameRule | null
   scribbleExtended: boolean
+  whimsy: boolean
   whitelist: string[]
   blacklist: string[]
 }
@@ -43,6 +44,7 @@ const initialState: IUserPreparationState = {
   gameMode: GameMode.CUSTOM_LOBBY,
   specialGameRule: null,
   scribbleExtended: false,
+  whimsy: false,
   whitelist: [],
   blacklist: []
 }
@@ -111,6 +113,9 @@ export const preparationSlice = createSlice({
     setScribbleExtended: (state, action: PayloadAction<boolean>) => {
       state.scribbleExtended = action.payload
     },
+    setWhimsy: (state, action: PayloadAction<boolean>) => {
+      state.whimsy = action.payload
+    },
     setMinRank: (state, action: PayloadAction<EloRank | null>) => {
       state.minRank = action.payload
     },
@@ -150,6 +155,7 @@ export const {
   setGameMode,
   setSpecialGameRule,
   setScribbleExtended,
+  setWhimsy,
   resetPreparation
 } = preparationSlice.actions
 

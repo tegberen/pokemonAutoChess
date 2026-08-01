@@ -52,6 +52,7 @@ export default class GameState extends Schema {
   @type("uint8") lightY = randomBetween(1, BOARD_HEIGHT / 2)
   @type("string") specialGameRule: SpecialGameRule | null = null
   scribbleExtended = false
+  @type("boolean") whimsy = false
   @type("string") avatarSynergy: Synergy | null = null
   @type("string") townEncounter: TownEncounter | null = null
   @type("number") weatherThreshold: number = 8
@@ -83,10 +84,12 @@ export default class GameState extends Schema {
     minRank: EloRank | null,
     maxRank: EloRank | null,
     specialGameRule: SpecialGameRule | null,
-    scribbleExtended = false
+    scribbleExtended = false,
+    whimsy = false
   ) {
     super()
     this.scribbleExtended = scribbleExtended
+    this.whimsy = whimsy
     this.preparationId = preparationId
     this.startTime = Date.now()
     this.name = name
@@ -98,6 +101,14 @@ export default class GameState extends Schema {
 
     if (gameMode === GameMode.SCRIBBLE) {
       this.specialGameRule = pickRandomIn(Object.values(SpecialGameRule))
+    } else if (whimsy) {
+      // the window was checked at room creation, so a lobby that started just
+      // before the deadline still gets its rule
+      this.specialGameRule = pickRandomIn(
+        Object.values(SpecialGameRule).filter(
+          (rule) => rule !== SpecialGameRule.PLAY_TEST
+        )
+      )
     } else {
       this.specialGameRule = specialGameRule
     }

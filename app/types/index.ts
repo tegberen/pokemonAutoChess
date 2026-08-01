@@ -678,12 +678,14 @@ export interface IPreparationMetadata {
   tournamentId: string | null
   bracketId: string | null
   scribbleExtended: boolean
+  whimsy: boolean
 }
 
 export interface IGameMetadata {
   name: string
   ownerName: string
   gameMode: GameMode
+  whimsy: boolean
   playerIds: string[]
   playersInfo: string[]
   stageLevel: number
@@ -797,7 +799,8 @@ export enum Title {
   SURVEY_CORPS = "SURVEY_CORPS",
   GUILDMASTER = "GUILDMASTER",
   LEGIONNAIRE = "LEGIONNAIRE",
-  FIVE_STARS = "FIVE_STARS"
+  FIVE_STARS = "FIVE_STARS",
+  WHIMSY = "WHIMSY"
 }
 
 export interface IBoardEvent {

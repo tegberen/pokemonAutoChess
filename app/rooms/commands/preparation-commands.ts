@@ -372,6 +372,7 @@ export class OnGameStartRequestCommand extends Command<
           gameMode: this.state.gameMode,
           specialGameRule: this.state.specialGameRule,
           scribbleExtended: this.state.scribbleExtended,
+          whimsy: this.state.whimsy,
           tournamentId: this.room.metadata?.tournamentId,
           bracketId: this.room.metadata?.bracketId,
           minRank: this.state.minRank

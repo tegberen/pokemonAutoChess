@@ -19,6 +19,12 @@ export enum GameMode {
   DOUBLE_UP = "DOUBLE_UP"
 }
 
+/* Whimsy Weekend is not a GameMode: it opens a DOUBLE_UP room with the `whimsy`
+   flag, so all Double Up gameplay applies unchanged. It is only a separate entry
+   in the room-creation menu, hence this request token. */
+export const WHIMSY_WEEKEND_REQUEST = "WHIMSY_WEEKEND"
+export type RoomRequest = GameMode | typeof WHIMSY_WEEKEND_REQUEST
+
 export enum GamePhaseState {
   PICK,
   FIGHT,

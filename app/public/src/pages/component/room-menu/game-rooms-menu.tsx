@@ -15,16 +15,25 @@ import { LocalStoreKeys, localStore } from "../../utils/store"
 import GameRoomItem from "./game-room-item"
 import { joinGame as networkJoinGame } from "../../../network"
 
-export function IngameRoomsList({ gameMode }: { gameMode?: GameMode }) {
+export function IngameRoomsList({
+  gameMode,
+  whimsy
+}: {
+  gameMode?: GameMode
+  whimsy?: boolean
+}) {
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
   const gameRooms: RoomAvailable[] = useAppSelector(
     (state) => state.lobby.gameRooms
-  ).filter((r) =>
-    gameMode
+  ).filter((r) => {
+    if (whimsy !== undefined && (r.metadata.whimsy ?? false) !== whimsy) {
+      return false
+    }
+    return gameMode
       ? r.metadata.gameMode === gameMode
       : r.metadata.gameMode !== GameMode.RANKED
-  )
+  })
   const navigate = useNavigate()
   const [isJoining, setJoining] = useState<boolean>(false)
   const [sortBy, setSortBy] = useState<"stage" | "elo" | "name">("stage")

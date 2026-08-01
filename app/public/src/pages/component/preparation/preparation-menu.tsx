@@ -23,6 +23,7 @@ import {
 import { addIconsToDescription } from "../../utils/descriptions"
 import { cc } from "../../utils/jsx"
 import { GameModeIcon } from "../icons/game-mode-icon"
+import { WhimsyWeekendCountdown } from "../whimsy-weekend/whimsy-weekend"
 import PreparationMenuUser from "./preparation-menu-user"
 import "./preparation-menu.css"
 
@@ -47,6 +48,7 @@ export default function PreparationMenu() {
   const scribbleExtended = useAppSelector(
     (state) => state.preparation.scribbleExtended
   )
+  const isWhimsyWeekend = useAppSelector((state) => state.preparation.whimsy)
 
   const isReady = users.find((user) => user.uid === uid)?.ready
   const nbUsersReady = users.filter((user) => user.ready).length
@@ -97,6 +99,20 @@ export default function PreparationMenu() {
         </p>
       )}
 
+      {isWhimsyWeekend && (
+        <>
+          <p>
+            <img
+              src="/assets/ui/whimsy_weekend.png"
+              alt={t("whimsy_weekend")}
+              className="gamemode icon"
+            />
+            <b>{t("whimsy_weekend")}</b>: {t("whimsy_weekend_description")}
+          </p>
+          <WhimsyWeekendCountdown />
+        </>
+      )}
+
       {(gameMode === GameMode.SCRIBBLE || specialGameRule != null) && (
         <p>
           <GameModeIcon gameMode={gameMode} />
@@ -116,6 +132,7 @@ export default function PreparationMenu() {
       )}
 
       {(gameMode === GameMode.CUSTOM_LOBBY ||
+        gameMode === GameMode.DOUBLE_UP ||
         gameMode === GameMode.SCRIBBLE) && (
         <p>
           <img src="assets/icons/HP.png" alt="HP" />

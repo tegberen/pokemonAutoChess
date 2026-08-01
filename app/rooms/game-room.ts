@@ -160,6 +160,7 @@ export default class GameRoom extends Room<{ state: GameState }> {
     gameMode,
     specialGameRule,
     scribbleExtended,
+    whimsy,
     minRank,
     maxRank,
     tournamentId,
@@ -173,6 +174,7 @@ export default class GameRoom extends Room<{ state: GameState }> {
     gameMode: GameMode
     specialGameRule: SpecialGameRule | null
     scribbleExtended?: boolean
+    whimsy?: boolean
     minRank: EloRank | null
     maxRank: EloRank | null
     tournamentId: string | null
@@ -197,6 +199,7 @@ export default class GameRoom extends Room<{ state: GameState }> {
       name,
       ownerName,
       gameMode,
+      whimsy: whimsy ?? false,
       playerIds: Object.keys(users).filter((id) => users[id].isBot === false),
       playersInfo: Object.keys(users).map(
         (u) => `${users[u].name} [${users[u].elo}]`
@@ -217,7 +220,8 @@ export default class GameRoom extends Room<{ state: GameState }> {
       minRank,
       maxRank,
       specialGameRule,
-      scribbleExtended ?? false
+      scribbleExtended ?? false,
+      whimsy ?? false
     )
     this.miniGame.create(
       this.state.avatars,
@@ -1014,6 +1018,10 @@ export default class GameRoom extends Room<{ state: GameState }> {
       usr.games += 1
       if (rank === 1) {
         usr.wins += 1
+        // both members of a Double Up team share rank 1
+        if (this.state.whimsy) {
+          player.titles.add(Title.WHIMSY)
+        }
         if (this.state.gameMode === GameMode.RANKED) {
           player.titles.add(Title.VANQUISHER)
           const minElo = Math.min(
@@ -1178,6 +1186,7 @@ export default class GameRoom extends Room<{ state: GameState }> {
           elo: usr.elo,
           synergies: synergiesMap,
           gameMode: this.state.gameMode,
+          whimsy: this.state.whimsy,
           regions: player.regions
         })
       }

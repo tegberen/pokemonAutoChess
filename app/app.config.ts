@@ -585,7 +585,7 @@ export const server = defineServer({
 
       const stats = await DetailledStatistic.find(
         params,
-        ["pokemons", "time", "rank", "elo", "gameMode", "unholdableItems"],
+        ["pokemons", "time", "rank", "elo", "gameMode", "whimsy", "unholdableItems"],
         { limit: limit, skip: skip, sort: { time: -1 } }
       )
       if (stats) {
@@ -597,7 +597,8 @@ export const server = defineServer({
               record.elo,
               record.pokemons,
               record.gameMode,
-              record.unholdableItems
+              record.unholdableItems,
+              record.whimsy
             )
         )
 

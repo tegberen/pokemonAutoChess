@@ -3,6 +3,7 @@ import { type Client, matchMaker } from "colyseus"
 // import { randomBytes } from "crypto"
 import {
   EloRankThreshold,
+  isScribbleWeekend,
   MAX_PLAYERS_PER_GAME,
   USERNAME_REGEXP
 } from "../../config"
@@ -21,7 +22,11 @@ import { notificationsService } from "../../services/notifications"
 import { Emotion, Role, type Title, Transfer } from "../../types"
 import { CloseCodes } from "../../types/enum/CloseCodes"
 import { EloRank } from "../../types/enum/EloRank"
-import { GameMode } from "../../types/enum/Game"
+import {
+  GameMode,
+  type RoomRequest,
+  WHIMSY_WEEKEND_REQUEST
+} from "../../types/enum/Game"
 import type { Language } from "../../types/enum/Language"
 import { PkmIndex } from "../../types/enum/Pokemon"
 import { Starters } from "../../types/enum/Starters"
@@ -624,11 +629,26 @@ export class SelectLanguageCommand extends Command<
 
 export class JoinOrOpenRoomCommand extends Command<
   CustomLobbyRoom,
-  { client: Client; gameMode: GameMode }
+  { client: Client; gameMode: RoomRequest }
 > {
-  async execute({ client, gameMode }: { client: Client; gameMode: GameMode }) {
+  async execute({ client, gameMode }: { client: Client; gameMode: RoomRequest }) {
     const user = this.room.users.get(client.auth.uid)
     if (!user) return
+
+    if (gameMode === WHIMSY_WEEKEND_REQUEST) {
+      // the client hides the entry outside the window, but never trust its clock
+      if (!isScribbleWeekend()) {
+        client.send(Transfer.ALERT, "Whimsy Weekend is not running right now.")
+        return
+      }
+      return [
+        new OpenGameCommand().setPayload({
+          gameMode: GameMode.DOUBLE_UP,
+          client,
+          whimsy: true
+        })
+      ]
+    }
 
     switch (gameMode) {
       case GameMode.CUSTOM_LOBBY:
@@ -747,18 +767,21 @@ export class OpenGameCommand extends Command<
     client: Client
     minRank?: EloRank
     maxRank?: EloRank
+    whimsy?: boolean
   }
 > {
   async execute({
     gameMode,
     client,
     minRank,
-    maxRank
+    maxRank,
+    whimsy
   }: {
     gameMode: GameMode
     client: Client
     minRank?: EloRank
     maxRank?: EloRank
+    whimsy?: boolean
   }) {
     const user = this.room.users.get(client.auth.uid)
     if (!user) return
@@ -783,7 +806,7 @@ export class OpenGameCommand extends Command<
     } else if (gameMode === GameMode.CLASSIC) {
       roomName = "Classic"
     } else if (gameMode === GameMode.DOUBLE_UP) {
-      roomName = "Double Up"
+      roomName = whimsy ? "Whimsy Weekend" : "Double Up"
       ownerId = user.uid
     }
 
@@ -794,7 +817,8 @@ export class OpenGameCommand extends Command<
       noElo,
       password,
       ownerId,
-      roomName
+      roomName,
+      whimsy: whimsy ?? false
     })
     client.send(Transfer.REQUEST_ROOM, newRoom.roomId)
   }

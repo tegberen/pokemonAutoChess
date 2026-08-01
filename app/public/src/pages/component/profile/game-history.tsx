@@ -151,7 +151,17 @@ function GameHistoryRow({
     <div style={style}>
       <div className="my-box game-history">
         <span className="top">
-          <GameModeIcon gameMode={r.gameMode} />
+          {r.whimsy ? (
+            <img
+              src="/assets/ui/whimsy_weekend.png"
+              alt={t("whimsy_weekend")}
+              title={t("whimsy_weekend")}
+              className="gamemode icon"
+              draggable="false"
+            />
+          ) : (
+            <GameModeIcon gameMode={r.gameMode} />
+          )}
           {t("top")} {r.rank}
         </span>
         <EloBadge elo={r.elo} />

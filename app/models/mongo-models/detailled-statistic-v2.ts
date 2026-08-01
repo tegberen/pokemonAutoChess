@@ -23,6 +23,7 @@ export interface IDetailledStatistic {
   synergies: Map<Synergy, number>
   regions: DungeonPMDO[]
   gameMode: GameMode
+  whimsy?: boolean
   unholdableItems: Item[]
 }
 
@@ -77,6 +78,9 @@ const statisticSchema = new Schema({
   ],
   gameMode: {
     type: String
+  },
+  whimsy: {
+    type: Boolean
   },
   unholdableItems: [
     {

@@ -50,6 +50,10 @@ export default function PreparationSettings() {
   const isModerator = user?.role === Role.MODERATOR
   const canEditRoom = isOwner || isModerator || isAdmin
   const isCustomLobby = gameMode === GameMode.CUSTOM_LOBBY
+  // Double Up gets the custom-room controls, minus the rule picker: its scribble
+  // rule is rolled at game start
+  const hasCustomLobbySettings =
+    isCustomLobby || gameMode === GameMode.DOUBLE_UP
 
   function togglePrivate() {
     if (password === null || password === undefined) {
@@ -80,8 +84,7 @@ export default function PreparationSettings() {
     changeSpecialRule(pickRandomIn(rules))
   }
 
-  const roomNameSetting = (isCustomLobby ||
-    gameMode === GameMode.DOUBLE_UP) &&
+  const roomNameSetting = hasCustomLobbySettings &&
     canEditRoom &&
     user &&
     !user.anonymous && (
@@ -104,7 +107,7 @@ export default function PreparationSettings() {
       </div>
     )
 
-  const privacySetting = isCustomLobby && (isOwner || isAdmin) && (
+  const privacySetting = hasCustomLobbySettings && (isOwner || isAdmin) && (
     <div className="lobby-setting">
       <span className="setting-label">{t("lobby_visibility")}</span>
       <div className="setting-control">
@@ -242,7 +245,7 @@ export default function PreparationSettings() {
   )
 
   const playerHpSetting = (gameMode === GameMode.SCRIBBLE ||
-    (isCustomLobby && (isOwner || isAdmin))) && (
+    (hasCustomLobbySettings && (isOwner || isAdmin))) && (
     <div className="lobby-setting" title={t("scribble_extended_hint")}>
       <span className="setting-label">
         {t("scribble_extended_label")}
@@ -260,7 +263,7 @@ export default function PreparationSettings() {
     </div>
   )
 
-  const botSetting = (isCustomLobby || gameMode === GameMode.DOUBLE_UP) &&
+  const botSetting = hasCustomLobbySettings &&
     (isOwner || isAdmin) &&
     (BOTS_ENABLED || isAdmin) && (
       <div className="lobby-setting">

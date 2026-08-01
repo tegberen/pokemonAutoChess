@@ -37,6 +37,8 @@ export default class PreparationState
   @type(["string"]) whitelist: string[]
   @type(["string"]) blacklist: string[]
   @type("boolean") scribbleExtended = false
+  /** Whimsy Weekend: a Double Up room that rolls a random scribble rule. */
+  @type("boolean") whimsy = false
   abortOnPlayerLeave?: AbortController
 
   constructor(params: {
@@ -50,8 +52,10 @@ export default class PreparationState
     specialGameRule?: SpecialGameRule
     whitelist?: string[]
     blacklist?: string[]
+    whimsy?: boolean
   }) {
     super()
+    this.whimsy = params.whimsy ?? false
     this.ownerId =
       (params.gameMode === GameMode.CUSTOM_LOBBY || params.gameMode === GameMode.DOUBLE_UP)
         ? (params.ownerId ?? "")
