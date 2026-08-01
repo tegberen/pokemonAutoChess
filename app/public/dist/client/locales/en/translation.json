@@ -3204,7 +3204,7 @@
 		"BLUE_ORB": "Every 3 attacks, unleashes a chain lightning that bounces to the 2 closest enemies, dealing 10 SPECIAL and burning 15 PP",
 		"SCOPE_LENS": "Critical attacks steal 10 PP from the target ON_HIT.",
 		"STAR_DUST": "After casting ability, gain 50% of max PP as SHIELD. The holder is immune to BURN.",
-		"GREEN_ORB": "Holder and ADJACENT allies regain 3% of their max HP every second. 30% of overheal is converted to PP.",
+		"GREEN_ORB": "Holder and ADJACENT allies regain 5% of their max HP every 2 seconds. 30% of overheal is converted to PP.",
 		"DEEP_SEA_TOOTH": "Holder restore 5 additional PP ON_ATTACK. If the attack knocks out the target, restore 15 additional PP.",
 		"SMOKE_BALL": "Once below 40% max HP, drop the smoke ball, gain 70 SHIELD and jump to a tile away. Every ADJACENT enemy is PARALYSIS and BLINDED for 4 seconds.",
 		"XRAY_VISION": "Holder is immune to SLEEP and their attacks can no longer miss. Attacks have [30,LK] % chance to inflict FLINCH for 3 seconds.",
