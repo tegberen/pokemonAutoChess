@@ -1072,6 +1072,7 @@
 		"TYNAMO": "Tynamo",
 		"EELEKTRIK": "Eelektrik",
 		"EELEKTROSS": "Eelektross",
+		"MEGA_EELEKTROSS": "Mega Eelektross",
 		"PIDOVE": "Pidove",
 		"TRANQUILL": "Tranquill",
 		"UNFEZANT": "Unfezant",
@@ -2341,7 +2342,7 @@
 		"BULLDOZE": "Stomps down on the ground dealing [15,30,60,120,SP] SPECIAL to ADJACENT enemies. Pokémon hit are knocked back and lose [5,5,10,20] SPEED.",
 		"ARMOR_CANNON": "Shoots out a blazing projectile, dealing [15,30,50,100,SP] SPECIAL to the target before bouncing to the 2 closest enemies, dealing [15,30,50,100,SP] SPECIAL to each. The projectiles then return to the original target, dealing an extra [6,12,25,50,SP] SPECIAL each.",
 		"BITTER_BLADE": "Focuses its bitter feelings into a flaming slash, dealing [50,60,70,140,SP] SPECIAL to every ADJACENT enemy. User heals 10% of its max HP for each enemy hit.",
-		"SUCTION_HEAL": "Drains the energy from its targets, dealing [15,30,60,120,SP] SPECIAL in a 2 tiles range CONE and heals HP for 50% of the damage dealt.",
+		"SUCTION_HEAL": "Drains the energy from its targets, dealing [15,30,60,80,120,SP] SPECIAL in a 2 tiles range CONE and heals HP for 50% of the damage dealt.",
 		"ROOST": "FLY_AWAY and after landing, SLEEP for 1 second and gaining [20,40,80,160,SP] SHIELD.",
 		"BEHEMOTH_BLADE": "Dash behind the target and deliver a powerful slash, dealing [30, 60, 90, 120, 240,SP] + [100,100,100,100,SP]% ATK as SPECIAL",
 		"BEHEMOTH_BASH": "Dash behind the target and deliver a powerful bash, dealing [30, 60, 90, 120, 240,SP] + [200,200,200,200,SP]% DEF as SPECIAL",
@@ -3835,7 +3836,9 @@
 		"ILLUSION": "Copy the apperance of the ally on its left (if it is not on the bench).",
 		"STOUTLAND_SEARCH": "Stoutland barks when standing on a cell with a hidden item buried in the ground.",
 		"SUBSTITUTE": "A decoy created to look like a Pokémon",
-		"PASSIMIAN": "Passimian comes with a BALL as item held"
+		"PASSIMIAN": "Passimian comes with a BALL as item held",
+		"EELEKTROSS": "Gains a stack for each KO. Mega evolves after 20 stacks.",
+		"MEGA_EELEKTROSS": "Overheal of the abilty is converted to SHIELD. Charge up a Battery by 20% for each KO."
 	},
 	"stat": {
 		"ATK": "Attack",

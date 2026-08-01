@@ -7313,6 +7313,13 @@ export const PokemonAnimations: {
     attackSprite: AttackSprite.ELECTRIC_MELEE,
     hitSprite: HitSprite.ELECTRIC_HIT
   },
+  [Pkm.MEGA_EELEKTROSS]: {
+    attack: AnimationType.Attack,
+    ability: AnimationType.Shoot,
+    emote: AnimationType.Charge,
+    attackSprite: AttackSprite.ELECTRIC_MELEE,
+    hitSprite: HitSprite.ELECTRIC_HIT
+  },
   [Pkm.PIDOVE]: {
     attack: AnimationType.Attack,
     ability: AnimationType.Shoot,

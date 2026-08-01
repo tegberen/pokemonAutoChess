@@ -19524,6 +19524,9 @@ export class Eelektross extends Pokemon {
   ])
   rarity = Rarity.UNCOMMON
   stars = 3
+  evolutionRule = { type: EvolutionRuleType.STACK } as const
+  stacksRequired: number = 20
+  evolution = Pkm.MEGA_EELEKTROSS
   hp = 250
   atk = 24
   speed = 41
@@ -19533,6 +19536,27 @@ export class Eelektross extends Pokemon {
   range = 1
   skill = Ability.SUCTION_HEAL
   regional = true
+  passive = Passive.EELEKTROSS
+}
+
+export class MegaEelektross extends Pokemon {
+  types = new SetSchema<Synergy>([
+    Synergy.ELECTRIC,
+    Synergy.AQUATIC,
+    Synergy.AMORPHOUS
+  ])
+  rarity = Rarity.UNCOMMON
+  stars = 4
+  hp = 250
+  atk = 24
+  speed = 41
+  def = 12
+  speDef = 12
+  maxPP = 80
+  range = 1
+  skill = Ability.SUCTION_HEAL
+  regional = true
+  passive = Passive.MEGA_EELEKTROSS
 }
 
 export class Pidove extends Pokemon {
@@ -23406,6 +23430,7 @@ export const PokemonClasses: Record<
   [Pkm.TYNAMO]: Tynamo,
   [Pkm.EELEKTRIK]: Eelektrik,
   [Pkm.EELEKTROSS]: Eelektross,
+  [Pkm.MEGA_EELEKTROSS]: MegaEelektross,
   [Pkm.PIDOVE]: Pidove,
   [Pkm.TRANQUILL]: Tranquill,
   [Pkm.UNFEZANT]: Unfezant,

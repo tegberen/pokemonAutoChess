@@ -1260,6 +1260,15 @@ const MewtwoOnKillEffect = new OnKillEffect(
   Passive.MEWTWO
 )
 
+const MegaEelektrossOnKillEffect = new OnKillEffect(
+  ({ attacker: pokemon }) => {
+    if (pokemon.isGhostOpponent) return
+    if (!pokemon.player) return
+    pokemon.player.chargeCellBattery(20)
+  },
+  Passive.MEGA_EELEKTROSS
+)
+
 export const PassiveEffects: Partial<
   Record<Passive, (Effect | (() => Effect))[]>
 > = {
@@ -1268,6 +1277,7 @@ export const PassiveEffects: Partial<
   [Passive.SHARED_VISION_2]: [SharedVisionEffect],
   [Passive.METEOR]: [MiniorKernelOnAttackEffect],
   [Passive.KUBFU]: [KubfuOnKillEffect],
+  [Passive.MEGA_EELEKTROSS]: [MegaEelektrossOnKillEffect],
   [Passive.QWILFISH]: [QwilfishPassiveEffect],
   [Passive.HISUIAN_QWILFISH]: [
     new OnAbilityCastEffect((pokemon) => pokemon.addStack())
@@ -2337,5 +2347,13 @@ export const PassiveEffects: Partial<
         })
       }
     })
+  ],
+  [Passive.EELEKTROSS]: [
+    new OnKillEffect(({ attacker }) => {
+      if (attacker.isGhostOpponent) return
+      if (!attacker.player) return
+      attacker.addStack()
+    })
   ]
+
 }

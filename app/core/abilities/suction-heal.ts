@@ -1,4 +1,5 @@
 import { AttackType } from "../../types/enum/Game"
+import { Passive } from "../../types/enum/Passive"
 import type { Board } from "../board"
 import type { PokemonEntity } from "../pokemon-entity"
 import { AbilityStrategy } from "./ability-strategy"
@@ -11,7 +12,7 @@ export class SuctionHealStrategy extends AbilityStrategy {
     crit: boolean
   ) {
     super.process(pokemon, board, target, crit, true)
-    const damage = [15, 30, 60, 120][pokemon.stars - 1] ?? 120
+    const damage = [15, 30, 60, 80, 120][pokemon.stars - 1] ?? 120
     const cells = board.getCellsInFront(pokemon, target, 2)
 
     cells.forEach((cell) => {
@@ -29,7 +30,15 @@ export class SuctionHealStrategy extends AbilityStrategy {
           targetX: cell.value.positionX,
           targetY: cell.value.positionY
         })
-        pokemon.handleHeal(attack.takenDamage * 0.5, pokemon, 0, false)
+        const { overheal } = pokemon.handleHeal(
+          attack.takenDamage * 0.5,
+          pokemon,
+          0,
+          false
+        )
+        if (overheal > 0 && pokemon.passive === Passive.MEGA_EELEKTROSS) {
+          pokemon.addShield(overheal, pokemon, 0, false)
+        }
       }
     })
   }
