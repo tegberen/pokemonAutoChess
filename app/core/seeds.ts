@@ -1,6 +1,4 @@
 import Player from "../models/colyseus-models/player"
-import { Transfer } from "../types"
-import { DungeonPMDO } from "../types/enum/Dungeon"
 import { EffectEnum } from "../types/enum/Effect"
 import { Rarity, Team } from "../types/enum/Game"
 import { type Seeds, CraftableNoStonesOrScarves, Item, ItemComponents, ItemComponentsNoScarf } from "../types/enum/Item"
@@ -176,12 +174,11 @@ export const SeedEffects: Record<(typeof Seeds)[number], Effect[]> = {
     })
   ],
 
-  // "TRAINING_SEED": "Flying allies gain 3 ATK, 5 SPEED and 10 max HP for each of their own KOs."
   TRAINING_SEED: [
     new OnKillEffect(({ attacker }) => {
       if (!attacker.types.has(Synergy.FLYING)) return
       attacker.addAttack(1, attacker, 0, false, true)
-      attacker.addSpeed(2, attacker, 0, false, true)
+      attacker.addSpeed(1, attacker, 0, false, true)
     })
   ],
 
@@ -235,24 +232,23 @@ export const SeedEffects: Record<(typeof Seeds)[number], Effect[]> = {
     })
   ],
 
-  // "WARP_SEED": "After the Sky Dive attack of the STRONGEST ally, change the opponents region."
   WARP_SEED: [
-    new OnSkyDiveAttackEffect(({ pokemon, target }) => {
-      if (!pokemon.isStrongestAllyThisFight) return
-      target.status.triggerConfusion(7000, target, pokemon)
-      //start warping
-      const opponent = target.player
-      if (!opponent) return
-      const room = pokemon.simulation.room
-      const previousMap = opponent.map
-      const maps = Object.values(DungeonPMDO).filter((m) => m !== previousMap)
-      const newMap = pickRandomIn(maps)
-      room.broadcast(Transfer.PRELOAD_MAPS, [newMap])
-      room.clock.setTimeout(() => {
-        opponent.map = newMap
-        opponent.regions.push(newMap)
-        opponent.updateRegionalPool(room.state, true, previousMap)
-      }, 500)
+    new OnSkyDiveAttackEffect(({ pokemon, target, board }) => {
+      if (!chance(0.3, pokemon)) return
+      const farthestTarget = pokemon.state.getFarthestTarget(pokemon, board)
+      if (!farthestTarget || farthestTarget.id === target.id) return
+      pokemon.broadcastAbility({
+        skill: "WARP_WAND",
+        targetX: target.positionX,
+        targetY: target.positionY
+      })
+      pokemon.broadcastAbility({
+        skill: "WARP_WAND",
+        targetX: farthestTarget.positionX,
+        targetY: farthestTarget.positionY
+      })
+      target.moveTo(farthestTarget.positionX, farthestTarget.positionY, board, true)
+      target.status.triggerConfusion(1000, target, pokemon)
     })
   ],
   // ---- Group 6: misc ----

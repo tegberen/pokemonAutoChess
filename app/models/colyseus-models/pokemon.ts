@@ -805,11 +805,11 @@ export class MegaLucario extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.FIGHTING, Synergy.STEEL])
   rarity = Rarity.RARE
   stars = 3
-  hp = 200
+  hp = 170
   atk = 25
   speed = 54
-  def = 12
-  speDef = 10
+  def = 8
+  speDef = 8
   maxPP = 80
   range = 2
   skill = Ability.AURASPHERE
@@ -1510,7 +1510,7 @@ export class Metagross extends Pokemon {
 
 export class Tympole extends Pokemon {
   types = new SetSchema<Synergy>([
-    Synergy.AQUATIC,
+    Synergy.WATER,
     Synergy.GROUND,
     Synergy.SOUND
   ])
@@ -1533,7 +1533,7 @@ export class Tympole extends Pokemon {
 
 export class Palpitoad extends Pokemon {
   types = new SetSchema<Synergy>([
-    Synergy.AQUATIC,
+    Synergy.WATER,
     Synergy.GROUND,
     Synergy.SOUND
   ])
@@ -1556,7 +1556,7 @@ export class Palpitoad extends Pokemon {
 
 export class Seismitoad extends Pokemon {
   types = new SetSchema<Synergy>([
-    Synergy.AQUATIC,
+    Synergy.WATER,
     Synergy.GROUND,
     Synergy.SOUND
   ])
@@ -5365,8 +5365,8 @@ export class Ampharos extends Pokemon {
   hp = 220
   atk = 18
   speed = 43
-  def = 2
-  speDef = 2
+  def = 4
+  speDef = 5
   maxPP = 100
   range = 2
   skill = Ability.THUNDER_SHOCK
@@ -6286,8 +6286,8 @@ export class Pinsir extends Pokemon {
   hp = 190
   atk = 20
   speed = 52
-  def = 6
-  speDef = 6
+  def = 8
+  speDef = 8
   maxPP = 100
   range = 1
   skill = Ability.GUILLOTINE
@@ -8463,7 +8463,7 @@ export class Cryogonal extends Pokemon {
   atk = 14
   speed = 59
   def = 4
-  speDef = 16
+  speDef = 8
   maxPP = 100
   range = 3
   skill = Ability.FREEZE_DRY
@@ -13639,7 +13639,7 @@ export class Spectrier extends Pokemon {
 }
 
 export class Glastrier extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.ICE, Synergy.FIELD])
+  types = new SetSchema<Synergy>([Synergy.WILD, Synergy.ICE, Synergy.FIELD])
   rarity = Rarity.LEGENDARY
   stars = 3
   hp = 280
@@ -19601,7 +19601,7 @@ export class Unfezant extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.NORMAL, Synergy.FLYING])
   rarity = Rarity.COMMON
   stars = 3
-  hp = 180
+  hp = 200
   atk = 19
   speed = 64
   def = 7

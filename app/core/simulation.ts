@@ -310,8 +310,7 @@ export default class Simulation extends Schema implements ISimulation {
       const strongestAllySeeds = [
         Item.DECOY_SEED,
           Item.REVIVER_SEED,
-          Item.TINY_REVIVER_SEED,
-          Item.WARP_SEED
+          Item.TINY_REVIVER_SEED
         ]
         if (strongestAllySeeds.some((seed) => player.activeSeed === seed)) {
           const entities = [...team.values()].filter(

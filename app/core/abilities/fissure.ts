@@ -13,7 +13,7 @@ export class FissureStrategy extends AbilityStrategy {
     crit: boolean
   ) {
     super.process(pokemon, board, target, crit, true)
-    const numberOfRifts = [2, 3, 4, 6][pokemon.stars - 1] ?? 6
+    const numberOfRifts = [3, 4, 5, 6][pokemon.stars - 1] ?? 6
     const damage = [25, 50, 75, 100][pokemon.stars - 1] ?? 100
     for (let i = 0; i < numberOfRifts; i++) {
       const x = randomBetween(0, BOARD_WIDTH - 1)
