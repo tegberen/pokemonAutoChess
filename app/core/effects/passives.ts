@@ -1260,6 +1260,26 @@ const MewtwoOnKillEffect = new OnKillEffect(
   Passive.MEWTWO
 )
 
+class MegaFeraligatrOnKillEffect extends OnKillEffect {
+  triggered = false
+
+  constructor() {
+    super(({ attacker }) => {
+      if (this.triggered) return
+      if (attacker.isGhostOpponent) return
+      if (!attacker.player) return
+      this.triggered = true
+
+      const totalStars = schemaValues(attacker.player.board).reduce(
+        (acc, p) => acc + (!isOnBench(p) ? p.stars : 0),
+        0
+      )
+      attacker.addSpeed(totalStars, attacker, 0, false, true)
+      attacker.addAbilityPower(totalStars, attacker, 0, false, true)
+    }, Passive.MEGA_FERALIGATR)
+  }
+}
+
 const MegaEelektrossOnKillEffect = new OnKillEffect(
   ({ attacker: pokemon }) => {
     if (pokemon.isGhostOpponent) return
@@ -2239,17 +2259,7 @@ export const PassiveEffects: Partial<
 
     })
   ],
-  [Passive.MEGA_FERALIGATR]: [
-    new OnKillEffect(({ attacker }) => {
-      if (!attacker.player) return
-      const totalStars = schemaValues(attacker.player.board).reduce(
-        (acc, p) => acc + (!isOnBench(p) ? p.stars : 0),
-        0
-      )
-      attacker.addSpeed(1, attacker, 0, false, true)
-      attacker.addAbilityPower(totalStars, attacker, 0, false, true)
-    })
-  ],
+  [Passive.MEGA_FERALIGATR]: [() => new MegaFeraligatrOnKillEffect()],
   [Passive.INTIMIDATE]: [
     new OnAttackEffect(({ pokemon, target }) => {
       if (!target) return

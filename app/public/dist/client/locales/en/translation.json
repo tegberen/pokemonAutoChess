@@ -3821,7 +3821,7 @@
 		"SHELL_ARMOR": "Gain [1,3,6] DEF when receiving critical attacks. The Pokémon is immune to ARMOR_BREAK.",
 		"FLOETTE_ETERNAL": "Gain one stack for each KO. Mega evolves after 20 stacks.",
 		"FERALIGATR": "Gain one stack for each KO. Mega evolves after 20 stacks.",
-		"MEGA_FERALIGATR": "If the target is KO'ed, gain permanently 1 SPEED and for each STAR on your board 1 AP",
+		"MEGA_FERALIGATR": "If the target is KO'ed, gain permanently for each STAR on your board 1 AP and 1 SPEED (max once per fight).",
 		"INTIMIDATE": "When attacking, has a [30,LK]% chance to FLINCH the target for 3 seconds.",
 		"STEELY_SPIRIT": "Allies ADJACENT_IN_THE_SAME_ROW deal 10% of their ATK as TRUE.",
 		"ZERAORA": "Gains a stack for each KO. Mega evolves after 20 stacks.",
