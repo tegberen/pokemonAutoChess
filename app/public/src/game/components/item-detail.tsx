@@ -23,10 +23,12 @@ import "./item-detail.css"
 
 export function ItemDetailTooltipContent({
   item,
-  showItemCombinationsTooltip = true
+  showItemCombinationsTooltip = true,
+  showAwakening = true
 }: {
   item: Item
   showItemCombinationsTooltip?: boolean
+  showAwakening?: boolean
 }) {
   const { t } = useTranslation()
   const recipes = useMemo(
@@ -105,7 +107,7 @@ export function ItemDetailTooltipContent({
       <p className="game-item-detail-description">
         {addIconsToDescription(t(`item_description.${item}`))}
       </p>
-      {isIn(WeatherRocks, item) && (
+      {showAwakening && isIn(WeatherRocks, item) && (
         <div className="game-item-detail-awakening">
           <div className="game-item-detail-awakening-label">
             <img src="/assets/icons/AWAKENING.svg" alt="" aria-hidden="true" />
@@ -148,6 +150,7 @@ export function ItemDetailTooltipContent({
             <ItemDetailTooltipContent
               item={content as Item}
               showItemCombinationsTooltip={false}
+              showAwakening={showAwakening}
             />
           )}
         />
@@ -156,13 +159,20 @@ export function ItemDetailTooltipContent({
   )
 }
 
-export function ItemDetailTooltip() {
+export function ItemDetailTooltip({
+  showAwakening = true
+}: {
+  showAwakening?: boolean
+} = {}) {
   return (
     <Tooltip
       id="item-detail-tooltip"
       className="custom-theme-tooltip item-detail-tooltip"
       render={({ content }) => (
-        <ItemDetailTooltipContent item={content as Item} />
+        <ItemDetailTooltipContent
+          item={content as Item}
+          showAwakening={showAwakening}
+        />
       )}
     />
   )

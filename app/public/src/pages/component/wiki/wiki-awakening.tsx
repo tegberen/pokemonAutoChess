@@ -63,7 +63,7 @@ export default function WikiAwakening({
             </li>
           ))}
       </ul>
-      <ItemDetailTooltip />
+      <ItemDetailTooltip showAwakening={false} />
     </div>
   )
 }

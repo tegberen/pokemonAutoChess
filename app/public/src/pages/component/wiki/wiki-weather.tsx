@@ -160,7 +160,7 @@ export default function WikiWeather({
       </ul>
 
       <GamePokemonDetailTooltip origin="wiki" />
-      <ItemDetailTooltip />
+      <ItemDetailTooltip showAwakening={false} />
       <Tooltip
         id="weather-awakening-tooltip"
         className="custom-theme-tooltip"
