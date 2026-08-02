@@ -16,30 +16,103 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
   [Blessing.PEARL]: {
     tier: BlessingTier.SILVER,
     availableAtStages: BLESSING_SELECTION_STAGES,
-    icon: "PEARL",
+    icon: "pearl",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.CROAGUNKS_AID]: {
+    tier: BlessingTier.SILVER,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "ticket",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.BAG_OF_SWEETS]: {
+    tier: BlessingTier.SILVER,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "sweets",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.WOBBUFFETS_SILVER_PRIZE]: {
+    tier: BlessingTier.SILVER,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "ticket",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.TREASURE_HUNT_I]: {
+    tier: BlessingTier.SILVER,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "gems",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.STARTER_PACK]: {
+    tier: BlessingTier.SILVER,
+    availableAtStages: [4],
+    icon: "gift_box",
+    grantsPokemonImmediately: true
+  },
+  [Blessing.NUGGET]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "cash",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.GOLDEN_TICKET]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "ticket",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.TREASURE_HUNT_II]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "gems",
+    grantsPokemonImmediately: false
+  },
+  // TEMPORARY stages for testing, revert to [4]
+  [Blessing.GIMMIGHOULS_TREASURE]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "treasure_chest",
+    grantsPokemonImmediately: false
+  },
+  // TEMPORARY stages for testing, revert to [4]
+  [Blessing.INSTANT_HYPER_ROLL]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "slot_mashine",
+    grantsPokemonImmediately: true
+  },
+  [Blessing.CINCCINOS_GIFTS_III]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "gift_box",
     grantsPokemonImmediately: false
   }
+}
+
+// TEMPORARY equal odds for testing, revert to 0.6/0.3/0.1 and 0.35/0.45/0.2
+const EARLY_BLESSING_TIER_CHANCES: { [tier in BlessingTier]: number } = {
+  [BlessingTier.SILVER]: 1,
+  [BlessingTier.GOLD]: 1,
+  [BlessingTier.PRISMATIC]: 1
+}
+
+const LATE_BLESSING_TIER_CHANCES: { [tier in BlessingTier]: number } = {
+  [BlessingTier.SILVER]: 1,
+  [BlessingTier.GOLD]: 1,
+  [BlessingTier.PRISMATIC]: 1
 }
 
 export const BlessingTierChanceByStage: {
   [stage: number]: { [tier in BlessingTier]: number }
 } = {
-  4: {
-    [BlessingTier.SILVER]: 0.6,
-    [BlessingTier.GOLD]: 0.3,
-    [BlessingTier.PRISMATIC]: 0.1
-  },
-  12: {
-    [BlessingTier.SILVER]: 0.35,
-    [BlessingTier.GOLD]: 0.45,
-    [BlessingTier.PRISMATIC]: 0.2
-  }
+  4: EARLY_BLESSING_TIER_CHANCES,
+  12: LATE_BLESSING_TIER_CHANCES
 }
 
 export function rollBlessingTierForStage(stage: number): BlessingTier {
-  return (
-    randomWeighted(BlessingTierChanceByStage[stage]) ?? BlessingTier.SILVER
-  )
+  const tierChances =
+    BlessingTierChanceByStage[stage] ?? EARLY_BLESSING_TIER_CHANCES
+  return randomWeighted(tierChances) ?? BlessingTier.SILVER
 }
 
 export function getBlessingsAvailable(

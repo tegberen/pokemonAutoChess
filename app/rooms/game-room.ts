@@ -139,6 +139,7 @@ import {
 import GameState from "./states/game-state"
 import { ArmoryOptionsPrice } from "../types/enum/ArmoryOptions"
 import { armoryGiftService } from "../services/armory-options"
+import { blessingEffectService } from "../services/blessings"
 
 export default class GameRoom extends Room<{ state: GameState }> {
   dispatcher: Dispatcher<this>
@@ -1455,7 +1456,7 @@ export default class GameRoom extends Room<{ state: GameState }> {
     const choice = player.choices[index]
 
     if (choice.type === "blessing") {
-      this.rerollBlessingSlot(choice, slotIndex)
+      this.rerollBlessingSlot(player, index, slotIndex)
       return
     }
 
@@ -1477,7 +1478,8 @@ export default class GameRoom extends Room<{ state: GameState }> {
     })
   }
 
-  rerollBlessingSlot(choice: PlayerChoice, slotIndex?: number) {
+  rerollBlessingSlot(player: Player, choiceIndex: number, slotIndex?: number) {
+    const choice = player.choices[choiceIndex]
     if (typeof slotIndex !== "number") return
     if (choice.rerollableSlots[slotIndex] !== true) return
     const currentBlessing = choice.blessings[slotIndex]
@@ -1488,8 +1490,18 @@ export default class GameRoom extends Room<{ state: GameState }> {
       this.state.stageLevel
     ).filter((blessing) => choice.blessings.includes(blessing) === false)
     if (alternatives.length === 0) return
-    choice.blessings[slotIndex] = pickRandomIn(alternatives)
-    choice.rerollableSlots[slotIndex] = false
+
+    const blessings = [...choice.blessings]
+    const rerollableSlots = [...choice.rerollableSlots]
+    blessings[slotIndex] = pickRandomIn(alternatives)
+    rerollableSlots[slotIndex] = false
+
+    // replacing the choice (new id) is what makes the client re-render, see rerollChoice
+    player.choices[choiceIndex] = new PlayerChoice({
+      type: "blessing",
+      blessings,
+      rerollableSlots
+    })
   }
 
   selectSeed(playerId: string, seed: unknown) {
@@ -1514,6 +1526,15 @@ export default class GameRoom extends Room<{ state: GameState }> {
     if (choice.type === "blessing") {
       const blessing = choice.blessings[choiceIndex]
       if (!blessing) return
+      const applyEffect = blessingEffectService[blessing]
+      const moneyBeforeBlessing = player.money
+      if (applyEffect && applyEffect(player, this.state) === false) return
+      const moneyGained = player.money - moneyBeforeBlessing
+      if (moneyGained > 0) {
+        this.clients
+          .find((cli) => cli.auth.uid === player.id)
+          ?.send(Transfer.PLAYER_INCOME, moneyGained)
+      }
       const owned =
         this.state.blessingsByPlayerId.get(player.id) ?? new PlayerBlessings()
       owned.blessings.push(blessing)

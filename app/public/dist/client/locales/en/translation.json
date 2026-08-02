@@ -4583,10 +4583,59 @@
 		"free_slot_hint": "You must have one free slot on the bench, or two for Duos",
 		"more_choices": "{{count}} more choice(s) after this one!"
 	},
+	"blessing_tier": {
+		"SILVER": "Silver Blessing",
+		"GOLD": "Gold Blessing",
+		"PRISMATIC": "Prismatic Blessing"
+	},
 	"blessing": {
 		"PEARL": {
 			"name": "Pearl",
 			"description": "Gain 10 gold."
+		},
+		"CROAGUNKS_AID": {
+			"name": "Croagunk's Aid",
+			"description": "Gain 3 exchange tickets."
+		},
+		"BAG_OF_SWEETS": {
+			"name": "Bag of Sweets",
+			"description": "Gain 4 random sweets."
+		},
+		"WOBBUFFETS_SILVER_PRIZE": {
+			"name": "Wobbuffet's Silver Prize",
+			"description": "Gain a random component and 2 recycle tickets."
+		},
+		"TREASURE_HUNT_I": {
+			"name": "Treasure Hunt I",
+			"description": "Gain 2 random synergy gems."
+		},
+		"STARTER_PACK": {
+			"name": "Starter Pack",
+			"description": "Gain a 2★ Common, a 1★ Uncommon and a 1★ Rare Pokémon."
+		},
+		"NUGGET": {
+			"name": "Nugget",
+			"description": "Gain 15 gold."
+		},
+		"GOLDEN_TICKET": {
+			"name": "Golden Ticket",
+			"description": "Gain a Gold Dojo Ticket."
+		},
+		"TREASURE_HUNT_II": {
+			"name": "Treasure Hunt II",
+			"description": "Gain 3 random synergy gems."
+		},
+		"GIMMIGHOULS_TREASURE": {
+			"name": "Gimmighoul's Treasure",
+			"description": "Gain an Amulet Coin and 2 Gimmighoul Coins."
+		},
+		"INSTANT_HYPER_ROLL": {
+			"name": "Instant Hyper Roll",
+			"description": "Gain a random 3★ Common Pokémon."
+		},
+		"CINCCINOS_GIFTS_III": {
+			"name": "Cinccino's Gifts III",
+			"description": "Gain a Silk Scarf and 2 random items crafted from a Silk Scarf."
 		}
 	},
 	"hide": "Hide",

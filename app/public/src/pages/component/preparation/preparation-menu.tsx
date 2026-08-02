@@ -8,7 +8,7 @@ import {
 import type { IGameUser } from "../../../../../models/colyseus-models/game-user"
 import { Role } from "../../../../../types"
 import { EloRank } from "../../../../../types/enum/EloRank"
-import { GameMode } from "../../../../../types/enum/Game"
+import { BotDifficulty, GameMode } from "../../../../../types/enum/Game"
 import { SpecialGameRule } from "../../../../../types/enum/SpecialGameRule"
 import { formatMinMaxRanks } from "../../../../../utils/elo"
 import { throttle } from "../../../../../utils/function"
@@ -16,6 +16,7 @@ import { max } from "../../../../../utils/number"
 import { setTitleNotificationIcon } from "../../../../../utils/window"
 import { useAppSelector } from "../../../hooks"
 import {
+  addBot,
   gameStartRequest,
   rooms,
   toggleReady
@@ -175,6 +176,17 @@ export default function PreparationMenu() {
       </button>
     )
 
+  const addBotButton = process.env.MODE === "dev" &&
+    (isOwner || isAdmin) &&
+    users.length < MAX_PLAYERS_PER_GAME && (
+      <button
+        className="bubbly blue"
+        onClick={() => addBot(BotDifficulty.MEDIUM)}
+      >
+        {t("add_bot")}
+      </button>
+    )
+
   const startGameButton = (isOwner || isAdmin) && (
     <button
       className={cc("bubbly", {
@@ -250,6 +262,7 @@ export default function PreparationMenu() {
       <div className="actions">
         <div className="actions-bar">
           <div className="spacer" />
+          {addBotButton}
           {readyButton}
           {startGameButton}
         </div>

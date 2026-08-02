@@ -57,8 +57,35 @@
   justify-content: center;
 }
 
-.game-choice-blessings-list > .my-box {
+.game-choice-blessings-list {
+  align-items: stretch;
+}
+
+.game-choice-blessing-slot {
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  gap: 1em;
+  width: 320px;
+  max-width: 20vw;
+}
+
+.game-choice-blessing-slot > .my-box {
+  height: 14em;
+  overflow-y: auto;
+  width: 100%;
+  padding: 5px;
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  justify-content: start;
+  text-align: center;
   gap: 0.5em;
+}
+
+.game-choice-blessing-slot > .my-box.clickable:hover {
+  cursor: var(--cursor-hover);
+  background-color: var(--color-bg-accent);
 }
 
 .game-choice-blessings-list .blessing-icon {
@@ -66,8 +93,99 @@
   height: 4rem;
 }
 
-.game-choice-blessings-list button {
-  margin-top: auto;
+.blessing-tier-silver {
+  --blessing-hue: var(--color-rarity-common);
+  --blessing-mix: 18%;
+  --blessing-stripe-a: var(--color-fg-secondary);
+  --blessing-stripe-b: var(--color-rarity-common);
+  --blessing-stripe-c: var(--color-bg-tertiary);
+  --blessing-stripe-alpha: 16%;
+}
+
+.blessing-tier-gold {
+  --blessing-hue: var(--color-fg-gold);
+  --blessing-mix: 32%;
+  --blessing-stripe-a: var(--color-fg-gold);
+  --blessing-stripe-b: var(--color-bg-gold);
+  --blessing-stripe-c: var(--color-rarity-legendary);
+  --blessing-stripe-alpha: 16%;
+}
+
+.blessing-tier-prismatic {
+  --blessing-hue: var(--color-rarity-epic);
+  --blessing-mix: 18%;
+  --blessing-stripe-a: var(--color-rarity-special);
+  --blessing-stripe-b: var(--color-rarity-epic);
+  --blessing-stripe-c: var(--color-rarity-rare);
+  --blessing-stripe-alpha: 22%;
+}
+
+.game-choice-blessing-slot > .my-box {
+  background-color: color-mix(
+    in srgb,
+    var(--blessing-hue) var(--blessing-mix),
+    var(--color-bg-secondary)
+  );
+  background-image: repeating-linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--blessing-stripe-a) var(--blessing-stripe-alpha), transparent) 0px,
+    color-mix(in srgb, var(--blessing-stripe-a) var(--blessing-stripe-alpha), transparent) 16px,
+    color-mix(in srgb, var(--blessing-stripe-b) var(--blessing-stripe-alpha), transparent) 16px,
+    color-mix(in srgb, var(--blessing-stripe-b) var(--blessing-stripe-alpha), transparent) 32px,
+    color-mix(in srgb, var(--blessing-stripe-c) var(--blessing-stripe-alpha), transparent) 32px,
+    color-mix(in srgb, var(--blessing-stripe-c) var(--blessing-stripe-alpha), transparent) 48px
+  );
+  background-size: 67.8823px 67.8823px;
+  animation: blessing-nacre 4s linear infinite;
+}
+
+.blessing-body {
+  align-self: stretch;
+  flex: 1;
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  gap: 0.4em;
+  padding: 0.5em 0.4em;
+  border-radius: 8px;
+  background-color: color-mix(
+    in srgb,
+    var(--color-shadow) 65%,
+    transparent
+  );
+}
+
+.blessing-body > h3,
+.blessing-body > p {
+  margin: 0;
+}
+
+.blessing-body > p {
+  width: 85%;
+  padding-top: 0.5em;
+  border-top: 1px solid
+    color-mix(in srgb, var(--color-fg-primary) 30%, transparent);
+  font-size: 0.9em;
+  opacity: 0.9;
+}
+
+.blessing-tier-prismatic.my-box {
+  box-shadow:
+    inset 0 0 0 2px var(--color-fg-primary),
+    var(--shadow-clickable);
+  padding: 8px;
+}
+
+/* 67.8823px = 48px stripe period / sin(135deg): the tile size and the shift must
+   both equal it, or the pattern seams at the tile edge instead of the loop restart */
+@keyframes blessing-nacre {
+  to {
+    background-position: 67.8823px 0;
+  }
+}
+
+.blessing-reroll-button {
+  pointer-events: initial;
 }
 
 .evolution-lab-label {

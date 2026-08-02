@@ -28,6 +28,7 @@ import { Blessings } from "../../../../../config/game/blessings"
 import { getGameScene } from "../../game"
 import { playSound, SOUNDS } from "../../utils/audio"
 import { addIconsToDescription } from "../../utils/descriptions"
+import { cc } from "../../utils/jsx"
 import { LocalStoreKeys, localStore } from "../../utils/store"
 import GamePokemonDuoPortrait from "./game-pokemon-duo-portrait"
 import GamePokemonPortrait from "./game-pokemon-portrait"
@@ -147,9 +148,14 @@ export default function GameChoice() {
               return (
               <div
                 key={`${choice.id}-${index}`}
-                className={
-                  blockedByFullBench ? "my-box" : "my-box active clickable"
-                }
+                className="game-choice-blessing-slot"
+              >
+              <div
+                className={cc(
+                  "my-box",
+                  `blessing-tier-${blessingDefinition.tier.toLowerCase()}`,
+                  { "active clickable": !blockedByFullBench }
+                )}
                 onClick={(event) => {
                   event.stopPropagation()
                   if (blockedByFullBench) return
@@ -157,30 +163,35 @@ export default function GameChoice() {
                   pickChoice(choice.id, index)
                 }}
               >
-                <img
-                  className="blessing-icon"
-                  src={`/assets/blessings/${blessingDefinition.icon}.svg`}
-                  alt=""
-                  onError={(event) => {
-                    event.currentTarget.style.visibility = "hidden"
-                  }}
-                />
-                <h3>{t(`blessing.${blessing}.name`)}</h3>
-                <p>
-                  {addIconsToDescription(t(`blessing.${blessing}.description`))}
-                </p>
-                {choice.rerollableSlots[index] === true && (
-                  <button
-                    className="bubbly blue"
-                    onClick={(event) => {
-                      event.stopPropagation()
-                      playSound(SOUNDS.BUTTON_CLICK)
-                      rerollChoice(choice.id, index)
+                <div className="blessing-body">
+                  <img
+                    className="blessing-icon"
+                    src={`/assets/blessings/${blessingDefinition.icon}.svg`}
+                    alt=""
+                    onError={(event) => {
+                      event.currentTarget.style.visibility = "hidden"
                     }}
-                  >
-                    {t("player_choices.reroll_blessing")}
-                  </button>
-                )}
+                  />
+                  <h3>{t(`blessing.${blessing}.name`)}</h3>
+                  <p>
+                    {addIconsToDescription(
+                      t(`blessing.${blessing}.description`)
+                    )}
+                  </p>
+                </div>
+              </div>
+              <button
+                className="bubbly blue blessing-reroll-button"
+                disabled={choice.rerollableSlots[index] !== true}
+                onClick={(event) => {
+                  event.stopPropagation()
+                  playSound(SOUNDS.BUTTON_CLICK)
+                  rerollChoice(choice.id, index)
+                }}
+              >
+                <img src="/assets/ui/refresh.svg" alt="" />
+                {t("player_choices.reroll_blessing")}
+              </button>
               </div>
               )
             })}
