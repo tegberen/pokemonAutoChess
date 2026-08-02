@@ -4,6 +4,7 @@ import { DEPTH } from "../../../game/depths"
 import { useAppSelector } from "../../../hooks"
 import { usePreference } from "../../../preferences"
 import DraggableWindow from "../modal/draggable-window"
+import BlessingsPanel from "../synergy/blessings-panel"
 import Synergies from "../synergy/synergies"
 import WeatherForecast from "../synergy/weather-forecast"
 
@@ -37,12 +38,22 @@ export default function GameSynergies() {
               alt={t("weather_forecast")}
             />
           </Tab>
+          <Tab key="blessings">
+            <img
+              src="assets/icons/blessing_stats.svg"
+              title={t("blessings")}
+              alt={t("blessings")}
+            />
+          </Tab>
         </TabList>
         <TabPanel>
           <Synergies synergies={synergies} tooltipPortal={true} />
         </TabPanel>
         <TabPanel>
           <WeatherForecast />
+        </TabPanel>
+        <TabPanel>
+          <BlessingsPanel />
         </TabPanel>
       </Tabs>
     </DraggableWindow>

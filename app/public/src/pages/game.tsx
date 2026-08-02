@@ -63,6 +63,7 @@ import {
   removeDpsMeter,
   removePlayer,
   setAdditionalPokemons,
+  setPlayerBlessings,
   setEmotesUnlocked,
   setGameMode,
   setInterest,
@@ -787,6 +788,18 @@ export default function Game() {
         dispatch(
           setAdditionalPokemons(schemaValues(room.state.additionalPokemons))
         )
+      })
+
+      $state.blessingsByPlayerId.onAdd((playerBlessings, playerId) => {
+        const dispatchBlessings = () =>
+          dispatch(
+            setPlayerBlessings({
+              playerId,
+              blessings: schemaValues(playerBlessings.blessings)
+            })
+          )
+        dispatchBlessings()
+        $(playerBlessings).blessings.onChange(dispatchBlessings)
       })
 
       $state.simulations.onRemove(() => {

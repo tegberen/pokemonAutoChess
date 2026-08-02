@@ -4184,6 +4184,8 @@
 		"WHIMSY": "Win a Whimsy Weekend Scribble with your partner"
 	},
 	"weather_forecast": "Weather forecast",
+	"blessings": "Blessings",
+	"no_blessing_yet": "No Blessing chosen yet",
 	"weather": {
 		"NEUTRAL": "Calm weather",
 		"ZENITH": "Zenith",

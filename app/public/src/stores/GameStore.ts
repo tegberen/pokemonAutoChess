@@ -12,6 +12,7 @@ import type {
 } from "../../../types"
 import { GameMode, GamePhaseState, Team } from "../../../types/enum/Game"
 import type { Item } from "../../../types/enum/Item"
+import type { Blessing } from "../../../types/enum/Blessing"
 import type { Pkm, PkmProposition } from "../../../types/enum/Pokemon"
 import type { SpecialGameRule } from "../../../types/enum/SpecialGameRule"
 import type { Synergy } from "../../../types/enum/Synergy"
@@ -60,6 +61,7 @@ export interface GameStateStore {
   redDpsMeter: IDps[]
   emotesUnlocked: Emotion[]
   additionalPokemons: Pkm[]
+  blessingsByPlayerId: { [playerId: string]: Blessing[] }
   podium: ILeaderboardInfo[]
   doubleUpChampions: ILeaderboardInfo[]
   smeargleScribbleChampion: ILeaderboardInfo[]
@@ -99,6 +101,7 @@ const initialState: GameStateStore = {
   redDpsMeter: new Array<IDps>(),
   emotesUnlocked: [],
   additionalPokemons: new Array<Pkm>(),
+  blessingsByPlayerId: {},
   specialGameRule: null,
   podium: new Array<ILeaderboardInfo>(),
   doubleUpChampions: new Array<ILeaderboardInfo>(),
@@ -214,6 +217,13 @@ export const gameSlice: Slice<GameStateStore> = createSlice({
     },
     setAdditionalPokemons: (state, action: PayloadAction<Pkm[]>) => {
       state.additionalPokemons = action.payload
+    },
+    setPlayerBlessings: (
+      state,
+      action: PayloadAction<{ playerId: string; blessings: Blessing[] }>
+    ) => {
+      state.blessingsByPlayerId[action.payload.playerId] =
+        action.payload.blessings
     },
     setSynergies: (
       state,
@@ -369,6 +379,7 @@ export const gameSlice: Slice<GameStateStore> = createSlice({
 export const {
   setSimulation,
   setAdditionalPokemons,
+  setPlayerBlessings,
   setPokemonProposition,
   setEmotesUnlocked,
   leaveGame,
