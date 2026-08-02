@@ -86,6 +86,54 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "gift_box",
     grantsPokemonImmediately: false
+  },
+  [Blessing.CINCCINOS_GIFTS_I]: {
+    tier: BlessingTier.SILVER,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "gift_box",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.CINCCINOS_GIFTS_II]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "gift_box",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.RELIC_FRAGMENT]: {
+    tier: BlessingTier.SILVER,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "compass",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.ITEMFINDER_I]: {
+    tier: BlessingTier.SILVER,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "item_detector",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.ITEMFINDER_II]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "item_detector",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.ITEMFINDER_III]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "item_detector",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.LEGENDARY_GAMBIT]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "book_aura",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.DEEP_INVESTMENTS]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "money_safe",
+    grantsPokemonImmediately: false
   }
 }
 

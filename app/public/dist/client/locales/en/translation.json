@@ -4633,6 +4633,38 @@
 			"name": "Instant Hyper Roll",
 			"description": "Gain a random 3★ Common Pokémon."
 		},
+		"CINCCINOS_GIFTS_I": {
+			"name": "Cinccino's Gifts I",
+			"description": "Gain a Silk Scarf. On stage 12, gain another."
+		},
+		"CINCCINOS_GIFTS_II": {
+			"name": "Cinccino's Gifts II",
+			"description": "Gain 2 Silk Scarves. On stage 12, gain 1 more."
+		},
+		"RELIC_FRAGMENT": {
+			"name": "Relic Fragment",
+			"description": "Gain a Lapras Travel Pass. On stages 10 and 20, gain another."
+		},
+		"ITEMFINDER_I": {
+			"name": "Itemfinder",
+			"description": "Gain a random component now and at the start of next round."
+		},
+		"ITEMFINDER_II": {
+			"name": "Itemfinder II",
+			"description": "Gain a random component now and at the start of the next 2 rounds."
+		},
+		"ITEMFINDER_III": {
+			"name": "Itemfinder III",
+			"description": "Gain a random component now and at the start of the next 6 rounds."
+		},
+		"LEGENDARY_GAMBIT": {
+			"name": "Legendary Gambit",
+			"description": "On stage 20, gain a random Legendary matching your highest synergy."
+		},
+		"DEEP_INVESTMENTS": {
+			"name": "Deep Investments",
+			"description": "Lose all your gold. At the start of stage 16, regain all the lost gold plus 30 more."
+		},
 		"CINCCINOS_GIFTS_III": {
 			"name": "Cinccino's Gifts III",
 			"description": "Gain a Silk Scarf and 2 random items crafted from a Silk Scarf."

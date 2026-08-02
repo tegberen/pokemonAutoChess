@@ -28,6 +28,7 @@ import {
 } from "../../types"
 import { EvolutionRuleType } from "../../types/EvolutionRules"
 import { Ability } from "../../types/enum/Ability"
+import type { ScheduledBlessingGrant } from "../../types/enum/Blessing"
 import type { DungeonPMDO } from "../../types/enum/Dungeon"
 import {
   BattleResult,
@@ -216,6 +217,7 @@ export default class Player extends Schema implements IPlayer {
     pokemonId: string
     returnStage: number
   }[] = []
+  scheduledBlessingGrants: ScheduledBlessingGrant[] = []
   pokemonsPlayed: Set<Pkm> = new Set<Pkm>()
   pokemonsTrainingInDojo: {
     pokemon: Pokemon

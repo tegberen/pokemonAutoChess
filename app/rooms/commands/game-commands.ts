@@ -34,6 +34,7 @@ import {
   getBlessingsAvailable,
   rollBlessingTierForStage
 } from "../../config/game/blessings"
+import { applyScheduledBlessingGrants } from "../../services/blessings"
 import {
   buildScribbleShapeBag,
   placeScribbleShapeCompatibleWith,
@@ -2075,6 +2076,10 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
       // update regional pokemons in case some regional variants of add picks are now available
       this.state.players.forEach((p) => p.updateRegionalPool(this.state, false))
     }
+
+    this.state.players.forEach((player: Player) => {
+      if (player.alive) applyScheduledBlessingGrants(player, this.state)
+    })
 
     if (BLESSING_SELECTION_STAGES.includes(this.state.stageLevel)) {
       const lobbyTier = rollBlessingTierForStage(this.state.stageLevel)
