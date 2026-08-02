@@ -67,17 +67,15 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     icon: "gems",
     grantsPokemonImmediately: false
   },
-  // TEMPORARY stages for testing, revert to [4]
   [Blessing.GIMMIGHOULS_TREASURE]: {
     tier: BlessingTier.PRISMATIC,
-    availableAtStages: BLESSING_SELECTION_STAGES,
+    availableAtStages: [4],
     icon: "treasure_chest",
     grantsPokemonImmediately: false
   },
-  // TEMPORARY stages for testing, revert to [4]
   [Blessing.INSTANT_HYPER_ROLL]: {
     tier: BlessingTier.PRISMATIC,
-    availableAtStages: BLESSING_SELECTION_STAGES,
+    availableAtStages: [4],
     icon: "slot_mashine",
     grantsPokemonImmediately: true
   },
@@ -164,6 +162,84 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "basket",
     grantsPokemonImmediately: false
+  },
+  [Blessing.POTION]: {
+    tier: BlessingTier.SILVER,
+    availableAtStages: [12],
+    icon: "health_increase",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.POCKET_DAYCARE]: {
+    tier: BlessingTier.SILVER,
+    availableAtStages: [4],
+    icon: "wing_cloak",
+    grantsPokemonImmediately: true
+  },
+  [Blessing.TRANSFORM]: {
+    tier: BlessingTier.SILVER,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "transform",
+    grantsPokemonImmediately: true
+  },
+  [Blessing.TAXES]: {
+    tier: BlessingTier.SILVER,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "robber_hand",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.ROCKY_BEGINNINGS]: {
+    tier: BlessingTier.SILVER,
+    availableAtStages: [4],
+    icon: "rock",
+    grantsPokemonImmediately: true
+  },
+  [Blessing.BABYLESS]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: [12],
+    icon: "wing_cloak",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.HEATRANS_SONG]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: [4],
+    icon: "instrument",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.RAYQUAZAS_SONG]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: [4],
+    icon: "instrument",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.MEWS_SONG]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: [4],
+    icon: "instrument",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.GROUDONS_SONG]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: [4],
+    icon: "instrument",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.ARTICUNOS_SONG]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: [4],
+    icon: "instrument",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.GIRATINAS_SONG]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: [4],
+    icon: "instrument",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.KYOGRES_SONG]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: [4],
+    icon: "instrument",
+    grantsPokemonImmediately: false
   }
 }
 
@@ -193,6 +269,9 @@ export function rollBlessingTierForStage(stage: number): BlessingTier {
   return randomWeighted(tierChances) ?? BlessingTier.SILVER
 }
 
+// TEMPORARY for testing, set back to false so availableAtStages is respected
+const IGNORE_BLESSING_STAGE_RESTRICTIONS = true
+
 export function getBlessingsAvailable(
   tier: BlessingTier,
   stage: number
@@ -200,7 +279,9 @@ export function getBlessingsAvailable(
   return (Object.keys(Blessings) as Blessing[]).filter((blessing) => {
     const definition = Blessings[blessing]
     return (
-      definition.tier === tier && definition.availableAtStages.includes(stage)
+      definition.tier === tier &&
+      (IGNORE_BLESSING_STAGE_RESTRICTIONS ||
+        definition.availableAtStages.includes(stage))
     )
   })
 }

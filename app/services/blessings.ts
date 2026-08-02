@@ -5,6 +5,8 @@ import { PRECOMPUTED_POKEMONS_PER_RARITY } from "../models/precomputed/precomput
 import type GameState from "../rooms/states/game-state"
 import { Blessing, BlessingTrigger } from "../types/enum/Blessing"
 import { Rarity } from "../types/enum/Game"
+import { giveRandomEgg } from "../core/eggs"
+import { type Awakening, AwakeningTypes } from "../types/enum/Awakening"
 import {
   Berries,
   Item,
@@ -12,7 +14,8 @@ import {
   ItemRecipe,
   Sweets,
   SynergyGems,
-  SynergyGivenByGem
+  SynergyGivenByGem,
+  WeatherRocks
 } from "../types/enum/Item"
 import { Pkm } from "../types/enum/Pokemon"
 import {
@@ -38,6 +41,12 @@ const GIMMIGHOUL_COIN_GOLD_ON_ACQUIRE = 5
 const LEGENDARY_GAMBIT_STAGE = 20
 const DEEP_INVESTMENTS_PAYOUT_STAGE = 16
 const DEEP_INVESTMENTS_PROFIT = 30
+const POTION_LIFE_HEALED = 15
+const TRANSFORM_STAGE = 20
+const TAXES_GOLD_GAINED = 7
+const TAXES_GOLD_TAKEN_FROM_OTHERS = 1
+const ROCKY_BEGINNINGS_POKEMONS = 2
+const BABYLESS_STAGE = 14
 const CINCCINOS_GIFTS_III_CRAFTED_ITEMS = 2
 const ITEMS_CRAFTED_FROM_SILK_SCARF = (
   Object.keys(ItemRecipe) as Item[]
@@ -139,6 +148,58 @@ export function applyScheduledBlessingGrants(player: Player, state: GameState) {
   )
 }
 
+const SONG_REINFORCEMENT_STAGES = [17, 22]
+
+const SongBlessingContent: {
+  [blessing in Blessing]?: { instrument: Item; reinforcement: Pkm }
+} = {
+  [Blessing.HEATRANS_SONG]: {
+    instrument: Item.FIERY_DRUM,
+    reinforcement: Pkm.FLETCHLING
+  },
+  [Blessing.RAYQUAZAS_SONG]: {
+    instrument: Item.SKY_MELODICA,
+    reinforcement: Pkm.FLETCHLING
+  },
+  [Blessing.MEWS_SONG]: {
+    instrument: Item.GRASS_CORNET,
+    reinforcement: Pkm.GROOKEY
+  },
+  [Blessing.GROUDONS_SONG]: {
+    instrument: Item.TERRA_CYMBAL,
+    reinforcement: Pkm.RHYHORN
+  },
+  [Blessing.ARTICUNOS_SONG]: {
+    instrument: Item.ICY_FLUTE,
+    reinforcement: Pkm.FRIGIBAX
+  },
+  [Blessing.GIRATINAS_SONG]: {
+    instrument: Item.ROCK_HORN,
+    reinforcement: Pkm.RHYHORN
+  },
+  [Blessing.KYOGRES_SONG]: {
+    instrument: Item.AQUA_MONICA,
+    reinforcement: Pkm.SOBBLE
+  }
+}
+
+function pickSongBlessing(
+  player: Player,
+  state: GameState,
+  blessing: Blessing
+): boolean {
+  const song = SongBlessingContent[blessing]
+  if (!song) return false
+  player.items.push(song.instrument)
+  scheduleBlessingGrant(player, state, blessing, SONG_REINFORCEMENT_STAGES)
+  return true
+}
+
+function grantSongReinforcement(player: Player, blessing: Blessing) {
+  const song = SongBlessingContent[blessing]
+  if (song) giftPokemonIfBenchHasRoom(player, song.reinforcement)
+}
+
 function giftPokemonIfBenchHasRoom(player: Player, pkm: Pkm): boolean {
   const freeCellX = getFirstAvailablePositionInBench(player.board)
   if (freeCellX === null) return false
@@ -221,7 +282,36 @@ export const blessingScheduledEffectService: {
 
   [Blessing.DEEP_INVESTMENTS]: (player, _state, value) => {
     player.addMoney(value ?? 0, true, null)
-  }
+  },
+
+  [Blessing.TRANSFORM]: (player) => {
+    giftPokemonIfBenchHasRoom(player, Pkm.DITTO)
+  },
+
+  [Blessing.BABYLESS]: (player) => {
+    giveRandomEgg(player, true)
+  },
+
+  [Blessing.HEATRANS_SONG]: (player) =>
+    grantSongReinforcement(player, Blessing.HEATRANS_SONG),
+
+  [Blessing.RAYQUAZAS_SONG]: (player) =>
+    grantSongReinforcement(player, Blessing.RAYQUAZAS_SONG),
+
+  [Blessing.MEWS_SONG]: (player) =>
+    grantSongReinforcement(player, Blessing.MEWS_SONG),
+
+  [Blessing.GROUDONS_SONG]: (player) =>
+    grantSongReinforcement(player, Blessing.GROUDONS_SONG),
+
+  [Blessing.ARTICUNOS_SONG]: (player) =>
+    grantSongReinforcement(player, Blessing.ARTICUNOS_SONG),
+
+  [Blessing.GIRATINAS_SONG]: (player) =>
+    grantSongReinforcement(player, Blessing.GIRATINAS_SONG),
+
+  [Blessing.KYOGRES_SONG]: (player) =>
+    grantSongReinforcement(player, Blessing.KYOGRES_SONG)
 }
 
 export const blessingEffectService: {
@@ -287,6 +377,74 @@ export const blessingEffectService: {
 
   [Blessing.INSTANT_HYPER_ROLL]: (player) =>
     giftPokemonOfRarityAndStars(player, Rarity.COMMON, 3),
+
+  [Blessing.POTION]: (player) => {
+    player.life = Math.min(player.maxLife, player.life + POTION_LIFE_HEALED)
+    return true
+  },
+
+  [Blessing.POCKET_DAYCARE]: (player) => giveRandomEgg(player, false) != null,
+
+  [Blessing.TRANSFORM]: (player, state) => {
+    if (!giftPokemonIfBenchHasRoom(player, Pkm.DITTO)) return false
+    scheduleBlessingGrant(player, state, Blessing.TRANSFORM, [TRANSFORM_STAGE])
+    return true
+  },
+
+  [Blessing.TAXES]: (player, state) => {
+    player.addMoney(TAXES_GOLD_GAINED, true, null)
+    state.players.forEach((otherPlayer) => {
+      if (otherPlayer.id !== player.id && otherPlayer.alive) {
+        otherPlayer.addMoney(-TAXES_GOLD_TAKEN_FROM_OTHERS, false, null)
+      }
+    })
+    return true
+  },
+
+  [Blessing.ROCKY_BEGINNINGS]: (player) => {
+    if (getFreeSpaceOnBench(player.board) < ROCKY_BEGINNINGS_POKEMONS) {
+      return false
+    }
+    const weatherRock = pickRandomIn(WeatherRocks)
+    player.items.push(weatherRock)
+    const rockSynergy = AwakeningTypes[weatherRock as unknown as Awakening]
+    const matching = PRECOMPUTED_POKEMONS_PER_RARITY[Rarity.COMMON]
+      .concat(PRECOMPUTED_POKEMONS_PER_RARITY[Rarity.UNCOMMON])
+      .filter((pkm: Pkm) => {
+        const data = getPokemonData(pkm)
+        return data.stars === 1 && rockSynergy && data.types.includes(rockSynergy)
+      })
+    pickNRandomIn(matching, ROCKY_BEGINNINGS_POKEMONS).forEach((pkm) =>
+      giftPokemonIfBenchHasRoom(player, pkm)
+    )
+    return true
+  },
+
+  [Blessing.BABYLESS]: (player, state) => {
+    scheduleBlessingGrant(player, state, Blessing.BABYLESS, [BABYLESS_STAGE])
+    return true
+  },
+
+  [Blessing.HEATRANS_SONG]: (player, state) =>
+    pickSongBlessing(player, state, Blessing.HEATRANS_SONG),
+
+  [Blessing.RAYQUAZAS_SONG]: (player, state) =>
+    pickSongBlessing(player, state, Blessing.RAYQUAZAS_SONG),
+
+  [Blessing.MEWS_SONG]: (player, state) =>
+    pickSongBlessing(player, state, Blessing.MEWS_SONG),
+
+  [Blessing.GROUDONS_SONG]: (player, state) =>
+    pickSongBlessing(player, state, Blessing.GROUDONS_SONG),
+
+  [Blessing.ARTICUNOS_SONG]: (player, state) =>
+    pickSongBlessing(player, state, Blessing.ARTICUNOS_SONG),
+
+  [Blessing.GIRATINAS_SONG]: (player, state) =>
+    pickSongBlessing(player, state, Blessing.GIRATINAS_SONG),
+
+  [Blessing.KYOGRES_SONG]: (player, state) =>
+    pickSongBlessing(player, state, Blessing.KYOGRES_SONG),
 
   [Blessing.BERRY_POUCH]: (player) => {
     player.items.push(pickRandomIn(Berries))

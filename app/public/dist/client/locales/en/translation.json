@@ -4635,6 +4635,58 @@
 			"name": "Instant Hyper Roll",
 			"description": "Gain a random 3★ Common Pokémon."
 		},
+		"POTION": {
+			"name": "Potion",
+			"description": "Heal 15 player HP."
+		},
+		"POCKET_DAYCARE": {
+			"name": "Pocket Daycare",
+			"description": "Gain an Egg."
+		},
+		"TRANSFORM": {
+			"name": "Transform",
+			"description": "Gain a Ditto. On stage 20, gain another."
+		},
+		"TAXES": {
+			"name": "Taxes",
+			"description": "Gain 7 gold. All other players lose 1 gold."
+		},
+		"ROCKY_BEGINNINGS": {
+			"name": "Rocky Beginnings",
+			"description": "Gain a random weather rock and 2 Pokémon matching that rock's synergy."
+		},
+		"BABYLESS": {
+			"name": "Babyless",
+			"description": "On stage 14, get a Golden Egg."
+		},
+		"HEATRANS_SONG": {
+			"name": "Heatran's Song",
+			"description": "Gain a Fiery Drum. On stages 17 and 22, gain a Fletchling."
+		},
+		"RAYQUAZAS_SONG": {
+			"name": "Rayquaza's Song",
+			"description": "Gain a Sky Melodica. On stages 17 and 22, gain a Fletchling."
+		},
+		"MEWS_SONG": {
+			"name": "Mew's Song",
+			"description": "Gain a Grass Cornet. On stages 17 and 22, gain a Grookey."
+		},
+		"GROUDONS_SONG": {
+			"name": "Groudon's Song",
+			"description": "Gain a Terra Cymbal. On stages 17 and 22, gain a Rhyhorn."
+		},
+		"ARTICUNOS_SONG": {
+			"name": "Articuno's Song",
+			"description": "Gain an Icy Flute. On stages 17 and 22, gain a Frigibax."
+		},
+		"GIRATINAS_SONG": {
+			"name": "Giratina's Song",
+			"description": "Gain a Rock Horn. On stages 17 and 22, gain a Rhyhorn."
+		},
+		"KYOGRES_SONG": {
+			"name": "Kyogre's Song",
+			"description": "Gain an Aqua Monica. On stages 17 and 22, gain a Sobble."
+		},
 		"BERRY_POUCH": {
 			"name": "Berry Pouch",
 			"description": "Now and after each PvE round, gain a random berry."
