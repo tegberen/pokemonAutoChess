@@ -64,6 +64,25 @@ export function addIconsToDescription(
   const matchIcon = description.match(iconRegExp)
   if (matchIcon === null) return description
   const descriptionParts = description.split(iconRegExp)
+
+  // a star icon is an atomic inline box, so the browser may wrap between the
+  // number and the star. Move the number inside the icon element to prevent it
+  const numberBeforeStar: (string | undefined)[] = []
+  descriptionParts.forEach((_, index) => {
+    if (index > 0 && matchIcon[index - 1] === "STAR") {
+      const trailingNumber = descriptionParts[index - 1].match(
+        /(\d+)[\s ]*$/
+      )
+      if (trailingNumber) {
+        numberBeforeStar[index] = trailingNumber[1]
+        descriptionParts[index - 1] = descriptionParts[index - 1].slice(
+          0,
+          trailingNumber.index
+        )
+      }
+    }
+  })
+
   return descriptionParts.map((part, i) => {
     const token = matchIcon![i - 1]
     let icon: ReactElement | null = null
@@ -83,11 +102,14 @@ export function addIconsToDescription(
         )
       } else if (token === "STAR") {
         icon = (
-          <img
-            className="description-icon icon-star"
-            src="/assets/ui/star.svg"
-            alt="⭐"
-          />
+          <span className="description-star-group">
+            {numberBeforeStar[i]}
+            <img
+              className="description-icon icon-star"
+              src="/assets/ui/star.svg"
+              alt="⭐"
+            />
+          </span>
         )
       } else if (isIn(DamageTypes, token)) {
         icon = (

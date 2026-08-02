@@ -17,8 +17,9 @@ import {
   SynergyGivenByGem,
   WeatherRocks
 } from "../types/enum/Item"
-import { Pkm } from "../types/enum/Pokemon"
-import type { Synergy } from "../types/enum/Synergy"
+import { Pkm, PkmFamily } from "../types/enum/Pokemon"
+import { getSellPrice } from "../models/shop"
+import { Synergy } from "../types/enum/Synergy"
 import { SYNERGIES_WITH_BLESSINGS } from "../config/game/blessings"
 import {
   getFirstAvailablePositionInBench,
@@ -406,6 +407,120 @@ function giftPokemonIfBenchHasRoom(player: Player, pkm: Pkm): boolean {
   return true
 }
 
+const QUEST_REROLL_TARGET = 50
+const QUEST_GROW_TARGET_HP = 1300
+const QUEST_SHINE_LIGHT_TARGET = 7
+const QUEST_EPIC_UNIQUE_TARGET = 7
+const QUEST_EXPAND_TARGET = 8
+const QUEST_EXPAND_MIN_SELL_PRICE = 5
+const SHARD_DAMAGE_PER_GRANT = 15
+const QUEST_REROLL_FREE_ROLLS = 10
+const QUEST_EPIC_EXPERIENCE = 6
+const QUEST_EXPAND_EXPERIENCE = 10
+const QUEST_ASCEND_POKEMONS = 3
+
+const blessingQuestConditions: {
+  [blessing in Blessing]?: (player: Player) => boolean
+} = {
+  [Blessing.QUEST_REROLL]: (player) =>
+    player.gameStats.rerollCount >= QUEST_REROLL_TARGET,
+
+  [Blessing.QUEST_GROW]: (player) =>
+    player.gameStats.maxHP >= QUEST_GROW_TARGET_HP,
+
+  [Blessing.QUEST_SHINE]: (player) =>
+    (player.synergies.get(Synergy.LIGHT) ?? 0) >= QUEST_SHINE_LIGHT_TARGET,
+
+  [Blessing.QUEST_EPIC]: (player) => {
+    const fielded = new Set<Pkm>()
+    player.board.forEach((pokemon) => {
+      if (
+        pokemon.positionY > 0 &&
+        (pokemon.rarity === Rarity.EPIC || pokemon.rarity === Rarity.ULTRA)
+      ) {
+        fielded.add(PkmFamily[pokemon.name] ?? pokemon.name)
+      }
+    })
+    return fielded.size >= QUEST_EPIC_UNIQUE_TARGET
+  },
+
+  [Blessing.QUEST_EXPAND]: (player) => {
+    let valuableFielded = 0
+    player.board.forEach((pokemon) => {
+      if (
+        pokemon.positionY > 0 &&
+        getSellPrice(pokemon, player.specialGameRule) >=
+          QUEST_EXPAND_MIN_SELL_PRICE
+      ) {
+        valuableFielded++
+      }
+    })
+    return valuableFielded >= QUEST_EXPAND_TARGET
+  },
+
+  [Blessing.QUEST_ASCEND]: (player) => {
+    let ascended = false
+    player.board.forEach((pokemon) => {
+      if (
+        pokemon.stars >= 3 &&
+        [Rarity.UNCOMMON, Rarity.RARE, Rarity.EPIC, Rarity.ULTRA].includes(
+          pokemon.rarity
+        )
+      ) {
+        ascended = true
+      }
+    })
+    return ascended
+  }
+}
+
+const blessingQuestRewards: { [blessing in Blessing]?: Item } = {
+  [Blessing.QUEST_REROLL]: Item.REPEAT_BALL,
+  [Blessing.QUEST_GROW]: Item.DYNAMAX_BAND,
+  [Blessing.QUEST_SHINE]: Item.SHINY_STONE,
+  [Blessing.QUEST_EPIC]: Item.EVIOLITE,
+  [Blessing.QUEST_EXPAND]: Item.GOLD_BOW,
+  [Blessing.QUEST_ASCEND]: Item.STAR_PIECE
+}
+
+const blessingShardRewards: { [blessing in Blessing]?: Item } = {
+  [Blessing.CHARGING_UP]: Item.CELL_BATTERY,
+  [Blessing.BURNING_SHARDS]: Item.FIRE_SHARD
+}
+
+export function checkBlessingQuests(player: Player, state: GameState) {
+  const owned = state.blessingsByPlayerId.get(player.id)
+  if (!owned) return
+
+  owned.blessings.forEach((blessing) => {
+    const condition = blessingQuestConditions[blessing]
+    if (
+      condition &&
+      !player.blessingQuestsCompleted.has(blessing) &&
+      condition(player)
+    ) {
+      player.blessingQuestsCompleted.add(blessing)
+      const reward = blessingQuestRewards[blessing]
+      if (reward) player.items.push(reward)
+    }
+
+    const shardReward = blessingShardRewards[blessing]
+    if (shardReward) {
+      const earned = Math.floor(
+        player.gameStats.totalPlayerDamageDealt / SHARD_DAMAGE_PER_GRANT
+      )
+      const alreadyGranted =
+        player.blessingQuestThresholdsReached.get(blessing) ?? 0
+      if (earned > alreadyGranted) {
+        for (let i = alreadyGranted; i < earned; i++) {
+          player.items.push(shardReward)
+        }
+        player.blessingQuestThresholdsReached.set(blessing, earned)
+      }
+    }
+  })
+}
+
 export function applyBlessingTrigger(
   player: Player,
   state: GameState,
@@ -515,6 +630,50 @@ export const blessingEffectService: {
   ...synergyGemFamilyEffects("BADGE", 1),
   ...synergyGemFamilyEffects("CREST", 2),
   ...crownEffects,
+
+  [Blessing.QUEST_REROLL]: (player) => {
+    player.shopFreeRolls += QUEST_REROLL_FREE_ROLLS
+    return true
+  },
+
+  [Blessing.QUEST_GROW]: (player) => {
+    player.items.push(Item.BERSERK_GENE)
+    return true
+  },
+
+  [Blessing.QUEST_SHINE]: (player) => {
+    player.items.push(Item.LIGHT_BALL)
+    return true
+  },
+
+  [Blessing.QUEST_EPIC]: (player) => {
+    if (!giftPokemonOfRarityAndStars(player, Rarity.EPIC, 1)) return false
+    player.addExperience(QUEST_EPIC_EXPERIENCE)
+    return true
+  },
+
+  [Blessing.QUEST_EXPAND]: (player) => {
+    player.addExperience(QUEST_EXPAND_EXPERIENCE)
+    return true
+  },
+
+  [Blessing.QUEST_ASCEND]: (player) => {
+    if (getFreeSpaceOnBench(player.board) < QUEST_ASCEND_POKEMONS) return false
+    for (let i = 0; i < QUEST_ASCEND_POKEMONS; i++) {
+      giftPokemonOfRarityAndStars(player, Rarity.RARE, 1)
+    }
+    return true
+  },
+
+  [Blessing.CHARGING_UP]: (player) => {
+    player.items.push(Item.CELL_BATTERY)
+    return true
+  },
+
+  [Blessing.BURNING_SHARDS]: (player) => {
+    player.items.push(Item.FIRE_SHARD)
+    return true
+  },
 
   [Blessing.PEARL]: (player) => {
     player.addMoney(PEARL_GOLD_GAINED, true, null)

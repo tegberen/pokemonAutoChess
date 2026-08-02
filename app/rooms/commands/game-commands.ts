@@ -37,7 +37,8 @@ import {
 } from "../../config/game/blessings"
 import {
   applyBlessingTrigger,
-  applyScheduledBlessingGrants
+  applyScheduledBlessingGrants,
+  checkBlessingQuests
 } from "../../services/blessings"
 import {
   buildScribbleShapeBag,
@@ -2085,6 +2086,7 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
     this.state.players.forEach((player: Player) => {
       if (!player.alive) return
       applyScheduledBlessingGrants(player, this.state)
+      checkBlessingQuests(player, this.state)
       if (ItemCarouselStages.includes(this.state.stageLevel)) {
         applyBlessingTrigger(player, this.state, BlessingTrigger.CAROUSEL_END)
       }

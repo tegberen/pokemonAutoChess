@@ -2390,7 +2390,7 @@
 		"LAST_RESPECTS": "Deals [30,60,90,180,SP] SPECIAL to an ADJACENT enemy and inflicts CURSE that will KO after [10,8,6,4,SP=-0.2] seconds. If the target has already CURSE, targets another ADJACENT enemy instead.",
 		"OCTOLOCK": "Deals [30,60,90,180,SP] SPECIAL. Inflict LOCKED and ARMOR_BREAK for [3,3,6,10,SP] seconds.",
 		"BURNING_JEALOUSY": "Deals [30,50,70,140,SP] SPECIAL to the target and ADJACENT enemies. Enemies with ATK buffs lose them and suffer BURN for 5 seconds.",
-		"FIRST_IMPRESSION": "Deals [45,90,180,360,SP] SPECIAL and inflicts FLINCH for 5 seconds. On first cast, jumps backwards, spawning a random 1 STAR [Common, Uncommon, Rare] BUG at their previous location.",
+		"FIRST_IMPRESSION": "Deals [45,90,180,360,SP] SPECIAL and inflicts FLINCH for 5 seconds. On first cast, jumps backwards, spawning a random 1 STAR [Common, Uncommon, Rare] BUG at their previous location.",
 		"GRUDGE_DIVE": "The user takes 10% of its Max HP as SPECIAL and deals [30,60,90,120,240,SP] SPECIAL to the target + [5,10,15,20,40,SP] additional SPECIAL per fallen ally.",
 		"BARED_FANGS": "Bites the target dealing [120,140,160,320,SP] % of his ATK as SPECIAL and stealing [10,SP] of the target's SPEED",
 		"SOUL_TRAP": "Gain [25,50,108,108] SHIELD, then enemies within a 2-tile radius lose [10,10,10,50,SP] PP and get FATIGUE for [2,2,2,5,SP,ND=1] seconds and choose the user as the target.",
@@ -2660,7 +2660,7 @@
 		"CRYSTALLISE_MIST_STONE": "Depending on 1/6 LUCK, lower 1 to 6 of the target's stat(s) ON_ATTACK. (-2 ATK, -5 AP, -2 DEF, -2 SPE_DEF, -5 SPEED or -5 LUCK).",
 		"CRYSTALLISE_BLOOD_STONE": "At the start of the fight, gain 20% of the user's DEF as ATK, then loose 50% of current DEF. On ROCK explosion, ADJACENT allies are RAGE for 2 seconds.",
 		"CRYSTALLISE_SMELLY_CLAY": "Heal the user for 25% of the POISONNED damage within a 2-tile radius received by enemy Pokémon. On ROCK explosion inflict enemies within a 2-tile radius with 2 stacks of POISONNED for 3 seconds.",
-		"CRYSTALLISE_ODD_KEYSTONE":  "Gain +1 LUCK and +2 AP for each dodged attack. On ROCK explosion inflict Curse of Weakness on enemies with higher ATK and Curse of Torment on enemies with higher AP than the user.",
+		"CRYSTALLISE_ODD_KEYSTONE": "Gain +1 LUCK and +2 AP for each dodged attack. On ROCK explosion inflict Curse of Weakness on enemies with higher ATK and Curse of Torment on enemies with higher AP than the user.",
 		"CRYSTALLISE_METAL_ALLOY": "ON_ATTACK [5, LK] % chance to absorb 1 RANGE from the target. If the target can't lose RANGE, push back the target and apply LOCKED for 2s instead. The push back distance increases relative to user RANGE.",
 		"CRYSTALLISE_STICKY_GLOB": "Every held item has a [30, LK]% chance to be copied to the BUG clone",
 		"CRYSTALLISE_ECLIPSE_STONE": "At the start of the fight, gain 100% of DEF as AP and 50% of DEF as starting PP.",
@@ -3142,11 +3142,11 @@
 		"TICKET_BUNDLE": "Gift a bundle containing a $t(item.EXCHANGE_TICKET), a $t(item.RECYCLE_TICKET) and a $t(item.BRONZE_DOJO_TICKET) to your partner.",
 		"DITTO_BUNDLE": "Gift a Ditto to your partner. Your partner needs to have at least one free space on the bench.",
 		"GEMS_BUNDLE": "Gift 3 synergy gems to your partner.",
-		"COMMON_BUNDLE": "Gift a random 3 STAR Common Pokémon to your partner. It will match your partner's highest active synergy.",
-		"UNCOMMON_BUNDLE": "Gift a random 2 STAR Additional or Regional Uncommon Pokémon to your partner. It will match your partner's highest active synergy.",
-		"RARE_BUNDLE": "Gift a random 2 STAR Additional or Regional Rare Pokémon to your partner. It will match your partner's highest active synergy.",
-		"EPIC_BUNDLE": "Gift a random 2 STAR Additional or Regional Epic Pokémon to your partner. It will have your partner's highest active synergy.",
-		"ULTRA_BUNDLE": "Gift a random 1 STAR Ultra Pokémon to your partner. It will have one of your partner's 2 highest active synergies.",
+		"COMMON_BUNDLE": "Gift a random 3 STAR Common Pokémon to your partner. It will match your partner's highest active synergy.",
+		"UNCOMMON_BUNDLE": "Gift a random 2 STAR Additional or Regional Uncommon Pokémon to your partner. It will match your partner's highest active synergy.",
+		"RARE_BUNDLE": "Gift a random 2 STAR Additional or Regional Rare Pokémon to your partner. It will match your partner's highest active synergy.",
+		"EPIC_BUNDLE": "Gift a random 2 STAR Additional or Regional Epic Pokémon to your partner. It will have your partner's highest active synergy.",
+		"ULTRA_BUNDLE": "Gift a random 1 STAR Ultra Pokémon to your partner. It will have one of your partner's 2 highest active synergies.",
 		"UNIQUE_BUNDLE": "Gift a random Unique Pokémon to your partner. It will have your partner's highest active synergy.",
 		"LEGENDARY_BUNDLE": "Gift a random Legendary Pokémon to your partner. It will have one of your partner's 2 highest active synergies.",
 		"REGION_BUNDLE": "Gift a $t(item.LAPRAS_PASSPORT) to your partner and 10 free shop rolls. Let's get those regionals!",
@@ -3311,7 +3311,7 @@
 		"STICKY_GLOB": "Counts for 3 towards PLAGUE. Under PLAGUE, your team recovers from PARALYSIS 20% faster. [10, LK]% chance to throw a sticky web ON_ATTACK.\n\nAllows a ROCK Pokémon to undergo Crystallisation, Awakening it as a BUG type.",
 		"ECLIPSE_STONE": "Counts for 3 towards ECLIPSE. Under ECLIPSE, your team has a [5, LK]% chance to steal 5 AP ON_ATTACK.\n\nAllows a ROCK Pokémon to undergo Crystallisation, Awakening it as a PSYCHIC type.",
 		"PEARL_STONE": "Counts for 3 towards FLOOD. Under FLOOD, when hit by any wave your team resist the knockback by 1 tile and gains 10 SHIELD.\n\nAllows a ROCK Pokémon to undergo Crystallisation, Awakening it as a AQUATIC type.",
-		"ELDER_CRYSTAL": "Counts as 3 towards ELDER_STORM. Under ELDER_STORM, your team takes -15% less damage from Pokémon with SHIELD.\n\nOnly the strongest can ascend to dragonhood. 3 STAR ROCK Pokémon can undergo Crystallisation with this weather rock.",
+		"ELDER_CRYSTAL": "Counts as 3 towards ELDER_STORM. Under ELDER_STORM, your team takes -15% less damage from Pokémon with SHIELD.\n\nOnly the strongest can ascend to dragonhood. 3 STAR ROCK Pokémon can undergo Crystallisation with this weather rock.",
 		"DISTORTION_SLATE": "Counts as 3 towards DISTORTION. Under DISTORTION, your team recovers from ARMOR_BREAK 30% faster.\n\nAllows a ROCK Pokémon to undergo Crystallisation, Awakening it as a ARTIFICIAL type.",
 		"FOSSIL_FRAGMENT": "Counts as 3 towards METEOR_SHOWER. Under METEOR_SHOWER, your team gains 10% of incoming PHYSICAL as SHIELD (after damage mitigation).\n\nAllows a ROCK Pokémon to undergo Crystallisation, Awakening it as a FOSSIL type.",
 		"CLOUD_ORB": "Counts as 3 towards CLOUDY. Under CLOUDY, your team deals 1% of target's max HP as SPECIAL ON_ATTACK.\n\nAllows a ROCK Pokémon to undergo Crystallisation, Awakening it as a AMORPHOUS type.",
@@ -3475,7 +3475,7 @@
 		"AQUATIC_MEMORY": "Can be equipped on $t(pkm.SILVALLY) to get AQUATIC type.",
 		"DRAGON_MEMORY": "Can be equipped on $t(pkm.SILVALLY) to get DRAGON type.",
 		"FLORA_MEMORY": "Can be equipped on $t(pkm.SILVALLY) to get FLORA type.",
-		"MISSION_ORDER_PINK": "Complete this mission to earn 30 GOLD:\n get 4 STAR STAR STAR Pokémon on board",
+		"MISSION_ORDER_PINK": "Complete this mission to earn 30 GOLD:\n get 4 STAR STAR STAR Pokémon on board",
 		"MISSION_ORDER_RED": "Complete this mission to earn 30 GOLD:\n inflict 100 damage to other players",
 		"MISSION_ORDER_BLUE": "Complete this mission to earn 30 GOLD:\n reach level 9",
 		"MISSION_ORDER_GREEN": "Complete this mission to earn 30 GOLD:\n reach 8 different active synergies",
@@ -3566,7 +3566,7 @@
 		"RKS_SYSTEM": "RKS system: All synergy items held are removable and give MEMORY_DISCS of those synergies when removed.",
 		"SUDOWOODO": "Pretends to be a tree and does not attack but gain [2,4] ATK per second instead (stackable).\nStarts attacking when PP bar is full, cannot be SILENCE or lose PP until then.",
 		"WOBBUFFET": "Does not move or attack until PP bar is full, cannot be SILENCE or lose PP until then.",
-		"DITTO": "Ditto can transform into a 1 STAR copy of one of your Pokémon you drop it over (does not work for Unique, Legendary or Hatch)",
+		"DITTO": "Ditto can transform into a 1 STAR copy of one of your Pokémon you drop it over (does not work for Unique, Legendary or Hatch)",
 		"EGG": "You can feel something moving inside",
 		"HATCH": "Hatched Pokémon evolve automatically after 5 stages",
 		"SYNCHRO": "If the Pokémon is affected by POISONNED, BURN, WOUND or SILENCE, the enemy caster will suffer the same negative status",
@@ -4613,7 +4613,7 @@
 		},
 		"STARTER_PACK": {
 			"name": "Starter Pack",
-			"description": "Gain a 2★ Common, a 1★ Uncommon and a 1★ Rare Pokémon."
+			"description": "Gain a 2 STAR Common, a 1 STAR Uncommon and a 1 STAR Rare Pokémon."
 		},
 		"NUGGET": {
 			"name": "Nugget",
@@ -4633,367 +4633,399 @@
 		},
 		"INSTANT_HYPER_ROLL": {
 			"name": "Instant Hyper Roll",
-			"description": "Gain a random 3★ Common Pokémon."
+			"description": "Gain a random 3 STAR Common Pokémon."
 		},
 		"NORMAL_BADGE_BLESSING": {
 			"name": "Normal Badge",
-			"description": "Gain a Normal Gem and a random 1★ Uncommon Normal Pokémon."
+			"description": "Gain a NORMAL_GEM and a random 1 STAR Uncommon NORMAL Pokémon."
 		},
 		"NORMAL_CREST_BLESSING": {
 			"name": "Normal Crest",
-			"description": "Gain a Normal Gem and 2 random 1★ Uncommon Normal Pokémon."
+			"description": "Gain a NORMAL_GEM and 2 random 1 STAR Uncommon NORMAL Pokémon."
 		},
 		"FLYING_BADGE_BLESSING": {
 			"name": "Flying Badge",
-			"description": "Gain a Flying Gem and a random 1★ Uncommon Flying Pokémon."
+			"description": "Gain a FLYING_GEM and a random 1 STAR Uncommon FLYING Pokémon."
 		},
 		"FLYING_CREST_BLESSING": {
 			"name": "Flying Crest",
-			"description": "Gain a Flying Gem and 2 random 1★ Uncommon Flying Pokémon."
+			"description": "Gain a FLYING_GEM and 2 random 1 STAR Uncommon FLYING Pokémon."
 		},
 		"FIELD_BADGE_BLESSING": {
 			"name": "Field Badge",
-			"description": "Gain a Field Gem and a random 1★ Uncommon Field Pokémon."
+			"description": "Gain a FIELD_GEM and a random 1 STAR Uncommon FIELD Pokémon."
 		},
 		"FIELD_CREST_BLESSING": {
 			"name": "Field Crest",
-			"description": "Gain a Field Gem and 2 random 1★ Uncommon Field Pokémon."
+			"description": "Gain a FIELD_GEM and 2 random 1 STAR Uncommon FIELD Pokémon."
 		},
 		"DARK_BADGE_BLESSING": {
 			"name": "Dark Badge",
-			"description": "Gain a Dark Gem and a random 1★ Uncommon Dark Pokémon."
+			"description": "Gain a DARK_GEM and a random 1 STAR Uncommon DARK Pokémon."
 		},
 		"DARK_CREST_BLESSING": {
 			"name": "Dark Crest",
-			"description": "Gain a Dark Gem and 2 random 1★ Uncommon Dark Pokémon."
+			"description": "Gain a DARK_GEM and 2 random 1 STAR Uncommon DARK Pokémon."
 		},
 		"GROUND_BADGE_BLESSING": {
 			"name": "Ground Badge",
-			"description": "Gain a Ground Gem and a random 1★ Uncommon Ground Pokémon."
+			"description": "Gain a GROUND_GEM and a random 1 STAR Uncommon GROUND Pokémon."
 		},
 		"GROUND_CREST_BLESSING": {
 			"name": "Ground Crest",
-			"description": "Gain a Ground Gem and 2 random 1★ Uncommon Ground Pokémon."
+			"description": "Gain a GROUND_GEM and 2 random 1 STAR Uncommon GROUND Pokémon."
 		},
 		"PSYCHIC_BADGE_BLESSING": {
 			"name": "Psychic Badge",
-			"description": "Gain a Psychic Gem and a random 1★ Uncommon Psychic Pokémon."
+			"description": "Gain a PSYCHIC_GEM and a random 1 STAR Uncommon PSYCHIC Pokémon."
 		},
 		"PSYCHIC_CREST_BLESSING": {
 			"name": "Psychic Crest",
-			"description": "Gain a Psychic Gem and 2 random 1★ Uncommon Psychic Pokémon."
+			"description": "Gain a PSYCHIC_GEM and 2 random 1 STAR Uncommon PSYCHIC Pokémon."
 		},
 		"GRASS_BADGE_BLESSING": {
 			"name": "Grass Badge",
-			"description": "Gain a Grass Gem and a random 1★ Uncommon Grass Pokémon."
+			"description": "Gain a GRASS_GEM and a random 1 STAR Uncommon GRASS Pokémon."
 		},
 		"GRASS_CREST_BLESSING": {
 			"name": "Grass Crest",
-			"description": "Gain a Grass Gem and 2 random 1★ Uncommon Grass Pokémon."
+			"description": "Gain a GRASS_GEM and 2 random 1 STAR Uncommon GRASS Pokémon."
 		},
 		"BUG_BADGE_BLESSING": {
 			"name": "Bug Badge",
-			"description": "Gain a Bug Gem and a random 1★ Uncommon Bug Pokémon."
+			"description": "Gain a BUG_GEM and a random 1 STAR Uncommon BUG Pokémon."
 		},
 		"BUG_CREST_BLESSING": {
 			"name": "Bug Crest",
-			"description": "Gain a Bug Gem and 2 random 1★ Uncommon Bug Pokémon."
+			"description": "Gain a BUG_GEM and 2 random 1 STAR Uncommon BUG Pokémon."
 		},
 		"WATER_BADGE_BLESSING": {
 			"name": "Water Badge",
-			"description": "Gain a Water Gem and a random 1★ Uncommon Water Pokémon."
+			"description": "Gain a WATER_GEM and a random 1 STAR Uncommon WATER Pokémon."
 		},
 		"WATER_CREST_BLESSING": {
 			"name": "Water Crest",
-			"description": "Gain a Water Gem and 2 random 1★ Uncommon Water Pokémon."
+			"description": "Gain a WATER_GEM and 2 random 1 STAR Uncommon WATER Pokémon."
 		},
 		"AQUATIC_BADGE_BLESSING": {
 			"name": "Aquatic Badge",
-			"description": "Gain a Aquatic Gem and a random 1★ Uncommon Aquatic Pokémon."
+			"description": "Gain a AQUATIC_GEM and a random 1 STAR Uncommon AQUATIC Pokémon."
 		},
 		"AQUATIC_CREST_BLESSING": {
 			"name": "Aquatic Crest",
-			"description": "Gain a Aquatic Gem and 2 random 1★ Uncommon Aquatic Pokémon."
+			"description": "Gain a AQUATIC_GEM and 2 random 1 STAR Uncommon AQUATIC Pokémon."
 		},
 		"POISON_BADGE_BLESSING": {
 			"name": "Poison Badge",
-			"description": "Gain a Poison Gem and a random 1★ Uncommon Poison Pokémon."
+			"description": "Gain a POISON_GEM and a random 1 STAR Uncommon POISON Pokémon."
 		},
 		"POISON_CREST_BLESSING": {
 			"name": "Poison Crest",
-			"description": "Gain a Poison Gem and 2 random 1★ Uncommon Poison Pokémon."
+			"description": "Gain a POISON_GEM and 2 random 1 STAR Uncommon POISON Pokémon."
 		},
 		"FAIRY_BADGE_BLESSING": {
 			"name": "Fairy Badge",
-			"description": "Gain a Fairy Gem and a random 1★ Uncommon Fairy Pokémon."
+			"description": "Gain a FAIRY_GEM and a random 1 STAR Uncommon FAIRY Pokémon."
 		},
 		"FAIRY_CREST_BLESSING": {
 			"name": "Fairy Crest",
-			"description": "Gain a Fairy Gem and 2 random 1★ Uncommon Fairy Pokémon."
+			"description": "Gain a FAIRY_GEM and 2 random 1 STAR Uncommon FAIRY Pokémon."
 		},
 		"FIGHTING_BADGE_BLESSING": {
 			"name": "Fighting Badge",
-			"description": "Gain a Fighting Gem and a random 1★ Uncommon Fighting Pokémon."
+			"description": "Gain a FIGHTING_GEM and a random 1 STAR Uncommon FIGHTING Pokémon."
 		},
 		"FIGHTING_CREST_BLESSING": {
 			"name": "Fighting Crest",
-			"description": "Gain a Fighting Gem and 2 random 1★ Uncommon Fighting Pokémon."
+			"description": "Gain a FIGHTING_GEM and 2 random 1 STAR Uncommon FIGHTING Pokémon."
 		},
 		"FIRE_BADGE_BLESSING": {
 			"name": "Fire Badge",
-			"description": "Gain a Fire Gem and a random 1★ Uncommon Fire Pokémon."
+			"description": "Gain a FIRE_GEM and a random 1 STAR Uncommon FIRE Pokémon."
 		},
 		"FIRE_CREST_BLESSING": {
 			"name": "Fire Crest",
-			"description": "Gain a Fire Gem and 2 random 1★ Uncommon Fire Pokémon."
+			"description": "Gain a FIRE_GEM and 2 random 1 STAR Uncommon FIRE Pokémon."
 		},
 		"GHOST_BADGE_BLESSING": {
 			"name": "Ghost Badge",
-			"description": "Gain a Ghost Gem and a random 1★ Uncommon Ghost Pokémon."
+			"description": "Gain a GHOST_GEM and a random 1 STAR Uncommon GHOST Pokémon."
 		},
 		"GHOST_CREST_BLESSING": {
 			"name": "Ghost Crest",
-			"description": "Gain a Ghost Gem and 2 random 1★ Uncommon Ghost Pokémon."
+			"description": "Gain a GHOST_GEM and 2 random 1 STAR Uncommon GHOST Pokémon."
 		},
 		"ROCK_BADGE_BLESSING": {
 			"name": "Rock Badge",
-			"description": "Gain a Rock Gem and a random 1★ Uncommon Rock Pokémon."
+			"description": "Gain a ROCK_GEM and a random 1 STAR Uncommon ROCK Pokémon."
 		},
 		"ROCK_CREST_BLESSING": {
 			"name": "Rock Crest",
-			"description": "Gain a Rock Gem and 2 random 1★ Uncommon Rock Pokémon."
+			"description": "Gain a ROCK_GEM and 2 random 1 STAR Uncommon ROCK Pokémon."
 		},
 		"MONSTER_BADGE_BLESSING": {
 			"name": "Monster Badge",
-			"description": "Gain a Monster Gem and a random 1★ Uncommon Monster Pokémon."
+			"description": "Gain a MONSTER_GEM and a random 1 STAR Uncommon MONSTER Pokémon."
 		},
 		"MONSTER_CREST_BLESSING": {
 			"name": "Monster Crest",
-			"description": "Gain a Monster Gem and 2 random 1★ Uncommon Monster Pokémon."
+			"description": "Gain a MONSTER_GEM and 2 random 1 STAR Uncommon MONSTER Pokémon."
 		},
 		"AMORPHOUS_BADGE_BLESSING": {
 			"name": "Amorphous Badge",
-			"description": "Gain a Amorphous Gem and a random 1★ Uncommon Amorphous Pokémon."
+			"description": "Gain a AMORPHOUS_GEM and a random 1 STAR Uncommon AMORPHOUS Pokémon."
 		},
 		"AMORPHOUS_CREST_BLESSING": {
 			"name": "Amorphous Crest",
-			"description": "Gain a Amorphous Gem and 2 random 1★ Uncommon Amorphous Pokémon."
+			"description": "Gain a AMORPHOUS_GEM and 2 random 1 STAR Uncommon AMORPHOUS Pokémon."
 		},
 		"WILD_BADGE_BLESSING": {
 			"name": "Wild Badge",
-			"description": "Gain a Wild Gem and a random 1★ Uncommon Wild Pokémon."
+			"description": "Gain a WILD_GEM and a random 1 STAR Uncommon WILD Pokémon."
 		},
 		"WILD_CREST_BLESSING": {
 			"name": "Wild Crest",
-			"description": "Gain a Wild Gem and 2 random 1★ Uncommon Wild Pokémon."
+			"description": "Gain a WILD_GEM and 2 random 1 STAR Uncommon WILD Pokémon."
 		},
 		"SOUND_BADGE_BLESSING": {
 			"name": "Sound Badge",
-			"description": "Gain a Sound Gem and a random 1★ Uncommon Sound Pokémon."
+			"description": "Gain a SOUND_GEM and a random 1 STAR Uncommon SOUND Pokémon."
 		},
 		"SOUND_CREST_BLESSING": {
 			"name": "Sound Crest",
-			"description": "Gain a Sound Gem and 2 random 1★ Uncommon Sound Pokémon."
+			"description": "Gain a SOUND_GEM and 2 random 1 STAR Uncommon SOUND Pokémon."
 		},
 		"FLORA_BADGE_BLESSING": {
 			"name": "Flora Badge",
-			"description": "Gain a Flora Gem and a random 1★ Uncommon Flora Pokémon."
+			"description": "Gain a FLORA_GEM and a random 1 STAR Uncommon FLORA Pokémon."
 		},
 		"FLORA_CREST_BLESSING": {
 			"name": "Flora Crest",
-			"description": "Gain a Flora Gem and 2 random 1★ Uncommon Flora Pokémon."
+			"description": "Gain a FLORA_GEM and 2 random 1 STAR Uncommon FLORA Pokémon."
 		},
 		"STEEL_BADGE_BLESSING": {
 			"name": "Steel Badge",
-			"description": "Gain a Steel Gem and a random 1★ Uncommon Steel Pokémon."
+			"description": "Gain a STEEL_GEM and a random 1 STAR Uncommon STEEL Pokémon."
 		},
 		"STEEL_CREST_BLESSING": {
 			"name": "Steel Crest",
-			"description": "Gain a Steel Gem and 2 random 1★ Uncommon Steel Pokémon."
+			"description": "Gain a STEEL_GEM and 2 random 1 STAR Uncommon STEEL Pokémon."
 		},
 		"ELECTRIC_BADGE_BLESSING": {
 			"name": "Electric Badge",
-			"description": "Gain a Electric Gem and a random 1★ Uncommon Electric Pokémon."
+			"description": "Gain a ELECTRIC_GEM and a random 1 STAR Uncommon ELECTRIC Pokémon."
 		},
 		"ELECTRIC_CREST_BLESSING": {
 			"name": "Electric Crest",
-			"description": "Gain a Electric Gem and 2 random 1★ Uncommon Electric Pokémon."
+			"description": "Gain a ELECTRIC_GEM and 2 random 1 STAR Uncommon ELECTRIC Pokémon."
 		},
 		"ICE_BADGE_BLESSING": {
 			"name": "Ice Badge",
-			"description": "Gain a Ice Gem and a random 1★ Uncommon Ice Pokémon."
+			"description": "Gain a ICE_GEM and a random 1 STAR Uncommon ICE Pokémon."
 		},
 		"ICE_CREST_BLESSING": {
 			"name": "Ice Crest",
-			"description": "Gain a Ice Gem and 2 random 1★ Uncommon Ice Pokémon."
+			"description": "Gain a ICE_GEM and 2 random 1 STAR Uncommon ICE Pokémon."
 		},
 		"HUMAN_BADGE_BLESSING": {
 			"name": "Human Badge",
-			"description": "Gain a Human Gem and a random 1★ Uncommon Human Pokémon."
+			"description": "Gain a HUMAN_GEM and a random 1 STAR Uncommon HUMAN Pokémon."
 		},
 		"HUMAN_CREST_BLESSING": {
 			"name": "Human Crest",
-			"description": "Gain a Human Gem and 2 random 1★ Uncommon Human Pokémon."
+			"description": "Gain a HUMAN_GEM and 2 random 1 STAR Uncommon HUMAN Pokémon."
 		},
 		"DRAGON_BADGE_BLESSING": {
 			"name": "Dragon Badge",
-			"description": "Gain a Dragon Gem and a random 1★ Uncommon Dragon Pokémon."
+			"description": "Gain a DRAGON_GEM and a random 1 STAR Uncommon DRAGON Pokémon."
 		},
 		"DRAGON_CREST_BLESSING": {
 			"name": "Dragon Crest",
-			"description": "Gain a Dragon Gem and 2 random 1★ Uncommon Dragon Pokémon."
+			"description": "Gain a DRAGON_GEM and 2 random 1 STAR Uncommon DRAGON Pokémon."
 		},
 		"LIGHT_BADGE_BLESSING": {
 			"name": "Light Badge",
-			"description": "Gain a Light Gem and a random 1★ Uncommon Light Pokémon."
+			"description": "Gain a LIGHT_GEM and a random 1 STAR Uncommon LIGHT Pokémon."
 		},
 		"LIGHT_CREST_BLESSING": {
 			"name": "Light Crest",
-			"description": "Gain a Light Gem and 2 random 1★ Uncommon Light Pokémon."
+			"description": "Gain a LIGHT_GEM and 2 random 1 STAR Uncommon LIGHT Pokémon."
 		},
 		"GOURMET_BADGE_BLESSING": {
 			"name": "Gourmet Badge",
-			"description": "Gain a Gourmet Gem and a random 1★ Uncommon Gourmet Pokémon."
+			"description": "Gain a GOURMET_GEM and a random 1 STAR Uncommon GOURMET Pokémon."
 		},
 		"GOURMET_CREST_BLESSING": {
 			"name": "Gourmet Crest",
-			"description": "Gain a Gourmet Gem and 2 random 1★ Uncommon Gourmet Pokémon."
+			"description": "Gain a GOURMET_GEM and 2 random 1 STAR Uncommon GOURMET Pokémon."
 		},
 		"FOSSIL_BADGE_BLESSING": {
 			"name": "Fossil Badge",
-			"description": "Gain a Fossil Gem and a random 1★ Uncommon Fossil Pokémon."
+			"description": "Gain a FOSSIL_GEM and a random 1 STAR Uncommon FOSSIL Pokémon."
 		},
 		"FOSSIL_CREST_BLESSING": {
 			"name": "Fossil Crest",
-			"description": "Gain a Fossil Gem and 2 random 1★ Uncommon Fossil Pokémon."
+			"description": "Gain a FOSSIL_GEM and 2 random 1 STAR Uncommon FOSSIL Pokémon."
 		},
 		"ARTIFICIAL_BADGE_BLESSING": {
 			"name": "Artificial Badge",
-			"description": "Gain a Artificial Gem and a random 1★ Uncommon Artificial Pokémon."
+			"description": "Gain a ARTIFICIAL_GEM and a random 1 STAR Uncommon ARTIFICIAL Pokémon."
 		},
 		"ARTIFICIAL_CREST_BLESSING": {
 			"name": "Artificial Crest",
-			"description": "Gain a Artificial Gem and 2 random 1★ Uncommon Artificial Pokémon."
+			"description": "Gain a ARTIFICIAL_GEM and 2 random 1 STAR Uncommon ARTIFICIAL Pokémon."
 		},
 		"NORMAL_CROWN_BLESSING": {
 			"name": "Normal Crown",
-			"description": "Gain a Friend Bow, a Protective Pads and an Igglybuff."
+			"description": "Gain a FRIEND_BOW, a PROTECTIVE_PADS and an Igglybuff."
 		},
 		"FLYING_CROWN_BLESSING": {
 			"name": "Flying Crown",
-			"description": "Gain an Air Balloon, a Razor Claw and a Quaxly."
+			"description": "Gain an AIR_BALLOON, a RAZOR_CLAW and a Quaxly."
 		},
 		"FIELD_CROWN_BLESSING": {
 			"name": "Field Crown",
-			"description": "Gain a Running Shoes, a Muscle Band and a Litten."
+			"description": "Gain a RUNNING_SHOES, a MUSCLE_BAND and a Litten."
 		},
 		"DARK_CROWN_BLESSING": {
 			"name": "Dark Crown",
-			"description": "Gain a Dusk Stone, a Loaded Dice and a Duskull."
+			"description": "Gain a DUSK_STONE, a LOADED_DICE and a Duskull."
 		},
 		"GROUND_CROWN_BLESSING": {
 			"name": "Ground Crown",
-			"description": "Gain an Explorer Kit, a Green Orb and a Nidoran-M."
+			"description": "Gain an EXPLORER_KIT, a GREEN_ORB and a Nidoran ♂."
 		},
 		"PSYCHIC_CROWN_BLESSING": {
 			"name": "Psychic Crown",
-			"description": "Gain a Dawn Stone, a Soul Dew and a Hatenna."
+			"description": "Gain a DAWN_STONE, a SOUL_DEW and a Hatenna."
 		},
 		"GRASS_CROWN_BLESSING": {
 			"name": "Grass Crown",
-			"description": "Gain a Leaf Stone, a Green Orb and a Treecko."
+			"description": "Gain a LEAF_STONE, a GREEN_ORB and a Treecko."
 		},
 		"BUG_CROWN_BLESSING": {
 			"name": "Bug Crown",
-			"description": "Gain a Shed Shell, a Relic Crown and a Sewaddle."
+			"description": "Gain a SHED_SHELL, a RELIC_CROWN and a Sewaddle."
 		},
 		"WATER_CROWN_BLESSING": {
 			"name": "Water Crown",
-			"description": "Gain a Water Stone, a Choice Specs and a Froakie."
+			"description": "Gain a WATER_STONE, a CHOICE_SPECS and a Froakie."
 		},
 		"AQUATIC_CROWN_BLESSING": {
 			"name": "Aquatic Crown",
-			"description": "Gain a Surfboard, a Stardust and a Pikachu."
+			"description": "Gain a SURFBOARD, a STAR_DUST and a Pikachu."
 		},
 		"POISON_CROWN_BLESSING": {
 			"name": "Poison Crown",
-			"description": "Gain a Pokerus Vial, a Loaded Dice and a Nidoran-F."
+			"description": "Gain a POKERUS_VIAL, a LOADED_DICE and a Nidoran ♀."
 		},
 		"FAIRY_CROWN_BLESSING": {
 			"name": "Fairy Crown",
-			"description": "Gain a Moon Stone, a Destiny Knot and a Flabebe."
+			"description": "Gain a MOON_STONE, a DESTINY_KNOT and a Flabébé (Pink)."
 		},
 		"FIGHTING_CROWN_BLESSING": {
 			"name": "Fighting Crown",
-			"description": "Gain a Macho Brace, a Poke Doll and a Machop."
+			"description": "Gain a MACHO_BRACE, a POKE_DOLL and a Machop."
 		},
 		"FIRE_CROWN_BLESSING": {
 			"name": "Fire Crown",
-			"description": "Gain a Fire Stone, a Red Orb and a Litten."
+			"description": "Gain a FIRE_STONE, a RED_ORB and a Litten."
 		},
 		"GHOST_CROWN_BLESSING": {
 			"name": "Ghost Crown",
-			"description": "Gain a Spell Tag, a Smoke Ball and a Snorunt."
+			"description": "Gain a SPELL_TAG, a SMOKE_BALL and a Snorunt."
 		},
 		"ROCK_CROWN_BLESSING": {
 			"name": "Rock Crown",
-			"description": "Gain an Everstone, a Sticky Barb and a Nacli."
+			"description": "Gain an EVER_STONE, a STICKY_BARB and a Nacli."
 		},
 		"MONSTER_CROWN_BLESSING": {
 			"name": "Monster Crown",
-			"description": "Gain a Berserk Gene, a Relic Crown and a Treecko."
+			"description": "Gain a BERSERK_GENE, a RELIC_CROWN and a Treecko."
 		},
 		"AMORPHOUS_CROWN_BLESSING": {
 			"name": "Amorphous Crown",
-			"description": "Gain an Amorphous Gem, a Punching Glove and a Grubbin."
+			"description": "Gain an AMORPHOUS_GEM, a PUNCHING_GLOVE and a Grubbin."
 		},
 		"WILD_CROWN_BLESSING": {
 			"name": "Wild Crown",
-			"description": "Gain a White Flute, a Flame Orb and an Aipom."
+			"description": "Gain a WHITE_FLUTE, a FLAME_ORB and an Aipom."
 		},
 		"SOUND_CROWN_BLESSING": {
 			"name": "Sound Crown",
-			"description": "Gain a Metronome, a Deep Sea Tooth and an Igglybuff."
+			"description": "Gain a METRONOME, a DEEP_SEA_TOOTH and an Igglybuff."
 		},
 		"FLORA_CROWN_BLESSING": {
 			"name": "Flora Crown",
-			"description": "Gain an Incense, a Gracidea Flower and a Flabebe."
+			"description": "Gain an INCENSE, a GRACIDEA_FLOWER and a Flabébé (Pink)."
 		},
 		"STEEL_CROWN_BLESSING": {
 			"name": "Steel Crown",
-			"description": "Gain a Metal Coat, a Red Orb and a Magnemite."
+			"description": "Gain a METAL_COAT, a RED_ORB and a Magnemite."
 		},
 		"ELECTRIC_CROWN_BLESSING": {
 			"name": "Electric Crown",
-			"description": "Gain a Thunder Stone, a Blue Orb and a Grubbin."
+			"description": "Gain a THUNDER_STONE, a BLUE_ORB and a Grubbin."
 		},
 		"ICE_CROWN_BLESSING": {
 			"name": "Ice Crown",
-			"description": "Gain an Ice Stone, a Power Lens and a Snorunt."
+			"description": "Gain an ICE_STONE, a POWER_LENS and a Snorunt."
 		},
 		"HUMAN_CROWN_BLESSING": {
 			"name": "Human Crown",
-			"description": "Gain a Human Gem, a Safety Goggles and a Machop."
+			"description": "Gain a HUMAN_GEM, a SAFETY_GOGGLES and a Machop."
 		},
 		"DRAGON_CROWN_BLESSING": {
 			"name": "Dragon Crown",
-			"description": "Gain a Dragon Scale, a Deep Sea Tooth and a Charmander."
+			"description": "Gain a DRAGON_SCALE, a DEEP_SEA_TOOTH and a Charmander."
 		},
 		"LIGHT_CROWN_BLESSING": {
 			"name": "Light Crown",
-			"description": "Gain a Light Ball, a Stardust and a Cherubi."
+			"description": "Gain a LIGHT_BALL, a STAR_DUST and a Cherubi."
 		},
 		"GOURMET_CROWN_BLESSING": {
 			"name": "Gourmet Crown",
-			"description": "Gain a Cooking Pot, a Soothe Bell and a Nacli."
+			"description": "Gain a COOKING_POT, a SOOTHE_BELL and a Nacli."
 		},
 		"FOSSIL_CROWN_BLESSING": {
 			"name": "Fossil Crown",
-			"description": "Gain an Old Amber, a Clear Amulet and a Piloswine."
+			"description": "Gain an OLD_AMBER, a CLEAR_AMULET and a Piloswine."
 		},
 		"ARTIFICIAL_CROWN_BLESSING": {
 			"name": "Artificial Crown",
-			"description": "Gain an Artificial Gem, a Wide Lens and a Magnemite."
+			"description": "Gain an ARTIFICIAL_GEM, a WIDE_LENS and a Magnemite."
+		},
+		"QUEST_REROLL": {
+			"name": "Quest: Reroll",
+			"description": "Gain 10 free rerolls. After rerolling 50 times, gain a Repeat Ball."
+		},
+		"QUEST_GROW": {
+			"name": "Quest: Grow",
+			"description": "Gain a Berserk Gene. The first time an ally reaches 1300 HP in a fight, gain a Dynamax Band."
+		},
+		"QUEST_SHINE": {
+			"name": "Quest: Shine",
+			"description": "Gain a Light Ball. The first time you activate Light 7, gain a Shiny Stone."
+		},
+		"QUEST_EPIC": {
+			"name": "Quest: Epic",
+			"description": "Gain a 1 STAR Epic Pokémon and 6 XP. The first time you field 7 unique Epic or Ultra Pokémon at once, gain an Eviolite."
+		},
+		"QUEST_EXPAND": {
+			"name": "Quest: Expand",
+			"description": "Gain 10 XP. After fielding 8 Pokémon that all have a sell price of 5 or more at once, gain a Gold Bow."
+		},
+		"QUEST_ASCEND": {
+			"name": "Quest: Ascend",
+			"description": "Gain 3 1 STAR Rare Pokémon. The first time you get a 3 STAR Uncommon, Rare, Epic or Ultra Pokémon, gain a Star Piece."
+		},
+		"CHARGING_UP": {
+			"name": "Charging Up",
+			"description": "Gain a Cell Battery. For every 15 player damage you deal, gain another."
+		},
+		"BURNING_SHARDS": {
+			"name": "Burning Shards",
+			"description": "Gain a Fire Shard. For every 15 player damage you deal, gain another."
 		},
 		"POTION": {
 			"name": "Potion",
@@ -5627,7 +5659,7 @@
 		"KAIJU_BATTLE": "Every Pokémon that is not MONSTER gains the MONSTER type. The HP gain is tripled.",
 		"AVATAR": "Every Pokémon that is not {{type}} gains the {{type}} type.",
 		"LIGHT_SHOW": "Every 3 stages, Smeargle draws a glowing shape on your board and you choose a second one. Pokémon starting a fight on a lit cell gain that shape's bonus:",
-		"JUGGERNAUT": "Pick a Pokémon — the Juggernaut. The shop keeps offering 1 STAR copies of it. Drag a copy onto the Juggernaut to permanently boost its HP and other stats!",
+		"JUGGERNAUT": "Pick a Pokémon — the Juggernaut. The shop keeps offering 1 STAR copies of it. Drag a copy onto the Juggernaut to permanently boost its HP and other stats!",
 		"OVERTIME": "Everyone starts with 200 HP and can reach level 10.",
 		"SIX_PACK": "Pokémon can hold up to 6 items instead of 3. More items and components can be found throughout the game.",
 		"EVOLUTION_LAB": "Welcome to the Evolution Lab! Every Pokémon can be found here, but the lab follows its own rules...",

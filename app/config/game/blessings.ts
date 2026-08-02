@@ -91,6 +91,54 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
   ...synergyFamilyDefinitions("BADGE", BlessingTier.SILVER, "rank_one"),
   ...synergyFamilyDefinitions("CREST", BlessingTier.GOLD, "rank_two"),
   ...synergyFamilyDefinitions("CROWN", BlessingTier.PRISMATIC, "rank_three"),
+  [Blessing.QUEST_REROLL]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: [4],
+    icon: "reroll_quest",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.QUEST_GROW]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: [4],
+    icon: "grow_quest",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.QUEST_SHINE]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: [4],
+    icon: "shine_quest",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.QUEST_EPIC]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: [4],
+    icon: "epic_ultra_quest",
+    grantsPokemonImmediately: true
+  },
+  [Blessing.QUEST_EXPAND]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: [4],
+    icon: "expand_quest",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.QUEST_ASCEND]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: [4],
+    icon: "ascend_quest",
+    grantsPokemonImmediately: true
+  },
+  [Blessing.CHARGING_UP]: {
+    tier: BlessingTier.SILVER,
+    availableAtStages: [4],
+    icon: "charging_up",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.BURNING_SHARDS]: {
+    tier: BlessingTier.SILVER,
+    availableAtStages: [4],
+    icon: "burning_shards",
+    grantsPokemonImmediately: false
+  },
   [Blessing.PEARL]: {
     tier: BlessingTier.SILVER,
     availableAtStages: BLESSING_SELECTION_STAGES,
@@ -353,6 +401,20 @@ const IGNORE_BLESSING_STAGE_RESTRICTIONS: boolean = true
 // TEMPORARY for testing the family cap, set back to false to re-enable the rest
 const ONLY_SYNERGY_FAMILY_BLESSINGS: boolean = true
 
+// TEMPORARY for testing quests, restricts the pool to quest blessings only
+const ONLY_QUEST_BLESSINGS: boolean = false
+
+const QUEST_BLESSINGS: Blessing[] = [
+  Blessing.QUEST_REROLL,
+  Blessing.QUEST_GROW,
+  Blessing.QUEST_SHINE,
+  Blessing.QUEST_EPIC,
+  Blessing.QUEST_EXPAND,
+  Blessing.QUEST_ASCEND,
+  Blessing.CHARGING_UP,
+  Blessing.BURNING_SHARDS
+]
+
 function countBlessingsOfFamily(blessings: Blessing[], family?: string) {
   if (!family) return 0
   return blessings.filter((blessing) => Blessings[blessing].family === family)
@@ -397,6 +459,7 @@ export function getBlessingsAvailable(
       definition.tier === tier &&
       (ONLY_SYNERGY_FAMILY_BLESSINGS === false ||
         definition.family !== undefined) &&
+      (ONLY_QUEST_BLESSINGS === false || QUEST_BLESSINGS.includes(blessing)) &&
       (IGNORE_BLESSING_STAGE_RESTRICTIONS ||
         definition.availableAtStages.includes(stage)) &&
       (definition.isAvailable?.(player, stage) ?? true)
