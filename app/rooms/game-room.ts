@@ -19,7 +19,8 @@ import {
 } from "../config"
 import {
   Blessings,
-  getBlessingsAvailable
+  getBlessingsAvailable,
+  isFamilyCapReached
 } from "../config/game/blessings"
 import { GADGETS } from "../config/game/gadgets"
 import { placeScribbleShape } from "../config/game/scribble-shapes"
@@ -1485,10 +1486,16 @@ export default class GameRoom extends Room<{ state: GameState }> {
     const currentBlessing = choice.blessings[slotIndex]
     const definition = Blessings[currentBlessing]
     if (!definition) return
+    const proposedHistory = choice.blessingsProposedHistory
     const alternatives = getBlessingsAvailable(
       definition.tier,
-      this.state.stageLevel
-    ).filter((blessing) => choice.blessings.includes(blessing) === false)
+      this.state.stageLevel,
+      player
+    ).filter(
+      (blessing) =>
+        proposedHistory.includes(blessing) === false &&
+        isFamilyCapReached(proposedHistory, blessing) === false
+    )
     if (alternatives.length === 0) return
 
     const blessings = [...choice.blessings]
@@ -1497,11 +1504,16 @@ export default class GameRoom extends Room<{ state: GameState }> {
     rerollableSlots[slotIndex] = false
 
     // replacing the choice (new id) is what makes the client re-render, see rerollChoice
-    player.choices[choiceIndex] = new PlayerChoice({
+    const rerolledChoice = new PlayerChoice({
       type: "blessing",
       blessings,
       rerollableSlots
     })
+    rerolledChoice.blessingsProposedHistory = [
+      ...proposedHistory,
+      blessings[slotIndex]
+    ]
+    player.choices[choiceIndex] = rerolledChoice
   }
 
   selectSeed(playerId: string, seed: unknown) {

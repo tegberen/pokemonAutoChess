@@ -31,6 +31,7 @@ import {
   UniquePool
 } from "../../config"
 import {
+  drawBlessingOptions,
   getBlessingsAvailable,
   rollBlessingTierForStage
 } from "../../config/game/blessings"
@@ -2091,23 +2092,25 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
 
     if (BLESSING_SELECTION_STAGES.includes(this.state.stageLevel)) {
       const lobbyTier = rollBlessingTierForStage(this.state.stageLevel)
-      const blessingPool = getBlessingsAvailable(
-        lobbyTier,
-        this.state.stageLevel
-      )
       this.state.players.forEach((player: Player) => {
-        if (player.isBot || !player.alive || blessingPool.length === 0) return
-        const proposedBlessings = pickNRandomIn(
+        if (player.isBot || !player.alive) return
+        const blessingPool = getBlessingsAvailable(
+          lobbyTier,
+          this.state.stageLevel,
+          player
+        )
+        if (blessingPool.length === 0) return
+        const proposedBlessings = drawBlessingOptions(
           blessingPool,
           BLESSING_OPTIONS_PER_SELECTION
         )
-        player.choices.push(
-          new PlayerChoice({
-            type: "blessing",
-            blessings: proposedBlessings,
-            rerollableSlots: proposedBlessings.map(() => true)
-          })
-        )
+        const blessingChoice = new PlayerChoice({
+          type: "blessing",
+          blessings: proposedBlessings,
+          rerollableSlots: proposedBlessings.map(() => true)
+        })
+        blessingChoice.blessingsProposedHistory = [...proposedBlessings]
+        player.choices.push(blessingChoice)
       })
     }
 

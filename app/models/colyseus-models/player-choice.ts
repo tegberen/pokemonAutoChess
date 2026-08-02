@@ -35,6 +35,9 @@ export class PlayerChoice extends Schema {
   @type(["string"]) blessings: Blessing[] = []
   @type(["boolean"]) rerollableSlots: boolean[] = []
   @type("boolean") canReroll: boolean = false
+  // server-only: every blessing ever shown in this selection, so family caps and
+  // duplicate exclusion survive the choice being replaced on each reroll
+  blessingsProposedHistory: Blessing[] = []
 
   constructor(args: {
     type: PlayerChoiceType

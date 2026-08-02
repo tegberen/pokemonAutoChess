@@ -18,6 +18,8 @@ import {
   WeatherRocks
 } from "../types/enum/Item"
 import { Pkm } from "../types/enum/Pokemon"
+import type { Synergy } from "../types/enum/Synergy"
+import { SYNERGIES_WITH_BLESSINGS } from "../config/game/blessings"
 import {
   getFirstAvailablePositionInBench,
   getFreeSpaceOnBench
@@ -147,6 +149,199 @@ export function applyScheduledBlessingGrants(player: Player, state: GameState) {
     blessingScheduledEffectService[grant.blessing]?.(player, state, grant.value)
   )
 }
+
+function grantSynergyAwareItem(player: Player, item: Item) {
+  if (SynergyGems.includes(item as (typeof SynergyGems)[number])) {
+    const synergy = SynergyGivenByGem[item]
+    player.bonusSynergies.set(
+      synergy,
+      (player.bonusSynergies.get(synergy) ?? 0) + 1
+    )
+    player.items.push(item)
+    player.updateSynergies()
+  } else {
+    player.items.push(item)
+  }
+}
+
+const GemBySynergy = Object.entries(SynergyGivenByGem).reduce(
+  (acc, [gem, synergy]) => {
+    acc[synergy as Synergy] = gem as Item
+    return acc
+  },
+  {} as { [synergy in Synergy]?: Item }
+)
+
+function giftUncommonsOfSynergy(
+  player: Player,
+  synergy: Synergy,
+  amount: number
+) {
+  const candidates = PRECOMPUTED_POKEMONS_PER_RARITY[Rarity.UNCOMMON].filter(
+    (pkm: Pkm) => {
+      const data = getPokemonData(pkm)
+      return data.stars === 1 && data.types.includes(synergy)
+    }
+  )
+  pickNRandomIn(candidates, amount).forEach((pkm) =>
+    giftPokemonIfBenchHasRoom(player, pkm)
+  )
+}
+
+function synergyGemFamilyEffects(
+  family: "BADGE" | "CREST",
+  pokemonGranted: number
+) {
+  return Object.fromEntries(
+    SYNERGIES_WITH_BLESSINGS.map((synergy) => [
+      `${synergy}_${family}_BLESSING`,
+      (player: Player) => {
+        if (getFreeSpaceOnBench(player.board) < pokemonGranted) return false
+        const gem = GemBySynergy[synergy]
+        if (gem) grantSynergyAwareItem(player, gem)
+        giftUncommonsOfSynergy(player, synergy, pokemonGranted)
+        return true
+      }
+    ])
+  )
+}
+
+const CrownBlessingContent: {
+  [blessing in Blessing]?: { items: Item[]; pokemon: Pkm }
+} = {
+  [Blessing.NORMAL_CROWN_BLESSING]: {
+    items: [Item.FRIEND_BOW, Item.PROTECTIVE_PADS],
+    pokemon: Pkm.IGGLYBUFF
+  },
+  [Blessing.FLYING_CROWN_BLESSING]: {
+    items: [Item.AIR_BALLOON, Item.RAZOR_CLAW],
+    pokemon: Pkm.QUAXLY
+  },
+  [Blessing.FIELD_CROWN_BLESSING]: {
+    items: [Item.RUNNING_SHOES, Item.MUSCLE_BAND],
+    pokemon: Pkm.LITTEN
+  },
+  [Blessing.DARK_CROWN_BLESSING]: {
+    items: [Item.DUSK_STONE, Item.LOADED_DICE],
+    pokemon: Pkm.DUSKULL
+  },
+  [Blessing.GROUND_CROWN_BLESSING]: {
+    items: [Item.EXPLORER_KIT, Item.GREEN_ORB],
+    pokemon: Pkm.NIDORANM
+  },
+  [Blessing.PSYCHIC_CROWN_BLESSING]: {
+    items: [Item.DAWN_STONE, Item.SOUL_DEW],
+    pokemon: Pkm.HATENNA
+  },
+  [Blessing.GRASS_CROWN_BLESSING]: {
+    items: [Item.LEAF_STONE, Item.GREEN_ORB],
+    pokemon: Pkm.TREECKO
+  },
+  [Blessing.BUG_CROWN_BLESSING]: {
+    items: [Item.SHED_SHELL, Item.RELIC_CROWN],
+    pokemon: Pkm.SEWADDLE
+  },
+  [Blessing.WATER_CROWN_BLESSING]: {
+    items: [Item.WATER_STONE, Item.CHOICE_SPECS],
+    pokemon: Pkm.FROAKIE
+  },
+  [Blessing.AQUATIC_CROWN_BLESSING]: {
+    items: [Item.SURFBOARD, Item.STAR_DUST],
+    pokemon: Pkm.PIKACHU
+  },
+  [Blessing.POISON_CROWN_BLESSING]: {
+    items: [Item.POKERUS_VIAL, Item.LOADED_DICE],
+    pokemon: Pkm.NIDORANF
+  },
+  [Blessing.FAIRY_CROWN_BLESSING]: {
+    items: [Item.MOON_STONE, Item.DESTINY_KNOT],
+    pokemon: Pkm.FLABEBE
+  },
+  [Blessing.FIGHTING_CROWN_BLESSING]: {
+    items: [Item.MACHO_BRACE, Item.POKE_DOLL],
+    pokemon: Pkm.MACHOP
+  },
+  [Blessing.FIRE_CROWN_BLESSING]: {
+    items: [Item.FIRE_STONE, Item.RED_ORB],
+    pokemon: Pkm.LITTEN
+  },
+  [Blessing.GHOST_CROWN_BLESSING]: {
+    items: [Item.SPELL_TAG, Item.SMOKE_BALL],
+    pokemon: Pkm.SNORUNT
+  },
+  [Blessing.ROCK_CROWN_BLESSING]: {
+    items: [Item.EVER_STONE, Item.STICKY_BARB],
+    pokemon: Pkm.NACLI
+  },
+  [Blessing.MONSTER_CROWN_BLESSING]: {
+    items: [Item.BERSERK_GENE, Item.RELIC_CROWN],
+    pokemon: Pkm.TREECKO
+  },
+  [Blessing.AMORPHOUS_CROWN_BLESSING]: {
+    items: [Item.AMORPHOUS_GEM, Item.PUNCHING_GLOVE],
+    pokemon: Pkm.GRUBBIN
+  },
+  [Blessing.WILD_CROWN_BLESSING]: {
+    items: [Item.WHITE_FLUTE, Item.FLAME_ORB],
+    pokemon: Pkm.AIPOM
+  },
+  [Blessing.SOUND_CROWN_BLESSING]: {
+    items: [Item.METRONOME, Item.DEEP_SEA_TOOTH],
+    pokemon: Pkm.IGGLYBUFF
+  },
+  [Blessing.FLORA_CROWN_BLESSING]: {
+    items: [Item.INCENSE, Item.GRACIDEA_FLOWER],
+    pokemon: Pkm.FLABEBE
+  },
+  [Blessing.STEEL_CROWN_BLESSING]: {
+    items: [Item.METAL_COAT, Item.RED_ORB],
+    pokemon: Pkm.MAGNEMITE
+  },
+  [Blessing.ELECTRIC_CROWN_BLESSING]: {
+    items: [Item.THUNDER_STONE, Item.BLUE_ORB],
+    pokemon: Pkm.GRUBBIN
+  },
+  [Blessing.ICE_CROWN_BLESSING]: {
+    items: [Item.ICE_STONE, Item.POWER_LENS],
+    pokemon: Pkm.SNORUNT
+  },
+  [Blessing.HUMAN_CROWN_BLESSING]: {
+    items: [Item.HUMAN_GEM, Item.SAFETY_GOGGLES],
+    pokemon: Pkm.MACHOP
+  },
+  [Blessing.DRAGON_CROWN_BLESSING]: {
+    items: [Item.DRAGON_SCALE, Item.DEEP_SEA_TOOTH],
+    pokemon: Pkm.CHARMANDER
+  },
+  [Blessing.LIGHT_CROWN_BLESSING]: {
+    items: [Item.LIGHT_BALL, Item.STAR_DUST],
+    pokemon: Pkm.CHERUBI
+  },
+  [Blessing.GOURMET_CROWN_BLESSING]: {
+    items: [Item.COOKING_POT, Item.SOOTHE_BELL],
+    pokemon: Pkm.NACLI
+  },
+  [Blessing.FOSSIL_CROWN_BLESSING]: {
+    items: [Item.OLD_AMBER, Item.CLEAR_AMULET],
+    pokemon: Pkm.PILOSWINE
+  },
+  [Blessing.ARTIFICIAL_CROWN_BLESSING]: {
+    items: [Item.ARTIFICIAL_GEM, Item.WIDE_LENS],
+    pokemon: Pkm.MAGNEMITE
+  }
+}
+
+const crownEffects = Object.fromEntries(
+  Object.entries(CrownBlessingContent).map(([blessing, content]) => [
+    blessing,
+    (player: Player) => {
+      if (getFreeSpaceOnBench(player.board) < 1) return false
+      content.items.forEach((item) => grantSynergyAwareItem(player, item))
+      giftPokemonIfBenchHasRoom(player, content.pokemon)
+      return true
+    }
+  ])
+)
 
 const SONG_REINFORCEMENT_STAGES = [17, 22]
 
@@ -317,6 +512,10 @@ export const blessingScheduledEffectService: {
 export const blessingEffectService: {
   [blessing in Blessing]?: (player: Player, state: GameState) => boolean
 } = {
+  ...synergyGemFamilyEffects("BADGE", 1),
+  ...synergyGemFamilyEffects("CREST", 2),
+  ...crownEffects,
+
   [Blessing.PEARL]: (player) => {
     player.addMoney(PEARL_GOLD_GAINED, true, null)
     return true

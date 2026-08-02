@@ -4635,6 +4635,366 @@
 			"name": "Instant Hyper Roll",
 			"description": "Gain a random 3★ Common Pokémon."
 		},
+		"NORMAL_BADGE_BLESSING": {
+			"name": "Normal Badge",
+			"description": "Gain a Normal Gem and a random 1★ Uncommon Normal Pokémon."
+		},
+		"NORMAL_CREST_BLESSING": {
+			"name": "Normal Crest",
+			"description": "Gain a Normal Gem and 2 random 1★ Uncommon Normal Pokémon."
+		},
+		"FLYING_BADGE_BLESSING": {
+			"name": "Flying Badge",
+			"description": "Gain a Flying Gem and a random 1★ Uncommon Flying Pokémon."
+		},
+		"FLYING_CREST_BLESSING": {
+			"name": "Flying Crest",
+			"description": "Gain a Flying Gem and 2 random 1★ Uncommon Flying Pokémon."
+		},
+		"FIELD_BADGE_BLESSING": {
+			"name": "Field Badge",
+			"description": "Gain a Field Gem and a random 1★ Uncommon Field Pokémon."
+		},
+		"FIELD_CREST_BLESSING": {
+			"name": "Field Crest",
+			"description": "Gain a Field Gem and 2 random 1★ Uncommon Field Pokémon."
+		},
+		"DARK_BADGE_BLESSING": {
+			"name": "Dark Badge",
+			"description": "Gain a Dark Gem and a random 1★ Uncommon Dark Pokémon."
+		},
+		"DARK_CREST_BLESSING": {
+			"name": "Dark Crest",
+			"description": "Gain a Dark Gem and 2 random 1★ Uncommon Dark Pokémon."
+		},
+		"GROUND_BADGE_BLESSING": {
+			"name": "Ground Badge",
+			"description": "Gain a Ground Gem and a random 1★ Uncommon Ground Pokémon."
+		},
+		"GROUND_CREST_BLESSING": {
+			"name": "Ground Crest",
+			"description": "Gain a Ground Gem and 2 random 1★ Uncommon Ground Pokémon."
+		},
+		"PSYCHIC_BADGE_BLESSING": {
+			"name": "Psychic Badge",
+			"description": "Gain a Psychic Gem and a random 1★ Uncommon Psychic Pokémon."
+		},
+		"PSYCHIC_CREST_BLESSING": {
+			"name": "Psychic Crest",
+			"description": "Gain a Psychic Gem and 2 random 1★ Uncommon Psychic Pokémon."
+		},
+		"GRASS_BADGE_BLESSING": {
+			"name": "Grass Badge",
+			"description": "Gain a Grass Gem and a random 1★ Uncommon Grass Pokémon."
+		},
+		"GRASS_CREST_BLESSING": {
+			"name": "Grass Crest",
+			"description": "Gain a Grass Gem and 2 random 1★ Uncommon Grass Pokémon."
+		},
+		"BUG_BADGE_BLESSING": {
+			"name": "Bug Badge",
+			"description": "Gain a Bug Gem and a random 1★ Uncommon Bug Pokémon."
+		},
+		"BUG_CREST_BLESSING": {
+			"name": "Bug Crest",
+			"description": "Gain a Bug Gem and 2 random 1★ Uncommon Bug Pokémon."
+		},
+		"WATER_BADGE_BLESSING": {
+			"name": "Water Badge",
+			"description": "Gain a Water Gem and a random 1★ Uncommon Water Pokémon."
+		},
+		"WATER_CREST_BLESSING": {
+			"name": "Water Crest",
+			"description": "Gain a Water Gem and 2 random 1★ Uncommon Water Pokémon."
+		},
+		"AQUATIC_BADGE_BLESSING": {
+			"name": "Aquatic Badge",
+			"description": "Gain a Aquatic Gem and a random 1★ Uncommon Aquatic Pokémon."
+		},
+		"AQUATIC_CREST_BLESSING": {
+			"name": "Aquatic Crest",
+			"description": "Gain a Aquatic Gem and 2 random 1★ Uncommon Aquatic Pokémon."
+		},
+		"POISON_BADGE_BLESSING": {
+			"name": "Poison Badge",
+			"description": "Gain a Poison Gem and a random 1★ Uncommon Poison Pokémon."
+		},
+		"POISON_CREST_BLESSING": {
+			"name": "Poison Crest",
+			"description": "Gain a Poison Gem and 2 random 1★ Uncommon Poison Pokémon."
+		},
+		"FAIRY_BADGE_BLESSING": {
+			"name": "Fairy Badge",
+			"description": "Gain a Fairy Gem and a random 1★ Uncommon Fairy Pokémon."
+		},
+		"FAIRY_CREST_BLESSING": {
+			"name": "Fairy Crest",
+			"description": "Gain a Fairy Gem and 2 random 1★ Uncommon Fairy Pokémon."
+		},
+		"FIGHTING_BADGE_BLESSING": {
+			"name": "Fighting Badge",
+			"description": "Gain a Fighting Gem and a random 1★ Uncommon Fighting Pokémon."
+		},
+		"FIGHTING_CREST_BLESSING": {
+			"name": "Fighting Crest",
+			"description": "Gain a Fighting Gem and 2 random 1★ Uncommon Fighting Pokémon."
+		},
+		"FIRE_BADGE_BLESSING": {
+			"name": "Fire Badge",
+			"description": "Gain a Fire Gem and a random 1★ Uncommon Fire Pokémon."
+		},
+		"FIRE_CREST_BLESSING": {
+			"name": "Fire Crest",
+			"description": "Gain a Fire Gem and 2 random 1★ Uncommon Fire Pokémon."
+		},
+		"GHOST_BADGE_BLESSING": {
+			"name": "Ghost Badge",
+			"description": "Gain a Ghost Gem and a random 1★ Uncommon Ghost Pokémon."
+		},
+		"GHOST_CREST_BLESSING": {
+			"name": "Ghost Crest",
+			"description": "Gain a Ghost Gem and 2 random 1★ Uncommon Ghost Pokémon."
+		},
+		"ROCK_BADGE_BLESSING": {
+			"name": "Rock Badge",
+			"description": "Gain a Rock Gem and a random 1★ Uncommon Rock Pokémon."
+		},
+		"ROCK_CREST_BLESSING": {
+			"name": "Rock Crest",
+			"description": "Gain a Rock Gem and 2 random 1★ Uncommon Rock Pokémon."
+		},
+		"MONSTER_BADGE_BLESSING": {
+			"name": "Monster Badge",
+			"description": "Gain a Monster Gem and a random 1★ Uncommon Monster Pokémon."
+		},
+		"MONSTER_CREST_BLESSING": {
+			"name": "Monster Crest",
+			"description": "Gain a Monster Gem and 2 random 1★ Uncommon Monster Pokémon."
+		},
+		"AMORPHOUS_BADGE_BLESSING": {
+			"name": "Amorphous Badge",
+			"description": "Gain a Amorphous Gem and a random 1★ Uncommon Amorphous Pokémon."
+		},
+		"AMORPHOUS_CREST_BLESSING": {
+			"name": "Amorphous Crest",
+			"description": "Gain a Amorphous Gem and 2 random 1★ Uncommon Amorphous Pokémon."
+		},
+		"WILD_BADGE_BLESSING": {
+			"name": "Wild Badge",
+			"description": "Gain a Wild Gem and a random 1★ Uncommon Wild Pokémon."
+		},
+		"WILD_CREST_BLESSING": {
+			"name": "Wild Crest",
+			"description": "Gain a Wild Gem and 2 random 1★ Uncommon Wild Pokémon."
+		},
+		"SOUND_BADGE_BLESSING": {
+			"name": "Sound Badge",
+			"description": "Gain a Sound Gem and a random 1★ Uncommon Sound Pokémon."
+		},
+		"SOUND_CREST_BLESSING": {
+			"name": "Sound Crest",
+			"description": "Gain a Sound Gem and 2 random 1★ Uncommon Sound Pokémon."
+		},
+		"FLORA_BADGE_BLESSING": {
+			"name": "Flora Badge",
+			"description": "Gain a Flora Gem and a random 1★ Uncommon Flora Pokémon."
+		},
+		"FLORA_CREST_BLESSING": {
+			"name": "Flora Crest",
+			"description": "Gain a Flora Gem and 2 random 1★ Uncommon Flora Pokémon."
+		},
+		"STEEL_BADGE_BLESSING": {
+			"name": "Steel Badge",
+			"description": "Gain a Steel Gem and a random 1★ Uncommon Steel Pokémon."
+		},
+		"STEEL_CREST_BLESSING": {
+			"name": "Steel Crest",
+			"description": "Gain a Steel Gem and 2 random 1★ Uncommon Steel Pokémon."
+		},
+		"ELECTRIC_BADGE_BLESSING": {
+			"name": "Electric Badge",
+			"description": "Gain a Electric Gem and a random 1★ Uncommon Electric Pokémon."
+		},
+		"ELECTRIC_CREST_BLESSING": {
+			"name": "Electric Crest",
+			"description": "Gain a Electric Gem and 2 random 1★ Uncommon Electric Pokémon."
+		},
+		"ICE_BADGE_BLESSING": {
+			"name": "Ice Badge",
+			"description": "Gain a Ice Gem and a random 1★ Uncommon Ice Pokémon."
+		},
+		"ICE_CREST_BLESSING": {
+			"name": "Ice Crest",
+			"description": "Gain a Ice Gem and 2 random 1★ Uncommon Ice Pokémon."
+		},
+		"HUMAN_BADGE_BLESSING": {
+			"name": "Human Badge",
+			"description": "Gain a Human Gem and a random 1★ Uncommon Human Pokémon."
+		},
+		"HUMAN_CREST_BLESSING": {
+			"name": "Human Crest",
+			"description": "Gain a Human Gem and 2 random 1★ Uncommon Human Pokémon."
+		},
+		"DRAGON_BADGE_BLESSING": {
+			"name": "Dragon Badge",
+			"description": "Gain a Dragon Gem and a random 1★ Uncommon Dragon Pokémon."
+		},
+		"DRAGON_CREST_BLESSING": {
+			"name": "Dragon Crest",
+			"description": "Gain a Dragon Gem and 2 random 1★ Uncommon Dragon Pokémon."
+		},
+		"LIGHT_BADGE_BLESSING": {
+			"name": "Light Badge",
+			"description": "Gain a Light Gem and a random 1★ Uncommon Light Pokémon."
+		},
+		"LIGHT_CREST_BLESSING": {
+			"name": "Light Crest",
+			"description": "Gain a Light Gem and 2 random 1★ Uncommon Light Pokémon."
+		},
+		"GOURMET_BADGE_BLESSING": {
+			"name": "Gourmet Badge",
+			"description": "Gain a Gourmet Gem and a random 1★ Uncommon Gourmet Pokémon."
+		},
+		"GOURMET_CREST_BLESSING": {
+			"name": "Gourmet Crest",
+			"description": "Gain a Gourmet Gem and 2 random 1★ Uncommon Gourmet Pokémon."
+		},
+		"FOSSIL_BADGE_BLESSING": {
+			"name": "Fossil Badge",
+			"description": "Gain a Fossil Gem and a random 1★ Uncommon Fossil Pokémon."
+		},
+		"FOSSIL_CREST_BLESSING": {
+			"name": "Fossil Crest",
+			"description": "Gain a Fossil Gem and 2 random 1★ Uncommon Fossil Pokémon."
+		},
+		"ARTIFICIAL_BADGE_BLESSING": {
+			"name": "Artificial Badge",
+			"description": "Gain a Artificial Gem and a random 1★ Uncommon Artificial Pokémon."
+		},
+		"ARTIFICIAL_CREST_BLESSING": {
+			"name": "Artificial Crest",
+			"description": "Gain a Artificial Gem and 2 random 1★ Uncommon Artificial Pokémon."
+		},
+		"NORMAL_CROWN_BLESSING": {
+			"name": "Normal Crown",
+			"description": "Gain a Friend Bow, a Protective Pads and an Igglybuff."
+		},
+		"FLYING_CROWN_BLESSING": {
+			"name": "Flying Crown",
+			"description": "Gain an Air Balloon, a Razor Claw and a Quaxly."
+		},
+		"FIELD_CROWN_BLESSING": {
+			"name": "Field Crown",
+			"description": "Gain a Running Shoes, a Muscle Band and a Litten."
+		},
+		"DARK_CROWN_BLESSING": {
+			"name": "Dark Crown",
+			"description": "Gain a Dusk Stone, a Loaded Dice and a Duskull."
+		},
+		"GROUND_CROWN_BLESSING": {
+			"name": "Ground Crown",
+			"description": "Gain an Explorer Kit, a Green Orb and a Nidoran-M."
+		},
+		"PSYCHIC_CROWN_BLESSING": {
+			"name": "Psychic Crown",
+			"description": "Gain a Dawn Stone, a Soul Dew and a Hatenna."
+		},
+		"GRASS_CROWN_BLESSING": {
+			"name": "Grass Crown",
+			"description": "Gain a Leaf Stone, a Green Orb and a Treecko."
+		},
+		"BUG_CROWN_BLESSING": {
+			"name": "Bug Crown",
+			"description": "Gain a Shed Shell, a Relic Crown and a Sewaddle."
+		},
+		"WATER_CROWN_BLESSING": {
+			"name": "Water Crown",
+			"description": "Gain a Water Stone, a Choice Specs and a Froakie."
+		},
+		"AQUATIC_CROWN_BLESSING": {
+			"name": "Aquatic Crown",
+			"description": "Gain a Surfboard, a Stardust and a Pikachu."
+		},
+		"POISON_CROWN_BLESSING": {
+			"name": "Poison Crown",
+			"description": "Gain a Pokerus Vial, a Loaded Dice and a Nidoran-F."
+		},
+		"FAIRY_CROWN_BLESSING": {
+			"name": "Fairy Crown",
+			"description": "Gain a Moon Stone, a Destiny Knot and a Flabebe."
+		},
+		"FIGHTING_CROWN_BLESSING": {
+			"name": "Fighting Crown",
+			"description": "Gain a Macho Brace, a Poke Doll and a Machop."
+		},
+		"FIRE_CROWN_BLESSING": {
+			"name": "Fire Crown",
+			"description": "Gain a Fire Stone, a Red Orb and a Litten."
+		},
+		"GHOST_CROWN_BLESSING": {
+			"name": "Ghost Crown",
+			"description": "Gain a Spell Tag, a Smoke Ball and a Snorunt."
+		},
+		"ROCK_CROWN_BLESSING": {
+			"name": "Rock Crown",
+			"description": "Gain an Everstone, a Sticky Barb and a Nacli."
+		},
+		"MONSTER_CROWN_BLESSING": {
+			"name": "Monster Crown",
+			"description": "Gain a Berserk Gene, a Relic Crown and a Treecko."
+		},
+		"AMORPHOUS_CROWN_BLESSING": {
+			"name": "Amorphous Crown",
+			"description": "Gain an Amorphous Gem, a Punching Glove and a Grubbin."
+		},
+		"WILD_CROWN_BLESSING": {
+			"name": "Wild Crown",
+			"description": "Gain a White Flute, a Flame Orb and an Aipom."
+		},
+		"SOUND_CROWN_BLESSING": {
+			"name": "Sound Crown",
+			"description": "Gain a Metronome, a Deep Sea Tooth and an Igglybuff."
+		},
+		"FLORA_CROWN_BLESSING": {
+			"name": "Flora Crown",
+			"description": "Gain an Incense, a Gracidea Flower and a Flabebe."
+		},
+		"STEEL_CROWN_BLESSING": {
+			"name": "Steel Crown",
+			"description": "Gain a Metal Coat, a Red Orb and a Magnemite."
+		},
+		"ELECTRIC_CROWN_BLESSING": {
+			"name": "Electric Crown",
+			"description": "Gain a Thunder Stone, a Blue Orb and a Grubbin."
+		},
+		"ICE_CROWN_BLESSING": {
+			"name": "Ice Crown",
+			"description": "Gain an Ice Stone, a Power Lens and a Snorunt."
+		},
+		"HUMAN_CROWN_BLESSING": {
+			"name": "Human Crown",
+			"description": "Gain a Human Gem, a Safety Goggles and a Machop."
+		},
+		"DRAGON_CROWN_BLESSING": {
+			"name": "Dragon Crown",
+			"description": "Gain a Dragon Scale, a Deep Sea Tooth and a Charmander."
+		},
+		"LIGHT_CROWN_BLESSING": {
+			"name": "Light Crown",
+			"description": "Gain a Light Ball, a Stardust and a Cherubi."
+		},
+		"GOURMET_CROWN_BLESSING": {
+			"name": "Gourmet Crown",
+			"description": "Gain a Cooking Pot, a Soothe Bell and a Nacli."
+		},
+		"FOSSIL_CROWN_BLESSING": {
+			"name": "Fossil Crown",
+			"description": "Gain an Old Amber, a Clear Amulet and a Piloswine."
+		},
+		"ARTIFICIAL_CROWN_BLESSING": {
+			"name": "Artificial Crown",
+			"description": "Gain an Artificial Gem, a Wide Lens and a Magnemite."
+		},
 		"POTION": {
 			"name": "Potion",
 			"description": "Heal 15 player HP."

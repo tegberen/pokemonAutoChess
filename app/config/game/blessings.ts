@@ -3,16 +3,94 @@ import {
   BLESSING_SELECTION_STAGES,
   BlessingTier
 } from "../../types/enum/Blessing"
-import { randomWeighted } from "../../utils/random"
+import { randomWeighted, shuffleArray } from "../../utils/random"
+import { SynergyTiersThresholds } from "../../config"
+import { Synergy } from "../../types/enum/Synergy"
+import type Player from "../../models/colyseus-models/player"
 
 export interface BlessingDefinition {
   tier: BlessingTier
   availableAtStages: number[]
   icon: string
   grantsPokemonImmediately: boolean
+  isAvailable?: (player: Player, stage: number) => boolean
+  family?: string
+}
+
+export const BLESSING_MAX_OPTIONS_PER_FAMILY = 2
+
+export const BLESSING_SYNERGY_GATED_STAGE = 12
+
+export function isSynergyActiveForPlayer(player: Player, synergy: Synergy) {
+  const threshold = SynergyTiersThresholds[synergy]?.[0]
+  return (
+    threshold !== undefined && (player.synergies.get(synergy) ?? 0) >= threshold
+  )
+}
+
+export const CrownBlessingBySynergy: { [synergy in Synergy]?: Blessing } = {
+  [Synergy.NORMAL]: Blessing.NORMAL_CROWN_BLESSING,
+  [Synergy.FLYING]: Blessing.FLYING_CROWN_BLESSING,
+  [Synergy.FIELD]: Blessing.FIELD_CROWN_BLESSING,
+  [Synergy.DARK]: Blessing.DARK_CROWN_BLESSING,
+  [Synergy.GROUND]: Blessing.GROUND_CROWN_BLESSING,
+  [Synergy.PSYCHIC]: Blessing.PSYCHIC_CROWN_BLESSING,
+  [Synergy.GRASS]: Blessing.GRASS_CROWN_BLESSING,
+  [Synergy.BUG]: Blessing.BUG_CROWN_BLESSING,
+  [Synergy.WATER]: Blessing.WATER_CROWN_BLESSING,
+  [Synergy.AQUATIC]: Blessing.AQUATIC_CROWN_BLESSING,
+  [Synergy.POISON]: Blessing.POISON_CROWN_BLESSING,
+  [Synergy.FAIRY]: Blessing.FAIRY_CROWN_BLESSING,
+  [Synergy.FIGHTING]: Blessing.FIGHTING_CROWN_BLESSING,
+  [Synergy.FIRE]: Blessing.FIRE_CROWN_BLESSING,
+  [Synergy.GHOST]: Blessing.GHOST_CROWN_BLESSING,
+  [Synergy.ROCK]: Blessing.ROCK_CROWN_BLESSING,
+  [Synergy.MONSTER]: Blessing.MONSTER_CROWN_BLESSING,
+  [Synergy.AMORPHOUS]: Blessing.AMORPHOUS_CROWN_BLESSING,
+  [Synergy.WILD]: Blessing.WILD_CROWN_BLESSING,
+  [Synergy.SOUND]: Blessing.SOUND_CROWN_BLESSING,
+  [Synergy.FLORA]: Blessing.FLORA_CROWN_BLESSING,
+  [Synergy.STEEL]: Blessing.STEEL_CROWN_BLESSING,
+  [Synergy.ELECTRIC]: Blessing.ELECTRIC_CROWN_BLESSING,
+  [Synergy.ICE]: Blessing.ICE_CROWN_BLESSING,
+  [Synergy.HUMAN]: Blessing.HUMAN_CROWN_BLESSING,
+  [Synergy.DRAGON]: Blessing.DRAGON_CROWN_BLESSING,
+  [Synergy.LIGHT]: Blessing.LIGHT_CROWN_BLESSING,
+  [Synergy.GOURMET]: Blessing.GOURMET_CROWN_BLESSING,
+  [Synergy.FOSSIL]: Blessing.FOSSIL_CROWN_BLESSING,
+  [Synergy.ARTIFICIAL]: Blessing.ARTIFICIAL_CROWN_BLESSING
+}
+
+export const SYNERGIES_WITH_BLESSINGS = Object.values(Synergy).filter(
+  (synergy) => synergy !== Synergy.BABY
+)
+
+function synergyFamilyDefinitions(
+  family: "BADGE" | "CREST" | "CROWN",
+  tier: BlessingTier,
+  icon: string
+) {
+  return Object.fromEntries(
+    SYNERGIES_WITH_BLESSINGS.map((synergy) => [
+      `${synergy}_${family}_BLESSING`,
+      {
+        tier,
+        availableAtStages: BLESSING_SELECTION_STAGES,
+        icon,
+        grantsPokemonImmediately: true,
+        family,
+        isAvailable: (player: Player, stage: number) =>
+          stage < BLESSING_SYNERGY_GATED_STAGE ||
+          isSynergyActiveForPlayer(player, synergy)
+      }
+    ])
+  ) as { [blessing in Blessing]: BlessingDefinition }
 }
 
 export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
+  ...synergyFamilyDefinitions("BADGE", BlessingTier.SILVER, "rank_one"),
+  ...synergyFamilyDefinitions("CREST", BlessingTier.GOLD, "rank_two"),
+  ...synergyFamilyDefinitions("CROWN", BlessingTier.PRISMATIC, "rank_three"),
   [Blessing.PEARL]: {
     tier: BlessingTier.SILVER,
     availableAtStages: BLESSING_SELECTION_STAGES,
@@ -270,18 +348,58 @@ export function rollBlessingTierForStage(stage: number): BlessingTier {
 }
 
 // TEMPORARY for testing, set back to false so availableAtStages is respected
-const IGNORE_BLESSING_STAGE_RESTRICTIONS = true
+const IGNORE_BLESSING_STAGE_RESTRICTIONS: boolean = true
+
+// TEMPORARY for testing the family cap, set back to false to re-enable the rest
+const ONLY_SYNERGY_FAMILY_BLESSINGS: boolean = true
+
+function countBlessingsOfFamily(blessings: Blessing[], family?: string) {
+  if (!family) return 0
+  return blessings.filter((blessing) => Blessings[blessing].family === family)
+    .length
+}
+
+export function isFamilyCapReached(
+  alreadyProposed: Blessing[],
+  candidate: Blessing
+) {
+  const { family } = Blessings[candidate]
+  if (!family) return false
+  return (
+    countBlessingsOfFamily(alreadyProposed, family) >=
+    BLESSING_MAX_OPTIONS_PER_FAMILY
+  )
+}
+
+export function drawBlessingOptions(
+  pool: Blessing[],
+  amount: number,
+  alreadyProposed: Blessing[] = []
+): Blessing[] {
+  const remaining = shuffleArray([...pool])
+  const drawn: Blessing[] = []
+  while (drawn.length < amount && remaining.length > 0) {
+    const candidate = remaining.pop()!
+    if (isFamilyCapReached([...alreadyProposed, ...drawn], candidate)) continue
+    drawn.push(candidate)
+  }
+  return drawn
+}
 
 export function getBlessingsAvailable(
   tier: BlessingTier,
-  stage: number
+  stage: number,
+  player: Player
 ): Blessing[] {
   return (Object.keys(Blessings) as Blessing[]).filter((blessing) => {
     const definition = Blessings[blessing]
     return (
       definition.tier === tier &&
+      (ONLY_SYNERGY_FAMILY_BLESSINGS === false ||
+        definition.family !== undefined) &&
       (IGNORE_BLESSING_STAGE_RESTRICTIONS ||
-        definition.availableAtStages.includes(stage))
+        definition.availableAtStages.includes(stage)) &&
+      (definition.isAvailable?.(player, stage) ?? true)
     )
   })
 }
