@@ -4593,19 +4593,19 @@
 	"blessing": {
 		"PEARL": {
 			"name": "Pearl",
-			"description": "Gain 10 gold."
+			"description": "Gain 10 GOLD."
 		},
 		"CROAGUNKS_AID": {
 			"name": "Croagunk's Aid",
-			"description": "Gain 3 exchange tickets."
+			"description": "Gain 3 EXCHANGE_TICKET."
 		},
 		"BAG_OF_SWEETS": {
 			"name": "Bag of Sweets",
-			"description": "Gain 4 random sweets."
+			"description": "Gain 4 random SWEETS."
 		},
 		"WOBBUFFETS_SILVER_PRIZE": {
 			"name": "Wobbuffet's Silver Prize",
-			"description": "Gain a random component and 2 recycle tickets."
+			"description": "Gain a random component and 2 RECYCLE_TICKET."
 		},
 		"TREASURE_HUNT_I": {
 			"name": "Treasure Hunt I",
@@ -4617,11 +4617,11 @@
 		},
 		"NUGGET": {
 			"name": "Nugget",
-			"description": "Gain 15 gold."
+			"description": "Gain 15 GOLD."
 		},
 		"GOLDEN_TICKET": {
 			"name": "Golden Ticket",
-			"description": "Gain a Gold Dojo Ticket."
+			"description": "Gain a GOLD_DOJO_TICKET."
 		},
 		"TREASURE_HUNT_II": {
 			"name": "Treasure Hunt II",
@@ -4629,7 +4629,7 @@
 		},
 		"GIMMIGHOULS_TREASURE": {
 			"name": "Gimmighoul's Treasure",
-			"description": "Gain an Amulet Coin and 2 Gimmighoul Coins."
+			"description": "Gain an AMULET_COIN and 2 GIMMIGHOUL_COIN."
 		},
 		"INSTANT_HYPER_ROLL": {
 			"name": "Instant Hyper Roll",
@@ -4997,35 +4997,35 @@
 		},
 		"QUEST_REROLL": {
 			"name": "Quest: Reroll",
-			"description": "Gain 10 free rerolls. After rerolling 50 times, gain a Repeat Ball."
+			"description": "Gain 10 free rerolls. After rerolling 50 times, gain a REPEAT_BALL."
 		},
 		"QUEST_GROW": {
 			"name": "Quest: Grow",
-			"description": "Gain a Berserk Gene. The first time an ally reaches 1300 HP in a fight, gain a Dynamax Band."
+			"description": "Gain a BERSERK_GENE. The first time an ally reaches 1300 HP in a fight, gain a DYNAMAX_BAND."
 		},
 		"QUEST_SHINE": {
 			"name": "Quest: Shine",
-			"description": "Gain a Light Ball. The first time you activate Light 7, gain a Shiny Stone."
+			"description": "Gain a LIGHT_BALL. The first time you activate Light 7, gain a SHINY_STONE."
 		},
 		"QUEST_EPIC": {
 			"name": "Quest: Epic",
-			"description": "Gain a 1 STAR Epic Pokémon and 6 XP. The first time you field 7 unique Epic or Ultra Pokémon at once, gain an Eviolite."
+			"description": "Gain a 1 STAR Epic Pokémon and 6 XP. The first time you field 7 unique Epic or Ultra Pokémon at once, gain an EVIOLITE."
 		},
 		"QUEST_EXPAND": {
 			"name": "Quest: Expand",
-			"description": "Gain 10 XP. After fielding 8 Pokémon that all have a sell price of 5 or more at once, gain a Gold Bow."
+			"description": "Gain 10 XP. After fielding 8 Pokémon that all have a sell price of 5 or more at once, gain a GOLD_BOW."
 		},
 		"QUEST_ASCEND": {
 			"name": "Quest: Ascend",
-			"description": "Gain 3 1 STAR Rare Pokémon. The first time you get a 3 STAR Uncommon, Rare, Epic or Ultra Pokémon, gain a Star Piece."
+			"description": "Gain 3 1 STAR Rare Pokémon. The first time you get a 3 STAR Uncommon, Rare, Epic or Ultra Pokémon, gain a STAR_PIECE."
 		},
 		"CHARGING_UP": {
 			"name": "Charging Up",
-			"description": "Gain a Cell Battery. For every 15 player damage you deal, gain another."
+			"description": "Gain a CELL_BATTERY. For every 15 player damage you deal, gain another."
 		},
 		"BURNING_SHARDS": {
 			"name": "Burning Shards",
-			"description": "Gain a Fire Shard. For every 15 player damage you deal, gain another."
+			"description": "Gain a FIRE_SHARD. For every 15 player damage you deal, gain another."
 		},
 		"POTION": {
 			"name": "Potion",
@@ -5041,7 +5041,7 @@
 		},
 		"TAXES": {
 			"name": "Taxes",
-			"description": "Gain 7 gold. All other players lose 1 gold."
+			"description": "Gain 7 GOLD. All other players lose 1 GOLD."
 		},
 		"ROCKY_BEGINNINGS": {
 			"name": "Rocky Beginnings",
@@ -5053,31 +5053,31 @@
 		},
 		"HEATRANS_SONG": {
 			"name": "Heatran's Song",
-			"description": "Gain a Fiery Drum. On stages 17 and 22, gain a Fletchling."
+			"description": "Gain a FIERY_DRUM. On stages 17 and 22, gain a Fletchling."
 		},
 		"RAYQUAZAS_SONG": {
 			"name": "Rayquaza's Song",
-			"description": "Gain a Sky Melodica. On stages 17 and 22, gain a Fletchling."
+			"description": "Gain a SKY_MELODICA. On stages 17 and 22, gain a Fletchling."
 		},
 		"MEWS_SONG": {
 			"name": "Mew's Song",
-			"description": "Gain a Grass Cornet. On stages 17 and 22, gain a Grookey."
+			"description": "Gain a GRASS_CORNET. On stages 17 and 22, gain a Grookey."
 		},
 		"GROUDONS_SONG": {
 			"name": "Groudon's Song",
-			"description": "Gain a Terra Cymbal. On stages 17 and 22, gain a Rhyhorn."
+			"description": "Gain a TERRA_CYMBAL. On stages 17 and 22, gain a Rhyhorn."
 		},
 		"ARTICUNOS_SONG": {
 			"name": "Articuno's Song",
-			"description": "Gain an Icy Flute. On stages 17 and 22, gain a Frigibax."
+			"description": "Gain an ICY_FLUTE. On stages 17 and 22, gain a Frigibax."
 		},
 		"GIRATINAS_SONG": {
 			"name": "Giratina's Song",
-			"description": "Gain a Rock Horn. On stages 17 and 22, gain a Rhyhorn."
+			"description": "Gain a ROCK_HORN. On stages 17 and 22, gain a Rhyhorn."
 		},
 		"KYOGRES_SONG": {
 			"name": "Kyogre's Song",
-			"description": "Gain an Aqua Monica. On stages 17 and 22, gain a Sobble."
+			"description": "Gain an AQUA_MONICA. On stages 17 and 22, gain a Sobble."
 		},
 		"BERRY_POUCH": {
 			"name": "Berry Pouch",
@@ -5089,7 +5089,7 @@
 		},
 		"BANANA_BUSINESS": {
 			"name": "Banana Business",
-			"description": "Now and after each PvE round, gain a Nanab Berry."
+			"description": "Now and after each PvE round, gain a NANAB_BERRY."
 		},
 		"SWEET_SUBSCRIPTION": {
 			"name": "Sweet Subscription",
@@ -5097,19 +5097,19 @@
 		},
 		"MUNCHLAX_DELIVERY": {
 			"name": "Munchlax Delivery",
-			"description": "Gain a picnic set. After each carousel, gain another."
+			"description": "Gain a PICNIC_SET. After each carousel, gain another."
 		},
 		"CINCCINOS_GIFTS_I": {
 			"name": "Cinccino's Gifts I",
-			"description": "Gain a Silk Scarf. On stage 12, gain another."
+			"description": "Gain a SILK_SCARF. On stage 12, gain another. If chosen on stage 12, gain both immediately."
 		},
 		"CINCCINOS_GIFTS_II": {
 			"name": "Cinccino's Gifts II",
-			"description": "Gain 2 Silk Scarves. On stage 12, gain 1 more."
+			"description": "Gain 2 SILK_SCARF. On stage 12, gain 1 more. If chosen on stage 12, gain all 3 immediately."
 		},
 		"RELIC_FRAGMENT": {
 			"name": "Relic Fragment",
-			"description": "Gain a Lapras Travel Pass. On stages 10 and 20, gain another."
+			"description": "Gain a LAPRAS_PASSPORT. On stages 10 and 20, gain another. Stages already passed are granted immediately."
 		},
 		"ITEMFINDER_I": {
 			"name": "Itemfinder",
@@ -5129,11 +5129,11 @@
 		},
 		"DEEP_INVESTMENTS": {
 			"name": "Deep Investments",
-			"description": "Lose all your gold. At the start of stage 16, regain all the lost gold plus 30 more."
+			"description": "Lose all your GOLD. At the start of stage 16, regain all the lost GOLD plus 30 more."
 		},
 		"CINCCINOS_GIFTS_III": {
 			"name": "Cinccino's Gifts III",
-			"description": "Gain a Silk Scarf and 2 random items crafted from a Silk Scarf."
+			"description": "Gain a SILK_SCARF and 2 random items crafted from a SILK_SCARF."
 		}
 	},
 	"hide": "Hide",

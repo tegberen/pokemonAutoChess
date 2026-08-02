@@ -71,8 +71,9 @@
 }
 
 .game-choice-blessing-slot > .my-box {
-  height: 14em;
+  height: 17em;
   overflow-y: auto;
+  scrollbar-width: thin;
   width: 100%;
   padding: 5px;
   display: flex;
@@ -139,6 +140,12 @@
   animation: blessing-nacre 4s linear infinite;
 }
 
+@keyframes blessing-nacre {
+  to {
+    background-position: 67.8823px 0;
+  }
+}
+
 .blessing-body {
   align-self: stretch;
   flex: 1;
@@ -176,17 +183,12 @@
   padding: 8px;
 }
 
-/* 67.8823px = 48px stripe period / sin(135deg): the tile size and the shift must
-   both equal it, or the pattern seams at the tile edge instead of the loop restart */
-@keyframes blessing-nacre {
-  to {
-    background-position: 67.8823px 0;
-  }
-}
+/* 67.8823px = 48px stripe period / sin(135deg), so the tile edges don't seam */
 
 .blessing-reroll-button {
   pointer-events: initial;
 }
+
 
 .evolution-lab-label {
   display: inline-flex;

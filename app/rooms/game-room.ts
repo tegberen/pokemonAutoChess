@@ -1483,35 +1483,23 @@ export default class GameRoom extends Room<{ state: GameState }> {
     const choice = player.choices[choiceIndex]
     if (typeof slotIndex !== "number") return
     if (choice.rerollableSlots[slotIndex] !== true) return
-    const currentBlessing = choice.blessings[slotIndex]
-    const definition = Blessings[currentBlessing]
-    if (!definition) return
-    const proposedHistory = choice.blessingsProposedHistory
-    const alternatives = getBlessingsAvailable(
-      definition.tier,
-      this.state.stageLevel,
-      player
-    ).filter(
-      (blessing) =>
-        proposedHistory.includes(blessing) === false &&
-        isFamilyCapReached(proposedHistory, blessing) === false
-    )
-    if (alternatives.length === 0) return
+    const replacement = choice.rerollCandidates[slotIndex]
+    if (!replacement) return
 
     const blessings = [...choice.blessings]
     const rerollableSlots = [...choice.rerollableSlots]
-    blessings[slotIndex] = pickRandomIn(alternatives)
+    blessings[slotIndex] = replacement
     rerollableSlots[slotIndex] = false
 
     // replacing the choice (new id) is what makes the client re-render, see rerollChoice
     const rerolledChoice = new PlayerChoice({
       type: "blessing",
       blessings,
+      rerollCandidates: [...choice.rerollCandidates],
       rerollableSlots
     })
     rerolledChoice.blessingsProposedHistory = [
-      ...proposedHistory,
-      blessings[slotIndex]
+      ...choice.blessingsProposedHistory
     ]
     player.choices[choiceIndex] = rerolledChoice
   }

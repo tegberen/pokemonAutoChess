@@ -33,6 +33,7 @@ export class PlayerChoice extends Schema {
   @type(["boolean"]) shinies: boolean[] = []
   @type(["string"]) emotions: Emotion[] = []
   @type(["string"]) blessings: Blessing[] = []
+  @type(["string"]) rerollCandidates: Blessing[] = []
   @type(["boolean"]) rerollableSlots: boolean[] = []
   @type("boolean") canReroll: boolean = false
   // server-only: every blessing ever shown in this selection, so family caps and
@@ -50,6 +51,7 @@ export class PlayerChoice extends Schema {
     shinies?: boolean[]
     emotions?: Emotion[]
     blessings?: Blessing[]
+    rerollCandidates?: Blessing[]
     rerollableSlots?: boolean[]
     canReroll?: boolean
   }) {
@@ -65,6 +67,7 @@ export class PlayerChoice extends Schema {
     if (args.shinies) this.shinies = args.shinies
     if (args.emotions) this.emotions = args.emotions
     if (args.blessings) this.blessings = args.blessings
+    if (args.rerollCandidates) this.rerollCandidates = args.rerollCandidates
     if (args.rerollableSlots) this.rerollableSlots = args.rerollableSlots
     if (args.canReroll) this.canReroll = args.canReroll
   }

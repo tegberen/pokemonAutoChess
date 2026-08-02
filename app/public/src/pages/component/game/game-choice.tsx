@@ -7,7 +7,7 @@ import {
 } from "../../../../../config"
 import type { PlayerChoice } from "../../../../../models/colyseus-models/player-choice"
 import {
-  type Item,
+  Item,
   ShinyItems,
   SynergyGems,
   SynergyGivenByGem
@@ -25,9 +25,10 @@ import { selectConnectedPlayer, useAppSelector } from "../../../hooks"
 import type { IDetailledPokemon } from "../../../models/bot-v2"
 import { pickChoice, pickArmoryGift, rerollChoice } from "../../../network"
 import { Blessings } from "../../../../../config/game/blessings"
+import type { Blessing } from "../../../../../types/enum/Blessing"
 import { getGameScene } from "../../game"
 import { playSound, SOUNDS } from "../../utils/audio"
-import { addIconsToDescription } from "../../utils/descriptions"
+import { addIconsToDescription, iconRegExp } from "../../utils/descriptions"
 import { cc } from "../../utils/jsx"
 import { LocalStoreKeys, localStore } from "../../utils/store"
 import GamePokemonDuoPortrait from "./game-pokemon-duo-portrait"
@@ -76,6 +77,25 @@ export default function GameChoice() {
   }, [])
 
   const [visible, setVisible] = useState(true)
+
+  // item icons inside blessing descriptions load later than the text, so warm
+  // them for every blessing before any of them can be shown
+  useEffect(() => {
+    const itemNames = new Set(Object.keys(Item))
+    const itemsInDescriptions = new Set<string>()
+    ;(Object.keys(Blessings) as Blessing[]).forEach((blessing) => {
+      const description = t(`blessing.${blessing}.description`)
+      for (const token of description.match(iconRegExp) ?? []) {
+        if (itemNames.has(token)) itemsInDescriptions.add(token)
+      }
+    })
+    itemsInDescriptions.forEach((item) => {
+      const preloaded = new Image()
+      preloaded.src = `assets/item/${item}.png`
+      // decoding up front, otherwise the icon still paints a frame after the text
+      preloaded.decode().catch(() => undefined)
+    })
+  }, [t])
 
   if (choices.length === 0 || life <= 0) {
     return null
@@ -147,7 +167,7 @@ export default function GameChoice() {
                 (board?.getBenchSize() ?? 0) >= 8
               return (
               <div
-                key={`${choice.id}-${index}`}
+                key={`blessing-slot-${index}`}
                 className="game-choice-blessing-slot"
               >
               <div
@@ -168,9 +188,6 @@ export default function GameChoice() {
                     className="blessing-icon"
                     src={`/assets/blessings/${blessingDefinition.icon}.svg`}
                     alt=""
-                    onError={(event) => {
-                      event.currentTarget.style.visibility = "hidden"
-                    }}
                   />
                   <h3>{t(`blessing.${blessing}.name`)}</h3>
                   <p>

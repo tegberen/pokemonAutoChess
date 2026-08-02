@@ -149,11 +149,7 @@ export enum BlessingTrigger {
   CAROUSEL_END = "CAROUSEL_END"
 }
 
-// TEMPORARY for testing, revert to [4, 12]
-export const BLESSING_SELECTION_STAGES = Array.from(
-  { length: 20 },
-  (_, index) => index + 1
-)
+export const BLESSING_SELECTION_STAGES = [4, 12]
 
 export const BLESSING_OPTIONS_PER_SELECTION = 3
 

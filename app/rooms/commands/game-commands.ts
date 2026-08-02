@@ -110,6 +110,7 @@ import {
 import { type Awakening, ROCK_AWAKENING_TIER } from "../../types/enum/Awakening"
 import {
   BLESSING_OPTIONS_PER_SELECTION,
+  BLESSING_REROLLS_PER_OPTION,
   BLESSING_SELECTION_STAGES,
   BlessingTrigger
 } from "../../types/enum/Blessing"
@@ -2102,16 +2103,24 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
           player
         )
         if (blessingPool.length === 0) return
-        const proposedBlessings = drawBlessingOptions(
+        const drawn = drawBlessingOptions(
           blessingPool,
+          BLESSING_OPTIONS_PER_SELECTION * (1 + BLESSING_REROLLS_PER_OPTION)
+        )
+        const proposedBlessings = drawn.slice(
+          0,
           BLESSING_OPTIONS_PER_SELECTION
         )
+        const rerollCandidates = drawn.slice(BLESSING_OPTIONS_PER_SELECTION)
         const blessingChoice = new PlayerChoice({
           type: "blessing",
           blessings: proposedBlessings,
-          rerollableSlots: proposedBlessings.map(() => true)
+          rerollCandidates,
+          rerollableSlots: proposedBlessings.map(
+            (_, slot) => rerollCandidates[slot] !== undefined
+          )
         })
-        blessingChoice.blessingsProposedHistory = [...proposedBlessings]
+        blessingChoice.blessingsProposedHistory = [...drawn]
         player.choices.push(blessingChoice)
       })
     }

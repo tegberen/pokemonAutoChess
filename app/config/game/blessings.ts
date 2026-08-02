@@ -369,17 +369,16 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
   }
 }
 
-// TEMPORARY equal odds for testing, revert to 0.6/0.3/0.1 and 0.35/0.45/0.2
 const EARLY_BLESSING_TIER_CHANCES: { [tier in BlessingTier]: number } = {
-  [BlessingTier.SILVER]: 1,
-  [BlessingTier.GOLD]: 1,
-  [BlessingTier.PRISMATIC]: 1
+  [BlessingTier.SILVER]: 0.6,
+  [BlessingTier.GOLD]: 0.3,
+  [BlessingTier.PRISMATIC]: 0.1
 }
 
 const LATE_BLESSING_TIER_CHANCES: { [tier in BlessingTier]: number } = {
-  [BlessingTier.SILVER]: 1,
-  [BlessingTier.GOLD]: 1,
-  [BlessingTier.PRISMATIC]: 1
+  [BlessingTier.SILVER]: 0.35,
+  [BlessingTier.GOLD]: 0.45,
+  [BlessingTier.PRISMATIC]: 0.2
 }
 
 export const BlessingTierChanceByStage: {
@@ -395,13 +394,9 @@ export function rollBlessingTierForStage(stage: number): BlessingTier {
   return randomWeighted(tierChances) ?? BlessingTier.SILVER
 }
 
-// TEMPORARY for testing, set back to false so availableAtStages is respected
-const IGNORE_BLESSING_STAGE_RESTRICTIONS: boolean = true
-
-// TEMPORARY for testing the family cap, set back to false to re-enable the rest
-const ONLY_SYNERGY_FAMILY_BLESSINGS: boolean = true
-
-// TEMPORARY for testing quests, restricts the pool to quest blessings only
+// testing switches, all false for normal play
+const IGNORE_BLESSING_STAGE_RESTRICTIONS: boolean = false
+const ONLY_SYNERGY_FAMILY_BLESSINGS: boolean = false
 const ONLY_QUEST_BLESSINGS: boolean = false
 
 const QUEST_BLESSINGS: Blessing[] = [
