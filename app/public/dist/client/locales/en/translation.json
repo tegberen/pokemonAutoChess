@@ -4633,6 +4633,26 @@
 			"name": "Instant Hyper Roll",
 			"description": "Gain a random 3★ Common Pokémon."
 		},
+		"BERRY_POUCH": {
+			"name": "Berry Pouch",
+			"description": "Now and after each PvE round, gain a random berry."
+		},
+		"SCHOOL_BUS": {
+			"name": "School Bus",
+			"description": "Now and after each PvE round, gain a Wishiwashi."
+		},
+		"BANANA_BUSINESS": {
+			"name": "Banana Business",
+			"description": "Now and after each PvE round, gain a Nanab Berry."
+		},
+		"SWEET_SUBSCRIPTION": {
+			"name": "Sweet Subscription",
+			"description": "Now and after each PvE round, gain a random sweet."
+		},
+		"MUNCHLAX_DELIVERY": {
+			"name": "Munchlax Delivery",
+			"description": "Gain a picnic set. After each carousel, gain another."
+		},
 		"CINCCINOS_GIFTS_I": {
 			"name": "Cinccino's Gifts I",
 			"description": "Gain a Silk Scarf. On stage 12, gain another."

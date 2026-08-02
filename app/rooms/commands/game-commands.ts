@@ -34,7 +34,10 @@ import {
   getBlessingsAvailable,
   rollBlessingTierForStage
 } from "../../config/game/blessings"
-import { applyScheduledBlessingGrants } from "../../services/blessings"
+import {
+  applyBlessingTrigger,
+  applyScheduledBlessingGrants
+} from "../../services/blessings"
 import {
   buildScribbleShapeBag,
   placeScribbleShapeCompatibleWith,
@@ -105,7 +108,8 @@ import {
 import { type Awakening, ROCK_AWAKENING_TIER } from "../../types/enum/Awakening"
 import {
   BLESSING_OPTIONS_PER_SELECTION,
-  BLESSING_SELECTION_STAGES
+  BLESSING_SELECTION_STAGES,
+  BlessingTrigger
 } from "../../types/enum/Blessing"
 import { DungeonPMDO } from "../../types/enum/Dungeon"
 import { EffectEnum } from "../../types/enum/Effect"
@@ -2078,7 +2082,11 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
     }
 
     this.state.players.forEach((player: Player) => {
-      if (player.alive) applyScheduledBlessingGrants(player, this.state)
+      if (!player.alive) return
+      applyScheduledBlessingGrants(player, this.state)
+      if (ItemCarouselStages.includes(this.state.stageLevel)) {
+        applyBlessingTrigger(player, this.state, BlessingTrigger.CAROUSEL_END)
+      }
     })
 
     if (BLESSING_SELECTION_STAGES.includes(this.state.stageLevel)) {
@@ -2623,6 +2631,12 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
               player.pveRewardsPropositions2.clear()
             }
           }
+
+          applyBlessingTrigger(
+            player,
+            this.state,
+            isPVE ? BlessingTrigger.PVE_END : BlessingTrigger.PVP_END
+          )
 
           this.spawnBabyEggs(player, isPVE)
 

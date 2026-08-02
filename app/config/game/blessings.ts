@@ -134,6 +134,36 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "money_safe",
     grantsPokemonImmediately: false
+  },
+  [Blessing.BERRY_POUCH]: {
+    tier: BlessingTier.SILVER,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "berries_bowl",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.SCHOOL_BUS]: {
+    tier: BlessingTier.SILVER,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "fish_school",
+    grantsPokemonImmediately: true
+  },
+  [Blessing.BANANA_BUSINESS]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "banana_bundle",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.SWEET_SUBSCRIPTION]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "sweets",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.MUNCHLAX_DELIVERY]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "basket",
+    grantsPokemonImmediately: false
   }
 }
 

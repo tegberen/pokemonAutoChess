@@ -3,9 +3,10 @@ import PokemonFactory from "../models/pokemon-factory"
 import { getPokemonData } from "../models/precomputed/precomputed-pokemon-data"
 import { PRECOMPUTED_POKEMONS_PER_RARITY } from "../models/precomputed/precomputed-rarity"
 import type GameState from "../rooms/states/game-state"
-import { Blessing } from "../types/enum/Blessing"
+import { Blessing, BlessingTrigger } from "../types/enum/Blessing"
 import { Rarity } from "../types/enum/Game"
 import {
+  Berries,
   Item,
   ItemComponents,
   ItemRecipe,
@@ -13,7 +14,7 @@ import {
   SynergyGems,
   SynergyGivenByGem
 } from "../types/enum/Item"
-import type { Pkm } from "../types/enum/Pokemon"
+import { Pkm } from "../types/enum/Pokemon"
 import {
   getFirstAvailablePositionInBench,
   getFreeSpaceOnBench
@@ -138,6 +139,59 @@ export function applyScheduledBlessingGrants(player: Player, state: GameState) {
   )
 }
 
+function giftPokemonIfBenchHasRoom(player: Player, pkm: Pkm): boolean {
+  const freeCellX = getFirstAvailablePositionInBench(player.board)
+  if (freeCellX === null) return false
+  const pokemon = PokemonFactory.createPokemonFromName(pkm, player)
+  pokemon.positionX = freeCellX
+  pokemon.positionY = 0
+  player.board.set(pokemon.id, pokemon)
+  pokemon.onAcquired(player)
+  return true
+}
+
+export function applyBlessingTrigger(
+  player: Player,
+  state: GameState,
+  trigger: BlessingTrigger
+) {
+  const owned = state.blessingsByPlayerId.get(player.id)
+  if (!owned) return
+  owned.blessings.forEach((blessing) => {
+    blessingTriggerEffectService[blessing]?.[trigger]?.(player, state)
+  })
+}
+
+export const blessingTriggerEffectService: {
+  [blessing in Blessing]?: {
+    [trigger in BlessingTrigger]?: (player: Player, state: GameState) => void
+  }
+} = {
+  [Blessing.BERRY_POUCH]: {
+    [BlessingTrigger.PVE_END]: (player) =>
+      player.items.push(pickRandomIn(Berries))
+  },
+
+  [Blessing.SCHOOL_BUS]: {
+    [BlessingTrigger.PVE_END]: (player) => {
+      giftPokemonIfBenchHasRoom(player, Pkm.WISHIWASHI)
+    }
+  },
+
+  [Blessing.BANANA_BUSINESS]: {
+    [BlessingTrigger.PVE_END]: (player) => player.items.push(Item.NANAB_BERRY)
+  },
+
+  [Blessing.SWEET_SUBSCRIPTION]: {
+    [BlessingTrigger.PVE_END]: (player) => player.items.push(pickRandomIn(Sweets))
+  },
+
+  [Blessing.MUNCHLAX_DELIVERY]: {
+    [BlessingTrigger.CAROUSEL_END]: (player) =>
+      player.items.push(Item.PICNIC_SET)
+  }
+}
+
 export const blessingScheduledEffectService: {
   [blessing in Blessing]?: (
     player: Player,
@@ -233,6 +287,29 @@ export const blessingEffectService: {
 
   [Blessing.INSTANT_HYPER_ROLL]: (player) =>
     giftPokemonOfRarityAndStars(player, Rarity.COMMON, 3),
+
+  [Blessing.BERRY_POUCH]: (player) => {
+    player.items.push(pickRandomIn(Berries))
+    return true
+  },
+
+  [Blessing.SCHOOL_BUS]: (player) =>
+    giftPokemonIfBenchHasRoom(player, Pkm.WISHIWASHI),
+
+  [Blessing.BANANA_BUSINESS]: (player) => {
+    player.items.push(Item.NANAB_BERRY)
+    return true
+  },
+
+  [Blessing.SWEET_SUBSCRIPTION]: (player) => {
+    player.items.push(pickRandomIn(Sweets))
+    return true
+  },
+
+  [Blessing.MUNCHLAX_DELIVERY]: (player) => {
+    player.items.push(Item.PICNIC_SET)
+    return true
+  },
 
   [Blessing.CINCCINOS_GIFTS_I]: (player, state) => {
     player.items.push(Item.SILK_SCARF)
