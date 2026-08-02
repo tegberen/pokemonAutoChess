@@ -31,6 +31,10 @@ import {
   UniquePool
 } from "../../config"
 import {
+  getBlessingsAvailable,
+  rollBlessingTierForStage
+} from "../../config/game/blessings"
+import {
   buildScribbleShapeBag,
   placeScribbleShapeCompatibleWith,
   rollScribbleShapes,
@@ -98,6 +102,10 @@ import {
   PaidOptions
 } from "../../types/enum/ArmoryOptions"
 import { type Awakening, ROCK_AWAKENING_TIER } from "../../types/enum/Awakening"
+import {
+  BLESSING_OPTIONS_PER_SELECTION,
+  BLESSING_SELECTION_STAGES
+} from "../../types/enum/Blessing"
 import { DungeonPMDO } from "../../types/enum/Dungeon"
 import { EffectEnum } from "../../types/enum/Effect"
 import {
@@ -2066,6 +2074,28 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
 
       // update regional pokemons in case some regional variants of add picks are now available
       this.state.players.forEach((p) => p.updateRegionalPool(this.state, false))
+    }
+
+    if (BLESSING_SELECTION_STAGES.includes(this.state.stageLevel)) {
+      const lobbyTier = rollBlessingTierForStage(this.state.stageLevel)
+      const blessingPool = getBlessingsAvailable(
+        lobbyTier,
+        this.state.stageLevel
+      )
+      this.state.players.forEach((player: Player) => {
+        if (player.isBot || !player.alive || blessingPool.length === 0) return
+        const proposedBlessings = pickNRandomIn(
+          blessingPool,
+          BLESSING_OPTIONS_PER_SELECTION
+        )
+        player.choices.push(
+          new PlayerChoice({
+            type: "blessing",
+            blessings: proposedBlessings,
+            rerollableSlots: proposedBlessings.map(() => true)
+          })
+        )
+      })
     }
 
     if (

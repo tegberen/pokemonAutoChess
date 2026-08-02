@@ -4572,6 +4572,8 @@
 		"choose_armory": "Choose one gift to send to your partner",
 		"choose_scribble_shape": "Choose the second shape Smeargle will draw on your board",
 		"choose_evolution_lab_reward": "Choose one reward",
+		"choose_blessing": "Jirachi grants you a Blessing. Choose one.",
+		"reroll_blessing": "Reroll",
 		"evolution_lab_components": "+{{count}} random components",
 		"evolution_lab_rerolls": "+{{count}} free shop rerolls",
 		"evolution_lab_exp": "+{{count}} EXP",
@@ -4580,6 +4582,12 @@
 		"smeargle_pack_reveal": "Open the booster",
 		"free_slot_hint": "You must have one free slot on the bench, or two for Duos",
 		"more_choices": "{{count}} more choice(s) after this one!"
+	},
+	"blessing": {
+		"PEARL": {
+			"name": "Pearl",
+			"description": "Gain 10 gold."
+		}
 	},
 	"hide": "Hide",
 	"show": "Show",

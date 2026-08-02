@@ -16,6 +16,7 @@ import BotManager from "../../core/bot-manager"
 import Simulation from "../../core/simulation"
 import { FloatingItem } from "../../models/colyseus-models/floating-item"
 import Player from "../../models/colyseus-models/player"
+import { PlayerBlessings } from "../../models/colyseus-models/player-blessings"
 import { PokemonAvatarModel } from "../../models/colyseus-models/pokemon-avatar"
 import { Portal, SynergySymbol } from "../../models/colyseus-models/portal"
 import Shop from "../../models/shop"
@@ -57,6 +58,8 @@ export default class GameState extends Schema {
   @type("string") townEncounter: TownEncounter | null = null
   @type("number") weatherThreshold: number = 8
   @type("number") currentPveVariantIndex: number = 0
+  @type({ map: PlayerBlessings }) blessingsByPlayerId =
+    new MapSchema<PlayerBlessings>()
   time = StageDuration[0] * 1000
   updatePhaseNeeded = false
   botManager: BotManager = new BotManager()

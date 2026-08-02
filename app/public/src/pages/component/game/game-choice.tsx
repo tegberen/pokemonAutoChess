@@ -23,7 +23,8 @@ import { isIn } from "../../../../../utils/array"
 import { DEPTH } from "../../../game/depths"
 import { selectConnectedPlayer, useAppSelector } from "../../../hooks"
 import type { IDetailledPokemon } from "../../../models/bot-v2"
-import { pickChoice, pickArmoryGift } from "../../../network"
+import { pickChoice, pickArmoryGift, rerollChoice } from "../../../network"
+import { Blessings } from "../../../../../config/game/blessings"
 import { getGameScene } from "../../game"
 import { playSound, SOUNDS } from "../../utils/audio"
 import { addIconsToDescription } from "../../utils/descriptions"
@@ -119,6 +120,8 @@ export default function GameChoice() {
     message = t("player_choices.choose_scribble_shape")
   } else if (choice.type === "evolution_lab_reward") {
     message = t("player_choices.choose_evolution_lab_reward")
+  } else if (choice.type === "blessing") {
+    message = t("player_choices.choose_blessing")
   }
 
   return (
@@ -134,7 +137,55 @@ export default function GameChoice() {
           </p>
         )}
 
-        {choice.type === "evolution_lab_reward" ? (
+        {choice.type === "blessing" ? (
+          <div className="game-choice-items-list game-choice-blessings-list">
+            {choice.blessings.map((blessing, index) => {
+              const blessingDefinition = Blessings[blessing]
+              const blockedByFullBench =
+                blessingDefinition.grantsPokemonImmediately &&
+                (board?.getBenchSize() ?? 0) >= 8
+              return (
+              <div
+                key={`${choice.id}-${index}`}
+                className={
+                  blockedByFullBench ? "my-box" : "my-box active clickable"
+                }
+                onClick={(event) => {
+                  event.stopPropagation()
+                  if (blockedByFullBench) return
+                  playSound(SOUNDS.BUTTON_CLICK)
+                  pickChoice(choice.id, index)
+                }}
+              >
+                <img
+                  className="blessing-icon"
+                  src={`/assets/blessings/${blessingDefinition.icon}.svg`}
+                  alt=""
+                  onError={(event) => {
+                    event.currentTarget.style.visibility = "hidden"
+                  }}
+                />
+                <h3>{t(`blessing.${blessing}.name`)}</h3>
+                <p>
+                  {addIconsToDescription(t(`blessing.${blessing}.description`))}
+                </p>
+                {choice.rerollableSlots[index] === true && (
+                  <button
+                    className="bubbly blue"
+                    onClick={(event) => {
+                      event.stopPropagation()
+                      playSound(SOUNDS.BUTTON_CLICK)
+                      rerollChoice(choice.id, index)
+                    }}
+                  >
+                    {t("player_choices.reroll_blessing")}
+                  </button>
+                )}
+              </div>
+              )
+            })}
+          </div>
+        ) : choice.type === "evolution_lab_reward" ? (
           <div className="game-choice-items-list game-choice-reward-list">
             {choice.rewards.map((reward, index) => {
               const icon =

@@ -4,6 +4,7 @@ import type { Emotion } from "../../types/enum/Emotion"
 import type { Item } from "../../types/enum/Item"
 import type { PkmProposition } from "../../types/enum/Pokemon"
 import { ArmoryOptions } from "../../types/enum/ArmoryOptions"
+import type { Blessing } from "../../types/enum/Blessing"
 
 export type PlayerChoiceType =
   | "item"
@@ -17,6 +18,7 @@ export type PlayerChoiceType =
   | "scribble_shape"
   // reward kinds in `rewards`; any rolled gem in `items[0]`, components in `items2`
   | "evolution_lab_reward"
+  | "blessing"
 
 export class PlayerChoice extends Schema {
   @type("string") id: string
@@ -30,6 +32,8 @@ export class PlayerChoice extends Schema {
   @type(["string"]) rewards: string[] = []
   @type(["boolean"]) shinies: boolean[] = []
   @type(["string"]) emotions: Emotion[] = []
+  @type(["string"]) blessings: Blessing[] = []
+  @type(["boolean"]) rerollableSlots: boolean[] = []
   @type("boolean") canReroll: boolean = false
 
   constructor(args: {
@@ -42,6 +46,8 @@ export class PlayerChoice extends Schema {
     rewards?: string[]
     shinies?: boolean[]
     emotions?: Emotion[]
+    blessings?: Blessing[]
+    rerollableSlots?: boolean[]
     canReroll?: boolean
   }) {
     super()
@@ -55,6 +61,8 @@ export class PlayerChoice extends Schema {
     if (args.rewards) this.rewards = args.rewards
     if (args.shinies) this.shinies = args.shinies
     if (args.emotions) this.emotions = args.emotions
+    if (args.blessings) this.blessings = args.blessings
+    if (args.rerollableSlots) this.rerollableSlots = args.rerollableSlots
     if (args.canReroll) this.canReroll = args.canReroll
   }
 }

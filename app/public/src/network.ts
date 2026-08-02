@@ -238,8 +238,8 @@ export function pickChoice(choiceId: string, choiceIndex: number) {
   rooms.game?.send(Transfer.CHOICE, { choiceId, choiceIndex })
 }
 
-export function rerollChoice(choiceId: string) {
-  rooms.game?.send(Transfer.REROLL_CHOICE, { choiceId })
+export function rerollChoice(choiceId: string, slotIndex?: number) {
+  rooms.game?.send(Transfer.REROLL_CHOICE, { choiceId, slotIndex })
 }
 
 export function selectSeed(seed: Item) {

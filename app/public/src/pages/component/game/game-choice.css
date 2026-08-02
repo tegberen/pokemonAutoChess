@@ -57,6 +57,19 @@
   justify-content: center;
 }
 
+.game-choice-blessings-list > .my-box {
+  gap: 0.5em;
+}
+
+.game-choice-blessings-list .blessing-icon {
+  width: 4rem;
+  height: 4rem;
+}
+
+.game-choice-blessings-list button {
+  margin-top: auto;
+}
+
 .evolution-lab-label {
   display: inline-flex;
   align-items: center;

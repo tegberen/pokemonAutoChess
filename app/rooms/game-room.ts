@@ -17,6 +17,10 @@ import {
   VICTORY_ROAD_MAX_EVENT_POINTS,
   VictoryRoadPointsPerRank
 } from "../config"
+import {
+  Blessings,
+  getBlessingsAvailable
+} from "../config/game/blessings"
 import { GADGETS } from "../config/game/gadgets"
 import { placeScribbleShape } from "../config/game/scribble-shapes"
 import { computeElo } from "../core/elo"
@@ -37,6 +41,7 @@ import {
 } from "../core/pending-game-manager"
 import type { IGameUser } from "../models/colyseus-models/game-user"
 import Player from "../models/colyseus-models/player"
+import { PlayerBlessings } from "../models/colyseus-models/player-blessings"
 import { PlayerChoice } from "../models/colyseus-models/player-choice"
 import type { Pokemon } from "../models/colyseus-models/pokemon"
 import { ScribbleShape } from "../models/colyseus-models/scribble-shape"
@@ -109,7 +114,7 @@ import { isValidDate } from "../utils/date"
 import { formatMinMaxRanks, getRank } from "../utils/elo"
 import { logger } from "../utils/logger"
 import { clamp } from "../utils/number"
-import { shuffleArray } from "../utils/random"
+import { pickRandomIn, shuffleArray } from "../utils/random"
 import { schemaValues } from "../utils/schemas"
 import {
   OnBuyPokemonCommand,
@@ -423,10 +428,14 @@ export default class GameRoom extends Room<{ state: GameState }> {
 
     this.onMessage(
       Transfer.REROLL_CHOICE,
-      (client, message: { choiceId: string }) => {
+      (client, message: { choiceId: string; slotIndex?: number }) => {
         if (!this.state.gameFinished && client.auth) {
           try {
-            this.rerollChoice(client.auth.uid, message.choiceId)
+            this.rerollChoice(
+              client.auth.uid,
+              message.choiceId,
+              message.slotIndex
+            )
           } catch (error) {
             logger.error(error)
           }
@@ -1438,12 +1447,18 @@ export default class GameRoom extends Room<{ state: GameState }> {
     removeInArray(player.choices, choice)
   }
 
-  rerollChoice(playerId: string, choiceId: string) {
+  rerollChoice(playerId: string, choiceId: string, slotIndex?: number) {
     const player = this.state.players.get(playerId)
     if (!player) return
     const index = player.choices.findIndex((c) => c.id === choiceId)
     if (index === -1) return
     const choice = player.choices[index]
+
+    if (choice.type === "blessing") {
+      this.rerollBlessingSlot(choice, slotIndex)
+      return
+    }
+
     if (
       !choice.canReroll ||
       this.state.specialGameRule !== SpecialGameRule.SMEARGLE_PACK
@@ -1460,6 +1475,21 @@ export default class GameRoom extends Room<{ state: GameState }> {
       emotions: pack.map((card) => card.emotion),
       canReroll: false
     })
+  }
+
+  rerollBlessingSlot(choice: PlayerChoice, slotIndex?: number) {
+    if (typeof slotIndex !== "number") return
+    if (choice.rerollableSlots[slotIndex] !== true) return
+    const currentBlessing = choice.blessings[slotIndex]
+    const definition = Blessings[currentBlessing]
+    if (!definition) return
+    const alternatives = getBlessingsAvailable(
+      definition.tier,
+      this.state.stageLevel
+    ).filter((blessing) => choice.blessings.includes(blessing) === false)
+    if (alternatives.length === 0) return
+    choice.blessings[slotIndex] = pickRandomIn(alternatives)
+    choice.rerollableSlots[slotIndex] = false
   }
 
   selectSeed(playerId: string, seed: unknown) {
@@ -1480,6 +1510,17 @@ export default class GameRoom extends Room<{ state: GameState }> {
     if (!player) return
     const choice = player.choices.find((c) => c.id === choiceId)
     if (!choice) return
+
+    if (choice.type === "blessing") {
+      const blessing = choice.blessings[choiceIndex]
+      if (!blessing) return
+      const owned =
+        this.state.blessingsByPlayerId.get(player.id) ?? new PlayerBlessings()
+      owned.blessings.push(blessing)
+      this.state.blessingsByPlayerId.set(player.id, owned)
+      removeInArray(player.choices, choice)
+      return
+    }
 
     // resolved here before the generic validation, which assumes homogeneous options
     if (choice.type === "evolution_lab_reward") {
