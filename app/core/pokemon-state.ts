@@ -11,6 +11,10 @@ import {
   Transfer
 } from "../types"
 import { Awakening } from "../types/enum/Awakening"
+import {
+  Blessing,
+  CONTEMPT_DAMAGE_MULTIPLIER
+} from "../types/enum/Blessing"
 import { EffectEnum } from "../types/enum/Effect"
 import {
   AttackType,
@@ -510,6 +514,15 @@ export default abstract class PokemonState {
       if (attacker && attacker.status.fairyField) {
         damage *= 1.2
       }
+      
+      if (
+        attacker &&
+        attacker.stars > pokemon.stars &&
+        attacker.player?.blessings?.includes(Blessing.CONTEMPT)
+      ) {
+        damage *= CONTEMPT_DAMAGE_MULTIPLIER
+      }
+
       // dark pokemon do more damage to BLINDED status
       if (attacker && pokemon.status.blinded && (attacker.effects.has(EffectEnum.BEAT_UP) || attacker.effects.has(EffectEnum.FALSE_SURRENDER))) {
         damage *= 1.2

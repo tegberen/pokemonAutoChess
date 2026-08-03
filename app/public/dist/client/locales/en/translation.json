@@ -5175,6 +5175,54 @@
 		"CURSE_OF_TWO": {
 			"name": "Curse of Two",
 			"description": "Each of your GHOST curses affects 2 enemies at once. Gain a Snorunt."
+		},
+		"VITAMINS": {
+			"name": "Vitamins",
+			"description": "Your team gains 1 ATK, 5 AP and 5 SPEED."
+		},
+		"DRAGON_FANG": {
+			"name": "Dragon Fang",
+			"description": "Allies gain 2 AP per STAR of the units on your board."
+		},
+		"QUIET_STRENGTH": {
+			"name": "Quiet Strength",
+			"description": "The strongest ally gains HP equal to your missing player HP at the start of combat. When under 25 player HP, this effect is doubled."
+		},
+		"MISFORTUNE": {
+			"name": "Misfortune",
+			"description": "The strongest enemy loses % max HP equal to your missing player HP at the start of combat."
+		},
+		"SYNCHRONISED_SPEED_I": {
+			"name": "Synchronised Speed I",
+			"description": "The first time the ally with the highest base SPEED gets a KO, all other allies raise their base SPEED to match it."
+		},
+		"SYNCHRONISED_SPEED_II": {
+			"name": "Synchronised Speed II",
+			"description": "The first time the ally with the highest SPEED gets a KO, all other allies raise their SPEED to match its current SPEED."
+		},
+		"POTENTIAL_ENERGY_I": {
+			"name": "Potential Energy I",
+			"description": "Allies that can still evolve gain 25 SHIELD and 5 SPEED."
+		},
+		"POTENTIAL_ENERGY_II": {
+			"name": "Potential Energy II",
+			"description": "Allies that can still evolve gain 40 SHIELD and 10 SPEED."
+		},
+		"RIVALRY": {
+			"name": "Rivalry",
+			"description": "When your strongest Pokémon gets a KO, it gains 2 permanent ATK if on your side of the board, or 10 permanent HP if on the enemy side of the board. If taken at stage 12, gain a RELIC_CROWN."
+		},
+		"SHINY_SAFEGUARD": {
+			"name": "Shiny Safeguard",
+			"description": "Allies that start combat in the front row gain PROTECT for 1.5 seconds the first time they drop below 50% HP."
+		},
+		"CONTEMPT": {
+			"name": "Contempt",
+			"description": "Allies deal 50% more damage to enemies with less STAR levels than them."
+		},
+		"MISFITS": {
+			"name": "Misfits",
+			"description": "Allies with no active synergies gain 50 HP, 50 AP, 5 ATK, 5 DEF and 5 SPE_DEF."
 		}
 	},
 	"hide": "Hide",

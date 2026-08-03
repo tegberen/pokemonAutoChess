@@ -330,6 +330,82 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
       stage < BLESSING_SYNERGY_GATED_STAGE ||
       isSynergyActiveForPlayer(player, Synergy.STEEL)
   },
+  [Blessing.VITAMINS]: {
+    tier: BlessingTier.SILVER,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "vitamin_bottle",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.DRAGON_FANG]: {
+    tier: BlessingTier.SILVER,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "dragon_orb",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.QUIET_STRENGTH]: {
+    tier: BlessingTier.SILVER,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "yin_yang",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.MISFORTUNE]: {
+    tier: BlessingTier.SILVER,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "broken_bone",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.SYNCHRONISED_SPEED_I]: {
+    tier: BlessingTier.SILVER,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "metronome",
+    grantsPokemonImmediately: false,
+    line: "synchronised_speed"
+  },
+  [Blessing.SYNCHRONISED_SPEED_II]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "metronome",
+    grantsPokemonImmediately: false,
+    line: "synchronised_speed"
+  },
+  [Blessing.POTENTIAL_ENERGY_I]: {
+    tier: BlessingTier.SILVER,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "star_energy_swirl",
+    grantsPokemonImmediately: false,
+    line: "potential_energy"
+  },
+  [Blessing.POTENTIAL_ENERGY_II]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "star_energy_swirl",
+    grantsPokemonImmediately: false,
+    line: "potential_energy"
+  },
+  [Blessing.RIVALRY]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "rival_arrows",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.SHINY_SAFEGUARD]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "shiny_shield",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.CONTEMPT]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "dripping_star",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.MISFITS]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "freedom_dove",
+    grantsPokemonImmediately: false
+  },
   [Blessing.WILD_SUBSCRIPTION]: {
     tier: BlessingTier.SILVER,
     availableAtStages: [4],
@@ -486,11 +562,18 @@ function tierChancesForBlessingsUnderTest(): {
 export const BLESSING_TEST_MODE: boolean = false
 
 const BLESSINGS_UNDER_TEST: Blessing[] = [
-  Blessing.FORECAST,
-  Blessing.WEATHER_INSTITUTE,
-  Blessing.BEEKEEPING,
-  Blessing.CURSE_OF_TWO,
-  Blessing.ARCANE_METALS
+  Blessing.VITAMINS,
+  Blessing.DRAGON_FANG,
+  Blessing.QUIET_STRENGTH,
+  Blessing.MISFORTUNE,
+  Blessing.SYNCHRONISED_SPEED_I,
+  Blessing.SYNCHRONISED_SPEED_II,
+  Blessing.POTENTIAL_ENERGY_I,
+  Blessing.POTENTIAL_ENERGY_II,
+  Blessing.RIVALRY,
+  Blessing.SHINY_SAFEGUARD,
+  Blessing.CONTEMPT,
+  Blessing.MISFITS
 ]
 
 function countBlessingsOfFamily(blessings: Blessing[], family?: string) {

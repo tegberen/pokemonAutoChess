@@ -24,7 +24,11 @@ import {
 } from "../types"
 import { EvolutionRuleType } from "../types/EvolutionRules"
 import { Ability } from "../types/enum/Ability"
-import { Blessing } from "../types/enum/Blessing"
+import {
+  Blessing,
+  RIVALRY_ATTACK_ON_OWN_SIDE,
+  RIVALRY_MAX_HP_ON_ENEMY_SIDE
+} from "../types/enum/Blessing"
 import { EffectEnum } from "../types/enum/Effect"
 import {
   AttackType,
@@ -159,6 +163,8 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
   darkSubstituteEligible: boolean = false
   isStrongestAllyThisFight: boolean = false
   isDoomSeedTarget: boolean = false
+  isRivalryChampionThisFight: boolean = false
+  isSynchronisedSpeedLeaderThisFight: boolean = false
 
   constructor(
     pokemon: IPokemon,
@@ -1338,6 +1344,43 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
         v.team === this.team &&
         v.addAttack(target.stars, v, 0, false)
     )
+
+    if (
+      this.isRivalryChampionThisFight &&
+      this.player?.blessings?.includes(Blessing.RIVALRY)
+    ) {
+      const isOnOwnSideOfBoard =
+        this.team === Team.BLUE_TEAM ? this.positionY <= 2 : this.positionY >= 3
+      if (isOnOwnSideOfBoard) {
+        this.addAttack(RIVALRY_ATTACK_ON_OWN_SIDE, this, 0, false, true)
+      } else {
+        this.addMaxHP(RIVALRY_MAX_HP_ON_ENEMY_SIDE, this, 0, false, true)
+      }
+    }
+
+    if (
+      this.isSynchronisedSpeedLeaderThisFight &&
+      (this.player?.blessings?.includes(Blessing.SYNCHRONISED_SPEED_I) ||
+        this.player?.blessings?.includes(Blessing.SYNCHRONISED_SPEED_II))
+    ) {
+      this.isSynchronisedSpeedLeaderThisFight = false
+      const sharedSpeed = this.player.blessings.includes(
+        Blessing.SYNCHRONISED_SPEED_II
+      )
+        ? this.speed
+        : this.refToBoardPokemon.speed
+      board.forEach((x, y, ally) => {
+        if (
+          ally &&
+          ally.team === this.team &&
+          ally !== this &&
+          ally.hp > 0 &&
+          ally.speed < sharedSpeed
+        ) {
+          ally.addSpeed(sharedSpeed - ally.speed, ally, 0, false)
+        }
+      })
+    }
 
     if (
       this.player &&

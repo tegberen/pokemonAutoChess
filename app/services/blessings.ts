@@ -20,7 +20,10 @@ import {
 import { Pkm, PkmFamily } from "../types/enum/Pokemon"
 import { getSellPrice } from "../models/shop"
 import { Synergy } from "../types/enum/Synergy"
-import { SYNERGIES_WITH_BLESSINGS } from "../config/game/blessings"
+import {
+  BLESSING_SYNERGY_GATED_STAGE,
+  SYNERGIES_WITH_BLESSINGS
+} from "../config/game/blessings"
 import {
   getFirstAvailablePositionInBench,
   getFreeSpaceOnBench
@@ -741,6 +744,13 @@ export const blessingEffectService: {
 
   [Blessing.ARCANE_METALS]: (player) =>
     giftPokemonIfBenchHasRoom(player, Pkm.MAGNEMITE),
+
+  [Blessing.RIVALRY]: (player, state) => {
+    if (state.stageLevel >= BLESSING_SYNERGY_GATED_STAGE) {
+      player.items.push(Item.RELIC_CROWN)
+    }
+    return true
+  },
 
   [Blessing.SAFARI_ENCOUNTER]: (player, state) => {
     const [topSynergy] = player.synergies.getTopSynergies(1)

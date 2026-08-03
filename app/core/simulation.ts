@@ -49,7 +49,24 @@ import {
 import { Passive } from "../types/enum/Passive"
 import { Pkm, PkmByIndex } from "../types/enum/Pokemon"
 import { Synergy } from "../types/enum/Synergy"
-import { Blessing } from "../types/enum/Blessing"
+import {
+  Blessing,
+  DRAGON_FANG_ABILITY_POWER_PER_STAR,
+  MISFITS_ABILITY_POWER,
+  MISFITS_ATTACK,
+  MISFITS_DEFENSE,
+  MISFITS_MAX_HP,
+  MISFITS_SPECIAL_DEFENSE,
+  POTENTIAL_ENERGY_SHIELD,
+  POTENTIAL_ENERGY_SPEED,
+  QUIET_STRENGTH_LOW_LIFE_THRESHOLD,
+  SHINY_SAFEGUARD_HP_THRESHOLD,
+  SHINY_SAFEGUARD_PROTECT_DURATION,
+  VITAMINS_ABILITY_POWER,
+  VITAMINS_ATTACK,
+  VITAMINS_SPEED
+} from "../types/enum/Blessing"
+import { isSynergyActiveForPlayer } from "../config/game/blessings"
 import { Weather, WeatherEffects } from "../types/enum/Weather"
 import type { IPokemonData } from "../types/interfaces/PokemonData"
 import { count, isIn, removeInArray } from "../utils/array"
@@ -68,6 +85,7 @@ import { DishEffects } from "./effects/dishes"
 import {
   OnAttackEffect,
   OnAttackReceivedEffect,
+  OnDamageReceivedEffect,
   OnDishConsumedEffect,
   OnMoveEffect,
   OnSimulationStartEffect,
@@ -1138,6 +1156,8 @@ export default class Simulation extends Schema implements ISimulation {
       })
     }
 
+    this.applyCombatStartBlessings(sides)
+
     // TARGET SELECTION EFFECTS (ghost curse)
     for (const { teamIndex, effects: teamEffects } of sides) {
       const opponentTeam =
@@ -1169,6 +1189,134 @@ export default class Simulation extends Schema implements ISimulation {
 
       if (teamEffects.has(EffectEnum.CURSE_OF_FATE)) {
         this.applyCurse(EffectEnum.CURSE_OF_FATE, opponentTeam)
+      }
+    }
+  }
+
+  applyCombatStartBlessings(
+    sides: { teamIndex: Team; player: Player | undefined }[]
+  ) {
+    for (const { teamIndex, player } of sides) {
+      const blessings = player?.blessings
+      if (!player || !blessings || blessings.length === 0) continue
+      const team = teamIndex === Team.BLUE_TEAM ? this.blueTeam : this.redTeam
+      const allies = [...team.values()].filter(
+        (entity): entity is PokemonEntity =>
+          entity.player === player && entity.hp > 0
+      )
+      const ownUnits = allies.filter((entity) => !entity.isSpawn)
+      if (allies.length === 0) continue
+
+      const missingPlayerLife = Math.max(0, player.maxLife - player.life)
+
+      if (blessings.includes(Blessing.VITAMINS)) {
+        allies.forEach((ally) => {
+          ally.addAttack(VITAMINS_ATTACK, ally, 0, false)
+          ally.addAbilityPower(VITAMINS_ABILITY_POWER, ally, 0, false)
+          ally.addSpeed(VITAMINS_SPEED, ally, 0, false)
+        })
+      }
+
+      if (blessings.includes(Blessing.DRAGON_FANG)) {
+        const totalStars = ownUnits.reduce((sum, ally) => sum + ally.stars, 0)
+        const abilityPower = totalStars * DRAGON_FANG_ABILITY_POWER_PER_STAR
+        allies.forEach((ally) =>
+          ally.addAbilityPower(abilityPower, ally, 0, false)
+        )
+      }
+
+      if (blessings.includes(Blessing.MISFITS)) {
+        allies
+          .filter(
+            (ally) =>
+              ![...ally.types].some((type) =>
+                isSynergyActiveForPlayer(player, type)
+              )
+          )
+          .forEach((ally) => {
+            ally.addMaxHP(MISFITS_MAX_HP, ally, 0, false)
+            ally.addAbilityPower(MISFITS_ABILITY_POWER, ally, 0, false)
+            ally.addAttack(MISFITS_ATTACK, ally, 0, false)
+            ally.addDefense(MISFITS_DEFENSE, ally, 0, false)
+            ally.addSpecialDefense(MISFITS_SPECIAL_DEFENSE, ally, 0, false)
+          })
+      }
+
+      for (const [blessing, tier] of [
+        [Blessing.POTENTIAL_ENERGY_I, "I"],
+        [Blessing.POTENTIAL_ENERGY_II, "II"]
+      ] as const) {
+        if (!blessings.includes(blessing)) continue
+        allies
+          .filter((ally) => ally.refToBoardPokemon.hasEvolution)
+          .forEach((ally) => {
+            ally.addShield(POTENTIAL_ENERGY_SHIELD[tier], ally, 0, false)
+            ally.addSpeed(POTENTIAL_ENERGY_SPEED[tier], ally, 0, false)
+          })
+      }
+
+      if (blessings.includes(Blessing.QUIET_STRENGTH) && ownUnits.length > 0) {
+        const strongestAlly = getStrongestUnit(ownUnits)
+        const bonusHP =
+          player.life < QUIET_STRENGTH_LOW_LIFE_THRESHOLD
+            ? missingPlayerLife * 2
+            : missingPlayerLife
+        strongestAlly.addMaxHP(bonusHP, strongestAlly, 0, false)
+      }
+
+      if (blessings.includes(Blessing.MISFORTUNE)) {
+        const enemyTeam =
+          teamIndex === Team.BLUE_TEAM ? this.redTeam : this.blueTeam
+        const enemies = [...enemyTeam.values()].filter(
+          (entity): entity is PokemonEntity => entity.hp > 0 && !entity.isSpawn
+        )
+        if (enemies.length > 0) {
+          const strongestEnemy = getStrongestUnit(enemies)
+          strongestEnemy.handleDamage({
+            damage: Math.round(
+              (strongestEnemy.maxHP * missingPlayerLife) / 100
+            ),
+            board: this.board,
+            attackType: AttackType.TRUE,
+            attacker: null,
+            shouldTargetGainMana: false
+          })
+        }
+      }
+
+      if (blessings.includes(Blessing.SHINY_SAFEGUARD)) {
+        const frontRow = teamIndex === Team.RED_TEAM ? 3 : 2
+        allies
+          .filter((ally) => ally.positionY === frontRow)
+          .forEach((ally) => {
+            const safeguard = new OnDamageReceivedEffect(({ pokemon }) => {
+              if (pokemon.hp / pokemon.maxHP >= SHINY_SAFEGUARD_HP_THRESHOLD)
+                return
+              pokemon.status.triggerProtect(SHINY_SAFEGUARD_PROTECT_DURATION)
+              pokemon.effectsSet.delete(safeguard)
+            })
+            ally.effectsSet.add(safeguard)
+          })
+      }
+
+      if (blessings.includes(Blessing.RIVALRY) && ownUnits.length > 0) {
+        getStrongestUnit(ownUnits).isRivalryChampionThisFight = true
+      }
+
+      /* Tier I ranks by base speed, tier II by the speed the unit actually
+         starts the fight with, after items and synergies have been applied */
+      const speedLeaderTier = blessings.includes(Blessing.SYNCHRONISED_SPEED_II)
+        ? "II"
+        : blessings.includes(Blessing.SYNCHRONISED_SPEED_I)
+          ? "I"
+          : null
+      if (speedLeaderTier && ownUnits.length > 0) {
+        const speedOf = (entity: PokemonEntity) =>
+          speedLeaderTier === "II" ? entity.speed : entity.refToBoardPokemon.speed
+        const speedLeader = ownUnits.reduce((fastest, ally) =>
+          speedOf(ally) > speedOf(fastest) ? ally : fastest
+        )
+        speedLeader.isSynchronisedSpeedLeaderThisFight = true
       }
     }
   }
