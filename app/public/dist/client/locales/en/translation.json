@@ -4529,7 +4529,8 @@
 			"team_planner": "Open/close team planner",
 			"avatar_emotes": "Toggle emote menu",
 			"avatar_show_emote": "Trigger emote"
-		}
+		},
+		"show_blessing_glow": "Blessing glow"
 	},
 	"theme": {
 		"default": "Classic",

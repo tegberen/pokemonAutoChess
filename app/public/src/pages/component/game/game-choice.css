@@ -71,9 +71,9 @@
 }
 
 .game-choice-blessing-slot > .my-box {
+  perspective: 700px;
   height: 17em;
-  overflow-y: auto;
-  scrollbar-width: thin;
+  overflow: hidden;
   width: 100%;
   padding: 5px;
   display: flex;
@@ -95,6 +95,7 @@
 }
 
 .blessing-tier-silver {
+  --blessing-glow-hue: var(--color-fg-secondary);
   --blessing-hue: var(--color-rarity-common);
   --blessing-mix: 18%;
   --blessing-stripe-a: var(--color-fg-secondary);
@@ -104,6 +105,7 @@
 }
 
 .blessing-tier-gold {
+  --blessing-glow-hue: var(--color-fg-gold);
   --blessing-hue: var(--color-fg-gold);
   --blessing-mix: 32%;
   --blessing-stripe-a: var(--color-fg-gold);
@@ -113,6 +115,11 @@
 }
 
 .blessing-tier-prismatic {
+  --blessing-glow-hue: color-mix(
+    in srgb,
+    var(--color-rarity-epic) 45%,
+    var(--color-fg-primary)
+  );
   --blessing-hue: var(--color-rarity-epic);
   --blessing-mix: 18%;
   --blessing-stripe-a: var(--color-rarity-special);
@@ -140,14 +147,66 @@
   animation: blessing-nacre 4s linear infinite;
 }
 
+/* keyed on the blessing in jsx, so a reroll remounts the body and replays this */
+.blessing-body-flip {
+  animation: blessing-flip 320ms ease-out;
+  backface-visibility: hidden;
+}
+
+@keyframes blessing-flip {
+  from {
+    opacity: 0;
+    transform: rotateY(-60deg);
+    filter: brightness(0.3);
+  }
+  45% {
+    opacity: 1;
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
+
 @keyframes blessing-nacre {
   to {
     background-position: 67.8823px 0;
   }
 }
 
+.blessing-glow::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    105deg,
+    transparent 30%,
+    color-mix(in srgb, var(--color-fg-primary) 10%, transparent) 42%,
+    color-mix(in srgb, var(--color-fg-primary) 28%, transparent) 50%,
+    color-mix(in srgb, var(--color-fg-primary) 10%, transparent) 58%,
+    transparent 70%
+  );
+  animation: blessing-sheen 6s ease-in-out infinite;
+}
+
+@keyframes blessing-sheen {
+  0%,
+  65% {
+    transform: translateX(-130%);
+  }
+  100% {
+    transform: translateX(130%);
+  }
+}
+
 .blessing-body {
+  position: relative;
+  z-index: 1;
   align-self: stretch;
+  overflow-y: auto;
+  scrollbar-width: thin;
   flex: 1;
   display: flex;
   flex-flow: column;
@@ -176,11 +235,36 @@
   opacity: 0.9;
 }
 
-.blessing-tier-prismatic.my-box {
-  box-shadow:
-    inset 0 0 0 2px var(--color-fg-primary),
-    var(--shadow-clickable);
+.game-choice-blessing-slot > .my-box.blessing-glow {
+  position: relative;
+  --blessing-glow-shadow:
+    inset 0 0 9px 1px
+      color-mix(in srgb, var(--blessing-glow-hue) 17%, transparent),
+    var(--shadow-clickable),
+    0 0 9px 1px color-mix(in srgb, var(--blessing-glow-hue) 30%, transparent),
+    0 0 20px 5px color-mix(in srgb, var(--blessing-glow-hue) 16%, transparent);
+  box-shadow: var(--blessing-glow-shadow);
+}
+
+
+.game-choice-blessing-slot > .my-box.blessing-tier-prismatic {
   padding: 8px;
+  /* six 8px bands keep the 48px period the seamless tile size depends on */
+  background-image: repeating-linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--color-rarity-ultra) 30%, transparent) 0px,
+    color-mix(in srgb, var(--color-rarity-ultra) 30%, transparent) 8px,
+    color-mix(in srgb, var(--color-rarity-legendary) 30%, transparent) 8px,
+    color-mix(in srgb, var(--color-rarity-legendary) 30%, transparent) 16px,
+    color-mix(in srgb, var(--color-rarity-uncommon) 30%, transparent) 16px,
+    color-mix(in srgb, var(--color-rarity-uncommon) 30%, transparent) 24px,
+    color-mix(in srgb, var(--color-rarity-rare) 30%, transparent) 24px,
+    color-mix(in srgb, var(--color-rarity-rare) 30%, transparent) 32px,
+    color-mix(in srgb, var(--color-rarity-epic) 30%, transparent) 32px,
+    color-mix(in srgb, var(--color-rarity-epic) 30%, transparent) 40px,
+    color-mix(in srgb, var(--color-rarity-special) 30%, transparent) 40px,
+    color-mix(in srgb, var(--color-rarity-special) 30%, transparent) 48px
+  );
 }
 
 /* 67.8823px = 48px stripe period / sin(135deg), so the tile edges don't seam */

@@ -163,6 +163,16 @@ export default function GameOptionsModal(props: {
           <p>
             <Checkbox
               isDark
+              checked={preferences.showBlessingGlow}
+              onToggle={(checked) =>
+                setPreferences({ showBlessingGlow: checked })
+              }
+              label={t("options.show_blessing_glow")}
+            />
+          </p>
+          <p>
+            <Checkbox
+              isDark
               checked={preferences.showDamageNumbers}
               onToggle={(checked) =>
                 setPreferences({ showDamageNumbers: checked })

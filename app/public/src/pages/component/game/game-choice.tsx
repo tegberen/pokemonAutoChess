@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { useTranslation } from "react-i18next"
 import {
   EVOLUTION_LAB_REWARD_EXP,
@@ -22,6 +22,7 @@ import { SpecialGameRule } from "../../../../../types/enum/SpecialGameRule"
 import { isIn } from "../../../../../utils/array"
 import { DEPTH } from "../../../game/depths"
 import { selectConnectedPlayer, useAppSelector } from "../../../hooks"
+import { usePreference } from "../../../preferences"
 import type { IDetailledPokemon } from "../../../models/bot-v2"
 import { pickChoice, pickArmoryGift, rerollChoice } from "../../../network"
 import { Blessings } from "../../../../../config/game/blessings"
@@ -77,6 +78,12 @@ export default function GameChoice() {
   }, [])
 
   const [visible, setVisible] = useState(true)
+  const [showBlessingGlow] = usePreference("showBlessingGlow")
+  const previousBlessings = useRef<Blessing[]>([])
+
+  useEffect(() => {
+    previousBlessings.current = [...(choices[0]?.blessings ?? [])]
+  })
 
   // item icons inside blessing descriptions load later than the text, so warm
   // them for every blessing before any of them can be shown
@@ -102,6 +109,13 @@ export default function GameChoice() {
   }
 
   const choice = choices[0] // only display one choice at a time, the others will be displayed after the first one is picked
+
+  // a reroll replaces exactly one blessing, a new selection replaces them all
+  const isSingleSlotChange =
+    previousBlessings.current.length === choice.blessings.length &&
+    choice.blessings.filter(
+      (blessing, index) => previousBlessings.current[index] !== blessing
+    ).length === 1
 
   if (
     choice.type === "starter" &&
@@ -162,6 +176,9 @@ export default function GameChoice() {
           <div className="game-choice-items-list game-choice-blessings-list">
             {choice.blessings.map((blessing, index) => {
               const blessingDefinition = Blessings[blessing]
+              const wasRerolled =
+                isSingleSlotChange &&
+                previousBlessings.current[index] !== blessing
               const blockedByFullBench =
                 blessingDefinition.grantsPokemonImmediately &&
                 (board?.getBenchSize() ?? 0) >= 8
@@ -174,7 +191,10 @@ export default function GameChoice() {
                 className={cc(
                   "my-box",
                   `blessing-tier-${blessingDefinition.tier.toLowerCase()}`,
-                  { "active clickable": !blockedByFullBench }
+                  {
+                    "active clickable": !blockedByFullBench,
+                    "blessing-glow": showBlessingGlow
+                  }
                 )}
                 onClick={(event) => {
                   event.stopPropagation()
@@ -183,7 +203,12 @@ export default function GameChoice() {
                   pickChoice(choice.id, index)
                 }}
               >
-                <div className="blessing-body">
+                <div
+                  className={cc("blessing-body", {
+                    "blessing-body-flip": wasRerolled
+                  })}
+                  key={blessing}
+                >
                   <img
                     className="blessing-icon"
                     src={`/assets/blessings/${blessingDefinition.icon}.svg`}

@@ -27,6 +27,7 @@ export interface IPreferencesState {
   synergiesPosition: { x: number; y: number }
   expeditionsPosition: { x: number; y: number }
   showDetailsOnHover: boolean
+  showBlessingGlow: boolean
   showDamageNumbers: boolean
   showEvolutions: boolean
   showWeatherRocks: boolean
@@ -57,6 +58,7 @@ const defaultPreferences: IPreferencesState = {
   synergiesPosition: { x: 0, y: 0 },
   expeditionsPosition: { x: 0, y: 0 },
   showDetailsOnHover: false,
+  showBlessingGlow: false,
   showDamageNumbers: true,
   showEvolutions: true,
   showWeatherRocks: true,
