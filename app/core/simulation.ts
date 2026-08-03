@@ -2354,13 +2354,13 @@ export default class Simulation extends Schema implements ISimulation {
       }
     }
 
-    /* SPECTRAL_SPLIT blessing: curse a second enemy. The pass counter bounds the
+    /* CURSE_OF_TWO blessing: curse a second enemy. The pass counter bounds the
        recursion, and the already cursed filter above picks a different target */
     const cursingPlayer =
       opponentTeamNumber === Team.RED_TEAM ? this.bluePlayer : this.redPlayer
     if (
       pass === 1 &&
-      cursingPlayer?.blessings?.includes(Blessing.SPECTRAL_SPLIT)
+      cursingPlayer?.blessings?.includes(Blessing.CURSE_OF_TWO)
     ) {
       this.applyCurse(effect, opponentTeamNumber, 2)
     }

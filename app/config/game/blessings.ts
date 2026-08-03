@@ -17,6 +17,9 @@ export interface BlessingDefinition {
   grantsPokemonImmediately: boolean
   isAvailable?: (player: Player, stage: number) => boolean
   family?: BlessingFamily
+  /* blessings on the same progression line are alternatives of each other, so
+     owning one hides the rest (Gardening -> Amazing Gardening -> Blossom Festival) */
+  line?: string
 }
 
 export const BLESSING_MAX_OPTIONS_PER_FAMILY = 2
@@ -309,7 +312,7 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     icon: "honey_comb",
     grantsPokemonImmediately: false
   },
-  [Blessing.SPECTRAL_SPLIT]: {
+  [Blessing.CURSE_OF_TWO]: {
     tier: BlessingTier.GOLD,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "ghost_spectre",
@@ -486,7 +489,7 @@ const BLESSINGS_UNDER_TEST: Blessing[] = [
   Blessing.FORECAST,
   Blessing.WEATHER_INSTITUTE,
   Blessing.BEEKEEPING,
-  Blessing.SPECTRAL_SPLIT,
+  Blessing.CURSE_OF_TWO,
   Blessing.ARCANE_METALS
 ]
 
@@ -528,6 +531,12 @@ export function getBlessingsAvailable(
   stage: number,
   player: Player
 ): Blessing[] {
+  const linesAlreadyOwned = new Set(
+    (player.blessings ?? [])
+      .map((owned) => Blessings[owned]?.line)
+      .filter((line): line is string => line !== undefined)
+  )
+
   return (Object.keys(Blessings) as Blessing[]).filter((blessing) => {
     const definition = Blessings[blessing]
     return (
@@ -535,6 +544,8 @@ export function getBlessingsAvailable(
       (BLESSING_TEST_MODE === false ||
         BLESSINGS_UNDER_TEST.includes(blessing)) &&
       (BLESSING_TEST_MODE || definition.availableAtStages.includes(stage)) &&
+      (definition.line === undefined ||
+        linesAlreadyOwned.has(definition.line) === false) &&
       (definition.isAvailable?.(player, stage) ?? true)
     )
   })

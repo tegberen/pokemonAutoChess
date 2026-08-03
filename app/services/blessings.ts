@@ -736,7 +736,7 @@ export const blessingEffectService: {
   [Blessing.INSTANT_HYPER_ROLL]: (player) =>
     giftPokemonOfRarityAndStars(player, Rarity.COMMON, 3),
 
-  [Blessing.SPECTRAL_SPLIT]: (player) =>
+  [Blessing.CURSE_OF_TWO]: (player) =>
     giftPokemonIfBenchHasRoom(player, Pkm.SNORUNT),
 
   [Blessing.ARCANE_METALS]: (player) =>

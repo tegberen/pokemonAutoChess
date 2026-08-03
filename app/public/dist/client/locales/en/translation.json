@@ -5168,13 +5168,13 @@
 			"name": "Beekeeping",
 			"description": "When your unique casts its ability, spawn a Combee."
 		},
-		"SPECTRAL_SPLIT": {
-			"name": "Spectral Split",
-			"description": "Each of your GHOST curses affects 2 enemies at once. Gain a Snorunt."
-		},
 		"ARCANE_METALS": {
 			"name": "Arcane Metals",
 			"description": "STEEL synergy converts ability damage into TRUE as well as attacks. Gain a Magnemite."
+		},
+		"CURSE_OF_TWO": {
+			"name": "Curse of Two",
+			"description": "Each of your GHOST curses affects 2 enemies at once. Gain a Snorunt."
 		}
 	},
 	"hide": "Hide",
