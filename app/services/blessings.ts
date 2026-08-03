@@ -5,7 +5,15 @@ import { PRECOMPUTED_POKEMONS_PER_RARITY } from "../models/precomputed/precomput
 import type GameState from "../rooms/states/game-state"
 import { Blessing, BlessingTrigger } from "../types/enum/Blessing"
 import { BattleResult, Rarity } from "../types/enum/Game"
-import { SynergyTiersThresholds } from "../config"
+import { RegionDetails, SynergyTiersThresholds } from "../config"
+import type { DungeonPMDO } from "../types/enum/Dungeon"
+import {
+  LAPRAS_TRAVEL_DURATION,
+  WandererBehavior,
+  WandererType
+} from "../types/enum/Wanderer"
+import { Transfer } from "../types"
+import type GameRoom from "../rooms/game-room"
 import { giveRandomEgg } from "../core/eggs"
 import { getUnlockedFlowerPots } from "../core/flower-pots"
 import { type Awakening, AwakeningTypes } from "../types/enum/Awakening"
@@ -641,7 +649,11 @@ export const blessingScheduledEffectService: {
 }
 
 export const blessingEffectService: {
-  [blessing in Blessing]?: (player: Player, state: GameState) => boolean
+  [blessing in Blessing]?: (
+    player: Player,
+    state: GameState,
+    room?: GameRoom
+  ) => boolean
 } = {
   ...synergyGemFamilyEffects("BADGE", 1),
   ...synergyGemFamilyEffects("CREST", 2),
@@ -769,6 +781,48 @@ export const blessingEffectService: {
 
   [Blessing.MEGA_SOL]: (player) =>
     giftPokemonIfBenchHasRoom(player, Pkm.GOSSIFLEUR),
+
+  [Blessing.TIDAL_SURGE]: (player) =>
+    giftPokemonIfBenchHasRoom(player, Pkm.FROAKIE),
+
+  [Blessing.ATLANTEAN_MAGIC]: (player) =>
+    giftPokemonIfBenchHasRoom(player, Pkm.SQUIRTLE),
+
+  [Blessing.STAR_CROSSED_SEAS]: (player, state, room) => {
+    const previousMap = player.map
+    const isAmorphousRegion =
+      previousMap !== "town" &&
+      RegionDetails[previousMap]?.synergies.includes(Synergy.AMORPHOUS)
+
+    if (isAmorphousRegion) {
+      // already there, just let both Shellos into the pool
+      player.updateRegionalPool(state, true, previousMap)
+      return true
+    }
+
+    const amorphousMaps = (Object.keys(RegionDetails) as DungeonPMDO[]).filter(
+      (map) =>
+        map !== previousMap &&
+        RegionDetails[map].synergies.includes(Synergy.AMORPHOUS)
+    )
+    if (amorphousMaps.length === 0) return true
+
+    // same travel sequence as the Lapras Passport item
+    const newMap = pickRandomIn(amorphousMaps)
+    room?.broadcast(Transfer.PRELOAD_MAPS, [newMap])
+    player.spawnWanderingPokemon({
+      pkm: Pkm.LAPRAS,
+      type: WandererType.DIALOG,
+      behavior: WandererBehavior.SPECTATE,
+      data: newMap
+    })
+    setTimeout(() => {
+      player.map = newMap
+      player.regions.push(newMap)
+      player.updateRegionalPool(state, true, previousMap)
+    }, LAPRAS_TRAVEL_DURATION)
+    return true
+  },
 
   [Blessing.SPORE_CLOUDS]: (player) =>
     giftPokemonIfBenchHasRoom(player, Pkm.FLABEBE),

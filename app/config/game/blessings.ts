@@ -30,6 +30,11 @@ export function isSynergyActiveForPlayer(player: Player, synergy: Synergy) {
   )
 }
 
+const isSynergyBlessingAvailable =
+  (synergy: Synergy) => (player: Player, stage: number) =>
+    stage < BLESSING_SYNERGY_GATED_STAGE ||
+    isSynergyActiveForPlayer(player, synergy)
+
 const isFloraBlessingAvailable = (player: Player, stage: number) =>
   stage < BLESSING_SYNERGY_GATED_STAGE ||
   isSynergyActiveForPlayer(player, Synergy.FLORA)
@@ -459,6 +464,34 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     grantsPokemonImmediately: true,
     isAvailable: isFloraBlessingAvailable
   },
+  [Blessing.POLLUTED_SEA]: {
+    tier: BlessingTier.SILVER,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "polluted_sea",
+    grantsPokemonImmediately: false,
+    isAvailable: isSynergyBlessingAvailable(Synergy.AQUATIC)
+  },
+  [Blessing.TIDAL_SURGE]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "trident",
+    grantsPokemonImmediately: true,
+    isAvailable: isSynergyBlessingAvailable(Synergy.AQUATIC)
+  },
+  [Blessing.ATLANTEAN_MAGIC]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "water_magic",
+    grantsPokemonImmediately: true,
+    isAvailable: isSynergyBlessingAvailable(Synergy.WATER)
+  },
+  [Blessing.STAR_CROSSED_SEAS]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: [12],
+    icon: "sea",
+    grantsPokemonImmediately: false,
+    isAvailable: isSynergyBlessingAvailable(Synergy.AMORPHOUS)
+  },
   [Blessing.WILD_SUBSCRIPTION]: {
     tier: BlessingTier.SILVER,
     availableAtStages: [4],
@@ -615,14 +648,10 @@ function tierChancesForBlessingsUnderTest(): {
 export const BLESSING_TEST_MODE: boolean = false
 
 const BLESSINGS_UNDER_TEST: Blessing[] = [
-  Blessing.GARDENING,
-  Blessing.DOUBLE_WINDFALL,
-  Blessing.AMAZING_GARDENING,
-  Blessing.FLYTRAP,
-  Blessing.MEGA_SOL,
-  Blessing.SPORE_CLOUDS,
-  Blessing.BLOSSOM_FESTIVAL,
-  Blessing.NOT_THE_BEES
+  Blessing.POLLUTED_SEA,
+  Blessing.TIDAL_SURGE,
+  Blessing.ATLANTEAN_MAGIC,
+  Blessing.STAR_CROSSED_SEAS
 ]
 
 function countBlessingsOfFamily(blessings: Blessing[], family?: string) {

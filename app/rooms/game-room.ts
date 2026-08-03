@@ -1570,7 +1570,7 @@ export default class GameRoom extends Room<{ state: GameState }> {
       if (!blessing) return
       const applyEffect = blessingEffectService[blessing]
       const moneyBeforeBlessing = player.money
-      if (applyEffect && applyEffect(player, this.state) === false) return
+      if (applyEffect && applyEffect(player, this.state, this) === false) return
       const moneyGained = player.money - moneyBeforeBlessing
       if (moneyGained > 0) {
         this.clients

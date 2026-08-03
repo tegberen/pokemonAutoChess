@@ -34,7 +34,11 @@ import {
 import { Passive } from "../../types/enum/Passive"
 import { NonPkm, Pkm, PkmFamily } from "../../types/enum/Pokemon"
 import { Synergy } from "../../types/enum/Synergy"
-import { WandererBehavior, WandererType } from "../../types/enum/Wanderer"
+import {
+  LAPRAS_TRAVEL_DURATION,
+  WandererBehavior,
+  WandererType
+} from "../../types/enum/Wanderer"
 import { isIn, removeInArray } from "../../utils/array"
 import { getFreeSpaceOnBench, isOnBench } from "../../utils/board"
 import { distanceC, distanceM } from "../../utils/distance"
@@ -1463,7 +1467,7 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
         player.map = newMap
         player.regions.push(newMap)
         player.updateRegionalPool(room.state, true, previousMap)
-      }, 10000)
+      }, LAPRAS_TRAVEL_DURATION)
 
       removeInArray(player.items, item)
       return false // prevent item from being equipped

@@ -1,6 +1,7 @@
 import PokemonFactory from "../../models/pokemon-factory"
 import { Awakening } from "../../types/enum/Awakening"
 import { Blessing } from "../../types/enum/Blessing"
+import { Synergy } from "../../types/enum/Synergy"
 import { Rarity } from "../../types/enum/Game"
 import { Pkm } from "../../types/enum/Pokemon"
 import { EffectEnum } from "../../types/enum/Effect"
@@ -33,6 +34,13 @@ export function castAbility(
   pokemon.getEffects(OnAbilityCastEffect).forEach((effect) => {
     effect.apply(pokemon, board, target, crit)
   })
+
+  if (
+    pokemon.types.has(Synergy.WATER) &&
+    pokemon.player?.blessings?.includes(Blessing.ATLANTEAN_MAGIC)
+  ) {
+    pokemon.addAbilityPower(pokemon.stars, pokemon, 0, false, true)
+  }
 
   // BEEKEEPING blessing: a Combee joins the fight each time a unique casts
   if (

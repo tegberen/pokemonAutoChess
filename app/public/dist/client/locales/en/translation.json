@@ -5252,6 +5252,22 @@
 			"name": "Not the Bees!",
 			"description": "At combat start, spawn a Combee on a random tile for each STAR level of your flower pots, up to 16. Gain a Gossifleur and a Flabébé."
 		},
+		"POLLUTED_SEA": {
+			"name": "Polluted Sea",
+			"description": "Enemy Pokémon that take damage from a tidal wave or flood wave are POISON for 3 seconds."
+		},
+		"TIDAL_SURGE": {
+			"name": "Tidal Surge",
+			"description": "When the tidal wave hits, ranged AQUATIC Pokémon holding 3+ items cast Hydro Pump, and melee AQUATIC Pokémon holding 3+ items cast Dive. Gain a Froakie."
+		},
+		"ATLANTEAN_MAGIC": {
+			"name": "Atlantean Magic",
+			"description": "When a WATER Pokémon casts its ability, it gains 1 permanent AP per STAR level. Gain a Squirtle."
+		},
+		"STAR_CROSSED_SEAS": {
+			"name": "Star-Crossed Seas",
+			"description": "Move to an AMORPHOUS region if not currently in one. You can find both kinds of Shellos in AMORPHOUS regions. Fielding them both at once grants each one 50 HP and 25 AP."
+		},
 		"MISFITS": {
 			"name": "Misfits",
 			"description": "Allies with no active synergies gain 50 HP, 50 AP, 5 ATK, 5 DEF and 5 SPE_DEF."

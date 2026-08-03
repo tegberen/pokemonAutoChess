@@ -3,6 +3,9 @@ export enum WandererBehavior {
   SPECTATE = "SPECTATE"
 }
 
+// how long the Lapras spectate animation runs before the region actually changes
+export const LAPRAS_TRAVEL_DURATION = 10000
+
 export enum WandererType {
   CATCHABLE = "CATCHABLE",
   UNOWN = "UNOWN",

@@ -47,12 +47,16 @@ import {
   WeatherRocksByWeather
 } from "../types/enum/Item"
 import { Passive } from "../types/enum/Passive"
-import { Pkm, PkmByIndex } from "../types/enum/Pokemon"
+import { Pkm, PkmByIndex, PkmFamily } from "../types/enum/Pokemon"
 import { Synergy } from "../types/enum/Synergy"
 import {
   Blessing,
   BLOSSOM_FESTIVAL_CASTS_PER_RANGE_GAIN,
   NOT_THE_BEES_MAX_COMBEES,
+  POLLUTED_SEA_POISON_DURATION,
+  STAR_CROSSED_SEAS_ABILITY_POWER,
+  STAR_CROSSED_SEAS_MAX_HP,
+  TIDAL_SURGE_ITEMS_REQUIRED,
   DRAGON_FANG_ABILITY_POWER_PER_STAR,
   MISFITS_ABILITY_POWER,
   MISFITS_ATTACK,
@@ -1338,6 +1342,24 @@ export default class Simulation extends Schema implements ISimulation {
               }
             })
           )
+        }
+      }
+
+      if (blessings.includes(Blessing.STAR_CROSSED_SEAS)) {
+        const seaFamilies = [Pkm.SHELLOS_EAST_SEA, Pkm.SHELLOS_WEST_SEA]
+        const fieldedSeaMons = seaFamilies.map((shellos) =>
+          allies.filter((ally) => PkmFamily[ally.name] === shellos)
+        )
+        if (fieldedSeaMons.every((mons) => mons.length > 0)) {
+          fieldedSeaMons.flat().forEach((ally) => {
+            ally.addMaxHP(STAR_CROSSED_SEAS_MAX_HP, ally, 0, false)
+            ally.addAbilityPower(
+              STAR_CROSSED_SEAS_ABILITY_POWER,
+              ally,
+              0,
+              false
+            )
+          })
         }
       }
 
@@ -2650,6 +2672,7 @@ export default class Simulation extends Schema implements ISimulation {
           AttackType.TRUE,
           takenDamage
         )
+        this.applyPollutedSeaPoison(pkm)
       }
 
       const nbPearlStones = pkm.player
@@ -2671,6 +2694,33 @@ export default class Simulation extends Schema implements ISimulation {
         pkm.moveTo(dest.x, dest.y, this.board, true)
       }
     }
+  }
+
+  /* both wave types damage a unit without an attacker, so the blessing owner is
+     whichever player is opposing the unit that just got hit */
+  applyPollutedSeaPoison(pokemonHit: PokemonEntity) {
+    const foePlayer =
+      pokemonHit.team === Team.BLUE_TEAM ? this.redPlayer : this.bluePlayer
+    if (!foePlayer?.blessings?.includes(Blessing.POLLUTED_SEA)) return
+    pokemonHit.status.triggerPoison(
+      POLLUTED_SEA_POISON_DURATION,
+      pokemonHit,
+      undefined
+    )
+  }
+
+  castTidalSurgeAbility(pokemon: PokemonEntity) {
+    if (
+      !pokemon.player?.blessings?.includes(Blessing.TIDAL_SURGE) ||
+      !pokemon.types.has(Synergy.AQUATIC) ||
+      pokemon.items.size < TIDAL_SURGE_ITEMS_REQUIRED
+    ) {
+      return
+    }
+    const ability = pokemon.range > 1 ? Ability.HYDRO_PUMP : Ability.DIVE
+    const target =
+      pokemon.state.getNearestTargetAtSight(pokemon, this.board)?.target ?? null
+    AbilityStrategies[ability].process(pokemon, this.board, target, false)
   }
 
   handleTidalWaveForTeam(team: Team) {
@@ -2734,6 +2784,7 @@ export default class Simulation extends Schema implements ISimulation {
         if (pokemonHit) {
           if (pokemonHit.team === team) {
             pokemonHit.status.clearNegativeStatus(pokemonHit)
+            this.castTidalSurgeAbility(pokemonHit)
             if (pokemonHit.types.has(Synergy.AQUATIC) || healAll) {
               const { healReceived } = pokemonHit.handleHeal(
                 tidalWaveLevel * 0.1 * pokemonHit.maxHP,
@@ -2774,6 +2825,7 @@ export default class Simulation extends Schema implements ISimulation {
               AttackType.TRUE,
               takenDamage
             )
+            this.applyPollutedSeaPoison(pokemonHit)
             let newY = y
             if (isRed) {
               while (

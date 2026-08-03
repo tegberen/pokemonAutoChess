@@ -321,10 +321,7 @@ export default class Shop {
       entityNumber = Math.ceil(entityNumber / 2)
     }
 
-    if (
-      regional &&
-      new PokemonClasses[pkm](pkm).isInRegion(player.map, state) === false
-    ) {
+    if (regional && player.canFindRegionalPokemon(pkm, state) === false) {
       return // regional pokemons sold in a region other than their original region are not added back to the pool
     }
 
@@ -587,12 +584,9 @@ export default class Shop {
 
         if (!hasSynergyWanted) return false
 
-        if (regional) {
-          const pokemon = new PokemonClasses[pkm](pkm)
-          if (!pokemon.isInRegion(player.map)) {
-            // skip regional pokemons not in their region
-            return false
-          }
+        if (regional && !player.canFindRegionalPokemon(pkm)) {
+          // skip regional pokemons not in their region
+          return false
         }
 
         if (

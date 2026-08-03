@@ -28,10 +28,8 @@ import {
 } from "../../types"
 import { EvolutionRuleType } from "../../types/EvolutionRules"
 import { Ability } from "../../types/enum/Ability"
-import type {
-  Blessing,
-  ScheduledBlessingGrant
-} from "../../types/enum/Blessing"
+import { Blessing } from "../../types/enum/Blessing"
+import type { ScheduledBlessingGrant } from "../../types/enum/Blessing"
 import type { DungeonPMDO } from "../../types/enum/Dungeon"
 import {
   BattleResult,
@@ -947,6 +945,21 @@ export default class Player extends Schema implements IPlayer {
     }
   }
 
+  /* Single source of truth for "can this player encounter this regional mon".
+     Every availability gate must go through this and not raw isInRegion, or a
+     mon can end up seeded into the pool but filtered out of the shop roll */
+  canFindRegionalPokemon(pkm: Pkm, state?: GameState): boolean {
+    if (this.map === "town") return false
+    if (new PokemonClasses[pkm](pkm).isInRegion(this.map, state!)) return true
+    // the two Shellos have mutually exclusive region gates, so only
+    // STAR_CROSSED_SEAS can make both findable at once
+    return (
+      (pkm === Pkm.SHELLOS_EAST_SEA || pkm === Pkm.SHELLOS_WEST_SEA) &&
+      this.blessings?.includes(Blessing.STAR_CROSSED_SEAS) === true &&
+      RegionDetails[this.map]?.synergies.includes(Synergy.AMORPHOUS) === true
+    )
+  }
+
   updateRegionalPool(
     state: GameState,
     mapChanged: boolean,
@@ -958,7 +971,7 @@ export default class Player extends Schema implements IPlayer {
     }
 
     const newRegionalPokemons = PRECOMPUTED_REGIONAL_MONS.filter((p) =>
-      new PokemonClasses[p](p).isInRegion(this.map, state)
+      this.canFindRegionalPokemon(p, state)
     )
 
     if (mapChanged) {
