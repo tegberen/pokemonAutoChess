@@ -17,9 +17,6 @@ export interface BlessingDefinition {
   grantsPokemonImmediately: boolean
   isAvailable?: (player: Player, stage: number) => boolean
   family?: BlessingFamily
-  /* blessings on the same progression line are alternatives of each other, so
-     owning one hides the rest (Gardening -> Amazing Gardening -> Blossom Festival) */
-  line?: string
 }
 
 export const BLESSING_MAX_OPTIONS_PER_FAMILY = 2
@@ -32,6 +29,10 @@ export function isSynergyActiveForPlayer(player: Player, synergy: Synergy) {
     threshold !== undefined && (player.synergies.get(synergy) ?? 0) >= threshold
   )
 }
+
+const isFloraBlessingAvailable = (player: Player, stage: number) =>
+  stage < BLESSING_SYNERGY_GATED_STAGE ||
+  isSynergyActiveForPlayer(player, Synergy.FLORA)
 
 export const CrownBlessingBySynergy: { [synergy in Synergy]?: Blessing } = {
   [Synergy.NORMAL]: Blessing.NORMAL_CROWN_BLESSING,
@@ -358,29 +359,25 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     tier: BlessingTier.SILVER,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "metronome",
-    grantsPokemonImmediately: false,
-    line: "synchronised_speed"
+    grantsPokemonImmediately: false
   },
   [Blessing.SYNCHRONISED_SPEED_II]: {
     tier: BlessingTier.GOLD,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "metronome",
-    grantsPokemonImmediately: false,
-    line: "synchronised_speed"
+    grantsPokemonImmediately: false
   },
   [Blessing.POTENTIAL_ENERGY_I]: {
     tier: BlessingTier.SILVER,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "star_energy_swirl",
-    grantsPokemonImmediately: false,
-    line: "potential_energy"
+    grantsPokemonImmediately: false
   },
   [Blessing.POTENTIAL_ENERGY_II]: {
     tier: BlessingTier.GOLD,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "star_energy_swirl",
-    grantsPokemonImmediately: false,
-    line: "potential_energy"
+    grantsPokemonImmediately: false
   },
   [Blessing.RIVALRY]: {
     tier: BlessingTier.GOLD,
@@ -405,6 +402,62 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "freedom_dove",
     grantsPokemonImmediately: false
+  },
+  [Blessing.GARDENING]: {
+    tier: BlessingTier.SILVER,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "watering_can",
+    grantsPokemonImmediately: true,
+    isAvailable: isFloraBlessingAvailable
+  },
+  [Blessing.DOUBLE_WINDFALL]: {
+    tier: BlessingTier.SILVER,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "double_windfall",
+    grantsPokemonImmediately: true,
+    isAvailable: isFloraBlessingAvailable
+  },
+  [Blessing.AMAZING_GARDENING]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "water_tank",
+    grantsPokemonImmediately: true,
+    isAvailable: isFloraBlessingAvailable
+  },
+  [Blessing.FLYTRAP]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "flytrap",
+    grantsPokemonImmediately: true,
+    isAvailable: isFloraBlessingAvailable
+  },
+  [Blessing.MEGA_SOL]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "mega_sol",
+    grantsPokemonImmediately: true,
+    isAvailable: isFloraBlessingAvailable
+  },
+  [Blessing.SPORE_CLOUDS]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "spore_clouds",
+    grantsPokemonImmediately: true,
+    isAvailable: isFloraBlessingAvailable
+  },
+  [Blessing.BLOSSOM_FESTIVAL]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "flower_pot",
+    grantsPokemonImmediately: false,
+    isAvailable: isFloraBlessingAvailable
+  },
+  [Blessing.NOT_THE_BEES]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "beehive",
+    grantsPokemonImmediately: true,
+    isAvailable: isFloraBlessingAvailable
   },
   [Blessing.WILD_SUBSCRIPTION]: {
     tier: BlessingTier.SILVER,
@@ -562,18 +615,14 @@ function tierChancesForBlessingsUnderTest(): {
 export const BLESSING_TEST_MODE: boolean = false
 
 const BLESSINGS_UNDER_TEST: Blessing[] = [
-  Blessing.VITAMINS,
-  Blessing.DRAGON_FANG,
-  Blessing.QUIET_STRENGTH,
-  Blessing.MISFORTUNE,
-  Blessing.SYNCHRONISED_SPEED_I,
-  Blessing.SYNCHRONISED_SPEED_II,
-  Blessing.POTENTIAL_ENERGY_I,
-  Blessing.POTENTIAL_ENERGY_II,
-  Blessing.RIVALRY,
-  Blessing.SHINY_SAFEGUARD,
-  Blessing.CONTEMPT,
-  Blessing.MISFITS
+  Blessing.GARDENING,
+  Blessing.DOUBLE_WINDFALL,
+  Blessing.AMAZING_GARDENING,
+  Blessing.FLYTRAP,
+  Blessing.MEGA_SOL,
+  Blessing.SPORE_CLOUDS,
+  Blessing.BLOSSOM_FESTIVAL,
+  Blessing.NOT_THE_BEES
 ]
 
 function countBlessingsOfFamily(blessings: Blessing[], family?: string) {
@@ -614,12 +663,6 @@ export function getBlessingsAvailable(
   stage: number,
   player: Player
 ): Blessing[] {
-  const linesAlreadyOwned = new Set(
-    (player.blessings ?? [])
-      .map((owned) => Blessings[owned]?.line)
-      .filter((line): line is string => line !== undefined)
-  )
-
   return (Object.keys(Blessings) as Blessing[]).filter((blessing) => {
     const definition = Blessings[blessing]
     return (
@@ -627,8 +670,6 @@ export function getBlessingsAvailable(
       (BLESSING_TEST_MODE === false ||
         BLESSINGS_UNDER_TEST.includes(blessing)) &&
       (BLESSING_TEST_MODE || definition.availableAtStages.includes(stage)) &&
-      (definition.line === undefined ||
-        linesAlreadyOwned.has(definition.line) === false) &&
       (definition.isAvailable?.(player, stage) ?? true)
     )
   })

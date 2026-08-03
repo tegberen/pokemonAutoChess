@@ -4,8 +4,10 @@ import { getPokemonData } from "../models/precomputed/precomputed-pokemon-data"
 import { PRECOMPUTED_POKEMONS_PER_RARITY } from "../models/precomputed/precomputed-rarity"
 import type GameState from "../rooms/states/game-state"
 import { Blessing, BlessingTrigger } from "../types/enum/Blessing"
-import { Rarity } from "../types/enum/Game"
+import { BattleResult, Rarity } from "../types/enum/Game"
+import { SynergyTiersThresholds } from "../config"
 import { giveRandomEgg } from "../core/eggs"
+import { getUnlockedFlowerPots } from "../core/flower-pots"
 import { type Awakening, AwakeningTypes } from "../types/enum/Awakening"
 import {
   Berries,
@@ -563,6 +565,17 @@ export const blessingTriggerEffectService: {
   [Blessing.MUNCHLAX_DELIVERY]: {
     [BlessingTrigger.CAROUSEL_END]: (player) =>
       player.items.push(Item.PICNIC_SET)
+  },
+
+  [Blessing.GARDENING]: {
+    [BlessingTrigger.PVP_END]: (player) => {
+      if (player.history.at(-1)?.result !== BattleResult.DEFEAT) return
+      const floraCount = player.synergies.get(Synergy.FLORA) ?? 0
+      const mulchGained = [...SynergyTiersThresholds[Synergy.FLORA]]
+        .reverse()
+        .find((threshold) => floraCount >= threshold)
+      if (mulchGained) player.collectMulch(mulchGained)
+    }
   }
 }
 
@@ -744,6 +757,38 @@ export const blessingEffectService: {
 
   [Blessing.ARCANE_METALS]: (player) =>
     giftPokemonIfBenchHasRoom(player, Pkm.MAGNEMITE),
+
+  [Blessing.GARDENING]: (player) =>
+    giftPokemonIfBenchHasRoom(player, Pkm.GOSSIFLEUR),
+
+  [Blessing.DOUBLE_WINDFALL]: (player) =>
+    giftPokemonIfBenchHasRoom(player, Pkm.FLABEBE),
+
+  [Blessing.FLYTRAP]: (player) =>
+    giftPokemonIfBenchHasRoom(player, Pkm.GOSSIFLEUR),
+
+  [Blessing.MEGA_SOL]: (player) =>
+    giftPokemonIfBenchHasRoom(player, Pkm.GOSSIFLEUR),
+
+  [Blessing.SPORE_CLOUDS]: (player) =>
+    giftPokemonIfBenchHasRoom(player, Pkm.FLABEBE),
+
+  [Blessing.AMAZING_GARDENING]: (player) => {
+    const fullyEvolvedFlowers = getUnlockedFlowerPots(player).filter(
+      (pot) => pot.evolution === Pkm.DEFAULT
+    ).length
+    for (let i = 0; i < 1 + fullyEvolvedFlowers; i++) {
+      player.items.push(Item.AMAZE_MULCH)
+    }
+    return giftPokemonIfBenchHasRoom(player, Pkm.GOSSIFLEUR)
+  },
+
+  [Blessing.NOT_THE_BEES]: (player) => {
+    if (getFreeSpaceOnBench(player.board) < 2) return false
+    giftPokemonIfBenchHasRoom(player, Pkm.GOSSIFLEUR)
+    giftPokemonIfBenchHasRoom(player, Pkm.FLABEBE)
+    return true
+  },
 
   [Blessing.RIVALRY]: (player, state) => {
     if (state.stageLevel >= BLESSING_SYNERGY_GATED_STAGE) {

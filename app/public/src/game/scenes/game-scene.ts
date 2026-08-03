@@ -8,7 +8,12 @@ import {
   RegionDetails
 } from "../../../../config"
 import type { DesignTiled } from "../../../../core/design"
-import { FLOWER_POTS_POSITIONS_BLUE } from "../../../../core/flower-pots"
+import {
+  FLOWER_POT_ZONE_HEIGHT,
+  FLOWER_POT_ZONE_WIDTH,
+  FLOWER_POT_ZONE_Y_OFFSET,
+  FLOWER_POTS_POSITIONS_BLUE
+} from "../../../../core/flower-pots"
 import { canSell } from "../../../../core/pokemon-entity"
 import type Player from "../../../../models/colyseus-models/player"
 import { PokemonClasses } from "../../../../models/colyseus-models/pokemon"
@@ -448,8 +453,16 @@ export default class GameScene extends Scene {
 
     for (let i = 0; i < FLOWER_POTS_POSITIONS_BLUE.length; i++) {
       const [x, y] = FLOWER_POTS_POSITIONS_BLUE[i]
-      const zone = this.add.zone(x, y, 48, 48)
-      zone.setRectangleDropZone(48, 48)
+      /* the flower sprite is drawn 24px above the pot, so a zone centred on the
+         pot itself sits below what the player actually aims at */
+      const zoneY = y - FLOWER_POT_ZONE_Y_OFFSET
+      const zone = this.add.zone(
+        x,
+        zoneY,
+        FLOWER_POT_ZONE_WIDTH,
+        FLOWER_POT_ZONE_HEIGHT
+      )
+      zone.setRectangleDropZone(FLOWER_POT_ZONE_WIDTH, FLOWER_POT_ZONE_HEIGHT)
       zone.setName("flower-pot-zone")
       zone.setData({ x, y, index: i })
     }

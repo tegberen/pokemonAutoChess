@@ -27,6 +27,7 @@ import { Pkm, PkmFamily, PkmIndex } from "../../types/enum/Pokemon"
 import { SpecialGameRule } from "../../types/enum/SpecialGameRule"
 import { Synergy, SynergyArray } from "../../types/enum/Synergy"
 import { Weather } from "../../types/enum/Weather"
+import { isUnderZenith } from "../../utils/weather"
 import { isIn, removeInArray } from "../../utils/array"
 import { getAvatarString } from "../../utils/avatar"
 import { isOnBench } from "../../utils/board"
@@ -1060,7 +1061,7 @@ const drySkinOnSpawnEffect = new OnSpawnEffect((entity) => {
     entity.effectsSet.add(new DrySkinPeriodicEffect())
   } else if (entity.simulation.weather === Weather.SANDSTORM) {
     entity.addDodgeChance(0.25, entity, 0, false)
-  } else if (entity.simulation.weather === Weather.ZENITH) {
+  } else if (isUnderZenith(entity)) {
     entity.addAbilityPower(50, entity, 0, false)
   }
 }, Passive.DRY_SKIN)

@@ -1,5 +1,5 @@
 import { AttackType } from "../../types/enum/Game"
-import { Weather } from "../../types/enum/Weather"
+import { isUnderZenith } from "../../utils/weather"
 import type { Board } from "../board"
 import { effectInLine } from "../board"
 
@@ -15,7 +15,7 @@ export class SolarBeamStrategy extends AbilityStrategy {
   ) {
     super.process(pokemon, board, target, crit)
     let damage = [25, 50, 100, 200][pokemon.stars - 1] ?? 200
-    if (pokemon.simulation.weather === Weather.ZENITH || pokemon.status.light) {
+    if (isUnderZenith(pokemon) || pokemon.status.light) {
       damage = damage * 1.3
       pokemon.addPP(20, pokemon, 0, false)
     }

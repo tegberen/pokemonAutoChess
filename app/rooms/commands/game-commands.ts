@@ -1037,7 +1037,21 @@ export class OnDragDropItemCommand extends Command<
           player
         )
         potEvolution.action = PokemonActionState.SLEEP
+        /* the pot is replaced by a brand new Pokemon, so any Amaze Mulch buffs
+           already spent on it have to be carried across by hand */
+        const potBaseline = PokemonFactory.createPokemonFromName(
+          pokemon.name,
+          player
+        )
+        potEvolution.addMaxHP(pokemon.hp - potBaseline.hp)
+        potEvolution.ap += pokemon.ap - potBaseline.ap
         player.flowerPots[index] = potEvolution
+        if (
+          potEvolution.evolution === Pkm.DEFAULT &&
+          player.blessings?.includes(Blessing.AMAZING_GARDENING)
+        ) {
+          player.items.push(Item.AMAZE_MULCH)
+        }
         removeInArray(player.items, item)
         client.send(Transfer.DRAG_DROP_CANCEL, message)
         return

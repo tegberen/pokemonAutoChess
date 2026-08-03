@@ -24,9 +24,16 @@ import { getSynergyTier } from "../../models/colyseus-models/synergies"
 import PokemonFactory, {
   getPokemonBaseline
 } from "../../models/pokemon-factory"
-import { type FlowerPot, type IPokemon, Title, Transfer } from "../../types"
+import { type IPokemon, Title, Transfer } from "../../types"
 import { EvolutionRuleType } from "../../types/EvolutionRules"
 import { Ability } from "../../types/enum/Ability"
+import {
+  Blessing,
+  BLOSSOM_FESTIVAL_MULCH_MULTIPLIER,
+  SPORE_CLOUDS_INTERVAL,
+  SPORE_CLOUDS_STATUS_DURATION
+} from "../../types/enum/Blessing"
+import { FlowerPot } from "../../types/enum/FlowerPot"
 import { Awakening } from "../../types/enum/Awakening"
 import { EffectEnum } from "../../types/enum/Effect"
 import { AttackType, PokemonActionState, Team } from "../../types/enum/Game"
@@ -46,7 +53,7 @@ import { isIn } from "../../utils/array"
 import { getFreeSpaceOnBench, isOnBench } from "../../utils/board"
 import { distanceC } from "../../utils/distance"
 import { max, min } from "../../utils/number"
-import { chance, pickNRandomIn } from "../../utils/random"
+import { chance, pickNRandomIn, pickRandomIn } from "../../utils/random"
 import { schemaValues } from "../../utils/schemas"
 import { type Board, effectInLine } from "../board"
 import { EvolutionManager } from "../evolution-logic/evolution-manager"
@@ -72,7 +79,8 @@ import {
   type OnKillEffectArgs,
   OnSimulationStartEffect,
   OnSpawnEffect,
-  OnStageStartEffect
+  OnStageStartEffect,
+  PeriodicEffect
 } from "./effect"
 import { PassiveEffects } from "./passives"
 
@@ -422,7 +430,15 @@ export const fightingTrainingEffect = new OnBenchedDuringFightEffect(
 export const onFlowerMonDeath = new OnDeathEffect(({ pokemon, board }) => {
   if (!pokemon.player) return
   if (!pokemon.isGhostOpponent) {
-    pokemon.player.collectMulch(pokemon.stars)
+    const hasBellossom = pokemon.player.flowerPots.some(
+      (pot) => pot.name === Pkm.BELLOSSOM
+    )
+    const mulchMultiplier =
+      !hasBellossom &&
+      pokemon.player.blessings?.includes(Blessing.BLOSSOM_FESTIVAL)
+        ? BLOSSOM_FESTIVAL_MULCH_MULTIPLIER
+        : 1
+    pokemon.player.collectMulch(pokemon.stars * mulchMultiplier)
   }
 
   const potsAvailable = getFlowerPotsUnlocked(pokemon.player)
@@ -436,6 +452,7 @@ export const onFlowerMonDeath = new OnDeathEffect(({ pokemon, board }) => {
   }
 
   if (nextPot) {
+    const blessings = pokemon.player.blessings
     const spawnSpot = board.getFarthestTargetCoordinateAvailablePlace(
       pokemon,
       true
@@ -457,9 +474,78 @@ export const onFlowerMonDeath = new OnDeathEffect(({ pokemon, board }) => {
       entity.action = PokemonActionState.BLOSSOM
       entity.cooldown = 1000
       pokemon.player.pokemonsPlayed.add(flowerToSpawn.name)
+
+      if (nextPot === FlowerPot.YELLOW && blessings?.includes(Blessing.FLYTRAP)) {
+        entity.items.add(Item.COVERT_CLOAK)
+        entity.applyItemEffect(Item.COVERT_CLOAK)
+      }
+
+      if (nextPot === FlowerPot.WHITE && blessings?.includes(Blessing.MEGA_SOL)) {
+        entity.items.add(Item.SOOTHE_BELL)
+        entity.applyItemEffect(Item.SOOTHE_BELL)
+        entity.isMegaSolAuraSource = true
+      }
+
+      if (nextPot === FlowerPot.BLUE && blessings?.includes(Blessing.SPORE_CLOUDS)) {
+        entity.items.add(Item.KINGS_ROCK)
+        entity.applyItemEffect(Item.KINGS_ROCK)
+        entity.effectsSet.add(sporeCloudEffect)
+      }
+
+      if (
+        nextPot === FlowerPot.PINK &&
+        blessings?.includes(Blessing.DOUBLE_WINDFALL)
+      ) {
+        const twinSpot = pokemon.simulation.getClosestFreeCellTo(
+          entity.positionX,
+          entity.positionY,
+          pokemon.team
+        )
+        if (twinSpot) {
+          pokemon.simulation.addPokemon(
+            flowerToSpawn,
+            twinSpot.x,
+            twinSpot.y,
+            pokemon.team,
+            true
+          )
+        }
+      }
     }
   }
 })
+
+const sporeCloudEffect = new PeriodicEffect(
+  (entity, board) => {
+    const inflictStatus = pickRandomIn([
+      (enemy: PokemonEntity) =>
+        enemy.status.triggerPoison(
+          SPORE_CLOUDS_STATUS_DURATION,
+          enemy,
+          entity
+        ),
+      (enemy: PokemonEntity) =>
+        enemy.status.triggerParalysis(
+          SPORE_CLOUDS_STATUS_DURATION,
+          enemy,
+          entity
+        ),
+      (enemy: PokemonEntity) =>
+        enemy.status.triggerBurn(SPORE_CLOUDS_STATUS_DURATION, enemy, entity),
+      (enemy: PokemonEntity) =>
+        enemy.status.triggerSleep(SPORE_CLOUDS_STATUS_DURATION, enemy)
+    ])
+    board
+      .getAdjacentCells(entity.positionX, entity.positionY)
+      .forEach((cell) => {
+        if (cell.value && cell.value.team !== entity.team) {
+          inflictStatus(cell.value)
+        }
+      })
+  },
+  Item.KINGS_ROCK,
+  SPORE_CLOUDS_INTERVAL
+)
 
 export const wildBerserkEffect = new OnDamageReceivedEffect(
   ({ pokemon }: OnDamageReceivedEffectArgs) => {

@@ -27,6 +27,7 @@ import { Passive } from "../types/enum/Passive"
 import { Pkm } from "../types/enum/Pokemon"
 import { Synergy } from "../types/enum/Synergy"
 import { Weather } from "../types/enum/Weather"
+import { isUnderZenith } from "../utils/weather"
 import { count } from "../utils/array"
 import { distanceC, distanceM } from "../utils/distance"
 import { logger } from "../utils/logger"
@@ -385,7 +386,7 @@ export default abstract class PokemonState {
       if (pokemon.status.enraged) {
         heal *= 0.5
       }
-      if (pokemon.simulation.weather === Weather.ZENITH) {
+      if (isUnderZenith(pokemon)) {
         heal *= 1.2
       }
 
@@ -1101,7 +1102,7 @@ export default abstract class PokemonState {
     }
 
     if (
-      pokemon.simulation.weather === Weather.ZENITH &&
+      isUnderZenith(pokemon) &&
       Math.floor(pokemon.simulation.room.state.time / 1000) % 2 === 0
     ) {
       const nbSunStones = pokemon.player

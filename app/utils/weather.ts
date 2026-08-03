@@ -2,7 +2,8 @@ import type { MapSchema } from "@colyseus/schema"
 import { WeatherThreshold } from "../config"
 import type Player from "../models/colyseus-models/player"
 import type { Pokemon } from "../models/colyseus-models/pokemon"
-import { Blessing } from "../types/enum/Blessing"
+import { Blessing, MEGA_SOL_AURA_RADIUS } from "../types/enum/Blessing"
+import type { IPokemonEntity } from "../types"
 import { Item, WeatherByWeatherRocks } from "../types/enum/Item"
 import { Passive } from "../types/enum/Passive"
 import { Synergy } from "../types/enum/Synergy"
@@ -14,6 +15,23 @@ import {
 import { count } from "./array"
 import { hasKey } from "./map"
 import { schemaValues } from "./schemas"
+
+/* Zenith is normally a global weather check, but MEGA_SOL grants it to allies
+   near its Chikorita, so every gameplay effect of Zenith has to ask per unit */
+export function isUnderZenith(entity: IPokemonEntity): boolean {
+  if (entity.simulation.weather === Weather.ZENITH) return true
+  return entity.simulation.board
+    .getCellsInRadius(
+      entity.positionX,
+      entity.positionY,
+      MEGA_SOL_AURA_RADIUS,
+      true
+    )
+    .some(
+      (cell) =>
+        cell.value?.team === entity.team && cell.value.isMegaSolAuraSource
+    )
+}
 
 // Passives that boost a specific weather by +2 (on top of the +1 the unit gives
 // from its matching synergy). A unit may carry one on either passive slot.

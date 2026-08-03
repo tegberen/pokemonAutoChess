@@ -11,8 +11,10 @@ export class PetalBlizzardStrategy extends AbilityStrategy {
     crit: boolean
   ) {
     super.process(pokemon, board, target, crit)
-    board
-      .getAdjacentCells(pokemon.positionX, pokemon.positionY)
+    const cells = pokemon.isBlossomFestivalChampionThisFight
+      ? board.getCellsInRadius(pokemon.positionX, pokemon.positionY, pokemon.range, false)
+      : board.getAdjacentCells(pokemon.positionX, pokemon.positionY)
+    cells
       .forEach((cell) => {
         if (cell.value && cell.value.team !== pokemon.team) {
           cell.value.handleSpecialDamage(

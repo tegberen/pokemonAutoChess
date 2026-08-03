@@ -1,4 +1,7 @@
+import { Blessing } from "../../types/enum/Blessing"
+import { FlowerPot } from "../../types/enum/FlowerPot"
 import { AttackType } from "../../types/enum/Game"
+import { FlowerMonByPot } from "../flower-pots"
 import type { Board } from "../board"
 import type { PokemonEntity } from "../pokemon-entity"
 import { AbilityStrategy } from "./ability-strategy"
@@ -15,11 +18,12 @@ export class IngrainStrategy extends AbilityStrategy {
     const damage = [15, 30, 60, 120][pokemon.stars - 1] ?? 120
     const lockedDuration = 4000
 
-    const cells = board.getAdjacentCells(
-      pokemon.positionX,
-      pokemon.positionY,
-      true
-    )
+    const reachesWholeAttackRange =
+      FlowerMonByPot[FlowerPot.YELLOW].includes(pokemon.name) &&
+      pokemon.player?.blessings?.includes(Blessing.FLYTRAP)
+    const cells = reachesWholeAttackRange
+      ? board.getCellsInRadius(pokemon.positionX, pokemon.positionY, pokemon.range, true)
+      : board.getAdjacentCells(pokemon.positionX, pokemon.positionY, true)
     cells.forEach((cell) => {
       if (cell.value && pokemon.team == cell.value.team) {
         cell.value.handleHeal(heal, pokemon, 1, crit)

@@ -51,6 +51,7 @@ import { Pkm } from "../types/enum/Pokemon"
 import { SpecialGameRule } from "../types/enum/SpecialGameRule"
 import { Synergy } from "../types/enum/Synergy"
 import { Weather } from "../types/enum/Weather"
+import { isUnderZenith } from "../utils/weather"
 import { count, isIn } from "../utils/array"
 import { isOnBench } from "../utils/board"
 import { distanceC, distanceM } from "../utils/distance"
@@ -165,6 +166,8 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
   isDoomSeedTarget: boolean = false
   isRivalryChampionThisFight: boolean = false
   isSynchronisedSpeedLeaderThisFight: boolean = false
+  isBlossomFestivalChampionThisFight: boolean = false
+  isMegaSolAuraSource: boolean = false
 
   constructor(
     pokemon: IPokemon,
@@ -1172,7 +1175,7 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
       }
     }
 
-    if (this.simulation.weather === Weather.ZENITH && this.player) {
+    if (isUnderZenith(this) && this.player) {
       const nbSunStones = count(this.player.items, Item.SUN_STONE)
       const burnChance = nbSunStones * 0.05
       if (chance(burnChance, this)) {

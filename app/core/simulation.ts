@@ -51,6 +51,8 @@ import { Pkm, PkmByIndex } from "../types/enum/Pokemon"
 import { Synergy } from "../types/enum/Synergy"
 import {
   Blessing,
+  BLOSSOM_FESTIVAL_CASTS_PER_RANGE_GAIN,
+  NOT_THE_BEES_MAX_COMBEES,
   DRAGON_FANG_ABILITY_POWER_PER_STAR,
   MISFITS_ABILITY_POWER,
   MISFITS_ATTACK,
@@ -67,6 +69,7 @@ import {
   VITAMINS_SPEED
 } from "../types/enum/Blessing"
 import { isSynergyActiveForPlayer } from "../config/game/blessings"
+import { getFlowerPotStarCount } from "./flower-pots"
 import { Weather, WeatherEffects } from "../types/enum/Weather"
 import type { IPokemonData } from "../types/interfaces/PokemonData"
 import { count, isIn, removeInArray } from "../utils/array"
@@ -1303,8 +1306,6 @@ export default class Simulation extends Schema implements ISimulation {
         getStrongestUnit(ownUnits).isRivalryChampionThisFight = true
       }
 
-      /* Tier I ranks by base speed, tier II by the speed the unit actually
-         starts the fight with, after items and synergies have been applied */
       const speedLeaderTier = blessings.includes(Blessing.SYNCHRONISED_SPEED_II)
         ? "II"
         : blessings.includes(Blessing.SYNCHRONISED_SPEED_I)
@@ -1317,6 +1318,50 @@ export default class Simulation extends Schema implements ISimulation {
           speedOf(ally) > speedOf(fastest) ? ally : fastest
         )
         speedLeader.isSynchronisedSpeedLeaderThisFight = true
+      }
+
+      if (blessings.includes(Blessing.BLOSSOM_FESTIVAL)) {
+        const bellossoms = allies.filter(
+          (ally) => ally.name === Pkm.BELLOSSOM
+        )
+        if (bellossoms.length > 0) {
+          const champion = getStrongestUnit(bellossoms)
+          champion.isBlossomFestivalChampionThisFight = true
+          champion.types.add(Synergy.GRASS)
+          champion.effectsSet.add(
+            new OnAbilityCastEffect((caster) => {
+              if (
+                caster.count.ult % BLOSSOM_FESTIVAL_CASTS_PER_RANGE_GAIN ===
+                0
+              ) {
+                caster.range += 1
+              }
+            })
+          )
+        }
+      }
+
+      if (blessings.includes(Blessing.NOT_THE_BEES)) {
+        const nbCombees = Math.min(
+          getFlowerPotStarCount(player),
+          NOT_THE_BEES_MAX_COMBEES
+        )
+        for (let i = 0; i < nbCombees; i++) {
+          const coord = this.getClosestFreeCellTo(
+            pickRandomIn([0, 1, 2, 3, 4, 5, 6, 7]),
+            teamIndex === Team.RED_TEAM ? 5 : 0,
+            teamIndex
+          )
+          if (!coord) break
+          player.pokemonsPlayed.add(Pkm.COMBEE)
+          this.addPokemon(
+            PokemonFactory.createPokemonFromName(Pkm.COMBEE, player),
+            coord.x,
+            coord.y,
+            teamIndex,
+            true
+          )
+        }
       }
     }
   }

@@ -5220,6 +5220,38 @@
 			"name": "Contempt",
 			"description": "Allies deal 50% more damage to enemies with less STAR levels than them."
 		},
+		"GARDENING": {
+			"name": "Gardening",
+			"description": "When you lose a PvP round, add 3/4/5/6 to your Mulch count when FLORA 3/4/5/6 is active. Gain a Gossifleur."
+		},
+		"DOUBLE_WINDFALL": {
+			"name": "Double Windfall",
+			"description": "When your FLORA synergy summons a member of the Hoppip line, it summons 2 instead. Gain a Flabébé."
+		},
+		"AMAZING_GARDENING": {
+			"name": "Amazing Gardening",
+			"description": "Gain an AMAZE_MULCH, plus another for each fully evolved flower, and another whenever a flower becomes fully evolved. Gain a Gossifleur."
+		},
+		"FLYTRAP": {
+			"name": "Flytrap",
+			"description": "The Bellsprout summoned by FLORA starts combat with a COVERT_CLOAK, and its ability affects all Pokémon within attack range. Gain a Gossifleur."
+		},
+		"MEGA_SOL": {
+			"name": "Mega Sol",
+			"description": "The Chikorita summoned by FLORA starts combat with a SOOTHE_BELL. Allies within 2 spaces of it benefit from the effects of ZENITH even if the weather is not active. Gain a Gossifleur."
+		},
+		"SPORE_CLOUDS": {
+			"name": "Spore Clouds",
+			"description": "The Oddish summoned by FLORA starts combat with a KINGS_ROCK. Every 3 seconds, it releases a spore cloud that randomly POISON, PARALYSIS, BURN or SLEEP adjacent enemies for 3 seconds. Gain a Flabébé."
+		},
+		"BLOSSOM_FESTIVAL": {
+			"name": "Blossom Festival",
+			"description": "The Mulch gained from KO'd FLORA allies is doubled until you get Bellossom. Your strongest Bellossom gains GRASS synergy, its ability affects all enemies within attack range, and it gains 1 RANGE every 3 casts."
+		},
+		"NOT_THE_BEES": {
+			"name": "Not the Bees!",
+			"description": "At combat start, spawn a Combee on a random tile for each STAR level of your flower pots, up to 16. Gain a Gossifleur and a Flabébé."
+		},
 		"MISFITS": {
 			"name": "Misfits",
 			"description": "Allies with no active synergies gain 50 HP, 50 AP, 5 ATK, 5 DEF and 5 SPE_DEF."

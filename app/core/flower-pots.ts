@@ -11,6 +11,13 @@ export const FLOWER_POTS_POSITIONS_BLUE = [
   [304, 614]
 ]
 
+/* Pots sit 64px apart within a row, so the zone can be that wide without two
+   pots in the same row overlapping. The vertical offset lifts it over the
+   flower sprite, which is drawn above the pot */
+export const FLOWER_POT_ZONE_WIDTH = 64
+export const FLOWER_POT_ZONE_HEIGHT = 64
+export const FLOWER_POT_ZONE_Y_OFFSET = 16
+
 export const FLOWER_POTS_POSITIONS_RED = [
   [1576, 186],
   [1544, 234],
@@ -50,6 +57,17 @@ export function getFlowerPotsUnlocked(player: IPlayer): FlowerPot[] {
       )
     }
   })
+}
+
+/* flowerPots is a fixed array in unlock order, so the unlocked ones are always
+   its first N entries. Locked pots still hold a Pokemon and would otherwise be
+   counted by anything summing stars or evolutions */
+export function getUnlockedFlowerPots(player: IPlayer) {
+  return player.flowerPots.slice(0, getFlowerPotsUnlocked(player).length)
+}
+
+export function getFlowerPotStarCount(player: IPlayer): number {
+  return getUnlockedFlowerPots(player).reduce((sum, pot) => sum + pot.stars, 0)
 }
 
 export function getFlowerMonByPot(pot: FlowerPot): Pkm[] {

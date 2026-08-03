@@ -59,6 +59,10 @@ import {
   transformBoardCoordinates,
   transformEntityCoordinates
 } from "../../pages/utils/utils"
+import {
+  Blessing,
+  NOT_THE_BEES_MAX_COMBEES
+} from "../../../../types/enum/Blessing"
 import { preference } from "../../preferences"
 import store from "../../stores"
 import { refreshShopUI } from "../../stores/GameStore"
@@ -105,6 +109,7 @@ export default class BoardManager {
   flowerPokemonsInPots: PokemonSprite[] = []
   mulchAmountText: Phaser.GameObjects.Text | null = null
   mulchIcon: Phaser.GameObjects.Image | null = null
+  flowerPotStarsText: Phaser.GameObjects.Text | null = null
   groundHoles: Phaser.GameObjects.Sprite[]
   trainingBag: Phaser.GameObjects.Sprite | null = null
   trainingRack: Phaser.GameObjects.Sprite | null = null
@@ -539,7 +544,27 @@ export default class BoardManager {
       this.mulchAmountText = null
       this.mulchIcon?.destroy()
       this.mulchIcon = null
+      this.flowerPotStarsText?.destroy()
+      this.flowerPotStarsText = null
       return
+    }
+
+    const hasNotTheBees = this.scene.room?.state.blessingsByPlayerId
+      .get(this.player.id)
+      ?.blessings.includes(Blessing.NOT_THE_BEES)
+    if (hasNotTheBees) {
+      if (this.flowerPotStarsText === null) {
+        this.flowerPotStarsText = this.displayText(348, 646, "").setOrigin(0, 0)
+      }
+      const nbStars = this.player.flowerPots
+        .slice(0, nbPots)
+        .reduce((acc, pot) => acc + pot.stars, 0)
+      this.flowerPotStarsText.setText(
+        `${Math.min(nbStars, NOT_THE_BEES_MAX_COMBEES)}★`
+      )
+    } else {
+      this.flowerPotStarsText?.destroy()
+      this.flowerPotStarsText = null
     }
 
     if (this.mulchAmountText === null) {
