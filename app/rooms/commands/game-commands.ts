@@ -31,6 +31,7 @@ import {
   UniquePool
 } from "../../config"
 import {
+  BLESSING_TEST_MODE,
   drawBlessingOptions,
   getBlessingsAvailable,
   rollBlessingTierForStage
@@ -2100,7 +2101,8 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
 
     if (
       this.state.blessingsEnabled &&
-      BLESSING_SELECTION_STAGES.includes(this.state.stageLevel)
+      (BLESSING_TEST_MODE ||
+        BLESSING_SELECTION_STAGES.includes(this.state.stageLevel))
     ) {
       const lobbyTier = rollBlessingTierForStage(this.state.stageLevel)
       this.state.players.forEach((player: Player) => {

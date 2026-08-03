@@ -2,6 +2,7 @@ import type { MapSchema } from "@colyseus/schema"
 import { WeatherThreshold } from "../config"
 import type Player from "../models/colyseus-models/player"
 import type { Pokemon } from "../models/colyseus-models/pokemon"
+import { Blessing } from "../types/enum/Blessing"
 import { Item, WeatherByWeatherRocks } from "../types/enum/Item"
 import { Passive } from "../types/enum/Passive"
 import { Synergy } from "../types/enum/Synergy"
@@ -41,7 +42,9 @@ export const WeatherSupportPassives: Partial<Record<Passive, Weather>> = {
 
 export function getPlayerWeatherScores(
   board: MapSchema<Pokemon, string>,
-  items: Iterable<Item>
+  items: Iterable<Item>,
+  // 2 when the player owns the FORECAST blessing
+  synergyWeight = 1
 ): Map<Weather, number> {
   const scores = new Map<Weather, number>()
   const add = (weather: Weather, amount: number) =>
@@ -65,7 +68,7 @@ export function getPlayerWeatherScores(
 
     pkm.types.forEach((type) => {
       if (WeatherAssociatedToSynergy.has(type) && pkm.passive !== Passive.CASTFORM) {
-        add(WeatherAssociatedToSynergy.get(type)!, 1)
+        add(WeatherAssociatedToSynergy.get(type)!, synergyWeight)
       }
     })
 
@@ -130,8 +133,15 @@ export function getWeather(
 
   for (const board of [bluePlayer.board, redPlayerBoard]) {
     // reuse the persistent per-player map so it also feeds weather attribution
-    const playerWeatherScore =
-      board === bluePlayer.board ? blueWeatherScore : redWeatherScore
+    const isBlueBoard = board === bluePlayer.board
+    const playerWeatherScore = isBlueBoard ? blueWeatherScore : redWeatherScore
+    /* FORECAST blessing: this player's synergies count double towards weather.
+       blessings is server-only, so it is undefined when the client previews weather */
+    const synergyWeight = (isBlueBoard ? bluePlayer : redPlayer)?.blessings?.includes(
+      Blessing.FORECAST
+    )
+      ? 2
+      : 1
     board.forEach((pkm) => {
       if (pkm.positionY != 0) {
 
@@ -156,13 +166,13 @@ export function getWeather(
             const weather = WeatherAssociatedToSynergy.get(type)!
             boardWeatherScore.set(
               weather,
-              (boardWeatherScore.get(weather) ?? 0) + 1
+              (boardWeatherScore.get(weather) ?? 0) + synergyWeight
             )
 
             if (pkm.passive !== Passive.CASTFORM) {
               playerWeatherScore.set(
                 weather,
-                (playerWeatherScore.get(weather) ?? 0) + 1
+                (playerWeatherScore.get(weather) ?? 0) + synergyWeight
               )
             }
           }

@@ -291,6 +291,42 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     icon: "basket",
     grantsPokemonImmediately: false
   },
+  [Blessing.FORECAST]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "kite",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.WEATHER_INSTITUTE]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "windmill_house",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.BEEKEEPING]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: [12],
+    icon: "honey_comb",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.SPECTRAL_SPLIT]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "ghost_spectre",
+    grantsPokemonImmediately: true,
+    isAvailable: (player, stage) =>
+      stage < BLESSING_SYNERGY_GATED_STAGE ||
+      isSynergyActiveForPlayer(player, Synergy.GHOST)
+  },
+  [Blessing.ARCANE_METALS]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "magnet_blast",
+    grantsPokemonImmediately: true,
+    isAvailable: (player, stage) =>
+      stage < BLESSING_SYNERGY_GATED_STAGE ||
+      isSynergyActiveForPlayer(player, Synergy.STEEL)
+  },
   [Blessing.WILD_SUBSCRIPTION]: {
     tier: BlessingTier.SILVER,
     availableAtStages: [4],
@@ -444,14 +480,14 @@ function tierChancesForBlessingsUnderTest(): {
 /* Test mode: propose only the blessings being worked on, at every selection
    stage, ignoring their availableAtStages. Tier odds are derived from the list
    so a tier with nothing in it is never rolled. Set to false to ship. */
-export const BLESSING_TEST_MODE = false
+export const BLESSING_TEST_MODE: boolean = false
 
 const BLESSINGS_UNDER_TEST: Blessing[] = [
-  Blessing.WILD_SUBSCRIPTION,
-  Blessing.ADDITIONAL_RETHINK_I,
-  Blessing.CHOSEN_ONES,
-  Blessing.SAFARI_ENCOUNTER,
-  Blessing.GYARODOS_TRES_QUATRO
+  Blessing.FORECAST,
+  Blessing.WEATHER_INSTITUTE,
+  Blessing.BEEKEEPING,
+  Blessing.SPECTRAL_SPLIT,
+  Blessing.ARCANE_METALS
 ]
 
 function countBlessingsOfFamily(blessings: Blessing[], family?: string) {

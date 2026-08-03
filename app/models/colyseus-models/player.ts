@@ -221,6 +221,9 @@ export default class Player extends Schema implements IPlayer {
     returnStage: number
   }[] = []
   scheduledBlessingGrants: ScheduledBlessingGrant[] = []
+  // server-only mirror of GameState.blessingsByPlayerId, so combat code can read
+  // a player's blessings without reaching for the room state
+  blessings: Blessing[] = []
   blessingQuestsCompleted: Set<Blessing> = new Set<Blessing>()
   blessingQuestThresholdsReached: Map<Blessing, number> = new Map<
     Blessing,

@@ -11,6 +11,7 @@ import { Weather } from "../../../../../types/enum/Weather"
 import { count } from "../../../../../utils/array"
 import { getPlayerWeatherScores, getWeather } from "../../../../../utils/weather"
 import { selectSpectatedPlayer, useAppSelector } from "../../../hooks"
+import { Blessing } from "../../../../../types/enum/Blessing"
 import WeatherDetailComponent from "./weather-detail-component"
 import "./weather-forecast.css"
 
@@ -25,6 +26,9 @@ export default function WeatherForecast() {
   const players = useAppSelector((state) => state.game.players)
   const baseThreshold = useAppSelector((state) => state.game.weatherThreshold)
   const phase = useAppSelector((state) => state.game.phase)
+  const blessingsByPlayerId = useAppSelector(
+    (state) => state.game.blessingsByPlayerId
+  )
   useAppSelector((state) => state.game.synergiesSpectated)
 
   if (!spectatedPlayer) return null
@@ -39,13 +43,24 @@ export default function WeatherForecast() {
       ? players.find((p) => p.id === spectatedPlayer.opponentId)
       : undefined
 
+  const forecastWeight = (playerId: string) =>
+    blessingsByPlayerId[playerId]?.includes(Blessing.FORECAST) ? 2 : 1
+
   const myScores =
     isSchema(spectatedPlayer.board) && isSchema(spectatedPlayer.items)
-      ? getPlayerWeatherScores(spectatedPlayer.board, spectatedPlayer.items)
+      ? getPlayerWeatherScores(
+          spectatedPlayer.board,
+          spectatedPlayer.items,
+          forecastWeight(spectatedPlayer.id)
+        )
       : new Map<Weather, number>()
   const opponentScores =
     opponent && isSchema(opponent.board) && isSchema(opponent.items)
-      ? getPlayerWeatherScores(opponent.board, opponent.items)
+      ? getPlayerWeatherScores(
+          opponent.board,
+          opponent.items,
+          forecastWeight(opponent.id)
+        )
       : new Map<Weather, number>()
 
   const myUmbrellas = isSchema(spectatedPlayer.items)

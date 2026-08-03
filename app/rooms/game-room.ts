@@ -1581,6 +1581,7 @@ export default class GameRoom extends Room<{ state: GameState }> {
         this.state.blessingsByPlayerId.get(player.id) ?? new PlayerBlessings()
       owned.blessings.push(blessing)
       this.state.blessingsByPlayerId.set(player.id, owned)
+      player.blessings.push(blessing)
       removeInArray(player.choices, choice)
       return
     }

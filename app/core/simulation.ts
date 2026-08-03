@@ -49,6 +49,7 @@ import {
 import { Passive } from "../types/enum/Passive"
 import { Pkm, PkmByIndex } from "../types/enum/Pokemon"
 import { Synergy } from "../types/enum/Synergy"
+import { Blessing } from "../types/enum/Blessing"
 import { Weather, WeatherEffects } from "../types/enum/Weather"
 import type { IPokemonData } from "../types/interfaces/PokemonData"
 import { count, isIn, removeInArray } from "../utils/array"
@@ -281,7 +282,37 @@ export default class Simulation extends Schema implements ISimulation {
       }
     })
 
+    this.summonWeatherInstituteCastforms()
     this.applyPostEffects(bluePlayer.board, redBoard)
+  }
+
+  /* WEATHER_INSTITUTE blessing: a Castform matching the current weather joins the
+     board at combat start, on the side of whoever owns the blessing */
+  summonWeatherInstituteCastforms() {
+    const castformByWeather: { [weather in Weather]?: Pkm } = {
+      [Weather.RAIN]: Pkm.CASTFORM_RAIN,
+      [Weather.ZENITH]: Pkm.CASTFORM_SUN,
+      [Weather.DROUGHT]: Pkm.CASTFORM_SUN,
+      [Weather.SNOW]: Pkm.CASTFORM_HAIL
+    }
+    const castform = castformByWeather[this.weather]
+    if (!castform) return
+
+    for (const [player, team] of [
+      [this.bluePlayer, Team.BLUE_TEAM],
+      [this.redPlayer, Team.RED_TEAM]
+    ] as const) {
+      if (!player?.blessings?.includes(Blessing.WEATHER_INSTITUTE)) continue
+      const coord = this.getClosestFreeCellTo(3, 1, team)
+      if (!coord) continue
+      this.addPokemon(
+        PokemonFactory.createPokemonFromName(castform, player),
+        coord.x,
+        coord.y,
+        team,
+        false
+      )
+    }
   }
 
   broadcastToSpectators(transfer: Transfer, data: any) {
@@ -2243,14 +2274,22 @@ export default class Simulation extends Schema implements ISimulation {
     this.room.rankPlayers()
   }
 
-  applyCurse(effect: EffectEnum, opponentTeamNumber: number) {
+  applyCurse(effect: EffectEnum, opponentTeamNumber: number, pass = 1) {
     const team =
       opponentTeamNumber === Team.RED_TEAM ? this.blueTeam : this.redTeam
     const opponentTeam =
       opponentTeamNumber === Team.BLUE_TEAM ? this.blueTeam : this.redTeam
-    const opponentsCursable = shuffleArray([...opponentTeam.values()]).filter(
-      (p) => p.hp > 0
-    ) as PokemonEntity[]
+    const isCursed: { [key in EffectEnum]?: (p: PokemonEntity) => boolean } = {
+      [EffectEnum.CURSE_OF_VULNERABILITY]: (p) => p.status.curseVulnerability,
+      [EffectEnum.CURSE_OF_WEAKNESS]: (p) => p.status.curseWeakness,
+      [EffectEnum.CURSE_OF_TORMENT]: (p) => p.status.curseTorment,
+      [EffectEnum.CURSE_OF_FATE]: (p) => p.status.curseFate
+    }
+    const opponentsCursable = (
+      shuffleArray([...opponentTeam.values()]).filter(
+        (p) => p.hp > 0
+      ) as PokemonEntity[]
+    ).filter((p) => isCursed[effect]?.(p) !== true)
     const curser = schemaValues(team).find((e) => e.types.has(Synergy.GHOST)) ?? schemaValues(team)[0]
     // the curser is not important, we just need a reference to an opponent for stat debuffs
     if (!curser) return
@@ -2313,6 +2352,17 @@ export default class Simulation extends Schema implements ISimulation {
         strongestEnemy.status.curseFate = true
         strongestEnemy.status.triggerCurse(8000, strongestEnemy)
       }
+    }
+
+    /* SPECTRAL_SPLIT blessing: curse a second enemy. The pass counter bounds the
+       recursion, and the already cursed filter above picks a different target */
+    const cursingPlayer =
+      opponentTeamNumber === Team.RED_TEAM ? this.bluePlayer : this.redPlayer
+    if (
+      pass === 1 &&
+      cursingPlayer?.blessings?.includes(Blessing.SPECTRAL_SPLIT)
+    ) {
+      this.applyCurse(effect, opponentTeamNumber, 2)
     }
   }
 

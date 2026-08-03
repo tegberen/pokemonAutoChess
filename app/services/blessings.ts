@@ -736,6 +736,12 @@ export const blessingEffectService: {
   [Blessing.INSTANT_HYPER_ROLL]: (player) =>
     giftPokemonOfRarityAndStars(player, Rarity.COMMON, 3),
 
+  [Blessing.SPECTRAL_SPLIT]: (player) =>
+    giftPokemonIfBenchHasRoom(player, Pkm.SNORUNT),
+
+  [Blessing.ARCANE_METALS]: (player) =>
+    giftPokemonIfBenchHasRoom(player, Pkm.MAGNEMITE),
+
   [Blessing.SAFARI_ENCOUNTER]: (player, state) => {
     const [topSynergy] = player.synergies.getTopSynergies(1)
     const candidates = (Object.keys(PkmFamily) as Pkm[]).filter((pkm) => {

@@ -24,6 +24,7 @@ import {
 } from "../types"
 import { EvolutionRuleType } from "../types/EvolutionRules"
 import { Ability } from "../types/enum/Ability"
+import { Blessing } from "../types/enum/Blessing"
 import { EffectEnum } from "../types/enum/Effect"
 import {
   AttackType,
@@ -453,6 +454,38 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
       }
       if (attacker?.passive === Passive.BERSERK_2) {
         attacker.addAbilityPower(5, attacker, 0, false, false)
+      }
+
+      /* ARCANE_METALS blessing: steel converts a share of ability damage into
+         true damage, mirroring what the synergy already does for attacks. Split
+         here so the true part is dealt after AP and crit have been applied */
+      if (
+        attackType === AttackType.SPECIAL &&
+        attacker?.player?.blessings?.includes(Blessing.ARCANE_METALS)
+      ) {
+        const steelTrueDamagePart = attacker.effects.has(
+          EffectEnum.MAX_MELTDOWN
+        )
+          ? 1.25
+          : attacker.effects.has(EffectEnum.CORKSCREW_CRASH)
+            ? 1.0
+            : attacker.effects.has(EffectEnum.STEEL_SPIKE)
+              ? 0.66
+              : attacker.effects.has(EffectEnum.STEEL_SURGE)
+                ? 0.33
+                : 0
+        if (steelTrueDamagePart > 0) {
+          const convertedDamage = Math.ceil(specialDamage * steelTrueDamagePart)
+          specialDamage = min(0)(specialDamage - convertedDamage)
+          this.state.handleDamage({
+            target: this,
+            damage: convertedDamage,
+            board,
+            attackType: AttackType.TRUE,
+            attacker,
+            shouldTargetGainMana: true
+          })
+        }
       }
 
       const damageResult = this.state.handleDamage({
