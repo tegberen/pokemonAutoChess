@@ -782,6 +782,24 @@ export const blessingEffectService: {
   [Blessing.MEGA_SOL]: (player) =>
     giftPokemonIfBenchHasRoom(player, Pkm.GOSSIFLEUR),
 
+  [Blessing.ABNORMALITY]: (player) =>
+    giftPokemonIfBenchHasRoom(player, Pkm.IGGLYBUFF),
+
+  [Blessing.WRAPPED_UP]: (player) =>
+    giftPokemonIfBenchHasRoom(player, Pkm.IGGLYBUFF),
+
+  [Blessing.BRACE_FOR_IMPACT]: (player) =>
+    giftPokemonIfBenchHasRoom(player, Pkm.MACHOP),
+
+  [Blessing.FROST_BARRIER]: (player) =>
+    giftPokemonIfBenchHasRoom(player, Pkm.SNORUNT),
+
+  [Blessing.SECOND_WIND]: (player) =>
+    giftPokemonIfBenchHasRoom(player, Pkm.LITTEN),
+
+  [Blessing.RESURGENCE]: (player) =>
+    giftPokemonIfBenchHasRoom(player, Pkm.PILOSWINE),
+
   [Blessing.TIDAL_SURGE]: (player) =>
     giftPokemonIfBenchHasRoom(player, Pkm.FROAKIE),
 

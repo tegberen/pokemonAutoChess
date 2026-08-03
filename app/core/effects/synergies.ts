@@ -30,6 +30,10 @@ import { Ability } from "../../types/enum/Ability"
 import {
   Blessing,
   BLOSSOM_FESTIVAL_MULCH_MULTIPLIER,
+  FROST_BARRIER_CHECK_INTERVAL,
+  FROST_BARRIER_DEFENSE,
+  FROST_BARRIER_HP_THRESHOLD,
+  FROST_BARRIER_SPEED,
   SPORE_CLOUDS_INTERVAL,
   SPORE_CLOUDS_STATUS_DURATION
 } from "../../types/enum/Blessing"
@@ -279,25 +283,71 @@ export const humanHealEffect = new OnDamageDealtEffect(
   EffectEnum.MEDITATE
 )
 
+/* FROST_BARRIER swaps between two bonuses as the unit crosses 50% HP, so it
+   tracks which one is currently applied and undoes it before applying the other */
+export function makeFrostBarrierEffect() {
+  let appliedAboveThreshold: boolean | null = null
+  return new PeriodicEffect(
+    (entity) => {
+      const isAboveThreshold =
+        entity.hp / entity.maxHP > FROST_BARRIER_HP_THRESHOLD
+      if (isAboveThreshold === appliedAboveThreshold) return
+
+      if (appliedAboveThreshold === true) {
+        entity.addDefense(-FROST_BARRIER_DEFENSE, entity, 0, false)
+      } else if (appliedAboveThreshold === false) {
+        entity.addSpeed(-FROST_BARRIER_SPEED, entity, 0, false)
+      }
+
+      if (isAboveThreshold) {
+        entity.addDefense(FROST_BARRIER_DEFENSE, entity, 0, false)
+      } else {
+        entity.addSpeed(FROST_BARRIER_SPEED, entity, 0, false)
+      }
+      appliedAboveThreshold = isAboveThreshold
+    },
+    EffectEnum.SNOW,
+    FROST_BARRIER_CHECK_INTERVAL
+  )
+}
+
+/* SECOND_WIND makes a resurrection count as a KO, so this has to be callable
+   from the resurrection path as well as from OnFieldDeathEffect */
+export function applyFieldDeathBuffs(
+  pokemon: PokemonEntity,
+  board: Board,
+  effect?: SynergyTier<Synergy.FIELD>
+) {
+  const allyEffects =
+    pokemon.team === Team.BLUE_TEAM
+      ? pokemon.simulation.blueEffects
+      : pokemon.simulation.redEffects
+  const activeEffect =
+    effect ?? SynergyTiers[Synergy.FIELD].findLast((e) => allyEffects.has(e))
+  if (!activeEffect) return
+
+  const synergyTier = SynergyTiers[Synergy.FIELD].indexOf(activeEffect) + 1
+  const heal = FIELD_HEAL_PER_SYNERGY_TIER[synergyTier] ?? 0
+  const speedBoost = FIELD_SPEED_BUFF_PER_SYNERGY_TIER[synergyTier] ?? 0
+  pokemon.simulation.room.clock.setTimeout(() => {
+    board.forEach((x, y, value) => {
+      if (
+        value &&
+        value.team === pokemon.team &&
+        value.types.has(Synergy.FIELD)
+      ) {
+        value.count.fieldCount++
+        value.handleHeal(heal, pokemon, 0, false)
+        value.addSpeed(speedBoost, value, 0, false)
+      }
+    })
+  }, 16) // delay to next tick, targeting 60 ticks per second
+}
+
 export class OnFieldDeathEffect extends OnDeathEffect {
   constructor(effect: SynergyTier<Synergy.FIELD>) {
     super(({ pokemon, board }) => {
-      const synergyTier = SynergyTiers[Synergy.FIELD].indexOf(effect) + 1
-      const heal = FIELD_HEAL_PER_SYNERGY_TIER[synergyTier] ?? 0
-      const speedBoost = FIELD_SPEED_BUFF_PER_SYNERGY_TIER[synergyTier] ?? 0
-      pokemon.simulation.room.clock.setTimeout(() => {
-        board.forEach((x, y, value) => {
-          if (
-            value &&
-            value.team === pokemon.team &&
-            value.types.has(Synergy.FIELD)
-          ) {
-            value.count.fieldCount++
-            value.handleHeal(heal, pokemon, 0, false)
-            value.addSpeed(speedBoost, value, 0, false)
-          }
-        })
-      }, 16) // delay to next tick, targeting 60 ticks per second
+      applyFieldDeathBuffs(pokemon, board, effect)
     }, effect)
   }
 }
@@ -592,17 +642,38 @@ export const normalShieldEffect = new OnSimulationStartEffect(
       }
     }
     if (shieldBonus >= 0) {
-      entity.addShield(shieldBonus, entity, 0, false)
+      const blessings = entity.player?.blessings
       const cells = simulation.board.getAdjacentCells(
         entity.positionX,
         entity.positionY
       )
 
-      cells.forEach((cell) => {
-        if (cell.value && entity.team == cell.value.team) {
-          cell.value.addShield(shieldBonus, entity, 0, false)
+      /* WRAPPED_UP turns whatever NORMAL would have shielded into permanent max
+         HP for scarf holders, so it has to wrap every grant below */
+      const grantNormalBonus = (target: PokemonEntity, amount: number) => {
+        const wrapsIntoMaxHP =
+          blessings?.includes(Blessing.WRAPPED_UP) &&
+          schemaValues(target.items).some((item) => Scarves.includes(item))
+        if (wrapsIntoMaxHP) {
+          target.addMaxHP(amount, entity, 0, false)
+        } else {
+          target.addShield(amount, entity, 0, false)
         }
-      })
+      }
+
+      if (blessings?.includes(Blessing.ABNORMALITY)) {
+        const emptyAdjacentCells = cells.filter(
+          (cell) => cell.value === undefined
+        ).length
+        grantNormalBonus(entity, shieldBonus * emptyAdjacentCells)
+      } else {
+        grantNormalBonus(entity, shieldBonus)
+        cells.forEach((cell) => {
+          if (cell.value && entity.team == cell.value.team) {
+            grantNormalBonus(cell.value, shieldBonus)
+          }
+        })
+      }
     }
   }
 )

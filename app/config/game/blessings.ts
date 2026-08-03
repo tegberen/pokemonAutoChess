@@ -464,6 +464,48 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     grantsPokemonImmediately: true,
     isAvailable: isFloraBlessingAvailable
   },
+  [Blessing.ABNORMALITY]: {
+    tier: BlessingTier.SILVER,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "spread_shield",
+    grantsPokemonImmediately: true,
+    isAvailable: isSynergyBlessingAvailable(Synergy.NORMAL)
+  },
+  [Blessing.WRAPPED_UP]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "up_shield",
+    grantsPokemonImmediately: true,
+    isAvailable: isSynergyBlessingAvailable(Synergy.NORMAL)
+  },
+  [Blessing.BRACE_FOR_IMPACT]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "leather_vest",
+    grantsPokemonImmediately: true,
+    isAvailable: isSynergyBlessingAvailable(Synergy.FIGHTING)
+  },
+  [Blessing.FROST_BARRIER]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "frost_barrier",
+    grantsPokemonImmediately: true,
+    isAvailable: isSynergyBlessingAvailable(Synergy.ICE)
+  },
+  [Blessing.SECOND_WIND]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "second_wind",
+    grantsPokemonImmediately: true,
+    isAvailable: isSynergyBlessingAvailable(Synergy.FIELD)
+  },
+  [Blessing.RESURGENCE]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "resurgence",
+    grantsPokemonImmediately: true,
+    isAvailable: isSynergyBlessingAvailable(Synergy.FOSSIL)
+  },
   [Blessing.POLLUTED_SEA]: {
     tier: BlessingTier.SILVER,
     availableAtStages: BLESSING_SELECTION_STAGES,
@@ -683,11 +725,12 @@ function tierChancesForBlessingsUnderTest(): {
 export const BLESSING_TEST_MODE: boolean = false
 
 const BLESSINGS_UNDER_TEST: Blessing[] = [
-  Blessing.HEX_MANIAC,
-  Blessing.ABSOLUTE_DARKNESS,
-  Blessing.TOXIC_BURST,
-  Blessing.EXHAUSTING_FLAME,
-  Blessing.ETERNAL_RAGE
+  Blessing.ABNORMALITY,
+  Blessing.WRAPPED_UP,
+  Blessing.BRACE_FOR_IMPACT,
+  Blessing.FROST_BARRIER,
+  Blessing.SECOND_WIND,
+  Blessing.RESURGENCE
 ]
 
 function countBlessingsOfFamily(blessings: Blessing[], family?: string) {

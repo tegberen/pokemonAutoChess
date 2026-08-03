@@ -5252,6 +5252,30 @@
 			"name": "Not the Bees!",
 			"description": "At combat start, spawn a Combee on a random tile for each STAR level of your flower pots, up to 16. Gain a Gossifleur and a Flabébé."
 		},
+		"ABNORMALITY": {
+			"name": "Abnormality",
+			"description": "NORMAL Pokémon now gain SHIELD for each empty adjacent space instead of giving it to adjacent allies. Gain an Igglybuff."
+		},
+		"WRAPPED_UP": {
+			"name": "Wrapped Up",
+			"description": "NORMAL Pokémon holding a scarf item convert the SHIELD gained from NORMAL into max HP. Gain an Igglybuff."
+		},
+		"BRACE_FOR_IMPACT": {
+			"name": "Brace for Impact",
+			"description": "FIGHTING Pokémon cannot take more than 50% of their maximum HP in a single instance of PHYSICAL or SPECIAL damage. Gain a Machop."
+		},
+		"FROST_BARRIER": {
+			"name": "Frost Barrier",
+			"description": "ICE Pokémon above 50% HP gain 15 DEF. ICE Pokémon below 50% HP gain 15 SPEED. Gain a Snorunt."
+		},
+		"SECOND_WIND": {
+			"name": "Second Wind",
+			"description": "When a FIELD Pokémon revives with RESURRECTION, this counts as a KO for the synergy buffs. At the start of combat and every 10 seconds, the weakest FIELD Pokémon gains RESURRECTION. Gain a Litten."
+		},
+		"RESURGENCE": {
+			"name": "Resurgence",
+			"description": "When your FOSSIL Pokémon revive, they gain 25 SPEED. Legendary FOSSIL Pokémon gain 35 instead. Gain a Piloswine."
+		},
 		"POLLUTED_SEA": {
 			"name": "Polluted Sea",
 			"description": "Enemy Pokémon that take damage from a tidal wave or flood wave are POISON for 3 seconds."
@@ -5270,7 +5294,7 @@
 		},
 		"HEX_MANIAC": {
 			"name": "Hex Maniac",
-			"description": "Your GHOST curses have additional effects. GHOST 2 inflicts ARMOR_BREAK, GHOST 4 inflicts FATIGUE, GHOST 6 inflicts PARALYSIS and GHOST 8 inflicts SILENCE. Gain a Snorunt."
+			"description": "At GHOST 2/4/6/8, curses also inflict ARMOR_BREAK,FATIGUE,PARALYSIS,SILENCE. Gain a Snorunt."
 		},
 		"ABSOLUTE_DARKNESS": {
 			"name": "Absolute Darkness",

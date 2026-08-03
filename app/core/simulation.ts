@@ -59,6 +59,7 @@ import {
   STAR_CROSSED_SEAS_MAX_HP,
   TIDAL_SURGE_ITEMS_REQUIRED,
   DRAGON_FANG_ABILITY_POWER_PER_STAR,
+  SECOND_WIND_RESURRECTION_INTERVAL,
   MISFITS_ABILITY_POWER,
   MISFITS_ATTACK,
   MISFITS_DEFENSE,
@@ -121,12 +122,13 @@ import {
   rockDeathExplosionT1,
   rockDeathExplosionT2,
   rockDeathExplosionT3,
-  DarkSubstituteEffect
+  DarkSubstituteEffect,
+  makeFrostBarrierEffect
 } from "./effects/synergies"
 import { PokemonEntity } from "./pokemon-entity"
 import { DelayedCommand } from "./simulation-command"
 import { SpecialGameRule } from "../types/enum/SpecialGameRule"
-import { getStrongestUnit, getStrongestUnits } from "./unit-score"
+import { getStrongestUnit, getStrongestUnits, getUnitScore } from "./unit-score"
 import { SeedEffects } from "./seeds"
 
 export default class Simulation extends Schema implements ISimulation {
@@ -159,6 +161,7 @@ export default class Simulation extends Schema implements ISimulation {
   redAbilitiesCast: Ability[] = []
   stormLightningTimer = 0
   tidalWaveTimer = 0
+  secondWindTimer = 0
   floodWaveTimer = 0
   elderStormTimer = 0
   distortionTimer = 0
@@ -1201,6 +1204,22 @@ export default class Simulation extends Schema implements ISimulation {
     }
   }
 
+  grantSecondWindResurrection(player: Player, teamIndex: Team) {
+    const team = teamIndex === Team.BLUE_TEAM ? this.blueTeam : this.redTeam
+    const fieldAllies = [...team.values()].filter(
+      (entity): entity is PokemonEntity =>
+        entity.player === player &&
+        entity.hp > 0 &&
+        entity.types.has(Synergy.FIELD) &&
+        !entity.status.resurrection
+    )
+    if (fieldAllies.length === 0) return
+    const weakest = fieldAllies.reduce((lowest, ally) =>
+      getUnitScore(ally) < getUnitScore(lowest) ? ally : lowest
+    )
+    weakest.status.resurrection = true
+  }
+
   applyCombatStartBlessings(
     sides: { teamIndex: Team; player: Player | undefined }[]
   ) {
@@ -1385,6 +1404,17 @@ export default class Simulation extends Schema implements ISimulation {
             true
           )
         }
+      }
+
+      if (blessings.includes(Blessing.FROST_BARRIER)) {
+        allies
+          .filter((ally) => ally.types.has(Synergy.ICE))
+          .forEach((ally) => ally.effectsSet.add(makeFrostBarrierEffect()))
+      }
+
+      if (blessings.includes(Blessing.SECOND_WIND)) {
+        this.grantSecondWindResurrection(player, teamIndex)
+        this.secondWindTimer = SECOND_WIND_RESURRECTION_INTERVAL
       }
     }
   }
@@ -2264,6 +2294,22 @@ export default class Simulation extends Schema implements ISimulation {
         }
         return false
       })
+    }
+
+    if (this.secondWindTimer > 0) {
+      this.secondWindTimer -= dt
+      if (this.secondWindTimer <= 0) {
+        this.secondWindTimer = SECOND_WIND_RESURRECTION_INTERVAL
+        for (const [player, teamIndex] of [
+          [this.bluePlayer, Team.BLUE_TEAM],
+          [this.bluePartnerPlayer, Team.BLUE_TEAM],
+          [this.redPlayer, Team.RED_TEAM]
+        ] as const) {
+          if (player?.blessings?.includes(Blessing.SECOND_WIND)) {
+            this.grantSecondWindResurrection(player, teamIndex)
+          }
+        }
+      }
     }
 
     if (this.tidalWaveTimer > 0) {

@@ -13,7 +13,10 @@ import {
 import { Awakening } from "../types/enum/Awakening"
 import {
   Blessing,
+  BRACE_FOR_IMPACT_MAX_HP_RATIO,
   CONTEMPT_DAMAGE_MULTIPLIER,
+  RESURGENCE_LEGENDARY_SPEED,
+  RESURGENCE_SPEED,
   EXHAUSTING_FLAME_DAMAGE_MULTIPLIER
 } from "../types/enum/Blessing"
 import { EffectEnum } from "../types/enum/Effect"
@@ -21,6 +24,7 @@ import {
   AttackType,
   HealType,
   PokemonActionState,
+  Rarity,
   Team
 } from "../types/enum/Game"
 import { Item } from "../types/enum/Item"
@@ -41,7 +45,11 @@ import {
   OnShieldDepletedEffect,
   PeriodicEffect
 } from "./effects/effect"
-import { applyWandEffects, humanHealEffect } from "./effects/synergies"
+import {
+  applyFieldDeathBuffs,
+  applyWandEffects,
+  humanHealEffect
+} from "./effects/synergies"
 import type { PokemonEntity } from "./pokemon-entity"
 
 export default abstract class PokemonState {
@@ -687,6 +695,18 @@ export default abstract class PokemonState {
 
       reducedDamage = min(1)(Math.ceil(reducedDamage)) // should deal 1 damage at least
 
+      if (
+        (attackType === AttackType.PHYSICAL ||
+          attackType === AttackType.SPECIAL) &&
+        pokemon.types.has(Synergy.FIGHTING) &&
+        pokemon.player?.blessings?.includes(Blessing.BRACE_FOR_IMPACT)
+      ) {
+        reducedDamage = Math.min(
+          reducedDamage,
+          Math.ceil(pokemon.maxHP * BRACE_FOR_IMPACT_MAX_HP_RATIO)
+        )
+      }
+
       if (attackType === AttackType.PHYSICAL) {
         pokemon.physicalDamageReduced += min(0)(damage - reducedDamage)
       } else if (attackType === AttackType.SPECIAL) {
@@ -802,6 +822,16 @@ export default abstract class PokemonState {
         }
 
         pokemon.addAttack(pokemon.baseAtk * attackBonus, pokemon, 0, false)
+        if (pokemon.player?.blessings?.includes(Blessing.RESURGENCE)) {
+          pokemon.addSpeed(
+            pokemon.rarity === Rarity.LEGENDARY
+              ? RESURGENCE_LEGENDARY_SPEED
+              : RESURGENCE_SPEED,
+            pokemon,
+            0,
+            false
+          )
+        }
         pokemon.resetCooldown(500)
         pokemon.broadcastAbility({ skill: "FOSSIL_RESURRECT" })
         SynergyTiers[Synergy.FOSSIL].forEach((e) => {
@@ -900,6 +930,13 @@ export default abstract class PokemonState {
           pokemon
             .getEffects(OnResurrectEffect)
             .forEach((effect) => effect.apply({ pokemon, board, attacker }))
+
+          if (
+            pokemon.types.has(Synergy.FIELD) &&
+            pokemon.player?.blessings?.includes(Blessing.SECOND_WIND)
+          ) {
+            applyFieldDeathBuffs(pokemon, board)
+          }
           board.forEach((x, y, entity: PokemonEntity | undefined) => {
             if (entity && entity.targetEntityId === pokemon.id) {
               // switch aggro immediately to reduce retarget lag after resurrection
