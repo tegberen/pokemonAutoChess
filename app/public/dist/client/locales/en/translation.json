@@ -5135,6 +5135,26 @@
 		"CINCCINOS_GIFTS_III": {
 			"name": "Cinccino's Gifts III",
 			"description": "Gain a SILK_SCARF and 2 random items crafted from a SILK_SCARF."
+		},
+		"WILD_SUBSCRIPTION": {
+			"name": "Wild Subscription",
+			"description": "You are guaranteed to see at least 1 WILD Pokémon in your first shop each round."
+		},
+		"CHOSEN_ONES": {
+			"name": "Chosen Ones",
+			"description": "When you pick an additional Pokémon, it immediately evolves."
+		},
+		"ADDITIONAL_RETHINK_I": {
+			"name": "Additional Rethink I",
+			"description": "You can reroll your additional pick options once. It rerolls all 3 Pokémon and items."
+		},
+		"SAFARI_ENCOUNTER": {
+			"name": "Safari Encounter",
+			"description": "Gain a random additional Pokémon matching your highest synergy that is not currently in the additional pool."
+		},
+		"GYARODOS_TRES_QUATRO": {
+			"name": "Gyarodos, Tres, Quatro",
+			"description": "When WATER is active, you are guaranteed to fish a Magikarp, regardless of which rod you have."
 		}
 	},
 	"hide": "Hide",

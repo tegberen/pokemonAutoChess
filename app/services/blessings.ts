@@ -736,6 +736,23 @@ export const blessingEffectService: {
   [Blessing.INSTANT_HYPER_ROLL]: (player) =>
     giftPokemonOfRarityAndStars(player, Rarity.COMMON, 3),
 
+  [Blessing.SAFARI_ENCOUNTER]: (player, state) => {
+    const [topSynergy] = player.synergies.getTopSynergies(1)
+    const candidates = (Object.keys(PkmFamily) as Pkm[]).filter((pkm) => {
+      const data = getPokemonData(pkm)
+      return (
+        data.additional &&
+        data.stars === 1 &&
+        data.types.includes(topSynergy) &&
+        state.additionalPokemons.includes(pkm) === false
+      )
+    })
+    if (candidates.length === 0) return false
+    const encountered = pickRandomIn(candidates)
+    state.shop.addAdditionalPokemon(encountered, state)
+    return giftPokemonIfBenchHasRoom(player, encountered)
+  },
+
   [Blessing.POTION]: (player) => {
     player.life = Math.min(player.maxLife, player.life + POTION_LIFE_HEALED)
     return true

@@ -109,6 +109,7 @@ import {
 } from "../../types/enum/ArmoryOptions"
 import { type Awakening, ROCK_AWAKENING_TIER } from "../../types/enum/Awakening"
 import {
+  Blessing,
   BLESSING_OPTIONS_PER_SELECTION,
   BLESSING_REROLLS_PER_OPTION,
   BLESSING_SELECTION_STAGES,
@@ -2066,7 +2067,11 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
               type: "addPick",
               pokemons,
               items,
-              items2
+              items2,
+              canReroll: this.state.hasBlessing(
+                player.id,
+                Blessing.ADDITIONAL_RETHINK_I
+              )
             })
           )
           remainingAddPicks--

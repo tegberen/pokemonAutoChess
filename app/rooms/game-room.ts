@@ -3,6 +3,7 @@ import type { MapSchema } from "@colyseus/schema"
 import { type Client, CloseCode, Room } from "colyseus"
 import admin from "firebase-admin"
 import {
+  AdditionalPicksStages,
   ALLOWED_GAME_RECONNECTION_TIME,
   EVOLUTION_LAB_REWARD_EXP,
   EVOLUTION_LAB_REWARD_GOLD,
@@ -22,6 +23,7 @@ import {
   getBlessingsAvailable,
   isFamilyCapReached
 } from "../config/game/blessings"
+import { Blessing } from "../types/enum/Blessing"
 import { GADGETS } from "../config/game/gadgets"
 import { placeScribbleShape } from "../config/game/scribble-shapes"
 import { computeElo } from "../core/elo"
@@ -84,6 +86,7 @@ import type { EloRank } from "../types/enum/EloRank"
 import { GameMode, PokemonActionState, Rarity } from "../types/enum/Game"
 import {
   type Item,
+  ItemComponentsNoScarf,
   Seeds,
   SynergyGems,
   SynergyGivenByGem,
@@ -115,7 +118,7 @@ import { isValidDate } from "../utils/date"
 import { formatMinMaxRanks, getRank } from "../utils/elo"
 import { logger } from "../utils/logger"
 import { clamp } from "../utils/number"
-import { pickRandomIn, shuffleArray } from "../utils/random"
+import { pickNRandomIn, pickRandomIn, shuffleArray } from "../utils/random"
 import { schemaValues } from "../utils/schemas"
 import {
   OnBuyPokemonCommand,
@@ -1461,6 +1464,11 @@ export default class GameRoom extends Room<{ state: GameState }> {
       return
     }
 
+    if (choice.type === "addPick") {
+      this.rerollAdditionalPick(player, index)
+      return
+    }
+
     if (
       !choice.canReroll ||
       this.state.specialGameRule !== SpecialGameRule.SMEARGLE_PACK
@@ -1475,6 +1483,37 @@ export default class GameRoom extends Room<{ state: GameState }> {
       pokemons: pack.map((card) => card.name),
       shinies: pack.map((card) => card.shiny),
       emotions: pack.map((card) => card.emotion),
+      canReroll: false
+    })
+  }
+
+  rerollAdditionalPick(player: Player, choiceIndex: number) {
+    const choice = player.choices[choiceIndex]
+    if (!choice.canReroll) return
+    const pool =
+      this.state.stageLevel === AdditionalPicksStages[0]
+        ? this.additionalUncommonPool
+        : this.state.stageLevel === AdditionalPicksStages[1]
+          ? this.additionalRarePool
+          : this.additionalEpicPool
+
+    choice.pokemons.forEach((pkm) => pool.push(pkm as Pkm))
+    shuffleArray(pool)
+    const pokemons: Pkm[] = []
+    for (let i = 0; i < choice.pokemons.length; i++) {
+      const drawn = pool.pop()
+      if (drawn) pokemons.push(drawn)
+    }
+    if (pokemons.length === 0) return
+
+    player.choices[choiceIndex] = new PlayerChoice({
+      type: "addPick",
+      pokemons,
+      items: pickNRandomIn(ItemComponentsNoScarf, pokemons.length),
+      items2:
+        choice.items2.length > 0
+          ? pickNRandomIn(ItemComponentsNoScarf, pokemons.length)
+          : undefined,
       canReroll: false
     })
   }
@@ -1615,7 +1654,10 @@ export default class GameRoom extends Room<{ state: GameState }> {
           this.state.shop.addAdditionalPokemon(pkm, this.state)
         }
 
-        if (this.state.specialGameRule === SpecialGameRule.CHOSEN_ONES) {
+        if (
+          this.state.specialGameRule === SpecialGameRule.CHOSEN_ONES ||
+          this.state.hasBlessing(player.id, Blessing.CHOSEN_ONES)
+        ) {
           pokemonsObtained = pokemonsObtained.map((pkm) => {
             const evolution = pkm.hasEvolution
               ? EvolutionManager.getEvolution(

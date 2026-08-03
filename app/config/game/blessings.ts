@@ -289,6 +289,36 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     icon: "basket",
     grantsPokemonImmediately: false
   },
+  [Blessing.WILD_SUBSCRIPTION]: {
+    tier: BlessingTier.SILVER,
+    availableAtStages: [4],
+    icon: "wild_subscription",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.CHOSEN_ONES]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: [4],
+    icon: "bat_mask",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.ADDITIONAL_RETHINK_I]: {
+    tier: BlessingTier.SILVER,
+    availableAtStages: [4],
+    icon: "backward_time",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.SAFARI_ENCOUNTER]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: [12],
+    icon: "high_grass",
+    grantsPokemonImmediately: true
+  },
+  [Blessing.GYARODOS_TRES_QUATRO]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: [4],
+    icon: "fishing_pole",
+    grantsPokemonImmediately: false
+  },
   [Blessing.POTION]: {
     tier: BlessingTier.SILVER,
     availableAtStages: [12],
@@ -389,25 +419,37 @@ export const BlessingTierChanceByStage: {
 }
 
 export function rollBlessingTierForStage(stage: number): BlessingTier {
-  const tierChances =
-    BlessingTierChanceByStage[stage] ?? EARLY_BLESSING_TIER_CHANCES
+  const tierChances = BLESSING_TEST_MODE
+    ? tierChancesForBlessingsUnderTest()
+    : (BlessingTierChanceByStage[stage] ?? EARLY_BLESSING_TIER_CHANCES)
   return randomWeighted(tierChances) ?? BlessingTier.SILVER
 }
 
-// testing switches, all false for normal play
-const IGNORE_BLESSING_STAGE_RESTRICTIONS: boolean = false
-const ONLY_SYNERGY_FAMILY_BLESSINGS: boolean = false
-const ONLY_QUEST_BLESSINGS: boolean = false
+function tierChancesForBlessingsUnderTest(): {
+  [tier in BlessingTier]: number
+} {
+  const chances = {
+    [BlessingTier.SILVER]: 0,
+    [BlessingTier.GOLD]: 0,
+    [BlessingTier.PRISMATIC]: 0
+  }
+  BLESSINGS_UNDER_TEST.forEach((blessing) => {
+    chances[Blessings[blessing].tier] = 1
+  })
+  return chances
+}
 
-const QUEST_BLESSINGS: Blessing[] = [
-  Blessing.QUEST_REROLL,
-  Blessing.QUEST_GROW,
-  Blessing.QUEST_SHINE,
-  Blessing.QUEST_EPIC,
-  Blessing.QUEST_EXPAND,
-  Blessing.QUEST_ASCEND,
-  Blessing.CHARGING_UP,
-  Blessing.BURNING_SHARDS
+/* Test mode: propose only the blessings being worked on, at every selection
+   stage, ignoring their availableAtStages. Tier odds are derived from the list
+   so a tier with nothing in it is never rolled. Set to false to ship. */
+export const BLESSING_TEST_MODE = false
+
+const BLESSINGS_UNDER_TEST: Blessing[] = [
+  Blessing.WILD_SUBSCRIPTION,
+  Blessing.ADDITIONAL_RETHINK_I,
+  Blessing.CHOSEN_ONES,
+  Blessing.SAFARI_ENCOUNTER,
+  Blessing.GYARODOS_TRES_QUATRO
 ]
 
 function countBlessingsOfFamily(blessings: Blessing[], family?: string) {
@@ -452,11 +494,9 @@ export function getBlessingsAvailable(
     const definition = Blessings[blessing]
     return (
       definition.tier === tier &&
-      (ONLY_SYNERGY_FAMILY_BLESSINGS === false ||
-        definition.family !== undefined) &&
-      (ONLY_QUEST_BLESSINGS === false || QUEST_BLESSINGS.includes(blessing)) &&
-      (IGNORE_BLESSING_STAGE_RESTRICTIONS ||
-        definition.availableAtStages.includes(stage)) &&
+      (BLESSING_TEST_MODE === false ||
+        BLESSINGS_UNDER_TEST.includes(blessing)) &&
+      (BLESSING_TEST_MODE || definition.availableAtStages.includes(stage)) &&
       (definition.isAvailable?.(player, stage) ?? true)
     )
   })

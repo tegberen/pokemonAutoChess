@@ -60,6 +60,7 @@ import {
   Unowns
 } from "../types/enum/Pokemon"
 import { SpecialGameRule } from "../types/enum/SpecialGameRule"
+import { Blessing } from "../types/enum/Blessing"
 import { Synergy } from "../types/enum/Synergy"
 import { removeInArray } from "../utils/array"
 import { logger } from "../utils/logger"
@@ -460,8 +461,30 @@ export default class Shop {
       for (let i = 0; i < getShopSize(state.specialGameRule, state.stageLevel); i++) {
         player.shop[i] = this.pickPokemon(player, state, i)
       }
+      if (!manualRefresh) {
+        this.guaranteeWildInShop(player, state)
+      }
       this.syncJuggernautShopStats(player, state, true)
     }
+  }
+
+  guaranteeWildInShop(player: Player, state: GameState) {
+    if (!state.hasBlessing(player.id, Blessing.WILD_SUBSCRIPTION)) return
+    const alreadyWild = player.shop.some((pkm) =>
+      pkm ? getPokemonData(pkm).types.includes(Synergy.WILD) : false
+    )
+    if (alreadyWild) return
+    const replacedIndex = player.shop.length - 1
+    const replaced = player.shop[replacedIndex]
+    const wild = this.getRandomPokemonFromPool(
+      getPokemonData(replaced).rarity,
+      player,
+      player.getFinalizedLines(),
+      [Synergy.WILD]
+    )
+    if (!wild) return
+    this.releasePokemon(replaced, player, state)
+    player.shop[replacedIndex] = wild
   }
 
   assignSootheBellShop(
@@ -896,6 +919,13 @@ export default class Shop {
     const mantine = schemaValues(player.board).find(
       (p) => p.name === Pkm.MANTYKE || p.name === Pkm.MANTINE
     )
+
+    if (
+      state.hasBlessing(player.id, Blessing.GYARODOS_TRES_QUATRO) &&
+      (player.synergies.get(Synergy.WATER) ?? 0) > 0
+    ) {
+      return Pkm.MAGIKARP
+    }
 
     const rarityProbability = FishRarityProbability[rod]
     const rarity_seed = Math.random()

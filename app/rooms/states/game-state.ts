@@ -20,6 +20,7 @@ import { PlayerBlessings } from "../../models/colyseus-models/player-blessings"
 import { PokemonAvatarModel } from "../../models/colyseus-models/pokemon-avatar"
 import { Portal, SynergySymbol } from "../../models/colyseus-models/portal"
 import Shop from "../../models/shop"
+import type { Blessing } from "../../types/enum/Blessing"
 import type { EloRank } from "../../types/enum/EloRank"
 import { GameMode, GamePhaseState } from "../../types/enum/Game"
 import type { Item } from "../../types/enum/Item"
@@ -78,6 +79,13 @@ export default class GameState extends Schema {
   maxRank: EloRank | null = null
   outlawStage: number | null = null
   treasureBoxRewardGiven: TreasureBoxReward = getTreasureBoxReward()
+
+  hasBlessing(playerId: string, blessing: Blessing): boolean {
+    return (
+      this.blessingsByPlayerId.get(playerId)?.blessings.includes(blessing) ===
+      true
+    )
+  }
 
   constructor(
     preparationId: string,
