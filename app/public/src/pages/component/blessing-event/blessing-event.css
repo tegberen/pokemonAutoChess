@@ -1,0 +1,137 @@
+.blessing-event-banner.my-box {
+  display: flex;
+  align-items: center;
+  gap: 1em;
+  padding: 0.5em 0.9em;
+  margin-bottom: 0.5em;
+  position: relative;
+  overflow: hidden;
+  /* fixed night sky, independent of the active theme */
+  background-color: #0d1726;
+  color: #ffffff;
+}
+
+/* aurora curtains: wide blurred bands drifting sideways behind the content */
+.blessing-event-banner::before {
+  content: "";
+  position: absolute;
+  inset: -30%;
+  pointer-events: none;
+  background-image: linear-gradient(
+    102deg,
+    transparent 0%,
+    #41bfcc66 22%,
+    #927fff73 45%,
+    #e58ee561 68%,
+    transparent 100%
+  );
+  background-size: 220% 140%;
+  mix-blend-mode: screen;
+  filter: blur(46px);
+  animation: blessing-event-aurora 48s linear infinite;
+}
+
+@keyframes blessing-event-aurora {
+  0% {
+    background-position: 0 40%;
+    opacity: 0.45;
+  }
+  50% {
+    opacity: 0.7;
+  }
+  100% {
+    background-position: 220% 60%;
+    opacity: 0.45;
+  }
+}
+
+.blessing-event-banner > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* starfield, faded in and out so it reads as twinkling rather than drifting */
+.blessing-event-banner::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    radial-gradient(1.5px 1.5px at 14% 28%, #fff, transparent),
+    radial-gradient(1px 1px at 32% 66%, #fff, transparent),
+    radial-gradient(1.5px 1.5px at 52% 18%, #fff, transparent),
+    radial-gradient(1px 1px at 61% 78%, #fff, transparent),
+    radial-gradient(1.5px 1.5px at 74% 52%, #fff, transparent),
+    radial-gradient(1px 1px at 88% 34%, #fff, transparent),
+    radial-gradient(1px 1px at 44% 88%, #fff, transparent);
+  animation: blessing-event-twinkle 6s ease-in-out infinite;
+}
+
+@keyframes blessing-event-twinkle {
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 0.9;
+  }
+}
+
+.blessing-event-banner h3 {
+  color: #ffffff;
+  text-shadow: 2px 2px 0 #05090f;
+  letter-spacing: 0.04em;
+}
+
+/* preparation-menu styles header img and p directly, so these need to outrank it */
+.blessing-event-banner.my-box > img.blessing-event-jirachi {
+  width: 94px;
+  height: 94px;
+  flex: none;
+  margin: 0;
+}
+
+.blessing-event-banner.my-box .blessing-event-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.blessing-event-banner.my-box .blessing-event-text p {
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  background: none;
+  text-align: left;
+  color: #ffffff;
+  text-shadow: 1px 1px 2px #05090f;
+}
+
+.blessing-event-banner h3,
+.blessing-event-banner p {
+  margin: 0;
+}
+
+.blessing-event-banner h3 {
+  font-size: 1.35em;
+  margin-bottom: 0.3em !important;
+}
+
+.blessing-event-banner p {
+  font-size: 1.05em;
+  line-height: 1.4;
+}
+
+.blessing-event-banner.my-box .blessing-event-text .blessing-event-remaining {
+  display: flex;
+  align-items: center;
+  gap: 0.4em;
+  margin-top: 0.5em;
+  color: #c3cddf;
+  font-size: 0.95em;
+}
+
+.blessing-event-banner.my-box .blessing-event-remaining img {
+  width: 1.15em;
+  height: 1.15em;
+  flex: none;
+}

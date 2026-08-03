@@ -2098,7 +2098,10 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
       }
     })
 
-    if (BLESSING_SELECTION_STAGES.includes(this.state.stageLevel)) {
+    if (
+      this.state.blessingsEnabled &&
+      BLESSING_SELECTION_STAGES.includes(this.state.stageLevel)
+    ) {
       const lobbyTier = rollBlessingTierForStage(this.state.stageLevel)
       this.state.players.forEach((player: Player) => {
         if (player.isBot || !player.alive) return

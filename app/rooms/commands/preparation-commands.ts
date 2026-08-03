@@ -372,6 +372,7 @@ export class OnGameStartRequestCommand extends Command<
           gameMode: this.state.gameMode,
           specialGameRule: this.state.specialGameRule,
           scribbleExtended: this.state.scribbleExtended,
+          blessingsEnabled: this.state.blessingsEnabled,
           whimsy: this.state.whimsy,
           tournamentId: this.room.metadata?.tournamentId,
           bracketId: this.room.metadata?.bracketId,
@@ -616,6 +617,40 @@ export class OnChangeScribbleExtendedCommand extends Command<
           payload: `${
             extended ? "Extended (150 HP)" : "Standard (100 HP)"
           } mode has been enabled for this game. Players need to ready again.`,
+          avatar: author?.avatar
+        })
+
+        this.state.users.forEach((user) => {
+          if (!user.isBot) user.ready = false
+        })
+      }
+    } catch (error) {
+      logger.error(error)
+    }
+  }
+}
+
+export class OnChangeBlessingsEnabledCommand extends Command<
+  PreparationRoom,
+  {
+    client: Client
+    enabled: boolean
+  }
+> {
+  execute({ client, enabled }) {
+    try {
+      const isAllowed =
+        this.state.gameMode === GameMode.SCRIBBLE ||
+        client.auth?.uid === this.state.ownerId
+      if (isAllowed && this.state.blessingsEnabled !== enabled) {
+        this.state.blessingsEnabled = enabled
+        const author = this.state.users.get(client.auth?.uid ?? "")
+        this.room.state.addMessage({
+          author: "Server",
+          authorId: "server",
+          payload: `Blessings have been ${
+            enabled ? "enabled" : "disabled"
+          } for this game. Players need to ready again.`,
           avatar: author?.avatar
         })
 

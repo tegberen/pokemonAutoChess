@@ -62,6 +62,7 @@ export interface GameStateStore {
   emotesUnlocked: Emotion[]
   additionalPokemons: Pkm[]
   blessingsByPlayerId: { [playerId: string]: Blessing[] }
+  blessingsEnabled: boolean
   podium: ILeaderboardInfo[]
   doubleUpChampions: ILeaderboardInfo[]
   smeargleScribbleChampion: ILeaderboardInfo[]
@@ -102,6 +103,7 @@ const initialState: GameStateStore = {
   emotesUnlocked: [],
   additionalPokemons: new Array<Pkm>(),
   blessingsByPlayerId: {},
+  blessingsEnabled: false,
   specialGameRule: null,
   podium: new Array<ILeaderboardInfo>(),
   doubleUpChampions: new Array<ILeaderboardInfo>(),
@@ -217,6 +219,9 @@ export const gameSlice: Slice<GameStateStore> = createSlice({
     },
     setAdditionalPokemons: (state, action: PayloadAction<Pkm[]>) => {
       state.additionalPokemons = action.payload
+    },
+    setBlessingsEnabled: (state, action: PayloadAction<boolean>) => {
+      state.blessingsEnabled = action.payload
     },
     setPlayerBlessings: (
       state,
@@ -380,6 +385,7 @@ export const {
   setSimulation,
   setAdditionalPokemons,
   setPlayerBlessings,
+  setBlessingsEnabled,
   setPokemonProposition,
   setEmotesUnlocked,
   leaveGame,

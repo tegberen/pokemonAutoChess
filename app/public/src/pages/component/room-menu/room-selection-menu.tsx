@@ -8,6 +8,7 @@ import {
 } from "../../../../../types/enum/Game"
 import { useAppSelector } from "../../../hooks"
 import { Modal } from "../modal/modal"
+import { BlessingEventBanner } from "../blessing-event/blessing-event"
 import {
   useWhimsyWeekendWindow,
   WhimsyWeekendCountdown
@@ -28,9 +29,11 @@ export function RoomSelectionMenu(props: {
     <Modal
       show={props.show}
       onClose={props.onClose}
-      className="room-selection-menu"
+      className="room-selection-menu anchor-top"
       header={t("new_game")}
       body={
+        <>
+        <BlessingEventBanner />
         <ul>
 
           <li
@@ -73,6 +76,7 @@ export function RoomSelectionMenu(props: {
             </li>
           )}
         </ul>
+        </>
       }
     />
   )

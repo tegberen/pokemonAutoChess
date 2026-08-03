@@ -44,6 +44,7 @@ import {
   setPassword,
   setSpecialGameRule,
   setScribbleExtended,
+  setBlessingsEnabled,
   setWhimsy,
   setUser,
   setWhiteList
@@ -175,6 +176,10 @@ export default function Preparation() {
 
       $state.listen("scribbleExtended", (value, previousValue) => {
         dispatch(setScribbleExtended(value))
+      })
+
+      $state.listen("blessingsEnabled", (value) => {
+        dispatch(setBlessingsEnabled(value))
       })
 
       $state.listen("whimsy", (value, previousValue) => {

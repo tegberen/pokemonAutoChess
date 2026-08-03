@@ -170,6 +170,7 @@ export default class GameRoom extends Room<{ state: GameState }> {
     gameMode,
     specialGameRule,
     scribbleExtended,
+    blessingsEnabled,
     whimsy,
     minRank,
     maxRank,
@@ -184,6 +185,7 @@ export default class GameRoom extends Room<{ state: GameState }> {
     gameMode: GameMode
     specialGameRule: SpecialGameRule | null
     scribbleExtended?: boolean
+    blessingsEnabled?: boolean
     whimsy?: boolean
     minRank: EloRank | null
     maxRank: EloRank | null
@@ -231,7 +233,8 @@ export default class GameRoom extends Room<{ state: GameState }> {
       maxRank,
       specialGameRule,
       scribbleExtended ?? false,
-      whimsy ?? false
+      whimsy ?? false,
+      blessingsEnabled ?? false
     )
     this.miniGame.create(
       this.state.avatars,

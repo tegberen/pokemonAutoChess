@@ -24,6 +24,7 @@ export interface IUserPreparationState {
   gameMode: GameMode
   specialGameRule: SpecialGameRule | null
   scribbleExtended: boolean
+  blessingsEnabled: boolean
   whimsy: boolean
   whitelist: string[]
   blacklist: string[]
@@ -44,6 +45,7 @@ const initialState: IUserPreparationState = {
   gameMode: GameMode.CUSTOM_LOBBY,
   specialGameRule: null,
   scribbleExtended: false,
+  blessingsEnabled: false,
   whimsy: false,
   whitelist: [],
   blacklist: []
@@ -113,6 +115,9 @@ export const preparationSlice = createSlice({
     setScribbleExtended: (state, action: PayloadAction<boolean>) => {
       state.scribbleExtended = action.payload
     },
+    setBlessingsEnabled: (state, action: PayloadAction<boolean>) => {
+      state.blessingsEnabled = action.payload
+    },
     setWhimsy: (state, action: PayloadAction<boolean>) => {
       state.whimsy = action.payload
     },
@@ -155,6 +160,7 @@ export const {
   setGameMode,
   setSpecialGameRule,
   setScribbleExtended,
+  setBlessingsEnabled,
   setWhimsy,
   resetPreparation
 } = preparationSlice.actions

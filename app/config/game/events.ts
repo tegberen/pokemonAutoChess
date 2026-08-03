@@ -67,6 +67,34 @@ export function getScribbleWeekendEnd(from = new Date()): Date | null {
   return findScribbleWeekendEdge(from, false)
 }
 
+/* The Blessing event is a rule layer applied on top of any game mode, not a mode
+   of its own. Anchor is the UTC midnight a window opens; move it to reschedule. */
+export const BLESSING_EVENT_ANCHOR = Date.UTC(2026, 7, 3)
+export const BLESSING_EVENT_INTERVAL_DAYS = 14
+export const BLESSING_EVENT_DURATION_DAYS = 2
+
+export function isBlessingEvent(date = new Date()): boolean {
+  const elapsedDays = Math.floor(
+    (date.getTime() - BLESSING_EVENT_ANCHOR) / 86_400_000
+  )
+  if (elapsedDays < 0) return false
+  return (
+    elapsedDays % BLESSING_EVENT_INTERVAL_DAYS < BLESSING_EVENT_DURATION_DAYS
+  )
+}
+
+/** When the running Blessing event ends, or null if one isn't running. */
+export function getBlessingEventEnd(from = new Date()): Date | null {
+  if (!isBlessingEvent(from)) return null
+  const elapsedDays = Math.floor(
+    (from.getTime() - BLESSING_EVENT_ANCHOR) / 86_400_000
+  )
+  const daysIntoWindow = elapsedDays % BLESSING_EVENT_INTERVAL_DAYS
+  const windowStart =
+    from.getTime() - daysIntoWindow * 86_400_000 - (from.getTime() % 86_400_000)
+  return new Date(windowStart + BLESSING_EVENT_DURATION_DAYS * 86_400_000)
+}
+
 export function getCurrentGameEvent(): GameEvent {
   // Implementation for determining the current event
   const month = new Date().getUTCMonth()

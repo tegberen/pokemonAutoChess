@@ -8,13 +8,15 @@ import { SynergyTiersThresholds } from "../../config"
 import { Synergy } from "../../types/enum/Synergy"
 import type Player from "../../models/colyseus-models/player"
 
+export type BlessingFamily = "BADGE" | "CREST" | "CROWN"
+
 export interface BlessingDefinition {
   tier: BlessingTier
   availableAtStages: number[]
   icon: string
   grantsPokemonImmediately: boolean
   isAvailable?: (player: Player, stage: number) => boolean
-  family?: string
+  family?: BlessingFamily
 }
 
 export const BLESSING_MAX_OPTIONS_PER_FAMILY = 2
@@ -66,7 +68,7 @@ export const SYNERGIES_WITH_BLESSINGS = Object.values(Synergy).filter(
 )
 
 function synergyFamilyDefinitions(
-  family: "BADGE" | "CREST" | "CROWN",
+  family: BlessingFamily,
   tier: BlessingTier,
   icon: string
 ) {

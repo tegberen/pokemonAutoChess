@@ -6,6 +6,7 @@ import WikiAwakening from "./wiki-awakening"
 import WikiData from "./wiki-data"
 import WikiFaq from "./wiki-faq"
 import WikiGlossary from "./wiki-glossary"
+import WikiBlessings from "./wiki-blessings"
 import WikiItems from "./wiki-items"
 import WikiPokemons from "./wiki-pokemons"
 import WikiRegions from "./wiki-regions"
@@ -54,6 +55,7 @@ export default function Wiki({ inGame = false }: { inGame: boolean }) {
             </>
           )}
           <Tab key="title-double-up">Double Up</Tab>
+          <Tab key="title-blessings">{t("wiki.nav.blessings_label")}</Tab>
           <Tab key="title-pokemon">{t("wiki.nav.pokemons_label")}</Tab>
           <Tab key="title-ability">{t("wiki.nav.abilities_label")}</Tab>
           <Tab key="title-awakening">{t("wiki.nav.awakening_label")}</Tab>
@@ -81,6 +83,9 @@ export default function Wiki({ inGame = false }: { inGame: boolean }) {
         )}
         <TabPanel key="double-up">
           <WikiDoubleUp />
+        </TabPanel>
+        <TabPanel key="blessings">
+          <WikiBlessings />
         </TabPanel>
         <TabPanel key="pokemon">
           <WikiPokemons />

@@ -217,6 +217,10 @@ export function setScribbleExtended(extended: boolean) {
   rooms.preparation?.send(Transfer.CHANGE_SCRIBBLE_EXTENDED, extended)
 }
 
+export function setBlessingsEnabled(enabled: boolean) {
+  rooms.preparation?.send(Transfer.CHANGE_BLESSINGS_ENABLED, enabled)
+}
+
 export function lockShop() {
   rooms.game?.send(Transfer.LOCK)
 }

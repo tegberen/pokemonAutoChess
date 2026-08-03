@@ -1,3 +1,12 @@
+.modal.room-selection-menu.anchor-top {
+  margin-top: 10vh;
+}
+
+/* same inset as the mode list below, so the edges line up */
+.room-selection-menu .blessing-event-banner {
+  margin: 0.5em;
+}
+
 .room-selection-menu ul {
   list-style: none;
   padding: 0;

@@ -24,6 +24,7 @@ import {
 import { addIconsToDescription } from "../../utils/descriptions"
 import { cc } from "../../utils/jsx"
 import { GameModeIcon } from "../icons/game-mode-icon"
+import { BlessingEventBanner } from "../blessing-event/blessing-event"
 import { WhimsyWeekendCountdown } from "../whimsy-weekend/whimsy-weekend"
 import PreparationMenuUser from "./preparation-menu-user"
 import "./preparation-menu.css"
@@ -113,6 +114,8 @@ export default function PreparationMenu() {
           <WhimsyWeekendCountdown />
         </>
       )}
+
+      <BlessingEventBanner />
 
       {(gameMode === GameMode.SCRIBBLE || specialGameRule != null) && (
         <p>

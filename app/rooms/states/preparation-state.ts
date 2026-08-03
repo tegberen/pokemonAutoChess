@@ -1,4 +1,5 @@
 import { ArraySchema, MapSchema, Schema, type } from "@colyseus/schema"
+import { isBlessingEvent } from "../../config/game/events"
 import { GameUser } from "../../models/colyseus-models/game-user"
 import Message from "../../models/colyseus-models/message"
 import chatV2 from "../../models/mongo-models/chat-v2"
@@ -16,6 +17,7 @@ export interface IPreparationState {
   minRank: EloRank | null
   gameMode: GameMode
   scribbleExtended: boolean
+  blessingsEnabled: boolean
 }
 
 export default class PreparationState
@@ -37,6 +39,8 @@ export default class PreparationState
   @type(["string"]) whitelist: string[]
   @type(["string"]) blacklist: string[]
   @type("boolean") scribbleExtended = false
+  /** Blessing event: rule layer on any game mode, on by default while it runs. */
+  @type("boolean") blessingsEnabled = isBlessingEvent()
   /** Whimsy Weekend: a Double Up room that rolls a random scribble rule. */
   @type("boolean") whimsy = false
   abortOnPlayerLeave?: AbortController

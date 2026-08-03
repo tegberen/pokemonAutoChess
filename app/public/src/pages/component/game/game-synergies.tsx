@@ -10,6 +10,9 @@ import WeatherForecast from "../synergy/weather-forecast"
 
 export default function GameSynergies() {
   const synergies = useAppSelector((state) => state.game.synergiesSpectated)
+  const blessingsEnabled = useAppSelector(
+    (state) => state.game.blessingsEnabled
+  )
   const { t } = useTranslation()
   const [synergiesPosition, setSynergiesPosition] =
     usePreference("synergiesPosition")
@@ -38,13 +41,15 @@ export default function GameSynergies() {
               alt={t("weather_forecast")}
             />
           </Tab>
-          <Tab key="blessings">
-            <img
-              src="assets/icons/blessing_stats.svg"
-              title={t("blessings")}
-              alt={t("blessings")}
-            />
-          </Tab>
+          {blessingsEnabled && (
+            <Tab key="blessings">
+              <img
+                src="assets/icons/blessing_stats.svg"
+                title={t("blessings")}
+                alt={t("blessings")}
+              />
+            </Tab>
+          )}
         </TabList>
         <TabPanel>
           <Synergies synergies={synergies} tooltipPortal={true} />
@@ -52,9 +57,11 @@ export default function GameSynergies() {
         <TabPanel>
           <WeatherForecast />
         </TabPanel>
-        <TabPanel>
-          <BlessingsPanel />
-        </TabPanel>
+        {blessingsEnabled && (
+          <TabPanel>
+            <BlessingsPanel />
+          </TabPanel>
+        )}
       </Tabs>
     </DraggableWindow>
   )

@@ -1,0 +1,199 @@
+.wiki-blessings-intro {
+  margin: 0 0 0.8em;
+}
+
+.wiki-blessings-filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6em;
+  margin-bottom: 1em;
+}
+
+.wiki-blessings-stages {
+  display: flex;
+  gap: 0.4em;
+}
+
+.wiki-blessings-filters input {
+  min-width: 14em;
+}
+
+.wiki-blessings h2 {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  margin: 0.8em 0 0.4em;
+  padding-bottom: 0.2em;
+  border-bottom: 2px solid var(--blessing-glow-hue);
+}
+
+.wiki-blessings-count {
+  font-size: 0.7em;
+  padding: 0.1em 0.6em;
+  border-radius: 10px;
+  border: var(--border-thin);
+  background-color: color-mix(
+    in srgb,
+    var(--blessing-hue) 25%,
+    var(--color-bg-secondary)
+  );
+}
+
+.wiki-blessings-list {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(12.5em, 1fr));
+  gap: 0.5em;
+  margin: 0;
+  padding: 0;
+}
+
+.wiki-blessings-list > li {
+  padding: 6px;
+  background-image: repeating-linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--blessing-stripe-a) 18%, transparent) 0px,
+    color-mix(in srgb, var(--blessing-stripe-a) 18%, transparent) 16px,
+    color-mix(in srgb, var(--blessing-stripe-b) 18%, transparent) 16px,
+    color-mix(in srgb, var(--blessing-stripe-b) 18%, transparent) 32px,
+    color-mix(in srgb, var(--blessing-stripe-c) 18%, transparent) 32px,
+    color-mix(in srgb, var(--blessing-stripe-c) 18%, transparent) 48px
+  );
+  background-size: 67.8823px 67.8823px;
+}
+
+.blessing-tier-prismatic .wiki-blessings-list > li {
+  background-image: repeating-linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--color-rarity-ultra) 22%, transparent) 0px,
+    color-mix(in srgb, var(--color-rarity-ultra) 22%, transparent) 8px,
+    color-mix(in srgb, var(--color-rarity-legendary) 22%, transparent) 8px,
+    color-mix(in srgb, var(--color-rarity-legendary) 22%, transparent) 16px,
+    color-mix(in srgb, var(--color-rarity-uncommon) 22%, transparent) 16px,
+    color-mix(in srgb, var(--color-rarity-uncommon) 22%, transparent) 24px,
+    color-mix(in srgb, var(--color-rarity-rare) 22%, transparent) 24px,
+    color-mix(in srgb, var(--color-rarity-rare) 22%, transparent) 32px,
+    color-mix(in srgb, var(--color-rarity-epic) 22%, transparent) 32px,
+    color-mix(in srgb, var(--color-rarity-epic) 22%, transparent) 40px,
+    color-mix(in srgb, var(--color-rarity-special) 22%, transparent) 40px,
+    color-mix(in srgb, var(--color-rarity-special) 22%, transparent) 48px
+  );
+}
+
+/* dark panel over the stripes, icon included, so everything stays readable */
+.wiki-blessing-body {
+  display: flex;
+  align-items: start;
+  gap: 0.7em;
+  height: 100%;
+  padding: 0.55em 0.6em;
+  border-radius: 9px;
+  background-color: color-mix(in srgb, var(--color-shadow) 74%, transparent);
+}
+
+.wiki-blessing-body > img {
+  width: 2.4rem;
+  height: 2.4rem;
+  flex: none;
+  margin-top: 1px;
+  padding: 3px;
+  box-sizing: content-box;
+  border: var(--border-thin);
+  border-radius: 8px;
+  background-color: color-mix(
+    in srgb,
+    var(--blessing-hue) 22%,
+    var(--color-bg-secondary)
+  );
+}
+
+.wiki-blessing-body h3,
+.wiki-blessing-body p {
+  margin: 0;
+}
+
+.wiki-blessing-body h3 {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.4em;
+  font-size: 1em;
+  line-height: 1.2;
+  padding-bottom: 0.4em;
+  border-bottom: 1px solid
+    color-mix(in srgb, var(--color-fg-primary) 22%, transparent);
+}
+
+.wiki-blessing-body h3 + p {
+  margin-top: 0.45em;
+  font-size: 0.85em;
+  line-height: 1.4;
+}
+
+.wiki-blessings-stages-label {
+  margin-top: 0.7em;
+  opacity: 0.7;
+  font-size: 0.8em;
+}
+
+/* description icons default to 1.5em, too big next to 0.85em body text */
+.wiki-blessings .description-icon > img,
+.wiki-blessings img.description-icon {
+  width: 1.15em;
+  height: 1.15em;
+  margin-right: 2px;
+  vertical-align: -0.2em;
+}
+
+.wiki-blessings .description-icon {
+  font-size: inherit;
+}
+
+/* a closed family fills its grid cell like the cards beside it */
+.wiki-blessings-family > details:not([open]),
+.wiki-blessings-family > details:not([open]) > summary {
+  height: 100%;
+}
+
+.wiki-blessings-family > details > summary {
+  cursor: var(--cursor-hover);
+  list-style: none;
+}
+
+.wiki-blessings-family > details > summary:hover .wiki-blessing-body {
+  background-color: color-mix(in srgb, var(--color-shadow) 60%, transparent);
+}
+
+.wiki-blessings-family > details > summary:hover .wiki-blessings-chevron {
+  border-color: var(--color-fg-accent);
+}
+
+.wiki-blessings-family > details > summary::-webkit-details-marker {
+  display: none;
+}
+
+.wiki-blessings-chevron {
+  flex: none;
+  width: 0.5em;
+  height: 0.5em;
+  border-right: 2px solid var(--color-fg-primary);
+  border-bottom: 2px solid var(--color-fg-primary);
+  transform: rotate(45deg) translate(-2px, -2px);
+  transition:
+    transform 0.15s ease-out,
+    border-color 0.15s ease-out;
+}
+
+.wiki-blessings-family > details[open] .wiki-blessings-chevron {
+  transform: rotate(-135deg) translate(-2px, -2px);
+}
+
+.wiki-blessings-list > li:has(details[open]) {
+  grid-column: 1 / -1;
+}
+
+.wiki-blessings-family-list {
+  margin-top: 0.5em;
+}

@@ -61,6 +61,7 @@ export default class GameState extends Schema {
   @type("number") currentPveVariantIndex: number = 0
   @type({ map: PlayerBlessings }) blessingsByPlayerId =
     new MapSchema<PlayerBlessings>()
+  @type("boolean") blessingsEnabled = false
   time = StageDuration[0] * 1000
   updatePhaseNeeded = false
   botManager: BotManager = new BotManager()
@@ -96,10 +97,12 @@ export default class GameState extends Schema {
     maxRank: EloRank | null,
     specialGameRule: SpecialGameRule | null,
     scribbleExtended = false,
-    whimsy = false
+    whimsy = false,
+    blessingsEnabled = false
   ) {
     super()
     this.scribbleExtended = scribbleExtended
+    this.blessingsEnabled = blessingsEnabled
     this.whimsy = whimsy
     this.preparationId = preparationId
     this.startTime = Date.now()

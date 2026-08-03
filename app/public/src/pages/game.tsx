@@ -64,6 +64,7 @@ import {
   removePlayer,
   setAdditionalPokemons,
   setPlayerBlessings,
+  setBlessingsEnabled,
   setEmotesUnlocked,
   setGameMode,
   setInterest,
@@ -788,6 +789,10 @@ export default function Game() {
         dispatch(
           setAdditionalPokemons(schemaValues(room.state.additionalPokemons))
         )
+      })
+
+      $state.listen("blessingsEnabled", (value) => {
+        dispatch(setBlessingsEnabled(value))
       })
 
       $state.blessingsByPlayerId.onAdd((playerBlessings, playerId) => {

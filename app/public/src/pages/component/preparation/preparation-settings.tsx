@@ -11,6 +11,7 @@ import {
   addBot,
   changeRoomName,
   changeRoomPassword,
+  setBlessingsEnabled,
   setScribbleExtended,
   setSpecialRule
 } from "../../../network"
@@ -40,6 +41,9 @@ export default function PreparationSettings() {
   )
   const scribbleExtended = useAppSelector(
     (state) => state.preparation.scribbleExtended
+  )
+  const blessingsEnabled = useAppSelector(
+    (state) => state.preparation.blessingsEnabled
   )
   const gameMode = useAppSelector((state) => state.preparation.gameMode)
   const isOwner = useAppSelector(
@@ -263,6 +267,29 @@ export default function PreparationSettings() {
     </div>
   )
 
+  const blessingsSetting = (gameMode === GameMode.SCRIBBLE ||
+    (hasCustomLobbySettings && (isOwner || isAdmin))) && (
+    <div className="lobby-setting" title={t("blessings_enabled_hint")}>
+      <span className="setting-label">
+        {t("blessings_enabled_label")}
+        <img
+          src="assets/ui/blessing_event_icon.jpg"
+          alt=""
+          className="setting-icon setting-icon-round"
+        />
+      </span>
+      <div className="setting-control">
+        <select
+          value={blessingsEnabled ? "on" : "off"}
+          onChange={(e) => setBlessingsEnabled(e.target.value === "on")}
+        >
+          <option value="off">{t("blessings_enabled_off")}</option>
+          <option value="on">{t("blessings_enabled_on")}</option>
+        </select>
+      </div>
+    </div>
+  )
+
   const botSetting = hasCustomLobbySettings &&
     (isOwner || isAdmin) &&
     (BOTS_ENABLED || isAdmin) && (
@@ -319,6 +346,7 @@ export default function PreparationSettings() {
           {botSetting}
           {scribbleRuleSetting}
           {playerHpSetting}
+          {blessingsSetting}
           {privacySetting}
         </div>
       ) : (

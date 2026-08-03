@@ -5776,7 +5776,8 @@
 			"town_label": "Town",
 			"dungeon_label": "Regions",
 			"glossary_label": "Glossary",
-			"data_label": "Data"
+			"data_label": "Data",
+			"blessings_label": "Blessings"
 		},
 		"faq": {
 			"official_game": "Is this an official game ?",
@@ -5982,6 +5983,16 @@
 			"consumable_item": "Consumable items are one-time use items that are removed when their effect is used.",
 			"unholdable_item": "Unholdable items are items that cannot be held by a Pokémon. Their effect still applies on your whole team.",
 			"removable_item": "Removable items are items that can be removed from a Pokémon by putting them on the bench."
+		},
+		"blessings": {
+			"intro": "Jirachi grants each player 2 Blessings per game, one at stage 4 and one at stage 12. Every player is offered the same tier, and each of the 3 options can be rerolled once.",
+			"all_stages": "All stages",
+			"family_BADGE_name": "Synergy Badges",
+			"family_BADGE_hint": "Gain that synergy gem and a random 1 STAR Uncommon Pokémon of that synergy. One exists for every synergy.",
+			"family_CREST_name": "Synergy Crests",
+			"family_CREST_hint": "Gain that synergy gem and 2 random 1 STAR Uncommon Pokémon of that synergy. One exists for every synergy.",
+			"family_CROWN_name": "Synergy Crowns",
+			"family_CROWN_hint": "Gain two items and a Pokémon chosen for that synergy. One exists for every synergy."
 		}
 	},
 	"errors": {
@@ -6271,5 +6282,12 @@
 	},
 	"not_pokemons": "Not Pokémon",
 	"bark": "WOOF !",
-	"custom_bot": "Custom"
+	"custom_bot": "Custom",
+	"blessings_enabled_label": "Blessings",
+	"blessings_enabled_hint": "Jirachi grants each player 2 Blessings during the game, at stage 4 and stage 12.",
+	"blessings_enabled_off": "Off",
+	"blessings_enabled_on": "On",
+	"blessing_event_title": "Jirachi's Wish Festival",
+	"blessing_event_description": "A wishing star has appeared. Jirachi is here, and every blessing changes your journey.",
+	"blessing_event_ends_in": "Ends in {{time}}"
 }
