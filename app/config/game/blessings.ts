@@ -492,6 +492,41 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     grantsPokemonImmediately: false,
     isAvailable: isSynergyBlessingAvailable(Synergy.AMORPHOUS)
   },
+  [Blessing.HEX_MANIAC]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "hex_maniac",
+    grantsPokemonImmediately: true,
+    isAvailable: isSynergyBlessingAvailable(Synergy.GHOST)
+  },
+  [Blessing.ABSOLUTE_DARKNESS]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "absolute_darkness",
+    grantsPokemonImmediately: true,
+    isAvailable: isSynergyBlessingAvailable(Synergy.DARK)
+  },
+  [Blessing.TOXIC_BURST]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "toxic_burst",
+    grantsPokemonImmediately: true,
+    isAvailable: isSynergyBlessingAvailable(Synergy.POISON)
+  },
+  [Blessing.EXHAUSTING_FLAME]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "exhausting_flame",
+    grantsPokemonImmediately: true,
+    isAvailable: isSynergyBlessingAvailable(Synergy.FIRE)
+  },
+  [Blessing.ETERNAL_RAGE]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "eternal_rage",
+    grantsPokemonImmediately: true,
+    isAvailable: isSynergyBlessingAvailable(Synergy.WILD)
+  },
   [Blessing.WILD_SUBSCRIPTION]: {
     tier: BlessingTier.SILVER,
     availableAtStages: [4],
@@ -648,10 +683,11 @@ function tierChancesForBlessingsUnderTest(): {
 export const BLESSING_TEST_MODE: boolean = false
 
 const BLESSINGS_UNDER_TEST: Blessing[] = [
-  Blessing.POLLUTED_SEA,
-  Blessing.TIDAL_SURGE,
-  Blessing.ATLANTEAN_MAGIC,
-  Blessing.STAR_CROSSED_SEAS
+  Blessing.HEX_MANIAC,
+  Blessing.ABSOLUTE_DARKNESS,
+  Blessing.TOXIC_BURST,
+  Blessing.EXHAUSTING_FLAME,
+  Blessing.ETERNAL_RAGE
 ]
 
 function countBlessingsOfFamily(blessings: Blessing[], family?: string) {

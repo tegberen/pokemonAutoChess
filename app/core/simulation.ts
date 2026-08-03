@@ -52,6 +52,7 @@ import { Synergy } from "../types/enum/Synergy"
 import {
   Blessing,
   BLOSSOM_FESTIVAL_CASTS_PER_RANGE_GAIN,
+  HEX_MANIAC_STATUS_DURATION,
   NOT_THE_BEES_MAX_COMBEES,
   POLLUTED_SEA_POISON_DURATION,
   STAR_CROSSED_SEAS_ABILITY_POWER,
@@ -2489,6 +2490,26 @@ export default class Simulation extends Schema implements ISimulation {
     this.room.rankPlayers()
   }
 
+  /* called from inside each curse branch, so CURSE_OF_TWO's second pass gets
+     these statuses on its extra target too */
+  applyHexManiacStatus(
+    effect: EffectEnum,
+    target: PokemonEntity,
+    curser: PokemonEntity
+  ) {
+    if (!curser.player?.blessings?.includes(Blessing.HEX_MANIAC)) return
+    const duration = HEX_MANIAC_STATUS_DURATION
+    if (effect === EffectEnum.CURSE_OF_VULNERABILITY) {
+      target.status.triggerArmorReduction(duration, target)
+    } else if (effect === EffectEnum.CURSE_OF_WEAKNESS) {
+      target.status.triggerFatigue(duration, target, curser)
+    } else if (effect === EffectEnum.CURSE_OF_TORMENT) {
+      target.status.triggerParalysis(duration, target, curser)
+    } else if (effect === EffectEnum.CURSE_OF_FATE) {
+      target.status.triggerSilence(duration, target, curser)
+    }
+  }
+
   applyCurse(effect: EffectEnum, opponentTeamNumber: number, pass = 1) {
     const team =
       opponentTeamNumber === Team.RED_TEAM ? this.blueTeam : this.redTeam
@@ -2521,6 +2542,7 @@ export default class Simulation extends Schema implements ISimulation {
         enemyWithHighestDef.addSpecialDefense(-5, curser, 0, false)
         enemyWithHighestDef.status.curseVulnerability = true
         enemyWithHighestDef.status.triggerFlinch(30000, enemyWithHighestDef)
+        this.applyHexManiacStatus(effect, enemyWithHighestDef, curser)
       }
     }
 
@@ -2542,6 +2564,7 @@ export default class Simulation extends Schema implements ISimulation {
           enemyWithHighestAtk,
           null
         )
+        this.applyHexManiacStatus(effect, enemyWithHighestAtk, curser)
       }
     }
 
@@ -2558,6 +2581,7 @@ export default class Simulation extends Schema implements ISimulation {
           enemyWithHighestAP,
           null
         )
+        this.applyHexManiacStatus(effect, enemyWithHighestAP, curser)
       }
     }
 
@@ -2566,6 +2590,7 @@ export default class Simulation extends Schema implements ISimulation {
       if (strongestEnemy) {
         strongestEnemy.status.curseFate = true
         strongestEnemy.status.triggerCurse(8000, strongestEnemy)
+        this.applyHexManiacStatus(effect, strongestEnemy, curser)
       }
     }
 

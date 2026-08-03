@@ -13,7 +13,8 @@ import {
 import { Awakening } from "../types/enum/Awakening"
 import {
   Blessing,
-  CONTEMPT_DAMAGE_MULTIPLIER
+  CONTEMPT_DAMAGE_MULTIPLIER,
+  EXHAUSTING_FLAME_DAMAGE_MULTIPLIER
 } from "../types/enum/Blessing"
 import { EffectEnum } from "../types/enum/Effect"
 import {
@@ -75,7 +76,13 @@ export default abstract class PokemonState {
         )
         critChance += 0.01 * distance
       }
-      const crit = chance(critChance, pokemon) || (target.status.sleep && pokemon.passive === Passive.BAD_DREAMS)
+      const hasAbsoluteDarkness =
+        target.status.blinded &&
+        pokemon.player?.blessings?.includes(Blessing.ABSOLUTE_DARKNESS) === true
+      const crit =
+        chance(critChance, pokemon) ||
+        (target.status.sleep && pokemon.passive === Passive.BAD_DREAMS) ||
+        (hasAbsoluteDarkness && pokemon.types.has(Synergy.DARK))
 
       const nbBlackAugurite = target.player
         ? count(target.player.items, Item.BLACK_AUGURITE)
@@ -181,6 +188,9 @@ export default abstract class PokemonState {
       }
 
       let trueDamagePart = 0
+      if (hasAbsoluteDarkness && pokemon.critChance >= 100) {
+        trueDamagePart += 1.0
+      }
       if (pokemon.effects.has(EffectEnum.STEEL_SURGE)) {
         trueDamagePart += 0.33
       } else if (pokemon.effects.has(EffectEnum.STEEL_SPIKE)) {
@@ -522,6 +532,14 @@ export default abstract class PokemonState {
         attacker.player?.blessings?.includes(Blessing.CONTEMPT)
       ) {
         damage *= CONTEMPT_DAMAGE_MULTIPLIER
+      }
+
+      if (
+        attacker?.status.burn &&
+        pokemon.types.has(Synergy.FIRE) &&
+        pokemon.player?.blessings?.includes(Blessing.EXHAUSTING_FLAME)
+      ) {
+        damage *= EXHAUSTING_FLAME_DAMAGE_MULTIPLIER
       }
 
       // dark pokemon do more damage to BLINDED status

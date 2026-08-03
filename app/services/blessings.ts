@@ -785,6 +785,21 @@ export const blessingEffectService: {
   [Blessing.TIDAL_SURGE]: (player) =>
     giftPokemonIfBenchHasRoom(player, Pkm.FROAKIE),
 
+  [Blessing.HEX_MANIAC]: (player) =>
+    giftPokemonIfBenchHasRoom(player, Pkm.SNORUNT),
+
+  [Blessing.ABSOLUTE_DARKNESS]: (player) =>
+    giftPokemonIfBenchHasRoom(player, Pkm.IMPIDIMP),
+
+  [Blessing.TOXIC_BURST]: (player) =>
+    giftPokemonIfBenchHasRoom(player, Pkm.SPINARAK),
+
+  [Blessing.EXHAUSTING_FLAME]: (player) =>
+    giftPokemonIfBenchHasRoom(player, Pkm.LITTEN),
+
+  [Blessing.ETERNAL_RAGE]: (player) =>
+    giftPokemonIfBenchHasRoom(player, Pkm.AIPOM),
+
   [Blessing.ATLANTEAN_MAGIC]: (player) =>
     giftPokemonIfBenchHasRoom(player, Pkm.SQUIRTLE),
 

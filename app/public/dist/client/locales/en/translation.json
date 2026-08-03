@@ -5268,6 +5268,26 @@
 			"name": "Star-Crossed Seas",
 			"description": "Move to an AMORPHOUS region if not currently in one. You can find both kinds of Shellos in AMORPHOUS regions. Fielding them both at once grants each one 50 HP and 25 AP."
 		},
+		"HEX_MANIAC": {
+			"name": "Hex Maniac",
+			"description": "Your GHOST curses have additional effects. GHOST 2 inflicts ARMOR_BREAK, GHOST 4 inflicts FATIGUE, GHOST 6 inflicts PARALYSIS and GHOST 8 inflicts SILENCE. Gain a Snorunt."
+		},
+		"ABSOLUTE_DARKNESS": {
+			"name": "Absolute Darkness",
+			"description": "DARK Pokémon always crit BLINDED enemies. Allies with 100% CRIT_CHANCE convert all their damage to TRUE damage against BLINDED enemies. Gain an Impidimp."
+		},
+		"TOXIC_BURST": {
+			"name": "Toxic Burst",
+			"description": "When a POISONNED enemy is KO'd, they explode, spreading their poison stacks to adjacent enemies. Gain a Spinarak."
+		},
+		"EXHAUSTING_FLAME": {
+			"name": "Exhausting Flame",
+			"description": "BURN enemies deal 20% reduced damage to your FIRE Pokémon. Gain a Litten."
+		},
+		"ETERNAL_RAGE": {
+			"name": "Eternal Rage",
+			"description": "When a WILD Pokémon is KO'd, the strongest adjacent WILD ally is RAGE for 1/2/3 seconds, based on the KO'd ally's STAR level. Gain an Aipom."
+		},
 		"MISFITS": {
 			"name": "Misfits",
 			"description": "Allies with no active synergies gain 50 HP, 50 AP, 5 ATK, 5 DEF and 5 SPE_DEF."

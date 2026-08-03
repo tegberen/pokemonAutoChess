@@ -26,9 +26,11 @@ import { EvolutionRuleType } from "../types/EvolutionRules"
 import { Ability } from "../types/enum/Ability"
 import {
   Blessing,
+  ETERNAL_RAGE_DURATION_PER_STAR,
   RIVALRY_ATTACK_ON_OWN_SIDE,
   RIVALRY_MAX_HP_ON_ENEMY_SIDE
 } from "../types/enum/Blessing"
+import { getStrongestUnit } from "./unit-score"
 import { EffectEnum } from "../types/enum/Effect"
 import {
   AttackType,
@@ -463,6 +465,25 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
       }
       if (attacker?.passive === Passive.BERSERK_2) {
         attacker.addAbilityPower(5, attacker, 0, false, false)
+      }
+
+      if (
+        attackType === AttackType.SPECIAL &&
+        this.status.blinded &&
+        attacker &&
+        attacker.critChance >= 100 &&
+        attacker.player?.blessings?.includes(Blessing.ABSOLUTE_DARKNESS)
+      ) {
+        const convertedDamage = specialDamage
+        specialDamage = 0
+        this.state.handleDamage({
+          target: this,
+          damage: convertedDamage,
+          board,
+          attackType: AttackType.TRUE,
+          attacker,
+          shouldTargetGainMana: true
+        })
       }
 
       /* ARCANE_METALS blessing: steel converts a share of ability damage into
@@ -1422,6 +1443,56 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
     this.getEffects(OnDeathEffect).forEach((effect) =>
       effect.apply({ pokemon: this, board, attacker })
     )
+
+    /* TOXIC_BURST is owned by the opposing player, since the unit bursting is
+       an enemy from the blessing owner's point of view */
+    const foePlayer =
+      this.team === Team.BLUE_TEAM
+        ? this.simulation.redPlayer
+        : this.simulation.bluePlayer
+    if (
+      this.status.poisonStacks > 0 &&
+      foePlayer?.blessings?.includes(Blessing.TOXIC_BURST)
+    ) {
+      const stacksToSpread = this.status.poisonStacks
+      const poisonDuration = this.status.poisonCooldown
+      board
+        .getAdjacentCells(this.positionX, this.positionY)
+        .forEach((cell) => {
+          if (cell.value && cell.value.team === this.team) {
+            for (let stack = 0; stack < stacksToSpread; stack++) {
+              cell.value.status.triggerPoison(
+                poisonDuration,
+                cell.value,
+                this.status.poisonOrigin
+              )
+            }
+          }
+        })
+    }
+
+    if (
+      this.types.has(Synergy.WILD) &&
+      this.player?.blessings?.includes(Blessing.ETERNAL_RAGE)
+    ) {
+      const adjacentWildAllies = board
+        .getAdjacentCells(this.positionX, this.positionY)
+        .map((cell) => cell.value)
+        .filter(
+          (ally): ally is PokemonEntity =>
+            ally != null &&
+            ally.team === this.team &&
+            ally.hp > 0 &&
+            ally.types.has(Synergy.WILD)
+        )
+      if (adjacentWildAllies.length > 0) {
+        const strongest = getStrongestUnit(adjacentWildAllies)
+        strongest.status.triggerRage(
+          this.stars * ETERNAL_RAGE_DURATION_PER_STAR,
+          strongest
+        )
+      }
+    }
 
     // FLOAT_STONE awakening: allies gain +10 SPEED when a ROCK ally is KO'd
     if (this.types.has(Synergy.ROCK)) {
