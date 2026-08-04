@@ -1,10 +1,17 @@
 import PokemonFactory from "../../models/pokemon-factory"
 import { Awakening } from "../../types/enum/Awakening"
-import { Blessing } from "../../types/enum/Blessing"
+import {
+  Blessing,
+  ECHO_CHAMBER_PP_TO_ALLIES,
+  ECHO_CHAMBER_PP_TO_LEADER,
+  LANGUAGE_BARRIER_SHIELD
+} from "../../types/enum/Blessing"
 import { Synergy } from "../../types/enum/Synergy"
 import { Rarity } from "../../types/enum/Game"
-import { Pkm } from "../../types/enum/Pokemon"
+import { Pkm, Unowns } from "../../types/enum/Pokemon"
+import { DPS_LANGUAGE_BARRIER_ID } from "../../types"
 import { EffectEnum } from "../../types/enum/Effect"
+import { isIn } from "../../utils/array"
 import { chance } from "../../utils/random"
 import type { Board } from "../board"
 import { OnAbilityCastEffect } from "../effects/effect"
@@ -40,6 +47,49 @@ export function castAbility(
     pokemon.player?.blessings?.includes(Blessing.ATLANTEAN_MAGIC)
   ) {
     pokemon.addAbilityPower(pokemon.stars, pokemon, 0, false, true)
+  }
+
+  const casterBlessings = pokemon.player?.blessings
+
+  if (
+    pokemon.types.has(Synergy.SOUND) &&
+    casterBlessings?.includes(Blessing.ECHO_CHAMBER)
+  ) {
+    if (pokemon.isEchoChamberLeaderThisFight) {
+      board.forEach((x, y, ally) => {
+        if (ally && ally.team === pokemon.team && ally !== pokemon) {
+          ally.addPP(ECHO_CHAMBER_PP_TO_ALLIES, ally, 0, false)
+        }
+      })
+    } else {
+      board.forEach((x, y, ally) => {
+        if (ally && ally.isEchoChamberLeaderThisFight) {
+          ally.addPP(ECHO_CHAMBER_PP_TO_LEADER, ally, 0, false)
+        }
+      })
+    }
+  }
+
+  if (
+    isIn(Unowns, pokemon.name) &&
+    casterBlessings?.includes(Blessing.LANGUAGE_BARRIER)
+  ) {
+    const shieldBefore = pokemon.shieldDone
+    board.forEach((x, y, ally) => {
+      if (ally && ally.team === pokemon.team) {
+        ally.addShield(LANGUAGE_BARRIER_SHIELD, pokemon, 1, false)
+      }
+    })
+    /* the Unown kills itself as part of casting, so it is already out of the
+       team map and its own Battle Stats row will never be flushed again */
+    const languageBarrierDps = pokemon.simulation.getOrCreateSyntheticDps(
+      pokemon.team,
+      DPS_LANGUAGE_BARRIER_ID
+    )
+    languageBarrierDps.shield = Math.min(
+      65535,
+      languageBarrierDps.shield + (pokemon.shieldDone - shieldBefore)
+    )
   }
 
   // BEEKEEPING blessing: a Combee joins the fight each time a unique casts

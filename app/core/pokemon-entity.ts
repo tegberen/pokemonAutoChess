@@ -26,9 +26,14 @@ import { EvolutionRuleType } from "../types/EvolutionRules"
 import { Ability } from "../types/enum/Ability"
 import {
   Blessing,
+  DRAGON_KING_ABILITY_POWER_PER_STAR,
+  DRAGON_KING_SHIELD_PER_STAR,
+  DRAGON_KING_SPEED_PER_STAR,
   ETERNAL_RAGE_DURATION_PER_STAR,
   RIVALRY_ATTACK_ON_OWN_SIDE,
-  RIVALRY_MAX_HP_ON_ENEMY_SIDE
+  RIVALRY_MAX_HP_ON_ENEMY_SIDE,
+  SLIPSTREAM_SPEED,
+  ZAP_CHAIN_DAMAGE_RATIO
 } from "../types/enum/Blessing"
 import { getStrongestUnit } from "./unit-score"
 import { EffectEnum } from "../types/enum/Effect"
@@ -169,6 +174,8 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
   isRivalryChampionThisFight: boolean = false
   isSynchronisedSpeedLeaderThisFight: boolean = false
   isBlossomFestivalChampionThisFight: boolean = false
+  isEchoChamberLeaderThisFight: boolean = false
+  isDragonKingChampionThisFight: boolean = false
   isMegaSolAuraSource: boolean = false
 
   constructor(
@@ -1024,6 +1031,43 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
   }) {
     this.addPP(ON_ATTACK_MANA, this, 0, false)
 
+    if (
+      isTripleAttack &&
+      this.types.has(Synergy.ELECTRIC) &&
+      this.player?.blessings?.includes(Blessing.ZAP)
+    ) {
+      const chainTarget = pickRandomIn(
+        board
+          .getAdjacentCells(target.positionX, target.positionY)
+          .map((cell) => cell.value)
+          .filter(
+            (enemy): enemy is PokemonEntity =>
+              enemy != null && enemy.team !== this.team && enemy.hp > 0
+          )
+      )
+      if (chainTarget) {
+        const chainedDamage = Math.ceil(totalDamage * ZAP_CHAIN_DAMAGE_RATIO)
+        chainTarget.handleDamage({
+          damage: chainedDamage,
+          board,
+          attackType: AttackType.PHYSICAL,
+          attacker: this,
+          shouldTargetGainMana: true
+        })
+        this.getEffects(OnHitEffect).forEach((effect) =>
+          effect.apply({
+            attacker: this,
+            target: chainTarget,
+            board,
+            totalTakenDamage: chainedDamage,
+            physicalDamage: chainedDamage,
+            specialDamage: 0,
+            trueDamage: 0
+          })
+        )
+      }
+    }
+
     if (target.effects.has(EffectEnum.OBSTRUCT)) {
       this.addDefense(-2, target, 0, false)
     }
@@ -1494,6 +1538,29 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
       }
     }
 
+    if (
+      this.types.has(Synergy.DRAGON) &&
+      this.player?.blessings?.includes(Blessing.DRAGON_KING)
+    ) {
+      board.forEach((x, y, ally) => {
+        if (ally && ally.isDragonKingChampionThisFight && ally.hp > 0) {
+          ally.addShield(
+            DRAGON_KING_SHIELD_PER_STAR * this.stars,
+            ally,
+            0,
+            false
+          )
+          ally.addSpeed(DRAGON_KING_SPEED_PER_STAR * this.stars, ally, 0, false)
+          ally.addAbilityPower(
+            DRAGON_KING_ABILITY_POWER_PER_STAR * this.stars,
+            ally,
+            0,
+            false
+          )
+        }
+      })
+    }
+
     // FLOAT_STONE awakening: allies gain +10 SPEED when a ROCK ally is KO'd
     if (this.types.has(Synergy.ROCK)) {
       board.cells.forEach((ally) => {
@@ -1613,6 +1680,26 @@ flyAway(
             EffectEnum.EMBER,
             this.simulation
           )
+        })
+    }
+
+    if (
+      flyAwayCell &&
+      (flyAwayCell.x !== this.positionX || flyAwayCell.y !== this.positionY) &&
+      this.player?.blessings?.includes(Blessing.SLIPSTREAM)
+    ) {
+      this.addSpeed(SLIPSTREAM_SPEED, this, 0, false)
+      board
+        .getCellsBetween(
+          this.positionX,
+          this.positionY,
+          flyAwayCell.x,
+          flyAwayCell.y
+        )
+        .forEach((cell) => {
+          if (cell.value && cell.value.team === this.team && cell.value !== this) {
+            cell.value.addSpeed(SLIPSTREAM_SPEED, cell.value, 0, false)
+          }
         })
     }
 

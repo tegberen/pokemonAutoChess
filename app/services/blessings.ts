@@ -3,7 +3,12 @@ import PokemonFactory from "../models/pokemon-factory"
 import { getPokemonData } from "../models/precomputed/precomputed-pokemon-data"
 import { PRECOMPUTED_POKEMONS_PER_RARITY } from "../models/precomputed/precomputed-rarity"
 import type GameState from "../rooms/states/game-state"
-import { Blessing, BlessingTrigger } from "../types/enum/Blessing"
+import {
+  Blessing,
+  BlessingTrigger,
+  LANGUAGE_BARRIER_UNOWNS_GRANTED,
+  MOVE_TUTOR_MAX_PP
+} from "../types/enum/Blessing"
 import { BattleResult, Rarity } from "../types/enum/Game"
 import { RegionDetails, SynergyTiersThresholds } from "../config"
 import type { DungeonPMDO } from "../types/enum/Dungeon"
@@ -27,7 +32,7 @@ import {
   SynergyGivenByGem,
   WeatherRocks
 } from "../types/enum/Item"
-import { Pkm, PkmFamily } from "../types/enum/Pokemon"
+import { Pkm, PkmFamily, Unowns } from "../types/enum/Pokemon"
 import { getSellPrice } from "../models/shop"
 import { Synergy } from "../types/enum/Synergy"
 import {
@@ -781,6 +786,53 @@ export const blessingEffectService: {
 
   [Blessing.MEGA_SOL]: (player) =>
     giftPokemonIfBenchHasRoom(player, Pkm.GOSSIFLEUR),
+
+  [Blessing.ECHO_CHAMBER]: (player) =>
+    giftPokemonIfBenchHasRoom(player, Pkm.IGGLYBUFF),
+
+  [Blessing.ZAP]: (player) => giftPokemonIfBenchHasRoom(player, Pkm.GRUBBIN),
+
+  [Blessing.SEEING_TRIPLE]: (player) =>
+    giftPokemonIfBenchHasRoom(player, Pkm.GRUBBIN),
+
+  [Blessing.SACRIFICE]: (player) =>
+    giftPokemonIfBenchHasRoom(player, Pkm.BAGON),
+
+  [Blessing.DRAGON_KING]: (player) =>
+    giftPokemonIfBenchHasRoom(player, Pkm.CHARMANDER),
+
+  [Blessing.ASCENSION]: (player) =>
+    giftPokemonIfBenchHasRoom(player, Pkm.CHERUBI),
+
+  [Blessing.SHARE_THE_SPOTLIGHT]: (player) =>
+    giftPokemonIfBenchHasRoom(player, Pkm.MAREEP),
+
+  [Blessing.SLIPSTREAM]: (player) =>
+    giftPokemonIfBenchHasRoom(player, Pkm.QUAXLY),
+
+  [Blessing.BIG_PECKS]: (player) =>
+    giftPokemonIfBenchHasRoom(player, Pkm.QUAXLY),
+
+  [Blessing.SHAPELESS_SYNERGIES]: (player) =>
+    giftPokemonIfBenchHasRoom(player, Pkm.TYNAMO),
+
+  [Blessing.LANGUAGE_BARRIER]: (player) => {
+    if (getFreeSpaceOnBench(player.board) < LANGUAGE_BARRIER_UNOWNS_GRANTED) {
+      return false
+    }
+    for (let i = 0; i < LANGUAGE_BARRIER_UNOWNS_GRANTED; i++) {
+      giftPokemonIfBenchHasRoom(player, pickRandomIn(Unowns))
+    }
+    return true
+  },
+
+  /* MOVE_TUTOR also applies to TMs taught later, in the TM item effect */
+  [Blessing.MOVE_TUTOR]: (player) => {
+    player.board.forEach((pokemon) => {
+      if (pokemon.tm) pokemon.maxPP = MOVE_TUTOR_MAX_PP
+    })
+    return true
+  },
 
   [Blessing.ABNORMALITY]: (player) =>
     giftPokemonIfBenchHasRoom(player, Pkm.IGGLYBUFF),

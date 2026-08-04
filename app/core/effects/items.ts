@@ -39,6 +39,7 @@ import {
   WandererBehavior,
   WandererType
 } from "../../types/enum/Wanderer"
+import { Blessing, MOVE_TUTOR_MAX_PP } from "../../types/enum/Blessing"
 import { isIn, removeInArray } from "../../utils/array"
 import { getFreeSpaceOnBench, isOnBench } from "../../utils/board"
 import { distanceC, distanceM } from "../../utils/distance"
@@ -620,7 +621,9 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
             return false // prevent equipping TMs on non-human pokemon
           pokemon.tm = ability
           pokemon.skill = ability
-          pokemon.maxPP = 100
+          pokemon.maxPP = player.blessings?.includes(Blessing.MOVE_TUTOR)
+            ? MOVE_TUTOR_MAX_PP
+            : 100
           removeInArray(player.items, item)
           return false
         })

@@ -1,4 +1,5 @@
 import Player from "../models/colyseus-models/player"
+import { Blessing } from "../types/enum/Blessing"
 import { EffectEnum } from "../types/enum/Effect"
 import { Rarity, Team } from "../types/enum/Game"
 import { type Seeds, CraftableNoStonesOrScarves, Item, ItemComponents, ItemComponentsNoScarf } from "../types/enum/Item"
@@ -292,6 +293,16 @@ export function rollExplorerBonusReward(rarity: Rarity, player: Player): Item | 
   if (!table) return null
   const roll = Math.random()
   let threshold = table.nothing
+  /* BIG_PECKS blessing: the first Letter of the game skips the rarity roll
+     entirely and always comes back with a Sharp Beak */
+  if (
+    player.blessings?.includes(Blessing.BIG_PECKS) &&
+    !player.bigPecksSharpBeakGranted
+  ) {
+    player.bigPecksSharpBeakGranted = true
+    return Item.SHARP_BEAK
+  }
+
   if (roll < threshold) return null
   threshold += table.bigNugget
   if (roll < threshold) return Item.BIG_NUGGET

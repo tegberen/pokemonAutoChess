@@ -23,7 +23,10 @@ export const BLESSING_MAX_OPTIONS_PER_FAMILY = 2
 
 export const BLESSING_SYNERGY_GATED_STAGE = 12
 
-export function isSynergyActiveForPlayer(player: Player, synergy: Synergy) {
+export function isSynergyActiveForPlayer(
+  player: Pick<Player, "synergies">,
+  synergy: Synergy
+) {
   const threshold = SynergyTiersThresholds[synergy]?.[0]
   return (
     threshold !== undefined && (player.synergies.get(synergy) ?? 0) >= threshold
@@ -464,6 +467,90 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     grantsPokemonImmediately: true,
     isAvailable: isFloraBlessingAvailable
   },
+  [Blessing.ECHO_CHAMBER]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "echo_chamber",
+    grantsPokemonImmediately: true,
+    isAvailable: isSynergyBlessingAvailable(Synergy.SOUND)
+  },
+  [Blessing.LANGUAGE_BARRIER]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "omega",
+    grantsPokemonImmediately: true,
+    isAvailable: isSynergyBlessingAvailable(Synergy.PSYCHIC)
+  },
+  [Blessing.MOVE_TUTOR]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "move_tutor",
+    grantsPokemonImmediately: false,
+    isAvailable: isSynergyBlessingAvailable(Synergy.HUMAN)
+  },
+  [Blessing.ZAP]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "lightning_zap",
+    grantsPokemonImmediately: true,
+    isAvailable: isSynergyBlessingAvailable(Synergy.ELECTRIC)
+  },
+  [Blessing.SEEING_TRIPLE]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "triforce",
+    grantsPokemonImmediately: true,
+    isAvailable: isSynergyBlessingAvailable(Synergy.BUG)
+  },
+  [Blessing.SACRIFICE]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "sacrifice",
+    grantsPokemonImmediately: true,
+    isAvailable: isSynergyBlessingAvailable(Synergy.MONSTER)
+  },
+  [Blessing.DRAGON_KING]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "dragon_king",
+    grantsPokemonImmediately: true,
+    isAvailable: isSynergyBlessingAvailable(Synergy.DRAGON)
+  },
+  [Blessing.ASCENSION]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "ascension_angel",
+    grantsPokemonImmediately: true,
+    isAvailable: isSynergyBlessingAvailable(Synergy.LIGHT)
+  },
+  [Blessing.SHARE_THE_SPOTLIGHT]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "double_light",
+    grantsPokemonImmediately: true,
+    isAvailable: isSynergyBlessingAvailable(Synergy.LIGHT)
+  },
+  [Blessing.SLIPSTREAM]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "slipstream_wing",
+    grantsPokemonImmediately: true,
+    isAvailable: isSynergyBlessingAvailable(Synergy.FLYING)
+  },
+  [Blessing.BIG_PECKS]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "big_peck_letter",
+    grantsPokemonImmediately: true,
+    isAvailable: isSynergyBlessingAvailable(Synergy.FLYING)
+  },
+  [Blessing.SHAPELESS_SYNERGIES]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "shapeless",
+    grantsPokemonImmediately: true,
+    isAvailable: isSynergyBlessingAvailable(Synergy.AMORPHOUS)
+  },
   [Blessing.ABNORMALITY]: {
     tier: BlessingTier.SILVER,
     availableAtStages: BLESSING_SELECTION_STAGES,
@@ -722,15 +809,21 @@ function tierChancesForBlessingsUnderTest(): {
 /* Test mode: propose only the blessings being worked on, at every selection
    stage, ignoring their availableAtStages. Tier odds are derived from the list
    so a tier with nothing in it is never rolled. Set to false to ship. */
-export const BLESSING_TEST_MODE: boolean = false
+export const BLESSING_TEST_MODE: boolean = true
 
 const BLESSINGS_UNDER_TEST: Blessing[] = [
-  Blessing.ABNORMALITY,
-  Blessing.WRAPPED_UP,
-  Blessing.BRACE_FOR_IMPACT,
-  Blessing.FROST_BARRIER,
-  Blessing.SECOND_WIND,
-  Blessing.RESURGENCE
+  Blessing.ECHO_CHAMBER,
+  Blessing.LANGUAGE_BARRIER,
+  Blessing.MOVE_TUTOR,
+  Blessing.ZAP,
+  Blessing.SEEING_TRIPLE,
+  Blessing.SACRIFICE,
+  Blessing.DRAGON_KING,
+  Blessing.ASCENSION,
+  Blessing.SHARE_THE_SPOTLIGHT,
+  Blessing.SLIPSTREAM,
+  Blessing.BIG_PECKS,
+  Blessing.SHAPELESS_SYNERGIES
 ]
 
 function countBlessingsOfFamily(blessings: Blessing[], family?: string) {

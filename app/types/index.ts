@@ -1,5 +1,6 @@
 import type { ArraySchema, MapSchema, SetSchema } from "@colyseus/schema"
 import type { ScribbleShapeType } from "../config/game/scribble-shapes"
+import type { Blessing } from "./enum/Blessing"
 import type { Board } from "../core/board"
 import type Dps from "../core/dps"
 import type { Effect as EffectClass } from "../core/effects/effect"
@@ -269,6 +270,8 @@ export interface IPlayer {
   team: Team
   experienceManager: ExperienceManager
   synergies: Synergies
+  // undecorated server-side mirror; undefined on the client
+  blessings?: Blessing[]
   money: number
   life: number
   shopLocked: boolean
@@ -423,6 +426,8 @@ export const DPS_EMBER_ID = "ember"
 export const DPS_POISON_GAS_ID = "poison-gas"
 export const DPS_TOXIC_SPIKES_ID = "toxic-spikes"
 export const DPS_METEOR_SHOWER_ID = "meteor-shower"
+// the Unown dies as part of its own cast, so its shield needs a row that outlives it
+export const DPS_LANGUAGE_BARRIER_ID = "language-barrier"
 
 // Synthetic Battle-Stats rows that aggregate a board effect's damage/heal across
 // a whole team, rather than belonging to a single Pokémon. They must be kept out
@@ -438,7 +443,8 @@ export const SYNTHETIC_DPS_IDS: ReadonlySet<string> = new Set([
   DPS_EMBER_ID,
   DPS_POISON_GAS_ID,
   DPS_TOXIC_SPIKES_ID,
-  DPS_METEOR_SHOWER_ID
+  DPS_METEOR_SHOWER_ID,
+  DPS_LANGUAGE_BARRIER_ID
 ])
 
 export interface IDps {

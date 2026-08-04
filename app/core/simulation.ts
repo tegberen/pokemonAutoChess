@@ -60,6 +60,13 @@ import {
   TIDAL_SURGE_ITEMS_REQUIRED,
   DRAGON_FANG_ABILITY_POWER_PER_STAR,
   SECOND_WIND_RESURRECTION_INTERVAL,
+  ASCENSION_BREAK_FREE_CHECK_INTERVAL,
+  SACRIFICE_DELAY,
+  BUG_CLONE_TRIPLE,
+  SHAPELESS_SYNERGIES_HP_RATIO,
+  SHAPELESS_SYNERGIES_MIN_ACTIVE,
+  SHAPELESS_SYNERGIES_SPEED_RATIO,
+  SHARE_THE_SPOTLIGHT_RATIO,
   MISFITS_ABILITY_POWER,
   MISFITS_ATTACK,
   MISFITS_DEFENSE,
@@ -96,6 +103,7 @@ import {
   OnAttackReceivedEffect,
   OnDamageReceivedEffect,
   OnDishConsumedEffect,
+  PeriodicEffect,
   OnMoveEffect,
   OnSimulationStartEffect,
   OnSpawnEffect,
@@ -1416,6 +1424,152 @@ export default class Simulation extends Schema implements ISimulation {
         this.grantSecondWindResurrection(player, teamIndex)
         this.secondWindTimer = SECOND_WIND_RESURRECTION_INTERVAL
       }
+
+      if (blessings.includes(Blessing.ECHO_CHAMBER)) {
+        const soundAllies = ownUnits.filter((ally) =>
+          ally.types.has(Synergy.SOUND)
+        )
+        if (soundAllies.length > 0) {
+          getStrongestUnit(soundAllies).isEchoChamberLeaderThisFight = true
+        }
+      }
+
+      if (blessings.includes(Blessing.DRAGON_KING)) {
+        const dragonAllies = ownUnits.filter((ally) =>
+          ally.types.has(Synergy.DRAGON)
+        )
+        if (dragonAllies.length > 0) {
+          getStrongestUnit(dragonAllies).isDragonKingChampionThisFight = true
+        }
+      }
+
+      if (blessings.includes(Blessing.SEEING_TRIPLE)) {
+        const bugAllies = ownUnits.filter((ally) => ally.types.has(Synergy.BUG))
+        if (bugAllies.length > 0) {
+          const strongestBug = getStrongestUnit(bugAllies)
+          for (let i = 0; i < BUG_CLONE_TRIPLE; i++) {
+            const coord = this.getClosestFreeCellToPokemonEntity(strongestBug)
+            if (!coord) break
+            const clone = PokemonFactory.createPokemonFromName(
+              strongestBug.name,
+              player
+            )
+            clone.hp = strongestBug.refToBoardPokemon.hp
+            this.addPokemon(clone, coord.x, coord.y, teamIndex, true)
+          }
+        }
+      }
+
+      if (
+        blessings.includes(Blessing.SACRIFICE) &&
+        isSynergyActiveForPlayer(player, Synergy.MONSTER)
+      ) {
+        const monsterAllies = ownUnits.filter((ally) =>
+          ally.types.has(Synergy.MONSTER)
+        )
+        if (monsterAllies.length > 0) {
+          const strongestMonster = getStrongestUnit(monsterAllies)
+          const adjacentAllies = this.board
+            .getAdjacentCells(
+              strongestMonster.positionX,
+              strongestMonster.positionY
+            )
+            .map((cell) => cell.value)
+            .filter(
+              (ally): ally is PokemonEntity =>
+                ally != null &&
+                ally.team === strongestMonster.team &&
+                ally !== strongestMonster &&
+                ally.hp > 0
+            )
+          if (adjacentAllies.length > 0) {
+            const weakest = adjacentAllies.reduce((lowest, ally) =>
+              getUnitScore(ally) < getUnitScore(lowest) ? ally : lowest
+            )
+            /* deferred to the first ticks of combat: this runs from
+               applyPostEffects, before clients have the board, so an ability
+               broadcast sent now is dropped */
+            strongestMonster.commands.push(
+              new DelayedCommand(() => {
+                if (weakest.hp <= 0) return
+                strongestMonster.broadcastAbility({
+                  skill: Ability.DRAGON_CLAW,
+                  positionX: strongestMonster.positionX,
+                  positionY: strongestMonster.positionY,
+                  targetX: weakest.positionX,
+                  targetY: weakest.positionY
+                })
+                weakest.handleDamage({
+                  damage: weakest.hp,
+                  board: this.board,
+                  attackType: AttackType.TRUE,
+                  attacker: strongestMonster,
+                  shouldTargetGainMana: false
+                })
+              }, SACRIFICE_DELAY)
+            )
+          }
+        }
+      }
+
+      const spotlightAllies = allies.filter((ally) => ally.inSpotlight)
+
+      if (blessings.includes(Blessing.ASCENSION)) {
+        spotlightAllies.forEach((ally) => {
+          // tree holds the unit until its PP bar fills, and wards it meanwhile
+          ally.status.tree = true
+          ally.toIdleState()
+          const breakFreeEffect = new PeriodicEffect(
+            (entity) => {
+              if (entity.status.tree) return
+              /* the Light buffs were already applied once at combat start, so
+                 replaying them here is what "doubles" them */
+              SynergyTiers[Synergy.LIGHT].forEach((lightEffect) => {
+                if (entity.effects.has(lightEffect)) {
+                  this.applyEffect(entity, lightEffect)
+                }
+              })
+              entity.effectsSet.delete(breakFreeEffect)
+            },
+            EffectEnum.SHINING_RAY,
+            ASCENSION_BREAK_FREE_CHECK_INTERVAL
+          )
+          ally.effectsSet.add(breakFreeEffect)
+        })
+      }
+
+      if (blessings.includes(Blessing.SHARE_THE_SPOTLIGHT)) {
+        spotlightAllies.forEach((spotlit) => {
+          this.board
+            .getAdjacentCells(spotlit.positionX, spotlit.positionY)
+            .forEach((cell) => {
+              const ally = cell.value
+              if (!ally || ally.team !== spotlit.team) return
+              /* multiple spotlights do not stack: only top up to the best
+                 share seen so far */
+              const raiseTo = (
+                current: number,
+                shared: number,
+                apply: (delta: number) => void
+              ) => {
+                const target = Math.ceil(shared * SHARE_THE_SPOTLIGHT_RATIO)
+                if (target > current) apply(target - current)
+              }
+              raiseTo(ally.atk - ally.baseAtk, spotlit.atk, (d) =>
+                ally.addAttack(d, ally, 0, false)
+              )
+              raiseTo(ally.ap, spotlit.ap, (d) =>
+                ally.addAbilityPower(d, ally, 0, false)
+              )
+              raiseTo(ally.def - ally.baseDef, spotlit.def, (d) =>
+                ally.addDefense(d, ally, 0, false)
+              )
+              raiseTo(ally.speDef - ally.baseSpeDef, spotlit.speDef, (d) =>
+                ally.addSpecialDefense(d, ally, 0, false)
+              )
+            })
+        })
+      }
     }
   }
 
@@ -1879,11 +2033,32 @@ export default class Simulation extends Schema implements ISimulation {
       case EffectEnum.ETHEREAL: {
         const activeSynergies = player?.synergies.countActiveSynergies() || 0
         const tier = SynergyTiers[Synergy.AMORPHOUS].indexOf(effect) + 1
-        const speedFactor = AMORPHOUS_SPEED_BUFF_PER_SYNERGY_TIER[tier] ?? 0
-        const hpFactor = AMORPHOUS_HP_BUFF_PER_SYNERGY_TIER[tier] ?? 0
+        let speedFactor = AMORPHOUS_SPEED_BUFF_PER_SYNERGY_TIER[tier] ?? 0
+        let hpFactor = AMORPHOUS_HP_BUFF_PER_SYNERGY_TIER[tier] ?? 0
+
+        if (player?.blessings?.includes(Blessing.SHAPELESS_SYNERGIES)) {
+          const ownActiveSynergies = [...types].filter((type) =>
+            isSynergyActiveForPlayer(player, type)
+          ).length
+          if (ownActiveSynergies >= SHAPELESS_SYNERGIES_MIN_ACTIVE) {
+            speedFactor *= 1 + SHAPELESS_SYNERGIES_SPEED_RATIO
+            hpFactor *= 1 + SHAPELESS_SYNERGIES_HP_RATIO
+          }
+        }
+
         pokemon.effects.add(effect)
-        pokemon.addSpeed(speedFactor * activeSynergies, pokemon, 0, false)
-        pokemon.addMaxHP(hpFactor * activeSynergies, pokemon, 0, false)
+        pokemon.addSpeed(
+          Math.ceil(speedFactor * activeSynergies),
+          pokemon,
+          0,
+          false
+        )
+        pokemon.addMaxHP(
+          Math.ceil(hpFactor * activeSynergies),
+          pokemon,
+          0,
+          false
+        )
         break
       }
 

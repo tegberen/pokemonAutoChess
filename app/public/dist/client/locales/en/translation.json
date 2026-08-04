@@ -2054,7 +2054,7 @@
 		"MIMIC": "Copy the target's ability, if not INIMITABLE.",
 		"HEX": "Deal [20,40,60,120,SP] SPECIAL to the target. The damage is doubled if the target suffers from a negative status condition.",
 		"GROWTH": "Increase max HP by [10,20,40,80,SP] and ATK by [3,5,7,14,SP]. The buff is increased by 30% if the weather is ZENITH.",
-		"HEAL_ORDER": "Spawn a Combee nearby then user and every Combee ally heals adjacent allied Pokémon for [10,20,30,60,SP] HP and clear their negative status conditions.",
+		"HEAL_ORDER": "Spawn a Combee nearby then user and every Combee ally heals ADJACENT allied Pokémon for [10,20,30,60,SP] HP and clear their negative status conditions.",
 		"DEFEND_ORDER": "Spawn a Combee nearby then gives [10,20,30,50,SP] SHIELD to user and all Combee allies. User gets [10,20,30,50,SP] additional SHIELD per Combee ally on the board.",
 		"ATTACK_ORDER": "Spawn a Combee nearby then all Combee allies get RAGE for 3 seconds. The next attack of the user deals [20,40,60,120,SP] additional SPECIAL + [10,20,30,60,SP] per Combee ally on the board.",
 		"BUG_BITE": " Deal [20,40,80,160,SP] SPECIAL to the target and steal and eat one of their berries if it holds one.",
@@ -5242,7 +5242,7 @@
 		},
 		"SPORE_CLOUDS": {
 			"name": "Spore Clouds",
-			"description": "The Oddish summoned by FLORA starts combat with a KINGS_ROCK. Every 3 seconds, it releases a spore cloud that randomly POISON, PARALYSIS, BURN or SLEEP adjacent enemies for 3 seconds. Gain a Flabébé."
+			"description": "The Oddish summoned by FLORA starts combat with a KINGS_ROCK. Every 3 seconds, it releases a spore cloud that randomly POISON, PARALYSIS, BURN or SLEEP ADJACENT enemies for 3 seconds. Gain a Flabébé."
 		},
 		"BLOSSOM_FESTIVAL": {
 			"name": "Blossom Festival",
@@ -5252,9 +5252,57 @@
 			"name": "Not the Bees!",
 			"description": "At combat start, spawn a Combee on a random tile for each STAR level of your flower pots, up to 16. Gain a Gossifleur and a Flabébé."
 		},
+		"ECHO_CHAMBER": {
+			"name": "Echo Chamber",
+			"description": "When a SOUND Pokémon casts, your strongest SOUND Pokémon gains 3 PP. When your strongest SOUND Pokémon casts, all allies gain 6 PP. Gain an Igglybuff."
+		},
+		"LANGUAGE_BARRIER": {
+			"name": "Language Barrier",
+			"description": "When your Unown casts, allies gain 15 SHIELD, scaling with AP. Gain 2 random Unown."
+		},
+		"MOVE_TUTOR": {
+			"name": "Move Tutor",
+			"description": "Pokémon with a TM ability have their max PP set to 80."
+		},
+		"ZAP": {
+			"name": "Zap!",
+			"description": "ELECTRIC triple attacks chain to a random ADJACENT enemy, dealing 50% reduced damage and applying on hit effects. Gain a Grubbin."
+		},
+		"SEEING_TRIPLE": {
+			"name": "Seeing Triple",
+			"description": "Your strongest BUG Pokémon is cloned one extra time at the start of combat, for three copies in total. Gain a Grubbin."
+		},
+		"SACRIFICE": {
+			"name": "Sacrifice",
+			"description": "At combat start, if MONSTER 2 is active, your strongest MONSTER Pokémon KOs the weakest ADJACENT ally. Gain a Bagon."
+		},
+		"DRAGON_KING": {
+			"name": "Dragon King",
+			"description": "When a DRAGON ally is KO'd, your strongest DRAGON Pokémon gains 5 SHIELD, 1 SPEED and 1 AP for each of the fallen ally's STAR. Gain a Charmander."
+		},
+		"ASCENSION": {
+			"name": "Ascension",
+			"description": "The Pokémon in your LIGHT spot starts combat in stasis: it does not move or attack until its PP bar is full, and cannot be SILENCE or lose PP until then. When it breaks free, it doubles all the stat buffs from LIGHT. Gain a Cherubi."
+		},
+		"SHARE_THE_SPOTLIGHT": {
+			"name": "Share the Spotlight",
+			"description": "The Pokémon in your LIGHT spot shares 50% of its ATK, AP, DEF and SPE_DEF with ADJACENT allies. Gain a Cherubi."
+		},
+		"SLIPSTREAM": {
+			"name": "Slipstream",
+			"description": "When a FLYING Pokémon flies away, it gains 5 SPEED and grants 5 SPEED to allies it passes through. Gain a Quaxly."
+		},
+		"BIG_PECKS": {
+			"name": "Big Pecks",
+			"description": "The first time you send a FLYING Pokémon away with a LETTER, it is guaranteed to come back with a SHARP_BEAK regardless of rarity. Gain a Quaxly."
+		},
+		"SHAPELESS_SYNERGIES": {
+			"name": "Shapeless Synergies",
+			"description": "Allies with at least 3 of their synergies active gain 100% more SPEED and 50% more HP from the AMORPHOUS synergy, rounded up. Gain a Tynamo."
+		},
 		"ABNORMALITY": {
 			"name": "Abnormality",
-			"description": "NORMAL Pokémon now gain SHIELD for each empty adjacent space instead of giving it to adjacent allies. Gain an Igglybuff."
+			"description": "NORMAL Pokémon now gain SHIELD for each empty ADJACENT space instead of giving it to ADJACENT allies. Gain an Igglybuff."
 		},
 		"WRAPPED_UP": {
 			"name": "Wrapped Up",
@@ -5302,7 +5350,7 @@
 		},
 		"TOXIC_BURST": {
 			"name": "Toxic Burst",
-			"description": "When a POISONNED enemy is KO'd, they explode, spreading their poison stacks to adjacent enemies. Gain a Spinarak."
+			"description": "When a POISONNED enemy is KO'd, they explode, spreading their poison stacks to ADJACENT enemies. Gain a Spinarak."
 		},
 		"EXHAUSTING_FLAME": {
 			"name": "Exhausting Flame",
@@ -5310,7 +5358,7 @@
 		},
 		"ETERNAL_RAGE": {
 			"name": "Eternal Rage",
-			"description": "When a WILD Pokémon is KO'd, the strongest adjacent WILD ally is RAGE for 1/2/3 seconds, based on the KO'd ally's STAR level. Gain an Aipom."
+			"description": "When a WILD Pokémon is KO'd, the strongest ADJACENT WILD ally is RAGE for 1/2/3 seconds, based on the KO'd ally's STAR level. Gain an Aipom."
 		},
 		"MISFITS": {
 			"name": "Misfits",
