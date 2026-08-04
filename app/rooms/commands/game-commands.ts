@@ -140,6 +140,8 @@ import {
   ItemComponents,
   ItemComponentsNoFossilOrScarf,
   ItemComponentsNoScarf,
+  ArtificialItems,
+  Berries,
   ItemRecipe,
   ItemsSoldAtTown,
   Mulches,
@@ -172,6 +174,7 @@ import { WandererBehavior, WandererType } from "../../types/enum/Wanderer"
 import type { IDetailledPokemon } from "../../types/models/bot-v2"
 import type { DisplayText } from "../../types/strings/DisplayText"
 import { isIn, removeInArray } from "../../utils/array"
+import { canEatMoreDishes } from "../../utils/dishes"
 import { getAvatarString } from "../../utils/avatar"
 import {
   getFirstAvailablePositionInBench,
@@ -283,7 +286,7 @@ export class OnBuyPokemonCommand extends Command<
       pokemon.evolutionRule.type === EvolutionRuleType.COUNT &&
       EvolutionManager.canEvolveIfGettingOne(pokemon, player)
 
-    const cost = getBuyPrice(name, this.state.specialGameRule)
+    const cost = getBuyPrice(name, this.state.specialGameRule, player)
     const freeSpaceOnBench = getFreeSpaceOnBench(player.board)
     const hasSpaceOnBench = freeSpaceOnBench > 0 || isEvolution
 
@@ -347,7 +350,7 @@ export class OnRemoveFromShopCommand extends Command<
     const name = player.shop[index]
     if (!name || name === Pkm.DEFAULT) return
 
-    const cost = getBuyPrice(name, this.state.specialGameRule)
+    const cost = getBuyPrice(name, this.state.specialGameRule, player)
     if (player.money >= cost) {
       player.shop[index] = Pkm.DEFAULT
       player.shopLocked = true
@@ -925,6 +928,18 @@ export class OnDragDropCombineCommand extends Command<
         client.send(Transfer.DRAG_DROP_CANCEL, message)
         return
       }
+    } else if (itemA === Item.DUBIOUS_DISC_BLESSING_ITEM || itemB === Item.DUBIOUS_DISC_BLESSING_ITEM) {
+      const copiedItem = itemA === Item.DUBIOUS_DISC_BLESSING_ITEM ? itemB : itemA
+      if (!isIn(ArtificialItems, copiedItem)) {
+        client.send(Transfer.DRAG_DROP_CANCEL, message)
+        return
+      }
+      /* the copy is kept out of artificialItems, which is pruned when the
+         ARTIFICIAL synergy drops, so it survives regardless of the level */
+      removeInArray(player.items, Item.DUBIOUS_DISC_BLESSING_ITEM)
+      player.items.push(copiedItem)
+      player.updateSynergies()
+      return
     } else if (itemA === Item.RECYCLE_TICKET || itemB === Item.RECYCLE_TICKET) {
       const recycledItem = itemA === Item.RECYCLE_TICKET ? itemB : itemA
       const recipe = ItemRecipe[recycledItem]
@@ -1184,7 +1199,10 @@ export class OnDragDropItemCommand extends Command<
     }
 
     if (isIn(Dishes, item)) {
-      if (pokemon.canEat && !pokemon.dishes.has(item)) {
+      if (
+        canEatMoreDishes(pokemon, player.blessings) &&
+        !pokemon.dishes.has(item)
+      ) {
         pokemon.dishes.add(item)
         pokemon.action = PokemonActionState.EAT
         removeInArray(player.items, item)
@@ -1261,6 +1279,21 @@ export class OnDragDropItemCommand extends Command<
     const existingBasicItemToCombine = schemaValues(pokemon.items).find((i) =>
       ItemComponents.includes(i)
     )
+
+    /* BERRY_BREAKFAST: a full Pokémon can still take a berry, as a dish rather
+       than a held item — it is eaten at the start of the fight */
+    if (
+      pokemon.items.size >= getItemCapacity(this.state.specialGameRule) &&
+      isIn(Berries, item) &&
+      player.blessings?.includes(Blessing.BERRY_BREAKFAST) &&
+      !pokemon.dishes.has(item)
+    ) {
+      pokemon.dishes.add(item)
+      pokemon.action = PokemonActionState.EAT
+      removeInArray(player.items, item)
+      client.send(Transfer.DRAG_DROP_CANCEL, message)
+      return
+    }
 
     // check if full items and nothing to combine
     if (
@@ -2370,6 +2403,28 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
         }
       }, 10000)
     }
+
+    /* FAST_FOOD_DELIVERY: dishes cooked to the inventory keep for one round,
+       then rot to leftovers, which are themselves thrown out a round later so
+       the inventory does not silt up. Leftovers are indistinguishable from any
+       other, so this removes an arbitrary one — only reachable with the
+       blessing, which produces far more than it could take away */
+    for (let i = 0; i < player.fastFoodLeftoversToExpire; i++) {
+      const leftoverIndex = player.items.indexOf(Item.LEFTOVERS)
+      if (leftoverIndex >= 0) player.items.splice(leftoverIndex, 1)
+    }
+    player.fastFoodLeftoversToExpire = 0
+
+    for (const staleDish of player.fastFoodDishesLastRound) {
+      const index = player.items.indexOf(staleDish)
+      if (index >= 0) {
+        player.items.splice(index, 1)
+        player.items.push(Item.LEFTOVERS)
+        player.fastFoodLeftoversToExpire++
+      }
+    }
+    player.fastFoodDishesLastRound = player.fastFoodDishes
+    player.fastFoodDishes = []
 
     const rottingItems: Map<Item, Item> = new Map([
       // order matters to not convert several times in a row

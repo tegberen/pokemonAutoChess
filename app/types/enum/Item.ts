@@ -126,6 +126,7 @@ export enum Item {
   RUNNING_SHOES = "RUNNING_SHOES",
   MAX_ELIXIR = "MAX_ELIXIR",
   METEORITE = "METEORITE",
+  DUBIOUS_DISC_BLESSING_ITEM = "DUBIOUS_DISC_BLESSING_ITEM",
   ROTOM_CATALOG = "ROTOM_CATALOG",
   DNA_SPLICER = "DNA_SPLICER",
   TRASH = "TRASH",
@@ -1286,6 +1287,7 @@ export const Mulches = [Item.RICH_MULCH, Item.AMAZE_MULCH] satisfies Item[]
 
 export const UnholdableItems = [
   Item.PRISON_BOTTLE,
+  Item.DUBIOUS_DISC_BLESSING_ITEM,
   ...WeatherRocks,
   ...FishingRods,
   ...Wands,

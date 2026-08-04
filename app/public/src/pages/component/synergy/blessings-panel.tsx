@@ -3,7 +3,9 @@ import { useTranslation } from "react-i18next"
 import { type PlacesType, Tooltip } from "react-tooltip"
 import { Blessings } from "../../../../../config/game/blessings"
 import { DEPTH } from "../../../game/depths"
-import { useAppSelector } from "../../../hooks"
+import { selectSpectatedPlayer, useAppSelector } from "../../../hooks"
+import { countWildsThreeStarsOrMore } from "../../../../../models/shop"
+import { Blessing } from "../../../../../types/enum/Blessing"
 import { addIconsToDescription } from "../../utils/descriptions"
 import "./blessings-panel.css"
 
@@ -16,6 +18,10 @@ export default function BlessingsPanel() {
   const blessings = useAppSelector(
     (state) => state.game.blessingsByPlayerId[playerIdSpectated] ?? []
   )
+  const spectatedPlayer = useAppSelector(selectSpectatedPlayer)
+  const nbThreeStarWilds = spectatedPlayer
+    ? countWildsThreeStarsOrMore(spectatedPlayer.board)
+    : 0
 
   if (blessings.length === 0) {
     return <p className="blessings-panel-empty">{t("no_blessing_yet")}</p>
@@ -49,6 +55,13 @@ export default function BlessingsPanel() {
             <p>
               {addIconsToDescription(t(`blessing.${blessing}.description`))}
             </p>
+            {blessing === Blessing.BERSERKER_HORDES && (
+              <p className="blessing-panel-live-value">
+                {addIconsToDescription(
+                  `${nbThreeStarWilds} WILD at 3 STAR or more: −${nbThreeStarWilds} GOLD`
+                )}
+              </p>
+            )}
           </Tooltip>
         </div>
       ))}

@@ -71,6 +71,9 @@ export default function GamePokemonPortrait(props: {
   const board = connectedPlayer?.board ?? null
 
   const specialGameRule = useAppSelector((state) => state.game.specialGameRule)
+  const blessingsByPlayerId = useAppSelector(
+    (state) => state.game.blessingsByPlayerId
+  )
   const stageLevel = useAppSelector((state) => state.game.stageLevel)
   const shopJuggernautStats = useAppSelector(
     (state) => state.game.shopJuggernautStats
@@ -161,7 +164,13 @@ export default function GamePokemonPortrait(props: {
   const pokemonInPortrait =
     willEvolve && pokemonEvolution ? pokemonEvolution : pokemon
 
-  const cost = getBuyPrice(pokemon.name, specialGameRule)
+  const buyer = connectedPlayer
+    ? {
+        board: connectedPlayer.board,
+        blessings: blessingsByPlayerId[connectedPlayer.id]
+      }
+    : undefined
+  const cost = getBuyPrice(pokemon.name, specialGameRule, buyer)
 
   const gainedSynergies =
     pokemonEvolution && willEvolve

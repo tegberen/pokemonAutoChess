@@ -7,10 +7,21 @@ import {
   Blessing,
   BlessingTrigger,
   LANGUAGE_BARRIER_UNOWNS_GRANTED,
-  MOVE_TUTOR_MAX_PP
+  SELECTIVE_GENETICS_GOLDEN_EGG_CHANCE,
+  MOVE_TUTOR_MAX_PP,
+  BABY_OPENER_BABIES_GRANTED,
+  BABY_OPENER_MAX_COST,
+  SELECTIVE_GENETICS_BABIES_GRANTED,
+  SELECTIVE_GENETICS_MAX_COST
 } from "../types/enum/Blessing"
 import { BattleResult, Rarity } from "../types/enum/Game"
-import { RegionDetails, SynergyTiersThresholds } from "../config"
+import {
+  FAIRY_WANDS_BY_SYNERGY_LEVEL,
+  RegionDetails,
+  SynergyTiersThresholds
+} from "../config"
+import { RarityCost } from "../config/game/shop"
+import { PRECOMPUTED_POKEMONS_PER_TYPE } from "../models/precomputed/precomputed-types"
 import type { DungeonPMDO } from "../types/enum/Dungeon"
 import {
   LAPRAS_TRAVEL_DURATION,
@@ -21,7 +32,7 @@ import { Transfer } from "../types"
 import type GameRoom from "../rooms/game-room"
 import { giveRandomEgg } from "../core/eggs"
 import { getUnlockedFlowerPots } from "../core/flower-pots"
-import { type Awakening, AwakeningTypes } from "../types/enum/Awakening"
+import { Awakening, AwakeningTypes } from "../types/enum/Awakening"
 import {
   Berries,
   Item,
@@ -43,7 +54,7 @@ import {
   getFirstAvailablePositionInBench,
   getFreeSpaceOnBench
 } from "../utils/board"
-import { pickNRandomIn, pickRandomIn } from "../utils/random"
+import { chance, pickNRandomIn, pickRandomIn } from "../utils/random"
 
 const PEARL_GOLD_GAINED = 10
 const CROAGUNKS_AID_EXCHANGE_TICKETS = 3
@@ -412,6 +423,32 @@ function pickSongBlessing(
 function grantSongReinforcement(player: Player, blessing: Blessing) {
   const song = SongBlessingContent[blessing]
   if (song) giftPokemonIfBenchHasRoom(player, song.reinforcement)
+}
+
+function giftBabiesUnderCost(
+  player: Player,
+  maxCost: number,
+  count: number,
+  excludeOwned = false
+): boolean {
+  if (getFreeSpaceOnBench(player.board) < count) return false
+  const owned = new Set(
+    [...player.board.values()].map((pokemon) => PkmFamily[pokemon.name])
+  )
+  const candidates = (PRECOMPUTED_POKEMONS_PER_TYPE[Synergy.BABY] ?? []).filter(
+    (pkm) => {
+      const data = getPokemonData(pkm)
+      return (
+        RarityCost[data.rarity] <= maxCost &&
+        (excludeOwned === false || owned.has(PkmFamily[pkm]) === false)
+      )
+    }
+  )
+  if (candidates.length === 0) return false
+  pickNRandomIn(candidates, Math.min(count, candidates.length)).forEach((pkm) =>
+    giftPokemonIfBenchHasRoom(player, pkm)
+  )
+  return true
 }
 
 function giftPokemonIfBenchHasRoom(player: Player, pkm: Pkm): boolean {
@@ -786,6 +823,77 @@ export const blessingEffectService: {
 
   [Blessing.MEGA_SOL]: (player) =>
     giftPokemonIfBenchHasRoom(player, Pkm.GOSSIFLEUR),
+
+  [Blessing.BABY_OPENER]: (player) =>
+    giftBabiesUnderCost(player, BABY_OPENER_MAX_COST, BABY_OPENER_BABIES_GRANTED),
+
+  [Blessing.SELECTIVE_GENETICS]: (player) => {
+    // at most one of the three babies is swapped for a Golden Egg
+    const golden = chance(SELECTIVE_GENETICS_GOLDEN_EGG_CHANCE)
+    const babies = SELECTIVE_GENETICS_BABIES_GRANTED - (golden ? 1 : 0)
+    if (getFreeSpaceOnBench(player.board) < SELECTIVE_GENETICS_BABIES_GRANTED) {
+      return false
+    }
+    if (golden) giveRandomEgg(player, true)
+    return giftBabiesUnderCost(
+      player,
+      SELECTIVE_GENETICS_MAX_COST,
+      babies,
+      true
+    )
+  },
+
+  [Blessing.REPLICATOR]: (player) => {
+    player.items.push(Item.DUBIOUS_DISC_BLESSING_ITEM)
+    return giftPokemonIfBenchHasRoom(player, Pkm.VAROOM)
+  },
+
+  [Blessing.FIND_A_LOST_WAND]: (player) => {
+    // only the FAIRY 2 roll, which is the first entry in the wand table
+    const offered = player.fairyWandChoicesRolls[0]
+    const lostWand = offered
+      ? FAIRY_WANDS_BY_SYNERGY_LEVEL[0].find(
+          (wand) => offered.includes(wand) === false
+        )
+      : undefined
+    if (lostWand) {
+      player.items.push(lostWand)
+      player.blessingWands.push(lostWand)
+    }
+    return giftPokemonIfBenchHasRoom(player, Pkm.HATENNA)
+  },
+
+  [Blessing.FAST_FOOD_DELIVERY]: (player) =>
+    giftPokemonIfBenchHasRoom(player, Pkm.NACLI),
+
+  [Blessing.CHEFS_GREED]: (player) =>
+    giftPokemonIfBenchHasRoom(player, Pkm.NACLI),
+
+  [Blessing.BERRY_BREAKFAST]: (player) =>
+    giftPokemonIfBenchHasRoom(player, Pkm.CHESPIN),
+
+  [Blessing.DIGGING_EQUIPMENT]: (player) =>
+    giftPokemonIfBenchHasRoom(player, Pkm.NIDORANM),
+
+  [Blessing.CRYSTAL_CLUSTERS]: (player) =>
+    giftPokemonIfBenchHasRoom(player, Pkm.SNORUNT),
+
+  [Blessing.CRYSTAL_MUTATION]: (player) => {
+    const rockUnique = [...player.board.values()].find(
+      (pokemon) =>
+        pokemon.types.has(Synergy.ROCK) &&
+        pokemon.rarity === Rarity.UNIQUE &&
+        pokemon.awakening === Awakening.NONE
+    )
+    if (!rockUnique) return false
+    rockUnique.awakening = pickRandomIn(
+      Object.keys(AwakeningTypes) as Awakening[]
+    )
+    rockUnique.awakeningRock = ""
+    rockUnique.awakeningCharge = 0
+    player.updateWeatherRocks()
+    return true
+  },
 
   [Blessing.ECHO_CHAMBER]: (player) =>
     giftPokemonIfBenchHasRoom(player, Pkm.IGGLYBUFF),

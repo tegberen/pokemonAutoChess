@@ -39,9 +39,14 @@ import {
   WandererBehavior,
   WandererType
 } from "../../types/enum/Wanderer"
-import { Blessing, MOVE_TUTOR_MAX_PP } from "../../types/enum/Blessing"
+import {
+  Blessing,
+  CRYSTAL_CLUSTERS_SIMULTANEOUS,
+  MOVE_TUTOR_MAX_PP
+} from "../../types/enum/Blessing"
 import { isIn, removeInArray } from "../../utils/array"
 import { getFreeSpaceOnBench, isOnBench } from "../../utils/board"
+import { canEatMoreDishes } from "../../utils/dishes"
 import { distanceC, distanceM } from "../../utils/distance"
 import { max, min } from "../../utils/number"
 import {
@@ -395,7 +400,10 @@ const chefCookEffect = new OnStageStartEffect(({ pokemon, player, room }) => {
   const chef = pokemon
 
   const gourmetTier = getSynergyTier(player.synergies, Synergy.GOURMET)
-  const nbDishes = [0, 1, 2, 2][gourmetTier] ?? 2
+  // CHEFS_GREED: one more portion, which the chef keeps for itself below
+  const nbDishes =
+    ([0, 1, 2, 2][gourmetTier] ?? 2) +
+    (player.blessings?.includes(Blessing.CHEFS_GREED) ? 1 : 0)
   let dish = DishByPkm[chef.name]
   if (chef.items.has(Item.COOKING_POT)) {
     dish = Item.HEARTY_STEW
@@ -449,12 +457,20 @@ const chefCookEffect = new OnStageStartEffect(({ pokemon, player, room }) => {
             } else {
               player.items.push(dish)
             }
-          } else if (isIn(DishesGoingToInventory, dish)) {
+          } else if (
+            isIn(DishesGoingToInventory, dish) ||
+            player.blessings?.includes(Blessing.FAST_FOOD_DELIVERY)
+          ) {
+            /* FAST_FOOD_DELIVERY: everything is cooked to the inventory for the
+               player to hand out, and rots to leftovers at the next stage end */
             player.items.push(dish)
+            if (player.blessings?.includes(Blessing.FAST_FOOD_DELIVERY)) {
+              player.fastFoodDishes.push(dish)
+            }
           } else {
             let candidates = schemaValues(player.board).filter(
               (p) =>
-                p.canEat &&
+                canEatMoreDishes(p, player.blessings) &&
                 !p.dishes.has(dish) &&
                 isOnBench(chef) === isOnBench(p) &&
                 distanceC(
@@ -470,8 +486,17 @@ const chefCookEffect = new OnStageStartEffect(({ pokemon, player, room }) => {
               )
             }
             candidates.sort((a, b) => getUnitScore(b) - getUnitScore(a))
+            /* CHEFS_GREED: the chef serves itself first, which is what makes
+               the extra portion cooked above land on the chef */
+            if (
+              player.blessings?.includes(Blessing.CHEFS_GREED) &&
+              canEatMoreDishes(chef, player.blessings) &&
+              !chef.dishes.has(dish)
+            ) {
+              candidates.unshift(chef)
+            }
             const pokemon = candidates[0] ?? chef // idx 0 equals the strongest unit
-            if (!pokemon.canEat) return
+            if (!canEatMoreDishes(pokemon, player.blessings)) return
             if (dish === Item.HERBA_MYSTICA) {
               const flavors: Dish[] = []
               if (pokemon.types.has(Synergy.FAIRY))
@@ -2075,7 +2100,10 @@ const weatherRockAwakeningEffect = new OnItemDroppedEffect(
       getSynergyTier(player.synergies, Synergy.ROCK) < ROCK_AWAKENING_TIER ||
       pokemon.awakening !== Awakening.NONE ||
       pokemon.awakeningRock !== "" ||
-      schemaValues(player.board).some((p) => p.awakeningRock !== "") ||
+      schemaValues(player.board).filter((p) => p.awakeningRock !== "").length >=
+        (player.blessings?.includes(Blessing.CRYSTAL_CLUSTERS)
+          ? CRYSTAL_CLUSTERS_SIMULTANEOUS
+          : 1) ||
       (item === Item.ELDER_CRYSTAL && pokemon.stars < 3)
     ) {
       return false // reject: the rock stays on the bench

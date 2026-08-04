@@ -3065,6 +3065,7 @@
 		"LEADERS_CREST": "Leader's Crest",
 		"LAPRAS_PASSPORT": "Lapras Travel Pass",
 		"PRISON_BOTTLE": "Prison Bottle",
+		"DUBIOUS_DISC_BLESSING_ITEM": "Dubious Disc",
 		"SILK_SCARF": "Silk Scarf",
 		"FRIEND_BOW": "Friend Bow",
 		"BLACK_BELT": "Black Belt",
@@ -3483,6 +3484,7 @@
 		"LEADERS_CREST": "When another player beats you in battle, they get an additional 4 GOLD and take the LEADERS_CREST.",
 		"LAPRAS_PASSPORT": "Lapras offers a ride to go to a different region. Use the passport on a Pokémon to influence the destination based on its synergies.",
 		"PRISON_BOTTLE": "Borrow Hoopa’s power to send a Pokémon from your bench to your partner’s bench. Items will be stripped off. (Preparation phase)",
+		"DUBIOUS_DISC_BLESSING_ITEM": "Drop DUBIOUS_DISC_BLESSING_ITEM on an ARTIFICIAL item in your inventory to consume this disc and gain a second copy of that item. The copy is kept even if your ARTIFICIAL level drops.",
 		"SILK_SCARF": "Combine it with other item components to make all kinds of scarves, bands and bows. Those items will be removed if you lower down NORMAL synergy level.",
 		"FRIEND_BOW": "The holder gains the NORMAL type.",
 		"BLACK_BELT": "Critical attacks provide 33% of the damage dealt as SHIELD.",
@@ -5220,6 +5222,54 @@
 			"name": "Contempt",
 			"description": "Allies deal 50% more damage to enemies with less STAR levels than them."
 		},
+		"BABY_OPENER": {
+			"name": "Baby Opener",
+			"description": "Gain 3 random different BABY Pokémon costing 2 or less. Each time you obtain an egg, gain 2 player HP."
+		},
+		"SELECTIVE_GENETICS": {
+			"name": "Selective Genetics",
+			"description": "When a Golden Egg hatches, it opens up a choice of 3 shiny items to obtain instead of its usual reward. Gain 3 random BABY Pokémon costing 4 or less that you don't currently have, with a 5% chance for one of them to be a Golden Egg."
+		},
+		"REPLICATOR": {
+			"name": "Replicator",
+			"description": "Gain a DUBIOUS_DISC_BLESSING_ITEM. This item can be consumed to make a copy of any tool you have, which remains in your inventory regardless of your ARTIFICIAL level. Gain a Varoom."
+		},
+		"FIND_A_LOST_WAND": {
+			"name": "Find a Lost Wand",
+			"description": "When FAIRY 2+ is active, gain the wand that was not offered to you in your FAIRY 2 options. Gain a Hatenna."
+		},
+		"FAST_FOOD_DELIVERY": {
+			"name": "Fast Food Delivery",
+			"description": "All GOURMET dishes are cooked to your inventory, and can be distributed among your Pokémon how you like, but turn into LEFTOVERS after 1 round, and are thrown out the round after. Gain a Nacli."
+		},
+		"CHEFS_GREED": {
+			"name": "Chef's Greed",
+			"description": "Your chefs cook an extra portion of their dish for themselves. Pokémon holding a CHEF_HAT can eat 2 dishes, or 3 if holding a BIG_EATER_BELT. Gain a Nacli."
+		},
+		"BERRY_BREAKFAST": {
+			"name": "Berry Breakfast",
+			"description": "Berries can be given to Pokémon with 3 items as dishes. They are consumed at the start of the fight, with their healing converted into SHIELD. Gain a Chespin."
+		},
+		"GEM_RUSH": {
+			"name": "Gem Rush",
+			"description": "Each time you fully dig out a row with GROUND, dig up an additional gem from the ground loot pool."
+		},
+		"DIGGING_EQUIPMENT": {
+			"name": "Digging Equipment",
+			"description": "GROUND Pokémon on fully dug holes will instead dig a random adjacent tile, prioritising holes closer to completion. Gain a Nidoran♂."
+		},
+		"CRYSTAL_MUTATION": {
+			"name": "Crystal Mutation",
+			"description": "Immediately awaken your ROCK unique with a random crystallisation."
+		},
+		"CRYSTAL_CLUSTERS": {
+			"name": "Crystal Clusters",
+			"description": "You can crystallise 2 Pokémon at once. The first time you activate ROCK 8, gain 2 random weather rocks, if you have space for them. Gain a Snorunt."
+		},
+		"BERSERKER_HORDES": {
+			"name": "Berserker Hordes",
+			"description": "WILD Pokémon cost 1 GOLD less for each WILD Pokémon at 3 STAR or more on your board, minimum 0. Every 10 shops, your shop will contain only WILD Pokémon."
+		},
 		"GARDENING": {
 			"name": "Gardening",
 			"description": "When you lose a PvP round, add 3/4/5/6 to your Mulch count when FLORA 3/4/5/6 is active. Gain a Gossifleur."
@@ -5378,6 +5428,9 @@
 	"next_bazaar_hint_one": "Next Bazaar shop in {{count}} shop",
 	"next_bazaar_hint_other": "Next Bazaar shop in {{count}} shops",
 	"bazaar_current_hint": "This is a Bazaar shop!",
+	"next_berserker_hint_one": "Next all-Wild shop in {{count}} shop",
+	"next_berserker_hint_other": "Next all-Wild shop in {{count}} shops",
+	"berserker_current_hint": "This is an all-Wild shop!",
 	"refresh": "Reroll",
 	"pve_stages": "PvE Stages",
 	"carousel_stages": "Carousel Stages",

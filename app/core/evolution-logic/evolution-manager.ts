@@ -11,7 +11,14 @@ import {
   type StackEvolutionRule,
   type StateEvolutionRule
 } from "../../types/EvolutionRules"
+import { PlayerChoice } from "../../models/colyseus-models/player-choice"
+import {
+  Blessing,
+  SELECTIVE_GENETICS_SHINY_ITEM_OPTIONS
+} from "../../types/enum/Blessing"
 import { PokemonActionState } from "../../types/enum/Game"
+import { Item, ShinyItems } from "../../types/enum/Item"
+import { pickNRandomIn } from "../../utils/random"
 import { Passive } from "../../types/enum/Passive"
 import { Pkm } from "../../types/enum/Pokemon"
 import { OnEvolutionEffect } from "../effects/effect"
@@ -80,6 +87,22 @@ export const EvolutionManager = {
   ) {
     player.updateSynergies()
     if (pokemonBeforeEvolution.supercharged) pokemonEvolved.supercharged = true // preserve supercharged state on evolution
+
+    if (
+      pokemonBeforeEvolution.name === Pkm.EGG &&
+      pokemonBeforeEvolution.shiny &&
+      player.blessings?.includes(Blessing.SELECTIVE_GENETICS)
+    ) {
+      player.choices.push(
+        new PlayerChoice({
+          type: "item",
+          items: pickNRandomIn(
+            ShinyItems.filter((item) => item !== Item.RED_SCALE),
+            SELECTIVE_GENETICS_SHINY_ITEM_OPTIONS
+          )
+        })
+      )
+    }
 
     if (pokemonEvolved.passive in PassiveEffects) {
       PassiveEffects[pokemonEvolved.passive]!.forEach((effect) => {

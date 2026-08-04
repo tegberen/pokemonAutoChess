@@ -6,6 +6,7 @@ import {
 import { randomWeighted, shuffleArray } from "../../utils/random"
 import { SynergyTiersThresholds } from "../../config"
 import { Synergy } from "../../types/enum/Synergy"
+import { Rarity } from "../../types/enum/Game"
 import type Player from "../../models/colyseus-models/player"
 
 export type BlessingFamily = "BADGE" | "CREST" | "CROWN"
@@ -37,6 +38,13 @@ const isSynergyBlessingAvailable =
   (synergy: Synergy) => (player: Player, stage: number) =>
     stage < BLESSING_SYNERGY_GATED_STAGE ||
     isSynergyActiveForPlayer(player, synergy)
+
+// CRYSTAL_MUTATION awakens a rock unique, so it is pointless without one
+const hasRockUnique = (player: Player) =>
+  [...player.board.values()].some(
+    (pokemon) =>
+      pokemon.types.has(Synergy.ROCK) && pokemon.rarity === Rarity.UNIQUE
+  )
 
 const isFloraBlessingAvailable = (player: Player, stage: number) =>
   stage < BLESSING_SYNERGY_GATED_STAGE ||
@@ -467,6 +475,95 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     grantsPokemonImmediately: true,
     isAvailable: isFloraBlessingAvailable
   },
+  [Blessing.BABY_OPENER]: {
+    tier: BlessingTier.SILVER,
+    availableAtStages: [4],
+    icon: "nest_eggs",
+    grantsPokemonImmediately: true
+  },
+  [Blessing.SELECTIVE_GENETICS]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: [12],
+    icon: "dna_string",
+    grantsPokemonImmediately: true,
+    isAvailable: isSynergyBlessingAvailable(Synergy.BABY)
+  },
+  [Blessing.REPLICATOR]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "computer_fan",
+    grantsPokemonImmediately: true,
+    isAvailable: isSynergyBlessingAvailable(Synergy.ARTIFICIAL)
+  },
+  [Blessing.FIND_A_LOST_WAND]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "wizard_staff",
+    grantsPokemonImmediately: true,
+    /* pointless before the FAIRY 2 wand choice has actually been resolved:
+       there is no "wand not offered" until the roll has been made and picked */
+    isAvailable: (player) =>
+      isSynergyActiveForPlayer(player, Synergy.FAIRY) &&
+      player.fairyWands.length > 0 &&
+      player.choices.some((choice) => choice.type === "wand") === false
+  },
+  [Blessing.FAST_FOOD_DELIVERY]: {
+    tier: BlessingTier.SILVER,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "fridge",
+    grantsPokemonImmediately: true,
+    isAvailable: isSynergyBlessingAvailable(Synergy.GOURMET)
+  },
+  [Blessing.CHEFS_GREED]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "ladle",
+    grantsPokemonImmediately: true,
+    isAvailable: isSynergyBlessingAvailable(Synergy.GOURMET)
+  },
+  [Blessing.BERRY_BREAKFAST]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "berries_bowl",
+    grantsPokemonImmediately: true,
+    isAvailable: isSynergyBlessingAvailable(Synergy.GRASS)
+  },
+  [Blessing.GEM_RUSH]: {
+    tier: BlessingTier.SILVER,
+    availableAtStages: [4],
+    icon: "gold_mine",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.DIGGING_EQUIPMENT]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "dig_hole",
+    grantsPokemonImmediately: true,
+    isAvailable: isSynergyBlessingAvailable(Synergy.GROUND)
+  },
+  [Blessing.CRYSTAL_MUTATION]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: [12],
+    icon: "crystal_growth",
+    grantsPokemonImmediately: false,
+    isAvailable: (player, stage) =>
+      isSynergyActiveForPlayer(player, Synergy.ROCK) &&
+      hasRockUnique(player)
+  },
+  [Blessing.CRYSTAL_CLUSTERS]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "crystal_shrine",
+    grantsPokemonImmediately: true,
+    isAvailable: isSynergyBlessingAvailable(Synergy.ROCK)
+  },
+  [Blessing.BERSERKER_HORDES]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "berserker_hordes",
+    grantsPokemonImmediately: false,
+    isAvailable: isSynergyBlessingAvailable(Synergy.WILD)
+  },
   [Blessing.ECHO_CHAMBER]: {
     tier: BlessingTier.GOLD,
     availableAtStages: BLESSING_SELECTION_STAGES,
@@ -695,7 +792,7 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
   [Blessing.POCKET_DAYCARE]: {
     tier: BlessingTier.SILVER,
     availableAtStages: [4],
-    icon: "wing_cloak",
+    icon: "egg",
     grantsPokemonImmediately: true
   },
   [Blessing.TRANSFORM]: {
@@ -812,18 +909,18 @@ function tierChancesForBlessingsUnderTest(): {
 export const BLESSING_TEST_MODE: boolean = true
 
 const BLESSINGS_UNDER_TEST: Blessing[] = [
-  Blessing.ECHO_CHAMBER,
-  Blessing.LANGUAGE_BARRIER,
-  Blessing.MOVE_TUTOR,
-  Blessing.ZAP,
-  Blessing.SEEING_TRIPLE,
-  Blessing.SACRIFICE,
-  Blessing.DRAGON_KING,
-  Blessing.ASCENSION,
-  Blessing.SHARE_THE_SPOTLIGHT,
-  Blessing.SLIPSTREAM,
-  Blessing.BIG_PECKS,
-  Blessing.SHAPELESS_SYNERGIES
+  Blessing.BABY_OPENER,
+  Blessing.SELECTIVE_GENETICS,
+  Blessing.REPLICATOR,
+  Blessing.FIND_A_LOST_WAND,
+  Blessing.FAST_FOOD_DELIVERY,
+  Blessing.CHEFS_GREED,
+  Blessing.BERRY_BREAKFAST,
+  Blessing.GEM_RUSH,
+  Blessing.DIGGING_EQUIPMENT,
+  Blessing.CRYSTAL_MUTATION,
+  Blessing.CRYSTAL_CLUSTERS,
+  Blessing.BERSERKER_HORDES
 ]
 
 function countBlessingsOfFamily(blessings: Blessing[], family?: string) {

@@ -60,7 +60,11 @@ import {
   Unowns
 } from "../types/enum/Pokemon"
 import { SpecialGameRule } from "../types/enum/SpecialGameRule"
-import { Blessing } from "../types/enum/Blessing"
+import {
+  Blessing,
+  BERSERKER_HORDES_SHOP_INTERVAL
+} from "../types/enum/Blessing"
+import { PRECOMPUTED_POKEMONS_PER_TYPE } from "./precomputed/precomputed-types"
 import { Synergy } from "../types/enum/Synergy"
 import { removeInArray } from "../utils/array"
 import { logger } from "../utils/logger"
@@ -167,9 +171,26 @@ export function getSellPrice(
   return price
 }
 
+export function countWildsThreeStarsOrMore(board: Player["board"]): number {
+  const pokemons: any[] =
+    typeof (board as any)?.values === "function"
+      ? [...(board as any).values()]
+      : Object.values((board as any) ?? {})
+  return pokemons.filter(
+    (pokemon) =>
+      pokemon?.stars >= 3 &&
+      (typeof pokemon.types?.has === "function"
+        ? pokemon.types.has(Synergy.WILD)
+        : Array.isArray(pokemon?.types) &&
+          pokemon.types.includes(Synergy.WILD))
+  ).length
+}
+
 export function getBuyPrice(
   name: Pkm,
-  specialGameRule?: SpecialGameRule | null
+  specialGameRule?: SpecialGameRule | null,
+  // narrow shape so the client can pass the synced blessings alongside the board
+  buyer?: { board: Player["board"]; blessings?: Blessing[] }
 ): number {
   if (specialGameRule === SpecialGameRule.FREE_MARKET) return 0
 
@@ -192,6 +213,13 @@ export function getBuyPrice(
     price = BuyPrices.UNOWN
   } else {
     price = RarityCost[getPokemonData(name).rarity]
+  }
+
+  if (
+    buyer?.blessings?.includes(Blessing.BERSERKER_HORDES) &&
+    getPokemonData(name).types.includes(Synergy.WILD)
+  ) {
+    price = Math.max(0, price - countWildsThreeStarsOrMore(buyer.board))
   }
 
   return price
@@ -420,6 +448,30 @@ export default class Shop {
         return
       }
       this.clearBazaarShop(player)
+    }
+
+    /* BERSERKER_HORDES: every Nth shop is all WILD, keyed the same way the
+       Bazaar shop is so a locked or repeated shop cannot re-trigger it */
+    if (player.blessings?.includes(Blessing.BERSERKER_HORDES)) {
+      const shopKey = state.stageLevel + player.gameStats.rerollCount
+      if (
+        shopKey > 0 &&
+        shopKey % BERSERKER_HORDES_SHOP_INTERVAL === 0 &&
+        shopKey !== player.berserkerLastShopKey
+      ) {
+        player.berserkerLastShopKey = shopKey
+        const wildPool = (
+          PRECOMPUTED_POKEMONS_PER_TYPE[Synergy.WILD] ?? []
+        ).filter((pkm) => getPokemonData(pkm).stars === 1)
+        if (wildPool.length > 0) {
+          const size = getShopSize(state.specialGameRule, state.stageLevel)
+          for (let i = 0; i < size; i++) {
+            player.shop[i] = pickRandomIn(wildPool)
+          }
+          this.syncJuggernautShopStats(player, state)
+          return
+        }
+      }
     }
 
     let psychicLevel = player.synergies.get(Synergy.PSYCHIC) ?? 0

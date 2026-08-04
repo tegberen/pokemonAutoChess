@@ -46,6 +46,7 @@ import {
   ItemComponents,
   Scarves,
   SynergyGems,
+  SynergyGemsBuried,
   SynergyGivenByGem,
   Wands
 } from "../../types/enum/Item"
@@ -1306,8 +1307,62 @@ const growBerryTreesEffect = new OnStageStartEffect(({ player }) => {
   }
 })
 
+const GROUND_HOLE_ROWS = 3
+
+function pickAdjacentHoleToDig(
+  player: Player,
+  index: number,
+  claimed: Set<number>
+): number | null {
+  const row = Math.floor(index / BOARD_WIDTH)
+  const column = index % BOARD_WIDTH
+  const neighbours: number[] = []
+  for (let dy = -1; dy <= 1; dy++) {
+    for (let dx = -1; dx <= 1; dx++) {
+      if (dx === 0 && dy === 0) continue
+      const y = row + dy
+      const x = column + dx
+      if (y < 0 || y >= GROUND_HOLE_ROWS || x < 0 || x >= BOARD_WIDTH) continue
+      const neighbourIndex = y * BOARD_WIDTH + x
+      if (player.groundHoles[neighbourIndex] < 5) {
+        neighbours.push(neighbourIndex)
+      }
+    }
+  }
+  /* two diggers should spread out rather than pile onto the same hole, but a
+     single free neighbour is still better than not digging at all */
+  const unclaimed = neighbours.filter((i) => claimed.has(i) === false)
+  if (unclaimed.length > 0) return pickDeepest(player, unclaimed)
+  if (neighbours.length === 0) return null
+  return pickDeepest(player, neighbours)
+}
+
+function pickDeepest(player: Player, holes: number[]): number {
+  const deepest = Math.max(...holes.map((i) => player.groundHoles[i]))
+  return pickRandomIn(holes.filter((i) => player.groundHoles[i] === deepest))
+}
+
+/* GEM_RUSH: one extra gem per row fully dug out. The buried grid seeds 3 gems
+   across its 3 rows, so this doubles a completed dig to 6 */
+function grantGemRushRowReward(player: Player, index: number) {
+  if (!player.blessings?.includes(Blessing.GEM_RUSH)) return
+  const row = Math.floor(index / BOARD_WIDTH)
+  const rowStart = row * BOARD_WIDTH
+  for (let i = rowStart; i < rowStart + BOARD_WIDTH; i++) {
+    if (player.groundHoles[i] < 5) return
+  }
+  if (player.gemRushRowsRewarded.includes(row)) return
+  player.gemRushRowsRewarded.push(row)
+  const gem = pickRandomIn(SynergyGemsBuried)
+  const type = SynergyGivenByGem[gem]
+  player.bonusSynergies.set(type, (player.bonusSynergies.get(type) ?? 0) + 1)
+  player.items.push(gem)
+  player.updateSynergies()
+}
+
 const groundDigEffect = new OnStageStartEffect(({ player, room }) => {
   if (getSynergyTier(player.synergies, Synergy.GROUND) > 0) {
+    const holesClaimedThisStage = new Set<number>()
     player.board.forEach((pokemon, pokemonId) => {
       if (
         pokemon.types.has(Synergy.GROUND) &&
@@ -1317,7 +1372,20 @@ const groundDigEffect = new OnStageStartEffect(({ player, room }) => {
           player.synergies.hasSynergyActive(Synergy.GOURMET)
         )
       ) {
-        const index = (pokemon.positionY - 1) * BOARD_WIDTH + pokemon.positionX
+        const standingIndex =
+          (pokemon.positionY - 1) * BOARD_WIDTH + pokemon.positionX
+        /* DIGGING_EQUIPMENT: a Ground pokemon standing on an exhausted hole
+           moves its effort to the most nearly finished neighbour instead */
+        const index =
+          player.groundHoles[standingIndex] === 5 &&
+          player.blessings?.includes(Blessing.DIGGING_EQUIPMENT)
+            ? (pickAdjacentHoleToDig(
+                player,
+                standingIndex,
+                holesClaimedThisStage
+              ) ?? standingIndex)
+            : standingIndex
+        holesClaimedThisStage.add(index)
         const hasAlreadyReachedMaxDepth = player.groundHoles[index] === 5
         const isReachingMaxDepth = player.groundHoles[index] === 4
         if (!hasAlreadyReachedMaxDepth) {
@@ -1349,6 +1417,7 @@ const groundDigEffect = new OnStageStartEffect(({ player, room }) => {
           })
           room.clock.setTimeout(() => {
             player.groundHoles[index] = max(5)(player.groundHoles[index] + 1)
+            grantGemRushRowReward(player, index)
             PassiveEffects[pokemon.passive]?.forEach((effect) => {
               if (effect instanceof OnGroundDiggingEffect) {
                 effect.apply({ pokemon, player })

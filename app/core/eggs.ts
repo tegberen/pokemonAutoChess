@@ -3,6 +3,10 @@ import type { Egg } from "../models/colyseus-models/pokemon"
 import PokemonFactory from "../models/pokemon-factory"
 import { getPokemonData } from "../models/precomputed/precomputed-pokemon-data"
 import { PRECOMPUTED_POKEMONS_PER_RARITY } from "../models/precomputed/precomputed-rarity"
+import {
+  BABY_OPENER_LIFE_PER_EGG,
+  Blessing
+} from "../types/enum/Blessing"
 import { PokemonActionState } from "../types/enum/Game"
 import { Pkm } from "../types/enum/Pokemon"
 import { getFirstAvailablePositionInBench } from "../utils/board"
@@ -41,6 +45,12 @@ export function giveRandomEgg(player: Player, shiny = false): Egg | undefined {
     egg.positionY = 0
     player.board.set(egg.id, egg)
     player.pokemonsPlayed.add(Pkm.EGG)
+    if (player.blessings?.includes(Blessing.BABY_OPENER)) {
+      player.life = Math.min(
+        player.maxLife,
+        player.life + BABY_OPENER_LIFE_PER_EGG
+      )
+    }
     return egg
   }
 }

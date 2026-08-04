@@ -28,7 +28,11 @@ import {
 } from "../../types"
 import { EvolutionRuleType } from "../../types/EvolutionRules"
 import { Ability } from "../../types/enum/Ability"
-import { Blessing } from "../../types/enum/Blessing"
+import {
+  Blessing,
+  CRYSTAL_CLUSTERS_ROCKS_GRANTED
+} from "../../types/enum/Blessing"
+import { ROCK_AWAKENING_TIER } from "../../types/enum/Awakening"
 import type { ScheduledBlessingGrant } from "../../types/enum/Blessing"
 import type { DungeonPMDO } from "../../types/enum/Dungeon"
 import {
@@ -212,6 +216,14 @@ export default class Player extends Schema implements IPlayer {
   // server-only: shop key (stage + rerolls) of the last bazaar shown, so the free
   // replacement shop after a buy doesn't re-trigger one
   bazaarLastShopKey = -1
+  berserkerLastShopKey = -1
+  // server-only: dig rows already paid out by GEM_RUSH, so they pay once
+  gemRushRowsRewarded: number[] = []
+  crystalClustersRocksGranted = false
+  // server-only: FAST_FOOD_DELIVERY dishes, tracked one round back so they rot
+  fastFoodDishes: Item[] = []
+  fastFoodDishesLastRound: Item[] = []
+  fastFoodLeftoversToExpire = 0
   hasLeftGame: boolean = false
   bonusSynergies: Map<Synergy, number> = new Map<Synergy, number>()
   pokemonsExploring: {
@@ -222,6 +234,8 @@ export default class Player extends Schema implements IPlayer {
   // server-only mirror of GameState.blessingsByPlayerId, so combat code can read
   // a player's blessings without reaching for the room state
   blessings: Blessing[] = []
+  // server-only: wands granted by FIND_A_LOST_WAND, exempt from synergy removal
+  blessingWands: Item[] = []
   bigPecksSharpBeakGranted = false
   blessingQuestsCompleted: Set<Blessing> = new Set<Blessing>()
   blessingQuestThresholdsReached: Map<Blessing, number> = new Map<
@@ -725,6 +739,20 @@ export default class Player extends Schema implements IPlayer {
       getSynergyTier(this.synergies, Synergy.ROCK)
     )
 
+    /* CRYSTAL_CLUSTERS: reaching the awakening tier for the first time hands
+       over two extra rocks outright, so they join the collected pool rather
+       than the tier-capped inventory slice below */
+    if (
+      this.blessings?.includes(Blessing.CRYSTAL_CLUSTERS) &&
+      !this.crystalClustersRocksGranted &&
+      getSynergyTier(this.synergies, Synergy.ROCK) >= ROCK_AWAKENING_TIER
+    ) {
+      this.crystalClustersRocksGranted = true
+      for (let i = 0; i < CRYSTAL_CLUSTERS_ROCKS_GRANTED; i++) {
+        this.weatherRocks.push(pickRandomIn(WeatherRocks))
+      }
+    }
+
     let weatherRockInInventory
     do {
       weatherRockInInventory = this.items.findIndex((item, index) =>
@@ -831,7 +859,18 @@ export default class Player extends Schema implements IPlayer {
     const newFairyLevel = getSynergyTier(this.synergies, Synergy.FAIRY)
     const nbWandsByLevel = [0, 1, 2, 3, 4]
     const newNbWands = nbWandsByLevel[newFairyLevel] ?? 0
-    const currentNbWands = this.items.filter((item) => isIn(Wands, item)).length
+    /* wands granted by FIND_A_LOST_WAND are permanent, so they must not count
+       towards the synergy total or a Fairy drop would strip one back out */
+    const blessingWandsHeld = [...this.blessingWands]
+    const currentNbWands = this.items.filter((item) => {
+      if (!isIn(Wands, item)) return false
+      const grantedIndex = blessingWandsHeld.indexOf(item)
+      if (grantedIndex >= 0) {
+        blessingWandsHeld.splice(grantedIndex, 1)
+        return false
+      }
+      return true
+    }).length
     const pendingChoices = this.choices.filter((c) => c.type === "wand")
 
     /* 4 cases to cover:

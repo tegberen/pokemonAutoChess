@@ -2,6 +2,7 @@ import { GoldenEggItems } from "../../config"
 import type Player from "../../models/colyseus-models/player"
 import type { Pokemon } from "../../models/colyseus-models/pokemon"
 import { Item } from "../../types"
+import { Blessing } from "../../types/enum/Blessing"
 import { Pkm } from "../../types/enum/Pokemon"
 import { pickRandomIn } from "../../utils/random"
 import { EvolutionHandler } from "./evolution-handler"
@@ -24,7 +25,11 @@ export class HatchEvolutionHandler extends EvolutionHandler {
     )
 
     if (pokemonEvolved != null && pokemon.name === Pkm.EGG && pokemon.shiny) {
-      player.items.push(pickRandomIn(GoldenEggItems))
+      /* SELECTIVE_GENETICS replaces the automatic drop with a choice of three,
+         opened in EvolutionManager.afterEvolve */
+      if (!player.blessings?.includes(Blessing.SELECTIVE_GENETICS)) {
+        player.items.push(pickRandomIn(GoldenEggItems))
+      }
     }
 
     return pokemonEvolved

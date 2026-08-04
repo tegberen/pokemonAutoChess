@@ -39,6 +39,7 @@ import {
   GameMode
 } from "../types/enum/Game"
 import {
+  Berries,
   CraftableItemsNoScarves,
   Item,
   NonSpecialBerries,
@@ -1389,6 +1390,17 @@ export default class Simulation extends Schema implements ISimulation {
             )
           })
         }
+      }
+
+      if (blessings.includes(Blessing.BERRY_BREAKFAST)) {
+        allies.forEach((ally) => {
+          schemaValues(ally.refToBoardPokemon.dishes)
+            .filter((dish) => isIn(Berries, dish))
+            .forEach((berry) => {
+              // healToShield, unscaled — flat like the Poffin dish
+              ally.eatBerry(berry, undefined, true, 0, false)
+            })
+        })
       }
 
       if (blessings.includes(Blessing.NOT_THE_BEES)) {
