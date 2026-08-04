@@ -1,4 +1,5 @@
 import { useState } from "react"
+import ReactDOM from "react-dom"
 import { useTranslation } from "react-i18next"
 import { type PlacesType, Tooltip } from "react-tooltip"
 import { SynergyTiersThresholds } from "../../../../../config"
@@ -10,8 +11,12 @@ import {
   AURORA_BOREALIS_DAMAGE_REDUCTION,
   AURORA_BOREALIS_DAMAGE_REDUCTION_IN_SNOW_OR_NIGHT,
   AURORA_BOREALIS_REDUCTION_PER_ACTIVE_SYNERGY,
+  MIX_AND_MATCH_I_FIELD_CAP,
+  MIX_AND_MATCH_II_FIELD_CAP,
   Blessing
 } from "../../../../../types/enum/Blessing"
+import { Rarity } from "../../../../../types/enum/Game"
+import { cc } from "../../utils/jsx"
 import { addIconsToDescription } from "../../utils/descriptions"
 import "./blessings-panel.css"
 
@@ -29,6 +34,17 @@ export default function BlessingsPanel() {
   const nbThreeStarWilds = spectatedPlayer
     ? countWildsThreeStarsOrMore(spectatedPlayer.board)
     : 0
+  const nbFieldedUniques = spectatedPlayer
+    ? [...spectatedPlayer.board.values()].filter(
+        (pokemon) =>
+          pokemon.positionY !== 0 && pokemon.rarity === Rarity.UNIQUE
+      ).length
+    : 0
+  const uniqueFieldCap = blessings.includes(Blessing.MIX_AND_MATCH_II)
+    ? MIX_AND_MATCH_II_FIELD_CAP
+    : blessings.includes(Blessing.MIX_AND_MATCH_I)
+      ? MIX_AND_MATCH_I_FIELD_CAP
+      : null
   const nbActiveSynergies = synergies.filter(
     ([synergy, value]) => value >= SynergyTiersThresholds[synergy][0]
   ).length
@@ -50,7 +66,7 @@ export default function BlessingsPanel() {
   return (
     <div className="blessings-panel">
       {blessings.map((blessing, index) => (
-        <div key={`${blessing}-${index}`}>
+        <div key={`${blessing}-${index}`} className="blessing-panel-slot">
           <img
             src={`/assets/blessings/${Blessings[blessing].icon}.svg`}
             alt={t(`blessing.${blessing}.name`)}
@@ -65,31 +81,46 @@ export default function BlessingsPanel() {
               )
             }}
           />
-          <Tooltip
-            id={`blessing-${blessing}-${index}`}
-            className="custom-theme-tooltip blessing-panel-tooltip"
-            place={tooltipPlace}
-            style={{ zIndex: DEPTH.TOOLTIP }}
-          >
-            <h3>{t(`blessing.${blessing}.name`)}</h3>
-            <p>
-              {addIconsToDescription(t(`blessing.${blessing}.description`))}
-            </p>
-            {blessing === Blessing.AURORA_BOREALIS && (
-              <p className="blessing-panel-live-value">
-                {addIconsToDescription(
-                  `${nbActiveSynergies} active synergies: −${auroraBorealisReduction}% damage taken, −${auroraBorealisReductionInSnowOrNight}% in SNOW or NIGHT`
-                )}
-              </p>
+          {uniqueFieldCap !== null &&
+            (blessing === Blessing.MIX_AND_MATCH_I ||
+              blessing === Blessing.MIX_AND_MATCH_II) && (
+              <span
+                className={cc("blessing-panel-counter", {
+                  full: nbFieldedUniques >= uniqueFieldCap
+                })}
+              >
+                {nbFieldedUniques}/{uniqueFieldCap}
+              </span>
             )}
-            {blessing === Blessing.BERSERKER_HORDES && (
-              <p className="blessing-panel-live-value">
-                {addIconsToDescription(
-                  `${nbThreeStarWilds} WILD at 3 STAR or more: −${nbThreeStarWilds} GOLD`
-                )}
+          {/* portalled out of the panel, or the Effects window clips it */}
+          {ReactDOM.createPortal(
+            <Tooltip
+              id={`blessing-${blessing}-${index}`}
+              className="custom-theme-tooltip blessing-panel-tooltip"
+              place={tooltipPlace}
+              style={{ zIndex: DEPTH.TOOLTIP }}
+            >
+              <h3>{t(`blessing.${blessing}.name`)}</h3>
+              <p>
+                {addIconsToDescription(t(`blessing.${blessing}.description`))}
               </p>
-            )}
-          </Tooltip>
+              {blessing === Blessing.AURORA_BOREALIS && (
+                <p className="blessing-panel-live-value">
+                  {addIconsToDescription(
+                    `${nbActiveSynergies} active synergies: −${auroraBorealisReduction}% damage taken, −${auroraBorealisReductionInSnowOrNight}% in SNOW or NIGHT`
+                  )}
+                </p>
+              )}
+              {blessing === Blessing.BERSERKER_HORDES && (
+                <p className="blessing-panel-live-value">
+                  {addIconsToDescription(
+                    `${nbThreeStarWilds} WILD at 3 STAR or more: −${nbThreeStarWilds} GOLD`
+                  )}
+                </p>
+              )}
+            </Tooltip>,
+            document.body
+          )}
         </div>
       ))}
     </div>

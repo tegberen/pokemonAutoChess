@@ -44,6 +44,7 @@ import {
   Item,
   NonSpecialBerries,
   Seeds,
+  SynergyItems,
   SynergyStones,
   WeatherRocksByWeather
 } from "../types/enum/Item"
@@ -75,6 +76,7 @@ import {
   MISFITS_SPECIAL_DEFENSE,
   HERO_BLESSING_FAMILY,
   AURORA_BOREALIS_REDUCTION_PER_ACTIVE_SYNERGY,
+  FLEXIBILITY_HP_PER_SYNERGY_ITEM,
   FLOWER_QUEEN_MAX_PP_REDUCTION,
   FLOWER_QUEEN_MIN_MAX_PP,
   LEAF_TORNADO_BOUNCES,
@@ -409,9 +411,13 @@ export default class Simulation extends Schema implements ISimulation {
           Item.REVIVER_SEED,
           Item.TINY_REVIVER_SEED
         ]
-        if (strongestAllySeeds.some((seed) => player.activeSeed === seed)) {
+        if (
+          strongestAllySeeds.some((seed) => player.activeSeed === seed) ||
+          player.blessings?.includes(Blessing.DROP_RATES)
+        ) {
           const entities = [...team.values()].filter(
-            (e): e is PokemonEntity => e.hp > 0 && !e.isSpawn
+            (e): e is PokemonEntity =>
+              e.hp > 0 && !e.isSpawn && e.player === player
           )
           if (entities.length > 0) {
             const strongest = getStrongestUnit(entities)
@@ -1609,6 +1615,19 @@ export default class Simulation extends Schema implements ISimulation {
               )
             })
         })
+      }
+
+      if (blessings.includes(Blessing.FLEXIBILITY)) {
+        const distinctSynergyItems = new Set(
+          ownUnits.flatMap((ally) =>
+            [...ally.items].filter((item) => isIn(SynergyItems, item))
+          )
+        )
+        const bonusHP =
+          distinctSynergyItems.size * FLEXIBILITY_HP_PER_SYNERGY_ITEM
+        if (bonusHP > 0) {
+          allies.forEach((ally) => ally.addMaxHP(bonusHP, ally, 0, false))
+        }
       }
 
       player.plunderGoldSpentThisFight = 0

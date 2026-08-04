@@ -263,6 +263,10 @@ export default class PokemonSprite extends DraggableObject {
       this.addJuggernautStatIcon(scene, pokemon.juggernautStat)
     }
 
+    if (!isEntity(pokemon) && pokemon.manifestationLocked) {
+      this.addManifestationLockIcon(scene)
+    }
+
     if (isEntity(pokemon)) {
       this.setLifeBar(pokemon, scene)
     } else {
@@ -1871,6 +1875,14 @@ export default class PokemonSprite extends DraggableObject {
   addJuggernautStatIcon(scene: GameScene | DebugScene, stat: string) {
     const icon = new GameObjects.Image(scene, 0, -52, `stat-${stat}`)
       .setScale(1)
+      .setDepth(DEPTH.POKEMON + 1)
+    this.add(icon)
+  }
+
+  // MANIFESTATION: padlock above a unit that is locked to the bench
+  addManifestationLockIcon(scene: GameScene | DebugScene) {
+    const icon = new GameObjects.Image(scene, 0, -52, "manifestation-locked")
+      .setScale(0.5)
       .setDepth(DEPTH.POKEMON + 1)
     this.add(icon)
   }

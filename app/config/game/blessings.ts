@@ -113,6 +113,112 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
   ...synergyFamilyDefinitions("BADGE", BlessingTier.SILVER, "rank_one"),
   ...synergyFamilyDefinitions("CREST", BlessingTier.GOLD, "rank_two"),
   ...synergyFamilyDefinitions("CROWN", BlessingTier.PRISMATIC, "rank_three"),
+  [Blessing.WOBBUFFETS_GOLD_PRIZE]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "ticket",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.HARD_COMMIT]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: [4],
+    icon: "commit",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.REGIONAL_TREASURES]: {
+    tier: BlessingTier.SILVER,
+    availableAtStages: [4],
+    icon: "regional_treasure",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.REGIONAL_TREASURES_II]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "regional_treasure",
+    grantsPokemonImmediately: true
+  },
+  [Blessing.SYNARCH]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: [12],
+    icon: "synarch",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.FLEXIBILITY]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "flexible",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.RAINBOW_HOUR]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: [4],
+    icon: "rainbow_star",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.MANIFESTATION_AP]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: [4],
+    icon: "crystal_ball",
+    grantsPokemonImmediately: true
+  },
+  [Blessing.MANIFESTATION_AD]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: [4],
+    icon: "crystal_ball",
+    grantsPokemonImmediately: true
+  },
+  [Blessing.MIX_AND_MATCH_I]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: [12],
+    icon: "mix_match",
+    grantsPokemonImmediately: true,
+    /* filters the candidate rather than shrinking the pool, so a selection can
+       still always fill 3 options */
+    isAvailable: (player: Player) =>
+      !player.blessings?.includes(Blessing.MIX_AND_MATCH_II)
+  },
+  [Blessing.MIX_AND_MATCH_II]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: [12],
+    icon: "mix_match",
+    grantsPokemonImmediately: true
+  },
+  [Blessing.WAITING_GAME]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: [4],
+    icon: "waiting_game",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.PRISMATIC_REROLL]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "slot_mashine",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.DROP_RATES]: {
+    tier: BlessingTier.SILVER,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "drop_rates",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.MORE_EQUAL_THAN_OTHERS]: {
+    tier: BlessingTier.SILVER,
+    availableAtStages: [4],
+    icon: "cash",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.CLIMBING_THE_LADDER]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: [4],
+    icon: "book_aura",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.FREE_COUPON]: {
+    tier: BlessingTier.SILVER,
+    availableAtStages: [4],
+    icon: "ticket",
+    grantsPokemonImmediately: false
+  },
   [Blessing.QUEST_REROLL]: {
     tier: BlessingTier.PRISMATIC,
     availableAtStages: [4],
@@ -218,31 +324,31 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
   [Blessing.GIMMIGHOULS_TREASURE]: {
     tier: BlessingTier.PRISMATIC,
     availableAtStages: [4],
-    icon: "treasure_chest",
+    icon: "coin_pile",
     grantsPokemonImmediately: false
   },
   [Blessing.INSTANT_HYPER_ROLL]: {
     tier: BlessingTier.PRISMATIC,
     availableAtStages: [4],
-    icon: "slot_mashine",
+    icon: "instant_hyperoll",
     grantsPokemonImmediately: true
   },
   [Blessing.CINCCINOS_GIFTS_III]: {
     tier: BlessingTier.PRISMATIC,
     availableAtStages: BLESSING_SELECTION_STAGES,
-    icon: "gift_box",
+    icon: "cinccino_bow",
     grantsPokemonImmediately: false
   },
   [Blessing.CINCCINOS_GIFTS_I]: {
     tier: BlessingTier.SILVER,
     availableAtStages: BLESSING_SELECTION_STAGES,
-    icon: "gift_box",
+    icon: "cinccino_bow",
     grantsPokemonImmediately: false
   },
   [Blessing.CINCCINOS_GIFTS_II]: {
     tier: BlessingTier.GOLD,
     availableAtStages: BLESSING_SELECTION_STAGES,
-    icon: "gift_box",
+    icon: "cinccino_bow",
     grantsPokemonImmediately: false
   },
   [Blessing.RELIC_FRAGMENT]: {
@@ -272,7 +378,7 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
   [Blessing.LEGENDARY_GAMBIT]: {
     tier: BlessingTier.PRISMATIC,
     availableAtStages: BLESSING_SELECTION_STAGES,
-    icon: "book_aura",
+    icon: "legendary_gambit",
     grantsPokemonImmediately: false
   },
   [Blessing.DEEP_INVESTMENTS]: {
@@ -1047,8 +1153,24 @@ function tierChancesForBlessingsUnderTest(): {
 export const BLESSING_TEST_MODE: boolean = true
 
 const BLESSINGS_UNDER_TEST: Blessing[] = [
-  Blessing.SOUL_DRAIN,
-  Blessing.FLOWER_QUEEN
+  Blessing.WAITING_GAME,
+  Blessing.PRISMATIC_REROLL,
+  Blessing.DROP_RATES,
+  Blessing.MORE_EQUAL_THAN_OTHERS,
+  Blessing.CLIMBING_THE_LADDER,
+  Blessing.FREE_COUPON
+  // D2, commented out while D1 is being playtested
+  // Blessing.WOBBUFFETS_GOLD_PRIZE,
+  // Blessing.HARD_COMMIT,
+  // Blessing.REGIONAL_TREASURES,
+  // Blessing.REGIONAL_TREASURES_II,
+  // Blessing.SYNARCH,
+  // Blessing.FLEXIBILITY,
+  // Blessing.RAINBOW_HOUR,
+  // Blessing.MANIFESTATION_AP,
+  // Blessing.MANIFESTATION_AD,
+  // Blessing.MIX_AND_MATCH_I,
+  // Blessing.MIX_AND_MATCH_II
 ]
 
 function countBlessingsOfFamily(blessings: Blessing[], family?: string) {

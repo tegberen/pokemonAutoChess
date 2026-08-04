@@ -49,6 +49,7 @@ import {
   SAPPHIRE_ORB_BOUNCES
 } from "../../types/enum/Blessing"
 import { isIn, removeInArray } from "../../utils/array"
+import { grantRegionalTreasuresOnRegionChange } from "../../services/blessings"
 import { getFreeSpaceOnBench, isOnBench } from "../../utils/board"
 import { canEatMoreDishes } from "../../utils/dishes"
 import { distanceC, distanceM } from "../../utils/distance"
@@ -1537,6 +1538,7 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
         player.map = newMap
         player.regions.push(newMap)
         player.updateRegionalPool(room.state, true, previousMap)
+        grantRegionalTreasuresOnRegionChange(player)
       }, LAPRAS_TRAVEL_DURATION)
 
       removeInArray(player.items, item)

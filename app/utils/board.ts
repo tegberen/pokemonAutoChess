@@ -31,6 +31,17 @@ export function getFirstAvailablePositionInBench(
   return null
 }
 
+export function getLastAvailablePositionInBench(
+  board: MapSchema<Pokemon, string>
+): number | null {
+  for (let i = 7; i >= 0; i--) {
+    if (isPositionEmpty(i, 0, board)) {
+      return i
+    }
+  }
+  return null
+}
+
 export function getFirstAvailablePositionOnBoard(
   board: MapSchema<Pokemon, string>,
   range: number

@@ -85,6 +85,12 @@ export default class LoadingManager {
     scene.load.image("stat-CRIT_CHANCE", "/assets/icons/CRIT_CHANCE.png")
     scene.load.image("stat-CRIT_POWER", "/assets/icons/CRIT_POWER.png")
 
+    // MANIFESTATION: padlock shown above units locked to the bench
+    scene.load.svg("manifestation-locked", "/assets/icons/LOCKED.svg", {
+      width: 64,
+      height: 64
+    })
+
     scene.load.spritesheet({
       key: "cell",
       url: "/assets/ui/cell.png",

@@ -380,6 +380,7 @@ export interface IPokemon {
   awakeningCharge: number
   boosterEnergyCount: number
   juggernautStat: string
+  manifestationLocked: boolean
 }
 
 export interface IExperienceManager {

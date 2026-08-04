@@ -29,6 +29,11 @@ import {
   SynergyItems,
   Transfer
 } from "../types"
+import {
+  Blessing,
+  FREE_COUPON_GUARANTEED_SHOP_STAGE
+} from "../types/enum/Blessing"
+import { grantRegionalTreasuresOnRegionChange } from "../services/blessings"
 import { DungeonPMDO } from "../types/enum/Dungeon"
 import { PokemonActionState } from "../types/enum/Game"
 import {
@@ -180,7 +185,8 @@ export class MiniGame {
                 (cli) => cli.auth.uid === avatar.id
               )
               const price =
-                room.state.specialGameRule === SpecialGameRule.TOWN_FESTIVAL
+                room.state.specialGameRule === SpecialGameRule.TOWN_FESTIVAL ||
+                player?.blessings?.includes(Blessing.FREE_COUPON)
                   ? 0
                   : TownEncounterSellPrice[encounter]!
               if ((player?.money ?? 0) < price) {
@@ -280,6 +286,24 @@ export class MiniGame {
       ) {
         encounter = null // prevent getting the same encounter twice in a game
       }
+      /* FREE_COUPON promises a shop to buy from: if none has come up by the
+         time its last chance arrives, force one */
+      if (
+        encounter == null &&
+        stageLevel === FREE_COUPON_GUARANTEED_SHOP_STAGE &&
+        [...players.values()].some(
+          (p) => p.alive && p.blessings?.includes(Blessing.FREE_COUPON)
+        ) &&
+        (Object.keys(TownEncounterSellPrice) as TownEncounter[]).every(
+          (shop) => !state.townEncounters.has(shop)
+        )
+      ) {
+        encounter = pickRandomIn(
+          (Object.keys(TownEncountersByStage[stageLevel]) as TownEncounter[])
+            .filter((candidate) => candidate in TownEncounterSellPrice)
+        )
+      }
+
       state.townEncounter = encounter ?? null
       if (encounter) {
         state.townEncounters.add(encounter)
@@ -901,6 +925,7 @@ export class MiniGame {
             player.map = portal.map
             player.regions.push(portal.map)
             player.updateRegionalPool(state, true, previousMap)
+            grantRegionalTreasuresOnRegionChange(player)
             const newBerryTreeTypes = pickNRandomIn(NonSpecialBerries, 3)
             for (let i = 0; i < player.berryTreesType.length; i++) {
               player.berryTreesType[i] = newBerryTreeTypes[i]

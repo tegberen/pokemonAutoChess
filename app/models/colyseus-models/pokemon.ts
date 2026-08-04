@@ -110,6 +110,8 @@ export class Pokemon extends Schema implements IPokemon {
   @type("uint8") awakeningCharge: number = 0
   // JUGGERNAUT: stat this copy feeds into the champion when merged ("" = HP/none)
   @type("string") juggernautStat: string = ""
+  // MANIFESTATION: passive on the bench until stage 20
+  @type("boolean") manifestationLocked: boolean = false
   dodge: number = 0
   deathCount: number = 0
   killCount: number = 0

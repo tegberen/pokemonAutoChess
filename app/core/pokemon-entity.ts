@@ -29,6 +29,7 @@ import {
   DRAGON_KING_ABILITY_POWER_PER_STAR,
   DRAGON_KING_SHIELD_PER_STAR,
   DRAGON_KING_SPEED_PER_STAR,
+  DROP_RATES_CHANCE,
   ETERNAL_RAGE_DURATION_PER_STAR,
   RIVALRY_ATTACK_ON_OWN_SIDE,
   RIVALRY_MAX_HP_ON_ENEMY_SIDE,
@@ -1418,6 +1419,15 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
         v.team === this.team &&
         v.addAttack(target.stars, v, 0, false)
     )
+
+    if (
+      this.isStrongestAllyThisFight &&
+      this.player?.blessings?.includes(Blessing.DROP_RATES) &&
+      !this.simulation.isGhostBattle &&
+      chance(DROP_RATES_CHANCE, this)
+    ) {
+      this.player.shopFreeRolls += 1
+    }
 
     if (
       this.isRivalryChampionThisFight &&

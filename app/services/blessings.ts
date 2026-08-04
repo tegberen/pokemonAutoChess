@@ -1,4 +1,4 @@
-import Player from "../models/colyseus-models/player"
+import type Player from "../models/colyseus-models/player"
 import { PokemonClasses } from "../models/colyseus-models/pokemon"
 import PokemonFactory from "../models/pokemon-factory"
 import { getPokemonData } from "../models/precomputed/precomputed-pokemon-data"
@@ -18,7 +18,27 @@ import {
   HERO_BLESSING_FAMILY,
   HERO_BLESSING_MOVES_REGION,
   HERO_BLESSING_ADDS_TO_POOL,
-  PLUNDER_GOLD_MULTIPLIER
+  PLUNDER_GOLD_MULTIPLIER,
+  WAITING_GAME_FREE_ROLLS,
+  WAITING_GAME_FREE_ROLLS_WITHOUT_REROLLING,
+  MORE_EQUAL_THAN_OTHERS_GOLD,
+  MORE_EQUAL_THAN_OTHERS_GOLD_FOR_OTHERS,
+  CLIMBING_THE_LADDER_MAX_LEVEL,
+  CLIMBING_THE_LADDER_MIN_LEVEL,
+  CLIMBING_THE_LADDER_EXP_DISCOUNT,
+  WOBBUFFETS_GOLD_PRIZE_RECYCLE_TICKETS,
+  HARD_COMMIT_STAGES,
+  SYNARCH_GEMS_PER_UNIQUE,
+  FLEXIBILITY_FOSSIL_STONES,
+  FLEXIBILITY_COMPONENTS,
+  RAINBOW_HOUR_FOSSIL_STONES,
+  RAINBOW_HOUR_EEVEELUTIONS_TARGET,
+  RAINBOW_HOUR_GOLD_REWARD,
+  MANIFESTATION_UNLOCK_STAGE,
+  MIX_AND_MATCH_I_UNIQUES,
+  MIX_AND_MATCH_I_FIELD_CAP,
+  MIX_AND_MATCH_II_UNIQUES,
+  MIX_AND_MATCH_II_FIELD_CAP
 } from "../types/enum/Blessing"
 import { BattleResult, Rarity } from "../types/enum/Game"
 import {
@@ -47,8 +67,12 @@ import {
   Sweets,
   SynergyGems,
   SynergyGivenByGem,
+  SynergyStones,
   WeatherRocks
 } from "../types/enum/Item"
+import { schemaValues } from "../utils/schemas"
+import { isIn } from "../utils/array"
+import type { Pokemon } from "../models/colyseus-models/pokemon"
 import { Pkm, PkmFamily, Unowns } from "../types/enum/Pokemon"
 import { getSellPrice } from "../models/shop"
 import { Synergy } from "../types/enum/Synergy"
@@ -59,7 +83,8 @@ import {
 import { getAltFormForPlayer } from "../config/game/pokemons"
 import {
   getFirstAvailablePositionInBench,
-  getFreeSpaceOnBench
+  getFreeSpaceOnBench,
+  getLastAvailablePositionInBench
 } from "../utils/board"
 import { chance, pickNRandomIn, pickRandomIn } from "../utils/random"
 
@@ -503,7 +528,165 @@ function moveToRegionWherePokemonIsFound(
     player.map = newMap
     player.regions.push(newMap)
     player.updateRegionalPool(state, true, previousMap)
+    grantRegionalTreasuresOnRegionChange(player)
   }, LAPRAS_TRAVEL_DURATION)
+}
+
+export const MANIFESTATION_AP_POKEMONS = [
+  Pkm.DUOSION,
+  Pkm.THWACKEY,
+  Pkm.DRIZZILE
+]
+export const MANIFESTATION_AD_POKEMONS = [
+  Pkm.PORYGON_2,
+  Pkm.FLETCHINDER,
+  Pkm.BISHARP
+]
+
+export function grantRainbowHourEevee(player: Player, craftedItem: Item) {
+  if (
+    !player.blessings?.includes(Blessing.RAINBOW_HOUR) ||
+    !isIn(SynergyStones, craftedItem)
+  )
+    return
+  giftPokemonIfBenchHasRoom(player, Pkm.EEVEE)
+}
+
+/* the bounty is checked whenever the board changes, and pays out once */
+export function checkRainbowHourReward(player: Player) {
+  if (
+    player.rainbowHourRewarded ||
+    !player.blessings?.includes(Blessing.RAINBOW_HOUR)
+  )
+    return
+  const fieldedEeveelutions = new Set(
+    schemaValues(player.board)
+      .filter(
+        (pokemon) =>
+          pokemon.positionY !== 0 && PkmFamily[pokemon.name] === Pkm.EEVEE
+      )
+      .map((pokemon) => pokemon.name)
+  )
+  if (fieldedEeveelutions.size >= RAINBOW_HOUR_EEVEELUTIONS_TARGET) {
+    player.rainbowHourRewarded = true
+    player.addMoney(RAINBOW_HOUR_GOLD_REWARD, true, null)
+  }
+}
+
+export function isPokemonManifestationLocked(
+  player: Player,
+  pokemonId: string
+): boolean {
+  return player.manifestedPokemonIds.includes(pokemonId)
+}
+
+export function getUniqueFieldCap(player: Player): number | null {
+  if (player.blessings?.includes(Blessing.MIX_AND_MATCH_II))
+    return MIX_AND_MATCH_II_FIELD_CAP
+  if (player.blessings?.includes(Blessing.MIX_AND_MATCH_I))
+    return MIX_AND_MATCH_I_FIELD_CAP
+  return null
+}
+
+export function isUniqueFieldCapReached(
+  player: Player,
+  pokemonBeingPlaced: Pokemon,
+  pokemonLeavingBoard?: Pokemon
+): boolean {
+  const cap = getUniqueFieldCap(player)
+  if (cap === null || pokemonBeingPlaced.rarity !== Rarity.UNIQUE) return false
+  /* a swap frees the slot the other unit is vacating, so a one-for-one unique
+     trade stays legal even while sitting exactly on the cap */
+  const fieldedUniques = schemaValues(player.board).filter(
+    (pokemon) =>
+      pokemon.positionY !== 0 &&
+      pokemon.rarity === Rarity.UNIQUE &&
+      pokemon.id !== pokemonBeingPlaced.id &&
+      pokemon.id !== pokemonLeavingBoard?.id
+  ).length
+  return fieldedUniques >= cap
+}
+
+function regionSynergies(player: Player): Synergy[] {
+  return player.map === "town" ? [] : (RegionDetails[player.map]?.synergies ?? [])
+}
+
+/* called from every place that moves a player to a new region */
+export function grantRegionalTreasuresOnRegionChange(player: Player) {
+  if (player.blessings?.includes(Blessing.REGIONAL_TREASURES)) {
+    grantRegionalGem(player)
+  }
+  if (player.blessings?.includes(Blessing.REGIONAL_TREASURES_II)) {
+    grantRegionalTreasures2(player)
+  }
+}
+
+export function grantRegionalGem(player: Player) {
+  const gems = regionSynergies(player)
+    .map((synergy) => GemBySynergy[synergy])
+    .filter((gem): gem is Item => gem != null)
+  if (gems.length > 0) grantSynergyAwareItem(player, pickRandomIn(gems))
+}
+
+export function grantRegionalTreasures2(player: Player) {
+  regionSynergies(player).forEach((synergy) => {
+    const gem = GemBySynergy[synergy]
+    if (gem) grantSynergyAwareItem(player, gem)
+    giftUncommonsOfSynergy(player, synergy, 1)
+  })
+}
+
+function grantManifestation(
+  player: Player,
+  state: GameState,
+  blessing: Blessing,
+  candidates: Pkm[],
+  heldItem: Item
+): boolean {
+  // parked on the far right, out of the way of the bench the player actually uses
+  const freeCellX = getLastAvailablePositionInBench(player.board)
+  if (freeCellX === null) return false
+  const pokemon = PokemonFactory.createPokemonFromName(
+    pickRandomIn(candidates),
+    player
+  )
+  pokemon.positionX = freeCellX
+  pokemon.positionY = 0
+  pokemon.items.add(heldItem)
+  pokemon.manifestationLocked = true
+  player.board.set(pokemon.id, pokemon)
+  pokemon.onAcquired(player)
+  player.manifestedPokemonIds.push(pokemon.id)
+  scheduleBlessingGrant(player, state, blessing, [MANIFESTATION_UNLOCK_STAGE])
+  return true
+}
+
+function releaseManifestedPokemons(player: Player) {
+  player.manifestedPokemonIds.forEach((id) => {
+    const pokemon = player.board.get(id)
+    if (pokemon) pokemon.manifestationLocked = false
+  })
+  player.manifestedPokemonIds = []
+}
+
+function giftRandomUniques(player: Player, amount: number): boolean {
+  if (getFreeSpaceOnBench(player.board) < amount) return false
+  pickNRandomIn(PRECOMPUTED_POKEMONS_PER_RARITY[Rarity.UNIQUE], amount).forEach(
+    (pkm: Pkm) => giftPokemonIfBenchHasRoom(player, pkm)
+  )
+  return true
+}
+
+/* the delta since the previous round end is what the player rolled during the
+   prep phase that just finished */
+function grantWaitingGameRerolls(player: Player) {
+  const rerollsThisRound =
+    player.gameStats.rerollCount - player.rerollCountAtLastRoundEnd
+  player.rerollCountAtLastRoundEnd = player.gameStats.rerollCount
+  player.shopFreeRolls +=
+    rerollsThisRound === 0
+      ? WAITING_GAME_FREE_ROLLS_WITHOUT_REROLLING
+      : WAITING_GAME_FREE_ROLLS
 }
 
 function refundPlunderedGold(player: Player) {
@@ -701,6 +884,11 @@ export const blessingTriggerEffectService: {
     [BlessingTrigger.PVP_END]: (player) => refundPlunderedGold(player)
   },
 
+  [Blessing.WAITING_GAME]: {
+    [BlessingTrigger.PVE_END]: (player) => grantWaitingGameRerolls(player),
+    [BlessingTrigger.PVP_END]: (player) => grantWaitingGameRerolls(player)
+  },
+
   [Blessing.GARDENING]: {
     [BlessingTrigger.PVP_END]: (player) => {
       if (player.history.at(-1)?.result !== BattleResult.DEFEAT) return
@@ -720,6 +908,15 @@ export const blessingScheduledEffectService: {
     value?: number
   ) => void
 } = {
+  [Blessing.HARD_COMMIT]: (player, state, value) => {
+    const gem = SynergyGems[value ?? 0]
+    if (gem) grantSynergyAwareItem(player, gem)
+  },
+
+  [Blessing.MANIFESTATION_AP]: (player) => releaseManifestedPokemons(player),
+
+  [Blessing.MANIFESTATION_AD]: (player) => releaseManifestedPokemons(player),
+
   [Blessing.CINCCINOS_GIFTS_I]: (player) => player.items.push(Item.SILK_SCARF),
 
   [Blessing.CINCCINOS_GIFTS_II]: (player) => player.items.push(Item.SILK_SCARF),
@@ -1097,7 +1294,122 @@ export const blessingEffectService: {
       player.map = newMap
       player.regions.push(newMap)
       player.updateRegionalPool(state, true, previousMap)
+      grantRegionalTreasuresOnRegionChange(player)
     }, LAPRAS_TRAVEL_DURATION)
+    return true
+  },
+
+  [Blessing.WOBBUFFETS_GOLD_PRIZE]: (player) => {
+    player.items.push(pickRandomIn(ItemComponents))
+    for (let i = 0; i < WOBBUFFETS_GOLD_PRIZE_RECYCLE_TICKETS; i++) {
+      player.items.push(Item.RECYCLE_TICKET)
+    }
+    return true
+  },
+
+  [Blessing.HARD_COMMIT]: (player, state) => {
+    const gem = pickRandomIn(SynergyGems)
+    grantSynergyAwareItem(player, gem)
+    // the roll is remembered as its index, the only shape a scheduled grant carries
+    scheduleBlessingGrant(
+      player,
+      state,
+      Blessing.HARD_COMMIT,
+      HARD_COMMIT_STAGES,
+      SynergyGems.indexOf(gem)
+    )
+    return true
+  },
+
+  [Blessing.REGIONAL_TREASURES]: (player) => {
+    grantRegionalGem(player)
+    return true
+  },
+
+  [Blessing.REGIONAL_TREASURES_II]: (player) => {
+    grantRegionalTreasures2(player)
+    return true
+  },
+
+  [Blessing.SYNARCH]: (player) => {
+    const uniques = schemaValues(player.board).filter(
+      (pokemon) => pokemon.rarity === Rarity.UNIQUE
+    )
+    const baseSynergies = uniques.flatMap((unique) => [
+      ...getPokemonData(unique.name).types
+    ])
+    const gems = baseSynergies
+      .map((synergy) => GemBySynergy[synergy])
+      .filter((gem): gem is Item => gem != null)
+    while (gems.length < SYNARCH_GEMS_PER_UNIQUE) {
+      gems.push(pickRandomIn(SynergyGems))
+    }
+    gems.forEach((gem) => grantSynergyAwareItem(player, gem))
+    return true
+  },
+
+  [Blessing.FLEXIBILITY]: (player) => {
+    for (let i = 0; i < FLEXIBILITY_FOSSIL_STONES; i++) {
+      player.items.push(Item.FOSSIL_STONE)
+    }
+    pickNRandomIn(ItemComponents, FLEXIBILITY_COMPONENTS).forEach((component) =>
+      player.items.push(component)
+    )
+    return true
+  },
+
+  [Blessing.RAINBOW_HOUR]: (player) => {
+    for (let i = 0; i < RAINBOW_HOUR_FOSSIL_STONES; i++) {
+      player.items.push(Item.FOSSIL_STONE)
+    }
+    return true
+  },
+
+  [Blessing.MANIFESTATION_AP]: (player, state) =>
+    grantManifestation(
+      player,
+      state,
+      Blessing.MANIFESTATION_AP,
+      MANIFESTATION_AP_POKEMONS,
+      Item.SOUL_DEW
+    ),
+
+  [Blessing.MANIFESTATION_AD]: (player, state) =>
+    grantManifestation(
+      player,
+      state,
+      Blessing.MANIFESTATION_AD,
+      MANIFESTATION_AD_POKEMONS,
+      Item.RED_ORB
+    ),
+
+  [Blessing.MIX_AND_MATCH_I]: (player) =>
+    giftRandomUniques(player, MIX_AND_MATCH_I_UNIQUES),
+
+  [Blessing.MIX_AND_MATCH_II]: (player) =>
+    giftRandomUniques(player, MIX_AND_MATCH_II_UNIQUES),
+
+  [Blessing.MORE_EQUAL_THAN_OTHERS]: (player, state) => {
+    player.addMoney(MORE_EQUAL_THAN_OTHERS_GOLD, true, null)
+    player.items.push(pickRandomIn(ItemComponents))
+    state.players.forEach((otherPlayer) => {
+      if (otherPlayer.id !== player.id && otherPlayer.alive) {
+        otherPlayer.addMoney(MORE_EQUAL_THAN_OTHERS_GOLD_FOR_OTHERS, true, null)
+      }
+    })
+    return true
+  },
+
+  [Blessing.CLIMBING_THE_LADDER]: (player) => {
+    player.experienceManager.maxLevel = CLIMBING_THE_LADDER_MAX_LEVEL
+    player.experienceManager.expDiscount = CLIMBING_THE_LADDER_EXP_DISCOUNT
+    if (player.experienceManager.level < CLIMBING_THE_LADDER_MIN_LEVEL) {
+      player.experienceManager.level = CLIMBING_THE_LADDER_MIN_LEVEL
+      player.experienceManager.experience = 0
+    }
+    player.experienceManager.expNeeded = player.experienceManager.expNeededAtLevel(
+      player.experienceManager.level
+    )
     return true
   },
 

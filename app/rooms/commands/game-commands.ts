@@ -114,8 +114,17 @@ import {
   BLESSING_OPTIONS_PER_SELECTION,
   BLESSING_REROLLS_PER_OPTION,
   BLESSING_SELECTION_STAGES,
-  BlessingTrigger
+  BlessingTrigger,
+  PRISMATIC_REROLL_CHANCE,
+  PRISMATIC_REROLL_FREE_ROLLS
 } from "../../types/enum/Blessing"
+import {
+  checkRainbowHourReward,
+  grantRainbowHourEevee,
+  getUniqueFieldCap,
+  isPokemonManifestationLocked,
+  isUniqueFieldCapReached
+} from "../../services/blessings"
 import { DungeonPMDO } from "../../types/enum/Dungeon"
 import { EffectEnum } from "../../types/enum/Effect"
 import {
@@ -695,7 +704,10 @@ export class OnDragDropPokemonCommand extends Command<
           if (dropOnBench) {
             if (
               pokemon.canBeBenched &&
-              (!target || target.canBePlaced) &&
+              (!target ||
+                (target.canBePlaced &&
+                  !isPokemonManifestationLocked(player, target.id) &&
+                  !isUniqueFieldCapReached(player, target, pokemon))) &&
               !(
                 isBoardFull &&
                 target &&
@@ -707,6 +719,8 @@ export class OnDragDropPokemonCommand extends Command<
             }
           } else if (
             pokemon.canBePlaced &&
+            !isPokemonManifestationLocked(player, pokemon.id) &&
+            !isUniqueFieldCapReached(player, pokemon, target ?? undefined) &&
             (!target || target.canBeBenched) &&
             !(
               dropFromBench &&
@@ -735,6 +749,7 @@ export class OnDragDropPokemonCommand extends Command<
 
       if (success) {
         player.updateSynergies()
+        checkRainbowHourReward(player)
         player.boardSize = this.room.getTeamSize(player.board)
       }
     }
@@ -822,6 +837,8 @@ export class OnSwitchBenchAndBoardCommand extends Command<
       )
       if (
         pokemon.canBePlaced &&
+        !isPokemonManifestationLocked(player, pokemon.id) &&
+        !isUniqueFieldCapReached(player, pokemon) &&
         destination &&
         !(isBoardFull && pokemon.doesCountForTeamSize)
       ) {
@@ -840,6 +857,7 @@ export class OnSwitchBenchAndBoardCommand extends Command<
           state: this.state,
           room: this.room
         })
+        checkRainbowHourReward(player)
       }
     } else {
       // pokemon is on board, switch to bench
@@ -954,6 +972,9 @@ export class OnDragDropCombineCommand extends Command<
       removeInArray(player.items, itemB)
       player.items.push(recipe[0])
       player.items.push(recipe[1])
+      if (player.blessings?.includes(Blessing.WOBBUFFETS_GOLD_PRIZE)) {
+        player.items.push(pickRandomIn(ItemComponents))
+      }
       player.updateSynergies()
       return
     } else {
@@ -987,6 +1008,7 @@ export class OnDragDropCombineCommand extends Command<
       player.items.push(result)
       removeInArray(player.items, itemA)
       removeInArray(player.items, itemB)
+      grantRainbowHourEevee(player, result)
     }
 
     player.updateSynergies()
@@ -1275,6 +1297,11 @@ export class OnDragDropItemCommand extends Command<
       return
     }
 
+    if (isPokemonManifestationLocked(player, pokemon.id)) {
+      client.send(Transfer.DRAG_DROP_CANCEL, message)
+      return
+    }
+
     const isBasicItem = ItemComponents.includes(item)
     const existingBasicItemToCombine = schemaValues(pokemon.items).find((i) =>
       ItemComponents.includes(i)
@@ -1345,6 +1372,7 @@ export class OnDragDropItemCommand extends Command<
 
       pokemon.items.delete(existingBasicItemToCombine)
       removeInArray(player.items, item)
+      grantRainbowHourEevee(player, itemCombined)
 
       if (pokemon.items.has(itemCombined)) {
         // pokemon already has the combined item so the second one pops off and go to player inventory
@@ -1417,10 +1445,19 @@ export class OnSellPokemonCommand extends Command<
       return
     }
 
+    const isManifested = isPokemonManifestationLocked(player, pokemonId)
+    if (isManifested) {
+      removeInArray(player.manifestedPokemonIds, pokemonId)
+    }
+
     player.board.delete(pokemonId)
     this.state.shop.releasePokemon(pokemon.name, player, this.state)
 
-    const sellPrice = getSellPrice(pokemon, this.state.specialGameRule)
+    const sellPrice =
+      isManifested ||
+      (getUniqueFieldCap(player) !== null && pokemon.rarity === Rarity.UNIQUE)
+        ? 0
+        : getSellPrice(pokemon, this.state.specialGameRule)
     player.addMoney(sellPrice, false, null)
     pokemon.items.forEach((it) => {
       player.items.push(it)
@@ -1459,6 +1496,13 @@ export class OnShopRerollCommand extends Command<GameRoom, string> {
         )
         if (repeatBallHolders.length > 0)
           player.shopFreeRolls += repeatBallHolders.length
+      }
+      /* chains on its own: the free roll re-enters this command and rolls again */
+      if (
+        player.blessings?.includes(Blessing.PRISMATIC_REROLL) &&
+        chance(PRISMATIC_REROLL_CHANCE)
+      ) {
+        player.shopFreeRolls += PRISMATIC_REROLL_FREE_ROLLS
       }
       this.state.shop.assignShop(player, true, this.state)
     }
@@ -2583,6 +2627,8 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
               (p) =>
                 isOnBench(p) &&
                 p.canBePlaced &&
+                !isPokemonManifestationLocked(player, p.id) &&
+                !isUniqueFieldCapReached(player, p) &&
                 p.action !== PokemonActionState.EXPLORING
             )
             .sort((a, b) => a.positionX - b.positionX)[0]

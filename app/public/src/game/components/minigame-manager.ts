@@ -12,6 +12,7 @@ import {
   type ISynergySymbol,
   Transfer
 } from "../../../../types"
+import { Blessing } from "../../../../types/enum/Blessing"
 import { Orientation, PokemonActionState } from "../../../../types/enum/Game"
 import { Pkm } from "../../../../types/enum/Pokemon"
 import { SpecialGameRule } from "../../../../types/enum/SpecialGameRule"
@@ -770,12 +771,20 @@ export default class MinigameManager {
 
     const specialGameRule = this.scene.room?.state?.specialGameRule
     if (encounter) {
+      const isShop = encounter in TownEncounterSellPrice
+      const hasFreeCoupon =
+        this.scene.room?.state.blessingsByPlayerId
+          ?.get(this.uid)
+          ?.blessings?.includes(Blessing.FREE_COUPON) === true
       const cost =
         specialGameRule === SpecialGameRule.TOWN_FESTIVAL
           ? 0
           : TownEncounterSellPrice[encounter]
       this.showEncounterDescription(
-        t(`town_encounter_description.${encounter}`, { cost })
+        t(`town_encounter_description.${encounter}`, { cost }) +
+          (isShop && hasFreeCoupon
+            ? ` — ${t("blessing.FREE_COUPON.name")}: ${t("free_of_charge")}`
+            : "")
       )
     } else if (specialGameRule && this.scene.room?.state.stageLevel === 0) {
       const smeargle = new PokemonSpecial({

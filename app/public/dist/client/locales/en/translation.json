@@ -4188,6 +4188,7 @@
 	"weather_forecast": "Weather forecast",
 	"blessings": "Blessings",
 	"no_blessing_yet": "No Blessing chosen yet",
+	"free_of_charge": "your item is free!",
 	"weather": {
 		"NEUTRAL": "Calm weather",
 		"ZENITH": "Zenith",
@@ -5425,6 +5426,74 @@
 		"ROOSTING_FLOCK": {
 			"name": "Roosting Flock",
 			"description": "Gain a Tranquill and move to a random Pidove region if not in one. When your STRONGEST Pidove casts its ability, ADJACENT FLYING allies cast Roost as well."
+		},
+		"WOBBUFFETS_GOLD_PRIZE": {
+			"name": "Wobbuffet's Gold Prize",
+			"description": "Gain a random item component and 2 RECYCLE_TICKET. Each time you use a RECYCLE_TICKET, gain a random item component."
+		},
+		"HARD_COMMIT": {
+			"name": "Hard Commit",
+			"description": "Gain a random gem. At stage 10 and stage 20, gain another copy of that same gem."
+		},
+		"REGIONAL_TREASURES": {
+			"name": "Regional Treasures",
+			"description": "Gain a random gem matching one of your region's synergies, now and each time you change region."
+		},
+		"REGIONAL_TREASURES_II": {
+			"name": "Regional Treasures II",
+			"description": "Gain a gem and a random 1 STAR uncommon Pokémon for each of your region's synergies, now and each time you change region."
+		},
+		"SYNARCH": {
+			"name": "Synarch",
+			"description": "Gain a gem matching each base synergy of your unique Pokémon. If that is less than 3 gems, random gems make up the difference."
+		},
+		"FLEXIBILITY": {
+			"name": "Flexibility",
+			"description": "Gain 3 FOSSIL_STONE and 3 random item components. Your team gains 12 HP per distinct synergy item equipped across your Pokémon."
+		},
+		"RAINBOW_HOUR": {
+			"name": "Rainbow Hour",
+			"description": "Gain 2 FOSSIL_STONE. Each time you craft a synergy stone, gain an Eevee. Each Eevee evolution contributes its synergies separately. The first time you field 7 different Eevee evolutions, gain 77 GOLD."
+		},
+		"MANIFESTATION_AP": {
+			"name": "Manifestation: AP",
+			"description": "Gain a random Duosion, Thwackey or Drizzile holding a SOUL_DEW, granting AP. Until stage 20 it cannot be fielded or given items, and sells for 0 GOLD."
+		},
+		"MANIFESTATION_AD": {
+			"name": "Manifestation: ATK",
+			"description": "Gain a random Porygon2, Fletchinder or Bisharp holding a RED_ORB, granting ATK. Until stage 20 it cannot be fielded or given items, and sells for 0 GOLD."
+		},
+		"MIX_AND_MATCH_I": {
+			"name": "Mix and Match I",
+			"description": "Gain 3 random unique Pokémon. Your unique Pokémon sell for 0 GOLD, and you can field at most 2 of them at a time."
+		},
+		"MIX_AND_MATCH_II": {
+			"name": "Mix and Match II",
+			"description": "Gain 4 random unique Pokémon. Your unique Pokémon sell for 0 GOLD, and you can field at most 3 of them at a time."
+		},
+		"WAITING_GAME": {
+			"name": "Waiting Game",
+			"description": "After each round, gain a free reroll, or 2 if you did not reroll during that round."
+		},
+		"PRISMATIC_REROLL": {
+			"name": "Prismatic Reroll",
+			"description": "Each reroll has a 25% chance to gain 2 free rerolls. Free rerolls can grant free rerolls in turn."
+		},
+		"DROP_RATES": {
+			"name": "Drop Rates",
+			"description": "KO's from your STRONGEST ally have a [40,LK]% chance to grant 1 free reroll."
+		},
+		"MORE_EQUAL_THAN_OTHERS": {
+			"name": "More Equal than Others",
+			"description": "Gain 10 GOLD and a random item component. Every other living player gains 5 GOLD."
+		},
+		"CLIMBING_THE_LADDER": {
+			"name": "Climbing the Ladder",
+			"description": "Immediately reach level 4 if below it. Each level up costs 4 less XP, and you can now reach level 10."
+		},
+		"FREE_COUPON": {
+			"name": "Free Coupon",
+			"description": "Take your item from carousel shops for free. If any player has this blessing, a shop encounter is guaranteed by stage 22."
 		},
 		"SOUL_DRAIN": {
 			"name": "Soul Drain",

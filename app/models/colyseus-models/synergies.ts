@@ -99,7 +99,8 @@ export function computeSynergies(
   board: IPokemon[],
   bonusSynergies?: Map<Synergy, number>,
   specialGameRule?: SpecialGameRule | null,
-  avatarSynergy?: Synergy | null
+  avatarSynergy?: Synergy | null,
+  separateEeveelutions?: boolean
 ): Map<Synergy, number> {
   const synergies = new Map<Synergy, number>()
   Object.keys(Synergy).forEach((key) => {
@@ -139,8 +140,11 @@ export function computeSynergies(
       }
     }
     if (pkm.positionY != 0) {
+      /* RAINBOW_HOUR borrows the FAMILY_OUTING trick for the Eevee line only:
+         a unique family key per unit means each eeveelution contributes */
       const family =
-        specialGameRule === SpecialGameRule.FAMILY_OUTING
+        specialGameRule === SpecialGameRule.FAMILY_OUTING ||
+        (separateEeveelutions && PkmFamily[pkm.name] === Pkm.EEVEE)
           ? `pkm${index}`
           : PkmFamily[pkm.name]
       if (!typesPerFamily.has(family)) typesPerFamily.set(family, new Set())

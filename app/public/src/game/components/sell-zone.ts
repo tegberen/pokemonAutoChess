@@ -2,6 +2,8 @@ import { t } from "i18next"
 import type Phaser from "phaser"
 import { GameObjects } from "phaser"
 import { getSellPrice } from "../../../../models/shop"
+import { Blessing } from "../../../../types/enum/Blessing"
+import { Rarity } from "../../../../types/enum/Game"
 import { transformBoardCoordinates } from "../../pages/utils/utils"
 import { DEPTH } from "../depths"
 import type GameScene from "../scenes/game-scene"
@@ -56,7 +58,19 @@ export class SellZone extends GameObjects.Container {
     const specialGameRule = this.scene.room?.state.specialGameRule
     const pokemon = this.scene.board?.player.board.get(pkm.id)
     if (!pokemon) return
-    const price = getSellPrice(pokemon, specialGameRule)
+    const playerId = this.scene.board?.player.id
+    const blessings =
+      playerId != null
+        ? this.scene.room?.state.blessingsByPlayerId?.get(playerId)?.blessings
+        : undefined
+    const hasMixAndMatch =
+      blessings?.includes(Blessing.MIX_AND_MATCH_I) === true ||
+      blessings?.includes(Blessing.MIX_AND_MATCH_II) === true
+    const price =
+      pokemon.manifestationLocked ||
+      (hasMixAndMatch && pokemon.rarity === Rarity.UNIQUE)
+        ? 0
+        : getSellPrice(pokemon, specialGameRule)
     this.text.setText(
       `${t("drop_here_to_sell")} ${t("for_price_gold", { price })}`
     )
