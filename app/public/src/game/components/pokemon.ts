@@ -78,6 +78,8 @@ export function resetSpriteCounts() {
 const isGameScene = (scene: Phaser.Scene): scene is GameScene =>
   "lastPokemonDetail" in scene
 
+const BLESSED_HERO_MARK_SCALE = 1.34
+
 export default class PokemonSprite extends DraggableObject {
   scene: GameScene | DebugScene
   evolution: Pkm
@@ -125,6 +127,7 @@ export default class PokemonSprite extends DraggableObject {
   curseTorment: GameObjects.Sprite | undefined
   curseFate: GameObjects.Sprite | undefined
   light: GameObjects.Sprite | undefined
+  blessedHeroMark: GameObjects.Image | undefined
   awakeningGlow: Phaser.Filters.Glow | undefined
   awakeningGlowTween: Phaser.Tweens.Tween | undefined
   awakeningCrystal: GameObjects.Sprite | undefined
@@ -1164,6 +1167,9 @@ export default class PokemonSprite extends DraggableObject {
   }
 
   addStatusEffectsSprites(pokemon: IPokemonEntity) {
+    if (pokemon.isBlessedHero) {
+      this.addBlessedHeroMark()
+    }
     if (pokemon.status.light) {
       this.addLight(pokemon.status.lightTint)
     }
@@ -1867,6 +1873,30 @@ export default class PokemonSprite extends DraggableObject {
       .setScale(1)
       .setDepth(DEPTH.POKEMON + 1)
     this.add(icon)
+  }
+
+  addBlessedHeroMark() {
+    if (this.blessedHeroMark) return
+    this.blessedHeroMark = new GameObjects.Image(
+      this.scene,
+      0,
+      -14,
+      "blessed-hero"
+    )
+      .setScale(BLESSED_HERO_MARK_SCALE)
+      .setAlpha(0.38)
+      .setTint(0x000000)
+      .setTintMode(Phaser.TintModes.FILL)
+      .setDepth(DEPTH.POKEMON_SHADOW)
+    // behind the sprite, like the unit's own shadow
+    this.addAt(this.blessedHeroMark, 0)
+  }
+
+  removeBlessedHeroMark() {
+    if (this.blessedHeroMark) {
+      this.remove(this.blessedHeroMark, true)
+      this.blessedHeroMark = undefined
+    }
   }
 
   addFlowerTrick() {

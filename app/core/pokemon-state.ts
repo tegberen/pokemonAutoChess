@@ -17,7 +17,8 @@ import {
   CONTEMPT_DAMAGE_MULTIPLIER,
   RESURGENCE_LEGENDARY_SPEED,
   RESURGENCE_SPEED,
-  EXHAUSTING_FLAME_DAMAGE_MULTIPLIER
+  EXHAUSTING_FLAME_DAMAGE_MULTIPLIER,
+  SHELL_ARMOR_SPE_DEF_BY_STARS
 } from "../types/enum/Blessing"
 import { EffectEnum } from "../types/enum/Effect"
 import {
@@ -122,6 +123,11 @@ export default abstract class PokemonState {
       if (crit && target.passive === Passive.SHELL_ARMOR) {
         const defenseBuff = [1, 3, 6][target.stars - 1] ?? 0
         target.addDefense(defenseBuff, target, 0, false)
+        if (target.heroBlessings?.has(Blessing.SHELL_ARMOR_BLESSING)) {
+          const specialDefenseBuff =
+            SHELL_ARMOR_SPE_DEF_BY_STARS[target.stars - 1] ?? 0
+          target.addSpecialDefense(specialDefenseBuff, target, 0, false)
+        }
       }
 
       let reductionFactor = 1 - 0.1 * nbBlackAugurite

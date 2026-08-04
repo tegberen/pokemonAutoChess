@@ -100,6 +100,7 @@ import { DelayedCommand, type SimulationCommand } from "./simulation-command"
 
 export class PokemonEntity extends Schema implements IPokemonEntity {
   @type("boolean") shiny: boolean
+  @type("boolean") isBlessedHero = false
   @type("uint8") positionX: number
   @type("uint8") positionY: number
   @type("string") action = PokemonActionState.WALK
@@ -177,6 +178,7 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
   isEchoChamberLeaderThisFight: boolean = false
   isDragonKingChampionThisFight: boolean = false
   isMegaSolAuraSource: boolean = false
+  heroBlessings = new Set<Blessing>()
 
   constructor(
     pokemon: IPokemon,

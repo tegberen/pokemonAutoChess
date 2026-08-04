@@ -624,6 +624,7 @@ export interface IPokemonEntity {
   commands: ISimulationCommand[]
   effectsSet: Set<EffectClass>
   inSpotlight: boolean
+  isBlessedHero: boolean
 }
 
 export interface IStatus {

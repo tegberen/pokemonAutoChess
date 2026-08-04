@@ -1,4 +1,5 @@
 import Player from "../models/colyseus-models/player"
+import { PokemonClasses } from "../models/colyseus-models/pokemon"
 import PokemonFactory from "../models/pokemon-factory"
 import { getPokemonData } from "../models/precomputed/precomputed-pokemon-data"
 import { PRECOMPUTED_POKEMONS_PER_RARITY } from "../models/precomputed/precomputed-rarity"
@@ -12,7 +13,10 @@ import {
   BABY_OPENER_BABIES_GRANTED,
   BABY_OPENER_MAX_COST,
   SELECTIVE_GENETICS_BABIES_GRANTED,
-  SELECTIVE_GENETICS_MAX_COST
+  SELECTIVE_GENETICS_MAX_COST,
+  HERO_BLESSING_GIFT,
+  HERO_BLESSING_FAMILY,
+  HERO_BLESSING_MOVES_REGION
 } from "../types/enum/Blessing"
 import { BattleResult, Rarity } from "../types/enum/Game"
 import {
@@ -459,6 +463,58 @@ function giftPokemonIfBenchHasRoom(player: Player, pkm: Pkm): boolean {
   pokemon.positionY = 0
   player.board.set(pokemon.id, pokemon)
   pokemon.onAcquired(player)
+  return true
+}
+
+function moveToRegionWherePokemonIsFound(
+  player: Player,
+  state: GameState,
+  room: GameRoom | undefined,
+  pkm: Pkm
+) {
+  const previousMap = player.map
+  const regionalMon = new PokemonClasses[pkm](pkm)
+  if (
+    previousMap !== "town" &&
+    regionalMon.isInRegion(previousMap, state)
+  ) {
+    player.updateRegionalPool(state, true, previousMap)
+    return
+  }
+
+  const candidateMaps = (Object.keys(RegionDetails) as DungeonPMDO[]).filter(
+    (map) => map !== previousMap && regionalMon.isInRegion(map, state)
+  )
+  if (candidateMaps.length === 0) return
+
+  // same travel sequence as the Lapras Passport item
+  const newMap = pickRandomIn(candidateMaps)
+  room?.broadcast(Transfer.PRELOAD_MAPS, [newMap])
+  player.spawnWanderingPokemon({
+    pkm: Pkm.LAPRAS,
+    type: WandererType.DIALOG,
+    behavior: WandererBehavior.SPECTATE,
+    data: newMap
+  })
+  setTimeout(() => {
+    player.map = newMap
+    player.regions.push(newMap)
+    player.updateRegionalPool(state, true, previousMap)
+  }, LAPRAS_TRAVEL_DURATION)
+}
+
+function heroBlessingEffect(
+  blessing: Blessing,
+  player: Player,
+  state: GameState,
+  room?: GameRoom
+): boolean {
+  const gift = HERO_BLESSING_GIFT[blessing]
+  if (gift && giftPokemonIfBenchHasRoom(player, gift) === false) return false
+  const family = HERO_BLESSING_FAMILY[blessing]
+  if (family && HERO_BLESSING_MOVES_REGION.includes(blessing)) {
+    moveToRegionWherePokemonIsFound(player, state, room, family)
+  }
   return true
 }
 
@@ -1016,6 +1072,18 @@ export const blessingEffectService: {
     }, LAPRAS_TRAVEL_DURATION)
     return true
   },
+
+  [Blessing.OLIVE_GARDEN]: (player, state, room) =>
+    heroBlessingEffect(Blessing.OLIVE_GARDEN, player, state, room),
+
+  [Blessing.ORBITAL_STRIKE]: (player, state, room) =>
+    heroBlessingEffect(Blessing.ORBITAL_STRIKE, player, state, room),
+
+  [Blessing.ROOSTING_FLOCK]: (player, state, room) =>
+    heroBlessingEffect(Blessing.ROOSTING_FLOCK, player, state, room),
+
+  [Blessing.SHELL_ARMOR_BLESSING]: (player, state, room) =>
+    heroBlessingEffect(Blessing.SHELL_ARMOR_BLESSING, player, state, room),
 
   [Blessing.SPORE_CLOUDS]: (player) =>
     giftPokemonIfBenchHasRoom(player, Pkm.FLABEBE),

@@ -5188,11 +5188,11 @@
 		},
 		"QUIET_STRENGTH": {
 			"name": "Quiet Strength",
-			"description": "The strongest ally gains HP equal to your missing player HP at the start of combat. When under 25 player HP, this effect is doubled."
+			"description": "The STRONGEST ally gains HP equal to your missing player HP at the start of combat. When under 25 player HP, this effect is doubled."
 		},
 		"MISFORTUNE": {
 			"name": "Misfortune",
-			"description": "The strongest enemy loses % max HP equal to your missing player HP at the start of combat."
+			"description": "The STRONGEST enemy loses % max HP equal to your missing player HP at the start of combat."
 		},
 		"SYNCHRONISED_SPEED_I": {
 			"name": "Synchronised Speed I",
@@ -5212,7 +5212,7 @@
 		},
 		"RIVALRY": {
 			"name": "Rivalry",
-			"description": "When your strongest Pokémon gets a KO, it gains 2 permanent ATK if on your side of the board, or 10 permanent HP if on the enemy side of the board. If taken at stage 12, gain a RELIC_CROWN."
+			"description": "When your STRONGEST Pokémon gets a KO, it gains 2 permanent ATK if on your side of the board, or 10 permanent HP if on the enemy side of the board. If taken at stage 12, gain a RELIC_CROWN."
 		},
 		"SHINY_SAFEGUARD": {
 			"name": "Shiny Safeguard",
@@ -5256,7 +5256,7 @@
 		},
 		"DIGGING_EQUIPMENT": {
 			"name": "Digging Equipment",
-			"description": "GROUND Pokémon on fully dug holes will instead dig a random adjacent tile, prioritising holes closer to completion. Gain a Nidoran♂."
+			"description": "GROUND Pokémon on fully dug holes will instead dig a random ADJACENT tile, prioritising holes closer to completion. Gain a Nidoran♂."
 		},
 		"CRYSTAL_MUTATION": {
 			"name": "Crystal Mutation",
@@ -5296,7 +5296,7 @@
 		},
 		"BLOSSOM_FESTIVAL": {
 			"name": "Blossom Festival",
-			"description": "The Mulch gained from KO'd FLORA allies is doubled until you get Bellossom. Your strongest Bellossom gains GRASS synergy, its ability affects all enemies within attack range, and it gains 1 RANGE every 3 casts."
+			"description": "The Mulch gained from KO'd FLORA allies is doubled until you get Bellossom. Your STRONGEST Bellossom gains GRASS synergy, its ability affects all enemies within attack range, and it gains 1 RANGE every 3 casts."
 		},
 		"NOT_THE_BEES": {
 			"name": "Not the Bees!",
@@ -5304,7 +5304,7 @@
 		},
 		"ECHO_CHAMBER": {
 			"name": "Echo Chamber",
-			"description": "When a SOUND Pokémon casts, your strongest SOUND Pokémon gains 3 PP. When your strongest SOUND Pokémon casts, all allies gain 6 PP. Gain an Igglybuff."
+			"description": "When a SOUND Pokémon casts, your STRONGEST SOUND Pokémon gains 3 PP. When your STRONGEST SOUND Pokémon casts, all allies gain 6 PP. Gain an Igglybuff."
 		},
 		"LANGUAGE_BARRIER": {
 			"name": "Language Barrier",
@@ -5320,15 +5320,15 @@
 		},
 		"SEEING_TRIPLE": {
 			"name": "Seeing Triple",
-			"description": "Your strongest BUG Pokémon is cloned one extra time at the start of combat, for three copies in total. Gain a Grubbin."
+			"description": "Your STRONGEST BUG Pokémon is cloned one extra time at the start of combat, for three copies in total. Gain a Grubbin."
 		},
 		"SACRIFICE": {
 			"name": "Sacrifice",
-			"description": "At combat start, if MONSTER 2 is active, your strongest MONSTER Pokémon KOs the weakest ADJACENT ally. Gain a Bagon."
+			"description": "At combat start, if MONSTER 2 is active, your STRONGEST MONSTER Pokémon KOs the weakest ADJACENT ally. Gain a Bagon."
 		},
 		"DRAGON_KING": {
 			"name": "Dragon King",
-			"description": "When a DRAGON ally is KO'd, your strongest DRAGON Pokémon gains 5 SHIELD, 1 SPEED and 1 AP for each of the fallen ally's STAR. Gain a Charmander."
+			"description": "When a DRAGON ally is KO'd, your STRONGEST DRAGON Pokémon gains 5 SHIELD, 1 SPEED and 1 AP for each of the fallen ally's STAR. Gain a Charmander."
 		},
 		"ASCENSION": {
 			"name": "Ascension",
@@ -5408,11 +5408,27 @@
 		},
 		"ETERNAL_RAGE": {
 			"name": "Eternal Rage",
-			"description": "When a WILD Pokémon is KO'd, the strongest ADJACENT WILD ally is RAGE for 1/2/3 seconds, based on the KO'd ally's STAR level. Gain an Aipom."
+			"description": "When a WILD Pokémon is KO'd, the STRONGEST ADJACENT WILD ally is RAGE for 1/2/3 seconds, based on the KO'd ally's STAR level. Gain an Aipom."
 		},
 		"MISFITS": {
 			"name": "Misfits",
 			"description": "Allies with no active synergies gain 50 HP, 50 AP, 5 ATK, 5 DEF and 5 SPE_DEF."
+		},
+		"OLIVE_GARDEN": {
+			"name": "Olive Garden",
+			"description": "Gain a Dolliv. Your STRONGEST Smoliv starts combat with GRASS_FIELD, and also with PSYCHIC_FIELD, FAIRY_FIELD or ELECTRIC_FIELD if it has the matching synergy."
+		},
+		"ORBITAL_STRIKE": {
+			"name": "Orbital Strike",
+			"description": "Gain a Dottler. At the start of combat, your STRONGEST Blipbug gets +2 RANGE. Your STRONGEST other 1 RANGE Pokémon starts combat with PSYCHIC_FIELD."
+		},
+		"ROOSTING_FLOCK": {
+			"name": "Roosting Flock",
+			"description": "Gain a Tranquill and move to a random Pidove region if not in one. When your STRONGEST Pidove casts its ability, ADJACENT FLYING allies cast Roost as well."
+		},
+		"SHELL_ARMOR_BLESSING": {
+			"name": "Shell Armor",
+			"description": "Gain a Grotle and move to a random Turtwig region if not in one. Your STRONGEST Turtwig's passive also grants it 1/3/6 SPE_DEF upon receiving critical attacks."
 		}
 	},
 	"hide": "Hide",

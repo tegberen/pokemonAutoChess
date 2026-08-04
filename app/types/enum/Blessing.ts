@@ -1,3 +1,5 @@
+import { Pkm } from "./Pokemon"
+
 export enum BlessingTier {
   SILVER = "SILVER",
   GOLD = "GOLD",
@@ -112,6 +114,10 @@ export enum Blessing {
   ADDITIONAL_RETHINK_I = "ADDITIONAL_RETHINK_I",
   SAFARI_ENCOUNTER = "SAFARI_ENCOUNTER",
   GYARODOS_TRES_QUATRO = "GYARODOS_TRES_QUATRO",
+  OLIVE_GARDEN = "OLIVE_GARDEN",
+  ORBITAL_STRIKE = "ORBITAL_STRIKE",
+  ROOSTING_FLOCK = "ROOSTING_FLOCK",
+  SHELL_ARMOR_BLESSING = "SHELL_ARMOR_BLESSING",
   QUEST_REROLL = "QUEST_REROLL",
   QUEST_GROW = "QUEST_GROW",
   QUEST_SHINE = "QUEST_SHINE",
@@ -294,6 +300,31 @@ export const STAR_CROSSED_SEAS_ABILITY_POWER = 25
 export const HEX_MANIAC_STATUS_DURATION = 30000
 export const EXHAUSTING_FLAME_DAMAGE_MULTIPLIER = 0.8
 export const ETERNAL_RAGE_DURATION_PER_STAR = 1000
+export const ORBITAL_STRIKE_RANGE_BONUS = 2
+export const SHELL_ARMOR_SPE_DEF_BY_STARS = [1, 3, 6]
+
+/* the Pokemon each hero blessing gifts on pick, and the family whose strongest
+   fielded member the blessing then empowers every combat */
+export const HERO_BLESSING_GIFT: { [blessing in Blessing]?: Pkm } = {
+  [Blessing.OLIVE_GARDEN]: Pkm.DOLLIV,
+  [Blessing.ORBITAL_STRIKE]: Pkm.DOTTLER,
+  [Blessing.ROOSTING_FLOCK]: Pkm.TRANQUILL,
+  [Blessing.SHELL_ARMOR_BLESSING]: Pkm.GROTLE
+}
+
+export const HERO_BLESSING_FAMILY: { [blessing in Blessing]?: Pkm } = {
+  [Blessing.OLIVE_GARDEN]: Pkm.SMOLIV,
+  [Blessing.ORBITAL_STRIKE]: Pkm.BLIPBUG,
+  [Blessing.ROOSTING_FLOCK]: Pkm.PIDOVE,
+  [Blessing.SHELL_ARMOR_BLESSING]: Pkm.TURTWIG
+}
+
+/* hero blessings that also relocate the player to a region where their family
+   is findable */
+export const HERO_BLESSING_MOVES_REGION: Blessing[] = [
+  Blessing.ROOSTING_FLOCK,
+  Blessing.SHELL_ARMOR_BLESSING
+]
 
 export interface ScheduledBlessingGrant {
   stage: number

@@ -1,5 +1,6 @@
 import { getSellPrice } from "../models/shop"
 import type { IPokemon, IPokemonEntity } from "../types"
+import { Pkm, PkmFamily } from "../types/enum/Pokemon"
 import { pickRandomIn } from "../utils/random"
 
 export function getUnitScore(pokemon: IPokemonEntity | IPokemon) {
@@ -22,6 +23,14 @@ export function getStrongestUnit<T extends IPokemon | IPokemonEntity>(
   const pokemonScores = pokemons.map((pokemon) => getUnitScore(pokemon))
   const bestScore = Math.max(...pokemonScores)
   return pickRandomIn(pokemons.filter((p, i) => pokemonScores[i] === bestScore))
+}
+
+export function getStrongestUnitOfFamily<T extends IPokemon | IPokemonEntity>(
+  pokemons: T[],
+  family: Pkm
+): T | undefined {
+  const members = pokemons.filter((p) => PkmFamily[p.name] === family)
+  return members.length === 0 ? undefined : getStrongestUnit(members)
 }
 
 export function getStrongestUnits<T extends IPokemon | IPokemonEntity>(

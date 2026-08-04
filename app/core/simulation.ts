@@ -73,6 +73,8 @@ import {
   MISFITS_DEFENSE,
   MISFITS_MAX_HP,
   MISFITS_SPECIAL_DEFENSE,
+  HERO_BLESSING_FAMILY,
+  ORBITAL_STRIKE_RANGE_BONUS,
   POTENTIAL_ENERGY_SHIELD,
   POTENTIAL_ENERGY_SPEED,
   QUIET_STRENGTH_LOW_LIFE_THRESHOLD,
@@ -137,8 +139,20 @@ import {
 import { PokemonEntity } from "./pokemon-entity"
 import { DelayedCommand } from "./simulation-command"
 import { SpecialGameRule } from "../types/enum/SpecialGameRule"
-import { getStrongestUnit, getStrongestUnits, getUnitScore } from "./unit-score"
+import {
+  getStrongestUnit,
+  getStrongestUnitOfFamily,
+  getStrongestUnits,
+  getUnitScore
+} from "./unit-score"
 import { SeedEffects } from "./seeds"
+
+const FIELD_STATUS_BY_SYNERGY: [Synergy, (entity: PokemonEntity) => void][] = [
+  [Synergy.GRASS, (entity) => entity.status.addGrassField(entity)],
+  [Synergy.PSYCHIC, (entity) => entity.status.addPsychicField(entity)],
+  [Synergy.FAIRY, (entity) => entity.status.addFairyField(entity)],
+  [Synergy.ELECTRIC, (entity) => entity.status.addElectricField(entity)]
+]
 
 export default class Simulation extends Schema implements ISimulation {
   @type("string") weather: Weather = Weather.NEUTRAL
@@ -1582,6 +1596,44 @@ export default class Simulation extends Schema implements ISimulation {
             })
         })
       }
+
+      this.applyHeroBlessings(blessings, ownUnits)
+    }
+  }
+
+  applyHeroBlessings(blessings: Blessing[], ownUnits: PokemonEntity[]) {
+    const championOf = new Map<Blessing, PokemonEntity>()
+    blessings.forEach((blessing) => {
+      const family = HERO_BLESSING_FAMILY[blessing]
+      if (!family) return
+      const champion = getStrongestUnitOfFamily(ownUnits, family)
+      if (!champion) return
+      champion.heroBlessings.add(blessing)
+      champion.isBlessedHero = true
+      championOf.set(blessing, champion)
+    })
+
+    const oliveGardenChampion = championOf.get(Blessing.OLIVE_GARDEN)
+    if (oliveGardenChampion) {
+      FIELD_STATUS_BY_SYNERGY.forEach(([synergy, addField]) => {
+        if (oliveGardenChampion.types.has(synergy)) {
+          addField(oliveGardenChampion)
+        }
+      })
+    }
+
+    const orbitalStrikeChampion = championOf.get(Blessing.ORBITAL_STRIKE)
+    if (orbitalStrikeChampion) {
+      /* the melee unit is picked before the range buff, and never the Blipbug
+         itself: it is the one meant to be standing among enemies */
+      const meleeAllies = ownUnits.filter(
+        (ally) => ally.range === 1 && ally !== orbitalStrikeChampion
+      )
+      if (meleeAllies.length > 0) {
+        const fieldSpreader = getStrongestUnit(meleeAllies)
+        fieldSpreader.status.addPsychicField(fieldSpreader)
+      }
+      orbitalStrikeChampion.range += ORBITAL_STRIKE_RANGE_BONUS
     }
   }
 

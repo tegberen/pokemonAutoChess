@@ -783,6 +783,30 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     icon: "fishing_pole",
     grantsPokemonImmediately: false
   },
+  [Blessing.OLIVE_GARDEN]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: [4],
+    icon: "olive_garden",
+    grantsPokemonImmediately: true
+  },
+  [Blessing.ORBITAL_STRIKE]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: [4],
+    icon: "orbital_strike",
+    grantsPokemonImmediately: true
+  },
+  [Blessing.ROOSTING_FLOCK]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: [4],
+    icon: "roosting_flock",
+    grantsPokemonImmediately: true
+  },
+  [Blessing.SHELL_ARMOR_BLESSING]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: [4],
+    icon: "turtle_shell",
+    grantsPokemonImmediately: true
+  },
   [Blessing.POTION]: {
     tier: BlessingTier.SILVER,
     availableAtStages: [12],
@@ -909,18 +933,10 @@ function tierChancesForBlessingsUnderTest(): {
 export const BLESSING_TEST_MODE: boolean = true
 
 const BLESSINGS_UNDER_TEST: Blessing[] = [
-  Blessing.BABY_OPENER,
-  Blessing.SELECTIVE_GENETICS,
-  Blessing.REPLICATOR,
-  Blessing.FIND_A_LOST_WAND,
-  Blessing.FAST_FOOD_DELIVERY,
-  Blessing.CHEFS_GREED,
-  Blessing.BERRY_BREAKFAST,
-  Blessing.GEM_RUSH,
-  Blessing.DIGGING_EQUIPMENT,
-  Blessing.CRYSTAL_MUTATION,
-  Blessing.CRYSTAL_CLUSTERS,
-  Blessing.BERSERKER_HORDES
+  Blessing.OLIVE_GARDEN,
+  Blessing.ORBITAL_STRIKE,
+  Blessing.ROOSTING_FLOCK,
+  Blessing.SHELL_ARMOR_BLESSING
 ]
 
 function countBlessingsOfFamily(blessings: Blessing[], family?: string) {

@@ -62,6 +62,11 @@ export default class LoadingManager {
 
     scene.load.image("money", "/assets/icons/money.svg")
     scene.load.image("arrowDown", "/assets/ui/arrowDown.png")
+    // marker above the unit a hero blessing has chosen for this combat
+    scene.load.svg("blessed-hero", "/assets/ui/strongest.svg", {
+      width: 64,
+      height: 64
+    })
 
     // icons shown on floating damage numbers dealt by board effects (no
     // attacker). Use load.svg (not load.image) so the transparent background is
