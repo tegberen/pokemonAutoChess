@@ -12,6 +12,8 @@ import {
 } from "../types"
 import { Awakening } from "../types/enum/Awakening"
 import {
+  AURORA_BOREALIS_DAMAGE_REDUCTION,
+  AURORA_BOREALIS_DAMAGE_REDUCTION_IN_SNOW_OR_NIGHT,
   Blessing,
   BRACE_FOR_IMPACT_MAX_HP_RATIO,
   CONTEMPT_DAMAGE_MULTIPLIER,
@@ -716,6 +718,20 @@ export default abstract class PokemonState {
           reducedDamage,
           Math.ceil(pokemon.maxHP * BRACE_FOR_IMPACT_MAX_HP_RATIO)
         )
+      }
+
+      if (
+        pokemon.isAuroraBorealisProtected &&
+        (attackType === AttackType.PHYSICAL ||
+          attackType === AttackType.SPECIAL)
+      ) {
+        const weather = pokemon.simulation.weather
+        const reduction =
+          (weather === Weather.SNOW || weather === Weather.NIGHT
+            ? AURORA_BOREALIS_DAMAGE_REDUCTION_IN_SNOW_OR_NIGHT
+            : AURORA_BOREALIS_DAMAGE_REDUCTION) +
+          pokemon.auroraBorealisSynergyBonus
+        reducedDamage = Math.ceil(reducedDamage * (1 - reduction))
       }
 
       if (attackType === AttackType.PHYSICAL) {

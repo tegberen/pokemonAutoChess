@@ -179,6 +179,9 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
   isDragonKingChampionThisFight: boolean = false
   isMegaSolAuraSource: boolean = false
   heroBlessings = new Set<Blessing>()
+  hasOwnSpotlight: boolean = false
+  auroraBorealisSynergyBonus: number = 0
+  isAuroraBorealisProtected: boolean = false
 
   constructor(
     pokemon: IPokemon,
@@ -343,6 +346,7 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
   }
 
   get inSpotlight(): boolean {
+    if (this.hasOwnSpotlight) return true
     if (!this.player) return false
     const { lightX, lightY } = this.player
     const { positionX, positionY } = this.refToBoardPokemon

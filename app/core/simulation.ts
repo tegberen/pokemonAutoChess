@@ -74,6 +74,7 @@ import {
   MISFITS_MAX_HP,
   MISFITS_SPECIAL_DEFENSE,
   HERO_BLESSING_FAMILY,
+  AURORA_BOREALIS_REDUCTION_PER_ACTIVE_SYNERGY,
   FROST_GEAR_HP_COST_RATIO,
   FROST_GEAR_MAX_PP,
   FROST_GEAR_RANGE_BONUS,
@@ -1605,11 +1606,19 @@ export default class Simulation extends Schema implements ISimulation {
       }
 
       player.plunderGoldSpentThisFight = 0
-      this.applyHeroBlessings(blessings, ownUnits)
+      this.applyHeroBlessings(
+        blessings,
+        ownUnits,
+        teamIndex === Team.BLUE_TEAM ? this.blueEffects : this.redEffects
+      )
     }
   }
 
-  applyHeroBlessings(blessings: Blessing[], ownUnits: PokemonEntity[]) {
+  applyHeroBlessings(
+    blessings: Blessing[],
+    ownUnits: PokemonEntity[],
+    teamEffects: Set<EffectEnum>
+  ) {
     const championOf = new Map<Blessing, PokemonEntity>()
     blessings.forEach((blessing) => {
       const family = HERO_BLESSING_FAMILY[blessing]
@@ -1682,6 +1691,31 @@ export default class Simulation extends Schema implements ISimulation {
     if (shuttleBusChampion) {
       shuttleBusChampion.maxPP = SHUTTLE_BUS_MAX_PP
       shuttleBusChampion.pp = SHUTTLE_BUS_MAX_PP
+    }
+
+    const radianceChampion = championOf.get(Blessing.RADIANCE)
+    if (radianceChampion) {
+      radianceChampion.types.add(Synergy.LIGHT)
+      /* its own spotlight, so it does not compete with the player's single
+         light spot on the board */
+      radianceChampion.hasOwnSpotlight = true
+      radianceChampion.status.light = true
+      /* the team's Light effects were handed out earlier in applyPostEffects,
+         when this unit was not yet spotlighted, so replay the active ones */
+      SynergyTiers[Synergy.LIGHT].filter((lightEffect) =>
+        teamEffects.has(lightEffect)
+      ).forEach((lightEffect) => this.applyEffect(radianceChampion, lightEffect))
+    }
+
+    const auroraBorealisChampion = championOf.get(Blessing.AURORA_BOREALIS)
+    if (auroraBorealisChampion) {
+      const synergyBonus =
+        (auroraBorealisChampion.player?.synergies.countActiveSynergies() ?? 0) *
+        AURORA_BOREALIS_REDUCTION_PER_ACTIVE_SYNERGY
+      ownUnits.forEach((ally) => {
+        ally.isAuroraBorealisProtected = true
+        ally.auroraBorealisSynergyBonus = synergyBonus
+      })
     }
   }
 

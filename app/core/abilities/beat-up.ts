@@ -1,6 +1,11 @@
 import PokemonFactory from "../../models/pokemon-factory"
+import {
+  Blessing,
+  PACK_ATTACK_HOUNDOOM_CHANCE
+} from "../../types/enum/Blessing"
 import { Pkm } from "../../types/enum/Pokemon"
 import { min } from "../../utils/number"
+import { chance } from "../../utils/random"
 import type { Board } from "../board"
 import type { PokemonEntity } from "../pokemon-entity"
 import { AbilityStrategy } from "./ability-strategy"
@@ -10,9 +15,12 @@ export class BeatUpStrategy extends AbilityStrategy {
   process(pokemon: PokemonEntity, board: Board, target: null, crit: boolean) {
     super.process(pokemon, board, target, crit)
     const nbSpawns = [1, 2, 3, 5][pokemon.stars - 1] ?? 5
+    const canSpawnHoundoom = pokemon.heroBlessings?.has(Blessing.PACK_ATTACK)
     for (let i = 0; i < nbSpawns; i++) {
       const houndour = PokemonFactory.createPokemonFromName(
-        Pkm.HOUNDOUR,
+        canSpawnHoundoom && chance(PACK_ATTACK_HOUNDOOM_CHANCE, pokemon)
+          ? Pkm.HOUNDOOM
+          : Pkm.HOUNDOUR,
         pokemon.player
       )
       const coord =

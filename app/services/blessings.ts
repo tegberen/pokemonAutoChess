@@ -1095,6 +1095,18 @@ export const blessingEffectService: {
     return true
   },
 
+  [Blessing.FROST_BURST]: (player, state, room) =>
+    heroBlessingEffect(Blessing.FROST_BURST, player, state, room),
+
+  [Blessing.AURORA_BOREALIS]: (player, state, room) =>
+    heroBlessingEffect(Blessing.AURORA_BOREALIS, player, state, room),
+
+  [Blessing.RADIANCE]: (player, state, room) =>
+    heroBlessingEffect(Blessing.RADIANCE, player, state, room),
+
+  [Blessing.PACK_ATTACK]: (player, state, room) =>
+    heroBlessingEffect(Blessing.PACK_ATTACK, player, state, room),
+
   [Blessing.MORTAR_SHELLS]: (player, state, room) =>
     heroBlessingEffect(Blessing.MORTAR_SHELLS, player, state, room),
 

@@ -5426,6 +5426,22 @@
 			"name": "Roosting Flock",
 			"description": "Gain a Tranquill and move to a random Pidove region if not in one. When your STRONGEST Pidove casts its ability, ADJACENT FLYING allies cast Roost as well."
 		},
+		"FROST_BURST": {
+			"name": "Frost Burst",
+			"description": "Gain a Snover and move to a random Snover region if not in one. When your STRONGEST Snover's ability KO's an enemy, 50% of the damage is dealt to ADJACENT enemies, which can also execute at half the chance. This effect cannot chain."
+		},
+		"AURORA_BOREALIS": {
+			"name": "Aurora Borealis",
+			"description": "Gain an Amaura and add it to the pool. While you field an Amaura, your team takes 10% less PHYSICAL and SPECIAL damage, increased to 15% in SNOW or NIGHT, plus 1% per active synergy."
+		},
+		"RADIANCE": {
+			"name": "Radiance",
+			"description": "Gain a Larvesta and add it to the pool. Your STRONGEST Larvesta gains the LIGHT synergy, and starts combat with its own spotlight."
+		},
+		"PACK_ATTACK": {
+			"name": "Pack Attack",
+			"description": "Gain a Houndour and add it to the pool. Each Houndour summoned by your STRONGEST Houndour's ability has a 20% chance to be a Houndoom instead."
+		},
 		"MORTAR_SHELLS": {
 			"name": "Mortar Shells",
 			"description": "Gain a Magby. Your STRONGEST Magby gains +3 RANGE and +100% base ATK, but has 50% reduced SPEED."
