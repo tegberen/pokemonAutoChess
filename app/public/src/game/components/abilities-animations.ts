@@ -889,6 +889,13 @@ export const AbilitiesAnimations: {
     scale: 3,
     hitAnim: onTarget({ ability: "PUFF_GREEN", scale: 1 })
   }),
+  // soul fragment travelling back to the caster, for the SOUL_DRAIN blessing
+  ["GHOST_RANGE"]: projectile({
+    ability: "GHOST/range",
+    textureKey: "attacks",
+    duration: 600,
+    scale: 1.5
+  }),
   [Ability.AQUA_STEP]: onCaster({
     ability: Ability.AQUA_STEP,
     scale: 1.5,

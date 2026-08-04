@@ -324,7 +324,7 @@ export const SHELL_ARMOR_SPE_DEF_BY_STARS = [1, 3, 6]
 
 export const SOUL_DRAIN_HEAL = 20
 export const SOUL_DRAIN_FRAGMENTS_ON_KILL = 2
-export const FLOWER_QUEEN_MAX_PP_REDUCTION = 5
+export const FLOWER_QUEEN_MAX_PP_REDUCTION = 4
 export const FLOWER_QUEEN_MIN_MAX_PP = 10
 
 export const LEAF_TORNADO_BOUNCES = 2
@@ -376,7 +376,9 @@ export const HERO_BLESSING_GIFT: { [blessing in Blessing]?: Pkm } = {
   [Blessing.LEAF_TORNADO]: Pkm.SNIVY,
   [Blessing.MARIACHI_MAYHEM]: Pkm.LOTAD,
   [Blessing.ICEBREAKER]: Pkm.PIPLUP,
-  [Blessing.RAMPAGE]: Pkm.DEINO
+  [Blessing.RAMPAGE]: Pkm.DEINO,
+  [Blessing.SOUL_DRAIN]: Pkm.LITWICK,
+  [Blessing.FLOWER_QUEEN]: Pkm.FLOETTE
 }
 
 export const HERO_BLESSING_FAMILY: { [blessing in Blessing]?: Pkm } = {
@@ -396,7 +398,9 @@ export const HERO_BLESSING_FAMILY: { [blessing in Blessing]?: Pkm } = {
   [Blessing.LEAF_TORNADO]: Pkm.SNIVY,
   [Blessing.MARIACHI_MAYHEM]: Pkm.LOTAD,
   [Blessing.ICEBREAKER]: Pkm.PIPLUP,
-  [Blessing.RAMPAGE]: Pkm.DEINO
+  [Blessing.RAMPAGE]: Pkm.DEINO,
+  [Blessing.SOUL_DRAIN]: Pkm.LITWICK,
+  [Blessing.FLOWER_QUEEN]: Pkm.FLABEBE
 }
 
 /* hero blessings that also relocate the player to a region where their family

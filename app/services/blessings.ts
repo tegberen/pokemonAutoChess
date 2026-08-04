@@ -56,6 +56,7 @@ import {
   BLESSING_SYNERGY_GATED_STAGE,
   SYNERGIES_WITH_BLESSINGS
 } from "../config/game/blessings"
+import { getAltFormForPlayer } from "../config/game/pokemons"
 import {
   getFirstAvailablePositionInBench,
   getFreeSpaceOnBench
@@ -520,7 +521,12 @@ function heroBlessingEffect(
   room?: GameRoom
 ): boolean {
   const gift = HERO_BLESSING_GIFT[blessing]
-  if (gift && giftPokemonIfBenchHasRoom(player, gift) === false) return false
+  if (
+    gift &&
+    giftPokemonIfBenchHasRoom(player, getAltFormForPlayer(gift, player)) ===
+      false
+  )
+    return false
   const family = HERO_BLESSING_FAMILY[blessing]
   if (!family) return true
 
@@ -1092,6 +1098,16 @@ export const blessingEffectService: {
       player.regions.push(newMap)
       player.updateRegionalPool(state, true, previousMap)
     }, LAPRAS_TRAVEL_DURATION)
+    return true
+  },
+
+  [Blessing.SOUL_DRAIN]: (player, state, room) =>
+    heroBlessingEffect(Blessing.SOUL_DRAIN, player, state, room),
+
+  [Blessing.FLOWER_QUEEN]: (player, state, room) => {
+    if (heroBlessingEffect(Blessing.FLOWER_QUEEN, player, state, room) === false)
+      return false
+    player.items.push(Item.METRONOME)
     return true
   },
 

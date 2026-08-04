@@ -75,6 +75,8 @@ import {
   MISFITS_SPECIAL_DEFENSE,
   HERO_BLESSING_FAMILY,
   AURORA_BOREALIS_REDUCTION_PER_ACTIVE_SYNERGY,
+  FLOWER_QUEEN_MAX_PP_REDUCTION,
+  FLOWER_QUEEN_MIN_MAX_PP,
   LEAF_TORNADO_BOUNCES,
   LEAF_TORNADO_DAMAGE_RATIO,
   MARIACHI_MAYHEM_CONFUSION_DURATION,
@@ -157,6 +159,7 @@ import {
   getUnitScore
 } from "./unit-score"
 import { SeedEffects } from "./seeds"
+import { getAltFormForPlayer } from "../config/game/pokemons"
 
 const FIELD_STATUS_BY_SYNERGY: [Synergy, (entity: PokemonEntity) => void][] = [
   [Synergy.GRASS, (entity) => entity.status.addGrassField(entity)],
@@ -1612,7 +1615,8 @@ export default class Simulation extends Schema implements ISimulation {
       this.applyHeroBlessings(
         blessings,
         ownUnits,
-        teamIndex === Team.BLUE_TEAM ? this.blueEffects : this.redEffects
+        teamIndex === Team.BLUE_TEAM ? this.blueEffects : this.redEffects,
+        player
       )
     }
   }
@@ -1620,13 +1624,19 @@ export default class Simulation extends Schema implements ISimulation {
   applyHeroBlessings(
     blessings: Blessing[],
     ownUnits: PokemonEntity[],
-    teamEffects: Set<EffectEnum>
+    teamEffects: Set<EffectEnum>,
+    player: Player
   ) {
     const championOf = new Map<Blessing, PokemonEntity>()
     blessings.forEach((blessing) => {
       const family = HERO_BLESSING_FAMILY[blessing]
       if (!family) return
-      const champion = getStrongestUnitOfFamily(ownUnits, family)
+      /* alt forms are their own family: the player's Flabebe colour is decided
+         by their first flower pot, so the champion must be resolved per player */
+      const champion = getStrongestUnitOfFamily(
+        ownUnits,
+        getAltFormForPlayer(family, player)
+      )
       if (!champion) return
       champion.heroBlessings.add(blessing)
       champion.isBlessedHero = true
@@ -1730,6 +1740,18 @@ export default class Simulation extends Schema implements ISimulation {
                 )
               }
             })
+        })
+      )
+    }
+
+    const flowerQueenChampion = championOf.get(Blessing.FLOWER_QUEEN)
+    if (flowerQueenChampion) {
+      flowerQueenChampion.effectsSet.add(
+        new OnAbilityCastEffect((caster) => {
+          caster.maxPP = Math.max(
+            FLOWER_QUEEN_MIN_MAX_PP,
+            caster.maxPP - FLOWER_QUEEN_MAX_PP_REDUCTION
+          )
         })
       )
     }

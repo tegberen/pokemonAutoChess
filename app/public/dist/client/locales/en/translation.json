@@ -5426,6 +5426,14 @@
 			"name": "Roosting Flock",
 			"description": "Gain a Tranquill and move to a random Pidove region if not in one. When your STRONGEST Pidove casts its ability, ADJACENT FLYING allies cast Roost as well."
 		},
+		"SOUL_DRAIN": {
+			"name": "Soul Drain",
+			"description": "Gain a Litwick. Your STRONGEST Litwick's ability cast pulls a Soul Fragment from the target, healing allies it travels through for [20,SP] HP. Two Fragments are pulled if the ability KO's the target."
+		},
+		"FLOWER_QUEEN": {
+			"name": "Flower Queen",
+			"description": "Gain a METRONOME and a Floette. Your STRONGEST Flabebe reduces its max PP by 4 after each cast."
+		},
 		"LEAF_TORNADO": {
 			"name": "Leaf Tornado",
 			"description": "Gain a Snivy. Your STRONGEST Snivy's attacks ricochet to up to 2 additional enemies, the damage halving with each bounce."
