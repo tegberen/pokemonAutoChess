@@ -38,8 +38,10 @@ import {
 } from "../../config/game/blessings"
 import {
   applyBlessingTrigger,
+  applyRecurringBlessingGrants,
   applyScheduledBlessingGrants,
-  checkBlessingQuests
+  checkBlessingQuests,
+  checkIndecisionSynergies
 } from "../../services/blessings"
 import {
   buildScribbleShapeBag,
@@ -61,7 +63,7 @@ import {
   grantBazaarOffer
 } from "../../core/bazaar"
 import { PassiveEffects } from "../../core/effects/passives"
-import { SynergyEffects } from "../../core/effects/synergies"
+import { groundDigEffect, SynergyEffects } from "../../core/effects/synergies"
 import { giveRandomEgg } from "../../core/eggs"
 import { EvolutionManager } from "../../core/evolution-logic/evolution-manager"
 import { getFlowerPotsUnlocked } from "../../core/flower-pots"
@@ -115,6 +117,7 @@ import {
   BLESSING_REROLLS_PER_OPTION,
   BLESSING_SELECTION_STAGES,
   BlessingTrigger,
+  countsForTeamSize,
   PRISMATIC_REROLL_CHANCE,
   PRISMATIC_REROLL_FREE_ROLLS
 } from "../../types/enum/Blessing"
@@ -295,7 +298,12 @@ export class OnBuyPokemonCommand extends Command<
       pokemon.evolutionRule.type === EvolutionRuleType.COUNT &&
       EvolutionManager.canEvolveIfGettingOne(pokemon, player)
 
-    const cost = getBuyPrice(name, this.state.specialGameRule, player)
+    const isAllFoursFreeBuy =
+      player.allFoursFreeBuyPending &&
+      getPokemonData(name).rarity === Rarity.EPIC
+    const cost = isAllFoursFreeBuy
+      ? 0
+      : getBuyPrice(name, this.state.specialGameRule, player)
     const freeSpaceOnBench = getFreeSpaceOnBench(player.board)
     const hasSpaceOnBench = freeSpaceOnBench > 0 || isEvolution
 
@@ -303,6 +311,35 @@ export class OnBuyPokemonCommand extends Command<
     if (!canBuy) return
 
     player.money -= cost
+    if (isAllFoursFreeBuy) player.allFoursFreeBuyPending = false
+
+    /* HYPER_HYPER_ROLL mints the 3-star outright: the 8 extra copies are never
+       taken from the shared pool, so the lobby's common lines are untouched */
+    if (
+      player.hyperHyperRollPending &&
+      getPokemonData(name).rarity === Rarity.COMMON
+    ) {
+      const secondStage = EvolutionManager.getEvolution(
+        pokemon,
+        player,
+        this.state.stageLevel
+      )
+      if (secondStage !== pokemon.name) {
+        const secondStagePokemon = PokemonFactory.createPokemonFromName(
+          secondStage,
+          player
+        )
+        const thirdStage = EvolutionManager.getEvolution(
+          secondStagePokemon,
+          player,
+          this.state.stageLevel
+        )
+        if (thirdStage !== secondStage) {
+          player.hyperHyperRollPending = false
+          pokemon = PokemonFactory.createPokemonFromName(thirdStage, player)
+        }
+      }
+    }
 
     const x = getFirstAvailablePositionInBench(player.board)
     pokemon.positionX = x !== null ? x : -1
@@ -462,7 +499,7 @@ function sendPokemonToPartner(
   // Remove from sender's board
   sender.board.delete(pokemon.id)
   sender.updateSynergies()
-  sender.boardSize = room.getTeamSize(sender.board)
+  sender.boardSize = room.getTeamSize(sender.board, sender.blessings)
 
   // Place Pokemon on partner's bench
   room.clock.setTimeout(() => {
@@ -492,7 +529,7 @@ function sendPokemonToPartner(
     pokemon.positionY = 0
     partner.board.set(pokemon.id, pokemon)
     partner.updateSynergies()
-    partner.boardSize = room.getTeamSize(partner.board)
+    partner.boardSize = room.getTeamSize(partner.board, partner.blessings)
     room.checkEvolutionsAfterPokemonAcquired(partner.id)
   }, 500)
 }
@@ -691,7 +728,7 @@ export class OnDragDropPokemonCommand extends Command<
           success = this.swapPokemonPositions(player, pokemon, x, y)
         } else if (this.state.phase == GamePhaseState.PICK) {
           // On pick, allow to drop on / from board
-          const teamSize = this.room.getTeamSize(player.board)
+          const teamSize = this.room.getTeamSize(player.board, player.blessings)
           const isBoardFull =
             teamSize >=
             getMaxTeamSize(
@@ -700,6 +737,10 @@ export class OnDragDropPokemonCommand extends Command<
             )
           const dropToEmptyPlace = isPositionEmpty(x, y, player.board)
           const target = player.getPokemonAt(x, y)
+          // swapping onto a unit that is free to field would raise the count by one
+          const targetIsExemptFromTeamSize =
+            target != null &&
+            countsForTeamSize(target, player.blessings) === false
 
           if (dropOnBench) {
             if (
@@ -711,7 +752,7 @@ export class OnDragDropPokemonCommand extends Command<
               !(
                 isBoardFull &&
                 target &&
-                pokemon?.doesCountForTeamSize === false
+                countsForTeamSize(pokemon, player.blessings) === false
               )
             ) {
               // From board to bench (bench to bench is already handled)
@@ -726,13 +767,9 @@ export class OnDragDropPokemonCommand extends Command<
               dropFromBench &&
               dropToEmptyPlace &&
               isBoardFull &&
-              pokemon.doesCountForTeamSize
+              countsForTeamSize(pokemon, player.blessings)
             ) &&
-            !(
-              dropFromBench &&
-              isBoardFull &&
-              target?.doesCountForTeamSize === false
-            )
+            !(dropFromBench && isBoardFull && targetIsExemptFromTeamSize)
           ) {
             // Prevents a pokemon to go on the board only if it's adding a pokemon from the bench on a full board
             success = this.swapPokemonPositions(player, pokemon, x, y)
@@ -750,7 +787,7 @@ export class OnDragDropPokemonCommand extends Command<
       if (success) {
         player.updateSynergies()
         checkRainbowHourReward(player)
-        player.boardSize = this.room.getTeamSize(player.board)
+        player.boardSize = this.room.getTeamSize(player.board, player.blessings)
       }
     }
     if (commands.length > 0) {
@@ -824,7 +861,7 @@ export class OnSwitchBenchAndBoardCommand extends Command<
 
     if (pokemon.positionY === 0) {
       // pokemon is on bench, switch to board
-      const teamSize = this.room.getTeamSize(player.board)
+      const teamSize = this.room.getTeamSize(player.board, player.blessings)
       const isBoardFull =
         teamSize >=
         getMaxTeamSize(
@@ -840,7 +877,7 @@ export class OnSwitchBenchAndBoardCommand extends Command<
         !isPokemonManifestationLocked(player, pokemon.id) &&
         !isUniqueFieldCapReached(player, pokemon) &&
         destination &&
-        !(isBoardFull && pokemon.doesCountForTeamSize)
+        !(isBoardFull && countsForTeamSize(pokemon, player.blessings))
       ) {
         const [x, y] = destination
         const oldX = pokemon.positionX
@@ -881,7 +918,7 @@ export class OnSwitchBenchAndBoardCommand extends Command<
     }
 
     player.updateSynergies()
-    player.boardSize = this.room.getTeamSize(player.board)
+    player.boardSize = this.room.getTeamSize(player.board, player.blessings)
   }
 }
 
@@ -1457,7 +1494,12 @@ export class OnSellPokemonCommand extends Command<
       isManifested ||
       (getUniqueFieldCap(player) !== null && pokemon.rarity === Rarity.UNIQUE)
         ? 0
-        : getSellPrice(pokemon, this.state.specialGameRule)
+        : getSellPrice(
+            pokemon,
+            this.state.specialGameRule,
+            false,
+            player.blessings
+          )
     player.addMoney(sellPrice, false, null)
     pokemon.items.forEach((it) => {
       player.items.push(it)
@@ -1470,7 +1512,7 @@ export class OnSellPokemonCommand extends Command<
       // as "charging").
       player.updateWeatherRocks()
     }
-    player.boardSize = this.room.getTeamSize(player.board)
+    player.boardSize = this.room.getTeamSize(player.board, player.blessings)
     pokemon.afterSell(player)
   }
 }
@@ -2160,10 +2202,28 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
               pokemons,
               items,
               items2,
-              canReroll: this.state.hasBlessing(
+              canReroll:
+                this.state.hasBlessing(
+                  player.id,
+                  Blessing.ADDITIONAL_RETHINK_I
+                ) ||
+                this.state.hasBlessing(
+                  player.id,
+                  Blessing.ADDITIONAL_RETHINK_II
+                ),
+              // Rethink II rerolls each pokemon and item slot independently
+              rerollableSlots: this.state.hasBlessing(
                 player.id,
-                Blessing.ADDITIONAL_RETHINK_I
+                Blessing.ADDITIONAL_RETHINK_II
               )
+                ? pokemons.map(() => true)
+                : [],
+              rerollableItemSlots: this.state.hasBlessing(
+                player.id,
+                Blessing.ADDITIONAL_RETHINK_II
+              )
+                ? items.map(() => true)
+                : []
             })
           )
           remainingAddPicks--
@@ -2184,6 +2244,7 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
     this.state.players.forEach((player: Player) => {
       if (!player.alive) return
       applyScheduledBlessingGrants(player, this.state)
+      applyRecurringBlessingGrants(player, this.state)
       checkBlessingQuests(player, this.state)
       if (ItemCarouselStages.includes(this.state.stageLevel)) {
         applyBlessingTrigger(player, this.state, BlessingTrigger.CAROUSEL_END)
@@ -2530,6 +2591,9 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
         p.pokemon.items = new SetSchema<Item>(schemaValues(p.pokemon.items))
 
         this.room.checkEvolutionsAfterPokemonAcquired(player.id)
+        if (player.blessings?.includes(Blessing.TRAINING_MONTAGE)) {
+          player.items.push(Item.BRONZE_DOJO_TICKET)
+        }
         player.pokemonsTrainingInDojo.splice(
           player.pokemonsTrainingInDojo.indexOf(p),
           1
@@ -2543,6 +2607,15 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
       .flatMap((synergyTier: EffectEnum) => SynergyEffects[synergyTier])
       .filter((p) => p instanceof OnStageStartEffect)
       .forEach((effect) => effect.apply({ player, room: this.room }))
+
+    /* TREASURE_TRAIL digs with the strongest ally even without Ground. Skipped
+       when Ground is active, since the loop above already ran the same effect */
+    if (
+      player.blessings?.includes(Blessing.TREASURE_TRAIL) &&
+      getSynergyTier(player.synergies, Synergy.GROUND) === 0
+    ) {
+      groundDigEffect.apply({ player, room: this.room })
+    }
 
     // Pokemon effects on stage start
     board.forEach((pokemon) => {
@@ -2614,7 +2687,7 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
     this.state.players.forEach((player, key) => {
       if (player.isBot) return
 
-      const teamSize = this.room.getTeamSize(player.board)
+      const teamSize = this.room.getTeamSize(player.board, player.blessings)
       const maxTeamSize = getMaxTeamSize(
         player.experienceManager.level,
         this.state.specialGameRule
@@ -2629,7 +2702,10 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
                 p.canBePlaced &&
                 !isPokemonManifestationLocked(player, p.id) &&
                 !isUniqueFieldCapReached(player, p) &&
-                p.action !== PokemonActionState.EXPLORING
+                p.action !== PokemonActionState.EXPLORING &&
+                /* TEMPLE_OF_LANGUAGE Unown are free to field, so autofill would
+                   otherwise dump every one of them onto the board */
+                countsForTeamSize(p, player.blessings)
             )
             .sort((a, b) => a.positionX - b.positionX)[0]
           if (pokemon) {
@@ -2660,7 +2736,7 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
         }
         if (numberOfPokemonsToMove > 0) {
           player.updateSynergies()
-          player.boardSize = this.room.getTeamSize(player.board)
+          player.boardSize = this.room.getTeamSize(player.board, player.blessings)
         }
       }
     })
@@ -3032,6 +3108,9 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
     this.state.players.forEach((player: Player) => {
       if (player.alive) {
         player.registerPlayedPokemons()
+        /* QUEST_INDECISION banks synergies off the locked combat board, not the
+           picking phase, so rotating synergies between rounds still counts */
+        checkIndecisionSynergies(player)
       }
     })
 
@@ -3460,7 +3539,7 @@ export class OnOverwriteBoardCommand extends Command<GameRoom> {
       player.board.set(pokemon.id, pokemon)
     })
     player.updateSynergies()
-    player.boardSize = this.room.getTeamSize(player.board)
+    player.boardSize = this.room.getTeamSize(player.board, player.blessings)
   }
 }
 

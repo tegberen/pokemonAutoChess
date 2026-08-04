@@ -62,6 +62,9 @@ export interface GameStateStore {
   emotesUnlocked: Emotion[]
   additionalPokemons: Pkm[]
   blessingsByPlayerId: { [playerId: string]: Blessing[] }
+  blessingQuestProgressByPlayerId: {
+    [playerId: string]: { [blessing: string]: number }
+  }
   blessingsEnabled: boolean
   podium: ILeaderboardInfo[]
   doubleUpChampions: ILeaderboardInfo[]
@@ -103,6 +106,7 @@ const initialState: GameStateStore = {
   emotesUnlocked: [],
   additionalPokemons: new Array<Pkm>(),
   blessingsByPlayerId: {},
+  blessingQuestProgressByPlayerId: {},
   blessingsEnabled: false,
   specialGameRule: null,
   podium: new Array<ILeaderboardInfo>(),
@@ -225,10 +229,18 @@ export const gameSlice: Slice<GameStateStore> = createSlice({
     },
     setPlayerBlessings: (
       state,
-      action: PayloadAction<{ playerId: string; blessings: Blessing[] }>
+      action: PayloadAction<{
+        playerId: string
+        blessings: Blessing[]
+        questProgress?: { [blessing: string]: number }
+      }>
     ) => {
       state.blessingsByPlayerId[action.payload.playerId] =
         action.payload.blessings
+      if (action.payload.questProgress) {
+        state.blessingQuestProgressByPlayerId[action.payload.playerId] =
+          action.payload.questProgress
+      }
     },
     setSynergies: (
       state,

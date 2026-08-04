@@ -100,7 +100,8 @@ export function computeSynergies(
   bonusSynergies?: Map<Synergy, number>,
   specialGameRule?: SpecialGameRule | null,
   avatarSynergy?: Synergy | null,
-  separateEeveelutions?: boolean
+  // families whose members each contribute their synergies instead of counting once
+  separateFamilies?: Pkm[]
 ): Map<Synergy, number> {
   const synergies = new Map<Synergy, number>()
   Object.keys(Synergy).forEach((key) => {
@@ -140,11 +141,11 @@ export function computeSynergies(
       }
     }
     if (pkm.positionY != 0) {
-      /* RAINBOW_HOUR borrows the FAMILY_OUTING trick for the Eevee line only:
-         a unique family key per unit means each eeveelution contributes */
+      /* RAINBOW_HOUR and BEAUTY_CONTEST borrow the FAMILY_OUTING trick for one
+         line each: a unique family key per unit means every member contributes */
       const family =
         specialGameRule === SpecialGameRule.FAMILY_OUTING ||
-        (separateEeveelutions && PkmFamily[pkm.name] === Pkm.EEVEE)
+        separateFamilies?.includes(PkmFamily[pkm.name])
           ? `pkm${index}`
           : PkmFamily[pkm.name]
       if (!typesPerFamily.has(family)) typesPerFamily.set(family, new Set())

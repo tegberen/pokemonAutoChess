@@ -19,6 +19,11 @@ export type PlayerChoiceType =
   // reward kinds in `rewards`; any rolled gem in `items[0]`, components in `items2`
   | "evolution_lab_reward"
   | "blessing"
+  /* SINGULARITY_I/II and STARTER_CHOICE need their own types: the generic item
+     and starter branches grant the pick and forget it, but these have to record
+     what was chosen so later stages can re-grant the same thing */
+  | "singularity"
+  | "starter_choice"
 
 export class PlayerChoice extends Schema {
   @type("string") id: string
@@ -35,6 +40,8 @@ export class PlayerChoice extends Schema {
   @type(["string"]) blessings: Blessing[] = []
   @type(["string"]) rerollCandidates: Blessing[] = []
   @type(["boolean"]) rerollableSlots: boolean[] = []
+  // ADDITIONAL_RETHINK_II: item slots reroll independently of pokemon slots
+  @type(["boolean"]) rerollableItemSlots: boolean[] = []
   @type("boolean") canReroll: boolean = false
   // server-only: every blessing ever shown in this selection, so family caps and
   // duplicate exclusion survive the choice being replaced on each reroll
@@ -53,6 +60,7 @@ export class PlayerChoice extends Schema {
     blessings?: Blessing[]
     rerollCandidates?: Blessing[]
     rerollableSlots?: boolean[]
+    rerollableItemSlots?: boolean[]
     canReroll?: boolean
   }) {
     super()
@@ -69,6 +77,8 @@ export class PlayerChoice extends Schema {
     if (args.blessings) this.blessings = args.blessings
     if (args.rerollCandidates) this.rerollCandidates = args.rerollCandidates
     if (args.rerollableSlots) this.rerollableSlots = args.rerollableSlots
+    if (args.rerollableItemSlots)
+      this.rerollableItemSlots = args.rerollableItemSlots
     if (args.canReroll) this.canReroll = args.canReroll
   }
 }

@@ -1,5 +1,6 @@
 import { Schema, type } from "@colyseus/schema"
 import { CC_COOLDOWN, FIGHTING_PHASE_DURATION, ItemStats } from "../../config"
+import { Blessing } from "../../types/enum/Blessing"
 import type { Board } from "../../core/board"
 import { transformToIceFace } from "../../core/effects/passives"
 import type { PokemonEntity } from "../../core/pokemon-entity"
@@ -36,6 +37,9 @@ export default class Status extends Schema implements IStatus {
   @type("boolean") wound = false
   @type("boolean") resurrection = false
   @type("boolean") resurrecting = false
+  /* IMPENDING_DOOM: server-only, set on the doom owner's enemies. Blocks
+     protect, rune protect and resurrection for the rest of the fight. */
+  doomed = false
   @type("boolean") paralysis = false
   @type("boolean") pokerus = false
   @type("boolean") possessed = false
@@ -811,6 +815,7 @@ export default class Status extends Schema implements IStatus {
   }
 
   triggerProtect(timer: number) {
+    if (this.doomed) return
     if (!this.protect && !this.enraged) {
       // protect cannot be stacked
       this.protect = true
@@ -1033,6 +1038,7 @@ export default class Status extends Schema implements IStatus {
     pokemon: IPokemonEntity,
     origin: IPokemonEntity
   ) {
+    if (this.doomed) return
     if (pokemon.simulation.weather === Weather.CLOUDY) {
       timer = Math.round(timer * 1.3)
     }
@@ -1118,10 +1124,13 @@ export default class Status extends Schema implements IStatus {
 
   addResurrection(pokemon: IPokemonEntity) {
     if (pokemon.passive === Passive.INANIMATE) return // Inanimate objects cannot be resurrected
+    if (this.doomed) return
     this.resurrection = true
   }
 
   triggerResurrection(pokemon: PokemonEntity, board: Board) {
+    // QUEST_REVIVE counts real resurrections only, not the Fossil self-revive
+    pokemon.player?.advanceBlessingQuest(Blessing.QUEST_REVIVE)
     this.resurrection = false
     this.resurrecting = true
     this.resurrectingCooldown = 2000

@@ -157,6 +157,10 @@ export default function GameChoice() {
     message = t("player_choices.choose_evolution_lab_reward")
   } else if (choice.type === "blessing") {
     message = t("player_choices.choose_blessing")
+  } else if (choice.type === "singularity") {
+    message = t("player_choices.choose_singularity")
+  } else if (choice.type === "starter_choice") {
+    message = t("player_choices.choose_starter_choice")
   }
 
   return (
@@ -312,9 +316,19 @@ export default function GameChoice() {
             {choice.pokemons.map((proposition, index) => {
               const item = choice.items[index]
               const item2 = choice.items2[index]
+              const canRerollPokemonSlot =
+                choice.type === "addPick" &&
+                choice.rerollableSlots[index] === true
+              const canRerollItemSlot =
+                choice.type === "addPick" &&
+                choice.rerollableItemSlots[index] === true
+              // keep both buttons mounted once granted, so spending one does not shift the row
+              const hasSlotRerolls =
+                choice.type === "addPick" &&
+                choice.rerollableSlots.length > 0
               return (
+                <div key={`${choice.id}-${index}`} className="game-choice-add-pick-slot">
                 <div
-                  key={`${choice.id}-${index}`}
                   className="my-box active clickable"
                   onClick={(event) => {
                     event.stopPropagation()
@@ -372,9 +386,11 @@ export default function GameChoice() {
                         }}
                         src={"assets/item/" + item + ".png"}
                       />
-                      <p>
-                        {addIconsToDescription(t(`item_description.${item}`))}
-                      </p>
+                      {choice.type !== "addPick" && (
+                        <p>
+                          {addIconsToDescription(t(`item_description.${item}`))}
+                        </p>
+                      )}
                       {item2 && isIn(ShinyItems, item2) === false && (
                         <>
                           <hr
@@ -394,15 +410,63 @@ export default function GameChoice() {
                             }}
                             src={"assets/item/" + item2 + ".png"}
                           />
-                          <p>
-                            {addIconsToDescription(
-                              t(`item_description.${item2}`)
-                            )}
-                          </p>
+                          {choice.type !== "addPick" && (
+                            <p>
+                              {addIconsToDescription(
+                                t(`item_description.${item2}`)
+                              )}
+                            </p>
+                          )}
                         </>
                       )}
                     </div>
                   )}
+                </div>
+                {hasSlotRerolls && (
+                  <div className="add-pick-reroll-row">
+                    <button
+                      className="bubbly blue active add-pick-reroll-button"
+                      disabled={!canRerollPokemonSlot}
+                      title={t("player_choices.reroll_add_pick_pokemon")}
+                      onClick={(event) => {
+                        event.stopPropagation()
+                        playSound(SOUNDS.BUTTON_CLICK)
+                        rerollChoice(choice.id, index)
+                      }}
+                    >
+                      <img src="/assets/ui/pokeball.svg" alt="" />
+                      <img
+                        className="add-pick-reroll-badge"
+                        src="/assets/ui/refresh.svg"
+                        alt=""
+                      />
+                    </button>
+                    <button
+                      className="bubbly blue active add-pick-reroll-button"
+                      disabled={!canRerollItemSlot || !item}
+                      title={t("player_choices.reroll_add_pick_item")}
+                      onClick={(event) => {
+                        event.stopPropagation()
+                        playSound(SOUNDS.BUTTON_CLICK)
+                        rerollChoice(choice.id, choice.pokemons.length + index)
+                      }}
+                    >
+                      <img
+                        src={
+                          item
+                            ? `assets/item/${item}.png`
+                            : "/assets/ui/refresh.svg"
+                        }
+                        alt=""
+                      />
+                      <img
+                        className="add-pick-reroll-badge"
+                        src="/assets/ui/refresh.svg"
+                        alt=""
+                      />
+                    </button>
+                  </div>
+                )}
                 </div>
               )
             })}
@@ -525,6 +589,22 @@ export default function GameChoice() {
             ))}
           </div>
         }
+
+        {choice.type === "addPick" &&
+          choice.canReroll &&
+          choice.rerollableSlots.length === 0 && (
+            <button
+              className="bubbly blue active"
+              onClick={(event) => {
+                event.stopPropagation()
+                playSound(SOUNDS.BUTTON_CLICK)
+                rerollChoice(choice.id)
+              }}
+            >
+              <img src="/assets/ui/refresh.svg" alt="" />
+              {t("player_choices.reroll_add_pick_all")}
+            </button>
+          )}
 
         {isBenchFull && choice.pokemons.length > 0 && (
           <p>{t("player_choices.free_slot_hint")}</p>

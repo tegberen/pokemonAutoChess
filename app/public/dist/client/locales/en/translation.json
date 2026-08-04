@@ -3066,6 +3066,7 @@
 		"LAPRAS_PASSPORT": "Lapras Travel Pass",
 		"PRISON_BOTTLE": "Prison Bottle",
 		"DUBIOUS_DISC_BLESSING_ITEM": "Dubious Disc",
+		"SYNCHRO_MASHINE": "Synchro Machine",
 		"SILK_SCARF": "Silk Scarf",
 		"FRIEND_BOW": "Friend Bow",
 		"BLACK_BELT": "Black Belt",
@@ -3485,6 +3486,7 @@
 		"LAPRAS_PASSPORT": "Lapras offers a ride to go to a different region. Use the passport on a Pokémon to influence the destination based on its synergies.",
 		"PRISON_BOTTLE": "Borrow Hoopa’s power to send a Pokémon from your bench to your partner’s bench. Items will be stripped off. (Preparation phase)",
 		"DUBIOUS_DISC_BLESSING_ITEM": "Drop DUBIOUS_DISC_BLESSING_ITEM on an ARTIFICIAL item in your inventory to consume this disc and gain a second copy of that item. The copy is kept even if your ARTIFICIAL level drops.",
+		"SYNCHRO_MASHINE": "At the start of combat, the holder copies the highest HP, ATK, AP, CRIT_CHANCE, CRIT_POWER, DEF and SPE_DEF of any allied Pokémon on the field.",
 		"SILK_SCARF": "Combine it with other item components to make all kinds of scarves, bands and bows. Those items will be removed if you lower down NORMAL synergy level.",
 		"FRIEND_BOW": "The holder gains the NORMAL type.",
 		"BLACK_BELT": "Critical attacks provide 33% of the damage dealt as SHIELD.",
@@ -4579,7 +4581,12 @@
 		"choose_scribble_shape": "Choose the second shape Smeargle will draw on your board",
 		"choose_evolution_lab_reward": "Choose one reward",
 		"choose_blessing": "Jirachi grants you a Blessing. Choose one.",
+		"choose_singularity": "Choose a component. You will receive it again on later stages.",
+		"choose_starter_choice": "Choose a starter. You will receive a copy every round.",
 		"reroll_blessing": "Reroll",
+		"reroll_add_pick_all": "Reroll all",
+		"reroll_add_pick_pokemon": "Reroll pokemon",
+		"reroll_add_pick_item": "Reroll item",
 		"evolution_lab_components": "+{{count}} random components",
 		"evolution_lab_rerolls": "+{{count}} free shop rerolls",
 		"evolution_lab_exp": "+{{count}} EXP",
@@ -5490,6 +5497,118 @@
 		"CLIMBING_THE_LADDER": {
 			"name": "Climbing the Ladder",
 			"description": "Immediately reach level 4 if below it. Each level up costs 4 less XP, and you can now reach level 10."
+		},
+		"QUEST_EVOLVE": {
+			"name": "Quest: Evolve",
+			"description": "Gain MISSION_ORDER_PINK and a random 2 STAR common Pokémon."
+		},
+		"QUEST_DESTROY": {
+			"name": "Quest: Destroy",
+			"description": "Gain MISSION_ORDER_RED and a random 2 STAR common Pokémon."
+		},
+		"QUEST_LEVEL_UP": {
+			"name": "Quest: Level Up",
+			"description": "Gain MISSION_ORDER_BLUE and a random 2 STAR common Pokémon."
+		},
+		"QUEST_DIVERSIFY": {
+			"name": "Quest: Diversify",
+			"description": "Gain MISSION_ORDER_GREEN and a random 2 STAR common Pokémon."
+		},
+		"QUEST_PROSPER": {
+			"name": "Quest: Prosper",
+			"description": "Gain MISSION_ORDER_GOLD and a random 2 STAR common Pokémon."
+		},
+		"QUEST_INDECISION": {
+			"name": "Quest: Indecision",
+			"description": "Gain 2 random gems. After activating the highest tier in 3 different synergies, gain a GOLD_MASK. They do not have to be active at once."
+		},
+		"QUEST_CRIT": {
+			"name": "Quest: Crit",
+			"description": "Gain 2 BLACK_GLASSES. The first time an ally reaches 5 CRIT_POWER in a fight, gain a GOLD_BOTTLE_CAP."
+		},
+		"QUEST_ABSORB": {
+			"name": "Quest: Absorb",
+			"description": "Gain a HEART_SCALE and a NEVER_MELT_ICE. The first time an ally blocks 1300 damage in a fight, gain an ABSORB_BULB."
+		},
+		"QUEST_REVIVE": {
+			"name": "Quest: Revive",
+			"description": "Gain a MAX_REVIVE. After allies have been revived 20 times, gain a SACRED_ASH."
+		},
+		"QUEST_PILLAGE": {
+			"name": "Quest: Pillage",
+			"description": "Gain an AMULET_COIN. After it has made you 30 GOLD, gain a BOOSTER_ENERGY."
+		},
+		"QUEST_EVOLVE_II": {
+			"name": "Quest: Evolve II",
+			"description": "Gain an Eevee and 2 rare 1 STAR Pokémon. After evolving Pokémon 20 times, gain a RARE_CANDY."
+		},
+		"IMPENDING_DOOM": {
+			"name": "Impending Doom",
+			"description": "After 12 seconds of combat, a shadow engulfs the battle, removing PROTECT, RUNE_PROTECT and RESURRECTION from all enemy Pokémon. For the remainder of combat, no enemy can receive these effects. Accelerate the shadow's countdown by 1 second when a CURSE enemy is KOed. Gain a Dartix."
+		},
+		"SYNCHRONICITY": {
+			"name": "Synchronicity",
+			"description": "Obtain the SYNCHRO_MASHINE. At the start of combat, the holder copies the highest HP, ATK, AP, CRIT_CHANCE, CRIT_POWER, DEF and SPE_DEF of any allied Pokémon on the field."
+		},
+		"STARTER_CHOICE": {
+			"name": "Starter Choice",
+			"description": "Choose between 3 common 1 STAR Pokémon. Gain a copy now and at the start of the next 8 rounds."
+		},
+		"SINGULARITY_I": {
+			"name": "Singularity I",
+			"description": "Choose from 3 components. Gain a copy now, on stage 10 and stage 20."
+		},
+		"SINGULARITY_II": {
+			"name": "Singularity II",
+			"description": "Choose from 3 components. Gain a copy now and on stages 10, 15, 20 and 25."
+		},
+		"CURSE_OF_CORAL": {
+			"name": "Curse of Coral",
+			"description": "Now and after every PvP round, gain a Corsola. Your Cursola sell for 18 GOLD."
+		},
+		"TEMPLE_OF_LANGUAGE": {
+			"name": "Temple of Language",
+			"description": "Gain an Unown after every PvP fight. Unown do not count towards your board's total units."
+		},
+		"TREASURE_TRAIL": {
+			"name": "Treasure Trail",
+			"description": "Highlight a tile on your board that contains treasure. Whenever you dig up treasure, highlight another tile that contains treasure, if any. Your STRONGEST ally digs a hole after every fight, even without GROUND."
+		},
+		"TRAINING_MONTAGE": {
+			"name": "Training Montage",
+			"description": "Gain a BRONZE_DOJO_TICKET. Any time a Pokémon comes back from the dojo, gain another BRONZE_DOJO_TICKET."
+		},
+		"ALL_FOURS": {
+			"name": "All Fours",
+			"description": "Open a shop of all epic Pokémon. The first one you buy is free."
+		},
+		"BEING_OF_KNOWLEDGE": {
+			"name": "Being of Knowledge",
+			"description": "Upon reaching level 7, gain a Uxie. You can now reach level 10."
+		},
+		"HYPER_HYPER_ROLL": {
+			"name": "Hyper Hyper Roll",
+			"description": "The next common Pokémon you buy immediately evolves to 3 STAR."
+		},
+		"BEAUTY_CONTEST": {
+			"name": "Beauty Contest",
+			"description": "When WATER is active, you are guaranteed to fish a Feebas after every PvE round, regardless of which rod you have. Multiple Milotic can each contribute their synergies to your total."
+		},
+		"QUICK_CLAW": {
+			"name": "Quick Claw",
+			"description": "You can move as soon as the carousel round starts. If taken on stage 12, gain a random component."
+		},
+		"COLOUR_CHANGE": {
+			"name": "Colour Change",
+			"description": "You cannot move on the stage 10 carousel, but your unique pick options are guaranteed to include Kecleon."
+		},
+		"AZURE_FLUTE": {
+			"name": "Azure Flute",
+			"description": "You cannot move on the stage 20 carousel, but your legendary pick options are guaranteed to include Arceus."
+		},
+		"ADDITIONAL_RETHINK_II": {
+			"name": "Additional Rethink II",
+			"description": "You can reroll your additional pick options. Each pokemon and item can be individually rerolled."
 		},
 		"FREE_COUPON": {
 			"name": "Free Coupon",

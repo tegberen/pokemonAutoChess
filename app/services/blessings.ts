@@ -1,4 +1,9 @@
 import type Player from "../models/colyseus-models/player"
+import { PlayerBlessings } from "../models/colyseus-models/player-blessings"
+import { PlayerChoice } from "../models/colyseus-models/player-choice"
+import { EvolutionManager } from "../core/evolution-logic/evolution-manager"
+import { EvolutionRuleType } from "../types/EvolutionRules"
+import { PokemonActionState } from "../types/enum/Game"
 import { PokemonClasses } from "../models/colyseus-models/pokemon"
 import PokemonFactory from "../models/pokemon-factory"
 import { getPokemonData } from "../models/precomputed/precomputed-pokemon-data"
@@ -24,6 +29,19 @@ import {
   MORE_EQUAL_THAN_OTHERS_GOLD,
   MORE_EQUAL_THAN_OTHERS_GOLD_FOR_OTHERS,
   CLIMBING_THE_LADDER_MAX_LEVEL,
+  QUICK_CLAW_COMPENSATION_STAGE,
+  BEING_OF_KNOWLEDGE_MAX_LEVEL,
+  SINGULARITY_OPTIONS,
+  SINGULARITY_I_STAGES,
+  SINGULARITY_II_STAGES,
+  STARTER_CHOICE_OPTIONS,
+  STARTER_CHOICE_EXTRA_ROUNDS,
+  QUEST_INDECISION_SYNERGIES_TARGET,
+  QUEST_CRIT_POWER_TARGET,
+  QUEST_ABSORB_DAMAGE_BLOCKED_TARGET,
+  QUEST_REVIVE_TARGET,
+  QUEST_PILLAGE_GOLD_TARGET,
+  QUEST_EVOLVE_II_TARGET,
   CLIMBING_THE_LADDER_MIN_LEVEL,
   CLIMBING_THE_LADDER_EXP_DISCOUNT,
   WOBBUFFETS_GOLD_PRIZE_RECYCLE_TICKETS,
@@ -491,6 +509,30 @@ function giftPokemonIfBenchHasRoom(player: Player, pkm: Pkm): boolean {
   pokemon.positionY = 0
   player.board.set(pokemon.id, pokemon)
   pokemon.onAcquired(player)
+  /* gifted copies have to merge like bought ones, or a blessing handing out
+     repeats of the same line leaves three 1-stars sitting on the bench */
+  player.board.forEach((boardPokemon) => {
+    if (
+      boardPokemon.hasEvolution &&
+      boardPokemon.evolutionRule.type === EvolutionRuleType.COUNT &&
+      boardPokemon.action !== PokemonActionState.EXPLORING
+    ) {
+      EvolutionManager.tryEvolve(boardPokemon, player)
+    }
+  })
+  return true
+}
+
+/* the five Gold quest blessings only hand out an existing Mission Order; the
+   mission's own completion logic already pays it out */
+function grantMissionOrderQuest(player: Player, missionOrder: Item): boolean {
+  player.items.push(missionOrder)
+  const commons = PRECOMPUTED_POKEMONS_PER_RARITY.COMMON.filter(
+    (pkm) => getPokemonData(pkm).stars === 2 && player.canFindRegionalPokemon(pkm)
+  )
+  if (commons.length > 0) {
+    giftPokemonIfBenchHasRoom(player, pickRandomIn(commons))
+  }
   return true
 }
 
@@ -619,6 +661,60 @@ export function grantRegionalTreasuresOnRegionChange(player: Player) {
   if (player.blessings?.includes(Blessing.REGIONAL_TREASURES_II)) {
     grantRegionalTreasures2(player)
   }
+}
+
+/* STARTER_CHOICE copies are minted fresh rather than drawn from the pool, so
+   nine of them never starve the lobby of that common line */
+export function giftStarterChoiceCopy(player: Player) {
+  if (!player.starterChoicePokemon) return
+  giftPokemonIfBenchHasRoom(player, player.starterChoicePokemon)
+}
+
+/* called at every round start for the recurring halves of chunk E */
+export function applyRecurringBlessingGrants(player: Player, state: GameState) {
+  if (player.starterChoiceRoundsLeft > 0) {
+    player.starterChoiceRoundsLeft -= 1
+    giftStarterChoiceCopy(player)
+  }
+
+  const singularityStages = player.blessings?.includes(Blessing.SINGULARITY_II)
+    ? SINGULARITY_II_STAGES
+    : player.blessings?.includes(Blessing.SINGULARITY_I)
+      ? SINGULARITY_I_STAGES
+      : null
+  if (
+    singularityStages?.includes(state.stageLevel) &&
+    player.singularityComponent
+  ) {
+    player.items.push(player.singularityComponent)
+  }
+}
+
+/* TREASURE_TRAIL: point at an undug tile that still holds something, or clear
+   the marker once the board has nothing left to find */
+export function revealNextBuriedTreasure(
+  player: Player,
+  state: GameState,
+  // the on-pick call runs before the blessing is registered on the player
+  skipBlessingCheck = false
+) {
+  const owned = state.blessingsByPlayerId.get(player.id)
+  if (!owned) return
+  if (!skipBlessingCheck && !player.blessings?.includes(Blessing.TREASURE_TRAIL))
+    return
+  if (
+    owned.treasureTrailHighlight >= 0 &&
+    player.buriedItems[owned.treasureTrailHighlight] != null &&
+    player.groundHoles[owned.treasureTrailHighlight] < 5
+  ) {
+    return // the current marker is still pointing at something
+  }
+  const candidates = player.buriedItems
+    .map((item, index) => ({ item, index }))
+    .filter(({ item, index }) => item != null && player.groundHoles[index] < 5)
+    .map(({ index }) => index)
+  owned.treasureTrailHighlight =
+    candidates.length > 0 ? pickRandomIn(candidates) : -1
 }
 
 export function grantRegionalGem(player: Player) {
@@ -788,10 +884,58 @@ const blessingQuestConditions: {
       }
     })
     return ascended
-  }
+  },
+
+  [Blessing.QUEST_CRIT]: (player) =>
+    player.getBlessingQuestProgress(Blessing.QUEST_CRIT) >=
+    QUEST_CRIT_POWER_TARGET,
+
+  [Blessing.QUEST_ABSORB]: (player) =>
+    player.getBlessingQuestProgress(Blessing.QUEST_ABSORB) >=
+    QUEST_ABSORB_DAMAGE_BLOCKED_TARGET,
+
+  [Blessing.QUEST_REVIVE]: (player) =>
+    player.getBlessingQuestProgress(Blessing.QUEST_REVIVE) >=
+    QUEST_REVIVE_TARGET,
+
+  [Blessing.QUEST_PILLAGE]: (player) =>
+    player.getBlessingQuestProgress(Blessing.QUEST_PILLAGE) >=
+    QUEST_PILLAGE_GOLD_TARGET,
+
+  [Blessing.QUEST_EVOLVE_II]: (player) =>
+    player.getBlessingQuestProgress(Blessing.QUEST_EVOLVE_II) >=
+    QUEST_EVOLVE_II_TARGET,
+
+  [Blessing.QUEST_INDECISION]: (player) =>
+    player.getBlessingQuestProgress(Blessing.QUEST_INDECISION) >=
+    QUEST_INDECISION_SYNERGIES_TARGET
+}
+
+/* QUEST_INDECISION counts synergies whose FINAL tier has been reached at any
+   point, so the three do not have to be active together */
+export function checkIndecisionSynergies(player: Player) {
+  if (!player.blessings?.includes(Blessing.QUEST_INDECISION)) return
+  SYNERGIES_WITH_BLESSINGS.forEach((synergy) => {
+    const thresholds = SynergyTiersThresholds[synergy]
+    const maxTier = thresholds?.at(-1)
+    if (
+      maxTier !== undefined &&
+      (player.synergies.get(synergy) ?? 0) >= maxTier &&
+      !player.indecisionSynergiesReached.has(synergy)
+    ) {
+      player.indecisionSynergiesReached.add(synergy)
+      player.advanceBlessingQuest(Blessing.QUEST_INDECISION)
+    }
+  })
 }
 
 const blessingQuestRewards: { [blessing in Blessing]?: Item } = {
+  [Blessing.QUEST_INDECISION]: Item.GOLD_MASK,
+  [Blessing.QUEST_CRIT]: Item.GOLD_BOTTLE_CAP,
+  [Blessing.QUEST_ABSORB]: Item.ABSORB_BULB,
+  [Blessing.QUEST_REVIVE]: Item.SACRED_ASH,
+  [Blessing.QUEST_PILLAGE]: Item.BOOSTER_ENERGY,
+  [Blessing.QUEST_EVOLVE_II]: Item.RARE_CANDY,
   [Blessing.QUEST_REROLL]: Item.REPEAT_BALL,
   [Blessing.QUEST_GROW]: Item.DYNAMAX_BAND,
   [Blessing.QUEST_SHINE]: Item.SHINY_STONE,
@@ -887,6 +1031,16 @@ export const blessingTriggerEffectService: {
   [Blessing.WAITING_GAME]: {
     [BlessingTrigger.PVE_END]: (player) => grantWaitingGameRerolls(player),
     [BlessingTrigger.PVP_END]: (player) => grantWaitingGameRerolls(player)
+  },
+
+  [Blessing.CURSE_OF_CORAL]: {
+    [BlessingTrigger.PVP_END]: (player) =>
+      giftPokemonIfBenchHasRoom(player, Pkm.CORSOLA)
+  },
+
+  [Blessing.TEMPLE_OF_LANGUAGE]: {
+    [BlessingTrigger.PVP_END]: (player) =>
+      giftPokemonIfBenchHasRoom(player, pickRandomIn(Unowns))
   },
 
   [Blessing.GARDENING]: {
@@ -1397,6 +1551,145 @@ export const blessingEffectService: {
         otherPlayer.addMoney(MORE_EQUAL_THAN_OTHERS_GOLD_FOR_OTHERS, true, null)
       }
     })
+    return true
+  },
+
+  [Blessing.QUEST_EVOLVE]: (player) =>
+    grantMissionOrderQuest(player, Item.MISSION_ORDER_PINK),
+  [Blessing.QUEST_DESTROY]: (player) =>
+    grantMissionOrderQuest(player, Item.MISSION_ORDER_RED),
+  [Blessing.QUEST_LEVEL_UP]: (player) =>
+    grantMissionOrderQuest(player, Item.MISSION_ORDER_BLUE),
+  [Blessing.QUEST_DIVERSIFY]: (player) =>
+    grantMissionOrderQuest(player, Item.MISSION_ORDER_GREEN),
+  [Blessing.QUEST_PROSPER]: (player) =>
+    grantMissionOrderQuest(player, Item.MISSION_ORDER_GOLD),
+
+  [Blessing.QUEST_INDECISION]: (player) => {
+    pickNRandomIn([...SynergyGems], 2).forEach((gem) =>
+      grantSynergyAwareItem(player, gem)
+    )
+    return true
+  },
+
+  [Blessing.QUEST_CRIT]: (player) => {
+    player.items.push(Item.BLACK_GLASSES, Item.BLACK_GLASSES)
+    return true
+  },
+
+  [Blessing.QUEST_ABSORB]: (player) => {
+    player.items.push(Item.HEART_SCALE, Item.NEVER_MELT_ICE)
+    return true
+  },
+
+  [Blessing.QUEST_REVIVE]: (player) => {
+    player.items.push(Item.MAX_REVIVE)
+    return true
+  },
+
+  [Blessing.QUEST_PILLAGE]: (player) => {
+    player.items.push(Item.AMULET_COIN)
+    return true
+  },
+
+  [Blessing.QUEST_EVOLVE_II]: (player) => {
+    giftPokemonIfBenchHasRoom(player, Pkm.EEVEE)
+    const rares = PRECOMPUTED_POKEMONS_PER_RARITY.RARE.filter(
+      (pkm) =>
+        getPokemonData(pkm).stars === 1 && player.canFindRegionalPokemon(pkm)
+    )
+    pickNRandomIn(rares, 2).forEach((pkm) =>
+      giftPokemonIfBenchHasRoom(player, pkm)
+    )
+    return true
+  },
+
+  [Blessing.IMPENDING_DOOM]: (player) =>
+    giftPokemonIfBenchHasRoom(player, Pkm.DARTIX),
+
+  [Blessing.SYNCHRONICITY]: (player) => {
+    player.items.push(Item.SYNCHRO_MASHINE)
+    return true
+  },
+
+  /* the sub-choice is pushed onto player.choices; pickChoice removes the
+     blessing choice straight after, so it becomes the next thing shown */
+  [Blessing.SINGULARITY_I]: (player) => {
+    player.choices.push(
+      new PlayerChoice({
+        type: "singularity",
+        items: pickNRandomIn(ItemComponents, SINGULARITY_OPTIONS)
+      })
+    )
+    return true
+  },
+
+  [Blessing.SINGULARITY_II]: (player) => {
+    player.choices.push(
+      new PlayerChoice({
+        type: "singularity",
+        items: pickNRandomIn(ItemComponents, SINGULARITY_OPTIONS)
+      })
+    )
+    return true
+  },
+
+  [Blessing.STARTER_CHOICE]: (player) => {
+    const commons = PRECOMPUTED_POKEMONS_PER_RARITY.COMMON.filter(
+      (pkm) =>
+        getPokemonData(pkm).stars === 1 && player.canFindRegionalPokemon(pkm)
+    )
+    if (commons.length === 0) return false
+    player.choices.push(
+      new PlayerChoice({
+        type: "starter_choice",
+        pokemons: pickNRandomIn(commons, STARTER_CHOICE_OPTIONS)
+      })
+    )
+    return true
+  },
+
+  [Blessing.CURSE_OF_CORAL]: (player) =>
+    giftPokemonIfBenchHasRoom(player, Pkm.CORSOLA),
+
+  [Blessing.TRAINING_MONTAGE]: (player) => {
+    player.items.push(Item.BRONZE_DOJO_TICKET)
+    return true
+  },
+
+  [Blessing.TREASURE_TRAIL]: (player, state) => {
+    // pickChoice reuses this entry when it registers the blessing right after
+    const owned =
+      state.blessingsByPlayerId.get(player.id) ?? new PlayerBlessings()
+    state.blessingsByPlayerId.set(player.id, owned)
+    player.blessingsRef = owned
+    revealNextBuriedTreasure(player, state, true)
+    return true
+  },
+
+  [Blessing.ALL_FOURS]: (player, state) => {
+    state.shop.assignAllEpicShop(player, state)
+    player.allFoursFreeBuyPending = true
+    // the themed shop can be rolled away without paying for it
+    player.shopFreeRolls += 1
+    return true
+  },
+
+  [Blessing.BEING_OF_KNOWLEDGE]: (player) => {
+    player.experienceManager.maxLevel = BEING_OF_KNOWLEDGE_MAX_LEVEL
+    player.tryGrantBeingOfKnowledgeUxie(true)
+    return true
+  },
+
+  [Blessing.HYPER_HYPER_ROLL]: (player) => {
+    player.hyperHyperRollPending = true
+    return true
+  },
+
+  [Blessing.QUICK_CLAW]: (player, state) => {
+    if (state.stageLevel >= QUICK_CLAW_COMPENSATION_STAGE) {
+      player.items.push(pickRandomIn(ItemComponents))
+    }
     return true
   },
 

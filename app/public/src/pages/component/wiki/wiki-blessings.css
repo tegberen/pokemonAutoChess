@@ -44,7 +44,7 @@
 .wiki-blessings-list {
   list-style: none;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(12.5em, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(17em, 1fr));
   gap: 0.5em;
   margin: 0;
   padding: 0;
@@ -88,6 +88,10 @@
   align-items: start;
   gap: 0.7em;
   height: 100%;
+  /* a flex item defaults to min-content width, so a long unbroken item label
+     would widen the card past its grid track instead of wrapping */
+  min-width: 0;
+  overflow-wrap: anywhere;
   padding: 0.55em 0.6em;
   border-radius: 9px;
   background-color: color-mix(in srgb, var(--color-shadow) 74%, transparent);
@@ -106,6 +110,16 @@
     in srgb,
     var(--blessing-hue) 22%,
     var(--color-bg-secondary)
+  );
+  /* kept in sync with .blessing-panel-icon in blessings-panel.css */
+  background-image: repeating-linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--blessing-stripe-a) 9%, transparent) 0px,
+    color-mix(in srgb, var(--blessing-stripe-a) 9%, transparent) 5px,
+    color-mix(in srgb, var(--blessing-stripe-b) 9%, transparent) 5px,
+    color-mix(in srgb, var(--blessing-stripe-b) 9%, transparent) 10px,
+    color-mix(in srgb, var(--blessing-stripe-c) 9%, transparent) 10px,
+    color-mix(in srgb, var(--blessing-stripe-c) 9%, transparent) 15px
   );
 }
 
@@ -149,6 +163,12 @@
 
 .wiki-blessings .description-icon {
   font-size: inherit;
+}
+
+/* .description-icon is nowrap so an icon never splits from its label, but long
+   item names (Mission Order - Diversify!) then overflow these narrow cards */
+.wiki-blessings .description-icon.item {
+  white-space: normal;
 }
 
 /* a closed family fills its grid cell like the cards beside it */

@@ -73,6 +73,8 @@ export const EvolutionManager = {
     player: Player,
     ...additionalArgs: unknown[]
   ): Pokemon {
+    // counted here rather than in tryEvolve so every rule type is included
+    player.advanceBlessingQuest(Blessing.QUEST_EVOLVE_II)
     const handler = this.getHandler(pokemon.evolutionRule)
     const pokemonEvolved = handler.evolve(pokemon, player, ...additionalArgs)
     this.afterEvolve(pokemonEvolved, pokemon, player, ...additionalArgs)

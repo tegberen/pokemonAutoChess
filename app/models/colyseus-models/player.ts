@@ -30,9 +30,11 @@ import { EvolutionRuleType } from "../../types/EvolutionRules"
 import { Ability } from "../../types/enum/Ability"
 import {
   Blessing,
+  BEING_OF_KNOWLEDGE_LEVEL,
   CRYSTAL_CLUSTERS_ROCKS_GRANTED
 } from "../../types/enum/Blessing"
 import { ROCK_AWAKENING_TIER } from "../../types/enum/Awakening"
+import type { PlayerBlessings } from "./player-blessings"
 import type { ScheduledBlessingGrant } from "../../types/enum/Blessing"
 import type { DungeonPMDO } from "../../types/enum/Dungeon"
 import {
@@ -234,6 +236,10 @@ export default class Player extends Schema implements IPlayer {
   // server-only mirror of GameState.blessingsByPlayerId, so combat code can read
   // a player's blessings without reaching for the room state
   blessings: Blessing[] = []
+  // server-only handle on the same entry, for writing synced quest progress
+  blessingsRef: PlayerBlessings | null = null
+  // server-only: synergies whose final tier QUEST_INDECISION has already banked
+  indecisionSynergiesReached: Set<Synergy> = new Set<Synergy>()
   // server-only: wands granted by FIND_A_LOST_WAND, exempt from synergy removal
   blessingWands: Item[] = []
   // server-only: gold the PLUNDER champion spent casting Treasure Rush this fight
@@ -244,6 +250,17 @@ export default class Player extends Schema implements IPlayer {
   manifestedPokemonIds: string[] = []
   // server-only: RAINBOW_HOUR pays its gold bounty only once
   rainbowHourRewarded: boolean = false
+  // server-only: ALL_FOURS makes the first buy out of its epic shop free
+  allFoursFreeBuyPending: boolean = false
+  // server-only: HYPER_HYPER_ROLL upgrades the next common bought to 3 stars
+  hyperHyperRollPending: boolean = false
+  // server-only: BEING_OF_KNOWLEDGE gifts its Uxie once, on reaching level 7
+  beingOfKnowledgeUxieGranted: boolean = false
+  // server-only: the component SINGULARITY_I/II re-grants on its later stages
+  singularityComponent: Item | null = null
+  // server-only: STARTER_CHOICE's pick, and how many round-starts still owe a copy
+  starterChoicePokemon: Pkm | null = null
+  starterChoiceRoundsLeft: number = 0
   bigPecksSharpBeakGranted = false
   blessingQuestsCompleted: Set<Blessing> = new Set<Blessing>()
   blessingQuestThresholdsReached: Map<Blessing, number> = new Map<
@@ -359,6 +376,25 @@ export default class Player extends Schema implements IPlayer {
     }
   }
 
+  /* lives on Player rather than services/blessings so combat, evolution and item
+     code can bump a counter without importing that service and cycling */
+  advanceBlessingQuest(blessing: Blessing, amount = 1) {
+    if (!this.blessings?.includes(blessing) || !this.blessingsRef) return
+    const progress = this.blessingsRef.questProgress
+    progress.set(blessing, (progress.get(blessing) ?? 0) + amount)
+  }
+
+  // for quests tracking a personal best rather than a running tally
+  recordBlessingQuestBest(blessing: Blessing, value: number) {
+    if (!this.blessings?.includes(blessing) || !this.blessingsRef) return
+    const progress = this.blessingsRef.questProgress
+    if (value > (progress.get(blessing) ?? 0)) progress.set(blessing, value)
+  }
+
+  getBlessingQuestProgress(blessing: Blessing): number {
+    return this.blessingsRef?.questProgress.get(blessing) ?? 0
+  }
+
   addExperience(value: number) {
     this.experienceManager.addExperience(value)
     if (
@@ -367,6 +403,30 @@ export default class Player extends Schema implements IPlayer {
     ) {
       this.completeMissionOrder(Item.MISSION_ORDER_BLUE)
     }
+    this.tryGrantBeingOfKnowledgeUxie()
+  }
+
+  /* inlined rather than routed through services/blessings: importing that
+     service here breaks every drag-drop through a circular init */
+  /* skipBlessingCheck is for the on-pick call: the effect runs before the
+     blessing is pushed onto player.blessings */
+  tryGrantBeingOfKnowledgeUxie(skipBlessingCheck = false) {
+    if (
+      this.beingOfKnowledgeUxieGranted ||
+      (!skipBlessingCheck &&
+        !this.blessings?.includes(Blessing.BEING_OF_KNOWLEDGE)) ||
+      this.experienceManager.level < BEING_OF_KNOWLEDGE_LEVEL
+    )
+      return
+    const x = getFirstAvailablePositionInBench(this.board)
+    if (x === null) return
+    this.beingOfKnowledgeUxieGranted = true
+    const uxie = PokemonFactory.createPokemonFromName(Pkm.UXIE, this)
+    uxie.positionX = x
+    uxie.positionY = 0
+    this.board.set(uxie.id, uxie)
+    uxie.onAcquired(this)
+    this.updateSynergies()
   }
 
   addMoney(
@@ -456,7 +516,12 @@ export default class Player extends Schema implements IPlayer {
       this.bonusSynergies,
       this.specialGameRule,
       this.avatarSynergy,
-      this.blessings?.includes(Blessing.RAINBOW_HOUR)
+      [
+        ...(this.blessings?.includes(Blessing.RAINBOW_HOUR) ? [Pkm.EEVEE] : []),
+        ...(this.blessings?.includes(Blessing.BEAUTY_CONTEST)
+          ? [Pkm.FEEBAS]
+          : [])
+      ]
     )
 
     const normalNeedsRecomputing = this.updateScarves(

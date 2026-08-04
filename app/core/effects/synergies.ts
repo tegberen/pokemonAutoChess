@@ -37,6 +37,7 @@ import {
   SPORE_CLOUDS_INTERVAL,
   SPORE_CLOUDS_STATUS_DURATION
 } from "../../types/enum/Blessing"
+import { revealNextBuriedTreasure } from "../../services/blessings"
 import { FlowerPot } from "../../types/enum/FlowerPot"
 import { Awakening } from "../../types/enum/Awakening"
 import { EffectEnum } from "../../types/enum/Effect"
@@ -66,7 +67,7 @@ import { FlowerMonByPot, getFlowerPotsUnlocked } from "../flower-pots"
 import type { PokemonEntity } from "../pokemon-entity"
 import type Simulation from "../simulation"
 import { DelayedCommand } from "../simulation-command"
-import { getUnitScore, getStrongestUnits } from "../unit-score"
+import { getUnitScore, getStrongestUnit, getStrongestUnits } from "../unit-score"
 import {
   type Effect,
   OnAbilityCastEffect,
@@ -1360,12 +1361,25 @@ function grantGemRushRowReward(player: Player, index: number) {
   player.updateSynergies()
 }
 
-const groundDigEffect = new OnStageStartEffect(({ player, room }) => {
-  if (getSynergyTier(player.synergies, Synergy.GROUND) > 0) {
+export const groundDigEffect = new OnStageStartEffect(({ player, room }) => {
+  const hasGroundSynergy = getSynergyTier(player.synergies, Synergy.GROUND) > 0
+  /* TREASURE_TRAIL adds the strongest ally as a digger even when it is not a
+     Ground type. Below Ground 2 this effect is never reached through the
+     synergy tiers, so game-commands applies it directly for the blessing. */
+  const treasureTrailDiggerId = player.blessings?.includes(
+    Blessing.TREASURE_TRAIL
+  )
+    ? getStrongestUnit(
+        schemaValues(player.board).filter((p) => !isOnBench(p))
+      )?.id
+    : undefined
+
+  if (hasGroundSynergy || treasureTrailDiggerId) {
     const holesClaimedThisStage = new Set<number>()
     player.board.forEach((pokemon, pokemonId) => {
       if (
-        pokemon.types.has(Synergy.GROUND) &&
+        ((hasGroundSynergy && pokemon.types.has(Synergy.GROUND)) ||
+          pokemonId === treasureTrailDiggerId) &&
         !isOnBench(pokemon) &&
         !(
           pokemon.items.has(Item.CHEF_HAT) &&
@@ -1418,6 +1432,7 @@ const groundDigEffect = new OnStageStartEffect(({ player, room }) => {
           room.clock.setTimeout(() => {
             player.groundHoles[index] = max(5)(player.groundHoles[index] + 1)
             grantGemRushRowReward(player, index)
+            revealNextBuriedTreasure(player, room.state)
             PassiveEffects[pokemon.passive]?.forEach((effect) => {
               if (effect instanceof OnGroundDiggingEffect) {
                 effect.apply({ pokemon, player })

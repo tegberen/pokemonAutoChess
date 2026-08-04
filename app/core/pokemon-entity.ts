@@ -30,6 +30,7 @@ import {
   DRAGON_KING_SHIELD_PER_STAR,
   DRAGON_KING_SPEED_PER_STAR,
   DROP_RATES_CHANCE,
+  IMPENDING_DOOM_KO_ACCELERATION,
   ETERNAL_RAGE_DURATION_PER_STAR,
   RIVALRY_ATTACK_ON_OWN_SIDE,
   RIVALRY_MAX_HP_ON_ENEMY_SIDE,
@@ -1427,6 +1428,22 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
       chance(DROP_RATES_CHANCE, this)
     ) {
       this.player.shopFreeRolls += 1
+    }
+
+    /* IMPENDING_DOOM: killing a cursed enemy pulls the killer's own shadow
+       forward. The timer is keyed by the killer's team, not the victim's. */
+    if (
+      target.status.curse &&
+      this.player?.blessings?.includes(Blessing.IMPENDING_DOOM)
+    ) {
+      if (this.team === Team.BLUE_TEAM && this.simulation.blueDoomTimer > 0) {
+        this.simulation.blueDoomTimer -= IMPENDING_DOOM_KO_ACCELERATION
+      } else if (
+        this.team === Team.RED_TEAM &&
+        this.simulation.redDoomTimer > 0
+      ) {
+        this.simulation.redDoomTimer -= IMPENDING_DOOM_KO_ACCELERATION
+      }
     }
 
     if (

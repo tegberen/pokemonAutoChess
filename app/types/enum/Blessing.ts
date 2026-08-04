@@ -1,4 +1,4 @@
-import { Pkm } from "./Pokemon"
+import { Pkm, Unowns } from "./Pokemon"
 
 export enum BlessingTier {
   SILVER = "SILVER",
@@ -154,6 +154,34 @@ export enum Blessing {
   MORE_EQUAL_THAN_OTHERS = "MORE_EQUAL_THAN_OTHERS",
   CLIMBING_THE_LADDER = "CLIMBING_THE_LADDER",
   FREE_COUPON = "FREE_COUPON",
+  QUICK_CLAW = "QUICK_CLAW",
+  COLOUR_CHANGE = "COLOUR_CHANGE",
+  AZURE_FLUTE = "AZURE_FLUTE",
+  ADDITIONAL_RETHINK_II = "ADDITIONAL_RETHINK_II",
+  ALL_FOURS = "ALL_FOURS",
+  BEING_OF_KNOWLEDGE = "BEING_OF_KNOWLEDGE",
+  HYPER_HYPER_ROLL = "HYPER_HYPER_ROLL",
+  BEAUTY_CONTEST = "BEAUTY_CONTEST",
+  CURSE_OF_CORAL = "CURSE_OF_CORAL",
+  TEMPLE_OF_LANGUAGE = "TEMPLE_OF_LANGUAGE",
+  TREASURE_TRAIL = "TREASURE_TRAIL",
+  TRAINING_MONTAGE = "TRAINING_MONTAGE",
+  IMPENDING_DOOM = "IMPENDING_DOOM",
+  SYNCHRONICITY = "SYNCHRONICITY",
+  STARTER_CHOICE = "STARTER_CHOICE",
+  SINGULARITY_I = "SINGULARITY_I",
+  SINGULARITY_II = "SINGULARITY_II",
+  QUEST_EVOLVE = "QUEST_EVOLVE",
+  QUEST_DESTROY = "QUEST_DESTROY",
+  QUEST_LEVEL_UP = "QUEST_LEVEL_UP",
+  QUEST_DIVERSIFY = "QUEST_DIVERSIFY",
+  QUEST_PROSPER = "QUEST_PROSPER",
+  QUEST_INDECISION = "QUEST_INDECISION",
+  QUEST_CRIT = "QUEST_CRIT",
+  QUEST_ABSORB = "QUEST_ABSORB",
+  QUEST_REVIVE = "QUEST_REVIVE",
+  QUEST_PILLAGE = "QUEST_PILLAGE",
+  QUEST_EVOLVE_II = "QUEST_EVOLVE_II",
   QUEST_REROLL = "QUEST_REROLL",
   QUEST_GROW = "QUEST_GROW",
   QUEST_SHINE = "QUEST_SHINE",
@@ -403,6 +431,91 @@ export const SAPPHIRE_ORB_BOUNCES = 3
 export const SAPPHIRE_ORB_ARMOR_BREAK_DURATION = 3000
 export const RUBY_ORB_TRUE_DAMAGE_VS_BURN = 0.5
 export const LUCKY_DICE_BOUNCE_DAMAGE_RATIO = 0.75
+
+/* blessings that trade away all movement on one future portal carousel for a
+   guaranteed pick in the propositions that carousel hands out */
+export const BLESSING_CAROUSEL_LOCK: {
+  [blessing in Blessing]?: { stage: number; guaranteedPick: Pkm }
+} = {
+  [Blessing.COLOUR_CHANGE]: { stage: 10, guaranteedPick: Pkm.KECLEON },
+  [Blessing.AZURE_FLUTE]: { stage: 20, guaranteedPick: Pkm.ARCEUS }
+}
+
+/* the avatar timer is synced and rendered as a countdown, so the lock is a long
+   finite delay rather than Infinity */
+export const CAROUSEL_LOCK_RETENTION_DELAY = 60000
+
+export const QUICK_CLAW_COMPENSATION_STAGE = 12
+
+export const QUEST_INDECISION_SYNERGIES_TARGET = 3
+export const QUEST_CRIT_POWER_TARGET = 5
+export const QUEST_ABSORB_DAMAGE_BLOCKED_TARGET = 1300
+export const QUEST_REVIVE_TARGET = 20
+export const QUEST_PILLAGE_GOLD_TARGET = 30
+export const QUEST_EVOLVE_II_TARGET = 20
+
+/* quests whose questProgress counter is shown on the Effects tab icon.
+   `decimals` is for the ones tracking a best-in-a-fight record rather than a
+   running tally, where the value is fractional. */
+export const BLESSING_QUEST_TARGETS: {
+  [blessing in Blessing]?: { target: number; decimals?: number }
+} = {
+  [Blessing.QUEST_EVOLVE_II]: { target: QUEST_EVOLVE_II_TARGET },
+  [Blessing.QUEST_REVIVE]: { target: QUEST_REVIVE_TARGET },
+  [Blessing.QUEST_PILLAGE]: { target: QUEST_PILLAGE_GOLD_TARGET },
+  [Blessing.QUEST_INDECISION]: { target: QUEST_INDECISION_SYNERGIES_TARGET },
+  [Blessing.QUEST_CRIT]: { target: QUEST_CRIT_POWER_TARGET, decimals: 1 },
+  [Blessing.QUEST_ABSORB]: { target: QUEST_ABSORB_DAMAGE_BLOCKED_TARGET }
+}
+
+export const IMPENDING_DOOM_DELAY = 12000
+export const IMPENDING_DOOM_KO_ACCELERATION = 1000
+
+export const STARTER_CHOICE_OPTIONS = 3
+export const STARTER_CHOICE_EXTRA_ROUNDS = 8
+
+export const SINGULARITY_OPTIONS = 3
+export const SINGULARITY_I_STAGES = [10, 20]
+export const SINGULARITY_II_STAGES = [10, 15, 20, 25]
+
+export const CURSOLA_SELL_PRICE = 18
+
+/* the treasure marker is the gold-coin burst rather than the Light spot, so it
+   reads as buried loot. Swap the anim key for DIG, PAYDAY or ZYGARDE_CELL to
+   try another look; it only needs to be an anim declared in the abilities atlas */
+export const TREASURE_TRAIL_HIGHLIGHT_ANIM = "GOLD_RUSH"
+export const TREASURE_TRAIL_HIGHLIGHT_ALPHA = 0.55
+// half the Light cell's scale of 2, so it sits inside a tile rather than over it
+export const TREASURE_TRAIL_HIGHLIGHT_SCALE = 1
+export const TRAINING_MONTAGE_TICKET_STAGE_DELAY = 0
+
+/* TEMPLE_OF_LANGUAGE exempts Unown from the board cap. Kept here rather than on
+   the Pokemon getter because the exemption depends on the owner, not the unit;
+   the pokemon shape is structural so this file stays import-free of models. */
+export function countsForTeamSize(
+  pokemon: { name: Pkm; doesCountForTeamSize: boolean },
+  blessings: Blessing[] | undefined
+): boolean {
+  if (!pokemon.doesCountForTeamSize) return false
+  if (
+    blessings?.includes(Blessing.TEMPLE_OF_LANGUAGE) &&
+    Unowns.includes(pokemon.name)
+  )
+    return false
+  return true
+}
+
+export const BEING_OF_KNOWLEDGE_LEVEL = 7
+export const BEING_OF_KNOWLEDGE_MAX_LEVEL = 10
+
+export function getCarouselLockForStage(
+  blessings: Blessing[] | undefined,
+  stage: number
+): { stage: number; guaranteedPick: Pkm } | undefined {
+  return blessings
+    ?.map((blessing) => BLESSING_CAROUSEL_LOCK[blessing])
+    .find((lock) => lock?.stage === stage)
+}
 
 /* the Pokemon each hero blessing gifts on pick, and the family whose strongest
    fielded member the blessing then empowers every combat */

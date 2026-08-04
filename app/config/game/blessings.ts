@@ -877,6 +877,175 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     icon: "backward_time",
     grantsPokemonImmediately: false
   },
+  [Blessing.ADDITIONAL_RETHINK_II]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: [4],
+    icon: "backward_time",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.QUEST_EVOLVE]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: [4],
+    icon: "tied_scroll",
+    grantsPokemonImmediately: true
+  },
+  [Blessing.QUEST_DESTROY]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: [4],
+    icon: "tied_scroll",
+    grantsPokemonImmediately: true
+  },
+  [Blessing.QUEST_LEVEL_UP]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: [4],
+    icon: "tied_scroll",
+    grantsPokemonImmediately: true
+  },
+  [Blessing.QUEST_DIVERSIFY]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: [4],
+    icon: "tied_scroll",
+    grantsPokemonImmediately: true
+  },
+  [Blessing.QUEST_PROSPER]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: [4],
+    icon: "tied_scroll",
+    grantsPokemonImmediately: true
+  },
+  [Blessing.QUEST_INDECISION]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: [4],
+    icon: "indecision_quest",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.QUEST_CRIT]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: [4],
+    icon: "crit_quest",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.QUEST_ABSORB]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: [4],
+    icon: "absorb_quest",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.QUEST_REVIVE]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: [4],
+    icon: "revive_quest",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.QUEST_PILLAGE]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: [4],
+    icon: "pillage_quest",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.QUEST_EVOLVE_II]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: [4],
+    icon: "evolve_two_quest",
+    grantsPokemonImmediately: true
+  },
+  [Blessing.IMPENDING_DOOM]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "impending_doom",
+    grantsPokemonImmediately: true
+  },
+  [Blessing.SYNCHRONICITY]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "synchronicity",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.STARTER_CHOICE]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: [4],
+    icon: "starter_choice",
+    grantsPokemonImmediately: true
+  },
+  [Blessing.SINGULARITY_I]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: [4],
+    icon: "singular_ring",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.SINGULARITY_II]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: [4],
+    icon: "singular_ring",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.CURSE_OF_CORAL]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: [12],
+    icon: "coral",
+    grantsPokemonImmediately: true
+  },
+  [Blessing.TEMPLE_OF_LANGUAGE]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: [4, 12],
+    icon: "shiny_omega",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.TREASURE_TRAIL]: {
+    tier: BlessingTier.SILVER,
+    availableAtStages: [4],
+    icon: "mole",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.TRAINING_MONTAGE]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: [4],
+    icon: "training_montage",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.ALL_FOURS]: {
+    tier: BlessingTier.SILVER,
+    availableAtStages: [12],
+    icon: "all_four",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.BEING_OF_KNOWLEDGE]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: [12],
+    icon: "egypt_eye",
+    grantsPokemonImmediately: true
+  },
+  [Blessing.HYPER_HYPER_ROLL]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: [12],
+    icon: "hyper_hyper_roll",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.BEAUTY_CONTEST]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: [4],
+    icon: "beauty_contest",
+    grantsPokemonImmediately: false,
+    isAvailable: isSynergyBlessingAvailable(Synergy.WATER)
+  },
+  [Blessing.QUICK_CLAW]: {
+    tier: BlessingTier.SILVER,
+    availableAtStages: [4, 12],
+    icon: "claw",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.COLOUR_CHANGE]: {
+    tier: BlessingTier.SILVER,
+    availableAtStages: [4],
+    icon: "colour_change",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.AZURE_FLUTE]: {
+    tier: BlessingTier.SILVER,
+    availableAtStages: [12],
+    icon: "azure_flute",
+    grantsPokemonImmediately: false
+  },
   [Blessing.SAFARI_ENCOUNTER]: {
     tier: BlessingTier.GOLD,
     availableAtStages: [12],
@@ -1150,27 +1319,11 @@ function tierChancesForBlessingsUnderTest(): {
 /* Test mode: propose only the blessings being worked on, at every selection
    stage, ignoring their availableAtStages. Tier odds are derived from the list
    so a tier with nothing in it is never rolled. Set to false to ship. */
-export const BLESSING_TEST_MODE: boolean = true
+export const BLESSING_TEST_MODE: boolean = false
 
 const BLESSINGS_UNDER_TEST: Blessing[] = [
-  Blessing.WAITING_GAME,
-  Blessing.PRISMATIC_REROLL,
-  Blessing.DROP_RATES,
-  Blessing.MORE_EQUAL_THAN_OTHERS,
-  Blessing.CLIMBING_THE_LADDER,
-  Blessing.FREE_COUPON
-  // D2, commented out while D1 is being playtested
-  // Blessing.WOBBUFFETS_GOLD_PRIZE,
-  // Blessing.HARD_COMMIT,
-  // Blessing.REGIONAL_TREASURES,
-  // Blessing.REGIONAL_TREASURES_II,
-  // Blessing.SYNARCH,
-  // Blessing.FLEXIBILITY,
-  // Blessing.RAINBOW_HOUR,
-  // Blessing.MANIFESTATION_AP,
-  // Blessing.MANIFESTATION_AD,
-  // Blessing.MIX_AND_MATCH_I,
-  // Blessing.MIX_AND_MATCH_II
+  // Blessings.EXAMPLE,
+  // Blessings.EXAMPLE_2
 ]
 
 function countBlessingsOfFamily(blessings: Blessing[], family?: string) {

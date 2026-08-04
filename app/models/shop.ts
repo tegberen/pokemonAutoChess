@@ -62,7 +62,9 @@ import {
 import { SpecialGameRule } from "../types/enum/SpecialGameRule"
 import {
   Blessing,
-  BERSERKER_HORDES_SHOP_INTERVAL
+  BERSERKER_HORDES_SHOP_INTERVAL,
+  CURSOLA_SELL_PRICE,
+  getCarouselLockForStage
 } from "../types/enum/Blessing"
 import { PRECOMPUTED_POKEMONS_PER_TYPE } from "./precomputed/precomputed-types"
 import { Synergy } from "../types/enum/Synergy"
@@ -98,9 +100,14 @@ export function getPoolSize(rarity: Rarity, maxStars: number): number {
 export function getSellPrice(
   pokemon: IPokemon | IPokemonEntity,
   specialGameRule?: SpecialGameRule | null,
-  ignoreRareCandy = false
+  ignoreRareCandy = false,
+  blessings?: Blessing[]
 ): number {
   const name = pokemon.name
+
+  if (name === Pkm.CURSOLA && blessings?.includes(Blessing.CURSE_OF_CORAL)) {
+    return CURSOLA_SELL_PRICE
+  }
 
   if (specialGameRule === SpecialGameRule.FREE_MARKET && name !== Pkm.EGG)
     return 0
@@ -433,6 +440,21 @@ export default class Shop {
     this.syncJuggernautShopStats(player, state)
   }
 
+  /* ALL_FOURS: a one-shot themed shop drawn outside the pool, like the Berserker
+     Hordes shop, so buying from it does not deplete the epic line for the lobby */
+  assignAllEpicShop(player: Player, state: GameState) {
+    player.shop.forEach((pkm) => this.releasePokemon(pkm, player, state))
+    const epicPool = PRECOMPUTED_POKEMONS_PER_RARITY.EPIC.filter(
+      (pkm) => getPokemonData(pkm).stars === 1 && !(pkm in PkmDuos)
+    )
+    if (epicPool.length === 0) return
+    const size = getShopSize(state.specialGameRule, state.stageLevel)
+    for (let i = 0; i < size; i++) {
+      player.shop[i] = pickRandomIn(epicPool)
+    }
+    this.syncJuggernautShopStats(player, state)
+  }
+
   assignShop(player: Player, manualRefresh: boolean, state: GameState) {
     player.shop.forEach((pkm) => this.releasePokemon(pkm, player, state))
 
@@ -619,6 +641,13 @@ export default class Shop {
         : NB_UNIQUE_PROPOSITIONS
     const pokemonsProposed: PkmProposition[] = []
     const itemsProposed: Item[] = []
+    /* Kecleon and Arceus are not in the pools; they are injected below by a
+       chance roll, so a carousel-lock blessing forces that roll instead of
+       seeding a proposition */
+    const guaranteedPick = getCarouselLockForStage(
+      player.blessings,
+      stageLevel
+    )?.guaranteedPick
     // SIX_PACK: a second component paired with each starter proposition
     const itemsProposed2: Item[] = []
     const isSixPack = state.specialGameRule === SpecialGameRule.SIX_PACK
@@ -714,13 +743,13 @@ export default class Shop {
       } else if (
         stageLevel === PortalCarouselStages[1] &&
         pokemonsProposed.includes(Pkm.KECLEON) === false &&
-        chance(KECLEON_RATE)
+        (guaranteedPick === Pkm.KECLEON || chance(KECLEON_RATE))
       ) {
         selected = Pkm.KECLEON
       } else if (
         stageLevel === PortalCarouselStages[2] &&
         pokemonsProposed.includes(Pkm.ARCEUS) === false &&
-        chance(ARCEUS_RATE)
+        (guaranteedPick === Pkm.ARCEUS || chance(ARCEUS_RATE))
       ) {
         selected = Pkm.ARCEUS
       }
@@ -971,6 +1000,13 @@ export default class Shop {
       (player.synergies.get(Synergy.WATER) ?? 0) > 0
     ) {
       return Pkm.MAGIKARP
+    }
+
+    if (
+      state.hasBlessing(player.id, Blessing.BEAUTY_CONTEST) &&
+      (player.synergies.get(Synergy.WATER) ?? 0) > 0
+    ) {
+      return Pkm.FEEBAS
     }
 
     const rarityProbability = FishRarityProbability[rod]

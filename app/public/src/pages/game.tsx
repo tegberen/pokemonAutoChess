@@ -800,11 +800,19 @@ export default function Game() {
           dispatch(
             setPlayerBlessings({
               playerId,
-              blessings: schemaValues(playerBlessings.blessings)
+              blessings: schemaValues(playerBlessings.blessings),
+              questProgress: Object.fromEntries(
+                playerBlessings.questProgress.entries()
+              )
             })
           )
         dispatchBlessings()
         $(playerBlessings).blessings.onChange(dispatchBlessings)
+        $(playerBlessings).questProgress.onChange(dispatchBlessings)
+        // TREASURE_TRAIL moves its marker the moment a dig resolves, mid-round
+        $(playerBlessings).listen("treasureTrailHighlight", () => {
+          getGameScene()?.board?.showTreasureTrailHighlight()
+        })
       })
 
       $state.simulations.onRemove(() => {
@@ -914,7 +922,9 @@ export default function Game() {
           $player.listen("streak", (value) => {
             dispatch(setStreak(value))
           })
-          $player.choices.onChange(() => {
+          /* a reroll replaces a choice in place; onChange alone does not always
+             fire for that, so adds and removes are listened to as well */
+          const dispatchChoices = () => {
             dispatch(
               changePlayer({
                 id: player.id,
@@ -922,7 +932,10 @@ export default function Game() {
                 value: schemaValues(player.choices)
               })
             )
-          })
+          }
+          $player.choices.onChange(dispatchChoices)
+          $player.choices.onAdd(dispatchChoices)
+          $player.choices.onRemove(dispatchChoices)
         }
         $player.listen("life", (value, previousValue) => {
           dispatch(setLife({ id: player.id, value: value }))

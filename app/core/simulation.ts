@@ -62,6 +62,9 @@ import {
   TIDAL_SURGE_ITEMS_REQUIRED,
   DRAGON_FANG_ABILITY_POWER_PER_STAR,
   SECOND_WIND_RESURRECTION_INTERVAL,
+  IMPENDING_DOOM_DELAY,
+  QUEST_CRIT_POWER_TARGET,
+  QUEST_ABSORB_DAMAGE_BLOCKED_TARGET,
   ASCENSION_BREAK_FREE_CHECK_INTERVAL,
   SACRIFICE_DELAY,
   BUG_CLONE_TRIPLE,
@@ -201,6 +204,11 @@ export default class Simulation extends Schema implements ISimulation {
   stormLightningTimer = 0
   tidalWaveTimer = 0
   secondWindTimer = 0
+  /* IMPENDING_DOOM is per owning team: a holder's shadow only strikes the units
+     opposing them, so two holders in one fight run independent countdowns.
+     0 means that side has no doom armed. */
+  blueDoomTimer = 0
+  redDoomTimer = 0
   floodWaveTimer = 0
   elderStormTimer = 0
   distortionTimer = 0
@@ -1160,6 +1168,31 @@ export default class Simulation extends Schema implements ISimulation {
           })
         }
 
+        /* SYNCHRO_MASHINE is Exp Share without the positioning: it takes the
+           best of every allied unit on the field, not just the two neighbours */
+        if (pokemon.items.has(Item.SYNCHRO_MASHINE)) {
+          const allies = schemaValues(
+            pokemon.team === Team.BLUE_TEAM
+              ? this.blueTeam
+              : this.redTeam
+          ).filter((ally) => ally.id !== pokemon.id)
+          allies.forEach((ally) => {
+            if (ally.maxHP > pokemon.maxHP) {
+              // hp is current health, so it has to follow or it exceeds the cap
+              pokemon.maxHP = ally.maxHP
+              pokemon.hp = ally.maxHP
+            }
+            if (ally.atk > pokemon.atk) pokemon.atk = ally.atk
+            if (ally.ap > pokemon.ap) pokemon.ap = ally.ap
+            if (ally.critChance > pokemon.critChance)
+              pokemon.critChance = ally.critChance
+            if (ally.critPower > pokemon.critPower)
+              pokemon.critPower = ally.critPower
+            if (ally.def > pokemon.def) pokemon.def = ally.def
+            if (ally.speDef > pokemon.speDef) pokemon.speDef = ally.speDef
+          })
+        }
+
         if (pokemon.passive === Passive.LUVDISC) {
           const lovers = [-1, 1].map((offset) =>
             this.board.getEntityOnCell(
@@ -1254,13 +1287,39 @@ export default class Simulation extends Schema implements ISimulation {
         entity.player === player &&
         entity.hp > 0 &&
         entity.types.has(Synergy.FIELD) &&
-        !entity.status.resurrection
+        !entity.status.resurrection &&
+        !entity.status.doomed
     )
     if (fieldAllies.length === 0) return
     const weakest = fieldAllies.reduce((lowest, ally) =>
       getUnitScore(ally) < getUnitScore(lowest) ? ally : lowest
     )
     weakest.status.resurrection = true
+  }
+
+  /* IMPENDING_DOOM: the shadow strikes the units opposing its owner, stripping
+     protect, rune protect and resurrection and barring them for the rest of the
+     fight via the doomed flag on each victim's status */
+  triggerImpendingDoom(ownerTeam: Team) {
+    const victims =
+      ownerTeam === Team.BLUE_TEAM ? this.redTeam : this.blueTeam
+    victims.forEach((entity) => {
+      entity.status.doomed = true
+      entity.status.protect = false
+      entity.status.protectCooldown = 0
+      entity.status.runeProtect = false
+      entity.status.runeProtectCooldown = 0
+      entity.status.resurrection = false
+      entity.broadcastAbility({
+        skill: "IMPENDING_DOOM",
+        // the shadow is a fixed-size board effect, not the victim's own ability
+        ap: 0,
+        positionX: entity.positionX,
+        positionY: entity.positionY,
+        targetX: entity.positionX,
+        targetY: entity.positionY
+      })
+    })
   }
 
   applyCombatStartBlessings(
@@ -1278,6 +1337,14 @@ export default class Simulation extends Schema implements ISimulation {
       if (allies.length === 0) continue
 
       const missingPlayerLife = Math.max(0, player.maxLife - player.life)
+
+      if (blessings.includes(Blessing.IMPENDING_DOOM)) {
+        if (teamIndex === Team.BLUE_TEAM) {
+          this.blueDoomTimer = IMPENDING_DOOM_DELAY
+        } else {
+          this.redDoomTimer = IMPENDING_DOOM_DELAY
+        }
+      }
 
       if (blessings.includes(Blessing.VITAMINS)) {
         allies.forEach((ally) => {
@@ -2550,10 +2617,43 @@ export default class Simulation extends Schema implements ISimulation {
     }
   }
 
+  /* QUEST_CRIT and QUEST_ABSORB track the best value any ally has reached in a
+     single fight, so the Effects tab can show the record and the quest completes
+     once it passes the target */
+  checkCombatQuestThresholds() {
+    for (const [player, team] of [
+      [this.bluePlayer, this.blueTeam],
+      [this.bluePartnerPlayer, this.blueTeam],
+      [this.redPlayer, this.redTeam]
+    ] as const) {
+      if (!player?.blessings?.length) continue
+      const wantsCrit = player.blessings.includes(Blessing.QUEST_CRIT)
+      const wantsAbsorb = player.blessings.includes(Blessing.QUEST_ABSORB)
+      if (!wantsCrit && !wantsAbsorb) continue
+
+      team.forEach((pkm) => {
+        if (pkm.player !== player) return
+        if (wantsCrit) {
+          player.recordBlessingQuestBest(Blessing.QUEST_CRIT, pkm.critPower)
+        }
+        if (wantsAbsorb) {
+          player.recordBlessingQuestBest(
+            Blessing.QUEST_ABSORB,
+            pkm.physicalDamageReduced +
+              pkm.specialDamageReduced +
+              pkm.shieldDamageTaken
+          )
+        }
+      })
+    }
+  }
+
   update(dt: number) {
     if (this.blueTeam.size === 0 || this.redTeam.size === 0) {
       this.onFinish()
     }
+
+    this.checkCombatQuestThresholds()
 
     this.blueTeam.forEach((pkm, key) => {
       this.blueDpsMeter
@@ -2736,6 +2836,16 @@ export default class Simulation extends Schema implements ISimulation {
         }
         return false
       })
+    }
+
+    if (this.blueDoomTimer > 0) {
+      this.blueDoomTimer -= dt
+      if (this.blueDoomTimer <= 0) this.triggerImpendingDoom(Team.BLUE_TEAM)
+    }
+
+    if (this.redDoomTimer > 0) {
+      this.redDoomTimer -= dt
+      if (this.redDoomTimer <= 0) this.triggerImpendingDoom(Team.RED_TEAM)
     }
 
     if (this.secondWindTimer > 0) {

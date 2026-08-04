@@ -23,7 +23,11 @@ import {
   getBlessingsAvailable,
   isFamilyCapReached
 } from "../config/game/blessings"
-import { Blessing } from "../types/enum/Blessing"
+import {
+  Blessing,
+  countsForTeamSize,
+  STARTER_CHOICE_EXTRA_ROUNDS
+} from "../types/enum/Blessing"
 import { GADGETS } from "../config/game/gadgets"
 import { placeScribbleShape } from "../config/game/scribble-shapes"
 import { computeElo } from "../core/elo"
@@ -143,7 +147,10 @@ import {
 import GameState from "./states/game-state"
 import { ArmoryOptionsPrice } from "../types/enum/ArmoryOptions"
 import { armoryGiftService } from "../services/armory-options"
-import { blessingEffectService } from "../services/blessings"
+import {
+  blessingEffectService,
+  giftStarterChoiceCopy
+} from "../services/blessings"
 
 export default class GameRoom extends Room<{ state: GameState }> {
   dispatcher: Dispatcher<this>
@@ -1370,7 +1377,7 @@ export default class GameRoom extends Room<{ state: GameState }> {
       }
     })
 
-    player.boardSize = this.getTeamSize(player.board)
+    player.boardSize = this.getTeamSize(player.board, player.blessings)
     return hasEvolved
   }
 
@@ -1405,11 +1412,11 @@ export default class GameRoom extends Room<{ state: GameState }> {
     return numberOfPlayersAlive
   }
 
-  getTeamSize(board: MapSchema<Pokemon>) {
+  getTeamSize(board: MapSchema<Pokemon>, blessings?: Blessing[]) {
     let size = 0
 
     board.forEach((pokemon, key) => {
-      if (pokemon.positionY != 0 && pokemon.doesCountForTeamSize) {
+      if (pokemon.positionY != 0 && countsForTeamSize(pokemon, blessings)) {
         size++
       }
     })
@@ -1468,7 +1475,11 @@ export default class GameRoom extends Room<{ state: GameState }> {
     }
 
     if (choice.type === "addPick") {
-      this.rerollAdditionalPick(player, index)
+      if (typeof slotIndex === "number") {
+        this.rerollAdditionalPickSlot(player, index, slotIndex)
+      } else {
+        this.rerollAdditionalPick(player, index)
+      }
       return
     }
 
@@ -1518,6 +1529,66 @@ export default class GameRoom extends Room<{ state: GameState }> {
           ? pickNRandomIn(ItemComponentsNoScarf, pokemons.length)
           : undefined,
       canReroll: false
+    })
+  }
+
+  /* ADDITIONAL_RETHINK_II: slots past the pokemon count address the paired item
+     slots, so one reroll message can serve both rows */
+  rerollAdditionalPickSlot(
+    player: Player,
+    choiceIndex: number,
+    slotIndex: number
+  ) {
+    const choice = player.choices[choiceIndex]
+    const nbPokemons = choice.pokemons.length
+    const pokemons = [...choice.pokemons] as Pkm[]
+    const items = [...choice.items]
+    const rerollableSlots = [...choice.rerollableSlots]
+    const rerollableItemSlots = [...choice.rerollableItemSlots]
+
+    if (slotIndex >= nbPokemons) {
+      const itemSlot = slotIndex - nbPokemons
+      if (rerollableItemSlots[itemSlot] !== true) return
+      const replacement = pickRandomIn(
+        ItemComponentsNoScarf.filter(
+          (component) => items.includes(component) === false
+        )
+      )
+      if (!replacement) return
+      items[itemSlot] = replacement
+      rerollableItemSlots[itemSlot] = false
+    } else {
+      if (rerollableSlots[slotIndex] !== true) return
+      const pool =
+        this.state.stageLevel === AdditionalPicksStages[0]
+          ? this.additionalUncommonPool
+          : this.state.stageLevel === AdditionalPicksStages[1]
+            ? this.additionalRarePool
+            : this.additionalEpicPool
+
+      /* the pool can be drained by the same stage's proposals; returning the
+         current pick first keeps the reroll from silently doing nothing, and
+         the other proposed slots are excluded so the reroll always visibly
+         changes something */
+      pool.push(pokemons[slotIndex])
+      shuffleArray(pool)
+      const drawIndex = pool.findIndex(
+        (candidate) => pokemons.includes(candidate) === false
+      )
+      if (drawIndex === -1) return
+      pokemons[slotIndex] = pool.splice(drawIndex, 1)[0]
+      rerollableSlots[slotIndex] = false
+    }
+
+    // replacing the choice (new id) is what makes the client re-render, see rerollChoice
+    player.choices[choiceIndex] = new PlayerChoice({
+      type: "addPick",
+      pokemons,
+      items,
+      items2: [...choice.items2],
+      rerollableSlots,
+      rerollableItemSlots,
+      canReroll: choice.canReroll
     })
   }
 
@@ -1581,7 +1652,29 @@ export default class GameRoom extends Room<{ state: GameState }> {
         this.state.blessingsByPlayerId.get(player.id) ?? new PlayerBlessings()
       owned.blessings.push(blessing)
       this.state.blessingsByPlayerId.set(player.id, owned)
+      player.blessingsRef = owned
       player.blessings.push(blessing)
+      removeInArray(player.choices, choice)
+      return
+    }
+
+    /* both record the pick before granting it, so later stages can repeat it.
+       Resolved before the generic branches, which grant and forget. */
+    if (choice.type === "singularity") {
+      const component = choice.items[choiceIndex]
+      if (!component) return
+      player.singularityComponent = component
+      player.items.push(component)
+      removeInArray(player.choices, choice)
+      return
+    }
+
+    if (choice.type === "starter_choice") {
+      const pkm = choice.pokemons[choiceIndex] as Pkm
+      if (!pkm) return
+      player.starterChoicePokemon = pkm
+      player.starterChoiceRoundsLeft = STARTER_CHOICE_EXTRA_ROUNDS
+      giftStarterChoiceCopy(player)
       removeInArray(player.choices, choice)
       return
     }
@@ -1742,7 +1835,12 @@ export default class GameRoom extends Room<{ state: GameState }> {
           pokemon.onAcquired(player)
         } else {
           // sell picked pokemon if no more space on bench and bypassLackOfSpace is true
-          const sellPrice = getSellPrice(pokemon, this.state.specialGameRule)
+          const sellPrice = getSellPrice(
+            pokemon,
+            this.state.specialGameRule,
+            false,
+            player.blessings
+          )
           player.addMoney(sellPrice, true, null)
         }
       })

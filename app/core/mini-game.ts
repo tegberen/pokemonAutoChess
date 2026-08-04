@@ -31,6 +31,8 @@ import {
 } from "../types"
 import {
   Blessing,
+  CAROUSEL_LOCK_RETENTION_DELAY,
+  getCarouselLockForStage,
   FREE_COUPON_GUARANTEED_SHOP_STAGE
 } from "../types/enum/Blessing"
 import { grantRegionalTreasuresOnRegionChange } from "../services/blessings"
@@ -351,6 +353,14 @@ export class MiniGame {
 
       if (player.isBot) {
         retentionDelay += randomBetween(1000, 6000)
+      }
+
+      /* a carousel lock is bought with a specific stage's movement, so it wins
+         over Quick Claw when a player holds both */
+      if (getCarouselLockForStage(player.blessings, stageLevel)) {
+        retentionDelay = CAROUSEL_LOCK_RETENTION_DELAY
+      } else if (state.hasBlessing(player.id, Blessing.QUICK_CLAW)) {
+        retentionDelay = 0
       }
 
       const avatar = new PokemonAvatarModel(

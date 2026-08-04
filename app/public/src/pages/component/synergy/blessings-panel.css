@@ -22,6 +22,18 @@
     var(--blessing-hue) 32%,
     var(--color-bg-secondary)
   );
+  /* faint tier stripes so a tile reads as textured rather than a flat colour;
+     prismatic picks up its rainbow vars instead of being solid purple.
+     Kept in sync with the same rule in wiki-blessings.css */
+  background-image: repeating-linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--blessing-stripe-a) 9%, transparent) 0px,
+    color-mix(in srgb, var(--blessing-stripe-a) 9%, transparent) 5px,
+    color-mix(in srgb, var(--blessing-stripe-b) 9%, transparent) 5px,
+    color-mix(in srgb, var(--blessing-stripe-b) 9%, transparent) 10px,
+    color-mix(in srgb, var(--blessing-stripe-c) 9%, transparent) 10px,
+    color-mix(in srgb, var(--blessing-stripe-c) 9%, transparent) 15px
+  );
   cursor: var(--cursor-hover);
 }
 

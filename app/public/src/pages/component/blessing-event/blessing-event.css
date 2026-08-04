@@ -1,6 +1,8 @@
 .blessing-event-banner.my-box {
   display: flex;
   align-items: center;
+  /* padding, gap and text are all em-based, so one font-size scales the banner */
+  font-size: 0.9em;
   gap: 1em;
   padding: 0.5em 0.9em;
   margin-bottom: 0.5em;
@@ -85,8 +87,9 @@
 
 /* preparation-menu styles header img and p directly, so these need to outrank it */
 .blessing-event-banner.my-box > img.blessing-event-jirachi {
-  width: 94px;
-  height: 94px;
+  /* the only px size in the banner, so it does not follow the font-size above */
+  width: 85px;
+  height: 85px;
   flex: none;
   margin: 0;
 }

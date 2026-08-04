@@ -865,6 +865,14 @@ function earthQuakeAnim(stars: number) {
 export const AbilitiesAnimations: {
   [animKey: string]: AbilityAnimation | AbilityAnimation[]
 } = {
+  /* IMPENDING_DOOM borrows the Dark Void sprite but sits at ground level, so
+     the shadow reads as falling under the victim rather than over it. Its own
+     key keeps Darkrai's DARK_VOID depth untouched. */
+  ["IMPENDING_DOOM"]: onTarget({
+    ability: Ability.DARK_VOID,
+    scale: 6,
+    depth: DEPTH.ABILITY_GROUND_LEVEL
+  }),
   ["PRISON_BOTTLE_PORTAL"]: onCasterScale2,
   ["PUFF_RED"]: onTargetScale2,
   ["PUFF_PINK"]: onTargetScale2,

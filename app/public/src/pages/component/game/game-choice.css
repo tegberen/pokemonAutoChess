@@ -33,11 +33,13 @@
 }
 
 .game-choice-pokemons-list > .my-box,
+.game-choice-pokemons-list > .game-choice-add-pick-slot > .my-box,
 .game-choice-items-list > .my-box {
   padding: 5px;
 }
 
 .game-choice-pokemons-list > .my-box:hover,
+.game-choice-pokemons-list > .game-choice-add-pick-slot > .my-box:hover,
 .game-choice-items-list > .my-box:hover {
   cursor: var(--cursor-hover);
   background-color: var(--color-bg-accent);
@@ -59,6 +61,54 @@
 
 .game-choice-blessings-list {
   align-items: stretch;
+}
+
+.game-choice-add-pick-slot {
+  display: flex;
+  flex-flow: column;
+  /* stretch so the reroll row can align its outer edges with the portrait box */
+  align-items: stretch;
+  gap: 0.5em;
+}
+
+.add-pick-reroll-row {
+  display: flex;
+}
+
+.add-pick-reroll-button {
+  position: relative;
+  padding: 0.3em;
+  flex: 1 1 50%;
+  min-width: 0;
+  height: 3em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.add-pick-reroll-button > img:first-child {
+  width: 1.8em;
+  height: 1.8em;
+}
+
+.add-pick-reroll-button > .add-pick-reroll-badge {
+  position: absolute;
+  right: -0.2em;
+  bottom: -0.2em;
+  width: 1.3em;
+  height: 1.3em;
+  padding: 0.15em;
+  border-radius: 50%;
+  background-color: var(--color-bg-secondary);
+}
+
+/* outranks .bubbly[disabled], whose not-allowed cursor reads as an error rather
+   than as a reroll already spent; the cursor stays as it is over the enabled
+   button so it does not change under the mouse */
+.game-choice .add-pick-reroll-button:disabled {
+  opacity: 0.4;
+  filter: grayscale(1);
+  cursor: var(--cursor-hover);
 }
 
 .game-choice-blessing-slot {
@@ -237,12 +287,14 @@
 
 .game-choice-blessing-slot > .my-box.blessing-glow {
   position: relative;
+  /* tight blur radii for a crisp edge rather than a haze; the alphas stay at
+     full strength, since dimming them as well made the glow look washed out */
   --blessing-glow-shadow:
-    inset 0 0 9px 1px
+    inset 0 0 5px 1px
       color-mix(in srgb, var(--blessing-glow-hue) 17%, transparent),
     var(--shadow-clickable),
-    0 0 9px 1px color-mix(in srgb, var(--blessing-glow-hue) 30%, transparent),
-    0 0 20px 5px color-mix(in srgb, var(--blessing-glow-hue) 16%, transparent);
+    0 0 5px 1px color-mix(in srgb, var(--blessing-glow-hue) 30%, transparent),
+    0 0 11px 3px color-mix(in srgb, var(--blessing-glow-hue) 16%, transparent);
   box-shadow: var(--blessing-glow-shadow);
 }
 

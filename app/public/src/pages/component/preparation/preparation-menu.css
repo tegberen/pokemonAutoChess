@@ -121,9 +121,8 @@
   vertical-align: middle;
 }
 
+/* only rounds and crops; sizing stays with .setting-icon so it matches its row */
 .lobby-setting .setting-icon-round {
-  width: 1.6em;
-  height: 1.6em;
   border-radius: 50%;
   border: var(--border-thin);
   object-fit: cover;

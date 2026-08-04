@@ -13,6 +13,7 @@ import {
   AURORA_BOREALIS_REDUCTION_PER_ACTIVE_SYNERGY,
   MIX_AND_MATCH_I_FIELD_CAP,
   MIX_AND_MATCH_II_FIELD_CAP,
+  BLESSING_QUEST_TARGETS,
   Blessing
 } from "../../../../../types/enum/Blessing"
 import { Rarity } from "../../../../../types/enum/Game"
@@ -29,6 +30,12 @@ export default function BlessingsPanel() {
   const blessings = useAppSelector(
     (state) => state.game.blessingsByPlayerId[playerIdSpectated] ?? []
   )
+  // defaulted outside the selector: returning a fresh {} would change identity
+  // on every call and re-render forever
+  const questProgressByPlayer = useAppSelector(
+    (state) => state.game.blessingQuestProgressByPlayerId[playerIdSpectated]
+  )
+  const questProgress = questProgressByPlayer ?? {}
   const spectatedPlayer = useAppSelector(selectSpectatedPlayer)
   const synergies = useAppSelector((state) => state.game.synergiesSpectated)
   const nbThreeStarWilds = spectatedPlayer
@@ -92,6 +99,20 @@ export default function BlessingsPanel() {
                 {nbFieldedUniques}/{uniqueFieldCap}
               </span>
             )}
+          {BLESSING_QUEST_TARGETS[blessing] && (
+            <span
+              className={cc("blessing-panel-counter", {
+                full:
+                  (questProgress[blessing] ?? 0) >=
+                  BLESSING_QUEST_TARGETS[blessing]!.target
+              })}
+            >
+              {(questProgress[blessing] ?? 0).toFixed(
+                BLESSING_QUEST_TARGETS[blessing]!.decimals ?? 0
+              )}
+              /{BLESSING_QUEST_TARGETS[blessing]!.target}
+            </span>
+          )}
           {/* portalled out of the panel, or the Effects window clips it */}
           {ReactDOM.createPortal(
             <Tooltip

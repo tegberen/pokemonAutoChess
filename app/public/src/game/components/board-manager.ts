@@ -61,7 +61,10 @@ import {
 } from "../../pages/utils/utils"
 import {
   Blessing,
-  NOT_THE_BEES_MAX_COMBEES
+  NOT_THE_BEES_MAX_COMBEES,
+  TREASURE_TRAIL_HIGHLIGHT_ALPHA,
+  TREASURE_TRAIL_HIGHLIGHT_ANIM,
+  TREASURE_TRAIL_HIGHLIGHT_SCALE
 } from "../../../../types/enum/Blessing"
 import { preference } from "../../preferences"
 import store from "../../stores"
@@ -102,6 +105,7 @@ export default class BoardManager {
   lightX: number
   lightY: number
   lightCell: Phaser.GameObjects.Sprite | null
+  treasureTrailCell: Phaser.GameObjects.Sprite | null = null
   scribbleCells: Phaser.GameObjects.Sprite[] = []
   scribbleLabels: GameDialog[] = []
   berryTrees: BerryTree[] = []
@@ -285,6 +289,7 @@ export default class BoardManager {
     if (this.mode === BoardMode.PICK) {
       this.showLightCell()
       this.showScribbleShapes()
+      this.showTreasureTrailHighlight()
     }
 
     this.player.board.forEach((pokemon) => {
@@ -332,6 +337,41 @@ export default class BoardManager {
   hideLightCell() {
     this.lightCell?.destroy()
     this.lightCell = null
+  }
+
+  /* TREASURE_TRAIL marks the tile hiding the next buried item, drawn smaller
+     and dimmer than a Light cell so the two never read as the same thing */
+  showTreasureTrailHighlight() {
+    this.hideTreasureTrailHighlight()
+    const index = this.scene.room?.state.blessingsByPlayerId.get(this.player.id)
+      ?.treasureTrailHighlight
+    if (index == null || index < 0) return
+    const coordinates = transformBoardCoordinates(
+      index % BOARD_WIDTH,
+      Math.floor(index / BOARD_WIDTH) + 1
+    )
+    this.treasureTrailCell = this.scene.add.sprite(
+      coordinates[0],
+      coordinates[1],
+      "abilities",
+      `${TREASURE_TRAIL_HIGHLIGHT_ANIM}/000.png`
+    )
+    this.treasureTrailCell.setDepth(DEPTH.LIGHT_CELL)
+    this.treasureTrailCell.setScale(
+      TREASURE_TRAIL_HIGHLIGHT_SCALE,
+      TREASURE_TRAIL_HIGHLIGHT_SCALE
+    )
+    this.treasureTrailCell.setAlpha(TREASURE_TRAIL_HIGHLIGHT_ALPHA)
+    // only LIGHT_CELL declares repeat in the atlas, so the loop is set here
+    this.treasureTrailCell.anims.play({
+      key: TREASURE_TRAIL_HIGHLIGHT_ANIM,
+      repeat: -1
+    })
+  }
+
+  hideTreasureTrailHighlight() {
+    this.treasureTrailCell?.destroy()
+    this.treasureTrailCell = null
   }
 
   showScribbleShapes() {
@@ -927,6 +967,7 @@ export default class BoardManager {
     // logger.debug('battleMode');
     this.mode = BoardMode.BATTLE
     this.hideLightCell()
+    this.hideTreasureTrailHighlight()
     this.hideScribbleShapes()
     if (!phaseJustChanged) this.removePokemonsOnBoard() // remove immediately board sprites if arriving in battle mode
     this.scene.closeTooltips()
@@ -1009,6 +1050,7 @@ export default class BoardManager {
       playMusic(this.scene, getMusicAlt(DungeonMusic.TREASURE_TOWN_STAGE_20))
     }
     this.hideLightCell()
+    this.hideTreasureTrailHighlight()
     this.hideScribbleShapes()
     this.hideBerryTrees()
     this.hideFlowerPots()
