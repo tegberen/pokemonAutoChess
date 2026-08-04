@@ -18,6 +18,7 @@ import {
   RESURGENCE_LEGENDARY_SPEED,
   RESURGENCE_SPEED,
   EXHAUSTING_FLAME_DAMAGE_MULTIPLIER,
+  RUBY_ORB_TRUE_DAMAGE_VS_BURN,
   SHELL_ARMOR_SPE_DEF_BY_STARS
 } from "../types/enum/Blessing"
 import { EffectEnum } from "../types/enum/Effect"
@@ -215,7 +216,11 @@ export default abstract class PokemonState {
         trueDamagePart += 1.25
       }
       if (pokemon.items.has(Item.RED_ORB)) {
-        trueDamagePart += 0.25
+        trueDamagePart +=
+          target.status.burn &&
+          pokemon.player?.blessings?.includes(Blessing.RUBY_ORB)
+            ? RUBY_ORB_TRUE_DAMAGE_VS_BURN
+            : 0.25
       }
       if (pokemon.effects.has(EffectEnum.STEELY_SPIRIT_BONUS)) {
         trueDamagePart += 0.1

@@ -5426,6 +5426,22 @@
 			"name": "Roosting Flock",
 			"description": "Gain a Tranquill and move to a random Pidove region if not in one. When your STRONGEST Pidove casts its ability, ADJACENT FLYING allies cast Roost as well."
 		},
+		"EMERALD_ORB": {
+			"name": "Emerald Orb",
+			"description": "Gain a GREEN_ORB. Your GREEN_ORB healing has 2 RANGE."
+		},
+		"SAPPHIRE_ORB": {
+			"name": "Sapphire Orb",
+			"description": "Gain a BLUE_ORB. Your BLUE_ORB chain lightning hits 1 additional enemy and applies ARMOR_BREAK for 3 seconds."
+		},
+		"RUBY_ORB": {
+			"name": "Ruby Orb",
+			"description": "Gain a RED_ORB. Your RED_ORB converts 50% of attack damage to TRUE damage against BURN enemies, instead of 25%."
+		},
+		"LUCKY_DICE_BLESSING": {
+			"name": "Lucky Ward",
+			"description": "Gain a LOADED_DICE. Your LOADED_DICE keeps bouncing to ADJACENT enemies after the first, with the chance halving every time. It cannot bounce to the same enemy twice."
+		},
 		"SHELL_ARMOR_BLESSING": {
 			"name": "Shell Armor",
 			"description": "Gain a Grotle and move to a random Turtwig region if not in one. Your STRONGEST Turtwig's passive also grants it 1/3/6 SPE_DEF upon receiving critical attacks."

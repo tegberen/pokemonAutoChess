@@ -42,7 +42,11 @@ import {
 import {
   Blessing,
   CRYSTAL_CLUSTERS_SIMULTANEOUS,
-  MOVE_TUTOR_MAX_PP
+  EMERALD_ORB_HEAL_RANGE,
+  LUCKY_DICE_BOUNCE_DAMAGE_RATIO,
+  MOVE_TUTOR_MAX_PP,
+  SAPPHIRE_ORB_ARMOR_BREAK_DURATION,
+  SAPPHIRE_ORB_BOUNCES
 } from "../../types/enum/Blessing"
 import { isIn, removeInArray } from "../../utils/array"
 import { getFreeSpaceOnBench, isOnBench } from "../../utils/board"
@@ -91,7 +95,10 @@ export const blueOrbOnAttackEffect = new OnAttackEffect(
     pokemon.count.staticHolderCount++
     if (pokemon.count.staticHolderCount >= 3) {
       pokemon.count.staticHolderCount = 0
-      const nbBounces = 2
+      const isBlessed = pokemon.player?.blessings?.includes(
+        Blessing.SAPPHIRE_ORB
+      )
+      const nbBounces = isBlessed ? SAPPHIRE_ORB_BOUNCES : 2
       const closestEnemies = board.getClosestEnemies(
         pokemon.positionX,
         pokemon.positionY,
@@ -121,6 +128,12 @@ export const blueOrbOnAttackEffect = new OnAttackEffect(
           )
           secondaryTargetHit.addPP(-15, pokemon, 0, false)
           secondaryTargetHit.count.manaBurnCount++
+          if (isBlessed) {
+            secondaryTargetHit.status.triggerArmorReduction(
+              SAPPHIRE_ORB_ARMOR_BREAK_DURATION,
+              secondaryTargetHit
+            )
+          }
           previousTg = secondaryTargetHit
         } else {
           break
@@ -141,17 +154,29 @@ export const loadedDiceOnAttackEffect = new OnAttackEffect(
     trueDamage
   }) => {
     if (totalDamage > 0 && target && chance(0.5, pokemon)) {
-      const cells = board.getAdjacentCells(target.positionX, target.positionY)
-      const candidateTargets = cells
-        .filter((cell) => cell.value && pokemon.team != cell.value.team)
-        .map((cell) => cell.value!)
-      candidateTargets.sort((a, b) => a.hp - b.hp) // target lowest life first
+      const isBlessed = pokemon.player?.blessings?.includes(
+        Blessing.LUCKY_DICE_BLESSING
+      )
+      const alreadyBounced = new Set<string>([target.id])
+      let bounceOrigin = target
+      let damageRatio = LUCKY_DICE_BOUNCE_DAMAGE_RATIO
+      let bounceChance = 0.5
 
-      const nbBounces = 1
-      const secondHitPhysicalDamage = Math.round(physicalDamage * 0.75)
-      const secondHitSpecialDamage = Math.round(specialDamage * 0.75)
-      const secondHitTrueDamage = Math.round(trueDamage * 0.75)
-      for (let i = 0; i < nbBounces; i++) {
+      while (true) {
+        const candidateTargets = board
+          .getAdjacentCells(bounceOrigin.positionX, bounceOrigin.positionY)
+          .filter(
+            (cell) =>
+              cell.value &&
+              pokemon.team != cell.value.team &&
+              !alreadyBounced.has(cell.value.id)
+          )
+          .map((cell) => cell.value!)
+        candidateTargets.sort((a, b) => a.hp - b.hp) // target lowest life first
+
+        const secondHitPhysicalDamage = Math.round(physicalDamage * damageRatio)
+        const secondHitSpecialDamage = Math.round(specialDamage * damageRatio)
+        const secondHitTrueDamage = Math.round(trueDamage * damageRatio)
         const secondHitTarget = candidateTargets.shift()
         if (!secondHitTarget) break
         let totalTakenDamage = 0
@@ -217,11 +242,19 @@ export const loadedDiceOnAttackEffect = new OnAttackEffect(
         })
         pokemon.broadcastAbility({
           skill: "LOADED_DICE",
-          positionX: target.positionX,
-          positionY: target.positionY,
+          positionX: bounceOrigin.positionX,
+          positionY: bounceOrigin.positionY,
           targetX: secondHitTarget.positionX,
           targetY: secondHitTarget.positionY
         })
+
+        alreadyBounced.add(secondHitTarget.id)
+        if (!isBlessed) break
+        // each further hop is half as likely and hits for another 75%
+        bounceOrigin = secondHitTarget
+        damageRatio *= LUCKY_DICE_BOUNCE_DAMAGE_RATIO
+        bounceChance /= 2
+        if (!chance(bounceChance, pokemon)) break
       }
     }
   }
@@ -270,12 +303,21 @@ export class GreenOrbEffect extends PeriodicEffect {
   constructor() {
     super(
       (pokemon, board) => {
-        const adjacentCells = board.getAdjacentCells(
-          pokemon.positionX,
-          pokemon.positionY,
-          true
+        const healedCells = pokemon.player?.blessings?.includes(
+          Blessing.EMERALD_ORB
         )
-        for (const cell of adjacentCells) {
+          ? board.getCellsInRange(
+              pokemon.positionX,
+              pokemon.positionY,
+              EMERALD_ORB_HEAL_RANGE,
+              true
+            )
+          : board.getAdjacentCells(
+              pokemon.positionX,
+              pokemon.positionY,
+              true
+            )
+        for (const cell of healedCells) {
           if (cell.value && cell.value.team === pokemon.team) {
             const { overheal } = cell.value.handleHeal(
               0.05 * cell.value.maxHP,

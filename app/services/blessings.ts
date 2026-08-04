@@ -1073,6 +1073,26 @@ export const blessingEffectService: {
     return true
   },
 
+  [Blessing.EMERALD_ORB]: (player) => {
+    player.items.push(Item.GREEN_ORB)
+    return true
+  },
+
+  [Blessing.SAPPHIRE_ORB]: (player) => {
+    player.items.push(Item.BLUE_ORB)
+    return true
+  },
+
+  [Blessing.RUBY_ORB]: (player) => {
+    player.items.push(Item.RED_ORB)
+    return true
+  },
+
+  [Blessing.LUCKY_DICE_BLESSING]: (player) => {
+    player.items.push(Item.LOADED_DICE)
+    return true
+  },
+
   [Blessing.OLIVE_GARDEN]: (player, state, room) =>
     heroBlessingEffect(Blessing.OLIVE_GARDEN, player, state, room),
 

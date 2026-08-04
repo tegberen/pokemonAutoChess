@@ -807,6 +807,30 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     icon: "turtle_shell",
     grantsPokemonImmediately: true
   },
+  [Blessing.EMERALD_ORB]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "emerald_orb",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.SAPPHIRE_ORB]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "sapphire_orb",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.RUBY_ORB]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "ruby_orb",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.LUCKY_DICE_BLESSING]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "lucky_dice_wand",
+    grantsPokemonImmediately: false
+  },
   [Blessing.POTION]: {
     tier: BlessingTier.SILVER,
     availableAtStages: [12],
@@ -933,10 +957,10 @@ function tierChancesForBlessingsUnderTest(): {
 export const BLESSING_TEST_MODE: boolean = true
 
 const BLESSINGS_UNDER_TEST: Blessing[] = [
-  Blessing.OLIVE_GARDEN,
-  Blessing.ORBITAL_STRIKE,
-  Blessing.ROOSTING_FLOCK,
-  Blessing.SHELL_ARMOR_BLESSING
+  Blessing.EMERALD_ORB,
+  Blessing.SAPPHIRE_ORB,
+  Blessing.RUBY_ORB,
+  Blessing.LUCKY_DICE_BLESSING
 ]
 
 function countBlessingsOfFamily(blessings: Blessing[], family?: string) {

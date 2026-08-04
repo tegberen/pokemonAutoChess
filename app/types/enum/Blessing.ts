@@ -118,6 +118,10 @@ export enum Blessing {
   ORBITAL_STRIKE = "ORBITAL_STRIKE",
   ROOSTING_FLOCK = "ROOSTING_FLOCK",
   SHELL_ARMOR_BLESSING = "SHELL_ARMOR_BLESSING",
+  EMERALD_ORB = "EMERALD_ORB",
+  SAPPHIRE_ORB = "SAPPHIRE_ORB",
+  RUBY_ORB = "RUBY_ORB",
+  LUCKY_DICE_BLESSING = "LUCKY_DICE_BLESSING",
   QUEST_REROLL = "QUEST_REROLL",
   QUEST_GROW = "QUEST_GROW",
   QUEST_SHINE = "QUEST_SHINE",
@@ -302,6 +306,12 @@ export const EXHAUSTING_FLAME_DAMAGE_MULTIPLIER = 0.8
 export const ETERNAL_RAGE_DURATION_PER_STAR = 1000
 export const ORBITAL_STRIKE_RANGE_BONUS = 2
 export const SHELL_ARMOR_SPE_DEF_BY_STARS = [1, 3, 6]
+
+export const EMERALD_ORB_HEAL_RANGE = 2
+export const SAPPHIRE_ORB_BOUNCES = 3
+export const SAPPHIRE_ORB_ARMOR_BREAK_DURATION = 3000
+export const RUBY_ORB_TRUE_DAMAGE_VS_BURN = 0.5
+export const LUCKY_DICE_BOUNCE_DAMAGE_RATIO = 0.75
 
 /* the Pokemon each hero blessing gifts on pick, and the family whose strongest
    fielded member the blessing then empowers every combat */
