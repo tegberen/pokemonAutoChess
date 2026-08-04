@@ -807,6 +807,30 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     icon: "turtle_shell",
     grantsPokemonImmediately: true
   },
+  [Blessing.LEAF_TORNADO]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: [4],
+    icon: "leaf_tornado",
+    grantsPokemonImmediately: true
+  },
+  [Blessing.MARIACHI_MAYHEM]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: [4],
+    icon: "mariachi_mayhem",
+    grantsPokemonImmediately: true
+  },
+  [Blessing.ICEBREAKER]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: [4],
+    icon: "ice_breaker",
+    grantsPokemonImmediately: true
+  },
+  [Blessing.RAMPAGE]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: [4],
+    icon: "rampage",
+    grantsPokemonImmediately: true
+  },
   [Blessing.FROST_BURST]: {
     tier: BlessingTier.GOLD,
     availableAtStages: [12],
@@ -1011,10 +1035,10 @@ function tierChancesForBlessingsUnderTest(): {
 export const BLESSING_TEST_MODE: boolean = true
 
 const BLESSINGS_UNDER_TEST: Blessing[] = [
-  Blessing.FROST_BURST,
-  Blessing.AURORA_BOREALIS,
-  Blessing.RADIANCE,
-  Blessing.PACK_ATTACK
+  Blessing.LEAF_TORNADO,
+  Blessing.MARIACHI_MAYHEM,
+  Blessing.ICEBREAKER,
+  Blessing.RAMPAGE
 ]
 
 function countBlessingsOfFamily(blessings: Blessing[], family?: string) {

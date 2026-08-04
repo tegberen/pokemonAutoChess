@@ -118,6 +118,12 @@ export enum Blessing {
   ORBITAL_STRIKE = "ORBITAL_STRIKE",
   ROOSTING_FLOCK = "ROOSTING_FLOCK",
   SHELL_ARMOR_BLESSING = "SHELL_ARMOR_BLESSING",
+  LEAF_TORNADO = "LEAF_TORNADO",
+  MARIACHI_MAYHEM = "MARIACHI_MAYHEM",
+  ICEBREAKER = "ICEBREAKER",
+  RAMPAGE = "RAMPAGE",
+  SOUL_DRAIN = "SOUL_DRAIN",
+  FLOWER_QUEEN = "FLOWER_QUEEN",
   FROST_BURST = "FROST_BURST",
   AURORA_BOREALIS = "AURORA_BOREALIS",
   RADIANCE = "RADIANCE",
@@ -316,6 +322,18 @@ export const ETERNAL_RAGE_DURATION_PER_STAR = 1000
 export const ORBITAL_STRIKE_RANGE_BONUS = 2
 export const SHELL_ARMOR_SPE_DEF_BY_STARS = [1, 3, 6]
 
+export const SOUL_DRAIN_HEAL = 20
+export const SOUL_DRAIN_FRAGMENTS_ON_KILL = 2
+export const FLOWER_QUEEN_MAX_PP_REDUCTION = 5
+export const FLOWER_QUEEN_MIN_MAX_PP = 10
+
+export const LEAF_TORNADO_BOUNCES = 2
+export const LEAF_TORNADO_DAMAGE_RATIO = 0.5
+export const MARIACHI_MAYHEM_CONFUSION_DURATION = 2000
+export const RAMPAGE_DURATION_EXTENSION = 2000
+export const RAMPAGE_CHANNEL_THRESHOLD = 5000
+export const RAMPAGE_DAMAGE_MULTIPLIER = 2
+
 export const FROST_BURST_SPLASH_RATIO = 0.5
 export const FROST_BURST_EXECUTE_CHANCE_RATIO = 0.5
 export const AURORA_BOREALIS_DAMAGE_REDUCTION = 0.1
@@ -354,7 +372,11 @@ export const HERO_BLESSING_GIFT: { [blessing in Blessing]?: Pkm } = {
   [Blessing.FROST_BURST]: Pkm.SNOVER,
   [Blessing.AURORA_BOREALIS]: Pkm.AMAURA,
   [Blessing.RADIANCE]: Pkm.LARVESTA,
-  [Blessing.PACK_ATTACK]: Pkm.HOUNDOUR
+  [Blessing.PACK_ATTACK]: Pkm.HOUNDOUR,
+  [Blessing.LEAF_TORNADO]: Pkm.SNIVY,
+  [Blessing.MARIACHI_MAYHEM]: Pkm.LOTAD,
+  [Blessing.ICEBREAKER]: Pkm.PIPLUP,
+  [Blessing.RAMPAGE]: Pkm.DEINO
 }
 
 export const HERO_BLESSING_FAMILY: { [blessing in Blessing]?: Pkm } = {
@@ -370,7 +392,11 @@ export const HERO_BLESSING_FAMILY: { [blessing in Blessing]?: Pkm } = {
   [Blessing.FROST_BURST]: Pkm.SNOVER,
   [Blessing.AURORA_BOREALIS]: Pkm.AMAURA,
   [Blessing.RADIANCE]: Pkm.LARVESTA,
-  [Blessing.PACK_ATTACK]: Pkm.HOUNDOUR
+  [Blessing.PACK_ATTACK]: Pkm.HOUNDOUR,
+  [Blessing.LEAF_TORNADO]: Pkm.SNIVY,
+  [Blessing.MARIACHI_MAYHEM]: Pkm.LOTAD,
+  [Blessing.ICEBREAKER]: Pkm.PIPLUP,
+  [Blessing.RAMPAGE]: Pkm.DEINO
 }
 
 /* hero blessings that also relocate the player to a region where their family

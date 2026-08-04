@@ -881,6 +881,14 @@ export const AbilitiesAnimations: {
     duration: 400,
     scale: 5
   }),
+  // projectile for the LEAF_TORNADO blessing ricochet
+  ["GRASS_RANGE"]: projectile({
+    ability: "GRASS/range",
+    textureKey: "attacks",
+    duration: 300,
+    scale: 3,
+    hitAnim: onTarget({ ability: "PUFF_GREEN", scale: 1 })
+  }),
   [Ability.AQUA_STEP]: onCaster({
     ability: Ability.AQUA_STEP,
     scale: 1.5,

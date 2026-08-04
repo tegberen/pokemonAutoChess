@@ -1,3 +1,4 @@
+import { Blessing } from "../../types/enum/Blessing"
 import { AttackType } from "../../types/enum/Game"
 import type { Board } from "../board"
 import type { PokemonEntity } from "../pokemon-entity"
@@ -15,7 +16,17 @@ export class WaveSplashStrategy extends AbilityStrategy {
     const shieldPercent = [0.2, 0.2, 0.2, 0.5][pokemon.stars - 1] ?? 0.5
     const shieldAmount = Math.round(pokemon.maxHP * shieldPercent)
     pokemon.addShield(shieldAmount, pokemon, 1, crit)
+    const isBlessed = pokemon.heroBlessings?.has(Blessing.ICEBREAKER)
     const damage = Math.round(pokemon.maxHP * shieldPercent)
-    target.handleSpecialDamage(damage, board, AttackType.SPECIAL, pokemon, crit)
+    const { death } = target.handleSpecialDamage(
+      isBlessed && target.status.freeze ? 9999 : damage,
+      board,
+      AttackType.SPECIAL,
+      pokemon,
+      crit
+    )
+    if (isBlessed && death) {
+      pokemon.addShield(shieldAmount, pokemon, 1, crit)
+    }
   }
 }

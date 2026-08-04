@@ -1095,6 +1095,18 @@ export const blessingEffectService: {
     return true
   },
 
+  [Blessing.LEAF_TORNADO]: (player, state, room) =>
+    heroBlessingEffect(Blessing.LEAF_TORNADO, player, state, room),
+
+  [Blessing.MARIACHI_MAYHEM]: (player, state, room) =>
+    heroBlessingEffect(Blessing.MARIACHI_MAYHEM, player, state, room),
+
+  [Blessing.ICEBREAKER]: (player, state, room) =>
+    heroBlessingEffect(Blessing.ICEBREAKER, player, state, room),
+
+  [Blessing.RAMPAGE]: (player, state, room) =>
+    heroBlessingEffect(Blessing.RAMPAGE, player, state, room),
+
   [Blessing.FROST_BURST]: (player, state, room) =>
     heroBlessingEffect(Blessing.FROST_BURST, player, state, room),
 

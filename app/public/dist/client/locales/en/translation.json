@@ -5426,6 +5426,22 @@
 			"name": "Roosting Flock",
 			"description": "Gain a Tranquill and move to a random Pidove region if not in one. When your STRONGEST Pidove casts its ability, ADJACENT FLYING allies cast Roost as well."
 		},
+		"LEAF_TORNADO": {
+			"name": "Leaf Tornado",
+			"description": "Gain a Snivy. Your STRONGEST Snivy's attacks ricochet to up to 2 additional enemies, the damage halving with each bounce."
+		},
+		"MARIACHI_MAYHEM": {
+			"name": "Mariachi Mayhem",
+			"description": "Gain a Lotad. When your STRONGEST Lotad casts its ability, all enemies within its RANGE suffer CONFUSION for 2 seconds."
+		},
+		"ICEBREAKER": {
+			"name": "Icebreaker",
+			"description": "Gain a Piplup. Your STRONGEST Piplup's ability executes FREEZE enemies, and grants double SHIELD when it KO's an enemy."
+		},
+		"RAMPAGE": {
+			"name": "Rampage",
+			"description": "Gain a Deino. Your STRONGEST Deino's ability and its SILENCE last 2 seconds longer each time it KO's an ADJACENT enemy. After 5 seconds of channeling, the damage is doubled for the rest of the cast."
+		},
 		"FROST_BURST": {
 			"name": "Frost Burst",
 			"description": "Gain a Snover and move to a random Snover region if not in one. When your STRONGEST Snover's ability KO's an enemy, 50% of the damage is dealt to ADJACENT enemies, which can also execute at half the chance. This effect cannot chain."

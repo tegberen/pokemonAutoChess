@@ -1,4 +1,10 @@
 import { Ability } from "../../types/enum/Ability"
+import {
+  Blessing,
+  RAMPAGE_CHANNEL_THRESHOLD,
+  RAMPAGE_DAMAGE_MULTIPLIER,
+  RAMPAGE_DURATION_EXTENSION
+} from "../../types/enum/Blessing"
 import { EffectEnum } from "../../types/enum/Effect"
 import { AttackType, Team } from "../../types/enum/Game"
 import { chance } from "../../utils/random"
@@ -9,10 +15,12 @@ import { AbilityStrategy } from "./ability-strategy"
 
 class DarkHarvestEffect extends PeriodicEffect {
   duration: number
+  channelledMs = 0
   constructor(duration: number, pokemon: PokemonEntity) {
     super(
       (pokemon) => {
         this.duration -= this.intervalMs
+        this.channelledMs += this.intervalMs
         if (this.duration <= 0) {
           pokemon.effectsSet.delete(this)
           pokemon.effects.delete(EffectEnum.DARK_HARVEST)
@@ -31,13 +39,19 @@ class DarkHarvestEffect extends PeriodicEffect {
         const crit = pokemon.effects.has(EffectEnum.ABILITY_CRIT)
           ? chance(pokemon.critChance / 100, pokemon)
           : false
-        const darkHarvestDamage = [5, 10, 20, 40][pokemon.stars - 1] ?? 40
+        const isRampaging = pokemon.heroBlessings?.has(Blessing.RAMPAGE)
+        const rampageBonus =
+          isRampaging && this.channelledMs >= RAMPAGE_CHANNEL_THRESHOLD
+            ? RAMPAGE_DAMAGE_MULTIPLIER
+            : 1
+        const darkHarvestDamage =
+          ([5, 10, 20, 40][pokemon.stars - 1] ?? 40) * rampageBonus
         const healFactor = 0.3
         board
           .getAdjacentCells(pokemon.positionX, pokemon.positionY)
           .forEach((cell) => {
             if (cell.value && cell.value.team !== pokemon.team) {
-              const { takenDamage } = cell.value.handleSpecialDamage(
+              const { takenDamage, death } = cell.value.handleSpecialDamage(
                 darkHarvestDamage,
                 board,
                 AttackType.SPECIAL,
@@ -51,6 +65,14 @@ class DarkHarvestEffect extends PeriodicEffect {
                 0,
                 false
               )
+              if (isRampaging && death) {
+                this.duration += RAMPAGE_DURATION_EXTENSION
+                pokemon.status.triggerSilence(
+                  pokemon.status.silenceCooldown + RAMPAGE_DURATION_EXTENSION,
+                  pokemon,
+                  pokemon
+                )
+              }
             }
           })
       },

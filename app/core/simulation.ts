@@ -75,6 +75,9 @@ import {
   MISFITS_SPECIAL_DEFENSE,
   HERO_BLESSING_FAMILY,
   AURORA_BOREALIS_REDUCTION_PER_ACTIVE_SYNERGY,
+  LEAF_TORNADO_BOUNCES,
+  LEAF_TORNADO_DAMAGE_RATIO,
+  MARIACHI_MAYHEM_CONFUSION_DURATION,
   FROST_GEAR_HP_COST_RATIO,
   FROST_GEAR_MAX_PP,
   FROST_GEAR_RANGE_BONUS,
@@ -1705,6 +1708,83 @@ export default class Simulation extends Schema implements ISimulation {
       SynergyTiers[Synergy.LIGHT].filter((lightEffect) =>
         teamEffects.has(lightEffect)
       ).forEach((lightEffect) => this.applyEffect(radianceChampion, lightEffect))
+    }
+
+    const mariachiChampion = championOf.get(Blessing.MARIACHI_MAYHEM)
+    if (mariachiChampion) {
+      mariachiChampion.effectsSet.add(
+        new OnAbilityCastEffect((caster, board) => {
+          board
+            .getCellsInRange(
+              caster.positionX,
+              caster.positionY,
+              caster.range,
+              false
+            )
+            .forEach((cell) => {
+              if (cell.value && cell.value.team !== caster.team) {
+                cell.value.status.triggerConfusion(
+                  MARIACHI_MAYHEM_CONFUSION_DURATION,
+                  cell.value,
+                  caster
+                )
+              }
+            })
+        })
+      )
+    }
+
+    const leafTornadoChampion = championOf.get(Blessing.LEAF_TORNADO)
+    if (leafTornadoChampion) {
+      leafTornadoChampion.effectsSet.add(
+        new OnAttackEffect(
+          ({
+            pokemon,
+            target,
+            board,
+            physicalDamage,
+            specialDamage,
+            trueDamage
+          }) => {
+            if (!target) return
+            const enemyTeam =
+              pokemon.team === Team.BLUE_TEAM ? Team.RED_TEAM : Team.BLUE_TEAM
+            const ricochetTargets = board
+              .getClosestEnemies(pokemon.positionX, pokemon.positionY, enemyTeam)
+              .filter((enemy) => enemy.id !== target.id && enemy.hp > 0)
+              .slice(0, LEAF_TORNADO_BOUNCES)
+
+            let ratio = LEAF_TORNADO_DAMAGE_RATIO
+            let bounceOrigin: PokemonEntity = target
+            ricochetTargets.forEach((enemy) => {
+              pokemon.broadcastAbility({
+                skill: "GRASS_RANGE",
+                positionX: bounceOrigin.positionX,
+                positionY: bounceOrigin.positionY,
+                targetX: enemy.positionX,
+                targetY: enemy.positionY
+              })
+              bounceOrigin = enemy
+              const damages: [number, AttackType][] = [
+                [physicalDamage, AttackType.PHYSICAL],
+                [specialDamage, AttackType.SPECIAL],
+                [trueDamage, AttackType.TRUE]
+              ]
+              damages.forEach(([damage, attackType]) => {
+                if (damage <= 0) return
+                enemy.handleDamage({
+                  damage: Math.round(damage * ratio),
+                  board,
+                  attackType,
+                  attacker: pokemon,
+                  shouldTargetGainMana: true
+                })
+              })
+              ratio *= LEAF_TORNADO_DAMAGE_RATIO
+            })
+          }
+        )
+      )
     }
 
     const auroraBorealisChampion = championOf.get(Blessing.AURORA_BOREALIS)
