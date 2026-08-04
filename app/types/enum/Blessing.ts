@@ -118,6 +118,11 @@ export enum Blessing {
   ORBITAL_STRIKE = "ORBITAL_STRIKE",
   ROOSTING_FLOCK = "ROOSTING_FLOCK",
   SHELL_ARMOR_BLESSING = "SHELL_ARMOR_BLESSING",
+  MORTAR_SHELLS = "MORTAR_SHELLS",
+  ICE_SPEAR = "ICE_SPEAR",
+  FROST_GEAR = "FROST_GEAR",
+  SHUTTLE_BUS = "SHUTTLE_BUS",
+  PLUNDER = "PLUNDER",
   EMERALD_ORB = "EMERALD_ORB",
   SAPPHIRE_ORB = "SAPPHIRE_ORB",
   RUBY_ORB = "RUBY_ORB",
@@ -307,6 +312,16 @@ export const ETERNAL_RAGE_DURATION_PER_STAR = 1000
 export const ORBITAL_STRIKE_RANGE_BONUS = 2
 export const SHELL_ARMOR_SPE_DEF_BY_STARS = [1, 3, 6]
 
+export const MORTAR_SHELLS_RANGE_BONUS = 3
+export const MORTAR_SHELLS_ATTACK_RATIO = 1
+export const MORTAR_SHELLS_SPEED_RATIO = 0.5
+export const ICE_SPEAR_PP_REFUND_ON_KILL = 20
+export const FROST_GEAR_RANGE_BONUS = 2
+export const FROST_GEAR_MAX_PP = 70
+export const FROST_GEAR_HP_COST_RATIO = 0.1
+export const SHUTTLE_BUS_MAX_PP = 110
+export const PLUNDER_GOLD_MULTIPLIER = 2
+
 export const EMERALD_ORB_HEAL_RANGE = 2
 export const SAPPHIRE_ORB_BOUNCES = 3
 export const SAPPHIRE_ORB_ARMOR_BREAK_DURATION = 3000
@@ -319,21 +334,40 @@ export const HERO_BLESSING_GIFT: { [blessing in Blessing]?: Pkm } = {
   [Blessing.OLIVE_GARDEN]: Pkm.DOLLIV,
   [Blessing.ORBITAL_STRIKE]: Pkm.DOTTLER,
   [Blessing.ROOSTING_FLOCK]: Pkm.TRANQUILL,
-  [Blessing.SHELL_ARMOR_BLESSING]: Pkm.GROTLE
+  [Blessing.SHELL_ARMOR_BLESSING]: Pkm.GROTLE,
+  [Blessing.MORTAR_SHELLS]: Pkm.MAGBY,
+  [Blessing.ICE_SPEAR]: Pkm.VANILLITE,
+  [Blessing.FROST_GEAR]: Pkm.SHELLDER,
+  [Blessing.SHUTTLE_BUS]: Pkm.SKIDDO,
+  [Blessing.PLUNDER]: Pkm.GALAR_MEOWTH
 }
 
 export const HERO_BLESSING_FAMILY: { [blessing in Blessing]?: Pkm } = {
   [Blessing.OLIVE_GARDEN]: Pkm.SMOLIV,
   [Blessing.ORBITAL_STRIKE]: Pkm.BLIPBUG,
   [Blessing.ROOSTING_FLOCK]: Pkm.PIDOVE,
-  [Blessing.SHELL_ARMOR_BLESSING]: Pkm.TURTWIG
+  [Blessing.SHELL_ARMOR_BLESSING]: Pkm.TURTWIG,
+  [Blessing.MORTAR_SHELLS]: Pkm.MAGBY,
+  [Blessing.ICE_SPEAR]: Pkm.VANILLITE,
+  [Blessing.FROST_GEAR]: Pkm.SHELLDER,
+  [Blessing.SHUTTLE_BUS]: Pkm.SKIDDO,
+  [Blessing.PLUNDER]: Pkm.GALAR_MEOWTH
 }
 
 /* hero blessings that also relocate the player to a region where their family
    is findable */
 export const HERO_BLESSING_MOVES_REGION: Blessing[] = [
   Blessing.ROOSTING_FLOCK,
-  Blessing.SHELL_ARMOR_BLESSING
+  Blessing.SHELL_ARMOR_BLESSING,
+  Blessing.PLUNDER
+]
+
+/* hero blessings that seed the shared pool with their Pokemon, exactly as an
+   additional pick would */
+export const HERO_BLESSING_ADDS_TO_POOL: Blessing[] = [
+  Blessing.FROST_GEAR,
+  Blessing.SHUTTLE_BUS,
+  Blessing.PLUNDER
 ]
 
 export interface ScheduledBlessingGrant {

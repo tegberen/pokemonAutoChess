@@ -5426,6 +5426,26 @@
 			"name": "Roosting Flock",
 			"description": "Gain a Tranquill and move to a random Pidove region if not in one. When your STRONGEST Pidove casts its ability, ADJACENT FLYING allies cast Roost as well."
 		},
+		"MORTAR_SHELLS": {
+			"name": "Mortar Shells",
+			"description": "Gain a Magby. Your STRONGEST Magby gains +3 RANGE and +100% base ATK, but has 50% reduced SPEED."
+		},
+		"ICE_SPEAR": {
+			"name": "Ice Spear",
+			"description": "Gain a Vanillite. Your STRONGEST Vanillite's missiles cannot miss, and refund 20 PP upon KO'ing an enemy."
+		},
+		"FROST_GEAR": {
+			"name": "Frost Gear",
+			"description": "Gain a Shellder and add it to the pool. Your STRONGEST Shellder has +2 RANGE and its PP set to 70, but loses 10% max HP upon casting its ability."
+		},
+		"SHUTTLE_BUS": {
+			"name": "Shuttle Bus",
+			"description": "Gain a Skiddo and add it to the pool. Your STRONGEST Skiddo has its PP set to 110, but starts combat with full PP."
+		},
+		"PLUNDER": {
+			"name": "Plunder",
+			"description": "Gain a Galarian Meowth, add it to the pool and move to a random STEEL region if not in one. Upon winning combat, gain double the GOLD your STRONGEST Galarian Meowth spent with its ability that combat."
+		},
 		"EMERALD_ORB": {
 			"name": "Emerald Orb",
 			"description": "Gain a GREEN_ORB. Your GREEN_ORB healing has 2 RANGE."

@@ -74,7 +74,14 @@ import {
   MISFITS_MAX_HP,
   MISFITS_SPECIAL_DEFENSE,
   HERO_BLESSING_FAMILY,
+  FROST_GEAR_HP_COST_RATIO,
+  FROST_GEAR_MAX_PP,
+  FROST_GEAR_RANGE_BONUS,
+  MORTAR_SHELLS_ATTACK_RATIO,
+  MORTAR_SHELLS_RANGE_BONUS,
+  MORTAR_SHELLS_SPEED_RATIO,
   ORBITAL_STRIKE_RANGE_BONUS,
+  SHUTTLE_BUS_MAX_PP,
   POTENTIAL_ENERGY_SHIELD,
   POTENTIAL_ENERGY_SPEED,
   QUIET_STRENGTH_LOW_LIFE_THRESHOLD,
@@ -1597,6 +1604,7 @@ export default class Simulation extends Schema implements ISimulation {
         })
       }
 
+      player.plunderGoldSpentThisFight = 0
       this.applyHeroBlessings(blessings, ownUnits)
     }
   }
@@ -1634,6 +1642,46 @@ export default class Simulation extends Schema implements ISimulation {
         fieldSpreader.status.addPsychicField(fieldSpreader)
       }
       orbitalStrikeChampion.range += ORBITAL_STRIKE_RANGE_BONUS
+    }
+
+    const mortarShellsChampion = championOf.get(Blessing.MORTAR_SHELLS)
+    if (mortarShellsChampion) {
+      mortarShellsChampion.range += MORTAR_SHELLS_RANGE_BONUS
+      mortarShellsChampion.addAttack(
+        Math.round(mortarShellsChampion.baseAtk * MORTAR_SHELLS_ATTACK_RATIO),
+        mortarShellsChampion,
+        0,
+        false
+      )
+      mortarShellsChampion.addSpeed(
+        -Math.round(mortarShellsChampion.speed * MORTAR_SHELLS_SPEED_RATIO),
+        mortarShellsChampion,
+        0,
+        false
+      )
+    }
+
+    const frostGearChampion = championOf.get(Blessing.FROST_GEAR)
+    if (frostGearChampion) {
+      frostGearChampion.range += FROST_GEAR_RANGE_BONUS
+      frostGearChampion.maxPP = FROST_GEAR_MAX_PP
+      frostGearChampion.effectsSet.add(
+        new OnAbilityCastEffect((caster) => {
+          caster.handleDamage({
+            damage: Math.round(caster.maxHP * FROST_GEAR_HP_COST_RATIO),
+            board: this.board,
+            attackType: AttackType.TRUE,
+            attacker: null,
+            shouldTargetGainMana: false
+          })
+        })
+      )
+    }
+
+    const shuttleBusChampion = championOf.get(Blessing.SHUTTLE_BUS)
+    if (shuttleBusChampion) {
+      shuttleBusChampion.maxPP = SHUTTLE_BUS_MAX_PP
+      shuttleBusChampion.pp = SHUTTLE_BUS_MAX_PP
     }
   }
 

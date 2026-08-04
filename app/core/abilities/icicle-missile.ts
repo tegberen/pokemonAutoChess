@@ -1,3 +1,7 @@
+import {
+  Blessing,
+  ICE_SPEAR_PP_REFUND_ON_KILL
+} from "../../types/enum/Blessing"
 import { AttackType, Team } from "../../types/enum/Game"
 import type { Board } from "../board"
 import type { PokemonEntity } from "../pokemon-entity"
@@ -34,22 +38,30 @@ export class IcicleMissileStrategy extends AbilityStrategy {
           delay: i
         })
 
+        const cannotMiss = pokemon.heroBlessings?.has(Blessing.ICE_SPEAR)
         pokemon.commands.push(
           new DelayedCommand(() => {
-            const entityHit = board.getEntityOnCell(targetX, targetY)
+            /* the missile normally lands on the cell it was aimed at, so a
+               target that walked away is missed; blessed, it follows the mon */
+            const entityHit = cannotMiss
+              ? tg
+              : board.getEntityOnCell(targetX, targetY)
             if (
               entityHit &&
               entityHit.hp > 0 &&
               entityHit.team !== pokemon.team
             ) {
               entityHit.status.triggerFreeze(2000, tg, pokemon)
-              entityHit.handleSpecialDamage(
+              const { death } = entityHit.handleSpecialDamage(
                 damage,
                 board,
                 AttackType.SPECIAL,
                 pokemon,
                 crit
               )
+              if (death && cannotMiss) {
+                pokemon.addPP(ICE_SPEAR_PP_REFUND_ON_KILL, pokemon, 0, false)
+              }
             }
           }, 1000)
         )

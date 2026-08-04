@@ -16,7 +16,9 @@ import {
   SELECTIVE_GENETICS_MAX_COST,
   HERO_BLESSING_GIFT,
   HERO_BLESSING_FAMILY,
-  HERO_BLESSING_MOVES_REGION
+  HERO_BLESSING_MOVES_REGION,
+  HERO_BLESSING_ADDS_TO_POOL,
+  PLUNDER_GOLD_MULTIPLIER
 } from "../types/enum/Blessing"
 import { BattleResult, Rarity } from "../types/enum/Game"
 import {
@@ -503,6 +505,14 @@ function moveToRegionWherePokemonIsFound(
   }, LAPRAS_TRAVEL_DURATION)
 }
 
+function refundPlunderedGold(player: Player) {
+  const spent = player.plunderGoldSpentThisFight ?? 0
+  player.plunderGoldSpentThisFight = 0
+  if (spent > 0 && player.history.at(-1)?.result === BattleResult.WIN) {
+    player.addMoney(spent * PLUNDER_GOLD_MULTIPLIER, true, null)
+  }
+}
+
 function heroBlessingEffect(
   blessing: Blessing,
   player: Player,
@@ -512,7 +522,14 @@ function heroBlessingEffect(
   const gift = HERO_BLESSING_GIFT[blessing]
   if (gift && giftPokemonIfBenchHasRoom(player, gift) === false) return false
   const family = HERO_BLESSING_FAMILY[blessing]
-  if (family && HERO_BLESSING_MOVES_REGION.includes(blessing)) {
+  if (!family) return true
+
+  /* seeding the pool first matters: isInRegion refuses an additional-only mon
+     until it is actually in the pool, so the region move would find no map */
+  if (HERO_BLESSING_ADDS_TO_POOL.includes(blessing)) {
+    state.shop.addAdditionalPokemon(family, state)
+  }
+  if (HERO_BLESSING_MOVES_REGION.includes(blessing)) {
     moveToRegionWherePokemonIsFound(player, state, room, family)
   }
   return true
@@ -671,6 +688,11 @@ export const blessingTriggerEffectService: {
   [Blessing.MUNCHLAX_DELIVERY]: {
     [BlessingTrigger.CAROUSEL_END]: (player) =>
       player.items.push(Item.PICNIC_SET)
+  },
+
+  [Blessing.PLUNDER]: {
+    [BlessingTrigger.PVE_END]: (player) => refundPlunderedGold(player),
+    [BlessingTrigger.PVP_END]: (player) => refundPlunderedGold(player)
   },
 
   [Blessing.GARDENING]: {
@@ -1072,6 +1094,21 @@ export const blessingEffectService: {
     }, LAPRAS_TRAVEL_DURATION)
     return true
   },
+
+  [Blessing.MORTAR_SHELLS]: (player, state, room) =>
+    heroBlessingEffect(Blessing.MORTAR_SHELLS, player, state, room),
+
+  [Blessing.ICE_SPEAR]: (player, state, room) =>
+    heroBlessingEffect(Blessing.ICE_SPEAR, player, state, room),
+
+  [Blessing.FROST_GEAR]: (player, state, room) =>
+    heroBlessingEffect(Blessing.FROST_GEAR, player, state, room),
+
+  [Blessing.SHUTTLE_BUS]: (player, state, room) =>
+    heroBlessingEffect(Blessing.SHUTTLE_BUS, player, state, room),
+
+  [Blessing.PLUNDER]: (player, state, room) =>
+    heroBlessingEffect(Blessing.PLUNDER, player, state, room),
 
   [Blessing.EMERALD_ORB]: (player) => {
     player.items.push(Item.GREEN_ORB)

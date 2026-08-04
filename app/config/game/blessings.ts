@@ -807,6 +807,36 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     icon: "turtle_shell",
     grantsPokemonImmediately: true
   },
+  [Blessing.MORTAR_SHELLS]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: [12],
+    icon: "mortar_shells",
+    grantsPokemonImmediately: true
+  },
+  [Blessing.ICE_SPEAR]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: [12],
+    icon: "ice_spear",
+    grantsPokemonImmediately: true
+  },
+  [Blessing.FROST_GEAR]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: [12],
+    icon: "frost_gear",
+    grantsPokemonImmediately: true
+  },
+  [Blessing.SHUTTLE_BUS]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: [12],
+    icon: "shuttle_bus",
+    grantsPokemonImmediately: true
+  },
+  [Blessing.PLUNDER]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: [12],
+    icon: "plunder",
+    grantsPokemonImmediately: true
+  },
   [Blessing.EMERALD_ORB]: {
     tier: BlessingTier.GOLD,
     availableAtStages: BLESSING_SELECTION_STAGES,
@@ -957,10 +987,11 @@ function tierChancesForBlessingsUnderTest(): {
 export const BLESSING_TEST_MODE: boolean = true
 
 const BLESSINGS_UNDER_TEST: Blessing[] = [
-  Blessing.EMERALD_ORB,
-  Blessing.SAPPHIRE_ORB,
-  Blessing.RUBY_ORB,
-  Blessing.LUCKY_DICE_BLESSING
+  Blessing.MORTAR_SHELLS,
+  Blessing.ICE_SPEAR,
+  Blessing.FROST_GEAR,
+  Blessing.SHUTTLE_BUS,
+  Blessing.PLUNDER
 ]
 
 function countBlessingsOfFamily(blessings: Blessing[], family?: string) {

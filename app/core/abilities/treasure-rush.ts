@@ -1,3 +1,4 @@
+import { Blessing } from "../../types/enum/Blessing"
 import { AttackType } from "../../types/enum/Game"
 import type { Board } from "../board"
 import type { PokemonEntity } from "../pokemon-entity"
@@ -18,6 +19,9 @@ export class TreasureRushStrategy extends AbilityStrategy {
     if (pokemon.player && pokemon.player.money >= goldCost) {
       pokemon.player.addMoney(-goldCost, false, pokemon)
       pokemon.addAttack(atkGain, pokemon, 0, false, true)
+      if (pokemon.heroBlessings?.has(Blessing.PLUNDER)) {
+        pokemon.player.plunderGoldSpentThisFight += goldCost
+      }
     }
 
     target.handleSpecialDamage(damage, board, AttackType.SPECIAL, pokemon, crit)

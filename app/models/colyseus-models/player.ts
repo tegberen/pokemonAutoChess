@@ -236,6 +236,8 @@ export default class Player extends Schema implements IPlayer {
   blessings: Blessing[] = []
   // server-only: wands granted by FIND_A_LOST_WAND, exempt from synergy removal
   blessingWands: Item[] = []
+  // server-only: gold the PLUNDER champion spent casting Treasure Rush this fight
+  plunderGoldSpentThisFight: number = 0
   bigPecksSharpBeakGranted = false
   blessingQuestsCompleted: Set<Blessing> = new Set<Blessing>()
   blessingQuestThresholdsReached: Map<Blessing, number> = new Map<
