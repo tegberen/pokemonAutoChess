@@ -3,6 +3,7 @@ import ReactDOM from "react-dom"
 import { Tooltip } from "react-tooltip"
 import { SynergyTiersThresholds } from "../../../../../config"
 import { Synergy } from "../../../../../types/enum/Synergy"
+import BlessingsPanel from "./blessings-panel"
 import SynergyComponent from "./synergy-component"
 import SynergyDetailComponent from "./synergy-detail-component"
 import "./synergies.css"
@@ -10,6 +11,7 @@ import "./synergies.css"
 export default function Synergies(props: {
   synergies: [string, number][]
   tooltipPortal: boolean
+  blessingsEnabled?: boolean
 }) {
   const [hoveredSynergy, setHoveredSynergy] = useState<Synergy | null>(null)
   const synergies = Object.keys(Synergy)
@@ -53,6 +55,7 @@ export default function Synergies(props: {
 
   return (
     <div className="synergies-list">
+      {props.blessingsEnabled && <BlessingsPanel recentOnly />}
       {synergies.map((type, index) => {
         const s = props.synergies.find((e) => e[0] == type)!
         return (

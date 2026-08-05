@@ -25,6 +25,8 @@
 .calendar-event-card.jirachi {
   background-color: #092c4f;
   background-image:
+    radial-gradient(ellipse at 68% 72%, rgb(190 124 244 / 58%) 0%, transparent 58%),
+    linear-gradient(122deg, transparent 18%, rgb(154 104 239 / 46%) 43%, rgb(94 182 239 / 38%) 60%, transparent 84%),
     radial-gradient(circle at 12% 24%, #fff 0 1px, #cbc7dd 1.5px, #cbc7dd55 2px, transparent 4px),
     radial-gradient(circle at 28% 70%, #fff 0 1px, #3397b8 1.5px, #3397b855 2px, transparent 4px),
     radial-gradient(circle at 54% 18%, #fff 0 1px, #cbc7dd 1.5px, #cbc7dd55 2px, transparent 4px),
@@ -56,6 +58,7 @@
 
 .calendar-event-card.smeargle .calendar-event-content,
 .calendar-event-card.smeargle .calendar-event-timer,
+.calendar-event-card.smeargle .calendar-event-content p,
 .calendar-event-card.smeargle .calendar-event-content time {
   color: #fff;
   text-shadow: 1px 1px 0 #05090f, 0 0 1px #05090f;
@@ -67,6 +70,34 @@
   padding: 0.1em 0;
   color: #fff;
   text-shadow: 1px 1px 0 #05090f, 0 0 1px #05090f;
+}
+
+.calendar-event-card.doubleup {
+  background: #10141a url("assets/ui/tournament_background.jpg") center / cover;
+}
+
+.calendar-event-card.doubleup .calendar-event-content {
+  padding-left: 1em;
+}
+
+.calendar-event-card.doubleup .calendar-event-content,
+.calendar-event-card.doubleup .calendar-event-timer,
+.calendar-event-card.doubleup .calendar-event-content p,
+.calendar-event-card.doubleup .calendar-event-content time {
+  color: #fff;
+  text-shadow: 1px 1px 0 #05090f, 0 0 1px #05090f;
+}
+
+.calendar-event-card.doubleup .calendar-event-timer {
+  padding: 0.3em 0.4em;
+  border-radius: 3px;
+  background: rgb(42 43 63 / 78%);
+}
+
+.calendar-event-card.doubleup .calendar-event-copy {
+  padding: 0.25em 0.4em;
+  border-radius: 3px;
+  background: rgb(42 43 63 / 78%);
 }
 
 .calendar-event-card.smeargle .calendar-event-copy {
@@ -90,7 +121,9 @@
 }
 
 .calendar-event-card > img {
-  width: clamp(106px, 28.6%, 141px);
+  width: 28.6%;
+  min-width: 106px;
+  align-self: stretch;
   border-radius: 5px;
   object-fit: cover;
   object-position: center;
@@ -109,7 +142,7 @@
 }
 
 .calendar-event-content h3 {
-  font-size: 1.2em;
+  font-size: 1.3em;
   text-shadow: 1px 1px 0 #05090f;
 }
 

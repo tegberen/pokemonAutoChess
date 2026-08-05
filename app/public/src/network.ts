@@ -545,6 +545,14 @@ export function setEventNpc(params: {
   orientation: string
   animation: string
   emotion: string
+  tournamentEnabled: boolean
+  tournamentTitle: string
+  tournamentMessage: string
+  tournamentDate: string
+  doubleUpEnabled: boolean
+  doubleUpTitle: string
+  doubleUpMessage: string
+  doubleUpDate: string
 }) {
   rooms.lobby?.send(Transfer.SET_EVENT_NPC, params)
 }

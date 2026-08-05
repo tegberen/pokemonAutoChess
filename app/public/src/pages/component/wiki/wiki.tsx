@@ -55,7 +55,10 @@ export default function Wiki({ inGame = false }: { inGame: boolean }) {
             </>
           )}
           <Tab key="title-double-up">Double Up</Tab>
-          <Tab key="title-blessings">{t("wiki.nav.blessings_label")}</Tab>
+          <Tab key="title-blessings">
+            <img src="assets/icons/blessing_stats.svg" alt="" />
+            {t("wiki.nav.blessings_label")}
+          </Tab>
           <Tab key="title-pokemon">{t("wiki.nav.pokemons_label")}</Tab>
           <Tab key="title-ability">{t("wiki.nav.abilities_label")}</Tab>
           <Tab key="title-awakening">{t("wiki.nav.awakening_label")}</Tab>

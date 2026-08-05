@@ -197,6 +197,14 @@ export class SetEventNpcCommand extends Command<
     orientation: string
     animation: string
     emotion: string
+    tournamentEnabled: boolean
+    tournamentTitle: string
+    tournamentMessage: string
+    tournamentDate: string
+    doubleUpEnabled: boolean
+    doubleUpTitle: string
+    doubleUpMessage: string
+    doubleUpDate: string
   }
 > {
   async execute({
@@ -207,7 +215,12 @@ export class SetEventNpcCommand extends Command<
     message,
     orientation,
     animation,
-    emotion
+    emotion,
+    tournamentEnabled,
+    tournamentTitle,
+    tournamentMessage,
+    tournamentDate
+    , doubleUpEnabled, doubleUpTitle, doubleUpMessage, doubleUpDate
   }: {
     client: Client
     enabled: boolean
@@ -217,6 +230,14 @@ export class SetEventNpcCommand extends Command<
     orientation: string
     animation: string
     emotion: string
+    tournamentEnabled: boolean
+    tournamentTitle: string
+    tournamentMessage: string
+    tournamentDate: string
+    doubleUpEnabled: boolean
+    doubleUpTitle: string
+    doubleUpMessage: string
+    doubleUpDate: string
   }) {
     try {
       const u = this.room.users.get(client.auth.uid)
@@ -228,7 +249,15 @@ export class SetEventNpcCommand extends Command<
           message: message ?? "",
           orientation: orientation ?? "",
           animation: animation ?? "",
-          emotion: emotion ?? ""
+          emotion: emotion ?? "",
+          tournamentEnabled: !!tournamentEnabled,
+          tournamentTitle: tournamentTitle ?? "Smeargle Pack Tournament",
+          tournamentMessage: tournamentMessage ?? "",
+          tournamentDate: tournamentDate ?? "",
+          doubleUpEnabled: !!doubleUpEnabled,
+          doubleUpTitle: doubleUpTitle ?? "Double Up Tournament",
+          doubleUpMessage: doubleUpMessage ?? "",
+          doubleUpDate: doubleUpDate ?? ""
         })
       }
     } catch (error) {

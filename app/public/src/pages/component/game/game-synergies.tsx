@@ -13,6 +13,8 @@ export default function GameSynergies() {
   const blessingsEnabled = useAppSelector(
     (state) => state.game.blessingsEnabled
   )
+  const showBlessingsBook =
+    blessingsEnabled && process.env.MODE === "dev"
   const { t } = useTranslation()
   const [synergiesPosition, setSynergiesPosition] =
     usePreference("synergiesPosition")
@@ -41,7 +43,7 @@ export default function GameSynergies() {
               alt={t("weather_forecast")}
             />
           </Tab>
-          {blessingsEnabled && (
+          {showBlessingsBook && (
             <Tab key="blessings">
               <img
                 src="assets/icons/blessing_stats.svg"
@@ -52,12 +54,16 @@ export default function GameSynergies() {
           )}
         </TabList>
         <TabPanel>
-          <Synergies synergies={synergies} tooltipPortal={true} />
+          <Synergies
+            synergies={synergies}
+            tooltipPortal={true}
+            blessingsEnabled={blessingsEnabled}
+          />
         </TabPanel>
         <TabPanel>
           <WeatherForecast />
         </TabPanel>
-        {blessingsEnabled && (
+        {showBlessingsBook && (
           <TabPanel>
             <BlessingsPanel />
           </TabPanel>

@@ -47,6 +47,22 @@ export default function WikiBlessings() {
   const [stageFilter, setStageFilter] = useState<number | null>(null)
   const [query, setQuery] = useState("")
 
+  const scrollToTier = (tier: BlessingTier) => {
+    const scroll = () => {
+      document
+        .getElementById(`wiki-blessing-tier-${tier.toLowerCase()}`)
+        ?.scrollIntoView({ behavior: "smooth", block: "start" })
+    }
+
+    if (stageFilter !== null || query) {
+      setStageFilter(null)
+      setQuery("")
+      window.setTimeout(scroll, 0)
+    } else {
+      scroll()
+    }
+  }
+
   const blessingsByTier = useMemo(() => {
     const search = query.trim().toLowerCase()
     const grouped = new Map<BlessingTier, Blessing[]>(
@@ -98,6 +114,20 @@ export default function WikiBlessings() {
           placeholder={t("search")}
           onChange={(event) => setQuery(event.target.value)}
         />
+        <div className="wiki-blessings-tier-shortcuts">
+          {[BlessingTier.SILVER, BlessingTier.GOLD, BlessingTier.PRISMATIC].map((tier) => (
+            <button
+              key={tier}
+              className={cc(
+                "bubbly wiki-blessings-tier-shortcut",
+                tier.toLowerCase()
+              )}
+              onClick={() => scrollToTier(tier)}
+            >
+              {t(`blessing_tier.${tier}`)}
+            </button>
+          ))}
+        </div>
       </div>
 
       {TIER_ORDER.map((tier) => {
@@ -113,7 +143,11 @@ export default function WikiBlessings() {
           )
         ]
         return (
-          <section key={tier} className={`blessing-tier-${tier.toLowerCase()}`}>
+          <section
+            key={tier}
+            id={`wiki-blessing-tier-${tier.toLowerCase()}`}
+            className={`blessing-tier-${tier.toLowerCase()}`}
+          >
             <h2>
               {t(`blessing_tier.${tier}`)}
               <span className="wiki-blessings-count">{blessings.length}</span>

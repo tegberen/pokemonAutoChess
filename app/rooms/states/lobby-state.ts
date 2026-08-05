@@ -19,6 +19,14 @@ export default class LobbyState extends Schema {
   @type("string") eventNpcOrientation = ""
   @type("string") eventNpcAnimation = ""
   @type("string") eventNpcEmotion = ""
+  @type("boolean") tournamentEnabled = false
+  @type("string") tournamentTitle = ""
+  @type("string") tournamentMessage = ""
+  @type("string") tournamentDate = ""
+  @type("boolean") doubleUpEnabled = false
+  @type("string") doubleUpTitle = ""
+  @type("string") doubleUpMessage = ""
+  @type("string") doubleUpDate = ""
 
   addMessage(
     payload: string,
@@ -97,6 +105,18 @@ export default class LobbyState extends Schema {
     this.eventNpcOrientation = config.orientation
     this.eventNpcAnimation = config.animation
     this.eventNpcEmotion = config.emotion
+    this.tournamentEnabled = config.tournamentEnabled
+    this.tournamentTitle = config.tournamentTitle
+    this.tournamentMessage = config.tournamentMessage
+    this.tournamentDate = config.tournamentDate
+    this.doubleUpEnabled = config.doubleUpEnabled
+    this.doubleUpTitle = config.doubleUpTitle
+    this.doubleUpMessage = config.doubleUpMessage
+    this.doubleUpDate = config.doubleUpDate
+    this.doubleUpEnabled = config.doubleUpEnabled
+    this.doubleUpTitle = config.doubleUpTitle
+    this.doubleUpMessage = config.doubleUpMessage
+    this.doubleUpDate = config.doubleUpDate
     await eventNpc.findOneAndUpdate({}, config, { upsert: true })
   }
 
@@ -110,6 +130,18 @@ export default class LobbyState extends Schema {
       this.eventNpcOrientation = doc.orientation ?? ""
       this.eventNpcAnimation = doc.animation ?? ""
       this.eventNpcEmotion = doc.emotion ?? ""
+      this.tournamentEnabled = doc.tournamentEnabled ?? false
+      this.tournamentTitle = doc.tournamentTitle ?? "Smeargle Pack Tournament"
+      this.tournamentMessage = doc.tournamentMessage ?? ""
+      this.tournamentDate = doc.tournamentDate ?? ""
+      this.doubleUpEnabled = doc.doubleUpEnabled ?? false
+      this.doubleUpTitle = doc.doubleUpTitle ?? "Double Up Tournament"
+      this.doubleUpMessage = doc.doubleUpMessage ?? ""
+      this.doubleUpDate = doc.doubleUpDate ?? ""
+      this.doubleUpEnabled = doc.doubleUpEnabled ?? false
+      this.doubleUpTitle = doc.doubleUpTitle ?? "Double Up Tournament"
+      this.doubleUpMessage = doc.doubleUpMessage ?? ""
+      this.doubleUpDate = doc.doubleUpDate ?? ""
     }
   }
 }

@@ -21,7 +21,7 @@ import { cc } from "../../utils/jsx"
 import { addIconsToDescription } from "../../utils/descriptions"
 import "./blessings-panel.css"
 
-export default function BlessingsPanel() {
+export default function BlessingsPanel(props: { recentOnly?: boolean }) {
   const { t } = useTranslation()
   const [tooltipPlace, setTooltipPlace] = useState<PlacesType>("left")
   const playerIdSpectated = useAppSelector(
@@ -66,13 +66,17 @@ export default function BlessingsPanel() {
       100
   )
 
-  if (blessings.length === 0) {
+  if (blessings.length === 0 && !props.recentOnly) {
     return <p className="blessings-panel-empty">{t("no_blessing_yet")}</p>
   }
 
+  const displayedBlessings = props.recentOnly
+    ? blessings.slice(-2).reverse()
+    : blessings
+
   return (
-    <div className="blessings-panel">
-      {blessings.map((blessing, index) => (
+    <div className={cc("blessings-panel", { "blessings-panel-recent": !!props.recentOnly })}>
+      {displayedBlessings.map((blessing, index) => (
         <div key={`${blessing}-${index}`} className="blessing-panel-slot">
           <img
             src={`/assets/blessings/${Blessings[blessing].icon}.svg`}
@@ -80,7 +84,7 @@ export default function BlessingsPanel() {
             className={`blessing-panel-icon blessing-tier-${Blessings[
               blessing
             ].tier.toLowerCase()}`}
-            data-tooltip-id={`blessing-${blessing}-${index}`}
+            data-tooltip-id={`${props.recentOnly ? "recent-" : ""}blessing-${blessing}-${index}`}
             onMouseEnter={(event) => {
               const { left, width } = event.currentTarget.getBoundingClientRect()
               setTooltipPlace(
@@ -116,29 +120,23 @@ export default function BlessingsPanel() {
           {/* portalled out of the panel, or the Effects window clips it */}
           {ReactDOM.createPortal(
             <Tooltip
-              id={`blessing-${blessing}-${index}`}
+              id={`${props.recentOnly ? "recent-" : ""}blessing-${blessing}-${index}`}
               className="custom-theme-tooltip blessing-panel-tooltip"
               place={tooltipPlace}
               style={{ zIndex: DEPTH.TOOLTIP }}
             >
-              <h3>{t(`blessing.${blessing}.name`)}</h3>
-              <p>
-                {addIconsToDescription(t(`blessing.${blessing}.description`))}
-              </p>
-              {blessing === Blessing.AURORA_BOREALIS && (
-                <p className="blessing-panel-live-value">
-                  {addIconsToDescription(
-                    `${nbActiveSynergies} active synergies: −${auroraBorealisReduction}% damage taken, −${auroraBorealisReductionInSnowOrNight}% in SNOW or NIGHT`
-                  )}
-                </p>
-              )}
-              {blessing === Blessing.BERSERKER_HORDES && (
-                <p className="blessing-panel-live-value">
-                  {addIconsToDescription(
-                    `${nbThreeStarWilds} WILD at 3 STAR or more: −${nbThreeStarWilds} GOLD`
-                  )}
-                </p>
-              )}
+              <div className={`wiki-blessing-body blessing-panel-tooltip-card blessing-tier-${Blessings[blessing].tier.toLowerCase()}`}>
+                <img
+                  src={`/assets/blessings/${Blessings[blessing].icon}.svg`}
+                  alt=""
+                />
+                <div>
+                  <h3>{t(`blessing.${blessing}.name`)}</h3>
+                  <p>{addIconsToDescription(t(`blessing.${blessing}.description`))}</p>
+                  {blessing === Blessing.AURORA_BOREALIS && <p className="blessing-panel-live-value">{addIconsToDescription(`${nbActiveSynergies} active synergies: −${auroraBorealisReduction}% damage taken, −${auroraBorealisReductionInSnowOrNight}% in SNOW or NIGHT`)}</p>}
+                  {blessing === Blessing.BERSERKER_HORDES && <p className="blessing-panel-live-value">{addIconsToDescription(`${nbThreeStarWilds} WILD at 3 STAR or more: −${nbThreeStarWilds} GOLD`)}</p>}
+                </div>
+              </div>
             </Tooltip>,
             document.body
           )}

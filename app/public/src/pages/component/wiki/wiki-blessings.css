@@ -1,19 +1,74 @@
+.react-tabs__tab img[src="assets/icons/blessing_stats.svg"] {
+  width: 1em;
+  height: 1em;
+  margin-right: 0.35em;
+  vertical-align: -0.1em;
+}
+
 .wiki-blessings-intro {
   margin: 0 0 0.8em;
 }
 
 .wiki-blessings-filters {
+  position: sticky;
+  top: 0;
+  z-index: 2;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   gap: 0.6em;
   margin-bottom: 1em;
+  padding: 0.5em 0;
+  background: var(--color-bg-primary);
 }
 
 .wiki-blessings-stages {
   display: flex;
   gap: 0.4em;
+}
+
+.wiki-blessings-tier-shortcuts {
+  display: flex;
+  gap: 0.4em;
+  margin-left: auto;
+}
+
+.wiki-blessings-tier-shortcut {
+  background-color: var(--color-bg-secondary);
+  color: var(--color-fg-primary);
+}
+
+.wiki-blessings-tier-shortcut.silver {
+  background-image: repeating-linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--color-fg-secondary) 18%, transparent) 0 16px,
+    color-mix(in srgb, var(--color-rarity-common) 18%, transparent) 16px 32px,
+    color-mix(in srgb, var(--color-bg-tertiary) 18%, transparent) 32px 48px
+  );
+  background-size: 67.8823px 67.8823px;
+}
+
+.wiki-blessings-tier-shortcut.gold {
+  background-image: repeating-linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--color-fg-gold) 18%, transparent) 0 16px,
+    color-mix(in srgb, var(--color-bg-gold) 18%, transparent) 16px 32px,
+    color-mix(in srgb, var(--color-rarity-legendary) 18%, transparent) 32px 48px
+  );
+  background-size: 67.8823px 67.8823px;
+}
+
+.wiki-blessings-tier-shortcut.prismatic {
+  background-image: repeating-linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--color-rarity-ultra) 22%, transparent) 0 8px,
+    color-mix(in srgb, var(--color-rarity-legendary) 22%, transparent) 8px 16px,
+    color-mix(in srgb, var(--color-rarity-uncommon) 22%, transparent) 16px 24px,
+    color-mix(in srgb, var(--color-rarity-rare) 22%, transparent) 24px 32px,
+    color-mix(in srgb, var(--color-rarity-epic) 22%, transparent) 32px 40px,
+    color-mix(in srgb, var(--color-rarity-special) 22%, transparent) 40px 48px
+  );
 }
 
 .wiki-blessings-filters input {
@@ -27,6 +82,10 @@
   margin: 0.8em 0 0.4em;
   padding-bottom: 0.2em;
   border-bottom: 2px solid var(--blessing-glow-hue);
+}
+
+.wiki-blessings section[id] {
+  scroll-margin-top: 5.5em;
 }
 
 .wiki-blessings-count {

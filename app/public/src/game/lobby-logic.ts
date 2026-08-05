@@ -156,6 +156,18 @@ export async function joinLobbyRoom(
           $state.listen("eventNpcAnimation", (value) => {
             dispatch(setEventNpc({ animation: value }))
           })
+          $state.listen("tournamentEnabled", (value) => dispatch(setEventNpc({ tournamentEnabled: value })))
+          $state.listen("tournamentTitle", (value) => dispatch(setEventNpc({ tournamentTitle: value })))
+          $state.listen("tournamentMessage", (value) => dispatch(setEventNpc({ tournamentMessage: value })))
+          $state.listen("tournamentDate", (value) => dispatch(setEventNpc({ tournamentDate: value })))
+          $state.listen("doubleUpEnabled", (value) => dispatch(setEventNpc({ doubleUpEnabled: value })))
+          $state.listen("doubleUpTitle", (value) => dispatch(setEventNpc({ doubleUpTitle: value })))
+          $state.listen("doubleUpMessage", (value) => dispatch(setEventNpc({ doubleUpMessage: value })))
+          $state.listen("doubleUpDate", (value) => dispatch(setEventNpc({ doubleUpDate: value })))
+          $state.listen("doubleUpEnabled", (value) => dispatch(setEventNpc({ doubleUpEnabled: value })))
+          $state.listen("doubleUpTitle", (value) => dispatch(setEventNpc({ doubleUpTitle: value })))
+          $state.listen("doubleUpMessage", (value) => dispatch(setEventNpc({ doubleUpMessage: value })))
+          $state.listen("doubleUpDate", (value) => dispatch(setEventNpc({ doubleUpDate: value })))
 
           $state.tournaments.onAdd((tournament) => {
             dispatch(addTournament(tournament))

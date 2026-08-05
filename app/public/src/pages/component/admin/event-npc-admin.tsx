@@ -26,6 +26,10 @@ export function EventNpcAdmin() {
     eventNpc.animation || PokemonActionState.IDLE
   )
   const [emotion, setEmotion] = useState(eventNpc.emotion || Emotion.NORMAL)
+  const [tournamentEnabled, setTournamentEnabled] = useState(eventNpc.tournamentEnabled)
+  const [tournamentTitle, setTournamentTitle] = useState(eventNpc.tournamentTitle)
+  const [tournamentMessage, setTournamentMessage] = useState(eventNpc.tournamentMessage)
+  const [tournamentDate, setTournamentDate] = useState(eventNpc.tournamentDate)
   const [applied, setApplied] = useState(false)
 
   // sync the form with the live server value (first load / other admin edits)
@@ -37,6 +41,10 @@ export function EventNpcAdmin() {
     setOrientation(eventNpc.orientation || Orientation.DOWN)
     setAnimation(eventNpc.animation || PokemonActionState.IDLE)
     setEmotion(eventNpc.emotion || Emotion.NORMAL)
+    setTournamentEnabled(eventNpc.tournamentEnabled)
+    setTournamentTitle(eventNpc.tournamentTitle)
+    setTournamentMessage(eventNpc.tournamentMessage)
+    setTournamentDate(eventNpc.tournamentDate)
   }, [
     eventNpc.enabled,
     eventNpc.pokemon,
@@ -45,6 +53,7 @@ export function EventNpcAdmin() {
     eventNpc.orientation,
     eventNpc.animation,
     eventNpc.emotion
+    , eventNpc.tournamentEnabled, eventNpc.tournamentTitle, eventNpc.tournamentMessage, eventNpc.tournamentDate
   ])
 
   const isValidPokemon = POKEMON_NAMES.includes(pokemon as Pkm)
@@ -80,7 +89,15 @@ export function EventNpcAdmin() {
       message,
       orientation,
       animation,
-      emotion
+      emotion,
+      tournamentEnabled,
+      tournamentTitle,
+      tournamentMessage,
+      tournamentDate,
+      doubleUpEnabled: eventNpc.doubleUpEnabled,
+      doubleUpTitle: eventNpc.doubleUpTitle,
+      doubleUpMessage: eventNpc.doubleUpMessage,
+      doubleUpDate: eventNpc.doubleUpDate
     })
     setApplied(true)
   }

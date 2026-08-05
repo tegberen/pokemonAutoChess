@@ -184,7 +184,7 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     grantsPokemonImmediately: true
   },
   [Blessing.WAITING_GAME]: {
-    tier: BlessingTier.PRISMATIC,
+    tier: BlessingTier.GOLD,
     availableAtStages: [4],
     icon: "waiting_game",
     grantsPokemonImmediately: false
@@ -1125,7 +1125,7 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     grantsPokemonImmediately: true
   },
   [Blessing.AURORA_BOREALIS]: {
-    tier: BlessingTier.PRISMATIC,
+    tier: BlessingTier.GOLD,
     availableAtStages: [12],
     icon: "aurora_borealis",
     grantsPokemonImmediately: true
@@ -1319,14 +1319,13 @@ function tierChancesForBlessingsUnderTest(): {
   return chances
 }
 
-export const BLESSING_TEST_MODE: boolean = true //enable selectd blessing
-export const BLESSING_SANDBOX_MODE: boolean = false //enable all blessings
+export const BLESSING_TEST_MODE: boolean = false
+export const BLESSING_SANDBOX_MODE: boolean = false
 
 export const BLESSING_SELECTION_EVERY_STAGE: boolean =
-  BLESSING_TEST_MODE || BLESSING_SANDBOX_MODE //overwrite
+  BLESSING_TEST_MODE || BLESSING_SANDBOX_MODE
 
 const BLESSINGS_UNDER_TEST: Blessing[] = [
-  Blessing.ROCKY_BEGINNINGS
 ]
 
 function countBlessingsOfFamily(blessings: Blessing[], family?: string) {

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
+import { useAppSelector } from "../../../hooks"
 import {
   getNextBlessingEventStart,
   getNextScribbleWeekendStart,
@@ -8,8 +9,6 @@ import {
 } from "../../../../../config"
 import { formatDate } from "../../utils/date"
 import "./calendar.css"
-
-const SMEARGLE_PACK_TOURNAMENT_ENABLED = true
 
 function useCalendarNow() {
   const [now, setNow] = useState(() => new Date())
@@ -31,7 +30,7 @@ function CalendarEventCard(props: {
   name: string
   description: string
   image: string
-  variant: "whimsy" | "jirachi" | "smeargle"
+  variant: "whimsy" | "jirachi" | "smeargle" | "doubleup"
   start: Date
   now: Date
   dateOnly?: boolean
@@ -39,7 +38,7 @@ function CalendarEventCard(props: {
   const { t } = useTranslation()
   return (
     <article className={`calendar-event-card ${props.variant}`}>
-      <img src={`assets/ui/game_modes/${props.image}.png`} alt="" />
+      {props.image && <img src={`assets/ui/${props.image}`} alt="" />}
       <div className="calendar-event-content">
         <div className="calendar-event-copy">
           <h3>{props.name}</h3>
@@ -64,15 +63,30 @@ function CalendarEventCard(props: {
 export function Calendar() {
   const { t } = useTranslation()
   const now = useCalendarNow()
+  const tournament = useAppSelector((state) => state.lobby.eventNpc)
+  const tournamentStart = tournament.tournamentDate
+    ? new Date(tournament.tournamentDate)
+    : new Date(2026, 7, 8)
   return (
     <div className="events-calendar">
-      {SMEARGLE_PACK_TOURNAMENT_ENABLED && (
+      {tournament.tournamentEnabled && (
         <CalendarEventCard
-          name="Smeargle Pack Tournament"
-          description="Back by popular demand! Sign up on Discord. Registration closes 24 hours before the tournament to allow time for bracket creation."
-          image="scribble"
+          name={tournament.tournamentTitle || "Smeargle Pack Tournament"}
+          description={tournament.tournamentMessage}
+          image="cards/smeargle_card.png"
           variant="smeargle"
-          start={new Date(2026, 7, 8)}
+          start={tournamentStart}
+          now={now}
+          dateOnly
+        />
+      )}
+      {tournament.doubleUpEnabled && (
+        <CalendarEventCard
+          name={tournament.doubleUpTitle || "Double Up Tournament"}
+          description={tournament.doubleUpMessage}
+          image=""
+          variant="doubleup"
+          start={tournament.doubleUpDate ? new Date(tournament.doubleUpDate) : new Date()}
           now={now}
           dateOnly
         />
@@ -81,7 +95,7 @@ export function Calendar() {
         <CalendarEventCard
           name={t("whimsy_weekend")}
           description={t("whimsy_weekend_description")}
-          image="whimsy_weekend"
+          image="cards/whimsicott_card.png"
           variant="whimsy"
           start={getNextScribbleWeekendStart(now)}
           now={now}
@@ -89,9 +103,9 @@ export function Calendar() {
       )}
       {!isBlessingEvent(now) && (
         <CalendarEventCard
-          name={t("blessing_event_title")}
+          name="Wish Festival"
           description={t("blessing_event_description")}
-          image="blessing_event"
+          image="cards/jirachi_card.png"
           variant="jirachi"
           start={getNextBlessingEventStart(now)}
           now={now}

@@ -5,6 +5,12 @@
   padding: 0.4em;
 }
 
+.blessings-panel-recent {
+  justify-content: center;
+  padding: 0.5em 0.4em;
+  border-bottom: var(--border-thin);
+}
+
 .blessings-panel-empty {
   padding: 0.6em;
   text-align: center;
@@ -59,7 +65,56 @@
 }
 
 .blessing-panel-tooltip {
-  max-width: 20em;
+  width: min(24em, 32vw) !important;
+  max-width: calc(100vw - 2em) !important;
+  white-space: normal !important;
+  overflow-wrap: anywhere;
+}
+
+.blessing-panel-tooltip-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6em;
+  background-image: repeating-linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--blessing-stripe-a) 18%, transparent) 0 16px,
+    color-mix(in srgb, var(--blessing-stripe-b) 18%, transparent) 16px 32px,
+    color-mix(in srgb, var(--blessing-stripe-c) 18%, transparent) 32px 48px
+  );
+}
+
+.blessing-panel-tooltip-card.blessing-tier-prismatic {
+  background-image: repeating-linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--color-rarity-ultra) 22%, transparent) 0 8px,
+    color-mix(in srgb, var(--color-rarity-legendary) 22%, transparent) 8px 16px,
+    color-mix(in srgb, var(--color-rarity-uncommon) 22%, transparent) 16px 24px,
+    color-mix(in srgb, var(--color-rarity-rare) 22%, transparent) 24px 32px,
+    color-mix(in srgb, var(--color-rarity-epic) 22%, transparent) 32px 40px,
+    color-mix(in srgb, var(--color-rarity-special) 22%, transparent) 40px 48px
+  );
+}
+
+.blessing-panel-tooltip-card .blessing-panel-icon {
+  flex: none;
+  width: 3.25em;
+  height: 3.25em;
+  cursor: default;
+}
+
+.blessing-panel-tooltip-card > img {
+  width: 2.4rem;
+  height: 2.4rem;
+}
+
+.blessing-panel-tooltip-card > div {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.blessing-panel-tooltip-card p {
+  font-size: 0.85em;
+  line-height: 1.35;
 }
 
 .blessing-panel-tooltip h3,

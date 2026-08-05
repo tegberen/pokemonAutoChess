@@ -26,6 +26,14 @@ export interface IEventNpcState {
   orientation: string
   animation: string
   emotion: string
+  tournamentEnabled: boolean
+  tournamentTitle: string
+  tournamentMessage: string
+  tournamentDate: string
+  doubleUpEnabled: boolean
+  doubleUpTitle: string
+  doubleUpMessage: string
+  doubleUpDate: string
 }
 
 export interface IUserLobbyState {
@@ -66,7 +74,12 @@ const initialState: IUserLobbyState = {
     message: "",
     orientation: "",
     animation: "",
-    emotion: ""
+    emotion: "",
+    tournamentEnabled: false,
+    tournamentTitle: "Smeargle Pack Tournament",
+    tournamentMessage: "",
+    tournamentDate: ""
+    , doubleUpEnabled: false, doubleUpTitle: "Double Up Tournament", doubleUpMessage: "", doubleUpDate: ""
   }
 }
 

@@ -325,7 +325,12 @@ export default class CustomLobbyRoom extends Room {
           message,
           orientation,
           animation,
-          emotion
+          emotion,
+          tournamentEnabled,
+          tournamentTitle,
+          tournamentMessage,
+          tournamentDate
+          , doubleUpEnabled, doubleUpTitle, doubleUpMessage, doubleUpDate
         }: {
           enabled: boolean
           pokemon: string
@@ -334,6 +339,14 @@ export default class CustomLobbyRoom extends Room {
           orientation: string
           animation: string
           emotion: string
+          tournamentEnabled: boolean
+          tournamentTitle: string
+          tournamentMessage: string
+          tournamentDate: string
+          doubleUpEnabled: boolean
+          doubleUpTitle: string
+          doubleUpMessage: string
+          doubleUpDate: string
         }
       ) => {
         this.dispatcher.dispatch(new SetEventNpcCommand(), {
@@ -344,7 +357,12 @@ export default class CustomLobbyRoom extends Room {
           message,
           orientation,
           animation,
-          emotion
+          emotion,
+          tournamentEnabled,
+          tournamentTitle,
+          tournamentMessage,
+          tournamentDate
+          , doubleUpEnabled, doubleUpTitle, doubleUpMessage, doubleUpDate
         })
       }
     )
