@@ -10,6 +10,7 @@ import {
   EVOLUTION_LAB_REWARD_REROLLS,
   ExpPlace,
   getCurrentGameEvent,
+  isBlessingEvent,
   MAX_LOADING_TIME,
   MAX_SIMULATION_DELTA_TIME,
   MinStageForGameToCount,
@@ -1045,6 +1046,12 @@ export default class GameRoom extends Room<{ state: GameState }> {
         // both members of a Double Up team share rank 1
         if (this.state.whimsy) {
           player.titles.add(Title.WHIMSY)
+        }
+        if (
+          isBlessingEvent() &&
+          schemaValues(player.board).some((pokemon) => pokemon.name === Pkm.JIRACHI)
+        ) {
+          player.titles.add(Title.STARRY)
         }
         if (this.state.gameMode === GameMode.RANKED) {
           player.titles.add(Title.VANQUISHER)

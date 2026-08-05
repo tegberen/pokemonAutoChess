@@ -2,7 +2,7 @@ import type { MapSchema } from "@colyseus/schema"
 import { t as tBase} from "i18next"
 const t = tBase as any
 import Phaser from "phaser"
-import { TownEncounterSellPrice } from "../../../../config"
+import { isBlessingEvent, TownEncounterSellPrice } from "../../../../config"
 import type GameState from "../../../../rooms/states/game-state"
 import {
   Emotion,
@@ -566,6 +566,16 @@ export default class MinigameManager {
       name: Pkm.MAKUHITA
     })
 
+    const jirachi = new PokemonSpecial({
+      scene: this.scene,
+      x: (37.7 - 0.21) * 48,
+      y: (6.5 + 0.05) * 48,
+      name: Pkm.JIRACHI,
+      animation: isBlessingEvent()
+        ? PokemonActionState.IDLE
+        : PokemonActionState.SLEEP
+    })
+
     const croagunk = new PokemonSpecial({
       scene: this.scene,
       x: encounter === TownEncounters.CROAGUNK ? cx : 11.5 * 48,
@@ -755,6 +765,7 @@ export default class MinigameManager {
       munchlax,
       meowth,
       makuhita,
+      jirachi,
       croagunk,
       wigglytuff,
       cincinno,

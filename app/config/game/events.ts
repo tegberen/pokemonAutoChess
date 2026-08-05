@@ -29,70 +29,111 @@ export function getGameEventResetDate(): Date {
    be open for one player and shut for the next. The window is the union of "it
    is the weekend" across these zones, listed east to west — the easternmost sets
    the opening, the westernmost the closing. Add a zone to widen it. */
-export const SCRIBBLE_WEEKEND_TIMEZONES = [
-  "Australia/Sydney",
-  "Asia/Tokyo",
-  "Europe/Paris",
-  "America/Los_Angeles"
-]
+const SYDNEY_TIME_ZONE = "Australia/Sydney"
+const LOS_ANGELES_TIME_ZONE = "America/Los_Angeles"
+const FESTIVAL_INTERVAL_DAYS = 14
+const WHIMSY_WEEKEND_ANCHOR = { year: 2026, month: 7, day: 8 }
+const JIRACHI_FESTIVAL_OFFSET_DAYS = 4
 
-function isWeekendInTimezone(date: Date, timeZone: string): boolean {
-  const weekday = new Intl.DateTimeFormat("en-US", {
+function getTimeZoneOffset(date: Date, timeZone: string): number {
+  const parts = new Intl.DateTimeFormat("en-US", {
     timeZone,
-    weekday: "short"
-  }).format(date)
-  return weekday === "Sat" || weekday === "Sun"
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hourCycle: "h23"
+  }).formatToParts(date)
+  const value = (type: string) => Number(parts.find((part) => part.type === type)?.value)
+  return Date.UTC(value("year"), value("month") - 1, value("day"), value("hour"), value("minute"), value("second")) - date.getTime()
+}
+
+function localMidnightToUtc(year: number, month: number, day: number, timeZone: string): Date {
+  const localMidnight = new Date(Date.UTC(year, month, day))
+  return new Date(localMidnight.getTime() - getTimeZoneOffset(localMidnight, timeZone))
+}
+
+function addCalendarDays(anchor: { year: number; month: number; day: number }, days: number) {
+  const date = new Date(Date.UTC(anchor.year, anchor.month, anchor.day + days))
+  return { year: date.getUTCFullYear(), month: date.getUTCMonth(), day: date.getUTCDate() }
+}
+
+function getFestivalWindowForCycle(
+  cycle: number,
+  startOffsetDays: number,
+  durationDays: number
+): { start: Date; end: Date } {
+  const startDate = addCalendarDays(WHIMSY_WEEKEND_ANCHOR, cycle * FESTIVAL_INTERVAL_DAYS + startOffsetDays)
+  const endDate = addCalendarDays(startDate, durationDays)
+  return {
+    start: localMidnightToUtc(startDate.year, startDate.month, startDate.day, SYDNEY_TIME_ZONE),
+    end: localMidnightToUtc(endDate.year, endDate.month, endDate.day, LOS_ANGELES_TIME_ZONE)
+  }
+}
+
+function getFestivalWindow(
+  date: Date,
+  startOffsetDays: number,
+  durationDays: number
+): { start: Date; end: Date } | null {
+  const anchorStart = localMidnightToUtc(WHIMSY_WEEKEND_ANCHOR.year, WHIMSY_WEEKEND_ANCHOR.month, WHIMSY_WEEKEND_ANCHOR.day, SYDNEY_TIME_ZONE)
+  const cycle = Math.floor((date.getTime() - anchorStart.getTime()) / (FESTIVAL_INTERVAL_DAYS * 86_400_000))
+  return cycle < 0 ? null : getFestivalWindowForCycle(cycle, startOffsetDays, durationDays)
+}
+
+function getNextFestivalStart(
+  from: Date,
+  startOffsetDays: number,
+  durationDays: number
+): Date {
+  const anchorStart = localMidnightToUtc(WHIMSY_WEEKEND_ANCHOR.year, WHIMSY_WEEKEND_ANCHOR.month, WHIMSY_WEEKEND_ANCHOR.day, SYDNEY_TIME_ZONE)
+  const cycle = Math.max(0, Math.floor((from.getTime() - anchorStart.getTime()) / (FESTIVAL_INTERVAL_DAYS * 86_400_000)))
+  const window = getFestivalWindowForCycle(cycle, startOffsetDays, durationDays)
+  return from < window.start
+    ? window.start
+    : getFestivalWindowForCycle(cycle + 1, startOffsetDays, durationDays).start
+}
+
+function isFestivalActive(
+  date: Date,
+  startOffsetDays: number,
+  durationDays: number
+): boolean {
+  const window = getFestivalWindow(date, startOffsetDays, durationDays)
+  return window !== null && date >= window.start && date < window.end
 }
 
 /** Saturday midnight in the earliest region through Sunday midnight in the latest. */
 export function isScribbleWeekend(date = new Date()): boolean {
-  return SCRIBBLE_WEEKEND_TIMEZONES.some((tz) => isWeekendInTimezone(date, tz))
-}
-
-/* Every boundary falls on an hour and all the zones above are whole-hour offsets
-   from UTC, so stepping by hours finds the edge exactly. */
-function findScribbleWeekendEdge(from: Date, lookingFor: boolean): Date | null {
-  const cursor = new Date(from)
-  cursor.setUTCMinutes(0, 0, 0)
-  for (let i = 1; i <= 24 * 8; i++) {
-    const next = new Date(cursor.getTime() + i * 3600_000)
-    if (isScribbleWeekend(next) === lookingFor) return next
-  }
-  return null
+  return isFestivalActive(date, 0, 1)
 }
 
 /** When the current Whimsy Weekend ends, or null if one isn't running. */
 export function getScribbleWeekendEnd(from = new Date()): Date | null {
-  if (!isScribbleWeekend(from)) return null
-  return findScribbleWeekendEdge(from, false)
+  const window = getFestivalWindow(from, 0, 1)
+  return window && from >= window.start && from < window.end ? window.end : null
+}
+
+export function getNextScribbleWeekendStart(from = new Date()): Date {
+  return getNextFestivalStart(from, 0, 1)
 }
 
 /* The Blessing event is a rule layer applied on top of any game mode, not a mode
    of its own. Anchor is the UTC midnight a window opens; move it to reschedule. */
-export const BLESSING_EVENT_ANCHOR = Date.UTC(2026, 7, 3)
-export const BLESSING_EVENT_INTERVAL_DAYS = 14
-export const BLESSING_EVENT_DURATION_DAYS = 2
-
 export function isBlessingEvent(date = new Date()): boolean {
-  const elapsedDays = Math.floor(
-    (date.getTime() - BLESSING_EVENT_ANCHOR) / 86_400_000
-  )
-  if (elapsedDays < 0) return false
-  return (
-    elapsedDays % BLESSING_EVENT_INTERVAL_DAYS < BLESSING_EVENT_DURATION_DAYS
-  )
+  return isFestivalActive(date, JIRACHI_FESTIVAL_OFFSET_DAYS, 4)
 }
 
 /** When the running Blessing event ends, or null if one isn't running. */
 export function getBlessingEventEnd(from = new Date()): Date | null {
-  if (!isBlessingEvent(from)) return null
-  const elapsedDays = Math.floor(
-    (from.getTime() - BLESSING_EVENT_ANCHOR) / 86_400_000
-  )
-  const daysIntoWindow = elapsedDays % BLESSING_EVENT_INTERVAL_DAYS
-  const windowStart =
-    from.getTime() - daysIntoWindow * 86_400_000 - (from.getTime() % 86_400_000)
-  return new Date(windowStart + BLESSING_EVENT_DURATION_DAYS * 86_400_000)
+  const window = getFestivalWindow(from, JIRACHI_FESTIVAL_OFFSET_DAYS, 4)
+  return window && from >= window.start && from < window.end ? window.end : null
+}
+
+export function getNextBlessingEventStart(from = new Date()): Date {
+  return getNextFestivalStart(from, JIRACHI_FESTIVAL_OFFSET_DAYS, 4)
 }
 
 export function getCurrentGameEvent(): GameEvent {

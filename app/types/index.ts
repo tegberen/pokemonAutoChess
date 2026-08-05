@@ -809,7 +809,8 @@ export enum Title {
   GUILDMASTER = "GUILDMASTER",
   LEGIONNAIRE = "LEGIONNAIRE",
   FIVE_STARS = "FIVE_STARS",
-  WHIMSY = "WHIMSY"
+  WHIMSY = "WHIMSY",
+  STARRY = "STARRY"
 }
 
 export interface IBoardEvent {

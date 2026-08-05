@@ -639,19 +639,21 @@ export class OnChangeBlessingsEnabledCommand extends Command<
 > {
   execute({ client, enabled }) {
     try {
+      const user = this.state.users.get(client.auth?.uid ?? "")
       const isAllowed =
-        this.state.gameMode === GameMode.SCRIBBLE ||
-        client.auth?.uid === this.state.ownerId
+        process.env.MODE === "dev" &&
+        (this.state.gameMode === GameMode.SCRIBBLE ||
+          client.auth?.uid === this.state.ownerId ||
+          user?.role === Role.ADMIN)
       if (isAllowed && this.state.blessingsEnabled !== enabled) {
         this.state.blessingsEnabled = enabled
-        const author = this.state.users.get(client.auth?.uid ?? "")
         this.room.state.addMessage({
           author: "Server",
           authorId: "server",
           payload: `Blessings have been ${
             enabled ? "enabled" : "disabled"
           } for this game. Players need to ready again.`,
-          avatar: author?.avatar
+          avatar: user?.avatar
         })
 
         this.state.users.forEach((user) => {

@@ -1858,18 +1858,18 @@ export const blessingEffectService: {
     if (getFreeSpaceOnBench(player.board) < ROCKY_BEGINNINGS_POKEMONS) {
       return false
     }
-    const weatherRock = pickRandomIn(WeatherRocks)
-    player.items.push(weatherRock)
-    const rockSynergy = AwakeningTypes[weatherRock as unknown as Awakening]
     const matching = PRECOMPUTED_POKEMONS_PER_RARITY[Rarity.COMMON]
       .concat(PRECOMPUTED_POKEMONS_PER_RARITY[Rarity.UNCOMMON])
+      .concat(PRECOMPUTED_POKEMONS_PER_RARITY[Rarity.RARE])
       .filter((pkm: Pkm) => {
         const data = getPokemonData(pkm)
-        return data.stars === 1 && rockSynergy && data.types.includes(rockSynergy)
+        return data.stars === 1 && data.types.includes(Synergy.ROCK)
       })
     pickNRandomIn(matching, ROCKY_BEGINNINGS_POKEMONS).forEach((pkm) =>
       giftPokemonIfBenchHasRoom(player, pkm)
     )
+    player.weatherRocks.push(pickRandomIn(WeatherRocks))
+    player.updateWeatherRocks()
     return true
   },
 

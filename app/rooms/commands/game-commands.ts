@@ -31,7 +31,7 @@ import {
   UniquePool
 } from "../../config"
 import {
-  BLESSING_TEST_MODE,
+  BLESSING_SELECTION_EVERY_STAGE,
   drawBlessingOptions,
   getBlessingsAvailable,
   rollBlessingTierForStage
@@ -116,6 +116,7 @@ import {
   BLESSING_OPTIONS_PER_SELECTION,
   BLESSING_REROLLS_PER_OPTION,
   BLESSING_SELECTION_STAGES,
+  BLESSING_SELECTION_EXTRA_TIME,
   BlessingTrigger,
   countsForTeamSize,
   PRISMATIC_REROLL_CHANCE,
@@ -2057,6 +2058,15 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
       this.state.time += 10000
     }
 
+    /* reading 3 blessings and their rerolls does not fit in a normal pick phase */
+    if (
+      this.state.blessingsEnabled &&
+      (BLESSING_SELECTION_EVERY_STAGE ||
+        BLESSING_SELECTION_STAGES.includes(this.state.stageLevel))
+    ) {
+      this.state.time += BLESSING_SELECTION_EXTRA_TIME
+    }
+
     if (
       this.state.stageLevel === 1 &&
       this.state.gameMode === GameMode.DOUBLE_UP
@@ -2253,7 +2263,7 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
 
     if (
       this.state.blessingsEnabled &&
-      (BLESSING_TEST_MODE ||
+      (BLESSING_SELECTION_EVERY_STAGE ||
         BLESSING_SELECTION_STAGES.includes(this.state.stageLevel))
     ) {
       const lobbyTier = rollBlessingTierForStage(this.state.stageLevel)

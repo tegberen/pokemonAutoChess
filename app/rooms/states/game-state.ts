@@ -29,6 +29,11 @@ import { SpecialGameRule } from "../../types/enum/SpecialGameRule"
 import { Synergy } from "../../types/enum/Synergy"
 import type { TownEncounter } from "../../types/enum/TownEncounter"
 import { Weather } from "../../types/enum/Weather"
+
+const unavailableScribbleRules = [
+  SpecialGameRule.DO_IT_ALL_YOURSELF,
+  SpecialGameRule.HALLOWEEN
+]
 import { pickRandomIn, randomBetween } from "../../utils/random"
 
 export default class GameState extends Schema {
@@ -114,13 +119,19 @@ export default class GameState extends Schema {
     this.weather = Weather.NEUTRAL
 
     if (gameMode === GameMode.SCRIBBLE) {
-      this.specialGameRule = pickRandomIn(Object.values(SpecialGameRule))
+      this.specialGameRule = pickRandomIn(
+        Object.values(SpecialGameRule).filter(
+          (rule) =>
+            unavailableScribbleRules.includes(rule) === false &&
+            rule !== SpecialGameRule.PLAY_TEST
+        )
+      )
     } else if (whimsy) {
       // the window was checked at room creation, so a lobby that started just
       // before the deadline still gets its rule
       this.specialGameRule = pickRandomIn(
         Object.values(SpecialGameRule).filter(
-          (rule) => rule !== SpecialGameRule.PLAY_TEST
+          (rule) => unavailableScribbleRules.includes(rule) === false
         )
       )
     } else {

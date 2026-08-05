@@ -21,6 +21,11 @@ import { Modal } from "../modal/modal"
 import { BotSelectModal } from "./bot-select-modal"
 import "./preparation-menu.css"
 
+const unavailableScribbleRules: SpecialGameRule[] = [
+  SpecialGameRule.DO_IT_ALL_YOURSELF,
+  SpecialGameRule.HALLOWEEN
+]
+
 export default function PreparationSettings() {
   const { t } = useTranslation()
   const [inputValue, setInputValue] = useState<string>("")
@@ -83,7 +88,9 @@ export default function PreparationSettings() {
 
   const pickRandomRule = () => {
     const rules = Object.values(SpecialGameRule).filter(
-      (rule) => rule !== SpecialGameRule.PLAY_TEST && rule !== specialGameRule
+      (rule) =>
+        unavailableScribbleRules.includes(rule) === false &&
+        rule !== specialGameRule
     )
     changeSpecialRule(pickRandomIn(rules))
   }
@@ -180,6 +187,7 @@ export default function PreparationSettings() {
 
   // newest rules first (the enum lists them chronologically, so reverse it)
   const filteredRules = [...keys(SpecialGameRule)].reverse().filter((rule) => {
+    if (unavailableScribbleRules.includes(rule as SpecialGameRule)) return false
     const q = ruleQuery.trim().toLowerCase()
     if (!q) return true
     return (
@@ -267,8 +275,9 @@ export default function PreparationSettings() {
     </div>
   )
 
-  const blessingsSetting = (gameMode === GameMode.SCRIBBLE ||
-    (hasCustomLobbySettings && (isOwner || isAdmin))) && (
+  const blessingsSetting = process.env.MODE === "dev" &&
+    (gameMode === GameMode.SCRIBBLE ||
+      (hasCustomLobbySettings && (isOwner || isAdmin))) && (
     <div className="lobby-setting" title={t("blessings_enabled_hint")}>
       <span className="setting-label">
         {t("blessings_enabled_label")}

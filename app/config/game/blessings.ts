@@ -1296,9 +1296,12 @@ export const BlessingTierChanceByStage: {
 }
 
 export function rollBlessingTierForStage(stage: number): BlessingTier {
-  const tierChances = BLESSING_TEST_MODE
-    ? tierChancesForBlessingsUnderTest()
-    : (BlessingTierChanceByStage[stage] ?? EARLY_BLESSING_TIER_CHANCES)
+  /* sandbox mode wants the real odds across the whole set, so only the
+     under-test list derives its own */
+  const tierChances =
+    BLESSING_TEST_MODE && !BLESSING_SANDBOX_MODE
+      ? tierChancesForBlessingsUnderTest()
+      : (BlessingTierChanceByStage[stage] ?? EARLY_BLESSING_TIER_CHANCES)
   return randomWeighted(tierChances) ?? BlessingTier.SILVER
 }
 
@@ -1316,14 +1319,14 @@ function tierChancesForBlessingsUnderTest(): {
   return chances
 }
 
-/* Test mode: propose only the blessings being worked on, at every selection
-   stage, ignoring their availableAtStages. Tier odds are derived from the list
-   so a tier with nothing in it is never rolled. Set to false to ship. */
-export const BLESSING_TEST_MODE: boolean = false
+export const BLESSING_TEST_MODE: boolean = true //enable selectd blessing
+export const BLESSING_SANDBOX_MODE: boolean = false //enable all blessings
+
+export const BLESSING_SELECTION_EVERY_STAGE: boolean =
+  BLESSING_TEST_MODE || BLESSING_SANDBOX_MODE //overwrite
 
 const BLESSINGS_UNDER_TEST: Blessing[] = [
-  // Blessings.EXAMPLE,
-  // Blessings.EXAMPLE_2
+  Blessing.ROCKY_BEGINNINGS
 ]
 
 function countBlessingsOfFamily(blessings: Blessing[], family?: string) {
@@ -1369,8 +1372,10 @@ export function getBlessingsAvailable(
     return (
       definition.tier === tier &&
       (BLESSING_TEST_MODE === false ||
+        BLESSING_SANDBOX_MODE ||
         BLESSINGS_UNDER_TEST.includes(blessing)) &&
-      (BLESSING_TEST_MODE || definition.availableAtStages.includes(stage)) &&
+      (BLESSING_SELECTION_EVERY_STAGE ||
+        definition.availableAtStages.includes(stage)) &&
       (definition.isAvailable?.(player, stage) ?? true)
     )
   })

@@ -4086,7 +4086,8 @@
 		"GUILDMASTER": "Guildmaster",
 		"LEGIONNAIRE": "Legionnaire",
 		"FIVE_STARS": "★★★★★",
-		"WHIMSY": "Whimsy"
+		"WHIMSY": "Whimsy",
+		"STARRY": "Starry"
 	},
 	"title_description": {
 		"NOVICE": "Play your first game",
@@ -4185,7 +4186,8 @@
 		"GUILDMASTER": "Complete a rank S expedition",
 		"LEGIONNAIRE": "Make a Falinks formation with 8 troopers or more",
 		"FIVE_STARS": "Play with a five stars Pokémon in your team",
-		"WHIMSY": "Win a Whimsy Weekend Scribble with your partner"
+		"WHIMSY": "Win a Whimsy Weekend Scribble with your partner",
+		"STARRY": "Win a game during the Wish Festival Event with a Jirachi on your board"
 	},
 	"weather_forecast": "Weather forecast",
 	"blessings": "Blessings",
@@ -4372,6 +4374,8 @@
 	"whimsy_weekend": "Whimsy Weekend",
 	"whimsy_weekend_description": "Team up with a partner and outlast every other duo, with a random Smeargle's Scribble rule in play!",
 	"whimsy_weekend_ends_in": "Whimsy Weekend ends in {{time}}",
+	"event_calendar": "Calendar",
+	"event_starts_in": "Starts in {{time}}",
 	"scribble_extended_label": "Player",
 	"scribble_extended_on": "Extended (150 HP)",
 	"scribble_extended_off": "Standard (100 HP)",
@@ -4408,6 +4412,7 @@
 	"open_booster": "Open a Booster",
 	"lobby": "Lobby",
 	"announcements": "Announcements",
+	"feedback": "Feedback",
 	"twitch_streams": {
 		"title": "Streams",
 		"language": "Language: {{language}}",
@@ -4554,6 +4559,7 @@
 		"hotspring": "Hot Spring",
 		"bazaar": "Bazaar",
 		"whimsicott": "Whimsicott",
+		"wishfestival": "Wish Festival",
 		"origin": "Origin"
 	},
 	"jukebox": {
@@ -5056,7 +5062,7 @@
 		},
 		"ROCKY_BEGINNINGS": {
 			"name": "Rocky Beginnings",
-			"description": "Gain a random weather rock and 2 Pokémon matching that rock's synergy."
+			"description": "Gain 2 different 1 STAR ROCK Pokémon of common, uncommon or rare rarity and a random weather rock."
 		},
 		"BABYLESS": {
 			"name": "Babyless",

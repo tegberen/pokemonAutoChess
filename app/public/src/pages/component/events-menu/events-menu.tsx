@@ -6,6 +6,7 @@ import type { TournamentSchema } from "../../../../../models/colyseus-models/tou
 import { GameEvent } from "../../../../../types/events"
 import { useAppSelector } from "../../../hooks"
 import { Announcements } from "./announcements"
+import { Calendar } from "./calendar"
 import { Expeditions } from "./expeditions"
 import { TournamentsList } from "./tournaments-list"
 import { TwitchStreams } from "./twitch-streams"
@@ -24,7 +25,7 @@ export function EventsMenu() {
   const hasExpeditionsTab = currentGameEvent === GameEvent.EXPEDITIONS
   const hasVictoryRoadTab = currentGameEvent === GameEvent.VICTORY_ROAD
   const tabCount =
-    1 +
+    2 +
     Number(hasTournamentTab) +
     Number(hasExpeditionsTab) +
     Number(hasVictoryRoadTab) +
@@ -72,13 +73,16 @@ export function EventsMenu() {
     >
       <h2>{t("events")}</h2>
       <TabList>
+        <Tab>
+          <span>{t("event_calendar")}</span>
+        </Tab>
         {showTwitchTab && (
           <Tab>
             <span>{t("twitch_streams.title")}</span>
           </Tab>
         )}
         <Tab>
-          <span>{t("announcements")}</span>
+          <span>{t("feedback")}</span>
         </Tab>
         {tournaments.length > 0 && (
           <Tab>
@@ -96,6 +100,9 @@ export function EventsMenu() {
           </Tab>
         )}
       </TabList>
+      <TabPanel>
+        <Calendar />
+      </TabPanel>
       {showTwitchTab && (
         <TabPanel>
           <TwitchStreams />
