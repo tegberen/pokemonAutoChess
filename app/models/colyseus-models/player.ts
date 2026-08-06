@@ -244,6 +244,7 @@ export default class Player extends Schema implements IPlayer {
   bpRewardsNextStage = 0
   greedyWishPending = false
   calledShotPending = false
+  sturdyTriggered = false
   // server-only handle on the same entry, for writing synced quest progress
   blessingsRef: PlayerBlessings | null = null
   // server-only: synergies whose final tier QUEST_INDECISION has already banked

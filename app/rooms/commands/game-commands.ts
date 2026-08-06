@@ -122,6 +122,9 @@ import {
   countsForTeamSize,
   PRISMATIC_REROLL_CHANCE,
   PRISMATIC_REROLL_FREE_ROLLS,
+  STURDY_DEFENSE,
+  STURDY_MAX_HP,
+  STURDY_SPECIAL_DEFENSE,
   UP_IS_UP_GOLD,
   UP_IS_UP_LIFE,
   WISE_SPENDING_EXP_PER_REROLL
@@ -2032,9 +2035,35 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
   checkDeath() {
     const newlyDead: Player[] = []
 
+    if (this.state.gameMode === GameMode.DOUBLE_UP) {
+      const teams = new Map<string, Player[]>()
+      this.state.players.forEach((player) => {
+        if (!player.alive || !player.doubleUpTeamId) return
+        const team = teams.get(player.doubleUpTeamId) ?? []
+        team.push(player)
+        teams.set(player.doubleUpTeamId, team)
+      })
+      teams.forEach((team) => {
+        if (!team.some((player) => player.life <= 0)) return
+        const protector = team.find(
+          (player) =>
+            player.blessings?.includes(Blessing.STURDY) &&
+            !player.sturdyTriggered
+        )
+        if (protector) this.triggerSturdy(protector, team)
+      })
+    }
+
     // Pass 1: mark all dead, release shop/board
     this.state.players.forEach((player: Player) => {
       if (player.life <= 0 && player.alive) {
+        if (
+          player.blessings?.includes(Blessing.STURDY) &&
+          !player.sturdyTriggered
+        ) {
+          this.triggerSturdy(player, [player])
+          return
+        }
         if (!player.isBot) {
           player.shop.forEach((pkm) => {
             this.state.shop.releasePokemon(pkm, player, this.state)
@@ -2061,6 +2090,18 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
       if (client) {
         client.send(Transfer.FINAL_RANK, player.rank)
       }
+    })
+  }
+
+  triggerSturdy(protector: Player, protectedPlayers: Player[]) {
+    protector.sturdyTriggered = true
+    protectedPlayers.forEach((player) => {
+      player.life = 1
+    })
+    protector.board.forEach((pokemon) => {
+      pokemon.addMaxHP(STURDY_MAX_HP)
+      pokemon.addDefense(STURDY_DEFENSE)
+      pokemon.addSpecialDefense(STURDY_SPECIAL_DEFENSE)
     })
   }
 

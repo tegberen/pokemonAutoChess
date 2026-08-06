@@ -62,6 +62,8 @@ import {
   TIDAL_SURGE_ITEMS_REQUIRED,
   DRAGON_FANG_ABILITY_POWER_PER_STAR,
   SECOND_WIND_RESURRECTION_INTERVAL,
+  FIRST_WIND_HEAL_DELAY,
+  FIRST_WIND_HEAL_RATIO,
   IMPENDING_DOOM_DELAY,
   QUEST_CRIT_POWER_TARGET,
   QUEST_ABSORB_DAMAGE_BLOCKED_TARGET,
@@ -77,6 +79,9 @@ import {
   MISFITS_DEFENSE,
   MISFITS_MAX_HP,
   MISFITS_SPECIAL_DEFENSE,
+  PROTECT_THE_WEAK_MAX_HP,
+  PROTECT_THE_WEAK_SPEED,
+  VAMPIRIC_HEAL_RATIO,
   HERO_BLESSING_FAMILY,
   AURORA_BOREALIS_REDUCTION_PER_ACTIVE_SYNERGY,
   FLEXIBILITY_HP_PER_SYNERGY_ITEM,
@@ -204,6 +209,7 @@ export default class Simulation extends Schema implements ISimulation {
   stormLightningTimer = 0
   tidalWaveTimer = 0
   secondWindTimer = 0
+  firstWindTimer = 0
   /* IMPENDING_DOOM is per owning team: a holder's shadow only strikes the units
      opposing them, so two holders in one fight run independent countdowns.
      0 means that side has no doom armed. */
@@ -1379,6 +1385,30 @@ export default class Simulation extends Schema implements ISimulation {
           })
       }
 
+      if (blessings.includes(Blessing.PROTECT_THE_WEAK)) {
+        const weakAllies = ownUnits.filter((ally) =>
+          [Rarity.COMMON, Rarity.UNCOMMON].includes(ally.rarity)
+        ).length
+        ownUnits
+          .filter((ally) =>
+            [Rarity.EPIC, Rarity.ULTRA, Rarity.LEGENDARY].includes(ally.rarity)
+          )
+          .forEach((ally) => {
+            ally.addMaxHP(
+              weakAllies * PROTECT_THE_WEAK_MAX_HP,
+              ally,
+              0,
+              false
+            )
+            ally.addSpeed(
+              weakAllies * PROTECT_THE_WEAK_SPEED,
+              ally,
+              0,
+              false
+            )
+          })
+      }
+
       for (const [blessing, tier] of [
         [Blessing.POTENTIAL_ENERGY_I, "I"],
         [Blessing.POTENTIAL_ENERGY_II, "II"]
@@ -1536,6 +1566,10 @@ export default class Simulation extends Schema implements ISimulation {
       if (blessings.includes(Blessing.SECOND_WIND)) {
         this.grantSecondWindResurrection(player, teamIndex)
         this.secondWindTimer = SECOND_WIND_RESURRECTION_INTERVAL
+      }
+
+      if (blessings.includes(Blessing.FIRST_WIND)) {
+        this.firstWindTimer = FIRST_WIND_HEAL_DELAY
       }
 
       if (blessings.includes(Blessing.ECHO_CHAMBER)) {
@@ -2864,6 +2898,32 @@ export default class Simulation extends Schema implements ISimulation {
       }
     }
 
+    if (this.firstWindTimer > 0) {
+      this.firstWindTimer -= dt
+      if (this.firstWindTimer <= 0) {
+        for (const [player, teamIndex] of [
+          [this.bluePlayer, Team.BLUE_TEAM],
+          [this.bluePartnerPlayer, Team.BLUE_TEAM],
+          [this.redPlayer, Team.RED_TEAM]
+        ] as const) {
+          if (player?.blessings?.includes(Blessing.FIRST_WIND)) {
+            const team =
+              teamIndex === Team.BLUE_TEAM ? this.blueTeam : this.redTeam
+            team.forEach((ally) => {
+              if (ally.player === player && ally.hp > 0) {
+                ally.handleHeal(
+                  ally.maxHP * FIRST_WIND_HEAL_RATIO,
+                  ally,
+                  0,
+                  false
+                )
+              }
+            })
+          }
+        }
+      }
+    }
+
     if (this.tidalWaveTimer > 0) {
       this.tidalWaveTimer -= dt
       if (this.tidalWaveTimer <= 0) {
@@ -3063,6 +3123,16 @@ export default class Simulation extends Schema implements ISimulation {
           const previousPlayerDamageDealt =
             opponentPlayer.gameStats.totalPlayerDamageDealt
           opponentPlayer.gameStats.totalPlayerDamageDealt += playerDamage
+          if (
+            playerDamage > 0 &&
+            opponentPlayer.blessings?.includes(Blessing.VAMPIRIC)
+          ) {
+            opponentPlayer.life = Math.min(
+              opponentPlayer.maxLife,
+              opponentPlayer.life +
+                Math.ceil(playerDamage * VAMPIRIC_HEAL_RATIO)
+            )
+          }
           opponentPlayer.checkLunchMoneyReward(previousPlayerDamageDealt)
           if (
             opponentPlayer.items.includes(Item.MISSION_ORDER_RED) &&

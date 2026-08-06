@@ -1205,6 +1205,9 @@ export const blessingEffectService: {
     player.addBlessingGold(CALLED_SHOT_GOLD)
     return true
   },
+  [Blessing.VAMPIRIC]: () => true,
+  [Blessing.PROTECT_THE_WEAK]: () => true,
+  [Blessing.STURDY]: () => true,
   [Blessing.THINK_FAST]: (player, state) => {
     const owned =
       state.blessingsByPlayerId.get(player.id) ?? new PlayerBlessings()
@@ -1472,6 +1475,8 @@ export const blessingEffectService: {
 
   [Blessing.SECOND_WIND]: (player) =>
     giftPokemonIfBenchHasRoom(player, Pkm.LITTEN),
+
+  [Blessing.FIRST_WIND]: () => true,
 
   [Blessing.RESURGENCE]: (player) =>
     giftPokemonIfBenchHasRoom(player, Pkm.PILOSWINE),

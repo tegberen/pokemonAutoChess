@@ -5384,6 +5384,10 @@
 			"name": "Second Wind",
 			"description": "When a FIELD Pokémon revives with RESURRECTION, this counts as a KO for the synergy buffs. At the start of combat and every 10 seconds, the weakest FIELD Pokémon gains RESURRECTION. Gain a Litten."
 		},
+		"FIRST_WIND": {
+			"name": "First Wind",
+			"description": "10 seconds into combat, allies heal 40% of their max HP."
+		},
 		"RESURGENCE": {
 			"name": "Resurgence",
 			"description": "When your FOSSIL Pokémon revive, they gain 25 SPEED. Legendary FOSSIL Pokémon gain 35 instead. Gain a Piloswine."
@@ -5515,6 +5519,18 @@
 		"CALLED_SHOT": {
 			"name": "Called Shot",
 			"description": "Set your win streak to 4 and gain 4 GOLD."
+		},
+		"VAMPIRIC": {
+			"name": "Vampiric",
+			"description": "Your team heals for 10% of the damage it deals. Heal player HP equal to 10% of the damage you deal to other players, rounded up."
+		},
+		"PROTECT_THE_WEAK": {
+			"name": "Protect the Weak",
+			"description": "Epic, ultra and legendary Pokémon gain 20 HP and 7 SPEED for each common and uncommon Pokémon on your board."
+		},
+		"STURDY": {
+			"name": "Sturdy",
+			"description": "The first time you would be eliminated this game, survive on 1 HP and grant allies 30 HP, 4 DEF and 4 SPE_DEF permanently."
 		},
 		"THINK_FAST": {
 			"name": "Pokemon APM",

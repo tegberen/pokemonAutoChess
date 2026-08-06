@@ -35,7 +35,8 @@ import {
   RIVALRY_ATTACK_ON_OWN_SIDE,
   RIVALRY_MAX_HP_ON_ENEMY_SIDE,
   SLIPSTREAM_SPEED,
-  ZAP_CHAIN_DAMAGE_RATIO
+  ZAP_CHAIN_DAMAGE_RATIO,
+  VAMPIRIC_HEAL_RATIO
 } from "../types/enum/Blessing"
 import { getStrongestUnit } from "./unit-score"
 import { EffectEnum } from "../types/enum/Effect"
@@ -1331,6 +1332,14 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
         isRetaliation
       })
     })
+
+    if (
+      damage > 0 &&
+      target.id !== this.id &&
+      this.player?.blessings?.includes(Blessing.VAMPIRIC)
+    ) {
+      this.handleHeal(Math.ceil(damage * VAMPIRIC_HEAL_RATIO), this, 0, false)
+    }
 
     if (
       this.simulation.weather === Weather.BLOODMOON &&

@@ -233,6 +233,24 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     grantsPokemonImmediately: false,
     isAvailable: (player: Player) => player.streak <= 4
   },
+  [Blessing.VAMPIRIC]: {
+    tier: BlessingTier.SILVER,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "vampiric",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.PROTECT_THE_WEAK]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "protect_the_weak",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.STURDY]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: [12],
+    icon: "sturdy",
+    grantsPokemonImmediately: false
+  },
   [Blessing.THINK_FAST]: {
     tier: BlessingTier.PRISMATIC,
     availableAtStages: [12],
@@ -851,6 +869,12 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     grantsPokemonImmediately: true,
     isAvailable: isSynergyBlessingAvailable(Synergy.FIELD)
   },
+  [Blessing.FIRST_WIND]: {
+    tier: BlessingTier.SILVER,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "first_wind",
+    grantsPokemonImmediately: false
+  },
   [Blessing.RESURGENCE]: {
     tier: BlessingTier.GOLD,
     availableAtStages: BLESSING_SELECTION_STAGES,
@@ -1400,10 +1424,10 @@ export const BLESSING_SELECTION_EVERY_STAGE: boolean =
   BLESSING_TEST_MODE || BLESSING_SANDBOX_MODE
 
 const BLESSINGS_UNDER_TEST: Blessing[] = [
-  Blessing.A_NEW_FRIEND,
-  Blessing.BP_REWARDS,
-  Blessing.GREEDY_WISH,
-  Blessing.CALLED_SHOT
+  Blessing.FIRST_WIND,
+  Blessing.VAMPIRIC,
+  Blessing.PROTECT_THE_WEAK,
+  Blessing.STURDY
 ]
 
 function countBlessingsOfFamily(blessings: Blessing[], family?: string) {
