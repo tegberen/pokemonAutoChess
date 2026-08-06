@@ -343,13 +343,13 @@ export default class PokemonSprite extends DraggableObject {
       }
 
       let spriteCount = spriteCountPerPokemon.get(pokemonSpriteKey) ?? 0
-      if (spriteCount === 0 && scene?.animationManager) {
-        if (scene.textures.exists(this.pokemon.index) === false) {
-          // needs to load the atlas & textures first
-          loadCompressedAtlas(scene, this.pokemon.index).then(loadAnimations)
-        } else {
-          loadAnimations()
-        }
+      if (
+        scene?.animationManager &&
+        scene.textures.exists(this.pokemon.index) === false
+      ) {
+        loadCompressedAtlas(scene, this.pokemon.index).then(loadAnimations)
+      } else if (spriteCount === 0 && scene?.animationManager) {
+        loadAnimations()
       } else {
         if (scene?.load.isLoading()) {
           scene.load.once("complete", loadAnimations)

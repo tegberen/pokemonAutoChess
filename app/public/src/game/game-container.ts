@@ -562,11 +562,15 @@ class GameContainer {
 
       listenForPokemonChanges(pokemon)
       this.handleBoardPokemonAdd(player, pokemon)
+      if (player.id === this.playerIdSpectated) {
+        this.gameScene?.board?.scheduleBoardReconciliation()
+      }
     }, false)
 
     $player.board.onRemove((pokemon, key) => {
       if (player.id === this.playerIdSpectated) {
         this.gameScene?.board?.removePokemon(pokemon)
+        this.gameScene?.board?.scheduleBoardReconciliation()
       }
     })
 

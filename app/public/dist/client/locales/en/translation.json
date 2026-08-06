@@ -5532,6 +5532,14 @@
 			"name": "Sturdy",
 			"description": "The first time you would be eliminated this game, survive on 1 HP and grant allies 30 HP, 4 DEF and 4 SPE_DEF permanently."
 		},
+		"ALL_FOR_ONE": {
+			"name": "All for One",
+			"description": "Lose all of your non-Unique Pokémon. Gain a Substitute with 60% of their combined max HP."
+		},
+		"RAINBOW_KEY": {
+			"name": "Rainbow Key",
+			"description": "Transform all of your non-Unique and non-Hatch Pokémon below Ultra rarity into random units one rarity higher, keeping their STAR level."
+		},
 		"THINK_FAST": {
 			"name": "Pokemon APM",
 			"description": "Gain infinite rerolls this turn. All shop rerolls cost no GOLD until the end of the preparation phase."

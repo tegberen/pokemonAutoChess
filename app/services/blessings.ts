@@ -6,7 +6,10 @@ import { EvolutionRuleType } from "../types/EvolutionRules"
 import { PokemonActionState } from "../types/enum/Game"
 import { PokemonClasses } from "../models/colyseus-models/pokemon"
 import PokemonFactory from "../models/pokemon-factory"
-import { getPokemonData } from "../models/precomputed/precomputed-pokemon-data"
+import {
+  getPokemonData,
+  getRegularsTier1
+} from "../models/precomputed/precomputed-pokemon-data"
 import { PRECOMPUTED_POKEMONS_PER_RARITY } from "../models/precomputed/precomputed-rarity"
 import type GameState from "../rooms/states/game-state"
 import {
@@ -62,7 +65,8 @@ import {
   MIX_AND_MATCH_I_UNIQUES,
   MIX_AND_MATCH_I_FIELD_CAP,
   MIX_AND_MATCH_II_UNIQUES,
-  MIX_AND_MATCH_II_FIELD_CAP
+  MIX_AND_MATCH_II_FIELD_CAP,
+  ALL_FOR_ONE_MAX_HP_RATIO
 } from "../types/enum/Blessing"
 import { BattleResult, Rarity } from "../types/enum/Game"
 import {
@@ -526,6 +530,140 @@ function giftPokemonIfBenchHasRoom(player: Player, pkm: Pkm): boolean {
       EvolutionManager.tryEvolve(boardPokemon, player)
     }
   })
+  return true
+}
+
+const RAINBOW_KEY_NEXT_RARITY: Partial<Record<Rarity, Rarity>> = {
+  [Rarity.COMMON]: Rarity.UNCOMMON,
+  [Rarity.UNCOMMON]: Rarity.RARE,
+  [Rarity.RARE]: Rarity.EPIC,
+  [Rarity.EPIC]: Rarity.ULTRA
+}
+
+function createPokemonWithStars(pkm: Pkm, stars: number, player: Player) {
+  let pokemon = PokemonFactory.createPokemonFromName(
+    getAltFormForPlayer(pkm, player),
+    player
+  )
+  while (pokemon.stars < stars && pokemon.hasEvolution) {
+    const evolution = EvolutionManager.getEvolution(pokemon, player)
+    if (evolution === pokemon.name) break
+    pokemon = PokemonFactory.createPokemonFromName(evolution, player)
+  }
+  return pokemon
+}
+
+function applyAllForOne(
+  player: Player,
+  state: GameState,
+  room?: GameRoom
+): boolean {
+  const sacrificed = schemaValues(player.board).filter(
+    (pokemon) => pokemon.rarity !== Rarity.UNIQUE
+  )
+  if (sacrificed.length === 0) return false
+  const maxHP = Math.round(
+    sacrificed.reduce((total, pokemon) => total + pokemon.maxHP, 0) *
+      ALL_FOR_ONE_MAX_HP_RATIO
+  )
+  const fieldPosition = sacrificed.find((pokemon) => pokemon.positionY > 0)
+  sacrificed.forEach((pokemon) => {
+    player.board.delete(pokemon.id)
+    state.shop.releasePokemon(pokemon.name, player, state)
+    pokemon.items.forEach((item) => player.items.push(item))
+  })
+  const substitute = PokemonFactory.createPokemonFromName(
+    Pkm.SUBSTITUTE,
+    player
+  )
+  substitute.hp = maxHP
+  substitute.maxHP = maxHP
+  substitute.positionX =
+    fieldPosition?.positionX ??
+    getFirstAvailablePositionInBench(player.board) ??
+    0
+  substitute.positionY = fieldPosition?.positionY ?? 0
+  player.board.set(substitute.id, substitute)
+  substitute.onAcquired(player)
+  player.updateSynergies()
+  if (room) player.boardSize = room.getTeamSize(player.board, player.blessings)
+  return true
+}
+
+function applyRainbowKey(
+  player: Player,
+  state: GameState,
+  room?: GameRoom
+): boolean {
+  const transformations = schemaValues(player.board).flatMap((pokemon) => {
+    if (
+      pokemon.rarity === Rarity.UNIQUE ||
+      pokemon.rarity === Rarity.HATCH ||
+      pokemon.action === PokemonActionState.EXPLORING
+    )
+      return []
+    const nextRarity = RAINBOW_KEY_NEXT_RARITY[pokemon.rarity]
+    if (!nextRarity) return []
+    const rarityPool = PRECOMPUTED_POKEMONS_PER_RARITY[nextRarity]
+    const candidates = getRegularsTier1(rarityPool).filter(
+      (pkm) =>
+        rarityPool.some(
+          (evolution) =>
+            PkmFamily[evolution] === PkmFamily[pkm] &&
+            getPokemonData(evolution).stars === pokemon.stars
+        ) &&
+        player.canFindRegionalPokemon(pkm)
+    )
+    if (candidates.length === 0) return []
+    return [{ pokemon, replacement: pickRandomIn(candidates) }]
+  })
+  if (transformations.length === 0) return false
+  const expectedPokemonIds = new Set(
+    schemaValues(player.board)
+      .filter(
+        (pokemon) =>
+          transformations.some(
+            (transformation) => transformation.pokemon.id === pokemon.id
+          ) === false
+      )
+      .map((pokemon) => pokemon.id)
+  )
+  const transformedPokemons: Pokemon[] = []
+  transformations.forEach(({ pokemon, replacement }) => {
+    const transformed = createPokemonWithStars(
+      replacement,
+      pokemon.stars,
+      player
+    )
+    transformed.positionX = pokemon.positionX
+    transformed.positionY = pokemon.positionY
+    transformed.shiny = pokemon.shiny
+    transformed.emotion = pokemon.emotion
+    pokemon.items.forEach((item) => transformed.items.add(item))
+    player.board.delete(pokemon.id)
+    state.shop.releasePokemon(pokemon.name, player, state)
+    player.board.set(transformed.id, transformed)
+    expectedPokemonIds.add(transformed.id)
+    transformedPokemons.push(transformed)
+  })
+  transformedPokemons.forEach((pokemon) => pokemon.onAcquired(player))
+  player.board.forEach((pokemon) => {
+    if (!expectedPokemonIds.has(pokemon.id)) player.board.delete(pokemon.id)
+  })
+  player.updateSynergies()
+  if (room) {
+    room.checkEvolutionsAfterPokemonAcquired(player.id)
+  } else {
+    player.board.forEach((pokemon) => {
+      if (
+        pokemon.hasEvolution &&
+        pokemon.evolutionRule.type === EvolutionRuleType.COUNT &&
+        pokemon.action !== PokemonActionState.EXPLORING
+      ) {
+        EvolutionManager.tryEvolve(pokemon, player)
+      }
+    })
+  }
   return true
 }
 
@@ -1208,6 +1346,10 @@ export const blessingEffectService: {
   [Blessing.VAMPIRIC]: () => true,
   [Blessing.PROTECT_THE_WEAK]: () => true,
   [Blessing.STURDY]: () => true,
+  [Blessing.ALL_FOR_ONE]: (player, state, room) =>
+    applyAllForOne(player, state, room),
+  [Blessing.RAINBOW_KEY]: (player, state, room) =>
+    applyRainbowKey(player, state, room),
   [Blessing.THINK_FAST]: (player, state) => {
     const owned =
       state.blessingsByPlayerId.get(player.id) ?? new PlayerBlessings()

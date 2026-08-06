@@ -120,6 +120,7 @@ export default class BoardManager {
   portal: Portal | undefined
   smeargle: PokemonSprite | null = null
   specialGameRule: SpecialGameRule | null = null
+  boardReconciliationTimer?: ReturnType<typeof setTimeout>
 
   constructor(
     scene: GameScene,
@@ -272,8 +273,40 @@ export default class BoardManager {
   }
 
   clearBoard() {
-    this.pokemons.forEach((p) => p.destroy())
+    this.pokemons.forEach((pokemon) => {
+      this.scene.tweens.killTweensOf(pokemon)
+      pokemon.destroy()
+    })
     this.pokemons.clear()
+  }
+
+  scheduleBoardReconciliation() {
+    clearTimeout(this.boardReconciliationTimer)
+    this.boardReconciliationTimer = setTimeout(() => {
+      if (this.mode !== BoardMode.PICK) return
+      this.player.board.forEach((pokemon) => {
+        const pokemonSprite = this.pokemons.get(pokemon.id)
+        const textureMissing =
+          this.scene.textures.exists(pokemon.index) === false
+        if (!pokemonSprite?.scene || textureMissing) {
+          if (pokemonSprite) this.removePokemon(pokemon)
+          this.addPokemonSprite(pokemon)
+          return
+        }
+        if (!this.scene.tweens.isTweening(pokemonSprite)) {
+          if (pokemonSprite.scaleX === 0 || pokemonSprite.scaleY === 0) {
+            pokemonSprite.setScale(1)
+          }
+          if (
+            pokemonSprite.alpha === 0 &&
+            pokemon.action !== PokemonActionState.EXPLORING
+          ) {
+            pokemonSprite.setAlpha(1)
+          }
+        }
+        pokemonSprite.setVisible(true)
+      })
+    }, 250)
   }
 
   renderBoard(phaseJustChanged: boolean) {
@@ -1015,6 +1048,11 @@ export default class BoardManager {
   pickMode(phaseJustChanged: boolean) {
     // logger.debug('pickMode');
     this.mode = BoardMode.PICK
+    if (this.portal) {
+      this.scene.tweens.killTweensOf(this.portal)
+      this.portal.destroy()
+      this.portal = undefined
+    }
     this.scene.setMap(this.player.map)
     if (
       this.scene.cache.audio.has(
@@ -1029,6 +1067,7 @@ export default class BoardManager {
     this.updatePlayerAvatar()
     this.updateOpponentAvatar(null, null)
     this.updateScoutingAvatars(true)
+    this.scheduleBoardReconciliation()
   }
 
   minigameMode() {

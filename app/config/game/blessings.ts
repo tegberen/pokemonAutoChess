@@ -251,6 +251,18 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     icon: "sturdy",
     grantsPokemonImmediately: false
   },
+  [Blessing.ALL_FOR_ONE]: {
+    tier: BlessingTier.SILVER,
+    availableAtStages: [12],
+    icon: "all_for_one",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.RAINBOW_KEY]: {
+    tier: BlessingTier.SILVER,
+    availableAtStages: [12],
+    icon: "rainbow_key",
+    grantsPokemonImmediately: false
+  },
   [Blessing.THINK_FAST]: {
     tier: BlessingTier.PRISMATIC,
     availableAtStages: [12],
@@ -1424,10 +1436,8 @@ export const BLESSING_SELECTION_EVERY_STAGE: boolean =
   BLESSING_TEST_MODE || BLESSING_SANDBOX_MODE
 
 const BLESSINGS_UNDER_TEST: Blessing[] = [
-  Blessing.FIRST_WIND,
-  Blessing.VAMPIRIC,
-  Blessing.PROTECT_THE_WEAK,
-  Blessing.STURDY
+  Blessing.ALL_FOR_ONE,
+  Blessing.RAINBOW_KEY
 ]
 
 function countBlessingsOfFamily(blessings: Blessing[], family?: string) {
