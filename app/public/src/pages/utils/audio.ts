@@ -5,6 +5,7 @@ import { logger } from "../../../../utils/logger"
 import { preference, subscribeToPreferences } from "../../preferences"
 
 export const SOUNDS = {
+  BLESSING: "blessing_sound.ogg",
   BUTTON_CLICK: "buttonclick.ogg",
   BUTTON_HOVER: "buttonhover.ogg",
   CAROUSEL_UNLOCK: "carouselunlock.ogg",

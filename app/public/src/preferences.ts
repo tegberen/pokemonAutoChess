@@ -58,7 +58,7 @@ const defaultPreferences: IPreferencesState = {
   synergiesPosition: { x: 0, y: 0 },
   expeditionsPosition: { x: 0, y: 0 },
   showDetailsOnHover: false,
-  showBlessingGlow: false,
+  showBlessingGlow: true,
   showDamageNumbers: true,
   showEvolutions: true,
   showWeatherRocks: true,

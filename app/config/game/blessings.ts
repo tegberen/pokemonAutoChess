@@ -1355,13 +1355,19 @@ function tierChancesForBlessingsUnderTest(): {
   return chances
 }
 
-export const BLESSING_TEST_MODE: boolean = false
+export const BLESSING_TEST_MODE: boolean = true
 export const BLESSING_SANDBOX_MODE: boolean = false
 
 export const BLESSING_SELECTION_EVERY_STAGE: boolean =
   BLESSING_TEST_MODE || BLESSING_SANDBOX_MODE
 
 const BLESSINGS_UNDER_TEST: Blessing[] = [
+  Blessing.LUNCH_MONEY,
+  Blessing.CALCULATED_LOSS,
+  Blessing.THINK_FAST,
+  Blessing.WISE_SPENDING,
+  Blessing.BIRTHDAY_PRESENT,
+  Blessing.UP_IS_UP
 ]
 
 function countBlessingsOfFamily(blessings: Blessing[], family?: string) {

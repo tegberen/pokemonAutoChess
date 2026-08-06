@@ -203,7 +203,7 @@ export default function GameChoice() {
                 onClick={(event) => {
                   event.stopPropagation()
                   if (blockedByFullBench) return
-                  playSound(SOUNDS.BUTTON_CLICK)
+                  playSound(SOUNDS.BLESSING)
                   pickChoice(choice.id, index)
                 }}
               >
