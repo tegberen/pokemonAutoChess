@@ -16917,17 +16917,17 @@ export class Grubbin extends Pokemon {
   types = new SetSchema<Synergy>([
     Synergy.BUG,
     Synergy.ELECTRIC,
-    Synergy.AMORPHOUS
+    Synergy.SOUND
   ])
   rarity = Rarity.UNCOMMON
   stars = 1
   evolution = Pkm.CHARJABUG
-  hp = 70
+  hp = 65
   atk = 5
   speed = 39
   def = 3
   speDef = 3
-  maxPP = 100
+  maxPP = 85
   range = 3
   skill = Ability.ZAP_CANNON
 }
@@ -16936,17 +16936,17 @@ export class Charjabug extends Pokemon {
   types = new SetSchema<Synergy>([
     Synergy.BUG,
     Synergy.ELECTRIC,
-    Synergy.AMORPHOUS
+    Synergy.SOUND
   ])
   rarity = Rarity.UNCOMMON
   stars = 2
   evolution = Pkm.VIKAVOLT
-  hp = 120
-  atk = 11
+  hp = 115
+  atk = 10
   speed = 39
   def = 4
   speDef = 4
-  maxPP = 100
+  maxPP = 85
   range = 3
   skill = Ability.ZAP_CANNON
 }
@@ -16955,16 +16955,16 @@ export class Vikavolt extends Pokemon {
   types = new SetSchema<Synergy>([
     Synergy.BUG,
     Synergy.ELECTRIC,
-    Synergy.AMORPHOUS
+    Synergy.SOUND
   ])
   rarity = Rarity.UNCOMMON
   stars = 3
-  hp = 180
-  atk = 17
+  hp = 175
+  atk = 16
   speed = 39
   def = 5
   speDef = 5
-  maxPP = 100
+  maxPP = 85
   range = 3
   skill = Ability.ZAP_CANNON
 }
