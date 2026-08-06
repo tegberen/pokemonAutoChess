@@ -32,6 +32,7 @@ import {
 } from "../../config"
 import {
   BLESSING_SELECTION_EVERY_STAGE,
+  consumeGreedyWishTier,
   drawBlessingOptions,
   getBlessingsAvailable,
   rollBlessingTierForStage
@@ -2286,8 +2287,9 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
       const lobbyTier = rollBlessingTierForStage(this.state.stageLevel)
       this.state.players.forEach((player: Player) => {
         if (player.isBot || !player.alive) return
+        const playerTier = consumeGreedyWishTier(player, lobbyTier)
         const blessingPool = getBlessingsAvailable(
-          lobbyTier,
+          playerTier,
           this.state.stageLevel,
           player
         )

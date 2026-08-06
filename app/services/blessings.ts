@@ -27,6 +27,11 @@ import {
   WAITING_GAME_FREE_ROLLS,
   WAITING_GAME_FREE_ROLLS_WITHOUT_REROLLING,
   CALCULATED_LOSS_GOLD,
+  BP_REWARDS_COMPONENTS,
+  BP_REWARDS_RECURRING_COMPONENTS,
+  BP_REWARDS_ROUND_INTERVAL,
+  CALLED_SHOT_GOLD,
+  CALLED_SHOT_STREAK,
   MORE_EQUAL_THAN_OTHERS_GOLD,
   MORE_EQUAL_THAN_OTHERS_GOLD_FOR_OTHERS,
   CLIMBING_THE_LADDER_MAX_LEVEL,
@@ -689,6 +694,22 @@ export function applyRecurringBlessingGrants(player: Player, state: GameState) {
   ) {
     player.items.push(player.singularityComponent)
   }
+
+  if (
+    player.blessings?.includes(Blessing.BP_REWARDS) &&
+    state.stageLevel >= player.bpRewardsNextStage
+  ) {
+    player.items.push(
+      ...pickNRandomIn(ItemComponents, BP_REWARDS_RECURRING_COMPONENTS)
+    )
+    player.bpRewardsNextStage += BP_REWARDS_ROUND_INTERVAL
+  }
+  if (player.blessings?.includes(Blessing.BP_REWARDS)) {
+    player.blessingsRef?.questProgress.set(
+      Blessing.BP_REWARDS,
+      Math.max(0, player.bpRewardsNextStage - state.stageLevel)
+    )
+  }
 }
 
 /* TREASURE_TRAIL: point at an undug tile that still holds something, or clear
@@ -1150,6 +1171,40 @@ export const blessingEffectService: {
 
   [Blessing.LUNCH_MONEY]: () => true,
   [Blessing.CALCULATED_LOSS]: () => true,
+  [Blessing.A_NEW_FRIEND]: (player) => {
+    const candidates = PRECOMPUTED_POKEMONS_PER_RARITY[Rarity.UNCOMMON].filter(
+      (pkm) =>
+        getPokemonData(pkm).stars === 1 &&
+        player.canFindRegionalPokemon(pkm)
+    )
+    if (candidates.length === 0) return false
+    const pokemon = getAltFormForPlayer(pickRandomIn(candidates), player)
+    player.aNewFriendPokemon = pokemon
+    if (player.giftAnewFriendCopy()) return true
+    player.aNewFriendPokemon = null
+    return false
+  },
+  [Blessing.BP_REWARDS]: (player, state) => {
+    player.items.push(...pickNRandomIn(ItemComponents, BP_REWARDS_COMPONENTS))
+    player.bpRewardsNextStage =
+      state.stageLevel + BP_REWARDS_ROUND_INTERVAL
+    const owned =
+      state.blessingsByPlayerId.get(player.id) ?? new PlayerBlessings()
+    state.blessingsByPlayerId.set(player.id, owned)
+    player.blessingsRef = owned
+    owned.questProgress.set(Blessing.BP_REWARDS, BP_REWARDS_ROUND_INTERVAL)
+    return true
+  },
+  [Blessing.GREEDY_WISH]: (player) => {
+    player.greedyWishPending = true
+    return true
+  },
+  [Blessing.CALLED_SHOT]: (player) => {
+    player.streak = CALLED_SHOT_STREAK
+    player.calledShotPending = true
+    player.addBlessingGold(CALLED_SHOT_GOLD)
+    return true
+  },
   [Blessing.THINK_FAST]: (player, state) => {
     const owned =
       state.blessingsByPlayerId.get(player.id) ?? new PlayerBlessings()

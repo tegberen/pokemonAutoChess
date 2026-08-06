@@ -240,6 +240,10 @@ export default class Player extends Schema implements IPlayer {
   // server-only mirror of GameState.blessingsByPlayerId, so combat code can read
   // a player's blessings without reaching for the room state
   blessings: Blessing[] = []
+  aNewFriendPokemon: Pkm | null = null
+  bpRewardsNextStage = 0
+  greedyWishPending = false
+  calledShotPending = false
   // server-only handle on the same entry, for writing synced quest progress
   blessingsRef: PlayerBlessings | null = null
   // server-only: synergies whose final tier QUEST_INDECISION has already banked
@@ -402,6 +406,18 @@ export default class Player extends Schema implements IPlayer {
   addExperience(value: number) {
     const previousLevel = this.experienceManager.level
     this.experienceManager.addExperience(value)
+    if (
+      this.blessings?.includes(Blessing.A_NEW_FRIEND) &&
+      this.aNewFriendPokemon
+    ) {
+      for (
+        let level = previousLevel + 1;
+        level <= this.experienceManager.level;
+        level++
+      ) {
+        this.giftAnewFriendCopy()
+      }
+    }
     if (this.blessings?.includes(Blessing.BIRTHDAY_PRESENT)) {
       for (
         let level = previousLevel + 1;
@@ -418,6 +434,31 @@ export default class Player extends Schema implements IPlayer {
       this.completeMissionOrder(Item.MISSION_ORDER_BLUE)
     }
     this.tryGrantBeingOfKnowledgeUxie()
+  }
+
+  giftAnewFriendCopy() {
+    if (!this.aNewFriendPokemon) return false
+    const x = getFirstAvailablePositionInBench(this.board)
+    if (x === null) return false
+    const pokemon = PokemonFactory.createPokemonFromName(
+      this.aNewFriendPokemon,
+      this
+    )
+    pokemon.positionX = x
+    pokemon.positionY = 0
+    this.board.set(pokemon.id, pokemon)
+    pokemon.onAcquired(this)
+    this.board.forEach((boardPokemon) => {
+      if (
+        boardPokemon.hasEvolution &&
+        boardPokemon.evolutionRule.type === EvolutionRuleType.COUNT &&
+        boardPokemon.action !== PokemonActionState.EXPLORING
+      ) {
+        EvolutionManager.tryEvolve(boardPokemon, this)
+      }
+    })
+    this.updateSynergies()
+    return true
   }
 
   private grantBirthdayPresent(level: number) {

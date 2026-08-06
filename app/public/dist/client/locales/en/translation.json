@@ -5500,6 +5500,22 @@
 			"name": "Calculated Loss",
 			"description": "When you lose, gain 2 GOLD and a free reroll."
 		},
+		"A_NEW_FRIEND": {
+			"name": "A New Friend",
+			"description": "Gain a random 2-cost Pokémon. Gain another copy whenever you level up."
+		},
+		"BP_REWARDS": {
+			"name": "Battle Point Rewards",
+			"description": "Gain 2 random item components. Every 5 rounds after selecting this Blessing, gain 1 more."
+		},
+		"GREEDY_WISH": {
+			"name": "Greedy Wish",
+			"description": "Your next Blessing selection is one tier higher. If it is already Prismatic, gain 10 GOLD instead."
+		},
+		"CALLED_SHOT": {
+			"name": "Called Shot",
+			"description": "Set your win streak to 4 and gain 4 GOLD."
+		},
 		"THINK_FAST": {
 			"name": "Pokemon APM",
 			"description": "Gain infinite rerolls this turn. All shop rerolls cost no GOLD until the end of the preparation phase."

@@ -3008,13 +3008,16 @@ export default class Simulation extends Schema implements ISimulation {
 
         // Compute streak
         if (!isPvE) {
-          const previousBattleResult = player.history
-            .filter(
-              (stage) =>
-                stage.id !== "pve" && stage.result !== BattleResult.DRAW
-            )
-            .map((stage) => stage.result)
-            .at(-2)
+          const previousBattleResult = player.calledShotPending
+            ? BattleResult.WIN
+            : player.history
+                .filter(
+                  (stage) =>
+                    stage.id !== "pve" && stage.result !== BattleResult.DRAW
+                )
+                .map((stage) => stage.result)
+                .at(-2)
+          player.calledShotPending = false
           if (battleResult === BattleResult.DRAW) {
             // preserve existing streak but lose HP
           } else if (battleResult !== previousBattleResult) {

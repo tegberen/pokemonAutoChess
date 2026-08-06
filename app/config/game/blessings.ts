@@ -1,7 +1,8 @@
 import {
   Blessing,
   BLESSING_SELECTION_STAGES,
-  BlessingTier
+  BlessingTier,
+  GREEDY_WISH_PRISMATIC_GOLD
 } from "../../types/enum/Blessing"
 import { randomWeighted, shuffleArray } from "../../utils/random"
 import { SynergyTiersThresholds } from "../../config"
@@ -206,6 +207,31 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "calculator",
     grantsPokemonImmediately: false
+  },
+  [Blessing.A_NEW_FRIEND]: {
+    tier: BlessingTier.SILVER,
+    availableAtStages: [4],
+    icon: "new_friend",
+    grantsPokemonImmediately: true
+  },
+  [Blessing.BP_REWARDS]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: [4],
+    icon: "bp_rewards",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.GREEDY_WISH]: {
+    tier: BlessingTier.SILVER,
+    availableAtStages: [4],
+    icon: "greedy_wish",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.CALLED_SHOT]: {
+    tier: BlessingTier.SILVER,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "called_shot",
+    grantsPokemonImmediately: false,
+    isAvailable: (player: Player) => player.streak <= 4
   },
   [Blessing.THINK_FAST]: {
     tier: BlessingTier.PRISMATIC,
@@ -1341,6 +1367,18 @@ export function rollBlessingTierForStage(stage: number): BlessingTier {
   return randomWeighted(tierChances) ?? BlessingTier.SILVER
 }
 
+export function consumeGreedyWishTier(
+  player: Player,
+  tier: BlessingTier
+): BlessingTier {
+  if (!player.greedyWishPending) return tier
+  player.greedyWishPending = false
+  if (tier === BlessingTier.SILVER) return BlessingTier.GOLD
+  if (tier === BlessingTier.GOLD) return BlessingTier.PRISMATIC
+  player.addBlessingGold(GREEDY_WISH_PRISMATIC_GOLD)
+  return BlessingTier.PRISMATIC
+}
+
 function tierChancesForBlessingsUnderTest(): {
   [tier in BlessingTier]: number
 } {
@@ -1362,12 +1400,10 @@ export const BLESSING_SELECTION_EVERY_STAGE: boolean =
   BLESSING_TEST_MODE || BLESSING_SANDBOX_MODE
 
 const BLESSINGS_UNDER_TEST: Blessing[] = [
-  Blessing.LUNCH_MONEY,
-  Blessing.CALCULATED_LOSS,
-  Blessing.THINK_FAST,
-  Blessing.WISE_SPENDING,
-  Blessing.BIRTHDAY_PRESENT,
-  Blessing.UP_IS_UP
+  Blessing.A_NEW_FRIEND,
+  Blessing.BP_REWARDS,
+  Blessing.GREEDY_WISH,
+  Blessing.CALLED_SHOT
 ]
 
 function countBlessingsOfFamily(blessings: Blessing[], family?: string) {
