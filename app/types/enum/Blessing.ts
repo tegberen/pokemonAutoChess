@@ -162,6 +162,12 @@ export enum Blessing {
   STURDY = "STURDY",
   ALL_FOR_ONE = "ALL_FOR_ONE",
   RAINBOW_KEY = "RAINBOW_KEY",
+  PLUSHIFY = "PLUSHIFY",
+  SUPPORTIVE_SOUL = "SUPPORTIVE_SOUL",
+  LANCES_ACE = "LANCES_ACE",
+  PANIC_BUTTON = "PANIC_BUTTON",
+  HAIL_TO_THE_KING = "HAIL_TO_THE_KING",
+  TRASH_TO_TREASURE = "TRASH_TO_TREASURE",
   THINK_FAST = "THINK_FAST",
   WISE_SPENDING = "WISE_SPENDING",
   BIRTHDAY_PRESENT = "BIRTHDAY_PRESENT",
@@ -417,6 +423,15 @@ export const CALCULATED_LOSS_GOLD = 2
 export const BP_REWARDS_COMPONENTS = 2
 export const BP_REWARDS_RECURRING_COMPONENTS = 1
 export const BP_REWARDS_ROUND_INTERVAL = 5
+export const LANCES_ACE_DELAY = 3
+export const HAIL_TO_THE_KING_MAX_HP = 100
+export const HAIL_TO_THE_KING_ATTACK = 10
+export const HAIL_TO_THE_KING_DEFENSE = 10
+export const HAIL_TO_THE_KING_SPECIAL_DEFENSE = 10
+export const HAIL_TO_THE_KING_ABILITY_POWER = 20
+export const HAIL_TO_THE_KING_SPEED = 10
+export const HAIL_TO_THE_KING_CURSE_DELAY = 3000
+export const TRASH_TO_TREASURE_ROUNDS_BY_STAR = [5, 3, 1] as const
 export const GREEDY_WISH_PRISMATIC_GOLD = 10
 export const CALLED_SHOT_GOLD = 4
 export const CALLED_SHOT_STREAK = 4
@@ -601,7 +616,8 @@ export const HERO_BLESSING_FAMILY: { [blessing in Blessing]?: Pkm } = {
   [Blessing.ICEBREAKER]: Pkm.PIPLUP,
   [Blessing.RAMPAGE]: Pkm.DEINO,
   [Blessing.SOUL_DRAIN]: Pkm.LITWICK,
-  [Blessing.FLOWER_QUEEN]: Pkm.FLABEBE
+  [Blessing.FLOWER_QUEEN]: Pkm.FLABEBE,
+  [Blessing.LANCES_ACE]: Pkm.DRATINI
 }
 
 /* hero blessings that also relocate the player to a region where their family

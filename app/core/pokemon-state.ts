@@ -1,6 +1,7 @@
 import { ARMOR_FACTOR, FIGHTING_PHASE_DURATION } from "../config"
 import { SynergyTiers } from "../config/game/synergies"
 import type Player from "../models/colyseus-models/player"
+import PokemonFactory from "../models/pokemon-factory"
 import {
   DPS_EMBER_ID,
   DPS_HAIL_ID,
@@ -993,7 +994,32 @@ export default abstract class PokemonState {
   ) {
     pokemon.team = pokemon.baseTeam
     pokemon.onDeath({ board, attacker })
+    const plushifySubstituteMaxHP = pokemon.maxHP
+    const shouldSpawnPlushifySubstitute =
+      pokemon.items.has(Item.POKE_DOLL) &&
+      pokemon.player?.blessings?.includes(Blessing.PLUSHIFY)
+    const substituteX = pokemon.positionX
+    const substituteY = pokemon.positionY
     board.setEntityOnCell(pokemon.positionX, pokemon.positionY, undefined)
+    if (shouldSpawnPlushifySubstitute) {
+      const substitute = PokemonFactory.createPokemonFromName(
+        Pkm.SUBSTITUTE,
+        pokemon.player
+      )
+      pokemon.simulation.addPokemon(
+        substitute,
+        substituteX,
+        substituteY,
+        pokemon.team,
+        true,
+        true
+      )
+      const substituteEntity = board.getEntityOnCell(substituteX, substituteY)
+      if (substituteEntity) {
+        substituteEntity.hp = plushifySubstituteMaxHP
+        substituteEntity.maxHP = plushifySubstituteMaxHP
+      }
+    }
     if (attacker && pokemon !== attacker) {
       attacker.onKill({ target: pokemon, board, attackType })
     }

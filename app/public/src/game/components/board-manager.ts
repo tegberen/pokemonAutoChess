@@ -120,7 +120,7 @@ export default class BoardManager {
   portal: Portal | undefined
   smeargle: PokemonSprite | null = null
   specialGameRule: SpecialGameRule | null = null
-  boardReconciliationTimer?: ReturnType<typeof setTimeout>
+  boardReconciliationTimers: ReturnType<typeof setTimeout>[] = []
 
   constructor(
     scene: GameScene,
@@ -281,32 +281,53 @@ export default class BoardManager {
   }
 
   scheduleBoardReconciliation() {
-    clearTimeout(this.boardReconciliationTimer)
-    this.boardReconciliationTimer = setTimeout(() => {
-      if (this.mode !== BoardMode.PICK) return
-      this.player.board.forEach((pokemon) => {
-        const pokemonSprite = this.pokemons.get(pokemon.id)
-        const textureMissing =
-          this.scene.textures.exists(pokemon.index) === false
-        if (!pokemonSprite?.scene || textureMissing) {
-          if (pokemonSprite) this.removePokemon(pokemon)
-          this.addPokemonSprite(pokemon)
-          return
-        }
-        if (!this.scene.tweens.isTweening(pokemonSprite)) {
-          if (pokemonSprite.scaleX === 0 || pokemonSprite.scaleY === 0) {
-            pokemonSprite.setScale(1)
+    this.boardReconciliationTimers.forEach(clearTimeout)
+    this.boardReconciliationTimers = [250, 1500].map((delay) =>
+      setTimeout(() => {
+        if (this.mode !== BoardMode.PICK) return
+        this.player.board.forEach((pokemon) => {
+          const pokemonSprite = this.pokemons.get(pokemon.id)
+          const textureMissing =
+            this.scene.textures.exists(pokemon.index) === false
+          if (!pokemonSprite?.scene || textureMissing) {
+            if (pokemonSprite) this.removePokemon(pokemon)
+            this.addPokemonSprite(pokemon)
+            return
           }
-          if (
-            pokemonSprite.alpha === 0 &&
-            pokemon.action !== PokemonActionState.EXPLORING
-          ) {
-            pokemonSprite.setAlpha(1)
+          if (!this.scene.tweens.isTweening(pokemonSprite)) {
+            const coordinates = transformBoardCoordinates(
+              pokemon.positionX,
+              pokemon.positionY
+            )
+            pokemonSprite.setPosition(coordinates[0], coordinates[1])
+            if (pokemonSprite.scaleX === 0 || pokemonSprite.scaleY === 0) {
+              pokemonSprite.setScale(1)
+            }
+            if (
+              pokemonSprite.alpha === 0 &&
+              pokemon.action !== PokemonActionState.EXPLORING
+            ) {
+              pokemonSprite.setAlpha(1)
+            }
           }
-        }
-        pokemonSprite.setVisible(true)
-      })
-    }, 250)
+          pokemonSprite.setActive(true).setVisible(true)
+          pokemonSprite.sprite.setActive(true).setVisible(true)
+          pokemonSprite.shadow?.setActive(true).setVisible(true)
+          if (this.scene.textures.exists(pokemon.index)) {
+            pokemonSprite.sprite.setTexture(pokemon.index)
+            this.animationManager.createPokemonAnimations(
+              pokemon.index,
+              pokemon.shiny ? PokemonTint.SHINY : PokemonTint.NORMAL
+            )
+            this.animationManager.animatePokemon(
+              pokemonSprite,
+              pokemon.action,
+              false
+            )
+          }
+        })
+      }, delay)
+    )
   }
 
   renderBoard(phaseJustChanged: boolean) {

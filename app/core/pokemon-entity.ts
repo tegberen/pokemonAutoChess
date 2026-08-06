@@ -32,6 +32,7 @@ import {
   DROP_RATES_CHANCE,
   IMPENDING_DOOM_KO_ACCELERATION,
   ETERNAL_RAGE_DURATION_PER_STAR,
+  HAIL_TO_THE_KING_CURSE_DELAY,
   RIVALRY_ATTACK_ON_OWN_SIDE,
   RIVALRY_MAX_HP_ON_ENEMY_SIDE,
   SLIPSTREAM_SPEED,
@@ -176,6 +177,8 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
   isStrongestAllyThisFight: boolean = false
   isDoomSeedTarget: boolean = false
   isRivalryChampionThisFight: boolean = false
+  isLancesAceThisFight: boolean = false
+  isHailToTheKingChampionThisFight: boolean = false
   isSynchronisedSpeedLeaderThisFight: boolean = false
   isBlossomFestivalChampionThisFight: boolean = false
   isEchoChamberLeaderThisFight: boolean = false
@@ -1439,6 +1442,13 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
       this.player.shopFreeRolls += 1
     }
 
+    if (
+      this.isLancesAceThisFight &&
+      this.player?.blessings?.includes(Blessing.LANCES_ACE)
+    ) {
+      this.addAbilityPower(1, this, 0, false, true)
+    }
+
     /* IMPENDING_DOOM: killing a cursed enemy pulls the killer's own shadow
        forward. The timer is keyed by the killer's team, not the victim's. */
     if (
@@ -1599,6 +1609,19 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
             0,
             false
           )
+        }
+      })
+    }
+
+    if (this.isHailToTheKingChampionThisFight) {
+      board.forEach((x, y, ally) => {
+        if (
+          ally &&
+          ally.team === this.team &&
+          ally.id !== this.id &&
+          ally.hp > 0
+        ) {
+          ally.status.triggerCurse(HAIL_TO_THE_KING_CURSE_DELAY, ally)
         }
       })
     }

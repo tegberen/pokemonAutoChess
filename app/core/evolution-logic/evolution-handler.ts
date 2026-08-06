@@ -106,4 +106,8 @@ export function carryOverPermanentStats(
     pokemonEvolved.awakeningRock = chargingBefore.awakeningRock
     pokemonEvolved.awakeningCharge = chargingBefore.awakeningCharge
   }
+
+  pokemonEvolved.trashToTreasureRounds = Math.max(
+    ...pokemonsBeforeEvolution.map((pokemon) => pokemon.trashToTreasureRounds)
+  )
 }

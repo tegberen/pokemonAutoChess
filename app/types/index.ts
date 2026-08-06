@@ -381,6 +381,8 @@ export interface IPokemon {
   boosterEnergyCount: number
   juggernautStat: string
   manifestationLocked: boolean
+  supportiveSoul: boolean
+  trashToTreasureRounds: number
 }
 
 export interface IExperienceManager {

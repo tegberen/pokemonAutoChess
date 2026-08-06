@@ -105,7 +105,13 @@ import {
   SHINY_SAFEGUARD_PROTECT_DURATION,
   VITAMINS_ABILITY_POWER,
   VITAMINS_ATTACK,
-  VITAMINS_SPEED
+  VITAMINS_SPEED,
+  HAIL_TO_THE_KING_MAX_HP,
+  HAIL_TO_THE_KING_ATTACK,
+  HAIL_TO_THE_KING_DEFENSE,
+  HAIL_TO_THE_KING_SPECIAL_DEFENSE,
+  HAIL_TO_THE_KING_ABILITY_POWER,
+  HAIL_TO_THE_KING_SPEED
 } from "../types/enum/Blessing"
 import { isSynergyActiveForPlayer } from "../config/game/blessings"
 import { getFlowerPotStarCount } from "./flower-pots"
@@ -436,6 +442,21 @@ export default class Simulation extends Schema implements ISimulation {
           if (entities.length > 0) {
             const strongest = getStrongestUnit(entities)
             strongest.isStrongestAllyThisFight = true
+          }
+        }
+        if (player.blessings?.includes(Blessing.LANCES_ACE)) {
+          const dratiniFamily = [...team.values()].filter(
+            (entity): entity is PokemonEntity =>
+              entity.hp > 0 &&
+              !entity.isSpawn &&
+              entity.player === player &&
+              PkmFamily[entity.name] === Pkm.DRATINI
+          )
+          if (dratiniFamily.length > 0) {
+            const lancesAce = getStrongestUnit(dratiniFamily)
+            lancesAce.isLancesAceThisFight = true
+            lancesAce.range += 2
+            lancesAce.skill = Ability.HYPER_BEAM
           }
         }
         // DOOM_SEED - random Flying ally, decided once
@@ -1468,6 +1489,31 @@ export default class Simulation extends Schema implements ISimulation {
 
       if (blessings.includes(Blessing.RIVALRY) && ownUnits.length > 0) {
         getStrongestUnit(ownUnits).isRivalryChampionThisFight = true
+      }
+
+      if (
+        blessings.includes(Blessing.HAIL_TO_THE_KING) &&
+        ownUnits.length > 0
+      ) {
+        const king = getStrongestUnit(ownUnits)
+        king.isHailToTheKingChampionThisFight = true
+        king.isBlessedHero = true
+        king.addMaxHP(HAIL_TO_THE_KING_MAX_HP, king, 0, false)
+        king.addAttack(HAIL_TO_THE_KING_ATTACK, king, 0, false)
+        king.addDefense(HAIL_TO_THE_KING_DEFENSE, king, 0, false)
+        king.addSpecialDefense(
+          HAIL_TO_THE_KING_SPECIAL_DEFENSE,
+          king,
+          0,
+          false
+        )
+        king.addAbilityPower(
+          HAIL_TO_THE_KING_ABILITY_POWER,
+          king,
+          0,
+          false
+        )
+        king.addSpeed(HAIL_TO_THE_KING_SPEED, king, 0, false)
       }
 
       const speedLeaderTier = blessings.includes(Blessing.SYNCHRONISED_SPEED_II)

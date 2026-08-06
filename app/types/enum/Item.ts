@@ -52,6 +52,7 @@ export enum Item {
   SHELL_BELL = "SHELL_BELL",
   HEAVY_DUTY_BOOTS = "HEAVY_DUTY_BOOTS",
   RELIC_CROWN = "RELIC_CROWN",
+  RELIC_STATUE = "RELIC_STATUE",
   AQUA_EGG = "AQUA_EGG",
   BLUE_ORB = "BLUE_ORB",
   SCOPE_LENS = "SCOPE_LENS",
@@ -505,6 +506,7 @@ export const TownItems = [
 // should be excluded from carousels
 export const SpecialItems: Item[] = [
   Item.PRISON_BOTTLE,
+  Item.RELIC_STATUE,
   ...TownItems,
   Item.COIN,
   Item.NUGGET,
@@ -1287,6 +1289,7 @@ export const Sweets = [
 export const Mulches = [Item.RICH_MULCH, Item.AMAZE_MULCH] satisfies Item[]
 
 export const UnholdableItems = [
+  Item.RELIC_STATUE,
   Item.PRISON_BOTTLE,
   Item.DUBIOUS_DISC_BLESSING_ITEM,
   ...WeatherRocks,

@@ -39,6 +39,8 @@ export default function BlessingsPanel(props: { recentOnly?: boolean }) {
   const questProgress = questProgressByPlayer ?? {}
   const bpRewardsRoundsLeft =
     questProgress[Blessing.BP_REWARDS] ?? BP_REWARDS_ROUND_INTERVAL
+  const supportiveSoulRoundsLeft =
+    questProgress[Blessing.SUPPORTIVE_SOUL] ?? 0
   const spectatedPlayer = useAppSelector(selectSpectatedPlayer)
   const synergies = useAppSelector((state) => state.game.synergiesSpectated)
   const boardPokemons: Array<{ positionY: number; rarity: Rarity }> =
@@ -126,6 +128,12 @@ export default function BlessingsPanel(props: { recentOnly?: boolean }) {
               {bpRewardsRoundsLeft}
             </span>
           )}
+          {blessing === Blessing.SUPPORTIVE_SOUL &&
+            supportiveSoulRoundsLeft > 0 && (
+              <span className="blessing-panel-counter">
+                {supportiveSoulRoundsLeft}
+              </span>
+            )}
           {/* portalled out of the panel, or the Effects window clips it */}
           {ReactDOM.createPortal(
             <Tooltip
@@ -143,6 +151,7 @@ export default function BlessingsPanel(props: { recentOnly?: boolean }) {
                   <h3>{t(`blessing.${blessing}.name`)}</h3>
                   <p>{addIconsToDescription(t(`blessing.${blessing}.description`))}</p>
                   {blessing === Blessing.BP_REWARDS && <p className="blessing-panel-live-value">Next component in {bpRewardsRoundsLeft} round{bpRewardsRoundsLeft === 1 ? "" : "s"}</p>}
+                  {blessing === Blessing.SUPPORTIVE_SOUL && supportiveSoulRoundsLeft > 0 && <p className="blessing-panel-live-value">Next support item in {supportiveSoulRoundsLeft} round{supportiveSoulRoundsLeft === 1 ? "" : "s"}</p>}
                   {blessing === Blessing.AURORA_BOREALIS && <p className="blessing-panel-live-value">{addIconsToDescription(`${nbActiveSynergies} active synergies: −${auroraBorealisReduction}% damage taken, −${auroraBorealisReductionInSnowOrNight}% in SNOW or NIGHT`)}</p>}
                   {blessing === Blessing.BERSERKER_HORDES && <p className="blessing-panel-live-value">{addIconsToDescription(`${nbThreeStarWilds} WILD at 3 STAR or more: −${nbThreeStarWilds} GOLD`)}</p>}
                 </div>

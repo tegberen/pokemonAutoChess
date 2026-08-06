@@ -910,7 +910,7 @@ export class OnSwitchBenchAndBoardCommand extends Command<
     } else {
       // pokemon is on board, switch to bench
       const x = getFirstAvailablePositionInBench(player.board)
-      if (x !== null) {
+      if (x !== null && pokemon.canBeBenched) {
         const oldX = pokemon.positionX
         const oldY = pokemon.positionY
         pokemon.positionX = x
@@ -1175,6 +1175,11 @@ export class OnDragDropItemCommand extends Command<
     }
 
     if (!pokemon) {
+      client.send(Transfer.DRAG_DROP_CANCEL, message)
+      return
+    }
+
+    if (pokemon.supportiveSoul) {
       client.send(Transfer.DRAG_DROP_CANCEL, message)
       return
     }
@@ -1489,7 +1494,10 @@ export class OnSellPokemonCommand extends Command<
       return // can't sell an explorer pokemon
     }
 
-    if (canSell(pokemon.name, this.state.specialGameRule) === false) {
+    if (
+      pokemon.supportiveSoul ||
+      canSell(pokemon.name, this.state.specialGameRule) === false
+    ) {
       return
     }
 

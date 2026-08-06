@@ -263,6 +263,42 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     icon: "rainbow_key",
     grantsPokemonImmediately: false
   },
+  [Blessing.PLUSHIFY]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "plushify",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.SUPPORTIVE_SOUL]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: [4],
+    icon: "supportive_soul",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.LANCES_ACE]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: [4],
+    icon: "lances_ace",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.PANIC_BUTTON]: {
+    tier: BlessingTier.SILVER,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "panic_button",
+    grantsPokemonImmediately: true
+  },
+  [Blessing.HAIL_TO_THE_KING]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "hail_to_the_king",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.TRASH_TO_TREASURE]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: [12],
+    icon: "trash_to_treasure",
+    grantsPokemonImmediately: true
+  },
   [Blessing.THINK_FAST]: {
     tier: BlessingTier.PRISMATIC,
     availableAtStages: [12],
@@ -1436,8 +1472,8 @@ export const BLESSING_SELECTION_EVERY_STAGE: boolean =
   BLESSING_TEST_MODE || BLESSING_SANDBOX_MODE
 
 const BLESSINGS_UNDER_TEST: Blessing[] = [
-  Blessing.ALL_FOR_ONE,
-  Blessing.RAINBOW_KEY
+  Blessing.HAIL_TO_THE_KING,
+  Blessing.TRASH_TO_TREASURE
 ]
 
 function countBlessingsOfFamily(blessings: Blessing[], family?: string) {

@@ -561,6 +561,7 @@ export default class GameScene extends Scene {
 
           if (
             this.sellZone &&
+            !gameObject.supportiveSoul &&
             canSell(
               this.pokemonDragged.name as Pkm,
               this.room?.state.specialGameRule
@@ -593,7 +594,9 @@ export default class GameScene extends Scene {
             const inBench = spot.getData("y") === 0
             let visible = false
             if (inBench) {
-              visible = pokemon.canBeBenched
+              visible =
+                pokemon.canBeBenched &&
+                this.pokemonDragged?.supportiveSoul !== true
             } else if (this.room?.state.phase === GamePhaseState.PICK) {
               visible = true
             }
@@ -601,6 +604,7 @@ export default class GameScene extends Scene {
           })
           if (
             this.sellZone?.visible === false &&
+            this.pokemonDragged?.supportiveSoul !== true &&
             canSell(
               this.pokemonDragged.name as Pkm,
               this.room?.state.specialGameRule

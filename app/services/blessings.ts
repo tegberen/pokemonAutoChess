@@ -33,6 +33,7 @@ import {
   BP_REWARDS_COMPONENTS,
   BP_REWARDS_RECURRING_COMPONENTS,
   BP_REWARDS_ROUND_INTERVAL,
+  LANCES_ACE_DELAY,
   CALLED_SHOT_GOLD,
   CALLED_SHOT_STREAK,
   MORE_EQUAL_THAN_OTHERS_GOLD,
@@ -66,7 +67,8 @@ import {
   MIX_AND_MATCH_I_FIELD_CAP,
   MIX_AND_MATCH_II_UNIQUES,
   MIX_AND_MATCH_II_FIELD_CAP,
-  ALL_FOR_ONE_MAX_HP_RATIO
+  ALL_FOR_ONE_MAX_HP_RATIO,
+  TRASH_TO_TREASURE_ROUNDS_BY_STAR
 } from "../types/enum/Blessing"
 import { BattleResult, Rarity } from "../types/enum/Game"
 import {
@@ -96,6 +98,7 @@ import {
   SynergyGems,
   SynergyGivenByGem,
   SynergyStones,
+  Tools,
   WeatherRocks
 } from "../types/enum/Item"
 import { schemaValues } from "../utils/schemas"
@@ -111,6 +114,7 @@ import {
 import { getAltFormForPlayer } from "../config/game/pokemons"
 import {
   getFirstAvailablePositionInBench,
+  getFirstAvailablePositionOnBoard,
   getFreeSpaceOnBench,
   getLastAvailablePositionInBench
 } from "../utils/board"
@@ -434,6 +438,63 @@ const crownEffects = Object.fromEntries(
 )
 
 const SONG_REINFORCEMENT_STAGES = [17, 22]
+const SUPPORTIVE_SOUL_ITEM_STAGES = [8, 16]
+const SUPPORTIVE_SOUL_ITEMS = [
+  Item.GRACIDEA_FLOWER,
+  Item.ABILITY_SHIELD,
+  Item.EFFICIENT_BANDANNA,
+  Item.GREEN_ORB
+]
+
+function grantSupportiveSoulItem(player: Player) {
+  const companion = schemaValues(player.board).find(
+    (pokemon) => pokemon.supportiveSoul
+  )
+  if (!companion || companion.items.size >= 3) return
+  const availableItems = SUPPORTIVE_SOUL_ITEMS.filter(
+    (item) => !companion.items.has(item)
+  )
+  if (availableItems.length === 0) return
+  companion.items.add(pickRandomIn(availableItems))
+}
+
+function updateSupportiveSoulRoundsLeft(player: Player, state: GameState) {
+  const companion = schemaValues(player.board).find(
+    (pokemon) => pokemon.supportiveSoul
+  )
+  const nextItemStage = player.scheduledBlessingGrants
+    .filter((grant) => grant.blessing === Blessing.SUPPORTIVE_SOUL)
+    .map((grant) => grant.stage)
+    .sort((a, b) => a - b)[0]
+  if (!companion || companion.items.size >= 3 || nextItemStage === undefined) {
+    player.blessingsRef?.questProgress.delete(Blessing.SUPPORTIVE_SOUL)
+    return
+  }
+  player.blessingsRef?.questProgress.set(
+    Blessing.SUPPORTIVE_SOUL,
+    Math.max(0, nextItemStage - state.stageLevel)
+  )
+}
+
+function recycleTrashToTreasure(player: Player) {
+  schemaValues(player.board)
+    .filter((pokemon) => PkmFamily[pokemon.name] === Pkm.BELDUM)
+    .forEach((pokemon) => {
+      if (!pokemon.items.has(Item.TRASH)) {
+        pokemon.trashToTreasureRounds = 0
+        return
+      }
+      pokemon.trashToTreasureRounds += 1
+      const roundsRequired =
+        TRASH_TO_TREASURE_ROUNDS_BY_STAR[
+          Math.min(pokemon.stars, 3) - 1
+        ] ?? 1
+      if (pokemon.trashToTreasureRounds < roundsRequired) return
+      pokemon.removeItem(Item.TRASH, player)
+      pokemon.addItem(pickRandomIn(Tools), player)
+      pokemon.trashToTreasureRounds = 0
+    })
+}
 
 const SongBlessingContent: {
   [blessing in Blessing]?: { instrument: Item; reinforcement: Pkm }
@@ -530,6 +591,19 @@ function giftPokemonIfBenchHasRoom(player: Player, pkm: Pkm): boolean {
       EvolutionManager.tryEvolve(boardPokemon, player)
     }
   })
+  return true
+}
+
+function grantPanicButtonUnown(player: Player): boolean {
+  const freeCellX = getFirstAvailablePositionInBench(player.board)
+  if (freeCellX === null) return false
+  const unown = PokemonFactory.createPokemonFromName(Pkm.UNOWN_Q, player)
+  unown.maxPP = 10
+  unown.baseMaxPP = 10
+  unown.positionX = freeCellX
+  unown.positionY = 0
+  player.board.set(unown.id, unown)
+  unown.onAcquired(player)
   return true
 }
 
@@ -847,6 +921,12 @@ export function applyRecurringBlessingGrants(player: Player, state: GameState) {
       Blessing.BP_REWARDS,
       Math.max(0, player.bpRewardsNextStage - state.stageLevel)
     )
+  }
+  if (player.blessings?.includes(Blessing.SUPPORTIVE_SOUL)) {
+    updateSupportiveSoulRoundsLeft(player, state)
+  }
+  if (player.blessings?.includes(Blessing.TRASH_TO_TREASURE)) {
+    recycleTrashToTreasure(player)
   }
 }
 
@@ -1293,7 +1373,12 @@ export const blessingScheduledEffectService: {
     grantSongReinforcement(player, Blessing.GIRATINAS_SONG),
 
   [Blessing.KYOGRES_SONG]: (player) =>
-    grantSongReinforcement(player, Blessing.KYOGRES_SONG)
+    grantSongReinforcement(player, Blessing.KYOGRES_SONG),
+
+  [Blessing.SUPPORTIVE_SOUL]: (player) => grantSupportiveSoulItem(player),
+
+  [Blessing.LANCES_ACE]: (player) =>
+    giftPokemonIfBenchHasRoom(player, Pkm.DRATINI)
 }
 
 export const blessingEffectService: {
@@ -1350,6 +1435,61 @@ export const blessingEffectService: {
     applyAllForOne(player, state, room),
   [Blessing.RAINBOW_KEY]: (player, state, room) =>
     applyRainbowKey(player, state, room),
+  [Blessing.PLUSHIFY]: (player) => {
+    player.items.push(Item.POKE_DOLL)
+    return true
+  },
+  [Blessing.SUPPORTIVE_SOUL]: (player, state, room) => {
+    const substitute = PokemonFactory.createPokemonFromName(
+      Pkm.SUBSTITUTE,
+      player
+    )
+    const fieldPosition = getFirstAvailablePositionOnBoard(
+      player.board,
+      substitute.range
+    )
+    if (!fieldPosition) return false
+    substitute.supportiveSoul = true
+    substitute.canBeBenched = false
+    substitute.positionX = fieldPosition[0]
+    substitute.positionY = fieldPosition[1]
+    player.board.set(substitute.id, substitute)
+    grantSupportiveSoulItem(player)
+    scheduleBlessingGrant(
+      player,
+      state,
+      Blessing.SUPPORTIVE_SOUL,
+      SUPPORTIVE_SOUL_ITEM_STAGES.map((rounds) => state.stageLevel + rounds)
+    )
+    const owned =
+      state.blessingsByPlayerId.get(player.id) ?? new PlayerBlessings()
+    owned.questProgress.set(
+      Blessing.SUPPORTIVE_SOUL,
+      SUPPORTIVE_SOUL_ITEM_STAGES[0]
+    )
+    state.blessingsByPlayerId.set(player.id, owned)
+    player.blessingsRef = owned
+    player.updateSynergies()
+    if (room) player.boardSize = room.getTeamSize(player.board, player.blessings)
+    return true
+  },
+  [Blessing.LANCES_ACE]: (player, state) => {
+    scheduleBlessingGrant(player, state, Blessing.LANCES_ACE, [
+      state.stageLevel + LANCES_ACE_DELAY
+    ])
+    return true
+  },
+  [Blessing.PANIC_BUTTON]: (player) => grantPanicButtonUnown(player),
+  [Blessing.HAIL_TO_THE_KING]: (player) => {
+    player.items.push(Item.RELIC_STATUE)
+    return true
+  },
+  [Blessing.TRASH_TO_TREASURE]: (player) => {
+    if (getFreeSpaceOnBench(player.board) < 2) return false
+    giftPokemonIfBenchHasRoom(player, Pkm.TRUBBISH)
+    giftPokemonIfBenchHasRoom(player, Pkm.BELDUM)
+    return true
+  },
   [Blessing.THINK_FAST]: (player, state) => {
     const owned =
       state.blessingsByPlayerId.get(player.id) ?? new PlayerBlessings()

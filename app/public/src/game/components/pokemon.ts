@@ -330,6 +330,10 @@ export default class PokemonSprite extends DraggableObject {
     return this.pokemon.positionY
   }
 
+  get supportiveSoul(): boolean {
+    return !isEntity(this.pokemon) && this.pokemon.supportiveSoul
+  }
+
   lazyLoadAnimations(scene: GameScene | DebugScene): Promise<void> {
     return new Promise((resolve) => {
       const tint = this.pokemon.shiny ? PokemonTint.SHINY : PokemonTint.NORMAL

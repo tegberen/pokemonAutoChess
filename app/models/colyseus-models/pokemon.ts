@@ -112,6 +112,8 @@ export class Pokemon extends Schema implements IPokemon {
   @type("string") juggernautStat: string = ""
   // MANIFESTATION: passive on the bench until stage 20
   @type("boolean") manifestationLocked: boolean = false
+  @type("boolean") supportiveSoul: boolean = false
+  @type("uint8") trashToTreasureRounds: number = 0
   dodge: number = 0
   deathCount: number = 0
   killCount: number = 0
@@ -185,6 +187,7 @@ export class Pokemon extends Schema implements IPokemon {
     return (
       this.passive !== Passive.INANIMATE &&
       this.passive !== Passive.FIGHTING_SUBSTITUTE &&
+      this.supportiveSoul === false &&
       this.items.has(Item.GOLD_BOW) === false
     )
   }
