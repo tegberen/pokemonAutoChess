@@ -5493,7 +5493,7 @@
 			"description": "Each reroll has a 25% chance to gain 2 free rerolls. Free rerolls can grant free rerolls in turn."
 		},
 		"LUNCH_MONEY": {
-			"name": "Lunch Money",
+			"name": "Prize Money",
 			"description": "For every 8 player damage you deal, gain 2 GOLD and a free reroll."
 		},
 		"CALCULATED_LOSS": {
@@ -5501,20 +5501,20 @@
 			"description": "When you lose, gain 2 GOLD and a free reroll."
 		},
 		"THINK_FAST": {
-			"name": "Think Fast",
+			"name": "Pokemon APM",
 			"description": "Gain infinite rerolls this turn. All shop rerolls cost no GOLD until the end of the preparation phase."
 		},
 		"WISE_SPENDING": {
-			"name": "Wise Spending",
+			"name": "Efficient Economy",
 			"description": "You cannot buy XP. Every reroll grants 1 XP."
 		},
 		"BIRTHDAY_PRESENT": {
-			"name": "Birthday Present",
+			"name": "Friend Subscription",
 			"description": "Whenever you level up, gain a 2 STAR Pokemon and 1 GOLD. Its rarity is Common at level 4, Uncommon at 5, Rare at 6-7, Epic at 8-9, and Ultra at 10."
 		},
 		"UP_IS_UP": {
-			"name": "Up Is Up",
-			"description": "Whenever you buy XP, gain 2 GOLD and restore 2 player HP."
+			"name": "Reinvigorate",
+			"description": "Whenever you buy XP, gain 1 GOLD and restore 1 player HP."
 		},
 		"DROP_RATES": {
 			"name": "Drop Rates",
