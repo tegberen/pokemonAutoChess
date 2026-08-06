@@ -8,8 +8,9 @@
   display: flex;
   position: relative;
   overflow: hidden;
+  font-size: 1em;
   min-height: 9.5em;
-  padding: 4px;
+  padding: 3px;
   border: 2px solid color-mix(in srgb, var(--color-fg-primary) 35%, var(--color-bg-tertiary));
   border-radius: 9px;
   background-color: var(--color-bg-tertiary);
@@ -23,37 +24,41 @@
 }
 
 .calendar-event-card.jirachi {
-  background-color: #092c4f;
+  background-color: #363938;
   background-image:
-    radial-gradient(ellipse at 68% 72%, rgb(190 124 244 / 58%) 0%, transparent 58%),
-    linear-gradient(122deg, transparent 18%, rgb(154 104 239 / 46%) 43%, rgb(94 182 239 / 38%) 60%, transparent 84%),
-    radial-gradient(circle at 12% 24%, #fff 0 1px, #cbc7dd 1.5px, #cbc7dd55 2px, transparent 4px),
-    radial-gradient(circle at 28% 70%, #fff 0 1px, #3397b8 1.5px, #3397b855 2px, transparent 4px),
-    radial-gradient(circle at 54% 18%, #fff 0 1px, #cbc7dd 1.5px, #cbc7dd55 2px, transparent 4px),
-    radial-gradient(circle at 72% 42%, #fff 0 1px, #1b7799 1.5px, #1b779955 2px, transparent 4px),
-    radial-gradient(circle at 40% 44%, #fff 0 0.75px, #3397b8 1.25px, #3397b844 1.75px, transparent 3px),
-    radial-gradient(circle at 65% 82%, #fff 0 0.75px, #cbc7dd 1.25px, #cbc7dd44 1.75px, transparent 3px),
-    radial-gradient(circle at 93% 31%, #fff 0 0.75px, #1b7799 1.25px, #1b779944 1.75px, transparent 3px),
-    linear-gradient(145deg, #052d5b 0%, #092c4f 55%, #16426a 100%);
+    linear-gradient(180deg, rgb(54 57 56 / 48%) 0%, transparent 46%),
+    linear-gradient(90deg, rgb(54 57 56 / 74%) 0%, rgb(54 57 56 / 42%) 34%, transparent 64%),
+    url("assets/ui/cards/wish_festival_bg.jpg");
+  background-position: center;
+  background-size: cover;
+  color: #fff;
 }
 
-.calendar-event-card.whimsy {
-  background-color: #6e996f;
-  background-image: linear-gradient(
-    132deg,
-    #3f6f48 0 25%,
-    #6e996f 25% 50%,
-    #5c8f64 50% 75%,
-    #497b54 75% 100%
-  );
+.calendar-event-card.whimsy.whimsy-v2 {
+  background-color: #092b18;
+  background-image:
+    linear-gradient(180deg, rgb(9 43 24 / 52%) 0%, transparent 46%),
+    linear-gradient(90deg, rgb(9 43 24 / 76%) 0%, rgb(28 104 55 / 46%) 34%, transparent 64%),
+    url("assets/ui/cards/whimsy_bg.webp");
+  background-position: left center;
+  background-size: 124% auto;
 }
 
 .calendar-event-card.smeargle {
   background-color: #f8fae4;
-  background-image: url("assets/ui/smeargle_background.jpg");
-  background-position: center 65%;
+  background-image:
+    linear-gradient(225deg, rgb(61 76 87 / 22%) 0%, transparent 38%),
+    radial-gradient(circle at 38% 100%, rgb(177 115 60 / 24%) 0%, transparent 34%),
+    linear-gradient(180deg, rgb(61 76 87 / 48%) 0%, transparent 46%),
+    linear-gradient(90deg, rgb(61 76 87 / 76%) 0%, rgb(117 104 91 / 46%) 34%, transparent 64%),
+    url("assets/ui/cards/the_scribbler_bg.png");
+  background-position: right center;
   background-size: cover;
   color: #273946;
+}
+
+.calendar-event-card.smeargle .calendar-event-content {
+  flex: 1;
 }
 
 .calendar-event-card.smeargle .calendar-event-content,
@@ -61,23 +66,18 @@
 .calendar-event-card.smeargle .calendar-event-content p,
 .calendar-event-card.smeargle .calendar-event-content time {
   color: #fff;
-  text-shadow: 1px 1px 0 #05090f, 0 0 1px #05090f;
-}
-
-.calendar-event-card.smeargle .calendar-event-content h3 {
-  display: inline-block;
-  margin-top: 0.9em;
-  padding: 0.1em 0;
-  color: #fff;
-  text-shadow: 1px 1px 0 #05090f, 0 0 1px #05090f;
+  text-shadow: none;
 }
 
 .calendar-event-card.doubleup {
-  background: #10141a url("assets/ui/tournament_background.jpg") center / cover;
-}
-
-.calendar-event-card.doubleup .calendar-event-content {
-  padding-left: 1em;
+  min-height: 15em;
+  background-color: #34283f;
+  background-image:
+    linear-gradient(180deg, rgb(52 40 63 / 38%) 0%, transparent 38%),
+    linear-gradient(90deg, rgb(52 40 63 / 68%) 0%, rgb(110 64 88 / 34%) 30%, transparent 54%),
+    url("assets/ui/cards/rapidash_bg.png");
+  background-position: center top;
+  background-size: cover;
 }
 
 .calendar-event-card.doubleup .calendar-event-content,
@@ -85,45 +85,90 @@
 .calendar-event-card.doubleup .calendar-event-content p,
 .calendar-event-card.doubleup .calendar-event-content time {
   color: #fff;
-  text-shadow: 1px 1px 0 #05090f, 0 0 1px #05090f;
+  text-shadow: none;
 }
 
 .calendar-event-card.doubleup .calendar-event-timer {
   padding: 0.3em 0.4em;
   border-radius: 3px;
-  background: rgb(42 43 63 / 78%);
 }
 
 .calendar-event-card.doubleup .calendar-event-copy {
   padding: 0.25em 0.4em;
   border-radius: 3px;
-  background: rgb(42 43 63 / 78%);
 }
 
 .calendar-event-card.smeargle .calendar-event-copy {
   padding: 0.25em 0.4em;
   border-radius: 3px;
-  font-weight: 700;
   text-align: left;
 }
 
 .calendar-event-card.smeargle .calendar-event-timer {
   padding: 0.3em 0.4em;
   border-radius: 3px;
-  font-weight: 700;
 }
 
 .calendar-event-card.whimsy .calendar-event-content,
 .calendar-event-card.whimsy .calendar-event-timer,
 .calendar-event-card.whimsy .calendar-event-content time {
-  color: #f8fae4;
-  text-shadow: 0 1px 1px #294833;
+  color: #fff;
+  text-shadow: none;
+}
+
+.calendar-event-card.doubleup h3,
+.calendar-event-card.smeargle h3,
+.calendar-event-card.whimsy h3,
+.calendar-event-card.jirachi h3 {
+  text-shadow: none;
+}
+
+.calendar-event-card.jirachi .calendar-event-content,
+.calendar-event-card.jirachi .calendar-event-timer,
+.calendar-event-card.jirachi .calendar-event-content time {
+  color: #fff;
+  text-shadow: none;
+}
+
+.calendar-event-card.jirachi h3 {
+  color: #fff;
+  text-shadow: none;
+}
+
+.calendar-event-card.jirachi .calendar-event-timer p {
+  color: #fff;
+}
+
+.calendar-event-card.whimsy-v2 .calendar-event-content,
+.calendar-event-card.whimsy-v2 .calendar-event-timer,
+.calendar-event-card.whimsy-v2 .calendar-event-content time {
+  color: #fff;
+  text-shadow: none;
+}
+
+.calendar-event-card.whimsy-v2 h3 {
+  color: #fff;
+  text-shadow: none;
+}
+
+.calendar-event-card.jirachi .calendar-event-copy,
+.calendar-event-card.jirachi .calendar-event-timer {
+  padding: 0.3em 0.45em;
+  border-radius: 4px;
+}
+
+.calendar-event-card.whimsy-v2 .calendar-event-copy,
+.calendar-event-card.whimsy-v2 .calendar-event-timer {
+  padding: 0.3em 0.45em;
+  border-radius: 4px;
 }
 
 .calendar-event-card > img {
-  width: 28.6%;
-  min-width: 106px;
+  width: 40%;
+  min-width: 85px;
   align-self: stretch;
+  box-sizing: border-box;
+  padding: 0.7em 0;
   border-radius: 5px;
   object-fit: cover;
   object-position: center;
@@ -142,14 +187,15 @@
 }
 
 .calendar-event-content h3 {
-  font-size: 1.3em;
+  font-size: 1.2em;
   text-shadow: 1px 1px 0 #05090f;
 }
 
 .calendar-event-copy > p {
   margin-top: 0.35em;
-  font-size: 0.85em;
-  line-height: 1.35;
+  font-size: 1em;
+  font-weight: 500;
+  line-height: 1.4;
 }
 
 .calendar-event-copy {
@@ -179,5 +225,36 @@
 
 .calendar-event-content time {
   color: #aebbd2;
-  font-size: 0.78em;
+  font-size: 0.82em;
+  line-height: 1.3;
+}
+
+.calendar-event-card .calendar-event-content h3,
+.calendar-event-card .calendar-event-copy > p {
+  -webkit-text-stroke: 0.35px rgb(0 0 0 / 82%);
+  paint-order: stroke fill;
+  text-shadow: 1px 1px 0 rgb(0 0 0 / 88%);
+}
+
+.calendar-event-card .calendar-event-copy > p {
+  text-shadow: 1px 1px 0 #000;
+}
+
+.calendar-event-card.smeargle .calendar-event-copy h3,
+.calendar-event-card.smeargle .calendar-event-copy > p {
+  text-shadow: 1px 1px 0 rgb(0 0 0 / 88%);
+}
+
+.calendar-event-card.doubleup .calendar-event-copy h3 {
+  font-weight: 700;
+}
+
+.calendar-event-card.doubleup .calendar-event-copy > p {
+  font-size: 1em;
+  font-weight: 600;
+}
+
+.calendar-event-card.doubleup .calendar-event-copy h3,
+.calendar-event-card.doubleup .calendar-event-copy > p {
+  text-shadow: 1px 1px 0 #000;
 }

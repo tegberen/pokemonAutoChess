@@ -113,10 +113,6 @@ export default class LobbyState extends Schema {
     this.doubleUpTitle = config.doubleUpTitle
     this.doubleUpMessage = config.doubleUpMessage
     this.doubleUpDate = config.doubleUpDate
-    this.doubleUpEnabled = config.doubleUpEnabled
-    this.doubleUpTitle = config.doubleUpTitle
-    this.doubleUpMessage = config.doubleUpMessage
-    this.doubleUpDate = config.doubleUpDate
     await eventNpc.findOneAndUpdate({}, config, { upsert: true })
   }
 
@@ -134,10 +130,6 @@ export default class LobbyState extends Schema {
       this.tournamentTitle = doc.tournamentTitle ?? "Smeargle Pack Tournament"
       this.tournamentMessage = doc.tournamentMessage ?? ""
       this.tournamentDate = doc.tournamentDate ?? ""
-      this.doubleUpEnabled = doc.doubleUpEnabled ?? false
-      this.doubleUpTitle = doc.doubleUpTitle ?? "Double Up Tournament"
-      this.doubleUpMessage = doc.doubleUpMessage ?? ""
-      this.doubleUpDate = doc.doubleUpDate ?? ""
       this.doubleUpEnabled = doc.doubleUpEnabled ?? false
       this.doubleUpTitle = doc.doubleUpTitle ?? "Double Up Tournament"
       this.doubleUpMessage = doc.doubleUpMessage ?? ""

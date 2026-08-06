@@ -46,21 +46,18 @@ export default function WikiBlessings() {
   const { t } = useTranslation()
   const [stageFilter, setStageFilter] = useState<number | null>(null)
   const [query, setQuery] = useState("")
+  const setStageFilterAtTop = (stage: number | null) => {
+    const scrollPanel = document.querySelector<HTMLElement>(
+      "#wiki-page > .react-tabs > .react-tabs__tab-panel--selected"
+    )
+    if (scrollPanel) scrollPanel.scrollTop = 0
+    setStageFilter(stage)
+  }
 
   const scrollToTier = (tier: BlessingTier) => {
-    const scroll = () => {
-      document
-        .getElementById(`wiki-blessing-tier-${tier.toLowerCase()}`)
-        ?.scrollIntoView({ behavior: "smooth", block: "start" })
-    }
-
-    if (stageFilter !== null || query) {
-      setStageFilter(null)
-      setQuery("")
-      window.setTimeout(scroll, 0)
-    } else {
-      scroll()
-    }
+    document
+      .getElementById(`wiki-blessing-tier-${tier.toLowerCase()}`)
+      ?.scrollIntoView({ behavior: "smooth", block: "start" })
   }
 
   const blessingsByTier = useMemo(() => {
@@ -91,10 +88,14 @@ export default function WikiBlessings() {
       <p className="wiki-blessings-intro">{t("wiki.blessings.intro")}</p>
 
       <div className="wiki-blessings-filters">
+        <p className="wiki-blessings-wish-quote">
+          <img src="assets/ui/blessing_event_icon.jpg" alt="" />
+          <span>{t("wiki.blessings.wish_quote")}</span>
+        </p>
         <div className="wiki-blessings-stages">
           <button
             className={cc("bubbly", stageFilter === null ? "blue" : "")}
-            onClick={() => setStageFilter(null)}
+            onClick={() => setStageFilterAtTop(null)}
           >
             {t("wiki.blessings.all_stages")}
           </button>
@@ -102,7 +103,7 @@ export default function WikiBlessings() {
             <button
               key={stage}
               className={cc("bubbly", stageFilter === stage ? "blue" : "")}
-              onClick={() => setStageFilter(stage)}
+              onClick={() => setStageFilterAtTop(stage)}
             >
               {t("stage")} {stage}
             </button>

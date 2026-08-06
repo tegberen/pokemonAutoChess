@@ -44,6 +44,7 @@ import {
   resetLobby,
   setCcu,
   setEventNpc,
+  setRooms,
   setSearchedUser,
   updateTournament
 } from "../stores/LobbyStore"
@@ -164,10 +165,6 @@ export async function joinLobbyRoom(
           $state.listen("doubleUpTitle", (value) => dispatch(setEventNpc({ doubleUpTitle: value })))
           $state.listen("doubleUpMessage", (value) => dispatch(setEventNpc({ doubleUpMessage: value })))
           $state.listen("doubleUpDate", (value) => dispatch(setEventNpc({ doubleUpDate: value })))
-          $state.listen("doubleUpEnabled", (value) => dispatch(setEventNpc({ doubleUpEnabled: value })))
-          $state.listen("doubleUpTitle", (value) => dispatch(setEventNpc({ doubleUpTitle: value })))
-          $state.listen("doubleUpMessage", (value) => dispatch(setEventNpc({ doubleUpMessage: value })))
-          $state.listen("doubleUpDate", (value) => dispatch(setEventNpc({ doubleUpDate: value })))
 
           $state.tournaments.onAdd((tournament) => {
             dispatch(addTournament(tournament))
@@ -276,7 +273,7 @@ export async function joinLobbyRoom(
           })
 
           room.onMessage(Transfer.ROOMS, (rooms: RoomAvailable[]) => {
-            rooms.forEach((room) => dispatch(addRoom(room)))
+            dispatch(setRooms(rooms))
           })
 
           room.onMessage(Transfer.REQUEST_ROOM, async (roomId: string) => {

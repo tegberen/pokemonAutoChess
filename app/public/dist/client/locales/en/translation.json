@@ -2157,7 +2157,7 @@
 		"SAND_TOMB": "Deal [10,20,40,80,SP] SPECIAL to the target and inflict them with SILENCE and PARALYSIS for [3,5,8,16] seconds.",
 		"WHIRLWIND": "Deal [40,80,120,240,SP] SPECIAL to the target and make them FLY_AWAY.",
 		"ACID_SPRAY": "Spit poison directly at an enemy Pokémon, dealing [11,22,33,66,SP] SPECIAL and reducing their SPE_DEF by 5. The ability then rebounds to another ADJACENT enemy (5 bounces max).",
-		"UNBOUND": "Tears open a dimensional ring and returns in its Unbound form — dragging a Legendary Pokémon along with it. The summoned Pokémon's HP increases with the user's AP.",
+		"UNBOUND": "Tears open a dimensional ring and returns in its Unbound form — dragging a Legendary Pokémon along with it. The summoned Pokémon starts with 50% of its base max HP, increasing by another 25% for every 100 AP the user has.",
 		"HYPERSPACE_FURY": "Using its many arms, unleashes a barrage of [6,6,6,6,12,SP] attacks. Each attack deals 20 SPECIAL to the target and lowers their DEF and SPE_DEF by 1.",
 		"SNIPE_SHOT": "Fire a shot of water from the user's index fingertips at the farthest enemy Pokémon, dealing [40,80,160,320,SP] SPECIAL to all enemy Pokémon in its path.",
 		"AIR_SLASH": "Deal [25,50,100,200,SP] SPECIAL to the target and inflict them with FLINCH for 7 seconds.",
@@ -5434,7 +5434,7 @@
 		},
 		"ORBITAL_STRIKE": {
 			"name": "Orbital Strike",
-			"description": "Gain a Dottler. At the start of combat, your STRONGEST Blipbug gets +2 RANGE. Your STRONGEST other 1 RANGE Pokémon starts combat with PSYCHIC_FIELD."
+			"description": "Gain a Dottler. At the start of combat, your STRONGEST Blipbug gets +2 RANGE. Your other STRONGEST Pokémon with 1 RANGE starts the combat with PSYCHIC_FIELD."
 		},
 		"ROOSTING_FLOCK": {
 			"name": "Roosting Flock",
@@ -6532,7 +6532,8 @@
 			"removable_item": "Removable items are items that can be removed from a Pokémon by putting them on the bench."
 		},
 		"blessings": {
-			"intro": "Jirachi grants each player 2 Blessings per game, one at stage 4 and one at stage 12. Every player is offered the same tier, and each of the 3 options can be rerolled once. Every wish leaves behind a little light...and a little shade for the night to keep.",
+			"intro": "Jirachi grants each player 2 Blessings per game, one at stage 4 and one at stage 12. Every player is offered the same tier, and each of the 3 options can be rerolled once.",
+			"wish_quote": "Every wish leaves behind a little light... and a little shade for the night to carry.",
 			"all_stages": "All stages",
 			"family_BADGE_name": "Synergy Badges",
 			"family_BADGE_hint": "Gain that synergy gem and a random 1 STAR Uncommon Pokémon of that synergy. One exists for every synergy.",

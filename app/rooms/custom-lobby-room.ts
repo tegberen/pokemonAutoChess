@@ -329,8 +329,11 @@ export default class CustomLobbyRoom extends Room {
           tournamentEnabled,
           tournamentTitle,
           tournamentMessage,
-          tournamentDate
-          , doubleUpEnabled, doubleUpTitle, doubleUpMessage, doubleUpDate
+          tournamentDate,
+          doubleUpEnabled,
+          doubleUpTitle,
+          doubleUpMessage,
+          doubleUpDate
         }: {
           enabled: boolean
           pokemon: string
@@ -361,8 +364,11 @@ export default class CustomLobbyRoom extends Room {
           tournamentEnabled,
           tournamentTitle,
           tournamentMessage,
-          tournamentDate
-          , doubleUpEnabled, doubleUpTitle, doubleUpMessage, doubleUpDate
+          tournamentDate,
+          doubleUpEnabled,
+          doubleUpTitle,
+          doubleUpMessage,
+          doubleUpDate
         })
       }
     )

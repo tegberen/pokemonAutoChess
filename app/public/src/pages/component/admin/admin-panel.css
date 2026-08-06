@@ -12,3 +12,63 @@
   grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
   gap: 0.5em;
 }
+
+.tournament-card-admin .calendar-visibility-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1em;
+  margin: 0.5em 0 0.8em;
+  padding: 0.75em 0.9em;
+  border-radius: 7px;
+  background: var(--color-bg-secondary);
+}
+
+.tournament-card-admin .calendar-visibility-toggle strong,
+.tournament-card-admin .calendar-visibility-toggle small {
+  display: block;
+}
+
+.tournament-card-admin .calendar-visibility-toggle small {
+  margin-top: 0.25em;
+  color: var(--color-fg-secondary);
+}
+
+.tournament-card-admin .calendar-visibility-toggle .checkbox-container {
+  flex: none;
+  gap: 0.55em;
+  font-weight: 600;
+}
+
+.tournament-card-admin .calendar-visibility-toggle .my-checkbox {
+  appearance: none;
+  position: relative;
+  width: 2.75em;
+  height: 1.5em;
+  margin: 0;
+  border: 1px solid color-mix(in srgb, var(--color-fg-primary) 28%, transparent);
+  border-radius: 999px;
+  background: var(--color-bg-tertiary);
+  cursor: var(--cursor-hover);
+  transition: background-color 120ms ease;
+}
+
+.tournament-card-admin .calendar-visibility-toggle .my-checkbox::before {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: calc(1.5em - 6px);
+  height: calc(1.5em - 6px);
+  border-radius: 50%;
+  background: var(--color-fg-primary);
+  transition: transform 120ms ease;
+}
+
+.tournament-card-admin .calendar-visibility-toggle .my-checkbox:checked {
+  background: var(--color-bg-accent);
+}
+
+.tournament-card-admin .calendar-visibility-toggle .my-checkbox:checked::before {
+  transform: translateX(1.25em);
+}

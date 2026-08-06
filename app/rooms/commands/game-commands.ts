@@ -529,6 +529,9 @@ function sendPokemonToPartner(
     pokemon.positionX = freeX
     pokemon.positionY = 0
     partner.board.set(pokemon.id, pokemon)
+    // A Prison Bottle transfer is an acquisition for the receiving player too.
+    // Keep it on the same lifecycle as shop/pick rewards before resolving merges.
+    pokemon.onAcquired(partner)
     partner.updateSynergies()
     partner.boardSize = room.getTeamSize(partner.board, partner.blessings)
     room.checkEvolutionsAfterPokemonAcquired(partner.id)
@@ -3556,7 +3559,9 @@ export class OnOverwriteBoardCommand extends Command<GameRoom> {
 export class OnDevCommand extends Command<GameRoom> {
   execute(msg: { action: string }) {
     if (msg.action === "skipStage") {
-      this.room.state.time = 0
+      // Advance synchronously so a follow-up skip cannot be overwritten by
+      // the timer assigned while the next phase is being initialized.
+      return [new OnUpdatePhaseCommand()]
     }
   }
 }

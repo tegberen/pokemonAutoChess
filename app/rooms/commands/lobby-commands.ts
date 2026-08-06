@@ -58,7 +58,11 @@ export class OnJoinCommand extends Command<
   }) {
     try {
       //logger.info(`${client.auth.displayName} ${client.id} join lobby room`)
-      client.send(Transfer.ROOMS, this.room.rooms)
+      const rooms = await matchMaker.query({
+        private: false,
+        unlisted: false
+      })
+      client.send(Transfer.ROOMS, rooms)
       client.userData = { joinedAt: Date.now() }
 
       if (user) {
@@ -219,8 +223,11 @@ export class SetEventNpcCommand extends Command<
     tournamentEnabled,
     tournamentTitle,
     tournamentMessage,
-    tournamentDate
-    , doubleUpEnabled, doubleUpTitle, doubleUpMessage, doubleUpDate
+    tournamentDate,
+    doubleUpEnabled,
+    doubleUpTitle,
+    doubleUpMessage,
+    doubleUpDate
   }: {
     client: Client
     enabled: boolean

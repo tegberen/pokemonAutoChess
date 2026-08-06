@@ -26,18 +26,21 @@ function formatEventCountdown(milliseconds: number): string {
   return days > 0 ? `${days}d ${hours}h` : `${hours}h`
 }
 
-function CalendarEventCard(props: {
+type CalendarEvent = {
+  id: string
   name: string
   description: string
   image: string
   variant: "whimsy" | "jirachi" | "smeargle" | "doubleup"
   start: Date
+}
+
+function CalendarEventCard(props: Omit<CalendarEvent, "id"> & {
   now: Date
-  dateOnly?: boolean
 }) {
   const { t } = useTranslation()
   return (
-    <article className={`calendar-event-card ${props.variant}`}>
+    <article className={`calendar-event-card ${props.variant}${props.variant === "whimsy" ? " whimsy-v2" : ""}`}>
       {props.image && <img src={`assets/ui/${props.image}`} alt="" />}
       <div className="calendar-event-content">
         <div className="calendar-event-copy">
@@ -45,13 +48,13 @@ function CalendarEventCard(props: {
           <p>{props.description}</p>
         </div>
         <div className="calendar-event-timer">
-          {!props.dateOnly && <img className="calendar-clock" src="assets/ui/clock.png" alt="" aria-hidden="true" />}
+          <img className="calendar-clock" src="assets/ui/clock.png" alt="" aria-hidden="true" />
           <div>
-            {!props.dateOnly && <p>
+            <p>
               {t("event_starts_in", {
                 time: formatEventCountdown(props.start.getTime() - props.now.getTime())
               })}
-            </p>}
+            </p>
             <time>{formatDate(props.start, { dateStyle: "long", timeStyle: undefined })}</time>
           </div>
         </div>
@@ -67,50 +70,61 @@ export function Calendar() {
   const tournamentStart = tournament.tournamentDate
     ? new Date(tournament.tournamentDate)
     : new Date(2026, 7, 8)
+  const events: CalendarEvent[] = []
+
+  if (tournament.tournamentEnabled) {
+    events.push({
+      id: "smeargle",
+      name: tournament.tournamentTitle || "Smeargle Pack Tournament",
+      description: tournament.tournamentMessage,
+      image: "",
+      variant: "smeargle",
+      start: tournamentStart
+    })
+  }
+
+  if (tournament.doubleUpEnabled) {
+    events.push({
+      id: "doubleup",
+      name: tournament.doubleUpTitle || "Double Up Tournament",
+      description: tournament.doubleUpMessage,
+      image: "",
+      variant: "doubleup",
+      start: tournament.doubleUpDate
+        ? new Date(tournament.doubleUpDate)
+        : new Date()
+    })
+  }
+
+  if (!isScribbleWeekend(now)) {
+    events.push({
+      id: "whimsy",
+      name: t("whimsy_weekend"),
+      description: t("whimsy_weekend_description"),
+      image: "",
+      variant: "whimsy",
+      start: getNextScribbleWeekendStart(now)
+    })
+  }
+
+  if (!isBlessingEvent(now)) {
+    events.push({
+      id: "jirachi",
+      name: "Wish Festival",
+      description: t("blessing_event_description"),
+      image: "",
+      variant: "jirachi",
+      start: getNextBlessingEventStart(now)
+    })
+  }
+
+  events.sort((a, b) => a.start.getTime() - b.start.getTime())
+
   return (
     <div className="events-calendar">
-      {tournament.tournamentEnabled && (
-        <CalendarEventCard
-          name={tournament.tournamentTitle || "Smeargle Pack Tournament"}
-          description={tournament.tournamentMessage}
-          image="cards/smeargle_card.png"
-          variant="smeargle"
-          start={tournamentStart}
-          now={now}
-          dateOnly
-        />
-      )}
-      {tournament.doubleUpEnabled && (
-        <CalendarEventCard
-          name={tournament.doubleUpTitle || "Double Up Tournament"}
-          description={tournament.doubleUpMessage}
-          image=""
-          variant="doubleup"
-          start={tournament.doubleUpDate ? new Date(tournament.doubleUpDate) : new Date()}
-          now={now}
-          dateOnly
-        />
-      )}
-      {!isScribbleWeekend(now) && (
-        <CalendarEventCard
-          name={t("whimsy_weekend")}
-          description={t("whimsy_weekend_description")}
-          image="cards/whimsicott_card.png"
-          variant="whimsy"
-          start={getNextScribbleWeekendStart(now)}
-          now={now}
-        />
-      )}
-      {!isBlessingEvent(now) && (
-        <CalendarEventCard
-          name="Wish Festival"
-          description={t("blessing_event_description")}
-          image="cards/jirachi_card.png"
-          variant="jirachi"
-          start={getNextBlessingEventStart(now)}
-          now={now}
-        />
-      )}
+      {events.map(({ id, ...event }) => (
+        <CalendarEventCard key={id} {...event} now={now} />
+      ))}
     </div>
   )
 }

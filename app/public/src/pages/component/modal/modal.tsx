@@ -44,23 +44,26 @@ export function Modal(props: ModalProps) {
     }
   }, [show])
 
-  useEffect(() => {
-    if (show) {
-      const dialog = ref.current!
-      dialog.addEventListener("click", function (event) {
-        const rect = dialog.getBoundingClientRect()
-        const isInDialog =
-          (rect.top <= event.clientY &&
-            event.clientY <= rect.top + rect.height &&
-            rect.left <= event.clientX &&
-            event.clientX <= rect.left + rect.width) ||
-          ["OPTION", "SELECT", "BUTTON"].includes((event.target as any).tagName)
-        if (show && !isInDialog) {
-          close()
-        }
-      })
+  const handlePointerDown = (
+    event: React.PointerEvent<HTMLDialogElement>
+  ) => {
+    const dialog = ref.current
+    if (!dialog) return
+
+    const rect = dialog.getBoundingClientRect()
+    const startedInside =
+      rect.top <= event.clientY &&
+      event.clientY <= rect.bottom &&
+      rect.left <= event.clientX &&
+      event.clientX <= rect.right
+    const startedOnNativeControl = ["OPTION", "SELECT", "BUTTON"].includes(
+      (event.target as HTMLElement).tagName
+    )
+
+    if (!startedInside && !startedOnNativeControl) {
+      close()
     }
-  }, [show])
+  }
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLDialogElement>) => {
     event.stopPropagation()
@@ -76,6 +79,7 @@ export function Modal(props: ModalProps) {
           onCancel={close}
           className={cc("modal", "my-container", className)}
           onKeyDown={handleKeyDown}
+          onPointerDown={handlePointerDown}
         >
           {header && (
             <header>

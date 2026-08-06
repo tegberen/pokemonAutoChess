@@ -78,8 +78,11 @@ const initialState: IUserLobbyState = {
     tournamentEnabled: false,
     tournamentTitle: "Smeargle Pack Tournament",
     tournamentMessage: "",
-    tournamentDate: ""
-    , doubleUpEnabled: false, doubleUpTitle: "Double Up Tournament", doubleUpMessage: "", doubleUpDate: ""
+    tournamentDate: "",
+    doubleUpEnabled: false,
+    doubleUpTitle: "Double Up Tournament",
+    doubleUpMessage: "",
+    doubleUpDate: ""
   }
 }
 
@@ -142,6 +145,22 @@ export const lobbySlice = createSlice({
           rooms.push(action.payload)
         }
       }
+    },
+    setRooms: (state, action: PayloadAction<RoomAvailable[]>) => {
+      state.preparationRooms = []
+      state.gameRooms = []
+      action.payload.forEach((room) => {
+        const metadata = room.metadata as
+          | IPreparationMetadata
+          | IGameMetadata
+        if (metadata?.name) {
+          const target =
+            metadata.type === "preparation"
+              ? state.preparationRooms
+              : state.gameRooms
+          target.push(room)
+        }
+      })
     },
     removeRoom: (state, action: PayloadAction<string>) => {
       state.preparationRooms = state.preparationRooms.filter(
@@ -269,6 +288,7 @@ export const {
   setEventLeaderboard,
   setTabIndex,
   addRoom,
+  setRooms,
   removeRoom,
   setCcu,
   setEventNpc,

@@ -30,8 +30,11 @@ const eventNpcSchema = new Schema<IEventNpc>({
   tournamentEnabled: { type: Boolean, default: false },
   tournamentTitle: { type: String, default: "Smeargle Pack Tournament" },
   tournamentMessage: { type: String, default: "" },
-  tournamentDate: { type: String, default: "" }
-  , doubleUpEnabled: { type: Boolean, default: false }, doubleUpTitle: { type: String, default: "Double Up Tournament" }, doubleUpMessage: { type: String, default: "" }, doubleUpDate: { type: String, default: "" }
+  tournamentDate: { type: String, default: "" },
+  doubleUpEnabled: { type: Boolean, default: false },
+  doubleUpTitle: { type: String, default: "Double Up Tournament" },
+  doubleUpMessage: { type: String, default: "" },
+  doubleUpDate: { type: String, default: "" }
 })
 
 export const EventNpc = model<IEventNpc>("EventNpc", eventNpcSchema)

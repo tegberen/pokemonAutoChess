@@ -657,8 +657,11 @@ export default class PokemonSprite extends DraggableObject {
   }
 
   displayAnimation(anim: string, args: Partial<AbilityAnimationArgs> = {}) {
+    const scene = this.scene as GameScene | undefined
+    if (!scene?.textures) return null
+
     return displayAbility({
-      scene: this.scene as GameScene,
+      scene,
       pokemonsOnBoard: [],
       ability: anim,
       orientation: this.orientation,
@@ -777,8 +780,8 @@ export default class PokemonSprite extends DraggableObject {
   }
 
   emoteAnimation() {
-    const g = <GameScene>this.scene
-    if (!g.animationManager) return
+    const g = this.scene as GameScene | undefined
+    if (!g?.animationManager) return
     g.animationManager.animatePokemon(
       this,
       PokemonActionState.EMOTE,
@@ -799,8 +802,8 @@ export default class PokemonSprite extends DraggableObject {
 
   hatchAnimation() {
     this.displayAnimation("HATCH")
-    const g = <GameScene>this.scene
-    g.animationManager?.animatePokemon(
+    const g = this.scene as GameScene | undefined
+    g?.animationManager?.animatePokemon(
       this,
       PokemonActionState.EMOTE,
       this.flip,

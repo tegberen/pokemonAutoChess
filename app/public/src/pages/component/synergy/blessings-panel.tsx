@@ -38,15 +38,16 @@ export default function BlessingsPanel(props: { recentOnly?: boolean }) {
   const questProgress = questProgressByPlayer ?? {}
   const spectatedPlayer = useAppSelector(selectSpectatedPlayer)
   const synergies = useAppSelector((state) => state.game.synergiesSpectated)
+  const boardPokemons: Array<{ positionY: number; rarity: Rarity }> =
+    typeof (spectatedPlayer?.board as any)?.values === "function"
+      ? [...(spectatedPlayer!.board as any).values()]
+      : Object.values((spectatedPlayer?.board as any) ?? {})
   const nbThreeStarWilds = spectatedPlayer
     ? countWildsThreeStarsOrMore(spectatedPlayer.board)
     : 0
-  const nbFieldedUniques = spectatedPlayer
-    ? [...spectatedPlayer.board.values()].filter(
-        (pokemon) =>
-          pokemon.positionY !== 0 && pokemon.rarity === Rarity.UNIQUE
-      ).length
-    : 0
+  const nbFieldedUniques = boardPokemons.filter(
+    (pokemon) => pokemon.positionY !== 0 && pokemon.rarity === Rarity.UNIQUE
+  ).length
   const uniqueFieldCap = blessings.includes(Blessing.MIX_AND_MATCH_II)
     ? MIX_AND_MATCH_II_FIELD_CAP
     : blessings.includes(Blessing.MIX_AND_MATCH_I)

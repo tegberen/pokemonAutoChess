@@ -45,10 +45,13 @@ export default function Lobby() {
   const lobbyJoined = useRef<boolean>(false)
   useEffect(() => {
     if (!lobbyJoined.current) {
+      if (!rooms.lobby?.connection.isOpen) {
+        dispatch(resetLobby())
+      }
       joinLobbyRoom(dispatch, navigate)
       lobbyJoined.current = true
     }
-  }, [lobbyJoined])
+  }, [dispatch, navigate])
 
   const signOut = useCallback(async () => {
     leaveRoom("lobby")

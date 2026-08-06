@@ -1277,15 +1277,15 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
 }
 
 const EARLY_BLESSING_TIER_CHANCES: { [tier in BlessingTier]: number } = {
-  [BlessingTier.SILVER]: 0.6,
-  [BlessingTier.GOLD]: 0.3,
+  [BlessingTier.SILVER]: 0.3,
+  [BlessingTier.GOLD]: 0.6,
   [BlessingTier.PRISMATIC]: 0.1
 }
 
 const LATE_BLESSING_TIER_CHANCES: { [tier in BlessingTier]: number } = {
-  [BlessingTier.SILVER]: 0.35,
-  [BlessingTier.GOLD]: 0.45,
-  [BlessingTier.PRISMATIC]: 0.2
+  [BlessingTier.SILVER]: 0.15,
+  [BlessingTier.GOLD]: 0.65,
+  [BlessingTier.PRISMATIC]: 0.20
 }
 
 export const BlessingTierChanceByStage: {

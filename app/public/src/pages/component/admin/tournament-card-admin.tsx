@@ -19,7 +19,39 @@ export function TournamentCardAdmin() {
     setTitle(eventNpc.tournamentTitle)
     setMessage(eventNpc.tournamentMessage)
     setDate(eventNpc.tournamentDate.slice(0, 10))
-  }, [eventNpc.tournamentEnabled, eventNpc.tournamentTitle, eventNpc.tournamentMessage, eventNpc.tournamentDate])
+    setDoubleUpEnabled(eventNpc.doubleUpEnabled)
+    setDoubleUpTitle(eventNpc.doubleUpTitle)
+    setDoubleUpMessage(eventNpc.doubleUpMessage)
+    setDoubleUpDate(eventNpc.doubleUpDate.slice(0, 10))
+  }, [eventNpc])
 
-  return <div className="content"><h2>Smeargle Pack Tournament Card</h2><Checkbox checked={enabled} onToggle={setEnabled} label="Show on Calendar" /><input value={title} onChange={(event) => setTitle(event.target.value)} placeholder="Title" /><textarea value={message} rows={4} onChange={(event) => setMessage(event.target.value)} placeholder="Description" /><input type="date" value={date} onChange={(event) => setDate(event.target.value)} /><h2>Double Up Tournament Card</h2><Checkbox checked={doubleUpEnabled} onToggle={setDoubleUpEnabled} label="Show on Calendar" /><input value={doubleUpTitle} onChange={(event) => setDoubleUpTitle(event.target.value)} placeholder="Title" /><textarea value={doubleUpMessage} rows={4} onChange={(event) => setDoubleUpMessage(event.target.value)} placeholder="Description" /><input type="date" value={doubleUpDate} onChange={(event) => setDoubleUpDate(event.target.value)} /><button className="bubbly blue" onClick={() => setEventNpc({ enabled: eventNpc.enabled, pokemon: eventNpc.pokemon, title: eventNpc.title, message: eventNpc.message, orientation: eventNpc.orientation, animation: eventNpc.animation, emotion: eventNpc.emotion, tournamentEnabled: enabled, tournamentTitle: title, tournamentMessage: message, tournamentDate: date, doubleUpEnabled, doubleUpTitle, doubleUpMessage, doubleUpDate })}>Apply</button></div>
+  return (
+    <div className="content tournament-card-admin">
+      <h2>Smeargle Pack Tournament Card</h2>
+      <div className="calendar-visibility-toggle">
+        <div>
+          <strong>Calendar visibility</strong>
+          <small>Display this card in the Events calendar.</small>
+        </div>
+        <Checkbox checked={enabled} onToggle={setEnabled} label={enabled ? "Visible" : "Hidden"} isDark />
+      </div>
+      <input value={title} onChange={(event) => setTitle(event.target.value)} placeholder="Title" />
+      <textarea value={message} rows={4} onChange={(event) => setMessage(event.target.value)} placeholder="Description" />
+      <input type="date" value={date} onChange={(event) => setDate(event.target.value)} />
+
+      <h2>Double Up Tournament Card</h2>
+      <div className="calendar-visibility-toggle">
+        <div>
+          <strong>Calendar visibility</strong>
+          <small>Display this card in the Events calendar.</small>
+        </div>
+        <Checkbox checked={doubleUpEnabled} onToggle={setDoubleUpEnabled} label={doubleUpEnabled ? "Visible" : "Hidden"} isDark />
+      </div>
+      <input value={doubleUpTitle} onChange={(event) => setDoubleUpTitle(event.target.value)} placeholder="Title" />
+      <textarea value={doubleUpMessage} rows={4} onChange={(event) => setDoubleUpMessage(event.target.value)} placeholder="Description" />
+      <input type="date" value={doubleUpDate} onChange={(event) => setDoubleUpDate(event.target.value)} />
+
+      <button className="bubbly blue" onClick={() => setEventNpc({ enabled: eventNpc.enabled, pokemon: eventNpc.pokemon, title: eventNpc.title, message: eventNpc.message, orientation: eventNpc.orientation, animation: eventNpc.animation, emotion: eventNpc.emotion, tournamentEnabled: enabled, tournamentTitle: title, tournamentMessage: message, tournamentDate: date, doubleUpEnabled, doubleUpTitle, doubleUpMessage, doubleUpDate })}>Apply</button>
+    </div>
+  )
 }
