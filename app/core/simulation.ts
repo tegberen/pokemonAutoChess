@@ -3057,7 +3057,10 @@ export default class Simulation extends Schema implements ISimulation {
           }
         }
         if (opponentPlayer && !isGhostOpponent) {
+          const previousPlayerDamageDealt =
+            opponentPlayer.gameStats.totalPlayerDamageDealt
           opponentPlayer.gameStats.totalPlayerDamageDealt += playerDamage
+          opponentPlayer.checkLunchMoneyReward(previousPlayerDamageDealt)
           if (
             opponentPlayer.items.includes(Item.MISSION_ORDER_RED) &&
             opponentPlayer.gameStats.totalPlayerDamageDealt >= 100

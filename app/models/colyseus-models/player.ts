@@ -31,7 +31,10 @@ import { Ability } from "../../types/enum/Ability"
 import {
   Blessing,
   BEING_OF_KNOWLEDGE_LEVEL,
-  CRYSTAL_CLUSTERS_ROCKS_GRANTED
+  BIRTHDAY_PRESENT_GOLD,
+  CRYSTAL_CLUSTERS_ROCKS_GRANTED,
+  LUNCH_MONEY_DAMAGE_REQUIRED,
+  LUNCH_MONEY_GOLD
 } from "../../types/enum/Blessing"
 import { ROCK_AWAKENING_TIER } from "../../types/enum/Awakening"
 import type { PlayerBlessings } from "./player-blessings"
@@ -101,6 +104,7 @@ import {
   getPokemonData,
   PRECOMPUTED_REGIONAL_MONS
 } from "../precomputed/precomputed-pokemon-data"
+import { PRECOMPUTED_POKEMONS_PER_RARITY } from "../precomputed/precomputed-rarity"
 import ExperienceManager from "./experience-manager"
 import { GameStatsSchema } from "./game-stats"
 import HistoryItem from "./history-item"
@@ -396,7 +400,17 @@ export default class Player extends Schema implements IPlayer {
   }
 
   addExperience(value: number) {
+    const previousLevel = this.experienceManager.level
     this.experienceManager.addExperience(value)
+    if (this.blessings?.includes(Blessing.BIRTHDAY_PRESENT)) {
+      for (
+        let level = previousLevel + 1;
+        level <= this.experienceManager.level;
+        level++
+      ) {
+        this.grantBirthdayPresent(level)
+      }
+    }
     if (
       this.experienceManager.level >= 9 &&
       this.items.includes(Item.MISSION_ORDER_BLUE)
@@ -404,6 +418,53 @@ export default class Player extends Schema implements IPlayer {
       this.completeMissionOrder(Item.MISSION_ORDER_BLUE)
     }
     this.tryGrantBeingOfKnowledgeUxie()
+  }
+
+  private grantBirthdayPresent(level: number) {
+    const rarity =
+      level >= 10
+        ? Rarity.ULTRA
+        : level >= 8
+          ? Rarity.EPIC
+          : level >= 6
+            ? Rarity.RARE
+            : level >= 5
+              ? Rarity.UNCOMMON
+              : Rarity.COMMON
+    const candidates = PRECOMPUTED_POKEMONS_PER_RARITY[rarity].filter(
+      (pkm) =>
+        getPokemonData(pkm).stars === 2 && this.canFindRegionalPokemon(pkm)
+    )
+    const benchX = getFirstAvailablePositionInBench(this.board)
+    if (candidates.length > 0 && benchX !== null) {
+      const pokemon = PokemonFactory.createPokemonFromName(
+        pickRandomIn(candidates),
+        this
+      )
+      pokemon.positionX = benchX
+      pokemon.positionY = 0
+      this.board.set(pokemon.id, pokemon)
+      pokemon.onAcquired(this)
+      this.updateSynergies()
+    }
+    this.addBlessingGold(BIRTHDAY_PRESENT_GOLD)
+  }
+
+  checkLunchMoneyReward(previousPlayerDamageDealt: number) {
+    if (!this.blessings?.includes(Blessing.LUNCH_MONEY)) return
+    const payouts =
+      Math.floor(
+        this.gameStats.totalPlayerDamageDealt / LUNCH_MONEY_DAMAGE_REQUIRED
+      ) -
+      Math.floor(previousPlayerDamageDealt / LUNCH_MONEY_DAMAGE_REQUIRED)
+    if (payouts === 0) return
+    this.addBlessingGold(payouts * LUNCH_MONEY_GOLD)
+    this.shopFreeRolls += payouts
+  }
+
+  addBlessingGold(amount: number) {
+    this.addMoney(amount, true, null)
+    if (this.blessingsRef) this.blessingsRef.goldEarned += amount
   }
 
   /* inlined rather than routed through services/blessings: importing that

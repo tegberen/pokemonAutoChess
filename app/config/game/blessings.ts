@@ -195,6 +195,42 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     icon: "slot_mashine",
     grantsPokemonImmediately: false
   },
+  [Blessing.LUNCH_MONEY]: {
+    tier: BlessingTier.SILVER,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "lunch_money",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.CALCULATED_LOSS]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "calculator",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.THINK_FAST]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: [12],
+    icon: "infinity",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.WISE_SPENDING]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: [4],
+    icon: "ink_swirl",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.BIRTHDAY_PRESENT]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: [4],
+    icon: "stork_delivery",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.UP_IS_UP]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: [4],
+    icon: "caduceus",
+    grantsPokemonImmediately: false
+  },
   [Blessing.DROP_RATES]: {
     tier: BlessingTier.SILVER,
     availableAtStages: BLESSING_SELECTION_STAGES,

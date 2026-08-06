@@ -796,6 +796,7 @@ export default function Game() {
       })
 
       $state.blessingsByPlayerId.onAdd((playerBlessings, playerId) => {
+        let previousBlessingGoldEarned = playerBlessings.goldEarned
         const dispatchBlessings = () =>
           dispatch(
             setPlayerBlessings({
@@ -803,12 +804,19 @@ export default function Game() {
               blessings: schemaValues(playerBlessings.blessings),
               questProgress: Object.fromEntries(
                 playerBlessings.questProgress.entries()
-              )
+              ),
+              thinkFastActive: playerBlessings.thinkFastActive
             })
           )
         dispatchBlessings()
         $(playerBlessings).blessings.onChange(dispatchBlessings)
         $(playerBlessings).questProgress.onChange(dispatchBlessings)
+        $(playerBlessings).listen("thinkFastActive", dispatchBlessings)
+        $(playerBlessings).listen("goldEarned", (goldEarned) => {
+          const amount = goldEarned - previousBlessingGoldEarned
+          previousBlessingGoldEarned = goldEarned
+          if (playerId === uid && amount > 0) showMoneyToast(amount)
+        })
         // TREASURE_TRAIL moves its marker the moment a dig resolves, mid-round
         $(playerBlessings).listen("treasureTrailHighlight", () => {
           getGameScene()?.board?.showTreasureTrailHighlight()

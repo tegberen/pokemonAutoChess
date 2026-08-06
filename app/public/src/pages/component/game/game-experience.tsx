@@ -2,7 +2,12 @@ import { useTranslation } from "react-i18next"
 import { Tooltip } from "react-tooltip"
 import { MAX_LEVEL } from "../../../../../config"
 import { getLevelUpCost } from "../../../../../models/colyseus-models/experience-manager"
-import { selectSpectatedPlayer, useAppSelector } from "../../../hooks"
+import { Blessing } from "../../../../../types/enum/Blessing"
+import {
+  selectConnectedPlayer,
+  selectSpectatedPlayer,
+  useAppSelector
+} from "../../../hooks"
 import { levelClick, skipStage } from "../../../network"
 import { addIconsToDescription } from "../../utils/descriptions"
 import { Money } from "../icons/money"
@@ -23,8 +28,20 @@ export default function GameExperience() {
           levelUpCost
       ) * levelUpCost
   const spectatedPlayer = useAppSelector(selectSpectatedPlayer)
+  const connectedPlayer = useAppSelector(selectConnectedPlayer)
+  const blessingsByPlayerId = useAppSelector(
+    (state) => state.game.blessingsByPlayerId
+  )
+  const wiseSpending = connectedPlayer
+    ? (blessingsByPlayerId[connectedPlayer.id] ?? []).includes(
+        Blessing.WISE_SPENDING
+      )
+    : false
   const canLevelup =
-    !isLevelMax && spectatedPlayer && spectatedPlayer.money >= levelUpCost
+    !wiseSpending &&
+    !isLevelMax &&
+    spectatedPlayer &&
+    spectatedPlayer.money >= levelUpCost
 
   return (
     <div className="game-experience">
@@ -42,7 +59,12 @@ export default function GameExperience() {
       )}
       <button
         className="bubbly orange buy-xp-button"
-        title={t("buy_xp_tooltip", { cost: levelUpCost })}
+        title={
+          wiseSpending
+            ? t("blessing.WISE_SPENDING.description")
+            : t("buy_xp_tooltip", { cost: levelUpCost })
+        }
+        disabled={wiseSpending}
         onClick={() => {
           levelClick()
         }}

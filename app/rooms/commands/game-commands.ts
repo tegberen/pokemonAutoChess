@@ -120,7 +120,10 @@ import {
   BlessingTrigger,
   countsForTeamSize,
   PRISMATIC_REROLL_CHANCE,
-  PRISMATIC_REROLL_FREE_ROLLS
+  PRISMATIC_REROLL_FREE_ROLLS,
+  UP_IS_UP_GOLD,
+  UP_IS_UP_LIFE,
+  WISE_SPENDING_EXP_PER_REROLL
 } from "../../types/enum/Blessing"
 import {
   checkRainbowHourReward,
@@ -1525,8 +1528,11 @@ export class OnShopRerollCommand extends Command<GameRoom, string> {
   execute(id) {
     const player = this.state.players.get(id)
     if (!player || !player.alive) return
+    const thinkFastActive =
+      this.state.phase === GamePhaseState.PICK &&
+      player.blessingsRef?.thinkFastActive === true
     const rollCost =
-      player.shopFreeRolls > 0
+      player.shopFreeRolls > 0 || thinkFastActive
         ? 0
         : getRerollCost(this.state.specialGameRule, this.state.stageLevel)
     const canRoll = (player?.money ?? 0) >= rollCost
@@ -1534,14 +1540,17 @@ export class OnShopRerollCommand extends Command<GameRoom, string> {
     if (canRoll) {
       player.gameStats.rerollCount++
       player.money -= rollCost
-      if (player.shopFreeRolls > 0) {
+      if (!thinkFastActive && player.shopFreeRolls > 0) {
         player.shopFreeRolls--
-      } else {
+      } else if (!thinkFastActive) {
         const repeatBallHolders = schemaValues(player.board).filter((p) =>
           p.items.has(Item.REPEAT_BALL)
         )
         if (repeatBallHolders.length > 0)
           player.shopFreeRolls += repeatBallHolders.length
+      }
+      if (player.blessings?.includes(Blessing.WISE_SPENDING)) {
+        player.addExperience(WISE_SPENDING_EXP_PER_REROLL)
       }
       /* chains on its own: the free roll re-enters this command and rolls again */
       if (
@@ -1586,11 +1595,16 @@ export class OnLevelUpCommand extends Command<
   execute(id) {
     const player = this.state.players.get(id)
     if (!player || !player.alive) return
+    if (player.blessings?.includes(Blessing.WISE_SPENDING)) return
 
     const cost = getLevelUpCost(this.state.specialGameRule)
     if (player.money >= cost && player.experienceManager.canLevelUp()) {
       player.addExperience(4)
       player.money -= cost
+      if (player.blessings?.includes(Blessing.UP_IS_UP)) {
+        player.addBlessingGold(UP_IS_UP_GOLD)
+        player.life = Math.min(player.maxLife, player.life + UP_IS_UP_LIFE)
+      }
     }
   }
 }
@@ -2779,6 +2793,7 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
           const randomPick = randomBetween(0, nbOptions - 1)
           this.room.pickChoice(player.id, choice.id, randomPick, true)
         })
+      if (player.blessingsRef) player.blessingsRef.thinkFastActive = false
     })
   }
 

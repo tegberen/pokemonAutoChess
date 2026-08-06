@@ -9,6 +9,7 @@ import {
   Blessing,
   BERSERKER_HORDES_SHOP_INTERVAL
 } from "../../../../../types/enum/Blessing"
+import { GamePhaseState } from "../../../../../types/enum/Game"
 import { selectConnectedPlayer, useAppSelector } from "../../../hooks"
 import { getGameScene } from "../../game"
 import { cc } from "../../utils/jsx"
@@ -19,8 +20,7 @@ export default function GameRefresh() {
   const shopFreeRolls = useAppSelector((state) => state.game.shopFreeRolls)
   const specialGameRule = useAppSelector((state) => state.game.specialGameRule)
   const stageLevel = useAppSelector((state) => state.game.stageLevel)
-  const cost =
-    shopFreeRolls > 0 ? 0 : getRerollCost(specialGameRule, stageLevel)
+  const phase = useAppSelector((state) => state.game.phase)
 
   // BAZAAR: show how many shops away the next bazaar is. It appears when
   // (stage + rerolls) is a multiple of BAZAAR_SHOP_INTERVAL — the same numbers
@@ -42,10 +42,23 @@ export default function GameRefresh() {
   const blessingsByPlayerId = useAppSelector(
     (state) => state.game.blessingsByPlayerId
   )
+  const connectedBlessings = connectedPlayerId
+    ? (blessingsByPlayerId[connectedPlayerId] ?? [])
+    : []
+  const thinkFastActiveByPlayerId = useAppSelector(
+    (state) => state.game.thinkFastActiveByPlayerId
+  )
+  const thinkFastActive =
+    phase === GamePhaseState.PICK &&
+    (connectedPlayerId
+      ? (thinkFastActiveByPlayerId[connectedPlayerId] ?? false)
+      : false)
+  const cost =
+    shopFreeRolls > 0 || thinkFastActive
+      ? 0
+      : getRerollCost(specialGameRule, stageLevel)
   const hasBerserkerHordes = connectedPlayerId
-    ? (blessingsByPlayerId[connectedPlayerId] ?? []).includes(
-        Blessing.BERSERKER_HORDES
-      )
+    ? connectedBlessings.includes(Blessing.BERSERKER_HORDES)
     : false
   const shopsUntilBerserker =
     BERSERKER_HORDES_SHOP_INTERVAL -
@@ -57,7 +70,7 @@ export default function GameRefresh() {
     <>
       <button
         className={cc("bubbly blue refresh-button", {
-          shimmer: shopFreeRolls > 0
+          shimmer: shopFreeRolls > 0 || thinkFastActive
         })}
         title={
           isBazaar || hasBerserkerHordes ? undefined : t("refresh_gold_hint")
@@ -75,7 +88,7 @@ export default function GameRefresh() {
       >
         <img src={`/assets/ui/refresh.svg`} />
         {cost === 0 ? (
-          `${t("refresh")} (${shopFreeRolls})`
+          `${t("refresh")} (${thinkFastActive ? "∞" : shopFreeRolls})`
         ) : (
           <Money value={`${t("refresh")} ${cost}`} />
         )}

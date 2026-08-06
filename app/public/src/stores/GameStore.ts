@@ -62,6 +62,7 @@ export interface GameStateStore {
   emotesUnlocked: Emotion[]
   additionalPokemons: Pkm[]
   blessingsByPlayerId: { [playerId: string]: Blessing[] }
+  thinkFastActiveByPlayerId: { [playerId: string]: boolean }
   blessingQuestProgressByPlayerId: {
     [playerId: string]: { [blessing: string]: number }
   }
@@ -106,6 +107,7 @@ const initialState: GameStateStore = {
   emotesUnlocked: [],
   additionalPokemons: new Array<Pkm>(),
   blessingsByPlayerId: {},
+  thinkFastActiveByPlayerId: {},
   blessingQuestProgressByPlayerId: {},
   blessingsEnabled: false,
   specialGameRule: null,
@@ -233,10 +235,13 @@ export const gameSlice: Slice<GameStateStore> = createSlice({
         playerId: string
         blessings: Blessing[]
         questProgress?: { [blessing: string]: number }
+        thinkFastActive?: boolean
       }>
     ) => {
       state.blessingsByPlayerId[action.payload.playerId] =
         action.payload.blessings
+      state.thinkFastActiveByPlayerId[action.payload.playerId] =
+        action.payload.thinkFastActive ?? false
       if (action.payload.questProgress) {
         state.blessingQuestProgressByPlayerId[action.payload.playerId] =
           action.payload.questProgress

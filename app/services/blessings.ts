@@ -26,6 +26,7 @@ import {
   PLUNDER_GOLD_MULTIPLIER,
   WAITING_GAME_FREE_ROLLS,
   WAITING_GAME_FREE_ROLLS_WITHOUT_REROLLING,
+  CALCULATED_LOSS_GOLD,
   MORE_EQUAL_THAN_OTHERS_GOLD,
   MORE_EQUAL_THAN_OTHERS_GOLD_FOR_OTHERS,
   CLIMBING_THE_LADDER_MAX_LEVEL,
@@ -785,6 +786,12 @@ function grantWaitingGameRerolls(player: Player) {
       : WAITING_GAME_FREE_ROLLS
 }
 
+function grantCalculatedLoss(player: Player) {
+  if (player.history.at(-1)?.result !== BattleResult.DEFEAT) return
+  player.addBlessingGold(CALCULATED_LOSS_GOLD)
+  player.shopFreeRolls += 1
+}
+
 function refundPlunderedGold(player: Player) {
   const spent = player.plunderGoldSpentThisFight ?? 0
   player.plunderGoldSpentThisFight = 0
@@ -1033,6 +1040,11 @@ export const blessingTriggerEffectService: {
     [BlessingTrigger.PVP_END]: (player) => grantWaitingGameRerolls(player)
   },
 
+  [Blessing.CALCULATED_LOSS]: {
+    [BlessingTrigger.PVE_END]: (player) => grantCalculatedLoss(player),
+    [BlessingTrigger.PVP_END]: (player) => grantCalculatedLoss(player)
+  },
+
   [Blessing.CURSE_OF_CORAL]: {
     [BlessingTrigger.PVP_END]: (player) =>
       giftPokemonIfBenchHasRoom(player, Pkm.CORSOLA)
@@ -1135,6 +1147,20 @@ export const blessingEffectService: {
   ...synergyGemFamilyEffects("BADGE", 1),
   ...synergyGemFamilyEffects("CREST", 2),
   ...crownEffects,
+
+  [Blessing.LUNCH_MONEY]: () => true,
+  [Blessing.CALCULATED_LOSS]: () => true,
+  [Blessing.THINK_FAST]: (player, state) => {
+    const owned =
+      state.blessingsByPlayerId.get(player.id) ?? new PlayerBlessings()
+    state.blessingsByPlayerId.set(player.id, owned)
+    player.blessingsRef = owned
+    owned.thinkFastActive = true
+    return true
+  },
+  [Blessing.WISE_SPENDING]: () => true,
+  [Blessing.BIRTHDAY_PRESENT]: () => true,
+  [Blessing.UP_IS_UP]: () => true,
 
   [Blessing.QUEST_REROLL]: (player) => {
     player.shopFreeRolls += QUEST_REROLL_FREE_ROLLS

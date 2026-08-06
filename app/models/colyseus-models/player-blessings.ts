@@ -9,4 +9,6 @@ export class PlayerBlessings extends Schema {
   /* quest counters that the Effects tab renders as progress, keyed by blessing.
      Synced because player.blessingQuestThresholdsReached is server-only. */
   @type({ map: "number" }) questProgress = new MapSchema<number>()
+  @type("boolean") thinkFastActive = false
+  @type("uint32") goldEarned = 0
 }
