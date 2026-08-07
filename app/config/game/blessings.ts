@@ -299,6 +299,30 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     icon: "trash_to_treasure",
     grantsPokemonImmediately: true
   },
+  [Blessing.CHARGING_MY_BUG]: {
+    tier: BlessingTier.SILVER,
+    availableAtStages: [4],
+    icon: "car_battery",
+    grantsPokemonImmediately: true
+  },
+  [Blessing.NEUROFORCE]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "neuroforce",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.SINNOHS_COOLEST]: {
+    tier: BlessingTier.SILVER,
+    availableAtStages: [4],
+    icon: "starly_goggles",
+    grantsPokemonImmediately: true
+  },
+  [Blessing.AXE_BLAST]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: [4],
+    icon: "axe_blast",
+    grantsPokemonImmediately: true
+  },
   [Blessing.THINK_FAST]: {
     tier: BlessingTier.PRISMATIC,
     availableAtStages: [12],
@@ -1472,8 +1496,8 @@ export const BLESSING_SELECTION_EVERY_STAGE: boolean =
   BLESSING_TEST_MODE || BLESSING_SANDBOX_MODE
 
 const BLESSINGS_UNDER_TEST: Blessing[] = [
-  Blessing.HAIL_TO_THE_KING,
-  Blessing.TRASH_TO_TREASURE
+  Blessing.SINNOHS_COOLEST,
+  Blessing.AXE_BLAST
 ]
 
 function countBlessingsOfFamily(blessings: Blessing[], family?: string) {

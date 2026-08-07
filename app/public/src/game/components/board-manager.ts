@@ -313,17 +313,13 @@ export default class BoardManager {
           pokemonSprite.setActive(true).setVisible(true)
           pokemonSprite.sprite.setActive(true).setVisible(true)
           pokemonSprite.shadow?.setActive(true).setVisible(true)
-          if (this.scene.textures.exists(pokemon.index)) {
+          if (
+            this.scene.textures.exists(pokemon.index) &&
+            ["loading_pokeball", "0000", "__MISSING"].includes(
+              pokemonSprite.sprite.texture.key
+            )
+          ) {
             pokemonSprite.sprite.setTexture(pokemon.index)
-            this.animationManager.createPokemonAnimations(
-              pokemon.index,
-              pokemon.shiny ? PokemonTint.SHINY : PokemonTint.NORMAL
-            )
-            this.animationManager.animatePokemon(
-              pokemonSprite,
-              pokemon.action,
-              false
-            )
           }
         })
       }, delay)

@@ -1406,6 +1406,21 @@ export default class Simulation extends Schema implements ISimulation {
           })
       }
 
+      if (blessings.includes(Blessing.CHARGING_MY_BUG)) {
+        ownUnits
+          .filter((ally) => PkmFamily[ally.name] === Pkm.GRUBBIN)
+          .forEach((ally) => {
+            const boardY =
+              ally.team === Team.RED_TEAM
+                ? BOARD_HEIGHT - 1 - ally.positionY
+                : ally.positionY
+            const holeIndex = boardY * BOARD_WIDTH + ally.positionX
+            if (player.groundHoles[holeIndex] === 5) {
+              ally.addAttack(1, ally, 0, false, true)
+            }
+          })
+      }
+
       if (blessings.includes(Blessing.PROTECT_THE_WEAK)) {
         const weakAllies = ownUnits.filter((ally) =>
           [Rarity.COMMON, Rarity.UNCOMMON].includes(ally.rarity)
@@ -1777,6 +1792,14 @@ export default class Simulation extends Schema implements ISimulation {
         }
       }
 
+      if (blessings.includes(Blessing.NEUROFORCE) && ownUnits.length > 0) {
+        const neuroforceAlly = ownUnits.reduce((highestAP, ally) =>
+          ally.ap > highestAP.ap ? ally : highestAP
+        )
+        neuroforceAlly.effects.add(EffectEnum.SPECIAL_ATTACKS)
+        neuroforceAlly.isBlessedHero = true
+      }
+
       player.plunderGoldSpentThisFight = 0
       this.applyHeroBlessings(
         blessings,
@@ -1808,6 +1831,22 @@ export default class Simulation extends Schema implements ISimulation {
       champion.isBlessedHero = true
       championOf.set(blessing, champion)
     })
+
+    const axeBlastChampion = championOf.get(Blessing.AXE_BLAST)
+    if (axeBlastChampion) {
+      const alliedTeam =
+        axeBlastChampion.team === Team.BLUE_TEAM ? this.blueTeam : this.redTeam
+      const opposingTeam =
+        axeBlastChampion.team === Team.BLUE_TEAM ? this.redTeam : this.blueTeam
+      const totalStars = (team: MapSchema<PokemonEntity>) =>
+        [...team.values()]
+          .filter((entity) => !entity.isSpawn)
+          .reduce((sum, entity) => sum + entity.stars, 0)
+      axeBlastChampion.skill = Ability.AXE_BLAST
+      axeBlastChampion.range += 2
+      axeBlastChampion.axeBlastExecutesThisFight =
+        totalStars(alliedTeam) > totalStars(opposingTeam)
+    }
 
     const oliveGardenChampion = championOf.get(Blessing.OLIVE_GARDEN)
     if (oliveGardenChampion) {

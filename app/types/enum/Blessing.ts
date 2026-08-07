@@ -168,6 +168,10 @@ export enum Blessing {
   PANIC_BUTTON = "PANIC_BUTTON",
   HAIL_TO_THE_KING = "HAIL_TO_THE_KING",
   TRASH_TO_TREASURE = "TRASH_TO_TREASURE",
+  CHARGING_MY_BUG = "CHARGING_MY_BUG",
+  NEUROFORCE = "NEUROFORCE",
+  SINNOHS_COOLEST = "SINNOHS_COOLEST",
+  AXE_BLAST = "AXE_BLAST",
   THINK_FAST = "THINK_FAST",
   WISE_SPENDING = "WISE_SPENDING",
   BIRTHDAY_PRESENT = "BIRTHDAY_PRESENT",
@@ -594,7 +598,9 @@ export const HERO_BLESSING_GIFT: { [blessing in Blessing]?: Pkm } = {
   [Blessing.ICEBREAKER]: Pkm.PIPLUP,
   [Blessing.RAMPAGE]: Pkm.DEINO,
   [Blessing.SOUL_DRAIN]: Pkm.LITWICK,
-  [Blessing.FLOWER_QUEEN]: Pkm.FLOETTE
+  [Blessing.FLOWER_QUEEN]: Pkm.FLOETTE,
+  [Blessing.CHARGING_MY_BUG]: Pkm.GRUBBIN,
+  [Blessing.AXE_BLAST]: Pkm.AXEW
 }
 
 export const HERO_BLESSING_FAMILY: { [blessing in Blessing]?: Pkm } = {
@@ -617,7 +623,9 @@ export const HERO_BLESSING_FAMILY: { [blessing in Blessing]?: Pkm } = {
   [Blessing.RAMPAGE]: Pkm.DEINO,
   [Blessing.SOUL_DRAIN]: Pkm.LITWICK,
   [Blessing.FLOWER_QUEEN]: Pkm.FLABEBE,
-  [Blessing.LANCES_ACE]: Pkm.DRATINI
+  [Blessing.LANCES_ACE]: Pkm.DRATINI,
+  [Blessing.CHARGING_MY_BUG]: Pkm.GRUBBIN,
+  [Blessing.AXE_BLAST]: Pkm.AXEW
 }
 
 /* hero blessings that also relocate the player to a region where their family

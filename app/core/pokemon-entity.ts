@@ -179,6 +179,7 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
   isRivalryChampionThisFight: boolean = false
   isLancesAceThisFight: boolean = false
   isHailToTheKingChampionThisFight: boolean = false
+  axeBlastExecutesThisFight: boolean = false
   isSynchronisedSpeedLeaderThisFight: boolean = false
   isBlossomFestivalChampionThisFight: boolean = false
   isEchoChamberLeaderThisFight: boolean = false

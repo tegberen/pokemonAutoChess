@@ -196,6 +196,7 @@ export default class Player extends Schema implements IPlayer {
   isBot: boolean
   opponents: Map<string, number> = new Map<string, number>()
   titles: Set<Title> = new Set<Title>()
+  sinnohsCoolestRewardGranted = false
   artificialItems: Item[] = pickNRandomIn(ArtificialItems, 3)
   buriedItems: (Item | null)[] = initBuriedItems()
   tms: Item[] = pickRandomTMs()

@@ -2685,6 +2685,19 @@ export const AbilitiesAnimations: {
     rotation: -Math.PI / 2,
     duration: 400
   }),
+  [Ability.AXE_BLAST]: [
+    onTarget({
+      ability: Ability.SOLAR_BLADE,
+      rotation: (7 * Math.PI) / 9,
+      flipY: true,
+      scale: 2.5
+    }),
+    onTarget({
+      ability: Ability.SOLAR_BLADE,
+      rotation: (2 * Math.PI) / 9,
+      scale: 2.5
+    })
+  ],
   [Ability.DRAGON_BREATH]: onCaster({
     oriented: true,
     origin: [0.5, 1],

@@ -20,7 +20,7 @@ import { PokemonActionState } from "../../types/enum/Game"
 import { Item, ShinyItems } from "../../types/enum/Item"
 import { pickNRandomIn } from "../../utils/random"
 import { Passive } from "../../types/enum/Passive"
-import { Pkm } from "../../types/enum/Pokemon"
+import { Pkm, PkmFamily } from "../../types/enum/Pokemon"
 import { OnEvolutionEffect } from "../effects/effect"
 import { PassiveEffects } from "../effects/passives"
 import { CountEvolutionHandler } from "./count-evolution-handler"
@@ -89,6 +89,16 @@ export const EvolutionManager = {
   ) {
     player.updateSynergies()
     if (pokemonBeforeEvolution.supercharged) pokemonEvolved.supercharged = true // preserve supercharged state on evolution
+
+    if (
+      player.blessings?.includes(Blessing.SINNOHS_COOLEST) &&
+      !player.sinnohsCoolestRewardGranted &&
+      PkmFamily[pokemonEvolved.name] === Pkm.STARLY &&
+      pokemonEvolved.stars >= 3
+    ) {
+      player.items.push(Item.SAFETY_GOGGLES)
+      player.sinnohsCoolestRewardGranted = true
+    }
 
     if (
       pokemonBeforeEvolution.name === Pkm.EGG &&

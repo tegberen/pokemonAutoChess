@@ -792,6 +792,23 @@ function moveToRegionWherePokemonIsFound(
   }, LAPRAS_TRAVEL_DURATION)
 }
 
+function grantSinnohsCoolest(
+  player: Player,
+  state: GameState,
+  room?: GameRoom
+): boolean {
+  if (!giftPokemonIfBenchHasRoom(player, Pkm.STARAVIA)) return false
+  moveToRegionWherePokemonIsFound(player, state, room, Pkm.STARLY)
+  const hasStaraptor = schemaValues(player.board).some(
+    (pokemon) => PkmFamily[pokemon.name] === Pkm.STARLY && pokemon.stars >= 3
+  )
+  if (hasStaraptor && !player.sinnohsCoolestRewardGranted) {
+    player.items.push(Item.SAFETY_GOGGLES)
+    player.sinnohsCoolestRewardGranted = true
+  }
+  return true
+}
+
 export const MANIFESTATION_AP_POKEMONS = [
   Pkm.DUOSION,
   Pkm.THWACKEY,
@@ -1490,6 +1507,13 @@ export const blessingEffectService: {
     giftPokemonIfBenchHasRoom(player, Pkm.BELDUM)
     return true
   },
+  [Blessing.CHARGING_MY_BUG]: (player, state, room) =>
+    heroBlessingEffect(Blessing.CHARGING_MY_BUG, player, state, room),
+  [Blessing.NEUROFORCE]: () => true,
+  [Blessing.SINNOHS_COOLEST]: (player, state, room) =>
+    grantSinnohsCoolest(player, state, room),
+  [Blessing.AXE_BLAST]: (player, state, room) =>
+    heroBlessingEffect(Blessing.AXE_BLAST, player, state, room),
   [Blessing.THINK_FAST]: (player, state) => {
     const owned =
       state.blessingsByPlayerId.get(player.id) ?? new PlayerBlessings()
