@@ -945,6 +945,23 @@ export function applyRecurringBlessingGrants(player: Player, state: GameState) {
   if (player.blessings?.includes(Blessing.TRASH_TO_TREASURE)) {
     recycleTrashToTreasure(player)
   }
+  if (player.blessings?.includes(Blessing.SWEET_TREATS)) {
+    grantSweetTreat(player)
+  }
+}
+
+function grantSweetTreat(player: Player) {
+  if (player.sweetTreat) {
+    const staleTreatIndex = player.items.indexOf(player.sweetTreat)
+    if (staleTreatIndex >= 0) {
+      player.items.splice(staleTreatIndex, 1, Item.LEFTOVERS)
+    }
+  }
+  player.sweetTreat = pickRandomIn([
+    Item.CASTELIACONE,
+    Item.WHIPPED_DREAM
+  ])
+  player.items.push(player.sweetTreat)
 }
 
 /* TREASURE_TRAIL: point at an undug tile that still holds something, or clear
@@ -1514,6 +1531,12 @@ export const blessingEffectService: {
     grantSinnohsCoolest(player, state, room),
   [Blessing.AXE_BLAST]: (player, state, room) =>
     heroBlessingEffect(Blessing.AXE_BLAST, player, state, room),
+  [Blessing.SWEET_TREATS]: (player) => {
+    grantSweetTreat(player)
+    return true
+  },
+  [Blessing.SNIFFER_DOG]: (player, state, room) =>
+    heroBlessingEffect(Blessing.SNIFFER_DOG, player, state, room),
   [Blessing.THINK_FAST]: (player, state) => {
     const owned =
       state.blessingsByPlayerId.get(player.id) ?? new PlayerBlessings()

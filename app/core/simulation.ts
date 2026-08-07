@@ -232,6 +232,7 @@ export default class Simulation extends Schema implements ISimulation {
   entities: IPokemonEntity[] = []
   finishedAt: number = 0
   reinforcementsSent: boolean = false
+  snifferDogPulledPokemonIds = new Set<string>()
 
   constructor(
     id: string,
@@ -1848,6 +1849,93 @@ export default class Simulation extends Schema implements ISimulation {
         totalStars(alliedTeam) > totalStars(opposingTeam)
     }
 
+    const snifferDogChampion = championOf.get(Blessing.SNIFFER_DOG)
+    if (snifferDogChampion) {
+      snifferDogChampion.effectsSet.add(
+        new OnAbilityCastEffect((caster) => {
+          const owner = caster.player
+          if (!owner) return
+          const hasFullyDugBoardHole = owner.groundHoles
+            .slice(0, (BOARD_HEIGHT / 2) * BOARD_WIDTH)
+            .some((depth) => depth === 5)
+          if (!hasFullyDugBoardHole) return
+          const candidates = schemaValues(owner.board).filter(
+            (pokemon) =>
+              isOnBench(pokemon) &&
+              ![
+                PokemonActionState.EXPLORING,
+                PokemonActionState.DIGGING
+              ].includes(pokemon.action) &&
+              owner.groundHoles[
+                (BOARD_HEIGHT / 2) * BOARD_WIDTH + pokemon.positionX
+              ] === 5 &&
+              !this.snifferDogPulledPokemonIds.has(pokemon.id)
+          )
+          if (candidates.length === 0) return
+          const reinforcement = pickRandomIn(candidates)
+          this.snifferDogPulledPokemonIds.add(reinforcement.id)
+          reinforcement.action = PokemonActionState.DIGGING
+          this.room.broadcast(Transfer.DIG, {
+            pokemonId: reinforcement.id,
+            buriedItem: null
+          })
+
+          const boardHoles: { x: number; y: number }[] = []
+          for (let row = 0; row < BOARD_HEIGHT / 2; row++) {
+            for (let column = 0; column < BOARD_WIDTH; column++) {
+              if (owner.groundHoles[row * BOARD_WIDTH + column] === 5) {
+                boardHoles.push({
+                  x: column,
+                  y:
+                    caster.team === Team.BLUE_TEAM
+                      ? row
+                      : BOARD_HEIGHT - 1 - row
+                })
+              }
+            }
+          }
+          const openHoles = boardHoles.filter(
+            ({ x, y }) => this.board.getEntityOnCell(x, y) === undefined
+          )
+          const arrivalHole =
+            boardHoles.length > 0
+              ? pickRandomIn(openHoles.length > 0 ? openHoles : boardHoles)
+              : { x: caster.positionX, y: caster.positionY }
+
+          caster.commands.push(
+            new DelayedCommand(() => {
+              caster.broadcastAbility({
+                skill: "DIG",
+                positionX: arrivalHole.x,
+                positionY: arrivalHole.y
+              })
+            }, 750),
+            new DelayedCommand(() => {
+              const coord =
+                this.board.getEntityOnCell(arrivalHole.x, arrivalHole.y) ===
+                undefined
+                  ? arrivalHole
+                  : this.getClosestFreeCellTo(
+                      arrivalHole.x,
+                      arrivalHole.y,
+                      caster.team
+                    )
+              if (!coord) return
+              this.addPokemon(
+                reinforcement,
+                coord.x,
+                coord.y,
+                caster.team,
+                true,
+                false,
+                owner
+              )
+            }, 1250)
+          )
+        })
+      )
+    }
+
     const oliveGardenChampion = championOf.get(Blessing.OLIVE_GARDEN)
     if (oliveGardenChampion) {
       FIELD_STATUS_BY_SYNERGY.forEach(([synergy, addField]) => {
@@ -3027,6 +3115,18 @@ export default class Simulation extends Schema implements ISimulation {
   }
 
   stop() {
+    const players = [this.bluePlayer, this.bluePartnerPlayer, this.redPlayer]
+    players.forEach((player) =>
+      player?.board.forEach((pokemon) => {
+        if (
+          this.snifferDogPulledPokemonIds.has(pokemon.id) &&
+          pokemon.action === PokemonActionState.DIGGING
+        ) {
+          pokemon.action = PokemonActionState.IDLE
+        }
+      })
+    )
+
     this.blueTeam.forEach((pokemon, key) => {
       // logger.debug('deleting ' + pokemon.name);
       // @ts-ignore: entity shouldnt be used after simulation stop, so we can safely delete it

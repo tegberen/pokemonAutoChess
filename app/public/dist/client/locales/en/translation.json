@@ -3406,7 +3406,7 @@
 		"RICE": "Gives 80 SHIELD. If a Tatsugiri is on the board, also provides the additional stats given by its form.",
 		"ROCK_SALT": "Start the next fight with RUNE_PROTECT for 10 seconds and 20% of max HP as SHIELD.",
 		"NUTRITIOUS_EGG": "Start the next fight with +30% base ATK, DEF and SPE_DEF.",
-		"LEFTOVERS": "No effect. There is not much left to eat.",
+		"LEFTOVERS": "No effect. There is not much left to eat. (Disappears from your inventory after 1 round)",
 		"BLACK_SLUDGE": "POISONNED the Pokémon that eats it. If it has POISON type, restore 5% of max HP every 2 seconds instead.",
 		"BINDING_MOCHI": "The first attack in the next fight will cause POSSESSED for 5 seconds ON_HIT.",
 		"FRUIT_JUICE": "Gain 50 SPEED in the next fight.",
@@ -5570,7 +5570,7 @@
 		},
 		"CHARGING_MY_BUG": {
 			"name": "Charging My Bug",
-			"description": "Gain a Grubbin. Your Grubbins gain 1 permanent ATK when starting combat in a fully dug hole."
+			"description": "Gain a Grubbin. Your Grubbins gain 1 permanent ATK when starting combat in a fully dug hole on board."
 		},
 		"NEUROFORCE": {
 			"name": "Neuroforce",
@@ -5583,6 +5583,14 @@
 		"AXE_BLAST": {
 			"name": "Axe Blast",
 			"description": "Gain an Axew. It gains +2 RANGE and its Ability is replaced with Axe Blast."
+		},
+		"SWEET_TREATS": {
+			"name": "Sweet Treats",
+			"description": "Now and at the start of each round, randomly gain a CASTELIACONE or WHIPPED_DREAM in your inventory. After 1 round, an unconsumed treat turns into LEFTOVERS."
+		},
+		"SNIFFER_DOG": {
+			"name": "Sniffer Dog",
+			"description": "Gain a Lillipup. While Lillipup is fielded and GROUND is active, benched GROUND allies dig holes. When the STRONGEST Lillipup casts its Ability, a random Pokémon on a fully dug bench hole enters battle through a fully dug board hole."
 		},
 		"THINK_FAST": {
 			"name": "Pokemon APM",

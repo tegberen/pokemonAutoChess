@@ -258,6 +258,10 @@ export default class BoardManager {
       pokemonUI.setAlpha(0.3)
       pokemonUI.draggable = false
     }
+    if (pokemon.action === PokemonActionState.DIGGING) {
+      pokemonUI.setAlpha(0.3)
+      pokemonUI.draggable = false
+    }
     this.pokemons.get(pokemonUI.id)?.destroy()
     this.pokemons.set(pokemonUI.id, pokemonUI)
 
@@ -736,6 +740,21 @@ export default class BoardManager {
             this.groundHoles.push(groundHole)
           }
         }
+      }
+    }
+    for (let col = 0; col < BOARD_WIDTH; col++) {
+      const hole =
+        this.player.groundHoles[(BOARD_HEIGHT / 2) * BOARD_WIDTH + col]
+      if (hole > 0) {
+        const [x, y] = transformBoardCoordinates(col, 0)
+        const groundHole = this.scene.add
+          .sprite(x, y + 10, "ground_holes", `hole${hole}.png`)
+          .setScale(2)
+          .setDepth(DEPTH.BOARD_EFFECT_GROUND_LEVEL)
+          .setTint(
+            getRegionTint(this.scene.mapName, preference("colorblindMode"))
+          )
+        this.groundHoles.push(groundHole)
       }
     }
   }
@@ -1315,6 +1334,29 @@ export default class BoardManager {
                     pokemonSprite.draggable = false
                   }
                 })
+              }
+            })
+          }
+          if (value === PokemonActionState.DIGGING) {
+            pokemonSprite.draggable = false
+            this.scene.tweens.add({
+              targets: pokemonSprite,
+              alpha: 0.3,
+              ease: "Sine.easeInOut",
+              duration: 1250
+            })
+          }
+          if (
+            previousValue === PokemonActionState.DIGGING &&
+            value !== PokemonActionState.DIGGING
+          ) {
+            this.scene.tweens.add({
+              targets: pokemonSprite,
+              alpha: 1,
+              ease: "Sine.easeInOut",
+              duration: 400,
+              onComplete: () => {
+                if (pokemonSprite?.scene) pokemonSprite.draggable = true
               }
             })
           }

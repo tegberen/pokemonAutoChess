@@ -52,7 +52,7 @@ import {
   Wands
 } from "../../types/enum/Item"
 import { Passive } from "../../types/enum/Passive"
-import { Pillars, Pkm } from "../../types/enum/Pokemon"
+import { Pillars, Pkm, PkmFamily } from "../../types/enum/Pokemon"
 import { SpecialGameRule } from "../../types/enum/SpecialGameRule"
 import { Synergy } from "../../types/enum/Synergy"
 import { isIn } from "../../utils/array"
@@ -1308,7 +1308,7 @@ const growBerryTreesEffect = new OnStageStartEffect(({ player }) => {
   }
 })
 
-const GROUND_HOLE_ROWS = 3
+const GROUND_HOLE_ROWS = BOARD_HEIGHT / 2
 
 function pickAdjacentHoleToDig(
   player: Player,
@@ -1363,6 +1363,12 @@ function grantGemRushRowReward(player: Player, index: number) {
 
 export const groundDigEffect = new OnStageStartEffect(({ player, room }) => {
   const hasGroundSynergy = getSynergyTier(player.synergies, Synergy.GROUND) > 0
+  const snifferDogFielded =
+    player.blessings?.includes(Blessing.SNIFFER_DOG) &&
+    schemaValues(player.board).some(
+      (pokemon) =>
+        !isOnBench(pokemon) && PkmFamily[pokemon.name] === Pkm.LILLIPUP
+    )
   /* TREASURE_TRAIL adds the strongest ally as a digger even when it is not a
      Ground type. Below Ground 2 this effect is never reached through the
      synergy tiers, so game-commands applies it directly for the blessing. */
@@ -1377,20 +1383,25 @@ export const groundDigEffect = new OnStageStartEffect(({ player, room }) => {
   if (hasGroundSynergy || treasureTrailDiggerId) {
     const holesClaimedThisStage = new Set<number>()
     player.board.forEach((pokemon, pokemonId) => {
+      const diggingOnBench = isOnBench(pokemon)
       if (
         ((hasGroundSynergy && pokemon.types.has(Synergy.GROUND)) ||
           pokemonId === treasureTrailDiggerId) &&
-        !isOnBench(pokemon) &&
+        (!diggingOnBench ||
+          (snifferDogFielded && pokemon.types.has(Synergy.GROUND))) &&
         !(
           pokemon.items.has(Item.CHEF_HAT) &&
           player.synergies.hasSynergyActive(Synergy.GOURMET)
         )
       ) {
         const standingIndex =
-          (pokemon.positionY - 1) * BOARD_WIDTH + pokemon.positionX
+          (diggingOnBench ? GROUND_HOLE_ROWS : pokemon.positionY - 1) *
+            BOARD_WIDTH +
+          pokemon.positionX
         /* DIGGING_EQUIPMENT: a Ground pokemon standing on an exhausted hole
            moves its effort to the most nearly finished neighbour instead */
         const index =
+          !diggingOnBench &&
           player.groundHoles[standingIndex] === 5 &&
           player.blessings?.includes(Blessing.DIGGING_EQUIPMENT)
             ? (pickAdjacentHoleToDig(
@@ -1403,8 +1414,15 @@ export const groundDigEffect = new OnStageStartEffect(({ player, room }) => {
         const hasAlreadyReachedMaxDepth = player.groundHoles[index] === 5
         const isReachingMaxDepth = player.groundHoles[index] === 4
         if (!hasAlreadyReachedMaxDepth) {
-          let buriedItem = isReachingMaxDepth ? player.buriedItems[index] : null
-          if (isReachingMaxDepth && pokemon.name === Pkm.MAMOSWINE) {
+          let buriedItem =
+            !diggingOnBench && isReachingMaxDepth
+              ? player.buriedItems[index]
+              : null
+          if (
+            !diggingOnBench &&
+            isReachingMaxDepth &&
+            pokemon.name === Pkm.MAMOSWINE
+          ) {
             const alreadyHasBalloon = [...player.board.values()].some((p) =>
               p.items.has(Item.AIR_BALLOON)
             )
@@ -1413,6 +1431,7 @@ export const groundDigEffect = new OnStageStartEffect(({ player, room }) => {
             }
           }
           if (
+            !diggingOnBench &&
             pokemon.items.has(Item.EXPLORER_KIT) &&
             isReachingMaxDepth &&
             !buriedItem
@@ -1431,7 +1450,7 @@ export const groundDigEffect = new OnStageStartEffect(({ player, room }) => {
           })
           room.clock.setTimeout(() => {
             player.groundHoles[index] = max(5)(player.groundHoles[index] + 1)
-            grantGemRushRowReward(player, index)
+            if (!diggingOnBench) grantGemRushRowReward(player, index)
             revealNextBuriedTreasure(player, room.state)
             PassiveEffects[pokemon.passive]?.forEach((effect) => {
               if (effect instanceof OnGroundDiggingEffect) {

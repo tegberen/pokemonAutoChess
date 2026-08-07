@@ -317,11 +317,11 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     icon: "starly_goggles",
     grantsPokemonImmediately: true
   },
-  [Blessing.AXE_BLAST]: {
-    tier: BlessingTier.PRISMATIC,
-    availableAtStages: [4],
-    icon: "axe_blast",
-    grantsPokemonImmediately: true
+  [Blessing.SWEET_TREATS]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "sweet_treats",
+    grantsPokemonImmediately: false
   },
   [Blessing.THINK_FAST]: {
     tier: BlessingTier.PRISMATIC,
@@ -1276,6 +1276,18 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     icon: "rampage",
     grantsPokemonImmediately: true
   },
+  [Blessing.AXE_BLAST]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: [4],
+    icon: "axe_blast",
+    grantsPokemonImmediately: true
+  },
+  [Blessing.SNIFFER_DOG]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: [4],
+    icon: "sniffer_dog",
+    grantsPokemonImmediately: true
+  },
   [Blessing.FROST_BURST]: {
     tier: BlessingTier.GOLD,
     availableAtStages: [12],
@@ -1496,8 +1508,7 @@ export const BLESSING_SELECTION_EVERY_STAGE: boolean =
   BLESSING_TEST_MODE || BLESSING_SANDBOX_MODE
 
 const BLESSINGS_UNDER_TEST: Blessing[] = [
-  Blessing.SINNOHS_COOLEST,
-  Blessing.AXE_BLAST
+  Blessing.SNIFFER_DOG
 ]
 
 function countBlessingsOfFamily(blessings: Blessing[], family?: string) {

@@ -275,9 +275,7 @@ export default function PreparationSettings() {
     </div>
   )
 
-  const blessingsSetting = process.env.MODE === "dev" &&
-    (gameMode === GameMode.SCRIBBLE ||
-      (hasCustomLobbySettings && (isOwner || isAdmin))) && (
+  const blessingsSetting = isAdmin && (
     <div className="lobby-setting" title={t("blessings_enabled_hint")}>
       <span className="setting-label">
         {t("blessings_enabled_label")}

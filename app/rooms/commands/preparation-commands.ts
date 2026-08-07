@@ -640,11 +640,7 @@ export class OnChangeBlessingsEnabledCommand extends Command<
   execute({ client, enabled }) {
     try {
       const user = this.state.users.get(client.auth?.uid ?? "")
-      const isAllowed =
-        process.env.MODE === "dev" &&
-        (this.state.gameMode === GameMode.SCRIBBLE ||
-          client.auth?.uid === this.state.ownerId ||
-          user?.role === Role.ADMIN)
+      const isAllowed = user?.role === Role.ADMIN
       if (isAllowed && this.state.blessingsEnabled !== enabled) {
         this.state.blessingsEnabled = enabled
         this.room.state.addMessage({

@@ -813,11 +813,15 @@ export class OnDragDropPokemonCommand extends Command<
     y: number
   ): boolean {
     const pokemonToSwap = player.getPokemonAt(x, y)
+    const lockedActions = [
+      PokemonActionState.EXPLORING,
+      PokemonActionState.DIGGING
+    ]
     if (
-      pokemon.action === PokemonActionState.EXPLORING ||
-      pokemonToSwap?.action === PokemonActionState.EXPLORING
+      lockedActions.includes(pokemon.action) ||
+      (pokemonToSwap != null && lockedActions.includes(pokemonToSwap.action))
     ) {
-      return false // can't swap explorer pokemons
+      return false
     }
     if (pokemonToSwap) {
       const oldX = pokemonToSwap.positionX
@@ -1221,7 +1225,11 @@ export class OnDragDropItemCommand extends Command<
       isOnBench(pokemon) &&
       pokemon.types.has(Synergy.FLYING)
     ) {
-      if (pokemon.action === PokemonActionState.EXPLORING) {
+      if (
+        [PokemonActionState.EXPLORING, PokemonActionState.DIGGING].includes(
+          pokemon.action
+        )
+      ) {
         client.send(Transfer.DRAG_DROP_CANCEL, message)
         return
       }
@@ -1247,7 +1255,11 @@ export class OnDragDropItemCommand extends Command<
       return
     }
 
-    if (pokemon.action === PokemonActionState.EXPLORING) {
+    if (
+      [PokemonActionState.EXPLORING, PokemonActionState.DIGGING].includes(
+        pokemon.action
+      )
+    ) {
       client.send(Transfer.DRAG_DROP_CANCEL, message)
       return
     }
@@ -1490,8 +1502,12 @@ export class OnSellPokemonCommand extends Command<
     if (!isOnBench(pokemon) && this.state.phase === GamePhaseState.FIGHT) {
       return // can't sell a pokemon currently fighting
     }
-    if (pokemon.action === PokemonActionState.EXPLORING) {
-      return // can't sell an explorer pokemon
+    if (
+      [PokemonActionState.EXPLORING, PokemonActionState.DIGGING].includes(
+        pokemon.action
+      )
+    ) {
+      return
     }
 
     if (
@@ -2587,23 +2603,15 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
       }, 10000)
     }
 
-    /* FAST_FOOD_DELIVERY: dishes cooked to the inventory keep for one round,
-       then rot to leftovers, which are themselves thrown out a round later so
-       the inventory does not silt up. Leftovers are indistinguishable from any
-       other, so this removes an arbitrary one — only reachable with the
-       blessing, which produces far more than it could take away */
-    for (let i = 0; i < player.fastFoodLeftoversToExpire; i++) {
-      const leftoverIndex = player.items.indexOf(Item.LEFTOVERS)
-      if (leftoverIndex >= 0) player.items.splice(leftoverIndex, 1)
+    while (player.items.includes(Item.LEFTOVERS)) {
+      player.items.splice(player.items.indexOf(Item.LEFTOVERS), 1)
     }
-    player.fastFoodLeftoversToExpire = 0
 
     for (const staleDish of player.fastFoodDishesLastRound) {
       const index = player.items.indexOf(staleDish)
       if (index >= 0) {
         player.items.splice(index, 1)
         player.items.push(Item.LEFTOVERS)
-        player.fastFoodLeftoversToExpire++
       }
     }
     player.fastFoodDishesLastRound = player.fastFoodDishes
@@ -2780,7 +2788,10 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
                 p.canBePlaced &&
                 !isPokemonManifestationLocked(player, p.id) &&
                 !isUniqueFieldCapReached(player, p) &&
-                p.action !== PokemonActionState.EXPLORING &&
+                ![
+                  PokemonActionState.EXPLORING,
+                  PokemonActionState.DIGGING
+                ].includes(p.action) &&
                 /* TEMPLE_OF_LANGUAGE Unown are free to field, so autofill would
                    otherwise dump every one of them onto the board */
                 countsForTeamSize(p, player.blessings)

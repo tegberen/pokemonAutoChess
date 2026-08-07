@@ -37,6 +37,7 @@ export enum PokemonActionState {
   ABILITY = "Ability",
   WALK = "Walk",
   EXPLORING = "Exploring",
+  DIGGING = "Digging",
   SLEEP = "Sleep",
   HOP = "Hop",
   HURT = "Hurt",

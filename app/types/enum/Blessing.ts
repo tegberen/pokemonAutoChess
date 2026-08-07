@@ -172,6 +172,8 @@ export enum Blessing {
   NEUROFORCE = "NEUROFORCE",
   SINNOHS_COOLEST = "SINNOHS_COOLEST",
   AXE_BLAST = "AXE_BLAST",
+  SWEET_TREATS = "SWEET_TREATS",
+  SNIFFER_DOG = "SNIFFER_DOG",
   THINK_FAST = "THINK_FAST",
   WISE_SPENDING = "WISE_SPENDING",
   BIRTHDAY_PRESENT = "BIRTHDAY_PRESENT",
@@ -600,7 +602,8 @@ export const HERO_BLESSING_GIFT: { [blessing in Blessing]?: Pkm } = {
   [Blessing.SOUL_DRAIN]: Pkm.LITWICK,
   [Blessing.FLOWER_QUEEN]: Pkm.FLOETTE,
   [Blessing.CHARGING_MY_BUG]: Pkm.GRUBBIN,
-  [Blessing.AXE_BLAST]: Pkm.AXEW
+  [Blessing.AXE_BLAST]: Pkm.AXEW,
+  [Blessing.SNIFFER_DOG]: Pkm.LILLIPUP
 }
 
 export const HERO_BLESSING_FAMILY: { [blessing in Blessing]?: Pkm } = {
@@ -625,7 +628,8 @@ export const HERO_BLESSING_FAMILY: { [blessing in Blessing]?: Pkm } = {
   [Blessing.FLOWER_QUEEN]: Pkm.FLABEBE,
   [Blessing.LANCES_ACE]: Pkm.DRATINI,
   [Blessing.CHARGING_MY_BUG]: Pkm.GRUBBIN,
-  [Blessing.AXE_BLAST]: Pkm.AXEW
+  [Blessing.AXE_BLAST]: Pkm.AXEW,
+  [Blessing.SNIFFER_DOG]: Pkm.LILLIPUP
 }
 
 /* hero blessings that also relocate the player to a region where their family

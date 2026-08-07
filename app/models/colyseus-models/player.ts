@@ -230,7 +230,6 @@ export default class Player extends Schema implements IPlayer {
   // server-only: FAST_FOOD_DELIVERY dishes, tracked one round back so they rot
   fastFoodDishes: Item[] = []
   fastFoodDishesLastRound: Item[] = []
-  fastFoodLeftoversToExpire = 0
   hasLeftGame: boolean = false
   bonusSynergies: Map<Synergy, number> = new Map<Synergy, number>()
   pokemonsExploring: {
@@ -271,6 +270,7 @@ export default class Player extends Schema implements IPlayer {
   // server-only: STARTER_CHOICE's pick, and how many round-starts still owe a copy
   starterChoicePokemon: Pkm | null = null
   starterChoiceRoundsLeft: number = 0
+  sweetTreat: Item | null = null
   bigPecksSharpBeakGranted = false
   blessingQuestsCompleted: Set<Blessing> = new Set<Blessing>()
   blessingQuestThresholdsReached: Map<Blessing, number> = new Map<
