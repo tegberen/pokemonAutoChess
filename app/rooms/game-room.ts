@@ -1861,6 +1861,11 @@ export default class GameRoom extends Room<{ state: GameState }> {
     }
 
     if (choice.items.length > 0) {
+      if (choice.isPveReward) {
+        player.forgottenPveItems = choice.items
+          .filter((_, index) => index !== choiceIndex)
+          .slice(0, 2)
+      }
       const grantItem = (it: Item) => {
         if (isIn(Wands, it)) {
           player.fairyWands.push(it)

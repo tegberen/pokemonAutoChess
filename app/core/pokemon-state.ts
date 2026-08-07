@@ -978,6 +978,7 @@ export default abstract class PokemonState {
       }
 
       if (death) {
+        pokemon.simulation.recordFirstPveKnockout(pokemon, attacker)
         this.triggerDeath(pokemon, attacker, board, attackType)
       }
     }

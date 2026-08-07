@@ -271,6 +271,8 @@ export default class Player extends Schema implements IPlayer {
   starterChoicePokemon: Pkm | null = null
   starterChoiceRoundsLeft: number = 0
   sweetTreat: Item | null = null
+  forgottenPvePokemon: Pkm | null = null
+  forgottenPveItems: Item[] = []
   bigPecksSharpBeakGranted = false
   blessingQuestsCompleted: Set<Blessing> = new Set<Blessing>()
   blessingQuestThresholdsReached: Map<Blessing, number> = new Map<

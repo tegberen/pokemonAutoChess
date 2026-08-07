@@ -5592,6 +5592,10 @@
 			"name": "Sniffer Dog",
 			"description": "Gain a Lillipup. While Lillipup is fielded and GROUND is active, benched GROUND allies dig holes. When the STRONGEST Lillipup casts its Ability, a random Pokémon on a fully dug bench hole enters battle through a fully dug board hole."
 		},
+		"YOU_FORGOT_SOMETHING": {
+			"name": "You Forgot Something!",
+			"description": "The first Pokémon you KO'd in your last PvE round joins your team after 8 seconds of PvP combat, holding the two items you didn't choose."
+		},
 		"THINK_FAST": {
 			"name": "Pokemon APM",
 			"description": "Gain infinite rerolls this turn. All shop rerolls cost no GOLD until the end of the preparation phase."

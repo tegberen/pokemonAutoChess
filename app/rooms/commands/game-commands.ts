@@ -2925,6 +2925,7 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
                 new PlayerChoice({
                   type: "item",
                   items: schemaValues(player.pveRewardsPropositions),
+                  isPveReward: true,
                   // SIX_PACK: each item option comes paired with a second item
                   items2:
                     player.pveRewardsPropositions2.length > 0
@@ -3243,6 +3244,8 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
 
       groups.forEach((group) => {
         group.forEach((player) => {
+          player.forgottenPvePokemon = null
+          player.forgottenPveItems = []
           player.opponentId = "pve"
           player.opponentName = pveStage.name
           player.opponentAvatar = getAvatarString(

@@ -323,6 +323,12 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     icon: "sweet_treats",
     grantsPokemonImmediately: false
   },
+  [Blessing.YOU_FORGOT_SOMETHING]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: [4],
+    icon: "bugle_call",
+    grantsPokemonImmediately: false
+  },
   [Blessing.THINK_FAST]: {
     tier: BlessingTier.PRISMATIC,
     availableAtStages: [12],
@@ -1501,14 +1507,13 @@ function tierChancesForBlessingsUnderTest(): {
   return chances
 }
 
-export const BLESSING_TEST_MODE: boolean = true
+export const BLESSING_TEST_MODE: boolean = false
 export const BLESSING_SANDBOX_MODE: boolean = false
 
 export const BLESSING_SELECTION_EVERY_STAGE: boolean =
   BLESSING_TEST_MODE || BLESSING_SANDBOX_MODE
 
 const BLESSINGS_UNDER_TEST: Blessing[] = [
-  Blessing.SNIFFER_DOG
 ]
 
 function countBlessingsOfFamily(blessings: Blessing[], family?: string) {

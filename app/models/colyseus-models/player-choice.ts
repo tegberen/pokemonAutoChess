@@ -46,6 +46,7 @@ export class PlayerChoice extends Schema {
   // server-only: every blessing ever shown in this selection, so family caps and
   // duplicate exclusion survive the choice being replaced on each reroll
   blessingsProposedHistory: Blessing[] = []
+  isPveReward = false
 
   constructor(args: {
     type: PlayerChoiceType
@@ -62,6 +63,7 @@ export class PlayerChoice extends Schema {
     rerollableSlots?: boolean[]
     rerollableItemSlots?: boolean[]
     canReroll?: boolean
+    isPveReward?: boolean
   }) {
     super()
     this.id = crypto.randomUUID()
@@ -80,5 +82,6 @@ export class PlayerChoice extends Schema {
     if (args.rerollableItemSlots)
       this.rerollableItemSlots = args.rerollableItemSlots
     if (args.canReroll) this.canReroll = args.canReroll
+    if (args.isPveReward) this.isPveReward = args.isPveReward
   }
 }

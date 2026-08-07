@@ -1537,6 +1537,7 @@ export const blessingEffectService: {
   },
   [Blessing.SNIFFER_DOG]: (player, state, room) =>
     heroBlessingEffect(Blessing.SNIFFER_DOG, player, state, room),
+  [Blessing.YOU_FORGOT_SOMETHING]: () => true,
   [Blessing.THINK_FAST]: (player, state) => {
     const owned =
       state.blessingsByPlayerId.get(player.id) ?? new PlayerBlessings()

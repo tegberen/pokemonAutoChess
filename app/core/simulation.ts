@@ -111,7 +111,8 @@ import {
   HAIL_TO_THE_KING_DEFENSE,
   HAIL_TO_THE_KING_SPECIAL_DEFENSE,
   HAIL_TO_THE_KING_ABILITY_POWER,
-  HAIL_TO_THE_KING_SPEED
+  HAIL_TO_THE_KING_SPEED,
+  YOU_FORGOT_SOMETHING_DELAY
 } from "../types/enum/Blessing"
 import { isSynergyActiveForPlayer } from "../config/game/blessings"
 import { getFlowerPotStarCount } from "./flower-pots"
@@ -233,6 +234,11 @@ export default class Simulation extends Schema implements ISimulation {
   finishedAt: number = 0
   reinforcementsSent: boolean = false
   snifferDogPulledPokemonIds = new Set<string>()
+  forgottenReinforcements: {
+    player: Player
+    team: Team
+    timer: number
+  }[] = []
 
   constructor(
     id: string,
@@ -417,6 +423,7 @@ export default class Simulation extends Schema implements ISimulation {
 
   start() {
     this.started = true
+    this.queueForgottenReinforcements()
 
     // Seeds targeting the strongest ally / random ally - decided once,
     // BEFORE OnSimulationStartEffect fires below, so those effects can
@@ -582,6 +589,80 @@ export default class Simulation extends Schema implements ISimulation {
       : playerId === this.redPlayer?.id
         ? this.blueTeam
         : undefined
+  }
+
+  recordFirstPveKnockout(
+    pokemon: PokemonEntity,
+    attacker: PokemonEntity | null
+  ) {
+    if (
+      this.redPlayerId !== "pve" ||
+      pokemon.team !== Team.RED_TEAM ||
+      attacker?.team !== Team.BLUE_TEAM
+    ) {
+      return
+    }
+    const player = attacker.player
+    if (
+      player &&
+      (player === this.bluePlayer || player === this.bluePartnerPlayer) &&
+      player.forgottenPvePokemon === null
+    ) {
+      player.forgottenPvePokemon = pokemon.name
+    }
+  }
+
+  queueForgottenReinforcements() {
+    if (this.redPlayerId === "pve") return
+    const players: [Player | undefined, Team][] = [
+      [this.bluePlayer, Team.BLUE_TEAM],
+      [this.isGhostBattle ? undefined : this.redPlayer, Team.RED_TEAM]
+    ]
+    players.forEach(([player, team]) => {
+      if (
+        player?.blessings?.includes(Blessing.YOU_FORGOT_SOMETHING) &&
+        player.forgottenPvePokemon
+      ) {
+        this.forgottenReinforcements.push({
+          player,
+          team,
+          timer: YOU_FORGOT_SOMETHING_DELAY
+        })
+      }
+    })
+  }
+
+  updateForgottenReinforcements(dt: number) {
+    this.forgottenReinforcements.forEach((reinforcement) => {
+      reinforcement.timer -= dt
+      if (reinforcement.timer > 0) return
+      const coord = this.getClosestFreeCellTo(
+        3,
+        reinforcement.team === Team.BLUE_TEAM ? 0 : BOARD_HEIGHT - 1,
+        reinforcement.team
+      )
+      if (!coord || !reinforcement.player.forgottenPvePokemon) return
+      const pokemon = PokemonFactory.createPokemonFromName(
+        reinforcement.player.forgottenPvePokemon,
+        reinforcement.player
+      )
+      reinforcement.player.forgottenPveItems.forEach((item) =>
+        pokemon.items.add(item)
+      )
+      this.addPokemon(
+        pokemon,
+        coord.x,
+        coord.y,
+        reinforcement.team,
+        true,
+        false,
+        reinforcement.player
+      )
+      reinforcement.timer = Number.POSITIVE_INFINITY
+    })
+    this.forgottenReinforcements = this.forgottenReinforcements.filter(
+      ({ timer }) => Number.isFinite(timer)
+    )
   }
 
   addPokemon(
@@ -2861,6 +2942,7 @@ export default class Simulation extends Schema implements ISimulation {
     }
 
     this.checkCombatQuestThresholds()
+    if (!this.finished) this.updateForgottenReinforcements(dt)
 
     this.blueTeam.forEach((pkm, key) => {
       this.blueDpsMeter
