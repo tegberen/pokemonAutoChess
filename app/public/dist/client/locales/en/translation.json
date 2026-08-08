@@ -3286,7 +3286,7 @@
 		"DNA_SPLICER": "It can be used to transform Kyurem into Kyurem White or Kyurem Black.",
 		"MYSTERY_BOX": "A mysterious old box. When in your inventory, all $t(pkm.DITTO) found in shops are replaced by $t(pkm.MELTAN).",
 		"TRASH": "No effect, but can be held.",
-		"OLD_ROD": "After each PvP round, fish a Pokémon that is then added to a free slot on your bench. Can catch common and uncommon WATER Pokémon as well as $t(pkm.MAGIKARP).",
+		"OLD_ROD": "After each PvP round, fish a Pokémon that is then added to a free slot on your bench. Can catch Common and Uncommon WATER Pokémon as well as $t(pkm.MAGIKARP).",
 		"GOOD_ROD": "After each PvP round, fish a Pokémon that is then added to a free slot on your bench. Can catch rare WATER Pokémon as well as $t(pkm.FEEBAS).",
 		"SUPER_ROD": "After each PvP round, fish a Pokémon that is then added to a free slot on your bench. Can catch epic WATER Pokémon as well as $t(pkm.WISHIWASHI).",
 		"DYNAMAX_BAND": "At the start of the fight, raise max HP by 200%.",
@@ -5030,7 +5030,7 @@
 		},
 		"QUEST_EPIC": {
 			"name": "Quest: Epic",
-			"description": "Gain a 1 STAR Epic Pokémon and 6 XP. The first time you field 7 unique Epic or Ultra Pokémon at once, gain an EVIOLITE."
+			"description": "Gain a 1 STAR Epic Pokémon and 6 XP. The first time you field 7 Unique Epic or Ultra Pokémon at once, gain an EVIOLITE."
 		},
 		"QUEST_EXPAND": {
 			"name": "Quest: Expand",
@@ -5066,7 +5066,7 @@
 		},
 		"ROCKY_BEGINNINGS": {
 			"name": "Rocky Beginnings",
-			"description": "Gain 2 different 1 STAR ROCK Pokémon of common, uncommon or rare rarity and a random weather rock."
+			"description": "Gain 2 different 1 STAR ROCK Pokémon of Common, Uncommon or Rare rarity and an immediate random weather rock (if ROCK 2 is active)."
 		},
 		"BABYLESS": {
 			"name": "Babyless",
@@ -5186,11 +5186,11 @@
 		},
 		"BEEKEEPING": {
 			"name": "Beekeeping",
-			"description": "When your unique casts its ability, spawn a Combee."
+			"description": "When your Unique casts its ability, spawn a Combee."
 		},
 		"ARCANE_METALS": {
 			"name": "Arcane Metals",
-			"description": "STEEL synergy converts ability damage into TRUE as well as attacks. Gain a Magnemite."
+			"description": "STEEL synergy converts ability damage into TRUE. Gain a Magnemite."
 		},
 		"CURSE_OF_TWO": {
 			"name": "Curse of Two",
@@ -5254,11 +5254,11 @@
 		},
 		"FIND_A_LOST_WAND": {
 			"name": "Find a Lost Wand",
-			"description": "When FAIRY 2+ is active, gain the wand that was not offered to you in your FAIRY 2 options. Gain a Hatenna."
+			"description": "When FAIRY is active and the first wand has been chosen, gain the wand that was not offered to you in your FAIRY 2 options. Gain a Hatenna."
 		},
 		"FAST_FOOD_DELIVERY": {
 			"name": "Fast Food Delivery",
-			"description": "All GOURMET dishes are cooked to your inventory, and can be distributed among your Pokémon how you like, but turn into LEFTOVERS after 1 round, and are thrown out the round after. Gain a Nacli."
+			"description": "All GOURMET dishes are cooked to your inventory, and can be distributed among your Pokémon how you like, but turn into LEFTOVERS after 1 round. Gain a Nacli."
 		},
 		"CHEFS_GREED": {
 			"name": "Chef's Greed",
@@ -5278,7 +5278,7 @@
 		},
 		"CRYSTAL_MUTATION": {
 			"name": "Crystal Mutation",
-			"description": "Immediately awaken your ROCK unique with a random crystallisation."
+			"description": "Immediately awaken your ROCK Unique with a random crystallisation."
 		},
 		"CRYSTAL_CLUSTERS": {
 			"name": "Crystal Clusters",
@@ -5334,7 +5334,7 @@
 		},
 		"ZAP": {
 			"name": "Zap!",
-			"description": "ELECTRIC triple attacks chain to a random ADJACENT enemy, dealing 50% reduced damage and applying on hit effects. Gain a Grubbin."
+			"description": "ELECTRIC triple attacks chain to a random ADJACENT enemy, dealing 50% of the initial damage and applying ON_HIT effects. Gain a Grubbin."
 		},
 		"SEEING_TRIPLE": {
 			"name": "Seeing Triple",
@@ -5462,11 +5462,11 @@
 		},
 		"REGIONAL_TREASURES_II": {
 			"name": "Regional Treasures II",
-			"description": "Gain a gem and a random 1 STAR uncommon Pokémon for each of your region's synergies, now and each time you change region."
+			"description": "Gain a gem and a random 1 STAR Uncommon Pokémon for each of your region's synergies, now and each time you change region."
 		},
 		"SYNARCH": {
 			"name": "Synarch",
-			"description": "Gain a gem matching each base synergy of your unique Pokémon. If that is less than 3 gems, random gems make up the difference."
+			"description": "Gain a gem matching each base synergy of your Unique Pokémon. If that is less than 3 gems, random gems make up the difference."
 		},
 		"FLEXIBILITY": {
 			"name": "Flexibility",
@@ -5478,19 +5478,19 @@
 		},
 		"MANIFESTATION_AP": {
 			"name": "Manifestation: AP",
-			"description": "Gain a random Duosion, Thwackey or Drizzile holding a SOUL_DEW, granting AP. Until stage 20 it cannot be fielded or given items, and sells for 0 GOLD."
+			"description": "Gain a random Duosion, Thwackey or Drizzile holding a SOUL_DEW. Until stage 20 it cannot be fielded or given items, and sells for 0 GOLD."
 		},
 		"MANIFESTATION_AD": {
 			"name": "Manifestation: ATK",
-			"description": "Gain a random Porygon2, Fletchinder or Bisharp holding a RED_ORB, granting ATK. Until stage 20 it cannot be fielded or given items, and sells for 0 GOLD."
+			"description": "Gain a random Porygon2, Fletchinder or Bisharp holding a RED_ORB. Until stage 20 it cannot be fielded or given items, and sells for 0 GOLD."
 		},
 		"MIX_AND_MATCH_I": {
 			"name": "Mix and Match I",
-			"description": "Gain 3 random unique Pokémon. Your unique Pokémon sell for 0 GOLD, and you can field at most 2 of them at a time."
+			"description": "gain 3 random Unique Pokémon. Your Unique Pokémon sell for 0 GOLD, and you can field at most 2 of them at a time."
 		},
 		"MIX_AND_MATCH_II": {
 			"name": "Mix and Match II",
-			"description": "Gain 4 random unique Pokémon. Your unique Pokémon sell for 0 GOLD, and you can field at most 3 of them at a time."
+			"description": "Gain 4 random Unique Pokémon. Your Unique Pokémon sell for 0 GOLD, and you can field at most 3 of them at a time."
 		},
 		"WAITING_GAME": {
 			"name": "Waiting Game",
@@ -5498,7 +5498,7 @@
 		},
 		"PRISMATIC_REROLL": {
 			"name": "Prismatic Reroll",
-			"description": "Each reroll has a 25% chance to gain 2 free rerolls. Free rerolls can grant free rerolls in turn."
+			"description": "Each reroll has a 25% chance to gain 2 free rerolls. Free rerolls can grant free rerolls in turn as well."
 		},
 		"LUNCH_MONEY": {
 			"name": "Prize Money",
@@ -5510,7 +5510,7 @@
 		},
 		"A_NEW_FRIEND": {
 			"name": "A New Friend",
-			"description": "Gain a random 2-cost Pokémon. Gain another copy whenever you level up."
+			"description": "Gain a random Uncommon cost Pokémon. Gain another copy whenever you level up."
 		},
 		"BP_REWARDS": {
 			"name": "Battle Point Rewards",
@@ -5530,7 +5530,7 @@
 		},
 		"PROTECT_THE_WEAK": {
 			"name": "Protect the Weak",
-			"description": "Epic, ultra and legendary Pokémon gain 20 HP and 7 SPEED for each common and uncommon Pokémon on your board."
+			"description": "Epic, Ultra and Legendary Pokémon gain 20 HP and 7 SPEED for each Common and Uncommon Pokémon on your board."
 		},
 		"STURDY": {
 			"name": "Sturdy",
@@ -5570,7 +5570,7 @@
 		},
 		"CHARGING_MY_BUG": {
 			"name": "Charging My Bug",
-			"description": "Gain a Grubbin. Your Grubbins gain 1 permanent ATK when starting combat in a fully dug hole on board."
+			"description": "Gain a Grubbin. Your STRONGEST Grubbin gains 1 permanent ATK when starting combat in a fully dug hole on board."
 		},
 		"NEUROFORCE": {
 			"name": "Neuroforce",
@@ -5666,7 +5666,7 @@
 		},
 		"QUEST_EVOLVE_II": {
 			"name": "Quest: Evolve II",
-			"description": "Gain an Eevee and 2 rare 1 STAR Pokémon. After evolving Pokémon 20 times, gain a RARE_CANDY."
+			"description": "Gain an Eevee and 2 Rare 1 STAR Pokémon. After evolving Pokémon 20 times, gain a RARE_CANDY."
 		},
 		"IMPENDING_DOOM": {
 			"name": "Impending Doom",
@@ -5706,7 +5706,7 @@
 		},
 		"ALL_FOURS": {
 			"name": "All Fours",
-			"description": "Open a shop of all epic Pokémon. The first one you buy is free."
+			"description": "Open a shop of all Epic Pokémon. The first one you buy is free."
 		},
 		"BEING_OF_KNOWLEDGE": {
 			"name": "Being of Knowledge",
@@ -5726,11 +5726,11 @@
 		},
 		"COLOUR_CHANGE": {
 			"name": "Colour Change",
-			"description": "You cannot move on the stage 10 carousel, but your unique pick options are guaranteed to include Kecleon."
+			"description": "You cannot move on the stage 10 carousel, but your Unique pick options are guaranteed to include Kecleon."
 		},
 		"AZURE_FLUTE": {
 			"name": "Azure Flute",
-			"description": "You cannot move on the stage 20 carousel, but your legendary pick options are guaranteed to include Arceus."
+			"description": "You cannot move on the stage 20 carousel, but your Legendary pick options are guaranteed to include Arceus."
 		},
 		"ADDITIONAL_RETHINK_II": {
 			"name": "Additional Rethink II",
@@ -5802,7 +5802,7 @@
 		},
 		"EMERALD_ORB": {
 			"name": "Emerald Orb",
-			"description": "Gain a GREEN_ORB. Your GREEN_ORB healing has 2 RANGE."
+			"description": "Gain a GREEN_ORB. Your GREEN_ORB heals in a 2-tile radius."
 		},
 		"SAPPHIRE_ORB": {
 			"name": "Sapphire Orb",
@@ -5810,7 +5810,7 @@
 		},
 		"RUBY_ORB": {
 			"name": "Ruby Orb",
-			"description": "Gain a RED_ORB. Your RED_ORB converts 50% of attack damage to TRUE damage against BURN enemies, instead of 25%."
+			"description": "Gain a RED_ORB. Your RED_ORB converts 50% of attack damage to TRUE against BURN enemies, instead of 25%."
 		},
 		"LUCKY_DICE_BLESSING": {
 			"name": "Lucky Ward",

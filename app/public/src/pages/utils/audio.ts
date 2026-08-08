@@ -6,6 +6,7 @@ import { preference, subscribeToPreferences } from "../../preferences"
 
 export const SOUNDS = {
   BLESSING: "blessing_sound.ogg",
+  BLESSING_FLIP: "blessing_flip.ogg",
   BUTTON_CLICK: "buttonclick.ogg",
   BUTTON_HOVER: "buttonhover.ogg",
   CAROUSEL_UNLOCK: "carouselunlock.ogg",

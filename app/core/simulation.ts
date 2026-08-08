@@ -3462,6 +3462,15 @@ export default class Simulation extends Schema implements ISimulation {
       [EffectEnum.CURSE_OF_TORMENT]: (p) => p.status.curseTorment,
       [EffectEnum.CURSE_OF_FATE]: (p) => p.status.curseFate
     }
+    const cursingPlayer =
+      opponentTeamNumber === Team.RED_TEAM ? this.bluePlayer : this.redPlayer
+    const maxTargets = cursingPlayer?.blessings?.includes(Blessing.CURSE_OF_TWO)
+      ? 2
+      : 1
+    const activeTargets = [...opponentTeam.values()].filter(
+      (pokemon) => pokemon.hp > 0 && isCursed[effect]?.(pokemon) === true
+    ).length
+    if (activeTargets >= maxTargets) return
     const opponentsCursable = (
       shuffleArray([...opponentTeam.values()]).filter(
         (p) => p.hp > 0
@@ -3537,8 +3546,6 @@ export default class Simulation extends Schema implements ISimulation {
 
     /* CURSE_OF_TWO blessing: curse a second enemy. The pass counter bounds the
        recursion, and the already cursed filter above picks a different target */
-    const cursingPlayer =
-      opponentTeamNumber === Team.RED_TEAM ? this.bluePlayer : this.redPlayer
     if (
       pass === 1 &&
       cursingPlayer?.blessings?.includes(Blessing.CURSE_OF_TWO)

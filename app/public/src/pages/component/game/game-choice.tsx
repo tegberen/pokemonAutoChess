@@ -231,7 +231,7 @@ export default function GameChoice() {
                 disabled={choice.rerollableSlots[index] !== true}
                 onClick={(event) => {
                   event.stopPropagation()
-                  playSound(SOUNDS.BUTTON_CLICK)
+                  playSound(SOUNDS.BLESSING_FLIP)
                   rerollChoice(choice.id, index)
                 }}
               >

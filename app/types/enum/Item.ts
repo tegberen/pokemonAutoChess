@@ -507,6 +507,7 @@ export const TownItems = [
 export const SpecialItems: Item[] = [
   Item.PRISON_BOTTLE,
   Item.RELIC_STATUE,
+  Item.SYNCHRO_MASHINE,
   ...TownItems,
   Item.COIN,
   Item.NUGGET,

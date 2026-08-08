@@ -25,6 +25,7 @@ export default function Wiki({ inGame = false }: { inGame: boolean }) {
   const tabKeys = [
     ...(inGame ? [] : ["faq", "tutorials"]),
     "double-up",
+    "blessings",
     "pokemon",
     "ability",
     "awakening",
