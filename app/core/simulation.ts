@@ -2909,11 +2909,13 @@ export default class Simulation extends Schema implements ISimulation {
      single fight, so the Effects tab can show the record and the quest completes
      once it passes the target */
   checkCombatQuestThresholds() {
-    for (const [player, team] of [
+    const sides: [Player | undefined, MapSchema<PokemonEntity>][] = [
       [this.bluePlayer, this.blueTeam],
-      [this.bluePartnerPlayer, this.blueTeam],
-      [this.redPlayer, this.redTeam]
-    ] as const) {
+      [this.bluePartnerPlayer, this.blueTeam]
+    ]
+    // the red side of a ghost battle is a copy of a player fighting elsewhere
+    if (!this.isGhostBattle) sides.push([this.redPlayer, this.redTeam])
+    for (const [player, team] of sides) {
       if (!player?.blessings?.length) continue
       const wantsCrit = player.blessings.includes(Blessing.QUEST_CRIT)
       const wantsAbsorb = player.blessings.includes(Blessing.QUEST_ABSORB)

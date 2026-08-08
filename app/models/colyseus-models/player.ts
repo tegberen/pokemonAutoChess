@@ -7,6 +7,7 @@ import {
   SynergyTiersThresholds
 } from "../../config"
 import type { ScribbleShapeType } from "../../config/game/scribble-shapes"
+import { getAltFormForPlayer } from "../../config/game/pokemons"
 import { CollectionUtils } from "../../core/collection"
 import { getAvailableEmotions } from "../precomputed/precomputed-emotions"
 import { ScribbleShape } from "./scribble-shape"
@@ -484,8 +485,9 @@ export default class Player extends Schema implements IPlayer {
     )
     const benchX = getFirstAvailablePositionInBench(this.board)
     if (candidates.length > 0 && benchX !== null) {
+      // alt forms are their own family: the wrong Floette colour never merges
       const pokemon = PokemonFactory.createPokemonFromName(
-        pickRandomIn(candidates),
+        getAltFormForPlayer(pickRandomIn(candidates), this),
         this
       )
       pokemon.positionX = benchX

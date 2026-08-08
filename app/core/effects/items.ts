@@ -1032,8 +1032,11 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
         attacker.player.addMoney(1, true, attacker)
         attacker.count.moneyCount += 1
         attacker.count.amuletCoinCount += 1
-        // QUEST_PILLAGE counts only gold this coin made, 1 per kill
-        attacker.player.advanceBlessingQuest(Blessing.QUEST_PILLAGE)
+        /* QUEST_PILLAGE counts only gold this coin made, 1 per kill: addMoney
+           pays nothing for a ghost copy, so it must not count there either */
+        if (!attacker.isGhostOpponent) {
+          attacker.player.advanceBlessingQuest(Blessing.QUEST_PILLAGE)
+        }
       }
     })
   ],

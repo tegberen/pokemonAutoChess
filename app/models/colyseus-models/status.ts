@@ -1129,8 +1129,11 @@ export default class Status extends Schema implements IStatus {
   }
 
   triggerResurrection(pokemon: PokemonEntity, board: Board) {
-    // QUEST_REVIVE counts real resurrections only, not the Fossil self-revive
-    pokemon.player?.advanceBlessingQuest(Blessing.QUEST_REVIVE)
+    // QUEST_REVIVE counts real resurrections only, not the Fossil self-revive,
+    // and not the ones a ghost copy racks up in someone else's fight
+    if (!pokemon.isGhostOpponent) {
+      pokemon.player?.advanceBlessingQuest(Blessing.QUEST_REVIVE)
+    }
     this.resurrection = false
     this.resurrecting = true
     this.resurrectingCooldown = 2000

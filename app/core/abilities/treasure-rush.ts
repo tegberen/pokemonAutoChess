@@ -19,7 +19,12 @@ export class TreasureRushStrategy extends AbilityStrategy {
     if (pokemon.player && pokemon.player.money >= goldCost) {
       pokemon.player.addMoney(-goldCost, false, pokemon)
       pokemon.addAttack(atkGain, pokemon, 0, false, true)
-      if (pokemon.heroBlessings?.has(Blessing.PLUNDER)) {
+      /* addMoney pays nothing for a ghost copy, so counting its casts here
+         would refund gold the player never actually spent */
+      if (
+        pokemon.heroBlessings?.has(Blessing.PLUNDER) &&
+        !pokemon.isGhostOpponent
+      ) {
         pokemon.player.plunderGoldSpentThisFight += goldCost
       }
     }

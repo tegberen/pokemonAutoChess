@@ -180,7 +180,7 @@ function giftPokemonOfRarityAndStars(
   if (freeCellX === null) return false
 
   const pokemon = PokemonFactory.createPokemonFromName(
-    pickRandomIn(candidates),
+    getAltFormForPlayer(pickRandomIn(candidates), player),
     player
   )
   pokemon.positionX = freeCellX
@@ -220,10 +220,21 @@ function scheduleBlessingGrant(
   value?: number
 ) {
   stages.forEach((stage) => {
-    if (stage <= state.stageLevel) {
-      blessingScheduledEffectService[blessing]?.(player, state, value)
-    } else {
+    if (stage > state.stageLevel) {
       player.scheduledBlessingGrants.push({ stage, blessing, value })
+      return
+    }
+    const granted = blessingScheduledEffectService[blessing]?.(
+      player,
+      state,
+      value
+    )
+    if (granted === false) {
+      player.scheduledBlessingGrants.push({
+        stage: state.stageLevel + 1,
+        blessing,
+        value
+      })
     }
   })
 }
@@ -239,9 +250,21 @@ export function applyScheduledBlessingGrants(player: Player, state: GameState) {
   player.scheduledBlessingGrants = player.scheduledBlessingGrants.filter(
     (grant) => grant.stage > state.stageLevel
   )
-  dueGrants.forEach((grant) =>
-    blessingScheduledEffectService[grant.blessing]?.(player, state, grant.value)
-  )
+  dueGrants.forEach((grant) => {
+    const granted = blessingScheduledEffectService[grant.blessing]?.(
+      player,
+      state,
+      grant.value
+    )
+    /* a gift that could not land on a full bench is owed, not forfeited: every
+       scheduled blessing promises its reward outright */
+    if (granted === false) {
+      player.scheduledBlessingGrants.push({
+        ...grant,
+        stage: state.stageLevel + 1
+      })
+    }
+  })
 }
 
 function grantSynergyAwareItem(player: Player, item: Item) {
@@ -541,9 +564,10 @@ function pickSongBlessing(
   return true
 }
 
-function grantSongReinforcement(player: Player, blessing: Blessing) {
+function grantSongReinforcement(player: Player, blessing: Blessing): boolean {
   const song = SongBlessingContent[blessing]
-  if (song) giftPokemonIfBenchHasRoom(player, song.reinforcement)
+  if (!song) return true
+  return giftPokemonIfBenchHasRoom(player, song.reinforcement)
 }
 
 function giftBabiesUnderCost(
@@ -575,7 +599,10 @@ function giftBabiesUnderCost(
 function giftPokemonIfBenchHasRoom(player: Player, pkm: Pkm): boolean {
   const freeCellX = getFirstAvailablePositionInBench(player.board)
   if (freeCellX === null) return false
-  const pokemon = PokemonFactory.createPokemonFromName(pkm, player)
+  const pokemon = PokemonFactory.createPokemonFromName(
+    getAltFormForPlayer(pkm, player),
+    player
+  )
   pokemon.positionX = freeCellX
   pokemon.positionY = 0
   player.board.set(pokemon.id, pokemon)
@@ -633,7 +660,9 @@ function applyAllForOne(
   room?: GameRoom
 ): boolean {
   const sacrificed = schemaValues(player.board).filter(
-    (pokemon) => pokemon.rarity !== Rarity.UNIQUE
+    // a locked manifestation is not the player's to spend yet
+    (pokemon) =>
+      pokemon.rarity !== Rarity.UNIQUE && pokemon.manifestationLocked === false
   )
   if (sacrificed.length === 0) return false
   const maxHP = Math.round(
@@ -673,7 +702,9 @@ function applyRainbowKey(
     if (
       pokemon.rarity === Rarity.UNIQUE ||
       pokemon.rarity === Rarity.HATCH ||
-      pokemon.action === PokemonActionState.EXPLORING
+      pokemon.action === PokemonActionState.EXPLORING ||
+      // transforming it would hand back an unlocked unit before stage 20
+      pokemon.manifestationLocked
     )
       return []
     const nextRarity = RAINBOW_KEY_NEXT_RARITY[pokemon.rarity]
@@ -900,16 +931,16 @@ export function grantRegionalTreasuresOnRegionChange(player: Player) {
 
 /* STARTER_CHOICE copies are minted fresh rather than drawn from the pool, so
    nine of them never starve the lobby of that common line */
-export function giftStarterChoiceCopy(player: Player) {
-  if (!player.starterChoicePokemon) return
-  giftPokemonIfBenchHasRoom(player, player.starterChoicePokemon)
+// false only when a copy is still owed but could not land on a full bench
+export function giftStarterChoiceCopy(player: Player): boolean {
+  if (!player.starterChoicePokemon) return true
+  return giftPokemonIfBenchHasRoom(player, player.starterChoicePokemon)
 }
 
 /* called at every round start for the recurring halves of chunk E */
 export function applyRecurringBlessingGrants(player: Player, state: GameState) {
-  if (player.starterChoiceRoundsLeft > 0) {
+  if (player.starterChoiceRoundsLeft > 0 && giftStarterChoiceCopy(player)) {
     player.starterChoiceRoundsLeft -= 1
-    giftStarterChoiceCopy(player)
   }
 
   const singularityStages = player.blessings?.includes(Blessing.SINGULARITY_II)
@@ -1355,7 +1386,8 @@ export const blessingScheduledEffectService: {
     player: Player,
     state: GameState,
     value?: number
-  ) => void
+    // false means the grant could not land and is re-queued for the next stage
+  ) => void | boolean
 } = {
   [Blessing.HARD_COMMIT]: (player, state, value) => {
     const gem = SynergyGems[value ?? 0]
@@ -1382,21 +1414,17 @@ export const blessingScheduledEffectService: {
   [Blessing.ITEMFINDER_III]: (player) =>
     player.items.push(pickRandomIn(ItemComponents)),
 
-  [Blessing.LEGENDARY_GAMBIT]: (player) => {
-    giftLegendaryMatchingTopSynergy(player)
-  },
+  [Blessing.LEGENDARY_GAMBIT]: (player) =>
+    giftLegendaryMatchingTopSynergy(player),
 
   [Blessing.DEEP_INVESTMENTS]: (player, _state, value) => {
     player.addMoney(value ?? 0, true, null)
   },
 
-  [Blessing.TRANSFORM]: (player) => {
-    giftPokemonIfBenchHasRoom(player, Pkm.DITTO)
-  },
+  [Blessing.TRANSFORM]: (player) =>
+    giftPokemonIfBenchHasRoom(player, Pkm.DITTO),
 
-  [Blessing.BABYLESS]: (player) => {
-    giveRandomEgg(player, true)
-  },
+  [Blessing.BABYLESS]: (player) => giveRandomEgg(player, true) != null,
 
   [Blessing.HEATRANS_SONG]: (player) =>
     grantSongReinforcement(player, Blessing.HEATRANS_SONG),
