@@ -9,6 +9,7 @@ import {
   useAppSelector
 } from "../../../hooks"
 import { levelClick, skipStage } from "../../../network"
+import { playSound, SOUNDS } from "../../utils/audio"
 import { addIconsToDescription } from "../../utils/descriptions"
 import { Money } from "../icons/money"
 
@@ -65,7 +66,9 @@ export default function GameExperience() {
             : t("buy_xp_tooltip", { cost: levelUpCost })
         }
         disabled={wiseSpending}
+        data-no-click-sound=""
         onClick={() => {
+          if (canLevelup) playSound(SOUNDS.GOLD_TO_LEVEL)
           levelClick()
         }}
       >

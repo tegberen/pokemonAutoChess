@@ -9,6 +9,17 @@ import { playSound, SOUNDS } from "../../utils/audio"
 import { addIconsToDescription } from "../../utils/descriptions"
 import "./game-seed-bag.css"
 
+const SEEDS_BEFORE_BAG_APPEARS = 2
+
+/* the deduped list cannot see a second copy of a seed you already hold, so the
+   new-seed alert counts every seed item instead */
+function useSeedCount(): number {
+  const player = useAppSelector(selectConnectedPlayer)
+  if (!player?.items) return 0
+  return schemaValues(player.items).filter((i): i is Item => isIn(Seeds, i))
+    .length
+}
+
 function useOwnedSeeds(): Item[] {
   const player = useAppSelector(selectConnectedPlayer)
   if (!player?.items) return []
@@ -73,9 +84,21 @@ export function GameSeedBag() {
 
 export function GameSeedBagIcon() {
   const { t } = useTranslation()
-  const ownedSeeds = useOwnedSeeds()
+  const seedCount = useSeedCount()
   const [open, setOpen] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
+  const [hasNewSeed, setHasNewSeed] = useState(false)
+  // bumped on every gain so remounting the sweep replays its animation
+  const [shineKey, setShineKey] = useState(0)
+  const previousSeedCount = useRef(seedCount)
+
+  useEffect(() => {
+    if (seedCount > previousSeedCount.current) {
+      setHasNewSeed(true)
+      setShineKey((key) => key + 1)
+    }
+    previousSeedCount.current = seedCount
+  }, [seedCount])
 
   useEffect(() => {
     if (!open) return
@@ -93,16 +116,25 @@ export function GameSeedBagIcon() {
     }
   }, [open])
 
-  if (ownedSeeds.length === 0) return null
+  /* a single seed is held and used directly, so the bag only earns its place in
+     the shop row once there is a second one to choose between */
+  if (seedCount < SEEDS_BEFORE_BAG_APPEARS) return null
 
   return (
     <div className="game-seed-bag-icon" ref={ref}>
       <button
         className="bubbly blue game-seed-bag-button"
         title={t("seed_bag.title")}
-        onClick={() => setOpen((o) => !o)}
+        onClick={() => {
+          setHasNewSeed(false)
+          setOpen((o) => !o)
+        }}
       >
         <img src="assets/icons/SEED_BAG.svg" draggable="false" alt="Seed Bag" />
+        {shineKey > 0 && (
+          <span key={shineKey} className="game-seed-bag-shine" />
+        )}
+        {hasNewSeed && <span className="game-seed-bag-new">!</span>}
       </button>
       {open && (
         <div className="game-seed-bag-popover">

@@ -31,18 +31,76 @@
   align-self: center;
 }
 
+/* a shop slot's height, but square, so the gap around the bag is even on all
+   four sides. The padding matches .bubbly's 6px inset bevel on the right and
+   bottom, so the icon centres in the lit face rather than in the whole box */
 .game-seed-bag-button {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 5.5em;
-  height: 5.5em;
-  padding: 0;
+  width: 6vw;
+  height: 6vw;
+  padding: 0 6px 6px 0;
 }
 
-.game-seed-bag-button img {
-  width: 2.5em;
-  height: 2.5em;
+/* a light sweep across the face on every seed gained, remounted to replay */
+.game-seed-bag-shine {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  border-radius: inherit;
+}
+
+.game-seed-bag-shine::after {
+  content: "";
+  position: absolute;
+  inset: -20% -60%;
+  background: linear-gradient(
+    105deg,
+    transparent 38%,
+    rgba(255, 255, 255, 0.15) 46%,
+    rgba(255, 255, 255, 0.65) 50%,
+    rgba(255, 255, 255, 0.15) 54%,
+    transparent 62%
+  );
+  /* forwards, or the band snaps back to centre and sits there once it ends */
+  animation: game-seed-bag-shine 900ms ease-out forwards;
+}
+
+@keyframes game-seed-bag-shine {
+  from {
+    transform: translateX(-60%);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(60%);
+    opacity: 0;
+  }
+}
+
+/* stays until the bag is opened, so a gain during a fight is not missed */
+.game-seed-bag-new {
+  position: absolute;
+  top: -0.35em;
+  right: 0.1em;
+  min-width: 1.3em;
+  padding: 0 0.25em;
+  border: var(--border-thin);
+  border-radius: 50%;
+  background-color: var(--color-bg-red, #e46969);
+  color: #fff;
+  font-size: 1.1em;
+  line-height: 1.3;
+  text-shadow: 1px 1px 2px #000;
+}
+
+/* the class is repeated to outrank .bubbly > img:first-child, which pins icons
+   to 1.4em tall for the icon-beside-label layout the other bubbly buttons use */
+.bubbly.game-seed-bag-button > img:first-child {
+  width: 4.2vw;
+  height: 4.2vw;
+  margin: 0;
   display: block;
 }
 

@@ -20,6 +20,7 @@ export const SOUNDS = {
   FINISH6: "finish6.ogg",
   FINISH7: "finish7.ogg",
   FINISH8: "finish8.ogg",
+  GOLD_TO_LEVEL: "gold_to_level_sound.ogg",
   JOIN_ROOM: "joinroom.ogg",
   LEAVE_ROOM: "leaveroom.ogg",
   REFRESH: "refresh.ogg",
@@ -54,10 +55,10 @@ function setupSounds() {
     }
   })
   document.body.addEventListener("click", (e) => {
-    if (
-      e.target instanceof HTMLButtonElement ||
-      (e.target instanceof HTMLElement && e.target.closest("button") != null)
-    ) {
+    const button =
+      e.target instanceof HTMLElement ? e.target.closest("button") : null
+    // data-no-click-sound opts a button out when it plays a sound of its own
+    if (button && button.dataset.noClickSound == null) {
       playSound(SOUNDS.BUTTON_CLICK)
     }
   })
