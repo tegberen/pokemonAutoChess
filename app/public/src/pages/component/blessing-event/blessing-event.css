@@ -1,14 +1,56 @@
-.blessing-event-banner.my-box {
+/* Shared shell for the header's rule banners. The Wish Festival and the active
+   Smeargle's Scribble rule are alternatives in the same slot, so they share one
+   geometry and differ only in theme, and the header keeps its height either way. */
+.rule-banner.my-box {
   display: flex;
   align-items: center;
   /* padding, gap and text are all em-based, so one font-size scales the banner */
   font-size: 0.9em;
   gap: 1em;
   padding: 0.5em 0.9em;
-  margin-bottom: 0.5em;
+  margin-bottom: 1.25em;
+  min-height: 92px;
   position: relative;
   overflow: hidden;
-  /* fixed night sky, independent of the active theme */
+}
+
+/* preparation-menu styles header img and p directly, so these need to outrank it */
+.rule-banner.my-box > img.rule-banner-icon {
+  /* the only px size in the banner, so it does not follow the font-size above */
+  width: 64px;
+  height: 64px;
+  flex: none;
+  margin: 0;
+}
+
+.rule-banner.my-box .rule-banner-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.rule-banner.my-box .rule-banner-text p {
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  background: none;
+  border: none;
+  text-align: left;
+}
+
+.rule-banner h3 {
+  margin: 0 0 0.3em !important;
+  font-size: 1.35em;
+  letter-spacing: 0.04em;
+}
+
+.rule-banner p {
+  margin: 0;
+  font-size: 1.05em;
+  line-height: 1.4;
+}
+
+/* fixed night sky, independent of the active theme */
+.blessing-event-banner.my-box {
   background-color: #17132f;
   color: #ffffff;
 }
@@ -19,12 +61,13 @@
   position: absolute;
   inset: -30%;
   pointer-events: none;
+  /* night blue into violet into magenta: no warm band, the drift stays cosmic */
   background-image: linear-gradient(
     102deg,
     transparent 0%,
     #5f8fe866 20%,
     #8d70d873 44%,
-    #fbcc7061 68%,
+    #e070c861 68%,
     transparent 100%
   );
   background-size: 220% 140%;
@@ -82,49 +125,14 @@
 .blessing-event-banner h3 {
   color: #ffffff;
   text-shadow: 2px 2px 0 #05090f;
-  letter-spacing: 0.04em;
 }
 
-/* preparation-menu styles header img and p directly, so these need to outrank it */
-.blessing-event-banner.my-box > img.blessing-event-jirachi {
-  /* the only px size in the banner, so it does not follow the font-size above */
-  width: 85px;
-  height: 85px;
-  flex: none;
-  margin: 0;
-}
-
-.blessing-event-banner.my-box .blessing-event-text {
-  flex: 1;
-  min-width: 0;
-}
-
-.blessing-event-banner.my-box .blessing-event-text p {
-  max-width: none;
-  margin: 0;
-  padding: 0;
-  background: none;
-  text-align: left;
+.blessing-event-banner.my-box .rule-banner-text p {
   color: #ffffff;
   text-shadow: 1px 1px 2px #05090f;
 }
 
-.blessing-event-banner h3,
-.blessing-event-banner p {
-  margin: 0;
-}
-
-.blessing-event-banner h3 {
-  font-size: 1.35em;
-  margin-bottom: 0.3em !important;
-}
-
-.blessing-event-banner p {
-  font-size: 1.05em;
-  line-height: 1.4;
-}
-
-.blessing-event-banner.my-box .blessing-event-text .blessing-event-remaining {
+.blessing-event-banner.my-box .rule-banner-text .blessing-event-remaining {
   display: flex;
   align-items: center;
   gap: 0.4em;

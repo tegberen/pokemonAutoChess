@@ -15,7 +15,8 @@
   gap: 0 0.5em;
   grid-template-areas:
     "top elo syn team"
-    "date date items team";
+    "date date items team"
+    ". . bless team";
   grid-template-columns: 8ch 7ch 160px 1fr;
   background-color: var(--color-bg-secondary);
   margin: 0 0 0.5em 0;
@@ -85,12 +86,27 @@
   gap: 2px;
 }
 
+.game-history .player-blessings {
+  grid-area: bless;
+  display: flex;
+  flex-wrap: wrap;
+  justify-self: center;
+  gap: 2px;
+}
+
+.game-history .player-blessings .blessing-panel-icon {
+  width: 32px;
+  height: 32px;
+  cursor: help;
+}
+
 @media (width <= 640px) {
   .game-history.my-box {
     grid-template-areas:
       "top elo date"
       "syn syn syn"
       "items items items"
+      "bless bless bless"
       "team team team";
     grid-template-columns: 5ch 7ch 1fr;
   }

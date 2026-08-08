@@ -33,14 +33,14 @@ export function BlessingEventBanner() {
   const { active, end, now } = useBlessingEventWindow()
   if (!active || !end) return null
   return (
-    <div className="blessing-event-banner my-box">
+    <div className="rule-banner blessing-event-banner my-box">
       <img
-        className="blessing-event-jirachi"
+        className="rule-banner-icon"
         src="assets/ui/game_modes/blessing_event.png"
         alt=""
         aria-hidden="true"
       />
-      <div className="blessing-event-text">
+      <div className="rule-banner-text">
         <h3>{t("blessing_event_title")}</h3>
         <p>{t("blessing_event_description")}</p>
         <p className="blessing-event-remaining">

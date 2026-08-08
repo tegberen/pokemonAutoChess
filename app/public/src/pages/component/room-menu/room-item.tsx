@@ -81,6 +81,14 @@ export default function RoomItem(props: {
 
   return (
     <div className="room-item my-box">
+      {props.room.metadata?.blessingsEnabled && (
+        <img
+          alt={t("blessings")}
+          title={t("blessing_event_title")}
+          className="blessings icon"
+          src="/assets/icons/blessing_stats.svg"
+        />
+      )}
       <span className="room-name" title={title}>
         {formatMinMaxRanks(
           props.room.metadata?.minRank as EloRank | null,

@@ -491,7 +491,7 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
         attackType === AttackType.SPECIAL &&
         this.status.blinded &&
         attacker &&
-        attacker.critChance >= 100 &&
+        crit &&
         attacker.player?.blessings?.includes(Blessing.ABSOLUTE_DARKNESS)
       ) {
         const convertedDamage = specialDamage
@@ -1553,10 +1553,13 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
     ) {
       const stacksToSpread = this.status.poisonStacks
       const poisonDuration = this.status.poisonCooldown
+      this.broadcastAbility({ skill: "TOXIC_BURST" })
       board
         .getAdjacentCells(this.positionX, this.positionY)
         .forEach((cell) => {
           if (cell.value && cell.value.team === this.team) {
+            // once per unit reached, not once per stack applied to it
+            cell.value.broadcastAbility({ skill: "TOXIC_BURST_SPREAD" })
             for (let stack = 0; stack < stacksToSpread; stack++) {
               cell.value.status.triggerPoison(
                 poisonDuration,

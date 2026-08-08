@@ -51,6 +51,9 @@ export default function PreparationMenu() {
     (state) => state.preparation.scribbleExtended
   )
   const isWhimsyWeekend = useAppSelector((state) => state.preparation.whimsy)
+  const blessingsEnabled = useAppSelector(
+    (state) => state.preparation.blessingsEnabled
+  )
 
   const isReady = users.find((user) => user.uid === uid)?.ready
   const nbUsersReady = users.filter((user) => user.ready).length
@@ -115,36 +118,35 @@ export default function PreparationMenu() {
         </>
       )}
 
-      <BlessingEventBanner />
-
       {(gameMode === GameMode.SCRIBBLE || specialGameRule != null) && (
-        <p>
-          <GameModeIcon gameMode={gameMode} />
-          {specialGameRule != null ? (
-            <>
-              <b>{t(`scribble.${specialGameRule}`)}</b>:{" "}
-              {addIconsToDescription(
-                t(`scribble_description.${specialGameRule}`, {
-                  type: "(random Synergy)"
-                })
-              )}
-            </>
-          ) : (
-            t("smeargle_scribble_hint")
-          )}
-        </p>
+        <div className="rule-banner scribble-rule-banner my-box">
+          <img
+            className="rule-banner-icon"
+            src="assets/ui/game_modes/scribble.png"
+            alt=""
+            aria-hidden="true"
+          />
+          <div className="rule-banner-text">
+            <h3>
+              {specialGameRule != null
+                ? t(`scribble.${specialGameRule}`)
+                : t("game_modes.SCRIBBLE")}
+            </h3>
+            <p>
+              {specialGameRule != null
+                ? addIconsToDescription(
+                    t(`scribble_description.${specialGameRule}`, {
+                      type: "(random Synergy)"
+                    })
+                  )
+                : t("smeargle_scribble_hint")}
+            </p>
+          </div>
+        </div>
       )}
 
-      {(gameMode === GameMode.CUSTOM_LOBBY ||
-        gameMode === GameMode.DOUBLE_UP ||
-        gameMode === GameMode.SCRIBBLE) && (
-        <p>
-          <img src="assets/icons/HP.png" alt="HP" />
-          {scribbleExtended
-            ? t("scribble_extended_on")
-            : t("scribble_extended_off")}
-        </p>
-      )}
+      {/* the global event can be running while this room has blessings off */}
+      {blessingsEnabled && <BlessingEventBanner />}
 
       {gameMode === GameMode.CLASSIC && (
         <p>
@@ -207,8 +209,28 @@ export default function PreparationMenu() {
     <div className="preparation-menu my-container is-centered custom-bg">
       <header>
         <h1>
+          {blessingsEnabled && (
+            <img
+              alt={t("blessings")}
+              title={t("blessing_event_title")}
+              className="preparation-header-icon"
+              src="/assets/icons/blessing_stats.svg"
+            />
+          )}
           {formatMinMaxRanks(minRank, maxRank)} {name}: {users.length}/
           {nbExpectedPlayers}
+          <span
+            className="hp-badge"
+            title={
+              scribbleExtended
+                ? t("scribble_extended_on")
+                : t("scribble_extended_off")
+            }
+          >
+            {scribbleExtended
+              ? t("scribble_extended_on_short")
+              : t("scribble_extended_off_short")}
+          </span>
         </h1>
         {headerMessage}
       </header>

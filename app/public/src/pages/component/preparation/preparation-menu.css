@@ -13,19 +13,47 @@
   text-shadow: 2px 2px 0 var(--color-shadow);
 }
 
+/* one centred row so the icon, the title and the badge share a baseline and an
+   even gap instead of each carrying its own margin */
+.preparation-menu header h1 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4em;
+}
+
+/* drop-shadow matches the title's text-shadow so the icon reads as part of it */
+.preparation-menu h1 img.preparation-header-icon {
+  width: 1.2em;
+  height: 1.2em;
+  margin: 0;
+  filter: drop-shadow(2px 2px 0 var(--color-shadow));
+}
+
+.preparation-menu h1 .hp-badge {
+  padding: 0.2em 0.6em;
+  border: var(--border-thin);
+  border-radius: 0.7em;
+  background-color: var(--color-bg-secondary);
+  font-size: 0.5em;
+  text-shadow: 2px 2px 0 var(--color-shadow);
+}
+
 .preparation-menu p,
 .preparation-menu label {
   color: var(--color-fg-primary);
   text-shadow: 2px 2px 2px black;
 }
 
+/* same chip treatment as the header's HP badge, so the two read as one family */
 .preparation-menu header p {
   text-align: center;
   margin: 0 auto 0.5em;
-  padding: 0.25em 0.6em;
+  padding: 0.25em 0.7em;
   max-width: fit-content;
-  background: rgba(0, 0, 0, 0.2);
-  border-radius: 8px;
+  border: var(--border-thin);
+  border-radius: 0.7em;
+  background-color: var(--color-bg-secondary);
   text-shadow: none;
 }
 

@@ -86,6 +86,10 @@ export default class PreparationRoom extends Room<{ state: PreparationState }> {
     await this.setMetadata(<IPreparationMetadata>{ scribbleExtended })
   }
 
+  async setBlessingsEnabled(blessingsEnabled: boolean) {
+    await this.setMetadata(<IPreparationMetadata>{ blessingsEnabled })
+  }
+
   onCreate(options: {
     ownerId?: string
     roomName: string
@@ -129,7 +133,8 @@ export default class PreparationRoom extends Room<{ state: PreparationState }> {
       ),
       type: "preparation",
       scribbleExtended: false,
-      whimsy: options.whimsy ?? false
+      whimsy: options.whimsy ?? false,
+      blessingsEnabled: this.state.blessingsEnabled
     })
     this.maxClients = 8
     if (options.gameMode === GameMode.TOURNAMENT) {

@@ -1218,7 +1218,8 @@ export default class GameRoom extends Room<{ state: GameState }> {
           synergies: synergiesMap,
           gameMode: this.state.gameMode,
           whimsy: this.state.whimsy,
-          regions: player.regions
+          regions: player.regions,
+          blessings: player.blessings ?? []
         })
       }
 

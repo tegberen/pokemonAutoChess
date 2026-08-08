@@ -1,5 +1,6 @@
 import { ArraySchema, Schema, type } from "@colyseus/schema"
 import { Emotion } from "../../types"
+import type { Blessing } from "../../types/enum/Blessing"
 import { GameMode } from "../../types/enum/Game"
 import type { Item } from "../../types/enum/Item"
 import { type Pkm, PkmIndex } from "../../types/enum/Pokemon"
@@ -34,6 +35,7 @@ export interface IGameRecord {
   gameMode: GameMode
   whimsy?: boolean
   unholdableItems: Item[]
+  blessings: Blessing[]
 }
 
 export class GameRecord extends Schema implements IGameRecord {
@@ -41,6 +43,7 @@ export class GameRecord extends Schema implements IGameRecord {
   @type("uint8") rank: number
   @type([PokemonRecord]) pokemons = new ArraySchema<IPokemonRecord>()
   @type(["string"]) unholdableItems = new ArraySchema<Item>()
+  @type(["string"]) blessings = new ArraySchema<Blessing>()
   @type("uint16") elo: number
   @type("string") gameMode: GameMode = GameMode.CUSTOM_LOBBY
   @type("boolean") whimsy = false
@@ -52,7 +55,8 @@ export class GameRecord extends Schema implements IGameRecord {
     pokemons: any[],
     gameMode: GameMode,
     unholdableItems: Item[],
-    whimsy = false
+    whimsy = false,
+    blessings: Blessing[] = []
   ) {
     super()
     this.time = time
@@ -60,7 +64,8 @@ export class GameRecord extends Schema implements IGameRecord {
     this.elo = elo
     this.gameMode = gameMode
     this.whimsy = whimsy
-    this.unholdableItems.push(...unholdableItems)
+    this.unholdableItems.push(...(unholdableItems ?? []))
+    this.blessings.push(...(blessings ?? []))
 
     pokemons.forEach((pokemon) => {
       this.pokemons.push(new PokemonRecord(pokemon))

@@ -323,23 +323,23 @@ export const BLESSING_OPTIONS_PER_SELECTION = 3
 
 export const BLESSING_REROLLS_PER_OPTION = 1
 
-export const VITAMINS_ATTACK = 1
-export const VITAMINS_ABILITY_POWER = 5
-export const VITAMINS_SPEED = 5
+export const VITAMINS_ATTACK = 2
+export const VITAMINS_ABILITY_POWER = 10
+export const VITAMINS_SPEED = 10
 export const DRAGON_FANG_ABILITY_POWER_PER_STAR = 2
 export const QUIET_STRENGTH_LOW_LIFE_THRESHOLD = 25
-export const RIVALRY_ATTACK_ON_OWN_SIDE = 2
-export const RIVALRY_MAX_HP_ON_ENEMY_SIDE = 10
+export const RIVALRY_ATTACK_ON_OWN_SIDE = 1
+export const RIVALRY_MAX_HP_ON_ENEMY_SIDE = 5
 export const SHINY_SAFEGUARD_HP_THRESHOLD = 0.5
 export const SHINY_SAFEGUARD_PROTECT_DURATION = 1500
 export const CONTEMPT_DAMAGE_MULTIPLIER = 1.5
 export const POTENTIAL_ENERGY_SHIELD = { I: 25, II: 40 }
 export const POTENTIAL_ENERGY_SPEED = { I: 5, II: 10 }
-export const MISFITS_MAX_HP = 50
-export const MISFITS_ABILITY_POWER = 50
-export const MISFITS_ATTACK = 5
-export const MISFITS_DEFENSE = 5
-export const MISFITS_SPECIAL_DEFENSE = 5
+export const MISFITS_MAX_HP = 40
+export const MISFITS_ABILITY_POWER = 40
+export const MISFITS_ATTACK = 4
+export const MISFITS_DEFENSE = 4
+export const MISFITS_SPECIAL_DEFENSE = 4
 export const BLOSSOM_FESTIVAL_MULCH_MULTIPLIER = 2
 export const BLOSSOM_FESTIVAL_CASTS_PER_RANGE_GAIN = 3
 export const NOT_THE_BEES_MAX_COMBEES = 16
@@ -397,10 +397,12 @@ export const SHAPELESS_SYNERGIES_MIN_ACTIVE = 3
 export const SHAPELESS_SYNERGIES_SPEED_RATIO = 1
 export const SHAPELESS_SYNERGIES_HP_RATIO = 0.5
 export const POLLUTED_SEA_POISON_DURATION = 3000
-export const TIDAL_SURGE_ITEMS_REQUIRED = 3
+export const TIDAL_SURGE_ITEMS_REQUIRED = 2
 export const STAR_CROSSED_SEAS_MAX_HP = 50
 export const STAR_CROSSED_SEAS_ABILITY_POWER = 25
 export const HEX_MANIAC_STATUS_DURATION = 30000
+export const ABSOLUTE_DARKNESS_BLIND_CHANCE = 0.05
+export const ABSOLUTE_DARKNESS_BLIND_DURATION = 3000
 export const EXHAUSTING_FLAME_DAMAGE_MULTIPLIER = 0.8
 export const ETERNAL_RAGE_DURATION_PER_STAR = 1000
 export const ORBITAL_STRIKE_RANGE_BONUS = 2
@@ -440,6 +442,8 @@ export const HAIL_TO_THE_KING_ABILITY_POWER = 20
 export const HAIL_TO_THE_KING_SPEED = 10
 export const HAIL_TO_THE_KING_CURSE_DELAY = 3000
 export const TRASH_TO_TREASURE_ROUNDS_BY_STAR = [5, 3, 1] as const
+export const TRASH_TO_TREASURE_TRASH_GRANTED_MIN = 1
+export const TRASH_TO_TREASURE_TRASH_GRANTED_MAX = 3
 export const GREEDY_WISH_PRISMATIC_GOLD = 10
 export const CALLED_SHOT_GOLD = 4
 export const CALLED_SHOT_STREAK = 4
@@ -509,14 +513,15 @@ export const CAROUSEL_LOCK_RETENTION_DELAY = 60000
 export const QUICK_CLAW_COMPENSATION_STAGE = 12
 
 // extra picking-phase time on a blessing selection stage, in ms
-export const BLESSING_SELECTION_EXTRA_TIME = 2000
+export const BLESSING_SELECTION_EXTRA_TIME = 2500
 
 export const QUEST_INDECISION_SYNERGIES_TARGET = 3
-export const QUEST_CRIT_POWER_TARGET = 5
+export const QUEST_CRIT_POWER_TARGET = 4
 export const QUEST_ABSORB_DAMAGE_BLOCKED_TARGET = 1300
 export const QUEST_REVIVE_TARGET = 20
 export const QUEST_PILLAGE_GOLD_TARGET = 30
-export const QUEST_EVOLVE_II_TARGET = 20
+export const QUEST_PILLAGE_CRIT_PER_GOLD = 0.5
+export const QUEST_EVOLVE_II_TARGET = 16
 
 /* quests whose questProgress counter is shown on the Effects tab icon.
    `decimals` is for the ones tracking a best-in-a-fight record rather than a

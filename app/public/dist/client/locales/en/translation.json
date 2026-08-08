@@ -4091,7 +4091,8 @@
 		"LEGIONNAIRE": "Legionnaire",
 		"FIVE_STARS": "★★★★★",
 		"WHIMSY": "Whimsy",
-		"STARRY": "Starry"
+		"STARRY": "Starry",
+		"PRIDE": "Pride"
 	},
 	"title_description": {
 		"NOVICE": "Play your first game",
@@ -4191,7 +4192,8 @@
 		"LEGIONNAIRE": "Make a Falinks formation with 8 troopers or more",
 		"FIVE_STARS": "Play with a five stars Pokémon in your team",
 		"WHIMSY": "Win a Whimsy Weekend Scribble with your partner",
-		"STARRY": "Win a game during the Wish Festival Event with a Jirachi on your board"
+		"STARRY": "Win a game during the Wish Festival Event with a Jirachi on your board",
+		"PRIDE": "Complete the Rainbow Hour Blessing Mission"
 	},
 	"weather_forecast": "Weather forecast",
 	"blessings": "Blessings",
@@ -4383,6 +4385,8 @@
 	"scribble_extended_label": "Player",
 	"scribble_extended_on": "Extended (150 HP)",
 	"scribble_extended_off": "Standard (100 HP)",
+	"scribble_extended_on_short": "Extended",
+	"scribble_extended_off_short": "Standard",
 	"scribble_extended_hint": "Choose between a Standard game (players start at 100 HP) and an Extended game (players start at 150 HP).",
 	"no_rule": "No special rule",
 	"random_rule": "Random rule",
@@ -5198,10 +5202,10 @@
 		},
 		"VITAMINS": {
 			"name": "Vitamins",
-			"description": "Your team gains 1 ATK, 5 AP and 5 SPEED."
+			"description": "At the start of the fight, your team gains 2 ATK, 10 AP and 10 SPEED."
 		},
 		"DRAGON_FANG": {
-			"name": "Dragon Fang",
+			"name": "Dragon Orb",
 			"description": "Allies gain 2 AP per STAR of the units on your board."
 		},
 		"QUIET_STRENGTH": {
@@ -5230,7 +5234,7 @@
 		},
 		"RIVALRY": {
 			"name": "Rivalry",
-			"description": "When your STRONGEST Pokémon gets a KO, it gains 2 permanent ATK if on your side of the board, or 10 permanent HP if on the enemy side of the board. If taken at stage 12, gain a RELIC_CROWN."
+			"description": "When your STRONGEST Pokémon gets a KO, it gains 1 permanent ATK if on your side of the board, or 5 permanent HP if on the enemy side of the board. If taken at stage 12, gain a RELIC_CROWN."
 		},
 		"SHINY_SAFEGUARD": {
 			"name": "Shiny Safeguard",
@@ -5366,7 +5370,7 @@
 		},
 		"SHAPELESS_SYNERGIES": {
 			"name": "Shapeless Synergies",
-			"description": "Allies with at least 3 of their synergies active gain 100% more SPEED and 50% more HP from the AMORPHOUS synergy, rounded up. Gain a Tynamo."
+			"description": "Allies with at least 3 of their synergies active, including those granted by held items, gain 100% more SPEED and 50% more HP from the AMORPHOUS synergy, rounded up. Gain a Tynamo."
 		},
 		"ABNORMALITY": {
 			"name": "Abnormality",
@@ -5402,7 +5406,7 @@
 		},
 		"TIDAL_SURGE": {
 			"name": "Tidal Surge",
-			"description": "When the tidal wave hits, ranged AQUATIC Pokémon holding 3+ items cast Hydro Pump, and melee AQUATIC Pokémon holding 3+ items cast Dive. Gain a Froakie."
+			"description": "When the tidal wave hits, ranged AQUATIC Pokémon holding 2 items cast Hydro Pump, and melee AQUATIC Pokémon holding 2 items cast Dive. Gain a Froakie."
 		},
 		"ATLANTEAN_MAGIC": {
 			"name": "Atlantean Magic",
@@ -5418,7 +5422,7 @@
 		},
 		"ABSOLUTE_DARKNESS": {
 			"name": "Absolute Darkness",
-			"description": "DARK Pokémon always crit BLINDED enemies. Allies with 100% CRIT_CHANCE convert all their damage to TRUE damage against BLINDED enemies. Gain an Impidimp."
+			"description": "DARK Pokémon have a 5% chance to inflict their target with BLINDED for 3 seconds ON_ATTACK. Allies convert all their damage to TRUE against BLINDED enemies when they crit. Gain an Impidimp."
 		},
 		"TOXIC_BURST": {
 			"name": "Toxic Burst",
@@ -5434,7 +5438,7 @@
 		},
 		"MISFITS": {
 			"name": "Misfits",
-			"description": "Allies with no active synergies gain 50 HP, 50 AP, 5 ATK, 5 DEF and 5 SPE_DEF."
+			"description": "Allies with no active synergies gain 40 HP, 40 AP, 4 ATK, 4 DEF and 4 SPE_DEF per STAR."
 		},
 		"OLIVE_GARDEN": {
 			"name": "Olive Garden",
@@ -5486,7 +5490,7 @@
 		},
 		"MIX_AND_MATCH_I": {
 			"name": "Mix and Match I",
-			"description": "gain 3 random Unique Pokémon. Your Unique Pokémon sell for 0 GOLD, and you can field at most 2 of them at a time."
+			"description": "Gain 3 random Unique Pokémon. Your Unique Pokémon sell for 0 GOLD, and you can field at most 2 of them at a time."
 		},
 		"MIX_AND_MATCH_II": {
 			"name": "Mix and Match II",
@@ -5510,7 +5514,7 @@
 		},
 		"A_NEW_FRIEND": {
 			"name": "A New Friend",
-			"description": "Gain a random Uncommon cost Pokémon. Gain another copy whenever you level up."
+			"description": "Gain a random Uncommon Pokémon. Gain another copy whenever you level up."
 		},
 		"BP_REWARDS": {
 			"name": "Battle Point Rewards",
@@ -5566,15 +5570,15 @@
 		},
 		"TRASH_TO_TREASURE": {
 			"name": "Trash to Treasure",
-			"description": "Gain a Trubbish and a Beldum. Each Beldum, Metang, or Metagross holding TRASH independently recycles it into a random Tool after 5/3/1 rounds at 1/2/3 STAR."
+			"description": "Gain a Trubbish, a Beldum and 1 to 3 TRASH. Each Beldum, Metang, or Metagross holding TRASH independently recycles it into a random Tool after 5/3/1 rounds at 1/2/3 STAR."
 		},
 		"CHARGING_MY_BUG": {
 			"name": "Charging My Bug",
-			"description": "Gain a Grubbin. Your STRONGEST Grubbin gains 1 permanent ATK when starting combat in a fully dug hole on board."
+			"description": "Gain a Grubbin. Your STRONGEST Grubbin gains 2 permanent ATK when starting combat in a fully dug hole on board."
 		},
 		"NEUROFORCE": {
 			"name": "Neuroforce",
-			"description": "The ally with the highest AP has attacks that deal SPECIAL damage and scale with AP."
+			"description": "The ally with the highest AP attacks deal SPECIAL and scale with AP."
 		},
 		"SINNOHS_COOLEST": {
 			"name": "Sinnoh's Coolest",
@@ -5606,7 +5610,7 @@
 		},
 		"BIRTHDAY_PRESENT": {
 			"name": "Friend Subscription",
-			"description": "Whenever you level up, gain a 2 STAR Pokemon and 1 GOLD. Its rarity is Common at level 4, Uncommon at 5, Rare at 6-7, Epic at 8-9, and Ultra at 10."
+			"description": "Whenever you level up, gain a 2 STAR Pokemon and 1 GOLD. Its rarity is Common at level 4-5, Uncommon at 6, Rare at 7, Epic at 8, and Ultra at 9-10."
 		},
 		"UP_IS_UP": {
 			"name": "Reinvigorate",
@@ -5650,7 +5654,7 @@
 		},
 		"QUEST_CRIT": {
 			"name": "Quest: Crit",
-			"description": "Gain 2 BLACK_GLASSES. The first time an ally reaches 5 CRIT_POWER in a fight, gain a GOLD_BOTTLE_CAP."
+			"description": "Gain 2 BLACK_GLASSES. The first time an ally reaches 4 CRIT_POWER in a fight, gain a GOLD_BOTTLE_CAP."
 		},
 		"QUEST_ABSORB": {
 			"name": "Quest: Absorb",
@@ -5662,11 +5666,11 @@
 		},
 		"QUEST_PILLAGE": {
 			"name": "Quest: Pillage",
-			"description": "Gain an AMULET_COIN. After it has made you 30 GOLD, gain a BOOSTER_ENERGY."
+			"description": "Gain an AMULET_COIN. Its holder gains 1 CRIT_CHANCE for every 2 GOLD at the start of the fight. After it has made you 30 GOLD, gain a BOOSTER_ENERGY."
 		},
 		"QUEST_EVOLVE_II": {
 			"name": "Quest: Evolve II",
-			"description": "Gain an Eevee and 2 Rare 1 STAR Pokémon. After evolving Pokémon 20 times, gain a RARE_CANDY."
+			"description": "Gain an Eevee and 2 Rare 1 STAR Pokémon. After evolving Pokémon 16 times, gain a RARE_CANDY."
 		},
 		"IMPENDING_DOOM": {
 			"name": "Impending Doom",
@@ -6951,7 +6955,7 @@
 	"not_pokemons": "Not Pokémon",
 	"bark": "WOOF !",
 	"custom_bot": "Custom",
-	"blessings_enabled_label": "Blessings",
+	"blessings_enabled_label": "Jirachi's Wish Festival",
 	"blessings_enabled_hint": "Jirachi grants each player 2 Blessings during the game, at stage 4 and stage 12.",
 	"blessings_enabled_off": "Off",
 	"blessings_enabled_on": "On",

@@ -13,6 +13,8 @@ import {
 } from "../types"
 import { Awakening } from "../types/enum/Awakening"
 import {
+  ABSOLUTE_DARKNESS_BLIND_CHANCE,
+  ABSOLUTE_DARKNESS_BLIND_DURATION,
   AURORA_BOREALIS_DAMAGE_REDUCTION,
   AURORA_BOREALIS_DAMAGE_REDUCTION_IN_SNOW_OR_NIGHT,
   Blessing,
@@ -89,13 +91,25 @@ export default abstract class PokemonState {
         )
         critChance += 0.01 * distance
       }
-      const hasAbsoluteDarkness =
-        target.status.blinded &&
+      const hasAbsoluteDarknessBlessing =
         pokemon.player?.blessings?.includes(Blessing.ABSOLUTE_DARKNESS) === true
+      if (
+        hasAbsoluteDarknessBlessing &&
+        pokemon.types.has(Synergy.DARK) &&
+        !target.status.blinded &&
+        chance(ABSOLUTE_DARKNESS_BLIND_CHANCE, pokemon)
+      ) {
+        target.status.triggerBlinded(
+          ABSOLUTE_DARKNESS_BLIND_DURATION,
+          target,
+          pokemon
+        )
+      }
+      const hasAbsoluteDarkness =
+        target.status.blinded && hasAbsoluteDarknessBlessing
       const crit =
         chance(critChance, pokemon) ||
-        (target.status.sleep && pokemon.passive === Passive.BAD_DREAMS) ||
-        (hasAbsoluteDarkness && pokemon.types.has(Synergy.DARK))
+        (target.status.sleep && pokemon.passive === Passive.BAD_DREAMS)
 
       const nbBlackAugurite = target.player
         ? count(target.player.items, Item.BLACK_AUGURITE)
@@ -206,7 +220,7 @@ export default abstract class PokemonState {
       }
 
       let trueDamagePart = 0
-      if (hasAbsoluteDarkness && pokemon.critChance >= 100) {
+      if (hasAbsoluteDarkness && crit) {
         trueDamagePart += 1.0
       }
       if (pokemon.effects.has(EffectEnum.STEEL_SURGE)) {

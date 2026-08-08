@@ -471,13 +471,13 @@ export default class Player extends Schema implements IPlayer {
 
   private grantBirthdayPresent(level: number) {
     const rarity =
-      level >= 10
+      level >= 9
         ? Rarity.ULTRA
         : level >= 8
           ? Rarity.EPIC
-          : level >= 6
+          : level >= 7
             ? Rarity.RARE
-            : level >= 5
+            : level >= 6
               ? Rarity.UNCOMMON
               : Rarity.COMMON
     const candidates = PRECOMPUTED_POKEMONS_PER_RARITY[rarity].filter(

@@ -1,4 +1,5 @@
 import { model, Schema } from "mongoose"
+import { Blessing } from "../../types/enum/Blessing"
 import { DungeonPMDO } from "../../types/enum/Dungeon"
 import type { GameMode } from "../../types/enum/Game"
 import { Item } from "../../types/enum/Item"
@@ -25,6 +26,7 @@ export interface IDetailledStatistic {
   gameMode: GameMode
   whimsy?: boolean
   unholdableItems: Item[]
+  blessings: Blessing[]
 }
 
 const pokemon = new Schema({
@@ -86,6 +88,12 @@ const statisticSchema = new Schema({
     {
       type: String,
       enum: Item
+    }
+  ],
+  blessings: [
+    {
+      type: String,
+      enum: Blessing
     }
   ]
 })

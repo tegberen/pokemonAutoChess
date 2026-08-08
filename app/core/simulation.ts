@@ -44,6 +44,7 @@ import {
   Item,
   NonSpecialBerries,
   Seeds,
+  SynergyGivenByItem,
   SynergyItems,
   SynergyStones,
   WeatherRocksByWeather
@@ -100,6 +101,7 @@ import {
   SHUTTLE_BUS_MAX_PP,
   POTENTIAL_ENERGY_SHIELD,
   POTENTIAL_ENERGY_SPEED,
+  QUEST_PILLAGE_CRIT_PER_GOLD,
   QUIET_STRENGTH_LOW_LIFE_THRESHOLD,
   SHINY_SAFEGUARD_HP_THRESHOLD,
   SHINY_SAFEGUARD_PROTECT_DURATION,
@@ -1463,6 +1465,15 @@ export default class Simulation extends Schema implements ISimulation {
         })
       }
 
+      if (blessings.includes(Blessing.QUEST_PILLAGE)) {
+        const critChance = Math.floor(
+          player.money * QUEST_PILLAGE_CRIT_PER_GOLD
+        )
+        ownUnits
+          .filter((ally) => ally.items.has(Item.AMULET_COIN))
+          .forEach((ally) => ally.addCritChance(critChance, ally, 0, false))
+      }
+
       if (blessings.includes(Blessing.DRAGON_FANG)) {
         const totalStars = ownUnits.reduce((sum, ally) => sum + ally.stars, 0)
         const abilityPower = totalStars * DRAGON_FANG_ABILITY_POWER_PER_STAR
@@ -1480,11 +1491,17 @@ export default class Simulation extends Schema implements ISimulation {
               )
           )
           .forEach((ally) => {
-            ally.addMaxHP(MISFITS_MAX_HP, ally, 0, false)
-            ally.addAbilityPower(MISFITS_ABILITY_POWER, ally, 0, false)
-            ally.addAttack(MISFITS_ATTACK, ally, 0, false)
-            ally.addDefense(MISFITS_DEFENSE, ally, 0, false)
-            ally.addSpecialDefense(MISFITS_SPECIAL_DEFENSE, ally, 0, false)
+            const stars = ally.stars
+            ally.addMaxHP(MISFITS_MAX_HP * stars, ally, 0, false)
+            ally.addAbilityPower(MISFITS_ABILITY_POWER * stars, ally, 0, false)
+            ally.addAttack(MISFITS_ATTACK * stars, ally, 0, false)
+            ally.addDefense(MISFITS_DEFENSE * stars, ally, 0, false)
+            ally.addSpecialDefense(
+              MISFITS_SPECIAL_DEFENSE * stars,
+              ally,
+              0,
+              false
+            )
           })
       }
 
@@ -1498,7 +1515,7 @@ export default class Simulation extends Schema implements ISimulation {
                 : ally.positionY
             const holeIndex = boardY * BOARD_WIDTH + ally.positionX
             if (player.groundHoles[holeIndex] === 5) {
-              ally.addAttack(1, ally, 0, false, true)
+              ally.addAttack(2, ally, 0, false, true)
             }
           })
       }
@@ -2659,7 +2676,12 @@ export default class Simulation extends Schema implements ISimulation {
         let hpFactor = AMORPHOUS_HP_BUFF_PER_SYNERGY_TIER[tier] ?? 0
 
         if (player?.blessings?.includes(Blessing.SHAPELESS_SYNERGIES)) {
-          const ownActiveSynergies = [...types].filter((type) =>
+          const ownSynergies = new Set<Synergy>(types)
+          pokemon.items.forEach((item) => {
+            const synergyGivenByItem = SynergyGivenByItem[item]
+            if (synergyGivenByItem) ownSynergies.add(synergyGivenByItem)
+          })
+          const ownActiveSynergies = [...ownSynergies].filter((type) =>
             isSynergyActiveForPlayer(player, type)
           ).length
           if (ownActiveSynergies >= SHAPELESS_SYNERGIES_MIN_ACTIVE) {

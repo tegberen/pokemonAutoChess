@@ -40,6 +40,7 @@ import { logger } from "../../utils/logger"
 import { generateRandomName } from "../../utils/name-generation"
 import { cleanProfanity } from "../../utils/profanity-filter"
 import { pickRandomIn } from "../../utils/random"
+import { getDefaultRoomName } from "../../utils/room-name"
 import type CustomLobbyRoom from "../custom-lobby-room"
 
 export class OnJoinCommand extends Command<
@@ -821,16 +822,13 @@ export class OpenGameCommand extends Command<
   }) {
     const user = this.room.users.get(client.auth.uid)
     if (!user) return
-    let roomName = `${user.displayName}'${user.displayName.endsWith("s") ? "" : "s"} room`
+    const roomName = getDefaultRoomName(gameMode, whimsy ?? false)
     let noElo: boolean = true
     let password: string | null = null
     let ownerId: string | null = null
 
     if (gameMode === GameMode.RANKED) {
-      roomName = "Ranked Match"
       noElo = false
-    } else if (gameMode === GameMode.SCRIBBLE) {
-      roomName = "Smeargle's Scribble"
     } else if (gameMode === GameMode.CUSTOM_LOBBY) {
       ownerId = user.uid
       // const secureCode = randomBytes(4)
@@ -839,10 +837,7 @@ export class OpenGameCommand extends Command<
       // password = (secureCode + randomBytes(4).toString("hex"))
       //   .substring(0, 4)
       //   .toUpperCase()
-    } else if (gameMode === GameMode.CLASSIC) {
-      roomName = "Classic"
     } else if (gameMode === GameMode.DOUBLE_UP) {
-      roomName = whimsy ? "Whimsy Weekend" : "Double Up"
       ownerId = user.uid
     }
 

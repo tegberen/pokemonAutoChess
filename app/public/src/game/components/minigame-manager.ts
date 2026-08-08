@@ -24,6 +24,7 @@ import type { ILeaderboardInfo } from "../../../../types/interfaces/LeaderboardI
 import type { NpcDialog } from "../../../../types/strings/NpcDialog"
 import { getRankLabel } from "../../../../types/strings/Strings"
 import { getPokemonCustomFromAvatar } from "../../../../utils/avatar"
+import { SPECIAL_NPC_X, SPECIAL_NPC_Y } from "./board-manager"
 import { logger } from "../../../../utils/logger"
 import { clamp } from "../../../../utils/number"
 import {
@@ -566,14 +567,21 @@ export default class MinigameManager {
       name: Pkm.MAKUHITA
     })
 
+    /* during the festival Jirachi leaves its perch and comes down to the spot
+       Smeargle uses to address the players, so there is only ever one of it */
+    const blessingsEnabled = this.scene.room?.state.blessingsEnabled === true
     const jirachi = new PokemonSpecial({
       scene: this.scene,
-      x: (37.7 - 0.21) * 48,
-      y: (6.5 + 0.05) * 48,
+      x: blessingsEnabled ? SPECIAL_NPC_X : (37.7 - 0.21) * 48,
+      y: blessingsEnabled ? SPECIAL_NPC_Y : (6.5 + 0.05) * 48,
       name: Pkm.JIRACHI,
-      animation: isBlessingEvent()
-        ? PokemonActionState.IDLE
-        : PokemonActionState.SLEEP
+      orientation: blessingsEnabled ? Orientation.DOWNLEFT : undefined,
+      animation:
+        blessingsEnabled || isBlessingEvent()
+          ? PokemonActionState.IDLE
+          : PokemonActionState.SLEEP,
+      dialog: blessingsEnabled ? t("blessing_event_description") : undefined,
+      dialogTitle: blessingsEnabled ? t("blessing_event_title") : undefined
     })
 
     const croagunk = new PokemonSpecial({

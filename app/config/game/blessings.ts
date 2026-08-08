@@ -324,7 +324,7 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     grantsPokemonImmediately: false
   },
   [Blessing.YOU_FORGOT_SOMETHING]: {
-    tier: BlessingTier.PRISMATIC,
+    tier: BlessingTier.GOLD,
     availableAtStages: [4],
     icon: "bugle_call",
     grantsPokemonImmediately: false
@@ -469,7 +469,7 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
   },
   [Blessing.GOLDEN_TICKET]: {
     tier: BlessingTier.GOLD,
-    availableAtStages: BLESSING_SELECTION_STAGES,
+    availableAtStages: [12],
     icon: "ticket",
     grantsPokemonImmediately: false
   },
@@ -583,7 +583,7 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
   },
   [Blessing.WEATHER_INSTITUTE]: {
     tier: BlessingTier.GOLD,
-    availableAtStages: BLESSING_SELECTION_STAGES,
+    availableAtStages: [12],
     icon: "windmill_house",
     grantsPokemonImmediately: false
   },
@@ -613,7 +613,7 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
   },
   [Blessing.VITAMINS]: {
     tier: BlessingTier.SILVER,
-    availableAtStages: BLESSING_SELECTION_STAGES,
+    availableAtStages: [12],
     icon: "vitamin_bottle",
     grantsPokemonImmediately: false
   },
@@ -753,7 +753,7 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     isAvailable: isSynergyBlessingAvailable(Synergy.BABY)
   },
   [Blessing.REPLICATOR]: {
-    tier: BlessingTier.GOLD,
+    tier: BlessingTier.SILVER,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "computer_fan",
     grantsPokemonImmediately: true,
@@ -1030,7 +1030,7 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     grantsPokemonImmediately: false
   },
   [Blessing.CHOSEN_ONES]: {
-    tier: BlessingTier.GOLD,
+    tier: BlessingTier.PRISMATIC,
     availableAtStages: [4],
     icon: "bat_mask",
     grantsPokemonImmediately: false
@@ -1520,7 +1520,7 @@ function tierChancesForBlessingsUnderTest(): {
   return chances
 }
 
-export const BLESSING_TEST_MODE: boolean = false
+export const BLESSING_TEST_MODE: boolean = true
 export const BLESSING_SANDBOX_MODE: boolean = false
 
 export const BLESSING_SELECTION_EVERY_STAGE: boolean =

@@ -26,11 +26,6 @@ const unavailableScribbleRules: SpecialGameRule[] = [
   SpecialGameRule.HALLOWEEN
 ]
 
-/* not translated, unlike the scribble rule names: the room list shows one name
-   to everyone, so it should not read differently per viewer's locale */
-// TEMP we will remove this at some point
-const BLESSINGS_BETA_ROOM_NAME = "[Wish Festival - Beta]"
-
 export default function PreparationSettings() {
   const { t } = useTranslation()
   const [inputValue, setInputValue] = useState<string>("")
@@ -89,14 +84,6 @@ export default function PreparationSettings() {
     setSpecialRule(rule === "none" ? null : rule)
     if (rule !== "none") {
       changeRoomName(t(`scribble.${rule}`))
-    }
-  }
-
-  const changeBlessingsEnabled = (enabled: boolean) => {
-    setBlessingsEnabled(enabled)
-    // TEMP we will remove this at some point
-    if (enabled) {
-      changeRoomName(BLESSINGS_BETA_ROOM_NAME)
     }
   }
 
@@ -173,10 +160,11 @@ export default function PreparationSettings() {
   )
 
   // blessings are not playtested alongside a scribble rule, so only one shows
+  /* stays visible during the festival: picking a rule turns the festival off,
+     so hiding it just made scribbles look unavailable for the whole event */
   const scribbleRuleSetting = isCustomLobby &&
     isOwner &&
-    noElo &&
-    !blessingsEnabled && (
+    noElo && (
     <div className="lobby-setting">
       <span className="setting-label">{t("game_modes.SCRIBBLE")}</span>
       <div className="setting-control">
@@ -310,7 +298,7 @@ export default function PreparationSettings() {
       <div className="setting-control">
         <select
           value={blessingsEnabled ? "on" : "off"}
-          onChange={(e) => changeBlessingsEnabled(e.target.value === "on")}
+          onChange={(e) => setBlessingsEnabled(e.target.value === "on")}
         >
           <option value="off">{t("blessings_enabled_off")}</option>
           <option value="on">{t("blessings_enabled_on")}</option>

@@ -530,16 +530,19 @@ export class OnRoomChangeSpecialRule extends Command<
       }
 
       if (client.auth?.uid == this.state.ownerId) {
-        // the other half of the blessings/scribble exclusion
-        if (specialRule != null && this.state.blessingsEnabled) {
+        /* the other half of the blessings/scribble exclusion: picking a rule
+           turns the festival off, mirroring how enabling it clears the rule */
+        const festivalCleared = specialRule != null && this.state.blessingsEnabled
+        if (festivalCleared) {
+          this.state.blessingsEnabled = false
+          this.room.setBlessingsEnabled(false)
           this.room.state.addMessage({
             author: "Server",
             authorId: "server",
             payload:
-              "Smeargle's Scribble rules are not available while Blessings are enabled.",
+              "Jirachi's Wish Festival has been turned off: it cannot run alongside a Smeargle's Scribble rule.",
             avatar: this.state.users.get(client.auth.uid)?.avatar
           })
-          return
         }
         this.state.specialGameRule = specialRule
         if (specialRule != null) {
@@ -660,6 +663,8 @@ export class OnChangeBlessingsEnabledCommand extends Command<
         // blessings are not playtested alongside a scribble rule
         const ruleCleared = enabled && this.state.specialGameRule != null
         if (ruleCleared) this.state.specialGameRule = null
+
+        this.room.setBlessingsEnabled(enabled)
         this.room.state.addMessage({
           author: "Server",
           authorId: "server",

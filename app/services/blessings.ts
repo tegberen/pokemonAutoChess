@@ -68,7 +68,9 @@ import {
   MIX_AND_MATCH_II_UNIQUES,
   MIX_AND_MATCH_II_FIELD_CAP,
   ALL_FOR_ONE_MAX_HP_RATIO,
-  TRASH_TO_TREASURE_ROUNDS_BY_STAR
+  TRASH_TO_TREASURE_ROUNDS_BY_STAR,
+  TRASH_TO_TREASURE_TRASH_GRANTED_MIN,
+  TRASH_TO_TREASURE_TRASH_GRANTED_MAX
 } from "../types/enum/Blessing"
 import { BattleResult, Rarity } from "../types/enum/Game"
 import {
@@ -84,7 +86,7 @@ import {
   WandererBehavior,
   WandererType
 } from "../types/enum/Wanderer"
-import { Transfer } from "../types"
+import { Title, Transfer } from "../types"
 import type GameRoom from "../rooms/game-room"
 import { giveRandomEgg } from "../core/eggs"
 import { getUnlockedFlowerPots } from "../core/flower-pots"
@@ -118,7 +120,12 @@ import {
   getFreeSpaceOnBench,
   getLastAvailablePositionInBench
 } from "../utils/board"
-import { chance, pickNRandomIn, pickRandomIn } from "../utils/random"
+import {
+  chance,
+  pickNRandomIn,
+  pickRandomIn,
+  randomBetween
+} from "../utils/random"
 
 const PEARL_GOLD_GAINED = 10
 const CROAGUNKS_AID_EXCHANGE_TICKETS = 3
@@ -878,6 +885,7 @@ export function checkRainbowHourReward(player: Player) {
   if (fieldedEeveelutions.size >= RAINBOW_HOUR_EEVEELUTIONS_TARGET) {
     player.rainbowHourRewarded = true
     player.addMoney(RAINBOW_HOUR_GOLD_REWARD, true, null)
+    player.titles.add(Title.PRIDE)
   }
 }
 
@@ -1082,8 +1090,11 @@ function releaseManifestedPokemons(player: Player) {
 
 function giftRandomUniques(player: Player, amount: number): boolean {
   if (getFreeSpaceOnBench(player.board) < amount) return false
-  pickNRandomIn(PRECOMPUTED_POKEMONS_PER_RARITY[Rarity.UNIQUE], amount).forEach(
-    (pkm: Pkm) => giftPokemonIfBenchHasRoom(player, pkm)
+  const candidates = PRECOMPUTED_POKEMONS_PER_RARITY[Rarity.UNIQUE].filter(
+    (pkm) => PkmFamily[pkm] !== Pkm.COSMOG
+  )
+  pickNRandomIn(candidates, amount).forEach((pkm: Pkm) =>
+    giftPokemonIfBenchHasRoom(player, pkm)
   )
   return true
 }
@@ -1570,6 +1581,13 @@ export const blessingEffectService: {
     if (getFreeSpaceOnBench(player.board) < 2) return false
     giftPokemonIfBenchHasRoom(player, Pkm.TRUBBISH)
     giftPokemonIfBenchHasRoom(player, Pkm.BELDUM)
+    const trashGranted = randomBetween(
+      TRASH_TO_TREASURE_TRASH_GRANTED_MIN,
+      TRASH_TO_TREASURE_TRASH_GRANTED_MAX
+    )
+    for (let i = 0; i < trashGranted; i++) {
+      player.items.push(Item.TRASH)
+    }
     return true
   },
   [Blessing.CHARGING_MY_BUG]: (player, state, room) =>

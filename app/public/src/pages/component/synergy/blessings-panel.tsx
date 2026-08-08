@@ -20,6 +20,7 @@ import {
 import { Rarity } from "../../../../../types/enum/Game"
 import { cc } from "../../utils/jsx"
 import { addIconsToDescription } from "../../utils/descriptions"
+import { BlessingTooltipCard } from "./blessing-tooltip-card"
 import "./blessings-panel.css"
 
 export default function BlessingsPanel(props: { recentOnly?: boolean }) {
@@ -142,20 +143,12 @@ export default function BlessingsPanel(props: { recentOnly?: boolean }) {
               place={tooltipPlace}
               style={{ zIndex: DEPTH.TOOLTIP }}
             >
-              <div className={`wiki-blessing-body blessing-panel-tooltip-card blessing-tier-${Blessings[blessing].tier.toLowerCase()}`}>
-                <img
-                  src={`/assets/blessings/${Blessings[blessing].icon}.svg`}
-                  alt=""
-                />
-                <div>
-                  <h3>{t(`blessing.${blessing}.name`)}</h3>
-                  <p>{addIconsToDescription(t(`blessing.${blessing}.description`))}</p>
-                  {blessing === Blessing.BP_REWARDS && <p className="blessing-panel-live-value">Next component in {bpRewardsRoundsLeft} round{bpRewardsRoundsLeft === 1 ? "" : "s"}</p>}
-                  {blessing === Blessing.SUPPORTIVE_SOUL && supportiveSoulRoundsLeft > 0 && <p className="blessing-panel-live-value">Next support item in {supportiveSoulRoundsLeft} round{supportiveSoulRoundsLeft === 1 ? "" : "s"}</p>}
-                  {blessing === Blessing.AURORA_BOREALIS && <p className="blessing-panel-live-value">{addIconsToDescription(`${nbActiveSynergies} active synergies: −${auroraBorealisReduction}% damage taken, −${auroraBorealisReductionInSnowOrNight}% in SNOW or NIGHT`)}</p>}
-                  {blessing === Blessing.BERSERKER_HORDES && <p className="blessing-panel-live-value">{addIconsToDescription(`${nbThreeStarWilds} WILD at 3 STAR or more: −${nbThreeStarWilds} GOLD`)}</p>}
-                </div>
-              </div>
+              <BlessingTooltipCard blessing={blessing}>
+                {blessing === Blessing.BP_REWARDS && <p className="blessing-panel-live-value">Next component in {bpRewardsRoundsLeft} round{bpRewardsRoundsLeft === 1 ? "" : "s"}</p>}
+                {blessing === Blessing.SUPPORTIVE_SOUL && supportiveSoulRoundsLeft > 0 && <p className="blessing-panel-live-value">Next support item in {supportiveSoulRoundsLeft} round{supportiveSoulRoundsLeft === 1 ? "" : "s"}</p>}
+                {blessing === Blessing.AURORA_BOREALIS && <p className="blessing-panel-live-value">{addIconsToDescription(`${nbActiveSynergies} active synergies: −${auroraBorealisReduction}% damage taken, −${auroraBorealisReductionInSnowOrNight}% in SNOW or NIGHT`)}</p>}
+                {blessing === Blessing.BERSERKER_HORDES && <p className="blessing-panel-live-value">{addIconsToDescription(`${nbThreeStarWilds} WILD at 3 STAR or more: −${nbThreeStarWilds} GOLD`)}</p>}
+              </BlessingTooltipCard>
             </Tooltip>,
             document.body
           )}

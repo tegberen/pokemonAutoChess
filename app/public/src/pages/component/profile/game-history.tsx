@@ -4,7 +4,10 @@ import { useCallback, useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { AutoSizer } from "react-virtualized-auto-sizer"
 import { List, useDynamicRowHeight } from "react-window"
+import { Tooltip } from "react-tooltip"
 import { SynergyTiersThresholds } from "../../../../../config"
+import { Blessings } from "../../../../../config/game/blessings"
+import type { Blessing } from "../../../../../types/enum/Blessing"
 import type {
   IGameRecord,
   IPokemonRecord
@@ -14,6 +17,10 @@ import PokemonFactory from "../../../../../models/pokemon-factory"
 import type { Synergy } from "../../../../../types/enum/Synergy"
 import { ItemDetailTooltip } from "../../../game/components/item-detail"
 import { formatDate } from "../../utils/date"
+import {
+  BlessingIcon,
+  BlessingTooltipCard
+} from "../synergy/blessing-tooltip-card"
 import Team from "../after/team"
 import { GamePokemonDetailTooltip } from "../game/game-pokemon-detail"
 import { GameModeIcon } from "../icons/game-mode-icon"
@@ -127,6 +134,7 @@ export default function GameHistory(props: {
       </div>
       <GamePokemonDetailTooltip origin="history" />
       <ItemDetailTooltip />
+      <BlessingHistoryTooltip />
     </article>
   )
 }
@@ -185,8 +193,33 @@ function GameHistoryRow({
             />
           ))}
         </div>
+        {(r.blessings?.length ?? 0) > 0 && (
+          <div className="player-blessings">
+            {r.blessings.map((blessing, i) => (
+              <BlessingIcon
+                key={i}
+                blessing={blessing}
+                tooltipId="blessing-history-tooltip"
+              />
+            ))}
+          </div>
+        )}
       </div>
     </div>
+  )
+}
+
+function BlessingHistoryTooltip() {
+  return (
+    <Tooltip
+      id="blessing-history-tooltip"
+      className="custom-theme-tooltip blessing-panel-tooltip"
+      render={({ content }) => {
+        const blessing = content as Blessing | null
+        if (!blessing || !Blessings[blessing]) return null
+        return <BlessingTooltipCard blessing={blessing} />
+      }}
+    />
   )
 }
 

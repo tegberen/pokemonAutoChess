@@ -88,6 +88,9 @@ export enum BoardMode {
   TOWN = "town"
 }
 
+export const SPECIAL_NPC_X = 1512
+export const SPECIAL_NPC_Y = 396 - 48 * 1.4
+
 export default class BoardManager {
   pokemons: Map<string, PokemonSprite>
   uid: string
@@ -1606,8 +1609,8 @@ export default class BoardManager {
     }
     this.smeargle = new PokemonSpecial({
       scene: this.scene,
-      x: 1512,
-      y: 396 - 48 * 1.4,
+      x: SPECIAL_NPC_X,
+      y: SPECIAL_NPC_Y,
       name: this.state.whimsy ? Pkm.WHIMSICOTT : Pkm.SMEARGLE,
       orientation: Orientation.DOWNLEFT,
       dialog,

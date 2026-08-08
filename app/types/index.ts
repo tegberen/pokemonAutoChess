@@ -690,6 +690,7 @@ export interface IPreparationMetadata {
   bracketId: string | null
   scribbleExtended: boolean
   whimsy: boolean
+  blessingsEnabled: boolean
 }
 
 export interface IGameMetadata {
@@ -812,7 +813,8 @@ export enum Title {
   LEGIONNAIRE = "LEGIONNAIRE",
   FIVE_STARS = "FIVE_STARS",
   WHIMSY = "WHIMSY",
-  STARRY = "STARRY"
+  STARRY = "STARRY",
+  PRIDE = "PRIDE"
 }
 
 export interface IBoardEvent {
