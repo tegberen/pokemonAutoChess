@@ -2377,8 +2377,11 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
             type: "blessing",
             blessings: proposedBlessings,
             rerollCandidates,
+            /* the spare blessings are shared: any slot can take the next one.
+               So a slot can reroll while spares are left, not only when it has
+               one of its own. rerollBlessingSlot takes from the same pile */
             rerollableSlots: proposedBlessings.map(
-              (_, slot) => rerollCandidates[slot] !== undefined
+              () => rerollCandidates.length > 0
             )
           })
         )
