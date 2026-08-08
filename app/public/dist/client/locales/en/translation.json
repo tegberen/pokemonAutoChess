@@ -4092,7 +4092,8 @@
 		"FIVE_STARS": "★★★★★",
 		"WHIMSY": "Whimsy",
 		"STARRY": "Starry",
-		"PRIDE": "Pride"
+		"PRIDE": "Pride",
+		"THE_SCRIBBLER": "The Scribbler"
 	},
 	"title_description": {
 		"NOVICE": "Play your first game",
@@ -4193,7 +4194,8 @@
 		"FIVE_STARS": "Play with a five stars Pokémon in your team",
 		"WHIMSY": "Win a Whimsy Weekend Scribble with your partner",
 		"STARRY": "Win a game during the Wish Festival Event with a Jirachi on your board",
-		"PRIDE": "Complete the Rainbow Hour Blessing Mission"
+		"PRIDE": "Complete the Rainbow Hour Blessing Mission",
+		"THE_SCRIBBLER": "Win a Smeargle Scribble Tournament"
 	},
 	"weather_forecast": "Weather forecast",
 	"blessings": "Blessings",
@@ -5406,7 +5408,7 @@
 		},
 		"TIDAL_SURGE": {
 			"name": "Tidal Surge",
-			"description": "When the tidal wave hits, ranged AQUATIC Pokémon holding 2 items cast Hydro Pump, and melee AQUATIC Pokémon holding 2 items cast Dive. Gain a Froakie."
+			"description": "When the TIDAL_WAVE hits, ranged AQUATIC Pokémon holding 2 items cast Hydro Pump, and melee AQUATIC Pokémon holding 2 items cast Dive. Gain a Froakie."
 		},
 		"ATLANTEAN_MAGIC": {
 			"name": "Atlantean Magic",
