@@ -530,6 +530,17 @@ export class OnRoomChangeSpecialRule extends Command<
       }
 
       if (client.auth?.uid == this.state.ownerId) {
+        // the other half of the blessings/scribble exclusion
+        if (specialRule != null && this.state.blessingsEnabled) {
+          this.room.state.addMessage({
+            author: "Server",
+            authorId: "server",
+            payload:
+              "Smeargle's Scribble rules are not available while Blessings are enabled.",
+            avatar: this.state.users.get(client.auth.uid)?.avatar
+          })
+          return
+        }
         this.state.specialGameRule = specialRule
         if (specialRule != null) {
           this.state.noElo = true
@@ -640,15 +651,23 @@ export class OnChangeBlessingsEnabledCommand extends Command<
   execute({ client, enabled }) {
     try {
       const user = this.state.users.get(client.auth?.uid ?? "")
-      const isAllowed = user?.role === Role.ADMIN
+      // TEMP we will remove this at some point: owners are allowed for the beta
+      const isAllowed =
+        !this.state.whimsy &&
+        (client.auth?.uid === this.state.ownerId || user?.role === Role.ADMIN)
       if (isAllowed && this.state.blessingsEnabled !== enabled) {
         this.state.blessingsEnabled = enabled
+        // blessings are not playtested alongside a scribble rule
+        const ruleCleared = enabled && this.state.specialGameRule != null
+        if (ruleCleared) this.state.specialGameRule = null
         this.room.state.addMessage({
           author: "Server",
           authorId: "server",
           payload: `Blessings have been ${
             enabled ? "enabled" : "disabled"
-          } for this game. Players need to ready again.`,
+          } for this game.${
+            ruleCleared ? " Smeargle's Scribble rule has been turned off." : ""
+          } Players need to ready again.`,
           avatar: user?.avatar
         })
 

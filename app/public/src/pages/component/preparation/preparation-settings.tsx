@@ -26,6 +26,11 @@ const unavailableScribbleRules: SpecialGameRule[] = [
   SpecialGameRule.HALLOWEEN
 ]
 
+/* not translated, unlike the scribble rule names: the room list shows one name
+   to everyone, so it should not read differently per viewer's locale */
+// TEMP we will remove this at some point
+const BLESSINGS_BETA_ROOM_NAME = "[Wish Festival - Beta]"
+
 export default function PreparationSettings() {
   const { t } = useTranslation()
   const [inputValue, setInputValue] = useState<string>("")
@@ -50,6 +55,7 @@ export default function PreparationSettings() {
   const blessingsEnabled = useAppSelector(
     (state) => state.preparation.blessingsEnabled
   )
+  const whimsy = useAppSelector((state) => state.preparation.whimsy)
   const gameMode = useAppSelector((state) => state.preparation.gameMode)
   const isOwner = useAppSelector(
     (state) => state.preparation.ownerId === state.network.uid
@@ -83,6 +89,14 @@ export default function PreparationSettings() {
     setSpecialRule(rule === "none" ? null : rule)
     if (rule !== "none") {
       changeRoomName(t(`scribble.${rule}`))
+    }
+  }
+
+  const changeBlessingsEnabled = (enabled: boolean) => {
+    setBlessingsEnabled(enabled)
+    // TEMP we will remove this at some point
+    if (enabled) {
+      changeRoomName(BLESSINGS_BETA_ROOM_NAME)
     }
   }
 
@@ -158,7 +172,11 @@ export default function PreparationSettings() {
     </div>
   )
 
-  const scribbleRuleSetting = isCustomLobby && isOwner && noElo && (
+  // blessings are not playtested alongside a scribble rule, so only one shows
+  const scribbleRuleSetting = isCustomLobby &&
+    isOwner &&
+    noElo &&
+    !blessingsEnabled && (
     <div className="lobby-setting">
       <span className="setting-label">{t("game_modes.SCRIBBLE")}</span>
       <div className="setting-control">
@@ -275,7 +293,11 @@ export default function PreparationSettings() {
     </div>
   )
 
-  const blessingsSetting = isAdmin && (
+  // Whimsy Weekend always rolls a scribble rule, so blessings are not offered
+  // TEMP we will remove this at some point: owners see it only during the beta
+  const blessingsSetting = hasCustomLobbySettings &&
+    !whimsy &&
+    (isOwner || isAdmin) && (
     <div className="lobby-setting" title={t("blessings_enabled_hint")}>
       <span className="setting-label">
         {t("blessings_enabled_label")}
@@ -288,7 +310,7 @@ export default function PreparationSettings() {
       <div className="setting-control">
         <select
           value={blessingsEnabled ? "on" : "off"}
-          onChange={(e) => setBlessingsEnabled(e.target.value === "on")}
+          onChange={(e) => changeBlessingsEnabled(e.target.value === "on")}
         >
           <option value="off">{t("blessings_enabled_off")}</option>
           <option value="on">{t("blessings_enabled_on")}</option>

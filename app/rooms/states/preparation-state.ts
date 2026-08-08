@@ -60,6 +60,8 @@ export default class PreparationState
   }) {
     super()
     this.whimsy = params.whimsy ?? false
+    // Whimsy Weekend is a scribble-rule mode, so blessings never layer onto it
+    if (this.whimsy) this.blessingsEnabled = false
     this.ownerId =
       (params.gameMode === GameMode.CUSTOM_LOBBY || params.gameMode === GameMode.DOUBLE_UP)
         ? (params.ownerId ?? "")

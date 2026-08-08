@@ -381,7 +381,8 @@ export default class Player extends Schema implements IPlayer {
     }
 
     if (state.specialGameRule === SpecialGameRule.OVERTIME) {
-      this.life = 200
+      this.maxLife = 200
+      this.life = this.maxLife
       this.experienceManager.maxLevel = 10
     }
 

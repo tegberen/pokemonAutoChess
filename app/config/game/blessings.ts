@@ -1521,7 +1521,7 @@ function tierChancesForBlessingsUnderTest(): {
 }
 
 export const BLESSING_TEST_MODE: boolean = false
-export const BLESSING_SANDBOX_MODE: boolean = true
+export const BLESSING_SANDBOX_MODE: boolean = false
 
 export const BLESSING_SELECTION_EVERY_STAGE: boolean =
   BLESSING_TEST_MODE || BLESSING_SANDBOX_MODE

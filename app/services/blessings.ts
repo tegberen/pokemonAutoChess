@@ -1398,21 +1398,31 @@ export const blessingScheduledEffectService: {
 
   [Blessing.MANIFESTATION_AD]: (player) => releaseManifestedPokemons(player),
 
-  [Blessing.CINCCINOS_GIFTS_I]: (player) => player.items.push(Item.SILK_SCARF),
+  /* items always land, so these return void rather than a grant result: an
+     expression body would leak the push's number into the union */
+  [Blessing.CINCCINOS_GIFTS_I]: (player) => {
+    player.items.push(Item.SILK_SCARF)
+  },
 
-  [Blessing.CINCCINOS_GIFTS_II]: (player) => player.items.push(Item.SILK_SCARF),
+  [Blessing.CINCCINOS_GIFTS_II]: (player) => {
+    player.items.push(Item.SILK_SCARF)
+  },
 
-  [Blessing.RELIC_FRAGMENT]: (player) =>
-    player.items.push(Item.LAPRAS_PASSPORT),
+  [Blessing.RELIC_FRAGMENT]: (player) => {
+    player.items.push(Item.LAPRAS_PASSPORT)
+  },
 
-  [Blessing.ITEMFINDER_I]: (player) =>
-    player.items.push(pickRandomIn(ItemComponents)),
+  [Blessing.ITEMFINDER_I]: (player) => {
+    player.items.push(pickRandomIn(ItemComponents))
+  },
 
-  [Blessing.ITEMFINDER_II]: (player) =>
-    player.items.push(pickRandomIn(ItemComponents)),
+  [Blessing.ITEMFINDER_II]: (player) => {
+    player.items.push(pickRandomIn(ItemComponents))
+  },
 
-  [Blessing.ITEMFINDER_III]: (player) =>
-    player.items.push(pickRandomIn(ItemComponents)),
+  [Blessing.ITEMFINDER_III]: (player) => {
+    player.items.push(pickRandomIn(ItemComponents))
+  },
 
   [Blessing.LEGENDARY_GAMBIT]: (player) =>
     giftLegendaryMatchingTopSynergy(player),
