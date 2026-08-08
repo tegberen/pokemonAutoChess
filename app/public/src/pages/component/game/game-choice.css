@@ -299,6 +299,148 @@
 }
 
 
+/* the wish is granted: the chosen card flares in its own tier hue while the two
+   it passed over dim away. 420ms, kept in sync with BLESSING_PICK_ANIMATION_MS */
+.game-choice-blessing-slot > .my-box.blessing-picked {
+  position: relative;
+  z-index: 2;
+  animation: blessing-pick-lift 420ms ease-out forwards;
+}
+
+/* the light is the glow preference's business, so both halves hang off
+   .blessing-glow: with it off the pick still lifts and dims, just without light.
+   The halo is a box-shadow on the card, since overflow:hidden clips children
+   but never the box's own shadow */
+.game-choice-blessing-slot > .my-box.blessing-picked.blessing-glow {
+  animation:
+    blessing-pick-lift 420ms ease-out forwards,
+    blessing-pick-halo 420ms ease-out forwards;
+}
+
+.game-choice-blessing-slot > .my-box.blessing-picked.blessing-glow::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+  border-radius: inherit;
+  /* the click point, so the light rises from where the card was touched */
+  transform-origin: var(--burst-x, 50%) var(--burst-y, 45%);
+  background: radial-gradient(
+    circle at var(--burst-x, 50%) var(--burst-y, 45%),
+    color-mix(in srgb, var(--color-fg-primary) 70%, transparent) 0%,
+    color-mix(in srgb, var(--blessing-glow-hue) 38%, transparent) 30%,
+    color-mix(in srgb, var(--blessing-glow-hue) 14%, transparent) 55%,
+    transparent 80%
+  );
+  /* blurred edges and a shallower expansion: the light swells rather than pops */
+  filter: blur(3px);
+  animation: blessing-pick-burst 420ms ease-in-out forwards;
+}
+
+@keyframes blessing-pick-lift {
+  0% {
+    transform: scale(1);
+  }
+  35% {
+    transform: scale(1.06) translateY(-4px);
+  }
+  100% {
+    transform: scale(1.02) translateY(-2px);
+  }
+}
+
+@keyframes blessing-pick-halo {
+  0% {
+    box-shadow: 0 0 0 0
+      color-mix(in srgb, var(--blessing-glow-hue) 55%, transparent);
+  }
+  35% {
+    box-shadow: 0 0 26px 8px
+      color-mix(in srgb, var(--blessing-glow-hue) 45%, transparent);
+  }
+  100% {
+    box-shadow: 0 0 60px 26px transparent;
+  }
+}
+
+@keyframes blessing-pick-burst {
+  0% {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  45% {
+    opacity: 0.9;
+  }
+  70% {
+    opacity: 0.55;
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.2);
+  }
+}
+
+/* on the slot rather than the card, so the reroll button below it dims too */
+.game-choice-blessing-slot.blessing-passed-over {
+  animation: blessing-pick-passed-over 420ms ease-out forwards;
+  pointer-events: none;
+}
+
+/* the nacre drift and the sheen sweep are infinite, so a dismissed card would
+   keep shimmering while it recedes */
+.game-choice-blessing-slot.blessing-passed-over > .my-box,
+.game-choice-blessing-slot.blessing-passed-over > .my-box::after {
+  animation-play-state: paused;
+}
+
+@keyframes blessing-pick-passed-over {
+  to {
+    opacity: 0.6;
+    filter: saturate(0.6);
+    transform: scale(0.97) translateY(4px);
+  }
+}
+
+/* the pick still has to read as a pick, so the states are kept and only the
+   movement is dropped: no lift, no swell, no recede */
+@media (prefers-reduced-motion: reduce) {
+  .game-choice-blessing-slot > .my-box.blessing-picked,
+  .game-choice-blessing-slot > .my-box.blessing-picked.blessing-glow,
+  .game-choice-blessing-slot > .my-box.blessing-picked.blessing-glow::before,
+  .game-choice-blessing-slot.blessing-passed-over {
+    animation: none;
+  }
+
+  /* a reroll still has to announce itself, so it fades instead of impacting */
+  .blessing-body-flip {
+    animation: blessing-flip-fade 200ms ease-out;
+  }
+
+  @keyframes blessing-flip-fade {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  .game-choice-blessing-slot > .my-box.blessing-picked.blessing-glow {
+    box-shadow: 0 0 26px 8px
+      color-mix(in srgb, var(--blessing-glow-hue) 45%, transparent);
+  }
+
+  .game-choice-blessing-slot > .my-box.blessing-picked.blessing-glow::before {
+    opacity: 0.55;
+  }
+
+  .game-choice-blessing-slot.blessing-passed-over {
+    opacity: 0.6;
+    filter: saturate(0.6);
+  }
+}
+
 .game-choice-blessing-slot > .my-box.blessing-tier-prismatic {
   padding: 8px;
   /* six 8px bands keep the 48px period the seamless tile size depends on */

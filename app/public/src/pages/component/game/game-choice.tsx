@@ -39,6 +39,9 @@ import { ScribbleShapeGlyph } from "./game-scribble-sketchbook"
 import "./game-choice.css"
 import { ArmoryOptions, ArmoryOptionsPrice } from "../../../../../types/enum/ArmoryOptions"
 
+/* kept in sync with the blessing-pick keyframes in game-choice.css */
+const BLESSING_PICK_ANIMATION_MS = 420
+
 function isPokemonChoice(choice: PlayerChoice): boolean {
   return choice.pokemons.length > 0
 }
@@ -80,6 +83,32 @@ export default function GameChoice() {
   const [visible, setVisible] = useState(true)
   const [showBlessingGlow] = usePreference("showBlessingGlow")
   const previousBlessings = useRef<Blessing[]>([])
+  /* the pick is held back for one animation beat, so the burst is seen before
+     the server answers and unmounts the panel */
+  const [pickedBlessingIndex, setPickedBlessingIndex] = useState<number | null>(
+    null
+  )
+  const blessingPickTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+  // where on the card the click landed, so the light comes out of that point
+  const [pickOrigin, setPickOrigin] = useState({ x: "50%", y: "45%" })
+
+  useEffect(
+    () => () => {
+      if (blessingPickTimer.current) clearTimeout(blessingPickTimer.current)
+    },
+    []
+  )
+
+  /* the pick state must not outlive its selection: left set, it renders the next
+     selection's cards already dimmed and refuses every click */
+  const currentChoiceId = choices[0]?.id
+  useEffect(() => {
+    setPickedBlessingIndex(null)
+    if (blessingPickTimer.current) {
+      clearTimeout(blessingPickTimer.current)
+      blessingPickTimer.current = null
+    }
+  }, [currentChoiceId])
 
   useEffect(() => {
     previousBlessings.current = [...(choices[0]?.blessings ?? [])]
@@ -189,7 +218,12 @@ export default function GameChoice() {
               return (
               <div
                 key={`blessing-slot-${index}`}
-                className="game-choice-blessing-slot"
+                className={cc("game-choice-blessing-slot", {
+                  // dims the reroll button along with its card
+                  "blessing-passed-over":
+                    pickedBlessingIndex !== null &&
+                    pickedBlessingIndex !== index
+                })}
               >
               <div
                 className={cc(
@@ -197,14 +231,32 @@ export default function GameChoice() {
                   `blessing-tier-${blessingDefinition.tier.toLowerCase()}`,
                   {
                     "active clickable": !blockedByFullBench,
-                    "blessing-glow": showBlessingGlow
+                    "blessing-glow": showBlessingGlow,
+                    "blessing-picked": pickedBlessingIndex === index
                   }
                 )}
+                style={
+                  pickedBlessingIndex === index
+                    ? ({
+                        "--burst-x": pickOrigin.x,
+                        "--burst-y": pickOrigin.y
+                      } as React.CSSProperties)
+                    : undefined
+                }
                 onClick={(event) => {
                   event.stopPropagation()
-                  if (blockedByFullBench) return
+                  if (blockedByFullBench || pickedBlessingIndex !== null) return
                   playSound(SOUNDS.BLESSING)
-                  pickChoice(choice.id, index)
+                  const card = event.currentTarget.getBoundingClientRect()
+                  setPickOrigin({
+                    x: `${((event.clientX - card.left) / card.width) * 100}%`,
+                    y: `${((event.clientY - card.top) / card.height) * 100}%`
+                  })
+                  setPickedBlessingIndex(index)
+                  blessingPickTimer.current = setTimeout(
+                    () => pickChoice(choice.id, index),
+                    BLESSING_PICK_ANIMATION_MS
+                  )
                 }}
               >
                 <div

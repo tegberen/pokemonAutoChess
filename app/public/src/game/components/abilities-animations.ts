@@ -1603,6 +1603,20 @@ export const AbilitiesAnimations: {
     depth: DEPTH.ABILITY_BELOW_POKEMON
   }),
   ["CORROSION"]: onCasterScale4,
+  /* TOXIC_BURST blessing, on Weezing's smog: a wide cloud where the poisoned
+     unit burst, then a tighter tinted one on each enemy the poison reaches.
+     Own keys, so SMOG's own config keeps serving the real ability */
+  ["TOXIC_BURST"]: onCaster({
+    ability: Ability.SMOG,
+    scale: 3,
+    depth: DEPTH.ABILITY_MINOR
+  }),
+  ["TOXIC_BURST_SPREAD"]: onCaster({
+    ability: Ability.SMOG,
+    scale: 2,
+    tint: 0xa040c0,
+    depth: DEPTH.ABILITY_MINOR
+  }),
   [Ability.HIGH_HORSEPOWER]: onCaster({
     ability: Ability.COUNTER,
     scale: 2,
