@@ -5,6 +5,7 @@ import { Role } from "../../../../../types"
 import { BotDifficulty, GameMode } from "../../../../../types/enum/Game"
 import { SpecialGameRule } from "../../../../../types/enum/SpecialGameRule"
 import { pickRandomIn } from "../../../../../utils/random"
+import { getDefaultRoomName } from "../../../../../utils/room-name"
 import { keys } from "../../../../../utils/object"
 import { useAppSelector } from "../../../hooks"
 import {
@@ -82,9 +83,11 @@ export default function PreparationSettings() {
 
   const changeSpecialRule = (rule: SpecialGameRule | "none") => {
     setSpecialRule(rule === "none" ? null : rule)
-    if (rule !== "none") {
-      changeRoomName(t(`scribble.${rule}`))
-    }
+    changeRoomName(
+      rule === "none"
+        ? getDefaultRoomName(gameMode, whimsy)
+        : t(`scribble.${rule}`)
+    )
   }
 
   const pickRandomRule = () => {

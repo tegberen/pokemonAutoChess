@@ -217,6 +217,14 @@ export default function PreparationMenu() {
               src="/assets/icons/blessing_stats.svg"
             />
           )}
+          {specialGameRule != null && (
+            <img
+              alt={t("game_modes.SCRIBBLE")}
+              title={t(`scribble.${specialGameRule}`)}
+              className="preparation-header-icon"
+              src="/assets/icons/smeargle_scribble_icon.svg"
+            />
+          )}
           {formatMinMaxRanks(minRank, maxRank)} {name}: {users.length}/
           {nbExpectedPlayers}
           <span
