@@ -1037,6 +1037,16 @@ function releaseManifestedPokemons(player: Player) {
     if (pokemon) pokemon.manifestationLocked = false
   })
   player.manifestedPokemonIds = []
+  /* the copies the lock held apart may now be a complete set */
+  player.board.forEach((pokemon) => {
+    if (
+      pokemon.hasEvolution &&
+      pokemon.evolutionRule.type === EvolutionRuleType.COUNT &&
+      pokemon.action !== PokemonActionState.EXPLORING
+    ) {
+      EvolutionManager.tryEvolve(pokemon, player)
+    }
+  })
 }
 
 function giftRandomUniques(player: Player, amount: number): boolean {
@@ -1692,12 +1702,16 @@ export const blessingEffectService: {
     )
   },
 
+  /* the gift goes first in every effect that also hands out an item: a refused
+     pick is retried, and the item would be paid out on each attempt */
   [Blessing.REPLICATOR]: (player) => {
+    if (!giftPokemonIfBenchHasRoom(player, Pkm.VAROOM)) return false
     player.items.push(Item.DUBIOUS_DISC_BLESSING_ITEM)
-    return giftPokemonIfBenchHasRoom(player, Pkm.VAROOM)
+    return true
   },
 
   [Blessing.FIND_A_LOST_WAND]: (player) => {
+    if (!giftPokemonIfBenchHasRoom(player, Pkm.HATENNA)) return false
     // only the FAIRY 2 roll, which is the first entry in the wand table
     const offered = player.fairyWandChoicesRolls[0]
     const lostWand = offered
@@ -1709,7 +1723,7 @@ export const blessingEffectService: {
       player.items.push(lostWand)
       player.blessingWands.push(lostWand)
     }
-    return giftPokemonIfBenchHasRoom(player, Pkm.HATENNA)
+    return true
   },
 
   [Blessing.FAST_FOOD_DELIVERY]: (player) =>
@@ -2207,13 +2221,14 @@ export const blessingEffectService: {
     giftPokemonIfBenchHasRoom(player, Pkm.FLABEBE),
 
   [Blessing.AMAZING_GARDENING]: (player) => {
+    if (!giftPokemonIfBenchHasRoom(player, Pkm.GOSSIFLEUR)) return false
     const fullyEvolvedFlowers = getUnlockedFlowerPots(player).filter(
       (pot) => pot.evolution === Pkm.DEFAULT
     ).length
     for (let i = 0; i < 1 + fullyEvolvedFlowers; i++) {
       player.items.push(Item.AMAZE_MULCH)
     }
-    return giftPokemonIfBenchHasRoom(player, Pkm.GOSSIFLEUR)
+    return true
   },
 
   [Blessing.NOT_THE_BEES]: (player) => {
@@ -2242,6 +2257,9 @@ export const blessingEffectService: {
       )
     })
     if (candidates.length === 0) return false
+    /* seeding the pool is lobby-wide and cannot be undone, so refuse before it
+       rather than after the gift fails */
+    if (getFreeSpaceOnBench(player.board) < 1) return false
     const encountered = pickRandomIn(candidates)
     state.shop.addAdditionalPokemon(encountered, state)
     return giftPokemonIfBenchHasRoom(player, encountered)
@@ -2264,7 +2282,9 @@ export const blessingEffectService: {
     player.addMoney(TAXES_GOLD_GAINED, true, null)
     state.players.forEach((otherPlayer) => {
       if (otherPlayer.id !== player.id && otherPlayer.alive) {
-        otherPlayer.addMoney(-TAXES_GOLD_TAKEN_FROM_OTHERS, false, null)
+        // money is a uint16: a broke player taxed below zero wraps to 65535
+        const taxed = Math.min(TAXES_GOLD_TAKEN_FROM_OTHERS, otherPlayer.money)
+        otherPlayer.addMoney(-taxed, false, null)
       }
     })
     return true

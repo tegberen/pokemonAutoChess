@@ -1,5 +1,5 @@
 import { MapSchema, Schema, type } from "@colyseus/schema"
-import { BOARD_HEIGHT, BOARD_WIDTH, BOARD_SIDE_HEIGHT, DEFAULT_SPEED, getItemCapacity } from "../config"
+import { BENCH_GROUND_HOLES_OFFSET, BOARD_HEIGHT, BOARD_WIDTH, BOARD_SIDE_HEIGHT, DEFAULT_SPEED, getItemCapacity } from "../config"
 import {
   packScribbleCell,
   ScribbleShapeTint,
@@ -1948,7 +1948,7 @@ export default class Simulation extends Schema implements ISimulation {
                 PokemonActionState.DIGGING
               ].includes(pokemon.action) &&
               owner.groundHoles[
-                (BOARD_HEIGHT / 2) * BOARD_WIDTH + pokemon.positionX
+                BENCH_GROUND_HOLES_OFFSET + pokemon.positionX
               ] === 5 &&
               !this.snifferDogPulledPokemonIds.has(pokemon.id)
           )

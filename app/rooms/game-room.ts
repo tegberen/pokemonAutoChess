@@ -1612,16 +1612,12 @@ export default class GameRoom extends Room<{ state: GameState }> {
     rerollableSlots[slotIndex] = false
 
     // replacing the choice (new id) is what makes the client re-render, see rerollChoice
-    const rerolledChoice = new PlayerChoice({
+    player.choices[choiceIndex] = new PlayerChoice({
       type: "blessing",
       blessings,
       rerollCandidates: [...choice.rerollCandidates],
       rerollableSlots
     })
-    rerolledChoice.blessingsProposedHistory = [
-      ...choice.blessingsProposedHistory
-    ]
-    player.choices[choiceIndex] = rerolledChoice
   }
 
   selectSeed(playerId: string, seed: unknown) {
@@ -1846,7 +1842,8 @@ export default class GameRoom extends Room<{ state: GameState }> {
             pokemon,
             this.state.specialGameRule,
             false,
-            player.blessings
+            player.blessings,
+            player.board
           )
           player.addMoney(sellPrice, true, null)
         }

@@ -162,6 +162,7 @@ export class Pokemon extends Schema implements IPokemon {
 
   get canBeCloned(): boolean {
     return (
+      this.manifestationLocked === false &&
       this.rarity !== Rarity.UNIQUE &&
       this.rarity !== Rarity.LEGENDARY &&
       this.rarity !== Rarity.HATCH &&

@@ -70,7 +70,13 @@ export class SellZone extends GameObjects.Container {
       pokemon.manifestationLocked ||
       (hasMixAndMatch && pokemon.rarity === Rarity.UNIQUE)
         ? 0
-        : getSellPrice(pokemon, specialGameRule, false, blessings ? [...blessings] : undefined)
+        : getSellPrice(
+            pokemon,
+            specialGameRule,
+            false,
+            blessings ? [...blessings] : undefined,
+            this.scene.board?.player.board
+          )
     this.text.setText(
       `${t("drop_here_to_sell")} ${t("for_price_gold", { price })}`
     )

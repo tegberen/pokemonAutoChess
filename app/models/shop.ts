@@ -101,7 +101,9 @@ export function getSellPrice(
   pokemon: IPokemon | IPokemonEntity,
   specialGameRule?: SpecialGameRule | null,
   ignoreRareCandy = false,
-  blessings?: Blessing[]
+  blessings?: Blessing[],
+  // the seller's board, only read for the BERSERKER_HORDES discount
+  sellerBoard?: Player["board"]
 ): number {
   const name = pokemon.name
 
@@ -173,6 +175,17 @@ export function getSellPrice(
     price = RarityCost[pokemon.rarity] * 1
   } else {
     price = RarityCost[pokemon.rarity] * stars
+  }
+
+  /* the same discount getBuyPrice applies, scaled by stars so that merging free
+     copies cannot refund more than they cost either. Without it a WILD unit
+     bought for 0 still sells for full price, which is an unbounded gold loop */
+  if (
+    sellerBoard &&
+    blessings?.includes(Blessing.BERSERKER_HORDES) &&
+    getPokemonData(name).types.includes(Synergy.WILD)
+  ) {
+    price = Math.max(0, price - countWildsThreeStarsOrMore(sellerBoard) * stars)
   }
 
   return price
@@ -443,7 +456,7 @@ export default class Shop {
   /* ALL_FOURS: a one-shot themed shop drawn outside the pool, like the Berserker
      Hordes shop, so buying from it does not deplete the epic line for the lobby */
   assignAllEpicShop(player: Player, state: GameState) {
-    player.shop.forEach((pkm) => this.releasePokemon(pkm, player, state))
+    this.releaseCurrentShop(player, state)
     const epicPool = PRECOMPUTED_POKEMONS_PER_RARITY.EPIC.filter(
       (pkm) => getPokemonData(pkm).stars === 1 && !(pkm in PkmDuos)
     )
@@ -452,11 +465,22 @@ export default class Shop {
     for (let i = 0; i < size; i++) {
       player.shop[i] = pickRandomIn(epicPool)
     }
+    player.shopSlotsMinted = true
     this.syncJuggernautShopStats(player, state)
   }
 
-  assignShop(player: Player, manualRefresh: boolean, state: GameState) {
+  /* a themed shop is minted rather than drawn, so returning it to the pool on
+     the next refresh would hand the lobby units that were never taken out */
+  releaseCurrentShop(player: Player, state: GameState) {
+    if (player.shopSlotsMinted) {
+      player.shopSlotsMinted = false
+      return
+    }
     player.shop.forEach((pkm) => this.releasePokemon(pkm, player, state))
+  }
+
+  assignShop(player: Player, manualRefresh: boolean, state: GameState) {
+    this.releaseCurrentShop(player, state)
 
     if (state.specialGameRule === SpecialGameRule.BAZAAR) {
       const shopKey = state.stageLevel + player.gameStats.rerollCount
@@ -490,6 +514,7 @@ export default class Shop {
           for (let i = 0; i < size; i++) {
             player.shop[i] = pickRandomIn(wildPool)
           }
+          player.shopSlotsMinted = true
           this.syncJuggernautShopStats(player, state)
           return
         }
@@ -563,7 +588,7 @@ export default class Shop {
     state: GameState,
     specificTypes: Synergy[]
   ) {
-    player.shop.forEach((pkm) => this.releasePokemon(pkm, player, state))
+    this.releaseCurrentShop(player, state)
     this.clearBazaarShop(player)
     for (let i = 0; i < getShopSize(state.specialGameRule, state.stageLevel); i++) {
       player.shop[i] = this.pickPokemon(player, state, i, true, specificTypes)

@@ -1481,16 +1481,29 @@ export function rollBlessingTierForStage(stage: number): BlessingTier {
   return randomWeighted(tierChances) ?? BlessingTier.SILVER
 }
 
+/* the tier a pending wish would upgrade to, without spending it */
+export function peekGreedyWishTier(
+  player: Player,
+  tier: BlessingTier
+): BlessingTier {
+  if (!player.greedyWishPending) return tier
+  if (tier === BlessingTier.SILVER) return BlessingTier.GOLD
+  return BlessingTier.PRISMATIC
+}
+
+/* called once the selection is certain to be offered, so a wish is never spent
+   on a tier that turns out to have nothing left to propose */
 export function consumeGreedyWishTier(
   player: Player,
   tier: BlessingTier
 ): BlessingTier {
   if (!player.greedyWishPending) return tier
+  const upgradedTier = peekGreedyWishTier(player, tier)
   player.greedyWishPending = false
-  if (tier === BlessingTier.SILVER) return BlessingTier.GOLD
-  if (tier === BlessingTier.GOLD) return BlessingTier.PRISMATIC
-  player.addBlessingGold(GREEDY_WISH_PRISMATIC_GOLD)
-  return BlessingTier.PRISMATIC
+  if (tier === BlessingTier.PRISMATIC) {
+    player.addBlessingGold(GREEDY_WISH_PRISMATIC_GOLD)
+  }
+  return upgradedTier
 }
 
 function tierChancesForBlessingsUnderTest(): {
@@ -1558,6 +1571,7 @@ export function getBlessingsAvailable(
     const definition = Blessings[blessing]
     return (
       definition.tier === tier &&
+      player.blessings?.includes(blessing) !== true &&
       (BLESSING_TEST_MODE === false ||
         BLESSING_SANDBOX_MODE ||
         BLESSINGS_UNDER_TEST.includes(blessing)) &&

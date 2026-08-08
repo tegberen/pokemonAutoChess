@@ -1,8 +1,7 @@
 import { ArraySchema, MapSchema, Schema, type, view } from "@colyseus/schema"
 import {
   AdditionalPicksStages,
-  BOARD_HEIGHT,
-  BOARD_WIDTH,
+  GROUND_HOLES_LENGTH,
   FAIRY_WANDS_BY_SYNERGY_LEVEL,
   RegionDetails,
   SynergyTiersThresholds
@@ -172,9 +171,9 @@ export default class Player extends Schema implements IPlayer {
   @type([Pokemon]) flowerPots: Pokemon[] = []
   @type("uint8") mulch: number = 0
   @type("uint8") mulchCap: number = MulchStockCaps[0]
-  @type(["uint8"]) groundHoles: number[] = new Array(
-    BOARD_WIDTH * BOARD_HEIGHT
-  ).fill(0)
+  @type(["uint8"]) groundHoles: number[] = new Array(GROUND_HOLES_LENGTH).fill(
+    0
+  )
   @type("string") map: DungeonPMDO | "town"
   @type({ set: "string" }) effects: Effects = new Effects()
   @type(["string"]) regionalPokemons = new ArraySchema<Pkm>()
@@ -261,6 +260,9 @@ export default class Player extends Schema implements IPlayer {
   rainbowHourRewarded: boolean = false
   // server-only: ALL_FOURS makes the first buy out of its epic shop free
   allFoursFreeBuyPending: boolean = false
+  /* server-only: the current shop was minted outside the pool (ALL_FOURS,
+     BERSERKER_HORDES), so it must not be released back into it */
+  shopSlotsMinted: boolean = false
   // server-only: HYPER_HYPER_ROLL upgrades the next common bought to 3 stars
   hyperHyperRollPending: boolean = false
   // server-only: BEING_OF_KNOWLEDGE gifts its Uxie once, on reaching level 7

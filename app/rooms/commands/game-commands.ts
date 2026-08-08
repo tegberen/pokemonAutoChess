@@ -32,9 +32,11 @@ import {
 } from "../../config"
 import {
   BLESSING_SELECTION_EVERY_STAGE,
+  Blessings,
   consumeGreedyWishTier,
   drawBlessingOptions,
   getBlessingsAvailable,
+  peekGreedyWishTier,
   rollBlessingTierForStage
 } from "../../config/game/blessings"
 import {
@@ -1533,7 +1535,8 @@ export class OnSellPokemonCommand extends Command<
             pokemon,
             this.state.specialGameRule,
             false,
-            player.blessings
+            player.blessings,
+            player.board
           )
     player.addMoney(sellPrice, false, null)
     pokemon.items.forEach((it) => {
@@ -2089,9 +2092,7 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
           return
         }
         if (!player.isBot) {
-          player.shop.forEach((pkm) => {
-            this.state.shop.releasePokemon(pkm, player, this.state)
-          })
+          this.state.shop.releaseCurrentShop(player, this.state)
           player.board.forEach((pokemon) => {
             this.state.shop.releasePokemon(pokemon.name, player, this.state)
           })
@@ -2120,7 +2121,9 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
   triggerSturdy(protector: Player, protectedPlayers: Player[]) {
     protector.sturdyTriggered = true
     protectedPlayers.forEach((player) => {
-      player.life = 1
+      /* outside the finale both partners already sit on the same life, but
+         during it they diverge and a healthy one must not be dropped to 1 */
+      if (player.life <= 0) player.life = 1
     })
     protector.board.forEach((pokemon) => {
       pokemon.addMaxHP(STURDY_MAX_HP)
@@ -2352,13 +2355,14 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
       const lobbyTier = rollBlessingTierForStage(this.state.stageLevel)
       this.state.players.forEach((player: Player) => {
         if (player.isBot || !player.alive) return
-        const playerTier = consumeGreedyWishTier(player, lobbyTier)
+        const playerTier = peekGreedyWishTier(player, lobbyTier)
         const blessingPool = getBlessingsAvailable(
           playerTier,
           this.state.stageLevel,
           player
         )
         if (blessingPool.length === 0) return
+        consumeGreedyWishTier(player, lobbyTier)
         const drawn = drawBlessingOptions(
           blessingPool,
           BLESSING_OPTIONS_PER_SELECTION * (1 + BLESSING_REROLLS_PER_OPTION)
@@ -2368,16 +2372,16 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
           BLESSING_OPTIONS_PER_SELECTION
         )
         const rerollCandidates = drawn.slice(BLESSING_OPTIONS_PER_SELECTION)
-        const blessingChoice = new PlayerChoice({
-          type: "blessing",
-          blessings: proposedBlessings,
-          rerollCandidates,
-          rerollableSlots: proposedBlessings.map(
-            (_, slot) => rerollCandidates[slot] !== undefined
-          )
-        })
-        blessingChoice.blessingsProposedHistory = [...drawn]
-        player.choices.push(blessingChoice)
+        player.choices.push(
+          new PlayerChoice({
+            type: "blessing",
+            blessings: proposedBlessings,
+            rerollCandidates,
+            rerollableSlots: proposedBlessings.map(
+              (_, slot) => rerollCandidates[slot] !== undefined
+            )
+          })
+        )
       })
     }
 
@@ -2841,7 +2845,12 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
         "unique",
         "legendary",
         "scribble_shape",
-        "evolution_lab_reward"
+        "evolution_lab_reward",
+        /* a blessing choice left open is a blessing banked: its scheduled
+           grants all fire at once when it is finally picked ten stages later */
+        "blessing",
+        "singularity",
+        "starter_choice"
       ]
       player.choices
         .filter((choice) => autoPickChoices.includes(choice.type))
@@ -2851,9 +2860,28 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
               ? choice.rewards.length
               : choice.pokemons.length ||
                 choice.items.length ||
-                choice.scribbleShapes.length
-          const randomPick = randomBetween(0, nbOptions - 1)
-          this.room.pickChoice(player.id, choice.id, randomPick, true)
+                choice.scribbleShapes.length ||
+                choice.blessings.length
+          if (nbOptions === 0) return
+          /* same rule the client greys the card out with: a blessing that has
+             to land a pokemon on a full bench is refused, which would leave
+             the choice pending and bank it into the next stage */
+          const benchIsFull = getFreeSpaceOnBench(player.board) === 0
+          const isPickable = (optionIndex: number) =>
+            choice.type !== "blessing" ||
+            !benchIsFull ||
+            Blessings[choice.blessings[optionIndex]]
+              ?.grantsPokemonImmediately !== true
+
+          const firstPick = randomBetween(0, nbOptions - 1)
+          for (let offset = 0; offset < nbOptions; offset++) {
+            const optionIndex = (firstPick + offset) % nbOptions
+            if (!isPickable(optionIndex)) continue
+            this.room.pickChoice(player.id, choice.id, optionIndex, true)
+            const stillPending =
+              player.choices.findIndex((c) => c.id === choice.id) !== -1
+            if (!stillPending) break
+          }
         })
       if (player.blessingsRef) player.blessingsRef.thinkFastActive = false
     })

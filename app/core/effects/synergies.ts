@@ -1,5 +1,6 @@
 import type { MapSchema } from "@colyseus/schema"
 import {
+  BENCH_GROUND_HOLES_OFFSET,
   BOARD_HEIGHT,
   BOARD_WIDTH,
   FIELD_HEAL_PER_SYNERGY_TIER,
@@ -1394,10 +1395,9 @@ export const groundDigEffect = new OnStageStartEffect(({ player, room }) => {
           player.synergies.hasSynergyActive(Synergy.GOURMET)
         )
       ) {
-        const standingIndex =
-          (diggingOnBench ? GROUND_HOLE_ROWS : pokemon.positionY - 1) *
-            BOARD_WIDTH +
-          pokemon.positionX
+        const standingIndex = diggingOnBench
+          ? BENCH_GROUND_HOLES_OFFSET + pokemon.positionX
+          : (pokemon.positionY - 1) * BOARD_WIDTH + pokemon.positionX
         /* DIGGING_EQUIPMENT: a Ground pokemon standing on an exhausted hole
            moves its effort to the most nearly finished neighbour instead */
         const index =

@@ -31,8 +31,20 @@ export class CountEvolutionHandler extends EvolutionHandler {
     )
   }
 
+  /* MANIFESTATION copies are locked until stage 20: they neither merge with
+     their own line nor let the line merge around them */
+  countsAsCopy(candidate: Pokemon, pokemon: Pokemon): boolean {
+    return (
+      candidate.name === pokemon.name &&
+      !candidate.items.has(Item.EVIOLITE) &&
+      candidate.action !== PokemonActionState.EXPLORING &&
+      candidate.manifestationLocked === false
+    )
+  }
+
   canEvolve(pokemon: Pokemon, player: Player): boolean {
     if (!pokemon.hasEvolution) return false
+    if (pokemon.manifestationLocked) return false
     if (this.isJuggernautChampionCopy(pokemon, player)) return false
 
     // special case for Avalugg passive, didnt find a better way to do it
@@ -47,15 +59,15 @@ export class CountEvolutionHandler extends EvolutionHandler {
 
     // match by name and not by index, because Illusion disguises (Zorua)
     // temporarily change the index of the board pokemon
-    const copies = schemaValues(player.board).filter(
-      (p) => p.name === pokemon.name && !p.items.has(Item.EVIOLITE) &&
-        p.action !== PokemonActionState.EXPLORING
+    const copies = schemaValues(player.board).filter((p) =>
+      this.countsAsCopy(p, pokemon)
     )
     return copies.length >= this.numberRequired
   }
 
   canEvolveIfGettingOne(pokemon: Pokemon, player: Player): boolean {
     if (!pokemon.hasEvolution) return false
+    if (pokemon.manifestationLocked) return false
     if (this.isJuggernautChampionCopy(pokemon, player)) return false
 
     // special case for Avalugg passive, didnt find a better way to do it
@@ -68,8 +80,8 @@ export class CountEvolutionHandler extends EvolutionHandler {
       return false
     }
 
-    const copies = schemaValues(player.board).filter(
-      (p) => p.name === pokemon.name && !p.items.has(Item.EVIOLITE) && p.action !== PokemonActionState.EXPLORING
+    const copies = schemaValues(player.board).filter((p) =>
+      this.countsAsCopy(p, pokemon)
     )
     return copies.length === this.numberRequired - 1
   }
@@ -86,9 +98,7 @@ export class CountEvolutionHandler extends EvolutionHandler {
 
     player.board.forEach((pkm, id) => {
       if (
-        pkm.name === pokemon.name &&
-        !pkm.items.has(Item.EVIOLITE) &&
-        pkm.action !== PokemonActionState.EXPLORING &&
+        this.countsAsCopy(pkm, pokemon) &&
         pokemonsBeforeEvolution.length < this.numberRequired
       ) {
         // logger.debug(pkm.name, pokemon.name)

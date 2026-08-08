@@ -32,7 +32,8 @@ import { Weather } from "../../types/enum/Weather"
 
 const unavailableScribbleRules = [
   SpecialGameRule.DO_IT_ALL_YOURSELF,
-  SpecialGameRule.HALLOWEEN
+  SpecialGameRule.HALLOWEEN,
+  SpecialGameRule.PLAY_TEST
 ]
 import { pickRandomIn, randomBetween } from "../../utils/random"
 
@@ -121,9 +122,7 @@ export default class GameState extends Schema {
     if (gameMode === GameMode.SCRIBBLE) {
       this.specialGameRule = pickRandomIn(
         Object.values(SpecialGameRule).filter(
-          (rule) =>
-            unavailableScribbleRules.includes(rule) === false &&
-            rule !== SpecialGameRule.PLAY_TEST
+          (rule) => unavailableScribbleRules.includes(rule) === false
         )
       )
     } else if (whimsy) {

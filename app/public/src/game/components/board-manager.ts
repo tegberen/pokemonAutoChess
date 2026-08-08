@@ -1,6 +1,7 @@
 import { t } from "i18next"
 import Phaser, { GameObjects } from "phaser"
 import {
+  BENCH_GROUND_HOLES_OFFSET,
   BERRY_TREE_POSITIONS,
   BOARD_HEIGHT,
   BOARD_WIDTH,
@@ -120,7 +121,7 @@ export default class BoardManager {
   portal: Portal | undefined
   smeargle: PokemonSprite | null = null
   specialGameRule: SpecialGameRule | null = null
-  boardReconciliationTimers: ReturnType<typeof setTimeout>[] = []
+  boardReconciliationTimers: Phaser.Time.TimerEvent[] = []
 
   constructor(
     scene: GameScene,
@@ -277,6 +278,7 @@ export default class BoardManager {
   }
 
   clearBoard() {
+    this.cancelBoardReconciliation()
     this.pokemons.forEach((pokemon) => {
       this.scene.tweens.killTweensOf(pokemon)
       pokemon.destroy()
@@ -284,10 +286,19 @@ export default class BoardManager {
     this.pokemons.clear()
   }
 
+  cancelBoardReconciliation() {
+    this.boardReconciliationTimers.forEach((timer) => timer.remove())
+    this.boardReconciliationTimers = []
+  }
+
+  /* sprites can come back from a fight detached from the scene or still waiting
+     on their atlas, which leaves them invisible for the whole picking phase.
+     Two passes on the scene clock, so they die with the scene rather than
+     firing into a torn down board. */
   scheduleBoardReconciliation() {
-    this.boardReconciliationTimers.forEach(clearTimeout)
+    this.cancelBoardReconciliation()
     this.boardReconciliationTimers = [250, 1500].map((delay) =>
-      setTimeout(() => {
+      this.scene.time.delayedCall(delay, () => {
         if (this.mode !== BoardMode.PICK) return
         this.player.board.forEach((pokemon) => {
           const pokemonSprite = this.pokemons.get(pokemon.id)
@@ -298,7 +309,9 @@ export default class BoardManager {
             this.addPokemonSprite(pokemon)
             return
           }
-          if (!this.scene.tweens.isTweening(pokemonSprite)) {
+          // repositioning the sprite under the cursor would cancel the drag
+          const isBeingDragged = this.scene.pokemonDragged === pokemonSprite
+          if (!isBeingDragged && !this.scene.tweens.isTweening(pokemonSprite)) {
             const coordinates = transformBoardCoordinates(
               pokemon.positionX,
               pokemon.positionY
@@ -309,7 +322,8 @@ export default class BoardManager {
             }
             if (
               pokemonSprite.alpha === 0 &&
-              pokemon.action !== PokemonActionState.EXPLORING
+              pokemon.action !== PokemonActionState.EXPLORING &&
+              pokemon.action !== PokemonActionState.DIGGING
             ) {
               pokemonSprite.setAlpha(1)
             }
@@ -318,7 +332,6 @@ export default class BoardManager {
           pokemonSprite.sprite.setActive(true).setVisible(true)
           pokemonSprite.shadow?.setActive(true).setVisible(true)
           if (
-            this.scene.textures.exists(pokemon.index) &&
             ["loading_pokeball", "0000", "__MISSING"].includes(
               pokemonSprite.sprite.texture.key
             )
@@ -326,7 +339,7 @@ export default class BoardManager {
             pokemonSprite.sprite.setTexture(pokemon.index)
           }
         })
-      }, delay)
+      })
     )
   }
 
@@ -743,8 +756,7 @@ export default class BoardManager {
       }
     }
     for (let col = 0; col < BOARD_WIDTH; col++) {
-      const hole =
-        this.player.groundHoles[(BOARD_HEIGHT / 2) * BOARD_WIDTH + col]
+      const hole = this.player.groundHoles[BENCH_GROUND_HOLES_OFFSET + col]
       if (hole > 0) {
         const [x, y] = transformBoardCoordinates(col, 0)
         const groundHole = this.scene.add

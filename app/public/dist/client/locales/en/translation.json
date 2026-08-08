@@ -5478,11 +5478,11 @@
 		},
 		"MANIFESTATION_AP": {
 			"name": "Manifestation: AP",
-			"description": "Gain a random Duosion, Thwackey or Drizzile holding a SOUL_DEW. Until stage 20 it cannot be fielded or given items, and sells for 0 GOLD."
+			"description": "Gain a random Duosion, Thwackey or Drizzile holding a SOUL_DEW. Until stage 20 the unit is locked and sells for 0 GOLD."
 		},
 		"MANIFESTATION_AD": {
 			"name": "Manifestation: ATK",
-			"description": "Gain a random Porygon2, Fletchinder or Bisharp holding a RED_ORB. Until stage 20 it cannot be fielded or given items, and sells for 0 GOLD."
+			"description": "Gain a random Porygon2, Fletchinder or Bisharp holding a RED_ORB. Until stage 20 the unit is locked and sells for 0 GOLD."
 		},
 		"MIX_AND_MATCH_I": {
 			"name": "Mix and Match I",
