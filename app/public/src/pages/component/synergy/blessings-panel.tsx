@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import ReactDOM from "react-dom"
 import { useTranslation } from "react-i18next"
 import { type PlacesType, Tooltip } from "react-tooltip"
@@ -38,6 +38,21 @@ export default function BlessingsPanel(props: { recentOnly?: boolean }) {
     (state) => state.game.blessingQuestProgressByPlayerId[playerIdSpectated]
   )
   const questProgress = questProgressByPlayer ?? {}
+  /* the newest blessing sweeps once when it arrives; keyed on the count so it
+     replays per pickup and does not fire again on unrelated re-renders */
+  const previousBlessingCount = useRef(blessings.length)
+  const [justAcquired, setJustAcquired] = useState(false)
+  useEffect(() => {
+    if (blessings.length > previousBlessingCount.current) {
+      setJustAcquired(true)
+      // cleared after the 1s pass has finished, so the ambient loop does not
+      // cut in mid-sweep and restart the band from its hold position
+      const timer = setTimeout(() => setJustAcquired(false), 1200)
+      previousBlessingCount.current = blessings.length
+      return () => clearTimeout(timer)
+    }
+    previousBlessingCount.current = blessings.length
+  }, [blessings.length])
   const bpRewardsRoundsLeft =
     questProgress[Blessing.BP_REWARDS] ?? BP_REWARDS_ROUND_INTERVAL
   const supportiveSoulRoundsLeft =
@@ -84,7 +99,15 @@ export default function BlessingsPanel(props: { recentOnly?: boolean }) {
   return (
     <div className={cc("blessings-panel", { "blessings-panel-recent": !!props.recentOnly })}>
       {displayedBlessings.map((blessing, index) => (
-        <div key={`${blessing}-${index}`} className="blessing-panel-slot">
+        <div
+          key={`${blessing}-${index}`}
+          className={cc("blessing-panel-slot", {
+            // recentOnly reverses the list, so the newest sits first there
+            "blessing-panel-acquired":
+              justAcquired &&
+              index === (props.recentOnly ? 0 : displayedBlessings.length - 1)
+          })}
+        >
           <img
             src={`/assets/blessings/${Blessings[blessing].icon}.svg`}
             alt={t(`blessing.${blessing}.name`)}

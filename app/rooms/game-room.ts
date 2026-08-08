@@ -1604,19 +1604,24 @@ export default class GameRoom extends Room<{ state: GameState }> {
     const choice = player.choices[choiceIndex]
     if (typeof slotIndex !== "number") return
     if (choice.rerollableSlots[slotIndex] !== true) return
-    const replacement = choice.rerollCandidates[slotIndex]
+    /* the spares are a shared queue rather than one per slot: a short draw used
+       to leave every slot but the first dead even with candidates left over */
+    const rerollCandidates = [...choice.rerollCandidates]
+    const replacement = rerollCandidates.shift()
     if (!replacement) return
 
     const blessings = [...choice.blessings]
-    const rerollableSlots = [...choice.rerollableSlots]
     blessings[slotIndex] = replacement
-    rerollableSlots[slotIndex] = false
+    const rerollableSlots = choice.rerollableSlots.map(
+      (rerollable, slot) =>
+        slot !== slotIndex && rerollable && rerollCandidates.length > 0
+    )
 
     // replacing the choice (new id) is what makes the client re-render, see rerollChoice
     player.choices[choiceIndex] = new PlayerChoice({
       type: "blessing",
       blessings,
-      rerollCandidates: [...choice.rerollCandidates],
+      rerollCandidates,
       rerollableSlots
     })
   }
