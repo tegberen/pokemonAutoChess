@@ -2691,7 +2691,7 @@ export class Politoed extends Pokemon {
   speed = 54
   def = 6
   speDef = 8
-  maxPP = 90
+  maxPP = 100
   range = 2
   skill = Ability.SOAK
 }
