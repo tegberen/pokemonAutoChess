@@ -174,6 +174,12 @@ export enum Blessing {
   AXE_BLAST = "AXE_BLAST",
   SWEET_TREATS = "SWEET_TREATS",
   SNIFFER_DOG = "SNIFFER_DOG",
+  JESTER = "JESTER",
+  TOXIC_RESONANCE = "TOXIC_RESONANCE",
+  GRAND_IGNITION = "GRAND_IGNITION",
+  VALOR = "VALOR",
+  COLONY = "COLONY",
+  SAND_BUDDIES = "SAND_BUDDIES",
   YOU_FORGOT_SOMETHING = "YOU_FORGOT_SOMETHING",
   THINK_FAST = "THINK_FAST",
   WISE_SPENDING = "WISE_SPENDING",
@@ -494,6 +500,22 @@ export const FROST_GEAR_HP_COST_RATIO = 0.1
 export const SHUTTLE_BUS_MAX_PP = 110
 export const PLUNDER_GOLD_MULTIPLIER = 2
 
+export const JESTER_SUBSTITUTE_MAX_PP = 80
+export const JESTER_SUBSTITUTE_MAX_STARS = 4
+export const TOXIC_RESONANCE_BEAT_INTERVAL = 3000
+export const TOXIC_RESONANCE_HARMONIC_BEAT = 4
+export const TOXIC_RESONANCE_POISON_DURATION = 3000
+export const TOXIC_RESONANCE_ALLY_PP = 5
+export const TOXIC_RESONANCE_HARMONIC_ALLY_PP = 30
+export const GRAND_IGNITION_TRUE_DAMAGE_RATIO = 0.1
+export const GRAND_IGNITION_MAX_HP_BURNED_RATIO = 0.1
+export const GRAND_IGNITION_EMBER_DAMAGE_RATIO = 0.05
+export const GRAND_IGNITION_TICK_INTERVAL = 1000
+export const GRAND_IGNITION_TORCH_TRAVEL_DELAY = 750
+export const VALOR_ATTACK_PER_STAR = 1
+export const VALOR_SHIELD_PER_STAR = 10
+export const COLONY_SPEWPA_HATCH_TIME = 2
+
 export const EMERALD_ORB_HEAL_RANGE = 2
 export const SAPPHIRE_ORB_BOUNCES = 3
 export const SAPPHIRE_ORB_ARMOR_BREAK_DURATION = 3000
@@ -613,7 +635,13 @@ export const HERO_BLESSING_GIFT: { [blessing in Blessing]?: Pkm } = {
   [Blessing.FLOWER_QUEEN]: Pkm.FLOETTE,
   [Blessing.CHARGING_MY_BUG]: Pkm.GRUBBIN,
   [Blessing.AXE_BLAST]: Pkm.AXEW,
-  [Blessing.SNIFFER_DOG]: Pkm.LILLIPUP
+  [Blessing.SNIFFER_DOG]: Pkm.LILLIPUP,
+  [Blessing.JESTER]: Pkm.SPRIGATITO,
+  [Blessing.TOXIC_RESONANCE]: Pkm.TYMPOLE,
+  [Blessing.GRAND_IGNITION]: Pkm.FENNEKIN,
+  [Blessing.VALOR]: Pkm.PIGNITE,
+  [Blessing.COLONY]: Pkm.SCATTERBUG,
+  [Blessing.SAND_BUDDIES]: Pkm.SANDILE
 }
 
 export const HERO_BLESSING_FAMILY: { [blessing in Blessing]?: Pkm } = {
@@ -639,7 +667,13 @@ export const HERO_BLESSING_FAMILY: { [blessing in Blessing]?: Pkm } = {
   [Blessing.LANCES_ACE]: Pkm.DRATINI,
   [Blessing.CHARGING_MY_BUG]: Pkm.GRUBBIN,
   [Blessing.AXE_BLAST]: Pkm.AXEW,
-  [Blessing.SNIFFER_DOG]: Pkm.LILLIPUP
+  [Blessing.SNIFFER_DOG]: Pkm.LILLIPUP,
+  [Blessing.JESTER]: Pkm.SPRIGATITO,
+  [Blessing.TOXIC_RESONANCE]: Pkm.TYMPOLE,
+  [Blessing.GRAND_IGNITION]: Pkm.FENNEKIN,
+  [Blessing.VALOR]: Pkm.TEPIG,
+  [Blessing.COLONY]: Pkm.SCATTERBUG,
+  [Blessing.SAND_BUDDIES]: Pkm.SANDILE
 }
 
 /* hero blessings that also relocate the player to a region where their family

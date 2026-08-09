@@ -1604,6 +1604,18 @@ export const blessingEffectService: {
   },
   [Blessing.SNIFFER_DOG]: (player, state, room) =>
     heroBlessingEffect(Blessing.SNIFFER_DOG, player, state, room),
+  [Blessing.JESTER]: (player, state, room) =>
+    heroBlessingEffect(Blessing.JESTER, player, state, room),
+  [Blessing.TOXIC_RESONANCE]: (player, state, room) =>
+    heroBlessingEffect(Blessing.TOXIC_RESONANCE, player, state, room),
+  [Blessing.GRAND_IGNITION]: (player, state, room) =>
+    heroBlessingEffect(Blessing.GRAND_IGNITION, player, state, room),
+  [Blessing.VALOR]: (player, state, room) =>
+    heroBlessingEffect(Blessing.VALOR, player, state, room),
+  [Blessing.COLONY]: (player, state, room) =>
+    heroBlessingEffect(Blessing.COLONY, player, state, room),
+  [Blessing.SAND_BUDDIES]: (player, state, room) =>
+    heroBlessingEffect(Blessing.SAND_BUDDIES, player, state, room),
   [Blessing.YOU_FORGOT_SOMETHING]: () => true,
   [Blessing.THINK_FAST]: (player, state) => {
     const owned =

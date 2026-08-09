@@ -5598,6 +5598,30 @@
 			"name": "Sniffer Dog",
 			"description": "Gain a Lillipup. While Lillipup is fielded and GROUND is active, benched GROUND allies dig holes. When the STRONGEST Lillipup casts its Ability, a random Pokémon on a fully dug bench hole enters battle through a fully dug board hole."
 		},
+		"JESTER": {
+			"name": "Jester",
+			"description": "Gain a Sprigatito. When your STRONGEST Sprigatito casts its Ability, a Substitute with full PP appears nearby. It casts Metronome at 1 STAR, gaining 1 STAR for each additional 100% CRIT_POWER of the caster, up to 4 STAR."
+		},
+		"TOXIC_RESONANCE": {
+			"name": "Toxic Resonance",
+			"description": "Gain a Tympole. Your STRONGEST Tympole resonates every 3 seconds. Each beat spreads 1 tile further than the last. Pokémon caught in the wave are POISONNED for 3 seconds, allies included. Poisoned allies gain 5 PP. The 4th beat covers the whole board and gives 30 PP instead. The cycle then restarts."
+		},
+		"GRAND_IGNITION": {
+			"name": "Grand Ignition",
+			"description": "Gain a Fennekin. When your STRONGEST Fennekin casts its Ability, it throws a torch to a random corner of the board. Once all four corners are lit, the battlefield ignites: every enemy permanently loses 10% of its max HP and suffers double BURN damage for the rest of the fight, which cannot be reduced or cleansed."
+		},
+		"VALOR": {
+			"name": "Valor",
+			"description": "Gain a Pignite. At the start of combat, your STRONGEST Tepig gains 1 ATK and 10 SHIELD for each WILD STAR on your bench, and the same again for each ally KO'd during the fight."
+		},
+		"COLONY": {
+			"name": "Colony",
+			"description": "Gain a Scatterbug. When your STRONGEST Vivillon KO's its target, a Spewpa joins your bench. It evolves after 2 rounds and sells for 0 GOLD. Only one Spewpa is attracted at a time, so it must evolve before the next arrives. Every Vivillon contributes its own synergies."
+		},
+		"SAND_BUDDIES": {
+			"name": "Sand Buddies",
+			"description": "Gain a Sandile. When your STRONGEST Sandile fails to KO its target with its Ability, a Trapinch with full PP appears nearby, at the same STAR level."
+		},
 		"YOU_FORGOT_SOMETHING": {
 			"name": "You Forgot Something!",
 			"description": "The first Pokémon you KO'd in your last PvE round joins your team after 8 seconds of PvP combat, holding the two items you didn't choose."

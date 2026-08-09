@@ -631,7 +631,8 @@ export default class Player extends Schema implements IPlayer {
         ...(this.blessings?.includes(Blessing.RAINBOW_HOUR) ? [Pkm.EEVEE] : []),
         ...(this.blessings?.includes(Blessing.BEAUTY_CONTEST)
           ? [Pkm.FEEBAS]
-          : [])
+          : []),
+        ...(this.blessings?.includes(Blessing.COLONY) ? [Pkm.SCATTERBUG] : [])
       ]
     )
 

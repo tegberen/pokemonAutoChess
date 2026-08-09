@@ -107,6 +107,8 @@ export function getSellPrice(
 ): number {
   const name = pokemon.name
 
+  if ("sellsForNothing" in pokemon && pokemon.sellsForNothing === true) return 0
+
   if (name === Pkm.CURSOLA && blessings?.includes(Blessing.CURSE_OF_CORAL)) {
     return CURSOLA_SELL_PRICE
   }

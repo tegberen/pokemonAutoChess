@@ -458,6 +458,1111 @@ export function hiddenPowerAnimation(args: AbilityAnimationArgs) {
   })
 }
 
+const GRAND_IGNITION_MAGIC_TINT = 0xff8a2b
+const GRAND_IGNITION_ARC_BLOOM = 0xd93b0a
+const GRAND_IGNITION_ARC_TINT = 0xff9a2b
+const GRAND_IGNITION_ARC_CORE = 0xffe9a8
+const GRAND_IGNITION_SMOKE_TINT = 0x726154
+const VFX_PIXEL = 3
+
+type PixelLayer = { grid: number; size: number; color: number; alpha: number }
+
+function samplePolyline(
+  points: { x: number; y: number }[],
+  step: number
+): { x: number; y: number }[] {
+  const sampled: { x: number; y: number }[] = []
+  for (let index = 1; index < points.length; index++) {
+    const [from, to] = [points[index - 1], points[index]]
+    const steps = Math.max(
+      1,
+      Math.ceil(Math.hypot(to.x - from.x, to.y - from.y) / step)
+    )
+    for (let s = 0; s < steps; s++) {
+      const t = s / steps
+      sampled.push({
+        x: from.x + (to.x - from.x) * t,
+        y: from.y + (to.y - from.y) * t
+      })
+    }
+  }
+  sampled.push(points[points.length - 1])
+  return sampled
+}
+
+function drawPixelPath(
+  graphics: Phaser.GameObjects.Graphics,
+  points: { x: number; y: number }[],
+  layers: PixelLayer[]
+) {
+  layers.forEach(({ grid, size, color, alpha }) => {
+    const cells = new Map<string, { x: number; y: number }>()
+    samplePolyline(points, grid / 2).forEach(({ x, y }) => {
+      const snapped = {
+        x: Math.round(x / grid) * grid,
+        y: Math.round(y / grid) * grid
+      }
+      cells.set(`${snapped.x},${snapped.y}`, snapped)
+    })
+    graphics.fillStyle(color, alpha)
+    cells.forEach(({ x, y }) =>
+      graphics.fillRect(x - size / 2, y - size / 2, size, size)
+    )
+  })
+}
+
+function ringPoints(radius: number) {
+  const STEPS = Math.max(32, Math.round(radius))
+  return Array.from({ length: STEPS + 1 }, (_, step) => {
+    const angle = (step / STEPS) * Math.PI * 2
+    return { x: Math.cos(angle) * radius, y: Math.sin(angle) * radius }
+  })
+}
+const BOARD_PLANE_FLATTEN = 0.55
+const GRAND_IGNITION_CORNERS: [number, number][] = [
+  [0, 0],
+  [BOARD_WIDTH - 1, 0],
+  [0, BOARD_HEIGHT - 1],
+  [BOARD_WIDTH - 1, BOARD_HEIGHT - 1]
+]
+
+const GRAND_IGNITION_FLAME_BASE: [number, number] = [0.5, 1]
+const GRAND_IGNITION_NEAR_CORNER_DROP = 26
+
+function grandIgnitionCornerDrop(cornerPixelY: number, flip: boolean) {
+  const [, centerPixelY] = transformEntityCoordinates(
+    (BOARD_WIDTH - 1) / 2,
+    (BOARD_HEIGHT - 1) / 2,
+    flip
+  )
+  return cornerPixelY > centerPixelY ? GRAND_IGNITION_NEAR_CORNER_DROP : 0
+}
+
+function grandIgnitionFlame(
+  scene: GameScene | DebugScene,
+  x: number,
+  groundY: number,
+  width: number,
+  height: number,
+  phase: number,
+  depth: number = DEPTH.ABILITY_MINOR
+) {
+  return addAbilitySprite(scene, "EMBER", 0, [x, groundY], {
+    scale: [width, height],
+    origin: GRAND_IGNITION_FLAME_BASE,
+    depth,
+    destroyOnComplete: false,
+    animOptions: {
+      repeat: -1,
+      delay: phase,
+      frameRate: randomBetween(11, 18)
+    }
+  })
+}
+
+function grandIgnitionWanderingFlame(
+  scene: GameScene | DebugScene,
+  x: number,
+  groundY: number,
+  width: number,
+  height: number,
+  depth: number
+) {
+  const flame = grandIgnitionFlame(
+    scene,
+    x,
+    groundY,
+    width,
+    height,
+    randomBetween(0, 500),
+    depth
+  )
+  if (!flame) return
+  scene.tweens.add({
+    targets: flame,
+    x: x + randomBetween(-7, 7),
+    y: groundY + randomBetween(-4, 4),
+    duration: randomBetween(1500, 2900),
+    yoyo: true,
+    repeat: -1,
+    ease: Phaser.Math.Easing.Sine.InOut
+  })
+}
+
+function grandIgnitionSparks(
+  scene: GameScene | DebugScene,
+  x: number,
+  groundY: number,
+  count: number,
+  spread: number
+) {
+  for (let i = 0; i < count; i++) {
+    const spark = addAbilitySprite(
+      scene,
+      "EMBER",
+      0,
+      [x + randomBetween(-spread, spread), groundY],
+      {
+        scale: randomBetween(3, 6) / 10,
+        depth: DEPTH.ABILITY,
+        destroyOnComplete: false,
+        animOptions: { repeat: -1 }
+      }
+    )
+    if (!spark) continue
+    scene.tweens.add({
+      targets: spark,
+      y: groundY - randomBetween(140, 300),
+      x: spark.x + randomBetween(-50, 50),
+      alpha: 0,
+      duration: randomBetween(1100, 2000),
+      delay: randomBetween(0, 500),
+      ease: Phaser.Math.Easing.Sine.Out,
+      onComplete: () => spark.destroy()
+    })
+  }
+}
+
+function grandIgnitionSmoke(
+  scene: GameScene | DebugScene,
+  x: number,
+  groundY: number,
+  scale: number
+) {
+  const smoke = addAbilitySprite(scene, "SMOKE", 0, [x, groundY - 20], {
+    scale: scale * 0.6,
+    depth: DEPTH.ABILITY_MINOR,
+    tint: GRAND_IGNITION_SMOKE_TINT,
+    alpha: 0,
+    destroyOnComplete: false,
+    animOptions: { repeat: -1, frameRate: randomBetween(4, 7) }
+  })
+  if (!smoke) return
+  scene.tweens.add({
+    targets: smoke,
+    alpha: { from: 0, to: 0.22 },
+    duration: 900,
+    delay: randomBetween(0, 1200),
+    yoyo: true,
+    hold: 900,
+    repeat: -1,
+    ease: Phaser.Math.Easing.Sine.InOut
+  })
+  scene.tweens.add({
+    targets: smoke,
+    y: groundY - randomBetween(150, 230),
+    x: x + randomBetween(-90, 90),
+    scaleX: scale * 1.8,
+    scaleY: scale * 1.8,
+    angle: randomBetween(-25, 25),
+    duration: 2700,
+    delay: randomBetween(0, 1200),
+    repeat: -1,
+    ease: Phaser.Math.Easing.Sine.Out
+  })
+}
+
+function grandIgnitionBoardCenter(flip: boolean) {
+  return transformEntityCoordinates(
+    (BOARD_WIDTH - 1) / 2,
+    (BOARD_HEIGHT - 1) / 2,
+    flip
+  )
+}
+
+const grandIgnitionSigilRadius = () => (CELL_WIDTH * BOARD_WIDTH) / 2
+
+function boardGroundPlane(
+  scene: GameScene | DebugScene,
+  centerX: number,
+  centerY: number
+) {
+  const plane = scene.add
+    .container(centerX, centerY)
+    .setDepth(DEPTH.ABILITY_GROUND_LEVEL)
+    .setScale(1, BOARD_PLANE_FLATTEN)
+  scene.abilitiesVfxGroup?.add(plane)
+  const graphics = scene.add
+    .graphics()
+    .setBlendMode(Phaser.BlendModes.ADD)
+    .setAlpha(0)
+  plane.add(graphics)
+  return graphics
+}
+
+function grandIgnitionLineRunner(
+  scene: GameScene | DebugScene,
+  centerX: number,
+  centerY: number,
+  pointAt: (t: number) => { x: number; y: number },
+  duration: number
+) {
+  const pixel = VFX_PIXEL
+  const TAIL = 7
+  const runner = scene.add
+    .graphics()
+    .setDepth(DEPTH.ABILITY_GROUND_LEVEL)
+    .setBlendMode(Phaser.BlendModes.ADD)
+  scene.abilitiesVfxGroup?.add(runner)
+
+  const head = { t: 0 }
+  scene.tweens.add({
+    targets: head,
+    t: 1,
+    duration,
+    repeat: -1,
+    repeatDelay: randomBetween(200, 900),
+    ease: Phaser.Math.Easing.Sine.InOut,
+    onUpdate: () => {
+      runner.clear()
+      for (let step = 0; step < TAIL; step++) {
+        const t = head.t - step * 0.022
+        if (t < 0) continue
+        const point = pointAt(t)
+        const size = pixel * (step === 0 ? 2.4 : 1.6)
+        runner.fillStyle(
+          step === 0 ? GRAND_IGNITION_ARC_CORE : GRAND_IGNITION_ARC_TINT,
+          (1 - step / TAIL) * 0.85
+        )
+        runner.fillRect(
+          centerX + point.x - size / 2,
+          centerY + point.y * BOARD_PLANE_FLATTEN - size / 2,
+          size,
+          size
+        )
+      }
+    }
+  })
+}
+
+function grandIgnitionQuarterArc(
+  scene: GameScene | DebugScene,
+  cornerX: number,
+  cornerY: number,
+  flip: boolean
+) {
+  const [centerX, centerY] = grandIgnitionBoardCenter(flip)
+  const quarter = boardGroundPlane(scene, centerX, centerY)
+  const radius = grandIgnitionSigilRadius()
+  const toCorner = Math.atan2(
+    (cornerY - centerY) / BOARD_PLANE_FLATTEN,
+    cornerX - centerX
+  )
+  const pixel = VFX_PIXEL
+  const points = Array.from({ length: 33 }, (_, step) => {
+    const angle = toCorner - Math.PI / 4 + (step / 32) * (Math.PI / 2)
+    return { x: Math.cos(angle) * radius, y: Math.sin(angle) * radius }
+  })
+  drawPixelPath(quarter, points, [
+    { grid: pixel * 4, size: pixel * 5, color: GRAND_IGNITION_ARC_BLOOM, alpha: 0.11 },
+    { grid: pixel, size: pixel * 1.5, color: GRAND_IGNITION_ARC_CORE, alpha: 0.6 }
+  ])
+
+  const cornerLocal = {
+    x: cornerX - centerX,
+    y: (cornerY - centerY) / BOARD_PLANE_FLATTEN
+  }
+  const arcEdge = {
+    x: Math.cos(toCorner) * radius,
+    y: Math.sin(toCorner) * radius
+  }
+  drawPixelPath(quarter, [arcEdge, cornerLocal], [
+    { grid: pixel * 4, size: pixel * 5, color: GRAND_IGNITION_ARC_BLOOM, alpha: 0.09 },
+    { grid: pixel, size: pixel * 1.5, color: GRAND_IGNITION_ARC_TINT, alpha: 0.45 }
+  ])
+
+  quarter.setScale(1.18)
+  scene.tweens.add({
+    targets: quarter,
+    alpha: 1,
+    scale: 1,
+    duration: 520,
+    ease: Phaser.Math.Easing.Cubic.Out
+  })
+
+  grandIgnitionLineRunner(scene, centerX, centerY, (t) => {
+    const angle = toCorner - Math.PI / 4 + t * (Math.PI / 2)
+    return { x: Math.cos(angle) * radius, y: Math.sin(angle) * radius }
+  }, 2600)
+  grandIgnitionLineRunner(scene, centerX, centerY, (t) => ({
+    x: cornerLocal.x + (arcEdge.x - cornerLocal.x) * t,
+    y: cornerLocal.y + (arcEdge.y - cornerLocal.y) * t
+  }), 1500)
+}
+
+function grandIgnitionSigil(
+  scene: GameScene | DebugScene,
+  centerX: number,
+  centerY: number,
+  radius: number
+) {
+  const sigil = boardGroundPlane(scene, centerX, centerY)
+
+  const RUNNERS = 2
+  for (let runner = 0; runner < RUNNERS; runner++) {
+    const offset = runner / RUNNERS
+    grandIgnitionLineRunner(
+      scene,
+      centerX,
+      centerY,
+      (t) => {
+        const angle = (offset + t) * Math.PI * 2
+        return { x: Math.cos(angle) * radius, y: Math.sin(angle) * radius }
+      },
+      5200
+    )
+  }
+
+  const pixel = VFX_PIXEL
+  drawPixelPath(sigil, ringPoints(radius), [
+    { grid: pixel * 4, size: pixel * 5, color: GRAND_IGNITION_ARC_BLOOM, alpha: 0.11 },
+    { grid: pixel, size: pixel * 1.5, color: GRAND_IGNITION_ARC_CORE, alpha: 0.65 }
+  ])
+  drawPixelPath(sigil, ringPoints(radius * 0.82), [
+    { grid: pixel, size: pixel * 1.2, color: GRAND_IGNITION_ARC_TINT, alpha: 0.5 }
+  ])
+  drawPixelPath(sigil, ringPoints(radius * 0.44), [
+    { grid: pixel * 3, size: pixel * 4, color: GRAND_IGNITION_ARC_BLOOM, alpha: 0.1 },
+    { grid: pixel, size: pixel * 1.2, color: GRAND_IGNITION_ARC_CORE, alpha: 0.55 }
+  ])
+
+  const TICKS = 24
+  for (let tick = 0; tick < TICKS; tick++) {
+    const angle = (tick / TICKS) * Math.PI * 2
+    const [dx, dy] = [Math.cos(angle), Math.sin(angle)]
+    drawPixelPath(
+      sigil,
+      [
+        { x: dx * radius * 0.82, y: dy * radius * 0.82 },
+        { x: dx * radius, y: dy * radius }
+      ],
+      [{ grid: pixel, size: pixel * 1.5, color: GRAND_IGNITION_ARC_TINT, alpha: 0.55 }]
+    )
+  }
+
+  const ARCS = 5
+  const ARC_SWEEP = (Math.PI * 2) / ARCS / 1.7
+  for (let segment = 0; segment < ARCS; segment++) {
+    const start = (segment / ARCS) * Math.PI * 2
+    const dash = Array.from({ length: 13 }, (_, step) => {
+      const angle = start + (step / 12) * ARC_SWEEP
+      return {
+        x: Math.cos(angle) * radius * 0.63,
+        y: Math.sin(angle) * radius * 0.63
+      }
+    })
+    drawPixelPath(sigil, dash, [
+      { grid: pixel * 3, size: pixel * 4, color: GRAND_IGNITION_ARC_BLOOM, alpha: 0.11 },
+      { grid: pixel, size: pixel * 1.5, color: GRAND_IGNITION_ARC_CORE, alpha: 0.6 }
+    ])
+  }
+
+  const MARKERS = 8
+  for (let marker = 0; marker < MARKERS; marker++) {
+    const angle = (marker / MARKERS) * Math.PI * 2 + Math.PI / MARKERS
+    const [cx, cy] = [
+      Math.cos(angle) * radius * 0.63,
+      Math.sin(angle) * radius * 0.63
+    ]
+    const size = pixel * 2.5
+    drawPixelPath(
+      sigil,
+      [
+        { x: cx, y: cy - size },
+        { x: cx + size, y: cy },
+        { x: cx, y: cy + size },
+        { x: cx - size, y: cy },
+        { x: cx, y: cy - size }
+      ],
+      [{ grid: pixel, size: pixel * 1.5, color: GRAND_IGNITION_ARC_TINT, alpha: 0.65 }]
+    )
+  }
+
+  sigil.setScale(0.4)
+  scene.tweens.add({
+    targets: sigil,
+    alpha: { from: 0, to: 1 },
+    scale: 1,
+    duration: 700,
+    ease: Phaser.Math.Easing.Cubic.Out
+  })
+  scene.tweens.add({
+    targets: sigil,
+    angle: 360,
+    duration: 34000,
+    repeat: -1,
+    ease: "Linear"
+  })
+  scene.tweens.add({
+    targets: sigil,
+    alpha: 0.35,
+    delay: 1400,
+    duration: 1800,
+    yoyo: true,
+    repeat: -1,
+    ease: Phaser.Math.Easing.Sine.InOut
+  })
+}
+
+const TOXIC_RESONANCE_BLOOM = 0x6b2fa0
+const TOXIC_RESONANCE_BODY = 0x7ae582
+const TOXIC_RESONANCE_CORE = 0xe8fff0
+const TOXIC_RESONANCE_HARMONIC_BEAT = 4
+// below 0.894 the diagonal neighbours fall outside a ring that does poison them
+const TOXIC_RESONANCE_RING_TILT = 0.9
+
+function toxicResonanceRing(
+  scene: GameScene | DebugScene,
+  centerX: number,
+  centerY: number,
+  radius: number,
+  delay: number,
+  duration: number,
+  weight: number
+) {
+  const ring = scene.add
+    .graphics({ x: centerX, y: centerY })
+    .setDepth(DEPTH.ABILITY_GROUND_LEVEL)
+    .setBlendMode(Phaser.BlendModes.ADD)
+  scene.abilitiesVfxGroup?.add(ring)
+  drawPixelPath(ring, ringPoints(radius), [
+    {
+      grid: VFX_PIXEL * 6,
+      size: VFX_PIXEL * 7 * weight,
+      color: TOXIC_RESONANCE_BLOOM,
+      alpha: 0.3
+    },
+    {
+      grid: VFX_PIXEL * 4,
+      size: VFX_PIXEL * 4.5 * weight,
+      color: TOXIC_RESONANCE_BODY,
+      alpha: 0.55
+    },
+    {
+      grid: VFX_PIXEL * 2,
+      size: VFX_PIXEL * 2.4 * weight,
+      color: TOXIC_RESONANCE_CORE,
+      alpha: 0.9
+    }
+  ])
+  ring.setScale(0.25, 0.25 * TOXIC_RESONANCE_RING_TILT).setAlpha(0)
+  scene.tweens.add({
+    targets: ring,
+    scaleX: 1,
+    scaleY: TOXIC_RESONANCE_RING_TILT,
+    alpha: { from: 0.95, to: 0 },
+    delay,
+    duration,
+    ease: Phaser.Math.Easing.Cubic.Out,
+    onComplete: () => ring.destroy()
+  })
+}
+
+function toxicResonanceBeatMarks(
+  scene: GameScene | DebugScene,
+  x: number,
+  y: number,
+  beat: number
+) {
+  const marks = boardGroundPlane(scene, x, y - 6)
+  const radius = 46
+  for (let pip = 0; pip < TOXIC_RESONANCE_HARMONIC_BEAT; pip++) {
+    const angle =
+      (pip / TOXIC_RESONANCE_HARMONIC_BEAT) * Math.PI * 2 - Math.PI / 2
+    const isLit = pip < beat
+    marks.fillStyle(
+      isLit ? TOXIC_RESONANCE_CORE : TOXIC_RESONANCE_BLOOM,
+      isLit ? 0.95 : 0.3
+    )
+    const size = VFX_PIXEL * (isLit ? 4 : 2)
+    marks.fillRect(
+      Math.round((Math.cos(angle) * radius) / VFX_PIXEL) * VFX_PIXEL - size / 2,
+      Math.round((Math.sin(angle) * radius) / VFX_PIXEL) * VFX_PIXEL - size / 2,
+      size,
+      size
+    )
+  }
+  marks.setAlpha(0)
+  scene.tweens.add({
+    targets: marks,
+    alpha: { from: 0.9, to: 0 },
+    scale: { from: 0.85, to: 1.2 },
+    duration: 1100,
+    ease: Phaser.Math.Easing.Sine.Out,
+    onComplete: () => marks.parentContainer?.destroy()
+  })
+}
+
+function toxicResonanceReaction(
+  args: AbilityAnimationArgs,
+  radiusInCells: number,
+  isHarmonic = false
+) {
+  const { scene, positionX, positionY, flip, pokemonsOnBoard } = args
+  /* mirrors Board.getCellsInRadius: euclidean against radius + 0.5, not a
+     chebyshev square, or the wave animates on units it never poisons */
+  const reach = radiusInCells + 0.5
+  pokemonsOnBoard.forEach((unit) => {
+    const [dx, dy] = [unit.positionX - positionX, unit.positionY - positionY]
+    if (dx * dx + dy * dy >= reach * reach) return
+    const distance = Math.round(Math.hypot(dx, dy))
+    const [unitX, unitY] = transformEntityCoordinates(
+      unit.positionX,
+      unit.positionY,
+      flip
+    )
+    const isChampion = distance === 0
+    scene.time.delayedCall(distance * 90, () => {
+      addAbilitySprite(
+        scene,
+        isChampion ? Ability.ECHO : "SMOG",
+        0,
+        [unitX, unitY - 10],
+        {
+          scale: isChampion ? 2.4 : 1.6,
+          depth: DEPTH.ABILITY_MINOR,
+          tint: TOXIC_RESONANCE_BLOOM,
+          alpha: 0.8
+        }
+      )
+      const bubbles = isHarmonic ? 7 : 3
+      for (let bubble = 0; bubble < bubbles; bubble++) {
+        const drop = addAbilitySprite(
+          scene,
+          Ability.MUD_BUBBLE,
+          0,
+          [unitX + randomBetween(-22, 22), unitY + randomBetween(-6, 10)],
+          {
+            scale: randomBetween(6, 11) / 10,
+            depth: DEPTH.ABILITY,
+            tint: TOXIC_RESONANCE_BODY,
+            destroyOnComplete: false
+          }
+        )
+        if (!drop) continue
+        scene.tweens.add({
+          targets: drop,
+          y: drop.y - randomBetween(34, 74),
+          alpha: 0,
+          duration: randomBetween(520, 900),
+          delay: randomBetween(0, 180),
+          ease: Phaser.Math.Easing.Sine.Out,
+          onComplete: () => drop.destroy()
+        })
+      }
+      if (!isHarmonic) return
+      addAbilitySprite(scene, Ability.ECHO, 0, [unitX, unitY - 12], {
+        scale: 2.2,
+        depth: DEPTH.ABILITY_MAJOR,
+        tint: TOXIC_RESONANCE_CORE,
+        alpha: 0.9
+      })
+      for (let mote = 0; mote < 6; mote++) {
+        toxicResonanceUplift(scene, unitX + randomBetween(-20, 20), unitY)
+      }
+    })
+  })
+}
+
+function toxicResonanceUplift(
+  scene: GameScene | DebugScene,
+  x: number,
+  y: number
+) {
+  const mote = scene.add
+    .graphics({ x, y })
+    .setDepth(DEPTH.ABILITY_MAJOR)
+    .setBlendMode(Phaser.BlendModes.ADD)
+  const size = VFX_PIXEL * randomBetween(2, 3)
+  mote.fillStyle(TOXIC_RESONANCE_CORE, 0.9)
+  mote.fillRect(-size / 2, -size / 2, size, size)
+  scene.abilitiesVfxGroup?.add(mote)
+  scene.tweens.add({
+    targets: mote,
+    x: x + randomBetween(-14, 14),
+    y: y - randomBetween(60, 110),
+    alpha: 0,
+    duration: randomBetween(480, 780),
+    delay: randomBetween(0, 200),
+    ease: Phaser.Math.Easing.Sine.Out,
+    onComplete: () => mote.destroy()
+  })
+}
+
+function grandIgnitionMagicBlister(
+  scene: GameScene | DebugScene,
+  x: number,
+  y: number
+) {
+  const blister = addAbilitySprite(scene, Ability.MYSTICAL_FIRE, 0, [x, y], {
+    scale: randomBetween(15, 32) / 10,
+    depth: DEPTH.ABILITY,
+    animOptions: { frameRate: randomBetween(18, 26) }
+  })
+  if (!blister) return
+  scene.tweens.add({
+    targets: blister,
+    y: y - randomBetween(30, 70),
+    alpha: { from: 1, to: 0 },
+    duration: randomBetween(500, 900),
+    ease: Phaser.Math.Easing.Sine.Out
+  })
+}
+
+function grandIgnitionArc(
+  scene: GameScene | DebugScene,
+  x0: number,
+  y0: number,
+  x1: number,
+  y1: number
+) {
+  const length = Math.hypot(x1 - x0, y1 - y0)
+  const [midX, midY] = [(x0 + x1) / 2, (y0 + y1) / 2]
+  const local = [
+    { x: x0 - midX, y: y0 - midY },
+    { x: x1 - midX, y: y1 - midY }
+  ]
+  const arc = scene.add
+    .graphics({ x: midX, y: midY })
+    .setDepth(DEPTH.ABILITY)
+    .setBlendMode(Phaser.BlendModes.ADD)
+  const weight = 1 + length / 220
+  const pixel = VFX_PIXEL
+  drawPixelPath(arc, local, [
+    { grid: pixel * 4, size: pixel * 5 * weight, color: GRAND_IGNITION_ARC_BLOOM, alpha: 0.09 },
+    { grid: pixel * 2, size: pixel * 3 * weight, color: GRAND_IGNITION_ARC_TINT, alpha: 0.24 },
+    { grid: pixel, size: pixel * 1.5 * weight, color: GRAND_IGNITION_ARC_CORE, alpha: 0.7 }
+  ])
+  scene.abilitiesVfxGroup?.add(arc)
+
+  arc.setScale(0.9)
+  scene.tweens.add({
+    targets: arc,
+    alpha: 0,
+    scale: 1.1,
+    duration: randomBetween(260, 460),
+    ease: Phaser.Math.Easing.Sine.Out,
+    onComplete: () => arc.destroy()
+  })
+}
+
+function grandIgnitionSpark(
+  scene: GameScene | DebugScene,
+  x: number,
+  y: number,
+  heading: number,
+  distance: number,
+  duration: number
+) {
+  const pixel = VFX_PIXEL
+  const tail = randomBetween(4, 9) * pixel
+  const [dx, dy] = [Math.cos(heading), Math.sin(heading)]
+  const spark = scene.add
+    .graphics({ x, y })
+    .setDepth(DEPTH.ABILITY)
+    .setBlendMode(Phaser.BlendModes.ADD)
+
+  drawPixelPath(
+    spark,
+    [
+      { x: -dx * tail, y: -dy * tail },
+      { x: 0, y: 0 }
+    ],
+    [
+      { grid: pixel * 2, size: pixel * 2.5, color: GRAND_IGNITION_ARC_BLOOM, alpha: 0.12 },
+      { grid: pixel, size: pixel, color: GRAND_IGNITION_ARC_TINT, alpha: 0.5 }
+    ]
+  )
+  spark.fillStyle(GRAND_IGNITION_ARC_CORE, 0.95)
+  spark.fillRect(-pixel, -pixel, pixel * 2, pixel * 2)
+  scene.abilitiesVfxGroup?.add(spark)
+
+  scene.tweens.add({
+    targets: spark,
+    x: x + dx * distance,
+    y: y + dy * distance,
+    duration,
+    ease: Phaser.Math.Easing.Cubic.Out
+  })
+  scene.tweens.add({
+    targets: spark,
+    alpha: 0,
+    duration: duration * 0.5,
+    delay: duration * 0.5,
+    onComplete: () => spark.destroy()
+  })
+}
+
+function grandIgnitionSparksInward(
+  scene: GameScene | DebugScene,
+  x: number,
+  y: number,
+  count: number,
+  reach: number
+) {
+  for (let index = 0; index < count; index++) {
+    const heading = Math.random() * Math.PI * 2
+    scene.time.delayedCall(randomBetween(0, 260), () =>
+      grandIgnitionSpark(
+        scene,
+        x + Math.cos(heading) * reach,
+        y + Math.sin(heading) * reach * BOARD_PLANE_FLATTEN,
+        heading + Math.PI,
+        reach,
+        randomBetween(280, 460)
+      )
+    )
+  }
+}
+
+function grandIgnitionTorchFlame(
+  scene: GameScene | DebugScene,
+  x: number,
+  y: number,
+  size: number,
+  flip: boolean
+) {
+  const groundY = y + 24 + grandIgnitionCornerDrop(y, flip)
+  grandIgnitionFlame(scene, x, groundY, size * 0.9, size * 2.2, 0)
+  grandIgnitionFlame(scene, x - 16 * size * 0.4, groundY, size * 0.6, size * 1.4, 210)
+  grandIgnitionFlame(scene, x + 15 * size * 0.4, groundY, size * 0.55, size * 1.6, 390)
+  grandIgnitionSparks(scene, x, groundY, 6, 22 * size * 0.4)
+  grandIgnitionSmoke(scene, x, groundY - size * 22, size * 0.5)
+}
+
+const grandIgnitionTorchAnimation =
+  (litCorners: number) => (args: AbilityAnimationArgs) => {
+  const { scene, positionX, positionY, targetX, targetY, flip } = args
+  const [startX, startY] = transformEntityCoordinates(
+    positionX,
+    positionY,
+    flip
+  )
+  const [endX, endY] = transformEntityCoordinates(targetX, targetY, flip)
+
+  const torch = addAbilitySprite(scene, "FIRE/range", 0, [startX, startY], {
+    textureKey: "attacks",
+    scale: 2.5,
+    depth: DEPTH.PROJECTILE,
+    destroyOnComplete: false,
+    animOptions: { repeat: -1 }
+  })
+  if (!torch) return
+
+  scene.tweens.add({ targets: torch, x: endX, duration: 720, ease: "Linear" })
+  scene.tweens.chain({
+    targets: torch,
+    tweens: [
+      { angle: -25, duration: 360, ease: Phaser.Math.Easing.Sine.Out },
+      { angle: 20, duration: 360, ease: Phaser.Math.Easing.Sine.In }
+    ]
+  })
+  scene.tweens.chain({
+    targets: torch,
+    tweens: [
+      {
+        y: Math.min(startY, endY) - 150,
+        duration: 360,
+        ease: Phaser.Math.Easing.Quadratic.Out
+      },
+      { y: endY, duration: 360, ease: Phaser.Math.Easing.Quadratic.In }
+    ],
+    onComplete: () => {
+      torch.destroy()
+      const landingY = endY + 24 + grandIgnitionCornerDrop(endY, flip)
+      addAbilitySprite(scene, Ability.TORCH_SONG, 0, [endX, landingY], {
+        scale: [2.5, 4],
+        origin: GRAND_IGNITION_FLAME_BASE,
+        depth: DEPTH.ABILITY
+      })
+      grandIgnitionTorchFlame(scene, endX, endY, 2.5, flip)
+      scene.shakeCamera({ duration: 120, intensity: 0.003 })
+
+      grandIgnitionSparksInward(scene, endX, landingY, 8 + litCorners * 2, 90)
+      if (litCorners < GRAND_IGNITION_CORNERS.length) {
+        scene.time.delayedCall(220, () =>
+          grandIgnitionQuarterArc(scene, endX, endY, flip)
+        )
+      }
+    }
+  })
+}
+
+const toxicResonanceBeatAnimation =
+  (beat: number) => (args: AbilityAnimationArgs) => {
+    const { scene, positionX, positionY, flip } = args
+    const [championX, championY] = transformEntityCoordinates(
+      positionX,
+      positionY,
+      flip
+    )
+    addAbilitySprite(scene, Ability.ECHO, 0, [championX, championY - 10], {
+      scale: 1.6 + beat * 0.7,
+      depth: DEPTH.ABILITY,
+      tint: TOXIC_RESONANCE_BODY
+    })
+    toxicResonanceBeatMarks(scene, championX, championY, beat)
+    for (let ring = 0; ring < 3; ring++) {
+      toxicResonanceRing(
+        scene,
+        championX,
+        championY,
+        CELL_WIDTH * (beat + 0.5),
+        ring * 120,
+        420 + beat * 90,
+        1 - ring * 0.22
+      )
+    }
+    toxicResonanceReaction(args, beat)
+    scene.shakeCamera({ duration: 140, intensity: 0.002 * beat })
+  }
+
+function toxicResonanceHarmonicAnimation(args: AbilityAnimationArgs) {
+  const { scene, positionX, positionY, flip } = args
+  const [championX, championY] = transformEntityCoordinates(
+    positionX,
+    positionY,
+    flip
+  )
+
+  {
+    addAbilitySprite(scene, Ability.ECHO, 0, [championX, championY - 10], {
+      scale: 5,
+      depth: DEPTH.ABILITY_MAJOR,
+      tint: TOXIC_RESONANCE_CORE
+    })
+    toxicResonanceBeatMarks(
+      scene,
+      championX,
+      championY,
+      TOXIC_RESONANCE_HARMONIC_BEAT
+    )
+
+    const [boardCenterX, boardCenterY] = transformEntityCoordinates(
+      (BOARD_WIDTH - 1) / 2,
+      (BOARD_HEIGHT - 1) / 2,
+      flip
+    )
+    const wash = scene.add
+      .rectangle(
+        boardCenterX,
+        boardCenterY,
+        CELL_WIDTH * (BOARD_WIDTH + 1),
+        CELL_HEIGHT * (BOARD_HEIGHT + 1),
+        TOXIC_RESONANCE_BLOOM,
+        0
+      )
+      .setDepth(DEPTH.BOARD_EFFECT_AIR_LEVEL)
+      .setBlendMode(Phaser.BlendModes.ADD)
+    scene.abilitiesVfxGroup?.add(wash)
+    scene.tweens.add({
+      targets: wash,
+      alpha: { from: 0, to: 0.3 },
+      duration: 500,
+      yoyo: true,
+      hold: 500,
+      ease: Phaser.Math.Easing.Sine.InOut,
+      onComplete: () => wash.destroy()
+    })
+
+    const RINGS = 5
+    const reach = CELL_WIDTH * (BOARD_WIDTH + 1)
+    for (let ring = 0; ring < RINGS; ring++) {
+      toxicResonanceRing(
+        scene,
+        championX,
+        championY,
+        reach,
+        ring * 190,
+        1500,
+        1.5 - ring * 0.18
+      )
+    }
+    toxicResonanceReaction(args, BOARD_WIDTH + BOARD_HEIGHT, true)
+    scene.shakeCamera({ duration: 900, intensity: 0.009 })
+  }
+}
+
+function grandIgnitionBlazeAnimation(args: AbilityAnimationArgs) {
+  const { scene, flip } = args
+  const corners = GRAND_IGNITION_CORNERS.map(([x, y]) =>
+    transformEntityCoordinates(x, y, flip)
+  )
+  const [centerX, centerY] = transformEntityCoordinates(
+    (BOARD_WIDTH - 1) / 2,
+    (BOARD_HEIGHT - 1) / 2,
+    flip
+  )
+
+  corners.forEach(([x, y]) => grandIgnitionTorchFlame(scene, x, y, 5, flip))
+  grandIgnitionSigil(scene, centerX, centerY, grandIgnitionSigilRadius())
+
+  corners.forEach(([x, y], index) => {
+    const [nextX, nextY] = corners[(index + 1) % corners.length]
+    scene.time.delayedCall(index * 120, () =>
+      grandIgnitionArc(scene, x, y, nextX, nextY)
+    )
+    scene.time.delayedCall(index * 120 + 200, () =>
+      grandIgnitionArc(scene, x, y, centerX, centerY)
+    )
+  })
+
+  const BURST_SPARKS = 34
+  scene.time.delayedCall(560, () => {
+    for (let spark = 0; spark < BURST_SPARKS; spark++) {
+      const heading = (spark / BURST_SPARKS) * Math.PI * 2 + Math.random() * 0.2
+      grandIgnitionSpark(
+        scene,
+        centerX,
+        centerY,
+        heading,
+        randomBetween(220, 460),
+        randomBetween(420, 760)
+      )
+    }
+  })
+
+  const flash = scene.add
+    .rectangle(
+      centerX,
+      centerY,
+      CELL_WIDTH * (BOARD_WIDTH + 1),
+      CELL_HEIGHT * (BOARD_HEIGHT + 1),
+      GRAND_IGNITION_MAGIC_TINT,
+      0
+    )
+    .setDepth(DEPTH.BOARD_EFFECT_AIR_LEVEL)
+    .setBlendMode(Phaser.BlendModes.ADD)
+  scene.abilitiesVfxGroup?.add(flash)
+  scene.tweens.add({
+    targets: flash,
+    alpha: { from: 0, to: 0.2 },
+    duration: 900,
+    delay: 400,
+    yoyo: true,
+    hold: 700,
+    ease: Phaser.Math.Easing.Sine.InOut,
+    onComplete: () => flash.destroy()
+  })
+
+  const radius = grandIgnitionSigilRadius()
+  const RING_COLLAPSE_STEP = 260
+  const SWEEP_STEP = 900
+  const cornerBearings = corners.map(([cornerX, cornerY]) =>
+    Math.atan2(
+      (cornerY - centerY) / BOARD_PLANE_FLATTEN,
+      cornerX - centerX
+    )
+  )
+  const sweepFromCorners = (angle: number) =>
+    Math.min(
+      ...cornerBearings.map((bearing) => {
+        const delta = Math.abs(
+          ((angle - bearing + Math.PI * 3) % (Math.PI * 2)) - Math.PI
+        )
+        return delta / Math.PI
+      })
+    )
+
+  const burningRings = [
+    { r: radius, flames: 34, size: 1.6 },
+    { r: radius * 0.82, flames: 28, size: 1.3 },
+    { r: radius * 0.63, flames: 22, size: 1.2 },
+    { r: radius * 0.44, flames: 15, size: 1.1 }
+  ]
+  burningRings.forEach(({ r, flames, size }, ringIndex) => {
+    for (let index = 0; index < flames; index++) {
+      const spacing = (Math.PI * 2) / flames
+      const angle =
+        index * spacing + ((randomBetween(-40, 40) / 100) * spacing)
+      const scatter = r + randomBetween(-14, 14)
+      const worldX = centerX + Math.cos(angle) * scatter
+      const worldY =
+        centerY +
+        Math.sin(angle) * scatter * BOARD_PLANE_FLATTEN +
+        randomBetween(4, 20)
+      const delay =
+        ringIndex * RING_COLLAPSE_STEP +
+        sweepFromCorners(angle) * SWEEP_STEP +
+        randomBetween(0, 120)
+      scene.time.delayedCall(delay, () => {
+        grandIgnitionWanderingFlame(
+          scene,
+          worldX,
+          worldY,
+          (size * randomBetween(80, 125)) / 100,
+          (size * randomBetween(190, 260)) / 100,
+          DEPTH.ABILITY_BELOW_POKEMON
+        )
+        if (index % 4 === 0) grandIgnitionSparks(scene, worldX, worldY, 2, 26)
+        if (ringIndex === 0 && index % 5 === 0) {
+          grandIgnitionSmoke(scene, worldX, worldY - 60, 0.9)
+        }
+      })
+    }
+  })
+
+  const BURNING_SPOKES = 12
+  for (let spoke = 0; spoke < BURNING_SPOKES; spoke++) {
+    const angle = (spoke / BURNING_SPOKES) * Math.PI * 2
+    const spokeRadius = radius * (randomBetween(88, 96) / 100)
+    const worldX = centerX + Math.cos(angle) * spokeRadius
+    const worldY =
+      centerY + Math.sin(angle) * spokeRadius * BOARD_PLANE_FLATTEN
+    scene.time.delayedCall(
+      sweepFromCorners(angle) * SWEEP_STEP + randomBetween(0, 200),
+      () =>
+        grandIgnitionWanderingFlame(
+          scene,
+          worldX,
+          worldY + randomBetween(4, 16),
+          randomBetween(70, 100) / 100,
+          randomBetween(150, 200) / 100,
+          DEPTH.ABILITY_BELOW_POKEMON
+        )
+    )
+  }
+
+  const AIRBURST_COUNT = 40
+  const [boardLeft, boardTop] = transformEntityCoordinates(0, 0, flip)
+  const [boardRight, boardBottom] = transformEntityCoordinates(
+    BOARD_WIDTH - 1,
+    BOARD_HEIGHT - 1,
+    flip
+  )
+  const randomPointInTheAir = (): [number, number] => [
+    randomBetween(
+      Math.min(boardLeft, boardRight) - 30,
+      Math.max(boardLeft, boardRight) + 30
+    ),
+    randomBetween(
+      Math.min(boardTop, boardBottom) - 140,
+      Math.max(boardTop, boardBottom) - 40
+    )
+  ]
+  scene.time.addEvent({
+    delay: 110,
+    repeat: AIRBURST_COUNT,
+    callback: () => {
+      const [x, y] = randomPointInTheAir()
+      if (randomBetween(0, 3) === 0) {
+        grandIgnitionMagicBlister(scene, x, y)
+      } else {
+        grandIgnitionSpark(
+          scene,
+          x,
+          y,
+          -Math.PI / 2 + (randomBetween(-45, 45) / 180) * Math.PI,
+          randomBetween(80, 190),
+          randomBetween(360, 620)
+        )
+      }
+    }
+  })
+
+  scene.shakeCamera({ duration: 2200, intensity: 0.004 })
+}
+
 export function addAbilitySprite(
   scene: GameScene | DebugScene,
   ability: Ability | string,
@@ -897,6 +2002,15 @@ export const AbilitiesAnimations: {
     scale: 3,
     hitAnim: onTarget({ ability: "PUFF_GREEN", scale: 1 })
   }),
+  ["TOXIC_RESONANCE_BEAT_1"]: toxicResonanceBeatAnimation(1),
+  ["TOXIC_RESONANCE_BEAT_2"]: toxicResonanceBeatAnimation(2),
+  ["TOXIC_RESONANCE_BEAT_3"]: toxicResonanceBeatAnimation(3),
+  ["TOXIC_RESONANCE_HARMONIC"]: toxicResonanceHarmonicAnimation,
+  ["GRAND_IGNITION_TORCH_1"]: grandIgnitionTorchAnimation(1),
+  ["GRAND_IGNITION_TORCH_2"]: grandIgnitionTorchAnimation(2),
+  ["GRAND_IGNITION_TORCH_3"]: grandIgnitionTorchAnimation(3),
+  ["GRAND_IGNITION_TORCH_4"]: grandIgnitionTorchAnimation(4),
+  ["GRAND_IGNITION_BLAZE"]: grandIgnitionBlazeAnimation,
   // soul fragment travelling back to the caster, for the SOUL_DRAIN blessing
   ["GHOST_RANGE"]: projectile({
     ability: "GHOST/range",

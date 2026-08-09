@@ -115,7 +115,22 @@ import {
   HAIL_TO_THE_KING_SPECIAL_DEFENSE,
   HAIL_TO_THE_KING_ABILITY_POWER,
   HAIL_TO_THE_KING_SPEED,
-  YOU_FORGOT_SOMETHING_DELAY
+  YOU_FORGOT_SOMETHING_DELAY,
+  JESTER_SUBSTITUTE_MAX_PP,
+  JESTER_SUBSTITUTE_MAX_STARS,
+  GRAND_IGNITION_TRUE_DAMAGE_RATIO,
+  GRAND_IGNITION_MAX_HP_BURNED_RATIO,
+  GRAND_IGNITION_EMBER_DAMAGE_RATIO,
+  GRAND_IGNITION_TICK_INTERVAL,
+  GRAND_IGNITION_TORCH_TRAVEL_DELAY,
+  VALOR_ATTACK_PER_STAR,
+  VALOR_SHIELD_PER_STAR,
+  COLONY_SPEWPA_HATCH_TIME,
+  TOXIC_RESONANCE_POISON_DURATION,
+  TOXIC_RESONANCE_ALLY_PP,
+  TOXIC_RESONANCE_BEAT_INTERVAL,
+  TOXIC_RESONANCE_HARMONIC_BEAT,
+  TOXIC_RESONANCE_HARMONIC_ALLY_PP
 } from "../types/enum/Blessing"
 import { isSynergyActiveForPlayer } from "../config/game/blessings"
 import { getFlowerPotStarCount } from "./flower-pots"
@@ -123,7 +138,8 @@ import { Weather, WeatherEffects } from "../types/enum/Weather"
 import type { IPokemonData } from "../types/interfaces/PokemonData"
 import { count, isIn, removeInArray } from "../utils/array"
 import { getAvatarString } from "../utils/avatar"
-import { isOnBench } from "../utils/board"
+import { getFirstAvailablePositionInBench, isOnBench } from "../utils/board"
+import { DEFAULT_CRIT_POWER } from "../config/game/battle"
 import { logger } from "../utils/logger"
 import { max } from "../utils/number"
 import { chance, pickRandomIn, randomBetween, shuffleArray } from "../utils/random"
@@ -146,7 +162,8 @@ import {
   OnSimulationStartEffect,
   OnSpawnEffect,
   OnShieldDepletedEffect,
-  OnAbilityCastEffect
+  OnAbilityCastEffect,
+  OnKillEffect
 } from "./effects/effect"
 import { WaterSpringEffect } from "./effects/passives"
 import {
@@ -188,6 +205,13 @@ const FIELD_STATUS_BY_SYNERGY: [Synergy, (entity: PokemonEntity) => void][] = [
   [Synergy.PSYCHIC, (entity) => entity.status.addPsychicField(entity)],
   [Synergy.FAIRY, (entity) => entity.status.addFairyField(entity)],
   [Synergy.ELECTRIC, (entity) => entity.status.addElectricField(entity)]
+]
+
+const GRAND_IGNITION_CORNER_CELLS = [
+  { x: 0, y: 0 },
+  { x: BOARD_WIDTH - 1, y: 0 },
+  { x: 0, y: BOARD_HEIGHT - 1 },
+  { x: BOARD_WIDTH - 1, y: BOARD_HEIGHT - 1 }
 ]
 
 export default class Simulation extends Schema implements ISimulation {
@@ -239,6 +263,16 @@ export default class Simulation extends Schema implements ISimulation {
   finishedAt: number = 0
   reinforcementsSent: boolean = false
   snifferDogPulledPokemonIds = new Set<string>()
+  toxicResonanceByTeam = new Map<
+    Team,
+    { champion: PokemonEntity; beat: number }
+  >()
+  toxicResonanceBeatTimer = 0
+  grandIgnitionByTeam = new Map<
+    Team,
+    { litCorners: Set<number>; ignited: boolean; champion: PokemonEntity }
+  >()
+  grandIgnitionTickTimer = 0
   forgottenReinforcements: {
     player: Player
     team: Team
@@ -322,6 +356,10 @@ export default class Simulation extends Schema implements ISimulation {
 
     this.finished = false
     this.winnerId = ""
+    this.grandIgnitionByTeam.clear()
+    this.toxicResonanceByTeam.clear()
+    this.toxicResonanceBeatTimer = TOXIC_RESONANCE_BEAT_INTERVAL
+    this.grandIgnitionTickTimer = GRAND_IGNITION_TICK_INTERVAL
     this.stormLightningTimer = randomBetween(4000, 8000)
     if (
       SynergyTiers[Synergy.AQUATIC].some(
@@ -1912,6 +1950,94 @@ export default class Simulation extends Schema implements ISimulation {
     }
   }
 
+  applyGrandIgnitionDamage() {
+    this.grandIgnitionByTeam.forEach((ignition, team) => {
+      const burningCells = [...ignition.litCorners].map(
+        (index) => GRAND_IGNITION_CORNER_CELLS[index]
+      )
+      const attacker =
+        ignition.champion.hp > 0 ? ignition.champion : null
+      this.board.forEach((x, y, enemy) => {
+        if (!enemy || enemy.team === team || enemy.hp <= 0) return
+        const standsInEmbers = burningCells.some(
+          (cell) => cell.x === x && cell.y === y
+        )
+        const ratio =
+          (ignition.ignited ? GRAND_IGNITION_TRUE_DAMAGE_RATIO : 0) +
+          (standsInEmbers ? GRAND_IGNITION_EMBER_DAMAGE_RATIO : 0)
+        if (ratio === 0) return
+        const { takenDamage } = enemy.handleDamage({
+          damage: Math.round(enemy.maxHP * ratio),
+          board: this.board,
+          attackType: AttackType.TRUE,
+          attacker,
+          shouldTargetGainMana: false
+        })
+        if (!attacker && takenDamage > 0) {
+          this.broadcastToSpectators(Transfer.POKEMON_DAMAGE, {
+            index: ignition.champion.index,
+            type: AttackType.TRUE,
+            amount: Math.round(takenDamage),
+            x: enemy.positionX,
+            y: enemy.positionY,
+            id: this.id
+          })
+        }
+      })
+    })
+  }
+
+  applyToxicResonance(resonance: {
+    champion: PokemonEntity
+    beat: number
+  }) {
+    const { champion } = resonance
+    if (champion.hp <= 0) return
+    resonance.beat = (resonance.beat % TOXIC_RESONANCE_HARMONIC_BEAT) + 1
+    const isHarmonic = resonance.beat === TOXIC_RESONANCE_HARMONIC_BEAT
+    champion.broadcastAbility({
+      skill: isHarmonic
+        ? "TOXIC_RESONANCE_HARMONIC"
+        : `TOXIC_RESONANCE_BEAT_${resonance.beat}`,
+      ap: 0
+    })
+
+    const reached = isHarmonic
+      ? [...this.blueTeam.values(), ...this.redTeam.values()]
+      : this.board
+          .getCellsInRadius(
+            champion.positionX,
+            champion.positionY,
+            resonance.beat,
+            true
+          )
+          .map((cell) => cell.value)
+
+    reached.forEach((reachedPokemon) => {
+      if (!reachedPokemon || reachedPokemon.hp <= 0) return
+      if (
+        reachedPokemon.effects.has(EffectEnum.IMMUNITY_POISON) ||
+        reachedPokemon.status.runeProtect
+      )
+        return
+      reachedPokemon.status.triggerPoison(
+        TOXIC_RESONANCE_POISON_DURATION,
+        reachedPokemon,
+        champion
+      )
+      if (reachedPokemon.team === champion.team) {
+        reachedPokemon.addPP(
+          isHarmonic
+            ? TOXIC_RESONANCE_HARMONIC_ALLY_PP
+            : TOXIC_RESONANCE_ALLY_PP,
+          reachedPokemon,
+          0,
+          false
+        )
+      }
+    })
+  }
+
   applyHeroBlessings(
     blessings: Blessing[],
     ownUnits: PokemonEntity[],
@@ -2033,6 +2159,164 @@ export default class Simulation extends Schema implements ISimulation {
               )
             }, 1250)
           )
+        })
+      )
+    }
+
+    const jesterChampion = championOf.get(Blessing.JESTER)
+    if (jesterChampion) {
+      jesterChampion.effectsSet.add(
+        new OnAbilityCastEffect((caster) => {
+          const coord = this.getClosestFreeCellToPokemonEntity(caster)
+          if (!coord) return
+          const jester = this.addPokemon(
+            PokemonFactory.createPokemonFromName(Pkm.SUBSTITUTE, caster.player),
+            coord.x,
+            coord.y,
+            caster.team,
+            true
+          )
+          jester.skill = Ability.METRONOME
+          jester.stars = Math.max(
+            1,
+            Math.min(
+              JESTER_SUBSTITUTE_MAX_STARS,
+              1 + Math.floor(caster.critPower - DEFAULT_CRIT_POWER)
+            )
+          )
+          jester.maxPP = JESTER_SUBSTITUTE_MAX_PP
+          jester.pp = JESTER_SUBSTITUTE_MAX_PP
+        })
+      )
+    }
+
+    const toxicResonanceChampion = championOf.get(Blessing.TOXIC_RESONANCE)
+    if (toxicResonanceChampion) {
+      this.toxicResonanceByTeam.set(toxicResonanceChampion.team, {
+        champion: toxicResonanceChampion,
+        beat: 0
+      })
+    }
+
+    const grandIgnitionChampion = championOf.get(Blessing.GRAND_IGNITION)
+    if (grandIgnitionChampion) {
+      const ignition = {
+        litCorners: new Set<number>(),
+        ignited: false,
+        champion: grandIgnitionChampion
+      }
+      this.grandIgnitionByTeam.set(grandIgnitionChampion.team, ignition)
+      grandIgnitionChampion.effectsSet.add(
+        new OnAbilityCastEffect((caster) => {
+          const unlitCorners = GRAND_IGNITION_CORNER_CELLS.map(
+            (_, index) => index
+          ).filter((index) => !ignition.litCorners.has(index))
+          if (unlitCorners.length === 0) return
+          const cornerIndex = pickRandomIn(unlitCorners)
+          ignition.litCorners.add(cornerIndex)
+          caster.broadcastAbility({
+            skill: `GRAND_IGNITION_TORCH_${ignition.litCorners.size}`,
+            targetX: GRAND_IGNITION_CORNER_CELLS[cornerIndex].x,
+            targetY: GRAND_IGNITION_CORNER_CELLS[cornerIndex].y,
+            ap: 0
+          })
+          if (ignition.litCorners.size < GRAND_IGNITION_CORNER_CELLS.length)
+            return
+          caster.commands.push(
+            new DelayedCommand(() => {
+              ignition.ignited = true
+              caster.broadcastAbility({ skill: "GRAND_IGNITION_BLAZE", ap: 0 })
+              this.board.forEach((x, y, enemy) => {
+                if (!enemy || enemy.team === caster.team || enemy.hp <= 0)
+                  return
+                enemy.addMaxHP(
+                  -Math.round(enemy.maxHP * GRAND_IGNITION_MAX_HP_BURNED_RATIO),
+                  caster,
+                  0,
+                  false,
+                  true
+                )
+              })
+            }, GRAND_IGNITION_TORCH_TRAVEL_DELAY)
+          )
+        })
+      )
+    }
+
+    const valorChampion = championOf.get(Blessing.VALOR)
+    if (valorChampion) {
+      const wildStarsOnBench = schemaValues(player.board)
+        .filter(
+          (pokemon) => isOnBench(pokemon) && pokemon.types.has(Synergy.WILD)
+        )
+        .reduce((total, pokemon) => total + pokemon.stars, 0)
+      if (wildStarsOnBench > 0) {
+        valorChampion.addAttack(
+          VALOR_ATTACK_PER_STAR * wildStarsOnBench,
+          valorChampion,
+          0,
+          false
+        )
+        valorChampion.addShield(
+          VALOR_SHIELD_PER_STAR * wildStarsOnBench,
+          valorChampion,
+          0,
+          false
+        )
+      }
+    }
+
+    const colonyChampion = championOf.get(Blessing.COLONY)
+    if (colonyChampion) {
+      colonyChampion.effectsSet.add(
+        new OnKillEffect(({ attacker }) => {
+          const owner = attacker.player
+          if (!owner || attacker.isGhostOpponent) return
+          if (
+            PkmFamily[attacker.name] !== Pkm.SCATTERBUG ||
+            attacker.stars < 3
+          )
+            return
+          const isSpewpaWaiting = schemaValues(owner.board).some(
+            (pokemon) => pokemon.name === Pkm.SPEWPA && isOnBench(pokemon)
+          )
+          if (isSpewpaWaiting) return
+          const freeCellX = getFirstAvailablePositionInBench(owner.board)
+          if (freeCellX === null) return
+          const spewpa = PokemonFactory.createPokemonFromName(
+            Pkm.SPEWPA,
+            owner
+          )
+          spewpa.hatchTimeOverride = COLONY_SPEWPA_HATCH_TIME
+          spewpa.sellsForNothing = true
+          spewpa.positionX = freeCellX
+          spewpa.positionY = 0
+          owner.board.set(spewpa.id, spewpa)
+          spewpa.onAcquired(owner)
+          owner.updateSynergies()
+        })
+      )
+    }
+
+    const sandBuddiesChampion = championOf.get(Blessing.SAND_BUDDIES)
+    if (sandBuddiesChampion) {
+      const trapinchLine = [Pkm.TRAPINCH, Pkm.VIBRAVA, Pkm.FLYGON]
+      sandBuddiesChampion.effectsSet.add(
+        new OnAbilityCastEffect((caster, board, target) => {
+          if (!target || target.hp <= 0) return
+          const coord = this.getClosestFreeCellToPokemonEntity(caster)
+          if (!coord) return
+          const buddy = this.addPokemon(
+            PokemonFactory.createPokemonFromName(
+              trapinchLine[caster.stars - 1] ?? Pkm.FLYGON,
+              caster.player
+            ),
+            coord.x,
+            coord.y,
+            caster.team,
+            true
+          )
+          buddy.pp = buddy.maxPP
         })
       )
     }
@@ -3219,6 +3503,24 @@ export default class Simulation extends Schema implements ISimulation {
             })
           }
         }
+      }
+    }
+
+    if (this.toxicResonanceByTeam.size > 0) {
+      this.toxicResonanceBeatTimer -= dt
+      if (this.toxicResonanceBeatTimer <= 0) {
+        this.toxicResonanceBeatTimer = TOXIC_RESONANCE_BEAT_INTERVAL
+        this.toxicResonanceByTeam.forEach((resonance) =>
+          this.applyToxicResonance(resonance)
+        )
+      }
+    }
+
+    if (this.grandIgnitionByTeam.size > 0) {
+      this.grandIgnitionTickTimer -= dt
+      if (this.grandIgnitionTickTimer <= 0) {
+        this.grandIgnitionTickTimer = GRAND_IGNITION_TICK_INTERVAL
+        this.applyGrandIgnitionDamage()
       }
     }
 

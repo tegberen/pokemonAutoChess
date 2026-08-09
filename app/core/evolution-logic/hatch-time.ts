@@ -5,6 +5,7 @@ import { EffectEnum } from "../../types/enum/Effect"
 import { Pkm } from "../../types/enum/Pokemon"
 
 export function getHatchTime(pokemon: Pokemon, player: Player): number {
+  if (pokemon.hatchTimeOverride != null) return pokemon.hatchTimeOverride
   if (pokemon.name === Pkm.EGG) {
     return player.effects.has(EffectEnum.BREEDER) ||
       player.effects.has(EffectEnum.GOLDEN_EGGS)

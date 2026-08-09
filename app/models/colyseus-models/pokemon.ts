@@ -130,6 +130,8 @@ export class Pokemon extends Schema implements IPokemon {
   baseSkill: Ability = Ability.DEFAULT
   baseMaxPP: number = 100
   boosterEnergyCount: number = 0
+  hatchTimeOverride: number | null = null
+  sellsForNothing = false
 
   constructor(name: Pkm, shiny = false, emotion = Emotion.NORMAL) {
     super()
@@ -1516,7 +1518,7 @@ export class Metagross extends Pokemon {
 
 export class Tympole extends Pokemon {
   types = new SetSchema<Synergy>([
-    Synergy.WATER,
+    Synergy.AQUATIC,
     Synergy.GROUND,
     Synergy.SOUND
   ])
@@ -1539,7 +1541,7 @@ export class Tympole extends Pokemon {
 
 export class Palpitoad extends Pokemon {
   types = new SetSchema<Synergy>([
-    Synergy.WATER,
+    Synergy.AQUATIC,
     Synergy.GROUND,
     Synergy.SOUND
   ])
@@ -1562,7 +1564,7 @@ export class Palpitoad extends Pokemon {
 
 export class Seismitoad extends Pokemon {
   types = new SetSchema<Synergy>([
-    Synergy.WATER,
+    Synergy.AQUATIC,
     Synergy.GROUND,
     Synergy.SOUND
   ])

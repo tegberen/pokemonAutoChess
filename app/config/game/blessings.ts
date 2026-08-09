@@ -1294,6 +1294,42 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     icon: "sniffer_dog",
     grantsPokemonImmediately: true
   },
+  [Blessing.JESTER]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: [4],
+    icon: "jester",
+    grantsPokemonImmediately: true
+  },
+  [Blessing.TOXIC_RESONANCE]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: [4],
+    icon: "toxic_resonance",
+    grantsPokemonImmediately: true
+  },
+  [Blessing.GRAND_IGNITION]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: [4],
+    icon: "grand_ignition",
+    grantsPokemonImmediately: true
+  },
+  [Blessing.VALOR]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: [4],
+    icon: "valor",
+    grantsPokemonImmediately: true
+  },
+  [Blessing.COLONY]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: [4],
+    icon: "colony",
+    grantsPokemonImmediately: true
+  },
+  [Blessing.SAND_BUDDIES]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: [4],
+    icon: "sand_buddies",
+    grantsPokemonImmediately: true
+  },
   [Blessing.FROST_BURST]: {
     tier: BlessingTier.GOLD,
     availableAtStages: [12],

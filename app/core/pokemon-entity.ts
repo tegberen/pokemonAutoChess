@@ -32,6 +32,8 @@ import {
   DROP_RATES_CHANCE,
   IMPENDING_DOOM_KO_ACCELERATION,
   ETERNAL_RAGE_DURATION_PER_STAR,
+  VALOR_ATTACK_PER_STAR,
+  VALOR_SHIELD_PER_STAR,
   HAIL_TO_THE_KING_CURSE_DELAY,
   RIVALRY_ATTACK_ON_OWN_SIDE,
   RIVALRY_MAX_HP_ON_ENEMY_SIDE,
@@ -1569,6 +1571,20 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
             }
           }
         })
+    }
+
+    if (this.player?.blessings?.includes(Blessing.VALOR)) {
+      board.forEach((x, y, ally) => {
+        if (
+          ally &&
+          ally.team === this.team &&
+          ally.hp > 0 &&
+          ally.heroBlessings?.has(Blessing.VALOR)
+        ) {
+          ally.addAttack(VALOR_ATTACK_PER_STAR, ally, 0, false)
+          ally.addShield(VALOR_SHIELD_PER_STAR, ally, 0, false)
+        }
+      })
     }
 
     if (
