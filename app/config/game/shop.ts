@@ -151,6 +151,10 @@ export const SellPrices = {
   WISHIWASHI_SCHOOL: 10,
   REMORAID: 2,
   OCTILLERY: 7,
+  /* Scyther evolves by item rather than by merging three copies, so both of its
+     forms would otherwise sell for a full 2-star Epic */
+  SCIZOR: 4,
+  KLEAVOR: 4,
   UNOWN: 1,
   HATCH: [3, 4, 5],
   UNIQUE: 10,

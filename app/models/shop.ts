@@ -149,6 +149,10 @@ export function getSellPrice(
     price = SellPrices.FEEBAS
   } else if (name === Pkm.WISHIWASHI) {
     price = SellPrices.WISHIWASHI
+  } else if (name === Pkm.SCIZOR) {
+    price = SellPrices.SCIZOR
+  } else if (name === Pkm.KLEAVOR) {
+    price = SellPrices.KLEAVOR
   } else if (name === Pkm.REMORAID) {
     price = SellPrices.REMORAID
   } else if (name === Pkm.OCTILLERY) {
