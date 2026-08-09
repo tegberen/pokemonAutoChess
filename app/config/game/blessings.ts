@@ -288,7 +288,7 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     grantsPokemonImmediately: true
   },
   [Blessing.HAIL_TO_THE_KING]: {
-    tier: BlessingTier.GOLD,
+    tier: BlessingTier.PRISMATIC,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "hail_to_the_king",
     grantsPokemonImmediately: false
@@ -661,7 +661,7 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
   },
   [Blessing.RIVALRY]: {
     tier: BlessingTier.GOLD,
-    availableAtStages: BLESSING_SELECTION_STAGES,
+    availableAtStages: [12],
     icon: "rival_arrows",
     grantsPokemonImmediately: false
   },
@@ -1446,43 +1446,43 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
   },
   [Blessing.HEATRANS_SONG]: {
     tier: BlessingTier.GOLD,
-    availableAtStages: [4],
+    availableAtStages: [12],
     icon: "instrument",
     grantsPokemonImmediately: false
   },
   [Blessing.RAYQUAZAS_SONG]: {
     tier: BlessingTier.GOLD,
-    availableAtStages: [4],
+    availableAtStages: [12],
     icon: "instrument",
     grantsPokemonImmediately: false
   },
   [Blessing.MEWS_SONG]: {
     tier: BlessingTier.GOLD,
-    availableAtStages: [4],
+    availableAtStages: [12],
     icon: "instrument",
     grantsPokemonImmediately: false
   },
   [Blessing.GROUDONS_SONG]: {
     tier: BlessingTier.GOLD,
-    availableAtStages: [4],
+    availableAtStages: [12],
     icon: "instrument",
     grantsPokemonImmediately: false
   },
   [Blessing.ARTICUNOS_SONG]: {
     tier: BlessingTier.GOLD,
-    availableAtStages: [4],
+    availableAtStages: [12],
     icon: "instrument",
     grantsPokemonImmediately: false
   },
   [Blessing.GIRATINAS_SONG]: {
     tier: BlessingTier.GOLD,
-    availableAtStages: [4],
+    availableAtStages: [12],
     icon: "instrument",
     grantsPokemonImmediately: false
   },
   [Blessing.KYOGRES_SONG]: {
     tier: BlessingTier.GOLD,
-    availableAtStages: [4],
+    availableAtStages: [12],
     icon: "instrument",
     grantsPokemonImmediately: false
   }

@@ -3161,11 +3161,11 @@
 	},
 	"item_description": {
 		"AQUA_MONICA": "Each ally cast grants +2 PP to the whole team",
-		"FIERY_DRUM": "Each ally cast grants +3 ATK to the whole team",
+		"FIERY_DRUM": "Each ally cast grants +2 ATK to the whole team",
 		"GRASS_CORNET": "Each ally cast grants +5 HP to the whole team",
 		"ICY_FLUTE": "Each ally cast grants +4 SPE_DEF to the whole team",
 		"ROCK_HORN": "Each ally cast grants +4 DEF to the whole team",
-		"SKY_MELODICA": "Each ally cast grants +5 SPEED to the whole team",
+		"SKY_MELODICA": "Each ally cast grants +4 SPEED to the whole team",
 		"TERRA_CYMBAL": "Each ally cast grants +3 LUCK to the whole team",
 		"BINDING_BAND": "+10 LUCK",
 		"SOOTHE_BELL": "Grant the lowest HP ally 30 SHIELD every 3 seconds. Has a [30,LK]% chance to convert that ally’s remaining SHIELD into max HP.",
