@@ -1211,7 +1211,7 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     grantsPokemonImmediately: false
   },
   [Blessing.SAFARI_ENCOUNTER]: {
-    tier: BlessingTier.GOLD,
+    tier: BlessingTier.SILVER,
     availableAtStages: [12],
     icon: "high_grass",
     grantsPokemonImmediately: true

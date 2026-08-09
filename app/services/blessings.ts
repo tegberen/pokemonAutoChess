@@ -120,6 +120,7 @@ import {
   getFreeSpaceOnBench,
   getLastAvailablePositionInBench
 } from "../utils/board"
+import { healPlayerLife } from "../utils/player-life"
 import {
   chance,
   pickNRandomIn,
@@ -403,7 +404,7 @@ const CrownBlessingContent: {
   },
   [Blessing.AMORPHOUS_CROWN_BLESSING]: {
     items: [Item.AMORPHOUS_GEM, Item.PUNCHING_GLOVE],
-    pokemon: Pkm.GRUBBIN
+    pokemon: Pkm.SLIGOO
   },
   [Blessing.WILD_CROWN_BLESSING]: {
     items: [Item.WHITE_FLUTE, Item.FLAME_ORB],
@@ -2321,8 +2322,8 @@ export const blessingEffectService: {
     return giftPokemonIfBenchHasRoom(player, encountered)
   },
 
-  [Blessing.POTION]: (player) => {
-    player.life = Math.min(player.maxLife, player.life + POTION_LIFE_HEALED)
+  [Blessing.POTION]: (player, state) => {
+    healPlayerLife(player, POTION_LIFE_HEALED, state)
     return true
   },
 

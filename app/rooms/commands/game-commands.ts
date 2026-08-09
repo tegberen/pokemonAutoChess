@@ -1341,7 +1341,10 @@ export class OnDragDropItemCommand extends Command<
         pokemon.name === Pkm.LEAFEON ||
         pokemon.name === Pkm.GLACEON ||
         pokemon.name === Pkm.SYLVEON ||
-        pokemon.items.has(Item.RARE_CANDY)
+        pokemon.items.has(Item.RARE_CANDY) ||
+        /* the generic check below is never reached: this branch returns first,
+           and a manifestation must not leave the player it is bound to */
+        isPokemonManifestationLocked(player, pokemon.id)
       ) {
         client.send(Transfer.DRAG_DROP_CANCEL, message)
         return

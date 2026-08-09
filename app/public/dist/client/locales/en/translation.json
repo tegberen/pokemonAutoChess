@@ -4972,7 +4972,7 @@
 		},
 		"AMORPHOUS_CROWN_BLESSING": {
 			"name": "Amorphous Crown",
-			"description": "Gain an AMORPHOUS_GEM, a PUNCHING_GLOVE and a Grubbin."
+			"description": "Gain an AMORPHOUS_GEM, a PUNCHING_GLOVE and a Sligoo."
 		},
 		"WILD_CROWN_BLESSING": {
 			"name": "Wild Crown",
@@ -5756,7 +5756,7 @@
 		},
 		"LEAF_TORNADO": {
 			"name": "Leaf Tornado",
-			"description": "Gain a Snivy. Your STRONGEST Snivy's attacks ricochet to up to 2 additional enemies, the damage halving with each bounce."
+			"description": "Gain a Snivy. Your STRONGEST Snivy's attacks ricochet to up to 2 additional enemies, applying ON_HIT effects, the damage halving with each bounce."
 		},
 		"MARIACHI_MAYHEM": {
 			"name": "Mariachi Mayhem",

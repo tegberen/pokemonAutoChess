@@ -70,6 +70,7 @@ import {
   QUEST_ABSORB_DAMAGE_BLOCKED_TARGET,
   ASCENSION_BREAK_FREE_CHECK_INTERVAL,
   SACRIFICE_DELAY,
+  SACRIFICE_EXECUTE_DAMAGE,
   BUG_CLONE_TRIPLE,
   SHAPELESS_SYNERGIES_HP_RATIO,
   SHAPELESS_SYNERGIES_MIN_ACTIVE,
@@ -127,6 +128,7 @@ import { logger } from "../utils/logger"
 import { max } from "../utils/number"
 import { chance, pickRandomIn, randomBetween, shuffleArray } from "../utils/random"
 import { OrientationVector } from "../utils/orientation"
+import { healPlayerLife } from "../utils/player-life"
 import { schemaValues } from "../utils/schemas"
 import { AbilityStrategies } from "./abilities/abilities"
 import type { SurfStrategy } from "./abilities/surf"
@@ -138,6 +140,7 @@ import {
   OnAttackReceivedEffect,
   OnDamageReceivedEffect,
   OnDishConsumedEffect,
+  OnHitEffect,
   PeriodicEffect,
   OnMoveEffect,
   OnSimulationStartEffect,
@@ -1807,7 +1810,7 @@ export default class Simulation extends Schema implements ISimulation {
                   targetY: weakest.positionY
                 })
                 weakest.handleDamage({
-                  damage: weakest.hp,
+                  damage: SACRIFICE_EXECUTE_DAMAGE,
                   board: this.board,
                   attackType: AttackType.TRUE,
                   attacker: strongestMonster,
@@ -2183,16 +2186,32 @@ export default class Simulation extends Schema implements ISimulation {
                 [specialDamage, AttackType.SPECIAL],
                 [trueDamage, AttackType.TRUE]
               ]
+              let bounceTakenDamage = 0
               damages.forEach(([damage, attackType]) => {
                 if (damage <= 0) return
+                const bounceDamage = Math.round(damage * ratio)
+                bounceTakenDamage += bounceDamage
                 enemy.handleDamage({
-                  damage: Math.round(damage * ratio),
+                  damage: bounceDamage,
                   board,
                   attackType,
                   attacker: pokemon,
                   shouldTargetGainMana: true
                 })
               })
+              /* handleDamage alone skips the attacker's on-hit hooks, so they
+                 are replayed per bounce, the same way ZAP chains do it */
+              pokemon.getEffects(OnHitEffect).forEach((effect) =>
+                effect.apply({
+                  attacker: pokemon,
+                  target: enemy,
+                  board,
+                  totalTakenDamage: bounceTakenDamage,
+                  physicalDamage: Math.round(physicalDamage * ratio),
+                  specialDamage: Math.round(specialDamage * ratio),
+                  trueDamage: Math.round(trueDamage * ratio)
+                })
+              )
               ratio *= LEAF_TORNADO_DAMAGE_RATIO
             })
           }
@@ -3418,10 +3437,10 @@ export default class Simulation extends Schema implements ISimulation {
             playerDamage > 0 &&
             opponentPlayer.blessings?.includes(Blessing.VAMPIRIC)
           ) {
-            opponentPlayer.life = Math.min(
-              opponentPlayer.maxLife,
-              opponentPlayer.life +
-                Math.ceil(playerDamage * VAMPIRIC_HEAL_RATIO)
+            healPlayerLife(
+              opponentPlayer,
+              Math.ceil(playerDamage * VAMPIRIC_HEAL_RATIO),
+              this.room.state
             )
           }
           opponentPlayer.checkLunchMoneyReward(previousPlayerDamageDealt)

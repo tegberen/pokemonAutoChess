@@ -377,6 +377,9 @@ export const DRAGON_KING_SPEED_PER_STAR = 1
 export const DRAGON_KING_ABILITY_POWER_PER_STAR = 1
 export const ASCENSION_BREAK_FREE_CHECK_INTERVAL = 250
 export const SACRIFICE_DELAY = 300
+/* enough to punch through any shield and survive damage reduction: dealing the
+   ally's exact hp left it alive whenever it held a shield or took a reduction */
+export const SACRIFICE_EXECUTE_DAMAGE = 9999
 export const BABY_OPENER_BABIES_GRANTED = 3
 export const BABY_OPENER_MAX_COST = 2
 export const BABY_OPENER_LIFE_PER_EGG = 2
