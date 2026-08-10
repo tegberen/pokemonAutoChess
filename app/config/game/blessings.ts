@@ -8,6 +8,8 @@ import { randomWeighted, shuffleArray } from "../../utils/random"
 import { SynergyTiersThresholds } from "../../config"
 import { Synergy } from "../../types/enum/Synergy"
 import { Rarity } from "../../types/enum/Game"
+import { SpecialGameRule } from "../../types/enum/SpecialGameRule"
+import { DungeonPMDO } from "../../types/enum/Dungeon"
 import type Player from "../../models/colyseus-models/player"
 
 export type BlessingFamily = "BADGE" | "CREST" | "CROWN"
@@ -20,6 +22,57 @@ export interface BlessingDefinition {
   isAvailable?: (player: Player, stage: number) => boolean
   family?: BlessingFamily
 }
+
+/* Ponds are drawn with the region's own water tiles, so WATER_FOUNTAIN only
+   works in regions whose water slot is painted as actual water. Picking it
+   travels the player here, and every later region change is redirected here */
+export const WATER_FOUNTAIN_REGIONS: DungeonPMDO[] = [
+  DungeonPMDO.AmpPlains,
+  DungeonPMDO.AppleWoods,
+  DungeonPMDO.BeachCave,
+  DungeonPMDO.BrineCave,
+  DungeonPMDO.CraggyCoast,
+  DungeonPMDO.CrystalCave1,
+  DungeonPMDO.CrystalCrossing,
+  DungeonPMDO.DeepLimestoneCavern,
+  DungeonPMDO.DeepSealedRuin,
+  DungeonPMDO.DesertRegion,
+  DungeonPMDO.DrenchedBluff,
+  DungeonPMDO.ElectricMaze,
+  DungeonPMDO.FarAmpPlains,
+  DungeonPMDO.FinalMaze2,
+  DungeonPMDO.FoggyForest,
+  DungeonPMDO.ForestPath,
+  DungeonPMDO.FrostyForest,
+  DungeonPMDO.GrassMaze,
+  DungeonPMDO.GreatCanyon,
+  DungeonPMDO.HiddenHighland,
+  DungeonPMDO.HiddenLand,
+  DungeonPMDO.HowlingForest1,
+  DungeonPMDO.IceAegisCave,
+  DungeonPMDO.JoyousTower,
+  DungeonPMDO.LapisCave,
+  DungeonPMDO.LightningField,
+  DungeonPMDO.LimestoneCavern,
+  DungeonPMDO.LushPrairie,
+  DungeonPMDO.MeteorCave,
+  DungeonPMDO.MiracleSea,
+  DungeonPMDO.MtSteel2,
+  DungeonPMDO.MtTravail,
+  DungeonPMDO.NorthernDesert1,
+  DungeonPMDO.NorthwindField,
+  DungeonPMDO.PurityForest2,
+  DungeonPMDO.PurityForest7,
+  DungeonPMDO.RescueTeamMaze,
+  DungeonPMDO.RockPathTDS,
+  DungeonPMDO.SkyTower,
+  DungeonPMDO.SouthernJungle,
+  DungeonPMDO.StormySea1,
+  DungeonPMDO.StormySea2,
+  DungeonPMDO.TinyMeadow,
+  DungeonPMDO.TinyWoods,
+  DungeonPMDO.WaterMaze
+]
 
 export const BLESSING_MAX_OPTIONS_PER_FAMILY = 2
 
@@ -973,6 +1026,18 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     icon: "trident",
     grantsPokemonImmediately: true,
     isAvailable: isSynergyBlessingAvailable(Synergy.AQUATIC)
+  },
+  [Blessing.WATER_FOUNTAIN]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "water_fountain",
+    grantsPokemonImmediately: false,
+    /* ponds share player.scribbleShapes with the Light Show drawings, so the
+       two cannot coexist in the same lobby */
+    isAvailable: (player: Player, stage: number) =>
+      player.specialGameRule !== SpecialGameRule.LIGHT_SHOW &&
+      (stage < BLESSING_SYNERGY_GATED_STAGE ||
+        isSynergyActiveForPlayer(player, Synergy.WATER))
   },
   [Blessing.ATLANTEAN_MAGIC]: {
     tier: BlessingTier.GOLD,

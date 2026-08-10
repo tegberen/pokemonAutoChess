@@ -9,6 +9,11 @@ import {
 } from "../../../../config"
 import type { DesignTiled } from "../../../../core/design"
 import {
+  getWaterPondTilesetKey,
+  isWaterPondTileset,
+  WATER_POND_TILE_SIZE
+} from "../../../../config/game/water-ponds"
+import {
   FLOWER_POT_ZONE_HEIGHT,
   FLOWER_POT_ZONE_WIDTH,
   FLOWER_POT_ZONE_Y_OFFSET,
@@ -184,6 +189,7 @@ export default class GameScene extends Scene {
   }
 
   toggleTilesetAnimation(paused: boolean) {
+    this.board?.setPondAnimationsPaused(paused)
     if (!this.map) return
     this.map.layers.forEach((layer) => {
       layer.tilemapLayer.setTimerPaused(paused)
@@ -374,6 +380,20 @@ export default class GameScene extends Scene {
               )
             })
             this.load.tilemapTiledJSON("map_" + mapName, tilemap)
+            /* the tilemap loads these as flat images for its own layers; ponds
+               need the same files as spritesheets to address single tiles */
+            tilemap.tilesets
+              .filter((t) => isWaterPondTileset(t.name))
+              .forEach((t) => {
+                this.load.spritesheet(
+                  getWaterPondTilesetKey(mapName, t.name),
+                  `/assets/tilesets/${mapName}/${t.image}`,
+                  {
+                    frameWidth: WATER_POND_TILE_SIZE,
+                    frameHeight: WATER_POND_TILE_SIZE
+                  }
+                )
+              })
           })
       )
     )
@@ -647,6 +667,7 @@ export default class GameScene extends Scene {
                 id: gameObject.id
               })
               this.lastDragDropPokemon = gameObject
+              this.board?.playPondSplashAt(x, y)
             } else {
               // RETURN TO ORIGINAL SPOT
               gameObject.setPosition(...transformBoardCoordinates(x, y))

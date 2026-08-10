@@ -35,7 +35,10 @@ import {
   getCarouselLockForStage,
   FREE_COUPON_GUARANTEED_SHOP_STAGE
 } from "../types/enum/Blessing"
-import { grantRegionalTreasuresOnRegionChange } from "../services/blessings"
+import {
+  getWaterFountainPortalMap,
+  grantRegionalTreasuresOnRegionChange
+} from "../services/blessings"
 import { DungeonPMDO } from "../types/enum/Dungeon"
 import { PokemonActionState } from "../types/enum/Game"
 import {
@@ -930,10 +933,13 @@ export class MiniGame {
       if (player && PortalCarouselStages.includes(state.stageLevel)) {
         if (avatar.portalId && this.portals?.has(avatar.portalId)) {
           const portal = this.portals.get(avatar.portalId)!
-          if (portal.map !== player.map) {
+          const newMap = getWaterFountainPortalMap(player, portal.map, [
+            ...schemaValues(this.portals).map((p) => p.map)
+          ])
+          if (newMap && newMap !== player.map) {
             const previousMap = player.map
-            player.map = portal.map
-            player.regions.push(portal.map)
+            player.map = newMap
+            player.regions.push(newMap)
             player.updateRegionalPool(state, true, previousMap)
             grantRegionalTreasuresOnRegionChange(player)
             const newBerryTreeTypes = pickNRandomIn(NonSpecialBerries, 3)

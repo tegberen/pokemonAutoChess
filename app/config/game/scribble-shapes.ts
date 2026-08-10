@@ -1,5 +1,10 @@
 import { pickRandomIn, shuffleArray } from "../../utils/random"
-import { BOARD_SIDE_HEIGHT, BOARD_WIDTH } from "./board"
+import {
+  BOARD_SIDE_HEIGHT,
+  BOARD_WIDTH,
+  packBoardCell,
+  unpackBoardCell
+} from "./board"
 
 export enum ScribbleShapeType {
   DOT = "DOT",
@@ -109,17 +114,11 @@ export const ScribbleShapeTint: Record<ScribbleShapeType, number> = {
   [ScribbleShapeType.RING]: 0xaaaaee // lavender - shield
 }
 
+export const SCRIBBLE_LABEL_FADE_DURATION = 250
+
 // placeable rows of the player half of the board (y = 0 is the bench)
 const SCRIBBLE_MIN_Y = 1
 const SCRIBBLE_MAX_Y = BOARD_SIDE_HEIGHT - 1
-
-export function packScribbleCell(x: number, y: number): number {
-  return y * BOARD_WIDTH + x
-}
-
-export function unpackScribbleCell(cell: number): { x: number; y: number } {
-  return { x: cell % BOARD_WIDTH, y: Math.floor(cell / BOARD_WIDTH) }
-}
 
 export interface ScribbleShapeData {
   shapeType: ScribbleShapeType
@@ -195,7 +194,7 @@ export function enumerateScribbleShapePlacements(
       // shape offsets use visual rows (dy 0 = top) while board y axis
       // points up, so the row is inverted to keep shapes upright on board
       const cells = offsets.map(([dx, dy]) =>
-        packScribbleCell(originX + dx, originY + (height - 1 - dy))
+        packBoardCell(originX + dx, originY + (height - 1 - dy))
       )
       if (cells.every((c) => occupied.has(c) === false)) {
         placements.push(cells)
@@ -230,3 +229,4 @@ export function placeScribbleShapeCompatibleWith(
     compatiblePlacements.length > 0 ? compatiblePlacements : placements
   )
 }
+

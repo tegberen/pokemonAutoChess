@@ -1363,6 +1363,9 @@ function grantGemRushRowReward(player: Player, index: number) {
 }
 
 export const groundDigEffect = new OnStageStartEffect(({ player, room }) => {
+  /* ponds cover the ground the diggers would work on, so taking WATER_FOUNTAIN
+     freezes digging where it stands rather than fighting the water for cells */
+  if (player.blessings?.includes(Blessing.WATER_FOUNTAIN)) return
   const hasGroundSynergy = getSynergyTier(player.synergies, Synergy.GROUND) > 0
   const snifferDogFielded =
     player.blessings?.includes(Blessing.SNIFFER_DOG) &&

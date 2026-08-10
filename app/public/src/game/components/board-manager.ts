@@ -7,14 +7,26 @@ import {
   BOARD_WIDTH,
   getRegionTint,
   ItemStats,
+  packBoardCell,
   PortalCarouselStages,
-  RegionDetails
+  RegionDetails,
+  unpackBoardCell
 } from "../../../../config"
 import { getMusicAlt } from "../../../../config/game/music"
 import {
-  ScribbleShapeTint,
-  unpackScribbleCell
+  SCRIBBLE_LABEL_FADE_DURATION,
+  ScribbleShapeTint
 } from "../../../../config/game/scribble-shapes"
+import {
+  getWaterPondTileFrames,
+  getWaterPondTilesetKey,
+  getWaterPondValue,
+  isWaterPondAnimatedTileset,
+  isWaterPondTileset,
+  POND_SPLASH_INTERVAL,
+  POND_SPLASH_Y_OFFSET,
+  WaterPondTint
+} from "../../../../config/game/water-ponds"
 import {
   FLOWER_POTS_POSITIONS_BLUE,
   FlowerPotMons
@@ -51,7 +63,7 @@ import { Weather } from "../../../../types/enum/Weather"
 import type { NonFunctionPropNames } from "../../../../types/HelperTypes"
 import { isOnBench } from "../../../../utils/board"
 import { logger } from "../../../../utils/logger"
-import { randomBetween } from "../../../../utils/random"
+import { pickRandomIn, randomBetween } from "../../../../utils/random"
 import { schemaValues } from "../../../../utils/schemas"
 import { GamePokemonDetailDOMWrapper } from "../../pages/component/game/game-pokemon-detail"
 import { getGameContainer } from "../../pages/game"
@@ -111,6 +123,10 @@ export default class BoardManager {
   lightCell: Phaser.GameObjects.Sprite | null
   treasureTrailCell: Phaser.GameObjects.Sprite | null = null
   scribbleCells: Phaser.GameObjects.Sprite[] = []
+  pondCells: Phaser.GameObjects.Sprite[] = []
+  pondCellIndices: number[] = []
+  pondSplashTimer: Phaser.Time.TimerEvent | null = null
+  waterTierRendered = -1
   scribbleLabels: GameDialog[] = []
   berryTrees: BerryTree[] = []
   flowerPots: Phaser.GameObjects.Sprite[] = []
@@ -444,18 +460,65 @@ export default class BoardManager {
     this.treasureTrailCell = null
   }
 
+  // ponds live on the blessing state, which is also where the client reads them
+  getWaterPonds() {
+    return [
+      ...(this.state.blessingsByPlayerId?.get(this.player.id)?.waterPonds ?? [])
+    ]
+  }
+
   showScribbleShapes() {
     this.hideScribbleShapes()
-    if (this.specialGameRule !== SpecialGameRule.LIGHT_SHOW) return
+    if (
+      this.specialGameRule !== SpecialGameRule.LIGHT_SHOW &&
+      this.getWaterPonds().length === 0
+    )
+      return
+    this.pondCellIndices = []
+    this.waterTierRendered = getSynergyTier(this.player.synergies, Synergy.WATER)
     const labelAnchors: {
       label: GameDialog
       dialog: string
       x: number
       y: number
     }[] = []
+
+    /* always visible effect label above the cells, so that players don't need to
+       open the Smeargle dialog to know what each shape or pond does */
+    const addLabel = (
+      cellCoordinates: [number, number][],
+      dialog: string,
+      tint: number
+    ) => {
+      const xs = cellCoordinates.map(([x]) => x)
+      const topY = Math.min(...cellCoordinates.map(([, y]) => y))
+      const label = new GameDialog({
+        scene: this.scene,
+        dialog,
+        extraClass: "scribble-shape-label"
+      })
+      // tint the label border like the cells so they stay associated even when
+      // the label had to be pushed away
+      label.dom.style.borderColor = `#${tint.toString(16).padStart(6, "0")}`
+      label.setAlpha(0)
+      this.scene.add.existing(label)
+      this.scene.tweens.add({
+        targets: label,
+        alpha: 1,
+        duration: SCRIBBLE_LABEL_FADE_DURATION
+      })
+      labelAnchors.push({
+        label,
+        dialog,
+        x: (Math.min(...xs) + Math.max(...xs)) / 2,
+        y: topY - 72
+      })
+      this.scribbleLabels.push(label)
+    }
+
     this.player.scribbleShapes.forEach((shape) => {
-      const cellCoordinates = shape.cells.map((cell) => {
-        const { x, y } = unpackScribbleCell(cell)
+      const cellCoordinates = [...shape.cells].map((cell) => {
+        const { x, y } = unpackBoardCell(cell)
         return transformBoardCoordinates(x, y)
       })
       cellCoordinates.forEach(([x, y]) => {
@@ -466,35 +529,35 @@ export default class BoardManager {
           "LIGHT_CELL/000.png"
         )
         sprite.setDepth(DEPTH.LIGHT_CELL)
-        sprite.setScale(2, 2)
+        sprite.setScale(2)
         sprite.anims.play("LIGHT_CELL")
         sprite.setTint(ScribbleShapeTint[shape.shapeType])
         this.scribbleCells.push(sprite)
       })
+      addLabel(
+        cellCoordinates,
+        t(`scribble_shape_effect.${shape.shapeType}`),
+        ScribbleShapeTint[shape.shapeType]
+      )
+    })
 
-      // always visible effect label above the shape, so that players don't
-      // need to open the Smeargle dialog to know what each shape does
-      const dialog = t(`scribble_shape_effect.${shape.shapeType}`)
-      const xs = cellCoordinates.map(([x]) => x)
-      const topY = Math.min(...cellCoordinates.map(([, y]) => y))
-      const label = new GameDialog({
-        scene: this.scene,
-        dialog,
-        extraClass: "scribble-shape-label"
+    this.getWaterPonds().forEach((pond) => {
+      const cells = [...pond.cells]
+      this.pondCellIndices.push(...cells)
+      const tileFrames = getWaterPondTileFrames(cells)
+      const cellCoordinates = cells.map((cell): [number, number] => {
+        const { x, y } = unpackBoardCell(cell)
+        const [x1, y1] = transformBoardCoordinates(x, y)
+        this.addPondCell(x1, y1, tileFrames.get(cell)!)
+        return [x1, y1]
       })
-      // tint the label border like the shape cells so they stay associated
-      // even when the label had to be pushed away from the shape
-      label.dom.style.borderColor = `#${ScribbleShapeTint[shape.shapeType]
-        .toString(16)
-        .padStart(6, "0")}`
-      this.scene.add.existing(label)
-      labelAnchors.push({
-        label,
-        dialog,
-        x: (Math.min(...xs) + Math.max(...xs)) / 2,
-        y: topY - 72
-      })
-      this.scribbleLabels.push(label)
+      addLabel(
+        cellCoordinates,
+        t(`water_pond_effect.${pond.pondType}`, {
+          value: getWaterPondValue(pond.pondType, this.waterTierRendered)
+        }),
+        WaterPondTint[pond.pondType]
+      )
     })
 
     // push labels up while they would overlap another shape's label
@@ -522,6 +585,8 @@ export default class BoardManager {
     // first layout from an estimate, then refine with the real rendered
     // widths once the label DOM has been painted (stat keywords are replaced
     // with icons, so the estimate can be off)
+    this.startPondSplashes()
+
     layoutLabels(({ dialog }) => dialog.length * 5 + 20)
     this.scene.time.delayedCall(100, () => {
       if (labelAnchors.some(({ label }) => !label.scene)) return // labels were destroyed in the meantime
@@ -532,11 +597,131 @@ export default class BoardManager {
     })
   }
 
+  /* a pond cell is the region's static water tile with its animated frames
+     layered on top, the same composition the tilemap uses for real water */
+  addPondCell(x: number, y: number, tileFrame: number) {
+    const map = this.player.map
+    if (map === "town") return
+    const tilemap = this.scene.tilemaps.get(map)
+    const animationsPaused = preference("disableAnimatedTilemap")
+
+    tilemap?.tilesets
+      .filter((tileset) => isWaterPondTileset(tileset.name))
+      .forEach((tileset) => {
+        const animation = isWaterPondAnimatedTileset(tileset.name)
+          ? tileset.tiles?.find((tile) => tile.id === tileFrame)?.animation
+          : undefined
+        if (isWaterPondAnimatedTileset(tileset.name) && !animation) return
+
+        const textureKey = getWaterPondTilesetKey(map, tileset.name)
+        // a region travelled to mid game can still be loading its tileset
+        if (this.scene.textures.exists(textureKey) === false) return
+
+        const sprite = this.scene.add.sprite(x, y, textureKey, tileFrame)
+        sprite.setDepth(DEPTH.LIGHT_CELL)
+        // pond tiles are 24px and cover a whole 96px board cell
+        sprite.setScale(4)
+        this.pondCells.push(sprite)
+
+        if (!animation) return
+        const animationKey = `pond_${textureKey}_${tileFrame}`
+        if (!this.scene.anims.exists(animationKey)) {
+          this.scene.anims.create({
+            key: animationKey,
+            frames: animation.map((frame) => ({
+              key: textureKey,
+              frame: frame.tileid
+            })),
+            duration: animation.reduce((sum, f) => sum + f.duration, 0),
+            repeat: -1
+          })
+        }
+        sprite.anims.play(animationKey)
+        if (animationsPaused) sprite.anims.pause()
+      })
+  }
+
+  /* a splash every so often under whichever pokemon is wading, picked fresh each
+     time so it follows units as they are dragged in and out of the water */
+  startPondSplashes() {
+    this.pondSplashTimer?.remove()
+    this.pondSplashTimer = null
+    if (this.pondCellIndices.length === 0) return
+    this.pondSplashTimer = this.scene.time.addEvent({
+      delay: POND_SPLASH_INTERVAL,
+      loop: true,
+      callback: () => this.playPondSplash()
+    })
+  }
+
+  /* the labels show a value scaled by the Water tier, so they go stale whenever
+     it changes. Only a tier change redraws, otherwise every unit moved on the
+     board would restart the water animation */
+  refreshPondsOnWaterTierChange() {
+    if (this.mode !== BoardMode.PICK || this.pondCellIndices.length === 0) return
+    const waterTier = getSynergyTier(this.player.synergies, Synergy.WATER)
+    if (waterTier === this.waterTierRendered) return
+    // claimed before the tween so a second synergy change cannot start a second one
+    this.waterTierRendered = waterTier
+    if (this.scribbleLabels.length === 0) return this.showScribbleShapes()
+
+    this.scene.tweens.add({
+      targets: this.scribbleLabels,
+      alpha: 0,
+      duration: SCRIBBLE_LABEL_FADE_DURATION,
+      onComplete: () => this.showScribbleShapes()
+    })
+  }
+
+  playPondSplash() {
+    const wading = schemaValues(this.player.board).filter((pokemon) =>
+      this.pondCellIndices.includes(
+        packBoardCell(pokemon.positionX, pokemon.positionY)
+      )
+    )
+    if (wading.length === 0) return
+    const pokemon = pickRandomIn(wading)
+    this.playPondSplashAt(pokemon.positionX, pokemon.positionY)
+  }
+
+  // dropping a pokemon in the water splashes straight away, as drop feedback
+  playPondSplashAt(boardX: number, boardY: number) {
+    if (preference("disableAnimatedTilemap")) return
+    if (this.pondCellIndices.includes(packBoardCell(boardX, boardY)) === false)
+      return
+
+    const [x, y] = transformBoardCoordinates(boardX, boardY)
+    const splash = this.scene.add.sprite(
+      x,
+      y + POND_SPLASH_Y_OFFSET,
+      "abilities",
+      "WAVE_SPLASH/000.png"
+    )
+    splash.setDepth(DEPTH.HIT_FX_BELOW_POKEMON)
+    splash.setScale(2)
+    splash.anims.play("WAVE_SPLASH")
+    splash.once(Phaser.Animations.Events.ANIMATION_COMPLETE, () =>
+      splash.destroy()
+    )
+  }
+
+  setPondAnimationsPaused(paused: boolean) {
+    this.pondCells.forEach((sprite) => {
+      if (!sprite.anims.currentAnim) return
+      paused ? sprite.anims.pause() : sprite.anims.resume()
+    })
+  }
+
   hideScribbleShapes() {
     this.scribbleCells.forEach((sprite) => sprite.destroy())
     this.scribbleCells = []
     this.scribbleLabels.forEach((label) => label.destroy())
     this.scribbleLabels = []
+    this.pondCells.forEach((sprite) => sprite.destroy())
+    this.pondCells = []
+    this.pondCellIndices = []
+    this.pondSplashTimer?.remove()
+    this.pondSplashTimer = null
   }
 
   // called when the player's scribble shapes change during the pick phase,
@@ -714,16 +899,26 @@ export default class BoardManager {
     }
   }
 
+  /* computed rather than read off pondCellIndices because renderBoard draws the
+     holes before the ponds */
+  getPondCells(): number[] {
+    return this.getWaterPonds().flatMap((pond) => [...pond.cells])
+  }
+
   renderGroundHoles() {
     this.groundHoles.forEach((hole) => hole.destroy())
     this.groundHoles = []
+    const pondCells = this.getPondCells()
     for (let row = 0; row < BOARD_HEIGHT / 2; row++) {
       for (let col = 0; col < BOARD_WIDTH; col++) {
         let trenchWidth = 0
         const index = col + row * BOARD_WIDTH
         while (
           col + trenchWidth < BOARD_WIDTH &&
-          this.player.groundHoles[index + trenchWidth] === 5
+          this.player.groundHoles[index + trenchWidth] === 5 &&
+          // a trench stops at the water rather than being drawn across it
+          pondCells.includes(packBoardCell(col + trenchWidth, row + 1)) ===
+            false
         ) {
           trenchWidth++
         }
@@ -744,7 +939,10 @@ export default class BoardManager {
         } else {
           // single hole
           const hole = this.player.groundHoles[index]
-          if (hole > 0) {
+          if (
+            hole > 0 &&
+            pondCells.includes(packBoardCell(col, row + 1)) === false
+          ) {
             const [x, y] = transformBoardCoordinates(col, row + 1)
             const groundHole = this.scene.add
               .sprite(x, y + 10, "ground_holes", `hole${hole}.png`)

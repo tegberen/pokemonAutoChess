@@ -1651,6 +1651,13 @@ export default class GameRoom extends Room<{ state: GameState }> {
     if (choice.type === "blessing") {
       const blessing = choice.blessings[choiceIndex]
       if (!blessing) return
+      /* the blessing state is attached before the effect runs, so an effect can
+         write to it right away, as WATER_FOUNTAIN does with its ponds */
+      const owned =
+        this.state.blessingsByPlayerId.get(player.id) ?? new PlayerBlessings()
+      this.state.blessingsByPlayerId.set(player.id, owned)
+      player.blessingsRef = owned
+
       const applyEffect = blessingEffectService[blessing]
       const moneyBeforeBlessing = player.money
       if (applyEffect && applyEffect(player, this.state, this) === false) return
@@ -1660,11 +1667,7 @@ export default class GameRoom extends Room<{ state: GameState }> {
           .find((cli) => cli.auth.uid === player.id)
           ?.send(Transfer.PLAYER_INCOME, moneyGained)
       }
-      const owned =
-        this.state.blessingsByPlayerId.get(player.id) ?? new PlayerBlessings()
       owned.blessings.push(blessing)
-      this.state.blessingsByPlayerId.set(player.id, owned)
-      player.blessingsRef = owned
       player.blessings.push(blessing)
       removeInArray(player.choices, choice)
       return

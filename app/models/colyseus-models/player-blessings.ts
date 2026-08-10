@@ -1,5 +1,6 @@
 import { ArraySchema, MapSchema, Schema, type } from "@colyseus/schema"
 import type { Blessing } from "../../types/enum/Blessing"
+import { WaterPond } from "./water-pond"
 
 export class PlayerBlessings extends Schema {
   @type(["string"]) blessings = new ArraySchema<Blessing>()
@@ -11,4 +12,8 @@ export class PlayerBlessings extends Schema {
   @type({ map: "number" }) questProgress = new MapSchema<number>()
   @type("boolean") thinkFastActive = false
   @type("uint32") goldEarned = 0
+  /* WATER_FOUNTAIN ponds, here rather than on Player because Player is at the
+     colyseus 64-field cap. Declared LAST so it does not shift the wire index of
+     the fields above, which would desync clients on an older bundle. */
+  @type([WaterPond]) waterPonds = new ArraySchema<WaterPond>()
 }

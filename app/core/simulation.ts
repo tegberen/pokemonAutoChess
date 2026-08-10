@@ -1,10 +1,13 @@
 import { MapSchema, Schema, type } from "@colyseus/schema"
-import { BENCH_GROUND_HOLES_OFFSET, BOARD_HEIGHT, BOARD_WIDTH, BOARD_SIDE_HEIGHT, DEFAULT_SPEED, getItemCapacity } from "../config"
+import { BENCH_GROUND_HOLES_OFFSET, BOARD_HEIGHT, BOARD_WIDTH, BOARD_SIDE_HEIGHT, DEFAULT_SPEED, getItemCapacity, packBoardCell } from "../config"
 import {
-  packScribbleCell,
   ScribbleShapeTint,
   ScribbleShapeType
 } from "../config/game/scribble-shapes"
+import {
+  getWaterPondValue,
+  WaterPondType
+} from "../config/game/water-ponds"
 import {
   AMORPHOUS_HP_BUFF_PER_SYNERGY_TIER,
   AMORPHOUS_SPEED_BUFF_PER_SYNERGY_TIER,
@@ -52,6 +55,7 @@ import {
 import { Passive } from "../types/enum/Passive"
 import { Pkm, PkmByIndex, PkmFamily } from "../types/enum/Pokemon"
 import { Synergy } from "../types/enum/Synergy"
+import { getSynergyTier } from "../models/colyseus-models/synergies"
 import {
   Blessing,
   BLOSSOM_FESTIVAL_CASTS_PER_RANGE_GAIN,
@@ -805,18 +809,18 @@ export default class Simulation extends Schema implements ISimulation {
       )
     }
 
-    if (
-      !isSpawn &&
-      player &&
-      this.room?.state.specialGameRule === SpecialGameRule.LIGHT_SHOW
-    ) {
-      player.scribbleShapes.forEach((shape) => {
-        if (
-          shape.cells.includes(
-            packScribbleCell(pokemon.positionX, pokemon.positionY)
-          )
-        ) {
-          this.applyScribbleShapeEffect(shape.shapeType, pokemonEntity)
+    if (!isSpawn && player) {
+      const cell = packBoardCell(pokemon.positionX, pokemon.positionY)
+      if (this.room?.state.specialGameRule === SpecialGameRule.LIGHT_SHOW) {
+        player.scribbleShapes.forEach((shape) => {
+          if (shape.cells.includes(cell)) {
+            this.applyScribbleShapeEffect(shape.shapeType, pokemonEntity)
+          }
+        })
+      }
+      player.blessingsRef?.waterPonds.forEach((pond) => {
+        if (pond.cells.includes(cell)) {
+          this.applyWaterPondEffect(pond.pondType, pokemonEntity, player)
         }
       })
     }
@@ -873,6 +877,47 @@ export default class Simulation extends Schema implements ISimulation {
         break
       case ScribbleShapeType.RING:
         entity.addShield(Math.ceil(entity.maxHP * 0.4), entity, 0, false)
+        break
+    }
+  }
+
+  // no light spot here, unlike a scribble shape: it reads wrong on water
+  applyWaterPondEffect(
+    pondType: WaterPondType,
+    entity: PokemonEntity,
+    player: Player
+  ) {
+    const value = getWaterPondValue(
+      pondType,
+      getSynergyTier(player.synergies, Synergy.WATER)
+    )
+    switch (pondType) {
+      case WaterPondType.DEEP_POND:
+        entity.addDefense(value, entity, 0, false)
+        break
+      case WaterPondType.MINERAL_SPRING:
+        entity.addSpecialDefense(value, entity, 0, false)
+        break
+      case WaterPondType.TIDE_POOL:
+        entity.addShield(
+          Math.ceil((entity.maxHP * value) / 100),
+          entity,
+          0,
+          false
+        )
+        break
+      case WaterPondType.TORRENT:
+        entity.addAttack(Math.ceil((entity.atk * value) / 100), entity, 0, false)
+        break
+      case WaterPondType.CRYSTAL_POND:
+        entity.addAbilityPower(value, entity, 0, false)
+        break
+      case WaterPondType.RAPIDS:
+        entity.addSpeed(value, entity, 0, false)
+        break
+      case WaterPondType.GEYSER:
+        entity.addCritChance(value, entity, 0, false)
+        entity.addCritPower(value, entity, 0, false)
         break
     }
   }

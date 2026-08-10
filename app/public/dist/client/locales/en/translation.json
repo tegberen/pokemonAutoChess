@@ -5454,6 +5454,10 @@
 			"name": "Roosting Flock",
 			"description": "Gain a Tranquill and move to a random Pidove region if not in one. When your STRONGEST Pidove casts its ability, ADJACENT FLYING allies cast Roost as well."
 		},
+		"WATER_FOUNTAIN": {
+			"name": "Water Fountain",
+			"description": "Travel to a region with Ponds, and from now on you can only travel to regions with Ponds. Two Ponds appear on your board, defensive ones in front and offensive ones in the backline. A Pokémon that starts the fight in a Pond gains that Pond's effect. The effects increases with higher tiers of WATER. Every 4 stages, the Ponds move and change. Your Pokémon can no longer dig, and holes already dug stay as they are."
+		},
 		"WOBBUFFETS_GOLD_PRIZE": {
 			"name": "Wobbuffet's Gold Prize",
 			"description": "Gain a random item component and 2 RECYCLE_TICKET. Each time you use a RECYCLE_TICKET, gain a random item component."
@@ -6407,6 +6411,24 @@
 	"scribble_sketchbook_milestone_3": "10 free rolls",
 	"scribble_sketchbook_milestone_4": "20 player HP",
 	"scribble_sketchbook_milestone_5": "Unique Pokémon",
+	"water_pond": {
+		"DEEP_POND": "Deep Pond",
+		"MINERAL_SPRING": "Mineral Spring",
+		"TIDE_POOL": "Tide Pool",
+		"TORRENT": "Torrent",
+		"CRYSTAL_POND": "Crystal Pond",
+		"RAPIDS": "Rapids",
+		"GEYSER": "Geyser"
+	},
+	"water_pond_effect": {
+		"DEEP_POND": "+{{value}} DEF",
+		"MINERAL_SPRING": "+{{value}} SPE_DEF",
+		"TIDE_POOL": "SHIELD equal to {{value}}% HP",
+		"TORRENT": "+{{value}}% ATK",
+		"CRYSTAL_POND": "+{{value}} AP",
+		"RAPIDS": "+{{value}} SPEED",
+		"GEYSER": "+{{value}} CRIT_CHANCE and CRIT_POWER"
+	},
 	"scribble_shape_effect": {
 		"DOT": "+50% ATK and +50 AP",
 		"LINE": "+50% ATK",

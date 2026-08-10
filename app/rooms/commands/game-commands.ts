@@ -28,7 +28,8 @@ import {
   StageDuration,
   TREASURE_BOX_LIFE_THRESHOLD,
   UNOWN_ENCOUNTER_CHANCE,
-  UniquePool
+  UniquePool,
+  unpackBoardCell
 } from "../../config"
 import {
   Blessings,
@@ -43,14 +44,15 @@ import {
   applyRecurringBlessingGrants,
   applyScheduledBlessingGrants,
   checkBlessingQuests,
-  checkIndecisionSynergies
+  checkIndecisionSynergies,
+  rollWaterFountainPonds
 } from "../../services/blessings"
 import {
   buildScribbleShapeBag,
   placeScribbleShapeCompatibleWith,
-  rollScribbleShapes,
-  unpackScribbleCell
+  rollScribbleShapes
 } from "../../config/game/scribble-shapes"
+import { WATER_FOUNTAIN_REROLL_INTERVAL } from "../../config/game/water-ponds"
 import { AbilityStrategies } from "../../core/abilities/abilities"
 import { castAbility } from "../../core/abilities/cast"
 import {
@@ -2203,6 +2205,15 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
       })
     }
 
+    if (this.state.stageLevel % WATER_FOUNTAIN_REROLL_INTERVAL === 1) {
+      this.state.players.forEach((player: Player) => {
+        if (!player.alive) return
+        if (player.blessings?.includes(Blessing.WATER_FOUNTAIN)) {
+          rollWaterFountainPonds(player)
+        }
+      })
+    }
+
     if (
       [2, 4].includes(this.state.stageLevel) &&
       this.state.specialGameRule === SpecialGameRule.TECHNOLOGIC
@@ -3163,7 +3174,7 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
       player.scribbleShapes.forEach((shape) => {
         if (player.scribbleShapesCollected.includes(shape.shapeType)) return
         const isShapeFilled = shape.cells.every((cell) => {
-          const { x, y } = unpackScribbleCell(cell)
+          const { x, y } = unpackBoardCell(cell)
           return schemaValues(player.board).some(
             (pokemon) => pokemon.positionX === x && pokemon.positionY === y
           )

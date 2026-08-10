@@ -1,4 +1,7 @@
 import type Player from "../models/colyseus-models/player"
+import { rollWaterPonds } from "../config/game/water-ponds"
+import { WATER_FOUNTAIN_REGIONS } from "../config/game/blessings"
+import { WaterPond } from "../models/colyseus-models/water-pond"
 import { PlayerBlessings } from "../models/colyseus-models/player-blessings"
 import { PlayerChoice } from "../models/colyseus-models/player-choice"
 import { EvolutionManager } from "../core/evolution-logic/evolution-manager"
@@ -602,6 +605,75 @@ function giftBabiesUnderCost(
     giftPokemonIfBenchHasRoom(player, pkm)
   )
   return true
+}
+
+export function isWaterFountainRegion(map: DungeonPMDO | "town"): boolean {
+  return map !== "town" && WATER_FOUNTAIN_REGIONS.includes(map)
+}
+
+/* the ponds need a region whose water tiles look like water, so picking the
+   blessing travels there first, and getWaterFountainPortalMap keeps every later
+   region change inside the list. The ponds are rolled on arrival, otherwise they
+   would show up in the region being left behind for the length of the travel */
+export function applyWaterFountain(
+  player: Player,
+  state: GameState,
+  room: GameRoom | undefined
+) {
+  const previousMap = player.map
+  if (isWaterFountainRegion(previousMap)) {
+    rollWaterFountainPonds(player)
+    return
+  }
+
+  const newMap = pickRandomIn(
+    WATER_FOUNTAIN_REGIONS.filter((map) => map !== previousMap)
+  )
+  // same travel sequence as the Lapras Passport item
+  room?.broadcast(Transfer.PRELOAD_MAPS, [newMap])
+  player.spawnWanderingPokemon({
+    pkm: Pkm.LAPRAS,
+    type: WandererType.DIALOG,
+    behavior: WandererBehavior.SPECTATE,
+    data: newMap
+  })
+  setTimeout(() => {
+    player.map = newMap
+    player.regions.push(newMap)
+    player.updateRegionalPool(state, true, previousMap)
+    grantRegionalTreasuresOnRegionChange(player)
+    rollWaterFountainPonds(player)
+  }, LAPRAS_TRAVEL_DURATION)
+}
+
+/* A WATER_FOUNTAIN player can only travel to regions where ponds render, so the
+   portal they took is swapped for an eligible one among those offered. Only the
+   offered maps are preloaded by the client, so when none of them is eligible the
+   player stays where they are rather than landing on a map with no tileset */
+export function getWaterFountainPortalMap(
+  player: Player,
+  portalMap: DungeonPMDO,
+  offeredMaps: DungeonPMDO[]
+): DungeonPMDO | null {
+  if (
+    player.blessings?.includes(Blessing.WATER_FOUNTAIN) !== true ||
+    isWaterFountainRegion(portalMap)
+  ) {
+    return portalMap
+  }
+  const eligible = offeredMaps.filter(
+    (map) => isWaterFountainRegion(map) && map !== player.map
+  )
+  return eligible.length > 0 ? pickRandomIn(eligible) : null
+}
+
+export function rollWaterFountainPonds(player: Player) {
+  const ponds = player.blessingsRef?.waterPonds
+  if (!ponds) return
+  ponds.clear()
+  rollWaterPonds().forEach(({ pondType, cells }) => {
+    ponds.push(new WaterPond(pondType, cells))
+  })
 }
 
 function giftPokemonIfBenchHasRoom(player: Player, pkm: Pkm): boolean {
@@ -1896,6 +1968,11 @@ export const blessingEffectService: {
 
   [Blessing.TIDAL_SURGE]: (player) =>
     giftPokemonIfBenchHasRoom(player, Pkm.FROAKIE),
+
+  [Blessing.WATER_FOUNTAIN]: (player, state, room) => {
+    applyWaterFountain(player, state, room)
+    return true
+  },
 
   [Blessing.HEX_MANIAC]: (player) =>
     giftPokemonIfBenchHasRoom(player, Pkm.SNORUNT),

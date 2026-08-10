@@ -810,6 +810,11 @@ export default function Game() {
           )
         dispatchBlessings()
         $(playerBlessings).blessings.onChange(dispatchBlessings)
+        $(playerBlessings).waterPonds.onChange(() => {
+          if (playerId === store.getState().game.playerIdSpectated) {
+            getGameScene()?.board?.refreshScribbleShapes()
+          }
+        })
         $(playerBlessings).questProgress.onChange(dispatchBlessings)
         $(playerBlessings).listen("thinkFastActive", dispatchBlessings)
         $(playerBlessings).listen("goldEarned", (goldEarned) => {
@@ -1019,9 +1024,11 @@ export default function Game() {
                 gameScene.load.reset()
               }
               preloadMusic(gameScene, RegionDetails[newMap].music)
-              gameScene.load.once("complete", () =>
+              gameScene.load.once("complete", () => {
                 playMusic(gameScene, RegionDetails[newMap].music)
-              )
+                // ponds are drawn from the region tileset, so they follow the move
+                gameScene.board?.showScribbleShapes()
+              })
               if (!alreadyLoading) {
                 gameScene.load.start()
               }
@@ -1081,8 +1088,13 @@ export default function Game() {
           })
         })
 
-        const updateSynergies = () =>
+        const updateSynergies = () => {
           dispatch(setSynergies({ id: player.id, value: player.synergies }))
+          if (player.id === store.getState().game.playerIdSpectated) {
+            // pond labels show a value scaled by the Water tier
+            getGameScene()?.board?.refreshPondsOnWaterTierChange()
+          }
+        }
         $player.synergies.onChange(updateSynergies)
         // onChange does not fire for existing players (e.g. a spectator or a
         // reconnecting client joining an in-progress game), which would leave
