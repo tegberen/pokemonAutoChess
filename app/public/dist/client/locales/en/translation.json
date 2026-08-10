@@ -5454,6 +5454,18 @@
 			"name": "Roosting Flock",
 			"description": "Gain a Tranquill and move to a random Pidove region if not in one. When your STRONGEST Pidove casts its ability, ADJACENT FLYING allies cast Roost as well."
 		},
+		"MOLECULAR_CORROSION": {
+			"name": "Molecular Corrosion",
+			"description": "Enemy Pokémon under POISONNED take 30% more damage from all sources, and your POISONNED can no longer be blocked by RUNE_PROTECT."
+		},
+		"UNISON": {
+			"name": "Unison",
+			"description": "Your TMs are no longer consumed when taught to a HUMAN Pokémon."
+		},
+		"BERRY_GROWTH": {
+			"name": "Berry Growth",
+			"description": "Every Berry eaten also grants the Pokémon +10 permanent max HP, or +15 for a golden Berry. If taken on stage 12, gain 2 golden Berries."
+		},
 		"WATER_FOUNTAIN": {
 			"name": "Water Fountain",
 			"description": "Travel to a region with Ponds, and from now on you can only travel to regions with Ponds. Two Ponds appear on your board, defensive ones in front and offensive ones in the backline. A Pokémon that starts the fight in a Pond gains that Pond's effect. The effects increases with higher tiers of WATER. Every 4 stages, the Ponds move and change. Your Pokémon can no longer dig, and holes already dug stay as they are."

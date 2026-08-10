@@ -1027,6 +1027,27 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     grantsPokemonImmediately: true,
     isAvailable: isSynergyBlessingAvailable(Synergy.AQUATIC)
   },
+  [Blessing.MOLECULAR_CORROSION]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "molecular_corrosion",
+    grantsPokemonImmediately: false,
+    isAvailable: isSynergyBlessingAvailable(Synergy.POISON)
+  },
+  [Blessing.UNISON]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "unison",
+    grantsPokemonImmediately: false,
+    isAvailable: isSynergyBlessingAvailable(Synergy.HUMAN)
+  },
+  [Blessing.BERRY_GROWTH]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "berry_growth",
+    grantsPokemonImmediately: false,
+    isAvailable: isSynergyBlessingAvailable(Synergy.GRASS)
+  },
   [Blessing.WATER_FOUNTAIN]: {
     tier: BlessingTier.PRISMATIC,
     availableAtStages: BLESSING_SELECTION_STAGES,

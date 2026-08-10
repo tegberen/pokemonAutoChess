@@ -701,12 +701,13 @@ export const NonSpecialBerries: Item[] = [
   Item.SITRUS_BERRY
 ]
 
-export const SpecialBerries: Item[] = [
-  Item.NANAB_BERRY,
+export const GoldenBerries: Item[] = [
   Item.GOLDEN_RAZZ_BERRY,
   Item.GOLDEN_NANAB_BERRY,
   Item.GOLDEN_PINAP_BERRY
 ]
+
+export const SpecialBerries: Item[] = [Item.NANAB_BERRY, ...GoldenBerries]
 
 export const Berries = [...NonSpecialBerries, ...SpecialBerries]
 

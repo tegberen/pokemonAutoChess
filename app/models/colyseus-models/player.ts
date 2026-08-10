@@ -990,15 +990,15 @@ export default class Player extends Schema implements IPlayer {
       const lostTMs = this.tms.slice(newNbTMs, previousNbTMs)
       lostTMs.forEach((tm) => {
         removeInArray(this.items, tm)
-        const pokemonWithThisTm = schemaValues(this.board).find(
-          (p) => p.tm === AbilityPerTM[tm]
-        )
-        if (pokemonWithThisTm) {
-          pokemonWithThisTm.tm = Ability.DEFAULT
-          const baseData = getPokemonData(pokemonWithThisTm.name)
-          pokemonWithThisTm.skill = baseData.skill
-          pokemonWithThisTm.maxPP = baseData.pp
-        }
+        // UNIFORM lets the same TM be taught to several pokemon, so all lose it
+        schemaValues(this.board)
+          .filter((p) => p.tm === AbilityPerTM[tm])
+          .forEach((pokemonWithThisTm) => {
+            pokemonWithThisTm.tm = Ability.DEFAULT
+            const baseData = getPokemonData(pokemonWithThisTm.name)
+            pokemonWithThisTm.skill = baseData.skill
+            pokemonWithThisTm.maxPP = baseData.pp
+          })
       })
     }
   }

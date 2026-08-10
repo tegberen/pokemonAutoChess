@@ -36,6 +36,8 @@ import {
   BP_REWARDS_COMPONENTS,
   BP_REWARDS_RECURRING_COMPONENTS,
   BP_REWARDS_ROUND_INTERVAL,
+  BERRY_GROWTH_GOLDEN_BERRIES_GRANTED,
+  BERRY_GROWTH_GOLDEN_BERRIES_STAGE,
   LANCES_ACE_DELAY,
   CALLED_SHOT_GOLD,
   CALLED_SHOT_STREAK,
@@ -96,6 +98,7 @@ import { getUnlockedFlowerPots } from "../core/flower-pots"
 import { Awakening, AwakeningTypes } from "../types/enum/Awakening"
 import {
   Berries,
+  GoldenBerries,
   Item,
   ItemComponents,
   ItemRecipe,
@@ -2483,6 +2486,17 @@ export const blessingEffectService: {
 
   [Blessing.BERRY_POUCH]: (player) => {
     player.items.push(pickRandomIn(Berries))
+    return true
+  },
+
+  /* taken late there is little time left to grow anything, so the golden
+     berries are the compensation for picking it on the last selection */
+  [Blessing.BERRY_GROWTH]: (player, state) => {
+    if (state.stageLevel >= BERRY_GROWTH_GOLDEN_BERRIES_STAGE) {
+      for (let i = 0; i < BERRY_GROWTH_GOLDEN_BERRIES_GRANTED; i++) {
+        player.items.push(pickRandomIn(GoldenBerries))
+      }
+    }
     return true
   },
 

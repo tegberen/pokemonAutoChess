@@ -23,6 +23,7 @@ import {
   RESURGENCE_LEGENDARY_SPEED,
   RESURGENCE_SPEED,
   EXHAUSTING_FLAME_DAMAGE_MULTIPLIER,
+  MOLECULAR_CORROSION_DAMAGE_MULTIPLIER,
   RUBY_ORB_TRUE_DAMAGE_VS_BURN,
   SHELL_ARMOR_SPE_DEF_BY_STARS
 } from "../types/enum/Blessing"
@@ -576,6 +577,17 @@ export default abstract class PokemonState {
         pokemon.player?.blessings?.includes(Blessing.EXHAUSTING_FLAME)
       ) {
         damage *= EXHAUSTING_FLAME_DAMAGE_MULTIPLIER
+      }
+
+      /* keyed on who applied the poison rather than the attacker, so the amp
+         covers damage from every source and not just the poisoner's own hits */
+      if (
+        pokemon.status.poisonStacks > 0 &&
+        pokemon.status.poisonOrigin?.player?.blessings?.includes(
+          Blessing.MOLECULAR_CORROSION
+        )
+      ) {
+        damage *= MOLECULAR_CORROSION_DAMAGE_MULTIPLIER
       }
 
       // dark pokemon do more damage to BLINDED status

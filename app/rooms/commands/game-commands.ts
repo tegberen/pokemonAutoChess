@@ -3729,7 +3729,10 @@ export function onPokemonChangePosition({
     pokemon.removeItems(itemsToRemove, player)
 
     if (pokemon.tm && TMPerAbility.has(pokemon.tm)) {
-      player.items.push(TMPerAbility.get(pokemon.tm)!)
+      // UNISON never consumed the TM, so giving it back would duplicate it
+      if (player.blessings?.includes(Blessing.UNISON) === false) {
+        player.items.push(TMPerAbility.get(pokemon.tm)!)
+      }
       pokemon.tm = Ability.DEFAULT
       pokemon.skill = pokemon.baseSkill
       pokemon.maxPP = pokemon.baseMaxPP

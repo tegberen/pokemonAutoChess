@@ -695,7 +695,9 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
           pokemon.maxPP = player.blessings?.includes(Blessing.MOVE_TUTOR)
             ? MOVE_TUTOR_MAX_PP
             : 100
-          removeInArray(player.items, item)
+          if (player.blessings?.includes(Blessing.UNISON) === false) {
+            removeInArray(player.items, item)
+          }
           return false
         })
       ]

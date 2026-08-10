@@ -619,7 +619,13 @@ export default class Status extends Schema implements IStatus {
     pkm: PokemonEntity,
     origin: PokemonEntity | undefined
   ) {
-    if (!pkm.effects.has(EffectEnum.IMMUNITY_POISON) && !this.runeProtect) {
+    // MOLECULAR_CORROSION eats through RUNE_PROTECT, but not poison immunity
+    const ignoresRuneProtect =
+      origin?.player?.blessings?.includes(Blessing.MOLECULAR_CORROSION) === true
+    if (
+      !pkm.effects.has(EffectEnum.IMMUNITY_POISON) &&
+      (!this.runeProtect || ignoresRuneProtect)
+    ) {
       let maxStacks = 3
       if (origin) {
         this.poisonOrigin = origin

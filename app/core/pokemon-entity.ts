@@ -39,7 +39,9 @@ import {
   RIVALRY_MAX_HP_ON_ENEMY_SIDE,
   SLIPSTREAM_SPEED,
   ZAP_CHAIN_DAMAGE_RATIO,
-  VAMPIRIC_HEAL_RATIO
+  VAMPIRIC_HEAL_RATIO,
+  BERRY_GROWTH_PERMANENT_HP,
+  BERRY_GROWTH_GOLDEN_PERMANENT_HP
 } from "../types/enum/Blessing"
 import { getStrongestUnit } from "./unit-score"
 import { EffectEnum } from "../types/enum/Effect"
@@ -53,6 +55,7 @@ import {
 } from "../types/enum/Game"
 import {
   Berries,
+  GoldenBerries,
   Item,
   Sweets,
   SynergyGivenByItem,
@@ -2046,6 +2049,13 @@ flyAway(
       healToShield
         ? this.addShield(val, this, apScaling, crit)
         : this.handleHeal(val, this, apScaling, crit)
+
+    if (this.player?.blessings?.includes(Blessing.BERRY_GROWTH)) {
+      const permanentHp = GoldenBerries.includes(berry)
+        ? BERRY_GROWTH_GOLDEN_PERMANENT_HP
+        : BERRY_GROWTH_PERMANENT_HP
+      this.addMaxHP(permanentHp, this, 0, false, true)
+    }
 
     switch (berry) {
       case Item.AGUAV_BERRY:
