@@ -13,11 +13,15 @@ import {
   changeRoomName,
   changeRoomPassword,
   setBlessingsEnabled,
+  setBlessingsUnderTest as setBlessingsUnderTestNetwork,
   setScribbleExtended,
   setSpecialRule
 } from "../../../network"
+import { Blessings } from "../../../../../config/game/blessings"
+import type { Blessing } from "../../../../../types/enum/Blessing"
 import { addIconsToDescription } from "../../utils/descriptions"
 import { cc } from "../../utils/jsx"
+import { LocalStoreKeys, localStore } from "../../utils/store"
 import { Modal } from "../modal/modal"
 import { BotSelectModal } from "./bot-select-modal"
 import "./preparation-menu.css"
@@ -32,6 +36,26 @@ export default function PreparationSettings() {
   const [inputValue, setInputValue] = useState<string>("")
   const [showBotSelectModal, setShowBotSelectModal] = useState(false)
   const [showRulePicker, setShowRulePicker] = useState(false)
+  const [showBlessingPicker, setShowBlessingPicker] = useState(false)
+  const [blessingQuery, setBlessingQuery] = useState("")
+  /* dev only, and kept client side: the server holds the list off the schema so
+     it costs no synced field, so this is the only copy the picker can show */
+  const isDevMode = process.env.MODE === "dev"
+  const [blessingsUnderTest, setBlessingsUnderTest] = useState<string[]>(
+    () => localStore.get(LocalStoreKeys.BLESSINGS_UNDER_TEST) ?? []
+  )
+  const pickBlessingsUnderTest = (blessings: string[]) => {
+    setBlessingsUnderTest(blessings)
+    localStore.set(LocalStoreKeys.BLESSINGS_UNDER_TEST, blessings)
+    setBlessingsUnderTestNetwork(blessings)
+  }
+  const filteredBlessings = (Object.keys(Blessings) as Blessing[]).filter(
+    (blessing) => {
+      const search = blessingQuery.trim().toLowerCase()
+      if (!search) return true
+      return t(`blessing.${blessing}.name`).toLowerCase().includes(search)
+    }
+  )
   const [ruleQuery, setRuleQuery] = useState("")
   const [botDifficulty, setBotDifficulty] = useState<BotDifficulty>(
     BotDifficulty.REGULAR
@@ -265,6 +289,74 @@ export default function PreparationSettings() {
     />
   )
 
+  const blessingsUnderTestModal = isDevMode && (
+    <Modal
+      show={showBlessingPicker}
+      onClose={() => setShowBlessingPicker(false)}
+      className="rule-picker"
+      header={t("blessings_under_test_label")}
+      body={
+        <>
+          <div className="rule-picker-toolbar">
+            <input
+              type="text"
+              className="rule-search"
+              placeholder={t("search")}
+              value={blessingQuery}
+              onChange={(e) => setBlessingQuery(e.target.value)}
+            />
+            <button
+              className="bubbly blue"
+              onClick={() => pickBlessingsUnderTest([])}
+            >
+              {t("blessings_under_test_clear")}
+            </button>
+          </div>
+          <ul className="rule-list">
+            {filteredBlessings.map((blessing) => (
+              <li
+                key={blessing}
+                className={cc("my-box", "rule-card", {
+                  selected: blessingsUnderTest.includes(blessing)
+                })}
+                onClick={() =>
+                  pickBlessingsUnderTest(
+                    blessingsUnderTest.includes(blessing)
+                      ? blessingsUnderTest.filter((b) => b !== blessing)
+                      : [...blessingsUnderTest, blessing]
+                  )
+                }
+              >
+                <h3>{t(`blessing.${blessing}.name`)}</h3>
+                <p>
+                  {addIconsToDescription(t(`blessing.${blessing}.description`))}
+                </p>
+              </li>
+            ))}
+          </ul>
+        </>
+      }
+    />
+  )
+
+  const blessingsUnderTestSetting = isDevMode && (
+    <div className="lobby-setting" title={t("blessings_under_test_hint")}>
+      <span className="setting-label">{t("blessings_under_test_label")}</span>
+      <div className="setting-control">
+        <button
+          className="rule-pick-button"
+          onClick={() => setShowBlessingPicker(true)}
+        >
+          {blessingsUnderTest.length > 0
+            ? t("blessings_under_test_count", {
+                count: blessingsUnderTest.length
+              })
+            : t("no_rule")}
+        </button>
+      </div>
+    </div>
+  )
+
   const playerHpSetting = (gameMode === GameMode.SCRIBBLE ||
     (hasCustomLobbySettings && (isOwner || isAdmin))) && (
     <div className="lobby-setting" title={t("scribble_extended_hint")}>
@@ -356,6 +448,7 @@ export default function PreparationSettings() {
     privacySetting ||
     scribbleRuleSetting ||
     playerHpSetting ||
+    blessingsUnderTestSetting ||
     botSetting
 
   return (
@@ -367,6 +460,7 @@ export default function PreparationSettings() {
           {scribbleRuleSetting}
           {playerHpSetting}
           {blessingsSetting}
+          {blessingsUnderTestSetting}
           {privacySetting}
         </div>
       ) : (
@@ -374,6 +468,7 @@ export default function PreparationSettings() {
       )}
 
       {rulePickerModal}
+      {blessingsUnderTestModal}
 
       {isOwner && showBotSelectModal && (
         <BotSelectModal

@@ -217,6 +217,10 @@ export function setScribbleExtended(extended: boolean) {
   rooms.preparation?.send(Transfer.CHANGE_SCRIBBLE_EXTENDED, extended)
 }
 
+export function setBlessingsUnderTest(blessings: string[]) {
+  rooms.preparation?.send(Transfer.CHANGE_BLESSINGS_UNDER_TEST, blessings)
+}
+
 export function setBlessingsEnabled(enabled: boolean) {
   rooms.preparation?.send(Transfer.CHANGE_BLESSINGS_ENABLED, enabled)
 }

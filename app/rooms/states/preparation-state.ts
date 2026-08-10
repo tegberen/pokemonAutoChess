@@ -1,5 +1,6 @@
 import { ArraySchema, MapSchema, Schema, type } from "@colyseus/schema"
 import { isBlessingEvent } from "../../config/game/events"
+import type { Blessing } from "../../types/enum/Blessing"
 import { GameUser } from "../../models/colyseus-models/game-user"
 import Message from "../../models/colyseus-models/message"
 import chatV2 from "../../models/mongo-models/chat-v2"
@@ -41,6 +42,8 @@ export default class PreparationState
   @type("boolean") scribbleExtended = false
   /** Blessing event: rule layer on any game mode, on by default while it runs. */
   @type("boolean") blessingsEnabled = isBlessingEvent()
+  // dev only, undecorated: restricts the pool without costing a schema field
+  blessingsUnderTest: Blessing[] = []
   /** Whimsy Weekend: a Double Up room that rolls a random scribble rule. */
   @type("boolean") whimsy = false
   abortOnPlayerLeave?: AbortController

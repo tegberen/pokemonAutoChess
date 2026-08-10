@@ -2316,11 +2316,19 @@ export default class Simulation extends Schema implements ISimulation {
 
     const oliveGardenChampion = championOf.get(Blessing.OLIVE_GARDEN)
     if (oliveGardenChampion) {
-      FIELD_STATUS_BY_SYNERGY.forEach(([synergy, addField]) => {
-        if (oliveGardenChampion.types.has(synergy)) {
-          addField(oliveGardenChampion)
-        }
-      })
+      /* one field only: holding several lets terrain-pulse's fixed priority pick
+         which one spreads, so a synergy stone would never take effect */
+      const stoneFields = FIELD_STATUS_BY_SYNERGY.filter(
+        ([synergy]) =>
+          synergy !== Synergy.GRASS && oliveGardenChampion.types.has(synergy)
+      )
+      const grantedField =
+        stoneFields.length > 0
+          ? pickRandomIn(stoneFields)
+          : FIELD_STATUS_BY_SYNERGY.find(([synergy]) =>
+              oliveGardenChampion.types.has(synergy)
+            )
+      grantedField?.[1](oliveGardenChampion)
     }
 
     const orbitalStrikeChampion = championOf.get(Blessing.ORBITAL_STRIKE)

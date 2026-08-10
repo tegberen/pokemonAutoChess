@@ -31,7 +31,6 @@ import {
   UniquePool
 } from "../../config"
 import {
-  BLESSING_SELECTION_EVERY_STAGE,
   Blessings,
   consumeGreedyWishTier,
   drawBlessingOptions,
@@ -2150,7 +2149,7 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
     /* reading 3 blessings and their rerolls does not fit in a normal pick phase */
     if (
       this.state.blessingsEnabled &&
-      (BLESSING_SELECTION_EVERY_STAGE ||
+      (this.state.blessingsUnderTest.length > 0 ||
         BLESSING_SELECTION_STAGES.includes(this.state.stageLevel))
     ) {
       this.state.time += BLESSING_SELECTION_EXTRA_TIME
@@ -2352,17 +2351,21 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
 
     if (
       this.state.blessingsEnabled &&
-      (BLESSING_SELECTION_EVERY_STAGE ||
+      (this.state.blessingsUnderTest.length > 0 ||
         BLESSING_SELECTION_STAGES.includes(this.state.stageLevel))
     ) {
-      const lobbyTier = rollBlessingTierForStage(this.state.stageLevel)
+      const lobbyTier = rollBlessingTierForStage(
+        this.state.stageLevel,
+        this.state.blessingsUnderTest
+      )
       this.state.players.forEach((player: Player) => {
         if (player.isBot || !player.alive) return
         const playerTier = peekGreedyWishTier(player, lobbyTier)
         const blessingPool = getBlessingsAvailable(
           playerTier,
           this.state.stageLevel,
-          player
+          player,
+          this.state.blessingsUnderTest
         )
         if (blessingPool.length === 0) return
         consumeGreedyWishTier(player, lobbyTier)

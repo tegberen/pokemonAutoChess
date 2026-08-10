@@ -9,7 +9,9 @@ import {
   MAX_PLAYERS_PER_GAME,
   MIN_HUMAN_PLAYERS
 } from "../../config"
+import { Blessings } from "../../config/game/blessings"
 import { GADGETS } from "../../config/game/gadgets"
+import type { Blessing } from "../../types/enum/Blessing"
 import {
   getPendingGame,
   isPlayerTimeout,
@@ -373,6 +375,7 @@ export class OnGameStartRequestCommand extends Command<
           specialGameRule: this.state.specialGameRule,
           scribbleExtended: this.state.scribbleExtended,
           blessingsEnabled: this.state.blessingsEnabled,
+          blessingsUnderTest: this.state.blessingsUnderTest,
           whimsy: this.state.whimsy,
           tournamentId: this.room.metadata?.tournamentId,
           bracketId: this.room.metadata?.bracketId,
@@ -680,6 +683,35 @@ export class OnChangeBlessingsEnabledCommand extends Command<
           if (!user.isBot) user.ready = false
         })
       }
+    } catch (error) {
+      logger.error(error)
+    }
+  }
+}
+
+export class OnChangeBlessingsUnderTestCommand extends Command<
+  PreparationRoom,
+  {
+    client: Client
+    blessings: Blessing[]
+  }
+> {
+  execute({ client, blessings }) {
+    try {
+      if (process.env.MODE !== "dev") return
+      const validBlessings = (blessings ?? []).filter(
+        (blessing) => blessing in Blessings
+      )
+      this.state.blessingsUnderTest = validBlessings
+      this.room.state.addMessage({
+        author: "Server",
+        authorId: "server",
+        payload:
+          validBlessings.length > 0
+            ? `Blessing pool restricted to ${validBlessings.length} blessing(s) under test.`
+            : "Blessing pool restored to every blessing.",
+        avatar: this.state.users.get(client.auth?.uid ?? "")?.avatar
+      })
     } catch (error) {
       logger.error(error)
     }

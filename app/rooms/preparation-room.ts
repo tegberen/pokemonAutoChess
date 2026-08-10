@@ -21,6 +21,7 @@ import {
   OnAddBotCommand,
   OnChangeNoEloCommand,
   OnChangeBlessingsEnabledCommand,
+  OnChangeBlessingsUnderTestCommand,
   OnChangeScribbleExtendedCommand,
   OnGameStartRequestCommand,
   OnJoinCommand,
@@ -289,6 +290,20 @@ export default class PreparationRoom extends Room<{ state: PreparationState }> {
         logger.error(error)
       }
     })
+
+    this.onMessage(
+      Transfer.CHANGE_BLESSINGS_UNDER_TEST,
+      (client, blessings) => {
+        try {
+          this.dispatcher.dispatch(new OnChangeBlessingsUnderTestCommand(), {
+            client,
+            blessings
+          })
+        } catch (error) {
+          logger.error(error)
+        }
+      }
+    )
 
     this.onMessage(Transfer.CHANGE_BLESSINGS_ENABLED, (client, enabled) => {
       logger.info(Transfer.CHANGE_BLESSINGS_ENABLED, this.roomName, enabled)

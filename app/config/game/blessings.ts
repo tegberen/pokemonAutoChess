@@ -1507,12 +1507,15 @@ export const BlessingTierChanceByStage: {
   12: LATE_BLESSING_TIER_CHANCES
 }
 
-export function rollBlessingTierForStage(stage: number): BlessingTier {
+export function rollBlessingTierForStage(
+  stage: number,
+  blessingsUnderTest: Blessing[] = []
+): BlessingTier {
   /* sandbox mode wants the real odds across the whole set, so only the
      under-test list derives its own */
   const tierChances =
-    BLESSING_TEST_MODE && !BLESSING_SANDBOX_MODE
-      ? tierChancesForBlessingsUnderTest()
+    blessingsUnderTest.length > 0 && !BLESSING_SANDBOX_MODE
+      ? tierChancesForBlessingsUnderTest(blessingsUnderTest)
       : (BlessingTierChanceByStage[stage] ?? EARLY_BLESSING_TIER_CHANCES)
   return randomWeighted(tierChances) ?? BlessingTier.SILVER
 }
@@ -1542,7 +1545,7 @@ export function consumeGreedyWishTier(
   return upgradedTier
 }
 
-function tierChancesForBlessingsUnderTest(): {
+function tierChancesForBlessingsUnderTest(blessingsUnderTest: Blessing[]): {
   [tier in BlessingTier]: number
 } {
   const chances = {
@@ -1550,20 +1553,13 @@ function tierChancesForBlessingsUnderTest(): {
     [BlessingTier.GOLD]: 0,
     [BlessingTier.PRISMATIC]: 0
   }
-  BLESSINGS_UNDER_TEST.forEach((blessing) => {
+  blessingsUnderTest.forEach((blessing) => {
     chances[Blessings[blessing].tier] = 1
   })
   return chances
 }
 
-export const BLESSING_TEST_MODE: boolean = false
 export const BLESSING_SANDBOX_MODE: boolean = false
-
-export const BLESSING_SELECTION_EVERY_STAGE: boolean =
-  BLESSING_TEST_MODE || BLESSING_SANDBOX_MODE
-
-const BLESSINGS_UNDER_TEST: Blessing[] = [
-]
 
 function countBlessingsOfFamily(blessings: Blessing[], family?: string) {
   if (!family) return 0
@@ -1601,17 +1597,20 @@ export function drawBlessingOptions(
 export function getBlessingsAvailable(
   tier: BlessingTier,
   stage: number,
-  player: Player
+  player: Player,
+  blessingsUnderTest: Blessing[] = []
 ): Blessing[] {
+  const isTesting = blessingsUnderTest.length > 0
   return (Object.keys(Blessings) as Blessing[]).filter((blessing) => {
     const definition = Blessings[blessing]
     return (
       definition.tier === tier &&
       player.blessings?.includes(blessing) !== true &&
-      (BLESSING_TEST_MODE === false ||
+      (isTesting === false ||
         BLESSING_SANDBOX_MODE ||
-        BLESSINGS_UNDER_TEST.includes(blessing)) &&
-      (BLESSING_SELECTION_EVERY_STAGE ||
+        blessingsUnderTest.includes(blessing)) &&
+      (isTesting ||
+        BLESSING_SANDBOX_MODE ||
         definition.availableAtStages.includes(stage)) &&
       (definition.isAvailable?.(player, stage) ?? true)
     )

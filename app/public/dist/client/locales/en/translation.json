@@ -5444,7 +5444,7 @@
 		},
 		"OLIVE_GARDEN": {
 			"name": "Olive Garden",
-			"description": "Gain a Dolliv. Your STRONGEST Smoliv starts combat with GRASS_FIELD, and also with PSYCHIC_FIELD, FAIRY_FIELD or ELECTRIC_FIELD if it has the matching synergy."
+			"description": "Gain a Dolliv. Your STRONGEST Smoliv starts combat with GRASS_FIELD, or with PSYCHIC_FIELD, FAIRY_FIELD or ELECTRIC_FIELD instead if you give it that synergy with a stone, picked at random if it has several."
 		},
 		"ORBITAL_STRIKE": {
 			"name": "Orbital Strike",
@@ -6987,6 +6987,10 @@
 	"custom_bot": "Custom",
 	"blessings_enabled_label": "Jirachi's Wish Festival",
 	"blessings_enabled_hint": "Jirachi grants each player 2 Blessings during the game, at stage 4 and stage 12.",
+	"blessings_under_test_label": "Blessings under test (dev)",
+	"blessings_under_test_hint": "Restrict the blessing pool to the selected blessings, and offer a selection every stage. Empty means the normal pool.",
+	"blessings_under_test_count": "{{count}} selected",
+	"blessings_under_test_clear": "Clear",
 	"blessings_enabled_off": "Off",
 	"blessings_enabled_on": "On",
 	"blessing_event_title": "Jirachi's Wish Festival",

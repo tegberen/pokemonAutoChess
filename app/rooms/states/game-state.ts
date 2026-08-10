@@ -68,6 +68,8 @@ export default class GameState extends Schema {
   @type({ map: PlayerBlessings }) blessingsByPlayerId =
     new MapSchema<PlayerBlessings>()
   @type("boolean") blessingsEnabled = false
+  // dev only, undecorated: restricts the pool without costing a schema field
+  blessingsUnderTest: Blessing[] = []
   time = StageDuration[0] * 1000
   updatePhaseNeeded = false
   botManager: BotManager = new BotManager()
@@ -104,11 +106,13 @@ export default class GameState extends Schema {
     specialGameRule: SpecialGameRule | null,
     scribbleExtended = false,
     whimsy = false,
-    blessingsEnabled = false
+    blessingsEnabled = false,
+    blessingsUnderTest: Blessing[] = []
   ) {
     super()
     this.scribbleExtended = scribbleExtended
     this.blessingsEnabled = blessingsEnabled
+    this.blessingsUnderTest = blessingsUnderTest
     this.whimsy = whimsy
     this.preparationId = preparationId
     this.startTime = Date.now()
