@@ -114,6 +114,8 @@ export class Pokemon extends Schema implements IPokemon {
   @type("boolean") manifestationLocked: boolean = false
   @type("boolean") supportiveSoul: boolean = false
   @type("uint8") trashToTreasureRounds: number = 0
+  // SOUL_BLAZE: ignited for the coming fight. Declared last to keep wire indexes
+  @type("boolean") ignited: boolean = false
   dodge: number = 0
   deathCount: number = 0
   killCount: number = 0
@@ -409,6 +411,10 @@ export class Pokemon extends Schema implements IPokemon {
   addMaxHP(amount: number) {
     this.hp = min(1)(this.hp + amount)
     this.maxHP = this.hp
+  }
+
+  setIgnited(ignited: boolean) {
+    this.ignited = ignited
   }
 }
 
@@ -10469,7 +10475,7 @@ export class Arcanine extends Pokemon {
   range = 1
   skill = Ability.FIRE_FANG
   additional = true
-  passive = Passive.INTIMIDATE
+  passive = Passive.INTIMIDATE_EVERBURNING
 }
 
 export class HisuiGrowlithe extends Pokemon {
@@ -10518,7 +10524,7 @@ export class HisuiArcanine extends Pokemon {
       regionSynergies.includes(Synergy.ROCK)
     )
   }
-  passive = Passive.INTIMIDATE
+  passive = Passive.INTIMIDATE_EVERBURNING
 }
 
 export class Smoochum extends Pokemon {

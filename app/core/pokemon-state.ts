@@ -24,6 +24,9 @@ import {
   RESURGENCE_SPEED,
   EXHAUSTING_FLAME_DAMAGE_MULTIPLIER,
   MOLECULAR_CORROSION_DAMAGE_MULTIPLIER,
+  DEEP_WOUNDS_ARMOR_BREAK_DURATION,
+  DEEP_WOUNDS_DEFENSE_LOSS,
+  DEEP_WOUNDS_DEFENSE_LOSS_CHANCE,
   RUBY_ORB_TRUE_DAMAGE_VS_BURN,
   SHELL_ARMOR_SPE_DEF_BY_STARS
 } from "../types/enum/Blessing"
@@ -139,6 +142,22 @@ export default abstract class PokemonState {
           target.count.crit++
         }
       }
+      if (crit && pokemon.player?.blessings?.includes(Blessing.DEEP_WOUNDS)) {
+        const wasAlreadyBroken = target.status.armorReduction
+        const loss = -DEEP_WOUNDS_DEFENSE_LOSS
+        target.status.triggerArmorReduction(
+          DEEP_WOUNDS_ARMOR_BREAK_DURATION,
+          target
+        )
+        if (
+          wasAlreadyBroken &&
+          chance(DEEP_WOUNDS_DEFENSE_LOSS_CHANCE, pokemon)
+        ) {
+          target.addDefense(loss, target, 0, false, true)
+          target.addSpecialDefense(loss, target, 0, false, true)
+        }
+      }
+
       if (crit && target.passive === Passive.SHELL_ARMOR) {
         const defenseBuff = [1, 3, 6][target.stars - 1] ?? 0
         target.addDefense(defenseBuff, target, 0, false)

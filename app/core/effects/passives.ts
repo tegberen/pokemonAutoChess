@@ -2269,6 +2269,15 @@ export const PassiveEffects: Partial<
       }
     })
   ],
+  // same as INTIMIDATE, plus SOUL_BLAZE can ignite the holder every round
+  [Passive.INTIMIDATE_EVERBURNING]: [
+    new OnAttackEffect(({ pokemon, target }) => {
+      if (!target) return
+      if (chance(0.3, pokemon)) {
+        target.status.triggerFlinch(3000, pokemon)
+      }
+    })
+  ],
   [Passive.STEELY_SPIRIT]: [
     new OnSimulationStartEffect(({ simulation, entity }) => {
       simulation.board.forEach((x, y, pkm) => {

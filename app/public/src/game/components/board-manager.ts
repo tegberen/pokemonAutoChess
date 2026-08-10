@@ -1713,6 +1713,13 @@ export default class BoardManager {
             pokemonSprite.auraAnimation(this.scene, false, false)
           }
           break
+        case "ignited":
+          if (value === true) {
+            pokemonSprite.igniteAnimation(this.scene, false, false)
+          } else {
+            pokemonSprite.removeIgniteFlame()
+          }
+          break
 
         case "awakeningCharge":
         case "awakeningRock":

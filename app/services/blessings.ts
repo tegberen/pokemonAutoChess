@@ -37,6 +37,7 @@ import {
   BP_REWARDS_RECURRING_COMPONENTS,
   BP_REWARDS_ROUND_INTERVAL,
   BERRY_GROWTH_GOLDEN_BERRIES_GRANTED,
+  FERTILE_SOIL_ABSORB_ROUNDS,
   BERRY_GROWTH_GOLDEN_BERRIES_STAGE,
   LANCES_ACE_DELAY,
   CALLED_SHOT_GOLD,
@@ -79,6 +80,7 @@ import {
 } from "../types/enum/Blessing"
 import { BattleResult, Rarity } from "../types/enum/Game"
 import {
+  BOARD_WIDTH,
   FAIRY_WANDS_BY_SYNERGY_LEVEL,
   RegionDetails,
   SynergyTiersThresholds
@@ -124,7 +126,8 @@ import {
   getFirstAvailablePositionInBench,
   getFirstAvailablePositionOnBoard,
   getFreeSpaceOnBench,
-  getLastAvailablePositionInBench
+  getLastAvailablePositionInBench,
+  isOnBench
 } from "../utils/board"
 import { healPlayerLife } from "../utils/player-life"
 import {
@@ -668,6 +671,31 @@ export function getWaterFountainPortalMap(
     (map) => isWaterFountainRegion(map) && map !== player.map
   )
   return eligible.length > 0 ? pickRandomIn(eligible) : null
+}
+
+/* a non ground pokemon standing on a fully dug hole for long enough absorbs the
+   soil, turning it into a Ground type with the matching awakening */
+export function absorbFertileSoil(player: Player) {
+  if (player.blessings?.includes(Blessing.FERTILE_SOIL) !== true) return
+  schemaValues(player.board).forEach((pokemon) => {
+    const holeIndex = (pokemon.positionY - 1) * BOARD_WIDTH + pokemon.positionX
+    const isRooted =
+      isOnBench(pokemon) === false &&
+      player.groundHoles[holeIndex] === 5 &&
+      pokemon.types.has(Synergy.GROUND) === false
+    if (!isRooted) {
+      player.fertileSoilRounds.delete(pokemon.id)
+      return
+    }
+    const rounds = (player.fertileSoilRounds.get(pokemon.id) ?? 0) + 1
+    player.fertileSoilRounds.set(pokemon.id, rounds)
+    if (rounds >= FERTILE_SOIL_ABSORB_ROUNDS) {
+      pokemon.types.add(Synergy.GROUND)
+      pokemon.awakening = Awakening.SMOOTH_ROCK
+      player.fertileSoilRounds.delete(pokemon.id)
+      player.updateSynergies()
+    }
+  })
 }
 
 export function rollWaterFountainPonds(player: Player) {

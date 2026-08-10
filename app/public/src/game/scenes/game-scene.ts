@@ -765,11 +765,10 @@ export default class GameScene extends Scene {
       }
       this.pokemonDragged = null
       this.itemDragged = null
-      // JUGGERNAUT: ensure the champion feed-target highlight is cleared on drop
-      if (
-        this.room?.state.specialGameRule === SpecialGameRule.JUGGERNAUT &&
-        this.pokemonHovered
-      ) {
+      /* dragleave does not fire when the pointer leaves the target in the same
+         gesture as the drop, which would orphan the hover outline until the
+         pokemon is hovered again. Hovering re-applies it on the next move */
+      if (this.pokemonHovered) {
         this.clearHovered(this.pokemonHovered.sprite)
         this.pokemonHovered = null
       }

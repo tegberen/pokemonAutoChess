@@ -479,6 +479,7 @@ class GameContainer {
         "shiny",
         "skill",
         "supercharged",
+        "ignited",
         "aura",
         "awakening",
         "awakeningRock",

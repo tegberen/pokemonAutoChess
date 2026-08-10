@@ -45,6 +45,7 @@ import {
   applyScheduledBlessingGrants,
   checkBlessingQuests,
   checkIndecisionSynergies,
+  absorbFertileSoil,
   rollWaterFountainPonds
 } from "../../services/blessings"
 import {
@@ -121,6 +122,7 @@ import {
   BLESSING_REROLLS_PER_OPTION,
   BLESSING_SELECTION_STAGES,
   BLESSING_SELECTION_EXTRA_TIME,
+  FAST_DELIVERY_RETURN_DELAY,
   BlessingTrigger,
   countsForTeamSize,
   PRISMATIC_REROLL_CHANCE,
@@ -1247,7 +1249,13 @@ export class OnDragDropItemCommand extends Command<
           : pokemon.items.has(Item.SHARP_BEAK) || pokemon.name === Pkm.DRAGONITE
             ? 1
             : 2
-      const returnDelay = Math.max(1, baseDelay - (hasPelipper ? 1 : 0))
+      // Gyarados keeps its deliberately slow delivery despite being FLYING
+      const returnDelay =
+        player.blessings?.includes(Blessing.FAST_DELIVERY) &&
+        pokemon.types.has(Synergy.FLYING) &&
+        pokemon.name !== Pkm.GYARADOS
+          ? FAST_DELIVERY_RETURN_DELAY
+          : Math.max(1, baseDelay - (hasPelipper ? 1 : 0))
 
       player.pokemonsExploring.push({
         pokemonId: pokemon.id,
@@ -2213,6 +2221,14 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
         }
       })
     }
+
+    this.state.players.forEach((player: Player) => {
+      if (!player.alive) return
+      absorbFertileSoil(player)
+      player.board.get(player.ignitedPokemonId)?.setIgnited(false)
+      player.previouslyIgnitedPokemonId = player.ignitedPokemonId
+      player.ignitedPokemonId = ""
+    })
 
     if (
       [2, 4].includes(this.state.stageLevel) &&

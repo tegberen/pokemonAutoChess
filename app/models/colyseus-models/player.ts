@@ -292,6 +292,11 @@ export default class Player extends Schema implements IPlayer {
   gameMode: GameMode = GameMode.CUSTOM_LOBBY // duplicated from gamestate for the same reason as specialGameRule
   avatarSynergy: Synergy | null = null // synergy given to all pokemon in Avatar scribble, rolled once per game
   shopsSinceLastUnownShop: number = 0
+  // FERTILE_SOIL: rounds each pokemon has stood on a fully dug hole
+  fertileSoilRounds: Map<string, number> = new Map<string, number>()
+  // SOUL_BLAZE: pokemon ignited for the coming fight, and the one ignited before
+  ignitedPokemonId: string = ""
+  previouslyIgnitedPokemonId: string = ""
   regions: DungeonPMDO[] = []
   unownReminiscences: number = 0
   maxLife: number = 100

@@ -79,6 +79,30 @@ const isGameScene = (scene: Phaser.Scene): scene is GameScene =>
   "lastPokemonDetail" in scene
 
 const BLESSED_HERO_MARK_SCALE = 1.34
+const IGNITE_FLAME_SIZE = 5
+const IGNITE_FLAME_GROUND_Y = 10 + IGNITE_FLAME_SIZE * 8
+const IGNITE_FLAME_X_OFFSET = 3
+const IGNITE_SPARKS_SCALE = 2.2
+type IgniteFlameLayer = {
+  x: number
+  w: number
+  h: number
+  delay: number
+  alpha: number
+  add?: boolean
+}
+const IGNITE_SPARKS_X_OFFSET = -3
+const IGNITE_SPARKS_Y_OFFSET = 18
+const IGNITE_SPARKS_FRAME_RATE = 24
+const IGNITE_SPARKS_FRAMES = 57
+const IGNITE_SPARKS_LOOP_DURATION =
+  (IGNITE_SPARKS_FRAMES / IGNITE_SPARKS_FRAME_RATE) * 1000
+const IGNITE_SPARKS_FADE = 450
+const IGNITE_SPARKS_ALPHA = 0.9
+/* the animation is a one shot burst, so frame 56 cuts hard back to 0. Each copy
+   fades out before that cut and back in after it, and a second copy runs half a
+   loop behind so sparks are always rising while the other one resets */
+const IGNITE_SPARKS_PHASES = [0, IGNITE_SPARKS_LOOP_DURATION / 2]
 
 export default class PokemonSprite extends DraggableObject {
   scene: GameScene | DebugScene
@@ -119,6 +143,7 @@ export default class PokemonSprite extends DraggableObject {
   runeProtect: GameObjects.Sprite | undefined
   reflectShield: GameObjects.Sprite | undefined
   electricField: GameObjects.Sprite | undefined
+  igniteFlames: GameObjects.Sprite[] = []
   psychicField: GameObjects.Sprite | undefined
   grassField: GameObjects.Sprite | undefined
   fairyField: GameObjects.Sprite | undefined
@@ -307,6 +332,9 @@ export default class PokemonSprite extends DraggableObject {
       }
       if (!isEntity(pokemon) && pokemon.aura) {
         this.auraAnimation(scene, true, false)
+      }
+      if (pokemon.ignited) {
+        this.igniteAnimation(scene, true, isEntity(pokemon))
       }
       if (
         !isEntity(pokemon) &&
@@ -920,6 +948,100 @@ export default class PokemonSprite extends DraggableObject {
     this.sprite.enableFilters()
     this.sprite.filters?.internal.addGlow(0x00bfff, 12, 0, 0.2)
     this.emoteAnimation()
+  }
+
+  igniteAnimation(
+    scene: GameScene | DebugScene,
+    alreadyActive: boolean,
+    onEntity: boolean
+  ) {
+    this.addIgniteFlame()
+    if (!alreadyActive) {
+      this.displayAnimation(Ability.SEARING_SHOT, {
+        targetX: this.positionX,
+        targetY: onEntity ? this.positionY : this.positionY - 1
+      })
+      this.emoteAnimation()
+    }
+  }
+
+  /* a soul catching fire: a column wide enough to engulf the pokemon from both
+     sides, with a couple of faint flames drawn in front so it stands inside it */
+  addIgniteFlame() {
+    if (this.igniteFlames.length > 0) return
+    const size = IGNITE_FLAME_SIZE
+    const layers: IgniteFlameLayer[] = [
+      { x: 0, w: 0.8, h: 2.1, delay: 0, alpha: 0.9 },
+      { x: -3.2, w: 0.45, h: 1.5, delay: 210, alpha: 0.9 },
+      { x: 3.1, w: 0.42, h: 1.65, delay: 390, alpha: 0.9 },
+      { x: 0, w: 0.3, h: 1.35, delay: 120, alpha: 0.6, add: true }
+    ]
+    const addFlame = ({ x, w, h, delay, alpha, add }: IgniteFlameLayer) => {
+      const flame = this.scene.add
+        .sprite(
+          x * size + IGNITE_FLAME_X_OFFSET,
+          IGNITE_FLAME_GROUND_Y,
+          "abilities",
+          "EMBER/000.png"
+        )
+        .setOrigin(0.5, 1)
+        .setDepth(DEPTH.BOARD_EFFECT_GROUND_LEVEL)
+        .setScale(w * size, h * size)
+        .setAlpha(alpha)
+      if (add) flame.setBlendMode(Phaser.BlendModes.ADD)
+      flame.anims.play({
+        key: "EMBER",
+        repeat: -1,
+        delay,
+        frameRate: randomBetween(11, 18)
+      })
+      this.add(flame)
+      this.igniteFlames.push(flame)
+    }
+    layers.forEach(addFlame)
+    this.bringToTop(this.sprite)
+    this.addIgniteSparks()
+  }
+
+  addIgniteSparks() {
+    IGNITE_SPARKS_PHASES.forEach((delay) => {
+      const sparks = this.scene.add
+        .sprite(
+          IGNITE_FLAME_X_OFFSET + IGNITE_SPARKS_X_OFFSET,
+          IGNITE_FLAME_GROUND_Y - IGNITE_SPARKS_Y_OFFSET,
+          "abilities",
+          "IGNITION_SPARKS/000.png"
+        )
+        .setOrigin(0.5, 1)
+        .setDepth(DEPTH.BOARD_EFFECT_GROUND_LEVEL)
+        .setScale(IGNITE_SPARKS_SCALE)
+        .setAlpha(0)
+      sparks.anims.play({
+        key: "IGNITION_SPARKS",
+        repeat: -1,
+        delay,
+        frameRate: IGNITE_SPARKS_FRAME_RATE
+      })
+      this.scene.tweens.add({
+        targets: sparks,
+        alpha: { from: 0, to: IGNITE_SPARKS_ALPHA },
+        duration: IGNITE_SPARKS_FADE,
+        hold: IGNITE_SPARKS_LOOP_DURATION - IGNITE_SPARKS_FADE * 2,
+        yoyo: true,
+        repeat: -1,
+        delay
+      })
+      this.add(sparks)
+      this.igniteFlames.push(sparks)
+    })
+  }
+
+  removeIgniteFlame() {
+    this.igniteFlames.forEach((flame) => {
+      this.scene.tweens.killTweensOf(flame)
+      this.remove(flame, true)
+    })
+    this.igniteFlames = []
   }
 
   crystalliseAnimation(withEmote = false) {

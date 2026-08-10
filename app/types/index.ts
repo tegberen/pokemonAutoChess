@@ -376,6 +376,7 @@ export interface IPokemon {
   readonly hasEvolution: boolean
   supercharged: boolean
   aura: boolean
+  ignited: boolean
   awakening: Awakening
   awakeningRock: string
   awakeningCharge: number
@@ -624,6 +625,7 @@ export interface IPokemonEntity {
   emotion: Emotion
   stacks: number
   stacksRequired: number
+  ignited: boolean
   isSpawn: boolean
   commands: ISimulationCommand[]
   effectsSet: Set<EffectClass>

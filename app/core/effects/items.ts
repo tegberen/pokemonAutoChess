@@ -1423,6 +1423,15 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
         pokemon.speed += 4
         player.life = min(1)(player.life - 3)
         removeInArray(player.items, item)
+        if (
+          player.blessings?.includes(Blessing.SOUL_BLAZE) &&
+          (pokemon.id !== player.previouslyIgnitedPokemonId ||
+            pokemon.passive === Passive.INTIMIDATE_EVERBURNING)
+        ) {
+          player.board.get(player.ignitedPokemonId)?.setIgnited(false)
+          player.ignitedPokemonId = pokemon.id
+          pokemon.setIgnited(true)
+        }
       }
 
       return false // prevent item from being equipped

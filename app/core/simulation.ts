@@ -64,6 +64,11 @@ import {
   POLLUTED_SEA_POISON_DURATION,
   STAR_CROSSED_SEAS_ABILITY_POWER,
   STAR_CROSSED_SEAS_MAX_HP,
+  FAST_DELIVERY_LUCK_PER_SEED,
+  SOUL_BLAZE_SHIELD,
+  SOUL_BLAZE_SPEED,
+  SOUL_BLAZE_LIFE_HEAL_ON_KO,
+  FERTILE_SOIL_HOLE_MAX_HP_RATIO,
   TIDAL_SURGE_ITEMS_REQUIRED,
   DRAGON_FANG_ABILITY_POWER_PER_STAR,
   SECOND_WIND_RESURRECTION_INTERVAL,
@@ -823,6 +828,20 @@ export default class Simulation extends Schema implements ISimulation {
           this.applyWaterPondEffect(pond.pondType, pokemonEntity, player)
         }
       })
+
+      const holeIndex =
+        (pokemon.positionY - 1) * BOARD_WIDTH + pokemon.positionX
+      if (
+        player.blessings?.includes(Blessing.FERTILE_SOIL) &&
+        player.groundHoles[holeIndex] === 5
+      ) {
+        pokemonEntity.addMaxHP(
+          Math.round(pokemonEntity.maxHP * FERTILE_SOIL_HOLE_MAX_HP_RATIO),
+          pokemonEntity,
+          0,
+          false
+        )
+      }
     }
 
     return pokemonEntity
@@ -1533,6 +1552,46 @@ export default class Simulation extends Schema implements ISimulation {
       if (allies.length === 0) continue
 
       const missingPlayerLife = Math.max(0, player.maxLife - player.life)
+
+      if (blessings.includes(Blessing.SOUL_BLAZE)) {
+        const ignitedUnit = ownUnits.find(
+          (unit) => unit.refToBoardPokemon.id === player.ignitedPokemonId
+        )
+        if (ignitedUnit) {
+          ignitedUnit.ignited = true
+          ignitedUnit.addShield(SOUL_BLAZE_SHIELD, ignitedUnit, 0, false)
+          ignitedUnit.addSpeed(SOUL_BLAZE_SPEED, ignitedUnit, 0, false)
+          ignitedUnit.effectsSet.add(
+            new OnKillEffect(({ attacker }) => {
+              if (attacker.player) {
+                healPlayerLife(
+                  attacker.player,
+                  SOUL_BLAZE_LIFE_HEAL_ON_KO,
+                  this.room.state
+                )
+              }
+            })
+          )
+        }
+      }
+
+      if (blessings.includes(Blessing.FAST_DELIVERY)) {
+        const seedsCollected = player.items.filter((item) =>
+          isIn(Seeds, item)
+        ).length
+        if (seedsCollected > 0) {
+          ownUnits
+            .filter((ally) => ally.types.has(Synergy.FLYING))
+            .forEach((ally) =>
+              ally.addLuck(
+                FAST_DELIVERY_LUCK_PER_SEED * seedsCollected,
+                ally,
+                0,
+                false
+              )
+            )
+        }
+      }
 
       if (blessings.includes(Blessing.IMPENDING_DOOM)) {
         if (teamIndex === Team.BLUE_TEAM) {

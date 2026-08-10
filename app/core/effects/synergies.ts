@@ -30,6 +30,7 @@ import { EvolutionRuleType } from "../../types/EvolutionRules"
 import { Ability } from "../../types/enum/Ability"
 import {
   Blessing,
+  FERTILE_SOIL_DIG_PERMANENT_HP,
   BLOSSOM_FESTIVAL_MULCH_MULTIPLIER,
   FROST_BARRIER_CHECK_INTERVAL,
   FROST_BARRIER_DEFENSE,
@@ -1460,6 +1461,12 @@ export const groundDigEffect = new OnStageStartEffect(({ player, room }) => {
           })
           room.clock.setTimeout(() => {
             player.groundHoles[index] = max(5)(player.groundHoles[index] + 1)
+            if (
+              player.blessings?.includes(Blessing.FERTILE_SOIL) &&
+              pokemon.types.has(Synergy.GROUND)
+            ) {
+              pokemon.addMaxHP(FERTILE_SOIL_DIG_PERMANENT_HP)
+            }
             if (!diggingOnBench) grantGemRushRowReward(player, index)
             revealNextBuriedTreasure(player, room.state)
             PassiveEffects[pokemon.passive]?.forEach((effect) => {
