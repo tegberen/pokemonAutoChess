@@ -4644,6 +4644,12 @@ export const AbilitiesAnimations: {
     scale: 3,
     depth: DEPTH.ABILITY_BELOW_POKEMON
   }),
+  ["GREEN_ORB_EMERALD"]: onCaster({
+    ability: "GREEN_ORB",
+    oriented: false,
+    scale: 6,
+    depth: DEPTH.ABILITY_BELOW_POKEMON
+  }),
   ["GALARIAN_DARMANITAN_ZEN_BURN"]: onCaster({
     ability: "INFERNO",
     depth: DEPTH.ABILITY_BELOW_POKEMON,

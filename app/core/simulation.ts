@@ -113,7 +113,6 @@ import {
   HAIL_TO_THE_KING_ATTACK,
   HAIL_TO_THE_KING_DEFENSE,
   HAIL_TO_THE_KING_SPECIAL_DEFENSE,
-  HAIL_TO_THE_KING_ABILITY_POWER,
   HAIL_TO_THE_KING_SPEED,
   YOU_FORGOT_SOMETHING_DELAY,
   JESTER_SUBSTITUTE_MAX_PP,
@@ -1662,12 +1661,6 @@ export default class Simulation extends Schema implements ISimulation {
           0,
           false
         )
-        king.addAbilityPower(
-          HAIL_TO_THE_KING_ABILITY_POWER,
-          king,
-          0,
-          false
-        )
         king.addSpeed(HAIL_TO_THE_KING_SPEED, king, 0, false)
       }
 
@@ -2387,15 +2380,20 @@ export default class Simulation extends Schema implements ISimulation {
     const radianceChampion = championOf.get(Blessing.RADIANCE)
     if (radianceChampion) {
       radianceChampion.types.add(Synergy.LIGHT)
-      /* its own spotlight, so it does not compete with the player's single
-         light spot on the board */
-      radianceChampion.hasOwnSpotlight = true
-      radianceChampion.status.light = true
       /* the team's Light effects were handed out earlier in applyPostEffects,
          when this unit was not yet spotlighted, so replay the active ones */
-      SynergyTiers[Synergy.LIGHT].filter((lightEffect) =>
-        teamEffects.has(lightEffect)
-      ).forEach((lightEffect) => this.applyEffect(radianceChampion, lightEffect))
+      const activeLightEffects = SynergyTiers[Synergy.LIGHT].filter(
+        (lightEffect) => teamEffects.has(lightEffect)
+      )
+      if (activeLightEffects.length > 0) {
+        /* its own spotlight, so it does not compete with the player's single
+           light spot on the board */
+        radianceChampion.hasOwnSpotlight = true
+        radianceChampion.status.light = true
+        activeLightEffects.forEach((lightEffect) =>
+          this.applyEffect(radianceChampion, lightEffect)
+        )
+      }
     }
 
     const mariachiChampion = championOf.get(Blessing.MARIACHI_MAYHEM)

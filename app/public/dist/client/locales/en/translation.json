@@ -3206,7 +3206,7 @@
 		"SHELL_BELL": "Holder heals for 33% of all damages inflicted",
 		"HEAVY_DUTY_BOOTS": "Holder is immune to any BOARD_EFFECT, forced displacement and LOCKED.",
 		"RELIC_CROWN": "When an ally within a 2-tile radius is KO'd, gain +5 DEF, +5 SPE_DEF and +10 AP. The user heals and increase its HP for 10% of the KO'd ally's max HP.",
-		"RELIC_STATUE": "Your strongest ally gains 100 HP, 10 ATK, 10 DEF, 10 SPE_DEF, 20 AP, and 10 SPEED. When it is KO'd, all other allies are cursed to be KO'd after 3 seconds.",
+		"RELIC_STATUE": "Your strongest ally gains 100 HP, 10 ATK, 10 DEF, 10 SPE_DEF and 10 SPEED. When it is KO'd, all other allies are cursed to be KO'd after 1 second.",
 		"AQUA_EGG": "The holder regains 20% of its max PP after casting its ability, + 2 PP for each cast done in the fight",
 		"BLUE_ORB": "Every 3 attacks, unleashes a chain lightning that bounces to the 2 closest enemies, dealing 10 SPECIAL and burning 15 PP",
 		"SCOPE_LENS": "Critical attacks steal 10 PP from the target ON_HIT.",
@@ -4628,7 +4628,7 @@
 		},
 		"BAG_OF_SWEETS": {
 			"name": "Bag of Sweets",
-			"description": "Gain 4 random SWEETS."
+			"description": "Gain 10 random SWEETS."
 		},
 		"WOBBUFFETS_SILVER_PRIZE": {
 			"name": "Wobbuffet's Silver Prize",
@@ -5168,7 +5168,7 @@
 		},
 		"CHOSEN_ONES": {
 			"name": "Chosen Ones",
-			"description": "When you pick an additional Pokémon, it immediately evolves."
+			"description": "When you pick an additional Pokémon, it immediately evolves with boosted stats."
 		},
 		"ADDITIONAL_RETHINK_I": {
 			"name": "Additional Rethink I",
@@ -5804,7 +5804,7 @@
 		},
 		"RADIANCE": {
 			"name": "Radiance",
-			"description": "Gain a Larvesta and add it to the pool. Your STRONGEST Larvesta gains the LIGHT synergy, and starts combat with its own spotlight."
+			"description": "Gain a Larvesta and add it to the pool. Your STRONGEST Larvesta gains the LIGHT synergy, and while LIGHT is active it starts combat with its own spotlight."
 		},
 		"PACK_ATTACK": {
 			"name": "Pack Attack",

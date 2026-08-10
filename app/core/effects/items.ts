@@ -304,9 +304,10 @@ export class GreenOrbEffect extends PeriodicEffect {
   constructor() {
     super(
       (pokemon, board) => {
-        const healedCells = pokemon.player?.blessings?.includes(
+        const hasEmeraldOrb = pokemon.player?.blessings?.includes(
           Blessing.EMERALD_ORB
         )
+        const healedCells = hasEmeraldOrb
           ? board.getCellsInRange(
               pokemon.positionX,
               pokemon.positionY,
@@ -331,7 +332,9 @@ export class GreenOrbEffect extends PeriodicEffect {
             }
           }
         }
-        pokemon.broadcastAbility({ skill: "GREEN_ORB" })
+        pokemon.broadcastAbility({
+          skill: hasEmeraldOrb ? "GREEN_ORB_EMERALD" : "GREEN_ORB"
+        })
       },
       Item.GREEN_ORB,
       2000
@@ -1452,6 +1455,9 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
 
       if (consummed) {
         removeInArray(player.items, item)
+        if (player.blessings?.includes(Blessing.WOBBUFFETS_GOLD_PRIZE)) {
+          player.items.push(pickRandomIn(ItemComponents))
+        }
       }
 
       return false // prevent item from being equipped

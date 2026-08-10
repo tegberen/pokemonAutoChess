@@ -24,6 +24,7 @@ export const SOUNDS = {
   JOIN_ROOM: "joinroom.ogg",
   LEAVE_ROOM: "leaveroom.ogg",
   REFRESH: "refresh.ogg",
+  SELL_UNIT: "sell_unit_sound.ogg",
   SET_READY: "setready.ogg",
   START_GAME: "startgame.ogg"
 } as const

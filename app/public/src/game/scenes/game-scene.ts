@@ -324,9 +324,11 @@ export default class GameScene extends Scene {
     if (canLevelUp) playSound(SOUNDS.GOLD_TO_LEVEL)
   }
 
+  // both the sell zone and the sell hotkey come through here
   sellPokemon(pokemon: PokemonSprite) {
     if (!pokemon) return
     this.room?.send(Transfer.SELL_POKEMON, pokemon.id)
+    playSound(SOUNDS.SELL_UNIT)
   }
 
   removeFromShop(index: number) {

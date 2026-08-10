@@ -1383,6 +1383,7 @@ export const groundDigEffect = new OnStageStartEffect(({ player, room }) => {
 
   if (hasGroundSynergy || treasureTrailDiggerId) {
     const holesClaimedThisStage = new Set<number>()
+    const holesDugThisStage = new Map<number, number>()
     player.board.forEach((pokemon, pokemonId) => {
       const diggingOnBench = isOnBench(pokemon)
       if (
@@ -1411,8 +1412,14 @@ export const groundDigEffect = new OnStageStartEffect(({ player, room }) => {
               ) ?? standingIndex)
             : standingIndex
         holesClaimedThisStage.add(index)
-        const hasAlreadyReachedMaxDepth = player.groundHoles[index] === 5
-        const isReachingMaxDepth = player.groundHoles[index] === 4
+        /* the depth is only written a second later, so a second digger on the
+           same hole this stage would read the old value and claim its treasure
+           a second time */
+        const depth =
+          player.groundHoles[index] + (holesDugThisStage.get(index) ?? 0)
+        holesDugThisStage.set(index, (holesDugThisStage.get(index) ?? 0) + 1)
+        const hasAlreadyReachedMaxDepth = depth >= 5
+        const isReachingMaxDepth = depth === 4
         if (!hasAlreadyReachedMaxDepth) {
           let buriedItem =
             !diggingOnBench && isReachingMaxDepth

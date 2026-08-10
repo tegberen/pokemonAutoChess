@@ -15,9 +15,13 @@ import {
   MIX_AND_MATCH_I_FIELD_CAP,
   MIX_AND_MATCH_II_FIELD_CAP,
   BLESSING_QUEST_TARGETS,
-  Blessing
+  Blessing,
+  VALOR_ATTACK_PER_STAR,
+  VALOR_SHIELD_PER_STAR
 } from "../../../../../types/enum/Blessing"
 import { Rarity } from "../../../../../types/enum/Game"
+import { Synergy } from "../../../../../types/enum/Synergy"
+import type { SetSchema } from "@colyseus/schema"
 import { cc } from "../../utils/jsx"
 import { addIconsToDescription } from "../../utils/descriptions"
 import { BlessingTooltipCard } from "./blessing-tooltip-card"
@@ -59,10 +63,20 @@ export default function BlessingsPanel(props: { recentOnly?: boolean }) {
     questProgress[Blessing.SUPPORTIVE_SOUL] ?? 0
   const spectatedPlayer = useAppSelector(selectSpectatedPlayer)
   const synergies = useAppSelector((state) => state.game.synergiesSpectated)
-  const boardPokemons: Array<{ positionY: number; rarity: Rarity }> =
+  const boardPokemons: Array<{
+    positionY: number
+    rarity: Rarity
+    stars: number
+    types: SetSchema<Synergy>
+  }> =
     typeof (spectatedPlayer?.board as any)?.values === "function"
       ? [...(spectatedPlayer!.board as any).values()]
       : Object.values((spectatedPlayer?.board as any) ?? {})
+  const valorWildStarsOnBench = boardPokemons
+    .filter(
+      (pokemon) => pokemon.positionY === 0 && pokemon.types?.has(Synergy.WILD)
+    )
+    .reduce((total, pokemon) => total + pokemon.stars, 0)
   const nbThreeStarWilds = spectatedPlayer
     ? countWildsThreeStarsOrMore(spectatedPlayer.board)
     : 0
@@ -152,6 +166,11 @@ export default function BlessingsPanel(props: { recentOnly?: boolean }) {
               {bpRewardsRoundsLeft}
             </span>
           )}
+          {blessing === Blessing.VALOR && (
+            <span className="blessing-panel-counter">
+              {valorWildStarsOnBench}
+            </span>
+          )}
           {blessing === Blessing.SUPPORTIVE_SOUL &&
             supportiveSoulRoundsLeft > 0 && (
               <span className="blessing-panel-counter">
@@ -171,6 +190,7 @@ export default function BlessingsPanel(props: { recentOnly?: boolean }) {
                 {blessing === Blessing.SUPPORTIVE_SOUL && supportiveSoulRoundsLeft > 0 && <p className="blessing-panel-live-value">Next support item in {supportiveSoulRoundsLeft} round{supportiveSoulRoundsLeft === 1 ? "" : "s"}</p>}
                 {blessing === Blessing.AURORA_BOREALIS && <p className="blessing-panel-live-value">{addIconsToDescription(`${nbActiveSynergies} active synergies: −${auroraBorealisReduction}% damage taken, −${auroraBorealisReductionInSnowOrNight}% in SNOW or NIGHT`)}</p>}
                 {blessing === Blessing.BERSERKER_HORDES && <p className="blessing-panel-live-value">{addIconsToDescription(`${nbThreeStarWilds} WILD at 3 STAR or more: −${nbThreeStarWilds} GOLD`)}</p>}
+                {blessing === Blessing.VALOR && <p className="blessing-panel-live-value">{addIconsToDescription(`${valorWildStarsOnBench} WILD STAR on bench: +${valorWildStarsOnBench * VALOR_ATTACK_PER_STAR} ATK, +${valorWildStarsOnBench * VALOR_SHIELD_PER_STAR} SHIELD`)}</p>}
               </BlessingTooltipCard>
             </Tooltip>,
             document.body

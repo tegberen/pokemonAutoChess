@@ -621,6 +621,13 @@ export default class Player extends Schema implements IPlayer {
 
   updateSynergies() {
     const pokemons: Pokemon[] = schemaValues(this.board)
+    if (this.blessings?.includes(Blessing.RADIANCE)) {
+      pokemons.forEach((pokemon) => {
+        if (PkmFamily[pokemon.name] === Pkm.LARVESTA) {
+          pokemon.types.add(Synergy.LIGHT)
+        }
+      })
+    }
     const previousSynergies = this.synergies.toMap()
     let updatedSynergies = computeSynergies(
       pokemons,
