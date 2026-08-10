@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { BOTS_ENABLED } from "../../../../../config"
 import { Role } from "../../../../../types"
@@ -41,14 +41,23 @@ export default function PreparationSettings() {
   /* dev only, and kept client side: the server holds the list off the schema so
      it costs no synced field, so this is the only copy the picker can show */
   const isDevMode = process.env.MODE === "dev"
-  const [blessingsUnderTest, setBlessingsUnderTest] = useState<string[]>(
-    () => localStore.get(LocalStoreKeys.BLESSINGS_UNDER_TEST) ?? []
+  const [blessingsUnderTest, setBlessingsUnderTest] = useState<Blessing[]>(
+    () =>
+      ((localStore.get(LocalStoreKeys.BLESSINGS_UNDER_TEST) ??
+        []) as Blessing[]).filter((blessing) => blessing in Blessings)
   )
-  const pickBlessingsUnderTest = (blessings: string[]) => {
+  const pickBlessingsUnderTest = (blessings: Blessing[]) => {
     setBlessingsUnderTest(blessings)
     localStore.set(LocalStoreKeys.BLESSINGS_UNDER_TEST, blessings)
     setBlessingsUnderTestNetwork(blessings)
   }
+  /* the server starts every room with an empty list, so the remembered
+     selection has to be pushed again on joining or it is shown but not applied */
+  useEffect(() => {
+    if (isDevMode && blessingsUnderTest.length > 0) {
+      setBlessingsUnderTestNetwork(blessingsUnderTest)
+    }
+  }, [])
   const filteredBlessings = (Object.keys(Blessings) as Blessing[]).filter(
     (blessing) => {
       const search = blessingQuery.trim().toLowerCase()
@@ -316,7 +325,7 @@ export default function PreparationSettings() {
             {filteredBlessings.map((blessing) => (
               <li
                 key={blessing}
-                className={cc("my-box", "rule-card", {
+                className={cc("my-box", "rule-card", "active", {
                   selected: blessingsUnderTest.includes(blessing)
                 })}
                 onClick={() =>
@@ -327,7 +336,10 @@ export default function PreparationSettings() {
                   )
                 }
               >
-                <h3>{t(`blessing.${blessing}.name`)}</h3>
+                <h3>
+                  {blessingsUnderTest.includes(blessing) ? "✔ " : ""}
+                  {t(`blessing.${blessing}.name`)}
+                </h3>
                 <p>
                   {addIconsToDescription(t(`blessing.${blessing}.description`))}
                 </p>
@@ -348,11 +360,20 @@ export default function PreparationSettings() {
           onClick={() => setShowBlessingPicker(true)}
         >
           {blessingsUnderTest.length > 0
-            ? t("blessings_under_test_count", {
-                count: blessingsUnderTest.length
-              })
+            ? blessingsUnderTest
+                .map((blessing) => t(`blessing.${blessing}.name`))
+                .join(", ")
             : t("no_rule")}
         </button>
+        {blessingsUnderTest.length > 0 && (
+          <button
+            className="bubbly red"
+            title={t("blessings_under_test_clear")}
+            onClick={() => pickBlessingsUnderTest([])}
+          >
+            ✕
+          </button>
+        )}
       </div>
     </div>
   )
