@@ -16,7 +16,9 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: space-between;
+  /* packed from the left rather than space-between: adding the stage scope row
+     must not redistribute the search box and the tier shortcuts */
+  justify-content: flex-start;
   gap: 0.6em;
   margin-bottom: 1em;
   padding: 0.5em 0;
@@ -44,13 +46,59 @@
 
 .wiki-blessings-stages {
   display: flex;
+  align-items: center;
   gap: 0.4em;
 }
 
-.wiki-blessings-tier-shortcuts {
+/* indented under the stage row and visibly smaller, so it reads as a refinement
+   of the stage above it rather than a fourth stage to choose from.
+   It sits inline to the right of the stage row; the toolbar packs from the left
+   and the search box is pushed right by its own auto margin, so appearing here
+   does not move anything else */
+.wiki-blessings-stage-scope {
   display: flex;
-  gap: 0.4em;
+  align-items: center;
+  gap: 0.3em;
+  margin-left: 1.2em;
+  padding-left: 0.8em;
+  border-left: 2px solid
+    color-mix(in srgb, var(--color-fg-primary) 30%, transparent);
+  font-size: 0.85em;
+}
+
+
+/* the key badge sits inside the field and gives way as soon as there is text */
+/* auto margin keeps it pinned right whether or not the stage scope is showing */
+.wiki-blessings-search {
+  position: relative;
+  display: inline-flex;
   margin-left: auto;
+}
+
+.wiki-blessings-search > kbd {
+  position: absolute;
+  right: 0.5em;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 0.1em 0.5em;
+  border: 1px solid var(--color-fg-primary);
+  border-bottom-width: 2px;
+  border-radius: 4px;
+  background-color: var(--color-bg-secondary);
+  color: var(--color-fg-primary);
+  font-size: 0.9em;
+  font-weight: bold;
+  line-height: 1.3;
+  pointer-events: none;
+}
+
+/* always its own line, right aligned: sharing the row left the toolbar wrapping
+   at stage 12 and not at stage 4, so the layout changed with the stage picked */
+.wiki-blessings-tier-shortcuts {
+  flex-basis: 100%;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.4em;
 }
 
 .wiki-blessings-tier-shortcut {

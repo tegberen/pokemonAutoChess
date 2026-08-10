@@ -15,6 +15,7 @@ import {
   FLOWER_POTS_POSITIONS_BLUE
 } from "../../../../core/flower-pots"
 import { canSell } from "../../../../core/pokemon-entity"
+import { getLevelUpCost } from "../../../../models/colyseus-models/experience-manager"
 import type Player from "../../../../models/colyseus-models/player"
 import { PokemonClasses } from "../../../../models/colyseus-models/pokemon"
 import type GameState from "../../../../rooms/states/game-state"
@@ -313,7 +314,14 @@ export default class GameScene extends Scene {
   }
 
   buyExperience() {
+    const player = this.room?.state.players.get(this.uid!)
+    // gated like the Buy XP button, so the hotkey does not play on a refused buy
+    const canLevelUp =
+      player != null &&
+      player.experienceManager.level < player.experienceManager.maxLevel &&
+      player.money >= getLevelUpCost(this.room?.state.specialGameRule)
     this.room?.send(Transfer.LEVEL_UP)
+    if (canLevelUp) playSound(SOUNDS.GOLD_TO_LEVEL)
   }
 
   sellPokemon(pokemon: PokemonSprite) {

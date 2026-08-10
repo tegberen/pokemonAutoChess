@@ -538,7 +538,7 @@ export const CAROUSEL_LOCK_RETENTION_DELAY = 60000
 export const QUICK_CLAW_COMPENSATION_STAGE = 12
 
 // extra picking-phase time on a blessing selection stage, in ms
-export const BLESSING_SELECTION_EXTRA_TIME = 2500
+export const BLESSING_SELECTION_EXTRA_TIME = 30000
 
 export const QUEST_INDECISION_SYNERGIES_TARGET = 3
 export const QUEST_CRIT_POWER_TARGET = 4

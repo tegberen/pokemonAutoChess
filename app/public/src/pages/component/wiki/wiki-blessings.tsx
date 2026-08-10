@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import { useTranslation } from "react-i18next"
 import {
   type BlessingFamily,
@@ -12,6 +12,11 @@ import {
 import { addIconsToDescription } from "../../utils/descriptions"
 import { cc } from "../../utils/jsx"
 import "./wiki-blessings.css"
+
+/* "/" is the web convention, "f" the one asked for. F is also the Buy XP
+   keybinding, so the handler stops the event rather than letting both run */
+const SEARCH_SHORTCUT_KEYS = ["/", "f"]
+const SEARCH_SHORTCUT_LABEL = "F"
 
 const TIER_ORDER = [
   BlessingTier.SILVER,
@@ -44,14 +49,49 @@ function BlessingCard(props: { blessing: Blessing }) {
 
 export default function WikiBlessings() {
   const { t } = useTranslation()
-  const [stageFilter, setStageFilter] = useState<number | null>(null)
+  /* exclusive narrows the stage to blessings offered at that stage only, rather
+     than every blessing the stage can roll */
+  const [stageFilter, setStageFilter] = useState<{
+    stage: number
+    exclusive: boolean
+  } | null>(null)
   const [query, setQuery] = useState("")
-  const setStageFilterAtTop = (stage: number | null) => {
+  const searchRef = useRef<HTMLInputElement>(null)
+
+  /* the key alone, no modifier: it must not fire while the user is typing into
+     this or any other field, and must leave browser shortcuts like ctrl+f alone */
+  useEffect(() => {
+    const focusSearch = (event: KeyboardEvent) => {
+      if (
+        !SEARCH_SHORTCUT_KEYS.includes(event.key.toLowerCase()) ||
+        event.ctrlKey ||
+        event.metaKey ||
+        event.altKey
+      )
+        return
+      const active = document.activeElement
+      if (
+        active instanceof HTMLInputElement ||
+        active instanceof HTMLTextAreaElement ||
+        (active instanceof HTMLElement && active.isContentEditable)
+      )
+        return
+      event.preventDefault()
+      // or F would buy experience in the game running behind the wiki
+      event.stopPropagation()
+      searchRef.current?.focus()
+    }
+    /* capture phase on window: the sidebar and the phaser scene both listen for
+       keydown and would otherwise consume it first */
+    window.addEventListener("keydown", focusSearch, true)
+    return () => window.removeEventListener("keydown", focusSearch, true)
+  }, [])
+  const setStageFilterAtTop = (filter: typeof stageFilter) => {
     const scrollPanel = document.querySelector<HTMLElement>(
       "#wiki-page > .react-tabs > .react-tabs__tab-panel--selected"
     )
     if (scrollPanel) scrollPanel.scrollTop = 0
-    setStageFilter(stage)
+    setStageFilter(filter)
   }
 
   const scrollToTier = (tier: BlessingTier) => {
@@ -67,11 +107,13 @@ export default function WikiBlessings() {
     )
     ;(Object.keys(Blessings) as Blessing[]).forEach((blessing) => {
       const definition = Blessings[blessing]
-      if (
-        stageFilter !== null &&
-        !definition.availableAtStages.includes(stageFilter)
-      )
-        return
+      if (stageFilter !== null) {
+        const stages = definition.availableAtStages
+        const matchesStage = stageFilter.exclusive
+          ? stages.length === 1 && stages[0] === stageFilter.stage
+          : stages.includes(stageFilter.stage)
+        if (!matchesStage) return
+      }
       if (
         search &&
         !t(`blessing.${blessing}.name`).toLowerCase().includes(search) &&
@@ -102,19 +144,55 @@ export default function WikiBlessings() {
           {BLESSING_SELECTION_STAGES.map((stage) => (
             <button
               key={stage}
-              className={cc("bubbly", stageFilter === stage ? "blue" : "")}
-              onClick={() => setStageFilterAtTop(stage)}
+              className={cc(
+                "bubbly",
+                stageFilter?.stage === stage ? "blue" : ""
+              )}
+              onClick={() => setStageFilterAtTop({ stage, exclusive: false })}
             >
               {t("stage")} {stage}
             </button>
           ))}
         </div>
-        <input
-          type="search"
-          value={query}
-          placeholder={t("search")}
-          onChange={(event) => setQuery(event.target.value)}
-        />
+
+        {/* scope belongs to the chosen stage, so it only exists once one is
+            chosen and is indented under the row that opened it */}
+        {stageFilter !== null && (
+          <div className="wiki-blessings-stage-scope">
+            <button
+              className={cc("bubbly", stageFilter.exclusive ? "" : "blue")}
+              onClick={() =>
+                setStageFilter({ stage: stageFilter.stage, exclusive: false })
+              }
+            >
+              {t("wiki.blessings.stage_scope_all", { stage: stageFilter.stage })}
+            </button>
+            <button
+              className={cc("bubbly", stageFilter.exclusive ? "blue" : "")}
+              title={t("wiki.blessings.stage_exclusive_hint")}
+              onClick={() =>
+                setStageFilter({ stage: stageFilter.stage, exclusive: true })
+              }
+            >
+              {t("wiki.blessings.stage_scope_exclusive", {
+                stage: stageFilter.stage
+              })}
+            </button>
+          </div>
+        )}
+        <div className="wiki-blessings-search">
+          <input
+            ref={searchRef}
+            type="search"
+            value={query}
+            placeholder={t("search")}
+            title={t("wiki.blessings.search_shortcut_hint")}
+            onChange={(event) => setQuery(event.target.value)}
+          />
+          {query === "" && (
+            <kbd aria-hidden="true">{SEARCH_SHORTCUT_LABEL}</kbd>
+          )}
+        </div>
         <div className="wiki-blessings-tier-shortcuts">
           {[BlessingTier.SILVER, BlessingTier.GOLD, BlessingTier.PRISMATIC].map((tier) => (
             <button
