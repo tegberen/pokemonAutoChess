@@ -39,7 +39,10 @@ import {
   SPORE_CLOUDS_INTERVAL,
   SPORE_CLOUDS_STATUS_DURATION
 } from "../../types/enum/Blessing"
-import { revealNextBuriedTreasure } from "../../services/blessings"
+import {
+  grantArcheologyRewards,
+  revealNextBuriedTreasure
+} from "../../services/blessings"
 import { FlowerPot } from "../../types/enum/FlowerPot"
 import { Awakening } from "../../types/enum/Awakening"
 import { EffectEnum } from "../../types/enum/Effect"
@@ -1368,6 +1371,8 @@ export const groundDigEffect = new OnStageStartEffect(({ player, room }) => {
      freezes digging where it stands rather than fighting the water for cells */
   if (player.blessings?.includes(Blessing.WATER_FOUNTAIN)) return
   const hasGroundSynergy = getSynergyTier(player.synergies, Synergy.GROUND) > 0
+  // ARCHEOLOGY: fossils keep digging even when Ground is not active
+  const hasArcheology = player.blessings?.includes(Blessing.ARCHEOLOGY) === true
   const snifferDogFielded =
     player.blessings?.includes(Blessing.SNIFFER_DOG) &&
     schemaValues(player.board).some(
@@ -1385,13 +1390,14 @@ export const groundDigEffect = new OnStageStartEffect(({ player, room }) => {
       )?.id
     : undefined
 
-  if (hasGroundSynergy || treasureTrailDiggerId) {
+  if (hasGroundSynergy || treasureTrailDiggerId || hasArcheology) {
     const holesClaimedThisStage = new Set<number>()
     const holesDugThisStage = new Map<number, number>()
     player.board.forEach((pokemon, pokemonId) => {
       const diggingOnBench = isOnBench(pokemon)
       if (
         ((hasGroundSynergy && pokemon.types.has(Synergy.GROUND)) ||
+          (hasArcheology && pokemon.types.has(Synergy.FOSSIL)) ||
           pokemonId === treasureTrailDiggerId) &&
         (!diggingOnBench ||
           (snifferDogFielded && pokemon.types.has(Synergy.GROUND))) &&
@@ -1467,7 +1473,12 @@ export const groundDigEffect = new OnStageStartEffect(({ player, room }) => {
             ) {
               pokemon.addMaxHP(FERTILE_SOIL_DIG_PERMANENT_HP)
             }
-            if (!diggingOnBench) grantGemRushRowReward(player, index)
+            if (!diggingOnBench) {
+              grantGemRushRowReward(player, index)
+              if (player.groundHoles[index] === 5) {
+                grantArcheologyRewards(player, index)
+              }
+            }
             revealNextBuriedTreasure(player, room.state)
             PassiveEffects[pokemon.passive]?.forEach((effect) => {
               if (effect instanceof OnGroundDiggingEffect) {

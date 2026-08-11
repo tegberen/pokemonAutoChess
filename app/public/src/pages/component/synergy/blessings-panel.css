@@ -199,3 +199,13 @@
 .blessing-panel-tooltip p {
   margin: 0;
 }
+
+/* live in-game values sit below the description, separated so they do not read
+   as another sentence of it */
+.blessing-panel-tooltip-card .blessing-panel-live-value {
+  margin: 0.5em 0 0;
+  padding-top: 0.45em;
+  border-top: 1px solid rgba(255, 255, 255, 0.25);
+  font-weight: bold;
+  color: #f7d51d;
+}

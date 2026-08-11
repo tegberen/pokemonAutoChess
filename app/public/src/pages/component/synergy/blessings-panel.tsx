@@ -16,6 +16,7 @@ import {
   MIX_AND_MATCH_II_FIELD_CAP,
   BLESSING_QUEST_TARGETS,
   Blessing,
+  RAINBOW_DROPLET_SYNERGIES_REQUIRED,
   VALOR_ATTACK_PER_STAR,
   VALOR_SHIELD_PER_STAR
 } from "../../../../../types/enum/Blessing"
@@ -91,6 +92,12 @@ export default function BlessingsPanel(props: { recentOnly?: boolean }) {
   const nbActiveSynergies = synergies.filter(
     ([synergy, value]) => value >= SynergyTiersThresholds[synergy][0]
   ).length
+  const amorphousCount =
+    synergies.find(([synergy]) => synergy === Synergy.AMORPHOUS)?.[1] ?? 0
+  const amorphousRequired =
+    SynergyTiersThresholds[Synergy.AMORPHOUS].at(-1) ?? 7
+  const rainbowDropletActivated =
+    (questProgress[Blessing.RAINBOW_DROPLET] ?? 0) > 0
   const auroraBorealisReduction = Math.round(
     (AURORA_BOREALIS_DAMAGE_REDUCTION +
       nbActiveSynergies * AURORA_BOREALIS_REDUCTION_PER_ACTIVE_SYNERGY) *
@@ -190,6 +197,7 @@ export default function BlessingsPanel(props: { recentOnly?: boolean }) {
                 {blessing === Blessing.SUPPORTIVE_SOUL && supportiveSoulRoundsLeft > 0 && <p className="blessing-panel-live-value">Next support item in {supportiveSoulRoundsLeft} round{supportiveSoulRoundsLeft === 1 ? "" : "s"}</p>}
                 {blessing === Blessing.AURORA_BOREALIS && <p className="blessing-panel-live-value">{addIconsToDescription(`${nbActiveSynergies} active synergies: −${auroraBorealisReduction}% damage taken, −${auroraBorealisReductionInSnowOrNight}% in SNOW or NIGHT`)}</p>}
                 {blessing === Blessing.BERSERKER_HORDES && <p className="blessing-panel-live-value">{addIconsToDescription(`${nbThreeStarWilds} WILD at 3 STAR or more: −${nbThreeStarWilds} GOLD`)}</p>}
+                {blessing === Blessing.RAINBOW_DROPLET && <p className="blessing-panel-live-value">{addIconsToDescription(rainbowDropletActivated ? `[Activated] +1 to every synergy except AMORPHOUS` : `AMORPHOUS ${amorphousCount}/${amorphousRequired}, ${nbActiveSynergies}/${RAINBOW_DROPLET_SYNERGIES_REQUIRED} synergies active`)}</p>}
                 {blessing === Blessing.VALOR && <p className="blessing-panel-live-value">{addIconsToDescription(`${valorWildStarsOnBench} WILD STAR on bench: +${valorWildStarsOnBench * VALOR_ATTACK_PER_STAR} ATK, +${valorWildStarsOnBench * VALOR_SHIELD_PER_STAR} SHIELD`)}</p>}
               </BlessingTooltipCard>
             </Tooltip>,

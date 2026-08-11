@@ -31,6 +31,7 @@ import { Ability } from "../../types/enum/Ability"
 import {
   Blessing,
   BEING_OF_KNOWLEDGE_LEVEL,
+  RAINBOW_DROPLET_SYNERGIES_REQUIRED,
   BIRTHDAY_PRESENT_GOLD,
   CRYSTAL_CLUSTERS_ROCKS_GRANTED,
   LUNCH_MONEY_DAMAGE_REQUIRED,
@@ -226,6 +227,13 @@ export default class Player extends Schema implements IPlayer {
   berserkerLastShopKey = -1
   // server-only: dig rows already paid out by GEM_RUSH, so they pay once
   gemRushRowsRewarded: number[] = []
+  // ARCHEOLOGY: rows already paid out, and whether the full board reward is spent
+  archeologyRowsRewarded: number[] = []
+  archeologyBoardRewarded: boolean = false
+  // RAINBOW_DROPLET: the gem is only ever handed out once
+  rainbowDropletGranted: boolean = false
+  // ADOPTION: babies already gifted, so the order never repeats one
+  adoptedBabies: Pkm[] = []
   crystalClustersRocksGranted = false
   // server-only: FAST_FOOD_DELIVERY dishes, tracked one round back so they rot
   fastFoodDishes: Item[] = []
@@ -664,6 +672,35 @@ export default class Player extends Schema implements IPlayer {
       it's not as easy as just decrementing by 1 in updatedSynergies map count
       */
       updatedSynergies = computeSynergies(pokemons, this.bonusSynergies)
+    }
+
+    if (
+      this.blessings?.includes(Blessing.RAINBOW_DROPLET) &&
+      this.rainbowDropletGranted === false
+    ) {
+      const amorphous = updatedSynergies.get(Synergy.AMORPHOUS) ?? 0
+      const activeSynergies = [...updatedSynergies.entries()].filter(
+        ([synergy, count]) =>
+          count >= (SynergyTiersThresholds[synergy]?.[0] ?? Infinity)
+      ).length
+      const amorphousMax = SynergyTiersThresholds[Synergy.AMORPHOUS].at(-1) ?? 7
+      if (
+        amorphous >= amorphousMax &&
+        activeSynergies >= RAINBOW_DROPLET_SYNERGIES_REQUIRED
+      ) {
+        this.rainbowDropletGranted = true
+        // marks it as activated for the Effects tab, which reads questProgress
+        this.advanceBlessingQuest(Blessing.RAINBOW_DROPLET)
+        Object.values(Synergy)
+          .filter((synergy) => synergy !== Synergy.AMORPHOUS)
+          .forEach((synergy) =>
+            this.bonusSynergies.set(
+              synergy,
+              (this.bonusSynergies.get(synergy) ?? 0) + 1
+            )
+          )
+        updatedSynergies = computeSynergies(pokemons, this.bonusSynergies)
+      }
     }
 
     if (this.gameMode === GameMode.DOUBLE_UP) {

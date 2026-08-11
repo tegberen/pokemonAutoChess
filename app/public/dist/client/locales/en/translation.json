@@ -5455,6 +5455,22 @@
 			"name": "Roosting Flock",
 			"description": "Gain a Tranquill and move to a random Pidove region if not in one. When your STRONGEST Pidove casts its ability, ADJACENT FLYING allies cast Roost as well."
 		},
+		"MONSTER_KING": {
+			"name": "King of the Monsters",
+			"description": "Gain a Larvitar. Every 8 seconds, your ally with the most MONSTER stacks fires Hyper Beam (at its own STAR level), towards the largest group of enemies."
+		},
+		"ADOPTION": {
+			"name": "Adoption Agency",
+			"description": "Gain an Azurill, a Pichu and an Igglybuff. At the start of each round, adopt a BABY Pokémon you have not received yet this game, cheapest first. Once every BABY has been adopted, you receive a Happiny every round instead."
+		},
+		"RAINBOW_DROPLET": {
+			"name": "Rainbow Droplet",
+			"description": "The first time you reach AMORPHOUS 7 with 7 synergies active, every synergy except AMORPHOUS permanently gains +1."
+		},
+		"ARCHEOLOGY": {
+			"name": "Archeological Site",
+			"description": "Gain a Piloswine. FOSSIL Pokémon dig every round even without GROUND active. Fully digging a hole unearths a random FOSSIL Pokémon, with a 10% chance it is 2 star. Fully digging a row unearths a FOSSIL unique, and the whole board a FOSSIL legendary."
+		},
 		"SOUL_BLAZE": {
 			"name": "Soul Blaze",
 			"description": "Using a FIRE_SHARD on a Pokémon ignites their spirit for one round. They gain 50 SHIELD, 20 SPEED and heal 1 player HP on KO. The same Pokémon cannot be ignited 2 rounds in a row."

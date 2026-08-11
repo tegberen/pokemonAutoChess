@@ -46,6 +46,7 @@ import {
   checkBlessingQuests,
   checkIndecisionSynergies,
   absorbFertileSoil,
+  grantAdoptionBaby,
   rollWaterFountainPonds
 } from "../../services/blessings"
 import {
@@ -2225,6 +2226,7 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
     this.state.players.forEach((player: Player) => {
       if (!player.alive) return
       absorbFertileSoil(player)
+      grantAdoptionBaby(player)
       player.board.get(player.ignitedPokemonId)?.setIgnited(false)
       player.previouslyIgnitedPokemonId = player.ignitedPokemonId
       player.ignitedPokemonId = ""
@@ -2734,10 +2736,11 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
       .filter((p) => p instanceof OnStageStartEffect)
       .forEach((effect) => effect.apply({ player, room: this.room }))
 
-    /* TREASURE_TRAIL digs with the strongest ally even without Ground. Skipped
-       when Ground is active, since the loop above already ran the same effect */
+    /* TREASURE_TRAIL and ARCHEOLOGY dig without Ground. Skipped when Ground is
+       active, since the loop above already ran the same effect */
     if (
-      player.blessings?.includes(Blessing.TREASURE_TRAIL) &&
+      (player.blessings?.includes(Blessing.TREASURE_TRAIL) ||
+        player.blessings?.includes(Blessing.ARCHEOLOGY)) &&
       getSynergyTier(player.synergies, Synergy.GROUND) === 0
     ) {
       groundDigEffect.apply({ player, room: this.room })

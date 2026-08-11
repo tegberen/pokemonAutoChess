@@ -30,6 +30,7 @@ import {
   Transfer
 } from "../types"
 import { Ability } from "../types/enum/Ability"
+import { distanceC } from "../utils/distance"
 import { Awakening } from "../types/enum/Awakening"
 import { EffectEnum } from "../types/enum/Effect"
 import {
@@ -65,6 +66,7 @@ import {
   STAR_CROSSED_SEAS_ABILITY_POWER,
   STAR_CROSSED_SEAS_MAX_HP,
   FAST_DELIVERY_LUCK_PER_SEED,
+  MONSTER_KING_BEAM_INTERVAL,
   SOUL_BLAZE_SHIELD,
   SOUL_BLAZE_SPEED,
   SOUL_BLAZE_LIFE_HEAL_ON_KO,
@@ -1537,6 +1539,14 @@ export default class Simulation extends Schema implements ISimulation {
     })
   }
 
+  getMonsterStacksOf(entity: PokemonEntity): number {
+    let stacks = 0
+    entity.effectsSet.forEach((effect) => {
+      if (effect instanceof MonsterKillEffect) stacks += effect.count
+    })
+    return stacks
+  }
+
   applyCombatStartBlessings(
     sides: { teamIndex: Team; player: Player | undefined }[]
   ) {
@@ -1552,6 +1562,55 @@ export default class Simulation extends Schema implements ISimulation {
       if (allies.length === 0) continue
 
       const missingPlayerLife = Math.max(0, player.maxLife - player.life)
+
+      if (blessings.includes(Blessing.MONSTER_KING)) {
+        const enemyTeam =
+          teamIndex === Team.BLUE_TEAM ? Team.RED_TEAM : Team.BLUE_TEAM
+        ownUnits.forEach((unit) => {
+          unit.effectsSet.add(
+            new PeriodicEffect(
+              (pokemon) => {
+                /* every ally carries the timer so it survives deaths, but only
+                   the one with the most monster stacks actually fires */
+                const contenders = [...team.values()].filter(
+                  (entity) => entity.player === player && entity.hp > 0
+                )
+                const beamer = contenders.sort(
+                  (a, b) =>
+                    this.getMonsterStacksOf(b) - this.getMonsterStacksOf(a) ||
+                    a.id.localeCompare(b.id)
+                )[0]
+                if (!beamer || beamer.id !== pokemon.id) return
+
+                const spot = pokemon.state.getMostSurroundedCoordinateAvailablePlace(
+                  enemyTeam,
+                  this.board
+                )
+                const enemies = this.board.cells.filter(
+                  (entity): entity is PokemonEntity =>
+                    entity != null && entity.team === enemyTeam && entity.hp > 0
+                )
+                if (enemies.length === 0) return
+                const target = spot
+                  ? enemies.sort(
+                      (a, b) =>
+                        distanceC(a.positionX, a.positionY, spot.x, spot.y) -
+                        distanceC(b.positionX, b.positionY, spot.x, spot.y)
+                    )[0]
+                  : enemies[0]
+                AbilityStrategies[Ability.HYPER_BEAM].process(
+                  pokemon,
+                  this.board,
+                  target,
+                  false
+                )
+              },
+              EffectEnum.MERCILESS,
+              MONSTER_KING_BEAM_INTERVAL
+            )
+          )
+        })
+      }
 
       if (blessings.includes(Blessing.SOUL_BLAZE)) {
         const ignitedUnit = ownUnits.find(

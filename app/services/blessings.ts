@@ -38,6 +38,10 @@ import {
   BP_REWARDS_ROUND_INTERVAL,
   BERRY_GROWTH_GOLDEN_BERRIES_GRANTED,
   FERTILE_SOIL_ABSORB_ROUNDS,
+  ADOPTION_FALLBACK,
+  ADOPTION_STARTERS,
+  ARCHEOLOGY_RARITY_WEIGHTS,
+  ARCHEOLOGY_TWO_STAR_CHANCE,
   BERRY_GROWTH_GOLDEN_BERRIES_STAGE,
   LANCES_ACE_DELAY,
   CALLED_SHOT_GOLD,
@@ -80,6 +84,7 @@ import {
 } from "../types/enum/Blessing"
 import { BattleResult, Rarity } from "../types/enum/Game"
 import {
+  BOARD_SIDE_HEIGHT,
   BOARD_WIDTH,
   FAIRY_WANDS_BY_SYNERGY_LEVEL,
   RegionDetails,
@@ -134,7 +139,8 @@ import {
   chance,
   pickNRandomIn,
   pickRandomIn,
-  randomBetween
+  randomBetween,
+  randomWeighted
 } from "../utils/random"
 
 const PEARL_GOLD_GAINED = 10
@@ -696,6 +702,76 @@ export function absorbFertileSoil(player: Player) {
       player.updateSynergies()
     }
   })
+}
+
+/* Babies in a fixed cheapest first order, so the adoption queue is the same
+   every game and cannot be skipped ahead by buying one yourself */
+export function getAdoptionOrder(): Pkm[] {
+  return (PRECOMPUTED_POKEMONS_PER_TYPE[Synergy.BABY] ?? [])
+    .filter((pkm) => getPokemonData(pkm).stars === 1)
+    .sort((a, b) => {
+      const costDifference =
+        RarityCost[getPokemonData(a).rarity] -
+        RarityCost[getPokemonData(b).rarity]
+      return costDifference !== 0 ? costDifference : a.localeCompare(b)
+    })
+}
+
+export function grantAdoptionBaby(player: Player) {
+  if (player.blessings?.includes(Blessing.ADOPTION) !== true) return
+  const next = getAdoptionOrder().find(
+    (pkm) => player.adoptedBabies.includes(pkm) === false
+  )
+  const baby = next ?? ADOPTION_FALLBACK
+  if (giftPokemonIfBenchHasRoom(player, baby) && next) {
+    player.adoptedBabies.push(next)
+  }
+}
+
+function pickArcheologyFossil(rarity: Rarity, stars?: number): Pkm | null {
+  const candidates = (
+    PRECOMPUTED_POKEMONS_PER_TYPE[Synergy.FOSSIL] ?? []
+  ).filter((pkm) => {
+    const data = getPokemonData(pkm)
+    return (
+      data.rarity === rarity && (stars === undefined || data.stars === stars)
+    )
+  })
+  return candidates.length > 0 ? pickRandomIn(candidates) : null
+}
+
+/* digging out a hole unearths a fossil, a whole row a fossil unique, and the
+   whole board a fossil legendary. Each row and the board only ever pay once */
+export function grantArcheologyRewards(player: Player, index: number) {
+  if (player.blessings?.includes(Blessing.ARCHEOLOGY) !== true) return
+
+  const rarity = randomWeighted<Rarity>(ARCHEOLOGY_RARITY_WEIGHTS)
+  if (rarity) {
+    const stars = chance(ARCHEOLOGY_TWO_STAR_CHANCE) ? 2 : 1
+    const fossil =
+      pickArcheologyFossil(rarity, stars) ?? pickArcheologyFossil(rarity, 1)
+    if (fossil) giftPokemonIfBenchHasRoom(player, fossil)
+  }
+
+  const row = Math.floor(index / BOARD_WIDTH)
+  const rowStart = row * BOARD_WIDTH
+  const isRowDug = player.groundHoles
+    .slice(rowStart, rowStart + BOARD_WIDTH)
+    .every((hole) => hole === 5)
+  if (isRowDug && player.archeologyRowsRewarded.includes(row) === false) {
+    player.archeologyRowsRewarded.push(row)
+    const unique = pickArcheologyFossil(Rarity.UNIQUE)
+    if (unique) giftPokemonIfBenchHasRoom(player, unique)
+  }
+
+  const isBoardDug = player.groundHoles
+    .slice(0, BOARD_WIDTH * (BOARD_SIDE_HEIGHT - 1))
+    .every((hole) => hole === 5)
+  if (isBoardDug && player.archeologyBoardRewarded === false) {
+    player.archeologyBoardRewarded = true
+    const legendary = pickArcheologyFossil(Rarity.LEGENDARY)
+    if (legendary) giftPokemonIfBenchHasRoom(player, legendary)
+  }
 }
 
 export function rollWaterFountainPonds(player: Player) {
@@ -1999,6 +2075,21 @@ export const blessingEffectService: {
 
   [Blessing.TIDAL_SURGE]: (player) =>
     giftPokemonIfBenchHasRoom(player, Pkm.FROAKIE),
+
+  [Blessing.ARCHEOLOGY]: (player) =>
+    giftPokemonIfBenchHasRoom(player, Pkm.PILOSWINE),
+
+  [Blessing.MONSTER_KING]: (player) =>
+    giftPokemonIfBenchHasRoom(player, Pkm.LARVITAR),
+
+  [Blessing.ADOPTION]: (player) => {
+    ADOPTION_STARTERS.forEach((baby) => {
+      if (giftPokemonIfBenchHasRoom(player, baby)) {
+        player.adoptedBabies.push(baby)
+      }
+    })
+    return true
+  },
 
   [Blessing.WATER_FOUNTAIN]: (player, state, room) => {
     applyWaterFountain(player, state, room)
