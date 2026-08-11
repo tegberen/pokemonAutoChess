@@ -2098,6 +2098,12 @@ export const blessingEffectService: {
 
   [Blessing.TIDAL_GUARDIAN]: () => true,
 
+  [Blessing.OVERLOAD]: () => true,
+
+  [Blessing.BULL_LEAPING]: () => true,
+
+  [Blessing.ICY_REFLECTION]: () => true,
+
   [Blessing.FOGBOUND_LAKE]: (player) =>
     giftPokemonIfBenchHasRoom(player, Pkm.DOTTLER),
 

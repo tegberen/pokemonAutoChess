@@ -601,6 +601,10 @@ export default class BattleManager {
           }
           break
 
+        case "icyReflectionCharge":
+          pkmSprite.lifebar?.setIcyReflectionCharge(pokemon.icyReflectionCharge)
+          break
+
         case "orientation": {
           if (pkmSprite.orientation !== pokemon.orientation) {
             pkmSprite.orientation = pokemon.orientation

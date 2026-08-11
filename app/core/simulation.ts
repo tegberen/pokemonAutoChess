@@ -1,5 +1,5 @@
 import { MapSchema, Schema, type } from "@colyseus/schema"
-import { BENCH_GROUND_HOLES_OFFSET, BOARD_HEIGHT, BOARD_WIDTH, BOARD_SIDE_HEIGHT, DEFAULT_SPEED, getItemCapacity, packBoardCell } from "../config"
+import { ARMOR_FACTOR, BENCH_GROUND_HOLES_OFFSET, BOARD_HEIGHT, BOARD_WIDTH, BOARD_SIDE_HEIGHT, DEFAULT_SPEED, getItemCapacity, packBoardCell } from "../config"
 import {
   ScribbleShapeTint,
   ScribbleShapeType
@@ -29,6 +29,7 @@ import {
   Title,
   Transfer
 } from "../types"
+import type { DisplayText } from "../types/strings/DisplayText"
 import { Ability } from "../types/enum/Ability"
 import { distanceC } from "../utils/distance"
 import { Awakening } from "../types/enum/Awakening"
@@ -143,7 +144,14 @@ import {
   TOXIC_RESONANCE_HARMONIC_ALLY_PP,
   isGrudgeSubstitute,
   TIDAL_GUARDIAN_WHIRLPOOL_TARGETS,
-  FOGBOUND_LAKE_FIREFLIES
+  FOGBOUND_LAKE_FIREFLIES,
+  OVERLOAD_CAST_INTERVAL,
+  OVERLOAD_FIRST_CAST_DELAY,
+  BULL_LEAPING_FOLLOW_UP_DELAY,
+  BULL_LEAPING_ARRIVAL_CHECK_INTERVAL,
+  BULL_LEAPING_ARRIVAL_MAX_CHECKS,
+  ICY_REFLECTION_TRIGGER_MAX_HP_RATIO,
+  ICY_REFLECTION_CAST_DELAY
 } from "../types/enum/Blessing"
 import { isSynergyActiveForPlayer } from "../config/game/blessings"
 import { getFlowerPotStarCount } from "./flower-pots"
@@ -1602,6 +1610,120 @@ export default class Simulation extends Schema implements ISimulation {
           Blessing.GRUDGE,
           substitutesPlanted
         )
+      }
+
+      if (blessings.includes(Blessing.ICY_REFLECTION)) {
+        allies
+          .filter((ally) => ally.types.has(Synergy.ICE))
+          .forEach((iceUnit) => {
+            iceUnit.effectsSet.add(
+              new OnDamageReceivedEffect(
+                ({ pokemon, attacker, damageBeforeReduction, attackType, board }) => {
+                  if (attackType !== AttackType.SPECIAL) return
+                  if (attacker) pokemon.icyReflectionLastAbility = attacker.skill
+                  /* what special defence took off this hit, mirroring the
+                     reduction formula in pokemon-state handleDamage */
+                  pokemon.icyReflectionStored +=
+                    damageBeforeReduction -
+                    damageBeforeReduction / (1 + ARMOR_FACTOR * pokemon.speDef)
+
+                  const threshold =
+                    pokemon.maxHP * ICY_REFLECTION_TRIGGER_MAX_HP_RATIO
+                  while (
+                    pokemon.icyReflectionStored >= threshold &&
+                    pokemon.icyReflectionLastAbility
+                  ) {
+                    pokemon.icyReflectionStored -= threshold
+                    pokemon.commands.push(
+                      new DelayedCommand(
+                        () => this.castIcyReflectionAbility(pokemon, board),
+                        ICY_REFLECTION_CAST_DELAY
+                      )
+                    )
+                  }
+                  pokemon.icyReflectionCharge = Math.min(
+                    100,
+                    Math.round((pokemon.icyReflectionStored / threshold) * 100)
+                  )
+                }
+              )
+            )
+          })
+      }
+
+      if (blessings.includes(Blessing.BULL_LEAPING)) {
+        allies
+          .filter((ally) => ally.types.has(Synergy.FIELD))
+          .forEach((fieldUnit) => {
+            fieldUnit.effectsSet.add(
+              new OnAbilityCastEffect((pokemon, board, target) => {
+                const followUp = this.getBullLeapingFollowUpAbility(pokemon)
+                /* casting the same dash twice back to back is unreadable, so
+                   those units fall back to the ranged option */
+                const ability =
+                  followUp === pokemon.skill ? Ability.HAPPY_HOUR : followUp
+                if (ability === pokemon.skill) return // own ability is Happy Hour
+                /* held back a beat, then until the unit has finished any dash
+                   the first ability sent it on */
+                let checksLeft = BULL_LEAPING_ARRIVAL_MAX_CHECKS
+                const castOnceArrived = () => {
+                  if (pokemon.hp <= 0) return
+                  if (pokemon.state.name === "moving" && checksLeft-- > 0) {
+                    pokemon.commands.push(
+                      new DelayedCommand(
+                        castOnceArrived,
+                        BULL_LEAPING_ARRIVAL_CHECK_INTERVAL
+                      )
+                    )
+                    return
+                  }
+                  this.castBullLeapingFollowUp(
+                    pokemon,
+                    board,
+                    target && target.hp > 0 ? target : null,
+                    ability
+                  )
+                }
+                pokemon.commands.push(
+                  new DelayedCommand(
+                    castOnceArrived,
+                    BULL_LEAPING_FOLLOW_UP_DELAY
+                  )
+                )
+              })
+            )
+          })
+      }
+
+      if (blessings.includes(Blessing.OVERLOAD)) {
+        /* deferred to the first ticks of combat: this runs from applyPostEffects,
+           before clients have the board, so the Volt Surge visual sent now would
+           be dropped */
+        getStrongestUnit(
+          ownUnits.filter((unit) => unit.types.has(Synergy.ELECTRIC))
+        )?.commands.push(
+          new DelayedCommand(
+            () => this.castOverloadVoltSurge(team, player),
+            OVERLOAD_FIRST_CAST_DELAY
+          )
+        )
+        ownUnits.forEach((unit) => {
+          unit.effectsSet.add(
+            new PeriodicEffect(
+              (pokemon) => {
+                /* every ally carries the timer so it survives deaths, but only
+                   one of them drives the pulse */
+                const conductor = [...team.values()]
+                  .filter((entity) => entity.player === player && entity.hp > 0)
+                  .sort((a, b) => a.id.localeCompare(b.id))[0]
+                if (!conductor || conductor.id !== pokemon.id) return
+                this.castOverloadVoltSurge(team, player)
+              },
+              Ability.VOLT_SURGE,
+              OVERLOAD_CAST_INTERVAL
+            )
+          )
+        })
       }
 
       if (blessings.includes(Blessing.MONSTER_KING)) {
@@ -4142,6 +4264,102 @@ export default class Simulation extends Schema implements ISimulation {
       const entity = this.addPokemon(surfer, coord.x, coord.y, team, true)
       entity.isTidalGuardian = summoned === Pkm.LUGIA
     }
+  }
+
+  castIcyReflectionAbility(pokemon: PokemonEntity, board: Board) {
+    const ability = pokemon.icyReflectionLastAbility
+    if (!ability || pokemon.hp <= 0) return
+    const strategy = AbilityStrategies[ability]
+    const target =
+      pokemon.state.getNearestTargetAtSight(pokemon, board)?.target ?? null
+    if (strategy.requiresTarget && !target) return
+
+    // rolled as if the unit were casting its own ability, per castAbility
+    const crit =
+      (pokemon.effects.has(EffectEnum.ABILITY_CRIT) ||
+        strategy.canCritByDefault) &&
+      chance(pokemon.critChance / 100, pokemon)
+
+    /* the borrowed cast would otherwise animate this unit's own ability */
+    const skillBefore = pokemon.skill
+    pokemon.skill = ability
+    strategy.process(pokemon, board, target, crit)
+    pokemon.skill = skillBefore
+
+    // names the borrowed ability above the caster, the way Metronome does
+    this.broadcastToSpectators(Transfer.DISPLAY_TEXT, {
+      id: this.id,
+      text: `ability.${ability}` as DisplayText,
+      x: pokemon.positionX,
+      y: pokemon.positionY
+    })
+  }
+
+  getBullLeapingFollowUpAbility(pokemon: PokemonEntity): Ability {
+    if (pokemon.range > 1) return Ability.HAPPY_HOUR
+    const chargesBySynergy: [Synergy, Ability][] = [
+      [Synergy.WATER, Ability.AQUA_JET],
+      [Synergy.FIRE, Ability.FLAME_CHARGE],
+      [Synergy.ELECTRIC, Ability.VOLT_SWITCH]
+    ]
+    const charges = chargesBySynergy
+      .filter(([synergy]) => pokemon.types.has(synergy))
+      .map(([, ability]) => ability)
+    return charges.length > 0 ? pickRandomIn(charges) : Ability.PSYSHIELD_BASH
+  }
+
+  /* processed directly rather than through castAbility, so the follow-up cannot
+     trigger a follow-up of its own */
+  castBullLeapingFollowUp(
+    pokemon: PokemonEntity,
+    board: Board,
+    target: PokemonEntity | null,
+    ability: Ability
+  ) {
+    const strategy = AbilityStrategies[ability]
+    const followUpTarget =
+      target ??
+      pokemon.state.getNearestTargetAtSight(pokemon, board)?.target ??
+      null
+    if (strategy.requiresTarget && !followUpTarget) return
+
+    /* swapping skill as well as stars keeps the broadcasts inside the strategy
+       showing the follow-up instead of the ability that was actually cast */
+    const starsBefore = pokemon.stars
+    const skillBefore = pokemon.skill
+    pokemon.stars = 1
+    pokemon.skill = ability
+    strategy.process(pokemon, board, followUpTarget, false)
+    pokemon.stars = starsBefore
+    pokemon.skill = skillBefore
+  }
+
+  castOverloadVoltSurge(team: MapSchema<PokemonEntity>, player: Player) {
+    const nextCaster = getStrongestUnit(
+      [...team.values()].filter(
+        (entity) =>
+          entity.player === player &&
+          entity.hp > 0 &&
+          entity.types.has(Synergy.ELECTRIC) &&
+          !entity.overloadVoltSurged
+      )
+    )
+    if (!nextCaster) return
+    nextCaster.overloadVoltSurged = true
+    /* an empowerment, not a substituted cast: the unit keeps the charge it had
+       built towards its own ability */
+    const ppBeforeEmpowerment = nextCaster.pp
+    /* the borrowed cast would otherwise animate the unit's own ability, so it is
+       suppressed in favour of Iron Thorns' Volt Surge visual */
+    AbilityStrategies[Ability.VOLT_SURGE].process(
+      nextCaster,
+      this.board,
+      null,
+      false,
+      true
+    )
+    nextCaster.broadcastAbility({ skill: Ability.VOLT_SURGE })
+    nextCaster.pp = ppBeforeEmpowerment
   }
 
   /* Lugia rides each wave after the one that brought it in, striking 3 different

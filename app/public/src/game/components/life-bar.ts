@@ -10,6 +10,8 @@ export default class LifeBar extends GameObjects.Graphics {
   shield: number
   pp?: number
   maxPP?: number
+  // ICY_REFLECTION: 0-100% towards this unit's next recast
+  icyReflectionCharge = 0
   team: Team
   flip: boolean
 
@@ -43,7 +45,9 @@ export default class LifeBar extends GameObjects.Graphics {
     const enemyLifeColor = 0xe76e55
     const shieldColor = 0xe0e0e0
     const ppColor = 0x209cee
+    const icyReflectionColor = 0x8ef6ff
     const hpPerSegment = 25
+    const hasIcyReflection = this.icyReflectionCharge > 0
 
     this.clear()
     this.clearMask()
@@ -52,7 +56,13 @@ export default class LifeBar extends GameObjects.Graphics {
 
     // hp bar
     this.fillStyle(0x000000)
-    this.fillRoundedRect(0, 0, barWidth, this.maxPP === undefined ? 8 : 14, 2)
+    this.fillRoundedRect(
+      0,
+      0,
+      barWidth,
+      (this.maxPP === undefined ? 8 : 14) + (hasIcyReflection ? 4 : 0),
+      2
+    )
 
     // hp and shield amount
     if (this.hp > 0) {
@@ -105,6 +115,14 @@ export default class LifeBar extends GameObjects.Graphics {
       this.fillStyle(ppColor)
       this.fillRect(1, 9, ppPercentage * innerBarWidth, 3)
     }
+
+    if (hasIcyReflection) {
+      const y = this.maxPP === undefined ? 9 : 13
+      this.fillStyle(ppBarBgColor, 1)
+      this.fillRect(1, y, innerBarWidth, 3)
+      this.fillStyle(icyReflectionColor)
+      this.fillRect(1, y, (this.icyReflectionCharge / 100) * innerBarWidth, 3)
+    }
   }
 
   setHp(value: number) {
@@ -135,6 +153,16 @@ export default class LifeBar extends GameObjects.Graphics {
     this.scene.tweens.add({
       targets: this,
       pp: value,
+      duration: 150,
+      onUpdate: this.draw.bind(this),
+      ease: "Sine.easeOut"
+    })
+  }
+
+  setIcyReflectionCharge(value: number) {
+    this.scene.tweens.add({
+      targets: this,
+      icyReflectionCharge: value,
       duration: 150,
       onUpdate: this.draw.bind(this),
       ease: "Sine.easeOut"

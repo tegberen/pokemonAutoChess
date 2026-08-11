@@ -44,8 +44,14 @@ const voltSurgeEffect = new OnAttackEffect(({ pokemon, target, board }) => {
 
 export class VoltSurgeStrategy extends AbilityStrategy {
   requiresTarget = false
-  process(pokemon: PokemonEntity, board: Board, target: null, crit: boolean) {
-    super.process(pokemon, board, target, crit)
+  process(
+    pokemon: PokemonEntity,
+    board: Board,
+    target: null,
+    crit: boolean,
+    preventDefaultAnim?: boolean
+  ) {
+    super.process(pokemon, board, target, crit, preventDefaultAnim)
     const hpGained = [10, 20, 30, 60][pokemon.stars - 1] ?? 60
     pokemon.addMaxHP(hpGained, pokemon, 1, crit, false)
     pokemon.addSpeed(20, pokemon, 0, false)

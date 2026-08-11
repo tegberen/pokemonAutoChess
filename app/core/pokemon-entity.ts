@@ -154,6 +154,8 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
   @type("uint8") stacks: number = 0
   @type("uint8") stacksRequired: number = 0
   @type("boolean") ignited: boolean = false
+  // ICY_REFLECTION: 0-100% towards the next recast. Declared last to keep wire indexes
+  @type("uint8") icyReflectionCharge: number = 0
   cooldown = 500
   oneSecondCooldown = 1000
   state: PokemonState
@@ -196,6 +198,9 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
   heroBlessings = new Set<Blessing>()
   hasOwnSpotlight: boolean = false
   isTidalGuardian: boolean = false
+  overloadVoltSurged: boolean = false
+  icyReflectionStored: number = 0
+  icyReflectionLastAbility: Ability | null = null
   auroraBorealisSynergyBonus: number = 0
   isAuroraBorealisProtected: boolean = false
 

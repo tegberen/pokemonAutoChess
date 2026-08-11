@@ -5471,6 +5471,18 @@
 			"name": "Archeological Site",
 			"description": "Gain a Piloswine. FOSSIL Pokémon dig every round even without GROUND active. Fully digging a hole unearths a random FOSSIL Pokémon, with a 10% chance it is 2 star. Fully digging a row unearths a FOSSIL unique, and the whole board a FOSSIL legendary."
 		},
+		"ICY_REFLECTION": {
+			"name": "Icy Reflection",
+			"description": "Your ICE Pokémon store all the damage their SPE_DEF blocks. Every time the stored amount reaches 25% of their max HP, they cast back the last ability that damaged them, at their own STAR level."
+		},
+		"BULL_LEAPING": {
+			"name": "Bull Leaping",
+			"description": "When your FIELD Pokémon cast their ability, they use a second one at 1 STAR right after: melee ones leap with Aqua Jet, Flame Charge or Volt Switch if they are WATER, FIRE or ELECTRIC, or Psyshield Bash otherwise. Ranged ones, and any that would repeat their own ability, use Happy Hour instead."
+		},
+		"OVERLOAD": {
+			"name": "Overload",
+			"description": "At the start of combat and every 8 seconds, the STRONGEST of your ELECTRIC Pokémon (not yet empowered) is empowered by Volt Surge: it gains ELECTRIC_FIELD, 20 SPEED and bonus HP, and every 3rd attack chains lightning to 4 enemies. Its own ability is unchanged."
+		},
 		"FOGBOUND_LAKE": {
 			"name": "Fogbound Lake",
 			"description": "Gain a Dottler. When a BUG Pokémon would clone, it spawns a Volbeat or an Illumise instead. BUG 8 adds +1 to LIGHT, and every Volbeat and Illumise gains the effects of your active LIGHT spot."

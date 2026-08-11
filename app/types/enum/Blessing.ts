@@ -133,6 +133,9 @@ export enum Blessing {
   MONSTER_KING = "MONSTER_KING",
   GRUDGE = "GRUDGE",
   TIDAL_GUARDIAN = "TIDAL_GUARDIAN",
+  OVERLOAD = "OVERLOAD",
+  BULL_LEAPING = "BULL_LEAPING",
+  ICY_REFLECTION = "ICY_REFLECTION",
   FOGBOUND_LAKE = "FOGBOUND_LAKE",
   SHELL_ARMOR_BLESSING = "SHELL_ARMOR_BLESSING",
   LEAF_TORNADO = "LEAF_TORNADO",
@@ -436,6 +439,17 @@ export const ARCHEOLOGY_RARITY_WEIGHTS = {
   [Rarity.RARE]: 30,
   [Rarity.EPIC]: 10
 }
+/* one animation beat, so a dasher casting a dash does not overlap itself, then
+   re-checked until the unit has stopped moving: dash travel time depends on the
+   distance covered, so no fixed delay can cover it */
+export const BULL_LEAPING_FOLLOW_UP_DELAY = 500
+export const ICY_REFLECTION_TRIGGER_MAX_HP_RATIO = 0.25
+// deferred out of the damage resolution it is triggered from
+export const ICY_REFLECTION_CAST_DELAY = 250
+export const BULL_LEAPING_ARRIVAL_CHECK_INTERVAL = 250
+export const BULL_LEAPING_ARRIVAL_MAX_CHECKS = 12
+export const OVERLOAD_CAST_INTERVAL = 8000
+export const OVERLOAD_FIRST_CAST_DELAY = 500
 export const TIDAL_GUARDIAN_WHIRLPOOL_TARGETS = 3
 export const FOGBOUND_LAKE_FIREFLIES: Pkm[] = [Pkm.VOLBEAT, Pkm.ILLUMISE]
 export const GRUDGE_CURSE_CHANCE = 0.3

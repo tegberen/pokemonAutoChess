@@ -184,7 +184,8 @@ class GameContainer {
       "types",
       "stacks",
       "stacksRequired",
-      "awakening"
+      "awakening",
+      "icyReflectionCharge"
     ] satisfies (NonFunctionPropNames<PokemonEntity> & keyof IPokemonEntity)[]
 
     fields.forEach((field) => {
