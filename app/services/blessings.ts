@@ -384,7 +384,7 @@ const CrownBlessingContent: {
   },
   [Blessing.BUG_CROWN_BLESSING]: {
     items: [Item.SHED_SHELL, Item.RELIC_CROWN],
-    pokemon: Pkm.SEWADDLE
+    pokemon: Pkm.GRUBBIN
   },
   [Blessing.WATER_CROWN_BLESSING]: {
     items: [Item.WATER_STONE, Item.CHOICE_SPECS],
@@ -2093,6 +2093,8 @@ export const blessingEffectService: {
     })
     return true
   },
+
+  [Blessing.GRUDGE]: () => true,
 
   [Blessing.WATER_FOUNTAIN]: (player, state, room) => {
     applyWaterFountain(player, state, room)

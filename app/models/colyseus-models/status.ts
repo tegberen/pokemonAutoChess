@@ -1,6 +1,9 @@
 import { Schema, type } from "@colyseus/schema"
 import { CC_COOLDOWN, FIGHTING_PHASE_DURATION, ItemStats } from "../../config"
-import { Blessing } from "../../types/enum/Blessing"
+import {
+  Blessing,
+  applyGrudgeCurseReduction
+} from "../../types/enum/Blessing"
 import type { Board } from "../../core/board"
 import { transformToIceFace } from "../../core/effects/passives"
 import type { PokemonEntity } from "../../core/pokemon-entity"
@@ -1169,6 +1172,19 @@ export default class Status extends Schema implements IStatus {
           // if status has been cleared, take the remaining time
           timer = Math.min(this.curseCooldown, timer)
         } else {
+          const cursingPlayer =
+            pokemon.team === Team.BLUE_TEAM
+              ? pokemon.simulation.redPlayer
+              : pokemon.simulation.bluePlayer
+          if (
+            pokemon.player &&
+            cursingPlayer?.blessings?.includes(Blessing.GRUDGE)
+          ) {
+            timer = applyGrudgeCurseReduction(
+              timer,
+              schemaValues(pokemon.player.board)
+            )
+          }
           const nbOddStones = pokemon.player
             ? count(pokemon.player.items, Item.ODD_KEYSTONE)
             : 0

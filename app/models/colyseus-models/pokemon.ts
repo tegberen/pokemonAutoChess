@@ -161,7 +161,7 @@ export class Pokemon extends Schema implements IPokemon {
   }
 
   get canBePlaced(): boolean {
-    return ![Pkm.EGG].includes(this.name)
+    return ![Pkm.EGG].includes(this.name) && this.manifestationLocked === false
   }
 
   get canBeCloned(): boolean {

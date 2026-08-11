@@ -1055,6 +1055,13 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     grantsPokemonImmediately: true,
     isAvailable: isSynergyBlessingAvailable(Synergy.FOSSIL)
   },
+  [Blessing.GRUDGE]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "grudge",
+    grantsPokemonImmediately: false,
+    isAvailable: isSynergyBlessingAvailable(Synergy.GHOST)
+  },
   [Blessing.SOUL_BLAZE]: {
     tier: BlessingTier.PRISMATIC,
     availableAtStages: BLESSING_SELECTION_STAGES,

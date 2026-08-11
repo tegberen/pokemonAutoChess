@@ -140,7 +140,8 @@ import {
   TOXIC_RESONANCE_ALLY_PP,
   TOXIC_RESONANCE_BEAT_INTERVAL,
   TOXIC_RESONANCE_HARMONIC_BEAT,
-  TOXIC_RESONANCE_HARMONIC_ALLY_PP
+  TOXIC_RESONANCE_HARMONIC_ALLY_PP,
+  isGrudgeSubstitute
 } from "../types/enum/Blessing"
 import { isSynergyActiveForPlayer } from "../config/game/blessings"
 import { getFlowerPotStarCount } from "./flower-pots"
@@ -148,7 +149,11 @@ import { Weather, WeatherEffects } from "../types/enum/Weather"
 import type { IPokemonData } from "../types/interfaces/PokemonData"
 import { count, isIn, removeInArray } from "../utils/array"
 import { getAvatarString } from "../utils/avatar"
-import { getFirstAvailablePositionInBench, isOnBench } from "../utils/board"
+import {
+  getFirstAvailablePositionInBench,
+  getLastAvailablePositionInBench,
+  isOnBench
+} from "../utils/board"
 import { DEFAULT_CRIT_POWER } from "../config/game/battle"
 import { logger } from "../utils/logger"
 import { max } from "../utils/number"
@@ -1562,6 +1567,18 @@ export default class Simulation extends Schema implements ISimulation {
       if (allies.length === 0) continue
 
       const missingPlayerLife = Math.max(0, player.maxLife - player.life)
+
+      if (blessings.includes(Blessing.GRUDGE)) {
+        const opponentPlayer =
+          teamIndex === Team.BLUE_TEAM ? this.redPlayer : this.bluePlayer
+        const substitutesPlanted = opponentPlayer
+          ? schemaValues(opponentPlayer.board).filter(isGrudgeSubstitute).length
+          : 0
+        player.blessingsRef?.questProgress.set(
+          Blessing.GRUDGE,
+          substitutesPlanted
+        )
+      }
 
       if (blessings.includes(Blessing.MONSTER_KING)) {
         const enemyTeam =
@@ -3744,6 +3761,20 @@ export default class Simulation extends Schema implements ISimulation {
     delete this.room // remove circular reference to help garbage collection
   }
 
+  plantGrudgeSubstitute(loser: Player) {
+    // parked on the far right, out of the way of the bench they actually use
+    const freeCellX = getLastAvailablePositionInBench(loser.board)
+    if (freeCellX === null) return
+    const substitute = PokemonFactory.createPokemonFromName(
+      Pkm.SUBSTITUTE,
+      loser
+    )
+    substitute.positionX = freeCellX
+    substitute.positionY = 0
+    substitute.manifestationLocked = true
+    loser.board.set(substitute.id, substitute)
+  }
+
   onFinish() {
     this.finishedAt = Date.now()
     this.finished = true
@@ -3885,6 +3916,13 @@ export default class Simulation extends Schema implements ISimulation {
           if (hasLeadersCrest && opponentPlayer) {
             removeInArray(opponentPlayer.items, Item.LEADERS_CREST)
             player.items.push(Item.LEADERS_CREST)
+          }
+          if (
+            opponentPlayer &&
+            !isGhostOpponent &&
+            player.blessings?.includes(Blessing.GRUDGE)
+          ) {
+            this.plantGrudgeSubstitute(opponentPlayer)
           }
         }
       } else {

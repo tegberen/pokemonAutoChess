@@ -133,7 +133,9 @@ import {
   STURDY_SPECIAL_DEFENSE,
   UP_IS_UP_GOLD,
   UP_IS_UP_LIFE,
-  WISE_SPENDING_EXP_PER_REROLL
+  WISE_SPENDING_EXP_PER_REROLL,
+  GRUDGE_SUBSTITUTE_SELL_COST,
+  isGrudgeSubstitute
 } from "../../types/enum/Blessing"
 import {
   checkRainbowHourReward,
@@ -1530,6 +1532,13 @@ export class OnSellPokemonCommand extends Command<
       canSell(pokemon.name, this.state.specialGameRule) === false
     ) {
       return
+    }
+
+    if (
+      isGrudgeSubstitute(pokemon) &&
+      player.money < GRUDGE_SUBSTITUTE_SELL_COST
+    ) {
+      return // getting rid of it has to be paid for
     }
 
     const isManifested = isPokemonManifestationLocked(player, pokemonId)

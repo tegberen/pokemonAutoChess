@@ -2383,7 +2383,7 @@
 		"SAND_SPIT": "Spits sand at the 3 enemy Pokémon in front of the user, dealing [30,60,120,240,SP] SPECIAL and inflicting BLINDED for 2 seconds.",
 		"HYPER_DRILL": "Deals [10,30,50,100,200,SP] TRUE that can break PROTECT, and dig deeper into the ground under the target, destroying any eventual buried items in the process. Double damage if target is already on a fully dug hole.",
 		"TERRAIN_PULSE": "If user has no field, gets GRASS_FIELD.\nField effects in your team propagate to ADJACENT allies, then trigger an effect:\nGRASS_FIELD: heal [5,7,10,15,SP]% of max HP\nELECTRIC_FIELD: gain [10,12,15,20,SP] SPEED\nPSYCHIC_FIELD: gain [10,12,15,20,SP] PP\nFAIRY_FIELD: gain [5,7,10,15,SP]% of max HP as SHIELD",
-		"AXE_BLAST": "Deals SPECIAL damage equal to 300% of the user's ATK to the target and ADJACENT enemy in an X-Shape. If your team has more total STAR than the opposing team, execute the target.",
+		"AXE_BLAST": "Deals SPECIAL damage equal to [300,SP]% of the user's ATK to the target and ADJACENT enemy in an X-Shape. If your team has more total STAR than the opposing team, execute the target.",
 		"AXE_KICK": "Leap to the enemy with the highest PP then deal [25,50,100,200,SP] SPECIAL and burn [15,15,30,60,SP] PP. Has [30,LK]% chance to inflict CONFUSION for 3 seconds.",
 		"EXPANDING_FORCE": "The user gains PSYCHIC_FIELD, or spreads it to a nearby ally. Then its psychic energy reverbates on all allies in a PSYCHIC_FIELD, dealing [10,20,40,80,SP] SPECIAL to ADJACENT enemies.",
 		"SPITE": "Drains [20,40,60,100,SP] PP from target and redistributes [20,40,60,100,SP] PP to ADJACENT allies",
@@ -4933,7 +4933,7 @@
 		},
 		"BUG_CROWN_BLESSING": {
 			"name": "Bug Crown",
-			"description": "Gain a SHED_SHELL, a RELIC_CROWN and a Sewaddle."
+			"description": "Gain a SHED_SHELL, a RELIC_CROWN and a Grubbin."
 		},
 		"WATER_CROWN_BLESSING": {
 			"name": "Water Crown",
@@ -5470,6 +5470,10 @@
 		"ARCHEOLOGY": {
 			"name": "Archeological Site",
 			"description": "Gain a Piloswine. FOSSIL Pokémon dig every round even without GROUND active. Fully digging a hole unearths a random FOSSIL Pokémon, with a 10% chance it is 2 star. Fully digging a row unearths a FOSSIL unique, and the whole board a FOSSIL legendary."
+		},
+		"GRUDGE": {
+			"name": "Grudge",
+			"description": "When one of your GHOST Pokémon is KO'd, it has a [30,LK]% chance to CURSE the enemy that defeated it (8 seconds). If you win the fight and your opponent has a free bench slot, they receive a locked Substitute that costs them 4 GOLD to sell. Each locked Substitute on their bench reduces the duration of any CURSE you inflict by 1 second, whatever its source."
 		},
 		"SOUL_BLAZE": {
 			"name": "Soul Blaze",
@@ -6092,6 +6096,7 @@
 		"announcement": "The team of {{player1}} & {{player2}} has won! Finale!"
 	},
 	"drop_here_to_sell": "Drop here to sell",
+	"drop_here_to_discard_for_gold": "Drop here to discard for -{{price}} gold",
 	"for_price_gold": "for {{price}} gold",
 	"buy_xp": "Buy XP {{cost}}",
 	"buy_xp_tooltip": "Buy 4 XP for {{cost}} gold",

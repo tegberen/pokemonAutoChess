@@ -17,6 +17,7 @@ import {
   BLESSING_QUEST_TARGETS,
   Blessing,
   RAINBOW_DROPLET_SYNERGIES_REQUIRED,
+  GRUDGE_CURSE_DURATION_REDUCTION_PER_SUBSTITUTE,
   VALOR_ATTACK_PER_STAR,
   VALOR_SHIELD_PER_STAR
 } from "../../../../../types/enum/Blessing"
@@ -62,6 +63,10 @@ export default function BlessingsPanel(props: { recentOnly?: boolean }) {
     questProgress[Blessing.BP_REWARDS] ?? BP_REWARDS_ROUND_INTERVAL
   const supportiveSoulRoundsLeft =
     questProgress[Blessing.SUPPORTIVE_SOUL] ?? 0
+  const grudgeSubstitutesPlanted = questProgress[Blessing.GRUDGE] ?? 0
+  const grudgeCurseSecondsSaved =
+    (grudgeSubstitutesPlanted * GRUDGE_CURSE_DURATION_REDUCTION_PER_SUBSTITUTE) /
+    1000
   const spectatedPlayer = useAppSelector(selectSpectatedPlayer)
   const synergies = useAppSelector((state) => state.game.synergiesSpectated)
   const boardPokemons: Array<{
@@ -199,6 +204,7 @@ export default function BlessingsPanel(props: { recentOnly?: boolean }) {
                 {blessing === Blessing.BERSERKER_HORDES && <p className="blessing-panel-live-value">{addIconsToDescription(`${nbThreeStarWilds} WILD at 3 STAR or more: −${nbThreeStarWilds} GOLD`)}</p>}
                 {blessing === Blessing.RAINBOW_DROPLET && <p className="blessing-panel-live-value">{addIconsToDescription(rainbowDropletActivated ? `[Activated] +1 to every synergy except AMORPHOUS` : `AMORPHOUS ${amorphousCount}/${amorphousRequired}, ${nbActiveSynergies}/${RAINBOW_DROPLET_SYNERGIES_REQUIRED} synergies active`)}</p>}
                 {blessing === Blessing.VALOR && <p className="blessing-panel-live-value">{addIconsToDescription(`${valorWildStarsOnBench} WILD STAR on bench: +${valorWildStarsOnBench * VALOR_ATTACK_PER_STAR} ATK, +${valorWildStarsOnBench * VALOR_SHIELD_PER_STAR} SHIELD`)}</p>}
+                {blessing === Blessing.GRUDGE && <p className="blessing-panel-live-value">{addIconsToDescription(`${grudgeSubstitutesPlanted} Substitute${grudgeSubstitutesPlanted === 1 ? "" : "s"} on the opponent bench: every CURSE you inflict is ${grudgeCurseSecondsSaved} seconds shorter`)}</p>}
               </BlessingTooltipCard>
             </Tooltip>,
             document.body

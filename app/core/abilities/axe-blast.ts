@@ -26,8 +26,7 @@ export class AxeBlastStrategy extends AbilityStrategy {
         board,
         AttackType.SPECIAL,
         pokemon,
-        crit,
-        false
+        crit
       )
     )
     if (pokemon.axeBlastExecutesThisFight && target.hp > 0) {

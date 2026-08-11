@@ -131,6 +131,7 @@ export enum Blessing {
   RAINBOW_DROPLET = "RAINBOW_DROPLET",
   ADOPTION = "ADOPTION",
   MONSTER_KING = "MONSTER_KING",
+  GRUDGE = "GRUDGE",
   SHELL_ARMOR_BLESSING = "SHELL_ARMOR_BLESSING",
   LEAF_TORNADO = "LEAF_TORNADO",
   MARIACHI_MAYHEM = "MARIACHI_MAYHEM",
@@ -433,6 +434,34 @@ export const ARCHEOLOGY_RARITY_WEIGHTS = {
   [Rarity.RARE]: 30,
   [Rarity.EPIC]: 10
 }
+export const GRUDGE_CURSE_CHANCE = 0.3
+export const GRUDGE_CURSE_DURATION = 8000
+export const GRUDGE_CURSE_DURATION_REDUCTION_PER_SUBSTITUTE = 1000
+export const GRUDGE_SUBSTITUTE_SELL_COST = 4
+
+/* Grudge substitutes are the only manifestation-locked Substitutes, so no
+   dedicated schema field is needed to tell them apart */
+export function isGrudgeSubstitute(pokemon: {
+  name: Pkm
+  manifestationLocked?: boolean
+}): boolean {
+  return pokemon.name === Pkm.SUBSTITUTE && pokemon.manifestationLocked === true
+}
+
+/* every CURSE the Grudge owner inflicts is shortened by 1 second per Substitute
+   planted on the cursed player's bench, whatever the source of the curse */
+export function applyGrudgeCurseReduction(
+  duration: number,
+  cursedPlayerBoard: { name: Pkm; manifestationLocked?: boolean }[]
+): number {
+  const substitutesPlanted = cursedPlayerBoard.filter(isGrudgeSubstitute).length
+  return Math.max(
+    1000,
+    duration -
+      substitutesPlanted * GRUDGE_CURSE_DURATION_REDUCTION_PER_SUBSTITUTE
+  )
+}
+
 export const SOUL_BLAZE_SHIELD = 50
 export const SOUL_BLAZE_SPEED = 20
 export const SOUL_BLAZE_LIFE_HEAL_ON_KO = 1

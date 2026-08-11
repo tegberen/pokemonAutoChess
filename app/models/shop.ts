@@ -64,7 +64,9 @@ import {
   Blessing,
   BERSERKER_HORDES_SHOP_INTERVAL,
   CURSOLA_SELL_PRICE,
-  getCarouselLockForStage
+  getCarouselLockForStage,
+  GRUDGE_SUBSTITUTE_SELL_COST,
+  isGrudgeSubstitute
 } from "../types/enum/Blessing"
 import { PRECOMPUTED_POKEMONS_PER_TYPE } from "./precomputed/precomputed-types"
 import { Synergy } from "../types/enum/Synergy"
@@ -108,6 +110,10 @@ export function getSellPrice(
   const name = pokemon.name
 
   if ("sellsForNothing" in pokemon && pokemon.sellsForNothing === true) return 0
+
+  if ("manifestationLocked" in pokemon && isGrudgeSubstitute(pokemon)) {
+    return -GRUDGE_SUBSTITUTE_SELL_COST
+  }
 
   if (name === Pkm.CURSOLA && blessings?.includes(Blessing.CURSE_OF_CORAL)) {
     return CURSOLA_SELL_PRICE

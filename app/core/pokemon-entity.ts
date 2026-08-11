@@ -41,7 +41,9 @@ import {
   ZAP_CHAIN_DAMAGE_RATIO,
   VAMPIRIC_HEAL_RATIO,
   BERRY_GROWTH_PERMANENT_HP,
-  BERRY_GROWTH_GOLDEN_PERMANENT_HP
+  BERRY_GROWTH_GOLDEN_PERMANENT_HP,
+  GRUDGE_CURSE_CHANCE,
+  GRUDGE_CURSE_DURATION
 } from "../types/enum/Blessing"
 import { getStrongestUnit } from "./unit-score"
 import { EffectEnum } from "../types/enum/Effect"
@@ -1575,6 +1577,16 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
             }
           }
         })
+    }
+
+    if (
+      this.types.has(Synergy.GHOST) &&
+      attacker &&
+      attacker.team !== this.team &&
+      this.player?.blessings?.includes(Blessing.GRUDGE) &&
+      chance(GRUDGE_CURSE_CHANCE, this)
+    ) {
+      attacker.status.triggerCurse(GRUDGE_CURSE_DURATION, attacker)
     }
 
     if (this.player?.blessings?.includes(Blessing.VALOR)) {

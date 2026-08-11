@@ -2,7 +2,11 @@ import { t } from "i18next"
 import type Phaser from "phaser"
 import { GameObjects } from "phaser"
 import { getSellPrice } from "../../../../models/shop"
-import { Blessing } from "../../../../types/enum/Blessing"
+import {
+  Blessing,
+  GRUDGE_SUBSTITUTE_SELL_COST,
+  isGrudgeSubstitute
+} from "../../../../types/enum/Blessing"
 import { Rarity } from "../../../../types/enum/Game"
 import { transformBoardCoordinates } from "../../pages/utils/utils"
 import { DEPTH } from "../depths"
@@ -66,6 +70,16 @@ export class SellZone extends GameObjects.Container {
     const hasMixAndMatch =
       blessings?.includes(Blessing.MIX_AND_MATCH_I) === true ||
       blessings?.includes(Blessing.MIX_AND_MATCH_II) === true
+    if (isGrudgeSubstitute(pokemon)) {
+      this.text.setText(
+        t("drop_here_to_discard_for_gold", {
+          price: GRUDGE_SUBSTITUTE_SELL_COST
+        })
+      )
+      this.rectangle.setFillStyle(this.bgColor)
+      this.setVisible(true)
+      return
+    }
     const price =
       pokemon.manifestationLocked ||
       (hasMixAndMatch && pokemon.rarity === Rarity.UNIQUE)
