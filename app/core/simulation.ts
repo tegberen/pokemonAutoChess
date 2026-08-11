@@ -49,6 +49,8 @@ import {
   Item,
   NonSpecialBerries,
   Seeds,
+  SynergyGems,
+  SynergyGivenByGem,
   SynergyGivenByItem,
   SynergyItems,
   SynergyStones,
@@ -152,6 +154,8 @@ import {
   BULL_LEAPING_ARRIVAL_MAX_CHECKS,
   ICY_REFLECTION_TRIGGER_MAX_HP_RATIO,
   ICY_REFLECTION_CAST_DELAY,
+  GEM_HARVEST_ATTACK_PER_GEM,
+  GEM_HARVEST_ABILITY_POWER_PER_GEM,
   MAGNETOSPHERE_PULSE_INTERVAL,
   MAGNETOSPHERE_ATTRACT_MOVE_DELAY,
   MAGNETOSPHERE_ATTRACT_PARALYSIS_DURATION,
@@ -1614,6 +1618,43 @@ export default class Simulation extends Schema implements ISimulation {
           Blessing.GRUDGE,
           substitutesPlanted
         )
+      }
+
+      if (blessings.includes(Blessing.LIMIT_BREAKER)) {
+        /* raising stars is all an "extra star level" needs: every ability reads
+           its scaling as [a,b,c,d][stars - 1], the way STAR_PIECE does it */
+        allies.forEach((ally) => {
+          if (
+            ally.types.has(Synergy.DRAGON) &&
+            ally.rarity !== Rarity.UNIQUE &&
+            ally.rarity !== Rarity.LEGENDARY &&
+            ally.refToBoardPokemon.final
+          ) {
+            ally.stars = max(5)(ally.stars + 1)
+          }
+        })
+      }
+
+      if (blessings.includes(Blessing.GEM_HARVEST)) {
+        const gemSynergies = player.items
+          .filter((item) => isIn(SynergyGems, item))
+          .map((gem) => SynergyGivenByGem[gem])
+        if (gemSynergies.length > 0) {
+          allies.forEach((ally) => {
+            // a gem counts once per matching synergy, and duplicates stack
+            const matches = gemSynergies.filter((synergy) =>
+              ally.types.has(synergy)
+            ).length
+            if (matches === 0) return
+            ally.addAttack(GEM_HARVEST_ATTACK_PER_GEM * matches, ally, 0, false)
+            ally.addAbilityPower(
+              GEM_HARVEST_ABILITY_POWER_PER_GEM * matches,
+              ally,
+              0,
+              false
+            )
+          })
+        }
       }
 
       if (blessings.includes(Blessing.MAGNETOSPHERE)) {

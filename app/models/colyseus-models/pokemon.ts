@@ -35,6 +35,12 @@ import {
 } from "../../types/EvolutionRules"
 import { Ability } from "../../types/enum/Ability"
 import { Awakening } from "../../types/enum/Awakening"
+import {
+  Blessing,
+  getSynergiesGivenByItem,
+  LIMIT_BREAKER_REROLLS_PER_GOLD
+} from "../../types/enum/Blessing"
+import { RarityCost } from "../../config/game/shop"
 import { DungeonPMDO } from "../../types/enum/Dungeon"
 import { EffectEnum } from "../../types/enum/Effect"
 import { PokemonActionState, Rarity, Stat } from "../../types/enum/Game"
@@ -60,7 +66,7 @@ import {
 } from "../../types/enum/Pokemon"
 import { Synergy } from "../../types/enum/Synergy"
 import { Weather } from "../../types/enum/Weather"
-import { removeInArray } from "../../utils/array"
+import { isIn, removeInArray } from "../../utils/array"
 import { getFirstAvailablePositionInBench, isOnBench } from "../../utils/board"
 import { distanceC } from "../../utils/distance"
 import { clamp, min } from "../../utils/number"
@@ -207,7 +213,21 @@ export class Pokemon extends Schema implements IPokemon {
   }
 
   onAcquired(player: Player) {
-    // called after buying or picking the mon
+    // called after buying or picking the mon, and after evolving into it
+    /* LIMIT_BREAKER: a 3 star DRAGON pays out rerolls worth 4 times what one
+       copy of it costs. Uniques, legendaries, hatches and specials are out */
+    if (
+      this.stars === 3 &&
+      this.types.has(Synergy.DRAGON) &&
+      player.blessings?.includes(Blessing.LIMIT_BREAKER) &&
+      isIn(
+        [Rarity.COMMON, Rarity.UNCOMMON, Rarity.RARE, Rarity.EPIC, Rarity.ULTRA],
+        this.rarity
+      )
+    ) {
+      player.shopFreeRolls +=
+        RarityCost[this.rarity] * LIMIT_BREAKER_REROLLS_PER_GOLD
+    }
   }
 
   afterSell(player: Player) {
@@ -299,18 +319,23 @@ export class Pokemon extends Schema implements IPokemon {
 
     const nativeTypes = new PokemonClasses[this.name](this.name).types
     for (const item of items) {
-      const synergyRemoved = SynergyGivenByItem[item]
-      const otherSynergyItemsHeld = schemaValues(this.items).filter(
-        (i) => SynergyGivenByItem[i] === synergyRemoved
-      )
+      /* an item can give two synergies at once under FURIOUS_FABRIC, so each is
+         checked separately against what is still held */
+      for (const synergyRemoved of getSynergiesGivenByItem(
+        item,
+        player.blessings
+      )) {
+        const otherSynergyItemsHeld = schemaValues(this.items).filter((i) =>
+          getSynergiesGivenByItem(i, player.blessings).includes(synergyRemoved)
+        )
+        if (otherSynergyItemsHeld.length > 0) continue
 
-      if (synergyRemoved && otherSynergyItemsHeld.length === 0) {
         if (nativeTypes.has(synergyRemoved) === false) {
           this.types.delete(synergyRemoved)
         }
         if (this.passive === Passive.RKS_SYSTEM) {
           const memory = MemoryDiscsBySynergy[synergyRemoved]
-          if (player.items.includes(memory) === false && memory) {
+          if (memory && player.items.includes(memory) === false) {
             player.items.push(memory)
           }
         }

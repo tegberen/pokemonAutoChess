@@ -657,7 +657,8 @@ export default class Player extends Schema implements IPlayer {
           ? [Pkm.FEEBAS]
           : []),
         ...(this.blessings?.includes(Blessing.COLONY) ? [Pkm.SCATTERBUG] : [])
-      ]
+      ],
+      this.blessings
     )
 
     const normalNeedsRecomputing = this.updateScarves(
@@ -675,7 +676,14 @@ export default class Player extends Schema implements IPlayer {
       adressed when losing a type (Axew double dragon + artif item for example) ;
       it's not as easy as just decrementing by 1 in updatedSynergies map count
       */
-      updatedSynergies = computeSynergies(pokemons, this.bonusSynergies)
+      updatedSynergies = computeSynergies(
+        pokemons,
+        this.bonusSynergies,
+        undefined,
+        undefined,
+        undefined,
+        this.blessings
+      )
     }
 
     if (
@@ -703,7 +711,14 @@ export default class Player extends Schema implements IPlayer {
               (this.bonusSynergies.get(synergy) ?? 0) + 1
             )
           )
-        updatedSynergies = computeSynergies(pokemons, this.bonusSynergies)
+        updatedSynergies = computeSynergies(
+        pokemons,
+        this.bonusSynergies,
+        undefined,
+        undefined,
+        undefined,
+        this.blessings
+      )
       }
     }
 
@@ -720,7 +735,14 @@ export default class Player extends Schema implements IPlayer {
               (hasBugMaxTier ? 1 : -1)
           )
         )
-        updatedSynergies = computeSynergies(pokemons, this.bonusSynergies)
+        updatedSynergies = computeSynergies(
+        pokemons,
+        this.bonusSynergies,
+        undefined,
+        undefined,
+        undefined,
+        this.blessings
+      )
       }
     }
 

@@ -202,6 +202,13 @@
 
 /* live in-game values sit below the description, separated so they do not read
    as another sentence of it */
+/* descriptions may lay their effects out as a "\n- " list, like abilities do.
+   .wiki-blessing-body is shared by the wiki card and the in-game tooltip */
+.wiki-blessing-body p,
+.blessing-body p {
+  white-space: pre-line;
+}
+
 .blessing-panel-tooltip-card .blessing-panel-live-value {
   margin: 0.5em 0 0;
   padding-top: 0.45em;

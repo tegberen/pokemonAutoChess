@@ -51,6 +51,7 @@ import {
 } from "../../pages/utils/utils"
 import { preference } from "../../preferences"
 import { DEPTH } from "../depths"
+import { Blessing } from "../../../../types/enum/Blessing"
 import type { DebugScene } from "../scenes/debug-scene"
 import type GameScene from "../scenes/game-scene"
 import {
@@ -103,6 +104,18 @@ const IGNITE_SPARKS_ALPHA = 0.9
    fades out before that cut and back in after it, and a second copy runs half a
    loop behind so sparks are always rising while the other one resets */
 const IGNITE_SPARKS_PHASES = [0, IGNITE_SPARKS_LOOP_DURATION / 2]
+
+/* GEM_HARVEST completes crystallisation a round early, so the bar it fills has
+   to be a segment shorter or the Pokémon awakens on a partly filled bar */
+export function getAwakeningSegments(
+  scene: GameScene | DebugScene,
+  playerId: string
+): number {
+  if (!isGameScene(scene)) return 3 // the debug scene has no room to read
+  const blessings = scene.room?.state.blessingsByPlayerId?.get(playerId)
+    ?.blessings
+  return blessings?.includes(Blessing.GEM_HARVEST) ? 2 : 3
+}
 
 export default class PokemonSprite extends DraggableObject {
   scene: GameScene | DebugScene
@@ -343,7 +356,8 @@ export default class PokemonSprite extends DraggableObject {
         this.setAwakening(
           pokemon.awakeningCharge,
           pokemon.awakeningRock,
-          pokemon.awakening
+          pokemon.awakening,
+          getAwakeningSegments(scene, this.playerId)
         )
       }
       this.emit("loaded")
@@ -1089,7 +1103,13 @@ export default class PokemonSprite extends DraggableObject {
     [Item.BLOSSOM_SHARD]: 0xebbcd5
   }
 
-  setAwakening(charge: number, rock: string, awakening: string) {
+  // GEM_HARVEST shortens crystallisation, so the bar has one segment less
+  setAwakening(
+    charge: number,
+    rock: string,
+    awakening: string,
+    segments = 3
+  ) {
     const awakened = awakening !== Awakening.NONE
     if (!awakened && rock === "") {
       this.awakeningGlowTween?.remove()
@@ -1098,13 +1118,14 @@ export default class PokemonSprite extends DraggableObject {
       this.removeAwakeningCharge()
       return
     }
-    const level = awakened ? 3 : Math.max(0, Math.min(3, charge))
+    const level = awakened ? segments : Math.max(0, Math.min(segments, charge))
     const color = awakened
       ? (PokemonSprite.AWAKENING_COLORS[awakening as Item] ?? 0x8ef6ff)
       : PokemonSprite.CRYSTALLISE_COLOR
 
-    // Progressive glow
-    const outerStrength = awakened ? 3 : 1 + level  // 1 / 3 / 5, 8 awakened
+    /* glow scaled by progress rather than raw charge, so a shorter
+       crystallisation still peaks just as bright */
+    const outerStrength = awakened ? 3 : 1 + (level / segments) * 4 // 1 → 5
     const scale = awakened ? 0.25 : 0.15
     this.sprite.enableFilters()
     if (!this.awakeningGlow) {
@@ -1165,7 +1186,7 @@ export default class PokemonSprite extends DraggableObject {
         this.bringToTop(this.awakeningCrystal)
         this.startAwakeningRockAnim(rockScale)
       }
-      this.drawAwakeningBar(level, color)
+      this.drawAwakeningBar(level, color, segments)
     } else {
       this.removeAwakeningCharge()
     }
@@ -1191,11 +1212,10 @@ export default class PokemonSprite extends DraggableObject {
     })
   }
 
-  drawAwakeningBar(charge: number, color: number) {
+  drawAwakeningBar(charge: number, color: number, segments: number) {
     const barWidth = 52
     const innerBarWidth = barWidth - 2
     const barBgColor = 0x303030
-    const segments = 3
     const y = 34 // below the Pokémon so it doesn't cut across the sprite
 
     if (!this.awakeningBar) {

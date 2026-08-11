@@ -1,5 +1,7 @@
 import { Rarity } from "./Game"
+import { Item, SynergyGivenByItem } from "./Item"
 import { Pkm, Unowns } from "./Pokemon"
+import { Synergy } from "./Synergy"
 
 export enum BlessingTier {
   SILVER = "SILVER",
@@ -139,6 +141,9 @@ export enum Blessing {
   FESTIVE_PICNIC = "FESTIVE_PICNIC",
   MYSTOGAN = "MYSTOGAN",
   MAGNETOSPHERE = "MAGNETOSPHERE",
+  GEM_HARVEST = "GEM_HARVEST",
+  FURIOUS_FABRIC = "FURIOUS_FABRIC",
+  LIMIT_BREAKER = "LIMIT_BREAKER",
   FOGBOUND_LAKE = "FOGBOUND_LAKE",
   SHELL_ARMOR_BLESSING = "SHELL_ARMOR_BLESSING",
   LEAF_TORNADO = "LEAF_TORNADO",
@@ -431,7 +436,7 @@ export const POLLUTED_SEA_POISON_DURATION = 3000
 export const TIDAL_SURGE_ITEMS_REQUIRED = 2
 export const STAR_CROSSED_SEAS_MAX_HP = 50
 export const STAR_CROSSED_SEAS_ABILITY_POWER = 25
-export const MOLECULAR_CORROSION_DAMAGE_MULTIPLIER = 1.3
+export const MOLECULAR_CORROSION_DAMAGE_MULTIPLIER = 1.4
 export const RAINBOW_DROPLET_SYNERGIES_REQUIRED = 7
 export const MONSTER_KING_BEAM_INTERVAL = 8000
 export const ADOPTION_STARTERS: Pkm[] = [Pkm.AZURILL, Pkm.PICHU, Pkm.IGGLYBUFF]
@@ -450,6 +455,45 @@ export const FESTIVE_PICNIC_MAX_HP_ON_OVERWRITE = 5
 // additive, applied before luck scales it in chance()
 export const MYSTOGAN_PROC_CHANCE_BONUS = 0.05
 
+// long enough for the field animation to play out and settle between flips
+/* FURIOUS_FABRIC: every SILK_SCARF recipe mapped to a synergy that overlaps
+   well with NORMAL. Kept out of SynergyGivenByItem so the items only grant a
+   synergy while the blessing is held */
+export const FURIOUS_FABRIC_SYNERGY_BY_SCARF: { [item in Item]?: Synergy } = {
+  [Item.BIG_EATER_BELT]: Synergy.GOURMET,
+  [Item.EFFICIENT_BANDANNA]: Synergy.SOUND,
+  [Item.COVER_BAND]: Synergy.GROUND,
+  [Item.TWIST_BAND]: Synergy.PSYCHIC,
+  [Item.EXPLOSIVE_BAND]: Synergy.WILD,
+  [Item.MACH_RIBBON]: Synergy.FIELD,
+  [Item.BLACK_BELT]: Synergy.FIGHTING,
+  [Item.LUCKY_RIBBON]: Synergy.FAIRY,
+  [Item.TIGHT_BELT]: Synergy.BUG,
+  [Item.FRIEND_BOW]: Synergy.GRASS,
+  [Item.NULLIFY_BANDANNA]: Synergy.FLYING
+}
+
+/* the one place that answers "which synergies does this item give its holder",
+   used both when equipping and when removing. An item may give two: its own,
+   plus the one FURIOUS_FABRIC adds on top */
+export function getSynergiesGivenByItem(
+  item: Item,
+  blessings?: Blessing[]
+): Synergy[] {
+  const synergies: Synergy[] = []
+  const innate = SynergyGivenByItem[item]
+  if (innate) synergies.push(innate)
+  if (blessings?.includes(Blessing.FURIOUS_FABRIC)) {
+    const fromFabric = FURIOUS_FABRIC_SYNERGY_BY_SCARF[item]
+    if (fromFabric && fromFabric !== innate) synergies.push(fromFabric)
+  }
+  return synergies
+}
+
+export const LIMIT_BREAKER_REROLLS_PER_GOLD = 4
+export const GEM_HARVEST_CHARGE_REDUCTION = 1
+export const GEM_HARVEST_ATTACK_PER_GEM = 3
+export const GEM_HARVEST_ABILITY_POWER_PER_GEM = 10
 // long enough for the field animation to play out and settle between flips
 export const MAGNETOSPHERE_PULSE_INTERVAL = 8000
 // the field flips polarity every pulse, so nothing is ever pulled and pushed at once
@@ -502,7 +546,7 @@ export const SOUL_BLAZE_LIFE_HEAL_ON_KO = 1
 export const FERTILE_SOIL_DIG_PERMANENT_HP = 5
 export const FERTILE_SOIL_HOLE_MAX_HP_RATIO = 0.2
 export const FERTILE_SOIL_ABSORB_ROUNDS = 5
-export const DEEP_WOUNDS_ARMOR_BREAK_DURATION = 3000
+export const DEEP_WOUNDS_ARMOR_BREAK_DURATION = 5000
 export const DEEP_WOUNDS_DEFENSE_LOSS = 1
 export const DEEP_WOUNDS_DEFENSE_LOSS_CHANCE = 0.3
 export const FAST_DELIVERY_LUCK_PER_SEED = 5

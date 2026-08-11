@@ -89,7 +89,7 @@ import type GameScene from "../scenes/game-scene"
 import { displayBoost } from "./abilities-animations"
 import { BerryTree } from "./berry-tree"
 import { GameDialog } from "./game-dialog"
-import PokemonSprite from "./pokemon"
+import PokemonSprite, { getAwakeningSegments } from "./pokemon"
 import PokemonAvatar from "./pokemon-avatar"
 import PokemonSpecial from "./pokemon-special"
 import { Portal } from "./portal"
@@ -1727,7 +1727,8 @@ export default class BoardManager {
           pokemonSprite.setAwakening(
             pokemon.awakeningCharge,
             pokemon.awakeningRock,
-            pokemon.awakening
+            pokemon.awakening,
+            getAwakeningSegments(this.scene, pokemonSprite.playerId)
           )
           if (
             field === "awakeningRock" &&

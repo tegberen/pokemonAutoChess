@@ -298,7 +298,7 @@ export function applyScheduledBlessingGrants(player: Player, state: GameState) {
   })
 }
 
-function grantSynergyAwareItem(player: Player, item: Item) {
+export function grantSynergyAwareItem(player: Player, item: Item) {
   if (SynergyGems.includes(item as (typeof SynergyGems)[number])) {
     const synergy = SynergyGivenByGem[item]
     player.bonusSynergies.set(
@@ -312,7 +312,7 @@ function grantSynergyAwareItem(player: Player, item: Item) {
   }
 }
 
-const GemBySynergy = Object.entries(SynergyGivenByGem).reduce(
+export const GemBySynergy = Object.entries(SynergyGivenByGem).reduce(
   (acc, [gem, synergy]) => {
     acc[synergy as Synergy] = gem as Item
     return acc
@@ -2030,6 +2030,13 @@ export const blessingEffectService: {
     rockUnique.awakeningRock = ""
     rockUnique.awakeningCharge = 0
     player.updateWeatherRocks()
+    /* GEM_HARVEST: a mutation is a crystallisation that skipped the charging,
+       so it leaves the same gem behind */
+    if (player.blessings?.includes(Blessing.GEM_HARVEST)) {
+      const crystalSynergy = AwakeningTypes[rockUnique.awakening]
+      const gem = crystalSynergy ? GemBySynergy[crystalSynergy] : null
+      if (gem) grantSynergyAwareItem(player, gem)
+    }
     return true
   },
 
@@ -2103,20 +2110,11 @@ export const blessingEffectService: {
   [Blessing.TIDAL_SURGE]: (player) =>
     giftPokemonIfBenchHasRoom(player, Pkm.FROAKIE),
 
-  [Blessing.ARCHEOLOGY]: (player) =>
-    giftPokemonIfBenchHasRoom(player, Pkm.PILOSWINE),
+  [Blessing.ARCHEOLOGY]: () => true,
 
-  [Blessing.MONSTER_KING]: (player) =>
-    giftPokemonIfBenchHasRoom(player, Pkm.LARVITAR),
+  [Blessing.MONSTER_KING]: () => true,
 
-  [Blessing.ADOPTION]: (player) => {
-    ADOPTION_STARTERS.forEach((baby) => {
-      if (giftPokemonIfBenchHasRoom(player, baby)) {
-        player.adoptedBabies.push(baby)
-      }
-    })
-    return true
-  },
+  [Blessing.ADOPTION]: () => true,
 
   [Blessing.GRUDGE]: () => true,
 
@@ -2132,13 +2130,18 @@ export const blessingEffectService: {
 
   [Blessing.MAGNETOSPHERE]: () => true,
 
+  [Blessing.GEM_HARVEST]: () => true,
+
+  [Blessing.FURIOUS_FABRIC]: () => true,
+
+  [Blessing.LIMIT_BREAKER]: () => true,
+
   [Blessing.FESTIVE_PICNIC]: (player) => {
     serveFestivePicnicDishes(player)
     return true
   },
 
-  [Blessing.FOGBOUND_LAKE]: (player) =>
-    giftPokemonIfBenchHasRoom(player, Pkm.DOTTLER),
+  [Blessing.FOGBOUND_LAKE]: () => true,
 
   [Blessing.WATER_FOUNTAIN]: (player, state, room) => {
     applyWaterFountain(player, state, room)

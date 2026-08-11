@@ -18,11 +18,19 @@ import {
   Blessing,
   RAINBOW_DROPLET_SYNERGIES_REQUIRED,
   GRUDGE_CURSE_DURATION_REDUCTION_PER_SUBSTITUTE,
+  GEM_HARVEST_ATTACK_PER_GEM,
+  GEM_HARVEST_ABILITY_POWER_PER_GEM,
   VALOR_ATTACK_PER_STAR,
   VALOR_SHIELD_PER_STAR
 } from "../../../../../types/enum/Blessing"
 import { Rarity } from "../../../../../types/enum/Game"
+import {
+  type Item,
+  SynergyGems,
+  SynergyGivenByGem
+} from "../../../../../types/enum/Item"
 import { Synergy } from "../../../../../types/enum/Synergy"
+import { isIn } from "../../../../../utils/array"
 import type { SetSchema } from "@colyseus/schema"
 import { cc } from "../../utils/jsx"
 import { addIconsToDescription } from "../../utils/descriptions"
@@ -81,6 +89,29 @@ export default function BlessingsPanel(props: { recentOnly?: boolean }) {
     typeof (spectatedPlayer?.board as any)?.values === "function"
       ? [...(spectatedPlayer!.board as any).values()]
       : Object.values((spectatedPlayer?.board as any) ?? {})
+  /* GEM_HARVEST: gems held, grouped so duplicates do not each take a line, with
+     how many fielded Pokémon each one buffs */
+  const gemHarvestCopies = (
+    (spectatedPlayer?.items as Item[] | undefined) ?? []
+  )
+    .filter((item) => isIn(SynergyGems, item))
+    .reduce(
+      (counts, gem) => counts.set(gem, (counts.get(gem) ?? 0) + 1),
+      new Map<Item, number>()
+    )
+  const gemHarvestGems: [Item, number, number][] = [
+    ...gemHarvestCopies.entries()
+  ]
+    .map(([gem, copies]): [Item, number, number] => [
+      gem,
+      copies,
+      boardPokemons.filter(
+        (pokemon) =>
+          pokemon.positionY !== 0 && pokemon.types?.has(SynergyGivenByGem[gem])
+      ).length
+    ])
+    // the gems actually doing something first, dead ones last
+    .sort(([, , holdersA], [, , holdersB]) => holdersB - holdersA)
   const valorWildStarsOnBench = boardPokemons
     .filter(
       (pokemon) => pokemon.positionY === 0 && pokemon.types?.has(Synergy.WILD)
@@ -219,6 +250,8 @@ export default function BlessingsPanel(props: { recentOnly?: boolean }) {
                 {blessing === Blessing.GRUDGE && <p className="blessing-panel-live-value">{addIconsToDescription(`${grudgeSubstitutesPlanted} Substitute${grudgeSubstitutesPlanted === 1 ? "" : "s"} on the opponent bench: every CURSE you inflict is ${grudgeCurseSecondsSaved} seconds shorter`)}</p>}
                 {blessing === Blessing.MYSTOGAN && <p className="blessing-panel-live-value">{mystoganWands && mystoganWands.length > 0 ? addIconsToDescription(mystoganWands.map((wand) => wand as string).join(", ")) : "No FAIRY tier reached yet"}</p>}
                 {blessing === Blessing.MAGNETOSPHERE && <p className="blessing-panel-live-value">{addIconsToDescription(`STEEL ${steelCount}: ${magnetosphereReach} RANGE of attraction and repulsion around each STEEL Pokémon`)}</p>}
+                {blessing === Blessing.GEM_HARVEST && gemHarvestGems.length === 0 && <p className="blessing-panel-live-value">No gem harvested yet</p>}
+                {blessing === Blessing.GEM_HARVEST && gemHarvestGems.map(([gem, copies, holders]) => <p key={gem} className="blessing-panel-live-value">{addIconsToDescription(holders > 0 ? `${gem}${copies > 1 ? ` x${copies}` : ""}: ${holders} fielded Pokémon gain ${copies * GEM_HARVEST_ATTACK_PER_GEM} ATK and ${copies * GEM_HARVEST_ABILITY_POWER_PER_GEM} AP` : `${gem}${copies > 1 ? ` x${copies}` : ""}: no fielded Pokémon shares this synergy`)}</p>)}
               </BlessingTooltipCard>
             </Tooltip>,
             document.body

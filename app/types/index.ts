@@ -374,6 +374,7 @@ export interface IPokemon {
   deathCount: number
   killCount: number
   readonly hasEvolution: boolean
+  readonly final: boolean
   supercharged: boolean
   aura: boolean
   ignited: boolean

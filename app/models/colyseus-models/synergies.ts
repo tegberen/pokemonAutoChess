@@ -2,6 +2,10 @@ import { MapSchema, SetSchema } from "@colyseus/schema"
 import { SynergyTiers, SynergyTiersThresholds } from "../../config"
 import type { IPlayer, IPokemon } from "../../types"
 import { AwakeningTypes } from "../../types/enum/Awakening"
+import {
+  type Blessing,
+  getSynergiesGivenByItem
+} from "../../types/enum/Blessing"
 import type { EffectEnum } from "../../types/enum/Effect"
 import { SynergyGivenByItem } from "../../types/enum/Item"
 import { Passive } from "../../types/enum/Passive"
@@ -101,7 +105,9 @@ export function computeSynergies(
   specialGameRule?: SpecialGameRule | null,
   avatarSynergy?: Synergy | null,
   // families whose members each contribute their synergies instead of counting once
-  separateFamilies?: Pkm[]
+  separateFamilies?: Pkm[],
+  // FURIOUS_FABRIC turns scarf-made items into synergies for their holder
+  blessings?: Blessing[]
 ): Map<Synergy, number> {
   const synergies = new Map<Synergy, number>()
   Object.keys(Synergy).forEach((key) => {
@@ -131,7 +137,7 @@ export function computeSynergies(
       }
     }
 
-    addSynergiesGivenByItems(pkm)
+    addSynergiesGivenByItems(pkm, blessings)
     const awakeningType = AwakeningTypes[pkm.awakening]
     if (awakeningType) {
       if (awakeningType === Synergy.DRAGON) {
@@ -320,16 +326,18 @@ export function computeSynergies(
   return synergies
 }
 
-export function addSynergiesGivenByItems(pkm: IPokemon) {
+export function addSynergiesGivenByItems(
+  pkm: IPokemon,
+  blessings?: Blessing[]
+) {
   pkm.items.forEach((item) => {
-    const synergy = SynergyGivenByItem[item]
-    if (synergy) {
+    getSynergiesGivenByItem(item, blessings).forEach((synergy) => {
       if (synergy === Synergy.DRAGON) {
         pkm.types = new SetSchema<Synergy>([synergy, ...pkm.types])
       } else {
         pkm.types.add(synergy)
       }
-    }
+    })
   })
 }
 

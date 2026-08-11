@@ -5457,11 +5457,11 @@
 		},
 		"MONSTER_KING": {
 			"name": "King of the Monsters",
-			"description": "Gain a Larvitar. Every 8 seconds, your ally with the most MONSTER stacks fires Hyper Beam (at its own STAR level), towards the largest group of enemies."
+			"description": "Every 8 seconds, your ally with the most MONSTER stacks fires Hyper Beam (at its own STAR level), towards the largest group of enemies."
 		},
 		"ADOPTION": {
 			"name": "Adoption Agency",
-			"description": "Gain an Azurill, a Pichu and an Igglybuff. At the start of each round, adopt a BABY Pokémon you have not received yet this game, cheapest first. Once every BABY has been adopted, you receive a Happiny every round instead."
+			"description": "At the start of each round, adopt a BABY Pokémon you have not received yet this game, cheapest first. Once every BABY has been adopted, you receive a Happiny every round instead."
 		},
 		"RAINBOW_DROPLET": {
 			"name": "Rainbow Droplet",
@@ -5469,7 +5469,19 @@
 		},
 		"ARCHEOLOGY": {
 			"name": "Archeological Site",
-			"description": "Gain a Piloswine. FOSSIL Pokémon dig every round even without GROUND active. Fully digging a hole unearths a random FOSSIL Pokémon, with a 10% chance it is 2 star. Fully digging a row unearths a FOSSIL unique, and the whole board a FOSSIL legendary."
+			"description": "FOSSIL Pokémon dig every round even without GROUND active. Fully digging a hole unearths a random FOSSIL Pokémon, with a 10% chance it is 2 star. Fully digging a row unearths a FOSSIL unique, and the whole board a FOSSIL legendary."
+		},
+		"LIMIT_BREAKER": {
+			"name": "Limit Breaker",
+			"description": "Abilities of your fully evolved DRAGON Pokémon are one STAR level stronger.\nEvery time you get a 3 STAR DRAGON, you gain free rerolls:\n- Common: 4\n- Uncommon: 8\n- Rare: 12\n- Epic: 16\n- Ultra: 20\nOther Rarities are excluded."
+		},
+		"FURIOUS_FABRIC": {
+			"name": "Furious Fabric",
+			"description": "Every item crafted from a SILK_SCARF also gives a synergy to the Pokémon holding it:\n- BIG_EATER_BELT: GOURMET\n- EFFICIENT_BANDANNA: SOUND\n- COVER_BAND: GROUND\n- TWIST_BAND: PSYCHIC\n- EXPLOSIVE_BAND: WILD\n- MACH_RIBBON: FIELD\n- BLACK_BELT: FIGHTING\n- LUCKY_RIBBON: FAIRY\n- TIGHT_BELT: BUG\n- FRIEND_BOW: GRASS\n- NULLIFY_BANDANNA: FLYING"
+		},
+		"GEM_HARVEST": {
+			"name": "Gem Harvest",
+			"description": "Crystallisation takes 1 round less to complete. When a crystallisation finishes, you gain a gem matching the crystal's type. Each gem in your inventory gives your Pokémon 3 ATK and 10 AP if they share its synergy."
 		},
 		"MAGNETOSPHERE": {
 			"name": "Magnetosphere",
@@ -5497,7 +5509,7 @@
 		},
 		"FOGBOUND_LAKE": {
 			"name": "Fogbound Lake",
-			"description": "Gain a Dottler. When a BUG Pokémon would clone, it spawns a Volbeat or an Illumise instead. BUG 8 adds +1 to LIGHT, and every Volbeat and Illumise gains the effects of your active LIGHT spot."
+			"description": "When a BUG Pokémon would clone, it spawns a Volbeat or an Illumise instead. BUG 8 adds +1 to LIGHT, and every Volbeat and Illumise gains the effects of your active LIGHT spot."
 		},
 		"TIDAL_GUARDIAN": {
 			"name": "Tidal Guardian",
@@ -5517,7 +5529,7 @@
 		},
 		"DEEP_WOUNDS": {
 			"name": "Deep Wounds",
-			"description": "Critical hits inflict ARMOR_BREAK for 3 seconds. If already ARMOR_BREAK, [30,LK]% chance to remove 1 DEF and SPE_DEF permanently."
+			"description": "Critical hits inflict ARMOR_BREAK for 5 seconds. If already ARMOR_BREAK, [30,LK]% chance to remove 1 DEF and SPE_DEF permanently."
 		},
 		"FAST_DELIVERY": {
 			"name": "Fast Delivery",
@@ -5525,7 +5537,7 @@
 		},
 		"MOLECULAR_CORROSION": {
 			"name": "Molecular Corrosion",
-			"description": "Enemy Pokémon under POISONNED take 30% more damage from all sources, and your POISONNED can no longer be blocked by RUNE_PROTECT."
+			"description": "Enemy Pokémon under POISONNED take 40% more damage from all sources, and your POISONNED can no longer be blocked by RUNE_PROTECT."
 		},
 		"UNISON": {
 			"name": "Unison",

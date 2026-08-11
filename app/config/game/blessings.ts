@@ -1031,14 +1031,14 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     tier: BlessingTier.PRISMATIC,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "monster_king",
-    grantsPokemonImmediately: true,
+    grantsPokemonImmediately: false,
     isAvailable: isSynergyBlessingAvailable(Synergy.MONSTER)
   },
   [Blessing.ADOPTION]: {
     tier: BlessingTier.PRISMATIC,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "adoption",
-    grantsPokemonImmediately: true,
+    grantsPokemonImmediately: false,
     isAvailable: isSynergyBlessingAvailable(Synergy.BABY)
   },
   [Blessing.RAINBOW_DROPLET]: {
@@ -1052,8 +1052,29 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     tier: BlessingTier.PRISMATIC,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "archeology",
-    grantsPokemonImmediately: true,
+    grantsPokemonImmediately: false,
     isAvailable: isSynergyBlessingAvailable(Synergy.FOSSIL)
+  },
+  [Blessing.LIMIT_BREAKER]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "limit_breaker",
+    grantsPokemonImmediately: false,
+    isAvailable: isSynergyBlessingAvailable(Synergy.DRAGON)
+  },
+  [Blessing.FURIOUS_FABRIC]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "furious_fabric",
+    grantsPokemonImmediately: false,
+    isAvailable: isSynergyBlessingAvailable(Synergy.NORMAL)
+  },
+  [Blessing.GEM_HARVEST]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "gem_harvest",
+    grantsPokemonImmediately: false,
+    isAvailable: isSynergyBlessingAvailable(Synergy.ROCK)
   },
   [Blessing.MAGNETOSPHERE]: {
     tier: BlessingTier.PRISMATIC,
@@ -1101,7 +1122,7 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     tier: BlessingTier.PRISMATIC,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "fogbound_lake",
-    grantsPokemonImmediately: true,
+    grantsPokemonImmediately: false,
     isAvailable: isSynergyBlessingAvailable(Synergy.BUG)
   },
   [Blessing.TIDAL_GUARDIAN]: {
