@@ -3,6 +3,24 @@ import type { Board } from "../board"
 import type { PokemonEntity } from "../pokemon-entity"
 import { AbilityStrategy } from "./ability-strategy"
 
+export function applyWhirlpoolDamage(
+  pokemon: PokemonEntity,
+  board: Board,
+  enemy: PokemonEntity,
+  crit: boolean
+) {
+  const multiplier = [1, 1.15, 1.25, 2.5][pokemon.stars - 1] ?? 2.5
+  for (let i = 0; i < 4; i++) {
+    enemy.handleSpecialDamage(
+      pokemon.atk * multiplier,
+      board,
+      AttackType.SPECIAL,
+      pokemon,
+      crit
+    )
+  }
+}
+
 export class WhirlpoolStrategy extends AbilityStrategy {
   process(
     pokemon: PokemonEntity,
@@ -31,17 +49,8 @@ export class WhirlpoolStrategy extends AbilityStrategy {
     }
 
     if (targetsHit.size === 0) targetsHit.add(target) // guarantee at least the target is hit
-    targetsHit.forEach((enemy) => {
-      const multiplier = [1, 1.15, 1.25, 2.5][pokemon.stars - 1] ?? 2.5
-      for (let i = 0; i < 4; i++) {
-        enemy.handleSpecialDamage(
-          pokemon.atk * multiplier,
-          board,
-          AttackType.SPECIAL,
-          pokemon,
-          crit
-        )
-      }
-    })
+    targetsHit.forEach((enemy) =>
+      applyWhirlpoolDamage(pokemon, board, enemy, crit)
+    )
   }
 }

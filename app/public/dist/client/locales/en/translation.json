@@ -2638,7 +2638,7 @@
 		"COCOON": "Copy 1 BUG Pokémon",
 		"INFESTATION": "Copy 2 BUG Pokémon",
 		"HORDE": "Copy 3 BUG Pokémon",
-		"HEART_OF_THE_SWARM": "Copy 5 BUG Pokémon and get a Bug Nest. If you have space on bench, a copy of your lowest rarity and not fully evolved BUG Pokémon will spawn each round.",
+		"HEART_OF_THE_SWARM": "Copy 4 BUG Pokémon and get a Bug Nest. If you have space on bench, a copy of your lowest rarity and not fully evolved BUG Pokémon will spawn each round.",
 		"TAILWIND": "Fly away once under 20% HP. Give 5 SPEED.",
 		"FEATHER_DANCE": "Get PROTECT for 2 seconds after flying away. Attacks have a [15, LK]% chance to reduce the target's ATK by 2 ON_HIT.",
 		"MAX_AIRSTREAM": "Fly away twice when under 50% HP and 20% HP. Give 10 SPEED.",
@@ -5470,6 +5470,14 @@
 		"ARCHEOLOGY": {
 			"name": "Archeological Site",
 			"description": "Gain a Piloswine. FOSSIL Pokémon dig every round even without GROUND active. Fully digging a hole unearths a random FOSSIL Pokémon, with a 10% chance it is 2 star. Fully digging a row unearths a FOSSIL unique, and the whole board a FOSSIL legendary."
+		},
+		"FOGBOUND_LAKE": {
+			"name": "Fogbound Lake",
+			"description": "Gain a Dottler. When a BUG Pokémon would clone, it spawns a Volbeat or an Illumise instead. BUG 8 adds +1 to LIGHT, and every Volbeat and Illumise gains the effects of your active LIGHT spot."
+		},
+		"TIDAL_GUARDIAN": {
+			"name": "Tidal Guardian",
+			"description": "AQUATIC 8 now summons Lugia instead of Surfing Pikachu. On every TIDAL_WAVE, Lugia casts Whirlpool on 3 different random enemies."
 		},
 		"GRUDGE": {
 			"name": "Grudge",

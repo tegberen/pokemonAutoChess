@@ -141,7 +141,9 @@ import {
   TOXIC_RESONANCE_BEAT_INTERVAL,
   TOXIC_RESONANCE_HARMONIC_BEAT,
   TOXIC_RESONANCE_HARMONIC_ALLY_PP,
-  isGrudgeSubstitute
+  isGrudgeSubstitute,
+  TIDAL_GUARDIAN_WHIRLPOOL_TARGETS,
+  FOGBOUND_LAKE_FIREFLIES
 } from "../types/enum/Blessing"
 import { isSynergyActiveForPlayer } from "../config/game/blessings"
 import { getFlowerPotStarCount } from "./flower-pots"
@@ -162,6 +164,7 @@ import { OrientationVector } from "../utils/orientation"
 import { healPlayerLife } from "../utils/player-life"
 import { schemaValues } from "../utils/schemas"
 import { AbilityStrategies } from "./abilities/abilities"
+import { applyWhirlpoolDamage } from "./abilities/whirlpool"
 import type { SurfStrategy } from "./abilities/surf"
 import { Board } from "./board"
 import Dps from "./dps"
@@ -1567,6 +1570,27 @@ export default class Simulation extends Schema implements ISimulation {
       if (allies.length === 0) continue
 
       const missingPlayerLife = Math.max(0, player.maxLife - player.life)
+
+      if (blessings.includes(Blessing.FOGBOUND_LAKE)) {
+        const teamEffects =
+          teamIndex === Team.BLUE_TEAM ? this.blueEffects : this.redEffects
+        const activeLightEffects = SynergyTiers[Synergy.LIGHT].filter(
+          (lightEffect) => teamEffects.has(lightEffect)
+        )
+        if (activeLightEffects.length > 0) {
+          allies
+            .filter((ally) => isIn(FOGBOUND_LAKE_FIREFLIES, ally.name))
+            .forEach((firefly) => {
+              /* their own spotlight, so they do not compete with the player's
+                 single light spot on the board */
+              firefly.hasOwnSpotlight = true
+              firefly.status.light = true
+              activeLightEffects.forEach((lightEffect) =>
+                this.applyEffect(firefly, lightEffect)
+              )
+            })
+        }
+      }
 
       if (blessings.includes(Blessing.GRUDGE)) {
         const opponentPlayer =
@@ -4108,15 +4132,42 @@ export default class Simulation extends Schema implements ISimulation {
 
   addPikachuSurferToBoard(team: Team) {
     const player = team === Team.RED_TEAM ? this.redPlayer : this.bluePlayer
-    const pikachuSurfer = PokemonFactory.createPokemonFromName(
-      Pkm.PIKACHU_SURFER,
-      player
-    )
-    if (player) player.pokemonsPlayed.add(Pkm.PIKACHU_SURFER)
+    const summoned = player?.blessings?.includes(Blessing.TIDAL_GUARDIAN)
+      ? Pkm.LUGIA
+      : Pkm.PIKACHU_SURFER
+    const surfer = PokemonFactory.createPokemonFromName(summoned, player)
+    if (player) player.pokemonsPlayed.add(summoned)
     const coord = this.getFirstFreeCell(team)
     if (coord) {
-      this.addPokemon(pikachuSurfer, coord.x, coord.y, team, true)
+      const entity = this.addPokemon(surfer, coord.x, coord.y, team, true)
+      entity.isTidalGuardian = summoned === Pkm.LUGIA
     }
+  }
+
+  /* Lugia rides each wave after the one that brought it in, striking 3 different
+     enemies rather than Whirlpool's usual single unit at the head of a line */
+  castTidalGuardianWhirlpools(team: Team) {
+    const teamEntities = team === Team.RED_TEAM ? this.redTeam : this.blueTeam
+    const lugia = schemaValues(teamEntities).find(
+      (entity) => entity.isTidalGuardian && entity.hp > 0
+    )
+    if (!lugia) return
+    const enemies = schemaValues(
+      team === Team.RED_TEAM ? this.blueTeam : this.redTeam
+    ).filter((entity) => entity.hp > 0)
+    if (enemies.length === 0) return
+    const targets = shuffleArray([...enemies]).slice(
+      0,
+      TIDAL_GUARDIAN_WHIRLPOOL_TARGETS
+    )
+    targets.forEach((enemy) => {
+      lugia.broadcastAbility({
+        skill: Ability.WHIRLPOOL,
+        targetX: enemy.positionX,
+        targetY: enemy.positionY
+      })
+      applyWhirlpoolDamage(lugia, this.board, enemy, false)
+    })
   }
 
   handleFloodWave() {
@@ -4274,6 +4325,14 @@ export default class Simulation extends Schema implements ISimulation {
       this.triggerTidalWave(team, tidalWaveLevel)
       if (effects.has(EffectEnum.SURGE_SURFER) && this.tidalWaveCounter === 1) {
         this.addPikachuSurferToBoard(team)
+      } else if (
+        effects.has(EffectEnum.SURGE_SURFER) &&
+        (team === Team.RED_TEAM
+          ? this.redPlayer
+          : this.bluePlayer
+        )?.blessings?.includes(Blessing.TIDAL_GUARDIAN)
+      ) {
+        this.castTidalGuardianWhirlpools(team)
       }
     }
   }

@@ -2096,6 +2096,11 @@ export const blessingEffectService: {
 
   [Blessing.GRUDGE]: () => true,
 
+  [Blessing.TIDAL_GUARDIAN]: () => true,
+
+  [Blessing.FOGBOUND_LAKE]: (player) =>
+    giftPokemonIfBenchHasRoom(player, Pkm.DOTTLER),
+
   [Blessing.WATER_FOUNTAIN]: (player, state, room) => {
     applyWaterFountain(player, state, room)
     return true

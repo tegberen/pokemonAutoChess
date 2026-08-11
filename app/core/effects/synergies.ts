@@ -37,7 +37,8 @@ import {
   FROST_BARRIER_HP_THRESHOLD,
   FROST_BARRIER_SPEED,
   SPORE_CLOUDS_INTERVAL,
-  SPORE_CLOUDS_STATUS_DURATION
+  SPORE_CLOUDS_STATUS_DURATION,
+  FOGBOUND_LAKE_FIREFLIES
 } from "../../types/enum/Blessing"
 import {
   grantArcheologyRewards,
@@ -1106,7 +1107,11 @@ export const cloneBugs = ({
       numberOfClone < numberOfClones;
       numberOfClone++
     ) {
-      const clone = PokemonFactory.createPokemonFromName(clonePkm, player)
+      /* FOGBOUND_LAKE: rolled per clone, so Vespiquen's two copies can differ */
+      const spawnedPkm = player?.blessings?.includes(Blessing.FOGBOUND_LAKE)
+        ? pickRandomIn(FOGBOUND_LAKE_FIREFLIES)
+        : clonePkm
+      const clone = PokemonFactory.createPokemonFromName(spawnedPkm, player)
       clone.stacks = pokemonCloned.stacks
 
       if (pokemonCloned.awakening === Awakening.STICKY_GLOB) {

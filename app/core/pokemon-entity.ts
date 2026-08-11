@@ -195,6 +195,7 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
   isMegaSolAuraSource: boolean = false
   heroBlessings = new Set<Blessing>()
   hasOwnSpotlight: boolean = false
+  isTidalGuardian: boolean = false
   auroraBorealisSynergyBonus: number = 0
   isAuroraBorealisProtected: boolean = false
 

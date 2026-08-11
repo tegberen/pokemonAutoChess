@@ -1055,6 +1055,20 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     grantsPokemonImmediately: true,
     isAvailable: isSynergyBlessingAvailable(Synergy.FOSSIL)
   },
+  [Blessing.FOGBOUND_LAKE]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "fogbound_lake",
+    grantsPokemonImmediately: true,
+    isAvailable: isSynergyBlessingAvailable(Synergy.BUG)
+  },
+  [Blessing.TIDAL_GUARDIAN]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "tidal_guardian",
+    grantsPokemonImmediately: false,
+    isAvailable: isSynergyBlessingAvailable(Synergy.AQUATIC)
+  },
   [Blessing.GRUDGE]: {
     tier: BlessingTier.PRISMATIC,
     availableAtStages: BLESSING_SELECTION_STAGES,

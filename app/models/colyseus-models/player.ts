@@ -232,6 +232,8 @@ export default class Player extends Schema implements IPlayer {
   archeologyBoardRewarded: boolean = false
   // RAINBOW_DROPLET: the gem is only ever handed out once
   rainbowDropletGranted: boolean = false
+  // FOGBOUND_LAKE: whether the BUG 8 bonus to LIGHT is currently applied
+  fogboundLakeLightGranted: boolean = false
   // ADOPTION: babies already gifted, so the order never repeats one
   adoptedBabies: Pkm[] = []
   crystalClustersRocksGranted = false
@@ -699,6 +701,23 @@ export default class Player extends Schema implements IPlayer {
               (this.bonusSynergies.get(synergy) ?? 0) + 1
             )
           )
+        updatedSynergies = computeSynergies(pokemons, this.bonusSynergies)
+      }
+    }
+
+    if (this.blessings?.includes(Blessing.FOGBOUND_LAKE)) {
+      const bugMax = SynergyTiersThresholds[Synergy.BUG].at(-1) ?? 8
+      const hasBugMaxTier = (updatedSynergies.get(Synergy.BUG) ?? 0) >= bugMax
+      if (hasBugMaxTier !== this.fogboundLakeLightGranted) {
+        this.fogboundLakeLightGranted = hasBugMaxTier
+        this.bonusSynergies.set(
+          Synergy.LIGHT,
+          Math.max(
+            0,
+            (this.bonusSynergies.get(Synergy.LIGHT) ?? 0) +
+              (hasBugMaxTier ? 1 : -1)
+          )
+        )
         updatedSynergies = computeSynergies(pokemons, this.bonusSynergies)
       }
     }
