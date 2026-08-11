@@ -585,8 +585,15 @@ export default class Shop {
       [Synergy.WILD]
     )
     if (!wild) return
+
+    const wildData = getPokemonData(wild)
+    const guaranteedWild =
+      wildData.rarity !== Rarity.SPECIAL &&
+      wildData.types.includes(Synergy.WILD)
+        ? wild
+        : Pkm.RATTATA
     this.releasePokemon(replaced, player, state)
-    player.shop[replacedIndex] = wild
+    player.shop[replacedIndex] = guaranteedWild
   }
 
   assignSootheBellShop(

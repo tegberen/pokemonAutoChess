@@ -169,7 +169,8 @@ export function computeSynergies(
         pkm.types.size > 1
       ) {
         const family =
-          specialGameRule === SpecialGameRule.FAMILY_OUTING
+          specialGameRule === SpecialGameRule.FAMILY_OUTING ||
+          separateFamilies?.includes(PkmFamily[pkm.name])
             ? `pkm${index}`
             : PkmFamily[pkm.name]
         if (!dragonDoubleTypes.has(family))

@@ -119,7 +119,12 @@ import {
 import { schemaValues } from "../utils/schemas"
 import { isIn } from "../utils/array"
 import type { Pokemon } from "../models/colyseus-models/pokemon"
-import { Pkm, PkmFamily, Unowns } from "../types/enum/Pokemon"
+import {
+  Pkm,
+  PkmFamily,
+  PkmRegionalVariants,
+  Unowns
+} from "../types/enum/Pokemon"
 import { getSellPrice } from "../models/shop"
 import { Synergy } from "../types/enum/Synergy"
 import {
@@ -980,10 +985,7 @@ function moveToRegionWherePokemonIsFound(
 ) {
   const previousMap = player.map
   const regionalMon = new PokemonClasses[pkm](pkm)
-  if (
-    previousMap !== "town" &&
-    regionalMon.isInRegion(previousMap, state)
-  ) {
+  if (previousMap !== "town" && regionalMon.isInRegion(previousMap, state)) {
     player.updateRegionalPool(state, true, previousMap)
     return
   }
@@ -1321,10 +1323,11 @@ function heroBlessingEffect(
   const family = HERO_BLESSING_FAMILY[blessing]
   if (!family) return true
 
-  /* seeding the pool first matters: isInRegion refuses an additional-only mon
-     until it is actually in the pool, so the region move would find no map */
   if (HERO_BLESSING_ADDS_TO_POOL.includes(blessing)) {
-    state.shop.addAdditionalPokemon(family, state)
+    const normalForm = (Object.keys(PkmRegionalVariants) as Pkm[]).find((pkm) =>
+      PkmRegionalVariants[pkm]!.includes(family)
+    )
+    state.shop.addAdditionalPokemon(normalForm ?? family, state)
   }
   if (HERO_BLESSING_MOVES_REGION.includes(blessing)) {
     moveToRegionWherePokemonIsFound(player, state, room, family)

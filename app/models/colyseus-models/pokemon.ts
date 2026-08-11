@@ -245,10 +245,12 @@ export class Pokemon extends Schema implements IPokemon {
       originalVariant = new PokemonClasses[originalVariantPkm](
         originalVariantPkm
       )
+
       if (
         originalVariant?.additional === true &&
         state &&
-        state.additionalPokemons.includes(originalVariantPkm) === false
+        state.additionalPokemons.includes(originalVariantPkm) === false &&
+        state.additionalPokemons.includes(basePkm) === false
       ) {
         return false
       }
