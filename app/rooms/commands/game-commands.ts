@@ -2227,9 +2227,11 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
       if (!player.alive) return
       absorbFertileSoil(player)
       grantAdoptionBaby(player)
-      player.board.get(player.ignitedPokemonId)?.setIgnited(false)
-      player.previouslyIgnitedPokemonId = player.ignitedPokemonId
-      player.ignitedPokemonId = ""
+      player.ignitedPokemonIds.forEach((id) =>
+        player.board.get(id)?.setIgnited(false)
+      )
+      player.previouslyIgnitedPokemonIds = [...player.ignitedPokemonIds]
+      player.ignitedPokemonIds = []
     })
 
     if (

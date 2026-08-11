@@ -1613,10 +1613,10 @@ export default class Simulation extends Schema implements ISimulation {
       }
 
       if (blessings.includes(Blessing.SOUL_BLAZE)) {
-        const ignitedUnit = ownUnits.find(
-          (unit) => unit.refToBoardPokemon.id === player.ignitedPokemonId
+        const ignitedUnits = ownUnits.filter((unit) =>
+          player.ignitedPokemonIds.includes(unit.refToBoardPokemon.id)
         )
-        if (ignitedUnit) {
+        ignitedUnits.forEach((ignitedUnit) => {
           ignitedUnit.ignited = true
           ignitedUnit.addShield(SOUL_BLAZE_SHIELD, ignitedUnit, 0, false)
           ignitedUnit.addSpeed(SOUL_BLAZE_SPEED, ignitedUnit, 0, false)
@@ -1631,7 +1631,7 @@ export default class Simulation extends Schema implements ISimulation {
               }
             })
           )
-        }
+        })
       }
 
       if (blessings.includes(Blessing.FAST_DELIVERY)) {

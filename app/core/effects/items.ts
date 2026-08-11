@@ -1425,11 +1425,11 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
         removeInArray(player.items, item)
         if (
           player.blessings?.includes(Blessing.SOUL_BLAZE) &&
-          (pokemon.id !== player.previouslyIgnitedPokemonId ||
+          player.ignitedPokemonIds.includes(pokemon.id) === false &&
+          (player.previouslyIgnitedPokemonIds.includes(pokemon.id) === false ||
             pokemon.passive === Passive.INTIMIDATE_EVERBURNING)
         ) {
-          player.board.get(player.ignitedPokemonId)?.setIgnited(false)
-          player.ignitedPokemonId = pokemon.id
+          player.ignitedPokemonIds.push(pokemon.id)
           pokemon.setIgnited(true)
         }
       }
