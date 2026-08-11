@@ -43,6 +43,7 @@ import {
   Blessing,
   CRYSTAL_CLUSTERS_SIMULTANEOUS,
   EMERALD_ORB_HEAL_RANGE,
+  FESTIVE_PICNIC_MAX_HP_ON_OVERWRITE,
   LUCKY_DICE_BOUNCE_DAMAGE_RATIO,
   MOVE_TUTOR_MAX_PP,
   SAPPHIRE_ORB_ARMOR_BREAK_DURATION,
@@ -555,6 +556,11 @@ const chefCookEffect = new OnStageStartEffect(({ pokemon, player, room }) => {
                 flavors.push(Item.HERBA_MYSTICA_BITTER)
               if (flavors.length === 0) flavors.push(Item.HERBA_MYSTICA_SALTY)
               dish = pickRandomIn(flavors)
+            }
+            if (pokemon.festivePicnicDish != null) {
+              pokemon.dishes.delete(pokemon.festivePicnicDish)
+              pokemon.festivePicnicDish = null
+              pokemon.addMaxHP(FESTIVE_PICNIC_MAX_HP_ON_OVERWRITE)
             }
             pokemon.dishes.add(dish)
             pokemon.action = PokemonActionState.EAT

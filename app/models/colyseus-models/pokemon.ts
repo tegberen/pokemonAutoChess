@@ -127,6 +127,7 @@ export class Pokemon extends Schema implements IPokemon {
   additional = false
   regional = false
   canHoldItems = true
+  festivePicnicDish: Item | null = null
   canBeBenched = true
   canBeSold = true
   baseSkill: Ability = Ability.DEFAULT

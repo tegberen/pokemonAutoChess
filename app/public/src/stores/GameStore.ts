@@ -66,6 +66,7 @@ export interface GameStateStore {
   blessingQuestProgressByPlayerId: {
     [playerId: string]: { [blessing: string]: number }
   }
+  mystoganWandsByPlayerId: { [playerId: string]: Item[] }
   blessingsEnabled: boolean
   podium: ILeaderboardInfo[]
   doubleUpChampions: ILeaderboardInfo[]
@@ -109,6 +110,7 @@ const initialState: GameStateStore = {
   blessingsByPlayerId: {},
   thinkFastActiveByPlayerId: {},
   blessingQuestProgressByPlayerId: {},
+  mystoganWandsByPlayerId: {},
   blessingsEnabled: false,
   specialGameRule: null,
   podium: new Array<ILeaderboardInfo>(),
@@ -236,12 +238,15 @@ export const gameSlice: Slice<GameStateStore> = createSlice({
         blessings: Blessing[]
         questProgress?: { [blessing: string]: number }
         thinkFastActive?: boolean
+        mystoganWands?: Item[]
       }>
     ) => {
       state.blessingsByPlayerId[action.payload.playerId] =
         action.payload.blessings
       state.thinkFastActiveByPlayerId[action.payload.playerId] =
         action.payload.thinkFastActive ?? false
+      state.mystoganWandsByPlayerId[action.payload.playerId] =
+        action.payload.mystoganWands ?? []
       if (action.payload.questProgress) {
         state.blessingQuestProgressByPlayerId[action.payload.playerId] =
           action.payload.questProgress

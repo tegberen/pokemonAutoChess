@@ -105,7 +105,10 @@ import { getUnlockedFlowerPots } from "../core/flower-pots"
 import { Awakening, AwakeningTypes } from "../types/enum/Awakening"
 import {
   Berries,
+  Dishes,
+  DishesGoingToInventory,
   GoldenBerries,
+  HerbaMysticas,
   Item,
   ItemComponents,
   ItemRecipe,
@@ -720,6 +723,27 @@ export function getAdoptionOrder(): Pkm[] {
         RarityCost[getPokemonData(b).rarity]
       return costDifference !== 0 ? costDifference : a.localeCompare(b)
     })
+}
+
+/* aggregates like SWEETS are placeholders resolved at cook time, inventory
+   dishes are never eaten, and herba mysticas pick a flavour per eater */
+const FESTIVE_PICNIC_DISHES = Dishes.filter(
+  (dish) =>
+    dish !== Item.SWEETS &&
+    dish !== Item.MUSHROOMS &&
+    dish !== Item.BERRIES &&
+    isIn(DishesGoingToInventory, dish) === false &&
+    isIn(HerbaMysticas, dish) === false
+)
+
+export function serveFestivePicnicDishes(player: Player) {
+  if (player.blessings?.includes(Blessing.FESTIVE_PICNIC) !== true) return
+  player.board.forEach((pokemon) => {
+    if (pokemon.dishes.size > 0 || !pokemon.canEat) return
+    const dish = pickRandomIn(FESTIVE_PICNIC_DISHES)
+    pokemon.dishes.add(dish)
+    pokemon.festivePicnicDish = dish
+  })
 }
 
 export function grantAdoptionBaby(player: Player) {
@@ -2103,6 +2127,15 @@ export const blessingEffectService: {
   [Blessing.BULL_LEAPING]: () => true,
 
   [Blessing.ICY_REFLECTION]: () => true,
+
+  [Blessing.MYSTOGAN]: () => true,
+
+  [Blessing.MAGNETOSPHERE]: () => true,
+
+  [Blessing.FESTIVE_PICNIC]: (player) => {
+    serveFestivePicnicDishes(player)
+    return true
+  },
 
   [Blessing.FOGBOUND_LAKE]: (player) =>
     giftPokemonIfBenchHasRoom(player, Pkm.DOTTLER),

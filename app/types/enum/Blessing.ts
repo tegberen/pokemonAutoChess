@@ -136,6 +136,9 @@ export enum Blessing {
   OVERLOAD = "OVERLOAD",
   BULL_LEAPING = "BULL_LEAPING",
   ICY_REFLECTION = "ICY_REFLECTION",
+  FESTIVE_PICNIC = "FESTIVE_PICNIC",
+  MYSTOGAN = "MYSTOGAN",
+  MAGNETOSPHERE = "MAGNETOSPHERE",
   FOGBOUND_LAKE = "FOGBOUND_LAKE",
   SHELL_ARMOR_BLESSING = "SHELL_ARMOR_BLESSING",
   LEAF_TORNADO = "LEAF_TORNADO",
@@ -443,6 +446,19 @@ export const ARCHEOLOGY_RARITY_WEIGHTS = {
    re-checked until the unit has stopped moving: dash travel time depends on the
    distance covered, so no fixed delay can cover it */
 export const BULL_LEAPING_FOLLOW_UP_DELAY = 500
+export const FESTIVE_PICNIC_MAX_HP_ON_OVERWRITE = 5
+// additive, applied before luck scales it in chance()
+export const MYSTOGAN_PROC_CHANCE_BONUS = 0.05
+
+// long enough for the field animation to play out and settle between flips
+export const MAGNETOSPHERE_PULSE_INTERVAL = 8000
+// the field flips polarity every pulse, so nothing is ever pulled and pushed at once
+/* the rings need time to close before the enemies land, or they arrive before
+   the animation's peak. Repelling needs none: its blast leaves immediately */
+export const MAGNETOSPHERE_ATTRACT_MOVE_DELAY = 700
+// long enough that hauling enemies into your own formation is worth the exposure
+export const MAGNETOSPHERE_ATTRACT_PARALYSIS_DURATION = 5000
+export const MAGNETOSPHERE_REPEL_LOCK_DURATION = 2000
 export const ICY_REFLECTION_TRIGGER_MAX_HP_RATIO = 0.25
 // deferred out of the damage resolution it is triggered from
 export const ICY_REFLECTION_CAST_DELAY = 250

@@ -3,6 +3,7 @@ import {
   BENCH_GROUND_HOLES_OFFSET,
   BOARD_HEIGHT,
   BOARD_WIDTH,
+  FAIRY_WANDS_BY_SYNERGY_LEVEL,
   FIELD_HEAL_PER_SYNERGY_TIER,
   FIELD_SPEED_BUFF_PER_SYNERGY_TIER,
   MONSTER_AP_BUFF_PER_SYNERGY_TIER,
@@ -38,7 +39,8 @@ import {
   FROST_BARRIER_SPEED,
   SPORE_CLOUDS_INTERVAL,
   SPORE_CLOUDS_STATUS_DURATION,
-  FOGBOUND_LAKE_FIREFLIES
+  FOGBOUND_LAKE_FIREFLIES,
+  MYSTOGAN_PROC_CHANCE_BONUS
 } from "../../types/enum/Blessing"
 import {
   grantArcheologyRewards,
@@ -700,6 +702,22 @@ export const bugSwarmSpawnEffect = new OnStageStartEffect(
   }
 )
 
+const WAND_BASE_PROC_CHANCE = 0.05
+
+/* MYSTOGAN: at every FAIRY tier reached, the one wand the offer left out */
+export function getMystoganWands(player: Player): Item[] {
+  const fairyTier = getSynergyTier(player.synergies, Synergy.FAIRY)
+  const wands: Item[] = []
+  for (let tier = 0; tier < fairyTier; tier++) {
+    const offered = player.fairyWandChoicesRolls[tier]
+    const pool = FAIRY_WANDS_BY_SYNERGY_LEVEL[tier]
+    if (!offered || !pool) continue
+    const unshown = pool.find((wand) => offered.includes(wand) === false)
+    if (unshown) wands.push(unshown)
+  }
+  return wands
+}
+
 export function applyWandEffects(
   pokemon: PokemonEntity,
   target: PokemonEntity,
@@ -707,39 +725,54 @@ export function applyWandEffects(
   crit: boolean
 ): { takenDamage: number; death: boolean } {
   const board = pokemon.simulation.board
-  const wands = pokemon.player?.items.filter((item) => isIn(Wands, item)) ?? []
+  const heldWands = pokemon.player?.items.filter((item) => isIn(Wands, item)) ?? []
+  /* MYSTOGAN: the wand left out of each offer works too, but only its effect —
+     the special damage stays with the wands actually held */
+  const hasMystogan =
+    pokemon.player?.blessings?.includes(Blessing.MYSTOGAN) === true
+  const wands: { wand: Item; dealsSpecialDamage: boolean }[] = [
+    ...heldWands.map((wand) => ({ wand, dealsSpecialDamage: true })),
+    ...(hasMystogan && pokemon.player
+      ? getMystoganWands(pokemon.player).map((wand) => ({
+          wand,
+          dealsSpecialDamage: false
+        }))
+      : [])
+  ]
   if (wands.length === 0) {
     return { takenDamage: 0, death: false }
   }
 
+  const wandProcChance =
+    WAND_BASE_PROC_CHANCE + (hasMystogan ? MYSTOGAN_PROC_CHANCE_BONUS : 0)
   let specialDamageFactor = 0
 
-  for (const wand of wands) {
-    specialDamageFactor += 0.15
+  for (const { wand, dealsSpecialDamage } of wands) {
+    if (dealsSpecialDamage) specialDamageFactor += 0.15
     switch (wand) {
       case Item.CONFUSE_WAND: {
-        if (chance(0.05, pokemon)) {
+        if (chance(wandProcChance, pokemon)) {
           target.status.triggerConfusion(2000, target, pokemon)
           target.addSpecialDefense(-3, pokemon, 0, false)
         }
         break
       }
       case Item.PETRIFY_WAND: {
-        if (chance(0.05, pokemon)) {
+        if (chance(wandProcChance, pokemon)) {
           target.status.triggerLocked(2000, target)
           target.addDefense(-3, pokemon, 0, false)
         }
         break
       }
       case Item.SLOW_WAND: {
-        if (chance(0.05, pokemon)) {
+        if (chance(wandProcChance, pokemon)) {
           target.status.triggerParalysis(2000, target, pokemon)
           target.addSpeed(-10, pokemon, 0, false)
         }
         break
       }
       case Item.SLUMBER_WAND: {
-        if (chance(0.05, pokemon)) {
+        if (chance(wandProcChance, pokemon)) {
           target.status.triggerSleep(2000, target)
           target.addAttack(-3, pokemon, 0, false)
         }
@@ -808,7 +841,7 @@ export function applyWandEffects(
   )
 
   // effects based on wands special damage, applied after calculation
-  for (const wand of wands) {
+  for (const { wand } of wands) {
     switch (wand) {
       case Item.HP_SWAP_WAND: {
         if (chance(0.2, pokemon)) {
@@ -868,7 +901,7 @@ export function applyWandEffects(
         break
       }
       case Item.WARP_WAND: {
-        if (chance(0.05, pokemon) && target.hp > 0) {
+        if (chance(wandProcChance, pokemon) && target.hp > 0) {
           const teleportationCell = board.getTeleportationCell(
             target.positionX,
             target.positionY,
@@ -891,7 +924,7 @@ export function applyWandEffects(
         break
       }
       case Item.SWITCHER_WAND: {
-        if (chance(0.05, pokemon) && target.hp > 0) {
+        if (chance(wandProcChance, pokemon) && target.hp > 0) {
           const farthestTarget = pokemon.state.getFarthestTarget(pokemon, board)
           if (farthestTarget) {
             pokemon.broadcastAbility({
@@ -915,7 +948,7 @@ export function applyWandEffects(
         break
       }
       case Item.WHIRLWIND_WAND: {
-        if (chance(0.05, pokemon)) {
+        if (chance(wandProcChance, pokemon)) {
           pokemon.broadcastAbility({ skill: "WHIRLWIND_WAND" })
           effectInLine(board, pokemon, target, (cell) => {
             if (cell.value && cell.value.team !== pokemon.team) {
@@ -939,7 +972,7 @@ export function applyWandEffects(
         break
       }
       case Item.TUNNEL_WAND: {
-        if (chance(0.05, pokemon)) {
+        if (chance(wandProcChance, pokemon)) {
           pokemon.broadcastAbility({ skill: "FAIRY_TUNNEL" })
           effectInLine(board, pokemon, target, (cell) => {
             if (

@@ -47,6 +47,7 @@ import {
   checkIndecisionSynergies,
   absorbFertileSoil,
   grantAdoptionBaby,
+  serveFestivePicnicDishes,
   rollWaterFountainPonds
 } from "../../services/blessings"
 import {
@@ -2236,6 +2237,7 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
       if (!player.alive) return
       absorbFertileSoil(player)
       grantAdoptionBaby(player)
+      serveFestivePicnicDishes(player)
       player.ignitedPokemonIds.forEach((id) =>
         player.board.get(id)?.setIgnited(false)
       )

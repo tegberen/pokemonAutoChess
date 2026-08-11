@@ -151,7 +151,11 @@ import {
   BULL_LEAPING_ARRIVAL_CHECK_INTERVAL,
   BULL_LEAPING_ARRIVAL_MAX_CHECKS,
   ICY_REFLECTION_TRIGGER_MAX_HP_RATIO,
-  ICY_REFLECTION_CAST_DELAY
+  ICY_REFLECTION_CAST_DELAY,
+  MAGNETOSPHERE_PULSE_INTERVAL,
+  MAGNETOSPHERE_ATTRACT_MOVE_DELAY,
+  MAGNETOSPHERE_ATTRACT_PARALYSIS_DURATION,
+  MAGNETOSPHERE_REPEL_LOCK_DURATION
 } from "../types/enum/Blessing"
 import { isSynergyActiveForPlayer } from "../config/game/blessings"
 import { getFlowerPotStarCount } from "./flower-pots"
@@ -1610,6 +1614,25 @@ export default class Simulation extends Schema implements ISimulation {
           Blessing.GRUDGE,
           substitutesPlanted
         )
+      }
+
+      if (blessings.includes(Blessing.MAGNETOSPHERE)) {
+        player.magnetospherePulseCount = 0
+        ownUnits.forEach((unit) => {
+          unit.effectsSet.add(
+            new PeriodicEffect(
+              (pokemon) => {
+                const conductor = [...team.values()]
+                  .filter((entity) => entity.player === player && entity.hp > 0)
+                  .sort((a, b) => a.id.localeCompare(b.id))[0]
+                if (!conductor || conductor.id !== pokemon.id) return
+                this.pulseMagnetosphere(team, player)
+              },
+              EffectEnum.STEEL_SURGE,
+              MAGNETOSPHERE_PULSE_INTERVAL
+            )
+          )
+        })
       }
 
       if (blessings.includes(Blessing.ICY_REFLECTION)) {
@@ -4264,6 +4287,127 @@ export default class Simulation extends Schema implements ISimulation {
       const entity = this.addPokemon(surfer, coord.x, coord.y, team, true)
       entity.isTidalGuardian = summoned === Pkm.LUGIA
     }
+  }
+
+  pulseMagnetosphere(team: MapSchema<PokemonEntity>, player: Player) {
+    const magnets = [...team.values()].filter(
+      (entity) =>
+        entity.player === player &&
+        entity.hp > 0 &&
+        entity.types.has(Synergy.STEEL)
+    )
+    if (magnets.length === 0) return
+    const isAttracting = player.magnetospherePulseCount % 2 === 0
+    player.magnetospherePulseCount++
+
+    const enemyTeam =
+      magnets[0].team === Team.BLUE_TEAM ? this.redTeam : this.blueTeam
+    const enemies = [...enemyTeam.values()].filter((entity) => entity.hp > 0)
+    /* leaning into STEEL widens the field: one tile of reach per synergy tier */
+    const reach = Math.max(1, getSynergyTier(player.synergies, Synergy.STEEL))
+    /* the reach granted by the last repel expires as the field flips back */
+    magnets.forEach((magnet) => {
+      if (magnet.magnetosphereRangeBonus > 0) {
+        magnet.range -= magnet.magnetosphereRangeBonus
+        magnet.magnetosphereRangeBonus = 0
+      }
+      if (!isAttracting) {
+        magnet.range += reach
+        magnet.magnetosphereRangeBonus = reach
+      }
+    })
+
+    magnets.forEach((magnet) => {
+      // every magnet raises its own field, none of them is the source
+      magnet.broadcastAbility({
+        skill: isAttracting ? "MAGNETOSPHERE_ATTRACT" : "MAGNETOSPHERE_REPEL",
+        positionX: magnet.positionX,
+        positionY: magnet.positionY,
+        ap: reach // the animation sizes the field from it
+      })
+    })
+
+    /* walked per enemy rather than per magnet: whichever magnet is nearest wins
+       it, otherwise the map's insertion order would drag an enemy past the unit
+       it is standing next to towards one across the board */
+    enemies
+      .filter((enemy) => enemy.hp > 0)
+      .forEach((enemy) => {
+        const distanceTo = (candidate: PokemonEntity) =>
+          distanceC(
+            candidate.positionX,
+            candidate.positionY,
+            enemy.positionX,
+            enemy.positionY
+          )
+        const inReach = magnets.filter((candidate) => distanceTo(candidate) <= reach)
+        if (inReach.length === 0) return
+        const magnet = inReach.reduce((nearest, candidate) =>
+          distanceTo(candidate) < distanceTo(nearest) ? candidate : nearest
+        )
+        {
+          const drag = () => {
+          if (enemy.hp <= 0 || magnet.hp <= 0) return
+          // as far as the field reaches, so attraction always closes to contact
+          for (let step = 0; step < reach; step++) {
+            const distance = distanceC(
+              magnet.positionX,
+              magnet.positionY,
+              enemy.positionX,
+              enemy.positionY
+            )
+            if (isAttracting && distance <= 1) break // already in contact
+            /* getKnockBackPlace steps along the orientation it is given, so
+               pointing it from the enemy at the magnet pulls instead of pushes */
+            const orientation = isAttracting
+              ? this.board.orientation(
+                  enemy.positionX,
+                  enemy.positionY,
+                  magnet.positionX,
+                  magnet.positionY,
+                  enemy,
+                  magnet
+                )
+              : this.board.orientation(
+                  magnet.positionX,
+                  magnet.positionY,
+                  enemy.positionX,
+                  enemy.positionY,
+                  magnet,
+                  enemy
+                )
+            const destination = this.board.getKnockBackPlace(
+              enemy.positionX,
+              enemy.positionY,
+              orientation
+            )
+            if (!destination) break
+            enemy.moveTo(destination.x, destination.y, this.board, true)
+          }
+          if (isAttracting) {
+            enemy.status.triggerParalysis(
+              MAGNETOSPHERE_ATTRACT_PARALYSIS_DURATION,
+              enemy,
+              magnet
+            )
+          } else {
+            enemy.status.triggerLocked(
+              MAGNETOSPHERE_REPEL_LOCK_DURATION,
+              enemy
+            )
+          }
+          }
+          /* held until the rings have closed, so the enemies land on the peak
+             of the animation instead of arriving before it starts */
+          if (isAttracting) {
+            magnet.commands.push(
+              new DelayedCommand(drag, MAGNETOSPHERE_ATTRACT_MOVE_DELAY)
+            )
+          } else {
+            drag()
+          }
+        }
+      })
   }
 
   castIcyReflectionAbility(pokemon: PokemonEntity, board: Board) {

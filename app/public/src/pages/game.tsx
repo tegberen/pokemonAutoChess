@@ -805,11 +805,13 @@ export default function Game() {
               questProgress: Object.fromEntries(
                 playerBlessings.questProgress.entries()
               ),
-              thinkFastActive: playerBlessings.thinkFastActive
+              thinkFastActive: playerBlessings.thinkFastActive,
+              mystoganWands: schemaValues(playerBlessings.mystoganWands)
             })
           )
         dispatchBlessings()
         $(playerBlessings).blessings.onChange(dispatchBlessings)
+        $(playerBlessings).mystoganWands.onChange(dispatchBlessings)
         $(playerBlessings).waterPonds.onChange(() => {
           if (playerId === store.getState().game.playerIdSpectated) {
             getGameScene()?.board?.refreshScribbleShapes()

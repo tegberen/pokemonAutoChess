@@ -1,5 +1,6 @@
 import { ArraySchema, MapSchema, Schema, type } from "@colyseus/schema"
 import type { Blessing } from "../../types/enum/Blessing"
+import type { Item } from "../../types/enum/Item"
 import { WaterPond } from "./water-pond"
 
 export class PlayerBlessings extends Schema {
@@ -16,4 +17,7 @@ export class PlayerBlessings extends Schema {
      colyseus 64-field cap. Declared LAST so it does not shift the wire index of
      the fields above, which would desync clients on an older bundle. */
   @type([WaterPond]) waterPonds = new ArraySchema<WaterPond>()
+  /* MYSTOGAN: the wands left out of each FAIRY offer, so the Effects tab can
+     name them. Declared LAST for the same wire-index reason as above. */
+  @type(["string"]) mystoganWands = new ArraySchema<Item>()
 }

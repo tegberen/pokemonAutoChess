@@ -518,6 +518,249 @@ function ringPoints(radius: number) {
     return { x: Math.cos(angle) * radius, y: Math.sin(angle) * radius }
   })
 }
+/* MAGNETOSPHERE has no sprite, so the field is drawn: shockwave rings on the
+   board plane, iron filings streaming along the field, and dipole arcs bowing
+   the way the force pulls. Blue north pole draws in, red south pole throws out */
+/* every magnet raises its own field. Kept compact so several can overlap, but
+   saturated: this is a capstone blessing and it should land like one */
+// the field is drawn to cover the tiles it actually reaches, one STEEL tier each
+const MAGNETOSPHERE_RADIUS_PER_RANGE = 52
+const MAGNETOSPHERE_FIELD_DURATION = 1100
+const MAGNETOSPHERE_RINGS = 3
+const MAGNETOSPHERE_FILINGS = 10
+const MAGNETOSPHERE_ARCS = 6
+const MAGNETOSPHERE_FLASH_DURATION = 420
+const MAGNETOSPHERE_ATTRACT_CORE = 0xdafcff
+const MAGNETOSPHERE_ATTRACT_TINT = 0x3aa5ff
+const MAGNETOSPHERE_REPEL_CORE = 0xffc46b
+const MAGNETOSPHERE_REPEL_TINT = 0xf03a10
+/* blue reads far darker than orange at the same alpha under ADD blending, so
+   the attracting half is pushed harder to land with equal weight */
+const MAGNETOSPHERE_ATTRACT_INTENSITY = 1.4
+
+function magnetosphereGroundGraphics(
+  scene: GameScene | DebugScene,
+  centerX: number,
+  centerY: number
+) {
+  const graphics = scene.add
+    .graphics({ x: centerX, y: centerY })
+    .setDepth(DEPTH.ABILITY_GROUND_LEVEL)
+    .setBlendMode(Phaser.BlendModes.ADD)
+  graphics.setScale(1, BOARD_PLANE_FLATTEN)
+  scene.abilitiesVfxGroup?.add(graphics)
+  return graphics
+}
+
+/* the shockwave: rings collapsing inwards or blasting outwards, staggered so
+   the field reads as several pulses rather than one line */
+function magnetosphereRings(
+  scene: GameScene | DebugScene,
+  centerX: number,
+  centerY: number,
+  attracting: boolean,
+  core: number,
+  tint: number,
+  fieldRadius: number
+) {
+  for (let ring = 0; ring < MAGNETOSPHERE_RINGS; ring++) {
+    const graphics = magnetosphereGroundGraphics(scene, centerX, centerY)
+    scene.tweens.addCounter({
+      from: attracting ? 1 : 0,
+      to: attracting ? 0 : 1,
+      duration: MAGNETOSPHERE_FIELD_DURATION,
+      delay: ring * 140,
+      ease: attracting ? "Cubic.easeIn" : "Cubic.easeOut",
+      onUpdate: (tween) => {
+        const progress = (tween.getValue() ?? 0) as number
+        /* attracting tightens as it closes, so it is dim while wide and at its
+           brightest the instant it snaps shut */
+        const fade = attracting
+          ? (0.4 + (1 - progress) * 0.6) * MAGNETOSPHERE_ATTRACT_INTENSITY
+          : 1 - progress
+        const radius = progress * fieldRadius
+        graphics.clear()
+        drawPixelPath(graphics, ringPoints(radius), [
+          { grid: 8, size: 8, color: tint, alpha: fade * 0.3 },
+          { grid: 4, size: 4, color: core, alpha: fade * 0.8 }
+        ])
+      },
+      onComplete: () => graphics.destroy()
+    })
+  }
+}
+
+/* iron filings: pixel comets riding the field in or out, each with a tail */
+function magnetosphereFilings(
+  scene: GameScene | DebugScene,
+  centerX: number,
+  centerY: number,
+  attracting: boolean,
+  core: number,
+  tint: number,
+  count: number,
+  fieldRadius: number
+) {
+  const TAIL = 7
+  for (let filing = 0; filing < count; filing++) {
+    const angle =
+      (filing / count) * Math.PI * 2 + randomBetween(-20, 20) / 100
+    const runner = scene.add
+      .graphics()
+      .setDepth(DEPTH.ABILITY_GROUND_LEVEL)
+      .setBlendMode(Phaser.BlendModes.ADD)
+    scene.abilitiesVfxGroup?.add(runner)
+    const head = { t: 0 }
+    scene.tweens.add({
+      targets: head,
+      t: 1,
+      duration: MAGNETOSPHERE_FIELD_DURATION,
+      delay: randomBetween(0, 220),
+      ease: attracting ? "Cubic.easeIn" : "Cubic.easeOut",
+      onUpdate: () => {
+        runner.clear()
+        for (let step = 0; step < TAIL; step++) {
+          const t = head.t - step * 0.045
+          if (t < 0) continue
+          const radius = (attracting ? 1 - t : t) * fieldRadius
+          const size = VFX_PIXEL * (step === 0 ? 2 : 1.1)
+          runner.fillStyle(
+            step === 0 ? core : tint,
+            (1 - step / TAIL) *
+              0.75 *
+              (attracting ? MAGNETOSPHERE_ATTRACT_INTENSITY : 1)
+          )
+          runner.fillRect(
+            centerX + Math.cos(angle) * radius - size / 2,
+            centerY +
+              Math.sin(angle) * radius * BOARD_PLANE_FLATTEN -
+              size / 2,
+            size,
+            size
+          )
+        }
+      },
+      onComplete: () => runner.destroy()
+    })
+  }
+}
+
+/* dipole arcs, bowed towards the magnet when attracting and away when
+   repelling, so the direction of the force is legible without the motion */
+function magnetosphereArcs(
+  scene: GameScene | DebugScene,
+  centerX: number,
+  centerY: number,
+  attracting: boolean,
+  core: number,
+  fieldRadius: number
+) {
+  const graphics = magnetosphereGroundGraphics(scene, centerX, centerY)
+  scene.tweens.addCounter({
+    from: 0,
+    to: 1,
+    duration: MAGNETOSPHERE_FIELD_DURATION,
+    ease: "Sine.easeInOut",
+    onUpdate: (tween) => {
+      const progress = (tween.getValue() ?? 0) as number
+      const spread = attracting ? 1 - progress : progress
+      const arcAlpha =
+        Math.sin(progress * Math.PI) *
+        0.45 *
+        (attracting ? MAGNETOSPHERE_ATTRACT_INTENSITY : 1)
+      graphics.clear()
+      for (let arc = 0; arc < MAGNETOSPHERE_ARCS; arc++) {
+        const angle = (arc / MAGNETOSPHERE_ARCS) * Math.PI * 2
+        const points = Array.from({ length: 13 }, (_, step) => {
+          const along = step / 12
+          const radius = along * fieldRadius * spread
+          // bow sideways in the middle, the classic field line shape
+          const bow = Math.sin(along * Math.PI) * 40 * (attracting ? -1 : 1)
+          return {
+            x: Math.cos(angle) * radius - Math.sin(angle) * bow,
+            y: Math.sin(angle) * radius + Math.cos(angle) * bow
+          }
+        })
+        drawPixelPath(graphics, points, [
+          { grid: 4, size: 4, color: core, alpha: arcAlpha }
+        ])
+      }
+    },
+    onComplete: () => graphics.destroy()
+  })
+}
+
+/* the payoff beat: repelling detonates at the magnet as the blast leaves,
+   attracting slams shut once the field has finished dragging everything in */
+function magnetosphereCoreFlash(
+  scene: GameScene | DebugScene,
+  centerX: number,
+  centerY: number,
+  attracting: boolean,
+  core: number,
+  tint: number
+) {
+  const graphics = magnetosphereGroundGraphics(scene, centerX, centerY)
+  scene.tweens.addCounter({
+    from: 0,
+    to: 1,
+    duration: MAGNETOSPHERE_FLASH_DURATION,
+    delay: attracting
+      ? MAGNETOSPHERE_FIELD_DURATION - MAGNETOSPHERE_FLASH_DURATION
+      : 0,
+    ease: "Cubic.easeOut",
+    onUpdate: (tween) => {
+      const progress = (tween.getValue() ?? 0) as number
+      graphics.clear()
+      const punch = attracting ? MAGNETOSPHERE_ATTRACT_INTENSITY : 1
+      drawPixelPath(graphics, ringPoints(12 + progress * 52), [
+        { grid: 6, size: 9, color: tint, alpha: (1 - progress) * 0.6 * punch },
+        { grid: 3, size: 5, color: core, alpha: (1 - progress) * punch }
+      ])
+    },
+    onComplete: () => graphics.destroy()
+  })
+}
+
+function magnetosphereFieldAnimation(attracting: boolean): AbilityAnimation {
+  // ap carries the reach in tiles, so the field is as wide as it actually pulls
+  return ({ scene, positionX, positionY, flip, ap }: AbilityAnimationArgs) => {
+    const [centerX, centerY] = transformEntityCoordinates(
+      positionX,
+      positionY,
+      flip
+    )
+    const fieldRadius = Math.max(1, ap) * MAGNETOSPHERE_RADIUS_PER_RANGE
+    const core = attracting
+      ? MAGNETOSPHERE_ATTRACT_CORE
+      : MAGNETOSPHERE_REPEL_CORE
+    const tint = attracting
+      ? MAGNETOSPHERE_ATTRACT_TINT
+      : MAGNETOSPHERE_REPEL_TINT
+    magnetosphereArcs(scene, centerX, centerY, attracting, core, fieldRadius)
+    magnetosphereRings(
+      scene,
+      centerX,
+      centerY,
+      attracting,
+      core,
+      tint,
+      fieldRadius
+    )
+    magnetosphereFilings(
+      scene,
+      centerX,
+      centerY,
+      attracting,
+      core,
+      tint,
+      MAGNETOSPHERE_FILINGS,
+      fieldRadius
+    )
+    magnetosphereCoreFlash(scene, centerX, centerY, attracting, core, tint)
+  }
+}
+
 const BOARD_PLANE_FLATTEN = 0.55
 const GRAND_IGNITION_CORNERS: [number, number][] = [
   [0, 0],
@@ -2011,6 +2254,8 @@ export const AbilitiesAnimations: {
   ["GRAND_IGNITION_TORCH_3"]: grandIgnitionTorchAnimation(3),
   ["GRAND_IGNITION_TORCH_4"]: grandIgnitionTorchAnimation(4),
   ["GRAND_IGNITION_BLAZE"]: grandIgnitionBlazeAnimation,
+  ["MAGNETOSPHERE_ATTRACT"]: magnetosphereFieldAnimation(true),
+  ["MAGNETOSPHERE_REPEL"]: magnetosphereFieldAnimation(false),
   // soul fragment travelling back to the caster, for the SOUL_DRAIN blessing
   ["GHOST_RANGE"]: projectile({
     ability: "GHOST/range",

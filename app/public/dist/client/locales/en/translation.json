@@ -5471,6 +5471,18 @@
 			"name": "Archeological Site",
 			"description": "Gain a Piloswine. FOSSIL Pokémon dig every round even without GROUND active. Fully digging a hole unearths a random FOSSIL Pokémon, with a 10% chance it is 2 star. Fully digging a row unearths a FOSSIL unique, and the whole board a FOSSIL legendary."
 		},
+		"MAGNETOSPHERE": {
+			"name": "Magnetosphere",
+			"description": "Your STEEL Pokémon create a magnetic field with 1 RANGE per tier of STEEL. Every 8 seconds the field switches between attraction and repulsion. Attraction pulls every enemy in RANGE into contact and inflicts PARALYSIS for 5 seconds. Repulsion pushes every enemy in RANGE away and inflicts LOCKED for 2 seconds. While repelling, your STEEL Pokémon gain that much RANGE."
+		},
+		"MYSTOGAN": {
+			"name": "Mystogan",
+			"description": "At each FAIRY tier, your FAIRY Pokémon also gain the effect of the wand that was left out of the offer, but not its extra SPECIAL. Wand effects are [5,LK]% more likely to happen."
+		},
+		"FESTIVE_PICNIC": {
+			"name": "Festive Picnic",
+			"description": "At the start of every preparation phase, each of your Pokémon without a dish receives a random one. A dish cooked by your own Pokémon replaces it, and the Pokémon permanently gains 5 max HP."
+		},
 		"ICY_REFLECTION": {
 			"name": "Icy Reflection",
 			"description": "Your ICE Pokémon store all the damage their SPE_DEF blocks. Every time the stored amount reaches 25% of their max HP, they cast back the last ability that damaged them, at their own STAR level."

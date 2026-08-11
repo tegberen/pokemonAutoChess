@@ -63,6 +63,9 @@ export default function BlessingsPanel(props: { recentOnly?: boolean }) {
     questProgress[Blessing.BP_REWARDS] ?? BP_REWARDS_ROUND_INTERVAL
   const supportiveSoulRoundsLeft =
     questProgress[Blessing.SUPPORTIVE_SOUL] ?? 0
+  const mystoganWands = useAppSelector(
+    (state) => state.game.mystoganWandsByPlayerId[playerIdSpectated]
+  )
   const grudgeSubstitutesPlanted = questProgress[Blessing.GRUDGE] ?? 0
   const grudgeCurseSecondsSaved =
     (grudgeSubstitutesPlanted * GRUDGE_CURSE_DURATION_REDUCTION_PER_SUBSTITUTE) /
@@ -97,6 +100,15 @@ export default function BlessingsPanel(props: { recentOnly?: boolean }) {
   const nbActiveSynergies = synergies.filter(
     ([synergy, value]) => value >= SynergyTiersThresholds[synergy][0]
   ).length
+  const steelCount =
+    synergies.find(([synergy]) => synergy === Synergy.STEEL)?.[1] ?? 0
+  // matches the server: one tile of reach per STEEL tier, never less than one
+  const magnetosphereReach = Math.max(
+    1,
+    SynergyTiersThresholds[Synergy.STEEL].filter(
+      (threshold) => steelCount >= threshold
+    ).length
+  )
   const amorphousCount =
     synergies.find(([synergy]) => synergy === Synergy.AMORPHOUS)?.[1] ?? 0
   const amorphousRequired =
@@ -205,6 +217,8 @@ export default function BlessingsPanel(props: { recentOnly?: boolean }) {
                 {blessing === Blessing.RAINBOW_DROPLET && <p className="blessing-panel-live-value">{addIconsToDescription(rainbowDropletActivated ? `[Activated] +1 to every synergy except AMORPHOUS` : `AMORPHOUS ${amorphousCount}/${amorphousRequired}, ${nbActiveSynergies}/${RAINBOW_DROPLET_SYNERGIES_REQUIRED} synergies active`)}</p>}
                 {blessing === Blessing.VALOR && <p className="blessing-panel-live-value">{addIconsToDescription(`${valorWildStarsOnBench} WILD STAR on bench: +${valorWildStarsOnBench * VALOR_ATTACK_PER_STAR} ATK, +${valorWildStarsOnBench * VALOR_SHIELD_PER_STAR} SHIELD`)}</p>}
                 {blessing === Blessing.GRUDGE && <p className="blessing-panel-live-value">{addIconsToDescription(`${grudgeSubstitutesPlanted} Substitute${grudgeSubstitutesPlanted === 1 ? "" : "s"} on the opponent bench: every CURSE you inflict is ${grudgeCurseSecondsSaved} seconds shorter`)}</p>}
+                {blessing === Blessing.MYSTOGAN && <p className="blessing-panel-live-value">{mystoganWands && mystoganWands.length > 0 ? addIconsToDescription(mystoganWands.map((wand) => wand as string).join(", ")) : "No FAIRY tier reached yet"}</p>}
+                {blessing === Blessing.MAGNETOSPHERE && <p className="blessing-panel-live-value">{addIconsToDescription(`STEEL ${steelCount}: ${magnetosphereReach} RANGE of attraction and repulsion around each STEEL Pokémon`)}</p>}
               </BlessingTooltipCard>
             </Tooltip>,
             document.body

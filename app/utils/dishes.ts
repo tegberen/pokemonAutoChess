@@ -22,5 +22,13 @@ export function canEatMoreDishes(
   pokemon: IPokemon,
   blessings?: Blessing[]
 ): boolean {
+  /* FESTIVE_PICNIC fills every mouth at the start of the phase, so a cook would
+     never find a free one: its handout can always be replaced instead */
+  if (
+    blessings?.includes(Blessing.FESTIVE_PICNIC) &&
+    pokemon.festivePicnicDish != null
+  ) {
+    return true
+  }
   return pokemon.canEat || pokemon.dishes.size < getDishCapacity(pokemon, blessings)
 }

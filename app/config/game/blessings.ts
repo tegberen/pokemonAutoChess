@@ -1055,6 +1055,27 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     grantsPokemonImmediately: true,
     isAvailable: isSynergyBlessingAvailable(Synergy.FOSSIL)
   },
+  [Blessing.MAGNETOSPHERE]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "magneto_sphere",
+    grantsPokemonImmediately: false,
+    isAvailable: isSynergyBlessingAvailable(Synergy.STEEL)
+  },
+  [Blessing.MYSTOGAN]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "mystogan",
+    grantsPokemonImmediately: false,
+    isAvailable: isSynergyBlessingAvailable(Synergy.FAIRY)
+  },
+  [Blessing.FESTIVE_PICNIC]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "festive_picnic",
+    grantsPokemonImmediately: false,
+    isAvailable: isSynergyBlessingAvailable(Synergy.GOURMET)
+  },
   [Blessing.ICY_REFLECTION]: {
     tier: BlessingTier.PRISMATIC,
     availableAtStages: BLESSING_SELECTION_STAGES,

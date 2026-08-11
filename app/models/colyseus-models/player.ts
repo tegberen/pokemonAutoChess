@@ -234,6 +234,8 @@ export default class Player extends Schema implements IPlayer {
   rainbowDropletGranted: boolean = false
   // FOGBOUND_LAKE: whether the BUG 8 bonus to LIGHT is currently applied
   fogboundLakeLightGranted: boolean = false
+  // MAGNETOSPHERE: even pulses attract, odd ones repel
+  magnetospherePulseCount: number = 0
   // ADOPTION: babies already gifted, so the order never repeats one
   adoptedBabies: Pkm[] = []
   crystalClustersRocksGranted = false
@@ -1182,6 +1184,20 @@ export default class Player extends Schema implements IPlayer {
       lostWands.forEach((wand) => {
         removeInArray(this.items, wand)
       })
+    }
+
+    /* MYSTOGAN: inlined rather than imported from core/effects/synergies, which
+       would pull a combat module into player init */
+    if (this.blessingsRef && this.blessings?.includes(Blessing.MYSTOGAN)) {
+      const unshownWands: Item[] = []
+      for (let tier = 0; tier < newFairyLevel; tier++) {
+        const offered = this.fairyWandChoicesRolls[tier]
+        const pool = FAIRY_WANDS_BY_SYNERGY_LEVEL[tier]
+        if (!offered || !pool) continue
+        const unshown = pool.find((wand) => offered.includes(wand) === false)
+        if (unshown) unshownWands.push(unshown)
+      }
+      this.blessingsRef.mystoganWands = new ArraySchema<Item>(...unshownWands)
     }
   }
 

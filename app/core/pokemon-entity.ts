@@ -199,6 +199,7 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
   hasOwnSpotlight: boolean = false
   isTidalGuardian: boolean = false
   overloadVoltSurged: boolean = false
+  magnetosphereRangeBonus: number = 0
   icyReflectionStored: number = 0
   icyReflectionLastAbility: Ability | null = null
   auroraBorealisSynergyBonus: number = 0

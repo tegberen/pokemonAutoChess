@@ -383,6 +383,7 @@ export interface IPokemon {
   boosterEnergyCount: number
   juggernautStat: string
   manifestationLocked: boolean
+  festivePicnicDish: Item | null
   supportiveSoul: boolean
   trashToTreasureRounds: number
 }
