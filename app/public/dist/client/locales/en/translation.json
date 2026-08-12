@@ -5541,7 +5541,7 @@
 		},
 		"UNISON": {
 			"name": "Unison",
-			"description": "Your TMs are no longer consumed when taught to a HUMAN Pokémon."
+			"description": "Your TMs are no longer consumed when taught to a HUMAN Pokémon.\nDamage dealt by your HUMAN Pokémon builds their bond (max 1000). When this bond reaches maximum power or is broken by the first HUMAN Pokémon being KO’d, your surviving Pokémon retaliate together, dividing the accumulated damage between all enemies as SPECIAL. This counts as a HUMAN attack."
 		},
 		"BERRY_GROWTH": {
 			"name": "Berry Growth",
@@ -6944,6 +6944,7 @@
 		"poison_gas": "Poison Gas",
 		"toxic_spikes": "Toxic Spikes",
 		"meteor_shower": "Meteor Shower (Fossil)",
+		"unison": "Unison (Human)",
 		"physical_damage_dealt": "Physical damage dealt",
 		"special_damage_dealt": "Special damage dealt",
 		"true_damage_dealt": "True damage dealt",

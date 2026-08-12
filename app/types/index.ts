@@ -433,6 +433,7 @@ export const DPS_EMBER_ID = "ember"
 export const DPS_POISON_GAS_ID = "poison-gas"
 export const DPS_TOXIC_SPIKES_ID = "toxic-spikes"
 export const DPS_METEOR_SHOWER_ID = "meteor-shower"
+export const DPS_UNISON_ID = "unison"
 // the Unown dies as part of its own cast, so its shield needs a row that outlives it
 export const DPS_LANGUAGE_BARRIER_ID = "language-barrier"
 
@@ -451,6 +452,7 @@ export const SYNTHETIC_DPS_IDS: ReadonlySet<string> = new Set([
   DPS_POISON_GAS_ID,
   DPS_TOXIC_SPIKES_ID,
   DPS_METEOR_SHOWER_ID,
+  DPS_UNISON_ID,
   DPS_LANGUAGE_BARRIER_ID
 ])
 

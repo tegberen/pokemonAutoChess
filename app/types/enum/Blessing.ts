@@ -490,6 +490,14 @@ export function getSynergiesGivenByItem(
   return synergies
 }
 
+export const UNISON_METER_DAMAGE = 1000
+export const UNISON_TRIGGERED_PROGRESS_OFFSET = UNISON_METER_DAMAGE + 1
+export const UNISON_FINISHED_PROGRESS = -1
+export const UNISON_CHECK_INTERVAL = 500
+export const UNISON_STRIKE_ATTACK_RATIO = 1
+export const UNISON_NOVA_DELAY = 600
+export const UNISON_STRIKE_DELAY = 1300
+export const UNISON_STARFALL_WARNING = 250
 export const LIMIT_BREAKER_REROLLS_PER_GOLD = 4
 export const GEM_HARVEST_CHARGE_REDUCTION = 1
 export const GEM_HARVEST_ATTACK_PER_GEM = 3

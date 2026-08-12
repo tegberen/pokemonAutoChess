@@ -21,7 +21,7 @@ import { cc } from "../../utils/jsx"
 import { GameModeIcon } from "../icons/game-mode-icon"
 import SynergyIcon from "../icons/synergy-icon"
 import PokemonPortrait from "../pokemon-portrait"
-import TimerBar from "./game-timer-bar"
+import TimerBar, { UnisonMeter } from "./game-timer-bar"
 import "./game-stage-info.css"
 
 export default function GameStageInfo() {
@@ -199,6 +199,7 @@ export default function GameStageInfo() {
         )}
 
         <TimerBar />
+        <UnisonMeter />
       </div>
     </>
   )

@@ -9,7 +9,8 @@ import {
   DPS_STEALTH_ROCKS_ID,
   DPS_STORM_ID,
   DPS_TIDAL_WAVE_ID,
-  DPS_TOXIC_SPIKES_ID
+  DPS_TOXIC_SPIKES_ID,
+  DPS_UNISON_ID
 } from "../../../../../types"
 
 // Display data for the synthetic Battle-Stats rows (board effects that are not a
@@ -27,6 +28,7 @@ type GameStatsLabelKey =
   | "game_stats.poison_gas"
   | "game_stats.toxic_spikes"
   | "game_stats.meteor_shower"
+  | "game_stats.unison"
 
 export const SYNTHETIC_DPS_DISPLAY: Record<
   string,
@@ -75,6 +77,10 @@ export const SYNTHETIC_DPS_DISPLAY: Record<
   [DPS_METEOR_SHOWER_ID]: {
     icon: "assets/icons/METEOR_DAMAGE.svg",
     labelKey: "game_stats.meteor_shower"
+  },
+  [DPS_UNISON_ID]: {
+    icon: "assets/blessings/unison.svg",
+    labelKey: "game_stats.unison"
   }
 }
 

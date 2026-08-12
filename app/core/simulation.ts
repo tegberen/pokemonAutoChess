@@ -23,6 +23,7 @@ import {
   DPS_METEOR_SHOWER_ID,
   DPS_STORM_ID,
   DPS_TIDAL_WAVE_ID,
+  DPS_UNISON_ID,
   type IPokemon,
   type IPokemonEntity,
   type ISimulation,
@@ -154,6 +155,14 @@ import {
   BULL_LEAPING_ARRIVAL_MAX_CHECKS,
   ICY_REFLECTION_TRIGGER_MAX_HP_RATIO,
   ICY_REFLECTION_CAST_DELAY,
+  UNISON_METER_DAMAGE,
+  UNISON_TRIGGERED_PROGRESS_OFFSET,
+  UNISON_FINISHED_PROGRESS,
+  UNISON_CHECK_INTERVAL,
+  UNISON_STRIKE_ATTACK_RATIO,
+  UNISON_NOVA_DELAY,
+  UNISON_STRIKE_DELAY,
+  UNISON_STARFALL_WARNING,
   GEM_HARVEST_ATTACK_PER_GEM,
   GEM_HARVEST_ABILITY_POWER_PER_GEM,
   MAGNETOSPHERE_PULSE_INTERVAL,
@@ -197,7 +206,8 @@ import {
   OnSpawnEffect,
   OnShieldDepletedEffect,
   OnAbilityCastEffect,
-  OnKillEffect
+  OnKillEffect,
+  OnDeathEffect
 } from "./effects/effect"
 import { WaterSpringEffect } from "./effects/passives"
 import {
@@ -1618,6 +1628,43 @@ export default class Simulation extends Schema implements ISimulation {
           Blessing.GRUDGE,
           substitutesPlanted
         )
+      }
+
+      if (blessings.includes(Blessing.UNISON)) {
+        player.unisonTriggered = false
+        player.blessingsRef?.questProgress.set(Blessing.UNISON, 0)
+        ownUnits.forEach((unit) => {
+          unit.effectsSet.add(
+            new PeriodicEffect(
+              (pokemon) => {
+                const conductor = [...team.values()]
+                  .filter((entity) => entity.player === player && entity.hp > 0)
+                  .sort((a, b) => a.id.localeCompare(b.id))[0]
+                if (!conductor || conductor.id !== pokemon.id) return
+                this.updateUnisonMeter(team, player)
+              },
+              EffectEnum.MERCILESS,
+              UNISON_CHECK_INTERVAL
+            )
+          )
+          if (unit.types.has(Synergy.HUMAN)) {
+            unit.effectsSet.add(
+              new OnDeathEffect(() => {
+                if (player.unisonTriggered) return
+                const chargedDamage = Math.min(
+                  UNISON_METER_DAMAGE,
+                  this.getUnisonDamageDealt(team, player)
+                )
+                player.unisonTriggered = true
+                player.blessingsRef?.questProgress.set(
+                  Blessing.UNISON,
+                  UNISON_TRIGGERED_PROGRESS_OFFSET + Math.floor(chargedDamage)
+                )
+                this.strikeUnison(team, player, chargedDamage)
+              })
+            )
+          }
+        })
       }
 
       if (blessings.includes(Blessing.LIMIT_BREAKER)) {
@@ -4328,6 +4375,164 @@ export default class Simulation extends Schema implements ISimulation {
       const entity = this.addPokemon(surfer, coord.x, coord.y, team, true)
       entity.isTidalGuardian = summoned === Pkm.LUGIA
     }
+  }
+
+  getUnisonDamageDealt(team: MapSchema<PokemonEntity>, player: Player): number {
+    return [...team.values()]
+      .filter(
+        (entity) =>
+          entity.player === player && entity.types.has(Synergy.HUMAN)
+      )
+      .reduce(
+        (total, entity) =>
+          total +
+          entity.physicalDamage +
+          entity.specialDamage +
+          entity.trueDamage,
+        0
+      )
+  }
+
+  updateUnisonMeter(team: MapSchema<PokemonEntity>, player: Player) {
+    if (player.unisonTriggered) return
+    const pooled = this.getUnisonDamageDealt(team, player)
+    player.blessingsRef?.questProgress.set(
+      Blessing.UNISON,
+      Math.min(UNISON_METER_DAMAGE, Math.floor(pooled))
+    )
+    if (pooled < UNISON_METER_DAMAGE) return
+
+    player.unisonTriggered = true
+    player.blessingsRef?.questProgress.set(
+      Blessing.UNISON,
+      UNISON_TRIGGERED_PROGRESS_OFFSET + UNISON_METER_DAMAGE
+    )
+    this.strikeUnison(team, player, UNISON_METER_DAMAGE)
+  }
+
+  strikeUnison(
+    team: MapSchema<PokemonEntity>,
+    player: Player,
+    chargedDamage: number
+  ) {
+    const allies = [...team.values()].filter(
+      (entity) => entity.player === player && entity.hp > 0
+    )
+    if (allies.length === 0) {
+      player.blessingsRef?.questProgress.set(
+        Blessing.UNISON,
+        UNISON_FINISHED_PROGRESS
+      )
+      return
+    }
+    const enemyTeam =
+      allies[0].team === Team.BLUE_TEAM ? this.redTeam : this.blueTeam
+    const livingEnemies = [...enemyTeam.values()].filter((enemy) => enemy.hp > 0)
+
+    const focusX =
+      allies.reduce((sum, ally) => sum + ally.positionX, 0) / allies.length
+    const focusY =
+      allies.reduce((sum, ally) => sum + ally.positionY, 0) / allies.length
+
+    const striker = allies.reduce((nearest, ally) =>
+      distanceC(ally.positionX, ally.positionY, focusX, focusY) <
+      distanceC(nearest.positionX, nearest.positionY, focusX, focusY)
+        ? ally
+        : nearest
+    )
+
+    const constellation = [...allies].sort(
+      (a, b) =>
+        Math.atan2(a.positionY - focusY, a.positionX - focusX) -
+        Math.atan2(b.positionY - focusY, b.positionX - focusX)
+    )
+    const links =
+      constellation.length === 2
+        ? [[constellation[0], constellation[1]]]
+        : constellation.map((ally, index) => [
+            ally,
+            constellation[(index + 1) % constellation.length]
+          ])
+    links.forEach(([ally, next]) =>
+      ally.broadcastAbility({
+        skill: "UNISON_BEAM",
+        positionX: ally.positionX,
+        positionY: ally.positionY,
+        targetX: next.positionX,
+        targetY: next.positionY
+      })
+    )
+    striker.commands.push(
+      new DelayedCommand(() => {
+        striker.broadcastAbility({
+          skill: "UNISON_NOVA",
+          positionX: focusX,
+          positionY: focusY,
+          ap: allies.length // a fuller team goes off bigger
+        })
+      }, UNISON_NOVA_DELAY)
+    )
+
+    const combinedAttack = allies.reduce((total, ally) => total + ally.atk, 0)
+    striker.commands.push(
+      new DelayedCommand(() => {
+        livingEnemies
+          .filter((enemy) => enemy.hp > 0)
+          .forEach((enemy) =>
+            striker.broadcastAbility({
+              skill: "UNISON_STARFALL",
+              positionX: enemy.positionX,
+              positionY: enemy.positionY
+            })
+          )
+      }, UNISON_STRIKE_DELAY - UNISON_STARFALL_WARNING)
+    )
+    striker.commands.push(
+      new DelayedCommand(() => {
+        const enemiesAtImpact = livingEnemies.filter((enemy) => enemy.hp > 0)
+        const damagePerEnemy =
+          enemiesAtImpact.length > 0
+            ? (chargedDamage * UNISON_STRIKE_ATTACK_RATIO) /
+              enemiesAtImpact.length
+            : 0
+        let dealtByStrike = 0
+        enemiesAtImpact.forEach((enemy) => {
+          const { takenDamage } = enemy.handleSpecialDamage(
+            damagePerEnemy,
+            this.board,
+            AttackType.SPECIAL,
+            null,
+            false,
+            false
+          )
+          this.creditSyntheticDamage(
+            enemy,
+            DPS_UNISON_ID,
+            AttackType.SPECIAL,
+            takenDamage
+          )
+          dealtByStrike += takenDamage
+        })
+        const humanAllies = allies.filter(
+          (ally) => ally.hp > 0 && ally.types.has(Synergy.HUMAN)
+        )
+        const humanHealTarget = enemiesAtImpact[0]
+        if (humanHealTarget && combinedAttack > 0 && dealtByStrike > 0) {
+          humanAllies.forEach((human) =>
+            humanHealEffect.apply({
+              pokemon: human,
+              target: humanHealTarget,
+              damage: (dealtByStrike * human.atk) / combinedAttack,
+              isRetaliation: false
+            })
+          )
+        }
+        player.blessingsRef?.questProgress.set(
+          Blessing.UNISON,
+          UNISON_FINISHED_PROGRESS
+        )
+      }, UNISON_STRIKE_DELAY)
+    )
   }
 
   pulseMagnetosphere(team: MapSchema<PokemonEntity>, player: Player) {

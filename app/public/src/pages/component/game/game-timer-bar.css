@@ -18,3 +18,50 @@
   border: var(--border-thick);
   transition: all linear 1s;
 }
+
+.unison-meter {
+  position: absolute;
+  top: calc(100% + 20px);
+  left: 50%;
+  transform: translateX(-50%);
+  display: grid;
+  grid-template-columns: 30px auto;
+  align-items: center;
+  gap: 5px;
+  min-width: 78px;
+  min-height: 34px;
+  padding: 3px 9px 3px 5px;
+  color: var(--color-fg-primary);
+  background: var(--color-bg-secondary);
+  border: var(--border-thick);
+  border-radius: 18px;
+  z-index: 1;
+}
+
+.unison-meter > img {
+  width: 30px;
+  height: 30px;
+  image-rendering: pixelated;
+}
+
+.unison-meter > strong {
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1;
+  text-shadow: 1px 1px #000;
+}
+
+.unison-meter.is-triggered {
+  color: #fff3a3;
+  background: #6d551d;
+  border-color: #fff3a3;
+  box-shadow: 0 0 8px #f7d51d, 0 0 18px #e76e55;
+  animation: unison-triggered-pulse 0.35s ease-in-out infinite alternate;
+}
+
+@keyframes unison-triggered-pulse {
+  to {
+    transform: translateX(-50%) scale(1.12);
+    filter: brightness(1.35);
+  }
+}

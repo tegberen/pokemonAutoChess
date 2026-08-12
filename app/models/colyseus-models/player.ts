@@ -236,6 +236,7 @@ export default class Player extends Schema implements IPlayer {
   fogboundLakeLightGranted: boolean = false
   // MAGNETOSPHERE: even pulses attract, odd ones repel
   magnetospherePulseCount: number = 0
+  unisonTriggered: boolean = false
   // ADOPTION: babies already gifted, so the order never repeats one
   adoptedBabies: Pkm[] = []
   crystalClustersRocksGranted = false

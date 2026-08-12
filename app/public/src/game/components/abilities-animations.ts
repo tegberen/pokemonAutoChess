@@ -18,6 +18,9 @@ import {
 } from "../../../../types/Animation"
 import { Ability } from "../../../../types/enum/Ability"
 import {
+  UNISON_STARFALL_WARNING
+} from "../../../../types/enum/Blessing"
+import {
   Orientation,
   OrientationFlip,
   PokemonActionState,
@@ -538,7 +541,289 @@ const MAGNETOSPHERE_REPEL_TINT = 0xf03a10
    the attracting half is pushed harder to land with equal weight */
 const MAGNETOSPHERE_ATTRACT_INTENSITY = 1.4
 
-function magnetosphereGroundGraphics(
+const UNISON_NOVA_WHITE = 0xfffdf0
+const UNISON_NOVA_GOLD = 0xffb03c
+const UNISON_NOVA_DEEP = 0xff5a1e
+const UNISON_CONSTELLATION_RAYS = 20
+const UNISON_IMPACT_SHARDS = 10
+
+function unisonBeamAnimation(): AbilityAnimation {
+  return ({
+    scene,
+    positionX,
+    positionY,
+    targetX,
+    targetY,
+    flip
+  }: AbilityAnimationArgs) => {
+    const [fromX, fromY] = transformEntityCoordinates(positionX, positionY, flip)
+    const [toX, toY] = transformEntityCoordinates(targetX, targetY, flip)
+    const runner = scene.add
+      .graphics()
+      .setDepth(DEPTH.ABILITY_GROUND_LEVEL)
+      .setBlendMode(Phaser.BlendModes.ADD)
+    scene.abilitiesVfxGroup?.add(runner)
+
+    const TAIL = 24
+    const head = { t: 0 }
+    scene.tweens.add({
+      targets: head,
+      t: 1,
+      duration: 1300,
+      ease: "Sine.easeInOut",
+      onUpdate: () => {
+        runner.clear()
+        const travel = Math.min(1, head.t * 2)
+        const constellationFade =
+          head.t < 0.78 ? 1 : Math.max(0, (1 - head.t) / 0.22)
+        drawPixelPath(
+          runner,
+          [
+            { x: fromX, y: fromY },
+            {
+              x: fromX + (toX - fromX) * travel,
+              y: fromY + (toY - fromY) * travel
+            }
+          ],
+          [
+            {
+              grid: 8,
+              size: 9,
+              color: UNISON_NOVA_DEEP,
+              alpha: constellationFade * 0.25
+            },
+            {
+              grid: 4,
+              size: 4,
+              color: UNISON_NOVA_GOLD,
+              alpha: constellationFade * 0.7
+            }
+          ]
+        )
+        for (let step = 0; step < TAIL; step++) {
+          const t = travel - step * 0.027
+          if (t < 0) continue
+          const fade = 1 - step / TAIL
+          const pulse = 0.8 + Math.sin(head.t * Math.PI * 8 - step * 0.4) * 0.2
+          const size = VFX_PIXEL * (step === 0 ? 6 : (1.5 + fade * 3) * pulse)
+          runner.fillStyle(
+            step === 0
+              ? UNISON_NOVA_WHITE
+              : step < 5
+                ? UNISON_NOVA_GOLD
+                : UNISON_NOVA_DEEP,
+            fade * constellationFade
+          )
+          runner.fillRect(
+            fromX + (toX - fromX) * t - size / 2,
+            fromY + (toY - fromY) * t - size / 2,
+            size,
+            size
+          )
+        }
+      },
+      onComplete: () => runner.destroy()
+    })
+  }
+}
+
+function unisonNovaAnimation(): AbilityAnimation {
+  return ({ scene, positionX, positionY, flip, ap }: AbilityAnimationArgs) => {
+    const [centerX, centerY] = transformEntityCoordinates(
+      positionX,
+      positionY,
+      flip
+    )
+    const allies = Math.max(1, ap)
+    const radius = 72 + allies * 11
+    const constellation = scene.add
+      .graphics({ x: centerX, y: centerY - 86 })
+      .setDepth(DEPTH.ABILITY)
+      .setBlendMode(Phaser.BlendModes.ADD)
+    scene.abilitiesVfxGroup?.add(constellation)
+    scene.tweens.addCounter({
+      from: 0,
+      to: 1,
+      duration: 700,
+      ease: "Cubic.easeInOut",
+      onUpdate: (tween) => {
+        const progress = (tween.getValue() ?? 0) as number
+        const size = radius * Math.min(1, progress * 1.6)
+        const fade = progress < 0.72 ? 1 : (1 - progress) / 0.28
+        const points = Array.from({ length: 10 }, (_, index) => {
+          const angle = -Math.PI / 2 + index * (Math.PI / 5)
+          const pointRadius = index % 2 === 0 ? size : size * 0.4
+          return {
+            x: Math.cos(angle) * pointRadius,
+            y: Math.sin(angle) * pointRadius
+          }
+        })
+        points.push(points[0])
+        constellation.clear()
+        drawPixelPath(constellation, points, [
+          { grid: 10, size: 12, color: UNISON_NOVA_DEEP, alpha: fade * 0.3 },
+          { grid: 5, size: 6, color: UNISON_NOVA_GOLD, alpha: fade * 0.8 },
+          { grid: 3, size: 3, color: UNISON_NOVA_WHITE, alpha: fade }
+        ])
+        drawPixelPath(constellation, ringPoints(size * 0.62), [
+          { grid: 7, size: 7, color: UNISON_NOVA_GOLD, alpha: fade * 0.5 },
+          { grid: 3, size: 3, color: UNISON_NOVA_WHITE, alpha: fade * 0.75 }
+        ])
+        const rayGrowth = Math.max(0, (progress - 0.35) / 0.65)
+        for (let ray = 0; ray < UNISON_CONSTELLATION_RAYS; ray++) {
+          const angle = (ray / UNISON_CONSTELLATION_RAYS) * Math.PI * 2
+          const alternatingLength = ray % 2 === 0 ? 1 : 0.58
+          const inner = size * 0.74
+          const outer =
+            inner + (34 + allies * 4) * rayGrowth * alternatingLength
+          drawPixelPath(
+            constellation,
+            [
+              { x: Math.cos(angle) * inner, y: Math.sin(angle) * inner },
+              { x: Math.cos(angle) * outer, y: Math.sin(angle) * outer }
+            ],
+            [
+              {
+                grid: 7,
+                size: 8,
+                color: UNISON_NOVA_GOLD,
+                alpha: fade * 0.55
+              },
+              {
+                grid: 3,
+                size: 4,
+                color: UNISON_NOVA_WHITE,
+                alpha: fade
+              }
+            ]
+          )
+        }
+        points.slice(0, -1).forEach((point, index) => {
+          if (index % 2 !== 0) return
+          constellation.fillStyle(UNISON_NOVA_GOLD, fade * 0.55)
+          constellation.fillCircle(point.x, point.y, 10 + allies * 0.5)
+          constellation.fillStyle(UNISON_NOVA_WHITE, fade)
+          constellation.fillCircle(point.x, point.y, 4 + allies * 0.25)
+        })
+        constellation.fillStyle(UNISON_NOVA_WHITE, fade)
+        constellation.fillCircle(0, 0, 8 + allies)
+      },
+      onComplete: () => {
+        constellation.destroy()
+        const flash = scene.add
+          .rectangle(
+            centerX,
+            centerY,
+            CELL_WIDTH * (BOARD_WIDTH + 2),
+            CELL_HEIGHT * (BOARD_HEIGHT + 2),
+            UNISON_NOVA_GOLD,
+            0.28
+          )
+          .setDepth(DEPTH.BOARD_EFFECT_AIR_LEVEL)
+          .setBlendMode(Phaser.BlendModes.ADD)
+        scene.abilitiesVfxGroup?.add(flash)
+        scene.tweens.add({
+          targets: flash,
+          alpha: 0,
+          duration: 420,
+          ease: "Cubic.easeOut",
+          onComplete: () => flash.destroy()
+        })
+        scene.shakeCamera({ duration: 360, intensity: 0.006 })
+      }
+    })
+  }
+}
+
+function unisonStarfallAnimation(): AbilityAnimation {
+  return ({ scene, positionX, positionY, flip }: AbilityAnimationArgs) => {
+    const [x, y] = transformEntityCoordinates(positionX, positionY, flip)
+    const warning = scene.add
+      .graphics({ x, y })
+      .setDepth(DEPTH.ABILITY)
+      .setBlendMode(Phaser.BlendModes.ADD)
+    scene.abilitiesVfxGroup?.add(warning)
+    scene.tweens.addCounter({
+      from: 0,
+      to: 1,
+      duration: UNISON_STARFALL_WARNING,
+      ease: "Quint.easeIn",
+      onUpdate: (tween) => {
+        const progress = (tween.getValue() ?? 0) as number
+        const starY = -300 + progress * 300
+        warning.clear()
+        warning.fillStyle(UNISON_NOVA_GOLD, 0.3 + progress * 0.5)
+        warning.fillRect(-3, -300, 6, 300)
+        warning.fillStyle(UNISON_NOVA_WHITE, 1)
+        warning.fillTriangle(0, starY - 15, 8, starY, 0, starY + 15)
+        warning.fillTriangle(0, starY - 15, -8, starY, 0, starY + 15)
+        drawPixelPath(warning, ringPoints(58 - progress * 38), [
+          { grid: 5, size: 5, color: UNISON_NOVA_WHITE, alpha: progress }
+        ])
+      },
+      onComplete: () => warning.destroy()
+    })
+
+    const light = scene.add
+      .graphics({ x, y })
+      .setDepth(DEPTH.ABILITY)
+      .setBlendMode(Phaser.BlendModes.ADD)
+    scene.abilitiesVfxGroup?.add(light)
+    scene.tweens.addCounter({
+      from: 0,
+      to: 1,
+      duration: 720,
+      delay: UNISON_STARFALL_WARNING,
+      ease: "Quint.easeOut",
+      onUpdate: (tween) => {
+        const progress = (tween.getValue() ?? 0) as number
+        const fade = 1 - progress
+        const width = 18 + progress * 58
+        light.clear()
+        light.fillStyle(UNISON_NOVA_DEEP, fade * 0.22)
+        light.fillTriangle(-width * 1.8, 22, width * 1.8, 22, 0, -420)
+        light.fillStyle(UNISON_NOVA_GOLD, fade * 0.55)
+        light.fillTriangle(-width, 16, width, 16, 0, -420)
+        light.fillStyle(UNISON_NOVA_WHITE, fade)
+        light.fillRect(-width * 0.24, -420, width * 0.48, 430)
+        drawPixelPath(light, ringPoints(progress * 105), [
+          { grid: 8, size: 10, color: UNISON_NOVA_GOLD, alpha: fade * 0.8 },
+          { grid: 4, size: 5, color: UNISON_NOVA_WHITE, alpha: fade }
+        ])
+        for (let shard = 0; shard < UNISON_IMPACT_SHARDS; shard++) {
+          const angle =
+            (shard / UNISON_IMPACT_SHARDS) * Math.PI * 2 + Math.PI / 10
+          const inner = progress * 52
+          const outer = inner + 48 * fade
+          drawPixelPath(
+            light,
+            [
+              { x: Math.cos(angle) * inner, y: Math.sin(angle) * inner },
+              { x: Math.cos(angle) * outer, y: Math.sin(angle) * outer }
+            ],
+            [
+              {
+                grid: 6,
+                size: 7,
+                color: UNISON_NOVA_GOLD,
+                alpha: fade * 0.75
+              },
+              {
+                grid: 3,
+                size: 4,
+                color: UNISON_NOVA_WHITE,
+                alpha: fade
+              }
+            ]
+          )
+        }
+      },
+      onComplete: () => light.destroy()
+    })
+  }
+}
+
+function boardPlaneGraphics(
   scene: GameScene | DebugScene,
   centerX: number,
   centerY: number
@@ -564,7 +849,7 @@ function magnetosphereRings(
   fieldRadius: number
 ) {
   for (let ring = 0; ring < MAGNETOSPHERE_RINGS; ring++) {
-    const graphics = magnetosphereGroundGraphics(scene, centerX, centerY)
+    const graphics = boardPlaneGraphics(scene, centerX, centerY)
     scene.tweens.addCounter({
       from: attracting ? 1 : 0,
       to: attracting ? 0 : 1,
@@ -655,7 +940,7 @@ function magnetosphereArcs(
   core: number,
   fieldRadius: number
 ) {
-  const graphics = magnetosphereGroundGraphics(scene, centerX, centerY)
+  const graphics = boardPlaneGraphics(scene, centerX, centerY)
   scene.tweens.addCounter({
     from: 0,
     to: 1,
@@ -700,7 +985,7 @@ function magnetosphereCoreFlash(
   core: number,
   tint: number
 ) {
-  const graphics = magnetosphereGroundGraphics(scene, centerX, centerY)
+  const graphics = boardPlaneGraphics(scene, centerX, centerY)
   scene.tweens.addCounter({
     from: 0,
     to: 1,
@@ -2254,6 +2539,9 @@ export const AbilitiesAnimations: {
   ["GRAND_IGNITION_TORCH_3"]: grandIgnitionTorchAnimation(3),
   ["GRAND_IGNITION_TORCH_4"]: grandIgnitionTorchAnimation(4),
   ["GRAND_IGNITION_BLAZE"]: grandIgnitionBlazeAnimation,
+  ["UNISON_BEAM"]: unisonBeamAnimation(),
+  ["UNISON_NOVA"]: unisonNovaAnimation(),
+  ["UNISON_STARFALL"]: unisonStarfallAnimation(),
   ["MAGNETOSPHERE_ATTRACT"]: magnetosphereFieldAnimation(true),
   ["MAGNETOSPHERE_REPEL"]: magnetosphereFieldAnimation(false),
   // soul fragment travelling back to the caster, for the SOUL_DRAIN blessing
