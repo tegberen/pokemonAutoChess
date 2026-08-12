@@ -77,6 +77,7 @@ import {
   OnAttackReceivedEffect,
   OnDamageDealtEffect,
   OnDamageReceivedEffect,
+  type OnDamageReceivedEffectArgs,
   OnDeathEffect,
   type OnDeathEffectArgs,
   OnHitEffect,
@@ -369,6 +370,131 @@ const smokeBallEffect = new OnDamageReceivedEffect(({ pokemon, board }) => {
     pokemon.flyAway(board, false, false)
   }
 })
+
+class ChampionsMaskRageEffect extends PeriodicEffect {
+  constructor() {
+    super(() => {}, Item.CHAMPIONS_MASK, 100)
+  }
+
+  override apply(pokemon: PokemonEntity) {
+    if (pokemon.hp > 0.5 * pokemon.maxHP) {
+      if (pokemon.status.enraged) {
+        pokemon.status.enraged = false
+        pokemon.status.enrageCooldown = 0
+        pokemon.addSpeed(-80, pokemon, 0, false)
+      }
+      pokemon.effectsSet.delete(this)
+    }
+  }
+}
+
+class ChampionsMaskEffect extends OnDamageReceivedEffect {
+  triggered = false
+
+  constructor() {
+    super(undefined, Item.CHAMPIONS_MASK)
+  }
+
+  override apply({
+    pokemon,
+    board
+  }: OnDamageReceivedEffectArgs) {
+    const target = board.cells.find(
+      (entity) => entity?.id === pokemon.targetEntityId
+    )
+    if (
+      this.triggered ||
+      pokemon.hp <= 0 ||
+      pokemon.hp >= 0.3 * pokemon.maxHP ||
+      !target ||
+      target.hp <= 0
+    ) {
+      return
+    }
+
+    this.triggered = true
+    pokemon.status.triggerRage(60000, pokemon)
+    pokemon.effectsSet.add(new ChampionsMaskRageEffect())
+    pokemon.broadcastAbility({
+      skill: "FLYING_TAKEOFF",
+      targetX: target.positionX,
+      targetY: target.positionY
+    })
+    target.broadcastAbility({
+      skill: "FLYING_TAKEOFF",
+      targetX: pokemon.positionX,
+      targetY: pokemon.positionY
+    })
+    const retreat = board.getFlyAwayCell(pokemon)
+    if (retreat) {
+      pokemon.skydiveTo(retreat.x, retreat.y, board)
+    }
+
+    const opponentTeam =
+      pokemon.team === Team.BLUE_TEAM ? Team.RED_TEAM : Team.BLUE_TEAM
+    const destination =
+      pokemon.state.getMostSurroundedCoordinateAvailablePlace(
+        opponentTeam,
+        board
+    )
+    if (!destination) return
+    target.skydiveTo(destination.x, destination.y, board)
+    pokemon.targetX = destination.x
+    pokemon.targetY = destination.y
+    target.targetX = destination.x
+    target.targetY = destination.y
+
+    pokemon.commands.push(
+      new DelayedCommand(() => {
+        if (pokemon.hp <= 0 || target.hp <= 0) return
+        const impactX = target.positionX
+        const impactY = target.positionY
+        target.broadcastAbility({
+          skill: Ability.SMASHING_WING,
+          positionX: impactX,
+          positionY: impactY,
+          targetX: impactX,
+          targetY: impactY
+        })
+        target.status.skydiving = false
+        target.handleSpecialDamage(
+          9999,
+          board,
+          AttackType.TRUE,
+          pokemon,
+          false,
+          false
+        )
+
+        board
+          .getAdjacentCells(impactX, impactY)
+          .forEach((cell) => {
+            const enemy = cell.value
+            if (!enemy || enemy.team === pokemon.team) return
+
+            enemy.status.triggerParalysis(5000, enemy, pokemon)
+            const orientation = board.orientation(
+              impactX,
+              impactY,
+              enemy.positionX,
+              enemy.positionY,
+              pokemon,
+              enemy
+            )
+            const knockbackCell = board.getKnockBackPlace(
+              enemy.positionX,
+              enemy.positionY,
+              orientation
+            )
+            if (knockbackCell) {
+              enemy.moveTo(knockbackCell.x, knockbackCell.y, board, true)
+              enemy.cooldown = 500
+            }
+          })
+      }, 1000)
+    )
+  }
+}
 
 const ogerponMaskEffect = new OnItemDroppedEffect(
   ({ pokemon, player, item }) => {
@@ -1316,6 +1442,15 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
         pokemon.removeItem(Item.ABSORB_BULB)
       }
     })
+  ],
+
+  [Item.CHAMPIONS_MASK]: [
+    () => new ChampionsMaskEffect(),
+    new OnSimulationStartEffect(({ entity, player }) => {
+      if (!player?.blessings?.includes(Blessing.CHAMPIONS_MASK)) return
+      const fightingTier = getSynergyTier(player.synergies, Synergy.FIGHTING)
+      entity.addShield(50 * fightingTier, entity, 0, false)
+    }, Item.CHAMPIONS_MASK)
   ],
 
   [Item.METEORITE]: [

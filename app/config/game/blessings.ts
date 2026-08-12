@@ -1062,6 +1062,13 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     grantsPokemonImmediately: false,
     isAvailable: isSynergyBlessingAvailable(Synergy.DRAGON)
   },
+  [Blessing.CHAMPIONS_MASK]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "champions_mask",
+    grantsPokemonImmediately: false,
+    isAvailable: isSynergyBlessingAvailable(Synergy.FIGHTING)
+  },
   [Blessing.FURIOUS_FABRIC]: {
     tier: BlessingTier.PRISMATIC,
     availableAtStages: BLESSING_SELECTION_STAGES,

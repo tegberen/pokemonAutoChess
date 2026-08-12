@@ -2874,6 +2874,7 @@
 		"RARE_CANDY": "Rare Candy",
 		"EVIOLITE": "Eviolite",
 		"GOLD_MASK": "Gold Mask",
+		"CHAMPIONS_MASK": "Champion's Mask",
 		"GOLD_BOTTLE_CAP": "Gold Bottle Cap",
 		"ABSORB_BULB": "Absorb Bulb",
 		"SACRED_ASH": "Sacred Ash",
@@ -3360,6 +3361,7 @@
 		"WELLSPRING_MASK": "This carved wooden mask is adorned with crystals, grants Ogerpon the AQUATIC type during battle. Ogerpon loses its mask when its shield is depleted.",
 		"HEARTHFLAME_MASK": "This carved wooden mask is adorned with crystals, grants Ogerpon the FIRE type during battle. Ogerpon loses its mask when its shield is depleted.",
 		"CORNERSTONE_MASK": "This carved wooden mask is adorned with crystals, grants Ogerpon the ROCK type during battle. Ogerpon loses its mask when its shield is depleted.",
+		"CHAMPIONS_MASK": "Once per fight, when the holder falls below 30% max HP, it jumps away and slams down its target into the largest group of enemies. Executing the target and knock back and PARALYSIS ADJACENT enemies for 5 seconds. The holder is RAGE for the rest of the fight, until it is above 50% max HP.",
 		"ZYGARDE_CUBE": "Contains cells of the Order Pokémon, Zygarde. It will cause a transformation into one of its alternate formes.",
 		"ADAMANT_CRYSTAL": "When used on Dialga, this large, glowing gem wells with power and allows the Pokémon to change form.",
 		"LUSTROUS_GLOBE": "When used on Palkia, this large, glowing orb wells with power and allows the Pokémon to change form.",
@@ -5474,6 +5476,10 @@
 		"LIMIT_BREAKER": {
 			"name": "Limit Breaker",
 			"description": "Abilities of your fully evolved DRAGON Pokémon are one STAR level stronger.\nEvery time you get a 3 STAR DRAGON, you gain free rerolls:\n- Common: 4\n- Uncommon: 8\n- Rare: 12\n- Epic: 16\n- Ultra: 20\nOther Rarities are excluded."
+		},
+		"CHAMPIONS_MASK": {
+			"name": "Champion's Mask",
+			"description": "Gain a CHAMPIONS_MASK. At the start of combat, allies with a CHAMPIONS_MASK gain 50 SHIELD per FIGHTING tier."
 		},
 		"FURIOUS_FABRIC": {
 			"name": "Furious Fabric",

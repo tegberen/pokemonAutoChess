@@ -2136,6 +2136,11 @@ export const blessingEffectService: {
 
   [Blessing.LIMIT_BREAKER]: () => true,
 
+  [Blessing.CHAMPIONS_MASK]: (player) => {
+    player.items.push(Item.CHAMPIONS_MASK)
+    return true
+  },
+
   [Blessing.FESTIVE_PICNIC]: (player) => {
     serveFestivePicnicDishes(player)
     return true
