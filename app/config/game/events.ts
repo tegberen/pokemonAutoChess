@@ -35,6 +35,7 @@ const FESTIVAL_INTERVAL_DAYS = 14
 const WHIMSY_WEEKEND_ANCHOR = { year: 2026, month: 7, day: 8 }
 const JIRACHI_FESTIVAL_OFFSET_DAYS = 4
 const JIRACHI_FESTIVAL_DURATION_DAYS = 4
+const JIRACHI_FINALE_DURATION_DAYS = 1
 const WHIMSY_WEEKEND_DURATION_DAYS = 1
 
 /* TEMP this week's Whimsy Weekend closes a day early to hand the stage to the
@@ -135,7 +136,22 @@ function getBlessingWindow(date: Date): { start: Date; end: Date } | null {
   const cycle = getFestivalCycle(date)
   if (cycle < 0) return null
   const { offsetDays, durationDays } = getBlessingFestivalSchedule(cycle)
-  return getFestivalWindowForCycle(cycle, offsetDays, durationDays)
+  return getFestivalWindowForCycle(
+    cycle,
+    offsetDays,
+    durationDays + JIRACHI_FINALE_DURATION_DAYS
+  )
+}
+
+function getWishFestivalFinaleWindow(date: Date): { start: Date; end: Date } | null {
+  const cycle = getFestivalCycle(date)
+  if (cycle < 0) return null
+  const { offsetDays, durationDays } = getBlessingFestivalSchedule(cycle)
+  return getFestivalWindowForCycle(
+    cycle,
+    offsetDays + durationDays,
+    JIRACHI_FINALE_DURATION_DAYS
+  )
 }
 
 function getNextFestivalStart(
@@ -181,6 +197,28 @@ export function getNextScribbleWeekendStart(from = new Date()): Date {
 export function isBlessingEvent(date = new Date()): boolean {
   const window = getBlessingWindow(date)
   return window !== null && date >= window.start && date < window.end
+}
+
+export function isWishFestivalFinale(date = new Date()): boolean {
+  const window = getWishFestivalFinaleWindow(date)
+  return window !== null && date >= window.start && date < window.end
+}
+
+export function getNextWishFestivalFinaleStart(from = new Date()): Date {
+  const cycle = Math.max(0, getFestivalCycle(from))
+  const current = getBlessingFestivalSchedule(cycle)
+  const currentStart = getFestivalWindowForCycle(
+    cycle,
+    current.offsetDays + current.durationDays,
+    JIRACHI_FINALE_DURATION_DAYS
+  ).start
+  if (from < currentStart) return currentStart
+  const next = getBlessingFestivalSchedule(cycle + 1)
+  return getFestivalWindowForCycle(
+    cycle + 1,
+    next.offsetDays + next.durationDays,
+    JIRACHI_FINALE_DURATION_DAYS
+  ).start
 }
 
 /** When the running Blessing event ends, or null if one isn't running. */

@@ -34,6 +34,17 @@
   color: #fff;
 }
 
+.calendar-event-card.jirachi_finale {
+  background-color: #2e2341;
+  background-image:
+    linear-gradient(180deg, rgb(46 35 65 / 42%) 0%, transparent 46%),
+    linear-gradient(90deg, rgb(46 35 65 / 78%) 0%, rgb(84 49 103 / 42%) 38%, transparent 68%),
+    url("assets/ui/cards/wish_festival_finale_bg.png");
+  background-position: center;
+  background-size: cover;
+  color: #fff;
+}
+
 .calendar-event-card.whimsy.whimsy-v2 {
   background-color: #092b18;
   background-image:
@@ -119,6 +130,7 @@
 .calendar-event-card.doubleup h3,
 .calendar-event-card.smeargle h3,
 .calendar-event-card.whimsy h3,
+.calendar-event-card.jirachi_finale h3,
 .calendar-event-card.jirachi h3 {
   text-shadow: none;
 }
@@ -128,6 +140,19 @@
 .calendar-event-card.jirachi .calendar-event-content time {
   color: #fff;
   text-shadow: none;
+}
+
+.calendar-event-card.jirachi_finale .calendar-event-content,
+.calendar-event-card.jirachi_finale .calendar-event-timer,
+.calendar-event-card.jirachi_finale .calendar-event-content time {
+  color: #fff;
+  text-shadow: none;
+}
+
+.calendar-event-card.jirachi_finale .calendar-event-copy,
+.calendar-event-card.jirachi_finale .calendar-event-timer {
+  padding: 0.3em 0.45em;
+  border-radius: 4px;
 }
 
 .calendar-event-card.jirachi h3 {

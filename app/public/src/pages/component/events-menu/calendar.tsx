@@ -3,9 +3,11 @@ import { useTranslation } from "react-i18next"
 import { useAppSelector } from "../../../hooks"
 import {
   getNextBlessingEventStart,
+  getNextWishFestivalFinaleStart,
   getNextScribbleWeekendStart,
   isBlessingEvent,
-  isScribbleWeekend
+  isScribbleWeekend,
+  isWishFestivalFinale
 } from "../../../../../config"
 import { formatDate } from "../../utils/date"
 import "./calendar.css"
@@ -31,7 +33,7 @@ type CalendarEvent = {
   name: string
   description: string
   image: string
-  variant: "whimsy" | "jirachi" | "smeargle" | "doubleup"
+  variant: "whimsy" | "jirachi" | "jirachi_finale" | "smeargle" | "doubleup"
   start: Date
 }
 
@@ -115,6 +117,17 @@ export function Calendar() {
       image: "",
       variant: "jirachi",
       start: getNextBlessingEventStart(now)
+    })
+  }
+
+  if (!isWishFestivalFinale(now)) {
+    events.push({
+      id: "wish-festival-finale",
+      name: "Wish Festival Finale",
+      description: "Prismatic Blessings appear more often.",
+      image: "",
+      variant: "jirachi_finale",
+      start: getNextWishFestivalFinaleStart(now)
     })
   }
 
