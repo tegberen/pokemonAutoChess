@@ -2,12 +2,15 @@ import React, { useMemo, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { useLocation } from "react-router"
 import { Tab, TabList, TabPanel, Tabs } from "react-tabs"
+import { Tooltip } from "react-tooltip"
 import { RarityColor } from "../../../../../config"
+import { Blessings } from "../../../../../config/game/blessings"
 import { getPokemonData } from "../../../../../models/precomputed/precomputed-pokemon-data"
 import { PRECOMPUTED_POKEMONS_PER_TYPE } from "../../../../../models/precomputed/precomputed-types"
 import { Emotion, type PkmWithCustom } from "../../../../../types"
+import { Blessing, BlessingTier } from "../../../../../types/enum/Blessing"
 import { Rarity } from "../../../../../types/enum/Game"
-import type { Item } from "../../../../../types/enum/Item"
+import { Item } from "../../../../../types/enum/Item"
 import {
   Pkm,
   PkmFamily,
@@ -35,15 +38,37 @@ import {
   filterPokemonsAccordingToPreferences,
   PokemonFilters
 } from "../pokemon-filters/pokemon-filters"
+import {
+  BlessingTooltipCard,
+  blessingTierClass
+} from "../synergy/blessing-tooltip-card"
 import { SynergyOverlaps } from "../synergy-overlaps/synergy-overlaps"
+import {
+  compareBlessingsBySynergy,
+  getBlessingShortLabel,
+  getBlessingSynergy
+} from "../tier-list/blessing-short-label"
+
+const BLESSING_TIER_ORDER = [
+  BlessingTier.SILVER,
+  BlessingTier.GOLD,
+  BlessingTier.PRISMATIC
+]
 
 export default function PokemonPicker(props: {
   selected?: PkmWithCustom | Item
-  selectEntity?: React.Dispatch<React.SetStateAction<PkmWithCustom>>
+  selectEntity?: React.Dispatch<React.SetStateAction<PkmWithCustom | Item>>
   addEntity?: (e: PkmWithCustom) => void
+  showDevItems?: boolean
+  showBlessings?: boolean
 }) {
-  const tabs = [...Object.keys(PRECOMPUTED_POKEMONS_PER_TYPE), "none"]
-  const pokemonsPerTab: Pkm[][] = tabs.map((t) =>
+  const pokemonTabs = [...Object.keys(PRECOMPUTED_POKEMONS_PER_TYPE), "none"]
+  const tabs = [
+    ...pokemonTabs,
+    ...(props.showBlessings ? ["blessings"] : []),
+    ...(props.showDevItems ? ["dev"] : [])
+  ]
+  const pokemonsPerTab: Pkm[][] = pokemonTabs.map((t) =>
     t === "none"
       ? [
           Pkm.KECLEON,
@@ -69,7 +94,15 @@ export default function PokemonPicker(props: {
         {tabs.map((t) => {
           return (
             <Tab key={t}>
-              {t === "none" ? (
+              {t === "blessings" ? (
+                <img
+                  className="blessings-tab-icon"
+                  src="assets/icons/blessing_stats.svg"
+                  alt="Blessings"
+                />
+              ) : t === "dev" ? (
+                "Dev"
+              ) : t === "none" ? (
                 "?"
               ) : (
                 <div
@@ -114,14 +147,130 @@ export default function PokemonPicker(props: {
           </TabPanel>
         )
       })}
+      {props.showBlessings && (
+        <TabPanel>
+          <div className="tier-list-blessings">
+            {BLESSING_TIER_ORDER.map((tier) => (
+              <section key={tier} className="tier-list-blessing-tier">
+                <h3>{tier}</h3>
+                <div>
+                  {(Object.values(Blessing) as Blessing[])
+                    .filter((blessing) => Blessings[blessing].tier === tier)
+                    .sort(compareBlessingsBySynergy)
+                    .map((blessing) => {
+                      const tooltipId = `tier-list-blessing-${blessing}`
+                      const shortLabel = getBlessingShortLabel(blessing)
+                      const blessingSynergy = getBlessingSynergy(blessing)
+                      return (
+                        <React.Fragment key={blessing}>
+                          <div
+                            className={`tier-list-blessing-choice ${blessingTierClass(blessing)}`}
+                            data-tooltip-id={tooltipId}
+                            draggable
+                            onDragStart={(e) => {
+                              e.stopPropagation()
+                              e.dataTransfer.setData(
+                                "text/plain",
+                                `blessing,${blessing}`
+                              )
+                            }}
+                          >
+                            <img
+                              src={`/assets/blessings/${Blessings[blessing].icon}.svg`}
+                              alt={blessing}
+                            />
+                            {blessingSynergy && (
+                              <SynergyIcon
+                                type={blessingSynergy}
+                                size="20px"
+                                className="blessing-synergy-badge"
+                              />
+                            )}
+                            {shortLabel && <span>{shortLabel}</span>}
+                          </div>
+                          <Tooltip
+                            id={tooltipId}
+                            className="custom-theme-tooltip blessing-panel-tooltip"
+                            globalCloseEvents={{ scroll: true }}
+                          >
+                            <BlessingTooltipCard blessing={blessing}>
+                              <p className="tier-list-blessing-stages">
+                                {Blessings[blessing].availableAtStages
+                                  .map((stage) => `Stage ${stage}`)
+                                  .join(" / ")}
+                              </p>
+                            </BlessingTooltipCard>
+                          </Tooltip>
+                        </React.Fragment>
+                      )
+                    })}
+                </div>
+              </section>
+            ))}
+          </div>
+        </TabPanel>
+      )}
+      {props.showDevItems && (
+        <TabPanel>
+          <DevItemPicker
+            selected={props.selected}
+            selectEntity={props.selectEntity}
+          />
+        </TabPanel>
+      )}
     </Tabs>
+  )
+}
+
+function DevItemPicker(props: {
+  selected?: PkmWithCustom | Item
+  selectEntity?: React.Dispatch<React.SetStateAction<PkmWithCustom | Item>>
+}) {
+  const { t } = useTranslation()
+  const [search, setSearch] = useState("")
+  const normalizedSearch = search.trim().toLocaleLowerCase()
+  const items = Object.values(Item).filter((item) => {
+    if (!normalizedSearch) return true
+    return `${item} ${t(`item.${item}`)}`
+      .toLocaleLowerCase()
+      .includes(normalizedSearch)
+  })
+
+  return (
+    <>
+      <input
+        className="dev-item-search"
+        type="search"
+        value={search}
+        placeholder={`${t("search")}…`}
+        autoFocus
+        onChange={(e) => setSearch(e.currentTarget.value)}
+      />
+      <div className="dev-items">
+        {items.map((item) => (
+          <img
+            key={item}
+            src={`assets/item/${item}.png`}
+            className={cc("item", { selected: item === props.selected })}
+            data-tooltip-id="item-detail-tooltip"
+            data-tooltip-content={item}
+            onClick={() => props.selectEntity?.(item)}
+            draggable
+            onDragStart={(e) => {
+              e.stopPropagation()
+              e.dataTransfer.setData("text/plain", `item,${item}`)
+            }}
+          />
+        ))}
+      </div>
+    </>
   )
 }
 
 function PokemonPickerTab(props: {
   pokemons: Pkm[]
   selected?: PkmWithCustom | Item
-  selectEntity?: React.Dispatch<React.SetStateAction<PkmWithCustom>>
+  selectEntity?: React.Dispatch<React.SetStateAction<PkmWithCustom | Item>>
   addEntity?: (e: PkmWithCustom) => void
   type: Synergy | "none"
 }) {

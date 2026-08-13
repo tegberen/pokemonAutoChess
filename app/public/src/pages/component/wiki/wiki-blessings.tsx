@@ -6,11 +6,17 @@ import {
 } from "../../../../../config/game/blessings"
 import {
   BLESSING_SELECTION_STAGES,
-  type Blessing,
-  BlessingTier
+  Blessing,
+  BlessingTier,
+  HERO_BLESSING_FAMILY
 } from "../../../../../types/enum/Blessing"
 import { addIconsToDescription } from "../../utils/descriptions"
 import { cc } from "../../utils/jsx"
+import SynergyIcon from "../icons/synergy-icon"
+import {
+  compareBlessingsBySynergy,
+  getBlessingSynergy
+} from "../tier-list/blessing-short-label"
 import "./wiki-blessings.css"
 
 /* "/" is the web convention, "f" the one asked for. F is also the Buy XP
@@ -27,10 +33,20 @@ const TIER_ORDER = [
 function BlessingCard(props: { blessing: Blessing }) {
   const { t } = useTranslation()
   const definition = Blessings[props.blessing]
+  const synergy = getBlessingSynergy(props.blessing)
   return (
     <li className="my-box">
       <div className="wiki-blessing-body">
-        <img src={`/assets/blessings/${definition.icon}.svg`} alt="" />
+        <div className="wiki-blessing-icon-wrap">
+          <img src={`/assets/blessings/${definition.icon}.svg`} alt="" />
+          {synergy && (
+            <SynergyIcon
+              type={synergy}
+              size="20px"
+              className="wiki-blessing-synergy"
+            />
+          )}
+        </div>
         <div>
           <h3>{t(`blessing.${props.blessing}.name`)}</h3>
           <p>
@@ -45,6 +61,217 @@ function BlessingCard(props: { blessing: Blessing }) {
       </div>
     </li>
   )
+}
+
+type BlessingCategory = "synergy" | "hero" | "planning" | "combat"
+
+const HATCH_BLESSINGS = new Set<Blessing>([
+  Blessing.POCKET_DAYCARE,
+  Blessing.BABYLESS,
+  Blessing.BABY_OPENER,
+  Blessing.SELECTIVE_GENETICS,
+  Blessing.ADOPTION,
+  Blessing.COLONY
+])
+
+const ECONOMY_BLESSINGS = new Set<Blessing>([
+  Blessing.PEARL,
+  Blessing.CROAGUNKS_AID,
+  Blessing.WOBBUFFETS_SILVER_PRIZE,
+  Blessing.WOBBUFFETS_GOLD_PRIZE,
+  Blessing.TREASURE_HUNT_I,
+  Blessing.TREASURE_HUNT_II,
+  Blessing.NUGGET,
+  Blessing.GOLDEN_TICKET,
+  Blessing.GIMMIGHOULS_TREASURE,
+  Blessing.INSTANT_HYPER_ROLL,
+  Blessing.DEEP_INVESTMENTS,
+  Blessing.TAXES,
+  Blessing.DOUBLE_WINDFALL,
+  Blessing.ALL_FOR_ONE,
+  Blessing.RAINBOW_HOUR,
+  Blessing.WAITING_GAME,
+  Blessing.PRISMATIC_REROLL,
+  Blessing.LUNCH_MONEY,
+  Blessing.CALCULATED_LOSS,
+  Blessing.GREEDY_WISH,
+  Blessing.CALLED_SHOT,
+  Blessing.WISE_SPENDING,
+  Blessing.MORE_EQUAL_THAN_OTHERS,
+  Blessing.FREE_COUPON,
+  Blessing.HYPER_HYPER_ROLL
+])
+
+const TEAM_BUILDING_BLESSINGS = new Set<Blessing>([
+  Blessing.ADDITIONAL_RETHINK_I,
+  Blessing.ADDITIONAL_RETHINK_II,
+  Blessing.CHOSEN_ONES,
+  Blessing.SAFARI_ENCOUNTER,
+  Blessing.SCHOOL_BUS,
+  Blessing.A_NEW_FRIEND,
+  Blessing.STARTER_CHOICE,
+  Blessing.REPLICATOR,
+  Blessing.TRANSFORM,
+  Blessing.REGIONAL_TREASURES,
+  Blessing.REGIONAL_TREASURES_II
+])
+
+const ITEM_BLESSINGS = new Set<Blessing>([
+  Blessing.STARTER_PACK,
+  Blessing.CINCCINOS_GIFTS_I,
+  Blessing.CINCCINOS_GIFTS_II,
+  Blessing.CINCCINOS_GIFTS_III,
+  Blessing.ITEMFINDER_I,
+  Blessing.ITEMFINDER_II,
+  Blessing.ITEMFINDER_III,
+  Blessing.RELIC_FRAGMENT,
+  Blessing.BERRY_POUCH,
+  Blessing.BAG_OF_SWEETS,
+  Blessing.BANANA_BUSINESS,
+  Blessing.SWEET_SUBSCRIPTION,
+  Blessing.MUNCHLAX_DELIVERY,
+  Blessing.FIND_A_LOST_WAND,
+  Blessing.EMERALD_ORB,
+  Blessing.SAPPHIRE_ORB,
+  Blessing.RUBY_ORB,
+  Blessing.LUCKY_DICE_BLESSING,
+  Blessing.SINGULARITY_I,
+  Blessing.SINGULARITY_II,
+  Blessing.TRASH_TO_TREASURE,
+  Blessing.SWEET_TREATS,
+  Blessing.BIRTHDAY_PRESENT,
+  Blessing.DROP_RATES
+])
+
+const PREPARATION_BLESSINGS = new Set<Blessing>([
+  Blessing.RAINBOW_KEY,
+  Blessing.CHARGING_UP,
+  Blessing.BURNING_SHARDS,
+  Blessing.TREASURE_TRAIL,
+  Blessing.COLOUR_CHANGE,
+  Blessing.AZURE_FLUTE,
+  Blessing.POTION,
+  Blessing.QUICK_CLAW,
+  Blessing.ALL_FOURS,
+  Blessing.MIX_AND_MATCH_I,
+  Blessing.MIX_AND_MATCH_II,
+  Blessing.MANIFESTATION_AP,
+  Blessing.MANIFESTATION_AD,
+  Blessing.BP_REWARDS,
+  Blessing.SYNARCH,
+  Blessing.FLEXIBILITY,
+  Blessing.THINK_FAST,
+  Blessing.ROBIN_GEMS,
+  Blessing.TRAINING_MONTAGE,
+  Blessing.QUEST_EVOLVE,
+  Blessing.QUEST_DESTROY,
+  Blessing.QUEST_LEVEL_UP,
+  Blessing.QUEST_DIVERSIFY,
+  Blessing.QUEST_PROSPER,
+  Blessing.QUEST_INDECISION,
+  Blessing.QUEST_CRIT,
+  Blessing.QUEST_ABSORB,
+  Blessing.QUEST_REVIVE,
+  Blessing.QUEST_PILLAGE,
+  Blessing.QUEST_EVOLVE_II,
+  Blessing.QUEST_REROLL,
+  Blessing.QUEST_GROW,
+  Blessing.QUEST_SHINE,
+  Blessing.QUEST_EPIC,
+  Blessing.QUEST_EXPAND,
+  Blessing.QUEST_ASCEND,
+  Blessing.LEGENDARY_GAMBIT,
+  Blessing.BEING_OF_KNOWLEDGE,
+  Blessing.CLIMBING_THE_LADDER,
+  Blessing.SYNCHRONICITY,
+  Blessing.UP_IS_UP,
+  Blessing.HARD_COMMIT
+])
+
+const ADDITIONAL_HERO_BLESSINGS = new Set<Blessing>([
+  Blessing.DOUBLE_WINDFALL,
+  Blessing.SINNOHS_COOLEST,
+  Blessing.SCHOOL_BUS,
+  Blessing.TRASH_TO_TREASURE,
+  Blessing.FLYTRAP,
+  Blessing.MEGA_SOL,
+  Blessing.SPORE_CLOUDS,
+  Blessing.STAR_CROSSED_SEAS,
+  Blessing.HEATRANS_SONG,
+  Blessing.RAYQUAZAS_SONG,
+  Blessing.MEWS_SONG,
+  Blessing.GROUDONS_SONG,
+  Blessing.ARTICUNOS_SONG,
+  Blessing.GIRATINAS_SONG,
+  Blessing.KYOGRES_SONG,
+  Blessing.BEAUTY_CONTEST,
+  Blessing.CURSE_OF_CORAL,
+  Blessing.TEMPLE_OF_LANGUAGE,
+  Blessing.GYARODOS_TRES_QUATRO,
+  Blessing.NOT_THE_BEES,
+  Blessing.WEATHER_INSTITUTE,
+  Blessing.BEEKEEPING,
+  Blessing.SUPPORTIVE_SOUL,
+  Blessing.YOU_FORGOT_SOMETHING
+])
+
+const DEFENSIVE_COMBAT_BLESSINGS = new Set<Blessing>([
+  Blessing.GEAR_SHIELD_I,
+  Blessing.GEAR_SHIELD_II,
+  Blessing.MAGIC_SHIELD_I,
+  Blessing.MAGIC_SHIELD_II,
+  Blessing.BRUTE_SHIELD_I,
+  Blessing.BRUTE_SHIELD_II,
+  Blessing.STAR_GUARD,
+  Blessing.VAMPIRIC,
+  Blessing.PROTECT_THE_WEAK,
+  Blessing.STURDY,
+  Blessing.PANIC_BUTTON
+])
+
+const OFFENSIVE_COMBAT_BLESSINGS = new Set<Blessing>([
+  Blessing.BURNING_FORCE,
+  Blessing.DRILL_I,
+  Blessing.DRILL_II,
+  Blessing.SHATTER_I,
+  Blessing.SHATTER_II,
+  Blessing.SURGE_I,
+  Blessing.SURGE_II,
+  Blessing.CALCULATED_OFFENCE,
+  Blessing.NEUROFORCE,
+  Blessing.IMPENDING_DOOM
+])
+
+function compareCombatBlessings(a: Blessing, b: Blessing): number {
+  const group = (blessing: Blessing) =>
+    OFFENSIVE_COMBAT_BLESSINGS.has(blessing)
+      ? 0
+      : DEFENSIVE_COMBAT_BLESSINGS.has(blessing)
+        ? 1
+        : 2
+  return group(a) - group(b)
+}
+
+const CATEGORY_ORDER: BlessingCategory[] = [
+  "synergy",
+  "hero",
+  "planning",
+  "combat"
+]
+
+function getBlessingCategory(blessing: Blessing): BlessingCategory {
+  if (getBlessingSynergy(blessing)) return "synergy"
+  if (HERO_BLESSING_FAMILY[blessing] || ADDITIONAL_HERO_BLESSINGS.has(blessing))
+    return "hero"
+  if (
+    HATCH_BLESSINGS.has(blessing) ||
+    ECONOMY_BLESSINGS.has(blessing) ||
+    TEAM_BUILDING_BLESSINGS.has(blessing) ||
+    ITEM_BLESSINGS.has(blessing) ||
+    PREPARATION_BLESSINGS.has(blessing)
+  )
+    return "planning"
+  return "combat"
 }
 
 export default function WikiBlessings() {
@@ -129,11 +356,12 @@ export default function WikiBlessings() {
     <div className="wiki-blessings">
       <p className="wiki-blessings-intro">{t("wiki.blessings.intro")}</p>
 
+      <p className="wiki-blessings-wish-quote">
+        <img src="assets/ui/blessing_event_icon.jpg" alt="" />
+        <span>{t("wiki.blessings.wish_quote")}</span>
+      </p>
+
       <div className="wiki-blessings-filters">
-        <p className="wiki-blessings-wish-quote">
-          <img src="assets/ui/blessing_event_icon.jpg" alt="" />
-          <span>{t("wiki.blessings.wish_quote")}</span>
-        </p>
         <div className="wiki-blessings-stages">
           <button
             className={cc("bubbly", stageFilter === null ? "blue" : "")}
@@ -165,7 +393,9 @@ export default function WikiBlessings() {
                 setStageFilter({ stage: stageFilter.stage, exclusive: false })
               }
             >
-              {t("wiki.blessings.stage_scope_all", { stage: stageFilter.stage })}
+              {t("wiki.blessings.stage_scope_all", {
+                stage: stageFilter.stage
+              })}
             </button>
             <button
               className={cc("bubbly", stageFilter.exclusive ? "blue" : "")}
@@ -194,18 +424,20 @@ export default function WikiBlessings() {
           )}
         </div>
         <div className="wiki-blessings-tier-shortcuts">
-          {[BlessingTier.SILVER, BlessingTier.GOLD, BlessingTier.PRISMATIC].map((tier) => (
-            <button
-              key={tier}
-              className={cc(
-                "bubbly wiki-blessings-tier-shortcut",
-                tier.toLowerCase()
-              )}
-              onClick={() => scrollToTier(tier)}
-            >
-              {t(`blessing_tier.${tier}`)}
-            </button>
-          ))}
+          {[BlessingTier.SILVER, BlessingTier.GOLD, BlessingTier.PRISMATIC].map(
+            (tier) => (
+              <button
+                key={tier}
+                className={cc(
+                  "bubbly wiki-blessings-tier-shortcut",
+                  tier.toLowerCase()
+                )}
+                onClick={() => scrollToTier(tier)}
+              >
+                {t(`blessing_tier.${tier}`)}
+              </button>
+            )
+          )}
         </div>
       </div>
 
@@ -232,49 +464,82 @@ export default function WikiBlessings() {
               <span className="wiki-blessings-count">{blessings.length}</span>
             </h2>
 
-            <ul className="wiki-blessings-list">
-              {families.map((family) => {
-                const members = blessings.filter(
-                  (blessing) => Blessings[blessing].family === family
+            {CATEGORY_ORDER.map((category) => {
+              const members = blessings
+                .filter(
+                  (blessing) =>
+                    Blessings[blessing].family === undefined &&
+                    getBlessingCategory(blessing) === category
                 )
-                return (
-                  <li key={family} className="my-box wiki-blessings-family">
-                    <details>
-                      <summary>
-                        <div className="wiki-blessing-body">
-                          <img
-                            src={`/assets/blessings/${Blessings[members[0]].icon}.svg`}
-                            alt=""
-                          />
-                          <div>
-                            <h3>
-                              {t(`wiki.blessings.family_${family}_name`)}
-                              <span className="wiki-blessings-chevron" />
-                            </h3>
-                            <p>
-                              {addIconsToDescription(
-                                t(`wiki.blessings.family_${family}_hint`)
-                              )}
-                            </p>
-                          </div>
-                        </div>
-                      </summary>
-                      <ul className="wiki-blessings-list wiki-blessings-family-list">
-                        {members.map((blessing) => (
-                          <BlessingCard key={blessing} blessing={blessing} />
-                        ))}
-                      </ul>
-                    </details>
-                  </li>
+                .sort(
+                  category === "combat"
+                    ? compareCombatBlessings
+                    : compareBlessingsBySynergy
                 )
-              })}
-
-              {blessings
-                .filter((blessing) => Blessings[blessing].family === undefined)
-                .map((blessing) => (
-                  <BlessingCard key={blessing} blessing={blessing} />
-                ))}
-            </ul>
+              if (members.length === 0 && category !== "synergy") return null
+              return (
+                <section key={category} className="wiki-blessings-category">
+                  <h3>
+                    {category === "planning"
+                      ? "Planning & Resources"
+                      : category === "hero"
+                        ? "Heroes & Spawns"
+                        : category}
+                  </h3>
+                  <ul className="wiki-blessings-list">
+                    {category === "synergy" &&
+                      families.map((family) => {
+                        const familyMembers = blessings.filter(
+                          (blessing) => Blessings[blessing].family === family
+                        )
+                        return (
+                          <li
+                            key={family}
+                            className="my-box wiki-blessings-family"
+                          >
+                            <details>
+                              <summary>
+                                <div className="wiki-blessing-body">
+                                  <img
+                                    src={`/assets/blessings/${Blessings[familyMembers[0]].icon}.svg`}
+                                    alt=""
+                                  />
+                                  <div>
+                                    <h3>
+                                      {t(
+                                        `wiki.blessings.family_${family}_name`
+                                      )}
+                                      <span className="wiki-blessings-chevron" />
+                                    </h3>
+                                    <p>
+                                      {addIconsToDescription(
+                                        t(
+                                          `wiki.blessings.family_${family}_hint`
+                                        )
+                                      )}
+                                    </p>
+                                  </div>
+                                </div>
+                              </summary>
+                              <ul className="wiki-blessings-list wiki-blessings-family-list">
+                                {familyMembers.map((blessing) => (
+                                  <BlessingCard
+                                    key={blessing}
+                                    blessing={blessing}
+                                  />
+                                ))}
+                              </ul>
+                            </details>
+                          </li>
+                        )
+                      })}
+                    {members.map((blessing) => (
+                      <BlessingCard key={blessing} blessing={blessing} />
+                    ))}
+                  </ul>
+                </section>
+              )
+            })}
           </section>
         )
       })}

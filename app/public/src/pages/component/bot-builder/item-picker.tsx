@@ -3,6 +3,10 @@ import type React from "react"
 import { Tab, TabList, TabPanel, Tabs } from "react-tabs"
 import { Dishes, type PkmWithCustom } from "../../../../../types"
 import {
+  FreeOptions,
+  PaidOptions
+} from "../../../../../types/enum/ArmoryOptions"
+import {
   Berries,
   CraftableItems,
   Item,
@@ -15,10 +19,9 @@ import {
   Wands
 } from "../../../../../types/enum/Item"
 import { isIn } from "../../../../../utils/array"
+import { BundleDetailTooltip } from "../../../game/components/bundle-detail"
 import { ItemDetailTooltip } from "../../../game/components/item-detail"
 import { cc } from "../../utils/jsx"
-import { FreeOptions, PaidOptions } from "../../../../../types/enum/ArmoryOptions"
-import { BundleDetailTooltip } from "../../../game/components/bundle-detail"
 import {
   type TierListSymbol,
   TierListSymbols
@@ -71,7 +74,10 @@ export default function ItemPicker(props: {
           {
             label: t("bundles"),
             key: "bundles",
-            items: [...Object.values(FreeOptions), ...Object.values(PaidOptions)] as unknown as Item[]
+            items: [
+              ...Object.values(FreeOptions),
+              ...Object.values(PaidOptions)
+            ] as unknown as Item[]
           }
         ]
       : []),
@@ -150,7 +156,7 @@ export default function ItemPicker(props: {
         </TabPanel>
       ))}
       <ItemDetailTooltip />
-      <BundleDetailTooltip /> 
+      <BundleDetailTooltip />
     </Tabs>
   )
 }

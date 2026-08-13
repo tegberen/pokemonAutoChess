@@ -1,3 +1,4 @@
+import type { Blessing } from "../enum/Blessing"
 import type { Synergy } from "../enum/Synergy"
 import type { Item, PkmWithCustom } from "../index"
 
@@ -6,6 +7,6 @@ export interface ITierList {
   rows: Array<{
     name: string
     color?: string
-    items: Array<Item | PkmWithCustom | Synergy>
+    items: Array<Item | PkmWithCustom | Synergy | Blessing>
   }>
 }

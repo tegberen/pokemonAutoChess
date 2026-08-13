@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
+import { Blessings } from "../../../../../config/game/blessings"
 import { Emotion, type PkmWithCustom } from "../../../../../types"
+import { Blessing } from "../../../../../types/enum/Blessing"
 import type { Item } from "../../../../../types/enum/Item"
 import { type Pkm, PkmIndex } from "../../../../../types/enum/Pokemon"
 import { Synergy } from "../../../../../types/enum/Synergy"
@@ -8,6 +10,11 @@ import type { ITierList } from "../../../../../types/interfaces/TierList"
 import { isIn } from "../../../../../utils/array"
 import { getPortraitSrc } from "../../../../../utils/avatar"
 import SynergyIcon from "../icons/synergy-icon"
+import { blessingTierClass } from "../synergy/blessing-tooltip-card"
+import {
+  getBlessingShortLabel,
+  getBlessingSynergy
+} from "./blessing-short-label"
 import { type TierListSymbol, TierListSymbols } from "./tier-list-symbols"
 import "./tier-list.css"
 
@@ -221,7 +228,7 @@ export default function TierList(props: {
     const [type, value] = data.split(",")
 
     // Create the appropriate item based on type
-    let newItem: Item | PkmWithCustom | Synergy
+    let newItem: Item | PkmWithCustom | Synergy | Blessing
 
     if (type === "item") {
       newItem = value as Item
@@ -233,6 +240,8 @@ export default function TierList(props: {
       } as PkmWithCustom
     } else if (type === "synergy") {
       newItem = value as Synergy
+    } else if (type === "blessing") {
+      newItem = value as Blessing
     } else {
       return // Unknown type
     }
@@ -267,20 +276,31 @@ export default function TierList(props: {
   }
 
   function isPokemon(
-    item: Item | PkmWithCustom | Synergy
+    item: Item | PkmWithCustom | Synergy | Blessing
   ): item is PkmWithCustom {
     return (item as PkmWithCustom).name !== undefined
   }
 
-  function isSynergy(item: Item | PkmWithCustom | Synergy): item is Synergy {
+  function isSynergy(
+    item: Item | PkmWithCustom | Synergy | Blessing
+  ): item is Synergy {
     return (
       typeof item === "string" &&
       Object.values(Synergy).includes(item as Synergy)
     )
   }
 
+  function isBlessing(
+    item: Item | PkmWithCustom | Synergy | Blessing
+  ): item is Blessing {
+    return (
+      typeof item === "string" &&
+      Object.values(Blessing).includes(item as Blessing)
+    )
+  }
+
   function renderItemImage(
-    item: Item | PkmWithCustom | Synergy | TierListSymbol
+    item: Item | PkmWithCustom | Synergy | Blessing | TierListSymbol
   ) {
     if (isIn(TierListSymbols, item)) {
       return (
@@ -301,6 +321,25 @@ export default function TierList(props: {
           alt={pokemon.name}
           className="tier-list-pokemon-icon"
         />
+      )
+    } else if (isBlessing(item)) {
+      const shortLabel = getBlessingShortLabel(item)
+      const blessingSynergy = getBlessingSynergy(item)
+      return (
+        <div className={`tier-list-blessing-icon ${blessingTierClass(item)}`}>
+          <img
+            src={`/assets/blessings/${Blessings[item].icon}.svg`}
+            alt={item}
+          />
+          {blessingSynergy && (
+            <SynergyIcon
+              type={blessingSynergy}
+              size="20px"
+              className="blessing-synergy-badge"
+            />
+          )}
+          {shortLabel && <span>{shortLabel}</span>}
+        </div>
       )
     } else if (isSynergy(item)) {
       return (

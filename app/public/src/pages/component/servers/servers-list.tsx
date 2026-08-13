@@ -24,6 +24,15 @@ interface ServerStatus {
   ping: string
 }
 
+const HIDDEN_COMMUNITY_SERVERS = new Set([
+  "Eternara PAC",
+  "Pokemon Auto Chess League",
+  "Penumbra Auto Chess",
+  "PokeChessBR",
+  "UW Online POC",
+  "Koala PAC"
+])
+
 export default function ServersList() {
   const { t } = useTranslation()
   const [servers, setServers] = useState<ServerInfo[]>([])
@@ -35,8 +44,9 @@ export default function ServersList() {
       .then((md) => markdownToConfig(md))
       .then((config) => {
         setServers(
-          (Object.entries(config) as [string, ServerInfo][]).map(
-            ([name, server]) => {
+          (Object.entries(config) as [string, ServerInfo][])
+            .filter(([name]) => !HIDDEN_COMMUNITY_SERVERS.has(name))
+            .map(([name, server]) => {
               return {
                 name,
                 url: server.url,
@@ -49,8 +59,7 @@ export default function ServersList() {
                 location: server.location,
                 description: server[CONTENT_AS_HTML]
               }
-            }
-          )
+            })
         )
       })
   }, [])

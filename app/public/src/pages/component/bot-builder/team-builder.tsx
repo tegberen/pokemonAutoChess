@@ -321,9 +321,10 @@ export default function TeamBuilder(props: {
         origin={inBotBuilder ? "bot-builder" : "team-planner"}
       />
       <PokemonPicker
-        selectEntity={(e) => setSelection(e as PkmWithCustom | Item)}
+        selectEntity={setSelection}
         addEntity={addPokemonOnFirstEmptyCell}
         selected={selection}
+        showDevItems={!inBotBuilder && process.env.MODE === "dev"}
       />
       {props.bot && props.onChangeAvatar && (
         <BotAvatar

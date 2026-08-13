@@ -147,7 +147,7 @@ export default function TierListMaker() {
       </div>
       <TierList tierList={tierList} onUpdate={setTierList} />
       <ItemPicker origin="tier-list" showUnholdableItems={true} />
-      <PokemonPicker />
+      <PokemonPicker showBlessings />
     </div>
   )
 }
