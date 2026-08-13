@@ -5561,6 +5561,10 @@
 			"name": "Calculated Offence",
 			"description": "All non-TRUE dealt by your Pokémon becomes PHYSICAL when the target's DEF is lower, or SPECIAL when its SPE_DEF is lower. If both are equal, the damage type does not change."
 		},
+		"ROBIN_GEMS": {
+			"name": "Robin Gems",
+			"description": "The first time you defeat each opponent, gain a gem matching their highest synergy. If multiple synergies are tied, one is chosen at random."
+		},
 		"FURIOUS_FABRIC": {
 			"name": "Furious Fabric",
 			"description": "Every item crafted from a SILK_SCARF also gives a synergy to the Pokémon holding it:\n- BIG_EATER_BELT: GOURMET\n- EFFICIENT_BANDANNA: SOUND\n- COVER_BAND: GROUND\n- TWIST_BAND: PSYCHIC\n- EXPLOSIVE_BAND: WILD\n- MACH_RIBBON: FIELD\n- BLACK_BELT: FIGHTING\n- LUCKY_RIBBON: FAIRY\n- TIGHT_BELT: BUG\n- FRIEND_BOW: GRASS\n- NULLIFY_BANDANNA: FLYING"

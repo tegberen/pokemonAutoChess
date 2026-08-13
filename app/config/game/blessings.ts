@@ -1809,6 +1809,12 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     icon: "calculated_offence",
     grantsPokemonImmediately: false
   },
+  [Blessing.ROBIN_GEMS]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "robin_gems",
+    grantsPokemonImmediately: false
+  },
   [Blessing.LUCKY_DICE_BLESSING]: {
     tier: BlessingTier.GOLD,
     availableAtStages: BLESSING_SELECTION_STAGES,

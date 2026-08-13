@@ -1331,6 +1331,40 @@ function refundPlunderedGold(player: Player) {
   }
 }
 
+function grantRobinGemsReward(player: Player, state: GameState) {
+  const latestBattle = player.history.at(-1)
+  if (!latestBattle || latestBattle.result !== BattleResult.WIN) return
+  if (
+    player.history
+      .slice(0, -1)
+      .some(
+        (battle) =>
+          battle.id === latestBattle.id && battle.result === BattleResult.WIN
+      )
+  ) {
+    return
+  }
+  const opponent = state.players.get(latestBattle.id)
+  if (!opponent) return
+  const gemSynergies = [...opponent.synergies.entries()].filter(
+    ([synergy, count]) => count > 0 && GemBySynergy[synergy] !== undefined
+  )
+  if (gemSynergies.length === 0) return
+  const activeGemSynergies = gemSynergies.filter(
+    ([synergy, count]) => count >= SynergyTiersThresholds[synergy][0]
+  )
+  const eligibleGemSynergies =
+    activeGemSynergies.length > 0 ? activeGemSynergies : gemSynergies
+  const highestCount = Math.max(
+    ...eligibleGemSynergies.map(([, count]) => count)
+  )
+  const highestSynergies = eligibleGemSynergies
+    .filter(([, count]) => count === highestCount)
+    .map(([synergy]) => synergy)
+  const gem = GemBySynergy[pickRandomIn(highestSynergies)]
+  if (gem) grantSynergyAwareItem(player, gem)
+}
+
 function heroBlessingEffect(
   blessing: Blessing,
   player: Player,
@@ -1596,6 +1630,11 @@ export const blessingTriggerEffectService: {
         .find((threshold) => floraCount >= threshold)
       if (mulchGained) player.collectMulch(mulchGained)
     }
+  },
+
+  [Blessing.ROBIN_GEMS]: {
+    [BlessingTrigger.PVP_END]: (player, state) =>
+      grantRobinGemsReward(player, state)
   }
 }
 
@@ -2167,6 +2206,7 @@ export const blessingEffectService: {
   [Blessing.STAR_GUARD]: () => true,
   [Blessing.MACHINE_RESIDUE]: () => true,
   [Blessing.CALCULATED_OFFENCE]: () => true,
+  [Blessing.ROBIN_GEMS]: () => true,
 
   [Blessing.FESTIVE_PICNIC]: (player) => {
     serveFestivePicnicDishes(player)
