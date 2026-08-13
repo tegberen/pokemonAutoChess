@@ -5183,6 +5183,11 @@ export const AbilitiesAnimations: {
     scale: 6,
     depth: DEPTH.ABILITY_BELOW_POKEMON
   }),
+  ["COMBAT_BLESSING_ACTIVATION"]: onCaster({
+    oriented: false,
+    scale: 2,
+    depth: DEPTH.ABILITY_BELOW_POKEMON
+  }),
   ["GALARIAN_DARMANITAN_ZEN_BURN"]: onCaster({
     ability: "INFERNO",
     depth: DEPTH.ABILITY_BELOW_POKEMON,

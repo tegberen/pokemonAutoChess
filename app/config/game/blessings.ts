@@ -93,6 +93,10 @@ const isSynergyBlessingAvailable =
     stage < BLESSING_SYNERGY_GATED_STAGE ||
     isSynergyActiveForPlayer(player, synergy)
 
+const areBlessingVariantsAvailable =
+  (...variants: Blessing[]) => (player: Player) =>
+    variants.every((variant) => !player.blessings?.includes(variant))
+
 // CRYSTAL_MUTATION awakens a rock unique, so it is pointless without one
 const hasRockUnique = (player: Player) =>
   [...player.board.values()].some(
@@ -773,7 +777,7 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
   },
   [Blessing.SPORE_CLOUDS]: {
     tier: BlessingTier.GOLD,
-    availableAtStages: BLESSING_SELECTION_STAGES,
+    availableAtStages: [12],
     icon: "spore_clouds",
     grantsPokemonImmediately: true,
     isAvailable: isFloraBlessingAvailable
@@ -1221,8 +1225,6 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "water_fountain",
     grantsPokemonImmediately: false,
-    /* ponds share player.scribbleShapes with the Light Show drawings, so the
-       two cannot coexist in the same lobby */
     isAvailable: (player: Player, stage: number) =>
       player.specialGameRule !== SpecialGameRule.LIGHT_SHOW &&
       (stage < BLESSING_SYNERGY_GATED_STAGE ||
@@ -1339,7 +1341,7 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
   },
   [Blessing.QUEST_CRIT]: {
     tier: BlessingTier.PRISMATIC,
-    availableAtStages: [4],
+    availableAtStages: [5],
     icon: "crit_quest",
     grantsPokemonImmediately: false
   },
@@ -1654,6 +1656,157 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     tier: BlessingTier.GOLD,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "ruby_orb",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.BURNING_FORCE]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "burning_force",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.SPIKY_GUARD]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "spiky_guard",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.DRILL_I]: {
+    tier: BlessingTier.SILVER,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "drill",
+    grantsPokemonImmediately: false,
+    isAvailable: areBlessingVariantsAvailable(
+      Blessing.DRILL_I,
+      Blessing.DRILL_II
+    )
+  },
+  [Blessing.DRILL_II]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "drill",
+    grantsPokemonImmediately: false,
+    isAvailable: areBlessingVariantsAvailable(
+      Blessing.DRILL_I,
+      Blessing.DRILL_II
+    )
+  },
+  [Blessing.SHATTER_I]: {
+    tier: BlessingTier.SILVER,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "shatter",
+    grantsPokemonImmediately: false,
+    isAvailable: areBlessingVariantsAvailable(
+      Blessing.SHATTER_I,
+      Blessing.SHATTER_II
+    )
+  },
+  [Blessing.SHATTER_II]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "shatter",
+    grantsPokemonImmediately: false,
+    isAvailable: areBlessingVariantsAvailable(
+      Blessing.SHATTER_I,
+      Blessing.SHATTER_II
+    )
+  },
+  [Blessing.SURGE_I]: {
+    tier: BlessingTier.SILVER,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "surge",
+    grantsPokemonImmediately: false,
+    isAvailable: areBlessingVariantsAvailable(
+      Blessing.SURGE_I,
+      Blessing.SURGE_II
+    )
+  },
+  [Blessing.SURGE_II]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "surge",
+    grantsPokemonImmediately: false,
+    isAvailable: areBlessingVariantsAvailable(
+      Blessing.SURGE_I,
+      Blessing.SURGE_II
+    )
+  },
+  [Blessing.GEAR_SHIELD_I]: {
+    tier: BlessingTier.SILVER,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "gear_shield",
+    grantsPokemonImmediately: false,
+    isAvailable: areBlessingVariantsAvailable(
+      Blessing.GEAR_SHIELD_I,
+      Blessing.GEAR_SHIELD_II
+    )
+  },
+  [Blessing.GEAR_SHIELD_II]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "gear_shield",
+    grantsPokemonImmediately: false,
+    isAvailable: areBlessingVariantsAvailable(
+      Blessing.GEAR_SHIELD_I,
+      Blessing.GEAR_SHIELD_II
+    )
+  },
+  [Blessing.MAGIC_SHIELD_I]: {
+    tier: BlessingTier.SILVER,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "magic_shield",
+    grantsPokemonImmediately: false,
+    isAvailable: areBlessingVariantsAvailable(
+      Blessing.MAGIC_SHIELD_I,
+      Blessing.MAGIC_SHIELD_II
+    )
+  },
+  [Blessing.MAGIC_SHIELD_II]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "magic_shield",
+    grantsPokemonImmediately: false,
+    isAvailable: areBlessingVariantsAvailable(
+      Blessing.MAGIC_SHIELD_I,
+      Blessing.MAGIC_SHIELD_II
+    )
+  },
+  [Blessing.BRUTE_SHIELD_I]: {
+    tier: BlessingTier.SILVER,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "brute_shield",
+    grantsPokemonImmediately: false,
+    isAvailable: areBlessingVariantsAvailable(
+      Blessing.BRUTE_SHIELD_I,
+      Blessing.BRUTE_SHIELD_II
+    )
+  },
+  [Blessing.BRUTE_SHIELD_II]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "brute_shield",
+    grantsPokemonImmediately: false,
+    isAvailable: areBlessingVariantsAvailable(
+      Blessing.BRUTE_SHIELD_I,
+      Blessing.BRUTE_SHIELD_II
+    )
+  },
+  [Blessing.STAR_GUARD]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "star_guard",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.MACHINE_RESIDUE]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "machine_residue",
+    grantsPokemonImmediately: false,
+    isAvailable: isSynergyBlessingAvailable(Synergy.ARTIFICIAL)
+  },
+  [Blessing.CALCULATED_OFFENCE]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "calculated_offence",
     grantsPokemonImmediately: false
   },
   [Blessing.LUCKY_DICE_BLESSING]: {

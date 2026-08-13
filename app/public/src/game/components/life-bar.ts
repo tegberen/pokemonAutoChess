@@ -12,6 +12,7 @@ export default class LifeBar extends GameObjects.Graphics {
   maxPP?: number
   // ICY_REFLECTION: 0-100% towards this unit's next recast
   icyReflectionCharge = 0
+  combatBlessingTimer = 0
   team: Team
   flip: boolean
 
@@ -46,8 +47,10 @@ export default class LifeBar extends GameObjects.Graphics {
     const shieldColor = 0xe0e0e0
     const ppColor = 0x209cee
     const icyReflectionColor = 0x8ef6ff
+    const combatBlessingColor = 0xf7d51d
     const hpPerSegment = 25
-    const hasIcyReflection = this.icyReflectionCharge > 0
+    const hasExtraBar =
+      this.icyReflectionCharge > 0 || this.combatBlessingTimer > 0
 
     this.clear()
     this.clearMask()
@@ -60,7 +63,7 @@ export default class LifeBar extends GameObjects.Graphics {
       0,
       0,
       barWidth,
-      (this.maxPP === undefined ? 8 : 14) + (hasIcyReflection ? 4 : 0),
+      (this.maxPP === undefined ? 8 : 14) + (hasExtraBar ? 4 : 0),
       2
     )
 
@@ -116,12 +119,20 @@ export default class LifeBar extends GameObjects.Graphics {
       this.fillRect(1, 9, ppPercentage * innerBarWidth, 3)
     }
 
-    if (hasIcyReflection) {
+    if (hasExtraBar) {
       const y = this.maxPP === undefined ? 9 : 13
+      const progress =
+        this.combatBlessingTimer > 0
+          ? this.combatBlessingTimer
+          : this.icyReflectionCharge
       this.fillStyle(ppBarBgColor, 1)
       this.fillRect(1, y, innerBarWidth, 3)
-      this.fillStyle(icyReflectionColor)
-      this.fillRect(1, y, (this.icyReflectionCharge / 100) * innerBarWidth, 3)
+      this.fillStyle(
+        this.combatBlessingTimer > 0
+          ? combatBlessingColor
+          : icyReflectionColor
+      )
+      this.fillRect(1, y, (progress / 100) * innerBarWidth, 3)
     }
   }
 
@@ -163,6 +174,16 @@ export default class LifeBar extends GameObjects.Graphics {
     this.scene.tweens.add({
       targets: this,
       icyReflectionCharge: value,
+      duration: 150,
+      onUpdate: this.draw.bind(this),
+      ease: "Sine.easeOut"
+    })
+  }
+
+  setCombatBlessingTimer(value: number) {
+    this.scene.tweens.add({
+      targets: this,
+      combatBlessingTimer: value,
       duration: 150,
       onUpdate: this.draw.bind(this),
       ease: "Sine.easeOut"

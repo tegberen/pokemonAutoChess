@@ -5493,6 +5493,74 @@
 			"name": "Hieroglyphs",
 			"description": "Unown have 50% less max PP. When an Unown casts its ability, summon a random Unown in the safest corner of the board. Unown ! and Unown Q cannot trigger this summon or be summoned."
 		},
+		"BURNING_FORCE": {
+			"name": "Burning Force",
+			"description": "At the start of combat, Pokémon with no ADJACENT allies are BURN and gain 50% of their base ATK."
+		},
+		"SPIKY_GUARD": {
+			"name": "Spiky Guard",
+			"description": "At the start of combat, Pokémon with no ADJACENT allies retaliate against melee attackers, dealing 10% of their current DEF and SPE_DEF as SPECIAL."
+		},
+		"DRILL_I": {
+			"name": "Drill I",
+			"description": "The first time a Pokémon falls below 50% max HP, its basic attacks deal 50% of its current ATK as additional TRUE for 8 seconds."
+		},
+		"DRILL_II": {
+			"name": "Drill II",
+			"description": "The first time a Pokémon falls below 50% max HP, its basic attacks deal 50% of its current ATK as additional TRUE for 12 seconds. This also hits an enemy directly behind the target."
+		},
+		"SHATTER_I": {
+			"name": "Shatter I",
+			"description": "The first time a Pokémon falls below 50% max HP, its basic attacks deal 50% of its current DEF and SPE_DEF as additional PHYSICAL for 8 seconds."
+		},
+		"SHATTER_II": {
+			"name": "Shatter II",
+			"description": "The first time a Pokémon falls below 50% max HP, its basic attacks deal 50% of its current DEF and SPE_DEF as additional PHYSICAL for 12 seconds. This also hits an enemy directly behind the target."
+		},
+		"SURGE_I": {
+			"name": "Surge I",
+			"description": "The first time a Pokémon falls below 50% max HP, its basic attacks deal 25% of its current SPEED as additional SPECIAL for 8 seconds."
+		},
+		"SURGE_II": {
+			"name": "Surge II",
+			"description": "The first time a Pokémon falls below 50% max HP, its basic attacks deal 25% of its current SPEED as additional SPECIAL for 12 seconds. This also hits an enemy directly behind the target."
+		},
+		"GEAR_SHIELD_I": {
+			"name": "Gear Shield I",
+			"description": "At the start of combat, melee Pokémon gain 20 SHIELD per held item."
+		},
+		"GEAR_SHIELD_II": {
+			"name": "Gear Shield II",
+			"description": "At the start of combat, melee Pokémon gain 30 SHIELD per held item. When this SHIELD is depleted, ADJACENT enemies suffer ARMOR_BREAK for 3 seconds."
+		},
+		"MAGIC_SHIELD_I": {
+			"name": "Magic Shield I",
+			"description": "At the start of combat, your Pokémon gain SHIELD equal to their AP."
+		},
+		"MAGIC_SHIELD_II": {
+			"name": "Magic Shield II",
+			"description": "At the start of combat, your Pokémon gain 30 AP, then gain SHIELD equal to their AP."
+		},
+		"BRUTE_SHIELD_I": {
+			"name": "Brute Shield I",
+			"description": "At the start of combat, your Pokémon gain SHIELD equal to 300% of their ATK."
+		},
+		"BRUTE_SHIELD_II": {
+			"name": "Brute Shield II",
+			"description": "At the start of combat, your Pokémon gain 3 ATK, then gain SHIELD equal to 300% of their ATK."
+		},
+		"STAR_GUARD": {
+			"name": "Star Guard",
+			"description": "At the start of combat, your Pokémon gain 1 DEF and SPE_DEF for each STAR on your board."
+		},
+		"MACHINE_RESIDUE": {
+			"name": "Machine Residue",
+			"description": "ARTIFICIAL Pokémon holding a tool place SPIKES beneath their target ON_ATTACK. When an allied ARTIFICIAL Pokémon walks over SPIKES, it clears them and gains 20 SHIELD instead of being affected."
+		},
+		"CALCULATED_OFFENCE": {
+			"name": "Calculated Offence",
+			"description": "All non-TRUE dealt by your Pokémon becomes PHYSICAL when the target's DEF is lower, or SPECIAL when its SPE_DEF is lower. If both are equal, the damage type does not change."
+		},
 		"FURIOUS_FABRIC": {
 			"name": "Furious Fabric",
 			"description": "Every item crafted from a SILK_SCARF also gives a synergy to the Pokémon holding it:\n- BIG_EATER_BELT: GOURMET\n- EFFICIENT_BANDANNA: SOUND\n- COVER_BAND: GROUND\n- TWIST_BAND: PSYCHIC\n- EXPLOSIVE_BAND: WILD\n- MACH_RIBBON: FIELD\n- BLACK_BELT: FIGHTING\n- LUCKY_RIBBON: FAIRY\n- TIGHT_BELT: BUG\n- FRIEND_BOW: GRASS\n- NULLIFY_BANDANNA: FLYING"

@@ -669,6 +669,15 @@ export default abstract class PokemonState {
         speDef = swap
       }
 
+      if (
+        attacker?.player?.blessings?.includes(Blessing.CALCULATED_OFFENCE) &&
+        attackType !== AttackType.TRUE &&
+        def !== speDef
+      ) {
+        attackType =
+          def < speDef ? AttackType.PHYSICAL : AttackType.SPECIAL
+      }
+
       if (pokemon.status.reflect && attackType === AttackType.PHYSICAL) {
         if (
           attacker &&

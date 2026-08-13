@@ -605,6 +605,10 @@ export default class BattleManager {
           pkmSprite.lifebar?.setIcyReflectionCharge(pokemon.icyReflectionCharge)
           break
 
+        case "combatBlessingTimer":
+          pkmSprite.lifebar?.setCombatBlessingTimer(pokemon.combatBlessingTimer)
+          break
+
         case "centerStageSpotlight":
           if (pokemon.centerStageSpotlight) pkmSprite.addCenterStageSpotlight()
           else pkmSprite.removeCenterStageSpotlight()

@@ -57,6 +57,7 @@ import {
   SynergyGivenByItem,
   SynergyItems,
   SynergyStones,
+  Tools,
   WeatherRocksByWeather
 } from "../types/enum/Item"
 import { Passive } from "../types/enum/Passive"
@@ -170,7 +171,19 @@ import {
   MAGNETOSPHERE_PULSE_INTERVAL,
   MAGNETOSPHERE_ATTRACT_MOVE_DELAY,
   MAGNETOSPHERE_ATTRACT_PARALYSIS_DURATION,
-  MAGNETOSPHERE_REPEL_LOCK_DURATION
+  MAGNETOSPHERE_REPEL_LOCK_DURATION,
+  BURNING_FORCE_ATTACK_RATIO,
+  COMBAT_BLESSING_TRIGGER_HP_RATIO,
+  COMBAT_BLESSING_DURATION,
+  DRILL_ATTACK_RATIO,
+  SHATTER_DEFENSE_RATIO,
+  SURGE_SPEED_RATIO,
+  GEAR_SHIELD_PER_ITEM,
+  MAGIC_SHIELD_ALLY_AP,
+  BRUTE_SHIELD_ATTACK_RATIO,
+  BRUTE_SHIELD_ALLY_ATTACK,
+  STAR_GUARD_DEFENSE_PER_STAR,
+  MACHINE_RESIDUE_SHIELD
 } from "../types/enum/Blessing"
 import { isSynergyActiveForPlayer } from "../config/game/blessings"
 import { getFlowerPotStarCount } from "./flower-pots"
@@ -1583,6 +1596,79 @@ export default class Simulation extends Schema implements ISimulation {
     return stacks
   }
 
+  addThresholdAttackBlessing(
+    pokemon: PokemonEntity,
+    kind: "DRILL" | "SHATTER" | "SURGE",
+    tier: "I" | "II",
+    controlsTimerBar: boolean
+  ) {
+    const state = { activated: false, remainingMs: 0 }
+    pokemon.effectsSet.add(
+      new PeriodicEffect((entity) => {
+        if (
+          !state.activated &&
+          entity.hp <= entity.maxHP * COMBAT_BLESSING_TRIGGER_HP_RATIO
+        ) {
+          state.activated = true
+          state.remainingMs = COMBAT_BLESSING_DURATION[tier]
+          if (controlsTimerBar) {
+            entity.combatBlessingTimer = 100
+            entity.broadcastAbility({
+              skill: "COMBAT_BLESSING_ACTIVATION",
+              ap: 0
+            })
+          }
+        } else if (state.remainingMs > 0) {
+          state.remainingMs = Math.max(0, state.remainingMs - 100)
+          if (controlsTimerBar) {
+            entity.combatBlessingTimer = Math.round(
+              (state.remainingMs / COMBAT_BLESSING_DURATION[tier]) * 100
+            )
+          }
+        }
+      }, Passive.NONE, 100)
+    )
+    pokemon.effectsSet.add(
+      new OnAttackEffect(({ pokemon: attacker, target, board, isTripleAttack }) => {
+        if (!target || isTripleAttack || state.remainingMs <= 0) return
+        const damage = Math.round(
+          kind === "DRILL"
+            ? attacker.atk * DRILL_ATTACK_RATIO
+            : kind === "SHATTER"
+              ? (attacker.def + attacker.speDef) * SHATTER_DEFENSE_RATIO
+              : attacker.speed * SURGE_SPEED_RATIO
+        )
+        const attackType =
+          kind === "DRILL"
+            ? AttackType.TRUE
+            : kind === "SHATTER"
+              ? AttackType.PHYSICAL
+              : AttackType.SPECIAL
+        const dealAdditionalDamage = (enemy: PokemonEntity) =>
+          enemy.handleDamage({
+            damage,
+            board,
+            attackType,
+            attacker,
+            shouldTargetGainMana: true
+          })
+
+        dealAdditionalDamage(target)
+        if (tier === "II") {
+          const dx = Math.sign(target.positionX - attacker.positionX)
+          const dy = Math.sign(target.positionY - attacker.positionY)
+          const behindTarget = board.getEntityOnCell(
+            target.positionX + dx,
+            target.positionY + dy
+          )
+          if (behindTarget && behindTarget.team === target.team) {
+            dealAdditionalDamage(behindTarget)
+          }
+        }
+      })
+    )
+  }
+
   applyCombatStartBlessings(
     sides: { teamIndex: Team; player: Player | undefined }[]
   ) {
@@ -1598,6 +1684,189 @@ export default class Simulation extends Schema implements ISimulation {
       if (allies.length === 0) continue
 
       const missingPlayerLife = Math.max(0, player.maxLife - player.life)
+
+      if (blessings.includes(Blessing.BURNING_FORCE)) {
+        ownUnits.forEach((ally) => {
+          const hasAdjacentAlly = this.board
+            .getAdjacentCells(ally.positionX, ally.positionY, false)
+            .some((cell) => cell.value?.team === ally.team)
+          if (!hasAdjacentAlly) {
+            ally.status.triggerBurn(300000, ally, ally)
+            ally.addAttack(
+              ally.baseAtk * BURNING_FORCE_ATTACK_RATIO,
+              ally,
+              0,
+              false
+            )
+          }
+        })
+      }
+
+      if (blessings.includes(Blessing.SPIKY_GUARD)) {
+        ownUnits.forEach((ally) => {
+          const hasAdjacentAlly = this.board
+            .getAdjacentCells(ally.positionX, ally.positionY, false)
+            .some((cell) => cell.value?.team === ally.team)
+          if (hasAdjacentAlly) return
+          ally.effectsSet.add(
+            new OnAttackReceivedEffect(({ pokemon, attacker, board }) => {
+              if (
+                distanceC(
+                  pokemon.positionX,
+                  pokemon.positionY,
+                  attacker.positionX,
+                  attacker.positionY
+                ) !== 1
+              ) {
+                return
+              }
+              attacker.handleDamage({
+                damage: 0.1 * (pokemon.def + pokemon.speDef),
+                board,
+                attackType: AttackType.SPECIAL,
+                attacker: pokemon,
+                shouldTargetGainMana: true,
+                isRetaliation: true
+              })
+            })
+          )
+        })
+      }
+
+      const thresholdAttackBlessings = [
+        [Blessing.DRILL_II, "DRILL", "II"],
+        [Blessing.DRILL_I, "DRILL", "I"],
+        [Blessing.SHATTER_II, "SHATTER", "II"],
+        [Blessing.SHATTER_I, "SHATTER", "I"],
+        [Blessing.SURGE_II, "SURGE", "II"],
+        [Blessing.SURGE_I, "SURGE", "I"]
+      ] as const
+      const activeThresholdAttackBlessings = thresholdAttackBlessings.filter(
+        ([blessing]) => blessings.includes(blessing)
+      )
+      const timerBarBlessing = activeThresholdAttackBlessings.find(
+        ([, , tier]) =>
+          COMBAT_BLESSING_DURATION[tier] ===
+          Math.max(
+            ...activeThresholdAttackBlessings.map(
+              ([, , activeTier]) => COMBAT_BLESSING_DURATION[activeTier]
+            )
+          )
+      )?.[0]
+      activeThresholdAttackBlessings.forEach(([blessing, kind, tier]) => {
+        ownUnits.forEach((ally) =>
+          this.addThresholdAttackBlessing(
+            ally,
+            kind,
+            tier,
+            blessing === timerBarBlessing
+          )
+        )
+      })
+
+      const gearShieldTier = blessings.includes(Blessing.GEAR_SHIELD_II)
+        ? "II"
+        : blessings.includes(Blessing.GEAR_SHIELD_I)
+          ? "I"
+          : undefined
+      if (gearShieldTier) {
+        ownUnits.filter((ally) => ally.range === 1).forEach((ally) => {
+          const shield = GEAR_SHIELD_PER_ITEM[gearShieldTier] * ally.items.size
+          if (shield <= 0) return
+          if (gearShieldTier === "II") {
+            let triggered = false
+            ally.effectsSet.add(
+              new OnShieldDepletedEffect(({ pokemon, board }) => {
+                if (triggered) return
+                triggered = true
+                board
+                  .getAdjacentCells(pokemon.positionX, pokemon.positionY, false)
+                  .forEach((cell) => {
+                    if (cell.value && cell.value.team !== pokemon.team) {
+                      cell.value.status.triggerArmorReduction(3000, cell.value)
+                    }
+                  })
+              })
+            )
+          }
+          ally.addShield(shield, ally, 0, false)
+        })
+      }
+
+      const magicShieldTier = blessings.includes(Blessing.MAGIC_SHIELD_II)
+        ? "II"
+        : blessings.includes(Blessing.MAGIC_SHIELD_I)
+          ? "I"
+          : undefined
+      if (magicShieldTier) {
+        if (magicShieldTier === "II") {
+          ownUnits.forEach((ally) =>
+            ally.addAbilityPower(MAGIC_SHIELD_ALLY_AP, ally, 0, false)
+          )
+        }
+        ownUnits.forEach((ally) => ally.addShield(ally.ap, ally, 0, false))
+      }
+
+      const bruteShieldTier = blessings.includes(Blessing.BRUTE_SHIELD_II)
+        ? "II"
+        : blessings.includes(Blessing.BRUTE_SHIELD_I)
+          ? "I"
+          : undefined
+      if (bruteShieldTier) {
+        if (bruteShieldTier === "II") {
+          ownUnits.forEach((ally) =>
+            ally.addAttack(BRUTE_SHIELD_ALLY_ATTACK, ally, 0, false)
+          )
+        }
+        ownUnits.forEach((ally) =>
+          ally.addShield(ally.atk * BRUTE_SHIELD_ATTACK_RATIO, ally, 0, false)
+        )
+      }
+
+      if (blessings.includes(Blessing.STAR_GUARD)) {
+        const stars = ownUnits.reduce((total, ally) => total + ally.stars, 0)
+        const defense = stars * STAR_GUARD_DEFENSE_PER_STAR
+        ownUnits.forEach((ally) => {
+          ally.addDefense(defense, ally, 0, false)
+          ally.addSpecialDefense(defense, ally, 0, false)
+        })
+      }
+
+      if (blessings.includes(Blessing.MACHINE_RESIDUE)) {
+        ownUnits
+          .filter((ally) => ally.types.has(Synergy.ARTIFICIAL))
+          .forEach((ally) => {
+            ally.effectsSet.add(
+              new OnAttackEffect(({ target, board, pokemon }) => {
+                if (
+                  !target ||
+                  ![...pokemon.items].some((item) => isIn(Tools, item))
+                ) {
+                  return
+                }
+                board.addBoardEffect(
+                  target.positionX,
+                  target.positionY,
+                  EffectEnum.SPIKES,
+                  pokemon.simulation
+                )
+              })
+            )
+            ally.effectsSet.add(
+              new OnMoveEffect((pokemon, board, _oldX, _oldY, newX, newY) => {
+                const effects = board.boardEffects[newY * board.columns + newX]
+                if (!effects.has(EffectEnum.SPIKES)) return
+                board.clearBoardEffect(
+                  newX,
+                  newY,
+                  pokemon.simulation,
+                  EffectEnum.SPIKES
+                )
+                pokemon.addShield(MACHINE_RESIDUE_SHIELD, pokemon, 0, false)
+              })
+            )
+          })
+      }
 
       if (
         blessings.includes(Blessing.AUTO_CRAFTING) &&

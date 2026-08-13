@@ -2150,6 +2150,24 @@ export const blessingEffectService: {
 
   [Blessing.HIEROGLYPHS]: () => true,
 
+  [Blessing.BURNING_FORCE]: () => true,
+  [Blessing.SPIKY_GUARD]: () => true,
+  [Blessing.DRILL_I]: () => true,
+  [Blessing.DRILL_II]: () => true,
+  [Blessing.SHATTER_I]: () => true,
+  [Blessing.SHATTER_II]: () => true,
+  [Blessing.SURGE_I]: () => true,
+  [Blessing.SURGE_II]: () => true,
+  [Blessing.GEAR_SHIELD_I]: () => true,
+  [Blessing.GEAR_SHIELD_II]: () => true,
+  [Blessing.MAGIC_SHIELD_I]: () => true,
+  [Blessing.MAGIC_SHIELD_II]: () => true,
+  [Blessing.BRUTE_SHIELD_I]: () => true,
+  [Blessing.BRUTE_SHIELD_II]: () => true,
+  [Blessing.STAR_GUARD]: () => true,
+  [Blessing.MACHINE_RESIDUE]: () => true,
+  [Blessing.CALCULATED_OFFENCE]: () => true,
+
   [Blessing.FESTIVE_PICNIC]: (player) => {
     serveFestivePicnicDishes(player)
     return true
