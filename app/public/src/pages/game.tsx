@@ -810,7 +810,12 @@ export default function Game() {
             })
           )
         dispatchBlessings()
-        $(playerBlessings).blessings.onChange(dispatchBlessings)
+        $(playerBlessings).blessings.onChange(() => {
+          dispatchBlessings()
+          if (playerId === store.getState().game.playerIdSpectated) {
+            getGameScene()?.board?.refreshShinySafeguardMarks()
+          }
+        })
         $(playerBlessings).mystoganWands.onChange(dispatchBlessings)
         $(playerBlessings).waterPonds.onChange(() => {
           if (playerId === store.getState().game.playerIdSpectated) {

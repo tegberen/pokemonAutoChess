@@ -4877,7 +4877,7 @@ export default class Simulation extends Schema implements ISimulation {
         entity.types.has(Synergy.STEEL)
     )
     if (magnets.length === 0) return
-    const isAttracting = player.magnetospherePulseCount % 2 === 0
+    const isAttracting = player.magnetospherePulseCount % 2 === 1
     player.magnetospherePulseCount++
 
     const enemyTeam =

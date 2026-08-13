@@ -5495,7 +5495,7 @@
 		},
 		"BURNING_FORCE": {
 			"name": "Burning Force",
-			"description": "At the start of combat, Pokémon with no ADJACENT allies are BURN and gain 50% of their base ATK."
+			"description": "At the start of combat, Pokémon with no ADJACENT allies are BURN for the rest of the fight and gain 50% of their base ATK."
 		},
 		"SPIKY_GUARD": {
 			"name": "Spiky Guard",
@@ -5575,7 +5575,7 @@
 		},
 		"MAGNETOSPHERE": {
 			"name": "Magnetosphere",
-			"description": "Your STEEL Pokémon create a magnetic field with 1 RANGE per tier of STEEL. Every 8 seconds the field switches between attraction and repulsion. Attraction pulls every enemy in RANGE into contact and inflicts PARALYSIS for 5 seconds. Repulsion pushes every enemy in RANGE away and inflicts LOCKED for 2 seconds. While repelling, your STEEL Pokémon gain that much RANGE."
+			"description": "Your STEEL Pokémon create a magnetic field with 1 RANGE per tier of STEEL. Every 8 seconds the field switches between repulsion and attraction. Attraction pulls every enemy in RANGE into contact and inflicts PARALYSIS for 8 seconds. Repulsion pushes every enemy in RANGE away and inflicts LOCKED for 2 seconds. While repelling, your STEEL Pokémon gain that much RANGE."
 		},
 		"MYSTOGAN": {
 			"name": "Mystogan",

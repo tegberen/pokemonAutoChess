@@ -1041,7 +1041,7 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
   },
   [Blessing.ADOPTION]: {
     tier: BlessingTier.PRISMATIC,
-    availableAtStages: BLESSING_SELECTION_STAGES,
+    availableAtStages: [4],
     icon: "adoption",
     grantsPokemonImmediately: false,
     isAvailable: isSynergyBlessingAvailable(Synergy.BABY)
@@ -1801,7 +1801,7 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     tier: BlessingTier.GOLD,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "machine_residue",
-    grantsPokemonImmediately: false,
+    grantsPokemonImmediately: true,
     isAvailable: isSynergyBlessingAvailable(Synergy.ARTIFICIAL)
   },
   [Blessing.CALCULATED_OFFENCE]: {

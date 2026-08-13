@@ -167,6 +167,7 @@ export default class PokemonSprite extends DraggableObject {
   light: GameObjects.Sprite | undefined
   centerStageSpotlight: GameObjects.Sprite | undefined
   blessedHeroMark: GameObjects.Image | undefined
+  shinySafeguardMark: GameObjects.Image | undefined
   awakeningGlow: Phaser.Filters.Glow | undefined
   awakeningGlowTween: Phaser.Tweens.Tween | undefined
   awakeningCrystal: GameObjects.Sprite | undefined
@@ -2080,6 +2081,29 @@ export default class PokemonSprite extends DraggableObject {
     if (this.blessedHeroMark) {
       this.remove(this.blessedHeroMark, true)
       this.blessedHeroMark = undefined
+    }
+  }
+
+  addShinySafeguardMark() {
+    if (this.shinySafeguardMark) return
+    this.shinySafeguardMark = new GameObjects.Image(
+      this.scene,
+      0,
+      -4,
+      "shiny-safeguard-mark"
+    )
+      .setScale(BLESSED_HERO_MARK_SCALE)
+      .setAlpha(0.38)
+      .setTint(0x000000)
+      .setTintMode(Phaser.TintModes.FILL)
+      .setDepth(DEPTH.POKEMON_SHADOW)
+    this.addAt(this.shinySafeguardMark, 0)
+  }
+
+  removeShinySafeguardMark() {
+    if (this.shinySafeguardMark) {
+      this.remove(this.shinySafeguardMark, true)
+      this.shinySafeguardMark = undefined
     }
   }
 

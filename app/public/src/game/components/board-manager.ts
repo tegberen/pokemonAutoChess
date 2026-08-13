@@ -284,8 +284,23 @@ export default class BoardManager {
     }
     this.pokemons.get(pokemonUI.id)?.destroy()
     this.pokemons.set(pokemonUI.id, pokemonUI)
+    this.refreshShinySafeguardMarks()
 
     return pokemonUI
+  }
+
+  refreshShinySafeguardMarks() {
+    if (this.mode !== BoardMode.PICK) return
+    const hasShinySafeguard = this.state.blessingsByPlayerId
+      .get(this.player.id)
+      ?.blessings.includes(Blessing.SHINY_SAFEGUARD)
+    this.pokemons.forEach((pokemonSprite) => {
+      if (hasShinySafeguard && pokemonSprite.positionY === 3) {
+        pokemonSprite.addShinySafeguardMark()
+      } else {
+        pokemonSprite.removeShinySafeguardMark()
+      }
+    })
   }
 
   removePokemon(pokemonToRemove: IPokemon) {
@@ -1499,6 +1514,7 @@ export default class BoardManager {
               pokemon.positionY
             )
           }
+          this.refreshShinySafeguardMarks()
           break
         }
 

@@ -2202,7 +2202,8 @@ export const blessingEffectService: {
   [Blessing.BRUTE_SHIELD_I]: () => true,
   [Blessing.BRUTE_SHIELD_II]: () => true,
   [Blessing.STAR_GUARD]: () => true,
-  [Blessing.MACHINE_RESIDUE]: () => true,
+  [Blessing.MACHINE_RESIDUE]: (player) =>
+    giftPokemonIfBenchHasRoom(player, Pkm.MAGNEMITE),
   [Blessing.CALCULATED_OFFENCE]: () => true,
   [Blessing.ROBIN_GEMS]: () => true,
 

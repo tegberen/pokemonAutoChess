@@ -20,6 +20,8 @@ import {
   GRUDGE_CURSE_DURATION_REDUCTION_PER_SUBSTITUTE,
   GEM_HARVEST_ATTACK_PER_GEM,
   GEM_HARVEST_ABILITY_POWER_PER_GEM,
+  DRAGON_FANG_ABILITY_POWER_PER_STAR,
+  STAR_GUARD_DEFENSE_PER_STAR,
   VALOR_ATTACK_PER_STAR,
   VALOR_SHIELD_PER_STAR
 } from "../../../../../types/enum/Blessing"
@@ -116,6 +118,9 @@ export default function BlessingsPanel(props: { recentOnly?: boolean }) {
     .filter(
       (pokemon) => pokemon.positionY === 0 && pokemon.types?.has(Synergy.WILD)
     )
+    .reduce((total, pokemon) => total + pokemon.stars, 0)
+  const fieldedStars = boardPokemons
+    .filter((pokemon) => pokemon.positionY !== 0)
     .reduce((total, pokemon) => total + pokemon.stars, 0)
   const nbThreeStarWilds = spectatedPlayer
     ? countWildsThreeStarsOrMore(spectatedPlayer.board)
@@ -257,6 +262,8 @@ export default function BlessingsPanel(props: { recentOnly?: boolean }) {
                 {blessing === Blessing.GRUDGE && <p className="blessing-panel-live-value">{addIconsToDescription(`${grudgeSubstitutesPlanted} Substitute${grudgeSubstitutesPlanted === 1 ? "" : "s"} on the opponent bench: every CURSE you inflict is ${grudgeCurseSecondsSaved} seconds shorter`)}</p>}
                 {blessing === Blessing.MYSTOGAN && <p className="blessing-panel-live-value">{mystoganWands && mystoganWands.length > 0 ? addIconsToDescription(mystoganWands.map((wand) => wand as string).join(", ")) : "No FAIRY tier reached yet"}</p>}
                 {blessing === Blessing.MAGNETOSPHERE && <p className="blessing-panel-live-value">{addIconsToDescription(`STEEL ${steelCount}: ${magnetosphereReach} RANGE of attraction and repulsion around each STEEL Pokémon`)}</p>}
+                {blessing === Blessing.DRAGON_FANG && <p className="blessing-panel-live-value">{addIconsToDescription(`${fieldedStars} STAR on your board: +${fieldedStars * DRAGON_FANG_ABILITY_POWER_PER_STAR} AP`)}</p>}
+                {blessing === Blessing.STAR_GUARD && <p className="blessing-panel-live-value">{addIconsToDescription(`${fieldedStars} STAR on your board: +${fieldedStars * STAR_GUARD_DEFENSE_PER_STAR} DEF and SPE_DEF`)}</p>}
                 {blessing === Blessing.AXE_BLAST && axeBlastStarCounts > 0 && <p className="blessing-panel-live-value">{addIconsToDescription(`Team STAR: ${axeBlastAlliedStars} vs ${axeBlastOpposingStars}\nExecute chance: ${axeBlastExecuteChance}% before Luck`)}</p>}
                 {blessing === Blessing.GEM_HARVEST && gemHarvestGems.length === 0 && <p className="blessing-panel-live-value">No gem harvested yet</p>}
                 {blessing === Blessing.GEM_HARVEST && gemHarvestGems.map(([gem, copies, holders]) => <p key={gem} className="blessing-panel-live-value">{addIconsToDescription(holders > 0 ? `${gem}${copies > 1 ? ` x${copies}` : ""}: ${holders} fielded Pokémon gain ${copies * GEM_HARVEST_ATTACK_PER_GEM} ATK and ${copies * GEM_HARVEST_ABILITY_POWER_PER_GEM} AP` : `${gem}${copies > 1 ? ` x${copies}` : ""}: no fielded Pokémon shares this synergy`)}</p>)}

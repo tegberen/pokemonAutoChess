@@ -1522,14 +1522,21 @@ export default class GameRoom extends Room<{ state: GameState }> {
           ? this.additionalRarePool
           : this.additionalEpicPool
 
-    choice.pokemons.forEach((pkm) => pool.push(pkm as Pkm))
     shuffleArray(pool)
+    const previousPokemons = [...choice.pokemons] as Pkm[]
+    const replacementIndices = pool
+      .map((pokemon, index) => ({ pokemon, index }))
+      .filter(({ pokemon }) => previousPokemons.includes(pokemon) === false)
+      .slice(0, previousPokemons.length)
+      .map(({ index }) => index)
+    if (replacementIndices.length < previousPokemons.length) return
+
     const pokemons: Pkm[] = []
-    for (let i = 0; i < choice.pokemons.length; i++) {
-      const drawn = pool.pop()
-      if (drawn) pokemons.push(drawn)
-    }
-    if (pokemons.length === 0) return
+    replacementIndices.reverse().forEach((index) => {
+      pokemons.unshift(pool.splice(index, 1)[0])
+    })
+    previousPokemons.forEach((pokemon) => pool.push(pokemon))
+    shuffleArray(pool)
 
     player.choices[choiceIndex] = new PlayerChoice({
       type: "addPick",
