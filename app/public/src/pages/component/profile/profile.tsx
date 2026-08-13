@@ -18,11 +18,9 @@ import {
 import { setSearchedUser } from "../../../stores/LobbyStore"
 import { AccountTab } from "./account-tab"
 import { EloTab } from "./elo-tab"
-import { GadgetsTab } from "./gadgets-tab"
 import GameHistory from "./game-history"
 import PlayerBox from "./player-box"
 import { ProfileChatHistory } from "./profile-chat-history"
-import { ProgressTab } from "./progress-tab"
 import { SearchBar } from "./search-bar"
 import SearchResults from "./search-results"
 import { TitleTab } from "./title-tab"
@@ -127,7 +125,7 @@ export default function Profile() {
             setRightPanel={setRightPanel}
           />
         ) : (
-          <MyProfileMenu />
+          <MyProfileMenu gameHistory={gameHistory} />
         )}
       </div>
 
@@ -141,29 +139,21 @@ export default function Profile() {
   )
 }
 
-function MyProfileMenu() {
+function MyProfileMenu({ gameHistory }: { gameHistory: IGameRecord[] }) {
   const { t } = useTranslation()
   return (
     <Tabs>
       <TabList>
-        <Tab>{t("profile.progress.title")}</Tab>
+        <Tab>Record</Tab>
         <Tab>{t("title_label")}</Tab>
-        <Tab>{t("gadgets")}</Tab>
-        <Tab>{t("profile.elo_tab.title")}</Tab>
         <Tab>{t("profile.account.title")}</Tab>
       </TabList>
 
       <TabPanel>
-        <ProgressTab />
+        <EloTab gameHistory={gameHistory} />
       </TabPanel>
       <TabPanel>
         <TitleTab />
-      </TabPanel>
-      <TabPanel>
-        <GadgetsTab />
-      </TabPanel>
-      <TabPanel>
-        <EloTab />
       </TabPanel>
       <TabPanel>
         <AccountTab />

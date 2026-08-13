@@ -35,7 +35,6 @@ export const VIDEO_BG_THEMES: Theme[] = [
 ]
 
 export const TITLE_BY_THEME = {
-  unown: Title.ARCHEOLOGIST,
   rainbow: Title.HARLEQUIN,
   autumn: Title.POKEMON_RANGER,
   umbra: Title.DELINQUENT,

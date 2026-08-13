@@ -54,6 +54,14 @@ const userMetadataSchema = new Schema({
     type: Number,
     default: 0
   },
+  activeWeeks: {
+    type: Number,
+    default: 0
+  },
+  lastActiveWeek: {
+    type: String,
+    default: ""
+  },
   exp: {
     type: Number,
     default: 0

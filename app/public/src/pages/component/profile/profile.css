@@ -86,6 +86,131 @@
   background-color: var(--color-bg-secondary);
 }
 
+.profile-actions .elo-tab {
+  display: grid;
+  grid-template-columns: minmax(120px, 42%) 1fr;
+  align-items: center;
+  gap: 1.5em;
+  min-height: 260px;
+  padding: 1.5em;
+  text-align: left;
+}
+
+.elo-tab .elo-rank-icon {
+  width: 100%;
+  max-width: 220px;
+  margin: auto;
+}
+
+.elo-tab .elo-summary {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.elo-tab .elo-label {
+  color: var(--color-fg-secondary);
+}
+
+.elo-tab .elo-rank-name {
+  margin: 0.1em 0 0.75em;
+  color: var(--color-fg-gold);
+  font-size: 1.5em;
+}
+
+.elo-tab .elo-summary p {
+  margin: 0.25em 0;
+}
+
+.elo-tab .profile-stats {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.5em;
+  width: 100%;
+  max-width: 260px;
+  margin-top: 1em;
+}
+
+.elo-tab .profile-stat {
+  display: grid;
+  grid-template-columns: 2em auto 1px minmax(0, 1fr);
+  align-items: center;
+  column-gap: 0.5em;
+  box-sizing: border-box;
+  padding: 0.5em 0.75em 0.5em 0.6em;
+  min-width: 0;
+  border: var(--border-thin);
+  border-radius: 12px;
+  background-color: var(--color-bg-primary);
+  color: var(--color-fg-gold);
+}
+
+.elo-tab .profile-stat::after {
+  grid-column: 3;
+  grid-row: 1;
+  width: 1px;
+  height: 70%;
+  background-color: var(--color-fg-secondary);
+  content: "";
+  opacity: 0.45;
+}
+
+.elo-tab .profile-stat-emblem {
+  display: grid;
+  grid-column: 1;
+  grid-row: 1;
+  width: 2em;
+  height: 2em;
+  place-items: center;
+}
+
+.elo-tab .profile-stat-emblem img {
+  width: 1.8em;
+  height: 1.8em;
+  object-fit: contain;
+}
+
+.elo-tab .profile-stat-count {
+  grid-column: 2;
+  grid-row: 1;
+  min-width: 1ch;
+  font-size: 2em;
+  line-height: 1;
+  text-align: center;
+}
+
+.elo-tab .profile-stat-label {
+  display: flex;
+  grid-column: 4;
+  grid-row: 1;
+  flex-direction: column;
+  align-items: flex-start;
+  line-height: 1.05;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.elo-tab .profile-stat-label small {
+  color: var(--color-fg-secondary);
+  font-size: 0.6em;
+  letter-spacing: 0.08em;
+}
+
+.elo-tab .profile-stat-label b {
+  font-size: 0.72em;
+  letter-spacing: 0;
+}
+
+@media (width <= 600px) {
+  .profile-actions .elo-tab {
+    grid-template-columns: 100px 1fr;
+    gap: 1em;
+    min-height: auto;
+    padding: 1em;
+  }
+
+}
+
 .profile-actions > button,
 .profile-actions > .my-input-group {
   margin: 0.25em;

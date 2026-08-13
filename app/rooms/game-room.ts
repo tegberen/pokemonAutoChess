@@ -1203,6 +1203,19 @@ export default class GameRoom extends Room<{ state: GameState }> {
       if (
         this.state.stageLevel >= MinStageForGameToCount
       ) {
+        const now = new Date()
+        const daysSinceMonday = (now.getUTCDay() + 6) % 7
+        const monday = new Date(
+          Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate())
+        )
+        monday.setUTCDate(monday.getUTCDate() - daysSinceMonday)
+        const activeWeek = monday.toISOString().slice(0, 10)
+
+        if (usr.lastActiveWeek !== activeWeek) {
+          usr.lastActiveWeek = activeWeek
+          usr.activeWeeks = (usr.activeWeeks ?? 0) + 1
+        }
+
         const dbrecord = this.transformToSimplePlayer(player)
         DetailledStatistic.create({
           time: Date.now(),

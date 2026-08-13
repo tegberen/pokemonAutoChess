@@ -13,6 +13,8 @@ interface IUserMetadata {
   avatar: string
   games: number
   wins: number
+  activeWeeks?: number
+  lastActiveWeek?: string
   exp: number
   level: number
   elo: number

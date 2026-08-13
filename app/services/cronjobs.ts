@@ -3,24 +3,13 @@ import { CronJob } from "cron"
 import dayjs from "dayjs"
 import admin from "firebase-admin"
 import type { UserRecord } from "firebase-admin/lib/auth/user-record"
-import {
-  CRON_ELO_DECAY_DELAY,
-  CRON_ELO_DECAY_MINIMUM_ELO,
-  CRON_HISTORY_CLEANUP_DELAY,
-  ELO_DECAY_LOST_PER_DAY,
-  ELO_DECAY_NB_GAMES_REQUIRED,
-  EloRankThreshold,
-  getCurrentGameEvent
-} from "../config"
+import { CRON_HISTORY_CLEANUP_DELAY, getCurrentGameEvent } from "../config"
 import DetailledStatistic from "../models/mongo-models/detailled-statistic-v2"
 import TitleStatistic from "../models/mongo-models/title-statistic"
 import UserMetadata from "../models/mongo-models/user-metadata"
 import { Title } from "../types"
-import { EloRank } from "../types/enum/EloRank"
-import { GameMode } from "../types/enum/Game"
 import { GameEvent } from "../types/events"
 import { logger } from "../utils/logger"
-import { min } from "../utils/number"
 import { logPreviousDayBoosterCreationStats } from "./booster-monitor"
 import { fetchMetaReports } from "./meta"
 import { notificationsService } from "./notifications"
@@ -43,12 +32,6 @@ export function initCronJobs(isMainThread: boolean) {
       cronTime: "15 8 * * *", // every day at 8:15am
       timeZone: "Europe/Paris",
       onTick: () => deleteOldHistory(),
-      start: true
-    })
-    CronJob.from({
-      cronTime: "30 8 * * *", // every day at 8:30am
-      timeZone: "Europe/Paris",
-      onTick: () => eloDecay(),
       start: true
     })
     CronJob.from({
@@ -141,50 +124,6 @@ async function deleteOldAnonymousAccounts() {
       uid: { $in: batchDeletion }
     })
     logger.info("pac deletion result ", pacDeletion)
-  }
-}
-
-async function eloDecay() {
-  logger.info("[CRON] Computing elo decay...")
-  const users = await UserMetadata.find(
-    { elo: { $gt: CRON_ELO_DECAY_MINIMUM_ELO } },
-    ["uid", "elo", "displayName"]
-  )
-  if (users && users.length > 0) {
-    logger.info(`Checking activity of ${users.length} users`)
-    for (let i = 0; i < users.length; i++) {
-      const u = users[i]
-      const stats = await DetailledStatistic.find(
-        {
-          playerId: u.uid,
-          ...(u.elo >= EloRankThreshold[EloRank.ULTRA_BALL]
-            ? { gameMode: GameMode.RANKED }
-            : {})
-        },
-        ["time"],
-        {
-          limit: 3,
-          sort: { time: -1 }
-        }
-      )
-
-      const shouldDecay =
-        stats.length < ELO_DECAY_NB_GAMES_REQUIRED ||
-        Date.now() - stats[2].time > CRON_ELO_DECAY_DELAY
-
-      if (shouldDecay) {
-        const eloAfterDecay = min(CRON_ELO_DECAY_MINIMUM_ELO)(
-          u.elo - ELO_DECAY_LOST_PER_DAY
-        )
-        logger.info(
-          `User ${u.displayName} (${u.elo}) will decay to ${eloAfterDecay}`
-        )
-        u.elo = eloAfterDecay
-        await u.save()
-      }
-    }
-  } else {
-    logger.info("No users to check")
   }
 }
 
