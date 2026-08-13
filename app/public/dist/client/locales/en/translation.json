@@ -5363,7 +5363,7 @@
 		},
 		"SHARE_THE_SPOTLIGHT": {
 			"name": "Share the Spotlight",
-			"description": "The Pokémon in your LIGHT spot shares 50% of its ATK, AP, DEF and SPE_DEF with ADJACENT allies. Gain a Cherubi."
+			"description": "The Pokémon in your LIGHT spot shares 50% of its ATK, AP, DEF and SPE_DEF with ADJACENT allies."
 		},
 		"SLIPSTREAM": {
 			"name": "Slipstream",
@@ -5411,7 +5411,7 @@
 		},
 		"TIDAL_SURGE": {
 			"name": "Tidal Surge",
-			"description": "When the TIDAL_WAVE hits, ranged AQUATIC Pokémon holding 2 items cast Hydro Pump, and melee AQUATIC Pokémon holding 2 items cast Dive. Gain a Froakie."
+			"description": "When the TIDAL_WAVE hits, ranged AQUATIC Pokémon holding 2 items cast Hydro Pump, and melee AQUATIC Pokémon holding 2 items cast Dive."
 		},
 		"ATLANTEAN_MAGIC": {
 			"name": "Atlantean Magic",
@@ -5867,7 +5867,7 @@
 		},
 		"QUEST_CRIT": {
 			"name": "Quest: Crit",
-			"description": "Gain 2 BLACK_GLASSES. The first time an ally reaches 4 CRIT_POWER in a fight, gain a GOLD_BOTTLE_CAP."
+			"description": "Gain 2 BLACK_GLASSES. The first time an ally reaches 5 CRIT_POWER in a fight, gain a GOLD_BOTTLE_CAP."
 		},
 		"QUEST_ABSORB": {
 			"name": "Quest: Absorb",

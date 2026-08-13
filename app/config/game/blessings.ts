@@ -946,7 +946,7 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     tier: BlessingTier.PRISMATIC,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "double_light",
-    grantsPokemonImmediately: true,
+    grantsPokemonImmediately: false,
     isAvailable: isSynergyBlessingAvailable(Synergy.LIGHT)
   },
   [Blessing.SLIPSTREAM]: {
@@ -1029,7 +1029,7 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     tier: BlessingTier.GOLD,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "trident",
-    grantsPokemonImmediately: true,
+    grantsPokemonImmediately: false,
     isAvailable: isSynergyBlessingAvailable(Synergy.AQUATIC)
   },
   [Blessing.MONSTER_KING]: {

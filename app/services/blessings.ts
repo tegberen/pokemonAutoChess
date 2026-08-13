@@ -2096,8 +2096,7 @@ export const blessingEffectService: {
   [Blessing.ASCENSION]: (player) =>
     giftPokemonIfBenchHasRoom(player, Pkm.CHERUBI),
 
-  [Blessing.SHARE_THE_SPOTLIGHT]: (player) =>
-    giftPokemonIfBenchHasRoom(player, Pkm.MAREEP),
+  [Blessing.SHARE_THE_SPOTLIGHT]: () => true,
 
   [Blessing.SLIPSTREAM]: (player) =>
     giftPokemonIfBenchHasRoom(player, Pkm.QUAXLY),
@@ -2146,8 +2145,7 @@ export const blessingEffectService: {
   [Blessing.RESURGENCE]: (player) =>
     giftPokemonIfBenchHasRoom(player, Pkm.PILOSWINE),
 
-  [Blessing.TIDAL_SURGE]: (player) =>
-    giftPokemonIfBenchHasRoom(player, Pkm.FROAKIE),
+  [Blessing.TIDAL_SURGE]: () => true,
 
   [Blessing.ARCHEOLOGY]: () => true,
 
