@@ -2383,7 +2383,7 @@
 		"SAND_SPIT": "Spits sand at the 3 enemy Pokémon in front of the user, dealing [30,60,120,240,SP] SPECIAL and inflicting BLINDED for 2 seconds.",
 		"HYPER_DRILL": "Deals [10,30,50,100,200,SP] TRUE that can break PROTECT, and dig deeper into the ground under the target, destroying any eventual buried items in the process. Double damage if target is already on a fully dug hole.",
 		"TERRAIN_PULSE": "If user has no field, gets GRASS_FIELD.\nField effects in your team propagate to ADJACENT allies, then trigger an effect:\nGRASS_FIELD: heal [5,7,10,15,SP]% of max HP\nELECTRIC_FIELD: gain [10,12,15,20,SP] SPEED\nPSYCHIC_FIELD: gain [10,12,15,20,SP] PP\nFAIRY_FIELD: gain [5,7,10,15,SP]% of max HP as SHIELD",
-		"AXE_BLAST": "Deals SPECIAL damage equal to [300,SP]% of the user's ATK to the target and ADJACENT enemy in an X-Shape. If your team has more total STAR than the opposing team, execute the target.",
+		"AXE_BLAST": "Deals SPECIAL damage equal to [300,SP]% of the user's ATK to the target and ADJACENT enemies in an X-Shape. If your team has more total STAR than the opposing team, this has a [30,LK]% chance to execute the target, increased by 5% for each additional STAR.",
 		"AXE_KICK": "Leap to the enemy with the highest PP then deal [25,50,100,200,SP] SPECIAL and burn [15,15,30,60,SP] PP. Has [30,LK]% chance to inflict CONFUSION for 3 seconds.",
 		"EXPANDING_FORCE": "The user gains PSYCHIC_FIELD, or spreads it to a nearby ally. Then its psychic energy reverbates on all allies in a PSYCHIC_FIELD, dealing [10,20,40,80,SP] SPECIAL to ADJACENT enemies.",
 		"SPITE": "Drains [20,40,60,100,SP] PP from target and redistributes [20,40,60,100,SP] PP to ADJACENT allies",

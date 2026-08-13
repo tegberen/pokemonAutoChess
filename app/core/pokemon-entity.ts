@@ -154,7 +154,6 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
   @type("uint8") stacks: number = 0
   @type("uint8") stacksRequired: number = 0
   @type("boolean") ignited: boolean = false
-  // ICY_REFLECTION: 0-100% towards the next recast. Declared last to keep wire indexes
   @type("uint8") icyReflectionCharge: number = 0
   cooldown = 500
   oneSecondCooldown = 1000
@@ -189,7 +188,7 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
   isRivalryChampionThisFight: boolean = false
   isLancesAceThisFight: boolean = false
   isHailToTheKingChampionThisFight: boolean = false
-  axeBlastExecutesThisFight: boolean = false
+  axeBlastExecuteChance: number = 0
   isSynchronisedSpeedLeaderThisFight: boolean = false
   isBlossomFestivalChampionThisFight: boolean = false
   isEchoChamberLeaderThisFight: boolean = false

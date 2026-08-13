@@ -21,7 +21,7 @@ export class WaveSplashStrategy extends AbilityStrategy {
     const { death } = target.handleSpecialDamage(
       isBlessed && target.status.freeze ? 9999 : damage,
       board,
-      AttackType.SPECIAL,
+      isBlessed && target.status.freeze ? AttackType.TRUE : AttackType.SPECIAL,
       pokemon,
       crit
     )

@@ -146,6 +146,13 @@ export default function BlessingsPanel(props: { recentOnly?: boolean }) {
     SynergyTiersThresholds[Synergy.AMORPHOUS].at(-1) ?? 7
   const rainbowDropletActivated =
     (questProgress[Blessing.RAINBOW_DROPLET] ?? 0) > 0
+  const axeBlastStarCounts = questProgress[Blessing.AXE_BLAST] ?? 0
+  const axeBlastAlliedStars = Math.floor(axeBlastStarCounts / 100)
+  const axeBlastOpposingStars = axeBlastStarCounts % 100
+  const axeBlastExecuteChance =
+    axeBlastAlliedStars > axeBlastOpposingStars
+      ? 30 + 5 * (axeBlastAlliedStars - axeBlastOpposingStars)
+      : 0
   const auroraBorealisReduction = Math.round(
     (AURORA_BOREALIS_DAMAGE_REDUCTION +
       nbActiveSynergies * AURORA_BOREALIS_REDUCTION_PER_ACTIVE_SYNERGY) *
@@ -250,6 +257,7 @@ export default function BlessingsPanel(props: { recentOnly?: boolean }) {
                 {blessing === Blessing.GRUDGE && <p className="blessing-panel-live-value">{addIconsToDescription(`${grudgeSubstitutesPlanted} Substitute${grudgeSubstitutesPlanted === 1 ? "" : "s"} on the opponent bench: every CURSE you inflict is ${grudgeCurseSecondsSaved} seconds shorter`)}</p>}
                 {blessing === Blessing.MYSTOGAN && <p className="blessing-panel-live-value">{mystoganWands && mystoganWands.length > 0 ? addIconsToDescription(mystoganWands.map((wand) => wand as string).join(", ")) : "No FAIRY tier reached yet"}</p>}
                 {blessing === Blessing.MAGNETOSPHERE && <p className="blessing-panel-live-value">{addIconsToDescription(`STEEL ${steelCount}: ${magnetosphereReach} RANGE of attraction and repulsion around each STEEL Pokémon`)}</p>}
+                {blessing === Blessing.AXE_BLAST && axeBlastStarCounts > 0 && <p className="blessing-panel-live-value">{addIconsToDescription(`Team STAR: ${axeBlastAlliedStars} vs ${axeBlastOpposingStars}\nExecute chance: ${axeBlastExecuteChance}% before Luck`)}</p>}
                 {blessing === Blessing.GEM_HARVEST && gemHarvestGems.length === 0 && <p className="blessing-panel-live-value">No gem harvested yet</p>}
                 {blessing === Blessing.GEM_HARVEST && gemHarvestGems.map(([gem, copies, holders]) => <p key={gem} className="blessing-panel-live-value">{addIconsToDescription(holders > 0 ? `${gem}${copies > 1 ? ` x${copies}` : ""}: ${holders} fielded Pokémon gain ${copies * GEM_HARVEST_ATTACK_PER_GEM} ATK and ${copies * GEM_HARVEST_ABILITY_POWER_PER_GEM} AP` : `${gem}${copies > 1 ? ` x${copies}` : ""}: no fielded Pokémon shares this synergy`)}</p>)}
               </BlessingTooltipCard>

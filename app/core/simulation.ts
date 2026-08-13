@@ -2502,8 +2502,16 @@ export default class Simulation extends Schema implements ISimulation {
           .reduce((sum, entity) => sum + entity.stars, 0)
       axeBlastChampion.skill = Ability.AXE_BLAST
       axeBlastChampion.range += 2
-      axeBlastChampion.axeBlastExecutesThisFight =
-        totalStars(alliedTeam) > totalStars(opposingTeam)
+      const alliedStars = totalStars(alliedTeam)
+      const opposingStars = totalStars(opposingTeam)
+      player.blessingsRef?.questProgress.set(
+        Blessing.AXE_BLAST,
+        alliedStars * 100 + opposingStars
+      )
+      if (alliedStars > opposingStars) {
+        axeBlastChampion.axeBlastExecuteChance =
+          0.3 + 0.05 * (alliedStars - opposingStars)
+      }
     }
 
     const snifferDogChampion = championOf.get(Blessing.SNIFFER_DOG)

@@ -1,4 +1,5 @@
 import { AttackType } from "../../types/enum/Game"
+import { chance } from "../../utils/random"
 import type { Board } from "../board"
 import type { PokemonEntity } from "../pokemon-entity"
 import { AbilityStrategy } from "./ability-strategy"
@@ -29,7 +30,10 @@ export class AxeBlastStrategy extends AbilityStrategy {
         crit
       )
     )
-    if (pokemon.axeBlastExecutesThisFight && target.hp > 0) {
+    if (
+      target.hp > 0 &&
+      chance(pokemon.axeBlastExecuteChance, pokemon)
+    ) {
       target.handleSpecialDamage(
         9999,
         board,

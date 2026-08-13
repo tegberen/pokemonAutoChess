@@ -63,7 +63,7 @@ export class SheerColdStrategy extends AbilityStrategy {
             ? 9999
             : Math.round(takenDamage * FROST_BURST_SPLASH_RATIO),
           board,
-          AttackType.SPECIAL,
+          splashExecuted ? AttackType.TRUE : AttackType.SPECIAL,
           pokemon,
           crit,
           true
