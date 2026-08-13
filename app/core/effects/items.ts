@@ -335,7 +335,8 @@ export class GreenOrbEffect extends PeriodicEffect {
           }
         }
         pokemon.broadcastAbility({
-          skill: hasEmeraldOrb ? "GREEN_ORB_EMERALD" : "GREEN_ORB"
+          skill: hasEmeraldOrb ? "GREEN_ORB_EMERALD" : "GREEN_ORB",
+          ap: 0
         })
       },
       Item.GREEN_ORB,

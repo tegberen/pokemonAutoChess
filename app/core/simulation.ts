@@ -48,6 +48,8 @@ import {
   Berries,
   CraftableItemsNoScarves,
   Item,
+  ItemComponents,
+  ItemRecipe,
   NonSpecialBerries,
   Seeds,
   SynergyGems,
@@ -58,7 +60,7 @@ import {
   WeatherRocksByWeather
 } from "../types/enum/Item"
 import { Passive } from "../types/enum/Passive"
-import { Pkm, PkmByIndex, PkmFamily } from "../types/enum/Pokemon"
+import { Pkm, PkmByIndex, PkmFamily, Unowns } from "../types/enum/Pokemon"
 import { Synergy } from "../types/enum/Synergy"
 import { getSynergyTier } from "../models/colyseus-models/synergies"
 import {
@@ -1596,6 +1598,61 @@ export default class Simulation extends Schema implements ISimulation {
       if (allies.length === 0) continue
 
       const missingPlayerLife = Math.max(0, player.maxLife - player.life)
+
+      if (
+        blessings.includes(Blessing.AUTO_CRAFTING) &&
+        isSynergyActiveForPlayer(player, Synergy.ARTIFICIAL)
+      ) {
+        ownUnits
+          .filter((ally) => ally.types.has(Synergy.ARTIFICIAL))
+          .forEach((ally) => {
+            const components = [...ally.items].filter((item) =>
+              isIn(ItemComponents, item)
+            )
+            components.forEach((component) => {
+              const craftableItems = (
+                Object.entries(ItemRecipe) as [Item, Item[]][]
+              )
+                .filter(
+                  ([item, recipe]) =>
+                    recipe.includes(component) &&
+                    !isIn(SynergyStones, item) &&
+                    item !== Item.WONDER_BOX &&
+                    !ally.items.has(item)
+                )
+                .map(([item]) => item)
+              if (craftableItems.length === 0) return
+              ally.removeItem(component)
+              ally.addItem(pickRandomIn(craftableItems))
+            })
+          })
+      }
+
+      if (
+        blessings.includes(Blessing.HIEROGLYPHS) &&
+        isSynergyActiveForPlayer(player, Synergy.PSYCHIC)
+      ) {
+        ownUnits.filter((ally) => isIn(Unowns, ally.name)).forEach((ally) => {
+          ally.maxPP = Math.max(1, Math.round(ally.maxPP * 0.5))
+        })
+      }
+
+      if (
+        blessings.includes(Blessing.CENTER_STAGE) &&
+        isSynergyActiveForPlayer(player, Synergy.SOUND)
+      ) {
+        const soundAllies = ownUnits.filter((ally) =>
+          ally.types.has(Synergy.SOUND)
+        )
+        const eagerPerformers = soundAllies.filter(
+          (ally) => PkmFamily[ally.name] !== Pkm.GROOKEY
+        )
+        if (eagerPerformers.length > 0) {
+          const centerStageAlly = getStrongestUnit(eagerPerformers)
+          centerStageAlly.centerStageSpotlight = true
+          centerStageAlly.isBlessedHero = true
+        }
+      }
 
       if (blessings.includes(Blessing.FOGBOUND_LAKE)) {
         const teamEffects =

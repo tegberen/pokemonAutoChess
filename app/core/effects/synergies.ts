@@ -258,7 +258,23 @@ export class SoundCryEffect extends OnAbilityCastEffect {
       chimecho.addPP(3, pokemon, 0, false)
     }
 
-    const scale = pokemon.passive === Passive.MEGA_LAUNCHER ? 3 : 1
+    const centerStageAlly = board.cells.find(
+      (ally) => ally?.team === pokemon.team && ally.centerStageSpotlight
+    )
+    const centerStageScale =
+      pokemon.player?.blessings?.includes(Blessing.CENTER_STAGE) &&
+      pokemon.hasSynergyEffect(Synergy.SOUND) &&
+      centerStageAlly &&
+      distanceC(
+        pokemon.positionX,
+        pokemon.positionY,
+        centerStageAlly.positionX,
+        centerStageAlly.positionY
+      ) === 1
+        ? 2
+        : 1
+    const scale =
+      (pokemon.passive === Passive.MEGA_LAUNCHER ? 3 : 1) * centerStageScale
 
     board.cells.forEach((ally) => {
       if (ally?.team === pokemon.team) {

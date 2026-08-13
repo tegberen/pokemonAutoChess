@@ -2141,6 +2141,15 @@ export const blessingEffectService: {
     return true
   },
 
+  [Blessing.AUTO_CRAFTING]: (player) => {
+    player.items.push(...pickNRandomIn(ItemComponents, 2))
+    return true
+  },
+
+  [Blessing.CENTER_STAGE]: () => true,
+
+  [Blessing.HIEROGLYPHS]: () => true,
+
   [Blessing.FESTIVE_PICNIC]: (player) => {
     serveFestivePicnicDishes(player)
     return true

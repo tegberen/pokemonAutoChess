@@ -605,6 +605,11 @@ export default class BattleManager {
           pkmSprite.lifebar?.setIcyReflectionCharge(pokemon.icyReflectionCharge)
           break
 
+        case "centerStageSpotlight":
+          if (pokemon.centerStageSpotlight) pkmSprite.addCenterStageSpotlight()
+          else pkmSprite.removeCenterStageSpotlight()
+          break
+
         case "orientation": {
           if (pkmSprite.orientation !== pokemon.orientation) {
             pkmSprite.orientation = pokemon.orientation

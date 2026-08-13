@@ -631,6 +631,7 @@ export interface IPokemonEntity {
   stacksRequired: number
   ignited: boolean
   icyReflectionCharge: number
+  centerStageSpotlight: boolean
   isSpawn: boolean
   commands: ISimulationCommand[]
   effectsSet: Set<EffectClass>

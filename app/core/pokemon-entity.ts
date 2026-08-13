@@ -155,6 +155,7 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
   @type("uint8") stacksRequired: number = 0
   @type("boolean") ignited: boolean = false
   @type("uint8") icyReflectionCharge: number = 0
+  @type("boolean") centerStageSpotlight: boolean = false
   cooldown = 500
   oneSecondCooldown = 1000
   state: PokemonState

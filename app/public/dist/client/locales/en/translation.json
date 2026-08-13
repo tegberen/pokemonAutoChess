@@ -5481,6 +5481,18 @@
 			"name": "Champion's Mask",
 			"description": "Gain a CHAMPIONS_MASK. At the start of combat, allies with a CHAMPIONS_MASK gain 50 SHIELD per FIGHTING tier."
 		},
+		"AUTO_CRAFTING": {
+			"name": "Auto-Crafting",
+			"description": "At the start of combat, each ARTIFICIAL Pokémon holding a component turns it into a random craftable item made with that component for that combat. Synergy stones and WONDER_BOX are excluded. Gain 2 random components."
+		},
+		"CENTER_STAGE": {
+			"name": "Center Stage",
+			"description": "At the start of combat, your STRONGEST SOUND ally gains a pink spotlight. Other ADJACENT SOUND Pokémon emit twice as many sound cries. (The Grookey family has stage fright and refuses the spotlight.)"
+		},
+		"HIEROGLYPHS": {
+			"name": "Hieroglyphs",
+			"description": "Unown have 50% less max PP. When an Unown casts its ability, summon a random Unown in the safest corner of the board. Unown ! and Unown Q cannot trigger this summon or be summoned."
+		},
 		"FURIOUS_FABRIC": {
 			"name": "Furious Fabric",
 			"description": "Every item crafted from a SILK_SCARF also gives a synergy to the Pokémon holding it:\n- BIG_EATER_BELT: GOURMET\n- EFFICIENT_BANDANNA: SOUND\n- COVER_BAND: GROUND\n- TWIST_BAND: PSYCHIC\n- EXPLOSIVE_BAND: WILD\n- MACH_RIBBON: FIELD\n- BLACK_BELT: FIGHTING\n- LUCKY_RIBBON: FAIRY\n- TIGHT_BELT: BUG\n- FRIEND_BOW: GRASS\n- NULLIFY_BANDANNA: FLYING"

@@ -1069,6 +1069,27 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     grantsPokemonImmediately: false,
     isAvailable: isSynergyBlessingAvailable(Synergy.FIGHTING)
   },
+  [Blessing.AUTO_CRAFTING]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "auto_crafting",
+    grantsPokemonImmediately: false,
+    isAvailable: isSynergyBlessingAvailable(Synergy.ARTIFICIAL)
+  },
+  [Blessing.CENTER_STAGE]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "center_stage",
+    grantsPokemonImmediately: false,
+    isAvailable: isSynergyBlessingAvailable(Synergy.SOUND)
+  },
+  [Blessing.HIEROGLYPHS]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "hieroglyphs",
+    grantsPokemonImmediately: false,
+    isAvailable: isSynergyBlessingAvailable(Synergy.PSYCHIC)
+  },
   [Blessing.FURIOUS_FABRIC]: {
     tier: BlessingTier.PRISMATIC,
     availableAtStages: BLESSING_SELECTION_STAGES,

@@ -165,6 +165,7 @@ export default class PokemonSprite extends DraggableObject {
   curseTorment: GameObjects.Sprite | undefined
   curseFate: GameObjects.Sprite | undefined
   light: GameObjects.Sprite | undefined
+  centerStageSpotlight: GameObjects.Sprite | undefined
   blessedHeroMark: GameObjects.Image | undefined
   awakeningGlow: Phaser.Filters.Glow | undefined
   awakeningGlowTween: Phaser.Tweens.Tween | undefined
@@ -1326,6 +1327,9 @@ export default class PokemonSprite extends DraggableObject {
     if (pokemon.status.light) {
       this.addLight(pokemon.status.lightTint)
     }
+    if (pokemon.centerStageSpotlight) {
+      this.addCenterStageSpotlight()
+    }
     if (pokemon.status.wound) {
       this.addWound()
     }
@@ -1887,6 +1891,25 @@ export default class PokemonSprite extends DraggableObject {
     if (this.light) {
       this.remove(this.light, true)
       this.light = undefined
+    }
+  }
+
+  addCenterStageSpotlight() {
+    if (this.centerStageSpotlight) return
+    this.centerStageSpotlight = this.scene.add
+      .sprite(0, 0, "abilities", "LIGHT_CELL/000.png")
+      .setScale(1.5, 1.5)
+      .setDepth(DEPTH.LIGHT_CELL)
+      .setTint(0xff69b4)
+    this.centerStageSpotlight.anims.play("LIGHT_CELL")
+    this.add(this.centerStageSpotlight)
+    this.sendToBack(this.centerStageSpotlight)
+  }
+
+  removeCenterStageSpotlight() {
+    if (this.centerStageSpotlight) {
+      this.remove(this.centerStageSpotlight, true)
+      this.centerStageSpotlight = undefined
     }
   }
 

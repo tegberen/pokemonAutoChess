@@ -12,7 +12,8 @@ import { Pkm, Unowns } from "../../types/enum/Pokemon"
 import { DPS_LANGUAGE_BARRIER_ID } from "../../types"
 import { EffectEnum } from "../../types/enum/Effect"
 import { isIn } from "../../utils/array"
-import { chance } from "../../utils/random"
+import { distanceC } from "../../utils/distance"
+import { chance, pickRandomIn } from "../../utils/random"
 import type { Board } from "../board"
 import { OnAbilityCastEffect } from "../effects/effect"
 import type { PokemonEntity } from "../pokemon-entity"
@@ -38,6 +39,7 @@ export function castAbility(
   }
   abilityStrategy.process(pokemon, board, target, crit, preventDefaultAnim)
 
+  const casterBlessings = pokemon.player?.blessings
   pokemon.getEffects(OnAbilityCastEffect).forEach((effect) => {
     effect.apply(pokemon, board, target, crit)
   })
@@ -48,8 +50,6 @@ export function castAbility(
   ) {
     pokemon.addAbilityPower(pokemon.stars, pokemon, 0, false, true)
   }
-
-  const casterBlessings = pokemon.player?.blessings
 
   if (
     pokemon.types.has(Synergy.SOUND) &&
@@ -90,6 +90,75 @@ export function castAbility(
       65535,
       languageBarrierDps.shield + (pokemon.shieldDone - shieldBefore)
     )
+  }
+
+  if (
+    isIn(Unowns, pokemon.name) &&
+    pokemon.name !== Pkm.UNOWN_EXCLAMATION &&
+    pokemon.name !== Pkm.UNOWN_Q &&
+    pokemon.hasSynergyEffect(Synergy.PSYCHIC) &&
+    casterBlessings?.includes(Blessing.HIEROGLYPHS) &&
+    pokemon.player
+  ) {
+    const corners = [
+      { x: 0, y: 0 },
+      { x: board.columns - 1, y: 0 },
+      { x: 0, y: board.rows - 1 },
+      { x: board.columns - 1, y: board.rows - 1 }
+    ]
+    const availableCorners = corners
+      .map((corner) =>
+        board.getEntityOnCell(corner.x, corner.y) === undefined
+          ? corner
+          : board.getClosestAvailablePlace(corner.x, corner.y)
+      )
+      .filter((corner): corner is { x: number; y: number } => corner !== null)
+      .filter(
+        (corner, index, all) =>
+          all.findIndex(
+            (candidate) =>
+              candidate.x === corner.x && candidate.y === corner.y
+          ) === index
+      )
+    const enemies = board.cells.filter(
+      (entity): entity is PokemonEntity =>
+        entity !== undefined && entity.team !== pokemon.team && entity.hp > 0
+    )
+    const safety = (corner: { x: number; y: number }) =>
+      enemies.length === 0
+        ? 0
+        : Math.min(
+            ...enemies.map((enemy) =>
+              distanceC(
+                corner.x,
+                corner.y,
+                enemy.positionX,
+                enemy.positionY
+              )
+            )
+          )
+    if (availableCorners.length > 0) {
+      const safestDistance = Math.max(...availableCorners.map(safety))
+      const safestCorners = availableCorners.filter(
+        (corner) => safety(corner) === safestDistance
+      )
+      const corner = pickRandomIn(safestCorners)
+      const summonableUnowns = Unowns.filter(
+        (unown) =>
+          unown !== Pkm.UNOWN_EXCLAMATION && unown !== Pkm.UNOWN_Q
+      )
+      const unown = pokemon.simulation.addPokemon(
+        PokemonFactory.createPokemonFromName(
+          pickRandomIn(summonableUnowns),
+          pokemon.player
+        ),
+        corner.x,
+        corner.y,
+        pokemon.team,
+        true
+      )
+      unown.maxPP = Math.max(1, Math.round(unown.maxPP * 0.5))
+    }
   }
 
   // BEEKEEPING blessing: a Combee joins the fight each time a unique casts
