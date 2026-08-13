@@ -1914,6 +1914,21 @@ const LATE_BLESSING_TIER_CHANCES: { [tier in BlessingTier]: number } = {
   [BlessingTier.PRISMATIC]: 0.20
 }
 
+const WISH_FESTIVAL_FINALE_TIER_CHANCES: {
+  [stage: number]: { [tier in BlessingTier]: number }
+} = {
+  4: {
+    [BlessingTier.SILVER]: 0.1,
+    [BlessingTier.GOLD]: 0.2,
+    [BlessingTier.PRISMATIC]: 0.7
+  },
+  12: {
+    [BlessingTier.SILVER]: 0.1,
+    [BlessingTier.GOLD]: 0.5,
+    [BlessingTier.PRISMATIC]: 0.4
+  }
+}
+
 export const BlessingTierChanceByStage: {
   [stage: number]: { [tier in BlessingTier]: number }
 } = {
@@ -1934,12 +1949,7 @@ export function rollBlessingTierForStage(
   const tierChances =
     isWishFestivalFinale() &&
     (blessingsUnderTest.length === 0 || BLESSING_SANDBOX_MODE)
-    ? {
-        ...baseTierChances,
-        [BlessingTier.GOLD]: baseTierChances[BlessingTier.GOLD] - 0.05,
-        [BlessingTier.PRISMATIC]:
-          baseTierChances[BlessingTier.PRISMATIC] + 0.05
-      }
+    ? (WISH_FESTIVAL_FINALE_TIER_CHANCES[stage] ?? baseTierChances)
     : baseTierChances
   return randomWeighted(tierChances) ?? BlessingTier.SILVER
 }
