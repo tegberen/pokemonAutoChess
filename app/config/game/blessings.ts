@@ -1123,6 +1123,12 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     grantsPokemonImmediately: false,
     isAvailable: isSynergyBlessingAvailable(Synergy.FAIRY)
   },
+  [Blessing.SHOW_OFF]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "show_off",
+    grantsPokemonImmediately: false
+  },
   [Blessing.FESTIVE_PICNIC]: {
     tier: BlessingTier.PRISMATIC,
     availableAtStages: BLESSING_SELECTION_STAGES,

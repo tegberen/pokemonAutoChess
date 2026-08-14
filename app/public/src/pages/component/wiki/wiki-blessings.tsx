@@ -185,7 +185,8 @@ const PREPARATION_BLESSINGS = new Set<Blessing>([
   Blessing.CLIMBING_THE_LADDER,
   Blessing.SYNCHRONICITY,
   Blessing.UP_IS_UP,
-  Blessing.HARD_COMMIT
+  Blessing.HARD_COMMIT,
+  Blessing.SHOW_OFF
 ])
 
 const ADDITIONAL_HERO_BLESSINGS = new Set<Blessing>([

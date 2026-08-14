@@ -1046,6 +1046,9 @@ export default class GameRoom extends Room<{ state: GameState }> {
       usr.games += 1
       if (rank === 1) {
         usr.wins += 1
+        if (this.state.hasBlessing(player.id, Blessing.SHOW_OFF)) {
+          player.titles.add(Title.SHOW_OFF)
+        }
         // both members of a Double Up team share rank 1
         if (this.state.whimsy) {
           player.titles.add(Title.WHIMSY)
@@ -1689,6 +1692,11 @@ export default class GameRoom extends Room<{ state: GameState }> {
       }
       owned.blessings.push(blessing)
       player.blessings.push(blessing)
+      if (blessing === Blessing.SHOW_OFF) {
+        this.clients
+          .find((client) => client.auth.uid === player.id)
+          ?.send(Transfer.SHOW_OFF)
+      }
       removeInArray(player.choices, choice)
       return
     }

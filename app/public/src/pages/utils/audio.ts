@@ -26,6 +26,7 @@ export const SOUNDS = {
   REFRESH: "refresh.ogg",
   SELL_UNIT: "sell_unit_sound.ogg",
   SET_READY: "setready.ogg",
+  SHOW_OFF: "show_off_song.ogg",
   START_GAME: "startgame.ogg"
 } as const
 
@@ -75,6 +76,44 @@ export function playSound(key: Soundkey, volume = 1) {
     sound.volume = (volume * preference("sfxVolume")) / 100
     sound.play()
   }
+}
+
+let showOffFadeInterval: ReturnType<typeof setInterval> | undefined
+
+export function playShowOffSong(scene?: SceneWithMusic) {
+  const sound = AUDIO_ELEMENTS[SOUNDS.SHOW_OFF]
+  if (!sound) return
+
+  if (showOffFadeInterval) clearInterval(showOffFadeInterval)
+  sound.currentTime = 0
+  const fadeInDuration = 3
+  const fadeOutDuration = 5
+  sound.volume = 0
+
+  const fadeInterval = setInterval(() => {
+    const remaining = sound.duration - sound.currentTime
+    const fadeInProgress = Math.min(1, sound.currentTime / fadeInDuration)
+    const fullVolume = preference("musicVolume") / 100
+    if (Number.isFinite(remaining) && remaining <= fadeOutDuration) {
+      const fadeOutProgress = Math.max(0, remaining / fadeOutDuration)
+      sound.volume = fullVolume * fadeOutProgress
+      scene?.music?.setVolume(fullVolume * (1 - fadeOutProgress))
+    } else {
+      sound.volume = fullVolume * fadeInProgress
+      scene?.music?.setVolume(fullVolume * (1 - fadeInProgress))
+    }
+    if (sound.ended) {
+      scene?.music?.setVolume(preference("musicVolume") / 100)
+      clearInterval(fadeInterval)
+      if (showOffFadeInterval === fadeInterval) showOffFadeInterval = undefined
+    }
+  }, 100)
+  showOffFadeInterval = fadeInterval
+  void sound.play().catch(() => {
+    scene?.music?.setVolume(preference("musicVolume") / 100)
+    clearInterval(fadeInterval)
+    if (showOffFadeInterval === fadeInterval) showOffFadeInterval = undefined
+  })
 }
 
 interface SceneWithMusic extends Phaser.Scene {

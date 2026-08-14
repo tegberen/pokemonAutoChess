@@ -107,7 +107,7 @@ import GameSynergies from "./component/game/game-synergies"
 import GameToasts from "./component/game/game-toasts"
 import { MainSidebar } from "./component/main-sidebar/main-sidebar"
 import { ConnectionStatusNotification } from "./component/system/connection-status-notification"
-import { playMusic, preloadMusic } from "./utils/audio"
+import { playMusic, playShowOffSong, preloadMusic } from "./utils/audio"
 import { LocalStoreKeys, localStore } from "./utils/store"
 import {
   transformBoardCoordinates,
@@ -465,6 +465,10 @@ export default function Game() {
       room.onMessage(Transfer.LOADING_COMPLETE, () => {
         setLoaded(true)
       })
+
+      room.onMessage(Transfer.SHOW_OFF, () =>
+        playShowOffSong(getGameScene() ?? undefined)
+      )
 
       room.onMessage(Transfer.FINAL_RANK, (finalRank) => {
         setFinalRank(finalRank)

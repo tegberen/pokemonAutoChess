@@ -153,7 +153,8 @@ export enum Transfer {
   CANCEL_TRADE_OFFER = "CANCEL_TRADE_OFFER",
   SELECT_PARTNER = "SELECT_PARTNER",
   ARMORY_GIFT = "ARMORY_GIFT",
-  DEV = "DEV"
+  DEV = "DEV",
+  SHOW_OFF = "SHOW_OFF"
 }
 
 export enum ReadWriteMode {
@@ -825,7 +826,8 @@ export enum Title {
   WHIMSY = "WHIMSY",
   STARRY = "STARRY",
   PRIDE = "PRIDE",
-  THE_SCRIBBLER = "THE_SCRIBBLER"
+  THE_SCRIBBLER = "THE_SCRIBBLER",
+  SHOW_OFF = "SHOW_OFF"
 }
 
 export interface IBoardEvent {

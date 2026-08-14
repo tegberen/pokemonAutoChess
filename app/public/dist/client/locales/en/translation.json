@@ -4099,7 +4099,8 @@
 		"WHIMSY": "Whimsy",
 		"STARRY": "Starry",
 		"PRIDE": "Pride",
-		"THE_SCRIBBLER": "The Scribbler"
+		"THE_SCRIBBLER": "The Scribbler",
+		"SHOW_OFF": "Show Off"
 	},
 	"title_description": {
 		"NOVICE": "Play your first game",
@@ -4201,7 +4202,8 @@
 		"WHIMSY": "Win a Whimsy Weekend Scribble with your partner",
 		"STARRY": "Win a game during the Wish Festival Event with a Jirachi on your board",
 		"PRIDE": "Complete the Rainbow Hour Blessing Mission",
-		"THE_SCRIBBLER": "Win a Smeargle Scribble Tournament"
+		"THE_SCRIBBLER": "Win a Smeargle Scribble Tournament",
+		"SHOW_OFF": "Win a game with the Show Off Blessing"
 	},
 	"weather_forecast": "Weather forecast",
 	"blessings": "Blessings",
@@ -6039,6 +6041,10 @@
 		"SHELL_ARMOR_BLESSING": {
 			"name": "Shell Armor",
 			"description": "Gain a Grotle and move to a random Turtwig region if not in one. Your STRONGEST Turtwig's passive also grants it 1/3/6 SPE_DEF upon receiving critical attacks."
+		},
+		"SHOW_OFF": {
+			"name": "Show Off",
+			"description": "Does nothing. Win a game with this Blessing to unlock the Show Off title."
 		}
 	},
 	"hide": "Hide",
