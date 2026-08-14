@@ -433,6 +433,7 @@ import { SacredSwordCavernStrategy } from "./sacred-sword-cavern"
 import { SacredSwordGrassStrategy } from "./sacred-sword-grass"
 import { SacredSwordIronStrategy } from "./sacred-sword-iron"
 import { SaltCureStrategy } from "./salt-cure"
+import { SandResetStrategy } from "./sand-reset"
 import { SandSpitStrategy } from "./sand-spit"
 import { SandTombStrategy } from "./sand-tomb"
 import { SandsearStormStrategy } from "./sandsear-storm"
@@ -1158,6 +1159,7 @@ export const AbilityStrategies: { [key in Ability]: AbilityStrategy } = {
   [Ability.SACRED_SWORD_GRASS]: new SacredSwordGrassStrategy(),
   [Ability.SACRED_SWORD_IRON]: new SacredSwordIronStrategy(),
   [Ability.SALT_CURE]: new SaltCureStrategy(),
+  [Ability.SAND_RESET]: new SandResetStrategy(),
   [Ability.SAND_SPIT]: new SandSpitStrategy(),
   [Ability.SAND_TOMB]: new SandTombStrategy(),
   [Ability.SANDSEAR_STORM]: new SandsearStormStrategy(),

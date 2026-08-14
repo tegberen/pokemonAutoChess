@@ -735,6 +735,187 @@ function unisonNovaAnimation(): AbilityAnimation {
   }
 }
 
+function sandResetAnimation(): AbilityAnimation {
+  return ({ scene, positionX, positionY, flip }: AbilityAnimationArgs) => {
+    const [cx, cy] = transformEntityCoordinates(positionX, positionY, flip)
+    // Slightly overscan the gameplay radius so every affected edge cell is
+    // visibly inside the quicksand after board/camera projection.
+    const maxRadius = CELL_WIDTH * 5
+    const pixel = VFX_PIXEL
+    const verticalScale = 0.65
+    const sandStops = [0x3a302d, 0x665044, 0x9a7042, 0xc99755, 0xe0b96f]
+    const mixColor = (from: number, to: number, amount: number) => {
+      const channel = (shift: number) =>
+        Math.round(
+          ((from >> shift) & 0xff) * (1 - amount) +
+            ((to >> shift) & 0xff) * amount
+        )
+      return (channel(16) << 16) | (channel(8) << 8) | channel(0)
+    }
+    const sandGradient = Array.from({ length: 25 }, (_, index) => {
+      const position = index / 24 * (sandStops.length - 1)
+      const stop = Math.min(sandStops.length - 2, Math.floor(position))
+      return mixColor(sandStops[stop], sandStops[stop + 1], position - stop)
+    })
+    const dormantGradient = sandGradient.map((color) =>
+      mixColor(0x817466, color, 0.22)
+    )
+    const sandCells = Array.from({ length: 97 * 97 }, (_, index) => {
+      const x = index % 97 - 48
+      const y = Math.floor(index / 97) - 48
+      const nx = x / 48
+      const ny = y / 48
+      return {
+        x: nx,
+        y: ny,
+        radius: Math.hypot(nx, ny),
+        angle: Math.atan2(ny, nx),
+        noise: Math.sin(x * 12.9898 + y * 78.233) * 0.5 + 0.5
+      }
+    }).filter((cell) => cell.radius <= 1)
+    const grains = Array.from({ length: 96 }, (_, i) => ({
+      angle: (i / 96) * Math.PI * 2 + Math.random() * 0.18,
+      radius: 0.16 + Math.random() * 0.84,
+      drift: 0.65 + Math.random() * 0.5,
+      size: randomBetween(1, 2) * pixel,
+      lift: randomBetween(0, 10) * pixel,
+      shade: i % 5
+    }))
+    const ground = scene.add.graphics().setDepth(DEPTH.ABILITY_GROUND_LEVEL)
+    const storm = scene.add.graphics().setDepth(DEPTH.ABILITY)
+    scene.abilitiesVfxGroup?.add(ground)
+    scene.abilitiesVfxGroup?.add(storm)
+    let lastFrame = -1
+
+    scene.tweens.addCounter({
+      from: 0,
+      to: 1,
+      duration: 5000,
+      ease: "Linear",
+      onUpdate: (tween) => {
+        const p = (tween.getValue() ?? 0) as number
+        // PMD effects update in visible animation steps instead of gliding.
+        const frame = Math.floor(p * 5000 / 90)
+        if (frame === lastFrame) return
+        lastFrame = frame
+        const steppedTime = frame * 0.09
+        const summon = 1
+        const materializeProgress = Math.min(1, p / 0.18)
+        const materialize =
+          materializeProgress * materializeProgress *
+          (3 - 2 * materializeProgress)
+        const collapse = p < 0.86 ? 1 : Math.max(0, (1 - p) / 0.14)
+        const radius = maxRadius * summon * collapse
+        const rotation = steppedTime * 1.55
+        const alpha =
+          Math.min(0.08 + materialize * 0.92, Math.max(0, collapse * 1.8))
+        ground.clear()
+        storm.clear()
+
+        // A continuous quicksand funnel: pale and raised at the perimeter,
+        // progressively darker and lower toward one recessed opening.
+        const cellSize = Math.max(pixel, pixel * 2.7 * summon * collapse)
+        sandCells.forEach((cell) => {
+          const spiral = Math.sin(
+            cell.angle * 1.8 + cell.radius * 10 - rotation * 0.5
+          )
+          const pitDepth = Math.max(0, (0.72 - cell.radius) / 0.62)
+          const shadePosition = Math.max(
+            0,
+            Math.min(
+              1,
+              cell.radius * 0.86 +
+                spiral * 0.055 +
+                (cell.noise - 0.5) * 0.035 -
+                pitDepth * 0.12
+            )
+          )
+          const edgeFade = Math.max(
+            0,
+            Math.min(1, (1.04 - cell.radius + (cell.noise - 0.5) * 0.12) / 0.22)
+          )
+          const shadeIndex = Math.round(
+            shadePosition * (sandGradient.length - 1)
+          )
+          ground.fillStyle(
+            mixColor(
+              dormantGradient[shadeIndex],
+              sandGradient[shadeIndex],
+              materialize
+            ),
+            alpha * edgeFade * (0.3 + pitDepth * 0.18 + Math.abs(spiral) * 0.08 + cell.noise * 0.04)
+          )
+          ground.fillRect(
+            Math.round((cx + cell.x * radius) / pixel) * pixel - cellSize / 2,
+            Math.round((cy + 12 + cell.y * radius * verticalScale + pitDepth * pitDepth * 38) / pixel) * pixel - cellSize / 4,
+            cellSize,
+            cellSize * 0.55
+          )
+        })
+
+        // Closely packed spiral contours make the full pool visibly whirl.
+        // Each contour advances outward during its turn, so none reads as a
+        // separate closed ring or a large isolated noodle.
+        for (let band = 0; band < 7; band++) {
+          const points = Array.from({ length: 73 }, (_, step) => {
+            const turn = step / 72
+            const angle = turn * Math.PI * 2 * 1.25 + rotation * 0.5
+            const normalizedRadius = 0.06 + (band + turn * 2.2) / 9.2 * 0.9
+            const ripple = Math.sin(angle * 3 + band * 0.9) * pixel * 0.7
+            const bandRadius = radius * normalizedRadius + ripple
+            const depth = Math.max(0, (0.68 - normalizedRadius) / 0.58)
+            return {
+              x: cx + Math.cos(angle) * bandRadius,
+              y: cy + 12 + Math.sin(angle) * bandRadius * verticalScale + depth * depth * 32
+            }
+          })
+          const bandFade = Math.min(1, (7 - band) / 2.5)
+          drawPixelPath(ground, points, [
+            { grid: pixel * 2, size: pixel * 2, color: 0x65482f, alpha: 0.24 * alpha * bandFade },
+            { grid: pixel, size: pixel, color: band % 3 === 0 ? 0xe4bd76 : 0xb5834d, alpha: 0.4 * alpha * bandFade }
+          ])
+        }
+
+        sandCells
+          .filter((cell) => cell.radius < 0.135)
+          .forEach((cell) => {
+            ground.fillStyle(
+              cell.radius < 0.07 ? 0x242326 : 0x403735,
+              0.86 * alpha
+            )
+            ground.fillRect(
+              cx + cell.x * radius - cellSize * 0.7,
+              cy + 39 + cell.y * radius * verticalScale - cellSize * 0.4,
+              cellSize * 1.4,
+              cellSize * 0.8
+            )
+          })
+
+        grains.forEach((grain, i) => {
+          const flow = (grain.radius - steppedTime * 0.085 * grain.drift + 1) % 1
+          const r = radius * (0.07 + flow * 0.93)
+          const angle = grain.angle + rotation * grain.drift + (1 - flow) * 2.4
+          const x = Math.round((cx + Math.cos(angle) * r) / pixel) * pixel
+          const y = Math.round((cy + 12 + Math.sin(angle) * r * verticalScale + (1 - flow) * pixel * 5 - grain.lift * flow * 0.25) / pixel) * pixel
+          const colors = [0x5d493d, 0x826142, 0xa87a45, 0xc99855, 0xe3ba70]
+          storm.fillStyle(colors[grain.shade], alpha * (0.52 + grain.shade * 0.08))
+          const sinkingSize = Math.max(pixel, grain.size * (0.35 + flow * 0.65))
+          storm.fillRect(x - sinkingSize / 2, y - sinkingSize / 2, sinkingSize, sinkingSize)
+          if (i % 7 === frame % 7) {
+            storm.fillStyle(0xe6bd73, alpha * 0.45)
+            storm.fillRect(x + pixel, y - pixel * 2, pixel, pixel)
+          }
+        })
+
+      },
+      onComplete: () => {
+        ground.destroy()
+        storm.destroy()
+      }
+    })
+  }
+}
+
 function unisonStarfallAnimation(): AbilityAnimation {
   return ({ scene, positionX, positionY, flip }: AbilityAnimationArgs) => {
     const [x, y] = transformEntityCoordinates(positionX, positionY, flip)
@@ -2845,6 +3026,7 @@ export const AbilitiesAnimations: {
   [Ability.FIRE_FANG]: onTargetScale2,
   [Ability.POPULATION_BOMB]: onTargetScale2,
   [Ability.SCREECH]: onTargetScale2,
+  [Ability.SAND_RESET]: sandResetAnimation(),
   [Ability.SAND_TOMB]: onTargetScale2,
   [Ability.FIRST_IMPRESSION]: onTarget({ ability: "PUFF_BROWN", scale: 3 }),
   [Ability.PLAY_ROUGH]: onTargetScale2,

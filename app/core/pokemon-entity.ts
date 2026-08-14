@@ -177,6 +177,7 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
   shieldDone: number
   grassHealCooldown = 2000
   sandstormDamageTimer = 0
+  sandResetVortexes = 0
   fairySplashCooldown = 0
   isSpawn = false
   refToBoardPokemon: IPokemon
@@ -319,6 +320,7 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
   get canCast(): boolean {
     return (
       !this.status.silence &&
+      this.sandResetVortexes === 0 &&
       !this.items.has(Item.NULLIFY_BANDANNA) &&
       !this.effects.has(EffectEnum.TELEPORT_NEXT_ATTACK)
     )

@@ -14573,7 +14573,7 @@ export class Hippopotas extends Pokemon {
 }
 
 export class Hippodown extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.GROUND, Synergy.NORMAL])
+  types = new SetSchema<Synergy>([Synergy.WILD, Synergy.GROUND, Synergy.NORMAL])
   rarity = Rarity.EPIC
   stars = 2
   hp = 270
@@ -14583,7 +14583,7 @@ export class Hippodown extends Pokemon {
   speDef = 6
   maxPP = 100
   range = 1
-  skill = Ability.SAND_TOMB
+  skill = Ability.SAND_RESET
   additional = true
   passive2 = Passive.SANDSTORM_WEATHER_SUPPORT
 }
