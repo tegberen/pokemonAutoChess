@@ -11,7 +11,7 @@ export class RockArtilleryStrategy extends AbilityStrategy {
   process(pokemon: PokemonEntity, board: Board, target: null, crit: boolean) {
     super.process(pokemon, board, target, crit, true)
     const numberOfRocks = [10, 20, 30, 50][pokemon.stars - 1] ?? 50
-    const damage = [20, 30, 40, 80][pokemon.stars - 1] ?? 80
+    const damage = [15, 25, 35, 70][pokemon.stars - 1] ?? 70
 
     const enemies = board.cells.filter(
       (cell) => cell && cell.team !== pokemon.team

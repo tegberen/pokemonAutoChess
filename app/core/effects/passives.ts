@@ -45,6 +45,7 @@ import {
   type Effect,
   OnAbilityCastEffect,
   OnAttackEffect,
+  OnAttackReceivedEffect,
   OnChangePositionEffect,
   OnDamageReceivedEffect,
   OnDeathEffect,
@@ -1293,6 +1294,71 @@ const MegaEelektrossOnKillEffect = new OnKillEffect(
 export const PassiveEffects: Partial<
   Record<Passive, (Effect | (() => Effect))[]>
 > = {
+  [Passive.INFLATABLE]: [
+    new OnAttackReceivedEffect(({ pokemon, attacker, board, crit }) => {
+      if (
+        !crit ||
+        pokemon.hp <= 0 ||
+        distanceC(
+          pokemon.positionX,
+          pokemon.positionY,
+          attacker.positionX,
+          attacker.positionY
+        ) > 1
+      ) {
+        return
+      }
+
+      const maxHpLoss = [5, 10, 15][pokemon.stars - 1] ?? 15
+      const sleepDuration = [1000, 2000, 3000][pokemon.stars - 1] ?? 3000
+      const reducibleMaxHp = Math.max(0, pokemon.maxHP - pokemon.baseHP)
+      if (reducibleMaxHp <= 0) return
+
+      const actualHpLoss = Math.min(maxHpLoss, reducibleMaxHp)
+      const hpBeforeDeflating = pokemon.hp
+      pokemon.addMaxHP(-actualHpLoss, pokemon, 0, false)
+      pokemon.hp = Math.max(
+        1,
+        Math.min(pokemon.maxHP, hpBeforeDeflating - actualHpLoss)
+      )
+
+      pokemon.broadcastAbility({ skill: "INFLATABLE_PUFF" })
+
+      const adjacentPokemon = board
+        .getAdjacentCells(pokemon.positionX, pokemon.positionY, false)
+        .map((cell) => cell.value)
+        .filter(
+          (entity): entity is PokemonEntity =>
+            entity != null && entity.team !== pokemon.team
+        )
+
+      adjacentPokemon.forEach((entity) => {
+        const orientation = board.orientation(
+          pokemon.positionX,
+          pokemon.positionY,
+          entity.positionX,
+          entity.positionY,
+          pokemon,
+          undefined
+        )
+        const destination = board.getKnockBackPlace(
+          entity.positionX,
+          entity.positionY,
+          orientation
+        )
+        if (!destination) return
+
+        pokemon.broadcastAbility({
+          skill: "FIGHTING_KNOCKBACK",
+          targetX: entity.positionX,
+          targetY: entity.positionY
+        })
+        entity.moveTo(destination.x, destination.y, board, true)
+        entity.status.triggerSleep(sleepDuration, entity)
+        entity.cooldown = 500
+      })
+    })
+  ],
   [Passive.DURANT]: [DurantBugBuffEffect],
   [Passive.SHARED_VISION]: [SharedVisionEffect],
   [Passive.SHARED_VISION_2]: [SharedVisionEffect],

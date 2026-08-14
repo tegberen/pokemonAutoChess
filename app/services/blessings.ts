@@ -1396,7 +1396,7 @@ function heroBlessingEffect(
 const QUEST_REROLL_TARGET = 50
 const QUEST_GROW_TARGET_HP = 1300
 const QUEST_SHINE_LIGHT_TARGET = 7
-const QUEST_EPIC_UNIQUE_TARGET = 7
+const QUEST_EPIC_RARITY_TARGET = 7
 const QUEST_EXPAND_TARGET = 8
 const QUEST_EXPAND_MIN_SELL_PRICE = 5
 const SHARD_DAMAGE_PER_GRANT = 15
@@ -1418,16 +1418,24 @@ const blessingQuestConditions: {
     (player.synergies.get(Synergy.LIGHT) ?? 0) >= QUEST_SHINE_LIGHT_TARGET,
 
   [Blessing.QUEST_EPIC]: (player) => {
-    const fielded = new Set<Pkm>()
+    const fieldedByRarity = {
+      [Rarity.UNIQUE]: 0,
+      [Rarity.EPIC]: 0,
+      [Rarity.ULTRA]: 0
+    }
     player.board.forEach((pokemon) => {
       if (
         pokemon.positionY > 0 &&
-        (pokemon.rarity === Rarity.EPIC || pokemon.rarity === Rarity.ULTRA)
+        (pokemon.rarity === Rarity.UNIQUE ||
+          pokemon.rarity === Rarity.EPIC ||
+          pokemon.rarity === Rarity.ULTRA)
       ) {
-        fielded.add(PkmFamily[pokemon.name] ?? pokemon.name)
+        fieldedByRarity[pokemon.rarity]++
       }
     })
-    return fielded.size >= QUEST_EPIC_UNIQUE_TARGET
+    return Object.values(fieldedByRarity).some(
+      (fielded) => fielded >= QUEST_EPIC_RARITY_TARGET
+    )
   },
 
   [Blessing.QUEST_EXPAND]: (player) => {

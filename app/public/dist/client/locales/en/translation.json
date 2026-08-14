@@ -1576,6 +1576,7 @@
 		"STOCKPILE": "Stockpile",
 		"BARB_BARRAGE": "Barb Barrage",
 		"INFERNAL_PARADE": "Infernal Parade",
+		"INHALE": "Inhale",
 		"MAGIC_POWDER": "Magic Powder",
 		"RETALIATE": "Retaliate",
 		"SLASH": "Slash",
@@ -2172,6 +2173,7 @@
 		"BARB_BARRAGE": "Dive into the middle of the enemy team, dealing [15,30,45,60,120,SP] SPECIAL to all ADJACENT enemy Pokémon and inflict them with POISONNED for 3 seconds.",
 		"MAGIC_POWDER": "Gain [15,30,60,120,SP] SHIELD and SILENCE ADJACENT enemy Pokémon for [2,3,4,8] seconds.",
 		"INFERNAL_PARADE": "Shoot a returning Flame Wheel at farthest enemy, dealing [100, SP] SPECIAL twice to all enemy Pokémon in its path with a [50,LK]% chance to apply BURN for 3s.",
+		"INHALE": "Gain [10,20,30,SP] max HP.",
 		"RETALIATE": "Deal [150,150,150,300,SP]% of ATK as SPECIAL to the target, + 1 additional hit for each fallen allied Pokémon.",
 		"SLASH": "Deal [10,20,40,80,SP] SPECIAL to the target with a [30,60,90,100]% increased CRIT_CHANCE ratio. Can crit by default.",
 		"OUTRAGE": "Deal [300,300,300,600,SP]% ATK as SPECIAL to the target and ADJACENT enemy Pokémon and inflict the user with CONFUSION for 2 seconds.",
@@ -2377,7 +2379,7 @@
 		"HORN_LEECH": "Drains the target's energy, dealing [200,200,300,500,SP]% of user ATK as SPECIAL and healing for 50% of the damage dealt. 50% of the overheal is converted to SHIELD.",
 		"DRILL_RUN": "Charges through the target like a drill, dealing [15,30,60,120,SP] TRUE and swapping position. If there's another target behind in the same direction, immediately cast the ability again on that target. Can crit by default.",
 		"DRILL_PECK": "Charges through the target like a drill, dealing [30,60,120,240,SP] SPECIAL and swapping position. If there's another target behind in the same direction, immediately cast the ability again on that target.",
-		"ROCK_ARTILLERY": "Throws [10,20,30,50] rocks at random enemies, each landing randomly on their target or an ADJACENT tile, each dealing [20,30,40,80,SP] SPECIAL with a [30,LK]% chance to inflict LOCKED for 2 second.",
+		"ROCK_ARTILLERY": "Throws [10,20,30,50] rocks at random enemies, each landing randomly on their target or an ADJACENT tile, each dealing [15,25,35,70,SP] SPECIAL with a [30,LK]% chance to inflict LOCKED for 2 second.",
 		"ZING_ZAP": "Rolls behind the target, dealing [30,60,90,180,SP] SPECIAL and inflicting FLINCH for 3 seconds. If the target suffers from PARALYSIS, gain [10,20,40,80,SP] SHIELD.",
 		"NO_RETREAT": "Gain 1 DEF and 1 SPE_DEF per Falinks on your team. Troopers tackle target for [20,20,20,40,SP] SPECIAL each.",
 		"TACKLE": "Deal [20,40,60,120,SP] SPECIAL to the target.",
@@ -3562,6 +3564,7 @@
 	},
 	"passive_description": {
 		"NONE": "No passive",
+		"INFLATABLE": "While above base max HP, receiving a critical attack from an ADJACENT enemy removes [5,10,15] current and max HP, then pushes all ADJACENT enemies away. Pushed enemies fall to SLEEP for [1,2,3] seconds. (Cannot go below base max HP.)",
 		"TYROGUE": "Will choose a combat discipline based on the first item given:\nCHARCOAL MAGNET: $t(pkm.HITMONLEE)\nHEART_SCALE NEVER_MELT_ICE: $t(pkm.HITMONCHAN)\nOthers: $t(pkm.HITMONTOP)",
 		"PROTEAN2": "The Pokémon acquires the typing of the 2 highest synergies on the team",
 		"PROTEAN3": "The Pokémon acquires the typing of the 3 highest synergies on the team",
@@ -5041,7 +5044,7 @@
 		},
 		"QUEST_EPIC": {
 			"name": "Quest: Epic",
-			"description": "Gain a 1 STAR Epic Pokémon and 6 XP. The first time you field 7 Unique Epic or Ultra Pokémon at once, gain an EVIOLITE."
+			"description": "Gain a 1 STAR Epic Pokémon and 6 XP. The first time you fight with 7 Unique, 7 Epic, or 7 Ultra Pokémon fielded, gain an EVIOLITE."
 		},
 		"QUEST_EXPAND": {
 			"name": "Quest: Expand",

@@ -3837,9 +3837,10 @@ export class Igglybuff extends Pokemon {
   speed = 39
   def = 1
   speDef = 1
-  maxPP = 90
+  maxPP = 100
   range = 1
-  skill = Ability.SING
+  skill = Ability.INHALE
+  passive = Passive.INFLATABLE
 }
 
 export class Jigglypuff extends Pokemon {
@@ -3852,9 +3853,10 @@ export class Jigglypuff extends Pokemon {
   speed = 39
   def = 3
   speDef = 3
-  maxPP = 90
+  maxPP = 100
   range = 1
-  skill = Ability.SING
+  skill = Ability.INHALE
+  passive = Passive.INFLATABLE
 }
 
 export class Wigglytuff extends Pokemon {
@@ -3866,9 +3868,10 @@ export class Wigglytuff extends Pokemon {
   speed = 39
   def = 5
   speDef = 5
-  maxPP = 90
+  maxPP = 100
   range = 1
-  skill = Ability.SING
+  skill = Ability.INHALE
+  passive = Passive.INFLATABLE
 }
 
 export class Duskull extends Pokemon {
@@ -9834,7 +9837,7 @@ export class Houndoom extends Pokemon {
   evolutionRule = { type: EvolutionRuleType.STACK } as const
   stacksRequired = 10
   hp = 160
-  atk = 24
+  atk = 20
   speed = 55
   def = 10
   speDef = 14
@@ -9850,7 +9853,7 @@ export class MegaHoundoom extends Pokemon {
   rarity = Rarity.EPIC
   stars = 3
   hp = 180
-  atk = 24
+  atk = 20
   speed = 57
   def = 10
   speDef = 14
@@ -19758,7 +19761,7 @@ export class Grookey extends Pokemon {
   def = 8
   speDef = 6
   maxPP = 60
-  range = 1
+  range = 2
   skill = Ability.DRUM_BEATING
   passive = Passive.DRUMMER
 }
@@ -19774,7 +19777,7 @@ export class Thwackey extends Pokemon {
   def = 14
   speDef = 11
   maxPP = 60
-  range = 1
+  range = 2
   skill = Ability.DRUM_BEATING
   passive = Passive.DRUMMER
 }
@@ -19789,7 +19792,7 @@ export class Rillaboom extends Pokemon {
   def = 20
   speDef = 16
   maxPP = 60
-  range = 1
+  range = 2
   skill = Ability.DRUM_BEATING
   passive = Passive.DRUMMER
 }

@@ -2690,6 +2690,7 @@ export const AbilitiesAnimations: {
   ["PRISON_BOTTLE_PORTAL"]: onCasterScale2,
   ["PUFF_RED"]: onTargetScale2,
   ["PUFF_PINK"]: onTargetScale2,
+  ["INFLATABLE_PUFF"]: onCaster({ ability: "PUFF_PINK", scale: 4 }),
   ["PUFF_GREEN"]: onTargetScale2,
   ["PUFF_BROWN"]: onTargetScale2,
   ["COCONUT"]: projectile({
