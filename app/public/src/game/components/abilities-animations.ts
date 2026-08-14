@@ -735,7 +735,7 @@ function unisonNovaAnimation(): AbilityAnimation {
   }
 }
 
-function sandResetAnimation(): AbilityAnimation {
+function sandTombAnimation(): AbilityAnimation {
   return ({ scene, positionX, positionY, flip }: AbilityAnimationArgs) => {
     const [cx, cy] = transformEntityCoordinates(positionX, positionY, flip)
     // Slightly overscan the gameplay radius so every affected edge cell is
@@ -3027,8 +3027,7 @@ export const AbilitiesAnimations: {
   [Ability.FIRE_FANG]: onTargetScale2,
   [Ability.POPULATION_BOMB]: onTargetScale2,
   [Ability.SCREECH]: onTargetScale2,
-  [Ability.SAND_RESET]: sandResetAnimation(),
-  [Ability.SAND_TOMB]: onTargetScale2,
+  [Ability.SAND_TOMB]: sandTombAnimation(),
   [Ability.FIRST_IMPRESSION]: onTarget({ ability: "PUFF_BROWN", scale: 3 }),
   [Ability.PLAY_ROUGH]: onTargetScale2,
   [Ability.ANCHOR_SHOT]: onTargetScale1,

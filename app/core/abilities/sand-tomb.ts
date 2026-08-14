@@ -4,19 +4,61 @@ import type { PokemonEntity } from "../pokemon-entity"
 import { AbilityStrategy } from "./ability-strategy"
 
 export class SandTombStrategy extends AbilityStrategy {
+  requiresTarget = false
+
   process(
     pokemon: PokemonEntity,
     board: Board,
-    target: PokemonEntity,
+    target: PokemonEntity | null,
     crit: boolean
   ) {
     super.process(pokemon, board, target, crit)
 
-    const statusDuration = [3000, 5000, 8000, 16000][pokemon.stars - 1] ?? 16000
-    const damage = [10, 20, 40, 80][pokemon.stars - 1] ?? 80
+    const vortexRadius = 4
+    const vortexDuration = 5000
+    const damageMultiplier = [2, 3, 4, 5][pokemon.stars - 1] ?? 5
+    const castPositionX = pokemon.positionX
+    const castPositionY = pokemon.positionY
+    pokemon.sandTombVortexes += 1
 
-    target.status.triggerParalysis(statusDuration, target, pokemon)
-    target.status.triggerSilence(statusDuration, target, pokemon)
-    target.handleSpecialDamage(damage, board, AttackType.SPECIAL, pokemon, crit)
+    board
+      .getCellsInRadius(castPositionX, castPositionY, vortexRadius, false)
+      .forEach((cell) => {
+        if (!cell.value) return
+
+        const distance = Math.round(
+          Math.hypot(cell.x - castPositionX, cell.y - castPositionY)
+        )
+        const silenceDuration = (5 - distance) * 1000
+        if (silenceDuration > 0) {
+          cell.value.status.triggerSilence(silenceDuration, cell.value, pokemon)
+        }
+      })
+
+    pokemon.simulation.room.clock.setTimeout(() => {
+      pokemon.sandTombVortexes = Math.max(0, pokemon.sandTombVortexes - 1)
+      if (
+        !pokemon.simulation ||
+        !pokemon.simulation.room ||
+        pokemon.simulation.finished
+      ) {
+        return
+      }
+
+      const damage = Math.round(pokemon.atk * damageMultiplier)
+      board
+        .getCellsInRadius(castPositionX, castPositionY, vortexRadius, false)
+        .forEach((cell) => {
+          if (cell.value && cell.value.team !== pokemon.team) {
+            cell.value.handleSpecialDamage(
+              damage,
+              board,
+              AttackType.SPECIAL,
+              pokemon,
+              crit
+            )
+          }
+        })
+    }, vortexDuration)
   }
 }

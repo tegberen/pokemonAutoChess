@@ -1197,15 +1197,15 @@ export default abstract class PokemonState {
           pokemon.types.has(Synergy.GROUND) === false &&
           pokemon.items.has(Item.SAFETY_GOGGLES) === false
         ) {
-          const isInSandResetVortex = board
+          const isInSandTombVortex = board
             .getCellsInRadius(
               pokemon.positionX,
               pokemon.positionY,
               4,
               false
             )
-            .some((cell) => (cell.value?.sandResetVortexes ?? 0) > 0)
-          if (isInSandResetVortex) sandstormDamage *= 2
+            .some((cell) => (cell.value?.sandTombVortexes ?? 0) > 0)
+          if (isInSandTombVortex) sandstormDamage *= 2
 
           const { takenDamage } = pokemon.handleDamage({
             damage: sandstormDamage,

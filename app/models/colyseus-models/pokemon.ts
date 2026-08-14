@@ -14586,7 +14586,7 @@ export class Hippodown extends Pokemon {
   speDef = 6
   maxPP = 100
   range = 1
-  skill = Ability.SAND_RESET
+  skill = Ability.SAND_TOMB
   additional = true
   passive2 = Passive.SANDSTORM_WEATHER_SUPPORT
 }
