@@ -1,88 +1,3 @@
-import type Player from "../models/colyseus-models/player"
-import { rollWaterPonds } from "../config/game/water-ponds"
-import { WATER_FOUNTAIN_REGIONS } from "../config/game/blessings"
-import { WaterPond } from "../models/colyseus-models/water-pond"
-import { PlayerBlessings } from "../models/colyseus-models/player-blessings"
-import { PlayerChoice } from "../models/colyseus-models/player-choice"
-import { EvolutionManager } from "../core/evolution-logic/evolution-manager"
-import { EvolutionRuleType } from "../types/EvolutionRules"
-import { PokemonActionState } from "../types/enum/Game"
-import { PokemonClasses } from "../models/colyseus-models/pokemon"
-import PokemonFactory from "../models/pokemon-factory"
-import {
-  getPokemonData,
-  getRegularsTier1
-} from "../models/precomputed/precomputed-pokemon-data"
-import { PRECOMPUTED_POKEMONS_PER_RARITY } from "../models/precomputed/precomputed-rarity"
-import type GameState from "../rooms/states/game-state"
-import {
-  Blessing,
-  BlessingTrigger,
-  LANGUAGE_BARRIER_UNOWNS_GRANTED,
-  SELECTIVE_GENETICS_GOLDEN_EGG_CHANCE,
-  MOVE_TUTOR_MAX_PP,
-  BABY_OPENER_BABIES_GRANTED,
-  BABY_OPENER_MAX_COST,
-  SELECTIVE_GENETICS_BABIES_GRANTED,
-  SELECTIVE_GENETICS_MAX_COST,
-  HERO_BLESSING_GIFT,
-  HERO_BLESSING_FAMILY,
-  HERO_BLESSING_MOVES_REGION,
-  HERO_BLESSING_ADDS_TO_POOL,
-  PLUNDER_GOLD_MULTIPLIER,
-  WAITING_GAME_FREE_ROLLS,
-  WAITING_GAME_FREE_ROLLS_WITHOUT_REROLLING,
-  CALCULATED_LOSS_GOLD,
-  BP_REWARDS_COMPONENTS,
-  BP_REWARDS_RECURRING_COMPONENTS,
-  BP_REWARDS_ROUND_INTERVAL,
-  BERRY_GROWTH_GOLDEN_BERRIES_GRANTED,
-  FERTILE_SOIL_ABSORB_ROUNDS,
-  ADOPTION_FALLBACK,
-  ADOPTION_STARTERS,
-  ARCHEOLOGY_RARITY_WEIGHTS,
-  ARCHEOLOGY_TWO_STAR_CHANCE,
-  BERRY_GROWTH_GOLDEN_BERRIES_STAGE,
-  LANCES_ACE_DELAY,
-  CALLED_SHOT_GOLD,
-  CALLED_SHOT_STREAK,
-  MORE_EQUAL_THAN_OTHERS_GOLD,
-  MORE_EQUAL_THAN_OTHERS_GOLD_FOR_OTHERS,
-  CLIMBING_THE_LADDER_MAX_LEVEL,
-  QUICK_CLAW_COMPENSATION_STAGE,
-  BEING_OF_KNOWLEDGE_MAX_LEVEL,
-  SINGULARITY_OPTIONS,
-  SINGULARITY_I_STAGES,
-  SINGULARITY_II_STAGES,
-  STARTER_CHOICE_OPTIONS,
-  STARTER_CHOICE_EXTRA_ROUNDS,
-  QUEST_INDECISION_SYNERGIES_TARGET,
-  QUEST_CRIT_POWER_TARGET,
-  QUEST_ABSORB_DAMAGE_BLOCKED_TARGET,
-  QUEST_REVIVE_TARGET,
-  QUEST_PILLAGE_GOLD_TARGET,
-  QUEST_EVOLVE_II_TARGET,
-  CLIMBING_THE_LADDER_MIN_LEVEL,
-  CLIMBING_THE_LADDER_EXP_DISCOUNT,
-  WOBBUFFETS_GOLD_PRIZE_RECYCLE_TICKETS,
-  HARD_COMMIT_STAGES,
-  SYNARCH_GEMS_PER_UNIQUE,
-  FLEXIBILITY_FOSSIL_STONES,
-  FLEXIBILITY_COMPONENTS,
-  RAINBOW_HOUR_FOSSIL_STONES,
-  RAINBOW_HOUR_EEVEELUTIONS_TARGET,
-  RAINBOW_HOUR_GOLD_REWARD,
-  MANIFESTATION_UNLOCK_STAGE,
-  MIX_AND_MATCH_I_UNIQUES,
-  MIX_AND_MATCH_I_FIELD_CAP,
-  MIX_AND_MATCH_II_UNIQUES,
-  MIX_AND_MATCH_II_FIELD_CAP,
-  ALL_FOR_ONE_MAX_HP_RATIO,
-  TRASH_TO_TREASURE_ROUNDS_BY_STAR,
-  TRASH_TO_TREASURE_TRASH_GRANTED_MIN,
-  TRASH_TO_TREASURE_TRASH_GRANTED_MAX
-} from "../types/enum/Blessing"
-import { BattleResult, Rarity } from "../types/enum/Game"
 import {
   BOARD_SIDE_HEIGHT,
   BOARD_WIDTH,
@@ -90,19 +5,105 @@ import {
   RegionDetails,
   SynergyTiersThresholds
 } from "../config"
-import { RarityCost } from "../config/game/shop"
-import { PRECOMPUTED_POKEMONS_PER_TYPE } from "../models/precomputed/precomputed-types"
-import type { DungeonPMDO } from "../types/enum/Dungeon"
 import {
-  LAPRAS_TRAVEL_DURATION,
-  WandererBehavior,
-  WandererType
-} from "../types/enum/Wanderer"
-import { Title, Transfer } from "../types"
-import type GameRoom from "../rooms/game-room"
+  BLESSING_SYNERGY_GATED_STAGE,
+  SYNERGIES_WITH_BLESSINGS,
+  WATER_FOUNTAIN_REGIONS
+} from "../config/game/blessings"
+import { getAltFormForPlayer } from "../config/game/pokemons"
+import { RarityCost } from "../config/game/shop"
+import { rollWaterPonds } from "../config/game/water-ponds"
 import { giveRandomEgg } from "../core/eggs"
+import { EvolutionManager } from "../core/evolution-logic/evolution-manager"
 import { getUnlockedFlowerPots } from "../core/flower-pots"
+import type Player from "../models/colyseus-models/player"
+import { PlayerBlessings } from "../models/colyseus-models/player-blessings"
+import { PlayerChoice } from "../models/colyseus-models/player-choice"
+import type { Pokemon } from "../models/colyseus-models/pokemon"
+import { PokemonClasses } from "../models/colyseus-models/pokemon"
+import { WaterPond } from "../models/colyseus-models/water-pond"
+import PokemonFactory from "../models/pokemon-factory"
+import {
+  getPokemonData,
+  getRegularsTier1
+} from "../models/precomputed/precomputed-pokemon-data"
+import { PRECOMPUTED_POKEMONS_PER_RARITY } from "../models/precomputed/precomputed-rarity"
+import { PRECOMPUTED_POKEMONS_PER_TYPE } from "../models/precomputed/precomputed-types"
+import { getSellPrice } from "../models/shop"
+import type GameRoom from "../rooms/game-room"
+import type GameState from "../rooms/states/game-state"
+import { Title, Transfer } from "../types"
+import { EvolutionRuleType } from "../types/EvolutionRules"
 import { Awakening, AwakeningTypes } from "../types/enum/Awakening"
+import {
+  ADOPTION_FALLBACK,
+  ADOPTION_STARTERS,
+  ALL_FOR_ONE_MAX_HP_RATIO,
+  ARCHEOLOGY_RARITY_WEIGHTS,
+  ARCHEOLOGY_TWO_STAR_CHANCE,
+  BABY_OPENER_BABIES_GRANTED,
+  BABY_OPENER_MAX_COST,
+  BEING_OF_KNOWLEDGE_MAX_LEVEL,
+  BERRY_GROWTH_GOLDEN_BERRIES_GRANTED,
+  BERRY_GROWTH_GOLDEN_BERRIES_STAGE,
+  Blessing,
+  BlessingTrigger,
+  BP_REWARDS_COMPONENTS,
+  BP_REWARDS_RECURRING_COMPONENTS,
+  BP_REWARDS_ROUND_INTERVAL,
+  CALCULATED_LOSS_GOLD,
+  CALLED_SHOT_GOLD,
+  CALLED_SHOT_STREAK,
+  CLIMBING_THE_LADDER_EXP_DISCOUNT,
+  CLIMBING_THE_LADDER_MAX_LEVEL,
+  CLIMBING_THE_LADDER_MIN_LEVEL,
+  FERTILE_SOIL_ABSORB_ROUNDS,
+  FLEXIBILITY_COMPONENTS,
+  FLEXIBILITY_FOSSIL_STONES,
+  HARD_COMMIT_STAGES,
+  HERO_BLESSING_ADDS_TO_POOL,
+  HERO_BLESSING_FAMILY,
+  HERO_BLESSING_GIFT,
+  HERO_BLESSING_MOVES_REGION,
+  LANCES_ACE_DELAY,
+  LANGUAGE_BARRIER_UNOWNS_GRANTED,
+  MANIFESTATION_UNLOCK_STAGE,
+  MIX_AND_MATCH_I_FIELD_CAP,
+  MIX_AND_MATCH_I_UNIQUES,
+  MIX_AND_MATCH_II_FIELD_CAP,
+  MIX_AND_MATCH_II_UNIQUES,
+  MORE_EQUAL_THAN_OTHERS_GOLD,
+  MORE_EQUAL_THAN_OTHERS_GOLD_FOR_OTHERS,
+  MOVE_TUTOR_MAX_PP,
+  PLUNDER_GOLD_MULTIPLIER,
+  QUEST_ABSORB_DAMAGE_BLOCKED_TARGET,
+  QUEST_CRIT_POWER_TARGET,
+  QUEST_EVOLVE_II_TARGET,
+  QUEST_INDECISION_SYNERGIES_TARGET,
+  QUEST_PILLAGE_GOLD_TARGET,
+  QUEST_REVIVE_TARGET,
+  QUICK_CLAW_COMPENSATION_STAGE,
+  RAINBOW_HOUR_EEVEELUTIONS_TARGET,
+  RAINBOW_HOUR_FOSSIL_STONES,
+  RAINBOW_HOUR_GOLD_REWARD,
+  SELECTIVE_GENETICS_BABIES_GRANTED,
+  SELECTIVE_GENETICS_GOLDEN_EGG_CHANCE,
+  SELECTIVE_GENETICS_MAX_COST,
+  SINGULARITY_I_STAGES,
+  SINGULARITY_II_STAGES,
+  SINGULARITY_OPTIONS,
+  STARTER_CHOICE_EXTRA_ROUNDS,
+  STARTER_CHOICE_OPTIONS,
+  SYNARCH_GEMS_PER_UNIQUE,
+  TRASH_TO_TREASURE_ROUNDS_BY_STAR,
+  TRASH_TO_TREASURE_TRASH_GRANTED_MAX,
+  TRASH_TO_TREASURE_TRASH_GRANTED_MIN,
+  WAITING_GAME_FREE_ROLLS,
+  WAITING_GAME_FREE_ROLLS_WITHOUT_REROLLING,
+  WOBBUFFETS_GOLD_PRIZE_RECYCLE_TICKETS
+} from "../types/enum/Blessing"
+import type { DungeonPMDO } from "../types/enum/Dungeon"
+import { BattleResult, PokemonActionState, Rarity } from "../types/enum/Game"
 import {
   Berries,
   Dishes,
@@ -119,22 +120,19 @@ import {
   Tools,
   WeatherRocks
 } from "../types/enum/Item"
-import { schemaValues } from "../utils/schemas"
-import { isIn } from "../utils/array"
-import type { Pokemon } from "../models/colyseus-models/pokemon"
 import {
   Pkm,
   PkmFamily,
   PkmRegionalVariants,
   Unowns
 } from "../types/enum/Pokemon"
-import { getSellPrice } from "../models/shop"
 import { Synergy } from "../types/enum/Synergy"
 import {
-  BLESSING_SYNERGY_GATED_STAGE,
-  SYNERGIES_WITH_BLESSINGS
-} from "../config/game/blessings"
-import { getAltFormForPlayer } from "../config/game/pokemons"
+  LAPRAS_TRAVEL_DURATION,
+  WandererBehavior,
+  WandererType
+} from "../types/enum/Wanderer"
+import { isIn } from "../utils/array"
 import {
   getFirstAvailablePositionInBench,
   getFirstAvailablePositionOnBoard,
@@ -150,6 +148,7 @@ import {
   randomBetween,
   randomWeighted
 } from "../utils/random"
+import { schemaValues } from "../utils/schemas"
 
 const PEARL_GOLD_GAINED = 10
 const CROAGUNKS_AID_EXCHANGE_TICKETS = 3
@@ -179,7 +178,11 @@ const ITEMS_CRAFTED_FROM_SILK_SCARF = (
   Object.keys(ItemRecipe) as Item[]
 ).filter((item) => ItemRecipe[item]?.includes(Item.SILK_SCARF))
 
-function giftRandomItems(player: Player, amount: number, pool: Item[]): boolean {
+function giftRandomItems(
+  player: Player,
+  amount: number,
+  pool: Item[]
+): boolean {
   pickNRandomIn(pool, amount).forEach((item) => player.items.push(item))
   return true
 }
@@ -271,7 +274,10 @@ function scheduleBlessingGrant(
 }
 
 function nextStages(state: GameState, count: number): number[] {
-  return Array.from({ length: count }, (_, index) => state.stageLevel + index + 1)
+  return Array.from(
+    { length: count },
+    (_, index) => state.stageLevel + index + 1
+  )
 }
 
 export function applyScheduledBlessingGrants(player: Player, state: GameState) {
@@ -540,9 +546,7 @@ function recycleTrashToTreasure(player: Player) {
       }
       pokemon.trashToTreasureRounds += 1
       const roundsRequired =
-        TRASH_TO_TREASURE_ROUNDS_BY_STAR[
-          Math.min(pokemon.stars, 3) - 1
-        ] ?? 1
+        TRASH_TO_TREASURE_ROUNDS_BY_STAR[Math.min(pokemon.stars, 3) - 1] ?? 1
       if (pokemon.trashToTreasureRounds < roundsRequired) return
       pokemon.removeItem(Item.TRASH, player)
       pokemon.addItem(pickRandomIn(Tools), player)
@@ -932,8 +936,7 @@ function applyRainbowKey(
           (evolution) =>
             PkmFamily[evolution] === PkmFamily[pkm] &&
             getPokemonData(evolution).stars === pokemon.stars
-        ) &&
-        player.canFindRegionalPokemon(pkm)
+        ) && player.canFindRegionalPokemon(pkm)
     )
     if (candidates.length === 0) return []
     return [{ pokemon, replacement: pickRandomIn(candidates) }]
@@ -993,7 +996,8 @@ function applyRainbowKey(
 function grantMissionOrderQuest(player: Player, missionOrder: Item): boolean {
   player.items.push(missionOrder)
   const commons = PRECOMPUTED_POKEMONS_PER_RARITY.COMMON.filter(
-    (pkm) => getPokemonData(pkm).stars === 2 && player.canFindRegionalPokemon(pkm)
+    (pkm) =>
+      getPokemonData(pkm).stars === 2 && player.canFindRegionalPokemon(pkm)
   )
   if (commons.length > 0) {
     giftPokemonIfBenchHasRoom(player, pickRandomIn(commons))
@@ -1130,7 +1134,9 @@ export function isUniqueFieldCapReached(
 }
 
 function regionSynergies(player: Player): Synergy[] {
-  return player.map === "town" ? [] : (RegionDetails[player.map]?.synergies ?? [])
+  return player.map === "town"
+    ? []
+    : (RegionDetails[player.map]?.synergies ?? [])
 }
 
 /* called from every place that moves a player to a new region */
@@ -1190,22 +1196,21 @@ export function applyRecurringBlessingGrants(player: Player, state: GameState) {
   if (player.blessings?.includes(Blessing.TRASH_TO_TREASURE)) {
     recycleTrashToTreasure(player)
   }
-  if (player.blessings?.includes(Blessing.SWEET_TREATS)) {
-    grantSweetTreat(player)
-  }
 }
 
-function grantSweetTreat(player: Player) {
+export function grantSweetTreat(player: Player) {
+  // A treat left in inventory for one full round becomes Leftovers before the
+  // next round's fresh treat is granted. Consumed treats are simply absent.
   if (player.sweetTreat) {
     const staleTreatIndex = player.items.indexOf(player.sweetTreat)
     if (staleTreatIndex >= 0) {
-      player.items.splice(staleTreatIndex, 1, Item.LEFTOVERS)
+      // ArraySchema does not reliably synchronize an in-place splice
+      // replacement to clients. Remove and add as two tracked mutations.
+      player.items.splice(staleTreatIndex, 1)
+      player.items.push(Item.LEFTOVERS)
     }
   }
-  player.sweetTreat = pickRandomIn([
-    Item.CASTELIACONE,
-    Item.WHIPPED_DREAM
-  ])
+  player.sweetTreat = pickRandomIn([Item.CASTELIACONE, Item.WHIPPED_DREAM])
   player.items.push(player.sweetTreat)
 }
 
@@ -1219,7 +1224,10 @@ export function revealNextBuriedTreasure(
 ) {
   const owned = state.blessingsByPlayerId.get(player.id)
   if (!owned) return
-  if (!skipBlessingCheck && !player.blessings?.includes(Blessing.TREASURE_TRAIL))
+  if (
+    !skipBlessingCheck &&
+    !player.blessings?.includes(Blessing.TREASURE_TRAIL)
+  )
     return
   if (
     owned.treasureTrailHighlight >= 0 &&
@@ -1331,7 +1339,8 @@ function refundPlunderedGold(player: Player) {
   }
 }
 
-function grantRobinGemsReward(player: Player, state: GameState) {
+export function grantRobinGemsReward(player: Player, state: GameState) {
+  if (!state.hasBlessing(player.id, Blessing.ROBIN_GEMS)) return
   const latestBattle = player.history.at(-1)
   if (!latestBattle || latestBattle.result !== BattleResult.WIN) return
   if (
@@ -1596,7 +1605,8 @@ export const blessingTriggerEffectService: {
   },
 
   [Blessing.SWEET_SUBSCRIPTION]: {
-    [BlessingTrigger.PVE_END]: (player) => player.items.push(pickRandomIn(Sweets))
+    [BlessingTrigger.PVE_END]: (player) =>
+      player.items.push(pickRandomIn(Sweets))
   },
 
   [Blessing.MUNCHLAX_DELIVERY]: {
@@ -1638,11 +1648,6 @@ export const blessingTriggerEffectService: {
         .find((threshold) => floraCount >= threshold)
       if (mulchGained) player.collectMulch(mulchGained)
     }
-  },
-
-  [Blessing.ROBIN_GEMS]: {
-    [BlessingTrigger.PVP_END]: (player, state) =>
-      grantRobinGemsReward(player, state)
   }
 }
 
@@ -1744,8 +1749,7 @@ export const blessingEffectService: {
   [Blessing.A_NEW_FRIEND]: (player) => {
     const candidates = PRECOMPUTED_POKEMONS_PER_RARITY[Rarity.UNCOMMON].filter(
       (pkm) =>
-        getPokemonData(pkm).stars === 1 &&
-        player.canFindRegionalPokemon(pkm)
+        getPokemonData(pkm).stars === 1 && player.canFindRegionalPokemon(pkm)
     )
     if (candidates.length === 0) return false
     const pokemon = getAltFormForPlayer(pickRandomIn(candidates), player)
@@ -1756,8 +1760,7 @@ export const blessingEffectService: {
   },
   [Blessing.BP_REWARDS]: (player, state) => {
     player.items.push(...pickNRandomIn(ItemComponents, BP_REWARDS_COMPONENTS))
-    player.bpRewardsNextStage =
-      state.stageLevel + BP_REWARDS_ROUND_INTERVAL
+    player.bpRewardsNextStage = state.stageLevel + BP_REWARDS_ROUND_INTERVAL
     const owned =
       state.blessingsByPlayerId.get(player.id) ?? new PlayerBlessings()
     state.blessingsByPlayerId.set(player.id, owned)
@@ -1817,7 +1820,8 @@ export const blessingEffectService: {
     state.blessingsByPlayerId.set(player.id, owned)
     player.blessingsRef = owned
     player.updateSynergies()
-    if (room) player.boardSize = room.getTeamSize(player.board, player.blessings)
+    if (room)
+      player.boardSize = room.getTeamSize(player.board, player.blessings)
     return true
   },
   [Blessing.LANCES_ACE]: (player, state) => {
@@ -1987,8 +1991,7 @@ export const blessingEffectService: {
   [Blessing.INSTANT_HYPER_ROLL]: (player) =>
     giftPokemonOfRarityAndStars(player, Rarity.COMMON, 3),
 
-  [Blessing.CURSE_OF_TWO]: (player) =>
-    giftPokemonIfBenchHasRoom(player, Pkm.SNORUNT),
+  [Blessing.CURSE_OF_TWO]: () => true,
 
   [Blessing.ARCANE_METALS]: (player) =>
     giftPokemonIfBenchHasRoom(player, Pkm.MAGNEMITE),
@@ -2006,7 +2009,11 @@ export const blessingEffectService: {
     giftPokemonIfBenchHasRoom(player, Pkm.GOSSIFLEUR),
 
   [Blessing.BABY_OPENER]: (player) =>
-    giftBabiesUnderCost(player, BABY_OPENER_MAX_COST, BABY_OPENER_BABIES_GRANTED),
+    giftBabiesUnderCost(
+      player,
+      BABY_OPENER_MAX_COST,
+      BABY_OPENER_BABIES_GRANTED
+    ),
 
   [Blessing.SELECTIVE_GENETICS]: (player) => {
     // at most one of the three babies is swapped for a Golden Egg
@@ -2529,9 +2536,8 @@ export const blessingEffectService: {
       player.experienceManager.level = CLIMBING_THE_LADDER_MIN_LEVEL
       player.experienceManager.experience = 0
     }
-    player.experienceManager.expNeeded = player.experienceManager.expNeededAtLevel(
-      player.experienceManager.level
-    )
+    player.experienceManager.expNeeded =
+      player.experienceManager.expNeededAtLevel(player.experienceManager.level)
     return true
   },
 
@@ -2539,7 +2545,9 @@ export const blessingEffectService: {
     heroBlessingEffect(Blessing.SOUL_DRAIN, player, state, room),
 
   [Blessing.FLOWER_QUEEN]: (player, state, room) => {
-    if (heroBlessingEffect(Blessing.FLOWER_QUEEN, player, state, room) === false)
+    if (
+      heroBlessingEffect(Blessing.FLOWER_QUEEN, player, state, room) === false
+    )
       return false
     player.items.push(Item.METRONOME)
     return true
@@ -2789,29 +2797,41 @@ export const blessingEffectService: {
 
   [Blessing.ITEMFINDER_I]: (player, state) => {
     player.items.push(pickRandomIn(ItemComponents))
-    scheduleBlessingGrant(player, state, Blessing.ITEMFINDER_I, nextStages(state, 1))
+    scheduleBlessingGrant(
+      player,
+      state,
+      Blessing.ITEMFINDER_I,
+      nextStages(state, 1)
+    )
     return true
   },
 
   [Blessing.ITEMFINDER_II]: (player, state) => {
     player.items.push(pickRandomIn(ItemComponents))
-    scheduleBlessingGrant(player, state, Blessing.ITEMFINDER_II, nextStages(state, 2))
+    scheduleBlessingGrant(
+      player,
+      state,
+      Blessing.ITEMFINDER_II,
+      nextStages(state, 2)
+    )
     return true
   },
 
   [Blessing.ITEMFINDER_III]: (player, state) => {
     player.items.push(pickRandomIn(ItemComponents))
-    scheduleBlessingGrant(player, state, Blessing.ITEMFINDER_III, nextStages(state, 6))
+    scheduleBlessingGrant(
+      player,
+      state,
+      Blessing.ITEMFINDER_III,
+      nextStages(state, 6)
+    )
     return true
   },
 
   [Blessing.LEGENDARY_GAMBIT]: (player, state) => {
-    scheduleBlessingGrant(
-      player,
-      state,
-      Blessing.LEGENDARY_GAMBIT,
-      [LEGENDARY_GAMBIT_STAGE]
-    )
+    scheduleBlessingGrant(player, state, Blessing.LEGENDARY_GAMBIT, [
+      LEGENDARY_GAMBIT_STAGE
+    ])
     return true
   },
 

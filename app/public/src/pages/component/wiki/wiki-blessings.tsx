@@ -87,8 +87,6 @@ const ECONOMY_BLESSINGS = new Set<Blessing>([
   Blessing.INSTANT_HYPER_ROLL,
   Blessing.DEEP_INVESTMENTS,
   Blessing.TAXES,
-  Blessing.DOUBLE_WINDFALL,
-  Blessing.ALL_FOR_ONE,
   Blessing.RAINBOW_HOUR,
   Blessing.WAITING_GAME,
   Blessing.PRISMATIC_REROLL,
@@ -99,7 +97,12 @@ const ECONOMY_BLESSINGS = new Set<Blessing>([
   Blessing.WISE_SPENDING,
   Blessing.MORE_EQUAL_THAN_OTHERS,
   Blessing.FREE_COUPON,
-  Blessing.HYPER_HYPER_ROLL
+  Blessing.HYPER_HYPER_ROLL,
+  Blessing.BABY_OPENER,
+  Blessing.SAFARI_ENCOUNTER,
+  Blessing.POCKET_DAYCARE,
+  Blessing.TRANSFORM,
+  Blessing.STARTER_PACK
 ])
 
 const TEAM_BUILDING_BLESSINGS = new Set<Blessing>([
@@ -109,7 +112,6 @@ const TEAM_BUILDING_BLESSINGS = new Set<Blessing>([
   Blessing.SAFARI_ENCOUNTER,
   Blessing.SCHOOL_BUS,
   Blessing.A_NEW_FRIEND,
-  Blessing.STARTER_CHOICE,
   Blessing.REPLICATOR,
   Blessing.TRANSFORM,
   Blessing.REGIONAL_TREASURES,
@@ -145,21 +147,15 @@ const ITEM_BLESSINGS = new Set<Blessing>([
 
 const PREPARATION_BLESSINGS = new Set<Blessing>([
   Blessing.RAINBOW_KEY,
-  Blessing.CHARGING_UP,
-  Blessing.BURNING_SHARDS,
   Blessing.TREASURE_TRAIL,
   Blessing.COLOUR_CHANGE,
   Blessing.AZURE_FLUTE,
   Blessing.POTION,
   Blessing.QUICK_CLAW,
-  Blessing.ALL_FOURS,
-  Blessing.MIX_AND_MATCH_I,
-  Blessing.MIX_AND_MATCH_II,
   Blessing.MANIFESTATION_AP,
   Blessing.MANIFESTATION_AD,
   Blessing.BP_REWARDS,
   Blessing.SYNARCH,
-  Blessing.FLEXIBILITY,
   Blessing.THINK_FAST,
   Blessing.ROBIN_GEMS,
   Blessing.TRAINING_MONTAGE,
@@ -180,23 +176,24 @@ const PREPARATION_BLESSINGS = new Set<Blessing>([
   Blessing.QUEST_EPIC,
   Blessing.QUEST_EXPAND,
   Blessing.QUEST_ASCEND,
-  Blessing.LEGENDARY_GAMBIT,
   Blessing.BEING_OF_KNOWLEDGE,
   Blessing.CLIMBING_THE_LADDER,
   Blessing.SYNCHRONICITY,
   Blessing.UP_IS_UP,
-  Blessing.HARD_COMMIT,
-  Blessing.SHOW_OFF
+  Blessing.HARD_COMMIT
 ])
 
 const ADDITIONAL_HERO_BLESSINGS = new Set<Blessing>([
-  Blessing.DOUBLE_WINDFALL,
+  Blessing.ALL_FOR_ONE,
+  Blessing.ALL_FOURS,
+  Blessing.BABY_OPENER,
+  Blessing.SAFARI_ENCOUNTER,
+  Blessing.POCKET_DAYCARE,
+  Blessing.TRANSFORM,
+  Blessing.STARTER_PACK,
   Blessing.SINNOHS_COOLEST,
   Blessing.SCHOOL_BUS,
   Blessing.TRASH_TO_TREASURE,
-  Blessing.FLYTRAP,
-  Blessing.MEGA_SOL,
-  Blessing.SPORE_CLOUDS,
   Blessing.STAR_CROSSED_SEAS,
   Blessing.HEATRANS_SONG,
   Blessing.RAYQUAZAS_SONG,
@@ -213,7 +210,20 @@ const ADDITIONAL_HERO_BLESSINGS = new Set<Blessing>([
   Blessing.WEATHER_INSTITUTE,
   Blessing.BEEKEEPING,
   Blessing.SUPPORTIVE_SOUL,
-  Blessing.YOU_FORGOT_SOMETHING
+  Blessing.YOU_FORGOT_SOMETHING,
+  Blessing.MANIFESTATION_AP,
+  Blessing.MANIFESTATION_AD,
+  Blessing.MIX_AND_MATCH_I,
+  Blessing.MIX_AND_MATCH_II,
+  Blessing.STARTER_CHOICE,
+  Blessing.A_NEW_FRIEND,
+  Blessing.CHOSEN_ONES,
+  Blessing.INSTANT_HYPER_ROLL,
+  Blessing.BEING_OF_KNOWLEDGE,
+  Blessing.HYPER_HYPER_ROLL,
+  Blessing.BIRTHDAY_PRESENT,
+  Blessing.LEGENDARY_GAMBIT,
+  Blessing.BABYLESS
 ])
 
 const DEFENSIVE_COMBAT_BLESSINGS = new Set<Blessing>([
@@ -484,7 +494,7 @@ export default function WikiBlessings() {
                     {category === "planning"
                       ? "Planning & Resources"
                       : category === "hero"
-                        ? "Heroes & Spawns"
+                        ? "Heroes & Pokémon"
                         : category}
                   </h3>
                   <ul className="wiki-blessings-list">

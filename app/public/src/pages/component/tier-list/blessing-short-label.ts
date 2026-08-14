@@ -47,6 +47,12 @@ const NUMBERED_FAMILIES = new Set([
 ])
 
 const THEMED_SYNERGIES: Partial<Record<Blessing, Synergy>> = {
+  [Blessing.BURNING_SHARDS]: Synergy.FIRE,
+  [Blessing.CHARGING_UP]: Synergy.ELECTRIC,
+  [Blessing.FLYTRAP]: Synergy.FLORA,
+  [Blessing.MEGA_SOL]: Synergy.FLORA,
+  [Blessing.SPORE_CLOUDS]: Synergy.FLORA,
+  [Blessing.DOUBLE_WINDFALL]: Synergy.FLORA,
   [Blessing.CRYSTAL_MUTATION]: Synergy.ROCK,
   [Blessing.MACHINE_RESIDUE]: Synergy.ARTIFICIAL,
   [Blessing.ARCANE_METALS]: Synergy.STEEL,

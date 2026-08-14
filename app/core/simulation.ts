@@ -321,6 +321,7 @@ export default class Simulation extends Schema implements ISimulation {
   entities: IPokemonEntity[] = []
   finishedAt: number = 0
   reinforcementsSent: boolean = false
+  robinGemsRewardProcessed = false
   snifferDogPulledPokemonIds = new Set<string>()
   toxicResonanceByTeam = new Map<
     Team,

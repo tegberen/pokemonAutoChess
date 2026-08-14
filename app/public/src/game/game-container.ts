@@ -584,19 +584,17 @@ class GameContainer {
       )
     })
 
-    // keep the store's live items reference fresh for the weather forecast
-    const refreshStoreItems = () =>
+    const refreshItems = () => {
       store.dispatch(
         changePlayer({ id: player.id, field: "items", value: player.items })
       )
-    $player.items.onAdd(refreshStoreItems)
-    $player.items.onRemove(refreshStoreItems)
-    $player.items.onChange((value, key) => {
-      refreshStoreItems()
       if (player.id === this.playerIdSpectated) {
         this.gameScene?.itemsContainer?.render(player.items)
       }
-    })
+    }
+    $player.items.onAdd(refreshItems)
+    $player.items.onRemove(refreshItems)
+    $player.items.onChange(refreshItems)
     $player.listen("doubleUpTradeOffer", (offer: string) => {
       if (player.id === this.playerIdSpectated) {
         const partner = this.room.state.players.get(player.doubleUpPartnerId)

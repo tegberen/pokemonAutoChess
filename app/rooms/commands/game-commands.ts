@@ -50,7 +50,9 @@ import {
   serveFestivePicnicDishes,
   rollWaterFountainPonds,
   GemBySynergy,
-  grantSynergyAwareItem
+  grantSweetTreat,
+  grantSynergyAwareItem,
+  grantRobinGemsReward
 } from "../../services/blessings"
 import {
   buildScribbleShapeBag,
@@ -1744,8 +1746,9 @@ export class OnUpdateCommand extends Command<
           }
         })
 
-        if (this.state.gameMode === GameMode.DOUBLE_UP && !this.state.finale) {
-          this.checkDoubleUpReinforcements()
+        if (this.state.gameMode === GameMode.DOUBLE_UP) {
+          grantRobinGemsForFinishedDoubleUpSimulations(this.state)
+          if (!this.state.finale) this.checkDoubleUpReinforcements()
         }
         if (everySimulationFinished && !this.state.updatePhaseNeeded) {
           // wait for 3 seconds victory anim before moving to next stage
@@ -1901,6 +1904,25 @@ export class OnUpdateCommand extends Command<
       partnerPlayerId: winnerPlayer.doubleUpPartnerId
     })
   }
+}
+
+function grantRobinGemsForFinishedDoubleUpSimulations(state: GameState) {
+  state.simulations.forEach((simulation) => {
+    if (!simulation.finished || simulation.robinGemsRewardProcessed) return
+    simulation.robinGemsRewardProcessed = true
+    if (!simulation.winnerId || simulation.redPlayerId === "pve") return
+    if (
+      simulation.isGhostBattle &&
+      simulation.winnerId === simulation.redPlayerId
+    ) {
+      return
+    }
+    const winner =
+      simulation.winnerId === simulation.bluePlayerId
+        ? simulation.bluePlayer
+        : simulation.redPlayer
+    if (winner) grantRobinGemsReward(winner, state)
+  })
 }
 
 export class OnUpdatePhaseCommand extends Command<GameRoom> {
@@ -2669,6 +2691,12 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
       player.items.splice(player.items.indexOf(Item.LEFTOVERS), 1)
     }
 
+    // Run after old Leftovers expire, otherwise Sweet Treats' newly converted
+    // Leftovers would be removed immediately by the cleanup above.
+    if (player.blessings?.includes(Blessing.SWEET_TREATS)) {
+      grantSweetTreat(player)
+    }
+
     for (const staleDish of player.fastFoodDishesLastRound) {
       const index = player.items.indexOf(staleDish)
       if (index >= 0) {
@@ -2967,6 +2995,13 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
         simulation.onFinish()
       }
     })
+    if (this.state.gameMode === GameMode.DOUBLE_UP) {
+      grantRobinGemsForFinishedDoubleUpSimulations(this.state)
+    } else if (!isPVE) {
+      this.state.players.forEach((player) => {
+        if (player.alive) grantRobinGemsReward(player, this.state)
+      })
+    }
     if (this.state.gameMode === GameMode.DOUBLE_UP) {
       this.applyDoubleUpDamage()
       if (!this.state.finale) {

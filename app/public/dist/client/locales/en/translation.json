@@ -5208,7 +5208,7 @@
 		},
 		"CURSE_OF_TWO": {
 			"name": "Curse of Two",
-			"description": "Each of your GHOST curses affects 2 enemies at once. Gain a Snorunt."
+			"description": "Each of your GHOST curses affects 2 enemies at once."
 		},
 		"VITAMINS": {
 			"name": "Vitamins",
@@ -5724,7 +5724,7 @@
 		},
 		"VAMPIRIC": {
 			"name": "Vampiric",
-			"description": "Your team heals for 10% of the damage it deals. Heal player HP equal to 10% of the damage you deal to other players, rounded up."
+			"description": "Your team heals for 20% of the damage it deals. Heal player HP equal to 10% of the damage you deal to other players, rounded up."
 		},
 		"PROTECT_THE_WEAK": {
 			"name": "Protect the Weak",

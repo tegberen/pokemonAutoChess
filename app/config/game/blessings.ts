@@ -1,17 +1,17 @@
+import { SynergyTiersThresholds } from "../../config"
+import type Player from "../../models/colyseus-models/player"
 import {
-  Blessing,
   BLESSING_SELECTION_STAGES,
+  Blessing,
   BlessingTier,
   GREEDY_WISH_PRISMATIC_GOLD
 } from "../../types/enum/Blessing"
-import { randomWeighted, shuffleArray } from "../../utils/random"
-import { SynergyTiersThresholds } from "../../config"
-import { isWishFestivalFinale } from "./events"
-import { Synergy } from "../../types/enum/Synergy"
+import { DungeonPMDO } from "../../types/enum/Dungeon"
 import { Rarity } from "../../types/enum/Game"
 import { SpecialGameRule } from "../../types/enum/SpecialGameRule"
-import { DungeonPMDO } from "../../types/enum/Dungeon"
-import type Player from "../../models/colyseus-models/player"
+import { Synergy } from "../../types/enum/Synergy"
+import { randomWeighted, shuffleArray } from "../../utils/random"
+import { isWishFestivalFinale } from "./events"
 
 export type BlessingFamily = "BADGE" | "CREST" | "CROWN"
 
@@ -95,7 +95,8 @@ const isSynergyBlessingAvailable =
     isSynergyActiveForPlayer(player, synergy)
 
 const areBlessingVariantsAvailable =
-  (...variants: Blessing[]) => (player: Player) =>
+  (...variants: Blessing[]) =>
+  (player: Player) =>
     variants.every((variant) => !player.blessings?.includes(variant))
 
 // CRYSTAL_MUTATION awakens a rock unique, so it is pointless without one
@@ -376,7 +377,7 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     grantsPokemonImmediately: true
   },
   [Blessing.SWEET_TREATS]: {
-    tier: BlessingTier.GOLD,
+    tier: BlessingTier.SILVER,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "sweet_treats",
     grantsPokemonImmediately: false
@@ -616,7 +617,7 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     grantsPokemonImmediately: true
   },
   [Blessing.BANANA_BUSINESS]: {
-    tier: BlessingTier.GOLD,
+    tier: BlessingTier.SILVER,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "banana_bundle",
     grantsPokemonImmediately: false
@@ -628,7 +629,7 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     grantsPokemonImmediately: false
   },
   [Blessing.MUNCHLAX_DELIVERY]: {
-    tier: BlessingTier.GOLD,
+    tier: BlessingTier.SILVER,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "basket",
     grantsPokemonImmediately: false
@@ -655,7 +656,7 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     tier: BlessingTier.PRISMATIC,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "ghost_spectre",
-    grantsPokemonImmediately: true,
+    grantsPokemonImmediately: false,
     isAvailable: (player, stage) =>
       stage < BLESSING_SYNERGY_GATED_STAGE ||
       isSynergyActiveForPlayer(player, Synergy.GHOST)
@@ -869,8 +870,7 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     icon: "crystal_growth",
     grantsPokemonImmediately: false,
     isAvailable: (player, stage) =>
-      isSynergyActiveForPlayer(player, Synergy.ROCK) &&
-      hasRockUnique(player)
+      isSynergyActiveForPlayer(player, Synergy.ROCK) && hasRockUnique(player)
   },
   [Blessing.CRYSTAL_CLUSTERS]: {
     tier: BlessingTier.GOLD,
@@ -1917,7 +1917,7 @@ const EARLY_BLESSING_TIER_CHANCES: { [tier in BlessingTier]: number } = {
 const LATE_BLESSING_TIER_CHANCES: { [tier in BlessingTier]: number } = {
   [BlessingTier.SILVER]: 0.15,
   [BlessingTier.GOLD]: 0.65,
-  [BlessingTier.PRISMATIC]: 0.20
+  [BlessingTier.PRISMATIC]: 0.2
 }
 
 const WISH_FESTIVAL_FINALE_TIER_CHANCES: {
@@ -1955,8 +1955,8 @@ export function rollBlessingTierForStage(
   const tierChances =
     isWishFestivalFinale() &&
     (blessingsUnderTest.length === 0 || BLESSING_SANDBOX_MODE)
-    ? (WISH_FESTIVAL_FINALE_TIER_CHANCES[stage] ?? baseTierChances)
-    : baseTierChances
+      ? (WISH_FESTIVAL_FINALE_TIER_CHANCES[stage] ?? baseTierChances)
+      : baseTierChances
   return randomWeighted(tierChances) ?? BlessingTier.SILVER
 }
 
