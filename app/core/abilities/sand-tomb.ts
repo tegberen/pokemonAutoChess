@@ -40,7 +40,8 @@ export class SandTombStrategy extends AbilityStrategy {
       if (
         !pokemon.simulation ||
         !pokemon.simulation.room ||
-        pokemon.simulation.finished
+        pokemon.simulation.finished ||
+        pokemon.hp <= 0
       ) {
         return
       }
@@ -50,6 +51,11 @@ export class SandTombStrategy extends AbilityStrategy {
         .getCellsInRadius(castPositionX, castPositionY, vortexRadius, false)
         .forEach((cell) => {
           if (cell.value && cell.value.team !== pokemon.team) {
+            pokemon.broadcastAbility({
+              skill: "SAND_TOMB_HIT",
+              targetX: cell.x,
+              targetY: cell.y
+            })
             cell.value.handleSpecialDamage(
               damage,
               board,

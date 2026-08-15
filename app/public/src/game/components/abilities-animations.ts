@@ -736,8 +736,18 @@ function unisonNovaAnimation(): AbilityAnimation {
 }
 
 function sandTombAnimation(): AbilityAnimation {
-  return ({ scene, positionX, positionY, flip }: AbilityAnimationArgs) => {
+  return ({
+    scene,
+    pokemonsOnBoard,
+    positionX,
+    positionY,
+    flip
+  }: AbilityAnimationArgs) => {
     const [cx, cy] = transformEntityCoordinates(positionX, positionY, flip)
+    const casterSprite = pokemonsOnBoard.find(
+      (pokemon) =>
+        pokemon.positionX === positionX && pokemon.positionY === positionY
+    )
     // Slightly overscan the gameplay radius so every affected edge cell is
     // visibly inside the quicksand after board/camera projection.
     const maxRadius = CELL_WIDTH * 5
@@ -786,6 +796,7 @@ function sandTombAnimation(): AbilityAnimation {
     scene.abilitiesVfxGroup?.add(ground)
     scene.abilitiesVfxGroup?.add(storm)
     let lastFrame = -1
+    let cancellationStart: number | undefined
 
     scene.tweens.addCounter({
       from: 0,
@@ -794,6 +805,17 @@ function sandTombAnimation(): AbilityAnimation {
       ease: "Linear",
       onUpdate: (tween) => {
         const p = (tween.getValue() ?? 0) as number
+        if (
+          casterSprite &&
+          cancellationStart === undefined &&
+          (!casterSprite.active || casterSprite.alpha < 0.99)
+        ) {
+          cancellationStart = p
+        }
+        const cancellationFade =
+          cancellationStart === undefined
+            ? 1
+            : Math.max(0, 1 - (p - cancellationStart) / 0.08)
         // PMD effects update in visible animation steps instead of gliding.
         const frame = Math.floor(p * 5000 / 90)
         if (frame === lastFrame) return
@@ -808,9 +830,11 @@ function sandTombAnimation(): AbilityAnimation {
         const radius = maxRadius * summon * collapse
         const rotation = steppedTime * 1.55
         const alpha =
-          Math.min(0.08 + materialize * 0.92, Math.max(0, collapse * 1.8))
+          Math.min(0.08 + materialize * 0.92, Math.max(0, collapse * 1.8)) *
+          cancellationFade
         ground.clear()
         storm.clear()
+        if (cancellationFade <= 0) return
 
         // A continuous quicksand funnel: pale and raised at the perimeter,
         // progressively darker and lower toward one recessed opening.
@@ -3028,6 +3052,7 @@ export const AbilitiesAnimations: {
   [Ability.POPULATION_BOMB]: onTargetScale2,
   [Ability.SCREECH]: onTargetScale2,
   [Ability.SAND_TOMB]: sandTombAnimation(),
+  ["SAND_TOMB_HIT"]: onTarget({ ability: Ability.SAND_TOMB, scale: 2 }),
   [Ability.FIRST_IMPRESSION]: onTarget({ ability: "PUFF_BROWN", scale: 3 }),
   [Ability.PLAY_ROUGH]: onTargetScale2,
   [Ability.ANCHOR_SHOT]: onTargetScale1,
