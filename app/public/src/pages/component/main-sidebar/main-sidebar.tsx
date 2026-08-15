@@ -1,4 +1,3 @@
-import { createSelector } from "@reduxjs/toolkit"
 import { useCallback, useEffect, useRef, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { Menu, MenuItem, type MenuItemProps, Sidebar } from "react-pro-sidebar"
@@ -57,8 +56,12 @@ export function MainSidebar(props: MainSidebarProps) {
   const sidebarRef = useRef<HTMLHtmlElement>(null)
 
   const { t } = useTranslation()
-  const profile = useAppSelector((state) => state.network.profile)
-  const profileLevel = profile?.level ?? 0
+  /* only level and role are read, and subscribing to the whole profile
+     re-rendered the sidebar whenever any unrelated field changed */
+  const profileLevel = useAppSelector(
+    (state) => state.network.profile?.level ?? 0
+  )
+  const profileRole = useAppSelector((state) => state.network.profile?.role)
   const [preferences] = usePreferences()
 
   const { isNewPatch, updateVersionChecked } = usePatchVersion()
@@ -122,14 +125,18 @@ export function MainSidebar(props: MainSidebarProps) {
     }
   }, [preferences.keybindings, profileLevel])
 
-  const player = useAppSelector(selectConnectedPlayer)
-  const playersAlive = useAppSelector(
-    createSelector([(state) => state.game.players], (players) =>
-      players.filter((p) => p.life > 0)
-    )
+  /* both are read only inside onClickLeave. Selecting the player object
+     re-rendered the whole sidebar on every field change, and createSelector
+     built a fresh selector each render so it never memoized - it returned a new
+     array every time. Primitives compare by value */
+  const isPlayerAlive = useAppSelector(
+    (state) => (selectConnectedPlayer(state)?.life ?? 0) > 0
+  )
+  const nbPlayersAlive = useAppSelector(
+    (state) => state.game.players.filter((p) => p.life > 0).length
   )
   function onClickLeave() {
-    if (player && player.life > 0 && playersAlive.length > 1) {
+    if (isPlayerAlive && nbPlayersAlive > 1) {
       setShowSurrenderConfirm(true)
     } else {
       leave()
@@ -226,7 +233,7 @@ export function MainSidebar(props: MainSidebarProps) {
         {page !== "game" &&
           ((!GADGETS.pokeguesser.disabled &&
             profileLevel >= GADGETS.pokeguesser.levelRequired) ||
-            profile?.role === Role.ADMIN) && (
+            profileRole === Role.ADMIN) && (
             <NavLink
               svg="pokeguesser"
               location="pokeguesser"
@@ -238,7 +245,7 @@ export function MainSidebar(props: MainSidebarProps) {
 
         {((!GADGETS.synergy_wheel.disabled &&
           profileLevel >= GADGETS.synergy_wheel.levelRequired) ||
-          profile?.role === Role.ADMIN) && (
+          profileRole === Role.ADMIN) && (
           <NavLink
             svg="synergy-wheel"
             location="synergy-wheel"
@@ -251,7 +258,7 @@ export function MainSidebar(props: MainSidebarProps) {
         {page !== "game" &&
           ((!GADGETS.bot_builder.disabled &&
             profileLevel >= GADGETS.bot_builder.levelRequired) ||
-            profile?.role === Role.ADMIN) && (
+            profileRole === Role.ADMIN) && (
             <NavLink svg="bot" onClick={() => navigate("/bot-builder")}>
               {t("bot_builder")}
             </NavLink>
@@ -260,7 +267,7 @@ export function MainSidebar(props: MainSidebarProps) {
         {page !== "game" &&
           ((!GADGETS.gameboy.disabled &&
             profileLevel >= GADGETS.gameboy.levelRequired) ||
-            profile?.role === Role.ADMIN) && (
+            profileRole === Role.ADMIN) && (
             <NavLink svg="gameboy" onClick={() => navigate("/gameboy")}>
               {t("gadget.gameboy")}
             </NavLink>
@@ -268,7 +275,7 @@ export function MainSidebar(props: MainSidebarProps) {
 
         {((!GADGETS.tier_list_maker.disabled &&
           profileLevel >= GADGETS.tier_list_maker.levelRequired) ||
-          profile?.role === Role.ADMIN) && (
+          profileRole === Role.ADMIN) && (
           <NavLink
             svg="tier-list"
             location="tier-list"
@@ -280,7 +287,7 @@ export function MainSidebar(props: MainSidebarProps) {
 
         {((!GADGETS.sprite_tracker.disabled &&
           profileLevel >= GADGETS.sprite_tracker.levelRequired) ||
-          profile?.role === Role.ADMIN) && (
+          profileRole === Role.ADMIN) && (
           <NavLink
             svg="pokemon-sprite"
             location="sprite-tracker"
@@ -291,8 +298,8 @@ export function MainSidebar(props: MainSidebarProps) {
         )}
 
         {page !== "game" &&
-          (profile?.role === Role.MODERATOR ||
-            profile?.role === Role.ADMIN) && (
+          (profileRole === Role.MODERATOR ||
+            profileRole === Role.ADMIN) && (
             <NavLink
               svg="hammer"
               location="moderation"
@@ -302,7 +309,7 @@ export function MainSidebar(props: MainSidebarProps) {
             </NavLink>
           )}
 
-        {page !== "game" && profile?.role === Role.ADMIN && (
+        {page !== "game" && profileRole === Role.ADMIN && (
           <>
             <NavLink svg="admin" location="admin" handleClick={changeModal}>
               {t("admin_panel.title")}

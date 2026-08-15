@@ -11,51 +11,58 @@ export default function GamePlayerDpsMeter({
   dpsMeter = []
 }: GamePlayerDpsMeterInput) {
   const { t } = useTranslation()
-  const sortedDps = useMemo(
+  const damageDealt = (dps: IDps) =>
+    dps.physicalDamage + dps.specialDamage + dps.trueDamage
+
+  const visibleDps = useMemo(
     () =>
       dpsMeter
         // hide synthetic effect rows (Tidal Wave, Curse) that dealt no damage
-        .filter(
-          (d) =>
-            !SYNTHETIC_DPS_IDS.has(d.id) ||
-            d.physicalDamage + d.specialDamage + d.trueDamage > 0
-        )
-        .sort((a, b) => {
-          return (
-            b.physicalDamage +
-            b.specialDamage +
-            b.trueDamage -
-            (a.physicalDamage + a.specialDamage + a.trueDamage)
-          )
-        }),
+        .filter((d) => !SYNTHETIC_DPS_IDS.has(d.id) || damageDealt(d) > 0),
     [dpsMeter]
   )
 
-  const maxDamage = useMemo(() => {
-    const firstDps = sortedDps.at(0)
-    if (!firstDps) {
-      return 0
-    }
-    return (
-      firstDps.physicalDamage + firstDps.specialDamage + firstDps.trueDamage
+  const { rankById, maxDamage } = useMemo(() => {
+    const ranked = [...visibleDps].sort(
+      (a, b) => damageDealt(b) - damageDealt(a)
     )
-  }, [sortedDps])
+    return {
+      rankById: new Map(ranked.map((dps, rank) => [dps.id, rank])),
+      maxDamage: ranked.length > 0 ? damageDealt(ranked[0]) : 0
+    }
+  }, [visibleDps])
+
+  /* rendered in a stable order and placed by rank with a transform: reordering
+     the DOM instead would move every row below a swap, and each move is a
+     layout shift that reflows the whole panel on every damage tick */
+  const rowsInStableOrder = useMemo(
+    () => [...visibleDps].sort((a, b) => a.id.localeCompare(b.id)),
+    [visibleDps]
+  )
 
   const totalDamage = useMemo(
-    () =>
-      sortedDps.reduce((acc, dps) => {
-        acc += dps.physicalDamage + dps.specialDamage + dps.trueDamage
-        return acc
-      }, 0),
-    [sortedDps]
+    () => visibleDps.reduce((acc, dps) => acc + damageDealt(dps), 0),
+    [visibleDps]
   )
 
   return (
     <div>
-      {sortedDps.map((p) => {
-        return <GameDps key={p.id} dps={p} maxDamage={maxDamage} />
-      })}
-      {sortedDps.length > 0 && (
+      <div
+        className="game-dps-list"
+        style={
+          { "--dps-row-count": rowsInStableOrder.length } as React.CSSProperties
+        }
+      >
+        {rowsInStableOrder.map((p) => (
+          <GameDps
+            key={p.id}
+            dps={p}
+            maxDamage={maxDamage}
+            rank={rankById.get(p.id) ?? 0}
+          />
+        ))}
+      </div>
+      {visibleDps.length > 0 && (
         <div>
           {t("total")}: {totalDamage}
         </div>

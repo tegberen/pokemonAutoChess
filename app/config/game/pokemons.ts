@@ -1,7 +1,6 @@
 import { FlowerPot, type IPlayer } from "../../types"
 import { Pkm } from "../../types/enum/Pokemon"
 import { Synergy } from "../../types/enum/Synergy"
-import { isIn } from "../../utils/array"
 
 export const EvolutionTime = {
   EGG_HATCH: 5,
@@ -416,16 +415,20 @@ export const PkmsWithAltForms: Pkm[] = Object.entries(PkmAltFormsByPkm).reduce(
   [] as Pkm[]
 )
 
+/* built once rather than scanned per call: this runs on every portrait render,
+   and the common case (a pokemon with no alt form) used to walk the whole table
+   and allocate a fresh Object.entries array before falling through */
+const baseFormByAltForm = new Map<Pkm, Pkm>(
+  Object.entries(PkmAltFormsByPkm).flatMap(([base, forms]) =>
+    forms.map((form) => [form as Pkm, base as Pkm] as [Pkm, Pkm])
+  )
+)
+
 export function getBaseAltForm(pkm: Pkm): Pkm {
   if (pkm in PkmAltFormsByPkm) {
     return pkm
   }
-  for (const [base, forms] of Object.entries(PkmAltFormsByPkm)) {
-    if (isIn(forms, pkm)) {
-      return base as Pkm
-    }
-  }
-  return pkm
+  return baseFormByAltForm.get(pkm) ?? pkm
 }
 
 export function getAllAltForms(pkm: Pkm): Pkm[] {

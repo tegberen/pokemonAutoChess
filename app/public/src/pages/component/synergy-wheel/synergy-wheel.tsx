@@ -19,6 +19,9 @@ export default function SynergyWheelModal(props: {
   const reelRefs = useRef<(HTMLDivElement | null)[]>([])
   const slotMachineRef = useRef<HTMLDivElement>(null)
 
+  // Modal renders nothing while hidden, but React builds its children first
+  if (!props.show) return null
+
   const drawSynergies = () => {
     if (spinning) return
 

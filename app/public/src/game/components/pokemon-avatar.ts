@@ -282,7 +282,6 @@ export default class PokemonAvatar extends PokemonSprite {
     this.hideEmoteMenu()
   }
   sendItemEmote(item: Item) {
-    console.log("sendItemEmote", item)
     showEmote("item/" + item)
     this.hideEmoteMenu()
   }

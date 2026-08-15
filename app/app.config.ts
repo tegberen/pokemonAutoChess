@@ -8,6 +8,7 @@ import {
   RedisPresence,
   type ServerOptions
 } from "colyseus"
+import { WebSocketTransport } from "@colyseus/ws-transport"
 import cors from "cors"
 import express, { type ErrorRequestHandler } from "express"
 import basicAuth from "express-basic-auth"
@@ -208,6 +209,23 @@ export const server = defineServer({
       idleTimeout: 0, // disable idle timeout
     })
   },*/
+
+  /* the default transport wraps `ws`, which ships with perMessageDeflate off,
+     so state patches went out uncompressed once the uWebSockets rollback above
+     took SHARED_COMPRESSOR with it. This has to be a `transport` instance, not
+     the `initializeTransport` hook above: that hook is only read when listen()
+     is handed a plain config object, and defineServer() here returns a Server.
+     No-context-takeover drops the retained sliding window per connection, which
+     is the memory cost that makes `ws` default this off */
+  transport: new WebSocketTransport({
+    perMessageDeflate: {
+      threshold: 1024,
+      concurrencyLimit: 10,
+      clientNoContextTakeover: true,
+      serverNoContextTakeover: true,
+      zlibDeflateOptions: { level: 3, memLevel: 7 }
+    }
+  }),
 
   rooms: {
     "after-game": defineRoom(AfterGameRoom),

@@ -16,7 +16,9 @@
   background: #f7d51d;
   border-radius: 0 0 6px 6px;
   border: var(--border-thick);
-  transition: all linear 1s;
+  /* only width actually changes; `all` made the browser diff every animatable
+     property each tick, and this transition runs for the whole match */
+  transition: width linear 1s;
 }
 
 .unison-meter {

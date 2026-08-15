@@ -60,7 +60,13 @@ export default class LoadingManager {
       "/assets/environment/"
     )
 
-    scene.load.image("money", "/assets/icons/money.svg")
+    /* money.svg sizes itself in percentages, so as an <img> it reports a
+       natural size of 0 and the WebGL upload is rejected. load.svg rasterises
+       it at an explicit size instead */
+    scene.load.svg("money", "/assets/icons/money.svg", {
+      width: 64,
+      height: 64
+    })
     scene.load.image("arrowDown", "/assets/ui/arrowDown.png")
     // marker above the unit a hero blessing has chosen for this combat
     scene.load.svg("blessed-hero", "/assets/ui/strongest.svg", {

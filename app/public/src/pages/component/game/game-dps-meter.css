@@ -44,11 +44,26 @@
   font-size: 0.8em;
 }
 
+/* the portrait (40px) plus the gap that used to be margin-bottom; rows are
+   positioned from this rather than stacked, so it owns the row geometry */
+.game-dps-meter {
+  --dps-row-height: 48px;
+}
+
+.game-dps-list {
+  position: relative;
+  height: calc(var(--dps-row-height) * var(--dps-row-count, 0));
+}
+
 .game-dps-bar {
   display: flex;
   align-items: center;
   width: 90%;
-  margin-bottom: 0.5em;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: var(--dps-row-height);
+  transform: translateY(calc(var(--dps-row-height) * var(--dps-rank, 0)));
 }
 
 .game-dps-bar img {

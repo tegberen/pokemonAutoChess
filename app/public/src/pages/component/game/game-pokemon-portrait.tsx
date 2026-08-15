@@ -31,16 +31,33 @@ import SynergyIcon from "../icons/synergy-icon"
 import { GamePokemonDetail } from "./game-pokemon-detail"
 import "./game-pokemon-portrait.css"
 
+/* getBase64 re-encodes the sprite to a PNG data URI on every call, and this runs
+   inside the render body of every portrait, so a single shop reroll used to pay
+   for six full encodes. The encoded string never changes for a given sprite. */
+const encodedPortraitCache = new Map<string, string>()
+
 export function getCachedPortrait(
   index: string,
   customs?: PokemonCustoms
 ): string {
-  const scene = getGameScene()
   const pokemonCustom = getPkmWithCustom(index, customs)
-  return (
-    scene?.textures.getBase64(`portrait-${index}`) ??
-    getPortraitSrc(index, pokemonCustom.shiny, pokemonCustom.emotion)
-  )
+  const cacheKey = `${index}-${pokemonCustom.shiny}-${pokemonCustom.emotion}`
+  const cached = encodedPortraitCache.get(cacheKey)
+  if (cached !== undefined) return cached
+
+  const encoded = getGameScene()?.textures.getBase64(`portrait-${index}`)
+  /* the atlas may not have loaded yet: fall back without caching, so the next
+     render picks the sprite up as soon as it is available. Only a non-empty
+     result is stored — caching a blank would hide the portrait for good */
+  if (!encoded) {
+    return (
+      encoded ??
+      getPortraitSrc(index, pokemonCustom.shiny, pokemonCustom.emotion)
+    )
+  }
+
+  encodedPortraitCache.set(cacheKey, encoded)
+  return encoded
 }
 
 export default function GamePokemonPortrait(props: {

@@ -74,7 +74,9 @@ export function playSound(key: Soundkey, volume = 1) {
   if (sound) {
     sound.currentTime = 0
     sound.volume = (volume * preference("sfxVolume")) / 100
-    sound.play()
+    // rejects until the user has interacted with the page; a missed sound
+    // effect is not worth an unhandled rejection
+    sound.play().catch(() => {})
   }
 }
 

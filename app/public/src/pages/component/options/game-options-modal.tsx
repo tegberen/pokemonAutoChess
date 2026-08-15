@@ -37,6 +37,10 @@ export default function GameOptionsModal(props: {
     [Phaser.CANVAS]: "Canvas"
   }
 
+  /* Modal renders nothing while hidden, but React builds these children first,
+     and this stays mounted for the whole session behind the sidebar */
+  if (!props.show) return null
+
   return (
     <Modal
       show={props.show}

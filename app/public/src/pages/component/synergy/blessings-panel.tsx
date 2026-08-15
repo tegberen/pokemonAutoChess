@@ -39,6 +39,10 @@ import { addIconsToDescription } from "../../utils/descriptions"
 import { BlessingTooltipCard } from "./blessing-tooltip-card"
 import "./blessings-panel.css"
 
+// shared so the selector below returns a stable reference for a player with no
+// blessings: a fresh [] would re-render this panel on every dispatch in the game
+const NO_BLESSINGS: Blessing[] = []
+
 export default function BlessingsPanel(props: { recentOnly?: boolean }) {
   const { t } = useTranslation()
   const [tooltipPlace, setTooltipPlace] = useState<PlacesType>("left")
@@ -46,7 +50,7 @@ export default function BlessingsPanel(props: { recentOnly?: boolean }) {
     (state) => state.game.playerIdSpectated
   )
   const blessings = useAppSelector(
-    (state) => state.game.blessingsByPlayerId[playerIdSpectated] ?? []
+    (state) => state.game.blessingsByPlayerId[playerIdSpectated] ?? NO_BLESSINGS
   )
   // defaulted outside the selector: returning a fresh {} would change identity
   // on every call and re-render forever

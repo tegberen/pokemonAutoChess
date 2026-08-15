@@ -9,6 +9,9 @@ export default function SpriteTrackerModal(props: {
 }) {
   const { t } = useTranslation()
 
+  // Modal renders nothing while hidden, but React builds its children first
+  if (!props.show) return null
+
   return (
     <Modal
       show={props.show}

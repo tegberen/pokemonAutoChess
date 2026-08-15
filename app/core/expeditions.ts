@@ -27,15 +27,12 @@ import {
 } from "../types/enum/Expedition"
 import { Rarity } from "../types/enum/Game"
 import { Synergy } from "../types/enum/Synergy"
-import type {
-  IUserMetadataClient,
-  IUserMetadataMongo,
-  IUserMetadataUnpacked
-} from "../types/interfaces/UserMetadata"
 import { max } from "../utils/number"
 
 export function getPlayerExpeditions(
-  user: IUserMetadataClient | IUserMetadataMongo | IUserMetadataUnpacked
+  // only these two fields are read, so callers can subscribe to just them
+  // instead of to a whole user object that changes identity constantly
+  user: { uid: string; eventPoints: number }
 ): Expedition[] {
   // compute hash based on player UID and number of expeditions done
   // this is a placeholder implementation and should be replaced with actual logic

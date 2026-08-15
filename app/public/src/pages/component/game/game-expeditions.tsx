@@ -1,3 +1,4 @@
+import { memo, useMemo } from "react"
 import { useTranslation } from "react-i18next"
 import {
   getExpeditionLabel,
@@ -8,15 +9,37 @@ import { usePreference } from "../../../preferences"
 import { addIconsToDescription } from "../../utils/descriptions"
 import DraggableWindow from "../modal/draggable-window"
 
-export default function GameExpeditions() {
+/* takes no props, so memo bails out of every parent-driven re-render and only
+   runs when its own profile/preference hooks actually change */
+function GameExpeditions() {
   const { t } = useTranslation()
-  const profile = useAppSelector((state) => state.network.profile)
+  /* subscribing to the whole profile re-rendered this on every unrelated field
+     change and busted the memo below with it; the expedition list is derived
+     from these two values alone, and they compare by value */
+  const uid = useAppSelector((state) => state.network.profile?.uid)
+  const eventPoints = useAppSelector(
+    (state) => state.network.profile?.eventPoints ?? 0
+  )
   const [expeditionsPosition, setExpeditionsPosition] = usePreference(
     "expeditionsPosition"
   )
 
-  if (!profile) return null
-  const expeditions = getPlayerExpeditions(profile)
+  const expeditionItems = useMemo(
+    () =>
+      uid
+        ? getPlayerExpeditions({ uid, eventPoints }).map((expedition) => (
+            <li key={expedition.type + expedition.rank}>
+              <span className="expedition-type">
+                {t(`expeditions.${expedition.type}`)}
+              </span>
+              <p>{addIconsToDescription(getExpeditionLabel(expedition))}</p>
+            </li>
+          ))
+        : null,
+    [uid, eventPoints, t]
+  )
+
+  if (!uid) return null
 
   return (
     <DraggableWindow
@@ -26,16 +49,9 @@ export default function GameExpeditions() {
       onMove={(position) => setExpeditionsPosition(position)}
       defaultMinimized={true}
     >
-      <ul style={{ maxWidth: "500px" }}>
-        {expeditions.map((expedition) => (
-          <li key={expedition.type + expedition.rank}>
-            <span className="expedition-type">
-              {t(`expeditions.${expedition.type}`)}
-            </span>
-            <p>{addIconsToDescription(getExpeditionLabel(expedition))}</p>
-          </li>
-        ))}
-      </ul>
+      <ul style={{ maxWidth: "500px" }}>{expeditionItems}</ul>
     </DraggableWindow>
   )
 }
+
+export default memo(GameExpeditions)

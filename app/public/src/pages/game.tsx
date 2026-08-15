@@ -182,9 +182,16 @@ export default function Game() {
   const spectatedPlayerId: string = useAppSelector(
     (state) => state.game.playerIdSpectated
   )
-  const connectedPlayer = useAppSelector(selectConnectedPlayer)
-  const spectatedPlayer = useAppSelector(selectSpectatedPlayer)
-  const spectate = spectatedPlayerId !== uid || !spectatedPlayer?.alive
+  /* immer gives the player a new identity on every field change - money, life,
+     board, a single dps counter - so selecting the whole object re-rendered this
+     root component constantly, and the entire tree under it. Only alive is read */
+  const connectedPlayerAlive = useAppSelector(
+    (state) => selectConnectedPlayer(state)?.alive
+  )
+  const spectatedPlayerAlive = useAppSelector(
+    (state) => selectSpectatedPlayer(state)?.alive
+  )
+  const spectate = spectatedPlayerId !== uid || !spectatedPlayerAlive
 
   const initialized = useRef<boolean>(false)
   const connecting = useRef<boolean>(false)
@@ -261,7 +268,7 @@ export default function Game() {
 
     const nbPlayers = room?.state.players.size ?? 0
     const hasLeftBeforeEnd =
-      connectedPlayer?.alive === true && room?.state?.gameFinished === false
+      connectedPlayerAlive === true && room?.state?.gameFinished === false
 
     if (nbPlayers > 0) {
       room?.state.players.forEach((p) => {
@@ -380,7 +387,9 @@ export default function Game() {
 
     return () => {
       if (videoBg) {
-        videoBg.play()
+        // blocked until the user has interacted with the page; a background
+        // video that does not resume is not worth an unhandled rejection
+        videoBg.play().catch(() => {})
         videoBg.style.display = "block"
       }
       window.removeEventListener("popstate", confirmLeave)

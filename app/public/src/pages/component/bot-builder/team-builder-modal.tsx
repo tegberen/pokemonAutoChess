@@ -16,6 +16,9 @@ export default function TeamBuilderModal(props: {
     localStore.set(LocalStoreKeys.TEAM_PLANNER, board)
   }, [board])
 
+  // Modal renders nothing while hidden, but React builds its children first
+  if (!props.show) return null
+
   return (
     <Modal
       show={props.show}

@@ -83,6 +83,9 @@ export default function Pokeguesser(props: {
     resetGame()
   }, [difficulty])
 
+  // Modal renders nothing while hidden, but React builds its children first
+  if (!props.show) return null
+
   return (
     <Modal
       show={props.show}

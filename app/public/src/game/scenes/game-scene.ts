@@ -65,6 +65,10 @@ export default class GameScene extends Scene {
   uid: string | undefined
   mapName: DungeonPMDO | "town" = "town"
   map: Phaser.Tilemaps.Tilemap | undefined
+  /* the region whose layers are actually built, which is not always mapName: a
+     tilemap that has not finished loading leaves mapName set with nothing drawn,
+     and that has to stay retryable */
+  renderedMapName: DungeonPMDO | "town" | undefined
   battleGroup: GameObjects.Group | undefined
   abilitiesVfxGroup: GameObjects.Group | undefined
   animationManager: AnimationManager | undefined
@@ -116,6 +120,15 @@ export default class GameScene extends Scene {
       logger.debug("Loading complete")
       if (!this.started) {
         this.room?.send(Transfer.LOADING_COMPLETE)
+      }
+    })
+
+    /* a region asked for before its tilemap finished downloading - reloading
+       mid-game does this - leaves nothing drawn until the next pick phase.
+       Retry as soon as the loader catches up */
+    this.load.on("complete", () => {
+      if (this.started && this.renderedMapName !== this.mapName) {
+        this.setMap(this.mapName)
       }
     })
 
@@ -401,10 +414,17 @@ export default class GameScene extends Scene {
 
   async setMap(mapName: DungeonPMDO | "town") {
     this.board?.hideGroundHoles()
+    /* rebuilding tears down and recreates every layer of the tilemap, and
+       pickMode calls this on entering every pick phase with a region that only
+       changes at portal stages */
+    const alreadyRendered = this.map != null && this.renderedMapName === mapName
     this.mapName = mapName
+    if (alreadyRendered) return
 
     if (mapName === "town") {
+      if (this.map) this.map.destroy()
       this.map = this.add.tilemap("town")
+      this.renderedMapName = mapName
       const tileset = this.map.addTilesetImage("town_tileset", "town_tileset")!
       this.map.createLayer("layer0", tileset, 0, 0)?.setScale(2, 2)
       this.map.createLayer("layer1", tileset, 0, 0)?.setScale(2, 2)
@@ -419,6 +439,7 @@ export default class GameScene extends Scene {
     const map = this.make.tilemap({ key: "map_" + mapName })
     if (this.map) this.map.destroy()
     this.map = map
+    this.renderedMapName = mapName
     tilemap.layers.forEach((layer) => {
       const tileset = map.addTilesetImage(
         layer.name,
@@ -710,7 +731,6 @@ export default class GameScene extends Scene {
               dropZone.getData("y") == 0)
           ) {
             if (gameObject.name === "PRISON_BOTTLE" && this.room?.state.phase === GamePhaseState.PICK && dropZone.getData("y") === 0) {
-              console.log("prison bottle drop x:", dropZone.getData("x"), "y:", dropZone.getData("y"))
               this.board?.playItemDropAnimation(dropZone.getData("x"), 0)
             }
             this.dispatchEvent<IDragDropItemMessage>(Transfer.DRAG_DROP_ITEM, {

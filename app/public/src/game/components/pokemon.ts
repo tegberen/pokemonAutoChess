@@ -1936,7 +1936,7 @@ export default class PokemonSprite extends DraggableObject {
   addGrassField() {
     if (!this.grassField) {
       this.grassField = this.scene.add
-        .sprite(0, 10, "abilities", "GRASSY_FIELD/000.png")
+        .sprite(0, 10, "status", "GRASSY_FIELD/000.png")
         .setDepth(DEPTH.BOARD_EFFECT_GROUND_LEVEL)
         .setScale(2)
       this.scene.add.existing(this.grassField)

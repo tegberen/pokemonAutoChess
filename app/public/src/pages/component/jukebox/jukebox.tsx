@@ -13,13 +13,13 @@ import { cc } from "../../utils/jsx"
 import { Modal } from "../modal/modal"
 import "./jukebox.css"
 
+const MUSICS: DungeonMusic[] = Object.values(DungeonMusic)
+
 export default function Jukebox(props: {
   show: boolean
   handleClose: Dispatch<SetStateAction<void>>
 }) {
   const { t } = useTranslation()
-
-  const MUSICS: DungeonMusic[] = Object.values(DungeonMusic)
 
   const musicPlaying = getGameScene()?.music?.key?.replace(
     "music_",
@@ -34,6 +34,12 @@ export default function Jukebox(props: {
       setMusic(musicPlaying)
     }
   }, [music, musicPlaying, loading])
+
+  /* the select below builds one option per music track, and React evaluates
+     those children before Modal gets to decide it renders nothing while hidden.
+     This component stays mounted for the whole game, so that was paid on every
+     re-render of the sidebar */
+  if (!props.show) return null
 
   const credits = DungeonMusicCredits[musicPlaying] ?? null
 
