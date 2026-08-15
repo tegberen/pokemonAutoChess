@@ -4924,7 +4924,7 @@
 		},
 		"DARK_CROWN_BLESSING": {
 			"name": "Dark Crown",
-			"description": "Gain a DUSK_STONE, a LOADED_DICE and a Duskull."
+			"description": "Gain a DUSK_STONE, a LOADED_DICE and a Froakie."
 		},
 		"GROUND_CROWN_BLESSING": {
 			"name": "Ground Crown",
@@ -5016,7 +5016,7 @@
 		},
 		"LIGHT_CROWN_BLESSING": {
 			"name": "Light Crown",
-			"description": "Gain a LIGHT_BALL, a STAR_DUST and a Cherubi."
+			"description": "Gain a LIGHT_BALL, a STAR_DUST and a Cherrim."
 		},
 		"GOURMET_CROWN_BLESSING": {
 			"name": "Gourmet Crown",
@@ -5115,8 +5115,8 @@
 			"description": "Gain an AQUA_MONICA. On stages 17 and 22, gain a Sobble."
 		},
 		"BERRY_POUCH": {
-			"name": "Berry Pouch",
-			"description": "Now and after each PvE round, gain a random berry."
+			"name": "Bowl of Berries",
+			"description": "Now and after each stage, gain a random berry."
 		},
 		"SCHOOL_BUS": {
 			"name": "School Bus",
@@ -5128,7 +5128,7 @@
 		},
 		"SWEET_SUBSCRIPTION": {
 			"name": "Sweet Subscription",
-			"description": "Now and after each PvE round, gain a random sweet."
+			"description": "Now and after each stage, gain a random sweet."
 		},
 		"MUNCHLAX_DELIVERY": {
 			"name": "Munchlax Delivery",
@@ -5223,7 +5223,7 @@
 			"description": "The STRONGEST ally gains HP equal to your missing player HP at the start of combat. When under 25 player HP, this effect is doubled."
 		},
 		"MISFORTUNE": {
-			"name": "Misfortune",
+			"name": "Breaking Bones",
 			"description": "The STRONGEST enemy loses % max HP equal to your missing player HP at the start of combat."
 		},
 		"SYNCHRONISED_SPEED_I": {
@@ -5280,7 +5280,7 @@
 		},
 		"BERRY_BREAKFAST": {
 			"name": "Berry Breakfast",
-			"description": "Berries can be given to Pokémon with 3 items as dishes. They are consumed at the start of the fight, with their healing converted into SHIELD. Gain a Chespin."
+			"description": "Berries can be given to Pokémon with 3 items as dishes. They are consumed at the start of the fight, with their healing converted into SHIELD. Gain 3 Berries and a Chespin."
 		},
 		"GEM_RUSH": {
 			"name": "Gem Rush",

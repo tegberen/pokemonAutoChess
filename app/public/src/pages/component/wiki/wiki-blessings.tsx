@@ -134,9 +134,6 @@ const ITEM_BLESSINGS = new Set<Blessing>([
   Blessing.MUNCHLAX_DELIVERY,
   Blessing.FIND_A_LOST_WAND,
   Blessing.EMERALD_ORB,
-  Blessing.SAPPHIRE_ORB,
-  Blessing.RUBY_ORB,
-  Blessing.LUCKY_DICE_BLESSING,
   Blessing.SINGULARITY_I,
   Blessing.SINGULARITY_II,
   Blessing.TRASH_TO_TREASURE,
@@ -178,7 +175,6 @@ const PREPARATION_BLESSINGS = new Set<Blessing>([
   Blessing.QUEST_ASCEND,
   Blessing.BEING_OF_KNOWLEDGE,
   Blessing.CLIMBING_THE_LADDER,
-  Blessing.SYNCHRONICITY,
   Blessing.UP_IS_UP,
   Blessing.HARD_COMMIT
 ])

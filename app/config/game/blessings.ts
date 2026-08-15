@@ -182,7 +182,7 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
   [Blessing.HARD_COMMIT]: {
     tier: BlessingTier.GOLD,
     availableAtStages: [4],
-    icon: "commit",
+    icon: "hard_commit",
     grantsPokemonImmediately: false
   },
   [Blessing.REGIONAL_TREASURES]: {
@@ -499,7 +499,7 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
   [Blessing.BAG_OF_SWEETS]: {
     tier: BlessingTier.SILVER,
     availableAtStages: BLESSING_SELECTION_STAGES,
-    icon: "sweets",
+    icon: "bag_of_sweets",
     grantsPokemonImmediately: false
   },
   [Blessing.WOBBUFFETS_SILVER_PRIZE]: {
@@ -847,7 +847,7 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
   [Blessing.BERRY_BREAKFAST]: {
     tier: BlessingTier.GOLD,
     availableAtStages: BLESSING_SELECTION_STAGES,
-    icon: "berries_bowl",
+    icon: "berry_breakfast",
     grantsPokemonImmediately: true,
     isAvailable: isSynergyBlessingAvailable(Synergy.GRASS)
   },

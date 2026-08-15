@@ -377,7 +377,7 @@ const CrownBlessingContent: {
   },
   [Blessing.DARK_CROWN_BLESSING]: {
     items: [Item.DUSK_STONE, Item.LOADED_DICE],
-    pokemon: Pkm.DUSKULL
+    pokemon: Pkm.FROAKIE
   },
   [Blessing.GROUND_CROWN_BLESSING]: {
     items: [Item.EXPLORER_KIT, Item.GREEN_ORB],
@@ -469,7 +469,7 @@ const CrownBlessingContent: {
   },
   [Blessing.LIGHT_CROWN_BLESSING]: {
     items: [Item.LIGHT_BALL, Item.STAR_DUST],
-    pokemon: Pkm.CHERUBI
+    pokemon: Pkm.CHERRIM
   },
   [Blessing.GOURMET_CROWN_BLESSING]: {
     items: [Item.COOKING_POT, Item.SOOTHE_BELL],
@@ -1591,6 +1591,8 @@ export const blessingTriggerEffectService: {
 } = {
   [Blessing.BERRY_POUCH]: {
     [BlessingTrigger.PVE_END]: (player) =>
+      player.items.push(pickRandomIn(Berries)),
+    [BlessingTrigger.PVP_END]: (player) =>
       player.items.push(pickRandomIn(Berries))
   },
 
@@ -1606,6 +1608,8 @@ export const blessingTriggerEffectService: {
 
   [Blessing.SWEET_SUBSCRIPTION]: {
     [BlessingTrigger.PVE_END]: (player) =>
+      player.items.push(pickRandomIn(Sweets)),
+    [BlessingTrigger.PVP_END]: (player) =>
       player.items.push(pickRandomIn(Sweets))
   },
 
@@ -2061,8 +2065,11 @@ export const blessingEffectService: {
   [Blessing.CHEFS_GREED]: (player) =>
     giftPokemonIfBenchHasRoom(player, Pkm.NACLI),
 
-  [Blessing.BERRY_BREAKFAST]: (player) =>
-    giftPokemonIfBenchHasRoom(player, Pkm.CHESPIN),
+  [Blessing.BERRY_BREAKFAST]: (player) => {
+    if (!giftPokemonIfBenchHasRoom(player, Pkm.CHESPIN)) return false
+    player.items.push(...pickNRandomIn(Berries, 3))
+    return true
+  },
 
   [Blessing.DIGGING_EQUIPMENT]: (player) =>
     giftPokemonIfBenchHasRoom(player, Pkm.NIDORANM),
