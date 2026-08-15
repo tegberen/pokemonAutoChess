@@ -4,7 +4,10 @@ import { useLocation } from "react-router"
 import { Tab, TabList, TabPanel, Tabs } from "react-tabs"
 import { Tooltip } from "react-tooltip"
 import { RarityColor } from "../../../../../config"
-import { Blessings } from "../../../../../config/game/blessings"
+import {
+  Blessings,
+  getBlessingSynergy
+} from "../../../../../config/game/blessings"
 import { getPokemonData } from "../../../../../models/precomputed/precomputed-pokemon-data"
 import { PRECOMPUTED_POKEMONS_PER_TYPE } from "../../../../../models/precomputed/precomputed-types"
 import { Emotion, type PkmWithCustom } from "../../../../../types"
@@ -45,8 +48,7 @@ import {
 import { SynergyOverlaps } from "../synergy-overlaps/synergy-overlaps"
 import {
   compareBlessingsBySynergy,
-  getBlessingShortLabel,
-  getBlessingSynergy
+  getBlessingShortLabel
 } from "../tier-list/blessing-short-label"
 
 const BLESSING_TIER_ORDER = [

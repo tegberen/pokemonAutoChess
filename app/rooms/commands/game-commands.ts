@@ -35,6 +35,7 @@ import {
   Blessings,
   consumeGreedyWishTier,
   drawBlessingOptions,
+  getMaxSynergyBlessingOptions,
   getBlessingsAvailable,
   peekGreedyWishTier,
   rollBlessingTierForStage
@@ -2442,12 +2443,10 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
         consumeGreedyWishTier(player, lobbyTier)
         const drawn = drawBlessingOptions(
           blessingPool,
-          BLESSING_OPTIONS_PER_SELECTION * (1 + BLESSING_REROLLS_PER_OPTION)
+          BLESSING_OPTIONS_PER_SELECTION * (1 + BLESSING_REROLLS_PER_OPTION),
+          getMaxSynergyBlessingOptions(this.state.stageLevel)
         )
-        const proposedBlessings = drawn.slice(
-          0,
-          BLESSING_OPTIONS_PER_SELECTION
-        )
+        const proposedBlessings = drawn.slice(0, BLESSING_OPTIONS_PER_SELECTION)
         const rerollCandidates = drawn.slice(BLESSING_OPTIONS_PER_SELECTION)
         player.choices.push(
           new PlayerChoice({

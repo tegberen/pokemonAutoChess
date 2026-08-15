@@ -20,11 +20,6 @@ import {
   VictoryRoadPointsPerRank
 } from "../config"
 import {
-  Blessings,
-  getBlessingsAvailable,
-  isFamilyCapReached
-} from "../config/game/blessings"
-import {
   Blessing,
   countsForTeamSize,
   STARTER_CHOICE_EXTRA_ROUNDS

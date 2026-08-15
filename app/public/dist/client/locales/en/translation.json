@@ -2302,7 +2302,7 @@
 		"BURN_UP": "BURN itself for 3 seconds to inflict [50,100,200,400,SP] SPECIAL.",
 		"LANDS_WRATH": "The ground erupts, dealing [20,30,40,80,SP] + [100,100,100,200,SP]% ATK as SPECIAL to the target and ADJACENT enemies, then lower their DEF and SPE_DEF by [5,5,5,10,SP].",
 		"THOUSAND_ARROWS": "33 energy arrows rain down on random tiles, dealing [40,50,60,100,SP] SPECIAL each. All enemies hit are LOCKED for 1 second.",
-		"CORE_ENFORCER": "Hits in a Z-shape area around the target, dealing [40,60,80,160,SP] SPECIAL and inflicting SILENCE for 3 seconds.",
+		"CORE_ENFORCER": "Hits in a Z-shape area around the target, dealing [40,60,80,160,320,SP] SPECIAL and inflicting SILENCE for 3 seconds.",
 		"NIHIL_LIGHT": "Unleash a powerful light that defies all laws of nature, dealing [10,20,40,80,160,SP] TRUE to the first target and 20% less for each enemy behind. All enemies hit lose any HP gained during the fight.",
 		"POWER_HUG": "Deal [40,80,160,320,SP] SPECIAL to the target. The target is LOCKED and PARALYSIS for [3,3,6,10,SP] seconds.",
 		"MORTAL_SPIN": "Knock back any Pokémon targeting the user in melee range. Deal [20,40,80,160,SP] SPECIAL to any enemies hit, and apply POISONNED for [4,4,8,16,SP] seconds",
@@ -4956,7 +4956,7 @@
 		},
 		"FAIRY_CROWN_BLESSING": {
 			"name": "Fairy Crown",
-			"description": "Gain a MOON_STONE, a DESTINY_KNOT and a Flabébé (Pink)."
+			"description": "Gain a MOON_STONE, a DESTINY_KNOT and a Marill."
 		},
 		"FIGHTING_CROWN_BLESSING": {
 			"name": "Fighting Crown",
@@ -4992,7 +4992,7 @@
 		},
 		"FLORA_CROWN_BLESSING": {
 			"name": "Flora Crown",
-			"description": "Gain an INCENSE, a GRACIDEA_FLOWER and a Flabébé (Pink)."
+			"description": "Gain an INCENSE, a GRACIDEA_FLOWER and a Flabébé."
 		},
 		"STEEL_CROWN_BLESSING": {
 			"name": "Steel Crown",
@@ -5056,11 +5056,11 @@
 		},
 		"CHARGING_UP": {
 			"name": "Charging Up",
-			"description": "Gain a CELL_BATTERY. For every 15 player damage you deal, gain another."
+			"description": "Gain a Mareep and a CELL_BATTERY. For every 15 player damage you deal, gain another CELL_BATTERY."
 		},
 		"BURNING_SHARDS": {
 			"name": "Burning Shards",
-			"description": "Gain a FIRE_SHARD. For every 15 player damage you deal, gain another."
+			"description": "Gain a Scorbunny and a FIRE_SHARD. For every 15 player damage you deal, gain another FIRE_SHARD."
 		},
 		"POTION": {
 			"name": "Potion",
@@ -5124,7 +5124,7 @@
 		},
 		"BANANA_BUSINESS": {
 			"name": "Banana Business",
-			"description": "Now and after each PvE round, gain a NANAB_BERRY."
+			"description": "Now and after each PvE round, gain 3 NANAB_BERRY."
 		},
 		"SWEET_SUBSCRIPTION": {
 			"name": "Sweet Subscription",
@@ -5332,7 +5332,7 @@
 		},
 		"NOT_THE_BEES": {
 			"name": "Not the Bees!",
-			"description": "At combat start, spawn a Combee on a random tile for each STAR level of your flower pots, up to 16. Gain a Gossifleur and a Flabébé."
+			"description": "At combat start, spawn a Combee on a random tile for each STAR level of your flower pots, up to 16."
 		},
 		"ECHO_CHAMBER": {
 			"name": "Echo Chamber",
@@ -5356,7 +5356,7 @@
 		},
 		"SACRIFICE": {
 			"name": "Sacrifice",
-			"description": "At combat start, if MONSTER 2 is active, your STRONGEST MONSTER Pokémon KOs the weakest ADJACENT ally. Gain a Bagon."
+			"description": "At combat start, if MONSTER 2 is active, your STRONGEST MONSTER Pokémon KOs the weakest ADJACENT ally. Gain a Lairon."
 		},
 		"DRAGON_KING": {
 			"name": "Dragon King",
@@ -5364,7 +5364,7 @@
 		},
 		"ASCENSION": {
 			"name": "Ascension",
-			"description": "The Pokémon in your LIGHT spot starts combat in stasis: it does not move or attack until its PP bar is full, and cannot be SILENCE or lose PP until then. When it breaks free, it doubles all the stat buffs from LIGHT. Gain a Cherubi."
+			"description": "The Pokémon in your LIGHT spot starts combat in stasis: it does not move or attack until its PP bar is full, and cannot be SILENCE or lose PP until then. When it breaks free, it doubles all the stat buffs from LIGHT. Gain a Cherrim."
 		},
 		"SHARE_THE_SPOTLIGHT": {
 			"name": "Share the Spotlight",
@@ -5560,7 +5560,7 @@
 		},
 		"MACHINE_RESIDUE": {
 			"name": "Machine Residue",
-			"description": "ARTIFICIAL Pokémon holding a tool place SPIKES beneath their target ON_ATTACK. When an allied ARTIFICIAL Pokémon walks over SPIKES, it clears them and gains 20 SHIELD instead of being affected."
+			"description": "ARTIFICIAL Pokémon holding a tool place SPIKES beneath their target ON_ATTACK. When an allied ARTIFICIAL Pokémon walks over SPIKES, it clears them and gains 20 SHIELD instead of being affected. Gain a Klang."
 		},
 		"CALCULATED_OFFENCE": {
 			"name": "Calculated Offence",
@@ -5892,7 +5892,7 @@
 		},
 		"IMPENDING_DOOM": {
 			"name": "Impending Doom",
-			"description": "After 12 seconds of combat, a shadow engulfs the battle, removing PROTECT, RUNE_PROTECT and RESURRECTION from all enemy Pokémon. For the remainder of combat, no enemy can receive these effects. Accelerate the shadow's countdown by 1 second when a CURSE enemy is KOed. Gain a Dartix."
+			"description": "After 10 seconds of combat, a shadow engulfs the battle, removing PROTECT, RUNE_PROTECT and RESURRECTION from all enemy Pokémon. For the remainder of combat, no enemy can receive these effects. Accelerate the shadow's countdown by 1 second when a CURSE enemy is KOed. Gain a Dartix."
 		},
 		"SYNCHRONICITY": {
 			"name": "Synchronicity",

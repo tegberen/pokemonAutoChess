@@ -153,6 +153,7 @@ import { schemaValues } from "../utils/schemas"
 const PEARL_GOLD_GAINED = 10
 const CROAGUNKS_AID_EXCHANGE_TICKETS = 3
 const BAG_OF_SWEETS_AMOUNT = 10
+const BANANA_BUSINESS_NANAB_BERRIES = 3
 const WOBBUFFETS_SILVER_PRIZE_RECYCLE_TICKETS = 2
 const TREASURE_HUNT_I_GEMS = 2
 const STARTER_PACK_CONTENT: { rarity: Rarity; stars: number }[] = [
@@ -409,7 +410,7 @@ const CrownBlessingContent: {
   },
   [Blessing.FAIRY_CROWN_BLESSING]: {
     items: [Item.MOON_STONE, Item.DESTINY_KNOT],
-    pokemon: Pkm.FLABEBE
+    pokemon: Pkm.MARILL
   },
   [Blessing.FIGHTING_CROWN_BLESSING]: {
     items: [Item.MACHO_BRACE, Item.POKE_DOLL],
@@ -761,10 +762,18 @@ export function grantAdoptionBaby(player: Player) {
   }
 }
 
+/* megas are earned by stacking their base form, so digging one up would hand
+   over the payoff for free. Carbink, Diancie and Aerodactyl stay diggable */
+const ARCHEOLOGY_EXCLUDED_FOSSILS: Pkm[] = [
+  Pkm.MEGA_AERODACTYL,
+  Pkm.MEGA_DIANCIE
+]
+
 function pickArcheologyFossil(rarity: Rarity, stars?: number): Pkm | null {
   const candidates = (
     PRECOMPUTED_POKEMONS_PER_TYPE[Synergy.FOSSIL] ?? []
   ).filter((pkm) => {
+    if (ARCHEOLOGY_EXCLUDED_FOSSILS.includes(pkm)) return false
     const data = getPokemonData(pkm)
     return (
       data.rarity === rarity && (stars === undefined || data.stars === stars)
@@ -1603,7 +1612,11 @@ export const blessingTriggerEffectService: {
   },
 
   [Blessing.BANANA_BUSINESS]: {
-    [BlessingTrigger.PVE_END]: (player) => player.items.push(Item.NANAB_BERRY)
+    [BlessingTrigger.PVE_END]: (player) => {
+      for (let i = 0; i < BANANA_BUSINESS_NANAB_BERRIES; i++) {
+        player.items.push(Item.NANAB_BERRY)
+      }
+    }
   },
 
   [Blessing.SWEET_SUBSCRIPTION]: {
@@ -1925,11 +1938,13 @@ export const blessingEffectService: {
   },
 
   [Blessing.CHARGING_UP]: (player) => {
+    if (giftPokemonIfBenchHasRoom(player, Pkm.MAREEP) === false) return false
     player.items.push(Item.CELL_BATTERY)
     return true
   },
 
   [Blessing.BURNING_SHARDS]: (player) => {
+    if (giftPokemonIfBenchHasRoom(player, Pkm.SCORBUNNY) === false) return false
     player.items.push(Item.FIRE_SHARD)
     return true
   },
@@ -2110,13 +2125,13 @@ export const blessingEffectService: {
     giftPokemonIfBenchHasRoom(player, Pkm.GRUBBIN),
 
   [Blessing.SACRIFICE]: (player) =>
-    giftPokemonIfBenchHasRoom(player, Pkm.BAGON),
+    giftPokemonIfBenchHasRoom(player, Pkm.LAIRON),
 
   [Blessing.DRAGON_KING]: (player) =>
     giftPokemonIfBenchHasRoom(player, Pkm.CHARMANDER),
 
   [Blessing.ASCENSION]: (player) =>
-    giftPokemonIfBenchHasRoom(player, Pkm.CHERUBI),
+    giftPokemonIfBenchHasRoom(player, Pkm.CHERRIM),
 
   [Blessing.SHARE_THE_SPOTLIGHT]: () => true,
 
@@ -2225,7 +2240,7 @@ export const blessingEffectService: {
   [Blessing.BRUTE_SHIELD_II]: () => true,
   [Blessing.STAR_GUARD]: () => true,
   [Blessing.MACHINE_RESIDUE]: (player) =>
-    giftPokemonIfBenchHasRoom(player, Pkm.MAGNEMITE),
+    giftPokemonIfBenchHasRoom(player, Pkm.KLANG),
   [Blessing.CALCULATED_OFFENCE]: () => true,
   [Blessing.ROBIN_GEMS]: () => true,
 
@@ -2645,12 +2660,7 @@ export const blessingEffectService: {
     return true
   },
 
-  [Blessing.NOT_THE_BEES]: (player) => {
-    if (getFreeSpaceOnBench(player.board) < 2) return false
-    giftPokemonIfBenchHasRoom(player, Pkm.GOSSIFLEUR)
-    giftPokemonIfBenchHasRoom(player, Pkm.FLABEBE)
-    return true
-  },
+  [Blessing.NOT_THE_BEES]: () => true,
 
   [Blessing.RIVALRY]: (player, state) => {
     if (state.stageLevel >= BLESSING_SYNERGY_GATED_STAGE) {
@@ -2769,7 +2779,9 @@ export const blessingEffectService: {
     giftPokemonIfBenchHasRoom(player, Pkm.WISHIWASHI),
 
   [Blessing.BANANA_BUSINESS]: (player) => {
-    player.items.push(Item.NANAB_BERRY)
+    for (let i = 0; i < BANANA_BUSINESS_NANAB_BERRIES; i++) {
+      player.items.push(Item.NANAB_BERRY)
+    }
     return true
   },
 

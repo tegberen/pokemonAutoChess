@@ -2,7 +2,8 @@ import { useEffect, useMemo, useRef, useState } from "react"
 import { useTranslation } from "react-i18next"
 import {
   type BlessingFamily,
-  Blessings
+  Blessings,
+  getBlessingSynergy
 } from "../../../../../config/game/blessings"
 import {
   BLESSING_SELECTION_STAGES,
@@ -13,10 +14,7 @@ import {
 import { addIconsToDescription } from "../../utils/descriptions"
 import { cc } from "../../utils/jsx"
 import SynergyIcon from "../icons/synergy-icon"
-import {
-  compareBlessingsBySynergy,
-  getBlessingSynergy
-} from "../tier-list/blessing-short-label"
+import { compareBlessingsBySynergy } from "../tier-list/blessing-short-label"
 import "./wiki-blessings.css"
 
 /* "/" is the web convention, "f" the one asked for. F is also the Buy XP

@@ -20,6 +20,7 @@ export interface BlessingDefinition {
   availableAtStages: number[]
   icon: string
   grantsPokemonImmediately: boolean
+  synergy?: Synergy
   isAvailable?: (player: Player, stage: number) => boolean
   family?: BlessingFamily
 }
@@ -76,7 +77,10 @@ export const WATER_FOUNTAIN_REGIONS: DungeonPMDO[] = [
 ]
 
 export const BLESSING_MAX_OPTIONS_PER_FAMILY = 2
+export const BLESSING_MAX_SYNERGY_OPTIONS_BEFORE_GATE = 3
+export const BLESSING_MAX_SYNERGY_OPTIONS_AFTER_GATE = 2
 
+// The gate: from this stage on, a synergy blessing needs that synergy active
 export const BLESSING_SYNERGY_GATED_STAGE = 12
 
 export function isSynergyActiveForPlayer(
@@ -89,10 +93,17 @@ export function isSynergyActiveForPlayer(
   )
 }
 
-const isSynergyBlessingAvailable =
-  (synergy: Synergy) => (player: Player, stage: number) =>
+function isSynergyRequirementMet(
+  definition: BlessingDefinition,
+  player: Player,
+  stage: number
+) {
+  if (definition.synergy === undefined) return true
+  return (
     stage < BLESSING_SYNERGY_GATED_STAGE ||
-    isSynergyActiveForPlayer(player, synergy)
+    isSynergyActiveForPlayer(player, definition.synergy)
+  )
+}
 
 const areBlessingVariantsAvailable =
   (...variants: Blessing[]) =>
@@ -105,10 +116,6 @@ const hasRockUnique = (player: Player) =>
     (pokemon) =>
       pokemon.types.has(Synergy.ROCK) && pokemon.rarity === Rarity.UNIQUE
   )
-
-const isFloraBlessingAvailable = (player: Player, stage: number) =>
-  stage < BLESSING_SYNERGY_GATED_STAGE ||
-  isSynergyActiveForPlayer(player, Synergy.FLORA)
 
 export const CrownBlessingBySynergy: { [synergy in Synergy]?: Blessing } = {
   [Synergy.NORMAL]: Blessing.NORMAL_CROWN_BLESSING,
@@ -160,10 +167,8 @@ function synergyFamilyDefinitions(
         availableAtStages: BLESSING_SELECTION_STAGES,
         icon,
         grantsPokemonImmediately: true,
-        family,
-        isAvailable: (player: Player, stage: number) =>
-          stage < BLESSING_SYNERGY_GATED_STAGE ||
-          isSynergyActiveForPlayer(player, synergy)
+        synergy,
+        family
       }
     ])
   ) as { [blessing in Blessing]: BlessingDefinition }
@@ -476,13 +481,15 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     tier: BlessingTier.SILVER,
     availableAtStages: [4],
     icon: "charging_up",
-    grantsPokemonImmediately: false
+    grantsPokemonImmediately: true,
+    synergy: Synergy.ELECTRIC
   },
   [Blessing.BURNING_SHARDS]: {
     tier: BlessingTier.SILVER,
     availableAtStages: [4],
     icon: "burning_shards",
-    grantsPokemonImmediately: false
+    grantsPokemonImmediately: true,
+    synergy: Synergy.FIRE
   },
   [Blessing.PEARL]: {
     tier: BlessingTier.SILVER,
@@ -657,18 +664,14 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "ghost_spectre",
     grantsPokemonImmediately: false,
-    isAvailable: (player, stage) =>
-      stage < BLESSING_SYNERGY_GATED_STAGE ||
-      isSynergyActiveForPlayer(player, Synergy.GHOST)
+    synergy: Synergy.GHOST
   },
   [Blessing.ARCANE_METALS]: {
     tier: BlessingTier.GOLD,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "magnet_blast",
     grantsPokemonImmediately: true,
-    isAvailable: (player, stage) =>
-      stage < BLESSING_SYNERGY_GATED_STAGE ||
-      isSynergyActiveForPlayer(player, Synergy.STEEL)
+    synergy: Synergy.STEEL
   },
   [Blessing.VITAMINS]: {
     tier: BlessingTier.SILVER,
@@ -747,56 +750,56 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "watering_can",
     grantsPokemonImmediately: true,
-    isAvailable: isFloraBlessingAvailable
+    synergy: Synergy.FLORA
   },
   [Blessing.DOUBLE_WINDFALL]: {
     tier: BlessingTier.SILVER,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "double_windfall",
     grantsPokemonImmediately: true,
-    isAvailable: isFloraBlessingAvailable
+    synergy: Synergy.FLORA
   },
   [Blessing.AMAZING_GARDENING]: {
     tier: BlessingTier.GOLD,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "water_tank",
     grantsPokemonImmediately: true,
-    isAvailable: isFloraBlessingAvailable
+    synergy: Synergy.FLORA
   },
   [Blessing.FLYTRAP]: {
     tier: BlessingTier.GOLD,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "flytrap",
     grantsPokemonImmediately: true,
-    isAvailable: isFloraBlessingAvailable
+    synergy: Synergy.FLORA
   },
   [Blessing.MEGA_SOL]: {
     tier: BlessingTier.GOLD,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "mega_sol",
     grantsPokemonImmediately: true,
-    isAvailable: isFloraBlessingAvailable
+    synergy: Synergy.FLORA
   },
   [Blessing.SPORE_CLOUDS]: {
     tier: BlessingTier.GOLD,
     availableAtStages: [12],
     icon: "spore_clouds",
     grantsPokemonImmediately: true,
-    isAvailable: isFloraBlessingAvailable
+    synergy: Synergy.FLORA
   },
   [Blessing.BLOSSOM_FESTIVAL]: {
     tier: BlessingTier.PRISMATIC,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "flower_pot",
     grantsPokemonImmediately: false,
-    isAvailable: isFloraBlessingAvailable
+    synergy: Synergy.FLORA
   },
   [Blessing.NOT_THE_BEES]: {
     tier: BlessingTier.PRISMATIC,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "beehive",
-    grantsPokemonImmediately: true,
-    isAvailable: isFloraBlessingAvailable
+    grantsPokemonImmediately: false,
+    synergy: Synergy.FLORA
   },
   [Blessing.BABY_OPENER]: {
     tier: BlessingTier.SILVER,
@@ -809,20 +812,21 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     availableAtStages: [12],
     icon: "dna_string",
     grantsPokemonImmediately: true,
-    isAvailable: isSynergyBlessingAvailable(Synergy.BABY)
+    synergy: Synergy.BABY
   },
   [Blessing.REPLICATOR]: {
     tier: BlessingTier.SILVER,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "computer_fan",
     grantsPokemonImmediately: true,
-    isAvailable: isSynergyBlessingAvailable(Synergy.ARTIFICIAL)
+    synergy: Synergy.ARTIFICIAL
   },
   [Blessing.FIND_A_LOST_WAND]: {
     tier: BlessingTier.GOLD,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "wizard_staff",
     grantsPokemonImmediately: true,
+    synergy: Synergy.FAIRY,
     /* pointless before the FAIRY 2 wand choice has actually been resolved:
        there is no "wand not offered" until the roll has been made and picked */
     isAvailable: (player) =>
@@ -835,175 +839,176 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "fridge",
     grantsPokemonImmediately: true,
-    isAvailable: isSynergyBlessingAvailable(Synergy.GOURMET)
+    synergy: Synergy.GOURMET
   },
   [Blessing.CHEFS_GREED]: {
     tier: BlessingTier.GOLD,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "ladle",
     grantsPokemonImmediately: true,
-    isAvailable: isSynergyBlessingAvailable(Synergy.GOURMET)
+    synergy: Synergy.GOURMET
   },
   [Blessing.BERRY_BREAKFAST]: {
     tier: BlessingTier.GOLD,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "berry_breakfast",
     grantsPokemonImmediately: true,
-    isAvailable: isSynergyBlessingAvailable(Synergy.GRASS)
+    synergy: Synergy.GRASS
   },
   [Blessing.GEM_RUSH]: {
     tier: BlessingTier.SILVER,
     availableAtStages: [4],
     icon: "gold_mine",
-    grantsPokemonImmediately: false
+    grantsPokemonImmediately: false,
+    synergy: Synergy.GROUND
   },
   [Blessing.DIGGING_EQUIPMENT]: {
     tier: BlessingTier.GOLD,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "dig_hole",
     grantsPokemonImmediately: true,
-    isAvailable: isSynergyBlessingAvailable(Synergy.GROUND)
+    synergy: Synergy.GROUND
   },
   [Blessing.CRYSTAL_MUTATION]: {
     tier: BlessingTier.GOLD,
     availableAtStages: [12],
     icon: "crystal_growth",
     grantsPokemonImmediately: false,
-    isAvailable: (player, stage) =>
-      isSynergyActiveForPlayer(player, Synergy.ROCK) && hasRockUnique(player)
+    synergy: Synergy.ROCK,
+    isAvailable: hasRockUnique
   },
   [Blessing.CRYSTAL_CLUSTERS]: {
     tier: BlessingTier.GOLD,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "crystal_shrine",
     grantsPokemonImmediately: true,
-    isAvailable: isSynergyBlessingAvailable(Synergy.ROCK)
+    synergy: Synergy.ROCK
   },
   [Blessing.BERSERKER_HORDES]: {
     tier: BlessingTier.PRISMATIC,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "berserker_hordes",
     grantsPokemonImmediately: false,
-    isAvailable: isSynergyBlessingAvailable(Synergy.WILD)
+    synergy: Synergy.WILD
   },
   [Blessing.ECHO_CHAMBER]: {
     tier: BlessingTier.GOLD,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "echo_chamber",
     grantsPokemonImmediately: true,
-    isAvailable: isSynergyBlessingAvailable(Synergy.SOUND)
+    synergy: Synergy.SOUND
   },
   [Blessing.LANGUAGE_BARRIER]: {
     tier: BlessingTier.GOLD,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "omega",
     grantsPokemonImmediately: true,
-    isAvailable: isSynergyBlessingAvailable(Synergy.PSYCHIC)
+    synergy: Synergy.PSYCHIC
   },
   [Blessing.MOVE_TUTOR]: {
     tier: BlessingTier.GOLD,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "move_tutor",
     grantsPokemonImmediately: false,
-    isAvailable: isSynergyBlessingAvailable(Synergy.HUMAN)
+    synergy: Synergy.HUMAN
   },
   [Blessing.ZAP]: {
     tier: BlessingTier.GOLD,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "lightning_zap",
     grantsPokemonImmediately: true,
-    isAvailable: isSynergyBlessingAvailable(Synergy.ELECTRIC)
+    synergy: Synergy.ELECTRIC
   },
   [Blessing.SEEING_TRIPLE]: {
     tier: BlessingTier.GOLD,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "triforce",
     grantsPokemonImmediately: true,
-    isAvailable: isSynergyBlessingAvailable(Synergy.BUG)
+    synergy: Synergy.BUG
   },
   [Blessing.SACRIFICE]: {
     tier: BlessingTier.GOLD,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "sacrifice",
     grantsPokemonImmediately: true,
-    isAvailable: isSynergyBlessingAvailable(Synergy.MONSTER)
+    synergy: Synergy.MONSTER
   },
   [Blessing.DRAGON_KING]: {
     tier: BlessingTier.GOLD,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "dragon_king",
     grantsPokemonImmediately: true,
-    isAvailable: isSynergyBlessingAvailable(Synergy.DRAGON)
+    synergy: Synergy.DRAGON
   },
   [Blessing.ASCENSION]: {
     tier: BlessingTier.GOLD,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "ascension_angel",
     grantsPokemonImmediately: true,
-    isAvailable: isSynergyBlessingAvailable(Synergy.LIGHT)
+    synergy: Synergy.LIGHT
   },
   [Blessing.SHARE_THE_SPOTLIGHT]: {
     tier: BlessingTier.PRISMATIC,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "double_light",
     grantsPokemonImmediately: false,
-    isAvailable: isSynergyBlessingAvailable(Synergy.LIGHT)
+    synergy: Synergy.LIGHT
   },
   [Blessing.SLIPSTREAM]: {
     tier: BlessingTier.GOLD,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "slipstream_wing",
     grantsPokemonImmediately: true,
-    isAvailable: isSynergyBlessingAvailable(Synergy.FLYING)
+    synergy: Synergy.FLYING
   },
   [Blessing.BIG_PECKS]: {
     tier: BlessingTier.GOLD,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "big_peck_letter",
     grantsPokemonImmediately: true,
-    isAvailable: isSynergyBlessingAvailable(Synergy.FLYING)
+    synergy: Synergy.FLYING
   },
   [Blessing.SHAPELESS_SYNERGIES]: {
     tier: BlessingTier.GOLD,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "shapeless",
     grantsPokemonImmediately: true,
-    isAvailable: isSynergyBlessingAvailable(Synergy.AMORPHOUS)
+    synergy: Synergy.AMORPHOUS
   },
   [Blessing.ABNORMALITY]: {
     tier: BlessingTier.SILVER,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "spread_shield",
     grantsPokemonImmediately: true,
-    isAvailable: isSynergyBlessingAvailable(Synergy.NORMAL)
+    synergy: Synergy.NORMAL
   },
   [Blessing.WRAPPED_UP]: {
     tier: BlessingTier.GOLD,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "up_shield",
     grantsPokemonImmediately: true,
-    isAvailable: isSynergyBlessingAvailable(Synergy.NORMAL)
+    synergy: Synergy.NORMAL
   },
   [Blessing.BRACE_FOR_IMPACT]: {
     tier: BlessingTier.GOLD,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "leather_vest",
     grantsPokemonImmediately: true,
-    isAvailable: isSynergyBlessingAvailable(Synergy.FIGHTING)
+    synergy: Synergy.FIGHTING
   },
   [Blessing.FROST_BARRIER]: {
     tier: BlessingTier.GOLD,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "frost_barrier",
     grantsPokemonImmediately: true,
-    isAvailable: isSynergyBlessingAvailable(Synergy.ICE)
+    synergy: Synergy.ICE
   },
   [Blessing.SECOND_WIND]: {
     tier: BlessingTier.GOLD,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "second_wind",
     grantsPokemonImmediately: true,
-    isAvailable: isSynergyBlessingAvailable(Synergy.FIELD)
+    synergy: Synergy.FIELD
   },
   [Blessing.FIRST_WIND]: {
     tier: BlessingTier.SILVER,
@@ -1016,112 +1021,112 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "resurgence",
     grantsPokemonImmediately: true,
-    isAvailable: isSynergyBlessingAvailable(Synergy.FOSSIL)
+    synergy: Synergy.FOSSIL
   },
   [Blessing.POLLUTED_SEA]: {
     tier: BlessingTier.SILVER,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "polluted_sea",
     grantsPokemonImmediately: false,
-    isAvailable: isSynergyBlessingAvailable(Synergy.AQUATIC)
+    synergy: Synergy.AQUATIC
   },
   [Blessing.TIDAL_SURGE]: {
     tier: BlessingTier.GOLD,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "trident",
     grantsPokemonImmediately: false,
-    isAvailable: isSynergyBlessingAvailable(Synergy.AQUATIC)
+    synergy: Synergy.AQUATIC
   },
   [Blessing.MONSTER_KING]: {
     tier: BlessingTier.PRISMATIC,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "monster_king",
     grantsPokemonImmediately: false,
-    isAvailable: isSynergyBlessingAvailable(Synergy.MONSTER)
+    synergy: Synergy.MONSTER
   },
   [Blessing.ADOPTION]: {
     tier: BlessingTier.PRISMATIC,
     availableAtStages: [4],
     icon: "adoption",
     grantsPokemonImmediately: false,
-    isAvailable: isSynergyBlessingAvailable(Synergy.BABY)
+    synergy: Synergy.BABY
   },
   [Blessing.RAINBOW_DROPLET]: {
     tier: BlessingTier.PRISMATIC,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "rainbow_droplet",
     grantsPokemonImmediately: false,
-    isAvailable: isSynergyBlessingAvailable(Synergy.AMORPHOUS)
+    synergy: Synergy.AMORPHOUS
   },
   [Blessing.ARCHEOLOGY]: {
     tier: BlessingTier.PRISMATIC,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "archeology",
     grantsPokemonImmediately: false,
-    isAvailable: isSynergyBlessingAvailable(Synergy.FOSSIL)
+    synergy: Synergy.FOSSIL
   },
   [Blessing.LIMIT_BREAKER]: {
     tier: BlessingTier.PRISMATIC,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "limit_breaker",
     grantsPokemonImmediately: false,
-    isAvailable: isSynergyBlessingAvailable(Synergy.DRAGON)
+    synergy: Synergy.DRAGON
   },
   [Blessing.CHAMPIONS_MASK]: {
     tier: BlessingTier.PRISMATIC,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "champions_mask",
     grantsPokemonImmediately: false,
-    isAvailable: isSynergyBlessingAvailable(Synergy.FIGHTING)
+    synergy: Synergy.FIGHTING
   },
   [Blessing.AUTO_CRAFTING]: {
     tier: BlessingTier.PRISMATIC,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "auto_crafting",
     grantsPokemonImmediately: false,
-    isAvailable: isSynergyBlessingAvailable(Synergy.ARTIFICIAL)
+    synergy: Synergy.ARTIFICIAL
   },
   [Blessing.CENTER_STAGE]: {
     tier: BlessingTier.PRISMATIC,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "center_stage",
     grantsPokemonImmediately: false,
-    isAvailable: isSynergyBlessingAvailable(Synergy.SOUND)
+    synergy: Synergy.SOUND
   },
   [Blessing.HIEROGLYPHS]: {
     tier: BlessingTier.PRISMATIC,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "hieroglyphs",
     grantsPokemonImmediately: false,
-    isAvailable: isSynergyBlessingAvailable(Synergy.PSYCHIC)
+    synergy: Synergy.PSYCHIC
   },
   [Blessing.FURIOUS_FABRIC]: {
     tier: BlessingTier.PRISMATIC,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "furious_fabric",
     grantsPokemonImmediately: false,
-    isAvailable: isSynergyBlessingAvailable(Synergy.NORMAL)
+    synergy: Synergy.NORMAL
   },
   [Blessing.GEM_HARVEST]: {
     tier: BlessingTier.PRISMATIC,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "gem_harvest",
     grantsPokemonImmediately: false,
-    isAvailable: isSynergyBlessingAvailable(Synergy.ROCK)
+    synergy: Synergy.ROCK
   },
   [Blessing.MAGNETOSPHERE]: {
     tier: BlessingTier.PRISMATIC,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "magneto_sphere",
     grantsPokemonImmediately: false,
-    isAvailable: isSynergyBlessingAvailable(Synergy.STEEL)
+    synergy: Synergy.STEEL
   },
   [Blessing.MYSTOGAN]: {
     tier: BlessingTier.PRISMATIC,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "mystogan",
     grantsPokemonImmediately: false,
-    isAvailable: isSynergyBlessingAvailable(Synergy.FAIRY)
+    synergy: Synergy.FAIRY
   },
   [Blessing.SHOW_OFF]: {
     tier: BlessingTier.PRISMATIC,
@@ -1134,163 +1139,163 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "festive_picnic",
     grantsPokemonImmediately: false,
-    isAvailable: isSynergyBlessingAvailable(Synergy.GOURMET)
+    synergy: Synergy.GOURMET
   },
   [Blessing.ICY_REFLECTION]: {
     tier: BlessingTier.PRISMATIC,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "icy_reflection",
     grantsPokemonImmediately: false,
-    isAvailable: isSynergyBlessingAvailable(Synergy.ICE)
+    synergy: Synergy.ICE
   },
   [Blessing.BULL_LEAPING]: {
     tier: BlessingTier.PRISMATIC,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "bull_leaping",
     grantsPokemonImmediately: false,
-    isAvailable: isSynergyBlessingAvailable(Synergy.FIELD)
+    synergy: Synergy.FIELD
   },
   [Blessing.OVERLOAD]: {
     tier: BlessingTier.PRISMATIC,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "overload",
     grantsPokemonImmediately: false,
-    isAvailable: isSynergyBlessingAvailable(Synergy.ELECTRIC)
+    synergy: Synergy.ELECTRIC
   },
   [Blessing.FOGBOUND_LAKE]: {
     tier: BlessingTier.PRISMATIC,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "fogbound_lake",
     grantsPokemonImmediately: false,
-    isAvailable: isSynergyBlessingAvailable(Synergy.BUG)
+    synergy: Synergy.BUG
   },
   [Blessing.TIDAL_GUARDIAN]: {
     tier: BlessingTier.PRISMATIC,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "tidal_guardian",
     grantsPokemonImmediately: false,
-    isAvailable: isSynergyBlessingAvailable(Synergy.AQUATIC)
+    synergy: Synergy.AQUATIC
   },
   [Blessing.GRUDGE]: {
     tier: BlessingTier.PRISMATIC,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "grudge",
     grantsPokemonImmediately: false,
-    isAvailable: isSynergyBlessingAvailable(Synergy.GHOST)
+    synergy: Synergy.GHOST
   },
   [Blessing.SOUL_BLAZE]: {
     tier: BlessingTier.PRISMATIC,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "soul_blaze",
     grantsPokemonImmediately: false,
-    isAvailable: isSynergyBlessingAvailable(Synergy.FIRE)
+    synergy: Synergy.FIRE
   },
   [Blessing.FERTILE_SOIL]: {
     tier: BlessingTier.PRISMATIC,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "fertile_soil",
     grantsPokemonImmediately: false,
-    isAvailable: isSynergyBlessingAvailable(Synergy.GROUND)
+    synergy: Synergy.GROUND
   },
   [Blessing.DEEP_WOUNDS]: {
     tier: BlessingTier.PRISMATIC,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "deep_wounds",
     grantsPokemonImmediately: false,
-    isAvailable: isSynergyBlessingAvailable(Synergy.DARK)
+    synergy: Synergy.DARK
   },
   [Blessing.FAST_DELIVERY]: {
     tier: BlessingTier.PRISMATIC,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "fast_delivery",
     grantsPokemonImmediately: false,
-    isAvailable: isSynergyBlessingAvailable(Synergy.FLYING)
+    synergy: Synergy.FLYING
   },
   [Blessing.MOLECULAR_CORROSION]: {
     tier: BlessingTier.PRISMATIC,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "molecular_corrosion",
     grantsPokemonImmediately: false,
-    isAvailable: isSynergyBlessingAvailable(Synergy.POISON)
+    synergy: Synergy.POISON
   },
   [Blessing.UNISON]: {
     tier: BlessingTier.PRISMATIC,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "unison",
     grantsPokemonImmediately: false,
-    isAvailable: isSynergyBlessingAvailable(Synergy.HUMAN)
+    synergy: Synergy.HUMAN
   },
   [Blessing.BERRY_GROWTH]: {
     tier: BlessingTier.PRISMATIC,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "berry_growth",
     grantsPokemonImmediately: false,
-    isAvailable: isSynergyBlessingAvailable(Synergy.GRASS)
+    synergy: Synergy.GRASS
   },
   [Blessing.WATER_FOUNTAIN]: {
     tier: BlessingTier.PRISMATIC,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "water_fountain",
     grantsPokemonImmediately: false,
-    isAvailable: (player: Player, stage: number) =>
-      player.specialGameRule !== SpecialGameRule.LIGHT_SHOW &&
-      (stage < BLESSING_SYNERGY_GATED_STAGE ||
-        isSynergyActiveForPlayer(player, Synergy.WATER))
+    synergy: Synergy.WATER,
+    isAvailable: (player) =>
+      player.specialGameRule !== SpecialGameRule.LIGHT_SHOW
   },
   [Blessing.ATLANTEAN_MAGIC]: {
     tier: BlessingTier.GOLD,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "water_magic",
     grantsPokemonImmediately: true,
-    isAvailable: isSynergyBlessingAvailable(Synergy.WATER)
+    synergy: Synergy.WATER
   },
   [Blessing.STAR_CROSSED_SEAS]: {
     tier: BlessingTier.GOLD,
     availableAtStages: [12],
     icon: "sea",
     grantsPokemonImmediately: false,
-    isAvailable: isSynergyBlessingAvailable(Synergy.AMORPHOUS)
+    synergy: Synergy.AMORPHOUS
   },
   [Blessing.HEX_MANIAC]: {
     tier: BlessingTier.GOLD,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "hex_maniac",
     grantsPokemonImmediately: true,
-    isAvailable: isSynergyBlessingAvailable(Synergy.GHOST)
+    synergy: Synergy.GHOST
   },
   [Blessing.ABSOLUTE_DARKNESS]: {
     tier: BlessingTier.GOLD,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "absolute_darkness",
     grantsPokemonImmediately: true,
-    isAvailable: isSynergyBlessingAvailable(Synergy.DARK)
+    synergy: Synergy.DARK
   },
   [Blessing.TOXIC_BURST]: {
     tier: BlessingTier.GOLD,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "toxic_burst",
     grantsPokemonImmediately: true,
-    isAvailable: isSynergyBlessingAvailable(Synergy.POISON)
+    synergy: Synergy.POISON
   },
   [Blessing.EXHAUSTING_FLAME]: {
     tier: BlessingTier.GOLD,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "exhausting_flame",
     grantsPokemonImmediately: true,
-    isAvailable: isSynergyBlessingAvailable(Synergy.FIRE)
+    synergy: Synergy.FIRE
   },
   [Blessing.ETERNAL_RAGE]: {
     tier: BlessingTier.GOLD,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "eternal_rage",
     grantsPokemonImmediately: true,
-    isAvailable: isSynergyBlessingAvailable(Synergy.WILD)
+    synergy: Synergy.WILD
   },
   [Blessing.WILD_SUBSCRIPTION]: {
     tier: BlessingTier.SILVER,
     availableAtStages: [4],
     icon: "wild_subscription",
-    grantsPokemonImmediately: false
+    grantsPokemonImmediately: false,
+    synergy: Synergy.WILD
   },
   [Blessing.CHOSEN_ONES]: {
     tier: BlessingTier.PRISMATIC,
@@ -1453,7 +1458,7 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     availableAtStages: [4],
     icon: "beauty_contest",
     grantsPokemonImmediately: false,
-    isAvailable: isSynergyBlessingAvailable(Synergy.WATER)
+    synergy: Synergy.WATER
   },
   [Blessing.QUICK_CLAW]: {
     tier: BlessingTier.SILVER,
@@ -1808,7 +1813,7 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "machine_residue",
     grantsPokemonImmediately: true,
-    isAvailable: isSynergyBlessingAvailable(Synergy.ARTIFICIAL)
+    synergy: Synergy.ARTIFICIAL
   },
   [Blessing.CALCULATED_OFFENCE]: {
     tier: BlessingTier.PRISMATIC,
@@ -1856,7 +1861,8 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     tier: BlessingTier.SILVER,
     availableAtStages: [4],
     icon: "rock",
-    grantsPokemonImmediately: true
+    grantsPokemonImmediately: true,
+    synergy: Synergy.ROCK
   },
   [Blessing.BABYLESS]: {
     tier: BlessingTier.PRISMATIC,
@@ -2001,34 +2007,51 @@ function tierChancesForBlessingsUnderTest(blessingsUnderTest: Blessing[]): {
 
 export const BLESSING_SANDBOX_MODE: boolean = false
 
-function countBlessingsOfFamily(blessings: Blessing[], family?: string) {
-  if (!family) return 0
-  return blessings.filter((blessing) => Blessings[blessing].family === family)
-    .length
+function isFamilyCapReached(alreadyDrawn: Blessing[], candidate: Blessing) {
+  const { family } = Blessings[candidate]
+  if (family === undefined) return false
+  return (
+    alreadyDrawn.filter((blessing) => Blessings[blessing].family === family)
+      .length >= BLESSING_MAX_OPTIONS_PER_FAMILY
+  )
 }
 
-export function isFamilyCapReached(
-  alreadyProposed: Blessing[],
-  candidate: Blessing
+export function getBlessingSynergy(blessing: Blessing): Synergy | undefined {
+  return Blessings[blessing].synergy
+}
+
+function isSynergyRelatedBlessing(blessing: Blessing): boolean {
+  return getBlessingSynergy(blessing) !== undefined
+}
+
+function isSynergyOptionCapReached(
+  alreadyDrawn: Blessing[],
+  candidate: Blessing,
+  maxSynergyOptions: number
 ) {
-  const { family } = Blessings[candidate]
-  if (!family) return false
+  if (!isSynergyRelatedBlessing(candidate)) return false
   return (
-    countBlessingsOfFamily(alreadyProposed, family) >=
-    BLESSING_MAX_OPTIONS_PER_FAMILY
+    alreadyDrawn.filter(isSynergyRelatedBlessing).length >= maxSynergyOptions
   )
+}
+
+export function getMaxSynergyBlessingOptions(stage: number) {
+  return stage >= BLESSING_SYNERGY_GATED_STAGE
+    ? BLESSING_MAX_SYNERGY_OPTIONS_AFTER_GATE
+    : BLESSING_MAX_SYNERGY_OPTIONS_BEFORE_GATE
 }
 
 export function drawBlessingOptions(
   pool: Blessing[],
   amount: number,
-  alreadyProposed: Blessing[] = []
+  maxSynergyOptions: number
 ): Blessing[] {
   const remaining = shuffleArray([...pool])
   const drawn: Blessing[] = []
   while (drawn.length < amount && remaining.length > 0) {
     const candidate = remaining.pop()!
-    if (isFamilyCapReached([...alreadyProposed, ...drawn], candidate)) continue
+    if (isFamilyCapReached(drawn, candidate)) continue
+    if (isSynergyOptionCapReached(drawn, candidate, maxSynergyOptions)) continue
     drawn.push(candidate)
   }
   return drawn
@@ -2052,6 +2075,7 @@ export function getBlessingsAvailable(
       (isTesting ||
         BLESSING_SANDBOX_MODE ||
         definition.availableAtStages.includes(stage)) &&
+      isSynergyRequirementMet(definition, player, stage) &&
       (definition.isAvailable?.(player, stage) ?? true)
     )
   })

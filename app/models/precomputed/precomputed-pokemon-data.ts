@@ -12,6 +12,18 @@ console.time("precompute-pokemon-data")
 
 const data = new Map<Pkm, Omit<IPokemonData, "name" | "index">>()
 
+// highest star count in each family, worked out once up front so the loop
+// below can look it up instead of searching the whole list for every pokemon
+const maxStarsByFamily = new Map<Pkm, number>()
+precomputedPokemons.forEach((pokemon) => {
+  if (pokemon.skill === Ability.DEFAULT) return
+  const family = PkmFamily[pokemon.name]
+  const highest = maxStarsByFamily.get(family)
+  if (highest === undefined || pokemon.stars > highest) {
+    maxStarsByFamily.set(family, pokemon.stars)
+  }
+})
+
 precomputedPokemons.forEach((pokemon) => {
   data.set(pokemon.name, {
     skill: pokemon.skill,
@@ -27,15 +39,10 @@ precomputedPokemons.forEach((pokemon) => {
     types: schemaValues(pokemon.types) as Synergy[],
     evolution: pokemon.evolution === Pkm.DEFAULT ? null : pokemon.evolution,
     evolutions: pokemon.evolutions,
-    stages: Math.max(
-      ...precomputedPokemons
-        .filter(
-          (p) =>
-            PkmFamily[p.name] === PkmFamily[pokemon.name] &&
-            p.skill !== Ability.DEFAULT
-        )
-        .map((p) => p.stars)
-    )
+    // -Infinity when nobody in the family has a skill yet, same as before
+    stages:
+      maxStarsByFamily.get(PkmFamily[pokemon.name]) ??
+      Number.NEGATIVE_INFINITY
   })
 })
 

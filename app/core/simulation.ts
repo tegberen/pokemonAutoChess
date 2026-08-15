@@ -1998,12 +1998,7 @@ export default class Simulation extends Schema implements ISimulation {
         /* raising stars is all an "extra star level" needs: every ability reads
            its scaling as [a,b,c,d][stars - 1], the way STAR_PIECE does it */
         allies.forEach((ally) => {
-          if (
-            ally.types.has(Synergy.DRAGON) &&
-            ally.rarity !== Rarity.UNIQUE &&
-            ally.rarity !== Rarity.LEGENDARY &&
-            ally.refToBoardPokemon.final
-          ) {
+          if (ally.types.has(Synergy.DRAGON) && ally.refToBoardPokemon.final) {
             ally.stars = max(5)(ally.stars + 1)
           }
         })

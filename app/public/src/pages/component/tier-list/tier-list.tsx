@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
-import { Blessings } from "../../../../../config/game/blessings"
+import {
+  Blessings,
+  getBlessingSynergy
+} from "../../../../../config/game/blessings"
 import { Emotion, type PkmWithCustom } from "../../../../../types"
 import { Blessing } from "../../../../../types/enum/Blessing"
 import type { Item } from "../../../../../types/enum/Item"
@@ -11,10 +14,7 @@ import { isIn } from "../../../../../utils/array"
 import { getPortraitSrc } from "../../../../../utils/avatar"
 import SynergyIcon from "../icons/synergy-icon"
 import { blessingTierClass } from "../synergy/blessing-tooltip-card"
-import {
-  getBlessingShortLabel,
-  getBlessingSynergy
-} from "./blessing-short-label"
+import { getBlessingShortLabel } from "./blessing-short-label"
 import { type TierListSymbol, TierListSymbols } from "./tier-list-symbols"
 import "./tier-list.css"
 
