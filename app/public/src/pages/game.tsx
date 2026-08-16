@@ -829,6 +829,7 @@ export default function Game() {
             getGameScene()?.board?.refreshShinySafeguardMarks()
           }
         })
+        $(playerBlessings).listen("mystoganWands", dispatchBlessings)
         $(playerBlessings).mystoganWands.onChange(dispatchBlessings)
         $(playerBlessings).waterPonds.onChange(() => {
           if (playerId === store.getState().game.playerIdSpectated) {

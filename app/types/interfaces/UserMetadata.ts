@@ -15,6 +15,8 @@ interface IUserMetadata {
   wins: number
   activeWeeks?: number
   lastActiveWeek?: string
+  currentFirstPlaceStreak?: number
+  highestFirstPlaceStreak?: number
   exp: number
   level: number
   elo: number

@@ -98,6 +98,8 @@ const statisticSchema = new Schema({
   ]
 })
 
+statisticSchema.index({ playerId: 1, time: -1 })
+
 export default model<IDetailledStatistic>(
   "DetailledStatisticV2",
   statisticSchema

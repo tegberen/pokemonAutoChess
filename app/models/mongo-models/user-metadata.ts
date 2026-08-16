@@ -62,6 +62,13 @@ const userMetadataSchema = new Schema({
     type: String,
     default: ""
   },
+  // TEMP: no default, so undefined means never seeded from history
+  currentFirstPlaceStreak: {
+    type: Number
+  },
+  highestFirstPlaceStreak: {
+    type: Number
+  },
   exp: {
     type: Number,
     default: 0

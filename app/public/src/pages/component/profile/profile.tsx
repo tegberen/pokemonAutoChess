@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next"
 import { Tab, TabList, TabPanel, Tabs } from "react-tabs"
 import type { IGameRecord } from "../../../../../models/colyseus-models/game-record"
 import { type ISuggestionUser, Role, Title } from "../../../../../types"
+import type { IUserMetadataUnpacked } from "../../../../../types/interfaces/UserMetadata"
 import { debounce } from "../../../../../utils/function"
 import { useAppDispatch, useAppSelector } from "../../../hooks"
 import {
@@ -121,11 +122,12 @@ export default function Profile() {
           />
         ) : searchedUser ? (
           <OtherProfileActions
+            gameHistory={gameHistory}
             rightPanel={rightPanel}
             setRightPanel={setRightPanel}
           />
         ) : (
-          <MyProfileMenu gameHistory={gameHistory} />
+          user && <MyProfileMenu user={user} gameHistory={gameHistory} />
         )}
       </div>
 
@@ -139,7 +141,13 @@ export default function Profile() {
   )
 }
 
-function MyProfileMenu({ gameHistory }: { gameHistory: IGameRecord[] }) {
+function MyProfileMenu({
+  gameHistory,
+  user
+}: {
+  gameHistory: IGameRecord[]
+  user: IUserMetadataUnpacked
+}) {
   const { t } = useTranslation()
   return (
     <Tabs>
@@ -150,7 +158,7 @@ function MyProfileMenu({ gameHistory }: { gameHistory: IGameRecord[] }) {
       </TabList>
 
       <TabPanel>
-        <EloTab gameHistory={gameHistory} />
+        <EloTab user={user} gameHistory={gameHistory} />
       </TabPanel>
       <TabPanel>
         <TitleTab />
@@ -163,6 +171,7 @@ function MyProfileMenu({ gameHistory }: { gameHistory: IGameRecord[] }) {
 }
 
 function OtherProfileActions(props: {
+  gameHistory: IGameRecord[]
   rightPanel: "game" | "chat"
   setRightPanel: React.Dispatch<React.SetStateAction<"game" | "chat">>
 }) {
@@ -325,17 +334,34 @@ function OtherProfileActions(props: {
       </div>
     ) : null
 
-  return role === Role.ADMIN || role === Role.MODERATOR ? (
+  return (
     <>
-      {titleButton}
-      {championButtons}
-      {user?.banned ? unbanButton : banButton}
-      {props.rightPanel === "game" ? chatHistoryButton : gameHistoryButton}
-      {currentUid && user && user.uid !== currentUid && (
-        <button className="bubbly blue" onClick={() => searchById(currentUid)}>
-          {t("back_to_my_profile")}
-        </button>
+      {user && (
+        <Tabs>
+          <TabList>
+            <Tab>Record</Tab>
+          </TabList>
+          <TabPanel>
+            <EloTab user={user} gameHistory={props.gameHistory} />
+          </TabPanel>
+        </Tabs>
+      )}
+      {(role === Role.ADMIN || role === Role.MODERATOR) && (
+        <>
+          {titleButton}
+          {championButtons}
+          {user?.banned ? unbanButton : banButton}
+          {props.rightPanel === "game" ? chatHistoryButton : gameHistoryButton}
+          {currentUid && user && user.uid !== currentUid && (
+            <button
+              className="bubbly blue"
+              onClick={() => searchById(currentUid)}
+            >
+              {t("back_to_my_profile")}
+            </button>
+          )}
+        </>
       )}
     </>
-  ) : null
+  )
 }

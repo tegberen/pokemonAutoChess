@@ -1,5 +1,5 @@
 import Masker from "../../core/masker"
-import { pickRandomIn, shuffleArray } from "../../utils/random"
+import { shuffleArray } from "../../utils/random"
 import {
   DTEF_TILESET_WIDTH,
   MaskCoordinate,
@@ -32,8 +32,7 @@ export interface WaterPondData {
 
 /* Cell offsets [dx, dy] from the top left of the bounding box. Ponds are round
    so the water autotiling reads as a shoreline rather than scattered puddles,
-   never wider than 4 so two always fit side by side in the 8 columns, and never
-   taller than 2 rows so a front or back row band still leaves them somewhere */
+   and never wider than 4 so two always fit side by side in the 8 columns */
 export const WaterPondOffsets: Record<WaterPondType, [number, number][]> = {
   [WaterPondType.DEEP_POND]: [
     [0, 0],
@@ -112,8 +111,9 @@ export const WaterPondFrontRowTypes = [
 
 export const WaterPondTypes = Object.values(WaterPondType)
 
-/* effect strength per tier of Water, so Water 3/6/9 pays 1x/2x/3x. The blessing
-   can be taken before Water is active, which would otherwise be a dead pick */
+/* base effect strength, multiplied by the player's Water tier below. The
+   blessing can be taken before Water is active, which would otherwise be a
+   dead pick */
 export const WaterPondValuePerWaterTier: Record<WaterPondType, number> = {
   [WaterPondType.DEEP_POND]: 4,
   [WaterPondType.MINERAL_SPRING]: 4,
@@ -124,11 +124,17 @@ export const WaterPondValuePerWaterTier: Record<WaterPondType, number> = {
   [WaterPondType.GEYSER]: 10
 }
 
+// indexed by Water tier, so Water 3/6/9 pays 1x/2x/4x: the last tier is the payoff
+const WaterPondMultiplierPerWaterTier = [1, 1, 2, 4]
+
 export function getWaterPondValue(
   pondType: WaterPondType,
   waterTier: number
 ): number {
-  return WaterPondValuePerWaterTier[pondType] * Math.max(1, waterTier)
+  const multiplier =
+    WaterPondMultiplierPerWaterTier[waterTier] ??
+    WaterPondMultiplierPerWaterTier.at(-1)!
+  return WaterPondValuePerWaterTier[pondType] * multiplier
 }
 
 export const WATER_FOUNTAIN_PONDS = 2
@@ -167,21 +173,31 @@ function enumerateWaterPondPlacements(
   return placements
 }
 
+/* the front and back bands share the middle row, so a pond dropped anywhere can
+   block the next one. Backtracking picks a spot that still leaves the rest room,
+   instead of placing blind and losing whatever no longer fits */
+function placeWaterPonds(
+  pondTypes: WaterPondType[],
+  occupied: number[]
+): WaterPondData[] | null {
+  const [pondType, ...remaining] = pondTypes
+  if (pondType === undefined) return []
+  const placements = shuffleArray(
+    enumerateWaterPondPlacements(pondType, occupied)
+  )
+  for (const cells of placements) {
+    const rest = placeWaterPonds(remaining, [...occupied, ...cells])
+    if (rest) return [{ pondType, cells }, ...rest]
+  }
+  return null
+}
+
 export function rollWaterPonds(): WaterPondData[] {
   const pondTypes = shuffleArray([...WaterPondTypes]).slice(
     0,
     WATER_FOUNTAIN_PONDS
   )
-  const ponds: WaterPondData[] = []
-  const occupied: number[] = []
-  for (const pondType of pondTypes) {
-    const placements = enumerateWaterPondPlacements(pondType, occupied)
-    if (placements.length === 0) continue
-    const cells = pickRandomIn(placements)
-    occupied.push(...cells)
-    ponds.push({ pondType, cells })
-  }
-  return ponds
+  return placeWaterPonds(pondTypes, []) ?? []
 }
 
 /* Ponds are drawn with their own region's water tiles so the shoreline blends

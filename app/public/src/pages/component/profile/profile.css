@@ -113,7 +113,7 @@
 }
 
 .elo-tab .elo-rank-name {
-  margin: 0.1em 0 0.75em;
+  margin: 0.1em 0 0.35em;
   color: var(--color-fg-gold);
   font-size: 1.5em;
 }
@@ -128,7 +128,59 @@
   gap: 0.5em;
   width: 100%;
   max-width: 260px;
-  margin-top: 1em;
+  margin-top: 0.5em;
+}
+
+.elo-tab .elo-record {
+  display: grid;
+  grid-template-columns: 2em minmax(0, 1fr) auto;
+  align-items: center;
+  column-gap: 0.5em;
+  min-width: 0;
+  padding: 0.2em 0.75em 0.35em 0.6em;
+}
+
+.elo-tab .elo-record-emblem {
+  display: grid;
+  width: 2em;
+  height: 2em;
+  place-items: center;
+}
+
+.elo-tab .elo-record-emblem img {
+  width: 1.65em;
+  height: 1.65em;
+  object-fit: contain;
+}
+
+.elo-tab .elo-record-label {
+  display: flex;
+  grid-column: 2;
+  grid-row: 1;
+  flex-direction: column;
+  align-items: flex-start;
+  line-height: 1.05;
+  text-transform: uppercase;
+}
+
+.elo-tab .elo-record-label small {
+  color: var(--color-fg-secondary);
+  font-size: 0.6em;
+  letter-spacing: 0.08em;
+}
+
+.elo-tab .elo-record-label b {
+  color: var(--color-fg-gold);
+  font-size: 0.72em;
+}
+
+.elo-tab .elo-record-value {
+  grid-column: 3;
+  grid-row: 1;
+  color: var(--color-fg-gold);
+  font-size: 1.55em;
+  line-height: 1;
+  text-align: center;
 }
 
 .elo-tab .profile-stat {
@@ -208,7 +260,6 @@
     min-height: auto;
     padding: 1em;
   }
-
 }
 
 .profile-actions > button,

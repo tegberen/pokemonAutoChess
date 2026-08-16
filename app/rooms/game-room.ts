@@ -1000,6 +1000,31 @@ export default class GameRoom extends Room<{ state: GameState }> {
     }
   }
 
+  /* TEMP: remove 4 weeks after deploy, once history holds no pre-feature games.
+     Restore the `?? 0` on the increment when removing, or it becomes undefined + 1 */
+  async countFirstPlaceStreaksFromHistory(
+    playerId: string
+  ): Promise<{ current: number; highest: number }> {
+    const recentGames = await DetailledStatistic.find(
+      { playerId },
+      ["rank"],
+      { sort: { time: -1 }, limit: 100 }
+    )
+    const ranks = recentGames.map((game) => game.rank) // newest first
+
+    let current = 0
+    while (current < ranks.length && ranks[current] === 1) current++
+
+    let highest = 0
+    let run = 0
+    for (const rank of ranks) {
+      run = rank === 1 ? run + 1 : 0
+      highest = Math.max(highest, run)
+    }
+
+    return { current, highest }
+  }
+
   // when a player leaves the game
   async updatePlayerAfterGame(player: Player, hasLeftBeforeEnd: boolean) {
     if (this.state.specialGameRule === SpecialGameRule.PLAY_TEST) return
@@ -1201,6 +1226,23 @@ export default class GameRoom extends Room<{ state: GameState }> {
       if (
         this.state.stageLevel >= MinStageForGameToCount
       ) {
+        if (usr.currentFirstPlaceStreak === undefined) {
+          // TEMP: history does not include the game that just ended
+          const seeded = await this.countFirstPlaceStreaksFromHistory(player.id)
+          usr.currentFirstPlaceStreak = seeded.current
+          usr.highestFirstPlaceStreak = seeded.highest
+        }
+
+        if (rank === 1) {
+          usr.currentFirstPlaceStreak = usr.currentFirstPlaceStreak + 1
+          usr.highestFirstPlaceStreak = Math.max(
+            usr.highestFirstPlaceStreak ?? 0,
+            usr.currentFirstPlaceStreak
+          )
+        } else if (!hasLeftBeforeEnd) {
+          usr.currentFirstPlaceStreak = 0
+        }
+
         const now = new Date()
         const daysSinceMonday = (now.getUTCDay() + 6) % 7
         const monday = new Date(

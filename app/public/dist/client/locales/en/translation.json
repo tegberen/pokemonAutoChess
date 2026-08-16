@@ -5644,7 +5644,7 @@
 		},
 		"WATER_FOUNTAIN": {
 			"name": "Water Fountain",
-			"description": "Travel to a region with Ponds, and from now on you can only travel to regions with Ponds. Two Ponds appear on your board, defensive ones in front and offensive ones in the backline. A Pokémon that starts the fight in a Pond gains that Pond's effect. The effects increases with higher tiers of WATER. Every 4 stages, the Ponds move and change. Your Pokémon can no longer dig, and holes already dug stay as they are."
+			"description": "Travel to a region with Ponds, and from now on you can only travel to those. Two Ponds appear on your board, defensive in front and offensive in the backline, changing every 4 stages. A Pokémon starting the fight in a Pond gains its effect, multiplied by your own WATER tier: 2x at WATER 6, 4x at WATER 9. (Your Pokémon can no longer dig.)"
 		},
 		"WOBBUFFETS_GOLD_PRIZE": {
 			"name": "Wobbuffet's Gold Prize",

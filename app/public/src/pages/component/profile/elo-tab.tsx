@@ -1,17 +1,40 @@
 import { useTranslation } from "react-i18next"
 import type { IGameRecord } from "../../../../../models/colyseus-models/game-record"
+import type { IUserMetadataClient } from "../../../../../types/interfaces/UserMetadata"
 import { getRank } from "../../../../../utils/elo"
-import { useAppSelector } from "../../../hooks"
 
-export function EloTab({ gameHistory }: { gameHistory: IGameRecord[] }) {
+type RecordUser = Pick<
+  IUserMetadataClient,
+  | "elo"
+  | "maxElo"
+  | "activeWeeks"
+  | "currentFirstPlaceStreak"
+  | "highestFirstPlaceStreak"
+>
+
+export function EloTab({
+  gameHistory,
+  user
+}: {
+  gameHistory: IGameRecord[]
+  user: RecordUser
+}) {
   const { t } = useTranslation()
-  const user = useAppSelector((state) => state.network.profile)
 
-  const rank = user ? getRank(user.elo) : null
-  const firstPlaceStreak = gameHistory.findIndex((game) => game.rank !== 1)
-  const streak = firstPlaceStreak === -1 ? gameHistory.length : firstPlaceStreak
+  const rank = getRank(user.elo)
+  const firstNonWin = gameHistory.findIndex((game) => game.rank !== 1)
+  const loadedCurrentStreak =
+    firstNonWin === -1 ? gameHistory.length : firstNonWin
+  const currentStreak = Math.max(
+    user.currentFirstPlaceStreak ?? 0,
+    loadedCurrentStreak
+  )
+  const highestStreak = Math.max(
+    user.highestFirstPlaceStreak ?? 0,
+    currentStreak
+  )
 
-  return user && rank ? (
+  return rank ? (
     <div className="elo-tab">
       <img
         className="elo-rank-icon"
@@ -22,13 +45,41 @@ export function EloTab({ gameHistory }: { gameHistory: IGameRecord[] }) {
       <div className="elo-summary">
         <span className="elo-label">{t("rank")}</span>
         <strong className="elo-rank-name">{t(`elorank.${rank}`)}</strong>
-        <p>
-          {t("profile.elo_tab.current_elo")}: <strong>{user.elo}</strong>
-        </p>
-        <p>
-          {t("profile.elo_tab.max_elo_reached")}: <strong>{user.maxElo}</strong>
-        </p>
         <div className="profile-stats">
+          <div
+            className="elo-record"
+            title={`Highest Elo reached: ${user.maxElo}`}
+          >
+            <span className="elo-record-emblem">
+              <img
+                src="/assets/icons/elo_record.svg"
+                alt=""
+                aria-hidden="true"
+              />
+            </span>
+            <span className="elo-record-label">
+              <small>Personal best</small>
+              <b>Highest Elo</b>
+            </span>
+            <strong className="elo-record-value">{user.maxElo}</strong>
+          </div>
+          <div
+            className="profile-stat"
+            title={`Current first-place streak: ${currentStreak}. Highest streak: ${highestStreak}.`}
+          >
+            <span className="profile-stat-emblem">
+              <img
+                src="/assets/icons/fire_first_streak.svg"
+                alt=""
+                aria-hidden="true"
+              />
+            </span>
+            <strong className="profile-stat-count">{highestStreak}</strong>
+            <span className="profile-stat-label">
+              <small>Current {currentStreak}</small>
+              <b>Best streak</b>
+            </span>
+          </div>
           <div
             className="profile-stat"
             title="Total calendar weeks in which you completed a game. Skipped weeks do not reset this count."
@@ -46,23 +97,6 @@ export function EloTab({ gameHistory }: { gameHistory: IGameRecord[] }) {
             <span className="profile-stat-label">
               <small>Community</small>
               <b>Active weeks</b>
-            </span>
-          </div>
-          <div
-            className="profile-stat"
-            title={`${streak} first-place finishes in a row`}
-          >
-            <span className="profile-stat-emblem">
-              <img
-                src="/assets/icons/fire_first_streak.svg"
-                alt=""
-                aria-hidden="true"
-              />
-            </span>
-            <strong className="profile-stat-count">{streak}</strong>
-            <span className="profile-stat-label">
-              <small>1st place</small>
-              <b>Win streak</b>
             </span>
           </div>
         </div>
