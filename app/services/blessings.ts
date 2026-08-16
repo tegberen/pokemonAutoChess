@@ -2206,6 +2206,12 @@ export const blessingEffectService: {
 
   [Blessing.LASTING_EFFECTS]: () => true,
 
+  [Blessing.LONE_WOLF]: () => true,
+
+  [Blessing.PARTING_GIFT]: () => true,
+
+  [Blessing.REQUIEM]: () => true,
+
   [Blessing.CRITICAL_RUSH_I]: () => true,
 
   [Blessing.CRITICAL_RUSH_II]: () => true,

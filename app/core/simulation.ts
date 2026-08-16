@@ -137,6 +137,12 @@ import {
   CRITICAL_RUSH_II_STACK_SPEED,
   CRITICAL_PATH_CRIT_POWER_FALLBACK,
   CRITICAL_PATH_II_CRIT_CHANCE,
+  LONE_WOLF_SHIELD_RATIO,
+  LONE_WOLF_SPEED,
+  LONE_WOLF_SPEED_DURATION,
+  PARTING_GIFT_ITEMS_REQUIRED,
+  PARTING_GIFT_SHIELD,
+  REQUIEM_SHIELD_RATIO,
   VITAMINS_ABILITY_POWER,
   VITAMINS_ATTACK,
   VITAMINS_SPEED,
@@ -1832,6 +1838,115 @@ export default class Simulation extends Schema implements ISimulation {
           )
         }
         ownUnits.forEach((ally) => ally.addShield(ally.ap, ally, 0, false))
+      }
+
+      if (blessings.includes(Blessing.REQUIEM)) {
+        ownUnits.forEach((ally) =>
+          ally.effectsSet.add(
+            new OnDeathEffect(({ pokemon, board }) => {
+              board
+                .getCellsInRadius(pokemon.positionX, pokemon.positionY, 2, false)
+                .forEach((cell) => {
+                  if (cell.value?.team !== pokemon.team) return
+                  cell.value.addShield(
+                    Math.round(cell.value.maxHP * REQUIEM_SHIELD_RATIO),
+                    cell.value,
+                    0,
+                    false
+                  )
+                })
+              pokemon.broadcastAbility({
+                skill: "REQUIEM",
+                ap: 0,
+                positionX: pokemon.positionX,
+                positionY: pokemon.positionY
+              })
+            })
+          )
+        )
+      }
+
+      if (blessings.includes(Blessing.PARTING_GIFT)) {
+        ownUnits.forEach((ally) =>
+          ally.effectsSet.add(
+            new OnDeathEffect(({ pokemon, board }) => {
+              if (pokemon.items.size < PARTING_GIFT_ITEMS_REQUIRED) return
+              const heirs = board
+                .getCellsInRadius(pokemon.positionX, pokemon.positionY, 2, false)
+                .map((cell) => cell.value)
+                .filter(
+                  (heir): heir is PokemonEntity =>
+                    heir !== undefined &&
+                    heir !== pokemon &&
+                    heir.team === pokemon.team &&
+                    heir.hp > 0
+                )
+              if (heirs.length === 0) return
+              const heir = pickRandomIn(heirs)
+              const gift = pickRandomIn([...pokemon.items])
+              pokemon.items.delete(gift)
+              heir.items.add(gift)
+              heir.addShield(PARTING_GIFT_SHIELD, heir, 0, false)
+              pokemon.broadcastAbility({
+                skill: "PARTING_GIFT",
+                ap: 0,
+                positionX: pokemon.positionX,
+                positionY: pokemon.positionY,
+                targetX: heir.positionX,
+                targetY: heir.positionY
+              })
+            })
+          )
+        )
+      }
+
+      if (blessings.includes(Blessing.LONE_WOLF)) {
+        // free while no threshold blessing owns it, same rule as Critical Rush
+        const controlsTimerBar = activeThresholdAttackBlessings.length === 0
+        const howl = (wolf: PokemonEntity) => {
+          wolf.addShield(
+            Math.round(wolf.baseHP * LONE_WOLF_SHIELD_RATIO),
+            wolf,
+            0,
+            false
+          )
+          wolf.addSpeed(LONE_WOLF_SPEED, wolf, 0, false)
+          const remaining = { ms: LONE_WOLF_SPEED_DURATION }
+          if (controlsTimerBar) wolf.combatBlessingTimer = 100
+          wolf.effectsSet.add(
+            new PeriodicEffect(
+              (entity) => {
+                if (remaining.ms <= 0) return
+                remaining.ms = Math.max(0, remaining.ms - 100)
+                if (controlsTimerBar) {
+                  entity.combatBlessingTimer = Math.round(
+                    (remaining.ms / LONE_WOLF_SPEED_DURATION) * 100
+                  )
+                }
+                if (remaining.ms === 0) {
+                  entity.addSpeed(-LONE_WOLF_SPEED, entity, 0, false)
+                }
+              },
+              Passive.NONE,
+              100
+            )
+          )
+        }
+        // a board of one never sees an ally die, so it has to howl right away
+        if (ownUnits.length === 1) {
+          howl(ownUnits[0])
+        } else {
+          ownUnits.forEach((ally) =>
+            ally.effectsSet.add(
+              new OnDeathEffect(({ pokemon }) => {
+                const survivors = ownUnits.filter(
+                  (unit) => unit !== pokemon && unit.hp > 0
+                )
+                if (survivors.length === 1) howl(survivors[0])
+              })
+            )
+          )
+        }
       }
 
       const criticalRushTier = blessings.includes(Blessing.CRITICAL_RUSH_II)

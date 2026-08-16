@@ -1778,6 +1778,24 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
       Blessing.SURGE_II
     )
   },
+  [Blessing.LONE_WOLF]: {
+    tier: BlessingTier.SILVER,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "lone_wolf",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.PARTING_GIFT]: {
+    tier: BlessingTier.SILVER,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "parting_gift",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.REQUIEM]: {
+    tier: BlessingTier.SILVER,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "requiem",
+    grantsPokemonImmediately: false
+  },
   [Blessing.CRITICAL_RUSH_I]: {
     tier: BlessingTier.SILVER,
     availableAtStages: BLESSING_SELECTION_STAGES,

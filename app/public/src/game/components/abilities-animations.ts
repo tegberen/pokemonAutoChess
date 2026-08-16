@@ -3431,6 +3431,13 @@ export const AbilitiesAnimations: {
     ability: Ability.ASSURANCE,
     positionOffset: [0, -20]
   }),
+  ["REQUIEM"]: tweenAnimation({
+    ability: Ability.ATTRACT,
+    startCoords: "caster",
+    startPositionOffset: [0, -70],
+    duration: 1100,
+    tweenProps: { alpha: 0, y: "-=50" }
+  }),
   [Ability.ATTRACT]: onCaster({ positionOffset: [0, -70] }),
   [Ability.MAGNET_RISE]: onCasterScale2,
   [Ability.FORCE_PALM]: onTarget({ ability: Ability.ANCHOR_SHOT }),
@@ -3482,6 +3489,25 @@ export const AbilitiesAnimations: {
     tint: 0xc19a6b
   }),
   [Ability.SPECTRAL_THIEF]: [onTargetScale2, onCasterScale2],
+  ["PARTING_GIFT"]: [
+    tweenAnimation({
+      ability: "SACRED_SWORD",
+      startCoords: "caster",
+      startPositionOffset: [0, -40],
+      origin: [0.5, 0.2],
+      rotation: Math.PI,
+      scale: 2,
+      duration: 900,
+      tweenProps: { alpha: 0 }
+    }),
+    projectile({
+      ability: Ability.PRESENT,
+      startCoords: "caster",
+      endCoords: "target",
+      scale: 2,
+      duration: 700
+    })
+  ],
   [Ability.SACRED_SWORD_IRON]: onTarget({
     ability: "SACRED_SWORD",
     origin: [0.5, 0.2],

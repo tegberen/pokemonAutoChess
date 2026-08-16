@@ -5058,6 +5058,18 @@
 			"name": "Charging Up",
 			"description": "Gain a Mareep and a CELL_BATTERY. For every 15 player damage you deal, gain another CELL_BATTERY."
 		},
+		"LONE_WOLF": {
+			"name": "Lone Wolf",
+			"description": "When only one allied Pokémon remains, it gains SHIELD equal to 50% of its base max HP and 80 SPEED for 5 seconds."
+		},
+		"PARTING_GIFT": {
+			"name": "Parting Gift",
+			"description": "When an allied Pokémon holding 3 items is KO'd, it transfers one of its items to a random ally within 2 tiles, which also gains 50 SHIELD."
+		},
+		"REQUIEM": {
+			"name": "Requiem",
+			"description": "When an allied Pokémon is KO'd, allies within 2 tiles gain SHIELD equal to 15% of their max HP."
+		},
 		"CRITICAL_RUSH_I": {
 			"name": "Critical Rush I",
 			"description": "The first time a Pokémon lands a critical hit, it gains 30 SPEED for 8 seconds."
