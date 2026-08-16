@@ -2206,6 +2206,14 @@ export const blessingEffectService: {
 
   [Blessing.LASTING_EFFECTS]: () => true,
 
+  [Blessing.PULSE_SHIELD_I]: () => true,
+
+  [Blessing.PULSE_SHIELD_II]: () => true,
+
+  [Blessing.MINIMALIST_I]: () => true,
+
+  [Blessing.MINIMALIST_II]: () => true,
+
   [Blessing.GUARD_FORMATION]: () => true,
 
   [Blessing.BRAVE_FORMATION]: () => true,

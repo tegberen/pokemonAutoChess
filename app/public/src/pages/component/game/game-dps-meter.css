@@ -59,10 +59,17 @@
   display: flex;
   align-items: center;
   width: 90%;
+  margin-bottom: 0.5em;
+}
+
+/* only the damage dealt tab places its rows by rank; the damage blocked and
+   heal tabs still stack theirs normally and never set --dps-rank */
+.game-dps-list .game-dps-bar {
   position: absolute;
   top: 0;
   left: 0;
   height: var(--dps-row-height);
+  margin-bottom: 0;
   transform: translateY(calc(var(--dps-row-height) * var(--dps-rank, 0)));
 }
 

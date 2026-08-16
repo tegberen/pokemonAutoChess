@@ -47,7 +47,9 @@ const NUMBERED_FAMILIES = new Set([
   "TREASURE_HUNT",
   "MIX_AND_MATCH",
   "POTENTIAL_ENERGY",
-  "ADDITIONAL_RETHINK"
+  "ADDITIONAL_RETHINK",
+  "PULSE_SHIELD",
+  "MINIMALIST"
 ])
 
 export function getBlessingShortLabel(blessing: Blessing): string | undefined {

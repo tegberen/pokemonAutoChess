@@ -5058,6 +5058,22 @@
 			"name": "Charging Up",
 			"description": "Gain a Mareep and a CELL_BATTERY. For every 15 player damage you deal, gain another CELL_BATTERY."
 		},
+		"PULSE_SHIELD_I": {
+			"name": "Pulse Shield I",
+			"description": "At the start of combat, your Pokémon gain SHIELD equal to 50% of their SPEED."
+		},
+		"PULSE_SHIELD_II": {
+			"name": "Pulse Shield II",
+			"description": "At the start of combat, your Pokémon gain 20 SPEED, then gain SHIELD equal to 50% of their SPEED."
+		},
+		"MINIMALIST_I": {
+			"name": "Minimalist I",
+			"description": "At the start of combat, your Pokémon gain 10% of their max PP as starting PP for each empty item slot."
+		},
+		"MINIMALIST_II": {
+			"name": "Minimalist II",
+			"description": "At the start of combat, your Pokémon gain 15% of their max PP as starting PP for each empty item slot. Pokémon holding no item also gain 40 AP."
+		},
 		"LASTING_EFFECTS": {
 			"name": "Lasting Effects",
 			"description": "At the start of combat, your Pokémon gain 10 LUCK. Negative statuses they inflict last 40% longer."

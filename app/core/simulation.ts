@@ -128,6 +128,10 @@ import {
   BRAVE_FORMATION_CRIT_CHANCE_PER_EMPTY_TILE,
   TOUGH_FORMATION_DEFENSE_PER_ADJACENT_ALLY,
   LASTING_EFFECTS_LUCK,
+  PULSE_SHIELD_SPEED_RATIO,
+  PULSE_SHIELD_ALLY_SPEED,
+  MINIMALIST_PP_PER_EMPTY_SLOT,
+  MINIMALIST_II_NO_ITEM_AP,
   VITAMINS_ABILITY_POWER,
   VITAMINS_ATTACK,
   VITAMINS_SPEED,
@@ -202,7 +206,7 @@ import {
 } from "../utils/board"
 import { DEFAULT_CRIT_POWER } from "../config/game/battle"
 import { logger } from "../utils/logger"
-import { max } from "../utils/number"
+import { max, min } from "../utils/number"
 import { chance, pickRandomIn, randomBetween, shuffleArray } from "../utils/random"
 import { OrientationVector } from "../utils/orientation"
 import { healPlayerLife } from "../utils/player-life"
@@ -1823,6 +1827,45 @@ export default class Simulation extends Schema implements ISimulation {
           )
         }
         ownUnits.forEach((ally) => ally.addShield(ally.ap, ally, 0, false))
+      }
+
+      const pulseShieldTier = blessings.includes(Blessing.PULSE_SHIELD_II)
+        ? "II"
+        : blessings.includes(Blessing.PULSE_SHIELD_I)
+          ? "I"
+          : undefined
+      if (pulseShieldTier) {
+        if (pulseShieldTier === "II") {
+          ownUnits.forEach((ally) =>
+            ally.addSpeed(PULSE_SHIELD_ALLY_SPEED, ally, 0, false)
+          )
+        }
+        ownUnits.forEach((ally) =>
+          ally.addShield(
+            Math.round(ally.speed * PULSE_SHIELD_SPEED_RATIO),
+            ally,
+            0,
+            false
+          )
+        )
+      }
+
+      const minimalistTier = blessings.includes(Blessing.MINIMALIST_II)
+        ? "II"
+        : blessings.includes(Blessing.MINIMALIST_I)
+          ? "I"
+          : undefined
+      if (minimalistTier) {
+        const itemCapacity = getItemCapacity(this.room?.state.specialGameRule)
+        ownUnits.forEach((ally) => {
+          const emptySlots = min(0)(itemCapacity - ally.items.size)
+          const ppRatio =
+            (MINIMALIST_PP_PER_EMPTY_SLOT[minimalistTier] * emptySlots) / 100
+          ally.addPP(Math.round(ally.maxPP * ppRatio), ally, 0, false)
+          if (minimalistTier === "II" && ally.items.size === 0) {
+            ally.addAbilityPower(MINIMALIST_II_NO_ITEM_AP, ally, 0, false)
+          }
+        })
       }
 
       const bruteShieldTier = blessings.includes(Blessing.BRUTE_SHIELD_II)

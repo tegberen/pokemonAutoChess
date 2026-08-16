@@ -1778,6 +1778,46 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
       Blessing.SURGE_II
     )
   },
+  [Blessing.PULSE_SHIELD_I]: {
+    tier: BlessingTier.SILVER,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "pulse_shield",
+    grantsPokemonImmediately: false,
+    isAvailable: areBlessingVariantsAvailable(
+      Blessing.PULSE_SHIELD_I,
+      Blessing.PULSE_SHIELD_II
+    )
+  },
+  [Blessing.PULSE_SHIELD_II]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "pulse_shield",
+    grantsPokemonImmediately: false,
+    isAvailable: areBlessingVariantsAvailable(
+      Blessing.PULSE_SHIELD_I,
+      Blessing.PULSE_SHIELD_II
+    )
+  },
+  [Blessing.MINIMALIST_I]: {
+    tier: BlessingTier.SILVER,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "minimalist",
+    grantsPokemonImmediately: false,
+    isAvailable: areBlessingVariantsAvailable(
+      Blessing.MINIMALIST_I,
+      Blessing.MINIMALIST_II
+    )
+  },
+  [Blessing.MINIMALIST_II]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "minimalist",
+    grantsPokemonImmediately: false,
+    isAvailable: areBlessingVariantsAvailable(
+      Blessing.MINIMALIST_I,
+      Blessing.MINIMALIST_II
+    )
+  },
   [Blessing.GEAR_SHIELD_I]: {
     tier: BlessingTier.SILVER,
     availableAtStages: BLESSING_SELECTION_STAGES,

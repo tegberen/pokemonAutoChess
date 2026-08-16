@@ -233,7 +233,9 @@ const DEFENSIVE_COMBAT_BLESSINGS = new Set<Blessing>([
   Blessing.STURDY,
   Blessing.PANIC_BUTTON,
   Blessing.GUARD_FORMATION,
-  Blessing.TOUGH_FORMATION
+  Blessing.TOUGH_FORMATION,
+  Blessing.PULSE_SHIELD_I,
+  Blessing.PULSE_SHIELD_II
 ])
 
 const OFFENSIVE_COMBAT_BLESSINGS = new Set<Blessing>([
@@ -250,7 +252,9 @@ const OFFENSIVE_COMBAT_BLESSINGS = new Set<Blessing>([
   Blessing.BRAVE_FORMATION,
   Blessing.EXPLOIT,
   Blessing.RIPPLING_EFFECTS,
-  Blessing.LASTING_EFFECTS
+  Blessing.LASTING_EFFECTS,
+  Blessing.MINIMALIST_I,
+  Blessing.MINIMALIST_II
 ])
 
 function compareCombatBlessings(a: Blessing, b: Blessing): number {
