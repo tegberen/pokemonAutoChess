@@ -231,7 +231,9 @@ const DEFENSIVE_COMBAT_BLESSINGS = new Set<Blessing>([
   Blessing.VAMPIRIC,
   Blessing.PROTECT_THE_WEAK,
   Blessing.STURDY,
-  Blessing.PANIC_BUTTON
+  Blessing.PANIC_BUTTON,
+  Blessing.GUARD_FORMATION,
+  Blessing.TOUGH_FORMATION
 ])
 
 const OFFENSIVE_COMBAT_BLESSINGS = new Set<Blessing>([
@@ -244,7 +246,8 @@ const OFFENSIVE_COMBAT_BLESSINGS = new Set<Blessing>([
   Blessing.SURGE_II,
   Blessing.CALCULATED_OFFENCE,
   Blessing.NEUROFORCE,
-  Blessing.IMPENDING_DOOM
+  Blessing.IMPENDING_DOOM,
+  Blessing.BRAVE_FORMATION
 ])
 
 function compareCombatBlessings(a: Blessing, b: Blessing): number {

@@ -2200,6 +2200,12 @@ export const blessingEffectService: {
 
   [Blessing.ICY_REFLECTION]: () => true,
 
+  [Blessing.GUARD_FORMATION]: () => true,
+
+  [Blessing.BRAVE_FORMATION]: () => true,
+
+  [Blessing.TOUGH_FORMATION]: () => true,
+
   [Blessing.MYSTOGAN]: () => true,
 
   [Blessing.MAGNETOSPHERE]: () => true,

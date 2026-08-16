@@ -124,6 +124,9 @@ import {
   QUIET_STRENGTH_LOW_LIFE_THRESHOLD,
   SHINY_SAFEGUARD_HP_THRESHOLD,
   SHINY_SAFEGUARD_PROTECT_DURATION,
+  GUARD_FORMATION_SHARE_RATIO,
+  BRAVE_FORMATION_CRIT_CHANCE_PER_EMPTY_TILE,
+  TOUGH_FORMATION_DEFENSE_PER_ADJACENT_ALLY,
   VITAMINS_ABILITY_POWER,
   VITAMINS_ATTACK,
   VITAMINS_SPEED,
@@ -2398,6 +2401,65 @@ export default class Simulation extends Schema implements ISimulation {
             })
             ally.effectsSet.add(safeguard)
           })
+      }
+
+      if (blessings.includes(Blessing.GUARD_FORMATION)) {
+        const shareHighestStatInRow = (
+          row: number,
+          statOf: (ally: PokemonEntity) => number,
+          grant: (ally: PokemonEntity, amount: number) => void
+        ) => {
+          const rowAllies = allies.filter((ally) => ally.positionY === row)
+          if (rowAllies.length === 0) return
+          const leader = rowAllies.reduce((best, ally) =>
+            statOf(ally) > statOf(best) ? ally : best
+          )
+          const shared = Math.round(
+            statOf(leader) * GUARD_FORMATION_SHARE_RATIO
+          )
+          rowAllies
+            .filter(
+              (ally) => Math.abs(ally.positionX - leader.positionX) === 1
+            )
+            .forEach((ally) => grant(ally, shared))
+        }
+        const isRed = teamIndex === Team.RED_TEAM
+        shareHighestStatInRow(
+          isRed ? 3 : 2,
+          (ally) => ally.def,
+          (ally, amount) => ally.addDefense(amount, ally, 0, false)
+        )
+        shareHighestStatInRow(
+          isRed ? 4 : 1,
+          (ally) => ally.speDef,
+          (ally, amount) => ally.addSpecialDefense(amount, ally, 0, false)
+        )
+      }
+
+      if (blessings.includes(Blessing.BRAVE_FORMATION)) {
+        allies.forEach((ally) => {
+          const emptyTiles = this.board
+            .getAdjacentCells(ally.positionX, ally.positionY)
+            .filter((cell) => cell.value === undefined).length
+          ally.addCritChance(
+            BRAVE_FORMATION_CRIT_CHANCE_PER_EMPTY_TILE * emptyTiles,
+            ally,
+            0,
+            false
+          )
+        })
+      }
+
+      if (blessings.includes(Blessing.TOUGH_FORMATION)) {
+        allies.forEach((ally) => {
+          const adjacentAllies = this.board
+            .getAdjacentCells(ally.positionX, ally.positionY)
+            .filter((cell) => cell.value?.team === ally.team).length
+          const bonus =
+            TOUGH_FORMATION_DEFENSE_PER_ADJACENT_ALLY * adjacentAllies
+          ally.addDefense(bonus, ally, 0, false)
+          ally.addSpecialDefense(bonus, ally, 0, false)
+        })
       }
 
       if (blessings.includes(Blessing.RIVALRY) && ownUnits.length > 0) {

@@ -491,6 +491,24 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     grantsPokemonImmediately: true,
     synergy: Synergy.FIRE
   },
+  [Blessing.GUARD_FORMATION]: {
+    tier: BlessingTier.SILVER,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "guard_formation",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.BRAVE_FORMATION]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "brave_formation",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.TOUGH_FORMATION]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "tough_formation",
+    grantsPokemonImmediately: false
+  },
   [Blessing.PEARL]: {
     tier: BlessingTier.SILVER,
     availableAtStages: BLESSING_SELECTION_STAGES,

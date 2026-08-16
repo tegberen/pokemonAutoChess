@@ -5058,6 +5058,18 @@
 			"name": "Charging Up",
 			"description": "Gain a Mareep and a CELL_BATTERY. For every 15 player damage you deal, gain another CELL_BATTERY."
 		},
+		"GUARD_FORMATION": {
+			"name": "Guard Formation",
+			"description": "At the start of combat, the ally with the highest DEF in the front row grants allies ADJACENT_IN_THE_SAME_ROW 50% of its DEF. The ally with the highest SPE_DEF in the middle row does the same with its SPE_DEF."
+		},
+		"BRAVE_FORMATION": {
+			"name": "Brave Formation",
+			"description": "At the start of combat, Pokémon gain 10% CRIT_CHANCE for each empty ADJACENT tile."
+		},
+		"TOUGH_FORMATION": {
+			"name": "Tough Formation",
+			"description": "At the start of combat, Pokémon gain 2 DEF and 2 SPE_DEF for each ADJACENT ally."
+		},
 		"BURNING_SHARDS": {
 			"name": "Burning Shards",
 			"description": "Gain a Scorbunny and a FIRE_SHARD. For every 15 player damage you deal, gain another FIRE_SHARD."
