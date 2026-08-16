@@ -238,7 +238,8 @@ const DEFENSIVE_COMBAT_BLESSINGS = new Set<Blessing>([
   Blessing.PULSE_SHIELD_II,
   Blessing.LONE_WOLF,
   Blessing.PARTING_GIFT,
-  Blessing.REQUIEM
+  Blessing.REQUIEM,
+  Blessing.REVEILLE
 ])
 
 const OFFENSIVE_COMBAT_BLESSINGS = new Set<Blessing>([

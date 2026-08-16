@@ -80,6 +80,7 @@ export default function BlessingsPanel(props: { recentOnly?: boolean }) {
   const mystoganWands = useAppSelector(
     (state) => state.game.mystoganWandsByPlayerId[playerIdSpectated]
   )
+  const reveilleSecondsLeft = questProgress[Blessing.REVEILLE] ?? 0
   const grudgeSubstitutesPlanted = questProgress[Blessing.GRUDGE] ?? 0
   const grudgeCurseSecondsSaved =
     (grudgeSubstitutesPlanted * GRUDGE_CURSE_DURATION_REDUCTION_PER_SUBSTITUTE) /
@@ -263,6 +264,7 @@ export default function BlessingsPanel(props: { recentOnly?: boolean }) {
                 {blessing === Blessing.BERSERKER_HORDES && <p className="blessing-panel-live-value">{addIconsToDescription(`${nbThreeStarWilds} WILD at 3 STAR or more: −${nbThreeStarWilds} GOLD`)}</p>}
                 {blessing === Blessing.RAINBOW_DROPLET && <p className="blessing-panel-live-value">{addIconsToDescription(rainbowDropletActivated ? `[Activated] +1 to every synergy except AMORPHOUS` : `AMORPHOUS ${amorphousCount}/${amorphousRequired}, ${nbActiveSynergies}/${RAINBOW_DROPLET_SYNERGIES_REQUIRED} synergies active`)}</p>}
                 {blessing === Blessing.VALOR && <p className="blessing-panel-live-value">{addIconsToDescription(`${valorWildStarsOnBench} WILD STAR on bench: +${valorWildStarsOnBench * VALOR_ATTACK_PER_STAR} ATK, +${valorWildStarsOnBench * VALOR_SHIELD_PER_STAR} SHIELD`)}</p>}
+                {blessing === Blessing.REVEILLE && reveilleSecondsLeft > 0 && <p className="blessing-panel-live-value">Marching in {reveilleSecondsLeft}s</p>}
                 {blessing === Blessing.GRUDGE && <p className="blessing-panel-live-value">{addIconsToDescription(`${grudgeSubstitutesPlanted} Substitute${grudgeSubstitutesPlanted === 1 ? "" : "s"} on the opponent bench: every CURSE you inflict is ${grudgeCurseSecondsSaved} seconds shorter`)}</p>}
                 {blessing === Blessing.MYSTOGAN && <p className="blessing-panel-live-value">{mystoganWands && mystoganWands.length > 0 ? addIconsToDescription(mystoganWands.map((wand) => wand as string).join(", ")) : "No FAIRY tier reached yet"}</p>}
                 {blessing === Blessing.MAGNETOSPHERE && <p className="blessing-panel-live-value">{addIconsToDescription(`STEEL ${steelCount}: ${magnetosphereReach} RANGE of attraction and repulsion around each STEEL Pokémon`)}</p>}

@@ -143,6 +143,9 @@ import {
   PARTING_GIFT_ITEMS_REQUIRED,
   PARTING_GIFT_SHIELD,
   REQUIEM_SHIELD_RATIO,
+  REVEILLE_DELAY,
+  REVEILLE_WALK_DELAY,
+  REVEILLE_BENCH_SLOTS,
   VITAMINS_ABILITY_POWER,
   VITAMINS_ATTACK,
   VITAMINS_SPEED,
@@ -370,6 +373,17 @@ export default class Simulation extends Schema implements ISimulation {
     team: Team
     timer: number
   }[] = []
+  reveilleReinforcements: {
+    player: Player
+    team: Team
+    timer: number
+    marching?: Pokemon[]
+  }[] = []
+  // flags each marched-in unit had before, so stop() restores them exactly
+  reveilleLockedPokemon = new Map<
+    string,
+    { canBeBenched: boolean; canHoldItems: boolean }
+  >()
 
   constructor(
     id: string,
@@ -559,6 +573,7 @@ export default class Simulation extends Schema implements ISimulation {
   start() {
     this.started = true
     this.queueForgottenReinforcements()
+    this.queueReveilleReinforcements()
 
     // Seeds targeting the strongest ally / random ally - decided once,
     // BEFORE OnSimulationStartEffect fires below, so those effects can
@@ -745,6 +760,81 @@ export default class Simulation extends Schema implements ISimulation {
     ) {
       player.forgottenPvePokemon = pokemon.name
     }
+  }
+
+  queueReveilleReinforcements() {
+    const sides: [Player | undefined, Team][] = [
+      [this.bluePlayer, Team.BLUE_TEAM],
+      [this.isGhostBattle ? undefined : this.redPlayer, Team.RED_TEAM]
+    ]
+    sides.forEach(([player, team]) => {
+      if (!player?.blessings?.includes(Blessing.REVEILLE)) return
+      this.reveilleReinforcements.push({ player, team, timer: REVEILLE_DELAY })
+    })
+  }
+
+  getReveilleBenchUnits(player: Player): Pokemon[] {
+    return schemaValues(player.board).filter(
+      (pokemon) =>
+        isOnBench(pokemon) &&
+        pokemon.positionX >= BOARD_WIDTH - REVEILLE_BENCH_SLOTS &&
+        !pokemon.supportiveSoul &&
+        !isGrudgeSubstitute(pokemon)
+    )
+  }
+
+  // EXPLORING is the lock: no moving, selling, itemising, sending or merging
+  lockReveilleUnit(pokemon: Pokemon) {
+    this.reveilleLockedPokemon.set(pokemon.id, {
+      canBeBenched: pokemon.canBeBenched,
+      canHoldItems: pokemon.canHoldItems
+    })
+    pokemon.action = PokemonActionState.EXPLORING
+    pokemon.canBeBenched = false
+    pokemon.canHoldItems = false
+  }
+
+  placeReveilleUnit(pokemon: Pokemon, team: Team, player: Player) {
+    const backRow = team === Team.BLUE_TEAM ? 0 : BOARD_HEIGHT - 1
+    // the search around its own column gives up on a crowded board
+    const coord =
+      this.getClosestFreeCellTo(pokemon.positionX, backRow, team) ??
+      this.getFirstFreeCell(team)
+    if (coord) {
+      this.addPokemon(pokemon, coord.x, coord.y, team, true, false, player)
+    }
+  }
+
+  updateReveilleReinforcements(dt: number) {
+    this.reveilleReinforcements.forEach((reinforcement) => {
+      const { player, team } = reinforcement
+      reinforcement.timer -= dt
+      player.blessingsRef?.questProgress.set(
+        Blessing.REVEILLE,
+        Math.max(0, Math.ceil(reinforcement.timer / 1000))
+      )
+
+      // they leave the bench early so the walk lands them as the timer ends
+      if (!reinforcement.marching && reinforcement.timer <= REVEILLE_WALK_DELAY) {
+        reinforcement.marching = this.getReveilleBenchUnits(player)
+        reinforcement.marching.forEach((pokemon) =>
+          this.lockReveilleUnit(pokemon)
+        )
+      }
+
+      if (reinforcement.timer > 0) return
+      reinforcement.timer = Number.POSITIVE_INFINITY
+      reinforcement.marching?.forEach((pokemon) =>
+        this.placeReveilleUnit(pokemon, team, player)
+      )
+      const entities = team === Team.BLUE_TEAM ? this.blueTeam : this.redTeam
+      entities.forEach((ally) => {
+        if (ally.player === player) ally.addPP(ally.maxPP, ally, 0, false)
+      })
+    })
+    this.reveilleReinforcements = this.reveilleReinforcements.filter(
+      ({ timer }) => Number.isFinite(timer)
+    )
   }
 
   queueForgottenReinforcements() {
@@ -4379,6 +4469,7 @@ export default class Simulation extends Schema implements ISimulation {
 
     this.checkCombatQuestThresholds()
     if (!this.finished) this.updateForgottenReinforcements(dt)
+    if (!this.finished) this.updateReveilleReinforcements(dt)
 
     this.blueTeam.forEach((pkm, key) => {
       this.blueDpsMeter
@@ -4652,7 +4743,8 @@ export default class Simulation extends Schema implements ISimulation {
 
   stop() {
     const players = [this.bluePlayer, this.bluePartnerPlayer, this.redPlayer]
-    players.forEach((player) =>
+    players.forEach((player) => {
+      player?.blessingsRef?.questProgress.delete(Blessing.REVEILLE)
       player?.board.forEach((pokemon) => {
         if (
           this.snifferDogPulledPokemonIds.has(pokemon.id) &&
@@ -4660,8 +4752,16 @@ export default class Simulation extends Schema implements ISimulation {
         ) {
           pokemon.action = PokemonActionState.IDLE
         }
+        const lockedBefore = this.reveilleLockedPokemon.get(pokemon.id) // avoid clash with flying letter
+        if (lockedBefore) {
+          pokemon.canBeBenched = lockedBefore.canBeBenched
+          pokemon.canHoldItems = lockedBefore.canHoldItems
+          if (pokemon.action === PokemonActionState.EXPLORING) {
+            pokemon.action = PokemonActionState.IDLE
+          }
+        }
       })
-    )
+    })
 
     this.blueTeam.forEach((pokemon, key) => {
       // logger.debug('deleting ' + pokemon.name);

@@ -75,6 +75,7 @@ import {
 import {
   Blessing,
   NOT_THE_BEES_MAX_COMBEES,
+  REVEILLE_BENCH_SLOTS,
   TREASURE_TRAIL_HIGHLIGHT_ALPHA,
   TREASURE_TRAIL_HIGHLIGHT_ANIM,
   TREASURE_TRAIL_HIGHLIGHT_SCALE
@@ -124,6 +125,7 @@ export default class BoardManager {
   treasureTrailCell: Phaser.GameObjects.Sprite | null = null
   scribbleCells: Phaser.GameObjects.Sprite[] = []
   pondCells: Phaser.GameObjects.Sprite[] = []
+  reveilleSlotMarks: Phaser.GameObjects.Image[] = []
   pondCellIndices: number[] = []
   pondSplashTimer: Phaser.Time.TimerEvent | null = null
   waterTierRendered = -1
@@ -290,6 +292,7 @@ export default class BoardManager {
   }
 
   refreshShinySafeguardMarks() {
+    this.refreshReveilleSlots()
     if (this.mode !== BoardMode.PICK) return
     const hasShinySafeguard = this.state.blessingsByPlayerId
       .get(this.player.id)
@@ -301,6 +304,28 @@ export default class BoardManager {
         pokemonSprite.removeShinySafeguardMark()
       }
     })
+  }
+
+  // bench slot tatoo
+  refreshReveilleSlots() {
+    this.reveilleSlotMarks.forEach((mark) => mark.destroy())
+    this.reveilleSlotMarks = []
+    const hasReveille = this.state.blessingsByPlayerId
+      .get(this.player.id)
+      ?.blessings.includes(Blessing.REVEILLE)
+    if (!hasReveille) return
+    for (let x = BOARD_WIDTH - REVEILLE_BENCH_SLOTS; x < BOARD_WIDTH; x++) {
+      const [markX, markY] = transformBoardCoordinates(x, 0)
+      this.reveilleSlotMarks.push(
+        this.scene.add
+          .image(markX, markY, "reveille-mark")
+          .setScale(1.5)
+          .setAlpha(0.4)
+          .setTint(0x000000)
+          .setTintMode(Phaser.TintModes.FILL)
+          .setDepth(DEPTH.LIGHT_CELL)
+      )
+    }
   }
 
   removePokemon(pokemonToRemove: IPokemon) {
@@ -735,6 +760,8 @@ export default class BoardManager {
     this.pondCells.forEach((sprite) => sprite.destroy())
     this.pondCells = []
     this.pondCellIndices = []
+    this.reveilleSlotMarks.forEach((mark) => mark.destroy())
+    this.reveilleSlotMarks = []
     this.pondSplashTimer?.remove()
     this.pondSplashTimer = null
   }
@@ -1266,6 +1293,8 @@ export default class BoardManager {
     this.hideLightCell()
     this.hideTreasureTrailHighlight()
     this.hideScribbleShapes()
+    // the bench slots stay marked through the fight, unlike the board shapes
+    this.refreshReveilleSlots()
     if (!phaseJustChanged) this.removePokemonsOnBoard() // remove immediately board sprites if arriving in battle mode
     this.scene.closeTooltips()
     this.scene.input.setDragState(this.scene.input.activePointer, 0)

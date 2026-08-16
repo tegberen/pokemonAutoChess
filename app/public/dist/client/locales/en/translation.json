@@ -5066,6 +5066,10 @@
 			"name": "Parting Gift",
 			"description": "When an allied Pokémon holding 3 items is KO'd, it transfers one of its items to a random ally within 2 tiles, which also gains 50 SHIELD."
 		},
+		"REVEILLE": {
+			"name": "Reveille",
+			"description": "After 12 seconds of combat, the Pokémon on your 3 rightmost bench slots join the fight. All allied Pokémon are restored to max PP."
+		},
 		"REQUIEM": {
 			"name": "Requiem",
 			"description": "When an allied Pokémon is KO'd, allies within 2 tiles gain SHIELD equal to 15% of their max HP."

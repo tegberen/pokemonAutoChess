@@ -1790,6 +1790,12 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     icon: "parting_gift",
     grantsPokemonImmediately: false
   },
+  [Blessing.REVEILLE]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "reveille",
+    grantsPokemonImmediately: false
+  },
   [Blessing.REQUIEM]: {
     tier: BlessingTier.SILVER,
     availableAtStages: BLESSING_SELECTION_STAGES,

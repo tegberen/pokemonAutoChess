@@ -2212,6 +2212,8 @@ export const blessingEffectService: {
 
   [Blessing.REQUIEM]: () => true,
 
+  [Blessing.REVEILLE]: () => true,
+
   [Blessing.CRITICAL_RUSH_I]: () => true,
 
   [Blessing.CRITICAL_RUSH_II]: () => true,
