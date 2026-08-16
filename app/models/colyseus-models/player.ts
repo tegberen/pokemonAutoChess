@@ -3,6 +3,7 @@ import {
   AdditionalPicksStages,
   GROUND_HOLES_LENGTH,
   FAIRY_WANDS_BY_SYNERGY_LEVEL,
+  getHighestReachableSynergyTier,
   RegionDetails,
   SynergyTiersThresholds
 } from "../../config"
@@ -748,8 +749,10 @@ export default class Player extends Schema implements IPlayer {
     }
 
     if (this.gameMode === GameMode.DOUBLE_UP) {
-      // In Double Up, the Baby synergy caps at its second tier (Baby 5):
-      const babyCap = SynergyTiersThresholds[Synergy.BABY][1]
+      const babyCap = getHighestReachableSynergyTier(
+        Synergy.BABY,
+        this.gameMode
+      )
       const babyCount = updatedSynergies.get(Synergy.BABY) ?? 0
       if (babyCount > babyCap) {
         updatedSynergies.set(Synergy.BABY, babyCap)

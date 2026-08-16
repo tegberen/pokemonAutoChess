@@ -1,5 +1,5 @@
 import { EffectEnum } from "../../types/enum/Effect"
-import { Rarity } from "../../types/enum/Game"
+import { GameMode, Rarity } from "../../types/enum/Game"
 import { type FishingRod, Item, type ShinyItem } from "../../types/enum/Item"
 import { Synergy } from "../../types/enum/Synergy"
 
@@ -210,6 +210,16 @@ export const SynergyTiersThresholds: { [key in Synergy]: number[] } = {
   [Synergy.WILD]: [2, 4, 6, 8],
   [Synergy.AMORPHOUS]: [3, 5, 7],
   [Synergy.GOURMET]: [3, 4, 5]
+}
+
+export function getHighestReachableSynergyTier(
+  synergy: Synergy,
+  gameMode: GameMode
+): number {
+  const thresholds = SynergyTiersThresholds[synergy]
+  return synergy === Synergy.BABY && gameMode === GameMode.DOUBLE_UP
+    ? thresholds[1]
+    : thresholds[thresholds.length - 1]
 }
 
 export const FishRarityProbability: {

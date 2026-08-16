@@ -109,7 +109,12 @@ export function getSellPrice(
 ): number {
   const name = pokemon.name
 
-  if ("sellsForNothing" in pokemon && pokemon.sellsForNothing === true) return 0
+  if (
+    blessings?.includes(Blessing.COLONY) &&
+    PkmFamily[name] === Pkm.SCATTERBUG &&
+    name !== Pkm.SCATTERBUG
+  )
+    return 0
 
   if ("manifestationLocked" in pokemon && isGrudgeSubstitute(pokemon)) {
     return -GRUDGE_SUBSTITUTE_SELL_COST

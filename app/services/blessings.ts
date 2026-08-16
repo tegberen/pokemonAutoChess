@@ -2,6 +2,7 @@ import {
   BOARD_SIDE_HEIGHT,
   BOARD_WIDTH,
   FAIRY_WANDS_BY_SYNERGY_LEVEL,
+  getHighestReachableSynergyTier,
   RegionDetails,
   SynergyTiersThresholds
 } from "../config"
@@ -1514,9 +1515,8 @@ const blessingQuestConditions: {
    point, so the three do not have to be active together */
 export function checkIndecisionSynergies(player: Player) {
   if (!player.blessings?.includes(Blessing.QUEST_INDECISION)) return
-  SYNERGIES_WITH_BLESSINGS.forEach((synergy) => {
-    const thresholds = SynergyTiersThresholds[synergy]
-    const maxTier = thresholds?.at(-1)
+  Object.values(Synergy).forEach((synergy) => {
+    const maxTier = getHighestReachableSynergyTier(synergy, player.gameMode)
     if (
       maxTier !== undefined &&
       (player.synergies.get(synergy) ?? 0) >= maxTier &&

@@ -5868,7 +5868,7 @@
 		},
 		"QUEST_INDECISION": {
 			"name": "Quest: Indecision",
-			"description": "Gain 2 random gems. After activating the highest tier in 3 different synergies, gain a GOLD_MASK. They do not have to be active at once."
+			"description": "Gain 2 random gems. Entering a fight with a synergy at its highest tier counts it. After 3 different synergies, gain a GOLD_MASK. They do not have to be active at once."
 		},
 		"QUEST_CRIT": {
 			"name": "Quest: Crit",

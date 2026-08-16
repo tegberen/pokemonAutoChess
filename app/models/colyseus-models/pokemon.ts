@@ -140,7 +140,6 @@ export class Pokemon extends Schema implements IPokemon {
   baseMaxPP: number = 100
   boosterEnergyCount: number = 0
   hatchTimeOverride: number | null = null
-  sellsForNothing = false
 
   constructor(name: Pkm, shiny = false, emotion = Emotion.NORMAL) {
     super()

@@ -3048,7 +3048,6 @@ export default class Simulation extends Schema implements ISimulation {
             owner
           )
           spewpa.hatchTimeOverride = COLONY_SPEWPA_HATCH_TIME
-          spewpa.sellsForNothing = true
           spewpa.positionX = freeCellX
           spewpa.positionY = 0
           owner.board.set(spewpa.id, spewpa)
