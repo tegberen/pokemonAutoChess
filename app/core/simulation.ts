@@ -132,6 +132,11 @@ import {
   PULSE_SHIELD_ALLY_SPEED,
   MINIMALIST_PP_PER_EMPTY_SLOT,
   MINIMALIST_II_NO_ITEM_AP,
+  CRITICAL_RUSH_SPEED,
+  CRITICAL_RUSH_DURATION,
+  CRITICAL_RUSH_II_STACK_SPEED,
+  CRITICAL_PATH_CRIT_POWER_FALLBACK,
+  CRITICAL_PATH_II_CRIT_CHANCE,
   VITAMINS_ABILITY_POWER,
   VITAMINS_ATTACK,
   VITAMINS_SPEED,
@@ -1827,6 +1832,86 @@ export default class Simulation extends Schema implements ISimulation {
           )
         }
         ownUnits.forEach((ally) => ally.addShield(ally.ap, ally, 0, false))
+      }
+
+      const criticalRushTier = blessings.includes(Blessing.CRITICAL_RUSH_II)
+        ? "II"
+        : blessings.includes(Blessing.CRITICAL_RUSH_I)
+          ? "I"
+          : undefined
+      if (criticalRushTier) {
+        const rushSpeed = CRITICAL_RUSH_SPEED[criticalRushTier]
+        const rushDuration = CRITICAL_RUSH_DURATION[criticalRushTier]
+        // Drill, Shatter and Surge drive the same bar, so only take it when free
+        const controlsTimerBar = activeThresholdAttackBlessings.length === 0
+        ownUnits.forEach((ally) => {
+          const rush = { started: false, remainingMs: 0 }
+          const onCrit = (crit: boolean) => {
+            if (!crit) return
+            if (!rush.started) {
+              rush.started = true
+              rush.remainingMs = rushDuration
+              ally.addSpeed(rushSpeed, ally, 0, false)
+              if (controlsTimerBar) ally.combatBlessingTimer = 100
+              // the burst fades, further crits keep their speed for the fight
+            } else if (rush.remainingMs > 0 && criticalRushTier === "II") {
+              ally.addSpeed(CRITICAL_RUSH_II_STACK_SPEED, ally, 0, false)
+            }
+          }
+          ally.effectsSet.add(
+            new PeriodicEffect(
+              (entity) => {
+                if (rush.remainingMs <= 0) return
+                rush.remainingMs = Math.max(0, rush.remainingMs - 100)
+                if (controlsTimerBar) {
+                  entity.combatBlessingTimer = Math.round(
+                    (rush.remainingMs / rushDuration) * 100
+                  )
+                }
+                if (rush.remainingMs === 0) {
+                  entity.addSpeed(-rushSpeed, entity, 0, false)
+                }
+              },
+              Passive.NONE,
+              100
+            )
+          )
+          ally.effectsSet.add(new OnAttackEffect(({ crit }) => onCrit(crit)))
+          ally.effectsSet.add(
+            new OnAbilityCastEffect((_pokemon, _board, _target, crit) =>
+              onCrit(crit)
+            )
+          )
+        })
+      }
+
+      const criticalPathTier = blessings.includes(Blessing.CRITICAL_PATH_II)
+        ? "II"
+        : blessings.includes(Blessing.CRITICAL_PATH_I)
+          ? "I"
+          : undefined
+      if (criticalPathTier) {
+        /* the order is fixed at combat start so the Path walks a lane the player
+           can read, instead of reshuffling every time a unit dies */
+        const byStrength = [...ownUnits].sort(
+          (a, b) => getUnitScore(b) - getUnitScore(a)
+        )
+        let joinedCount = 0
+        const joinPath = () => {
+          const ally = byStrength[joinedCount]
+          if (!ally) return
+          joinedCount++
+          ally.isOnCriticalPath = true
+          ally.effects.add(EffectEnum.ABILITY_CRIT)
+          if (AbilityStrategies[ally.skill].canCritByDefault) {
+            ally.addCritPower(CRITICAL_PATH_CRIT_POWER_FALLBACK, ally, 0, false)
+          }
+          if (criticalPathTier === "II") {
+            ally.addCritChance(CRITICAL_PATH_II_CRIT_CHANCE, ally, 0, false)
+          }
+          ally.effectsSet.add(new OnAbilityCastEffect(() => joinPath()))
+        }
+        joinPath()
       }
 
       const pulseShieldTier = blessings.includes(Blessing.PULSE_SHIELD_II)

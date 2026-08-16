@@ -649,6 +649,14 @@ export default class BattleManager {
           }
           break
 
+        case "isOnCriticalPath":
+          if (value) {
+            pkmSprite.addCriticalPathMark()
+          } else {
+            pkmSprite.removeCriticalPathMark()
+          }
+          break
+
         case "isBlessedHero":
           if (value) {
             pkmSprite.addBlessedHeroMark()

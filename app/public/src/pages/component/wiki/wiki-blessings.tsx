@@ -254,7 +254,11 @@ const OFFENSIVE_COMBAT_BLESSINGS = new Set<Blessing>([
   Blessing.RIPPLING_EFFECTS,
   Blessing.LASTING_EFFECTS,
   Blessing.MINIMALIST_I,
-  Blessing.MINIMALIST_II
+  Blessing.MINIMALIST_II,
+  Blessing.CRITICAL_RUSH_I,
+  Blessing.CRITICAL_RUSH_II,
+  Blessing.CRITICAL_PATH_I,
+  Blessing.CRITICAL_PATH_II
 ])
 
 function compareCombatBlessings(a: Blessing, b: Blessing): number {

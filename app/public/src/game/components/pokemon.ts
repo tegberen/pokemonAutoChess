@@ -168,6 +168,7 @@ export default class PokemonSprite extends DraggableObject {
   centerStageSpotlight: GameObjects.Sprite | undefined
   blessedHeroMark: GameObjects.Image | undefined
   shinySafeguardMark: GameObjects.Image | undefined
+  criticalPathMark: GameObjects.Image | undefined
   awakeningGlow: Phaser.Filters.Glow | undefined
   awakeningGlowTween: Phaser.Tweens.Tween | undefined
   awakeningCrystal: GameObjects.Sprite | undefined
@@ -1322,6 +1323,9 @@ export default class PokemonSprite extends DraggableObject {
   }
 
   addStatusEffectsSprites(pokemon: IPokemonEntity) {
+    if (pokemon.isOnCriticalPath) {
+      this.addCriticalPathMark()
+    }
     if (pokemon.isBlessedHero) {
       this.addBlessedHeroMark()
     }
@@ -2081,6 +2085,29 @@ export default class PokemonSprite extends DraggableObject {
     if (this.blessedHeroMark) {
       this.remove(this.blessedHeroMark, true)
       this.blessedHeroMark = undefined
+    }
+  }
+
+  addCriticalPathMark() {
+    if (this.criticalPathMark) return
+    this.criticalPathMark = new GameObjects.Image(
+      this.scene,
+      0,
+      -4,
+      "critical-path-mark"
+    )
+      .setScale(BLESSED_HERO_MARK_SCALE)
+      .setAlpha(0.38)
+      .setTint(0x000000)
+      .setTintMode(Phaser.TintModes.FILL)
+      .setDepth(DEPTH.POKEMON_SHADOW)
+    this.addAt(this.criticalPathMark, 0)
+  }
+
+  removeCriticalPathMark() {
+    if (this.criticalPathMark) {
+      this.remove(this.criticalPathMark, true)
+      this.criticalPathMark = undefined
     }
   }
 

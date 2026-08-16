@@ -74,6 +74,11 @@ export default class LoadingManager {
       height: 64
     })
     scene.load.svg(
+      "critical-path-mark",
+      "/assets/blessings/critical_path.svg",
+      { width: 64, height: 64 }
+    )
+    scene.load.svg(
       "shiny-safeguard-mark",
       "/assets/blessings/shiny_shield.svg",
       { width: 64, height: 64 }

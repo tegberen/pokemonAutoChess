@@ -5058,6 +5058,22 @@
 			"name": "Charging Up",
 			"description": "Gain a Mareep and a CELL_BATTERY. For every 15 player damage you deal, gain another CELL_BATTERY."
 		},
+		"CRITICAL_RUSH_I": {
+			"name": "Critical Rush I",
+			"description": "The first time a Pokémon lands a critical hit, it gains 30 SPEED for 8 seconds."
+		},
+		"CRITICAL_RUSH_II": {
+			"name": "Critical Rush II",
+			"description": "The first time a Pokémon lands a critical hit, it gains 50 SPEED for 12 seconds. Each further critical hit during that time grants 5 SPEED for the rest of combat."
+		},
+		"CRITICAL_PATH_I": {
+			"name": "Critical Path I",
+			"description": "At the start of combat, your STRONGEST Pokémon joins the Critical Path: its ability can critically strike. Each time a Pokémon on the Path casts, the next strongest ally joins. (Abilities that already critically strike gain 50% CRIT_POWER instead.)"
+		},
+		"CRITICAL_PATH_II": {
+			"name": "Critical Path II",
+			"description": "At the start of combat, your STRONGEST Pokémon joins the Critical Path: its ability can critically strike and it gains 20% CRIT_CHANCE. Each time a Pokémon on the Path casts, the next strongest ally joins. (Abilities that already critically strike gain 50% CRIT_POWER instead.)"
+		},
 		"PULSE_SHIELD_I": {
 			"name": "Pulse Shield I",
 			"description": "At the start of combat, your Pokémon gain SHIELD equal to 50% of their SPEED."

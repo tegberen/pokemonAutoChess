@@ -639,6 +639,7 @@ export interface IPokemonEntity {
   effectsSet: Set<EffectClass>
   inSpotlight: boolean
   isBlessedHero: boolean
+  isOnCriticalPath: boolean
 }
 
 export interface IStatus {

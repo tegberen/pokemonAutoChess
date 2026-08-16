@@ -187,7 +187,8 @@ class GameContainer {
       "awakening",
       "icyReflectionCharge",
       "centerStageSpotlight",
-      "combatBlessingTimer"
+      "combatBlessingTimer",
+      "isOnCriticalPath"
     ] satisfies (NonFunctionPropNames<PokemonEntity> & keyof IPokemonEntity)[]
 
     fields.forEach((field) => {

@@ -2206,6 +2206,14 @@ export const blessingEffectService: {
 
   [Blessing.LASTING_EFFECTS]: () => true,
 
+  [Blessing.CRITICAL_RUSH_I]: () => true,
+
+  [Blessing.CRITICAL_RUSH_II]: () => true,
+
+  [Blessing.CRITICAL_PATH_I]: () => true,
+
+  [Blessing.CRITICAL_PATH_II]: () => true,
+
   [Blessing.PULSE_SHIELD_I]: () => true,
 
   [Blessing.PULSE_SHIELD_II]: () => true,

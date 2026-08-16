@@ -1778,6 +1778,46 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
       Blessing.SURGE_II
     )
   },
+  [Blessing.CRITICAL_RUSH_I]: {
+    tier: BlessingTier.SILVER,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "critical_rush",
+    grantsPokemonImmediately: false,
+    isAvailable: areBlessingVariantsAvailable(
+      Blessing.CRITICAL_RUSH_I,
+      Blessing.CRITICAL_RUSH_II
+    )
+  },
+  [Blessing.CRITICAL_RUSH_II]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "critical_rush",
+    grantsPokemonImmediately: false,
+    isAvailable: areBlessingVariantsAvailable(
+      Blessing.CRITICAL_RUSH_I,
+      Blessing.CRITICAL_RUSH_II
+    )
+  },
+  [Blessing.CRITICAL_PATH_I]: {
+    tier: BlessingTier.SILVER,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "critical_path",
+    grantsPokemonImmediately: false,
+    isAvailable: areBlessingVariantsAvailable(
+      Blessing.CRITICAL_PATH_I,
+      Blessing.CRITICAL_PATH_II
+    )
+  },
+  [Blessing.CRITICAL_PATH_II]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "critical_path",
+    grantsPokemonImmediately: false,
+    isAvailable: areBlessingVariantsAvailable(
+      Blessing.CRITICAL_PATH_I,
+      Blessing.CRITICAL_PATH_II
+    )
+  },
   [Blessing.PULSE_SHIELD_I]: {
     tier: BlessingTier.SILVER,
     availableAtStages: BLESSING_SELECTION_STAGES,
