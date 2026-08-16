@@ -20,6 +20,7 @@ import {
   Blessing,
   BRACE_FOR_IMPACT_MAX_HP_RATIO,
   CONTEMPT_DAMAGE_MULTIPLIER,
+  EXPLOIT_DAMAGE_BONUS,
   RESURGENCE_LEGENDARY_SPEED,
   RESURGENCE_SPEED,
   EXHAUSTING_FLAME_DAMAGE_MULTIPLIER,
@@ -560,6 +561,13 @@ export default abstract class PokemonState {
 
     if (attacker && attacker.status.enraged) {
       damage *= 2
+    }
+
+    if (
+      attacker?.player?.blessings?.includes(Blessing.EXPLOIT) &&
+      pokemon.status.hasNegativeStatus()
+    ) {
+      damage *= 1 + EXPLOIT_DAMAGE_BONUS / 100
     }
 
     if (pokemon.status.protect || pokemon.status.skydiving || pokemon.status.vanishing) {

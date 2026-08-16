@@ -2200,6 +2200,12 @@ export const blessingEffectService: {
 
   [Blessing.ICY_REFLECTION]: () => true,
 
+  [Blessing.EXPLOIT]: () => true,
+
+  [Blessing.RIPPLING_EFFECTS]: () => true,
+
+  [Blessing.LASTING_EFFECTS]: () => true,
+
   [Blessing.GUARD_FORMATION]: () => true,
 
   [Blessing.BRAVE_FORMATION]: () => true,

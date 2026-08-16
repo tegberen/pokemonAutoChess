@@ -2,6 +2,7 @@ import { Schema, type } from "@colyseus/schema"
 import { CC_COOLDOWN, FIGHTING_PHASE_DURATION, ItemStats } from "../../config"
 import {
   Blessing,
+  LASTING_EFFECTS_BONUS,
   applyGrudgeCurseReduction
 } from "../../types/enum/Blessing"
 import type { Board } from "../../core/board"
@@ -26,6 +27,17 @@ import { Synergy } from "../../types/enum/Synergy"
 import { Weather } from "../../types/enum/Weather"
 import { count } from "../../utils/array"
 import { max, min } from "../../utils/number"
+
+/* stretched when the status is applied rather than while it ticks, so the
+   inflicter's blessing is what counts and not the victim's */
+function lastingEffects(
+  duration: number,
+  origin: PokemonEntity | null | undefined
+) {
+  return origin?.player?.blessings?.includes(Blessing.LASTING_EFFECTS)
+    ? duration * (1 + LASTING_EFFECTS_BONUS / 100)
+    : duration
+}
 import { schemaValues } from "../../utils/schemas"
 
 export default class Status extends Schema implements IStatus {
@@ -180,7 +192,11 @@ export default class Status extends Schema implements IStatus {
     )
   }
 
-  transferNegativeStatus(from: PokemonEntity, to: PokemonEntity) {
+  transferNegativeStatus(
+    from: PokemonEntity,
+    to: PokemonEntity,
+    transferCurse = true
+  ) {
     if (this.burn) to.status.triggerBurn(this.burnCooldown, to, from)
     if (this.silence) to.status.triggerSilence(this.silenceCooldown, to, from)
     if (this.fatigue) to.status.triggerFatigue(this.fatigueCooldown, to, from)
@@ -197,7 +213,8 @@ export default class Status extends Schema implements IStatus {
     if (this.flinch) to.status.triggerFlinch(this.flinchCooldown, to, from)
     if (this.armorReduction)
       to.status.triggerArmorReduction(this.armorReductionCooldown, to)
-    if (this.curse) to.status.triggerCurse(this.curseCooldown, to)
+    if (this.curse && transferCurse)
+      to.status.triggerCurse(this.curseCooldown, to)
     if (this.locked) to.status.triggerLocked(this.lockedCooldown, to)
     if (this.blinded) to.status.triggerBlinded(this.blindCooldown, to, from)
     if (this.possessed)
@@ -428,6 +445,7 @@ export default class Status extends Schema implements IStatus {
     pkm: PokemonEntity,
     origin: PokemonEntity | null
   ) {
+    duration = lastingEffects(duration, origin)
     const alreadyBurning = this.burn
     if (
       !pkm.effects.has(EffectEnum.IMMUNITY_BURN) &&
@@ -560,6 +578,7 @@ export default class Status extends Schema implements IStatus {
   }
 
   triggerSilence(duration: number, pkm: PokemonEntity, origin?: PokemonEntity) {
+    duration = lastingEffects(duration, origin)
     if (!this.runeProtect && !this.tree) {
       if (pkm.simulation.weather === Weather.MURKY) {
         duration *= 1.3
@@ -595,6 +614,7 @@ export default class Status extends Schema implements IStatus {
     origin: PokemonEntity | null,
     apBoost = false
   ) {
+    duration = lastingEffects(duration, origin)
     if (!this.runeProtect) {
       duration = apBoost && origin ? duration * (1 + origin.ap / 100) : duration
       if (pkm.simulation.weather === Weather.ECLIPSE) {
@@ -622,6 +642,7 @@ export default class Status extends Schema implements IStatus {
     pkm: PokemonEntity,
     origin: PokemonEntity | undefined
   ) {
+    duration = lastingEffects(duration, origin)
     // MOLECULAR_CORROSION eats through RUNE_PROTECT, but not poison immunity
     const ignoresRuneProtect =
       origin?.player?.blessings?.includes(Blessing.MOLECULAR_CORROSION) === true
@@ -774,6 +795,7 @@ export default class Status extends Schema implements IStatus {
     pkm: PokemonEntity,
     origin: PokemonEntity | undefined
   ) {
+    duration = lastingEffects(duration, origin)
     if (
       !this.freeze && // freeze cannot be stacked
       !this.runeProtect &&
@@ -892,6 +914,7 @@ export default class Status extends Schema implements IStatus {
     origin: PokemonEntity,
     apBoost = false
   ) {
+    duration = lastingEffects(duration, origin)
     if (
       !this.confusion &&
       !this.runeProtect &&
@@ -932,6 +955,7 @@ export default class Status extends Schema implements IStatus {
     origin: PokemonEntity,
     apBoost = false
   ) {
+    duration = lastingEffects(duration, origin)
     if (!this.charm && !this.runeProtect) {
       duration = apBoost && origin ? duration * (1 + origin.ap / 100) : duration
       if (pkm.simulation.weather === Weather.MISTY) {
@@ -962,6 +986,7 @@ export default class Status extends Schema implements IStatus {
     pkm: PokemonEntity,
     origin: PokemonEntity | undefined
   ) {
+    duration = lastingEffects(duration, origin)
     if (!this.runeProtect) {
       this.wound = true
       if (pkm.simulation.weather === Weather.BLOODMOON) {
@@ -994,6 +1019,7 @@ export default class Status extends Schema implements IStatus {
     origin: PokemonEntity | null,
     apBoost = false
   ) {
+    duration = lastingEffects(duration, origin)
     if (!this.runeProtect && !pkm.effects.has(EffectEnum.IMMUNITY_PARALYSIS)) {
       if (!this.paralysis) {
         this.paralysis = true
@@ -1067,6 +1093,7 @@ export default class Status extends Schema implements IStatus {
   }
 
   triggerFlinch(duration: number, pkm: PokemonEntity, origin?: PokemonEntity) {
+    duration = lastingEffects(duration, origin)
     if (!this.runeProtect) {
       this.flinch = true
 
@@ -1319,6 +1346,7 @@ export default class Status extends Schema implements IStatus {
     pkm: PokemonEntity,
     origin: PokemonEntity
   ) {
+    duration = lastingEffects(duration, origin)
     if (!this.runeProtect) {
       const pkmTeam =
         pkm.team === Team.RED_TEAM
@@ -1387,6 +1415,7 @@ export default class Status extends Schema implements IStatus {
     origin: PokemonEntity | null,
     apBoost = false
   ) {
+    duration = lastingEffects(duration, origin)
     if (!this.blinded && !this.runeProtect) {
       duration = apBoost && origin ? duration * (1 + origin.ap / 100) : duration
 

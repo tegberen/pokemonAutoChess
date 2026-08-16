@@ -127,6 +127,7 @@ import {
   GUARD_FORMATION_SHARE_RATIO,
   BRAVE_FORMATION_CRIT_CHANCE_PER_EMPTY_TILE,
   TOUGH_FORMATION_DEFENSE_PER_ADJACENT_ALLY,
+  LASTING_EFFECTS_LUCK,
   VITAMINS_ABILITY_POWER,
   VITAMINS_ATTACK,
   VITAMINS_SPEED,
@@ -275,6 +276,19 @@ const GRAND_IGNITION_CORNER_CELLS = [
   { x: 0, y: BOARD_HEIGHT - 1 },
   { x: BOARD_WIDTH - 1, y: BOARD_HEIGHT - 1 }
 ]
+
+function spreadNegativeStatuses(dying: PokemonEntity, board: Board) {
+  board
+    .getAdjacentCells(dying.positionX, dying.positionY)
+    .map((cell) => cell.value)
+    .filter(
+      (neighbour): neighbour is PokemonEntity =>
+        neighbour !== undefined && neighbour.team === dying.team
+    )
+    .forEach((neighbour) =>
+      dying.status.transferNegativeStatus(dying, neighbour, false)
+    )
+}
 
 export default class Simulation extends Schema implements ISimulation {
   @type("string") weather: Weather = Weather.NEUTRAL
@@ -2401,6 +2415,24 @@ export default class Simulation extends Schema implements ISimulation {
             })
             ally.effectsSet.add(safeguard)
           })
+      }
+
+      if (blessings.includes(Blessing.LASTING_EFFECTS)) {
+        allies.forEach((ally) =>
+          ally.addLuck(LASTING_EFFECTS_LUCK, ally, 0, false)
+        )
+      }
+
+      if (blessings.includes(Blessing.RIPPLING_EFFECTS)) {
+        const enemyTeam =
+          teamIndex === Team.BLUE_TEAM ? this.redTeam : this.blueTeam
+        enemyTeam.forEach((enemy) => {
+          enemy.effectsSet.add(
+            new OnDeathEffect(({ pokemon, board }) => {
+              spreadNegativeStatuses(pokemon, board)
+            })
+          )
+        })
       }
 
       if (blessings.includes(Blessing.GUARD_FORMATION)) {

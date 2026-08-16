@@ -5058,6 +5058,18 @@
 			"name": "Charging Up",
 			"description": "Gain a Mareep and a CELL_BATTERY. For every 15 player damage you deal, gain another CELL_BATTERY."
 		},
+		"LASTING_EFFECTS": {
+			"name": "Lasting Effects",
+			"description": "At the start of combat, your Pokémon gain 10 LUCK. Negative statuses they inflict last 40% longer."
+		},
+		"RIPPLING_EFFECTS": {
+			"name": "Rippling Effects",
+			"description": "When an enemy is KO'd, every negative status it carries spreads to ADJACENT enemies, keeping its remaining duration. (CURSE does not spread)"
+		},
+		"EXPLOIT": {
+			"name": "Exploit",
+			"description": "Allied Pokémon deal 20% more damage to enemies affected by a negative status. (Attacks and abilities)"
+		},
 		"GUARD_FORMATION": {
 			"name": "Guard Formation",
 			"description": "At the start of combat, the ally with the highest DEF in the front row grants allies ADJACENT_IN_THE_SAME_ROW 50% of its DEF. The ally with the highest SPE_DEF in the middle row does the same with its SPE_DEF."
