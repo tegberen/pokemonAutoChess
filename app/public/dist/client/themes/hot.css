@@ -1,0 +1,147 @@
+:root {
+  --color-bg-primary: #2b2c42;
+  --color-bg-secondary: #45496b;
+  --color-bg-tertiary: #6b7098;
+  --color-bg-accent: #efc39b;
+
+  --border-thick: 2px solid #17182a;
+  --border-thin: 1px solid #17182a;
+  --border-extra-thin: 1px solid #17182a;
+}
+
+.custom-bg {
+  background-image: url("/assets/theme/hot/custombg.webp"),
+    linear-gradient(
+      to right,
+      rgba(23, 24, 42, 0.92) 0%,
+      rgba(23, 24, 42, 0.5) 14%,
+      rgba(23, 24, 42, 0.42) 50%,
+      rgba(23, 24, 42, 0.5) 86%,
+      rgba(23, 24, 42, 0.92) 100%
+    ),
+    url("/assets/theme/hot/custombg.webp");
+  background-size: contain, auto, cover;
+  background-position: center, center, center;
+  background-repeat: no-repeat, no-repeat, no-repeat;
+  background-attachment: fixed, fixed, fixed;
+  background-color: #2b2c42;
+}
+
+.lobby h2 {
+  color: #f0e4d0;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9), 0 0 8px rgba(0, 0, 0, 0.7);
+}
+
+.lobby::before,
+.lobby::after {
+  content: "";
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 200vh;
+  pointer-events: none;
+  z-index: 9999;
+  will-change: transform;
+  background-repeat: repeat-y;
+}
+
+/* near layer: small sharp sparks, faster */
+.lobby::after {
+  background-image: radial-gradient(
+      circle 2.5px at 8% 9%,
+      rgba(255, 248, 238, 1),
+      rgba(244, 206, 182, 0.55) 55%,
+      transparent 68%
+    ),
+    radial-gradient(
+      circle 2px at 30% 36%,
+      rgba(252, 242, 232, 1),
+      rgba(238, 197, 172, 0.55) 55%,
+      transparent 68%
+    ),
+    radial-gradient(
+      circle 3px at 52% 19%,
+      rgba(255, 250, 242, 1),
+      rgba(248, 212, 188, 0.55) 55%,
+      transparent 68%
+    ),
+    radial-gradient(
+      circle 2px at 71% 44%,
+      rgba(250, 240, 230, 1),
+      rgba(235, 192, 167, 0.55) 55%,
+      transparent 68%
+    ),
+    radial-gradient(
+      circle 2.5px at 91% 26%,
+      rgba(255, 246, 236, 1),
+      rgba(243, 202, 180, 0.55) 55%,
+      transparent 68%
+    );
+  background-size: 100% 50vh;
+  animation: embers-rise-near 7s linear infinite;
+}
+
+.lobby::before {
+  background-image: radial-gradient(
+      circle 1.5px at 18% 21%,
+      rgba(252, 242, 232, 0.9),
+      rgba(236, 194, 170, 0.45) 55%,
+      transparent 70%
+    ),
+    radial-gradient(
+      circle 1.5px at 43% 45%,
+      rgba(250, 240, 230, 0.9),
+      rgba(234, 190, 166, 0.45) 55%,
+      transparent 70%
+    ),
+    radial-gradient(
+      circle 2px at 66% 11%,
+      rgba(255, 246, 236, 0.9),
+      rgba(242, 202, 180, 0.45) 55%,
+      transparent 70%
+    ),
+    radial-gradient(
+      circle 1.5px at 86% 32%,
+      rgba(250, 240, 230, 0.9),
+      rgba(236, 194, 170, 0.45) 55%,
+      transparent 70%
+    );
+  background-size: 100% 50vh;
+  animation: embers-rise-far 12s linear infinite;
+}
+
+@keyframes embers-rise-near {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(0, -50vh, 0);
+  }
+}
+
+@keyframes embers-rise-far {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(0, -50vh, 0);
+  }
+}
+
+.scales-ap .ability-value {
+  color: #ff8a3d;
+}
+
+.lobby .play-button.bubbly.green {
+  background: #7a7fae;
+  color: #f0e4d0;
+  box-shadow: inset -6px -6px 0px 0px #45496b, var(--shadow-clickable);
+}
+.lobby .play-button.bubbly.green:not([disabled]):hover {
+  background: #8b90bd;
+}
+.lobby .play-button.bubbly.green:not([disabled]):active {
+  background: #7a7fae;
+  box-shadow: inset 6px 6px 0px 0px #45496b, var(--shadow-clickable);
+}

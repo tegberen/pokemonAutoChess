@@ -4100,7 +4100,8 @@
 		"STARRY": "Starry",
 		"PRIDE": "Pride",
 		"THE_SCRIBBLER": "The Scribbler",
-		"SHOW_OFF": "Show Off"
+		"SHOW_OFF": "Show Off",
+		"HOT_STREAK": "Hot"
 	},
 	"title_description": {
 		"NOVICE": "Play your first game",
@@ -4203,7 +4204,8 @@
 		"STARRY": "Win a game during the Wish Festival Event with a Jirachi on your board",
 		"PRIDE": "Complete the Rainbow Hour Blessing Mission",
 		"THE_SCRIBBLER": "Win a Smeargle Scribble Tournament",
-		"SHOW_OFF": "Win a game with the Show Off Blessing"
+		"SHOW_OFF": "Win a game with the Show Off Blessing",
+		"HOT_STREAK": "Win 3 games in a row"
 	},
 	"weather_forecast": "Weather forecast",
 	"blessings": "Blessings",
@@ -4578,6 +4580,7 @@
 		"bazaar": "Bazaar",
 		"whimsicott": "Whimsicott",
 		"wishfestival": "Wish Festival",
+		"hot": "Arcanine's Blaze",
 		"origin": "Origin"
 	},
 	"jukebox": {

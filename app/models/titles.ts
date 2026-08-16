@@ -239,4 +239,8 @@ export function updatePlayerTitlesAfterGame(
   if (player.gameStats.maxHP >= 1500) {
     player.titles.add(Title.GIANT)
   }
+
+  if ((usr.highestFirstPlaceStreak ?? 0) >= 3) {
+    player.titles.add(Title.HOT_STREAK)
+  }
 }
