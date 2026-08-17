@@ -6079,7 +6079,7 @@
 		},
 		"MORTAR_SHELLS": {
 			"name": "Mortar Shells",
-			"description": "Gain a Magby. Your STRONGEST Magby gains +3 RANGE and +100% base ATK, but has 50% reduced SPEED."
+			"description": "Gain a Magby. Your STRONGEST Magby gains +3 RANGE and +150% base ATK, but has 50% reduced base SPEED."
 		},
 		"ICE_SPEAR": {
 			"name": "Ice Spear",
@@ -6087,7 +6087,7 @@
 		},
 		"FROST_GEAR": {
 			"name": "Frost Gear",
-			"description": "Gain a Shellder and add it to the pool. Your STRONGEST Shellder has +2 RANGE and its PP set to 70, but loses 10% max HP upon casting its ability."
+			"description": "Gain a Shellder and add it to the pool. Your STRONGEST Shellder has +3 RANGE, its PP set to 70, and its Shell Smash ATK gain scales with AP."
 		},
 		"SHUTTLE_BUS": {
 			"name": "Shuttle Bus",

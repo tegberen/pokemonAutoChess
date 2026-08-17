@@ -1,3 +1,4 @@
+import { Blessing } from "../../types/enum/Blessing"
 import { AttackType } from "../../types/enum/Game"
 import type { Board } from "../board"
 import type { PokemonEntity } from "../pokemon-entity"
@@ -24,8 +25,9 @@ export class ShellSmashStrategy extends AbilityStrategy {
         )
       }
     })
+    const hasFrostGear = pokemon.heroBlessings.has(Blessing.FROST_GEAR)
     pokemon.addAbilityPower(25, pokemon, 0, false)
-    pokemon.addAttack(5, pokemon, 0, false)
+    pokemon.addAttack(5, pokemon, hasFrostGear ? 1 : 0, hasFrostGear && crit)
     pokemon.addSpeed(25, pokemon, 0, false)
     pokemon.addDefense(-5, pokemon, 0, false)
     pokemon.addSpecialDefense(-5, pokemon, 0, false)

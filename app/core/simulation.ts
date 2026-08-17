@@ -110,7 +110,6 @@ import {
   LEAF_TORNADO_BOUNCES,
   LEAF_TORNADO_DAMAGE_RATIO,
   MARIACHI_MAYHEM_CONFUSION_DURATION,
-  FROST_GEAR_HP_COST_RATIO,
   FROST_GEAR_MAX_PP,
   FROST_GEAR_RANGE_BONUS,
   MORTAR_SHELLS_ATTACK_RATIO,
@@ -3544,8 +3543,13 @@ export default class Simulation extends Schema implements ISimulation {
         0,
         false
       )
+      const mortarShellsPkmClass =
+        PokemonClasses[PkmByIndex[mortarShellsChampion.index]]
+      const mortarShellsBaseSpeed = mortarShellsPkmClass
+        ? new mortarShellsPkmClass(mortarShellsChampion.name).speed
+        : DEFAULT_SPEED
       mortarShellsChampion.addSpeed(
-        -Math.round(mortarShellsChampion.speed * MORTAR_SHELLS_SPEED_RATIO),
+        -Math.round(mortarShellsBaseSpeed * MORTAR_SHELLS_SPEED_RATIO),
         mortarShellsChampion,
         0,
         false
@@ -3556,17 +3560,7 @@ export default class Simulation extends Schema implements ISimulation {
     if (frostGearChampion) {
       frostGearChampion.range += FROST_GEAR_RANGE_BONUS
       frostGearChampion.maxPP = FROST_GEAR_MAX_PP
-      frostGearChampion.effectsSet.add(
-        new OnAbilityCastEffect((caster) => {
-          caster.handleDamage({
-            damage: Math.round(caster.maxHP * FROST_GEAR_HP_COST_RATIO),
-            board: this.board,
-            attackType: AttackType.TRUE,
-            attacker: null,
-            shouldTargetGainMana: false
-          })
-        })
-      )
+      frostGearChampion.effects.add(EffectEnum.ABILITY_CRIT)
     }
 
     const shuttleBusChampion = championOf.get(Blessing.SHUTTLE_BUS)
