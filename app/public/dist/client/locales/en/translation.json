@@ -4202,14 +4202,14 @@
 		"FIVE_STARS": "Play with a five stars Pokémon in your team",
 		"WHIMSY": "Win a Whimsy Weekend Scribble with your partner",
 		"STARRY": "Win a game during the Wish Festival Event with a Jirachi on your board",
-		"PRIDE": "Complete the Rainbow Hour Blessing Mission",
+		"PRIDE": "Complete the Rainbow Hour Wish Mission",
 		"THE_SCRIBBLER": "Win a Smeargle Scribble Tournament",
-		"SHOW_OFF": "Win a game with the Show Off Blessing",
+		"SHOW_OFF": "Win a game with the Show Off Wish",
 		"HOT_STREAK": "Win 3 games in a row"
 	},
 	"weather_forecast": "Weather forecast",
-	"blessings": "Blessings",
-	"no_blessing_yet": "No Blessing chosen yet",
+	"blessings": "Wishes",
+	"no_blessing_yet": "No Wish chosen yet",
 	"free_of_charge": "your item is free!",
 	"weather": {
 		"NEUTRAL": "Calm weather",
@@ -4560,7 +4560,7 @@
 			"avatar_emotes": "Toggle emote menu",
 			"avatar_show_emote": "Trigger emote"
 		},
-		"show_blessing_glow": "Blessing glow"
+		"show_blessing_glow": "Wish glow"
 	},
 	"theme": {
 		"default": "Classic",
@@ -4607,7 +4607,7 @@
 		"choose_armory": "Choose one gift to send to your partner",
 		"choose_scribble_shape": "Choose the second shape Smeargle will draw on your board",
 		"choose_evolution_lab_reward": "Choose one reward",
-		"choose_blessing": "Jirachi grants you a Blessing. Choose one.",
+		"choose_blessing": "Make your wish.",
 		"choose_singularity": "Choose a component. You will receive it again on later stages.",
 		"choose_starter_choice": "Choose a starter. You will receive a copy every round.",
 		"reroll_blessing": "Reroll",
@@ -4624,9 +4624,9 @@
 		"more_choices": "{{count}} more choice(s) after this one!"
 	},
 	"blessing_tier": {
-		"SILVER": "Silver Blessing",
-		"GOLD": "Gold Blessing",
-		"PRISMATIC": "Prismatic Blessing"
+		"SILVER": "Silver Wish",
+		"GOLD": "Gold Wish",
+		"PRISMATIC": "Prismatic Wish"
 	},
 	"blessing": {
 		"PEARL": {
@@ -5787,11 +5787,11 @@
 		},
 		"BP_REWARDS": {
 			"name": "Battle Point Rewards",
-			"description": "Gain 2 random item components. Every 5 rounds after selecting this Blessing, gain 1 more."
+			"description": "Gain 2 random item components. Every 5 rounds after selecting this Wish, gain 1 more."
 		},
 		"GREEDY_WISH": {
 			"name": "Greedy Wish",
-			"description": "Your next Blessing selection is one tier higher. If it is already Prismatic, gain 10 GOLD instead."
+			"description": "Your next Wish selection is one tier higher. If it is already Prismatic, gain 10 GOLD instead."
 		},
 		"CALLED_SHOT": {
 			"name": "Called Shot",
@@ -6035,7 +6035,7 @@
 		},
 		"FREE_COUPON": {
 			"name": "Free Coupon",
-			"description": "Take your item from carousel shops for free. If any player has this blessing, a shop encounter is guaranteed by stage 22."
+			"description": "Take your item from carousel shops for free. If any player has this Wish, a shop encounter is guaranteed by stage 22."
 		},
 		"SOUL_DRAIN": {
 			"name": "Soul Drain",
@@ -6119,7 +6119,7 @@
 		},
 		"SHOW_OFF": {
 			"name": "Show Off",
-			"description": "Does nothing. Win a game with this Blessing to unlock the Show Off title."
+			"description": "Does nothing. Win a game with this Wish to unlock the Show Off title."
 		}
 	},
 	"hide": "Hide",
@@ -6764,7 +6764,7 @@
 			"dungeon_label": "Regions",
 			"glossary_label": "Glossary",
 			"data_label": "Data",
-			"blessings_label": "Blessings"
+			"blessings_label": "Wishes"
 		},
 		"faq": {
 			"official_game": "Is this an official game ?",
@@ -6972,12 +6972,12 @@
 			"removable_item": "Removable items are items that can be removed from a Pokémon by putting them on the bench."
 		},
 		"blessings": {
-			"intro": "Jirachi grants each player 2 Blessings per game, one at stage 4 and one at stage 12. Every player is offered the same tier, and each of the 3 options can be rerolled once.",
+			"intro": "Jirachi grants each player 2 wishes per game, one at stage 4 and one at stage 12. Every player is offered the same tier, and each of the 3 options can be rerolled once.",
 			"wish_quote": "Every wish leaves behind a little light... and a little shade for the night to carry.",
 			"all_stages": "All stages",
 			"stage_scope_all": "Everything at stage {{stage}}",
 			"stage_scope_exclusive": "Only at stage {{stage}}",
-			"stage_exclusive_hint": "Blessings offered at this stage and no other",
+			"stage_exclusive_hint": "Wishes offered at this stage and no other",
 			"search_shortcut_hint": "Press F or / to search",
 			"family_BADGE_name": "Synergy Badges",
 			"family_BADGE_hint": "Gain that synergy gem and a random 1 STAR Uncommon Pokémon of that synergy. One exists for every synergy.",
@@ -7277,14 +7277,14 @@
 	"bark": "WOOF !",
 	"custom_bot": "Custom",
 	"blessings_enabled_label": "Jirachi's Wish Festival",
-	"blessings_enabled_hint": "Jirachi grants each player 2 Blessings during the game, at stage 4 and stage 12.",
-	"blessings_under_test_label": "Blessings under test (dev)",
-	"blessings_under_test_hint": "Restrict the blessing pool to the selected blessings, and offer a selection every stage. Empty means the normal pool.",
+	"blessings_enabled_hint": "Jirachi grants each player 2 wishes during the game, at stage 4 and stage 12.",
+	"blessings_under_test_label": "Wishes under test (dev)",
+	"blessings_under_test_hint": "Restrict the wish pool to the selected wishes, and offer a selection every stage. Empty means the normal pool.",
 	"blessings_under_test_count": "{{count}} selected",
 	"blessings_under_test_clear": "Clear",
 	"blessings_enabled_off": "Off",
 	"blessings_enabled_on": "On",
 	"blessing_event_title": "Jirachi's Wish Festival",
-	"blessing_event_description": "A wishing star has appeared. Jirachi is here, and every blessing changes your journey.",
+	"blessing_event_description": "A wishing star has appeared. What you ask for will shape your journey.",
 	"blessing_event_ends_in": "Ends in {{time}}"
 }

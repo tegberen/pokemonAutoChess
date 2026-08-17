@@ -120,11 +120,11 @@ export function Calendar() {
     })
   }
 
-  if (!isWishFestivalFinale(now)) {
+  if (!isWishFestivalFinale(now) && isBlessingEvent(now)) {
     events.push({
       id: "wish-festival-finale",
       name: "Wish Festival Finale",
-      description: "Prismatic Blessings appear more often.",
+      description: "Prismatic Wishes are granted more often.",
       image: "",
       variant: "jirachi_finale",
       start: getNextWishFestivalFinaleStart(now)
