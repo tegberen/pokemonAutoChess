@@ -5971,7 +5971,7 @@
 		},
 		"SYNCHRONICITY": {
 			"name": "Synchronicity",
-			"description": "Obtain the SYNCHRO_MASHINE. At the start of combat, the holder copies the highest HP, ATK, AP, CRIT_CHANCE, CRIT_POWER, DEF and SPE_DEF of any allied Pokémon on the field."
+			"description": "Obtain the SYNCHRO_MASHINE. At the start of combat, the holder copies the highest HP, ATK, AP, DEF and SPE_DEF of any allied Pokémon on the field."
 		},
 		"STARTER_CHOICE": {
 			"name": "Starter Choice",
