@@ -1127,6 +1127,8 @@ export default abstract class PokemonState {
       effectsRemovedList.forEach((x) => pokemon.simulation.redEffects.delete(x))
     }
 
+    pokemon.simulation.flushDpsMeter(pokemon)
+
     if (pokemon.simulation.redTeam.has(pokemon.id)) {
       pokemon.simulation.redTeam.delete(pokemon.id)
     }

@@ -15,6 +15,7 @@ import {
   FIRE_ATK_BUFF_PER_SYNERGY_TIER,
   GROUND_ATK_BUFF_PER_SYNERGY_TIER,
   GROUND_DEF_BUFF_PER_SYNERGY_TIER,
+  POISON_EXPLOSION_PP_RATIO_PER_SYNERGY_TIER,
   SOUND_ATK_BUFF_PER_SYNERGY_TIER,
   SOUND_PP_GAIN_PER_SYNERGY_TIER,
   SOUND_SPEED_BUFF_PER_SYNERGY_TIER,
@@ -1103,6 +1104,38 @@ function rockDeathExplosion(
     target.handleSpecialDamage(damage, board, AttackType.TRUE, pokemon, false, false)
     target.status.triggerArmorReduction(armorBreakMs, target)
   })
+}
+
+export class PoisonPPExplosionEffect extends OnDeathEffect {
+  constructor(effect: SynergyTier<Synergy.POISON>) {
+    super(({ pokemon, board }) => {
+      const synergyTier = SynergyTiers[Synergy.POISON].indexOf(effect) + 1
+      const ppRatio =
+        POISON_EXPLOSION_PP_RATIO_PER_SYNERGY_TIER[synergyTier] ?? 0
+      const damage = Math.round(pokemon.pp * ppRatio)
+      if (damage <= 0) return
+
+      /* ap: 0 on both broadcasts because addAbilitySprite scales sprites by
+         (1 + ap/200); the burst size must read as constant, and the hit would
+         otherwise size itself off the victim's AP */
+      pokemon.broadcastAbility({ skill: "POISON_PP_EXPLOSION", ap: 0 })
+      board
+        .getAdjacentCells(pokemon.positionX, pokemon.positionY)
+        .forEach((cell) => {
+          const target = cell.value
+          if (!target || target.team === pokemon.team) return
+          target.broadcastAbility({ skill: "POISON_PP_HIT", ap: 0 })
+          target.handleSpecialDamage(
+            damage,
+            board,
+            AttackType.SPECIAL,
+            pokemon,
+            false,
+            false
+          )
+        })
+    }, effect)
+  }
 }
 
 export const cloneBugs = ({

@@ -259,6 +259,7 @@ import {
   normalShieldEffect,
   OnFieldDeathEffect,
   onFlowerMonDeath,
+  PoisonPPExplosionEffect,
   pounceWandEffect,
   SoundCryEffect,
   wildBerserkEffect,
@@ -675,6 +676,24 @@ export default class Simulation extends Schema implements ISimulation {
       meter.set(id, dps)
     }
     return dps
+  }
+
+  /* Battle-Stats rows are refreshed once per tick from blueTeam/redTeam, so a
+     unit deleted from those maps as it dies would never publish what it did
+     while dying: death explosions, on-KO effects. Flush its final tally first */
+  flushDpsMeter(pokemon: PokemonEntity) {
+    const dps =
+      this.blueDpsMeter.get(pokemon.id) ?? this.redDpsMeter.get(pokemon.id)
+    dps?.update(
+      pokemon.physicalDamage,
+      pokemon.specialDamage,
+      pokemon.trueDamage,
+      pokemon.physicalDamageReduced,
+      pokemon.specialDamageReduced,
+      pokemon.shieldDamageTaken,
+      pokemon.healDone,
+      pokemon.shieldDone
+    )
   }
 
   // Credit damage that has no attacker (board effects, weather, curse…) to the
@@ -3997,6 +4016,7 @@ export default class Simulation extends Schema implements ISimulation {
       case EffectEnum.TOXIC:
         if (types.has(Synergy.POISON)) {
           pokemon.effects.add(effect)
+          pokemon.effectsSet.add(new PoisonPPExplosionEffect(effect))
         }
         break
 

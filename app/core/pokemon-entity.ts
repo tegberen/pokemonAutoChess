@@ -8,7 +8,10 @@ import {
   MAX_SPEED,
   ON_ATTACK_MANA
 } from "../config"
-import { SynergyTiers } from "../config/game/synergies"
+import {
+  POISON_PP_GAIN_PER_SYNERGY_TIER,
+  SynergyTiers
+} from "../config/game/synergies"
 import Count from "../models/colyseus-models/count"
 import Player from "../models/colyseus-models/player"
 import { type Pokemon, PokemonClasses } from "../models/colyseus-models/pokemon"
@@ -1063,6 +1066,18 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
   }) {
     this.addPP(ON_ATTACK_MANA, this, 0, false)
 
+    const poisonTierIndex = SynergyTiers[Synergy.POISON].findLastIndex(
+      (effect) => this.effects.has(effect)
+    )
+    if (poisonTierIndex >= 0) {
+      this.addPP(
+        POISON_PP_GAIN_PER_SYNERGY_TIER[poisonTierIndex + 1] ?? 0,
+        this,
+        0,
+        false
+      )
+    }
+
     if (
       isTripleAttack &&
       this.types.has(Synergy.ELECTRIC) &&
@@ -1240,13 +1255,6 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
       }
       if (this.effects.has(EffectEnum.TOXIC)) {
         poisonChance = 1.0
-      }
-      // buff poison "corossion" effect
-      if (this.effects.has(EffectEnum.TOXIC) && target.items.size > 0 && !target.status.runeProtect && chance(0.02, this)) {
-        const items = [...target.items]
-        const randomItem = pickRandomIn(items)
-        target.removeItem(randomItem)
-        target.broadcastAbility({ skill: "CORROSION" }) // visual feedback
       }
       if (target.player) {
         const nbSmellyClays = count(target.player.items, Item.SMELLY_CLAY)
