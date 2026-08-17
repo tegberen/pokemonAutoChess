@@ -708,7 +708,9 @@ export const GRAND_IGNITION_TICK_INTERVAL = 1000
 export const GRAND_IGNITION_TORCH_TRAVEL_DELAY = 750
 export const VALOR_ATTACK_PER_STAR = 1
 export const VALOR_SHIELD_PER_STAR = 10
-export const COLONY_SPEWPA_HATCH_TIME = 2
+/* 3 on purpose while the description says 2: the fight it spawns in already
+   ticks the counter, so 3 here is the 2 rounds of waiting a player sees */
+export const COLONY_SPEWPA_HATCH_TIME = 3
 
 export const EMERALD_ORB_HEAL_RANGE = 2
 export const BURNING_FORCE_ATTACK_RATIO = 0.5

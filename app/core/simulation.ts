@@ -1573,10 +1573,6 @@ export default class Simulation extends Schema implements ISimulation {
             }
             if (ally.atk > pokemon.atk) pokemon.atk = ally.atk
             if (ally.ap > pokemon.ap) pokemon.ap = ally.ap
-            if (ally.critChance > pokemon.critChance)
-              pokemon.critChance = ally.critChance
-            if (ally.critPower > pokemon.critPower)
-              pokemon.critPower = ally.critPower
             if (ally.def > pokemon.def) pokemon.def = ally.def
             if (ally.speDef > pokemon.speDef) pokemon.speDef = ally.speDef
           })
@@ -3464,8 +3460,9 @@ export default class Simulation extends Schema implements ISimulation {
             attacker.stars < 3
           )
             return
+          // anywhere on the board, or fielding the last one would earn another
           const isSpewpaWaiting = schemaValues(owner.board).some(
-            (pokemon) => pokemon.name === Pkm.SPEWPA && isOnBench(pokemon)
+            (pokemon) => pokemon.name === Pkm.SPEWPA
           )
           if (isSpewpaWaiting) return
           const freeCellX = getFirstAvailablePositionInBench(owner.board)

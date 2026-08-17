@@ -269,7 +269,7 @@ export class OnBuyPokemonCommand extends Command<
         (!needsBench || getFreeSpaceOnBench(player.board) > 0)
       if (!canBuy) return
       player.money -= offer.price
-      grantBazaarOffer(offer, player)
+      grantBazaarOffer(offer, player, this.state)
       // one purchase per bazaar: advance to a regular shop and spend the bazaar's
       // free reroll, same as picking from an unown shop
       this.state.shop.assignShop(player, true, this.state)
@@ -510,6 +510,11 @@ function sendPokemonToPartner(
   if (state.finale) return // partners are opponents now
   const partner = state.players.get(sender.doubleUpPartnerId)
   if (!partner || !partner.alive) return
+  if (
+    sender.blessings?.includes(Blessing.COLONY) &&
+    PkmFamily[pokemon.name] === Pkm.SCATTERBUG
+  )
+    return
 
   // Consume the Prison Bottle and start cooldown
   removeInArray(sender.items, item)

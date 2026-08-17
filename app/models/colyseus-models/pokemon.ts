@@ -19868,8 +19868,8 @@ export class ScreamTail extends Pokemon {
   ])
   rarity = Rarity.UNIQUE
   stars = 3
-  hp = 140
-  atk = 14
+  hp = 210
+  atk = 16
   speed = 71
   def = 6
   speDef = 7

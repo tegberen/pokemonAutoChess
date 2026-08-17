@@ -3494,7 +3494,7 @@
 		"LAPRAS_PASSPORT": "Lapras offers a ride to go to a different region. Use the passport on a Pokémon to influence the destination based on its synergies.",
 		"PRISON_BOTTLE": "Borrow Hoopa’s power to send a Pokémon from your bench to your partner’s bench. Items will be stripped off. (Preparation phase)",
 		"DUBIOUS_DISC_BLESSING_ITEM": "Drop DUBIOUS_DISC_BLESSING_ITEM on an ARTIFICIAL item in your inventory to consume this disc and gain a second copy of that item. The copy is kept even if your ARTIFICIAL level drops.",
-		"SYNCHRO_MASHINE": "At the start of combat, the holder copies the highest HP, ATK, AP, CRIT_CHANCE, CRIT_POWER, DEF and SPE_DEF of any allied Pokémon on the field.",
+		"SYNCHRO_MASHINE": "At the start of combat, the holder copies the highest HP, ATK, AP, DEF and SPE_DEF of any allied Pokémon on the field.",
 		"SILK_SCARF": "Combine it with other item components to make all kinds of scarves, bands and bows. Those items will be removed if you lower down NORMAL synergy level.",
 		"FRIEND_BOW": "The holder gains the NORMAL type.",
 		"BLACK_BELT": "Critical attacks provide 33% of the damage dealt as SHIELD.",
@@ -5047,7 +5047,7 @@
 		},
 		"QUEST_EPIC": {
 			"name": "Quest: Epic",
-			"description": "Gain a 1 STAR Epic Pokémon and 6 XP. The first time you fight with 7 Unique, 7 Epic, or 7 Ultra Pokémon fielded, gain an EVIOLITE."
+			"description": "Gain a 1 STAR Epic Pokémon and 6 XP. The first time you fight with 7 Unique, 7 Epic, or 7 Ultra Pokémon fielded, gain an EVIOLITE. (Scyther does not count)"
 		},
 		"QUEST_EXPAND": {
 			"name": "Quest: Expand",
@@ -5139,7 +5139,7 @@
 		},
 		"POTION": {
 			"name": "Potion",
-			"description": "Heal 15 player HP."
+			"description": "Heal 15 player HP. In Double Up, your partner is healed as well."
 		},
 		"POCKET_DAYCARE": {
 			"name": "Pocket Daycare",
@@ -5883,7 +5883,7 @@
 		},
 		"COLONY": {
 			"name": "Colony",
-			"description": "Gain a Scatterbug. When your STRONGEST Vivillon KO's its target, a Spewpa joins your bench. It evolves after 2 rounds and sells for 0 GOLD. Only one Spewpa is attracted at a time, so it must evolve before the next arrives. Every Vivillon contributes its own synergies."
+			"description": "Gain a Scatterbug. When your STRONGEST Vivillon KO's its target, a Spewpa joins your bench. It evolves after 2 rounds and sells for 0 GOLD. Only one Spewpa is attracted at a time, so it must evolve before the next arrives. Every Vivillon contributes its own synergies. The swarm has grown fond of you and refuses to be sent to your partner."
 		},
 		"SAND_BUDDIES": {
 			"name": "Sand Buddies",

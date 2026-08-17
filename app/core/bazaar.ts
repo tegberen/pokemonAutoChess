@@ -1,5 +1,7 @@
 import type Player from "../models/colyseus-models/player"
 import PokemonFactory from "../models/pokemon-factory"
+import type GameState from "../rooms/states/game-state"
+import { healPlayerLife } from "../utils/player-life"
 import {
   ArtificialItems,
   Berries,
@@ -196,7 +198,8 @@ export function bazaarOfferNeedsBench(category: string): boolean {
 
 export function grantBazaarOffer(
   offer: { item: string; category: string },
-  player: Player
+  player: Player,
+  state: GameState
 ): void {
   const category = offer.category as BazaarOfferCategory
   switch (category) {
@@ -216,7 +219,7 @@ export function grantBazaarOffer(
       break
     }
     case "potion":
-      player.life = Math.min(player.maxLife, player.life + BAZAAR_POTION_HEAL)
+      healPlayerLife(player, BAZAAR_POTION_HEAL, state)
       break
     case "gem": {
       const gem = offer.item as Item

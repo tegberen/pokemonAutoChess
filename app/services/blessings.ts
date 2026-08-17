@@ -1445,6 +1445,7 @@ const blessingQuestConditions: {
     player.board.forEach((pokemon) => {
       if (
         pokemon.positionY > 0 &&
+        pokemon.name !== Pkm.SCYTHER &&
         (pokemon.rarity === Rarity.UNIQUE ||
           pokemon.rarity === Rarity.EPIC ||
           pokemon.rarity === Rarity.ULTRA)
