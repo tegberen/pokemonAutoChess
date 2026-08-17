@@ -211,6 +211,19 @@ export default function GameOptionsModal(props: {
           <p>
             <Checkbox
               isDark
+              checked={preferences.walkingAvatar}
+              onToggle={(checked) => {
+                setPreferences({ walkingAvatar: checked })
+                if (!checked) {
+                  getGameScene()?.walkingAvatarManager?.sendHome()
+                }
+              }}
+              label={t("options.walking_avatar")}
+            />
+          </p>
+          <p>
+            <Checkbox
+              isDark
               checked={preferences.antialiasing}
               onToggle={(checked) => setPreferences({ antialiasing: checked })}
               label={t("options.antialiasing")}

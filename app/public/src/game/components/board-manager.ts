@@ -94,6 +94,7 @@ import PokemonSprite, { getAwakeningSegments } from "./pokemon"
 import PokemonAvatar from "./pokemon-avatar"
 import PokemonSpecial from "./pokemon-special"
 import { Portal } from "./portal"
+import { AVATAR_HOME_X, AVATAR_HOME_Y } from "./walking-avatar"
 
 export enum BoardMode {
   PICK = "pick",
@@ -185,8 +186,20 @@ export default class BoardManager {
 
   victoryAnimation(winnerId: string) {
     //logger.debug({ winnerId, playerId: this.player.id, opponentId: this.opponentAvatar?.playerId })
+
+    /* an avatar the player walked away would otherwise slide through its
+       reaction, and the walk ending would then cancel it. It keeps facing
+       wherever it was last sent */
+    if (this.playerAvatar) {
+      this.scene.tweens.killTweensOf(this.playerAvatar)
+      this.playerAvatar.sprite.anims.timeScale = 1
+    }
+
     if (winnerId === this.player.id) {
       if (this.playerAvatar) {
+        /* remembered, not just played, so the avatar keeps hopping while the
+           player walks it around */
+        this.playerAvatar.action = PokemonActionState.HOP
         this.animationManager.animatePokemon(
           this.playerAvatar,
           PokemonActionState.HOP,
@@ -1099,7 +1112,22 @@ export default class BoardManager {
   }
 
   updatePlayerAvatar() {
+    const walkedTo =
+      this.playerAvatar?.hasWandered === true
+        ? {
+            x: this.playerAvatar.x,
+            y: this.playerAvatar.y,
+            orientation: this.playerAvatar.orientation
+          }
+        : null
+    /* a win lands while the fight is still on, so the hop is carried over only
+       for that fight. Rebuilding into the next round is what ends it */
+    const keepCelebrating =
+      this.playerAvatar?.action === PokemonActionState.HOP &&
+      this.state.phase === GamePhaseState.FIGHT
     if (this.playerAvatar) {
+      /* otherwise a walk in progress keeps moving something that is gone */
+      this.scene.tweens.killTweensOf(this.playerAvatar)
       this.playerAvatar.destroy()
     }
     if (this.player.life <= 0) return // do not display avatar when player is dead
@@ -1113,12 +1141,14 @@ export default class BoardManager {
     )
     this.playerAvatar = new PokemonAvatar(
       this.scene,
-      504,
-      696,
+      walkedTo?.x ?? AVATAR_HOME_X,
+      walkedTo?.y ?? AVATAR_HOME_Y,
       playerAvatar,
       this.player.id
     )
-    this.playerAvatar.orientation = Orientation.UPRIGHT
+    this.playerAvatar.orientation = walkedTo?.orientation ?? Orientation.UPRIGHT
+    if (walkedTo) this.playerAvatar.setWandering(true)
+    if (keepCelebrating) this.playerAvatar.action = PokemonActionState.HOP
     this.playerAvatar.updateLife(this.player.life)
     this.animationManager.animatePokemon(
       this.playerAvatar,
@@ -1222,12 +1252,28 @@ export default class BoardManager {
       scoutingPlayers.map((p) => `${p.name} (${p.id})`).join("\n")
     )*/
 
+    /* an onlooker who walked away from the list stays where they walked to */
+    const wanderedScouts = new Map<
+      string,
+      { x: number; y: number; orientation: Orientation }
+    >()
+    this.scoutingAvatars.forEach((avatar) => {
+      if (avatar.hasWandered) {
+        wanderedScouts.set(avatar.playerId, {
+          x: avatar.x,
+          y: avatar.y,
+          orientation: avatar.orientation
+        })
+      }
+    })
+
     this.scoutingAvatars = this.scoutingAvatars.filter((avatar) => {
       // remove player avatars that stopped scouting
       if (
         resetAll ||
         scoutingPlayers.some((p) => p.id === avatar.playerId) === false
       ) {
+        this.scene.tweens.killTweensOf(avatar)
         avatar.destroy()
         return false
       }
@@ -1241,6 +1287,7 @@ export default class BoardManager {
       const playerIndex = schemaValues(players).findIndex(
         (p) => p.id === player.id
       )
+      const wandered = wanderedScouts.get(player.id)
       const scoutAvatarModel = new PokemonAvatarModel(
         player.id,
         player.avatar,
@@ -1251,14 +1298,15 @@ export default class BoardManager {
 
       const scoutAvatar = new PokemonAvatar(
         this.scene,
-        1512,
-        218 + 48 * playerIndex,
+        wandered?.x ?? 1512,
+        wandered?.y ?? 218 + 48 * playerIndex,
         scoutAvatarModel,
         player.id,
         true
       )
 
-      scoutAvatar.orientation = Orientation.DOWNLEFT
+      scoutAvatar.orientation = wandered?.orientation ?? Orientation.DOWNLEFT
+      if (wandered) scoutAvatar.setWandering(true)
       this.animationManager.animatePokemon(
         scoutAvatar,
         scoutAvatar.action,
@@ -1398,6 +1446,7 @@ export default class BoardManager {
     this.scene.input.setDragState(this.scene.input.activePointer, 0)
 
     if (this.playerAvatar) {
+      this.scene.tweens.killTweensOf(this.playerAvatar)
       this.playerAvatar.destroy()
     }
     this.updateOpponentAvatar(null, null)
@@ -1412,6 +1461,8 @@ export default class BoardManager {
 
   setPlayer(player: Player) {
     if (player.id != this.player.id) {
+      /* where you walked on one board should not follow you to the next */
+      if (this.playerAvatar) this.playerAvatar.hasWandered = false
       this.player = player
       this.renderBoard(false)
       this.updatePlayerAvatar()

@@ -40,6 +40,7 @@ export interface IPreferencesState {
   disableAnimatedTilemap: boolean
   disableCameraShake: boolean
   cameraLocked: boolean
+  walkingAvatar: boolean
   keybindings: Keybindings
   renderer: number
   antialiasing: boolean
@@ -71,6 +72,7 @@ const defaultPreferences: IPreferencesState = {
   disableAnimatedTilemap: false,
   disableCameraShake: true,
   cameraLocked: false,
+  walkingAvatar: false,
   renderer: Phaser.AUTO,
   antialiasing: true,
   colorblindMode: false,

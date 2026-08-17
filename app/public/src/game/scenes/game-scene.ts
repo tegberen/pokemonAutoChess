@@ -58,6 +58,7 @@ import { SellZone } from "../components/sell-zone"
 import WanderersManager from "../components/wanderers-manager"
 import WeatherManager from "../components/weather-manager"
 import { DEPTH } from "../depths"
+import WalkingAvatarManager from "../components/walking-avatar"
 
 export default class GameScene extends Scene {
   tilemaps: Map<DungeonPMDO, DesignTiled> = new Map<DungeonPMDO, DesignTiled>()
@@ -88,6 +89,7 @@ export default class GameScene extends Scene {
   lastPokemonDetail: PokemonSprite | null = null
   minigameManager: MinigameManager | null = null
   loadingManager: LoadingManager | null = null
+  walkingAvatarManager: WalkingAvatarManager | null = null
   started: boolean = false
   spectate: boolean = false
 
@@ -534,7 +536,10 @@ export default class GameScene extends Scene {
     croagunkZone.setRectangleDropZone(130,130)
     croagunkZone.setName("croagunk-trade-zone")
 
+    this.walkingAvatarManager = new WalkingAvatarManager(this)
+
     this.input.on("pointerdown", (pointer) => {
+      this.walkingAvatarManager?.onPointerDown(pointer)
       if (
         pointer.leftButtonDown() &&
         this.minigameManager &&

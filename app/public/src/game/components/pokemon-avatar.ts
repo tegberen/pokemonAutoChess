@@ -21,6 +21,8 @@ import LifeBar from "./life-bar"
 import PokemonSprite from "./pokemon"
 import { Item, ItemComponents } from "../../../../types/enum/Item"
 
+export const WANDERING_AVATAR_ALPHA = 0.65
+
 export default class PokemonAvatar extends PokemonSprite {
   scene: GameScene
   circleHitbox: GameObjects.Ellipse | null = null
@@ -28,6 +30,9 @@ export default class PokemonAvatar extends PokemonSprite {
   isCurrentPlayerAvatar: boolean
   emoteBubble: EmoteBubble | null
   emoteMenu: EmoteMenu | null
+  /* remembers the avatar left its corner, so it can be put back where the
+     player walked it rather than snapping home every round */
+  hasWandered = false
 
   constructor(
     scene: GameScene,
@@ -69,6 +74,14 @@ export default class PokemonAvatar extends PokemonSprite {
     this.sendItemEmote = this.sendItemEmote.bind(this)
     this.sendTextEmote = this.sendTextEmote.bind(this)
     this.sendDittoEmote = this.sendDittoEmote.bind(this)
+  }
+
+  /* out among the units the avatar looks like just another pokemon, so it is
+     faded and kept behind them. Its health bar stays solid */
+  setWandering(wandering: boolean) {
+    this.hasWandered = wandering
+    this.setDepth(wandering ? DEPTH.INANIMATE_OBJECTS : DEPTH.POKEMON)
+    this.sprite.setAlpha(wandering ? WANDERING_AVATAR_ALPHA : 1)
   }
 
   registerKeys() {

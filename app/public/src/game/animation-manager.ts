@@ -438,7 +438,14 @@ export default class AnimationManager {
       !PokemonAnimations[PkmByIndex[pkmSprite.pokemon.index]].shinyUnavailable
         ? PokemonTint.SHINY
         : PokemonTint.NORMAL
-    const animKey = `${textureIndex}/${tint}/${animation}/${SpriteType.ANIM}/${orientation}`
+    /* not every pokemon has all eight directions drawn for every animation, and
+       asking for one that is missing fails quietly and leaves the sprite on
+       whatever it was already playing */
+    let animKey = `${textureIndex}/${tint}/${animation}/${SpriteType.ANIM}/${orientation}`
+    if (!this.game.anims.exists(animKey)) {
+      orientation = Orientation.DOWN
+      animKey = `${textureIndex}/${tint}/${animation}/${SpriteType.ANIM}/${orientation}`
+    }
     const shadowKey = `${textureIndex}/${tint}/${animation}/${SpriteType.SHADOW}/${orientation}`
 
     if (
