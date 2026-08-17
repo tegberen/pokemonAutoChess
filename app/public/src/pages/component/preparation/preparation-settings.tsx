@@ -398,10 +398,7 @@ export default function PreparationSettings() {
   )
 
   // Whimsy Weekend always rolls a scribble rule, so blessings are not offered
-  // TEMP we will remove this at some point: owners see it only during the beta
-  const blessingsSetting = hasCustomLobbySettings &&
-    !whimsy &&
-    (isOwner || isAdmin) && (
+  const blessingsSetting = hasCustomLobbySettings && !whimsy && isAdmin && (
     <div className="lobby-setting" title={t("blessings_enabled_hint")}>
       <span className="setting-label">
         {t("blessings_enabled_label")}

@@ -657,10 +657,7 @@ export class OnChangeBlessingsEnabledCommand extends Command<
   execute({ client, enabled }) {
     try {
       const user = this.state.users.get(client.auth?.uid ?? "")
-      // TEMP we will remove this at some point: owners are allowed for the beta
-      const isAllowed =
-        !this.state.whimsy &&
-        (client.auth?.uid === this.state.ownerId || user?.role === Role.ADMIN)
+      const isAllowed = !this.state.whimsy && user?.role === Role.ADMIN
       if (isAllowed && this.state.blessingsEnabled !== enabled) {
         this.state.blessingsEnabled = enabled
         // blessings are not playtested alongside a scribble rule
