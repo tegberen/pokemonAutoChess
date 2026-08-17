@@ -24,6 +24,7 @@ import {
   selectSpectatedPlayer,
   useAppSelector
 } from "../../../hooks"
+import { usePreferences } from "../../../preferences"
 import { getGameScene } from "../../game"
 import { cc } from "../../utils/jsx"
 import { Money } from "../icons/money"
@@ -95,6 +96,8 @@ export default function GamePokemonPortrait(props: {
   const shopJuggernautStats = useAppSelector(
     (state) => state.game.shopJuggernautStats
   )
+
+  const [preferences] = usePreferences()
 
   const isOnAnotherBoard = spectatedPlayerId !== currentPlayerUid
 
@@ -208,6 +211,10 @@ export default function GamePokemonPortrait(props: {
     <div
       className={cc("my-box", "clickable", "game-pokemon-portrait", {
         shimmer: shouldShimmer,
+        "outline-upgrade":
+          shouldShimmer &&
+          props.origin === "shop" &&
+          preferences.outlineShopUpgrades,
         disabled: !canBuy && props.origin === "shop",
         planned: props.inPlanner ?? false,
         "juggernaut-copy":

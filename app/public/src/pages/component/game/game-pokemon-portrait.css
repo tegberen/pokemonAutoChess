@@ -56,8 +56,19 @@
   border-color: transparent;
 }
 
-.game-pokemon-portrait.shimmer {
-  box-shadow: 0 0 4px #ffffff80;
+.game-pokemon-portrait.my-box.shimmer {
+  box-shadow:
+    var(--shadow-clickable),
+    0 0 4px #ffffff80;
+}
+
+.game-pokemon-portrait.my-box.outline-upgrade {
+  --outline-upgrade-color: #ffffff;
+  border-color: var(--outline-upgrade-color) !important;
+  box-shadow:
+    var(--shadow-clickable),
+    inset 0 0 0 3px var(--outline-upgrade-color),
+    0 0 4px var(--outline-upgrade-color);
 }
 
 /* JUGGERNAUT: feed-copies get a crisp pulsing ring (0 blur) colored by the stat

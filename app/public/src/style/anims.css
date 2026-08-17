@@ -24,6 +24,7 @@
   left: 0;
   right: 0;
   bottom: 0;
+  border-radius: inherit;
   animation: shimmer 2s infinite;
   background: linear-gradient(
     135deg,

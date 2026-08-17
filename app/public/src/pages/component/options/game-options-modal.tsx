@@ -167,6 +167,16 @@ export default function GameOptionsModal(props: {
           <p>
             <Checkbox
               isDark
+              checked={preferences.outlineShopUpgrades}
+              onToggle={(checked) =>
+                setPreferences({ outlineShopUpgrades: checked })
+              }
+              label={t("options.outline_shop_upgrades")}
+            />
+          </p>
+          <p>
+            <Checkbox
+              isDark
               checked={preferences.showBlessingGlow}
               onToggle={(checked) =>
                 setPreferences({ showBlessingGlow: checked })
