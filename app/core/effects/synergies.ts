@@ -1439,8 +1439,6 @@ const growBerryTreesEffect = new OnStageStartEffect(({ player }) => {
     player.berryTreesStages[i] = max(3)(player.berryTreesStages[i] + 1)
   }
   if (!player.blessings?.includes(Blessing.BERRY_GROWTH)) return
-  /* the trees follow the GRASS tier both ways, so briefly reaching it during a
-     board shuffle cannot leave them golden for the rest of the game */
   if (getSynergyTier(player.synergies, Synergy.GRASS) >= BERRY_GROWTH_GOLDEN_TIER) {
     if (player.berryTreesTypeBeforeGolden.length === 0) {
       player.berryTreesTypeBeforeGolden = [...player.berryTreesType]

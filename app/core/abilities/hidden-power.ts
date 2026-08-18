@@ -324,8 +324,6 @@ export class HiddenPowerPStrategy extends HiddenPowerStrategy {
 export class HiddenPowerQStrategy extends HiddenPowerStrategy {
   process(unown: PokemonEntity, board: Board, target: null, crit: boolean) {
     super.process(unown, board, target, crit)
-    /* PANIC_BUTTON: the draw is no longer clean, the opponent still takes a
-       few player damage on the way out */
     if (
       unown.player &&
       !unown.isGhostOpponent &&

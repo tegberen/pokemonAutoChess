@@ -3111,8 +3111,6 @@ export default class Simulation extends Schema implements ISimulation {
           const breakFreeEffect = new PeriodicEffect(
             (entity) => {
               if (entity.status.tree) return
-              /* the Light buffs were already applied once at combat start, so
-                 replaying them twice here is what triples them */
               SynergyTiers[Synergy.LIGHT].forEach((lightEffect) => {
                 if (!entity.effects.has(lightEffect)) return
                 for (let i = 0; i < ASCENSION_EXTRA_LIGHT_APPLICATIONS; i++) {
