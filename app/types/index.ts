@@ -379,6 +379,7 @@ export interface IPokemon {
   supercharged: boolean
   aura: boolean
   ignited: boolean
+  ignitionCooldown: number
   awakening: Awakening
   awakeningRock: string
   awakeningCharge: number

@@ -120,8 +120,8 @@ export class Pokemon extends Schema implements IPokemon {
   @type("boolean") manifestationLocked: boolean = false
   @type("boolean") supportiveSoul: boolean = false
   @type("uint8") trashToTreasureRounds: number = 0
-  // SOUL_BLAZE: ignited for the coming fight. Declared last to keep wire indexes
   @type("boolean") ignited: boolean = false
+  @type("uint8") ignitionCooldown: number = 0
   dodge: number = 0
   deathCount: number = 0
   killCount: number = 0

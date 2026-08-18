@@ -41,7 +41,10 @@ import {
   SPORE_CLOUDS_INTERVAL,
   SPORE_CLOUDS_STATUS_DURATION,
   FOGBOUND_LAKE_FIREFLIES,
-  MYSTOGAN_PROC_CHANCE_BONUS
+  MYSTOGAN_PROC_CHANCE_BONUS,
+  FIRE_SHARD_MIN_TIER,
+  FIRE_IGNITION_TIER,
+  IGNITION_COOLDOWN_ROUNDS
 } from "../../types/enum/Blessing"
 import {
   grantArcheologyRewards,
@@ -1383,9 +1386,44 @@ export class DarkSubstituteEffect extends OnDamageReceivedEffect {
   }
 }
 
+export function isIgnitionActive(
+  player: Pick<Player, "synergies" | "blessings">
+) {
+  return (
+    player.blessings?.includes(Blessing.SOUL_BLAZE) === true ||
+    getSynergyTier(player.synergies, Synergy.FIRE) >= FIRE_IGNITION_TIER
+  )
+}
+
+export function canIgniteEveryRound(
+  player: Pick<Player, "blessings">,
+  passive: Passive
+) {
+  return (
+    player.blessings?.includes(Blessing.SOUL_BLAZE) === true ||
+    passive === Passive.INTIMIDATE_EVERBURNING
+  )
+}
+
+export function endIgnitionRound(player: Player) {
+  player.board.forEach((pokemon) => {
+    if (pokemon.ignitionCooldown > 0) pokemon.ignitionCooldown--
+  })
+  player.ignitedPokemonIds.forEach((id) => {
+    const pokemon = player.board.get(id)
+    if (!pokemon) return
+    pokemon.setIgnited(false)
+    // a Pokemon that never waits would only show a cooldown it ignores
+    if (!canIgniteEveryRound(player, pokemon.passive)) {
+      pokemon.ignitionCooldown = IGNITION_COOLDOWN_ROUNDS
+    }
+  })
+  player.ignitedPokemonIds = []
+}
+
 const giveFireShardEffect = new OnStageStartEffect(({ player }) => {
   if (
-    getSynergyTier(player.synergies, Synergy.FIRE) === 4 &&
+    getSynergyTier(player.synergies, Synergy.FIRE) >= FIRE_SHARD_MIN_TIER &&
     player.items.includes(Item.FIRE_SHARD) === false &&
     player.life > 2
   ) {
@@ -1617,6 +1655,7 @@ export const SynergyEffects: Partial<
   Record<EffectEnum, (Effect | (() => Effect))[]>
 > = {
   [EffectEnum.HEART_OF_THE_SWARM]: [bugSwarmSpawnEffect],
+  [EffectEnum.BLAZE]: [giveFireShardEffect],
   [EffectEnum.DESOLATE_LAND]: [giveFireShardEffect],
   [EffectEnum.INGRAIN]: [growBerryTreesEffect],
   [EffectEnum.GROWTH]: [growBerryTreesEffect],

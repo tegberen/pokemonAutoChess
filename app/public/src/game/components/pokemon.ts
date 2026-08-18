@@ -80,6 +80,10 @@ const isGameScene = (scene: Phaser.Scene): scene is GameScene =>
   "lastPokemonDetail" in scene
 
 const BLESSED_HERO_MARK_SCALE = 1.34
+const IGNITION_COOLDOWN_ICON_SCALE = 0.42
+const IGNITION_COOLDOWN_BADGE_X = 0
+const IGNITION_COOLDOWN_BADGE_GAP = 6
+const IGNITION_COOLDOWN_ICON_TEXT_GAP = 2
 const IGNITE_FLAME_SIZE = 5
 const IGNITE_FLAME_GROUND_Y = 10 + IGNITE_FLAME_SIZE * 8
 const IGNITE_FLAME_X_OFFSET = 3
@@ -169,6 +173,7 @@ export default class PokemonSprite extends DraggableObject {
   blessedHeroMark: GameObjects.Image | undefined
   shinySafeguardMark: GameObjects.Image | undefined
   criticalPathMark: GameObjects.Image | undefined
+  ignitionCooldownBadge: GameObjects.Container | undefined
   awakeningGlow: Phaser.Filters.Glow | undefined
   awakeningGlowTween: Phaser.Tweens.Tween | undefined
   awakeningCrystal: GameObjects.Sprite | undefined
@@ -351,6 +356,9 @@ export default class PokemonSprite extends DraggableObject {
       }
       if (pokemon.ignited) {
         this.igniteAnimation(scene, true, isEntity(pokemon))
+      }
+      if (!isEntity(pokemon) && pokemon.ignitionCooldown > 0) {
+        this.setIgnitionCooldown(pokemon.ignitionCooldown)
       }
       if (
         !isEntity(pokemon) &&
@@ -2079,6 +2087,54 @@ export default class PokemonSprite extends DraggableObject {
       .setDepth(DEPTH.POKEMON_SHADOW)
     // behind the sprite, like the unit's own shadow
     this.addAt(this.blessedHeroMark, 0)
+  }
+
+  /* rounds left before this Pokemon can be ignited again, shown while it waits
+     so the player can tell it apart from one that never burned */
+  setIgnitionCooldown(roundsLeft: number) {
+    this.removeIgnitionCooldownBadge()
+    if (roundsLeft <= 0) return
+    // both are white, so the counter sits beside the flame and never over it
+    const icon = new GameObjects.Image(
+      this.scene,
+      0,
+      0,
+      "ignition-cooldown"
+    ).setScale(IGNITION_COOLDOWN_ICON_SCALE)
+    const counter = new GameObjects.Text(
+      this.scene,
+      0,
+      0,
+      roundsLeft.toString(),
+      {
+        fontSize: "16px",
+        fontFamily: "Jost",
+        color: "#FFFFFF",
+        align: "center",
+        strokeThickness: 2,
+        stroke: "#000000"
+      }
+    ).setOrigin(0.5)
+    /* the flame is far wider than the digit, so both are laid out from the
+       measured widths to keep the pair centered above the unit */
+    const badgeWidth =
+      icon.displayWidth + IGNITION_COOLDOWN_ICON_TEXT_GAP + counter.width
+    icon.x = -badgeWidth / 2 + icon.displayWidth / 2
+    counter.x = badgeWidth / 2 - counter.width / 2
+    this.ignitionCooldownBadge = new GameObjects.Container(
+      this.scene,
+      IGNITION_COOLDOWN_BADGE_X,
+      -this.sprite.displayHeight / 2 - IGNITION_COOLDOWN_BADGE_GAP,
+      [icon, counter]
+    ).setDepth(DEPTH.POKEMON + 1)
+    this.add(this.ignitionCooldownBadge)
+  }
+
+  removeIgnitionCooldownBadge() {
+    if (this.ignitionCooldownBadge) {
+      this.remove(this.ignitionCooldownBadge, true)
+      this.ignitionCooldownBadge = undefined
+    }
   }
 
   removeBlessedHeroMark() {

@@ -308,9 +308,7 @@ export default class Player extends Schema implements IPlayer {
   shopsSinceLastUnownShop: number = 0
   // FERTILE_SOIL: rounds each pokemon has stood on a fully dug hole
   fertileSoilRounds: Map<string, number> = new Map<string, number>()
-  // SOUL_BLAZE: pokemon ignited for the coming fight, and those ignited before
   ignitedPokemonIds: string[] = []
-  previouslyIgnitedPokemonIds: string[] = []
   regions: DungeonPMDO[] = []
   unownReminiscences: number = 0
   maxLife: number = 100

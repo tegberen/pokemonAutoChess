@@ -12,10 +12,11 @@ export class OverdriveStrategy extends AbilityStrategy {
     crit: boolean
   ) {
     super.process(pokemon, board, target, crit)
+    const radius = pokemon.status.electricField ? 4 : 3
     const cells = board.getCellsInRadius(
       target.positionX,
       target.positionY,
-      3,
+      radius,
       false
     )
     cells.forEach((cell) => {

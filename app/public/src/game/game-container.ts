@@ -484,6 +484,7 @@ class GameContainer {
         "skill",
         "supercharged",
         "ignited",
+        "ignitionCooldown",
         "aura",
         "awakening",
         "awakeningRock",

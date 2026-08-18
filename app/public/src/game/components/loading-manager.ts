@@ -83,6 +83,11 @@ export default class LoadingManager {
       height: 64
     })
     scene.load.svg(
+      "ignition-cooldown",
+      "/assets/icons/fire_first_streak.svg",
+      { width: 64, height: 64 }
+    )
+    scene.load.svg(
       "shiny-safeguard-mark",
       "/assets/blessings/shiny_shield.svg",
       { width: 64, height: 64 }

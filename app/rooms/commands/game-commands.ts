@@ -75,7 +75,11 @@ import {
   grantBazaarOffer
 } from "../../core/bazaar"
 import { PassiveEffects } from "../../core/effects/passives"
-import { groundDigEffect, SynergyEffects } from "../../core/effects/synergies"
+import {
+  endIgnitionRound,
+  groundDigEffect,
+  SynergyEffects
+} from "../../core/effects/synergies"
 import { giveRandomEgg } from "../../core/eggs"
 import { EvolutionManager } from "../../core/evolution-logic/evolution-manager"
 import { getFlowerPotsUnlocked } from "../../core/flower-pots"
@@ -2273,11 +2277,7 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
       absorbFertileSoil(player)
       grantAdoptionBaby(player)
       serveFestivePicnicDishes(player)
-      player.ignitedPokemonIds.forEach((id) =>
-        player.board.get(id)?.setIgnited(false)
-      )
-      player.previouslyIgnitedPokemonIds = [...player.ignitedPokemonIds]
-      player.ignitedPokemonIds = []
+      endIgnitionRound(player)
     })
 
     if (

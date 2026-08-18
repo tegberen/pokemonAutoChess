@@ -74,9 +74,9 @@ import {
   STAR_CROSSED_SEAS_MAX_HP,
   FAST_DELIVERY_LUCK_PER_SEED,
   MONSTER_KING_BEAM_INTERVAL,
-  SOUL_BLAZE_SHIELD,
-  SOUL_BLAZE_SPEED,
-  SOUL_BLAZE_LIFE_HEAL_ON_KO,
+  IGNITION_SHIELD,
+  IGNITION_SPEED,
+  IGNITION_LIFE_HEAL_ON_KO,
   FERTILE_SOIL_HOLE_MAX_HP_RATIO,
   TIDAL_SURGE_ITEMS_REQUIRED,
   DRAGON_FANG_ABILITY_POWER_PER_STAR,
@@ -267,7 +267,8 @@ import {
   rockDeathExplosionT2,
   rockDeathExplosionT3,
   DarkSubstituteEffect,
-  makeFrostBarrierEffect
+  makeFrostBarrierEffect,
+  isIgnitionActive
 } from "./effects/synergies"
 import { PokemonEntity } from "./pokemon-entity"
 import { DelayedCommand } from "./simulation-command"
@@ -1646,6 +1647,7 @@ export default class Simulation extends Schema implements ISimulation {
       })
     }
 
+    this.applyIgnitedUnits(sides)
     this.applyCombatStartBlessings(sides)
 
     // TARGET SELECTION EFFECTS (ghost curse)
@@ -1804,6 +1806,45 @@ export default class Simulation extends Schema implements ISimulation {
         }
       })
     )
+  }
+
+  applyIgnitedUnits(sides: { teamIndex: Team; player: Player | undefined }[]) {
+    for (const { teamIndex, player } of sides) {
+      if (!player) continue
+      /* selling a Fire unit after spending the shard loses the ignition, so it
+         is put out here instead of applied */
+      if (!isIgnitionActive(player)) {
+        player.ignitedPokemonIds.forEach((id) =>
+          player.board.get(id)?.setIgnited(false)
+        )
+        player.ignitedPokemonIds = []
+        continue
+      }
+      const team = teamIndex === Team.BLUE_TEAM ? this.blueTeam : this.redTeam
+      const ignitedUnits = [...team.values()].filter(
+        (entity): entity is PokemonEntity =>
+          entity.player === player &&
+          entity.hp > 0 &&
+          !entity.isSpawn &&
+          player.ignitedPokemonIds.includes(entity.refToBoardPokemon.id)
+      )
+      ignitedUnits.forEach((ignitedUnit) => {
+        ignitedUnit.ignited = true
+        ignitedUnit.addShield(IGNITION_SHIELD, ignitedUnit, 0, false)
+        ignitedUnit.addSpeed(IGNITION_SPEED, ignitedUnit, 0, false)
+        ignitedUnit.effectsSet.add(
+          new OnKillEffect(({ attacker }) => {
+            if (attacker.player) {
+              healPlayerLife(
+                attacker.player,
+                IGNITION_LIFE_HEAL_ON_KO,
+                this.room.state
+              )
+            }
+          })
+        )
+      })
+    }
   }
 
   applyCombatStartBlessings(
@@ -2568,28 +2609,6 @@ export default class Simulation extends Schema implements ISimulation {
               EffectEnum.MERCILESS,
               MONSTER_KING_BEAM_INTERVAL
             )
-          )
-        })
-      }
-
-      if (blessings.includes(Blessing.SOUL_BLAZE)) {
-        const ignitedUnits = ownUnits.filter((unit) =>
-          player.ignitedPokemonIds.includes(unit.refToBoardPokemon.id)
-        )
-        ignitedUnits.forEach((ignitedUnit) => {
-          ignitedUnit.ignited = true
-          ignitedUnit.addShield(SOUL_BLAZE_SHIELD, ignitedUnit, 0, false)
-          ignitedUnit.addSpeed(SOUL_BLAZE_SPEED, ignitedUnit, 0, false)
-          ignitedUnit.effectsSet.add(
-            new OnKillEffect(({ attacker }) => {
-              if (attacker.player) {
-                healPlayerLife(
-                  attacker.player,
-                  SOUL_BLAZE_LIFE_HEAL_ON_KO,
-                  this.room.state
-                )
-              }
-            })
           )
         })
       }

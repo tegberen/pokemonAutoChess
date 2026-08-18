@@ -1817,6 +1817,10 @@ export default class BoardManager {
           }
           break
 
+        case "ignitionCooldown":
+          pokemonSprite.setIgnitionCooldown(value as number)
+          break
+
         case "awakeningCharge":
         case "awakeningRock":
         case "awakening":

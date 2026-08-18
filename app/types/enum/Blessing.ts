@@ -589,9 +589,17 @@ export function applyGrudgeCurseReduction(
   )
 }
 
-export const SOUL_BLAZE_SHIELD = 50
-export const SOUL_BLAZE_SPEED = 20
-export const SOUL_BLAZE_LIFE_HEAL_ON_KO = 1
+// Fire 6 hands out the shard, Fire 8 makes spending it ignite the Pokemon
+export const FIRE_SHARD_MIN_TIER = 3
+export const FIRE_IGNITION_TIER = 4
+export const FIRE_SHARD_ATTACK = 2
+export const FIRE_SHARD_SPEED = 2
+export const IGNITION_SHIELD = 30
+export const IGNITION_SPEED = 20
+export const IGNITION_LIFE_HEAL_ON_KO = 1
+/* rounds of waiting after an ignition: ignite on round 1, wait rounds 2 and 3,
+   ignite again on round 4. Soul Blaze and Arcanine's passive skip the wait */
+export const IGNITION_COOLDOWN_ROUNDS = 2
 export const FERTILE_SOIL_DIG_PERMANENT_HP = 5
 export const FERTILE_SOIL_HOLE_MAX_HP_RATIO = 0.2
 export const FERTILE_SOIL_ABSORB_ROUNDS = 5

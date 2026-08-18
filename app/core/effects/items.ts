@@ -1,5 +1,6 @@
 import { ARMOR_FACTOR, getItemCapacity, RegionDetails } from "../../config"
 import { DishByPkm } from "../../config/game/dishes"
+import { canIgniteEveryRound, isIgnitionActive } from "./synergies"
 import { getSynergyTier } from "../../models/colyseus-models/synergies"
 import PokemonFactory from "../../models/pokemon-factory"
 import { PVEStages } from "../../models/pve-stages"
@@ -44,6 +45,8 @@ import {
   CRYSTAL_CLUSTERS_SIMULTANEOUS,
   EMERALD_ORB_HEAL_RANGE,
   FESTIVE_PICNIC_MAX_HP_ON_OVERWRITE,
+  FIRE_SHARD_ATTACK,
+  FIRE_SHARD_SPEED,
   LUCKY_DICE_BOUNCE_DAMAGE_RATIO,
   MOVE_TUTOR_MAX_PP,
   SAPPHIRE_ORB_ARMOR_BREAK_DURATION,
@@ -1561,15 +1564,15 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
   [Item.FIRE_SHARD]: [
     new OnItemDroppedEffect(({ pokemon, player, item }) => {
       if (pokemon.types.has(Synergy.FIRE) && player.life > 3) {
-        pokemon.atk += 4
-        pokemon.speed += 4
+        pokemon.atk += FIRE_SHARD_ATTACK
+        pokemon.speed += FIRE_SHARD_SPEED
         player.life = min(1)(player.life - 3)
         removeInArray(player.items, item)
         if (
-          player.blessings?.includes(Blessing.SOUL_BLAZE) &&
+          isIgnitionActive(player) &&
           player.ignitedPokemonIds.includes(pokemon.id) === false &&
-          (player.previouslyIgnitedPokemonIds.includes(pokemon.id) === false ||
-            pokemon.passive === Passive.INTIMIDATE_EVERBURNING)
+          (pokemon.ignitionCooldown === 0 ||
+            canIgniteEveryRound(player, pokemon.passive))
         ) {
           player.ignitedPokemonIds.push(pokemon.id)
           pokemon.setIgnited(true)
