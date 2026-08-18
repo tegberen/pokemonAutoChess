@@ -32,6 +32,8 @@ import { Ability } from "../../types/enum/Ability"
 import {
   Blessing,
   BEING_OF_KNOWLEDGE_LEVEL,
+  BEING_OF_KNOWLEDGE_UXIE_ATTACK,
+  BEING_OF_KNOWLEDGE_UXIE_DEFENSE,
   RAINBOW_DROPLET_SYNERGIES_REQUIRED,
   BIRTHDAY_PRESENT_GOLD,
   CRYSTAL_CLUSTERS_ROCKS_GRANTED,
@@ -241,9 +243,8 @@ export default class Player extends Schema implements IPlayer {
   // ADOPTION: babies already gifted, so the order never repeats one
   adoptedBabies: Pkm[] = []
   crystalClustersRocksGranted = false
-  // server-only: FAST_FOOD_DELIVERY dishes, tracked one round back so they rot
-  fastFoodDishes: Item[] = []
-  fastFoodDishesLastRound: Item[] = []
+  // server-only: FAST_FOOD_DELIVERY dishes and the rounds left before they rot
+  fastFoodDishes: { dish: Item; roundsLeft: number }[] = []
   hasLeftGame: boolean = false
   bonusSynergies: Map<Synergy, number> = new Map<Synergy, number>()
   pokemonsExploring: {
@@ -309,6 +310,8 @@ export default class Player extends Schema implements IPlayer {
   // FERTILE_SOIL: rounds each pokemon has stood on a fully dug hole
   fertileSoilRounds: Map<string, number> = new Map<string, number>()
   ignitedPokemonIds: string[] = []
+  // BERRY_GROWTH: berries the trees carry when they are not golden
+  berryTreesTypeBeforeGolden: Item[] = []
   regions: DungeonPMDO[] = []
   unownReminiscences: number = 0
   maxLife: number = 100
@@ -550,6 +553,10 @@ export default class Player extends Schema implements IPlayer {
     if (x === null) return
     this.beingOfKnowledgeUxieGranted = true
     const uxie = PokemonFactory.createPokemonFromName(Pkm.UXIE, this)
+    // it is there to steal abilities, not to fight, so it keeps only its HP
+    uxie.atk = BEING_OF_KNOWLEDGE_UXIE_ATTACK
+    uxie.def = BEING_OF_KNOWLEDGE_UXIE_DEFENSE
+    uxie.speDef = BEING_OF_KNOWLEDGE_UXIE_DEFENSE
     uxie.positionX = x
     uxie.positionY = 0
     this.board.set(uxie.id, uxie)

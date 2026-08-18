@@ -180,8 +180,8 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
   ...synergyFamilyDefinitions("CROWN", BlessingTier.PRISMATIC, "rank_three"),
   [Blessing.WOBBUFFETS_GOLD_PRIZE]: {
     tier: BlessingTier.GOLD,
-    availableAtStages: BLESSING_SELECTION_STAGES,
-    icon: "ticket",
+    availableAtStages: [12],
+    icon: "kit",
     grantsPokemonImmediately: false
   },
   [Blessing.HARD_COMMIT]: {
@@ -191,16 +191,16 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     grantsPokemonImmediately: false
   },
   [Blessing.REGIONAL_TREASURES]: {
-    tier: BlessingTier.SILVER,
+    tier: BlessingTier.GOLD,
     availableAtStages: [4],
     icon: "regional_treasure",
     grantsPokemonImmediately: false
   },
   [Blessing.REGIONAL_TREASURES_II]: {
     tier: BlessingTier.PRISMATIC,
-    availableAtStages: BLESSING_SELECTION_STAGES,
+    availableAtStages: [4],
     icon: "regional_treasure",
-    grantsPokemonImmediately: true
+    grantsPokemonImmediately: false
   },
   [Blessing.SYNARCH]: {
     tier: BlessingTier.PRISMATIC,
@@ -227,6 +227,12 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     grantsPokemonImmediately: true
   },
   [Blessing.MANIFESTATION_AD]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: [4],
+    icon: "crystal_ball",
+    grantsPokemonImmediately: true
+  },
+  [Blessing.MANIFESTATION_DEF]: {
     tier: BlessingTier.GOLD,
     availableAtStages: [4],
     icon: "crystal_ball",
@@ -301,7 +307,8 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     tier: BlessingTier.SILVER,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "vampiric",
-    grantsPokemonImmediately: false
+    grantsPokemonImmediately: true,
+    synergy: Synergy.HUMAN
   },
   [Blessing.PROTECT_THE_WEAK]: {
     tier: BlessingTier.GOLD,
@@ -370,7 +377,7 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     grantsPokemonImmediately: true
   },
   [Blessing.NEUROFORCE]: {
-    tier: BlessingTier.GOLD,
+    tier: BlessingTier.PRISMATIC,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "neuroforce",
     grantsPokemonImmediately: false
@@ -438,7 +445,7 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
   [Blessing.FREE_COUPON]: {
     tier: BlessingTier.SILVER,
     availableAtStages: [4],
-    icon: "ticket",
+    icon: "shopping_bag",
     grantsPokemonImmediately: false
   },
   [Blessing.QUEST_REROLL]: {
@@ -534,9 +541,9 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     grantsPokemonImmediately: false
   },
   [Blessing.CROAGUNKS_AID]: {
-    tier: BlessingTier.SILVER,
-    availableAtStages: BLESSING_SELECTION_STAGES,
-    icon: "ticket",
+    tier: BlessingTier.GOLD,
+    availableAtStages: [4],
+    icon: "croagunk_aid",
     grantsPokemonImmediately: false
   },
   [Blessing.BAG_OF_SWEETS]: {
@@ -547,8 +554,8 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
   },
   [Blessing.WOBBUFFETS_SILVER_PRIZE]: {
     tier: BlessingTier.SILVER,
-    availableAtStages: BLESSING_SELECTION_STAGES,
-    icon: "ticket",
+    availableAtStages: [12],
+    icon: "kit",
     grantsPokemonImmediately: false
   },
   [Blessing.TREASURE_HUNT_I]: {
@@ -566,7 +573,7 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
   [Blessing.NUGGET]: {
     tier: BlessingTier.GOLD,
     availableAtStages: BLESSING_SELECTION_STAGES,
-    icon: "cash",
+    icon: "gold_bar",
     grantsPokemonImmediately: false
   },
   [Blessing.GOLDEN_TICKET]: {
@@ -678,7 +685,7 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     grantsPokemonImmediately: false
   },
   [Blessing.FORECAST]: {
-    tier: BlessingTier.GOLD,
+    tier: BlessingTier.SILVER,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "kite",
     grantsPokemonImmediately: false
@@ -687,7 +694,7 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     tier: BlessingTier.GOLD,
     availableAtStages: [12],
     icon: "windmill_house",
-    grantsPokemonImmediately: false
+    grantsPokemonImmediately: true
   },
   [Blessing.BEEKEEPING]: {
     tier: BlessingTier.GOLD,
@@ -885,7 +892,7 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     synergy: Synergy.GOURMET
   },
   [Blessing.BERRY_BREAKFAST]: {
-    tier: BlessingTier.GOLD,
+    tier: BlessingTier.SILVER,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "berry_breakfast",
     grantsPokemonImmediately: true,
@@ -1269,7 +1276,7 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     synergy: Synergy.GRASS
   },
   [Blessing.WATER_FOUNTAIN]: {
-    tier: BlessingTier.PRISMATIC,
+    tier: BlessingTier.GOLD,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "water_fountain",
     grantsPokemonImmediately: false,
@@ -1278,10 +1285,10 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
       player.specialGameRule !== SpecialGameRule.LIGHT_SHOW
   },
   [Blessing.ATLANTEAN_MAGIC]: {
-    tier: BlessingTier.GOLD,
+    tier: BlessingTier.PRISMATIC,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "water_magic",
-    grantsPokemonImmediately: true,
+    grantsPokemonImmediately: false,
     synergy: Synergy.WATER
   },
   [Blessing.STAR_CROSSED_SEAS]: {
@@ -1389,7 +1396,7 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
   },
   [Blessing.QUEST_CRIT]: {
     tier: BlessingTier.PRISMATIC,
-    availableAtStages: [5],
+    availableAtStages: [4],
     icon: "crit_quest",
     grantsPokemonImmediately: false
   },
@@ -1436,13 +1443,13 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     grantsPokemonImmediately: true
   },
   [Blessing.SINGULARITY_I]: {
-    tier: BlessingTier.GOLD,
+    tier: BlessingTier.SILVER,
     availableAtStages: [4],
     icon: "singular_ring",
     grantsPokemonImmediately: false
   },
   [Blessing.SINGULARITY_II]: {
-    tier: BlessingTier.PRISMATIC,
+    tier: BlessingTier.GOLD,
     availableAtStages: [4],
     icon: "singular_ring",
     grantsPokemonImmediately: false
@@ -1490,7 +1497,7 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     grantsPokemonImmediately: false
   },
   [Blessing.BEAUTY_CONTEST]: {
-    tier: BlessingTier.PRISMATIC,
+    tier: BlessingTier.GOLD,
     availableAtStages: [4],
     icon: "beauty_contest",
     grantsPokemonImmediately: false,

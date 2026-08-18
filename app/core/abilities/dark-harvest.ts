@@ -36,10 +36,12 @@ class DarkHarvestEffect extends PeriodicEffect {
         }
         pokemon.broadcastAbility({ skill: Ability.DARK_HARVEST })
         const board = pokemon.simulation.board
-        const crit = pokemon.effects.has(EffectEnum.ABILITY_CRIT)
-          ? chance(pokemon.critChance / 100, pokemon)
-          : false
         const isRampaging = pokemon.heroBlessings?.has(Blessing.RAMPAGE)
+        // Rampage lets Dark Harvest crit without needing ABILITY_CRIT
+        const crit =
+          isRampaging || pokemon.effects.has(EffectEnum.ABILITY_CRIT)
+            ? chance(pokemon.critChance / 100, pokemon)
+            : false
         const rampageBonus =
           isRampaging && this.channelledMs >= RAMPAGE_CHANNEL_THRESHOLD
             ? RAMPAGE_DAMAGE_MULTIPLIER

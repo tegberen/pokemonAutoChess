@@ -20,7 +20,8 @@ import {
   SOUND_PP_GAIN_PER_SYNERGY_TIER,
   SOUND_SPEED_BUFF_PER_SYNERGY_TIER,
   type SynergyTier,
-  SynergyTiers
+  SynergyTiers,
+  GOLDEN_BERRY_TREE_TYPES
 } from "../../config/game/synergies"
 import type Player from "../../models/colyseus-models/player"
 import { getSynergyTier } from "../../models/colyseus-models/synergies"
@@ -44,7 +45,8 @@ import {
   MYSTOGAN_PROC_CHANCE_BONUS,
   FIRE_SHARD_MIN_TIER,
   FIRE_IGNITION_TIER,
-  IGNITION_COOLDOWN_ROUNDS
+  IGNITION_COOLDOWN_ROUNDS,
+  BERRY_GROWTH_GOLDEN_TIER
 } from "../../types/enum/Blessing"
 import {
   grantArcheologyRewards,
@@ -1435,6 +1437,27 @@ const growBerryTreesEffect = new OnStageStartEffect(({ player }) => {
   const nbTrees = getSynergyTier(player.synergies, Synergy.GRASS)
   for (let i = 0; i < nbTrees; i++) {
     player.berryTreesStages[i] = max(3)(player.berryTreesStages[i] + 1)
+  }
+  if (!player.blessings?.includes(Blessing.BERRY_GROWTH)) return
+  /* the trees follow the GRASS tier both ways, so briefly reaching it during a
+     board shuffle cannot leave them golden for the rest of the game */
+  if (getSynergyTier(player.synergies, Synergy.GRASS) >= BERRY_GROWTH_GOLDEN_TIER) {
+    if (player.berryTreesTypeBeforeGolden.length === 0) {
+      player.berryTreesTypeBeforeGolden = [...player.berryTreesType]
+    }
+    player.berryTreesType.forEach((berry, index) => {
+      if (GOLDEN_BERRY_TREE_TYPES.includes(berry)) return
+      const unusedGolden = GOLDEN_BERRY_TREE_TYPES.filter(
+        (golden) => player.berryTreesType.includes(golden) === false
+      )
+      if (unusedGolden.length === 0) return
+      player.berryTreesType[index] = pickRandomIn(unusedGolden)
+    })
+  } else if (player.berryTreesTypeBeforeGolden.length > 0) {
+    player.berryTreesTypeBeforeGolden.forEach((berry, index) => {
+      player.berryTreesType[index] = berry
+    })
+    player.berryTreesTypeBeforeGolden = []
   }
 })
 

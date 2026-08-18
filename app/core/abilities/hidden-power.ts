@@ -4,7 +4,11 @@ import PokemonFactory from "../../models/pokemon-factory"
 import { getPokemonData } from "../../models/precomputed/precomputed-pokemon-data"
 import { PRECOMPUTED_POKEMONS_PER_TYPE_AND_CATEGORY } from "../../models/precomputed/precomputed-types-and-categories"
 import type { IPokemon } from "../../types"
-import { AttackType, Rarity } from "../../types/enum/Game"
+import {
+  Blessing,
+  PANIC_BUTTON_PLAYER_DAMAGE
+} from "../../types/enum/Blessing"
+import { AttackType, Rarity, Team } from "../../types/enum/Game"
 import {
   Berries,
   Dishes,
@@ -320,6 +324,24 @@ export class HiddenPowerPStrategy extends HiddenPowerStrategy {
 export class HiddenPowerQStrategy extends HiddenPowerStrategy {
   process(unown: PokemonEntity, board: Board, target: null, crit: boolean) {
     super.process(unown, board, target, crit)
+    /* PANIC_BUTTON: the draw is no longer clean, the opponent still takes a
+       few player damage on the way out */
+    if (
+      unown.player &&
+      !unown.isGhostOpponent &&
+      unown.player.blessings?.includes(Blessing.PANIC_BUTTON)
+    ) {
+      const opponent =
+        unown.team === Team.BLUE_TEAM
+          ? unown.simulation.redPlayer
+          : unown.simulation.bluePlayer
+      if (opponent) {
+        opponent.life = Math.max(
+          0,
+          opponent.life - PANIC_BUTTON_PLAYER_DAMAGE
+        )
+      }
+    }
     unown.simulation.redTeam.clear()
     unown.simulation.blueTeam.clear()
   }

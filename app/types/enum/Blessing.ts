@@ -196,6 +196,7 @@ export enum Blessing {
   RAINBOW_HOUR = "RAINBOW_HOUR",
   MANIFESTATION_AP = "MANIFESTATION_AP",
   MANIFESTATION_AD = "MANIFESTATION_AD",
+  MANIFESTATION_DEF = "MANIFESTATION_DEF",
   MIX_AND_MATCH_I = "MIX_AND_MATCH_I",
   MIX_AND_MATCH_II = "MIX_AND_MATCH_II",
   WAITING_GAME = "WAITING_GAME",
@@ -403,12 +404,12 @@ export const VITAMINS_SPEED = 10
 export const DRAGON_FANG_ABILITY_POWER_PER_STAR = 2
 export const QUIET_STRENGTH_LOW_LIFE_THRESHOLD = 25
 export const RIVALRY_ATTACK_ON_OWN_SIDE = 1
-export const RIVALRY_MAX_HP_ON_ENEMY_SIDE = 5
+export const RIVALRY_MAX_HP_ON_ENEMY_SIDE = 4
 export const SHINY_SAFEGUARD_HP_THRESHOLD = 0.5
 export const SHINY_SAFEGUARD_PROTECT_DURATION = 1500
 export const CONTEMPT_DAMAGE_MULTIPLIER = 1.5
-export const POTENTIAL_ENERGY_SHIELD = { I: 25, II: 40 }
-export const POTENTIAL_ENERGY_SPEED = { I: 5, II: 10 }
+export const POTENTIAL_ENERGY_SHIELD = { I: 20, II: 30 }
+export const POTENTIAL_ENERGY_SPEED = { I: 10, II: 20 }
 export const MISFITS_MAX_HP = 40
 export const MISFITS_ABILITY_POWER = 40
 export const MISFITS_ATTACK = 4
@@ -420,7 +421,7 @@ export const NOT_THE_BEES_MAX_COMBEES = 16
 export const SPORE_CLOUDS_INTERVAL = 3000
 export const SPORE_CLOUDS_STATUS_DURATION = 3000
 export const MEGA_SOL_AURA_RADIUS = 2
-export const BRACE_FOR_IMPACT_MAX_HP_RATIO = 0.5
+export const BRACE_FOR_IMPACT_MAX_HP_RATIO = 0.4
 export const FROST_BARRIER_HP_THRESHOLD = 0.5
 export const FROST_BARRIER_DEFENSE = 15
 export const FROST_BARRIER_SPEED = 15
@@ -435,12 +436,12 @@ export const PROTECT_THE_WEAK_SPEED = 7
 export const STURDY_MAX_HP = 30
 export const STURDY_DEFENSE = 4
 export const STURDY_SPECIAL_DEFENSE = 4
-export const ALL_FOR_ONE_MAX_HP_RATIO = 0.6
+export const ALL_FOR_ONE_MAX_HP_RATIO = 1
 export const RESURGENCE_SPEED = 25
 export const RESURGENCE_LEGENDARY_SPEED = 35
-export const ECHO_CHAMBER_PP_TO_LEADER = 3
-export const ECHO_CHAMBER_PP_TO_ALLIES = 6
-export const LANGUAGE_BARRIER_SHIELD = 15
+export const ECHO_CHAMBER_PP_TO_LEADER = 2
+export const ECHO_CHAMBER_PP_TO_ALLIES = 4
+export const LANGUAGE_BARRIER_SHIELD = 30
 export const LANGUAGE_BARRIER_UNOWNS_GRANTED = 2
 export const MOVE_TUTOR_MAX_PP = 80
 export const ZAP_CHAIN_DAMAGE_RATIO = 0.5
@@ -450,7 +451,10 @@ export const DRAGON_KING_SHIELD_PER_STAR = 5
 export const DRAGON_KING_SPEED_PER_STAR = 1
 export const DRAGON_KING_ABILITY_POWER_PER_STAR = 1
 export const ASCENSION_BREAK_FREE_CHECK_INTERVAL = 250
+// on top of the one application every LIGHT unit already gets at combat start
+export const ASCENSION_EXTRA_LIGHT_APPLICATIONS = 2
 export const SACRIFICE_DELAY = 300
+export const SACRIFICE_ENRAGE_DURATION = 2000
 /* enough to punch through any shield and survive damage reduction: dealing the
    ally's exact hp left it alive whenever it held a shield or took a reduction */
 export const SACRIFICE_EXECUTE_DAMAGE = 9999
@@ -461,7 +465,7 @@ export const SELECTIVE_GENETICS_BABIES_GRANTED = 3
 export const SELECTIVE_GENETICS_MAX_COST = 4
 export const SELECTIVE_GENETICS_SHINY_ITEM_OPTIONS = 3
 export const SELECTIVE_GENETICS_GOLDEN_EGG_CHANCE = 0.05
-export const FAST_FOOD_DELIVERY_ROUNDS_BEFORE_ROTTING = 1
+export const FAST_FOOD_DELIVERY_ROUNDS_BEFORE_ROTTING = 3
 export const CHEFS_GREED_DISHES = 2
 export const CHEFS_GREED_DISHES_WITH_BELT = 3
 export const GEM_RUSH_EXTRA_GEMS = 1
@@ -471,14 +475,14 @@ export const BERSERKER_HORDES_SHOP_INTERVAL = 10
 export const SHARE_THE_SPOTLIGHT_RATIO = 0.5
 export const SLIPSTREAM_SPEED = 5
 export const SHAPELESS_SYNERGIES_MIN_ACTIVE = 3
-export const SHAPELESS_SYNERGIES_SPEED_RATIO = 1
+export const SHAPELESS_SYNERGIES_SPEED_RATIO = 0.5
 export const SHAPELESS_SYNERGIES_HP_RATIO = 0.5
 export const POLLUTED_SEA_POISON_DURATION = 3000
 export const TIDAL_SURGE_ITEMS_REQUIRED = 2
 export const STAR_CROSSED_SEAS_MAX_HP = 50
 export const STAR_CROSSED_SEAS_ABILITY_POWER = 25
-export const MOLECULAR_CORROSION_DAMAGE_MULTIPLIER = 1.4
-export const RAINBOW_DROPLET_SYNERGIES_REQUIRED = 7
+export const MOLECULAR_CORROSION_DAMAGE_MULTIPLIER = 1.3
+export const RAINBOW_DROPLET_SYNERGIES_REQUIRED = 8
 export const MONSTER_KING_BEAM_INTERVAL = 8000
 export const ADOPTION_STARTERS: Pkm[] = [Pkm.AZURILL, Pkm.PICHU, Pkm.IGGLYBUFF]
 export const ADOPTION_FALLBACK = Pkm.HAPPINY
@@ -541,7 +545,6 @@ export const UNISON_STRIKE_DELAY = 1300
 export const UNISON_STARFALL_WARNING = 250
 export const LIMIT_BREAKER_REROLLS_PER_GOLD = 4
 export const GEM_HARVEST_CHARGE_REDUCTION = 1
-export const GEM_HARVEST_ATTACK_PER_GEM = 3
 export const GEM_HARVEST_ABILITY_POWER_PER_GEM = 10
 // long enough for the field animation to play out and settle between flips
 export const MAGNETOSPHERE_PULSE_INTERVAL = 8000
@@ -601,10 +604,10 @@ export const IGNITION_LIFE_HEAL_ON_KO = 1
    ignite again on round 4. Soul Blaze and Arcanine's passive skip the wait */
 export const IGNITION_COOLDOWN_ROUNDS = 2
 export const FERTILE_SOIL_DIG_PERMANENT_HP = 5
-export const FERTILE_SOIL_HOLE_MAX_HP_RATIO = 0.2
+export const FERTILE_SOIL_HOLE_MAX_HP_RATIO = 0.1
 export const FERTILE_SOIL_ABSORB_ROUNDS = 5
 export const DEEP_WOUNDS_ARMOR_BREAK_DURATION = 5000
-export const DEEP_WOUNDS_DEFENSE_LOSS = 1
+export const DEEP_WOUNDS_DEFENSE_LOSS = 2
 export const DEEP_WOUNDS_DEFENSE_LOSS_CHANCE = 0.3
 export const FAST_DELIVERY_LUCK_PER_SEED = 5
 export const FAST_DELIVERY_RETURN_DELAY = 1
@@ -612,10 +615,13 @@ export const BERRY_GROWTH_PERMANENT_HP = 10
 export const BERRY_GROWTH_GOLDEN_PERMANENT_HP = 15
 export const BERRY_GROWTH_GOLDEN_BERRIES_GRANTED = 2
 export const BERRY_GROWTH_GOLDEN_BERRIES_STAGE = 12
+// GRASS tier 3, so GRASS 7 and above
+export const BERRY_GROWTH_GOLDEN_TIER = 3
 export const HEX_MANIAC_STATUS_DURATION = 30000
 export const ABSOLUTE_DARKNESS_BLIND_CHANCE = 0.05
 export const ABSOLUTE_DARKNESS_BLIND_DURATION = 3000
 export const EXHAUSTING_FLAME_DAMAGE_MULTIPLIER = 0.8
+export const EXHAUSTING_FLAME_LUCK_PER_STAR = 5
 export const ETERNAL_RAGE_DURATION_PER_STAR = 1000
 export const ORBITAL_STRIKE_RANGE_BONUS = 2
 export const SHELL_ARMOR_SPE_DEF_BY_STARS = [1, 3, 6]
@@ -658,7 +664,7 @@ export const TRASH_TO_TREASURE_TRASH_GRANTED_MAX = 3
 export const GREEDY_WISH_PRISMATIC_GOLD = 10
 export const CALLED_SHOT_GOLD = 4
 export const CALLED_SHOT_STREAK = 4
-export const WISE_SPENDING_EXP_PER_REROLL = 1
+export const WISE_SPENDING_EXP_PER_REROLL = 2
 export const BIRTHDAY_PRESENT_GOLD = 1
 export const UP_IS_UP_GOLD = 1
 export const UP_IS_UP_LIFE = 1
@@ -681,6 +687,8 @@ export const FLOWER_QUEEN_MIN_MAX_PP = 10
 export const LEAF_TORNADO_BOUNCES = 2
 export const LEAF_TORNADO_DAMAGE_RATIO = 0.5
 export const MARIACHI_MAYHEM_CONFUSION_DURATION = 2000
+export const ICEBREAKER_LUCK_ON_KO = 20
+export const PANIC_BUTTON_PLAYER_DAMAGE = 4
 export const RAMPAGE_DURATION_EXTENSION = 2000
 export const RAMPAGE_CHANNEL_THRESHOLD = 5000
 export const RAMPAGE_DAMAGE_MULTIPLIER = 2
@@ -690,7 +698,7 @@ export const FROST_BURST_EXECUTE_CHANCE_RATIO = 0.5
 export const AURORA_BOREALIS_DAMAGE_REDUCTION = 0.1
 export const AURORA_BOREALIS_DAMAGE_REDUCTION_IN_SNOW_OR_NIGHT = 0.15
 export const AURORA_BOREALIS_REDUCTION_PER_ACTIVE_SYNERGY = 0.01
-export const PACK_ATTACK_HOUNDOOM_CHANCE = 0.2
+export const PACK_ATTACK_HOUNDOOM_CHANCE = 0.15
 
 export const MORTAR_SHELLS_RANGE_BONUS = 3
 export const MORTAR_SHELLS_ATTACK_RATIO = 1.5
@@ -712,6 +720,8 @@ export const GRAND_IGNITION_TRUE_DAMAGE_RATIO = 0.1
 export const GRAND_IGNITION_MAX_HP_BURNED_RATIO = 0.1
 export const GRAND_IGNITION_EMBER_DAMAGE_RATIO = 0.05
 export const GRAND_IGNITION_TICK_INTERVAL = 1000
+export const GRAND_IGNITION_MAX_PP_REDUCTION = 0.1
+export const GRAND_IGNITION_MIN_MAX_PP = 20
 export const GRAND_IGNITION_TORCH_TRAVEL_DELAY = 750
 export const VALOR_ATTACK_PER_STAR = 1
 export const VALOR_SHIELD_PER_STAR = 10
@@ -721,7 +731,7 @@ export const COLONY_SPEWPA_HATCH_TIME = 3
 
 export const EMERALD_ORB_HEAL_RANGE = 2
 export const BURNING_FORCE_ATTACK_RATIO = 0.5
-export const COMBAT_BLESSING_TRIGGER_HP_RATIO = 0.5
+export const COMBAT_BLESSING_TRIGGER_HP_RATIO = 0.6
 export const COMBAT_BLESSING_DURATION = { I: 8000, II: 12000 }
 export const DRILL_ATTACK_RATIO = 0.5
 export const SHATTER_DEFENSE_RATIO = 0.5
@@ -757,11 +767,11 @@ export const BLESSING_SELECTION_EXTRA_TIME = 30000
 
 export const QUEST_INDECISION_SYNERGIES_TARGET = 3
 export const QUEST_CRIT_POWER_TARGET = 4
-export const QUEST_ABSORB_DAMAGE_BLOCKED_TARGET = 1300
-export const QUEST_REVIVE_TARGET = 20
+export const QUEST_ABSORB_DAMAGE_BLOCKED_TARGET = 1000
+export const QUEST_REVIVE_TARGET = 16
 export const QUEST_PILLAGE_GOLD_TARGET = 30
 export const QUEST_PILLAGE_CRIT_PER_GOLD = 0.5
-export const QUEST_EVOLVE_II_TARGET = 16
+export const QUEST_EVOLVE_II_TARGET = 12
 
 /* quests whose questProgress counter is shown on the Effects tab icon.
    `decimals` is for the ones tracking a best-in-a-fight record rather than a
@@ -781,9 +791,9 @@ export const EXPLOIT_DAMAGE_BONUS = 20 // in %
 export const LASTING_EFFECTS_BONUS = 40 // in %
 export const LASTING_EFFECTS_LUCK = 10
 
-export const PULSE_SHIELD_SPEED_RATIO = 0.5
+export const PULSE_SHIELD_SPEED_RATIO = 0.7
 export const PULSE_SHIELD_ALLY_SPEED = 20
-export const MINIMALIST_PP_PER_EMPTY_SLOT = { I: 10, II: 15 } // in % of max PP
+export const MINIMALIST_PP_PER_EMPTY_SLOT = { I: 8, II: 12 } // in % of max PP
 export const MINIMALIST_II_NO_ITEM_AP = 40
 
 export const CRITICAL_RUSH_SPEED = { I: 30, II: 50 }
@@ -844,6 +854,8 @@ export function countsForTeamSize(
 }
 
 export const BEING_OF_KNOWLEDGE_LEVEL = 7
+export const BEING_OF_KNOWLEDGE_UXIE_ATTACK = 0
+export const BEING_OF_KNOWLEDGE_UXIE_DEFENSE = 0
 export const BEING_OF_KNOWLEDGE_MAX_LEVEL = 10
 
 export function getCarouselLockForStage(
@@ -858,7 +870,7 @@ export function getCarouselLockForStage(
 /* the Pokemon each hero blessing gifts on pick, and the family whose strongest
    fielded member the blessing then empowers every combat */
 export const HERO_BLESSING_GIFT: { [blessing in Blessing]?: Pkm } = {
-  [Blessing.OLIVE_GARDEN]: Pkm.DOLLIV,
+  [Blessing.OLIVE_GARDEN]: Pkm.SMOLIV,
   [Blessing.ORBITAL_STRIKE]: Pkm.DOTTLER,
   [Blessing.ROOSTING_FLOCK]: Pkm.TRANQUILL,
   [Blessing.SHELL_ARMOR_BLESSING]: Pkm.GROTLE,
@@ -877,7 +889,7 @@ export const HERO_BLESSING_GIFT: { [blessing in Blessing]?: Pkm } = {
   [Blessing.RAMPAGE]: Pkm.DEINO,
   [Blessing.SOUL_DRAIN]: Pkm.LITWICK,
   [Blessing.FLOWER_QUEEN]: Pkm.FLOETTE,
-  [Blessing.CHARGING_MY_BUG]: Pkm.GRUBBIN,
+  [Blessing.CHARGING_MY_BUG]: Pkm.CHARJABUG,
   [Blessing.AXE_BLAST]: Pkm.AXEW,
   [Blessing.SNIFFER_DOG]: Pkm.LILLIPUP,
   [Blessing.JESTER]: Pkm.SPRIGATITO,

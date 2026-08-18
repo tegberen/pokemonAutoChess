@@ -87,7 +87,10 @@ import {
   QUEST_CRIT_POWER_TARGET,
   QUEST_ABSORB_DAMAGE_BLOCKED_TARGET,
   ASCENSION_BREAK_FREE_CHECK_INTERVAL,
+  ASCENSION_EXTRA_LIGHT_APPLICATIONS,
+  EXHAUSTING_FLAME_LUCK_PER_STAR,
   SACRIFICE_DELAY,
+  SACRIFICE_ENRAGE_DURATION,
   SACRIFICE_EXECUTE_DAMAGE,
   BUG_CLONE_TRIPLE,
   SHAPELESS_SYNERGIES_HP_RATIO,
@@ -160,6 +163,8 @@ import {
   GRAND_IGNITION_MAX_HP_BURNED_RATIO,
   GRAND_IGNITION_EMBER_DAMAGE_RATIO,
   GRAND_IGNITION_TICK_INTERVAL,
+  GRAND_IGNITION_MAX_PP_REDUCTION,
+  GRAND_IGNITION_MIN_MAX_PP,
   GRAND_IGNITION_TORCH_TRAVEL_DELAY,
   VALOR_ATTACK_PER_STAR,
   VALOR_SHIELD_PER_STAR,
@@ -187,7 +192,6 @@ import {
   UNISON_NOVA_DELAY,
   UNISON_STRIKE_DELAY,
   UNISON_STARFALL_WARNING,
-  GEM_HARVEST_ATTACK_PER_GEM,
   GEM_HARVEST_ABILITY_POWER_PER_GEM,
   MAGNETOSPHERE_PULSE_INTERVAL,
   MAGNETOSPHERE_ATTRACT_MOVE_DELAY,
@@ -548,15 +552,13 @@ export default class Simulation extends Schema implements ISimulation {
       [this.redPlayer, Team.RED_TEAM]
     ] as const) {
       if (!player?.blessings?.includes(Blessing.WEATHER_INSTITUTE)) continue
-      const coord = this.getClosestFreeCellTo(3, 1, team)
+      const backRow = team === Team.BLUE_TEAM ? 0 : BOARD_HEIGHT - 1
+      const coord =
+        this.getClosestFreeCellTo(3, backRow, team) ?? this.getFirstFreeCell(team)
       if (!coord) continue
-      this.addPokemon(
-        PokemonFactory.createPokemonFromName(castform, player),
-        coord.x,
-        coord.y,
-        team,
-        false
-      )
+      const summoned = PokemonFactory.createPokemonFromName(castform, player)
+      summoned.items.add(Item.AQUA_EGG)
+      this.addPokemon(summoned, coord.x, coord.y, team, false)
     }
   }
 
@@ -2420,7 +2422,6 @@ export default class Simulation extends Schema implements ISimulation {
               ally.types.has(synergy)
             ).length
             if (matches === 0) return
-            ally.addAttack(GEM_HARVEST_ATTACK_PER_GEM * matches, ally, 0, false)
             ally.addAbilityPower(
               GEM_HARVEST_ABILITY_POWER_PER_GEM * matches,
               ally,
@@ -2731,12 +2732,36 @@ export default class Simulation extends Schema implements ISimulation {
         [Blessing.POTENTIAL_ENERGY_II, "II"]
       ] as const) {
         if (!blessings.includes(blessing)) continue
+        allies.forEach((ally) => {
+          // stages is how many stars the family reaches once fully evolved
+          const missingStars = min(0)(getPokemonData(ally.name).stages - ally.stars)
+          if (missingStars === 0) return
+          ally.addShield(
+            POTENTIAL_ENERGY_SHIELD[tier] * missingStars,
+            ally,
+            0,
+            false
+          )
+          ally.addSpeed(
+            POTENTIAL_ENERGY_SPEED[tier] * missingStars,
+            ally,
+            0,
+            false
+          )
+        })
+      }
+
+      if (blessings.includes(Blessing.EXHAUSTING_FLAME)) {
         allies
-          .filter((ally) => ally.refToBoardPokemon.hasEvolution)
-          .forEach((ally) => {
-            ally.addShield(POTENTIAL_ENERGY_SHIELD[tier], ally, 0, false)
-            ally.addSpeed(POTENTIAL_ENERGY_SPEED[tier], ally, 0, false)
-          })
+          .filter((ally) => ally.types.has(Synergy.FIRE))
+          .forEach((ally) =>
+            ally.addLuck(
+              EXHAUSTING_FLAME_LUCK_PER_STAR * ally.stars,
+              ally,
+              0,
+              false
+            )
+          )
       }
 
       if (blessings.includes(Blessing.QUIET_STRENGTH) && ownUnits.length > 0) {
@@ -3066,6 +3091,10 @@ export default class Simulation extends Schema implements ISimulation {
                   attacker: strongestMonster,
                   shouldTargetGainMana: false
                 })
+                strongestMonster.status.triggerRage(
+                  SACRIFICE_ENRAGE_DURATION,
+                  strongestMonster
+                )
               }, SACRIFICE_DELAY)
             )
           }
@@ -3083,9 +3112,10 @@ export default class Simulation extends Schema implements ISimulation {
             (entity) => {
               if (entity.status.tree) return
               /* the Light buffs were already applied once at combat start, so
-                 replaying them here is what "doubles" them */
+                 replaying them twice here is what triples them */
               SynergyTiers[Synergy.LIGHT].forEach((lightEffect) => {
-                if (entity.effects.has(lightEffect)) {
+                if (!entity.effects.has(lightEffect)) return
+                for (let i = 0; i < ASCENSION_EXTRA_LIGHT_APPLICATIONS; i++) {
                   this.applyEffect(entity, lightEffect)
                 }
               })
@@ -3283,7 +3313,7 @@ export default class Simulation extends Schema implements ISimulation {
           .filter((entity) => !entity.isSpawn)
           .reduce((sum, entity) => sum + entity.stars, 0)
       axeBlastChampion.skill = Ability.AXE_BLAST
-      axeBlastChampion.range += 2
+      axeBlastChampion.range += 1
       const alliedStars = totalStars(alliedTeam)
       const opposingStars = totalStars(opposingTeam)
       player.blessingsRef?.questProgress.set(
@@ -3440,6 +3470,10 @@ export default class Simulation extends Schema implements ISimulation {
             targetY: GRAND_IGNITION_CORNER_CELLS[cornerIndex].y,
             ap: 0
           })
+          caster.maxPP = Math.max(
+            GRAND_IGNITION_MIN_MAX_PP,
+            Math.round(caster.maxPP * (1 - GRAND_IGNITION_MAX_PP_REDUCTION))
+          )
           if (ignition.litCorners.size < GRAND_IGNITION_CORNER_CELLS.length)
             return
           caster.commands.push(

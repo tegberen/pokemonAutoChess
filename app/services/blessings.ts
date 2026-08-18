@@ -7,7 +7,6 @@ import {
   SynergyTiersThresholds
 } from "../config"
 import {
-  BLESSING_SYNERGY_GATED_STAGE,
   SYNERGIES_WITH_BLESSINGS,
   WATER_FOUNTAIN_REGIONS
 } from "../config/game/blessings"
@@ -153,6 +152,7 @@ import { schemaValues } from "../utils/schemas"
 
 const PEARL_GOLD_GAINED = 10
 const CROAGUNKS_AID_EXCHANGE_TICKETS = 3
+const ADDITIONAL_RETHINK_GOLD = { I: 4, II: 8 }
 const BAG_OF_SWEETS_AMOUNT = 10
 const BANANA_BUSINESS_NANAB_BERRIES = 3
 const WOBBUFFETS_SILVER_PRIZE_RECYCLE_TICKETS = 2
@@ -1068,14 +1068,22 @@ function grantSinnohsCoolest(
 }
 
 export const MANIFESTATION_AP_POKEMONS = [
+  Pkm.DRIZZILE,
   Pkm.DUOSION,
-  Pkm.THWACKEY,
-  Pkm.DRIZZILE
+  Pkm.LUXIO,
+  Pkm.THWACKEY
 ]
 export const MANIFESTATION_AD_POKEMONS = [
-  Pkm.PORYGON_2,
+  Pkm.ARCTIBAX,
+  Pkm.BISHARP,
   Pkm.FLETCHINDER,
-  Pkm.BISHARP
+  Pkm.PORYGON_2
+]
+export const MANIFESTATION_DEF_POKEMONS = [
+  Pkm.CHANSEY,
+  Pkm.DUSCLOPS,
+  Pkm.GURDURR,
+  Pkm.SWADLOON
 ]
 
 export function grantRainbowHourEevee(player: Player, craftedItem: Item) {
@@ -1265,7 +1273,6 @@ export function grantRegionalTreasures2(player: Player) {
   regionSynergies(player).forEach((synergy) => {
     const gem = GemBySynergy[synergy]
     if (gem) grantSynergyAwareItem(player, gem)
-    giftUncommonsOfSynergy(player, synergy, 1)
   })
 }
 
@@ -1413,12 +1420,12 @@ function heroBlessingEffect(
 }
 
 const QUEST_REROLL_TARGET = 50
-const QUEST_GROW_TARGET_HP = 1300
+const QUEST_GROW_TARGET_HP = 1000
 const QUEST_SHINE_LIGHT_TARGET = 7
 const QUEST_EPIC_RARITY_TARGET = 7
 const QUEST_EXPAND_TARGET = 8
-const QUEST_EXPAND_MIN_SELL_PRICE = 5
-const SHARD_DAMAGE_PER_GRANT = 15
+const QUEST_EXPAND_MIN_SELL_PRICE = 4
+const SHARD_DAMAGE_PER_GRANT = 12
 const QUEST_REROLL_FREE_ROLLS = 10
 const QUEST_EPIC_EXPERIENCE = 6
 const QUEST_EXPAND_EXPERIENCE = 10
@@ -1653,7 +1660,7 @@ export const blessingTriggerEffectService: {
   },
 
   [Blessing.TEMPLE_OF_LANGUAGE]: {
-    [BlessingTrigger.PVP_END]: (player) =>
+    [BlessingTrigger.PVE_END]: (player) =>
       giftPokemonIfBenchHasRoom(player, pickRandomIn(Unowns))
   },
 
@@ -1685,6 +1692,8 @@ export const blessingScheduledEffectService: {
   [Blessing.MANIFESTATION_AP]: (player) => releaseManifestedPokemons(player),
 
   [Blessing.MANIFESTATION_AD]: (player) => releaseManifestedPokemons(player),
+
+  [Blessing.MANIFESTATION_DEF]: (player) => releaseManifestedPokemons(player),
 
   /* items always land, so these return void rather than a grant result: an
      expression body would leak the push's number into the union */
@@ -1764,8 +1773,21 @@ export const blessingEffectService: {
 
   [Blessing.LUNCH_MONEY]: () => true,
   [Blessing.CALCULATED_LOSS]: () => true,
+  [Blessing.WEATHER_INSTITUTE]: (player) =>
+    giftPokemonIfBenchHasRoom(
+      player,
+      pickRandomIn([Pkm.SNOVER, Pkm.LARVESTA, Pkm.BARBOACH])
+    ),
+  [Blessing.ADDITIONAL_RETHINK_I]: (player) => {
+    player.addMoney(ADDITIONAL_RETHINK_GOLD.I, true, null)
+    return true
+  },
+  [Blessing.ADDITIONAL_RETHINK_II]: (player) => {
+    player.addMoney(ADDITIONAL_RETHINK_GOLD.II, true, null)
+    return true
+  },
   [Blessing.A_NEW_FRIEND]: (player) => {
-    const candidates = PRECOMPUTED_POKEMONS_PER_RARITY[Rarity.UNCOMMON].filter(
+    const candidates = PRECOMPUTED_POKEMONS_PER_RARITY[Rarity.RARE].filter(
       (pkm) =>
         getPokemonData(pkm).stars === 1 && player.canFindRegionalPokemon(pkm)
     )
@@ -1796,7 +1818,8 @@ export const blessingEffectService: {
     player.addBlessingGold(CALLED_SHOT_GOLD)
     return true
   },
-  [Blessing.VAMPIRIC]: () => true,
+  [Blessing.VAMPIRIC]: (player) =>
+    giftPokemonIfBenchHasRoom(player, Pkm.CHIMCHAR),
   [Blessing.PROTECT_THE_WEAK]: () => true,
   [Blessing.STURDY]: () => true,
   [Blessing.ALL_FOR_ONE]: (player, state, room) =>
@@ -2054,7 +2077,7 @@ export const blessingEffectService: {
   /* the gift goes first in every effect that also hands out an item: a refused
      pick is retried, and the item would be paid out on each attempt */
   [Blessing.REPLICATOR]: (player) => {
-    if (!giftPokemonIfBenchHasRoom(player, Pkm.VAROOM)) return false
+    if (!giftPokemonIfBenchHasRoom(player, Pkm.KLINK)) return false
     player.items.push(Item.DUBIOUS_DISC_BLESSING_ITEM)
     return true
   },
@@ -2082,7 +2105,7 @@ export const blessingEffectService: {
     giftPokemonIfBenchHasRoom(player, Pkm.NACLI),
 
   [Blessing.BERRY_BREAKFAST]: (player) => {
-    if (!giftPokemonIfBenchHasRoom(player, Pkm.CHESPIN)) return false
+    if (!giftPokemonIfBenchHasRoom(player, Pkm.SMOLIV)) return false
     player.items.push(...pickNRandomIn(Berries, 3))
     return true
   },
@@ -2290,6 +2313,7 @@ export const blessingEffectService: {
 
   [Blessing.WATER_FOUNTAIN]: (player, state, room) => {
     applyWaterFountain(player, state, room)
+    giftPokemonIfBenchHasRoom(player, Pkm.SQUIRTLE)
     return true
   },
 
@@ -2308,8 +2332,7 @@ export const blessingEffectService: {
   [Blessing.ETERNAL_RAGE]: (player) =>
     giftPokemonIfBenchHasRoom(player, Pkm.AIPOM),
 
-  [Blessing.ATLANTEAN_MAGIC]: (player) =>
-    giftPokemonIfBenchHasRoom(player, Pkm.SQUIRTLE),
+  [Blessing.ATLANTEAN_MAGIC]: () => true,
 
   [Blessing.STAR_CROSSED_SEAS]: (player, state, room) => {
     const previousMap = player.map
@@ -2430,6 +2453,15 @@ export const blessingEffectService: {
       Blessing.MANIFESTATION_AD,
       MANIFESTATION_AD_POKEMONS,
       Item.RED_ORB
+    ),
+
+  [Blessing.MANIFESTATION_DEF]: (player, state) =>
+    grantManifestation(
+      player,
+      state,
+      Blessing.MANIFESTATION_DEF,
+      MANIFESTATION_DEF_POKEMONS,
+      Item.ROCKY_HELMET
     ),
 
   [Blessing.MIX_AND_MATCH_I]: (player) =>
@@ -2564,6 +2596,7 @@ export const blessingEffectService: {
 
   [Blessing.ALL_FOURS]: (player, state) => {
     state.shop.assignAllEpicShop(player, state)
+    player.items.push(Item.BRONZE_DOJO_TICKET)
     player.allFoursFreeBuyPending = true
     // the themed shop can be rolled away without paying for it
     player.shopFreeRolls += 1
@@ -2699,12 +2732,7 @@ export const blessingEffectService: {
 
   [Blessing.NOT_THE_BEES]: () => true,
 
-  [Blessing.RIVALRY]: (player, state) => {
-    if (state.stageLevel >= BLESSING_SYNERGY_GATED_STAGE) {
-      player.items.push(Item.RELIC_CROWN)
-    }
-    return true
-  },
+  [Blessing.RIVALRY]: () => true,
 
   [Blessing.SAFARI_ENCOUNTER]: (player, state) => {
     const [topSynergy] = player.synergies.getTopSynergies(1)
@@ -2723,7 +2751,9 @@ export const blessingEffectService: {
     if (getFreeSpaceOnBench(player.board) < 1) return false
     const encountered = pickRandomIn(candidates)
     state.shop.addAdditionalPokemon(encountered, state)
-    return giftPokemonIfBenchHasRoom(player, encountered)
+    if (!giftPokemonIfBenchHasRoom(player, encountered)) return false
+    player.items.push(Item.BRONZE_DOJO_TICKET)
+    return true
   },
 
   [Blessing.POTION]: (player, state) => {
@@ -2879,7 +2909,7 @@ export const blessingEffectService: {
       player,
       state,
       Blessing.ITEMFINDER_III,
-      nextStages(state, 6)
+      nextStages(state, 5)
     )
     return true
   },

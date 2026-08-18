@@ -5,6 +5,7 @@ import {
 import { Blessing } from "../../../../../types/enum/Blessing"
 import { Synergy } from "../../../../../types/enum/Synergy"
 
+// only blessings sharing an icon need a label to tell them apart
 const LABELS: Partial<Record<Blessing, string>> = {
   [Blessing.HEATRANS_SONG]: "HEAT",
   [Blessing.RAYQUAZAS_SONG]: "RAY",
@@ -15,21 +16,14 @@ const LABELS: Partial<Record<Blessing, string>> = {
   [Blessing.KYOGRES_SONG]: "KYO",
   [Blessing.WOBBUFFETS_SILVER_PRIZE]: "S",
   [Blessing.WOBBUFFETS_GOLD_PRIZE]: "G",
-  [Blessing.FREE_COUPON]: "FREE",
-  [Blessing.CROAGUNKS_AID]: "AID",
-  [Blessing.GOLDEN_TICKET]: "GOLD",
   [Blessing.QUEST_EVOLVE]: "EVO",
   [Blessing.QUEST_DESTROY]: "KO",
   [Blessing.QUEST_LEVEL_UP]: "LVL",
   [Blessing.QUEST_DIVERSIFY]: "DIV",
   [Blessing.QUEST_PROSPER]: "GOLD",
-  [Blessing.BAG_OF_SWEETS]: "BAG",
-  [Blessing.SWEET_SUBSCRIPTION]: "SUB",
-  [Blessing.MORE_EQUAL_THAN_OTHERS]: "EQ",
-  [Blessing.NUGGET]: "NUG",
-  [Blessing.BERRY_POUCH]: "POUCH",
   [Blessing.MANIFESTATION_AP]: "AP",
-  [Blessing.MANIFESTATION_AD]: "AD"
+  [Blessing.MANIFESTATION_AD]: "AD",
+  [Blessing.MANIFESTATION_DEF]: "DEF"
 }
 
 const NUMBERED_FAMILIES = new Set([

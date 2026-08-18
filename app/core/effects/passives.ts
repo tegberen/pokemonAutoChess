@@ -9,6 +9,7 @@ import { getSynergyTier } from "../../models/colyseus-models/synergies"
 import PokemonFactory from "../../models/pokemon-factory"
 import { RemovableItems, Transfer } from "../../types"
 import { Ability } from "../../types/enum/Ability"
+import { Blessing } from "../../types/enum/Blessing"
 import { EffectEnum } from "../../types/enum/Effect"
 import { Emotion } from "../../types/enum/Emotion"
 import { AttackType, PokemonActionState, Team } from "../../types/enum/Game"
@@ -1825,7 +1826,8 @@ export const PassiveEffects: Partial<
         const itemsToRemove = schemaValues(pokemon.items).filter((item) => {
           return (
             isIn(RemovableItems, item) ||
-            (state?.specialGameRule === SpecialGameRule.SLAMINGO &&
+            ((state?.specialGameRule === SpecialGameRule.SLAMINGO ||
+              player.blessings?.includes(Blessing.CROAGUNKS_AID)) &&
               item !== Item.RARE_CANDY) ||
             isIn(SynergyItems, item)
           )

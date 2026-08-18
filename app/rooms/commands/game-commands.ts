@@ -2701,15 +2701,19 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
       grantSweetTreat(player)
     }
 
-    for (const staleDish of player.fastFoodDishesLastRound) {
-      const index = player.items.indexOf(staleDish)
-      if (index >= 0) {
-        player.items.splice(index, 1)
-        player.items.push(Item.LEFTOVERS)
-      }
-    }
-    player.fastFoodDishesLastRound = player.fastFoodDishes
-    player.fastFoodDishes = []
+    player.fastFoodDishes.forEach((delivery) => delivery.roundsLeft--)
+    player.fastFoodDishes
+      .filter((delivery) => delivery.roundsLeft <= 0)
+      .forEach((delivery) => {
+        const index = player.items.indexOf(delivery.dish)
+        if (index >= 0) {
+          player.items.splice(index, 1)
+          player.items.push(Item.LEFTOVERS)
+        }
+      })
+    player.fastFoodDishes = player.fastFoodDishes.filter(
+      (delivery) => delivery.roundsLeft > 0
+    )
 
     const rottingItems: Map<Item, Item> = new Map([
       // order matters to not convert several times in a row
@@ -3812,7 +3816,8 @@ export function onPokemonChangePosition({
     const itemsToRemove = schemaValues(pokemon.items).filter((item) => {
       return (
         isIn(RemovableItems, item) ||
-        (state?.specialGameRule === SpecialGameRule.SLAMINGO &&
+        ((state?.specialGameRule === SpecialGameRule.SLAMINGO ||
+          player.blessings?.includes(Blessing.CROAGUNKS_AID)) &&
           item !== Item.RARE_CANDY)
       )
     })

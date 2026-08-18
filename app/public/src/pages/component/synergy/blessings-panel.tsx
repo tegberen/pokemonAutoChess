@@ -18,7 +18,6 @@ import {
   Blessing,
   RAINBOW_DROPLET_SYNERGIES_REQUIRED,
   GRUDGE_CURSE_DURATION_REDUCTION_PER_SUBSTITUTE,
-  GEM_HARVEST_ATTACK_PER_GEM,
   GEM_HARVEST_ABILITY_POWER_PER_GEM,
   DRAGON_FANG_ABILITY_POWER_PER_STAR,
   STAR_GUARD_DEFENSE_PER_STAR,
@@ -272,7 +271,7 @@ export default function BlessingsPanel(props: { recentOnly?: boolean }) {
                 {blessing === Blessing.STAR_GUARD && <p className="blessing-panel-live-value">{addIconsToDescription(`${fieldedStars} STAR on your board: +${fieldedStars * STAR_GUARD_DEFENSE_PER_STAR} DEF and SPE_DEF`)}</p>}
                 {blessing === Blessing.AXE_BLAST && axeBlastStarCounts > 0 && <p className="blessing-panel-live-value">{addIconsToDescription(`Team STAR: ${axeBlastAlliedStars} vs ${axeBlastOpposingStars}\nExecute chance: ${axeBlastExecuteChance}% before Luck`)}</p>}
                 {blessing === Blessing.GEM_HARVEST && gemHarvestGems.length === 0 && <p className="blessing-panel-live-value">No gem harvested yet</p>}
-                {blessing === Blessing.GEM_HARVEST && gemHarvestGems.map(([gem, copies, holders]) => <p key={gem} className="blessing-panel-live-value">{addIconsToDescription(holders > 0 ? `${gem}${copies > 1 ? ` x${copies}` : ""}: ${holders} fielded Pokémon gain ${copies * GEM_HARVEST_ATTACK_PER_GEM} ATK and ${copies * GEM_HARVEST_ABILITY_POWER_PER_GEM} AP` : `${gem}${copies > 1 ? ` x${copies}` : ""}: no fielded Pokémon shares this synergy`)}</p>)}
+                {blessing === Blessing.GEM_HARVEST && gemHarvestGems.map(([gem, copies, holders]) => <p key={gem} className="blessing-panel-live-value">{addIconsToDescription(holders > 0 ? `${gem}${copies > 1 ? ` x${copies}` : ""}: ${holders} fielded Pokémon gain ${copies * GEM_HARVEST_ABILITY_POWER_PER_GEM} AP` : `${gem}${copies > 1 ? ` x${copies}` : ""}: no fielded Pokémon shares this synergy`)}</p>)}
               </BlessingTooltipCard>
             </Tooltip>,
             document.body

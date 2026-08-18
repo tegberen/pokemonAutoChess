@@ -44,6 +44,7 @@ import {
   Blessing,
   CRYSTAL_CLUSTERS_SIMULTANEOUS,
   EMERALD_ORB_HEAL_RANGE,
+  FAST_FOOD_DELIVERY_ROUNDS_BEFORE_ROTTING,
   FESTIVE_PICNIC_MAX_HP_ON_OVERWRITE,
   FIRE_SHARD_ATTACK,
   FIRE_SHARD_SPEED,
@@ -639,10 +640,13 @@ const chefCookEffect = new OnStageStartEffect(({ pokemon, player, room }) => {
             player.blessings?.includes(Blessing.FAST_FOOD_DELIVERY)
           ) {
             /* FAST_FOOD_DELIVERY: everything is cooked to the inventory for the
-               player to hand out, and rots to leftovers at the next stage end */
+               player to hand out, and rots to leftovers a few rounds later */
             player.items.push(dish)
             if (player.blessings?.includes(Blessing.FAST_FOOD_DELIVERY)) {
-              player.fastFoodDishes.push(dish)
+              player.fastFoodDishes.push({
+                dish,
+                roundsLeft: FAST_FOOD_DELIVERY_ROUNDS_BEFORE_ROTTING
+              })
             }
           } else {
             let candidates = schemaValues(player.board).filter(

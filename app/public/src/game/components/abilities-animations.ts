@@ -2012,11 +2012,10 @@ const grandIgnitionTorchAnimation =
       scene.shakeCamera({ duration: 120, intensity: 0.003 })
 
       grandIgnitionSparksInward(scene, endX, landingY, 8 + litCorners * 2, 90)
-      if (litCorners < GRAND_IGNITION_CORNERS.length) {
-        scene.time.delayedCall(220, () =>
-          grandIgnitionQuarterArc(scene, endX, endY, flip)
-        )
-      }
+      // the fourth arc is what closes the square, so every torch draws one
+      scene.time.delayedCall(220, () =>
+        grandIgnitionQuarterArc(scene, endX, endY, flip)
+      )
     }
   })
 }
