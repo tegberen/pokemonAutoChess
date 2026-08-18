@@ -3,13 +3,27 @@
 
 const CACHE_NAME = "CACHE v6.10.1.2026-07-08.0"
 
+/* a fetch that never settles leaves respondWith pending forever, which freezes
+   the game on its loading screen with no way out but restarting the browser.
+   Phaser's own load.xhr.timeout does not cover images, so this is the only
+   place a timeout can be applied to them */
+const NETWORK_TIMEOUT_MS = 30000
+
+const fetchWithTimeout = (request) => {
+  const controller = new AbortController()
+  const timer = setTimeout(() => controller.abort(), NETWORK_TIMEOUT_MS)
+  return fetch(request, { signal: controller.signal }).finally(() =>
+    clearTimeout(timer)
+  )
+}
+
 // Cache-first strategy
 const cacheFirst = (event) => {
   event.respondWith(
     caches.match(event.request).then((cacheResponse) => {
-      return (
-        cacheResponse ||
-        fetch(event.request).then((networkResponse) => {
+      if (cacheResponse) return cacheResponse
+      return fetchWithTimeout(event.request)
+        .then((networkResponse) => {
           if (networkResponse.ok && networkResponse.status !== 206) {
             // do not cache errors or partial content
             return caches.open(CACHE_NAME).then((cache) => {
@@ -24,7 +38,17 @@ const cacheFirst = (event) => {
           }
           return networkResponse
         })
-      )
+        .catch(() =>
+          // one retry, then fail definitively so the loader moves on instead
+          // of waiting on a request that will never come back
+          fetchWithTimeout(event.request).catch(
+            () =>
+              new Response("", {
+                status: 504,
+                statusText: "Service worker network timeout"
+              })
+          )
+        )
     })
   )
 }
