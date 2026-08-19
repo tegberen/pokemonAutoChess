@@ -16,6 +16,9 @@ export class PokemonAvatarModel extends Schema implements IPokemonAvatar {
   @type("string") action: PokemonActionState = PokemonActionState.IDLE
   @type("string") orientation: Orientation = Orientation.DOWNLEFT
   @type("number") timer: number
+  /* bumped whenever the server places this avatar rather than walking it,
+     so a client can tell a deliberate reposition from ordinary movement */
+  @type("uint8") anchorCount: number = 0
   @type("string") itemId: string = ""
   @type("string") portalId: string = ""
   constraint: Constraint | undefined

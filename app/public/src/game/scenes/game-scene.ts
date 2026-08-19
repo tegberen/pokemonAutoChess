@@ -58,7 +58,7 @@ import { SellZone } from "../components/sell-zone"
 import WanderersManager from "../components/wanderers-manager"
 import WeatherManager from "../components/weather-manager"
 import { DEPTH } from "../depths"
-import WalkingAvatarManager from "../components/walking-avatar"
+import PlayerAvatarsManager from "../components/player-avatars-manager"
 
 export default class GameScene extends Scene {
   tilemaps: Map<DungeonPMDO, DesignTiled> = new Map<DungeonPMDO, DesignTiled>()
@@ -89,7 +89,7 @@ export default class GameScene extends Scene {
   lastPokemonDetail: PokemonSprite | null = null
   minigameManager: MinigameManager | null = null
   loadingManager: LoadingManager | null = null
-  walkingAvatarManager: WalkingAvatarManager | null = null
+  playerAvatars: PlayerAvatarsManager | null = null
   started: boolean = false
   spectate: boolean = false
 
@@ -193,6 +193,8 @@ export default class GameScene extends Scene {
       this.weatherManager?.setTownDaytime(0)
 
       this.wandererManager = new WanderersManager(this)
+      this.playerAvatars = new PlayerAvatarsManager(this)
+      this.playerAvatars.buildExisting()
       if (!this.music) {
         playMusic(
           this,
@@ -222,6 +224,7 @@ export default class GameScene extends Scene {
     ) {
       this.minigameManager.update()
     }
+    this.playerAvatars?.update(delta)
   }
 
   setupCamera() {
@@ -261,7 +264,23 @@ export default class GameScene extends Scene {
 
     this.input.keyboard!.removeAllListeners()
 
+    // Emotes remain available while visiting or spectating.
+    this.input.keyboard!.on(
+      "keydown-" + keybindings.emote,
+      (event: KeyboardEvent) => {
+        if (event.repeat) return
+        this.showLocalEmote()
+        this.room?.send(Transfer.SHOW_EMOTE, "")
+      }
+    )
     if (!this.spectate) {
+      this.input.keyboard!.on("keydown-CTRL", (event: KeyboardEvent) => {
+        if (!event.repeat) this.getOwnEmoteController()?.showEmoteMenu()
+      })
+      this.input.keyboard!.on("keyup-CTRL", () => {
+        this.getOwnEmoteController()?.hideEmoteMenu()
+      })
+
       this.input.keyboard!.on(
         "keydown-" + keybindings.refresh,
         throttle(() => {
@@ -321,6 +340,42 @@ export default class GameScene extends Scene {
     })
   }
 
+  showLocalEmote(emote?: string) {
+    if (this.room?.state.phase === GamePhaseState.TOWN) {
+      this.minigameManager?.showEmote(this.uid!, emote)
+    } else {
+      this.board?.showEmote(this.uid!, emote)
+    }
+  }
+
+  private getOwnEmoteController() {
+    if (this.room?.state.phase === GamePhaseState.TOWN) {
+      return this.minigameManager?.pokemons.get(this.uid!)
+    }
+    return (
+      this.playerAvatars?.sprites.get(this.uid!) ?? this.board?.playerAvatar
+    )
+  }
+
+  /* during a fight the click steers the avatar on the shared battle map. Same
+     rule as the pick phase: a press on bare ground is a move order, a press on
+     anything interactive belongs to that thing */
+  onGroundClicked(pointer: Phaser.Input.Pointer) {
+    if (!pointer.leftButtonDown() || this.spectate) return
+    if (preference("walkingAvatar") !== true) return
+    const phase = this.room?.state.phase
+    if (phase !== GamePhaseState.PICK && phase !== GamePhaseState.FIGHT) return
+    const blocked = this.input
+      .hitTestPointer(pointer)
+      .some((object) => object instanceof Phaser.GameObjects.Zone === false)
+    if (blocked) return
+    const camera = this.cameras.main
+    this.playerAvatars?.requestMove(
+      camera.worldView.left + pointer.x / camera.zoom,
+      camera.worldView.top + pointer.y / camera.zoom
+    )
+  }
+
   refreshShop() {
     const player = this.room?.state.players.get(this.uid!)
     const thinkFastActive =
@@ -365,6 +420,7 @@ export default class GameScene extends Scene {
     this.weatherManager?.clearWeather()
     clearAbilityAnimations(this)
     this.resetDragState()
+    this.board?.clearAvatarEmoteDisplays()
 
     if (previousPhase === GamePhaseState.TOWN) {
       this.minigameManager?.dispose()
@@ -530,16 +586,14 @@ export default class GameScene extends Scene {
       zone.setName("berry-tree-zone")
       zone.setData({ x, y, index: i })
     }
-    
+
     const [croagunkX, croagunkY] = transformBoardCoordinates(7.5, 0.4)
     const croagunkZone = this.add.zone(croagunkX, croagunkY, 96, 96)
     croagunkZone.setRectangleDropZone(130,130)
     croagunkZone.setName("croagunk-trade-zone")
 
-    this.walkingAvatarManager = new WalkingAvatarManager(this)
-
     this.input.on("pointerdown", (pointer) => {
-      this.walkingAvatarManager?.onPointerDown(pointer)
+      this.onGroundClicked(pointer)
       if (
         pointer.leftButtonDown() &&
         this.minigameManager &&

@@ -823,7 +823,7 @@ export default class MinigameManager {
     }
   }
 
-  showEmote(id: string, emote: Emotion) {
+  showEmote(id: string, emote?: string) {
     const pokemonAvatar = this.pokemons.get(id)
     if (pokemonAvatar) {
       pokemonAvatar.action = PokemonActionState.EMOTE
@@ -833,7 +833,7 @@ export default class MinigameManager {
         false,
         false
       )
-      pokemonAvatar.drawSpeechBubble(emote, false)
+      if (emote) pokemonAvatar.drawSpeechBubble(emote, false)
     }
   }
 

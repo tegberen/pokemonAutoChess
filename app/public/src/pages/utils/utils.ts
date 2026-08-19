@@ -33,6 +33,22 @@ export function transformEntityCoordinates(
   ]
 }
 
+/* the inverse of transformEntityCoordinates, for turning a click back into the
+   board cell it landed on. Fractional on purpose: avatars walk between cells */
+export function untransformEntityCoordinates(
+  worldX: number,
+  worldY: number,
+  flip: boolean
+): [number, number] {
+  const y = worldY - CELL_HEIGHT / 2
+  return [
+    (worldX - BOARD_X_START) / CELL_WIDTH,
+    flip
+      ? (y - BOARD_Y_START) / CELL_HEIGHT + 7
+      : (BOARD_Y_START - y) / CELL_HEIGHT - 2
+  ]
+}
+
 export function transformMiniGameXCoordinate(x: number) {
   return BOARD_X_START + x
 }

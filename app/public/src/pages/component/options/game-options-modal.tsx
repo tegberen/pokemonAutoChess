@@ -9,6 +9,7 @@ import { LanguageNames } from "../../../../dist/client/locales"
 import { useAppDispatch, useAppSelector } from "../../../hooks"
 import { usePreferences } from "../../../preferences"
 import { selectLanguage } from "../../../stores/NetworkStore"
+import { resetAvatar } from "../../../network"
 import { getGameScene } from "../../game"
 import { Checkbox } from "../checkbox/checkbox"
 import type { Page } from "../main-sidebar/main-sidebar"
@@ -224,9 +225,9 @@ export default function GameOptionsModal(props: {
               checked={preferences.walkingAvatar}
               onToggle={(checked) => {
                 setPreferences({ walkingAvatar: checked })
-                if (!checked) {
-                  getGameScene()?.walkingAvatarManager?.sendHome()
-                }
+                /* switching it off leaves the avatar wherever it wandered, which
+                   makes the toggle look like it did nothing */
+                if (!checked) resetAvatar()
               }}
               label={t("options.walking_avatar")}
             />

@@ -95,6 +95,8 @@ export enum Transfer {
   USER = "USER",
   DRAG_DROP_CANCEL = "DRAG_DROP_CANCEL",
   SHOW_EMOTE = "SHOW_EMOTE",
+  MOVE_AVATAR = "MOVE_AVATAR",
+  RESET_AVATAR = "RESET_AVATAR",
   FINAL_RANK = "FINAL_RANK",
   FINALE_START = "FINALE_START",
   DOUBLE_UP_REINFORCEMENT_SENT = "DOUBLE_UP_REINFORCEMENT_SENT",
@@ -234,6 +236,7 @@ export interface IPokemonAvatar {
   x: number
   y: number
   action: PokemonActionState
+  orientation: Orientation
   portalId: string
   itemId: string
 }

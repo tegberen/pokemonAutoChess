@@ -1,6 +1,8 @@
 import { t } from "i18next"
 import Phaser, { GameObjects } from "phaser"
 import {
+  AVATAR_HOME_X,
+  AVATAR_HOME_Y,
   BENCH_GROUND_HOLES_OFFSET,
   BERRY_TREE_POSITIONS,
   BOARD_HEIGHT,
@@ -94,7 +96,6 @@ import PokemonSprite, { getAwakeningSegments } from "./pokemon"
 import PokemonAvatar from "./pokemon-avatar"
 import PokemonSpecial from "./pokemon-special"
 import { Portal } from "./portal"
-import { AVATAR_HOME_X, AVATAR_HOME_Y } from "./walking-avatar"
 
 export enum BoardMode {
   PICK = "pick",
@@ -193,6 +194,26 @@ export default class BoardManager {
     if (this.playerAvatar) {
       this.scene.tweens.killTweensOf(this.playerAvatar)
       this.playerAvatar.sprite.anims.timeScale = 1
+    }
+
+    /* the corner pair is hidden mid fight, so the reaction has to play on the
+       avatars actually walking the battle map */
+    const opponentId = this.opponentAvatar?.playerId
+    const loserId =
+      winnerId === this.player.id
+        ? opponentId
+        : winnerId === opponentId
+          ? this.player.id
+          : undefined
+    if (loserId) {
+      this.scene.playerAvatars?.reaction(
+        winnerId,
+        PokemonActionState.HOP
+      )
+      this.scene.playerAvatars?.reaction(
+        loserId,
+        PokemonActionState.HURT
+      )
     }
 
     if (winnerId === this.player.id) {
@@ -1112,21 +1133,12 @@ export default class BoardManager {
   }
 
   updatePlayerAvatar() {
-    const walkedTo =
-      this.playerAvatar?.hasWandered === true
-        ? {
-            x: this.playerAvatar.x,
-            y: this.playerAvatar.y,
-            orientation: this.playerAvatar.orientation
-          }
-        : null
     /* a win lands while the fight is still on, so the hop is carried over only
        for that fight. Rebuilding into the next round is what ends it */
     const keepCelebrating =
       this.playerAvatar?.action === PokemonActionState.HOP &&
       this.state.phase === GamePhaseState.FIGHT
     if (this.playerAvatar) {
-      /* otherwise a walk in progress keeps moving something that is gone */
       this.scene.tweens.killTweensOf(this.playerAvatar)
       this.playerAvatar.destroy()
     }
@@ -1141,13 +1153,18 @@ export default class BoardManager {
     )
     this.playerAvatar = new PokemonAvatar(
       this.scene,
-      walkedTo?.x ?? AVATAR_HOME_X,
-      walkedTo?.y ?? AVATAR_HOME_Y,
+      AVATAR_HOME_X,
+      AVATAR_HOME_Y,
       playerAvatar,
-      this.player.id
+      this.player.id,
+      /* hidden and superseded by the walking avatar: it must not claim the
+         emote keys or draw a second life bar */
+      true
     )
-    this.playerAvatar.orientation = walkedTo?.orientation ?? Orientation.UPRIGHT
-    if (walkedTo) this.playerAvatar.setWandering(true)
+    this.playerAvatar.orientation = Orientation.UPRIGHT
+    /* superseded by the walking avatar; kept alive but hidden because the
+       portal transition still animates it */
+    this.playerAvatar.setVisible(false)
     if (keepCelebrating) this.playerAvatar.action = PokemonActionState.HOP
     this.playerAvatar.updateLife(this.player.life)
     this.animationManager.animatePokemon(
@@ -1206,6 +1223,10 @@ export default class BoardManager {
 
       this.opponentAvatar.orientation = Orientation.DOWNLEFT
       this.opponentAvatar.updateLife(opponentLife)
+      /* the opponent walks the battle map during a fight, same as the player */
+      this.opponentAvatar.setVisible(
+        this.state.phase !== GamePhaseState.FIGHT
+      )
       if (isGhostBattle) this.opponentAvatar.sprite.setAlpha(0.5)
       this.animationManager.animatePokemon(
         this.opponentAvatar,
@@ -1252,21 +1273,6 @@ export default class BoardManager {
       scoutingPlayers.map((p) => `${p.name} (${p.id})`).join("\n")
     )*/
 
-    /* an onlooker who walked away from the list stays where they walked to */
-    const wanderedScouts = new Map<
-      string,
-      { x: number; y: number; orientation: Orientation }
-    >()
-    this.scoutingAvatars.forEach((avatar) => {
-      if (avatar.hasWandered) {
-        wanderedScouts.set(avatar.playerId, {
-          x: avatar.x,
-          y: avatar.y,
-          orientation: avatar.orientation
-        })
-      }
-    })
-
     this.scoutingAvatars = this.scoutingAvatars.filter((avatar) => {
       // remove player avatars that stopped scouting
       if (
@@ -1287,7 +1293,6 @@ export default class BoardManager {
       const playerIndex = schemaValues(players).findIndex(
         (p) => p.id === player.id
       )
-      const wandered = wanderedScouts.get(player.id)
       const scoutAvatarModel = new PokemonAvatarModel(
         player.id,
         player.avatar,
@@ -1298,15 +1303,14 @@ export default class BoardManager {
 
       const scoutAvatar = new PokemonAvatar(
         this.scene,
-        wandered?.x ?? 1512,
-        wandered?.y ?? 218 + 48 * playerIndex,
+        1512,
+        218 + 48 * playerIndex,
         scoutAvatarModel,
         player.id,
         true
       )
 
-      scoutAvatar.orientation = wandered?.orientation ?? Orientation.DOWNLEFT
-      if (wandered) scoutAvatar.setWandering(true)
+      scoutAvatar.orientation = Orientation.DOWNLEFT
       this.animationManager.animatePokemon(
         scoutAvatar,
         scoutAvatar.action,
@@ -1359,6 +1363,8 @@ export default class BoardManager {
         const isPVERound = spectatedPlayer.opponentId === "pve"
         const isRedPlayer = gameState.teamSpectated === Team.RED_TEAM
         if (!isPVERound && phaseJustChanged) {
+          /* the portal animation shrinks the corner avatar away by itself, so
+             hiding it here would cancel the very thing that removes it */
           this.portalTransition(isRedPlayer)
         } else {
           this.updateOpponentAvatar(
@@ -1461,8 +1467,6 @@ export default class BoardManager {
 
   setPlayer(player: Player) {
     if (player.id != this.player.id) {
-      /* where you walked on one board should not follow you to the next */
-      if (this.playerAvatar) this.playerAvatar.hasWandered = false
       this.player = player
       this.renderBoard(false)
       this.updatePlayerAvatar()
@@ -1877,6 +1881,8 @@ export default class BoardManager {
   }
 
   showEmote(playerOrPokemonId: string, emote?: string) {
+    /* the walking avatar is the one on screen; the corner pair are hidden */
+    if (this.scene.playerAvatars?.showEmote(playerOrPokemonId, emote)) return
     const avatars = [
       this.playerAvatar,
       this.opponentAvatar,
@@ -1902,6 +1908,20 @@ export default class BoardManager {
         }
       }
     }
+  }
+
+  clearAvatarEmoteDisplays() {
+    this.playerAvatar?.clearEmoteDisplay()
+    this.opponentAvatar?.clearEmoteDisplay()
+    this.scoutingAvatars.forEach((avatar) => avatar.clearEmoteDisplay())
+  }
+
+  clearStaleAvatarEmoteDisplays() {
+    this.playerAvatar?.clearStaleEmoteDisplay()
+    this.opponentAvatar?.clearStaleEmoteDisplay()
+    this.scoutingAvatars.forEach((avatar) =>
+      avatar.clearStaleEmoteDisplay()
+    )
   }
 
   addSmeargle(specialGameRule: SpecialGameRule) {
@@ -2001,6 +2021,10 @@ export default class BoardManager {
   }
 
   portalTransition(isRedPlayer: boolean) {
+    /* the whole board sweeps into a portal here, so the walking avatar sits the
+       transition out rather than skating across it */
+    this.scene.playerAvatars?.setHidden(true)
+    setTimeout(() => this.scene.playerAvatars?.setHidden(false), 3000)
     const [portalX, portalY] = transformBoardCoordinates(3.5, 5)
     const opponent = schemaValues(this.state.players).find(
       (p) => p.id === this.player.opponentId

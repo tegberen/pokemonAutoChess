@@ -504,7 +504,10 @@ export default function Game() {
 
       room.onMessage(Transfer.SHOW_EMOTE, (message) => {
         const g = getGameScene()
+        // The sender already rendered this locally.
+        if (message.id === g?.uid) return
         if (
+          room.state.phase === GamePhaseState.TOWN &&
           g?.minigameManager?.pokemons?.size &&
           g.minigameManager.pokemons.size > 0
         ) {

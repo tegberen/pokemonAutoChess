@@ -1504,6 +1504,7 @@ export default class BattleManager {
     this.buildPokemons()
   }
 
+
   onSimulationStart() {
     this.pokemonSprites.forEach((pkm) => {
       pkm.setVisible(true)

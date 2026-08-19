@@ -44,6 +44,11 @@ export default class GameState extends Schema {
   @type({ map: Player }) players = new MapSchema<Player>()
   @type({ map: PokemonAvatarModel }) avatars =
     new MapSchema<PokemonAvatarModel>()
+  /* one per living player, alive for the whole game rather than per phase, so
+     walking around never restarts or hands over between systems. Separate from
+     `avatars` above, which the carousel owns while everyone shares one map. */
+  @type({ map: PokemonAvatarModel }) playerAvatars =
+    new MapSchema<PokemonAvatarModel>()
   @type({ map: FloatingItem }) floatingItems = new MapSchema<FloatingItem>()
   @type({ map: Portal }) portals = new MapSchema<Portal>()
   @type({ map: SynergySymbol }) symbols = new MapSchema<SynergySymbol>()

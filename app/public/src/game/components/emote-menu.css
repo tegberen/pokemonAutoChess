@@ -19,6 +19,9 @@
   border: 1px solid #000000;
   border-radius: 4px;
   box-shadow: 2px 2px #00000060;
+  transition:
+    filter 100ms ease-out,
+    box-shadow 100ms ease-out;
 }
 
 .emote-menu li .counter {
@@ -42,6 +45,13 @@
 .emote-menu li img:not(.locked) {
   cursor: var(--cursor-hover);
 }
+
+.emote-menu li img:not(.locked):hover {
+  filter: brightness(0.88);
+  box-shadow:
+    inset 0 0 0 3px #d8d8e080,
+    2px 3px 4px #00000080;
+}
 .emote-menu .item-emotes {
   background-color: var(--color-bg-primary);
 }
@@ -63,6 +73,16 @@
   cursor: var(--cursor-hover);
   background-color: var(--color-bg-secondary);
   min-height: 48px;
+  transition:
+    background-color 100ms ease-out,
+    box-shadow 100ms ease-out;
+}
+
+.emote-menu .text-emotes li:hover {
+  background-color: color-mix(in srgb, var(--color-bg-secondary) 82%, #d8d8e0);
+  box-shadow:
+    inset 0 0 0 2px #d8d8e060,
+    2px 3px 4px #00000080;
 }
 
 .emote-menu .text-emotes li span {

@@ -275,6 +275,10 @@ export const gameSlice: Slice<GameStateStore> = createSlice({
         action.payload.id,
         action.payload.value
       )
+      getGameScene()?.playerAvatars?.updateLife(
+        action.payload.id,
+        action.payload.value
+      )
     },
     setLoadingProgress: (
       state,

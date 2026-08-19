@@ -114,6 +114,7 @@ class GameContainer {
       this.handleWeatherChange(simulation, value)
     })
 
+
     for (const team of [$simulation.blueTeam, $simulation.redTeam]) {
       team.onAdd((p, key) =>
         this.initializePokemon(
@@ -371,6 +372,32 @@ class GameContainer {
 
   initializeEvents() {
     const $state = this.$<GameState>(this.room.state)
+
+    $state.playerAvatars.onAdd((avatar, key) => {
+      this.gameScene?.playerAvatars?.onAdd(avatar)
+      const $avatar = this.$<PokemonAvatarModel>(avatar)
+      /* x and y land as separate patches, so both are read off the model */
+      const onMoved = () =>
+        this.gameScene?.playerAvatars?.onServerPosition(
+          key,
+          avatar.x,
+          avatar.y
+        )
+      $avatar.listen("x", onMoved)
+      $avatar.listen("y", onMoved)
+      for (const field of ["action", "orientation"] as const) {
+        $avatar.listen(field, (value) => {
+          this.gameScene?.playerAvatars?.onServerField(key, field, value)
+        })
+      }
+      $avatar.listen("anchorCount", () => {
+        this.gameScene?.playerAvatars?.onAnchored(key, avatar.x, avatar.y)
+      })
+    })
+
+    $state.playerAvatars.onRemove((avatar, key) => {
+      this.gameScene?.playerAvatars?.onRemove(key)
+    })
     $state.avatars.onAdd((avatar) => {
       const $avatar = this.$<PokemonAvatarModel>(avatar)
       this.gameScene?.minigameManager?.addPokemon(avatar)

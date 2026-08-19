@@ -2591,7 +2591,7 @@
 		"FLAME_BODY": "Attacks have [30,LK]% chance to inflict BURN for 3 seconds",
 		"WILDFIRE": "+1 ATK after every hit",
 		"BLAZE": "+2 ATK after every hit. Get a FIRE_SHARD every round (max 1)",
-		"DESOLATE_LAND": "+4 ATK after every hit. Using a FIRE_SHARD can also IGNITE the Pokémon for 1 round, granting 30 SHIELD, 20 SPEED, and 1 player HP on every KO. It cannot IGNITE again for 2 rounds, but the FIRE_SHARD can still be used.",
+		"DESOLATE_LAND": "+4 ATK after every hit. Using a FIRE_SHARD can also IGNITE the Pokémon for 1 round, granting 30 SHIELD, 20 SPEED and heal 1 player HP on every KO. It cannot IGNITE again for 2 rounds, but the FIRE_SHARD can still be used.",
 		"RAIN_DANCE": "+4 PP per second. Get an Old Rod.",
 		"DRIZZLE": "+8 PP per second. Get a Good Rod.",
 		"PRIMORDIAL_SEA": "+12 PP per second. Get a Super Rod.",

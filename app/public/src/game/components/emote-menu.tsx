@@ -2,9 +2,7 @@ import { GameObjects } from "phaser"
 import ReactDOM from "react-dom/client"
 import { useTranslation } from "react-i18next"
 import { getAvailableEmotions } from "../../../../models/precomputed/precomputed-emotions"
-import type { IPlayer } from "../../../../types"
-import { AvatarEmotions, Emotion } from "../../../../types/enum/Emotion"
-import { logger } from "../../../../utils/logger"
+import { AvatarEmotions, type Emotion } from "../../../../types/enum/Emotion"
 import PokemonPortrait from "../../pages/component/pokemon-portrait"
 import { cc } from "../../pages/utils/jsx"
 import store from "../../stores"
@@ -13,13 +11,11 @@ import "./emote-menu.css"
 import { Item, ItemComponents } from "../../../../types/enum/Item"
 
 export function EmoteMenuComponent(props: {
-  player: IPlayer
   index: string
   shiny: boolean
   sendEmote: (emotion: Emotion) => void
   sendItemEmote: (item: Item) => void
   sendTextEmote: (text: string) => void
-  sendDittoEmote: () => void
 }) {
   const { t } = useTranslation()
   const availableEmotions = getAvailableEmotions(props.index, props.shiny)
@@ -33,7 +29,9 @@ export function EmoteMenuComponent(props: {
       ) : (
         <ul>
           {emotions.map((emotion, i) => {
-            const unlocked = store.getState().game.emotesUnlocked.includes(emotion)
+            const unlocked = store
+              .getState()
+              .game.emotesUnlocked.includes(emotion)
             return (
               <li key={emotion}>
                 <PokemonPortrait
@@ -46,26 +44,39 @@ export function EmoteMenuComponent(props: {
               </li>
             )
           })}
-          <li key="ditto">
-            <PokemonPortrait
-              portrait={{ index: "0132", shiny: false, emotion: Emotion.NORMAL}}
-              title="Ditto"
-              onClick={() => props.sendDittoEmote()}
+          <li
+            key={Item.PRISON_BOTTLE}
+            onClick={() => props.sendItemEmote(Item.PRISON_BOTTLE)}
+          >
+            <img
+              src={`assets/item/${Item.PRISON_BOTTLE}.png`}
+              title={Item.PRISON_BOTTLE}
             />
           </li>
         </ul>
       )}
       <ul className="item-emotes">
-        {ItemComponents.filter((item) => item !== Item.SILK_SCARF).map((item) => (
-          <li key={item} onClick={() => props.sendItemEmote(item)}>
-            <img src={`assets/item/${item}.png`} title={item} />
-          </li>
-        ))}
+        {ItemComponents.filter((item) => item !== Item.SILK_SCARF).map(
+          (item) => (
+            <li key={item} onClick={() => props.sendItemEmote(item)}>
+              <img src={`assets/item/${item}.png`} title={item} />
+            </li>
+          )
+        )}
       </ul>
       <ul className="text-emotes">
         {["ME", "YOU", "FREE ⛶", "⇌ ?", "✗", "OK"].map((text) => (
           <li key={text} onClick={() => props.sendTextEmote(text)}>
-            <span style={{ fontSize: "1.5em", fontWeight: "bold", padding: "4px 8px", cursor: "pointer" }}>{text}</span>
+            <span
+              style={{
+                fontSize: "1.5em",
+                fontWeight: "bold",
+                padding: "4px 8px",
+                cursor: "pointer"
+              }}
+            >
+              {text}
+            </span>
           </li>
         ))}
       </ul>
@@ -75,36 +86,33 @@ export function EmoteMenuComponent(props: {
 
 export default class EmoteMenu extends GameObjects.DOMElement {
   dom: HTMLDivElement
+  private root: ReactDOM.Root
   constructor(
     scene: GameScene,
     avatarIndex: string,
     shiny: boolean,
     sendEmote: (emotion: Emotion) => void,
     sendItemEmote: (item: Item) => void,
-    sendTextEmote: (text: string) => void,
-    sendDittoEmote: () => void
+    sendTextEmote: (text: string) => void
   ) {
     super(scene, -350, -150)
-    const state = store.getState()
-    const player = state.game.players.find((p) => p.id === scene.uid)
     this.dom = document.createElement("div")
     this.dom.className = "my-container emote-menu"
     this.setElement(this.dom)
-    const root = ReactDOM.createRoot(this.dom)
-    if (player) {
-      root.render(
-        <EmoteMenuComponent
-          player={player}
-          index={avatarIndex}
-          shiny={shiny}
-          sendEmote={sendEmote}
-          sendItemEmote={sendItemEmote}
-          sendTextEmote={sendTextEmote}
-          sendDittoEmote={sendDittoEmote}
-        />
-      )
-    } else {
-      logger.error(`Cant' find player bound to EmoteMenu`)
-    }
+    this.root = ReactDOM.createRoot(this.dom)
+    this.root.render(
+      <EmoteMenuComponent
+        index={avatarIndex}
+        shiny={shiny}
+        sendEmote={sendEmote}
+        sendItemEmote={sendItemEmote}
+        sendTextEmote={sendTextEmote}
+      />
+    )
+  }
+
+  destroy(fromScene?: boolean) {
+    this.root.unmount()
+    super.destroy(fromScene)
   }
 }

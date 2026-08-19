@@ -1,4 +1,10 @@
 import { Dispatcher } from "@colyseus/command"
+import {
+  anchorPlayerAvatar,
+  removePlayerAvatar,
+  setPlayerAvatarTarget,
+  spawnPlayerAvatar
+} from "../core/player-avatars"
 import type { MapSchema } from "@colyseus/schema"
 import { type Client, CloseCode, Room } from "colyseus"
 import admin from "firebase-admin"
@@ -635,6 +641,24 @@ export default class GameRoom extends Room<{ state: GameState }> {
       }
     })
 
+    this.onMessage(
+      Transfer.MOVE_AVATAR,
+      (client: Client, message: { x: number; y: number }) => {
+        const uid = client.auth?.uid
+        if (!uid) return
+        if (typeof message?.x !== "number" || typeof message?.y !== "number")
+          return
+        /* a player can only ever steer their own, and it is cosmetic, so
+           nothing else needs checking */
+        setPlayerAvatarTarget(this.state, uid, message.x, message.y)
+      }
+    )
+
+    this.onMessage(Transfer.RESET_AVATAR, (client: Client) => {
+      const uid = client.auth?.uid
+      if (uid) anchorPlayerAvatar(this.state, uid)
+    })
+
     this.onMessage(Transfer.SHOW_EMOTE, (client: Client, message?: string) => {
       if (client.auth) {
         this.broadcast(Transfer.SHOW_EMOTE, {
@@ -762,6 +786,11 @@ export default class GameRoom extends Room<{ state: GameState }> {
     })
     this.state.botManager.updateBots()
     this.miniGame.initialize(this.state, this)
+    /* one avatar per human player for the whole game: bots have no one driving
+       them, and a per-phase lifecycle is what made this feel like two features */
+    this.state.players.forEach((player) => {
+      if (!player.isBot) spawnPlayerAvatar(this.state, player.id)
+    })
   }
 
   async onAuth(client: Client, options, context) {

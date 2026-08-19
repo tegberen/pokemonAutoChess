@@ -1,17 +1,13 @@
 import type Phaser from "phaser"
 import { GameObjects } from "phaser"
 import PokemonFactory from "../../../../models/pokemon-factory"
-import {
-  AvatarEmotions,
-  Emotion,
-  type IPokemonAvatar
-} from "../../../../types"
+import type { Emotion, IPokemonAvatar } from "../../../../types"
 import { GamePhaseState } from "../../../../types/enum/Game"
+import type { Item } from "../../../../types/enum/Item"
 import { getAvatarString } from "../../../../utils/avatar"
 import { throttle } from "../../../../utils/function"
 import { showEmote } from "../../network"
 import { playSound, SOUNDS } from "../../pages/utils/audio"
-import { preference } from "../../preferences"
 import store from "../../stores"
 import { DEPTH } from "../depths"
 import type GameScene from "../scenes/game-scene"
@@ -19,7 +15,6 @@ import { EmoteBubble } from "./emote-bubble"
 import EmoteMenu from "./emote-menu"
 import LifeBar from "./life-bar"
 import PokemonSprite from "./pokemon"
-import { Item, ItemComponents } from "../../../../types/enum/Item"
 
 export const WANDERING_AVATAR_ALPHA = 0.65
 
@@ -30,10 +25,8 @@ export default class PokemonAvatar extends PokemonSprite {
   isCurrentPlayerAvatar: boolean
   emoteBubble: EmoteBubble | null
   emoteMenu: EmoteMenu | null
-  /* remembers the avatar left its corner, so it can be put back where the
-     player walked it rather than snapping home every round */
-  hasWandered = false
-
+  private emotePhase: GamePhaseState | undefined
+  private emoteStageLevel: number | undefined
   constructor(
     scene: GameScene,
     x: number,
@@ -64,88 +57,24 @@ export default class PokemonAvatar extends PokemonSprite {
     } else if (!scouting) {
       this.drawLifebar()
     }
-    if (this.isCurrentPlayerAvatar) {
-      this.registerKeys()
-    } else {
+    if (!this.isCurrentPlayerAvatar) {
       this.disableInteractive()
     }
     this.setDepth(DEPTH.POKEMON)
     this.sendEmote = throttle(this.sendEmote, 1000).bind(this)
     this.sendItemEmote = this.sendItemEmote.bind(this)
     this.sendTextEmote = this.sendTextEmote.bind(this)
-    this.sendDittoEmote = this.sendDittoEmote.bind(this)
   }
 
   /* out among the units the avatar looks like just another pokemon, so it is
      faded and kept behind them. Its health bar stays solid */
   setWandering(wandering: boolean) {
-    this.hasWandered = wandering
+    const alpha = wandering ? WANDERING_AVATAR_ALPHA : 1
     this.setDepth(wandering ? DEPTH.INANIMATE_OBJECTS : DEPTH.POKEMON)
-    this.sprite.setAlpha(wandering ? WANDERING_AVATAR_ALPHA : 1)
-  }
-
-  registerKeys() {
-    const keybindings = preference("keybindings")
-    let onKeyA,
-      onKeyCtrl,
-      onKeyCtrlUp,
-      onNumKey = {}
-    this.scene.input.keyboard!.on(
-      "keydown-" + keybindings.emote,
-      (onKeyA = () => {
-        if (this.isCurrentPlayerAvatar && this.scene && this.scene.game) {
-          this.playAnimation()
-        }
-      })
-    )
-    this.scene.input.keyboard!.on(
-      "keydown-CTRL",
-      (onKeyCtrl = () => {
-        if (this.isCurrentPlayerAvatar && this.scene?.game) {
-          this.showEmoteMenu()
-        }
-      })
-    )
-
-    this.scene.input.keyboard!.on(
-      "keyup-CTRL",
-      (onKeyCtrlUp = () => {
-        this.hideEmoteMenu()
-      })
-    )
-
-    const NUM_KEYS = [
-      "ONE",
-      "TWO",
-      "THREE",
-      "FOUR",
-      "FIVE",
-      "SIX",
-      "SEVEN",
-      "EIGHT",
-      "NINE"
-    ]
-    NUM_KEYS.forEach((keycode, i) => {
-      onNumKey[i] = (event) => {
-        if (this.isCurrentPlayerAvatar && this.scene?.game && event.ctrlKey) {
-          event.preventDefault()
-          this.sendEmote(AvatarEmotions[i])
-        }
-      }
-      this.scene.input.keyboard!.on("keydown-" + keycode, onNumKey[i])
-      this.scene.input.keyboard!.on("keydown-NUMPAD_" + keycode, onNumKey[i])
-    })
-
-    // do not forget to clean up parent listeners after destroy
-    this.sprite.once("destroy", () => {
-      this.scene.input.keyboard!.off("keydown-" + keybindings.emote, onKeyA)
-      this.scene.input.keyboard!.off("keydown-CTRL", onKeyCtrl)
-      this.scene.input.keyboard!.off("keyup-CTRL", onKeyCtrlUp)
-      NUM_KEYS.forEach((keycode, i) => {
-        this.scene.input.keyboard!.off("keydown-" + keycode, onNumKey[i])
-        this.scene.input.keyboard!.off("keydown-NUMPAD_" + keycode, onNumKey[i])
-      })
-    })
+    this.sprite.setAlpha(alpha)
+    /* the shadow fades with the sprite, or a solid shadow sits under a
+       translucent pokemon and the pair stop reading as one thing */
+    this.shadow?.setAlpha(alpha)
   }
 
   drawCircles() {
@@ -197,17 +126,24 @@ export default class PokemonAvatar extends PokemonSprite {
       this.emoteMenu = null
     }
 
-    this.emoteBubble = new EmoteBubble(this.scene, emoteAvatar, isOpponent)
-    this.add(this.emoteBubble)
+    this.emoteBubble?.destroy()
+    const bubble = new EmoteBubble(this.scene, emoteAvatar, isOpponent)
+    this.emoteBubble = bubble
+    this.emotePhase = this.scene.room?.state.phase
+    this.emoteStageLevel = this.scene.room?.state.stageLevel
+    this.add(bubble)
 
     const x = isOpponent ? -40 : +40
     const y = isOpponent ? +100 : -120
-    this.emoteBubble.setPosition(x, y)
+    bubble.setPosition(x, y)
 
     setTimeout(() => {
-      if (this.emoteBubble) {
-        this.emoteBubble.destroy()
+      /* A previous bubble's timer must never destroy or retain its replacement. */
+      if (bubble.scene) bubble.destroy()
+      if (this.emoteBubble === bubble) {
         this.emoteBubble = null
+        this.emotePhase = undefined
+        this.emoteStageLevel = undefined
       }
     }, 3000)
   }
@@ -228,17 +164,16 @@ export default class PokemonAvatar extends PokemonSprite {
 
   showEmoteMenu() {
     if (this.isCurrentPlayerAvatar && !this.emoteMenu) {
+      const host = this.scene.playerAvatars?.getEmoteMenuHost(this) ?? this
       this.emoteMenu = new EmoteMenu(
         this.scene as GameScene,
         this.pokemon.index,
         this.pokemon.shiny,
         this.sendEmote,
         this.sendItemEmote,
-        this.sendTextEmote,
-        this.sendDittoEmote
-
+        this.sendTextEmote
       )
-      this.add(this.emoteMenu)
+      host.add(this.emoteMenu)
     }
   }
 
@@ -246,6 +181,24 @@ export default class PokemonAvatar extends PokemonSprite {
     if (this.emoteMenu) {
       this.emoteMenu.destroy()
       this.emoteMenu = null
+    }
+  }
+
+  clearEmoteDisplay() {
+    this.hideEmoteMenu()
+    this.emoteBubble?.destroy()
+    this.emoteBubble = null
+    this.emotePhase = undefined
+    this.emoteStageLevel = undefined
+  }
+
+  clearStaleEmoteDisplay() {
+    if (
+      this.emoteBubble &&
+      (this.emotePhase !== this.scene.room?.state.phase ||
+        this.emoteStageLevel !== this.scene.room?.state.stageLevel)
+    ) {
+      this.clearEmoteDisplay()
     }
   }
 
@@ -257,15 +210,20 @@ export default class PokemonAvatar extends PokemonSprite {
   sendEmote(emotion: Emotion) {
     const state = store.getState()
     if (state.game.emotesUnlocked.includes(emotion)) {
-      showEmote(
-        getAvatarString(this.pokemon.index, this.pokemon.shiny, emotion)
+      const emote = getAvatarString(
+        this.pokemon.index,
+        this.pokemon.shiny,
+        emotion
       )
+      this.displayLocalEmote(emote)
+      showEmote(emote)
       this.hideEmoteMenu()
     }
   }
 
   playAnimation() {
     try {
+      this.displayLocalEmote()
       showEmote()
     } catch (err) {
       console.error("could not play animation", err)
@@ -276,30 +234,29 @@ export default class PokemonAvatar extends PokemonSprite {
     super.onPointerDown(pointer, event)
     const scene = this.scene as GameScene
 
-    if (
-      !this.isCurrentPlayerAvatar ||
-      scene.room?.state.phase === GamePhaseState.TOWN
-    ) {
-      return
-    }
+    if (!this.isCurrentPlayerAvatar) return
 
     if (pointer.rightButtonDown()) {
       this.toggleEmoteMenu()
-    } else {
+    } else if (scene.room?.state.phase !== GamePhaseState.TOWN) {
       this.playAnimation()
     }
   }
 
-  sendDittoEmote() {
-    showEmote(getAvatarString("0132", false, Emotion.NORMAL))
-    this.hideEmoteMenu()
-  }
   sendItemEmote(item: Item) {
-    showEmote("item/" + item)
+    const emote = "item/" + item
+    this.displayLocalEmote(emote)
+    showEmote(emote)
     this.hideEmoteMenu()
   }
   sendTextEmote(text: string) {
-    showEmote("text/" + text)
+    const emote = "text/" + text
+    this.displayLocalEmote(emote)
+    showEmote(emote)
     this.hideEmoteMenu()
+  }
+
+  private displayLocalEmote(emote?: string) {
+    this.scene.showLocalEmote(emote)
   }
 }

@@ -1,4 +1,9 @@
 import { Command } from "@colyseus/command"
+import {
+  anchorPlayerAvatars,
+  removePlayerAvatar,
+  updatePlayerAvatars
+} from "../../core/player-avatars"
 import { SetSchema, StateView } from "@colyseus/schema"
 import { type Client, updateLobby } from "colyseus"
 import {
@@ -1744,6 +1749,9 @@ export class OnUpdateCommand extends Command<
       if (Math.round(this.state.time / 1000) != this.state.roundTime) {
         this.state.roundTime = Math.round(this.state.time / 1000)
       }
+      /* outside the phase branches: the avatar walks through both the pick
+         phase and the fight, which is what makes it feel like one thing */
+      updatePlayerAvatars(this.state, deltaTime)
       if (this.state.time < 0) {
         this.state.updatePhaseNeeded = true
       } else if (this.state.phase == GamePhaseState.FIGHT) {
@@ -2160,6 +2168,7 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
           })
         }
         player.alive = false
+        removePlayerAvatar(this.state, player.id)
         player.doubleUpEliminationRound = this.state.stageLevel
         player.spectatedPlayerId = player.id
         newlyDead.push(player)
@@ -2196,6 +2205,7 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
 
   initializePickingPhase() {
     this.state.phase = GamePhaseState.PICK
+    anchorPlayerAvatars(this.state)
     this.state.time =
       (StageDuration[this.state.stageLevel] ?? StageDuration.DEFAULT) * 1000
 
@@ -3531,6 +3541,9 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
         }, 2500) // 2 seconds for portal transition animation, 500 ms for latency
       })
     }
+
+    /* after every simulation exists, so each player's side is known */
+    anchorPlayerAvatars(this.state)
 
     if (this.state.specialGameRule === SpecialGameRule.UNOWN_SPELL) {
       this.state.simulations.forEach((simulation) => {

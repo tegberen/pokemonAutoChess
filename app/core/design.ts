@@ -1,4 +1,10 @@
-import { type Mask, TerrainType } from "../config"
+import {
+  AVATAR_SPAWN_WORLD_X,
+  AVATAR_WALL_GAP_HALF_WIDTH,
+  MAP_TILE_SIZE,
+  type Mask,
+  TerrainType
+} from "../config"
 import type { DungeonPMDO } from "../types/enum/Dungeon"
 import { logger } from "../utils/logger"
 import Masker from "./masker"
@@ -52,7 +58,11 @@ export default class Design {
   persistance: number
   tileset: Tileset
   arenaRect: [x1: number, y1: number, x2: number, y2: number] = [13, 2, 29, 18]
-  wallRect: [x1: number, y1: number, x2: number, y2: number] = [14, 15, 28, 15]
+  /* starts at 13 rather than 14 so the row is centred on the board: tiles
+     13..28 span world 624..1392, whose middle is 1008, the same middle the
+     board and the avatars use. Starting at 14 put the centre half a tile right,
+     which left the two halves either side of the avatar gap uneven. */
+  wallRect: [x1: number, y1: number, x2: number, y2: number] = [13, 15, 28, 15]
 
   constructor(
     id: DungeonPMDO,
@@ -119,13 +129,21 @@ export default class Design {
     }
 
     for (let i = this.wallRect[0]; i <= this.wallRect[2]; i++) {
+      /* leave a gap where the players' avatars stand, so they are not spawned
+         on top of the wall */
+      const inAvatarGap =
+        i * MAP_TILE_SIZE <
+          AVATAR_SPAWN_WORLD_X + AVATAR_WALL_GAP_HALF_WIDTH &&
+        (i + 1) * MAP_TILE_SIZE >
+          AVATAR_SPAWN_WORLD_X - AVATAR_WALL_GAP_HALF_WIDTH
       for (let j = this.wallRect[1]; j <= this.wallRect[3]; j++) {
         if (j in this.terrain && i in this.terrain[j]) {
           if (
-            i === this.wallRect[0] ||
-            j === this.wallRect[1] ||
-            i === this.wallRect[2] ||
-            j === this.wallRect[3]
+            !inAvatarGap &&
+            (i === this.wallRect[0] ||
+              j === this.wallRect[1] ||
+              i === this.wallRect[2] ||
+              j === this.wallRect[3])
           ) {
             this.terrain[j][i] = TerrainType.WALL
           }
@@ -139,9 +157,9 @@ export default class Design {
       }
     }
 
-    // player avatars slots
-    this.drawGroundRect(9, 13, 3, 3)
-    this.drawGroundRect(30, 1, 3, 3)
+    /* scouting avatars slot: the column of players watching this board. The two
+       3x3 corners that used to stand the player and their opponent are gone,
+       since both now walk the arena from the gap in the wall */
     for (let y = 4; y < 12; y++) this.terrain[y][31] = TerrainType.GROUND
 
     // berry tree slots

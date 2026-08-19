@@ -384,7 +384,16 @@ export async function openBooster() {
 }
 
 export function showEmote(emote?: string) {
-  rooms.game?.send(Transfer.SHOW_EMOTE, emote)
+  // Use an explicit payload for animation-only emotes.
+  rooms.game?.send(Transfer.SHOW_EMOTE, emote ?? "")
+}
+
+export function moveAvatar(x: number, y: number) {
+  rooms.game?.send(Transfer.MOVE_AVATAR, { x, y })
+}
+
+export function resetAvatar() {
+  rooms.game?.send(Transfer.RESET_AVATAR)
 }
 
 export function searchById(id: string) {
