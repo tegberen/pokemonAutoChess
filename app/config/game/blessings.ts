@@ -784,7 +784,7 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
   },
   [Blessing.MISFITS]: {
     tier: BlessingTier.PRISMATIC,
-    availableAtStages: BLESSING_SELECTION_STAGES,
+    availableAtStages: [4],
     icon: "freedom_dove",
     grantsPokemonImmediately: false
   },
@@ -1500,8 +1500,7 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     tier: BlessingTier.GOLD,
     availableAtStages: [4],
     icon: "beauty_contest",
-    grantsPokemonImmediately: false,
-    synergy: Synergy.WATER
+    grantsPokemonImmediately: false
   },
   [Blessing.QUICK_CLAW]: {
     tier: BlessingTier.SILVER,
@@ -1553,7 +1552,7 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
   },
   [Blessing.SHELL_ARMOR_BLESSING]: {
     tier: BlessingTier.GOLD,
-    availableAtStages: [4],
+    availableAtStages: [],
     icon: "turtle_shell",
     grantsPokemonImmediately: true
   },

@@ -102,11 +102,12 @@ export default function GameOptionsModal(props: {
           </p>
         </TabPanel>
 
-        <TabPanel>
+        <TabPanel className="interface-options">
+          <div className="interface-options__selectors">
           {props.page === "main_lobby" && (
-            <>
+            <div className="interface-options__field">
               <label>
-                {t("options.language")}:&nbsp;
+                <span>{t("options.language")}</span>
                 <select
                   className="is-light"
                   value={language}
@@ -122,7 +123,7 @@ export default function GameOptionsModal(props: {
                   ))}
                 </select>
               </label>
-              <p className="info">
+              <p className="info interface-options__hint">
                 {t("options.community_translations")}{" "}
                 <a
                   href="https://discord.com/channels/737230355039387749/1488242758232834282"
@@ -131,13 +132,13 @@ export default function GameOptionsModal(props: {
                   Discord
                 </a>
               </p>
-            </>
+            </div>
           )}
 
           {profile && profileLevel >= GADGETS.palette.levelRequired && (
-            <p>
+            <div className="interface-options__field">
               <label>
-                {t("options.theme")}:&nbsp;
+                <span>{t("options.theme")}</span>
                 <select
                   className="is-light"
                   value={preferences.theme}
@@ -152,9 +153,11 @@ export default function GameOptionsModal(props: {
                   ))}
                 </select>
               </label>
-            </p>
+            </div>
           )}
+          </div>
 
+          <div className="interface-options__toggles">
           <p>
             <Checkbox
               isDark
@@ -250,10 +253,11 @@ export default function GameOptionsModal(props: {
               label={t("options.colorblind_mode")}
             />
           </p>
+          </div>
           {props.page === "main_lobby" && (
-            <div>
+            <div className="interface-options__renderer">
               <label>
-                {t("options.renderer")}:&nbsp;
+                <span>{t("options.renderer")}</span>
                 <select
                   className="is-light"
                   value={preferences.renderer}
@@ -270,8 +274,8 @@ export default function GameOptionsModal(props: {
                     </option>
                   ))}
                 </select>
-                <p className="info">{t("options.renderer_info")}</p>
               </label>
+              <p className="info">{t("options.renderer_info")}</p>
             </div>
           )}
         </TabPanel>

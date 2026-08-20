@@ -2591,7 +2591,7 @@
 		"FLAME_BODY": "Attacks have [30,LK]% chance to inflict BURN for 3 seconds",
 		"WILDFIRE": "+1 ATK after every hit",
 		"BLAZE": "+2 ATK after every hit. Get a FIRE_SHARD every round (max 1)",
-		"DESOLATE_LAND": "+4 ATK after every hit. Using a FIRE_SHARD can also IGNITE the Pokémon for 1 round, granting 30 SHIELD, 20 SPEED and heal 1 player HP on every KO. It cannot IGNITE again for 2 rounds, but the FIRE_SHARD can still be used.",
+		"DESOLATE_LAND": "+4 ATK after every hit. Using a FIRE_SHARD can also IGNITE the Pokémon for 1 round, granting 30 SHIELD, 20 SPEED and heal 1 player HP on every KO. It cannot IGNITE again for 2 rounds, but the FIRE_SHARD can still be used on the same Pokémon.",
 		"RAIN_DANCE": "+4 PP per second. Get an Old Rod.",
 		"DRIZZLE": "+8 PP per second. Get a Good Rod.",
 		"PRIMORDIAL_SEA": "+12 PP per second. Get a Super Rod.",
@@ -2617,9 +2617,9 @@
 		"DIGGER": "Gain from +2 to +10 DEF and SPE_DEF and +5 ATK at max depth",
 		"DRILLER": "Gain from +3 to +15 DEF and SPE_DEF and +8 ATK at max depth",
 		"DEEP_MINER": "Gain 5 extra DEF and SPE_DEF for each fully dug row and +8 ATK when your half of the board is fully dug",
-		"POISONOUS": "[30,LK]% chance to POISONNED ON_HIT. +2 PP ON_ATTACK. On KO, burst for 40% of remaining PP as SPECIAL",
-		"VENOMOUS": "[60,LK]% chance to POISONNED ON_HIT, +1 max POISONNED stacks. +4 PP ON_ATTACK. On KO, burst for 80% of remaining PP as SPECIAL",
-		"TOXIC": "[100,LK]% chance to POISONNED ON_HIT, +2 max POISONNED stacks. +6 PP ON_ATTACK. On KO, burst for 120% of remaining PP as SPECIAL",
+		"POISONOUS": "[30,LK]% chance to POISONNED ON_HIT. +2 PP ON_ATTACK. On KO, rupture for 40% of remaining PP as SPECIAL",
+		"VENOMOUS": "[60,LK]% chance to POISONNED ON_HIT, +1 max POISONNED stacks. +4 PP ON_ATTACK. On KO, rupture for 80% of remaining PP as SPECIAL",
+		"TOXIC": "[100,LK]% chance to POISONNED ON_HIT, +2 max POISONNED stacks. +6 PP ON_ATTACK. On KO, rupture for 120% of remaining PP as SPECIAL",
 		"DRAGON_ENERGY": "Dragon's second synergy counts double (not the third)",
 		"DRAGON_SCALES": "Dragons gain 5 SHIELD for each STAR of all your DRAGON units on board",
 		"DRAGON_DANCE": "Dragons gain 1 SPEED and 1 AP for each STAR of all your DRAGON units on board",
@@ -2644,7 +2644,7 @@
 		"TAILWIND": "Fly away once under 20% HP. Give 5 SPEED.",
 		"FEATHER_DANCE": "Get PROTECT for 2 seconds after flying away. Attacks have a [15, LK]% chance to reduce the target's ATK by 2 ON_HIT.",
 		"MAX_AIRSTREAM": "Fly away twice when under 50% HP and 20% HP. Give 10 SPEED.",
-		"SKYDIVE": "Now perform skydive attacks, dealing 150% PHYSICAL ATK on landing on their target. Attach a LETTER to a benched Pokémon, and it will set off to deliver it.",
+		"SKYDIVE": "Now perform skydive attacks, dealing 150% PHYSICAL ATK on landing on their target. Attach a LETTER to a benched Pokémon, and it will set off to deliver it. They will bring home a seed",
 		"COTTONWEED": "Get an Hoppip Flower Pot",
 		"FLYCATCHER": "Get a Bellsprout Flower Pot",
 		"FRAGRANT": "Get a Chikorita Flower Pot",
@@ -3970,7 +3970,7 @@
 		"DARK": "DARK Pokémon's critical hits are more powerful and more frequent. Melee Dark Pokémon jump to the farthest target reachable. The STRONGEST Melee  DARK Pokémon leaps away with the target once below 50% max HP. One more Pokémon triggering this effect for each synergy step.",
 		"STEEL": "STEEL Pokémon deal a percentage of their damage as TRUE and give 3 DEF to your whole team when activated.",
 		"GROUND": "GROUND Pokémon dig holes on board in between stages, and gain stats based on the depth of the hole they start in. They sometimes find buried items at max depth (5 stages).",
-		"POISON": "POISON Pokémon have a chance to POISONNED their target for 4 seconds ON_HIT, and gain extra PP ON_ATTACK. When POISON Pokémon are KO'd, they burst and deal a part of their remaining PP as SPECIAL to all ADJACENT enemies.",
+		"POISON": "POISON Pokémon have a chance to POISONNED their target for 4 seconds ON_HIT, and gain extra PP ON_ATTACK. When POISON Pokémon are KO'd, they rupture and deal a part of their remaining PP as SPECIAL to all ADJACENT enemies.",
 		"DRAGON": "DRAGON Pokémon amplify synergies and gain more stats when fully evolved.{{additionalInfo}}",
 		"FIELD": "When a FIELD Pokémon is KO'd, all the other FIELD Pokémon are healed and gain SPEED",
 		"MONSTER": "MONSTER Pokémon can FLINCH their opponents for 3 seconds ON_ATTACK. Every time they get a KO, they gain stats, heal and grow in size.",
@@ -5037,27 +5037,27 @@
 		},
 		"QUEST_REROLL": {
 			"name": "Quest: Reroll",
-			"description": "Gain 10 free rerolls. After rerolling 50 times, gain a REPEAT_BALL."
+			"description": "Gain 10 free rerolls. After rerolling 50 times, gain a REPEAT_BALL and an EXCHANGE_TICKET."
 		},
 		"QUEST_GROW": {
 			"name": "Quest: Grow",
-			"description": "Gain a BERSERK_GENE. The first time an ally reaches 1000 HP in a fight, gain a DYNAMAX_BAND."
+			"description": "Gain a BERSERK_GENE. The first time an ally reaches 1000 HP in a fight, gain a DYNAMAX_BAND and an EXCHANGE_TICKET."
 		},
 		"QUEST_SHINE": {
 			"name": "Quest: Shine",
-			"description": "Gain a LIGHT_BALL. The first time you activate Light 7, gain a SHINY_STONE."
+			"description": "Gain a LIGHT_BALL. The first time you activate Light 7, gain a SHINY_STONE and an EXCHANGE_TICKET."
 		},
 		"QUEST_EPIC": {
 			"name": "Quest: Epic",
-			"description": "Gain a 1 STAR Epic Pokémon and 6 XP. The first time you fight with 7 Unique, 7 Epic, or 7 Ultra Pokémon fielded, gain an EVIOLITE. (Scyther does not count)"
+			"description": "Gain a 1 STAR Epic Pokémon and 6 XP. The first time you fight with 7 Unique, 7 Epic, or 7 Ultra Pokémon fielded, gain an EVIOLITE and an EXCHANGE_TICKET. (Scyther does not count)"
 		},
 		"QUEST_EXPAND": {
 			"name": "Quest: Expand",
-			"description": "Gain 10 XP. After fielding 8 Pokémon that all have a sell price of 4 or more at once, gain a GOLD_BOW."
+			"description": "Gain 10 XP. After fielding 8 Pokémon that all have a sell price of 4 or more at once, gain a GOLD_BOW and an EXCHANGE_TICKET."
 		},
 		"QUEST_ASCEND": {
 			"name": "Quest: Ascend",
-			"description": "Gain 3 1 STAR Rare Pokémon. The first time you get a 3 STAR Uncommon, Rare, Epic or Ultra Pokémon, gain a STAR_PIECE."
+			"description": "Gain 3 1 STAR Rare Pokémon. The first time you get a 3 STAR Uncommon, Rare, Epic or Ultra Pokémon, gain a STAR_PIECE and an EXCHANGE_TICKET."
 		},
 		"CHARGING_UP": {
 			"name": "Charging Up",
@@ -5525,7 +5525,7 @@
 		},
 		"MISFITS": {
 			"name": "Misfits",
-			"description": "Allies with no active synergies gain 40 HP, 40 AP, 4 ATK, 4 DEF and 4 SPE_DEF per STAR."
+			"description": "Allies with no active synergies gain 30 HP, 30 AP, 3 ATK, 3 SPEED, 3 DEF and 3 SPE_DEF per STAR."
 		},
 		"OLIVE_GARDEN": {
 			"name": "Olive Garden",
@@ -5949,27 +5949,27 @@
 		},
 		"QUEST_INDECISION": {
 			"name": "Quest: Indecision",
-			"description": "Gain 2 random gems. Entering a fight with a synergy at its highest tier counts it. After 3 different synergies, gain a GOLD_MASK. They do not have to be active at once."
+			"description": "Gain 2 random gems. Entering a fight with a synergy at its highest tier counts it. After 3 different synergies, gain a GOLD_MASK and an EXCHANGE_TICKET. They do not have to be active at once."
 		},
 		"QUEST_CRIT": {
 			"name": "Quest: Crit",
-			"description": "Gain 2 BLACK_GLASSES. The first time an ally reaches 5 CRIT_POWER in a fight, gain a GOLD_BOTTLE_CAP."
+			"description": "Gain 2 BLACK_GLASSES. The first time an ally reaches 5 CRIT_POWER in a fight, gain a GOLD_BOTTLE_CAP and an EXCHANGE_TICKET."
 		},
 		"QUEST_ABSORB": {
 			"name": "Quest: Absorb",
-			"description": "Gain a HEART_SCALE and a NEVER_MELT_ICE. The first time an ally blocks 1000 damage in a fight, gain an ABSORB_BULB."
+			"description": "Gain a HEART_SCALE and a NEVER_MELT_ICE. The first time an ally blocks 1000 damage in a fight, gain an ABSORB_BULB and an EXCHANGE_TICKET."
 		},
 		"QUEST_REVIVE": {
 			"name": "Quest: Revive",
-			"description": "Gain a MAX_REVIVE. After allies have been revived 16 times, gain a SACRED_ASH."
+			"description": "Gain a MAX_REVIVE. After allies have been revived 16 times, gain a SACRED_ASH and an EXCHANGE_TICKET."
 		},
 		"QUEST_PILLAGE": {
 			"name": "Quest: Pillage",
-			"description": "Gain an AMULET_COIN. Its holder gains 1 CRIT_CHANCE for every 2 GOLD at the start of the fight. After it has made you 30 GOLD, gain a BOOSTER_ENERGY."
+			"description": "Gain an AMULET_COIN. Its holder gains 1 CRIT_CHANCE for every 2 GOLD at the start of the fight. After it has made you 30 GOLD, gain a BOOSTER_ENERGY and an EXCHANGE_TICKET."
 		},
 		"QUEST_EVOLVE_II": {
 			"name": "Quest: Evolve II",
-			"description": "Gain an Eevee and 2 Rare 1 STAR Pokémon. After evolving Pokémon 12 times, gain a RARE_CANDY."
+			"description": "Gain an Eevee and 2 Rare 1 STAR Pokémon. After evolving Pokémon 12 times, gain a RARE_CANDY and an EXCHANGE_TICKET."
 		},
 		"IMPENDING_DOOM": {
 			"name": "Impending Doom",

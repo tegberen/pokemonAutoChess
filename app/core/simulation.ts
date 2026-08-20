@@ -102,6 +102,7 @@ import {
   MISFITS_DEFENSE,
   MISFITS_MAX_HP,
   MISFITS_SPECIAL_DEFENSE,
+  MISFITS_SPEED,
   PROTECT_THE_WEAK_MAX_HP,
   PROTECT_THE_WEAK_SPEED,
   VAMPIRIC_HEAL_RATIO,
@@ -2679,6 +2680,7 @@ export default class Simulation extends Schema implements ISimulation {
             ally.addAbilityPower(MISFITS_ABILITY_POWER * stars, ally, 0, false)
             ally.addAttack(MISFITS_ATTACK * stars, ally, 0, false)
             ally.addDefense(MISFITS_DEFENSE * stars, ally, 0, false)
+            ally.addSpeed(MISFITS_SPEED * stars, ally, 0, false)
             ally.addSpecialDefense(
               MISFITS_SPECIAL_DEFENSE * stars,
               ally,
