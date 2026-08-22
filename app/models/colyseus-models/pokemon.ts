@@ -18487,7 +18487,7 @@ export class Stufful extends Pokemon {
 }
 
 export class Bewear extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.NORMAL, Synergy.FIGHTING])
+  types = new SetSchema<Synergy>([Synergy.WILD, Synergy.NORMAL, Synergy.FIGHTING])
   rarity = Rarity.EPIC
   stars = 2
   hp = 260

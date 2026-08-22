@@ -3189,7 +3189,7 @@
 		"DESTINY_KNOT": "Once the holder is KO, the STRONGEST ally gains the users current LUCK and base ATK for the rest of the fight.",
 		"LUCKY_PUNCH": "If the target has an ally directly behind it, the attack knocks a random held item from the target to that ally. When an item is knocked off, [30, LK]% chance to inflict CONFUSION for 2 seconds.",
 		"GRIP_CLAW": "Attacks grant +10% CRIT_POWER. (stackable)",
-		"COVERT_CLOAK": "Every 4 seconds, steal 5 AP from all enemies within RANGE and deal 5 SPECIAL to them.",
+		"COVERT_CLOAK": "At the start of the fight, and every 4 seconds, steal 5 AP from all enemies within RANGE and deal 5 SPECIAL to them.",
 		"FLUFFY_TAIL": "Gains [15,LK]% dodge chance. The holder is immune to ARMOR_BREAK.",
 		"EVER_STONE": "The holder gains the ROCK type",
 		"TIGHT_BELT": "At the beginning of each battle, TIGHT_BELT is replaced by 2 random items. The holder is PARALYSIS during the entire fight.",

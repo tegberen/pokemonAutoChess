@@ -808,6 +808,7 @@ export class CovertCloakEffect extends PeriodicEffect {
       Item.COVERT_CLOAK,
       4000
     )
+    this.timer = 0
   }
 }
 
