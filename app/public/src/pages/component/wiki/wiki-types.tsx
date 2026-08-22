@@ -80,6 +80,10 @@ export function WikiType(props: { type: Synergy }) {
         const a = fa[0],
           b = fb[0]
         if (a.regional !== b.regional) return +a.regional - +b.regional
+        /* keys run most- to least-significant, so comparing unlockable before
+           additional is what orders the groups regular, additional, unlockable */
+        if (a.unlockable !== b.unlockable)
+          return +a.unlockable - +b.unlockable
         if (a.additional !== b.additional) return +a.additional - +b.additional
         return a.index.localeCompare(b.index)
       })
@@ -140,6 +144,7 @@ export function WikiType(props: { type: Synergy }) {
                         key={p.name}
                         className={cc("pokemon-portrait", {
                           additional: p.additional,
+                          unlockable: p.unlockable,
                           regional: p.regional
                         })}
                       >
@@ -229,6 +234,7 @@ export function WikiAllTypes() {
                       key={p.name}
                       className={cc("pokemon-portrait", {
                         additional: p.additional,
+                        unlockable: p.unlockable,
                         regional: p.regional
                       })}
                     >

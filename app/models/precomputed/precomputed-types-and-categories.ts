@@ -13,6 +13,7 @@ const data: Partial<
       uniquePokemons: Pkm[]
       legendaryPokemons: Pkm[]
       additionalPokemons: Pkm[]
+      unlockablePokemons: Pkm[]
       specialPokemons: Pkm[]
     }
   >
@@ -26,11 +27,22 @@ precomputedPokemonsImplemented.forEach((pokemon) => {
         uniquePokemons: [],
         legendaryPokemons: [],
         additionalPokemons: [],
+        unlockablePokemons: [],
         specialPokemons: []
       }
     }
 
-    if (pokemon.rarity === Rarity.UNIQUE) {
+    /* checked before rarity: an unlockable is unlockable whatever its rarity,
+       and REGIGIGAS would otherwise be listed as an ordinary legendary */
+    if (pokemon.unlockable) {
+      if (
+        !data[type]!.unlockablePokemons.some(
+          (p) => PkmFamily[p] === PkmFamily[pokemon.name]
+        )
+      ) {
+        data[type]!.unlockablePokemons.push(pokemon.name)
+      }
+    } else if (pokemon.rarity === Rarity.UNIQUE) {
       data[type]!.uniquePokemons.push(pokemon.name)
     } else if (pokemon.rarity === Rarity.LEGENDARY) {
       data[type]!.legendaryPokemons.push(pokemon.name)
@@ -60,6 +72,7 @@ export const PRECOMPUTED_POKEMONS_PER_TYPE_AND_CATEGORY = data as {
     uniquePokemons: Pkm[]
     legendaryPokemons: Pkm[]
     additionalPokemons: Pkm[]
+    unlockablePokemons: Pkm[]
     specialPokemons: Pkm[]
   }
 }

@@ -5,6 +5,7 @@ import type { Item } from "../../types/enum/Item"
 import type { PkmProposition } from "../../types/enum/Pokemon"
 import { ArmoryOptions } from "../../types/enum/ArmoryOptions"
 import type { Blessing } from "../../types/enum/Blessing"
+import type { GalarFossil } from "../../types/enum/FossilUnlock"
 
 export type PlayerChoiceType =
   | "item"
@@ -24,6 +25,7 @@ export type PlayerChoiceType =
      what was chosen so later stages can re-grant the same thing */
   | "singularity"
   | "starter_choice"
+  | "galar_fossil"
 
 export class PlayerChoice extends Schema {
   @type("string") id: string
@@ -34,6 +36,7 @@ export class PlayerChoice extends Schema {
   @type(["string"]) pokemons: PkmProposition[] = []
   @type(["string"]) armoryOptions: ArmoryOptions[] = []
   @type(["string"]) scribbleShapes: ScribbleShapeType[] = []
+  @type(["string"]) galarFossils: GalarFossil[] = []
   @type(["string"]) rewards: string[] = []
   @type(["boolean"]) shinies: boolean[] = []
   @type(["string"]) emotions: Emotion[] = []
@@ -52,6 +55,7 @@ export class PlayerChoice extends Schema {
     pokemons?: PkmProposition[]
     armoryOptions?: ArmoryOptions[]
     scribbleShapes?: ScribbleShapeType[]
+    galarFossils?: GalarFossil[]
     rewards?: string[]
     shinies?: boolean[]
     emotions?: Emotion[]
@@ -70,6 +74,7 @@ export class PlayerChoice extends Schema {
     if (args.pokemons) this.pokemons = args.pokemons
     if (args.armoryOptions) this.armoryOptions = args.armoryOptions
     if (args.scribbleShapes) this.scribbleShapes = args.scribbleShapes
+    if (args.galarFossils) this.galarFossils = args.galarFossils
     if (args.rewards) this.rewards = args.rewards
     if (args.shinies) this.shinies = args.shinies
     if (args.emotions) this.emotions = args.emotions

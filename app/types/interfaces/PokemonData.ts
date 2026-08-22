@@ -13,6 +13,7 @@ export interface IPokemonData {
   stars: number
   rarity: Rarity
   additional: boolean
+  unlockable: boolean
   regional: boolean
   hp: number
   pp: number

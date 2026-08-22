@@ -167,6 +167,10 @@ export function WikiAllPokemons() {
   for (const rarity in pokemonsPerRarity) {
     pokemonsPerRarity[rarity].sort((a: IPokemonData, b: IPokemonData) => {
       if (a.regional !== b.regional) return +a.regional - +b.regional
+      /* keys run most- to least-significant, so comparing unlockable before
+         additional is what orders the groups regular, additional, unlockable */
+      if (a.unlockable !== b.unlockable)
+        return +a.unlockable - +b.unlockable
       if (a.additional !== b.additional) return +a.additional - +b.additional
       return PkmFamily[a.name] === PkmFamily[b.name]
         ? a.stars - b.stars
@@ -188,6 +192,7 @@ export function WikiAllPokemons() {
                       key={p.name}
                       className={cc("pokemon-portrait", {
                         additional: p.additional,
+                        unlockable: p.unlockable,
                         regional: p.regional
                       })}
                       data-tooltip-id="game-pokemon-detail-tooltip"

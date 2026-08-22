@@ -138,7 +138,8 @@ export const SynergyTiers = {
   [Synergy.FOSSIL]: [
     EffectEnum.ANCIENT_POWER,
     EffectEnum.ELDER_POWER,
-    EffectEnum.FORGOTTEN_POWER
+    EffectEnum.FORGOTTEN_POWER,
+    EffectEnum.PRIMORDIAL_POWER
   ],
   [Synergy.SOUND]: [EffectEnum.LARGO, EffectEnum.ALLEGRO, EffectEnum.PRESTO],
   [Synergy.ARTIFICIAL]: [
@@ -202,7 +203,7 @@ export const SynergyTiersThresholds: { [key in Synergy]: number[] } = {
   [Synergy.GHOST]: [2, 4, 6, 8],
   [Synergy.FAIRY]: [2, 4, 6, 8],
   [Synergy.ICE]: [2, 4, 6, 8],
-  [Synergy.FOSSIL]: [2, 4, 6],
+  [Synergy.FOSSIL]: [2, 4, 6, 8],
   [Synergy.SOUND]: [2, 4, 6],
   [Synergy.ARTIFICIAL]: [2, 4, 6],
   [Synergy.BABY]: [3, 5, 7],

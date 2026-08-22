@@ -12,7 +12,7 @@ export class DynamicPunchStrategy extends AbilityStrategy {
   ) {
     super.process(pokemon, board, target, crit)
     const duration = [2000, 4000, 6000, 8000][pokemon.stars - 1] ?? 8000
-    const damage = [40, 80, 160, 320][pokemon.stars - 1] ?? 320
+    const damage = [50, 100, 200, 400][pokemon.stars - 1] ?? 400
     target.status.triggerConfusion(duration, target, pokemon)
     target.handleSpecialDamage(damage, board, AttackType.SPECIAL, pokemon, crit)
   }

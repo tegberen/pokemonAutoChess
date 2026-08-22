@@ -190,6 +190,8 @@ export default function GameChoice() {
     message = t("player_choices.choose_singularity")
   } else if (choice.type === "starter_choice") {
     message = t("player_choices.choose_starter_choice")
+  } else if (choice.type === "galar_fossil") {
+    message = t("player_choices.choose_galar_fossil")
   }
 
   return (
@@ -522,6 +524,28 @@ export default function GameChoice() {
                 </div>
               )
             })}
+          </div>
+        ) : choice.galarFossils.length > 0 ? (
+          <div className="game-choice-items-list">
+            {choice.galarFossils.map((fossil, index) => (
+              <div
+                className="my-box active clickable"
+                key={`${choice.id}-${index}`}
+                onClick={(event) => {
+                  event.stopPropagation()
+                  playSound(SOUNDS.BUTTON_CLICK)
+                  pickChoice(choice.id, index)
+                }}
+              >
+                <img
+                  style={{ width: "4rem", height: "4rem" }}
+                  src={`assets/item/${fossil}.webp`}
+                />
+                <h3 style={{ margin: "0.25em 0" }}>
+                  {t(`galar_fossil.${fossil}`)}
+                </h3>
+              </div>
+            ))}
           </div>
         ) : choice.scribbleShapes.length > 0 ? (
           <div className="game-choice-items-list">

@@ -329,6 +329,21 @@ summary,
   filter: invert(1);
 }
 
+/* Fossil unlocks: earned per player, so they get their own corner badge instead
+   of the additional-pick one */
+.pokemon-portrait.unlockable:not(.regional)::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  right: 0px;
+  height: 12px;
+  width: 12px;
+  background-image: url("assets/icons/FOSSIL_CLOSE_ICON.svg");
+  background-size: cover;
+  filter: invert(1) drop-shadow(1px 0 0 #fff) drop-shadow(-1px 0 0 #fff)
+    drop-shadow(0 1px 0 #fff) drop-shadow(0 -1px 0 #fff);
+}
+
 .pokemon-portrait.regional::after {
   content: "R";
   position: absolute;

@@ -144,6 +144,7 @@ export enum Transfer {
   SELECT_LANGUAGE = "SELECT_LANGUAGE",
   USER_PROFILE = "USER_PROFILE",
   PICK_BERRY = "PICK_BERRY",
+  RESTORE_FOSSIL = "RESTORE_FOSSIL",
   PRELOAD_MAPS = "PRELOAD_MAPS",
   NPC_DIALOG = "NPC_DIALOG",
   DELETE_ACCOUNT = "DELETE_ACCOUNT",
@@ -369,6 +370,7 @@ export interface IPokemon {
   shiny: boolean
   emotion: Emotion
   additional: boolean
+  unlockable: boolean
   regional: boolean
   action: PokemonActionState
   canBePlaced: boolean
@@ -833,7 +835,8 @@ export enum Title {
   PRIDE = "PRIDE",
   THE_SCRIBBLER = "THE_SCRIBBLER",
   SHOW_OFF = "SHOW_OFF",
-  HOT_STREAK = "HOT_STREAK"
+  HOT_STREAK = "HOT_STREAK",
+  ANCIENT = "ANCIENT"
 }
 
 export interface IBoardEvent {

@@ -42,6 +42,8 @@ import {
 } from "../../types/enum/Blessing"
 import { ROCK_AWAKENING_TIER } from "../../types/enum/Awakening"
 import type { PlayerBlessings } from "./player-blessings"
+import type { PlayerFossilUnlocks } from "./player-fossil-unlocks"
+import { FOSSIL_RESTORATION_SYNERGY_LEVEL } from "../../types/enum/FossilUnlock"
 import type { ScheduledBlessingGrant } from "../../types/enum/Blessing"
 import type { DungeonPMDO } from "../../types/enum/Dungeon"
 import {
@@ -197,6 +199,15 @@ export default class Player extends Schema implements IPlayer {
   rareRegionalPool: Pkm[] = new Array<Pkm>()
   epicRegionalPool: Pkm[] = new Array<Pkm>()
   ultraRegionalPool: Pkm[] = new Array<Pkm>()
+  /* Fossil unlocks: the copies of unlocked Pokemon this player alone can draw,
+     laid out like the regional pools so the shop can concat them in and deplete
+     them the same way */
+  commonUnlockPool: Pkm[] = new Array<Pkm>()
+  uncommonUnlockPool: Pkm[] = new Array<Pkm>()
+  rareUnlockPool: Pkm[] = new Array<Pkm>()
+  epicUnlockPool: Pkm[] = new Array<Pkm>()
+  ultraUnlockPool: Pkm[] = new Array<Pkm>()
+  legendaryUnlockPool: Pkm[] = new Array<Pkm>()
   isBot: boolean
   opponents: Map<string, number> = new Map<string, number>()
   titles: Set<Title> = new Set<Title>()
@@ -262,6 +273,18 @@ export default class Player extends Schema implements IPlayer {
   sturdyTriggered = false
   // server-only handle on the same entry, for writing synced quest progress
   blessingsRef: PlayerBlessings | null = null
+  // server-only handle on this player's entry in state.fossilUnlocksByPlayerId
+  fossilUnlocksRef: PlayerFossilUnlocks | null = null
+  // server-only, reset each combat: ARCHEN and SHIELDON score within one fight
+  fossilRockExplosionArmorBreakIds: Set<string> = new Set<string>()
+  fossilRockExplosionTrueDamage: number = 0
+  // server-only, reset each preparation phase: TYRUNT counts rerolls within one
+  fossilRerollsThisPickPhase: number = 0
+  /* server-only: an evolved Swinub was fielded when this combat started, so the
+     unlock menu is revealed once the combat is over, win or lose */
+  fossilUnlockRevealPending: boolean = false
+  // guards updateFossilRestoration against recursing through updateSynergies
+  fossilRestorationUpdating: boolean = false
   // server-only: synergies whose final tier QUEST_INDECISION has already banked
   indecisionSynergiesReached: Set<Synergy> = new Set<Synergy>()
   // server-only: wands granted by FIND_A_LOST_WAND, exempt from synergy removal
@@ -643,6 +666,32 @@ export default class Player extends Schema implements IPlayer {
     return newPokemon
   }
 
+  /* Restoration is a Fossil (8) capstone: dropping below the tier takes the
+     restored Pokemon back off the board, and reaching it again lets the player
+     restore another. Re-entrancy guarded because removing a FOSSIL unit changes
+     the very synergies this is reacting to. */
+  updateFossilRestoration() {
+    const unlocks = this.fossilUnlocksRef
+    if (this.fossilRestorationUpdating || !unlocks) return
+    if (unlocks.restoredPokemon === "") return
+    if (
+      (this.synergies.get(Synergy.FOSSIL) ?? 0) >=
+      FOSSIL_RESTORATION_SYNERGY_LEVEL
+    ) {
+      return
+    }
+
+    const restored = schemaValues(this.board).find(
+      (pokemon) => pokemon.name === unlocks.restoredPokemon
+    )
+    unlocks.restoredPokemon = ""
+    if (!restored) return
+    this.fossilRestorationUpdating = true
+    this.board.delete(restored.id)
+    this.updateSynergies()
+    this.fossilRestorationUpdating = false
+  }
+
   updateSynergies() {
     const pokemons: Pokemon[] = schemaValues(this.board)
     if (this.blessings?.includes(Blessing.RADIANCE)) {
@@ -789,6 +838,13 @@ export default class Player extends Schema implements IPlayer {
       previousSynergies.get(Synergy.ROCK) !== updatedSynergies.get(Synergy.ROCK)
     ) {
       this.updateWeatherRocks()
+    }
+
+    if (
+      previousSynergies.get(Synergy.FOSSIL) !==
+      updatedSynergies.get(Synergy.FOSSIL)
+    ) {
+      this.updateFossilRestoration()
     }
 
     if (

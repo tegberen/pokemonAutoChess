@@ -154,6 +154,7 @@ const giftRandomPokemonByRarity = (toPlayer: Player, rarity: Rarity): boolean =>
         const pkmData = getPokemonData(p)
         if (PkmsWithAltForms.includes(p) && getBaseAltForm(p) !== p) return false
         if (pkmData.stars !== wantedStars) return false
+        if (pkmData.unlockable) return false // fossil unlocks are earned, never gifted
         if (shouldBeRegionalOrAdditional && !(pkmData.additional || pkmData.regional)) return false
         if (!shouldBeRegionalOrAdditional && (pkmData.additional || pkmData.regional)) return false
         if (shouldBeRegionalOrAdditional && pkmData.regional && !toPlayer.regionalPokemons.includes(p)) return false

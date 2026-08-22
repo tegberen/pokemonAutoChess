@@ -1,0 +1,132 @@
+/* sits directly above the Unlocks button, mirroring the progress toasts on the
+   other side of the shop. left matches #game-shop-info's horizontal padding so
+   it lines up with the button, and the bottom offset clears that same row. */
+.fossil-unlocked-overlay {
+  position: absolute;
+  left: 1em;
+  bottom: calc(100% + 14em);
+  z-index: 110;
+  pointer-events: none;
+}
+
+.fossil-unlocked-visual {
+  --fossil-accent: #d2d35b;
+  width: 185px;
+  overflow: hidden;
+  border: var(--border-thick);
+  border-radius: 16px;
+  background: var(--color-bg-secondary);
+  box-shadow:
+    0 0 0 4px var(--fossil-accent),
+    8px 8px 0 var(--color-shadow);
+  animation: fossil-unlocked-reveal 450ms ease-out both;
+}
+
+.fossil-unlocked-portrait {
+  display: block;
+  width: 100%;
+  height: 145px;
+  object-fit: cover;
+  image-rendering: pixelated;
+}
+
+.fossil-unlocked-label {
+  display: grid;
+  grid-template-columns: 36px 1fr;
+  padding: 0.75em;
+  border-top: var(--border-thin);
+  color: var(--color-fg-primary);
+  background: var(--color-bg-tertiary);
+}
+
+.fossil-unlocked-label img {
+  grid-row: 1 / 3;
+  width: 30px;
+  height: 30px;
+}
+
+.fossil-unlocked-label strong {
+  font-size: 1.25em;
+}
+.fossil-unlocked-label span {
+  color: var(--fossil-accent);
+  font-size: 0.9em;
+  text-transform: uppercase;
+}
+
+/* the stack, so several conditions advancing at once queue up instead of
+   overwriting each other */
+.fossil-unlock-progress-toasts {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 58px);
+  z-index: 2;
+  display: grid;
+  gap: 0.4em;
+  justify-items: end;
+  pointer-events: none;
+}
+
+.fossil-unlock-progress-toast {
+  --fossil-accent: #d2d35b;
+  display: grid;
+  grid-template-columns: 48px minmax(130px, 1fr) 24px;
+  align-items: center;
+  gap: 0.65em;
+  width: 290px;
+  padding: 0.45em;
+  border: var(--border-thin);
+  border-radius: 10px;
+  color: var(--color-fg-primary);
+  background: var(--color-bg-secondary);
+  box-shadow: var(--shadow-clickable);
+  animation: fossil-unlocked-reveal 250ms ease-out both;
+}
+
+.fossil-unlock-progress-toast > img:first-child {
+  width: 48px;
+  height: 48px;
+  object-fit: cover;
+  image-rendering: pixelated;
+  border: var(--border-thin);
+  border-radius: 6px;
+}
+
+.fossil-unlock-progress-toast > div {
+  display: grid;
+  gap: 1px;
+}
+.fossil-unlock-progress-toast strong {
+  font-size: 0.9em;
+}
+.fossil-unlock-progress-toast span {
+  color: var(--color-fg-secondary);
+  font-size: 0.72em;
+}
+.fossil-toast-progress {
+  height: 7px;
+  overflow: hidden;
+  border: 1px solid #000;
+  border-radius: 5px;
+  background: var(--color-bg-input);
+}
+.fossil-toast-progress i {
+  display: block;
+  height: 100%;
+  background: var(--fossil-accent);
+}
+.fossil-toast-lock {
+  width: 22px;
+  height: 22px;
+}
+
+@keyframes fossil-unlocked-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(35px) scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}

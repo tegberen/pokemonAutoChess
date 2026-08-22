@@ -64,6 +64,7 @@ import {
   removePlayer,
   setAdditionalPokemons,
   setPlayerBlessings,
+  setPlayerFossilUnlocks,
   setBlessingsEnabled,
   setEmotesUnlocked,
   setGameMode,
@@ -850,6 +851,34 @@ export default function Game() {
         $(playerBlessings).listen("treasureTrailHighlight", () => {
           getGameScene()?.board?.showTreasureTrailHighlight()
         })
+      })
+
+      $state.fossilUnlocksByPlayerId.onAdd((fossilUnlocks, playerId) => {
+        const dispatchFossilUnlocks = () =>
+          dispatch(
+            setPlayerFossilUnlocks({
+              playerId,
+              unlocks: {
+                revealed: fossilUnlocks.revealed,
+                galarFossils: schemaValues(fossilUnlocks.galarFossils),
+                restoredPokemon: fossilUnlocks.restoredPokemon,
+                unlocked: schemaValues(fossilUnlocks.unlocked),
+                progress: Object.fromEntries(fossilUnlocks.progress.entries()),
+                pendingGuarantees: schemaValues(fossilUnlocks.pendingGuarantees),
+                shopWeight: Object.fromEntries(
+                  fossilUnlocks.shopWeight.entries()
+                )
+              }
+            })
+          )
+        dispatchFossilUnlocks()
+        $(fossilUnlocks).listen("revealed", dispatchFossilUnlocks)
+        $(fossilUnlocks).listen("restoredPokemon", dispatchFossilUnlocks)
+        $(fossilUnlocks).galarFossils.onChange(dispatchFossilUnlocks)
+        $(fossilUnlocks).unlocked.onChange(dispatchFossilUnlocks)
+        $(fossilUnlocks).progress.onChange(dispatchFossilUnlocks)
+        $(fossilUnlocks).pendingGuarantees.onChange(dispatchFossilUnlocks)
+        $(fossilUnlocks).shopWeight.onChange(dispatchFossilUnlocks)
       })
 
       $state.simulations.onRemove(() => {

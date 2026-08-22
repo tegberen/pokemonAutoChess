@@ -1,0 +1,442 @@
+.fossil-unlocks-button,
+.fossil-unlocks-modal {
+  --fossil-accent: #d2d35b;
+  --fossil-action: #f7d51d;
+  --fossil-action-hover: #e7c819;
+  --fossil-action-shadow: #c9ae17;
+  --fossil-accent-muted: color-mix(
+    in srgb,
+    var(--fossil-accent) 35%,
+    var(--color-bg-secondary)
+  );
+}
+
+.fossil-unlocks-button {
+  position: relative;
+  display: flex;
+  width: clamp(112px, 7.5vw, 145px);
+  height: 42px;
+  padding: 5px 12px 5px 10px;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45em;
+  border: 0;
+  border-bottom: 0;
+  border-radius: 0 9px 0 0;
+  color: var(--color-fg-invert);
+  background: var(--fossil-action);
+  box-shadow:
+    inset 0 -5px 0 var(--fossil-action-shadow),
+    var(--shadow-clickable);
+  font-size: 1em;
+  cursor: var(--cursor-hover);
+  transition:
+    background-color 100ms ease,
+    transform 100ms ease;
+}
+
+.fossil-unlocks-button:hover,
+.fossil-unlocks-button:focus-visible {
+  background: var(--fossil-action-hover);
+  outline: 2px solid var(--color-fg-primary);
+  outline-offset: -2px;
+}
+
+.fossil-unlocks-button:active {
+  background: var(--fossil-action);
+  box-shadow: inset 0 5px 0 var(--fossil-action-shadow);
+  transform: translateY(1px);
+}
+
+.fossil-unlocks-button-icon {
+  display: block;
+  order: 2;
+  width: 1em;
+  height: 1em;
+  margin: 0;
+  object-fit: contain;
+  filter: brightness(0);
+  transition: transform 100ms ease;
+}
+
+.fossil-unlocks-button-label {
+  color: var(--color-fg-invert);
+  font-size: inherit;
+  font-weight: 600;
+  white-space: nowrap;
+  text-shadow: none;
+}
+
+.fossil-unlocks-button:hover .fossil-unlocks-button-icon,
+.fossil-unlocks-button:focus-visible .fossil-unlocks-button-icon {
+  transform: scale(1.1);
+}
+
+.fossil-unlocks-modal {
+  /* the whole panel reads 10% smaller: em-based sizing inside follows this, and
+     the few fixed px layout values below are scaled to match */
+  font-size: 0.9em;
+  width: min(936px, 96vw);
+  overflow: hidden;
+  border: var(--border-thin);
+  border-radius: 12px;
+  color: var(--color-fg-primary);
+  background: var(--color-bg-primary);
+  box-shadow: 6px 6px 0 var(--color-shadow);
+}
+
+.fossil-unlocks-modal > header {
+  position: relative;
+  padding: 0.65em 1em;
+  padding-right: 3.25em;
+  border-bottom: var(--border-thin);
+  background: var(--color-bg-secondary);
+  text-align: left;
+}
+
+.fossil-unlocks-modal > header .close-btn {
+  position: absolute;
+  top: 50%;
+  right: 0.75em;
+  float: none;
+  margin: 0;
+  transform: translateY(-50%);
+}
+
+.fossil-unlocks-heading {
+  display: flex;
+  align-items: center;
+  gap: 0.75em;
+}
+.fossil-unlocks-heading > img {
+  width: 2.75em;
+  height: 2.75em;
+  padding: 0.3em;
+  border: var(--border-thin);
+  border-radius: 8px;
+  background: var(--fossil-accent-muted);
+  filter: drop-shadow(1px 1px 0 #000);
+}
+.fossil-unlocks-heading h2 {
+  margin: 0;
+  color: var(--color-fg-primary);
+  font-size: 1.35em;
+}
+.fossil-unlocks-heading p {
+  margin: 0.1em 0 0;
+  color: var(--color-fg-secondary);
+  font-size: 0.8em;
+}
+.fossil-unlocks-modal .modal-body {
+  max-height: min(621px, 74vh);
+  padding: 0;
+}
+
+.fossil-unlocks-content {
+  min-height: 0;
+}
+
+.fossil-unlock-title-row span {
+  color: var(--fossil-accent);
+  font-size: 0.7em;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-shadow: 1px 1px 0 #000;
+}
+.fossil-unlock-card.is-unlocked .fossil-unlock-progress,
+.fossil-unlock-card.is-unlocked .fossil-unlock-progress-label {
+  display: none;
+}
+.fossil-unlock-progress {
+  position: relative;
+  height: 12px;
+  margin-top: 0.45em;
+  overflow: hidden;
+  border: var(--border-thin);
+  border-radius: 8px;
+  background: var(--color-bg-input);
+}
+
+.fossil-unlock-progress i {
+  display: block;
+  height: 100%;
+  border-radius: 8px 0 0 8px;
+  /* a lit top edge so the fill reads as a filled tube rather than a flat block */
+  background:
+    linear-gradient(
+      to bottom,
+      color-mix(in srgb, var(--fossil-accent) 100%, #fff 35%),
+      var(--fossil-accent) 55%,
+      color-mix(in srgb, var(--fossil-accent) 80%, #000)
+    );
+  transition: width 250ms ease;
+}
+
+.fossil-unlocks-catalog {
+  min-width: 0;
+  padding: 1em;
+  background: var(--color-bg-primary);
+}
+.fossil-unlocks-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75em;
+}
+.fossil-unlocks-toolbar {
+  display: flex;
+  gap: 0.65em;
+  margin-bottom: 0.8em;
+}
+.fossil-unlocks-toolbar label {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: 0.5em;
+  padding: 0 0.75em;
+  border: var(--border-thin);
+  border-radius: 8px;
+  color: var(--color-fg-secondary);
+  background: var(--color-bg-input);
+}
+.fossil-unlocks-toolbar label:focus-within {
+  outline: 2px solid var(--color-fg-primary);
+  outline-offset: 1px;
+}
+.fossil-unlocks-toolbar input {
+  width: 100%;
+  padding: 0.7em 0;
+  border: 0;
+  outline: 0;
+  color: var(--color-fg-primary);
+  background: transparent;
+  font: inherit;
+}
+.fossil-unlocks-toolbar input::placeholder {
+  color: var(--color-fg-secondary);
+  opacity: 0.7;
+}
+.fossil-unlock-card {
+  display: grid;
+  grid-template-columns: 117px 1fr;
+  overflow: hidden;
+  border: var(--border-thin);
+  border-radius: 12px;
+  background: var(--color-bg-secondary);
+  box-shadow: var(--shadow-clickable);
+}
+.fossil-unlocks-section-title {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 0.4em;
+  margin: 0.15em 0 -0.25em;
+  color: var(--color-fg-primary);
+  font-size: 0.9em;
+  text-transform: uppercase;
+}
+.fossil-unlock-card.is-unlocked {
+  border-color: #000;
+  box-shadow:
+    0 0 0 2px color-mix(in srgb, var(--fossil-accent) 60%, transparent),
+    var(--shadow-clickable);
+}
+.fossil-unlock-card.is-tracked {
+  box-shadow:
+    0 0 0 2px var(--fossil-action),
+    var(--shadow-clickable);
+}
+.fossil-unlock-card.is-unlocked .fossil-unlock-details {
+  background: color-mix(
+    in srgb,
+    var(--fossil-accent) 8%,
+    var(--color-bg-secondary)
+  );
+}
+/* a locked portrait sits behind a scrim, so earning the card visibly lights it
+   up. An overlay rather than a filter on the portrait itself, which would drag
+   the badge and the pin down with it. */
+.fossil-unlock-card:not(.is-unlocked) .fossil-unlock-portrait::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+}
+.fossil-unlock-portrait {
+  position: relative;
+  min-height: 171px;
+  border-right: var(--border-thin);
+  background-color: var(--color-bg-tertiary);
+  background-position: center top;
+  background-repeat: no-repeat;
+  background-size: contain;
+  image-rendering: pixelated;
+}
+/* rarity band behind the lock chip and the pin button, reusing RarityColor */
+.fossil-unlock-portrait::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 2.7em;
+  border-top: var(--border-thin);
+  background: var(--rarity-color, var(--color-bg-tertiary));
+}
+/* the badge and the pin used to be positioned independently, and their bottom
+   offsets resolved against different font sizes, so they never lined up */
+.fossil-unlock-portrait-footer {
+  position: absolute;
+  z-index: 1;
+  inset: auto 0.5em 0.5em;
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+  gap: 0.35em;
+}
+
+.fossil-unlock-state {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 0.35em;
+  padding: 0 0.5em;
+  border: var(--border-thin);
+  border-radius: 6px;
+  color: var(--color-fg-invert);
+  background: var(--fossil-accent);
+  box-shadow: none;
+  /* small enough that the label and the pin fit the narrow portrait column
+     without the badge wrapping onto a second line */
+  font-size: 0.62em;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.fossil-unlock-card.is-unlocked .fossil-unlock-state {
+  background: var(--fossil-accent);
+  box-shadow: none;
+}
+.fossil-unlock-state img {
+  flex: none;
+  width: 1.05em;
+  height: 1.05em;
+  filter: brightness(0);
+}
+.fossil-unlock-track {
+  display: grid;
+  flex: none;
+  width: 1.6em;
+  height: 1.6em;
+  padding: 0;
+  place-content: center;
+  border: var(--border-thin);
+  border-radius: 6px;
+  color: var(--color-fg-primary);
+  background: var(--color-bg-secondary);
+  box-shadow: var(--shadow-clickable);
+  font: inherit;
+  cursor: var(--cursor-hover);
+}
+.fossil-unlock-track img {
+  width: 1.1em;
+  height: 1.1em;
+  opacity: 0.45;
+}
+.fossil-unlock-track[aria-pressed="true"] img {
+  opacity: 1;
+}
+.fossil-unlock-track:hover img,
+.fossil-unlock-track:focus-visible img {
+  opacity: 1;
+}
+.fossil-unlock-track:hover,
+.fossil-unlock-track:focus-visible {
+  outline: 2px solid var(--color-fg-primary);
+  outline-offset: 1px;
+}
+.fossil-unlock-details {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  padding: 0.8em 0.85em 0.75em;
+}
+.fossil-unlock-title-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 1em;
+}
+.fossil-unlock-title-row h3 {
+  margin: 0;
+  color: var(--color-fg-primary);
+  font-size: 1.35em;
+  line-height: 1.1;
+  letter-spacing: 0.01em;
+  text-shadow: 2px 2px 0 #000;
+}
+/* a hairline under the name separates it from the condition without a divider
+   element, and picks up the accent on cards that are already unlocked */
+.fossil-unlock-title-row {
+  padding-bottom: 0.45em;
+  border-bottom: 1px solid
+    color-mix(in srgb, var(--color-fg-secondary) 25%, transparent);
+}
+.fossil-unlock-card.is-unlocked .fossil-unlock-title-row {
+  border-bottom-color: color-mix(
+    in srgb,
+    var(--fossil-accent) 45%,
+    transparent
+  );
+}
+.fossil-unlock-title-row ul {
+  display: flex;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.fossil-unlock-title-row .synergy-icon {
+  width: 24px;
+  height: 24px;
+}
+.fossil-unlock-condition {
+  align-self: start;
+  min-height: 2.5em;
+  margin: 0.6em 0 0.8em;
+  color: var(--color-fg-secondary);
+  font-size: 0.95em;
+  line-height: 1.35;
+}
+/* the condition is the whole point of a locked card, so it stays fully legible
+   there and only recedes once the card is earned */
+.fossil-unlock-card:not(.is-unlocked) .fossil-unlock-condition {
+  color: var(--color-fg-primary);
+}
+.fossil-unlock-progress-label {
+  display: flex;
+  justify-content: space-between;
+  color: var(--color-fg-secondary);
+  font-size: 0.75em;
+}
+.fossil-unlock-progress-label strong {
+  color: var(--fossil-accent);
+  text-shadow: 1px 1px 0 #000;
+}
+.fossil-unlocks-empty {
+  display: grid;
+  min-height: 297px;
+  place-content: center;
+  border: var(--border-thin);
+  border-radius: 12px;
+  color: var(--color-fg-secondary);
+  background: var(--color-bg-secondary);
+}
+@media (width <= 720px) {
+  .fossil-unlocks-grid {
+    grid-template-columns: 1fr;
+  }
+  .fossil-unlock-card {
+    grid-template-columns: 108px 1fr;
+  }
+  .fossil-unlock-portrait {
+    min-height: 198px;
+  }
+}

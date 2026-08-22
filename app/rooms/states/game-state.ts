@@ -17,6 +17,7 @@ import Simulation from "../../core/simulation"
 import { FloatingItem } from "../../models/colyseus-models/floating-item"
 import Player from "../../models/colyseus-models/player"
 import { PlayerBlessings } from "../../models/colyseus-models/player-blessings"
+import { PlayerFossilUnlocks } from "../../models/colyseus-models/player-fossil-unlocks"
 import { PokemonAvatarModel } from "../../models/colyseus-models/pokemon-avatar"
 import { Portal, SynergySymbol } from "../../models/colyseus-models/portal"
 import Shop from "../../models/shop"
@@ -73,6 +74,10 @@ export default class GameState extends Schema {
   @type({ map: PlayerBlessings }) blessingsByPlayerId =
     new MapSchema<PlayerBlessings>()
   @type("boolean") blessingsEnabled = false
+  /* Fossil unlocks per player. Declared after blessingsByPlayerId, and any new
+     field must keep going last, so existing fields keep their wire index. */
+  @type({ map: PlayerFossilUnlocks }) fossilUnlocksByPlayerId =
+    new MapSchema<PlayerFossilUnlocks>()
   // dev only, undecorated: restricts the pool without costing a schema field
   blessingsUnderTest: Blessing[] = []
   time = StageDuration[0] * 1000

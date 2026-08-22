@@ -22,7 +22,8 @@ export const THEMES = [
   "bazaar",
   "whimsicott",
   "wishfestival",
-  "hot"
+  "hot",
+  "embersofthepast"
 ] as const
 
 export type Theme = (typeof THEMES)[number]
@@ -45,7 +46,8 @@ export const TITLE_BY_THEME = {
   deerling: Title.AMATEUR,
   whimsicott: Title.WHIMSY,
   wishfestival: Title.STARRY,
-  hot: Title.HOT_STREAK
+  hot: Title.HOT_STREAK,
+  embersofthepast: Title.ANCIENT
 } satisfies Partial<Record<Theme, Title>>
 
 export const THEME_BY_TITLE = invertKeysValues(TITLE_BY_THEME)
