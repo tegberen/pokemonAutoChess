@@ -43,6 +43,7 @@ import {
   SPORE_CLOUDS_STATUS_DURATION,
   FOGBOUND_LAKE_FIREFLIES,
   MYSTOGAN_PROC_CHANCE_BONUS,
+  FIRE_SHARD_LIFE_COST,
   FIRE_SHARD_MIN_TIER,
   FIRE_IGNITION_TIER,
   IGNITION_COOLDOWN_ROUNDS,
@@ -1255,6 +1256,9 @@ export const cloneBugs = ({
   }
 }
 
+const ASSURANCE_BLIND_DURATION = 2000
+const FALSE_SURRENDER_VANISH_DURATION = 1500
+
 export class DarkSubstituteEffect extends OnDamageReceivedEffect {
   triggered: boolean = false
   synergyLevel: number
@@ -1320,7 +1324,11 @@ export class DarkSubstituteEffect extends OnDamageReceivedEffect {
               .getAdjacentCells(sub.positionX, sub.positionY)
               .forEach((cell) => {
                 if (cell.value && cell.value.team !== pokemon.team) {
-                  cell.value.status.triggerBlinded(3000, cell.value, sub)
+                  cell.value.status.triggerBlinded(
+                    ASSURANCE_BLIND_DURATION,
+                    cell.value,
+                    sub
+                  )
                 }
               })
           })
@@ -1361,7 +1369,7 @@ export class DarkSubstituteEffect extends OnDamageReceivedEffect {
             attacker.commands.push(
               new DelayedCommand(() => {
                 attacker.status.untargettable = false
-              }, 3000)
+              }, FALSE_SURRENDER_VANISH_DURATION)
             )
           }
         })
@@ -1427,7 +1435,7 @@ const giveFireShardEffect = new OnStageStartEffect(({ player }) => {
   if (
     getSynergyTier(player.synergies, Synergy.FIRE) >= FIRE_SHARD_MIN_TIER &&
     player.items.includes(Item.FIRE_SHARD) === false &&
-    player.life > 2
+    player.life > FIRE_SHARD_LIFE_COST
   ) {
     player.items.push(Item.FIRE_SHARD)
   }

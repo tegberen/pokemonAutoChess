@@ -19,3 +19,20 @@ export function healPlayerLife(
     if (partner?.alive) heal(partner)
   }
 }
+
+/* Counterpart of healPlayerLife: a life cost willingly paid is paid by the duo,
+   so it stays symmetric with the heals they also share. */
+export function sacrificePlayerLife(
+  player: Player,
+  amount: number,
+  state: GameState
+) {
+  const sacrifice = (target: Player) => {
+    target.life = Math.max(1, target.life - amount)
+  }
+  sacrifice(player)
+  if (state.gameMode === GameMode.DOUBLE_UP && player.doubleUpPartnerId) {
+    const partner = state.players.get(player.doubleUpPartnerId)
+    if (partner?.alive) sacrifice(partner)
+  }
+}

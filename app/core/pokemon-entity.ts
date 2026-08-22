@@ -1079,6 +1079,16 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
     }
 
     if (
+      this.effects.has(EffectEnum.FEATHER_DANCE) ||
+      this.effects.has(EffectEnum.MAX_AIRSTREAM) ||
+      this.effects.has(EffectEnum.SKYDIVE)
+    ) {
+      if (chance(0.15, this)) {
+        target.addAttack(-1, this, 0, false)
+      }
+    }
+
+    if (
       isTripleAttack &&
       this.types.has(Synergy.ELECTRIC) &&
       this.player?.blessings?.includes(Blessing.ZAP)
@@ -1271,15 +1281,6 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
         target.status.triggerWound(3000, target, this)
       }
     }
-    if (this.effects.has(EffectEnum.FEATHER_DANCE) ||
-        this.effects.has(EffectEnum.MAX_AIRSTREAM) ||
-        this.effects.has(EffectEnum.SKYDIVE)
-    ) {
-      if (chance(0.15, this)) {
-        target.addAttack(-2, this, 0, false)
-      }
-    }
-
     if (isUnderZenith(this) && this.player) {
       const nbSunStones = count(this.player.items, Item.SUN_STONE)
       const burnChance = nbSunStones * 0.05
