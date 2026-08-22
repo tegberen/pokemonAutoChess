@@ -1,4 +1,5 @@
 import { Team } from "../../types/enum/Game"
+import { onFossilUnlockSpotlightCast } from "../../services/fossil-unlocks"
 import { min } from "../../utils/number"
 import type { Board } from "../board"
 import type { PokemonEntity } from "../pokemon-entity"
@@ -29,5 +30,7 @@ export class AbilityStrategy {
     } else if (pokemon.team === Team.RED_TEAM) {
       pokemon.simulation.redAbilitiesCast.push(pokemon.skill)
     }
+
+    onFossilUnlockSpotlightCast(pokemon)
   }
 }

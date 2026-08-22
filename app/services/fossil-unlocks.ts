@@ -24,7 +24,6 @@ import {
 import { Rarity } from "../types/enum/Game"
 import { Pkm, PkmFamily } from "../types/enum/Pokemon"
 import { Synergy } from "../types/enum/Synergy"
-import { Weather } from "../types/enum/Weather"
 import { getFirstAvailablePositionOnBoard, isOnBench } from "../utils/board"
 import { clamp } from "../utils/number"
 import { pickNRandomIn } from "../utils/random"
@@ -143,6 +142,7 @@ function setFossilUnlockProgress(player: Player, pokemon: Pkm, value: number) {
   const unlocks = player.fossilUnlocksRef
   const definition = FossilUnlockDefinitionByPokemon.get(pokemon)
   if (!unlocks || !definition) return
+  if (!unlocks.revealed) return
   if (unlocks.unlocked.includes(pokemon)) return
   if (player.experienceManager.level < definition.minLevel) return
 
@@ -201,6 +201,12 @@ function countFielded(player: Player, type: Synergy): number {
   return schemaValues(player.board).filter(
     (pokemon) => !isOnBench(pokemon) && pokemon.types.has(type)
   ).length
+}
+
+function countFieldedStars(player: Player, type: Synergy): number {
+  return schemaValues(player.board)
+    .filter((pokemon) => !isOnBench(pokemon) && pokemon.types.has(type))
+    .reduce((total, pokemon) => total + pokemon.stars, 0)
 }
 
 /* OMANYTE and CLAMPERL: called for every Pokemon reeled in, whichever rod or
@@ -273,8 +279,8 @@ export function onFossilUnlockRockExplosion(
   )
 }
 
-// TANGELA
-export function onFossilUnlockBerryHarvested(player: Player) {
+// TANGELA: berries picked and dishes cooked both count
+export function onFossilUnlockHarvest(player: Player) {
   advanceFossilUnlockProgress(player, Pkm.TANGELA)
 }
 
@@ -291,14 +297,16 @@ export function onFossilUnlockSpeedChanged(pokemon: PokemonEntity) {
   )
 }
 
-// AMAURA
-export function onFossilUnlockKill(attacker: PokemonEntity) {
-  if (attacker.simulation.weather !== Weather.SNOW) return
-  const player = attacker.player
-  if (!player || attacker.isGhostOpponent) return
-  if (player.synergies.hasSynergyActive(Synergy.ICE)) {
-    advanceFossilUnlockProgress(player, Pkm.AMAURA)
-  }
+/* AMAURA: one FOSSIL or ICE unit casting repeatedly while lit, so the count is
+   per unit rather than a team total */
+export function onFossilUnlockSpotlightCast(pokemon: PokemonEntity) {
+  if (!pokemon.types.has(Synergy.FOSSIL) && !pokemon.types.has(Synergy.ICE))
+    return
+  if (!pokemon.inSpotlight) return
+  const player = pokemon.player
+  if (!player || pokemon.isGhostOpponent) return
+  pokemon.spotlightCasts += 1
+  recordFossilUnlockBest(player, Pkm.AMAURA, pokemon.spotlightCasts)
 }
 
 // TYRUNT, counted within a single preparation phase
@@ -331,6 +339,7 @@ export function onFossilUnlockCombatStart(player: Player) {
   if (countFielded(player, Synergy.BUG) >= ANORITH_BUGS_REQUIRED) {
     advanceFossilUnlockProgress(player, Pkm.ANORITH)
   }
+  recordFossilUnlockBest(player, Pkm.CRANIDOS, countFieldedStars(player, Synergy.DRAGON))
 }
 
 /* the reveal is paid out at the end of the combat rather than at its start, and
@@ -426,16 +435,11 @@ export function restoreGalarFossilPokemon(
   return true
 }
 
-// CRANIDOS and REGIGIGAS
+// REGIGIGAS
 export function onFossilUnlockFightWon(
   player: Player,
   survivors: PokemonEntity[]
 ) {
-  const dragonStars = schemaValues(player.board)
-    .filter((p) => p.types.has(Synergy.DRAGON) && !isOnBench(p))
-    .reduce((total, p) => total + p.stars, 0)
-  recordFossilUnlockBest(player, Pkm.CRANIDOS, dragonStars)
-
   const mamoswineSurvived = survivors.some(
     (entity) => entity.refToBoardPokemon.name === Pkm.MAMOSWINE
   )

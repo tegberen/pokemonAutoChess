@@ -98,6 +98,7 @@ import {
   OnStageStartEffect,
   PeriodicEffect
 } from "./effect"
+import { onFossilUnlockHarvest } from "../../services/fossil-unlocks"
 
 export const blueOrbOnAttackEffect = new OnAttackEffect(
   ({ pokemon, target, board }) => {
@@ -699,6 +700,7 @@ const chefCookEffect = new OnStageStartEffect(({ pokemon, player, room }) => {
               pokemon.addMaxHP(FESTIVE_PICNIC_MAX_HP_ON_OVERWRITE)
             }
             pokemon.dishes.add(dish)
+            onFossilUnlockHarvest(player)
             pokemon.action = PokemonActionState.EAT
           }
         })

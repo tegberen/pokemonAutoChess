@@ -82,7 +82,6 @@ import { clamp, max, min, roundToNDigits } from "../utils/number"
 import { schemaValues } from "../utils/schemas"
 import {
   onFossilUnlockDamageReceived,
-  onFossilUnlockKill,
   onFossilUnlockSpeedChanged
 } from "../services/fossil-unlocks"
 import AttackingState from "./attacking-state"
@@ -196,6 +195,8 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
   seizedEnemy: PokemonEntity | null = null
   // DRACOVISH: presses the advantage against wounded enemies once awakened
   fishiousRendEmpowered: boolean = false
+  // AMAURA: casts made by this unit while lit by the spotlight
+  spotlightCasts: number = 0
   // set by an ability that may only resolve once per combat
   spentForCombat: boolean = false
   commands = new Array<SimulationCommand>()
@@ -1466,7 +1467,6 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
     if (!this.isGhostOpponent) {
       this.refToBoardPokemon.killCount++
     }
-    onFossilUnlockKill(this)
     this.getEffects(OnKillEffect).forEach((effect) => {
       effect.apply({ attacker: this, target, board, attackType })
     })

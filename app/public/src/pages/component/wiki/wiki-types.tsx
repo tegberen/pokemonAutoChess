@@ -21,6 +21,10 @@ import {
   PokemonFilters
 } from "../pokemon-filters/pokemon-filters"
 import { SynergyTierDescription } from "../synergy/synergy-tier-description"
+import {
+  WikiFossilRestorations,
+  WikiFossilUnlocks
+} from "./wiki-fossil-unlocks"
 import { SynergyOverlaps } from "../synergy-overlaps/synergy-overlaps"
 
 export default function WikiTypes() {
@@ -162,6 +166,14 @@ export function WikiType(props: { type: Synergy }) {
           })}
         </tbody>
       </table>
+      {props.type === Synergy.FOSSIL && (
+        <>
+          <hr />
+          <WikiFossilUnlocks />
+          <hr />
+          <WikiFossilRestorations />
+        </>
+      )}
       <GamePokemonDetailTooltip origin="wiki" />
     </div>
   )

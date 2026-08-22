@@ -25,14 +25,14 @@ export default function GameShop() {
         style={{ zIndex: DEPTH.GAME_SHOP }}
       >
         <div id="game-shop-info">
+          <GameLifeInfo />
+          <GameMoneyInfo />
+          <GameStreakInfo />
+          <div className="spacer"></div>
+          <GameTeamInfo />
           <div className="game-fossil-unlocks-anchor my-container information">
             <GameFossilUnlocksIcon />
           </div>
-          <GameStreakInfo />
-          <div className="spacer"></div>
-          <GameMoneyInfo />
-          <GameTeamInfo />
-          <GameLifeInfo />
         </div>
         <div className="game-shop-actions">
           <GameRarityPercentage />

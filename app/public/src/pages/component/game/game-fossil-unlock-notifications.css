@@ -3,7 +3,7 @@
    it lines up with the button, and the bottom offset clears that same row. */
 .fossil-unlocked-overlay {
   position: absolute;
-  left: 1em;
+  right: 1em;
   bottom: calc(100% + 14em);
   z-index: 110;
   pointer-events: none;

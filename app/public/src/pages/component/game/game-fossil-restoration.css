@@ -29,11 +29,13 @@
 
 .fossil-restoration-header p {
   /* kept narrow so the hint reads as a paragraph rather than one long line */
-  max-width: 46ch;
+  max-width: 52ch;
   margin: 0;
   color: var(--color-fg-secondary);
-  font-size: 0.78em;
+  font-size: 0.82em;
+  line-height: 1.45;
   text-align: center;
+  text-wrap: balance;
 }
 
 /* the tray and the bench sit side by side, the bench taking the spare width */

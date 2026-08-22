@@ -12,9 +12,9 @@ const fossilUnlocks = [
   { pokemon: Pkm.YANMA, conditionKey: "yanma", target: 60, minLevel: 5 },
   { pokemon: Pkm.ARCHEN, conditionKey: "archen", target: 6, minLevel: 5 },
   { pokemon: Pkm.CLAMPERL, conditionKey: "clamperl", target: 6, minLevel: 5 },
-  { pokemon: Pkm.CRANIDOS, conditionKey: "cranidos", target: 12, minLevel: 7 },
-  { pokemon: Pkm.SHIELDON, conditionKey: "shieldon", target: 120, minLevel: 7 },
-  { pokemon: Pkm.AMAURA, conditionKey: "amaura", target: 1, minLevel: 7 },
+  { pokemon: Pkm.CRANIDOS, conditionKey: "cranidos", target: 6, minLevel: 7 },
+  { pokemon: Pkm.SHIELDON, conditionKey: "shieldon", target: 100, minLevel: 7 },
+  { pokemon: Pkm.AMAURA, conditionKey: "amaura", target: 2, minLevel: 7 },
   { pokemon: Pkm.TYRUNT, conditionKey: "tyrunt", target: 12, minLevel: 7 },
   {
     pokemon: Pkm.REGIGIGAS,
@@ -62,7 +62,7 @@ export enum GalarFossil {
   FISH = "FOSSILIZED_FISH"
 }
 
-const GalarFossilRestorations: {
+export const GalarFossilRestorations: {
   fossils: [GalarFossil, GalarFossil]
   pokemon: Pkm
 }[] = [

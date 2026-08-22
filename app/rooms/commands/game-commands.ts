@@ -248,7 +248,7 @@ import type GameRoom from "../game-room"
 import type GameState from "../states/game-state"
 import {
   resetFossilShopWeight,
-  onFossilUnlockBerryHarvested,
+  onFossilUnlockHarvest,
   onFossilUnlockCombatEnd,
   onFossilUnlockCombatStart,
   onFossilUnlockReroll,
@@ -1714,7 +1714,7 @@ export class OnPickBerryCommand extends Command<
           ? GOLDEN_BERRY_TREE_TYPES[berryIndex]
           : player.berryTreesType[berryIndex]
       player.items.push(type)
-      onFossilUnlockBerryHarvested(player)
+      onFossilUnlockHarvest(player)
     }
   }
 }

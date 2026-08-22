@@ -12,7 +12,7 @@ import {
   selectFossilUnlocks,
   useAppSelector
 } from "../../../hooks"
-import { addIconsToDescription } from "../../utils/descriptions"
+import { FossilUnlockCondition } from "./fossil-unlock-condition"
 import SynergyIcon from "../icons/synergy-icon"
 import { Modal } from "../modal/modal"
 import { GameFossilRestoration } from "./game-fossil-restoration"
@@ -151,15 +151,17 @@ function FossilUnlocksModal(props: { show: boolean; onClose: () => void }) {
                       )}
                     <article
                       className={`fossil-unlock-card ${unlocked ? "is-unlocked" : ""} ${tracked ? "is-tracked" : ""}`}
+                      style={
+                        {
+                          "--rarity-color": RarityColor[cardPokemon.rarity]
+                        } as CSSProperties
+                      }
                     >
                       <div
                         className="fossil-unlock-portrait"
-                        style={
-                          {
-                            backgroundImage: `url("${getCachedPortrait(cardPokemon.index, connectedPlayer?.pokemonCustoms)}")`,
-                            "--rarity-color": RarityColor[cardPokemon.rarity]
-                          } as CSSProperties
-                        }
+                        style={{
+                          backgroundImage: `url("${getCachedPortrait(cardPokemon.index, connectedPlayer?.pokemonCustoms)}")`
+                        }}
                       >
                         {/* one row so the badge and the pin share a baseline
                             whatever their own font sizes are */}
@@ -218,11 +220,9 @@ function FossilUnlocksModal(props: { show: boolean; onClose: () => void }) {
                           </ul>
                         </div>
                         <p className="fossil-unlock-condition">
-                          {addIconsToDescription(
-                            t(
-                              `fossil_unlocks.conditions.${unlock.conditionKey}`
-                            )
-                          )}
+                          <FossilUnlockCondition
+                            conditionKey={unlock.conditionKey}
+                          />
                         </p>
                         <div className="fossil-unlock-progress-label">
                           <span>{t("fossil_unlocks.progress")}</span>

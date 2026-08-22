@@ -1,0 +1,150 @@
+.wiki-fossil-unlocks h3 {
+  display: flex;
+  align-items: center;
+  gap: 0.4em;
+  margin: 0 0 0.15em;
+}
+
+.wiki-fossil-unlocks > .help {
+  margin: 0 0 0.9em;
+  font-size: 0.85em;
+}
+
+/* the gate that comes before every condition below: darker, squarer and wider
+   set than the cards, so it reads as the system requirement rather than one
+   more unlock */
+.wiki-fossil-entry {
+  display: flex;
+  align-items: center;
+  gap: 0.75em;
+  margin: 0 0 1.4em;
+  padding: 0.75em 1em;
+  border: var(--border-thin);
+  border-left: 6px solid var(--fossil-accent, #d2d35b);
+  border-radius: 6px;
+  color: var(--color-fg-secondary);
+  background: color-mix(in srgb, var(--color-bg-primary) 80%, #000);
+  font-size: 0.98em;
+  line-height: 1.4;
+}
+
+.wiki-fossil-entry > img {
+  flex: none;
+  width: 1.4em;
+  height: 1.4em;
+  opacity: 0.85;
+}
+
+.wiki-fossil-entry strong {
+  color: var(--color-fg-primary);
+  font-weight: 700;
+}
+
+.wiki-fossil-unlocks ul {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 0.5em 0.75em;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* the rarity reaches the card through one variable, set inline per card, so the
+   frame stays neutral and only the accents carry colour */
+.wiki-fossil-unlocks li {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+  gap: 0.7em;
+  padding: 0.5em 0.6em 0.55em 0.75em;
+  overflow: hidden;
+  border: var(--border-thin);
+  border-radius: 10px;
+  background: var(--color-bg-secondary);
+}
+
+/* a rarity spine rather than a coloured card: readable, and still scannable */
+.wiki-fossil-unlocks li::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 3px;
+  background: var(--rarity-color);
+}
+
+.wiki-fossil-unlocks li > img {
+  width: 44px;
+  height: 44px;
+  border: 1px solid #000;
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--rarity-color) 18%, #000);
+  image-rendering: pixelated;
+}
+
+.wiki-fossil-unlocks h4 {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5em;
+  margin: 0 0 0.45em;
+  color: var(--color-fg-primary);
+  font-size: 1.05em;
+  line-height: 1.1;
+  text-shadow: 1px 1px 0 #000;
+}
+
+.wiki-fossil-unlocks h4 em {
+  flex: none;
+  color: var(--rarity-color);
+  font-size: 0.62em;
+  font-style: normal;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  text-shadow: none;
+}
+
+.wiki-fossil-unlocks li p {
+  margin: 0;
+  color: color-mix(in srgb, var(--color-fg-primary) 82%, transparent);
+  font-size: 0.82em;
+  line-height: 1.45;
+}
+
+
+/* the inline icons the condition text is built from sit on the text baseline */
+.wiki-fossil-unlocks li p img {
+  vertical-align: -0.18em;
+}
+
+.wiki-fossil-restorations ul {
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+}
+
+.wiki-fossil-restorations li {
+  grid-template-columns: auto auto minmax(0, 1fr);
+  align-items: center;
+  gap: 0.5em;
+}
+
+.wiki-fossil-recipe {
+  display: flex;
+  align-items: center;
+  gap: 0.3em;
+}
+
+.wiki-fossil-recipe img {
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+
+.wiki-fossil-recipe b {
+  color: var(--color-fg-secondary);
+  font-size: 0.9em;
+}
+
+.wiki-fossil-restorations h4 {
+  margin: 0;
+}

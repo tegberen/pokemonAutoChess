@@ -1,0 +1,18 @@
+.fossil-unlock-gate {
+  display: inline-block;
+  margin-right: 0.45em;
+  padding: 0.05em 0.4em;
+  border-radius: 4px;
+  color: var(--color-fg-invert);
+  background: color-mix(
+    in srgb,
+    var(--rarity-color, var(--color-fg-secondary)) 70%,
+    #fff
+  );
+  font-size: 0.9em;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  vertical-align: 0.05em;
+}
