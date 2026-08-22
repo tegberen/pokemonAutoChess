@@ -1818,7 +1818,7 @@ export class Fuecoco extends Pokemon {
   def = 4
   speDef = 2
   maxPP = 80
-  range = 3
+  range = 2
   skill = Ability.TORCH_SONG
   regional = true
 }
@@ -1839,7 +1839,7 @@ export class Crocalor extends Pokemon {
   def = 6
   speDef = 4
   maxPP = 70
-  range = 3
+  range = 2
   skill = Ability.TORCH_SONG
   regional = true
 }
@@ -1854,7 +1854,7 @@ export class Skeledirge extends Pokemon {
   def = 8
   speDef = 6
   maxPP = 60
-  range = 3
+  range = 2
   skill = Ability.TORCH_SONG
   regional = true
 }
@@ -2763,13 +2763,13 @@ export class Magby extends Pokemon {
   rarity = Rarity.RARE
   stars = 1
   evolution = Pkm.MAGMAR
-  hp = 80
+  hp = 70
   atk = 6
   speed = 52
   def = 2
   speDef = 4
-  maxPP = 80
-  range = 2
+  maxPP = 120
+  range = 3
   skill = Ability.FLAMETHROWER
 }
 
@@ -2778,13 +2778,13 @@ export class Magmar extends Pokemon {
   rarity = Rarity.RARE
   stars = 2
   evolution = Pkm.MAGMORTAR
-  hp = 140
+  hp = 130
   atk = 15
   speed = 52
-  def = 4
-  speDef = 6
-  maxPP = 80
-  range = 2
+  def = 3
+  speDef = 5
+  maxPP = 120
+  range = 3
   skill = Ability.FLAMETHROWER
 }
 
@@ -2792,13 +2792,13 @@ export class Magmortar extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.FIRE, Synergy.HUMAN])
   rarity = Rarity.RARE
   stars = 3
-  hp = 280
+  hp = 270
   atk = 28
   speed = 52
-  def = 6
-  speDef = 8
-  maxPP = 80
-  range = 2
+  def = 5
+  speDef = 7
+  maxPP = 120
+  range = 3
   skill = Ability.FLAMETHROWER
 }
 

@@ -598,7 +598,8 @@ export const FIRE_SHARD_MIN_TIER = 3
 export const FIRE_IGNITION_TIER = 4
 export const FIRE_SHARD_ATTACK = 2
 export const FIRE_SHARD_SPEED = 2
-export const IGNITION_SHIELD = 30
+export const FIRE_SHARD_LIFE_COST = 2
+export const IGNITION_SHIELD = 50
 export const IGNITION_SPEED = 20
 export const IGNITION_LIFE_HEAL_ON_KO = 1
 /* rounds of waiting after an ignition: ignite on round 1, wait rounds 2 and 3,

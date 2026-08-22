@@ -47,6 +47,7 @@ import {
   FAST_FOOD_DELIVERY_ROUNDS_BEFORE_ROTTING,
   FESTIVE_PICNIC_MAX_HP_ON_OVERWRITE,
   FIRE_SHARD_ATTACK,
+  FIRE_SHARD_LIFE_COST,
   FIRE_SHARD_SPEED,
   LUCKY_DICE_BOUNCE_DAMAGE_RATIO,
   MOVE_TUTOR_MAX_PP,
@@ -59,6 +60,7 @@ import { getFreeSpaceOnBench, isOnBench } from "../../utils/board"
 import { canEatMoreDishes } from "../../utils/dishes"
 import { distanceC, distanceM } from "../../utils/distance"
 import { max, min } from "../../utils/number"
+import { sacrificePlayerLife } from "../../utils/player-life"
 import {
   chance,
   pickNRandomIn,
@@ -1566,11 +1568,14 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
   [Item.HEARTHFLAME_MASK]: [ogerponMaskEffect],
 
   [Item.FIRE_SHARD]: [
-    new OnItemDroppedEffect(({ pokemon, player, item }) => {
-      if (pokemon.types.has(Synergy.FIRE) && player.life > 3) {
+    new OnItemDroppedEffect(({ pokemon, player, item, room }) => {
+      if (
+        pokemon.types.has(Synergy.FIRE) &&
+        player.life > FIRE_SHARD_LIFE_COST
+      ) {
         pokemon.atk += FIRE_SHARD_ATTACK
         pokemon.speed += FIRE_SHARD_SPEED
-        player.life = min(1)(player.life - 3)
+        sacrificePlayerLife(player, FIRE_SHARD_LIFE_COST, room.state)
         removeInArray(player.items, item)
         if (
           isIgnitionActive(player) &&
