@@ -44,3 +44,5 @@ id_digital_ocean.pub
 .devmode.json
 !app/public/src/assets/musics/ogg/Trouble in Town.ogg
 .assetpack/
+*.swp
+*.swo
