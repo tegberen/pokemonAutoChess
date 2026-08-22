@@ -153,6 +153,12 @@ import {
   blessingEffectService,
   giftStarterChoiceCopy
 } from "../services/blessings"
+import {
+  discoverGalarFossil,
+  initFossilUnlocks,
+  restoreGalarFossilPokemon
+} from "../services/fossil-unlocks"
+import type { GalarFossil } from "../types/enum/FossilUnlock"
 
 export default class GameRoom extends Room<{ state: GameState }> {
   dispatcher: Dispatcher<this>
@@ -372,6 +378,7 @@ export default class GameRoom extends Room<{ state: GameState }> {
             )
 
             this.state.players.set(user.uid, player)
+            initFossilUnlocks(player, this.state)
             this.state.shop.assignShop(player, false, this.state)
             player.doubleUpPartnerId = users[id].doubleUpPartnerId ?? ""
             player.doubleUpTeamId = users[id].doubleUpTeamId ?? ""
@@ -695,6 +702,24 @@ export default class GameRoom extends Room<{ state: GameState }> {
         }
       }
     })
+
+    this.onMessage(
+      Transfer.RESTORE_FOSSIL,
+      (client, message: { fossils: [GalarFossil, GalarFossil] }) => {
+        if (this.state.gameFinished || !client.auth) return
+        const player = this.state.players.get(client.auth.uid)
+        if (!player || !player.alive) return
+        try {
+          const [first, second] = message?.fossils ?? []
+          if (!first || !second) return
+          if (restoreGalarFossilPokemon(player, first, second)) {
+            player.boardSize = this.getTeamSize(player.board, player.blessings)
+          }
+        } catch (error) {
+          logger.error("error restoring fossil", error)
+        }
+      }
+    )
 
     this.onMessage(Transfer.PICK_BERRY, async (client, index) => {
       if (!this.state.gameFinished && client.auth) {
@@ -1774,6 +1799,16 @@ export default class GameRoom extends Room<{ state: GameState }> {
       if (!component) return
       player.singularityComponent = component
       player.items.push(component)
+      removeInArray(player.choices, choice)
+      return
+    }
+
+    /* resolved before the generic validation below, which measures the index
+       against pokemons/items/scribbleShapes and would reject every index here */
+    if (choice.type === "galar_fossil") {
+      const fossil = choice.galarFossils[choiceIndex]
+      if (!fossil) return
+      discoverGalarFossil(player, fossil)
       removeInArray(player.choices, choice)
       return
     }

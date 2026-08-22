@@ -229,6 +229,10 @@ import { chance, pickRandomIn, randomBetween, shuffleArray } from "../utils/rand
 import { getOrientation, OrientationVector } from "../utils/orientation"
 import { healPlayerLife } from "../utils/player-life"
 import { schemaValues } from "../utils/schemas"
+import {
+  onFossilUnlockFightWon,
+  onFossilUnlockTidalWave
+} from "../services/fossil-unlocks"
 import { AbilityStrategies } from "./abilities/abilities"
 import { applyWhirlpoolDamage } from "./abilities/whirlpool"
 import type { SurfStrategy } from "./abilities/surf"
@@ -3816,6 +3820,7 @@ export default class Simulation extends Schema implements ISimulation {
       case EffectEnum.ANCIENT_POWER:
       case EffectEnum.ELDER_POWER:
       case EffectEnum.FORGOTTEN_POWER:
+      case EffectEnum.PRIMORDIAL_POWER:
         if (types.has(Synergy.FOSSIL)) {
           pokemon.effects.add(effect)
         }
@@ -4862,6 +4867,43 @@ export default class Simulation extends Schema implements ISimulation {
     loser.board.set(substitute.id, substitute)
   }
 
+  /* Dracovish takes an enemy out of the fight: it leaves the board and its team
+     map, so the fight can still resolve, and comes back if Dracovish falls. */
+  seizePokemon(seizer: PokemonEntity, victim: PokemonEntity, board: Board) {
+    if (seizer.seizedEnemy || victim.hp <= 0) return
+    board.setEntityOnCell(victim.positionX, victim.positionY, undefined)
+    const team = victim.team === Team.BLUE_TEAM ? this.blueTeam : this.redTeam
+    team.delete(victim.id)
+    seizer.seizedEnemy = victim
+  }
+
+  releaseSeizedPokemon(seizer: PokemonEntity, board: Board) {
+    const victim = seizer.seizedEnemy
+    if (!victim) return
+    seizer.seizedEnemy = null
+    if (victim.hp <= 0) return
+    const place = board.getClosestAvailablePlace(
+      seizer.positionX,
+      seizer.positionY
+    )
+    if (!place) return
+
+    /* spawned fresh rather than re-inserting the seized entity: colyseus releases
+       a Schema's ref when it leaves a collection, so putting the same instance
+       back never encodes an ADD and the client never redraws it */
+    const released = this.addPokemon(
+      victim.refToBoardPokemon as Pokemon,
+      place.x,
+      place.y,
+      victim.team,
+      true
+    )
+    // carry over what it was worth when it was taken out of the fight
+    released.hp = victim.hp
+    released.shield = victim.shield
+    released.pp = victim.pp
+  }
+
   onFinish() {
     this.finishedAt = Date.now()
     this.finished = true
@@ -4993,6 +5035,12 @@ export default class Simulation extends Schema implements ISimulation {
       // Handle win/loss outcomes
       if (this.winnerId === sideId) {
         // WIN
+        if (!isGhostPlayer) {
+          onFossilUnlockFightWon(
+            player,
+            winningTeam ? schemaValues(winningTeam) : []
+          )
+        }
         if (!isPvE && !isGhostPlayer) {
           // no extra gold from PvE wins
           const hasLeadersCrest =
@@ -5781,6 +5829,7 @@ export default class Simulation extends Schema implements ISimulation {
     healAll: boolean = false
   ) {
     const isRed = team === Team.RED_TEAM
+    onFossilUnlockTidalWave(isRed ? this.redPlayer : this.bluePlayer)
     const orientation = isRed ? Orientation.DOWN : Orientation.UP
     this.room.broadcast(Transfer.ABILITY, {
       id: this.id,

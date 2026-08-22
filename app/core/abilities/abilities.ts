@@ -216,6 +216,10 @@ import { GunkShotStrategy } from "./gunk-shot"
 import { HailStrategy } from "./hail"
 import { HappyHourStrategy } from "./happy-hour"
 import { HardenStrategy } from "./harden"
+import { AmpingBeakStrategy } from "./amping-beak"
+import { FrozenBeakStrategy } from "./frozen-beak"
+import { FrozenRendStrategy } from "./frozen-rend"
+import { HardFaceStrategy } from "./hard-face"
 import { HeadSmashStrategy } from "./head-smash"
 import { HeadbuttStrategy } from "./headbutt"
 import { HeadlongRushStrategy } from "./headlong-rush"
@@ -954,6 +958,10 @@ export const AbilityStrategies: { [key in Ability]: AbilityStrategy } = {
   [Ability.HAIL]: new HailStrategy(),
   [Ability.HAPPY_HOUR]: new HappyHourStrategy(),
   [Ability.HARDEN]: new HardenStrategy(),
+  [Ability.AMPING_BEAK]: new AmpingBeakStrategy(),
+  [Ability.FROZEN_BEAK]: new FrozenBeakStrategy(),
+  [Ability.FROZEN_REND]: new FrozenRendStrategy(),
+  [Ability.HARD_FACE]: new HardFaceStrategy(),
   [Ability.HEAD_SMASH]: new HeadSmashStrategy(),
   [Ability.HEADBUTT]: new HeadbuttStrategy(),
   [Ability.HEADLONG_RUSH]: new HeadlongRushStrategy(),

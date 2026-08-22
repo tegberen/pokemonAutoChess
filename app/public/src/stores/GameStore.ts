@@ -13,6 +13,7 @@ import type {
 import { GameMode, GamePhaseState, Team } from "../../../types/enum/Game"
 import type { Item } from "../../../types/enum/Item"
 import type { Blessing } from "../../../types/enum/Blessing"
+import type { GalarFossil } from "../../../types/enum/FossilUnlock"
 import type { Pkm, PkmProposition } from "../../../types/enum/Pokemon"
 import type { SpecialGameRule } from "../../../types/enum/SpecialGameRule"
 import type { Synergy } from "../../../types/enum/Synergy"
@@ -25,6 +26,16 @@ export interface IBazaarOffer {
   item: string
   price: number
   category: string
+}
+
+export interface IFossilUnlocksState {
+  revealed: boolean
+  galarFossils: GalarFossil[]
+  restoredPokemon: Pkm | ""
+  unlocked: Pkm[]
+  progress: { [pokemon: string]: number }
+  pendingGuarantees: Pkm[]
+  shopWeight: { [pokemon: string]: number }
 }
 
 export interface GameStateStore {
@@ -68,6 +79,7 @@ export interface GameStateStore {
   }
   mystoganWandsByPlayerId: { [playerId: string]: Item[] }
   blessingsEnabled: boolean
+  fossilUnlocksByPlayerId: { [playerId: string]: IFossilUnlocksState }
   podium: ILeaderboardInfo[]
   doubleUpChampions: ILeaderboardInfo[]
   smeargleScribbleChampion: ILeaderboardInfo[]
@@ -112,6 +124,7 @@ const initialState: GameStateStore = {
   blessingQuestProgressByPlayerId: {},
   mystoganWandsByPlayerId: {},
   blessingsEnabled: false,
+  fossilUnlocksByPlayerId: {},
   specialGameRule: null,
   podium: new Array<ILeaderboardInfo>(),
   doubleUpChampions: new Array<ILeaderboardInfo>(),
@@ -251,6 +264,16 @@ export const gameSlice: Slice<GameStateStore> = createSlice({
         state.blessingQuestProgressByPlayerId[action.payload.playerId] =
           action.payload.questProgress
       }
+    },
+    setPlayerFossilUnlocks: (
+      state,
+      action: PayloadAction<{
+        playerId: string
+        unlocks: IFossilUnlocksState
+      }>
+    ) => {
+      state.fossilUnlocksByPlayerId[action.payload.playerId] =
+        action.payload.unlocks
     },
     setSynergies: (
       state,
@@ -411,6 +434,7 @@ export const {
   setSimulation,
   setAdditionalPokemons,
   setPlayerBlessings,
+  setPlayerFossilUnlocks,
   setBlessingsEnabled,
   setPokemonProposition,
   setEmotesUnlocked,

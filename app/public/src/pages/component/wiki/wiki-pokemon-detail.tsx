@@ -76,7 +76,7 @@ export default function WikiPokemonDetail(props: {
         <dt>{t("pool_label")}</dt>
         <dd>
           {t(
-            `pool.${pokemonData.regional ? "regional" : pokemonData.additional ? "additional" : "regular"}`
+            `pool.${pokemonData.regional ? "regional" : pokemonData.unlockable ? "unlockable" : pokemonData.additional ? "additional" : "regular"}`
           )}
         </dd>
         <dt style={{ verticalAlign: "middle" }}>{t("tier")}</dt>

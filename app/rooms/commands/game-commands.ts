@@ -246,6 +246,14 @@ import { resetArraySchema, schemaValues } from "../../utils/schemas"
 import { getWeather } from "../../utils/weather"
 import type GameRoom from "../game-room"
 import type GameState from "../states/game-state"
+import {
+  resetFossilShopWeight,
+  onFossilUnlockBerryHarvested,
+  onFossilUnlockCombatEnd,
+  onFossilUnlockCombatStart,
+  onFossilUnlockReroll,
+  resetFossilUnlockPickPhaseTrackers
+} from "../../services/fossil-unlocks"
 
 export class OnBuyPokemonCommand extends Command<
   GameRoom,
@@ -347,6 +355,7 @@ export class OnBuyPokemonCommand extends Command<
     if (!canBuy) return
 
     player.money -= cost
+    resetFossilShopWeight(player, name)
     if (isAllFoursFreeBuy) player.allFoursFreeBuyPending = false
 
     /* HYPER_HYPER_ROLL mints the 3-star outright: the 8 extra copies are never
@@ -1618,6 +1627,7 @@ export class OnShopRerollCommand extends Command<GameRoom, string> {
     if (canRoll) {
       player.gameStats.rerollCount++
       player.money -= rollCost
+      onFossilUnlockReroll(player)
       if (!thinkFastActive && player.shopFreeRolls > 0) {
         player.shopFreeRolls--
       } else if (!thinkFastActive) {
@@ -1704,6 +1714,7 @@ export class OnPickBerryCommand extends Command<
           ? GOLDEN_BERRY_TREE_TYPES[berryIndex]
           : player.berryTreesType[berryIndex]
       player.items.push(type)
+      onFossilUnlockBerryHarvested(player)
     }
   }
 }
@@ -2205,6 +2216,7 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
 
   initializePickingPhase() {
     this.state.phase = GamePhaseState.PICK
+    this.state.players.forEach(resetFossilUnlockPickPhaseTrackers)
     anchorPlayerAvatars(this.state)
     this.state.time =
       (StageDuration[this.state.stageLevel] ?? StageDuration.DEFAULT) * 1000
@@ -3044,6 +3056,8 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
       simulation.stop()
     })
 
+    this.state.players.forEach(onFossilUnlockCombatEnd)
+
     this.computeAchievements()
     this.checkDeath()
     const isGameFinished = this.checkEndGame()
@@ -3352,6 +3366,7 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
     this.state.players.forEach((player: Player) => {
       if (player.alive) {
         player.registerPlayedPokemons()
+        onFossilUnlockCombatStart(player)
         /* QUEST_INDECISION banks synergies off the locked combat board, not the
            picking phase, so rotating synergies between rounds still counts */
         checkIndecisionSynergies(player)

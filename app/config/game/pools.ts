@@ -61,10 +61,7 @@ export const UniquePool = new Array<PkmProposition>(
   //Pkm.HOOPA,
   Pkm.COMFEY,
   Pkm.SABLEYE,
-  Pkm.DRACOVISH,
-  Pkm.DRACOZOLT,
-  Pkm.ARCTOVISH,
-  Pkm.ARCTOZOLT,
+  // the 4 Galar fossils are restored from fossil pairs, never proposed
   Pkm.GIMMIGHOUL,
   Pkm.BRUXISH,
   Pkm.CYCLIZAR,

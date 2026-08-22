@@ -104,6 +104,7 @@ import {
   PeriodicEffect
 } from "./effect"
 import { PassiveEffects } from "./passives"
+import { onFossilUnlockRockExplosion } from "../../services/fossil-unlocks"
 
 export class MonsterKillEffect extends OnKillEffect {
   hpBoosted: number = 0
@@ -1109,6 +1110,7 @@ function rockDeathExplosion(
     //console.log(`[rockExplosion] hasCritEffect=${hasCritEffect} critRoll=${critRoll} crit=${crit}`)
     target.handleSpecialDamage(damage, board, AttackType.TRUE, pokemon, false, false)
     target.status.triggerArmorReduction(armorBreakMs, target)
+    onFossilUnlockRockExplosion(pokemon, target, damage)
   })
 }
 

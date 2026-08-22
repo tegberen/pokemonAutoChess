@@ -13,7 +13,7 @@ export class HeadSmashStrategy extends AbilityStrategy {
   ) {
     super.process(pokemon, board, target, crit)
 
-    const damage = [40, 80, 150, 300][pokemon.stars - 1] ?? 300
+    const damage = [90, 120, 150, 300][pokemon.stars - 1] ?? 300
     const recoil = [10, 20, 40, 80][pokemon.stars - 1] ?? 80
 
     if (target.status.sleep || target.status.freeze) {

@@ -3527,7 +3527,7 @@ export const AbilitiesAnimations: {
   [Ability.NASTY_PLOT]: onCaster({ positionOffset: [0, -50] }),
   [Ability.ROCK_TOMB]: onTarget({ origin: [0.5, 0.9], scale: 1 }),
   [Ability.SLACK_OFF]: onCaster({ ability: Ability.CAMOUFLAGE, scale: 1 }),
-  [Ability.FISHIOUS_REND]: onCaster({ oriented: true, rotation: -Math.PI / 2 }),
+  [Ability.FISHIOUS_REND]: onTarget({ ability: Ability.BITE, scale: 3 }),
   [Ability.HORN_ATTACK]: onTarget({ ability: Ability.CUT, scale: 3 }),
   [Ability.HORN_DRILL]: onTarget({ ability: Ability.CUT, scale: 4 }),
   [Ability.CUT]: [
@@ -4865,6 +4865,13 @@ export const AbilitiesAnimations: {
       duration: 1000
     })
   ),
+  [Ability.AMPING_BEAK]: onCaster({ ability: Ability.BOLT_BEAK }),
+  [Ability.FROZEN_REND]: onCasterScale3,
+  [Ability.HARD_FACE]: onCaster({
+    ability: Ability.REFLECT,
+    tint: 0xc0a080,
+    scale: 2.5
+  }),
   [Ability.SHELTER]: onCaster({
     ability: Ability.REFLECT,
     tint: 0xa080ff,

@@ -1,0 +1,36 @@
+:root {
+  --color-bg-primary: #34423f;
+  --color-bg-secondary: #45564f;
+  --color-bg-tertiary: #5c6b60;
+  --color-bg-accent: #c9a24b;
+
+  --border-thick: 2px solid #232c29;
+  --border-thin: 1px solid #232c29;
+  --border-extra-thin: 1px solid #232c29;
+}
+
+.custom-bg {
+  background-image: url("/assets/theme/embersofthepast/custombg.webp");
+  background-size: cover;
+  background-position: center;
+}
+
+.lobby h2 {
+  text-shadow: 0px 3px 6px black;
+}
+
+.leaderboard [data-react-window-index]:nth-child(odd) .my-box {
+  background: color-mix(in srgb, var(--color-bg-secondary) 90%, transparent);
+}
+
+.leaderboard [data-react-window-index]:nth-child(even) .my-box {
+  background: color-mix(in srgb, var(--color-bg-primary) 90%, transparent);
+}
+
+.after-menu .my-container {
+  background: color-mix(in srgb, var(--color-bg-primary) 50%, transparent);
+}
+
+.scales-ap .ability-value {
+  color: #c9a24b;
+}

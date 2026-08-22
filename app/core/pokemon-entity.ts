@@ -80,6 +80,11 @@ import { isPlainFunction } from "../utils/function"
 import { chance, pickNRandomIn, pickRandomIn } from "../utils/random"
 import { clamp, max, min, roundToNDigits } from "../utils/number"
 import { schemaValues } from "../utils/schemas"
+import {
+  onFossilUnlockDamageReceived,
+  onFossilUnlockKill,
+  onFossilUnlockSpeedChanged
+} from "../services/fossil-unlocks"
 import AttackingState from "./attacking-state"
 import type { Board } from "./board"
 import {
@@ -185,6 +190,14 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
   fairySplashCooldown = 0
   isSpawn = false
   refToBoardPokemon: IPokemon
+  /* Galar fossil combat state, all reset with the entity each fight */
+  ampingBeakStacks: number = 0
+  frozenBeakArmed: boolean = false
+  seizedEnemy: PokemonEntity | null = null
+  // DRACOVISH: presses the advantage against wounded enemies once awakened
+  fishiousRendEmpowered: boolean = false
+  // set by an ability that may only resolve once per combat
+  spentForCombat: boolean = false
   commands = new Array<SimulationCommand>()
   effectsSet = new Set<EffectClass>()
   sourcePlayer: Player | undefined = undefined
@@ -323,6 +336,7 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
 
   get canCast(): boolean {
     return (
+      !this.spentForCombat &&
       !this.status.silence &&
       this.sandTombVortexes === 0 &&
       !this.items.has(Item.NULLIFY_BANDANNA) &&
@@ -905,6 +919,7 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
         target.speed = clamp(target.speed + value, 0, MAX_SPEED)
       }
       update(this)
+      onFossilUnlockSpeedChanged(this)
       if (permanent && !this.isGhostOpponent) {
         update(this.refToBoardPokemon)
       }
@@ -1404,6 +1419,8 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
     // Increment damage received count
     this.count.damageReceivedCount++
 
+    onFossilUnlockDamageReceived(this)
+
     // Berries trigger
     const berry = schemaValues(this.items).find((item) =>
       Berries.includes(item)
@@ -1449,6 +1466,7 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
     if (!this.isGhostOpponent) {
       this.refToBoardPokemon.killCount++
     }
+    onFossilUnlockKill(this)
     this.getEffects(OnKillEffect).forEach((effect) => {
       effect.apply({ attacker: this, target, board, attackType })
     })

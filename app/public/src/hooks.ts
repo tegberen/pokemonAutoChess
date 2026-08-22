@@ -6,6 +6,7 @@ import {
 } from "react-redux"
 import { getGameEventResetDate } from "../../config"
 import type { AppDispatch, RootState } from "./stores"
+import type { IFossilUnlocksState } from "./stores/GameStore"
 
 // Use throughout your app instead of plain `useDispatch` and `useSelector`
 export const useAppDispatch = () => useDispatch<AppDispatch>()
@@ -18,6 +19,20 @@ export const selectSpectatedPlayer = (state: RootState) =>
 // the player that is linked to current user session (undefined when spectating another lobby)
 export const selectConnectedPlayer = (state: RootState) =>
   state.game.players.find((p) => p.id === state.network.uid)
+
+const NO_FOSSIL_UNLOCKS: IFossilUnlocksState = {
+  revealed: false,
+  galarFossils: [],
+  restoredPokemon: "",
+  unlocked: [],
+  progress: {},
+  pendingGuarantees: [],
+  shopWeight: {}
+}
+
+// fossil unlock state of the player linked to the current user session
+export const selectFossilUnlocks = (state: RootState): IFossilUnlocksState =>
+  state.game.fossilUnlocksByPlayerId[state.network.uid] ?? NO_FOSSIL_UNLOCKS
 
 export const useGameEventResetCountdown = () => {
   const now = new Date()

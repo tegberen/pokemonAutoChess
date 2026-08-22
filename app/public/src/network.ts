@@ -22,6 +22,7 @@ import { LocalStoreKeys, localStore } from "./pages/utils/store.js"
 import store from "./stores"
 import { setBoosterContent } from "./stores/BoostersStore"
 import { logIn, setProfile } from "./stores/NetworkStore"
+import type { GalarFossil } from "../../types/enum/FossilUnlock"
 
 const endpoint = `${window.location.protocol.replace("http", "ws")}//${
   window.location.host
@@ -227,6 +228,10 @@ export function setBlessingsEnabled(enabled: boolean) {
 
 export function lockShop() {
   rooms.game?.send(Transfer.LOCK)
+}
+
+export function restoreFossil(fossils: [GalarFossil, GalarFossil]) {
+  rooms.game?.send(Transfer.RESTORE_FOSSIL, { fossils })
 }
 
 export function skipStage() {

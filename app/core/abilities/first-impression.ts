@@ -18,9 +18,9 @@ export class FirstImpressionStrategy extends AbilityStrategy {
     crit: boolean
   ) {
     super.process(pokemon, board, target, crit)
-    const damage = [45, 90, 180, 360][pokemon.stars - 1] ?? 360
+    const damage = [25, 50, 100, 200][pokemon.stars - 1] ?? 200
     target.handleSpecialDamage(damage, board, AttackType.SPECIAL, pokemon, crit)
-    target.status.triggerFlinch(5000, target, pokemon)
+    target.status.triggerFlinch(3000, target, pokemon)
 
     if (pokemon.count.ult === 1) {
       // On first cast, find a cell to jump away to after the attack
@@ -44,9 +44,8 @@ export class FirstImpressionStrategy extends AbilityStrategy {
           const possibleBugsPkm = (
             [
               PRECOMPUTED_POKEMONS_PER_RARITY.COMMON,
-              PRECOMPUTED_POKEMONS_PER_RARITY.UNCOMMON,
-              PRECOMPUTED_POKEMONS_PER_RARITY.RARE
-            ][pokemon.stars - 1] ?? PRECOMPUTED_POKEMONS_PER_RARITY.RARE
+              PRECOMPUTED_POKEMONS_PER_RARITY.UNCOMMON
+            ][pokemon.stars - 1] ?? PRECOMPUTED_POKEMONS_PER_RARITY.UNCOMMON
           ).filter((pkm) => {
             const data = getPokemonData(pkm)
             return (

@@ -1,6 +1,8 @@
 import { ToastContainer } from "react-toastify"
 import { GameAdditionalPokemonsIcon } from "./game-additional-pokemons"
 import GameExperience from "./game-experience"
+import { GameFossilUnlockNotifications } from "./game-fossil-unlock-notifications"
+import { GameFossilUnlocksIcon } from "./game-fossil-unlocks"
 import { GameLifeInfo } from "./game-life-info"
 import GameLock from "./game-lock"
 import { GameMoneyInfo } from "./game-money-info"
@@ -23,11 +25,14 @@ export default function GameShop() {
         style={{ zIndex: DEPTH.GAME_SHOP }}
       >
         <div id="game-shop-info">
-          <GameLifeInfo />
-          <GameMoneyInfo />
+          <div className="game-fossil-unlocks-anchor my-container information">
+            <GameFossilUnlocksIcon />
+          </div>
           <GameStreakInfo />
           <div className="spacer"></div>
+          <GameMoneyInfo />
           <GameTeamInfo />
+          <GameLifeInfo />
         </div>
         <div className="game-shop-actions">
           <GameRarityPercentage />
@@ -42,6 +47,7 @@ export default function GameShop() {
         </div>
         <GameStore />
         <GameExperience />
+        <GameFossilUnlockNotifications />
       </div>
       <ToastContainer
         className="toast"

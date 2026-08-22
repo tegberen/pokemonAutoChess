@@ -35,6 +35,11 @@ export default function WikiAbility() {
         o[ability] = PRECOMPUTED_POKEMONS_PER_ABILITY[ability]
           .map((p) => getPokemonData(p))
           .sort((a, b) => {
+            /* keys run most- to least-significant, so comparing unlockable
+               before additional is what orders the groups regular, additional,
+               unlockable */
+            if (a.unlockable !== b.unlockable)
+              return +a.unlockable - +b.unlockable
             if (a.additional !== b.additional)
               return +a.additional - +b.additional
             // sort by PkmFamily
@@ -183,6 +188,7 @@ function AbilityRow({
                     <div
                       className={cc("pokemon-portrait", {
                         additional: p.additional,
+                        unlockable: p.unlockable,
                         regional: p.regional
                       })}
                       data-tooltip-id="game-pokemon-detail-tooltip"

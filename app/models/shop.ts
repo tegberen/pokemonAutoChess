@@ -61,6 +61,18 @@ import {
 } from "../types/enum/Pokemon"
 import { SpecialGameRule } from "../types/enum/SpecialGameRule"
 import {
+  FOSSIL_UNLOCK_MAX_GUARANTEES_PER_SHOP,
+  FOSSIL_UNLOCK_MIN_ENTRIES,
+  isFossilUnlockPokemon
+} from "../types/enum/FossilUnlock"
+import {
+  decayIgnoredFossilShopWeights,
+  getFossilShopWeight,
+  getFossilUnlockPool,
+  onFossilUnlockFishing,
+  releaseFossilUnlockCopy
+} from "../services/fossil-unlocks"
+import {
   Blessing,
   BERSERKER_HORDES_SHOP_INTERVAL,
   CURSOLA_SELL_PRICE,
@@ -262,6 +274,17 @@ export function getBuyPrice(
   return price
 }
 
+/* what a fished Pokemon is worth in gold, for the CLAMPERL unlock. The fish that
+   are not drawn from a rarity pool are SPECIAL, whose RarityCost is 0 because
+   they price themselves, so read those from their explicit sell price instead. */
+export function getFishedGoldValue(fish: Pkm): number {
+  if (fish === Pkm.MAGIKARP) return SellPrices.MAGIKARP
+  if (fish === Pkm.FEEBAS) return SellPrices.FEEBAS
+  if (fish === Pkm.WISHIWASHI) return SellPrices.WISHIWASHI
+  if (fish === Pkm.REMORAID) return SellPrices.REMORAID
+  return RarityCost[getPokemonData(fish).rarity]
+}
+
 const CommonShop = getRegularsTier1(PRECOMPUTED_POKEMONS_PER_RARITY.COMMON)
 const UncommonShop = getRegularsTier1(PRECOMPUTED_POKEMONS_PER_RARITY.UNCOMMON)
 const RareShop = getRegularsTier1(PRECOMPUTED_POKEMONS_PER_RARITY.RARE)
@@ -386,6 +409,8 @@ export default class Shop {
       entityNumber = Math.ceil(entityNumber / 2)
     }
 
+    if (releaseFossilUnlockCopy(player, pkm)) return
+
     if (regional && player.canFindRegionalPokemon(pkm, state) === false) {
       return // regional pokemons sold in a region other than their original region are not added back to the pool
     }
@@ -489,6 +514,9 @@ export default class Shop {
   /* a themed shop is minted rather than drawn, so returning it to the pool on
      the next refresh would hand the lobby units that were never taken out */
   releaseCurrentShop(player: Player, state: GameState) {
+    /* the shop about to be thrown away is exactly the set of offers the player
+       saw and did not buy, which is what the unlock bonus decays on */
+    decayIgnoredFossilShopWeights(player, [...player.shop])
     if (player.shopSlotsMinted) {
       player.shopSlotsMinted = false
       return
@@ -577,7 +605,40 @@ export default class Shop {
       if (!manualRefresh) {
         this.guaranteeWildInShop(player, state)
       }
+      this.guaranteeFossilUnlocksInShop(player, state)
       this.syncJuggernautShopStats(player, state, true)
+    }
+  }
+
+  /* a freshly unlocked Pokemon is owed one guaranteed offer, placed in the
+     rightmost slots and filling leftwards. Guarantees beyond what one shop can
+     spend stay queued for the next ones. */
+  guaranteeFossilUnlocksInShop(player: Player, state: GameState) {
+    const pending = player.fossilUnlocksRef?.pendingGuarantees
+    if (!pending || pending.length === 0) return
+    const size = getShopSize(state.specialGameRule, state.stageLevel)
+    const nbGuaranteed = Math.min(
+      pending.length,
+      FOSSIL_UNLOCK_MAX_GUARANTEES_PER_SHOP,
+      size
+    )
+
+    for (let n = 0; n < nbGuaranteed; n++) {
+      const guaranteed = pending[0]
+      const pool = getFossilUnlockPool(player, getPokemonData(guaranteed).rarity)
+      const copyIndex = pool?.indexOf(guaranteed) ?? -1
+      // the whole Unlock Pool has been bought out: the guarantee cannot be paid
+      if (!pool || copyIndex < 0) {
+        pending.shift()
+        continue
+      }
+      const slot = size - 1 - n
+      if (player.shop[slot] !== guaranteed) {
+        this.releasePokemon(player.shop[slot], player, state)
+        pool.splice(copyIndex, 1)
+        player.shop[slot] = guaranteed
+      }
+      pending.shift()
     }
   }
 
@@ -658,7 +719,8 @@ export default class Shop {
     } = {
       starter: [...this.commonPool],
       unique: [...UniquePool],
-      legendary: [...LegendaryPool]
+      // an unlocked legendary fossil is only ever proposed to its own unlocker
+      legendary: [...LegendaryPool, ...player.legendaryUnlockPool]
     }
 
     let allCandidates: PkmProposition[] = poolByType[type] || []
@@ -824,8 +886,23 @@ export default class Shop {
     specificTypesWanted?: Synergy[]
   ): Pkm {
     let pkm = Pkm.MAGIKARP
+    const unlockPool = getFossilUnlockPool(player, rarity) ?? []
+    /* an unlocked Pokemon is drawn on its remaining copies shifted by its shop
+       weight: up right after the unlock, down every time it is offered and
+       passed over. The weight only moves draw entries, never the Unlock Pool
+       itself, which still empties one copy per purchase. */
+    const unlockEntries: Pkm[] = []
+    new Set(unlockPool).forEach((unlocked) => {
+      const copies = unlockPool.filter((pkm) => pkm === unlocked).length
+      const entries = Math.max(
+        FOSSIL_UNLOCK_MIN_ENTRIES,
+        copies + getFossilShopWeight(player, unlocked)
+      )
+      for (let n = 0; n < entries; n++) unlockEntries.push(unlocked)
+    })
     const candidates = (this.getPool(rarity) ?? [])
       .concat(this.getRegionalPool(rarity, player) ?? [])
+      .concat(unlockEntries)
       .map((pkm) => {
         if (pkm in PkmRegionalVariants) {
           const regionalVariants = PkmRegionalVariants[pkm]!.filter((p) =>
@@ -866,9 +943,11 @@ export default class Shop {
     }
 
     const { regional } = getPokemonData(pkm)
-    const pool = regional
-      ? this.getRegionalPool(rarity, player)
-      : this.getPool(rarity)
+    const pool = isFossilUnlockPokemon(getPokemonBaseline(pkm))
+      ? getFossilUnlockPool(player, rarity)
+      : regional
+        ? this.getRegionalPool(rarity, player)
+        : this.getPool(rarity)
     if (pool) {
       const index = pool.indexOf(getPokemonBaseline(pkm))
       if (index >= 0) {
@@ -1040,6 +1119,16 @@ export default class Shop {
   }
 
   pickFish(player: Player, rod: FishingRod, state: GameState): Pkm {
+    const fish = this.pickFishFromPool(player, rod, state)
+    onFossilUnlockFishing(player, fish, getFishedGoldValue(fish))
+    return fish
+  }
+
+  private pickFishFromPool(
+    player: Player,
+    rod: FishingRod,
+    state: GameState
+  ): Pkm {
     const mantine = schemaValues(player.board).find(
       (p) => p.name === Pkm.MANTYKE || p.name === Pkm.MANTINE
     )

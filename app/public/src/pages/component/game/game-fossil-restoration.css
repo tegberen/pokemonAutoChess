@@ -1,0 +1,187 @@
+.fossil-restoration {
+  display: grid;
+  gap: 0.8em;
+  /* clear of the modal header above, and inset to the same 1em the catalog
+     below pads its content by, so the two line up down the sides */
+  margin: 0.9em 1em 0.8em;
+  padding: 0.9em 1em 1em;
+  border: var(--border-thin);
+  border-radius: 12px;
+  background: var(--color-bg-secondary);
+}
+
+.fossil-restoration-header {
+  display: grid;
+  justify-items: center;
+  gap: 0.25em;
+  padding-bottom: 0.7em;
+  border-bottom: 1px solid var(--fossil-accent-muted);
+}
+
+.fossil-restoration-header h3 {
+  margin: 0;
+  color: var(--fossil-accent);
+  font-size: 1.05em;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-shadow: 2px 2px 0 #000;
+}
+
+.fossil-restoration-header p {
+  /* kept narrow so the hint reads as a paragraph rather than one long line */
+  max-width: 46ch;
+  margin: 0;
+  color: var(--color-fg-secondary);
+  font-size: 0.78em;
+  text-align: center;
+}
+
+/* the tray and the bench sit side by side, the bench taking the spare width */
+.fossil-restoration-panels {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0.8em;
+  align-items: stretch;
+}
+
+.fossil-restoration-panel {
+  display: grid;
+  justify-items: center;
+  align-content: start;
+  gap: 0.8em;
+  padding: 0.85em 1.15em 1.1em;
+  border: var(--border-thin);
+  border-radius: 10px;
+  background: var(--color-bg-primary);
+}
+
+.fossil-restoration-panel h4 {
+  margin: 0;
+  color: var(--color-fg-secondary);
+  font-size: 0.68em;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.fossil-restoration-combine {
+  align-content: center;
+}
+
+.fossil-restoration-bench {
+  display: flex;
+  align-items: center;
+  gap: 0.55em;
+}
+
+.fossil-restoration-operator {
+  color: var(--fossil-accent);
+  font-size: 1.5em;
+  text-shadow: 2px 2px 0 #000;
+}
+
+.fossil-restoration-slot,
+.fossil-restoration-result {
+  display: grid;
+  place-content: center;
+  width: 56px;
+  height: 56px;
+  border: 2px dashed var(--color-fg-secondary);
+  border-radius: 10px;
+  background: var(--color-bg-tertiary);
+}
+
+/* the payoff of the equation, so it reads a size larger than its inputs */
+.fossil-restoration-result {
+  width: 67px;
+  height: 67px;
+}
+
+/* same ring the unlocked cards use, so the two halves of the menu glow alike */
+.fossil-restoration-slot.is-filled {
+  border-style: solid;
+  border-color: #000;
+  box-shadow:
+    0 0 0 2px color-mix(in srgb, var(--fossil-accent) 60%, transparent),
+    var(--shadow-clickable);
+  cursor: var(--cursor-hover);
+}
+
+.fossil-restoration-result.is-valid {
+  border-style: solid;
+  border-color: #000;
+  box-shadow:
+    0 0 0 2px var(--fossil-action),
+    var(--shadow-clickable);
+}
+
+.fossil-restoration-result span {
+  color: var(--color-fg-secondary);
+  font-size: 1.7em;
+  opacity: 0.5;
+}
+
+.fossil-restoration-slot img {
+  width: 49px;
+  height: 49px;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+
+.fossil-restoration-result img {
+  width: 59px;
+  height: 59px;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+
+/* a fixed 2x2 well, so the tray keeps its shape as fossils move in and out */
+.fossil-restoration-inventory {
+  display: grid;
+  grid-template-columns: repeat(2, 47px);
+  grid-auto-rows: 47px;
+  gap: 0.65em;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.fossil-restoration-fossil {
+  display: grid;
+  place-content: center;
+  border: var(--border-thin);
+  border-radius: 8px;
+  background: var(--color-bg-tertiary);
+  cursor: var(--cursor-hover);
+  transition: transform 100ms ease;
+}
+
+.fossil-restoration-fossil:hover {
+  transform: translateY(-2px);
+}
+
+.fossil-restoration-fossil img {
+  width: 38px;
+  height: 38px;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+
+/* an undiscovered fossil is a dark socket: it shows what is still out there */
+.fossil-restoration-fossil.is-undiscovered {
+  cursor: default;
+  opacity: 0.35;
+}
+
+.fossil-restoration-fossil.is-undiscovered:hover {
+  transform: none;
+}
+
+.fossil-restoration-fossil.is-undiscovered img {
+  filter: brightness(0);
+}
+
+@media (max-width: 900px) {
+  .fossil-restoration-panels {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

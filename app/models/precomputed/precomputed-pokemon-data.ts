@@ -32,6 +32,7 @@ precomputedPokemons.forEach((pokemon) => {
     stars: pokemon.stars,
     rarity: pokemon.rarity,
     additional: pokemon.additional,
+    unlockable: pokemon.unlockable,
     regional: pokemon.regional,
     hp: pokemon.hp,
     pp: pokemon.maxPP,
@@ -67,6 +68,7 @@ export function getPokemonData(name: Pkm): IPokemonData {
     name: Pkm.DEFAULT,
     index: PkmIndex[Pkm.DEFAULT],
     additional: false,
+    unlockable: false,
     regional: false,
     hp: 10,
     pp: 100,
@@ -90,6 +92,7 @@ export function getRegularsTier1(pokemons: Pkm[]) {
       pokemonData.stars === 1 &&
       pokemonData.skill !== Ability.DEFAULT &&
       !pokemonData.additional &&
+      !pokemonData.unlockable &&
       !pokemonData.regional
     )
   })

@@ -62,6 +62,13 @@ import {
   applyWandEffects,
   humanHealEffect
 } from "./effects/synergies"
+import { onFossilUnlockCrit } from "../services/fossil-unlocks"
+import { FROZEN_BEAK_DAMAGE_REDUCTION } from "./abilities/frozen-beak"
+import {
+  FISHIOUS_REND_LOW_HP_DAMAGE_MULTIPLIER,
+  FISHIOUS_REND_LOW_HP_THRESHOLD,
+  onPrimordialPowerAwakened
+} from "./effects/galar-fossil-passives"
 import type { PokemonEntity } from "./pokemon-entity"
 
 export default abstract class PokemonState {
@@ -143,6 +150,8 @@ export default abstract class PokemonState {
           target.count.crit++
         }
       }
+      if (crit) onFossilUnlockCrit(pokemon, board)
+
       if (crit && pokemon.player?.blessings?.includes(Blessing.DEEP_WOUNDS)) {
         const wasAlreadyBroken = target.status.armorReduction
         const loss = -DEEP_WOUNDS_DEFENSE_LOSS
@@ -630,6 +639,15 @@ export default abstract class PokemonState {
         damage *= 1.2
       }
 
+      /* DRACOVISH: a FOSSIL that awakened its primordial power hits wounded
+         enemies harder for the rest of the combat */
+      if (
+        attacker?.fishiousRendEmpowered &&
+        pokemon.hp < FISHIOUS_REND_LOW_HP_THRESHOLD * pokemon.maxHP
+      ) {
+        damage *= FISHIOUS_REND_LOW_HP_DAMAGE_MULTIPLIER
+      }
+
       if (
         pokemon.simulation.weather === Weather.MISTY &&
         attackType === AttackType.SPECIAL
@@ -730,6 +748,13 @@ export default abstract class PokemonState {
         reducedDamage = damage / (1 + ARMOR_FACTOR * speDef)
       } else if (attackType == AttackType.TRUE) {
         reducedDamage = damage
+      }
+
+      /* FROZEN_BEAK: Arctozolt ices itself over and takes half of everything
+         while it lasts. Sits outside the block below because it reduces TRUE
+         damage as well. */
+      if (pokemon.status.freeze && pokemon.frozenBeakArmed) {
+        reducedDamage *= 1 - FROZEN_BEAK_DAMAGE_REDUCTION
       }
 
       if (pokemon.awakening === Awakening.BLACK_AUGURITE) {
@@ -882,17 +907,20 @@ export default abstract class PokemonState {
       ) {
         const shield = Math.round(
           pokemon.maxHP *
-            (pokemon.effects.has(EffectEnum.FORGOTTEN_POWER)
+            (pokemon.effects.has(EffectEnum.PRIMORDIAL_POWER) ||
+            pokemon.effects.has(EffectEnum.FORGOTTEN_POWER)
               ? 1
               : pokemon.effects.has(EffectEnum.ELDER_POWER)
                 ? 0.7
                 : 0.4)
         )
-        const attackBonus = pokemon.effects.has(EffectEnum.FORGOTTEN_POWER)
-          ? 1
-          : pokemon.effects.has(EffectEnum.ELDER_POWER)
-            ? 0.7
-            : 0.4
+        const attackBonus =
+          pokemon.effects.has(EffectEnum.PRIMORDIAL_POWER) ||
+          pokemon.effects.has(EffectEnum.FORGOTTEN_POWER)
+            ? 1
+            : pokemon.effects.has(EffectEnum.ELDER_POWER)
+              ? 0.7
+              : 0.4
 
         if (pokemon.awakening === Awakening.FOSSIL_FRAGMENT) {
           const damageOnRevive = max(0.5 * shield)(residualDamage)
@@ -924,6 +952,7 @@ export default abstract class PokemonState {
         }
         pokemon.resetCooldown(500)
         pokemon.broadcastAbility({ skill: "FOSSIL_RESURRECT" })
+        onPrimordialPowerAwakened(pokemon, board)
         SynergyTiers[Synergy.FOSSIL].forEach((e) => {
           pokemon.effects.delete(e)
         })
@@ -1056,6 +1085,9 @@ export default abstract class PokemonState {
     attackType: AttackType
   ) {
     pokemon.team = pokemon.baseTeam
+    if (pokemon.seizedEnemy) {
+      pokemon.simulation.releaseSeizedPokemon(pokemon, board)
+    }
     pokemon.onDeath({ board, attacker })
     const plushifySubstituteMaxHP = pokemon.maxHP
     const shouldSpawnPlushifySubstitute =

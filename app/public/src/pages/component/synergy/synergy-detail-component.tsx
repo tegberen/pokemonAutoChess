@@ -24,7 +24,11 @@ import type { IPokemonData } from "../../../../../types/interfaces/PokemonData"
 import { isOnBench } from "../../../../../utils/board"
 import { roundToNDigits } from "../../../../../utils/number"
 import { schemaValues } from "../../../../../utils/schemas"
-import { selectSpectatedPlayer, useAppSelector } from "../../../hooks"
+import {
+  selectFossilUnlocks,
+  selectSpectatedPlayer,
+  useAppSelector
+} from "../../../hooks"
 import { addIconsToDescription } from "../../utils/descriptions"
 import { cc } from "../../utils/jsx"
 import { getCachedPortrait } from "../game/game-pokemon-portrait"
@@ -54,6 +58,7 @@ export default function SynergyDetailComponent(props: {
   const additionalPokemons = useAppSelector(
     (state) => state.game.additionalPokemons
   )
+  const fossilUnlocks = useAppSelector(selectFossilUnlocks)
   const stageLevel = useAppSelector((state) => state.game.stageLevel)
   const spectatedPlayer = useAppSelector(selectSpectatedPlayer)
   const specialGameRule = useAppSelector((state) => state.game.specialGameRule)
@@ -77,6 +82,16 @@ export default function SynergyDetailComponent(props: {
         additionalPokemons.includes(baseVariant(PkmFamily[p])) ||
         (specialGameRule != null &&
           RulesWithAllPokemonsAvailable.includes(specialGameRule))
+    )
+  ).map((p) => getPokemonData(p as Pkm))
+
+  /* fossil unlocks are personal, so only the ones this player has earned are
+     listed, the same way additionals wait on the lobby's picks */
+  const unlockables = keepFirstOfFamily(
+    PRECOMPUTED_POKEMONS_PER_TYPE_AND_CATEGORY[
+      props.type
+    ].unlockablePokemons.filter((p) =>
+      fossilUnlocks.unlocked.includes(PkmFamily[p as Pkm])
     )
   ).map((p) => getPokemonData(p as Pkm))
 
@@ -205,6 +220,12 @@ export default function SynergyDetailComponent(props: {
       />
       <PokemonPortraitList
         pokemons={additionals}
+        type={props.type}
+        player={spectatedPlayer}
+        marginTop="0.5em"
+      />
+      <PokemonPortraitList
+        pokemons={unlockables}
         type={props.type}
         player={spectatedPlayer}
         marginTop="0.5em"
