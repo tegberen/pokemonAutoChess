@@ -14,7 +14,7 @@ import {
   AnimationType,
   AttackSprite,
   AttackSpriteScale,
-  type HitSprite
+  HitSprite
 } from "../../../../types/Animation"
 import { Ability } from "../../../../types/enum/Ability"
 import {
@@ -2699,6 +2699,196 @@ function earthQuakeAnim(stars: number) {
   }
 }
 
+const FLAMETHROWER_JET_LENGTH = CELL_WIDTH * 8
+/** the jet starts just in front of the caster's muzzle, not on its sprite */
+const FLAMETHROWER_MUZZLE_OFFSET = CELL_WIDTH * 0.2
+const FLAMETHROWER_JET_DURATION = 820
+const FLAMETHROWER_JET_GROWTH = 300
+/** the jet holds at full length before fading out */
+const FLAMETHROWER_JET_HOLD = 540
+const FLAMETHROWER_EMBER_TINT = 0xffc65a
+/** slight multiply tint, just enough to stop the flame reading as pale pink */
+const FLAMETHROWER_JET_TINT = 0xffd9a0
+/** eruptions trail the flame front instead of landing on the cast frame */
+const FLAMETHROWER_ERUPT_DELAY = 150
+const FLAMETHROWER_ERUPT_DELAY_PER_CELL = 30
+
+function flamethrowerEmber(
+  scene: GameScene | DebugScene,
+  x: number,
+  y: number,
+  toX: number,
+  toY: number,
+  duration: number,
+  delay: number
+) {
+  const ember = addAbilitySprite(scene, "EMBER", 0, [x, y], {
+    scale: randomBetween(4, 8) / 10,
+    depth: DEPTH.ABILITY,
+    destroyOnComplete: false,
+    animOptions: { repeat: -1 }
+  })
+  if (!ember) return
+  ember.setBlendMode(Phaser.BlendModes.ADD)
+  scene.tweens.add({
+    targets: ember,
+    x: toX,
+    y: toY,
+    alpha: { from: 1, to: 0 },
+    duration,
+    delay,
+    ease: Phaser.Math.Easing.Cubic.Out,
+    onComplete: () => ember.destroy()
+  })
+}
+
+/** A jet of fire stretching from the caster to the far edge of the board,
+    matching the full line the server burns PP on */
+function flamethrowerJetAnimation(args: AbilityAnimationArgs) {
+  const { scene, positionX, positionY, targetX, targetY, ap, flip } = args
+  const from = transformEntityCoordinates(positionX, positionY, flip)
+  const to = transformEntityCoordinates(targetX, targetY, flip)
+  const angle = angleBetween(from, to)
+  const [dx, dy] = [Math.cos(angle), Math.sin(angle)]
+
+  const muzzle = [
+    from[0] + dx * FLAMETHROWER_MUZZLE_OFFSET,
+    from[1] + dy * FLAMETHROWER_MUZZLE_OFFSET
+  ]
+
+  const jet = addAbilitySprite(scene, Ability.FLAMETHROWER, ap, muzzle, {
+    origin: [0.5, 1],
+    rotation: angle + Math.PI / 2,
+    scale: 2,
+    depth: DEPTH.ABILITY,
+    tint: FLAMETHROWER_JET_TINT,
+    destroyOnComplete: false
+  })
+  if (jet) {
+    const jetScaleY = Math.max(2, FLAMETHROWER_JET_LENGTH / jet.height)
+    scene.tweens.add({
+      targets: jet,
+      scaleX: { from: jet.scaleX * 0.3, to: jet.scaleX },
+      scaleY: { from: jetScaleY * 0.08, to: jetScaleY },
+      duration: FLAMETHROWER_JET_GROWTH,
+      ease: Phaser.Math.Easing.Cubic.Out
+    })
+    scene.tweens.add({
+      targets: jet,
+      alpha: 0,
+      duration: FLAMETHROWER_JET_DURATION - FLAMETHROWER_JET_HOLD,
+      delay: FLAMETHROWER_JET_HOLD,
+      ease: Phaser.Math.Easing.Quadratic.In,
+      onComplete: () => jet.destroy()
+    })
+  }
+
+  const EMBERS = 6
+  for (let index = 0; index < EMBERS; index++) {
+    const spread = randomBetween(-14, 14)
+    const reach = FLAMETHROWER_JET_LENGTH * (randomBetween(6, 10) / 10)
+    flamethrowerEmber(
+      scene,
+      muzzle[0] - dy * spread,
+      muzzle[1] + dx * spread,
+      muzzle[0] + dx * reach - dy * spread,
+      muzzle[1] + dy * reach + dx * spread,
+      randomBetween(400, 540),
+      index * 45
+    )
+  }
+
+  scene.shakeCamera({ duration: 300, intensity: 0.002 })
+}
+
+/** how long the flame front takes to reach the erupting cell */
+function flamethrowerEruptDelay(args: AbilityAnimationArgs) {
+  return (
+    FLAMETHROWER_ERUPT_DELAY +
+    distanceM(args.positionX, args.positionY, args.targetX, args.targetY) *
+      FLAMETHROWER_ERUPT_DELAY_PER_CELL
+  )
+}
+
+/** PP burn overflowing into an eruption on one enemy of the line */
+function flamethrowerEruptAnimation(args: AbilityAnimationArgs) {
+  const { scene, targetX, targetY, ap, flip } = args
+  const [x, y] = transformEntityCoordinates(targetX, targetY, flip)
+
+  addAbilitySprite(scene, HitSprite.FIRE_HIT, ap, [x, y], {
+    textureKey: "attacks",
+    scale: 5.5,
+    depth: DEPTH.HIT_FX_ABOVE_POKEMON
+  })
+
+  const shockwave = scene.add
+    .graphics({ x, y })
+    .setDepth(DEPTH.ABILITY)
+    .setBlendMode(Phaser.BlendModes.ADD)
+  shockwave
+    .lineStyle(VFX_PIXEL * 1.5, FLAMETHROWER_EMBER_TINT, 1)
+    .strokeCircle(0, 0, CELL_WIDTH * 0.75)
+  scene.abilitiesVfxGroup?.add(shockwave)
+  scene.tweens.add({
+    targets: shockwave,
+    scaleX: 3.6,
+    scaleY: 2.1,
+    alpha: 0,
+    duration: 380,
+    ease: Phaser.Math.Easing.Cubic.Out,
+    onComplete: () => shockwave.destroy()
+  })
+
+  const EMBERS = 12
+  for (let index = 0; index < EMBERS; index++) {
+    const heading = (index / EMBERS) * Math.PI * 2 + Math.random() * 0.5
+    const reach = randomBetween(90, 160)
+    flamethrowerEmber(
+      scene,
+      x,
+      y,
+      x + Math.cos(heading) * reach,
+      y + Math.sin(heading) * reach - 35,
+      randomBetween(300, 420),
+      0
+    )
+  }
+}
+
+/** splash feedback on the ADJACENT enemies caught by an eruption */
+function flamethrowerSplashAnimation(args: AbilityAnimationArgs) {
+  const { scene, targetX, targetY, ap, flip } = args
+  const [x, y] = transformEntityCoordinates(targetX, targetY, flip)
+
+  addAbilitySprite(scene, HitSprite.FIRE_HIT, ap, [x, y], {
+    textureKey: "attacks",
+    scale: 3.2,
+    depth: DEPTH.HIT_FX_ABOVE_POKEMON
+  })
+
+  for (let index = 0; index < 3; index++) {
+    const heading = -Math.PI / 2 + randomBetween(-6, 6) / 10
+    flamethrowerEmber(
+      scene,
+      x,
+      y,
+      x + Math.cos(heading) * randomBetween(25, 50),
+      y + Math.sin(heading) * randomBetween(25, 50),
+      randomBetween(200, 280),
+      0
+    )
+  }
+}
+
+/** both eruption animations wait for the flame front to actually get there */
+const flamethrowerDelayed =
+  (animation: AbilityAnimation): AbilityAnimation =>
+  (args) => {
+    args.scene.time.delayedCall(flamethrowerEruptDelay(args), () =>
+      animation(args)
+    )
+  }
+
 export const AbilitiesAnimations: {
   [animKey: string]: AbilityAnimation | AbilityAnimation[]
 } = {
@@ -2735,6 +2925,8 @@ export const AbilitiesAnimations: {
     scale: 3,
     hitAnim: onTarget({ ability: "PUFF_GREEN", scale: 1 })
   }),
+  ["FLAMETHROWER_ERUPT"]: flamethrowerDelayed(flamethrowerEruptAnimation),
+  ["FLAMETHROWER_SPLASH"]: flamethrowerDelayed(flamethrowerSplashAnimation),
   ["TOXIC_RESONANCE_BEAT_1"]: toxicResonanceBeatAnimation(1),
   ["TOXIC_RESONANCE_BEAT_2"]: toxicResonanceBeatAnimation(2),
   ["TOXIC_RESONANCE_BEAT_3"]: toxicResonanceBeatAnimation(3),
@@ -3165,11 +3357,7 @@ export const AbilitiesAnimations: {
   [Ability.SEED_FLARE]: onCasterScale3,
   [Ability.MULTI_ATTACK]: onCasterScale4,
   [Ability.ROCK_SLIDE]: onTarget({ scale: 2, origin: [0.5, 0.9] }),
-  [Ability.FLAMETHROWER]: onCaster({
-    oriented: true,
-    rotation: +Math.PI / 2,
-    origin: [0.5, 1]
-  }),
+  [Ability.FLAMETHROWER]: flamethrowerJetAnimation,
   [Ability.SUPER_HEAT]: [
     onCaster({
       oriented: true,
