@@ -12018,7 +12018,6 @@ export class Popplio extends Pokemon {
   maxPP = 90
   range = 3
   skill = Ability.SPARKLING_ARIA
-  regional = true
   isInRegion(map: DungeonPMDO, state?: GameState) {
     const regionSynergies = RegionDetails[map]?.synergies
     return (
@@ -12041,7 +12040,6 @@ export class Brionne extends Pokemon {
   maxPP = 90
   range = 3
   skill = Ability.SPARKLING_ARIA
-  regional = true
   inRegion(map: DungeonPMDO, state?: GameState) {
     const regionSynergies = RegionDetails[map]?.synergies
     return (
@@ -12063,7 +12061,6 @@ export class Primarina extends Pokemon {
   maxPP = 90
   range = 3
   skill = Ability.SPARKLING_ARIA
-  regional = true
   isInRegion(map: DungeonPMDO, state?: GameState) {
     const regionSynergies = RegionDetails[map]?.synergies
     return (
