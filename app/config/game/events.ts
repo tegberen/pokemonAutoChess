@@ -36,7 +36,7 @@ const WHIMSY_WEEKEND_ANCHOR = { year: 2026, month: 7, day: 8 }
 const JIRACHI_FESTIVAL_OFFSET_DAYS = 4
 const JIRACHI_FESTIVAL_DURATION_DAYS = 4
 const JIRACHI_FINALE_DURATION_DAYS = 1
-const WHIMSY_WEEKEND_DURATION_DAYS = 1
+const WHIMSY_WEEKEND_DURATION_DAYS = 2
 
 /* TEMP this week's Whimsy Weekend closes a day early to hand the stage to the
    extended Wish Festival start phase, see JIRACHI_EXTENDED_START_CYCLE. Delete
@@ -175,7 +175,7 @@ function isFestivalActive(
   return window !== null && date >= window.start && date < window.end
 }
 
-/** Saturday midnight in the earliest region through Sunday midnight in the latest. */
+/** Saturday midnight in the earliest region through Monday midnight in the latest. */
 export function isScribbleWeekend(date = new Date()): boolean {
   const window = getWhimsyWindow(date)
   return window !== null && date >= window.start && date < window.end
@@ -219,6 +219,12 @@ export function getNextWishFestivalFinaleStart(from = new Date()): Date {
     next.offsetDays + next.durationDays,
     JIRACHI_FINALE_DURATION_DAYS
   ).start
+}
+
+/** When the running Wish Festival finale ends, or null if one isn't running. */
+export function getWishFestivalFinaleEnd(from = new Date()): Date | null {
+  const window = getWishFestivalFinaleWindow(from)
+  return window && from >= window.start && from < window.end ? window.end : null
 }
 
 /** When the running Blessing event ends, or null if one isn't running. */

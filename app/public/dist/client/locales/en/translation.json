@@ -4410,6 +4410,7 @@
 	"whimsy_weekend_description": "Team up with a partner and outlast every other duo, with a random Smeargle's Scribble rule in play!",
 	"whimsy_weekend_ends_in": "Whimsy Weekend ends in {{time}}",
 	"event_calendar": "Calendar",
+	"event_happening_now": "Happening now — ends in {{time}}",
 	"event_starts_in": "Starts in {{time}}",
 	"scribble_extended_label": "Player",
 	"scribble_extended_on": "Extended (150 HP)",

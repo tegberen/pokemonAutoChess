@@ -5,9 +5,9 @@ import {
   getNextBlessingEventStart,
   getNextWishFestivalFinaleStart,
   getNextScribbleWeekendStart,
+  getWishFestivalFinaleEnd,
   isBlessingEvent,
-  isScribbleWeekend,
-  isWishFestivalFinale
+  isScribbleWeekend
 } from "../../../../../config"
 import { formatDate } from "../../utils/date"
 import "./calendar.css"
@@ -35,6 +35,7 @@ type CalendarEvent = {
   image: string
   variant: "whimsy" | "jirachi" | "jirachi_finale" | "smeargle" | "doubleup"
   start: Date
+  end?: Date
 }
 
 function CalendarEventCard(props: Omit<CalendarEvent, "id"> & {
@@ -53,11 +54,20 @@ function CalendarEventCard(props: Omit<CalendarEvent, "id"> & {
           <img className="calendar-clock" src="assets/ui/clock.png" alt="" aria-hidden="true" />
           <div>
             <p>
-              {t("event_starts_in", {
-                time: formatEventCountdown(props.start.getTime() - props.now.getTime())
-              })}
+              {props.end
+                ? t("event_happening_now", {
+                    time: formatEventCountdown(props.end.getTime() - props.now.getTime())
+                  })
+                : t("event_starts_in", {
+                    time: formatEventCountdown(props.start.getTime() - props.now.getTime())
+                  })}
             </p>
-            <time>{formatDate(props.start, { dateStyle: "long", timeStyle: undefined })}</time>
+            <time>
+              {formatDate(props.end ?? props.start, {
+                dateStyle: "long",
+                timeStyle: undefined
+              })}
+            </time>
           </div>
         </div>
       </div>
@@ -120,14 +130,16 @@ export function Calendar() {
     })
   }
 
-  if (!isWishFestivalFinale(now) && isBlessingEvent(now)) {
+  if (isBlessingEvent(now)) {
+    const finaleEnd = getWishFestivalFinaleEnd(now)
     events.push({
       id: "wish-festival-finale",
       name: "Wish Festival Finale",
       description: "Prismatic Wishes are granted more often.",
       image: "",
       variant: "jirachi_finale",
-      start: getNextWishFestivalFinaleStart(now)
+      start: finaleEnd ? now : getNextWishFestivalFinaleStart(now),
+      end: finaleEnd ?? undefined
     })
   }
 
