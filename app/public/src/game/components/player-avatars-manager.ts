@@ -254,19 +254,18 @@ export default class PlayerAvatarsManager {
   /** false when this player has no visible avatar, so the caller can fall back */
   showEmote(playerId: string, emote?: string): boolean {
     const sprite = this.sprites.get(playerId)
-    if (!sprite?.scene) return false
-    const useVisibleHost = !sprite.visible && playerId === this.ownId
-    // Consume remote emotes while their walking avatar is transitioning.
-    if (!sprite.visible && !useVisibleHost) return true
-    const target = useVisibleHost ? this.getEmoteMenuHost(sprite) : sprite
-    // Let BoardManager fall back to a visible scouting avatar.
-    if (!target.visible) return false
-    target.animationLocked = false
+    /* Claim the emote only when this player's own walking avatar is the one on
+       screen. Hidden, it belongs on their scouting marker in the side lane,
+       which BoardManager owns: borrowing whichever avatar happens to be visible
+       puts one player's emote on another player's head, and swallowing it stops
+       the fallback running at all. */
+    if (!sprite?.scene || !sprite.visible) return false
+    sprite.animationLocked = false
     this.scene.animationManager?.play(
-      target,
-      PokemonAnimations[target.name].emote
+      sprite,
+      PokemonAnimations[sprite.name].emote
     )
-    if (emote) target.drawSpeechBubble(emote, playerId !== this.ownId)
+    if (emote) sprite.drawSpeechBubble(emote, playerId !== this.ownId)
     return true
   }
 
