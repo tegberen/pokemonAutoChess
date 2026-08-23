@@ -24,11 +24,14 @@ import type { IPokemonData } from "../../../../../types/interfaces/PokemonData"
 import { isOnBench } from "../../../../../utils/board"
 import { roundToNDigits } from "../../../../../utils/number"
 import { schemaValues } from "../../../../../utils/schemas"
+import { EffectEnum } from "../../../../../types/enum/Effect"
+import { GalarFossil } from "../../../../../types/enum/FossilUnlock"
 import {
-  selectFossilUnlocks,
+  selectSpectatedFossilUnlocks,
   selectSpectatedPlayer,
   useAppSelector
 } from "../../../hooks"
+import type { IFossilUnlocksState } from "../../../stores/GameStore"
 import { addIconsToDescription } from "../../utils/descriptions"
 import { cc } from "../../utils/jsx"
 import { getCachedPortrait } from "../game/game-pokemon-portrait"
@@ -58,7 +61,7 @@ export default function SynergyDetailComponent(props: {
   const additionalPokemons = useAppSelector(
     (state) => state.game.additionalPokemons
   )
-  const fossilUnlocks = useAppSelector(selectFossilUnlocks)
+  const fossilUnlocks = useAppSelector(selectSpectatedFossilUnlocks)
   const stageLevel = useAppSelector((state) => state.game.stageLevel)
   const spectatedPlayer = useAppSelector(selectSpectatedPlayer)
   const specialGameRule = useAppSelector((state) => state.game.specialGameRule)
@@ -88,11 +91,7 @@ export default function SynergyDetailComponent(props: {
   /* fossil unlocks are personal, so only the ones this player has earned are
      listed, the same way additionals wait on the lobby's picks */
   const unlockables = keepFirstOfFamily(
-    PRECOMPUTED_POKEMONS_PER_TYPE_AND_CATEGORY[
-      props.type
-    ].unlockablePokemons.filter((p) =>
-      fossilUnlocks.unlocked.includes(PkmFamily[p as Pkm])
-    )
+    PRECOMPUTED_POKEMONS_PER_TYPE_AND_CATEGORY[props.type].unlockablePokemons
   ).map((p) => getPokemonData(p as Pkm))
 
   const uniques = keepFirstOfFamily(
@@ -210,6 +209,9 @@ export default function SynergyDetailComponent(props: {
               ({SynergyTiersThresholds[props.type][i]}) {t(`effect.${tier}`)}
             </h4>
             <SynergyTierDescription tier={tier} />
+            {tier === EffectEnum.PRIMORDIAL_POWER && (
+              <FossilRestorationState unlocks={fossilUnlocks} />
+            )}
           </div>
         )
       })}
@@ -228,6 +230,7 @@ export default function SynergyDetailComponent(props: {
         pokemons={unlockables}
         type={props.type}
         player={spectatedPlayer}
+        unlockedFossils={fossilUnlocks.unlocked}
         marginTop="0.5em"
       />
       <PokemonPortraitList
@@ -252,10 +255,63 @@ export default function SynergyDetailComponent(props: {
   )
 }
 
+/* Restoration state is public: which Galar fossils this player holds, and the
+   form they currently have restored. Their quest progress is not shown. */
+function FossilRestorationState(props: { unlocks: IFossilUnlocksState }) {
+  const { t } = useTranslation()
+  const { galarFossils, restoredPokemon } = props.unlocks
+  if (galarFossils.length === 0 && restoredPokemon === "") return null
+
+  /* the restored form's passive is the real payoff of the tier, so it is spelled
+     out here rather than left to a hover on the portrait */
+  const restoredPassive =
+    restoredPokemon === "" ? null : getPokemonData(restoredPokemon).passive
+
+  return (
+    <>
+    <div className="synergy-fossil-restoration">
+      {Object.values(GalarFossil).map((fossil) => (
+        <img
+          key={fossil}
+          className={galarFossils.includes(fossil) ? "" : "is-locked"}
+          src={`assets/item/${fossil}.webp`}
+          alt={fossil}
+          title={t(`galar_fossil.${fossil}`)}
+        />
+      ))}
+      {restoredPokemon !== "" && (
+        <>
+          <span>{t("fossil_unlocks.active_restoration")}</span>
+          <img
+            className="restored-portrait"
+            src={getCachedPortrait(
+              getPokemonData(restoredPokemon).index,
+              undefined
+            )}
+            alt={t(`pkm.${restoredPokemon}`)}
+            title={t(`pkm.${restoredPokemon}`)}
+          />
+        </>
+      )}
+    </div>
+    {restoredPassive && (
+      <p className="synergy-fossil-passive">
+        {/* defaultValue widens the key to string: four Passive members have
+            no description, so the template union is not a valid key type */}
+        {addIconsToDescription(
+          t(`passive_description.${restoredPassive}`, { defaultValue: "" })
+        )}
+      </p>
+    )}
+    </>
+  )
+}
+
 function PokemonPortraitList(props: {
   pokemons: IPokemonData[]
   type: Synergy
   player?: IPlayer
+  unlockedFossils?: Pkm[]
   marginTop?: string
 }) {
   const teamFamilies = new Set(
@@ -281,6 +337,10 @@ function PokemonPortraitList(props: {
           type={props.type}
           player={props.player}
           teamFamilies={teamFamilies}
+          locked={
+            props.unlockedFossils != null &&
+            !props.unlockedFossils.includes(PkmFamily[p.name])
+          }
         />
       ))}
     </div>
@@ -292,11 +352,13 @@ function PokemonPortrait(props: {
   type: Synergy
   player?: IPlayer
   teamFamilies: Set<Pkm>
+  locked?: boolean
 }) {
   return (
     <div
       className={cc("pokemon-portrait", {
         additional: props.p.additional,
+        unlockable: props.locked === true,
         regional: props.p.regional,
         acquired: props.teamFamilies.has(PkmFamily[props.p.name])
       })}

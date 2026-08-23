@@ -32,6 +32,8 @@ import { schemaValues } from "../utils/schemas"
 const EvolvedSwinubs: Pkm[] = [Pkm.PILOSWINE, Pkm.MAMOSWINE]
 const WIMPOD_HP_THRESHOLD = 0.5
 const ANORITH_BUGS_REQUIRED = 2
+// GRASS on the board that completes LILEEP outright, instead of two tidal waves
+const LILEEP_GRASS_REQUIRED = 3
 
 export function initFossilUnlocks(player: Player, state: GameState) {
   const unlocks = new PlayerFossilUnlocks()
@@ -252,9 +254,7 @@ export function onFossilUnlockDamageReceived(pokemon: PokemonEntity) {
 // LILEEP
 export function onFossilUnlockTidalWave(player: Player | undefined) {
   if (!player) return
-  if (player.synergies.hasSynergyActive(Synergy.GRASS)) {
-    advanceFossilUnlockProgress(player, Pkm.LILEEP)
-  }
+  advanceFossilUnlockProgress(player, Pkm.LILEEP)
 }
 
 // ARCHEN and SHIELDON, both scored over a single combat
@@ -339,7 +339,15 @@ export function onFossilUnlockCombatStart(player: Player) {
   if (countFielded(player, Synergy.BUG) >= ANORITH_BUGS_REQUIRED) {
     advanceFossilUnlockProgress(player, Pkm.ANORITH)
   }
-  recordFossilUnlockBest(player, Pkm.CRANIDOS, countFieldedStars(player, Synergy.DRAGON))
+  recordFossilUnlockBest(
+    player,
+    Pkm.CRANIDOS,
+    countFieldedStars(player, Synergy.DRAGON)
+  )
+  if ((player.synergies.get(Synergy.GRASS) ?? 0) >= LILEEP_GRASS_REQUIRED) {
+    const lileep = FossilUnlockDefinitionByPokemon.get(Pkm.LILEEP)
+    if (lileep) recordFossilUnlockBest(player, Pkm.LILEEP, lileep.target)
+  }
 }
 
 /* the reveal is paid out at the end of the combat rather than at its start, and

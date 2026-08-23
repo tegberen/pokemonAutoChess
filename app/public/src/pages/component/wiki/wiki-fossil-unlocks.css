@@ -40,6 +40,16 @@
   font-weight: 700;
 }
 
+/* sits under the entry notice: subordinate to it, still above the recipes */
+.wiki-fossil-capstone {
+  max-width: 88ch;
+  margin: -0.6em 0 1.2em;
+  padding-left: calc(6px + 1em);
+  color: var(--color-fg-secondary);
+  font-size: 0.88em;
+  line-height: 1.45;
+}
+
 .wiki-fossil-unlocks ul {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));

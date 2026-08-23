@@ -34,6 +34,14 @@ const NO_FOSSIL_UNLOCKS: IFossilUnlocksState = {
 export const selectFossilUnlocks = (state: RootState): IFossilUnlocksState =>
   state.game.fossilUnlocksByPlayerId[state.network.uid] ?? NO_FOSSIL_UNLOCKS
 
+/* lock state and restored form of whoever is being spectated. Never used for
+   quest progress, which stays private to its owner. */
+export const selectSpectatedFossilUnlocks = (
+  state: RootState
+): IFossilUnlocksState =>
+  state.game.fossilUnlocksByPlayerId[state.game.playerIdSpectated] ??
+  NO_FOSSIL_UNLOCKS
+
 export const useGameEventResetCountdown = () => {
   const now = new Date()
   const resetDate = getGameEventResetDate()

@@ -5038,7 +5038,11 @@ export default class Simulation extends Schema implements ISimulation {
         if (!isGhostPlayer) {
           onFossilUnlockFightWon(
             player,
-            winningTeam ? schemaValues(winningTeam) : []
+            winningTeam
+              ? schemaValues(winningTeam).filter(
+                  (entity) => entity.player === player
+                )
+              : []
           )
         }
         if (!isPvE && !isGhostPlayer) {
@@ -5829,7 +5833,12 @@ export default class Simulation extends Schema implements ISimulation {
     healAll: boolean = false
   ) {
     const isRed = team === Team.RED_TEAM
-    onFossilUnlockTidalWave(isRed ? this.redPlayer : this.bluePlayer)
+    if (isRed) {
+      onFossilUnlockTidalWave(this.redPlayer)
+    } else {
+      onFossilUnlockTidalWave(this.bluePlayer)
+      onFossilUnlockTidalWave(this.bluePartnerPlayer)
+    }
     const orientation = isRed ? Orientation.DOWN : Orientation.UP
     this.room.broadcast(Transfer.ABILITY, {
       id: this.id,

@@ -91,6 +91,9 @@ export function WikiFossilRestorations() {
             )
           )}
       </p>
+      <p className="wiki-fossil-capstone">
+        {addIconsToDescription(t("fossil_unlocks.restoration_capstone"))}
+      </p>
       <ul>
         {GalarFossilRestorations.map(({ fossils, pokemon }) => {
           const restored = getPokemonData(pokemon)
