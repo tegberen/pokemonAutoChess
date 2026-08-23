@@ -836,7 +836,8 @@ export enum Title {
   THE_SCRIBBLER = "THE_SCRIBBLER",
   SHOW_OFF = "SHOW_OFF",
   HOT_STREAK = "HOT_STREAK",
-  ANCIENT = "ANCIENT"
+  ANCIENT = "ANCIENT",
+  WHALE = "WHALE"
 }
 
 export interface IBoardEvent {

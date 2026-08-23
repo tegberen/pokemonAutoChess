@@ -170,6 +170,7 @@ export enum Blessing {
   SHELL_ARMOR_BLESSING = "SHELL_ARMOR_BLESSING",
   LEAF_TORNADO = "LEAF_TORNADO",
   MARIACHI_MAYHEM = "MARIACHI_MAYHEM",
+  HIGH_BREACHING = "HIGH_BREACHING",
   ICEBREAKER = "ICEBREAKER",
   RAMPAGE = "RAMPAGE",
   SOUL_DRAIN = "SOUL_DRAIN",
@@ -689,6 +690,11 @@ export const FLOWER_QUEEN_MIN_MAX_PP = 10
 export const LEAF_TORNADO_BOUNCES = 2
 export const LEAF_TORNADO_DAMAGE_RATIO = 0.5
 export const MARIACHI_MAYHEM_CONFUSION_DURATION = 2000
+export const HIGH_BREACHING_MAX_PP = 60
+export const HIGH_BREACHING_LEAP_EVERY = 3
+export const HIGH_BREACHING_CRASH_RANGE = 4
+// 500ms up, 500ms of skydive animation, so the crash lands with the sprite
+export const HIGH_BREACHING_CRASH_DELAY = 1000
 export const ICEBREAKER_LUCK_ON_KO = 20
 export const PANIC_BUTTON_PLAYER_DAMAGE = 4
 export const RAMPAGE_DURATION_EXTENSION = 2000
@@ -888,6 +894,7 @@ export const HERO_BLESSING_GIFT: { [blessing in Blessing]?: Pkm } = {
   [Blessing.LEAF_TORNADO]: Pkm.SNIVY,
   [Blessing.MARIACHI_MAYHEM]: Pkm.LOTAD,
   [Blessing.ICEBREAKER]: Pkm.PIPLUP,
+  [Blessing.HIGH_BREACHING]: Pkm.WAILMER,
   [Blessing.RAMPAGE]: Pkm.DEINO,
   [Blessing.SOUL_DRAIN]: Pkm.LITWICK,
   [Blessing.FLOWER_QUEEN]: Pkm.FLOETTE,
@@ -919,6 +926,7 @@ export const HERO_BLESSING_FAMILY: { [blessing in Blessing]?: Pkm } = {
   [Blessing.LEAF_TORNADO]: Pkm.SNIVY,
   [Blessing.MARIACHI_MAYHEM]: Pkm.LOTAD,
   [Blessing.ICEBREAKER]: Pkm.PIPLUP,
+  [Blessing.HIGH_BREACHING]: Pkm.WAILMER,
   [Blessing.RAMPAGE]: Pkm.DEINO,
   [Blessing.SOUL_DRAIN]: Pkm.LITWICK,
   [Blessing.FLOWER_QUEEN]: Pkm.FLABEBE,
@@ -951,7 +959,8 @@ export const HERO_BLESSING_ADDS_TO_POOL: Blessing[] = [
   Blessing.PLUNDER,
   Blessing.AURORA_BOREALIS,
   Blessing.RADIANCE,
-  Blessing.PACK_ATTACK
+  Blessing.PACK_ATTACK,
+  Blessing.HIGH_BREACHING
 ]
 
 export interface ScheduledBlessingGrant {

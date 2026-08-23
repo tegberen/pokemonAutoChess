@@ -116,6 +116,7 @@ import {
   MARIACHI_MAYHEM_CONFUSION_DURATION,
   FROST_GEAR_MAX_PP,
   FROST_GEAR_RANGE_BONUS,
+  HIGH_BREACHING_MAX_PP,
   MORTAR_SHELLS_ATTACK_RATIO,
   MORTAR_SHELLS_RANGE_BONUS,
   MORTAR_SHELLS_SPEED_RATIO,
@@ -3630,6 +3631,12 @@ export default class Simulation extends Schema implements ISimulation {
         0,
         false
       )
+    }
+
+    const highBreachingChampion = championOf.get(Blessing.HIGH_BREACHING)
+    if (highBreachingChampion) {
+      highBreachingChampion.skill = Ability.HIGH_BREACHING
+      highBreachingChampion.maxPP = HIGH_BREACHING_MAX_PP
     }
 
     const frostGearChampion = championOf.get(Blessing.FROST_GEAR)

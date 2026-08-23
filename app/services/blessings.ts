@@ -2655,6 +2655,9 @@ export const blessingEffectService: {
   [Blessing.ICEBREAKER]: (player, state, room) =>
     heroBlessingEffect(Blessing.ICEBREAKER, player, state, room),
 
+  [Blessing.HIGH_BREACHING]: (player, state, room) =>
+    heroBlessingEffect(Blessing.HIGH_BREACHING, player, state, room),
+
   [Blessing.RAMPAGE]: (player, state, room) =>
     heroBlessingEffect(Blessing.RAMPAGE, player, state, room),
 

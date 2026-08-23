@@ -1123,6 +1123,9 @@ export default class GameRoom extends Room<{ state: GameState }> {
         if (this.state.hasBlessing(player.id, Blessing.SHOW_OFF)) {
           player.titles.add(Title.SHOW_OFF)
         }
+        if (this.state.hasBlessing(player.id, Blessing.HIGH_BREACHING)) {
+          player.titles.add(Title.WHALE)
+        }
         // both members of a Double Up team share rank 1
         if (this.state.whimsy) {
           player.titles.add(Title.WHIMSY)

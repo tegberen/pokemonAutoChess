@@ -1,0 +1,64 @@
+:root {
+  --color-bg-primary: #3b3d6b;
+  --color-bg-secondary: #4f5488;
+  --color-bg-tertiary: #6d74ab;
+  --color-bg-accent: #d8a583;
+
+  --border-thick: 2px solid #23244a;
+  --border-thin: 1px solid #23244a;
+  --border-extra-thin: 1px solid #23244a;
+}
+
+.custom-bg {
+  background-image: url("/assets/theme/wailord/custombg.webp");
+  background-size: cover;
+  background-position: center;
+}
+
+.lobby h2 {
+  text-shadow: 0px 3px 6px black;
+}
+
+.draggable-window.my-container,
+.game-shop .information > div,
+#game-stage-info,
+.game-spectate-player-info.my-container,
+.team-builder-modal.my-container,
+.game-shop.my-container {
+  background-color: color-mix(in srgb, var(--color-bg-primary) 35%, transparent);
+  backdrop-filter: blur(4px);
+}
+
+.after-menu .my-container,
+.leaderboard .my-container,
+.room-menu.my-container,
+.events-menu .my-container {
+  background-color: color-mix(in srgb, var(--color-bg-primary) 32%, transparent);
+  backdrop-filter: blur(4px);
+}
+
+.leaderboard [data-react-window-index]:nth-child(odd) .my-box {
+  background: color-mix(in srgb, var(--color-bg-secondary) 45%, transparent);
+}
+
+.leaderboard [data-react-window-index]:nth-child(even) .my-box {
+  background: color-mix(in srgb, var(--color-bg-primary) 45%, transparent);
+}
+
+.scales-ap .ability-value {
+  color: #d8a583;
+}
+
+/* New Game button — sunbeam gold on the ocean palette, same bubbly style */
+.lobby .play-button.bubbly.green {
+  background: #d8a583;
+  color: #2a2340;
+  box-shadow: inset -6px -6px 0px 0px #b07f5f, var(--shadow-clickable);
+}
+.lobby .play-button.bubbly.green:not([disabled]):hover {
+  background: #e4b696;
+}
+.lobby .play-button.bubbly.green:not([disabled]):active {
+  background: #d8a583;
+  box-shadow: inset 6px 6px 0px 0px #b07f5f, var(--shadow-clickable);
+}

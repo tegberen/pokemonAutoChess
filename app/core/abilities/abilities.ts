@@ -260,6 +260,7 @@ import {
   HiddenPowerYStrategy,
   HiddenPowerZStrategy
 } from "./hidden-power"
+import { HighBreachingStrategy } from "./high-breaching"
 import { HighHorsepowerStrategy } from "./high-horsepower"
 import { HighJumpKickStrategy } from "./high-jump-kick"
 import { HornAttackStrategy } from "./horn-attack"
@@ -1000,6 +1001,7 @@ export const AbilityStrategies: { [key in Ability]: AbilityStrategy } = {
   [Ability.HIDDEN_POWER_X]: new HiddenPowerXStrategy(),
   [Ability.HIDDEN_POWER_Y]: new HiddenPowerYStrategy(),
   [Ability.HIDDEN_POWER_Z]: new HiddenPowerZStrategy(),
+  [Ability.HIGH_BREACHING]: new HighBreachingStrategy(),
   [Ability.HIGH_HORSEPOWER]: new HighHorsepowerStrategy(),
   [Ability.HIGH_JUMP_KICK]: new HighJumpKickStrategy(),
   [Ability.HORN_ATTACK]: new HornAttackStrategy(),

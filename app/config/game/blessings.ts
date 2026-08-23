@@ -1586,6 +1586,12 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     icon: "ice_breaker",
     grantsPokemonImmediately: true
   },
+  [Blessing.HIGH_BREACHING]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "high_breaching",
+    grantsPokemonImmediately: true
+  },
   [Blessing.RAMPAGE]: {
     tier: BlessingTier.PRISMATIC,
     availableAtStages: [4],

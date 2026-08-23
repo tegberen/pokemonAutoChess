@@ -1826,6 +1826,7 @@
 		"PUMMELING_PAYBACK": "Pummeling Payback",
 		"VOLT_SURGE": "Volt Surge",
 		"SUPERCELL_SLAM": "Supercell Slam",
+		"HIGH_BREACHING": "High Breaching",
 		"HIGH_HORSEPOWER": "High Horsepower",
 		"CITY_SHUTTLE": "City Shuttle",
 		"BULLET_PUNCH": "Bullet Punch",
@@ -2424,6 +2425,7 @@
 		"PUMMELING_PAYBACK": "Pelt the target with a storm of punches, dealing [20,40,60,120,SP] + 125% ATK SPECIAL and heals [20,30,40,80,SP] HP.",
 		"VOLT_SURGE": "The user supercharges itself, gaining ELECTRIC_FIELD, 20 SPEED and [10,20,30,60,SP] max HP. Then every third attack chains through up to 4 nearby enemies, dealing [10,20,30,60,SP] SPECIAL each.",
 		"SUPERCELL_SLAM": "Jump and land in the middle of the enemy team, dealing [10,20,40,80,SP] SPECIAL to all ADJACENT enemy Pokemon and gaining [10,20,40,80,SP] SHIELD",
+		"HIGH_BREACHING": "Gain [15,30,60] SHIELD and deal [10,20,40,SP] SPECIAL to ADJACENT enemies. Every third cast, leap high into the air and crash into the middle of the enemy team, dealing [60,120,240,SP] SPECIAL within 4 tiles and knocking those enemies back 1 tile. Enemies knocked past the edge are washed off the board.",
 		"HIGH_HORSEPOWER": "Charges through the target, then deals [15,30,60,120,SP] SPECIAL to all ADJACENT enemies. If only one enemy is hit, deals double SPECIAL",
 		"CITY_SHUTTLE": "Leap to the closest ally and saddle them on the user's back, then dash to the farthest enemy reachable. Deal [10,20,30,40,SP] SPECIAL + [100,SP]% of the carried ally's ATK to all enemy Pokémon in the path. Grant [20,40,80,160,SP] SHIELD to the user and the carried ally.",
 		"BULLET_PUNCH": "Deal [20,30,40,80,SP] TRUE to the target, then gain [20,30,40,80,SP] SPEED for 2 seconds.",
@@ -4117,7 +4119,8 @@
 		"THE_SCRIBBLER": "The Scribbler",
 		"SHOW_OFF": "Show Off",
 		"HOT_STREAK": "Hot",
-		"ANCIENT": "Ancient"
+		"ANCIENT": "Ancient",
+		"WHALE": "Whale"
 	},
 	"title_description": {
 		"NOVICE": "Play your first game",
@@ -4222,7 +4225,8 @@
 		"THE_SCRIBBLER": "Win a Smeargle Scribble Tournament",
 		"SHOW_OFF": "Win a game with the Show Off Wish",
 		"HOT_STREAK": "Win 3 games in a row",
-		"ANCIENT": "Complete every Fossil unlock in a single game"
+		"ANCIENT": "Complete every Fossil unlock in a single game",
+		"WHALE": "Win a game with the High Breaching Wish"
 	},
 	"weather_forecast": "Weather forecast",
 	"blessings": "Wishes",
@@ -4602,6 +4606,7 @@
 		"wishfestival": "Wish Festival",
 		"hot": "Arcanine's Blaze",
 		"embersofthepast": "Embers of the Past",
+		"wailord": "Wailord's World",
 		"origin": "Origin"
 	},
 	"jukebox": {
@@ -6078,6 +6083,10 @@
 		"MARIACHI_MAYHEM": {
 			"name": "Mariachi Mayhem",
 			"description": "Gain a Lotad. When your STRONGEST Lotad casts its ability, all enemies within its RANGE suffer CONFUSION for 2 seconds."
+		},
+		"HIGH_BREACHING": {
+			"name": "High Breaching",
+			"description": "Gain a Wailmer and add it to the pool. Your STRONGEST Wailmer's ability is replaced with High Breaching, and its max PP is set to 60."
 		},
 		"ICEBREAKER": {
 			"name": "Icebreaker",

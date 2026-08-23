@@ -2020,6 +2020,82 @@ const grandIgnitionTorchAnimation =
   })
 }
 
+/* a ring of FLOOD_WAVE sprites laid tangentially, crests facing outward, so each
+   one is an arc segment instead of a spoke. The whole ring is built at unit
+   radius inside a container and then scaled up, which grows the segments and the
+   radius together — the seams never open, so it reads as one circular wave */
+function highBreachingRing(
+  scene: GameScene | DebugScene,
+  x: number,
+  y: number,
+  segments: number,
+  from: number,
+  to: number,
+  alpha: number,
+  delay: number
+) {
+  const ring = scene.add
+    .container(x, y)
+    .setDepth(DEPTH.ABILITY_BELOW_POKEMON)
+  scene.abilitiesVfxGroup?.add(ring)
+
+  const radius = CELL_WIDTH * 0.9
+  // arc length each segment must cover, plus overlap so the seams stay hidden
+  const segmentWidth = ((2 * Math.PI * radius) / segments / CELL_WIDTH) * 1.6
+  for (let step = 0; step < segments; step++) {
+    const angle =
+      (step / segments) * Math.PI * 2 + Phaser.Math.FloatBetween(-0.1, 0.1)
+    const segment = scene.add
+      .sprite(
+        Math.cos(angle) * radius,
+        Math.sin(angle) * radius,
+        "abilities",
+        `FLOOD_WAVE/00${Phaser.Math.Between(0, 2)}.png`
+      )
+      .setOrigin(0.5, 0.5)
+      // crest is drawn at the sprite's top, so this points it outward
+      .setRotation(angle + Math.PI / 2)
+      .setScale(segmentWidth, segmentWidth * Phaser.Math.FloatBetween(0.85, 1.1))
+      .setAlpha(Phaser.Math.FloatBetween(0.8, 1))
+    ring.add(segment)
+  }
+
+  ring.setScale(from, from * BOARD_PLANE_FLATTEN).setAlpha(0)
+  scene.tweens.add({
+    targets: ring,
+    scaleX: to,
+    scaleY: to * BOARD_PLANE_FLATTEN,
+    delay,
+    duration: 720,
+    ease: Phaser.Math.Easing.Quadratic.Out,
+    onComplete: () => ring.destroy(),
+    onUpdate: (tween) => {
+      ring.setAlpha(
+        tween.progress < 0.18
+          ? (tween.progress / 0.18) * alpha
+          : (1 - (tween.progress - 0.18) / 0.82) * alpha
+      )
+    }
+  })
+}
+
+/* HIGH_BREACHING crash: Dive's splash as the core of the impact, with two rings
+   of wave sprites sweeping out of it to the tiles the crash reaches */
+function highBreachingCrashAnimation(args: AbilityAnimationArgs) {
+  const { scene, targetX, targetY, flip } = args
+  const [x, y] = transformEntityCoordinates(targetX, targetY, flip)
+
+  addAbilitySprite(scene, Ability.DIVE, 0, [x, y], {
+    scale: [4, 4 * BOARD_PLANE_FLATTEN],
+    depth: DEPTH.ABILITY_BELOW_POKEMON
+  })
+  // 12 segments is dense enough that the ring never shows its parts
+  highBreachingRing(scene, x, y, 12, 0.6, 3.4, 1, 0)
+  highBreachingRing(scene, x, y, 12, 0.5, 4.6, 0.55, 140)
+
+  scene.shakeCamera({ duration: 300, intensity: 0.014 })
+}
+
 const toxicResonanceBeatAnimation =
   (beat: number) => (args: AbilityAnimationArgs) => {
     const { scene, positionX, positionY, flip } = args
@@ -2936,6 +3012,7 @@ export const AbilitiesAnimations: {
   ["GRAND_IGNITION_TORCH_3"]: grandIgnitionTorchAnimation(3),
   ["GRAND_IGNITION_TORCH_4"]: grandIgnitionTorchAnimation(4),
   ["GRAND_IGNITION_BLAZE"]: grandIgnitionBlazeAnimation,
+  ["HIGH_BREACHING_CRASH"]: highBreachingCrashAnimation,
   ["UNISON_BEAM"]: unisonBeamAnimation(),
   ["UNISON_NOVA"]: unisonNovaAnimation(),
   ["UNISON_STARFALL"]: unisonStarfallAnimation(),
@@ -3724,6 +3801,12 @@ export const AbilitiesAnimations: {
   }),
   [Ability.JUDGEMENT]: onTarget({ origin: [0.5, 1] }),
   [Ability.DIVE]: onCaster({ scale: 3, depth: DEPTH.ABILITY_BELOW_POKEMON }),
+  // the leap itself is the skydive animation, so the cast reuses Dive's splash
+  [Ability.HIGH_BREACHING]: onCaster({
+    scale: 3,
+    depth: DEPTH.ABILITY_BELOW_POKEMON,
+    ability: Ability.DIVE
+  }),
   [Ability.SMOKE_SCREEN]: onTargetScale3,
   [Ability.BARB_BARRAGE]: onTargetScale2,
   [Ability.OUTRAGE]: onTargetScale2,
