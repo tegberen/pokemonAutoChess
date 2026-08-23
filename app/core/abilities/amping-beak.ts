@@ -21,14 +21,18 @@ export class AmpingBeakStrategy extends AbilityStrategy {
     // the listener is armed once; later casts only raise the stack count
     if (pokemon.ampingBeakStacks > 1) return
 
+    let lastTriggeredAttackCount = -1
+
     pokemon.effectsSet.add(
       new OnAttackEffect(({ pokemon, target, board }) => {
         if (
           !target ||
-          pokemon.count.attackCount % AMPING_BEAK_ATTACK_INTERVAL !== 0
+          pokemon.count.attackCount % AMPING_BEAK_ATTACK_INTERVAL !== 0 ||
+          pokemon.count.attackCount === lastTriggeredAttackCount
         ) {
           return
         }
+        lastTriggeredAttackCount = pokemon.count.attackCount
         for (let n = 0; n < pokemon.ampingBeakStacks; n++) {
           pokemon.commands.push(
             new AttackCommand(
