@@ -305,6 +305,7 @@ export function onFossilUnlockSpotlightCast(pokemon: PokemonEntity) {
   if (!pokemon.inSpotlight) return
   const player = pokemon.player
   if (!player || pokemon.isGhostOpponent) return
+  if (!player.synergies.hasSynergyActive(Synergy.LIGHT)) return
   pokemon.spotlightCasts += 1
   recordFossilUnlockBest(player, Pkm.AMAURA, pokemon.spotlightCasts)
 }
