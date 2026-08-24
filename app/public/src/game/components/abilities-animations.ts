@@ -5693,6 +5693,12 @@ export const AbilitiesAnimations: {
     scale: 6,
     depth: DEPTH.ABILITY_BELOW_POKEMON
   }),
+  ["GRACIDEA_BLOSSOM"]: onCaster({
+    ability: "GREEN_ORB",
+    oriented: false,
+    scale: 1,
+    depth: DEPTH.ABILITY_BELOW_POKEMON
+  }),
   ["COMBAT_BLESSING_ACTIVATION"]: onCaster({
     oriented: false,
     scale: 2,

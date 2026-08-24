@@ -608,6 +608,18 @@ export default class BattleManager {
           pkmSprite.lifebar?.setCombatBlessingTimer(pokemon.combatBlessingTimer)
           break
 
+        case "critMarkTimer":
+          pkmSprite.lifebar?.setCritMarkTimer(pokemon.critMarkTimer)
+          break
+
+        case "focusPunchCharge":
+          pkmSprite.lifebar?.setFocusPunchCharge(pokemon.focusPunchCharge)
+          break
+
+        case "trueDamageMarkTimer":
+          pkmSprite.lifebar?.setTrueDamageMarkTimer(pokemon.trueDamageMarkTimer)
+          break
+
         case "centerStageSpotlight":
           if (pokemon.centerStageSpotlight) pkmSprite.addCenterStageSpotlight()
           else pkmSprite.removeCenterStageSpotlight()

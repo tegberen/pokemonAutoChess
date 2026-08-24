@@ -1063,7 +1063,10 @@ export default class BoardManager {
   renderTrainingBag() {
     this.hideTrainingBag()
     const fightingTier = getSynergyTier(this.player.synergies, Synergy.FIGHTING)
-    if (fightingTier >= 4) {
+    const hasMuscleBandBlessing = this.state.blessingsByPlayerId
+      .get(this.player.id)
+      ?.blessings.includes(Blessing.MUSCLE_BAND_BLESSING)
+    if (fightingTier >= 4 || hasMuscleBandBlessing) {
       this.trainingRack = this.scene.add
         .sprite(605, 775, "training_bag", "rack.png")
         .setScale(1.5)

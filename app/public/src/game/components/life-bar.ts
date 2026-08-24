@@ -13,6 +13,12 @@ export default class LifeBar extends GameObjects.Graphics {
   // ICY_REFLECTION: 0-100% towards this unit's next recast
   icyReflectionCharge = 0
   combatBlessingTimer = 0
+  // SCOPE_LENS blessing crit mark
+  critMarkTimer = 0
+  // PUNCHING_GLOVE blessing charge towards the next Focus Punch
+  focusPunchCharge = 0
+  // SHINY_CHARM blessing true damage mark
+  trueDamageMarkTimer = 0
   team: Team
   flip: boolean
 
@@ -48,9 +54,28 @@ export default class LifeBar extends GameObjects.Graphics {
     const ppColor = 0x209cee
     const icyReflectionColor = 0x8ef6ff
     const combatBlessingColor = 0xf7d51d
+    const critMarkColor = 0xede354
+    const focusPunchColor = 0xc93130
+    const trueDamageMarkColor = 0xffffff
     const hpPerSegment = 25
-    const hasExtraBar =
-      this.icyReflectionCharge > 0 || this.combatBlessingTimer > 0
+    // one shared slot under the PP bar, so the timers are ordered by how
+    // urgent they are to read rather than drawn on top of each other
+    const extraBar =
+      this.combatBlessingTimer > 0
+        ? { progress: this.combatBlessingTimer, color: combatBlessingColor }
+        : this.trueDamageMarkTimer > 0
+          ? { progress: this.trueDamageMarkTimer, color: trueDamageMarkColor }
+          : this.critMarkTimer > 0
+            ? { progress: this.critMarkTimer, color: critMarkColor }
+            : this.focusPunchCharge > 0
+              ? { progress: this.focusPunchCharge, color: focusPunchColor }
+              : this.icyReflectionCharge > 0
+                ? {
+                    progress: this.icyReflectionCharge,
+                    color: icyReflectionColor
+                  }
+                : null
+    const hasExtraBar = extraBar !== null
 
     this.clear()
     this.clearMask()
@@ -119,20 +144,12 @@ export default class LifeBar extends GameObjects.Graphics {
       this.fillRect(1, 9, ppPercentage * innerBarWidth, 3)
     }
 
-    if (hasExtraBar) {
+    if (extraBar) {
       const y = this.maxPP === undefined ? 9 : 13
-      const progress =
-        this.combatBlessingTimer > 0
-          ? this.combatBlessingTimer
-          : this.icyReflectionCharge
       this.fillStyle(ppBarBgColor, 1)
       this.fillRect(1, y, innerBarWidth, 3)
-      this.fillStyle(
-        this.combatBlessingTimer > 0
-          ? combatBlessingColor
-          : icyReflectionColor
-      )
-      this.fillRect(1, y, (progress / 100) * innerBarWidth, 3)
+      this.fillStyle(extraBar.color)
+      this.fillRect(1, y, (extraBar.progress / 100) * innerBarWidth, 3)
     }
   }
 
@@ -184,6 +201,36 @@ export default class LifeBar extends GameObjects.Graphics {
     this.scene.tweens.add({
       targets: this,
       combatBlessingTimer: value,
+      duration: 150,
+      onUpdate: this.draw.bind(this),
+      ease: "Sine.easeOut"
+    })
+  }
+
+  setCritMarkTimer(value: number) {
+    this.scene.tweens.add({
+      targets: this,
+      critMarkTimer: value,
+      duration: 150,
+      onUpdate: this.draw.bind(this),
+      ease: "Sine.easeOut"
+    })
+  }
+
+  setFocusPunchCharge(value: number) {
+    this.scene.tweens.add({
+      targets: this,
+      focusPunchCharge: value,
+      duration: 150,
+      onUpdate: this.draw.bind(this),
+      ease: "Sine.easeOut"
+    })
+  }
+
+  setTrueDamageMarkTimer(value: number) {
+    this.scene.tweens.add({
+      targets: this,
+      trueDamageMarkTimer: value,
       duration: 150,
       onUpdate: this.draw.bind(this),
       ease: "Sine.easeOut"

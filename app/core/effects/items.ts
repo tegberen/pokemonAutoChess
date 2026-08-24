@@ -40,26 +40,58 @@ import {
   WandererBehavior,
   WandererType
 } from "../../types/enum/Wanderer"
+import { Weather } from "../../types/enum/Weather"
 import {
+  AQUA_EGG_PHIONE_ALLY_PP,
   Blessing,
+  CLEAR_AMULET_BLESSED_RADIUS,
+  COVERT_CLOAK_VANISH_DURATION,
   CRYSTAL_CLUSTERS_SIMULTANEOUS,
+  DEEP_SEA_TOOTH_PP_ON_KILL,
   EMERALD_ORB_HEAL_RANGE,
+  EXP_CHARM_BLESSED_EXPERIENCE,
+  FAIRY_FEATHER_LUCK_ON_ATTACK,
   FAST_FOOD_DELIVERY_ROUNDS_BEFORE_ROTTING,
   FESTIVE_PICNIC_MAX_HP_ON_OVERWRITE,
   FIRE_SHARD_ATTACK,
   FIRE_SHARD_LIFE_COST,
   FIRE_SHARD_SPEED,
+  GRACIDEA_FLOWER_HEAL_INTERVAL,
+  GRACIDEA_FLOWER_HEAL_MAX_HP_RATIO,
+  GRIP_CLAW_CRIT_POWER,
+  GRIP_CLAW_MIN_TARGET_CRIT_POWER,
+  KINGS_ROCK_FLINCH_DURATION,
   LUCKY_DICE_BOUNCE_DAMAGE_RATIO,
+  MAX_REVIVE_RALLY_RADIUS,
+  MAX_REVIVE_RALLY_SPEED,
   MOVE_TUTOR_MAX_PP,
+  POKEMONOMICON_WOUND_DURATION,
+  POWER_LENS_ABILITY_POWER_WHEN_HIT,
+  PROTECTIVE_PADS_ABILITY_POWER_VS_SHIELDED,
+  PROTECTIVE_PADS_ATTACK_VS_SHIELDED,
+  PUNCHING_GLOVE_ATTACKS_PER_FOCUS_PUNCH,
+  RAZOR_CLAW_ATTACK_ON_CRIT,
   SAPPHIRE_ORB_ARMOR_BREAK_DURATION,
-  SAPPHIRE_ORB_BOUNCES
+  SAPPHIRE_ORB_BOUNCES,
+  SCOPE_LENS_MARK_DURATION,
+  SHELL_BELL_TIDAL_WAVE_DELAY,
+  SHELL_BELL_TIDAL_WAVE_LEVEL,
+  SMOKE_BALL_SPIKES_LOCK_DURATION,
+  SOOTHE_BELL_MAX_PP_RATIO,
+  STAR_DUST_RUNE_PROTECT_DURATION,
+  STICKY_BARB_SELF_DAMAGE_ATTACK_RATIO,
+  UPGRADE_BLESSED_SPEED_RATIO,
+  UPGRADE_BLESSED_STACKS_REQUIRED,
+  WIDE_LENS_BLESSED_RANGE,
+  XRAY_VISION_EXPOSE_DURATION,
+  XRAY_VISION_HITS_TO_EXPOSE
 } from "../../types/enum/Blessing"
 import { isIn, removeInArray } from "../../utils/array"
 import { grantRegionalTreasuresOnRegionChange } from "../../services/blessings"
 import { getFreeSpaceOnBench, isOnBench } from "../../utils/board"
 import { canEatMoreDishes } from "../../utils/dishes"
 import { distanceC, distanceM } from "../../utils/distance"
-import { max, min } from "../../utils/number"
+import { clamp, max, min } from "../../utils/number"
 import { sacrificePlayerLife } from "../../utils/player-life"
 import {
   chance,
@@ -99,6 +131,46 @@ import {
   PeriodicEffect
 } from "./effect"
 import { onFossilUnlockHarvest } from "../../services/fossil-unlocks"
+
+// item blessings upgrade every copy of their item the player owns, so each
+// upgraded behaviour is gated on the holder's owner having picked the blessing
+export function hasBlessing(
+  pokemon: PokemonEntity,
+  blessing: Blessing
+): boolean {
+  return pokemon.player?.blessings?.includes(blessing) === true
+}
+
+// granted at combat start to each ally the flower reaches, so the healing rides
+// on the Pokemon rather than on the tile it happened to be standing on
+export class GracideaBlossomEffect extends PeriodicEffect {
+  constructor() {
+    super(
+      (pokemon) => {
+        pokemon.handleHeal(
+          GRACIDEA_FLOWER_HEAL_MAX_HP_RATIO * pokemon.maxHP,
+          pokemon,
+          0,
+          false
+        )
+        pokemon.broadcastAbility({ skill: "GRACIDEA_BLOSSOM", ap: 0 })
+      },
+      Item.GRACIDEA_FLOWER,
+      GRACIDEA_FLOWER_HEAL_INTERVAL
+    )
+  }
+}
+
+function isBlessedPadsHitOnShield(
+  pokemon: PokemonEntity,
+  target: PokemonEntity | null
+): boolean {
+  return (
+    target != null &&
+    target.shield > 0 &&
+    hasBlessing(pokemon, Blessing.PROTECTIVE_PADS_BLESSING)
+  )
+}
 
 export const blueOrbOnAttackEffect = new OnAttackEffect(
   ({ pokemon, target, board }) => {
@@ -275,6 +347,13 @@ export const pokemonomiconOnDamageEffect = new OnDamageDealtEffect(
     if (attackType === AttackType.SPECIAL) {
       target.status.triggerBurn(3000, target, pokemon)
       target.addSpecialDefense(-1, pokemon, 0, false)
+      if (hasBlessing(pokemon, Blessing.POKEMONOMICON_BLESSING)) {
+        target.status.triggerWound(
+          POKEMONOMICON_WOUND_DURATION,
+          target,
+          pokemon
+        )
+      }
     }
   }
 )
@@ -363,6 +442,24 @@ export class RunningShoesOnMoveEffect extends OnMoveEffect {
   }
 }
 
+function scatterSmokeBallSpikes(pokemon: PokemonEntity, board: Board) {
+  const origins = [{ x: pokemon.positionX, y: pokemon.positionY }]
+  if (pokemon.targetX >= 0 && pokemon.targetY >= 0) {
+    origins.push({ x: pokemon.targetX, y: pokemon.targetY })
+  }
+  origins.forEach(({ x, y }) => {
+    board.getAdjacentCells(x, y, true).forEach((cell) => {
+      board.addBoardEffect(cell.x, cell.y, EffectEnum.SPIKES, pokemon.simulation)
+      if (cell.value && cell.value.team !== pokemon.team) {
+        cell.value.status.triggerLocked(
+          SMOKE_BALL_SPIKES_LOCK_DURATION,
+          cell.value
+        )
+      }
+    })
+  })
+}
+
 const smokeBallEffect = new OnDamageReceivedEffect(({ pokemon, board }) => {
   if (pokemon.hp > 0 && pokemon.hp < 0.4 * pokemon.maxHP) {
     const cells = board.getAdjacentCells(pokemon.positionX, pokemon.positionY)
@@ -372,6 +469,9 @@ const smokeBallEffect = new OnDamageReceivedEffect(({ pokemon, board }) => {
         cell.value.status.triggerBlinded(4000, cell.value, pokemon)
       }
     })
+    if (hasBlessing(pokemon, Blessing.SMOKE_BALL_BLESSING)) {
+      scatterSmokeBallSpikes(pokemon, board)
+    }
     pokemon.broadcastAbility({ skill: "SMOKE_BALL" })
     pokemon.removeItem(Item.SMOKE_BALL)
     pokemon.addShield(50, pokemon, 0, false)
@@ -760,6 +860,14 @@ export class SootheBellEffect extends PeriodicEffect {
             targetY: lowestHealthAlly.positionY
           })
           lowestHealthAlly.addShield(30, pokemon, 0, false)
+          if (hasBlessing(pokemon, Blessing.SOOTHE_BELL_BLESSING)) {
+            lowestHealthAlly.addPP(
+              SOOTHE_BELL_MAX_PP_RATIO * lowestHealthAlly.maxPP,
+              pokemon,
+              0,
+              false
+            )
+          }
           if (chance(0.3, pokemon)) {
             const converted = lowestHealthAlly.shield
             lowestHealthAlly.shield = 0
@@ -794,7 +902,7 @@ export class CovertCloakEffect extends PeriodicEffect {
             const enemy = cell.value
             const apSteal = Math.min(5, enemy.ap)
             if (enemy.items.has(Item.TWIST_BAND) === false) {
-              enemy.addAbilityPower(-apSteal, enemy, 0, false)
+              enemy.addAbilityPower(-apSteal, pokemon, 0, false)
               pokemon.addAbilityPower(apSteal, pokemon, 0, false)
             }
             enemy.handleSpecialDamage(
@@ -806,6 +914,17 @@ export class CovertCloakEffect extends PeriodicEffect {
               false
             )
           })
+
+        // blessed, every steal also vanishes the holder, the same way Dark 9
+        // vanishes its assassins. This is what lets a cloak hold a frontline
+        if (hasBlessing(pokemon, Blessing.COVERT_CLOAK_BLESSING)) {
+          pokemon.status.untargettable = true
+          pokemon.commands.push(
+            new DelayedCommand(() => {
+              pokemon.status.untargettable = false
+            }, COVERT_CLOAK_VANISH_DURATION)
+          )
+        }
       },
       Item.COVERT_CLOAK,
       4000
@@ -925,13 +1044,52 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
         attacker,
         shouldTargetGainMana: true
       })
-    })
+    }),
+    () => {
+      let attacksSinceLastPunch = 0
+      return new OnAttackEffect(({ pokemon, target, board, crit }) => {
+        if (!target || !hasBlessing(pokemon, Blessing.PUNCHING_GLOVE_BLESSING))
+          return
+        attacksSinceLastPunch++
+        pokemon.focusPunchCharge = Math.round(
+          (attacksSinceLastPunch / PUNCHING_GLOVE_ATTACKS_PER_FOCUS_PUNCH) * 100
+        )
+        if (attacksSinceLastPunch < PUNCHING_GLOVE_ATTACKS_PER_FOCUS_PUNCH)
+          return
+        attacksSinceLastPunch = 0
+        pokemon.focusPunchCharge = 0
+        AbilityStrategies[Ability.FOCUS_PUNCH].process(
+          pokemon,
+          board,
+          target,
+          crit
+        )
+      })
+    }
   ],
 
   [Item.SHELL_BELL]: [
     new OnDamageDealtEffect(({ pokemon, damage, target }) => {
       if (target.id === pokemon.id) return // prevent healing from self-inflicted damage (e.g. Flame Orb)
       pokemon.handleHeal(Math.ceil(0.33 * damage), pokemon, 0, false)
+    }),
+    new OnSimulationStartEffect(({ entity, simulation }) => {
+      if (!hasBlessing(entity, Blessing.SHELL_BELL_BLESSING)) return
+      entity.commands.push(
+        new DelayedCommand(() => {
+          simulation.triggerTidalWave(entity.team, SHELL_BELL_TIDAL_WAVE_LEVEL)
+          simulation.board.cells.forEach((cell) => {
+            if (
+              cell &&
+              cell.team === entity.team &&
+              cell.hp > 0 &&
+              !cell.items.has(Item.SHELL_BELL)
+            ) {
+              cell.addItem(Item.SHELL_BELL)
+            }
+          })
+        }, SHELL_BELL_TIDAL_WAVE_DELAY)
+      )
     })
   ],
 
@@ -949,6 +1107,61 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
     }),
     new OnItemRemovedEffect((pokemon) => {
       pokemon.status.resurrection = false
+    }),
+    // the revive itself is what triggers the blessing's rally
+    new OnResurrectEffect(({ pokemon, board }) => {
+      if (!hasBlessing(pokemon, Blessing.MAX_REVIVE_BLESSING)) return
+      board
+        .getCellsInRadius(
+          pokemon.positionX,
+          pokemon.positionY,
+          MAX_REVIVE_RALLY_RADIUS,
+          true
+        )
+        .forEach((cell) => {
+          if (cell.value && cell.value.team === pokemon.team) {
+            cell.value.addSpeed(MAX_REVIVE_RALLY_SPEED, pokemon, 0, false)
+          }
+        })
+    })
+  ],
+
+  [Item.PROTECTIVE_PADS]: [
+    new OnAttackEffect(({ pokemon, target }) => {
+      if (isBlessedPadsHitOnShield(pokemon, target)) {
+        pokemon.addAttack(PROTECTIVE_PADS_ATTACK_VS_SHIELDED, pokemon, 0, false)
+      }
+    }),
+    new OnAbilityCastEffect((pokemon, board, target) => {
+      if (isBlessedPadsHitOnShield(pokemon, target)) {
+        pokemon.addAbilityPower(
+          PROTECTIVE_PADS_ABILITY_POWER_VS_SHIELDED,
+          pokemon,
+          0,
+          false
+        )
+      }
+    })
+  ],
+
+  [Item.RAZOR_CLAW]: [
+    new OnAttackEffect(({ pokemon, crit }) => {
+      if (crit && hasBlessing(pokemon, Blessing.RAZOR_CLAW_BLESSING)) {
+        pokemon.addAttack(RAZOR_CLAW_ATTACK_ON_CRIT, pokemon, 0, false)
+      }
+    })
+  ],
+
+  [Item.POWER_LENS]: [
+    new OnAttackReceivedEffect(({ pokemon }) => {
+      if (hasBlessing(pokemon, Blessing.POWER_LENS_BLESSING)) {
+        pokemon.addAbilityPower(
+          POWER_LENS_ABILITY_POWER_WHEN_HIT,
+          pokemon,
+          0,
+          false
+        )
+      }
     })
   ],
 
@@ -994,7 +1207,26 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
       if (chance(0.3, pokemon)) {
         target.status.triggerFlinch(3000, pokemon)
       }
-    })
+    }),
+    // the count is per target, so switching away resets it: exposing something
+    // is meant to reward staying on it
+    () => {
+      let exposedTargetId = ""
+      let hitsOnTarget = 0
+      return new OnAttackEffect(({ pokemon, target }) => {
+        if (!target || !hasBlessing(pokemon, Blessing.XRAY_VISION_BLESSING))
+          return
+        if (target.id !== exposedTargetId) {
+          exposedTargetId = target.id
+          hitsOnTarget = 0
+        }
+        hitsOnTarget++
+        if (hitsOnTarget < XRAY_VISION_HITS_TO_EXPOSE) return
+        hitsOnTarget = 0
+        target.trueDamageMarkRemainingMs = XRAY_VISION_EXPOSE_DURATION
+        target.trueDamageMarkTimer = 100
+      })
+    }
   ],
 
   [Item.POKERUS_VIAL]: [
@@ -1008,6 +1240,16 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
     new OnItemGainedEffect((pokemon) => {
       pokemon.status.triggerRuneProtect(60000, pokemon, pokemon)
     }),
+    new OnSimulationStartEffect(({ entity, simulation }) => {
+      if (
+        simulation.weather === Weather.NEUTRAL ||
+        !hasBlessing(entity, Blessing.SAFETY_GOGGLES_BLESSING)
+      )
+        return
+      entity.addAttack(entity.baseAtk, entity, 0, false)
+      entity.addDefense(entity.baseDef, entity, 0, false)
+      entity.addSpecialDefense(entity.baseSpeDef, entity, 0, false)
+    }),
     new OnItemRemovedEffect((pokemon) => {
       pokemon.status.runeProtectCooldown = 0
     })
@@ -1016,6 +1258,15 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
   [Item.KINGS_ROCK]: [
     new OnSimulationStartEffect(({ entity }) => {
       entity.addShield(0.2 * entity.maxHP, entity, 0, false)
+    }),
+    new OnAttackReceivedEffect(({ pokemon, attacker }) => {
+      if (attacker && hasBlessing(pokemon, Blessing.KINGS_ROCK_BLESSING)) {
+        attacker.status.triggerFlinch(
+          KINGS_ROCK_FLINCH_DURATION,
+          attacker,
+          pokemon
+        )
+      }
     })
   ],
 
@@ -1093,6 +1344,20 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
       pokemon.addSpeed(5, pokemon, 0, false)
       pokemon.addAbilityPower(5, pokemon, 0, false)
       pokemon.count.upgradeCount++
+      if (
+        target &&
+        pokemon.count.upgradeCount >= UPGRADE_BLESSED_STACKS_REQUIRED &&
+        hasBlessing(pokemon, Blessing.UPGRADE_BLESSING)
+      ) {
+        target.handleSpecialDamage(
+          Math.round(UPGRADE_BLESSED_SPEED_RATIO * pokemon.speed),
+          board,
+          AttackType.SPECIAL,
+          pokemon,
+          false,
+          false
+        )
+      }
     }),
     new OnItemRemovedEffect((pokemon) => {
       pokemon.addSpeed(-5 * pokemon.count.upgradeCount, pokemon, 0, false)
@@ -1106,6 +1371,11 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
     })
   ],
   [Item.WIDE_LENS]: [
+    new OnSimulationStartEffect(({ entity }) => {
+      if (hasBlessing(entity, Blessing.WIDE_LENS_BLESSING)) {
+        entity.range = WIDE_LENS_BLESSED_RANGE
+      }
+    }),
     new OnAttackEffect(({ pokemon, target, board }) => {
       pokemon.addCritChance(5, pokemon, 0, false)
       pokemon.count.wideLensCount++
@@ -1171,7 +1441,14 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
       pokemon.addPP(5, pokemon, 0, false)
 
       if (hasAttackKilled) {
-        pokemon.addPP(15, pokemon, 0, false)
+        pokemon.addPP(
+          hasBlessing(pokemon, Blessing.DEEP_SEA_TOOTH_BLESSING)
+            ? DEEP_SEA_TOOTH_PP_ON_KILL
+            : 15,
+          pokemon,
+          0,
+          false
+        )
       }
     })
   ],
@@ -1330,7 +1607,31 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
       if (AbilityStrategies[pokemon.skill].canCritByDefault) {
         pokemon.addCritPower(-50, pokemon, 0, false)
       }
-    })
+    }),
+    () => {
+      let hasRaisedGhost = false
+      return new OnKillEffect(({ attacker, target }) => {
+        if (
+          hasRaisedGhost ||
+          !hasBlessing(attacker, Blessing.REAPER_CLOTH_BLESSING)
+        )
+          return
+        hasRaisedGhost = true
+        const ghost = attacker.simulation.addPokemon(
+          PokemonFactory.createPokemonFromName(Pkm.GHOST, attacker.player),
+          target.positionX,
+          target.positionY,
+          attacker.team,
+          true
+        )
+        // the ghost rises as the unit it replaces, before any of its buffs
+        ghost.maxHP = target.baseHP
+        ghost.hp = ghost.maxHP
+        ghost.atk = target.baseAtk
+        ghost.def = target.baseDef
+        ghost.speDef = target.baseSpeDef
+      })
+    }
   ],
 
   [Item.BLUE_ORB]: [blueOrbOnAttackEffect],
@@ -1360,7 +1661,46 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
           shouldTargetGainMana: true
         })
         attacker.status.triggerWound(3000, attacker, pokemon)
+
+        if (
+          hasBlessing(pokemon, Blessing.STICKY_BARB_BLESSING) &&
+          attacker.items.size < 3
+        ) {
+          pokemon.removeItem(Item.STICKY_BARB)
+          attacker.addItem(Item.STICKY_BARB)
+          attacker.stickyBarbCursed = true
+        }
       }
+    }),
+    // the barb hurts whoever carries it once blessed, which is what makes
+    // handing it to an enemy worth doing
+    new OnAttackEffect(({ pokemon, board }) => {
+      const carriesBlessedBarb =
+        pokemon.stickyBarbCursed ||
+        hasBlessing(pokemon, Blessing.STICKY_BARB_BLESSING)
+      if (!carriesBlessedBarb) return
+      const damage = Math.round(
+        STICKY_BARB_SELF_DAMAGE_ATTACK_RATIO * pokemon.atk
+      )
+      const victims = [
+        pokemon,
+        ...board
+          .getAdjacentCells(pokemon.positionX, pokemon.positionY)
+          .map((cell) => cell.value)
+          .filter(
+            (ally): ally is PokemonEntity =>
+              ally != null && ally.team === pokemon.team
+          )
+      ]
+      victims.forEach((victim) =>
+        victim.handleDamage({
+          damage,
+          board,
+          attackType: AttackType.TRUE,
+          attacker: pokemon,
+          shouldTargetGainMana: false
+        })
+      )
     })
   ],
 
@@ -1370,7 +1710,34 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
         Math.round(0.2 * pokemon.maxPP + 2 * pokemon.count.ult)
       )
       pokemon.addPP(ppRegained, pokemon, 0, false)
-    })
+    }),
+    () => {
+      let hasHatched = false
+      return new OnAbilityCastEffect((pokemon) => {
+        if (hasHatched || !hasBlessing(pokemon, Blessing.AQUA_EGG_BLESSING))
+          return
+        const coord =
+          pokemon.simulation.getClosestFreeCellToPokemonEntity(pokemon)
+        if (!coord) return
+        hasHatched = true
+        const phione = pokemon.simulation.addPokemon(
+          PokemonFactory.createPokemonFromName(Pkm.PHIONE, pokemon.player),
+          coord.x,
+          coord.y,
+          pokemon.team,
+          true
+        )
+        phione.effectsSet.add(
+          new OnAbilityCastEffect((caster, board) => {
+            board.cells.forEach((cell) => {
+              if (cell && cell.team === caster.team) {
+                cell.addPP(AQUA_EGG_PHIONE_ALLY_PP, caster, 0, false)
+              }
+            })
+          })
+        )
+      })
+    }
   ],
 
   [Item.SCOPE_LENS]: [
@@ -1380,6 +1747,10 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
         pokemon.addPP(ppStolen, pokemon, 0, false)
         target.addPP(-ppStolen, pokemon, 0, false)
         target.count.manaBurnCount++
+        if (hasBlessing(pokemon, Blessing.SCOPE_LENS_BLESSING)) {
+          target.critMarkRemainingMs = SCOPE_LENS_MARK_DURATION
+          target.critMarkTimer = 100
+        }
       }
     })
   ],
@@ -1389,13 +1760,44 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
       if (crit && target) {
         target.status.triggerArmorReduction(2000, target)
       }
-    })
+    }),
+    () => {
+      let isFollowUpAttack = false
+      return new OnAttackEffect(({ pokemon, target, board, crit }) => {
+        if (
+          !crit ||
+          !target ||
+          target.hp <= 0 ||
+          isFollowUpAttack ||
+          !hasBlessing(pokemon, Blessing.RAZOR_FANG_BLESSING)
+        )
+          return
+        isFollowUpAttack = true
+        pokemon.state.attack(pokemon, board, target)
+        isFollowUpAttack = false
+      })
+    }
   ],
 
   [Item.STAR_DUST]: [
-    new OnAbilityCastEffect((pokemon) => {
-      pokemon.addShield(Math.round(0.5 * pokemon.maxPP), pokemon, 0, false)
+    new OnAbilityCastEffect((pokemon, board) => {
+      const shield = Math.round(0.5 * pokemon.maxPP)
+      pokemon.addShield(shield, pokemon, 0, false)
       pokemon.count.starDustCount++
+      if (hasBlessing(pokemon, Blessing.STAR_DUST_BLESSING)) {
+        pokemon.status.triggerRuneProtect(
+          STAR_DUST_RUNE_PROTECT_DURATION,
+          pokemon,
+          pokemon
+        )
+        board
+          .getAdjacentCells(pokemon.positionX, pokemon.positionY)
+          .forEach((cell) => {
+            if (cell.value && cell.value.team === pokemon.team) {
+              cell.value.addShield(shield, pokemon, 0, false)
+            }
+          })
+      }
     }),
     new OnItemGainedEffect((pokemon) => {
       pokemon.effects.add(EffectEnum.IMMUNITY_BURN)
@@ -1943,7 +2345,11 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
     }),
     new OnDeathEffect(({ pokemon }) => {
       if (pokemon.player && !pokemon.isGhostOpponent) {
-        pokemon.player.addExperience(1)
+        pokemon.player.addExperience(
+          hasBlessing(pokemon, Blessing.EXP_CHARM_BLESSING)
+            ? EXP_CHARM_BLESSED_EXPERIENCE
+            : 1
+        )
       }
     }),
     new OnItemRemovedEffect((pokemon) => {
@@ -2005,7 +2411,14 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
       })
       pokemon.effects.add(EffectEnum.CLEAR_AMULET_TRIGGERED)
 
-      const cells = board.getAdjacentCells(pokemon.positionX, pokemon.positionY)
+      const cells = hasBlessing(pokemon, Blessing.CLEAR_AMULET_BLESSING)
+        ? board.getCellsInRadius(
+            pokemon.positionX,
+            pokemon.positionY,
+            CLEAR_AMULET_BLESSED_RADIUS,
+            false
+          )
+        : board.getAdjacentCells(pokemon.positionX, pokemon.positionY)
       cells.forEach((cell) => {
         if (!cell.value || cell.value.team === pokemon.team) return
         const enemy = cell.value
@@ -2079,6 +2492,11 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
       if (!strongest) return
       strongest.addAttack(pokemon.baseAtk, strongest, 0, false)
       strongest.addLuck(pokemon.luck, strongest, 0, false)
+      if (hasBlessing(pokemon, Blessing.DESTINY_KNOT_BLESSING)) {
+        strongest.addDefense(pokemon.baseDef, strongest, 0, false)
+        strongest.addSpecialDefense(pokemon.baseSpeDef, strongest, 0, false)
+        strongest.addSpeed(pokemon.baseSpeed, strongest, 0, false)
+      }
     })
   ],
   [Item.LUCKY_PUNCH]: [
@@ -2086,19 +2504,23 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
       if (!target) return
       if (target.items.size === 0) return
 
-      const dx = Math.sign(target.positionX - pokemon.positionX)
-      const dy = Math.sign(target.positionY - pokemon.positionY)
-      const behindEntity = board.getEntityOnCell(
-        target.positionX + dx,
-        target.positionY + dy
-      )
-
-      if (!behindEntity || behindEntity.team !== target.team) return
-      if (behindEntity.items.size >= 3) return
-
       const item = schemaValues(target.items)[0]!
-      target.removeItem(item)
-      behindEntity.addItem(item)
+
+      if (hasBlessing(pokemon, Blessing.LUCKY_PUNCH_BLESSING)) {
+        target.removeItem(item)
+      } else {
+        const dx = Math.sign(target.positionX - pokemon.positionX)
+        const dy = Math.sign(target.positionY - pokemon.positionY)
+        const behindEntity = board.getEntityOnCell(
+          target.positionX + dx,
+          target.positionY + dy
+        )
+        if (!behindEntity || behindEntity.team !== target.team) return
+        if (behindEntity.items.size >= 3) return
+        target.removeItem(item)
+        behindEntity.addItem(item)
+      }
+
       if (chance(0.3, pokemon)) {
         target.status.triggerConfusion(2000, target, pokemon)
       }
@@ -2106,7 +2528,15 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
   ],
   [Item.GRIP_CLAW]: [
     new OnAttackEffect(({ pokemon, target, board }) => {
-      pokemon.addCritPower(10, pokemon, 0, false)
+      // blessed, the crit power is torn off the target rather than conjured
+      if (target && hasBlessing(pokemon, Blessing.GRIP_CLAW_BLESSING)) {
+        const targetCritBonus = Math.round(
+          100 * (target.critPower - GRIP_CLAW_MIN_TARGET_CRIT_POWER)
+        )
+        const stolen = clamp(targetCritBonus, 0, GRIP_CLAW_CRIT_POWER)
+        if (stolen > 0) target.addCritPower(-stolen, pokemon, 0, false)
+      }
+      pokemon.addCritPower(GRIP_CLAW_CRIT_POWER, pokemon, 0, false)
       pokemon.count.gripClawCount++
     }),
     new OnItemRemovedEffect((pokemon) => {
@@ -2176,13 +2606,16 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
   ],
   [Item.FAIRY_FEATHER]: [
     new OnAttackEffect(({ pokemon, target }) => {
+      if (hasBlessing(pokemon, Blessing.FAIRY_FEATHER_BLESSING)) {
+        pokemon.addLuck(FAIRY_FEATHER_LUCK_ON_ATTACK, pokemon, 0, false)
+      }
       if (!target) return
       if (
         target &&
         chance(0.3, pokemon) &&
         target.items.has(Item.TWIST_BAND) === false
       ) {
-        target.addAttack(-2, target, 0, false)
+        target.addAttack(-2, pokemon, 0, false)
       }
     })
   ],

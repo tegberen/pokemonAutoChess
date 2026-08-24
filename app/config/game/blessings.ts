@@ -4,7 +4,9 @@ import {
   BLESSING_SELECTION_STAGES,
   Blessing,
   BlessingTier,
-  GREEDY_WISH_PRISMATIC_GOLD
+  GREEDY_WISH_PRISMATIC_GOLD,
+  ITEM_BLESSING_STAGES_OVERRIDE,
+  ITEM_GRANTED_BY_BLESSING
 } from "../../types/enum/Blessing"
 import { DungeonPMDO } from "../../types/enum/Dungeon"
 import { Rarity } from "../../types/enum/Game"
@@ -23,6 +25,7 @@ export interface BlessingDefinition {
   synergy?: Synergy
   isAvailable?: (player: Player, stage: number) => boolean
   family?: BlessingFamily
+  isItemBlessing?: boolean
 }
 
 /* Ponds are drawn with the region's own water tiles, so WATER_FOUNTAIN only
@@ -79,6 +82,11 @@ export const WATER_FOUNTAIN_REGIONS: DungeonPMDO[] = [
 export const BLESSING_MAX_OPTIONS_PER_FAMILY = 2
 export const BLESSING_MAX_SYNERGY_OPTIONS_BEFORE_GATE = 3
 export const BLESSING_MAX_SYNERGY_OPTIONS_AFTER_GATE = 2
+
+export const BLESSING_MAX_ITEM_OPTIONS_BY_STAGE: { [stage: number]: number } = {
+  4: 2,
+  12: 1
+}
 
 // The gate: from this stage on, a synergy blessing needs that synergy active
 export const BLESSING_SYNERGY_GATED_STAGE = 12
@@ -174,7 +182,26 @@ function synergyFamilyDefinitions(
   ) as { [blessing in Blessing]: BlessingDefinition }
 }
 
+// every item blessing is named after the item it hands out, so its icon and
+// definition are derived rather than written out one by one
+function itemBlessingDefinitions() {
+  return Object.fromEntries(
+    (Object.keys(ITEM_GRANTED_BY_BLESSING) as Blessing[]).map((blessing) => [
+      blessing,
+      {
+        tier: BlessingTier.GOLD,
+        availableAtStages:
+          ITEM_BLESSING_STAGES_OVERRIDE[blessing] ?? BLESSING_SELECTION_STAGES,
+        icon: blessing.toLowerCase(),
+        grantsPokemonImmediately: false,
+        isItemBlessing: true
+      }
+    ])
+  ) as { [blessing in Blessing]: BlessingDefinition }
+}
+
 export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
+  ...itemBlessingDefinitions(),
   ...synergyFamilyDefinitions("BADGE", BlessingTier.SILVER, "rank_one"),
   ...synergyFamilyDefinitions("CREST", BlessingTier.GOLD, "rank_two"),
   ...synergyFamilyDefinitions("CROWN", BlessingTier.PRISMATIC, "rank_three"),
@@ -224,19 +251,22 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     tier: BlessingTier.GOLD,
     availableAtStages: [4],
     icon: "crystal_ball",
-    grantsPokemonImmediately: true
+    grantsPokemonImmediately: true,
+    isItemBlessing: true
   },
   [Blessing.MANIFESTATION_AD]: {
     tier: BlessingTier.GOLD,
     availableAtStages: [4],
     icon: "crystal_ball",
-    grantsPokemonImmediately: true
+    grantsPokemonImmediately: true,
+    isItemBlessing: true
   },
   [Blessing.MANIFESTATION_DEF]: {
     tier: BlessingTier.GOLD,
     availableAtStages: [4],
     icon: "crystal_ball",
-    grantsPokemonImmediately: true
+    grantsPokemonImmediately: true,
+    isItemBlessing: true
   },
   [Blessing.MIX_AND_MATCH_I]: {
     tier: BlessingTier.GOLD,
@@ -332,12 +362,6 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     tier: BlessingTier.SILVER,
     availableAtStages: [12],
     icon: "rainbow_key",
-    grantsPokemonImmediately: false
-  },
-  [Blessing.PLUSHIFY]: {
-    tier: BlessingTier.GOLD,
-    availableAtStages: BLESSING_SELECTION_STAGES,
-    icon: "plushify",
     grantsPokemonImmediately: false
   },
   [Blessing.SUPPORTIVE_SOUL]: {
@@ -1700,24 +1724,6 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     icon: "plunder",
     grantsPokemonImmediately: true
   },
-  [Blessing.EMERALD_ORB]: {
-    tier: BlessingTier.GOLD,
-    availableAtStages: BLESSING_SELECTION_STAGES,
-    icon: "emerald_orb",
-    grantsPokemonImmediately: false
-  },
-  [Blessing.SAPPHIRE_ORB]: {
-    tier: BlessingTier.GOLD,
-    availableAtStages: BLESSING_SELECTION_STAGES,
-    icon: "sapphire_orb",
-    grantsPokemonImmediately: false
-  },
-  [Blessing.RUBY_ORB]: {
-    tier: BlessingTier.GOLD,
-    availableAtStages: BLESSING_SELECTION_STAGES,
-    icon: "ruby_orb",
-    grantsPokemonImmediately: false
-  },
   [Blessing.BURNING_FORCE]: {
     tier: BlessingTier.GOLD,
     availableAtStages: BLESSING_SELECTION_STAGES,
@@ -1979,12 +1985,6 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     icon: "robin_gems",
     grantsPokemonImmediately: false
   },
-  [Blessing.LUCKY_DICE_BLESSING]: {
-    tier: BlessingTier.GOLD,
-    availableAtStages: BLESSING_SELECTION_STAGES,
-    icon: "lucky_dice_wand",
-    grantsPokemonImmediately: false
-  },
   [Blessing.POTION]: {
     tier: BlessingTier.SILVER,
     availableAtStages: [12],
@@ -2193,10 +2193,27 @@ export function getMaxSynergyBlessingOptions(stage: number) {
     : BLESSING_MAX_SYNERGY_OPTIONS_BEFORE_GATE
 }
 
+export function getMaxItemBlessingOptions(stage: number) {
+  return BLESSING_MAX_ITEM_OPTIONS_BY_STAGE[stage] ?? 1
+}
+
+function isItemOptionCapReached(
+  alreadyDrawn: Blessing[],
+  candidate: Blessing,
+  maxItemOptions: number
+) {
+  if (!Blessings[candidate].isItemBlessing) return false
+  return (
+    alreadyDrawn.filter((blessing) => Blessings[blessing].isItemBlessing)
+      .length >= maxItemOptions
+  )
+}
+
 export function drawBlessingOptions(
   pool: Blessing[],
   amount: number,
-  maxSynergyOptions: number
+  maxSynergyOptions: number,
+  maxItemOptions: number
 ): Blessing[] {
   const remaining = shuffleArray([...pool])
   const drawn: Blessing[] = []
@@ -2204,6 +2221,7 @@ export function drawBlessingOptions(
     const candidate = remaining.pop()!
     if (isFamilyCapReached(drawn, candidate)) continue
     if (isSynergyOptionCapReached(drawn, candidate, maxSynergyOptions)) continue
+    if (isItemOptionCapReached(drawn, candidate, maxItemOptions)) continue
     drawn.push(candidate)
   }
   return drawn

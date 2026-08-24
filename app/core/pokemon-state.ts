@@ -2,6 +2,8 @@ import { ARMOR_FACTOR, FIGHTING_PHASE_DURATION } from "../config"
 import { SynergyTiers } from "../config/game/synergies"
 import type Player from "../models/colyseus-models/player"
 import PokemonFactory from "../models/pokemon-factory"
+import { getPokemonData } from "../models/precomputed/precomputed-pokemon-data"
+import { PRECOMPUTED_POKEMONS_PER_TYPE } from "../models/precomputed/precomputed-types"
 import {
   DPS_EMBER_ID,
   DPS_HAIL_ID,
@@ -29,7 +31,13 @@ import {
   DEEP_WOUNDS_DEFENSE_LOSS,
   DEEP_WOUNDS_DEFENSE_LOSS_CHANCE,
   RUBY_ORB_TRUE_DAMAGE_VS_BURN,
-  SHELL_ARMOR_SPE_DEF_BY_STARS
+  SHELL_ARMOR_SPE_DEF_BY_STARS,
+  DEEP_SEA_TOOTH_DAMAGE_MULTIPLIER,
+  DEEP_SEA_TOOTH_EXECUTE_HP_RATIO,
+  POKEMONOMICON_DAMAGE_BONUS,
+  SCOPE_LENS_MARK_DURATION,
+  SHINY_CHARM_MARK_DURATION,
+  FLUFFY_TAIL_LEGENDARY_STAGE
 } from "../types/enum/Blessing"
 import { EffectEnum } from "../types/enum/Effect"
 import {
@@ -70,6 +78,45 @@ import {
   onPrimordialPowerAwakened
 } from "./effects/galar-fossil-passives"
 import type { PokemonEntity } from "./pokemon-entity"
+
+function tickBlessingMark(
+  pokemon: PokemonEntity,
+  dt: number,
+  remaining: "critMarkRemainingMs" | "trueDamageMarkRemainingMs",
+  timer: "critMarkTimer" | "trueDamageMarkTimer",
+  duration: number
+) {
+  if (pokemon[remaining] <= 0) return
+  pokemon[remaining] = Math.max(0, pokemon[remaining] - dt)
+  pokemon[timer] = Math.round((pokemon[remaining] / duration) * 100)
+}
+
+function summonFluffyTailDecoy(pokemon: PokemonEntity, board: Board) {
+  if (pokemon.fluffyTailSummon && pokemon.fluffyTailSummon.hp > 0) return
+  const legendariesAllowed =
+    pokemon.simulation.stageLevel >= FLUFFY_TAIL_LEGENDARY_STAGE
+  const candidates = PRECOMPUTED_POKEMONS_PER_TYPE[Synergy.WILD].filter(
+    (pkm) => {
+      const data = getPokemonData(pkm)
+      if (data.stars !== pokemon.stars) return false
+      return legendariesAllowed || data.rarity !== Rarity.LEGENDARY
+    }
+  )
+  if (candidates.length === 0) return
+  pokemon.flyAway(board)
+  const coord = pokemon.simulation.getClosestFreeCellToPokemonEntity(pokemon)
+  if (!coord) return
+  pokemon.fluffyTailSummon = pokemon.simulation.addPokemon(
+    PokemonFactory.createPokemonFromName(
+      pickRandomIn(candidates),
+      pokemon.player
+    ),
+    coord.x,
+    coord.y,
+    pokemon.team,
+    true
+  )
+}
 
 export default abstract class PokemonState {
   name: string = ""
@@ -121,14 +168,28 @@ export default abstract class PokemonState {
         target.status.blinded && hasAbsoluteDarknessBlessing
       const crit =
         chance(critChance, pokemon) ||
+        target.critMarkRemainingMs > 0 ||
         (target.status.sleep && pokemon.passive === Passive.BAD_DREAMS)
+
+      if (
+        pokemon.items.has(Item.DEEP_SEA_TOOTH) &&
+        pokemon.player?.blessings?.includes(
+          Blessing.DEEP_SEA_TOOTH_BLESSING
+        ) &&
+        target.hp < DEEP_SEA_TOOTH_EXECUTE_HP_RATIO * target.baseHP
+      ) {
+        damage *= DEEP_SEA_TOOTH_DAMAGE_MULTIPLIER
+      }
 
       const nbBlackAugurite = target.player
         ? count(target.player.items, Item.BLACK_AUGURITE)
         : 0
 
       if (crit) {
-        if (target.items.has(Item.ROCKY_HELMET) === false && target.items.has(Item.LUCKY_RIBBON) === false) {
+        const negatesCritBonus =
+          target.items.has(Item.KINGS_ROCK) &&
+          target.player?.blessings?.includes(Blessing.KINGS_ROCK_BLESSING)
+        if (target.items.has(Item.ROCKY_HELMET) === false && target.items.has(Item.LUCKY_RIBBON) === false && !negatesCritBonus) {
           let reductionFactor = 1.0
           if (target.effects.has(EffectEnum.BATTLE_ARMOR)) {
             reductionFactor -= 0.3
@@ -214,6 +275,12 @@ export default abstract class PokemonState {
         if (target.passive === Passive.AURA) {
           target.addAttack(3, target, 0, false)
           target.addAbilityPower(10, target, 0, false)
+        }
+        if (
+          target.items.has(Item.FLUFFY_TAIL) &&
+          target.player?.blessings?.includes(Blessing.FLUFFY_TAIL_BLESSING)
+        ) {
+          summonFluffyTailDecoy(target, board)
         }
       }
 
@@ -682,6 +749,13 @@ export default abstract class PokemonState {
         damage *= 1.3
       }
 
+      if (
+        (pokemon.status.burn || pokemon.status.wound) &&
+        attacker?.player?.blessings?.includes(Blessing.POKEMONOMICON_BLESSING)
+      ) {
+        damage *= POKEMONOMICON_DAMAGE_BONUS
+      }
+
       let def = pokemon.status.armorReduction
         ? Math.round(pokemon.def / 2)
         : pokemon.def
@@ -702,6 +776,10 @@ export default abstract class PokemonState {
       ) {
         attackType =
           def < speDef ? AttackType.PHYSICAL : AttackType.SPECIAL
+      }
+
+      if (pokemon.trueDamageMarkRemainingMs > 0) {
+        attackType = AttackType.TRUE
       }
 
       if (pokemon.status.reflect && attackType === AttackType.PHYSICAL) {
@@ -898,6 +976,16 @@ export default abstract class PokemonState {
         residualDamage = 0
         pokemon.addPP(50, pokemon, 0, false)
         pokemon.status.triggerProtect(1500)
+        if (pokemon.player?.blessings?.includes(Blessing.SHINY_CHARM_BLESSING)) {
+          board
+            .getAdjacentCells(pokemon.positionX, pokemon.positionY)
+            .forEach((cell) => {
+              if (cell.value && cell.value.team !== pokemon.team) {
+                cell.value.trueDamageMarkRemainingMs = SHINY_CHARM_MARK_DURATION
+                cell.value.trueDamageMarkTimer = 100
+              }
+            })
+        }
         pokemon.removeItem(Item.SHINY_CHARM)
       }
 
@@ -1192,6 +1280,21 @@ export default abstract class PokemonState {
   ) {
     this.updateCommands(pokemon, dt)
     pokemon.status.updateAllStatus(dt, pokemon, board)
+
+    tickBlessingMark(
+      pokemon,
+      dt,
+      "trueDamageMarkRemainingMs",
+      "trueDamageMarkTimer",
+      SHINY_CHARM_MARK_DURATION
+    )
+    tickBlessingMark(
+      pokemon,
+      dt,
+      "critMarkRemainingMs",
+      "critMarkTimer",
+      SCOPE_LENS_MARK_DURATION
+    )
 
     pokemon.effectsSet.forEach((effect) => {
       if (effect instanceof PeriodicEffect) {

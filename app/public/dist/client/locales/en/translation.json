@@ -5782,7 +5782,7 @@
 		},
 		"MANIFESTATION_AD": {
 			"name": "Manifestation: ATK",
-			"description": "Gain a random Arctibax, Bisharp, Fletchinder or Porygon2 holding a RED_ORB. Until stage 20 the unit is locked and sells for 0 GOLD."
+			"description": "Gain a random Arctibax, Bisharp, Fletchinder or Porygon2 holding a FLAME_ORB. Until stage 20 the unit is locked and sells for 0 GOLD."
 		},
 		"MANIFESTATION_DEF": {
 			"name": "Manifestation: DEF",
@@ -5850,7 +5850,7 @@
 		},
 		"PLUSHIFY": {
 			"name": "Plushify",
-			"description": "Gain a POKE_DOLL. When an ally holding a POKE_DOLL is KO'd, spawn a Substitute with its max HP."
+			"description": "Gain a POKE_DOLL. When the holder is KO'd, spawn a Substitute with its max HP."
 		},
 		"SUPPORTIVE_SOUL": {
 			"name": "Supportive Soul",
@@ -6134,19 +6134,163 @@
 		},
 		"EMERALD_ORB": {
 			"name": "Emerald Orb",
-			"description": "Gain a GREEN_ORB. Your GREEN_ORB heals in a 2-tile radius."
+			"description": "Gain a GREEN_ORB. The holder heals in a 2-tile radius."
 		},
 		"SAPPHIRE_ORB": {
 			"name": "Sapphire Orb",
-			"description": "Gain a BLUE_ORB. Your BLUE_ORB chain lightning hits 1 additional enemy and applies ARMOR_BREAK for 3 seconds."
+			"description": "Gain a BLUE_ORB. Its chain lightning hits 1 additional enemy and applies ARMOR_BREAK for 3 seconds."
 		},
 		"RUBY_ORB": {
 			"name": "Ruby Orb",
-			"description": "Gain a RED_ORB. Your RED_ORB converts 50% of attack damage to TRUE against BURN enemies, instead of 25%."
+			"description": "Gain a RED_ORB. It converts 50% of attack damage to TRUE against BURN enemies, instead of 25%."
+		},
+		"KINGS_ROCK_BLESSING": {
+			"name": "King's Crown",
+			"description": "Gain a KINGS_ROCK. Enemies that attack the holder FLINCH for 3 seconds. Negates critical bonus damage from all incoming critical hits."
+		},
+		"STICKY_BARB_BLESSING": {
+			"name": "Sticky Thorns",
+			"description": "Gain a STICKY_BARB. The first enemy with a free item slot that attacks the holder receives it. Its new holder deals 20% of its ATK as TRUE to itself and all ADJACENT allies ON_ATTACK."
+		},
+		"MAX_REVIVE_BLESSING": {
+			"name": "Revival Pulse",
+			"description": "Gain a MAX_REVIVE. When it triggers, grant 30 SPEED to all allies within a 2-tile radius."
+		},
+		"PROTECTIVE_PADS_BLESSING": {
+			"name": "Counter Pads",
+			"description": "Gain PROTECTIVE_PADS. Against enemies with SHIELD, the holder gains 5 ATK ON_ATTACK and 40 AP on cast."
+		},
+		"GRACIDEA_FLOWER_BLESSING": {
+			"name": "Gracidea Garden",
+			"description": "Gain a GRACIDEA_FLOWER. At the start of combat, allies it affects blossom and restore 5% of their max HP every 2 seconds."
+		},
+		"SMOKE_BALL_BLESSING": {
+			"name": "Shuriken",
+			"description": "Gain a SMOKE_BALL. Before the holder jumps away, scatter SPIKES around it and its target. Enemies caught in them are LOCKED for 2 seconds."
+		},
+		"ABILITY_SHIELD_BLESSING": {
+			"name": "Supreme Ability Shield",
+			"description": "Gain an ABILITY_SHIELD. It affects all ADJACENT allies."
+		},
+		"SOOTHE_BELL_BLESSING": {
+			"name": "Soothe Carol",
+			"description": "Gain a Soothe Bell. The ally it shields also restores 25% of its max PP."
+		},
+		"AQUA_EGG_BLESSING": {
+			"name": "Blessing of Phione",
+			"description": "Gain an AQUA_EGG. After the holder's first ability cast, summon a Phione. That Phione grants 5 PP to all allies whenever it casts its ability."
+		},
+		"STAR_DUST_BLESSING": {
+			"name": "Star Dust Veil",
+			"description": "Gain STAR_DUST. After the holder casts its ability, it gains RUNE_PROTECT for 4 seconds and grants the same SHIELD to ADJACENT allies."
+		},
+		"DEEP_SEA_TOOTH_BLESSING": {
+			"name": "Abyssal Fang",
+			"description": "Gain a DEEP_SEA_TOOTH. Attacks deal double damage against enemies below 50% of their max HP and restores 30 PP on KO instead."
+		},
+		"SCOPE_LENS_BLESSING": {
+			"name": "Lock-On Lens",
+			"description": "Gain a SCOPE_LENS. On a critical attack, mark the target for 4 seconds. Attacks against marked enemies are guaranteed to critically strike."
+		},
+		"EXP_CHARM_BLESSING": {
+			"name": "Exp Book",
+			"description": "Gain an EXP_CHARM. The holder grants 1 additional XP when it is KO."
+		},
+		"MUSCLE_BAND_BLESSING": {
+			"name": "Training Band",
+			"description": "Gain a MUSCLE_BAND. Unlock the training bag of the FIGHTING synergy: Pokémon holding MUSCLE_BAND can train on it."
+		},
+		"SAFETY_GOGGLES_BLESSING": {
+			"name": "Weatherproof Goggles",
+			"description": "Gain SAFETY_GOGGLES. At the start of the fight, if a Weather is active, the holder gains 100% of its base ATK, DEF and SPE_DEF."
+		},
+		"RELIC_CROWN_BLESSING": {
+			"name": "Ancient Crown",
+			"description": "Gain a RELIC_CROWN. It triggers when an ally is KO anywhere on the board, not only nearby."
+		},
+		"FAIRY_FEATHER_BLESSING": {
+			"name": "Lucky Feather",
+			"description": "Gain a FAIRY_FEATHER. The holder gains 5 LUCK ON_ATTACK."
+		},
+		"SHELL_BELL_BLESSING": {
+			"name": "Coast Wave",
+			"description": "Gain a SHELL_BELL. After 4 seconds, trigger a TIDAL_WAVE that grants a copy to every allied Pokémon."
+		},
+		"WIDE_LENS_BLESSING": {
+			"name": "Telescope",
+			"description": "Gain a WIDE_LENS. At the start of the fight, the holder gains 8 RANGE."
+		},
+		"POWER_LENS_BLESSING": {
+			"name": "Power Mirror",
+			"description": "Gain a POWER_LENS. The holder gains 5 AP whenever it is hit by an attack, and the damage it reflects scales with its AP."
+		},
+		"CLEAR_AMULET_BLESSING": {
+			"name": "Clear Diamond",
+			"description": "Gain a CLEAR_AMULET. Its effect radius is increased to 2 tiles around the holder."
+		},
+		"PUNCHING_GLOVE_BLESSING": {
+			"name": "Focus Glove",
+			"description": "Gain a PUNCHING_GLOVE. Every 10 attacks, the holder casts Focus Punch."
+		},
+		"RAZOR_CLAW_BLESSING": {
+			"name": "Honed Claw",
+			"description": "Gain a RAZOR_CLAW. On a critical attack, the holder gains 2 ATK."
+		},
+		"POKEMONOMICON_BLESSING": {
+			"name": "Scorching Tome",
+			"description": "Gain a POKEMONOMICON. The holder also applies WOUND for 3 seconds, and enemies affected by BURN or WOUND take 30% increased damage from all sources."
+		},
+		"DESTINY_KNOT_BLESSING": {
+			"name": "Red Thread",
+			"description": "Gain a DESTINY_KNOT. When the holder is KO'd, the bonded ally also inherits its base DEF, SPE_DEF and SPEED."
+		},
+		"XRAY_VISION_BLESSING": {
+			"name": "Vision of Truth",
+			"description": "Gain an XRAY_VISION. After attacking the same target 4 times, expose it for 4 seconds. All damage dealt to exposed enemies is converted to TRUE."
+		},
+		"RAZOR_FANG_BLESSING": {
+			"name": "Quick Fang",
+			"description": "Gain a RAZOR_FANG. On a critical attack, the holder immediately attacks the same target again. The additional attack cannot trigger this effect."
+		},
+		"UPGRADE_BLESSING": {
+			"name": "Super Upgrade",
+			"description": "Gain an UPGRADE. At 12 stacks, attacks deal 20% of the holder's current SPEED as additional SPECIAL ON_ATTACK."
+		},
+		"LUCKY_PUNCH_BLESSING": {
+			"name": "Knock Off Punch",
+			"description": "Gain a LUCKY_PUNCH. Items the holder knocks away are destroyed instead."
+		},
+		"WONDER_BOX_BLESSING": {
+			"name": "President Box",
+			"description": "Gain a WONDER_BOX. It creates 3 temporary items instead of 2."
+		},
+		"REAPER_CLOTH_BLESSING": {
+			"name": "Haunted Cloth",
+			"description": "Gain a REAPER_CLOTH. The first time the holder KO an enemy, summon a Ghost on the target's tile with its base HP, ATK, DEF and SPE_DEF."
+		},
+		"GRIP_CLAW_BLESSING": {
+			"name": "Seizing Claw",
+			"description": "Gain a GRIP_CLAW. The CRIT_POWER it grants is stolen from the target, down to no critical bonus at all."
+		},
+		"CHOICE_SPECS_BLESSING": {
+			"name": "Shared Vision",
+			"description": "Gain CHOICE_SPECS. Allies ADJACENT in the same row use the same ability as the holder, with their PP set to 100."
+		},
+		"COVERT_CLOAK_BLESSING": {
+			"name": "Mist Cloak",
+			"description": "Gain a COVERT_CLOAK. Every time it steals AP, the holder becomes untargettable for 1 second."
+		},
+		"SHINY_CHARM_BLESSING": {
+			"name": "Charm of Truth",
+			"description": "Gain a SHINY_CHARM. When it triggers, mark all ADJACENT enemies for 4 seconds. All damage dealt to marked enemies is converted to TRUE."
+		},
+		"FLUFFY_TAIL_BLESSING": {
+			"name": "Wild Escape",
+			"description": "Gain a FLUFFY_TAIL. When the holder dodges an attack, it jumps to a safe tile and summons a random WILD Pokémon of its own STAR level. This cannot trigger again while the previous summon is alive."
 		},
 		"LUCKY_DICE_BLESSING": {
 			"name": "Lucky Ward",
-			"description": "Gain a LOADED_DICE. Your LOADED_DICE keeps bouncing to ADJACENT enemies after the first, with the chance halving every time. It cannot bounce to the same enemy twice."
+			"description": "Gain a LOADED_DICE. It keeps bouncing to ADJACENT enemies after the first, with the chance halving every time. It cannot bounce to the same enemy twice."
 		},
 		"SHELL_ARMOR_BLESSING": {
 			"name": "Shell Armor",

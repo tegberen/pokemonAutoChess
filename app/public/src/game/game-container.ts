@@ -189,6 +189,9 @@ class GameContainer {
       "icyReflectionCharge",
       "centerStageSpotlight",
       "combatBlessingTimer",
+      "critMarkTimer",
+      "focusPunchCharge",
+      "trueDamageMarkTimer",
       "isOnCriticalPath"
     ] satisfies (NonFunctionPropNames<PokemonEntity> & keyof IPokemonEntity)[]
 

@@ -831,6 +831,8 @@ export default function Game() {
           dispatchBlessings()
           if (playerId === store.getState().game.playerIdSpectated) {
             getGameScene()?.board?.refreshShinySafeguardMarks()
+            // MUSCLE_BAND unlocks the training bag without a synergy change
+            getGameScene()?.board?.renderTrainingBag()
           }
         })
         $(playerBlessings).listen("mystoganWands", dispatchBlessings)

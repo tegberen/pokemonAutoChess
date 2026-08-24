@@ -50,6 +50,9 @@ export default function PreparationSettings() {
     setBlessingsUnderTest(blessings)
     localStore.set(LocalStoreKeys.BLESSINGS_UNDER_TEST, blessings)
     setBlessingsUnderTestNetwork(blessings)
+    // a wish under test never rolls while the festival is off, so picking one
+    // turns it on. The server ignores this unless the picker is an admin
+    if (blessings.length > 0) setBlessingsEnabled(true)
   }
   /* the server starts every room with an empty list, so the remembered
      selection has to be pushed again on joining or it is shown but not applied */

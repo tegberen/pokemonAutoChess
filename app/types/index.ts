@@ -608,6 +608,7 @@ export interface IPokemonEntity {
   baseAtk: number
   baseDef: number
   baseSpeDef: number
+  baseSpeed: number
   hp: number
   shield: number
   team: number
@@ -640,6 +641,9 @@ export interface IPokemonEntity {
   icyReflectionCharge: number
   centerStageSpotlight: boolean
   combatBlessingTimer: number
+  critMarkTimer: number
+  focusPunchCharge: number
+  trueDamageMarkTimer: number
   isSpawn: boolean
   commands: ISimulationCommand[]
   effectsSet: Set<EffectClass>

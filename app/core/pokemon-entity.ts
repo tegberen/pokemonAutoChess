@@ -3,6 +3,7 @@ import {
   ARMOR_FACTOR,
   DEFAULT_CRIT_CHANCE,
   DEFAULT_CRIT_POWER,
+  DEFAULT_SPEED,
   getItemCapacity,
   ItemStats,
   MAX_SPEED,
@@ -68,7 +69,7 @@ import {
 } from "../types/enum/Item"
 import { Awakening } from "../types/enum/Awakening"
 import { Passive } from "../types/enum/Passive"
-import { Pkm } from "../types/enum/Pokemon"
+import { Pkm, PkmByIndex } from "../types/enum/Pokemon"
 import { SpecialGameRule } from "../types/enum/SpecialGameRule"
 import { Synergy } from "../types/enum/Synergy"
 import { Weather } from "../types/enum/Weather"
@@ -164,6 +165,9 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
   @type("uint8") icyReflectionCharge: number = 0
   @type("boolean") centerStageSpotlight: boolean = false
   @type("uint8") combatBlessingTimer: number = 0
+  @type("uint8") critMarkTimer: number = 0
+  @type("uint8") focusPunchCharge: number = 0
+  @type("uint8") trueDamageMarkTimer: number = 0
   @type("boolean") isOnCriticalPath: boolean = false
   cooldown = 500
   oneSecondCooldown = 1000
@@ -175,6 +179,7 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
   baseSpeDef: number
   baseRange: number
   baseHP: number
+  baseSpeed: number
   dodge: number
   physicalDamage: number
   specialDamage: number
@@ -204,6 +209,10 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
   sourcePlayer: Player | undefined = undefined
   darkSubstituteTriggered: boolean = false
   darkSubstituteEligible: boolean = false
+  stickyBarbCursed: boolean = false
+  critMarkRemainingMs: number = 0
+  trueDamageMarkRemainingMs: number = 0
+  fluffyTailSummon: PokemonEntity | null = null
   isStrongestAllyThisFight: boolean = false
   isDoomSeedTarget: boolean = false
   isRivalryChampionThisFight: boolean = false
@@ -255,6 +264,8 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
     this.baseSpeDef = pokemon.speDef
     this.baseRange = pokemon.range
     this.baseHP = pokemon.hp
+    const PkmClass = PokemonClasses[PkmByIndex[pokemon.index]]
+    this.baseSpeed = PkmClass ? new PkmClass(pokemon.name).speed : DEFAULT_SPEED
     this.atk = pokemon.atk
     this.def = pokemon.def
     this.speDef = pokemon.speDef
@@ -596,8 +607,13 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
           : this.speDef
         const damageAfterReduction = specialDamage / (1 + ARMOR_FACTOR * speDef)
         const damageBlocked = min(0)(specialDamage - damageAfterReduction)
+        const reflectScaling = this.player?.blessings?.includes(
+          Blessing.POWER_LENS_BLESSING
+        )
+          ? 1 + this.ap / 100
+          : 1
         attacker.handleDamage({
-          damage: Math.round(damageBlocked),
+          damage: Math.round(damageBlocked * reflectScaling),
           board,
           attackType: AttackType.SPECIAL,
           attacker: this,
@@ -1739,14 +1755,16 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
       .map((c) => c.value)
       .forEach((p) => p?.addPP(p.maxPP - p.pp, p, 0, false))
 
-    board
-      .getCellsInRadius(this.positionX, this.positionY, 2, false)
-      .filter(
-        (c) =>
-          c.value?.items.has(Item.RELIC_CROWN) &&
-          c.value?.team === this.team
-      )
-      .map((c) => c.value)
+    // blessed, the crown answers a KO anywhere rather than only a nearby one
+    const crownCandidates = this.player?.blessings?.includes(
+      Blessing.RELIC_CROWN_BLESSING
+    )
+      ? board.cells
+      : board
+          .getCellsInRadius(this.positionX, this.positionY, 2, false)
+          .map((c) => c.value)
+    crownCandidates
+      .filter((p) => p?.items.has(Item.RELIC_CROWN) && p.team === this.team)
       .forEach((p) => {
         if (p) {
           p.addMaxHP(Math.floor(this.maxHP * 0.1), p, 0, false)

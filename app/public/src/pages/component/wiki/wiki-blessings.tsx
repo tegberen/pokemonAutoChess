@@ -61,7 +61,7 @@ function BlessingCard(props: { blessing: Blessing }) {
   )
 }
 
-type BlessingCategory = "synergy" | "hero" | "planning" | "combat"
+type BlessingCategory = "synergy" | "hero" | "planning" | "combat" | "items"
 
 const HATCH_BLESSINGS = new Set<Blessing>([
   Blessing.POCKET_DAYCARE,
@@ -116,7 +116,8 @@ const TEAM_BUILDING_BLESSINGS = new Set<Blessing>([
   Blessing.REGIONAL_TREASURES_II
 ])
 
-const ITEM_BLESSINGS = new Set<Blessing>([
+// blessings that hand out loot, as opposed to the Item Blessings category
+const LOOT_BLESSINGS = new Set<Blessing>([
   Blessing.STARTER_PACK,
   Blessing.CINCCINOS_GIFTS_I,
   Blessing.CINCCINOS_GIFTS_II,
@@ -131,7 +132,6 @@ const ITEM_BLESSINGS = new Set<Blessing>([
   Blessing.SWEET_SUBSCRIPTION,
   Blessing.MUNCHLAX_DELIVERY,
   Blessing.FIND_A_LOST_WAND,
-  Blessing.EMERALD_ORB,
   Blessing.SINGULARITY_I,
   Blessing.SINGULARITY_II,
   Blessing.TRASH_TO_TREASURE,
@@ -147,9 +147,6 @@ const PREPARATION_BLESSINGS = new Set<Blessing>([
   Blessing.AZURE_FLUTE,
   Blessing.POTION,
   Blessing.QUICK_CLAW,
-  Blessing.MANIFESTATION_AP,
-  Blessing.MANIFESTATION_AD,
-  Blessing.MANIFESTATION_DEF,
   Blessing.BP_REWARDS,
   Blessing.SYNARCH,
   Blessing.THINK_FAST,
@@ -206,9 +203,6 @@ const ADDITIONAL_HERO_BLESSINGS = new Set<Blessing>([
   Blessing.BEEKEEPING,
   Blessing.SUPPORTIVE_SOUL,
   Blessing.YOU_FORGOT_SOMETHING,
-  Blessing.MANIFESTATION_AP,
-  Blessing.MANIFESTATION_AD,
-  Blessing.MANIFESTATION_DEF,
   Blessing.MIX_AND_MATCH_I,
   Blessing.MIX_AND_MATCH_II,
   Blessing.STARTER_CHOICE,
@@ -281,10 +275,12 @@ const CATEGORY_ORDER: BlessingCategory[] = [
   "synergy",
   "hero",
   "planning",
-  "combat"
+  "combat",
+  "items"
 ]
 
 function getBlessingCategory(blessing: Blessing): BlessingCategory {
+  if (Blessings[blessing].isItemBlessing) return "items"
   if (getBlessingSynergy(blessing)) return "synergy"
   if (HERO_BLESSING_FAMILY[blessing] || ADDITIONAL_HERO_BLESSINGS.has(blessing))
     return "hero"
@@ -292,7 +288,7 @@ function getBlessingCategory(blessing: Blessing): BlessingCategory {
     HATCH_BLESSINGS.has(blessing) ||
     ECONOMY_BLESSINGS.has(blessing) ||
     TEAM_BUILDING_BLESSINGS.has(blessing) ||
-    ITEM_BLESSINGS.has(blessing) ||
+    LOOT_BLESSINGS.has(blessing) ||
     PREPARATION_BLESSINGS.has(blessing)
   )
     return "planning"
@@ -509,7 +505,9 @@ export default function WikiBlessings() {
                       ? "Planning & Resources"
                       : category === "hero"
                         ? "Heroes & Pokémon"
-                        : category}
+                        : category === "items"
+                          ? "Items"
+                          : category}
                   </h3>
                   <ul className="wiki-blessings-list">
                     {category === "synergy" &&

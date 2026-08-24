@@ -65,6 +65,7 @@ import {
   HERO_BLESSING_FAMILY,
   HERO_BLESSING_GIFT,
   HERO_BLESSING_MOVES_REGION,
+  ITEM_GRANTED_BY_BLESSING,
   LANCES_ACE_DELAY,
   LANGUAGE_BARRIER_UNOWNS_GRANTED,
   MANIFESTATION_UNLOCK_STAGE,
@@ -341,6 +342,20 @@ function giftUncommonsOfSynergy(
   )
   pickNRandomIn(candidates, amount).forEach((pkm) =>
     giftPokemonIfBenchHasRoom(player, pkm)
+  )
+}
+
+// every item blessing does the same thing on pick: hand over its item
+function itemBlessingEffects() {
+  const grants = Object.entries(ITEM_GRANTED_BY_BLESSING) as [Blessing, Item][]
+  return Object.fromEntries(
+    grants.map(([blessing, item]) => [
+      blessing,
+      (player: Player) => {
+        player.items.push(item)
+        return true
+      }
+    ])
   )
 }
 
@@ -1768,6 +1783,7 @@ export const blessingEffectService: {
     room?: GameRoom
   ) => boolean
 } = {
+  ...itemBlessingEffects(),
   ...synergyGemFamilyEffects("BADGE", 1),
   ...synergyGemFamilyEffects("CREST", 2),
   ...crownEffects,
@@ -1827,10 +1843,6 @@ export const blessingEffectService: {
     applyAllForOne(player, state, room),
   [Blessing.RAINBOW_KEY]: (player, state, room) =>
     applyRainbowKey(player, state, room),
-  [Blessing.PLUSHIFY]: (player) => {
-    player.items.push(Item.POKE_DOLL)
-    return true
-  },
   [Blessing.SUPPORTIVE_SOUL]: (player, state, room) => {
     const substitute = PokemonFactory.createPokemonFromName(
       Pkm.SUBSTITUTE,
@@ -2453,7 +2465,7 @@ export const blessingEffectService: {
       state,
       Blessing.MANIFESTATION_AD,
       MANIFESTATION_AD_POKEMONS,
-      Item.RED_ORB
+      Item.FLAME_ORB
     ),
 
   [Blessing.MANIFESTATION_DEF]: (player, state) =>
@@ -2687,26 +2699,6 @@ export const blessingEffectService: {
 
   [Blessing.PLUNDER]: (player, state, room) =>
     heroBlessingEffect(Blessing.PLUNDER, player, state, room),
-
-  [Blessing.EMERALD_ORB]: (player) => {
-    player.items.push(Item.GREEN_ORB)
-    return true
-  },
-
-  [Blessing.SAPPHIRE_ORB]: (player) => {
-    player.items.push(Item.BLUE_ORB)
-    return true
-  },
-
-  [Blessing.RUBY_ORB]: (player) => {
-    player.items.push(Item.RED_ORB)
-    return true
-  },
-
-  [Blessing.LUCKY_DICE_BLESSING]: (player) => {
-    player.items.push(Item.LOADED_DICE)
-    return true
-  },
 
   [Blessing.OLIVE_GARDEN]: (player, state, room) =>
     heroBlessingEffect(Blessing.OLIVE_GARDEN, player, state, room),

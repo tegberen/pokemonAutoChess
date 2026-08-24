@@ -1,5 +1,5 @@
 import { MapSchema, Schema, type } from "@colyseus/schema"
-import { ARMOR_FACTOR, BENCH_GROUND_HOLES_OFFSET, BOARD_HEIGHT, BOARD_WIDTH, BOARD_SIDE_HEIGHT, DEFAULT_SPEED, getItemCapacity, packBoardCell } from "../config"
+import { ARMOR_FACTOR, BENCH_GROUND_HOLES_OFFSET, BOARD_HEIGHT, BOARD_WIDTH, BOARD_SIDE_HEIGHT, getItemCapacity, packBoardCell } from "../config"
 import {
   ScribbleShapeTint,
   ScribbleShapeType
@@ -14,7 +14,7 @@ import {
   SynergyTiers
 } from "../config/game/synergies"
 import type Player from "../models/colyseus-models/player"
-import { PokemonClasses, type Pokemon } from "../models/colyseus-models/pokemon"
+import { type Pokemon } from "../models/colyseus-models/pokemon"
 import PokemonFactory from "../models/pokemon-factory"
 import { getPokemonData } from "../models/precomputed/precomputed-pokemon-data"
 import { PRECOMPUTED_POKEMONS_PER_TYPE } from "../models/precomputed/precomputed-types"
@@ -61,7 +61,7 @@ import {
   WeatherRocksByWeather
 } from "../types/enum/Item"
 import { Passive } from "../types/enum/Passive"
-import { Pkm, PkmByIndex, PkmFamily, Unowns } from "../types/enum/Pokemon"
+import { Pkm, PkmFamily, Unowns } from "../types/enum/Pokemon"
 import { Synergy } from "../types/enum/Synergy"
 import { getSynergyTier } from "../models/colyseus-models/synergies"
 import {
@@ -210,8 +210,11 @@ import {
   BRUTE_SHIELD_ATTACK_RATIO,
   BRUTE_SHIELD_ALLY_ATTACK,
   STAR_GUARD_DEFENSE_PER_STAR,
-  MACHINE_RESIDUE_SHIELD
+  MACHINE_RESIDUE_SHIELD,
+  WONDER_BOX_BLESSED_ITEMS,
+  CHOICE_SPECS_ALLY_MAX_PP
 } from "../types/enum/Blessing"
+import { GracideaBlossomEffect } from "./effects/items"
 import { isSynergyActiveForPlayer } from "../config/game/blessings"
 import { getFlowerPotStarCount } from "./flower-pots"
 import { Weather, WeatherEffects } from "../types/enum/Weather"
@@ -450,10 +453,16 @@ export default class Simulation extends Schema implements ISimulation {
           })
           if (isOnBench(pokemon)) {
             // OnBenchedDuringFightEffect should be applied here
-            if (
+            // the blessing unlocks the bag on its own, so a MUSCLE_BAND holder
+            // can train without the team ever reaching FIGHTING 8
+            const isCoached =
               teamEffects.has(EffectEnum.COACHING) &&
-              (pokemon.types.has(Synergy.FIGHTING) || pokemon.name === Pkm.PIKACHU)
-            ) {
+              (pokemon.types.has(Synergy.FIGHTING) ||
+                pokemon.name === Pkm.PIKACHU)
+            const trainsWithMuscleBand =
+              pokemon.items.has(Item.MUSCLE_BAND) &&
+              player.blessings?.includes(Blessing.MUSCLE_BAND_BLESSING)
+            if (isCoached || trainsWithMuscleBand) {
               fightingTrainingEffect.apply({
                 pokemon,
                 player,
@@ -1255,7 +1264,12 @@ export default class Simulation extends Schema implements ISimulation {
       pokemon.items.delete(Item.WONDER_BOX)
 
       const wonderboxItems: Item[] = []
-      for (let n = 0; n < 2; n++) {
+      const nbWonderboxItems = pokemon.player?.blessings?.includes(
+        Blessing.WONDER_BOX_BLESSING
+      )
+        ? WONDER_BOX_BLESSED_ITEMS
+        : 2
+      for (let n = 0; n < nbWonderboxItems; n++) {
         const eligibleItems = CraftableItemsNoScarves.filter(
           (i) =>
             !isIn(SynergyStones, i) &&
@@ -1540,11 +1554,19 @@ export default class Simulation extends Schema implements ISimulation {
     for (const team of [this.blueTeam, this.redTeam]) {
       team.forEach((pokemon) => {
         if (pokemon.items.has(Item.ABILITY_SHIELD)) {
-          ;[-1, 0, 1].forEach((offset) => {
-            const ally = this.board.getEntityOnCell(
-              pokemon.positionX + offset,
-              pokemon.positionY
-            )
+          const coveredUnits = pokemon.player?.blessings?.includes(
+            Blessing.ABILITY_SHIELD_BLESSING
+          )
+            ? this.board
+                .getAdjacentCells(pokemon.positionX, pokemon.positionY, true)
+                .map((cell) => cell.value)
+            : [-1, 0, 1].map((offset) =>
+                this.board.getEntityOnCell(
+                  pokemon.positionX + offset,
+                  pokemon.positionY
+                )
+              )
+          coveredUnits.forEach((ally) => {
             if (ally && ally.team === pokemon.team) {
               ally.addShield(Math.ceil(0.2 * ally.maxHP), ally, 0, false)
               ally.status.triggerRuneProtect(5000, ally, pokemon as PokemonEntity)
@@ -1558,13 +1580,34 @@ export default class Simulation extends Schema implements ISimulation {
         }
 
         if (pokemon.items.has(Item.GRACIDEA_FLOWER)) {
+          const blossoms = pokemon.player?.blessings?.includes(
+            Blessing.GRACIDEA_FLOWER_BLESSING
+          )
           ;[-1, 0, 1].forEach((offset) => {
             const value = this.board.getEntityOnCell(
               pokemon.positionX + offset,
               pokemon.positionY
             )
-            if (value) {
-              value.addSpeed(20, pokemon, 0, false)
+            if (!value) return
+            value.addSpeed(20, pokemon, 0, false)
+            if (blossoms && value.team === pokemon.team) {
+              value.effectsSet.add(new GracideaBlossomEffect())
+            }
+          })
+        }
+
+        if (
+          pokemon.items.has(Item.CHOICE_SPECS) &&
+          pokemon.player?.blessings?.includes(Blessing.CHOICE_SPECS_BLESSING)
+        ) {
+          ;[-1, 1].forEach((offset) => {
+            const ally = this.board.getEntityOnCell(
+              pokemon.positionX + offset,
+              pokemon.positionY
+            )
+            if (ally && ally.team === pokemon.team) {
+              ally.skill = pokemon.skill
+              ally.maxPP = CHOICE_SPECS_ALLY_MAX_PP
             }
           })
         }
@@ -3620,13 +3663,10 @@ export default class Simulation extends Schema implements ISimulation {
         0,
         false
       )
-      const mortarShellsPkmClass =
-        PokemonClasses[PkmByIndex[mortarShellsChampion.index]]
-      const mortarShellsBaseSpeed = mortarShellsPkmClass
-        ? new mortarShellsPkmClass(mortarShellsChampion.name).speed
-        : DEFAULT_SPEED
       mortarShellsChampion.addSpeed(
-        -Math.round(mortarShellsBaseSpeed * MORTAR_SHELLS_SPEED_RATIO),
+        -Math.round(
+          mortarShellsChampion.baseSpeed * MORTAR_SHELLS_SPEED_RATIO
+        ),
         mortarShellsChampion,
         0,
         false
@@ -4373,11 +4413,10 @@ export default class Simulation extends Schema implements ISimulation {
 
       case EffectEnum.MAGNET_STORM: {
         // compute shield in applyPostEffects
-        const PkmClass = PokemonClasses[PkmByIndex[pokemon.index]]
-        const baseSpeed = PkmClass ? new PkmClass(pokemon.name).speed : DEFAULT_SPEED
-        const isFastSteel = pokemon.types.has(Synergy.STEEL) && baseSpeed > 50
+        const isFastSteel =
+          pokemon.types.has(Synergy.STEEL) && pokemon.baseSpeed > 50
         if (!isFastSteel) {
-          pokemon.addSpeed(50 - baseSpeed, "environment", 0, false)
+          pokemon.addSpeed(50 - pokemon.baseSpeed, "environment", 0, false)
         }
         break
       }
