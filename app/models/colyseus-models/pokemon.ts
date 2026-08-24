@@ -15302,8 +15302,8 @@ export class Dracovish extends Pokemon {
   ])
   rarity = Rarity.SPECIAL
   stars = 3
-  hp = 180
-  atk = 20
+  hp = 150
+  atk = 18
   speed = 49
   def = 6
   speDef = 6
@@ -15327,8 +15327,8 @@ export class Dracozolt extends Pokemon {
   ])
   rarity = Rarity.SPECIAL
   stars = 3
-  hp = 180
-  atk = 20
+  hp = 150
+  atk = 18
   speed = 49
   def = 6
   speDef = 6
@@ -15352,8 +15352,8 @@ export class Arctozolt extends Pokemon {
   ])
   rarity = Rarity.SPECIAL
   stars = 3
-  hp = 180
-  atk = 22
+  hp = 150
+  atk = 20
   speed = 43
   def = 6
   speDef = 6
@@ -15373,8 +15373,8 @@ export class Arctovish extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.ICE, Synergy.AQUATIC, Synergy.FOSSIL])
   rarity = Rarity.SPECIAL
   stars = 3
-  hp = 180
-  atk = 22
+  hp = 150
+  atk = 20
   speed = 43
   def = 6
   speDef = 6
