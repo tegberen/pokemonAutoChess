@@ -2227,14 +2227,14 @@ export const PassiveEffects: Partial<
         if (cell.value && cell.value.team === entity.team) {
           const weatherMultiplier = simulation.weather === Weather.DROUGHT ? 2 : 1
           if (cell.value.types.has(Synergy.FIGHTING)) {
-            entity.addDefense(5 * weatherMultiplier, entity, 0, false)
+            entity.addDefense(2 * weatherMultiplier, entity, 0, false)
           }
           if (cell.value.types.has(Synergy.FOSSIL)) {
-            entity.addMaxHP(10 * weatherMultiplier, entity, 0, false)
+            entity.addMaxHP(4 * weatherMultiplier, entity, 0, false)
             entity.hp = entity.maxHP
           }
           if (cell.value.types.has(Synergy.BUG)) {
-            entity.addAttack(5 * weatherMultiplier, entity, 0, false)
+            entity.addAttack(2 * weatherMultiplier, entity, 0, false)
           }
         }
       })
