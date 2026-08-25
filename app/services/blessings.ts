@@ -1585,7 +1585,7 @@ export function checkBlessingQuests(player: Player, state: GameState) {
       player.blessingQuestsCompleted.add(blessing)
       const reward = blessingQuestRewards[blessing]
       if (reward) player.items.push(reward)
-      player.items.push(Item.EXCHANGE_TICKET)
+      player.items.push(Item.EXCHANGE_TICKET, Item.RECYCLE_TICKET)
     }
 
     const shardReward = blessingShardRewards[blessing]

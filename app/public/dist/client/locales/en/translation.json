@@ -5068,27 +5068,27 @@
 		},
 		"QUEST_REROLL": {
 			"name": "Quest: Reroll",
-			"description": "Gain 10 free rerolls. After rerolling 50 times, gain a REPEAT_BALL and an EXCHANGE_TICKET."
+			"description": "Gain 10 free rerolls. After rerolling 50 times, gain a REPEAT_BALL, an EXCHANGE_TICKET and a RECYCLE_TICKET."
 		},
 		"QUEST_GROW": {
 			"name": "Quest: Grow",
-			"description": "Gain a BERSERK_GENE. The first time an ally reaches 1000 HP in a fight, gain a DYNAMAX_BAND and an EXCHANGE_TICKET."
+			"description": "Gain a BERSERK_GENE. The first time an ally reaches 1000 HP in a fight, gain a DYNAMAX_BAND, an EXCHANGE_TICKET and a RECYCLE_TICKET."
 		},
 		"QUEST_SHINE": {
 			"name": "Quest: Shine",
-			"description": "Gain a LIGHT_BALL. The first time you activate Light 7, gain a SHINY_STONE and an EXCHANGE_TICKET."
+			"description": "Gain a LIGHT_BALL. The first time you activate Light 7, gain a SHINY_STONE, an EXCHANGE_TICKET and a RECYCLE_TICKET."
 		},
 		"QUEST_EPIC": {
 			"name": "Quest: Epic",
-			"description": "Gain a 1 STAR Epic Pokémon and 6 XP. The first time you fight with 7 Unique, 7 Epic, or 7 Ultra Pokémon fielded, gain an EVIOLITE and an EXCHANGE_TICKET. (Scyther does not count)"
+			"description": "Gain a 1 STAR Epic Pokémon and 6 XP. The first time you fight with 7 Unique, 7 Epic, or 7 Ultra Pokémon fielded, gain an EVIOLITE, an EXCHANGE_TICKET and a RECYCLE_TICKET. (Scyther does not count)"
 		},
 		"QUEST_EXPAND": {
 			"name": "Quest: Expand",
-			"description": "Gain 10 XP. After fielding 8 Pokémon that all have a sell price of 4 or more at once, gain a GOLD_BOW and an EXCHANGE_TICKET."
+			"description": "Gain 10 XP. After fielding 8 Pokémon that all have a sell price of 4 or more at once, gain a GOLD_BOW, an EXCHANGE_TICKET and a RECYCLE_TICKET."
 		},
 		"QUEST_ASCEND": {
 			"name": "Quest: Ascend",
-			"description": "Gain 3 1 STAR Rare Pokémon. The first time you get a 3 STAR Uncommon, Rare, Epic or Ultra Pokémon, gain a STAR_PIECE and an EXCHANGE_TICKET."
+			"description": "Gain 3 1 STAR Rare Pokémon. The first time you get a 3 STAR Uncommon, Rare, Epic or Ultra Pokémon, gain a STAR_PIECE, an EXCHANGE_TICKET and a RECYCLE_TICKET."
 		},
 		"CHARGING_UP": {
 			"name": "Charging Up",
@@ -5980,27 +5980,27 @@
 		},
 		"QUEST_INDECISION": {
 			"name": "Quest: Indecision",
-			"description": "Gain 2 random gems. Entering a fight with a synergy at its highest tier counts it. After 3 different synergies, gain a GOLD_MASK and an EXCHANGE_TICKET. They do not have to be active at once."
+			"description": "Gain 2 random gems. Entering a fight with a synergy at its highest tier counts it. After 3 different synergies, gain a GOLD_MASK, an EXCHANGE_TICKET and a RECYCLE_TICKET. They do not have to be active at once."
 		},
 		"QUEST_CRIT": {
 			"name": "Quest: Crit",
-			"description": "Gain 2 BLACK_GLASSES. The first time an ally reaches 5 CRIT_POWER in a fight, gain a GOLD_BOTTLE_CAP and an EXCHANGE_TICKET."
+			"description": "Gain 2 BLACK_GLASSES. The first time an ally reaches 5 CRIT_POWER in a fight, gain a GOLD_BOTTLE_CAP, an EXCHANGE_TICKET and a RECYCLE_TICKET."
 		},
 		"QUEST_ABSORB": {
 			"name": "Quest: Absorb",
-			"description": "Gain a HEART_SCALE and a NEVER_MELT_ICE. The first time an ally blocks 1000 damage in a fight, gain an ABSORB_BULB and an EXCHANGE_TICKET."
+			"description": "Gain a HEART_SCALE and a NEVER_MELT_ICE. The first time an ally blocks 1000 damage in a fight, gain an ABSORB_BULB, an EXCHANGE_TICKET and a RECYCLE_TICKET."
 		},
 		"QUEST_REVIVE": {
 			"name": "Quest: Revive",
-			"description": "Gain a MAX_REVIVE. After allies have been revived 16 times, gain a SACRED_ASH and an EXCHANGE_TICKET."
+			"description": "Gain a MAX_REVIVE. After allies have been revived 16 times, gain a SACRED_ASH, an EXCHANGE_TICKET and a RECYCLE_TICKET."
 		},
 		"QUEST_PILLAGE": {
 			"name": "Quest: Pillage",
-			"description": "Gain an AMULET_COIN. Its holder gains 1 CRIT_CHANCE for every 2 GOLD at the start of the fight. After it has made you 30 GOLD, gain a BOOSTER_ENERGY and an EXCHANGE_TICKET."
+			"description": "Gain an AMULET_COIN. Its holder gains 1 CRIT_CHANCE for every 2 GOLD at the start of the fight. After it has made you 30 GOLD, gain a BOOSTER_ENERGY, an EXCHANGE_TICKET and a RECYCLE_TICKET."
 		},
 		"QUEST_EVOLVE_II": {
 			"name": "Quest: Evolve II",
-			"description": "Gain an Eevee and 2 Rare 1 STAR Pokémon. After evolving Pokémon 12 times, gain a RARE_CANDY and an EXCHANGE_TICKET."
+			"description": "Gain an Eevee and 2 Rare 1 STAR Pokémon. After evolving Pokémon 12 times, gain a RARE_CANDY, an EXCHANGE_TICKET and a RECYCLE_TICKET."
 		},
 		"IMPENDING_DOOM": {
 			"name": "Impending Doom",
