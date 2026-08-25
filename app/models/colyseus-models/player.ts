@@ -335,6 +335,7 @@ export default class Player extends Schema implements IPlayer {
   ignitedPokemonIds: string[] = []
   // BERRY_GROWTH: berries the trees carry when they are not golden
   berryTreesTypeBeforeGolden: Item[] = []
+  robinGemsOpponentsRewarded: string[] = []
   regions: DungeonPMDO[] = []
   unownReminiscences: number = 0
   maxLife: number = 100

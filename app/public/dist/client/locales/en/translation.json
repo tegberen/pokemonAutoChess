@@ -6280,7 +6280,7 @@
 		},
 		"CHOICE_SPECS_BLESSING": {
 			"name": "Shared Vision",
-			"description": "Gain CHOICE_SPECS. Allies ADJACENT in the same row use the same ability as the holder, with their PP set to 100."
+			"description": "Gain CHOICE_SPECS. Allies ADJACENT_IN_THE_SAME_ROW row use the same ability as the holder, with their PP set to 100."
 		},
 		"COVERT_CLOAK_BLESSING": {
 			"name": "Mist Cloak",

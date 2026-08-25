@@ -1375,16 +1375,7 @@ export function grantRobinGemsReward(player: Player, state: GameState) {
   if (!state.hasBlessing(player.id, Blessing.ROBIN_GEMS)) return
   const latestBattle = player.history.at(-1)
   if (!latestBattle || latestBattle.result !== BattleResult.WIN) return
-  if (
-    player.history
-      .slice(0, -1)
-      .some(
-        (battle) =>
-          battle.id === latestBattle.id && battle.result === BattleResult.WIN
-      )
-  ) {
-    return
-  }
+  if (player.robinGemsOpponentsRewarded.includes(latestBattle.id)) return
   const opponent = state.players.get(latestBattle.id)
   if (!opponent) return
   const gemSynergies = [...opponent.synergies.entries()].filter(
@@ -1404,6 +1395,7 @@ export function grantRobinGemsReward(player: Player, state: GameState) {
     .map(([synergy]) => synergy)
   const gem = GemBySynergy[pickRandomIn(highestSynergies)]
   if (gem) grantSynergyAwareItem(player, gem)
+  player.robinGemsOpponentsRewarded.push(latestBattle.id)
 }
 
 function heroBlessingEffect(
