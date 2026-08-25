@@ -1,0 +1,213 @@
+.newspaper {
+  display: flex;
+  flex-direction: column;
+  flex: none; /* the tab panel is a flex column: do not squash, let it scroll */
+  gap: 0.4em;
+  /* identical to .events-calendar, so the first card of each panel lines up */
+  padding: 0.8em 0.25em;
+}
+
+/* compound with .my-box so this padding wins over its own */
+.newspaper-card.my-box {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3em;
+  padding: 0.4em 0.5em 0.5em;
+  background-image: linear-gradient(
+    160deg,
+    color-mix(in srgb, var(--color-bg-primary) 55%, transparent),
+    transparent 55%
+  );
+}
+
+.newspaper-kicker {
+  display: flex;
+  align-items: center;
+  gap: 0.4em;
+  margin: 0;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-fg-secondary);
+}
+
+.newspaper-kicker strong {
+  color: var(--color-fg-primary);
+  letter-spacing: 0.08em;
+}
+
+.newspaper-kicker .newspaper-crown {
+  width: 20px;
+  height: 20px;
+}
+
+.newspaper-kicker .gamemode.icon {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  margin-left: auto;
+}
+
+.newspaper-board {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35em;
+}
+
+/* a Double Up card stacks both partners: rule off the second board */
+.newspaper-board + .newspaper-board {
+  border-top: var(--border-extra-thin);
+  padding-top: 0.45em;
+}
+
+.newspaper-result {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5em;
+}
+
+.newspaper-player {
+  display: flex;
+  align-items: center;
+  gap: 0.45em;
+  min-width: 0;
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--color-fg-primary);
+  font-size: 1rem;
+  font-weight: 600;
+  text-shadow: 1px 2px 2px var(--color-shadow);
+  cursor: var(--cursor-hover);
+}
+
+.newspaper-player:hover span,
+.newspaper-player:focus-visible span {
+  text-shadow:
+    0 0 8px color-mix(in srgb, var(--color-fg-primary) 65%, transparent),
+    1px 2px 2px var(--color-shadow);
+}
+
+.newspaper-player .pokemon-portrait {
+  width: 34px;
+  height: 34px;
+  flex: none;
+}
+
+.newspaper-player span {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.newspaper-buildup {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25em 0.5em;
+}
+
+.newspaper-synergies,
+.newspaper-blessings {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.newspaper-synergies {
+  gap: 0.25em;
+}
+
+.newspaper-synergies > li {
+  display: flex;
+  align-items: center;
+  gap: 0.1em;
+  padding: 0.05em 0.3em 0.05em 0.1em;
+  border-radius: 999px;
+  background-color: var(--color-bg-tertiary);
+  border: var(--border-extra-thin);
+  font-size: 0.8rem;
+}
+
+.newspaper-synergies .synergy-icon {
+  width: 1.35em;
+  height: 1.35em;
+}
+
+.newspaper-blessings {
+  gap: 0.2em;
+}
+
+.newspaper-blessings .blessing-panel-icon {
+  width: 24px;
+  height: 24px;
+  cursor: help;
+}
+
+/* Team is reused as-is: these rules turn its list, whose held items hang
+   absolutely positioned under each portrait, into an aligned grid with the
+   items in flow underneath. The column minimum has to fit a full 3-item build
+   on one line or the third wraps and the rows stop lining up:
+   3 items + 2 gaps + the tile padding, so 3x16+2+4, plus a rounding pixel */
+.newspaper .player-team-pokemons {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(56px, 1fr));
+  gap: 3px;
+  padding: 0;
+  margin: 0;
+}
+
+.newspaper .player-team-pokemons li {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 2px;
+  border-radius: 8px;
+  background-color: color-mix(in srgb, black 22%, transparent);
+}
+
+.newspaper .player-team-pokemons .pokemon-portrait {
+  width: 100%;
+  height: auto;
+  margin: 0;
+}
+
+.newspaper .player-team-pokemons .pokemon-items {
+  position: static;
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: center;
+  gap: 1px;
+}
+
+/* min-width: 0 lets a rare fourth item shrink the row instead of overflowing
+   the tile, since an image's automatic minimum is its intrinsic width */
+.newspaper .player-team-pokemons .pokemon-items img {
+  width: 16px;
+  height: 16px;
+  min-width: 0;
+}
+
+/* a fully itemized Pokemon is the board's carry, and three items is the tell */
+.newspaper .player-team-pokemons li:has(.pokemon-items img:nth-child(3)) {
+  background-color: color-mix(
+    in srgb,
+    var(--color-fg-primary) 18%,
+    transparent
+  );
+  box-shadow: inset 0 0 0 1px
+    color-mix(in srgb, var(--color-fg-primary) 55%, transparent);
+}
+
+.newspaper-placeholder {
+  margin: 1em 0;
+  text-align: center;
+  color: var(--color-fg-secondary);
+  font-style: italic;
+}

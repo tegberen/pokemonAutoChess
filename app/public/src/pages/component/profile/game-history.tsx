@@ -12,7 +12,10 @@ import type {
   IGameRecord,
   IPokemonRecord
 } from "../../../../../models/colyseus-models/game-record"
-import { computeSynergies } from "../../../../../models/colyseus-models/synergies"
+import {
+  computeSynergies,
+  sortSynergiesForDisplay
+} from "../../../../../models/colyseus-models/synergies"
 import PokemonFactory from "../../../../../models/pokemon-factory"
 import type { Synergy } from "../../../../../types/enum/Synergy"
 import { ItemDetailTooltip } from "../../../game/components/item-detail"
@@ -159,17 +162,7 @@ function GameHistoryRow({
     <div style={style}>
       <div className="my-box game-history">
         <span className="top">
-          {r.whimsy ? (
-            <img
-              src="/assets/ui/whimsy_weekend.png"
-              alt={t("whimsy_weekend")}
-              title={t("whimsy_weekend")}
-              className="gamemode icon"
-              draggable="false"
-            />
-          ) : (
-            <GameModeIcon gameMode={r.gameMode} />
-          )}
+          <GameModeIcon gameMode={r.gameMode} whimsy={r.whimsy} />
           {t("top")} {r.rank}
         </span>
         <EloBadge elo={r.elo} />
@@ -209,7 +202,7 @@ function GameHistoryRow({
   )
 }
 
-function BlessingHistoryTooltip() {
+export function BlessingHistoryTooltip() {
   return (
     <Tooltip
       id="blessing-history-tooltip"
@@ -223,10 +216,10 @@ function BlessingHistoryTooltip() {
   )
 }
 
-function getTopSynergies(
+function computeRecordSynergies(
   team: IPokemonRecord[] | ArraySchema<IPokemonRecord>
-): [Synergy, number][] {
-  const synergies = computeSynergies(
+): Map<Synergy, number> {
+  return computeSynergies(
     team.map((pkmRecord) => {
       const pkm = PokemonFactory.createPokemonFromName(pkmRecord.name)
       pkm.positionY = 1 // just to not be counted on bench
@@ -236,6 +229,21 @@ function getTopSynergies(
       return pkm
     })
   )
+}
+
+// every synergy the team actually triggered, ordered like the in-game panel
+export function getActiveSynergies(
+  team: IPokemonRecord[] | ArraySchema<IPokemonRecord>
+): [Synergy, number][] {
+  return sortSynergiesForDisplay([
+    ...computeRecordSynergies(team).entries()
+  ]).filter(([type, value]) => value >= SynergyTiersThresholds[type][0])
+}
+
+function getTopSynergies(
+  team: IPokemonRecord[] | ArraySchema<IPokemonRecord>
+): [Synergy, number][] {
+  const synergies = computeRecordSynergies(team)
 
   const topSynergies = [...synergies.entries()]
     .sort((a, b) => {

@@ -16,6 +16,31 @@ export function formatDate(
   }
 }
 
+const RELATIVE_DATE_UNITS: [Intl.RelativeTimeFormatUnit, number][] = [
+  ["day", 86400_000],
+  ["hour", 3600_000],
+  ["minute", 60_000]
+]
+
+export function formatRelativeDate(date: number | Date) {
+  const time = typeof date === "number" ? date : date.getTime()
+  const elapsed = Date.now() - time
+  try {
+    const formatter = new Intl.RelativeTimeFormat(i18n.language, {
+      numeric: "auto",
+      style: "narrow"
+    })
+    for (const [unit, milliseconds] of RELATIVE_DATE_UNITS) {
+      if (elapsed >= milliseconds) {
+        return formatter.format(-Math.floor(elapsed / milliseconds), unit)
+      }
+    }
+    return formatter.format(-1, "minute")
+  } catch (err) {
+    return formatDate(date)
+  }
+}
+
 export function formatDuration(seconds: number) {
   const days = Math.floor(seconds / 86400)
   seconds -= days * 86400

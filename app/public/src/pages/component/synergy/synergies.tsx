@@ -1,8 +1,8 @@
 import { useState } from "react"
 import ReactDOM from "react-dom"
 import { Tooltip } from "react-tooltip"
-import { SynergyTiersThresholds } from "../../../../../config"
-import { Synergy } from "../../../../../types/enum/Synergy"
+import { sortSynergiesForDisplay } from "../../../../../models/colyseus-models/synergies"
+import type { Synergy } from "../../../../../types/enum/Synergy"
 import BlessingsPanel from "./blessings-panel"
 import SynergyComponent from "./synergy-component"
 import SynergyDetailComponent from "./synergy-detail-component"
@@ -14,26 +14,7 @@ export default function Synergies(props: {
   blessingsEnabled?: boolean
 }) {
   const [hoveredSynergy, setHoveredSynergy] = useState<Synergy | null>(null)
-  const synergies = Object.keys(Synergy)
-    .sort((a, b) => {
-      const fa = props.synergies.find((e) => e[0] == a)
-      const fb = props.synergies.find((e) => e[0] == b)
-      const sa = fa ? fa : 0
-      const sb = fb ? fb : 0
-      if (sa[1] == sb[1]) {
-        if (sa[1] >= SynergyTiersThresholds[a][0]) {
-          return -1
-        } else {
-          return 1
-        }
-      } else {
-        return sb[1] - sa[1]
-      }
-    })
-    .filter((type) => {
-      const s = props.synergies.find((e) => e[0] == type)
-      return s && s[1] > 0
-    })
+  const synergies = sortSynergiesForDisplay(props.synergies)
 
   const tooltip = (
     <Tooltip
@@ -56,19 +37,16 @@ export default function Synergies(props: {
   return (
     <div className="synergies-list">
       {props.blessingsEnabled && <BlessingsPanel recentOnly />}
-      {synergies.map((type, index) => {
-        const s = props.synergies.find((e) => e[0] == type)!
-        return (
-          <SynergyComponent
-            key={type}
-            type={type as Synergy}
-            value={s[1]}
-            index={index}
-            onMouseEnter={() => setHoveredSynergy(type as Synergy)}
-            onMouseLeave={() => setHoveredSynergy(null)}
-          />
-        )
-      })}
+      {synergies.map(([type, value], index) => (
+        <SynergyComponent
+          key={type}
+          type={type}
+          value={value}
+          index={index}
+          onMouseEnter={() => setHoveredSynergy(type)}
+          onMouseLeave={() => setHoveredSynergy(null)}
+        />
+      ))}
       {props.tooltipPortal
         ? ReactDOM.createPortal(tooltip, document.body)
         : tooltip}

@@ -1316,6 +1316,7 @@ export default class GameRoom extends Room<{ state: GameState }> {
         const dbrecord = this.transformToSimplePlayer(player)
         DetailledStatistic.create({
           time: Date.now(),
+          gameId: this.roomId,
           name: dbrecord.name,
           pokemons: dbrecord.pokemons.map((p) => ({
             ...p,

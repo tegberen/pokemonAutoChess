@@ -27,7 +27,9 @@ import {
 import { initTilemap } from "./core/design"
 import { GameRecord } from "./models/colyseus-models/game-record"
 import chatV2 from "./models/mongo-models/chat-v2"
-import DetailledStatistic from "./models/mongo-models/detailled-statistic-v2"
+import DetailledStatistic, {
+  type IDetailledStatistic
+} from "./models/mongo-models/detailled-statistic-v2"
 import TitleStatistic from "./models/mongo-models/title-statistic"
 import UserMetadata, {
   toUserMetadataJSON
@@ -77,6 +79,10 @@ import { DungeonPMDO } from "./types/enum/Dungeon"
 import { Emotion } from "./types/enum/Emotion"
 import { Item, UnholdableItemsToSaveForStats } from "./types/enum/Item"
 import { Pkm, PkmIndex } from "./types/enum/Pokemon"
+import type {
+  IRecentVictory,
+  IVictoryWinner
+} from "./types/interfaces/RecentVictory"
 import { logger } from "./utils/logger"
 
 const clientSrc = __dirname.includes("server")
@@ -84,6 +90,43 @@ const clientSrc = __dirname.includes("server")
   : path.join(__dirname, "public", "dist", "client")
 const viewsSrc = path.join(clientSrc, "index.html")
 const isDevelopment = process.env.MODE === "dev"
+
+// every game mode is eligible: community servers run mostly Double Up and
+// custom rooms, and only games past MinStageForGameToCount are recorded at all
+const NEWSPAPER_RECORDS_SCANNED = 30
+// the number of cards the Gazette shows: the panel renders whatever it is sent
+const NEWSPAPER_VICTORIES_RETURNED = 4
+// legacy records predate gameId and can only be paired back up by their mode,
+// player count and the near-identical time at which they were written
+const SAME_MATCH_TIME_WINDOW = 30_000
+
+function isSameMatch(a: IDetailledStatistic, b: IDetailledStatistic): boolean {
+  if (a.gameId && b.gameId) return a.gameId === b.gameId
+  return (
+    a.gameMode === b.gameMode &&
+    a.nbplayers === b.nbplayers &&
+    Math.abs(a.time - b.time) < SAME_MATCH_TIME_WINDOW
+  )
+}
+
+function toVictoryWinner(record: IDetailledStatistic): IVictoryWinner {
+  return {
+    playerId: record.playerId,
+    playerName: record.name,
+    playerAvatar: record.avatar,
+    game: new GameRecord(
+      record.time,
+      record.rank,
+      record.elo,
+      record.pokemons,
+      record.gameMode,
+      record.unholdableItems,
+      record.whimsy,
+      record.blessings
+    )
+  }
+}
+
 const setCacheControl = (res: any, maxAge: number = 86400) => {
   if (!isDevelopment) {
     res.set("Cache-Control", `max-age=${maxAge}`)
@@ -627,6 +670,76 @@ export const server = defineServer({
 
       // If no records found, return an empty array
       return res.status(200).json([])
+    })
+
+    app.get("/recent-victories", async (req, res) => {
+      if (!isDevelopment) {
+        res.set("Cache-Control", "no-cache")
+      }
+
+      try {
+        const stats = await DetailledStatistic.find(
+          { rank: 1 },
+          [
+            "playerId",
+            "gameId",
+            "name",
+            "avatar",
+            "pokemons",
+            "time",
+            "rank",
+            "nbplayers",
+            "elo",
+            "gameMode",
+            "whimsy",
+            "unholdableItems",
+            "blessings"
+          ],
+          { limit: NEWSPAPER_RECORDS_SCANNED, sort: { time: -1 } }
+        )
+
+        // records come newest first, so the winners crowned by one match are
+        // adjacent and can be gathered into a single story
+        const matches: IDetailledStatistic[][] = []
+        for (const record of stats) {
+          const currentMatch = matches[matches.length - 1]
+          if (currentMatch && isSameMatch(currentMatch[0], record)) {
+            currentMatch.push(record)
+          } else {
+            matches.push([record])
+          }
+        }
+
+        const victories: IRecentVictory[] = []
+        const used = new Set<number>()
+        const featuredPlayers = new Set<string>()
+        const take = (index: number) => {
+          used.add(index)
+          matches[index].forEach((r) => featuredPlayers.add(r.playerId))
+          victories.push({ winners: matches[index].map(toVictoryWinner) })
+        }
+
+        // a different player per story keeps the page varied, but filling it
+        // matters more: the second pass tops it up when one player won most of
+        // the recent games
+        matches.forEach((match, index) => {
+          if (victories.length >= NEWSPAPER_VICTORIES_RETURNED) return
+          if (match.some((r) => featuredPlayers.has(r.playerId))) return
+          take(index)
+        })
+        matches.forEach((_match, index) => {
+          if (victories.length >= NEWSPAPER_VICTORIES_RETURNED) return
+          if (used.has(index)) return
+          take(index)
+        })
+
+        return res.status(200).json(victories)
+      } catch (error) {
+        logger.error("Error fetching recent victories", error)
+        return res
+          .status(500)
+          .json({ error: "Error fetching recent victories" })
+      }
     })
 
     app.get("/chat-history/:playerUid", async (req, res) => {

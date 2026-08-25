@@ -341,6 +341,35 @@ export function addSynergiesGivenByItems(
   })
 }
 
+// display order of the in-game synergies panel: biggest counts first, and among
+// equal counts the ones that reached their first tier come first. Shared so the
+// lobby newspaper lists a team's synergies exactly as the player saw them
+export function sortSynergiesForDisplay(
+  synergies: [string, number][]
+): [Synergy, number][] {
+  return Object.keys(Synergy)
+    .sort((a, b) => {
+      const fa = synergies.find((e) => e[0] == a)
+      const fb = synergies.find((e) => e[0] == b)
+      const sa = fa ? fa : 0
+      const sb = fb ? fb : 0
+      if (sa[1] == sb[1]) {
+        if (sa[1] >= SynergyTiersThresholds[a][0]) {
+          return -1
+        } else {
+          return 1
+        }
+      } else {
+        return sb[1] - sa[1]
+      }
+    })
+    .map((type): [Synergy, number] => [
+      type as Synergy,
+      synergies.find((e) => e[0] === type)?.[1] ?? 0
+    ])
+    .filter(([, value]) => value > 0)
+}
+
 export function getSynergyTier(
   synergies: Map<Synergy, number> | MapSchema<number, Synergy>,
   type: Synergy

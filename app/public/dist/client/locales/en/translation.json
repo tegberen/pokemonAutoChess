@@ -4440,6 +4440,12 @@
 	"no_data_available": "No data available",
 	"no_bots_found": "No bots found !",
 	"leaderboard": "Leaderboard",
+	"community": "Community",
+	"newspaper": {
+		"tab": "Gazette",
+		"see_profile": "See {{player}}'s profile",
+		"no_stories": "Today's stories are still being written..."
+	},
 	"rooms": "Rooms",
 	"rooms_one": "{{count}} room",
 	"rooms_other": "{{count}} rooms",

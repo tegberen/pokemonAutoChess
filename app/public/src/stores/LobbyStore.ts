@@ -16,6 +16,7 @@ import type {
   ILeaderboardEventInfo,
   ILeaderboardInfo
 } from "../../../types/interfaces/LeaderboardInfo"
+import type { IRecentVictory } from "../../../types/interfaces/RecentVictory"
 import type { IUserMetadataClient } from "../../../types/interfaces/UserMetadata"
 
 export interface IEventNpcState {
@@ -42,6 +43,8 @@ export interface IUserLobbyState {
   botLeaderboard: ILeaderboardBotInfo[]
   levelLeaderboard: ILeaderboardInfo[]
   eventLeaderboard: ILeaderboardEventInfo[]
+  recentVictories: IRecentVictory[]
+  recentVictoriesLoaded: boolean
   user: IUserMetadataClient | undefined
   searchedUser: IUserMetadataClient | undefined
   tabIndex: number
@@ -60,6 +63,8 @@ const initialState: IUserLobbyState = {
   botLeaderboard: [],
   levelLeaderboard: [],
   eventLeaderboard: [],
+  recentVictories: [],
+  recentVictoriesLoaded: false,
   user: undefined,
   tabIndex: 0,
   preparationRooms: [],
@@ -86,7 +91,9 @@ const initialState: IUserLobbyState = {
   }
 }
 
-export const lobbySlice = createSlice({
+// not exported: with `declaration: true` the inferred slice type is too large
+// for tsc to serialize, and nothing outside this file needs the slice itself
+const lobbySlice = createSlice({
   name: "lobby",
   initialState: initialState,
   reducers: {
@@ -115,6 +122,10 @@ export const lobbySlice = createSlice({
       action: PayloadAction<ILeaderboardEventInfo[]>
     ) => {
       state.eventLeaderboard = action.payload
+    },
+    setRecentVictories: (state, action: PayloadAction<IRecentVictory[]>) => {
+      state.recentVictories = action.payload
+      state.recentVictoriesLoaded = true
     },
     setTabIndex: (state, action: PayloadAction<number>) => {
       state.tabIndex = action.payload
@@ -286,6 +297,7 @@ export const {
   setBotLeaderboard,
   setLevelLeaderboard,
   setEventLeaderboard,
+  setRecentVictories,
   setTabIndex,
   addRoom,
   setRooms,

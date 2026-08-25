@@ -14,6 +14,9 @@ export interface Pokemon {
 
 export interface IDetailledStatistic {
   playerId: string
+  // room id of the game this record comes from, so the several winners of a
+  // Double Up game can be recognized as one match. Absent on pre-2026-08 records
+  gameId?: string
   elo: number
   time: number
   name: string
@@ -47,6 +50,9 @@ const pokemon = new Schema({
 
 const statisticSchema = new Schema({
   playerId: {
+    type: String
+  },
+  gameId: {
     type: String
   },
   elo: {
@@ -99,6 +105,8 @@ const statisticSchema = new Schema({
 })
 
 statisticSchema.index({ playerId: 1, time: -1 })
+// serves the lobby newspaper query for the most recent first places
+statisticSchema.index({ rank: 1, time: -1 })
 
 export default model<IDetailledStatistic>(
   "DetailledStatisticV2",
