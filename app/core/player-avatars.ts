@@ -6,8 +6,7 @@ import {
   AVATAR_SPAWN_BLUE_Y,
   AVATAR_SPAWN_RED_Y,
   AVATAR_SPAWN_X,
-  AVATAR_TEAMMATE_OFFSET_CELLS,
-  AVATAR_WALK_SPEED_CELLS_PER_SECOND
+  AVATAR_TEAMMATE_OFFSET_CELLS
 } from "../config"
 import { PokemonAvatarModel } from "../models/colyseus-models/pokemon-avatar"
 import type GameState from "../rooms/states/game-state"
@@ -18,6 +17,7 @@ import {
 } from "../types/enum/Game"
 import { clamp } from "../utils/number"
 import { getOrientation } from "../utils/orientation"
+import { getPlayerAvatarWalkSpeed } from "./player-avatar-speed"
 
 /**
  * One avatar per player, walked around for fun through the pick phase and
@@ -120,8 +120,8 @@ export function updatePlayerAvatars(state: GameState, dt: number) {
   )
     return
 
-  const step = (AVATAR_WALK_SPEED_CELLS_PER_SECOND * dt) / 1000
   state.playerAvatars.forEach((avatar) => {
+    const step = (getPlayerAvatarWalkSpeed(avatar.name) * dt) / 1000
     const dx = avatar.targetX - avatar.x
     const dy = avatar.targetY - avatar.y
     const distance = Math.hypot(dx, dy)

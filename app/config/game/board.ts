@@ -32,18 +32,9 @@ export const AVATAR_ROAM_MAX_X = BOARD_WIDTH + 2
    these remain symmetric around the board midpoint so camera flips match. */
 export const AVATAR_ROAM_MIN_Y = -1
 export const AVATAR_ROAM_MAX_Y = BOARD_HEIGHT
-/* Constant, with no easing anywhere.
-
-   A pixel sprite has one walk cycle drawn at one pace, so it only reads as
-   walking rather than sliding if the ground covered per cycle stays fixed. Any
-   acceleration makes the body and the legs disagree, and the eye reads that
-   disagreement as skating, or as marching on the spot. Top down games in this
-   style move at a flat speed and stop cleanly for exactly this reason.
-
-   316.8 px/s. The old version averaged 200 but eased out from a 314 px/s start,
-   and it was that opening burst that read as responsive. A flat speed cannot
-   have a burst, so it sits above the old average instead. */
-export const AVATAR_WALK_SPEED_CELLS_PER_SECOND = 3.3
+/* Avatar speed scaling. Base Speed is curved around 75 so slow and fast
+   Pokémon feel distinctly different. */
+export const AVATAR_WALK_SPEED_SCALE = 3
 
 /* Double Up puts two players on the blue side of a pve round, so they step
    apart either side of the spawn instead of standing in the same place. */

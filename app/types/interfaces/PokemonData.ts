@@ -17,6 +17,7 @@ export interface IPokemonData {
   regional: boolean
   hp: number
   pp: number
+  speed: number
   range: number
   types: Synergy[]
   evolution: Pkm | null

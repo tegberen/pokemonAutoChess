@@ -4,10 +4,10 @@ import {
   AVATAR_ROAM_MAX_Y,
   AVATAR_ROAM_MIN_X,
   AVATAR_ROAM_MIN_Y,
-  AVATAR_WALK_SPEED_CELLS_PER_SECOND,
   BOARD_HEIGHT,
   CELL_WIDTH
 } from "../../../../config"
+import { getPlayerAvatarWalkSpeed } from "../../../../core/player-avatar-speed"
 import type { IPokemonAvatar } from "../../../../types"
 import {
   GamePhaseState,
@@ -310,7 +310,7 @@ export default class PlayerAvatarsManager {
     const own = this.ownId ? this.sprites.get(this.ownId) : undefined
     if (!this.predicted || !own?.scene) return
 
-    const step = (AVATAR_WALK_SPEED_CELLS_PER_SECOND * delta) / 1000
+    const step = (getPlayerAvatarWalkSpeed(own.name) * delta) / 1000
     const dx = this.predicted.targetX - this.predicted.x
     const dy = this.predicted.targetY - this.predicted.y
     const distance = Math.hypot(dx, dy)
@@ -501,7 +501,7 @@ export default class PlayerAvatarsManager {
     }
     const naturalCycleMs = sprite.sprite.anims.currentAnim?.duration
     if (!naturalCycleMs) return
-    const speedPxPerSecond = AVATAR_WALK_SPEED_CELLS_PER_SECOND * CELL_WIDTH
+    const speedPxPerSecond = getPlayerAvatarWalkSpeed(sprite.name) * CELL_WIDTH
     const travelCycleMs = (WALK_STRIDE_PX / speedPxPerSecond) * 1000
     sprite.sprite.anims.timeScale = Phaser.Math.Clamp(
       naturalCycleMs / travelCycleMs,
