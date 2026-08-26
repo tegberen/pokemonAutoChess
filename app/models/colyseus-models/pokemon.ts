@@ -2768,36 +2768,36 @@ export class Magby extends Pokemon {
   speed = 52
   def = 2
   speDef = 4
-  maxPP = 120
+  maxPP = 125
   range = 3
   skill = Ability.FLAMETHROWER
 }
 
 export class Magmar extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.FIRE, Synergy.HUMAN])
+  types = new SetSchema<Synergy>([Synergy.FIRE, Synergy.HUMAN, Synergy.ARTIFICIAL])
   rarity = Rarity.RARE
   stars = 2
   evolution = Pkm.MAGMORTAR
-  hp = 130
+  hp = 125
   atk = 15
   speed = 52
   def = 3
   speDef = 5
-  maxPP = 120
+  maxPP = 125
   range = 3
   skill = Ability.FLAMETHROWER
 }
 
 export class Magmortar extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.FIRE, Synergy.HUMAN])
+  types = new SetSchema<Synergy>([Synergy.FIRE, Synergy.HUMAN, Synergy.ARTIFICIAL])
   rarity = Rarity.RARE
   stars = 3
-  hp = 270
-  atk = 28
+  hp = 250
+  atk = 30
   speed = 52
   def = 5
   speDef = 7
-  maxPP = 120
+  maxPP = 125
   range = 3
   skill = Ability.FLAMETHROWER
 }
