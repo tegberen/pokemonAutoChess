@@ -726,7 +726,7 @@ export const FLOWER_QUEEN_MIN_MAX_PP = 10
 export const LEAF_TORNADO_BOUNCES = 2
 export const LEAF_TORNADO_DAMAGE_RATIO = 0.5
 export const MARIACHI_MAYHEM_CONFUSION_DURATION = 2000
-export const HIGH_BREACHING_MAX_PP = 60
+export const HIGH_BREACHING_MAX_PP = 100
 export const HIGH_BREACHING_LEAP_EVERY = 3
 export const HIGH_BREACHING_CRASH_RANGE = 4
 // 500ms up, 500ms of skydive animation, so the crash lands with the sprite

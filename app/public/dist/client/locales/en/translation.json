@@ -6092,7 +6092,7 @@
 		},
 		"HIGH_BREACHING": {
 			"name": "High Breaching",
-			"description": "Gain a Wailmer and add it to the pool. Your STRONGEST Wailmer's ability is replaced with High Breaching, and its max PP is set to 60."
+			"description": "Gain a Wailmer and add it to the pool. Your STRONGEST Wailmer's ability is replaced with High Breaching."
 		},
 		"ICEBREAKER": {
 			"name": "Icebreaker",

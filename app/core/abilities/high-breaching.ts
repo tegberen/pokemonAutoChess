@@ -3,7 +3,7 @@ import {
   HIGH_BREACHING_CRASH_RANGE,
   HIGH_BREACHING_LEAP_EVERY
 } from "../../types/enum/Blessing"
-import { AttackType, Team } from "../../types/enum/Game"
+import { AttackType, Orientation, Team } from "../../types/enum/Game"
 import { OrientationVector } from "../../utils/orientation"
 import type { Board } from "../board"
 import type { PokemonEntity } from "../pokemon-entity"
@@ -14,7 +14,8 @@ function washOffBoard(
   enemy: PokemonEntity,
   caster: PokemonEntity,
   board: Board,
-  crit: boolean
+  crit: boolean,
+  orientation: Orientation
 ) {
   if (
     !enemy.canBeMoved ||
@@ -23,6 +24,14 @@ function washOffBoard(
     enemy.status.protect
   )
     return
+  caster.broadcastAbility({
+    skill: "FOCUS_PUNCH_EJECT",
+    positionX: enemy.positionX,
+    positionY: enemy.positionY,
+    orientation,
+    targetX: enemy.positionX,
+    targetY: enemy.positionY
+  })
   enemy.cooldown = 9999
   const { death } = enemy.handleSpecialDamage(
     9999,
@@ -37,7 +46,6 @@ function washOffBoard(
 }
 
 export class HighBreachingStrategy extends AbilityStrategy {
-  requiresTarget = false
   process(pokemon: PokemonEntity, board: Board, target: null, crit: boolean) {
     super.process(pokemon, board, target, crit)
     const shield = [15, 30, 60][pokemon.stars - 1] ?? 60
@@ -106,7 +114,7 @@ export class HighBreachingStrategy extends AbilityStrategy {
             const destinationX = enemy.positionX + dx
             const destinationY = enemy.positionY + dy
             if (!board.isOnBoard(destinationX, destinationY)) {
-              washOffBoard(enemy, pokemon, board, crit)
+              washOffBoard(enemy, pokemon, board, crit, orientation)
             } else if (!board.getEntityOnCell(destinationX, destinationY)) {
               enemy.moveTo(destinationX, destinationY, board, true)
               enemy.resetCooldown(500)
