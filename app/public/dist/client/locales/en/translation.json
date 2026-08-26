@@ -4172,7 +4172,7 @@
 		"COLLECTOR": "Play all Pokémon currently in the game",
 		"DUKE": "Own at least one emotion of each Pokémon currently in the game",
 		"DUCHESS": "Own all the emotion of a single Pokémon",
-		"CHAMPION": "Win a Tournament",
+		"CHAMPION": "Win a Double Up Tournament",
 		"ELITE_FOUR_MEMBER": "Reach first 4 places of a tournament",
 		"ACE_TRAINER": "Reach the final of a tournament",
 		"GYM_LEADER": "Reach 1400 Elo",
@@ -7471,6 +7471,15 @@
 		"avatar": {
 			"change_avatar": "Change Avatar",
 			"play_more_games_hint": "Play more games to earn boosters and unlock new avatars !"
+		},
+		"titles": {
+			"jac": "JAC Titles",
+			"jac_hint": "Special titles from community events and challenges",
+			"unlocked": "Unlocked Titles",
+			"unlocked_hint": "Ready to equip",
+			"locked": "Locked Titles",
+			"locked_hint": "Complete their challenge to unlock them",
+			"clear_hint": "Display your name without a title"
 		},
 		"elo_tab": {
 			"title": "Elo",
