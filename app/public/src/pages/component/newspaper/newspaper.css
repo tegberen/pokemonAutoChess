@@ -7,18 +7,6 @@
   padding: 0.8em 0.25em;
 }
 
-.newspaper::after {
-  content: "";
-  position: sticky;
-  bottom: -0.8em;
-  z-index: 1;
-  flex: 0 0 24px;
-  margin-top: -24px;
-  pointer-events: none;
-  background: linear-gradient(transparent, var(--color-bg-primary));
-  opacity: 0.82;
-}
-
 /* compound with .my-box so this padding wins over its own */
 .newspaper-card.my-box {
   --newspaper-card-border-width: 2px;
