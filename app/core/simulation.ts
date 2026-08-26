@@ -212,7 +212,7 @@ import {
   STAR_GUARD_DEFENSE_PER_STAR,
   MACHINE_RESIDUE_SHIELD,
   WONDER_BOX_BLESSED_ITEMS,
-  CHOICE_SPECS_ALLY_MAX_PP
+  CHOICE_SPECS_ALLY_MIN_MAX_PP
 } from "../types/enum/Blessing"
 import { GracideaBlossomEffect } from "./effects/items"
 import { isSynergyActiveForPlayer } from "../config/game/blessings"
@@ -1607,7 +1607,10 @@ export default class Simulation extends Schema implements ISimulation {
             )
             if (ally && ally.team === pokemon.team) {
               ally.skill = pokemon.skill
-              ally.maxPP = CHOICE_SPECS_ALLY_MAX_PP
+              ally.maxPP = Math.max(
+                CHOICE_SPECS_ALLY_MIN_MAX_PP,
+                pokemon.maxPP
+              )
             }
           })
         }
