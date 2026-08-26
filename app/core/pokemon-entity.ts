@@ -1894,7 +1894,7 @@ flyAway(
             const hasCcSeed = ccSeeds.some((seed) =>
               this.player?.items.includes(seed)
             )
-            const skydiveMultiplier = hasCcSeed ? 3 : 1.5
+            const skydiveMultiplier = hasCcSeed ? 2.5 : 1.5
             const damage = skydiveMultiplier * this.atk
             const crit = this.player?.items.includes(Item.EMPOWERMENT_SEED)
               ? true

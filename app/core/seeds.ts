@@ -101,7 +101,7 @@ export const SeedEffects: Record<(typeof Seeds)[number], Effect[]> = {
       const freeAdjacent = adjacentCells.filter(
         (cell) => cell.value === undefined
       ).length
-      entity.addSpeed(10 * freeAdjacent, entity, 0, false)
+      entity.addSpeed(5 * freeAdjacent, entity, 0, false)
     })
   ],
 
@@ -280,10 +280,10 @@ type ExplorerBonusRow = {
 export const EXPLORER_BONUS_TABLE: Partial<Record<Rarity, ExplorerBonusRow>> = {
   [Rarity.COMMON]:    { nothing: 0.20, bigNugget: 0.1,  nugget: 0.30, rustyCoin: 0.40, component: 0,    fullItem: 0,    sharpBeak: 0    },
   [Rarity.UNCOMMON]:  { nothing: 0.20, bigNugget: 0,    nugget: 0.20, rustyCoin: 0.50, component: 0.05, fullItem: 0.05, sharpBeak: 0    },
-  [Rarity.RARE]:      { nothing: 0.20, bigNugget: 0,    nugget: 0.10, rustyCoin: 0.30, component: 0.30, fullItem: 0.05, sharpBeak: 0.05 },
-  [Rarity.EPIC]:      { nothing: 0.20, bigNugget: 0,    nugget: 0,    rustyCoin: 0.30, component: 0.35, fullItem: 0.10, sharpBeak: 0.05 },
-  [Rarity.ULTRA]:     { nothing: 0.20, bigNugget: 0,    nugget: 0,    rustyCoin: 0.10, component: 0.40, fullItem: 0.15, sharpBeak: 0.15 },
-  [Rarity.UNIQUE]:    { nothing: 0.20, bigNugget: 0,    nugget: 0,    rustyCoin: 0.10, component: 0.30, fullItem: 0.10, sharpBeak: 0.30 },
+  [Rarity.RARE]:      { nothing: 0.20, bigNugget: 0,    nugget: 0.10, rustyCoin: 0.50, component: 0.10, fullItem: 0.05, sharpBeak: 0.05 },
+  [Rarity.EPIC]:      { nothing: 0.20, bigNugget: 0,    nugget: 0.05, rustyCoin: 0.45, component: 0.15, fullItem: 0.10, sharpBeak: 0.05 },
+  [Rarity.ULTRA]:     { nothing: 0.20, bigNugget: 0,    nugget: 0,    rustyCoin: 0.35, component: 0.15, fullItem: 0.15, sharpBeak: 0.15 },
+  [Rarity.UNIQUE]:    { nothing: 0.20, bigNugget: 0,    nugget: 0,    rustyCoin: 0.20, component: 0.20, fullItem: 0.10, sharpBeak: 0.30 },
   [Rarity.LEGENDARY]: { nothing: 0.20, bigNugget: 0,    nugget: 0,    rustyCoin: 0,    component: 0.20, fullItem: 0.10, sharpBeak: 0.50 },
   [Rarity.SPECIAL]:   { nothing: 0.20, bigNugget: 0,    nugget: 0,    rustyCoin: 0,    component: 0,    fullItem: 0.80, sharpBeak: 0    }
 }
