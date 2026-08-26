@@ -6475,7 +6475,7 @@ export class OriginPalkia extends Pokemon {
   speed = 57
   def = 10
   speDef = 10
-  maxPP = 120
+  maxPP = 130
   range = 2
   skill = Ability.SUBSPACE_SWELL
   passive = Passive.PALKIA
