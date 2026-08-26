@@ -2,12 +2,11 @@ import type { ArraySchema } from "@colyseus/schema"
 import type React from "react"
 import { useCallback, useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
+import { Tooltip } from "react-tooltip"
 import { AutoSizer } from "react-virtualized-auto-sizer"
 import { List, useDynamicRowHeight } from "react-window"
-import { Tooltip } from "react-tooltip"
 import { SynergyTiersThresholds } from "../../../../../config"
 import { Blessings } from "../../../../../config/game/blessings"
-import type { Blessing } from "../../../../../types/enum/Blessing"
 import type {
   IGameRecord,
   IPokemonRecord
@@ -17,17 +16,18 @@ import {
   sortSynergiesForDisplay
 } from "../../../../../models/colyseus-models/synergies"
 import PokemonFactory from "../../../../../models/pokemon-factory"
+import type { Blessing } from "../../../../../types/enum/Blessing"
 import type { Synergy } from "../../../../../types/enum/Synergy"
 import { ItemDetailTooltip } from "../../../game/components/item-detail"
 import { formatDate } from "../../utils/date"
-import {
-  BlessingIcon,
-  BlessingTooltipCard
-} from "../synergy/blessing-tooltip-card"
 import Team from "../after/team"
 import { GamePokemonDetailTooltip } from "../game/game-pokemon-detail"
 import { GameModeIcon } from "../icons/game-mode-icon"
 import SynergyIcon from "../icons/synergy-icon"
+import {
+  BlessingIcon,
+  BlessingTooltipCard
+} from "../synergy/blessing-tooltip-card"
 import { EloBadge } from "./elo-badge"
 import "./game-history.css"
 
@@ -202,11 +202,14 @@ function GameHistoryRow({
   )
 }
 
-export function BlessingHistoryTooltip() {
+export function BlessingHistoryTooltip(
+  props: { portalRoot?: Element | null } = {}
+) {
   return (
     <Tooltip
       id="blessing-history-tooltip"
       className="custom-theme-tooltip blessing-panel-tooltip"
+      portalRoot={props.portalRoot}
       render={({ content }) => {
         const blessing = content as Blessing | null
         if (!blessing || !Blessings[blessing]) return null

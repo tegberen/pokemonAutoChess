@@ -160,14 +160,17 @@ export function ItemDetailTooltipContent({
 }
 
 export function ItemDetailTooltip({
-  showAwakening = true
+  showAwakening = true,
+  portalRoot
 }: {
   showAwakening?: boolean
+  portalRoot?: Element | null
 } = {}) {
   return (
     <Tooltip
       id="item-detail-tooltip"
       className="custom-theme-tooltip item-detail-tooltip"
+      portalRoot={portalRoot}
       render={({ content }) => (
         <ItemDetailTooltipContent
           item={content as Item}

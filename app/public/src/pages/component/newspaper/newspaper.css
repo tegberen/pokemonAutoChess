@@ -1,18 +1,32 @@
 .newspaper {
+  position: relative;
   display: flex;
   flex-direction: column;
-  flex: none; /* the tab panel is a flex column: do not squash, let it scroll */
+  flex: none;
   gap: 0.4em;
-  /* identical to .events-calendar, so the first card of each panel lines up */
   padding: 0.8em 0.25em;
+}
+
+.newspaper::after {
+  content: "";
+  position: sticky;
+  bottom: -0.8em;
+  z-index: 1;
+  flex: 0 0 24px;
+  margin-top: -24px;
+  pointer-events: none;
+  background: linear-gradient(transparent, var(--color-bg-primary));
+  opacity: 0.82;
 }
 
 /* compound with .my-box so this padding wins over its own */
 .newspaper-card.my-box {
+  --newspaper-card-border-width: 2px;
+
   display: flex;
   flex-direction: column;
-  gap: 0.3em;
-  padding: 0.4em 0.5em 0.5em;
+  gap: 0.4em;
+  padding: 0 0.5em 0.5em;
   background-image: linear-gradient(
     160deg,
     color-mix(in srgb, var(--color-bg-primary) 55%, transparent),
@@ -23,8 +37,14 @@
 .newspaper-kicker {
   display: flex;
   align-items: center;
-  gap: 0.4em;
-  margin: 0;
+  gap: 0.35em;
+  margin: calc(-1 * var(--newspaper-card-border-width))
+    calc(-0.5em - var(--newspaper-card-border-width)) 0;
+  padding: calc(0.28em + var(--newspaper-card-border-width))
+    calc(0.5em + var(--newspaper-card-border-width)) 0.28em;
+  border-bottom: var(--border-extra-thin);
+  border-radius: 10px 10px 0 0;
+  background-color: color-mix(in srgb, black 28%, transparent);
   font-size: 0.72rem;
   text-transform: uppercase;
   letter-spacing: 0.06em;
@@ -41,11 +61,18 @@
   height: 20px;
 }
 
-.newspaper-kicker .gamemode.icon {
+.newspaper-match-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.35em;
+  margin-left: auto;
+  white-space: nowrap;
+}
+
+.newspaper-match-meta .gamemode.icon {
   width: 18px;
   height: 18px;
   border-radius: 50%;
-  margin-left: auto;
 }
 
 .newspaper-board {
@@ -77,7 +104,7 @@
   background: none;
   color: var(--color-fg-primary);
   font-size: 1rem;
-  font-weight: 600;
+  font-weight: 700;
   text-shadow: 1px 2px 2px var(--color-shadow);
   cursor: var(--cursor-hover);
 }
@@ -90,8 +117,8 @@
 }
 
 .newspaper-player .pokemon-portrait {
-  width: 34px;
-  height: 34px;
+  width: 30px;
+  height: 30px;
   flex: none;
 }
 
@@ -102,11 +129,28 @@
   text-overflow: ellipsis;
 }
 
+.newspaper-result .elo.badge {
+  flex-basis: auto;
+  gap: 3px;
+  font-size: 0.82rem;
+}
+
+.newspaper-result .elo.badge img {
+  width: 30px;
+  height: 30px;
+}
+
 .newspaper-buildup {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 0.25em 0.5em;
+  gap: 0.25em 0.45em;
+  min-height: 28px;
+  margin-inline: calc(-0.5em - var(--newspaper-card-border-width));
+  padding: 0.2em calc(0.5em + var(--newspaper-card-border-width));
+  border-top: var(--border-extra-thin);
+  border-bottom: var(--border-extra-thin);
+  background-color: color-mix(in srgb, black 18%, transparent);
 }
 
 .newspaper-synergies,
@@ -141,6 +185,8 @@
 
 .newspaper-blessings {
   gap: 0.2em;
+  padding-left: 0.45em;
+  border-left: var(--border-extra-thin);
 }
 
 .newspaper-blessings .blessing-panel-icon {
@@ -198,11 +244,11 @@
 .newspaper .player-team-pokemons li:has(.pokemon-items img:nth-child(3)) {
   background-color: color-mix(
     in srgb,
-    var(--color-fg-primary) 18%,
-    transparent
+    var(--color-bg-primary) 55%,
+    var(--color-bg-tertiary)
   );
   box-shadow: inset 0 0 0 1px
-    color-mix(in srgb, var(--color-fg-primary) 55%, transparent);
+    color-mix(in srgb, var(--color-fg-secondary) 28%, black);
 }
 
 .newspaper-placeholder {
@@ -210,4 +256,10 @@
   text-align: center;
   color: var(--color-fg-secondary);
   font-style: italic;
+}
+
+@media (width <= 1024px) {
+  .newspaper-card.my-box {
+    --newspaper-card-border-width: 1px;
+  }
 }

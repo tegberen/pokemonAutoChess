@@ -43,6 +43,7 @@ export default function Newspaper() {
   const { t } = useTranslation()
   const victories = useAppSelector((state) => state.lobby.recentVictories)
   const loaded = useAppSelector((state) => state.lobby.recentVictoriesLoaded)
+  const tooltipPortal = typeof document === "undefined" ? null : document.body
 
   // plain div: `.lobby section` in lobby.css forces 25% width on any <section>
   return (
@@ -59,9 +60,9 @@ export default function Newspaper() {
         ))
       )}
 
-      <GamePokemonDetailTooltip origin="history" />
-      <ItemDetailTooltip />
-      <BlessingHistoryTooltip />
+      <GamePokemonDetailTooltip origin="history" portalRoot={tooltipPortal} />
+      <ItemDetailTooltip portalRoot={tooltipPortal} />
+      <BlessingHistoryTooltip portalRoot={tooltipPortal} />
     </div>
   )
 }
@@ -70,16 +71,18 @@ function VictoryCard({ victory }: { victory: IRecentVictory }) {
   const match = victory.winners[0].game
   return (
     <article className="my-box newspaper-card">
-      <p className="newspaper-kicker">
+      <header className="newspaper-kicker">
         <img
           src="/assets/icons/LAUREL_CROWN_ICON.svg"
           alt=""
           className="newspaper-crown"
         />
         <strong>{getRankLabel(match.rank)}</strong>
-        <GameModeIcon gameMode={match.gameMode} whimsy={match.whimsy} />
-        <span>{formatRelativeDate(match.time)}</span>
-      </p>
+        <span className="newspaper-match-meta">
+          <GameModeIcon gameMode={match.gameMode} whimsy={match.whimsy} />
+          <span>{formatRelativeDate(match.time)}</span>
+        </span>
+      </header>
       {victory.winners.map((winner) => (
         <WinnerBoard key={winner.playerId} winner={winner} />
       ))}
