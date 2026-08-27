@@ -134,8 +134,7 @@ export const ItemStats: { [item in Item]?: { [stat in Stat]?: number } } = {
   [Item.EFFICIENT_BANDANNA]: { [Stat.SHIELD]: 15, [Stat.PP]: 15 },
   [Item.TATSUGIRI_CURLY]: { [Stat.ATK]: 8 },
   [Item.TATSUGIRI_DROOPY]: { [Stat.DEF]: 8 },
-  [Item.TATSUGIRI_STRETCHY]: { [Stat.SPEED]: 25 },
-  [Item.SHARP_BEAK]: {}
+  [Item.TATSUGIRI_STRETCHY]: { [Stat.SPEED]: 25 }
 }
 
 export const ItemSellPricesAtTown: { [item in ItemsSoldAtTown]?: number } = {

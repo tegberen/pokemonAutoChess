@@ -31,7 +31,7 @@ import SynergyIcon from "../icons/synergy-icon"
 import { FreeOptions, PaidOptions } from "../../../../../types/enum/ArmoryOptions"
 import { BundleDetailTooltip } from "../../../game/components/bundle-detail"
 
-function ItemList(props: { items: readonly Item[]; icon?: string }) {
+export function ItemList(props: { items: readonly Item[]; icon?: string }) {
   return props.items.map((i) => (
     <li key={i} data-tooltip-id="item-detail-tooltip" data-tooltip-content={i}>
       <img
@@ -255,7 +255,7 @@ export default function WikiItems() {
         </h3>
         <p>{addIconsToDescription(t("wiki.items.letter_description"))}</p>
         <ul>
-          <ItemList items={[Item.LETTER, Item.SHARP_BEAK]} />
+          <ItemList items={[Item.LETTER]} />
 
         </ul>
         <p>{addIconsToDescription(t("wiki.items.seeds_description"))}</p>

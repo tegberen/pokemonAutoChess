@@ -8,6 +8,7 @@ export enum TechnicalTerm {
   INIMITABLE = "INIMITABLE",
   ON_HIT = "ON_HIT",
   ON_ATTACK = "ON_ATTACK",
+  SEED_BAG = "SEED_BAG",
   STRONGEST = "STRONGEST"
 }
 

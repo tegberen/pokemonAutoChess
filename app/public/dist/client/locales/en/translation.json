@@ -2656,7 +2656,7 @@
 		"TAILWIND": "Fly away once under 20% HP. Give 5 SPEED.",
 		"FEATHER_DANCE": "Get PROTECT for 2 seconds after flying away. Attacks have a [15, LK]% chance to reduce the target's ATK by 1 ON_ATTACK.",
 		"MAX_AIRSTREAM": "Fly away twice when under 50% HP and 20% HP. Give 10 SPEED.",
-		"SKYDIVE": "Now perform skydive attacks, dealing 150% PHYSICAL ATK on landing on their target. Attach a LETTER to a benched Pokémon, and it will set off to deliver it. They will bring home a seed",
+		"SKYDIVE": "Now perform skydive attacks, dealing 150% PHYSICAL ATK on landing on their target. Attach a LETTER to a benched Pokémon, and it will set off to deliver it. They will bring home a Seed",
 		"COTTONWEED": "Get an Hoppip Flower Pot",
 		"FLYCATCHER": "Get a Bellsprout Flower Pot",
 		"FRAGRANT": "Get a Chikorita Flower Pot",
@@ -3124,7 +3124,6 @@
 		"COCONUT_MALASADA": "Coconut Malasada",
 		"BERRIES": "Berries",
 		"LETTER": "Letter",
-		"SHARP_BEAK": "Sharp Beak",
 		"BAN_SEED": "Ban Seed",
 		"BLAST_SEED": "Blast Seed",
 		"BLINKER_SEED": "Blinker Seed",
@@ -3546,7 +3545,6 @@
 		"COCONUT_MALASADA": "Gain +2 RANGE. [30, LK]% chance to apply CONFUSION for 2 seconds on attack.",
 		"BERRIES": "Forage a random berry for the Chef to hold. If no free item slots, it goes to your inventory.",
 		"LETTER": "An important letter. A benched FLYING Pokémon that delivers it will be rewarded with a powerful Seed. It will return in 2 stages.",
-		"SHARP_BEAK": "The FLYING holder increases its base ATK by 100% and Sky Dive attacks scale with AP. Enables the fastest LETTER delivery! (max. 1 per player)",
 		"BAN_SEED": "All Sky Dive attacks deal 250% of user ATK. The target is SILENCE for 3 seconds.",
 		"BLAST_SEED": "At the start of the fight, all FLYING allies gain 50% of the users base ATK and are BURN for the rest of the fight.",
 		"BLINKER_SEED": "All Sky Dive attacks deal 250% of user ATK. Apply smoke to the target and ADJACENT tiles. Pokemon in the smoke are BLINDED.",
@@ -3857,7 +3855,6 @@
 		"DARKRAI": "Gain one stack for each KO. Mega evolves after 20 stacks.",
 		"BAD_DREAMS": "When the target is SLEEP, attacks are guaranteed to critically hit.",
 		"VESPIQUEN": "Vespiquen's RANGE and ability differs based on the row it starts in.\nBUG synergy effect does not spawn a copy of Vespiquen but 2 Combee instead.",
-		"DRAGONITE": "Gain another LETTER. Usually is very fast with delivering.",
 		"PELIPPER": "Allied FLYING Pokémon, deliver their LETTER faster.",
 		"INFILTRATOR": "On attack, destroy PROTECT, Magic Bounce and Reflect.",
 		"ILLUSION": "Copy the apperance of the ally on its left (if it is not on the bench).",
@@ -3994,7 +3991,7 @@
 		"HUMAN": "HUMAN Pokémon heal for a percentage of the damage they deal with attacks and abilities, and can learn a new ability with TMs.",
 		"AQUATIC": "AQUATIC Pokémon mitigate status afflictions for all your team. After 7 seconds, a TIDAL_WAVE cleans up negative status and field effects, heals your AQUATIC allies, and knocks back and damages enemies.",
 		"BUG": "At the start of combat spawns a copy of your STRONGEST BUG Pokémon.",
-		"FLYING": "FLYING Pokémon fly away when they fall under a certain amount of HP unless affected by PARALYSIS, FREEZE, LOCKED or SLEEP. Your whole team gives SPEED when activated. Benched Pokémon can be used as postal service. They get paid with seeds. Higher rarity carriers tend to bring back items and components, while lower rarity ones are more likely to find gold on their way home.",
+		"FLYING": "FLYING Pokémon fly away when they fall under a certain amount of HP unless affected by PARALYSIS, FREEZE, LOCKED or SLEEP. At maximum synergy, use a LETTER to send a benched Pokémon on a delivery.",
 		"FLORA": "When a FLORA Pokémon is KO'd, a Flower Pot blossoms and you collect RICH_MULCH. Higher STAR units give more mulch, which can be used to evolve your Flower Pots.",
 		"FAIRY": "FAIRY Pokémon use wands to deal additional SPECIAL and various effects with their attacks.{{additionalInfo}}",
 		"FAIRY_WANDS": "\nWands equipped: {{wands}}",
@@ -5484,7 +5481,7 @@
 		},
 		"BIG_PECKS": {
 			"name": "Big Pecks",
-			"description": "The first time you send a FLYING Pokémon away with a LETTER, it is guaranteed to come back with a SHARP_BEAK regardless of rarity. Gain a Quaxly."
+			"description": "Your FLYING Pokémon will deliver their LETTER one stage faster. Gain a Quaxly."
 		},
 		"SHAPELESS_SYNERGIES": {
 			"name": "Shapeless Synergies",
@@ -7089,8 +7086,8 @@
 			"fire_shard_description": "After reaching max level in FIRE synergy, every round you can use FIRE_SHARD to sacrifice your player HP and buff a FIRE Pokémon.",
 			"bundles": "Bundles",
 			"bundles_description": "Bundles are gifts for the game mode Double Up. Some bundles require free benchspace, others require alot of gold.",
-			"letter_description": "After reaching max level in FLYING synergy, your benched Pokémon can be used as postal service by using the LETTER on a benched Pokémon. They get paid with seeds. Sometimes find other items during the journey like SHARP_BEAK (max. 1 per bench and board).",
-			"seeds_description": "Seeds are unholdable items and stored in the Seed Bag. At the start of the fight, the selected active Seed applies a powerful effect to the Pokémon on your board."
+			"letter_description": "After reaching max level in FLYING synergy, use the LETTER to send a benched Pokémon on a delivery. It returns with a powerful Seed and may also bring back gold or an item.",
+			"seeds_description": "Every Letter delivery returns a Seed. Seeds are stored in the SEED_BAG, and the selected active Seed applies a powerful effect to your board at the start of the next fight."
 		},
 		"statistics": {
 			"stat_description": {
@@ -7157,8 +7154,8 @@
 			"arceus_rate": "Chance to find Arceus in stage 20 propositions",
 			"fishing_rarity_rate": "Fishing rarity by rod quality",
 			"fishing_rarity_rate_description": "The quality of the rod you use to fish influences the rarity of the Pokémon you can catch.",
-			"explorer_bonus_rate": "Letter delivery bonus by rarity",
-			"explorer_bonus_rate_description": "The rarity of the Pokémon sent on a Letter delivery influences what they bring back.",
+			"explorer_bonus_rate": "Bonus rewards",
+			"explorer_bonus_rate_description": "In addition to a Seed, the Pokémon may return with an extra reward based on its rarity.",
 			"component": "Component",
 			"full_item": "Full item",
 			"nothing": "Nothing",
@@ -7271,6 +7268,7 @@
 		"INIMITABLE": "Inimitable",
 		"ON_HIT": "on hit",
 		"ON_ATTACK": "on attack",
+		"SEED_BAG": "Seed Bag",
 		"STRONGEST": "strongest"
 	},
 	"technical_terms_definitions": {
@@ -7283,6 +7281,7 @@
 		"INIMITABLE": "An ability is inimitable if it cannot be copied and used by another Pokémon.",
 		"ON_HIT": "On Hit effects trigger when a unit is hit by an attack or an ability. They are triggered even if target has SHIELD, but not if the target dodges or has PROTECT.",
 		"ON_ATTACK": "On Attack effects trigger when a unit makes a basic attack on another unit that is still alive, at the time the attack is supposed to hit, whether the attack actually hits or not.",
+		"SEED_BAG": "The Seed Bag stores Seeds earned from Letter deliveries. Select one active Seed to apply its effect at the start of the next fight.",
 		"STRONGEST": "Strongest is defined as, by order of priority: 1. Number of items held, 2. Unit tier, 3. Unit rarity"
 	},
 	"seed_bag": {

@@ -15,7 +15,7 @@ import { Rarity } from "../../../../../types/enum/Game"
 import { FishingRods } from "../../../../../types/enum/Item"
 import { getRankLabel } from "../../../../../types/strings/Strings"
 import { addIconsToDescription } from "../../utils/descriptions"
-import { EXPLORER_BONUS_TABLE } from "../../../../../core/seeds"
+import { WikiLetterDelivery } from "./wiki-letter-delivery"
 
 export default function WikiData() {
   const { t } = useTranslation()
@@ -160,40 +160,7 @@ export default function WikiData() {
           ))}
         </tbody>
       </table>
-      <h2>{t("wiki.data.explorer_bonus_rate")}</h2>
-      <p>{t("wiki.data.explorer_bonus_rate_description")}</p>
-      <table id="wiki-data-explorer-bonus-rate">
-        <thead>
-          <tr>
-            <th></th>
-            <th>{t("item.BIG_NUGGET")}</th>
-            <th>{t("item.NUGGET")}</th>
-            <th>{t("item.COIN")}</th>
-            <th>{t("wiki.data.component")}</th>
-            <th>{t("wiki.data.full_item")}</th>
-            <th>{t("item.SHARP_BEAK")}</th>
-            <th>{t("wiki.data.nothing")}</th>
-          </tr>
-        </thead>
-        <tbody>
-        {rarities_all.map((r) => {
-          const row = EXPLORER_BONUS_TABLE[r]
-          if (!row) return null
-          return (
-            <tr>
-              <td style={{ color: RarityColor[r] }}>{t(`rarity.${r}`)}</td>
-              <td>{percentage.format(row.bigNugget)}</td>
-              <td>{percentage.format(row.nugget)}</td>
-              <td>{percentage.format(row.rustyCoin)}</td>
-              <td>{percentage.format(row.component)}</td>
-              <td>{percentage.format(row.fullItem)}</td>
-              <td>{percentage.format(row.sharpBeak)}</td>
-              <td>{percentage.format(row.nothing)}</td>
-            </tr>
-          )
-        })}
-        </tbody>
-      </table>
+      <WikiLetterDelivery />
 
       <h2>{t("wiki.data.special_pokemons_rate")}</h2>
       <p>

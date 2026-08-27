@@ -25,6 +25,7 @@ import {
   WikiFossilRestorations,
   WikiFossilUnlocks
 } from "./wiki-fossil-unlocks"
+import { WikiLetterDelivery } from "./wiki-letter-delivery"
 import { SynergyOverlaps } from "../synergy-overlaps/synergy-overlaps"
 
 export default function WikiTypes() {
@@ -122,6 +123,13 @@ export function WikiType(props: { type: Synergy }) {
           </div>
         )
       })}
+
+      {props.type === Synergy.FLYING && (
+        <>
+          <hr />
+          <WikiLetterDelivery heading="h3" showSeeds />
+        </>
+      )}
 
       <hr />
       <div style={{ float: "right", justifyItems: "end" }}>

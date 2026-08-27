@@ -1,11 +1,13 @@
-import Player from "../models/colyseus-models/player"
-import { Blessing } from "../types/enum/Blessing"
 import { EffectEnum } from "../types/enum/Effect"
 import { Rarity, Team } from "../types/enum/Game"
-import { type Seeds, CraftableNoStonesOrScarves, Item, ItemComponents, ItemComponentsNoScarf } from "../types/enum/Item"
+import {
+  type Seeds,
+  Item,
+  ItemComponents,
+  ItemComponentsNoScarf
+} from "../types/enum/Item"
 import { Synergy } from "../types/enum/Synergy"
 import { chance, pickNRandomIn, pickRandomIn } from "../utils/random"
-import { schemaValues } from "../utils/schemas"
 import {
   type Effect,
   OnKillEffect,
@@ -269,53 +271,57 @@ export const SeedEffects: Record<(typeof Seeds)[number], Effect[]> = {
 
 type ExplorerBonusRow = {
   nothing: number
-  bigNugget: number
   nugget: number
   rustyCoin: number
   component: number
-  fullItem: number
-  sharpBeak: number
 }
 
-export const EXPLORER_BONUS_TABLE: Partial<Record<Rarity, ExplorerBonusRow>> = {
-  [Rarity.COMMON]:    { nothing: 0.20, bigNugget: 0.1,  nugget: 0.30, rustyCoin: 0.40, component: 0,    fullItem: 0,    sharpBeak: 0    },
-  [Rarity.UNCOMMON]:  { nothing: 0.20, bigNugget: 0,    nugget: 0.20, rustyCoin: 0.50, component: 0.05, fullItem: 0.05, sharpBeak: 0    },
-  [Rarity.RARE]:      { nothing: 0.20, bigNugget: 0,    nugget: 0.10, rustyCoin: 0.50, component: 0.10, fullItem: 0.05, sharpBeak: 0.05 },
-  [Rarity.EPIC]:      { nothing: 0.20, bigNugget: 0,    nugget: 0.05, rustyCoin: 0.45, component: 0.15, fullItem: 0.10, sharpBeak: 0.05 },
-  [Rarity.ULTRA]:     { nothing: 0.20, bigNugget: 0,    nugget: 0,    rustyCoin: 0.35, component: 0.15, fullItem: 0.15, sharpBeak: 0.15 },
-  [Rarity.UNIQUE]:    { nothing: 0.20, bigNugget: 0,    nugget: 0,    rustyCoin: 0.20, component: 0.20, fullItem: 0.10, sharpBeak: 0.30 },
-  [Rarity.LEGENDARY]: { nothing: 0.20, bigNugget: 0,    nugget: 0,    rustyCoin: 0,    component: 0.20, fullItem: 0.10, sharpBeak: 0.50 },
-  [Rarity.SPECIAL]:   { nothing: 0.20, bigNugget: 0,    nugget: 0,    rustyCoin: 0,    component: 0,    fullItem: 0.80, sharpBeak: 0    }
-}
+export const EXPLORER_BONUS_TIERS: {
+  rarities: Rarity[]
+  rewards: ExplorerBonusRow
+}[] = [
+  {
+    rarities: [Rarity.COMMON, Rarity.UNCOMMON],
+    rewards: {
+      nothing: 0.2,
+      nugget: 0.4,
+      rustyCoin: 0.4,
+      component: 0
+    }
+  },
+  {
+    rarities: [Rarity.RARE, Rarity.EPIC],
+    rewards: {
+      nothing: 0.2,
+      nugget: 0.2,
+      rustyCoin: 0.5,
+      component: 0.1
+    }
+  },
+  {
+    rarities: [Rarity.ULTRA, Rarity.UNIQUE],
+    rewards: {
+      nothing: 0.2,
+      nugget: 0,
+      rustyCoin: 0.4,
+      component: 0.4
+    }
+  }
+]
 
-export function rollExplorerBonusReward(rarity: Rarity, player: Player): Item | null {
-  const table = EXPLORER_BONUS_TABLE[rarity]
+export function rollExplorerBonusReward(rarity: Rarity): Item | null {
+  const table = EXPLORER_BONUS_TIERS.find((tier) =>
+    tier.rarities.includes(rarity)
+  )?.rewards
   if (!table) return null
   const roll = Math.random()
   let threshold = table.nothing
-  /* BIG_PECKS blessing: the first Letter of the game skips the rarity roll
-     entirely and always comes back with a Sharp Beak */
-  if (
-    player.blessings?.includes(Blessing.BIG_PECKS) &&
-    !player.bigPecksSharpBeakGranted
-  ) {
-    player.bigPecksSharpBeakGranted = true
-    return Item.SHARP_BEAK
-  }
-
   if (roll < threshold) return null
-  threshold += table.bigNugget
-  if (roll < threshold) return Item.BIG_NUGGET
   threshold += table.nugget
   if (roll < threshold) return Item.NUGGET
   threshold += table.rustyCoin
   if (roll < threshold) return Item.COIN
   threshold += table.component
   if (roll < threshold) return pickRandomIn(ItemComponentsNoScarf)
-  threshold += table.fullItem
-  if (roll < threshold) return pickRandomIn(CraftableNoStonesOrScarves)
-  const alreadyHasSharpBeak =
-    player.items.includes(Item.SHARP_BEAK) ||
-    schemaValues(player.board).some((p) => p.items.has(Item.SHARP_BEAK))
-  return alreadyHasSharpBeak ? pickRandomIn(CraftableNoStonesOrScarves) : Item.SHARP_BEAK
+  return null
 }

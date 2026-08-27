@@ -1278,22 +1278,20 @@ export class OnDragDropItemCommand extends Command<
       }
       pokemon.action = PokemonActionState.EXPLORING
 
-      const hasPelipper = schemaValues(player.board).some(
-        (p) => p.name === Pkm.PELIPPER
-      )
+      const hasFasterDelivery =
+        player.blessings?.includes(Blessing.BIG_PECKS) ||
+        schemaValues(player.board).some((p) => p.name === Pkm.PELIPPER)
       const baseDelay =
         pokemon.name === Pkm.GYARADOS
           ? 5
-          : pokemon.items.has(Item.SHARP_BEAK) || pokemon.name === Pkm.DRAGONITE
-            ? 1
-            : 2
+          : 2
       // Gyarados keeps its deliberately slow delivery despite being FLYING
       const returnDelay =
         player.blessings?.includes(Blessing.FAST_DELIVERY) &&
         pokemon.types.has(Synergy.FLYING) &&
         pokemon.name !== Pkm.GYARADOS
           ? FAST_DELIVERY_RETURN_DELAY
-          : Math.max(1, baseDelay - (hasPelipper ? 1 : 0))
+          : Math.max(1, baseDelay - (hasFasterDelivery ? 1 : 0))
 
       player.pokemonsExploring.push({
         pokemonId: pokemon.id,
@@ -2597,7 +2595,7 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
         const bonus =
           pokemon.name === Pkm.GYARADOS
             ? null
-            : rollExplorerBonusReward(pokemon.rarity, player)
+            : rollExplorerBonusReward(pokemon.rarity)
         const client = this.room.clients.find((c) => c.auth.uid === player.id)
 
         if (pokemon.name === Pkm.CORVIKNIGHT) {

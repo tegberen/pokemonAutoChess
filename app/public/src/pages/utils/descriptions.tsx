@@ -10,7 +10,10 @@ import {
 } from "../../../../types/enum/Status"
 import { Synergy } from "../../../../types/enum/Synergy"
 import { Weather } from "../../../../types/enum/Weather"
-import { TechnicalTerms } from "../../../../types/strings/TechnicalTerm"
+import {
+  TechnicalTerm,
+  TechnicalTerms
+} from "../../../../types/strings/TechnicalTerm"
 import { isIn } from "../../../../utils/array"
 import { max, roundToNDigits } from "../../../../utils/number"
 import { keys } from "../../../../utils/object"
@@ -22,6 +25,11 @@ const Stats = keys(Stat)
 const Weathers = keys(Weather)
 const Synergies = keys(Synergy)
 const Items = keys(Item)
+
+const getTechnicalTermIcon = (term: string) =>
+  term === TechnicalTerm.SEED_BAG
+    ? "/assets/icons/SEED_BAG.svg"
+    : `/assets/ui/${term.toLowerCase()}.svg`
 
 // board-effect tiles plus the AQUATIC tidal wave and the two weather damage
 // sources — all rendered with an icon from assets/icons/<TOKEN>.svg and
@@ -193,7 +201,7 @@ export function addIconsToDescription(
             className="description-icon technical-term"
             title={t(`technical_terms_definitions.${token}`)}
           >
-            <img src={`assets/ui/${token.toLowerCase()}.svg`} />
+            <img src={getTechnicalTermIcon(token)} />
             <i className="technical-term-label">
               {capitalize(t(`technical_terms.${token}`))}
             </i>
@@ -375,7 +383,7 @@ export function addIconsToHtml(
           </span>`
         } else if (isIn(TechnicalTerms, token)) {
           iconHTML = `<span class="description-icon technical-term" title="${t(`technical_terms_definitions.${token}`)}">
-            <img src="assets/ui/${token.toLowerCase()}.svg" />
+            <img src="${getTechnicalTermIcon(token)}" />
             <i class="technical-term-label">${t(`technical_terms.${token}`)}</i>
           </span>`
         } else if (/\[[^\]]+\]/.test(token)) {

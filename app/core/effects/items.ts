@@ -2619,17 +2619,6 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
       }
     })
   ],
-  [Item.SHARP_BEAK]: [
-    new OnItemGainedEffect((pokemon) => {
-      if (!pokemon.types.has(Synergy.FLYING)) return
-      pokemon.addAttack(pokemon.baseAtk, pokemon, 0, false)
-    }),
-    new OnItemRemovedEffect((pokemon) => {
-      if (!pokemon.types.has(Synergy.FLYING)) return
-      pokemon.addAttack(-pokemon.baseAtk, pokemon, 0, false)
-    })
-  ],
-
   [Item.BALL]: [
     new OnAbilityCastEffect((pokemon, board) => {
       // When casting ability, throws the ball to the furthest FIELD ally to grant them the BALL and 50 SHIELD.

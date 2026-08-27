@@ -3083,7 +3083,6 @@ export class Dragonite extends Pokemon {
   maxPP = 100
   range = 1
   skill = Ability.TWISTER
-  passive = Passive.DRAGONITE
 }
 
 export class Goomy extends Pokemon {

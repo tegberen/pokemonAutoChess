@@ -314,7 +314,6 @@ export default class Player extends Schema implements IPlayer {
   sweetTreat: Item | null = null
   forgottenPvePokemon: Pkm | null = null
   forgottenPveItems: Item[] = []
-  bigPecksSharpBeakGranted = false
   blessingQuestsCompleted: Set<Blessing> = new Set<Blessing>()
   blessingQuestThresholdsReached: Map<Blessing, number> = new Map<
     Blessing,
@@ -899,22 +898,12 @@ export default class Player extends Schema implements IPlayer {
   }
 
   grantLetterIfEligible() {
-    const hasDragonite = schemaValues(this.board).some(
-      (p) => p.name === Pkm.DRAGONITE
-    )
-    const maxConcurrent = hasDragonite ? 2 : 1
     const hasFlying8 = getSynergyTier(this.synergies, Synergy.FLYING) === 4
     if (!hasFlying8) return
 
-    let granted = 0
-    while (granted < maxConcurrent) {
-      const totalActive =
-        this.items.filter((i) => i === Item.LETTER).length +
-        this.pokemonsExploring.length
-      if (totalActive >= maxConcurrent) break
-      this.items.push(Item.LETTER)
-      granted++
-    }
+    const hasActiveDelivery =
+      this.items.includes(Item.LETTER) || this.pokemonsExploring.length > 0
+    if (!hasActiveDelivery) this.items.push(Item.LETTER)
   }
 
   addSeedToBag(rolledSeed: Item): Seeds | null {

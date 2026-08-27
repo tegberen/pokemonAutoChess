@@ -375,7 +375,6 @@ export enum Item {
   COCONUT_MALASADA = "COCONUT_MALASADA",
   BIG_ROOT = "BIG_ROOT",
   LETTER = "LETTER",
-  SHARP_BEAK = "SHARP_BEAK",
   BAN_SEED = "BAN_SEED",
   BLAST_SEED = "BLAST_SEED",
   BLINKER_SEED = "BLINKER_SEED",
@@ -558,7 +557,6 @@ export const SpecialItems: Item[] = [
   Item.TATSUGIRI_DROOPY,
   Item.TATSUGIRI_STRETCHY,
   Item.LETTER,
-  Item.SHARP_BEAK,
   Item.SPEAKER,
   Item.BALL
 ] satisfies Item[]
@@ -1367,7 +1365,6 @@ export const RemovableItems = [
   ...Tools,
   ...Scarves,
   ...MemoryDiscs,
-  Item.SHARP_BEAK
 ] satisfies Item[]
 
 export const UnholdableItemsToSaveForStats = [

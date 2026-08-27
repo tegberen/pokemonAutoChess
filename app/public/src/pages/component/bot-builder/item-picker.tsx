@@ -92,7 +92,6 @@ export default function ItemPicker(props: {
         Item.CORNERSTONE_MASK,
         Item.HEARTHFLAME_MASK,
         ...MemoryDiscs,
-        Item.SHARP_BEAK,
         Item.UTILITY_UMBRELLA
       ]
     },

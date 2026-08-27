@@ -432,7 +432,8 @@
   margin-bottom: 0.25em;
 }
 
-#wiki-items ul {
+#wiki-items ul,
+.wiki-letter-delivery ul {
   display: flex;
   flex-wrap: wrap;
   gap: 0;
@@ -452,11 +453,136 @@
   grid-column: 1 / 3;
 }
 
-#wiki-items img.item {
+#wiki-items img.item,
+.wiki-letter-delivery img.item {
   width: 45px;
   height: 45px;
   cursor: var(--cursor-hover);
   margin: 8px;
+}
+
+.wiki-letter-delivery-header h2,
+.wiki-letter-delivery-header h3,
+.wiki-letter-delivery-seeds h4 {
+  margin: 0 0 0.25em;
+}
+
+.wiki-letter-delivery-header p,
+.wiki-letter-delivery-seeds p {
+  margin: 0;
+}
+
+.wiki-letter-delivery-table-wrap {
+  overflow-x: auto;
+  margin-top: 0.5em;
+}
+
+.wiki-letter-delivery-seeds {
+  margin-top: 1em;
+}
+
+.wiki-letter-delivery-seeds ul {
+  margin-top: 0.35em;
+}
+
+.wiki-letter-delivery-card {
+  display: grid;
+  grid-template-columns: minmax(20rem, 0.8fr) minmax(30rem, 1.2fr);
+  grid-template-areas:
+    "seeds rewards-header"
+    "seeds rewards-table";
+  gap: 1.5em 2em;
+  margin: 1.25em 0;
+  padding: 1em 1.25em 1.25em;
+  align-items: start;
+}
+
+.wiki-letter-delivery-card .wiki-letter-delivery-header {
+  grid-area: rewards-header;
+  padding: 0.65em 0.75em;
+  border: var(--border-thin);
+  border-left: 6px solid var(--color-fg-primary);
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--color-bg-primary) 80%, #000);
+}
+
+.wiki-letter-delivery-seed-heading {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+}
+
+.wiki-letter-delivery-seed-icon {
+  flex: none;
+  width: 1.75em;
+  height: 1.75em;
+}
+
+.wiki-letter-delivery-seed-callout {
+  padding: 0.65em 0.75em;
+  border: var(--border-thin);
+  border-left: 6px solid var(--color-fg-primary);
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--color-bg-primary) 80%, #000);
+}
+
+.wiki-letter-delivery-card .wiki-letter-delivery-table-wrap {
+  grid-area: rewards-table;
+  margin-top: 0;
+  padding: 0.5em 0.5em 0.75em;
+}
+
+.wiki-letter-delivery-card .wiki-letter-delivery-header h3,
+.wiki-letter-delivery-card .wiki-letter-delivery-seeds h4 {
+  color: var(--color-fg-primary);
+}
+
+.wiki-letter-delivery-card .wiki-letter-delivery-header p,
+.wiki-letter-delivery-card .wiki-letter-delivery-seeds p {
+  color: var(--color-fg-secondary);
+  line-height: 1.35;
+}
+
+.wiki-letter-delivery-card .wiki-letter-delivery-seeds {
+  grid-area: seeds;
+  margin-top: 0;
+  align-self: stretch;
+  padding: 0 1.25em 0 0;
+  border-right: 1px solid #ffffff30;
+}
+
+.wiki-letter-delivery-card .wiki-letter-delivery-seeds > hr {
+  display: none;
+}
+
+.wiki-letter-delivery.wiki-letter-delivery-card table {
+  width: 100%;
+  background-color: transparent;
+}
+
+.wiki-letter-delivery-card th,
+.wiki-letter-delivery-card td {
+  padding-top: 0.3em;
+  padding-bottom: 0.3em;
+}
+
+.wiki-letter-delivery-card tbody th {
+  text-align: left;
+}
+
+.wiki-letter-delivery.wiki-letter-delivery-card thead {
+  color: var(--color-fg-primary);
+  border-bottom: 1px solid #ffffff30;
+}
+
+.wiki-letter-delivery-card .wiki-letter-delivery-seeds img.item {
+  width: 40px;
+  height: 40px;
+  margin: 4px;
+}
+
+.wiki-letter-delivery-card .wiki-letter-delivery-seeds ul {
+  margin-top: 1em;
 }
 
 #wiki-items img.tree {
@@ -479,19 +605,28 @@
   padding: 0 0.5em;
 }
 
-#wiki-data table {
+#wiki-data table,
+.wiki-letter-delivery table {
   text-align: center;
   table-layout: fixed;
   background-color: var(--color-bg-secondary);
 }
 
-#wiki-data thead {
+#wiki-data thead,
+.wiki-letter-delivery thead {
   border-bottom: 2px solid currentColor;
 }
 
 #wiki-data th,
-#wiki-data td {
+.wiki-letter-delivery th,
+#wiki-data td,
+.wiki-letter-delivery td {
   padding: 0 0.5em;
+}
+
+.wiki-letter-delivery th,
+.wiki-letter-delivery td {
+  white-space: nowrap;
 }
 
 #wiki-data-tiers-by-level th,
@@ -510,10 +645,28 @@
     display: block;
   }
 
-  #wiki-items img.item {
+  #wiki-items img.item,
+  .wiki-letter-delivery img.item {
     width: 24px;
     height: 24px;
     margin: 4px;
+  }
+
+  .wiki-letter-delivery-card {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "seeds"
+      "rewards-header"
+      "rewards-table";
+  }
+
+  .wiki-letter-delivery-card .wiki-letter-delivery-seeds {
+    padding: 0;
+    border-right: 0;
+  }
+
+  .wiki-letter-delivery-card .wiki-letter-delivery-seeds > hr {
+    display: none;
   }
 
   #wiki-page .wiki-types li[role="tab"] {
