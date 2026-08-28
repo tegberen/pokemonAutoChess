@@ -1,6 +1,7 @@
 import Phaser from "phaser"
 import { useCallback, useEffect, useState } from "react"
 import { removeInArray } from "../../utils/array"
+import type { AvatarCosmeticId } from "./cosmetics/avatar-cosmetics"
 import { LocalStoreKeys, localStore } from "./pages/utils/store"
 
 export type Keybindings = {
@@ -42,6 +43,7 @@ export interface IPreferencesState {
   disableCameraShake: boolean
   cameraLocked: boolean
   walkingAvatar: boolean
+  avatarCosmetic: AvatarCosmeticId
   keybindings: Keybindings
   renderer: number
   antialiasing: boolean
@@ -75,6 +77,7 @@ const defaultPreferences: IPreferencesState = {
   disableCameraShake: true,
   cameraLocked: false,
   walkingAvatar: false,
+  avatarCosmetic: "none",
   renderer: Phaser.AUTO,
   antialiasing: true,
   colorblindMode: false,

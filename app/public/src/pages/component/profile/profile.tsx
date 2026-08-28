@@ -18,6 +18,7 @@ import {
 } from "../../../network"
 import { setSearchedUser } from "../../../stores/LobbyStore"
 import { AccountTab } from "./account-tab"
+import { CosmeticsTab } from "./cosmetics-tab"
 import { EloTab } from "./elo-tab"
 import GameHistory from "./game-history"
 import PlayerBox from "./player-box"
@@ -154,6 +155,7 @@ function MyProfileMenu({
       <TabList>
         <Tab>Record</Tab>
         <Tab>{t("title_label")}</Tab>
+        <Tab>Cosmetics</Tab>
         <Tab>{t("profile.account.title")}</Tab>
       </TabList>
 
@@ -162,6 +164,9 @@ function MyProfileMenu({
       </TabPanel>
       <TabPanel>
         <TitleTab />
+      </TabPanel>
+      <TabPanel>
+        <CosmeticsTab />
       </TabPanel>
       <TabPanel>
         <AccountTab />

@@ -15,7 +15,9 @@ import {
   PokemonActionState
 } from "../../../../types/enum/Game"
 import { getOrientation } from "../../../../utils/orientation"
-import { moveAvatar } from "../../network"
+import { getAvatarCosmetic } from "../../cosmetics/avatar-cosmetics"
+import { equipAvatarCosmetic, moveAvatar } from "../../network"
+import { preference } from "../../preferences"
 import {
   transformEntityCoordinates,
   untransformEntityCoordinates
@@ -24,6 +26,7 @@ import { DEPTH } from "../depths"
 import type GameScene from "../scenes/game-scene"
 import { PokemonAnimations } from "./pokemon-animations"
 import PokemonAvatar from "./pokemon-avatar"
+import { AvatarCosmeticsRenderer } from "./avatar-cosmetics-renderer"
 
 /* how much of the gap to the server position a remote avatar closes per frame */
 const REMOTE_SMOOTHING = 0.25
@@ -66,15 +69,23 @@ export default class PlayerAvatarsManager {
   private lastPhase: GamePhaseState | undefined
   private localEmoteController: PokemonAvatar | null = null
   private reactionTimers = new Map<string, ReturnType<typeof setTimeout>>()
+  private cosmetics: AvatarCosmeticsRenderer
+  private equippedCosmetics = new Map<string, string>()
+  private cosmeticBoardId: string | undefined
 
   constructor(scene: GameScene) {
     this.scene = scene
+    this.cosmetics = new AvatarCosmeticsRenderer(scene)
+    this.scene.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
+      this.cosmetics.clear()
+    })
   }
 
   // --- state ---------------------------------------------------------------
 
   onAdd(avatar: IPokemonAvatar) {
     if (this.sprites.has(avatar.id)) return
+    this.equippedCosmetics.set(avatar.id, avatar.cosmetic)
     const [x, y] = transformEntityCoordinates(avatar.x, avatar.y, this.flip)
     const sprite = new PokemonAvatar(this.scene, x, y, avatar, avatar.id, false)
 
@@ -111,11 +122,14 @@ export default class PlayerAvatarsManager {
      that arrived first has to be picked up once rather than awaited */
   buildExisting() {
     this.scene.room?.state.playerAvatars.forEach((avatar) => this.onAdd(avatar))
+    equipAvatarCosmetic(preference("avatarCosmetic"))
   }
 
   onRemove(id: string) {
     clearTimeout(this.reactionTimers.get(id))
     this.reactionTimers.delete(id)
+    this.equippedCosmetics.delete(id)
+    this.cosmetics.remove(id)
     const sprite = this.sprites.get(id)
     if (id === this.ownId && sprite?.scene) {
       /* Keep the local avatar as a hidden emote/menu controller after server
@@ -200,6 +214,10 @@ export default class PlayerAvatarsManager {
     this.syncAnimationRate(sprite, sprite.action)
   }
 
+  onCosmetic(id: string, cosmetic: string) {
+    this.equippedCosmetics.set(id, cosmetic)
+  }
+
   updateLife(id: string, life: number) {
     const sprite = this.sprites.get(id)
     if (sprite?.scene) sprite.updateLife(life)
@@ -272,6 +290,7 @@ export default class PlayerAvatarsManager {
   /** the portal transition owns the screen while it runs */
   setHidden(hidden: boolean) {
     this.hidden = hidden
+    if (hidden) this.cosmetics.clear()
   }
 
   // --- render loop ---------------------------------------------------------
@@ -296,6 +315,7 @@ export default class PlayerAvatarsManager {
       this.refreshPositions()
     }
     if (phaseChanged || flipChanged) {
+      this.cosmetics.clear()
       // Stop looping reactions and recompute facing after phase/camera changes.
       this.settleAllAvatars()
     }
@@ -304,6 +324,7 @@ export default class PlayerAvatarsManager {
     if (phaseChanged && hadPreviousPhase) this.fadeInAnchoredAvatars()
     this.stepPrediction(delta)
     this.drawRemotes()
+    this.drawCosmetics(delta)
   }
 
   private stepPrediction(delta: number) {
@@ -315,7 +336,8 @@ export default class PlayerAvatarsManager {
     const dy = this.predicted.targetY - this.predicted.y
     const distance = Math.hypot(dx, dy)
 
-    if (distance > ARRIVED_DISTANCE_CELLS) {
+    const moving = distance > ARRIVED_DISTANCE_CELLS
+    if (moving) {
       if (distance <= step) {
         this.predicted.x = this.predicted.targetX
         this.predicted.y = this.predicted.targetY
@@ -356,6 +378,25 @@ export default class PlayerAvatarsManager {
       }
       sprite.x = Phaser.Math.Linear(sprite.x, serverX, REMOTE_SMOOTHING)
       sprite.y = Phaser.Math.Linear(sprite.y, serverY, REMOTE_SMOOTHING)
+    })
+  }
+
+  private drawCosmetics(delta: number) {
+    const boardId = this.scene.board?.player.id
+    if (boardId !== this.cosmeticBoardId) {
+      this.cosmetics.clear()
+      this.cosmeticBoardId = boardId
+    }
+    this.sprites.forEach((sprite, id) => {
+      if (!sprite.scene) return
+      const equipped = this.equippedCosmetics.get(id) ?? "none"
+      this.cosmetics.update(
+        id,
+        sprite,
+        getAvatarCosmetic(equipped),
+        sprite.visible && sprite.action === PokemonActionState.WALK,
+        delta
+      )
     })
   }
 

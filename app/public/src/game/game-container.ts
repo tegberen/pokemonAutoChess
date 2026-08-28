@@ -396,6 +396,9 @@ class GameContainer {
       $avatar.listen("anchorCount", () => {
         this.gameScene?.playerAvatars?.onAnchored(key, avatar.x, avatar.y)
       })
+      $avatar.listen("cosmetic", (cosmetic) => {
+        this.gameScene?.playerAvatars?.onCosmetic(key, cosmetic)
+      })
     })
 
     $state.playerAvatars.onRemove((avatar, key) => {

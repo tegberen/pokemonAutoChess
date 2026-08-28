@@ -397,6 +397,10 @@ export function moveAvatar(x: number, y: number) {
   rooms.game?.send(Transfer.MOVE_AVATAR, { x, y })
 }
 
+export function equipAvatarCosmetic(cosmetic: string) {
+  rooms.game?.send(Transfer.EQUIP_AVATAR_COSMETIC, cosmetic)
+}
+
 export function resetAvatar() {
   rooms.game?.send(Transfer.RESET_AVATAR)
 }

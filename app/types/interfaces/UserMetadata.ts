@@ -1,5 +1,6 @@
 import type { Emotion, Role, Title } from ".."
 import type { Language } from "../enum/Language"
+import type { AvatarCosmeticId } from "../enum/AvatarCosmetic"
 
 interface IUserMetadata {
   uid: string
@@ -26,6 +27,7 @@ interface IUserMetadata {
   eventFinishTime: Date | null
   booster: number
   titles: Title[]
+  unlockedAvatarCosmetics?: AvatarCosmeticId[]
   title: "" | Title
   role: Role
   banned?: boolean

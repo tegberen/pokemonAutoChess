@@ -3,12 +3,14 @@ import type { Constraint } from "matter-js"
 import type { IPokemonAvatar } from "../../types"
 import { Orientation, PokemonActionState } from "../../types/enum/Game"
 import type { Pkm } from "../../types/enum/Pokemon"
+import type { AvatarCosmeticId } from "../../types/enum/AvatarCosmetic"
 import { getPokemonCustomFromAvatar } from "../../utils/avatar"
 
 export class PokemonAvatarModel extends Schema implements IPokemonAvatar {
   @type("string") id: string
   @type("string") name: Pkm
   @type("boolean") shiny: boolean
+  @type("string") cosmetic: AvatarCosmeticId = "none"
   @type("number") x: number
   @type("number") y: number
   @type("number") targetX: number

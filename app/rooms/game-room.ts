@@ -88,6 +88,12 @@ import {
 } from "../types"
 import { EvolutionRuleType } from "../types/EvolutionRules"
 import { CloseCodes } from "../types/enum/CloseCodes"
+import {
+  AVATAR_COSMETIC_BLESSINGS,
+  AVATAR_COSMETIC_IDS,
+  isAvatarCosmeticId,
+  type AvatarCosmeticId
+} from "../types/enum/AvatarCosmetic"
 import type { EloRank } from "../types/enum/EloRank"
 import { GameMode, PokemonActionState, Rarity } from "../types/enum/Game"
 import {
@@ -166,6 +172,8 @@ export default class GameRoom extends Room<{ state: GameState }> {
   additionalRarePool: Array<Pkm>
   additionalEpicPool: Array<Pkm>
   miniGame: MiniGame
+  private unlockedAvatarCosmetics = new Map<string, Set<AvatarCosmeticId>>()
+  private matchAvatarCosmetics = new Map<string, AvatarCosmeticId>()
   constructor() {
     super()
     this.dispatcher = new Dispatcher(this)
@@ -666,6 +674,23 @@ export default class GameRoom extends Room<{ state: GameState }> {
       if (uid) anchorPlayerAvatar(this.state, uid)
     })
 
+    this.onMessage(Transfer.EQUIP_AVATAR_COSMETIC, (client: Client, cosmetic) => {
+      const uid = client.auth?.uid
+      if (!uid || !isAvatarCosmeticId(cosmetic)) return
+      const avatar = this.state.playerAvatars.get(uid)
+      if (!avatar) return
+      let selected = this.matchAvatarCosmetics.get(uid)
+      // The first choice is kept for this match, including reconnects.
+      if (selected === undefined) {
+        selected =
+          cosmetic === "none" || this.unlockedAvatarCosmetics.get(uid)?.has(cosmetic)
+            ? cosmetic
+            : "none"
+        this.matchAvatarCosmetics.set(uid, selected)
+      }
+      avatar.cosmetic = selected
+    })
+
     this.onMessage(Transfer.SHOW_EMOTE, (client: Client, message?: string) => {
       if (client.auth) {
         this.broadcast(Transfer.SHOW_EMOTE, {
@@ -842,6 +867,10 @@ export default class GameRoom extends Room<{ state: GameState }> {
     if (userProfile?.banned) {
       throw "Account banned"
     }
+    this.unlockedAvatarCosmetics.set(
+      client.auth.uid,
+      new Set(userProfile?.unlockedAvatarCosmetics ?? [])
+    )
     this.dispatcher.dispatch(new OnJoinCommand(), { client })
     const pendingGame = await getPendingGame(this.presence, client.auth.uid)
     if (pendingGame?.gameId === this.roomId) {
@@ -1120,6 +1149,18 @@ export default class GameRoom extends Room<{ state: GameState }> {
       usr.games += 1
       if (rank === 1) {
         usr.wins += 1
+        if (!hasLeftBeforeEnd) {
+          const unlocked = new Set(usr.unlockedAvatarCosmetics ?? [])
+          for (const cosmetic of AVATAR_COSMETIC_IDS) {
+            if (
+              cosmetic !== "none" &&
+              this.state.hasBlessing(player.id, AVATAR_COSMETIC_BLESSINGS[cosmetic])
+            ) {
+              unlocked.add(cosmetic)
+            }
+          }
+          usr.unlockedAvatarCosmetics = [...unlocked]
+        }
         if (this.state.hasBlessing(player.id, Blessing.SHOW_OFF)) {
           player.titles.add(Title.SHOW_OFF)
         }

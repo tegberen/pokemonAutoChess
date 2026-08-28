@@ -4,6 +4,7 @@ import { GADGETS_UNLOCKED_BY_LEVEL } from "../../config/game/gadgets"
 import { CollectionUtils } from "../../core/collection"
 import { notificationsService } from "../../services/notifications"
 import { Emotion, Role, Title } from "../../types"
+import { AVATAR_COSMETIC_IDS } from "../../types/enum/AvatarCosmetic"
 import { Pkm, PkmIndex } from "../../types/enum/Pokemon"
 import type {
   IPokemonCollectionItemClient,
@@ -119,6 +120,7 @@ const userMetadataSchema = new Schema({
       enum: Title
     }
   ],
+  unlockedAvatarCosmetics: [{ type: String, enum: AVATAR_COSMETIC_IDS }],
   pokemonCollection: {
     type: Map,
     of: {

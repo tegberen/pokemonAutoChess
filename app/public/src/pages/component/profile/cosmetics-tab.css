@@ -1,0 +1,73 @@
+.cosmetics-tab {
+  padding: 1em;
+}
+
+.cosmetics-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1em;
+  margin-bottom: 1em;
+}
+
+.cosmetics-heading h3,
+.cosmetics-details h4 {
+  margin: 0 0 0.35em;
+}
+
+.cosmetics-heading p,
+.cosmetics-details p {
+  margin: 0;
+  color: var(--color-fg-secondary);
+  font-size: 0.9em;
+  line-height: 1.5;
+}
+
+.cosmetics-heading > span {
+  flex-shrink: 0;
+  color: var(--color-fg-secondary);
+  font-size: 0.85em;
+}
+
+.cosmetics-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border: var(--border-thin);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.cosmetics-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.25em;
+  padding: 0.9em 1em;
+  background: var(--color-bg-primary);
+}
+
+.cosmetics-row + .cosmetics-row {
+  border-top: var(--border-thin);
+}
+
+.cosmetics-row.is-equipped {
+  box-shadow: inset 3px 0 #92cc41;
+}
+
+.cosmetics-row button {
+  flex-shrink: 0;
+  min-width: 7em;
+}
+
+@media (width <= 600px) {
+  .cosmetics-heading {
+    flex-direction: column;
+    gap: 0.5em;
+  }
+
+  .cosmetics-row {
+    gap: 0.75em;
+    padding: 0.8em;
+  }
+}
