@@ -1105,12 +1105,16 @@ export default class Player extends Schema implements IPlayer {
       // type — they're in use until the Pokémon shatters. Removing by type (not
       // just by count) matters when the collected rocks are mixed: dropping the
       // icy rock must keep your fossil fragments, not trim whichever is last.
+      let nbRocksInUse = 0
       schemaValues(this.board).forEach((p) => {
         if (p.awakeningRock !== "") {
+          nbRocksInUse++
           const idx = inInventory.indexOf(p.awakeningRock as Item)
           if (idx !== -1) inInventory.splice(idx, 1)
         }
       })
+      const inventoryCapacity = Math.max(0, nbOwned - nbRocksInUse)
+      inInventory.splice(0, Math.max(0, inInventory.length - inventoryCapacity))
       this.items.push(...inInventory)
     }
   }
