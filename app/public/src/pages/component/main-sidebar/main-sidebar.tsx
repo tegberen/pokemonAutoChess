@@ -160,22 +160,15 @@ export function MainSidebar(props: MainSidebarProps) {
         </div>
 
         <NavLink
-          svg="meta"
-          onClick={() => window.open("/privacy-policy", "_blank")}
-        >
-          {t("policy")}
-        </NavLink>
-
-        <NavLink
-          svg="meta"
-          onClick={() => window.open("/terms-of-service", "_blank")}
-        >
-          {t("terms_of_service")}
-        </NavLink>
-
-        <NavLink
           location="news"
-          svg="newspaper"
+          icon={
+            <img
+              width={32}
+              height={32}
+              src="assets/icons/SERVER_GUIDE.svg"
+              alt=""
+            />
+          }
           handleClick={(newModal) => {
             changeModal(newModal)
             if (isNewPatch) {
@@ -184,7 +177,7 @@ export function MainSidebar(props: MainSidebarProps) {
           }}
           shimmer={isNewPatch}
         >
-          {t("patch_notes")}
+          Server Guide
         </NavLink>
 
         {page === "main_lobby" && (
@@ -298,8 +291,7 @@ export function MainSidebar(props: MainSidebarProps) {
         )}
 
         {page !== "game" &&
-          (profileRole === Role.MODERATOR ||
-            profileRole === Role.ADMIN) && (
+          (profileRole === Role.MODERATOR || profileRole === Role.ADMIN) && (
             <NavLink
               svg="hammer"
               location="moderation"
@@ -488,6 +480,11 @@ function Modals({
 }) {
   const { t } = useTranslation()
   const searchedUser = useAppSelector((state) => state.lobby.searchedUser)
+  const [optionsTab, setOptionsTab] = useState<"sound" | "interface">("sound")
+
+  useEffect(() => {
+    if (modal !== "options") setOptionsTab("sound")
+  }, [modal])
 
   const dispatch = useAppDispatch()
 
@@ -504,10 +501,15 @@ function Modals({
       <Modal
         onClose={closeModal}
         show={modal === "news"}
-        header={t("patch_notes")}
+        header="Server Guide"
         className="patchnotes"
       >
-        <Patchnotes />
+        <Patchnotes
+          onOpenInterface={() => {
+            setOptionsTab("interface")
+            setModal("options")
+          }}
+        />
       </Modal>
       <Modal
         onClose={() => {
@@ -567,6 +569,7 @@ function Modals({
       />
       <GameOptionsModal
         show={modal === "options"}
+        initialTab={optionsTab}
         page={page}
         hideModal={closeModal}
       />

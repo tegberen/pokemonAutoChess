@@ -1,3 +1,4 @@
+import type { Synergy } from "../../../../../types/enum/Synergy"
 import { useState } from "react"
 import { useTranslation } from "react-i18next"
 import { Tab, TabList, TabPanel, Tabs } from "react-tabs"
@@ -20,7 +21,15 @@ import WikiWeather from "./wiki-weather"
 import WikiDoubleUp from "./wiki-double-up"
 import "./wiki.css"
 
-export default function Wiki({ inGame = false }: { inGame: boolean }) {
+export default function Wiki({
+  inGame = false,
+  initialTab,
+  initialSynergy
+}: {
+  inGame: boolean
+  initialTab?: string
+  initialSynergy?: Synergy
+}) {
   const { t } = useTranslation()
   const tabKeys = [
     ...(inGame ? [] : ["faq", "tutorials"]),
@@ -40,7 +49,9 @@ export default function Wiki({ inGame = false }: { inGame: boolean }) {
     "glossary",
     "data"
   ]
-  const [selectedIndex, setSelectedIndex] = useState(0)
+  const [selectedIndex, setSelectedIndex] = useState(() =>
+    Math.max(0, tabKeys.indexOf(initialTab ?? ""))
+  )
   const goToTab = (key: string) => {
     const index = tabKeys.indexOf(key)
     if (index >= 0) setSelectedIndex(index)
@@ -104,7 +115,7 @@ export default function Wiki({ inGame = false }: { inGame: boolean }) {
           <WikiItems />
         </TabPanel>
         <TabPanel key="types">
-          <WikiTypes />
+          <WikiTypes initialSynergy={initialSynergy} />
         </TabPanel>
         <TabPanel key="statistic">
           <WikiStatistic />

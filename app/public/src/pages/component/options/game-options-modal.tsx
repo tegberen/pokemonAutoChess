@@ -22,6 +22,7 @@ export default function GameOptionsModal(props: {
   show: boolean
   hideModal: Dispatch<SetStateAction<void>>
   page: Page
+  initialTab?: "sound" | "interface"
 }) {
   const [preferences, setPreferences] = usePreferences()
   const { t, i18n } = useTranslation()
@@ -49,7 +50,7 @@ export default function GameOptionsModal(props: {
       header={t("options.title")}
       className="game-options-modal anchor-top"
     >
-      <Tabs>
+      <Tabs defaultIndex={props.initialTab === "interface" ? 1 : 0}>
         <TabList>
           <Tab key="sound">{t("options.sound")}</Tab>
           <Tab key="interface">{t("options.interface")}</Tab>

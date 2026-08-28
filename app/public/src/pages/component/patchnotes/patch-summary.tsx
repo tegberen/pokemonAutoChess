@@ -2,6 +2,9 @@ import { marked } from "marked"
 import { memo, useEffect, useMemo, useState } from "react"
 import { useTranslation } from "react-i18next"
 import type { PatchInfo } from "../../../../../config/game/patches"
+import { Synergy } from "../../../../../types/enum/Synergy"
+import { Modal } from "../modal/modal"
+import Wiki from "../wiki/wiki"
 import { Item } from "../../../../../types/enum/Item"
 import { getPkmFromPortraitSrc } from "../../../../../utils/avatar"
 import { clamp } from "../../../../../utils/number"
@@ -63,6 +66,10 @@ export const PatchSummary = memo(
     const [fullPatchNotes, setFullPatchNotes] = useState<string>()
     const [midpatchNotes, setMidpatchNotes] = useState<MidpatchNote[]>([])
     const [isLoading, setIsLoading] = useState(true)
+    const [wikiTarget, setWikiTarget] = useState<{
+      tab: string
+      synergy?: Synergy
+    }>()
 
     useEffect(() => {
       setIsLoading(true)
@@ -115,7 +122,18 @@ export const PatchSummary = memo(
     const hasMidpatches = midpatchNotes.length > 0
 
     return (
-      <div className="patch-summary">
+      <div
+        className="patch-summary"
+        onClick={(event) => {
+          const link = (event.target as HTMLElement).closest("a")
+          const href = link?.getAttribute("href")
+          if (!href?.startsWith("#wiki/")) return
+          event.preventDefault()
+          const [, tab, type] = href.split("/")
+          const synergy = Object.values(Synergy).find((value) => value === type)
+          setWikiTarget({ tab, synergy })
+        }}
+      >
         {isLoading ? (
           <p>{t("loading")}...</p>
         ) : (
@@ -172,6 +190,19 @@ export const PatchSummary = memo(
         )}
         <GamePokemonDetailTooltip origin="patchnotes" />
         <ItemDetailTooltip />
+        <Modal
+          show={wikiTarget !== undefined}
+          onClose={() => setWikiTarget(undefined)}
+          className="wiki-modal"
+          header={t("wiki.title")}
+        >
+          <Wiki
+            key={`${wikiTarget?.tab}/${wikiTarget?.synergy}`}
+            inGame={false}
+            initialTab={wikiTarget?.tab}
+            initialSynergy={wikiTarget?.synergy}
+          />
+        </Modal>
       </div>
     )
   },

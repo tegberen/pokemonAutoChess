@@ -1,0 +1,608 @@
+/* The outer Patch Notes modal supplies my-container framing.
+   Inside, use the same my-box / bubbly / React Tabs styles as the Wiki.
+   Keep this file responsible for layout, not a separate theme. */
+.server-guide {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+  color: var(--color-fg-primary);
+  text-align: left;
+}
+
+.server-guide .guide-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5em;
+  padding: 0.25em 0.5em 0.5em;
+}
+
+.server-guide .guide-toolbar h1 {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  margin: 0;
+}
+
+.server-guide .guide-toolbar h1 img {
+  width: 32px;
+  height: 32px;
+}
+
+.server-guide .guide-toolbar-links {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5em;
+  margin-left: auto;
+}
+
+.server-guide .guide-toolbar-links .bubbly {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+}
+
+.server-guide .guide-toolbar-links img {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+}
+
+.server-guide .guide-tabs {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
+/* Shared Wiki tabs; labels identify sections without unrelated type icons. */
+.server-guide .react-tabs__tab-list {
+  display: flex;
+  flex-wrap: wrap;
+  row-gap: 0.5em;
+  flex-shrink: 0;
+  padding-top: 0.25em;
+}
+
+.server-guide .react-tabs__tab {
+  display: flex;
+  align-items: center;
+  gap: 0.25em;
+}
+
+.server-guide .react-tabs__tab-panel--selected {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.server-guide .guide-content {
+  flex: 1;
+  min-width: 0;
+  overflow-y: auto;
+  padding: 0.5em;
+}
+
+.server-guide .guide-footnote {
+  color: var(--color-fg-secondary);
+}
+
+.server-guide .guide-welcome,
+.server-guide .guide-notice {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+}
+
+.server-guide .guide-welcome h3 {
+  margin: 0;
+}
+
+.server-guide .guide-welcome .bubbly,
+.server-guide .guide-notice .bubbly {
+  align-self: flex-start;
+}
+
+.server-guide .guide-article p + p,
+.server-guide .guide-article li + li {
+  margin-top: 0.5em;
+}
+
+.server-guide .guide-article ul {
+  margin: 0.5em 0;
+  padding-left: 1.5em;
+  list-style: disc;
+}
+
+.server-guide .guide-article .bubbly {
+  margin: 0.25em 0;
+}
+
+/* Guide callouts remain in the article flow. */
+.server-guide .guide-article blockquote:first-child {
+  float: none;
+  margin: 0.5em 0;
+}
+
+.server-guide .guide-chapter-footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.5em;
+  margin-top: 0.5em;
+}
+
+.server-guide .guide-footnote {
+  margin-top: 1em;
+  font-size: 0.9em;
+}
+
+.patchnotes .modal-body:has(> .server-guide) {
+  overflow: hidden;
+  min-height: 0;
+}
+
+.patchnotes-archive {
+  width: 100%;
+  padding: 0.5em;
+}
+
+.patchnotes-archive > .bubbly {
+  margin-bottom: 0.5em;
+}
+
+@media (width <= 640px) {
+  .server-guide .guide-toolbar-links {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .server-guide .react-tabs__tab-list {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-bottom: 5px;
+  }
+
+  .server-guide .react-tabs__tab {
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
+}
+
+/* One section-heading hierarchy across the index and every guide tab. */
+.server-guide .guide-article h3,
+.server-guide .guide-index-heading {
+  margin: 1em 0 0.5em;
+  padding: 0.25em 0;
+  color: var(--color-fg-primary);
+  border-bottom: 4px solid currentColor;
+  scroll-margin-top: 0.5em;
+}
+
+.server-guide .guide-article h3,
+.server-guide .guide-index-heading h3 {
+  font-size: 1.17em;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.server-guide .guide-article h3:first-child {
+  margin-top: 0;
+}
+
+/* Synergies keep their icon-led headings and understated native divider. */
+.server-guide .guide-article-synergies > h3 {
+  padding-top: 0;
+  border-bottom: var(--border-thin);
+}
+
+.server-guide .guide-article h4 {
+  margin: 1em 0 0.5em;
+}
+
+.server-guide .guide-pokemon-portraits {
+  display: inline-flex;
+  align-items: center;
+  margin-right: 0.35em;
+  vertical-align: middle;
+}
+
+.server-guide .guide-pokemon-portraits img {
+  width: 32px;
+  height: 32px;
+  image-rendering: pixelated;
+  cursor: help;
+  margin: 0;
+}
+
+.server-guide .guide-article .description-icon.synergy {
+  white-space: nowrap;
+}
+
+.server-guide .guide-article .description-icon.item > img,
+.server-guide .guide-article .description-icon.synergy > img {
+  width: 1.15em;
+  height: 1.15em;
+  object-fit: contain;
+}
+
+.server-guide .guide-article .description-icon {
+  display: inline-flex;
+  align-items: center;
+  vertical-align: middle;
+}
+
+.server-guide .guide-article .description-icon > img {
+  display: inline-block;
+  margin-right: 3px;
+  vertical-align: bottom;
+}
+
+/* Keep long descriptions readable instead of filling the entire modal width. */
+.server-guide .guide-article,
+.server-guide .guide-chapter-footer {
+  max-width: 72em;
+}
+
+.server-guide .guide-article {
+  font-weight: normal;
+  padding: 0.5em;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.server-guide .guide-article > p,
+.server-guide .guide-item-entry > p,
+.server-guide .guide-item-entry blockquote {
+  max-width: 85ch;
+}
+
+.server-guide .guide-section-nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+.server-guide .guide-section-nav .bubbly,
+.server-guide .guide-article .bubbly {
+  font-size: 1em;
+}
+
+.server-guide .guide-section-heading {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  scroll-margin-top: 0.5em;
+}
+
+.server-guide .guide-section-heading .synergy-icon {
+  width: 24px;
+  height: 24px;
+}
+
+.server-guide .guide-item-entry:last-child {
+  border-bottom: 0;
+}
+
+.server-guide .guide-item-entry blockquote p::before,
+.server-guide .guide-item-entry blockquote p::after {
+  content: none;
+}
+
+.server-guide .guide-article .description-icon > img,
+.server-guide .guide-article img.description-icon {
+  width: 1.15em;
+  height: 1.15em;
+}
+
+.server-guide .guide-article .description-icon.item {
+  display: inline;
+  white-space: normal;
+}
+
+/* Same two-column reading order as the Wiki's Pokémon tables. */
+.server-guide .guide-table-scroll {
+  width: 100%;
+  overflow-x: auto;
+  margin: 0.5em 0;
+}
+
+.server-guide .guide-pokemon-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.server-guide .guide-pokemon-table th,
+.server-guide .guide-pokemon-table td {
+  padding: 0.5em;
+  vertical-align: middle;
+  border-bottom: var(--border-extra-thin);
+}
+
+.server-guide .guide-pokemon-table thead {
+  background: var(--color-bg-tertiary);
+}
+
+.server-guide .guide-pokemon-table tbody tr:nth-child(even) {
+  background: var(--color-bg-primary);
+}
+
+.server-guide .guide-pokemon-table tbody th {
+  width: 28%;
+  min-width: 12em;
+  font-weight: 600;
+}
+
+.server-guide .guide-pokemon-table td {
+  font-weight: normal;
+}
+
+.server-guide .guide-pokemon-table .guide-pokemon-portraits {
+  margin-right: 0.5em;
+  gap: 2px;
+}
+
+.server-guide .guide-pokemon-table p {
+  margin: 0;
+}
+
+.server-guide :is(.guide-item-table, .guide-weather-table) {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.server-guide :is(.guide-item-table, .guide-weather-table) th,
+.server-guide :is(.guide-item-table, .guide-weather-table) td {
+  padding: 0.5em;
+  vertical-align: top;
+  border-bottom: var(--border-extra-thin);
+}
+
+.server-guide :is(.guide-item-table, .guide-weather-table) thead {
+  background: var(--color-bg-tertiary);
+}
+
+.server-guide
+  :is(.guide-item-table, .guide-weather-table)
+  tbody
+  tr:nth-child(even) {
+  background: var(--color-bg-primary);
+}
+
+.server-guide :is(.guide-item-table, .guide-weather-table) th:first-child,
+.server-guide :is(.guide-item-table, .guide-weather-table) td:first-child {
+  width: 18%;
+  min-width: 10em;
+}
+
+.server-guide :is(.guide-item-table, .guide-weather-table) td:nth-child(2) {
+  min-width: 15em;
+}
+
+.server-guide .guide-index-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5em;
+}
+.server-guide .guide-index-heading h3 {
+  margin: 0;
+}
+.server-guide .guide-index {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(24em, 100%), 1fr));
+  gap: 0.5em;
+  align-items: start;
+}
+.server-guide .guide-index-group {
+  padding: 0.5em;
+}
+.server-guide .guide-index-category {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  text-align: left;
+  margin-bottom: 0.5em;
+}
+.server-guide .guide-index-group ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.server-guide .guide-index-entry {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5em;
+  width: 100%;
+  padding: 0.35em 0.5em;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--color-fg-primary);
+  font-size: 1em;
+  text-align: left;
+  cursor: var(--cursor-hover);
+}
+.server-guide .guide-index-entry:hover,
+.server-guide .guide-index-entry:focus-visible {
+  background: var(--color-bg-accent);
+}
+.server-guide .guide-index-entry:focus-visible {
+  outline: var(--border-thin);
+}
+.server-guide .guide-index-entry:active {
+  background: var(--color-bg-tertiary);
+}
+.server-guide .guide-index-leader {
+  flex: 1;
+  min-width: 1em;
+  border-bottom: 1px dotted var(--color-fg-secondary);
+}
+.server-guide .guide-section-nav {
+  padding: 0.5em;
+  border: var(--border-thin);
+  border-radius: 12px;
+  background: var(--color-bg-secondary);
+}
+.server-guide .guide-section-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35em;
+  min-height: 2.5em;
+  color: var(--guide-section-color);
+  border-bottom: 4px solid var(--guide-section-color);
+}
+.server-guide .guide-section-button[aria-pressed="true"] {
+  background: var(--color-bg-tertiary);
+  outline: 2px solid var(--guide-section-color);
+  outline-offset: 1px;
+}
+.server-guide .guide-section-button:focus-visible {
+  outline: 2px solid var(--color-fg-primary);
+  outline-offset: 2px;
+}
+.server-guide .guide-section-button > img:first-child {
+  width: 24px;
+  height: 24px;
+  margin: 0;
+}
+.server-guide .guide-rarity-mark {
+  width: 0.5em;
+  height: 0.5em;
+  background: var(--guide-section-color);
+  border: var(--border-extra-thin);
+}
+
+/* Keep the same framing; Mega Evolution uses a static rainbow underline. */
+.server-guide .guide-mega-heading,
+.server-guide .guide-mega-button {
+  --guide-mega-gradient: linear-gradient(
+    90deg,
+    var(--color-rarity-ultra),
+    var(--color-rarity-legendary),
+    var(--color-rarity-uncommon),
+    var(--color-rarity-rare),
+    var(--color-rarity-epic),
+    var(--color-rarity-special)
+  );
+  position: relative;
+}
+
+.server-guide .guide-article .guide-mega-heading,
+.server-guide .guide-mega-button {
+  border-bottom-color: transparent;
+}
+
+.server-guide .guide-mega-heading::after,
+.server-guide .guide-mega-button::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: -4px;
+  left: 0;
+  height: 4px;
+  background: var(--guide-mega-gradient);
+  pointer-events: none;
+}
+
+.server-guide .guide-mega-button::after {
+  inset: -2px -2px -4px;
+  height: auto;
+  border: 0 solid transparent;
+  border-bottom-width: 4px;
+  border-radius: inherit;
+  mask:
+    linear-gradient(#fff 0 0) padding-box,
+    linear-gradient(#fff 0 0) border-box;
+  mask-composite: exclude;
+}
+
+.server-guide .guide-mega-button .guide-rarity-mark {
+  background: var(--guide-mega-gradient);
+}
+
+.server-guide .guide-mega-label {
+  background: var(--guide-mega-gradient);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  text-shadow: none;
+  filter: brightness(1.25);
+}
+.server-guide .guide-article [tabindex="-1"]:focus {
+  outline: 2px solid var(--color-fg-accent);
+  outline-offset: 2px;
+}
+
+/* Item identity, effect and author advice use three distinct reading levels. */
+.server-guide .guide-item-entry {
+  display: grid;
+  grid-template-columns: minmax(11em, 0.28fr) minmax(0, 1fr);
+  gap: 0.75em;
+  padding: 1em 0;
+  border-bottom: var(--border-thin);
+  align-items: start;
+}
+
+.server-guide .guide-item-entry h4 {
+  margin: 0;
+  padding-top: 0.15em;
+  font-size: 1.1em;
+}
+
+.server-guide .guide-item-entry h4 .description-icon.item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  color: var(--color-fg-primary);
+}
+
+.server-guide .guide-item-entry h4 .description-icon.item > img {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  image-rendering: pixelated;
+}
+
+.server-guide .guide-item-entry h4 .item-label {
+  color: var(--color-fg-primary);
+  font-weight: 600;
+}
+
+.server-guide .guide-item-body {
+  min-width: 0;
+  max-width: 80ch;
+}
+
+.server-guide .guide-item-body > p {
+  margin: 0;
+}
+
+.server-guide .guide-item-entry blockquote {
+  margin: 0.75em 0 0;
+  padding: 0.5em 0.75em;
+  background: var(--color-bg-tertiary);
+  border-left: var(--border-thin);
+  color: var(--color-fg-secondary);
+  font-size: 0.95em;
+  border-radius: 0;
+  font-style: normal;
+}
+
+@media (width <= 800px) {
+  .server-guide .guide-item-entry {
+    grid-template-columns: 1fr;
+    gap: 0.5em;
+  }
+}

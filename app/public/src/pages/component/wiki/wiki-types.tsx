@@ -28,10 +28,20 @@ import {
 import { WikiLetterDelivery } from "./wiki-letter-delivery"
 import { SynergyOverlaps } from "../synergy-overlaps/synergy-overlaps"
 
-export default function WikiTypes() {
+export default function WikiTypes({
+  initialSynergy
+}: {
+  initialSynergy?: Synergy
+}) {
   const { t: tBase } = useTranslation(); const t = tBase as any
   return (
-    <Tabs className="wiki-types">
+    <Tabs
+      className="wiki-types"
+      defaultIndex={Math.max(
+        0,
+        Object.keys(Synergy).indexOf(initialSynergy ?? "")
+      )}
+    >
       <TabList>
         {(Object.keys(Synergy) as Synergy[]).map((type) => {
           return (

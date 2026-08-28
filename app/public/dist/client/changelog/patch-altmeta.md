@@ -1,248 +1,371 @@
-# Comments
-> Since Mega Evolutions are probably pretty far down the roadmap for the main server, I decided to add them here instead. I have absolutely no idea how to properly program a real Mega Evolution mechanic, so I just reused the Poipole/Kubfu-style evolution method. I mostly threw them in for fun - so the sprites actually see some use. Looking towards its real mechanic in the future, yahoooo.
+# Server Guide
 
-> Overall, I have changed the unit distribution to make it feel like a different set to the main server. With different openings and a different late game.
+## Synergies
 
-> While I try to keep things somewhat balanced, the games on this server are not meant to be. They are not balanced. Noooot balanced. It’s a small server, and I don’t collect data or run meta reports to fine-tune anything, so please bear with me. The general philosophy here is: if someone ever said “f*ck it, we should give [xyz], [abc] haha” as a joke or sarcastic comment about a Pokémon, I just changed and added it on this server for the memes.
+### Fossil
 
-# Synergy Buffs
-- Additional effect for ROCK: When KO'd, explode and deal TRUE and ARMOR_BREAK ADJACENT enemies. 
-- Additional effect for POISON 7: [2,LK] % chance to corrode one of the target's items, destroying it for the rest of the fight when not RUNE_PROTECT.
-- Additional effect for MONSTER 8: If the target is the last enemy on the board, permanently gain 3 ATK, 10 AP and 10 max HP.
-- Buffed effect for FIRE 8: +4 ATK after every hit (FIRE_SHARD: +4 permanent ATK and SPEED)
-- changed PSYCHIC 3 to 2, nerfed AP to 30
-- Additional effect for DARK: now escapes with the target when below 40% HP
-- Additional effect for FLYING: receive a LETTER
+{{synergy:FOSSIL}}
 
-# Misc
-> It's a small side server, I don't expect you to grind levels here haha. You can host your own Smeargle Scribble in Custom Lobby's now, and meet up with your friends to play together.
-- Smeargle's Scribble selectable in Custom Lobby's for non-admin users
-- No level requirement for Gadgets, except Bot Builder yikes
-- Added Shiniest Hunter: All PvE encounter are shiny
-- Added new Fugitive: Mafia Togepi that gives an egg upon capture
-- Pikachu can punch the bag
-- 555 Boosters for new members, to motivate you playing here (not to make multiple accounts, please XD)
-- Playtest Smeargle Scribble: Can be used for testing and reproducing bugs. (No EXP)
-- new town encounter - Chimecho: grants a melodic treasure to every player
-- buff town encounter - Spinda: now uses inverse user control
-- Added Halloween: Everyone starts with GHOST 8, GHOST 16 summons Ghost
+[Fossil in the Wiki](#wiki/types/FOSSIL)
 
-## Gamemode
-- New Gamemode: Double Up - Team up with your partner and outlast every other duo!
+### Fire
 
-# Items
-## Chimecho Town Encounter
-- FIERY_DRUM, GRASS_CORNET, ICY_FLUTE, ROCK_HORN, SKY_MELODICA, TERRA_CYMBAL
+{{synergy:FIRE}}
 
-## Additional Effects
-- WIDE_LENS: Attacks grant +5% CRIT_CHANCE (stackable) (removed base CRIT_CHANCE)
-- STICKY_BARB: HP 15 → 30, DEF 6 → 15
-- HEAVY_DUTY_BOOTS: Once below 40% max HP, kick away the target and gain 10 DEF and 30 AP
-- ABILITY_SHIELD: When the user and allies SHIELD is depleted, gain 30 AP.
-- LUCKY_RIBBON: Negates critical bonus damage from all incoming critical hits.
+[Fire in the Wiki](#wiki/types/FIRE)
 
-## Shiny
-- BOOSTER_ENERGY: The capsule fills with energy. For every 4 KO's during the fight, gain a random component
-- GOLD_MASK: replaces White Flute, now spawns Pokemon that share a type with the holder
+### Poison
 
-## The BINDING_BAND
-- SOOTHE_BELL: Grant the lowest HP ally 30 SHIELD every 3 seconds. Has a [30,LK]% chance to convert that ally’s remaining SHIELD into HP.
+{{synergy:POISON}}
+
+[Poison in the Wiki](#wiki/types/POISON)
+
+### Flying
+
+{{synergy:FLYING}}
+
+[Flying in the Wiki](#wiki/types/FLYING)
+
+### Rock
+
+{{synergy:ROCK}}
+
+[Rock in the Wiki](#wiki/types/ROCK)
+
+### Dark
+
+{{synergy:DARK}}
+
+[Dark in the Wiki](#wiki/types/DARK)
+
+## Weather
+
+[See weather effects, setters and matching items](#wiki/weather).
+
+### New Weather
+
+| Weather | Effect |
+| --- | --- |
+| MAGNET_STORM | {{weather:MAGNET_STORM}} |
+| PLAGUE | {{weather:PLAGUE}} |
+| ECLIPSE | {{weather:ECLIPSE}} |
+| FLOOD | {{weather:FLOOD}} |
+| ELDER_STORM | {{weather:ELDER_STORM}} |
+| DISTORTION | {{weather:DISTORTION}} |
+| METEOR_SHOWER | {{weather:METEOR_SHOWER}} |
+| CLOUDY | {{weather:CLOUDY}} |
+| TERRAIN | {{weather:TERRAIN}} |
+| BLOSSOM | {{weather:BLOSSOM}} |
+
+## Items
+
+[Browse item effects and recipes](#wiki/items).
+
+### Binding Band
+
+#### SOOTHE_BELL
+
+Grant the lowest HP ally 30 SHIELD every 3 seconds. Has a [30,LK]% chance to convert that ally’s remaining SHIELD into HP.
+
 > It is a support item, that you should use on a ranged unit. Could also work on the frontline, when paired with some tank items.
-- EXP_CHARM: The holder gains 2 PP after getting hit by an attack. [30,LK]% chance to increase that PP gain by 1 after each received hit. When the holder is KO, gain 1 XP.
+
+#### EXP_CHARM
+
+The holder gains 2 PP after getting hit by an attack. [30,LK]% chance to increase that PP gain by 1 after each received hit. When the holder is KO, gain 1 XP.
+
 > Good for loose streaker! Use it in the early game, to level faster and start catching up. Otherwise it is a tool to gain alot of PP when paired with a tank item like ROCKY_HELMET or POKE_DOLL. Also good to generate more PP, when having SHIELD.
-- FAIRY_FEATHER: Attacks have a [30,LK]% chance to deal 50% of the users current DEF as additional SPECIAL on attack.
+
+#### FAIRY_FEATHER
+
+Attacks deal 50% of the user’s current DEF as additional SPECIAL. [30,LK]% chance to reduce the target’s ATK by 2.
+
 > Its base DEF of 20 is enough, to work on any ranged unit to let it deal more damage. It is especially good on ranged ROCK units, like Snorunt, Solrock or Nihilego! Try to pair it with LOADED_DICE and SPEED items!
-- CLEAR_AMULET: The first time the holder is affected by any negative status effect, they will store the effect and gain RUNE_PROTECT for 10 seconds. On the next attack, apply said negative effect to all ADJACENT enemies for 5 seconds.
+
+#### CLEAR_AMULET
+
+The first time the holder is affected by any negative status effect, they will store the effect and gain RUNE_PROTECT for 10 seconds. On the next attack, apply said negative effect to all ADJACENT enemies for 5 seconds.
+
 > Could be interesting with FLAME_ORB or TIGHT_BELT! Otherwise 20 SPE_DEF is always appreciated on your tank.
-- DESTINY_KNOT: Once the holder is KO, the STRONGEST ally gains the users current LUCK and base ATK for the rest of the fight.
-> A way to further buff your carry, when it is already fully itemized! 
-- LUCKY_PUNCH: If the target has an ally directly behind it, the attack knocks a random held item from the target to that ally. When an item is knocked off, [30, LK]% chance to inflict CONFUSION for 2 seconds.
+
+#### DESTINY_KNOT
+
+Once the holder is KO, the STRONGEST ally gains the users current LUCK and base ATK for the rest of the fight.
+
+> A way to further buff your carry, when it is already fully itemized!
+
+#### LUCKY_PUNCH
+
+If the target has an ally directly behind it, the attack knocks a random held item from the target to that ally. When an item is knocked off, [30, LK]% chance to inflict CONFUSION for 2 seconds.
+
 > Use your positioning knowledge to get rid of annoying tank items. Time to scout!
-- GRIP_CLAW: Attacks grant +10% CRIT_POWER. (stackable)
-- COVERT_CLOAK: Every 3 seconds, steal 10 AP from all enemies within RANGE and deal 10 SPECIAL to them.
-> This item is a way to make any 2 RANGE carry less vulnerable, by giving it +1 more RANGE. Try to pair it with POKEMONOMICON, or just use the 30 AP to deal alot of damage. The AP stealing can help against PSYCHIC, ARTIFICIAL or DRAGON comps!
-- FLUFFY_TAIL: Gains [15,LK]% dodge chance. The holder is immune to ARMOR_BREAK.
-> If you have survived GHOST Togekiss meta, beating this will be a breeze.
-- EVER_STONE: The holder gains the ROCK type.
-- TIGHT_BELT: At the beginning of each battle, TIGHT_BELT is replaced by 2 random items. The holder is PARALYSIS during the entire fight.
+
+#### GRIP_CLAW
+
+Attacks grant +10% CRIT_POWER. (stackable)
+
+#### COVERT_CLOAK
+
+At the start of the fight and every 4 seconds, steal 5 AP from all enemies within RANGE and deal 5 SPECIAL to them.
+
+> This item is a way to make any 2 RANGE carry less vulnerable, by giving it +1 more RANGE. Try to pair it with POKEMONOMICON, or just use the 50 AP to deal alot of damage. The AP stealing can help against PSYCHIC, ARTIFICIAL or DRAGON comps!
+
+#### FLUFFY_TAIL
+
+Gains [15,LK]% dodge chance. The holder is immune to ARMOR_BREAK.
+
+#### EVER_STONE
+
+The holder gains the ROCK type.
+
+#### TIGHT_BELT
+
+At the beginning of each battle, TIGHT_BELT is replaced by 2 random items. The holder is PARALYSIS during the entire fight.
 
 > From the Wiki > Data section: Luck increases your chances in all draws, whether for critical hits, dodges, status on hit or any other effect mentioned with the LUCK symbol. Luck affects probabilities with this formula: P = baseP ^ (1 - LUCK /100);
-# Changes to Rarity, Typings, etc. with adjusted stats!
-## Common
-- Cinderace: added NORMAL, removed HUMAN
-- Butterfree: to regional
-- Goodra:
-- Kingdra: RANGE 2 → 3
-- Decidueye: also has regional form now, as ranged FIGHTING unit
-- Mamoosh: added FOSSIL
-- Cherrim Sunlight: to regular (does not evolve via lightspot)
-- Shiftry: added ICE
-- Charizard: moved to regional
-- Orbeetle: moved to regular
-- Staraptor: added FIGHTING
-- Gardevoir, Gallade:
-- Smoliv: regular attacks now scale with AP, SPEED 25 → 42
-- Salamence: to regional
-- Torterra: to regional (GRASS / GROUND) , added passive
-- Emboar: to regular, buffed ability effect
-## Uncommon
-- Blastoise: Range 3 → 1, new ability
-- Nidoking and Nidoqueen: added MONSTER, removed FIELD
-- Wigglytuff: RANGE 2 → 1, tank role
-- Chestnaught: light HP, DEF Buff, moved to regional since GRASS FIGHTING is filled by Rowlet line
-- Froslass:
-- Grimmsnarl: to (all) regional
-- Magnezone: added ARTIFICIAL
-- Sceptile: added DRAGON after 2 STAR
-- Greninja: to regular
-- Torracat: 
-- Florges: buffed ability effect
-- Nidoking and Nidoqueen: added passive, to attract catchable Nidoran♀ and Nidoran♂ respectively (yes I know it's a bit of a cheat)
-- Gossifleur: added GRASS
-- Garganacl: added HUMAN after 3 STAR
-- Charizard:
-- Rapidash:
-- Vikavolt: to regular, added AMORPHOUS
-- Froslass: added ROCK
 
-## Rare
-- Exploud: added MONSTER
-- Manectric: new ability
-- Pawmot: added FIELD, buffed ability effect 
-- Pangoro: added WILD
-- Sharpedo: added WILD
-- both Yamask forms: added FOSSIL
-- Primarina: to regional (WATER / FAIRY)
-- Salazzle: RANGE 2 → 3, added MONSTER
-- Dragapult: to regional (DRAGON / GHOST) , added FLYING
-- Blaziken: buffed ability effect
-- Roserade: 
-- Tinkaton:
-- Lickitung: to regional (NORMAL / GOURMET)
-- Swellow: Range 1 → 2, added NORMAL
-- Ninetales: added GHOST, changed ability effect
-- Alolan Ninetales: added FIELD
-- Swampert: removed WATER, added AQUATIC
-- Dragonite: 
+### Other Items
+
+| Item | Effect |
+| --- | --- |
+| HEAVY_DUTY_BOOTS | {{item:HEAVY_DUTY_BOOTS}} |
+| GOLD_BOTTLE_CAP | {{item:GOLD_BOTTLE_CAP}} |
+| TEA | {{item:TEA}} |
+| BOOSTER_ENERGY | {{item:BOOSTER_ENERGY}} |
+| STAR_DUST | {{item:STAR_DUST}} |
+| XRAY_VISION | {{item:XRAY_VISION}} |
+| RELIC_CROWN | {{item:RELIC_CROWN}} |
+| WHITE_FLUTE | {{item:WHITE_FLUTE}} |
+
+## Pokémon
+
+[Pokémon and evolution requirements](#wiki/pokemon)
+
+### Common
+
+- Crobat: attacks destroy Protect, Magic Bounce and Reflect.
+
+- Fossil unlock pool: Omanyte, Kabuto, Wimpod.
+- Golisopod: has FOSSIL. Evolves from Wimpod.
+- Kabutops: has DARK. Evolves from Kabuto.
+- Cinderace: has NORMAL
+- Butterfree: regional pool
+
+- Kingdra: RANGE 3
+- Decidueye: its regional form is a ranged FIGHTING unit.
+- Mamoswine: has FOSSIL
+- Cherrim Sunlight: regular pool (does not evolve via lightspot)
+- Shiftry: has ICE
+- Charizard: regional pool
+- Orbeetle: regular pool
+- Staraptor: has FIGHTING
+
+- Arboliva: regular attacks scale with AP, SPEED 42
+- Salamence: regional pool
+- Torterra: regional pool (GRASS / GROUND)
+- Emboar: regular pool
+
+### Uncommon
+
+- Fossil unlock pool: Lileep, Anorith, Tangela.
+- Heliolisk: has DRAGON.
+- Dragalge: DRAGON / POISON / WATER.
+- Blastoise: RANGE 1. Withdraw blasts water around the user, pushes enemies back and increases DEF.
+- Wigglytuff: RANGE 1, tank role
+- Chesnaught: regional GRASS / FIGHTING Pokémon.
+
+- Grimmsnarl: available in all regions
+- Magnezone: has ARTIFICIAL
+- Sceptile: has DRAGON after 2 STAR; 2 range
+- Greninja: regular pool
+
+- Nidoking / Nidoqueen: have MONSTER and attract catchable Nidoran♀ / Nidoran♂ respectively.
+- Eldegoss: has GRASS
+- Garganacl: has HUMAN after 3 STAR
+
+- Vikavolt: regular pool, has AMORPHOUS
+- Froslass: has ROCK
+
+### Rare
+
+- Magmortar: 3 range, the Magby line gains ARTIFICIAL at Magmar. Flamethrower burns PP in a line; excess PP burn erupts as special damage.
+
+- Fossil unlock pool: Yanma, Archen, Clamperl.
+- Exploud: has MONSTER
+- Pawmot: has FIELD
+- Pangoro: has WILD
+- Sharpedo: has WILD
+- Cofagrigus: GHOST / HUMAN. Evolves from Yamask.
+- Runerigus: has ROCK. Evolves from Galarian Yamask.
+- Primarina: regional pool (WATER / FAIRY)
+- Salazzle: RANGE 3, has MONSTER
+- Dragapult: regional pool (DRAGON / GHOST) , has FLYING
+- Lickilicky: regional pool (NORMAL / GOURMET)
+- Swellow: Range 2, has NORMAL
+- Ninetales: has GHOST
+- Alolan Ninetales: has FIELD
+- Swampert: has AQUATIC
+
 - Toxtricity: form based on the dominant synergy between ELECTRIC and POISON
-- Kabutops: added BUG
-- Trevenant: new ability, utility role
+- Trevenant: utility role
 
+### Epic
 
-## Epic
-- Typhlosion: 
-- Gigalith: added SOUND
-- Walrein: 
-- Houndoom: added FIELD
-- Aurorus: added LIGHT
-- Diancie: 
-- Gengar: 
-- Gothitelle: added DARK, buffed ability effect
-- Cloyster: 
-- Togekiss: added passive
-- Venusaur: new ability
-- Arcanine: added passive
-- Kommo-O: restrict to regional (DRAGON / FIGHTING)
-- Skeledirge: to regional
-- Escavalier: to regional for Volcarona
-- Corviknight: to regular
-- Garchomp: new ability
-- Wattrel: added AQUATIC
-- Exeggutor: added GOURMET, COCONUT_MILK
-- Alolan Exeggutor: added GOURMET for PSYCHIC, COCONUT_MALASADA 
+- Fossil unlock pool: Cranidos, Shieldon, Amaura, Tyrunt.
+- Rampardos: counts twice toward MONSTER. Evolves from Cranidos.
+- Bastiodon: Hard Face. Gain Shield and retaliate with true damage against melee attacks while that Shield remains. Evolves from Shieldon.
+- Scizor / Kleavor: Scyther is in the regular pool and has WILD; evolves via Metal Alloy or Black Augurite.
+- Lycanroc Dusk / Lycanroc Day / Lycanroc Night: Rockruff comes from Addpicks.
+- Crustle: regional pool (BUG).
+- Beheeyem: has ARTIFICIAL.
+- Altaria: has AMORPHOUS.
+- Volcarona: has FLYING, Addpick.
 
-## Ultra
+- Gigalith: has SOUND
+
+- Houndoom: has FIELD
+- Aurorus: has LIGHT
+
+- Gothitelle: has DARK. Fake Tears affects a five-tile radius around the user.
+
+- Arcanine / Hisuian Arcanine: spirits can Ignite every round
+- Kommo-O: regional pool (DRAGON / FIGHTING)
+- Skeledirge: regional pool
+- Escavalier: Additional pool
+- Corviknight: regular pool
+- Kilowattrel: has AQUATIC
+- Exeggutor: has GOURMET, COCONUT_MILK
+- Alolan Exeggutor: has GOURMET, COCONUT_MALASADA.
+
+### Ultra
+
+- Bloodmoon Ursaluna: has ROCK, sets Blood Moon.
 > Ultra Pokemon have twice the HP when 3 STAR
-- Intellion: RANGE 3 → 4
-- Ursaluna: 
-- Leavanny:
-- Kingambit: added HUMAN
-- Reuniclus: added MONSTER
+- Inteleon: RANGE 4
+
+- Kingambit: has HUMAN
+- Reuniclus: has MONSTER
 - Dusknoir: with SPEED items and REAPER_CLOTH, it is a carry. Otherwise with PP items, it should provide support
-- Granbull: to regular, added WILD, removed FIELD
+- Granbull: regular pool, has WILD
 
-## Hatch
-- Stoutland: added GROUND
+### Hatch
+- Ludicolo: GRASS / AQUATIC / SOUND.
+- Empoleon: WATER / ICE / STEEL.
+- Hydreigon: DRAGON / DARK.
+- Delphox: FIRE / PSYCHIC / HUMAN.
+- Meowscarada: GRASS / FLORA / DARK.
+- Stoutland: has GROUND
 - Chandelure: SPECIAL carry
-- Empoleon:
-- Serperior: added LIGHT
-- Ludicolo:
-- Delphox: buffed ability effect
-- Meowscarada:
-- Hydreigon:
 
-## Unique
-- Veluza: added MONSTER, removed WATER 
-- Roaring Moon:
-- Pyukumuku: buffed passive
-- Farfetchd: buffed HP
-- Galarian Farfetchd: buffed HP
-- Zeraora: buffed HP
-- Miltank: buffed HP
-- Scream Tail: changed to SOUND, FOSSIL, MONSTER
-- Morpeko: added ELECTRIC, ELECTRIC_SEED
-- Cryogonal: removed AMORPHOUS, added ROCK, MONSTER
-- Togedemaru: added FIELD,
-- Pinsir: added FIGHTING
+- Serperior: has LIGHT
 
-## Legendary
-- Landorus, Thunderus, Tornadus, Enamorus, Marcus: added HUMAN
-- Buzzwole and Pheromosa: are now Legendary Duo, no nerfs smile
-- Yveltal: new ability
-- Victini: added GOURMET, TABASCO
-- Guzzlord: 300 → 400 HP
-- Spectrier: Range 1 → 2
-- Deoxys Attack: ATK 25 → 35
-- Xurkitree: 200 → 250 HP, 15 → 20 ATK, Ability: +1 target
-- Hoopa: buffed ability effect
-- Groudon: now GROUND FIRE, becomes MONSTER with RED_ORB
-- Kyogre: now WATER ELECTRIC, becomes MONSTER with BLUE_ORB
-- Heatran: added MONSTER
+### Unique
+
+- Tropius: has FOSSIL.
+- Turtonator: has ROCK.
+
+- Alcremie: evolves from Milcery, a Unique Pokémon.
+- Carbink: interacts with Crystallization. See [Awakenings](#wiki/awakening).
+- Sableye: has ROCK; Crystallization unlocks Mega Sableye.
+- Minior: has LIGHT.
+- Veluza: has MONSTER
+
+- Scream Tail: SOUND / FOSSIL / MONSTER.
+- Morpeko: has ELECTRIC, ELECTRIC_SEED
+- Cryogonal: has ROCK, MONSTER
+- Togedemaru: has FIELD,
+- Pinsir: has FIGHTING
+
+### Legendary
+
+- Diancie: Legendary Pokémon.
+- Galarian Zapdos: has WILD.
+- Glastrier: has WILD.
+- Ho-Oh: allied FIRE Pokémon with Resurrection revive Ignited.
+- Landorus, Thunderus, Tornadus, Enamorus, Marcus: have HUMAN
+- Buzzwole and Pheromosa: Legendary Duo.
+- Victini: has GOURMET, TABASCO
+- Guzzlord: 400 HP
+- Spectrier: Range 2
+- Deoxys Attack: ATK 35
+- Xurkitree: raises AP by 30; 220 HP
+- Groudon: GROUND / FIRE, becomes MONSTER with RED_ORB
+- Kyogre: WATER / ELECTRIC, becomes MONSTER with BLUE_ORB
+- Heatran: has MONSTER
 - Ogerpon: becomes MONSTER with TEAL_MASK, WELLSPRING_MASK, HEARTHFLAME_MASK or CORNERSTONE_MASK,
-- Celebi: added FAIRY, removed PSYCHIC
+- Celebi: has FAIRY
 
-## Special
+### Special
+
+- Galarian Fossils: Special Pokémon. Restore Dracovish, Dracozolt, Arctovish or Arctozolt in the Fossil menu.
 - Mafia Eevee: via EVER_STONE
-- Milcery: 5% chance to appear at stage 0
-- Meltan: buff passive
 
-# Abilities and Passives
-- Duskull - Trick Room: If the target and ADJACENT enemies are faster than the user, halve their current speed, apply FATIGUE and BLINDED for 5 seconds. Otherwise, deal [50,100,200,SP] SPECIAL.
-- Beldum - Meteor Mash: Deal 1/2/4 times [100,SP]% of ATK as SPECIAL to the target and ADJACENT enemy Pokemon. Then increase the user's ATK by [2, SP] ([4, SP] if the user is in PSYCHIC_FIELD) on each hit.
-- Fennekin - Mystical Fire: Explodes on the target and ADJACENT enemies, hitting 4 times. Each hit deals [30,SP]% ATK as SPECIAL and reduces AP by [3,SP]. If a hit drops their AP below 0, they are BURN for [1,2,3,SP] seconds.
-- Yveltal - Oblivion Wing: Jump to the backline, then fire a beam in a line dealing [100,SP] SPECIAL to all enemy Pokémon. Heal for 75% of the damage dealt. Will stay in the backline with increased RANGE for 3 seconds.
-- Squirtle - Withdraw: Retreat into its shell while blasting out water in all directions, dealing [10,20,40, SP] SPECIAL to Pokémon hit and pushing them back. Increase the users DEF by [2,4,8,SP].
-- Electrike - Rising Voltage: The user gathers electric voltage and deals [30,60,120,SP] SPECIAL to the target. Gains ELECTRIC_FIELD and spreads it to all ADJACENT Pokémon. Double the damage, if the opponent has ELECTRIC_FIELD.
-- Mega Gengar - Phantom Force: Silence all enemy Pokémon for [2, SP] seconds, then vanish. After 1 second, reappear in the middle of the enemy team and deal [100, SP] SPECIAL damage to all ADJACENT enemy Pokémon. Double the damage to targets with SILENCE or FATIGUE.
-- Mega Charizard X - Flare Blitz: Charge towards the target, dealing [500,SP]% of ATK as PHYSICAL to all ADJACENT enemy Pokemon. BURN the user for 3 seconds.
-- Hisuian Decidueye - Triple Arrows: Shoot 3 Piercing Arrows in a line, dealing [5,10,20,SP] SPECIAL. Each arrow reduces the target's DEF by 2 and applies FLINCH for 1 second. Can crit by default.
-- Shadow Mewtwo - Dark Nova: Strike into the largest crowd, dealing [60, SP] SPECIAL to the target and ADJACENT enemy Pokémon, teleporting them away. Can crit by default.
-- Libre Pikachu - Thunderclap Press: The target is hit with an electric bodyslam and pushed away. It and all targets in the path are PARALYSIS for 4 seconds and take [25, 50, 100, SP] SPECIAL.
-- Gothita - Fake Tears: Deal [10,20,30,SP] SPECIAL to all enemy Pokémon and inflict them with ARMOR_BREAK for 3 seconds. If already affected, remove [3,6,9] SPE_DEF.
-- Tepig - Heat Crash: Crashes into the target, knocking it back and dealing [40,60,80, SP] SPECIAL. Does more damage the more ATK the user has compared to the target. If the user hase more HP than the target, gain 20 SPEED.
-- Hoopa - Unbound: Tears open a dimensional ring and returns in its Unbound form — dragging a Legendary Pokémon along with it. The summoned Pokémon's HP increases with the user's AP. (so so broken)
-- Bulbasaur - Frenzy Plant: Strikes the target 3 times with enormous tree roots, dealing [10,30,60,SP] SPECIAL per hit, multiplied by the number of ADJACENT enemies surrounding the target. If the target is defeated, remaining roots lash out at the nearest enemy.
-- Flabebe - Fairy Wind: Restore [5,10,20,SP=0.5] PP to all allied Pokémon other than the user and decrease the SPEED of all enemy Pokémon by [2, 4, 8].
-- Mudkip - Mud Bubble: Heal the user for [20,40,80,SP] HP, then BLINDED all ADJACENT enemy Pokémon for [2,4,6] seconds. If already BLINDED, deal [30,60,120,SP] SPECIAL instead.
-- Poliwhirl - Soak: Deal [20,40,80,SP] SPECIAL to the target and restore [10,10,20] PP to all allied Pokémon.
-- Torchic - Blaze Kick: Gain [10,20,40]% CRIT_CHANCE, then deal [30,60,120,SP] SPECIAL and BURN the target for 2 seconds. If it already has BURN, deal +30% damage. Can crit by default.
-- Pawmi - Double Shock: Emit a powerful electric shock, dealing [50,100,200,SP] SPECIAL to the target and inflict the user with PARALYSIS for 3 seconds. If the user has ELECTRIC_FIELD, discharge it and execute the target. 
-- Turtwig - Passive [Shell Armor]: Gain [1,3,6] DEF when receiving critical attacks. The Pokémon is immune to ARMOR_BREAK.
-- Spheal - Passive [Ice Body]: Under SNOW, regain 10% of its max HP every 2 seconds.
-- Gible - Earthquake: Deals [25,50,100,SP] SPECIAL to all Pokémon in a [1,2,3] tile radius of the user.
+### Mega Evolution
 
+- Mega Charizard X: evolves from Charizard.
+- Mega Lopunny: evolves from Lopunny.
+- Mega Camerupt: evolves from Camerupt.
+- Mega Houndoom: evolves from Houndoom.
+- Mega Steelix: evolves from Steelix.
+- Mega Altaria: evolves from Altaria.
+- Mega Banette: evolves from Banette.
+- Mega Manectric: evolves from Manectric.
+- Mega Slowbro: evolves from Slowbro; has ROCK.
+- Mega Gallade: evolves from Gallade.
+- Mega Gardevoir: evolves from Gardevoir.
+- Mega Medicham: evolves from Medicham.
+- Mega Alakazam: evolves from Alakazam.
+- Mega Tyranitar: evolves from Tyranitar.
+- Mega Aerodactyl: evolves from Aerodactyl.
+- Mega Diancie: evolves from Diancie.
+- Mega Gengar: evolves from Gengar.
+- Mega Lucario: evolves from Lucario.
+- Mega Mawile: evolves from Mawile.
+- Mega Absol: evolves from Absol.
+- Mega Mewtwo Y: evolves from Mewtwo.
+- Mega Latias: evolves from Latias.
+- Mega Latios: evolves from Latios.
+- Mega Drampa: evolves from Drampa.
+- Mega Excadrill: evolves from Excadrill.
+- Mega Dragalge: evolves from Dragalge.
+- Mega Zygarde: evolves from Zygarde.
+- Mega Floette Eternal: evolves from Floette Eternal.
+- Mega Feraligatr: evolves from Feraligatr; passive triggers once per fight.
+- Mega Skarmory: evolves from Skarmory.
+- Mega Zeraora: evolves from Zeraora.
+- Mega Darkrai: evolves from Darkrai.
+- Mega Sableye: Crystallization unlocks Sableye's Mega Evolution.
+- Mega Eelektross: evolves from Eelektross.
 
-# Credits
-> Some of the Pokemon are not officially sprited yet, but there is access to them via the SkyTemple Discord server. I don't know how to credit them, so I will just do that here:
-- Mega Drampa: DeltaL, Pi, Soulja
-- Mega Excadrill: DeltaL, Pi, Soulja
-- Mega Dragalge: DeltaL, Pi, Soulja
-- Mega Zygarde: DeltaL, Pi (GOATED)
-- Mega Feraligatr: DeltaL, Pi (GOATED again)
-- Chimecho tent: from PMD Universe ˶ᵔ ᵕ ᵔ˶
-> Thank you alot, I will do the proper crediting when they are out on PMD Collab. Thanks to all the spriters really! Also thanks alot to all the additions from Non-SpriteCollab too!! They are awesome!
+## Game Mode
 
-- Song during Carousels & in Juke Box - Trouble In Town (John Rei - .jahey, my goat!!)
-- Patch Poster Image: I just stole that from spanishcrow, my beloved friend and artist :^D
-> Thanks for the devs to create such an amazing game!
+### Double Up
 
+Team up with your partner and outlast every other duo!
+
+[Double Up guide](#wiki/double-up)
+
+### Wish Festival
+
+[Wishes in the Wiki](#wiki/blessings)
+
+Choose a **Wish at stages 4 and 12**. Stage-12 synergy-specific offers are tailored to your active synergies.
+
+### Smeargle Scribbles
+
+Selectable in Custom Lobbies.
+
+- **Six Pack**: {{scribble:SIX_PACK}}
+- **Evolution Lab**: {{scribble:EVOLUTION_LAB}}
+- **The Bazaar**: {{scribble:BAZAAR}}
+- **Juggernaut**: {{scribble:JUGGERNAUT}}
+- **Kaiju Battle**: {{scribble:KAIJU_BATTLE}}
+- **Avatar**: {{scribble:AVATAR}}
+- **Light Show**: {{scribble:LIGHT_SHOW}}
+- **Smeargle Pack**: {{scribble:SMEARGLE_PACK}}
+- **Overtime**: {{scribble:OVERTIME}}
+
+## Misc
+
+- The full collection is unlocked, with all nine emotions when available. Boosters are exclusive to the Smeargle Pack Scribble.
+- There is no Elo decay.
+- Shop-upgrade outlines and Walking Avatar are under [Options > Interface](#options/interface).
