@@ -156,7 +156,8 @@ import {
   WISE_SPENDING_EXP_PER_REROLL,
   GEM_HARVEST_CHARGE_REDUCTION,
   GRUDGE_SUBSTITUTE_SELL_COST,
-  isGrudgeSubstitute
+  isGrudgeSubstitute,
+  SIMULATION_SCOPED_HERO_BLESSINGS
 } from "../../types/enum/Blessing"
 import {
   checkRainbowHourReward,
@@ -1909,6 +1910,17 @@ export class OnUpdateCommand extends Command<
       )
       entity.effects.forEach((e) => reinforcement.effects.add(e))
       reinforcement.effectsSet = new Set(entity.effectsSet)
+
+      reinforcement.heroBlessings = new Set(
+        [...entity.heroBlessings].filter(
+          (blessing) => !SIMULATION_SCOPED_HERO_BLESSINGS.includes(blessing)
+        )
+      )
+      reinforcement.isBlessedHero = reinforcement.heroBlessings.size > 0
+      reinforcement.skill = entity.skill
+      reinforcement.maxPP = entity.maxPP
+      reinforcement.axeBlastExecuteChance = entity.axeBlastExecuteChance
+      reinforcement.ignited = entity.ignited
     }
     // apply ghost curses, outside the loop to avoid multiple applications
     const opponentTeam =

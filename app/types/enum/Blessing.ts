@@ -989,6 +989,18 @@ export const HERO_BLESSING_MOVES_REGION: Blessing[] = [
 
 /* hero blessings that seed the shared pool with their Pokemon, exactly as an
    additional pick would */
+/* these hero blessings keep their state on the simulation rather than on the
+   unit, so a reinforcement crossing into the partner's fight cannot bring them
+   along. It arrives as an ordinary unit instead of a hero that does nothing */
+export const SIMULATION_SCOPED_HERO_BLESSINGS: Blessing[] = [
+  Blessing.GRAND_IGNITION,
+  Blessing.TOXIC_RESONANCE,
+  Blessing.SNIFFER_DOG,
+  Blessing.JESTER,
+  Blessing.COLONY,
+  Blessing.SAND_BUDDIES
+]
+
 export const HERO_BLESSING_ADDS_TO_POOL: Blessing[] = [
   Blessing.FROST_GEAR,
   Blessing.SHUTTLE_BUS,
