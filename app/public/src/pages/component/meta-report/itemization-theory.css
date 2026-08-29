@@ -1,0 +1,176 @@
+.itemization-theory {
+  height: 100%;
+  overflow-y: auto;
+  padding: 0.5em 0;
+}
+
+.itemization-intro {
+  margin: 0 0 1em;
+  max-width: 80ch;
+  line-height: 1.6;
+}
+
+.itemization-outro {
+  margin: 1em 0 0;
+  max-width: 80ch;
+  line-height: 1.6;
+}
+
+.itemization-table-scroll {
+  overflow-x: auto;
+  max-width: 72em;
+}
+
+.itemization-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  line-height: 1.5;
+}
+
+.itemization-table caption {
+  text-align: left;
+  font-size: 1.17em;
+  font-weight: 700;
+  padding-bottom: 0.25em;
+  margin-bottom: 0.5em;
+  border-bottom: 4px solid currentColor;
+}
+
+.itemization-table th,
+.itemization-table td {
+  padding: 0.9em 0.75em;
+  vertical-align: middle;
+  border-bottom: var(--border-extra-thin);
+}
+
+.itemization-table tbody tr:last-child th,
+.itemization-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.itemization-table tbody th {
+  width: 1%;
+  white-space: nowrap;
+  color: var(--role-accent);
+  font-size: 0.9em;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.itemization-options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.itemization-option {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4em 0.75em;
+  padding: 0.5em 0.9em;
+  border-radius: 6px;
+  border-left: 4px solid var(--role-accent);
+  background: var(--color-bg-secondary);
+}
+
+.itemization-index {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 1.5em;
+  height: 1.5em;
+  margin-left: -0.25em;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--role-accent) 25%, transparent);
+  color: var(--role-accent);
+  font-size: 0.8em;
+  font-weight: 700;
+}
+
+.itemization-slot,
+.itemization-group {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4em;
+}
+
+/* must read stronger than the gap between plain alternatives */
+.itemization-group-tied {
+  gap: 0.6em;
+  padding: 0.2em 0.6em;
+  border: var(--border-extra-thin);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--color-bg-primary) 60%, transparent);
+}
+
+.itemization-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  font-weight: 600;
+  cursor: help;
+}
+
+.itemization-item img {
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+
+.itemization-plus {
+  margin-right: 0.35em;
+  color: var(--color-fg-secondary);
+  font-weight: 700;
+}
+
+.itemization-or {
+  color: var(--color-fg-secondary);
+  font-size: 0.8em;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.itemization-item:focus-visible,
+.itemization-effects summary:focus-visible {
+  outline: 2px solid var(--color-fg-accent);
+  outline-offset: 2px;
+}
+
+.itemization-effects {
+  margin-top: 0.6em;
+}
+
+.itemization-effects summary {
+  cursor: var(--cursor-hover);
+  color: var(--color-fg-secondary);
+  font-size: 0.85em;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.itemization-effects summary:hover {
+  color: var(--color-fg-primary);
+}
+
+.itemization-effects dl {
+  margin: 0.5em 0 0;
+}
+
+.itemization-effects dl > div {
+  padding: 0.5em 0;
+}
+
+.itemization-effects dd {
+  margin: 0.25em 0 0;
+  max-width: 80ch;
+  white-space: pre-line;
+}

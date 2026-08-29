@@ -2,13 +2,10 @@ import React, { useState } from "react"
 import { useTranslation } from "react-i18next"
 import {
   AdditionalPicksStages,
-  ItemCarouselStages,
-  PortalCarouselStages,
   TownEncountersByStage
 } from "../../../../../config"
 import { getAdditionalsTier1 } from "../../../../../models/precomputed/precomputed-pokemon-data"
 import { PRECOMPUTED_POKEMONS_PER_RARITY } from "../../../../../models/precomputed/precomputed-rarity"
-import { type PVEStage, PVEStages } from "../../../../../models/pve-stages"
 import { Emotion } from "../../../../../types"
 import {
   CraftableItemsNoScarves,
@@ -16,104 +13,26 @@ import {
   ItemComponentsNoScarf
 } from "../../../../../types/enum/Item"
 import { Pkm, PkmIndex } from "../../../../../types/enum/Pokemon"
-import { getPortraitSrc } from "../../../../../utils/avatar"
 import { entries } from "../../../../../utils/object"
 import { ItemDetailTooltip } from "../../../game/components/item-detail"
 import { addIconsToDescription } from "../../utils/descriptions"
-import { cc } from "../../utils/jsx"
 import { GamePokemonDetailTooltip } from "../game/game-pokemon-detail"
 import PokemonPortrait from "../pokemon-portrait"
+import {
+  generateStageInfo,
+  StageLegend,
+  StagePath,
+  type StageInfo,
+  type StageType
+} from "../stage-path/stage-path"
 import "./wiki-stages.css"
-
-type StageInfo = {
-  level: number
-  icon: string
-  title?: string
-  type: "pve" | "carousel" | "additional" | "portal" | "battle"
-  stageData?: PVEStage
-}
 
 export default function WikiStages() {
   const { t } = useTranslation()
   const [selectedStage, setSelectedStage] = useState<number | null>(null)
-  const [hoveredLegendType, setHoveredLegendType] = useState<string | null>(
-    null
-  )
+  const [highlightedType, setHighlightedType] = useState<StageType | null>(null)
 
-  // Generate all stages from 0 to 40
-  const generateStageInfo = (): StageInfo[] => {
-    const stages: StageInfo[] = []
-
-    for (let level = 0; level <= 40; level++) {
-      // Check for carousel stages
-      if (ItemCarouselStages.includes(level)) {
-        stages.push({
-          level,
-          icon: "/assets/ui/carousel.svg",
-          type: "carousel"
-        })
-      }
-
-      // Check for portal carousel stages
-      if (PortalCarouselStages.includes(level)) {
-        stages.push({
-          level,
-          icon: "/assets/ui/mythical.svg",
-          title:
-            level === 0
-              ? t("wiki.stages.starter_pick")
-              : level === 10
-                ? t("unique_pick")
-                : level === 20
-                  ? t("wiki.stages.legendary_pick")
-                  : undefined,
-          type: "portal"
-        })
-      } else if (AdditionalPicksStages.includes(level)) {
-        // Check for additional pick stages
-        stages.push({
-          level,
-          icon: "/assets/ui/additional-pick.svg",
-          type: "additional",
-          title:
-            level === AdditionalPicksStages[0]
-              ? t("rarity.UNCOMMON")
-              : level === AdditionalPicksStages[1]
-                ? t("rarity.RARE")
-                : level === AdditionalPicksStages[2]
-                  ? t("rarity.EPIC")
-                  : undefined
-        })
-      }
-
-      // Check for PvE stages
-      const pveStage = PVEStages[level]
-      if (pveStage) {
-        stages.push({
-          level,
-          icon: getPortraitSrc(
-            PkmIndex[pveStage.avatar],
-            false,
-            Emotion.NORMAL
-          ),
-          title: t(pveStage.name),
-          type: "pve",
-          stageData: pveStage
-        })
-      } else if (level > 0) {
-        // Regular battle stage
-        stages.push({
-          level,
-          icon: "/assets/ui/battle.svg",
-          type: "battle"
-        })
-      }
-    }
-
-    return stages
-  }
-
-  const allStages = generateStageInfo()
+  const allStages = generateStageInfo(t)
   const selectedStageInfo =
     selectedStage !== null
       ? allStages.find((s) => s.level === selectedStage)
@@ -124,86 +43,21 @@ export default function WikiStages() {
       <div className="wiki-stage-path-container my-box">
         <div className="stage-header">
           <h2>{t("stages")}</h2>
-          <div className="stage-legend">
-            <div
-              className="legend-item pve"
-              onMouseEnter={() => setHoveredLegendType("pve")}
-              onMouseLeave={() => setHoveredLegendType(null)}
-            >
-              <img
-                src={getPortraitSrc(
-                  PkmIndex[Pkm.MAGIKARP],
-                  false,
-                  Emotion.NORMAL
-                )}
-                alt="PvE"
-              />
-              <span>{t("stage_type.pve")}</span>
-            </div>
-            <div
-              className="legend-item carousel"
-              onMouseEnter={() => setHoveredLegendType("carousel")}
-              onMouseLeave={() => setHoveredLegendType(null)}
-            >
-              <img src="/assets/ui/carousel.svg" alt="Carousel" />
-              <span>{t("stage_type.carousel")}</span>
-            </div>
-            <div
-              className="legend-item portal"
-              onMouseEnter={() => setHoveredLegendType("portal")}
-              onMouseLeave={() => setHoveredLegendType(null)}
-            >
-              <img src="/assets/ui/mythical.svg" alt="Portal" />
-              <span>{t("stage_type.portal")}</span>
-            </div>
-            <div
-              className="legend-item additional"
-              onMouseEnter={() => setHoveredLegendType("additional")}
-              onMouseLeave={() => setHoveredLegendType(null)}
-            >
-              <img src="/assets/ui/additional-pick.svg" alt="Additional" />
-              <span>{t("stage_type.additional")}</span>
-            </div>
-            <div
-              className="legend-item battle"
-              onMouseEnter={() => setHoveredLegendType("battle")}
-              onMouseLeave={() => setHoveredLegendType(null)}
-            >
-              <img src="/assets/ui/battle.svg" alt="Battle" />
-              <span>{t("stage_type.battle")}</span>
-            </div>
-          </div>
+          <StageLegend
+            highlightedType={highlightedType}
+            onHighlightType={setHighlightedType}
+          />
         </div>
-        <div className="wiki-stage-path">
-          {allStages.map((stage) => (
-            <React.Fragment key={`stage-${stage.level}`}>
-              <div
-                className={cc("wiki-stage-path-item", {
-                  selected: selectedStage === stage.level,
-                  highlighted: hoveredLegendType === stage.type,
-                  pve: stage.type === "pve",
-                  carousel: stage.type === "carousel",
-                  portal: stage.type === "portal",
-                  additional: stage.type === "additional",
-                  battle: stage.type === "battle"
-                })}
-                onClick={() =>
-                  setSelectedStage(
-                    selectedStage === stage.level ? null : stage.level
-                  )
-                }
-                title={`${t("stage")} ${stage.level}: ${stage.title}`}
-              >
-                <img src={stage.icon} alt={stage.title} />
-                <span className="stage-number">{stage.level}</span>
-              </div>
-              {stage.level < 40 && <span className="stage-connector">―</span>}
-            </React.Fragment>
-          ))}
-        </div>
+        <StagePath
+          stages={allStages}
+          selectedStage={selectedStage}
+          highlightedType={highlightedType}
+          onSelect={(level) =>
+            setSelectedStage(selectedStage === level ? null : level)
+          }
+        />
       </div>
 
-      {/* Stage Detail Display */}
       {selectedStageInfo && <StageDetail stageInfo={selectedStageInfo} />}
     </div>
   )

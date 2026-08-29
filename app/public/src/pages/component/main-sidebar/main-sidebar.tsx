@@ -205,12 +205,19 @@ export function MainSidebar(props: MainSidebarProps) {
           {t("wiki.title")}
         </NavLink>
         <NavLink
-          svg="meta"
+          icon={
+            <img
+              width={32}
+              height={32}
+              src="assets/icons/ITEM_GUIDE.svg"
+              alt=""
+            />
+          }
           className="green"
           location="meta"
           handleClick={changeModal}
         >
-          {t("meta")}
+          Itemization
         </NavLink>
 
         {profileLevel >= GADGETS.team_planner.levelRequired && (
@@ -544,7 +551,11 @@ function Modals({
       >
         <Wiki inGame={page === "game"} />
       </Modal>
-      <Modal show={modal === "meta"} header={t("meta")} onClose={closeModal}>
+      <Modal
+        show={modal === "meta"}
+        header="Itemization"
+        onClose={closeModal}
+      >
         <MetaReport />
       </Modal>
       <Modal

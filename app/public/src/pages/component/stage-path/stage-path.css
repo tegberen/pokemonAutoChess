@@ -1,0 +1,175 @@
+.stage-path,
+.stage-legend {
+  --stage-pve-color: #8c2022;
+  --stage-carousel-color: #4aa52e;
+  --stage-portal-color: #e6cb49;
+  --stage-additional-color: #927fff;
+  --stage-battle-color: #666;
+}
+
+.stage-path {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5em 0;
+}
+
+.stage-path-item {
+  position: relative;
+  background-color: var(--color-bg-secondary);
+  border-radius: 8px;
+  border: 2px solid transparent;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 5px;
+  transition: all 0.2s ease;
+  min-width: 45px;
+  min-height: 45px;
+}
+
+.stage-path-item.clickable {
+  cursor: var(--cursor-hover, pointer);
+}
+
+.stage-path-item.clickable:hover {
+  background-color: var(--color-bg-accent);
+  transform: scale(1.05);
+}
+
+.stage-path-item.selected {
+  background-color: #109fff;
+  border-color: #0080e6;
+}
+
+.stage-path-item.highlighted {
+  background-color: var(--color-bg-accent);
+  transform: scale(1.05);
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.2);
+}
+
+.stage-path-item.dimmed {
+  opacity: 0.4;
+  filter: grayscale(0.6);
+}
+
+.stage-path-item.pve {
+  border-color: var(--stage-pve-color);
+}
+
+.stage-path-item.carousel {
+  border-color: var(--stage-carousel-color);
+}
+
+.stage-path-item.portal {
+  border-color: var(--stage-portal-color);
+}
+
+.stage-path-item.additional {
+  border-color: var(--stage-additional-color);
+}
+
+.stage-path-item.battle {
+  border-color: var(--stage-battle-color);
+}
+
+.stage-path-item.zone-green,
+.stage-path-item.zone-orange,
+.stage-path-item.zone-red,
+.stage-path-item.zone-late {
+  border-color: var(--zone-color);
+  box-shadow: 0 0 0 2px var(--zone-color);
+  background-color: var(--color-bg-secondary);
+  z-index: 1;
+}
+
+.stage-path-item.zone-green {
+  --zone-color: #6ec46e;
+}
+
+.stage-path-item.zone-orange {
+  --zone-color: #ffb04a;
+}
+
+.stage-path-item.zone-red {
+  --zone-color: #ff6b66;
+}
+
+.stage-path-item.zone-late {
+  --zone-color: #5ecbf7;
+}
+
+.stage-path-item img {
+  display: block;
+  height: 32px;
+  width: 32px;
+  object-fit: contain;
+}
+
+.stage-path-item .stage-number {
+  font-size: 0.7em;
+  font-weight: bold;
+  margin-top: 2px;
+  color: var(--color-fg-primary);
+}
+
+.stage-connector {
+  color: var(--color-fg-secondary);
+  font-weight: bold;
+  margin: 0 -4px;
+}
+
+.stage-legend {
+  display: flex;
+  gap: 0.6em;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+}
+
+.stage-legend .legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.4em;
+  padding: 0.2em 0.4em;
+  background-color: var(--color-bg-secondary);
+  border-radius: 4px;
+  border: 2px solid transparent;
+  font-size: 0.85em;
+  cursor: var(--cursor-hover, pointer);
+  transition: all 0.2s ease;
+}
+
+.stage-legend .legend-item:hover {
+  background-color: var(--color-bg-accent);
+}
+
+.stage-legend .legend-item.pve {
+  border-color: var(--stage-pve-color);
+}
+
+.stage-legend .legend-item.carousel {
+  border-color: var(--stage-carousel-color);
+}
+
+.stage-legend .legend-item.portal {
+  border-color: var(--stage-portal-color);
+}
+
+.stage-legend .legend-item.additional {
+  border-color: var(--stage-additional-color);
+}
+
+.stage-legend .legend-item.battle {
+  border-color: var(--stage-battle-color);
+}
+
+.stage-legend .legend-item img {
+  width: 24px;
+  height: 24px;
+}
+
+.stage-legend .legend-item span {
+  font-weight: 500;
+  color: var(--color-fg-primary);
+}
