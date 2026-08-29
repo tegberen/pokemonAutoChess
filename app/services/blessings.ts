@@ -2723,17 +2723,24 @@ export const blessingEffectService: {
   [Blessing.RIVALRY]: () => true,
 
   [Blessing.SAFARI_ENCOUNTER]: (player, state) => {
-    const [topSynergy] = player.synergies.getTopSynergies(1)
-    const candidates = (Object.keys(PkmFamily) as Pkm[]).filter((pkm) => {
+    const encounterables = (Object.keys(PkmFamily) as Pkm[]).filter((pkm) => {
       const data = getPokemonData(pkm)
       return (
         data.additional &&
         data.stars === 1 &&
-        data.types.includes(topSynergy) &&
         state.additionalPokemons.includes(pkm) === false
       )
     })
-    if (candidates.length === 0) return false
+    const candidates = player.synergies
+      .getTopSynergies(Object.keys(Synergy).length)
+      .filter((synergy) => (player.synergies.get(synergy) ?? 0) > 0)
+      .map((synergy) =>
+        encounterables.filter((pkm) =>
+          getPokemonData(pkm).types.includes(synergy)
+        )
+      )
+      .find((matches) => matches.length > 0)
+    if (!candidates) return false
     /* seeding the pool is lobby-wide and cannot be undone, so refuse before it
        rather than after the gift fails */
     if (getFreeSpaceOnBench(player.board) < 1) return false
