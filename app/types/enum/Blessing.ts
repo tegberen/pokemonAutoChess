@@ -538,7 +538,6 @@ export const FESTIVE_PICNIC_MAX_HP_ON_OVERWRITE = 5
 // additive, applied before luck scales it in chance()
 export const MYSTOGAN_PROC_CHANCE_BONUS = 0.05
 
-// long enough for the field animation to play out and settle between flips
 /* FURIOUS_FABRIC: every SILK_SCARF recipe mapped to a synergy that overlaps
    well with NORMAL. Kept out of SynergyGivenByItem so the items only grant a
    synergy while the blessing is held */
@@ -586,11 +585,9 @@ export const GEM_HARVEST_CHARGE_REDUCTION = 1
 export const GEM_HARVEST_ABILITY_POWER_PER_GEM = 10
 // long enough for the field animation to play out and settle between flips
 export const MAGNETOSPHERE_PULSE_INTERVAL = 8000
-// the field flips polarity every pulse, so nothing is ever pulled and pushed at once
 /* the rings need time to close before the enemies land, or they arrive before
    the animation's peak. Repelling needs none: its blast leaves immediately */
 export const MAGNETOSPHERE_ATTRACT_MOVE_DELAY = 700
-// long enough that hauling enemies into your own formation is worth the exposure
 export const MAGNETOSPHERE_ATTRACT_PARALYSIS_DURATION = 8000
 export const MAGNETOSPHERE_REPEL_LOCK_DURATION = 2000
 export const ICY_REFLECTION_TRIGGER_MAX_HP_RATIO = 0.25
@@ -675,6 +672,15 @@ export const RAINBOW_HOUR_FOSSIL_STONES = 2
 export const RAINBOW_HOUR_EEVEELUTIONS_TARGET = 7
 export const RAINBOW_HOUR_GOLD_REWARD = 77
 export const MANIFESTATION_UNLOCK_STAGE = 20
+export const QUEST_ASCEND_POKEMONS = 3
+export const ROCKY_BEGINNINGS_POKEMONS = 2
+export const QUEST_EVOLVE_II_RARES_GRANTED = 2
+// lives here rather than in the service so the pick UI can read its length
+export const STARTER_PACK_CONTENT: { rarity: Rarity; stars: number }[] = [
+  { rarity: Rarity.COMMON, stars: 2 },
+  { rarity: Rarity.UNCOMMON, stars: 1 },
+  { rarity: Rarity.RARE, stars: 1 }
+]
 export const MIX_AND_MATCH_I_UNIQUES = 3
 export const MIX_AND_MATCH_I_FIELD_CAP = 2
 export const MIX_AND_MATCH_II_UNIQUES = 4
@@ -806,7 +812,6 @@ export const CAROUSEL_LOCK_RETENTION_DELAY = 60000
 
 export const QUICK_CLAW_COMPENSATION_STAGE = 12
 
-// extra picking-phase time on a blessing selection stage, in ms
 export const BLESSING_SELECTION_EXTRA_TIME = 30000
 
 export const QUEST_INDECISION_SYNERGIES_TARGET = 3
@@ -872,9 +877,6 @@ export const SINGULARITY_II_STAGES = [10, 15, 20, 25]
 
 export const CURSOLA_SELL_PRICE = 18
 
-/* the treasure marker is the gold-coin burst rather than the Light spot, so it
-   reads as buried loot. Swap the anim key for DIG, PAYDAY or ZYGARDE_CELL to
-   try another look; it only needs to be an anim declared in the abilities atlas */
 export const TREASURE_TRAIL_HIGHLIGHT_ANIM = "GOLD_RUSH"
 export const TREASURE_TRAIL_HIGHLIGHT_ALPHA = 0.55
 // half the Light cell's scale of 2, so it sits inside a tile rather than over it
@@ -987,8 +989,6 @@ export const HERO_BLESSING_MOVES_REGION: Blessing[] = [
   Blessing.FROST_BURST
 ]
 
-/* hero blessings that seed the shared pool with their Pokemon, exactly as an
-   additional pick would */
 /* these hero blessings keep their state on the simulation rather than on the
    unit, so a reinforcement crossing into the partner's fight cannot bring them
    along. It arrives as an ordinary unit instead of a hero that does nothing */

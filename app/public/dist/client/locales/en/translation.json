@@ -4651,6 +4651,7 @@
 		"smeargle_pack_hint": "Open the booster, then pick a Pokémon to be your starter",
 		"smeargle_pack_reveal": "Open the booster",
 		"free_slot_hint": "You must have one free slot on the bench, or two for Duos",
+		"blessing_refused_hint": "This wish cannot be granted right now. Choose another one",
 		"more_choices": "{{count}} more choice(s) after this one!"
 	},
 	"blessing_tier": {

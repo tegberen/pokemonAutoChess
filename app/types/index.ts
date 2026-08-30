@@ -158,7 +158,8 @@ export enum Transfer {
   SELECT_PARTNER = "SELECT_PARTNER",
   ARMORY_GIFT = "ARMORY_GIFT",
   DEV = "DEV",
-  SHOW_OFF = "SHOW_OFF"
+  SHOW_OFF = "SHOW_OFF",
+  BLESSING_REFUSED = "BLESSING_REFUSED"
 }
 
 export enum ReadWriteMode {

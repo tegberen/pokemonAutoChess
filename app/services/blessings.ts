@@ -78,7 +78,9 @@ import {
   MOVE_TUTOR_MAX_PP,
   PLUNDER_GOLD_MULTIPLIER,
   QUEST_ABSORB_DAMAGE_BLOCKED_TARGET,
+  QUEST_ASCEND_POKEMONS,
   QUEST_CRIT_POWER_TARGET,
+  QUEST_EVOLVE_II_RARES_GRANTED,
   QUEST_EVOLVE_II_TARGET,
   QUEST_INDECISION_SYNERGIES_TARGET,
   QUEST_PILLAGE_GOLD_TARGET,
@@ -87,6 +89,7 @@ import {
   RAINBOW_HOUR_EEVEELUTIONS_TARGET,
   RAINBOW_HOUR_FOSSIL_STONES,
   RAINBOW_HOUR_GOLD_REWARD,
+  ROCKY_BEGINNINGS_POKEMONS,
   SELECTIVE_GENETICS_BABIES_GRANTED,
   SELECTIVE_GENETICS_GOLDEN_EGG_CHANCE,
   SELECTIVE_GENETICS_MAX_COST,
@@ -95,6 +98,7 @@ import {
   SINGULARITY_OPTIONS,
   STARTER_CHOICE_EXTRA_ROUNDS,
   STARTER_CHOICE_OPTIONS,
+  STARTER_PACK_CONTENT,
   SYNARCH_GEMS_PER_UNIQUE,
   TRASH_TO_TREASURE_ROUNDS_BY_STAR,
   TRASH_TO_TREASURE_TRASH_GRANTED_MAX,
@@ -158,11 +162,6 @@ const BAG_OF_SWEETS_AMOUNT = 10
 const BANANA_BUSINESS_NANAB_BERRIES = 3
 const WOBBUFFETS_SILVER_PRIZE_RECYCLE_TICKETS = 2
 const TREASURE_HUNT_I_GEMS = 2
-const STARTER_PACK_CONTENT: { rarity: Rarity; stars: number }[] = [
-  { rarity: Rarity.COMMON, stars: 2 },
-  { rarity: Rarity.UNCOMMON, stars: 1 },
-  { rarity: Rarity.RARE, stars: 1 }
-]
 const NUGGET_GOLD_GAINED = 15
 const TREASURE_HUNT_II_GEMS = 3
 const GIMMIGHOULS_TREASURE_COINS = 2
@@ -174,7 +173,6 @@ const POTION_LIFE_HEALED = 15
 const TRANSFORM_STAGE = 20
 const TAXES_GOLD_GAINED = 7
 const TAXES_GOLD_TAKEN_FROM_OTHERS = 1
-const ROCKY_BEGINNINGS_POKEMONS = 2
 const BABYLESS_STAGE = 14
 const CINCCINOS_GIFTS_III_CRAFTED_ITEMS = 2
 const ITEMS_CRAFTED_FROM_SILK_SCARF = (
@@ -345,7 +343,6 @@ function giftUncommonsOfSynergy(
   )
 }
 
-// every item blessing does the same thing on pick: hand over its item
 function itemBlessingEffects() {
   const grants = Object.entries(ITEM_GRANTED_BY_BLESSING) as [Blessing, Item][]
   return Object.fromEntries(
@@ -670,7 +667,6 @@ export function applyWaterFountain(
   const newMap = pickRandomIn(
     WATER_FOUNTAIN_REGIONS.filter((map) => map !== previousMap)
   )
-  // same travel sequence as the Lapras Passport item
   room?.broadcast(Transfer.PRELOAD_MAPS, [newMap])
   player.spawnWanderingPokemon({
     pkm: Pkm.LAPRAS,
@@ -1048,7 +1044,6 @@ function moveToRegionWherePokemonIsFound(
   )
   if (candidateMaps.length === 0) return
 
-  // same travel sequence as the Lapras Passport item
   const newMap = pickRandomIn(candidateMaps)
   room?.broadcast(Transfer.PRELOAD_MAPS, [newMap])
   player.spawnWanderingPokemon({
@@ -1110,7 +1105,6 @@ export function grantRainbowHourEevee(player: Player, craftedItem: Item) {
   giftPokemonIfBenchHasRoom(player, Pkm.EEVEE)
 }
 
-/* the bounty is checked whenever the board changes, and pays out once */
 export function checkRainbowHourReward(player: Player) {
   if (
     player.rainbowHourRewarded ||
@@ -1172,7 +1166,6 @@ function regionSynergies(player: Player): Synergy[] {
     : (RegionDetails[player.map]?.synergies ?? [])
 }
 
-/* called from every place that moves a player to a new region */
 export function grantRegionalTreasuresOnRegionChange(player: Player) {
   if (player.blessings?.includes(Blessing.REGIONAL_TREASURES)) {
     grantRegionalGem(player)
@@ -1190,7 +1183,6 @@ export function giftStarterChoiceCopy(player: Player): boolean {
   return giftPokemonIfBenchHasRoom(player, player.starterChoicePokemon)
 }
 
-/* called at every round start for the recurring halves of chunk E */
 export function applyRecurringBlessingGrants(player: Player, state: GameState) {
   if (player.starterChoiceRoundsLeft > 0 && giftStarterChoiceCopy(player)) {
     player.starterChoiceRoundsLeft -= 1
@@ -1436,7 +1428,6 @@ const SHARD_DAMAGE_PER_GRANT = 12
 const QUEST_REROLL_FREE_ROLLS = 10
 const QUEST_EPIC_EXPERIENCE = 6
 const QUEST_EXPAND_EXPERIENCE = 10
-const QUEST_ASCEND_POKEMONS = 3
 
 const blessingQuestConditions: {
   [blessing in Blessing]?: (player: Player) => boolean
@@ -2358,7 +2349,6 @@ export const blessingEffectService: {
     )
     if (amorphousMaps.length === 0) return true
 
-    // same travel sequence as the Lapras Passport item
     const newMap = pickRandomIn(amorphousMaps)
     room?.broadcast(Transfer.PRELOAD_MAPS, [newMap])
     player.spawnWanderingPokemon({
@@ -2525,12 +2515,18 @@ export const blessingEffectService: {
   },
 
   [Blessing.QUEST_EVOLVE_II]: (player) => {
+    if (
+      getFreeSpaceOnBench(player.board) <
+      1 + QUEST_EVOLVE_II_RARES_GRANTED
+    ) {
+      return false
+    }
     giftPokemonIfBenchHasRoom(player, Pkm.EEVEE)
     const rares = PRECOMPUTED_POKEMONS_PER_RARITY.RARE.filter(
       (pkm) =>
         getPokemonData(pkm).stars === 1 && player.canFindRegionalPokemon(pkm)
     )
-    pickNRandomIn(rares, 2).forEach((pkm) =>
+    pickNRandomIn(rares, QUEST_EVOLVE_II_RARES_GRANTED).forEach((pkm) =>
       giftPokemonIfBenchHasRoom(player, pkm)
     )
     return true

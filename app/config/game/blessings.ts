@@ -1,12 +1,21 @@
 import { SynergyTiersThresholds } from "../../config"
 import type Player from "../../models/colyseus-models/player"
 import {
+  BABY_OPENER_BABIES_GRANTED,
   BLESSING_SELECTION_STAGES,
   Blessing,
   BlessingTier,
   GREEDY_WISH_PRISMATIC_GOLD,
   ITEM_BLESSING_STAGES_OVERRIDE,
-  ITEM_GRANTED_BY_BLESSING
+  ITEM_GRANTED_BY_BLESSING,
+  LANGUAGE_BARRIER_UNOWNS_GRANTED,
+  MIX_AND_MATCH_I_UNIQUES,
+  MIX_AND_MATCH_II_UNIQUES,
+  QUEST_ASCEND_POKEMONS,
+  QUEST_EVOLVE_II_RARES_GRANTED,
+  ROCKY_BEGINNINGS_POKEMONS,
+  SELECTIVE_GENETICS_BABIES_GRANTED,
+  STARTER_PACK_CONTENT
 } from "../../types/enum/Blessing"
 import { DungeonPMDO } from "../../types/enum/Dungeon"
 import { Rarity } from "../../types/enum/Game"
@@ -22,6 +31,9 @@ export interface BlessingDefinition {
   availableAtStages: number[]
   icon: string
   grantsPokemonImmediately: boolean
+  // free bench slots the grant needs, when more than the one
+  // grantsPokemonImmediately already implies
+  benchSlotsRequired?: number
   synergy?: Synergy
   isAvailable?: (player: Player, stage: number) => boolean
   family?: BlessingFamily
@@ -273,6 +285,7 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     availableAtStages: [12],
     icon: "mix_match",
     grantsPokemonImmediately: true,
+    benchSlotsRequired: MIX_AND_MATCH_I_UNIQUES,
     /* filters the candidate rather than shrinking the pool, so a selection can
        still always fill 3 options */
     isAvailable: (player: Player) =>
@@ -282,7 +295,8 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     tier: BlessingTier.PRISMATIC,
     availableAtStages: [12],
     icon: "mix_match",
-    grantsPokemonImmediately: true
+    grantsPokemonImmediately: true,
+    benchSlotsRequired: MIX_AND_MATCH_II_UNIQUES
   },
   [Blessing.WAITING_GAME]: {
     tier: BlessingTier.GOLD,
@@ -392,7 +406,9 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     tier: BlessingTier.GOLD,
     availableAtStages: [12],
     icon: "trash_to_treasure",
-    grantsPokemonImmediately: true
+    grantsPokemonImmediately: true,
+    // a Trubbish and a Beldum
+    benchSlotsRequired: 2
   },
   [Blessing.CHARGING_MY_BUG]: {
     tier: BlessingTier.SILVER,
@@ -506,7 +522,8 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     tier: BlessingTier.PRISMATIC,
     availableAtStages: [4],
     icon: "ascend_quest",
-    grantsPokemonImmediately: true
+    grantsPokemonImmediately: true,
+    benchSlotsRequired: QUEST_ASCEND_POKEMONS
   },
   [Blessing.CHARGING_UP]: {
     tier: BlessingTier.SILVER,
@@ -592,7 +609,8 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     tier: BlessingTier.SILVER,
     availableAtStages: [4],
     icon: "gift_box",
-    grantsPokemonImmediately: true
+    grantsPokemonImmediately: true,
+    benchSlotsRequired: STARTER_PACK_CONTENT.length
   },
   [Blessing.NUGGET]: {
     tier: BlessingTier.GOLD,
@@ -872,13 +890,15 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     tier: BlessingTier.SILVER,
     availableAtStages: [4],
     icon: "nest_eggs",
-    grantsPokemonImmediately: true
+    grantsPokemonImmediately: true,
+    benchSlotsRequired: BABY_OPENER_BABIES_GRANTED
   },
   [Blessing.SELECTIVE_GENETICS]: {
     tier: BlessingTier.GOLD,
     availableAtStages: [12],
     icon: "dna_string",
     grantsPokemonImmediately: true,
+    benchSlotsRequired: SELECTIVE_GENETICS_BABIES_GRANTED,
     synergy: Synergy.BABY
   },
   [Blessing.REPLICATOR]: {
@@ -970,6 +990,7 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "omega",
     grantsPokemonImmediately: true,
+    benchSlotsRequired: LANGUAGE_BARRIER_UNOWNS_GRANTED,
     synergy: Synergy.PSYCHIC
   },
   [Blessing.MOVE_TUTOR]: {
@@ -1446,7 +1467,8 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     tier: BlessingTier.PRISMATIC,
     availableAtStages: [4],
     icon: "evolve_two_quest",
-    grantsPokemonImmediately: true
+    grantsPokemonImmediately: true,
+    benchSlotsRequired: 1 + QUEST_EVOLVE_II_RARES_GRANTED
   },
   [Blessing.IMPENDING_DOOM]: {
     tier: BlessingTier.PRISMATIC,
@@ -2014,6 +2036,7 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     availableAtStages: [4],
     icon: "rock",
     grantsPokemonImmediately: true,
+    benchSlotsRequired: ROCKY_BEGINNINGS_POKEMONS,
     synergy: Synergy.ROCK
   },
   [Blessing.BABYLESS]: {
@@ -2118,7 +2141,6 @@ export function rollBlessingTierForStage(
   return randomWeighted(tierChances) ?? BlessingTier.SILVER
 }
 
-/* the tier a pending wish would upgrade to, without spending it */
 export function peekGreedyWishTier(
   player: Player,
   tier: BlessingTier

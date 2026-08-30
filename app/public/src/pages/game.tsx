@@ -84,6 +84,7 @@ import {
   setShopLocked,
   setSpecialGameRule,
   setSpectatorCount,
+  blessingRefused,
   setStageLevel,
   setWeatherThreshold,
   setStreak,
@@ -624,6 +625,12 @@ export default function Game() {
       })
 
       room.onMessage(Transfer.PLAYER_INCOME, showMoneyToast)
+
+      /* releases the card the pick UI already marked as picked, and lets it
+         show the free slot hint under the cards */
+      room.onMessage(Transfer.BLESSING_REFUSED, (choiceId: string) =>
+        dispatch(blessingRefused(choiceId))
+      )
 
       room.onMessage(Transfer.BOARD_EVENT, (event: IBoardEvent) => {
         if (gameContainer.game) {

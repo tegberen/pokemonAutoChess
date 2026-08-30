@@ -100,15 +100,22 @@ export default function GameChoice() {
   )
 
   /* the pick state must not outlive its selection: left set, it renders the next
-     selection's cards already dimmed and refuses every click */
+     selection's cards already dimmed and refuses every click. A refused Wish
+     keeps the same choice, so the refusal releases the card too */
   const currentChoiceId = choices[0]?.id
+  const blessingRefusedCount = useAppSelector(
+    (state) => state.game.blessingRefusedCount
+  )
+  const blessingRefusedChoiceId = useAppSelector(
+    (state) => state.game.blessingRefusedChoiceId
+  )
   useEffect(() => {
     setPickedBlessingIndex(null)
     if (blessingPickTimer.current) {
       clearTimeout(blessingPickTimer.current)
       blessingPickTimer.current = null
     }
-  }, [currentChoiceId])
+  }, [currentChoiceId, blessingRefusedCount])
 
   useEffect(() => {
     previousBlessings.current = [...(choices[0]?.blessings ?? [])]
@@ -216,7 +223,8 @@ export default function GameChoice() {
                 previousBlessings.current[index] !== blessing
               const blockedByFullBench =
                 blessingDefinition.grantsPokemonImmediately &&
-                (board?.getBenchSize() ?? 0) >= 8
+                8 - (board?.getBenchSize() ?? 0) <
+                  (blessingDefinition.benchSlotsRequired ?? 1)
               return (
               <div
                 key={`blessing-slot-${index}`}
@@ -684,6 +692,10 @@ export default function GameChoice() {
 
         {isBenchFull && choice.pokemons.length > 0 && (
           <p>{t("player_choices.free_slot_hint")}</p>
+        )}
+
+        {blessingRefusedChoiceId === currentChoiceId && (
+          <p>{t("player_choices.blessing_refused_hint")}</p>
         )}
       </div>
 

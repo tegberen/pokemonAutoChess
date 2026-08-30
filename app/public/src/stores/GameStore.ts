@@ -84,6 +84,11 @@ export interface GameStateStore {
   doubleUpChampions: ILeaderboardInfo[]
   smeargleScribbleChampion: ILeaderboardInfo[]
   spectatorCount: number
+  /* bumped every time the server refuses a Wish, so the pick UI knows to release
+     the card it optimistically marked as picked, even on a repeated refusal */
+  blessingRefusedCount: number
+  // which selection was refused, so the hint only shows on that one
+  blessingRefusedChoiceId: string | null
 }
 
 const initialState: GameStateStore = {
@@ -129,7 +134,9 @@ const initialState: GameStateStore = {
   podium: new Array<ILeaderboardInfo>(),
   doubleUpChampions: new Array<ILeaderboardInfo>(),
   smeargleScribbleChampion: new Array<ILeaderboardInfo>(),
-  spectatorCount: 0
+  spectatorCount: 0,
+  blessingRefusedCount: 0,
+  blessingRefusedChoiceId: null
 }
 
 export const gameSlice: Slice<GameStateStore> = createSlice({
@@ -426,6 +433,11 @@ export const gameSlice: Slice<GameStateStore> = createSlice({
       state.spectatorCount = action.payload
     },
 
+    blessingRefused: (state, action: PayloadAction<string>) => {
+      state.blessingRefusedCount += 1
+      state.blessingRefusedChoiceId = action.payload
+    },
+
     leaveGame: () => initialState
   }
 })
@@ -474,7 +486,8 @@ export const {
   setPodium,
   setDoubleUpChampions,
   setSmeargleScribbleChampion,
-  setSpectatorCount
+  setSpectatorCount,
+  blessingRefused
 } = gameSlice.actions
 
 export default gameSlice.reducer

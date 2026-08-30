@@ -1819,7 +1819,14 @@ export default class GameRoom extends Room<{ state: GameState }> {
 
       const applyEffect = blessingEffectService[blessing]
       const moneyBeforeBlessing = player.money
-      if (applyEffect && applyEffect(player, this.state, this) === false) return
+      if (applyEffect && applyEffect(player, this.state, this) === false) {
+        /* the Wish could not be granted, most often for lack of bench space.
+           Without this the card just goes dead and the player is left guessing */
+        this.clients
+          .find((cli) => cli.auth.uid === player.id)
+          ?.send(Transfer.BLESSING_REFUSED, choice.id)
+        return
+      }
       const moneyGained = player.money - moneyBeforeBlessing
       if (moneyGained > 0) {
         this.clients
