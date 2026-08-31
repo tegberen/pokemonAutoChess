@@ -160,6 +160,8 @@ export function joinGame(
   room: Room<GameState>,
   reconnectionTokenExpirationTimeInSeconds?: number
 ) {
+  // without this, reconnecting looks like quitting and the player loses the game
+  leaveRoom("game", true)
   leaveAllRooms()
   rooms.game = room
   localStore.set(
