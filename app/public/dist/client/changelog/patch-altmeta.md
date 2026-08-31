@@ -191,12 +191,12 @@ At the beginning of each battle, TIGHT_BELT is replaced by 2 random items. The h
 
 - Fossil unlock pool: Yanma, Archen, Clamperl.
 - Exploud: has MONSTER
-- Pawmot: has FIELD
+- Pawmot: has FIELD, buffed ability
 - Pangoro: has WILD
 - Sharpedo: has WILD
 - Cofagrigus: GHOST / HUMAN. Evolves from Yamask.
 - Runerigus: has ROCK. Evolves from Galarian Yamask.
-- Primarina: regional pool (WATER / FAIRY)
+- Primarina: regular pool
 - Salazzle: RANGE 3, has MONSTER
 - Dragapult: regional pool (DRAGON / GHOST) , has FLYING
 - Lickilicky: regional pool (NORMAL / GOURMET)
@@ -206,7 +206,7 @@ At the beginning of each battle, TIGHT_BELT is replaced by 2 random items. The h
 - Swampert: has AQUATIC
 
 - Toxtricity: form based on the dominant synergy between ELECTRIC and POISON
-- Trevenant: utility role
+- Trevenant: changed ability
 
 ### Epic
 

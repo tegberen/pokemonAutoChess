@@ -11,9 +11,9 @@
 
 .wiki-blessings-filters {
   position: sticky;
-  /* The Wiki scroll panel has 0.5em top padding. Pull the sticky toolbar into
+  /* The Wiki scroll panel has 0.35em top padding. Pull the sticky toolbar into
      that inset so it anchors flush beneath the main Wiki tabs. */
-  top: -0.5em;
+  top: -0.35em;
   z-index: 2;
   display: flex;
   flex-wrap: wrap;
@@ -66,7 +66,6 @@
     color-mix(in srgb, var(--color-fg-primary) 30%, transparent);
   font-size: 0.85em;
 }
-
 
 /* the key badge sits inside the field and gives way as soon as there is text */
 /* auto margin keeps it pinned right whether or not the stage scope is showing */

@@ -21,19 +21,23 @@ import {
   PokemonFilters
 } from "../pokemon-filters/pokemon-filters"
 import { SynergyTierDescription } from "../synergy/synergy-tier-description"
+import { SynergyOverlaps } from "../synergy-overlaps/synergy-overlaps"
+import WikiAwakening from "./wiki-awakening"
 import {
   WikiFossilRestorations,
   WikiFossilUnlocks
 } from "./wiki-fossil-unlocks"
 import { WikiLetterDelivery } from "./wiki-letter-delivery"
-import { SynergyOverlaps } from "../synergy-overlaps/synergy-overlaps"
 
 export default function WikiTypes({
-  initialSynergy
+  initialSynergy,
+  onGoToWeather
 }: {
   initialSynergy?: Synergy
+  onGoToWeather?: () => void
 }) {
-  const { t: tBase } = useTranslation(); const t = tBase as any
+  const { t: tBase } = useTranslation()
+  const t = tBase as any
   return (
     <Tabs
       className="wiki-types"
@@ -56,7 +60,7 @@ export default function WikiTypes({
       {(Object.keys(Synergy) as Synergy[]).map((r) => {
         return (
           <TabPanel key={r}>
-            <WikiType type={r} />
+            <WikiType type={r} onGoToWeather={onGoToWeather} />
           </TabPanel>
         )
       })}
@@ -67,8 +71,9 @@ export default function WikiTypes({
   )
 }
 
-export function WikiType(props: { type: Synergy }) {
-  const { t: tBase } = useTranslation(); const t = tBase as any
+export function WikiType(props: { type: Synergy; onGoToWeather?: () => void }) {
+  const { t: tBase } = useTranslation()
+  const t = tBase as any
   const [preferences] = usePreferences()
   const [overlap, setOverlap] = useState<Synergy | null>(null)
   const synergyTiers = SynergyTiers[props.type]
@@ -97,8 +102,7 @@ export function WikiType(props: { type: Synergy }) {
         if (a.regional !== b.regional) return +a.regional - +b.regional
         /* keys run most- to least-significant, so comparing unlockable before
            additional is what orders the groups regular, additional, unlockable */
-        if (a.unlockable !== b.unlockable)
-          return +a.unlockable - +b.unlockable
+        if (a.unlockable !== b.unlockable) return +a.unlockable - +b.unlockable
         if (a.additional !== b.additional) return +a.additional - +b.additional
         return a.index.localeCompare(b.index)
       })
@@ -141,6 +145,13 @@ export function WikiType(props: { type: Synergy }) {
         </>
       )}
 
+      {props.type === Synergy.ROCK && (
+        <>
+          <hr />
+          <WikiAwakening onGoToWeather={props.onGoToWeather} />
+        </>
+      )}
+
       <hr />
       <div style={{ float: "right", justifyItems: "end" }}>
         <PokemonFilters />
@@ -172,6 +183,9 @@ export function WikiType(props: { type: Synergy }) {
                       >
                         <img
                           src={getPortraitSrc(p.index)}
+                          decoding="async"
+                          width={40}
+                          height={40}
                           data-tooltip-id="game-pokemon-detail-tooltip"
                           data-tooltip-content={p.name}
                         />
@@ -236,7 +250,8 @@ export function WikiAllTypes() {
     ) // put first stage first
   }
 
-  const { t: tBase } = useTranslation(); const t = tBase as any
+  const { t: tBase } = useTranslation()
+  const t = tBase as any
   const types = [...SynergyArray, "protean"] as const
 
   return (
@@ -270,6 +285,9 @@ export function WikiAllTypes() {
                     >
                       <img
                         src={getPortraitSrc(p.index)}
+                        decoding="async"
+                        width={40}
+                        height={40}
                         data-tooltip-id="game-pokemon-detail-tooltip"
                         data-tooltip-content={p.name}
                       />

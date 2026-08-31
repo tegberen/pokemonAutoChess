@@ -99,7 +99,12 @@ export default function WikiWeather({
                       data-tooltip-id="game-pokemon-detail-tooltip"
                       data-tooltip-content={p.name}
                     >
-                      <img src={getPortraitSrc(p.index)} />
+                      <img
+                        src={getPortraitSrc(p.index)}
+                        decoding="async"
+                        width={40}
+                        height={40}
+                      />
                     </div>
                   </li>
                 ))}
@@ -127,7 +132,12 @@ export default function WikiWeather({
                           data-tooltip-id="game-pokemon-detail-tooltip"
                           data-tooltip-content={p.name}
                         >
-                          <img src={getPortraitSrc(p.index)} />
+                          <img
+                            src={getPortraitSrc(p.index)}
+                            decoding="async"
+                            width={40}
+                            height={40}
+                          />
                         </div>
                       </li>
                     ))}

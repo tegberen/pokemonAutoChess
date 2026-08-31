@@ -1,7 +1,136 @@
 #wiki-page {
+  --wiki-index-bg: color-mix(in srgb, var(--color-bg-primary) 72%, #000 28%);
+  --wiki-topic-bg: color-mix(
+    in srgb,
+    var(--color-bg-tertiary) 45%,
+    var(--color-bg-primary)
+  );
+  --wiki-subnav-bg: color-mix(
+    in srgb,
+    var(--color-bg-tertiary) 24%,
+    transparent
+  );
   color: var(--color-fg-primary);
   width: min(95vw, 1800px);
   max-width: 100%;
+}
+
+#wiki-page .wiki-navigation {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  margin: 0.45em 0.5em 0;
+  padding: 0.35em 0.35em 0;
+  overflow: hidden;
+  background: var(--wiki-index-bg);
+  border: 1px solid color-mix(in srgb, var(--color-bg-tertiary) 75%, #000);
+  border-bottom: 3px solid var(--color-bg-tertiary);
+  border-radius: 8px 8px 4px 4px;
+  box-shadow: 0 3px 0 #00000028;
+}
+
+#wiki-page .wiki-index-heading {
+  align-self: center;
+  padding: 0.45em 1em 0.4em 0.65em;
+  color: var(--color-fg-secondary);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  cursor: default;
+  opacity: 0.75;
+  user-select: none;
+}
+
+#wiki-page .wiki-index-heading::after {
+  content: ":";
+}
+
+#wiki-page .wiki-section-list {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+#wiki-page .wiki-section {
+  position: relative;
+  padding: 0.45em 1em;
+  color: var(--color-fg-secondary);
+  background: transparent;
+  border: 0;
+  border-right: 1px solid var(--color-bg-tertiary);
+  border-radius: 0;
+  cursor: var(--cursor-hover);
+  transition:
+    color 120ms ease,
+    background-color 120ms ease;
+}
+
+#wiki-page .wiki-section:hover {
+  color: var(--color-fg-primary);
+  background: color-mix(in srgb, var(--color-bg-tertiary) 55%, transparent);
+}
+
+#wiki-page .wiki-section.is-active {
+  color: var(--color-fg-primary);
+  background: color-mix(in srgb, var(--color-bg-primary) 70%, transparent);
+  box-shadow: inset 0 -4px var(--color-fg-green);
+}
+
+#wiki-page .wiki-section > span {
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+#wiki-page .wiki-topic-list {
+  display: flex;
+  min-height: 2.4em;
+  margin: 0 0.5em;
+  padding: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  background: var(--wiki-topic-bg);
+  border-bottom: 3px solid
+    color-mix(in srgb, var(--color-bg-tertiary) 80%, #000);
+  border-radius: 0 0 6px 6px;
+  box-shadow: 0 2px 0 #00000020;
+}
+
+#wiki-page .wiki-topic-tab {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 0.3em;
+  margin: 0;
+  padding: 0.55em 0.5em;
+  background: transparent;
+  border: 0;
+  border-right: 1px solid var(--color-bg-tertiary);
+  border-radius: 0;
+  white-space: nowrap;
+}
+
+#wiki-page .wiki-topic-tab:hover {
+  background: color-mix(in srgb, var(--color-bg-tertiary) 55%, transparent);
+}
+
+#wiki-page .wiki-topic-tab.react-tabs__tab--selected {
+  background: color-mix(in srgb, var(--color-bg-primary) 70%, transparent);
+}
+
+#wiki-page .wiki-topic-tab.react-tabs__tab--selected::after {
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 3px;
+  background: var(--color-fg-green);
+}
+
+#wiki-page .wiki-topic-tab--hidden {
+  display: none;
+}
+
+#wiki-page .wiki-topic-tab > img {
+  width: 1.15em;
+  height: 1.15em;
 }
 
 #wiki-page h2 {
@@ -28,15 +157,134 @@
 }
 
 #wiki-page .wiki-types li[role="tab"] {
-  padding: 4px;
-  line-height: 40px;
-  min-width: 48px;
+  padding: 2px 3px;
+  line-height: 38px;
+  min-width: 44px;
   text-align: center;
+}
+
+#wiki-page :is(.wiki-types, .wiki-pokemons) > .react-tabs__tab-list {
+  display: flex;
+  flex-wrap: nowrap;
+  margin: 0 0.5em;
+  padding-left: 0.3em;
+  overflow-x: auto;
+  overflow-y: hidden;
+  background: var(--wiki-subnav-bg);
+  border: 1px solid color-mix(in srgb, var(--color-bg-tertiary) 75%, #000);
+  border-bottom: 2px solid
+    color-mix(in srgb, var(--color-bg-tertiary) 70%, #000);
+  border-radius: 6px;
+  box-shadow: 0 2px 0 #00000018;
+}
+
+#wiki-page
+  :is(.wiki-types, .wiki-pokemons)
+  > .react-tabs__tab-list
+  > .react-tabs__tab:first-child {
+  border-radius: 5px 0 0 5px;
+}
+
+#wiki-page
+  :is(.wiki-types, .wiki-pokemons)
+  > .react-tabs__tab-list
+  > .react-tabs__tab:last-child {
+  border-right: 0;
+  border-radius: 0 5px 5px 0;
+}
+
+#wiki-page
+  :is(.wiki-types, .wiki-pokemons)
+  > .react-tabs__tab-list
+  > .react-tabs__tab {
+  flex: 0 0 auto;
+  margin: 0;
+  background: transparent;
+  border: 0;
+  border-right: 1px solid var(--color-bg-tertiary);
+  border-radius: 0;
+}
+
+#wiki-page
+  :is(.wiki-types, .wiki-pokemons)
+  > .react-tabs__tab-list
+  > .react-tabs__tab:hover {
+  background: color-mix(in srgb, var(--color-bg-tertiary) 55%, transparent);
+}
+
+#wiki-page
+  :is(.wiki-types, .wiki-pokemons)
+  > .react-tabs__tab-list
+  > .react-tabs__tab--selected {
+  background: color-mix(in srgb, var(--color-bg-primary) 70%, transparent);
+}
+
+#wiki-page
+  :is(.wiki-types, .wiki-pokemons)
+  > .react-tabs__tab-list
+  > .react-tabs__tab--selected::after {
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  background: var(--color-fg-green);
+}
+
+#wiki-page .wiki-pokemons > .filters {
+  float: none;
+  justify-content: flex-end;
+  min-height: 2.25em;
+  margin-right: 0.5em;
+  margin-left: 0.5em;
+  padding: 0.3em 0.5em;
+  background: var(--wiki-subnav-bg);
+  border-bottom: 1px solid var(--color-bg-tertiary);
+}
+
+#wiki-page :is(.wiki-types, .wiki-pokemons) > .react-tabs__tab-panel--selected {
+  padding-right: 1em;
+  padding-left: 1em;
+  border-top: 2px solid #00000030;
+}
+
+#wiki-page .wiki-types > .react-tabs__tab-panel--selected > div {
+  padding-right: 0 !important;
+  padding-left: 0 !important;
+}
+
+#wiki-page
+  > .react-tabs
+  > .react-tabs__tab-panel--selected
+  > :is(
+    #wiki-items,
+    #wiki-ability,
+    .wiki-status,
+    #wiki-weather,
+    .wiki-blessings,
+    #wiki-stages,
+    .wiki-double-up,
+    #wiki-town,
+    #wiki-regions,
+    .wiki-stat,
+    #wiki-glossary,
+    #wiki-data,
+    .wiki-faq,
+    .wiki-tutorials
+  ) {
+  margin-right: 0.5em;
+  margin-left: 0.5em;
+}
+
+#wiki-page .wiki-types > .react-tabs__tab-panel--selected > div > h2 {
+  margin-top: 0.35em;
+  padding: 0 0 0.3em;
+  border-bottom: 3px solid
+    color-mix(in srgb, var(--color-bg-tertiary) 75%, #000);
 }
 
 #wiki-page > .react-tabs > .react-tabs__tab-panel {
   height: 75vh;
-  padding: 0.5em 0 0 0;
+  padding: 0.35em 0 0;
   overflow-y: auto;
 }
 
@@ -602,7 +850,7 @@
 }
 
 #wiki-data {
-  padding: 0 0.5em;
+  padding: 0;
 }
 
 #wiki-data table,
@@ -674,11 +922,33 @@
   }
 }
 
+@media (width <= 720px) {
+  #wiki-page .wiki-navigation {
+    grid-template-columns: 1fr;
+  }
+
+  #wiki-page .wiki-index-heading {
+    justify-self: start;
+    padding: 0.25em 0.5em;
+  }
+
+  #wiki-page .wiki-section-list {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scroll-snap-type: x proximity;
+  }
+
+  #wiki-page .wiki-section {
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+  }
+}
+
 #wiki-page .wiki-double-up {
   display: flex;
   flex-direction: column;
   gap: 1em;
-  padding: 0.5em;
+  padding: 0.5em 0;
 }
 
 #wiki-page .wiki-double-up h2 {

@@ -119,6 +119,7 @@ export function WikiPokemon(props: {
       }),
     [
       props.rarity,
+      props.showsNonPokemons,
       preferences.showAdditionalPool,
       preferences.showRegionalPool,
       preferences.showSpecialPool,
@@ -135,9 +136,11 @@ export function WikiPokemon(props: {
     >
       <TabList>
         {pokemons.map((pkm) => {
+          // portraits are 624 bytes each, lazy loading only risks leaving the
+          // whole rarity strip blank when the tab is swapped
           return (
             <Tab key={"title-" + pkm} className="react-tabs__tab icon-tab">
-              <PokemonPortrait portrait={PkmIndex[pkm]} />
+              <PokemonPortrait portrait={PkmIndex[pkm]} loading="eager" />
             </Tab>
           )
         })}
@@ -156,27 +159,38 @@ export function WikiPokemon(props: {
 
 export function WikiAllPokemons() {
   const [preferences] = usePreferences()
-  const pokemons = filterPokemonsAccordingToPreferences(
-    Object.values(Pkm),
-    preferences
-  )
-    .map((p) => getPokemonData(p))
-    .sort((a, b) => a.stars - b.stars) // put first stage first
+  const pokemonsPerRarity = useMemo(() => {
+    const pokemons = filterPokemonsAccordingToPreferences(
+      Object.values(Pkm),
+      preferences
+    )
+      .map((p) => getPokemonData(p))
+      .sort((a, b) => a.stars - b.stars) // put first stage first
 
-  const pokemonsPerRarity = groupBy(pokemons, (p) => p.rarity)
-  for (const rarity in pokemonsPerRarity) {
-    pokemonsPerRarity[rarity].sort((a: IPokemonData, b: IPokemonData) => {
-      if (a.regional !== b.regional) return +a.regional - +b.regional
-      /* keys run most- to least-significant, so comparing unlockable before
-         additional is what orders the groups regular, additional, unlockable */
-      if (a.unlockable !== b.unlockable)
-        return +a.unlockable - +b.unlockable
-      if (a.additional !== b.additional) return +a.additional - +b.additional
-      return PkmFamily[a.name] === PkmFamily[b.name]
-        ? a.stars - b.stars
-        : PkmIndex[PkmFamily[a.name]].localeCompare(PkmIndex[PkmFamily[b.name]])
-    })
-  }
+    const perRarity = groupBy(pokemons, (p) => p.rarity)
+    for (const rarity in perRarity) {
+      perRarity[rarity].sort((a: IPokemonData, b: IPokemonData) => {
+        if (a.regional !== b.regional) return +a.regional - +b.regional
+        /* keys run most- to least-significant, so comparing unlockable before
+           additional is what orders the groups regular, additional, unlockable */
+        if (a.unlockable !== b.unlockable) return +a.unlockable - +b.unlockable
+        if (a.additional !== b.additional) return +a.additional - +b.additional
+        return PkmFamily[a.name] === PkmFamily[b.name]
+          ? a.stars - b.stars
+          : PkmIndex[PkmFamily[a.name]].localeCompare(
+              PkmIndex[PkmFamily[b.name]]
+            )
+      })
+    }
+    return perRarity
+  }, [
+    preferences.showAdditionalPool,
+    preferences.showRegionalPool,
+    preferences.showSpecialPool,
+    preferences.showRegularPool,
+    preferences.showEvolutions,
+    preferences.showAltForms
+  ])
 
   return (
     <>
@@ -198,7 +212,12 @@ export function WikiAllPokemons() {
                       data-tooltip-id="game-pokemon-detail-tooltip"
                       data-tooltip-content={p.name}
                     >
-                      <img src={getPortraitSrc(p.index)} />
+                      <img
+                        src={getPortraitSrc(p.index)}
+                        decoding="async"
+                        width={40}
+                        height={40}
+                      />
                     </li>
                   )
                 })}
