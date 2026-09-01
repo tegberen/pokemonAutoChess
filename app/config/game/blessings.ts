@@ -22,7 +22,6 @@ import { Rarity } from "../../types/enum/Game"
 import { SpecialGameRule } from "../../types/enum/SpecialGameRule"
 import { Synergy } from "../../types/enum/Synergy"
 import { randomWeighted, shuffleArray } from "../../utils/random"
-import { isWishFestivalFinale } from "./events"
 
 export type BlessingFamily = "BADGE" | "CREST" | "CROWN"
 
@@ -2090,30 +2089,15 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
 }
 
 const EARLY_BLESSING_TIER_CHANCES: { [tier in BlessingTier]: number } = {
-  [BlessingTier.SILVER]: 0.3,
-  [BlessingTier.GOLD]: 0.6,
+  [BlessingTier.SILVER]: 0.4,
+  [BlessingTier.GOLD]: 0.5,
   [BlessingTier.PRISMATIC]: 0.1
 }
 
 const LATE_BLESSING_TIER_CHANCES: { [tier in BlessingTier]: number } = {
-  [BlessingTier.SILVER]: 0.15,
-  [BlessingTier.GOLD]: 0.65,
+  [BlessingTier.SILVER]: 0.3,
+  [BlessingTier.GOLD]: 0.5,
   [BlessingTier.PRISMATIC]: 0.2
-}
-
-const WISH_FESTIVAL_FINALE_TIER_CHANCES: {
-  [stage: number]: { [tier in BlessingTier]: number }
-} = {
-  4: {
-    [BlessingTier.SILVER]: 0.1,
-    [BlessingTier.GOLD]: 0.2,
-    [BlessingTier.PRISMATIC]: 0.7
-  },
-  12: {
-    [BlessingTier.SILVER]: 0.1,
-    [BlessingTier.GOLD]: 0.5,
-    [BlessingTier.PRISMATIC]: 0.4
-  }
 }
 
 export const BlessingTierChanceByStage: {
@@ -2129,15 +2113,10 @@ export function rollBlessingTierForStage(
 ): BlessingTier {
   /* sandbox mode wants the real odds across the whole set, so only the
      under-test list derives its own */
-  const baseTierChances =
+  const tierChances =
     blessingsUnderTest.length > 0 && !BLESSING_SANDBOX_MODE
       ? tierChancesForBlessingsUnderTest(blessingsUnderTest)
       : (BlessingTierChanceByStage[stage] ?? EARLY_BLESSING_TIER_CHANCES)
-  const tierChances =
-    isWishFestivalFinale() &&
-    (blessingsUnderTest.length === 0 || BLESSING_SANDBOX_MODE)
-      ? (WISH_FESTIVAL_FINALE_TIER_CHANCES[stage] ?? baseTierChances)
-      : baseTierChances
   return randomWeighted(tierChances) ?? BlessingTier.SILVER
 }
 

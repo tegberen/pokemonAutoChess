@@ -3,9 +3,7 @@ import { useTranslation } from "react-i18next"
 import { useAppSelector } from "../../../hooks"
 import {
   getNextBlessingEventStart,
-  getNextWishFestivalFinaleStart,
   getNextScribbleWeekendStart,
-  getWishFestivalFinaleEnd,
   isBlessingEvent,
   isScribbleWeekend
 } from "../../../../../config"
@@ -33,9 +31,8 @@ type CalendarEvent = {
   name: string
   description: string
   image: string
-  variant: "whimsy" | "jirachi" | "jirachi_finale" | "smeargle" | "doubleup"
+  variant: "whimsy" | "jirachi" | "smeargle" | "doubleup"
   start: Date
-  end?: Date
 }
 
 function CalendarEventCard(props: Omit<CalendarEvent, "id"> & {
@@ -54,20 +51,11 @@ function CalendarEventCard(props: Omit<CalendarEvent, "id"> & {
           <img className="calendar-clock" src="assets/ui/clock.png" alt="" aria-hidden="true" />
           <div>
             <p>
-              {props.end
-                ? t("event_happening_now", {
-                    time: formatEventCountdown(props.end.getTime() - props.now.getTime())
-                  })
-                : t("event_starts_in", {
-                    time: formatEventCountdown(props.start.getTime() - props.now.getTime())
-                  })}
-            </p>
-            <time>
-              {formatDate(props.end ?? props.start, {
-                dateStyle: "long",
-                timeStyle: undefined
+              {t("event_starts_in", {
+                time: formatEventCountdown(props.start.getTime() - props.now.getTime())
               })}
-            </time>
+            </p>
+            <time>{formatDate(props.start, { dateStyle: "long", timeStyle: undefined })}</time>
           </div>
         </div>
       </div>
@@ -127,19 +115,6 @@ export function Calendar() {
       image: "",
       variant: "jirachi",
       start: getNextBlessingEventStart(now)
-    })
-  }
-
-  if (isBlessingEvent(now)) {
-    const finaleEnd = getWishFestivalFinaleEnd(now)
-    events.push({
-      id: "wish-festival-finale",
-      name: "Wish Festival Finale",
-      description: "Prismatic Wishes are granted more often.",
-      image: "",
-      variant: "jirachi_finale",
-      start: finaleEnd ? now : getNextWishFestivalFinaleStart(now),
-      end: finaleEnd ?? undefined
     })
   }
 
