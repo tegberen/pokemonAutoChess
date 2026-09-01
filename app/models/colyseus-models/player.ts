@@ -143,7 +143,7 @@ export default class Player extends Schema implements IPlayer {
   @type("string") opponentId: string = ""
   @type("string") opponentName: string = ""
   @type("string") opponentAvatar: string = ""
-  @type("string") opponentTitle: Title | "WILD" | "" = ""
+  @type("string") opponentTitle: Title | "WILD" | "TEACHER" | "" = ""
   @type("string") doubleUpPartnerId: string = ""
   @type("string") doubleUpTeamId: string = ""
   @type("uint8") doubleUpSendCooldown: number = 0

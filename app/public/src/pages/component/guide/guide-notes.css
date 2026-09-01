@@ -1,0 +1,71 @@
+/* The whole end card once the standings are gone, so the notes carry the page
+   rather than sitting beside a table. Capped in width because the panel is as
+   wide as the browser and a bullet running the full 1900px is unreadable. */
+.guide-notes {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(24em, 1fr));
+  gap: 1.25em;
+  align-items: start;
+  text-align: left;
+  max-width: 78rem;
+  margin: 1.5em auto 1em;
+  padding: 0 0.5em;
+}
+
+.guide-notes > section {
+  background-color: var(--color-bg-secondary);
+  border: var(--border-thin);
+  border-radius: 12px;
+  padding: 1em 1.25em 1.15em;
+  height: 100%;
+}
+
+/* The two headings are the only navigation on the page, so they read as labels
+   rather than as another sentence: small, spaced, and set off by a rule that
+   spans the card. */
+.guide-notes h3 {
+  margin: 0 0 0.75em;
+  padding-bottom: 0.5em;
+  border-bottom: var(--border-thin);
+  font-size: 0.95em;
+  font-weight: bold;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-fg-secondary);
+}
+
+.guide-notes ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9em;
+}
+
+/* Hanging bullets: the marker sits in the gutter so wrapped lines align under
+   the first word instead of under the dot. */
+.guide-notes li {
+  position: relative;
+  padding-left: 1.1em;
+  line-height: 1.5;
+  /* long-form prose, unlike the rest of this screen */
+  font-size: 1.05em;
+}
+
+.guide-notes li::before {
+  content: "";
+  position: absolute;
+  left: 0.1em;
+  top: 0.62em;
+  width: 0.4em;
+  height: 0.4em;
+  border-radius: 50%;
+  background-color: var(--color-fg-secondary);
+}
+
+/* the shared token renderer emits inline portraits and item icons, which drag
+   the line height around unless they are pinned to the text baseline */
+.guide-notes img {
+  vertical-align: middle;
+}

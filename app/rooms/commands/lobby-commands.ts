@@ -24,12 +24,15 @@ import { CloseCodes } from "../../types/enum/CloseCodes"
 import { EloRank } from "../../types/enum/EloRank"
 import {
   GameMode,
+  isGuideRoomRequest,
   type RoomRequest,
   WHIMSY_WEEKEND_REQUEST
 } from "../../types/enum/Game"
 import type { Language } from "../../types/enum/Language"
 import { PkmIndex } from "../../types/enum/Pokemon"
 import { Starters } from "../../types/enum/Starters"
+import type { Synergy } from "../../types/enum/Synergy"
+import { GuideLessons } from "../../core/guide/lessons"
 import type {
   IPokemonCollectionItemMongo,
   IUserMetadataMongo
@@ -672,6 +675,23 @@ export class JoinOrOpenRoomCommand extends Command<
     const user = this.room.users.get(client.auth.uid)
     if (!user) return
 
+    if (isGuideRoomRequest(gameMode)) {
+      // the picker greys out synergies without a lesson, but the request is
+      // still client input, so the lesson has to exist server side too
+      if (!(gameMode.synergy in GuideLessons)) {
+        client.send(Transfer.ALERT, "This guide is not available yet.")
+        return
+      }
+      // always a fresh solo room: a guide run is scripted around one player
+      return [
+        new OpenGameCommand().setPayload({
+          gameMode: GameMode.GUIDE,
+          client,
+          guideSynergy: gameMode.synergy
+        })
+      ]
+    }
+
     if (gameMode === WHIMSY_WEEKEND_REQUEST) {
       // the client hides the entry outside the window, but never trust its clock
       if (!isScribbleWeekend()) {
@@ -805,6 +825,7 @@ export class OpenGameCommand extends Command<
     minRank?: EloRank
     maxRank?: EloRank
     whimsy?: boolean
+    guideSynergy?: Synergy
   }
 > {
   async execute({
@@ -812,13 +833,15 @@ export class OpenGameCommand extends Command<
     client,
     minRank,
     maxRank,
-    whimsy
+    whimsy,
+    guideSynergy
   }: {
     gameMode: GameMode
     client: Client
     minRank?: EloRank
     maxRank?: EloRank
     whimsy?: boolean
+    guideSynergy?: Synergy
   }) {
     const user = this.room.users.get(client.auth.uid)
     if (!user) return
@@ -849,7 +872,8 @@ export class OpenGameCommand extends Command<
       password,
       ownerId,
       roomName,
-      whimsy: whimsy ?? false
+      whimsy: whimsy ?? false,
+      guideSynergy
     })
     client.send(Transfer.REQUEST_ROOM, newRoom.roomId)
   }

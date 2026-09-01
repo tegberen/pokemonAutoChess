@@ -38,7 +38,8 @@ import { PokemonAvatarModel } from "../../../../models/colyseus-models/pokemon-a
 import { getSynergyTier } from "../../../../models/colyseus-models/synergies"
 import PokemonFactory from "../../../../models/pokemon-factory"
 import { getPokemonData } from "../../../../models/precomputed/precomputed-pokemon-data"
-import { type PVEStage, PVEStages } from "../../../../models/pve-stages"
+import type { PVEStage } from "../../../../models/pve-stages"
+import { getPveStage } from "../../../../core/guide/guide-stage"
 import type GameState from "../../../../rooms/states/game-state"
 import {
   FlowerPots,
@@ -106,6 +107,18 @@ export enum BoardMode {
 export const SPECIAL_NPC_X = 1512
 export const SPECIAL_NPC_Y = 396 - 48 * 1.4
 
+/* The scene is 1950x1000 and scaled to FIT, so these are world coordinates. The
+   readable middle of it: clear of the left sidebar and the item column, of the
+   Effects and Battle Stats panels, of the lesson card docked under the stage
+   bar, and of the shop along the bottom. */
+const GUIDE_MESSAGE_MAX_WIDTH = 520
+const GUIDE_MESSAGE_AREA = {
+  left: 540,
+  right: 1740,
+  top: 470,
+  bottom: 830
+}
+
 export default class BoardManager {
   pokemons: Map<string, PokemonSprite>
   uid: string
@@ -133,6 +146,7 @@ export default class BoardManager {
   waterTierRendered = -1
   scribbleLabels: GameDialog[] = []
   berryTrees: BerryTree[] = []
+  guideMessage: GameObjects.Text | null = null
   flowerPots: Phaser.GameObjects.Sprite[] = []
   flowerPokemonsInPots: PokemonSprite[] = []
   mulchAmountText: Phaser.GameObjects.Text | null = null
@@ -466,8 +480,9 @@ export default class BoardManager {
       this.addSmeargle(this.specialGameRule)
     }
 
-    if (this.state.stageLevel in PVEStages && this.mode === BoardMode.PICK) {
-      const base = PVEStages[this.state.stageLevel]
+    const pveStage = getPveStage(this.state, this.state.stageLevel)
+    if (pveStage && this.mode === BoardMode.PICK) {
+      const base = pveStage
       const allOptions = base.variants ? [base, ...base.variants] : [base]
       const resolvedStage = {
         ...base,
@@ -1092,6 +1107,63 @@ export default class BoardManager {
       yoyo: true,
       repeat: -1
     })
+  }
+
+  /* A guide refusal, floated where the player just acted. Unlike displayText it
+     is a whole sentence rather than a number, so it wraps and holds still at
+     full opacity long enough to be read before fading - drifting upwards the
+     moment it appears is fine for "+5" and useless for an instruction. */
+  displayGuideMessage(label: string) {
+    /* A refused drop is easy to repeat - the player tries the same thing three
+       times before reading - and each attempt used to stack another copy on the
+       last. Only ever one on screen: a new refusal replaces the old one and
+       restarts its clock. */
+    this.guideMessage?.destroy()
+
+    const text = this.scene.add.existing(
+      new GameObjects.Text(this.scene, 0, 0, label, {
+        fontSize: "26px",
+        fontFamily: "Jost",
+        color: "#fff",
+        align: "center",
+        strokeThickness: 4,
+        stroke: "#000",
+        wordWrap: { width: GUIDE_MESSAGE_MAX_WIDTH, useAdvancedWrap: true }
+      }).setOrigin(0.5, 1)
+    )
+    text.setDepth(DEPTH.TEXT)
+
+    /* Anchored to the pointer so the answer appears where the player acted, but
+       pulled back inside the board: dragging from the item column put half the
+       sentence off the left edge and the rest under the Effects panel. */
+    const pointer = this.scene.input.activePointer
+    text.setPosition(
+      Phaser.Math.Clamp(
+        pointer.x,
+        GUIDE_MESSAGE_AREA.left + text.width / 2,
+        GUIDE_MESSAGE_AREA.right - text.width / 2
+      ),
+      Phaser.Math.Clamp(
+        pointer.y - 60,
+        GUIDE_MESSAGE_AREA.top + text.height,
+        GUIDE_MESSAGE_AREA.bottom
+      )
+    )
+
+    this.guideMessage = text
+    this.scene.add.tween({
+      targets: [text],
+      ease: "linear",
+      duration: 700,
+      delay: 3200,
+      alpha: { getStart: () => 1, getEnd: () => 0 },
+      onComplete: () => {
+        if (this.guideMessage === text) this.guideMessage = null
+        text.destroy()
+      }
+    })
+
+    return text
   }
 
   displayText(x: number, y: number, label: string, tweenOut: boolean = false) {

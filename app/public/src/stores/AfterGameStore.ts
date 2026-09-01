@@ -1,19 +1,22 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit"
 import type { IAfterGamePlayer } from "../../../types"
 import { GameMode } from "../../../types/enum/Game"
+import type { Synergy } from "../../../types/enum/Synergy"
 
 export interface IUserAfterState {
   players: IAfterGamePlayer[]
   eligibleToXP: boolean
   eligibleToELO: boolean
   gameMode: GameMode
+  guideSynergy: Synergy | null
 }
 
 const initialState: IUserAfterState = {
   players: new Array<IAfterGamePlayer>(),
   eligibleToXP: false,
   eligibleToELO: false,
-  gameMode: GameMode.CUSTOM_LOBBY
+  gameMode: GameMode.CUSTOM_LOBBY,
+  guideSynergy: null
 }
 
 const afterSlice = createSlice({
@@ -32,6 +35,9 @@ const afterSlice = createSlice({
     },
     setGameMode: (state, action: PayloadAction<GameMode>) => {
       state.gameMode = action.payload
+    },
+    setGuideSynergy: (state, action: PayloadAction<Synergy | null>) => {
+      state.guideSynergy = action.payload
     }
   }
 })
@@ -41,7 +47,8 @@ export const {
   leaveAfter,
   setElligibilityToXP,
   setElligibilityToELO,
-  setGameMode
+  setGameMode,
+  setGuideSynergy
 } = afterSlice.actions
 
 export default afterSlice.reducer

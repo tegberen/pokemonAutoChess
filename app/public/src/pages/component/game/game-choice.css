@@ -487,3 +487,10 @@
   font-size: 80%;
   max-width: 240px;
 }
+
+/* a proposition the guide is not teaching: still readable, not takeable */
+.game-choice-locked {
+  filter: grayscale(1);
+  opacity: 0.45;
+  cursor: not-allowed;
+}

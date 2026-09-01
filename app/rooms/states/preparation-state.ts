@@ -7,6 +7,7 @@ import chatV2 from "../../models/mongo-models/chat-v2"
 import type { EloRank } from "../../types/enum/EloRank"
 import { GameMode } from "../../types/enum/Game"
 import type { SpecialGameRule } from "../../types/enum/SpecialGameRule"
+import type { Synergy } from "../../types/enum/Synergy"
 
 export interface IPreparationState {
   users: MapSchema<GameUser>
@@ -46,6 +47,8 @@ export default class PreparationState
   blessingsUnderTest: Blessing[] = []
   /** Whimsy Weekend: a Double Up room that rolls a random scribble rule. */
   @type("boolean") whimsy = false
+  /** GUIDE: which synergy the run about to start teaches. */
+  @type("string") guideSynergy: Synergy | null = null
   abortOnPlayerLeave?: AbortController
 
   constructor(params: {
@@ -60,11 +63,14 @@ export default class PreparationState
     whitelist?: string[]
     blacklist?: string[]
     whimsy?: boolean
+    guideSynergy?: Synergy
   }) {
     super()
     this.whimsy = params.whimsy ?? false
     // Whimsy Weekend is a scribble-rule mode, so blessings never layer onto it
     if (this.whimsy) this.blessingsEnabled = false
+    // a lesson teaches the base game, so an active blessing event never leaks in
+    if (params.gameMode === GameMode.GUIDE) this.blessingsEnabled = false
     this.ownerId =
       (params.gameMode === GameMode.CUSTOM_LOBBY || params.gameMode === GameMode.DOUBLE_UP)
         ? (params.ownerId ?? "")
@@ -80,6 +86,7 @@ export default class PreparationState
     this.specialGameRule = params.specialGameRule ?? null
     this.whitelist = params.whitelist ?? []
     this.blacklist = params.blacklist ?? []
+    this.guideSynergy = params.guideSynergy ?? null
   }
 
   addMessage(params: {

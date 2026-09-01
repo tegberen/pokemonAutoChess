@@ -10,6 +10,8 @@ export function getDefaultRoomName(gameMode: GameMode, whimsy = false) {
       return "Classic"
     case GameMode.DOUBLE_UP:
       return whimsy ? "Whimsy Weekend" : "Double Up"
+    case GameMode.GUIDE:
+      return "Guide"
     default:
       return "Custom Room"
   }

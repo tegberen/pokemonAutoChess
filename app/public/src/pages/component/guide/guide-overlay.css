@@ -1,0 +1,193 @@
+/* Docked under the stage bar rather than over the board: the whole point of the
+   guide is dragging units from the shop onto the board, and that corridor is the
+   bottom half of the screen. Clicks pass straight through the card as well, so
+   even where it does overlap it can never eat a drag. */
+.guide-overlay {
+  position: absolute;
+  left: 50%;
+  top: 4.5em;
+  transform: translateX(-50%);
+  z-index: 10;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75em;
+  /* Narrow enough to clear the Battle Stats panel on the right and to keep the
+     text to a readable measure - at 44em the lines ran the full width of the
+     screen and the step counter was clipped underneath the panel. */
+  width: min(32em, 62vw);
+  padding: 0.6em 0.85em;
+  background-color: var(--color-bg-primary);
+  box-shadow: 0 6px 18px var(--color-shadow);
+  pointer-events: none;
+}
+
+/* the only part that is meant to be clicked */
+.guide-overlay button,
+.guide-overlay-pokemons {
+  pointer-events: auto;
+}
+
+/* Slowking fronts every lesson, so the player always knows who is talking.
+   Framed as a chip so the portrait reads as a speaker rather than as artwork
+   floating next to the text. */
+.guide-overlay-presenter {
+  position: relative;
+  top: 2px;
+  flex: none;
+  width: 3.5em;
+  height: 3.5em;
+  image-rendering: pixelated;
+  background-color: var(--color-bg-secondary);
+  border: var(--border-thin, 2px solid rgba(0, 0, 0, 0.35));
+  border-radius: 10px;
+}
+
+.guide-overlay-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.guide-overlay header {
+  display: flex;
+  align-items: center;
+  gap: 0.6em;
+  margin-bottom: 0.5em;
+  padding-bottom: 0.2em;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+/* matches the Effects panel's minimise control */
+.guide-overlay-collapse {
+  flex: none;
+  background: var(--color-bg-secondary);
+  border: 0;
+  color: var(--color-fg-primary);
+  padding: 2px 7px;
+  cursor: var(--cursor-hover, pointer);
+  border-radius: 3px;
+  font-size: 0.8rem;
+  line-height: 1.2;
+  transition: background-color 0.2s;
+}
+
+.guide-overlay-collapse:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* rolled up to the header row, so the item inventory underneath is reachable */
+.guide-overlay.is-collapsed {
+  width: auto;
+}
+
+.guide-overlay.is-collapsed .guide-overlay-presenter {
+  width: 2em;
+  height: 2em;
+}
+
+.guide-overlay.is-collapsed p,
+.guide-overlay.is-collapsed .guide-overlay-pokemons,
+.guide-overlay.is-collapsed .guide-overlay-body > button {
+  display: none;
+}
+
+.guide-overlay.is-collapsed header {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+/* Eyebrow, not a heading: it labels the instruction rather than competing with
+   it, and carries the topic colour so the accent means something at a glance. */
+.guide-overlay-topic {
+  flex: 1;
+  color: var(--color-fg-accent);
+  font-size: 0.75em;
+  font-weight: bold;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.guide-overlay-progress {
+  flex: none;
+  opacity: 0.7;
+  font-size: 0.75em;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+/* the instruction is the point of the card, so it carries the visual weight */
+.guide-overlay-text {
+  margin: 0 0 0.45em 0;
+  font-size: 1.05em;
+  line-height: 1.45;
+}
+
+.guide-overlay p {
+  margin: 0 0 0.5em 0;
+  line-height: 1.4;
+}
+
+/* the pool grids: many portraits, so they scroll rather than push the card up */
+.guide-overlay-pokemons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.15em;
+  list-style: none;
+  margin: 0 0 0.5em 0;
+  padding: 0;
+  max-height: 9em;
+  overflow-y: auto;
+}
+
+.guide-overlay-pokemons img {
+  image-rendering: pixelated;
+}
+
+/* an objective clears itself, so it reads as a prompt rather than a button */
+.guide-overlay-objective {
+  margin: 0;
+  color: var(--color-fg-secondary);
+  font-style: italic;
+  font-size: 0.85em;
+  opacity: 0.75;
+}
+
+.guide-overlay-stopwatch {
+  width: 1.1em;
+  height: 1.1em;
+  margin: 0 0.12em;
+  vertical-align: -0.2em;
+}
+
+/* the call to action sits below the instruction and stays smaller than it */
+.guide-overlay-body > button {
+  font-size: 0.9em;
+  padding: 0.25em 1.1em;
+}
+@media (max-width: 800px), (max-height: 620px) {
+  .guide-overlay {
+    top: auto;
+    bottom: 8.5em;
+    width: min(36em, calc(100vw - 1em));
+    max-height: 38vh;
+    overflow-y: auto;
+  }
+  .guide-overlay-presenter {
+    width: 2.75em;
+    height: 2.75em;
+  }
+}
+
+/* an inline "[portrait] Swinub" so the player reads a face, not a shouty token */
+.guide-pkm-token {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.15em;
+  vertical-align: -0.35em;
+  white-space: nowrap;
+  font-weight: bold;
+}
+
+.guide-pkm-token img {
+  image-rendering: pixelated;
+}

@@ -40,7 +40,7 @@ import {
   grantRegionalTreasuresOnRegionChange
 } from "../services/blessings"
 import { DungeonPMDO } from "../types/enum/Dungeon"
-import { PokemonActionState } from "../types/enum/Game"
+import { GameMode, PokemonActionState } from "../types/enum/Game"
 import {
   CraftableItemsNoScarves,
   CraftableNoStonesOrScarves,
@@ -71,6 +71,11 @@ import {
 } from "../utils/random"
 import { schemaKeys, schemaValues } from "../utils/schemas"
 import { giveRandomEgg } from "./eggs"
+import {
+  getGuideCarouselExclusions,
+  getGuideCarouselTarget,
+  getGuideRegionSynergy
+} from "./guide/guide-stage"
 import { spawnDIAYAvatar } from "./scribbles"
 
 const PLAYER_VELOCITY = 2
@@ -183,6 +188,11 @@ export class MiniGame {
           const item = this.items.get(itemBody.label)
           const encounter = room.state.townEncounter
 
+          /* A scripted carousel hands over one component and nothing else, so
+             a misgrab cannot cost the player the item the next step needs. */
+          const guideTarget = getGuideCarouselTarget(room.state)
+          if (guideTarget && item && item.name !== guideTarget) return
+
           if (avatar?.itemId === "" && item?.avatarId === "") {
             if (encounter && encounter in TownEncounterSellPrice) {
               const player = room.state.players.get(avatar.id)
@@ -279,7 +289,15 @@ export class MiniGame {
     this.timeElapsed = 0
     this.rotationDirection = 1
 
-    if (stageLevel in TownEncountersByStage) {
+    /* A guide carousel is scripted down to which component is on the floor, and
+       an encounter rewrites that wholesale - Chansey swaps the item set for
+       eggs, Kecleon charges for picks, Castform moves the weather threshold.
+       None of that is anything a lesson can teach around, so guides never
+       roll one. */
+    if (
+      state.gameMode !== GameMode.GUIDE &&
+      stageLevel in TownEncountersByStage
+    ) {
       let encounter = randomWeighted(
         TownEncountersByStage[stageLevel],
         state.specialGameRule === SpecialGameRule.TOWN_FESTIVAL ? undefined : 1
@@ -557,6 +575,7 @@ export class MiniGame {
     const encounter = state.townEncounter
     const items: Item[] = []
 
+
     let nbItemsToPick = clamp(this.alivePlayers.length + 3, 5, 9)
     let maxCopiesPerItem = 2
     let itemsSet: readonly Item[] = ItemComponentsNoFossilOrScarf
@@ -661,6 +680,25 @@ export class MiniGame {
     } else if (itemsSet === ItemComponentsNoFossilOrScarf && chance(0.4)) {
       // max 1 random fossil stone, added with 40% chance
       items.push(Item.FOSSIL_STONE)
+    }
+
+    /* A guide carousel is still rolled, but the component the lesson tells the
+       player to take has to actually be on the floor - and the one the replay
+       says is gone has to actually be gone. */
+    const guideExclusions = getGuideCarouselExclusions(state)
+    if (guideExclusions.length > 0) {
+      for (let i = 0; i < items.length; i++) {
+        if (!isIn(guideExclusions, items[i])) continue
+        items[i] = pickRandomIn(
+          ItemComponentsNoFossilOrScarf.filter(
+            (c) => !isIn(guideExclusions, c)
+          )
+        )
+      }
+    }
+    const guideTarget = getGuideCarouselTarget(state)
+    if (guideTarget && !items.includes(guideTarget)) {
+      items[0] = guideTarget
     }
 
     return shuffleArray(items)
@@ -803,6 +841,19 @@ export class MiniGame {
 
     // assign a map to each portal
     const maps = new Set(Object.values(DungeonPMDO))
+
+    /* A lesson's whole comp depends on its synergy being available in the
+       region, so every portal in a guide leads somewhere that has it. Every
+       synergy appears in at least eleven regions, so there is always more than
+       enough to go round. */
+    const guideSynergy = getGuideRegionSynergy(room.state)
+    if (guideSynergy) {
+      for (const map of [...maps]) {
+        if (!RegionDetails[map].synergies.includes(guideSynergy)) {
+          maps.delete(map)
+        }
+      }
+    }
     this.portals?.forEach((portal) => {
       const symbols = this.symbolsByPortal.get(portal.id)
       const portalSynergies = (symbols ?? []).map((s) => s.synergy)

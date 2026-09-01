@@ -116,6 +116,16 @@ import {
   RulesWithAllPokemonsAvailable,
   SpecialGameRule
 } from "../types/enum/SpecialGameRule"
+import {
+  acknowledgeGuideStep,
+  getActiveGuideStep,
+  isGuideAwaitingConfirm,
+  isGuideHoldingPlayerStill
+} from "../core/guide/guide-progress"
+import {
+  getGuideForcedPickItem,
+  getGuideForcedProposition
+} from "../core/guide/guide-stage"
 import type { Synergy } from "../types/enum/Synergy"
 import { GameEvent } from "../types/events"
 import type { IPokemonCollectionItemMongo } from "../types/interfaces/UserMetadata"
@@ -135,6 +145,7 @@ import { schemaValues } from "../utils/schemas"
 import {
   OnBuyPokemonCommand,
   OnDevCommand,
+  OnGuideRewindCommand,
   OnDragDropCombineCommand,
   OnDragDropItemCommand,
   OnDragDropPokemonCommand,
@@ -199,7 +210,8 @@ export default class GameRoom extends Room<{ state: GameState }> {
     minRank,
     maxRank,
     tournamentId,
-    bracketId
+    bracketId,
+    guideSynergy
   }: {
     users: Record<string, IGameUser>
     preparationId: string
@@ -216,6 +228,7 @@ export default class GameRoom extends Room<{ state: GameState }> {
     maxRank: EloRank | null
     tournamentId: string | null
     bracketId: string | null
+    guideSynergy?: Synergy | null
   }) {
     logger.info("Create Game ", this.roomId)
 
@@ -248,6 +261,7 @@ export default class GameRoom extends Room<{ state: GameState }> {
     })
 
     if (gameMode === GameMode.DOUBLE_UP) noElo = true
+    if (gameMode === GameMode.GUIDE) noElo = true
     // logger.debug(options);
     this.state = new GameState(
       preparationId,
@@ -260,7 +274,8 @@ export default class GameRoom extends Room<{ state: GameState }> {
       scribbleExtended ?? false,
       whimsy ?? false,
       blessingsEnabled ?? false,
-      blessingsUnderTest ?? []
+      blessingsUnderTest ?? [],
+      guideSynergy ?? null
     )
     this.miniGame.create(
       this.state.avatars,
@@ -385,6 +400,14 @@ export default class GameRoom extends Room<{ state: GameState }> {
               this.state
             )
 
+            if (gameMode === GameMode.GUIDE) {
+              /* Player defaults to 999 gold and 1000 life under MODE=dev, which
+                 makes every economy lesson meaningless. A guide always starts
+                 from the real numbers. */
+              player.money = 5
+              player.life = 100
+            }
+
             this.state.players.set(user.uid, player)
             initFossilUnlocks(player, this.state)
             this.state.shop.assignShop(player, false, this.state)
@@ -508,6 +531,19 @@ export default class GameRoom extends Room<{ state: GameState }> {
       }
     )
 
+    this.onMessage(Transfer.GUIDE_ACK, (client) => {
+      // only the reading steps need this; a step with a check clears itself
+      if (this.state.gameMode !== GameMode.GUIDE) return
+      // a guide room holds exactly one player, so any authed client is them
+      if (!client.auth || !this.state.players.has(client.auth.uid)) return
+      const acked = getActiveGuideStep(this.state)
+      const wasAwaiting = isGuideAwaitingConfirm(this.state)
+      acknowledgeGuideStep(this.state)
+      if (wasAwaiting && acked?.triggersRewind) {
+        this.dispatcher.dispatch(new OnGuideRewindCommand())
+      }
+    })
+
     this.onMessage(Transfer.DRAG_DROP, (client, message: IDragDropMessage) => {
       if (!this.state.gameFinished) {
         try {
@@ -574,6 +610,9 @@ export default class GameRoom extends Room<{ state: GameState }> {
       (client, message: { x: number; y: number }) => {
         try {
           if (client.auth) {
+            /* A guide holds the player still until they have read the plan for
+               this carousel. Once the step is acknowledged they walk normally. */
+            if (isGuideHoldingPlayerStill(this.state)) return
             this.miniGame.applyVector(client.auth.uid, message.x, message.y, this.state.townEncounter)
           }
         } catch (error) {
@@ -1089,7 +1128,8 @@ export default class GameRoom extends Room<{ state: GameState }> {
     playerId: string
   ): Promise<{ current: number; highest: number }> {
     const recentGames = await DetailledStatistic.find(
-      { playerId },
+      // a guide is always a rank 1, so seeding from it would invent a streak
+      { playerId, gameMode: { $ne: GameMode.GUIDE } },
       ["rank"],
       { sort: { time: -1 }, limit: 100 }
     )
@@ -1128,7 +1168,10 @@ export default class GameRoom extends Room<{ state: GameState }> {
     })
 
     let shouldRefetchEventLeaderboard = false
-    const eligibleToELO = this.state.gameMode !== GameMode.SCRIBBLE
+    // a guide run is a scripted tutorial, so nothing about it counts
+    const eligibleToELO =
+      this.state.gameMode !== GameMode.SCRIBBLE &&
+      this.state.gameMode !== GameMode.GUIDE
     /*!this.state.noElo &&
       (this.state.stageLevel >= MinStageForGameToCount || hasLeftBeforeEnd) &&
       humans.length >= 2*/
@@ -1146,8 +1189,11 @@ export default class GameRoom extends Room<{ state: GameState }> {
         giveUserExp(usr, exp)
       }
 
-      usr.games += 1
-      if (rank === 1) {
+      /* A guide is solo, so its player is always rank 1 - counting it would
+         hand out a free win and inflate the games played. */
+      const countsAsAGame = this.state.gameMode !== GameMode.GUIDE
+      if (countsAsAGame) usr.games += 1
+      if (rank === 1 && countsAsAGame) {
         usr.wins += 1
         if (!hasLeftBeforeEnd) {
           const unlocked = new Set(usr.unlockedAvatarCosmetics ?? [])
@@ -1321,37 +1367,46 @@ export default class GameRoom extends Room<{ state: GameState }> {
           }
         }
       }
-      if (
-        this.state.stageLevel >= MinStageForGameToCount
-      ) {
-        if (usr.currentFirstPlaceStreak === undefined) {
-          // TEMP: history does not include the game that just ended
-          const seeded = await this.countFirstPlaceStreaksFromHistory(player.id)
-          usr.currentFirstPlaceStreak = seeded.current
-          usr.highestFirstPlaceStreak = seeded.highest
-        }
+      if (this.state.stageLevel >= MinStageForGameToCount) {
+        /* A guide is a scripted solo run against a teacher, so its rank 1 is
+           not an achievement: it counts for no streak and no active week. The
+           record itself is still written, because the player's own profile is
+           a fair place to see the lessons they have finished - the Gazette and
+           the streak seeding filter it out on the way back in. */
+        const isGuide = this.state.gameMode === GameMode.GUIDE
 
-        if (rank === 1) {
-          usr.currentFirstPlaceStreak = usr.currentFirstPlaceStreak + 1
-          usr.highestFirstPlaceStreak = Math.max(
-            usr.highestFirstPlaceStreak ?? 0,
-            usr.currentFirstPlaceStreak
+        if (!isGuide) {
+          if (usr.currentFirstPlaceStreak === undefined) {
+            // TEMP: history does not include the game that just ended
+            const seeded = await this.countFirstPlaceStreaksFromHistory(
+              player.id
+            )
+            usr.currentFirstPlaceStreak = seeded.current
+            usr.highestFirstPlaceStreak = seeded.highest
+          }
+
+          if (rank === 1) {
+            usr.currentFirstPlaceStreak = usr.currentFirstPlaceStreak + 1
+            usr.highestFirstPlaceStreak = Math.max(
+              usr.highestFirstPlaceStreak ?? 0,
+              usr.currentFirstPlaceStreak
+            )
+          } else if (!hasLeftBeforeEnd) {
+            usr.currentFirstPlaceStreak = 0
+          }
+
+          const now = new Date()
+          const daysSinceMonday = (now.getUTCDay() + 6) % 7
+          const monday = new Date(
+            Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate())
           )
-        } else if (!hasLeftBeforeEnd) {
-          usr.currentFirstPlaceStreak = 0
-        }
+          monday.setUTCDate(monday.getUTCDate() - daysSinceMonday)
+          const activeWeek = monday.toISOString().slice(0, 10)
 
-        const now = new Date()
-        const daysSinceMonday = (now.getUTCDay() + 6) % 7
-        const monday = new Date(
-          Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate())
-        )
-        monday.setUTCDate(monday.getUTCDate() - daysSinceMonday)
-        const activeWeek = monday.toISOString().slice(0, 10)
-
-        if (usr.lastActiveWeek !== activeWeek) {
-          usr.lastActiveWeek = activeWeek
-          usr.activeWeeks = (usr.activeWeeks ?? 0) + 1
+          if (usr.lastActiveWeek !== activeWeek) {
+            usr.lastActiveWeek = activeWeek
+            usr.activeWeeks = (usr.activeWeeks ?? 0) + 1
+          }
         }
 
         const dbrecord = this.transformToSimplePlayer(player)
@@ -1401,7 +1456,8 @@ export default class GameRoom extends Room<{ state: GameState }> {
       if (
         getCurrentGameEvent() === GameEvent.EXPEDITIONS &&
         eligibleToXP &&
-        this.state.gameMode !== GameMode.CUSTOM_LOBBY
+        this.state.gameMode !== GameMode.CUSTOM_LOBBY &&
+        this.state.gameMode !== GameMode.GUIDE
       ) {
         const hasCompletedExpeditions = updatePlayerExpeditionsAfterGame(
           player,
@@ -1806,6 +1862,28 @@ export default class GameRoom extends Room<{ state: GameState }> {
     if (!player) return
     const choice = player.choices.find((c) => c.id === choiceId)
     if (!choice) return
+
+    /* The client greys the other propositions, but the refusal has to be here:
+       picking the wrong unique would leave the lesson's step unreachable with
+       no way to choose again. */
+    const guidePick = getGuideForcedProposition(this.state)
+    if (
+      guidePick &&
+      choice.pokemons.length > 0 &&
+      choice.pokemons[choiceIndex] !== guidePick
+    ) {
+      return
+    }
+
+    // additional picks are chosen for the component they carry, not the unit
+    const guidePickItem = getGuideForcedPickItem(this.state)
+    if (
+      guidePickItem &&
+      choice.items.length > 0 &&
+      choice.items[choiceIndex] !== guidePickItem
+    ) {
+      return
+    }
 
     if (choice.type === "blessing") {
       const blessing = choice.blessings[choiceIndex]

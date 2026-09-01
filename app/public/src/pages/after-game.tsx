@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react"
 import { Navigate } from "react-router"
 import type AfterGameState from "../../../rooms/states/after-game-state"
 import { CloseCodes } from "../../../types/enum/CloseCodes"
+import type { Synergy } from "../../../types/enum/Synergy"
 import { useAppDispatch, useAppSelector } from "../hooks"
 import { authenticateUser, client, joinAfter, rooms } from "../network"
 import { preference } from "../preferences"
@@ -11,7 +12,8 @@ import {
   leaveAfter,
   setElligibilityToELO,
   setElligibilityToXP,
-  setGameMode
+  setGameMode,
+  setGuideSynergy
 } from "../stores/AfterGameStore"
 import AfterMenu from "./component/after/after-menu"
 import { playSound, SOUNDS } from "./utils/audio"
@@ -93,6 +95,9 @@ export default function AfterGame() {
       })
       $state.listen("gameMode", (value, previousValue) => {
         dispatch(setGameMode(value))
+      })
+      $state.listen("guideSynergy", (value) => {
+        dispatch(setGuideSynergy((value as Synergy) || null))
       })
     }
 

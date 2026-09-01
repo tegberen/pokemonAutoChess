@@ -65,6 +65,7 @@ export default function Preparation() {
   const dispatch = useAppDispatch()
   const room: Room<PreparationState> | undefined = rooms.preparation
   const user = useAppSelector((state) => state.preparation.user)
+  const gameMode = useAppSelector((state) => state.preparation.gameMode)
   const initialized = useRef<boolean>(false)
   const connectingToGame = useRef<boolean>(false)
 
@@ -218,7 +219,13 @@ export default function Preparation() {
 
         fields.forEach((field) => {
           $user.listen(field, (value, previousValue) => {
-            if (field === "ready" && value) {
+            /* A guide readies the player automatically the moment they join, so
+               the ready chime fires with nothing to confirm. */
+            if (
+              field === "ready" &&
+              value &&
+              room.state.gameMode !== GameMode.GUIDE
+            ) {
               playSound(SOUNDS.SET_READY)
             }
             dispatch(changeUser({ id: user.uid, field: field, value: value }))
@@ -324,6 +331,15 @@ export default function Preparation() {
     navigate("/lobby")
     playSound(SOUNDS.LEAVE_ROOM)
   }, [room])
+
+  // a guide room starts the moment it is joined, so its lobby is never shown
+  if (gameMode === GameMode.GUIDE) {
+    return (
+      <div className="preparation-page">
+        <p className="preparation-loading">{t("guide.loading")}</p>
+      </div>
+    )
+  }
 
   return (
     <div className="preparation-page">

@@ -14,6 +14,7 @@ import { type IPreparationMetadata, Role, Transfer } from "../types"
 import { CloseCodes } from "../types/enum/CloseCodes"
 import type { EloRank } from "../types/enum/EloRank"
 import { type BotDifficulty, GameMode } from "../types/enum/Game"
+import type { Synergy } from "../types/enum/Synergy"
 import type { IBot } from "../types/models/bot-v2"
 import { logger } from "../utils/logger"
 import { schemaValues } from "../utils/schemas"
@@ -105,6 +106,7 @@ export default class PreparationRoom extends Room<{ state: PreparationState }> {
     tournamentId?: string
     bracketId?: string
     whimsy?: boolean
+    guideSynergy?: Synergy
   }) {
     logger.info("create Preparation ", this.roomId)
     // logger.debug(options);
@@ -140,6 +142,10 @@ export default class PreparationRoom extends Room<{ state: PreparationState }> {
     this.maxClients = 8
     if (options.gameMode === GameMode.TOURNAMENT) {
       this.autoDispose = false
+    }
+    if (options.gameMode === GameMode.GUIDE) {
+      // a guide run is solo and scripted, so the lobby has nothing to configure
+      this.maxClients = 1
     }
 
     if (options.autoStartDelayInSeconds) {

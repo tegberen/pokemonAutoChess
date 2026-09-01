@@ -11,10 +11,7 @@ import {
 import PokemonFactory from "../../../../../models/pokemon-factory"
 import { getBuyPrice } from "../../../../../models/shop"
 import { EvolutionRuleType } from "../../../../../types/EvolutionRules"
-import {
-  JuggernautStatColor,
-  Stat
-} from "../../../../../types/enum/Game"
+import { JuggernautStatColor, type Stat } from "../../../../../types/enum/Game"
 import { type Pkm, PkmFamily } from "../../../../../types/enum/Pokemon"
 import { SpecialGameRule } from "../../../../../types/enum/SpecialGameRule"
 import { getPortraitSrc } from "../../../../../utils/avatar"
@@ -27,6 +24,7 @@ import {
 import { usePreferences } from "../../../preferences"
 import { getGameScene } from "../../game"
 import { cc } from "../../utils/jsx"
+import { useGuideAllowsBuying } from "../guide/use-guide-action"
 import { Money } from "../icons/money"
 import SynergyIcon from "../icons/synergy-icon"
 import { GamePokemonDetail } from "./game-pokemon-detail"
@@ -84,6 +82,9 @@ export default function GamePokemonPortrait(props: {
     (state) => state.game.playerIdSpectated
   )
   const spectatedPlayer = useAppSelector(selectSpectatedPlayer)
+  const guideAllowsBuying = useGuideAllowsBuying(
+    typeof props.pokemon === "string" ? props.pokemon : props.pokemon?.name
+  )
   const connectedPlayer = useAppSelector(selectConnectedPlayer)
 
   const board = connectedPlayer?.board ?? null
@@ -205,7 +206,12 @@ export default function GamePokemonPortrait(props: {
         )
       : []
 
-  const canBuy = spectatedPlayer?.alive && spectatedPlayer?.money >= cost
+  /* A guide draws a normal shop but only the lesson's units are live, so a comp
+     it never mentions cannot be bought into by accident. */
+  const canBuy =
+    spectatedPlayer?.alive &&
+    spectatedPlayer?.money >= cost &&
+    (props.origin !== "shop" || guideAllowsBuying)
 
   return (
     <div

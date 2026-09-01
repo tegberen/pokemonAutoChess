@@ -1,6 +1,5 @@
 import { useTranslation } from "react-i18next"
 import { Tooltip } from "react-tooltip"
-import { MAX_LEVEL } from "../../../../../config"
 import { getLevelUpCost } from "../../../../../models/colyseus-models/experience-manager"
 import { Blessing } from "../../../../../types/enum/Blessing"
 import {
@@ -11,6 +10,7 @@ import {
 import { levelClick, skipStage } from "../../../network"
 import { playSound, SOUNDS } from "../../utils/audio"
 import { addIconsToDescription } from "../../utils/descriptions"
+import { useGuideActionAllowed } from "../guide/use-guide-action"
 import { Money } from "../icons/money"
 
 export default function GameExperience() {
@@ -44,6 +44,8 @@ export default function GameExperience() {
     spectatedPlayer &&
     spectatedPlayer.money >= levelUpCost
 
+  const levelUpAllowed = useGuideActionAllowed("levelup")
+
   return (
     <div className="game-experience">
       <span>
@@ -65,9 +67,10 @@ export default function GameExperience() {
             ? t("blessing.WISE_SPENDING.description")
             : t("buy_xp_tooltip", { cost: levelUpCost })
         }
-        disabled={wiseSpending}
+        disabled={wiseSpending || !levelUpAllowed}
         data-no-click-sound=""
         onClick={() => {
+          if (!levelUpAllowed) return
           if (canLevelup) playSound(SOUNDS.GOLD_TO_LEVEL)
           levelClick()
         }}

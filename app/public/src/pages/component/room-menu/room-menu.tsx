@@ -21,7 +21,9 @@ export default function RoomMenu() {
   const navigate = useNavigate()
   const preparationRooms: RoomAvailable[] = useAppSelector(
     (state) => state.lobby.preparationRooms
-  )
+    // a guide lobby exists for the instant it takes to auto-start, and belongs
+    // to one player, so it never belongs in the room list
+  ).filter((r) => r.metadata?.gameMode !== GameMode.GUIDE)
   const gameRooms: RoomAvailable[] = useAppSelector(
     (state) => state.lobby.gameRooms
   )

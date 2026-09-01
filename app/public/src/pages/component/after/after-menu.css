@@ -16,6 +16,19 @@
   margin-bottom: 0.5em;
 }
 
+/* The lesson's own subject, standing in for a mode badge that would only
+   repeat the heading above it. Sized as a subtitle so the eye goes heading ->
+   synergy -> notes rather than stopping on a small grey label. */
+.after-menu .gamemode.lesson {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4em;
+  margin: 0.35em 0 0;
+  font-size: 1.5rem;
+  color: var(--color-fg-secondary);
+}
+
 .after-menu .player-rank {
   font-size: 4rem;
   color: var(--color-fg-primary);
@@ -24,6 +37,14 @@
   justify-content: center;
   align-items: center;
   gap: 16px;
+}
+
+/* keeps the weight a placing had, but it is half again as wide as "First
+   Place", so it needs room to break evenly on a narrow screen */
+.after-menu .player-rank.lesson {
+  text-align: center;
+  text-wrap: balance;
+  padding: 0 1rem;
 }
 
 .after-menu .player-gains {

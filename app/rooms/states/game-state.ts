@@ -78,6 +78,22 @@ export default class GameState extends Schema {
      field must keep going last, so existing fields keep their wire index. */
   @type({ map: PlayerFossilUnlocks }) fossilUnlocksByPlayerId =
     new MapSchema<PlayerFossilUnlocks>()
+  /** GUIDE mode: which synergy this run teaches, and how far the player has
+      read. Both must stay after fossilUnlocksByPlayerId for the same reason. */
+  @type("string") guideSynergy: Synergy | null = null
+  @type("uint8") guideStep = 0
+  // whether the player has pressed "Got it" on the current step
+  @type("boolean") guideStepAcked = false
+  // server-only cursor recording which step already handed out its grants
+  guideStepEntered = -1
+  // server-only: true while a guide stage is being replayed with a different
+  // carousel, which is what makes the rewind deal the alternative items
+  guideRewinding = false
+  /* server-only: reroll count when the current step became active, so a pity
+     floor counts that step's own rolls rather than the whole stage's */
+  guideStepRerollBase = 0
+  // server-only: which step the two values above were last synced to
+  guideTrackedStep = -1
   // dev only, undecorated: restricts the pool without costing a schema field
   blessingsUnderTest: Blessing[] = []
   time = StageDuration[0] * 1000
@@ -117,7 +133,8 @@ export default class GameState extends Schema {
     scribbleExtended = false,
     whimsy = false,
     blessingsEnabled = false,
-    blessingsUnderTest: Blessing[] = []
+    blessingsUnderTest: Blessing[] = [],
+    guideSynergy: Synergy | null = null
   ) {
     super()
     this.scribbleExtended = scribbleExtended
@@ -129,6 +146,7 @@ export default class GameState extends Schema {
     this.name = name
     this.noElo = noElo
     this.gameMode = gameMode
+    this.guideSynergy = guideSynergy
     this.minRank = minRank
     this.maxRank = maxRank
     this.weather = Weather.NEUTRAL

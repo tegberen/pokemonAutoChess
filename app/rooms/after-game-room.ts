@@ -5,6 +5,7 @@ import AfterGamePlayer from "../models/colyseus-models/after-game-player"
 import UserMetadata from "../models/mongo-models/user-metadata"
 import type { IAfterGamePlayer } from "../types"
 import type { GameMode } from "../types/enum/Game"
+import type { Synergy } from "../types/enum/Synergy"
 import { logger } from "../utils/logger"
 import AfterGameState from "./states/after-game-state"
 
@@ -21,6 +22,7 @@ export default class AfterGameRoom extends Room<{ state: AfterGameState }> {
     eligibleToXP: boolean
     eligibleToELO: boolean
     gameMode: GameMode
+    guideSynergy?: Synergy | null
   }) {
     logger.info("Create AfterGame ", this.roomId)
 

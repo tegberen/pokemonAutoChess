@@ -2,17 +2,18 @@ import { useTranslation } from "react-i18next"
 import { Tooltip } from "react-tooltip"
 import { getRerollCost } from "../../../../../config"
 import {
+  BERSERKER_HORDES_SHOP_INTERVAL,
+  Blessing
+} from "../../../../../types/enum/Blessing"
+import { GamePhaseState } from "../../../../../types/enum/Game"
+import {
   BAZAAR_SHOP_INTERVAL,
   SpecialGameRule
 } from "../../../../../types/enum/SpecialGameRule"
-import {
-  Blessing,
-  BERSERKER_HORDES_SHOP_INTERVAL
-} from "../../../../../types/enum/Blessing"
-import { GamePhaseState } from "../../../../../types/enum/Game"
 import { selectConnectedPlayer, useAppSelector } from "../../../hooks"
 import { getGameScene } from "../../game"
 import { cc } from "../../utils/jsx"
+import { useGuideActionAllowed } from "../guide/use-guide-action"
 import { Money } from "../icons/money"
 
 export default function GameRefresh() {
@@ -66,12 +67,15 @@ export default function GameRefresh() {
   const onBerserkerShop =
     (stageLevel + rerollCount) % BERSERKER_HORDES_SHOP_INTERVAL === 0
 
+  const rerollAllowed = useGuideActionAllowed("reroll")
+
   return (
     <>
       <button
         className={cc("bubbly blue refresh-button", {
           shimmer: shopFreeRolls > 0 || thinkFastActive
         })}
+        disabled={!rerollAllowed}
         title={
           isBazaar || hasBerserkerHordes ? undefined : t("refresh_gold_hint")
         }
@@ -83,6 +87,7 @@ export default function GameRefresh() {
               : undefined
         }
         onClick={() => {
+          if (!rerollAllowed) return
           getGameScene()?.refreshShop()
         }}
       >

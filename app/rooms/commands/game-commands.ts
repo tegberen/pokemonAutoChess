@@ -4,7 +4,7 @@ import {
   removePlayerAvatar,
   updatePlayerAvatars
 } from "../../core/player-avatars"
-import { SetSchema, StateView } from "@colyseus/schema"
+import { MapSchema, SetSchema, StateView } from "@colyseus/schema"
 import { type Client, updateLobby } from "colyseus"
 import {
   AdditionalPicksStages,
@@ -104,13 +104,16 @@ import {
   PokemonClasses
 } from "../../models/colyseus-models/pokemon"
 import { ScribbleShape } from "../../models/colyseus-models/scribble-shape"
-import { getSynergyTier } from "../../models/colyseus-models/synergies"
+import Synergies, {
+  computeSynergies,
+  getSynergyTier
+} from "../../models/colyseus-models/synergies"
+import { Effects } from "../../models/effects"
 import UserMetadata from "../../models/mongo-models/user-metadata"
 import PokemonFactory, {
   getPokemonBaseline
 } from "../../models/pokemon-factory"
 import { getPokemonData } from "../../models/precomputed/precomputed-pokemon-data"
-import { PVEStages } from "../../models/pve-stages"
 import { getBuyPrice, getSellPrice } from "../../models/shop"
 import { updatePlayerTitlesAfterFight } from "../../models/titles"
 import {
@@ -245,6 +248,33 @@ import {
   simpleHashSeededCoinFlip
 } from "../../utils/random"
 import { resetArraySchema, schemaValues } from "../../utils/schemas"
+import { ExpTable, XP_PER_PURCHASE } from "../../config/game/experience"
+import {
+  GUIDE_INFINITE_GOLD,
+  GUIDE_CAROUSEL_OUTRO_DURATION,
+  isProtectedFromSelling
+} from "../../core/guide/guide-lesson"
+import {
+  getGuideAllowedCrafts,
+  getGuideAllowedItems,
+  getGuideBuyableUnits,
+  getGuideItemTarget,
+  isGuideActionAllowed,
+  isGuideWaitingOnPlayer,
+  updateGuideProgress
+} from "../../core/guide/guide-progress"
+import { isGuideWildStage } from "../../core/guide/guide-opponents"
+import {
+  getGuideCarouselTarget,
+  getGuideForcedPickItem,
+  getGuideLesson,
+  getGuideRipeBerry,
+  getGuideStartingLevel,
+  getGuideStageRewards,
+  getGuideXpPurchases,
+  getPveStage,
+  isPveStage
+} from "../../core/guide/guide-stage"
 import { getWeather } from "../../utils/weather"
 import type GameRoom from "../game-room"
 import type GameState from "../states/game-state"
@@ -298,6 +328,12 @@ export class OnBuyPokemonCommand extends Command<
     }
 
     const name = player.shop[index]
+
+    const buyable = getGuideBuyableUnits(this.state)
+    if (buyable && !buyable.includes(name)) {
+      // the shop still draws normally, but only the lesson's units are live
+      return
+    }
     if (!name || name === Pkm.DEFAULT) return
 
     let pokemon = PokemonFactory.createPokemonFromName(name, player)
@@ -1090,7 +1126,17 @@ export class OnDragDropCombineCommand extends Command<
     if (!result) {
       client.send(Transfer.DRAG_DROP_CANCEL, message)
       return
-    } else {
+    }
+
+    const allowedCrafts = getGuideAllowedCrafts(this.state)
+    if (allowedCrafts && !allowedCrafts.includes(result)) {
+      // the step names the items to build; anything else would burn components
+      client.send(Transfer.GUIDE_WRONG_CRAFT, allowedCrafts)
+      client.send(Transfer.DRAG_DROP_CANCEL, message)
+      return
+    }
+
+    {
       if (itemA === Item.SILK_SCARF || itemB === Item.SILK_SCARF) {
         const nbScarvesBasedOnNormalSynergy = getSynergyTier(
           player.synergies,
@@ -1230,6 +1276,30 @@ export class OnDragDropItemCommand extends Command<
     if (pokemon.supportiveSoul) {
       client.send(Transfer.DRAG_DROP_CANCEL, message)
       return
+    }
+
+    if (getGuideLesson(this.state)) {
+      const guideItemTarget = getGuideItemTarget(this.state)
+      const guideAllowedItems = getGuideAllowedItems(this.state)
+      /* Equipping is locked like everything else in a guide: a step opens it by
+         naming the body it teaches, and only then. A component dropped on a
+         whim is a component the stage that spends it will not find. An empty
+         list tells the player nothing equips here, the same way crafting does. */
+      if (!guideItemTarget) {
+        client.send(Transfer.GUIDE_WRONG_ITEM, [])
+        client.send(Transfer.DRAG_DROP_CANCEL, message)
+        return
+      }
+      if (PkmFamily[pokemon.name] !== PkmFamily[guideItemTarget]) {
+        client.send(Transfer.GUIDE_WRONG_TARGET, guideItemTarget)
+        client.send(Transfer.DRAG_DROP_CANCEL, message)
+        return
+      }
+      if (guideAllowedItems && !guideAllowedItems.includes(item)) {
+        client.send(Transfer.GUIDE_WRONG_ITEM, guideAllowedItems)
+        client.send(Transfer.DRAG_DROP_CANCEL, message)
+        return
+      }
     }
 
     if (item === Item.SPEAKER) {
@@ -1476,6 +1546,13 @@ export class OnDragDropItemCommand extends Command<
 
       const itemCombined = recipe[0] as Item
 
+      const allowedOnPokemon = getGuideAllowedCrafts(this.state)
+      if (allowedOnPokemon && !allowedOnPokemon.includes(itemCombined)) {
+        client.send(Transfer.GUIDE_WRONG_CRAFT, allowedOnPokemon)
+        client.send(Transfer.DRAG_DROP_CANCEL, message)
+        return
+      }
+
       if (recipe[1].includes(Item.SILK_SCARF)) {
         const nbScarvesBasedOnNormalSynergy = getSynergyTier(
           player.synergies,
@@ -1575,6 +1652,18 @@ export class OnSellPokemonCommand extends Command<
       return // getting rid of it has to be paid for
     }
 
+    const lesson = getGuideLesson(this.state)
+    if (
+      lesson &&
+      isProtectedFromSelling(lesson, pokemon.name, this.state.stageLevel)
+    ) {
+      // the rest of the script is built on this line, so it cannot be sold away
+      this.room.clients
+        .find((cli) => cli.auth.uid === player.id)
+        ?.send(Transfer.GUIDE_PROTECTED_UNIT, pokemon.name)
+      return
+    }
+
     const isManifested = isPokemonManifestationLocked(player, pokemonId)
     if (isManifested) {
       removeInArray(player.manifestedPokemonIds, pokemonId)
@@ -1615,6 +1704,7 @@ export class OnShopRerollCommand extends Command<GameRoom, string> {
   execute(id) {
     const player = this.state.players.get(id)
     if (!player || !player.alive) return
+    if (!isGuideActionAllowed(this.state, "reroll")) return
     const thinkFastActive =
       this.state.phase === GamePhaseState.PICK &&
       player.blessingsRef?.thinkFastActive === true
@@ -1683,11 +1773,12 @@ export class OnLevelUpCommand extends Command<
   execute(id) {
     const player = this.state.players.get(id)
     if (!player || !player.alive) return
+    if (!isGuideActionAllowed(this.state, "levelup")) return
     if (player.blessings?.includes(Blessing.WISE_SPENDING)) return
 
     const cost = getLevelUpCost(this.state.specialGameRule)
     if (player.money >= cost && player.experienceManager.canLevelUp()) {
-      player.addExperience(4)
+      player.addExperience(XP_PER_PURCHASE)
       player.money -= cost
       if (player.blessings?.includes(Blessing.UP_IS_UP)) {
         player.addBlessingGold(UP_IS_UP_GOLD)
@@ -1756,9 +1847,15 @@ export class OnUpdateCommand extends Command<
 > {
   execute({ deltaTime }) {
     if (deltaTime) {
-      this.state.time -= deltaTime
-      if (Math.round(this.state.time / 1000) != this.state.roundTime) {
-        this.state.roundTime = Math.round(this.state.time / 1000)
+      /* The clock stops while a guide step is waiting on the player, so reading
+         never costs them the round and a scripted carousel never closes before
+         they have taken what it is holding. Everything else still ticks: the
+         minigame has to keep running or the carousel would be unplayable. */
+      if (!this.isGuidePaused()) {
+        this.state.time -= deltaTime
+        if (Math.round(this.state.time / 1000) != this.state.roundTime) {
+          this.state.roundTime = Math.round(this.state.time / 1000)
+        }
       }
       /* outside the phase branches: the avatar walks through both the pick
          phase and the fight, which is what makes it feel like one thing */
@@ -1792,6 +1889,52 @@ export class OnUpdateCommand extends Command<
       }
     }
   }
+  isGuidePaused(): boolean {
+    if (this.state.gameMode !== GameMode.GUIDE) return false
+    const player = schemaValues(this.state.players).find((p) => !p.isBot)
+    if (!player) return false
+
+    if (this.state.phase === GamePhaseState.TOWN) {
+      // a scripted carousel waits until its component has been collected
+      const target = getGuideCarouselTarget(this.state)
+      if (target === null) return false
+      /* Read the avatar, not the inventory. A carousel item only moves into
+         player.items when the town phase ends, and the phase cannot end while
+         this pause is holding the clock - waiting on the inventory deadlocks
+         the run the moment the player picks the component up. */
+      let hasPickedUp = false
+      this.state.avatars.forEach((avatar) => {
+        if (avatar.id === player.id && avatar.itemId !== "") hasPickedUp = true
+      })
+      if (!hasPickedUp) return true
+      /* Nobody else is on the map, so there is nothing to wait for once the
+         component is in hand - cut whatever is left of the carousel short. */
+      if (this.state.time > GUIDE_CAROUSEL_OUTRO_DURATION) {
+        this.state.time = GUIDE_CAROUSEL_OUTRO_DURATION
+      }
+      return false
+    }
+
+    if (this.state.phase !== GamePhaseState.PICK) return false
+    /* The clock stops only while a step is still waiting on the player, so
+       reading is never rushed but the round still resolves on its own once they
+       are done - the same rhythm as any other autochess turn. */
+    updateGuideProgress(this.state, player)
+    /* A pity floor counts the rolls done on its own step, so its baseline moves
+       with the step - otherwise a stage's second roll lesson inherits the first
+       one's count and resolves instantly. */
+    if (this.state.guideTrackedStep !== this.state.guideStep) {
+      this.state.guideTrackedStep = this.state.guideStep
+      this.state.guideStepRerollBase = player.gameStats.rerollCount
+    }
+    return isGuideWaitingOnPlayer(this.state)
+  }
+
+  /* A stage's opening shop is dealt the units its steps need, but a rolling step
+     earlier on the same stage washes that away - so a step that names a unit
+     re-offers it if it has gone. Rolling steps are exempt: there the search is
+     the lesson, and the pity floor is what bounds it. */
+
   checkDoubleUpReinforcements() {
     this.state.simulations.forEach((sim) => {
       if (!sim.finished || sim.reinforcementsSent) return
@@ -1965,6 +2108,17 @@ function grantRobinGemsForFinishedDoubleUpSimulations(state: GameState) {
   })
 }
 
+/* A PVE board has no Player, so nothing ever computed its synergies and every
+   wild encounter fought with none active. Slowking's classes are a Psychic comp
+   and are meant to play like one, so the board's own synergies are derived here
+   and handed to the simulation. */
+function buildPveEffects(board: MapSchema<Pokemon>): Set<EffectEnum> {
+  const synergies = new Synergies(computeSynergies(schemaValues(board)))
+  const effects = new Effects()
+  effects.update(synergies, board)
+  return new Set(effects)
+}
+
 export class OnUpdatePhaseCommand extends Command<GameRoom> {
   execute() {
     this.state.updatePhaseNeeded = false
@@ -2005,6 +2159,10 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
       return this.checkEndGameDoubleUp()
     }
 
+    if (this.state.gameMode === GameMode.GUIDE) {
+      return this.checkEndGameGuide()
+    }
+
     const playersAlive = schemaValues(this.state.players).filter((p) => p.alive)
 
     if (playersAlive.length <= 1) {
@@ -2031,6 +2189,24 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
     }
 
     return false
+  }
+
+  /* A guide run is solo, so the usual "last player standing" test would end it
+     on the first check. It ends when the scripted stages run out instead. */
+  checkEndGameGuide(): boolean {
+    // checked before the stage counter is bumped, so the last scripted fight is
+    // the one that ends the run
+    const lesson = getGuideLesson(this.state)
+    if (!lesson || this.state.stageLevel < lesson.lastStage) return false
+
+    this.state.gameFinished = true
+    /* No FINAL_RANK: finishing a lesson is not winning a game, and the podium
+       screen would congratulate the player for beating a scripted opponent. */
+    this.clock.setTimeout(() => {
+      this.room.broadcast(Transfer.GAME_END)
+      this.room.disconnect()
+    }, 30 * 1000)
+    return true
   }
 
   checkEndGameDoubleUp(): boolean {
@@ -2154,6 +2330,15 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
   checkDeath() {
     const newlyDead: Player[] = []
 
+    if (this.state.gameMode === GameMode.GUIDE) {
+      // a lesson is never lost: a scripted round still costs life, but running
+      // out of it must not cut the guide short
+      this.state.players.forEach((player) => {
+        if (player.life <= 0) player.life = 1
+      })
+      return
+    }
+
     if (this.state.gameMode === GameMode.DOUBLE_UP) {
       const teams = new Map<string, Player[]>()
       this.state.players.forEach((player) => {
@@ -2225,12 +2410,55 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
     })
   }
 
+  /* Gold is unlimited in a guide and the level is dictated by the lesson, so a
+     player who misplays an earlier stage still arrives at the next one in the
+     state its instructions assume. */
+  applyGuideStageSetup() {
+    if (this.state.gameMode !== GameMode.GUIDE) return
+    const player = schemaValues(this.state.players).find((p) => !p.isBot)
+    if (!player) return
+
+    player.money = GUIDE_INFINITE_GOLD
+
+    /* Applied before the clients are told the phase changed, so the tree is
+       already the right berry by the time the board renders it. */
+    const ripeBerry = getGuideRipeBerry(this.state)
+    if (ripeBerry) {
+      player.berryTreesType[0] = ripeBerry
+      player.berryTreesStages[0] = 3
+    }
+
+    const level = getGuideStartingLevel(this.state)
+    if (level !== null) {
+      if (player.experienceManager.level !== level) {
+        player.experienceManager.level = level
+        player.boardSize = this.room.getTeamSize(player.board, player.blessings)
+      }
+      /* expNeeded is its own synced field and is what the XP bar shows as its
+         denominator, so setting the level without it leaves the bar reading
+         against the previous level's threshold. */
+      player.experienceManager.expNeeded =
+        player.experienceManager.expNeededAtLevel(level)
+      /* Start the bar far enough along that the lesson's stated number of XP
+         purchases is exactly what it takes, instead of leaving the player to
+         buy blind from zero. */
+      const purchases = getGuideXpPurchases(this.state)
+      player.experienceManager.experience =
+        purchases === null
+          ? 0
+          : Math.max(0, (ExpTable[level] ?? 0) - XP_PER_PURCHASE * purchases)
+    }
+  }
+
   initializePickingPhase() {
     this.state.phase = GamePhaseState.PICK
     this.state.players.forEach(resetFossilUnlockPickPhaseTrackers)
     anchorPlayerAvatars(this.state)
     this.state.time =
       (StageDuration[this.state.stageLevel] ?? StageDuration.DEFAULT) * 1000
+
+
+    this.applyGuideStageSetup()
 
     if (
       this.state.stageLevel === 1 &&
@@ -2380,6 +2608,12 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
       this.state.players.forEach((player: Player) => {
         if (!player.isBot) {
           const items = pickNRandomIn(ItemComponentsNoScarf, 3)
+          /* A guide picks an additional Pokemon for the component it carries,
+             so the component the lesson needs has to actually be on offer. */
+          const guidePickItem = getGuideForcedPickItem(this.state)
+          if (guidePickItem && !items.includes(guidePickItem)) {
+            items[0] = guidePickItem
+          }
           // SIX_PACK: a second component paired with each add-pick proposition
           const items2 =
             this.state.specialGameRule === SpecialGameRule.SIX_PACK
@@ -2554,14 +2788,17 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
     this.spawnWanderingPokemons()
 
     // PvE stage initialization
-    const pveStageBase = PVEStages[this.state.stageLevel]
+    const pveStageBase = getPveStage(this.state, this.state.stageLevel)
     if (pveStageBase) {
       const allOptions = pveStageBase.variants
         ? [pveStageBase, ...pveStageBase.variants]
         : [pveStageBase]
-      this.state.currentPveVariantIndex = Math.floor(
-        Math.random() * allOptions.length
-      )
+      /* Guide stages are authored without variants, so rolling one would index
+         past the single option and hand the client a mismatched board. */
+      this.state.currentPveVariantIndex =
+        this.state.gameMode === GameMode.GUIDE
+          ? 0
+          : Math.floor(Math.random() * allOptions.length)
 
       this.state.shinyEncounter =
         this.state.townEncounter === TownEncounters.CELEBI ||
@@ -3030,7 +3267,7 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
   }
 
   stopFightingPhase() {
-    const isPVE = this.state.stageLevel in PVEStages
+    const isPVE = isPveStage(this.state, this.state.stageLevel)
 
     this.state.simulations.forEach((simulation) => {
       if (!simulation.finished) {
@@ -3090,6 +3327,16 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
             player.experienceManager.level = max(9)(
               Math.round(this.state.stageLevel / 2)
             )
+          }
+
+          /* Guide rewards are the lesson's item timeline, so they are handed
+             over whether the sparring match was won or lost. */
+          const guideRewards = getGuideStageRewards(
+            this.state,
+            this.state.stageLevel - 1
+          )
+          if (guideRewards.length > 0 && !player.isBot) {
+            guideRewards.forEach((item) => player.items.push(item))
           }
 
           // Give PVE rewards to players
@@ -3220,6 +3467,9 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
   }
 
   stopTownPhase() {
+    // the replay is over as soon as its carousel closes, so the next carousel
+    // of the run is dealt normally again
+    this.state.guideRewinding = false
     this.room.miniGame.stop(this.room.state)
     this.state.players.forEach((player: Player) => {
       const croagunk = [...player.wanderers.values()].find(
@@ -3389,7 +3639,7 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
       this.updateScribbleSketchbooks()
     }
 
-    const pveStageBase = PVEStages[this.state.stageLevel]
+    const pveStageBase = getPveStage(this.state, this.state.stageLevel)
     if (pveStageBase) {
       const allOptions = pveStageBase.variants
         ? [pveStageBase, ...pveStageBase.variants]
@@ -3433,22 +3683,36 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
             this.state.shinyEncounter,
             pveStage.emotion
           )
-          player.opponentTitle = "WILD"
+          /* Slowking is running the class, not ambushing anyone. The stages a
+             guide reuses from the real game keep their WILD label. */
+          player.opponentTitle =
+            this.state.gameMode === GameMode.GUIDE &&
+            !isGuideWildStage(this.state.stageLevel)
+              ? "TEACHER"
+              : "WILD"
           player.team = Team.BLUE_TEAM
 
-          const rewards =
-            pveStage.getRewards?.(player, this.state.shinyEncounter) ??
-            ([] as Item[])
+          /* A guide's components come from its own timeline, so the wild
+             rounds it reuses must not also hand out their usual drops - the
+             lesson's text names exactly what is in the inventory. */
+          const isGuide = this.state.gameMode === GameMode.GUIDE
+          const rewards = isGuide
+            ? ([] as Item[])
+            : (pveStage.getRewards?.(player, this.state.shinyEncounter) ??
+              ([] as Item[]))
           resetArraySchema(player.pveRewards, rewards)
 
           const gaveShinyItemReward = rewards.some((item) =>
             isIn(ShinyItems, item)
           )
 
-          const rewardsPropositions =
+          const wantsShinyPropositions =
             !gaveShinyItemReward &&
             ((this.state.shinyEncounter && this.state.stageLevel > 1) ||
               this.state.specialGameRule === SpecialGameRule.SHINIEST_HUNTER)
+          const rewardsPropositions = isGuide
+            ? ([] as Item[])
+            : wantsShinyPropositions
               ? pickNRandomIn(ShinyItems, 3)
               : (pveStage.getRewardsPropositions?.(player, false) ??
                 ([] as Item[]))
@@ -3495,7 +3759,7 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
           crypto.randomUUID(),
           this.room,
           player,
-          { id: "pve", board: pveBoard },
+          { id: "pve", board: pveBoard, effects: buildPveEffects(pveBoard) },
           this.state.stageLevel,
           weather,
           false,
@@ -3615,7 +3879,7 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
   }
 
   spawnWanderingPokemons() {
-    const isPVE = this.state.stageLevel in PVEStages
+    const isPVE = isPveStage(this.state, this.state.stageLevel)
 
     this.state.players.forEach((player: Player) => {
       if (player.alive && !player.isBot) {
@@ -3816,6 +4080,57 @@ export class OnOverwriteBoardCommand extends Command<GameRoom> {
     })
     player.updateSynergies()
     player.boardSize = this.room.getTeamSize(player.board, player.blessings)
+  }
+}
+
+/* Replays the lesson's rewind stage with the taught pick already gone, so the
+   player has to build the same item from the other component. Only the item is
+   undone, not the whole run: everything else the player did on this stage was
+   correct and stays. */
+export class OnGuideRewindCommand extends Command<GameRoom> {
+  execute() {
+    const lesson = getGuideLesson(this.state)
+    const rewind = lesson?.rewind
+    if (!rewind || this.state.stageLevel !== rewind.stage) return
+
+    const player = schemaValues(this.state.players).find((p) => !p.isBot)
+    if (!player) return
+
+    const holderFamily = rewind.holder ? PkmFamily[rewind.holder] : null
+
+    const takeItemOffBoard = (item: Item, family: Pkm | null): boolean => {
+      let removed = false
+      player.board.forEach((pokemon) => {
+        if (removed) return
+        if (family && PkmFamily[pokemon.name] !== family) return
+        if (!pokemon.items.has(item)) return
+        pokemon.removeItems([item], player)
+        removed = true
+      })
+      return removed
+    }
+
+    /* Unwind what the stage produced, looking at the holder it was built onto
+       before the bag. An earlier stage can have put the same component on
+       another unit - Carnivine and the Rowlet line both end up with a
+       GREEN_ORB here - and taking it off the win condition instead would be
+       silent and unrecoverable. A named holder is never overreached past. */
+    rewind.takeBack.forEach((item) => {
+      if (holderFamily && takeItemOffBoard(item, holderFamily)) return
+      if (player.items.includes(item)) {
+        removeInArray(player.items, item)
+        return
+      }
+      if (!holderFamily) takeItemOffBoard(item, null)
+    })
+    // and hand the components back so the other branch is actually craftable
+    rewind.restore.forEach((item) => player.items.push(item))
+
+    this.state.guideRewinding = true
+    this.state.phase = GamePhaseState.TOWN
+    this.room.miniGame.initialize(this.state, this.room)
+    this.state.time = ITEM_CAROUSEL_BASE_DURATION
+    this.state.updatePhaseNeeded = false
   }
 }
 

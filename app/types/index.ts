@@ -159,7 +159,12 @@ export enum Transfer {
   ARMORY_GIFT = "ARMORY_GIFT",
   DEV = "DEV",
   SHOW_OFF = "SHOW_OFF",
-  BLESSING_REFUSED = "BLESSING_REFUSED"
+  BLESSING_REFUSED = "BLESSING_REFUSED",
+  GUIDE_ACK = "GUIDE_ACK",
+  GUIDE_PROTECTED_UNIT = "GUIDE_PROTECTED_UNIT",
+  GUIDE_WRONG_TARGET = "GUIDE_WRONG_TARGET",
+  GUIDE_WRONG_CRAFT = "GUIDE_WRONG_CRAFT",
+  GUIDE_WRONG_ITEM = "GUIDE_WRONG_ITEM"
 }
 
 export enum ReadWriteMode {
@@ -294,7 +299,7 @@ export interface IPlayer {
   opponentId: string
   opponentName: string
   opponentAvatar: string
-  opponentTitle: Title | "WILD" | ""
+  opponentTitle: Title | "WILD" | "TEACHER" | ""
   boardSize: number
   items: ArraySchema<Item>
   scarvesItems: ArraySchema<Item>

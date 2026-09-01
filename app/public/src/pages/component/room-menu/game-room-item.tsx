@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next"
 import { type IGameMetadata, Role } from "../../../../../types"
 import { useAppSelector } from "../../../hooks"
 import { cc } from "../../utils/jsx"
+import { GameModeIcon } from "../icons/game-mode-icon"
 import "./room-item.css"
 
 export default function GameRoomItem(props: {
@@ -20,6 +21,12 @@ export default function GameRoomItem(props: {
 
   return (
     <div className="room-item my-box">
+      {props.room.metadata?.gameMode && (
+        <GameModeIcon
+          gameMode={props.room.metadata.gameMode}
+          whimsy={props.room.metadata.whimsy}
+        />
+      )}
       <span className="room-name" title={title}>
         {props.room.metadata?.name}
       </span>

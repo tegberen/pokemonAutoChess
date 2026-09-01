@@ -253,6 +253,10 @@ export function pickChoice(choiceId: string, choiceIndex: number) {
   rooms.game?.send(Transfer.CHOICE, { choiceId, choiceIndex })
 }
 
+export function acknowledgeGuideStep() {
+  rooms.game?.send(Transfer.GUIDE_ACK)
+}
+
 export function rerollChoice(choiceId: string, slotIndex?: number) {
   rooms.game?.send(Transfer.REROLL_CHOICE, { choiceId, slotIndex })
 }

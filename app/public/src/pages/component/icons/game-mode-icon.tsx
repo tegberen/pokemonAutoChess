@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next"
-import type { GameMode } from "../../../../../types/enum/Game"
+import { GameMode } from "../../../../../types/enum/Game"
 import { cc } from "../../utils/jsx"
 
 export function GameModeIcon(props: { gameMode: GameMode; whimsy?: boolean }) {
@@ -8,6 +8,9 @@ export function GameModeIcon(props: { gameMode: GameMode; whimsy?: boolean }) {
   const label = props.whimsy
     ? t("whimsy_weekend")
     : t(`game_modes.${props.gameMode}`)
+  // the png icons are all 40x40, but guide_lobby.svg declares 512x512 inline,
+  // so the size is pinned here rather than left to intrinsic dimensions.
+  // Call sites that size it in CSS still win over these attributes.
   return (
     <img
       alt={label}
@@ -16,9 +19,13 @@ export function GameModeIcon(props: { gameMode: GameMode; whimsy?: boolean }) {
       src={
         props.whimsy
           ? "/assets/ui/whimsy_weekend.png"
-          : `/assets/ui/${props.gameMode.toLowerCase()}.png`
+          : props.gameMode === GameMode.GUIDE
+            ? "/assets/ui/guide_lobby.svg"
+            : `/assets/ui/${props.gameMode.toLowerCase()}.png`
       }
       draggable="false"
+      width={40}
+      height={40}
     />
   )
 }

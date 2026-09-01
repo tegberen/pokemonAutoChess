@@ -27,6 +27,9 @@ import type { IDetailledPokemon } from "../../../models/bot-v2"
 import { pickChoice, pickArmoryGift, rerollChoice } from "../../../network"
 import { Blessings } from "../../../../../config/game/blessings"
 import type { Blessing } from "../../../../../types/enum/Blessing"
+import { GuideLessons } from "../../../../../core/guide/lessons"
+import { useGuideIsReading } from "../guide/use-guide-action"
+import { GameMode } from "../../../../../types/enum/Game"
 import { getGameScene } from "../../game"
 import { playSound, SOUNDS } from "../../utils/audio"
 import { addIconsToDescription, iconRegExp } from "../../utils/descriptions"
@@ -50,6 +53,11 @@ export default function GameChoice() {
   const { t } = useTranslation()
   const connectedPlayer = useAppSelector(selectConnectedPlayer)
   const specialGameRule = useAppSelector((state) => state.game.specialGameRule)
+  const gameMode = useAppSelector((state) => state.game.gameMode)
+  const guideSynergy = useAppSelector((state) => state.game.guideSynergy)
+  const stageLevel = useAppSelector((state) => state.game.stageLevel)
+
+  const guideIsReading = useGuideIsReading()
 
   const life = connectedPlayer?.life ?? 0
   const choices = connectedPlayer?.choices ?? []
@@ -140,11 +148,24 @@ export default function GameChoice() {
     })
   }, [t])
 
-  if (choices.length === 0 || life <= 0) {
+  // the proposition waits until Slowking has finished the point he is making
+  if (choices.length === 0 || life <= 0 || guideIsReading) {
     return null
   }
 
   const choice = choices[0] // only display one choice at a time, the others will be displayed after the first one is picked
+
+  /* Guide mode teaches one unique. Derived from the lesson rather than synced,
+     so forcing a pick costs no schema field. */
+  const guidePickItem =
+    gameMode === GameMode.GUIDE && guideSynergy
+      ? (GuideLessons[guideSynergy]?.forcedPickItems?.[stageLevel] ?? null)
+      : null
+
+  const guidePick =
+    gameMode === GameMode.GUIDE && guideSynergy
+      ? (GuideLessons[guideSynergy]?.forcedPropositions?.[stageLevel] ?? null)
+      : null
 
   // a reroll replaces exactly one blessing, a new selection replaces them all
   const isSingleSlotChange =
@@ -388,12 +409,23 @@ export default function GameChoice() {
               const hasSlotRerolls =
                 choice.type === "addPick" &&
                 choice.rerollableSlots.length > 0
+              /* a guide teaches one specific pick, so the others are shown but
+                 not takeable rather than hidden - the player still sees what
+                 they were choosing between */
+              const lockedByGuide =
+                (guidePick !== null && proposition !== guidePick) ||
+                (guidePickItem !== null && item !== guidePickItem)
               return (
                 <div key={`${choice.id}-${index}`} className="game-choice-add-pick-slot">
                 <div
-                  className="my-box active clickable"
+                  className={cc("my-box", {
+                    active: !lockedByGuide,
+                    clickable: !lockedByGuide,
+                    "game-choice-locked": lockedByGuide
+                  })}
                   onClick={(event) => {
                     event.stopPropagation()
+                    if (lockedByGuide) return
                     playSound(SOUNDS.BUTTON_CLICK)
                     pickChoice(choice.id, index)
                   }}

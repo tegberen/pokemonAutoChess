@@ -26,6 +26,7 @@ import {
 } from "./config"
 import { initTilemap } from "./core/design"
 import { GameRecord } from "./models/colyseus-models/game-record"
+import { GameMode } from "./types/enum/Game"
 import chatV2 from "./models/mongo-models/chat-v2"
 import DetailledStatistic, {
   type IDetailledStatistic
@@ -679,7 +680,10 @@ export const server = defineServer({
 
       try {
         const stats = await DetailledStatistic.find(
-          { rank: 1 },
+          /* Every guide run ends at rank 1 by design, so without this the
+             Gazette would be nothing but lessons. The record still exists;
+             it is the player's own history that wants it, not the front page. */
+          { rank: 1, gameMode: { $ne: GameMode.GUIDE } },
           [
             "playerId",
             "gameId",

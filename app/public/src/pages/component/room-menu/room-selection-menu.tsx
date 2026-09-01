@@ -1,3 +1,4 @@
+import { useState } from "react"
 import { useTranslation } from "react-i18next"
 import { GADGETS } from "../../../../../config/game/gadgets"
 import { Role } from "../../../../../types"
@@ -6,7 +7,9 @@ import {
   type RoomRequest,
   WHIMSY_WEEKEND_REQUEST
 } from "../../../../../types/enum/Game"
+import type { Synergy } from "../../../../../types/enum/Synergy"
 import { useAppSelector } from "../../../hooks"
+import { GuideMenu } from "../guide/guide-menu"
 import { Modal } from "../modal/modal"
 import { BlessingEventBanner } from "../blessing-event/blessing-event"
 import {
@@ -24,8 +27,10 @@ export function RoomSelectionMenu(props: {
   const profile = useAppSelector((state) => state.network.profile)
   const profileLevel = profile?.level ?? 0
   const { active: whimsyWeekend } = useWhimsyWeekendWindow()
+  const [showGuideMenu, setShowGuideMenu] = useState(false)
 
   return (
+    <>
     <Modal
       show={props.show}
       onClose={props.onClose}
@@ -60,6 +65,15 @@ export function RoomSelectionMenu(props: {
             <h2>{t(`game_modes.${GameMode.DOUBLE_UP}`)}</h2>
             <p>{t(`game_modes_descriptions.${GameMode.DOUBLE_UP}`)}</p>
           </li>
+          <li className="my-box" onClick={() => setShowGuideMenu(true)}>
+            <img
+              src="assets/ui/game_modes/guide.png"
+              alt={t(`game_modes.${GameMode.GUIDE}`)}
+              draggable="false"
+            />
+            <h2>{t(`game_modes.${GameMode.GUIDE}`)}</h2>
+            <p>{t(`game_modes_descriptions.${GameMode.GUIDE}`)}</p>
+          </li>
           {whimsyWeekend && (
             <li
               className="my-box"
@@ -79,5 +93,14 @@ export function RoomSelectionMenu(props: {
         </>
       }
     />
+    <GuideMenu
+      show={showGuideMenu}
+      onClose={() => setShowGuideMenu(false)}
+      onSelectSynergy={(synergy: Synergy) => {
+        setShowGuideMenu(false)
+        props.onSelectMode({ gameMode: GameMode.GUIDE, synergy })
+      }}
+    />
+    </>
   )
 }

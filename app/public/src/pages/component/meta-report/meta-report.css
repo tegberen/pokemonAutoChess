@@ -11,6 +11,32 @@
   margin: 0;
 }
 
+/* Only some of these tabs carry an icon, so nothing inside a tab is allowed to
+   decide its height - a fixed box makes all four identical whether they hold an
+   icon, a label, or both. Content is centred inside that box, so the labels sit
+   on one line across the whole row. */
+#meta-report .react-tabs__tab-list {
+  display: flex;
+  align-items: flex-end;
+}
+
+#meta-report .react-tabs__tab {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35em;
+  height: 2.2em;
+  box-sizing: border-box;
+  line-height: 1;
+}
+
+/* .tab-icon is scoped to the preparation sidebar, so these tabs bring their own */
+#meta-report .react-tabs__tab .tab-icon {
+  width: 1.25em;
+  height: 1.25em;
+  flex-shrink: 0;
+}
+
 #meta-report .react-tabs {
   height: 100%;
   display: flex;

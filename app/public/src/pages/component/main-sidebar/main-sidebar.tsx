@@ -209,7 +209,7 @@ export function MainSidebar(props: MainSidebarProps) {
             <img
               width={32}
               height={32}
-              src="assets/icons/ITEM_GUIDE.svg"
+              src="assets/icons/BOOKMARK_ICON.svg"
               alt=""
             />
           }
@@ -217,7 +217,7 @@ export function MainSidebar(props: MainSidebarProps) {
           location="meta"
           handleClick={changeModal}
         >
-          Itemization
+          {t("guide.bookmark_tab")}
         </NavLink>
 
         {profileLevel >= GADGETS.team_planner.levelRequired && (
@@ -553,7 +553,7 @@ function Modals({
       </Modal>
       <Modal
         show={modal === "meta"}
-        header="Itemization"
+        header={t("guide.bookmark_tab")}
         onClose={closeModal}
       >
         <MetaReport />

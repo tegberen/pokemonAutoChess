@@ -20,6 +20,8 @@ import {
   FLOWER_POTS_POSITIONS_BLUE
 } from "../../../../core/flower-pots"
 import { canSell } from "../../../../core/pokemon-entity"
+import { isProtectedFromSelling } from "../../../../core/guide/guide-lesson"
+import { GuideLessons } from "../../../../core/guide/lessons"
 import { getLevelUpCost } from "../../../../models/colyseus-models/experience-manager"
 import type Player from "../../../../models/colyseus-models/player"
 import { PokemonClasses } from "../../../../models/colyseus-models/pokemon"
@@ -31,7 +33,7 @@ import {
   Transfer
 } from "../../../../types"
 import { DungeonMusic, type DungeonPMDO } from "../../../../types/enum/Dungeon"
-import { GamePhaseState } from "../../../../types/enum/Game"
+import { GameMode, GamePhaseState } from "../../../../types/enum/Game"
 import { type Item, ItemRecipe, Mulches } from "../../../../types/enum/Item"
 import { type Pkm, PkmFamily } from "../../../../types/enum/Pokemon"
 import { SpecialGameRule } from "../../../../types/enum/SpecialGameRule"
@@ -400,9 +402,24 @@ export default class GameScene extends Scene {
     if (canLevelUp) playSound(SOUNDS.GOLD_TO_LEVEL)
   }
 
+  /* A guide protects the units its later steps are built on. Checked here as
+     well as on the server so the sell zone never opens, the sell sound never
+     plays, and the sprite snaps straight back instead of sticking to the zone. */
+  canSellPokemon(pkm: Pkm): boolean {
+    if (!canSell(pkm, this.room?.state.specialGameRule)) return false
+    const state = this.room?.state
+    if (!state || state.gameMode !== GameMode.GUIDE || !state.guideSynergy) {
+      return true
+    }
+    const lesson = GuideLessons[state.guideSynergy]
+    if (!lesson) return true
+    return !isProtectedFromSelling(lesson, pkm, state.stageLevel)
+  }
+
   // both the sell zone and the sell hotkey come through here
   sellPokemon(pokemon: PokemonSprite) {
     if (!pokemon) return
+    if (!this.canSellPokemon(pokemon.name as Pkm)) return
     this.room?.send(Transfer.SELL_POKEMON, pokemon.id)
     playSound(SOUNDS.SELL_UNIT)
   }
@@ -672,10 +689,7 @@ export default class GameScene extends Scene {
           if (
             this.sellZone &&
             !gameObject.supportiveSoul &&
-            canSell(
-              this.pokemonDragged.name as Pkm,
-              this.room?.state.specialGameRule
-            )
+            this.canSellPokemon(this.pokemonDragged.name as Pkm)
           ) {
             this.sellZone.showForPokemon(this.pokemonDragged)
           }
@@ -715,10 +729,7 @@ export default class GameScene extends Scene {
           if (
             this.sellZone?.visible === false &&
             this.pokemonDragged?.supportiveSoul !== true &&
-            canSell(
-              this.pokemonDragged.name as Pkm,
-              this.room?.state.specialGameRule
-            )
+            this.canSellPokemon(this.pokemonDragged.name as Pkm)
           ) {
             this.sellZone.setVisible(true)
           }

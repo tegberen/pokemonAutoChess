@@ -89,11 +89,18 @@ export interface GameStateStore {
   blessingRefusedCount: number
   // which selection was refused, so the hint only shows on that one
   blessingRefusedChoiceId: string | null
+  // GUIDE mode: the synergy being taught and how far the player has read
+  guideSynergy: Synergy | null
+  guideStep: number
+  guideStepAcked: boolean
 }
 
 const initialState: GameStateStore = {
   afterGameId: "",
   gameMode: GameMode.CUSTOM_LOBBY,
+  guideSynergy: null,
+  guideStep: 0,
+  guideStepAcked: false,
   phaseDuration: StageDuration[1],
   roundTime: StageDuration[1],
   phase: GamePhaseState.PICK,
@@ -322,6 +329,15 @@ export const gameSlice: Slice<GameStateStore> = createSlice({
     setGameMode: (state, action: PayloadAction<GameMode>) => {
       state.gameMode = action.payload
     },
+    setGuideSynergy: (state, action: PayloadAction<Synergy | null>) => {
+      state.guideSynergy = action.payload
+    },
+    setGuideStep: (state, action: PayloadAction<number>) => {
+      state.guideStep = action.payload
+    },
+    setGuideStepAcked: (state, action: PayloadAction<boolean>) => {
+      state.guideStepAcked = action.payload
+    },
     setWeather: (
       state,
       action: PayloadAction<{ value: Weather; id: string }>
@@ -459,6 +475,9 @@ export const {
   setLife,
   setSynergies,
   setGameMode,
+  setGuideSynergy,
+  setGuideStep,
+  setGuideStepAcked,
   setRoundTime,
   setAfterGameId,
   setPhase,

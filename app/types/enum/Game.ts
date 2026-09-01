@@ -1,3 +1,5 @@
+import type { Synergy } from "./Synergy"
+
 export enum Rarity {
   COMMON = "COMMON",
   UNCOMMON = "UNCOMMON",
@@ -16,14 +18,29 @@ export enum GameMode {
   RANKED = "RANKED",
   SCRIBBLE = "SCRIBBLE",
   TOURNAMENT = "TOURNAMENT",
-  DOUBLE_UP = "DOUBLE_UP"
+  DOUBLE_UP = "DOUBLE_UP",
+  GUIDE = "GUIDE"
 }
 
 /* Whimsy Weekend is not a GameMode: it opens a DOUBLE_UP room with the `whimsy`
    flag, so all Double Up gameplay applies unchanged. It is only a separate entry
    in the room-creation menu, hence this request token. */
 export const WHIMSY_WEEKEND_REQUEST = "WHIMSY_WEEKEND"
-export type RoomRequest = GameMode | typeof WHIMSY_WEEKEND_REQUEST
+
+/* Guide is the only mode that needs a parameter to open a room, so its request
+   is an object rather than a bare mode token. */
+export type GuideRoomRequest = { gameMode: GameMode.GUIDE; synergy: Synergy }
+
+export type RoomRequest =
+  | GameMode
+  | typeof WHIMSY_WEEKEND_REQUEST
+  | GuideRoomRequest
+
+export function isGuideRoomRequest(
+  request: RoomRequest
+): request is GuideRoomRequest {
+  return typeof request === "object" && request.gameMode === GameMode.GUIDE
+}
 
 export enum GamePhaseState {
   PICK,

@@ -28,7 +28,7 @@ import {
 } from "../../../types"
 import { CloseCodes, CloseCodesMessages } from "../../../types/enum/CloseCodes"
 import { ConnectionStatus } from "../../../types/enum/ConnectionStatus"
-import { GamePhaseState, Team } from "../../../types/enum/Game"
+import { GameMode, GamePhaseState, Team } from "../../../types/enum/Game"
 import type { Item } from "../../../types/enum/Item"
 import { Passive } from "../../../types/enum/Passive"
 import { type Pkm, PkmIndex } from "../../../types/enum/Pokemon"
@@ -41,6 +41,7 @@ import { getAvatarString, getPortraitSrc } from "../../../utils/avatar"
 import { logger } from "../../../utils/logger"
 import { schemaValues } from "../../../utils/schemas"
 import GameContainer from "../game/game-container"
+import GuideOverlay from "./component/guide/guide-overlay"
 import type GameScene from "../game/scenes/game-scene"
 import {
   selectConnectedPlayer,
@@ -68,6 +69,9 @@ import {
   setBlessingsEnabled,
   setEmotesUnlocked,
   setGameMode,
+  setGuideStep,
+  setGuideStepAcked,
+  setGuideSynergy,
   setInterest,
   setLife,
   setLoadingProgress,
@@ -334,7 +338,8 @@ export default function Game() {
       idToken: token,
       eligibleToXP,
       eligibleToELO,
-      gameMode
+      gameMode,
+      guideSynergy: room?.state.guideSynergy
     })
     localStore.set(
       LocalStoreKeys.RECONNECTION_AFTER_GAME,
@@ -481,6 +486,42 @@ export default function Game() {
         playShowOffSong(getGameScene() ?? undefined)
       )
 
+      /* Guide refusals answer something the player just did on the board, so
+         they float there rather than docking in a corner as a toast. */
+      const showGuideMessage = (message: string) => {
+        getGameScene()?.board?.displayGuideMessage(message)
+      }
+
+      room.onMessage(Transfer.GUIDE_PROTECTED_UNIT, (pkm: Pkm) => {
+        showGuideMessage(t("guide.protected_unit", { pkm: t(`pkm.${pkm}`) }))
+      })
+
+      room.onMessage(Transfer.GUIDE_WRONG_CRAFT, (items: Item[]) => {
+        // an empty list means this step builds nothing at all, not "wrong one"
+        showGuideMessage(
+          items.length === 0
+            ? t("guide.craft_not_yet")
+            : t("guide.wrong_craft", {
+                items: items.map((item) => t(`item.${item}`)).join(", ")
+              })
+        )
+      })
+
+      room.onMessage(Transfer.GUIDE_WRONG_ITEM, (items: Item[]) => {
+        // an empty list means this step equips nothing at all, not "wrong one"
+        showGuideMessage(
+          items.length === 0
+            ? t("guide.equip_not_yet")
+            : t("guide.wrong_item", {
+                items: items.map((item) => t(`item.${item}`)).join(", ")
+              })
+        )
+      })
+
+      room.onMessage(Transfer.GUIDE_WRONG_TARGET, (pkm: Pkm) => {
+        showGuideMessage(t("guide.wrong_target", { pkm: t(`pkm.${pkm}`) }))
+      })
+
       room.onMessage(Transfer.FINAL_RANK, (finalRank) => {
         setFinalRank(finalRank)
         setFinalRankVisibility(FinalRankVisibility.VISIBLE)
@@ -624,7 +665,11 @@ export default function Game() {
         )
       })
 
-      room.onMessage(Transfer.PLAYER_INCOME, showMoneyToast)
+      room.onMessage(Transfer.PLAYER_INCOME, (income: number) => {
+        // gold is unlimited in a guide, so an income popup is pure noise
+        if (room.state.gameMode === GameMode.GUIDE) return
+        showMoneyToast(income)
+      })
 
       /* releases the card the pick UI already marked as picked, and lets it
          show the free slot hint under the cards */
@@ -749,6 +794,18 @@ export default function Game() {
 
       $state.listen("gameMode", (mode) => {
         dispatch(setGameMode(mode))
+      })
+
+      $state.listen("guideSynergy", (synergy) => {
+        dispatch(setGuideSynergy(synergy))
+      })
+
+      $state.listen("guideStep", (step) => {
+        dispatch(setGuideStep(step))
+      })
+
+      $state.listen("guideStepAcked", (acked) => {
+        dispatch(setGuideStepAcked(acked))
       })
 
       $state.listen("roundTime", (value) => {
@@ -1240,6 +1297,7 @@ export default function Game() {
           <GameChoice />
           <GameDpsMeter />
           <GameToasts />
+          <GuideOverlay />
           {currentGameEvent === GameEvent.EXPEDITIONS && !spectate && (
             <GameExpeditions />
           )}

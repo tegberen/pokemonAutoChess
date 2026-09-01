@@ -82,6 +82,12 @@ import {
 } from "../types/enum/Blessing"
 import { PRECOMPUTED_POKEMONS_PER_TYPE } from "./precomputed/precomputed-types"
 import { Synergy } from "../types/enum/Synergy"
+import { getGuidePityUnit } from "../core/guide/guide-progress"
+import {
+  getGuideForcedPickItem,
+  getGuideForcedProposition,
+  getGuideShopInjections
+} from "../core/guide/guide-stage"
 import { removeInArray } from "../utils/array"
 import { logger } from "../utils/logger"
 import { clamp, min } from "../utils/number"
@@ -524,6 +530,37 @@ export default class Shop {
     player.shop.forEach((pkm) => this.releasePokemon(pkm, player, state))
   }
 
+  /* A guide shop is a real shop with the lesson's units dealt into it. Keeping
+     the rest of the draw honest is the point: the player has to read a normal
+     board, they are just guaranteed to find what the step asks for. */
+  /* Puts specific units into the shop, replacing whatever is in the leftmost
+     slots. Used for a stage's opening deal, where the whole set is written at
+     once and nothing needs preserving. */
+  injectUnits(player: Player, state: GameState, units: Pkm[]) {
+    if (units.length === 0) return
+    const size = getShopSize(state.specialGameRule, state.stageLevel)
+    units.slice(0, size).forEach((pkm, i) => {
+      // released back to the pool by the next refresh like any other offer
+      this.releasePokemon(player.shop[i], player, state)
+      player.shop[i] = pkm
+    })
+    this.syncJuggernautShopStats(player, state)
+  }
+
+
+  injectGuideUnits(player: Player, state: GameState, manualRefresh: boolean) {
+    const pity = getGuidePityUnit(
+      state,
+      player.gameStats.rerollCount - state.guideStepRerollBase
+    )
+    /* The stage's opening shop is dealt the lesson's units so the step that
+       names them is always followable. Rerolls are not: a step that asks the
+       player to roll for something has to be a real search, and the pity floor
+       is what stops it being an unbounded one. */
+    const injections = pity ? [pity] : manualRefresh ? [] : getGuideShopInjections(state)
+    this.injectUnits(player, state, injections)
+  }
+
   assignShop(player: Player, manualRefresh: boolean, state: GameState) {
     this.releaseCurrentShop(player, state)
 
@@ -605,6 +642,7 @@ export default class Shop {
       if (!manualRefresh) {
         this.guaranteeWildInShop(player, state)
       }
+      this.injectGuideUnits(player, state, manualRefresh)
       this.guaranteeFossilUnlocksInShop(player, state)
       this.syncJuggernautShopStats(player, state, true)
     }
@@ -841,7 +879,14 @@ export default class Shop {
           )
         }
       }
+      /* Eevee, Kecleon and Arceus overwrite both the proposition and its item,
+         which would quietly undo whatever the lesson forced onto this screen. */
+      const guideForcesThisScreen =
+        getGuideForcedPickItem(state) !== null ||
+        getGuideForcedProposition(state) !== null
+
       if (
+        !guideForcesThisScreen &&
         stageLevel === PortalCarouselStages[0] &&
         pokemonsProposed.includes(Pkm.EEVEE) === false &&
         (chance(EEVEE_RATE) || initialCandidatesEmpty) &&
@@ -852,12 +897,14 @@ export default class Shop {
         selected = Pkm.EEVEE
         itemsProposed[i] = Item.FOSSIL_STONE
       } else if (
+        !guideForcesThisScreen &&
         stageLevel === PortalCarouselStages[1] &&
         pokemonsProposed.includes(Pkm.KECLEON) === false &&
         (guaranteedPick === Pkm.KECLEON || chance(KECLEON_RATE))
       ) {
         selected = Pkm.KECLEON
       } else if (
+        !guideForcesThisScreen &&
         stageLevel === PortalCarouselStages[2] &&
         pokemonsProposed.includes(Pkm.ARCEUS) === false &&
         (guaranteedPick === Pkm.ARCEUS || chance(ARCEUS_RATE))
@@ -867,6 +914,32 @@ export default class Shop {
 
       removeInArray(allCandidates, selected)
       pokemonsProposed.push(selected)
+    }
+
+    /* A guide teaches one specific pick, so it has to actually be on offer. It
+       goes in the middle slot with the component the lesson needs, and the two
+       either side keep their own random components - which is what makes the
+       greyed-out pair read as a real choice that was passed over. */
+    const guideForced = getGuideForcedProposition(state)
+    if (guideForced) {
+      const middle = Math.floor(pokemonsProposed.length / 2)
+      if (!pokemonsProposed.includes(guideForced)) {
+        pokemonsProposed[middle] = guideForced
+      }
+      const guideItem = getGuideForcedPickItem(state)
+      const forcedIndex = pokemonsProposed.indexOf(guideForced)
+      if (guideItem && itemsProposed.length > forcedIndex) {
+        // never leave two slots holding the taught component
+        const duplicate = itemsProposed.indexOf(guideItem)
+        if (duplicate >= 0 && duplicate !== forcedIndex) {
+          itemsProposed[duplicate] = pickRandomIn(
+            ItemComponentsNoFossilOrScarf.filter(
+              (c) => c !== guideItem && !itemsProposed.includes(c)
+            )
+          )
+        }
+        itemsProposed[forcedIndex] = guideItem
+      }
     }
 
     player.choices.push(

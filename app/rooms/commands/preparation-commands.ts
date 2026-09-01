@@ -241,7 +241,13 @@ export class OnGameStartRequestCommand extends Command<
         }
       })
 
-      if (nbHumanPlayers < MIN_HUMAN_PLAYERS && process.env.MODE !== "dev") {
+      const isGuide = this.state.gameMode === GameMode.GUIDE
+
+      if (
+        !isGuide &&
+        nbHumanPlayers < MIN_HUMAN_PLAYERS &&
+        process.env.MODE !== "dev"
+      ) {
         this.state.addMessage({
           authorId: "Server",
           payload: `Due to the current high traffic on the game, to limit the resources used server side, only games with a minimum of ${MIN_HUMAN_PLAYERS} players are authorized.`,
@@ -250,7 +256,7 @@ export class OnGameStartRequestCommand extends Command<
         return
       }
 
-      if (this.state.users.size < 2) {
+      if (!isGuide && this.state.users.size < 2) {
         this.state.addMessage({
           authorId: "Server",
           payload: `Add bots or wait for more players to join your room.`,
@@ -323,7 +329,11 @@ export class OnGameStartRequestCommand extends Command<
           payload: `Too many players are currently playing and the server is running out of memory. To save resources, only lobbys with ${MAX_PLAYERS_PER_GAME} human players are enabled. Sorry for the inconvenience.`,
           avatar: "0025/Pain"
         })
-      } else if (freeMemory < 0.4 * totalMemory && nbHumanPlayers === 1) {
+      } else if (
+        !isGuide &&
+        freeMemory < 0.4 * totalMemory &&
+        nbHumanPlayers === 1
+      ) {
         // if less than 40% free memory available, prevents starting a game solo
         this.state.addMessage({
           author: "Server",
@@ -379,7 +389,8 @@ export class OnGameStartRequestCommand extends Command<
           whimsy: this.state.whimsy,
           tournamentId: this.room.metadata?.tournamentId,
           bracketId: this.room.metadata?.bracketId,
-          minRank: this.state.minRank
+          minRank: this.state.minRank,
+          guideSynergy: this.state.guideSynergy
         })
 
         this.state.users.forEach((user) => {
@@ -850,6 +861,15 @@ export class OnToggleReadyCommand extends Command<
       if (client.auth?.uid && this.state.users.has(client.auth.uid)) {
         const user = this.state.users.get(client.auth.uid)!
         user.ready = ready
+      }
+
+      /* A guide room holds one player and has nothing to configure, so it
+         starts the moment that player reports ready. Waiting for ready rather
+         than starting on join matters: the client only registers its GAME_START
+         handler after the join resolves, so starting any earlier broadcasts
+         into the void and strands it on the preparation screen. */
+      if (this.state.gameMode === GameMode.GUIDE) {
+        return new OnGameStartRequestCommand()
       }
 
       const nbExpectedPlayers =

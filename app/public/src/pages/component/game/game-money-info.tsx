@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next"
 import { Tooltip } from "react-tooltip"
-import { BattleResult } from "../../../../../types/enum/Game"
+import { BattleResult, GameMode } from "../../../../../types/enum/Game"
 import { SpecialGameRule } from "../../../../../types/enum/SpecialGameRule"
 import { max } from "../../../../../utils/number"
 import { selectSpectatedPlayer, useAppSelector } from "../../../hooks"
@@ -11,7 +11,12 @@ import { Money } from "../icons/money"
 export function GameMoneyInfo() {
   const spectatedPlayer = useAppSelector(selectSpectatedPlayer)
   const maxInterest = useAppSelector((state) => state.game.maxInterest)
+  const gameMode = useAppSelector((state) => state.game.gameMode)
   if (!spectatedPlayer) return null
+
+  // a guide never runs out of gold, so showing a number invites reading it as a
+  // budget the lesson expects you to manage
+  const isUnlimited = gameMode === GameMode.GUIDE
 
   return (
     <div id="game-money-info" className="my-container money information">
@@ -20,9 +25,9 @@ export function GameMoneyInfo() {
           <GameMoneyDetail />
         </Tooltip>
         <Money
-          value={spectatedPlayer.money}
+          value={isUnlimited ? "∞" : spectatedPlayer.money}
           className={cc({
-            "is-max": spectatedPlayer.money >= maxInterest * 10
+            "is-max": !isUnlimited && spectatedPlayer.money >= maxInterest * 10
           })}
         />
       </div>

@@ -5,11 +5,14 @@ import { getRankLabel } from "../../../../../../app/types/strings/Strings"
 import { ExpPlace, SynergyTiersThresholds } from "../../../../../config"
 import { computeElo } from "../../../../../core/elo"
 import { type IAfterGamePlayer, Role } from "../../../../../types"
+import { GameMode } from "../../../../../types/enum/Game"
 import type { Synergy } from "../../../../../types/enum/Synergy"
 import { ItemDetailTooltip } from "../../../game/components/item-detail"
 import { useAppSelector } from "../../../hooks"
 import { addIconsToDescription } from "../../utils/descriptions"
+import { cc } from "../../utils/jsx"
 import { GamePokemonDetailTooltip } from "../game/game-pokemon-detail"
+import { GuideNotes } from "../guide/guide-notes"
 import { GameModeIcon } from "../icons/game-mode-icon"
 import SynergyIcon from "../icons/synergy-icon"
 import { Avatar } from "../profile/avatar"
@@ -25,6 +28,8 @@ export default function AfterMenu() {
   const eligibleToXP = useAppSelector((state) => state.after.eligibleToXP)
   const eligibleToELO = useAppSelector((state) => state.after.eligibleToELO)
   const gameMode = useAppSelector((state) => state.after.gameMode)
+  const isGuide = gameMode === GameMode.GUIDE
+  const guideSynergy = useAppSelector((state) => state.after.guideSynergy)
   const currentPlayerId: string = useAppSelector((state) => state.network.uid)
   const currentPlayer = players.find((p) => p.id === currentPlayerId)
   const playerRank = currentPlayer ? currentPlayer.rank : null
@@ -46,16 +51,30 @@ export default function AfterMenu() {
       <div className="my-container is-centered">
         {playerRank && (
           <>
-            <div className="player-rank">
-              {playerRank <= 3 && (
+            {/* a guide is solo, so its rank 1 is a formality rather than a
+                placing, and a medal would be claiming something unearned */}
+            <div className={cc("player-rank", { lesson: isGuide })}>
+              {!isGuide && playerRank <= 3 && (
                 <img src={`/assets/ui/rank${playerRank}.png`} alt="" />
               )}
-              <span>{getRankLabel(playerRank)}</span>
+              <span>
+                {isGuide ? t("guide.lesson_finished") : getRankLabel(playerRank)}
+              </span>
             </div>
-            <p className="gamemode">
-              <GameModeIcon gameMode={gameMode} />
-              {t(`game_modes.${gameMode}`)}
+            <p className={cc("gamemode", { lesson: isGuide })}>
+              {isGuide && guideSynergy ? (
+                <>
+                  <SynergyIcon type={guideSynergy} size="1.6em" />
+                  {t(`synergy.${guideSynergy}`)}
+                </>
+              ) : (
+                <>
+                  <GameModeIcon gameMode={gameMode} />
+                  {t(`game_modes.${gameMode}`)}
+                </>
+              )}
             </p>
+            {isGuide && guideSynergy && <GuideNotes synergy={guideSynergy} />}
             <div className="player-gains">
               {shouldShowElo && (
                 <p className="player-elo">
@@ -72,81 +91,83 @@ export default function AfterMenu() {
           </>
         )}
 
-        <table>
-          <thead>
-            <tr>
-              <th>{t("rank")}</th>
-              <th>{t("player")}</th>
-              <th>{t("stats")}</th>
-              <th>{t("team")}</th>
-              <th>{t("synergies")}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {players.map((player) => {
-              return (
-                <tr key={player.id}>
-                  <td>{player.rank}</td>
-                  <td>
-                    <Avatar
-                      avatar={player.avatar}
-                      name={player.name}
-                      elo={player.elo}
-                      title={player.title}
-                      role={player.role}
-                    />
-                  </td>
-                  <td data-tooltip-id={`stats-tooltip-${player.id}`}>
-                    <p title={t("game_stats.total_money_earned")}>
-                      <img
-                        src="assets/icons/money_total.svg"
-                        alt="$"
-                        style={{ width: "24px", height: "24px" }}
-                      />{" "}
-                      {player.gameStats.totalMoneyEarned}
-                    </p>
-                    <p title={t("game_stats.total_player_damage_dealt")}>
-                      <img
-                        src="assets/icons/ATK.png"
-                        alt="✊"
-                        style={{ width: "24px", height: "24px" }}
+        {!isGuide && (
+          <table>
+            <thead>
+              <tr>
+                <th>{t("rank")}</th>
+                <th>{t("player")}</th>
+                <th>{t("stats")}</th>
+                <th>{t("team")}</th>
+                <th>{t("synergies")}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {players.map((player) => {
+                return (
+                  <tr key={player.id}>
+                    <td>{player.rank}</td>
+                    <td>
+                      <Avatar
+                        avatar={player.avatar}
+                        name={player.name}
+                        elo={player.elo}
+                        title={player.title}
+                        role={player.role}
                       />
-                      {player.gameStats.totalPlayerDamageDealt}
-                    </p>
-                    <p title={t("game_stats.total_reroll_count")}>
-                      <img
-                        src="assets/ui/refresh.svg"
-                        alt="↻"
-                        style={{ width: "24px", height: "24px" }}
-                      />{" "}
-                      {player.gameStats.rerollCount}
-                    </p>
-                    <Tooltip
-                      id={`stats-tooltip-${player.id}`}
-                      className="custom-theme-tooltip"
-                      place="right"
-                    >
-                      <PlayerStatsTooltip player={player} />
-                    </Tooltip>
-                  </td>
-                  <td>
-                    <Team team={player.pokemons} />
-                  </td>
-                  <td>
-                    <ul className="player-team-synergies">
-                      {player.synergies.filter(isActive).map((s) => (
-                        <React.Fragment key={s.name}>
-                          <SynergyIcon type={s.name} />
-                          <span>{s.value}</span>
-                        </React.Fragment>
-                      ))}
-                    </ul>
-                  </td>
-                </tr>
-              )
-            })}
-          </tbody>
-        </table>
+                    </td>
+                    <td data-tooltip-id={`stats-tooltip-${player.id}`}>
+                      <p title={t("game_stats.total_money_earned")}>
+                        <img
+                          src="assets/icons/money_total.svg"
+                          alt="$"
+                          style={{ width: "24px", height: "24px" }}
+                        />{" "}
+                        {player.gameStats.totalMoneyEarned}
+                      </p>
+                      <p title={t("game_stats.total_player_damage_dealt")}>
+                        <img
+                          src="assets/icons/ATK.png"
+                          alt="✊"
+                          style={{ width: "24px", height: "24px" }}
+                        />
+                        {player.gameStats.totalPlayerDamageDealt}
+                      </p>
+                      <p title={t("game_stats.total_reroll_count")}>
+                        <img
+                          src="assets/ui/refresh.svg"
+                          alt="↻"
+                          style={{ width: "24px", height: "24px" }}
+                        />{" "}
+                        {player.gameStats.rerollCount}
+                      </p>
+                      <Tooltip
+                        id={`stats-tooltip-${player.id}`}
+                        className="custom-theme-tooltip"
+                        place="right"
+                      >
+                        <PlayerStatsTooltip player={player} />
+                      </Tooltip>
+                    </td>
+                    <td>
+                      <Team team={player.pokemons} />
+                    </td>
+                    <td>
+                      <ul className="player-team-synergies">
+                        {player.synergies.filter(isActive).map((s) => (
+                          <React.Fragment key={s.name}>
+                            <SynergyIcon type={s.name} />
+                            <span>{s.value}</span>
+                          </React.Fragment>
+                        ))}
+                      </ul>
+                    </td>
+                  </tr>
+                )
+              })}
+            </tbody>
+          </table>
+        )}
       </div>
       <GamePokemonDetailTooltip origin="after" />
       <ItemDetailTooltip />

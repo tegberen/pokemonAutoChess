@@ -6,6 +6,8 @@ export const ExpThreshold = 1000
 export const MAX_LEVEL = 9
 
 // Experience required to move from level n to level n+1
+export const XP_PER_PURCHASE = 4
+
 export const ExpTable: { [key: number]: number } = Object.freeze({
   1: 0,
   2: 2,

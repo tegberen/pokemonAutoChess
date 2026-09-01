@@ -1,0 +1,78 @@
+.guide-menu-icon {
+  width: 1.4em;
+  height: 1.4em;
+  vertical-align: -0.25em;
+  margin-right: 0.4em;
+}
+
+.guide-menu .modal-body {
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+.modal.guide-menu {
+  width: min(30em, 92vw);
+}
+
+.guide-menu-content {
+  padding: 0.5em;
+}
+.guide-menu-note {
+  margin: 0.75em 0 0;
+  color: var(--color-fg-secondary, #d7d7d7);
+  text-align: center;
+}
+
+.guide-menu-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(8em, 9em));
+  justify-content: center;
+  gap: 0.6em;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.guide-menu-entry {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25em;
+  text-align: center;
+  min-height: 5.75em;
+  padding: 0.65em 0.5em;
+  cursor: pointer;
+  transition:
+    transform 0.12s ease,
+    box-shadow 0.12s ease,
+    opacity 0.2s ease;
+}
+
+.guide-menu-entry strong {
+  font-size: 1em;
+}
+
+.guide-menu-entry:focus-visible {
+  outline: 3px solid var(--color-fg-primary, #fff);
+  outline-offset: 2px;
+}
+
+.guide-menu-entry:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.45);
+}
+
+/* once a card is picked the others recede, so the choice reads as made while
+   the room is still being created */
+.guide-menu-list.is-picking .guide-menu-entry {
+  opacity: 0.3;
+  filter: grayscale(1);
+  pointer-events: none;
+}
+
+.guide-menu-list.is-picking .guide-menu-entry--picked {
+  opacity: 1;
+  filter: none;
+  transform: translateY(-2px);
+  box-shadow: 0 0 0 2px var(--color-fg-primary, #fff);
+}

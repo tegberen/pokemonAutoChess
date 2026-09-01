@@ -8,6 +8,7 @@ import {
   PortalCarouselStages,
   RegionDetails
 } from "../../../../../config"
+import { isPveStage } from "../../../../../core/guide/guide-stage"
 import { PVEStages } from "../../../../../models/pve-stages"
 import { Emotion } from "../../../../../types"
 import { BattleResult, GamePhaseState } from "../../../../../types/enum/Game"
@@ -32,12 +33,18 @@ export default function GameStageInfo() {
   const spectatedPlayer = useAppSelector(selectSpectatedPlayer)
   const stageLevel = useAppSelector((state) => state.game.stageLevel)
   const gameMode = useAppSelector((state) => state.game.gameMode)
+  const guideSynergy = useAppSelector((state) => state.game.guideSynergy)
   const finale = useAppSelector((state) => state.game.finale)
   const spectatorCount = useAppSelector((state) => state.game.spectatorCount)
 
   if (!spectatedPlayer) return null
 
-  const isPVE = stageLevel in PVEStages
+  /* Guide stages are PVE too, and most of them are not in the vanilla table -
+     without this the opponent name renders as the raw "pkm.SLOWKING" key. */
+  const isPVE = isPveStage(
+    { gameMode, guideSynergy },
+    stageLevel
+  )
   const name = spectatedPlayer.name
   const title = spectatedPlayer.title
   const avatar = spectatedPlayer.avatar

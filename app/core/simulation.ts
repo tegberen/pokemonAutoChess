@@ -403,7 +403,9 @@ export default class Simulation extends Schema implements ISimulation {
     id: string,
     room: GameRoom,
     bluePlayer: Player,
-    redPlayer: Player | { id: "pve"; board: MapSchema<Pokemon> },
+    redPlayer:
+      | Player
+      | { id: "pve"; board: MapSchema<Pokemon>; effects?: Set<EffectEnum> },
     stageLevel: number,
     weather: Weather,
     isGhostBattle = false,
@@ -426,6 +428,11 @@ export default class Simulation extends Schema implements ISimulation {
 
     this.bluePlayer.effects.forEach((e) => this.blueEffects.add(e))
     this.redPlayer?.effects.forEach((e) => this.redEffects.add(e))
+    /* A PVE side has no Player behind it, so its synergies have to be handed in
+       ready-made by whoever built the board. */
+    if (redPlayer.id === "pve") {
+      redPlayer.effects?.forEach((e) => this.redEffects.add(e))
+    }
     this.bluePartnerPlayer?.effects.forEach((e) =>
       this.bluePartnerEffects.add(e)
     )
