@@ -1,5 +1,6 @@
 import { Rarity } from "./Game"
 import { Item, SynergyGivenByItem } from "./Item"
+import { Passive } from "./Passive"
 import { Pkm, Unowns } from "./Pokemon"
 import { Synergy } from "./Synergy"
 
@@ -481,13 +482,13 @@ export const ECHO_CHAMBER_PP_TO_LEADER = 2
 export const ECHO_CHAMBER_PP_TO_ALLIES = 4
 export const LANGUAGE_BARRIER_SHIELD = 30
 export const LANGUAGE_BARRIER_UNOWNS_GRANTED = 2
-export const MOVE_TUTOR_MAX_PP = 80
+export const MOVE_TUTOR_MAX_PP = 70
 export const ZAP_CHAIN_DAMAGE_RATIO = 0.5
 // on top of the clone the BUG synergy already makes, for three copies in total
 export const BUG_CLONE_TRIPLE = 1
-export const DRAGON_KING_SHIELD_PER_STAR = 5
-export const DRAGON_KING_SPEED_PER_STAR = 1
-export const DRAGON_KING_ABILITY_POWER_PER_STAR = 1
+export const DRAGON_KING_SHIELD_PER_STAR = 10
+export const DRAGON_KING_SPEED_PER_STAR = 2
+export const DRAGON_KING_ABILITY_POWER_PER_STAR = 2
 export const ASCENSION_BREAK_FREE_CHECK_INTERVAL = 250
 // on top of the one application every LIGHT unit already gets at combat start
 export const ASCENSION_EXTRA_LIGHT_APPLICATIONS = 2
@@ -504,14 +505,28 @@ export const SELECTIVE_GENETICS_MAX_COST = 4
 export const SELECTIVE_GENETICS_SHINY_ITEM_OPTIONS = 3
 export const SELECTIVE_GENETICS_GOLDEN_EGG_CHANCE = 0.05
 export const FAST_FOOD_DELIVERY_ROUNDS_BEFORE_ROTTING = 3
+/* CHEFS_GREED lends every chef Snorlax's Glutton growth, so all three places
+   that grow max HP on eating ask this rather than the passive directly */
+export function hasGluttonGrowth(
+  pokemon: { passive: Passive; items: { has(item: Item): boolean } },
+  blessings?: Blessing[]
+): boolean {
+  return (
+    pokemon.passive === Passive.GLUTTON ||
+    (blessings?.includes(Blessing.CHEFS_GREED) === true &&
+      pokemon.items.has(Item.CHEF_HAT))
+  )
+}
+
 export const CHEFS_GREED_DISHES = 2
 export const CHEFS_GREED_DISHES_WITH_BELT = 3
 export const GEM_RUSH_EXTRA_GEMS = 1
 export const CRYSTAL_CLUSTERS_SIMULTANEOUS = 2
 export const CRYSTAL_CLUSTERS_ROCKS_GRANTED = 2
-export const BERSERKER_HORDES_SHOP_INTERVAL = 10
+export const BERSERKER_HORDES_SHOP_INTERVAL = 8
 export const SHARE_THE_SPOTLIGHT_RATIO = 0.5
 export const SLIPSTREAM_SPEED = 5
+export const SLIPSTREAM_ATTACK = 1
 export const SHAPELESS_SYNERGIES_MIN_ACTIVE = 3
 export const SHAPELESS_SYNERGIES_SPEED_RATIO = 0.5
 export const SHAPELESS_SYNERGIES_HP_RATIO = 0.5
@@ -519,12 +534,11 @@ export const POLLUTED_SEA_POISON_DURATION = 3000
 export const TIDAL_SURGE_ITEMS_REQUIRED = 2
 export const STAR_CROSSED_SEAS_MAX_HP = 50
 export const STAR_CROSSED_SEAS_ABILITY_POWER = 25
-export const MOLECULAR_CORROSION_DAMAGE_MULTIPLIER = 1.3
+export const MOLECULAR_CORROSION_DAMAGE_MULTIPLIER = 1.25
 export const RAINBOW_DROPLET_SYNERGIES_REQUIRED = 8
 export const MONSTER_KING_BEAM_INTERVAL = 8000
 export const ADOPTION_STARTERS: Pkm[] = [Pkm.AZURILL, Pkm.PICHU, Pkm.IGGLYBUFF]
 export const ADOPTION_FALLBACK = Pkm.HAPPINY
-export const ARCHEOLOGY_TWO_STAR_CHANCE = 0.1
 export const ARCHEOLOGY_RARITY_WEIGHTS = {
   [Rarity.UNCOMMON]: 60,
   [Rarity.RARE]: 30,
@@ -534,7 +548,7 @@ export const ARCHEOLOGY_RARITY_WEIGHTS = {
    re-checked until the unit has stopped moving: dash travel time depends on the
    distance covered, so no fixed delay can cover it */
 export const BULL_LEAPING_FOLLOW_UP_DELAY = 500
-export const FESTIVE_PICNIC_MAX_HP_ON_OVERWRITE = 5
+export const FESTIVE_PICNIC_MAX_HP_ON_OVERWRITE = 10
 // additive, applied before luck scales it in chance()
 export const MYSTOGAN_PROC_CHANCE_BONUS = 0.05
 
@@ -639,22 +653,25 @@ export const IGNITION_LIFE_HEAL_ON_KO = 1
 /* rounds of waiting after an ignition: ignite on round 1, wait rounds 2 and 3,
    ignite again on round 4. Soul Blaze and Arcanine's passive skip the wait */
 export const IGNITION_COOLDOWN_ROUNDS = 2
+export const SOUL_BLAZE_FIRE_SHARDS = 5
+export const AUTO_CRAFTING_COMPONENTS = 3
 export const FERTILE_SOIL_DIG_PERMANENT_HP = 5
 export const FERTILE_SOIL_HOLE_MAX_HP_RATIO = 0.1
 export const FERTILE_SOIL_ABSORB_ROUNDS = 5
 export const DEEP_WOUNDS_ARMOR_BREAK_DURATION = 5000
-export const DEEP_WOUNDS_DEFENSE_LOSS = 2
+export const DEEP_WOUNDS_DEFENSE_LOSS = 4
 export const DEEP_WOUNDS_DEFENSE_LOSS_CHANCE = 0.3
+export const FAST_DELIVERY_ATTACK_PER_SEED = 2
 export const FAST_DELIVERY_LUCK_PER_SEED = 5
 export const FAST_DELIVERY_RETURN_DELAY = 1
 export const BERRY_GROWTH_PERMANENT_HP = 10
 export const BERRY_GROWTH_GOLDEN_PERMANENT_HP = 15
-export const BERRY_GROWTH_GOLDEN_BERRIES_GRANTED = 2
+export const BERRY_GROWTH_GOLDEN_BERRIES_GRANTED = 5
 export const BERRY_GROWTH_GOLDEN_BERRIES_STAGE = 12
 // GRASS tier 3, so GRASS 7 and above
 export const BERRY_GROWTH_GOLDEN_TIER = 3
 export const HEX_MANIAC_STATUS_DURATION = 30000
-export const ABSOLUTE_DARKNESS_BLIND_CHANCE = 0.05
+export const ABSOLUTE_DARKNESS_BLIND_CHANCE = 0.1
 export const ABSOLUTE_DARKNESS_BLIND_DURATION = 3000
 export const EXHAUSTING_FLAME_DAMAGE_MULTIPLIER = 0.8
 export const EXHAUSTING_FLAME_LUCK_PER_STAR = 5
@@ -672,6 +689,7 @@ export const RAINBOW_HOUR_FOSSIL_STONES = 2
 export const RAINBOW_HOUR_EEVEELUTIONS_TARGET = 7
 export const RAINBOW_HOUR_GOLD_REWARD = 77
 export const MANIFESTATION_UNLOCK_STAGE = 20
+export const HERO_BLESSING_HATCH_MAX_HP = 50
 export const QUEST_ASCEND_POKEMONS = 3
 export const ROCKY_BEGINNINGS_POKEMONS = 2
 export const QUEST_EVOLVE_II_RARES_GRANTED = 2
@@ -761,6 +779,7 @@ export const PLUNDER_GOLD_MULTIPLIER = 2
 
 export const JESTER_SUBSTITUTE_MAX_PP = 80
 export const JESTER_SUBSTITUTE_MAX_STARS = 4
+export const JESTER_CRIT_POWER_PER_STAR = 0.5
 export const TOXIC_RESONANCE_BEAT_INTERVAL = 3000
 export const TOXIC_RESONANCE_HARMONIC_BEAT = 4
 export const TOXIC_RESONANCE_POISON_DURATION = 3000
@@ -791,7 +810,7 @@ export const MAGIC_SHIELD_ALLY_AP = 30
 export const BRUTE_SHIELD_ATTACK_RATIO = 3
 export const BRUTE_SHIELD_ALLY_ATTACK = 3
 export const STAR_GUARD_DEFENSE_PER_STAR = 1
-export const MACHINE_RESIDUE_SHIELD = 20
+export const MACHINE_RESIDUE_SHIELD = 50
 export const SAPPHIRE_ORB_BOUNCES = 3
 export const SAPPHIRE_ORB_ARMOR_BREAK_DURATION = 3000
 export const RUBY_ORB_TRUE_DAMAGE_VS_BURN = 0.5
@@ -815,7 +834,7 @@ export const QUICK_CLAW_COMPENSATION_STAGE = 12
 export const BLESSING_SELECTION_EXTRA_TIME = 30000
 
 export const QUEST_INDECISION_SYNERGIES_TARGET = 3
-export const QUEST_CRIT_POWER_TARGET = 4
+export const QUEST_CRIT_POWER_TARGET = 5
 export const QUEST_ABSORB_DAMAGE_BLOCKED_TARGET = 1000
 export const QUEST_REVIVE_TARGET = 16
 export const QUEST_PILLAGE_GOLD_TARGET = 30
@@ -865,7 +884,7 @@ export const GUARD_FORMATION_SHARE_RATIO = 0.5
 export const BRAVE_FORMATION_CRIT_CHANCE_PER_EMPTY_TILE = 10 // in %
 export const TOUGH_FORMATION_DEFENSE_PER_ADJACENT_ALLY = 2
 
-export const IMPENDING_DOOM_DELAY = 10000
+export const IMPENDING_DOOM_DELAY = 7000
 export const IMPENDING_DOOM_KO_ACCELERATION = 1000
 
 export const STARTER_CHOICE_OPTIONS = 3
@@ -1081,6 +1100,7 @@ export const MAX_REVIVE_RALLY_SPEED = 30
 export const CHOICE_SPECS_ALLY_MIN_MAX_PP = 100
 export const SOOTHE_BELL_MAX_PP_RATIO = 0.25
 export const AQUA_EGG_PHIONE_ALLY_PP = 5
+export const RAZOR_FANG_FOLLOW_UP_ATTACK_RATIO = 0.4
 export const STAR_DUST_RUNE_PROTECT_DURATION = 4000
 export const DEEP_SEA_TOOTH_EXECUTE_HP_RATIO = 0.5
 export const DEEP_SEA_TOOTH_DAMAGE_MULTIPLIER = 2

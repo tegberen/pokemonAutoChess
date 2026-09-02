@@ -186,6 +186,7 @@ function synergyFamilyDefinitions(
         availableAtStages: BLESSING_SELECTION_STAGES,
         icon,
         grantsPokemonImmediately: true,
+        benchSlotsRequired: family === "CREST" ? 2 : 1,
         synergy,
         family
       }
@@ -928,10 +929,10 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     synergy: Synergy.GOURMET
   },
   [Blessing.CHEFS_GREED]: {
-    tier: BlessingTier.GOLD,
+    tier: BlessingTier.PRISMATIC,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "ladle",
-    grantsPokemonImmediately: true,
+    grantsPokemonImmediately: false,
     synergy: Synergy.GOURMET
   },
   [Blessing.BERRY_BREAKFAST]: {
@@ -1222,10 +1223,10 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     grantsPokemonImmediately: false
   },
   [Blessing.FESTIVE_PICNIC]: {
-    tier: BlessingTier.PRISMATIC,
+    tier: BlessingTier.GOLD,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "festive_picnic",
-    grantsPokemonImmediately: false,
+    grantsPokemonImmediately: true,
     synergy: Synergy.GOURMET
   },
   [Blessing.ICY_REFLECTION]: {
@@ -1470,7 +1471,7 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     benchSlotsRequired: 1 + QUEST_EVOLVE_II_RARES_GRANTED
   },
   [Blessing.IMPENDING_DOOM]: {
-    tier: BlessingTier.PRISMATIC,
+    tier: BlessingTier.GOLD,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "impending_doom",
     grantsPokemonImmediately: true

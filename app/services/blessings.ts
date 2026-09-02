@@ -40,7 +40,7 @@ import {
   ADOPTION_STARTERS,
   ALL_FOR_ONE_MAX_HP_RATIO,
   ARCHEOLOGY_RARITY_WEIGHTS,
-  ARCHEOLOGY_TWO_STAR_CHANCE,
+  AUTO_CRAFTING_COMPONENTS,
   BABY_OPENER_BABIES_GRANTED,
   BABY_OPENER_MAX_COST,
   BEING_OF_KNOWLEDGE_MAX_LEVEL,
@@ -64,6 +64,7 @@ import {
   HERO_BLESSING_ADDS_TO_POOL,
   HERO_BLESSING_FAMILY,
   HERO_BLESSING_GIFT,
+  HERO_BLESSING_HATCH_MAX_HP,
   HERO_BLESSING_MOVES_REGION,
   ITEM_GRANTED_BY_BLESSING,
   LANCES_ACE_DELAY,
@@ -98,6 +99,7 @@ import {
   SINGULARITY_OPTIONS,
   STARTER_CHOICE_EXTRA_ROUNDS,
   STARTER_CHOICE_OPTIONS,
+  SOUL_BLAZE_FIRE_SHARDS,
   STARTER_PACK_CONTENT,
   SYNARCH_GEMS_PER_UNIQUE,
   TRASH_TO_TREASURE_ROUNDS_BY_STAR,
@@ -156,6 +158,7 @@ import {
 import { schemaValues } from "../utils/schemas"
 
 const PEARL_GOLD_GAINED = 10
+const RELIC_FRAGMENT_GOLD = 5
 const CROAGUNKS_AID_EXCHANGE_TICKETS = 3
 const ADDITIONAL_RETHINK_GOLD = { I: 4, II: 8 }
 const BAG_OF_SWEETS_AMOUNT = 10
@@ -356,7 +359,7 @@ function itemBlessingEffects() {
   )
 }
 
-function synergyGemFamilyEffects(
+function synergyFamilyEffects(
   family: "BADGE" | "CREST",
   pokemonGranted: number
 ) {
@@ -365,8 +368,13 @@ function synergyGemFamilyEffects(
       `${synergy}_${family}_BLESSING`,
       (player: Player) => {
         if (getFreeSpaceOnBench(player.board) < pokemonGranted) return false
-        const gem = GemBySynergy[synergy]
-        if (gem) grantSynergyAwareItem(player, gem)
+        // a Crest hands out the item its Crown leads with, a Badge the gem
+        const item =
+          family === "CREST"
+            ? CrownBlessingContent[`${synergy}_CROWN_BLESSING` as Blessing]
+                ?.items[0]
+            : GemBySynergy[synergy]
+        if (item) grantSynergyAwareItem(player, item)
         giftUncommonsOfSynergy(player, synergy, pokemonGranted)
         return true
       }
@@ -378,124 +386,124 @@ const CrownBlessingContent: {
   [blessing in Blessing]?: { items: Item[]; pokemon: Pkm }
 } = {
   [Blessing.NORMAL_CROWN_BLESSING]: {
-    items: [Item.FRIEND_BOW, Item.PROTECTIVE_PADS],
-    pokemon: Pkm.IGGLYBUFF
+    items: [Item.FRIEND_BOW, Item.COVER_BAND],
+    pokemon: Pkm.JIGGLYPUFF
   },
   [Blessing.FLYING_CROWN_BLESSING]: {
     items: [Item.AIR_BALLOON, Item.RAZOR_CLAW],
-    pokemon: Pkm.QUAXLY
+    pokemon: Pkm.QUAXWELL
   },
   [Blessing.FIELD_CROWN_BLESSING]: {
-    items: [Item.RUNNING_SHOES, Item.MUSCLE_BAND],
-    pokemon: Pkm.LITTEN
+    items: [Item.RUNNING_SHOES, Item.DESTINY_KNOT],
+    pokemon: Pkm.TORRACAT
   },
   [Blessing.DARK_CROWN_BLESSING]: {
-    items: [Item.DUSK_STONE, Item.LOADED_DICE],
-    pokemon: Pkm.FROAKIE
+    items: [Item.DUSK_STONE, Item.BLACK_BELT],
+    pokemon: Pkm.FROGADIER
   },
   [Blessing.GROUND_CROWN_BLESSING]: {
-    items: [Item.EXPLORER_KIT, Item.GREEN_ORB],
-    pokemon: Pkm.NIDORANM
+    items: [Item.EXPLORER_KIT, Item.SAFETY_GOGGLES],
+    pokemon: Pkm.NIDORINO
   },
   [Blessing.PSYCHIC_CROWN_BLESSING]: {
-    items: [Item.DAWN_STONE, Item.SOUL_DEW],
-    pokemon: Pkm.HATENNA
+    items: [Item.DAWN_STONE, Item.AQUA_EGG],
+    pokemon: Pkm.HATTREM
   },
   [Blessing.GRASS_CROWN_BLESSING]: {
     items: [Item.LEAF_STONE, Item.GREEN_ORB],
-    pokemon: Pkm.TREECKO
+    pokemon: Pkm.ELDEGOSS
   },
   [Blessing.BUG_CROWN_BLESSING]: {
     items: [Item.SHED_SHELL, Item.RELIC_CROWN],
-    pokemon: Pkm.GRUBBIN
+    pokemon: Pkm.CHARJABUG
   },
   [Blessing.WATER_CROWN_BLESSING]: {
     items: [Item.WATER_STONE, Item.CHOICE_SPECS],
-    pokemon: Pkm.FROAKIE
+    pokemon: Pkm.WARTORTLE
   },
   [Blessing.AQUATIC_CROWN_BLESSING]: {
-    items: [Item.SURFBOARD, Item.STAR_DUST],
+    items: [Item.SURFBOARD, Item.SHELL_BELL],
     pokemon: Pkm.PIKACHU
   },
   [Blessing.POISON_CROWN_BLESSING]: {
-    items: [Item.POKERUS_VIAL, Item.LOADED_DICE],
-    pokemon: Pkm.NIDORANF
+    items: [Item.POKERUS_VIAL, Item.UPGRADE],
+    pokemon: Pkm.NIDORINA
   },
   [Blessing.FAIRY_CROWN_BLESSING]: {
-    items: [Item.MOON_STONE, Item.DESTINY_KNOT],
-    pokemon: Pkm.MARILL
+    items: [Item.MOON_STONE, Item.LOADED_DICE],
+    pokemon: Pkm.DELCATTY
   },
   [Blessing.FIGHTING_CROWN_BLESSING]: {
-    items: [Item.MACHO_BRACE, Item.POKE_DOLL],
-    pokemon: Pkm.MACHOP
+    items: [Item.MACHO_BRACE, Item.ROCKY_HELMET],
+    pokemon: Pkm.MACHOKE
   },
   [Blessing.FIRE_CROWN_BLESSING]: {
-    items: [Item.FIRE_STONE, Item.RED_ORB],
-    pokemon: Pkm.LITTEN
+    items: [Item.FIRE_STONE, Item.XRAY_VISION],
+    pokemon: Pkm.TORRACAT
   },
   [Blessing.GHOST_CROWN_BLESSING]: {
-    items: [Item.SPELL_TAG, Item.SMOKE_BALL],
-    pokemon: Pkm.SNORUNT
+    items: [Item.SPELL_TAG, Item.MAX_REVIVE],
+    pokemon: Pkm.GLALIE
   },
   [Blessing.ROCK_CROWN_BLESSING]: {
-    items: [Item.EVER_STONE, Item.STICKY_BARB],
-    pokemon: Pkm.NACLI
+    items: [Item.EVER_STONE, Item.FAIRY_FEATHER],
+    pokemon: Pkm.NACLSTACK
   },
   [Blessing.MONSTER_CROWN_BLESSING]: {
-    items: [Item.BERSERK_GENE, Item.RELIC_CROWN],
-    pokemon: Pkm.TREECKO
+    items: [Item.BERSERK_GENE, Item.WIDE_LENS],
+    pokemon: Pkm.GROVYLE
   },
   [Blessing.AMORPHOUS_CROWN_BLESSING]: {
     items: [Item.AMORPHOUS_GEM, Item.PUNCHING_GLOVE],
-    pokemon: Pkm.SLIGOO
+    pokemon: Pkm.PALOSSAND
   },
   [Blessing.WILD_CROWN_BLESSING]: {
-    items: [Item.WHITE_FLUTE, Item.FLAME_ORB],
-    pokemon: Pkm.AIPOM
+    items: [Item.WHITE_FLUTE, Item.RED_ORB],
+    pokemon: Pkm.AMBIPOM
   },
   [Blessing.SOUND_CROWN_BLESSING]: {
-    items: [Item.METRONOME, Item.DEEP_SEA_TOOTH],
-    pokemon: Pkm.IGGLYBUFF
+    items: [Item.METRONOME, Item.EFFICIENT_BANDANNA],
+    pokemon: Pkm.JIGGLYPUFF
   },
   [Blessing.FLORA_CROWN_BLESSING]: {
-    items: [Item.INCENSE, Item.GRACIDEA_FLOWER],
-    pokemon: Pkm.FLABEBE
+    items: [Item.INCENSE, Item.SOUL_DEW],
+    pokemon: Pkm.FLOETTE
   },
   [Blessing.STEEL_CROWN_BLESSING]: {
-    items: [Item.METAL_COAT, Item.RED_ORB],
-    pokemon: Pkm.MAGNEMITE
+    items: [Item.METAL_COAT, Item.FLAME_ORB],
+    pokemon: Pkm.MAGNETON
   },
   [Blessing.ELECTRIC_CROWN_BLESSING]: {
     items: [Item.THUNDER_STONE, Item.BLUE_ORB],
-    pokemon: Pkm.GRUBBIN
+    pokemon: Pkm.CHARJABUG
   },
   [Blessing.ICE_CROWN_BLESSING]: {
     items: [Item.ICE_STONE, Item.POWER_LENS],
-    pokemon: Pkm.SNORUNT
+    pokemon: Pkm.GLALIE
   },
   [Blessing.HUMAN_CROWN_BLESSING]: {
-    items: [Item.HUMAN_GEM, Item.SAFETY_GOGGLES],
-    pokemon: Pkm.MACHOP
+    items: [Item.HUMAN_GEM, Item.MUSCLE_BAND],
+    pokemon: Pkm.MACHOKE
   },
   [Blessing.DRAGON_CROWN_BLESSING]: {
     items: [Item.DRAGON_SCALE, Item.DEEP_SEA_TOOTH],
-    pokemon: Pkm.CHARMANDER
+    pokemon: Pkm.CHARMELEON
   },
   [Blessing.LIGHT_CROWN_BLESSING]: {
     items: [Item.LIGHT_BALL, Item.STAR_DUST],
-    pokemon: Pkm.CHERRIM
+    pokemon: Pkm.CLEFAIRY
   },
   [Blessing.GOURMET_CROWN_BLESSING]: {
-    items: [Item.COOKING_POT, Item.SOOTHE_BELL],
-    pokemon: Pkm.NACLI
+    items: [Item.COOKING_POT, Item.BIG_EATER_BELT],
+    pokemon: Pkm.NACLSTACK
   },
   [Blessing.FOSSIL_CROWN_BLESSING]: {
-    items: [Item.OLD_AMBER, Item.CLEAR_AMULET],
+    items: [Item.OLD_AMBER, Item.KINGS_ROCK],
     pokemon: Pkm.PILOSWINE
   },
   [Blessing.ARTIFICIAL_CROWN_BLESSING]: {
-    items: [Item.ARTIFICIAL_GEM, Item.WIDE_LENS],
-    pokemon: Pkm.MAGNEMITE
+    items: [Item.ARTIFICIAL_GEM, Item.WONDER_BOX],
+    pokemon: Pkm.MAGNETON
   }
 }
 
@@ -505,6 +513,8 @@ const crownEffects = Object.fromEntries(
     (player: Player) => {
       if (getFreeSpaceOnBench(player.board) < 1) return false
       content.items.forEach((item) => grantSynergyAwareItem(player, item))
+      // kept out of the table so a Crest never inherits it as its lead item
+      player.items.push(Item.LAPRAS_PASSPORT)
       giftPokemonIfBenchHasRoom(player, content.pokemon)
       return true
     }
@@ -801,9 +811,7 @@ export function grantArcheologyRewards(player: Player, index: number) {
 
   const rarity = randomWeighted<Rarity>(ARCHEOLOGY_RARITY_WEIGHTS)
   if (rarity) {
-    const stars = chance(ARCHEOLOGY_TWO_STAR_CHANCE) ? 2 : 1
-    const fossil =
-      pickArcheologyFossil(rarity, stars) ?? pickArcheologyFossil(rarity, 1)
+    const fossil = pickArcheologyFossil(rarity, 1)
     if (fossil) giftPokemonIfBenchHasRoom(player, fossil)
   }
 
@@ -837,13 +845,19 @@ export function rollWaterFountainPonds(player: Player) {
   })
 }
 
-function giftPokemonIfBenchHasRoom(player: Player, pkm: Pkm): boolean {
+function giftPokemonIfBenchHasRoom(
+  player: Player,
+  pkm: Pkm,
+  bonusMaxHp = 0
+): boolean {
   const freeCellX = getFirstAvailablePositionInBench(player.board)
   if (freeCellX === null) return false
   const pokemon = PokemonFactory.createPokemonFromName(
     getAltFormForPlayer(pkm, player),
     player
   )
+  pokemon.hp += bonusMaxHp
+  pokemon.maxHP += bonusMaxHp
   pokemon.positionX = freeCellX
   pokemon.positionY = 0
   player.board.set(pokemon.id, pokemon)
@@ -1397,10 +1411,17 @@ function heroBlessingEffect(
   room?: GameRoom
 ): boolean {
   const gift = HERO_BLESSING_GIFT[blessing]
+  const bonusMaxHp =
+    gift && getPokemonData(gift).rarity === Rarity.HATCH
+      ? HERO_BLESSING_HATCH_MAX_HP
+      : 0
   if (
     gift &&
-    giftPokemonIfBenchHasRoom(player, getAltFormForPlayer(gift, player)) ===
-      false
+    giftPokemonIfBenchHasRoom(
+      player,
+      getAltFormForPlayer(gift, player),
+      bonusMaxHp
+    ) === false
   )
     return false
   const family = HERO_BLESSING_FAMILY[blessing]
@@ -1767,8 +1788,8 @@ export const blessingEffectService: {
   ) => boolean
 } = {
   ...itemBlessingEffects(),
-  ...synergyGemFamilyEffects("BADGE", 1),
-  ...synergyGemFamilyEffects("CREST", 2),
+  ...synergyFamilyEffects("BADGE", 1),
+  ...synergyFamilyEffects("CREST", 2),
   ...crownEffects,
 
   [Blessing.LUNCH_MONEY]: () => true,
@@ -2097,8 +2118,7 @@ export const blessingEffectService: {
   [Blessing.FAST_FOOD_DELIVERY]: (player) =>
     giftPokemonIfBenchHasRoom(player, Pkm.NACLI),
 
-  [Blessing.CHEFS_GREED]: (player) =>
-    giftPokemonIfBenchHasRoom(player, Pkm.NACLI),
+  [Blessing.CHEFS_GREED]: () => true,
 
   [Blessing.BERRY_BREAKFAST]: (player) => {
     if (!giftPokemonIfBenchHasRoom(player, Pkm.SMOLIV)) return false
@@ -2271,8 +2291,15 @@ export const blessingEffectService: {
     return true
   },
 
+  [Blessing.SOUL_BLAZE]: (player) => {
+    for (let i = 0; i < SOUL_BLAZE_FIRE_SHARDS; i++) {
+      player.items.push(Item.FIRE_SHARD)
+    }
+    return true
+  },
+
   [Blessing.AUTO_CRAFTING]: (player) => {
-    player.items.push(...pickNRandomIn(ItemComponents, 2))
+    player.items.push(...pickNRandomIn(ItemComponents, AUTO_CRAFTING_COMPONENTS))
     return true
   },
 
@@ -2301,6 +2328,7 @@ export const blessingEffectService: {
   [Blessing.ROBIN_GEMS]: () => true,
 
   [Blessing.FESTIVE_PICNIC]: (player) => {
+    if (!giftPokemonIfBenchHasRoom(player, Pkm.NACLI)) return false
     serveFestivePicnicDishes(player)
     return true
   },
@@ -2868,6 +2896,7 @@ export const blessingEffectService: {
 
   [Blessing.RELIC_FRAGMENT]: (player, state) => {
     player.items.push(Item.LAPRAS_PASSPORT)
+    player.addMoney(RELIC_FRAGMENT_GOLD, true, null)
     scheduleBlessingGrant(player, state, Blessing.RELIC_FRAGMENT, [10, 20])
     return true
   },

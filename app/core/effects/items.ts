@@ -78,13 +78,15 @@ import {
   SHELL_BELL_TIDAL_WAVE_LEVEL,
   SMOKE_BALL_SPIKES_LOCK_DURATION,
   SOOTHE_BELL_MAX_PP_RATIO,
+  RAZOR_FANG_FOLLOW_UP_ATTACK_RATIO,
   STAR_DUST_RUNE_PROTECT_DURATION,
   STICKY_BARB_SELF_DAMAGE_ATTACK_RATIO,
   UPGRADE_BLESSED_SPEED_RATIO,
   UPGRADE_BLESSED_STACKS_REQUIRED,
   WIDE_LENS_BLESSED_RANGE,
   XRAY_VISION_EXPOSE_DURATION,
-  XRAY_VISION_HITS_TO_EXPOSE
+  XRAY_VISION_HITS_TO_EXPOSE,
+  hasGluttonGrowth
 } from "../../types/enum/Blessing"
 import { isIn, removeInArray } from "../../utils/array"
 import { grantRegionalTreasuresOnRegionChange } from "../../services/blessings"
@@ -696,7 +698,7 @@ const chefCookEffect = new OnStageStartEffect(({ pokemon, player, room }) => {
     dish = Item.SANDWICH
   }
 
-  if (chef.passive === Passive.GLUTTON) {
+  if (hasGluttonGrowth(chef, player?.blessings)) {
     chef.addMaxHP(30)
     if (chef.maxHP > 750) {
       player.titles.add(Title.GLUTTON)
@@ -1773,7 +1775,13 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
         )
           return
         isFollowUpAttack = true
+        // state.attack reads pokemon.atk, so the weaker hit is staged on it
+        const fullAttack = pokemon.atk
+        pokemon.atk = Math.round(
+          fullAttack * RAZOR_FANG_FOLLOW_UP_ATTACK_RATIO
+        )
         pokemon.state.attack(pokemon, board, target)
+        pokemon.atk = fullAttack
         isFollowUpAttack = false
       })
     }

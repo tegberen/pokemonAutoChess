@@ -72,6 +72,7 @@ import {
   POLLUTED_SEA_POISON_DURATION,
   STAR_CROSSED_SEAS_ABILITY_POWER,
   STAR_CROSSED_SEAS_MAX_HP,
+  FAST_DELIVERY_ATTACK_PER_SEED,
   FAST_DELIVERY_LUCK_PER_SEED,
   MONSTER_KING_BEAM_INTERVAL,
   IGNITION_SHIELD,
@@ -159,6 +160,7 @@ import {
   HAIL_TO_THE_KING_SPECIAL_DEFENSE,
   HAIL_TO_THE_KING_SPEED,
   YOU_FORGOT_SOMETHING_DELAY,
+  JESTER_CRIT_POWER_PER_STAR,
   JESTER_SUBSTITUTE_MAX_PP,
   JESTER_SUBSTITUTE_MAX_STARS,
   GRAND_IGNITION_TRUE_DAMAGE_RATIO,
@@ -212,7 +214,8 @@ import {
   STAR_GUARD_DEFENSE_PER_STAR,
   MACHINE_RESIDUE_SHIELD,
   WONDER_BOX_BLESSED_ITEMS,
-  CHOICE_SPECS_ALLY_MIN_MAX_PP
+  CHOICE_SPECS_ALLY_MIN_MAX_PP,
+  hasGluttonGrowth
 } from "../types/enum/Blessing"
 import { GracideaBlossomEffect } from "./effects/items"
 import { isSynergyActiveForPlayer } from "../config/game/blessings"
@@ -1396,7 +1399,7 @@ export default class Simulation extends Schema implements ISimulation {
         effect.apply(entity, player, true)
     })
 
-    if (pokemon.passive === Passive.GLUTTON) {
+    if (hasGluttonGrowth(pokemon, player?.blessings)) {
       pokemon.addMaxHP(20)
       entity?.addMaxHP(20, entity, 0, false)
       if (player && pokemon.maxHP > 750) {
@@ -2680,14 +2683,20 @@ export default class Simulation extends Schema implements ISimulation {
         if (seedsCollected > 0) {
           ownUnits
             .filter((ally) => ally.types.has(Synergy.FLYING))
-            .forEach((ally) =>
+            .forEach((ally) => {
+              ally.addAttack(
+                FAST_DELIVERY_ATTACK_PER_SEED * seedsCollected,
+                ally,
+                0,
+                false
+              )
               ally.addLuck(
                 FAST_DELIVERY_LUCK_PER_SEED * seedsCollected,
                 ally,
                 0,
                 false
               )
-            )
+            })
         }
       }
 
@@ -3485,11 +3494,16 @@ export default class Simulation extends Schema implements ISimulation {
             true
           )
           jester.skill = Ability.METRONOME
+          jester.metronomeForcedRarity = Rarity.LEGENDARY
           jester.stars = Math.max(
             1,
             Math.min(
               JESTER_SUBSTITUTE_MAX_STARS,
-              1 + Math.floor(caster.critPower - DEFAULT_CRIT_POWER)
+              1 +
+                Math.floor(
+                  (caster.critPower - DEFAULT_CRIT_POWER) /
+                    JESTER_CRIT_POWER_PER_STAR
+                )
             )
           )
           jester.maxPP = JESTER_SUBSTITUTE_MAX_PP

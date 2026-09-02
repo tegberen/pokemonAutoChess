@@ -675,7 +675,9 @@ export class MetronomeStrategy extends AbilityStrategy {
   ) {
     const threshold = Math.pow(Math.random(), 1 + pokemon.luck / 100)
     let rarity = Rarity.COMMON
-    if (threshold < 1 / 8) {
+    if (pokemon.metronomeForcedRarity) {
+      rarity = pokemon.metronomeForcedRarity
+    } else if (threshold < 1 / 8) {
       rarity = Rarity.ULTRA
     } else if (threshold < 2 / 8) {
       rarity = Rarity.LEGENDARY

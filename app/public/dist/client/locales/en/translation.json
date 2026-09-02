@@ -4710,7 +4710,7 @@
 		},
 		"NORMAL_CREST_BLESSING": {
 			"name": "Normal Crest",
-			"description": "Gain a NORMAL_GEM and 2 random 1 STAR Uncommon NORMAL Pokémon."
+			"description": "Gain a FRIEND_BOW and 2 random 1 STAR Uncommon NORMAL Pokémon."
 		},
 		"FLYING_BADGE_BLESSING": {
 			"name": "Flying Badge",
@@ -4718,7 +4718,7 @@
 		},
 		"FLYING_CREST_BLESSING": {
 			"name": "Flying Crest",
-			"description": "Gain a FLYING_GEM and 2 random 1 STAR Uncommon FLYING Pokémon."
+			"description": "Gain an AIR_BALLOON and 2 random 1 STAR Uncommon FLYING Pokémon."
 		},
 		"FIELD_BADGE_BLESSING": {
 			"name": "Field Badge",
@@ -4726,7 +4726,7 @@
 		},
 		"FIELD_CREST_BLESSING": {
 			"name": "Field Crest",
-			"description": "Gain a FIELD_GEM and 2 random 1 STAR Uncommon FIELD Pokémon."
+			"description": "Gain a RUNNING_SHOES and 2 random 1 STAR Uncommon FIELD Pokémon."
 		},
 		"DARK_BADGE_BLESSING": {
 			"name": "Dark Badge",
@@ -4734,7 +4734,7 @@
 		},
 		"DARK_CREST_BLESSING": {
 			"name": "Dark Crest",
-			"description": "Gain a DARK_GEM and 2 random 1 STAR Uncommon DARK Pokémon."
+			"description": "Gain a DUSK_STONE and 2 random 1 STAR Uncommon DARK Pokémon."
 		},
 		"GROUND_BADGE_BLESSING": {
 			"name": "Ground Badge",
@@ -4742,7 +4742,7 @@
 		},
 		"GROUND_CREST_BLESSING": {
 			"name": "Ground Crest",
-			"description": "Gain a GROUND_GEM and 2 random 1 STAR Uncommon GROUND Pokémon."
+			"description": "Gain an EXPLORER_KIT and 2 random 1 STAR Uncommon GROUND Pokémon."
 		},
 		"PSYCHIC_BADGE_BLESSING": {
 			"name": "Psychic Badge",
@@ -4750,7 +4750,7 @@
 		},
 		"PSYCHIC_CREST_BLESSING": {
 			"name": "Psychic Crest",
-			"description": "Gain a PSYCHIC_GEM and 2 random 1 STAR Uncommon PSYCHIC Pokémon."
+			"description": "Gain a DAWN_STONE and 2 random 1 STAR Uncommon PSYCHIC Pokémon."
 		},
 		"GRASS_BADGE_BLESSING": {
 			"name": "Grass Badge",
@@ -4758,7 +4758,7 @@
 		},
 		"GRASS_CREST_BLESSING": {
 			"name": "Grass Crest",
-			"description": "Gain a GRASS_GEM and 2 random 1 STAR Uncommon GRASS Pokémon."
+			"description": "Gain a LEAF_STONE and 2 random 1 STAR Uncommon GRASS Pokémon."
 		},
 		"BUG_BADGE_BLESSING": {
 			"name": "Bug Badge",
@@ -4766,7 +4766,7 @@
 		},
 		"BUG_CREST_BLESSING": {
 			"name": "Bug Crest",
-			"description": "Gain a BUG_GEM and 2 random 1 STAR Uncommon BUG Pokémon."
+			"description": "Gain a SHED_SHELL and 2 random 1 STAR Uncommon BUG Pokémon."
 		},
 		"WATER_BADGE_BLESSING": {
 			"name": "Water Badge",
@@ -4774,7 +4774,7 @@
 		},
 		"WATER_CREST_BLESSING": {
 			"name": "Water Crest",
-			"description": "Gain a WATER_GEM and 2 random 1 STAR Uncommon WATER Pokémon."
+			"description": "Gain a WATER_STONE and 2 random 1 STAR Uncommon WATER Pokémon."
 		},
 		"AQUATIC_BADGE_BLESSING": {
 			"name": "Aquatic Badge",
@@ -4782,7 +4782,7 @@
 		},
 		"AQUATIC_CREST_BLESSING": {
 			"name": "Aquatic Crest",
-			"description": "Gain an AQUATIC_GEM and 2 random 1 STAR Uncommon AQUATIC Pokémon."
+			"description": "Gain a SURFBOARD and 2 random 1 STAR Uncommon AQUATIC Pokémon."
 		},
 		"POISON_BADGE_BLESSING": {
 			"name": "Poison Badge",
@@ -4790,7 +4790,7 @@
 		},
 		"POISON_CREST_BLESSING": {
 			"name": "Poison Crest",
-			"description": "Gain a POISON_GEM and 2 random 1 STAR Uncommon POISON Pokémon."
+			"description": "Gain a POKERUS_VIAL and 2 random 1 STAR Uncommon POISON Pokémon."
 		},
 		"FAIRY_BADGE_BLESSING": {
 			"name": "Fairy Badge",
@@ -4798,7 +4798,7 @@
 		},
 		"FAIRY_CREST_BLESSING": {
 			"name": "Fairy Crest",
-			"description": "Gain a FAIRY_GEM and 2 random 1 STAR Uncommon FAIRY Pokémon."
+			"description": "Gain a MOON_STONE and 2 random 1 STAR Uncommon FAIRY Pokémon."
 		},
 		"FIGHTING_BADGE_BLESSING": {
 			"name": "Fighting Badge",
@@ -4806,7 +4806,7 @@
 		},
 		"FIGHTING_CREST_BLESSING": {
 			"name": "Fighting Crest",
-			"description": "Gain a FIGHTING_GEM and 2 random 1 STAR Uncommon FIGHTING Pokémon."
+			"description": "Gain a MACHO_BRACE and 2 random 1 STAR Uncommon FIGHTING Pokémon."
 		},
 		"FIRE_BADGE_BLESSING": {
 			"name": "Fire Badge",
@@ -4814,7 +4814,7 @@
 		},
 		"FIRE_CREST_BLESSING": {
 			"name": "Fire Crest",
-			"description": "Gain a FIRE_GEM and 2 random 1 STAR Uncommon FIRE Pokémon."
+			"description": "Gain a FIRE_STONE and 2 random 1 STAR Uncommon FIRE Pokémon."
 		},
 		"GHOST_BADGE_BLESSING": {
 			"name": "Ghost Badge",
@@ -4822,7 +4822,7 @@
 		},
 		"GHOST_CREST_BLESSING": {
 			"name": "Ghost Crest",
-			"description": "Gain a GHOST_GEM and 2 random 1 STAR Uncommon GHOST Pokémon."
+			"description": "Gain a SPELL_TAG and 2 random 1 STAR Uncommon GHOST Pokémon."
 		},
 		"ROCK_BADGE_BLESSING": {
 			"name": "Rock Badge",
@@ -4830,7 +4830,7 @@
 		},
 		"ROCK_CREST_BLESSING": {
 			"name": "Rock Crest",
-			"description": "Gain a ROCK_GEM and 2 random 1 STAR Uncommon ROCK Pokémon."
+			"description": "Gain an EVER_STONE and 2 random 1 STAR Uncommon ROCK Pokémon."
 		},
 		"MONSTER_BADGE_BLESSING": {
 			"name": "Monster Badge",
@@ -4838,7 +4838,7 @@
 		},
 		"MONSTER_CREST_BLESSING": {
 			"name": "Monster Crest",
-			"description": "Gain a MONSTER_GEM and 2 random 1 STAR Uncommon MONSTER Pokémon."
+			"description": "Gain a BERSERK_GENE and 2 random 1 STAR Uncommon MONSTER Pokémon."
 		},
 		"AMORPHOUS_BADGE_BLESSING": {
 			"name": "Amorphous Badge",
@@ -4854,7 +4854,7 @@
 		},
 		"WILD_CREST_BLESSING": {
 			"name": "Wild Crest",
-			"description": "Gain a WILD_GEM and 2 random 1 STAR Uncommon WILD Pokémon."
+			"description": "Gain a WHITE_FLUTE and 2 random 1 STAR Uncommon WILD Pokémon."
 		},
 		"SOUND_BADGE_BLESSING": {
 			"name": "Sound Badge",
@@ -4862,7 +4862,7 @@
 		},
 		"SOUND_CREST_BLESSING": {
 			"name": "Sound Crest",
-			"description": "Gain a SOUND_GEM and 2 random 1 STAR Uncommon SOUND Pokémon."
+			"description": "Gain a METRONOME and 2 random 1 STAR Uncommon SOUND Pokémon."
 		},
 		"FLORA_BADGE_BLESSING": {
 			"name": "Flora Badge",
@@ -4870,7 +4870,7 @@
 		},
 		"FLORA_CREST_BLESSING": {
 			"name": "Flora Crest",
-			"description": "Gain a FLORA_GEM and 2 random 1 STAR Uncommon FLORA Pokémon."
+			"description": "Gain an INCENSE and 2 random 1 STAR Uncommon FLORA Pokémon."
 		},
 		"STEEL_BADGE_BLESSING": {
 			"name": "Steel Badge",
@@ -4878,7 +4878,7 @@
 		},
 		"STEEL_CREST_BLESSING": {
 			"name": "Steel Crest",
-			"description": "Gain a STEEL_GEM and 2 random 1 STAR Uncommon STEEL Pokémon."
+			"description": "Gain a METAL_COAT and 2 random 1 STAR Uncommon STEEL Pokémon."
 		},
 		"ELECTRIC_BADGE_BLESSING": {
 			"name": "Electric Badge",
@@ -4886,7 +4886,7 @@
 		},
 		"ELECTRIC_CREST_BLESSING": {
 			"name": "Electric Crest",
-			"description": "Gain an ELECTRIC_GEM and 2 random 1 STAR Uncommon ELECTRIC Pokémon."
+			"description": "Gain a THUNDER_STONE and 2 random 1 STAR Uncommon ELECTRIC Pokémon."
 		},
 		"ICE_BADGE_BLESSING": {
 			"name": "Ice Badge",
@@ -4894,7 +4894,7 @@
 		},
 		"ICE_CREST_BLESSING": {
 			"name": "Ice Crest",
-			"description": "Gain an ICE_GEM and 2 random 1 STAR Uncommon ICE Pokémon."
+			"description": "Gain an ICE_STONE and 2 random 1 STAR Uncommon ICE Pokémon."
 		},
 		"HUMAN_BADGE_BLESSING": {
 			"name": "Human Badge",
@@ -4910,7 +4910,7 @@
 		},
 		"DRAGON_CREST_BLESSING": {
 			"name": "Dragon Crest",
-			"description": "Gain a DRAGON_GEM and 2 random 1 STAR Uncommon DRAGON Pokémon."
+			"description": "Gain a DRAGON_SCALE and 2 random 1 STAR Uncommon DRAGON Pokémon."
 		},
 		"LIGHT_BADGE_BLESSING": {
 			"name": "Light Badge",
@@ -4918,7 +4918,7 @@
 		},
 		"LIGHT_CREST_BLESSING": {
 			"name": "Light Crest",
-			"description": "Gain a LIGHT_GEM and 2 random 1 STAR Uncommon LIGHT Pokémon."
+			"description": "Gain a LIGHT_BALL and 2 random 1 STAR Uncommon LIGHT Pokémon."
 		},
 		"GOURMET_BADGE_BLESSING": {
 			"name": "Gourmet Badge",
@@ -4926,7 +4926,7 @@
 		},
 		"GOURMET_CREST_BLESSING": {
 			"name": "Gourmet Crest",
-			"description": "Gain a GOURMET_GEM and 2 random 1 STAR Uncommon GOURMET Pokémon."
+			"description": "Gain a COOKING_POT and 2 random 1 STAR Uncommon GOURMET Pokémon."
 		},
 		"FOSSIL_BADGE_BLESSING": {
 			"name": "Fossil Badge",
@@ -4934,7 +4934,7 @@
 		},
 		"FOSSIL_CREST_BLESSING": {
 			"name": "Fossil Crest",
-			"description": "Gain a FOSSIL_GEM and 2 random 1 STAR Uncommon FOSSIL Pokémon."
+			"description": "Gain an OLD_AMBER and 2 random 1 STAR Uncommon FOSSIL Pokémon."
 		},
 		"ARTIFICIAL_BADGE_BLESSING": {
 			"name": "Artificial Badge",
@@ -4946,123 +4946,123 @@
 		},
 		"NORMAL_CROWN_BLESSING": {
 			"name": "Normal Crown",
-			"description": "Gain a FRIEND_BOW, a PROTECTIVE_PADS and an Igglybuff."
+			"description": "Gain a FRIEND_BOW, a COVER_BAND, a LAPRAS_PASSPORT and a Jigglypuff."
 		},
 		"FLYING_CROWN_BLESSING": {
 			"name": "Flying Crown",
-			"description": "Gain an AIR_BALLOON, a RAZOR_CLAW and a Quaxly."
+			"description": "Gain an AIR_BALLOON, a RAZOR_CLAW, a LAPRAS_PASSPORT and a Quaxwell."
 		},
 		"FIELD_CROWN_BLESSING": {
 			"name": "Field Crown",
-			"description": "Gain a RUNNING_SHOES, a MUSCLE_BAND and a Litten."
+			"description": "Gain a RUNNING_SHOES, a DESTINY_KNOT, a LAPRAS_PASSPORT and a Torracat."
 		},
 		"DARK_CROWN_BLESSING": {
 			"name": "Dark Crown",
-			"description": "Gain a DUSK_STONE, a LOADED_DICE and a Froakie."
+			"description": "Gain a DUSK_STONE, a BLACK_BELT, a LAPRAS_PASSPORT and a Frogadier."
 		},
 		"GROUND_CROWN_BLESSING": {
 			"name": "Ground Crown",
-			"description": "Gain an EXPLORER_KIT, a GREEN_ORB and a Nidoran ♂."
+			"description": "Gain an EXPLORER_KIT, a SAFETY_GOGGLES, a LAPRAS_PASSPORT and a Nidorino."
 		},
 		"PSYCHIC_CROWN_BLESSING": {
 			"name": "Psychic Crown",
-			"description": "Gain a DAWN_STONE, a SOUL_DEW and a Hatenna."
+			"description": "Gain a DAWN_STONE, an AQUA_EGG, a LAPRAS_PASSPORT and a Hattrem."
 		},
 		"GRASS_CROWN_BLESSING": {
 			"name": "Grass Crown",
-			"description": "Gain a LEAF_STONE, a GREEN_ORB and a Treecko."
+			"description": "Gain a LEAF_STONE, a GREEN_ORB, a LAPRAS_PASSPORT and an Eldegoss."
 		},
 		"BUG_CROWN_BLESSING": {
 			"name": "Bug Crown",
-			"description": "Gain a SHED_SHELL, a RELIC_CROWN and a Grubbin."
+			"description": "Gain a SHED_SHELL, a RELIC_CROWN, a LAPRAS_PASSPORT and a Charjabug."
 		},
 		"WATER_CROWN_BLESSING": {
 			"name": "Water Crown",
-			"description": "Gain a WATER_STONE, a CHOICE_SPECS and a Froakie."
+			"description": "Gain a WATER_STONE, a CHOICE_SPECS, a LAPRAS_PASSPORT and a Wartortle."
 		},
 		"AQUATIC_CROWN_BLESSING": {
 			"name": "Aquatic Crown",
-			"description": "Gain a SURFBOARD, a STAR_DUST and a Pikachu."
+			"description": "Gain a SURFBOARD, a SHELL_BELL, a LAPRAS_PASSPORT and a Pikachu."
 		},
 		"POISON_CROWN_BLESSING": {
 			"name": "Poison Crown",
-			"description": "Gain a POKERUS_VIAL, a LOADED_DICE and a Nidoran ♀."
+			"description": "Gain a POKERUS_VIAL, an UPGRADE, a LAPRAS_PASSPORT and a Nidorina."
 		},
 		"FAIRY_CROWN_BLESSING": {
 			"name": "Fairy Crown",
-			"description": "Gain a MOON_STONE, a DESTINY_KNOT and a Marill."
+			"description": "Gain a MOON_STONE, a LOADED_DICE, a LAPRAS_PASSPORT and a Delcatty."
 		},
 		"FIGHTING_CROWN_BLESSING": {
 			"name": "Fighting Crown",
-			"description": "Gain a MACHO_BRACE, a POKE_DOLL and a Machop."
+			"description": "Gain a MACHO_BRACE, a ROCKY_HELMET, a LAPRAS_PASSPORT and a Machoke."
 		},
 		"FIRE_CROWN_BLESSING": {
 			"name": "Fire Crown",
-			"description": "Gain a FIRE_STONE, a RED_ORB and a Litten."
+			"description": "Gain a FIRE_STONE, an XRAY_VISION, a LAPRAS_PASSPORT and a Torracat."
 		},
 		"GHOST_CROWN_BLESSING": {
 			"name": "Ghost Crown",
-			"description": "Gain a SPELL_TAG, a SMOKE_BALL and a Snorunt."
+			"description": "Gain a SPELL_TAG, a MAX_REVIVE, a LAPRAS_PASSPORT and a Glalie."
 		},
 		"ROCK_CROWN_BLESSING": {
 			"name": "Rock Crown",
-			"description": "Gain an EVER_STONE, a STICKY_BARB and a Nacli."
+			"description": "Gain an EVER_STONE, a FAIRY_FEATHER, a LAPRAS_PASSPORT and a Naclstack."
 		},
 		"MONSTER_CROWN_BLESSING": {
 			"name": "Monster Crown",
-			"description": "Gain a BERSERK_GENE, a RELIC_CROWN and a Treecko."
+			"description": "Gain a BERSERK_GENE, a WIDE_LENS, a LAPRAS_PASSPORT and a Grovyle."
 		},
 		"AMORPHOUS_CROWN_BLESSING": {
 			"name": "Amorphous Crown",
-			"description": "Gain an AMORPHOUS_GEM, a PUNCHING_GLOVE and a Sligoo."
+			"description": "Gain an AMORPHOUS_GEM, a PUNCHING_GLOVE, a LAPRAS_PASSPORT and a Palossand."
 		},
 		"WILD_CROWN_BLESSING": {
 			"name": "Wild Crown",
-			"description": "Gain a WHITE_FLUTE, a FLAME_ORB and an Aipom."
+			"description": "Gain a WHITE_FLUTE, a RED_ORB, a LAPRAS_PASSPORT and an Ambipom."
 		},
 		"SOUND_CROWN_BLESSING": {
 			"name": "Sound Crown",
-			"description": "Gain a METRONOME, a DEEP_SEA_TOOTH and an Igglybuff."
+			"description": "Gain a METRONOME, an EFFICIENT_BANDANNA, a LAPRAS_PASSPORT and a Jigglypuff."
 		},
 		"FLORA_CROWN_BLESSING": {
 			"name": "Flora Crown",
-			"description": "Gain an INCENSE, a GRACIDEA_FLOWER and a Flabébé."
+			"description": "Gain an INCENSE, a SOUL_DEW, a LAPRAS_PASSPORT and a Floette."
 		},
 		"STEEL_CROWN_BLESSING": {
 			"name": "Steel Crown",
-			"description": "Gain a METAL_COAT, a RED_ORB and a Magnemite."
+			"description": "Gain a METAL_COAT, a FLAME_ORB, a LAPRAS_PASSPORT and a Magneton."
 		},
 		"ELECTRIC_CROWN_BLESSING": {
 			"name": "Electric Crown",
-			"description": "Gain a THUNDER_STONE, a BLUE_ORB and a Grubbin."
+			"description": "Gain a THUNDER_STONE, a BLUE_ORB, a LAPRAS_PASSPORT and a Charjabug."
 		},
 		"ICE_CROWN_BLESSING": {
 			"name": "Ice Crown",
-			"description": "Gain an ICE_STONE, a POWER_LENS and a Snorunt."
+			"description": "Gain an ICE_STONE, a POWER_LENS, a LAPRAS_PASSPORT and a Glalie."
 		},
 		"HUMAN_CROWN_BLESSING": {
 			"name": "Human Crown",
-			"description": "Gain a HUMAN_GEM, a SAFETY_GOGGLES and a Machop."
+			"description": "Gain a HUMAN_GEM, a MUSCLE_BAND, a LAPRAS_PASSPORT and a Machoke."
 		},
 		"DRAGON_CROWN_BLESSING": {
 			"name": "Dragon Crown",
-			"description": "Gain a DRAGON_SCALE, a DEEP_SEA_TOOTH and a Charmander."
+			"description": "Gain a DRAGON_SCALE, a DEEP_SEA_TOOTH, a LAPRAS_PASSPORT and a Charmeleon."
 		},
 		"LIGHT_CROWN_BLESSING": {
 			"name": "Light Crown",
-			"description": "Gain a LIGHT_BALL, a STAR_DUST and a Cherrim."
+			"description": "Gain a LIGHT_BALL, a STAR_DUST, a LAPRAS_PASSPORT and a Clefairy."
 		},
 		"GOURMET_CROWN_BLESSING": {
 			"name": "Gourmet Crown",
-			"description": "Gain a COOKING_POT, a SOOTHE_BELL and a Nacli."
+			"description": "Gain a COOKING_POT, a BIG_EATER_BELT, a LAPRAS_PASSPORT and a Naclstack."
 		},
 		"FOSSIL_CROWN_BLESSING": {
 			"name": "Fossil Crown",
-			"description": "Gain an OLD_AMBER, a CLEAR_AMULET and a Piloswine."
+			"description": "Gain an OLD_AMBER, a KINGS_ROCK, a LAPRAS_PASSPORT and a Piloswine."
 		},
 		"ARTIFICIAL_CROWN_BLESSING": {
 			"name": "Artificial Crown",
-			"description": "Gain an ARTIFICIAL_GEM, a WIDE_LENS and a Magnemite."
+			"description": "Gain an ARTIFICIAL_GEM, a WONDER_BOX, a LAPRAS_PASSPORT and a Magneton."
 		},
 		"QUEST_REROLL": {
 			"name": "Quest: Reroll",
@@ -5250,7 +5250,7 @@
 		},
 		"RELIC_FRAGMENT": {
 			"name": "Relic Fragment",
-			"description": "Gain a LAPRAS_PASSPORT. On stages 10 and 20, gain another. Stages already passed are granted immediately."
+			"description": "Gain a LAPRAS_PASSPORT and 5 GOLD. On stages 10 and 20, gain another passport. Stages already passed are granted immediately."
 		},
 		"ITEMFINDER_I": {
 			"name": "Itemfinder",
@@ -5382,7 +5382,7 @@
 		},
 		"CHEFS_GREED": {
 			"name": "Chef's Greed",
-			"description": "Your chefs cook an extra portion of their dish for themselves. Pokémon holding a CHEF_HAT can eat 2 dishes, or 3 if holding a BIG_EATER_BELT. Gain a Nacli."
+			"description": "Your chefs cook an extra portion of their dish for themselves. Pokémon holding a CHEF_HAT can eat 2 dishes, and gain Munchlax's Glutton passive."
 		},
 		"BERRY_BREAKFAST": {
 			"name": "Berry Breakfast",
@@ -5406,7 +5406,7 @@
 		},
 		"BERSERKER_HORDES": {
 			"name": "Berserker Hordes",
-			"description": "WILD Pokémon cost 1 GOLD less for each WILD Pokémon at 3 STAR or more on your board, minimum 0. Every 10 shops, your shop will contain only WILD Pokémon."
+			"description": "WILD Pokémon cost 1 GOLD less for each WILD Pokémon at 3 STAR or more on your board, minimum 0. Every 8 shops, your shop will contain only WILD Pokémon."
 		},
 		"GARDENING": {
 			"name": "Gardening",
@@ -5450,7 +5450,7 @@
 		},
 		"MOVE_TUTOR": {
 			"name": "Move Tutor",
-			"description": "Pokémon with a TM ability have their max PP set to 80."
+			"description": "Pokémon with a TM ability have their max PP set to 70."
 		},
 		"ZAP": {
 			"name": "Zap!",
@@ -5462,11 +5462,11 @@
 		},
 		"SACRIFICE": {
 			"name": "Sacrifice",
-			"description": "At combat start, if MONSTER 2 is active, your STRONGEST MONSTER Pokémon KOs the weakest ADJACENT ally and is ENRAGED for 2 seconds. Gain a Lairon."
+			"description": "At combat start, if MONSTER 2 is active, your STRONGEST MONSTER Pokémon KOs the weakest ADJACENT ally and is RAGE for 2 seconds. Gain a Lairon."
 		},
 		"DRAGON_KING": {
 			"name": "Dragon King",
-			"description": "When a DRAGON ally is KO'd, your STRONGEST DRAGON Pokémon gains 5 SHIELD, 1 SPEED and 1 AP for each of the fallen ally's STAR. Gain a Charmander."
+			"description": "When a DRAGON ally is KO'd, your STRONGEST DRAGON Pokémon gains 10 SHIELD, 2 SPEED and 2 AP for each of the fallen ally's STAR. Gain a Charmander."
 		},
 		"ASCENSION": {
 			"name": "Ascension",
@@ -5478,7 +5478,7 @@
 		},
 		"SLIPSTREAM": {
 			"name": "Slipstream",
-			"description": "When a FLYING Pokémon flies away, it gains 5 SPEED and grants 5 SPEED to allies it passes through. Gain a Quaxly."
+			"description": "When a FLYING Pokémon flies away, it gains 5 SPEED and 1 ATK, and grants the same to allies it passes through. Gain a Quaxly."
 		},
 		"BIG_PECKS": {
 			"name": "Big Pecks",
@@ -5538,7 +5538,7 @@
 		},
 		"ABSOLUTE_DARKNESS": {
 			"name": "Absolute Darkness",
-			"description": "DARK Pokémon have a 5% chance to inflict their target with BLINDED for 3 seconds ON_ATTACK. Allies convert all their damage to TRUE against BLINDED enemies when they crit. Gain an Impidimp."
+			"description": "DARK Pokémon have a 10% chance to inflict their target with BLINDED for 3 seconds ON_ATTACK. Allies convert all their damage to TRUE against BLINDED enemies when they crit. Gain an Impidimp."
 		},
 		"TOXIC_BURST": {
 			"name": "Toxic Burst",
@@ -5582,7 +5582,7 @@
 		},
 		"ARCHEOLOGY": {
 			"name": "Archeological Site",
-			"description": "FOSSIL Pokémon dig every round even without GROUND active. Fully digging a hole unearths a random FOSSIL Pokémon, with a 10% chance it is 2 star. Fully digging a row unearths a FOSSIL unique, and the whole board a FOSSIL legendary."
+			"description": "FOSSIL Pokémon dig every round even without GROUND active. Fully digging a hole unearths a random FOSSIL Pokémon. Fully digging a row unearths a FOSSIL unique, and the whole board a FOSSIL legendary."
 		},
 		"LIMIT_BREAKER": {
 			"name": "Limit Breaker",
@@ -5594,7 +5594,7 @@
 		},
 		"AUTO_CRAFTING": {
 			"name": "Auto-Crafting",
-			"description": "At the start of combat, each ARTIFICIAL Pokémon holding a component turns it into a random craftable item made with that component for that combat. Synergy stones and WONDER_BOX are excluded. Gain 2 random components."
+			"description": "At the start of combat, each ARTIFICIAL Pokémon holding a component turns it into a random craftable item made with that component for that combat. Synergy stones and WONDER_BOX are excluded. Gain 3 random components."
 		},
 		"CENTER_STAGE": {
 			"name": "Center Stage",
@@ -5666,7 +5666,7 @@
 		},
 		"MACHINE_RESIDUE": {
 			"name": "Machine Residue",
-			"description": "ARTIFICIAL Pokémon holding a tool place SPIKES beneath their target ON_ATTACK. When an allied ARTIFICIAL Pokémon walks over SPIKES, it clears them and gains 20 SHIELD instead of being affected. Gain a Klang."
+			"description": "ARTIFICIAL Pokémon holding a tool place SPIKES beneath their target ON_ATTACK. When an allied ARTIFICIAL Pokémon walks over SPIKES, it clears them and gains 50 SHIELD instead of being affected. Gain a Klang."
 		},
 		"CALCULATED_OFFENCE": {
 			"name": "Calculated Offence",
@@ -5694,7 +5694,7 @@
 		},
 		"FESTIVE_PICNIC": {
 			"name": "Festive Picnic",
-			"description": "At the start of every preparation phase, each of your Pokémon without a dish receives a random one. A dish cooked by your own Pokémon replaces it, and the Pokémon permanently gains 5 max HP."
+			"description": "At the start of every preparation phase, each of your Pokémon without a dish receives a random one. A dish cooked by your own Pokémon replaces it, and the Pokémon permanently gains 10 max HP. Gain a Nacli."
 		},
 		"ICY_REFLECTION": {
 			"name": "Icy Reflection",
@@ -5722,7 +5722,7 @@
 		},
 		"SOUL_BLAZE": {
 			"name": "Soul Blaze",
-			"description": "A FIRE_SHARD ignites at any FIRE tier, and your Pokémon never wait between two ignitions."
+			"description": "A FIRE_SHARD ignites at any FIRE tier, and your Pokémon never wait between two ignitions. Gain 5 FIRE_SHARD."
 		},
 		"FERTILE_SOIL": {
 			"name": "Fertile Soil",
@@ -5730,15 +5730,15 @@
 		},
 		"DEEP_WOUNDS": {
 			"name": "Deep Wounds",
-			"description": "Critical hits inflict ARMOR_BREAK for 5 seconds. If already ARMOR_BREAK, [30,LK]% chance to remove 2 DEF and SPE_DEF permanently."
+			"description": "Critical hits inflict ARMOR_BREAK for 5 seconds. If already ARMOR_BREAK, [30,LK]% chance to remove 4 DEF and SPE_DEF permanently."
 		},
 		"FAST_DELIVERY": {
 			"name": "Fast Delivery",
-			"description": "FLYING Pokémon always deliver the LETTER in 1 turn. At the start of combat, your FLYING Pokémon gain 5 LUCK for each Seed you have collected."
+			"description": "FLYING Pokémon always deliver the LETTER in 1 turn. At the start of combat, your FLYING Pokémon gain 2 ATK and 5 LUCK for each Seed you have collected."
 		},
 		"MOLECULAR_CORROSION": {
 			"name": "Molecular Corrosion",
-			"description": "Enemy Pokémon under POISONNED take 30% more damage from all sources, and your POISONNED can no longer be blocked by RUNE_PROTECT."
+			"description": "Enemy Pokémon under POISONNED take 25% more damage from all sources, and your POISONNED can no longer be blocked by RUNE_PROTECT."
 		},
 		"UNISON": {
 			"name": "Unison",
@@ -5746,7 +5746,7 @@
 		},
 		"BERRY_GROWTH": {
 			"name": "Berry Growth",
-			"description": "Every Berry eaten also grants the Pokémon +10 permanent max HP, or +15 for a golden Berry. At GRASS 7, your berry trees turn golden. If taken on stage 12, gain 2 golden Berries."
+			"description": "Every Berry eaten also grants the Pokémon +10 permanent max HP, or +15 for a golden Berry. At GRASS 7, your berry trees turn golden. If taken on stage 12, gain 5 golden Berries."
 		},
 		"WATER_FOUNTAIN": {
 			"name": "Water Fountain",
@@ -5890,7 +5890,7 @@
 		},
 		"AXE_BLAST": {
 			"name": "Axe Blast",
-			"description": "Gain an Axew. It gains +1 RANGE and its Ability is replaced with Axe Blast."
+			"description": "Gain a strong Axew. It gains +1 RANGE and its Ability is replaced with Axe Blast."
 		},
 		"SWEET_TREATS": {
 			"name": "Sweet Treats",
@@ -5898,19 +5898,19 @@
 		},
 		"SNIFFER_DOG": {
 			"name": "Sniffer Dog",
-			"description": "Gain a Lillipup. While Lillipup is fielded and GROUND is active, benched GROUND allies dig holes. When the STRONGEST Lillipup casts its Ability, a random Pokémon on a fully dug bench hole enters battle through a fully dug board hole."
+			"description": "Gain a strong Lillipup. While Lillipup is fielded and GROUND is active, benched GROUND allies dig holes. When the STRONGEST Lillipup casts its Ability, a random Pokémon on a fully dug bench hole enters battle through a fully dug board hole."
 		},
 		"JESTER": {
 			"name": "Jester",
-			"description": "Gain a Sprigatito. When your STRONGEST Sprigatito casts its Ability, a Substitute with full PP appears nearby. It casts Metronome at 1 STAR, gaining 1 STAR for each additional 100% CRIT_POWER of the caster, up to 4 STAR."
+			"description": "Gain a strong Sprigatito. When your STRONGEST Sprigatito casts its Ability, a Substitute with full PP appears nearby. It casts very lucky Metronome at 1 STAR and gains 1 STAR for each additional 50% CRIT_POWER of the caster, up to 4 STAR."
 		},
 		"TOXIC_RESONANCE": {
 			"name": "Toxic Resonance",
-			"description": "Gain a Tympole. Your STRONGEST Tympole resonates every 3 seconds. Each beat spreads 1 tile further than the last. Pokémon caught in the wave are POISONNED for 3 seconds, allies included. Poisoned allies gain 5 PP. The 4th beat covers the whole board and gives 30 PP instead. The cycle then restarts."
+			"description": "Gain a strong Tympole. Your STRONGEST Tympole resonates every 3 seconds. Each beat spreads 1 tile further than the last. Pokémon caught in the wave are POISONNED for 3 seconds, allies included. Poisoned allies gain 5 PP. The 4th beat covers the whole board and gives 30 PP instead. The cycle then restarts."
 		},
 		"GRAND_IGNITION": {
 			"name": "Grand Ignition",
-			"description": "Gain a Fennekin. When your STRONGEST Fennekin casts its Ability, it throws a torch to a random corner of the board and reduces its own max PP by 10%. Once all four corners are lit, the battlefield ignites: every enemy permanently loses 10% of its max HP and suffers double BURN damage for the rest of the fight, which cannot be reduced or cleansed."
+			"description": "Gain a strong Fennekin. When your STRONGEST Fennekin casts its Ability, it throws a torch to a random corner of the board and reduces its own max PP by 10%. Once all four corners are lit, the battlefield ignites: every enemy permanently loses 10% of its max HP and suffers double BURN damage for the rest of the fight, which cannot be reduced or cleansed."
 		},
 		"VALOR": {
 			"name": "Valor",
@@ -5918,11 +5918,11 @@
 		},
 		"COLONY": {
 			"name": "Colony",
-			"description": "Gain a Scatterbug. When your STRONGEST Vivillon KO's its target, a Spewpa joins your bench. It evolves after 2 rounds and sells for 0 GOLD. Only one Spewpa is attracted at a time, so it must evolve before the next arrives. Every Vivillon contributes its own synergies. The swarm has grown fond of you and refuses to be sent to your partner."
+			"description": "Gain a strong Scatterbug. When your STRONGEST Vivillon KO's its target, a Spewpa joins your bench. It evolves after 2 rounds and sells for 0 GOLD. Only one Spewpa is attracted at a time, so it must evolve before the next arrives. Every Vivillon contributes its own synergies. The swarm has grown fond of you and refuses to be sent to your partner."
 		},
 		"SAND_BUDDIES": {
 			"name": "Sand Buddies",
-			"description": "Gain a Sandile. When your STRONGEST Sandile fails to KO its target with its Ability, a Trapinch with full PP appears nearby, at the same STAR level."
+			"description": "Gain a strong Sandile. When your STRONGEST Sandile fails to KO its target with its Ability, a Trapinch with full PP appears nearby, at the same STAR level."
 		},
 		"YOU_FORGOT_SOMETHING": {
 			"name": "You Forgot Something!",
@@ -6002,7 +6002,7 @@
 		},
 		"IMPENDING_DOOM": {
 			"name": "Impending Doom",
-			"description": "After 10 seconds of combat, a shadow engulfs the battle, removing PROTECT, RUNE_PROTECT and RESURRECTION from all enemy Pokémon. For the remainder of combat, no enemy can receive these effects. Accelerate the shadow's countdown by 1 second when a CURSE enemy is KOed. Gain a Dartix."
+			"description": "After 7 seconds of combat, a shadow engulfs the battle, removing PROTECT, RUNE_PROTECT and RESURRECTION from all enemy Pokémon. For the remainder of combat, no enemy can receive these effects. Accelerate the shadow's countdown by 1 second when a CURSE enemy is KOed. Gain a Dartix."
 		},
 		"SYNCHRONICITY": {
 			"name": "Synchronicity",
@@ -6074,7 +6074,7 @@
 		},
 		"SOUL_DRAIN": {
 			"name": "Soul Drain",
-			"description": "Gain a Litwick. Your STRONGEST Litwick's ability cast pulls a Soul Fragment from the target, healing allies it travels through for [20,SP] HP. Two Fragments are pulled if the ability KO's the target."
+			"description": "Gain a strong Litwick. Your STRONGEST Litwick's ability cast pulls a Soul Fragment from the target, healing allies it travels through for [20,SP] HP. Two Fragments are pulled if the ability KO's the target."
 		},
 		"FLOWER_QUEEN": {
 			"name": "Flower Queen",
@@ -6082,11 +6082,11 @@
 		},
 		"LEAF_TORNADO": {
 			"name": "Leaf Tornado",
-			"description": "Gain a Snivy. Your STRONGEST Snivy's attacks ricochet to up to 2 additional enemies, applying ON_HIT effects, the damage halving with each bounce."
+			"description": "Gain a strong Snivy. Your STRONGEST Snivy's attacks ricochet to up to 2 additional enemies, applying ON_HIT effects, the damage halving with each bounce."
 		},
 		"MARIACHI_MAYHEM": {
 			"name": "Mariachi Mayhem",
-			"description": "Gain a Lotad. When your STRONGEST Lotad casts its ability, all enemies within its RANGE suffer CONFUSION for 2 seconds."
+			"description": "Gain a strong Lotad. When your STRONGEST Lotad casts its ability, all enemies within its RANGE suffer CONFUSION for 2 seconds."
 		},
 		"HIGH_BREACHING": {
 			"name": "High Breaching",
@@ -6094,11 +6094,11 @@
 		},
 		"ICEBREAKER": {
 			"name": "Icebreaker",
-			"description": "Gain a Piplup. Your STRONGEST Piplup's ability executes FREEZE enemies. On a KO, it grants double SHIELD and 20 LUCK."
+			"description": "Gain a strong Piplup. Your STRONGEST Piplup's ability executes FREEZE enemies. On a KO, it grants double SHIELD and 20 LUCK."
 		},
 		"RAMPAGE": {
 			"name": "Rampage",
-			"description": "Gain a Deino. Your STRONGEST Deino's ability can critically strike. Each time it KO's an ADJACENT enemy, the ability and its SILENCE last 2 seconds longer. After 5 seconds of channeling, the damage doubles for the rest of the cast."
+			"description": "Gain a strong Deino. Your STRONGEST Deino's ability can critically strike. Each time it KO's an ADJACENT enemy, the ability and its SILENCE last 2 seconds longer. After 5 seconds of channeling, the damage doubles for the rest of the cast."
 		},
 		"FROST_BURST": {
 			"name": "Frost Burst",
@@ -6254,7 +6254,7 @@
 		},
 		"RAZOR_FANG_BLESSING": {
 			"name": "Quick Fang",
-			"description": "Gain a RAZOR_FANG. On a critical attack, the holder immediately attacks the same target again. The additional attack cannot trigger this effect."
+			"description": "Gain a RAZOR_FANG. On a critical attack, the holder immediately attacks the same target again for 40% of its ATK. The additional attack cannot trigger this effect."
 		},
 		"UPGRADE_BLESSING": {
 			"name": "Super Upgrade",

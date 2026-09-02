@@ -41,13 +41,15 @@ import {
   HAIL_TO_THE_KING_CURSE_DELAY,
   RIVALRY_ATTACK_ON_OWN_SIDE,
   RIVALRY_MAX_HP_ON_ENEMY_SIDE,
+  SLIPSTREAM_ATTACK,
   SLIPSTREAM_SPEED,
   ZAP_CHAIN_DAMAGE_RATIO,
   VAMPIRIC_HEAL_RATIO,
   BERRY_GROWTH_PERMANENT_HP,
   BERRY_GROWTH_GOLDEN_PERMANENT_HP,
   GRUDGE_CURSE_CHANCE,
-  GRUDGE_CURSE_DURATION
+  GRUDGE_CURSE_DURATION,
+  hasGluttonGrowth
 } from "../types/enum/Blessing"
 import { getStrongestUnit } from "./unit-score"
 import { EffectEnum } from "../types/enum/Effect"
@@ -219,6 +221,7 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
   isLancesAceThisFight: boolean = false
   isHailToTheKingChampionThisFight: boolean = false
   axeBlastExecuteChance: number = 0
+  metronomeForcedRarity: Rarity | null = null
   isSynchronisedSpeedLeaderThisFight: boolean = false
   isBlossomFestivalChampionThisFight: boolean = false
   isEchoChamberLeaderThisFight: boolean = false
@@ -1846,6 +1849,7 @@ flyAway(
       this.player?.blessings?.includes(Blessing.SLIPSTREAM)
     ) {
       this.addSpeed(SLIPSTREAM_SPEED, this, 0, false)
+      this.addAttack(SLIPSTREAM_ATTACK, this, 0, false)
       board
         .getCellsBetween(
           this.positionX,
@@ -1856,6 +1860,7 @@ flyAway(
         .forEach((cell) => {
           if (cell.value && cell.value.team === this.team && cell.value !== this) {
             cell.value.addSpeed(SLIPSTREAM_SPEED, cell.value, 0, false)
+            cell.value.addAttack(SLIPSTREAM_ATTACK, cell.value, 0, false)
           }
         })
     }
@@ -2258,7 +2263,7 @@ flyAway(
       this.removeItem(berry, true)
     }
 
-    if (this.passive === Passive.GLUTTON) {
+    if (hasGluttonGrowth(this, this.player?.blessings)) {
       this.applyStat(Stat.HP, 10, true)
       if (this.refToBoardPokemon.hp > 750) {
         this.player?.titles.add(Title.GLUTTON)
