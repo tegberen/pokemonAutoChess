@@ -10,6 +10,10 @@ import { DEPTH } from "../depths"
 import type GameScene from "../scenes/game-scene"
 import type BoardManager from "./board-manager"
 import ItemDetail from "./item-detail"
+import {
+  getGuideLesson,
+  getGuideRipeBerries
+} from "../../../../core/guide/guide-stage"
 
 export class BerryTree extends GameObjects.Container {
   scene: GameScene
@@ -140,6 +144,13 @@ export class BerryTree extends GameObjects.Container {
       }
     } else {
       if (this.player.id !== this.scene.uid) return
+      /* Refused server side too; checked here so the crop animation and the
+         "berry gained" text never play for a harvest that does not happen. */
+      const state = this.scene.room?.state
+      if (state && getGuideLesson(state) && getGuideRipeBerries(state) === null) {
+        this.manager.displayGuideMessage(t("guide.berries_not_yet"))
+        return
+      }
       const stage = this.player.berryTreesStages[this.index]
       if (this.scene.room && stage >= 3) {
         this.scene.room.send(Transfer.PICK_BERRY, this.index)

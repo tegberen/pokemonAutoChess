@@ -1,6 +1,7 @@
 import { Item } from "../../../types/enum/Item"
 import { Pkm } from "../../../types/enum/Pokemon"
 import { Synergy } from "../../../types/enum/Synergy"
+import { Title } from "../../../types"
 import {
   countItemAnywhere,
   countItemsOnPokemon,
@@ -33,10 +34,13 @@ import type { GuideLessonScript } from "../guide-script"
       8  MYSTIC_WATER + ORAN_BERRY (tree) -> GROTLE
       9  TWISTED_SPOON      11  MYSTIC_WATER
      12  MIRACLE_SEED -> orb + dew   | rewind: MYSTIC_WATER -> egg + dew
+     13  SITRUS_BERRY + GANLON_BERRY (trees) -> GROTLE
+     18  LIECHI + APICOT + LUM_BERRY (trees) -> SNOVER
      14  BLACK_GLASSES      17  BLACK_GLASSES -> wonder box
      19  HEART_SCALE x2 -> rocky helmet */
 export const GrassLesson: GuideLessonScript = {
   synergy: Synergy.GRASS,
+  title: Title.BOTANIST,
 
   /* The three item holders are rented, so each is released on the stage that
      hands its items onward: Dolliv to Carnivine at 10, Quilladin and Rowlet to
@@ -51,6 +55,7 @@ export const GrassLesson: GuideLessonScript = {
     { pkm: Pkm.BURMY_PLANT },
     { pkm: Pkm.CARNIVINE },
     { pkm: Pkm.CHESPIN, untilStage: 20 },
+    { pkm: Pkm.SNOVER },
     { pkm: Pkm.BULBASAUR }
   ],
 
@@ -185,7 +190,7 @@ export const GrassLesson: GuideLessonScript = {
       stage: 8,
       level: 4,
       pickItem: Item.MYSTIC_WATER,
-      ripeBerry: Item.ORAN_BERRY,
+      ripeBerries: [Item.ORAN_BERRY],
       steps: [
         {
           key: "pick_water_two",
@@ -324,6 +329,24 @@ export const GrassLesson: GuideLessonScript = {
       ]
     },
     {
+      /* A stage the lesson otherwise skips. Two trees are growing by now, and
+         whatever was harvested at stage 8 has been eaten and the portal at 10
+         rerolled both trees - so this is a real second harvest, not a repeat. */
+      stage: 13,
+      ripeBerries: [Item.SITRUS_BERRY, Item.GANLON_BERRY],
+      steps: [
+        {
+          key: "harvest_berries",
+          topic: GuideTopic.ITEMIZATION,
+          itemTarget: Pkm.TURTWIG,
+          allowedItems: [Item.SITRUS_BERRY, Item.GANLON_BERRY],
+          isCompleted: (player) =>
+            hasItemOnPokemon(player, Pkm.TURTWIG, Item.SITRUS_BERRY) &&
+            hasItemOnPokemon(player, Pkm.TURTWIG, Item.GANLON_BERRY)
+        }
+      ]
+    },
+    {
       stage: 14,
       level: 6,
       shop: [Pkm.CHESPIN],
@@ -417,6 +440,29 @@ export const GrassLesson: GuideLessonScript = {
           allowedCrafts: [Item.WONDER_BOX],
           isCompleted: (player) =>
             hasItemOnPokemon(player, Pkm.CHESPIN, Item.WONDER_BOX)
+        }
+      ]
+    },
+    {
+      /* Three trees by now, and SNOVER is a melee body the ledger never
+         itemises - so a full set of berries is the whole of its itemization
+         rather than a compromise. */
+      stage: 18,
+      ripeBerries: [Item.LIECHI_BERRY, Item.APICOT_BERRY, Item.LUM_BERRY],
+      steps: [
+        {
+          key: "harvest_three_berries",
+          topic: GuideTopic.ITEMIZATION,
+          itemTarget: Pkm.SNOVER,
+          allowedItems: [
+            Item.LIECHI_BERRY,
+            Item.APICOT_BERRY,
+            Item.LUM_BERRY
+          ],
+          isCompleted: (player) =>
+            hasItemOnPokemon(player, Pkm.SNOVER, Item.LIECHI_BERRY) &&
+            hasItemOnPokemon(player, Pkm.SNOVER, Item.APICOT_BERRY) &&
+            hasItemOnPokemon(player, Pkm.SNOVER, Item.LUM_BERRY)
         }
       ]
     },

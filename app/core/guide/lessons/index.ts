@@ -16,3 +16,11 @@ export const GuideLessons: Partial<Record<Synergy, GuideLesson>> =
   Object.fromEntries(
     SCRIPTS.map((script) => [script.synergy, compileGuideLesson(script)])
   )
+
+/* Lesson titles have no art of their own, so the UI badges them with the
+   synergy they were earned for. Derived from the lessons rather than kept as a
+   second table, so a new lesson needs no bookkeeping here. */
+export function getSynergyForGuideTitle(title: string): Synergy | null {
+  const lesson = SCRIPTS.find((script) => script.title === title)
+  return lesson?.synergy ?? null
+}

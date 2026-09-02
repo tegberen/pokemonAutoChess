@@ -124,9 +124,10 @@ import {
 } from "../core/guide/guide-progress"
 import {
   getGuideForcedPickItem,
-  getGuideForcedProposition
+  getGuideForcedProposition,
+  getGuideLesson
 } from "../core/guide/guide-stage"
-import type { Synergy } from "../types/enum/Synergy"
+import { type Synergy, SynergyArray } from "../types/enum/Synergy"
 import { GameEvent } from "../types/events"
 import type { IPokemonCollectionItemMongo } from "../types/interfaces/UserMetadata"
 import type { IDetailledPokemon } from "../types/models/bot-v2"
@@ -1464,6 +1465,30 @@ export default class GameRoom extends Room<{ state: GameState }> {
           usr
         )
         if (hasCompletedExpeditions) shouldRefetchEventLeaderboard = true
+      }
+
+      /* A finished lesson pays a title, added to player.titles so it rides the
+         same persistence and notification path as every other one. The synergy
+         is recorded too, so SCHOLAR can be worked out once every synergy has a
+         lesson written and completed.
+
+         gameFinished as well as the stage: the counter reaches the last stage
+         when its picking phase opens, so the stage check alone would pay out
+         to someone who quit before playing any of it. Only checkEndGameGuide
+         sets the flag, and only once that final fight has resolved. */
+      const lesson = getGuideLesson(this.state)
+      if (
+        lesson &&
+        this.state.gameFinished &&
+        this.state.stageLevel >= lesson.lastStage
+      ) {
+        if (lesson.title) player.titles.add(lesson.title)
+        const taught = new Set(usr.guideLessonsCompleted ?? [])
+        taught.add(lesson.synergy)
+        usr.guideLessonsCompleted = [...taught]
+        if (taught.size >= SynergyArray.length) {
+          player.titles.add(Title.SCHOLAR)
+        }
       }
 
       updatePlayerTitlesAfterGame(player, usr, rank)

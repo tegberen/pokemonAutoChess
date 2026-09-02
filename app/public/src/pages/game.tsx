@@ -11,7 +11,7 @@ import {
 } from "../../../config"
 import type { IPokemonRecord } from "../../../models/colyseus-models/game-record"
 import type { Wanderer } from "../../../models/colyseus-models/wanderer"
-import { PVEStages } from "../../../models/pve-stages"
+import { isPveStage } from "../../../core/guide/guide-stage"
 import type AfterGameState from "../../../rooms/states/after-game-state"
 import type GameState from "../../../rooms/states/game-state"
 import {
@@ -811,9 +811,13 @@ export default function Game() {
       $state.listen("roundTime", (value) => {
         dispatch(setRoundTime(value))
         const stageLevel = room.state.stageLevel ?? 0
+        /* The sweep-into-the-portal transition only plays before a real
+           matchup, and a PVE round never sweeps - so spawning one there leaves
+           it hanging on screen. Guide rounds are PVE without being in the
+           vanilla table, which is why this has to ask the lesson. */
         if (
           room.state.phase === GamePhaseState.PICK &&
-          stageLevel in PVEStages === false &&
+          isPveStage(room.state, stageLevel) === false &&
           value < 5 &&
           gameContainer.gameScene?.board &&
           !gameContainer.gameScene.board.portal

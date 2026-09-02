@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next"
 import { Tab, TabList, TabPanel, Tabs } from "react-tabs"
-import { PVEStages } from "../../../../../models/pve-stages"
+import { isPveStage } from "../../../../../core/guide/guide-stage"
 import { GamePhaseState, Team } from "../../../../../types/enum/Game"
 import type { Pkm } from "../../../../../types/enum/Pokemon"
 import { DEPTH } from "../../../game/depths"
@@ -19,6 +19,8 @@ export default function GameDpsMeter() {
   const team = useAppSelector((state) => state.game.teamSpectated)
   const stageLevel = useAppSelector((state) => state.game.stageLevel)
   const phase = useAppSelector((state) => state.game.phase)
+  const gameMode = useAppSelector((state) => state.game.gameMode)
+  const guideSynergy = useAppSelector((state) => state.game.guideSynergy)
   const [showDpsMeter, setShowDpsMeter] = usePreference("showDpsMeter")
   const [dpsMeterPosition, setDpsMeterPosition] =
     usePreference("dpsMeterPosition")
@@ -30,10 +32,14 @@ export default function GameDpsMeter() {
 
   if (!spectatedPlayer) return null
 
-  const isPVE =
-    phase === GamePhaseState.FIGHT
-      ? stageLevel in PVEStages
-      : stageLevel - 1 in PVEStages
+  /* Guide stages are PVE too and most are not in the vanilla table, so the
+     opponent name has to be resolved the same way the stage header does it or
+     it renders as the raw "pkm.SLOWKING" key. During the picking phase the
+     opponent shown is still the one from the fight that just ended. */
+  const isPVE = isPveStage(
+    { gameMode, guideSynergy },
+    phase === GamePhaseState.FIGHT ? stageLevel : stageLevel - 1
+  )
 
   const name = spectatedPlayer.name
   const avatar = spectatedPlayer.avatar

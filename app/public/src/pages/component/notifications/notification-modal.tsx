@@ -6,7 +6,8 @@ import { getRankLabel } from "../../../../../types/strings/Strings"
 import { Modal } from "../modal/modal"
 import "./notification-modal.css"
 import type { Theme } from "../../../../../config/game/theme"
-import type { Title } from "../../../../../types"
+import { Title } from "../../../../../types"
+import { getSynergyForGuideTitle } from "../../../../../core/guide/lessons"
 import type { EloRank } from "../../../../../types/enum/EloRank"
 import type { ExpeditionType } from "../../../../../types/enum/Expedition"
 import { cc } from "../../utils/jsx"
@@ -139,8 +140,17 @@ export function NotificationModal({
 
   const getIllustrationSrc = (notification: INotification): string | null => {
     switch (notification.type) {
-      case "new_title":
+      case "new_title": {
+        /* A lesson title is badged with the synergy it was earned for, and the
+           one for finishing every lesson with the guide's own icon - neither
+           has a file under assets/titles. */
+        if (notification.message === Title.SCHOLAR) {
+          return "/assets/ui/guide_lobby.svg"
+        }
+        const guideSynergy = getSynergyForGuideTitle(notification.message)
+        if (guideSynergy) return `/assets/types/${guideSynergy}.svg`
         return `/assets/titles/${notification.message}.svg`
+      }
       case "new_gadget":
         return `/assets/ui/${GADGETS[notification.message as keyof typeof GADGETS].icon}.svg`
       case "new_theme":

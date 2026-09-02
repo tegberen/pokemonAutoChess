@@ -2,6 +2,7 @@ import type Player from "../../models/colyseus-models/player"
 import type { Item } from "../../types/enum/Item"
 import type { Pkm } from "../../types/enum/Pokemon"
 import type { Synergy } from "../../types/enum/Synergy"
+import type { Title } from "../../types"
 import type {
   GuideAction,
   GuideLesson,
@@ -75,16 +76,18 @@ export interface GuideStageScript {
   pickItem?: Item
   /** the only component this stage's carousel will hand over */
   carousel?: Item
-  /* Fixes what grows on the first berry tree and ripens it, so a lesson can
-     tell the player to harvest a named berry on this stage. Only the first
-     tree is guaranteed to be on screen - it is the one a single tier of GRASS
-     already pays for. */
-  ripeBerry?: Item
+  /* Fixes what grows on the berry trees and ripens them, so a lesson can tell
+     the player to harvest named berries on this stage. One entry per tree from
+     the left; a tree only renders once the GRASS tier pays for it, so never
+     list more than the board will have by then. */
+  ripeBerries?: Item[]
   steps?: GuideStepScript[]
 }
 
 export interface GuideLessonScript {
   synergy: Synergy
+  /** awarded once the player reaches the last stage of this lesson */
+  title?: Title
   /** units the script depends on; `untilStage` releases a rented item holder */
   protect?: { pkm: Pkm; untilStage?: number }[]
   /** replays one carousel stage with the taught pick gone */
@@ -176,6 +179,7 @@ export function compileGuideLesson(script: GuideLessonScript): GuideLesson {
 
   return {
     synergy: script.synergy,
+    title: script.title,
     lastStage: script.stages[script.stages.length - 1].stage,
     protectedFamilies: script.protect,
     rewind: script.rewind,
@@ -186,7 +190,7 @@ export function compileGuideLesson(script: GuideLessonScript): GuideLesson {
     carouselTargets: byStage((s) => s.carousel),
     levels: byStage((s) => s.level),
     xpPurchases: byStage((s) => s.xpPurchases),
-    ripeBerries: byStage((s) => s.ripeBerry),
+    ripeBerries: byStage((s) => s.ripeBerries),
     steps
   }
 }

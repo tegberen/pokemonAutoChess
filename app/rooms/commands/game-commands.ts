@@ -252,6 +252,7 @@ import { ExpTable, XP_PER_PURCHASE } from "../../config/game/experience"
 import {
   GUIDE_INFINITE_GOLD,
   GUIDE_CAROUSEL_OUTRO_DURATION,
+  GUIDE_PICK_OUTRO_DURATION,
   isProtectedFromSelling
 } from "../../core/guide/guide-lesson"
 import {
@@ -268,7 +269,7 @@ import {
   getGuideCarouselTarget,
   getGuideForcedPickItem,
   getGuideLesson,
-  getGuideRipeBerry,
+  getGuideRipeBerries,
   getGuideStartingLevel,
   getGuideStageRewards,
   getGuideXpPurchases,
@@ -465,6 +466,9 @@ export class OnRemoveFromShopCommand extends Command<
       !this.state.players.has(playerId)
     )
       return
+    /* A guide deals its own shop, so discarding a slot throws away a unit the
+       lesson put there and cannot put back. */
+    if (getGuideLesson(this.state)) return
     const player = this.state.players.get(playerId)
     if (!player || !player.alive) return
 
@@ -1798,6 +1802,12 @@ export class OnPickBerryCommand extends Command<
   execute({ playerId, berryIndex }) {
     const player = this.state.players.get(playerId)
     if (!player || !player.alive) return
+    /* Grass grows berries on its own, so a guide would otherwise hand the
+       player free items on every stage the lesson is not talking about them.
+       Harvesting opens only on the stages that ripen a tree on purpose. */
+    if (getGuideLesson(this.state) && getGuideRipeBerries(this.state) === null) {
+      return
+    }
     if (player.berryTreesStages[berryIndex] >= 3) {
       player.berryTreesStages[berryIndex] = 0
       const type =
@@ -1927,7 +1937,18 @@ export class OnUpdateCommand extends Command<
       this.state.guideTrackedStep = this.state.guideStep
       this.state.guideStepRerollBase = player.gameStats.rerollCount
     }
-    return isGuideWaitingOnPlayer(this.state)
+
+    const waitingOnPlayer = isGuideWaitingOnPlayer(this.state)
+    /* Nothing left to ask on this stage, so cut the rest of the timer short the
+       same way a finished carousel does. This also covers the stages a lesson
+       skips entirely, which have no steps to wait on in the first place. */
+    if (
+      !waitingOnPlayer &&
+      this.state.time > GUIDE_PICK_OUTRO_DURATION
+    ) {
+      this.state.time = GUIDE_PICK_OUTRO_DURATION
+    }
+    return waitingOnPlayer
   }
 
   /* A stage's opening shop is dealt the units its steps need, but a rolling step
@@ -2420,13 +2441,13 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
 
     player.money = GUIDE_INFINITE_GOLD
 
-    /* Applied before the clients are told the phase changed, so the tree is
+    /* Applied before the clients are told the phase changed, so each tree is
        already the right berry by the time the board renders it. */
-    const ripeBerry = getGuideRipeBerry(this.state)
-    if (ripeBerry) {
-      player.berryTreesType[0] = ripeBerry
-      player.berryTreesStages[0] = 3
-    }
+    const ripeBerries = getGuideRipeBerries(this.state)
+    ripeBerries?.forEach((berry, index) => {
+      player.berryTreesType[index] = berry
+      player.berryTreesStages[index] = 3
+    })
 
     const level = getGuideStartingLevel(this.state)
     if (level !== null) {

@@ -20,6 +20,7 @@ import {
   FLOWER_POTS_POSITIONS_BLUE
 } from "../../../../core/flower-pots"
 import { canSell } from "../../../../core/pokemon-entity"
+import { t } from "i18next"
 import { isProtectedFromSelling } from "../../../../core/guide/guide-lesson"
 import { GuideLessons } from "../../../../core/guide/lessons"
 import { getLevelUpCost } from "../../../../models/colyseus-models/experience-manager"
@@ -424,7 +425,15 @@ export default class GameScene extends Scene {
     playSound(SOUNDS.SELL_UNIT)
   }
 
+  /* The sell hotkey doubles as "discard this shop slot" while hovering the
+     shop, which let a guide throw away the unit its step is asking for.
+     Refused server side too; caught here so no request leaves at all. */
   removeFromShop(index: number) {
+    const state = this.room?.state
+    if (state?.gameMode === GameMode.GUIDE && state.guideSynergy) {
+      this.board?.displayGuideMessage(t("guide.shop_is_dealt"))
+      return
+    }
     this.room?.send(Transfer.REMOVE_FROM_SHOP, index)
   }
 

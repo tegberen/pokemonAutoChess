@@ -2,10 +2,17 @@ import type Player from "../../models/colyseus-models/player"
 import type { Item } from "../../types/enum/Item"
 import { type Pkm, PkmFamily } from "../../types/enum/Pokemon"
 import type { Synergy } from "../../types/enum/Synergy"
+import type { Title } from "../../types"
 
 /* What is left of a scripted carousel once the player has the component. They
    are alone on the map, so the rest of the timer is dead air. */
 export const GUIDE_CAROUSEL_OUTRO_DURATION = 1500
+
+/* What is left of a picking phase once the lesson has nothing further to ask.
+   A normal stage timer exists to pressure eight players into deciding; a guide
+   has one player who has already done what the step wanted, so the rest of it
+   is dead air too. Long enough to see the board settle before the fight. */
+export const GUIDE_PICK_OUTRO_DURATION = 2000
 
 // the teacher fronting every lesson
 export const GUIDE_PRESENTER_INDEX = "0199"
@@ -80,6 +87,9 @@ export interface GuideStep {
 
 export interface GuideLesson {
   synergy: Synergy
+  /* Paid out for reaching the last stage. Named per lesson rather than from a
+     central table so writing a lesson never means editing a second file. */
+  title?: Title
   // the run ends after this stage
   lastStage: number
   /* Units forced into the shop on the stage that teaches them. The rest of the
@@ -109,10 +119,11 @@ export interface GuideLesson {
      starts with the experience bar already that far along, so "buy XP twice"
      is literally true rather than an estimate that drifts with the exp table. */
   xpPurchases?: { [stage: number]: number }
-  /* The berry the first tree grows, ripened for that stage. Berry trees are
-     random in type and grow a stage at a time, neither of which a script can
-     write text against, so a lesson that teaches harvesting pins both. */
-  ripeBerries?: { [stage: number]: Item }
+  /* What the berry trees grow, ripened for that stage, one entry per tree from
+     the left. Trees are random in type and grow a stage at a time, and a portal
+     rerolls both - none of which a script can write text against - so a lesson
+     that teaches harvesting pins them. */
+  ripeBerries?: { [stage: number]: Item[] }
   /* Replays one carousel stage with the taught pick already gone, to teach the
      adaptation rather than only the plan. */
   rewind?: {

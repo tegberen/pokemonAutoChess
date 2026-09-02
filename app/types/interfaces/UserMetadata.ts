@@ -1,5 +1,6 @@
 import type { Emotion, Role, Title } from ".."
 import type { Language } from "../enum/Language"
+import type { Synergy } from "../enum/Synergy"
 import type { AvatarCosmeticId } from "../enum/AvatarCosmetic"
 
 interface IUserMetadata {
@@ -27,6 +28,8 @@ interface IUserMetadata {
   eventFinishTime: Date | null
   booster: number
   titles: Title[]
+  // synergies whose lesson has been completed, for the SCHOLAR title
+  guideLessonsCompleted?: Synergy[]
   unlockedAvatarCosmetics?: AvatarCosmeticId[]
   title: "" | Title
   role: Role

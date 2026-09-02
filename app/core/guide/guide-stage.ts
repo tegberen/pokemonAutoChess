@@ -106,10 +106,10 @@ export function getGuideXpPurchases(
   return getGuideLesson(state)?.xpPurchases?.[state.stageLevel] ?? null
 }
 
-/** The berry the first tree should be grown and ready to drop on this stage. */
-export function getGuideRipeBerry(
+/** The berries the trees should be grown and ready to drop on this stage. */
+export function getGuideRipeBerries(
   state: GuideGameState & { stageLevel: number }
-): Item | null {
+): Item[] | null {
   return getGuideLesson(state)?.ripeBerries?.[state.stageLevel] ?? null
 }
 

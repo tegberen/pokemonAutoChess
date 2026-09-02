@@ -849,7 +849,10 @@ export enum Title {
   SHOW_OFF = "SHOW_OFF",
   HOT_STREAK = "HOT_STREAK",
   ANCIENT = "ANCIENT",
-  WHALE = "WHALE"
+  WHALE = "WHALE",
+  // finishing one of Slowking's lessons, and finishing all of them
+  BOTANIST = "BOTANIST",
+  SCHOLAR = "SCHOLAR"
 }
 
 export interface IBoardEvent {

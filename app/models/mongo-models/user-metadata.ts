@@ -6,6 +6,7 @@ import { notificationsService } from "../../services/notifications"
 import { Emotion, Role, Title } from "../../types"
 import { AVATAR_COSMETIC_IDS } from "../../types/enum/AvatarCosmetic"
 import { Pkm, PkmIndex } from "../../types/enum/Pokemon"
+import { Synergy } from "../../types/enum/Synergy"
 import type {
   IPokemonCollectionItemClient,
   IPokemonCollectionItemMongo,
@@ -120,6 +121,7 @@ const userMetadataSchema = new Schema({
       enum: Title
     }
   ],
+  guideLessonsCompleted: [{ type: String, enum: Synergy }],
   unlockedAvatarCosmetics: [{ type: String, enum: AVATAR_COSMETIC_IDS }],
   pokemonCollection: {
     type: Map,
