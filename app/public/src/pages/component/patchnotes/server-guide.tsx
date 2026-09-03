@@ -34,10 +34,12 @@ import "./server-guide.css"
 
 export default function ServerGuide({
   onArchive,
-  onOpenInterface
+  onOpenInterface,
+  onOpenBookmarks
 }: {
   onArchive: () => void
   onOpenInterface: () => void
+  onOpenBookmarks: (tab: string) => void
 }) {
   const { t } = useTranslation()
   const [selected, setSelected] = useState<GuidePageId>("home")
@@ -387,6 +389,11 @@ export default function ServerGuide({
                         if (href === "#options/interface") {
                           event.preventDefault()
                           onOpenInterface()
+                          return
+                        }
+                        if (href?.startsWith("#meta/")) {
+                          event.preventDefault()
+                          onOpenBookmarks(href.split("/")[1])
                           return
                         }
                         if (!href?.startsWith("#wiki/")) return

@@ -1,17 +1,26 @@
 import { useTranslation } from "react-i18next"
 import { Tab, TabList, TabPanel, Tabs } from "react-tabs"
 import { ActivityReport } from "./activity-report"
+import { BindingBandGuide } from "./binding-band-guide"
 import { ItemizationTheory } from "./itemization-theory"
 import { SynergyGuide } from "./synergy-guide"
 import { TempoGuide } from "./tempo-guide"
 import "./meta-report.css"
 
-export default function MetaReport() {
+const tabKeys = [
+  "itemization-theory",
+  "tempo-guide",
+  "synergy-guide",
+  "binding-band-guide",
+  "activity-report"
+]
+
+export default function MetaReport({ initialTab }: { initialTab?: string }) {
   const { t } = useTranslation()
 
   return (
     <div id="meta-report">
-      <Tabs>
+      <Tabs defaultIndex={Math.max(0, tabKeys.indexOf(initialTab ?? ""))}>
         <TabList>
           <Tab key="itemization-theory">
             <img
@@ -30,6 +39,14 @@ export default function MetaReport() {
             />
             {t("guide.bookmarks_title")}
           </Tab>
+          <Tab key="binding-band-guide">
+            <img
+              src="assets/item/BINDING_BAND.png"
+              alt=""
+              className="tab-icon tab-icon-item"
+            />
+            Binding Band Guide
+          </Tab>
           <Tab key="activity-report">
             {t("game_activity", { defaultValue: "Game Activity" })}
           </Tab>
@@ -43,6 +60,9 @@ export default function MetaReport() {
         </TabPanel>
         <TabPanel>
           <SynergyGuide />
+        </TabPanel>
+        <TabPanel>
+          <BindingBandGuide />
         </TabPanel>
         <TabPanel>
           <ActivityReport />

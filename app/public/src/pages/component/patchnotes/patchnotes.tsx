@@ -7,9 +7,11 @@ import ServerGuide from "./server-guide"
 import "./patchnotes.css"
 
 export default function PatchNotes({
-  onOpenInterface
+  onOpenInterface,
+  onOpenBookmarks
 }: {
   onOpenInterface: () => void
+  onOpenBookmarks: (tab: string) => void
 }) {
   const [showGuide, setShowGuide] = useState(true)
   const [selectedPatch, setSelectedPatch] = useState<PatchInfo | null>(null)
@@ -45,6 +47,7 @@ export default function PatchNotes({
       <ServerGuide
         onArchive={() => setShowGuide(false)}
         onOpenInterface={onOpenInterface}
+        onOpenBookmarks={onOpenBookmarks}
       />
     )
   }

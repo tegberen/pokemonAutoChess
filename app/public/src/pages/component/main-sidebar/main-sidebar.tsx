@@ -488,9 +488,11 @@ function Modals({
   const { t } = useTranslation()
   const searchedUser = useAppSelector((state) => state.lobby.searchedUser)
   const [optionsTab, setOptionsTab] = useState<"sound" | "interface">("sound")
+  const [metaTab, setMetaTab] = useState<string>()
 
   useEffect(() => {
     if (modal !== "options") setOptionsTab("sound")
+    if (modal !== "meta") setMetaTab(undefined)
   }, [modal])
 
   const dispatch = useAppDispatch()
@@ -515,6 +517,10 @@ function Modals({
           onOpenInterface={() => {
             setOptionsTab("interface")
             setModal("options")
+          }}
+          onOpenBookmarks={(tab) => {
+            setMetaTab(tab)
+            setModal("meta")
           }}
         />
       </Modal>
@@ -556,7 +562,7 @@ function Modals({
         header={t("guide.bookmark_tab")}
         onClose={closeModal}
       >
-        <MetaReport />
+        <MetaReport key={metaTab ?? "default"} initialTab={metaTab} />
       </Modal>
       <Modal
         onClose={closeModal}

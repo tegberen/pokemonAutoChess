@@ -2,8 +2,19 @@
    scrolling has to happen here rather than on the page. */
 .synergy-guide {
   height: 100%;
+  width: calc(100% - 2em);
+  max-width: 72em;
+  margin: 0 auto;
+  box-sizing: border-box;
   overflow-y: auto;
   padding: 0.5em 1em 1.5em;
+}
+
+@media (max-width: 640px) {
+  .synergy-guide {
+    width: calc(100% - 0.5em);
+    padding-inline: 0.25em;
+  }
 }
 
 .synergy-guide > header {
@@ -43,4 +54,10 @@
   background: none;
   border: none;
   padding: 0;
+}
+
+.synergy-guide .guide-notes li,
+.synergy-guide .guide-notes .guide-pkm-token,
+.synergy-guide .guide-notes .description-icon {
+  color: var(--color-fg-secondary);
 }

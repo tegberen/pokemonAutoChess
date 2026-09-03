@@ -63,6 +63,10 @@
 
 ### Binding Band
 
+This chapter is the short version: what each item does, plus a line of advice. The long version — why the component exists, and the design reasoning behind every single item — is a separate read.
+
+[Read the extended Binding Band guide](#meta/binding-band-guide)
+
 #### SOOTHE_BELL
 
 Grant the lowest HP ally 30 SHIELD every 3 seconds. Has a [30,LK]% chance to convert that ally’s remaining SHIELD into HP.

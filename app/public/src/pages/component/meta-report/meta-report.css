@@ -18,6 +18,9 @@
 #meta-report .react-tabs__tab-list {
   display: flex;
   align-items: flex-end;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: thin;
 }
 
 #meta-report .react-tabs__tab {
@@ -28,6 +31,13 @@
   height: 2.2em;
   box-sizing: border-box;
   line-height: 1;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+#meta-report .react-tabs__tab .tab-icon-item {
+  image-rendering: pixelated;
+  object-fit: contain;
 }
 
 /* .tab-icon is scoped to the preparation sidebar, so these tabs bring their own */
