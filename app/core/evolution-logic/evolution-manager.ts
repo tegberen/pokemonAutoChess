@@ -81,6 +81,27 @@ export const EvolutionManager = {
     return pokemonEvolved
   },
 
+  // a free promotion: the same COUNT handler asked for a single copy, so the
+  // Pokemon evolves alone while keeping its cell, items and permanent stats
+  evolveWithoutCopies(pokemon: Pokemon, player: Player): Pokemon | undefined {
+    const rule = pokemon.evolutionRule
+    const handler = new CountEvolutionHandler({
+      type: EvolutionRuleType.COUNT,
+      numberRequired: 1,
+      divergentEvolution:
+        rule.type === EvolutionRuleType.COUNT
+          ? rule.divergentEvolution
+          : undefined
+    })
+    // the handler consumes only what it recognises as a copy, so an Eviolite
+    // holder or a locked unit would leave it nothing to evolve from
+    if (!handler.countsAsCopy(pokemon, pokemon)) return
+    player.advanceBlessingQuest(Blessing.QUEST_EVOLVE_II)
+    const pokemonEvolved = handler.evolve(pokemon, player)
+    this.afterEvolve(pokemonEvolved, pokemon, player)
+    return pokemonEvolved
+  },
+
   afterEvolve(
     pokemonEvolved: Pokemon,
     pokemonBeforeEvolution: Pokemon,

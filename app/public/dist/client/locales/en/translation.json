@@ -2348,7 +2348,7 @@
 		"MUD_SHOT": "Hurls mud at the target, dealing [25,50,100,200,SP] SPECIAL and reducing their SPEED by [10,20,30,40,SP].",
 		"MALIGNANT_CHAIN": "Extends a poisonous chain to ensnare target, inflicting POSSESSED and 3 stacks of POISONNED for [3,3,3,6,SP] seconds.",
 		"FILLET_AWAY": "Sacrifice 30% of current max HP to flee away, gaining [5,8,10,20,SP] ATK, [10,15,20,40,SP] SPEED and PROTECT for a very short time.",
-		"ELECTRO_SHOT": "Gathers electricity for 2 seconds, then gains 40 AP and fires a high voltage shot in a straight line, dealing [80,100,120,240,SP]. The shot will be fired immediately under STORM",
+		"ELECTRO_SHOT": "Gathers electricity for 2 seconds, then gains 40 AP and fires a high voltage shot in a straight line, dealing [80,100,120,240,SP]. The shot will be fired immediately under STORM or MAGNET_STORM",
 		"FLOWER_TRICK": "Throws a rigged bouquet of flowers at the target that explodes after 3 seconds, dealing [15,40,85,170,SP] SPECIAL to the target and ADJACENT enemies. Every critical hit received by the target during the duration adds [15,SP] SPECIAL to the explosion.",
 		"SOLAR_BLADE": "Gathers light and fills a blade with its energy for 2 seconds (or instantly if the user is in the LIGHT spot), then slices up to 3 Pokémon in a CONE, dealing [30,60,120,240,SP] TRUE.",
 		"SCALE_SHOT": "The user sheds their scales, dealing [5,10,20,40,SP] SPECIAL to ADJACENT enemies, applying ARMOR_BREAK to itself and enemies hit for 2 seconds. After 2 seconds the scales are shot towards the farthest enemy, dealing [2,6,10,20,SP] SPECIAL to them and [1,3,5,10,SP] SPECIAL to enemies in their path.",
@@ -4709,363 +4709,363 @@
 			"description": "Gain a random 3 STAR Common Pokémon."
 		},
 		"NORMAL_BADGE_BLESSING": {
-			"name": "Normal Badge",
+			"name": "NORMAL Badge",
 			"description": "Gain a NORMAL_GEM and a random 1 STAR Uncommon NORMAL Pokémon."
 		},
 		"NORMAL_CREST_BLESSING": {
-			"name": "Normal Crest",
+			"name": "NORMAL Crest",
 			"description": "Gain a FRIEND_BOW and 2 random 1 STAR Uncommon NORMAL Pokémon."
 		},
 		"FLYING_BADGE_BLESSING": {
-			"name": "Flying Badge",
+			"name": "FLYING Badge",
 			"description": "Gain a FLYING_GEM and a random 1 STAR Uncommon FLYING Pokémon."
 		},
 		"FLYING_CREST_BLESSING": {
-			"name": "Flying Crest",
+			"name": "FLYING Crest",
 			"description": "Gain an AIR_BALLOON and 2 random 1 STAR Uncommon FLYING Pokémon."
 		},
 		"FIELD_BADGE_BLESSING": {
-			"name": "Field Badge",
+			"name": "FIELD Badge",
 			"description": "Gain a FIELD_GEM and a random 1 STAR Uncommon FIELD Pokémon."
 		},
 		"FIELD_CREST_BLESSING": {
-			"name": "Field Crest",
+			"name": "FIELD Crest",
 			"description": "Gain a RUNNING_SHOES and 2 random 1 STAR Uncommon FIELD Pokémon."
 		},
 		"DARK_BADGE_BLESSING": {
-			"name": "Dark Badge",
+			"name": "DARK Badge",
 			"description": "Gain a DARK_GEM and a random 1 STAR Uncommon DARK Pokémon."
 		},
 		"DARK_CREST_BLESSING": {
-			"name": "Dark Crest",
+			"name": "DARK Crest",
 			"description": "Gain a DUSK_STONE and 2 random 1 STAR Uncommon DARK Pokémon."
 		},
 		"GROUND_BADGE_BLESSING": {
-			"name": "Ground Badge",
+			"name": "GROUND Badge",
 			"description": "Gain a GROUND_GEM and a random 1 STAR Uncommon GROUND Pokémon."
 		},
 		"GROUND_CREST_BLESSING": {
-			"name": "Ground Crest",
+			"name": "GROUND Crest",
 			"description": "Gain an EXPLORER_KIT and 2 random 1 STAR Uncommon GROUND Pokémon."
 		},
 		"PSYCHIC_BADGE_BLESSING": {
-			"name": "Psychic Badge",
+			"name": "PSYCHIC Badge",
 			"description": "Gain a PSYCHIC_GEM and a random 1 STAR Uncommon PSYCHIC Pokémon."
 		},
 		"PSYCHIC_CREST_BLESSING": {
-			"name": "Psychic Crest",
+			"name": "PSYCHIC Crest",
 			"description": "Gain a DAWN_STONE and 2 random 1 STAR Uncommon PSYCHIC Pokémon."
 		},
 		"GRASS_BADGE_BLESSING": {
-			"name": "Grass Badge",
+			"name": "GRASS Badge",
 			"description": "Gain a GRASS_GEM and a random 1 STAR Uncommon GRASS Pokémon."
 		},
 		"GRASS_CREST_BLESSING": {
-			"name": "Grass Crest",
+			"name": "GRASS Crest",
 			"description": "Gain a LEAF_STONE and 2 random 1 STAR Uncommon GRASS Pokémon."
 		},
 		"BUG_BADGE_BLESSING": {
-			"name": "Bug Badge",
+			"name": "BUG Badge",
 			"description": "Gain a BUG_GEM and a random 1 STAR Uncommon BUG Pokémon."
 		},
 		"BUG_CREST_BLESSING": {
-			"name": "Bug Crest",
+			"name": "BUG Crest",
 			"description": "Gain a SHED_SHELL and 2 random 1 STAR Uncommon BUG Pokémon."
 		},
 		"WATER_BADGE_BLESSING": {
-			"name": "Water Badge",
+			"name": "WATER Badge",
 			"description": "Gain a WATER_GEM and a random 1 STAR Uncommon WATER Pokémon."
 		},
 		"WATER_CREST_BLESSING": {
-			"name": "Water Crest",
+			"name": "WATER Crest",
 			"description": "Gain a WATER_STONE and 2 random 1 STAR Uncommon WATER Pokémon."
 		},
 		"AQUATIC_BADGE_BLESSING": {
-			"name": "Aquatic Badge",
+			"name": "AQUATIC Badge",
 			"description": "Gain an AQUATIC_GEM and a random 1 STAR Uncommon AQUATIC Pokémon."
 		},
 		"AQUATIC_CREST_BLESSING": {
-			"name": "Aquatic Crest",
+			"name": "AQUATIC Crest",
 			"description": "Gain a SURFBOARD and 2 random 1 STAR Uncommon AQUATIC Pokémon."
 		},
 		"POISON_BADGE_BLESSING": {
-			"name": "Poison Badge",
+			"name": "POISON Badge",
 			"description": "Gain a POISON_GEM and a random 1 STAR Uncommon POISON Pokémon."
 		},
 		"POISON_CREST_BLESSING": {
-			"name": "Poison Crest",
+			"name": "POISON Crest",
 			"description": "Gain a POKERUS_VIAL and 2 random 1 STAR Uncommon POISON Pokémon."
 		},
 		"FAIRY_BADGE_BLESSING": {
-			"name": "Fairy Badge",
+			"name": "FAIRY Badge",
 			"description": "Gain a FAIRY_GEM and a random 1 STAR Uncommon FAIRY Pokémon."
 		},
 		"FAIRY_CREST_BLESSING": {
-			"name": "Fairy Crest",
+			"name": "FAIRY Crest",
 			"description": "Gain a MOON_STONE and 2 random 1 STAR Uncommon FAIRY Pokémon."
 		},
 		"FIGHTING_BADGE_BLESSING": {
-			"name": "Fighting Badge",
+			"name": "FIGHTING Badge",
 			"description": "Gain a FIGHTING_GEM and a random 1 STAR Uncommon FIGHTING Pokémon."
 		},
 		"FIGHTING_CREST_BLESSING": {
-			"name": "Fighting Crest",
+			"name": "FIGHTING Crest",
 			"description": "Gain a MACHO_BRACE and 2 random 1 STAR Uncommon FIGHTING Pokémon."
 		},
 		"FIRE_BADGE_BLESSING": {
-			"name": "Fire Badge",
+			"name": "FIRE Badge",
 			"description": "Gain a FIRE_GEM and a random 1 STAR Uncommon FIRE Pokémon."
 		},
 		"FIRE_CREST_BLESSING": {
-			"name": "Fire Crest",
+			"name": "FIRE Crest",
 			"description": "Gain a FIRE_STONE and 2 random 1 STAR Uncommon FIRE Pokémon."
 		},
 		"GHOST_BADGE_BLESSING": {
-			"name": "Ghost Badge",
+			"name": "GHOST Badge",
 			"description": "Gain a GHOST_GEM and a random 1 STAR Uncommon GHOST Pokémon."
 		},
 		"GHOST_CREST_BLESSING": {
-			"name": "Ghost Crest",
+			"name": "GHOST Crest",
 			"description": "Gain a SPELL_TAG and 2 random 1 STAR Uncommon GHOST Pokémon."
 		},
 		"ROCK_BADGE_BLESSING": {
-			"name": "Rock Badge",
+			"name": "ROCK Badge",
 			"description": "Gain a ROCK_GEM and a random 1 STAR Uncommon ROCK Pokémon."
 		},
 		"ROCK_CREST_BLESSING": {
-			"name": "Rock Crest",
+			"name": "ROCK Crest",
 			"description": "Gain an EVER_STONE and 2 random 1 STAR Uncommon ROCK Pokémon."
 		},
 		"MONSTER_BADGE_BLESSING": {
-			"name": "Monster Badge",
+			"name": "MONSTER Badge",
 			"description": "Gain a MONSTER_GEM and a random 1 STAR Uncommon MONSTER Pokémon."
 		},
 		"MONSTER_CREST_BLESSING": {
-			"name": "Monster Crest",
+			"name": "MONSTER Crest",
 			"description": "Gain a BERSERK_GENE and 2 random 1 STAR Uncommon MONSTER Pokémon."
 		},
 		"AMORPHOUS_BADGE_BLESSING": {
-			"name": "Amorphous Badge",
+			"name": "AMORPHOUS Badge",
 			"description": "Gain an AMORPHOUS_GEM and a random 1 STAR Uncommon AMORPHOUS Pokémon."
 		},
 		"AMORPHOUS_CREST_BLESSING": {
-			"name": "Amorphous Crest",
+			"name": "AMORPHOUS Crest",
 			"description": "Gain an AMORPHOUS_GEM and 2 random 1 STAR Uncommon AMORPHOUS Pokémon."
 		},
 		"WILD_BADGE_BLESSING": {
-			"name": "Wild Badge",
+			"name": "WILD Badge",
 			"description": "Gain a WILD_GEM and a random 1 STAR Uncommon WILD Pokémon."
 		},
 		"WILD_CREST_BLESSING": {
-			"name": "Wild Crest",
+			"name": "WILD Crest",
 			"description": "Gain a WHITE_FLUTE and 2 random 1 STAR Uncommon WILD Pokémon."
 		},
 		"SOUND_BADGE_BLESSING": {
-			"name": "Sound Badge",
+			"name": "SOUND Badge",
 			"description": "Gain a SOUND_GEM and a random 1 STAR Uncommon SOUND Pokémon."
 		},
 		"SOUND_CREST_BLESSING": {
-			"name": "Sound Crest",
+			"name": "SOUND Crest",
 			"description": "Gain a METRONOME and 2 random 1 STAR Uncommon SOUND Pokémon."
 		},
 		"FLORA_BADGE_BLESSING": {
-			"name": "Flora Badge",
+			"name": "FLORA Badge",
 			"description": "Gain a FLORA_GEM and a random 1 STAR Uncommon FLORA Pokémon."
 		},
 		"FLORA_CREST_BLESSING": {
-			"name": "Flora Crest",
+			"name": "FLORA Crest",
 			"description": "Gain an INCENSE and 2 random 1 STAR Uncommon FLORA Pokémon."
 		},
 		"STEEL_BADGE_BLESSING": {
-			"name": "Steel Badge",
+			"name": "STEEL Badge",
 			"description": "Gain a STEEL_GEM and a random 1 STAR Uncommon STEEL Pokémon."
 		},
 		"STEEL_CREST_BLESSING": {
-			"name": "Steel Crest",
+			"name": "STEEL Crest",
 			"description": "Gain a METAL_COAT and 2 random 1 STAR Uncommon STEEL Pokémon."
 		},
 		"ELECTRIC_BADGE_BLESSING": {
-			"name": "Electric Badge",
+			"name": "ELECTRIC Badge",
 			"description": "Gain an ELECTRIC_GEM and a random 1 STAR Uncommon ELECTRIC Pokémon."
 		},
 		"ELECTRIC_CREST_BLESSING": {
-			"name": "Electric Crest",
+			"name": "ELECTRIC Crest",
 			"description": "Gain a THUNDER_STONE and 2 random 1 STAR Uncommon ELECTRIC Pokémon."
 		},
 		"ICE_BADGE_BLESSING": {
-			"name": "Ice Badge",
+			"name": "ICE Badge",
 			"description": "Gain an ICE_GEM and a random 1 STAR Uncommon ICE Pokémon."
 		},
 		"ICE_CREST_BLESSING": {
-			"name": "Ice Crest",
+			"name": "ICE Crest",
 			"description": "Gain an ICE_STONE and 2 random 1 STAR Uncommon ICE Pokémon."
 		},
 		"HUMAN_BADGE_BLESSING": {
-			"name": "Human Badge",
+			"name": "HUMAN Badge",
 			"description": "Gain a HUMAN_GEM and a random 1 STAR Uncommon HUMAN Pokémon."
 		},
 		"HUMAN_CREST_BLESSING": {
-			"name": "Human Crest",
+			"name": "HUMAN Crest",
 			"description": "Gain a HUMAN_GEM and 2 random 1 STAR Uncommon HUMAN Pokémon."
 		},
 		"DRAGON_BADGE_BLESSING": {
-			"name": "Dragon Badge",
+			"name": "DRAGON Badge",
 			"description": "Gain a DRAGON_GEM and a random 1 STAR Uncommon DRAGON Pokémon."
 		},
 		"DRAGON_CREST_BLESSING": {
-			"name": "Dragon Crest",
+			"name": "DRAGON Crest",
 			"description": "Gain a DRAGON_SCALE and 2 random 1 STAR Uncommon DRAGON Pokémon."
 		},
 		"LIGHT_BADGE_BLESSING": {
-			"name": "Light Badge",
+			"name": "LIGHT Badge",
 			"description": "Gain a LIGHT_GEM and a random 1 STAR Uncommon LIGHT Pokémon."
 		},
 		"LIGHT_CREST_BLESSING": {
-			"name": "Light Crest",
+			"name": "LIGHT Crest",
 			"description": "Gain a LIGHT_BALL and 2 random 1 STAR Uncommon LIGHT Pokémon."
 		},
 		"GOURMET_BADGE_BLESSING": {
-			"name": "Gourmet Badge",
+			"name": "GOURMET Badge",
 			"description": "Gain a GOURMET_GEM and a random 1 STAR Uncommon GOURMET Pokémon."
 		},
 		"GOURMET_CREST_BLESSING": {
-			"name": "Gourmet Crest",
+			"name": "GOURMET Crest",
 			"description": "Gain a COOKING_POT and 2 random 1 STAR Uncommon GOURMET Pokémon."
 		},
 		"FOSSIL_BADGE_BLESSING": {
-			"name": "Fossil Badge",
+			"name": "FOSSIL Badge",
 			"description": "Gain a FOSSIL_GEM and a random 1 STAR Uncommon FOSSIL Pokémon."
 		},
 		"FOSSIL_CREST_BLESSING": {
-			"name": "Fossil Crest",
+			"name": "FOSSIL Crest",
 			"description": "Gain an OLD_AMBER and 2 random 1 STAR Uncommon FOSSIL Pokémon."
 		},
 		"ARTIFICIAL_BADGE_BLESSING": {
-			"name": "Artificial Badge",
+			"name": "ARTIFICIAL Badge",
 			"description": "Gain an ARTIFICIAL_GEM and a random 1 STAR Uncommon ARTIFICIAL Pokémon."
 		},
 		"ARTIFICIAL_CREST_BLESSING": {
-			"name": "Artificial Crest",
+			"name": "ARTIFICIAL Crest",
 			"description": "Gain an ARTIFICIAL_GEM and 2 random 1 STAR Uncommon ARTIFICIAL Pokémon."
 		},
 		"NORMAL_CROWN_BLESSING": {
-			"name": "Normal Crown",
+			"name": "NORMAL Crown",
 			"description": "Gain a FRIEND_BOW, a COVER_BAND, a LAPRAS_PASSPORT and a Jigglypuff."
 		},
 		"FLYING_CROWN_BLESSING": {
-			"name": "Flying Crown",
+			"name": "FLYING Crown",
 			"description": "Gain an AIR_BALLOON, a RAZOR_CLAW, a LAPRAS_PASSPORT and a Quaxwell."
 		},
 		"FIELD_CROWN_BLESSING": {
-			"name": "Field Crown",
+			"name": "FIELD Crown",
 			"description": "Gain a RUNNING_SHOES, a DESTINY_KNOT, a LAPRAS_PASSPORT and a Torracat."
 		},
 		"DARK_CROWN_BLESSING": {
-			"name": "Dark Crown",
+			"name": "DARK Crown",
 			"description": "Gain a DUSK_STONE, a BLACK_BELT, a LAPRAS_PASSPORT and a Frogadier."
 		},
 		"GROUND_CROWN_BLESSING": {
-			"name": "Ground Crown",
+			"name": "GROUND Crown",
 			"description": "Gain an EXPLORER_KIT, a SAFETY_GOGGLES, a LAPRAS_PASSPORT and a Nidorino."
 		},
 		"PSYCHIC_CROWN_BLESSING": {
-			"name": "Psychic Crown",
+			"name": "PSYCHIC Crown",
 			"description": "Gain a DAWN_STONE, an AQUA_EGG, a LAPRAS_PASSPORT and a Hattrem."
 		},
 		"GRASS_CROWN_BLESSING": {
-			"name": "Grass Crown",
+			"name": "GRASS Crown",
 			"description": "Gain a LEAF_STONE, a GREEN_ORB, a LAPRAS_PASSPORT and an Eldegoss."
 		},
 		"BUG_CROWN_BLESSING": {
-			"name": "Bug Crown",
+			"name": "BUG Crown",
 			"description": "Gain a SHED_SHELL, a RELIC_CROWN, a LAPRAS_PASSPORT and a Charjabug."
 		},
 		"WATER_CROWN_BLESSING": {
-			"name": "Water Crown",
+			"name": "WATER Crown",
 			"description": "Gain a WATER_STONE, a CHOICE_SPECS, a LAPRAS_PASSPORT and a Wartortle."
 		},
 		"AQUATIC_CROWN_BLESSING": {
-			"name": "Aquatic Crown",
+			"name": "AQUATIC Crown",
 			"description": "Gain a SURFBOARD, a SHELL_BELL, a LAPRAS_PASSPORT and a Pikachu."
 		},
 		"POISON_CROWN_BLESSING": {
-			"name": "Poison Crown",
+			"name": "POISON Crown",
 			"description": "Gain a POKERUS_VIAL, an UPGRADE, a LAPRAS_PASSPORT and a Nidorina."
 		},
 		"FAIRY_CROWN_BLESSING": {
-			"name": "Fairy Crown",
+			"name": "FAIRY Crown",
 			"description": "Gain a MOON_STONE, a LOADED_DICE, a LAPRAS_PASSPORT and a Delcatty."
 		},
 		"FIGHTING_CROWN_BLESSING": {
-			"name": "Fighting Crown",
+			"name": "FIGHTING Crown",
 			"description": "Gain a MACHO_BRACE, a ROCKY_HELMET, a LAPRAS_PASSPORT and a Machoke."
 		},
 		"FIRE_CROWN_BLESSING": {
-			"name": "Fire Crown",
+			"name": "FIRE Crown",
 			"description": "Gain a FIRE_STONE, an XRAY_VISION, a LAPRAS_PASSPORT and a Torracat."
 		},
 		"GHOST_CROWN_BLESSING": {
-			"name": "Ghost Crown",
+			"name": "GHOST Crown",
 			"description": "Gain a SPELL_TAG, a MAX_REVIVE, a LAPRAS_PASSPORT and a Glalie."
 		},
 		"ROCK_CROWN_BLESSING": {
-			"name": "Rock Crown",
+			"name": "ROCK Crown",
 			"description": "Gain an EVER_STONE, a FAIRY_FEATHER, a LAPRAS_PASSPORT and a Naclstack."
 		},
 		"MONSTER_CROWN_BLESSING": {
-			"name": "Monster Crown",
+			"name": "MONSTER Crown",
 			"description": "Gain a BERSERK_GENE, a WIDE_LENS, a LAPRAS_PASSPORT and a Grovyle."
 		},
 		"AMORPHOUS_CROWN_BLESSING": {
-			"name": "Amorphous Crown",
+			"name": "AMORPHOUS Crown",
 			"description": "Gain an AMORPHOUS_GEM, a PUNCHING_GLOVE, a LAPRAS_PASSPORT and a Palossand."
 		},
 		"WILD_CROWN_BLESSING": {
-			"name": "Wild Crown",
+			"name": "WILD Crown",
 			"description": "Gain a WHITE_FLUTE, a RED_ORB, a LAPRAS_PASSPORT and an Ambipom."
 		},
 		"SOUND_CROWN_BLESSING": {
-			"name": "Sound Crown",
+			"name": "SOUND Crown",
 			"description": "Gain a METRONOME, an EFFICIENT_BANDANNA, a LAPRAS_PASSPORT and a Jigglypuff."
 		},
 		"FLORA_CROWN_BLESSING": {
-			"name": "Flora Crown",
+			"name": "FLORA Crown",
 			"description": "Gain an INCENSE, a SOUL_DEW, a LAPRAS_PASSPORT and a Floette."
 		},
 		"STEEL_CROWN_BLESSING": {
-			"name": "Steel Crown",
+			"name": "STEEL Crown",
 			"description": "Gain a METAL_COAT, a FLAME_ORB, a LAPRAS_PASSPORT and a Magneton."
 		},
 		"ELECTRIC_CROWN_BLESSING": {
-			"name": "Electric Crown",
+			"name": "ELECTRIC Crown",
 			"description": "Gain a THUNDER_STONE, a BLUE_ORB, a LAPRAS_PASSPORT and a Charjabug."
 		},
 		"ICE_CROWN_BLESSING": {
-			"name": "Ice Crown",
+			"name": "ICE Crown",
 			"description": "Gain an ICE_STONE, a POWER_LENS, a LAPRAS_PASSPORT and a Glalie."
 		},
 		"HUMAN_CROWN_BLESSING": {
-			"name": "Human Crown",
+			"name": "HUMAN Crown",
 			"description": "Gain a HUMAN_GEM, a MUSCLE_BAND, a LAPRAS_PASSPORT and a Machoke."
 		},
 		"DRAGON_CROWN_BLESSING": {
-			"name": "Dragon Crown",
+			"name": "DRAGON Crown",
 			"description": "Gain a DRAGON_SCALE, a DEEP_SEA_TOOTH, a LAPRAS_PASSPORT and a Charmeleon."
 		},
 		"LIGHT_CROWN_BLESSING": {
-			"name": "Light Crown",
+			"name": "LIGHT Crown",
 			"description": "Gain a LIGHT_BALL, a STAR_DUST, a LAPRAS_PASSPORT and a Clefairy."
 		},
 		"GOURMET_CROWN_BLESSING": {
-			"name": "Gourmet Crown",
+			"name": "GOURMET Crown",
 			"description": "Gain a COOKING_POT, a BIG_EATER_BELT, a LAPRAS_PASSPORT and a Naclstack."
 		},
 		"FOSSIL_CROWN_BLESSING": {
-			"name": "Fossil Crown",
+			"name": "FOSSIL Crown",
 			"description": "Gain an OLD_AMBER, a KINGS_ROCK, a LAPRAS_PASSPORT and a Piloswine."
 		},
 		"ARTIFICIAL_CROWN_BLESSING": {
-			"name": "Artificial Crown",
+			"name": "ARTIFICIAL Crown",
 			"description": "Gain an ARTIFICIAL_GEM, a WONDER_BOX, a LAPRAS_PASSPORT and a Magneton."
 		},
 		"QUEST_REROLL": {
@@ -5283,6 +5283,66 @@
 		"MIND_RUSH": {
 			"name": "Mind Rush",
 			"description": "Gain a DAWN_STONE and a RUNNING_SHOES. Your Unowns have FIELD synergy and count as KO'd when they cast their ability. At PSYCHIC 7, your Unown shops always contain Unown !."
+		},
+		"NORMAL_FAIRY_GYM_TRAINER": {
+			"name": "NORMAL FAIRY Gym Trainer",
+			"description": "Gain an Igglybuff and a Togepi. Your Unique Pokémon selection is guaranteed to include a Tandemaus."
+		},
+		"FLYING_AQUATIC_GYM_TRAINER": {
+			"name": "FLYING AQUATIC Gym Trainer",
+			"description": "Gain a Quaxly and a Wattrel. Your Unique Pokémon selection is guaranteed to include a Cramorant."
+		},
+		"DARK_WILD_GYM_TRAINER": {
+			"name": "DARK WILD Gym Trainer",
+			"description": "Gain a Poochyena and a Galarian Zigzagoon. Your Unique Pokémon selection is guaranteed to include an Absol."
+		},
+		"GROUND_BUG_GYM_TRAINER": {
+			"name": "GROUND BUG Gym Trainer",
+			"description": "Gain a Trapinch and a Burmy (Sandy). Your Unique Pokémon selection is guaranteed to include a Dunsparce."
+		},
+		"PSYCHIC_LIGHT_GYM_TRAINER": {
+			"name": "PSYCHIC LIGHT Gym Trainer",
+			"description": "Gain a Flittle and an Elgyem. Your Unique Pokémon selection is guaranteed to include a Cosmog."
+		},
+		"GRASS_GOURMET_GYM_TRAINER": {
+			"name": "GRASS GOURMET Gym Trainer",
+			"description": "Gain a Capsakid and a Bounsweet. Your Unique Pokémon selection is guaranteed to include an Applin."
+		},
+		"POISON_AMORPHOUS_GYM_TRAINER": {
+			"name": "POISON AMORPHOUS Gym Trainer",
+			"description": "Gain a Grimer and a Koffing. Your Unique Pokémon selection is guaranteed to include a Pyukumuku."
+		},
+		"FIRE_FIELD_GYM_TRAINER": {
+			"name": "FIRE FIELD Gym Trainer",
+			"description": "Gain a Ponyta and a Growlithe. Your Unique Pokémon selection is guaranteed to include a Heatmor."
+		},
+		"HUMAN_FIGHTING_GYM_TRAINER": {
+			"name": "HUMAN FIGHTING Gym Trainer",
+			"description": "Gain a Machop and a Meditite. Your Unique Pokémon selection is guaranteed to include a Tyrogue."
+		},
+		"GHOST_ARTIFICIAL_GYM_TRAINER": {
+			"name": "GHOST ARTIFICIAL Gym Trainer",
+			"description": "Gain a Honedge and a Golett. Your Unique Pokémon selection is guaranteed to include a Rotom."
+		},
+		"ROCK_ICE_GYM_TRAINER": {
+			"name": "ROCK ICE Gym Trainer",
+			"description": "Gain a Snorunt and a Shellder. Your Unique Pokémon selection is guaranteed to include a Cryogonal."
+		},
+		"DRAGON_MONSTER_GYM_TRAINER": {
+			"name": "DRAGON MONSTER Gym Trainer",
+			"description": "Gain a Treecko and a Gible. Your Unique Pokémon selection is guaranteed to include a Druddigon."
+		},
+		"WATER_SOUND_GYM_TRAINER": {
+			"name": "WATER SOUND Gym Trainer",
+			"description": "Gain a Clauncher and a Popplio. Your Unique Pokémon selection is guaranteed to include a Lapras."
+		},
+		"ELECTRIC_STEEL_GYM_TRAINER": {
+			"name": "ELECTRIC STEEL Gym Trainer",
+			"description": "Gain a Magnemite and a Nosepass. Your Unique Pokémon selection is guaranteed to include a Duraludon."
+		},
+		"GYM_LEADER": {
+			"name": "Gym Leader",
+			"description": "The two Pokémon your Gym Trainer gave you evolve (if they are still 1 STAR). Gain a LAPRAS_PASSPORT."
 		},
 		"BERRY_POUCH": {
 			"name": "Bowl of Berries",
@@ -7277,7 +7337,9 @@
 			"family_CREST_name": "Synergy Crests",
 			"family_CREST_hint": "Gain that synergy gem and 2 random 1 STAR Uncommon Pokémon of that synergy. One exists for every synergy.",
 			"family_CROWN_name": "Synergy Crowns",
-			"family_CROWN_hint": "Gain two items and a Pokémon chosen for that synergy. One exists for every synergy."
+			"family_CROWN_hint": "Gain two items and a Pokémon chosen for that synergy. One exists for every synergy.",
+			"family_GYM_TRAINER_name": "Gym Trainers",
+			"family_GYM_TRAINER_hint": "Gain two Pokémon sharing a pair of synergies, and a guaranteed Unique of that pair in your Unique selection."
 		}
 	},
 	"errors": {

@@ -188,6 +188,22 @@
   letter-spacing: 0.04em;
 }
 
+/* a subgroup of the section above, so it indents rather than starting over */
+.wiki-blessings-subcategory {
+  margin-top: 0.6em;
+  padding-left: 0.8em;
+  border-left: 2px solid
+    color-mix(in srgb, var(--color-fg-primary) 18%, transparent);
+}
+
+.wiki-blessings-subcategory > h4 {
+  margin: 0 0 0.4em;
+  color: var(--color-fg-secondary);
+  font-size: 0.85em;
+  letter-spacing: 0.04em;
+  opacity: 0.85;
+}
+
 .wiki-blessing-icon-wrap {
   position: relative;
   flex: 0 0 auto !important;
@@ -348,6 +364,14 @@
 
 .wiki-blessings .description-icon {
   font-size: inherit;
+}
+
+/* the rule above is sized for the 0.85em card body and out-specifies the
+   generic heading one, so a blessing title needs its own */
+.wiki-blessings h3 .description-icon > img {
+  width: 1em;
+  height: 1em;
+  vertical-align: -0.15em;
 }
 
 /* .description-icon is nowrap so an icon never splits from its label, but long

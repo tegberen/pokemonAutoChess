@@ -6,6 +6,7 @@ import {
   Blessing,
   BlessingTier,
   GREEDY_WISH_PRISMATIC_GOLD,
+  GYM_TRAINER_ROSTERS,
   ITEM_BLESSING_STAGES_OVERRIDE,
   ITEM_GRANTED_BY_BLESSING,
   LANGUAGE_BARRIER_UNOWNS_GRANTED,
@@ -15,7 +16,8 @@ import {
   QUEST_EVOLVE_II_RARES_GRANTED,
   ROCKY_BEGINNINGS_POKEMONS,
   SELECTIVE_GENETICS_BABIES_GRANTED,
-  STARTER_PACK_CONTENT
+  STARTER_PACK_CONTENT,
+  getGymTrainerRoster
 } from "../../types/enum/Blessing"
 import { DungeonPMDO } from "../../types/enum/Dungeon"
 import { Rarity } from "../../types/enum/Game"
@@ -23,7 +25,7 @@ import { SpecialGameRule } from "../../types/enum/SpecialGameRule"
 import { Synergy } from "../../types/enum/Synergy"
 import { randomWeighted, shuffleArray } from "../../utils/random"
 
-export type BlessingFamily = "BADGE" | "CREST" | "CROWN"
+export type BlessingFamily = "BADGE" | "CREST" | "CROWN" | "GYM_TRAINER"
 
 export interface BlessingDefinition {
   tier: BlessingTier
@@ -207,6 +209,26 @@ function synergyFamilyDefinitions(
   ) as { [blessing in Blessing]: BlessingDefinition }
 }
 
+// every Gym Trainer is the same offer with a different pair, so the roster is
+// the only thing written out. GYM_LEADER pays them off at stage 12
+function gymTrainerDefinitions(): {
+  [blessing in Blessing]: BlessingDefinition
+} {
+  const definitions: { [blessing: string]: BlessingDefinition } = {}
+  Object.entries(GYM_TRAINER_ROSTERS).forEach(([blessing, roster]) => {
+    definitions[blessing] = {
+      tier: BlessingTier.SILVER,
+      availableAtStages: [4],
+      icon: "gym_trainer",
+      grantsPokemonImmediately: true,
+      benchSlotsRequired: roster.starters.length,
+      synergies: roster.synergies,
+      family: "GYM_TRAINER"
+    }
+  })
+  return definitions as { [blessing in Blessing]: BlessingDefinition }
+}
+
 // every item blessing is named after the item it hands out, so its icon and
 // definition are derived rather than written out one by one
 function itemBlessingDefinitions() {
@@ -230,6 +252,15 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
   ...synergyFamilyDefinitions("BADGE", BlessingTier.SILVER, "rank_one"),
   ...synergyFamilyDefinitions("CREST", BlessingTier.GOLD, "rank_two"),
   ...synergyFamilyDefinitions("CROWN", BlessingTier.PRISMATIC, "rank_three"),
+  ...gymTrainerDefinitions(),
+  [Blessing.GYM_LEADER]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: [12],
+    icon: "gym_leader",
+    grantsPokemonImmediately: false,
+    // nothing to promote without a trainer team picked at stage 4
+    isAvailable: (player) => getGymTrainerRoster(player.blessings) !== undefined
+  },
   [Blessing.WOBBUFFETS_GOLD_PRIZE]: {
     tier: BlessingTier.GOLD,
     availableAtStages: [12],
@@ -2293,8 +2324,11 @@ export function getBlessingSynergy(blessing: Blessing): Synergy | undefined {
   return Blessings[blessing].synergy
 }
 
+// a Combo or a Gym Trainer bridges a pair rather than naming one synergy, but
+// it is still a synergy pick and shares the same option cap
 function isSynergyRelatedBlessing(blessing: Blessing): boolean {
-  return getBlessingSynergy(blessing) !== undefined
+  const { synergy, synergies } = Blessings[blessing]
+  return synergy !== undefined || synergies !== undefined
 }
 
 function isSynergyOptionCapReached(
@@ -2330,14 +2364,20 @@ function isItemOptionCapReached(
   )
 }
 
+// these reach a pool only once the pick that unlocks them has been made, and
+// that pick has no other payoff, so they take a slot rather than a chance
+const GUARANTEED_BLESSINGS: Blessing[] = [Blessing.GYM_LEADER]
+
 export function drawBlessingOptions(
   pool: Blessing[],
   amount: number,
   maxSynergyOptions: number,
   maxItemOptions: number
 ): Blessing[] {
-  const remaining = shuffleArray([...pool])
-  const drawn: Blessing[] = []
+  const isGuaranteed = (blessing: Blessing) =>
+    GUARANTEED_BLESSINGS.includes(blessing)
+  const remaining = shuffleArray(pool.filter((b) => !isGuaranteed(b)))
+  const drawn: Blessing[] = pool.filter(isGuaranteed).slice(0, amount)
   while (drawn.length < amount && remaining.length > 0) {
     const candidate = remaining.pop()!
     if (isFamilyCapReached(drawn, candidate)) continue

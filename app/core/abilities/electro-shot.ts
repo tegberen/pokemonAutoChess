@@ -8,6 +8,12 @@ import type { PokemonEntity } from "../pokemon-entity"
 import { DelayedCommand } from "../simulation-command"
 import { AbilityStrategy } from "./ability-strategy"
 
+// the two charged skies that spare Electro Shot its wind-up
+const ELECTRO_SHOT_INSTANT_WEATHERS: Weather[] = [
+  Weather.STORM,
+  Weather.MAGNET_STORM
+]
+
 export class ElectroShotStrategy extends AbilityStrategy {
   process(
     pokemon: PokemonEntity,
@@ -17,7 +23,11 @@ export class ElectroShotStrategy extends AbilityStrategy {
   ) {
     super.process(pokemon, board, target, crit, true)
 
-    if (pokemon.simulation.weather !== Weather.STORM) {
+    const shootsInstantly = ELECTRO_SHOT_INSTANT_WEATHERS.includes(
+      pokemon.simulation.weather
+    )
+
+    if (!shootsInstantly) {
       pokemon.cooldown = 2000
       pokemon.broadcastAbility({
         skill: "ELECTRO_SHOT_CHARGE",
@@ -49,7 +59,7 @@ export class ElectroShotStrategy extends AbilityStrategy {
             }
           })
         },
-        pokemon.simulation.weather === Weather.STORM ? 0 : 2000
+        shootsInstantly ? 0 : 2000
       )
     )
   }

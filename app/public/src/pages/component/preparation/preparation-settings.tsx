@@ -341,7 +341,7 @@ export default function PreparationSettings() {
               >
                 <h3>
                   {blessingsUnderTest.includes(blessing) ? "✔ " : ""}
-                  {t(`blessing.${blessing}.name`)}
+                  {addIconsToDescription(t(`blessing.${blessing}.name`))}
                 </h3>
                 <p>
                   {addIconsToDescription(t(`blessing.${blessing}.description`))}

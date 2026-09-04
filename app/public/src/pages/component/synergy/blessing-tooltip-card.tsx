@@ -42,7 +42,9 @@ export function BlessingTooltipCard(props: {
     >
       <img src={`/assets/blessings/${Blessings[blessing].icon}.svg`} alt="" />
       <div>
-        <h3>{t(`blessing.${blessing}.name`)}</h3>
+        <h3>
+          <span>{addIconsToDescription(t(`blessing.${blessing}.name`))}</span>
+        </h3>
         <p>{addIconsToDescription(t(`blessing.${blessing}.description`))}</p>
         {props.children}
       </div>

@@ -50,6 +50,7 @@ import {
   CONVERGENT_PARADOX_GENESECT_TIER,
   GROUND_HOLE_ROW_STARTS,
   GROUND_HOLE_MAX_DEPTH,
+  GYM_TRAINER_ROSTERS,
   Blessing,
   BlessingTrigger,
   BP_REWARDS_COMPONENTS,
@@ -111,7 +112,8 @@ import {
   TRASH_TO_TREASURE_TRASH_GRANTED_MIN,
   WAITING_GAME_FREE_ROLLS,
   WAITING_GAME_FREE_ROLLS_WITHOUT_REROLLING,
-  WOBBUFFETS_GOLD_PRIZE_RECYCLE_TICKETS
+  WOBBUFFETS_GOLD_PRIZE_RECYCLE_TICKETS,
+  getGymTrainerRoster
 } from "../types/enum/Blessing"
 import type { DungeonPMDO } from "../types/enum/Dungeon"
 import { BattleResult, PokemonActionState, Rarity } from "../types/enum/Game"
@@ -391,6 +393,39 @@ function comboBlessingGrants() {
       }
     ])
   )
+}
+
+function gymTrainerGrants() {
+  return Object.fromEntries(
+    Object.entries(GYM_TRAINER_ROSTERS).map(([blessing, roster]) => [
+      blessing,
+      (player: Player) => {
+        if (getFreeSpaceOnBench(player.board) < roster.starters.length) {
+          return false
+        }
+        roster.starters.forEach((pkm) => giftPokemonIfBenchHasRoom(player, pkm))
+        return true
+      }
+    ])
+  )
+}
+
+// only the copies the trainer handed out and never merged still count as his
+// team, so a line the player already grew past is left alone
+function promoteGymTrainerStarters(player: Player) {
+  const roster = getGymTrainerRoster(player.blessings)
+  if (!roster) return
+  roster.starters.forEach((starter) => {
+    const stillFirstStage = schemaValues(player.board).find(
+      (pokemon) =>
+        pokemon.stars === 1 &&
+        pokemon.hasEvolution &&
+        PkmFamily[pokemon.name] === PkmFamily[starter]
+    )
+    if (stillFirstStage) {
+      EvolutionManager.evolveWithoutCopies(stillFirstStage, player)
+    }
+  })
 }
 
 function synergyFamilyEffects(
@@ -1862,6 +1897,13 @@ export const blessingEffectService: {
   ...synergyFamilyEffects("BADGE", 1),
   ...synergyFamilyEffects("CREST", 2),
   ...crownEffects,
+  ...gymTrainerGrants(),
+
+  [Blessing.GYM_LEADER]: (player) => {
+    promoteGymTrainerStarters(player)
+    player.items.push(Item.LAPRAS_PASSPORT)
+    return true
+  },
 
   [Blessing.LUNCH_MONEY]: () => true,
   [Blessing.CALCULATED_LOSS]: () => true,

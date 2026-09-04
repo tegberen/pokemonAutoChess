@@ -245,7 +245,7 @@ export default function BlessingsPanel(props: { recentOnly?: boolean }) {
   }
 
   const displayedBlessings = props.recentOnly
-    ? blessings.slice(-2).reverse()
+    ? blessings.slice(-2)
     : blessings
 
   return (
@@ -254,10 +254,9 @@ export default function BlessingsPanel(props: { recentOnly?: boolean }) {
         <div
           key={`${blessing}-${index}`}
           className={cc("blessing-panel-slot", {
-            // recentOnly reverses the list, so the newest sits first there
+            // both lists run in acquisition order, so the newest sits last
             "blessing-panel-acquired":
-              justAcquired &&
-              index === (props.recentOnly ? 0 : displayedBlessings.length - 1)
+              justAcquired && index === displayedBlessings.length - 1
           })}
         >
           <img

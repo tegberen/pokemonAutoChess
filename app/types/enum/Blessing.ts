@@ -438,7 +438,23 @@ export enum Blessing {
   HYDRATED_CELLS = "HYDRATED_CELLS",
   SYMBIOTIC_SYMPHONY = "SYMBIOTIC_SYMPHONY",
   EARTHEN_BARRIER = "EARTHEN_BARRIER",
-  MIND_RUSH = "MIND_RUSH"
+  MIND_RUSH = "MIND_RUSH",
+
+  NORMAL_FAIRY_GYM_TRAINER = "NORMAL_FAIRY_GYM_TRAINER",
+  FLYING_AQUATIC_GYM_TRAINER = "FLYING_AQUATIC_GYM_TRAINER",
+  DARK_WILD_GYM_TRAINER = "DARK_WILD_GYM_TRAINER",
+  GROUND_BUG_GYM_TRAINER = "GROUND_BUG_GYM_TRAINER",
+  PSYCHIC_LIGHT_GYM_TRAINER = "PSYCHIC_LIGHT_GYM_TRAINER",
+  GRASS_GOURMET_GYM_TRAINER = "GRASS_GOURMET_GYM_TRAINER",
+  POISON_AMORPHOUS_GYM_TRAINER = "POISON_AMORPHOUS_GYM_TRAINER",
+  FIRE_FIELD_GYM_TRAINER = "FIRE_FIELD_GYM_TRAINER",
+  HUMAN_FIGHTING_GYM_TRAINER = "HUMAN_FIGHTING_GYM_TRAINER",
+  GHOST_ARTIFICIAL_GYM_TRAINER = "GHOST_ARTIFICIAL_GYM_TRAINER",
+  ROCK_ICE_GYM_TRAINER = "ROCK_ICE_GYM_TRAINER",
+  DRAGON_MONSTER_GYM_TRAINER = "DRAGON_MONSTER_GYM_TRAINER",
+  WATER_SOUND_GYM_TRAINER = "WATER_SOUND_GYM_TRAINER",
+  ELECTRIC_STEEL_GYM_TRAINER = "ELECTRIC_STEEL_GYM_TRAINER",
+  GYM_LEADER = "GYM_LEADER"
 }
 
 export enum BlessingTrigger {
@@ -1217,3 +1233,98 @@ export const CONVERGENT_PARADOX_POKEMONS: Pkm[] = [
   ...CONVERGENT_PARADOX_UNIQUES,
   ...CONVERGENT_PARADOX_LEGENDARIES
 ]
+
+export interface GymTrainerRoster {
+  synergies: [Synergy, Synergy]
+  // handed out on pick and worth 6 gold together, either an Uncommon paired
+  // with an Epic or two Rares
+  starters: [Pkm, Pkm]
+  // forced into the Unique proposition screen, and never evolved by GYM_LEADER
+  unique: Pkm
+}
+
+// one pair per synergy, FOSSIL and FLORA excepted: neither has a partner whose
+// shared Uncommon-to-Unique line reads as a single trainer's team
+export const GYM_TRAINER_ROSTERS: {
+  [blessing in Blessing]?: GymTrainerRoster
+} = {
+  [Blessing.NORMAL_FAIRY_GYM_TRAINER]: {
+    synergies: [Synergy.NORMAL, Synergy.FAIRY],
+    starters: [Pkm.IGGLYBUFF, Pkm.TOGEPI],
+    unique: Pkm.TANDEMAUS
+  },
+  [Blessing.FLYING_AQUATIC_GYM_TRAINER]: {
+    synergies: [Synergy.FLYING, Synergy.AQUATIC],
+    starters: [Pkm.QUAXLY, Pkm.WATTREL],
+    unique: Pkm.CRAMORANT
+  },
+  [Blessing.DARK_WILD_GYM_TRAINER]: {
+    synergies: [Synergy.DARK, Synergy.WILD],
+    starters: [Pkm.POOCHYENA, Pkm.GALARIAN_ZIGZAGOON],
+    unique: Pkm.ABSOL
+  },
+  [Blessing.GROUND_BUG_GYM_TRAINER]: {
+    synergies: [Synergy.GROUND, Synergy.BUG],
+    starters: [Pkm.TRAPINCH, Pkm.BURMY_SANDY],
+    unique: Pkm.DUNSPARCE
+  },
+  [Blessing.PSYCHIC_LIGHT_GYM_TRAINER]: {
+    synergies: [Synergy.PSYCHIC, Synergy.LIGHT],
+    starters: [Pkm.FLITTLE, Pkm.ELGYEM],
+    unique: Pkm.COSMOG
+  },
+  [Blessing.GRASS_GOURMET_GYM_TRAINER]: {
+    synergies: [Synergy.GRASS, Synergy.GOURMET],
+    starters: [Pkm.CAPSAKID, Pkm.BOUNSWEET],
+    unique: Pkm.APPLIN
+  },
+  [Blessing.POISON_AMORPHOUS_GYM_TRAINER]: {
+    synergies: [Synergy.POISON, Synergy.AMORPHOUS],
+    starters: [Pkm.GRIMER, Pkm.KOFFING],
+    unique: Pkm.PYUKUMUKU
+  },
+  [Blessing.FIRE_FIELD_GYM_TRAINER]: {
+    synergies: [Synergy.FIRE, Synergy.FIELD],
+    starters: [Pkm.PONYTA, Pkm.GROWLITHE],
+    unique: Pkm.HEATMOR
+  },
+  [Blessing.HUMAN_FIGHTING_GYM_TRAINER]: {
+    synergies: [Synergy.HUMAN, Synergy.FIGHTING],
+    starters: [Pkm.MACHOP, Pkm.MEDITITE],
+    unique: Pkm.TYROGUE
+  },
+  [Blessing.GHOST_ARTIFICIAL_GYM_TRAINER]: {
+    synergies: [Synergy.GHOST, Synergy.ARTIFICIAL],
+    starters: [Pkm.HONEDGE, Pkm.GOLETT],
+    unique: Pkm.ROTOM
+  },
+  [Blessing.ROCK_ICE_GYM_TRAINER]: {
+    synergies: [Synergy.ROCK, Synergy.ICE],
+    starters: [Pkm.SNORUNT, Pkm.SHELLDER],
+    unique: Pkm.CRYOGONAL
+  },
+  [Blessing.DRAGON_MONSTER_GYM_TRAINER]: {
+    synergies: [Synergy.DRAGON, Synergy.MONSTER],
+    starters: [Pkm.TREECKO, Pkm.GIBLE],
+    unique: Pkm.DRUDDIGON
+  },
+  [Blessing.WATER_SOUND_GYM_TRAINER]: {
+    synergies: [Synergy.WATER, Synergy.SOUND],
+    starters: [Pkm.CLAUNCHER, Pkm.POPPLIO],
+    unique: Pkm.LAPRAS
+  },
+  [Blessing.ELECTRIC_STEEL_GYM_TRAINER]: {
+    synergies: [Synergy.ELECTRIC, Synergy.STEEL],
+    starters: [Pkm.MAGNEMITE, Pkm.NOSEPASS],
+    unique: Pkm.DURALUDON
+  }
+}
+
+export function getGymTrainerRoster(
+  blessings: Blessing[] | undefined
+): GymTrainerRoster | undefined {
+  const owned = (Object.keys(GYM_TRAINER_ROSTERS) as Blessing[]).find(
+    (blessing) => blessings?.includes(blessing)
+  )
+  return owned ? GYM_TRAINER_ROSTERS[owned] : undefined
+}

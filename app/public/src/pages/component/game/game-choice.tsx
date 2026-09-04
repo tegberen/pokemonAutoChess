@@ -301,7 +301,9 @@ export default function GameChoice() {
                     src={`/assets/blessings/${blessingDefinition.icon}.svg`}
                     alt=""
                   />
-                  <h3>{t(`blessing.${blessing}.name`)}</h3>
+                  <h3>
+                    {addIconsToDescription(t(`blessing.${blessing}.name`))}
+                  </h3>
                   <p>
                     {addIconsToDescription(
                       t(`blessing.${blessing}.description`)

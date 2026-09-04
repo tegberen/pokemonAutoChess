@@ -1260,6 +1260,7 @@
     "pool": {
         "regular": "Regular",
         "additional": "Additional",
+        "unlockable": "Fossil Unlock",
         "regional": "Regional",
         "special": "Special"
     },
@@ -1336,6 +1337,10 @@
         "DEFENSE_CURL": "Defense Curl",
         "IRON_HEAD": "Iron Head",
         "IRON_DEFENSE": "Iron Defense",
+        "HARD_FACE": "Hard Face",
+        "AMPING_BEAK": "Amping Beak",
+        "FROZEN_BEAK": "Frozen Beak",
+        "FROZEN_REND": "Frozen Rend",
         "METRONOME": "Metronome",
         "SOAK": "Soak",
         "ORIGIN_PULSE": "Origin Pulse",
@@ -1575,6 +1580,7 @@
         "STOCKPILE": "Stockpile",
         "BARB_BARRAGE": "Barb Barrage",
         "INFERNAL_PARADE": "Infernal Parade",
+        "INHALE": "Inhale",
         "MAGIC_POWDER": "Magic Powder",
         "RETALIATE": "Retaliate",
         "SLASH": "Slash",
@@ -1797,6 +1803,7 @@
         "SAND_SPIT": "Sand Spit",
         "HYPER_DRILL": "Hyper Drill",
         "TERRAIN_PULSE": "Terrain Pulse",
+        "AXE_BLAST": "Axe Blast",
         "AXE_KICK": "Axe Kick",
         "EXPANDING_FORCE": "Expanding Force",
         "SPITE": "Spite",
@@ -1819,6 +1826,7 @@
         "PUMMELING_PAYBACK": "Pummeling Payback",
         "VOLT_SURGE": "Volt Surge",
         "SUPERCELL_SLAM": "Supercell Slam",
+        "HIGH_BREACHING": "High Breaching",
         "HIGH_HORSEPOWER": "High Horsepower",
         "CITY_SHUTTLE": "City Shuttle",
         "BULLET_PUNCH": "Bullet Punch",
@@ -1919,7 +1927,7 @@
         "SEISMIC_TOSS": "Deal [5,10,20,40,SP] multiplied by the allied player's level TRUE to the target.",
         "GUILLOTINE": "Deal [300,300,300,600,SP]% of user ATK as SPECIAL to the target. Restore half of the user's PP if the target is KO'd.",
         "ROCK_SLIDE": "Deal [30,60,120,150,300,SP] SPECIAL to the target. The damage is doubled if the target is FLYING.",
-        "FLAMETHROWER": "Deal [30,60,120,240,SP] SPECIAL and BURN for 4 seconds to all enemy Pokémon in a direction in a 3 tile radius.",
+        "FLAMETHROWER": "Scorch all enemies in a line, burning PP equal to [100,150,200,400,SP]% of the user’s ATK and inflicting BURN for 3 seconds. If it burns more PP than the target has remaining, it erupts the exceeding amount of PP-burn as SPECIAL to the targets and its ADJACENT enemies.",
         "THUNDER_SHOCK": "Deal [30,60,120,240,SP] SPECIAL to the target.",
         "THUNDER": "Lightning strikes up to 3 random enemies, inflicting [25,50,100,200,SP] SPECIAL with [30,LK]% chance to inflict PARALYSIS for 3 seconds",
         "HYDRO_PUMP": "Deal [20,40,80,160,SP] SPECIAL to all enemies in a line.",
@@ -1932,6 +1940,10 @@
         "DEFENSE_CURL": "Increase the user's DEF and SPE_DEF by [5,10,20,40,SP].",
         "IRON_HEAD": "Increase the user's DEF and SPE_DEF by [5,10,15,30,SP] then hit target with a powerful headbutt, dealing [100,SP]% of (DEF + SPE_DEF) as SPECIAL.",
         "IRON_DEFENSE": "Grant [20,40,80,160,SP] SHIELD to all allied Pokémon in the same row as the user.",
+        "HARD_FACE": "Gain [20,40,80,160,SP] SHIELD. After the first cast, while the user has any SHIELD, an attack received at melee range deals back [3,6,12,24,AP] + 20% of DEF as retaliation TRUE.",
+        "AMPING_BEAK": "Every third attack triggers 1 additional attack for the rest of combat. Stacks with each cast.",
+        "FROZEN_BEAK": "Gain 100 SHIELD and FREEZE itself for 2 seconds. While FREEZE, take 50% less damage from all sources.",
+        "FROZEN_REND": "FREEZE ADJACENT enemies for 2 seconds. The radius increases by 1 with each cast for the rest of combat.",
         "METRONOME": "Use a random ability whose strength depends on LUCK. INIMITABLE abilities are excluded.",
         "SOAK": "Deal [20,40,80,160,SP] SPECIAL to the target and restore [10,10,20,40] PP to all allied Pokémon",
         "ORIGIN_PULSE": "A wave travels horizontally across the battlefield, dealing [50,75,100,120,150,SP] SPECIAL to all enemy Pokémon in its path.",
@@ -1969,13 +1981,13 @@
         "HEAL_BLOCK": "Deal [20,40,80,160,SP] SPECIAL and WOUND all ADJACENT enemy Pokémon for 5 seconds.",
         "ROAR_OF_TIME": "Grant RESURRECTION and [10,15,20,40,SP] SPEED to the STRONGEST allied Pokémon.",
         "ROCK_TOMB": "Deal [30,60,120,240,SP] SPECIAL to the target and decrease their SPEED by [10,20,40,80].",
-        "ROCK_SMASH": "Deal [25,50,100,200,SP] SPECIAL and ARMOR_BREAK for [3,6,9,18] seconds to the target.",
-        "HEAD_SMASH": "Deal [40,80,150,300,SP] SPECIAL to the target and [10,20,40,80,SP] PHYSICAL to the user. Execute the target if they suffer from SLEEP or FREEZE.",
-        "ROCK_HEAD": "Deal [120,120,150,300,SP]% of ATK + DEF as SPECIAL to the target.",
+        "ROCK_SMASH": "Deal [50,75,120,200,SP] SPECIAL and ARMOR_BREAK for [3,6,9,18] seconds to the target.",
+        "HEAD_SMASH": "Deal [90,120,150,300,SP] SPECIAL to the target and [10,20,40,80,SP] PHYSICAL to the user. Execute the target if they suffer from SLEEP or FREEZE.",
+        "ROCK_HEAD": "Deal [150, 200, 250, 300,SP]% of ATK + DEF as SPECIAL to the target.",
         "CRABHAMMER": "Deal [40,80,160,320,SP] SPECIAL to the target. Execute the target if they are below 30% HP. Can crit by default with a 30% increased CRIT_CHANCE.",
         "DIAMOND_STORM": "Deal [50,100,150,200,400,SP]% of the user's DEF as SPECIAL to all ADJACENT enemy Pokémon.",
         "DYNAMAX_CANNON": "Shoot a Dynamax beam in a straight line. Enemy Pokémon hit take [30,40,50,70,SP]% of their max HP as SPECIAL.",
-        "DYNAMIC_PUNCH": "Deal [40,80,160,320,SP] SPECIAL to the target and inflict them with CONFUSION for [2,4,6,8] seconds.",
+        "DYNAMIC_PUNCH": "Deal [50,100,200,400,SP] SPECIAL to the target and inflict them with CONFUSION for [2,4,6,8] seconds.",
         "ELECTRO_WEB": "Deal [15,30,60,120,SP] SPECIAL to all ADJACENT enemy Pokémon and steal [15,30,60,120,SP] SPEED.",
         "MYSTICAL_FIRE": "Circling the target with four flames, explodes on the target and ADJACENT enemies. Each hit deals [30,SP]% ATK as SPECIAL and reduces AP by [3,SP]. If a hit drops their AP below 0, they are BURN for [1,2,3,6,SP] seconds.",
         "FLAME_CHARGE": "Dash into the enemy team's back line and deal [20,30,100,200,SP] SPECIAL to all enemy Pokémon in the path.",
@@ -2154,7 +2166,7 @@
         "CHARGE_BEAM": "Raises the users AP by 50. Fire a concentrated bundle of electricity that propagates to a maximum of 3 ADJACENT enemy Pokémon, dealing [15,30,60,120,SP] SPECIAL to each.",
         "POPULATION_BOMB": "Deal 10 SPECIAL [4,8,12,16,20,SP] times to the target.",
         "SCREECH": "Reduce DEF of all enemies in a 2-range radius by [2,4,8,16,SP].",
-        "SAND_TOMB": "Deal [10,20,40,80,SP] SPECIAL to the target and inflict them with SILENCE and PARALYSIS for [3,5,8,16] seconds.",
+        "SAND_TOMB": "Create quicksand within 4 tiles for 5 seconds. All Pokémon caught inside are SILENCE for 4/3/2/1 seconds based on distance. During SANDSTORM, they take double SANDSTORM_DAMAGE. When the quicksand disappears, enemies inside take [200,300,400,500,SP]% ATK as SPECIAL.",
         "WHIRLWIND": "Deal [40,80,120,240,SP] SPECIAL to the target and make them FLY_AWAY.",
         "ACID_SPRAY": "Spit poison directly at an enemy Pokémon, dealing [11,22,33,66,SP] SPECIAL and reducing their SPE_DEF by 5. The ability then rebounds to another ADJACENT enemy (5 bounces max).",
         "UNBOUND": "Tears open a dimensional ring and returns in its Unbound form — dragging a Legendary Pokémon along with it. The summoned Pokémon starts with 50% of its base max HP, increasing by another 25% for every 100 AP the user has.",
@@ -2169,12 +2181,13 @@
         "BARB_BARRAGE": "Dive into the middle of the enemy team, dealing [15,30,45,60,120,SP] SPECIAL to all ADJACENT enemy Pokémon and inflict them with POISONNED for 3 seconds.",
         "MAGIC_POWDER": "Gain [15,30,60,120,SP] SHIELD and SILENCE ADJACENT enemy Pokémon for [2,3,4,8] seconds.",
         "INFERNAL_PARADE": "Shoot a returning Flame Wheel at farthest enemy, dealing [100, SP] SPECIAL twice to all enemy Pokémon in its path with a [50,LK]% chance to apply BURN for 3s.",
+        "INHALE": "Gain [10,20,30,SP] max HP.",
         "RETALIATE": "Deal [150,150,150,300,SP]% of ATK as SPECIAL to the target, + 1 additional hit for each fallen allied Pokémon.",
         "SLASH": "Deal [10,20,40,80,SP] SPECIAL to the target with a [30,60,90,100]% increased CRIT_CHANCE ratio. Can crit by default.",
         "OUTRAGE": "Deal [300,300,300,600,SP]% ATK as SPECIAL to the target and ADJACENT enemy Pokémon and inflict the user with CONFUSION for 2 seconds.",
         "LUNGE": "Jump to the enemy Pokémon with the highest ATK, dealing [30,40,50,100,SP] SPECIAL and reducing its ATK by [3,4,5,10,SP].",
         "KNOCK_OFF": "Deal [30,60,90,100,200,SP] SPECIAL to the target, +[15,20,30,35,60,SP] SPECIAL for each item held by the target. All of the target's items are removed.",
-        "FISHIOUS_REND": "Deal [20,40,80,160,SP] SPECIAL to the target. The damage is doubled if the user has more SPEED than the target.",
+        "FISHIOUS_REND": "Dash to the farthest enemy and seize it, removing it from combat. Release it if the user is KO'd. The user cannot cast again this combat.",
         "RECOVER": "Heal for [25,25,50,100,SP]% of max HP.",
         "CURSE": "Inflict the highest HP enemy Pokémon with CURSE that will KO after [8,5,3,1,SP=-0.2] seconds. The delay decrease by 1% every 5 AP.",
         "DOOM_DESIRE": "After 2 seconds, deal [100,125,150,300,SP] SPECIAL to the target. Get back to max PP if the target is KO'd in the duration.",
@@ -2185,7 +2198,7 @@
         "CRUSH_GRIP": "The target is crushed with great force. The more HP % the target has left, the greater the damage: between [15,25,50,100,SP] and [65,125,250,500,SP] SPECIAL.",
         "AURASPHERE": "Exude an aura and project energy in a line, dealing [25,50,100,200,SP] SPECIAL and inflicting all enemy Pokémon hit with SILENCE for 3 seconds.",
         "SKETCH": "Copy the ability, max PP and STAR of the allied Pokémon on the user's left at the start of the fight, if not INIMITABLE.",
-        "OVERDRIVE": "Twang an electric guitar, causing a huge echo and strong vibration. Deal [140,SP]% of ATK as SPECIAL within a 3 tile radius of the user, -20% damage per tile from the user.",
+        "OVERDRIVE": "Twang an electric guitar, causing a huge echo and strong vibration. Deal [140,SP]% of ATK as SPECIAL within a 3 tile radius (4 if ELECTRIC_FIELD) of the user, -20% damage per tile from the user.",
         "MAGNETIC_FLUX": "All allied Pokémon in a 2-tile radius gain [15,15,15,30,SP] DEF and SPE_DEF for 5 seconds. If the ally has ELECTRIC_FIELD, the buff stays for the rest of the fight.",
         "LOVELY_KISS": "Kiss the enemy Pokémon with a frightening expression. Put the target to SLEEP for [2,4,6,12,SP] seconds. If the target is already suffering from SLEEP, deal [50,100,150,300,SP] SPECIAL instead.",
         "TRANSFORM": "Take the appearance, stats (except HP) and ability of the target.",
@@ -2299,7 +2312,7 @@
         "BURN_UP": "BURN itself for 3 seconds to inflict [50,100,200,400,SP] SPECIAL.",
         "LANDS_WRATH": "The ground erupts, dealing [20,30,40,80,SP] + [100,100,100,200,SP]% ATK as SPECIAL to the target and ADJACENT enemies, then lower their DEF and SPE_DEF by [5,5,5,10,SP].",
         "THOUSAND_ARROWS": "33 energy arrows rain down on random tiles, dealing [40,50,60,100,SP] SPECIAL each. All enemies hit are LOCKED for 1 second.",
-        "CORE_ENFORCER": "Hits in a Z-shape area around the target, dealing [40,60,80,160,SP] SPECIAL and inflicting SILENCE for 3 seconds.",
+        "CORE_ENFORCER": "Hits in a Z-shape area around the target, dealing [40,60,80,160,320,SP] SPECIAL and inflicting SILENCE for 3 seconds.",
         "NIHIL_LIGHT": "Unleash a powerful light that defies all laws of nature, dealing [10,20,40,80,160,SP] TRUE to the first target and 20% less for each enemy behind. All enemies hit lose any HP gained during the fight.",
         "POWER_HUG": "Deal [40,80,160,320,SP] SPECIAL to the target. The target is LOCKED and PARALYSIS for [3,3,6,10,SP] seconds.",
         "MORTAL_SPIN": "Knock back any Pokémon targeting the user in melee range. Deal [20,40,80,160,SP] SPECIAL to any enemies hit, and apply POISONNED for [4,4,8,16,SP] seconds",
@@ -2338,7 +2351,7 @@
         "ELECTRO_SHOT": "Gathers electricity for 2 seconds, then gains 40 AP and fires a high voltage shot in a straight line, dealing [80,100,120,240,SP]. The shot will be fired immediately under STORM",
         "FLOWER_TRICK": "Throws a rigged bouquet of flowers at the target that explodes after 3 seconds, dealing [15,40,85,170,SP] SPECIAL to the target and ADJACENT enemies. Every critical hit received by the target during the duration adds [15,SP] SPECIAL to the explosion.",
         "SOLAR_BLADE": "Gathers light and fills a blade with its energy for 2 seconds (or instantly if the user is in the LIGHT spot), then slices up to 3 Pokémon in a CONE, dealing [30,60,120,240,SP] TRUE.",
-        "SCALE_SHOT": "The user sheds their scales, dealing [5,10,20,40,SP] SPECIAL to ADJACENT enemies, applying ARMOR_BREAK to itself and enemies hit for 2 seconds. After 2 seconds the scales are shot towards the farthest enemy, dealing [6,10,20,40,SP] SPECIAL to them and [1,3,5,10,SP] SPECIAL to enemies in their path.",
+        "SCALE_SHOT": "The user sheds their scales, dealing [5,10,20,40,SP] SPECIAL to ADJACENT enemies, applying ARMOR_BREAK to itself and enemies hit for 2 seconds. After 2 seconds the scales are shot towards the farthest enemy, dealing [2,6,10,20,SP] SPECIAL to them and [1,3,5,10,SP] SPECIAL to enemies in their path.",
         "BULLDOZE": "Stomps down on the ground dealing [15,30,60,120,SP] SPECIAL to ADJACENT enemies. Pokémon hit are knocked back and lose [5,5,10,20] SPEED.",
         "ARMOR_CANNON": "Shoots out a blazing projectile, dealing [15,30,50,100,SP] SPECIAL to the target before bouncing to the 2 closest enemies, dealing [15,30,50,100,SP] SPECIAL to each. The projectiles then return to the original target, dealing an extra [6,12,25,50,SP] SPECIAL each.",
         "BITTER_BLADE": "Focuses its bitter feelings into a flaming slash, dealing [50,60,70,140,SP] SPECIAL to every ADJACENT enemy. User heals 10% of its max HP for each enemy hit.",
@@ -2374,7 +2387,7 @@
         "HORN_LEECH": "Drains the target's energy, dealing [200,200,300,500,SP]% of user ATK as SPECIAL and healing for 50% of the damage dealt. 50% of the overheal is converted to SHIELD.",
         "DRILL_RUN": "Charges through the target like a drill, dealing [15,30,60,120,SP] TRUE and swapping position. If there's another target behind in the same direction, immediately cast the ability again on that target. Can crit by default.",
         "DRILL_PECK": "Charges through the target like a drill, dealing [30,60,120,240,SP] SPECIAL and swapping position. If there's another target behind in the same direction, immediately cast the ability again on that target.",
-        "ROCK_ARTILLERY": "Throws [10,20,30,50] rocks at random enemies, each landing randomly on their target or an ADJACENT tile, each dealing [20,30,40,80,SP] SPECIAL with a [30,LK]% chance to inflict LOCKED for 2 second.",
+        "ROCK_ARTILLERY": "Throws [10,20,30,50] rocks at random enemies, each landing randomly on their target or an ADJACENT tile, each dealing [15,25,35,70,SP] SPECIAL with a [30,LK]% chance to inflict LOCKED for 2 second.",
         "ZING_ZAP": "Rolls behind the target, dealing [30,60,90,180,SP] SPECIAL and inflicting FLINCH for 3 seconds. If the target suffers from PARALYSIS, gain [10,20,40,80,SP] SHIELD.",
         "NO_RETREAT": "Gain 1 DEF and 1 SPE_DEF per Falinks on your team. Troopers tackle target for [20,20,20,40,SP] SPECIAL each.",
         "TACKLE": "Deal [20,40,60,120,SP] SPECIAL to the target.",
@@ -2382,6 +2395,7 @@
         "SAND_SPIT": "Spits sand at the 3 enemy Pokémon in front of the user, dealing [30,60,120,240,SP] SPECIAL and inflicting BLINDED for 2 seconds.",
         "HYPER_DRILL": "Deals [10,30,50,100,200,SP] TRUE that can break PROTECT, and dig deeper into the ground under the target, destroying any eventual buried items in the process. Double damage if target is already on a fully dug hole.",
         "TERRAIN_PULSE": "If user has no field, gets GRASS_FIELD.\nField effects in your team propagate to ADJACENT allies, then trigger an effect:\nGRASS_FIELD: heal [5,7,10,15,SP]% of max HP\nELECTRIC_FIELD: gain [10,12,15,20,SP] SPEED\nPSYCHIC_FIELD: gain [10,12,15,20,SP] PP\nFAIRY_FIELD: gain [5,7,10,15,SP]% of max HP as SHIELD",
+        "AXE_BLAST": "Deals SPECIAL damage equal to [300,SP]% of the user's ATK to the target and ADJACENT enemies in an X-Shape. If your team has more total STAR than the opposing team, this has a [30,LK]% chance to execute the target, increased by 5% for each additional STAR.",
         "AXE_KICK": "Leap to the enemy with the highest PP then deal [25,50,100,200,SP] SPECIAL and burn [15,15,30,60,SP] PP. Has [30,LK]% chance to inflict CONFUSION for 3 seconds.",
         "EXPANDING_FORCE": "The user gains PSYCHIC_FIELD, or spreads it to a nearby ally. Then its psychic energy reverbates on all allies in a PSYCHIC_FIELD, dealing [10,20,40,80,SP] SPECIAL to ADJACENT enemies.",
         "SPITE": "Drains [20,40,60,100,SP] PP from target and redistributes [20,40,60,100,SP] PP to ADJACENT allies",
@@ -2390,7 +2404,7 @@
         "LAST_RESPECTS": "Deals [30,60,90,180,SP] SPECIAL to an ADJACENT enemy and inflicts CURSE that will KO after [10,8,6,4,SP=-0.2] seconds. If the target has already CURSE, targets another ADJACENT enemy instead.",
         "OCTOLOCK": "Deals [30,60,90,180,SP] SPECIAL. Inflict LOCKED and ARMOR_BREAK for [3,3,6,10,SP] seconds.",
         "BURNING_JEALOUSY": "Deals [30,50,70,140,SP] SPECIAL to the target and ADJACENT enemies. Enemies with ATK buffs lose them and suffer BURN for 5 seconds.",
-        "FIRST_IMPRESSION": "Deals [45,90,180,360,SP] SPECIAL and inflicts FLINCH for 5 seconds. On first cast, jumps backwards, spawning a random 1 STAR [Common, Uncommon, Rare] BUG at their previous location.",
+        "FIRST_IMPRESSION": "Deals [25, 50, 100, 200,SP] SPECIAL and inflicts FLINCH for 3 seconds. On first cast, jumps backwards, spawning a random 1 STAR [Common, Uncommon] BUG at their previous location.",
         "GRUDGE_DIVE": "The user takes 10% of its Max HP as SPECIAL and deals [30,60,90,120,240,SP] SPECIAL to the target + [5,10,15,20,40,SP] additional SPECIAL per fallen ally.",
         "BARED_FANGS": "Bites the target dealing [120,140,160,320,SP] % of his ATK as SPECIAL and stealing [10,SP] of the target's SPEED",
         "SOUL_TRAP": "Gain [25,50,108,108] SHIELD, then enemies within a 2-tile radius lose [10,10,10,50,SP] PP and get FATIGUE for [2,2,2,5,SP,ND=1] seconds and choose the user as the target.",
@@ -2411,6 +2425,7 @@
         "PUMMELING_PAYBACK": "Pelt the target with a storm of punches, dealing [20,40,60,120,SP] + 125% ATK SPECIAL and heals [20,30,40,80,SP] HP.",
         "VOLT_SURGE": "The user supercharges itself, gaining ELECTRIC_FIELD, 20 SPEED and [10,20,30,60,SP] max HP. Then every third attack chains through up to 4 nearby enemies, dealing [10,20,30,60,SP] SPECIAL each.",
         "SUPERCELL_SLAM": "Jump and land in the middle of the enemy team, dealing [10,20,40,80,SP] SPECIAL to all ADJACENT enemy Pokemon and gaining [10,20,40,80,SP] SHIELD",
+        "HIGH_BREACHING": "Gain [15,30,60] SHIELD and deal [10,20,40,SP] SPECIAL to ADJACENT enemies. Every third cast, leap high into the air and crash into the middle of the enemy team, dealing [60,120,240,SP] SPECIAL within 4 tiles and knocking those enemies back 1 tile. Enemies knocked past the edge are washed off the board.",
         "HIGH_HORSEPOWER": "Charges through the target, then deals [15,30,60,120,SP] SPECIAL to all ADJACENT enemies. If only one enemy is hit, deals double SPECIAL",
         "CITY_SHUTTLE": "Leap to the closest ally and saddle them on the user's back, then dash to the farthest enemy reachable. Deal [10,20,30,40,SP] SPECIAL + [100,SP]% of the carried ally's ATK to all enemy Pokémon in the path. Grant [20,40,80,160,SP] SHIELD to the user and the carried ally.",
         "BULLET_PUNCH": "Deal [20,30,40,80,SP] TRUE to the target, then gain [20,30,40,80,SP] SPEED for 2 seconds.",
@@ -2545,6 +2560,7 @@
         "ANCIENT_POWER": "Ancient Power",
         "ELDER_POWER": "Elder Power",
         "FORGOTTEN_POWER": "Forgotten Power",
+        "PRIMORDIAL_POWER": "Primordial Power",
         "LARGO": "Largo",
         "ALLEGRO": "Allegro",
         "PRESTO": "Presto",
@@ -2586,8 +2602,8 @@
         "OVERGROW": "Your berry trees turn golden. When consuming a berry, gain 50 AP.",
         "FLAME_BODY": "Attacks have [30,LK]% chance to inflict BURN for 3 seconds",
         "WILDFIRE": "+1 ATK after every hit",
-        "BLAZE": "+2 ATK after every hit",
-        "DESOLATE_LAND": "+4 ATK after every hit. After every round, get a FIRE_SHARD (max 1)",
+        "BLAZE": "+2 ATK after every hit. Get a FIRE_SHARD every round (max 1)",
+        "DESOLATE_LAND": "+4 ATK after every hit. Using a FIRE_SHARD can also IGNITE the Pokémon for 1 round, granting 50 SHIELD, 20 SPEED and heal 1 player HP on every KO. It is on cooldown and cannot IGNITE again for 2 rounds, but the FIRE_SHARD can still be used on the same Pokémon.",
         "RAIN_DANCE": "+4 PP per second. Get an Old Rod.",
         "DRIZZLE": "+8 PP per second. Get a Good Rod.",
         "PRIMORDIAL_SEA": "+12 PP per second. Get a Super Rod.",
@@ -2602,9 +2618,9 @@
         "AURA": "+80 AP. A Unown appears every 3 shops.",
         "TRANSCENDENCE": "+120 AP. Get a Unown shop and a free shop reroll after every fight and every 10 shop rerolls.",
         "HONE_CLAWS": "Gain +30% CRIT_CHANCE and +30% CRIT_POWER. Leave behind a 25% max HP Substitute that draws enemy attacks. The substitute will KO early when the leaped target or its owner is KO.",
-        "ASSURANCE": "Gain +40% CRIT_CHANCE and +50% CRIT_POWER. When the substitute is KO'd, BLINDED all ADJACENT enemies for 3 seconds.",
+        "ASSURANCE": "Gain +40% CRIT_CHANCE and +50% CRIT_POWER. When the substitute is KO'd, BLINDED all ADJACENT enemies for 2 seconds.",
         "BEAT_UP": "Gain +50% CRIT_CHANCE and +80% CRIT_POWER. On attacks, DARK allies deal 10% more damage to BLINDED enemies.",
-        "FALSE_SURRENDER": "When the leaped target is KO'd, the assassin melts into the shadows, becoming untargetable for 3 seconds.",
+        "FALSE_SURRENDER": "When the leaped target is KO'd, the assassin melts into the shadows, becoming untargetable for 1.5 seconds.",
         "STEEL_SURGE": "Deal 33% of ATK as TRUE",
         "STEEL_SPIKE": "Deal 66% of ATK as TRUE",
         "CORKSCREW_CRASH": "Deal 100% of ATK as TRUE",
@@ -2613,9 +2629,9 @@
         "DIGGER": "Gain from +2 to +10 DEF and SPE_DEF and +5 ATK at max depth",
         "DRILLER": "Gain from +3 to +15 DEF and SPE_DEF and +8 ATK at max depth",
         "DEEP_MINER": "Gain 5 extra DEF and SPE_DEF for each fully dug row and +8 ATK when your half of the board is fully dug",
-        "POISONOUS": "[30,LK]% chance to POISONNED",
-        "VENOMOUS": "[60,LK]% chance to POISONNED. Max stacks of POISONNED +1",
-        "TOXIC": "[100,LK]% chance to POISONNED. Max stacks of POISONNED +2. [2,LK]% chance to corrode one of the target's items, destroying it for the rest of the fight.",
+        "POISONOUS": "[30,LK]% chance to POISONNED ON_HIT.",
+        "VENOMOUS": "[60,LK]% chance to POISONNED ON_HIT, +1 max POISONNED stacks. +4 PP ON_ATTACK. On KO, rupture for 60% of remaining PP as SPECIAL",
+        "TOXIC": "[100,LK]% chance to POISONNED ON_HIT, +2 max POISONNED stacks. +6 PP ON_ATTACK. On KO, rupture for 100% of remaining PP as SPECIAL",
         "DRAGON_ENERGY": "Dragon's second synergy counts double (not the third)",
         "DRAGON_SCALES": "Dragons gain 5 SHIELD for each STAR of all your DRAGON units on board",
         "DRAGON_DANCE": "Dragons gain 1 SPEED and 1 AP for each STAR of all your DRAGON units on board",
@@ -2636,11 +2652,11 @@
         "COCOON": "Copy 1 BUG Pokémon",
         "INFESTATION": "Copy 2 BUG Pokémon",
         "HORDE": "Copy 3 BUG Pokémon",
-        "HEART_OF_THE_SWARM": "Copy 5 BUG Pokémon and get a Bug Nest. If you have space on bench, a copy of your lowest rarity and not fully evolved BUG Pokémon will spawn each round.",
+        "HEART_OF_THE_SWARM": "Copy 4 BUG Pokémon and get a Bug Nest. If you have space on bench, a copy of your lowest rarity and not fully evolved BUG Pokémon will spawn each round.",
         "TAILWIND": "Fly away once under 20% HP. Give 5 SPEED.",
-        "FEATHER_DANCE": "Get PROTECT for 2 seconds after flying away. Attacks have a [15, LK]% chance to reduce the target's ATK by 2 ON_HIT.",
+        "FEATHER_DANCE": "Get PROTECT for 2 seconds after flying away. Attacks have a [15, LK]% chance to reduce the target's ATK by 1 ON_ATTACK.",
         "MAX_AIRSTREAM": "Fly away twice when under 50% HP and 20% HP. Give 10 SPEED.",
-        "SKYDIVE": "Now perform skydive attacks, dealing 150% PHYSICAL ATK on landing on their target. Attach a LETTER to a benched Pokémon, and it will set off to deliver it.",
+        "SKYDIVE": "Now perform skydive attacks, dealing 150% PHYSICAL ATK on landing on their target. Attach a LETTER to a benched Pokémon, and it will set off to deliver it. They will bring home a Seed",
         "COTTONWEED": "Get an Hoppip Flower Pot",
         "FLYCATCHER": "Get a Bellsprout Flower Pot",
         "FRAGRANT": "Get a Chikorita Flower Pot",
@@ -2686,6 +2702,7 @@
         "ANCIENT_POWER": "Gain 40% base max HP as SHIELD and +40% base ATK",
         "ELDER_POWER": "Gain 70% base max HP as SHIELD and +70% base ATK",
         "FORGOTTEN_POWER": "Gain 100% base max HP as SHIELD and +100% base ATK",
+        "PRIMORDIAL_POWER": "Unlock the Restoration Panel",
         "LARGO": "With each cry, ally team gains +2 ATK",
         "ALLEGRO": "With each cry, ally team gains +1 ATK and +5 SPEED",
         "PRESTO": "With each cry, ally team gains +1 ATK, +5 SPEED and 3 PP",
@@ -2703,7 +2720,7 @@
         "SHINING_RAY": "Increase AP by 20 and base ATK by 20%",
         "LIGHT_PULSE": "Also give +8 PP per second",
         "ETERNAL_LIGHT": "Also increase base DEF and SPE_DEF by 50% and give RUNE_PROTECT for 8 seconds",
-        "MAX_ILLUMINATION": "Also give 120 SHIELD and RESURRECTION",
+        "MAX_ILLUMINATION": "Also give 100 SHIELD and RESURRECTION",
         "QUICK_FEET": "WILD Pokémon get +20 SPEED, and can now be found in shops at every stage (8% base chance + 0.5% for each WILD STAR on board).",
         "RUN_AWAY": "+40 SPEED.",
         "HUSTLE": "+40 SPEED and +40% base ATK",
@@ -2785,6 +2802,7 @@
         "SHELL_BELL": "Shell Bell",
         "HEAVY_DUTY_BOOTS": "Heavy-Duty Boots",
         "RELIC_CROWN": "Relic Crown",
+        "RELIC_STATUE": "Relic Statue",
         "AQUA_EGG": "Aqua Egg",
         "BLUE_ORB": "Blue Orb",
         "SCOPE_LENS": "Scope Lens",
@@ -2871,6 +2889,7 @@
         "RARE_CANDY": "Rare Candy",
         "EVIOLITE": "Eviolite",
         "GOLD_MASK": "Gold Mask",
+        "CHAMPIONS_MASK": "Champion's Mask",
         "GOLD_BOTTLE_CAP": "Gold Bottle Cap",
         "ABSORB_BULB": "Absorb Bulb",
         "SACRED_ASH": "Sacred Ash",
@@ -3105,7 +3124,6 @@
         "COCONUT_MALASADA": "Coconut Malasada",
         "BERRIES": "Berries",
         "LETTER": "Letter",
-        "SHARP_BEAK": "Sharp Beak",
         "BAN_SEED": "Ban Seed",
         "BLAST_SEED": "Blast Seed",
         "BLINKER_SEED": "Blinker Seed",
@@ -3158,11 +3176,11 @@
     },
     "item_description": {
         "AQUA_MONICA": "Each ally cast grants +2 PP to the whole team",
-        "FIERY_DRUM": "Each ally cast grants +3 ATK to the whole team",
+        "FIERY_DRUM": "Each ally cast grants +2 ATK to the whole team",
         "GRASS_CORNET": "Each ally cast grants +5 HP to the whole team",
         "ICY_FLUTE": "Each ally cast grants +4 SPE_DEF to the whole team",
         "ROCK_HORN": "Each ally cast grants +4 DEF to the whole team",
-        "SKY_MELODICA": "Each ally cast grants +5 SPEED to the whole team",
+        "SKY_MELODICA": "Each ally cast grants +4 SPEED to the whole team",
         "TERRA_CYMBAL": "Each ally cast grants +3 LUCK to the whole team",
         "BINDING_BAND": "+10 LUCK",
         "SOOTHE_BELL": "Grant the lowest HP ally 30 SHIELD every 3 seconds. Has a [30,LK]% chance to convert that ally’s remaining SHIELD into max HP.",
@@ -3172,7 +3190,7 @@
         "DESTINY_KNOT": "Once the holder is KO, the STRONGEST ally gains the users current LUCK and base ATK for the rest of the fight.",
         "LUCKY_PUNCH": "If the target has an ally directly behind it, the attack knocks a random held item from the target to that ally. When an item is knocked off, [30, LK]% chance to inflict CONFUSION for 2 seconds.",
         "GRIP_CLAW": "Attacks grant +10% CRIT_POWER. (stackable)",
-        "COVERT_CLOAK": "Every 4 seconds, steal 5 AP from all enemies within RANGE and deal 5 SPECIAL to them.",
+        "COVERT_CLOAK": "At the start of the fight, and every 4 seconds, steal 5 AP from all enemies within RANGE and deal 5 SPECIAL to them.",
         "FLUFFY_TAIL": "Gains [15,LK]% dodge chance. The holder is immune to ARMOR_BREAK.",
         "EVER_STONE": "The holder gains the ROCK type",
         "TIGHT_BELT": "At the beginning of each battle, TIGHT_BELT is replaced by 2 random items. The holder is PARALYSIS during the entire fight.",
@@ -3203,6 +3221,7 @@
         "SHELL_BELL": "Holder heals for 33% of all damages inflicted",
         "HEAVY_DUTY_BOOTS": "Holder is immune to any BOARD_EFFECT, forced displacement and LOCKED.",
         "RELIC_CROWN": "When an ally within a 2-tile radius is KO'd, gain +5 DEF, +5 SPE_DEF and +10 AP. The user heals and increase its HP for 10% of the KO'd ally's max HP.",
+        "RELIC_STATUE": "Your strongest ally gains 100 HP, 10 ATK, 10 DEF, 10 SPE_DEF and 10 SPEED. When it is KO'd, all other allies are cursed to be KO'd after 1 second.",
         "AQUA_EGG": "The holder regains 20% of its max PP after casting its ability, + 2 PP for each cast done in the fight",
         "BLUE_ORB": "Every 3 attacks, unleashes a chain lightning that bounces to the 2 closest enemies, dealing 10 SPECIAL and burning 15 PP",
         "SCOPE_LENS": "Critical attacks steal 10 PP from the target ON_HIT.",
@@ -3282,7 +3301,7 @@
         "DNA_SPLICER": "It can be used to transform Kyurem into Kyurem White or Kyurem Black.",
         "MYSTERY_BOX": "A mysterious old box. When in your inventory, all $t(pkm.DITTO) found in shops are replaced by $t(pkm.MELTAN).",
         "TRASH": "No effect, but can be held.",
-        "OLD_ROD": "After each PvP round, fish a Pokémon that is then added to a free slot on your bench. Can catch common and uncommon WATER Pokémon as well as $t(pkm.MAGIKARP).",
+        "OLD_ROD": "After each PvP round, fish a Pokémon that is then added to a free slot on your bench. Can catch Common and Uncommon WATER Pokémon as well as $t(pkm.MAGIKARP).",
         "GOOD_ROD": "After each PvP round, fish a Pokémon that is then added to a free slot on your bench. Can catch rare WATER Pokémon as well as $t(pkm.FEEBAS).",
         "SUPER_ROD": "After each PvP round, fish a Pokémon that is then added to a free slot on your bench. Can catch epic WATER Pokémon as well as $t(pkm.WISHIWASHI).",
         "DYNAMAX_BAND": "At the start of the fight, raise max HP by 200%.",
@@ -3350,12 +3369,13 @@
         "WILD_GEM": "+1 to WILD synergy",
         "AMORPHOUS_GEM": "+1 to AMORPHOUS synergy",
         "GOURMET_GEM": "+1 to GOURMET synergy",
-        "FIRE_SHARD": "Sacrifice 3 player HP to give permanently +4 ATK and +4 SPEED to a FIRE Pokémon. Immediately consumed when given.",
+        "FIRE_SHARD": "Sacrifice 2 player HP to give permanently +2 ATK and +2 SPEED to a FIRE Pokémon. Immediately consumed when given.",
         "CELL_BATTERY": "Each cell battery on bench gives 2 SPEED to all your ELECTRIC Pokémon.\nUse it on an ELECTRIC Pokémon to supercharge it for the next fight, granting it 20 SPEED, 30 SHIELD and ELECTRIC_FIELD.",
         "TEAL_MASK": "This carved wooden mask is adorned with crystals, grants Ogerpon the FLORA type during battle. Ogerpon loses its mask when its shield is depleted.",
         "WELLSPRING_MASK": "This carved wooden mask is adorned with crystals, grants Ogerpon the AQUATIC type during battle. Ogerpon loses its mask when its shield is depleted.",
         "HEARTHFLAME_MASK": "This carved wooden mask is adorned with crystals, grants Ogerpon the FIRE type during battle. Ogerpon loses its mask when its shield is depleted.",
         "CORNERSTONE_MASK": "This carved wooden mask is adorned with crystals, grants Ogerpon the ROCK type during battle. Ogerpon loses its mask when its shield is depleted.",
+        "CHAMPIONS_MASK": "Once per fight, when the holder falls below 30% max HP, it jumps away and slams down its target into the largest group of enemies. Executing the target and knock back and PARALYSIS ADJACENT enemies for 5 seconds. The holder is RAGE for the rest of the fight, until it is above 50% max HP.",
         "ZYGARDE_CUBE": "Contains cells of the Order Pokémon, Zygarde. It will cause a transformation into one of its alternate formes.",
         "ADAMANT_CRYSTAL": "When used on Dialga, this large, glowing gem wells with power and allows the Pokémon to change form.",
         "LUSTROUS_GLOBE": "When used on Palkia, this large, glowing orb wells with power and allows the Pokémon to change form.",
@@ -3402,7 +3422,7 @@
         "RICE": "Gives 80 SHIELD. If a Tatsugiri is on the board, also provides the additional stats given by its form.",
         "ROCK_SALT": "Start the next fight with RUNE_PROTECT for 10 seconds and 20% of max HP as SHIELD.",
         "NUTRITIOUS_EGG": "Start the next fight with +30% base ATK, DEF and SPE_DEF.",
-        "LEFTOVERS": "No effect. There is not much left to eat.",
+        "LEFTOVERS": "No effect. There is not much left to eat. (Disappears from your inventory after 1 round)",
         "BLACK_SLUDGE": "POISONNED the Pokémon that eats it. If it has POISON type, restore 5% of max HP every 2 seconds instead.",
         "BINDING_MOCHI": "The first attack in the next fight will cause POSSESSED for 5 seconds ON_HIT.",
         "FRUIT_JUICE": "Gain 50 SPEED in the next fight.",
@@ -3486,7 +3506,7 @@
         "LAPRAS_PASSPORT": "Lapras offers a ride to go to a different region. Use the passport on a Pokémon to influence the destination based on its synergies.",
         "PRISON_BOTTLE": "Borrow Hoopa’s power to send a Pokémon from your bench to your partner’s bench. Items will be stripped off. (Preparation phase)",
         "DUBIOUS_DISC_BLESSING_ITEM": "Drop DUBIOUS_DISC_BLESSING_ITEM on an ARTIFICIAL item in your inventory to consume this disc and gain a second copy of that item. The copy is kept even if your ARTIFICIAL level drops.",
-        "SYNCHRO_MASHINE": "At the start of combat, the holder copies the highest HP, ATK, AP, CRIT_CHANCE, CRIT_POWER, DEF and SPE_DEF of any allied Pokémon on the field.",
+        "SYNCHRO_MASHINE": "At the start of combat, the holder copies the highest HP, ATK, AP, DEF and SPE_DEF of any allied Pokémon on the field.",
         "SILK_SCARF": "Combine it with other item components to make all kinds of scarves, bands and bows. Those items will be removed if you lower down NORMAL synergy level.",
         "FRIEND_BOW": "The holder gains the NORMAL type.",
         "BLACK_BELT": "Critical attacks provide 33% of the damage dealt as SHIELD.",
@@ -3525,10 +3545,9 @@
         "COCONUT_MALASADA": "Gain +2 RANGE. [30, LK]% chance to apply CONFUSION for 2 seconds on attack.",
         "BERRIES": "Forage a random berry for the Chef to hold. If no free item slots, it goes to your inventory.",
         "LETTER": "An important letter. A benched FLYING Pokémon that delivers it will be rewarded with a powerful Seed. It will return in 2 stages.",
-        "SHARP_BEAK": "The FLYING holder increases its base ATK by 100% and Sky Dive attacks scale with AP. Enables the fastest LETTER delivery! (max. 1 per player)",
-        "BAN_SEED": "All Sky Dive attacks deal 300% of user ATK. The target is SILENCE for 3 seconds.",
+        "BAN_SEED": "All Sky Dive attacks deal 250% of user ATK. The target is SILENCE for 3 seconds.",
         "BLAST_SEED": "At the start of the fight, all FLYING allies gain 50% of the users base ATK and are BURN for the rest of the fight.",
-        "BLINKER_SEED": "All Sky Dive attacks deal 300% of user ATK. Apply smoke to the target and ADJACENT tiles. Pokemon in the smoke are BLINDED.",
+        "BLINKER_SEED": "All Sky Dive attacks deal 250% of user ATK. Apply smoke to the target and ADJACENT tiles. Pokemon in the smoke are BLINDED.",
         "DECOY_SEED": "Before the STRONGEST ally Sky Dive Attack, spawn a Substitute with 25% of user max HP. The substitute taunts all enemy Pokémon in a 4-tile radius",
         "DOOM_SEED": "At the start of the fight, a random ally Sky Dive attacks immediately with cursed energy. The target is CURSE and KO'd after 4 seconds.",
         "EMPOWERMENT_SEED": "At the start of the fight, all FLYING allies gain 25% CRIT_POWER. All Sky Dive attacks are guaranteed to critically hit.",
@@ -3539,13 +3558,13 @@
         "LIFE_SEED": "At the start of the fight, all FLYING allies gain 10 max HP for each ADJACENT free tile.",
         "PLAIN_SEED": "A useless seed.",
         "PURE_SEED": "After the Sky Dive attacks, FLYING allies gain 50 AP and RUNE_PROTECT for the rest of the fight.",
-        "QUICK_SEED": "At the start of the fight, all FLYING allies gain 10 SPEED for each ADJACENT free tile",
+        "QUICK_SEED": "At the start of the fight, all FLYING allies gain 5 SPEED for each ADJACENT free tile",
         "REVIVER_SEED": "After the Sky Dive attack of the STRONGEST ally, give RESURRECTION to 2 random allied Pokémon.",
-        "SLEEP_SEED": "All Sky Dive attacks deal 300% of user ATK. The target is SLEEP for 3 seconds.",
-        "STUN_SEED": "All Sky Dive attacks deal 300% of user ATK. The target is PARALYSIS for 3 seconds.",
+        "SLEEP_SEED": "All Sky Dive attacks deal 250% of user ATK. The target is SLEEP for 3 seconds.",
+        "STUN_SEED": "All Sky Dive attacks deal 250% of user ATK. The target is PARALYSIS for 3 seconds.",
         "TINY_REVIVER_SEED": "After the Sky Dive attack of the STRONGEST ally, give RESURRECTION to one random allied Pokémon and raise its current ATK by 100%",
-        "TOTTER_SEED": "All Sky Dive attacks deal 300% of user ATK. The target is CONFUSION for 3 seconds.",
-        "TRAINING_SEED": "In the next fight, FLYING allies gain permanently 1 ATK and SPEED for each of their own KO's.",
+        "TOTTER_SEED": "All Sky Dive attacks deal 250% of user ATK. The target is CONFUSION for 3 seconds.",
+        "TRAINING_SEED": "In the next fight, FLYING allies gain permanently 1 ATK for each of their own KO's.",
         "VIOLENT_SEED": "After the Sky Dive attacks, all FLYING allies are RAGE for 2 seconds.",
         "WARP_SEED": "All Sky Dive attacks have [30,LK]% chance to swap the target with the farthest enemy and CONFUSION it for 1 second.",
         "STAR_PIECE": "Gives the holder one additional STAR, which increases the power of their ability.",
@@ -3554,6 +3573,7 @@
     },
     "passive_description": {
         "NONE": "No passive",
+        "INFLATABLE": "While above base max HP, receiving a critical attack from an ADJACENT enemy removes [5,10,15] current and max HP, then pushes all ADJACENT enemies away. Pushed enemies fall to SLEEP for [1,2,3] seconds. (Cannot go below base max HP.)",
         "TYROGUE": "Will choose a combat discipline based on the first item given:\nCHARCOAL MAGNET: $t(pkm.HITMONLEE)\nHEART_SCALE NEVER_MELT_ICE: $t(pkm.HITMONCHAN)\nOthers: $t(pkm.HITMONTOP)",
         "PROTEAN2": "The Pokémon acquires the typing of the 2 highest synergies on the team",
         "PROTEAN3": "The Pokémon acquires the typing of the 3 highest synergies on the team",
@@ -3816,7 +3836,7 @@
         "SUPER_LUCK": "Increase allies CRIT_CHANCE by +10.",
         "PALKIA": "Palkia switches between its Altered Form and Origin Form through the use of the LUSTROUS_GLOBE.",
         "DIALGA": "Dialga switches between its Altered Form and Origin Form through the use of the ADAMANT_CRYSTAL.",
-        "SLITHER_WING": "At the start of fight, for each ADJACENT ally:\nFIGHTING grants +5 DEF,\nFOSSIL grants +10 HP,\nBUG grants +5 ATK. Doubled in DROUGHT.",
+        "SLITHER_WING": "At the start of fight, for each ADJACENT ally:\nFIGHTING grants +2 DEF,\nFOSSIL grants +4 HP,\nBUG grants +2 ATK. Doubled in DROUGHT.",
         "NIDOQUEEN": "The queen of the family. At the start of the fight, has a [50,LK]% chance to attract a catchable Nidoran♂  when no Nidoking is on the board.",
         "NIDOKING": "The king of the family. At the start of the fight, has a [50,LK]% chance to attract a catchable Nidoran♀  when no Nidoqueen is on the board.",
         "DANCER": "At the start of the fight, start dancing with allies ADJACENT_IN_THE_SAME_ROW. Each second gain [1,2,3] SPEED and ATK until half the PP bar is filled or enemies are in RANGE.",
@@ -3827,6 +3847,7 @@
         "FERALIGATR": "Gain one stack for each KO. Mega evolves after 20 stacks.",
         "MEGA_FERALIGATR": "If the target is KO'ed, gain permanently for each STAR on your board 1 AP and 1 SPEED (max once per fight).",
         "INTIMIDATE": "When attacking, has a [30,LK]% chance to FLINCH the target for 3 seconds.",
+        "INTIMIDATE_EVERBURNING": "When attacking, has a [30,LK]% chance to FLINCH the target for 3 seconds. Its spirit can IGNITE every round.",
         "STEELY_SPIRIT": "Allies ADJACENT_IN_THE_SAME_ROW deal 10% of their ATK as TRUE.",
         "ZERAORA": "Gains a stack for each KO. Mega evolves after 20 stacks.",
         "ICE_BODY": "Under SNOW, regain 20% of its max HP every 2 seconds.",
@@ -3834,7 +3855,6 @@
         "DARKRAI": "Gain one stack for each KO. Mega evolves after 20 stacks.",
         "BAD_DREAMS": "When the target is SLEEP, attacks are guaranteed to critically hit.",
         "VESPIQUEN": "Vespiquen's RANGE and ability differs based on the row it starts in.\nBUG synergy effect does not spawn a copy of Vespiquen but 2 Combee instead.",
-        "DRAGONITE": "Gain another LETTER. Usually is very fast with delivering.",
         "PELIPPER": "Allied FLYING Pokémon, deliver their LETTER faster.",
         "INFILTRATOR": "On attack, destroy PROTECT, Magic Bounce and Reflect.",
         "ILLUSION": "Copy the apperance of the ally on its left (if it is not on the bench).",
@@ -3842,7 +3862,11 @@
         "SUBSTITUTE": "A decoy created to look like a Pokémon",
         "PASSIMIAN": "Passimian comes with a BALL as item held",
         "EELEKTROSS": "Gains a stack for each KO. Mega evolves after 20 stacks.",
-        "MEGA_EELEKTROSS": "Overheal of the abilty is converted to SHIELD. Charge up a Battery by 20% for each KO."
+        "MEGA_EELEKTROSS": "Overheal of the abilty is converted to SHIELD. Charge up a Battery by 20% for each KO.",
+        "DRACOZOLT": "When an allied FOSSIL awakens its primordial power, that Pokemon casts its ability 1 STAR level higher for the rest of combat.",
+        "ARCTOZOLT": "When an allied FOSSIL awakens its primordial power, PARALYSIS enemies ADJACENT to it for 4 seconds. Already PARALYSIS enemies are FREEZE instead.",
+        "DRACOVISH": "When an allied FOSSIL awakens its primordial power, it deals 30% more damage to enemies below 50% HP for the rest of combat.",
+        "ARCTOVISH": "When an allied FOSSIL awakens its primordial power, it gains 20% max HP and RUNE_PROTECT for 1 second."
     },
     "stat": {
         "ATK": "Attack",
@@ -3960,14 +3984,14 @@
         "DARK": "DARK Pokémon's critical hits are more powerful and more frequent. Melee Dark Pokémon jump to the farthest target reachable. The STRONGEST Melee  DARK Pokémon leaps away with the target once below 50% max HP. One more Pokémon triggering this effect for each synergy step.",
         "STEEL": "STEEL Pokémon deal a percentage of their damage as TRUE and give 3 DEF to your whole team when activated.",
         "GROUND": "GROUND Pokémon dig holes on board in between stages, and gain stats based on the depth of the hole they start in. They sometimes find buried items at max depth (5 stages).",
-        "POISON": "POISON Pokémon have a chance to POISONNED their target for 4 seconds with their basic attacks. Poison inflicts TRUE over time",
+        "POISON": "POISON Pokémon have a chance to POISONNED their target for 4 seconds ON_HIT, and gain extra PP ON_ATTACK. When POISON Pokémon are KO'd, they rupture and deal a part of their remaining PP as SPECIAL to all ADJACENT enemies.",
         "DRAGON": "DRAGON Pokémon amplify synergies and gain more stats when fully evolved.{{additionalInfo}}",
         "FIELD": "When a FIELD Pokémon is KO'd, all the other FIELD Pokémon are healed and gain SPEED",
         "MONSTER": "MONSTER Pokémon can FLINCH their opponents for 3 seconds ON_ATTACK. Every time they get a KO, they gain stats, heal and grow in size.",
         "HUMAN": "HUMAN Pokémon heal for a percentage of the damage they deal with attacks and abilities, and can learn a new ability with TMs.",
         "AQUATIC": "AQUATIC Pokémon mitigate status afflictions for all your team. After 7 seconds, a TIDAL_WAVE cleans up negative status and field effects, heals your AQUATIC allies, and knocks back and damages enemies.",
         "BUG": "At the start of combat spawns a copy of your STRONGEST BUG Pokémon.",
-        "FLYING": "FLYING Pokémon fly away when they fall under a certain amount of HP unless affected by PARALYSIS, FREEZE, LOCKED or SLEEP. Your whole team gives SPEED when activated. Benched Pokémon can be used as postal service. They get paid with seeds. Higher rarity carriers tend to bring back items and components, while lower rarity ones are more likely to find gold on their way home.",
+        "FLYING": "FLYING Pokémon fly away when they fall under a certain amount of HP unless affected by PARALYSIS, FREEZE, LOCKED or SLEEP. At maximum synergy, use a LETTER to send a benched Pokémon on a delivery.",
         "FLORA": "When a FLORA Pokémon is KO'd, a Flower Pot blossoms and you collect RICH_MULCH. Higher STAR units give more mulch, which can be used to evolve your Flower Pots.",
         "FAIRY": "FAIRY Pokémon use wands to deal additional SPECIAL and various effects with their attacks.{{additionalInfo}}",
         "FAIRY_WANDS": "\nWands equipped: {{wands}}",
@@ -4064,6 +4088,7 @@
         "VANQUISHER": "Vanquisher",
         "OUTSIDER": "Outsider",
         "WILD": "Wild",
+        "TEACHER": "Teacher",
         "GLUTTON": "Glutton",
         "PICNICKER": "Picnicker",
         "STARGAZER": "Stargazer",
@@ -4087,9 +4112,19 @@
         "LEGIONNAIRE": "Legionnaire",
         "FIVE_STARS": "★★★★★",
         "WHIMSY": "Whimsy",
-        "STARRY": "Starry"
+        "STARRY": "Starry",
+        "PRIDE": "Pride",
+        "THE_SCRIBBLER": "The Scribbler",
+        "SHOW_OFF": "Show Off",
+        "HOT_STREAK": "Hot",
+        "ANCIENT": "Ancient",
+        "BOTANIST": "Botanist",
+        "SCHOLAR": "Scholar",
+        "WHALE": "Whale"
     },
     "title_description": {
+        "BOTANIST": "Complete the GRASS lesson in Slowking's School of Synergies",
+        "SCHOLAR": "Complete every lesson in Slowking's School of Synergies",
         "NOVICE": "Play your first game",
         "ROOKIE": "Reach level 10",
         "AMATEUR": "Reach level 20",
@@ -4139,7 +4174,7 @@
         "COLLECTOR": "Play all Pokémon currently in the game",
         "DUKE": "Own at least one emotion of each Pokémon currently in the game",
         "DUCHESS": "Own all the emotion of a single Pokémon",
-        "CHAMPION": "Win a Tournament",
+        "CHAMPION": "Win a Double Up Tournament",
         "ELITE_FOUR_MEMBER": "Reach first 4 places of a tournament",
         "ACE_TRAINER": "Reach the final of a tournament",
         "GYM_LEADER": "Reach 1400 Elo",
@@ -4187,11 +4222,17 @@
         "LEGIONNAIRE": "Make a Falinks formation with 8 troopers or more",
         "FIVE_STARS": "Play with a five stars Pokémon in your team",
         "WHIMSY": "Win a Whimsy Weekend Scribble with your partner",
-        "STARRY": "Win a game during the Wish Festival Event with a Jirachi on your board"
+        "STARRY": "Win a game during the Wish Festival Event with a Jirachi on your board",
+        "PRIDE": "Complete the Rainbow Hour Wish Mission",
+        "THE_SCRIBBLER": "Win a Smeargle Scribble Tournament",
+        "SHOW_OFF": "Win a game with the Show Off Wish",
+        "HOT_STREAK": "Win 3 games in a row",
+        "ANCIENT": "Complete every Fossil unlock in a single game",
+        "WHALE": "Win a game with the High Breaching Wish"
     },
     "weather_forecast": "Weather forecast",
-    "blessings": "Blessings",
-    "no_blessing_yet": "No Blessing chosen yet",
+    "blessings": "Wishes",
+    "no_blessing_yet": "No Wish chosen yet",
     "free_of_charge": "your item is free!",
     "weather": {
         "NEUTRAL": "Calm weather",
@@ -4379,6 +4420,8 @@
     "scribble_extended_label": "Player",
     "scribble_extended_on": "Extended (150 HP)",
     "scribble_extended_off": "Standard (100 HP)",
+    "scribble_extended_on_short": "Extended",
+    "scribble_extended_off_short": "Standard",
     "scribble_extended_hint": "Choose between a Standard game (players start at 100 HP) and an Extended game (players start at 150 HP).",
     "no_rule": "No special rule",
     "random_rule": "Random rule",
@@ -4398,6 +4441,12 @@
     "no_data_available": "No data available",
     "no_bots_found": "No bots found !",
     "leaderboard": "Leaderboard",
+    "community": "Community",
+    "newspaper": {
+        "tab": "Gazette",
+        "see_profile": "See {{player}}'s profile",
+        "no_stories": "Today's stories are still being written..."
+    },
     "rooms": "Rooms",
     "rooms_one": "{{count}} room",
     "rooms_other": "{{count}} rooms",
@@ -4508,8 +4557,10 @@
         "community_translations": "Translations are managed by the community. If you want to add or\r\n              help improve a translation, head over to ",
         "show_details_on_hover": "Show details on hover instead of right click",
         "show_damage_numbers": "Show damage numbers",
+        "outline_shop_upgrades": "Outline shop upgrades",
         "disable_animated_tilemap": "No background animations",
         "disable_camera_shake": "No camera shake or flashes",
+        "walking_avatar": "Click to walk your avatar around",
         "antialiasing": "Enable anti-aliasing",
         "colorblind_mode": "Colorblind mode",
         "renderer": "Renderer",
@@ -4540,7 +4591,7 @@
             "avatar_emotes": "Toggle emote menu",
             "avatar_show_emote": "Trigger emote"
         },
-        "show_blessing_glow": "Blessing glow"
+        "show_blessing_glow": "Wish glow"
     },
     "theme": {
         "default": "Classic",
@@ -4560,6 +4611,9 @@
         "bazaar": "Bazaar",
         "whimsicott": "Whimsicott",
         "wishfestival": "Wish Festival",
+        "hot": "Arcanine's Blaze",
+        "embersofthepast": "Embers of the Past",
+        "wailord": "Wailord's World",
         "origin": "Origin"
     },
     "jukebox": {
@@ -4586,9 +4640,10 @@
         "choose_armory": "Choose one gift to send to your partner",
         "choose_scribble_shape": "Choose the second shape Smeargle will draw on your board",
         "choose_evolution_lab_reward": "Choose one reward",
-        "choose_blessing": "Jirachi grants you a Blessing. Choose one.",
+        "choose_blessing": "Make your wish.",
         "choose_singularity": "Choose a component. You will receive it again on later stages.",
         "choose_starter_choice": "Choose a starter. You will receive a copy every round.",
+        "choose_galar_fossil": "Choose a Galar fossil",
         "reroll_blessing": "Reroll",
         "reroll_add_pick_all": "Reroll all",
         "reroll_add_pick_pokemon": "Reroll pokemon",
@@ -4600,12 +4655,13 @@
         "smeargle_pack_hint": "Open the booster, then pick a Pokémon to be your starter",
         "smeargle_pack_reveal": "Open the booster",
         "free_slot_hint": "You must have one free slot on the bench, or two for Duos",
+        "blessing_refused_hint": "This wish cannot be granted right now. Choose another one",
         "more_choices": "{{count}} more choice(s) after this one!"
     },
     "blessing_tier": {
-        "SILVER": "Silver Blessing",
-        "GOLD": "Gold Blessing",
-        "PRISMATIC": "Prismatic Blessing"
+        "SILVER": "Silver Wish",
+        "GOLD": "Gold Wish",
+        "PRISMATIC": "Prismatic Wish"
     },
     "blessing": {
         "PEARL": {
@@ -4614,14 +4670,14 @@
         },
         "CROAGUNKS_AID": {
             "name": "Croagunk's Aid",
-            "description": "Gain 3 EXCHANGE_TICKET."
+            "description": "Gain 3 EXCHANGE_TICKET. Benching a Pokémon now takes back every item it holds."
         },
         "BAG_OF_SWEETS": {
             "name": "Bag of Sweets",
-            "description": "Gain 4 random SWEETS."
+            "description": "Gain 10 random SWEETS."
         },
         "WOBBUFFETS_SILVER_PRIZE": {
-            "name": "Wobbuffet's Silver Prize",
+            "name": "Silver Kit",
             "description": "Gain a random component and 2 RECYCLE_TICKET."
         },
         "TREASURE_HUNT_I": {
@@ -4633,7 +4689,7 @@
             "description": "Gain a 2 STAR Common, a 1 STAR Uncommon and a 1 STAR Rare Pokémon."
         },
         "NUGGET": {
-            "name": "Nugget",
+            "name": "Gold Bar",
             "description": "Gain 15 GOLD."
         },
         "GOLDEN_TICKET": {
@@ -4658,7 +4714,7 @@
         },
         "NORMAL_CREST_BLESSING": {
             "name": "Normal Crest",
-            "description": "Gain a NORMAL_GEM and 2 random 1 STAR Uncommon NORMAL Pokémon."
+            "description": "Gain a FRIEND_BOW and 2 random 1 STAR Uncommon NORMAL Pokémon."
         },
         "FLYING_BADGE_BLESSING": {
             "name": "Flying Badge",
@@ -4666,7 +4722,7 @@
         },
         "FLYING_CREST_BLESSING": {
             "name": "Flying Crest",
-            "description": "Gain a FLYING_GEM and 2 random 1 STAR Uncommon FLYING Pokémon."
+            "description": "Gain an AIR_BALLOON and 2 random 1 STAR Uncommon FLYING Pokémon."
         },
         "FIELD_BADGE_BLESSING": {
             "name": "Field Badge",
@@ -4674,7 +4730,7 @@
         },
         "FIELD_CREST_BLESSING": {
             "name": "Field Crest",
-            "description": "Gain a FIELD_GEM and 2 random 1 STAR Uncommon FIELD Pokémon."
+            "description": "Gain a RUNNING_SHOES and 2 random 1 STAR Uncommon FIELD Pokémon."
         },
         "DARK_BADGE_BLESSING": {
             "name": "Dark Badge",
@@ -4682,7 +4738,7 @@
         },
         "DARK_CREST_BLESSING": {
             "name": "Dark Crest",
-            "description": "Gain a DARK_GEM and 2 random 1 STAR Uncommon DARK Pokémon."
+            "description": "Gain a DUSK_STONE and 2 random 1 STAR Uncommon DARK Pokémon."
         },
         "GROUND_BADGE_BLESSING": {
             "name": "Ground Badge",
@@ -4690,7 +4746,7 @@
         },
         "GROUND_CREST_BLESSING": {
             "name": "Ground Crest",
-            "description": "Gain a GROUND_GEM and 2 random 1 STAR Uncommon GROUND Pokémon."
+            "description": "Gain an EXPLORER_KIT and 2 random 1 STAR Uncommon GROUND Pokémon."
         },
         "PSYCHIC_BADGE_BLESSING": {
             "name": "Psychic Badge",
@@ -4698,7 +4754,7 @@
         },
         "PSYCHIC_CREST_BLESSING": {
             "name": "Psychic Crest",
-            "description": "Gain a PSYCHIC_GEM and 2 random 1 STAR Uncommon PSYCHIC Pokémon."
+            "description": "Gain a DAWN_STONE and 2 random 1 STAR Uncommon PSYCHIC Pokémon."
         },
         "GRASS_BADGE_BLESSING": {
             "name": "Grass Badge",
@@ -4706,7 +4762,7 @@
         },
         "GRASS_CREST_BLESSING": {
             "name": "Grass Crest",
-            "description": "Gain a GRASS_GEM and 2 random 1 STAR Uncommon GRASS Pokémon."
+            "description": "Gain a LEAF_STONE and 2 random 1 STAR Uncommon GRASS Pokémon."
         },
         "BUG_BADGE_BLESSING": {
             "name": "Bug Badge",
@@ -4714,7 +4770,7 @@
         },
         "BUG_CREST_BLESSING": {
             "name": "Bug Crest",
-            "description": "Gain a BUG_GEM and 2 random 1 STAR Uncommon BUG Pokémon."
+            "description": "Gain a SHED_SHELL and 2 random 1 STAR Uncommon BUG Pokémon."
         },
         "WATER_BADGE_BLESSING": {
             "name": "Water Badge",
@@ -4722,15 +4778,15 @@
         },
         "WATER_CREST_BLESSING": {
             "name": "Water Crest",
-            "description": "Gain a WATER_GEM and 2 random 1 STAR Uncommon WATER Pokémon."
+            "description": "Gain a WATER_STONE and 2 random 1 STAR Uncommon WATER Pokémon."
         },
         "AQUATIC_BADGE_BLESSING": {
             "name": "Aquatic Badge",
-            "description": "Gain a AQUATIC_GEM and a random 1 STAR Uncommon AQUATIC Pokémon."
+            "description": "Gain an AQUATIC_GEM and a random 1 STAR Uncommon AQUATIC Pokémon."
         },
         "AQUATIC_CREST_BLESSING": {
             "name": "Aquatic Crest",
-            "description": "Gain a AQUATIC_GEM and 2 random 1 STAR Uncommon AQUATIC Pokémon."
+            "description": "Gain a SURFBOARD and 2 random 1 STAR Uncommon AQUATIC Pokémon."
         },
         "POISON_BADGE_BLESSING": {
             "name": "Poison Badge",
@@ -4738,7 +4794,7 @@
         },
         "POISON_CREST_BLESSING": {
             "name": "Poison Crest",
-            "description": "Gain a POISON_GEM and 2 random 1 STAR Uncommon POISON Pokémon."
+            "description": "Gain a POKERUS_VIAL and 2 random 1 STAR Uncommon POISON Pokémon."
         },
         "FAIRY_BADGE_BLESSING": {
             "name": "Fairy Badge",
@@ -4746,7 +4802,7 @@
         },
         "FAIRY_CREST_BLESSING": {
             "name": "Fairy Crest",
-            "description": "Gain a FAIRY_GEM and 2 random 1 STAR Uncommon FAIRY Pokémon."
+            "description": "Gain a MOON_STONE and 2 random 1 STAR Uncommon FAIRY Pokémon."
         },
         "FIGHTING_BADGE_BLESSING": {
             "name": "Fighting Badge",
@@ -4754,7 +4810,7 @@
         },
         "FIGHTING_CREST_BLESSING": {
             "name": "Fighting Crest",
-            "description": "Gain a FIGHTING_GEM and 2 random 1 STAR Uncommon FIGHTING Pokémon."
+            "description": "Gain a MACHO_BRACE and 2 random 1 STAR Uncommon FIGHTING Pokémon."
         },
         "FIRE_BADGE_BLESSING": {
             "name": "Fire Badge",
@@ -4762,7 +4818,7 @@
         },
         "FIRE_CREST_BLESSING": {
             "name": "Fire Crest",
-            "description": "Gain a FIRE_GEM and 2 random 1 STAR Uncommon FIRE Pokémon."
+            "description": "Gain a FIRE_STONE and 2 random 1 STAR Uncommon FIRE Pokémon."
         },
         "GHOST_BADGE_BLESSING": {
             "name": "Ghost Badge",
@@ -4770,7 +4826,7 @@
         },
         "GHOST_CREST_BLESSING": {
             "name": "Ghost Crest",
-            "description": "Gain a GHOST_GEM and 2 random 1 STAR Uncommon GHOST Pokémon."
+            "description": "Gain a SPELL_TAG and 2 random 1 STAR Uncommon GHOST Pokémon."
         },
         "ROCK_BADGE_BLESSING": {
             "name": "Rock Badge",
@@ -4778,7 +4834,7 @@
         },
         "ROCK_CREST_BLESSING": {
             "name": "Rock Crest",
-            "description": "Gain a ROCK_GEM and 2 random 1 STAR Uncommon ROCK Pokémon."
+            "description": "Gain an EVER_STONE and 2 random 1 STAR Uncommon ROCK Pokémon."
         },
         "MONSTER_BADGE_BLESSING": {
             "name": "Monster Badge",
@@ -4786,15 +4842,15 @@
         },
         "MONSTER_CREST_BLESSING": {
             "name": "Monster Crest",
-            "description": "Gain a MONSTER_GEM and 2 random 1 STAR Uncommon MONSTER Pokémon."
+            "description": "Gain a BERSERK_GENE and 2 random 1 STAR Uncommon MONSTER Pokémon."
         },
         "AMORPHOUS_BADGE_BLESSING": {
             "name": "Amorphous Badge",
-            "description": "Gain a AMORPHOUS_GEM and a random 1 STAR Uncommon AMORPHOUS Pokémon."
+            "description": "Gain an AMORPHOUS_GEM and a random 1 STAR Uncommon AMORPHOUS Pokémon."
         },
         "AMORPHOUS_CREST_BLESSING": {
             "name": "Amorphous Crest",
-            "description": "Gain a AMORPHOUS_GEM and 2 random 1 STAR Uncommon AMORPHOUS Pokémon."
+            "description": "Gain an AMORPHOUS_GEM and 2 random 1 STAR Uncommon AMORPHOUS Pokémon."
         },
         "WILD_BADGE_BLESSING": {
             "name": "Wild Badge",
@@ -4802,7 +4858,7 @@
         },
         "WILD_CREST_BLESSING": {
             "name": "Wild Crest",
-            "description": "Gain a WILD_GEM and 2 random 1 STAR Uncommon WILD Pokémon."
+            "description": "Gain a WHITE_FLUTE and 2 random 1 STAR Uncommon WILD Pokémon."
         },
         "SOUND_BADGE_BLESSING": {
             "name": "Sound Badge",
@@ -4810,7 +4866,7 @@
         },
         "SOUND_CREST_BLESSING": {
             "name": "Sound Crest",
-            "description": "Gain a SOUND_GEM and 2 random 1 STAR Uncommon SOUND Pokémon."
+            "description": "Gain a METRONOME and 2 random 1 STAR Uncommon SOUND Pokémon."
         },
         "FLORA_BADGE_BLESSING": {
             "name": "Flora Badge",
@@ -4818,7 +4874,7 @@
         },
         "FLORA_CREST_BLESSING": {
             "name": "Flora Crest",
-            "description": "Gain a FLORA_GEM and 2 random 1 STAR Uncommon FLORA Pokémon."
+            "description": "Gain an INCENSE and 2 random 1 STAR Uncommon FLORA Pokémon."
         },
         "STEEL_BADGE_BLESSING": {
             "name": "Steel Badge",
@@ -4826,23 +4882,23 @@
         },
         "STEEL_CREST_BLESSING": {
             "name": "Steel Crest",
-            "description": "Gain a STEEL_GEM and 2 random 1 STAR Uncommon STEEL Pokémon."
+            "description": "Gain a METAL_COAT and 2 random 1 STAR Uncommon STEEL Pokémon."
         },
         "ELECTRIC_BADGE_BLESSING": {
             "name": "Electric Badge",
-            "description": "Gain a ELECTRIC_GEM and a random 1 STAR Uncommon ELECTRIC Pokémon."
+            "description": "Gain an ELECTRIC_GEM and a random 1 STAR Uncommon ELECTRIC Pokémon."
         },
         "ELECTRIC_CREST_BLESSING": {
             "name": "Electric Crest",
-            "description": "Gain a ELECTRIC_GEM and 2 random 1 STAR Uncommon ELECTRIC Pokémon."
+            "description": "Gain a THUNDER_STONE and 2 random 1 STAR Uncommon ELECTRIC Pokémon."
         },
         "ICE_BADGE_BLESSING": {
             "name": "Ice Badge",
-            "description": "Gain a ICE_GEM and a random 1 STAR Uncommon ICE Pokémon."
+            "description": "Gain an ICE_GEM and a random 1 STAR Uncommon ICE Pokémon."
         },
         "ICE_CREST_BLESSING": {
             "name": "Ice Crest",
-            "description": "Gain a ICE_GEM and 2 random 1 STAR Uncommon ICE Pokémon."
+            "description": "Gain an ICE_STONE and 2 random 1 STAR Uncommon ICE Pokémon."
         },
         "HUMAN_BADGE_BLESSING": {
             "name": "Human Badge",
@@ -4858,7 +4914,7 @@
         },
         "DRAGON_CREST_BLESSING": {
             "name": "Dragon Crest",
-            "description": "Gain a DRAGON_GEM and 2 random 1 STAR Uncommon DRAGON Pokémon."
+            "description": "Gain a DRAGON_SCALE and 2 random 1 STAR Uncommon DRAGON Pokémon."
         },
         "LIGHT_BADGE_BLESSING": {
             "name": "Light Badge",
@@ -4866,7 +4922,7 @@
         },
         "LIGHT_CREST_BLESSING": {
             "name": "Light Crest",
-            "description": "Gain a LIGHT_GEM and 2 random 1 STAR Uncommon LIGHT Pokémon."
+            "description": "Gain a LIGHT_BALL and 2 random 1 STAR Uncommon LIGHT Pokémon."
         },
         "GOURMET_BADGE_BLESSING": {
             "name": "Gourmet Badge",
@@ -4874,7 +4930,7 @@
         },
         "GOURMET_CREST_BLESSING": {
             "name": "Gourmet Crest",
-            "description": "Gain a GOURMET_GEM and 2 random 1 STAR Uncommon GOURMET Pokémon."
+            "description": "Gain a COOKING_POT and 2 random 1 STAR Uncommon GOURMET Pokémon."
         },
         "FOSSIL_BADGE_BLESSING": {
             "name": "Fossil Badge",
@@ -4882,171 +4938,243 @@
         },
         "FOSSIL_CREST_BLESSING": {
             "name": "Fossil Crest",
-            "description": "Gain a FOSSIL_GEM and 2 random 1 STAR Uncommon FOSSIL Pokémon."
+            "description": "Gain an OLD_AMBER and 2 random 1 STAR Uncommon FOSSIL Pokémon."
         },
         "ARTIFICIAL_BADGE_BLESSING": {
             "name": "Artificial Badge",
-            "description": "Gain a ARTIFICIAL_GEM and a random 1 STAR Uncommon ARTIFICIAL Pokémon."
+            "description": "Gain an ARTIFICIAL_GEM and a random 1 STAR Uncommon ARTIFICIAL Pokémon."
         },
         "ARTIFICIAL_CREST_BLESSING": {
             "name": "Artificial Crest",
-            "description": "Gain a ARTIFICIAL_GEM and 2 random 1 STAR Uncommon ARTIFICIAL Pokémon."
+            "description": "Gain an ARTIFICIAL_GEM and 2 random 1 STAR Uncommon ARTIFICIAL Pokémon."
         },
         "NORMAL_CROWN_BLESSING": {
             "name": "Normal Crown",
-            "description": "Gain a FRIEND_BOW, a PROTECTIVE_PADS and an Igglybuff."
+            "description": "Gain a FRIEND_BOW, a COVER_BAND, a LAPRAS_PASSPORT and a Jigglypuff."
         },
         "FLYING_CROWN_BLESSING": {
             "name": "Flying Crown",
-            "description": "Gain an AIR_BALLOON, a RAZOR_CLAW and a Quaxly."
+            "description": "Gain an AIR_BALLOON, a RAZOR_CLAW, a LAPRAS_PASSPORT and a Quaxwell."
         },
         "FIELD_CROWN_BLESSING": {
             "name": "Field Crown",
-            "description": "Gain a RUNNING_SHOES, a MUSCLE_BAND and a Litten."
+            "description": "Gain a RUNNING_SHOES, a DESTINY_KNOT, a LAPRAS_PASSPORT and a Torracat."
         },
         "DARK_CROWN_BLESSING": {
             "name": "Dark Crown",
-            "description": "Gain a DUSK_STONE, a LOADED_DICE and a Duskull."
+            "description": "Gain a DUSK_STONE, a BLACK_BELT, a LAPRAS_PASSPORT and a Frogadier."
         },
         "GROUND_CROWN_BLESSING": {
             "name": "Ground Crown",
-            "description": "Gain an EXPLORER_KIT, a GREEN_ORB and a Nidoran ♂."
+            "description": "Gain an EXPLORER_KIT, a SAFETY_GOGGLES, a LAPRAS_PASSPORT and a Nidorino."
         },
         "PSYCHIC_CROWN_BLESSING": {
             "name": "Psychic Crown",
-            "description": "Gain a DAWN_STONE, a SOUL_DEW and a Hatenna."
+            "description": "Gain a DAWN_STONE, an AQUA_EGG, a LAPRAS_PASSPORT and a Hattrem."
         },
         "GRASS_CROWN_BLESSING": {
             "name": "Grass Crown",
-            "description": "Gain a LEAF_STONE, a GREEN_ORB and a Treecko."
+            "description": "Gain a LEAF_STONE, a GREEN_ORB, a LAPRAS_PASSPORT and an Eldegoss."
         },
         "BUG_CROWN_BLESSING": {
             "name": "Bug Crown",
-            "description": "Gain a SHED_SHELL, a RELIC_CROWN and a Sewaddle."
+            "description": "Gain a SHED_SHELL, a RELIC_CROWN, a LAPRAS_PASSPORT and a Charjabug."
         },
         "WATER_CROWN_BLESSING": {
             "name": "Water Crown",
-            "description": "Gain a WATER_STONE, a CHOICE_SPECS and a Froakie."
+            "description": "Gain a WATER_STONE, a CHOICE_SPECS, a LAPRAS_PASSPORT and a Wartortle."
         },
         "AQUATIC_CROWN_BLESSING": {
             "name": "Aquatic Crown",
-            "description": "Gain a SURFBOARD, a STAR_DUST and a Pikachu."
+            "description": "Gain a SURFBOARD, a SHELL_BELL, a LAPRAS_PASSPORT and a Pikachu."
         },
         "POISON_CROWN_BLESSING": {
             "name": "Poison Crown",
-            "description": "Gain a POKERUS_VIAL, a LOADED_DICE and a Nidoran ♀."
+            "description": "Gain a POKERUS_VIAL, an UPGRADE, a LAPRAS_PASSPORT and a Nidorina."
         },
         "FAIRY_CROWN_BLESSING": {
             "name": "Fairy Crown",
-            "description": "Gain a MOON_STONE, a DESTINY_KNOT and a Flabébé (Pink)."
+            "description": "Gain a MOON_STONE, a LOADED_DICE, a LAPRAS_PASSPORT and a Delcatty."
         },
         "FIGHTING_CROWN_BLESSING": {
             "name": "Fighting Crown",
-            "description": "Gain a MACHO_BRACE, a POKE_DOLL and a Machop."
+            "description": "Gain a MACHO_BRACE, a ROCKY_HELMET, a LAPRAS_PASSPORT and a Machoke."
         },
         "FIRE_CROWN_BLESSING": {
             "name": "Fire Crown",
-            "description": "Gain a FIRE_STONE, a RED_ORB and a Litten."
+            "description": "Gain a FIRE_STONE, an XRAY_VISION, a LAPRAS_PASSPORT and a Torracat."
         },
         "GHOST_CROWN_BLESSING": {
             "name": "Ghost Crown",
-            "description": "Gain a SPELL_TAG, a SMOKE_BALL and a Snorunt."
+            "description": "Gain a SPELL_TAG, a MAX_REVIVE, a LAPRAS_PASSPORT and a Glalie."
         },
         "ROCK_CROWN_BLESSING": {
             "name": "Rock Crown",
-            "description": "Gain an EVER_STONE, a STICKY_BARB and a Nacli."
+            "description": "Gain an EVER_STONE, a FAIRY_FEATHER, a LAPRAS_PASSPORT and a Naclstack."
         },
         "MONSTER_CROWN_BLESSING": {
             "name": "Monster Crown",
-            "description": "Gain a BERSERK_GENE, a RELIC_CROWN and a Treecko."
+            "description": "Gain a BERSERK_GENE, a WIDE_LENS, a LAPRAS_PASSPORT and a Grovyle."
         },
         "AMORPHOUS_CROWN_BLESSING": {
             "name": "Amorphous Crown",
-            "description": "Gain an AMORPHOUS_GEM, a PUNCHING_GLOVE and a Grubbin."
+            "description": "Gain an AMORPHOUS_GEM, a PUNCHING_GLOVE, a LAPRAS_PASSPORT and a Palossand."
         },
         "WILD_CROWN_BLESSING": {
             "name": "Wild Crown",
-            "description": "Gain a WHITE_FLUTE, a FLAME_ORB and an Aipom."
+            "description": "Gain a WHITE_FLUTE, a RED_ORB, a LAPRAS_PASSPORT and an Ambipom."
         },
         "SOUND_CROWN_BLESSING": {
             "name": "Sound Crown",
-            "description": "Gain a METRONOME, a DEEP_SEA_TOOTH and an Igglybuff."
+            "description": "Gain a METRONOME, an EFFICIENT_BANDANNA, a LAPRAS_PASSPORT and a Jigglypuff."
         },
         "FLORA_CROWN_BLESSING": {
             "name": "Flora Crown",
-            "description": "Gain an INCENSE, a GRACIDEA_FLOWER and a Flabébé (Pink)."
+            "description": "Gain an INCENSE, a SOUL_DEW, a LAPRAS_PASSPORT and a Floette."
         },
         "STEEL_CROWN_BLESSING": {
             "name": "Steel Crown",
-            "description": "Gain a METAL_COAT, a RED_ORB and a Magnemite."
+            "description": "Gain a METAL_COAT, a FLAME_ORB, a LAPRAS_PASSPORT and a Magneton."
         },
         "ELECTRIC_CROWN_BLESSING": {
             "name": "Electric Crown",
-            "description": "Gain a THUNDER_STONE, a BLUE_ORB and a Grubbin."
+            "description": "Gain a THUNDER_STONE, a BLUE_ORB, a LAPRAS_PASSPORT and a Charjabug."
         },
         "ICE_CROWN_BLESSING": {
             "name": "Ice Crown",
-            "description": "Gain an ICE_STONE, a POWER_LENS and a Snorunt."
+            "description": "Gain an ICE_STONE, a POWER_LENS, a LAPRAS_PASSPORT and a Glalie."
         },
         "HUMAN_CROWN_BLESSING": {
             "name": "Human Crown",
-            "description": "Gain a HUMAN_GEM, a SAFETY_GOGGLES and a Machop."
+            "description": "Gain a HUMAN_GEM, a MUSCLE_BAND, a LAPRAS_PASSPORT and a Machoke."
         },
         "DRAGON_CROWN_BLESSING": {
             "name": "Dragon Crown",
-            "description": "Gain a DRAGON_SCALE, a DEEP_SEA_TOOTH and a Charmander."
+            "description": "Gain a DRAGON_SCALE, a DEEP_SEA_TOOTH, a LAPRAS_PASSPORT and a Charmeleon."
         },
         "LIGHT_CROWN_BLESSING": {
             "name": "Light Crown",
-            "description": "Gain a LIGHT_BALL, a STAR_DUST and a Cherubi."
+            "description": "Gain a LIGHT_BALL, a STAR_DUST, a LAPRAS_PASSPORT and a Clefairy."
         },
         "GOURMET_CROWN_BLESSING": {
             "name": "Gourmet Crown",
-            "description": "Gain a COOKING_POT, a SOOTHE_BELL and a Nacli."
+            "description": "Gain a COOKING_POT, a BIG_EATER_BELT, a LAPRAS_PASSPORT and a Naclstack."
         },
         "FOSSIL_CROWN_BLESSING": {
             "name": "Fossil Crown",
-            "description": "Gain an OLD_AMBER, a CLEAR_AMULET and a Piloswine."
+            "description": "Gain an OLD_AMBER, a KINGS_ROCK, a LAPRAS_PASSPORT and a Piloswine."
         },
         "ARTIFICIAL_CROWN_BLESSING": {
             "name": "Artificial Crown",
-            "description": "Gain an ARTIFICIAL_GEM, a WIDE_LENS and a Magnemite."
+            "description": "Gain an ARTIFICIAL_GEM, a WONDER_BOX, a LAPRAS_PASSPORT and a Magneton."
         },
         "QUEST_REROLL": {
             "name": "Quest: Reroll",
-            "description": "Gain 10 free rerolls. After rerolling 50 times, gain a REPEAT_BALL."
+            "description": "Gain 10 free rerolls. After rerolling 50 times, gain a REPEAT_BALL, an EXCHANGE_TICKET and a RECYCLE_TICKET."
         },
         "QUEST_GROW": {
             "name": "Quest: Grow",
-            "description": "Gain a BERSERK_GENE. The first time an ally reaches 1300 HP in a fight, gain a DYNAMAX_BAND."
+            "description": "Gain a BERSERK_GENE. The first time an ally reaches 1000 HP in a fight, gain a DYNAMAX_BAND, an EXCHANGE_TICKET and a RECYCLE_TICKET."
         },
         "QUEST_SHINE": {
             "name": "Quest: Shine",
-            "description": "Gain a LIGHT_BALL. The first time you activate Light 7, gain a SHINY_STONE."
+            "description": "Gain a LIGHT_BALL. The first time you activate Light 7, gain a SHINY_STONE, an EXCHANGE_TICKET and a RECYCLE_TICKET."
         },
         "QUEST_EPIC": {
             "name": "Quest: Epic",
-            "description": "Gain a 1 STAR Epic Pokémon and 6 XP. The first time you field 7 unique Epic or Ultra Pokémon at once, gain an EVIOLITE."
+            "description": "Gain a 1 STAR Epic Pokémon and 6 XP. The first time you fight with 7 Unique, 7 Epic, or 7 Ultra Pokémon fielded, gain an EVIOLITE, an EXCHANGE_TICKET and a RECYCLE_TICKET. (Scyther does not count)"
         },
         "QUEST_EXPAND": {
             "name": "Quest: Expand",
-            "description": "Gain 10 XP. After fielding 8 Pokémon that all have a sell price of 5 or more at once, gain a GOLD_BOW."
+            "description": "Gain 10 XP. After fielding 8 Pokémon that all have a sell price of 4 or more at once, gain a GOLD_BOW, an EXCHANGE_TICKET and a RECYCLE_TICKET."
         },
         "QUEST_ASCEND": {
             "name": "Quest: Ascend",
-            "description": "Gain 3 1 STAR Rare Pokémon. The first time you get a 3 STAR Uncommon, Rare, Epic or Ultra Pokémon, gain a STAR_PIECE."
+            "description": "Gain 3 1 STAR Rare Pokémon. The first time you get a 3 STAR Uncommon, Rare, Epic or Ultra Pokémon, gain a STAR_PIECE, an EXCHANGE_TICKET and a RECYCLE_TICKET."
         },
         "CHARGING_UP": {
             "name": "Charging Up",
-            "description": "Gain a CELL_BATTERY. For every 15 player damage you deal, gain another."
+            "description": "Gain a Mareep and a CELL_BATTERY. For every 12 player damage you deal, gain another CELL_BATTERY."
+        },
+        "LONE_WOLF": {
+            "name": "Lone Wolf",
+            "description": "When only one allied Pokémon remains, it gains SHIELD equal to 50% of its base max HP and 80 SPEED for 5 seconds."
+        },
+        "PARTING_GIFT": {
+            "name": "Parting Gift",
+            "description": "When an allied Pokémon holding 3 items is KO'd, it transfers one of its items to a random ally within 2 tiles, which also gains 50 SHIELD."
+        },
+        "REVEILLE": {
+            "name": "Reveille",
+            "description": "After 12 seconds of combat, the Pokémon on your 3 rightmost bench slots join the fight. All allied Pokémon are restored to max PP."
+        },
+        "REQUIEM": {
+            "name": "Requiem",
+            "description": "When an allied Pokémon is KO'd, allies within 2 tiles gain SHIELD equal to 15% of their max HP."
+        },
+        "CRITICAL_RUSH_I": {
+            "name": "Critical Rush I",
+            "description": "The first time a Pokémon lands a critical hit, it gains 30 SPEED for 8 seconds."
+        },
+        "CRITICAL_RUSH_II": {
+            "name": "Critical Rush II",
+            "description": "The first time a Pokémon lands a critical hit, it gains 50 SPEED for 12 seconds. Each further critical hit during that time grants 5 SPEED for the rest of combat."
+        },
+        "CRITICAL_PATH_I": {
+            "name": "Critical Path I",
+            "description": "At the start of combat, your STRONGEST Pokémon joins the Critical Path: its ability can critically strike. Each time a Pokémon on the Path casts, the next strongest ally joins. (Abilities that already critically strike gain 50% CRIT_POWER instead.)"
+        },
+        "CRITICAL_PATH_II": {
+            "name": "Critical Path II",
+            "description": "At the start of combat, your STRONGEST Pokémon joins the Critical Path: its ability can critically strike and it gains 20% CRIT_CHANCE. Each time a Pokémon on the Path casts, the next strongest ally joins. (Abilities that already critically strike gain 50% CRIT_POWER instead.)"
+        },
+        "PULSE_SHIELD_I": {
+            "name": "Pulse Shield I",
+            "description": "At the start of combat, your Pokémon gain SHIELD equal to 70% of their SPEED."
+        },
+        "PULSE_SHIELD_II": {
+            "name": "Pulse Shield II",
+            "description": "At the start of combat, your Pokémon gain 20 SPEED, then gain SHIELD equal to 70% of their SPEED."
+        },
+        "MINIMALIST_I": {
+            "name": "Minimalist I",
+            "description": "At the start of combat, your Pokémon gain 8% of their max PP as starting PP for each empty item slot."
+        },
+        "MINIMALIST_II": {
+            "name": "Minimalist II",
+            "description": "At the start of combat, your Pokémon gain 12% of their max PP as starting PP for each empty item slot. Pokémon holding no item also gain 40 AP."
+        },
+        "LASTING_EFFECTS": {
+            "name": "Lasting Effects",
+            "description": "At the start of combat, your Pokémon gain 10 LUCK. Negative statuses they inflict last 40% longer."
+        },
+        "RIPPLING_EFFECTS": {
+            "name": "Rippling Effects",
+            "description": "When an enemy is KO'd, every negative status it carries spreads to ADJACENT enemies, keeping its remaining duration. (CURSE does not spread)"
+        },
+        "EXPLOIT": {
+            "name": "Exploit",
+            "description": "Allied Pokémon deal 20% more damage to enemies affected by a negative status. (Attacks and abilities)"
+        },
+        "GUARD_FORMATION": {
+            "name": "Guard Formation",
+            "description": "At the start of combat, the ally with the highest DEF in the front row grants allies ADJACENT_IN_THE_SAME_ROW 50% of its DEF. The ally with the highest SPE_DEF in the middle row does the same with its SPE_DEF."
+        },
+        "BRAVE_FORMATION": {
+            "name": "Brave Formation",
+            "description": "At the start of combat, Pokémon gain 10% CRIT_CHANCE for each empty ADJACENT tile."
+        },
+        "TOUGH_FORMATION": {
+            "name": "Tough Formation",
+            "description": "At the start of combat, Pokémon gain 2 DEF and 2 SPE_DEF for each ADJACENT ally."
         },
         "BURNING_SHARDS": {
             "name": "Burning Shards",
-            "description": "Gain a FIRE_SHARD. For every 15 player damage you deal, gain another."
+            "description": "Gain a Scorbunny and a FIRE_SHARD. For every 12 player damage you deal, gain another FIRE_SHARD."
         },
         "POTION": {
             "name": "Potion",
-            "description": "Heal 15 player HP."
+            "description": "Heal 15 player HP. In Double Up, your partner is healed as well."
         },
         "POCKET_DAYCARE": {
             "name": "Pocket Daycare",
@@ -5062,7 +5190,7 @@
         },
         "ROCKY_BEGINNINGS": {
             "name": "Rocky Beginnings",
-            "description": "Gain 2 different 1 STAR ROCK Pokémon of common, uncommon or rare rarity and a random weather rock."
+            "description": "Gain 2 different 1 STAR ROCK Pokémon of Common, Uncommon or Rare rarity and an immediate random weather rock (if ROCK 2 is active)."
         },
         "BABYLESS": {
             "name": "Babyless",
@@ -5096,9 +5224,69 @@
             "name": "Kyogre's Song",
             "description": "Gain an AQUA_MONICA. On stages 17 and 22, gain a Sobble."
         },
+        "MIDNIGHT_SUN": {
+            "name": "Midnight Sun",
+            "description": "Gain a DUSK_STONE and a LIGHT_BALL. At the start of the fight, the stat bonuses from your LIGHT spot are multiplied by the recipient's CRIT_POWER."
+        },
+        "STEAM_ENGINE": {
+            "name": "Steam Engine",
+            "description": "Gain a FIRE_STONE and a THUNDER_STONE. Pokémon with both FIRE and ELECTRIC synergy gain 3 SPEED ON_ATTACK, plus 1 for each level of FIRE and ELECTRIC active."
+        },
+        "CONVERGENT_PARADOX": {
+            "name": "Convergent Paradox",
+            "description": "At least one Paradox Pokémon is guaranteed in your Unique and Legendary options. Paradox Pokémon gain ARTIFICIAL or FOSSIL, whichever they lack. ARTIFICIAL 6 grants an OLD_AMBER, and fielding ARTIFICIAL 6 with FOSSIL 6 unlocks Genesect."
+        },
+        "CRYSTAL_EXOSKELETON": {
+            "name": "Crystal Exoskeleton",
+            "description": "Gain a PROTECTOR and a SHED_SHELL. When a crystallised BUG Pokémon holding 2 or more items falls to half HP, it gains 50 SHIELD, dashes away and spawns a clone of itself at 50% HP with no items. Pokémon that already have BUG crystallise with STICKY_GLOB 1 turn faster."
+        },
+        "BLIGHTED_GARDEN": {
+            "name": "Blighted Garden",
+            "description": "Gain an INCENSE and a POKERUS_VIAL. While FLORA is active, KOing a POISONNED enemy collects RICH_MULCH based on its STAR. When an allied FLORA Pokémon with POKERUS is KO'd, collect 1 extra RICH_MULCH."
+        },
+        "MONSTROUS_GLUTTONY": {
+            "name": "Monstrous Gluttony",
+            "description": "Gain a BERSERK_GENE and a COOKING_POT. When a MONSTER Pokémon eats a dish, it gains a MONSTER stack as though it had KO'd the chef who cooked it."
+        },
+        "SHEDDING_SCALES": {
+            "name": "Shedding Scales",
+            "description": "Move to a random DRAGON region and gain a Dratini. The first time each DRAGON ally flies away in a fight, gain a free reroll. Each Salamence, Charizard, Dragonite or Dragapult you obtain grants a DRAGON_SCALE."
+        },
+        "FROZEN_OCEAN": {
+            "name": "Frozen Ocean",
+            "description": "Gain an ICE_STONE and a SURFBOARD. When hit by an AQUATIC or FLOOD wave, allies with both AQUATIC and ICE synergy gain 30 PP and FREEZE adjacent enemies for 2 seconds."
+        },
+        "MAGICAL_METAL": {
+            "name": "Magical Metal",
+            "description": "Gain a METAL_COAT and a MOON_STONE. Pokémon with both STEEL and FAIRY synergy convert part of their on-hit damage to TRUE damage, scaling with your active STEEL synergy."
+        },
+        "FURY_UNLEASHED": {
+            "name": "Fury Unleashed",
+            "description": "Gain a WHITE_FLUTE and a MACHO_BRACE. When an ally with both FIGHTING and WILD synergy throws an enemy, it leaps to the thrown target and enrages for 2 seconds."
+        },
+        "HUMAN_HORROR": {
+            "name": "Human Horror",
+            "description": "Gain a SPELL_TAG and a HUMAN_GEM. Your GHOST Pokémon can learn moves from TMs. When a GHOST ally knowing a TM ability is KO'd, the attacker is POSSESSED for 2 seconds, gains max PP and casts that TM ability until the possession ends."
+        },
+        "HYDRATED_CELLS": {
+            "name": "Hydrated Cells",
+            "description": "Gain an AMORPHOUS_GEM and a WATER_STONE. Your WATER Pokémon gain AP equal to the HP they gain from AMORPHOUS synergy."
+        },
+        "SYMBIOTIC_SYMPHONY": {
+            "name": "Symbiotic Symphony",
+            "description": "Gain a LEAF_STONE and a METRONOME. GRASS Pokémon gain 5 HP on hearing an allied SOUND cry. SOUND Pokémon gain 2 PP whenever they are healed."
+        },
+        "EARTHEN_BARRIER": {
+            "name": "Earthen Barrier",
+            "description": "Gain an EXPLORER_KIT and a FRIEND_BOW. Shielded GROUND Pokémon gain 50% more DEF and SPE_DEF from their GROUND hole until their SHIELD breaks, after which they double the ATK it grants."
+        },
+        "MIND_RUSH": {
+            "name": "Mind Rush",
+            "description": "Gain a DAWN_STONE and a RUNNING_SHOES. Your Unowns have FIELD synergy and count as KO'd when they cast their ability. At PSYCHIC 7, your Unown shops always contain Unown !."
+        },
         "BERRY_POUCH": {
-            "name": "Berry Pouch",
-            "description": "Now and after each PvE round, gain a random berry."
+            "name": "Bowl of Berries",
+            "description": "Now and after each stage, gain a random berry."
         },
         "SCHOOL_BUS": {
             "name": "School Bus",
@@ -5106,11 +5294,11 @@
         },
         "BANANA_BUSINESS": {
             "name": "Banana Business",
-            "description": "Now and after each PvE round, gain a NANAB_BERRY."
+            "description": "Now and after each PvE round, gain 3 NANAB_BERRY."
         },
         "SWEET_SUBSCRIPTION": {
             "name": "Sweet Subscription",
-            "description": "Now and after each PvE round, gain a random sweet."
+            "description": "Now and after each stage, gain a random sweet."
         },
         "MUNCHLAX_DELIVERY": {
             "name": "Munchlax Delivery",
@@ -5126,7 +5314,7 @@
         },
         "RELIC_FRAGMENT": {
             "name": "Relic Fragment",
-            "description": "Gain a LAPRAS_PASSPORT. On stages 10 and 20, gain another. Stages already passed are granted immediately."
+            "description": "Gain a LAPRAS_PASSPORT and 5 GOLD. On stages 10 and 20, gain another passport. Stages already passed are granted immediately."
         },
         "ITEMFINDER_I": {
             "name": "Itemfinder",
@@ -5138,7 +5326,7 @@
         },
         "ITEMFINDER_III": {
             "name": "Itemfinder III",
-            "description": "Gain a random component now and at the start of the next 6 rounds."
+            "description": "Gain a random component now and at the start of the next 5 rounds."
         },
         "LEGENDARY_GAMBIT": {
             "name": "Legendary Gambit",
@@ -5158,15 +5346,15 @@
         },
         "CHOSEN_ONES": {
             "name": "Chosen Ones",
-            "description": "When you pick an additional Pokémon, it immediately evolves."
+            "description": "When you pick an additional Pokémon, it immediately evolves with boosted stats."
         },
         "ADDITIONAL_RETHINK_I": {
             "name": "Additional Rethink I",
-            "description": "You can reroll your additional pick options once. It rerolls all 3 Pokémon and items."
+            "description": "Gain 4 GOLD. You can reroll your additional pick options once. It rerolls all 3 Pokémon and items."
         },
         "SAFARI_ENCOUNTER": {
             "name": "Safari Encounter",
-            "description": "Gain a random additional Pokémon matching your highest synergy that is not currently in the additional pool."
+            "description": "Gain a BRONZE_DOJO_TICKET and a random additional Pokémon matching your highest synergy, chosen from those not yet in the additional pool."
         },
         "GYARODOS_TRES_QUATRO": {
             "name": "Gyarodos, Tres, Quatro",
@@ -5178,26 +5366,26 @@
         },
         "WEATHER_INSTITUTE": {
             "name": "Weather Institute",
-            "description": "At combat start, if the weather is RAIN, ZENITH, DROUGHT or SNOW, summon a Castform matching the weather."
+            "description": "At combat start, if the weather is RAIN, ZENITH, DROUGHT or SNOW, summon a Castform matching the weather, holding an AQUA_EGG. Gain a Snover, Larvesta or Barboach."
         },
         "BEEKEEPING": {
             "name": "Beekeeping",
-            "description": "When your unique casts its ability, spawn a Combee."
+            "description": "When your Unique casts its ability, spawn a Combee."
         },
         "ARCANE_METALS": {
             "name": "Arcane Metals",
-            "description": "STEEL synergy converts ability damage into TRUE as well as attacks. Gain a Magnemite."
+            "description": "STEEL synergy converts ability damage into TRUE. Gain a Magnemite."
         },
         "CURSE_OF_TWO": {
             "name": "Curse of Two",
-            "description": "Each of your GHOST curses affects 2 enemies at once. Gain a Snorunt."
+            "description": "Each of your GHOST curses affects 2 enemies at once."
         },
         "VITAMINS": {
             "name": "Vitamins",
-            "description": "Your team gains 1 ATK, 5 AP and 5 SPEED."
+            "description": "At the start of the fight, your team gains 2 ATK, 10 AP and 10 SPEED."
         },
         "DRAGON_FANG": {
-            "name": "Dragon Fang",
+            "name": "Dragon Orb",
             "description": "Allies gain 2 AP per STAR of the units on your board."
         },
         "QUIET_STRENGTH": {
@@ -5205,7 +5393,7 @@
             "description": "The STRONGEST ally gains HP equal to your missing player HP at the start of combat. When under 25 player HP, this effect is doubled."
         },
         "MISFORTUNE": {
-            "name": "Misfortune",
+            "name": "Breaking Bones",
             "description": "The STRONGEST enemy loses % max HP equal to your missing player HP at the start of combat."
         },
         "SYNCHRONISED_SPEED_I": {
@@ -5218,15 +5406,15 @@
         },
         "POTENTIAL_ENERGY_I": {
             "name": "Potential Energy I",
-            "description": "Allies that can still evolve gain 25 SHIELD and 5 SPEED."
+            "description": "Allies gain 20 SHIELD and 10 SPEED for every STAR they are short of their final form."
         },
         "POTENTIAL_ENERGY_II": {
             "name": "Potential Energy II",
-            "description": "Allies that can still evolve gain 40 SHIELD and 10 SPEED."
+            "description": "Allies gain 30 SHIELD and 20 SPEED for every STAR they are short of their final form."
         },
         "RIVALRY": {
             "name": "Rivalry",
-            "description": "When your STRONGEST Pokémon gets a KO, it gains 2 permanent ATK if on your side of the board, or 10 permanent HP if on the enemy side of the board. If taken at stage 12, gain a RELIC_CROWN."
+            "description": "When your STRONGEST Pokémon gets a KO, it gains 1 permanent ATK if on your side of the board, or 4 permanent HP if on the enemy side of the board."
         },
         "SHINY_SAFEGUARD": {
             "name": "Shiny Safeguard",
@@ -5246,23 +5434,23 @@
         },
         "REPLICATOR": {
             "name": "Replicator",
-            "description": "Gain a DUBIOUS_DISC_BLESSING_ITEM. This item can be consumed to make a copy of any tool you have, which remains in your inventory regardless of your ARTIFICIAL level. Gain a Varoom."
+            "description": "Gain a DUBIOUS_DISC_BLESSING_ITEM. This item can be consumed to make a copy of any tool you have, which remains in your inventory regardless of your ARTIFICIAL level. Gain a Klink."
         },
         "FIND_A_LOST_WAND": {
             "name": "Find a Lost Wand",
-            "description": "When FAIRY 2+ is active, gain the wand that was not offered to you in your FAIRY 2 options. Gain a Hatenna."
+            "description": "When FAIRY is active and the first wand has been chosen, gain the wand that was not offered to you in your FAIRY 2 options. Gain a Hatenna."
         },
         "FAST_FOOD_DELIVERY": {
             "name": "Fast Food Delivery",
-            "description": "All GOURMET dishes are cooked to your inventory, and can be distributed among your Pokémon how you like, but turn into LEFTOVERS after 1 round, and are thrown out the round after. Gain a Nacli."
+            "description": "All GOURMET dishes are cooked to your inventory, and can be distributed among your Pokémon how you like, but turn into LEFTOVERS after 3 rounds. Gain a Nacli."
         },
         "CHEFS_GREED": {
             "name": "Chef's Greed",
-            "description": "Your chefs cook an extra portion of their dish for themselves. Pokémon holding a CHEF_HAT can eat 2 dishes, or 3 if holding a BIG_EATER_BELT. Gain a Nacli."
+            "description": "Your chefs cook an extra portion of their dish for themselves. Pokémon holding a CHEF_HAT can eat 2 dishes, and gain Munchlax's Glutton passive."
         },
         "BERRY_BREAKFAST": {
             "name": "Berry Breakfast",
-            "description": "Berries can be given to Pokémon with 3 items as dishes. They are consumed at the start of the fight, with their healing converted into SHIELD. Gain a Chespin."
+            "description": "Berries can be given to Pokémon with 3 items as dishes. They are consumed at the start of the fight, with their healing converted into SHIELD. Gain 3 Berries and a Smoliv."
         },
         "GEM_RUSH": {
             "name": "Gem Rush",
@@ -5274,7 +5462,7 @@
         },
         "CRYSTAL_MUTATION": {
             "name": "Crystal Mutation",
-            "description": "Immediately awaken your ROCK unique with a random crystallisation."
+            "description": "Immediately awaken your ROCK Unique with a random crystallisation."
         },
         "CRYSTAL_CLUSTERS": {
             "name": "Crystal Clusters",
@@ -5282,7 +5470,7 @@
         },
         "BERSERKER_HORDES": {
             "name": "Berserker Hordes",
-            "description": "WILD Pokémon cost 1 GOLD less for each WILD Pokémon at 3 STAR or more on your board, minimum 0. Every 10 shops, your shop will contain only WILD Pokémon."
+            "description": "WILD Pokémon cost 1 GOLD less for each WILD Pokémon at 3 STAR or more on your board, minimum 0. Every 8 shops, your shop will contain only WILD Pokémon."
         },
         "GARDENING": {
             "name": "Gardening",
@@ -5294,7 +5482,7 @@
         },
         "AMAZING_GARDENING": {
             "name": "Amazing Gardening",
-            "description": "Gain an AMAZE_MULCH, plus another for each fully evolved flower, and another whenever a flower becomes fully evolved. Gain a Gossifleur."
+            "description": "Gain an AMAZE_MULCH, plus another for each fully evolved flower. Gain a Gossifleur."
         },
         "FLYTRAP": {
             "name": "Flytrap",
@@ -5314,23 +5502,23 @@
         },
         "NOT_THE_BEES": {
             "name": "Not the Bees!",
-            "description": "At combat start, spawn a Combee on a random tile for each STAR level of your flower pots, up to 16. Gain a Gossifleur and a Flabébé."
+            "description": "At combat start, spawn a Combee on a random tile for each STAR level of your flower pots, up to 16."
         },
         "ECHO_CHAMBER": {
             "name": "Echo Chamber",
-            "description": "When a SOUND Pokémon casts, your STRONGEST SOUND Pokémon gains 3 PP. When your STRONGEST SOUND Pokémon casts, all allies gain 6 PP. Gain an Igglybuff."
+            "description": "When a SOUND Pokémon casts, your STRONGEST SOUND Pokémon gains 2 PP. When your STRONGEST SOUND Pokémon casts, all allies gain 4 PP. Gain an Igglybuff."
         },
         "LANGUAGE_BARRIER": {
             "name": "Language Barrier",
-            "description": "When your Unown casts, allies gain 15 SHIELD, scaling with AP. Gain 2 random Unown."
+            "description": "When your Unown casts, allies gain 30 SHIELD, scaling with AP. Gain 2 random Unown."
         },
         "MOVE_TUTOR": {
             "name": "Move Tutor",
-            "description": "Pokémon with a TM ability have their max PP set to 80."
+            "description": "Pokémon with a TM ability have their max PP set to 70."
         },
         "ZAP": {
             "name": "Zap!",
-            "description": "ELECTRIC triple attacks chain to a random ADJACENT enemy, dealing 50% reduced damage and applying on hit effects. Gain a Grubbin."
+            "description": "ELECTRIC triple attacks chain to a random ADJACENT enemy, dealing 50% of the initial damage and applying ON_HIT effects. Gain a Grubbin."
         },
         "SEEING_TRIPLE": {
             "name": "Seeing Triple",
@@ -5338,31 +5526,31 @@
         },
         "SACRIFICE": {
             "name": "Sacrifice",
-            "description": "At combat start, if MONSTER 2 is active, your STRONGEST MONSTER Pokémon KOs the weakest ADJACENT ally. Gain a Bagon."
+            "description": "At combat start, if MONSTER 2 is active, your STRONGEST MONSTER Pokémon KOs the weakest ADJACENT ally and is RAGE for 2 seconds. Gain a Lairon."
         },
         "DRAGON_KING": {
             "name": "Dragon King",
-            "description": "When a DRAGON ally is KO'd, your STRONGEST DRAGON Pokémon gains 5 SHIELD, 1 SPEED and 1 AP for each of the fallen ally's STAR. Gain a Charmander."
+            "description": "When a DRAGON ally is KO'd, your STRONGEST DRAGON Pokémon gains 10 SHIELD, 2 SPEED and 2 AP for each of the fallen ally's STAR. Gain a Charmander."
         },
         "ASCENSION": {
             "name": "Ascension",
-            "description": "The Pokémon in your LIGHT spot starts combat in stasis: it does not move or attack until its PP bar is full, and cannot be SILENCE or lose PP until then. When it breaks free, it doubles all the stat buffs from LIGHT. Gain a Cherubi."
+            "description": "The Pokémon in your LIGHT spot starts combat in stasis: it does not move or attack until its PP bar is full, and cannot be SILENCE or lose PP until then. When it breaks free, it triples all the stat buffs from LIGHT. Gain a Cherrim."
         },
         "SHARE_THE_SPOTLIGHT": {
             "name": "Share the Spotlight",
-            "description": "The Pokémon in your LIGHT spot shares 50% of its ATK, AP, DEF and SPE_DEF with ADJACENT allies. Gain a Cherubi."
+            "description": "The Pokémon in your LIGHT spot shares 50% of its ATK, AP, DEF and SPE_DEF with ADJACENT allies."
         },
         "SLIPSTREAM": {
             "name": "Slipstream",
-            "description": "When a FLYING Pokémon flies away, it gains 5 SPEED and grants 5 SPEED to allies it passes through. Gain a Quaxly."
+            "description": "When a FLYING Pokémon flies away, it gains 5 SPEED and 1 ATK, and grants the same to allies it passes through. Gain a Quaxly."
         },
         "BIG_PECKS": {
             "name": "Big Pecks",
-            "description": "The first time you send a FLYING Pokémon away with a LETTER, it is guaranteed to come back with a SHARP_BEAK regardless of rarity. Gain a Quaxly."
+            "description": "Your FLYING Pokémon will deliver their LETTER one stage faster. Gain a Quaxly."
         },
         "SHAPELESS_SYNERGIES": {
             "name": "Shapeless Synergies",
-            "description": "Allies with at least 3 of their synergies active gain 100% more SPEED and 50% more HP from the AMORPHOUS synergy, rounded up. Gain a Tynamo."
+            "description": "Allies with at least 3 of their synergies active, including those granted by held items, gain 50% more SPEED and HP from the AMORPHOUS synergy, rounded up. Gain a Tynamo."
         },
         "ABNORMALITY": {
             "name": "Abnormality",
@@ -5374,7 +5562,7 @@
         },
         "BRACE_FOR_IMPACT": {
             "name": "Brace for Impact",
-            "description": "FIGHTING Pokémon cannot take more than 50% of their maximum HP in a single instance of PHYSICAL or SPECIAL damage. Gain a Machop."
+            "description": "FIGHTING Pokémon cannot take more than 40% of their maximum HP in a single instance of PHYSICAL or SPECIAL damage. Gain a Machop."
         },
         "FROST_BARRIER": {
             "name": "Frost Barrier",
@@ -5383,6 +5571,10 @@
         "SECOND_WIND": {
             "name": "Second Wind",
             "description": "When a FIELD Pokémon revives with RESURRECTION, this counts as a KO for the synergy buffs. At the start of combat and every 10 seconds, the weakest FIELD Pokémon gains RESURRECTION. Gain a Litten."
+        },
+        "FIRST_WIND": {
+            "name": "First Wind",
+            "description": "10 seconds into combat, allies heal 40% of their max HP."
         },
         "RESURGENCE": {
             "name": "Resurgence",
@@ -5394,11 +5586,11 @@
         },
         "TIDAL_SURGE": {
             "name": "Tidal Surge",
-            "description": "When the tidal wave hits, ranged AQUATIC Pokémon holding 3+ items cast Hydro Pump, and melee AQUATIC Pokémon holding 3+ items cast Dive. Gain a Froakie."
+            "description": "When the TIDAL_WAVE hits, ranged AQUATIC Pokémon holding 2 items cast Hydro Pump, and melee AQUATIC Pokémon holding 2 items cast Dive."
         },
         "ATLANTEAN_MAGIC": {
             "name": "Atlantean Magic",
-            "description": "When a WATER Pokémon casts its ability, it gains 1 permanent AP per STAR level. Gain a Squirtle."
+            "description": "When a WATER Pokémon casts its ability, it gains 1 permanent AP per STAR level."
         },
         "STAR_CROSSED_SEAS": {
             "name": "Star-Crossed Seas",
@@ -5410,7 +5602,7 @@
         },
         "ABSOLUTE_DARKNESS": {
             "name": "Absolute Darkness",
-            "description": "DARK Pokémon always crit BLINDED enemies. Allies with 100% CRIT_CHANCE convert all their damage to TRUE damage against BLINDED enemies. Gain an Impidimp."
+            "description": "DARK Pokémon have a 10% chance to inflict their target with BLINDED for 3 seconds ON_ATTACK. Allies convert all their damage to TRUE against BLINDED enemies when they crit. Gain an Impidimp."
         },
         "TOXIC_BURST": {
             "name": "Toxic Burst",
@@ -5418,7 +5610,7 @@
         },
         "EXHAUSTING_FLAME": {
             "name": "Exhausting Flame",
-            "description": "BURN enemies deal 20% reduced damage to your FIRE Pokémon. Gain a Litten."
+            "description": "Your FIRE Pokémon take 20% less damage from BURN enemies, and gain 5 LUCK per STAR. Gain a Litten."
         },
         "ETERNAL_RAGE": {
             "name": "Eternal Rage",
@@ -5426,11 +5618,11 @@
         },
         "MISFITS": {
             "name": "Misfits",
-            "description": "Allies with no active synergies gain 50 HP, 50 AP, 5 ATK, 5 DEF and 5 SPE_DEF."
+            "description": "Allies with no active synergies gain 30 HP, 30 AP, 3 ATK, 3 SPEED, 3 DEF and 3 SPE_DEF per STAR."
         },
         "OLIVE_GARDEN": {
             "name": "Olive Garden",
-            "description": "Gain a Dolliv. Your STRONGEST Smoliv starts combat with GRASS_FIELD, and also with PSYCHIC_FIELD, FAIRY_FIELD or ELECTRIC_FIELD if it has the matching synergy."
+            "description": "Gain a Smoliv. Your STRONGEST Smoliv starts combat with GRASS_FIELD, or with PSYCHIC_FIELD, FAIRY_FIELD or ELECTRIC_FIELD instead if you give it that synergy with a stone, picked at random if it has several."
         },
         "ORBITAL_STRIKE": {
             "name": "Orbital Strike",
@@ -5440,8 +5632,192 @@
             "name": "Roosting Flock",
             "description": "Gain a Tranquill and move to a random Pidove region if not in one. When your STRONGEST Pidove casts its ability, ADJACENT FLYING allies cast Roost as well."
         },
+        "MONSTER_KING": {
+            "name": "King of the Monsters",
+            "description": "Every 8 seconds, your ally with the most MONSTER stacks fires Hyper Beam (at its own STAR level), towards the largest group of enemies."
+        },
+        "ADOPTION": {
+            "name": "Adoption Agency",
+            "description": "At the start of each round, adopt a BABY Pokémon you have not received yet this game, cheapest first. Once every BABY has been adopted, you receive a Happiny every round instead."
+        },
+        "RAINBOW_DROPLET": {
+            "name": "Rainbow Droplet",
+            "description": "The first time you reach AMORPHOUS 7 with 8 synergies active, every synergy except AMORPHOUS permanently gains +1."
+        },
+        "ARCHEOLOGY": {
+            "name": "Archeological Site",
+            "description": "FOSSIL Pokémon dig every round even without GROUND active. Fully digging a hole unearths a random FOSSIL Pokémon. Fully digging a row unearths a FOSSIL unique, and the whole board a FOSSIL legendary."
+        },
+        "LIMIT_BREAKER": {
+            "name": "Limit Breaker",
+            "description": "Abilities of your fully evolved DRAGON Pokémon are one STAR level stronger.\nEvery time you get a 3 STAR DRAGON, you gain free rerolls:\n- Common: 4\n- Uncommon: 8\n- Rare: 12\n- Epic: 16\n- Ultra: 20\nOther Rarities are excluded."
+        },
+        "CHAMPIONS_MASK": {
+            "name": "Champion's Mask",
+            "description": "Gain a CHAMPIONS_MASK. At the start of combat, allies with a CHAMPIONS_MASK gain 50 SHIELD per FIGHTING tier."
+        },
+        "AUTO_CRAFTING": {
+            "name": "Auto-Crafting",
+            "description": "At the start of combat, each ARTIFICIAL Pokémon holding a component turns it into a random craftable item made with that component for that combat. Synergy stones and WONDER_BOX are excluded. Gain 3 random components."
+        },
+        "CENTER_STAGE": {
+            "name": "Center Stage",
+            "description": "At the start of combat, your STRONGEST SOUND ally gains a pink spotlight. Other ADJACENT SOUND Pokémon emit twice as many sound cries. (The Grookey family has stage fright and refuses the spotlight.)"
+        },
+        "HIEROGLYPHS": {
+            "name": "Hieroglyphs",
+            "description": "Unown have 50% less max PP. When an Unown casts its ability, summon a random Unown in the safest corner of the board. Unown ! and Unown Q cannot trigger this summon or be summoned."
+        },
+        "BURNING_FORCE": {
+            "name": "Burning Force",
+            "description": "At the start of combat, Pokémon with no ADJACENT allies are BURN for the rest of the fight and gain 50% of their base ATK."
+        },
+        "SPIKY_GUARD": {
+            "name": "Spiky Guard",
+            "description": "At the start of combat, Pokémon with no ADJACENT allies retaliate against melee attackers, dealing 10% of their current DEF and SPE_DEF as SPECIAL."
+        },
+        "DRILL_I": {
+            "name": "Drill I",
+            "description": "The first time a Pokémon falls below 60% max HP, its basic attacks deal 50% of its current ATK as additional TRUE for 8 seconds."
+        },
+        "DRILL_II": {
+            "name": "Drill II",
+            "description": "The first time a Pokémon falls below 60% max HP, its basic attacks deal 50% of its current ATK as additional TRUE for 12 seconds. This also hits an enemy directly behind the target."
+        },
+        "SHATTER_I": {
+            "name": "Shatter I",
+            "description": "The first time a Pokémon falls below 60% max HP, its basic attacks deal 50% of its current DEF and SPE_DEF as additional PHYSICAL for 8 seconds."
+        },
+        "SHATTER_II": {
+            "name": "Shatter II",
+            "description": "The first time a Pokémon falls below 60% max HP, its basic attacks deal 50% of its current DEF and SPE_DEF as additional PHYSICAL for 12 seconds. This also hits an enemy directly behind the target."
+        },
+        "SURGE_I": {
+            "name": "Surge I",
+            "description": "The first time a Pokémon falls below 60% max HP, its basic attacks deal 25% of its current SPEED as additional SPECIAL for 8 seconds."
+        },
+        "SURGE_II": {
+            "name": "Surge II",
+            "description": "The first time a Pokémon falls below 60% max HP, its basic attacks deal 25% of its current SPEED as additional SPECIAL for 12 seconds. This also hits an enemy directly behind the target."
+        },
+        "GEAR_SHIELD_I": {
+            "name": "Gear Shield I",
+            "description": "At the start of combat, melee Pokémon gain 20 SHIELD per held item."
+        },
+        "GEAR_SHIELD_II": {
+            "name": "Gear Shield II",
+            "description": "At the start of combat, melee Pokémon gain 30 SHIELD per held item. When this SHIELD is depleted, ADJACENT enemies suffer ARMOR_BREAK for 3 seconds."
+        },
+        "MAGIC_SHIELD_I": {
+            "name": "Magic Shield I",
+            "description": "At the start of combat, your Pokémon gain SHIELD equal to their AP."
+        },
+        "MAGIC_SHIELD_II": {
+            "name": "Magic Shield II",
+            "description": "At the start of combat, your Pokémon gain 30 AP, then gain SHIELD equal to their AP."
+        },
+        "BRUTE_SHIELD_I": {
+            "name": "Brute Shield I",
+            "description": "At the start of combat, your Pokémon gain SHIELD equal to 300% of their ATK."
+        },
+        "BRUTE_SHIELD_II": {
+            "name": "Brute Shield II",
+            "description": "At the start of combat, your Pokémon gain 3 ATK, then gain SHIELD equal to 300% of their ATK."
+        },
+        "STAR_GUARD": {
+            "name": "Star Guard",
+            "description": "At the start of combat, your Pokémon gain 1 DEF and SPE_DEF for each STAR on your board."
+        },
+        "MACHINE_RESIDUE": {
+            "name": "Machine Residue",
+            "description": "ARTIFICIAL Pokémon holding a tool place SPIKES beneath their target ON_ATTACK. When an allied ARTIFICIAL Pokémon walks over SPIKES, it clears them and gains 50 SHIELD instead of being affected. Gain a Klang."
+        },
+        "CALCULATED_OFFENCE": {
+            "name": "Calculated Offence",
+            "description": "All non-TRUE dealt by your Pokémon becomes PHYSICAL when the target's DEF is lower, or SPECIAL when its SPE_DEF is lower. If both are equal, the damage type does not change."
+        },
+        "ROBIN_GEMS": {
+            "name": "Robin Gems",
+            "description": "The first time you defeat each opponent, gain a gem matching their highest synergy. If multiple synergies are tied, one is chosen at random."
+        },
+        "FURIOUS_FABRIC": {
+            "name": "Furious Fabric",
+            "description": "Every item crafted from a SILK_SCARF also gives a synergy to the Pokémon holding it:\n- BIG_EATER_BELT: GOURMET\n- EFFICIENT_BANDANNA: SOUND\n- COVER_BAND: GROUND\n- TWIST_BAND: PSYCHIC\n- EXPLOSIVE_BAND: WILD\n- MACH_RIBBON: FIELD\n- BLACK_BELT: FIGHTING\n- LUCKY_RIBBON: FAIRY\n- TIGHT_BELT: BUG\n- FRIEND_BOW: GRASS\n- NULLIFY_BANDANNA: FLYING"
+        },
+        "GEM_HARVEST": {
+            "name": "Gem Harvest",
+            "description": "Crystallisation takes 1 round less to complete. When a crystallisation finishes, you gain a gem matching the crystal's type. Each gem in your inventory gives your Pokémon 10 AP if they share its synergy."
+        },
+        "MAGNETOSPHERE": {
+            "name": "Magnetosphere",
+            "description": "Your STEEL Pokémon create a magnetic field with 1 RANGE per tier of STEEL, switching between attraction and repulsion every 8 seconds. Attraction pulls enemies in RANGE into contact and inflicts PARALYSIS for 8 seconds. Repulsion pushes them away, inflicts LOCKED for 2 seconds, and grants your STEEL Pokémon that much RANGE while it lasts."
+        },
+        "MYSTOGAN": {
+            "name": "Mystogan",
+            "description": "At each FAIRY tier, your FAIRY Pokémon also gain the effect of the wand that was left out of the offer, but not its extra SPECIAL. Wand effects are [5,LK]% more likely to happen."
+        },
+        "FESTIVE_PICNIC": {
+            "name": "Festive Picnic",
+            "description": "At the start of every preparation phase, each of your Pokémon without a dish receives a random one. A dish cooked by your own Pokémon replaces it, and the Pokémon permanently gains 10 max HP. Gain a Nacli."
+        },
+        "ICY_REFLECTION": {
+            "name": "Icy Reflection",
+            "description": "Your ICE Pokémon store all the damage their SPE_DEF blocks. Every time the stored amount reaches 25% of their max HP, they cast back the last ability that damaged them, at their own STAR level."
+        },
+        "BULL_LEAPING": {
+            "name": "Bull Leaping",
+            "description": "When your FIELD Pokémon cast their ability, they use a second one at 1 STAR right after: melee ones leap with Aqua Jet, Flame Charge or Volt Switch if they are WATER, FIRE or ELECTRIC, or Psyshield Bash otherwise. Ranged ones, and any that would repeat their own ability, use Happy Hour instead."
+        },
+        "OVERLOAD": {
+            "name": "Overload",
+            "description": "At the start of combat and every 8 seconds, the STRONGEST of your ELECTRIC Pokémon (not yet empowered) is empowered by Volt Surge: it gains ELECTRIC_FIELD, 20 SPEED and bonus HP, and every 3rd attack chains lightning to 4 enemies. Its own ability is unchanged."
+        },
+        "FOGBOUND_LAKE": {
+            "name": "Fogbound Lake",
+            "description": "When a BUG Pokémon would clone, it spawns a Volbeat or an Illumise instead. BUG 8 adds +1 to LIGHT, and every Volbeat and Illumise gains the effects of your active LIGHT spot."
+        },
+        "TIDAL_GUARDIAN": {
+            "name": "Tidal Guardian",
+            "description": "AQUATIC 8 now summons Lugia instead of Surfing Pikachu. On every TIDAL_WAVE, Lugia casts Whirlpool on 3 different random enemies."
+        },
+        "GRUDGE": {
+            "name": "Grudge",
+            "description": "When one of your GHOST Pokémon is KO'd, it has a [30,LK]% chance to CURSE the enemy that defeated it (8 seconds). If you win the fight and your opponent has a free bench slot, they receive a locked Substitute that costs them 4 GOLD to sell. Each locked Substitute on their bench reduces the duration of any CURSE you inflict by 1 second, whatever its source."
+        },
+        "SOUL_BLAZE": {
+            "name": "Soul Blaze",
+            "description": "A FIRE_SHARD ignites at any FIRE tier, and your Pokémon never wait between two ignitions. Gain 5 FIRE_SHARD."
+        },
+        "FERTILE_SOIL": {
+            "name": "Fertile Soil",
+            "description": "GROUND Pokémon gain 5 permanent max HP each time they dig. Pokémon starting a fight on a fully dug hole gain 10% max HP. A non-GROUND Pokémon that spends 5 rounds on a fully dug hole absorbs the soil, becoming GROUND and gaining the SMOOTH_ROCK awakening."
+        },
+        "DEEP_WOUNDS": {
+            "name": "Deep Wounds",
+            "description": "Critical hits inflict ARMOR_BREAK for 5 seconds. If already ARMOR_BREAK, [30,LK]% chance to remove 4 DEF and SPE_DEF permanently."
+        },
+        "FAST_DELIVERY": {
+            "name": "Fast Delivery",
+            "description": "FLYING Pokémon always deliver the LETTER in 1 turn. At the start of combat, your FLYING Pokémon gain 2 ATK and 5 LUCK for each Seed you have collected."
+        },
+        "MOLECULAR_CORROSION": {
+            "name": "Molecular Corrosion",
+            "description": "Enemy Pokémon under POISONNED take 25% more damage from all sources, and your POISONNED can no longer be blocked by RUNE_PROTECT."
+        },
+        "UNISON": {
+            "name": "Unison",
+            "description": "Your TMs are no longer consumed when taught to a HUMAN Pokémon.\nDamage dealt by your HUMAN Pokémon builds their bond (max 1000). When this bond reaches maximum power or is broken by the first HUMAN Pokémon being KO'd, your surviving Pokémon retaliate together, dividing the accumulated damage between all enemies as SPECIAL. This counts as a HUMAN attack."
+        },
+        "BERRY_GROWTH": {
+            "name": "Berry Growth",
+            "description": "Every Berry eaten also grants the Pokémon +10 permanent max HP, or +15 for a golden Berry. At GRASS 7, your berry trees turn golden. If taken on stage 12, gain 5 golden Berries."
+        },
+        "WATER_FOUNTAIN": {
+            "name": "Water Fountain",
+            "description": "Travel to a Pond region, and from now on you can only travel to Pond regions.\nTwo Ponds appear on your board, defensive in front and offensive in the back, moving every 4 stages. A Pokémon starting the fight in a Pond gains its effect, doubled at WATER 6 and quadrupled at WATER 9.\nYour Pokémon can no longer dig. Gain a Squirtle."
+        },
         "WOBBUFFETS_GOLD_PRIZE": {
-            "name": "Wobbuffet's Gold Prize",
+            "name": "Gold Kit",
             "description": "Gain a random item component and 2 RECYCLE_TICKET. Each time you use a RECYCLE_TICKET, gain a random item component."
         },
         "HARD_COMMIT": {
@@ -5454,11 +5830,11 @@
         },
         "REGIONAL_TREASURES_II": {
             "name": "Regional Treasures II",
-            "description": "Gain a gem and a random 1 STAR uncommon Pokémon for each of your region's synergies, now and each time you change region."
+            "description": "Gain a gem for each of your region's synergies, now and each time you change region."
         },
         "SYNARCH": {
             "name": "Synarch",
-            "description": "Gain a gem matching each base synergy of your unique Pokémon. If that is less than 3 gems, random gems make up the difference."
+            "description": "Gain a gem matching each base synergy of your Unique Pokémon. If that is less than 3 gems, random gems make up the difference."
         },
         "FLEXIBILITY": {
             "name": "Flexibility",
@@ -5470,19 +5846,23 @@
         },
         "MANIFESTATION_AP": {
             "name": "Manifestation: AP",
-            "description": "Gain a random Duosion, Thwackey or Drizzile holding a SOUL_DEW, granting AP. Until stage 20 it cannot be fielded or given items, and sells for 0 GOLD."
+            "description": "Gain a random Drizzile, Duosion, Luxio or Thwackey holding a SOUL_DEW. Until stage 20 the unit is locked and sells for 0 GOLD."
         },
         "MANIFESTATION_AD": {
             "name": "Manifestation: ATK",
-            "description": "Gain a random Porygon2, Fletchinder or Bisharp holding a RED_ORB, granting ATK. Until stage 20 it cannot be fielded or given items, and sells for 0 GOLD."
+            "description": "Gain a random Arctibax, Bisharp, Fletchinder or Porygon2 holding a FLAME_ORB. Until stage 20 the unit is locked and sells for 0 GOLD."
+        },
+        "MANIFESTATION_DEF": {
+            "name": "Manifestation: DEF",
+            "description": "Gain a random Chansey, Dusclops, Gurdurr or Swadloon holding a ROCKY_HELMET. Until stage 20 the unit is locked and sells for 0 GOLD."
         },
         "MIX_AND_MATCH_I": {
             "name": "Mix and Match I",
-            "description": "Gain 3 random unique Pokémon. Your unique Pokémon sell for 0 GOLD, and you can field at most 2 of them at a time."
+            "description": "Gain 3 random Unique Pokémon. Your Unique Pokémon sell for 0 GOLD, and you can field at most 2 of them at a time."
         },
         "MIX_AND_MATCH_II": {
             "name": "Mix and Match II",
-            "description": "Gain 4 random unique Pokémon. Your unique Pokémon sell for 0 GOLD, and you can field at most 3 of them at a time."
+            "description": "Gain 4 random Unique Pokémon. Your Unique Pokémon sell for 0 GOLD, and you can field at most 3 of them at a time."
         },
         "WAITING_GAME": {
             "name": "Waiting Game",
@@ -5490,31 +5870,143 @@
         },
         "PRISMATIC_REROLL": {
             "name": "Prismatic Reroll",
-            "description": "Each reroll has a 25% chance to gain 2 free rerolls. Free rerolls can grant free rerolls in turn."
+            "description": "Each reroll has a 25% chance to gain 2 free rerolls. Free rerolls can grant free rerolls in turn as well."
         },
         "LUNCH_MONEY": {
-            "name": "Lunch Money",
-            "description": "For every 8 player damage you take, gain 2 GOLD and a free reroll."
+            "name": "Prize Money",
+            "description": "For every 8 player damage you deal, gain 2 GOLD and a free reroll."
         },
         "CALCULATED_LOSS": {
             "name": "Calculated Loss",
             "description": "When you lose, gain 2 GOLD and a free reroll."
         },
+        "A_NEW_FRIEND": {
+            "name": "A New Friend",
+            "description": "Gain a random Rare Pokémon. Gain another copy whenever you level up."
+        },
+        "BP_REWARDS": {
+            "name": "Battle Point Rewards",
+            "description": "Gain 2 random item components. Every 5 rounds after selecting this Wish, gain 1 more."
+        },
+        "GREEDY_WISH": {
+            "name": "Greedy Wish",
+            "description": "Your next Wish selection is one tier higher. If it is already Prismatic, gain 10 GOLD instead."
+        },
+        "CALLED_SHOT": {
+            "name": "Called Shot",
+            "description": "Set your win streak to 4 and gain 4 GOLD."
+        },
+        "VAMPIRIC": {
+            "name": "Vampiric",
+            "description": "In combat, allied Pokémon heal for 20% of the damage they deal. Between rounds, you heal 1 player HP for every 10 player damage you deal, rounded up. Gain a Chimchar."
+        },
+        "PROTECT_THE_WEAK": {
+            "name": "Protect the Weak",
+            "description": "Epic, Ultra and Legendary Pokémon gain 20 HP and 7 SPEED for each Common and Uncommon Pokémon on your board."
+        },
+        "STURDY": {
+            "name": "Sturdy",
+            "description": "The first time you would be eliminated this game, survive on 1 HP and grant allies 30 HP, 4 DEF and 4 SPE_DEF permanently."
+        },
+        "ALL_FOR_ONE": {
+            "name": "All for One",
+            "description": "Lose all of your non-Unique Pokémon. Gain a Substitute with 100% of their combined max HP."
+        },
+        "RAINBOW_KEY": {
+            "name": "Rainbow Key",
+            "description": "Transform all of your non-Unique and non-Hatch Pokémon below Ultra rarity into random units one rarity higher, keeping their STAR level."
+        },
+        "PLUSHIFY": {
+            "name": "Plushify",
+            "description": "Gain a POKE_DOLL. When the holder is KO'd, spawn a Substitute with its max HP."
+        },
+        "SUPPORTIVE_SOUL": {
+            "name": "Supportive Soul",
+            "description": "Gain a Substitute holding a random support item on the board. It does not count toward board size and cannot be sold or have its items changed. Every 8 rounds, it gains another support item until full."
+        },
+        "LANCES_ACE": {
+            "name": "Lance's Ace",
+            "description": "After 3 rounds, gain a Dratini. Your STRONGEST Dratini has +2 RANGE, its Ability is replaced with Hyperbeam, and it permanently gains 1 AP whenever it scores a KO."
+        },
+        "PANIC_BUTTON": {
+            "name": "Panic Button",
+            "description": "Gain an Unown-Q. Its max PP is set to 10, and the draw it casts now deals 4 player damage to your opponent."
+        },
+        "HAIL_TO_THE_KING": {
+            "name": "Hail to the King",
+            "description": "Gain a RELIC_STATUE."
+        },
+        "TRASH_TO_TREASURE": {
+            "name": "Trash to Treasure",
+            "description": "Gain a Trubbish, a Beldum and 1 to 3 TRASH. Each Beldum, Metang, or Metagross holding TRASH independently recycles it into a random Tool after 5/3/1 rounds at 1/2/3 STAR."
+        },
+        "CHARGING_MY_BUG": {
+            "name": "Charging My Bug",
+            "description": "Gain a Charjabug. Your STRONGEST Grubbin gains 2 permanent ATK when starting combat in a fully dug hole on board."
+        },
+        "NEUROFORCE": {
+            "name": "Neuroforce",
+            "description": "The ally with the highest AP attacks deal SPECIAL and scale with AP."
+        },
+        "SINNOHS_COOLEST": {
+            "name": "Sinnoh's Coolest",
+            "description": "Gain a Staravia and move to a random Starly region if you are not currently in one. The first time you get a Staraptor, gain SAFETY_GOGGLES."
+        },
+        "AXE_BLAST": {
+            "name": "Axe Blast",
+            "description": "Gain a strong Axew. It gains +1 RANGE and its Ability is replaced with Axe Blast."
+        },
+        "SWEET_TREATS": {
+            "name": "Sweet Treats",
+            "description": "Now and at the start of each round, randomly gain a CASTELIACONE or WHIPPED_DREAM in your inventory. After 1 round, an unconsumed treat turns into LEFTOVERS."
+        },
+        "SNIFFER_DOG": {
+            "name": "Sniffer Dog",
+            "description": "Gain a strong Lillipup. While Lillipup is fielded and GROUND is active, benched GROUND allies dig holes. When the STRONGEST Lillipup casts its Ability, a random Pokémon on a fully dug bench hole enters battle through a fully dug board hole."
+        },
+        "JESTER": {
+            "name": "Jester",
+            "description": "Gain a strong Sprigatito. When your STRONGEST Sprigatito casts its Ability, a Substitute with full PP appears nearby. It casts very lucky Metronome at 1 STAR and gains 1 STAR for each additional 50% CRIT_POWER of the caster, up to 4 STAR."
+        },
+        "TOXIC_RESONANCE": {
+            "name": "Toxic Resonance",
+            "description": "Gain a strong Tympole. Your STRONGEST Tympole resonates every 3 seconds. Each beat spreads 1 tile further than the last. Pokémon caught in the wave are POISONNED for 3 seconds, allies included. Poisoned allies gain 5 PP. The 4th beat covers the whole board and gives 30 PP instead. The cycle then restarts."
+        },
+        "GRAND_IGNITION": {
+            "name": "Grand Ignition",
+            "description": "Gain a strong Fennekin. When your STRONGEST Fennekin casts its Ability, it throws a torch to a random corner of the board and reduces its own max PP by 10%. Once all four corners are lit, the battlefield ignites: every enemy permanently loses 10% of its max HP and suffers double BURN damage for the rest of the fight, which cannot be reduced or cleansed."
+        },
+        "VALOR": {
+            "name": "Valor",
+            "description": "Gain a Pignite. At the start of combat, your STRONGEST Tepig gains 1 ATK and 10 SHIELD for each WILD STAR on your bench, and the same again for each ally KO'd during the fight."
+        },
+        "COLONY": {
+            "name": "Colony",
+            "description": "Gain a strong Scatterbug. When your STRONGEST Vivillon KO's its target, a Spewpa joins your bench. It evolves after 2 rounds and sells for 0 GOLD. Only one Spewpa is attracted at a time, so it must evolve before the next arrives. Every Vivillon contributes its own synergies. The swarm has grown fond of you and refuses to be sent to your partner."
+        },
+        "SAND_BUDDIES": {
+            "name": "Sand Buddies",
+            "description": "Gain a strong Sandile. When your STRONGEST Sandile fails to KO its target with its Ability, a Trapinch with full PP appears nearby, at the same STAR level."
+        },
+        "YOU_FORGOT_SOMETHING": {
+            "name": "You Forgot Something!",
+            "description": "The first Pokémon you KO'd in your last PvE round joins your team after 8 seconds of PvP combat, holding the two items you didn't choose."
+        },
         "THINK_FAST": {
-            "name": "Think Fast",
+            "name": "Pokemon APM",
             "description": "Gain infinite rerolls this turn. All shop rerolls cost no GOLD until the end of the preparation phase."
         },
         "WISE_SPENDING": {
-            "name": "Wise Spending",
-            "description": "You cannot buy XP. Every reroll grants 1 XP."
+            "name": "Efficient Economy",
+            "description": "You cannot buy XP. Every reroll grants 2 XP."
         },
         "BIRTHDAY_PRESENT": {
-            "name": "Birthday Present",
-            "description": "Whenever you level up, gain a 2 STAR Pokemon and 1 GOLD. Its rarity is Common at level 4, Uncommon at 5, Rare at 6-7, Epic at 8-9, and Ultra at 10."
+            "name": "Friend Subscription",
+            "description": "Whenever you level up, gain a 2 STAR Pokemon and 1 GOLD. Its rarity is Common at level 4-5, Uncommon at 6, Rare at 7, Epic at 8, and Ultra at 9-10."
         },
         "UP_IS_UP": {
-            "name": "Up Is Up",
-            "description": "Whenever you buy XP, gain 2 GOLD and restore 2 player HP."
+            "name": "Reinvigorate",
+            "description": "Whenever you buy XP, gain 1 GOLD and restore 1 player HP."
         },
         "DROP_RATES": {
             "name": "Drop Rates",
@@ -5550,35 +6042,35 @@
         },
         "QUEST_INDECISION": {
             "name": "Quest: Indecision",
-            "description": "Gain 2 random gems. After activating the highest tier in 3 different synergies, gain a GOLD_MASK. They do not have to be active at once."
+            "description": "Gain 2 random gems. Entering a fight with a synergy at its highest tier counts it. After 3 different synergies, gain a GOLD_MASK, an EXCHANGE_TICKET and a RECYCLE_TICKET. They do not have to be active at once."
         },
         "QUEST_CRIT": {
             "name": "Quest: Crit",
-            "description": "Gain 2 BLACK_GLASSES. The first time an ally reaches 5 CRIT_POWER in a fight, gain a GOLD_BOTTLE_CAP."
+            "description": "Gain 2 BLACK_GLASSES. The first time an ally reaches 5 CRIT_POWER in a fight, gain a GOLD_BOTTLE_CAP, an EXCHANGE_TICKET and a RECYCLE_TICKET."
         },
         "QUEST_ABSORB": {
             "name": "Quest: Absorb",
-            "description": "Gain a HEART_SCALE and a NEVER_MELT_ICE. The first time an ally blocks 1300 damage in a fight, gain an ABSORB_BULB."
+            "description": "Gain a HEART_SCALE and a NEVER_MELT_ICE. The first time an ally blocks 1000 damage in a fight, gain an ABSORB_BULB, an EXCHANGE_TICKET and a RECYCLE_TICKET."
         },
         "QUEST_REVIVE": {
             "name": "Quest: Revive",
-            "description": "Gain a MAX_REVIVE. After allies have been revived 20 times, gain a SACRED_ASH."
+            "description": "Gain a MAX_REVIVE. After allies have been revived 16 times, gain a SACRED_ASH, an EXCHANGE_TICKET and a RECYCLE_TICKET."
         },
         "QUEST_PILLAGE": {
             "name": "Quest: Pillage",
-            "description": "Gain an AMULET_COIN. After it has made you 30 GOLD, gain a BOOSTER_ENERGY."
+            "description": "Gain an AMULET_COIN. Its holder gains 1 CRIT_CHANCE for every 2 GOLD at the start of the fight. After it has made you 30 GOLD, gain a BOOSTER_ENERGY, an EXCHANGE_TICKET and a RECYCLE_TICKET."
         },
         "QUEST_EVOLVE_II": {
             "name": "Quest: Evolve II",
-            "description": "Gain an Eevee and 2 rare 1 STAR Pokémon. After evolving Pokémon 20 times, gain a RARE_CANDY."
+            "description": "Gain an Eevee and 2 Rare 1 STAR Pokémon. After evolving Pokémon 12 times, gain a RARE_CANDY, an EXCHANGE_TICKET and a RECYCLE_TICKET."
         },
         "IMPENDING_DOOM": {
             "name": "Impending Doom",
-            "description": "After 12 seconds of combat, a shadow engulfs the battle, removing PROTECT, RUNE_PROTECT and RESURRECTION from all enemy Pokémon. For the remainder of combat, no enemy can receive these effects. Accelerate the shadow's countdown by 1 second when a CURSE enemy is KOed. Gain a Dartix."
+            "description": "After 7 seconds of combat, a shadow engulfs the battle, removing PROTECT, RUNE_PROTECT and RESURRECTION from all enemy Pokémon. For the remainder of combat, no enemy can receive these effects. Accelerate the shadow's countdown by 1 second when a CURSE enemy is KOed. Gain a Dartix."
         },
         "SYNCHRONICITY": {
             "name": "Synchronicity",
-            "description": "Obtain the SYNCHRO_MASHINE. At the start of combat, the holder copies the highest HP, ATK, AP, CRIT_CHANCE, CRIT_POWER, DEF and SPE_DEF of any allied Pokémon on the field."
+            "description": "Obtain the SYNCHRO_MASHINE. At the start of combat, the holder copies the highest HP, ATK, AP, DEF and SPE_DEF of any allied Pokémon on the field."
         },
         "STARTER_CHOICE": {
             "name": "Starter Choice",
@@ -5598,7 +6090,7 @@
         },
         "TEMPLE_OF_LANGUAGE": {
             "name": "Temple of Language",
-            "description": "Gain an Unown after every PvP fight. Unown do not count towards your board's total units."
+            "description": "Gain an Unown after every PvE fight. Unown do not count towards your board's total units."
         },
         "TREASURE_TRAIL": {
             "name": "Treasure Trail",
@@ -5610,11 +6102,11 @@
         },
         "ALL_FOURS": {
             "name": "All Fours",
-            "description": "Open a shop of all epic Pokémon. The first one you buy is free."
+            "description": "Open a shop of all Epic Pokémon. The first one you buy is free. Gain a BRONZE_DOJO_TICKET."
         },
         "BEING_OF_KNOWLEDGE": {
             "name": "Being of Knowledge",
-            "description": "Upon reaching level 7, gain a Uxie. You can now reach level 10."
+            "description": "Upon reaching level 7, gain a Uxie with no ATK, DEF or SPE_DEF. You can now reach level 10."
         },
         "HYPER_HYPER_ROLL": {
             "name": "Hyper Hyper Roll",
@@ -5630,23 +6122,23 @@
         },
         "COLOUR_CHANGE": {
             "name": "Colour Change",
-            "description": "You cannot move on the stage 10 carousel, but your unique pick options are guaranteed to include Kecleon."
+            "description": "You cannot move on the stage 10 carousel, but your Unique pick options are guaranteed to include Kecleon."
         },
         "AZURE_FLUTE": {
             "name": "Azure Flute",
-            "description": "You cannot move on the stage 20 carousel, but your legendary pick options are guaranteed to include Arceus."
+            "description": "You cannot move on the stage 20 carousel, but your Legendary pick options are guaranteed to include Arceus."
         },
         "ADDITIONAL_RETHINK_II": {
             "name": "Additional Rethink II",
-            "description": "You can reroll your additional pick options. Each pokemon and item can be individually rerolled."
+            "description": "Gain 8 GOLD. You can reroll your additional pick options. Each pokemon and item can be individually rerolled."
         },
         "FREE_COUPON": {
-            "name": "Free Coupon",
-            "description": "Take your item from carousel shops for free. If any player has this blessing, a shop encounter is guaranteed by stage 22."
+            "name": "Gift Bag",
+            "description": "Take your item from carousel shops for free. If any player has this Wish, a shop encounter is guaranteed by stage 22."
         },
         "SOUL_DRAIN": {
             "name": "Soul Drain",
-            "description": "Gain a Litwick. Your STRONGEST Litwick's ability cast pulls a Soul Fragment from the target, healing allies it travels through for [20,SP] HP. Two Fragments are pulled if the ability KO's the target."
+            "description": "Gain a strong Litwick. Your STRONGEST Litwick's ability cast pulls a Soul Fragment from the target, healing allies it travels through for [20,SP] HP. Two Fragments are pulled if the ability KO's the target."
         },
         "FLOWER_QUEEN": {
             "name": "Flower Queen",
@@ -5654,19 +6146,23 @@
         },
         "LEAF_TORNADO": {
             "name": "Leaf Tornado",
-            "description": "Gain a Snivy. Your STRONGEST Snivy's attacks ricochet to up to 2 additional enemies, the damage halving with each bounce."
+            "description": "Gain a strong Snivy. Your STRONGEST Snivy's attacks ricochet to up to 2 additional enemies, applying ON_HIT effects, the damage halving with each bounce."
         },
         "MARIACHI_MAYHEM": {
             "name": "Mariachi Mayhem",
-            "description": "Gain a Lotad. When your STRONGEST Lotad casts its ability, all enemies within its RANGE suffer CONFUSION for 2 seconds."
+            "description": "Gain a strong Lotad. When your STRONGEST Lotad casts its ability, all enemies within its RANGE suffer CONFUSION for 2 seconds."
+        },
+        "HIGH_BREACHING": {
+            "name": "High Breaching",
+            "description": "Gain a Wailmer and add it to the pool. Your STRONGEST Wailmer's ability is replaced with High Breaching."
         },
         "ICEBREAKER": {
             "name": "Icebreaker",
-            "description": "Gain a Piplup. Your STRONGEST Piplup's ability executes FREEZE enemies, and grants double SHIELD when it KO's an enemy."
+            "description": "Gain a strong Piplup. Your STRONGEST Piplup's ability executes FREEZE enemies. On a KO, it grants double SHIELD and 20 LUCK."
         },
         "RAMPAGE": {
             "name": "Rampage",
-            "description": "Gain a Deino. Your STRONGEST Deino's ability and its SILENCE last 2 seconds longer each time it KO's an ADJACENT enemy. After 5 seconds of channeling, the damage is doubled for the rest of the cast."
+            "description": "Gain a strong Deino. Your STRONGEST Deino's ability can critically strike. Each time it KO's an ADJACENT enemy, the ability and its SILENCE last 2 seconds longer. After 5 seconds of channeling, the damage doubles for the rest of the cast."
         },
         "FROST_BURST": {
             "name": "Frost Burst",
@@ -5678,15 +6174,15 @@
         },
         "RADIANCE": {
             "name": "Radiance",
-            "description": "Gain a Larvesta and add it to the pool. Your STRONGEST Larvesta gains the LIGHT synergy, and starts combat with its own spotlight."
+            "description": "Gain a Larvesta and add it to the pool. Your STRONGEST Larvesta gains the LIGHT synergy, and while LIGHT is active it starts combat with its own spotlight."
         },
         "PACK_ATTACK": {
             "name": "Pack Attack",
-            "description": "Gain a Houndour and add it to the pool. Each Houndour summoned by your STRONGEST Houndour's ability has a 20% chance to be a Houndoom instead."
+            "description": "Gain a Houndour and add it to the pool. Each Houndour summoned by your STRONGEST Houndour's ability has a 15% chance to be a Houndoom instead."
         },
         "MORTAR_SHELLS": {
             "name": "Mortar Shells",
-            "description": "Gain a Magby. Your STRONGEST Magby gains +3 RANGE and +100% base ATK, but has 50% reduced SPEED."
+            "description": "Gain a Magby. Your STRONGEST Magby gains +3 RANGE and +150% base ATK, but has 50% reduced base SPEED."
         },
         "ICE_SPEAR": {
             "name": "Ice Spear",
@@ -5694,7 +6190,7 @@
         },
         "FROST_GEAR": {
             "name": "Frost Gear",
-            "description": "Gain a Shellder and add it to the pool. Your STRONGEST Shellder has +2 RANGE and its PP set to 70, but loses 10% max HP upon casting its ability."
+            "description": "Gain a Shellder and add it to the pool. Your STRONGEST Shellder has +3 RANGE, its PP set to 70, and its Shell Smash ATK gain scales with AP."
         },
         "SHUTTLE_BUS": {
             "name": "Shuttle Bus",
@@ -5706,23 +6202,171 @@
         },
         "EMERALD_ORB": {
             "name": "Emerald Orb",
-            "description": "Gain a GREEN_ORB. Your GREEN_ORB healing has 2 RANGE."
+            "description": "Gain a GREEN_ORB. The holder heals in a 2-tile radius."
         },
         "SAPPHIRE_ORB": {
             "name": "Sapphire Orb",
-            "description": "Gain a BLUE_ORB. Your BLUE_ORB chain lightning hits 1 additional enemy and applies ARMOR_BREAK for 3 seconds."
+            "description": "Gain a BLUE_ORB. Its chain lightning hits 1 additional enemy and applies ARMOR_BREAK for 3 seconds."
         },
         "RUBY_ORB": {
             "name": "Ruby Orb",
-            "description": "Gain a RED_ORB. Your RED_ORB converts 50% of attack damage to TRUE damage against BURN enemies, instead of 25%."
+            "description": "Gain a RED_ORB. It converts 50% of attack damage to TRUE against BURN enemies, instead of 25%."
+        },
+        "KINGS_ROCK_BLESSING": {
+            "name": "King's Crown",
+            "description": "Gain a KINGS_ROCK. Enemies that attack the holder FLINCH for 3 seconds. Negates critical bonus damage from all incoming critical hits."
+        },
+        "STICKY_BARB_BLESSING": {
+            "name": "Sticky Thorns",
+            "description": "Gain a STICKY_BARB. The first enemy with a free item slot that attacks the holder receives it. Its new holder deals 20% of its ATK as TRUE to itself and all ADJACENT allies ON_ATTACK."
+        },
+        "MAX_REVIVE_BLESSING": {
+            "name": "Revival Pulse",
+            "description": "Gain a MAX_REVIVE. When it triggers, grant 30 SPEED to all allies within a 2-tile radius."
+        },
+        "PROTECTIVE_PADS_BLESSING": {
+            "name": "Counter Pads",
+            "description": "Gain PROTECTIVE_PADS. Against enemies with SHIELD, the holder gains 5 ATK ON_ATTACK and 40 AP on cast."
+        },
+        "GRACIDEA_FLOWER_BLESSING": {
+            "name": "Gracidea Garden",
+            "description": "Gain a GRACIDEA_FLOWER. At the start of combat, allies it affects blossom and restore 5% of their max HP every 2 seconds."
+        },
+        "SMOKE_BALL_BLESSING": {
+            "name": "Shuriken",
+            "description": "Gain a SMOKE_BALL. Before the holder jumps away, scatter SPIKES around it and its target. Enemies caught in them are LOCKED for 2 seconds."
+        },
+        "ABILITY_SHIELD_BLESSING": {
+            "name": "Supreme Ability Shield",
+            "description": "Gain an ABILITY_SHIELD. It affects all ADJACENT allies."
+        },
+        "SOOTHE_BELL_BLESSING": {
+            "name": "Soothe Carol",
+            "description": "Gain a Soothe Bell. The ally it shields also restores 25% of its max PP."
+        },
+        "AQUA_EGG_BLESSING": {
+            "name": "Blessing of Phione",
+            "description": "Gain an AQUA_EGG. After the holder's first ability cast, summon a Phione. That Phione grants 5 PP to all allies whenever it casts its ability."
+        },
+        "STAR_DUST_BLESSING": {
+            "name": "Star Dust Veil",
+            "description": "Gain STAR_DUST. After the holder casts its ability, it gains RUNE_PROTECT for 4 seconds and grants the same SHIELD to ADJACENT allies."
+        },
+        "DEEP_SEA_TOOTH_BLESSING": {
+            "name": "Abyssal Fang",
+            "description": "Gain a DEEP_SEA_TOOTH. Attacks deal double damage against enemies below 50% of their max HP and restores 30 PP on KO instead."
+        },
+        "SCOPE_LENS_BLESSING": {
+            "name": "Lock-On Lens",
+            "description": "Gain a SCOPE_LENS. On a critical attack, mark the target for 4 seconds. Attacks against marked enemies are guaranteed to critically strike."
+        },
+        "EXP_CHARM_BLESSING": {
+            "name": "Exp Book",
+            "description": "Gain an EXP_CHARM. The holder grants 1 additional XP when it is KO."
+        },
+        "MUSCLE_BAND_BLESSING": {
+            "name": "Training Band",
+            "description": "Gain a MUSCLE_BAND. Unlock the training bag of the FIGHTING synergy: Pokémon holding MUSCLE_BAND can train on it."
+        },
+        "SAFETY_GOGGLES_BLESSING": {
+            "name": "Weatherproof Goggles",
+            "description": "Gain SAFETY_GOGGLES. At the start of the fight, if a Weather is active, the holder gains 100% of its base ATK, DEF and SPE_DEF."
+        },
+        "RELIC_CROWN_BLESSING": {
+            "name": "Ancient Crown",
+            "description": "Gain a RELIC_CROWN. It triggers when an ally is KO anywhere on the board, not only nearby."
+        },
+        "FAIRY_FEATHER_BLESSING": {
+            "name": "Lucky Feather",
+            "description": "Gain a FAIRY_FEATHER. The holder gains 5 LUCK ON_ATTACK."
+        },
+        "SHELL_BELL_BLESSING": {
+            "name": "Coast Wave",
+            "description": "Gain a SHELL_BELL. After 4 seconds, trigger a TIDAL_WAVE that grants a copy to every allied Pokémon."
+        },
+        "WIDE_LENS_BLESSING": {
+            "name": "Telescope",
+            "description": "Gain a WIDE_LENS. At the start of the fight, the holder gains 8 RANGE."
+        },
+        "POWER_LENS_BLESSING": {
+            "name": "Power Mirror",
+            "description": "Gain a POWER_LENS. The holder gains 5 AP whenever it is hit by an attack, and the damage it reflects scales with its AP."
+        },
+        "CLEAR_AMULET_BLESSING": {
+            "name": "Clear Diamond",
+            "description": "Gain a CLEAR_AMULET. Its effect radius is increased to 2 tiles around the holder."
+        },
+        "PUNCHING_GLOVE_BLESSING": {
+            "name": "Focus Glove",
+            "description": "Gain a PUNCHING_GLOVE. Every 10 attacks, the holder casts Focus Punch."
+        },
+        "RAZOR_CLAW_BLESSING": {
+            "name": "Honed Claw",
+            "description": "Gain a RAZOR_CLAW. On a critical attack, the holder gains 2 ATK."
+        },
+        "POKEMONOMICON_BLESSING": {
+            "name": "Scorching Tome",
+            "description": "Gain a POKEMONOMICON. The holder also applies WOUND for 3 seconds, and enemies affected by BURN or WOUND take 30% increased damage from all sources."
+        },
+        "DESTINY_KNOT_BLESSING": {
+            "name": "Red Thread",
+            "description": "Gain a DESTINY_KNOT. When the holder is KO'd, the bonded ally also inherits its base DEF, SPE_DEF and SPEED."
+        },
+        "XRAY_VISION_BLESSING": {
+            "name": "Vision of Truth",
+            "description": "Gain an XRAY_VISION. After attacking the same target 4 times, expose it for 4 seconds. All damage dealt to exposed enemies is converted to TRUE."
+        },
+        "RAZOR_FANG_BLESSING": {
+            "name": "Quick Fang",
+            "description": "Gain a RAZOR_FANG. On a critical attack, the holder immediately attacks the same target again for 40% of its ATK. The additional attack cannot trigger this effect."
+        },
+        "UPGRADE_BLESSING": {
+            "name": "Super Upgrade",
+            "description": "Gain an UPGRADE. At 12 stacks, attacks deal 20% of the holder's current SPEED as additional SPECIAL ON_ATTACK."
+        },
+        "LUCKY_PUNCH_BLESSING": {
+            "name": "Knock Off Punch",
+            "description": "Gain a LUCKY_PUNCH. Items the holder knocks away are destroyed instead."
+        },
+        "WONDER_BOX_BLESSING": {
+            "name": "President Box",
+            "description": "Gain a WONDER_BOX. It creates 3 temporary items instead of 2."
+        },
+        "REAPER_CLOTH_BLESSING": {
+            "name": "Haunted Cloth",
+            "description": "Gain a REAPER_CLOTH. The first time the holder KO an enemy, summon a Ghost on the target's tile with its base HP, ATK, DEF and SPE_DEF."
+        },
+        "GRIP_CLAW_BLESSING": {
+            "name": "Seizing Claw",
+            "description": "Gain a GRIP_CLAW. The CRIT_POWER it grants is stolen from the target, down to no critical bonus at all."
+        },
+        "CHOICE_SPECS_BLESSING": {
+            "name": "Shared Vision",
+            "description": "Gain CHOICE_SPECS. Allies ADJACENT_IN_THE_SAME_ROW use the same ability and max PP as the holder, with a minimum of 100 max PP."
+        },
+        "COVERT_CLOAK_BLESSING": {
+            "name": "Mist Cloak",
+            "description": "Gain a COVERT_CLOAK. Every time it steals AP, the holder becomes untargettable for 1 second."
+        },
+        "SHINY_CHARM_BLESSING": {
+            "name": "Charm of Truth",
+            "description": "Gain a SHINY_CHARM. When it triggers, mark all ADJACENT enemies for 4 seconds. All damage dealt to marked enemies is converted to TRUE."
+        },
+        "FLUFFY_TAIL_BLESSING": {
+            "name": "Wild Escape",
+            "description": "Gain a FLUFFY_TAIL. When the holder dodges an attack, it jumps to a safe tile and summons a random WILD Pokémon of its own STAR level. This cannot trigger again while the previous summon is alive."
         },
         "LUCKY_DICE_BLESSING": {
             "name": "Lucky Ward",
-            "description": "Gain a LOADED_DICE. Your LOADED_DICE keeps bouncing to ADJACENT enemies after the first, with the chance halving every time. It cannot bounce to the same enemy twice."
+            "description": "Gain a LOADED_DICE. It keeps bouncing to ADJACENT enemies after the first, with the chance halving every time. It cannot bounce to the same enemy twice."
         },
         "SHELL_ARMOR_BLESSING": {
             "name": "Shell Armor",
             "description": "Gain a Grotle and move to a random Turtwig region if not in one. Your STRONGEST Turtwig's passive also grants it 1/3/6 SPE_DEF upon receiving critical attacks."
+        },
+        "SHOW_OFF": {
+            "name": "Show Off",
+            "description": "Does nothing. Win a game with this Wish to unlock the Show Off title."
         }
     },
     "hide": "Hide",
@@ -5744,6 +6388,51 @@
     "refresh": "Reroll",
     "pve_stages": "PvE Stages",
     "carousel_stages": "Carousel Stages",
+    "galar_fossil": {
+        "FOSSILIZED_BIRD": "Fossilized Bird",
+        "FOSSILIZED_DINO": "Fossilized Dino",
+        "FOSSILIZED_DRAKE": "Fossilized Drake",
+        "FOSSILIZED_FISH": "Fossilized Fish"
+    },
+    "fossil_unlocks": {
+        "title": "Fossil Unlocks",
+        "subtitle": "Unlock Fossil Pokemon for your own shop pool.",
+        "entry_requirement": "Start a fight with an **evolved Swinub** or a **FOSSIL Unique** Pokémon on the board to gain access to the Fossil Unlock Menu. You only need to do this once. Afterwards, every condition below tracks normally, even if the Pokémon that unlocked the menu leaves your board.",
+        "quest_title": "Unlock Condition",
+        "unlocked": "Unlocked",
+        "locked": "Locked",
+        "progress": "Progress",
+        "tracked": "Pin",
+        "all_unlocks": "All unlocks",
+        "track": "Pin this unlock",
+        "untrack": "Unpin this unlock",
+        "your_fossils": "Your fossils",
+        "combine": "Combine",
+        "restoration_title": "Restoration",
+        "restoration_capstone": "The passive of your restored Pokemon becomes your FOSSIL (8) capstone effect. Restore a different one to change it.",
+        "active_restoration": "Active Restoration:",
+        "restoration_source": "Your first fight at **FOSSIL (8)** grants a Galarian Fossil, and **every {{fights}} fights** after that grants another.",
+        "restoration_hint": "Pair two Galar fossils to restore one Pokemon. Restoring again replaces the one on your board. Left click a Galar fossil (or drag it) to put it in, and click a slot to take it back.",
+        "restore": "Restore",
+        "already_restored": "Already restored",
+        "conditions": {
+            "swinub": "Available at the start.",
+            "omanyte": "Fish up a WATER Pokémon while an evolved Swinub or a FOSSIL Unique is fielded.",
+            "kabuto": "Have an evolved Swinub or a FOSSIL Unique land a critical attack while an allied DARK Pokémon is fielded.",
+            "wimpod": "Have an evolved Swinub or a FOSSIL Unique fall below 50% max HP while a BUG Pokémon is on your bench.",
+            "lileep": "Trigger the TIDAL_WAVE 2 times, or start a combat with GRASS active.",
+            "anorith": "At the start of combat, have at least 2 BUG Pokémon on the board for 2 rounds.",
+            "tangela": "Harvest 2 berries or cook 2 dishes",
+            "yanma": "Level 5 + During combat, have a BUG or FLYING Pokémon exceed its base SPEED by 60.",
+            "archen": "Level 5 + During combat, ARMOR_BREAK 6 different Pokémon with ROCK explosions.",
+            "clamperl": "Level 5 + Fish up 6 GOLD worth of Pokémon.",
+            "cranidos": "Level 7 + Start a fight with a total of 6 DRAGON STAR on the board.",
+            "shieldon": "Level 7 + During combat, deal a total of 100 TRUE with ROCK explosions.",
+            "amaura": "Level 7 + With LIGHT active, have a FOSSIL or ICE Pokémon under the Lightspot cast their ability twice during combat.",
+            "tyrunt": "Level 7 + Reroll 12 times in a single preparation phase with DRAGON or ROCK active.",
+            "regigigas": "Level 9 + Win a fight with Mamoswine alongside 8 FOSSIL Pokémon, with Mamoswine surviving."
+        }
+    },
     "additional_picks": "Additional picks",
     "regional_pokemons": "Regional Pokémon",
     "unique_picks": "Unique picks",
@@ -5917,6 +6606,7 @@
         "announcement": "The team of {{player1}} & {{player2}} has won! Finale!"
     },
     "drop_here_to_sell": "Drop here to sell",
+    "drop_here_to_discard_for_gold": "Drop here to discard for -{{price}} gold",
     "for_price_gold": "for {{price}} gold",
     "buy_xp": "Buy XP {{cost}}",
     "buy_xp_tooltip": "Buy 4 XP for {{cost}} gold",
@@ -6281,6 +6971,24 @@
     "scribble_sketchbook_milestone_3": "10 free rolls",
     "scribble_sketchbook_milestone_4": "20 player HP",
     "scribble_sketchbook_milestone_5": "Unique Pokémon",
+    "water_pond": {
+        "DEEP_POND": "Deep Pond",
+        "MINERAL_SPRING": "Mineral Spring",
+        "TIDE_POOL": "Tide Pool",
+        "TORRENT": "Torrent",
+        "CRYSTAL_POND": "Crystal Pond",
+        "RAPIDS": "Rapids",
+        "GEYSER": "Geyser"
+    },
+    "water_pond_effect": {
+        "DEEP_POND": "+{{value}} DEF",
+        "MINERAL_SPRING": "+{{value}} SPE_DEF",
+        "TIDE_POOL": "SHIELD equal to {{value}}% HP",
+        "TORRENT": "+{{value}}% ATK",
+        "CRYSTAL_POND": "+{{value}} AP",
+        "RAPIDS": "+{{value}} SPEED",
+        "GEYSER": "+{{value}} CRIT_CHANCE and CRIT_POWER"
+    },
     "scribble_shape_effect": {
         "DOT": "+50% ATK and +50 AP",
         "LINE": "+50% ATK",
@@ -6348,7 +7056,7 @@
             "dungeon_label": "Regions",
             "glossary_label": "Glossary",
             "data_label": "Data",
-            "blessings_label": "Blessings"
+            "blessings_label": "Wishes"
         },
         "faq": {
             "official_game": "Is this an official game ?",
@@ -6442,8 +7150,8 @@
             "fire_shard_description": "After reaching max level in FIRE synergy, every round you can use FIRE_SHARD to sacrifice your player HP and buff a FIRE Pokémon.",
             "bundles": "Bundles",
             "bundles_description": "Bundles are gifts for the game mode Double Up. Some bundles require free benchspace, others require alot of gold.",
-            "letter_description": "After reaching max level in FLYING synergy, your benched Pokémon can be used as postal service by using the LETTER on a benched Pokémon. They get paid with seeds. Sometimes find other items during the journey like SHARP_BEAK (max. 1 per bench and board).",
-            "seeds_description": "Seeds are unholdable items and stored in the Seed Bag. At the start of the fight, the selected active Seed applies a powerful effect to the Pokémon on your board."
+            "letter_description": "After reaching max level in FLYING synergy, use the LETTER to send a benched Pokémon on a delivery. It returns with a powerful Seed and may also bring back gold or an item.",
+            "seeds_description": "Every Letter delivery returns a Seed. Seeds are stored in the SEED_BAG, and the selected active Seed applies a powerful effect to your board at the start of the next fight."
         },
         "statistics": {
             "stat_description": {
@@ -6510,8 +7218,8 @@
             "arceus_rate": "Chance to find Arceus in stage 20 propositions",
             "fishing_rarity_rate": "Fishing rarity by rod quality",
             "fishing_rarity_rate_description": "The quality of the rod you use to fish influences the rarity of the Pokémon you can catch.",
-            "explorer_bonus_rate": "Letter delivery bonus by rarity",
-            "explorer_bonus_rate_description": "The rarity of the Pokémon sent on a Letter delivery influences what they bring back.",
+            "explorer_bonus_rate": "Bonus rewards",
+            "explorer_bonus_rate_description": "In addition to a Seed, the Pokémon may return with an extra reward based on its rarity.",
             "component": "Component",
             "full_item": "Full item",
             "nothing": "Nothing",
@@ -6556,9 +7264,13 @@
             "removable_item": "Removable items are items that can be removed from a Pokémon by putting them on the bench."
         },
         "blessings": {
-            "intro": "Jirachi grants each player 2 Blessings per game, one at stage 4 and one at stage 12. Every player is offered the same tier, and each of the 3 options can be rerolled once.",
+            "intro": "Jirachi grants each player 2 wishes per game, one at stage 4 and one at stage 12. Every player is offered the same tier, and each of the 3 options can be rerolled once.",
             "wish_quote": "Every wish leaves behind a little light... and a little shade for the night to carry.",
             "all_stages": "All stages",
+            "stage_scope_all": "Everything at stage {{stage}}",
+            "stage_scope_exclusive": "Only at stage {{stage}}",
+            "stage_exclusive_hint": "Wishes offered at this stage and no other",
+            "search_shortcut_hint": "Press F or / to search",
             "family_BADGE_name": "Synergy Badges",
             "family_BADGE_hint": "Gain that synergy gem and a random 1 STAR Uncommon Pokémon of that synergy. One exists for every synergy.",
             "family_CREST_name": "Synergy Crests",
@@ -6616,9 +7328,11 @@
         "BOARD_EFFECT": "Board Effect",
         "CONE": "cone",
         "FLY_AWAY": "fly away",
+        "IGNITE": "ignite",
         "INIMITABLE": "Inimitable",
         "ON_HIT": "on hit",
         "ON_ATTACK": "on attack",
+        "SEED_BAG": "Seed Bag",
         "STRONGEST": "strongest"
     },
     "technical_terms_definitions": {
@@ -6627,9 +7341,11 @@
         "BOARD_EFFECT": "A Board Effect is an effect on a cell of the board that influences all units standing on it, no matter the team, until the end of the fight. Board effects can be cleared by certain abilities.",
         "CONE": "shooting at a 90 degrees angle in front of the unit, centered on the target",
         "FLY_AWAY": "Moves to the safest spot while still being at RANGE of an enemy",
+        "IGNITE": "Spending a FIRE_SHARD on a Pokémon can set its spirit alight for one round, granting it SHIELD, SPEED and healing player HP on every KO. Requires FIRE 8 or the Soul Blaze Wish.",
         "INIMITABLE": "An ability is inimitable if it cannot be copied and used by another Pokémon.",
         "ON_HIT": "On Hit effects trigger when a unit is hit by an attack or an ability. They are triggered even if target has SHIELD, but not if the target dodges or has PROTECT.",
         "ON_ATTACK": "On Attack effects trigger when a unit makes a basic attack on another unit that is still alive, at the time the attack is supposed to hit, whether the attack actually hits or not.",
+        "SEED_BAG": "The Seed Bag stores Seeds earned from Letter deliveries. Select one active Seed to apply its effect at the start of the next fight.",
         "STRONGEST": "Strongest is defined as, by order of priority: 1. Number of items held, 2. Unit tier, 3. Unit rarity"
     },
     "seed_bag": {
@@ -6698,6 +7414,7 @@
         "poison_gas": "Poison Gas",
         "toxic_spikes": "Toxic Spikes",
         "meteor_shower": "Meteor Shower (Fossil)",
+        "unison": "Unison (Human)",
         "physical_damage_dealt": "Physical damage dealt",
         "special_damage_dealt": "Special damage dealt",
         "true_damage_dealt": "True damage dealt",
@@ -6736,7 +7453,8 @@
         "SCRIBBLE": "Smeargle's Scribble",
         "CUSTOM_LOBBY": "Custom room",
         "TOURNAMENT": "Tournament",
-        "DOUBLE_UP": "Double Up"
+        "DOUBLE_UP": "Double Up",
+        "GUIDE": "Guide"
     },
     "game_modes_descriptions": {
         "CLASSIC": "The casual PAC Experience !\n8 players, Elo disabled, open to everyone.",
@@ -6744,7 +7462,114 @@
         "SCRIBBLE": "Play for fun ! 8 players, Elo disabled\nA new special rule is added for this game.",
         "CUSTOM_LOBBY": "Create a private room to play with your friends or with bots",
         "DOUBLE_UP": "Team up with a partner and outlast every other duo!",
-        "TOURNAMENT": "This match is part of a tournament. Check Discord for upcoming events."
+        "TOURNAMENT": "This match is part of a tournament. Check Discord for upcoming events.",
+        "GUIDE": "Learn one synergy at a time with Slowking's Guidance"
+    },
+    "guide": {
+        "pick_a_synergy": "Pick a synergy to learn",
+        "lesson_finished": "Lesson complete!",
+        "bookmark_tab": "Bookmark",
+        "bookmarks_title": "Synergy Guide",
+        "bookmarks_hint": "Bookmarks from the interactive Guide.",
+        "notes": {
+            "synergy": "Synergy",
+            "items": "Items"
+        },
+        "choose_lesson_hint": "More lessons will be added over time.",
+        "available_lessons": "Available synergy lessons",
+        "protected_unit": "{{pkm}} stays - we need it later.",
+        "wrong_target": "That goes on {{pkm}}.",
+        "wrong_craft": "Not that one. We're building {{items}}.",
+        "wrong_item": "Not that one. We're equipping {{items}}.",
+        "equip_not_yet": "Not yet - hold onto that.",
+        "berries_not_yet": "Not yet - we harvest when the lesson says.",
+        "shop_is_dealt": "The lesson deals this shop.",
+        "craft_not_yet": "Not yet - hold onto those.",
+        "coming_soon": "Soon",
+        "loading": "Preparing your lesson...",
+        "got_it": "Continue",
+        "waiting_for_you": "<stopwatch/> Do this to continue. The timer is paused!",
+        "step_counter": "Step {{current}} / {{total}}",
+        "topics": {
+            "BOARD": "Building the board",
+            "ITEMIZATION": "Itemization",
+            "ECONOMY": "Rolling and economy",
+            "POSITIONING": "Positioning"
+        },
+        "lessons": {
+            "GRASS": {
+                "notes": {
+                    "synergy": [
+                        "GRASS is not a Catch-Up Trait. Give your best effort to win the early and mid game, preserving enough health to reach Level 8 to roll for your strong units, or Level 9 to max out the synergy.",
+                        "Do this by slamming items for tempo and rolling as needed to maintain that tempo throughout the game.",
+                        "The synergy caps extremely high. It is one of the few synergies with access to two Ultras and a Synergy Stone.",
+                        "Don't get fixated on splashing other synergies. You can raw dog pure GRASS with high-quality units."
+                    ],
+                    "items": [
+                        "We are naturally very tanky, so we want to prioritize scaling DPS sets. Examples include PUNCHING_GLOVE + UPGRADE, WIDE_LENS + GRIP_CLAW, and SOUL_DEW + AQUA_EGG. These ramp slowly, but the scaling helps you finish off strong opponents.",
+                        "One of GRASS's unique strengths is its ability to overheal and increase max HP. Aside from MONSTER, it is the only synergy that can do this. We can influence the amount of healing we get by building GREEN_ORB, so aim for two."
+                    ]
+                },
+                "steps": {
+                    "welcome": "Welcome to Slowking's Synergy School. Gold is unlimited and levels are handled for us, so this run is all about the decisions. I will be your opponent every round.",
+                    "regular_pool": "These are the GRASS Pokemon in the regular pool. Any of them can show up in our shop in any game, so this is the list we are working from.",
+                    "regionals": "And these are the GRASS regionals. They only show up if the region rolls for them, so we plan without them and take them as a bonus.",
+                    "choose_starter": "First decision of the run: our starter. TURTWIG in the middle is the one we want - it will be our tank for most of the game.",
+                    "opener": "Now buy ROWLET from the shop and put both on the board. Turtwig holds the front, Rowlet deals the damage behind it, and both are GRASS.",
+                    "grotle": "Buy the two extra TURTWIG in our shop and upgrade into GROTLE. A 2 STAR this early points us toward GRASS. Remember though: it is not the Pokemon that decide our synergy, it is the items.",
+                    "smoliv_in": "Put SMOLIV in. It does nothing special yet - we are buying it now for what it becomes at stage 5.",
+                    "wincon": "Do not level this turn. Leveling early is an advanced play: it asks us to already be ahead and to hold that lead. Not today. Look at our inventory instead: 2x MAGNET, a CHARCOAL and a MIRACLE_SEED. Scanning our components before the first carousel is how we start to picture our win condition.",
+                    "take_spoon": "Carousel. Take the TWISTED_SPOON - that is the last component we need. We are aiming for a damage set: PUNCHING_GLOVE and UPGRADE. We could craft already, but let us wait one more round.",
+                    "pick_water": "Additional pick. Take the one carrying the MYSTIC_WATER. Focus on our own game first, and click the Pokemon holding the component we need.",
+                    "craft_three": "Now commit all three onto DOLLIV: PUNCHING_GLOVE, UPGRADE and GREEN_ORB. Waiting two stages cost us nothing, and every item went onto the right unit first time. That is our win condition. Our items are what decide which synergy we play, and this set works well in GRASS.",
+                    "smoliv_two": "Two more SMOLIV are in the shop. Buy them and upgrade into DOLLIV. There is our item holder.",
+                    "pick_water_two": "Additional pick again. Take the MYSTIC_WATER. We have no use for it yet - we are preparing for a second GREEN_ORB.",
+                    "harvest_berry": "In GRASS, we grow berry trees beside the board. Click them to harvest an ORAN_BERRY, then put it on GROTLE. Berries provide free tempo and are strongest in the early stages of the game. Please don't clog your inventory — use the KOFFING berries!",
+                    "harvest_berries": "Do not forget to check our berries! Harvest both trees and slam the SITRUS_BERRY and the GANLON_BERRY onto GROTLE for tempo.",
+                    "harvest_three_berries": "Three trees are ripe now. Harvest all of them and slam the LIECHI_BERRY, the APICOT_BERRY and the LUM_BERRY onto SNOVER. We love winning. We hate losing.",
+                    "level_five": "Buy XP once to reach level 5.",
+                    "grass_five": "Buy SEEDOT, GOSSIFLEUR and BUDEW so we have enough Pokemon to reach GRASS {{threshold}}. Fielding enough GRASS is what guarantees us a portal.",
+                    "pick_carnivine": "Portal carousel. CARNIVINE will be our Unique - the other four are greyed out on purpose. Take it.",
+                    "carnivine": "Move all three items onto CARNIVINE. DOLLIV was only holding them for us through the early game.",
+                    "pick_water_three": "Additional pick. We were hunting a MIRACLE_SEED for that second GREEN_ORB and it is not here - what is here is a third MYSTIC_WATER. Take it anyway.",
+                    "realize_aqua_egg": "Two MYSTIC_WATER make an AQUA_EGG, so we are no longer locked into that second GREEN_ORB. We hold both plans and decide at the next carousel instead of committing now. Do not craft anything yet.",
+                    "confirm_plan": "Carousel. Before we move: we are holding two MYSTIC_WATER and a TWISTED_SPOON, and there is one MIRACLE_SEED out there. The plan is to make a second GREEN_ORB. Confirm and go take the MIRACLE_SEED!",
+                    "take_seed": "Walk to the MIRACLE_SEED and pick it up.",
+                    "evolve_rowlet": "Two more ROWLET are in the shop. Buy them and evolve into DARTIX. The midgame has started and we will be dropping our Commons soon - but a Common that is holding our items is always worth upgrading, and this one fits our synergies and came to us for free.",
+                    "orb_and_dew": "Preparation phase. Build both onto DARTIX, our temporary holder: GREEN_ORB and SOUL_DEW.",
+                    "second_carry": "Look at what we have built. CARNIVINE is the win condition - our Unique with three items, and the board is played around it. DARTIX is our second carry and temporary item holder.",
+                    "rewind_intro": "Now let us run that carousel again, except this time somebody beat us to the MIRACLE_SEED. This is the part that matters.",
+                    "rewind_confirm": "Same carousel, but the MIRACLE_SEED is gone - what is left is a MYSTIC_WATER. We lock in the other plan: SOUL_DEW and AQUA_EGG. Confirm and go take it.",
+                    "rewind_take_water": "Walk to the MYSTIC_WATER and pick it up.",
+                    "rewind_aqua_and_dew": "And this is why we waited. Onto DARTIX: AQUA_EGG and SOUL_DEW. Same item count, same board, no turns lost. Holding two plans is what made the MIRACLE_SEED optional.",
+                    "chespin_in": "CHESPIN is in our shop. Buy it and put it on the board.",
+                    "rewind_second_carry": "CARNIVINE is still the win condition with its three items. DARTIX is still our second carry, holding an AQUA_EGG and a SOUL_DEW until a stronger unit turns up for them. And that is the lesson: our item sets do not have to be perfect, using them early is what matters.",
+                    "level_seven": "Level 6, with six different GRASS Pokemon on the board. Buy XP twice to reach level 7.",
+                    "grass_seven": "Level 7 gives us room for a seventh Pokemon, and GRASS {{threshold}} is one unit away. BURMY_PLANT is in our shop - buy it and place it.",
+                    "roll_chespin": "Let's improve our board! Roll and upgrade CHESPIN into QUILLADIN.",
+                    "evolve_rule": "Rule of thumb from stage 14 onward: we look to evolve one or two Pokemon! We start dropping lower rarity one as well.",
+                    "roll_petilil": "Roll and evolve GOSSIFLEUR. We are training a feel for when a board is strong enough.",
+                    "roll_snover": "One or two evolutions is usually enough, and we have ours. We should stop rolling and start leveling here. But I want you to get used to dip below the economy threshold. We will keep rolling here. Learn to spend more GOLD after stage 14, and less GOLD before stage 14.",
+                    "cut_seedot": "SNOVER is an Epic and SEEDOT is a Common. Sell the Seedot and put the Snover in. We want this to become second nature: knowing when to drop the lower rarity Pokemon.",
+                    "glasses_plan": "Carousel. Before we move: we are holding one BLACK_GLASSES from stage 14, and there is a second one out there. Two of them make the WONDER_BOX. Confirm and go take it.",
+                    "take_glasses": "Walk to the BLACK_GLASSES and pick it up.",
+                    "wonder_box": "At stage 12, we slammed items to stay strong through rounds 12 and 13. At stage 14, the game gave us a component, so we planned ahead for what would be useful on the last component carousel. Two BLACK_GLASSES make a WONDER_BOX. We want to maintain tempo through the next stages 17 and 18. Now slam the WONDER_BOX on QUILLADIN!",
+                    "pick_virizion": "Legendary proposal. VIRIZION is the one our comp wants - the others are greyed out. Take it.",
+                    "level_eight": "Before it can go anywhere we need the room. Buy XP five times to reach level 8, and our Legendary has its slot.",
+                    "virizion_in": "Now put VIRIZION on the board.",
+                    "sell_quilladin": "QUILLADIN has done its job. Sell it, and the WONDER_BOX drops back into our inventory.",
+                    "wonder_box_virizion": "Put the WONDER_BOX on VIRIZION. Simply itemizing our Unique and Legendary first will carry us a long way.",
+                    "rocky_helmet": "Stage 19 paid us two HEART_SCALE, and two of them make a ROCKY_HELMET. Build it and put it on VIRIZION as well - our Legendary now carries three items. Finishing it early frees our attention for positioning and for what to roll next.",
+                    "roll_grookey": "Now we roll deep for GROOKEY, the Ultra of our synergy. Two DITTO have come to us along the way - keep them on the bench for a moment.",
+                    "ditto_grookey": "How fortuitous, we hit a GROOKEY. Drop both DITTO onto it to make it 2 stars, and stop rolling here.",
+                    "carry_to_thwackey": "THWACKEY is our carry now. Sell DARTIX and put the AQUA_EGG and the SOUL_DEW onto it - a held item is never doing its job on a unit we are about to drop.",
+                    "ultra_not_consistent": "That was luck, and we should not plan around it. Hitting an Ultra in the rolldown after stage 20 is not consistent, and GROOKEY is popular far outside our synergy, so it will be heavily contested. Let us run this rolldown again and aim somewhere we can actually rely on.",
+                    "roll_bulbasaur": "Our consistent lategame win condition, besides the Legendary, are the Epic GRASS Pokemon. We roll for BULBASAUR instead and try to take it to 2 STAR.",
+                    "carry_to_ivysaur": "Last move. The AQUA_EGG and the SOUL_DEW are loose in our inventory again - put them both onto IVYSAUR. Same two items, same board slot, on a carry we can actually count on.",
+                    "final": "That is the line. Let us play out the last fight."
+                }
+            }
+        }
     },
     "dendrogram": {
         "title": "Cluster Hierarchy",
@@ -6818,6 +7643,15 @@
             "change_avatar": "Change Avatar",
             "play_more_games_hint": "Play more games to earn boosters and unlock new avatars !"
         },
+        "titles": {
+            "jac": "JAC Titles",
+            "jac_hint": "Special titles from community events and challenges",
+            "unlocked": "Unlocked Titles",
+            "unlocked_hint": "Ready to equip",
+            "locked": "Locked Titles",
+            "locked_hint": "Complete their challenge to unlock them",
+            "clear_hint": "Display your name without a title"
+        },
         "elo_tab": {
             "title": "Elo",
             "current_elo": "Current Elo",
@@ -6855,11 +7689,15 @@
     "not_pokemons": "Not Pokémon",
     "bark": "WOOF !",
     "custom_bot": "Custom",
-    "blessings_enabled_label": "Blessings",
-    "blessings_enabled_hint": "Jirachi grants each player 2 Blessings during the game, at stage 4 and stage 12.",
+    "blessings_enabled_label": "Jirachi's Wish Festival",
+    "blessings_enabled_hint": "Jirachi grants each player 2 wishes during the game, at stage 4 and stage 12.",
+    "blessings_under_test_label": "Wishes under test (dev)",
+    "blessings_under_test_hint": "Restrict the wish pool to the selected wishes, and offer a selection every stage. Empty means the normal pool.",
+    "blessings_under_test_count": "{{count}} selected",
+    "blessings_under_test_clear": "Clear",
     "blessings_enabled_off": "Off",
     "blessings_enabled_on": "On",
     "blessing_event_title": "Jirachi's Wish Festival",
-    "blessing_event_description": "A wishing star has appeared. Jirachi is here, and every blessing changes your journey.",
+    "blessing_event_description": "A wishing star has appeared. What you ask for will shape your journey.",
     "blessing_event_ends_in": "Ends in {{time}}"
 }

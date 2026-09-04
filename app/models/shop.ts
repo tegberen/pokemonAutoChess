@@ -81,7 +81,8 @@ import {
   isGrudgeSubstitute,
   MIND_RUSH_UNOWN_GUARANTEE_TIER,
   CONVERGENT_PARADOX_UNIQUES,
-  CONVERGENT_PARADOX_LEGENDARIES
+  CONVERGENT_PARADOX_LEGENDARIES,
+  getGymTrainerRoster
 } from "../types/enum/Blessing"
 import { PRECOMPUTED_POKEMONS_PER_TYPE } from "./precomputed/precomputed-types"
 import { Synergy } from "../types/enum/Synergy"
@@ -925,6 +926,19 @@ export default class Shop {
 
       removeInArray(allCandidates, selected)
       pokemonsProposed.push(selected)
+    }
+
+    // the Gym Trainer promises his Unique on any map, region gate included:
+    // Rotom is the only regional one and its gate is ELECTRIC or ARTIFICIAL,
+    // which no GHOST region guarantees. First slot, so it cannot collide with
+    // the Paradox swap below
+    const gymTrainerUnique = getGymTrainerRoster(player.blessings)?.unique
+    if (
+      stageLevel === PortalCarouselStages[1] &&
+      gymTrainerUnique &&
+      !pokemonsProposed.includes(gymTrainerUnique)
+    ) {
+      pokemonsProposed[0] = gymTrainerUnique
     }
 
     /* CONVERGENT_PARADOX promises a Paradox among the Unique and Legendary

@@ -56,7 +56,11 @@ function BlessingCard(props: { blessing: Blessing }) {
           ) : null}
         </div>
         <div>
-          <h3>{t(`blessing.${props.blessing}.name`)}</h3>
+          <h3>
+            <span>
+              {addIconsToDescription(t(`blessing.${props.blessing}.name`))}
+            </span>
+          </h3>
           <p>
             {addIconsToDescription(t(`blessing.${props.blessing}.description`))}
           </p>
@@ -129,7 +133,8 @@ const TEAM_BUILDING_BLESSINGS = new Set<Blessing>([
   Blessing.REPLICATOR,
   Blessing.TRANSFORM,
   Blessing.REGIONAL_TREASURES,
-  Blessing.REGIONAL_TREASURES_II
+  Blessing.REGIONAL_TREASURES_II,
+  Blessing.GYM_LEADER
 ])
 
 // blessings that hand out loot, as opposed to the Item Blessings category
@@ -287,9 +292,9 @@ function compareCombatBlessings(a: Blessing, b: Blessing): number {
   return group(a) - group(b)
 }
 
+// "combo" is missing on purpose: it renders nested inside the synergy section
 const CATEGORY_ORDER: BlessingCategory[] = [
   "synergy",
-  "combo",
   "hero",
   "planning",
   "combat",
@@ -515,19 +520,25 @@ export default function WikiBlessings() {
                     ? compareCombatBlessings
                     : compareBlessingsBySynergy
                 )
+              const combos =
+                category === "synergy"
+                  ? blessings.filter(
+                      (blessing) =>
+                        Blessings[blessing].family === undefined &&
+                        getBlessingCategory(blessing) === "combo"
+                    )
+                  : []
               if (members.length === 0 && category !== "synergy") return null
               return (
                 <section key={category} className="wiki-blessings-category">
                   <h3>
                     {category === "planning"
                       ? "Planning & Resources"
-                      : category === "combo"
-                        ? "Combos"
-                        : category === "hero"
-                          ? "Heroes & Pokémon"
-                          : category === "items"
-                            ? "Items"
-                            : category}
+                      : category === "hero"
+                        ? "Heroes & Pokémon"
+                        : category === "items"
+                          ? "Items"
+                          : category}
                   </h3>
                   <ul className="wiki-blessings-list">
                     {category === "synergy" &&
@@ -580,6 +591,16 @@ export default function WikiBlessings() {
                       <BlessingCard key={blessing} blessing={blessing} />
                     ))}
                   </ul>
+                  {combos.length > 0 && (
+                    <section className="wiki-blessings-subcategory">
+                      <h4>Combos</h4>
+                      <ul className="wiki-blessings-list">
+                        {combos.map((blessing) => (
+                          <BlessingCard key={blessing} blessing={blessing} />
+                        ))}
+                      </ul>
+                    </section>
+                  )}
                 </section>
               )
             })}
