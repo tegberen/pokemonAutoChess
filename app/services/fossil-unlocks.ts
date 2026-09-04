@@ -11,6 +11,8 @@ import { Title } from "../types"
 import {
   FOSSIL_RESTORATION_CHOICES,
   FOSSIL_RESTORATION_FIGHTS_PER_DISCOVERY,
+  ANCIENT_TITLE_UNLOCKS_REQUIRED,
+  FOSSIL_UNLOCKS_OUTSIDE_ANCIENT,
   FOSSIL_RESTORATION_SYNERGY_LEVEL,
   FOSSIL_UNLOCK_MIN_SHOP_WEIGHT,
   FOSSIL_UNLOCK_WEIGHT_LOST_WHEN_IGNORED,
@@ -173,7 +175,10 @@ function unlockFossil(player: Player, pokemon: Pkm) {
   // the guaranteed slot is the reward; no weighting on top of it
   unlocks.pendingGuarantees.push(pokemon)
 
-  if (unlocks.unlocked.length === FossilUnlocks.length) {
+  const unlockedForAncient = unlocks.unlocked.filter(
+    (unlocked) => !FOSSIL_UNLOCKS_OUTSIDE_ANCIENT.includes(unlocked)
+  ).length
+  if (unlockedForAncient === ANCIENT_TITLE_UNLOCKS_REQUIRED) {
     player.titles.add(Title.ANCIENT)
   }
 }

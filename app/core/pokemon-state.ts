@@ -37,7 +37,8 @@ import {
   POKEMONOMICON_DAMAGE_BONUS,
   SCOPE_LENS_MARK_DURATION,
   SHINY_CHARM_MARK_DURATION,
-  FLUFFY_TAIL_LEGENDARY_STAGE
+  FLUFFY_TAIL_LEGENDARY_STAGE,
+  SYMBIOTIC_SYMPHONY_SOUND_PP_PER_HEAL
 } from "../types/enum/Blessing"
 import { EffectEnum } from "../types/enum/Effect"
 import {
@@ -77,7 +78,7 @@ import {
   FISHIOUS_REND_LOW_HP_THRESHOLD,
   onPrimordialPowerAwakened
 } from "./effects/galar-fossil-passives"
-import type { PokemonEntity } from "./pokemon-entity"
+import { steelTrueDamageRatio, type PokemonEntity } from "./pokemon-entity"
 
 function tickBlessingMark(
   pokemon: PokemonEntity,
@@ -290,12 +291,14 @@ export default abstract class PokemonState {
       }
 
       if (isAttackSuccessful && pokemon.types.has(Synergy.FAIRY)) {
+        pokemon.isResolvingOnHitEffects = true
         const { takenDamage, death } = applyWandEffects(
           pokemon,
           target,
           damage,
           crit
         )
+        pokemon.isResolvingOnHitEffects = false
         totalTakenDamage += takenDamage
         if (death) hasAttackKilled = true
       }
@@ -553,6 +556,19 @@ export default abstract class PokemonState {
         caster.healDone += healReceived
       }
 
+      if (
+        healReceived > 0 &&
+        pokemon.types.has(Synergy.SOUND) &&
+        pokemon.player?.blessings?.includes(Blessing.SYMBIOTIC_SYMPHONY)
+      ) {
+        pokemon.addPP(
+          SYMBIOTIC_SYMPHONY_SOUND_PP_PER_HEAL,
+          pokemon,
+          0,
+          false
+        )
+      }
+
       if (overheal > 0 && pokemon.hasSynergyEffect(Synergy.GRASS)) {
         pokemon.addMaxHP(0.4 * overheal, pokemon, 0, false, false)
       }
@@ -637,6 +653,30 @@ export default abstract class PokemonState {
 
     if (attacker && attacker.status.enraged) {
       damage *= 2
+    }
+
+    /* MAGICAL_METAL: every ON_HIT effect deals its damage through here, whatever
+       its attack type, so the steel conversion is applied once at this point */
+    if (
+      attackType !== AttackType.TRUE &&
+      attacker?.isResolvingOnHitEffects &&
+      attacker.types.has(Synergy.STEEL) &&
+      attacker.types.has(Synergy.FAIRY) &&
+      attacker.player?.blessings?.includes(Blessing.MAGICAL_METAL)
+    ) {
+      const trueDamagePart = steelTrueDamageRatio(attacker)
+      if (trueDamagePart > 0) {
+        const convertedDamage = Math.ceil(damage * trueDamagePart)
+        damage = min(0)(damage - convertedDamage)
+        this.handleDamage({
+          target: pokemon,
+          damage: convertedDamage,
+          board,
+          attackType: AttackType.TRUE,
+          attacker,
+          shouldTargetGainMana
+        })
+      }
     }
 
     if (

@@ -1391,6 +1391,11 @@ export default class Status extends Schema implements IStatus {
     if (this.possessedCooldown <= 0 || lastAliveArePossessed) {
       this.possessed = false
       pkm.team = pkm.baseTeam
+      // HUMAN_HORROR lends the haunted unit an ability only while possessed
+      if (pkm.skillBeforePossession) {
+        pkm.skill = pkm.skillBeforePossession
+        pkm.skillBeforePossession = null
+      }
 
       if (
         lastAliveArePossessed &&

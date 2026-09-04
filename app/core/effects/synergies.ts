@@ -33,6 +33,11 @@ import { EvolutionRuleType } from "../../types/EvolutionRules"
 import { Ability } from "../../types/enum/Ability"
 import {
   Blessing,
+  SYMBIOTIC_SYMPHONY_GRASS_MAX_HP_PER_CRY,
+  FURY_UNLEASHED_RAGE_DURATION,
+  FURY_UNLEASHED_RAGE_PER_WILD_TIER,
+  EARTHEN_BARRIER_GROUND_HOLE_BONUS,
+  FURIOUS_FABRIC_SYNERGY_BY_SCARF,
   FERTILE_SOIL_DIG_PERMANENT_HP,
   BLOSSOM_FESTIVAL_MULCH_MULTIPLIER,
   FROST_BARRIER_CHECK_INTERVAL,
@@ -51,6 +56,7 @@ import {
 } from "../../types/enum/Blessing"
 import {
   grantArcheologyRewards,
+  grantEarthenBarrierScarves,
   revealNextBuriedTreasure
 } from "../../services/blessings"
 import { FlowerPot } from "../../types/enum/FlowerPot"
@@ -153,6 +159,18 @@ export class MonsterKillEffect extends OnKillEffect {
     }
   }
 }
+function isEarthenBarrierScarfWearer(pokemon: PokemonEntity): boolean {
+  return (
+    pokemon.player?.blessings?.includes(Blessing.EARTHEN_BARRIER) === true &&
+    pokemon.types.has(Synergy.GROUND) &&
+    pokemon.types.has(Synergy.NORMAL) &&
+    [...pokemon.items].some(
+      (item) =>
+        item === Item.SILK_SCARF || item in FURIOUS_FABRIC_SYNERGY_BY_SCARF
+    )
+  )
+}
+
 export class GroundHoleEffect extends OnSpawnEffect {
   constructor(effect: SynergyTier<Synergy.GROUND>) {
     const synergyTier = SynergyTiers[Synergy.GROUND].indexOf(effect) + 1
@@ -176,6 +194,11 @@ export class GroundHoleEffect extends OnSpawnEffect {
           atkBuff += 8
           player?.titles.add(Title.MOLE)
         }
+      }
+
+      if (isEarthenBarrierScarfWearer(pokemon)) {
+        atkBuff *= 1 + EARTHEN_BARRIER_GROUND_HOLE_BONUS
+        defBuff *= 1 + EARTHEN_BARRIER_GROUND_HOLE_BONUS
       }
 
       pokemon.addAttack(atkBuff, pokemon, 0, false)
@@ -295,6 +318,17 @@ export class SoundCryEffect extends OnAbilityCastEffect {
         ally.addSpeed(speedBuff * scale, pokemon, 0, false)
         ally.addPP(ppGain * scale, pokemon, 0, false)
         ally.count.soundCryCount += scale
+        if (
+          ally.types.has(Synergy.GRASS) &&
+          ally.player?.blessings?.includes(Blessing.SYMBIOTIC_SYMPHONY)
+        ) {
+          ally.addMaxHP(
+            SYMBIOTIC_SYMPHONY_GRASS_MAX_HP_PER_CRY,
+            ally,
+            0,
+            false
+          )
+        }
       }
     })
   }
@@ -490,6 +524,26 @@ export class FightingKnockbackEffect extends OnDamageReceivedEffect {
           isRetaliation: true
         })
         targetAtContact.moveTo(destination.x, destination.y, board, true)
+        if (
+          pokemon.types.has(Synergy.WILD) &&
+          pokemon.player?.blessings?.includes(Blessing.FURY_UNLEASHED)
+        ) {
+          const landingCell = board
+            .getAdjacentCells(destination.x, destination.y)
+            .find((cell) => cell.value === undefined)
+          if (landingCell) {
+            pokemon.moveTo(landingCell.x, landingCell.y, board, true)
+          }
+          const wildTier = getSynergyTier(
+            pokemon.player.synergies,
+            Synergy.WILD
+          )
+          pokemon.status.triggerRage(
+            FURY_UNLEASHED_RAGE_DURATION +
+              wildTier * FURY_UNLEASHED_RAGE_PER_WILD_TIER,
+            pokemon
+          )
+        }
       }
     }
   }
@@ -1633,6 +1687,7 @@ export const groundDigEffect = new OnStageStartEffect(({ player, room }) => {
               grantGemRushRowReward(player, index)
               if (player.groundHoles[index] === 5) {
                 grantArcheologyRewards(player, index)
+                grantEarthenBarrierScarves(player)
               }
             }
             revealNextBuriedTreasure(player, room.state)

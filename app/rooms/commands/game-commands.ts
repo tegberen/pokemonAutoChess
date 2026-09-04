@@ -163,6 +163,7 @@ import {
   SIMULATION_SCOPED_HERO_BLESSINGS
 } from "../../types/enum/Blessing"
 import {
+  checkConvergentParadoxRewards,
   checkRainbowHourReward,
   grantRainbowHourEevee,
   getUniqueFieldCap,
@@ -882,6 +883,7 @@ export class OnDragDropPokemonCommand extends Command<
       if (success) {
         player.updateSynergies()
         checkRainbowHourReward(player)
+        checkConvergentParadoxRewards(player)
         player.boardSize = this.room.getTeamSize(player.board, player.blessings)
       }
     }
@@ -994,6 +996,7 @@ export class OnSwitchBenchAndBoardCommand extends Command<
           room: this.room
         })
         checkRainbowHourReward(player)
+        checkConvergentParadoxRewards(player)
       }
     } else {
       // pokemon is on board, switch to bench

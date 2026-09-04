@@ -19,8 +19,9 @@ import { getUnlockedFlowerPots } from "../core/flower-pots"
 import type Player from "../models/colyseus-models/player"
 import { PlayerBlessings } from "../models/colyseus-models/player-blessings"
 import { PlayerChoice } from "../models/colyseus-models/player-choice"
-import type { Pokemon } from "../models/colyseus-models/pokemon"
-import { PokemonClasses } from "../models/colyseus-models/pokemon"
+import { PokemonClasses, type Pokemon } from "../models/colyseus-models/pokemon"
+import { getSynergyTier } from "../models/colyseus-models/synergies"
+import { advanceFossilUnlockProgress } from "./fossil-unlocks"
 import { WaterPond } from "../models/colyseus-models/water-pond"
 import PokemonFactory from "../models/pokemon-factory"
 import {
@@ -46,6 +47,9 @@ import {
   BEING_OF_KNOWLEDGE_MAX_LEVEL,
   BERRY_GROWTH_GOLDEN_BERRIES_GRANTED,
   BERRY_GROWTH_GOLDEN_BERRIES_STAGE,
+  CONVERGENT_PARADOX_GENESECT_TIER,
+  GROUND_HOLE_ROW_STARTS,
+  GROUND_HOLE_MAX_DEPTH,
   Blessing,
   BlessingTrigger,
   BP_REWARDS_COMPONENTS,
@@ -353,6 +357,36 @@ function itemBlessingEffects() {
       blessing,
       (player: Player) => {
         player.items.push(item)
+        return true
+      }
+    ])
+  )
+}
+
+/* the pair of items each COMBO blessing opens with, one per synergy it bridges.
+   CONVERGENT_PARADOX and SHEDDING_SCALES open differently and are written out */
+const COMBO_BLESSING_ITEMS: { [blessing in Blessing]?: [Item, Item] } = {
+  [Blessing.MIDNIGHT_SUN]: [Item.DUSK_STONE, Item.LIGHT_BALL],
+  [Blessing.STEAM_ENGINE]: [Item.FIRE_STONE, Item.THUNDER_STONE],
+  [Blessing.CRYSTAL_EXOSKELETON]: [Item.EVER_STONE, Item.SHED_SHELL],
+  [Blessing.BLIGHTED_GARDEN]: [Item.INCENSE, Item.POKERUS_VIAL],
+  [Blessing.MONSTROUS_GLUTTONY]: [Item.BERSERK_GENE, Item.COOKING_POT],
+  [Blessing.FROZEN_OCEAN]: [Item.ICE_STONE, Item.SURFBOARD],
+  [Blessing.MAGICAL_METAL]: [Item.METAL_COAT, Item.MOON_STONE],
+  [Blessing.FURY_UNLEASHED]: [Item.WHITE_FLUTE, Item.MACHO_BRACE],
+  [Blessing.HUMAN_HORROR]: [Item.SPELL_TAG, Item.HUMAN_GEM],
+  [Blessing.HYDRATED_CELLS]: [Item.AMORPHOUS_GEM, Item.WATER_STONE],
+  [Blessing.SYMBIOTIC_SYMPHONY]: [Item.LEAF_STONE, Item.METRONOME],
+  [Blessing.EARTHEN_BARRIER]: [Item.EXPLORER_KIT, Item.FRIEND_BOW],
+  [Blessing.MIND_RUSH]: [Item.DAWN_STONE, Item.RUNNING_SHOES]
+}
+
+function comboBlessingGrants() {
+  return Object.fromEntries(
+    Object.entries(COMBO_BLESSING_ITEMS).map(([blessing, items]) => [
+      blessing,
+      (player: Player) => {
+        items.forEach((item) => grantSynergyAwareItem(player, item))
         return true
       }
     ])
@@ -1117,6 +1151,43 @@ export function grantRainbowHourEevee(player: Player, craftedItem: Item) {
   )
     return
   giftPokemonIfBenchHasRoom(player, Pkm.EEVEE)
+}
+
+/* EARTHEN_BARRIER pays one scarf per fully dug row, counted rather than flagged
+   so rows already finished when the wish is made are paid for too */
+export function grantEarthenBarrierScarves(player: Player) {
+  if (!player.blessings?.includes(Blessing.EARTHEN_BARRIER)) return
+  const fullyDugRows = GROUND_HOLE_ROW_STARTS.filter((rowStart) =>
+    player.groundHoles
+      .slice(rowStart, rowStart + BOARD_WIDTH)
+      .every((hole) => hole === GROUND_HOLE_MAX_DEPTH)
+  ).length
+  while (player.earthenBarrierScarvesGranted < fullyDugRows) {
+    player.earthenBarrierScarvesGranted++
+    player.items.push(Item.SILK_SCARF)
+  }
+}
+
+/* CONVERGENT_PARADOX pays out as the two halves come online: the amber once
+   ARTIFICIAL is up, and Genesect once FOSSIL joins it. Both only ever land once */
+export function checkConvergentParadoxRewards(player: Player) {
+  if (!player.blessings?.includes(Blessing.CONVERGENT_PARADOX)) return
+  const hasArtificial =
+    getSynergyTier(player.synergies, Synergy.ARTIFICIAL) >=
+    CONVERGENT_PARADOX_GENESECT_TIER
+  if (hasArtificial && !player.convergentParadoxAmberGranted) {
+    player.convergentParadoxAmberGranted = true
+    player.items.push(Item.OLD_AMBER)
+  }
+  if (
+    hasArtificial &&
+    !player.convergentParadoxGenesectGranted &&
+    getSynergyTier(player.synergies, Synergy.FOSSIL) >=
+      CONVERGENT_PARADOX_GENESECT_TIER
+  ) {
+    player.convergentParadoxGenesectGranted = true
+    advanceFossilUnlockProgress(player, Pkm.GENESECT)
+  }
 }
 
 export function checkRainbowHourReward(player: Player) {
@@ -2288,6 +2359,29 @@ export const blessingEffectService: {
 
   [Blessing.CHAMPIONS_MASK]: (player) => {
     player.items.push(Item.CHAMPIONS_MASK)
+    return true
+  },
+
+  ...comboBlessingGrants(),
+
+  [Blessing.CONVERGENT_PARADOX]: (player) => {
+    // its Genesect unlock is tracked in that panel, so the wish opens it
+    if (player.fossilUnlocksRef) player.fossilUnlocksRef.revealed = true
+    checkConvergentParadoxRewards(player)
+    return true
+  },
+
+  [Blessing.EARTHEN_BARRIER]: (player) => {
+    COMBO_BLESSING_ITEMS[Blessing.EARTHEN_BARRIER]?.forEach((item) =>
+      grantSynergyAwareItem(player, item)
+    )
+    grantEarthenBarrierScarves(player)
+    return true
+  },
+
+  [Blessing.SHEDDING_SCALES]: (player, state, room) => {
+    if (!giftPokemonIfBenchHasRoom(player, Pkm.DRATINI)) return false
+    moveToRegionWherePokemonIsFound(player, state, room, Pkm.DRATINI)
     return true
   },
 

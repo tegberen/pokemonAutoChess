@@ -49,7 +49,8 @@ import {
   BERRY_GROWTH_GOLDEN_PERMANENT_HP,
   GRUDGE_CURSE_CHANCE,
   GRUDGE_CURSE_DURATION,
-  hasGluttonGrowth
+  hasGluttonGrowth,
+  SHEDDING_SCALES_FREE_ROLLS_PER_FLIGHT
 } from "../types/enum/Blessing"
 import { getStrongestUnit } from "./unit-score"
 import { EffectEnum } from "../types/enum/Effect"
@@ -71,7 +72,7 @@ import {
 } from "../types/enum/Item"
 import { Awakening } from "../types/enum/Awakening"
 import { Passive } from "../types/enum/Passive"
-import { Pkm, PkmByIndex } from "../types/enum/Pokemon"
+import { Pkm, PkmByIndex, Unowns } from "../types/enum/Pokemon"
 import { SpecialGameRule } from "../types/enum/SpecialGameRule"
 import { Synergy } from "../types/enum/Synergy"
 import { Weather } from "../types/enum/Weather"
@@ -118,6 +119,15 @@ import MovingState from "./moving-state"
 import type PokemonState from "./pokemon-state"
 import type Simulation from "./simulation"
 import { DelayedCommand, type SimulationCommand } from "./simulation-command"
+
+/* the share of damage STEEL turns into TRUE damage, one step per STEEL tier */
+export function steelTrueDamageRatio(pokemon: PokemonEntity): number {
+  if (pokemon.effects.has(EffectEnum.MAX_MELTDOWN)) return 1.25
+  if (pokemon.effects.has(EffectEnum.CORKSCREW_CRASH)) return 1.0
+  if (pokemon.effects.has(EffectEnum.STEEL_SPIKE)) return 0.66
+  if (pokemon.effects.has(EffectEnum.STEEL_SURGE)) return 0.33
+  return 0
+}
 
 export class PokemonEntity extends Schema implements IPokemonEntity {
   @type("boolean") shiny: boolean
@@ -222,6 +232,9 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
   isHailToTheKingChampionThisFight: boolean = false
   axeBlastExecuteChance: number = 0
   metronomeForcedRarity: Rarity | null = null
+  isResolvingOnHitEffects: boolean = false
+  hasSheddingScalesRerolled: boolean = false
+  skillBeforePossession: Ability | null = null
   isSynchronisedSpeedLeaderThisFight: boolean = false
   isBlossomFestivalChampionThisFight: boolean = false
   isEchoChamberLeaderThisFight: boolean = false
@@ -308,6 +321,15 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
     pokemon.types.forEach((type) => {
       this.types.add(type)
     })
+
+    /* MIND_RUSH also covers the Unowns summoned mid fight, which are built
+       straight into the simulation and never pass through onAcquired */
+    if (
+      isIn(Unowns, this.name) &&
+      this.player?.blessings?.includes(Blessing.MIND_RUSH)
+    ) {
+      this.types.add(Synergy.FIELD)
+    }
 
     this.passive = Passive.NONE
     this.changePassive(pokemon.passive)
@@ -564,17 +586,7 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
         attackType === AttackType.SPECIAL &&
         attacker?.player?.blessings?.includes(Blessing.ARCANE_METALS)
       ) {
-        const steelTrueDamagePart = attacker.effects.has(
-          EffectEnum.MAX_MELTDOWN
-        )
-          ? 1.25
-          : attacker.effects.has(EffectEnum.CORKSCREW_CRASH)
-            ? 1.0
-            : attacker.effects.has(EffectEnum.STEEL_SPIKE)
-              ? 0.66
-              : attacker.effects.has(EffectEnum.STEEL_SURGE)
-                ? 0.33
-                : 0
+        const steelTrueDamagePart = steelTrueDamageRatio(attacker)
         if (steelTrueDamagePart > 0) {
           const convertedDamage = Math.ceil(specialDamage * steelTrueDamagePart)
           specialDamage = min(0)(specialDamage - convertedDamage)
@@ -1146,6 +1158,7 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
           attacker: this,
           shouldTargetGainMana: true
         })
+        this.isResolvingOnHitEffects = true
         this.getEffects(OnHitEffect).forEach((effect) =>
           effect.apply({
             attacker: this,
@@ -1157,6 +1170,7 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
             trueDamage: 0
           })
         )
+        this.isResolvingOnHitEffects = false
       }
     }
 
@@ -1242,6 +1256,7 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
       })
     }
 
+    this.isResolvingOnHitEffects = true
     this.getEffects(OnHitEffect).forEach((effect) => {
       effect.apply({
         attacker: this,
@@ -1253,6 +1268,7 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
         trueDamage
       })
     })
+    this.isResolvingOnHitEffects = false
 
     if (this.hasSynergyEffect(Synergy.ICE) && this.types.has(Synergy.ICE)) {
       const nbIcyRocks =
@@ -1787,6 +1803,14 @@ flyAway(
       this.effects.has(EffectEnum.MAX_AIRSTREAM)
   ): { x: number; y: number; target: PokemonEntity } | null {
     const flyAwayCell = board.getFlyAwayCell(this)
+    if (
+      this.types.has(Synergy.DRAGON) &&
+      !this.hasSheddingScalesRerolled &&
+      this.player?.blessings?.includes(Blessing.SHEDDING_SCALES)
+    ) {
+      this.hasSheddingScalesRerolled = true
+      this.player.shopFreeRolls += SHEDDING_SCALES_FREE_ROLLS_PER_FLIGHT
+    }
     const hasDecoySeed =
       this.player?.items.includes(Item.DECOY_SEED) &&
       this.isStrongestAllyThisFight

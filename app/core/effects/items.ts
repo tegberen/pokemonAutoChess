@@ -802,6 +802,7 @@ const chefCookEffect = new OnStageStartEffect(({ pokemon, player, room }) => {
               pokemon.addMaxHP(FESTIVE_PICNIC_MAX_HP_ON_OVERWRITE)
             }
             pokemon.dishes.add(dish)
+            pokemon.dishChefMaxHP.set(dish, chef.maxHP)
             onFossilUnlockHarvest(player)
             pokemon.action = PokemonActionState.EAT
           }
@@ -954,8 +955,13 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
       [
         new OnItemDroppedEffect(({ pokemon, player, item }) => {
           const ability = AbilityPerTM[item]
-          if (!ability || pokemon.types.has(Synergy.HUMAN) === false)
-            return false // prevent equipping TMs on non-human pokemon
+          /* HUMAN_HORROR lets GHOST study the discs as well; without it TMs stay
+             a HUMAN-only trick */
+          const canLearnTM =
+            pokemon.types.has(Synergy.HUMAN) ||
+            (pokemon.types.has(Synergy.GHOST) &&
+              player.blessings?.includes(Blessing.HUMAN_HORROR) === true)
+          if (!ability || !canLearnTM) return false
           pokemon.tm = ability
           pokemon.skill = ability
           pokemon.maxPP = player.blessings?.includes(Blessing.MOVE_TUTOR)

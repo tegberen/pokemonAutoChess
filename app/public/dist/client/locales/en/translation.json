@@ -2720,7 +2720,7 @@
 		"SHINING_RAY": "Increase AP by 20 and base ATK by 20%",
 		"LIGHT_PULSE": "Also give +8 PP per second",
 		"ETERNAL_LIGHT": "Also increase base DEF and SPE_DEF by 50% and give RUNE_PROTECT for 8 seconds",
-		"MAX_ILLUMINATION": "Also give 120 SHIELD and RESURRECTION",
+		"MAX_ILLUMINATION": "Also give 100 SHIELD and RESURRECTION",
 		"QUICK_FEET": "WILD Pokémon get +20 SPEED, and can now be found in shops at every stage (8% base chance + 0.5% for each WILD STAR on board).",
 		"RUN_AWAY": "+40 SPEED.",
 		"HUSTLE": "+40 SPEED and +40% base ATK",
@@ -5224,6 +5224,66 @@
 			"name": "Kyogre's Song",
 			"description": "Gain an AQUA_MONICA. On stages 17 and 22, gain a Sobble."
 		},
+		"MIDNIGHT_SUN": {
+			"name": "Midnight Sun",
+			"description": "Gain a DUSK_STONE and a LIGHT_BALL. At the start of the fight, the stat bonuses from your LIGHT spot are multiplied by the recipient's CRIT_POWER."
+		},
+		"STEAM_ENGINE": {
+			"name": "Steam Engine",
+			"description": "Gain a FIRE_STONE and a THUNDER_STONE. Pokémon with both FIRE and ELECTRIC synergy gain 5 SPEED ON_ATTACK, plus 1 for each level of FIRE and ELECTRIC active."
+		},
+		"CONVERGENT_PARADOX": {
+			"name": "Convergent Paradox",
+			"description": "At least one Paradox Pokémon is guaranteed in your Unique and Legendary options. Paradox Pokémon gain ARTIFICIAL or FOSSIL, whichever they lack. ARTIFICIAL 6 grants an OLD_AMBER. Gain access to the Genesect Unlock."
+		},
+		"CRYSTAL_EXOSKELETON": {
+			"name": "Rocky Exoskeleton",
+			"description": "Gain an EVER_STONE and a SHED_SHELL. Once at 50% HP, pokemon with both BUG and ROCK synergy gain 50 SHIELD, dash away and leave behind a clone with 100% of the user's current DEF and 50% of its base max HP."
+		},
+		"BLIGHTED_GARDEN": {
+			"name": "Blighted Garden",
+			"description": "Gain an INCENSE and a POKERUS_VIAL. When FLORA is active, and a POISONNED enemy is KO'd, collect RICH_MULCH based on the enmies STAR level. When an allied FLORA Pokémon with POKERUS is KO'd, collect 1 additional RICH_MULCH."
+		},
+		"MONSTROUS_GLUTTONY": {
+			"name": "Monstrous Gluttony",
+			"description": "Gain a BERSERK_GENE and a COOKING_POT. When a MONSTER Pokémon eats a dish, it gains a MONSTER stack as though it had KO'd the chef who cooked it."
+		},
+		"SHEDDING_SCALES": {
+			"name": "Shedding Scales",
+			"description": "Move to a random DRAGON region and gain a Dratini. The first time each DRAGON ally flies away in a fight, gain a free reroll. Each Salamence, Charizard, Dragonite or Dragapult you obtain grants a DRAGON_SCALE."
+		},
+		"FROZEN_OCEAN": {
+			"name": "Frozen Ocean",
+			"description": "Gain an ICE_STONE and a SURFBOARD. When hit by an TIDAL_WAVE, allies with both AQUATIC and ICE synergy restore 20% of their max + their current SPE_DEF as PP."
+		},
+		"MAGICAL_METAL": {
+			"name": "Magic Metals",
+			"description": "Gain a METAL_COAT and a MOON_STONE. Pokémon with both STEEL and FAIRY synergy convert part of their ON_HIT damage to TRUE, scaling with your active STEEL synergy."
+		},
+		"FURY_UNLEASHED": {
+			"name": "Fury Unleashed",
+			"description": "Gain a WHITE_FLUTE and a MACHO_BRACE. When an ally with both FIGHTING and WILD synergy throws an enemy, it leaps to the thrown target and RAGE for 2 seconds, plus 1 for each level of WILD active."
+		},
+		"HUMAN_HORROR": {
+			"name": "Human Horror",
+			"description": "Gain a SPELL_TAG and a HUMAN_GEM. Your GHOST Pokémon can learn moves from TMs. When a GHOST ally knowing a TM is KO'd, the attacker is POSSESSED for 2 seconds, plus 1 for each level of HUMAN active. It will immediately cast a random TM ability, scaling with your active HUMAN synergy."
+		},
+		"HYDRATED_CELLS": {
+			"name": "Hydrated Cells",
+			"description": "Gain an AMORPHOUS_GEM and a WATER_STONE. Your WATER Pokémon gain AP equal to the HP they gain from AMORPHOUS synergy."
+		},
+		"SYMBIOTIC_SYMPHONY": {
+			"name": "Symbiotic Symphony",
+			"description": "Gain a LEAF_STONE and a METRONOME. GRASS Pokémon gain 5 HP upon hearing allied sound cries. SOUND Pokémon gain 2 PP upon receiving healing."
+		},
+		"EARTHEN_BARRIER": {
+			"name": "Earthen Barrier",
+			"description": "Gain an EXPLORER_KIT and a FRIEND_BOW. Pokemon with both GROUND and NORMAL synergy holding a scarf item gain 100% more stats from dug holes. Gain a SILK_SCARF for each fully dug row."
+		},
+		"MIND_RUSH": {
+			"name": "Mind Rush",
+			"description": "Gain a DAWN_STONE and a RUNNING_SHOES. Your Unowns have FIELD synergy and count as KO'd when they cast their ability. At PSYCHIC 7, your Unown shops always contain Unown !."
+		},
 		"BERRY_POUCH": {
 			"name": "Bowl of Berries",
 			"description": "Now and after each stage, gain a random berry."
@@ -6370,7 +6430,8 @@
 			"shieldon": "Level 7 + During combat, deal a total of 100 TRUE with ROCK explosions.",
 			"amaura": "Level 7 + With LIGHT active, have a FOSSIL or ICE Pokémon under the Lightspot cast their ability twice during combat.",
 			"tyrunt": "Level 7 + Reroll 12 times in a single preparation phase with DRAGON or ROCK active.",
-			"regigigas": "Level 9 + Win a fight with Mamoswine alongside 8 FOSSIL Pokémon, with Mamoswine surviving."
+			"regigigas": "Level 9 + Win a fight with Mamoswine alongside 8 FOSSIL Pokémon, with Mamoswine surviving.",
+			"genesect": "Field ARTIFICIAL 6 together with FOSSIL 6."
 		}
 	},
 	"additional_picks": "Additional picks",

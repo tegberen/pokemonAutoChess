@@ -21,8 +21,22 @@ const fossilUnlocks = [
     conditionKey: "regigigas",
     target: 1,
     minLevel: 9
+  },
+  {
+    pokemon: Pkm.GENESECT,
+    conditionKey: "genesect",
+    target: 1,
+    minLevel: 0
   }
 ] as const
+
+/* CONVERGENT_PARADOX grants Genesect, so it is only listed for the players
+   holding that blessing and is left out of the ANCIENT roster count */
+export const FOSSIL_UNLOCKS_OUTSIDE_ANCIENT: Pkm[] = [Pkm.GENESECT]
+
+export const ANCIENT_TITLE_UNLOCKS_REQUIRED = fossilUnlocks.filter(
+  (unlock) => !FOSSIL_UNLOCKS_OUTSIDE_ANCIENT.includes(unlock.pokemon)
+).length
 
 export interface FossilUnlockDefinition {
   pokemon: Pkm

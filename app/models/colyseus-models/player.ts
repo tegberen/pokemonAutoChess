@@ -297,6 +297,9 @@ export default class Player extends Schema implements IPlayer {
   manifestedPokemonIds: string[] = []
   // server-only: RAINBOW_HOUR pays its gold bounty only once
   rainbowHourRewarded: boolean = false
+  convergentParadoxAmberGranted: boolean = false
+  convergentParadoxGenesectGranted: boolean = false
+  earthenBarrierScarvesGranted: number = 0
   // server-only: ALL_FOURS makes the first buy out of its epic shop free
   allFoursFreeBuyPending: boolean = false
   /* server-only: the current shop was minted outside the pool (ALL_FOURS,

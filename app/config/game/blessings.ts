@@ -34,6 +34,8 @@ export interface BlessingDefinition {
   // grantsPokemonImmediately already implies
   benchSlotsRequired?: number
   synergy?: Synergy
+  // the two synergies a combo blessing bridges, gated on the player's Unique
+  synergies?: [Synergy, Synergy]
   isAvailable?: (player: Player, stage: number) => boolean
   family?: BlessingFamily
   isItemBlessing?: boolean
@@ -112,11 +114,22 @@ export function isSynergyActiveForPlayer(
   )
 }
 
+export function hasUniqueOfSynergy(player: Player, synergies: Synergy[]) {
+  return [...player.board.values()].some(
+    (pokemon) =>
+      pokemon.rarity === Rarity.UNIQUE &&
+      synergies.some((synergy) => pokemon.types.has(synergy))
+  )
+}
+
 function isSynergyRequirementMet(
   definition: BlessingDefinition,
   player: Player,
   stage: number
 ) {
+  if (stage >= BLESSING_SYNERGY_GATED_STAGE && definition.synergies) {
+    return hasUniqueOfSynergy(player, definition.synergies)
+  }
   if (definition.synergy === undefined) return true
   return (
     stage < BLESSING_SYNERGY_GATED_STAGE ||
@@ -2086,6 +2099,112 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     availableAtStages: [12],
     icon: "instrument",
     grantsPokemonImmediately: false
+  },
+
+  [Blessing.MIDNIGHT_SUN]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "midnight_sun",
+    grantsPokemonImmediately: false,
+    synergies: [Synergy.DARK, Synergy.LIGHT]
+  },
+  [Blessing.STEAM_ENGINE]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "steam_engine",
+    grantsPokemonImmediately: false,
+    synergies: [Synergy.FIRE, Synergy.ELECTRIC]
+  },
+  [Blessing.CONVERGENT_PARADOX]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: [4],
+    icon: "convergent_paradox",
+    grantsPokemonImmediately: false,
+    synergies: [Synergy.ARTIFICIAL, Synergy.FOSSIL]
+  },
+  [Blessing.CRYSTAL_EXOSKELETON]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "crystal_exoskeleton",
+    grantsPokemonImmediately: false,
+    synergies: [Synergy.ROCK, Synergy.BUG]
+  },
+  [Blessing.BLIGHTED_GARDEN]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "blighted_garden",
+    grantsPokemonImmediately: false,
+    synergies: [Synergy.FLORA, Synergy.POISON]
+  },
+  [Blessing.MONSTROUS_GLUTTONY]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "monstrous_gluttony",
+    grantsPokemonImmediately: false,
+    synergies: [Synergy.MONSTER, Synergy.GOURMET]
+  },
+  [Blessing.SHEDDING_SCALES]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "shedding_scales",
+    grantsPokemonImmediately: true,
+    synergies: [Synergy.DRAGON, Synergy.FLYING]
+  },
+  [Blessing.FROZEN_OCEAN]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "frozen_ocean",
+    grantsPokemonImmediately: false,
+    synergies: [Synergy.AQUATIC, Synergy.ICE]
+  },
+  [Blessing.MAGICAL_METAL]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "magical_metal",
+    grantsPokemonImmediately: false,
+    synergies: [Synergy.STEEL, Synergy.FAIRY]
+  },
+  [Blessing.FURY_UNLEASHED]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "fury_unleashed",
+    grantsPokemonImmediately: false,
+    synergies: [Synergy.FIGHTING, Synergy.WILD]
+  },
+  [Blessing.HUMAN_HORROR]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "human_horror",
+    grantsPokemonImmediately: false,
+    synergies: [Synergy.GHOST, Synergy.HUMAN]
+  },
+  [Blessing.HYDRATED_CELLS]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "hydrated_cells",
+    grantsPokemonImmediately: false,
+    synergies: [Synergy.WATER, Synergy.AMORPHOUS]
+  },
+  [Blessing.SYMBIOTIC_SYMPHONY]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "symbiotic_symphony",
+    grantsPokemonImmediately: false,
+    synergies: [Synergy.GRASS, Synergy.SOUND]
+  },
+  [Blessing.EARTHEN_BARRIER]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "earthen_barrier",
+    grantsPokemonImmediately: false,
+    synergies: [Synergy.GROUND, Synergy.NORMAL]
+  },
+  [Blessing.MIND_RUSH]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "mind_rush",
+    grantsPokemonImmediately: false,
+    synergies: [Synergy.PSYCHIC, Synergy.FIELD]
   }
 }
 

@@ -78,7 +78,10 @@ import {
   CURSOLA_SELL_PRICE,
   getCarouselLockForStage,
   GRUDGE_SUBSTITUTE_SELL_COST,
-  isGrudgeSubstitute
+  isGrudgeSubstitute,
+  MIND_RUSH_UNOWN_GUARANTEE_TIER,
+  CONVERGENT_PARADOX_UNIQUES,
+  CONVERGENT_PARADOX_LEGENDARIES
 } from "../types/enum/Blessing"
 import { PRECOMPUTED_POKEMONS_PER_TYPE } from "./precomputed/precomputed-types"
 import { Synergy } from "../types/enum/Synergy"
@@ -105,7 +108,7 @@ import {
   type PlayerChoiceType
 } from "./colyseus-models/player-choice"
 import { type Pokemon, PokemonClasses } from "./colyseus-models/pokemon"
-import { getWildChance } from "./colyseus-models/synergies"
+import { getSynergyTier, getWildChance } from "./colyseus-models/synergies"
 import { getPokemonBaseline } from "./pokemon-factory"
 import {
   getPokemonData,
@@ -634,6 +637,14 @@ export default class Shop {
         chosenUnowns.push(randomUnown)
         player.shop[i] = randomUnown
       }
+      if (
+        player.blessings?.includes(Blessing.MIND_RUSH) &&
+        getSynergyTier(player.synergies, Synergy.PSYCHIC) >=
+          MIND_RUSH_UNOWN_GUARANTEE_TIER &&
+        !chosenUnowns.includes(Pkm.UNOWN_EXCLAMATION)
+      ) {
+        player.shop[0] = Pkm.UNOWN_EXCLAMATION
+      }
     } else {
       // Regular shop
       for (let i = 0; i < getShopSize(state.specialGameRule, state.stageLevel); i++) {
@@ -914,6 +925,32 @@ export default class Shop {
 
       removeInArray(allCandidates, selected)
       pokemonsProposed.push(selected)
+    }
+
+    /* CONVERGENT_PARADOX promises a Paradox among the Unique and Legendary
+       options, so one slot is swapped when the roll produced none */
+    const paradoxRoster =
+      stageLevel === PortalCarouselStages[1]
+        ? CONVERGENT_PARADOX_UNIQUES
+        : stageLevel === PortalCarouselStages[2]
+          ? CONVERGENT_PARADOX_LEGENDARIES
+          : []
+    if (
+      player.blessings?.includes(Blessing.CONVERGENT_PARADOX) &&
+      paradoxRoster.length > 0 &&
+      !pokemonsProposed.some((proposition) =>
+        paradoxRoster.includes(proposition as Pkm)
+      )
+    ) {
+      /* canFindRegionalPokemon answers "shares a synergy with this map" for a
+         non-regional Pokemon, so it may only gate the regional ones */
+      const offerable = paradoxRoster.filter(
+        (pkm) =>
+          !getPokemonData(pkm).regional || player.canFindRegionalPokemon(pkm)
+      )
+      if (offerable.length > 0) {
+        pokemonsProposed[pokemonsProposed.length - 1] = pickRandomIn(offerable)
+      }
     }
 
     /* A guide teaches one specific pick, so it has to actually be on offer. It

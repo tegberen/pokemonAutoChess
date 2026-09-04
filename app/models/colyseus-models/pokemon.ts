@@ -38,7 +38,9 @@ import { Awakening } from "../../types/enum/Awakening"
 import {
   Blessing,
   getSynergiesGivenByItem,
-  LIMIT_BREAKER_REROLLS_PER_GOLD
+  LIMIT_BREAKER_REROLLS_PER_GOLD,
+  SHEDDING_SCALES_SCALE_SHEDDERS,
+  CONVERGENT_PARADOX_POKEMONS
 } from "../../types/enum/Blessing"
 import { RarityCost } from "../../config/game/shop"
 import { DungeonPMDO } from "../../types/enum/Dungeon"
@@ -104,6 +106,8 @@ export class Pokemon extends Schema implements IPokemon {
   @type("string") passive2: Passive = Passive.NONE
   @type({ set: "string" }) items = new SetSchema<Item>()
   @type({ set: "string" }) dishes = new SetSchema<Item>()
+  // MONSTROUS_GLUTTONY needs the cook's size when the dish is finally eaten
+  dishChefMaxHP = new Map<Item, number>()
   @type("boolean") shiny: boolean
   @type("string") emotion: Emotion
   @type("string") action: PokemonActionState = PokemonActionState.IDLE
@@ -235,6 +239,33 @@ export class Pokemon extends Schema implements IPokemon {
     ) {
       player.shopFreeRolls +=
         RarityCost[this.rarity] * LIMIT_BREAKER_REROLLS_PER_GOLD
+    }
+
+    if (
+      player.blessings?.includes(Blessing.SHEDDING_SCALES) &&
+      isIn(SHEDDING_SCALES_SCALE_SHEDDERS, this.name)
+    ) {
+      player.items.push(Item.DRAGON_SCALE)
+    }
+
+    /* MIND_RUSH: Unowns join the FIELD roster, so vanishing on cast pays out the
+       synergy's death buffs like any other FIELD unit dying would */
+    if (
+      player.blessings?.includes(Blessing.MIND_RUSH) &&
+      isIn(Unowns, this.name)
+    ) {
+      this.types.add(Synergy.FIELD)
+    }
+
+    /* CONVERGENT_PARADOX: the two halves of a Paradox Pokemon, so an ancient one
+       gains the machine type and a future one gains the fossil type */
+    if (
+      player.blessings?.includes(Blessing.CONVERGENT_PARADOX) &&
+      isIn(CONVERGENT_PARADOX_POKEMONS, this.name)
+    ) {
+      this.types.add(
+        this.types.has(Synergy.ARTIFICIAL) ? Synergy.FOSSIL : Synergy.ARTIFICIAL
+      )
     }
   }
 

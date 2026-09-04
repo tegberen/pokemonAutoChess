@@ -4,10 +4,7 @@ import { useLocation } from "react-router"
 import { Tab, TabList, TabPanel, Tabs } from "react-tabs"
 import { Tooltip } from "react-tooltip"
 import { RarityColor } from "../../../../../config"
-import {
-  Blessings,
-  getBlessingSynergy
-} from "../../../../../config/game/blessings"
+import { Blessings } from "../../../../../config/game/blessings"
 import { getPokemonData } from "../../../../../models/precomputed/precomputed-pokemon-data"
 import { PRECOMPUTED_POKEMONS_PER_TYPE } from "../../../../../models/precomputed/precomputed-types"
 import { Emotion, type PkmWithCustom } from "../../../../../types"
@@ -50,6 +47,7 @@ import {
   compareBlessingsBySynergy,
   getBlessingShortLabel
 } from "../tier-list/blessing-short-label"
+import { BlessingSynergyBadges } from "../tier-list/blessing-synergy-badges"
 
 const BLESSING_TIER_ORDER = [
   BlessingTier.SILVER,
@@ -162,7 +160,6 @@ export default function PokemonPicker(props: {
                     .map((blessing) => {
                       const tooltipId = `tier-list-blessing-${blessing}`
                       const shortLabel = getBlessingShortLabel(blessing)
-                      const blessingSynergy = getBlessingSynergy(blessing)
                       return (
                         <React.Fragment key={blessing}>
                           <div
@@ -181,13 +178,7 @@ export default function PokemonPicker(props: {
                               src={`/assets/blessings/${Blessings[blessing].icon}.svg`}
                               alt={blessing}
                             />
-                            {blessingSynergy && (
-                              <SynergyIcon
-                                type={blessingSynergy}
-                                size="20px"
-                                className="blessing-synergy-badge"
-                              />
-                            )}
+                            <BlessingSynergyBadges blessing={blessing} />
                             {shortLabel && <span>{shortLabel}</span>}
                           </div>
                           <Tooltip

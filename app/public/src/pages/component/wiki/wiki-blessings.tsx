@@ -37,13 +37,23 @@ function BlessingCard(props: { blessing: Blessing }) {
       <div className="wiki-blessing-body">
         <div className="wiki-blessing-icon-wrap">
           <img src={`/assets/blessings/${definition.icon}.svg`} alt="" />
-          {synergy && (
+          {definition.synergies ? (
+            <span className="wiki-blessing-synergy-pair">
+              {definition.synergies.map((pairedSynergy) => (
+                <SynergyIcon
+                  key={pairedSynergy}
+                  type={pairedSynergy}
+                  size="12px"
+                />
+              ))}
+            </span>
+          ) : synergy ? (
             <SynergyIcon
               type={synergy}
               size="20px"
               className="wiki-blessing-synergy"
             />
-          )}
+          ) : null}
         </div>
         <div>
           <h3>{t(`blessing.${props.blessing}.name`)}</h3>
@@ -61,7 +71,13 @@ function BlessingCard(props: { blessing: Blessing }) {
   )
 }
 
-type BlessingCategory = "synergy" | "hero" | "planning" | "combat" | "items"
+type BlessingCategory =
+  | "synergy"
+  | "combo"
+  | "hero"
+  | "planning"
+  | "combat"
+  | "items"
 
 const HATCH_BLESSINGS = new Set<Blessing>([
   Blessing.POCKET_DAYCARE,
@@ -273,6 +289,7 @@ function compareCombatBlessings(a: Blessing, b: Blessing): number {
 
 const CATEGORY_ORDER: BlessingCategory[] = [
   "synergy",
+  "combo",
   "hero",
   "planning",
   "combat",
@@ -281,6 +298,7 @@ const CATEGORY_ORDER: BlessingCategory[] = [
 
 function getBlessingCategory(blessing: Blessing): BlessingCategory {
   if (Blessings[blessing].isItemBlessing) return "items"
+  if (Blessings[blessing].synergies) return "combo"
   if (getBlessingSynergy(blessing)) return "synergy"
   if (HERO_BLESSING_FAMILY[blessing] || ADDITIONAL_HERO_BLESSINGS.has(blessing))
     return "hero"
@@ -503,11 +521,13 @@ export default function WikiBlessings() {
                   <h3>
                     {category === "planning"
                       ? "Planning & Resources"
-                      : category === "hero"
-                        ? "Heroes & Pokémon"
-                        : category === "items"
-                          ? "Items"
-                          : category}
+                      : category === "combo"
+                        ? "Combos"
+                        : category === "hero"
+                          ? "Heroes & Pokémon"
+                          : category === "items"
+                            ? "Items"
+                            : category}
                   </h3>
                   <ul className="wiki-blessings-list">
                     {category === "synergy" &&

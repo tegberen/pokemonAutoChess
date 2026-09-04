@@ -11,6 +11,9 @@ import {
 import {
   AMORPHOUS_HP_BUFF_PER_SYNERGY_TIER,
   AMORPHOUS_SPEED_BUFF_PER_SYNERGY_TIER,
+  MONSTER_ATTACK_BUFF_PER_SYNERGY_TIER,
+  MONSTER_AP_BUFF_PER_SYNERGY_TIER,
+  MONSTER_MAX_HP_BUFF_FACTOR_PER_SYNERGY_TIER,
   SynergyTiers
 } from "../config/game/synergies"
 import type Player from "../models/colyseus-models/player"
@@ -212,6 +215,14 @@ import {
   BRUTE_SHIELD_ATTACK_RATIO,
   BRUTE_SHIELD_ALLY_ATTACK,
   STAR_GUARD_DEFENSE_PER_STAR,
+  STEAM_ENGINE_SPEED_ON_ATTACK,
+  FROZEN_OCEAN_WAVE_RATIO,
+  BLIGHTED_GARDEN_POKERUS_MULCH,
+  HUMAN_HORROR_POSSESSION_DURATION,
+  HUMAN_HORROR_POSSESSION_PER_HUMAN_TIER,
+  HUMAN_HORROR_ABILITIES_BY_TIER,
+  CRYSTAL_EXOSKELETON_SHIELD,
+  CRYSTAL_EXOSKELETON_SHELL_MAX_HP_RATIO,
   MACHINE_RESIDUE_SHIELD,
   WONDER_BOX_BLESSED_ITEMS,
   CHOICE_SPECS_ALLY_MIN_MAX_PP,
@@ -668,6 +679,7 @@ export default class Simulation extends Schema implements ISimulation {
             })
             boardPokemon.action = PokemonActionState.IDLE
             boardPokemon.dishes.clear() // consume all dishes
+            boardPokemon.dishChefMaxHP.clear()
           }
           entity.getEffects(OnSimulationStartEffect).forEach((effect) => {
             effect.apply({
@@ -964,6 +976,9 @@ export default class Simulation extends Schema implements ISimulation {
       team === Team.BLUE_TEAM ? Orientation.UPRIGHT : Orientation.DOWNLEFT
     if (!skipSynergyEffects) this.applySynergyEffects(pokemonEntity)
     this.applyItemsEffects(pokemonEntity)
+    /* after the items, so the multiplier sees the crit power they grant and not
+       only the part the synergies had applied by the time LIGHT was reached */
+    this.applyMidnightSunBonuses(pokemonEntity)
 
     this.board.setEntityOnCell(
       pokemonEntity.positionX,
@@ -1303,6 +1318,41 @@ export default class Simulation extends Schema implements ISimulation {
     })
   }
 
+  /* MIDNIGHT_SUN multiplies the LIGHT spot bonuses by the recipient's crit
+     power. The spot has already granted them once, so this tops up the rest */
+  applyMidnightSunBonuses(pokemon: PokemonEntity) {
+    if (
+      pokemon.player?.blessings?.includes(Blessing.MIDNIGHT_SUN) !== true ||
+      !pokemon.status.light
+    ) {
+      return
+    }
+    const extra = pokemon.critPower - 1
+    if (extra <= 0) return
+    pokemon.addAttack(
+      Math.ceil(pokemon.baseAtk * 0.2 * extra),
+      pokemon,
+      0,
+      false
+    )
+    pokemon.addAbilityPower(Math.round(20 * extra), pokemon, 0, false)
+    if (
+      pokemon.effects.has(EffectEnum.ETERNAL_LIGHT) ||
+      pokemon.effects.has(EffectEnum.MAX_ILLUMINATION)
+    ) {
+      pokemon.addDefense(0.5 * pokemon.baseDef * extra, pokemon, 0, false)
+      pokemon.addSpecialDefense(
+        0.5 * pokemon.baseSpeDef * extra,
+        pokemon,
+        0,
+        false
+      )
+    }
+    if (pokemon.effects.has(EffectEnum.MAX_ILLUMINATION)) {
+      pokemon.addShield(Math.round(100 * extra), pokemon, 0, false)
+    }
+  }
+
   applySynergyEffects(pokemon: PokemonEntity, singleType?: Synergy) {
     // in Double Up shared PVE fights, the partner's units use their own synergies
     const allyEffects =
@@ -1406,6 +1456,59 @@ export default class Simulation extends Schema implements ISimulation {
         player.titles.add(Title.GLUTTON)
       }
     }
+
+    if (
+      entity &&
+      player?.blessings?.includes(Blessing.MONSTROUS_GLUTTONY) &&
+      entity.types.has(Synergy.MONSTER)
+    ) {
+      this.applyMonsterStack(entity, pokemon.dishChefMaxHP.get(dish) ?? 0)
+    }
+  }
+
+  /* the MONSTER synergy normally pays this out on a KO, scaled by the victim's
+     size. MONSTROUS_GLUTTONY pays the same for eating what a chef cooked */
+  // the shell inherits the wearer's defence, but the factory builds it itemless
+  spawnCrystalExoskeletonShell(pokemon: PokemonEntity, team: Team) {
+    const coord = this.getClosestFreeCellToPokemonEntity(pokemon)
+    if (!coord) return
+    const shell = PokemonFactory.createPokemonFromName(
+      pokemon.name,
+      pokemon.player
+    )
+    shell.hp = Math.ceil(
+      pokemon.refToBoardPokemon.hp * CRYSTAL_EXOSKELETON_SHELL_MAX_HP_RATIO
+    )
+    const shellEntity = this.addPokemon(shell, coord.x, coord.y, team, true)
+    shellEntity.def = pokemon.def
+    shellEntity.speDef = pokemon.speDef
+    return shellEntity
+  }
+
+  applyMonsterStack(pokemon: PokemonEntity, victimMaxHP: number) {
+    const tier = getSynergyTier(
+      pokemon.player?.synergies ?? new Map(),
+      Synergy.MONSTER
+    )
+    if (tier === 0) return
+    pokemon.addAttack(
+      MONSTER_ATTACK_BUFF_PER_SYNERGY_TIER[tier] ?? 0,
+      pokemon,
+      0,
+      false
+    )
+    pokemon.addAbilityPower(
+      MONSTER_AP_BUFF_PER_SYNERGY_TIER[tier] ?? 0,
+      pokemon,
+      0,
+      false
+    )
+    pokemon.addMaxHP(
+      (MONSTER_MAX_HP_BUFF_FACTOR_PER_SYNERGY_TIER[tier] ?? 0) * victimMaxHP,
+      pokemon,
+      0,
+      false
+    )
   }
 
   applyPostEffects(
@@ -1942,6 +2045,45 @@ export default class Simulation extends Schema implements ISimulation {
             )
           }
         })
+      }
+
+      if (
+        blessings.includes(Blessing.BLIGHTED_GARDEN) &&
+        isSynergyActiveForPlayer(player, Synergy.FLORA)
+      ) {
+        ownUnits.forEach((ally) => {
+          ally.effectsSet.add(
+            new OnKillEffect(({ target }) => {
+              if (target.status.poisonStacks) player.collectMulch(target.stars)
+            })
+          )
+          ally.effectsSet.add(
+            new OnDeathEffect(({ pokemon }) => {
+              if (pokemon.types.has(Synergy.FLORA) && pokemon.status.pokerus) {
+                player.collectMulch(BLIGHTED_GARDEN_POKERUS_MULCH)
+              }
+            })
+          )
+        })
+      }
+
+      if (blessings.includes(Blessing.STEAM_ENGINE)) {
+        const speedPerAttack =
+          STEAM_ENGINE_SPEED_ON_ATTACK +
+          getSynergyTier(player.synergies, Synergy.FIRE) +
+          getSynergyTier(player.synergies, Synergy.ELECTRIC)
+        ownUnits
+          .filter(
+            (ally) =>
+              ally.types.has(Synergy.FIRE) && ally.types.has(Synergy.ELECTRIC)
+          )
+          .forEach((ally) =>
+            ally.effectsSet.add(
+              new OnAttackEffect(({ pokemon }) =>
+                pokemon.addSpeed(speedPerAttack, pokemon, 0, false)
+              )
+            )
+          )
       }
 
       if (blessings.includes(Blessing.SPIKY_GUARD)) {
@@ -3095,6 +3237,67 @@ export default class Simulation extends Schema implements ISimulation {
         if (dragonAllies.length > 0) {
           getStrongestUnit(dragonAllies).isDragonKingChampionThisFight = true
         }
+      }
+
+      if (blessings.includes(Blessing.HUMAN_HORROR)) {
+        const humanTier = getSynergyTier(player.synergies, Synergy.HUMAN)
+        const hauntingAbilities = HUMAN_HORROR_ABILITIES_BY_TIER[humanTier]
+        ownUnits
+          .filter(
+            (ally) =>
+              ally.types.has(Synergy.GHOST) && ally.tm !== Ability.DEFAULT
+          )
+          .forEach((ally) => {
+            ally.effectsSet.add(
+              new OnDeathEffect(({ pokemon, attacker }) => {
+                if (!attacker || attacker.hp <= 0 || !hauntingAbilities) return
+                attacker.status.triggerPossessed(
+                  HUMAN_HORROR_POSSESSION_DURATION +
+                    humanTier * HUMAN_HORROR_POSSESSION_PER_HUMAN_TIER,
+                  attacker,
+                  pokemon
+                )
+                if (!attacker.status.possessed) return
+                const haunting = pickRandomIn(hauntingAbilities)
+                // set rather than added, so it is exactly one cast and not two
+                attacker.pp = attacker.maxPP
+                attacker.skillBeforePossession = attacker.skill
+                attacker.skill = haunting
+                attacker.broadcastAbility({ skill: haunting })
+                this.broadcastToSpectators(Transfer.DISPLAY_TEXT, {
+                  id: this.id,
+                  text: `ability.${haunting}` as DisplayText,
+                  x: attacker.positionX,
+                  y: attacker.positionY
+                })
+              })
+            )
+          })
+      }
+
+      if (blessings.includes(Blessing.CRYSTAL_EXOSKELETON)) {
+        ownUnits
+          .filter(
+            (ally) =>
+              ally.types.has(Synergy.BUG) && ally.types.has(Synergy.ROCK)
+          )
+          .forEach((ally) => {
+            let hasMoulted = false
+            ally.effectsSet.add(
+              new OnDamageReceivedEffect(({ pokemon, board }) => {
+                if (hasMoulted || pokemon.hp > 0.5 * pokemon.maxHP) return
+                hasMoulted = true
+                pokemon.addShield(
+                  CRYSTAL_EXOSKELETON_SHIELD,
+                  pokemon,
+                  0,
+                  false
+                )
+                this.spawnCrystalExoskeletonShell(pokemon, teamIndex)
+                pokemon.flyAway(board)
+              })
+            )
+          })
       }
 
       if (blessings.includes(Blessing.SEEING_TRIPLE)) {
@@ -4273,7 +4476,7 @@ export default class Simulation extends Schema implements ISimulation {
           pokemon.status.triggerRuneProtect(8000, pokemon, pokemon)
           pokemon.addDefense(0.5 * pokemon.baseDef, pokemon, 0, false)
           pokemon.addSpecialDefense(0.5 * pokemon.baseSpeDef, pokemon, 0, false)
-          pokemon.addShield(120, pokemon, 0, false)
+          pokemon.addShield(100, pokemon, 0, false)
           pokemon.status.addResurrection(pokemon)
         }
         break
@@ -4333,18 +4536,20 @@ export default class Simulation extends Schema implements ISimulation {
         }
 
         pokemon.effects.add(effect)
+        const amorphousMaxHp = Math.ceil(hpFactor * activeSynergies)
         pokemon.addSpeed(
           Math.ceil(speedFactor * activeSynergies),
           pokemon,
           0,
           false
         )
-        pokemon.addMaxHP(
-          Math.ceil(hpFactor * activeSynergies),
-          pokemon,
-          0,
-          false
-        )
+        pokemon.addMaxHP(amorphousMaxHp, pokemon, 0, false)
+        if (
+          types.has(Synergy.WATER) &&
+          player?.blessings?.includes(Blessing.HYDRATED_CELLS)
+        ) {
+          pokemon.addAbilityPower(amorphousMaxHp, pokemon, 0, false)
+        }
         break
       }
 
@@ -5897,6 +6102,23 @@ export default class Simulation extends Schema implements ISimulation {
     }
   }
 
+  applyFrozenOceanToWaveRider(pokemon: PokemonEntity) {
+    if (
+      pokemon.player?.blessings?.includes(Blessing.FROZEN_OCEAN) !== true ||
+      !pokemon.types.has(Synergy.AQUATIC) ||
+      !pokemon.types.has(Synergy.ICE)
+    ) {
+      return
+    }
+    pokemon.addPP(
+      Math.round(FROZEN_OCEAN_WAVE_RATIO * pokemon.maxPP),
+      pokemon,
+      0,
+      false
+    )
+    pokemon.addSpecialDefense(pokemon.speDef, pokemon, 0, false)
+  }
+
   triggerTidalWave(
     team: Team,
     tidalWaveLevel: number,
@@ -5935,6 +6157,7 @@ export default class Simulation extends Schema implements ISimulation {
           if (pokemonHit.team === team) {
             pokemonHit.status.clearNegativeStatus(pokemonHit)
             this.castTidalSurgeAbility(pokemonHit)
+            this.applyFrozenOceanToWaveRider(pokemonHit)
             if (pokemonHit.types.has(Synergy.AQUATIC) || healAll) {
               const { healReceived } = pokemonHit.handleHeal(
                 tidalWaveLevel * 0.1 * pokemonHit.maxHP,
