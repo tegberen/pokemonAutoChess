@@ -6,6 +6,7 @@ import type { UserRecord } from "firebase-admin/lib/auth/user-record"
 import type { QueryFilter } from "mongoose"
 import {
   EloRankThreshold,
+  isScribbleWeekend,
   MAX_PLAYERS_PER_GAME,
   MIN_HUMAN_PLAYERS
 } from "../../config"
@@ -34,6 +35,7 @@ import { logger } from "../../utils/logger"
 import { max } from "../../utils/number"
 import { cleanProfanity } from "../../utils/profanity-filter"
 import { pickRandomIn, shuffleArray } from "../../utils/random"
+import { getDefaultRoomName } from "../../utils/room-name"
 import { schemaEntries, schemaValues } from "../../utils/schemas"
 import type PreparationRoom from "../preparation-room"
 
@@ -684,6 +686,49 @@ export class OnChangeBlessingsEnabledCommand extends Command<
           } for this game.${
             ruleCleared ? " Smeargle's Scribble rule has been turned off." : ""
           } Players need to ready again.`,
+          avatar: user?.avatar
+        })
+
+        this.state.users.forEach((user) => {
+          if (!user.isBot) user.ready = false
+        })
+      }
+    } catch (error) {
+      logger.error(error)
+    }
+  }
+}
+
+export class OnChangeWhimsyCommand extends Command<
+  PreparationRoom,
+  {
+    client: Client
+    whimsy: boolean
+  }
+> {
+  execute({ client, whimsy }) {
+    try {
+      const user = this.state.users.get(client.auth?.uid ?? "")
+      const isAllowed =
+        (client.auth?.uid === this.state.ownerId ||
+          user?.role === Role.ADMIN ||
+          user?.role === Role.MODERATOR) &&
+        this.state.gameMode === GameMode.DOUBLE_UP &&
+        isScribbleWeekend()
+      if (isAllowed && this.state.whimsy !== whimsy) {
+        // the room keeps a name the owner typed, but follows the toggle otherwise
+        if (this.state.name === getDefaultRoomName(this.state.gameMode, !whimsy)) {
+          this.state.name = getDefaultRoomName(this.state.gameMode, whimsy)
+          this.room.setName(this.state.name)
+        }
+        this.state.whimsy = whimsy
+        this.room.setWhimsy(whimsy)
+        this.room.state.addMessage({
+          author: "Server",
+          authorId: "server",
+          payload: `Whimsy Weekend rules have been ${
+            whimsy ? "enabled" : "disabled"
+          } for this game. Players need to ready again.`,
           avatar: user?.avatar
         })
 

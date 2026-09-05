@@ -53,28 +53,7 @@ export function RoomSelectionMenu(props: {
             <h2>{t(`game_modes.${GameMode.CUSTOM_LOBBY}`)}</h2>
             <p>{t(`game_modes_descriptions.${GameMode.CUSTOM_LOBBY}`)}</p>
           </li>
-          <li
-            className="my-box"
-            onClick={() => props.onSelectMode(GameMode.DOUBLE_UP)}
-          >
-            <img
-              src="assets/ui/game_modes/double_up.png"
-              alt={t(`game_modes.${GameMode.DOUBLE_UP}`)}
-              draggable="false"
-            />
-            <h2>{t(`game_modes.${GameMode.DOUBLE_UP}`)}</h2>
-            <p>{t(`game_modes_descriptions.${GameMode.DOUBLE_UP}`)}</p>
-          </li>
-          <li className="my-box" onClick={() => setShowGuideMenu(true)}>
-            <img
-              src="assets/ui/game_modes/guide.png"
-              alt={t(`game_modes.${GameMode.GUIDE}`)}
-              draggable="false"
-            />
-            <h2>{t(`game_modes.${GameMode.GUIDE}`)}</h2>
-            <p>{t(`game_modes_descriptions.${GameMode.GUIDE}`)}</p>
-          </li>
-          {whimsyWeekend && (
+          {whimsyWeekend ? (
             <li
               className="my-box"
               onClick={() => props.onSelectMode(WHIMSY_WEEKEND_REQUEST)}
@@ -88,7 +67,29 @@ export function RoomSelectionMenu(props: {
               <p>{t("whimsy_weekend_description")}</p>
               <WhimsyWeekendCountdown />
             </li>
+          ) : (
+            <li
+              className="my-box"
+              onClick={() => props.onSelectMode(GameMode.DOUBLE_UP)}
+            >
+              <img
+                src="assets/ui/game_modes/double_up.png"
+                alt={t(`game_modes.${GameMode.DOUBLE_UP}`)}
+                draggable="false"
+              />
+              <h2>{t(`game_modes.${GameMode.DOUBLE_UP}`)}</h2>
+              <p>{t(`game_modes_descriptions.${GameMode.DOUBLE_UP}`)}</p>
+            </li>
           )}
+          <li className="my-box" onClick={() => setShowGuideMenu(true)}>
+            <img
+              src="assets/ui/game_modes/guide.png"
+              alt={t(`game_modes.${GameMode.GUIDE}`)}
+              draggable="false"
+            />
+            <h2>{t(`game_modes.${GameMode.GUIDE}`)}</h2>
+            <p>{t(`game_modes_descriptions.${GameMode.GUIDE}`)}</p>
+          </li>
         </ul>
         </>
       }

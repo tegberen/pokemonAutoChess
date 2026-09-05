@@ -115,13 +115,7 @@ export default function RoomMenu() {
         )}
         {hasWhimsyLobbies && (
           <Tab>
-            <img
-              src="/assets/ui/whimsy_weekend.png"
-              alt={t("whimsy_weekend")}
-              title={t("whimsy_weekend")}
-              className="gamemode icon"
-              draggable="false"
-            />
+            <GameModeIcon gameMode={GameMode.DOUBLE_UP} whimsy />
             <span>{t("whimsy_weekend")}</span>
           </Tab>
         )}

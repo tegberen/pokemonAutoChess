@@ -24,6 +24,7 @@ import {
   OnChangeBlessingsEnabledCommand,
   OnChangeBlessingsUnderTestCommand,
   OnChangeScribbleExtendedCommand,
+  OnChangeWhimsyCommand,
   OnGameStartRequestCommand,
   OnJoinCommand,
   OnKickPlayerCommand,
@@ -90,6 +91,10 @@ export default class PreparationRoom extends Room<{ state: PreparationState }> {
 
   async setBlessingsEnabled(blessingsEnabled: boolean) {
     await this.setMetadata(<IPreparationMetadata>{ blessingsEnabled })
+  }
+
+  async setWhimsy(whimsy: boolean) {
+    await this.setMetadata(<IPreparationMetadata>{ whimsy })
   }
 
   onCreate(options: {
@@ -317,6 +322,18 @@ export default class PreparationRoom extends Room<{ state: PreparationState }> {
         this.dispatcher.dispatch(new OnChangeBlessingsEnabledCommand(), {
           client,
           enabled
+        })
+      } catch (error) {
+        logger.error(error)
+      }
+    })
+
+    this.onMessage(Transfer.CHANGE_WHIMSY, (client, whimsy) => {
+      logger.info(Transfer.CHANGE_WHIMSY, this.roomName, whimsy)
+      try {
+        this.dispatcher.dispatch(new OnChangeWhimsyCommand(), {
+          client,
+          whimsy
         })
       } catch (error) {
         logger.error(error)

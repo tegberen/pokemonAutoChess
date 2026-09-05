@@ -7760,6 +7760,10 @@
 	"blessings_under_test_clear": "Clear",
 	"blessings_enabled_off": "Off",
 	"blessings_enabled_on": "On",
+	"whimsy_rules_label": "Whimsy Weekend",
+	"whimsy_rules_hint": "Whimsy Weekend adds a random Smeargle's Scribble rule to Double Up. Turn it off to play a plain Double Up game.",
+	"whimsy_rules_on": "Random Smeargle's Scribble Rule",
+	"whimsy_rules_off": "Off (plain Double Up)",
 	"blessing_event_title": "Jirachi's Wish Festival",
 	"blessing_event_description": "A wishing star has appeared. What you ask for will shape your journey.",
 	"blessing_event_ends_in": "Ends in {{time}}"

@@ -107,11 +107,7 @@ export default function PreparationMenu() {
       {isWhimsyWeekend && (
         <>
           <p>
-            <img
-              src="/assets/ui/whimsy_weekend.png"
-              alt={t("whimsy_weekend")}
-              className="gamemode icon"
-            />
+            <GameModeIcon gameMode={GameMode.DOUBLE_UP} whimsy />
             <b>{t("whimsy_weekend")}</b>: {t("whimsy_weekend_description")}
           </p>
           <WhimsyWeekendCountdown />

@@ -15,8 +15,10 @@ import {
   setBlessingsEnabled,
   setBlessingsUnderTest as setBlessingsUnderTestNetwork,
   setScribbleExtended,
-  setSpecialRule
+  setSpecialRule,
+  setWhimsy
 } from "../../../network"
+import { useWhimsyWeekendWindow } from "../whimsy-weekend/whimsy-weekend"
 import { Blessings } from "../../../../../config/game/blessings"
 import type { Blessing } from "../../../../../types/enum/Blessing"
 import { addIconsToDescription } from "../../utils/descriptions"
@@ -93,6 +95,7 @@ export default function PreparationSettings() {
     (state) => state.preparation.ownerId === state.network.uid
   )
 
+  const { active: whimsyWeekendActive } = useWhimsyWeekendWindow()
   const isAdmin = user?.role === Role.ADMIN
   const isModerator = user?.role === Role.MODERATOR
   const canEditRoom = isOwner || isModerator || isAdmin
@@ -400,6 +403,30 @@ export default function PreparationSettings() {
     </div>
   )
 
+  const whimsySetting = gameMode === GameMode.DOUBLE_UP &&
+    whimsyWeekendActive &&
+    canEditRoom && (
+      <div className="lobby-setting" title={t("whimsy_rules_hint")}>
+        <span className="setting-label">
+          {t("whimsy_rules_label")}
+          <img
+            src="/assets/ui/whimsy_weekend.jpg"
+            alt=""
+            className="setting-icon setting-icon-round"
+          />
+        </span>
+        <div className="setting-control">
+          <select
+            value={whimsy ? "on" : "off"}
+            onChange={(e) => setWhimsy(e.target.value === "on")}
+          >
+            <option value="on">{t("whimsy_rules_on")}</option>
+            <option value="off">{t("whimsy_rules_off")}</option>
+          </select>
+        </div>
+      </div>
+    )
+
   // Whimsy Weekend always rolls a scribble rule, so blessings are not offered
   const blessingsSetting = hasCustomLobbySettings && !whimsy && isAdmin && (
     <div className="lobby-setting" title={t("blessings_enabled_hint")}>
@@ -469,6 +496,7 @@ export default function PreparationSettings() {
     privacySetting ||
     scribbleRuleSetting ||
     playerHpSetting ||
+    whimsySetting ||
     blessingsUnderTestSetting ||
     botSetting
 
@@ -479,6 +507,7 @@ export default function PreparationSettings() {
           {roomNameSetting}
           {botSetting}
           {scribbleRuleSetting}
+          {whimsySetting}
           {playerHpSetting}
           {blessingsSetting}
           {blessingsUnderTestSetting}

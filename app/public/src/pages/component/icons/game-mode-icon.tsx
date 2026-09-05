@@ -15,10 +15,12 @@ export function GameModeIcon(props: { gameMode: GameMode; whimsy?: boolean }) {
     <img
       alt={label}
       title={label}
-      className={cc(props.gameMode.toLowerCase(), "gamemode icon")}
+      className={cc(props.gameMode.toLowerCase(), "gamemode icon", {
+        whimsy: props.whimsy === true
+      })}
       src={
         props.whimsy
-          ? "/assets/ui/whimsy_weekend.png"
+          ? "/assets/ui/whimsy_weekend.jpg"
           : props.gameMode === GameMode.GUIDE
             ? "/assets/ui/guide_lobby.svg"
             : `/assets/ui/${props.gameMode.toLowerCase()}.png`

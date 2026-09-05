@@ -228,6 +228,10 @@ export function setBlessingsEnabled(enabled: boolean) {
   rooms.preparation?.send(Transfer.CHANGE_BLESSINGS_ENABLED, enabled)
 }
 
+export function setWhimsy(whimsy: boolean) {
+  rooms.preparation?.send(Transfer.CHANGE_WHIMSY, whimsy)
+}
+
 export function lockShop() {
   rooms.game?.send(Transfer.LOCK)
 }

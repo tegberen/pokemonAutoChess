@@ -81,6 +81,12 @@ img {
   border-style: none;
 }
 
+/* the whimsy badge is opaque artwork, unlike the transparent mode icons it sits next to */
+img.gamemode.whimsy {
+  border-radius: 50%;
+  object-fit: cover;
+}
+
 table {
   border-collapse: collapse;
 }
