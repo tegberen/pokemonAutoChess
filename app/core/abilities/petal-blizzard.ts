@@ -12,7 +12,7 @@ export class PetalBlizzardStrategy extends AbilityStrategy {
   ) {
     super.process(pokemon, board, target, crit)
     const cells = pokemon.isBlossomFestivalChampionThisFight
-      ? board.getCellsInRadius(pokemon.positionX, pokemon.positionY, pokemon.range, false)
+      ? board.getCellsInRange(pokemon.positionX, pokemon.positionY, pokemon.range, false)
       : board.getAdjacentCells(pokemon.positionX, pokemon.positionY)
     cells
       .forEach((cell) => {

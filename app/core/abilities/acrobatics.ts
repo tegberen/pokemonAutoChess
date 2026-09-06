@@ -17,7 +17,7 @@ export class AcrobaticsStrategy extends AbilityStrategy {
 
     const travelDistance = 4 - pokemon.items.size
     const candidateDestinationCells = board
-      .getCellsInRadius(pokemon.targetX, pokemon.targetY, pokemon.range, false)
+      .getCellsInRange(pokemon.targetX, pokemon.targetY, pokemon.range, false)
       .filter((cell) => cell.value === undefined)
       .sort(
         (a, b) =>

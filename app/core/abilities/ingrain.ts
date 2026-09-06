@@ -22,7 +22,7 @@ export class IngrainStrategy extends AbilityStrategy {
       FlowerMonByPot[FlowerPot.YELLOW].includes(pokemon.name) &&
       pokemon.player?.blessings?.includes(Blessing.FLYTRAP)
     const cells = reachesWholeAttackRange
-      ? board.getCellsInRadius(pokemon.positionX, pokemon.positionY, pokemon.range, true)
+      ? board.getCellsInRange(pokemon.positionX, pokemon.positionY, pokemon.range, true)
       : board.getAdjacentCells(pokemon.positionX, pokemon.positionY, true)
     cells.forEach((cell) => {
       if (cell.value && pokemon.team == cell.value.team) {
