@@ -986,6 +986,13 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     grantsPokemonImmediately: true,
     synergy: Synergy.GRASS
   },
+  [Blessing.VERDANT_GROWTH]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "verdant_growth",
+    grantsPokemonImmediately: false,
+    synergy: Synergy.GRASS
+  },
   [Blessing.GEM_RUSH]: {
     tier: BlessingTier.SILVER,
     availableAtStages: [4],

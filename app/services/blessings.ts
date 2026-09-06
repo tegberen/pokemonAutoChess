@@ -15,7 +15,10 @@ import { RarityCost } from "../config/game/shop"
 import { rollWaterPonds } from "../config/game/water-ponds"
 import { giveRandomEgg } from "../core/eggs"
 import { EvolutionManager } from "../core/evolution-logic/evolution-manager"
-import { getUnlockedFlowerPots } from "../core/flower-pots"
+import {
+  getUnlockedFlowerPots,
+  grantWishItemToFlowerPot
+} from "../core/flower-pots"
 import type Player from "../models/colyseus-models/player"
 import { PlayerBlessings } from "../models/colyseus-models/player-blessings"
 import { PlayerChoice } from "../models/colyseus-models/player-choice"
@@ -2175,11 +2178,15 @@ export const blessingEffectService: {
   [Blessing.DOUBLE_WINDFALL]: (player) =>
     giftPokemonIfBenchHasRoom(player, Pkm.FLABEBE),
 
-  [Blessing.FLYTRAP]: (player) =>
-    giftPokemonIfBenchHasRoom(player, Pkm.GOSSIFLEUR),
+  [Blessing.FLYTRAP]: (player) => {
+    grantWishItemToFlowerPot(player, Blessing.FLYTRAP)
+    return giftPokemonIfBenchHasRoom(player, Pkm.GOSSIFLEUR)
+  },
 
-  [Blessing.MEGA_SOL]: (player) =>
-    giftPokemonIfBenchHasRoom(player, Pkm.GOSSIFLEUR),
+  [Blessing.MEGA_SOL]: (player) => {
+    grantWishItemToFlowerPot(player, Blessing.MEGA_SOL)
+    return giftPokemonIfBenchHasRoom(player, Pkm.GOSSIFLEUR)
+  },
 
   [Blessing.BABY_OPENER]: (player) =>
     giftBabiesUnderCost(
@@ -2238,6 +2245,8 @@ export const blessingEffectService: {
     player.items.push(...pickNRandomIn(Berries, 3))
     return true
   },
+
+  [Blessing.VERDANT_GROWTH]: () => true,
 
   [Blessing.DIGGING_EQUIPMENT]: (player) =>
     giftPokemonIfBenchHasRoom(player, Pkm.NIDORANM),
@@ -2864,8 +2873,10 @@ export const blessingEffectService: {
   [Blessing.SHELL_ARMOR_BLESSING]: (player, state, room) =>
     heroBlessingEffect(Blessing.SHELL_ARMOR_BLESSING, player, state, room),
 
-  [Blessing.SPORE_CLOUDS]: (player) =>
-    giftPokemonIfBenchHasRoom(player, Pkm.FLABEBE),
+  [Blessing.SPORE_CLOUDS]: (player) => {
+    grantWishItemToFlowerPot(player, Blessing.SPORE_CLOUDS)
+    return giftPokemonIfBenchHasRoom(player, Pkm.FLABEBE)
+  },
 
   [Blessing.AMAZING_GARDENING]: (player) => {
     if (!giftPokemonIfBenchHasRoom(player, Pkm.GOSSIFLEUR)) return false

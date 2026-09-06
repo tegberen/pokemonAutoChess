@@ -1,6 +1,11 @@
 import { type IPlayer, Title } from "../types"
+import { getItemCapacity } from "../config/game/items"
+import { Blessing } from "../types/enum/Blessing"
+import type { Pokemon } from "../models/colyseus-models/pokemon"
+import type Player from "../models/colyseus-models/player"
+import { schemaValues } from "../utils/schemas"
 import { EffectEnum } from "../types/enum/Effect"
-import { FlowerPot } from "../types/enum/FlowerPot"
+import { FlowerPot, FlowerPots } from "../types/enum/FlowerPot"
 import {
   DojoTickets,
   Item,
@@ -57,6 +62,52 @@ export function canItemGoOnFlowerPot(item: Item): boolean {
   if (isIn(FlowerPotForbiddenItems, item)) return false
   if (isIn(Mulches, item)) return true
   return !isIn(UnholdableItems, item) && !isIn(DojoTickets, item)
+}
+
+// these wishes bolt an item onto their flower pot for the rest of the game, and
+// the player cannot take it back off
+export const WishItemByPot: Partial<
+  Record<FlowerPot, { blessing: Blessing; item: Item }>
+> = {
+  [FlowerPot.YELLOW]: { blessing: Blessing.FLYTRAP, item: Item.COVERT_CLOAK },
+  [FlowerPot.WHITE]: { blessing: Blessing.MEGA_SOL, item: Item.SOOTHE_BELL },
+  [FlowerPot.BLUE]: { blessing: Blessing.SPORE_CLOUDS, item: Item.KINGS_ROCK }
+}
+
+export function getFlowerPotOf(pkm: Pkm): FlowerPot | undefined {
+  return FlowerPots.find((pot) => FlowerMonByPot[pot].includes(pkm))
+}
+
+// the item a wish has locked onto this pot, if the player took that wish
+export function getWishItemOnPot(
+  player: IPlayer,
+  pot: Pokemon
+): Item | undefined {
+  const potColor = getFlowerPotOf(pot.name)
+  const wish = potColor ? WishItemByPot[potColor] : undefined
+  return wish && player.blessings?.includes(wish.blessing) ? wish.item : undefined
+}
+
+// Taking one of these wishes attaches its item to the matching pot right away.
+// A pot with no room left hands everything it was holding back to the bag, so
+// the wish item is the only thing it wears
+export function grantWishItemToFlowerPot(player: Player, blessing: Blessing) {
+  const entry = Object.entries(WishItemByPot).find(
+    ([, wish]) => wish.blessing === blessing
+  )
+  if (!entry) return
+  const [potColor, { item }] = entry as [FlowerPot, { blessing: Blessing; item: Item }]
+  const pot = player.flowerPots.find((p) =>
+    FlowerMonByPot[potColor].includes(p.name)
+  )
+  if (!pot || pot.items.has(item)) return
+  if (pot.items.size >= getItemCapacity(player.specialGameRule)) {
+    schemaValues(pot.items).forEach((heldItem) => {
+      pot.items.delete(heldItem)
+      player.items.push(heldItem)
+    })
+  }
+  pot.items.add(item)
 }
 
 export function getFlowerPotsUnlocked(player: IPlayer): FlowerPot[] {

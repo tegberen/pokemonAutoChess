@@ -18,7 +18,8 @@ import { carryOverPermanentStats } from "../../core/evolution-logic/evolution-ha
 import { EvolutionManager } from "../../core/evolution-logic/evolution-manager"
 import {
   MulchStockCaps,
-  getFlowerPotsUnlocked
+  getFlowerPotsUnlocked,
+  getWishItemOnPot
 } from "../../core/flower-pots"
 import type { PokemonEntity } from "../../core/pokemon-entity"
 import type GameState from "../../rooms/states/game-state"
@@ -933,7 +934,9 @@ export default class Player extends Schema implements IPlayer {
     let anyItemReturned = false
     this.flowerPots.forEach((pot, index) => {
       if (index < nbPotsUnlocked || pot.items.size === 0) return
-      const itemsHeld = schemaValues(pot.items)
+      const wishItem = getWishItemOnPot(this, pot)
+      const itemsHeld = schemaValues(pot.items).filter((i) => i !== wishItem)
+      if (itemsHeld.length === 0) return
       pot.removeItems(itemsHeld, this)
       itemsHeld.forEach((item) => this.items.push(item))
       anyItemReturned = true

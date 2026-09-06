@@ -187,27 +187,40 @@ export function sectionId(title: string) {
   )
 }
 
-export function formatGuideArticle(html: string, kind: "item" | "weather") {
+export function formatGuideArticle(
+  html: string,
+  kind: "item" | "weather" | "synergy"
+) {
   const root = document.createElement("div")
   root.innerHTML = html
   root.querySelectorAll("table").forEach((table) => {
     table.classList.add(`guide-${kind}-table`)
     table.setAttribute(
       "aria-label",
-      kind === "item" ? "Items and effects" : "Weather and effects"
+      kind === "item"
+        ? "Items and effects"
+        : kind === "weather"
+          ? "Weather and effects"
+          : "Pokemon and abilities"
     )
     table
       .querySelectorAll("thead th")
       .forEach((cell) => cell.setAttribute("scope", "col"))
     for (const body of Array.from(table.tBodies)) {
       for (const row of Array.from(body.rows)) {
-        const label = row.cells[0]?.textContent?.trim()
+        const nameCell = row.cells[0]
+        const label = nameCell?.textContent?.trim()
         if (label) row.id = sectionId("entry-" + label)
+        // the synergy table names a Pokemon in its first column, so show its portrait
+        if (kind === "synergy" && nameCell && label) {
+          nameCell.prepend(pokemonPortraits(label))
+        }
       }
     }
     wrapTable(table)
   })
-  if (kind === "weather") return root.innerHTML
+  // only the items chapter groups its h4 headings into entry cards
+  if (kind !== "item") return root.innerHTML
   root.querySelectorAll("h4").forEach((heading) => {
     const section = document.createElement("section")
     section.className = "guide-item-entry"

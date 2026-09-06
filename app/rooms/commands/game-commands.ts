@@ -90,7 +90,8 @@ import { giveRandomEgg } from "../../core/eggs"
 import { EvolutionManager } from "../../core/evolution-logic/evolution-manager"
 import {
   canItemGoOnFlowerPot,
-  getFlowerPotsUnlocked
+  getFlowerPotsUnlocked,
+  getWishItemOnPot
 } from "../../core/flower-pots"
 import { selectDoubleUpMatchups, selectMatchups } from "../../core/matchmaking"
 import { canSell, PokemonEntity } from "../../core/pokemon-entity"
@@ -1851,7 +1852,9 @@ export class OnRemoveFlowerPotItemsCommand extends Command<
     if (potIndex >= getFlowerPotsUnlocked(player).length) return
     const pot = player.flowerPots[potIndex]
     if (!pot) return
-    const itemsHeld = schemaValues(pot.items)
+    // a wish's item is bolted on, so it stays behind when the rest comes off
+    const wishItem = getWishItemOnPot(player, pot)
+    const itemsHeld = schemaValues(pot.items).filter((i) => i !== wishItem)
     if (itemsHeld.length === 0) return
     pot.removeItems(itemsHeld, player)
     itemsHeld.forEach((item) => player.items.push(item))

@@ -226,6 +226,8 @@ import {
   MACHINE_RESIDUE_SHIELD,
   WONDER_BOX_BLESSED_ITEMS,
   CHOICE_SPECS_ALLY_MIN_MAX_PP,
+  VERDANT_GROWTH_ABILITY_POWER,
+  VERDANT_GROWTH_INTERVAL,
   hasGluttonGrowth
 } from "../types/enum/Blessing"
 import { GracideaBlossomEffect } from "./effects/items"
@@ -2115,6 +2117,27 @@ export default class Simulation extends Schema implements ISimulation {
           )
       }
 
+      if (blessings.includes(Blessing.VERDANT_GROWTH)) {
+        ownUnits
+          .filter((ally) => ally.types.has(Synergy.GRASS))
+          .forEach((ally) =>
+            ally.effectsSet.add(
+              // a fresh instance per ally, or they would share one timer
+              new PeriodicEffect(
+                (pokemon) =>
+                  pokemon.addAbilityPower(
+                    VERDANT_GROWTH_ABILITY_POWER,
+                    pokemon,
+                    0,
+                    false
+                  ),
+                EffectEnum.GROWTH,
+                VERDANT_GROWTH_INTERVAL
+              )
+            )
+          )
+      }
+
       if (blessings.includes(Blessing.SPIKY_GUARD)) {
         ownUnits.forEach((ally) => {
           const hasAdjacentAlly = this.board
@@ -3168,7 +3191,6 @@ export default class Simulation extends Schema implements ISimulation {
         )
         if (bellossoms.length > 0) {
           const champion = getStrongestUnit(bellossoms)
-          champion.isBlossomFestivalChampionThisFight = true
           champion.types.add(Synergy.GRASS)
           champion.effectsSet.add(
             new OnAbilityCastEffect((caster) => {

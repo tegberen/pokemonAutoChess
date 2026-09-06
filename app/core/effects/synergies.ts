@@ -84,7 +84,11 @@ import { chance, pickNRandomIn, pickRandomIn } from "../../utils/random"
 import { schemaValues } from "../../utils/schemas"
 import { type Board, effectInLine } from "../board"
 import { EvolutionManager } from "../evolution-logic/evolution-manager"
-import { FlowerMonByPot, getFlowerPotsUnlocked } from "../flower-pots"
+import {
+  FlowerMonByPot,
+  getFlowerPotsUnlocked,
+  getWishItemOnPot
+} from "../flower-pots"
 import type { PokemonEntity } from "../pokemon-entity"
 import type Simulation from "../simulation"
 import { DelayedCommand } from "../simulation-command"
@@ -613,20 +617,16 @@ export const onFlowerMonDeath = new OnDeathEffect(({ pokemon, board }) => {
       entity.cooldown = 1000
       pokemon.player.pokemonsPlayed.add(flowerToSpawn.name)
 
-      if (nextPot === FlowerPot.YELLOW && blessings?.includes(Blessing.FLYTRAP)) {
-        entity.items.add(Item.COVERT_CLOAK)
-        entity.applyItemEffect(Item.COVERT_CLOAK)
-      }
+      // the wish item is attached to the pot when the wish is taken, so the flower
+      // already spawned holding it. it just must not be stolen off in combat
+      const wishItem = getWishItemOnPot(pokemon.player, flowerToSpawn)
+      if (wishItem) entity.unremovableItems.add(wishItem)
 
       if (nextPot === FlowerPot.WHITE && blessings?.includes(Blessing.MEGA_SOL)) {
-        entity.items.add(Item.SOOTHE_BELL)
-        entity.applyItemEffect(Item.SOOTHE_BELL)
         entity.isMegaSolAuraSource = true
       }
 
       if (nextPot === FlowerPot.BLUE && blessings?.includes(Blessing.SPORE_CLOUDS)) {
-        entity.items.add(Item.KINGS_ROCK)
-        entity.applyItemEffect(Item.KINGS_ROCK)
         entity.effectsSet.add(sporeCloudEffect)
       }
 
@@ -640,12 +640,16 @@ export const onFlowerMonDeath = new OnDeathEffect(({ pokemon, board }) => {
           pokemon.team
         )
         if (twinSpot) {
-          pokemon.simulation.addPokemon(
+          const twin = pokemon.simulation.addPokemon(
             flowerToSpawn,
             twinSpot.x,
             twinSpot.y,
             pokemon.team,
             true
+          )
+          // only one of the pair carries what the pot is holding
+          schemaValues(twin.items).forEach((heldItem) =>
+            twin.removeItem(heldItem)
           )
         }
       }
@@ -674,7 +678,7 @@ const sporeCloudEffect = new PeriodicEffect(
         enemy.status.triggerSleep(SPORE_CLOUDS_STATUS_DURATION, enemy)
     ])
     board
-      .getAdjacentCells(entity.positionX, entity.positionY)
+      .getCellsInRange(entity.positionX, entity.positionY, entity.range, false)
       .forEach((cell) => {
         if (cell.value && cell.value.team !== entity.team) {
           inflictStatus(cell.value)

@@ -238,10 +238,11 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
   // CELEBI caps how much player life one fight can hand back
   timeTravelLifeHealedThisFight: number = 0
   isSynchronisedSpeedLeaderThisFight: boolean = false
-  isBlossomFestivalChampionThisFight: boolean = false
   isEchoChamberLeaderThisFight: boolean = false
   isDragonKingChampionThisFight: boolean = false
   isMegaSolAuraSource: boolean = false
+  // items handed over by a blessing at spawn: part of the effect, not loot to steal
+  unremovableItems: Set<Item> = new Set()
   heroBlessings = new Set<Blessing>()
   hasOwnSpotlight: boolean = false
   isTidalGuardian: boolean = false
@@ -999,6 +1000,7 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
   }
 
   removeItem(item: Item, permanent = false) {
+    if (this.unremovableItems.has(item)) return
     this.items.delete(item)
     this.removeItemEffect(item)
     if (permanent && !this.isGhostOpponent) {

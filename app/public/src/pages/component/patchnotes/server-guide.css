@@ -354,25 +354,25 @@
   margin: 0;
 }
 
-.server-guide :is(.guide-item-table, .guide-weather-table) {
+.server-guide :is(.guide-item-table, .guide-weather-table, .guide-synergy-table) {
   width: 100%;
   border-collapse: collapse;
   text-align: left;
 }
 
-.server-guide :is(.guide-item-table, .guide-weather-table) th,
-.server-guide :is(.guide-item-table, .guide-weather-table) td {
+.server-guide :is(.guide-item-table, .guide-weather-table, .guide-synergy-table) th,
+.server-guide :is(.guide-item-table, .guide-weather-table, .guide-synergy-table) td {
   padding: 0.5em;
   vertical-align: top;
   border-bottom: var(--border-extra-thin);
 }
 
-.server-guide :is(.guide-item-table, .guide-weather-table) thead {
+.server-guide :is(.guide-item-table, .guide-weather-table, .guide-synergy-table) thead {
   background: var(--color-bg-tertiary);
 }
 
 .server-guide
-  :is(.guide-item-table, .guide-weather-table)
+  :is(.guide-item-table, .guide-weather-table, .guide-synergy-table)
   tbody
   tr:nth-child(even) {
   background: var(--color-bg-primary);
@@ -386,6 +386,29 @@
 
 .server-guide :is(.guide-item-table, .guide-weather-table) td:nth-child(2) {
   min-width: 15em;
+}
+
+/* Name with portrait, ability, then a wide effect column that takes the rest */
+.server-guide .guide-synergy-table th:first-child,
+.server-guide .guide-synergy-table td:first-child {
+  width: 14%;
+  min-width: 11em;
+}
+
+.server-guide .guide-synergy-table td:first-child {
+  white-space: nowrap;
+  vertical-align: middle;
+}
+
+.server-guide .guide-synergy-table th:nth-child(2),
+.server-guide .guide-synergy-table td:nth-child(2) {
+  width: 16%;
+  min-width: 9em;
+  white-space: nowrap;
+}
+
+.server-guide .guide-synergy-table td:nth-child(3) {
+  min-width: 20em;
 }
 
 .server-guide .guide-index-heading {

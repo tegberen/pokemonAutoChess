@@ -2,6 +2,71 @@
 
 ## Synergies
 
+### Flora
+
+Flora is the synergy built around RANGE. Its abilities cover the caster's RANGE,
+and several scale with the distance to the target.
+
+**(2) Springtide:** Allies deal 10% more damage to enemies for each space between
+them and the enemy.
+
+> Flora (2) is a generic damage amp splash. It applies to every ally on the board,
+> not only FLORA units.
+
+#### Items on flower pots
+
+Flower pots can now be itemized. The flower that blossoms from a pot carries its
+items into the fight.
+
+- Left click a flower to take its items back. Losing the FLORA tier that unlocked
+  a pot returns them too.
+- You cannot itemize during the fighting phase.
+- Refused on pots: RARE_CANDY, GOLD_BOW, dojo tickets, and anything a Pokemon
+  could never hold.
+- A pot only contributes the synergies its items grant, never its own types.
+
+#### Abilities
+
+Flora abilities hit within the user's RANGE. Some get weaker the further
+away the target stands.
+
+| Pokemon | Ability | Effect |
+| --- | --- | --- |
+| Hoppip | Acrobatics | {{ability:ACROBATICS}} |
+| Bellsprout | Ingrain | {{ability:INGRAIN}} |
+| Chikorita | Sweet Scent | {{ability:SWEET_SCENT}} |
+| Oddish | Stun Spore | {{ability:STUN_SPORE}} |
+| Bellossom | Petal Blizzard | {{ability:PETAL_BLIZZARD}} |
+| Petilil | Aromatherapy | {{ability:AROMATHERAPY}} |
+| Budew | Petal Dance | {{ability:PETAL_DANCE}} |
+
+- The Chikorita line goes RANGE 2 to 3.
+- Roserade releases 1 extra petal for each bonus RANGE, up to 3 extra petals.
+
+#### Uniques and Legendaries
+
+- Xerneas: new passive. The ally in your LIGHT spot gains +2 RANGE.
+- Celebi: Time Travel heals the user and allies within RANGE and grants them
+  +1 RANGE. In Double Up it gives back at most 2 player HP per round.
+- Shaymin: ATK 25 to 22, RANGE 3 to 4. Sky Forme: ATK 28 to 25, RANGE 3 to 5.
+
+#### Blossom weather
+
+{{weather:BLOSSOM}}
+
+#### Wishes
+
+- Blossom Festival: the Mulch from KO'd FLORA allies is doubled until you get
+  Bellossom. Your STRONGEST Bellossom gains GRASS and 1 RANGE every 3 casts.
+- Flytrap: the Bellsprout keeps its full LOCKED duration at any distance, and
+  heals 10 HP for each enemy it LOCKED.
+- Mega Sol: allies within the Chikorita's RANGE benefit from ZENITH.
+- Spore Clouds: the Oddish clouds enemies within its RANGE for 2 seconds.
+- Double Windfall: two Hoppip spawn, one of them carrying the pot's items.
+- Items granted by Flytrap, Mega Sol and Spore Clouds cannot be removed or stolen.
+
+[Flora in the Wiki](#wiki/types/FLORA)
+
 ### Fossil
 
 {{synergy:FOSSIL}}

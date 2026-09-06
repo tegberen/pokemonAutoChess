@@ -9,6 +9,7 @@ import {
 import { Rarity } from "../../../../../types/enum/Game"
 import { RarityColor } from "../../../../../config/game/shop"
 import { SynergyTiersThresholds } from "../../../../../config"
+import { Ability } from "../../../../../types/enum/Ability"
 import { Item } from "../../../../../types/enum/Item"
 import { Weather } from "../../../../../types/enum/Weather"
 import { Synergy } from "../../../../../types/enum/Synergy"
@@ -69,6 +70,16 @@ export default function ServerGuide({
                   .replace(/\|/g, "&#124;")
               : token
           })
+          .replace(/\{\{ability:([A-Z_]+)\}\}/g, (token, name) => {
+            const ability = Object.values(Ability).find(
+              (value) => value === name
+            )
+            return ability
+              ? t(`ability_description.${ability}`)
+                  .replace(/\r?\n/g, "<br>")
+                  .replace(/\|/g, "&#124;")
+              : token
+          })
           .replace(/\{\{weather:([A-Z_]+)\}\}/g, (token, name) => {
             const weather = Object.values(Weather).find(
               (value) => value === name
@@ -111,6 +122,7 @@ export default function ServerGuide({
     const parsed = guideParser.parse(active?.markdown ?? "", { async: false })
     const withIcons = addIconsToHtml(parsed)
     if (selected === "pokemon") return addPokemonPortraits(withIcons)
+    if (selected === "synergies") return formatGuideArticle(withIcons, "synergy")
     if (selected === "items") return formatGuideArticle(withIcons, "item")
     if (selected === "weather") return formatGuideArticle(withIcons, "weather")
     return withIcons

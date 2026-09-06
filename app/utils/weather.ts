@@ -2,7 +2,7 @@ import type { MapSchema } from "@colyseus/schema"
 import { WeatherThreshold } from "../config"
 import type Player from "../models/colyseus-models/player"
 import type { Pokemon } from "../models/colyseus-models/pokemon"
-import { Blessing, MEGA_SOL_AURA_RADIUS } from "../types/enum/Blessing"
+import { Blessing } from "../types/enum/Blessing"
 import type { IPokemonEntity } from "../types"
 import { Item, WeatherByWeatherRocks } from "../types/enum/Item"
 import { Passive } from "../types/enum/Passive"
@@ -13,24 +13,28 @@ import {
   WeatherAssociatedToSynergy
 } from "../types/enum/Weather"
 import { count } from "./array"
+import { distanceC } from "./distance"
 import { hasKey } from "./map"
 import { schemaValues } from "./schemas"
 
-/* Zenith is normally a global weather check, but MEGA_SOL grants it to allies
-   near its Chikorita, so every gameplay effect of Zenith has to ask per unit */
+// Zenith is normally a global weather check, but MEGA_SOL grants it to allies its
+// Chikorita can reach, so every gameplay effect of Zenith has to ask per unit.
+// Asked from the source rather than around the entity, since the reach is the
+// source's own attack range
 export function isUnderZenith(entity: IPokemonEntity): boolean {
   if (entity.simulation.weather === Weather.ZENITH) return true
-  return entity.simulation.board
-    .getCellsInRadius(
-      entity.positionX,
-      entity.positionY,
-      MEGA_SOL_AURA_RADIUS,
-      true
-    )
-    .some(
-      (cell) =>
-        cell.value?.team === entity.team && cell.value.isMegaSolAuraSource
-    )
+  return entity.simulation.board.cells.some(
+    (source) =>
+      source != null &&
+      source.isMegaSolAuraSource &&
+      source.team === entity.team &&
+      distanceC(
+        source.positionX,
+        source.positionY,
+        entity.positionX,
+        entity.positionY
+      ) <= source.range
+  )
 }
 
 // Passives that boost a specific weather by +2 (on top of the +1 the unit gives

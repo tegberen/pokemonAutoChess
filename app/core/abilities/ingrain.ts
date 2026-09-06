@@ -1,4 +1,7 @@
-import { Blessing } from "../../types/enum/Blessing"
+import {
+  Blessing,
+  FLYTRAP_HEAL_PER_LOCKED_ENEMY
+} from "../../types/enum/Blessing"
 import { FlowerPot } from "../../types/enum/FlowerPot"
 import { AttackType } from "../../types/enum/Game"
 import { spacesBetween } from "../../utils/distance"
@@ -26,6 +29,7 @@ export class IngrainStrategy extends AbilityStrategy {
       FlowerMonByPot[FlowerPot.YELLOW].includes(pokemon.name) &&
       pokemon.player?.blessings?.includes(Blessing.FLYTRAP)
 
+    let enemiesLocked = 0
     board
       .getCellsInRange(pokemon.positionX, pokemon.positionY, pokemon.range, true)
       .forEach((cell) => {
@@ -47,6 +51,7 @@ export class IngrainStrategy extends AbilityStrategy {
                     )
               )
           cell.value.status.triggerLocked(lockedDuration, cell.value)
+          enemiesLocked++
           cell.value.handleSpecialDamage(
             damage,
             board,
@@ -56,5 +61,14 @@ export class IngrainStrategy extends AbilityStrategy {
           )
         }
       })
+
+    if (rootsReachEqually && enemiesLocked > 0) {
+      pokemon.handleHeal(
+        enemiesLocked * FLYTRAP_HEAL_PER_LOCKED_ENEMY,
+        pokemon,
+        1,
+        crit
+      )
+    }
   }
 }
