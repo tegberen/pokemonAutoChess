@@ -34,7 +34,7 @@ const LOS_ANGELES_TIME_ZONE = "America/Los_Angeles"
 const FESTIVAL_INTERVAL_DAYS = 14
 const WHIMSY_WEEKEND_ANCHOR = { year: 2026, month: 7, day: 8 }
 const JIRACHI_FESTIVAL_OFFSET_DAYS = 3
-const JIRACHI_FESTIVAL_DURATION_DAYS = 7
+const JIRACHI_FESTIVAL_DURATION_DAYS = 9
 const WHIMSY_WEEKEND_DURATION_DAYS = 2
 
 /* TEMP this week's Whimsy Weekend closes a day early to hand the stage to the
