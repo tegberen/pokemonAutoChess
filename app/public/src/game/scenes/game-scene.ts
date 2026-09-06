@@ -17,7 +17,8 @@ import {
   FLOWER_POT_ZONE_HEIGHT,
   FLOWER_POT_ZONE_WIDTH,
   FLOWER_POT_ZONE_Y_OFFSET,
-  FLOWER_POTS_POSITIONS_BLUE
+  FLOWER_POTS_POSITIONS_BLUE,
+  canItemGoOnFlowerPot
 } from "../../../../core/flower-pots"
 import { canSell } from "../../../../core/pokemon-entity"
 import { t } from "i18next"
@@ -949,7 +950,8 @@ export default class GameScene extends Scene {
         if (
           gameObject instanceof ItemContainer &&
           dropZone.name === "flower-pot-zone" &&
-          isIn(Mulches, gameObject.name)
+          this.room?.state.phase !== GamePhaseState.FIGHT &&
+          canItemGoOnFlowerPot(gameObject.name)
         ) {
           const flowerMonSprite =
             this.board?.flowerPokemonsInPots[dropZone.getData("index")]
@@ -1037,7 +1039,7 @@ export default class GameScene extends Scene {
         if (
           dropZone.name === "flower-pot-zone" &&
           gameObject instanceof ItemContainer &&
-          isIn(Mulches, gameObject.name)
+          canItemGoOnFlowerPot(gameObject.name)
         ) {
           const flowerPot =
             this.board?.flowerPokemonsInPots[dropZone.getData("index")]

@@ -43,6 +43,7 @@ import { getPveStage } from "../../../../core/guide/guide-stage"
 import type GameState from "../../../../rooms/states/game-state"
 import {
   FlowerPots,
+  Transfer,
   type IPokemon,
   type IPokemonEntity
 } from "../../../../types"
@@ -852,10 +853,11 @@ export default class BoardManager {
 
   getNbFlowerPots(): number {
     const floraTier = getSynergyTier(this.player.synergies, Synergy.FLORA)
-    const nbPotsPerTier = [0, 1, 2, 3, 4]
+    // tier 1 is Springtide, which grants no pot, so pots only start at tier 2
+    const nbPotsPerTier = [0, 0, 1, 2, 3, 4]
     let nbPots = nbPotsPerTier[floraTier] ?? 0
     if (
-      floraTier >= 4 &&
+      floraTier >= 5 &&
       this.player.flowerPots.every((p) => p.evolution === Pkm.DEFAULT)
     ) {
       nbPots = 5
@@ -913,6 +915,13 @@ export default class BoardManager {
           true
         )
         flowerInPot.draggable = false
+        if (this.player.id === this.scene.uid) {
+          flowerInPot.on("pointerdown", (pointer: Phaser.Input.Pointer) => {
+            if (pointer.leftButtonDown() && potPokemon.items.size > 0) {
+              this.scene.room?.send(Transfer.REMOVE_FLOWER_POT_ITEMS, i)
+            }
+          })
+        }
         this.flowerPokemonsInPots.push(flowerInPot)
         this.pokemons.set(flowerInPot.id, flowerInPot)
       }

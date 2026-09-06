@@ -167,8 +167,10 @@ export default class Design {
     this.terrain[14][7] = TerrainType.GROUND
     this.terrain[14][6] = TerrainType.GROUND
 
-    // flower pots slots
-    this.drawGroundRect(5, 11, 5, 4, false)
+    // flower pots slots: two rows of pots spanning tiles x 4-10, y 8-12 once the
+    // flower sprite above each pot and its item column to the right are counted,
+    // carried down to y 13 so the garden joins the berry tree row below it
+    this.drawGroundRect(4, 8, 7, 6, false)
 
     // training bag slot
     this.drawGroundRect(11, 16, 2, 2, false)

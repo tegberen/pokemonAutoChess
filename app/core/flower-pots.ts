@@ -1,29 +1,41 @@
 import { type IPlayer, Title } from "../types"
 import { EffectEnum } from "../types/enum/Effect"
 import { FlowerPot } from "../types/enum/FlowerPot"
+import {
+  DojoTickets,
+  Item,
+  Mulches,
+  UnholdableItems
+} from "../types/enum/Item"
 import { Pkm } from "../types/enum/Pokemon"
+import { isIn } from "../utils/array"
 
+// two rows 96px apart, staggered by 48px. A flower's item column reaches about
+// 57px to its right and the next pot's sprite about 24px to its left, so anything
+// under ~81px of same row spacing draws items on top of the neighbouring pot
 export const FLOWER_POTS_POSITIONS_BLUE = [
-  [432, 614],
-  [400, 566],
-  [368, 614],
+  [432, 566],
+  [384, 470],
   [336, 566],
-  [304, 614]
+  [288, 470],
+  [240, 566]
 ]
 
-/* Pots sit 64px apart within a row, so the zone can be that wide without two
-   pots in the same row overlapping. The vertical offset lifts it over the
-   flower sprite, which is drawn above the pot */
+// Pots sit 96px apart within a row and 96px apart between rows, so a 64px zone
+// never reaches a neighbour. The vertical offset lifts it over the flower
+// sprite, which is drawn above the pot
 export const FLOWER_POT_ZONE_WIDTH = 64
 export const FLOWER_POT_ZONE_HEIGHT = 64
 export const FLOWER_POT_ZONE_Y_OFFSET = 16
 
+// the same garden mirrored about y = 800 and shifted right, far enough that the
+// widened row clears board cell 7, which reaches x 1392
 export const FLOWER_POTS_POSITIONS_RED = [
-  [1576, 186],
-  [1544, 234],
-  [1512, 186],
-  [1480, 234],
-  [1448, 186]
+  [1624, 234],
+  [1576, 330],
+  [1528, 234],
+  [1480, 330],
+  [1432, 234]
 ]
 
 export const FlowerMonByPot: Record<FlowerPot, Pkm[]> = {
@@ -32,6 +44,19 @@ export const FlowerMonByPot: Record<FlowerPot, Pkm[]> = {
   [FlowerPot.WHITE]: [Pkm.CHIKORITA, Pkm.BAYLEEF, Pkm.MEGANIUM],
   [FlowerPot.BLUE]: [Pkm.ODDISH, Pkm.GLOOM, Pkm.VILEPLUME],
   [FlowerPot.ORANGE]: [Pkm.BELLOSSOM]
+}
+
+// rare candy evolves its holder through player.board, which a pot is not part of,
+// and gold bow only frees up team size, which a pot never took in the first place
+const FlowerPotForbiddenItems = [Item.RARE_CANDY, Item.GOLD_BOW] satisfies Item[]
+
+// mulches feed the pot itself, everything else is carried into the fight by the
+// flower it spawns, so only what a pokemon could never hold is refused.
+// dojo tickets are holdable but send their pokemon off to train, which a pot cannot do
+export function canItemGoOnFlowerPot(item: Item): boolean {
+  if (isIn(FlowerPotForbiddenItems, item)) return false
+  if (isIn(Mulches, item)) return true
+  return !isIn(UnholdableItems, item) && !isIn(DojoTickets, item)
 }
 
 export function getFlowerPotsUnlocked(player: IPlayer): FlowerPot[] {

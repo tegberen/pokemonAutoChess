@@ -16,7 +16,10 @@ import { OnSpotlightChangeEffect } from "../../core/effects/effect"
 import { PassiveEffects } from "../../core/effects/passives"
 import { carryOverPermanentStats } from "../../core/evolution-logic/evolution-handler"
 import { EvolutionManager } from "../../core/evolution-logic/evolution-manager"
-import { MulchStockCaps } from "../../core/flower-pots"
+import {
+  MulchStockCaps,
+  getFlowerPotsUnlocked
+} from "../../core/flower-pots"
 import type { PokemonEntity } from "../../core/pokemon-entity"
 import type GameState from "../../rooms/states/game-state"
 import {
@@ -38,7 +41,8 @@ import {
   BIRTHDAY_PRESENT_GOLD,
   CRYSTAL_CLUSTERS_ROCKS_GRANTED,
   LUNCH_MONEY_DAMAGE_REQUIRED,
-  LUNCH_MONEY_GOLD
+  LUNCH_MONEY_GOLD,
+  getSynergiesGivenByItem
 } from "../../types/enum/Blessing"
 import { ROCK_AWAKENING_TIER } from "../../types/enum/Awakening"
 import type { PlayerBlessings } from "./player-blessings"
@@ -117,7 +121,11 @@ import HistoryItem from "./history-item"
 import { PlayerChoice } from "./player-choice"
 import { Pokemon, PokemonClasses } from "./pokemon"
 import { PokemonCustoms } from "./pokemon-customs"
-import Synergies, { computeSynergies, getSynergyTier } from "./synergies"
+import Synergies, {
+  addSynergiesGivenByItems,
+  computeSynergies,
+  getSynergyTier
+} from "./synergies"
 import { Wanderer } from "./wanderer"
 import { ArmoryOptions } from "../../types/enum/ArmoryOptions"
 
@@ -816,6 +824,19 @@ export default class Player extends Schema implements IPlayer {
       }
     }
 
+    // pots are not board units, so only the synergies their items grant are counted.
+    // computeSynergies is also what writes those types onto a holder, so a pot that
+    // never goes through it needs them added here or the flower it spawns fights
+    // without the synergy it is wearing
+    this.flowerPots.forEach((pot) => {
+      addSynergiesGivenByItems(pot, this.blessings)
+      schemaValues(pot.items).forEach((item) => {
+        getSynergiesGivenByItem(item, this.blessings).forEach((synergy) =>
+          updatedSynergies.set(synergy, (updatedSynergies.get(synergy) ?? 0) + 1)
+        )
+      })
+    })
+
     const previousLight = previousSynergies.get(Synergy.LIGHT) ?? 0
     const newLight = updatedSynergies.get(Synergy.LIGHT) ?? 0
     const minimumToGetLight = SynergyTiersThresholds[Synergy.LIGHT][0]
@@ -879,6 +900,12 @@ export default class Player extends Schema implements IPlayer {
 
     this.effects.update(this.synergies, this.board)
 
+    // locked pots hand their items back, which changes what those items were counting
+    if (this.updateFlowerPotItems()) {
+      this.updateSynergies()
+      return
+    }
+
     if (
       this.items.includes(Item.MISSION_ORDER_GREEN) &&
       this.synergies.countActiveSynergies() >= 8
@@ -898,6 +925,20 @@ export default class Player extends Schema implements IPlayer {
     } else if (getSynergyTier(updatedSynergies, Synergy.FLYING) === 4) {
       this.grantLetterIfEligible()
     }
+  }
+
+  // a pot the player no longer has the Flora tier for hands its items back to the bag
+  updateFlowerPotItems(): boolean {
+    const nbPotsUnlocked = getFlowerPotsUnlocked(this).length
+    let anyItemReturned = false
+    this.flowerPots.forEach((pot, index) => {
+      if (index < nbPotsUnlocked || pot.items.size === 0) return
+      const itemsHeld = schemaValues(pot.items)
+      pot.removeItems(itemsHeld, this)
+      itemsHeld.forEach((item) => this.items.push(item))
+      anyItemReturned = true
+    })
+    return anyItemReturned
   }
 
   grantLetterIfEligible() {

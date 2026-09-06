@@ -155,6 +155,7 @@ import {
   OnLockCommand,
   OnOverwriteBoardCommand,
   OnPickBerryCommand,
+  OnRemoveFlowerPotItemsCommand,
   OnPokemonCatchCommand,
   OnRemoveFromShopCommand,
   OnSellPokemonCommand,
@@ -795,6 +796,19 @@ export default class GameRoom extends Room<{ state: GameState }> {
           })
         } catch (error) {
           logger.error("error picking berry", error)
+        }
+      }
+    })
+
+    this.onMessage(Transfer.REMOVE_FLOWER_POT_ITEMS, (client, index) => {
+      if (!this.state.gameFinished && client.auth) {
+        try {
+          this.dispatcher.dispatch(new OnRemoveFlowerPotItemsCommand(), {
+            playerId: client.auth.uid,
+            potIndex: index
+          })
+        } catch (error) {
+          logger.error("error removing flower pot items", error)
         }
       }
     })

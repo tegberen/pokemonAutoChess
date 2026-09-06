@@ -88,7 +88,10 @@ import {
 } from "../../core/effects/synergies"
 import { giveRandomEgg } from "../../core/eggs"
 import { EvolutionManager } from "../../core/evolution-logic/evolution-manager"
-import { getFlowerPotsUnlocked } from "../../core/flower-pots"
+import {
+  canItemGoOnFlowerPot,
+  getFlowerPotsUnlocked
+} from "../../core/flower-pots"
 import { selectDoubleUpMatchups, selectMatchups } from "../../core/matchmaking"
 import { canSell, PokemonEntity } from "../../core/pokemon-entity"
 import { rollExplorerBonusReward } from "../../core/seeds"
@@ -1198,6 +1201,11 @@ export class OnDragDropItemCommand extends Command<
 
     let pokemon: Pokemon | undefined
     if (zone === "flower-pot-zone") {
+      // a pot's flower may already be out fighting, so its loadout is locked for the round
+      if (this.state.phase === GamePhaseState.FIGHT) {
+        client.send(Transfer.DRAG_DROP_CANCEL, message)
+        return
+      }
       const nbPots = getFlowerPotsUnlocked(player).length
       if (index >= nbPots) {
         // has not unlocked that flower pot yet
@@ -1205,7 +1213,7 @@ export class OnDragDropItemCommand extends Command<
         return
       }
       pokemon = player.flowerPots[index]
-      if (!pokemon || isIn(Mulches, item) === false) {
+      if (!pokemon || !canItemGoOnFlowerPot(item)) {
         client.send(Transfer.DRAG_DROP_CANCEL, message)
         return
       }
@@ -1223,14 +1231,20 @@ export class OnDragDropItemCommand extends Command<
           player
         )
         potEvolution.action = PokemonActionState.SLEEP
-        /* the pot is replaced by a brand new Pokemon, so any Amaze Mulch buffs
-           already spent on it have to be carried across by hand */
+        // the pot is replaced by a brand new Pokemon, so any Amaze Mulch buffs
+        // already spent on it and anything it holds have to be carried across by hand
         const potBaseline = PokemonFactory.createPokemonFromName(
           pokemon.name,
           player
         )
         potEvolution.addMaxHP(pokemon.hp - potBaseline.hp)
         potEvolution.ap += pokemon.ap - potBaseline.ap
+        schemaValues(pokemon.items).forEach((heldItem) =>
+          potEvolution.items.add(heldItem)
+        )
+        if (potEvolution.items.has(Item.SHINY_CHARM)) {
+          potEvolution.shiny = true
+        }
         player.flowerPots[index] = potEvolution
         if (
           potEvolution.evolution === Pkm.DEFAULT &&
@@ -1820,6 +1834,28 @@ export class OnPickBerryCommand extends Command<
       player.items.push(type)
       onFossilUnlockHarvest(player)
     }
+  }
+}
+
+export class OnRemoveFlowerPotItemsCommand extends Command<
+  GameRoom,
+  {
+    playerId: string
+    potIndex: number
+  }
+> {
+  execute({ playerId, potIndex }) {
+    const player = this.state.players.get(playerId)
+    if (!player || !player.alive) return
+    if (this.state.phase === GamePhaseState.FIGHT) return
+    if (potIndex >= getFlowerPotsUnlocked(player).length) return
+    const pot = player.flowerPots[potIndex]
+    if (!pot) return
+    const itemsHeld = schemaValues(pot.items)
+    if (itemsHeld.length === 0) return
+    pot.removeItems(itemsHeld, player)
+    itemsHeld.forEach((item) => player.items.push(item))
+    player.updateSynergies()
   }
 }
 
