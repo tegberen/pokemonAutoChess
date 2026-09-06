@@ -111,7 +111,7 @@ export function Calendar() {
     events.push({
       id: "jirachi",
       name: "Wish Festival",
-      description: t("blessing_event_description"),
+      description: t("blessing_event_upcoming_description"),
       image: "",
       variant: "jirachi",
       start: getNextBlessingEventStart(now)

@@ -7752,7 +7752,7 @@
 	"not_pokemons": "Not Pokémon",
 	"bark": "WOOF !",
 	"custom_bot": "Custom",
-	"blessings_enabled_label": "Jirachi's Wish Festival",
+	"blessings_enabled_label": "Wish Festival",
 	"blessings_enabled_hint": "Jirachi grants each player 2 wishes during the game, at stage 4 and stage 12.",
 	"blessings_under_test_label": "Wishes under test (dev)",
 	"blessings_under_test_hint": "Restrict the wish pool to the selected wishes, and offer a selection every stage. Empty means the normal pool.",
@@ -7764,7 +7764,8 @@
 	"whimsy_rules_hint": "Whimsy Weekend adds a random Smeargle's Scribble rule to Double Up. Turn it off to play a plain Double Up game.",
 	"whimsy_rules_on": "Random Smeargle's Scribble Rule",
 	"whimsy_rules_off": "Off (plain Double Up)",
-	"blessing_event_title": "Jirachi's Wish Festival",
-	"blessing_event_description": "A wishing star has appeared. What you ask for will shape your journey.",
+	"blessing_event_title": "Wish Festival",
+	"blessing_event_description": "Make your wish while the star is near. Two blessings await: one early, one late.",
+	"blessing_event_upcoming_description": "A wishing star has appeared. What you ask for will shape your journey.",
 	"blessing_event_ends_in": "Ends in {{time}}"
 }

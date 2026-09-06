@@ -4,12 +4,15 @@
 .rule-banner.my-box {
   display: flex;
   align-items: center;
+  /* the banner is far wider than its content, so keep icon and text together
+     in the middle instead of stranding them against the left edge */
+  justify-content: center;
   /* padding, gap and text are all em-based, so one font-size scales the banner */
   font-size: 0.9em;
-  gap: 1em;
+  gap: 1.25em;
   padding: 0.5em 0.9em;
   margin-bottom: 1.25em;
-  min-height: 92px;
+  min-height: 112px;
   position: relative;
   overflow: hidden;
 }
@@ -17,15 +20,21 @@
 /* preparation-menu styles header img and p directly, so these need to outrank it */
 .rule-banner.my-box > img.rule-banner-icon {
   /* the only px size in the banner, so it does not follow the font-size above */
-  width: 64px;
-  height: 64px;
+  width: 96px;
+  height: 96px;
   flex: none;
   margin: 0;
+  object-fit: contain;
 }
 
 .rule-banner.my-box .rule-banner-text {
-  flex: 1;
+  /* shrink to the text instead of stretching, so centring has an effect */
+  flex: 0 1 auto;
   min-width: 0;
+  /* one gap for every line, so the rhythm cannot drift per element */
+  display: flex;
+  flex-direction: column;
+  gap: 0.4em;
 }
 
 .rule-banner.my-box .rule-banner-text p {
@@ -38,7 +47,7 @@
 }
 
 .rule-banner h3 {
-  margin: 0 0 0.3em !important;
+  margin: 0 !important;
   font-size: 1.35em;
   letter-spacing: 0.04em;
 }
@@ -61,13 +70,13 @@
   position: absolute;
   inset: -30%;
   pointer-events: none;
-  /* night blue into violet into magenta: no warm band, the drift stays cosmic */
+  /* deep blues only: screen blending lightens, so bright stops read as daylight */
   background-image: linear-gradient(
     102deg,
     transparent 0%,
-    #5f8fe866 20%,
-    #8d70d873 44%,
-    #e070c861 68%,
+    #24406f59 20%,
+    #30508966 44%,
+    #182a5259 68%,
     transparent 100%
   );
   background-size: 220% 140%;
@@ -79,14 +88,14 @@
 @keyframes blessing-event-aurora {
   0% {
     background-position: 0 40%;
-    opacity: 0.45;
+    opacity: 0.35;
   }
   50% {
-    opacity: 0.7;
+    opacity: 0.55;
   }
   100% {
     background-position: 220% 60%;
-    opacity: 0.45;
+    opacity: 0.35;
   }
 }
 
@@ -136,7 +145,6 @@
   display: flex;
   align-items: center;
   gap: 0.4em;
-  margin-top: 0.5em;
   color: #c3cddf;
   font-size: 0.95em;
 }

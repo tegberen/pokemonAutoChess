@@ -36,7 +36,7 @@ export function BlessingEventBanner() {
     <div className="rule-banner blessing-event-banner my-box">
       <img
         className="rule-banner-icon"
-        src="assets/ui/game_modes/blessing_event.png"
+        src="assets/ui/game_modes/WISH_FESTIVAL.png"
         alt=""
         aria-hidden="true"
       />
