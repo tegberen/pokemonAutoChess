@@ -1499,7 +1499,7 @@ export class Roggenrola extends Pokemon {
   speed = 37
   def = 8
   speDef = 6
-  maxPP = 90
+  maxPP = 100
   range = 2
   skill = Ability.ROCK_ARTILLERY
 }
@@ -1514,7 +1514,7 @@ export class Boldore extends Pokemon {
   speed = 37
   def = 12
   speDef = 10
-  maxPP = 90
+  maxPP = 100
   range = 2
   skill = Ability.ROCK_ARTILLERY
 }
@@ -1528,7 +1528,7 @@ export class Gigalith extends Pokemon {
   speed = 37
   def = 16
   speDef = 14
-  maxPP = 90
+  maxPP = 100
   range = 2
   skill = Ability.ROCK_ARTILLERY
 }
@@ -3597,8 +3597,8 @@ export class Snorunt extends Pokemon {
   rarity = Rarity.UNCOMMON
   stars = 1
   evolution = Pkm.GLALIE
-  hp = 60
-  atk = 6
+  hp = 50
+  atk = 5
   speed = 60
   def = 3
   speDef = 3
@@ -14341,7 +14341,7 @@ export class Stunky extends Pokemon {
   speed = 52
   def = 4
   speDef = 4
-  maxPP = 80
+  maxPP = 90
   range = 1
   skill = Ability.POISON_GAS
   passive = Passive.STENCH
@@ -14352,12 +14352,12 @@ export class Skuntank extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.DARK, Synergy.POISON, Synergy.FIELD])
   rarity = Rarity.EPIC
   stars = 2
-  hp = 280
+  hp = 250
   atk = 21
   speed = 52
   def = 8
   speDef = 8
-  maxPP = 80
+  maxPP = 90
   range = 1
   skill = Ability.POISON_GAS
   passive = Passive.STENCH
