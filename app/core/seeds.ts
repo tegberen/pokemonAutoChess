@@ -23,7 +23,7 @@ export const SeedEffects: Record<(typeof Seeds)[number], Effect[]> = {
   // "BAN_SEED": "All Sky Dive attacks deal 300% of user ATK. The user and the target are SILENCE for 3s."
   BAN_SEED: [
     new OnSkyDiveAttackEffect(({ pokemon, target }) => {
-      target.status.triggerSilence(3000, target, pokemon)
+      target.status.triggerSilence(2000, target, pokemon)
     })
   ],
 
@@ -52,21 +52,21 @@ export const SeedEffects: Record<(typeof Seeds)[number], Effect[]> = {
   // "SLEEP_SEED": "All Sky Dive attacks deal 300% of user ATK. The user and the target are SLEEP for 3s."
   SLEEP_SEED: [
     new OnSkyDiveAttackEffect(({ pokemon, target }) => {
-      target.status.triggerSleep(3000, target)
+      target.status.triggerSleep(2000, target)
     })
   ],
 
   // "STUN_SEED": "All Sky Dive attacks deal 300% of user ATK. The user and the target are PARALYSIS for 3s."
   STUN_SEED: [
     new OnSkyDiveAttackEffect(({ pokemon, target }) => {
-      target.status.triggerParalysis(3000, target, pokemon)
+      target.status.triggerParalysis(2000, target, pokemon)
     })
   ],
 
   // "TOTTER_SEED": "All Sky Dive attacks deal 300% of user ATK. The user and the target are CONFUSION for 3s."
   TOTTER_SEED: [
     new OnSkyDiveAttackEffect(({ pokemon, target }) => {
-      target.status.triggerConfusion(3000, target, pokemon)
+      target.status.triggerConfusion(2000, target, pokemon)
     })
   ],
 
@@ -132,7 +132,7 @@ export const SeedEffects: Record<(typeof Seeds)[number], Effect[]> = {
       if (!entity.isDoomSeedTarget) return
       const flyAwayCell = entity.flyAway(simulation.board, true, false)
       if (flyAwayCell?.target) {
-        flyAwayCell.target.status.triggerCurse(4000, flyAwayCell.target)
+        flyAwayCell.target.status.triggerCurse(8000, flyAwayCell.target)
       }
     })
   ],
@@ -154,11 +154,10 @@ export const SeedEffects: Record<(typeof Seeds)[number], Effect[]> = {
   // "EYEDROP_SEED": "All allies gain +2 RANGE. Sky Dive attacks FLINCH the target for 5s and gain 50 SPEED". -> up to 100 SPEED
   EYEDROP_SEED: [
     new OnSimulationStartEffect(({ entity }) => {
-      entity.range += 3
+      entity.range += 2
     }),
     new OnSkyDiveAttackEffect(({ pokemon, target }) => {
-      target.status.triggerFlinch(5000, target, pokemon)
-      pokemon.addSpeed(20, pokemon, 0, false)
+      target.status.triggerFlinch(2000, target, pokemon)
     })
   ],
 
@@ -173,7 +172,7 @@ export const SeedEffects: Record<(typeof Seeds)[number], Effect[]> = {
   PURE_SEED: [
     new OnSkyDiveAttackEffect(({ pokemon }) => {
       pokemon.status.triggerRuneProtect(300000, pokemon, pokemon)
-      pokemon.addAbilityPower(50, pokemon, 0, false, false)
+      pokemon.addAbilityPower(25, pokemon, 0, false, false)
     })
   ],
 
@@ -261,7 +260,7 @@ export const SeedEffects: Record<(typeof Seeds)[number], Effect[]> = {
   // "EMPOWERMENT_SEED":  -> checked in pokemon-entity.ts fly away
   EMPOWERMENT_SEED: [
     new OnSimulationStartEffect(({ entity }) => {
-      entity.addCritPower(25, entity, 0, false)
+      entity.addCritPower(10, entity, 0, false)
     })  
   ],
   // "DECOY_SEED": -> checked in pokemon-entity.ts fly away

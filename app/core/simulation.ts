@@ -4219,11 +4219,7 @@ export default class Simulation extends Schema implements ISimulation {
       case EffectEnum.FEATHER_DANCE:
       case EffectEnum.MAX_AIRSTREAM:
       case EffectEnum.SKYDIVE:
-        if (effect === EffectEnum.MAX_AIRSTREAM || effect === EffectEnum.SKYDIVE) {
-          pokemon.addSpeed(10, pokemon, 0, false)
-        } else {
-          pokemon.addSpeed(5, pokemon, 0, false)
-        }
+        pokemon.addSpeed(5, pokemon, 0, false)
         if (types.has(Synergy.FLYING)) {
           pokemon.effects.add(effect)
           pokemon.effectsSet.add(new FlyingProtectionEffect(effect))

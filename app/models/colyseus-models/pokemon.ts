@@ -715,7 +715,7 @@ export class Quaxwell extends Pokemon {
   rarity = Rarity.UNCOMMON
   stars = 2
   evolution = Pkm.QUAQUAVAL
-  hp = 140
+  hp = 120
   atk = 12
   speed = 55
   def = 6
@@ -733,7 +733,7 @@ export class Quaquaval extends Pokemon {
   ])
   rarity = Rarity.UNCOMMON
   stars = 3
-  hp = 220
+  hp = 200
   atk = 24
   speed = 55
   def = 8
@@ -4664,7 +4664,7 @@ export class Combusken extends Pokemon {
   stars = 2
   evolution = Pkm.BLAZIKEN
   hp = 150
-  atk = 14
+  atk = 12
   speed = 51
   def = 8
   speDef = 8
@@ -12876,8 +12876,8 @@ export class Rowlet extends Pokemon {
   rarity = Rarity.COMMON
   stars = 1
   evolution = Pkm.DARTIX
-  hp = 50
-  atk = 5
+  hp = 45
+  atk = 4
   speed = 47
   def = 2
   speDef = 2
@@ -12902,8 +12902,8 @@ export class Dartix extends Pokemon {
       }
     }
   } as const
-  hp = 100
-  atk = 9
+  hp = 90
+  atk = 7
   speed = 47
   def = 2
   speDef = 3
