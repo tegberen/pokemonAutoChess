@@ -71,8 +71,10 @@ export default function ServerGuide({
               : token
           })
           .replace(/\{\{ability:([A-Z_]+)\}\}/g, (token, name) => {
+            // Ability.DEFAULT is the only one with no description to look up
             const ability = Object.values(Ability).find(
-              (value) => value === name
+              (value): value is Exclude<Ability, Ability.DEFAULT> =>
+                value === name && value !== Ability.DEFAULT
             )
             return ability
               ? t(`ability_description.${ability}`)

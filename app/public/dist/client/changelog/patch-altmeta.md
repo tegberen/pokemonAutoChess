@@ -4,31 +4,31 @@
 
 ### Flora
 
-Flora is the synergy built around RANGE. Its abilities cover the caster's RANGE,
-and several scale with the distance to the target.
+Flora is the synergy built around RANGE. Ability damage and status durations are
+designed around that stat.
 
-**(2) Springtide:** Allies deal 10% more damage to enemies for each space between
-them and the enemy.
+**(2) Springtide:** Allies deal 10% more damage for each tile between them and
+their target.
 
 > Flora (2) is a generic damage amp splash. It applies to every ally on the board,
 > not only FLORA units.
 
 #### Items on flower pots
 
-Flower pots can now be itemized. The flower that blossoms from a pot carries its
-items into the fight.
+Flower pots can now be itemized, and the flower that blossoms carries those items
+into the fight.
 
-- Left click a flower to take its items back. Losing the FLORA tier that unlocked
-  a pot returns them too.
-- You cannot itemize during the fighting phase.
-- Refused on pots: RARE_CANDY, GOLD_BOW, dojo tickets, and anything a Pokemon
-  could never hold.
+- Left click a flower to take its items back. They also return if you drop the
+  FLORA tier that unlocked the pot.
+- Pots cannot be itemized once the fighting phase starts.
+- Pots refuse RARE_CANDY, GOLD_BOW, dojo tickets, and anything a Pokemon could
+  never hold.
 - A pot only contributes the synergies its items grant, never its own types.
 
 #### Abilities
 
-Flora abilities hit within the user's RANGE. Some get weaker the further
-away the target stands.
+Every Flora ability hits within the caster's RANGE, and several lose power with
+each tile of gap.
 
 | Pokemon | Ability | Effect |
 | --- | --- | --- |
@@ -63,7 +63,6 @@ away the target stands.
 - Mega Sol: allies within the Chikorita's RANGE benefit from ZENITH.
 - Spore Clouds: the Oddish clouds enemies within its RANGE for 2 seconds.
 - Double Windfall: two Hoppip spawn, one of them carrying the pot's items.
-- Items granted by Flytrap, Mega Sol and Spore Clouds cannot be removed or stolen.
 
 [Flora in the Wiki](#wiki/types/FLORA)
 

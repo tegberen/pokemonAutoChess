@@ -92,7 +92,7 @@ import {
 import type { PokemonEntity } from "../pokemon-entity"
 import type Simulation from "../simulation"
 import { DelayedCommand } from "../simulation-command"
-import { getUnitScore, getStrongestUnit, getStrongestUnits } from "../unit-score"
+import { getUnitScore, getStrongestUnit } from "../unit-score"
 import {
   type Effect,
   OnAbilityCastEffect,

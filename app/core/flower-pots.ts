@@ -66,7 +66,7 @@ export function canItemGoOnFlowerPot(item: Item): boolean {
 
 // these wishes bolt an item onto their flower pot for the rest of the game, and
 // the player cannot take it back off
-export const WishItemByPot: Partial<
+const WishItemByPot: Partial<
   Record<FlowerPot, { blessing: Blessing; item: Item }>
 > = {
   [FlowerPot.YELLOW]: { blessing: Blessing.FLYTRAP, item: Item.COVERT_CLOAK },
@@ -74,7 +74,7 @@ export const WishItemByPot: Partial<
   [FlowerPot.BLUE]: { blessing: Blessing.SPORE_CLOUDS, item: Item.KINGS_ROCK }
 }
 
-export function getFlowerPotOf(pkm: Pkm): FlowerPot | undefined {
+function getFlowerPotOf(pkm: Pkm): FlowerPot | undefined {
   return FlowerPots.find((pot) => FlowerMonByPot[pot].includes(pkm))
 }
 
@@ -92,11 +92,11 @@ export function getWishItemOnPot(
 // A pot with no room left hands everything it was holding back to the bag, so
 // the wish item is the only thing it wears
 export function grantWishItemToFlowerPot(player: Player, blessing: Blessing) {
-  const entry = Object.entries(WishItemByPot).find(
-    ([, wish]) => wish.blessing === blessing
+  const potColor = FlowerPots.find(
+    (pot) => WishItemByPot[pot]?.blessing === blessing
   )
-  if (!entry) return
-  const [potColor, { item }] = entry as [FlowerPot, { blessing: Blessing; item: Item }]
+  const item = potColor && WishItemByPot[potColor]?.item
+  if (!potColor || !item) return
   const pot = player.flowerPots.find((p) =>
     FlowerMonByPot[potColor].includes(p.name)
   )

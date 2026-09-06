@@ -2658,7 +2658,7 @@
 		"FEATHER_DANCE": "Get PROTECT for 2 seconds after flying away. Attacks have a [15, LK]% chance to reduce the target's ATK by 1 ON_ATTACK.",
 		"MAX_AIRSTREAM": "Fly away twice when under 50% HP and 20% HP.",
 		"SKYDIVE": "Now perform skydive attacks, dealing 150% PHYSICAL ATK on landing on their target. Attach a LETTER to a benched Pokémon, and it will set off to deliver it. They will bring home a Seed",
-		"SPRINGTIDE": "Allies deal 10% more damage to enemies for each space between them and the enemy",
+		"SPRINGTIDE": "Allies deal 10% more damage for each tile between them and their target",
 		"COTTONWEED": "Get an Hoppip Flower Pot",
 		"FLYCATCHER": "Get a Bellsprout Flower Pot",
 		"FRAGRANT": "Get a Chikorita Flower Pot",
