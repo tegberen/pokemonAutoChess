@@ -316,6 +316,8 @@ const FIELD_STATUS_BY_SYNERGY: [Synergy, (entity: PokemonEntity) => void][] = [
   [Synergy.ELECTRIC, (entity) => entity.status.addElectricField(entity)]
 ]
 
+const XERNEAS_SPOTLIGHT_RANGE = 2
+
 const GRAND_IGNITION_CORNER_CELLS = [
   { x: 0, y: 0 },
   { x: BOARD_WIDTH - 1, y: 0 },
@@ -1816,6 +1818,7 @@ export default class Simulation extends Schema implements ISimulation {
     }
 
     this.applyIgnitedUnits(sides)
+    this.applyXerneasSpotlightRange(sides)
     this.applyCombatStartBlessings(sides)
 
     // TARGET SELECTION EFFECTS (ghost curse)
@@ -2012,6 +2015,31 @@ export default class Simulation extends Schema implements ISimulation {
           })
         )
       })
+    }
+  }
+
+  // XERNEAS: with it on the board, whoever stands on the light spot gains reach
+  applyXerneasSpotlightRange(
+    sides: { teamIndex: Team; player: Player | undefined }[]
+  ) {
+    for (const { teamIndex, player } of sides) {
+      if (!player) continue
+      // the light spot only exists while LIGHT is active, same gate as onLightChange
+      if (!SynergyTiers[Synergy.LIGHT].some((e) => player.effects.has(e)))
+        continue
+      const team = teamIndex === Team.BLUE_TEAM ? this.blueTeam : this.redTeam
+      const allies = [...team.values()].filter(
+        (entity): entity is PokemonEntity =>
+          entity.player === player && entity.hp > 0
+      )
+      if (!allies.some((ally) => ally.passive === Passive.XERNEAS)) continue
+      // inSpotlight, not the light cell alone: SHINY_STONE and CONVERSION
+      // spotlight their holder wherever it stands
+      allies
+        .filter((ally) => ally.inSpotlight)
+        .forEach((ally) => {
+          ally.range += XERNEAS_SPOTLIGHT_RANGE
+        })
     }
   }
 

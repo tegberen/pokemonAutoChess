@@ -1932,6 +1932,7 @@ export class Roserade extends Pokemon {
   maxPP = 100
   range = 3
   skill = Ability.PETAL_DANCE
+  passive = Passive.ROSERADE
 }
 
 export class Slakoth extends Pokemon {
@@ -9780,6 +9781,7 @@ export class Xerneas extends Pokemon {
   maxPP = 100
   range = 3
   skill = Ability.GEOMANCY
+  passive = Passive.XERNEAS
 }
 
 export class TapuFini extends Pokemon {

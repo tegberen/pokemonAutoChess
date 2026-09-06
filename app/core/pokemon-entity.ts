@@ -235,6 +235,8 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
   isResolvingOnHitEffects: boolean = false
   hasSheddingScalesRerolled: boolean = false
   skillBeforePossession: Ability | null = null
+  // CELEBI caps how much player life one fight can hand back
+  timeTravelLifeHealedThisFight: number = 0
   isSynchronisedSpeedLeaderThisFight: boolean = false
   isBlossomFestivalChampionThisFight: boolean = false
   isEchoChamberLeaderThisFight: boolean = false
