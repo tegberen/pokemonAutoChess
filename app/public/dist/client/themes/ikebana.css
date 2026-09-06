@@ -1,0 +1,73 @@
+:root {
+  --color-bg-primary: #2b3a2c;
+  --color-bg-secondary: #46583f;
+  --color-bg-tertiary: #5e7052;
+  --color-bg-accent: #d9c9a3;
+
+  --border-thick: 2px solid #1a231a;
+  --border-thin: 1px solid #1a231a;
+  --border-extra-thin: 1px solid #1a231a;
+}
+
+.custom-bg {
+  background-image: url("/assets/theme/ikebana/custombg.webp");
+  background-size: cover;
+  background-position: center;
+}
+
+/* the background is a pale watercolour, so white lobby text needs a hard shadow */
+.lobby h2 {
+  text-shadow: 0px 3px 6px black;
+}
+
+/* Panels stay see-through onto the flower shop, but at a heavier mix than the
+   darker themes use: white text over this artwork washes out below ~50% */
+.draggable-window.my-container,
+.game-shop .information > div,
+#game-stage-info,
+.game-spectate-player-info.my-container,
+.team-builder-modal.my-container,
+.game-shop.my-container {
+  background-color: color-mix(in srgb, var(--color-bg-primary) 55%, transparent);
+  backdrop-filter: blur(4px);
+}
+
+.after-menu .my-container,
+.leaderboard .my-container,
+.room-menu.my-container,
+.events-menu .my-container {
+  background-color: color-mix(in srgb, var(--color-bg-primary) 52%, transparent);
+  backdrop-filter: blur(4px);
+}
+
+.leaderboard [data-react-window-index]:nth-child(odd) .my-box {
+  background: color-mix(in srgb, var(--color-bg-secondary) 60%, transparent);
+}
+
+.leaderboard [data-react-window-index]:nth-child(even) .my-box {
+  background: color-mix(in srgb, var(--color-bg-primary) 60%, transparent);
+}
+
+/* Gazette cards paint a solid --color-bg-secondary through .my-box, which reads
+   opaque next to the see-through panels around them */
+.newspaper-card.my-box {
+  background-color: color-mix(in srgb, var(--color-bg-secondary) 55%, transparent);
+}
+
+.scales-ap .ability-value {
+  color: #cfe3b4;
+}
+
+/* New Game button — wicker cream on the garden palette, same bubbly style */
+.lobby .play-button.bubbly.green {
+  background: #d9c9a3;
+  color: #2b3a2c;
+  box-shadow: inset -6px -6px 0px 0px #b3a37c, var(--shadow-clickable);
+}
+.lobby .play-button.bubbly.green:not([disabled]):hover {
+  background: #e7dabb;
+}
+.lobby .play-button.bubbly.green:not([disabled]):active {
+  background: #d9c9a3;
+  box-shadow: inset 6px 6px 0px 0px #b3a37c, var(--shadow-clickable);
+}

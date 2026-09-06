@@ -232,7 +232,10 @@ import {
 } from "../types/enum/Blessing"
 import { GracideaBlossomEffect } from "./effects/items"
 import { isSynergyActiveForPlayer } from "../config/game/blessings"
-import { getFlowerPotStarCount } from "./flower-pots"
+import {
+  getFlowerPotStarCount,
+  hasFullyItemizedFlowerPots
+} from "./flower-pots"
 import { Weather, WeatherEffects } from "../types/enum/Weather"
 import type { IPokemonData } from "../types/interfaces/PokemonData"
 import { count, isIn, removeInArray } from "../utils/array"
@@ -1821,6 +1824,7 @@ export default class Simulation extends Schema implements ISimulation {
 
     this.applyIgnitedUnits(sides)
     this.applyXerneasSpotlightRange(sides)
+    this.awardFlowerPotTitles(sides)
     this.applyCombatStartBlessings(sides)
 
     // TARGET SELECTION EFFECTS (ghost curse)
@@ -2017,6 +2021,20 @@ export default class Simulation extends Schema implements ISimulation {
           })
         )
       })
+    }
+  }
+
+  // IKEBANA is earned by walking into a fight with every flower pot kitted out
+  awardFlowerPotTitles(
+    sides: { teamIndex: Team; player: Player | undefined }[]
+  ) {
+    for (const { teamIndex, player } of sides) {
+      if (!player) continue
+      // the red side of a ghost battle is a snapshot, not someone playing
+      if (teamIndex === Team.RED_TEAM && this.isGhostBattle) continue
+      if (hasFullyItemizedFlowerPots(player)) {
+        player.titles.add(Title.IKEBANA)
+      }
     }
   }
 

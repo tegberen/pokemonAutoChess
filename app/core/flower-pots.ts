@@ -142,6 +142,15 @@ export function getUnlockedFlowerPots(player: IPlayer) {
   return player.flowerPots.slice(0, getFlowerPotsUnlocked(player).length)
 }
 
+// IKEBANA: max Flora, with every pot it unlocked carrying a full set of items
+export function hasFullyItemizedFlowerPots(player: Player): boolean {
+  if (!player.effects.has(EffectEnum.FLOWER_POWER)) return false
+  const capacity = getItemCapacity(player.specialGameRule)
+  return getUnlockedFlowerPots(player).every(
+    (pot) => pot.items.size >= capacity
+  )
+}
+
 export function getFlowerPotStarCount(player: IPlayer): number {
   return getUnlockedFlowerPots(player).reduce((sum, pot) => sum + pot.stars, 0)
 }

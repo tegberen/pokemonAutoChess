@@ -45,6 +45,12 @@
   background: color-mix(in srgb, var(--color-bg-primary) 45%, transparent);
 }
 
+/* Gazette cards paint a solid --color-bg-secondary through .my-box, which reads
+   opaque next to the see-through panels around them */
+.newspaper-card.my-box {
+  background-color: color-mix(in srgb, var(--color-bg-secondary) 45%, transparent);
+}
+
 .scales-ap .ability-value {
   color: #d8a583;
 }

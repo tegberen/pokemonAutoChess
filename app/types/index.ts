@@ -852,6 +852,7 @@ export enum Title {
   HOT_STREAK = "HOT_STREAK",
   ANCIENT = "ANCIENT",
   WHALE = "WHALE",
+  IKEBANA = "IKEBANA",
   // finishing one of Slowking's lessons, and finishing all of them
   BOTANIST = "BOTANIST",
   SCHOLAR = "SCHOLAR"

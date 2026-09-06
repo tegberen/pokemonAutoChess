@@ -29,6 +29,7 @@ const HIDDEN_TITLES = new Set<Title>([
 ])
 
 const JAC_TITLES = new Set<Title>([
+  Title.IKEBANA,
   Title.WHALE,
   Title.ANCIENT,
   Title.THE_SCRIBBLER,
