@@ -1,5 +1,9 @@
 import { ARMOR_FACTOR, FIGHTING_PHASE_DURATION } from "../config"
-import { SynergyTiers } from "../config/game/synergies"
+import {
+  SPRINGTIDE_DAMAGE_BONUS_PER_SPACE,
+  SynergyTiers,
+  SynergyTiersThresholds
+} from "../config/game/synergies"
 import type Player from "../models/colyseus-models/player"
 import PokemonFactory from "../models/pokemon-factory"
 import { getPokemonData } from "../models/precomputed/precomputed-pokemon-data"
@@ -55,7 +59,7 @@ import { Synergy } from "../types/enum/Synergy"
 import { Weather } from "../types/enum/Weather"
 import { isUnderZenith } from "../utils/weather"
 import { count } from "../utils/array"
-import { distanceC, distanceM } from "../utils/distance"
+import { distanceC, distanceM, spacesBetween } from "../utils/distance"
 import { logger } from "../utils/logger"
 import { clamp, max, min } from "../utils/number"
 import { chance, pickRandomIn } from "../utils/random"
@@ -704,6 +708,24 @@ export default abstract class PokemonState {
 
       if (attacker && attacker.status.fairyField) {
         damage *= 1.2
+      }
+
+      // SPRINGTIDE: Flora amps damage the further apart attacker and victim stand,
+      // and it covers every ally on the board, not just the Flora units
+      if (
+        attacker &&
+        (attacker.player?.synergies.get(Synergy.FLORA) ?? 0) >=
+          SynergyTiersThresholds[Synergy.FLORA][0]
+      ) {
+        damage *=
+          1 +
+          SPRINGTIDE_DAMAGE_BONUS_PER_SPACE *
+            spacesBetween(
+              attacker.positionX,
+              attacker.positionY,
+              pokemon.positionX,
+              pokemon.positionY
+            )
       }
       
       if (
