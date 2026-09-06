@@ -4160,7 +4160,7 @@ export class Chikorita extends Pokemon {
   def = 2
   speDef = 2
   maxPP = 100
-  range = 2
+  range = 3
   skill = Ability.SWEET_SCENT
 }
 
@@ -4175,7 +4175,7 @@ export class Bayleef extends Pokemon {
   def = 4
   speDef = 4
   maxPP = 100
-  range = 2
+  range = 3
   skill = Ability.SWEET_SCENT
 }
 
@@ -4189,7 +4189,7 @@ export class Meganium extends Pokemon {
   def = 6
   speDef = 6
   maxPP = 100
-  range = 2
+  range = 3
   skill = Ability.SWEET_SCENT
 }
 
@@ -8425,12 +8425,12 @@ export class Shaymin extends Pokemon {
     itemsTriggeringEvolution: [Item.GRACIDEA_FLOWER]
   } satisfies ItemEvolutionRule
   hp = 200
-  atk = 25
+  atk = 22
   speed = 57
   def = 10
   speDef = 10
   maxPP = 100
-  range = 3
+  range = 4
   skill = Ability.SEED_FLARE
   passive = Passive.SHAYMIN
 }
@@ -8440,12 +8440,12 @@ export class ShayminSky extends Pokemon {
   rarity = Rarity.LEGENDARY
   stars = 4
   hp = 300
-  atk = 28
+  atk = 25
   speed = 66
   def = 6
   speDef = 6
   maxPP = 100
-  range = 3
+  range = 5
   skill = Ability.SEED_FLARE
   passive = Passive.BLOSSOM
 }

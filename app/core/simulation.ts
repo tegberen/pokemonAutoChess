@@ -1017,8 +1017,9 @@ export default class Simulation extends Schema implements ISimulation {
     })
 
     if (isSpawn && this.weather === Weather.BLOSSOM) {
-      const apGain = pokemonEntity.types.has(Synergy.FLORA) ? 50 : 25
-      pokemonEntity.addAbilityPower(apGain, pokemonEntity, 0, false)
+      const isFlora = pokemonEntity.types.has(Synergy.FLORA)
+      pokemonEntity.addAbilityPower(isFlora ? 40 : 20, pokemonEntity, 0, false)
+      if (isFlora) pokemonEntity.range += 1
 
       // Deferred one tick so abilities that finalize the spawn's maxHP after addPokemon (e.g. Shadow
       // Clone) are accounted for before the shield is computed.

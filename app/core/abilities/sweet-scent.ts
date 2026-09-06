@@ -11,11 +11,12 @@ export class SweetScentStrategy extends AbilityStrategy {
     crit: boolean
   ) {
     super.process(pokemon, board, target, crit)
-    // Enemies in a 3-range radius can no longer dodge attacks, lose [3,SP] SPE_DEF and have [30,LK]% chance to be CHARM for 1 second
-    const cells = board.getCellsInRadius(
+    // Enemies within attack range can no longer dodge attacks, lose [4,SP] SPE_DEF
+    // and [10,SP] SPEED, and have [30,LK]% chance to be CHARM for 1 second
+    const cells = board.getCellsInRange(
       pokemon.positionX,
       pokemon.positionY,
-      3,
+      pokemon.range,
       false
     )
     const spDefLoss = [4, 6, 8, 10][pokemon.stars - 1] ?? 10

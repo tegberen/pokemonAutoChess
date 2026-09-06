@@ -12,7 +12,7 @@ export class AromatherapyStrategy extends AbilityStrategy {
     super.process(pokemon, board, target, crit)
     const heal = [20, 40, 80, 160][pokemon.stars - 1] ?? 160
     board
-      .getAdjacentCells(pokemon.positionX, pokemon.positionY)
+      .getCellsInRange(pokemon.positionX, pokemon.positionY, pokemon.range, false)
       .forEach((cell) => {
         if (cell.value && cell.value.team === pokemon.team) {
           cell.value.status.clearNegativeStatus(cell.value, pokemon)
