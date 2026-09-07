@@ -1,7 +1,9 @@
 /* Centred on the game view rather than hung off the avatar, which roams the map
    and shifts when spectating. transform needs !important to beat the inline
-   transform Phaser rewrites every frame from the avatar's position */
-.emote-menu {
+   transform Phaser rewrites every frame from the avatar's position.
+   Scoped to the in-game menu: the chat picker shares .emote-menu but positions
+   itself against the chat input */
+.game-emote-menu {
   position: absolute !important;
   transform: none !important;
   inset: 0;

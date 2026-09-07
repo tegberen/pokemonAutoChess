@@ -100,7 +100,7 @@ export default class EmoteMenu extends GameObjects.DOMElement {
     // the other. emote-menu.css pins it to the game view instead
     super(scene, 0, 0)
     this.dom = document.createElement("div")
-    this.dom.className = "my-container emote-menu"
+    this.dom.className = "my-container emote-menu game-emote-menu"
     this.setElement(this.dom)
     this.root = ReactDOM.createRoot(this.dom)
     this.root.render(
