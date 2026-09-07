@@ -1,7 +1,6 @@
 import { Dispatcher } from "@colyseus/command"
 import {
   anchorPlayerAvatar,
-  removePlayerAvatar,
   setPlayerAvatarTarget,
   spawnPlayerAvatar
 } from "../core/player-avatars"
@@ -170,7 +169,8 @@ import { ArmoryOptionsPrice } from "../types/enum/ArmoryOptions"
 import { armoryGiftService } from "../services/armory-options"
 import {
   blessingEffectService,
-  giftStarterChoiceCopy
+  giftStarterChoiceCopy,
+  grantGambleReward
 } from "../services/blessings"
 import {
   discoverGalarFossil,
@@ -1944,14 +1944,15 @@ export default class GameRoom extends Room<{ state: GameState }> {
           ?.send(Transfer.BLESSING_REFUSED, choice.id)
         return
       }
+      owned.blessings.push(blessing)
+      player.blessings.push(blessing)
+      grantGambleReward(player, this.state, this, blessing)
       const moneyGained = player.money - moneyBeforeBlessing
       if (moneyGained > 0) {
         this.clients
           .find((cli) => cli.auth.uid === player.id)
           ?.send(Transfer.PLAYER_INCOME, moneyGained)
       }
-      owned.blessings.push(blessing)
-      player.blessings.push(blessing)
       if (blessing === Blessing.SHOW_OFF) {
         this.clients
           .find((client) => client.auth.uid === player.id)

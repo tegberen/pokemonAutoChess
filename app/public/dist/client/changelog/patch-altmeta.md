@@ -40,15 +40,16 @@ each tile of gap.
 | Petilil | Aromatherapy | {{ability:AROMATHERAPY}} |
 | Budew | Petal Dance | {{ability:PETAL_DANCE}} |
 
-- The Chikorita line goes RANGE 2 to 3.
-- Roserade releases 1 extra petal for each bonus RANGE, up to 3 extra petals.
+- Chikorita Line: RANGE 2 to 3
+- Roserade: 1 extra petal per bonus RANGE, max 3
 
 #### Uniques and Legendaries
 
-- Xerneas: new passive. The ally in your LIGHT spot gains +2 RANGE.
+- Xerneas: new passive, the ally in your LIGHT spot gains +2 RANGE
 - Celebi: Time Travel heals the user and allies within RANGE and grants them
-  +1 RANGE. In Double Up it gives back at most 2 player HP per round.
-- Shaymin: ATK 25 to 22, RANGE 3 to 4. Sky Forme: ATK 28 to 25, RANGE 3 to 5.
+  +1 RANGE. Double Up: at most 2 player HP per round
+- Shaymin: ATK 25 to 22, RANGE 3 to 4
+- Shaymin Sky: ATK 28 to 25, RANGE 3 to 5
 
 #### Blossom weather
 

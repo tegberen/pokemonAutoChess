@@ -44,6 +44,8 @@ import "./blessings-panel.css"
 // blessings: a fresh [] would re-render this panel on every dispatch in the game
 const NO_BLESSINGS: Blessing[] = []
 
+const RECENT_BLESSINGS_SHOWN = 3
+
 export default function BlessingsPanel(props: { recentOnly?: boolean }) {
   const { t } = useTranslation()
   const [tooltipPlace, setTooltipPlace] = useState<PlacesType>("left")
@@ -245,7 +247,7 @@ export default function BlessingsPanel(props: { recentOnly?: boolean }) {
   }
 
   const displayedBlessings = props.recentOnly
-    ? blessings.slice(-2)
+    ? blessings.slice(-RECENT_BLESSINGS_SHOWN)
     : blessings
 
   return (

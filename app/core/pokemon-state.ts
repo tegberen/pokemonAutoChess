@@ -736,6 +736,10 @@ export default abstract class PokemonState {
         damage *= CONTEMPT_DAMAGE_MULTIPLIER
       }
 
+      if (attacker && attacker.damageAmp > 0) {
+        damage *= 1 + attacker.damageAmp
+      }
+
       if (
         attacker?.status.burn &&
         pokemon.types.has(Synergy.FIRE) &&

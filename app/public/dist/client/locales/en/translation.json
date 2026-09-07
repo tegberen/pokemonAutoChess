@@ -5249,7 +5249,7 @@
 		},
 		"BLIGHTED_GARDEN": {
 			"name": "Blighted Garden",
-			"description": "Gain an INCENSE and a POKERUS_VIAL. When FLORA is active, and a POISONNED enemy is KO'd, collect RICH_MULCH based on the enmies STAR level. When an allied FLORA Pokémon with POKERUS is KO'd, collect 1 additional RICH_MULCH."
+			"description": "Gain an INCENSE and a POKERUS_VIAL. When FLORA is active, and a POISONNED enemy is KO'd, collect RICH_MULCH based on the enemy's STAR level. When an allied FLORA Pokémon with POKERUS is KO'd, collect 1 additional RICH_MULCH."
 		},
 		"MONSTROUS_GLUTTONY": {
 			"name": "Monstrous Gluttony",
@@ -5521,7 +5521,7 @@
 		},
 		"VERDANT_GROWTH": {
 			"name": "Verdant Growth",
-			"description": "Allied GRASS Pokémon gain 5 AP every 2 seconds."
+			"description": "Allied GRASS Pokémon gain 5 AP every 2 seconds. Gain a Chespin."
 		},
 		"GEM_RUSH": {
 			"name": "Gem Rush",
@@ -5749,27 +5749,35 @@
 		},
 		"DRILL_I": {
 			"name": "Drill I",
-			"description": "The first time a Pokémon falls below 60% max HP, its basic attacks deal 50% of its current ATK as additional TRUE for 8 seconds."
+			"description": "The first time a Pokémon falls below 70% max HP, its basic attacks deal 50% of its current ATK as additional TRUE for 8 seconds."
 		},
 		"DRILL_II": {
 			"name": "Drill II",
-			"description": "The first time a Pokémon falls below 60% max HP, its basic attacks deal 50% of its current ATK as additional TRUE for 12 seconds. This also hits an enemy directly behind the target."
+			"description": "The first time a Pokémon falls below 70% max HP, its basic attacks deal 50% of its current ATK as additional TRUE for 12 seconds. This also hits an enemy directly behind the target."
 		},
 		"SHATTER_I": {
 			"name": "Shatter I",
-			"description": "The first time a Pokémon falls below 60% max HP, its basic attacks deal 50% of its current DEF and SPE_DEF as additional PHYSICAL for 8 seconds."
+			"description": "The first time a Pokémon falls below 70% max HP, it deals 40% of its current DEF and SPE_DEF as PHYSICAL to ADJACENT enemies every second for 8 seconds."
 		},
 		"SHATTER_II": {
 			"name": "Shatter II",
-			"description": "The first time a Pokémon falls below 60% max HP, its basic attacks deal 50% of its current DEF and SPE_DEF as additional PHYSICAL for 12 seconds. This also hits an enemy directly behind the target."
+			"description": "The first time a Pokémon falls below 70% max HP, it deals 40% of its current DEF and SPE_DEF as PHYSICAL to ADJACENT enemies every second for 12 seconds."
 		},
 		"SURGE_I": {
 			"name": "Surge I",
-			"description": "The first time a Pokémon falls below 60% max HP, its basic attacks deal 25% of its current SPEED as additional SPECIAL for 8 seconds."
+			"description": "The first time a Pokémon falls below 70% max HP, its basic attacks deal 25% of its current SPEED as additional SPECIAL for 8 seconds."
 		},
 		"SURGE_II": {
 			"name": "Surge II",
-			"description": "The first time a Pokémon falls below 60% max HP, its basic attacks deal 25% of its current SPEED as additional SPECIAL for 12 seconds. This also hits an enemy directly behind the target."
+			"description": "The first time a Pokémon falls below 70% max HP, its basic attacks deal 25% of its current SPEED as additional SPECIAL for 12 seconds. This also hits an enemy directly behind the target."
+		},
+		"EMPOWER_I": {
+			"name": "Empower I",
+			"description": "The first time a Pokémon falls below 70% max HP, all damage it deals is increased by 20% for 8 seconds."
+		},
+		"EMPOWER_II": {
+			"name": "Empower II",
+			"description": "The first time a Pokémon falls below 70% max HP, all damage it deals is increased by 40% for 12 seconds."
 		},
 		"GEAR_SHIELD_I": {
 			"name": "Gear Shield I",
@@ -5794,6 +5802,34 @@
 		"BRUTE_SHIELD_II": {
 			"name": "Brute Shield II",
 			"description": "At the start of combat, your Pokémon gain 3 ATK, then gain SHIELD equal to 300% of their ATK."
+		},
+		"HEART_SHIELD_I": {
+			"name": "Heart Shield I",
+			"description": "At the start of combat, each of your Pokémon gains 4 HP for every other ally sharing a synergy with it."
+		},
+		"HEART_SHIELD_II": {
+			"name": "Heart Shield II",
+			"description": "At the start of combat, each of your Pokémon gains 8 HP for every other ally sharing a synergy with it."
+		},
+		"LAYERED_ARMOR": {
+			"name": "Layered Armor",
+			"description": "Gain 4 Rerolls. At the start of combat, your Pokémon holding 3 items gain 3 SHIELD for each shop roll you have done this game."
+		},
+		"MORPH_BALL": {
+			"name": "Morph Ball",
+			"description": "Gain 4 Rerolls. At the start of combat, your Pokémon holding 3 items gain 1 SPEED for each shop roll you have done this game."
+		},
+		"ORB_WAND": {
+			"name": "Orb Wand",
+			"description": "Gain 4 Rerolls. At the start of combat, your Pokémon holding 3 items gain 2 AP for each shop roll you have done this game."
+		},
+		"SHADY_PRICE": {
+			"name": "Shady Price",
+			"description": "Gain 32 Rerolls. Your shop is halved to 3 slots for the rest of the game."
+		},
+		"RANK_UP": {
+			"name": "Rank Up",
+			"description": "Now and at the start of each stage, gain 2 XP."
 		},
 		"STAR_GUARD": {
 			"name": "Star Guard",
@@ -5962,6 +5998,18 @@
 		"GREEDY_WISH": {
 			"name": "Greedy Wish",
 			"description": "Your next Wish selection is one tier higher. If it is already Prismatic, gain 10 GOLD instead."
+		},
+		"GAMBLE_I": {
+			"name": "Gamble I",
+			"description": "Gain 5 GOLD and a random Silver Wish."
+		},
+		"GAMBLE_II": {
+			"name": "Gamble II",
+			"description": "Gain 10 GOLD and a random Gold Wish."
+		},
+		"GAMBLE_III": {
+			"name": "Gamble III",
+			"description": "Gain 15 GOLD and a random Prismatic Wish."
 		},
 		"CALLED_SHOT": {
 			"name": "Called Shot",
@@ -6289,7 +6337,7 @@
 		},
 		"STICKY_BARB_BLESSING": {
 			"name": "Sticky Thorns",
-			"description": "Gain a STICKY_BARB. The first enemy with a free item slot that attacks the holder receives it. Its new holder deals 20% of its ATK as TRUE to itself and all ADJACENT allies ON_ATTACK."
+			"description": "Gain a STICKY_BARB. The first enemy with a free item slot that attacks the holder receives it. Its new holder deals 150% of its ATK as TRUE to itself and all ADJACENT allies ON_ATTACK."
 		},
 		"MAX_REVIVE_BLESSING": {
 			"name": "Revival Pulse",
@@ -6353,7 +6401,7 @@
 		},
 		"SHELL_BELL_BLESSING": {
 			"name": "Coast Wave",
-			"description": "Gain a SHELL_BELL. After 4 seconds, trigger a TIDAL_WAVE that grants a copy to every allied Pokémon."
+			"description": "Gain a SHELL_BELL. After 12 seconds, trigger a TIDAL_WAVE that grants a copy to every allied Pokémon."
 		},
 		"WIDE_LENS_BLESSING": {
 			"name": "Telescope",

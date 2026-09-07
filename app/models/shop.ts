@@ -82,6 +82,7 @@ import {
   MIND_RUSH_UNOWN_GUARANTEE_TIER,
   CONVERGENT_PARADOX_UNIQUES,
   CONVERGENT_PARADOX_LEGENDARIES,
+  SHADY_PRICE_SHOP_SIZE,
   getGymTrainerRoster
 } from "../types/enum/Blessing"
 import { PRECOMPUTED_POKEMONS_PER_TYPE } from "./precomputed/precomputed-types"
@@ -301,6 +302,13 @@ const RareShop = getRegularsTier1(PRECOMPUTED_POKEMONS_PER_RARITY.RARE)
 const EpicShop = getRegularsTier1(PRECOMPUTED_POKEMONS_PER_RARITY.EPIC)
 const UltraShop = getRegularsTier1(PRECOMPUTED_POKEMONS_PER_RARITY.ULTRA)
 
+function getShopSizeForPlayer(player: Player, state: GameState) {
+  const size = getShopSize(state.specialGameRule, state.stageLevel)
+  return player.blessings?.includes(Blessing.SHADY_PRICE)
+    ? Math.min(size, SHADY_PRICE_SHOP_SIZE)
+    : size
+}
+
 export default class Shop {
   commonPool: Pkm[] = new Array<Pkm>()
   uncommonPool: Pkm[] = new Array<Pkm>()
@@ -466,7 +474,7 @@ export default class Shop {
   }
 
   assignBazaarShop(player: Player, state: GameState) {
-    const size = getShopSize(state.specialGameRule, state.stageLevel)
+    const size = getShopSizeForPlayer(player, state)
     this.ensureBazaarSlots(player, size)
     const offers = createBazaarShopOffers(state.stageLevel)
     for (let i = 0; i < player.bazaarSlots.length; i++) {
@@ -513,7 +521,7 @@ export default class Shop {
       (pkm) => getPokemonData(pkm).stars === 1 && !(pkm in PkmDuos)
     )
     if (epicPool.length === 0) return
-    const size = getShopSize(state.specialGameRule, state.stageLevel)
+    const size = getShopSizeForPlayer(player, state)
     for (let i = 0; i < size; i++) {
       player.shop[i] = pickRandomIn(epicPool)
     }
@@ -542,7 +550,7 @@ export default class Shop {
      once and nothing needs preserving. */
   injectUnits(player: Player, state: GameState, units: Pkm[]) {
     if (units.length === 0) return
-    const size = getShopSize(state.specialGameRule, state.stageLevel)
+    const size = getShopSizeForPlayer(player, state)
     units.slice(0, size).forEach((pkm, i) => {
       // released back to the pool by the next refresh like any other offer
       this.releasePokemon(player.shop[i], player, state)
@@ -596,7 +604,7 @@ export default class Shop {
           PRECOMPUTED_POKEMONS_PER_TYPE[Synergy.WILD] ?? []
         ).filter((pkm) => getPokemonData(pkm).stars === 1)
         if (wildPool.length > 0) {
-          const size = getShopSize(state.specialGameRule, state.stageLevel)
+          const size = getShopSizeForPlayer(player, state)
           for (let i = 0; i < size; i++) {
             player.shop[i] = pickRandomIn(wildPool)
           }
@@ -632,7 +640,7 @@ export default class Shop {
       player.shopsSinceLastUnownShop = 0
       const unowns = getUnownsPoolPerStage(state.stageLevel)
       const chosenUnowns: Pkm[] = []
-      for (let i = 0; i < getShopSize(state.specialGameRule, state.stageLevel); i++) {
+      for (let i = 0; i < getShopSizeForPlayer(player, state); i++) {
         const availableUnowns = unowns.filter((u) => !chosenUnowns.includes(u))
         const randomUnown = pickRandomIn(availableUnowns)
         chosenUnowns.push(randomUnown)
@@ -648,7 +656,7 @@ export default class Shop {
       }
     } else {
       // Regular shop
-      for (let i = 0; i < getShopSize(state.specialGameRule, state.stageLevel); i++) {
+      for (let i = 0; i < getShopSizeForPlayer(player, state); i++) {
         player.shop[i] = this.pickPokemon(player, state, i)
       }
       if (!manualRefresh) {
@@ -666,7 +674,7 @@ export default class Shop {
   guaranteeFossilUnlocksInShop(player: Player, state: GameState) {
     const pending = player.fossilUnlocksRef?.pendingGuarantees
     if (!pending || pending.length === 0) return
-    const size = getShopSize(state.specialGameRule, state.stageLevel)
+    const size = getShopSizeForPlayer(player, state)
     const nbGuaranteed = Math.min(
       pending.length,
       FOSSIL_UNLOCK_MAX_GUARANTEES_PER_SHOP,
@@ -725,7 +733,7 @@ export default class Shop {
   ) {
     this.releaseCurrentShop(player, state)
     this.clearBazaarShop(player)
-    for (let i = 0; i < getShopSize(state.specialGameRule, state.stageLevel); i++) {
+    for (let i = 0; i < getShopSizeForPlayer(player, state); i++) {
       player.shop[i] = this.pickPokemon(player, state, i, true, specificTypes)
     }
   }

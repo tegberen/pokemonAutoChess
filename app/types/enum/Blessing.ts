@@ -160,12 +160,21 @@ export enum Blessing {
   SHATTER_II = "SHATTER_II",
   SURGE_I = "SURGE_I",
   SURGE_II = "SURGE_II",
+  EMPOWER_I = "EMPOWER_I",
+  EMPOWER_II = "EMPOWER_II",
   GEAR_SHIELD_I = "GEAR_SHIELD_I",
   GEAR_SHIELD_II = "GEAR_SHIELD_II",
   MAGIC_SHIELD_I = "MAGIC_SHIELD_I",
   MAGIC_SHIELD_II = "MAGIC_SHIELD_II",
   BRUTE_SHIELD_I = "BRUTE_SHIELD_I",
   BRUTE_SHIELD_II = "BRUTE_SHIELD_II",
+  HEART_SHIELD_I = "HEART_SHIELD_I",
+  HEART_SHIELD_II = "HEART_SHIELD_II",
+  LAYERED_ARMOR = "LAYERED_ARMOR",
+  MORPH_BALL = "MORPH_BALL",
+  ORB_WAND = "ORB_WAND",
+  SHADY_PRICE = "SHADY_PRICE",
+  RANK_UP = "RANK_UP",
   STAR_GUARD = "STAR_GUARD",
   MACHINE_RESIDUE = "MACHINE_RESIDUE",
   CALCULATED_OFFENCE = "CALCULATED_OFFENCE",
@@ -210,6 +219,9 @@ export enum Blessing {
   A_NEW_FRIEND = "A_NEW_FRIEND",
   BP_REWARDS = "BP_REWARDS",
   GREEDY_WISH = "GREEDY_WISH",
+  GAMBLE_I = "GAMBLE_I",
+  GAMBLE_II = "GAMBLE_II",
+  GAMBLE_III = "GAMBLE_III",
   CALLED_SHOT = "CALLED_SHOT",
   VAMPIRIC = "VAMPIRIC",
   PROTECT_THE_WEAK = "PROTECT_THE_WEAK",
@@ -762,6 +774,13 @@ export const TRASH_TO_TREASURE_ROUNDS_BY_STAR = [5, 3, 1] as const
 export const TRASH_TO_TREASURE_TRASH_GRANTED_MIN = 1
 export const TRASH_TO_TREASURE_TRASH_GRANTED_MAX = 3
 export const GREEDY_WISH_PRISMATIC_GOLD = 10
+export const GAMBLE_REWARDS: {
+  [blessing in Blessing]?: { tier: BlessingTier; gold: number }
+} = {
+  [Blessing.GAMBLE_I]: { tier: BlessingTier.SILVER, gold: 5 },
+  [Blessing.GAMBLE_II]: { tier: BlessingTier.GOLD, gold: 10 },
+  [Blessing.GAMBLE_III]: { tier: BlessingTier.PRISMATIC, gold: 15 }
+}
 export const CALLED_SHOT_GOLD = 4
 export const CALLED_SHOT_STREAK = 4
 export const WISE_SPENDING_EXP_PER_REROLL = 2
@@ -837,12 +856,28 @@ export const COLONY_SPEWPA_HATCH_TIME = 3
 
 export const EMERALD_ORB_HEAL_RANGE = 2
 export const BURNING_FORCE_ATTACK_RATIO = 0.5
-export const COMBAT_BLESSING_TRIGGER_HP_RATIO = 0.6
+export const COMBAT_BLESSING_TRIGGER_HP_RATIO = 0.7
 export const COMBAT_BLESSING_DURATION = { I: 8000, II: 12000 }
 export const DRILL_ATTACK_RATIO = 0.5
-export const SHATTER_DEFENSE_RATIO = 0.5
+export const SHATTER_DEFENSE_RATIO = 0.4
+// tanky units attack too slowly to carry an on-attack rider, so SHATTER pulses
+export const SHATTER_PULSE_INTERVAL = 1000
 export const SURGE_SPEED_RATIO = 0.25
+// a share, not a multiplier: 0.2 is x1.2 on everything the unit deals
+export const EMPOWER_DAMAGE_AMP = { I: 0.2, II: 0.4 }
 export const GEAR_SHIELD_PER_ITEM = { I: 20, II: 30 }
+export const HEART_SHIELD_MAX_HP_PER_ALLY = { I: 4, II: 8 }
+// free rolls count towards rerollCount, so these part-fund their own scaling
+export const ROLL_SCALING_FREE_ROLLS = 4
+export const ROLL_SCALING_ITEMS_REQUIRED = 3
+export const LAYERED_ARMOR_SHIELD_PER_ROLL = 3
+export const MORPH_BALL_SPEED_PER_ROLL = 1
+export const ORB_WAND_ABILITY_POWER_PER_ROLL = 2
+
+export const SHADY_PRICE_FREE_ROLLS = 32
+export const SHADY_PRICE_SHOP_SIZE = 3
+
+export const RANK_UP_EXPERIENCE = 2
 export const MAGIC_SHIELD_ALLY_AP = 30
 export const BRUTE_SHIELD_ATTACK_RATIO = 3
 export const BRUTE_SHIELD_ALLY_ATTACK = 3
@@ -1128,7 +1163,7 @@ export const ITEM_BLESSING_STAGES_OVERRIDE: { [blessing in Blessing]?: number[] 
 export const KINGS_ROCK_FLINCH_DURATION = 3000
 export const PROTECTIVE_PADS_ATTACK_VS_SHIELDED = 5
 export const PROTECTIVE_PADS_ABILITY_POWER_VS_SHIELDED = 40
-export const STICKY_BARB_SELF_DAMAGE_ATTACK_RATIO = 0.2
+export const STICKY_BARB_SELF_DAMAGE_ATTACK_RATIO = 1.5
 export const GRACIDEA_FLOWER_HEAL_INTERVAL = 2000
 export const GRACIDEA_FLOWER_HEAL_MAX_HP_RATIO = 0.05
 export const SMOKE_BALL_SPIKES_LOCK_DURATION = 2000
@@ -1153,7 +1188,7 @@ export const XRAY_VISION_EXPOSE_DURATION = 4000
 export const FLUFFY_TAIL_LEGENDARY_STAGE = 20
 export const EXP_CHARM_BLESSED_EXPERIENCE = 2
 export const FAIRY_FEATHER_LUCK_ON_ATTACK = 5
-export const SHELL_BELL_TIDAL_WAVE_DELAY = 4000
+export const SHELL_BELL_TIDAL_WAVE_DELAY = 12000
 // matches the wave Hidden Power SURF summons, the only other on-demand one
 export const SHELL_BELL_TIDAL_WAVE_LEVEL = 2
 export const WIDE_LENS_BLESSED_RANGE = 8

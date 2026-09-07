@@ -384,6 +384,26 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     icon: "greedy_wish",
     grantsPokemonImmediately: false
   },
+  [Blessing.GAMBLE_I]: {
+    tier: BlessingTier.SILVER,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "gamble",
+    // false even though the reward Wish may hand out Pokemon: a full bench
+    // only narrows which reward is drawn, it never refuses the Gamble
+    grantsPokemonImmediately: false
+  },
+  [Blessing.GAMBLE_II]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "gamble",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.GAMBLE_III]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "gamble",
+    grantsPokemonImmediately: false
+  },
   [Blessing.CALLED_SHOT]: {
     tier: BlessingTier.SILVER,
     availableAtStages: BLESSING_SELECTION_STAGES,
@@ -491,7 +511,7 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     grantsPokemonImmediately: false
   },
   [Blessing.WISE_SPENDING]: {
-    tier: BlessingTier.PRISMATIC,
+    tier: BlessingTier.GOLD,
     availableAtStages: [4],
     icon: "ink_swirl",
     grantsPokemonImmediately: false
@@ -990,7 +1010,7 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     tier: BlessingTier.GOLD,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "verdant_growth",
-    grantsPokemonImmediately: false,
+    grantsPokemonImmediately: true,
     synergy: Synergy.GRASS
   },
   [Blessing.GEM_RUSH]: {
@@ -1869,6 +1889,26 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
       Blessing.SURGE_II
     )
   },
+  [Blessing.EMPOWER_I]: {
+    tier: BlessingTier.SILVER,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "empower",
+    grantsPokemonImmediately: false,
+    isAvailable: areBlessingVariantsAvailable(
+      Blessing.EMPOWER_I,
+      Blessing.EMPOWER_II
+    )
+  },
+  [Blessing.EMPOWER_II]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "empower",
+    grantsPokemonImmediately: false,
+    isAvailable: areBlessingVariantsAvailable(
+      Blessing.EMPOWER_I,
+      Blessing.EMPOWER_II
+    )
+  },
   [Blessing.LONE_WOLF]: {
     tier: BlessingTier.SILVER,
     availableAtStages: BLESSING_SELECTION_STAGES,
@@ -1992,6 +2032,56 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
       Blessing.GEAR_SHIELD_I,
       Blessing.GEAR_SHIELD_II
     )
+  },
+  [Blessing.HEART_SHIELD_I]: {
+    tier: BlessingTier.SILVER,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "heart_shield",
+    grantsPokemonImmediately: false,
+    isAvailable: areBlessingVariantsAvailable(
+      Blessing.HEART_SHIELD_I,
+      Blessing.HEART_SHIELD_II
+    )
+  },
+  [Blessing.HEART_SHIELD_II]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "heart_shield",
+    grantsPokemonImmediately: false,
+    isAvailable: areBlessingVariantsAvailable(
+      Blessing.HEART_SHIELD_I,
+      Blessing.HEART_SHIELD_II
+    )
+  },
+  [Blessing.LAYERED_ARMOR]: {
+    tier: BlessingTier.SILVER,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "layered_armor",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.MORPH_BALL]: {
+    tier: BlessingTier.SILVER,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "morph_ball",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.ORB_WAND]: {
+    tier: BlessingTier.SILVER,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "orb_wand",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.SHADY_PRICE]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "shady_price",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.RANK_UP]: {
+    tier: BlessingTier.SILVER,
+    availableAtStages: [4],
+    icon: "rank_up",
+    grantsPokemonImmediately: false
   },
   [Blessing.MAGIC_SHIELD_I]: {
     tier: BlessingTier.SILVER,

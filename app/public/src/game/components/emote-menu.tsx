@@ -95,7 +95,10 @@ export default class EmoteMenu extends GameObjects.DOMElement {
     sendItemEmote: (item: Item) => void,
     sendTextEmote: (text: string) => void
   ) {
-    super(scene, -350, -150)
+    // position comes from CSS, not from here: the avatar roams the map and moves
+    // when spectating, so any offset from it clipped the panel off one edge or
+    // the other. emote-menu.css pins it to the game view instead
+    super(scene, 0, 0)
     this.dom = document.createElement("div")
     this.dom.className = "my-container emote-menu"
     this.setElement(this.dom)

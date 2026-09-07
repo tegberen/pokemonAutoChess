@@ -1,3 +1,18 @@
+/* Centred on the game view rather than hung off the avatar, which roams the map
+   and shifts when spectating. transform needs !important to beat the inline
+   transform Phaser rewrites every frame from the avatar's position */
+.emote-menu {
+  position: absolute !important;
+  transform: none !important;
+  inset: 0;
+  margin: auto;
+  width: fit-content;
+  height: fit-content;
+  max-height: 90%;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
 .emote-menu ul {
   padding: 0;
   margin: 0;

@@ -7,8 +7,10 @@ import {
   SynergyTiersThresholds
 } from "../config"
 import {
+  Blessings,
   SYNERGIES_WITH_BLESSINGS,
-  WATER_FOUNTAIN_REGIONS
+  WATER_FOUNTAIN_REGIONS,
+  getBlessingsAvailable
 } from "../config/game/blessings"
 import { getAltFormForPlayer } from "../config/game/pokemons"
 import { RarityCost } from "../config/game/shop"
@@ -41,7 +43,6 @@ import { EvolutionRuleType } from "../types/EvolutionRules"
 import { Awakening, AwakeningTypes } from "../types/enum/Awakening"
 import {
   ADOPTION_FALLBACK,
-  ADOPTION_STARTERS,
   ALL_FOR_ONE_MAX_HP_RATIO,
   ARCHEOLOGY_RARITY_WEIGHTS,
   AUTO_CRAFTING_COMPONENTS,
@@ -54,8 +55,11 @@ import {
   GROUND_HOLE_ROW_STARTS,
   GROUND_HOLE_MAX_DEPTH,
   GYM_TRAINER_ROSTERS,
+  BLESSING_SELECTION_STAGES,
   Blessing,
+  BlessingTier,
   BlessingTrigger,
+  GAMBLE_REWARDS,
   BP_REWARDS_COMPONENTS,
   BP_REWARDS_RECURRING_COMPONENTS,
   BP_REWARDS_ROUND_INTERVAL,
@@ -98,14 +102,17 @@ import {
   RAINBOW_HOUR_EEVEELUTIONS_TARGET,
   RAINBOW_HOUR_FOSSIL_STONES,
   RAINBOW_HOUR_GOLD_REWARD,
+  RANK_UP_EXPERIENCE,
   ROCKY_BEGINNINGS_POKEMONS,
+  ROLL_SCALING_FREE_ROLLS,
   SELECTIVE_GENETICS_BABIES_GRANTED,
   SELECTIVE_GENETICS_GOLDEN_EGG_CHANCE,
   SELECTIVE_GENETICS_MAX_COST,
+  SHADY_PRICE_FREE_ROLLS,
+  SHADY_PRICE_SHOP_SIZE,
   SINGULARITY_I_STAGES,
   SINGULARITY_II_STAGES,
   SINGULARITY_OPTIONS,
-  STARTER_CHOICE_EXTRA_ROUNDS,
   STARTER_CHOICE_OPTIONS,
   SOUL_BLAZE_FIRE_SHARDS,
   STARTER_PACK_CONTENT,
@@ -162,7 +169,8 @@ import {
   pickNRandomIn,
   pickRandomIn,
   randomBetween,
-  randomWeighted
+  randomWeighted,
+  shuffleArray
 } from "../utils/random"
 import { schemaValues } from "../utils/schemas"
 
@@ -429,6 +437,67 @@ function promoteGymTrainerStarters(player: Player) {
       EvolutionManager.evolveWithoutCopies(stillFirstStage, player)
     }
   })
+}
+
+// the same rule the choice screen greys a card out by
+function isBlockedByFullBench(player: Player, blessing: Blessing) {
+  const definition = Blessings[blessing]
+  return (
+    definition.grantsPokemonImmediately === true &&
+    getFreeSpaceOnBench(player.board) < (definition.benchSlotsRequired ?? 1)
+  )
+}
+
+// the Gambles are excluded from their own pool so one cannot chain into another
+function grantRandomBlessingOfTier(
+  player: Player,
+  state: GameState,
+  room: GameRoom | undefined,
+  tier: BlessingTier
+) {
+  // a choice can be banked and picked stages later, and every definition is
+  // gated on a selection stage, so asking for the current one matches nothing
+  const selectionStage =
+    BLESSING_SELECTION_STAGES.filter(
+      (stage) => stage <= state.stageLevel
+    ).at(-1) ?? BLESSING_SELECTION_STAGES[0]
+  const candidates = shuffleArray(
+    getBlessingsAvailable(tier, selectionStage, player).filter(
+      (blessing) =>
+        blessing in GAMBLE_REWARDS === false &&
+        isBlockedByFullBench(player, blessing) === false
+    )
+  )
+  for (const blessing of candidates) {
+    const applyEffect = blessingEffectService[blessing]
+    if (applyEffect && applyEffect(player, state, room) === false) continue
+    state.blessingsByPlayerId.get(player.id)?.blessings.push(blessing)
+    player.blessings.push(blessing)
+    return
+  }
+}
+
+function gambleGrants() {
+  return Object.fromEntries(
+    Object.entries(GAMBLE_REWARDS).map(([blessing, reward]) => [
+      blessing,
+      (player: Player) => {
+        player.addBlessingGold(reward.gold)
+        return true
+      }
+    ])
+  )
+}
+
+// called after the Gamble is recorded, so the reward shows as the newer Wish
+export function grantGambleReward(
+  player: Player,
+  state: GameState,
+  room: GameRoom | undefined,
+  picked: Blessing
+) {
+  const reward = GAMBLE_REWARDS[picked]
+  if (reward) grantRandomBlessingOfTier(player, state, room, reward.tier)
 }
 
 function synergyFamilyEffects(
@@ -1742,6 +1811,14 @@ export const blessingTriggerEffectService: {
       player.items.push(pickRandomIn(Berries))
   },
 
+  // a round is PVE or PVP, never both, so the two together fire once per round
+  [Blessing.RANK_UP]: {
+    [BlessingTrigger.PVE_END]: (player) =>
+      player.addExperience(RANK_UP_EXPERIENCE),
+    [BlessingTrigger.PVP_END]: (player) =>
+      player.addExperience(RANK_UP_EXPERIENCE)
+  },
+
   [Blessing.SCHOOL_BUS]: {
     [BlessingTrigger.PVE_END]: (player) => {
       giftPokemonIfBenchHasRoom(player, Pkm.WISHIWASHI)
@@ -1949,6 +2026,8 @@ export const blessingEffectService: {
     player.greedyWishPending = true
     return true
   },
+
+  ...gambleGrants(),
   [Blessing.CALLED_SHOT]: (player) => {
     player.streak = CALLED_SHOT_STREAK
     player.calledShotPending = true
@@ -2246,7 +2325,8 @@ export const blessingEffectService: {
     return true
   },
 
-  [Blessing.VERDANT_GROWTH]: () => true,
+  [Blessing.VERDANT_GROWTH]: (player) =>
+    giftPokemonIfBenchHasRoom(player, Pkm.CHESPIN),
 
   [Blessing.DIGGING_EQUIPMENT]: (player) =>
     giftPokemonIfBenchHasRoom(player, Pkm.NIDORANM),
@@ -2460,8 +2540,33 @@ export const blessingEffectService: {
   [Blessing.SHATTER_II]: () => true,
   [Blessing.SURGE_I]: () => true,
   [Blessing.SURGE_II]: () => true,
+  [Blessing.EMPOWER_I]: () => true,
+  [Blessing.EMPOWER_II]: () => true,
   [Blessing.GEAR_SHIELD_I]: () => true,
   [Blessing.GEAR_SHIELD_II]: () => true,
+  [Blessing.HEART_SHIELD_I]: () => true,
+  [Blessing.HEART_SHIELD_II]: () => true,
+  [Blessing.LAYERED_ARMOR]: (player) => {
+    player.shopFreeRolls += ROLL_SCALING_FREE_ROLLS
+    return true
+  },
+  [Blessing.MORPH_BALL]: (player) => {
+    player.shopFreeRolls += ROLL_SCALING_FREE_ROLLS
+    return true
+  },
+  [Blessing.ORB_WAND]: (player) => {
+    player.shopFreeRolls += ROLL_SCALING_FREE_ROLLS
+    return true
+  },
+  [Blessing.SHADY_PRICE]: (player, state) => {
+    player.shopFreeRolls += SHADY_PRICE_FREE_ROLLS
+    // the slots past the new width hand their offers back to the pool
+    player.shop
+      .slice(SHADY_PRICE_SHOP_SIZE)
+      .forEach((pkm) => state.shop.releasePokemon(pkm, player, state))
+    player.shop.splice(SHADY_PRICE_SHOP_SIZE)
+    return true
+  },
   [Blessing.MAGIC_SHIELD_I]: () => true,
   [Blessing.MAGIC_SHIELD_II]: () => true,
   [Blessing.BRUTE_SHIELD_I]: () => true,
@@ -2994,6 +3099,11 @@ export const blessingEffectService: {
 
   [Blessing.BERRY_POUCH]: (player) => {
     player.items.push(pickRandomIn(Berries))
+    return true
+  },
+
+  [Blessing.RANK_UP]: (player) => {
+    player.addExperience(RANK_UP_EXPERIENCE)
     return true
   },
 

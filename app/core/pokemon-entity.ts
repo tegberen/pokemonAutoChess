@@ -234,6 +234,8 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
   metronomeForcedRarity: Rarity | null = null
   isResolvingOnHitEffects: boolean = false
   hasSheddingScalesRerolled: boolean = false
+  // EMPOWER: extra share of every point of damage this unit deals, while active
+  damageAmp: number = 0
   skillBeforePossession: Ability | null = null
   // CELEBI caps how much player life one fight can hand back
   timeTravelLifeHealedThisFight: number = 0

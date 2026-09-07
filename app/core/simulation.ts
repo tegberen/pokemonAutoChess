@@ -88,8 +88,6 @@ import {
   FIRST_WIND_HEAL_DELAY,
   FIRST_WIND_HEAL_RATIO,
   IMPENDING_DOOM_DELAY,
-  QUEST_CRIT_POWER_TARGET,
-  QUEST_ABSORB_DAMAGE_BLOCKED_TARGET,
   ASCENSION_BREAK_FREE_CHECK_INTERVAL,
   ASCENSION_EXTRA_LIGHT_APPLICATIONS,
   EXHAUSTING_FLAME_LUCK_PER_STAR,
@@ -209,8 +207,15 @@ import {
   COMBAT_BLESSING_DURATION,
   DRILL_ATTACK_RATIO,
   SHATTER_DEFENSE_RATIO,
+  SHATTER_PULSE_INTERVAL,
   SURGE_SPEED_RATIO,
+  EMPOWER_DAMAGE_AMP,
   GEAR_SHIELD_PER_ITEM,
+  HEART_SHIELD_MAX_HP_PER_ALLY,
+  ROLL_SCALING_ITEMS_REQUIRED,
+  LAYERED_ARMOR_SHIELD_PER_ROLL,
+  MORPH_BALL_SPEED_PER_ROLL,
+  ORB_WAND_ABILITY_POWER_PER_ROLL,
   MAGIC_SHIELD_ALLY_AP,
   BRUTE_SHIELD_ATTACK_RATIO,
   BRUTE_SHIELD_ALLY_ATTACK,
@@ -249,7 +254,7 @@ import { DEFAULT_CRIT_POWER } from "../config/game/battle"
 import { logger } from "../utils/logger"
 import { clamp, max, min } from "../utils/number"
 import { chance, pickRandomIn, randomBetween, shuffleArray } from "../utils/random"
-import { getOrientation, OrientationVector } from "../utils/orientation"
+import { OrientationVector } from "../utils/orientation"
 import { healPlayerLife } from "../utils/player-life"
 import { schemaValues } from "../utils/schemas"
 import {
@@ -1914,7 +1919,7 @@ export default class Simulation extends Schema implements ISimulation {
 
   addThresholdAttackBlessing(
     pokemon: PokemonEntity,
-    kind: "DRILL" | "SHATTER" | "SURGE",
+    kind: "DRILL" | "SHATTER" | "SURGE" | "EMPOWER",
     tier: "I" | "II",
     controlsTimerBar: boolean
   ) {
@@ -1944,22 +1949,59 @@ export default class Simulation extends Schema implements ISimulation {
         }
       }, Passive.NONE, 100)
     )
+    if (kind === "EMPOWER") {
+      const amp = EMPOWER_DAMAGE_AMP[tier]
+      // written every tick rather than toggled, so the amp clears itself
+      pokemon.effectsSet.add(
+        new PeriodicEffect(
+          (entity) => {
+            entity.damageAmp = state.remainingMs > 0 ? amp : 0
+          },
+          Passive.NONE,
+          100
+        )
+      )
+      return
+    }
+
+    if (kind === "SHATTER") {
+      pokemon.effectsSet.add(
+        new PeriodicEffect(
+          (entity, board) => {
+            if (state.remainingMs <= 0) return
+            const damage = Math.round(
+              (entity.def + entity.speDef) * SHATTER_DEFENSE_RATIO
+            )
+            board
+              .getAdjacentCells(entity.positionX, entity.positionY)
+              .forEach((cell) => {
+                if (!cell.value || cell.value.team === entity.team) return
+                cell.value.handleDamage({
+                  damage,
+                  board,
+                  attackType: AttackType.PHYSICAL,
+                  attacker: entity,
+                  shouldTargetGainMana: true
+                })
+              })
+          },
+          Passive.NONE,
+          SHATTER_PULSE_INTERVAL
+        )
+      )
+      return
+    }
+
     pokemon.effectsSet.add(
       new OnAttackEffect(({ pokemon: attacker, target, board, isTripleAttack }) => {
         if (!target || isTripleAttack || state.remainingMs <= 0) return
         const damage = Math.round(
           kind === "DRILL"
             ? attacker.atk * DRILL_ATTACK_RATIO
-            : kind === "SHATTER"
-              ? (attacker.def + attacker.speDef) * SHATTER_DEFENSE_RATIO
-              : attacker.speed * SURGE_SPEED_RATIO
+            : attacker.speed * SURGE_SPEED_RATIO
         )
         const attackType =
-          kind === "DRILL"
-            ? AttackType.TRUE
-            : kind === "SHATTER"
-              ? AttackType.PHYSICAL
-              : AttackType.SPECIAL
+          kind === "DRILL" ? AttackType.TRUE : AttackType.SPECIAL
         const dealAdditionalDamage = (enemy: PokemonEntity) =>
           enemy.handleDamage({
             damage,
@@ -2193,7 +2235,9 @@ export default class Simulation extends Schema implements ISimulation {
         [Blessing.SHATTER_II, "SHATTER", "II"],
         [Blessing.SHATTER_I, "SHATTER", "I"],
         [Blessing.SURGE_II, "SURGE", "II"],
-        [Blessing.SURGE_I, "SURGE", "I"]
+        [Blessing.SURGE_I, "SURGE", "I"],
+        [Blessing.EMPOWER_II, "EMPOWER", "II"],
+        [Blessing.EMPOWER_I, "EMPOWER", "I"]
       ] as const
       const activeThresholdAttackBlessings = thresholdAttackBlessings.filter(
         ([blessing]) => blessings.includes(blessing)
@@ -2217,6 +2261,46 @@ export default class Simulation extends Schema implements ISimulation {
           )
         )
       })
+
+      const rollsThisGame = player.gameStats.rerollCount
+      if (rollsThisGame > 0) {
+        const fullBagUnits = ownUnits.filter(
+          (ally) => ally.items.size >= ROLL_SCALING_ITEMS_REQUIRED
+        )
+        if (blessings.includes(Blessing.LAYERED_ARMOR)) {
+          const shield = rollsThisGame * LAYERED_ARMOR_SHIELD_PER_ROLL
+          fullBagUnits.forEach((ally) => ally.addShield(shield, ally, 0, false))
+        }
+        if (blessings.includes(Blessing.MORPH_BALL)) {
+          const speed = rollsThisGame * MORPH_BALL_SPEED_PER_ROLL
+          fullBagUnits.forEach((ally) => ally.addSpeed(speed, ally, 0, false))
+        }
+        if (blessings.includes(Blessing.ORB_WAND)) {
+          const abilityPower = rollsThisGame * ORB_WAND_ABILITY_POWER_PER_ROLL
+          fullBagUnits.forEach((ally) =>
+            ally.addAbilityPower(abilityPower, ally, 0, false)
+          )
+        }
+      }
+
+      const heartShieldTier = blessings.includes(Blessing.HEART_SHIELD_II)
+        ? "II"
+        : blessings.includes(Blessing.HEART_SHIELD_I)
+          ? "I"
+          : undefined
+      if (heartShieldTier) {
+        const maxHpPerAlly = HEART_SHIELD_MAX_HP_PER_ALLY[heartShieldTier]
+        // every pairing is read off the same starting board, so the grants do
+        // not depend on the order the units are visited
+        ownUnits.forEach((ally) => {
+          const kin = ownUnits.filter(
+            (other) =>
+              other !== ally &&
+              [...other.types].some((type) => ally.types.has(type))
+          ).length
+          if (kin > 0) ally.addMaxHP(maxHpPerAlly * kin, ally, 0, false)
+        })
+      }
 
       const gearShieldTier = blessings.includes(Blessing.GEAR_SHIELD_II)
         ? "II"
