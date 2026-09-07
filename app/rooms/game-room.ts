@@ -1223,7 +1223,11 @@ export default class GameRoom extends Room<{ state: GameState }> {
           }
           usr.unlockedAvatarCosmetics = [...unlocked]
         }
-        if (this.state.hasBlessing(player.id, Blessing.SHOW_OFF)) {
+        // a Double Up pair wins together, so one carrying it earns it for both
+        if (
+          this.state.hasBlessing(player.id, Blessing.SHOW_OFF) ||
+          this.state.hasBlessing(player.doubleUpPartnerId, Blessing.SHOW_OFF)
+        ) {
           player.titles.add(Title.SHOW_OFF)
         }
         if (this.state.hasBlessing(player.id, Blessing.HIGH_BREACHING)) {

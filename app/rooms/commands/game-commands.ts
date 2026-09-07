@@ -3691,6 +3691,7 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
     this.state.players.forEach((player: Player) => {
       if (player.alive) {
         player.registerPlayedPokemons()
+        player.checkDerpyTitle()
         onFossilUnlockCombatStart(player)
         /* QUEST_INDECISION banks synergies off the locked combat board, not the
            picking phase, so rotating synergies between rounds still counts */

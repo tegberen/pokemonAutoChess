@@ -130,6 +130,10 @@ import Synergies, {
 import { Wanderer } from "./wanderer"
 import { ArmoryOptions } from "../../types/enum/ArmoryOptions"
 
+// the top tier of each, so DERPY asks for both synergies fully capped
+const DERPY_WATER_REQUIRED = 9
+const DERPY_BUG_REQUIRED = 8
+
 export default class Player extends Schema implements IPlayer {
   @type("string") id: string
   @type("string") simulationId = ""
@@ -1552,6 +1556,19 @@ export default class Player extends Schema implements IPlayer {
     }
     if (count >= 10) {
       this.titles.add(Title.DECURION)
+    }
+  }
+
+  checkDerpyTitle() {
+    if (
+      (this.synergies.get(Synergy.WATER) ?? 0) >= DERPY_WATER_REQUIRED &&
+      (this.synergies.get(Synergy.BUG) ?? 0) >= DERPY_BUG_REQUIRED &&
+      schemaValues(this.board).some(
+        (pokemon) =>
+          pokemon.name === Pkm.BEEDRILL && pokemon.items.has(Item.WATER_STONE)
+      )
+    ) {
+      this.titles.add(Title.DERPY)
     }
   }
 

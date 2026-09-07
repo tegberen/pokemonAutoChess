@@ -1,0 +1,86 @@
+:root {
+  --color-bg-primary: #1e3a4c;
+  --color-bg-secondary: #2f5d78;
+  --color-bg-tertiary: #417f9e;
+  --color-bg-accent: #f4c14a;
+
+  --border-thick: 2px solid #12222d;
+  --border-thin: 1px solid #12222d;
+  --border-extra-thin: 1px solid #12222d;
+}
+
+/* Same three layer trick the hot theme uses. The artwork is a close-up at
+   1.48:1, so cover alone crops a quarter of its height. Instead the full image
+   sits on top at contain, a second copy fills the letterbox behind it at cover,
+   and a scrim darkens the edges so the seam between them disappears */
+.custom-bg {
+  background-image: url("/assets/theme/derpy/custombg.webp"),
+    linear-gradient(
+      to right,
+      rgba(20, 40, 53, 0.96) 0%,
+      rgba(20, 40, 53, 0.62) 14%,
+      rgba(20, 40, 53, 0.42) 50%,
+      rgba(20, 40, 53, 0.62) 86%,
+      rgba(20, 40, 53, 0.96) 100%
+    ),
+    url("/assets/theme/derpy/custombg.webp");
+  background-size: contain, auto, cover;
+  background-position: center, center, center;
+  background-repeat: no-repeat, no-repeat, no-repeat;
+  background-attachment: fixed, fixed, fixed;
+  background-color: #1e3a4c;
+}
+
+.lobby h2 {
+  text-shadow: 0px 3px 6px black;
+}
+
+/* See-through onto the pond. The artwork is mid dark, so these sit between
+   wailord's ocean and ikebana's pale watercolour */
+.draggable-window.my-container,
+.game-shop .information > div,
+#game-stage-info,
+.game-spectate-player-info.my-container,
+.team-builder-modal.my-container,
+.game-shop.my-container {
+  background-color: color-mix(in srgb, var(--color-bg-primary) 45%, transparent);
+  backdrop-filter: blur(4px);
+}
+
+.after-menu .my-container,
+.leaderboard .my-container,
+.room-menu.my-container,
+.events-menu .my-container {
+  background-color: color-mix(in srgb, var(--color-bg-primary) 42%, transparent);
+  backdrop-filter: blur(4px);
+}
+
+.leaderboard [data-react-window-index]:nth-child(odd) .my-box {
+  background: color-mix(in srgb, var(--color-bg-secondary) 52%, transparent);
+}
+
+.leaderboard [data-react-window-index]:nth-child(even) .my-box {
+  background: color-mix(in srgb, var(--color-bg-primary) 52%, transparent);
+}
+
+.newspaper-card.my-box {
+  background-color: color-mix(in srgb, var(--color-bg-secondary) 52%, transparent);
+}
+
+.scales-ap .ability-value {
+  color: #8fd3ea;
+}
+
+/* New Game button — cheek-spike yellow on the pond palette, same bubbly style */
+.lobby .play-button.bubbly.green {
+  background: #f4c14a;
+  color: #12222d;
+  box-shadow: inset -6px -6px 0px 0px #c89932, var(--shadow-clickable);
+}
+.lobby .play-button.bubbly.green:not([disabled]):hover {
+  background: #f8d27a;
+}
+.lobby .play-button.bubbly.green:not([disabled]):active {
+  background: #f4c14a;
+  box-shadow: inset 6px 6px 0px 0px #c89932, var(--shadow-clickable);
+}

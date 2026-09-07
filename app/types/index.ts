@@ -855,7 +855,8 @@ export enum Title {
   IKEBANA = "IKEBANA",
   // finishing one of Slowking's lessons, and finishing all of them
   BOTANIST = "BOTANIST",
-  SCHOLAR = "SCHOLAR"
+  SCHOLAR = "SCHOLAR",
+  DERPY = "DERPY"
 }
 
 export interface IBoardEvent {
