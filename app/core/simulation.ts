@@ -3851,6 +3851,7 @@ export default class Simulation extends Schema implements ISimulation {
           )
           jester.skill = Ability.METRONOME
           jester.metronomeForcedRarity = Rarity.LEGENDARY
+          jester.types.add(Synergy.DARK)
           jester.stars = Math.max(
             1,
             Math.min(

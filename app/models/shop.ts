@@ -85,7 +85,6 @@ import {
   SHADY_PRICE_SHOP_SIZE,
   getGymTrainerRoster
 } from "../types/enum/Blessing"
-import { PRECOMPUTED_POKEMONS_PER_TYPE } from "./precomputed/precomputed-types"
 import { Synergy } from "../types/enum/Synergy"
 import { getGuidePityUnit } from "../core/guide/guide-progress"
 import {
@@ -600,18 +599,14 @@ export default class Shop {
         shopKey !== player.berserkerLastShopKey
       ) {
         player.berserkerLastShopKey = shopKey
-        const wildPool = (
-          PRECOMPUTED_POKEMONS_PER_TYPE[Synergy.WILD] ?? []
-        ).filter((pkm) => getPokemonData(pkm).stars === 1)
-        if (wildPool.length > 0) {
-          const size = getShopSizeForPlayer(player, state)
-          for (let i = 0; i < size; i++) {
-            player.shop[i] = pickRandomIn(wildPool)
-          }
-          player.shopSlotsMinted = true
-          this.syncJuggernautShopStats(player, state)
-          return
+        const size = getShopSizeForPlayer(player, state)
+        for (let i = 0; i < size; i++) {
+          player.shop[i] = this.pickPokemon(player, state, i, true, [
+            Synergy.WILD
+          ])
         }
+        this.syncJuggernautShopStats(player, state)
+        return
       }
     }
 
