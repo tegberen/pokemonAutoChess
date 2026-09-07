@@ -3996,7 +3996,7 @@
 		"AQUATIC": "AQUATIC Pokémon mitigate status afflictions for all your team. After 7 seconds, a TIDAL_WAVE cleans up negative status and field effects, heals your AQUATIC allies, and knocks back and damages enemies.",
 		"BUG": "At the start of combat spawns a copy of your STRONGEST BUG Pokémon.",
 		"FLYING": "FLYING Pokémon fly away when they fall under a certain amount of HP unless affected by PARALYSIS, FREEZE, LOCKED or SLEEP. At maximum synergy, use a LETTER to send a benched Pokémon on a delivery.",
-		"FLORA": "When a FLORA Pokémon is KO'd, a Flower Pot blossoms and you collect RICH_MULCH. Higher STAR units give more mulch, which can be used to evolve your Flower Pots.",
+		"FLORA": "When a FLORA Pokémon is KO'd, a Flower Pot blossoms and you collect RICH_MULCH. Higher STAR units give more mulch, which can be used to evolve your Flower Pots. They can be itemized.",
 		"FAIRY": "FAIRY Pokémon use wands to deal additional SPECIAL and various effects with their attacks.{{additionalInfo}}",
 		"FAIRY_WANDS": "\nWands equipped: {{wands}}",
 		"ROCK": "ROCK Pokémon gain DEF, better resist to critical attacks, and can adapt to weather. When ROCK Pokémon are KO'd they explode, deal TRUE damage and ARMOR_BREAK all ADJACENT enemies",
