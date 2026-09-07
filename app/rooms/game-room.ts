@@ -90,6 +90,7 @@ import { CloseCodes } from "../types/enum/CloseCodes"
 import {
   AVATAR_COSMETIC_BLESSINGS,
   AVATAR_COSMETIC_IDS,
+  getUnlockedAvatarCosmetics,
   isAvatarCosmeticId,
   type AvatarCosmeticId
 } from "../types/enum/AvatarCosmetic"
@@ -923,7 +924,7 @@ export default class GameRoom extends Room<{ state: GameState }> {
     }
     this.unlockedAvatarCosmetics.set(
       client.auth.uid,
-      new Set(userProfile?.unlockedAvatarCosmetics ?? [])
+      getUnlockedAvatarCosmetics(userProfile)
     )
     this.dispatcher.dispatch(new OnJoinCommand(), { client })
     const pendingGame = await getPendingGame(this.presence, client.auth.uid)

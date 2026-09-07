@@ -1,5 +1,8 @@
 import { useTranslation } from "react-i18next"
-import { AVATAR_COSMETIC_BLESSINGS } from "../../../../../types/enum/AvatarCosmetic"
+import {
+  AVATAR_COSMETIC_BLESSINGS,
+  getUnlockedAvatarCosmetics
+} from "../../../../../types/enum/AvatarCosmetic"
 import { AVATAR_COSMETICS } from "../../../cosmetics/avatar-cosmetics"
 import { useAppSelector } from "../../../hooks"
 import { usePreferences } from "../../../preferences"
@@ -9,7 +12,7 @@ export function CosmeticsTab() {
   const { t } = useTranslation()
   const profile = useAppSelector((state) => state.network.profile)
   const [preferences, setPreferences] = usePreferences()
-  const unlocked = new Set(profile?.unlockedAvatarCosmetics ?? [])
+  const unlocked = getUnlockedAvatarCosmetics(profile)
   const equipped = unlocked.has(preferences.avatarCosmetic)
     ? preferences.avatarCosmetic
     : "none"
