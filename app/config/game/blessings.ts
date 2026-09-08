@@ -2072,7 +2072,7 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     grantsPokemonImmediately: false
   },
   [Blessing.SHADY_PRICE]: {
-    tier: BlessingTier.GOLD,
+    tier: BlessingTier.SILVER,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "shady_price",
     grantsPokemonImmediately: false

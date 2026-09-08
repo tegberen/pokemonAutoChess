@@ -1182,7 +1182,7 @@ export const SCOPE_LENS_MARK_DURATION = 4000
 export const SHINY_CHARM_MARK_DURATION = 4000
 // XRAY_VISION exposes with the same true damage mark SHINY_CHARM applies, so
 // the two read as the same effect earned two different ways
-export const XRAY_VISION_HITS_TO_EXPOSE = 4
+export const XRAY_VISION_HITS_TO_EXPOSE = 2
 export const XRAY_VISION_EXPOSE_DURATION = 4000
 // the wild summons stay ordinary until the late game
 export const FLUFFY_TAIL_LEGENDARY_STAGE = 20
@@ -1198,7 +1198,7 @@ export const PUNCHING_GLOVE_ATTACKS_PER_FOCUS_PUNCH = 10
 export const RAZOR_CLAW_ATTACK_ON_CRIT = 2
 export const POKEMONOMICON_WOUND_DURATION = 3000
 export const POKEMONOMICON_DAMAGE_BONUS = 1.3
-export const UPGRADE_BLESSED_STACKS_REQUIRED = 12
+export const UPGRADE_BLESSED_STACKS_REQUIRED = 10
 export const UPGRADE_BLESSED_SPEED_RATIO = 0.2
 export const WONDER_BOX_BLESSED_ITEMS = 3
 // the CRIT_POWER a GRIP_CLAW grants per attack, and so the most it can steal

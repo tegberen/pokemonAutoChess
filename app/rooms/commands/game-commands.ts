@@ -245,6 +245,7 @@ import {
 import { repeat } from "../../utils/function"
 import { logger } from "../../utils/logger"
 import { max } from "../../utils/number"
+import { healPlayerLife } from "../../utils/player-life"
 import {
   chance,
   pickNRandomIn,
@@ -1804,7 +1805,7 @@ export class OnLevelUpCommand extends Command<
       player.money -= cost
       if (player.blessings?.includes(Blessing.UP_IS_UP)) {
         player.addBlessingGold(UP_IS_UP_GOLD)
-        player.life = Math.min(player.maxLife, player.life + UP_IS_UP_LIFE)
+        healPlayerLife(player, UP_IS_UP_LIFE, this.state)
       }
     }
   }
