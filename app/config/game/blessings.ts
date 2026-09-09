@@ -2336,35 +2336,46 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
   }
 }
 
-const EARLY_BLESSING_TIER_CHANCES: { [tier in BlessingTier]: number } = {
+const BLESSING_TIER_CHANCES_FIRST: { [tier in BlessingTier]: number } = {
   [BlessingTier.SILVER]: 0.4,
   [BlessingTier.GOLD]: 0.5,
   [BlessingTier.PRISMATIC]: 0.1
 }
 
-const LATE_BLESSING_TIER_CHANCES: { [tier in BlessingTier]: number } = {
-  [BlessingTier.SILVER]: 0.3,
-  [BlessingTier.GOLD]: 0.5,
-  [BlessingTier.PRISMATIC]: 0.2
-}
-
-export const BlessingTierChanceByStage: {
-  [stage: number]: { [tier in BlessingTier]: number }
+// a Prismatic after a Silver makes the Silver pick it followed irrelevant, and
+// with only two selections there is no third round to recover a Silver-Silver
+const BLESSING_TIER_CHANCES_AFTER: {
+  [previous in BlessingTier]: { [tier in BlessingTier]: number }
 } = {
-  4: EARLY_BLESSING_TIER_CHANCES,
-  12: LATE_BLESSING_TIER_CHANCES
+  [BlessingTier.SILVER]: {
+    [BlessingTier.SILVER]: 0.2,
+    [BlessingTier.GOLD]: 0.75,
+    [BlessingTier.PRISMATIC]: 0.05
+  },
+  [BlessingTier.GOLD]: {
+    [BlessingTier.SILVER]: 0.25,
+    [BlessingTier.GOLD]: 0.5,
+    [BlessingTier.PRISMATIC]: 0.25
+  },
+  [BlessingTier.PRISMATIC]: {
+    [BlessingTier.SILVER]: 0.5,
+    [BlessingTier.GOLD]: 0.3,
+    [BlessingTier.PRISMATIC]: 0.2
+  }
 }
 
-export function rollBlessingTierForStage(
-  stage: number,
-  blessingsUnderTest: Blessing[] = []
+export function rollBlessingTier(
+  blessingsUnderTest: Blessing[] = [],
+  previousTier?: BlessingTier
 ): BlessingTier {
-  /* sandbox mode wants the real odds across the whole set, so only the
-     under-test list derives its own */
+  // sandbox mode wants the real odds across the whole set, so only the
+  // under-test list derives its own
   const tierChances =
     blessingsUnderTest.length > 0 && !BLESSING_SANDBOX_MODE
       ? tierChancesForBlessingsUnderTest(blessingsUnderTest)
-      : (BlessingTierChanceByStage[stage] ?? EARLY_BLESSING_TIER_CHANCES)
+      : previousTier
+        ? BLESSING_TIER_CHANCES_AFTER[previousTier]
+        : BLESSING_TIER_CHANCES_FIRST
   return randomWeighted(tierChances) ?? BlessingTier.SILVER
 }
 

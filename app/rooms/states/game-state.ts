@@ -21,7 +21,7 @@ import { PlayerFossilUnlocks } from "../../models/colyseus-models/player-fossil-
 import { PokemonAvatarModel } from "../../models/colyseus-models/pokemon-avatar"
 import { Portal, SynergySymbol } from "../../models/colyseus-models/portal"
 import Shop from "../../models/shop"
-import type { Blessing } from "../../types/enum/Blessing"
+import type { Blessing, BlessingTier } from "../../types/enum/Blessing"
 import type { EloRank } from "../../types/enum/EloRank"
 import { GameMode, GamePhaseState } from "../../types/enum/Game"
 import type { Item } from "../../types/enum/Item"
@@ -96,6 +96,8 @@ export default class GameState extends Schema {
   guideTrackedStep = -1
   // dev only, undecorated: restricts the pool without costing a schema field
   blessingsUnderTest: Blessing[] = []
+  // the lobby's last rolled tier, which the next selection's odds hang off
+  previousBlessingTier: BlessingTier | undefined = undefined
   time = StageDuration[0] * 1000
   updatePhaseNeeded = false
   botManager: BotManager = new BotManager()

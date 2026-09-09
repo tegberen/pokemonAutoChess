@@ -44,7 +44,7 @@ import {
   getMaxSynergyBlessingOptions,
   getBlessingsAvailable,
   peekGreedyWishTier,
-  rollBlessingTierForStage
+  rollBlessingTier
 } from "../../config/game/blessings"
 import {
   applyBlessingTrigger,
@@ -2762,10 +2762,11 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
       (this.state.blessingsUnderTest.length > 0 ||
         BLESSING_SELECTION_STAGES.includes(this.state.stageLevel))
     ) {
-      const lobbyTier = rollBlessingTierForStage(
-        this.state.stageLevel,
-        this.state.blessingsUnderTest
+      const lobbyTier = rollBlessingTier(
+        this.state.blessingsUnderTest,
+        this.state.previousBlessingTier
       )
+      this.state.previousBlessingTier = lobbyTier
       this.state.players.forEach((player: Player) => {
         if (player.isBot || !player.alive) return
         const playerTier = peekGreedyWishTier(player, lobbyTier)
