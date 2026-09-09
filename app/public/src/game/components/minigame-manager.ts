@@ -2,7 +2,11 @@ import type { MapSchema } from "@colyseus/schema"
 import { t as tBase} from "i18next"
 const t = tBase as any
 import Phaser from "phaser"
-import { isBlessingEvent, TownEncounterSellPrice } from "../../../../config"
+import {
+  isBlessingEvent,
+  ItemCarouselStages,
+  TownEncounterSellPrice
+} from "../../../../config"
 import type GameState from "../../../../rooms/states/game-state"
 import {
   Emotion,
@@ -175,7 +179,8 @@ export default class MinigameManager {
       item.id,
       transformMiniGameXCoordinate(item.x),
       transformMiniGameYCoordinate(item.y),
-      item.name
+      item.name,
+      item.pkm
     )
     this.items.set(it.id, it)
   }
@@ -658,6 +663,20 @@ export default class MinigameManager {
       name: Pkm.CASTFORM
     })
 
+    const bidoof = new PokemonSpecial({
+      scene: this.scene,
+      x: encounter === TownEncounters.BIDOOF ? cx : 3.5 * 48,
+      y: encounter === TownEncounters.BIDOOF ? cy : 9.5 * 48,
+      name: Pkm.BIDOOF
+    })
+
+    const ludicolo = new PokemonSpecial({
+      scene: this.scene,
+      x: encounter === TownEncounters.LUDICOLO ? cx : 15.5 * 48,
+      y: encounter === TownEncounters.LUDICOLO ? cy : 25 * 48,
+      name: Pkm.LUDICOLO
+    })
+
     const podiumPokemons = podium.map((p, rank) => {
       const { name, shiny } = getPokemonCustomFromAvatar(p.avatar)
       const champion = new PokemonSpecial({
@@ -781,6 +800,8 @@ export default class MinigameManager {
       kingambit,
       lapras,
       castform,
+      bidoof,
+      ludicolo,
       chimecho,
       ...podiumPokemons,
       ...championVillagers,
@@ -804,6 +825,14 @@ export default class MinigameManager {
           (isShop && hasFreeCoupon
             ? ` — ${t("blessing.FREE_COUPON.name")}: ${t("free_of_charge")}`
             : "")
+      )
+    } else if (
+      this.scene.room?.state.pokemonCarousel &&
+      ItemCarouselStages.includes(this.scene.room.state.stageLevel)
+    ) {
+      // Chimecho is long gone but every later carousel still carries Pokemon
+      this.showEncounterDescription(
+        t(`town_encounter_description.${TownEncounters.CHIMECHO}`)
       )
     } else if (specialGameRule && this.scene.room?.state.stageLevel === 0) {
       const smeargle = new PokemonSpecial({

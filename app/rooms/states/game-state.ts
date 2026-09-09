@@ -84,6 +84,10 @@ export default class GameState extends Schema {
   @type("uint8") guideStep = 0
   // whether the player has pressed "Got it" on the current step
   @type("boolean") guideStepAcked = false
+  /* Chimecho turns every later item carousel into a Pokemon carousel, so this
+     outlives the encounter that set it. Must stay after guideStepAcked so
+     existing fields keep their wire index. */
+  @type("boolean") pokemonCarousel = false
   // server-only cursor recording which step already handed out its grants
   guideStepEntered = -1
   // server-only: true while a guide stage is being replayed with a different
@@ -115,6 +119,9 @@ export default class GameState extends Schema {
   minRank: EloRank | null = null
   maxRank: EloRank | null = null
   outlawStage: number | null = null
+  /* Bidoof: both wish selections of the festival are forced to Prismatic. Set
+     during the stage 4 carousel, which runs before that stage's own selection */
+  prismaticWishes = false
   treasureBoxRewardGiven: TreasureBoxReward = getTreasureBoxReward()
 
   hasBlessing(playerId: string, blessing: Blessing): boolean {

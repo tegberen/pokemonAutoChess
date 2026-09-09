@@ -7149,7 +7149,9 @@
 		"MAGNEZONE": "Magnezone is looking for an outlaw and offers a reward to find them",
 		"KINGAMBIT": "Kingambit has given the player in first place the LEADERS_CREST. Beat them in battle to earn extra GOLD!",
 		"LAPRAS": "Lapras offers a ride to go to a different region.",
-		"CHIMECHO": "Chimecho grants a melodic treasure to every player"
+		"CHIMECHO": "Chimecho recruits a Pokemon onto every carousel item, now and for the rest of the game",
+		"LUDICOLO": "Ludicolo grants a melodic treasure to every player",
+		"BIDOOF": "Jirachi grants Bidoof's wish, and Bidoof spends it on everyone. Both wish selections come out $t(blessing_tier.PRISMATIC)"
 	},
 	"loading_hints": {
 		"tab_out": "Don't tab out! Loading is paused when this browser window is inactive.",

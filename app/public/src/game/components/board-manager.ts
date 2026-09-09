@@ -1504,7 +1504,7 @@ export default class BoardManager {
   minigameMode() {
     this.mode = BoardMode.TOWN
     this.scene.setMap("town")
-    if (this.state.townEncounter === TownEncounters.CHIMECHO) {
+    if (this.state.townEncounter === TownEncounters.LUDICOLO) {
       playMusic(this.scene, DungeonMusic.CARNIVAL_LUDICOLO)
       this.scene.music?.once("looped", () => {
         playMusic(
