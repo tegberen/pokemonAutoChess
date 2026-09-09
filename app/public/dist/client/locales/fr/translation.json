@@ -4519,7 +4519,9 @@
 		"MAGNEZONE": "Magnézone recherche un hors-la-loi et offre une récompense pour le retrouver.",
 		"KINGAMBIT": "Scalpereur a offert l'LEADERS_CREST au joueur en première place. Battez-le au combat pour gagner de l'GOLD supplémentaire !",
 		"LAPRAS": "Lapras vous offre un voyage vers une autre région.",
-		"LUDICOLO": "Ludicolo célèbre l'arrivée du carnaval et offre des instruments aux joueurs pour qu'ils puissent également participer aux festivités."
+		"LUDICOLO": "Ludicolo offre un trésor mélodieux à chaque joueur.",
+		"CHIMECHO": "Éoko recrute un Pokémon sur chaque objet du carrousel, maintenant et pour le reste de la partie.",
+		"BIDOOF": "Keunotor garantit un Vœu Prismatique aux deux sélections de vœux du festival."
 	},
 	"loading_hints": {
 		"tab_out": "Ne changez pas d'onglet ! Le chargement est mis en pause si cette fenêtre est inactive.",

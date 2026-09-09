@@ -257,6 +257,7 @@ export interface IFloatingItem {
   name: Item
   x: number
   y: number
+  pkm: Pkm
 }
 
 export interface IPortal {

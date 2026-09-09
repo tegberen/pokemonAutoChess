@@ -151,6 +151,7 @@ import {
   BLESSING_SELECTION_STAGES,
   BLESSING_SELECTION_EXTRA_TIME,
   FAST_DELIVERY_RETURN_DELAY,
+  BlessingTier,
   BlessingTrigger,
   countsForTeamSize,
   PRISMATIC_REROLL_CHANCE,
@@ -2762,10 +2763,15 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
       (this.state.blessingsUnderTest.length > 0 ||
         BLESSING_SELECTION_STAGES.includes(this.state.stageLevel))
     ) {
-      const lobbyTier = rollBlessingTier(
-        this.state.blessingsUnderTest,
-        this.state.previousBlessingTier
-      )
+      /* the sandbox still rolls, since forcing a tier there can leave the
+         under-test list with nothing to propose */
+      const lobbyTier =
+        this.state.prismaticWishes && this.state.blessingsUnderTest.length === 0
+          ? BlessingTier.PRISMATIC
+          : rollBlessingTier(
+              this.state.blessingsUnderTest,
+              this.state.previousBlessingTier
+            )
       this.state.previousBlessingTier = lobbyTier
       this.state.players.forEach((player: Player) => {
         if (player.isBot || !player.alive) return
@@ -3535,7 +3541,7 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
     // the replay is over as soon as its carousel closes, so the next carousel
     // of the run is dealt normally again
     this.state.guideRewinding = false
-    this.room.miniGame.stop(this.room.state)
+    this.room.miniGame.stop(this.room.state, this.room)
     this.state.players.forEach((player: Player) => {
       const croagunk = [...player.wanderers.values()].find(
         (w) => w.type === WandererType.CROAGUNK_TRADE

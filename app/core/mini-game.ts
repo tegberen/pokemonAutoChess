@@ -9,6 +9,7 @@ import {
   Vector
 } from "matter-js"
 import {
+  getCarouselPokemonRarities,
   ItemCarouselStages,
   PortalCarouselStages,
   RegionDetails,
@@ -21,6 +22,8 @@ import { PlayerChoice } from "../models/colyseus-models/player-choice"
 import { PokemonAvatarModel } from "../models/colyseus-models/pokemon-avatar"
 import { Portal, SynergySymbol } from "../models/colyseus-models/portal"
 import { getSynergyTier } from "../models/colyseus-models/synergies"
+import PokemonFactory from "../models/pokemon-factory"
+import { getPokemonData } from "../models/precomputed/precomputed-pokemon-data"
 import type GameRoom from "../rooms/game-room"
 import type GameState from "../rooms/states/game-state"
 import {
@@ -29,6 +32,7 @@ import {
   SynergyItems,
   Transfer
 } from "../types"
+import { EvolutionRuleType } from "../types/EvolutionRules"
 import {
   Blessing,
   CAROUSEL_LOCK_RETENTION_DELAY,
@@ -40,7 +44,7 @@ import {
   grantRegionalTreasuresOnRegionChange
 } from "../services/blessings"
 import { DungeonPMDO } from "../types/enum/Dungeon"
-import { GameMode, PokemonActionState } from "../types/enum/Game"
+import { GameMode, PokemonActionState, Rarity } from "../types/enum/Game"
 import {
   CraftableItemsNoScarves,
   CraftableNoStonesOrScarves,
@@ -54,11 +58,16 @@ import {
   Tools,
   SevenTreasures
 } from "../types/enum/Item"
+import { Pkm, PkmFamily } from "../types/enum/Pokemon"
 import { SpecialGameRule } from "../types/enum/SpecialGameRule"
 import { Synergy, SynergyArray } from "../types/enum/Synergy"
 import { type TownEncounter, TownEncounters } from "../types/enum/TownEncounter"
 import type { NpcDialog } from "../types/strings/NpcDialog"
 import { isIn } from "../utils/array"
+import {
+  getFirstAvailablePositionInBench,
+  getFreeSpaceOnBench
+} from "../utils/board"
 import { clamp, max } from "../utils/number"
 import { getOrientation } from "../utils/orientation"
 import {
@@ -71,6 +80,7 @@ import {
 } from "../utils/random"
 import { schemaKeys, schemaValues } from "../utils/schemas"
 import { giveRandomEgg } from "./eggs"
+import { EvolutionManager } from "./evolution-logic/evolution-manager"
 import {
   getGuideCarouselExclusions,
   getGuideCarouselTarget,
@@ -298,8 +308,17 @@ export class MiniGame {
       state.gameMode !== GameMode.GUIDE &&
       stageLevel in TownEncountersByStage
     ) {
+      const encounterWeights = { ...TownEncountersByStage[stageLevel] }
+      if (!state.blessingsEnabled) {
+        /* Bidoof has nothing to give outside the Wish Festival. Dropping it
+           from the weights rather than nulling the roll afterwards keeps the
+           other encounters at their intended odds, and keeps the festival rule
+           - which normalises over whatever weights it is handed - from ending
+           up with a stage that has no encounter at all. */
+        delete encounterWeights[TownEncounters.BIDOOF]
+      }
       let encounter = randomWeighted(
-        TownEncountersByStage[stageLevel],
+        encounterWeights,
         state.specialGameRule === SpecialGameRule.TOWN_FESTIVAL ? undefined : 1
       ) as TownEncounter | null
       if (
@@ -332,6 +351,12 @@ export class MiniGame {
         state.townEncounters.add(encounter)
         if (encounter === TownEncounters.CASTFORM) {
           state.weatherThreshold = 7
+        }
+        if (encounter === TownEncounters.CHIMECHO) {
+          state.pokemonCarousel = true
+        }
+        if (encounter === TownEncounters.BIDOOF) {
+          state.prismaticWishes = true
         }
         // add a fixed blocked circle collision body around encounter
         const body = Bodies.circle(this.centerX, this.centerY, 20, {
@@ -483,19 +508,63 @@ export class MiniGame {
 
   initializeItemsCarousel(state: GameState) {
     const items = this.pickRandomItems(state)
+    const pokemons = state.pokemonCarousel
+      ? this.drawCarouselPokemons(state, items.length)
+      : []
 
     for (let j = 0; j < items.length; j++) {
       const x = this.centerX + Math.cos((Math.PI * 2 * j) / items.length) * 100
       const y = this.centerY + Math.sin((Math.PI * 2 * j) / items.length) * 90
       const name = items[j]
+      const pkm = pokemons[j]
       const floatingItem = new FloatingItem(name, x, y, j)
+      if (pkm) floatingItem.pkm = pkm
       this.items?.set(floatingItem.id, floatingItem)
-      const body = Bodies.circle(x, y, 20)
+      /* the client centres the pair on the Pokemon and hangs the item off its
+         shoulder, so the grab zone is the Pokemon rather than the item disc */
+      const body = Bodies.circle(x, y, pkm ? 28 : 20)
       body.label = floatingItem.id
       body.isSensor = true
       this.bodies.set(floatingItem.id, body)
       Composite.add(this.engine.world, body)
     }
+  }
+
+  /* Carousel Pokemon are real copies taken out of the lobby pool, so every one
+     that nobody grabs has to find its way back in stop(). Regional pools are
+     per-player and the carousel is shared, so only the non-regional pool is
+     ever touched. */
+  drawCarouselPokemons(state: GameState, nbSlots: number): Pkm[] {
+    const rarities = getCarouselPokemonRarities(state.stageLevel, nbSlots)
+    const drawn: Pkm[] = []
+    rarities.forEach((rarity) => {
+      drawn.push(this.drawCarouselPokemon(state, rarity, drawn))
+    })
+    return drawn
+  }
+
+  drawCarouselPokemon(
+    state: GameState,
+    rarity: Rarity,
+    alreadyDrawn: Pkm[]
+  ): Pkm {
+    /* a slot the pool cannot fill still has to carry something, or the item on
+       it looks like a bug next to eight Pokemon. Ditto is SPECIAL rarity, so it
+       is drawn from no pool and returns to none either */
+    const pool = state.shop.getPool(rarity)
+    if (!pool || pool.length === 0) return Pkm.DITTO
+
+    // a duplicate species wastes a slot, but an empty slot wastes a pick
+    const unseen = pool.filter(
+      (pkm) => !alreadyDrawn.some((d) => PkmFamily[d] === PkmFamily[pkm])
+    )
+    const picked = pickRandomIn(unseen.length > 0 ? unseen : pool)
+    pool.splice(pool.indexOf(picked), 1)
+    return picked
+  }
+
+  returnCarouselPokemonToPool(state: GameState, pkm: Pkm) {
+    state.shop.getPool(getPokemonData(pkm).rarity)?.push(pkm)
   }
 
   initializePortalCarousel(stageLevel: number, room: GameRoom) {
@@ -587,7 +656,7 @@ export class MiniGame {
       itemsSet = CraftableItemsNoScarves
     }
 
-    if (encounter === TownEncounters.CHIMECHO) {
+    if (encounter === TownEncounters.LUDICOLO) {
       itemsSet = SevenTreasures
       maxCopiesPerItem = 2
     }
@@ -919,9 +988,27 @@ export class MiniGame {
     }
   }
 
-  stop(state: GameState) {
+  grantCarouselPokemon(player: Player, pkm: Pkm, room: GameRoom): boolean {
+    const pokemon = PokemonFactory.createPokemonFromName(pkm, player)
+    const hasSpaceOnBench =
+      getFreeSpaceOnBench(player.board) > 0 ||
+      (pokemon.evolutionRule?.type === EvolutionRuleType.COUNT &&
+        EvolutionManager.canEvolveIfGettingOne(pokemon, player))
+    if (!hasSpaceOnBench) return false
+
+    pokemon.positionX = getFirstAvailablePositionInBench(player.board) ?? -1
+    pokemon.positionY = 0
+    player.board.set(pokemon.id, pokemon)
+    pokemon.onAcquired(player)
+    room.checkEvolutionsAfterPokemonAcquired(player.id)
+    return true
+  }
+
+  stop(state: GameState, room: GameRoom) {
     const players: MapSchema<Player> = state.players
     const encounter = state.townEncounter
+    // every carousel Pokemon not landing on a real board goes back in the pool
+    const grantedPokemonItemIds = new Set<string>()
     this.bodies.forEach((body, key) => {
       Composite.remove(this.engine.world, body)
       this.bodies.delete(key)
@@ -978,6 +1065,13 @@ export class MiniGame {
           } else {
             player.items.push(item.name)
           }
+
+          if (
+            item.pkm !== Pkm.DEFAULT &&
+            this.grantCarouselPokemon(player, item.pkm, room)
+          ) {
+            grantedPokemonItemIds.add(item.id)
+          }
         }
       }
 
@@ -1020,6 +1114,9 @@ export class MiniGame {
 
     if (this.items) {
       this.items.forEach((item) => {
+        if (item.pkm !== Pkm.DEFAULT && !grantedPokemonItemIds.has(item.id)) {
+          this.returnCarouselPokemonToPool(state, item.pkm)
+        }
         this.items!.delete(item.id)
       })
     }
