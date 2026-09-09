@@ -21,7 +21,8 @@ import {
   SOUND_SPEED_BUFF_PER_SYNERGY_TIER,
   type SynergyTier,
   SynergyTiers,
-  GOLDEN_BERRY_TREE_TYPES
+  GOLDEN_BERRY_TREE_TYPES,
+  VESPIQUEN_CLONE
 } from "../../config/game/synergies"
 import type Player from "../../models/colyseus-models/player"
 import { getSynergyTier } from "../../models/colyseus-models/synergies"
@@ -1246,8 +1247,8 @@ export const cloneBugs = ({
     let clonePkm = pokemonCloned.name
 
     if (pokemonCloned.passive === Passive.VESPIQUEN) {
-      numberOfClones = 2
-      clonePkm = Pkm.COMBEE
+      numberOfClones = VESPIQUEN_CLONE.count
+      clonePkm = VESPIQUEN_CLONE.pkm
     }
 
     for (

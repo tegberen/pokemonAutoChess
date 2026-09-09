@@ -14,7 +14,8 @@ import {
   MONSTER_ATTACK_BUFF_PER_SYNERGY_TIER,
   MONSTER_AP_BUFF_PER_SYNERGY_TIER,
   MONSTER_MAX_HP_BUFF_FACTOR_PER_SYNERGY_TIER,
-  SynergyTiers
+  SynergyTiers,
+  VESPIQUEN_CLONE
 } from "../config/game/synergies"
 import type Player from "../models/colyseus-models/player"
 import { type Pokemon } from "../models/colyseus-models/pokemon"
@@ -3457,14 +3458,17 @@ export default class Simulation extends Schema implements ISimulation {
         const bugAllies = ownUnits.filter((ally) => ally.types.has(Synergy.BUG))
         if (bugAllies.length > 0) {
           const strongestBug = getStrongestUnit(bugAllies)
-          for (let i = 0; i < BUG_CLONE_TRIPLE; i++) {
+          const isQueen = strongestBug.passive === Passive.VESPIQUEN
+          const spawnCount = isQueen ? VESPIQUEN_CLONE.count : 1
+          for (let i = 0; i < BUG_CLONE_TRIPLE * spawnCount; i++) {
             const coord = this.getClosestFreeCellToPokemonEntity(strongestBug)
             if (!coord) break
             const clone = PokemonFactory.createPokemonFromName(
-              strongestBug.name,
+              isQueen ? VESPIQUEN_CLONE.pkm : strongestBug.name,
               player
             )
-            clone.hp = strongestBug.refToBoardPokemon.hp
+            // a Combee keeps its own HP, only a true copy inherits the queen's
+            if (!isQueen) clone.hp = strongestBug.refToBoardPokemon.hp
             this.addPokemon(clone, coord.x, coord.y, teamIndex, true)
           }
         }

@@ -1,7 +1,11 @@
 import { EffectEnum } from "../../types/enum/Effect"
 import { GameMode, Rarity } from "../../types/enum/Game"
 import { type FishingRod, Item, type ShinyItem } from "../../types/enum/Item"
+import { Pkm } from "../../types/enum/Pokemon"
 import { Synergy } from "../../types/enum/Synergy"
+
+// a cloned queen hatches a pair of Combees rather than a second queen
+export const VESPIQUEN_CLONE = { pkm: Pkm.COMBEE, count: 2 }
 
 export const SynergyTiers = {
   [Synergy.NORMAL]: [
