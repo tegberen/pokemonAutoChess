@@ -552,6 +552,9 @@ export default function WikiBlessings() {
                           ? "Items"
                           : category}
                   </h3>
+                  {category === "synergy" && (
+                    <p>{t("wiki.blessings.synergy_hint")}</p>
+                  )}
                   <ul className="wiki-blessings-list">
                     {category === "synergy" &&
                       families.map((family) => {
@@ -606,6 +609,7 @@ export default function WikiBlessings() {
                   {combos.length > 0 && (
                     <section className="wiki-blessings-subcategory">
                       <h4>Combos</h4>
+                      <p>{t("wiki.blessings.combos_hint")}</p>
                       <ul className="wiki-blessings-list">
                         {combos.map((blessing) => (
                           <BlessingCard key={blessing} blessing={blessing} />

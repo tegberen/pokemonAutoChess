@@ -177,7 +177,7 @@ export function MainSidebar(props: MainSidebarProps) {
           }}
           shimmer={isNewPatch}
         >
-          Server Guide
+          Server Changes
         </NavLink>
 
         {page === "main_lobby" && (
@@ -510,7 +510,7 @@ function Modals({
       <Modal
         onClose={closeModal}
         show={modal === "news"}
-        header="Server Guide"
+        header="Server Changes"
         className="patchnotes"
       >
         <Patchnotes

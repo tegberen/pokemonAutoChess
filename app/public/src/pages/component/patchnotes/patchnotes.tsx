@@ -77,7 +77,7 @@ export default function PatchNotes({
   return (
     <div className="patchnotes-archive">
       <button className="bubbly blue" onClick={() => setShowGuide(true)}>
-        ← Back to Server Guide
+        ← Back to Server Changes
       </button>
       <ul className="patchnotes-grid" role="list">
         {PATCHES.filter((patch) => patch.v !== "altmeta").map((patch) => (

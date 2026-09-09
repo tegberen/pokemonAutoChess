@@ -7401,7 +7401,9 @@
 			"family_CROWN_name": "Synergy Crowns",
 			"family_CROWN_hint": "Gain two items and a Pokémon chosen for that synergy. One exists for every synergy.",
 			"family_GYM_TRAINER_name": "Gym Trainers",
-			"family_GYM_TRAINER_hint": "Gain two Pokémon sharing a pair of synergies, and a guaranteed Unique of that pair in your Unique selection."
+			"family_GYM_TRAINER_hint": "Gain two Pokémon sharing a pair of synergies, and a guaranteed Unique of that pair in your Unique selection.",
+			"combos_hint": "At stage 12, a Combo is only offered if you own a Unique with one of its two synergies, on your board or bench.",
+			"synergy_hint": "At stage 12, these are only offered if their synergy is active."
 		}
 	},
 	"errors": {
@@ -7593,7 +7595,7 @@
 	"guide": {
 		"pick_a_synergy": "Pick a synergy to learn",
 		"lesson_finished": "Lesson complete!",
-		"bookmark_tab": "Bookmark",
+		"bookmark_tab": "Guide",
 		"bookmarks_title": "Synergy Guide",
 		"bookmarks_hint": "Bookmarks from the interactive Guide.",
 		"notes": {

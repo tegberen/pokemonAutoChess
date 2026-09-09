@@ -18,6 +18,10 @@
   --color-fg-positive: #a9f5ad;
   --color-fg-negative: #f5a9a9;
   --color-shadow: #2d334b;
+  /* the default --color-bg-secondary and --color-bg-tertiary, kept apart so a
+     theme recolouring those cannot tint the blessing tier stripes over them */
+  --color-blessing-card: #54596b;
+  --color-blessing-card-shade: #464c5c;
 
   --color-physical: #e76e55;
   --color-special: hsl(215, 100%, 75%);

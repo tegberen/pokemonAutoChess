@@ -221,7 +221,7 @@ export default function ServerGuide({
     <div className="server-guide">
       <header className="guide-toolbar">
         <h1>
-          <img src="assets/icons/SERVER_GUIDE.svg" alt="" /> Server Guide
+          <img src="assets/icons/SERVER_GUIDE.svg" alt="" /> Server Changes
         </h1>
         <nav className="guide-toolbar-links" aria-label="Server information">
           <button className="bubbly" onClick={onArchive}>
@@ -283,7 +283,7 @@ export default function ServerGuide({
                   <>
                     <section className="my-box guide-welcome">
                       <p>
-                        This guide explains the differences from the main server and assumes you know the basics of Pokémon Auto Chess. New players are encouraged to start on the main server.
+                        Explains the differences from the main server and assumes you know the basics of Pokémon Auto Chess. New players are encouraged to start on the main server.
                       </p>
                     </section>
                     <div className="guide-index-heading">
