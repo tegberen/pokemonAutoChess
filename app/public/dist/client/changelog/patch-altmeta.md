@@ -216,7 +216,7 @@ At the beginning of each battle, TIGHT_BELT is replaced by 2 random items. The h
 - Fossil unlock pool: Omanyte, Kabuto, Wimpod.
 - Golisopod: has FOSSIL. Evolves from Wimpod.
 - Kabutops: has DARK. Evolves from Kabuto.
-- Cinderace: has NORMAL
+- Cinderace: has NORMAL. Raboot evolves into Cinderace Pirate, which swaps NORMAL for AQUATIC, when your AQUATIC count is at least your NORMAL count
 - Butterfree: regional pool
 
 - Kingdra: RANGE 3
@@ -302,6 +302,8 @@ At the beginning of each battle, TIGHT_BELT is replaced by 2 random items. The h
 - Escavalier: Additional pool
 - Corviknight: regular pool
 - Kilowattrel: has AQUATIC
+- Samurott: the Oshawott line is AQUATIC / FIELD / FIGHTING
+- Walrein: the Spheal line is ICE / WATER, filling the WATER tank role
 - Exeggutor: has GOURMET, COCONUT_MILK
 - Alolan Exeggutor: has GOURMET, COCONUT_MALASADA.
 

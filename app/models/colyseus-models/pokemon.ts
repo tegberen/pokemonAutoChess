@@ -2062,7 +2062,7 @@ export class AegislashBlade extends Pokemon {
 
 export class Oshawott extends Pokemon {
   types = new SetSchema<Synergy>([
-    Synergy.WATER,
+    Synergy.AQUATIC,
     Synergy.FIELD,
     Synergy.FIGHTING
   ])
@@ -2081,7 +2081,7 @@ export class Oshawott extends Pokemon {
 
 export class Dewott extends Pokemon {
   types = new SetSchema<Synergy>([
-    Synergy.WATER,
+    Synergy.AQUATIC,
     Synergy.FIELD,
     Synergy.FIGHTING
   ])
@@ -2109,7 +2109,7 @@ export class Dewott extends Pokemon {
 
 export class Samurott extends Pokemon {
   types = new SetSchema<Synergy>([
-    Synergy.WATER,
+    Synergy.AQUATIC,
     Synergy.FIELD,
     Synergy.FIGHTING
   ])
@@ -2126,7 +2126,7 @@ export class Samurott extends Pokemon {
 }
 
 export class HisuiSamurott extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.WATER, Synergy.FIELD, Synergy.DARK])
+  types = new SetSchema<Synergy>([Synergy.AQUATIC, Synergy.FIELD, Synergy.DARK])
   rarity = Rarity.EPIC
   stars = 3
   hp = 280
@@ -4239,7 +4239,7 @@ export class Scolipede extends Pokemon {
 }
 
 export class Spheal extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.AQUATIC, Synergy.ICE])
+  types = new SetSchema<Synergy>([Synergy.ICE, Synergy.WATER])
   rarity = Rarity.EPIC
   stars = 1
   evolution = Pkm.SEALEO
@@ -4255,7 +4255,7 @@ export class Spheal extends Pokemon {
 }
 
 export class Sealeo extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.AQUATIC, Synergy.ICE])
+  types = new SetSchema<Synergy>([Synergy.ICE, Synergy.WATER])
   rarity = Rarity.EPIC
   stars = 2
   evolution = Pkm.WALREIN
@@ -4271,7 +4271,7 @@ export class Sealeo extends Pokemon {
 }
 
 export class Walrein extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.AQUATIC, Synergy.ICE])
+  types = new SetSchema<Synergy>([Synergy.ICE, Synergy.WATER])
   rarity = Rarity.EPIC
   stars = 3
   hp = 500
@@ -5724,7 +5724,7 @@ export class Seedot extends Pokemon {
   rarity = Rarity.COMMON
   stars = 1
   evolution = Pkm.NUZLEAF
-  hp = 60
+  hp = 50
   atk = 6
   speed = 51
   def = 4
@@ -5743,7 +5743,7 @@ export class Nuzleaf extends Pokemon {
   rarity = Rarity.COMMON
   stars = 2
   evolution = Pkm.SHIFTRY
-  hp = 120
+  hp = 100
   atk = 9
   speed = 51
   def = 6
@@ -11933,8 +11933,8 @@ export class Raboot extends Pokemon {
     numberRequired: 3,
     divergentEvolution: (pokemon, player) => {
       const normalCount = player.synergies.get(Synergy.NORMAL) ?? 0
-      const darkCount = player.synergies.get(Synergy.DARK) ?? 0
-      return darkCount >= normalCount ? Pkm.CINDERACE_PIRATE : Pkm.CINDERACE
+      const aquaticCount = player.synergies.get(Synergy.AQUATIC) ?? 0
+      return aquaticCount >= normalCount ? Pkm.CINDERACE_PIRATE : Pkm.CINDERACE
     }
   } as const
 
@@ -11964,7 +11964,7 @@ export class Cinderace extends Pokemon {
 }
 
 export class CinderacePirate extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.FIRE, Synergy.FIELD, Synergy.DARK])
+  types = new SetSchema<Synergy>([Synergy.FIRE, Synergy.FIELD, Synergy.AQUATIC])
   rarity = Rarity.COMMON
   stars = 3
   hp = 150
