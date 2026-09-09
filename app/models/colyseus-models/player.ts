@@ -1562,11 +1562,7 @@ export default class Player extends Schema implements IPlayer {
   checkDerpyTitle() {
     if (
       (this.synergies.get(Synergy.WATER) ?? 0) >= DERPY_WATER_REQUIRED &&
-      (this.synergies.get(Synergy.BUG) ?? 0) >= DERPY_BUG_REQUIRED &&
-      schemaValues(this.board).some(
-        (pokemon) =>
-          pokemon.name === Pkm.BEEDRILL && pokemon.items.has(Item.WATER_STONE)
-      )
+      (this.synergies.get(Synergy.BUG) ?? 0) >= DERPY_BUG_REQUIRED
     ) {
       this.titles.add(Title.DERPY)
     }

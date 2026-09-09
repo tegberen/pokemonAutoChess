@@ -97,7 +97,7 @@ import {
 import type { EloRank } from "../types/enum/EloRank"
 import { GameMode, PokemonActionState, Rarity } from "../types/enum/Game"
 import {
-  type Item,
+  Item,
   ItemComponentsNoScarf,
   Seeds,
   SynergyGems,
@@ -1242,6 +1242,15 @@ export default class GameRoom extends Room<{ state: GameState }> {
           schemaValues(player.board).some((pokemon) => pokemon.name === Pkm.JIRACHI)
         ) {
           player.titles.add(Title.STARRY)
+        }
+        if (
+          schemaValues(player.board).some(
+            (pokemon) =>
+              pokemon.name === Pkm.BEEDRILL &&
+              pokemon.items.has(Item.WATER_STONE)
+          )
+        ) {
+          player.titles.add(Title.DERPY)
         }
         if (this.state.gameMode === GameMode.RANKED) {
           player.titles.add(Title.VANQUISHER)
