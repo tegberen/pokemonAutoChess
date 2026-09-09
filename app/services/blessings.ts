@@ -2001,10 +2001,9 @@ export const blessingEffectService: {
     return true
   },
   [Blessing.A_NEW_FRIEND]: (player) => {
-    const candidates = PRECOMPUTED_POKEMONS_PER_RARITY[Rarity.RARE].filter(
-      (pkm) =>
-        getPokemonData(pkm).stars === 1 && player.canFindRegionalPokemon(pkm)
-    )
+    const candidates = getRegularsTier1(
+      PRECOMPUTED_POKEMONS_PER_RARITY[Rarity.UNCOMMON]
+    ).filter((pkm) => getPokemonData(pkm).stages === 3)
     if (candidates.length === 0) return false
     const pokemon = getAltFormForPlayer(pickRandomIn(candidates), player)
     player.aNewFriendPokemon = pokemon

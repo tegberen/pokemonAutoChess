@@ -5992,7 +5992,7 @@
 		},
 		"A_NEW_FRIEND": {
 			"name": "A New Friend",
-			"description": "Gain a random Rare Pokémon. Gain another copy whenever you level up."
+			"description": "Gain a random Uncommon Pokémon from a 3 STAR line. Gain another copy whenever you level up."
 		},
 		"BP_REWARDS": {
 			"name": "Battle Point Rewards",
@@ -6440,7 +6440,7 @@
 		},
 		"RAZOR_FANG_BLESSING": {
 			"name": "Quick Fang",
-			"description": "Gain a RAZOR_FANG. On a critical attack, the holder immediately attacks the same target again for 40% of its ATK. The additional attack cannot trigger this effect."
+			"description": "Gain a RAZOR_FANG. On a critical attack, the holder immediately attacks the same target again for 25% of its ATK. The additional attack cannot trigger this effect."
 		},
 		"UPGRADE_BLESSING": {
 			"name": "Super Upgrade",
