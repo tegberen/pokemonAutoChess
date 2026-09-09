@@ -186,7 +186,7 @@
   background-color: color-mix(
     in srgb,
     var(--blessing-hue) 32%,
-    var(--color-bg-secondary)
+    var(--color-blessing-card)
   );
   background-image: repeating-linear-gradient(
     135deg,

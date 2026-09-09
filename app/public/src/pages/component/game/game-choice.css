@@ -150,7 +150,7 @@
   --blessing-mix: 18%;
   --blessing-stripe-a: var(--color-fg-secondary);
   --blessing-stripe-b: var(--color-rarity-common);
-  --blessing-stripe-c: var(--color-bg-tertiary);
+  --blessing-stripe-c: var(--color-blessing-card-shade);
   --blessing-stripe-alpha: 16%;
 }
 
@@ -182,7 +182,7 @@
   background-color: color-mix(
     in srgb,
     var(--blessing-hue) var(--blessing-mix),
-    var(--color-bg-secondary)
+    var(--color-blessing-card)
   );
   background-image: repeating-linear-gradient(
     135deg,
