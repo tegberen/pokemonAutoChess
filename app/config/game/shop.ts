@@ -1,3 +1,7 @@
+import {
+  Blessing,
+  SHADY_PRICE_REROLL_COST
+} from "../../types/enum/Blessing"
 import { Rarity } from "../../types/enum/Game"
 import { SpecialGameRule } from "../../types/enum/SpecialGameRule"
 
@@ -29,6 +33,15 @@ export function getRerollCost(
     return 2
   }
   return REROLL_COST
+}
+
+export function getRerollCostForBlessings(
+  blessings: Blessing[] | undefined,
+  specialGameRule?: SpecialGameRule | null,
+  stageLevel = 0
+): number {
+  if (blessings?.includes(Blessing.SHADY_PRICE)) return SHADY_PRICE_REROLL_COST
+  return getRerollCost(specialGameRule, stageLevel)
 }
 
 export const EVOLUTION_LAB_REWARD_COMPONENTS = 3

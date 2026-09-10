@@ -5,6 +5,7 @@ import {
   BERRY_TREE_POSITIONS,
   BOARD_WIDTH,
   getRegionTint,
+  getRerollCostForBlessings,
   RegionDetails
 } from "../../../../config"
 import type { DesignTiled } from "../../../../core/design"
@@ -385,7 +386,17 @@ export default class GameScene extends Scene {
     const thinkFastActive =
       this.room?.state.phase === GamePhaseState.PICK &&
       this.room?.state.blessingsByPlayerId.get(this.uid!)?.thinkFastActive
-    const rollCost = (player?.shopFreeRolls ?? 0) > 0 || thinkFastActive ? 0 : 1
+    const rollCost =
+      (player?.shopFreeRolls ?? 0) > 0 || thinkFastActive
+        ? 0
+        : getRerollCostForBlessings(
+            [
+              ...(this.room?.state.blessingsByPlayerId.get(this.uid!)
+                ?.blessings ?? [])
+            ],
+            this.room?.state.specialGameRule,
+            this.room?.state.stageLevel
+          )
     const canRoll = (player?.money ?? 0) >= rollCost
     if (player && player.alive && canRoll && player === this.board?.player) {
       this.room?.send(Transfer.REFRESH)

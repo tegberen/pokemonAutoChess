@@ -511,7 +511,7 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     grantsPokemonImmediately: false
   },
   [Blessing.WISE_SPENDING]: {
-    tier: BlessingTier.GOLD,
+    tier: BlessingTier.PRISMATIC,
     availableAtStages: [4],
     icon: "ink_swirl",
     grantsPokemonImmediately: false
@@ -780,7 +780,7 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
   },
   [Blessing.SWEET_SUBSCRIPTION]: {
     tier: BlessingTier.GOLD,
-    availableAtStages: BLESSING_SELECTION_STAGES,
+    availableAtStages: [4],
     icon: "sweets",
     grantsPokemonImmediately: false
   },

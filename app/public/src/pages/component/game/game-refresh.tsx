@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next"
 import { Tooltip } from "react-tooltip"
-import { getRerollCost } from "../../../../../config"
+import { getRerollCostForBlessings } from "../../../../../config"
 import {
   BERSERKER_HORDES_SHOP_INTERVAL,
   Blessing
@@ -57,7 +57,11 @@ export default function GameRefresh() {
   const cost =
     shopFreeRolls > 0 || thinkFastActive
       ? 0
-      : getRerollCost(specialGameRule, stageLevel)
+      : getRerollCostForBlessings(
+          connectedBlessings,
+          specialGameRule,
+          stageLevel
+        )
   const hasBerserkerHordes = connectedPlayerId
     ? connectedBlessings.includes(Blessing.BERSERKER_HORDES)
     : false

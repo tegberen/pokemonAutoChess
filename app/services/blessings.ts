@@ -109,7 +109,6 @@ import {
   SELECTIVE_GENETICS_GOLDEN_EGG_CHANCE,
   SELECTIVE_GENETICS_MAX_COST,
   SHADY_PRICE_FREE_ROLLS,
-  SHADY_PRICE_SHOP_SIZE,
   SINGULARITY_I_STAGES,
   SINGULARITY_II_STAGES,
   SINGULARITY_OPTIONS,
@@ -2557,13 +2556,8 @@ export const blessingEffectService: {
     player.shopFreeRolls += ROLL_SCALING_FREE_ROLLS
     return true
   },
-  [Blessing.SHADY_PRICE]: (player, state) => {
+  [Blessing.SHADY_PRICE]: (player) => {
     player.shopFreeRolls += SHADY_PRICE_FREE_ROLLS
-    // the slots past the new width hand their offers back to the pool
-    player.shop
-      .slice(SHADY_PRICE_SHOP_SIZE)
-      .forEach((pkm) => state.shop.releasePokemon(pkm, player, state))
-    player.shop.splice(SHADY_PRICE_SHOP_SIZE)
     return true
   },
   [Blessing.MAGIC_SHIELD_I]: () => true,

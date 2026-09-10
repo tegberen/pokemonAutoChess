@@ -211,7 +211,9 @@ export class Pokemon extends Schema implements IPokemon {
       this.countsForTeamSize &&
       this.passive !== Passive.INANIMATE &&
       this.passive !== Passive.FIGHTING_SUBSTITUTE &&
-      this.supportiveSoul === false &&
+      // covers both substitutes that reach a board: Supportive Soul's companion
+      // and the one All for One fuses the team into
+      this.passive !== Passive.SUBSTITUTE &&
       this.items.has(Item.GOLD_BOW) === false
     )
   }

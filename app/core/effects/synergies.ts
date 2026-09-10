@@ -53,7 +53,8 @@ import {
   FIRE_SHARD_MIN_TIER,
   FIRE_IGNITION_TIER,
   IGNITION_COOLDOWN_ROUNDS,
-  BERRY_GROWTH_GOLDEN_TIER
+  BERRY_GROWTH_GOLDEN_TIER,
+  ABNORMALITY_ABILITY_POWER_PER_EMPTY_CELL
 } from "../../types/enum/Blessing"
 import {
   grantArcheologyRewards,
@@ -759,6 +760,12 @@ export const normalShieldEffect = new OnSimulationStartEffect(
           (cell) => cell.value === undefined
         ).length
         grantNormalBonus(entity, shieldBonus * emptyAdjacentCells)
+        entity.addAbilityPower(
+          ABNORMALITY_ABILITY_POWER_PER_EMPTY_CELL * emptyAdjacentCells,
+          entity,
+          0,
+          false
+        )
       } else {
         grantNormalBonus(entity, shieldBonus)
         cells.forEach((cell) => {

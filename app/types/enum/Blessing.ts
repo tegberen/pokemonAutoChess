@@ -874,8 +874,10 @@ export const LAYERED_ARMOR_SHIELD_PER_ROLL = 3
 export const MORPH_BALL_SPEED_PER_ROLL = 1
 export const ORB_WAND_ABILITY_POWER_PER_ROLL = 2
 
+export const ABNORMALITY_ABILITY_POWER_PER_EMPTY_CELL = 5
+
 export const SHADY_PRICE_FREE_ROLLS = 32
-export const SHADY_PRICE_SHOP_SIZE = 3
+export const SHADY_PRICE_REROLL_COST = 4
 
 export const RANK_UP_EXPERIENCE = 2
 export const MAGIC_SHIELD_ALLY_AP = 30
@@ -902,6 +904,8 @@ export const BLESSING_CAROUSEL_LOCK: {
 /* the avatar timer is synced and rendered as a countdown, so the lock is a long
    finite delay rather than Infinity */
 export const CAROUSEL_LOCK_RETENTION_DELAY = 60000
+
+export const GYM_TRAINER_CAROUSEL_LOCK_STAGE = 10
 
 export const QUICK_CLAW_COMPENSATION_STAGE = 12
 
@@ -1001,9 +1005,16 @@ export function getCarouselLockForStage(
   blessings: Blessing[] | undefined,
   stage: number
 ): { stage: number; guaranteedPick: Pkm } | undefined {
-  return blessings
+  const lock = blessings
     ?.map((blessing) => BLESSING_CAROUSEL_LOCK[blessing])
     .find((lock) => lock?.stage === stage)
+  if (lock) return lock
+  // the gym trainer's unique is injected by the shop rather than rolled for, so
+  // it never has to win the guaranteedPick slot off Colour Change
+  const gymTrainerUnique = getGymTrainerRoster(blessings)?.unique
+  return gymTrainerUnique && stage === GYM_TRAINER_CAROUSEL_LOCK_STAGE
+    ? { stage, guaranteedPick: gymTrainerUnique }
+    : undefined
 }
 
 /* the Pokemon each hero blessing gifts on pick, and the family whose strongest
@@ -1321,12 +1332,12 @@ export const GYM_TRAINER_ROSTERS: {
   },
   [Blessing.POISON_AMORPHOUS_GYM_TRAINER]: {
     synergies: [Synergy.POISON, Synergy.AMORPHOUS],
-    starters: [Pkm.GRIMER, Pkm.KOFFING],
+    starters: [Pkm.GRIMER, Pkm.GASTLY],
     unique: Pkm.PYUKUMUKU
   },
   [Blessing.FIRE_FIELD_GYM_TRAINER]: {
     synergies: [Synergy.FIRE, Synergy.FIELD],
-    starters: [Pkm.PONYTA, Pkm.GROWLITHE],
+    starters: [Pkm.LITTEN, Pkm.CYNDAQUIL],
     unique: Pkm.HEATMOR
   },
   [Blessing.HUMAN_FIGHTING_GYM_TRAINER]: {

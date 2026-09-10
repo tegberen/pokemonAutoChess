@@ -5296,59 +5296,59 @@
 		},
 		"NORMAL_FAIRY_GYM_TRAINER": {
 			"name": "NORMAL FAIRY Gym Trainer",
-			"description": "Gain an Igglybuff and a Togepi. Your Unique Pokémon selection is guaranteed to include a Tandemaus."
+			"description": "Gain an Igglybuff and a Togepi. You cannot move on the stage 10 carousel, but your Unique Pokémon selection is guaranteed to include a Tandemaus."
 		},
 		"FLYING_AQUATIC_GYM_TRAINER": {
 			"name": "FLYING AQUATIC Gym Trainer",
-			"description": "Gain a Quaxly and a Wattrel. Your Unique Pokémon selection is guaranteed to include a Cramorant."
+			"description": "Gain a Quaxly and a Wattrel. You cannot move on the stage 10 carousel, but your Unique Pokémon selection is guaranteed to include a Cramorant."
 		},
 		"DARK_WILD_GYM_TRAINER": {
 			"name": "DARK WILD Gym Trainer",
-			"description": "Gain a Poochyena and a Galarian Zigzagoon. Your Unique Pokémon selection is guaranteed to include an Absol."
+			"description": "Gain a Poochyena and a Galarian Zigzagoon. You cannot move on the stage 10 carousel, but your Unique Pokémon selection is guaranteed to include an Absol."
 		},
 		"GROUND_BUG_GYM_TRAINER": {
 			"name": "GROUND BUG Gym Trainer",
-			"description": "Gain a Trapinch and a Burmy (Sandy). Your Unique Pokémon selection is guaranteed to include a Dunsparce."
+			"description": "Gain a Trapinch and a Burmy (Sandy). You cannot move on the stage 10 carousel, but your Unique Pokémon selection is guaranteed to include a Dunsparce."
 		},
 		"PSYCHIC_LIGHT_GYM_TRAINER": {
 			"name": "PSYCHIC LIGHT Gym Trainer",
-			"description": "Gain a Flittle and an Elgyem. Your Unique Pokémon selection is guaranteed to include a Cosmog."
+			"description": "Gain a Flittle and an Elgyem. You cannot move on the stage 10 carousel, but your Unique Pokémon selection is guaranteed to include a Cosmog."
 		},
 		"GRASS_GOURMET_GYM_TRAINER": {
 			"name": "GRASS GOURMET Gym Trainer",
-			"description": "Gain a Capsakid and a Bounsweet. Your Unique Pokémon selection is guaranteed to include an Applin."
+			"description": "Gain a Capsakid and a Bounsweet. You cannot move on the stage 10 carousel, but your Unique Pokémon selection is guaranteed to include an Applin."
 		},
 		"POISON_AMORPHOUS_GYM_TRAINER": {
 			"name": "POISON AMORPHOUS Gym Trainer",
-			"description": "Gain a Grimer and a Koffing. Your Unique Pokémon selection is guaranteed to include a Pyukumuku."
+			"description": "Gain a Grimer and a Gastly. You cannot move on the stage 10 carousel, but your Unique Pokémon selection is guaranteed to include a Pyukumuku."
 		},
 		"FIRE_FIELD_GYM_TRAINER": {
 			"name": "FIRE FIELD Gym Trainer",
-			"description": "Gain a Ponyta and a Growlithe. Your Unique Pokémon selection is guaranteed to include a Heatmor."
+			"description": "Gain a Litten and a Cyndaquil. You cannot move on the stage 10 carousel, but your Unique Pokémon selection is guaranteed to include a Heatmor."
 		},
 		"HUMAN_FIGHTING_GYM_TRAINER": {
 			"name": "HUMAN FIGHTING Gym Trainer",
-			"description": "Gain a Machop and a Meditite. Your Unique Pokémon selection is guaranteed to include a Tyrogue."
+			"description": "Gain a Machop and a Meditite. You cannot move on the stage 10 carousel, but your Unique Pokémon selection is guaranteed to include a Tyrogue."
 		},
 		"GHOST_ARTIFICIAL_GYM_TRAINER": {
 			"name": "GHOST ARTIFICIAL Gym Trainer",
-			"description": "Gain a Honedge and a Golett. Your Unique Pokémon selection is guaranteed to include a Rotom."
+			"description": "Gain a Honedge and a Golett. You cannot move on the stage 10 carousel, but your Unique Pokémon selection is guaranteed to include a Rotom."
 		},
 		"ROCK_ICE_GYM_TRAINER": {
 			"name": "ROCK ICE Gym Trainer",
-			"description": "Gain a Snorunt and a Shellder. Your Unique Pokémon selection is guaranteed to include a Cryogonal."
+			"description": "Gain a Snorunt and a Shellder. You cannot move on the stage 10 carousel, but your Unique Pokémon selection is guaranteed to include a Cryogonal."
 		},
 		"DRAGON_MONSTER_GYM_TRAINER": {
 			"name": "DRAGON MONSTER Gym Trainer",
-			"description": "Gain a Treecko and a Gible. Your Unique Pokémon selection is guaranteed to include a Druddigon."
+			"description": "Gain a Treecko and a Gible. You cannot move on the stage 10 carousel, but your Unique Pokémon selection is guaranteed to include a Druddigon."
 		},
 		"WATER_SOUND_GYM_TRAINER": {
 			"name": "WATER SOUND Gym Trainer",
-			"description": "Gain a Clauncher and a Popplio. Your Unique Pokémon selection is guaranteed to include a Lapras."
+			"description": "Gain a Clauncher and a Popplio. You cannot move on the stage 10 carousel, but your Unique Pokémon selection is guaranteed to include a Lapras."
 		},
 		"ELECTRIC_STEEL_GYM_TRAINER": {
 			"name": "ELECTRIC STEEL Gym Trainer",
-			"description": "Gain a Magnemite and a Nosepass. Your Unique Pokémon selection is guaranteed to include a Duraludon."
+			"description": "Gain a Magnemite and a Nosepass. You cannot move on the stage 10 carousel, but your Unique Pokémon selection is guaranteed to include a Duraludon."
 		},
 		"GYM_LEADER": {
 			"name": "Gym Leader",
@@ -5628,7 +5628,7 @@
 		},
 		"ABNORMALITY": {
 			"name": "Abnormality",
-			"description": "NORMAL Pokémon now gain SHIELD for each empty ADJACENT space instead of giving it to ADJACENT allies. Gain an Igglybuff."
+			"description": "When NORMAL is active, its Pokémon gain SHIELD and 5 AP for each empty ADJACENT space instead of giving SHIELD to ADJACENT allies. Gain an Igglybuff."
 		},
 		"WRAPPED_UP": {
 			"name": "Wrapped Up",
@@ -5828,7 +5828,7 @@
 		},
 		"SHADY_PRICE": {
 			"name": "Shady Price",
-			"description": "Gain 32 Rerolls. Your shop is halved to 3 slots for the rest of the game."
+			"description": "Gain 32 Rerolls. Once they are spent, rerolling your shop costs 4 GOLD for the rest of the game."
 		},
 		"RANK_UP": {
 			"name": "Rank Up",
@@ -6032,7 +6032,7 @@
 		},
 		"ALL_FOR_ONE": {
 			"name": "All for One",
-			"description": "Lose all of your non-Unique Pokémon. Gain a Substitute with 100% of their combined max HP."
+			"description": "Lose all of your non-Unique Pokémon. Gain a Substitute with 100% of their combined max HP. It does not count towards your board space."
 		},
 		"RAINBOW_KEY": {
 			"name": "Rainbow Key",
@@ -6376,7 +6376,7 @@
 		},
 		"DEEP_SEA_TOOTH_BLESSING": {
 			"name": "Abyssal Fang",
-			"description": "Gain a DEEP_SEA_TOOTH. Attacks deal double damage against enemies below 50% of their max HP and restores 30 PP on KO instead."
+			"description": "Gain a DEEP_SEA_TOOTH. Attacks deal double damage against enemies below 50% of their max HP and restore 30 PP intead of 15 PP when knocking out the target."
 		},
 		"SCOPE_LENS_BLESSING": {
 			"name": "Lock-On Lens",

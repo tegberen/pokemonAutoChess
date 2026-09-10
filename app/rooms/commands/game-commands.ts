@@ -21,7 +21,7 @@ import {
   EVOLUTION_LAB_REWARD_OPTIONS,
   EvolutionLabRewardKinds,
   getItemCapacity,
-  getRerollCost,
+  getRerollCostForBlessings,
   MAX_PLAYERS_PER_GAME,
   OUTLAW_GOLD_REWARD,
   PkmsWithAltForms,
@@ -1735,7 +1735,11 @@ export class OnShopRerollCommand extends Command<GameRoom, string> {
     const rollCost =
       player.shopFreeRolls > 0 || thinkFastActive
         ? 0
-        : getRerollCost(this.state.specialGameRule, this.state.stageLevel)
+        : getRerollCostForBlessings(
+            player.blessings,
+            this.state.specialGameRule,
+            this.state.stageLevel
+          )
     const canRoll = (player?.money ?? 0) >= rollCost
 
     if (canRoll) {
