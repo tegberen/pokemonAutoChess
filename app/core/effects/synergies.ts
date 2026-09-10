@@ -586,14 +586,10 @@ export const onFlowerMonDeath = new OnDeathEffect(({ pokemon, board }) => {
   }
 
   const potsAvailable = getFlowerPotsUnlocked(pokemon.player)
-  let nextPot: FlowerPot | undefined
-  if (pokemon.team === Team.RED_TEAM) {
-    nextPot = potsAvailable[pokemon.simulation.redFlowerSpawn]
-    pokemon.simulation.redFlowerSpawn++
-  } else {
-    nextPot = potsAvailable[pokemon.simulation.blueFlowerSpawn]
-    pokemon.simulation.blueFlowerSpawn++
-  }
+  const { flowerSpawnByPlayerId } = pokemon.simulation
+  const spawnIndex = flowerSpawnByPlayerId.get(pokemon.player.id) ?? 0
+  const nextPot: FlowerPot | undefined = potsAvailable[spawnIndex]
+  flowerSpawnByPlayerId.set(pokemon.player.id, spawnIndex + 1)
 
   if (nextPot) {
     const blessings = pokemon.player.blessings

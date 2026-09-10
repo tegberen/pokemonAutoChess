@@ -367,8 +367,9 @@ export default class Simulation extends Schema implements ISimulation {
   redEffects = new Set<EffectEnum>()
   board: Board = new Board(BOARD_HEIGHT, BOARD_WIDTH)
   finished = false
-  blueFlowerSpawn: number = 0
-  redFlowerSpawn: number = 0
+  // one cursor per player, not per team: a Double Up PVE fight puts both
+  // partners on the blue team and each blossoms from their own flower pots
+  flowerSpawnByPlayerId = new Map<string, number>()
   stageLevel = 0
   bluePlayer: Player | undefined
   redPlayer: Player | undefined
