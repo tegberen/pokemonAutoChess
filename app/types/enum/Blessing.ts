@@ -885,7 +885,9 @@ export const STAR_GUARD_DEFENSE_PER_STAR = 1
 export const MACHINE_RESIDUE_SHIELD = 50
 export const SAPPHIRE_ORB_BOUNCES = 3
 export const SAPPHIRE_ORB_ARMOR_BREAK_DURATION = 3000
-export const RUBY_ORB_TRUE_DAMAGE_VS_BURN = 0.5
+export const RUBY_ORB_ERUPTION_INTERVAL = 4
+export const RUBY_ORB_ERUPTION_DAMAGE = 20
+export const RUBY_ORB_ERUPTION_BURN_DURATION = 4000
 export const LUCKY_DICE_BOUNCE_DAMAGE_RATIO = 0.75
 
 /* blessings that trade away all movement on one future portal carousel for a

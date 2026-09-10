@@ -6332,7 +6332,7 @@
 		},
 		"RUBY_ORB": {
 			"name": "Ruby Orb",
-			"description": "Gain a RED_ORB. It converts 50% of attack damage to TRUE against BURN enemies, instead of 25%."
+			"description": "Gain a RED_ORB. Every 4 attacks, its holder erupts a fire tornado on the target and ADJACENT enemies, dealing 20 SPECIAL and BURN for 4 seconds."
 		},
 		"KINGS_ROCK_BLESSING": {
 			"name": "King's Crown",

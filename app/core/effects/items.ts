@@ -71,6 +71,9 @@ import {
   PROTECTIVE_PADS_ATTACK_VS_SHIELDED,
   PUNCHING_GLOVE_ATTACKS_PER_FOCUS_PUNCH,
   RAZOR_CLAW_ATTACK_ON_CRIT,
+  RUBY_ORB_ERUPTION_BURN_DURATION,
+  RUBY_ORB_ERUPTION_DAMAGE,
+  RUBY_ORB_ERUPTION_INTERVAL,
   SAPPHIRE_ORB_ARMOR_BREAK_DURATION,
   SAPPHIRE_ORB_BOUNCES,
   SCOPE_LENS_MARK_DURATION,
@@ -1643,6 +1646,42 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
   ],
 
   [Item.BLUE_ORB]: [blueOrbOnAttackEffect],
+
+  [Item.RED_ORB]: [
+    () => {
+      let attacksSinceEruption = 0
+      return new OnAttackEffect(({ pokemon, target, board }) => {
+        if (!target || !hasBlessing(pokemon, Blessing.RUBY_ORB)) return
+        attacksSinceEruption++
+        if (attacksSinceEruption < RUBY_ORB_ERUPTION_INTERVAL) return
+        attacksSinceEruption = 0
+        pokemon.broadcastAbility({
+          skill: Ability.FLARE_BLITZ,
+          ap: 0,
+          positionX: target.positionX,
+          positionY: target.positionY
+        })
+        board
+          .getAdjacentCells(target.positionX, target.positionY, true)
+          .forEach((cell) => {
+            if (!cell.value || cell.value.team === pokemon.team) return
+            cell.value.status.triggerBurn(
+              RUBY_ORB_ERUPTION_BURN_DURATION,
+              cell.value,
+              pokemon
+            )
+            cell.value.handleSpecialDamage(
+              RUBY_ORB_ERUPTION_DAMAGE,
+              board,
+              AttackType.SPECIAL,
+              pokemon,
+              false,
+              false
+            )
+          })
+      })
+    }
+  ],
 
   [Item.POKEMONOMICON]: [pokemonomiconOnDamageEffect],
 

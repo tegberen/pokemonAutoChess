@@ -34,7 +34,6 @@ import {
   DEEP_WOUNDS_ARMOR_BREAK_DURATION,
   DEEP_WOUNDS_DEFENSE_LOSS,
   DEEP_WOUNDS_DEFENSE_LOSS_CHANCE,
-  RUBY_ORB_TRUE_DAMAGE_VS_BURN,
   SHELL_ARMOR_SPE_DEF_BY_STARS,
   DEEP_SEA_TOOTH_DAMAGE_MULTIPLIER,
   DEEP_SEA_TOOTH_EXECUTE_HP_RATIO,
@@ -337,11 +336,7 @@ export default abstract class PokemonState {
         trueDamagePart += 1.25
       }
       if (pokemon.items.has(Item.RED_ORB)) {
-        trueDamagePart +=
-          target.status.burn &&
-          pokemon.player?.blessings?.includes(Blessing.RUBY_ORB)
-            ? RUBY_ORB_TRUE_DAMAGE_VS_BURN
-            : 0.25
+        trueDamagePart += 0.25
       }
       if (pokemon.effects.has(EffectEnum.STEELY_SPIRIT_BONUS)) {
         trueDamagePart += 0.1
