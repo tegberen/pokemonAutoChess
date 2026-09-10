@@ -1124,7 +1124,7 @@ export class Bounsweet extends Pokemon {
   speed = 48
   def = 8
   speDef = 8
-  maxPP = 120
+  maxPP = 80
   range = 1
   skill = Ability.TROP_KICK
 }
@@ -1143,7 +1143,7 @@ export class Steenee extends Pokemon {
   speed = 48
   def = 10
   speDef = 10
-  maxPP = 120
+  maxPP = 80
   range = 1
   skill = Ability.TROP_KICK
 }
@@ -1161,7 +1161,7 @@ export class Tsareena extends Pokemon {
   speed = 48
   def = 12
   speDef = 12
-  maxPP = 120
+  maxPP = 80
   range = 1
   skill = Ability.TROP_KICK
 }

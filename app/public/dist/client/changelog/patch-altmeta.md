@@ -306,6 +306,7 @@ At the beginning of each battle, TIGHT_BELT is replaced by 2 random items. The h
 - Walrein: the Spheal line is ICE / WATER, filling the WATER tank role
 - Exeggutor: has GOURMET, COCONUT_MILK
 - Alolan Exeggutor: has GOURMET, COCONUT_MALASADA.
+- Tsareena: {{ability:TROP_KICK}}
 
 ### Ultra
 
