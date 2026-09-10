@@ -59,6 +59,11 @@ export function WikiFossilUnlocks() {
                   <em>{t(`rarity.${pokemon.rarity}`)}</em>
                 </h4>
                 <p>
+                  {unlock.requiresBlessing && (
+                    <b className="wiki-fossil-blessing">
+                      {t(`blessing.${unlock.requiresBlessing}.name`)}
+                    </b>
+                  )}
                   <FossilUnlockCondition conditionKey={unlock.conditionKey} />
                 </p>
               </div>

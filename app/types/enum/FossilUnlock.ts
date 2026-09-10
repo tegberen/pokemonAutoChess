@@ -1,3 +1,4 @@
+import { Blessing } from "./Blessing"
 import { Pkm } from "./Pokemon"
 
 /* `as const` so each conditionKey stays a string literal: t() only accepts keys
@@ -9,13 +10,49 @@ const fossilUnlocks = [
   { pokemon: Pkm.LILEEP, conditionKey: "lileep", target: 2, minLevel: 0 },
   { pokemon: Pkm.ANORITH, conditionKey: "anorith", target: 2, minLevel: 0 },
   { pokemon: Pkm.TANGELA, conditionKey: "tangela", target: 2, minLevel: 0 },
-  { pokemon: Pkm.YANMA, conditionKey: "yanma", target: 60, minLevel: 5 },
-  { pokemon: Pkm.ARCHEN, conditionKey: "archen", target: 6, minLevel: 5 },
+  {
+    pokemon: Pkm.YANMA,
+    conditionKey: "yanma",
+    target: 60,
+    minLevel: 5,
+    roundScoped: true
+  },
+  {
+    pokemon: Pkm.ARCHEN,
+    conditionKey: "archen",
+    target: 6,
+    minLevel: 5,
+    roundScoped: true
+  },
   { pokemon: Pkm.CLAMPERL, conditionKey: "clamperl", target: 6, minLevel: 5 },
-  { pokemon: Pkm.CRANIDOS, conditionKey: "cranidos", target: 6, minLevel: 7 },
-  { pokemon: Pkm.SHIELDON, conditionKey: "shieldon", target: 100, minLevel: 7 },
-  { pokemon: Pkm.AMAURA, conditionKey: "amaura", target: 2, minLevel: 7 },
-  { pokemon: Pkm.TYRUNT, conditionKey: "tyrunt", target: 12, minLevel: 7 },
+  {
+    pokemon: Pkm.CRANIDOS,
+    conditionKey: "cranidos",
+    target: 6,
+    minLevel: 7,
+    roundScoped: true
+  },
+  {
+    pokemon: Pkm.SHIELDON,
+    conditionKey: "shieldon",
+    target: 100,
+    minLevel: 7,
+    roundScoped: true
+  },
+  {
+    pokemon: Pkm.AMAURA,
+    conditionKey: "amaura",
+    target: 2,
+    minLevel: 7,
+    roundScoped: true
+  },
+  {
+    pokemon: Pkm.TYRUNT,
+    conditionKey: "tyrunt",
+    target: 12,
+    minLevel: 7,
+    roundScoped: true
+  },
   {
     pokemon: Pkm.REGIGIGAS,
     conditionKey: "regigigas",
@@ -26,7 +63,8 @@ const fossilUnlocks = [
     pokemon: Pkm.GENESECT,
     conditionKey: "genesect",
     target: 1,
-    minLevel: 0
+    minLevel: 0,
+    requiresBlessing: Blessing.CONVERGENT_PARADOX
   }
 ] as const
 
@@ -46,6 +84,11 @@ export interface FossilUnlockDefinition {
   target: number
   /* the "Level N +" prefix of a condition: progress only accrues from that level */
   minLevel: number
+  // measured inside one round, so its progress restarts at every round start
+  // instead of standing as a best-ever across the game
+  roundScoped?: boolean
+  // the unlock is only reachable while holding this blessing
+  requiresBlessing?: Blessing
 }
 
 export const FossilUnlocks: readonly FossilUnlockDefinition[] = fossilUnlocks

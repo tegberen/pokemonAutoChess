@@ -292,7 +292,7 @@ import {
   onFossilUnlockCombatEnd,
   onFossilUnlockCombatStart,
   onFossilUnlockReroll,
-  resetFossilUnlockPickPhaseTrackers
+  onFossilUnlockRoundStart
 } from "../../services/fossil-unlocks"
 
 export class OnBuyPokemonCommand extends Command<
@@ -2521,7 +2521,7 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
 
   initializePickingPhase() {
     this.state.phase = GamePhaseState.PICK
-    this.state.players.forEach(resetFossilUnlockPickPhaseTrackers)
+    this.state.players.forEach(onFossilUnlockRoundStart)
     anchorPlayerAvatars(this.state)
     this.state.time =
       (StageDuration[this.state.stageLevel] ?? StageDuration.DEFAULT) * 1000

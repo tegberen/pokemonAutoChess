@@ -114,6 +114,23 @@
   text-shadow: none;
 }
 
+/* an unlock only reachable while holding a blessing. Shaped like the LEVEL gate
+   chip and set in the condition line, where it can wrap instead of running off
+   the card the way a header tag did */
+.wiki-fossil-blessing {
+  display: inline-block;
+  margin-right: 0.45em;
+  padding: 0.05em 0.4em;
+  border-radius: 4px;
+  color: var(--color-fg-invert);
+  background: var(--color-rarity-special);
+  font-size: 0.9em;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  vertical-align: 0.05em;
+}
+
 .wiki-fossil-unlocks li p {
   margin: 0;
   color: color-mix(in srgb, var(--color-fg-primary) 82%, transparent);

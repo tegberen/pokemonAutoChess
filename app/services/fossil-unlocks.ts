@@ -331,8 +331,13 @@ export function onFossilUnlockReroll(player: Player) {
   )
 }
 
-export function resetFossilUnlockPickPhaseTrackers(player: Player) {
+// a round-scoped condition asks for something inside one round, so its bar
+// restarts here rather than standing at the best round the player ever had
+export function onFossilUnlockRoundStart(player: Player) {
   player.fossilRerollsThisPickPhase = 0
+  FossilUnlocks.forEach((unlock) => {
+    if (unlock.roundScoped) setFossilUnlockProgress(player, unlock.pokemon, 0)
+  })
 }
 
 // ANORITH, plus the per-combat counters ARCHEN and SHIELDON accumulate into
