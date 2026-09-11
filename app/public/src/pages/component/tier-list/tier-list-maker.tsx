@@ -1,12 +1,22 @@
-import { useEffect, useState } from "react"
+import { useEffect, useLayoutEffect, useRef, useState } from "react"
 import { useTranslation } from "react-i18next"
+import type { Blessing } from "../../../../../types/enum/Blessing"
 import type { ITierList } from "../../../../../types/interfaces/TierList"
 import { exportElementAsImage } from "../../../../../utils/export-image"
 import { LocalStoreKeys, localStore } from "../../utils/store"
 import ItemPicker from "../bot-builder/item-picker"
 import PokemonPicker from "../bot-builder/pokemon-picker"
+import {
+  BlessingStages,
+  BlessingTooltipCard,
+  blessingTierClass
+} from "../synergy/blessing-tooltip-card"
 import TierList from "./tier-list"
 import "./tier-list-maker.css"
+import TierListRapidSorter from "./tier-list-rapid-sorter"
+
+const PREVIEW_WIDTH = 620
+const PREVIEW_GAP = 6
 
 export default function TierListMaker() {
   const { t } = useTranslation()
@@ -30,6 +40,57 @@ export default function TierListMaker() {
   useEffect(() => {
     localStore.set(LocalStoreKeys.TIER_LIST, tierList)
   }, [tierList])
+
+  const [sorting, setSorting] = useState(false)
+  const makerRef = useRef<HTMLDivElement>(null)
+  const previewRef = useRef<HTMLDivElement>(null)
+  const [preview, setPreview] = useState<{
+    blessing: Blessing
+    top: number
+    left: number
+    tableTop: number
+    tableBottom: number
+  } | null>(null)
+
+  // the card goes in the table's empty space beside the hovered row, in maker
+  // coordinates because it is absolutely positioned inside the scrolling maker
+  function previewBlessing(blessing: Blessing | null, anchor?: DOMRect) {
+    const maker = makerRef.current
+    const table = maker?.querySelector(".tier-list-table")
+    const actions = maker?.querySelector(".tier-list-actions-column")
+    if (!blessing || !anchor || !maker || !table) return setPreview(null)
+
+    const makerBox = maker.getBoundingClientRect()
+    const tableBox = table.getBoundingClientRect()
+    const actionsWidth = actions?.getBoundingClientRect().width ?? 0
+    const toMakerX = (x: number) => x - makerBox.left + maker.scrollLeft
+    const toMakerY = (y: number) => y - makerBox.top + maker.scrollTop
+
+    const firstLeft = toMakerX(tableBox.left)
+    const lastLeft = toMakerX(tableBox.right - actionsWidth) - PREVIEW_WIDTH
+
+    setPreview({
+      blessing,
+      top: toMakerY(anchor.top),
+      left: Math.min(
+        Math.max(toMakerX(anchor.right) + PREVIEW_GAP, firstLeft),
+        Math.max(firstLeft, lastLeft)
+      ),
+      tableTop: toMakerY(tableBox.top),
+      tableBottom: toMakerY(tableBox.bottom)
+    })
+  }
+
+  // the card's height depends on the description, so clamp it once rendered
+  useLayoutEffect(() => {
+    const node = previewRef.current
+    if (!preview || !node) return
+    const top = Math.max(
+      preview.tableTop,
+      Math.min(preview.top, preview.tableBottom - node.offsetHeight)
+    )
+    if (top !== preview.top) setPreview({ ...preview, top })
+  }, [preview])
 
   function saveFile() {
     const blob = new Blob([JSON.stringify(tierList)], {
@@ -70,36 +131,36 @@ export default function TierListMaker() {
     input.click()
   }
 
-  async function downloadImage() {
-    try {
-      await exportElementAsImage({
-        selector: ".tier-list-table",
-        excludeSelector: ".tier-list-actions-column",
-        filename: tierList.name,
-        preferClipboard: false
-      })
-    } catch (error) {
-      alert("Failed to capture tier list image")
+  function captureOptions(preferClipboard: boolean) {
+    return {
+      selector: ".tier-list-table",
+      excludeSelector: ".tier-list-actions-column",
+      filename: tierList.name,
+      preferClipboard
     }
   }
 
-  async function shareOnDiscord() {
-    try {
-      // First copy the image to clipboard
-      await exportElementAsImage({
-        selector: ".tier-list-table",
-        excludeSelector: ".tier-list-actions-column",
-        filename: tierList.name,
-        preferClipboard: true
-      })
+  function reportCaptureFailure(error: unknown) {
+    const reason = error instanceof Error ? error.message : String(error)
+    alert(`${t("tier_list.image_failed")}\n\n${reason}`)
+  }
 
-      // Open Discord channel in new tab
-      const discordChannelUrl =
-        "https://discord.com/channels/737230355039387749/1126145783889145887"
-      window.open(discordChannelUrl, "_blank")
+  async function downloadImage() {
+    try {
+      await exportElementAsImage(captureOptions(false))
     } catch (error) {
-      console.error("Error sharing to Discord:", error)
-      alert("Failed to prepare tier list for Discord sharing")
+      reportCaptureFailure(error)
+    }
+  }
+
+  async function copyImage() {
+    try {
+      const result = await exportElementAsImage(captureOptions(true))
+      if (result === "download") {
+        alert(t("tier_list.image_clipboard_unavailable"))
+      }
+    } catch (error) {
+      reportCaptureFailure(error)
     }
   }
 
@@ -120,8 +181,18 @@ export default function TierListMaker() {
   }
 
   return (
-    <div id="tier-list-maker">
+    <div id="tier-list-maker" ref={makerRef}>
       <div className="actions">
+        {!sorting && (
+          <button
+            className="bubbly green tier-list-rapid-sort"
+            onClick={() => setSorting(true)}
+            type="button"
+          >
+            <img src="assets/icons/blessing_stats.svg" alt="" />{" "}
+            {t("tier_list.rank_wishes")}
+          </button>
+        )}
         <button
           className="bubbly tier-list-add-row"
           onClick={addRow}
@@ -136,18 +207,43 @@ export default function TierListMaker() {
           <img src="assets/ui/save.svg" /> {t("save")}
         </button>
         <button className="bubbly blue" onClick={downloadImage}>
-          <img src="assets/ui/save.svg" /> {t("tier_list.download_image")}
+          <img src="assets/ui/photo.svg" /> {t("tier_list.download_image")}
         </button>
-        <button className="bubbly blue" onClick={shareOnDiscord}>
-          <img src="assets/ui/share.svg" /> {t("tier_list.share_on_discord")}
+        <button className="bubbly blue" onClick={copyImage}>
+          <img src="assets/ui/share.svg" /> {t("tier_list.copy_image")}
         </button>
         <button className="bubbly red" onClick={reset}>
           <img src="assets/ui/trash.svg" /> {t("reset")}
         </button>
       </div>
-      <TierList tierList={tierList} onUpdate={setTierList} />
-      <ItemPicker origin="tier-list" showUnholdableItems={true} />
-      <PokemonPicker showBlessings />
+      <TierList
+        tierList={tierList}
+        onUpdate={setTierList}
+        onPreviewBlessing={previewBlessing}
+      />
+      {preview && (
+        <div
+          ref={previewRef}
+          className={`tier-list-preview ${blessingTierClass(preview.blessing)}`}
+          style={{ top: preview.top, left: preview.left }}
+        >
+          <BlessingTooltipCard blessing={preview.blessing}>
+            <BlessingStages blessing={preview.blessing} />
+          </BlessingTooltipCard>
+        </div>
+      )}
+      {sorting ? (
+        <TierListRapidSorter
+          tierList={tierList}
+          onUpdate={setTierList}
+          onClose={() => setSorting(false)}
+        />
+      ) : (
+        <>
+          <ItemPicker origin="tier-list" showUnholdableItems={true} />
+          <PokemonPicker showBlessings />
+        </>
+      )}
     </div>
   )
 }

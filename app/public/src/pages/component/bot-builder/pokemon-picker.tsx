@@ -8,7 +8,7 @@ import { Blessings } from "../../../../../config/game/blessings"
 import { getPokemonData } from "../../../../../models/precomputed/precomputed-pokemon-data"
 import { PRECOMPUTED_POKEMONS_PER_TYPE } from "../../../../../models/precomputed/precomputed-types"
 import { Emotion, type PkmWithCustom } from "../../../../../types"
-import { Blessing, BlessingTier } from "../../../../../types/enum/Blessing"
+import { Blessing } from "../../../../../types/enum/Blessing"
 import { Rarity } from "../../../../../types/enum/Game"
 import { Item } from "../../../../../types/enum/Item"
 import {
@@ -39,21 +39,17 @@ import {
   PokemonFilters
 } from "../pokemon-filters/pokemon-filters"
 import {
+  BlessingStages,
   BlessingTooltipCard,
   blessingTierClass
 } from "../synergy/blessing-tooltip-card"
 import { SynergyOverlaps } from "../synergy-overlaps/synergy-overlaps"
 import {
+  BLESSING_TIER_ORDER,
   compareBlessingsBySynergy,
   getBlessingShortLabel
 } from "../tier-list/blessing-short-label"
 import { BlessingSynergyBadges } from "../tier-list/blessing-synergy-badges"
-
-const BLESSING_TIER_ORDER = [
-  BlessingTier.SILVER,
-  BlessingTier.GOLD,
-  BlessingTier.PRISMATIC
-]
 
 export default function PokemonPicker(props: {
   selected?: PkmWithCustom | Item
@@ -187,11 +183,7 @@ export default function PokemonPicker(props: {
                             globalCloseEvents={{ scroll: true }}
                           >
                             <BlessingTooltipCard blessing={blessing}>
-                              <p className="tier-list-blessing-stages">
-                                {Blessings[blessing].availableAtStages
-                                  .map((stage) => `Stage ${stage}`)
-                                  .join(" / ")}
-                              </p>
+                              <BlessingStages blessing={blessing} />
                             </BlessingTooltipCard>
                           </Tooltip>
                         </React.Fragment>

@@ -29,6 +29,17 @@ export function BlessingIcon(props: {
   )
 }
 
+/* the stage line shown under a blessing description in the pickers and tier list */
+export function BlessingStages(props: { blessing: Blessing }) {
+  return (
+    <p className="tier-list-blessing-stages">
+      {Blessings[props.blessing].availableAtStages
+        .map((stage) => `Stage ${stage}`)
+        .join(" / ")}
+    </p>
+  )
+}
+
 /* children slot in below the description for live in-game values */
 export function BlessingTooltipCard(props: {
   blessing: Blessing

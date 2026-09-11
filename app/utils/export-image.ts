@@ -17,6 +17,8 @@ export interface ExportImageOptions {
   preferClipboard?: boolean
 }
 
+export type ExportImageResult = "clipboard" | "download"
+
 /**
  * Converts SVG images to canvas elements to fix html2canvas SVG rendering issues
  * @param element The element containing SVG images
@@ -95,14 +97,90 @@ async function convertSvgsToPng(element: HTMLElement): Promise<void> {
   await Promise.allSettled(conversionPromises)
 }
 
+const COLOR_FUNCTION_PROPERTIES = [
+  "backgroundColor",
+  "backgroundImage",
+  "color",
+  "borderTopColor",
+  "borderRightColor",
+  "borderBottomColor",
+  "borderLeftColor",
+  "outlineColor",
+  "boxShadow"
+] as const
+
+function channelToByte(raw: string): number {
+  const value = raw.endsWith("%") ? Number(raw.slice(0, -1)) / 100 : Number(raw)
+  return Math.round(Math.min(Math.max(value, 0), 1) * 255)
+}
+
+function channelToAlpha(raw: string | undefined): number {
+  if (raw === undefined) return 1
+  const value = raw.endsWith("%") ? Number(raw.slice(0, -1)) / 100 : Number(raw)
+  return Number.isNaN(value) ? 1 : Math.min(Math.max(value, 0), 1)
+}
+
+// html2canvas 1.4.1 parses only rgb/rgba/hsl/hsla, but the browser resolves every
+// color-mix() to color(srgb ...), so anything using the blessing palette makes it
+// throw "unsupported color function". Rewrite those to rgba before capture.
+function downgradeModernColors(value: string): string {
+  return value.replace(
+    /color\(\s*[\w-]+\s+([^)]+)\)/g,
+    (match, body: string) => {
+      const [channels, alpha] = body.split("/")
+      const parts = channels.trim().split(/\s+/)
+      if (parts.length < 3) return match
+      const bytes = parts.slice(0, 3).map(channelToByte)
+      if (bytes.some(Number.isNaN)) return match
+      return `rgba(${bytes[0]}, ${bytes[1]}, ${bytes[2]}, ${channelToAlpha(alpha?.trim())})`
+    }
+  )
+}
+
+function downgradeUnsupportedColors(root: HTMLElement): void {
+  const elements = [root, ...Array.from(root.querySelectorAll("*"))]
+  for (const element of elements) {
+    if (!(element instanceof HTMLElement)) continue
+    const computed = window.getComputedStyle(element)
+    for (const property of COLOR_FUNCTION_PROPERTIES) {
+      const value = computed[property]
+      if (value.includes("color(")) {
+        element.style[property] = downgradeModernColors(value)
+      }
+    }
+  }
+}
+
+function canvasToBlob(
+  canvas: HTMLCanvasElement,
+  quality: number
+): Promise<Blob | null> {
+  return new Promise((resolve) =>
+    canvas.toBlob(resolve, "image/png", quality)
+  )
+}
+
+async function copyBlobToClipboard(blob: Blob): Promise<boolean> {
+  if (!navigator.clipboard?.write || typeof ClipboardItem === "undefined") {
+    return false
+  }
+  try {
+    await navigator.clipboard.write([new ClipboardItem({ "image/png": blob })])
+    return true
+  } catch (error) {
+    console.error("Clipboard write failed:", error)
+    return false
+  }
+}
+
 /**
- * Exports a DOM element as an image and copies to clipboard or downloads as file
+ * Exports a DOM element as an image, to the clipboard or as a file download
  * @param options Configuration options for the export
- * @returns Promise that resolves when the export is complete
+ * @returns where the image ended up, so callers can report it accurately
  */
 export async function exportElementAsImage(
   options: ExportImageOptions
-): Promise<void> {
+): Promise<ExportImageResult> {
   const {
     selector,
     excludeSelector,
@@ -114,37 +192,31 @@ export async function exportElementAsImage(
     preferClipboard = true
   } = options
 
-  // Find the target element
   const targetElement = document.querySelector(selector) as HTMLElement
   if (!targetElement) {
     throw new Error(`Element with selector "${selector}" not found`)
   }
 
+  const clonedElement = targetElement.cloneNode(true) as HTMLElement
+  if (excludeSelector) {
+    clonedElement.querySelectorAll(excludeSelector).forEach((el) => el.remove())
+  }
+
+  const tempContainer = document.createElement("div")
+  tempContainer.style.position = "absolute"
+  tempContainer.style.left = "-9999px"
+  tempContainer.style.top = "-9999px"
+  tempContainer.style.background = backgroundColor
+  tempContainer.style.padding = "20px"
+  tempContainer.style.color = foregroundColor
+  tempContainer.appendChild(clonedElement)
+  document.body.appendChild(tempContainer)
+
   try {
-    // Create a clone to modify without affecting original
-    const clonedElement = targetElement.cloneNode(true) as HTMLElement
-
-    // Remove excluded elements from the clone
-    if (excludeSelector) {
-      const excludedElements = clonedElement.querySelectorAll(excludeSelector)
-      excludedElements.forEach((el) => el.remove())
-    }
-
-    // Convert SVGs to PNGs to fix rendering issues
+    // convertSvgsToPng reads computed sizes, so the clone has to be laid out first
     await convertSvgsToPng(clonedElement)
+    downgradeUnsupportedColors(clonedElement)
 
-    // Create temporary container
-    const tempContainer = document.createElement("div")
-    tempContainer.style.position = "absolute"
-    tempContainer.style.left = "-9999px"
-    tempContainer.style.top = "-9999px"
-    tempContainer.style.background = backgroundColor
-    tempContainer.style.padding = "20px"
-    tempContainer.style.color = foregroundColor
-    tempContainer.appendChild(clonedElement)
-    document.body.appendChild(tempContainer)
-
-    // Capture with html2canvas
     const html2canvas = (await import("html2canvas")).default
     const canvas = await html2canvas(clonedElement, {
       backgroundColor,
@@ -153,40 +225,20 @@ export async function exportElementAsImage(
       allowTaint: true
     })
 
-    // Convert canvas to blob and handle export
-    await new Promise<void>((resolve) => {
-      canvas.toBlob(
-        async (blob) => {
-          if (blob) {
-            if (preferClipboard) {
-              try {
-                // Try to copy to clipboard first
-                await navigator.clipboard.write([
-                  new ClipboardItem({ "image/png": blob })
-                ])
-                alert("Image copied to clipboard!")
-              } catch (err) {
-                console.error("Clipboard write failed:", err)
-                // Fallback to download
-                downloadBlob(blob, filename)
-              }
-              resolve()
-            } else {
-              // Direct download
-              downloadBlob(blob, filename)
-            }
-          }
-        },
-        "image/png",
-        quality
-      )
-    })
+    const blob = await canvasToBlob(canvas, quality)
+    if (!blob) throw new Error("Canvas produced no image data")
 
-    // Clean up temporary container
-    document.body.removeChild(tempContainer)
+    if (preferClipboard && (await copyBlobToClipboard(blob))) {
+      return "clipboard"
+    }
+    downloadBlob(blob, filename)
+    return "download"
   } catch (error) {
     console.error("Error capturing element:", error)
-    throw new Error("Failed to capture element as image")
+    const reason = error instanceof Error ? error.message : String(error)
+    throw new Error(`Failed to capture element as image: ${reason}`)
+  } finally {
+    tempContainer.remove()
   }
 }
 

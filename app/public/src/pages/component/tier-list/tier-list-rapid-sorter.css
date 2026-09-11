@@ -1,0 +1,187 @@
+.tier-list-rapid-sorter {
+  /* one 4px-step scale, so every gap in the panel is a multiple of the same unit */
+  --sorter-gap: 12px;
+  --sorter-gap-sm: 8px;
+  --sorter-radius: 10px;
+
+  grid-column: 1 / -1;
+  grid-row: 3;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sorter-gap);
+  padding: var(--sorter-gap);
+  min-height: 0;
+}
+
+.tier-list-rapid-sorter header {
+  display: flex;
+  align-items: center;
+  gap: var(--sorter-gap);
+  flex-wrap: wrap;
+}
+
+.tier-list-rapid-sorter header h2 {
+  margin: 0;
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+  gap: var(--sorter-gap-sm);
+}
+
+.tier-list-rapid-sorter header h2 img {
+  width: 1.2em;
+  height: 1.2em;
+}
+
+.tier-list-rapid-sorter-filters {
+  display: flex;
+  gap: var(--sorter-gap-sm);
+}
+
+.tier-list-rapid-sorter-filters .selected {
+  outline: 2px solid var(--color-fg-accent, #fff);
+}
+
+/* the tier filters wear the same diagonal stripes as the cards they filter. the
+   palette is pinned to the defaults because a tier must read the same in every
+   theme, and bubbly's background and inset shade are both themed variables */
+.tier-list-rapid-sorter-filters .bubbly.tier-filter,
+.tier-list-rapid-sorter-filters .bubbly.tier-filter:hover {
+  --color-fg-secondary: #c3cddf;
+  --color-fg-gold: #ffc107;
+  --color-bg-gold: #c9a000;
+  --color-rarity-legendary: #e6cb49;
+  color: #ffffff;
+  box-shadow:
+    inset -6px -6px 0px 0px var(--color-blessing-card-shade),
+    var(--shadow-clickable);
+  background-color: color-mix(
+    in srgb,
+    var(--blessing-hue) var(--blessing-mix),
+    var(--color-blessing-card)
+  );
+  background-image: repeating-linear-gradient(
+    135deg,
+    color-mix(
+        in srgb,
+        var(--blessing-stripe-a) var(--blessing-stripe-alpha),
+        transparent
+      )
+      0 6px,
+    color-mix(
+        in srgb,
+        var(--blessing-stripe-b) var(--blessing-stripe-alpha),
+        transparent
+      )
+      6px 12px,
+    color-mix(
+        in srgb,
+        var(--blessing-stripe-c) var(--blessing-stripe-alpha),
+        transparent
+      )
+      12px 18px
+  );
+}
+
+.tier-list-rapid-sorter-filters .bubbly.tier-filter:hover {
+  filter: brightness(1.2);
+}
+
+.tier-list-rapid-sorter-filters .bubbly.tier-filter:active {
+  box-shadow:
+    inset 6px 6px 0px 0px var(--color-blessing-card-shade),
+    var(--shadow-clickable);
+}
+
+.tier-list-rapid-sorter-progress {
+  font-variant-numeric: tabular-nums;
+  font-size: 120%;
+  font-weight: bold;
+}
+
+/* the full card sits below the tier buttons, so it can be any height without
+   ever moving them. only the queue underneath gives up the space */
+.tier-list-rapid-sorter-card {
+  flex: 0 0 auto;
+  align-self: start;
+  /* a fixed width, or the card would resize on every entry as the text changes */
+  width: 620px;
+  max-width: 100%;
+  box-sizing: border-box;
+  border: var(--border-thin);
+  border-radius: var(--sorter-radius);
+  cursor: var(--cursor-grab);
+}
+
+.tier-list-rapid-sorter-card .blessing-panel-tooltip-card > img {
+  width: 3.5rem;
+  height: 3.5rem;
+}
+
+/* matches the card it replaces, so finishing a tier does not collapse the panel */
+.tier-list-rapid-sorter-done {
+  align-self: start;
+  box-sizing: border-box;
+  width: 620px;
+  max-width: 100%;
+  min-height: 92px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: var(--border-thin);
+  border-radius: var(--sorter-radius);
+  background-color: var(--color-blessing-card);
+  font-size: 115%;
+}
+
+.tier-list-rapid-sorter-rows {
+  display: flex;
+  align-items: stretch;
+  flex-wrap: wrap;
+  gap: var(--sorter-gap-sm);
+}
+
+/* the tiers decide, skip and undo only navigate, so they read as a second group */
+.tier-list-rapid-sorter-divider {
+  width: 1px;
+  margin: 2px 0;
+  background: color-mix(in srgb, var(--color-fg-primary) 22%, transparent);
+}
+
+/* black label like the row headers, overriding bubbly's white text and shadow */
+.tier-list-rapid-sorter-rows .tier-list-rapid-sorter-row-button {
+  min-width: 110px;
+  font-weight: bold;
+  font-size: 110%;
+  color: black;
+  text-shadow: none;
+}
+
+.tier-list-rapid-sorter-rows .tier-list-rapid-sorter-row-button:not([disabled]):hover {
+  filter: brightness(1.15);
+}
+
+/* the full category, so you can see what is done and what is still coming */
+.tier-list-rapid-sorter-queue {
+  flex: 1 1 auto;
+  min-height: 120px;
+  overflow-y: auto;
+  padding: var(--sorter-gap-sm);
+  border: var(--border-thin);
+  border-radius: var(--sorter-radius);
+  background-color: var(--color-bg-secondary, #1a1a1a);
+}
+
+/* dim only the artwork so the row colour on the border stays readable */
+.tier-list-rapid-sorter-queue .tier-list-blessing-choice.sorted > img {
+  opacity: 0.25;
+}
+
+.tier-list-rapid-sorter-queue .tier-list-blessing-choice.current {
+  outline: 3px solid var(--color-fg-accent, #fff);
+  box-shadow: 0 0 10px var(--color-fg-accent, #fff);
+}
+
+.tier-list-rapid-sorter-queue .tier-list-blessing-choice.current > img {
+  opacity: 1;
+}

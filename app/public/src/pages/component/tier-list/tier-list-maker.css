@@ -29,3 +29,35 @@
   justify-content: end;
   gap: 1em;
 }
+
+#tier-list-maker .tier-list-rapid-sort img {
+  width: 1.2em;
+  height: 1.2em;
+}
+
+/* the sorter needs the height more than the picker panels did */
+#tier-list-maker:has(.tier-list-rapid-sorter) {
+  grid-template-rows: min-content min-content 1fr;
+}
+
+/* hovering a wish in the table shows its card in the table's empty space, beside
+   the hovered row. top and left are measured at hover time in maker coordinates */
+#tier-list-maker .tier-list-preview {
+  position: absolute;
+  z-index: 5;
+  box-sizing: border-box;
+  width: 620px;
+  max-width: 100%;
+  border: var(--border-thin);
+  border-radius: 10px;
+  box-shadow: 0 8px 20px #00000080;
+  pointer-events: none;
+}
+
+/* both wrappers carry the stripes themselves, so the card must not paint its own,
+   and its wiki height of 100% would stretch it to the panel */
+#tier-list-maker .tier-list-preview .blessing-panel-tooltip-card,
+#tier-list-maker .tier-list-rapid-sorter-card .blessing-panel-tooltip-card {
+  height: auto;
+  background-image: none;
+}

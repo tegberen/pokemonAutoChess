@@ -7586,11 +7586,18 @@
 		"title": "My new tier list",
 		"add_row": "Add Row",
 		"download_image": "Download Image",
-		"share_on_discord": "Share on Discord",
+		"copy_image": "Copy Image",
+		"image_failed": "Failed to capture tier list image",
+		"image_clipboard_unavailable": "Your browser blocked the clipboard, so the image was downloaded instead",
 		"move_row_up": "Move row up",
 		"move_row_down": "Move row down",
 		"delete_row": "Delete row",
-		"symbols": "Symbols"
+		"symbols": "Symbols",
+		"rank_wishes": "Rank Wishes",
+		"all_tiers": "All",
+		"all_sorted": "Nothing left to sort",
+		"skip": "Skip",
+		"undo": "Undo"
 	},
 	"game_modes": {
 		"CLASSIC": "Classic",

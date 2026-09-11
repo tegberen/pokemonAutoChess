@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
+import { Tooltip } from "react-tooltip"
 import { Blessings } from "../../../../../config/game/blessings"
 import { Emotion, type PkmWithCustom } from "../../../../../types"
 import { Blessing } from "../../../../../types/enum/Blessing"
@@ -9,6 +10,8 @@ import { Synergy } from "../../../../../types/enum/Synergy"
 import type { ITierList } from "../../../../../types/interfaces/TierList"
 import { isIn } from "../../../../../utils/array"
 import { getPortraitSrc } from "../../../../../utils/avatar"
+import { ItemDetailTooltipContent } from "../../../game/components/item-detail"
+import { GamePokemonDetail } from "../game/game-pokemon-detail"
 import SynergyIcon from "../icons/synergy-icon"
 import { blessingTierClass } from "../synergy/blessing-tooltip-card"
 import { getBlessingShortLabel } from "./blessing-short-label"
@@ -19,6 +22,7 @@ import "./tier-list.css"
 export default function TierList(props: {
   tierList: ITierList
   onUpdate: (tierList: ITierList) => void
+  onPreviewBlessing?: (blessing: Blessing | null, anchor?: DOMRect) => void
 }) {
   const { t } = useTranslation()
   const [editingRowIndex, setEditingRowIndex] = useState<number | null>(null)
@@ -297,6 +301,33 @@ export default function TierList(props: {
     )
   }
 
+  // .tier-list-item::before covers the icon to widen the drop zone, so hover has
+  // to be handled on the wrapper rather than on whatever renderItemImage returns
+  function itemHoverProps(item: Item | PkmWithCustom | Synergy | Blessing) {
+    const preview = props.onPreviewBlessing
+    const blessing = isBlessing(item) ? item : null
+    let tooltipId: string | undefined
+    let tooltipContent: string | undefined
+
+    if (isPokemon(item)) {
+      tooltipId = "tier-list-pokemon-tooltip"
+      tooltipContent = item.name
+    } else if (!blessing && !isIn(TierListSymbols, item) && !isSynergy(item)) {
+      tooltipId = "tier-list-item-tooltip"
+      tooltipContent = item
+    }
+
+    return {
+      "data-tooltip-id": tooltipId,
+      "data-tooltip-content": tooltipContent,
+      onMouseEnter: preview
+        ? (e: React.MouseEvent<HTMLDivElement>) =>
+            preview(blessing, e.currentTarget.getBoundingClientRect())
+        : undefined,
+      onMouseLeave: preview ? () => preview(null) : undefined
+    }
+  }
+
   function renderItemImage(
     item: Item | PkmWithCustom | Synergy | Blessing | TierListSymbol
   ) {
@@ -348,6 +379,9 @@ export default function TierList(props: {
       )
     }
   }
+
+  // a tooltip following the cursor mid-drag fights the drag image
+  const hiddenWhileDragging = draggedItem ? { isOpen: false as const } : {}
 
   return (
     <div id="tier-list">
@@ -436,6 +470,7 @@ export default function TierList(props: {
                         )}
                         <div
                           className={`tier-list-item${isDragging ? " dragging" : ""}`}
+                          {...itemHoverProps(item)}
                           draggable
                           onDragStart={(e) =>
                             handleItemDragStart(rowIndex, itemIndex, e)
@@ -514,6 +549,25 @@ export default function TierList(props: {
           ))}
         </tbody>
       </table>
+      <Tooltip
+        id="tier-list-pokemon-tooltip"
+        className="custom-theme-tooltip game-pokemon-detail-tooltip"
+        float
+        render={({ content }) =>
+          content ? (
+            <GamePokemonDetail pokemon={content as Pkm} origin="planner" />
+          ) : null
+        }
+        {...hiddenWhileDragging}
+      />
+      <Tooltip
+        id="tier-list-item-tooltip"
+        className="custom-theme-tooltip item-detail-tooltip"
+        render={({ content }) =>
+          content ? <ItemDetailTooltipContent item={content as Item} /> : null
+        }
+        {...hiddenWhileDragging}
+      />
     </div>
   )
 }

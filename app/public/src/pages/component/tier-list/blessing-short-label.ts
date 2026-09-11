@@ -2,8 +2,14 @@ import {
   Blessings,
   getBlessingSynergy
 } from "../../../../../config/game/blessings"
-import { Blessing } from "../../../../../types/enum/Blessing"
+import { Blessing, BlessingTier } from "../../../../../types/enum/Blessing"
 import { Synergy } from "../../../../../types/enum/Synergy"
+
+export const BLESSING_TIER_ORDER = [
+  BlessingTier.SILVER,
+  BlessingTier.GOLD,
+  BlessingTier.PRISMATIC
+]
 
 // only blessings sharing an icon need a label to tell them apart
 const LABELS: Partial<Record<Blessing, string>> = {
