@@ -2336,15 +2336,15 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
   }
 }
 
-const BLESSING_TIER_CHANCES_FIRST: { [tier in BlessingTier]: number } = {
-  [BlessingTier.SILVER]: 0.4,
+export const BLESSING_TIER_CHANCES_FIRST: { [tier in BlessingTier]: number } = {
+  [BlessingTier.SILVER]: 0.35,
   [BlessingTier.GOLD]: 0.5,
-  [BlessingTier.PRISMATIC]: 0.1
+  [BlessingTier.PRISMATIC]: 0.15
 }
 
 // a Prismatic after a Silver makes the Silver pick it followed irrelevant, and
 // with only two selections there is no third round to recover a Silver-Silver
-const BLESSING_TIER_CHANCES_AFTER: {
+export const BLESSING_TIER_CHANCES_AFTER: {
   [previous in BlessingTier]: { [tier in BlessingTier]: number }
 } = {
   [BlessingTier.SILVER]: {
@@ -2353,9 +2353,9 @@ const BLESSING_TIER_CHANCES_AFTER: {
     [BlessingTier.PRISMATIC]: 0.05
   },
   [BlessingTier.GOLD]: {
-    [BlessingTier.SILVER]: 0.25,
+    [BlessingTier.SILVER]: 0.2,
     [BlessingTier.GOLD]: 0.5,
-    [BlessingTier.PRISMATIC]: 0.25
+    [BlessingTier.PRISMATIC]: 0.3
   },
   [BlessingTier.PRISMATIC]: {
     [BlessingTier.SILVER]: 0.5,

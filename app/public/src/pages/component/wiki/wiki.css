@@ -853,6 +853,168 @@
   padding: 0;
 }
 
+/* the panel is far wider than a table wants to be: full-width rows put the
+   row label and its last figure a screen apart. Constrained on the container
+   so headings, rules and cards cannot drift out of line with each other.
+   Matches the specificity of the tab-panel margin rule above it. */
+#wiki-page
+  > .react-tabs
+  > .react-tabs__tab-panel--selected
+  > #wiki-data {
+  max-width: 54em;
+  margin-inline: auto;
+}
+
+#wiki-data > h2 {
+  margin-block: 1.4em 0.6em;
+  padding-bottom: 0.35em;
+  border-bottom: 3px solid
+    color-mix(in srgb, var(--color-bg-tertiary) 75%, #000);
+}
+
+#wiki-data > h2:first-of-type {
+  margin-top: 0.4em;
+}
+
+.wiki-data-intro {
+  margin: 0;
+  color: var(--color-fg-secondary);
+}
+
+.wiki-data-list {
+  display: grid;
+  gap: 0.75em;
+}
+
+/* only the formula cards pair up: they are the one group where every card
+   holds the same kind of content, so a row of them stays even */
+.wiki-data-list-pair {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.wiki-data-entry {
+  display: flex;
+  flex-direction: column;
+  padding: 0.9em 1.1em 1em;
+  overflow-x: auto;
+}
+
+.wiki-data-entry > h3 {
+  margin: 0 0 0.25em;
+  font-size: 1.2em;
+}
+
+.wiki-data-entry > p {
+  margin: 0 0 0.9em;
+  max-width: 70ch;
+  font-size: 0.92em;
+  line-height: 1.5;
+  color: var(--color-fg-secondary);
+}
+
+.wiki-data-entry > table {
+  width: 100%;
+  margin-top: auto;
+}
+
+.wiki-data-entry > .wiki-data-formula {
+  margin: 0 0 0.6em;
+  padding: 0.5em 0.8em;
+  border-radius: 8px;
+  border-left: 3px solid var(--color-fg-gold);
+  background-color: var(--color-bg-primary);
+  color: var(--color-fg-primary);
+  font-family: monospace;
+  font-size: 1em;
+}
+
+.wiki-data-entry > .wiki-data-example {
+  margin: 0;
+  font-size: 0.88em;
+}
+
+/* the letter delivery card renders its own header, so match the others */
+.wiki-data-entry .wiki-letter-delivery-header h3 {
+  font-size: 1.2em;
+}
+
+.wiki-data-entry .wiki-letter-delivery-header p {
+  max-width: 70ch;
+  font-size: 0.92em;
+  line-height: 1.5;
+  color: var(--color-fg-secondary);
+}
+
+/* a row label needs the room a percentage column does not */
+#wiki-data-special-pokemons-rate td:first-child {
+  width: 45%;
+  text-align: left;
+}
+
+/* a branching table: the stage 4 cell spans its three stage 12 outcomes, so
+   each tier is tinted and the cells are ruled into a grid to show the nesting */
+#wiki-data-wish-tier-odds :is(th, td) {
+  border: 1px solid color-mix(in srgb, var(--color-fg-primary) 18%, transparent);
+  text-align: left;
+  vertical-align: middle;
+}
+
+#wiki-data-wish-tier-odds tbody tr:nth-child(odd) {
+  background-color: transparent;
+}
+
+/* the fixed layout takes its columns from the header row, which is the only
+   row that always has all three cells: the others sit under a rowspan */
+#wiki-data-wish-tier-odds thead th:nth-child(1) {
+  width: 36%;
+}
+
+#wiki-data-wish-tier-odds thead th:last-child {
+  width: 22%;
+}
+
+#wiki-data-wish-tier-odds tbody td:last-child {
+  text-align: right;
+  font-weight: bold;
+}
+
+.wiki-data-tier-name {
+  opacity: 0.75;
+}
+
+/* tinted against the darkest panel colour rather than over the card, so the
+   bands read as recessed. The tier is identified by the text colour, so these
+   only need to group the rows, not name the tier. */
+.wiki-tier-cell-silver {
+  background-color: color-mix(
+    in srgb,
+    var(--color-rarity-common) 8%,
+    var(--color-bg-tertiary)
+  );
+}
+
+.wiki-tier-cell-gold {
+  background-color: color-mix(
+    in srgb,
+    var(--color-fg-gold) 10%,
+    var(--color-bg-tertiary)
+  );
+}
+
+.wiki-tier-cell-prismatic {
+  background-color: color-mix(
+    in srgb,
+    var(--color-rarity-epic) 15%,
+    var(--color-bg-tertiary)
+  );
+}
+
+@media (width <= 800px) {
+  .wiki-data-list-pair {
+    grid-template-columns: 1fr;
+  }
+}
+
 #wiki-data table,
 .wiki-letter-delivery table {
   text-align: center;
@@ -869,7 +1031,37 @@
 .wiki-letter-delivery th,
 #wiki-data td,
 .wiki-letter-delivery td {
-  padding: 0 0.5em;
+  padding: 0.55em 0.75em;
+  line-height: 1.4;
+}
+
+#wiki-data thead th,
+.wiki-letter-delivery thead th {
+  font-size: 0.78em;
+  font-weight: bold;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+#wiki-data tbody tr:nth-child(odd),
+.wiki-letter-delivery tbody tr:nth-child(odd) {
+  background-color: var(--color-bg-primary);
+}
+
+/* the first cell of these tables names the row rather than reporting a figure,
+   so it reads as a label and is ruled off from the numbers beside it */
+#wiki-data-tiers-by-level tbody :is(th, td):first-child,
+#wiki-data-fishing-rarity-rate tbody :is(th, td):first-child,
+#wiki-data-special-pokemons-rate tbody :is(th, td):first-child,
+#wiki-data-experience-by-rank tbody :is(th, td):first-child,
+#wiki-data-explorer-bonus-rate tbody :is(th, td):first-child {
+  text-align: left;
+  border-right: 1px solid
+    color-mix(in srgb, var(--color-fg-primary) 25%, transparent);
+}
+
+#wiki-data-fishing-rarity-rate :is(th, td):first-child {
+  width: 22%;
 }
 
 .wiki-letter-delivery th,
@@ -877,9 +1069,13 @@
   white-space: nowrap;
 }
 
-#wiki-data-tiers-by-level th,
-#wiki-data-booster-rarity-probability th {
+#wiki-data-tiers-by-level th {
   width: 10ch;
+}
+
+/* level and XP are 1 to 3 characters, so they take half a rarity column */
+#wiki-data-tiers-by-level :is(th, td):nth-child(-n + 2) {
+  width: 5ch;
 }
 
 #wiki-page input[type="search"] {
