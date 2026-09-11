@@ -180,7 +180,6 @@ export const SeedEffects: Record<(typeof Seeds)[number], Effect[]> = {
     new OnKillEffect(({ attacker }) => {
       if (!attacker.types.has(Synergy.FLYING)) return
       attacker.addAttack(1, attacker, 0, false, true)
-      attacker.addSpeed(1, attacker, 0, false, true)
     })
   ],
 
