@@ -50,13 +50,16 @@ import {
   DEEP_SEA_TOOTH_PP_ON_KILL,
   EMERALD_ORB_HEAL_RANGE,
   EXP_CHARM_BLESSED_EXPERIENCE,
+  FAIRY_FEATHER_DEFENSE_ON_ATTACK,
   FAIRY_FEATHER_LUCK_ON_ATTACK,
   FAST_FOOD_DELIVERY_ROUNDS_BEFORE_ROTTING,
   FESTIVE_PICNIC_MAX_HP_ON_OVERWRITE,
   FIRE_SHARD_ATTACK,
   FIRE_SHARD_LIFE_COST,
   FIRE_SHARD_SPEED,
+  CHAMPIONS_MASK_SHIELD_PER_FIGHTING_TIER,
   GRACIDEA_FLOWER_HEAL_INTERVAL,
+  REAPER_CLOTH_GHOST_VANISH_DURATION,
   GRACIDEA_FLOWER_HEAL_MAX_HP_RATIO,
   GRIP_CLAW_CRIT_POWER,
   GRIP_CLAW_MIN_TARGET_CRIT_POWER,
@@ -1641,6 +1644,14 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
         ghost.atk = target.baseAtk
         ghost.def = target.baseDef
         ghost.speDef = target.baseSpeDef
+        // it rises mid-fight with nothing protecting it, so it gets a grace
+        // period before the enemy board can turn on it
+        ghost.status.untargettable = true
+        ghost.commands.push(
+          new DelayedCommand(() => {
+            ghost.status.untargettable = false
+          }, REAPER_CLOTH_GHOST_VANISH_DURATION)
+        )
       })
     }
   ],
@@ -1718,6 +1729,31 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
           attacker.stickyBarbCursed = true
         }
       }
+    }),
+    // a blessed barb outlives its carrier: on KO it latches onto a neighbour
+    // that has room for it and is not already cursed
+    new OnDeathEffect(({ pokemon, board }) => {
+      if (
+        !pokemon.stickyBarbCursed &&
+        !hasBlessing(pokemon, Blessing.STICKY_BARB_BLESSING)
+      ) {
+        return
+      }
+      const heir = board
+        .getAdjacentCells(pokemon.positionX, pokemon.positionY)
+        .map((cell) => cell.value)
+        .find(
+          (ally): ally is PokemonEntity =>
+            ally != null &&
+            ally.team === pokemon.team &&
+            ally.hp > 0 &&
+            ally.items.size < 3 &&
+            !ally.items.has(Item.STICKY_BARB)
+        )
+      if (!heir) return
+      pokemon.removeItem(Item.STICKY_BARB)
+      heir.addItem(Item.STICKY_BARB)
+      heir.stickyBarbCursed = true
     }),
     // the barb hurts whoever carries it once blessed, which is what makes
     // handing it to an enemy worth doing
@@ -1917,7 +1953,12 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
     new OnSimulationStartEffect(({ entity, player }) => {
       if (!player?.blessings?.includes(Blessing.CHAMPIONS_MASK)) return
       const fightingTier = getSynergyTier(player.synergies, Synergy.FIGHTING)
-      entity.addShield(50 * fightingTier, entity, 0, false)
+      entity.addShield(
+        CHAMPIONS_MASK_SHIELD_PER_FIGHTING_TIER * fightingTier,
+        entity,
+        0,
+        false
+      )
     }, Item.CHAMPIONS_MASK)
   ],
 
@@ -2661,6 +2702,7 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
     new OnAttackEffect(({ pokemon, target }) => {
       if (hasBlessing(pokemon, Blessing.FAIRY_FEATHER_BLESSING)) {
         pokemon.addLuck(FAIRY_FEATHER_LUCK_ON_ATTACK, pokemon, 0, false)
+        pokemon.addDefense(FAIRY_FEATHER_DEFENSE_ON_ATTACK, pokemon, 0, false)
       }
       if (!target) return
       if (

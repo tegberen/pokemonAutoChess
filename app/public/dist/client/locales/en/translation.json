@@ -1959,7 +1959,7 @@
 		"DRAGON_TAIL": "Deal [30,60,100,150,SP] SPECIAL to the target and increase the user's DEF and SPE_DEF by [2,4,6,10,SP].",
 		"DRAGON_BREATH": "Deal [25,50,100,200,SP] SPECIAL to the target and an enemy directly behind it.",
 		"ICICLE_CRASH": "Deal [20,40,80,160,SP] SPECIAL to the target and enemy Pokémon ADJACENT to it.",
-		"INGRAIN": "Deal [15,30,60,120,SP] SPECIAL to enemies within RANGE and make them LOCKED. Heal the user and allies within RANGE for [15,30,60,120,SP] HP. LOCKED duration is 4s and is reduced by 1s for each tile between the user and the target, down to 1s.",
+		"INGRAIN": "Deal [15,30,60,120,SP] SPECIAL to enemies within RANGE and make them LOCKED. Heal the user and allies within RANGE for [15,30,60,120,SP] HP. Damage, healing and LOCKED duration fall off with each tile between the user and the target: 20% less per tile, and 1s less LOCKED down to 1s.",
 		"TORMENT": "Increase the user's SPEED by [20,35,50,65,SP].",
 		"STOMP": "Deal [300,400,500,1000,SP]% of user ATK as SPECIAL to the target.",
 		"HORN_DRILL": "Deal [300,400,500,1000,SP]% of user ATK as SPECIAL to the target, with [30,LK]% chance to execute it. The more ATK the user has relative to the target, the higher the chance.",
@@ -5108,11 +5108,11 @@
 		},
 		"LONE_WOLF": {
 			"name": "Lone Wolf",
-			"description": "When only one allied Pokémon remains, it gains SHIELD equal to 50% of its base max HP and 80 SPEED for 5 seconds."
+			"description": "When only one allied Pokémon remains, it gains SHIELD equal to 50% of its base max HP, 80 SPEED for 10 seconds and 2 permanent ATK."
 		},
 		"PARTING_GIFT": {
 			"name": "Parting Gift",
-			"description": "When a fully itemized allied Pokémon is KO'd, it transfers one of its items to a random ally within 2 tiles, which also gains 50 SHIELD."
+			"description": "When a fully itemized allied Pokémon is KO'd, it transfers one of its items to a random ally within 2 tiles, which also gains 100 SHIELD."
 		},
 		"REVEILLE": {
 			"name": "Reveille",
@@ -5708,7 +5708,7 @@
 		},
 		"MONSTER_KING": {
 			"name": "King of the Monsters",
-			"description": "Every 8 seconds, your ally with the most MONSTER stacks fires Hyper Beam (at its own STAR level), towards the largest group of enemies."
+			"description": "Every 6 seconds, your ally with the most MONSTER stacks fires Hyper Beam (at its own STAR level), towards the largest group of enemies."
 		},
 		"ADOPTION": {
 			"name": "Adoption Agency",
@@ -5716,7 +5716,7 @@
 		},
 		"RAINBOW_DROPLET": {
 			"name": "Rainbow Droplet",
-			"description": "The first time you reach AMORPHOUS 7 with 8 synergies active, every synergy except AMORPHOUS permanently gains +1."
+			"description": "The first time you reach AMORPHOUS 7 with 9 synergies active, every synergy except AMORPHOUS permanently gains +1."
 		},
 		"ARCHEOLOGY": {
 			"name": "Archeological Site",
@@ -5728,7 +5728,7 @@
 		},
 		"CHAMPIONS_MASK": {
 			"name": "Champion's Mask",
-			"description": "Gain a CHAMPIONS_MASK. At the start of combat, allies with a CHAMPIONS_MASK gain 50 SHIELD per FIGHTING tier."
+			"description": "Gain a CHAMPIONS_MASK. At the start of combat, allies with a CHAMPIONS_MASK gain 100 SHIELD per FIGHTING tier."
 		},
 		"AUTO_CRAFTING": {
 			"name": "Auto-Crafting",
@@ -5748,7 +5748,7 @@
 		},
 		"SPIKY_GUARD": {
 			"name": "Spiky Guard",
-			"description": "At the start of combat, Pokémon with no ADJACENT allies retaliate against melee attackers, dealing 10% of their current DEF and SPE_DEF as SPECIAL."
+			"description": "At the start of combat, Pokémon with no ADJACENT allies gain 5 SHIELD for each free ADJACENT tile and retaliate against melee attackers, dealing 15% of their current DEF and SPE_DEF as SPECIAL."
 		},
 		"DRILL_I": {
 			"name": "Drill I",
@@ -5804,7 +5804,7 @@
 		},
 		"BRUTE_SHIELD_II": {
 			"name": "Brute Shield II",
-			"description": "At the start of combat, your Pokémon gain 3 ATK, then gain SHIELD equal to 300% of their ATK."
+			"description": "At the start of combat, your Pokémon gain 4 ATK, then gain SHIELD equal to 300% of their ATK."
 		},
 		"HEART_SHIELD_I": {
 			"name": "Heart Shield I",
@@ -5920,7 +5920,7 @@
 		},
 		"BERRY_GROWTH": {
 			"name": "Berry Growth",
-			"description": "Every Berry eaten also grants the Pokémon +10 permanent max HP, or +15 for a golden Berry. At GRASS 7, your berry trees turn golden. If taken on stage 12, gain 5 golden Berries."
+			"description": "Every Berry eaten also grants the Pokémon +20 permanent max HP, or +30 for a golden Berry. At GRASS 7, your berry trees turn golden. If taken on stage 12, gain 5 golden Berries."
 		},
 		"WATER_FOUNTAIN": {
 			"name": "Water Fountain",
@@ -6040,7 +6040,7 @@
 		},
 		"PLUSHIFY": {
 			"name": "Plushify",
-			"description": "Gain a POKE_DOLL. When the holder is KO'd, spawn a Substitute with its max HP."
+			"description": "Gain a POKE_DOLL. When the holder is KO'd, spawn a Substitute with its max HP and PROTECT for 1.5 seconds."
 		},
 		"SUPPORTIVE_SOUL": {
 			"name": "Supportive Soul",
@@ -6168,7 +6168,7 @@
 		},
 		"QUEST_CRIT": {
 			"name": "Quest: Crit",
-			"description": "Gain 2 BLACK_GLASSES. The first time an ally reaches 5 CRIT_POWER in a fight, gain a GOLD_BOTTLE_CAP, an EXCHANGE_TICKET and a RECYCLE_TICKET."
+			"description": "Gain 2 BLACK_GLASSES. The first time an ally reaches 4.5 CRIT_POWER in a fight, gain a GOLD_BOTTLE_CAP, an EXCHANGE_TICKET and a RECYCLE_TICKET."
 		},
 		"QUEST_ABSORB": {
 			"name": "Quest: Absorb",
@@ -6188,7 +6188,7 @@
 		},
 		"IMPENDING_DOOM": {
 			"name": "Impending Doom",
-			"description": "After 7 seconds of combat, a shadow engulfs the battle, removing PROTECT, RUNE_PROTECT and RESURRECTION from all enemy Pokémon. For the remainder of combat, no enemy can receive these effects. Accelerate the shadow's countdown by 1 second when a CURSE enemy is KOed. Gain a Dartix."
+			"description": "After 7 seconds of combat, a shadow engulfs the battle, removing PROTECT, RUNE_PROTECT and RESURRECTION from all enemy Pokémon. For the remainder of combat, no enemy can receive these effects. Accelerate the shadow's countdown by 1 second when a CURSE enemy is KOed."
 		},
 		"SYNCHRONICITY": {
 			"name": "Synchronicity",
@@ -6340,7 +6340,7 @@
 		},
 		"STICKY_BARB_BLESSING": {
 			"name": "Sticky Thorns",
-			"description": "Gain a STICKY_BARB. The first enemy with a free item slot that attacks the holder receives it. Its new holder deals 150% of its ATK as TRUE to itself and all ADJACENT allies ON_ATTACK."
+			"description": "Gain a STICKY_BARB. The first enemy with a free item slot that attacks the holder receives it. Its new holder deals 150% of its ATK as TRUE to itself and all ADJACENT allies ON_ATTACK. When a holder is KO'd, the barb passes to an ADJACENT ally with a free item slot."
 		},
 		"MAX_REVIVE_BLESSING": {
 			"name": "Revival Pulse",
@@ -6352,7 +6352,7 @@
 		},
 		"GRACIDEA_FLOWER_BLESSING": {
 			"name": "Gracidea Garden",
-			"description": "Gain a GRACIDEA_FLOWER. At the start of combat, allies it affects blossom and restore 5% of their max HP every 2 seconds."
+			"description": "Gain a GRACIDEA_FLOWER. At the start of combat, allies it affects blossom and restore 10% of their max HP every 2 seconds."
 		},
 		"SMOKE_BALL_BLESSING": {
 			"name": "Shuriken",
@@ -6368,7 +6368,7 @@
 		},
 		"AQUA_EGG_BLESSING": {
 			"name": "Blessing of Phione",
-			"description": "Gain an AQUA_EGG. After the holder's first ability cast, summon a Phione. That Phione grants 5 PP to all allies whenever it casts its ability."
+			"description": "Gain an AQUA_EGG. After the holder's first ability cast, summon a Phione. That Phione grants 3 PP to all allies whenever it casts its ability."
 		},
 		"STAR_DUST_BLESSING": {
 			"name": "Star Dust Veil",
@@ -6400,7 +6400,7 @@
 		},
 		"FAIRY_FEATHER_BLESSING": {
 			"name": "Lucky Feather",
-			"description": "Gain a FAIRY_FEATHER. The holder gains 5 LUCK ON_ATTACK."
+			"description": "Gain a FAIRY_FEATHER. The holder gains 5 LUCK and 2 DEF ON_ATTACK."
 		},
 		"SHELL_BELL_BLESSING": {
 			"name": "Coast Wave",
@@ -6412,7 +6412,7 @@
 		},
 		"POWER_LENS_BLESSING": {
 			"name": "Power Mirror",
-			"description": "Gain a POWER_LENS. The holder gains 5 AP whenever it is hit by an attack, and the damage it reflects scales with its AP."
+			"description": "Gain a POWER_LENS. The holder gains 10 AP whenever it is hit by an attack, and the damage it reflects scales with its AP."
 		},
 		"CLEAR_AMULET_BLESSING": {
 			"name": "Clear Diamond",
@@ -6428,7 +6428,7 @@
 		},
 		"POKEMONOMICON_BLESSING": {
 			"name": "Scorching Tome",
-			"description": "Gain a POKEMONOMICON. The holder also applies WOUND for 3 seconds, and enemies affected by BURN or WOUND take 30% increased damage from all sources."
+			"description": "Gain a POKEMONOMICON. The holder also applies WOUND for 3 seconds, and enemies affected by BURN or WOUND take 40% increased damage from all sources."
 		},
 		"DESTINY_KNOT_BLESSING": {
 			"name": "Red Thread",
@@ -6456,7 +6456,7 @@
 		},
 		"REAPER_CLOTH_BLESSING": {
 			"name": "Haunted Cloth",
-			"description": "Gain a REAPER_CLOTH. The first time the holder KO an enemy, summon a Ghost on the target's tile with its base HP, ATK, DEF and SPE_DEF."
+			"description": "Gain a REAPER_CLOTH. The first time the holder KO an enemy, summon a Ghost on the target's tile with its base HP, ATK, DEF and SPE_DEF. The Ghost cannot be targeted for 8 seconds."
 		},
 		"GRIP_CLAW_BLESSING": {
 			"name": "Seizing Claw",

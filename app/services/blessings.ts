@@ -2803,8 +2803,7 @@ export const blessingEffectService: {
     return true
   },
 
-  [Blessing.IMPENDING_DOOM]: (player) =>
-    giftPokemonIfBenchHasRoom(player, Pkm.DARTIX),
+  [Blessing.IMPENDING_DOOM]: () => true,
 
   [Blessing.SYNCHRONICITY]: (player) => {
     player.items.push(Item.SYNCHRO_MASHINE)

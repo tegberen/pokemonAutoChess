@@ -13,6 +13,7 @@ import { AbilityStrategy } from "./ability-strategy"
 const LOCKED_DURATION = 4000
 const LOCKED_DURATION_MIN = 1000
 const LOCKED_DURATION_LOST_PER_SPACE = 1000
+const FALLOFF_PER_SPACE = 0.2
 
 export class IngrainStrategy extends AbilityStrategy {
   process(
@@ -34,26 +35,26 @@ export class IngrainStrategy extends AbilityStrategy {
       .getCellsInRange(pokemon.positionX, pokemon.positionY, pokemon.range, true)
       .forEach((cell) => {
         if (!cell.value) return
+        const spaces = spacesBetween(
+          pokemon.positionX,
+          pokemon.positionY,
+          cell.x,
+          cell.y
+        )
+        const falloff = Math.max(0, 1 - FALLOFF_PER_SPACE * spaces)
         if (pokemon.team === cell.value.team) {
-          cell.value.handleHeal(heal, pokemon, 1, crit)
+          cell.value.handleHeal(Math.round(heal * falloff), pokemon, 1, crit)
         } else {
           const lockedDuration = rootsReachEqually
             ? LOCKED_DURATION
             : Math.max(
                 LOCKED_DURATION_MIN,
-                LOCKED_DURATION -
-                  LOCKED_DURATION_LOST_PER_SPACE *
-                    spacesBetween(
-                      pokemon.positionX,
-                      pokemon.positionY,
-                      cell.x,
-                      cell.y
-                    )
+                LOCKED_DURATION - LOCKED_DURATION_LOST_PER_SPACE * spaces
               )
           cell.value.status.triggerLocked(lockedDuration, cell.value)
           enemiesLocked++
           cell.value.handleSpecialDamage(
-            damage,
+            Math.round(damage * falloff),
             board,
             AttackType.SPECIAL,
             pokemon,

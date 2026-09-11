@@ -1542,10 +1542,10 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     benchSlotsRequired: 1 + QUEST_EVOLVE_II_RARES_GRANTED
   },
   [Blessing.IMPENDING_DOOM]: {
-    tier: BlessingTier.GOLD,
+    tier: BlessingTier.SILVER,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "impending_doom",
-    grantsPokemonImmediately: true
+    grantsPokemonImmediately: false
   },
   [Blessing.SYNCHRONICITY]: {
     tier: BlessingTier.PRISMATIC,

@@ -25,6 +25,7 @@ import {
   AURORA_BOREALIS_DAMAGE_REDUCTION_IN_SNOW_OR_NIGHT,
   Blessing,
   BRACE_FOR_IMPACT_MAX_HP_RATIO,
+  PLUSHIFY_SUBSTITUTE_PROTECT_DURATION,
   CONTEMPT_DAMAGE_MULTIPLIER,
   EXPLOIT_DAMAGE_BONUS,
   RESURGENCE_LEGENDARY_SPEED,
@@ -1262,6 +1263,10 @@ export default abstract class PokemonState {
       if (substituteEntity) {
         substituteEntity.hp = plushifySubstituteMaxHP
         substituteEntity.maxHP = plushifySubstituteMaxHP
+        // it appears mid-swing of whatever just killed the holder
+        substituteEntity.status.triggerProtect(
+          PLUSHIFY_SUBSTITUTE_PROTECT_DURATION
+        )
       }
     }
     if (attacker && pokemon !== attacker) {

@@ -144,6 +144,7 @@ import {
   CRITICAL_RUSH_II_STACK_SPEED,
   CRITICAL_PATH_CRIT_POWER_FALLBACK,
   CRITICAL_PATH_II_CRIT_CHANCE,
+  LONE_WOLF_PERMANENT_ATTACK,
   LONE_WOLF_SHIELD_RATIO,
   LONE_WOLF_SPEED,
   LONE_WOLF_SPEED_DURATION,
@@ -214,6 +215,8 @@ import {
   GEAR_SHIELD_PER_ITEM,
   HEART_SHIELD_MAX_HP_PER_ALLY,
   ROLL_SCALING_ITEMS_REQUIRED,
+  SPIKY_GUARD_DEFENSE_RATIO,
+  SPIKY_GUARD_SHIELD_PER_FREE_CELL,
   LAYERED_ARMOR_SHIELD_MAX,
   LAYERED_ARMOR_SHIELD_PER_ROLL,
   MORPH_BALL_ROLLS_PER_SPEED,
@@ -2204,10 +2207,22 @@ export default class Simulation extends Schema implements ISimulation {
 
       if (blessings.includes(Blessing.SPIKY_GUARD)) {
         ownUnits.forEach((ally) => {
-          const hasAdjacentAlly = this.board
-            .getAdjacentCells(ally.positionX, ally.positionY, false)
-            .some((cell) => cell.value?.team === ally.team)
-          if (hasAdjacentAlly) return
+          const adjacentCells = this.board.getAdjacentCells(
+            ally.positionX,
+            ally.positionY,
+            false
+          )
+          if (adjacentCells.some((cell) => cell.value?.team === ally.team)) {
+            return
+          }
+          // board edges are not cells, so a cornered unit has fewer to claim
+          const freeCells = adjacentCells.filter((cell) => !cell.value).length
+          ally.addShield(
+            freeCells * SPIKY_GUARD_SHIELD_PER_FREE_CELL,
+            ally,
+            0,
+            false
+          )
           ally.effectsSet.add(
             new OnAttackReceivedEffect(({ pokemon, attacker, board }) => {
               if (
@@ -2221,7 +2236,9 @@ export default class Simulation extends Schema implements ISimulation {
                 return
               }
               attacker.handleDamage({
-                damage: 0.1 * (pokemon.def + pokemon.speDef),
+                damage:
+                  SPIKY_GUARD_DEFENSE_RATIO *
+                  (pokemon.def + pokemon.speDef),
                 board,
                 attackType: AttackType.SPECIAL,
                 attacker: pokemon,
@@ -2426,6 +2443,7 @@ export default class Simulation extends Schema implements ISimulation {
             false
           )
           wolf.addSpeed(LONE_WOLF_SPEED, wolf, 0, false)
+          wolf.addAttack(LONE_WOLF_PERMANENT_ATTACK, wolf, 0, false, true)
           const remaining = { ms: LONE_WOLF_SPEED_DURATION }
           if (controlsTimerBar) wolf.combatBlessingTimer = 100
           wolf.effectsSet.add(
