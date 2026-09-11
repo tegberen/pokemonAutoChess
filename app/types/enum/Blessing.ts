@@ -870,9 +870,11 @@ export const HEART_SHIELD_MAX_HP_PER_ALLY = { I: 4, II: 8 }
 // free rolls count towards rerollCount, so these part-fund their own scaling
 export const ROLL_SCALING_FREE_ROLLS = 4
 export const ROLL_SCALING_ITEMS_REQUIRED = 3
-export const LAYERED_ARMOR_SHIELD_PER_ROLL = 3
-export const MORPH_BALL_SPEED_PER_ROLL = 1
+export const LAYERED_ARMOR_SHIELD_PER_ROLL = 4
+export const LAYERED_ARMOR_SHIELD_MAX = 200
+export const MORPH_BALL_ROLLS_PER_SPEED = 2
 export const ORB_WAND_ABILITY_POWER_PER_ROLL = 2
+export const ORB_WAND_ABILITY_POWER_MAX = 150
 
 export const ABNORMALITY_ABILITY_POWER_PER_EMPTY_CELL = 5
 

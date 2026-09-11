@@ -214,8 +214,10 @@ import {
   GEAR_SHIELD_PER_ITEM,
   HEART_SHIELD_MAX_HP_PER_ALLY,
   ROLL_SCALING_ITEMS_REQUIRED,
+  LAYERED_ARMOR_SHIELD_MAX,
   LAYERED_ARMOR_SHIELD_PER_ROLL,
-  MORPH_BALL_SPEED_PER_ROLL,
+  MORPH_BALL_ROLLS_PER_SPEED,
+  ORB_WAND_ABILITY_POWER_MAX,
   ORB_WAND_ABILITY_POWER_PER_ROLL,
   MAGIC_SHIELD_ALLY_AP,
   BRUTE_SHIELD_ATTACK_RATIO,
@@ -2270,15 +2272,21 @@ export default class Simulation extends Schema implements ISimulation {
           (ally) => ally.items.size >= ROLL_SCALING_ITEMS_REQUIRED
         )
         if (blessings.includes(Blessing.LAYERED_ARMOR)) {
-          const shield = rollsThisGame * LAYERED_ARMOR_SHIELD_PER_ROLL
+          const shield = Math.min(
+            rollsThisGame * LAYERED_ARMOR_SHIELD_PER_ROLL,
+            LAYERED_ARMOR_SHIELD_MAX
+          )
           fullBagUnits.forEach((ally) => ally.addShield(shield, ally, 0, false))
         }
         if (blessings.includes(Blessing.MORPH_BALL)) {
-          const speed = rollsThisGame * MORPH_BALL_SPEED_PER_ROLL
+          const speed = Math.floor(rollsThisGame / MORPH_BALL_ROLLS_PER_SPEED)
           fullBagUnits.forEach((ally) => ally.addSpeed(speed, ally, 0, false))
         }
         if (blessings.includes(Blessing.ORB_WAND)) {
-          const abilityPower = rollsThisGame * ORB_WAND_ABILITY_POWER_PER_ROLL
+          const abilityPower = Math.min(
+            rollsThisGame * ORB_WAND_ABILITY_POWER_PER_ROLL,
+            ORB_WAND_ABILITY_POWER_MAX
+          )
           fullBagUnits.forEach((ally) =>
             ally.addAbilityPower(abilityPower, ally, 0, false)
           )

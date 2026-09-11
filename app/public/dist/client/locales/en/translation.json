@@ -5112,7 +5112,7 @@
 		},
 		"PARTING_GIFT": {
 			"name": "Parting Gift",
-			"description": "When an allied Pokémon holding 3 items is KO'd, it transfers one of its items to a random ally within 2 tiles, which also gains 50 SHIELD."
+			"description": "When a fully itemized allied Pokémon is KO'd, it transfers one of its items to a random ally within 2 tiles, which also gains 50 SHIELD."
 		},
 		"REVEILLE": {
 			"name": "Reveille",
@@ -5816,15 +5816,15 @@
 		},
 		"LAYERED_ARMOR": {
 			"name": "Layered Armor",
-			"description": "Gain 4 Rerolls. At the start of combat, your Pokémon holding 3 items gain 3 SHIELD for each shop roll you have done this game."
+			"description": "Gain 4 Rerolls. At the start of combat, your fully itemized Pokémon gain 4 SHIELD for each shop roll you have done this game, up to 200 SHIELD."
 		},
 		"MORPH_BALL": {
 			"name": "Morph Ball",
-			"description": "Gain 4 Rerolls. At the start of combat, your Pokémon holding 3 items gain 1 SPEED for each shop roll you have done this game."
+			"description": "Gain 4 Rerolls. At the start of combat, your fully itemized Pokémon gain 1 SPEED for each 2 shop rolls you have done this game."
 		},
 		"ORB_WAND": {
 			"name": "Orb Wand",
-			"description": "Gain 4 Rerolls. At the start of combat, your Pokémon holding 3 items gain 2 AP for each shop roll you have done this game."
+			"description": "Gain 4 Rerolls. At the start of combat, your fully itemized Pokémon gain 2 AP for each shop roll you have done this game, up to 150 AP."
 		},
 		"SHADY_PRICE": {
 			"name": "Shady Price",
