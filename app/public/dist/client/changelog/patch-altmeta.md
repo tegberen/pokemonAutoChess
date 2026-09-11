@@ -365,6 +365,8 @@ At the beginning of each battle, TIGHT_BELT is replaced by 2 random items. The h
 - Heatran: has MONSTER
 - Ogerpon: becomes MONSTER with TEAL_MASK, WELLSPRING_MASK, HEARTHFLAME_MASK or CORNERSTONE_MASK,
 - Celebi: has FAIRY
+- Urshifu (Single Strike): teaches its style, so the training bag and pillars also grant 20 AP permanently.
+- Urshifu (Rapid Strike): teaches its style, so the training bag and pillars also grant 10 SPEED permanently.
 
 ### Special
 

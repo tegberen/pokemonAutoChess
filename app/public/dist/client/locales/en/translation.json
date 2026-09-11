@@ -3870,7 +3870,9 @@
 		"DRACOZOLT": "When an allied FOSSIL awakens its primordial power, that Pokemon casts its ability 1 STAR level higher for the rest of combat.",
 		"ARCTOZOLT": "When an allied FOSSIL awakens its primordial power, PARALYSIS enemies ADJACENT to it for 4 seconds. Already PARALYSIS enemies are FREEZE instead.",
 		"DRACOVISH": "When an allied FOSSIL awakens its primordial power, it deals 30% more damage to enemies below 50% HP for the rest of combat.",
-		"ARCTOVISH": "When an allied FOSSIL awakens its primordial power, it gains 20% max HP and RUNE_PROTECT for 1 second."
+		"ARCTOVISH": "When an allied FOSSIL awakens its primordial power, it gains 20% max HP and RUNE_PROTECT for 1 second.",
+		"URSHIFU_RAPID": "Teaches the Rapid Strike Style. The training bag and pillars also grant 10 SPEED permanently.",
+		"URSHIFU_SINGLE": "Teaches the Single Strike Style. The training bag and pillars also grant 20 AP permanently."
 	},
 	"stat": {
 		"ATK": "Attack",

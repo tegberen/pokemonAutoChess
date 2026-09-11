@@ -19899,6 +19899,7 @@ export class UrshifuRapid extends Pokemon {
   maxPP = 100
   range = 1
   skill = Ability.SURGING_STRIKES
+  passive = Passive.URSHIFU_RAPID
   onAcquired(player: Player): void {
     removeInArray(player.items, Item.SCROLL_OF_WATERS)
     removeInArray(player.items, Item.SCROLL_OF_DARKNESS)
@@ -19918,6 +19919,7 @@ export class UrshifuSingle extends Pokemon {
   maxPP = 100
   range = 1
   skill = Ability.WICKED_BLOW
+  passive = Passive.URSHIFU_SINGLE
   onAcquired(player: Player): void {
     removeInArray(player.items, Item.SCROLL_OF_WATERS)
     removeInArray(player.items, Item.SCROLL_OF_DARKNESS)

@@ -216,7 +216,11 @@ import {
   Tools,
   UnholdableItems
 } from "../../types/enum/Item"
-import { Passive } from "../../types/enum/Passive"
+import {
+  Passive,
+  URSHIFU_RAPID_TRAINING_SPEED,
+  URSHIFU_SINGLE_TRAINING_ABILITY_POWER
+} from "../../types/enum/Passive"
 import {
   Pkm,
   PkmDuos,
@@ -3454,6 +3458,18 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
             }
 
             if (pokemon.action === PokemonActionState.TRAINING) {
+              // the masters coach from anywhere they are owned, bench included
+              const coaches = schemaValues(player.board)
+              const coachedAbilityPower = coaches.some(
+                (p) => p.passive === Passive.URSHIFU_SINGLE
+              )
+                ? URSHIFU_SINGLE_TRAINING_ABILITY_POWER
+                : 0
+              const coachedSpeed = coaches.some(
+                (p) => p.passive === Passive.URSHIFU_RAPID
+              )
+                ? URSHIFU_RAPID_TRAINING_SPEED
+                : 0
               if (pokemon.name === Pkm.PIKACHU) {
                 const libre = player.transformPokemon(
                   pokemon,
@@ -3463,10 +3479,15 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
                 libre.addMaxHP(
                   Math.ceil(0.1 * getPokemonData(Pkm.PIKACHU_LIBRE).hp)
                 )
+                // the transform returns a new unit, so it claims the coaching
+                libre.addAbilityPower(coachedAbilityPower)
+                libre.addSpeed(coachedSpeed)
                 return
               }
               pokemon.addAttack(4)
               pokemon.addMaxHP(Math.ceil(0.1 * getPokemonData(pokemon.name).hp))
+              pokemon.addAbilityPower(coachedAbilityPower)
+              pokemon.addSpeed(coachedSpeed)
               pokemon.action = PokemonActionState.IDLE
             }
           })
