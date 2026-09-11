@@ -251,7 +251,7 @@ At the beginning of each battle, TIGHT_BELT is replaced by 2 random items. The h
 - Eldegoss: has GRASS
 - Garganacl: has HUMAN after 3 STAR
 
-- Vikavolt: regular pool, has AMORPHOUS
+- Vikavolt: regular pool, has SOUND
 - Froslass: has ROCK
 
 ### Rare
