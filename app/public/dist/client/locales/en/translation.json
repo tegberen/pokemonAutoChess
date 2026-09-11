@@ -5824,7 +5824,7 @@
 		},
 		"ORB_WAND": {
 			"name": "Orb Wand",
-			"description": "Gain 4 Rerolls. At the start of combat, your fully itemized Pokémon gain 2 AP for each shop roll you have done this game, up to 150 AP."
+			"description": "Gain 4 Rerolls. At the start of combat, your fully itemized Pokémon gain 2 AP for each shop roll you have done this game, up to 100 AP."
 		},
 		"SHADY_PRICE": {
 			"name": "Shady Price",
