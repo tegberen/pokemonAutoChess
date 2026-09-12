@@ -14,7 +14,6 @@ import { AttackType, PokemonActionState, Team } from "../../types/enum/Game"
 import {
   AbilityPerTM,
   CraftableItemsNoScarves,
-  type Dish,
   DishesGoingToInventory,
   type FishingRod,
   Flavors,
@@ -791,19 +790,6 @@ const chefCookEffect = new OnStageStartEffect(({ pokemon, player, room }) => {
             }
             const pokemon = candidates[0] ?? chef // idx 0 equals the strongest unit
             if (!canEatMoreDishes(pokemon, player.blessings)) return
-            if (dish === Item.HERBA_MYSTICA) {
-              const flavors: Dish[] = []
-              if (pokemon.types.has(Synergy.FAIRY))
-                flavors.push(Item.HERBA_MYSTICA_SWEET)
-              if (pokemon.types.has(Synergy.PSYCHIC))
-                flavors.push(Item.HERBA_MYSTICA_SPICY)
-              if (pokemon.types.has(Synergy.ELECTRIC))
-                flavors.push(Item.HERBA_MYSTICA_SOUR)
-              if (pokemon.types.has(Synergy.GRASS))
-                flavors.push(Item.HERBA_MYSTICA_BITTER)
-              if (flavors.length === 0) flavors.push(Item.HERBA_MYSTICA_SALTY)
-              dish = pickRandomIn(flavors)
-            }
             if (pokemon.festivePicnicDish != null) {
               pokemon.dishes.delete(pokemon.festivePicnicDish)
               pokemon.festivePicnicDish = null

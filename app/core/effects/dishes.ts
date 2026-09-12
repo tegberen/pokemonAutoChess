@@ -20,6 +20,10 @@ import {
 } from "./../effects/effect"
 import { AttackType } from "../../types/enum/Game"
 
+const runeProtectForNextFight = new OnSpawnEffect((entity) => {
+  entity.status.triggerRuneProtect(FIGHTING_PHASE_DURATION, entity, entity)
+})
+
 export const DishEffects: Record<(typeof Dishes)[number], Effect[]> = {
   [Item.BERRY_JUICE]: [
     new OnSpawnEffect((entity) => {
@@ -112,7 +116,7 @@ export const DishEffects: Record<(typeof Dishes)[number], Effect[]> = {
       }
     })
   ],
-  [Item.HERBA_MYSTICA]: [],
+  [Item.HERBA_MYSTICA]: [runeProtectForNextFight],
   [Item.HERBA_MYSTICA_SWEET]: [
     new OnSpawnEffect((entity) => {
       entity.status.addFairyField(entity)
@@ -133,11 +137,7 @@ export const DishEffects: Record<(typeof Dishes)[number], Effect[]> = {
       entity.status.addGrassField(entity)
     })
   ],
-  [Item.HERBA_MYSTICA_SALTY]: [
-    new OnSpawnEffect((entity) => {
-      entity.status.triggerRuneProtect(FIGHTING_PHASE_DURATION, entity, entity)
-    })
-  ],
+  [Item.HERBA_MYSTICA_SALTY]: [runeProtectForNextFight],
   [Item.HONEY]: [],
   [Item.LARGE_LEEK]: [
     new OnSpawnEffect((entity) => {
