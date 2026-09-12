@@ -2083,6 +2083,12 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     icon: "rank_up",
     grantsPokemonImmediately: false
   },
+  [Blessing.PARK_BENCH]: {
+    tier: BlessingTier.SILVER,
+    availableAtStages: [4],
+    icon: "park_bench",
+    grantsPokemonImmediately: false
+  },
   [Blessing.MAGIC_SHIELD_I]: {
     tier: BlessingTier.SILVER,
     availableAtStages: BLESSING_SELECTION_STAGES,

@@ -2,7 +2,9 @@ import type Player from "../../models/colyseus-models/player"
 import PokemonFactory from "../../models/pokemon-factory"
 import type { Item } from "../../types/enum/Item"
 import { type Pkm, PkmFamily } from "../../types/enum/Pokemon"
-import { getFirstAvailablePositionInBench } from "../../utils/board"
+import { getFirstAvailablePositionInBench,
+  getBenchSize
+} from "../../utils/board"
 
 /* What a step's `onEnter` may do to set itself up. Read-only checks live in
    guide-conditions.ts; anything that changes the player's board or bag belongs
@@ -15,7 +17,7 @@ import { getFirstAvailablePositionInBench } from "../../utils/board"
 /** Puts a unit on the bench. For units no shop will ever offer. */
 export function giveGuidePokemon(player: Player, pkm: Pkm, count = 1) {
   for (let i = 0; i < count; i++) {
-    const x = getFirstAvailablePositionInBench(player.board)
+    const x = getFirstAvailablePositionInBench(player.board, getBenchSize(player.blessings))
     if (x === null) return
     const pokemon = PokemonFactory.createPokemonFromName(pkm, player)
     pokemon.positionX = x

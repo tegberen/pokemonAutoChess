@@ -160,7 +160,8 @@ import {
   getFirstAvailablePositionOnBoard,
   getFreeSpaceOnBench,
   getLastAvailablePositionInBench,
-  isOnBench
+  isOnBench,
+  getBenchSize
 } from "../utils/board"
 import { healPlayerLife } from "../utils/player-life"
 import {
@@ -230,7 +231,7 @@ function giftPokemonOfRarityAndStars(
   )
   if (candidates.length === 0) return false
 
-  const freeCellX = getFirstAvailablePositionInBench(player.board)
+  const freeCellX = getFirstAvailablePositionInBench(player.board, getBenchSize(player.blessings))
   if (freeCellX === null) return false
 
   const pokemon = PokemonFactory.createPokemonFromName(
@@ -252,7 +253,7 @@ function giftLegendaryMatchingTopSynergy(player: Player): boolean {
   )
   const candidates = matching.length > 0 ? matching : legendaries
 
-  const freeCellX = getFirstAvailablePositionInBench(player.board)
+  const freeCellX = getFirstAvailablePositionInBench(player.board, getBenchSize(player.blessings))
   if (freeCellX === null) return false
 
   const pokemon = PokemonFactory.createPokemonFromName(
@@ -410,7 +411,7 @@ function gymTrainerGrants() {
     Object.entries(GYM_TRAINER_ROSTERS).map(([blessing, roster]) => [
       blessing,
       (player: Player) => {
-        if (getFreeSpaceOnBench(player.board) < roster.starters.length) {
+        if (getFreeSpaceOnBench(player.board, getBenchSize(player.blessings)) < roster.starters.length) {
           return false
         }
         roster.starters.forEach((pkm) => giftPokemonIfBenchHasRoom(player, pkm))
@@ -443,7 +444,7 @@ function isBlockedByFullBench(player: Player, blessing: Blessing) {
   const definition = Blessings[blessing]
   return (
     definition.grantsPokemonImmediately === true &&
-    getFreeSpaceOnBench(player.board) < (definition.benchSlotsRequired ?? 1)
+    getFreeSpaceOnBench(player.board, getBenchSize(player.blessings)) < (definition.benchSlotsRequired ?? 1)
   )
 }
 
@@ -507,7 +508,7 @@ function synergyFamilyEffects(
     SYNERGIES_WITH_BLESSINGS.map((synergy) => [
       `${synergy}_${family}_BLESSING`,
       (player: Player) => {
-        if (getFreeSpaceOnBench(player.board) < pokemonGranted) return false
+        if (getFreeSpaceOnBench(player.board, getBenchSize(player.blessings)) < pokemonGranted) return false
         // a Crest hands out the item its Crown leads with, a Badge the gem
         const item =
           family === "CREST"
@@ -651,7 +652,7 @@ const crownEffects = Object.fromEntries(
   Object.entries(CrownBlessingContent).map(([blessing, content]) => [
     blessing,
     (player: Player) => {
-      if (getFreeSpaceOnBench(player.board) < 1) return false
+      if (getFreeSpaceOnBench(player.board, getBenchSize(player.blessings)) < 1) return false
       content.items.forEach((item) => grantSynergyAwareItem(player, item))
       // kept out of the table so a Crest never inherits it as its lead item
       player.items.push(Item.LAPRAS_PASSPORT)
@@ -775,7 +776,7 @@ function giftBabiesUnderCost(
   count: number,
   excludeOwned = false
 ): boolean {
-  if (getFreeSpaceOnBench(player.board) < count) return false
+  if (getFreeSpaceOnBench(player.board, getBenchSize(player.blessings)) < count) return false
   const owned = new Set(
     [...player.board.values()].map((pokemon) => PkmFamily[pokemon.name])
   )
@@ -990,7 +991,7 @@ function giftPokemonIfBenchHasRoom(
   pkm: Pkm,
   bonusMaxHp = 0
 ): boolean {
-  const freeCellX = getFirstAvailablePositionInBench(player.board)
+  const freeCellX = getFirstAvailablePositionInBench(player.board, getBenchSize(player.blessings))
   if (freeCellX === null) return false
   const pokemon = PokemonFactory.createPokemonFromName(
     getAltFormForPlayer(pkm, player),
@@ -1017,7 +1018,7 @@ function giftPokemonIfBenchHasRoom(
 }
 
 function grantPanicButtonUnown(player: Player): boolean {
-  const freeCellX = getFirstAvailablePositionInBench(player.board)
+  const freeCellX = getFirstAvailablePositionInBench(player.board, getBenchSize(player.blessings))
   if (freeCellX === null) return false
   const unown = PokemonFactory.createPokemonFromName(Pkm.UNOWN_Q, player)
   unown.maxPP = 10
@@ -1078,7 +1079,7 @@ function applyAllForOne(
   substitute.maxHP = maxHP
   substitute.positionX =
     fieldPosition?.positionX ??
-    getFirstAvailablePositionInBench(player.board) ??
+    getFirstAvailablePositionInBench(player.board, getBenchSize(player.blessings)) ??
     0
   substitute.positionY = fieldPosition?.positionY ?? 0
   player.board.set(substitute.id, substitute)
@@ -1482,7 +1483,7 @@ function grantManifestation(
   heldItem: Item
 ): boolean {
   // parked on the far right, out of the way of the bench the player actually uses
-  const freeCellX = getLastAvailablePositionInBench(player.board)
+  const freeCellX = getLastAvailablePositionInBench(player.board, getBenchSize(player.blessings))
   if (freeCellX === null) return false
   const pokemon = PokemonFactory.createPokemonFromName(
     pickRandomIn(candidates),
@@ -1518,7 +1519,7 @@ function releaseManifestedPokemons(player: Player) {
 }
 
 function giftRandomUniques(player: Player, amount: number): boolean {
-  if (getFreeSpaceOnBench(player.board) < amount) return false
+  if (getFreeSpaceOnBench(player.board, getBenchSize(player.blessings)) < amount) return false
   const candidates = PRECOMPUTED_POKEMONS_PER_RARITY[Rarity.UNIQUE].filter(
     (pkm) => PkmFamily[pkm] !== Pkm.COSMOG
   )
@@ -2087,7 +2088,7 @@ export const blessingEffectService: {
     return true
   },
   [Blessing.TRASH_TO_TREASURE]: (player) => {
-    if (getFreeSpaceOnBench(player.board) < 2) return false
+    if (getFreeSpaceOnBench(player.board, getBenchSize(player.blessings)) < 2) return false
     giftPokemonIfBenchHasRoom(player, Pkm.TRUBBISH)
     giftPokemonIfBenchHasRoom(player, Pkm.BELDUM)
     const trashGranted = randomBetween(
@@ -2164,7 +2165,7 @@ export const blessingEffectService: {
   },
 
   [Blessing.QUEST_ASCEND]: (player) => {
-    if (getFreeSpaceOnBench(player.board) < QUEST_ASCEND_POKEMONS) return false
+    if (getFreeSpaceOnBench(player.board, getBenchSize(player.blessings)) < QUEST_ASCEND_POKEMONS) return false
     for (let i = 0; i < QUEST_ASCEND_POKEMONS; i++) {
       giftPokemonOfRarityAndStars(player, Rarity.RARE, 1)
     }
@@ -2210,7 +2211,7 @@ export const blessingEffectService: {
     giftRandomSynergyGems(player, TREASURE_HUNT_I_GEMS),
 
   [Blessing.STARTER_PACK]: (player) => {
-    if (getFreeSpaceOnBench(player.board) < STARTER_PACK_CONTENT.length) {
+    if (getFreeSpaceOnBench(player.board, getBenchSize(player.blessings)) < STARTER_PACK_CONTENT.length) {
       return false
     }
     STARTER_PACK_CONTENT.forEach(({ rarity, stars }) =>
@@ -2276,7 +2277,7 @@ export const blessingEffectService: {
     // at most one of the three babies is swapped for a Golden Egg
     const golden = chance(SELECTIVE_GENETICS_GOLDEN_EGG_CHANCE)
     const babies = SELECTIVE_GENETICS_BABIES_GRANTED - (golden ? 1 : 0)
-    if (getFreeSpaceOnBench(player.board) < SELECTIVE_GENETICS_BABIES_GRANTED) {
+    if (getFreeSpaceOnBench(player.board, getBenchSize(player.blessings)) < SELECTIVE_GENETICS_BABIES_GRANTED) {
       return false
     }
     if (golden) giveRandomEgg(player, true)
@@ -2385,7 +2386,7 @@ export const blessingEffectService: {
     giftPokemonIfBenchHasRoom(player, Pkm.TYNAMO),
 
   [Blessing.LANGUAGE_BARRIER]: (player) => {
-    if (getFreeSpaceOnBench(player.board) < LANGUAGE_BARRIER_UNOWNS_GRANTED) {
+    if (getFreeSpaceOnBench(player.board, getBenchSize(player.blessings)) < LANGUAGE_BARRIER_UNOWNS_GRANTED) {
       return false
     }
     for (let i = 0; i < LANGUAGE_BARRIER_UNOWNS_GRANTED; i++) {
@@ -2787,7 +2788,7 @@ export const blessingEffectService: {
 
   [Blessing.QUEST_EVOLVE_II]: (player) => {
     if (
-      getFreeSpaceOnBench(player.board) <
+      getFreeSpaceOnBench(player.board, getBenchSize(player.blessings)) <
       1 + QUEST_EVOLVE_II_RARES_GRANTED
     ) {
       return false
@@ -3011,7 +3012,7 @@ export const blessingEffectService: {
     if (!candidates) return false
     /* seeding the pool is lobby-wide and cannot be undone, so refuse before it
        rather than after the gift fails */
-    if (getFreeSpaceOnBench(player.board) < 1) return false
+    if (getFreeSpaceOnBench(player.board, getBenchSize(player.blessings)) < 1) return false
     const encountered = pickRandomIn(candidates)
     state.shop.addAdditionalPokemon(encountered, state)
     if (!giftPokemonIfBenchHasRoom(player, encountered)) return false
@@ -3045,7 +3046,7 @@ export const blessingEffectService: {
   },
 
   [Blessing.ROCKY_BEGINNINGS]: (player) => {
-    if (getFreeSpaceOnBench(player.board) < ROCKY_BEGINNINGS_POKEMONS) {
+    if (getFreeSpaceOnBench(player.board, getBenchSize(player.blessings)) < ROCKY_BEGINNINGS_POKEMONS) {
       return false
     }
     const matching = PRECOMPUTED_POKEMONS_PER_RARITY[Rarity.COMMON]
@@ -3093,6 +3094,8 @@ export const blessingEffectService: {
     player.items.push(pickRandomIn(Berries))
     return true
   },
+
+  [Blessing.PARK_BENCH]: () => true,
 
   [Blessing.RANK_UP]: (player) => {
     player.addExperience(RANK_UP_EXPERIENCE)

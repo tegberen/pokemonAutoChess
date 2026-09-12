@@ -68,7 +68,10 @@ export default function GameChoice() {
     choice.pokemons.some((pokemon) => pokemon in PkmDuo)
   )
   const isBenchFull =
-    board && hasPokemonChoice && board.getBenchSize() >= (containsDuo ? 7 : 8)
+    board &&
+    hasPokemonChoice &&
+    board.getBenchOccupancy() >=
+      board.getBenchCapacity() - (containsDuo ? 1 : 0)
 
   const [teamPlanner, setTeamPlanner] = useState<IDetailledPokemon[]>(
     localStore.get(LocalStoreKeys.TEAM_PLANNER)
@@ -244,7 +247,8 @@ export default function GameChoice() {
                 previousBlessings.current[index] !== blessing
               const blockedByFullBench =
                 blessingDefinition.grantsPokemonImmediately &&
-                8 - (board?.getBenchSize() ?? 0) <
+                (board?.getBenchCapacity() ?? 0) -
+                  (board?.getBenchOccupancy() ?? 0) <
                   (blessingDefinition.benchSlotsRequired ?? 1)
               return (
               <div

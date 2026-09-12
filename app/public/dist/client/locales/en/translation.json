@@ -5836,6 +5836,10 @@
 			"name": "Rank Up",
 			"description": "Now and at the start of each stage, gain 2 XP."
 		},
+		"PARK_BENCH": {
+			"name": "Park Bench",
+			"description": "Gain a 9th bench slot for the rest of the game."
+		},
 		"STAR_GUARD": {
 			"name": "Star Guard",
 			"description": "At the start of combat, your Pokémon gain 1 DEF and SPE_DEF for each STAR on your board."

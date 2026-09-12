@@ -1,4 +1,8 @@
+import { PARK_BENCH_EXTRA_SLOTS } from "../../types/enum/Blessing"
+
 export const BOARD_WIDTH = 8
+export const BENCH_WIDTH = BOARD_WIDTH
+export const BENCH_MAX_WIDTH = BENCH_WIDTH + PARK_BENCH_EXTRA_SLOTS
 export const BOARD_HEIGHT = 6
 export const BOARD_SIDE_HEIGHT = 4 // 0 = bench
 
@@ -15,7 +19,8 @@ export function unpackBoardCell(cell: number): { x: number; y: number } {
    past the whole board in player.groundHoles so that combat abilities digging
    under an enemy (rows 3-5 in simulation coordinates) can never reach it. */
 export const BENCH_GROUND_HOLES_OFFSET = BOARD_WIDTH * BOARD_HEIGHT
-export const GROUND_HOLES_LENGTH = BENCH_GROUND_HOLES_OFFSET + BOARD_WIDTH
+export const GROUND_HOLES_LENGTH =
+  BENCH_GROUND_HOLES_OFFSET + BENCH_MAX_WIDTH
 export const BOARD_X_START = 672 // 28 * 24
 export const BOARD_Y_START = 808
 

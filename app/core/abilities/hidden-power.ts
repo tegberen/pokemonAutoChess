@@ -19,7 +19,9 @@ import {
 import { Pkm, Unowns } from "../../types/enum/Pokemon"
 import { Synergy } from "../../types/enum/Synergy"
 import { isIn } from "../../utils/array"
-import { getFirstAvailablePositionInBench } from "../../utils/board"
+import { getFirstAvailablePositionInBench,
+  getBenchSize
+} from "../../utils/board"
 import { clamp, min } from "../../utils/number"
 import { pickNRandomIn, pickRandomIn, randomWeighted } from "../../utils/random"
 import type { Board } from "../board"
@@ -96,7 +98,7 @@ export class HiddenPowerDStrategy extends HiddenPowerStrategy {
     super.process(unown, board, target, crit)
     const player = unown.player
     if (player && !unown.isGhostOpponent) {
-      const x = getFirstAvailablePositionInBench(player.board)
+      const x = getFirstAvailablePositionInBench(player.board, getBenchSize(player.blessings))
       if (x !== null) {
         const ditto = PokemonFactory.createPokemonFromName(Pkm.DITTO, player)
         ditto.positionX = x
@@ -406,7 +408,7 @@ export class HiddenPowerWStrategy extends HiddenPowerStrategy {
     super.process(unown, board, target, crit)
     const player = unown.player
     if (player && !unown.isGhostOpponent) {
-      const x = getFirstAvailablePositionInBench(player.board)
+      const x = getFirstAvailablePositionInBench(player.board, getBenchSize(player.blessings))
       if (x !== null) {
         const topSynergy = pickRandomIn(player.synergies.getTopSynergies(2))
         const monsOfThatSynergy =
@@ -502,7 +504,7 @@ export class HiddenPowerQMStrategy extends HiddenPowerStrategy {
       const nbUnownsObtained = 4
       for (let i = 0; i < nbUnownsObtained; i++) {
         const pkm = pickRandomIn(candidates)
-        const x = getFirstAvailablePositionInBench(player.board)
+        const x = getFirstAvailablePositionInBench(player.board, getBenchSize(player.blessings))
         if (x !== null) {
           const pokemon = PokemonFactory.createPokemonFromName(pkm, player)
           pokemon.positionX = x

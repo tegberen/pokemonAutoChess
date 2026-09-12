@@ -66,7 +66,8 @@ import type { NpcDialog } from "../types/strings/NpcDialog"
 import { isIn } from "../utils/array"
 import {
   getFirstAvailablePositionInBench,
-  getFreeSpaceOnBench
+  getFreeSpaceOnBench,
+  getBenchSize
 } from "../utils/board"
 import { clamp, max } from "../utils/number"
 import { getOrientation } from "../utils/orientation"
@@ -991,12 +992,12 @@ export class MiniGame {
   grantCarouselPokemon(player: Player, pkm: Pkm, room: GameRoom): boolean {
     const pokemon = PokemonFactory.createPokemonFromName(pkm, player)
     const hasSpaceOnBench =
-      getFreeSpaceOnBench(player.board) > 0 ||
+      getFreeSpaceOnBench(player.board, getBenchSize(player.blessings)) > 0 ||
       (pokemon.evolutionRule?.type === EvolutionRuleType.COUNT &&
         EvolutionManager.canEvolveIfGettingOne(pokemon, player))
     if (!hasSpaceOnBench) return false
 
-    pokemon.positionX = getFirstAvailablePositionInBench(player.board) ?? -1
+    pokemon.positionX = getFirstAvailablePositionInBench(player.board, getBenchSize(player.blessings)) ?? -1
     pokemon.positionY = 0
     player.board.set(pokemon.id, pokemon)
     pokemon.onAcquired(player)

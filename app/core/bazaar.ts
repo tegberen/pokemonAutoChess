@@ -13,7 +13,9 @@ import {
   SynergyGivenByGem
 } from "../types/enum/Item"
 import { Pkm } from "../types/enum/Pokemon"
-import { getFirstAvailablePositionInBench } from "../utils/board"
+import { getFirstAvailablePositionInBench,
+  getBenchSize
+} from "../utils/board"
 import { pickRandomIn, randomWeighted, shuffleArray } from "../utils/random"
 import { createRandomEgg } from "./eggs"
 
@@ -212,7 +214,7 @@ export function grantBazaarOffer(
               player
             )
           : PokemonFactory.createPokemonFromName(Pkm.MAGIKARP, player)
-      pokemon.positionX = getFirstAvailablePositionInBench(player.board) ?? 0
+      pokemon.positionX = getFirstAvailablePositionInBench(player.board, getBenchSize(player.blessings)) ?? 0
       pokemon.positionY = 0
       player.board.set(pokemon.id, pokemon)
       pokemon.onAcquired(player)

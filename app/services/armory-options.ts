@@ -12,7 +12,9 @@ import { FreeOptions, PaidOptions, ArmoryOptions } from "../types/enum/ArmoryOpt
 import { Rarity } from "../types/enum/Game"
 import { Pkm, Unowns } from "../types/enum/Pokemon"
 import { Synergy } from "../types/enum/Synergy"
-import { getFirstAvailablePositionInBench, getFreeSpaceOnBench } from "../utils/board"
+import { getFirstAvailablePositionInBench, getFreeSpaceOnBench,
+  getBenchSize
+} from "../utils/board"
 import { pickNRandomIn, pickRandomIn, randomWeighted } from "../utils/random"
 
 const giftAmountOfItem = (toPlayer: Player, amount: number, itemName: string): boolean => {
@@ -65,7 +67,7 @@ const giftSetOfItems = (toPlayer: Player, itemName: string): boolean => {
 }
 
 const giftAmountOfPokemon = (toPlayer: Player, amount: number, pokemon: Pkm): boolean => {
-    const spaceInBench = getFreeSpaceOnBench(toPlayer.board)
+    const spaceInBench = getFreeSpaceOnBench(toPlayer.board, getBenchSize(toPlayer.blessings))
     if (spaceInBench < amount) return false
     
     if (!pokemon) return false
@@ -75,7 +77,7 @@ const giftAmountOfPokemon = (toPlayer: Player, amount: number, pokemon: Pkm): bo
         if (pokemon === Pkm.UNOWN_A) pkm = pickRandomIn(Unowns)
 
         const replacement = PokemonFactory.createPokemonFromName(getPokemonData(pkm).name, toPlayer)
-        const freeCellX = getFirstAvailablePositionInBench(toPlayer.board)
+        const freeCellX = getFirstAvailablePositionInBench(toPlayer.board, getBenchSize(toPlayer.blessings))
     
         if (freeCellX === null) return false
         replacement.positionX = freeCellX
@@ -88,7 +90,7 @@ const giftAmountOfPokemon = (toPlayer: Player, amount: number, pokemon: Pkm): bo
 }
 
 const giftHatchPokemon = (toPlayer: Player, amount: number): boolean => {
-    const spaceInBench = getFreeSpaceOnBench(toPlayer.board)
+    const spaceInBench = getFreeSpaceOnBench(toPlayer.board, getBenchSize(toPlayer.blessings))
     if (spaceInBench < amount) return false
 
     var d = Math.random() // 5% chance of getting a golden egg
@@ -99,7 +101,7 @@ const giftHatchPokemon = (toPlayer: Player, amount: number): boolean => {
     
         randomHatches.forEach((pkm) => {
             const replacement = PokemonFactory.createPokemonFromName(getPokemonData(pkm).name, toPlayer)
-            const freeCellX = getFirstAvailablePositionInBench(toPlayer.board)
+            const freeCellX = getFirstAvailablePositionInBench(toPlayer.board, getBenchSize(toPlayer.blessings))
         
             if (freeCellX === null) return false
             replacement.stacksRequired = EvolutionTime.EVOLVE_HATCH
@@ -119,7 +121,7 @@ const giftHatchPokemon = (toPlayer: Player, amount: number): boolean => {
 }
 
 const giftRandomPokemonByRarity = (toPlayer: Player, rarity: Rarity): boolean => {
-    const spaceInBench = getFreeSpaceOnBench(toPlayer.board)
+    const spaceInBench = getFreeSpaceOnBench(toPlayer.board, getBenchSize(toPlayer.blessings))
     if (spaceInBench < 1) return false
     let wantedStars : number
     let shouldBeRegionalOrAdditional = false
@@ -169,7 +171,7 @@ const giftRandomPokemonByRarity = (toPlayer: Player, rarity: Rarity): boolean =>
     if (!pkm) return false
 
     const replacement = PokemonFactory.createPokemonFromName(pkm, toPlayer)
-    const freeCellX = getFirstAvailablePositionInBench(toPlayer.board)
+    const freeCellX = getFirstAvailablePositionInBench(toPlayer.board, getBenchSize(toPlayer.blessings))
 
     if (freeCellX === null) return false
     replacement.positionX = freeCellX

@@ -99,7 +99,8 @@ import { getPokemonCustomFromAvatar } from "../../utils/avatar"
 import {
   getFirstAvailablePositionInBench,
   getFirstAvailablePositionOnBoard,
-  isOnBench
+  isOnBench,
+  getBenchSize
 } from "../../utils/board"
 import { max, min } from "../../utils/number"
 import {
@@ -422,7 +423,7 @@ export default class Player extends Schema implements IPlayer {
     if (state.specialGameRule === SpecialGameRule.DITTO_PARTY) {
       for (let i = 0; i < 5; i++) {
         const ditto = PokemonFactory.createPokemonFromName(Pkm.DITTO, this)
-        ditto.positionX = getFirstAvailablePositionInBench(this.board) ?? 0
+        ditto.positionX = getFirstAvailablePositionInBench(this.board, getBenchSize(this.blessings)) ?? 0
         ditto.positionY = 0
         this.board.set(ditto.id, ditto)
         ditto.onAcquired(this)
@@ -505,7 +506,7 @@ export default class Player extends Schema implements IPlayer {
 
   giftAnewFriendCopy() {
     if (!this.aNewFriendPokemon) return false
-    const x = getFirstAvailablePositionInBench(this.board)
+    const x = getFirstAvailablePositionInBench(this.board, getBenchSize(this.blessings))
     if (x === null) return false
     const pokemon = PokemonFactory.createPokemonFromName(
       this.aNewFriendPokemon,
@@ -543,7 +544,7 @@ export default class Player extends Schema implements IPlayer {
       (pkm) =>
         getPokemonData(pkm).stars === 2 && this.canFindRegionalPokemon(pkm)
     )
-    const benchX = getFirstAvailablePositionInBench(this.board)
+    const benchX = getFirstAvailablePositionInBench(this.board, getBenchSize(this.blessings))
     if (candidates.length > 0 && benchX !== null) {
       // alt forms are their own family: the wrong Floette colour never merges
       const pokemon = PokemonFactory.createPokemonFromName(
@@ -588,7 +589,7 @@ export default class Player extends Schema implements IPlayer {
       this.experienceManager.level < BEING_OF_KNOWLEDGE_LEVEL
     )
       return
-    const x = getFirstAvailablePositionInBench(this.board)
+    const x = getFirstAvailablePositionInBench(this.board, getBenchSize(this.blessings))
     if (x === null) return
     this.beingOfKnowledgeUxieGranted = true
     const uxie = PokemonFactory.createPokemonFromName(Pkm.UXIE, this)

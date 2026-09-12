@@ -135,7 +135,8 @@ import { isIn, removeInArray } from "../utils/array"
 import { getAvatarString } from "../utils/avatar"
 import {
   getFirstAvailablePositionInBench,
-  getFreeSpaceOnBench
+  getFreeSpaceOnBench,
+  getBenchSize
 } from "../utils/board"
 import { isValidDate } from "../utils/date"
 import { formatMinMaxRanks, getRank } from "../utils/elo"
@@ -1613,7 +1614,7 @@ export default class GameRoom extends Room<{ state: GameState }> {
     anim: "fishing" | "nest" | "spawn" = "spawn"
   ) {
     const pokemon = PokemonFactory.createPokemonFromName(pkm, player)
-    const x = getFirstAvailablePositionInBench(player.board)
+    const x = getFirstAvailablePositionInBench(player.board, getBenchSize(player.blessings))
     if (x !== null) {
       pokemon.positionX = x
       pokemon.positionY = 0
@@ -2058,7 +2059,7 @@ export default class GameRoom extends Room<{ state: GameState }> {
         pokemon.evolutionRule.type === EvolutionRuleType.COUNT &&
         EvolutionManager.canEvolveIfGettingOne(pokemon, player)
 
-      const freeSpace = getFreeSpaceOnBench(player.board)
+      const freeSpace = getFreeSpaceOnBench(player.board, getBenchSize(player.blessings))
 
       if (
         freeSpace < pokemonsObtained.length &&
@@ -2149,7 +2150,7 @@ export default class GameRoom extends Room<{ state: GameState }> {
       }
 
       pokemonsObtained.forEach((pokemon) => {
-        const freeCellX = getFirstAvailablePositionInBench(player.board)
+        const freeCellX = getFirstAvailablePositionInBench(player.board, getBenchSize(player.blessings))
         if (isEvolution) {
           pokemon.positionX = freeCellX ?? -1 // temporary position off the board just to handle evolution
           pokemon.positionY = 0

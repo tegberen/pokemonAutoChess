@@ -3,6 +3,7 @@ import firebase from "firebase/compat/app"
 import Phaser, { GameObjects, Scene } from "phaser"
 import {
   BERRY_TREE_POSITIONS,
+  BENCH_MAX_WIDTH,
   BOARD_WIDTH,
   getRegionTint,
   getRerollCostForBlessings,
@@ -35,6 +36,7 @@ import {
   type IDragDropMessage,
   Transfer
 } from "../../../../types"
+import { Blessing } from "../../../../types/enum/Blessing"
 import { DungeonMusic, type DungeonPMDO } from "../../../../types/enum/Dungeon"
 import { GameMode, GamePhaseState } from "../../../../types/enum/Game"
 import { type Item, ItemRecipe, Mulches } from "../../../../types/enum/Item"
@@ -580,12 +582,22 @@ export default class GameScene extends Scene {
     this.input.setDragState(this.input.pointer1, 0)
   }
 
+  isDropSpotUnlocked(spot: Phaser.GameObjects.Image): boolean {
+    if (spot.getData("x") < BOARD_WIDTH) return true
+    return (
+      this.room?.state.blessingsByPlayerId
+        .get(this.uid!)
+        ?.blessings.includes(Blessing.PARK_BENCH) === true
+    )
+  }
+
   setupMouseEvents() {
     this.sellZone = new SellZone(this)
     this.dropSpots = []
 
     for (let y = 0; y < 4; y++) {
-      for (let x = 0; x < 8; x++) {
+      const rowWidth = y === 0 ? BENCH_MAX_WIDTH : BOARD_WIDTH
+      for (let x = 0; x < rowWidth; x++) {
         const coord = transformBoardCoordinates(x, y)
         const zone = this.add.zone(coord[0], coord[1], 96, 96)
         zone.setRectangleDropZone(96, 96)
@@ -700,8 +712,9 @@ export default class GameScene extends Scene {
           this.pokemonDragged.setDepth(DEPTH.DRAGGED_POKEMON)
           this.dropSpots.forEach((spot) => {
             if (
-              this.room?.state.phase === GamePhaseState.PICK ||
-              spot.getData("y") === 0
+              (this.room?.state.phase === GamePhaseState.PICK ||
+                spot.getData("y") === 0) &&
+              this.isDropSpotUnlocked(spot)
             ) {
               spot.setFrame(0).setVisible(true)
             }
@@ -738,7 +751,9 @@ export default class GameScene extends Scene {
           this.dropSpots.forEach((spot) => {
             const inBench = spot.getData("y") === 0
             let visible = false
-            if (inBench) {
+            if (!this.isDropSpotUnlocked(spot)) {
+              visible = false
+            } else if (inBench) {
               visible =
                 pokemon.canBeBenched &&
                 this.pokemonDragged?.supportiveSoul !== true
@@ -827,7 +842,8 @@ export default class GameScene extends Scene {
             this.dispatchEvent<IDragDropItemMessage>(Transfer.DRAG_DROP_ITEM, {
               zone: dropZone.name,
               index:
-                dropZone.getData("x") + dropZone.getData("y") * BOARD_WIDTH,
+                dropZone.getData("x") +
+                dropZone.getData("y") * BENCH_MAX_WIDTH,
               id: gameObject.name
             })
           }

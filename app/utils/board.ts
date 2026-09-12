@@ -2,8 +2,22 @@ import type { MapSchema } from "@colyseus/schema"
 import type { Pokemon } from "../models/colyseus-models/pokemon"
 import type PokemonSprite from "../public/src/game/components/pokemon"
 import type { IPokemon } from "../types"
+import {
+  BENCH_MAX_WIDTH,
+  BENCH_WIDTH,
+  BOARD_WIDTH
+} from "../config/game/board"
+import { Blessing } from "../types/enum/Blessing"
 import { SpecialGameRule } from "../types/enum/SpecialGameRule"
 import { schemaValues } from "./schemas"
+
+export function getBenchSize(
+  blessings: { includes(blessing: Blessing): boolean } | undefined
+): number {
+  return blessings?.includes(Blessing.PARK_BENCH)
+    ? BENCH_MAX_WIDTH
+    : BENCH_WIDTH
+}
 
 export function isOnBench(pokemon: IPokemon | PokemonSprite) {
   return pokemon.positionY === 0
@@ -21,9 +35,10 @@ export function isPositionEmpty(
 }
 
 export function getFirstAvailablePositionInBench(
-  board: MapSchema<Pokemon, string>
+  board: MapSchema<Pokemon, string>,
+  benchSize = BENCH_WIDTH
 ): number | null {
-  for (let i = 0; i < 8; i++) {
+  for (let i = 0; i < benchSize; i++) {
     if (isPositionEmpty(i, 0, board)) {
       return i
     }
@@ -32,9 +47,10 @@ export function getFirstAvailablePositionInBench(
 }
 
 export function getLastAvailablePositionInBench(
-  board: MapSchema<Pokemon, string>
+  board: MapSchema<Pokemon, string>,
+  benchSize = BENCH_WIDTH
 ): number | null {
-  for (let i = 7; i >= 0; i--) {
+  for (let i = benchSize - 1; i >= 0; i--) {
     if (isPositionEmpty(i, 0, board)) {
       return i
     }
@@ -62,7 +78,7 @@ export function getFirstAvailablePositionOnBoard(
       break
   }
   for (let y = 0; y < rowsOrder.length; y++) {
-    for (let x = 0; x < 8; x++) {
+    for (let x = 0; x < BOARD_WIDTH; x++) {
       if (isPositionEmpty(x, rowsOrder[y], board)) {
         return [x, rowsOrder[y]]
       }
@@ -70,9 +86,12 @@ export function getFirstAvailablePositionOnBoard(
   }
 }
 
-export function getFreeSpaceOnBench(board: MapSchema<Pokemon, string>): number {
+export function getFreeSpaceOnBench(
+  board: MapSchema<Pokemon, string>,
+  benchSize = BENCH_WIDTH
+): number {
   let numberOfFreeSpace = 0
-  for (let i = 0; i < 8; i++) {
+  for (let i = 0; i < benchSize; i++) {
     if (isPositionEmpty(i, 0, board)) {
       numberOfFreeSpace++
     }

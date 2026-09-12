@@ -69,7 +69,9 @@ import {
 import { Synergy } from "../../types/enum/Synergy"
 import { Weather } from "../../types/enum/Weather"
 import { isIn, removeInArray } from "../../utils/array"
-import { getFirstAvailablePositionInBench, isOnBench } from "../../utils/board"
+import { getFirstAvailablePositionInBench, isOnBench,
+  getBenchSize
+} from "../../utils/board"
 import { distanceC } from "../../utils/distance"
 import { clamp, min } from "../../utils/number"
 import { schemaValues } from "../../utils/schemas"
@@ -9644,7 +9646,7 @@ export class Ninjask extends Pokemon {
   additional = true
   onAcquired(player: Player) {
     // also gain sheninja if free space on bench
-    const x = getFirstAvailablePositionInBench(player.board)
+    const x = getFirstAvailablePositionInBench(player.board, getBenchSize(player.blessings))
     if (x !== null) {
       const pkmWithCustom = getPkmWithCustom(
         PkmIndex[Pkm.SHEDINJA],

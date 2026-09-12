@@ -65,7 +65,7 @@ import { Synergy } from "../../../../types/enum/Synergy"
 import { TownEncounters } from "../../../../types/enum/TownEncounter"
 import { Weather } from "../../../../types/enum/Weather"
 import type { NonFunctionPropNames } from "../../../../types/HelperTypes"
-import { isOnBench } from "../../../../utils/board"
+import { getBenchSize, isOnBench } from "../../../../utils/board"
 import { logger } from "../../../../utils/logger"
 import { pickRandomIn, randomBetween } from "../../../../utils/random"
 import { schemaValues } from "../../../../utils/schemas"
@@ -359,11 +359,11 @@ export default class BoardManager {
   refreshReveilleSlots() {
     this.reveilleSlotMarks.forEach((mark) => mark.destroy())
     this.reveilleSlotMarks = []
-    const hasReveille = this.state.blessingsByPlayerId
-      .get(this.player.id)
-      ?.blessings.includes(Blessing.REVEILLE)
-    if (!hasReveille) return
-    for (let x = BOARD_WIDTH - REVEILLE_BENCH_SLOTS; x < BOARD_WIDTH; x++) {
+    const blessings = this.state.blessingsByPlayerId.get(this.player.id)
+      ?.blessings
+    if (!blessings?.includes(Blessing.REVEILLE)) return
+    const benchSize = getBenchSize(blessings)
+    for (let x = benchSize - REVEILLE_BENCH_SLOTS; x < benchSize; x++) {
       const [markX, markY] = transformBoardCoordinates(x, 0)
       this.reveilleSlotMarks.push(
         this.scene.add
@@ -1056,7 +1056,7 @@ export default class BoardManager {
         }
       }
     }
-    for (let col = 0; col < BOARD_WIDTH; col++) {
+    for (let col = 0; col < this.getBenchCapacity(); col++) {
       const hole = this.player.groundHoles[BENCH_GROUND_HOLES_OFFSET + col]
       if (hole > 0) {
         const [x, y] = transformBoardCoordinates(col, 0)
@@ -1952,7 +1952,7 @@ export default class BoardManager {
     })
   }
 
-  getBenchSize(): number {
+  getBenchOccupancy(): number {
     let benchSize = 0
 
     this.pokemons.forEach((pokemon) => {
@@ -1962,6 +1962,12 @@ export default class BoardManager {
     })
 
     return benchSize
+  }
+
+  getBenchCapacity(): number {
+    return getBenchSize(
+      this.state.blessingsByPlayerId.get(this.player.id)?.blessings
+    )
   }
 
   showEmote(playerOrPokemonId: string, emote?: string) {

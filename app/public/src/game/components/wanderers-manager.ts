@@ -12,7 +12,7 @@ import { type Item, Transfer } from "../../../../types"
 import { Orientation, PokemonActionState } from "../../../../types/enum/Game"
 import { Pkm } from "../../../../types/enum/Pokemon"
 import { WandererBehavior, WandererType } from "../../../../types/enum/Wanderer"
-import { getFreeSpaceOnBench } from "../../../../utils/board"
+import { getBenchSize, getFreeSpaceOnBench } from "../../../../utils/board"
 import { clamp } from "../../../../utils/number"
 import { chance } from "../../../../utils/random"
 import { DEPTH } from "../depths"
@@ -82,7 +82,14 @@ export default class WanderersManager {
       onClick: (wanderer, sprite, pointer) => {
         let caught = false
         if (this.scene.board) {
-          if (getFreeSpaceOnBench(this.scene.board.player.board) > 0) {
+          if (getFreeSpaceOnBench(
+              this.scene.board.player.board,
+              getBenchSize(
+                this.scene.room?.state.blessingsByPlayerId.get(
+                  this.scene.board.player.id
+                )?.blessings
+              )
+            ) > 0) {
             caught = true
             this.scene.room?.send(Transfer.WANDERER_CLICKED, {
               id: wanderer.id

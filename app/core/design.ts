@@ -57,7 +57,9 @@ export default class Design {
   frequency: number
   persistance: number
   tileset: Tileset
-  arenaRect: [x1: number, y1: number, x2: number, y2: number] = [13, 2, 29, 18]
+  /* x2 reaches one tile past the board so the bench has ground under a ninth
+     slot on its right, which the PARK_BENCH blessing unlocks */
+  arenaRect: [x1: number, y1: number, x2: number, y2: number] = [13, 2, 30, 18]
   /* starts at 13 rather than 14 so the row is centred on the board: tiles
      13..28 span world 624..1392, whose middle is 1008, the same middle the
      board and the avatars use. Starting at 14 put the centre half a tile right,

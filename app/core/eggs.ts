@@ -9,7 +9,9 @@ import {
 } from "../types/enum/Blessing"
 import { PokemonActionState } from "../types/enum/Game"
 import { Pkm } from "../types/enum/Pokemon"
-import { getFirstAvailablePositionInBench } from "../utils/board"
+import { getFirstAvailablePositionInBench,
+  getBenchSize
+} from "../utils/board"
 import { pickRandomIn } from "../utils/random"
 import { getHatchTime } from "./evolution-logic/hatch-time"
 
@@ -39,7 +41,7 @@ export function createRandomEgg(player: Player, shiny: boolean): Egg {
 export function giveRandomEgg(player: Player, shiny = false): Egg | undefined {
   const egg = createRandomEgg(player, shiny)
 
-  const x = getFirstAvailablePositionInBench(player.board)
+  const x = getFirstAvailablePositionInBench(player.board, getBenchSize(player.blessings))
   if (x !== null) {
     egg.positionX = x
     egg.positionY = 0

@@ -254,7 +254,8 @@ import { getAvatarString } from "../utils/avatar"
 import {
   getFirstAvailablePositionInBench,
   getLastAvailablePositionInBench,
-  isOnBench
+  isOnBench,
+  getBenchSize
 } from "../utils/board"
 import { DEFAULT_CRIT_POWER } from "../config/game/battle"
 import { logger } from "../utils/logger"
@@ -854,7 +855,8 @@ export default class Simulation extends Schema implements ISimulation {
     return schemaValues(player.board).filter(
       (pokemon) =>
         isOnBench(pokemon) &&
-        pokemon.positionX >= BOARD_WIDTH - REVEILLE_BENCH_SLOTS &&
+        pokemon.positionX >=
+          getBenchSize(player.blessings) - REVEILLE_BENCH_SLOTS &&
         !pokemon.supportiveSoul &&
         !isGrudgeSubstitute(pokemon)
     )
@@ -3996,7 +3998,7 @@ export default class Simulation extends Schema implements ISimulation {
             (pokemon) => pokemon.name === Pkm.SPEWPA
           )
           if (isSpewpaWaiting) return
-          const freeCellX = getFirstAvailablePositionInBench(owner.board)
+          const freeCellX = getFirstAvailablePositionInBench(owner.board, getBenchSize(owner.blessings))
           if (freeCellX === null) return
           const spewpa = PokemonFactory.createPokemonFromName(
             Pkm.SPEWPA,
@@ -5311,7 +5313,7 @@ export default class Simulation extends Schema implements ISimulation {
 
   plantGrudgeSubstitute(loser: Player) {
     // parked on the far right, out of the way of the bench they actually use
-    const freeCellX = getLastAvailablePositionInBench(loser.board)
+    const freeCellX = getLastAvailablePositionInBench(loser.board, getBenchSize(loser.blessings))
     if (freeCellX === null) return
     const substitute = PokemonFactory.createPokemonFromName(
       Pkm.SUBSTITUTE,

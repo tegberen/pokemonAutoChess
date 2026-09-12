@@ -79,7 +79,9 @@ import { Pillars, Pkm, PkmFamily } from "../../types/enum/Pokemon"
 import { SpecialGameRule } from "../../types/enum/SpecialGameRule"
 import { Synergy } from "../../types/enum/Synergy"
 import { isIn } from "../../utils/array"
-import { getFreeSpaceOnBench, isOnBench } from "../../utils/board"
+import { getFreeSpaceOnBench, isOnBench,
+  getBenchSize
+} from "../../utils/board"
 import { distanceC } from "../../utils/distance"
 import { max, min } from "../../utils/number"
 import { chance, pickNRandomIn, pickRandomIn } from "../../utils/random"
@@ -776,7 +778,7 @@ export const normalShieldEffect = new OnSimulationStartEffect(
 
 export const bugSwarmSpawnEffect = new OnStageStartEffect(
   ({ player, room }) => {
-    if (getFreeSpaceOnBench(player.board) > 0 && !player.isBot) {
+    if (getFreeSpaceOnBench(player.board, getBenchSize(player.blessings)) > 0 && !player.isBot) {
       const bugsNotFinal = [...player.board.values()]
         .filter((p) => p.types.has(Synergy.BUG) && !p.final)
         .sort((a, b) => RarityCost[a.rarity] - RarityCost[b.rarity])

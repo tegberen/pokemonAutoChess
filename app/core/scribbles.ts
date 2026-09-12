@@ -17,7 +17,9 @@ import { Emotion } from "../types/enum/Emotion"
 import { Rarity } from "../types/enum/Game"
 import { Pkm, PkmFamily, PkmIndex, PkmRegionalVariants, Unowns } from "../types/enum/Pokemon"
 import { getPokemonCustomFromAvatar } from "../utils/avatar"
-import { getFirstAvailablePositionInBench } from "../utils/board"
+import { getFirstAvailablePositionInBench,
+  getBenchSize
+} from "../utils/board"
 import { min } from "../utils/number"
 import { chance, pickRandomIn, randomWeighted, simpleHashSeededCoinFlip } from "../utils/random"
 import { getUnitPowerScore } from "./bot-logic"
@@ -84,7 +86,7 @@ export function spawnDIAYAvatar(player: Player): Pokemon {
     })
   }
 
-  avatar.positionX = getFirstAvailablePositionInBench(player.board) ?? 0
+  avatar.positionX = getFirstAvailablePositionInBench(player.board, getBenchSize(player.blessings)) ?? 0
   avatar.positionY = 0
 
   applyScribbleStarterStats(avatar, player, powerScore)

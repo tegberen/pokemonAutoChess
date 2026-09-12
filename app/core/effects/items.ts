@@ -96,7 +96,9 @@ import {
 } from "../../types/enum/Blessing"
 import { isIn, removeInArray } from "../../utils/array"
 import { grantRegionalTreasuresOnRegionChange } from "../../services/blessings"
-import { getFreeSpaceOnBench, isOnBench } from "../../utils/board"
+import { getFreeSpaceOnBench, isOnBench,
+  getBenchSize
+} from "../../utils/board"
 import { canEatMoreDishes } from "../../utils/dishes"
 import { distanceC, distanceM } from "../../utils/distance"
 import { clamp, max, min } from "../../utils/number"
@@ -824,7 +826,7 @@ export class FishingRodEffect extends OnStageStartEffect {
       const isAfterPVE = room.state.stageLevel - 1 in PVEStages
       if (
         rod &&
-        getFreeSpaceOnBench(player.board) > 0 &&
+        getFreeSpaceOnBench(player.board, getBenchSize(player.blessings)) > 0 &&
         !isAfterPVE &&
         room.state.stageLevel > 3 &&
         !player.isBot

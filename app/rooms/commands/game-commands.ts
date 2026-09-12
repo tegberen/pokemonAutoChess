@@ -11,6 +11,7 @@ import {
   ArmoryAssistStages,
   BOARD_SIDE_HEIGHT,
   BOARD_WIDTH,
+  BENCH_MAX_WIDTH,
   FIGHTING_PHASE_DURATION,
   GOLDEN_BERRY_TREE_TYPES,
   getAltFormForPlayer,
@@ -245,7 +246,8 @@ import {
   getFreeSpaceOnBench,
   getMaxTeamSize,
   isOnBench,
-  isPositionEmpty
+  isPositionEmpty,
+  getBenchSize
 } from "../../utils/board"
 import { repeat } from "../../utils/function"
 import { logger } from "../../utils/logger"
@@ -327,7 +329,7 @@ export class OnBuyPokemonCommand extends Command<
       const needsBench = bazaarOfferNeedsBench(offer.category)
       const canBuy =
         player.money >= offer.price &&
-        (!needsBench || getFreeSpaceOnBench(player.board) > 0)
+        (!needsBench || getFreeSpaceOnBench(player.board, getBenchSize(player.blessings)) > 0)
       if (!canBuy) return
       player.money -= offer.price
       grantBazaarOffer(offer, player, this.state)
@@ -398,7 +400,7 @@ export class OnBuyPokemonCommand extends Command<
     const cost = isAllFoursFreeBuy
       ? 0
       : getBuyPrice(name, this.state.specialGameRule, player)
-    const freeSpaceOnBench = getFreeSpaceOnBench(player.board)
+    const freeSpaceOnBench = getFreeSpaceOnBench(player.board, getBenchSize(player.blessings))
     const hasSpaceOnBench = freeSpaceOnBench > 0 || isEvolution
 
     const canBuy = player.money >= cost && hasSpaceOnBench
@@ -436,7 +438,7 @@ export class OnBuyPokemonCommand extends Command<
       }
     }
 
-    const x = getFirstAvailablePositionInBench(player.board)
+    const x = getFirstAvailablePositionInBench(player.board, getBenchSize(player.blessings))
     pokemon.positionX = x !== null ? x : -1
     pokemon.positionY = 0
     player.board.set(pokemon.id, pokemon)
@@ -545,7 +547,7 @@ export class OnPokemonCatchCommand extends Command<
       }
     } else if (wanderer.type === WandererType.CATCHABLE) {
       const pokemon = PokemonFactory.createPokemonFromName(wanderer.pkm, player)
-      const freeSpaceOnBench = getFreeSpaceOnBench(player.board)
+      const freeSpaceOnBench = getFreeSpaceOnBench(player.board, getBenchSize(player.blessings))
       const hasSpaceOnBench =
         freeSpaceOnBench > 0 ||
         (pokemon.evolutionRule &&
@@ -553,7 +555,7 @@ export class OnPokemonCatchCommand extends Command<
           EvolutionManager.canEvolveIfGettingOne(pokemon, player))
 
       if (hasSpaceOnBench) {
-        const x = getFirstAvailablePositionInBench(player.board)
+        const x = getFirstAvailablePositionInBench(player.board, getBenchSize(player.blessings))
         pokemon.positionX = x !== null ? x : -1
         pokemon.positionY = 0
         player.board.set(pokemon.id, pokemon)
@@ -606,10 +608,10 @@ function sendPokemonToPartner(
 
   // Place Pokemon on partner's bench
   room.clock.setTimeout(() => {
-    const freeX = getFirstAvailablePositionInBench(partner.board)
+    const freeX = getFirstAvailablePositionInBench(partner.board, getBenchSize(partner.blessings))
     if (freeX === null) {
       // Partner bench full — return to sender and refund bottle
-      const senderX = getFirstAvailablePositionInBench(sender.board)
+      const senderX = getFirstAvailablePositionInBench(sender.board, getBenchSize(sender.blessings))
       if (senderX !== null) {
         pokemon.positionX = senderX
         pokemon.positionY = 0
@@ -729,7 +731,7 @@ export class OnDragDropPokemonCommand extends Command<
         pokemon &&
         x != null &&
         x >= 0 &&
-        x < BOARD_WIDTH &&
+        x < (y === 0 ? getBenchSize(player.blessings) : BOARD_WIDTH) &&
         y != null &&
         y >= 0 &&
         y < BOARD_SIDE_HEIGHT
@@ -782,7 +784,7 @@ export class OnDragDropPokemonCommand extends Command<
               player.items.push(item)
             })
             player.board.delete(detail.id)
-            const position = getFirstAvailablePositionInBench(player.board)
+            const position = getFirstAvailablePositionInBench(player.board, getBenchSize(player.blessings))
             if (position !== null) {
               replaceDitto.positionX = position
               replaceDitto.positionY = 0
@@ -1010,7 +1012,7 @@ export class OnSwitchBenchAndBoardCommand extends Command<
       }
     } else {
       // pokemon is on board, switch to bench
-      const x = getFirstAvailablePositionInBench(player.board)
+      const x = getFirstAvailablePositionInBench(player.board, getBenchSize(player.blessings))
       if (x !== null && pokemon.canBeBenched) {
         const oldX = pokemon.positionX
         const oldY = pokemon.positionY
@@ -1291,8 +1293,8 @@ export class OnDragDropItemCommand extends Command<
         return
       }
     } else {
-      const x = index % BOARD_WIDTH
-      const y = Math.floor(index / BOARD_WIDTH)
+      const x = index % BENCH_MAX_WIDTH
+      const y = Math.floor(index / BENCH_MAX_WIDTH)
       pokemon = player.getPokemonAt(x, y)
     }
 
@@ -2927,7 +2929,7 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
         const client = this.room.clients.find((c) => c.auth.uid === player.id)
 
         if (pokemon.name === Pkm.CORVIKNIGHT) {
-          const position = getFirstAvailablePositionInBench(player.board)
+          const position = getFirstAvailablePositionInBench(player.board, getBenchSize(player.blessings))
           if (position !== null) {
             const mareep = PokemonFactory.createPokemonFromName(
               Pkm.MAREEP,
@@ -3324,7 +3326,7 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
           /* same rule the client greys the card out with: a blessing that has
              to land a pokemon on a full bench is refused, which would leave
              the choice pending and bank it into the next stage */
-          const benchIsFull = getFreeSpaceOnBench(player.board) === 0
+          const benchIsFull = getFreeSpaceOnBench(player.board, getBenchSize(player.blessings)) === 0
           const isPickable = (optionIndex: number) =>
             choice.type !== "blessing" ||
             !benchIsFull ||
@@ -3675,7 +3677,7 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
         break
       case 6: {
         const ditto = PokemonFactory.createPokemonFromName(Pkm.DITTO, player)
-        ditto.positionX = getFirstAvailablePositionInBench(player.board) ?? 0
+        ditto.positionX = getFirstAvailablePositionInBench(player.board, getBenchSize(player.blessings)) ?? 0
         ditto.positionY = 0
         player.board.set(ditto.id, ditto)
         break
@@ -3698,7 +3700,7 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
           matchingUniques.length > 0 ? matchingUniques : singleUniques
         )
         const pokemon = PokemonFactory.createPokemonFromName(unique, player)
-        pokemon.positionX = getFirstAvailablePositionInBench(player.board) ?? 0
+        pokemon.positionX = getFirstAvailablePositionInBench(player.board, getBenchSize(player.blessings)) ?? 0
         pokemon.positionY = 0
         player.board.set(pokemon.id, pokemon)
         player.pokemonsPlayed.add(unique)
@@ -4138,7 +4140,7 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
     }
 
     for (let i = 0; i < nbEggsFound; i++) {
-      if (getFreeSpaceOnBench(player.board) === 0) continue
+      if (getFreeSpaceOnBench(player.board, getBenchSize(player.blessings)) === 0) continue
       const isGoldenEgg =
         goldenEggFound && i === 0 && nbOfGoldenEggsOnBench === 0
       giveRandomEgg(player, isGoldenEgg)
