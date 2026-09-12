@@ -12881,7 +12881,7 @@ export class Rowlet extends Pokemon {
   stars = 1
   evolution = Pkm.DARTIX
   hp = 45
-  atk = 4
+  atk = 5
   speed = 47
   def = 2
   speDef = 2
@@ -12906,8 +12906,8 @@ export class Dartix extends Pokemon {
       }
     }
   } as const
-  hp = 90
-  atk = 7
+  hp = 75
+  atk = 10
   speed = 47
   def = 2
   speDef = 3
@@ -12920,11 +12920,11 @@ export class Decidueye extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.GRASS, Synergy.FLYING, Synergy.GHOST])
   rarity = Rarity.COMMON
   stars = 3
-  hp = 170
-  atk = 17
+  hp = 150
+  atk = 20
   speed = 47
   def = 3
-  speDef = 4
+  speDef = 3
   maxPP = 100
   range = 3
   skill = Ability.SPIRIT_SHACKLE
@@ -16092,7 +16092,7 @@ export class Taillow extends Pokemon {
   stars = 1
   evolution = Pkm.SWELLOW
   hp = 70
-  atk = 7
+  atk = 6
   speed = 80
   def = 4
   speDef = 3
@@ -16107,7 +16107,7 @@ export class Swellow extends Pokemon {
   rarity = Rarity.UNCOMMON
   stars = 2
   hp = 130
-  atk = 15
+  atk = 13
   speed = 80
   def = 8
   speDef = 7

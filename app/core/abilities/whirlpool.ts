@@ -9,7 +9,7 @@ export function applyWhirlpoolDamage(
   enemy: PokemonEntity,
   crit: boolean
 ) {
-  const multiplier = [1, 1.15, 1.25, 2.5][pokemon.stars - 1] ?? 2.5
+  const multiplier = [1.25, 1.25, 1.25, 2.5][pokemon.stars - 1] ?? 2.5
   for (let i = 0; i < 4; i++) {
     enemy.handleSpecialDamage(
       pokemon.atk * multiplier,

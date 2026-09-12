@@ -2337,9 +2337,9 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
 }
 
 export const BLESSING_TIER_CHANCES_FIRST: { [tier in BlessingTier]: number } = {
-  [BlessingTier.SILVER]: 0.35,
+  [BlessingTier.SILVER]: 0.4,
   [BlessingTier.GOLD]: 0.5,
-  [BlessingTier.PRISMATIC]: 0.15
+  [BlessingTier.PRISMATIC]: 0.1
 }
 
 // a Prismatic after a Silver makes the Silver pick it followed irrelevant, and
