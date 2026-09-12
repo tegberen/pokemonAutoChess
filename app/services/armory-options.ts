@@ -143,35 +143,32 @@ const giftRandomPokemonByRarity = (toPlayer: Player, rarity: Rarity): boolean =>
     }
 
     const nbOfSynergies = (rarity === Rarity.ULTRA || rarity === Rarity.LEGENDARY) ? 2 : 1
-    var wantedSynergy = toPlayer.synergies.getTopSynergies(nbOfSynergies)
+    let wantedSynergy = toPlayer.synergies.getTopSynergies(nbOfSynergies)
     if (wantedSynergy.includes(Synergy.BABY)) {
         wantedSynergy = toPlayer.synergies.getTopSynergies(nbOfSynergies + 1)
         wantedSynergy.splice(wantedSynergy.indexOf(Synergy.BABY), 1)
     }
 
-    const pkmByRarity = PRECOMPUTED_POKEMONS_PER_RARITY[rarity]
-    const pkmByRarityWithWantedSyns = pkmByRarity.filter((p) => {
+    const matchesBundle = (p: Pkm, regionalOrAdditional: boolean): boolean => {
         const pkmData = getPokemonData(p)
         if (PkmsWithAltForms.includes(p) && getBaseAltForm(p) !== p) return false
         if (pkmData.stars !== wantedStars) return false
-        if (pkmData.unlockable) return false // fossil unlocks are earned, never gifted
-        if (shouldBeRegionalOrAdditional && !(pkmData.additional || pkmData.regional)) return false
-        if (!shouldBeRegionalOrAdditional && (pkmData.additional || pkmData.regional)) return false
-        if (shouldBeRegionalOrAdditional && pkmData.regional && !toPlayer.regionalPokemons.includes(p)) return false
-        const types = pkmData.types
-        let res = false
-        wantedSynergy.forEach((syn) => {
-            if (types.includes(syn)) res = true
-        })
-        return res
-    })
-    
-    if (pkmByRarityWithWantedSyns.length === 0) pkmByRarityWithWantedSyns.push(Pkm.UNOWN_A) //Fallback if no Pokémon satisfy the filter
-    const pkm = pickRandomIn(pkmByRarityWithWantedSyns)
-    
+        if (pkmData.unlockable) return false
+        if ((pkmData.additional || pkmData.regional) !== regionalOrAdditional) return false
+        if (pkmData.regional && !toPlayer.regionalPokemons.includes(p)) return false
+        return pkmData.types.some((syn) => wantedSynergy.includes(syn))
+    }
+
+    const pkmByRarity = PRECOMPUTED_POKEMONS_PER_RARITY[rarity]
+    let candidates = pkmByRarity.filter((p) => matchesBundle(p, shouldBeRegionalOrAdditional))
+    if (candidates.length === 0 && shouldBeRegionalOrAdditional) {
+        candidates = pkmByRarity.filter((p) => matchesBundle(p, false))
+    }
+
+    const pkm = pickRandomIn(candidates)
     if (!pkm) return false
-    
-    const replacement = PokemonFactory.createPokemonFromName(getPokemonData(pkm).name, toPlayer)
+
+    const replacement = PokemonFactory.createPokemonFromName(pkm, toPlayer)
     const freeCellX = getFirstAvailablePositionInBench(toPlayer.board)
 
     if (freeCellX === null) return false
