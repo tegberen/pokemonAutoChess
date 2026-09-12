@@ -100,12 +100,16 @@ export function grantWishItemToFlowerPot(player: Player, blessing: Blessing) {
   const pot = player.flowerPots.find((p) =>
     FlowerMonByPot[potColor].includes(p.name)
   )
-  if (!pot || pot.items.has(item)) return
+  if (!pot) return
+  let itemsToReturn: Item[] = []
   if (pot.items.size >= getItemCapacity(player.specialGameRule)) {
-    schemaValues(pot.items).forEach((heldItem) => {
-      pot.items.delete(heldItem)
-      player.items.push(heldItem)
-    })
+    itemsToReturn = schemaValues(pot.items)
+  } else if (pot.items.has(item)) {
+    itemsToReturn = [item]
+  }
+  if (itemsToReturn.length > 0) {
+    pot.removeItems(itemsToReturn, player)
+    itemsToReturn.forEach((heldItem) => player.items.push(heldItem))
   }
   pot.items.add(item)
 }
