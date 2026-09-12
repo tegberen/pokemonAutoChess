@@ -5838,7 +5838,7 @@
 		},
 		"PARK_BENCH": {
 			"name": "Park Bench",
-			"description": "Gain a 9th bench slot for the rest of the game."
+			"description": "Gain a 9th bench slot for the rest of the game. At the start of each round, gain 2 XP if your bench is full."
 		},
 		"STAR_GUARD": {
 			"name": "Star Guard",
@@ -6242,7 +6242,7 @@
 		},
 		"BEAUTY_CONTEST": {
 			"name": "Beauty Contest",
-			"description": "When WATER is active, you are guaranteed to fish a Feebas after every PvE round, regardless of which rod you have. Multiple Milotic can each contribute their synergies to your total."
+			"description": "When WATER is active, you are guaranteed to fish a Feebas, regardless of which rod you have. Each Feebas and Milotic on the board contributes its synergies to your total."
 		},
 		"QUICK_CLAW": {
 			"name": "Quick Claw",

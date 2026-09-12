@@ -888,6 +888,7 @@ export const SHADY_PRICE_REROLL_COST = 4
 
 export const RANK_UP_EXPERIENCE = 2
 export const PARK_BENCH_EXTRA_SLOTS = 1
+export const PARK_BENCH_FULL_BENCH_EXPERIENCE = 2
 export const MAGIC_SHIELD_ALLY_AP = 30
 export const BRUTE_SHIELD_ATTACK_RATIO = 3
 export const BRUTE_SHIELD_ALLY_ATTACK = 4

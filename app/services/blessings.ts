@@ -102,6 +102,7 @@ import {
   RAINBOW_HOUR_EEVEELUTIONS_TARGET,
   RAINBOW_HOUR_FOSSIL_STONES,
   RAINBOW_HOUR_GOLD_REWARD,
+  PARK_BENCH_FULL_BENCH_EXPERIENCE,
   RANK_UP_EXPERIENCE,
   ROCKY_BEGINNINGS_POKEMONS,
   ROLL_SCALING_FREE_ROLLS,
@@ -1799,6 +1800,12 @@ export function applyBlessingTrigger(
   })
 }
 
+function rewardFullBench(player: Player) {
+  if (getFreeSpaceOnBench(player.board, getBenchSize(player.blessings)) === 0) {
+    player.addExperience(PARK_BENCH_FULL_BENCH_EXPERIENCE)
+  }
+}
+
 export const blessingTriggerEffectService: {
   [blessing in Blessing]?: {
     [trigger in BlessingTrigger]?: (player: Player, state: GameState) => void
@@ -1809,6 +1816,11 @@ export const blessingTriggerEffectService: {
       player.items.push(pickRandomIn(Berries)),
     [BlessingTrigger.PVP_END]: (player) =>
       player.items.push(pickRandomIn(Berries))
+  },
+
+  [Blessing.PARK_BENCH]: {
+    [BlessingTrigger.PVE_END]: rewardFullBench,
+    [BlessingTrigger.PVP_END]: rewardFullBench
   },
 
   // a round is PVE or PVP, never both, so the two together fire once per round
