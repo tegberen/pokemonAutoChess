@@ -41,7 +41,7 @@ import {
   POKEMONOMICON_DAMAGE_BONUS,
   SCOPE_LENS_MARK_DURATION,
   SHINY_CHARM_MARK_DURATION,
-  FLUFFY_TAIL_LEGENDARY_STAGE,
+  FLUFFY_TAIL_RARITY_STAGE,
   SYMBIOTIC_SYMPHONY_SOUND_PP_PER_HEAL
 } from "../types/enum/Blessing"
 import { EffectEnum } from "../types/enum/Effect"
@@ -98,13 +98,12 @@ function tickBlessingMark(
 
 function summonFluffyTailDecoy(pokemon: PokemonEntity, board: Board) {
   if (pokemon.fluffyTailSummon && pokemon.fluffyTailSummon.hp > 0) return
-  const legendariesAllowed =
-    pokemon.simulation.stageLevel >= FLUFFY_TAIL_LEGENDARY_STAGE
+  const stageLevel = pokemon.simulation.stageLevel
   const candidates = PRECOMPUTED_POKEMONS_PER_TYPE[Synergy.WILD].filter(
     (pkm) => {
       const data = getPokemonData(pkm)
       if (data.stars !== pokemon.stars) return false
-      return legendariesAllowed || data.rarity !== Rarity.LEGENDARY
+      return stageLevel >= (FLUFFY_TAIL_RARITY_STAGE[data.rarity] ?? 0)
     }
   )
   if (candidates.length === 0) return

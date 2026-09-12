@@ -1206,7 +1206,12 @@ export const SHINY_CHARM_MARK_DURATION = 4000
 export const XRAY_VISION_HITS_TO_EXPOSE = 2
 export const XRAY_VISION_EXPOSE_DURATION = 4000
 // the wild summons stay ordinary until the late game
-export const FLUFFY_TAIL_LEGENDARY_STAGE = 20
+// the stage each rarity of decoy becomes reachable, so a 3 STAR summon stays in
+// line with what a wild stage of that level fields
+export const FLUFFY_TAIL_RARITY_STAGE: { [rarity in Rarity]?: number } = {
+  [Rarity.ULTRA]: 20,
+  [Rarity.LEGENDARY]: 20
+}
 export const EXP_CHARM_BLESSED_EXPERIENCE = 2
 export const FAIRY_FEATHER_LUCK_ON_ATTACK = 5
 export const FAIRY_FEATHER_DEFENSE_ON_ATTACK = 2
