@@ -36,10 +36,10 @@ export default function KeybindInfo() {
       if (gameScene) gameScene.registerKeys() // update key listeners
     }
 
-    window.addEventListener("keydown", onKeydown)
+    window.addEventListener("keydown", onKeydown, true)
     //clean up event listener when destroyed
     return () => {
-      window.removeEventListener("keydown", onKeydown)
+      window.removeEventListener("keydown", onKeydown, true)
     }
   }, [currentlyRemapping])
 
