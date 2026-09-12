@@ -1263,6 +1263,8 @@ const MewtwoOnKillEffect = new OnKillEffect(
   Passive.MEWTWO
 )
 
+const MEGA_FERALIGATR_MAX_PERMANENT_GAIN = 100
+
 class MegaFeraligatrOnKillEffect extends OnKillEffect {
   triggered = false
 
@@ -1277,8 +1279,15 @@ class MegaFeraligatrOnKillEffect extends OnKillEffect {
         (acc, p) => acc + (!isOnBench(p) ? p.stars : 0),
         0
       )
-      attacker.addSpeed(totalStars, attacker, 0, false, true)
-      attacker.addAbilityPower(totalStars, attacker, 0, false, true)
+      const boardPokemon = attacker.refToBoardPokemon
+      const gain = Math.min(
+        totalStars,
+        MEGA_FERALIGATR_MAX_PERMANENT_GAIN - boardPokemon.stacks
+      )
+      if (gain <= 0) return
+      boardPokemon.stacks += gain
+      attacker.addSpeed(gain, attacker, 0, false, true)
+      attacker.addAbilityPower(gain, attacker, 0, false, true)
     }, Passive.MEGA_FERALIGATR)
   }
 }
