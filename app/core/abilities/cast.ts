@@ -19,6 +19,16 @@ import { OnAbilityCastEffect } from "../effects/effect"
 import type { PokemonEntity } from "../pokemon-entity"
 import type { AbilityStrategy } from "./ability-strategy"
 
+export function applyAbilityEffect(
+  abilityStrategy: AbilityStrategy,
+  pokemon: PokemonEntity,
+  board: Board,
+  target: PokemonEntity | null
+) {
+  if (pokemon.canCast === false) return
+  abilityStrategy.process(pokemon, board, target, false)
+}
+
 export function castAbility(
   abilityStrategy: AbilityStrategy,
   pokemon: PokemonEntity,

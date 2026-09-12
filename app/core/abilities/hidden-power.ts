@@ -27,7 +27,7 @@ import { giveRandomEgg } from "../eggs"
 import { getHatchTime } from "../evolution-logic/hatch-time"
 import type { PokemonEntity } from "../pokemon-entity"
 import { AbilityStrategy } from "./ability-strategy"
-import { castAbility } from "./cast"
+import { applyAbilityEffect } from "./cast"
 import { explosionStrategy } from "./explosion"
 import { meditateStrategy } from "./meditate"
 import { thunderShockStrategy } from "./thunder-shock"
@@ -240,7 +240,7 @@ export class HiddenPowerNStrategy extends HiddenPowerStrategy {
           const target = board.getEntityOnCell(pokemon.targetX, pokemon.targetY)
           if (target) {
             pokemon.addShield(50, unown, 1, false)
-            castAbility(explosionStrategy, pokemon, board, target, false)
+            applyAbilityEffect(explosionStrategy, pokemon, board, target)
           }
         }
       }
@@ -395,7 +395,7 @@ export class HiddenPowerVStrategy extends HiddenPowerStrategy {
     super.process(unown, board, target, crit)
     board.forEach((x: number, y: number, enemy: PokemonEntity | undefined) => {
       if (enemy && unown.team !== enemy.team) {
-        castAbility(thunderShockStrategy, unown, board, enemy, false)
+        applyAbilityEffect(thunderShockStrategy, unown, board, enemy)
       }
     })
   }
@@ -473,7 +473,7 @@ export class HiddenPowerYStrategy extends HiddenPowerStrategy {
     super.process(unown, board, target, crit)
     board.forEach((x: number, y: number, ally: PokemonEntity | undefined) => {
       if (ally && unown.team === ally.team) {
-        castAbility(meditateStrategy, ally, board, ally, false)
+        applyAbilityEffect(meditateStrategy, ally, board, ally)
       }
     })
   }
