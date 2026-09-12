@@ -145,7 +145,7 @@
 }
 
 .wiki-fossil-restorations ul {
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
 }
 
 .wiki-fossil-restorations li {
@@ -172,6 +172,12 @@
   font-size: 0.9em;
 }
 
+/* block rather than the flex the unlock cards use: a bare text node in a flex
+   container cannot shrink past its longest word, so the name was clipped by the
+   card instead of wrapping */
 .wiki-fossil-restorations h4 {
+  display: block;
+  min-width: 0;
   margin: 0;
+  overflow-wrap: anywhere;
 }
