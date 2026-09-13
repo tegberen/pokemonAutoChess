@@ -476,6 +476,48 @@
   border-radius: 12px;
   background: var(--color-bg-secondary);
 }
+.server-guide .guide-patchlog-nav {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.35em;
+}
+.server-guide .guide-patchlog-month {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25em;
+}
+.server-guide .guide-patchlog-month-label {
+  min-width: 9em;
+  margin-right: 0.5em;
+  color: var(--color-fg-secondary);
+  font-size: 0.8em;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.server-guide .guide-patchlog-day {
+  min-width: 2.2em;
+  padding: 0.2em 0.4em;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--color-fg-primary);
+  font: inherit;
+  font-variant-numeric: tabular-nums;
+  cursor: var(--cursor-hover);
+}
+.server-guide .guide-patchlog-day:hover {
+  background: var(--color-bg-tertiary);
+}
+.server-guide .guide-patchlog-day[aria-pressed="true"] {
+  background: var(--color-bg-tertiary);
+  box-shadow: inset 0 -2px 0 var(--color-fg-primary);
+}
+.server-guide .guide-patchlog-day:focus-visible {
+  outline: 2px solid var(--color-fg-primary);
+  outline-offset: 1px;
+}
 .server-guide .guide-section-button {
   display: inline-flex;
   align-items: center;
@@ -628,4 +670,85 @@
     grid-template-columns: 1fr;
     gap: 0.5em;
   }
+}
+
+/* same badge the collection uses on newly unlocked Pokémon */
+.server-guide .guide-new-tag {
+  margin-left: 0.4em;
+  padding: 0 4px;
+  border-radius: 8px;
+  background-color: var(--color-bg-gold);
+  color: black;
+  font-size: 0.6em;
+  font-weight: bold;
+  vertical-align: middle;
+}
+
+.server-guide .guide-patchlog-category {
+  margin: 1.2em 0 0.35em;
+  color: var(--color-fg-secondary);
+  font-size: 0.76em;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.server-guide .guide-patchlog-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.server-guide .guide-patchlog-table td {
+  padding: 0.45em 0.7em;
+  vertical-align: middle;
+  border-bottom: var(--border-extra-thin);
+  line-height: 1.45;
+}
+
+.server-guide .guide-patchlog-table tr:nth-child(even) {
+  background: var(--color-bg-primary);
+}
+
+.server-guide .guide-patchlog-subject {
+  width: 32%;
+  min-width: 11em;
+  font-weight: 600;
+}
+
+.server-guide .guide-patchlog-new-entry {
+  font-weight: 600;
+}
+
+.server-guide .guide-wish-icons {
+  display: inline-flex;
+  gap: 2px;
+  margin-right: 0.5em;
+  vertical-align: middle;
+}
+
+.server-guide .guide-wish-icons:empty {
+  display: none;
+}
+
+.server-guide .guide-wish-icons img {
+  width: 28px;
+  height: 28px;
+}
+
+.server-guide .guide-patchlog-subject .guide-pokemon-portraits {
+  gap: 2px;
+  margin-right: 0.5em;
+}
+
+.server-guide .guide-patchlog-old {
+  opacity: 0.55;
+}
+
+.server-guide .guide-patchlog-arrow {
+  margin: 0 0.3em;
+  opacity: 0.4;
+}
+
+.server-guide .guide-patchlog-new {
+  font-weight: 700;
 }

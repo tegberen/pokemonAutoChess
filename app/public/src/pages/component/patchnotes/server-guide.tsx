@@ -9,7 +9,9 @@ import {
 import { Rarity } from "../../../../../types/enum/Game"
 import { RarityColor } from "../../../../../config/game/shop"
 import { SynergyTiersThresholds } from "../../../../../config"
+import { Blessings } from "../../../../../config/game/blessings"
 import { Ability } from "../../../../../types/enum/Ability"
+import { Blessing } from "../../../../../types/enum/Blessing"
 import { Item } from "../../../../../types/enum/Item"
 import { Weather } from "../../../../../types/enum/Weather"
 import { Synergy } from "../../../../../types/enum/Synergy"
@@ -26,6 +28,8 @@ import {
   addPokemonPortraits,
   sectionId,
   formatGuideArticle,
+  formatPatchLog,
+  type PatchLogWish,
   guideParser,
   guidePages,
   type GuideChapterId,
@@ -106,6 +110,7 @@ export default function ServerGuide({
             )
             return [description, "", ...tiers].join("\n")
           })
+          .replace(/\{\{new\}\}/g, '<span class="guide-new-tag">NEW</span>')
           .replace(/\{\{scribble:([A-Z_]+)\}\}/g, (token, name) => {
             const rule = Object.values(SpecialGameRule).find(
               (value) => value === name
@@ -120,6 +125,17 @@ export default function ServerGuide({
     [markdown, t]
   )
   const active = sections.find((entry) => entry.id === selected)
+  const patchLogWishes = useMemo<PatchLogWish[]>(
+    () => [
+      ...(Object.keys(Blessings) as Blessing[]).map((blessing) => ({
+        name: t(`blessing.${blessing}.name`),
+        icon: Blessings[blessing].icon
+      })),
+      // the synergy-paired names never appear on their own in the log
+      { name: "Gym Trainer", icon: Blessings[Blessing.NORMAL_FAIRY_GYM_TRAINER].icon }
+    ],
+    [t]
+  )
   const html = useMemo(() => {
     const parsed = guideParser.parse(active?.markdown ?? "", { async: false })
     const withIcons = addIconsToHtml(parsed)
@@ -127,11 +143,28 @@ export default function ServerGuide({
     if (selected === "synergies") return formatGuideArticle(withIcons, "synergy")
     if (selected === "items") return formatGuideArticle(withIcons, "item")
     if (selected === "weather") return formatGuideArticle(withIcons, "weather")
+    if (selected === "patchlog") return formatPatchLog(withIcons, patchLogWishes)
     return withIcons
-  }, [active?.markdown, selected])
+  }, [active?.markdown, selected, patchLogWishes])
   const subsections = [
     ...(active?.markdown ?? "").matchAll(/^### (.+)$/gm)
   ].map((match) => ({ title: match[1], id: sectionId(match[1]) }))
+  const patchLogMonths: {
+    title: string
+    days: { title: string; id: string; day: string }[]
+  }[] = []
+  if (selected === "patchlog") {
+    for (const section of subsections) {
+      const [day, ...monthAndYear] = section.title.split(" ")
+      const monthTitle = monthAndYear.join(" ")
+      let month = patchLogMonths.at(-1)
+      if (month?.title !== monthTitle) {
+        month = { title: monthTitle, days: [] }
+        patchLogMonths.push(month)
+      }
+      month.days.push({ ...section, day })
+    }
+  }
   const indexGroups = useMemo(
     () =>
       sections.map((chapter) => {
@@ -166,7 +199,10 @@ export default function ServerGuide({
         }
         return {
           ...chapter,
-          entries: entries.sort((a, b) => a.title.localeCompare(b.title))
+          entries:
+            chapter.id === "patchlog"
+              ? entries
+              : entries.sort((a, b) => a.title.localeCompare(b.title))
         }
       }),
     [sections, t]
@@ -327,7 +363,36 @@ export default function ServerGuide({
                   </>
                 ) : (
                   <>
-                    {subsections.length > 1 && (
+                    {selected === "patchlog" ? (
+                      <nav
+                        className="guide-section-nav guide-patchlog-nav"
+                        aria-label={`${chapter?.title} dates`}
+                      >
+                        {patchLogMonths.map((month) => (
+                          <div
+                            className="guide-patchlog-month"
+                            key={month.title}
+                          >
+                            <span className="guide-patchlog-month-label">
+                              {month.title}
+                            </span>
+                            {month.days.map((section) => (
+                              <button
+                                className="guide-patchlog-day"
+                                key={section.id}
+                                aria-label={section.title}
+                                aria-pressed={activeSection === section.id}
+                                onClick={() =>
+                                  jumpToChapter(selected, section.id)
+                                }
+                              >
+                                {section.day}
+                              </button>
+                            ))}
+                          </div>
+                        ))}
+                      </nav>
+                    ) : subsections.length > 1 && (
                       <nav
                         className="guide-section-nav"
                         aria-label={`${chapter?.title} sections`}

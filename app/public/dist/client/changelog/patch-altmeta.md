@@ -443,3 +443,566 @@ Selectable in Custom Lobbies.
 - The full collection is unlocked, with all nine emotions when available. Boosters are exclusive to the Smeargle Pack Scribble.
 - There is no Elo decay.
 - Shop-upgrade outlines and Walking Avatar are under [Options > Interface](#options/interface).
+
+## Patch Log
+
+Every balance change on this server, newest first.
+
+### 13 September 2026
+
+**Pokémon**
+- Bellsprout Line | DEF 3/5/7 → 1/3/5, HP 60/130/200 → 70/140/220, loses GRASS
+- Chikorita Line | HP 70/140/220 → 80/160/280, loses GRASS
+- Dracovish, Dracozolt, Arctozolt, Arctovish | HP 150 → 120
+- Piloswine, Mamoswine | HP 120/200 → 100/180
+- Cranidos | unlock DRAGON STAR needed 6 → 7
+- Shieldon | unlock TRUE needed 100 → 120
+- Tyrunt | unlock rerolls needed 12 → 15
+- Spheal Line | ICE / WATER → ICE / AQUATIC / WATER
+- Froakie, Frogadier | HP 80/140 → 60/120
+- Litten | HP 90 → 70
+- Vespiquen | DEF 8 → 6, max PP 90 → 100
+- Bellossom | star level 4 → 3
+
+**Abilities**
+- Defend Order | SHIELD 10/20/30/50 → 5/10/20/40
+- Ingrain | damage and heal 15/30/60/120 → 10/20/40/80
+- Petal Dance | damage per petal 20/30/50/100 → 15/20/30/60
+- Sand Tomb | 200/300/400/500% → 100/200/300/400%
+
+**Items**
+- All Fairy wands | additional SPECIAL 15% → 20%
+- BLAST_WAND on critical hit | 30% → 40%
+- TWO_EDGED_WAND | 30% → 40%
+
+**Fixes**
+- EXP_CHARM | no longer gains PP from attacks blocked by PROTECT
+- Dojo Tickets | can no longer be used on Pokémon locked on the bench by Manifestation
+- Kyurem, Zacian, Zamazenta | still receive their PvE reward item while training in the Dojo
+- FIGHTING knockback | removing a SHIELD now counts as breaking it, triggering ABILITY_SHIELD, EXPLOSIVE_BAND and similar effects
+- Shield breaks | effects no longer trigger when SHIELD is removed from a Pokémon that had none
+
+### 12 September 2026
+
+**Pokémon**
+- Rowlet | ATK 4 → 5
+- Dartrix | HP 90 → 75, ATK 7 → 10
+- Decidueye | HP 170 → 150, ATK 17 → 20, SPE_DEF 4 → 3
+- Taillow | ATK 7 → 6
+- Swellow | ATK 15 → 13
+- Mega Feraligatr | permanent AP and SPEED gains are now capped at 100 each.
+
+**Abilities**
+- Hyper Drill | 10/30/50/100/200 → 10/20/40/50/100
+- Sparkling Aria | 20/40/80/160 → 25/50/100/200
+- Whirlpool | 100/115/125/250% → 125/125/125/250%
+
+**Wishes**
+- Park Bench {{new}} | gain a 9th bench slot. At the start of each round, gain 2 XP if your bench is full.
+- Wild Escape | Ultra summons now also wait until stage 20, like Legendary ones.
+
+**Items**
+- Herba Mystica | renamed to Herb, always grants RUNE_PROTECT for the next fight
+- LIFE_SEED, EYEDROP_SEED, EMPOWERMENT_SEED | only affect FLYING allies
+- TINY_REVIVER_SEED | only raises the ATK of the resurrected ally
+
+**Fixes**
+- Hieroglyphs | no longer summons several Unown from one cast
+- Double Up bundles | fall back to a regular-pool 2-star instead of Unown A
+- Hotkeys | can be rebound again in Options
+
+### 11 September 2026
+
+**Pokémon**
+- Urshifu (Single Strike) | training grants 20 AP.
+- Urshifu (Rapid Strike) | training grants 10 SPEED.
+
+**Abilities**
+- Ingrain | damage and healing fall off by 20% per tile of distance
+
+**Wishes**
+- Prismatic Wish chance after a Gold Wish | 25% → 30%
+- Blessing of Phione | PP granted by Phione 5 → 3
+- Berry Growth | permanent max HP per Berry +10/+15 → +20/+30
+- Brute Shield II | ATK 3 → 4
+- Champion's Mask | SHIELD per FIGHTING tier 50 → 100
+- Gracidea Garden | heal 5% → 10% max HP
+- Impending Doom | Gold → Silver, no longer grants a Dartrix
+- King of the Monsters | Hyper Beam every 8 → 6 seconds
+- Layered Armor | SHIELD per roll 3 → 4, capped at 200
+- Lone Wolf | SPEED duration 5 → 10 seconds, plus 2 permanent ATK
+- Lucky Feather | also grants 2 DEF ON_ATTACK
+- Morph Ball | 1 SPEED per roll → 1 SPEED per 2 rolls
+- Orb Wand | AP capped at 100
+- Parting Gift | SHIELD 50 → 100
+- Plushify | the Substitute also gets PROTECT for 1.5 seconds
+- Scorching Tome | damage amp 30% → 40%
+- Power Mirror | AP per hit 5 → 10
+- Quest: Crit | target CRIT_POWER 5 → 4.5
+- Rainbow Droplet | synergies required 8 → 9
+- Haunted Cloth | the Ghost cannot be targeted for 8 seconds
+- Lock-On Lens | now offered at stage 4 as well as 12
+- Spiky Guard | retaliation 10% → 15%, plus 5 SHIELD per free ADJACENT tile
+- Sticky Thorns | when the holder is KO'd, the barb passes to an ADJACENT ally
+
+### 10 September 2026
+
+**Pokémon**
+- Bounsweet Line | max PP 120 → 80
+
+**Abilities**
+- Trop Kick | reworked, kicks twice plus once more each cast, up to 8
+
+**Wishes**
+- Gym Trainer | you can no longer move on the stage 10 carousel.
+- Fire / Field Gym Trainer | Ponyta and Growlithe → Litten and Cyndaquil
+- Poison / Amorphous Gym Trainer | Koffing → Gastly
+- Abnormality | NORMAL Pokémon also gain 5 AP per empty ADJACENT tile.
+- All for One | the Substitute no longer takes up board space.
+- Ruby Orb reworked | every 4 attacks, erupt on the target and ADJACENT enemies for 20 SPECIAL and BURN.
+- Shady Price | keeps all 6 shop slots, rerolls cost 4 GOLD once the free ones are spent.
+- Sweet Subscription | stage 4 only
+
+### 9 September 2026
+
+**Pokémon**
+- Hisuian Samurott | WATER → AQUATIC
+- Spheal Line | AQUATIC / ICE → ICE / WATER
+- Cinderace (Pirate) | DARK → AQUATIC
+- Seedot / Nuzleaf | HP 60/120 → 50/100
+
+**Wishes**
+- Wish tiers | stage 12 now depends on the tier offered at stage 4, see Wiki > Data
+- A New Friend | now an Uncommon from a 3-star line
+- Quick Fang | follow-up attack 40% → 25% ATK
+- Shady Price | Gold → Silver
+- Super Upgrade | stacks required 12 → 10
+- Vision of Truth | attacks required 4 → 2
+
+**Fixes**
+- Seeing Triple | clones Combees on Vespiquen instead of Vespiquen
+
+### 7 September 2026
+
+**Wishes**
+- Empower I and II {{new}}
+- Gamble I, II and III {{new}}
+- Heart Shield I and II {{new}}
+- Layered Armor, Morph Ball and Orb Wand {{new}}
+- Rank Up {{new}}
+- Shady Price {{new}}
+- Drill, Shatter and Surge | trigger threshold 60% → 70% max HP
+- Shatter | reworked to deal 40% of DEF and SPE_DEF to ADJACENT enemies every second
+- Coast Wave | tidal wave delay 4 → 12 seconds
+- Sticky Thorns | self-damage 20% → 150% ATK
+
+### 6 September 2026
+
+**Pokémon**
+- Quaxwell / Quaquaval | HP 140/220 → 120/200
+- Roggenrola Line | max PP 90 → 100
+- Snorunt | HP 60 → 50, ATK 6 → 5
+- Chikorita Line | RANGE 2 → 3
+- Combusken | ATK 14 → 12
+- Origin Palkia | max PP 130 → 140
+- Shaymin | ATK 25 → 22, RANGE 3 → 4
+- Shaymin (Sky) | ATK 28 → 25, RANGE 3 → 5
+- Rowlet | HP 50 → 45, ATK 5 → 4
+- Dartrix | HP 100 → 90, ATK 9 → 7
+- Stunky Line | max PP 80 → 90, Skuntank HP 280 → 250
+
+**Abilities**
+- Flora abilities | hit within the caster's RANGE, several lose power with distance
+- Spirit Shackle | 25/50/75/150 → 20/40/80/160
+- Time Travel | also grants +1 RANGE
+
+**Wishes**
+- Verdant Growth {{new}}
+
+**Items**
+- BAN_SEED, SLEEP_SEED, STUN_SEED and TOTTER_SEED | status 3 → 2 seconds
+- DOOM_SEED | KO after 4 → 8 seconds
+- EMPOWERMENT_SEED | CRIT_POWER 25% → 10%
+- EYEDROP_SEED | RANGE +3 → +2, no longer grants SPEED
+- PURE_SEED | AP 50 → 25
+
+### 5 September 2026
+
+**Wishes**
+- Gym Trainer {{new}} | one for each pair of synergies
+- Gym Leader {{new}}
+
+### 4 September 2026
+
+**Wishes**
+- Blighted Garden {{new}}
+- Convergent Paradox {{new}}
+- Rocky Exoskeleton {{new}}
+- Earthen Barrier {{new}}
+- Frozen Ocean {{new}}
+- Fury Unleashed {{new}}
+- Human Horror {{new}}
+- Hydrated Cells {{new}}
+- Magic Metals {{new}}
+- Midnight Sun {{new}}
+- Mind Rush {{new}}
+- Monstrous Gluttony {{new}}
+- Shedding Scales {{new}}
+- Steam Engine {{new}}
+- Symbiotic Symphony {{new}}
+
+### 2 September 2026
+
+**Wishes**
+- Synergy Crests | grant a signature item instead of a Gem
+- Synergy Crowns | include a LAPRAS_PASSPORT and a stronger starter
+- Absolute Darkness | BLINDED chance 5% → 10%
+- Auto-Crafting | components granted 2 → 3
+- Berry Growth | golden Berries when taken at stage 12, 2 → 5
+- Berserker Hordes | WILD-only shop every 10 → 8 shops
+- Chef's Greed | Gold → Prismatic
+- Deep Wounds | permanent DEF and SPE_DEF removed 2 → 4
+- Dragon King | SHIELD per star 5 → 10, SPEED and AP per star 1 → 2
+- Festive Picnic | Prismatic → Gold, permanent max HP 5 → 10
+- Impending Doom | Prismatic → Gold, delay 10 → 7 seconds
+- Jester | CRIT_POWER needed per extra star 100% → 50%
+- Machine Residue | SHIELD from SPIKES 20 → 50
+- Molecular Corrosion | extra damage taken 30% → 25%
+- Move Tutor | max PP 80 → 70
+
+### 28 August 2026
+
+**Wishes**
+- Amazing Gardening | no longer grants an extra flower when one fully evolves
+
+### 27 August 2026
+
+**Pokémon**
+- Dragonite | passive removed
+
+**Synergies**
+- FLYING 8 | Letter rewards simplified, no longer include Big Nuggets or full items
+
+**Wishes**
+- Big Pecks | reworked, your Pokémon deliver their LETTER one stage faster
+
+**Items**
+- Sharp Beak | removed
+
+### 26 August 2026
+
+**Pokémon**
+- Magby Line | max PP 120 → 125
+- Magmar | gains ARTIFICIAL, HP 130 → 125
+- Magmortar | gains ARTIFICIAL, HP 270 → 250, ATK 28 → 30
+- Origin Palkia | max PP 120 → 130
+
+**Synergies**
+- FLYING 8 | Letter rewards give fewer components and more Rusty Coins
+
+**Wishes**
+- High Breaching | no longer sets max PP to 60
+- Shared Vision | allies now have a minimum of 100 max PP instead of their PP set to 100
+
+**Items**
+- BAN_SEED, BLINKER_SEED, SLEEP_SEED, STUN_SEED and TOTTER_SEED | Sky Dive damage 300% → 250% ATK
+- QUICK_SEED | SPEED per free ADJACENT tile 10 → 5
+- TRAINING_SEED | no longer grants SPEED
+
+### 25 August 2026
+
+**Pokémon**
+- Dracovish, Dracozolt, Arctozolt, Arctovish | HP 180 → 150, ATK reduced by 2
+- Slither Wing | ADJACENT ally bonuses +5/+10/+5 → +2/+4/+2
+
+**Abilities**
+- Scale Shot | 6/10/20/40 → 2/6/10/20
+
+**Wishes**
+- Abyssal Fang, Ancient Crown and Blessing of Phione {{new}}
+- Charm of Truth, Clear Diamond and Coast Wave {{new}}
+- Counter Pads, Exp Book and Focus Glove {{new}}
+- Gracidea Garden, Haunted Cloth and Honed Claw {{new}}
+- King's Crown, Knock Off Punch and Lock-On Lens {{new}}
+- Lucky Feather, Mist Cloak and Power Mirror {{new}}
+- President Box, Quick Fang and Red Thread {{new}}
+- Revival Pulse, Scorching Tome and Seizing Claw {{new}}
+- Shared Vision, Shuriken and Soothe Carol {{new}}
+- Star Dust Veil, Sticky Thorns and Super Upgrade {{new}}
+- Supreme Ability Shield, Telescope and Training Band {{new}}
+- Vision of Truth, Weatherproof Goggles and Wild Escape {{new}}
+- Quests | rewards now also include a RECYCLE_TICKET
+
+### 23 August 2026
+
+**Pokémon**
+- Popplio Line | no longer regional
+
+**Wishes**
+- High Breaching {{new}}
+
+### 22 August 2026
+
+**Pokémon**
+- Magby Line | RANGE 2 → 3, max PP 80 → 120, HP reduced by 10
+- Magmar, Magmortar | DEF and SPE_DEF reduced by 1
+- Fuecoco Line | RANGE 3 → 2
+- Makuhita Line | Rare → Epic, HP 80/200 → 100/280, Hariyama ATK 23 → 24
+- Hisuian Voltorb Line | max PP 100 → 80
+- Bewear | gains WILD
+- Yamask Line | loses FOSSIL
+- Dracovish, Dracozolt, Arctozolt, Arctovish | now Special units restored from fossil pairs, with new passives, max PP 100 → 60
+- Archen Line | Uncommon → Rare, HP 70/130 → 80/160, ATK 6/13 → 9/18, DEF and SPE_DEF increased by 1, Archeops max PP 100 → 90
+- Shieldon Line | Rare → Epic, Iron Defense → Hard Face, HP 90/250 → 140/300, ATK 7/11 → 4/8, DEF 6/12 → 12/18, SPE_DEF 4/8 → 10/14
+- Lileep Line | Rare → Uncommon, ROCK / AQUATIC / FLORA → FOSSIL / GRASS / AQUATIC, HP 80/180 → 60/140, ATK 7/22 → 6/16
+- Cranidos Line | Uncommon → Epic, HP 60/160 → 90/180, ATK 7/15 → 14/32
+- Kabuto Line | Rare → Common, BUG → DARK, Protect → Slashing Claw, HP 80/190 → 60/120, ATK 8/22 → 6/10, max PP 80 → 100
+- Omanyte Line | Uncommon → Common, HP 70/150 → 50/100, ATK 6/14 → 4/8, max PP 90 → 100
+- Clamperl Line | Epic → Rare, Clamperl HP 100 → 60, Huntail HP 200 → 140, lower DEF and SPE_DEF across the line
+- Tyrunt Line | Rare → Epic, HP 70/170 → 120/220, ATK 8/18 → 13/22, DEF 8/12 → 10/14
+- Wimpod Line | Epic → Common, MONSTER → FOSSIL, HP 90/180 → 40/80, ATK 8/20 → 2/8
+
+**Abilities**
+- Amping Beak, Frozen Beak and Frozen Rend {{new}}
+- Hard Face {{new}}
+- Dynamic Punch | 40/80/160/320 → 50/100/200/400
+- First Impression | 45/90/180/360 → 25/50/100/200, FLINCH 5 → 3 seconds
+- Fishious Rend | reworked, seizes the farthest enemy until the user is KO'd
+- Flamethrower | reworked, burns PP equal to 100/150/200/400% ATK and erupts the excess as SPECIAL
+- Head Smash | 40/80/150/300 → 90/120/150/300
+- Rock Head | 120/120/150/300% → 150/200/250/300%
+- Rock Smash | 25/50/100/200 → 50/75/120/200
+
+**Synergies**
+- FOSSIL 8 | new tier, unlocks the Restoration Panel
+- Fossil lines and Tangela | unlocked through the Restoration Panel instead of additional picks
+- POISON 3 | no longer gains PP or ruptures
+- POISON 5 | rupture 80% → 60% of remaining PP
+- POISON 7 | rupture 120% → 100% of remaining PP
+- FIRE 8 | IGNITE SHIELD 30 → 50
+- DARK 5 | BLINDED when the Substitute is KO'd 3 → 2 seconds
+- DARK 9 | untargetable after a KO 3 → 1.5 seconds
+- FLYING 4 | ATK reduction now ON_ATTACK, 2 → 1
+
+**Items**
+- COVERT_CLOAK | also triggers at the start of the fight
+- FIRE_SHARD | player HP cost 3 → 2
+
+### 20 August 2026
+
+**Wishes**
+- Misfits | stage 4 only, HP and AP 40 → 30, ATK, DEF and SPE_DEF 4 → 3, now also grants 3 SPEED
+- Shell Armor | removed from the wish pool
+- Quests | rewards now also include an EXCHANGE_TICKET
+
+### 18 August 2026
+
+**Abilities**
+- Overdrive | radius 3 → 4 in ELECTRIC_FIELD
+
+**Synergies**
+- POISON | reworked, POISON Pokémon gain PP ON_ATTACK and rupture on KO, dealing part of their remaining PP as SPECIAL to ADJACENT enemies
+- POISON 7 | no longer corrodes items
+- FIRE 6 | grants a FIRE_SHARD every round, moved from FIRE 8
+- FIRE 8 | a FIRE_SHARD can now IGNITE a Pokémon for 1 round
+
+**Wishes**
+- Manifestation: DEF {{new}}
+- Atlantean Magic and Neuroforce | Gold → Prismatic
+- Beauty Contest, Singularity II and Water Fountain | Prismatic → Gold
+- Berry Breakfast and Forecast | Gold → Silver
+- Regional Treasures and Requiem | Silver → Gold
+- Singularity I | Gold → Silver
+- Croagunk's Aid | Silver → Gold, stage 4 only, benching a Pokémon returns its items
+- Gold Kit and Silver Kit | stage 12 only, renamed from Wobbuffet's Gold and Silver Prize
+- Regional Treasures II | stage 4 only, no longer grants Pokémon
+- Additional Rethink I and II | now also grant 4 and 8 GOLD
+- All for One | Substitute max HP 60% → 100%
+- Axe Blast | RANGE +2 → +1
+- Brace for Impact | damage cap 50% → 40% max HP
+- Burning Shards and Charging Up | player damage per item 15 → 12
+- Deep Wounds | DEF and SPE_DEF removed 1 → 2
+- Drill, Shatter and Surge | trigger threshold 50% → 60% max HP
+- Echo Chamber | PP 3 → 2 and 6 → 4
+- Efficient Economy | XP per reroll 1 → 2
+- Exhausting Flame | now also grants 5 LUCK per STAR
+- Fast Food Delivery | dishes last 1 → 3 rounds
+- Fertile Soil | max HP on a fully dug hole 20% → 10%
+- Gem Harvest | no longer grants ATK per gem
+- Grand Ignition | Fennekin loses 10% max PP per torch
+- Icebreaker | KOs also grant 20 LUCK
+- Itemfinder III | rounds 6 → 5
+- Language Barrier | SHIELD 15 → 30
+- Minimalist I and II | PP per empty slot 10% → 8% and 15% → 12%
+- Molecular Corrosion | extra damage taken 40% → 30%
+- Pack Attack | Houndoom chance 20% → 15%
+- Panic Button | the draw now deals 4 player damage
+- Potential Energy I | now per missing STAR, SHIELD 25 → 20, SPEED 5 → 10
+- Potential Energy II | now per missing STAR, SHIELD 40 → 30, SPEED 10 → 20
+- Pulse Shield I and II | SHIELD 50% → 70% of SPEED
+- Quest: Absorb and Quest: Grow | target 1300 → 1000
+- Quest: Evolve II | evolutions needed 16 → 12
+- Quest: Expand | sell price needed 5 → 4
+- Quest: Revive | revives needed 20 → 16
+- Rainbow Droplet | synergies needed 7 → 8
+- Rivalry | permanent HP 5 → 4, no longer grants a RELIC_CROWN
+- Sacrifice | the MONSTER is also ENRAGED for 2 seconds
+- Shapeless Synergies | bonus SPEED 100% → 50%
+- Soul Blaze | reworked, IGNITE works at any FIRE tier with no cooldown
+- Vampiric | player HP now 1 per 10 player damage dealt
+- Gold Bar | renamed from Nugget
+- Gift Bag | renamed from Free Coupon
+
+**Items**
+- FIRE_SHARD | ATK and SPEED +4 → +2
+
+### 17 August 2026
+
+**Pokémon**
+- Scream Tail | HP 140 → 210, ATK 14 → 16
+
+**Wishes**
+- Frost Gear | RANGE +2 → +3, no longer loses max HP on cast, Shell Smash ATK scales with AP
+- Mortar Shells | base ATK +100% → +150%
+
+**Items**
+- SYNCHRO_MASHINE | no longer copies CRIT_CHANCE and CRIT_POWER
+
+### 16 August 2026
+
+**Wishes**
+- Brave Formation, Guard Formation and Tough Formation {{new}}
+- Critical Path I and II {{new}}
+- Critical Rush I and II {{new}}
+- Exploit, Lasting Effects and Rippling Effects {{new}}
+- Lone Wolf, Parting Gift and Requiem {{new}}
+- Minimalist I and II {{new}}
+- Pulse Shield I and II {{new}}
+- Reveille {{new}}
+- Water Fountain | Pond effects doubled at WATER 6, quadrupled at WATER 9
+
+### 15 August 2026
+
+**Wishes**
+- Banana Business, Munchlax Delivery and Sweet Treats | Gold → Silver
+- Banana Business | NANAB_BERRY per stage 1 → 3
+- Berry Breakfast | now also grants 3 Berries
+- Impending Doom | delay 12 → 10 seconds
+- Vampiric | team healing 10% → 20%
+- Bowl of Berries | renamed from Berry Pouch
+- Breaking Bones | renamed from Misfortune
+
+### 14 August 2026
+
+**Pokémon**
+- Igglybuff Line | Sing → Inhale, new passive Inflatable, max PP 90 → 100
+- Houndoom, Mega Houndoom | ATK 24 → 20
+- Hippowdon | gains WILD
+- Grookey Line | RANGE 1 → 2
+
+**Abilities**
+- Rock Artillery | 20/30/40/80 → 15/25/35/70
+- Sand Tomb | reworked into quicksand that SILENCE and deals ATK-based SPECIAL when it ends
+
+**Wishes**
+- Show Off {{new}}
+- Quest: Epic | 7 Unique, 7 Epic or 7 Ultra Pokémon now count separately
+
+### 13 August 2026
+
+**Wishes**
+- Auto-Crafting, Center Stage and Hieroglyphs {{new}}
+- Brute Shield I and II {{new}}
+- Burning Force and Spiky Guard {{new}}
+- Calculated Offence, Machine Residue and Robin Gems {{new}}
+- Drill I and II {{new}}
+- Gear Shield I and II {{new}}
+- Magic Shield I and II {{new}}
+- Shatter I and II {{new}}
+- Star Guard {{new}}
+- Surge I and II {{new}}
+- Adoption Agency | stage 4 only
+- Spore Clouds | stage 12 only
+- Magnetosphere | PARALYSIS 5 → 8 seconds
+- Quest: Crit | CRIT_POWER needed 4 → 5
+
+### 12 August 2026
+
+**Wishes**
+- Champion's Mask {{new}}
+- Curse of Two | Gold → Prismatic
+- Unison | HUMAN damage also builds a bond that is released as SPECIAL
+
+### 11 August 2026
+
+**Synergies**
+- BUG 8 | BUG Pokémon copied 5 → 4
+
+**Wishes**
+- Adoption Agency, Archeological Site and Bull Leaping {{new}}
+- Festive Picnic, Fogbound Lake and Furious Fabric {{new}}
+- Gem Harvest, Grudge and Icy Reflection {{new}}
+- King of the Monsters, Limit Breaker and Magnetosphere {{new}}
+- Mystogan, Overload and Rainbow Droplet {{new}}
+- Tidal Guardian {{new}}
+- Deep Wounds | ARMOR_BREAK 3 → 5 seconds
+- Molecular Corrosion | extra damage taken 30% → 40%
+
+**Items**
+- RELIC_STATUE | no longer grants AP, curse delay 3 → 1 second
+
+### 10 August 2026
+
+**Pokémon**
+- Arcanine, Hisuian Arcanine | passive can IGNITE every round
+
+**Wishes**
+- Berry Growth, Deep Wounds and Fast Delivery {{new}}
+- Fertile Soil, Molecular Corrosion and Soul Blaze {{new}}
+- Unison and Water Fountain {{new}}
+- Bag of Sweets | SWEETS 4 → 10
+
+### 9 August 2026
+
+**Pokémon**
+- Scizor, Kleavor | sell for 4 GOLD
+
+**Wishes**
+- Colony, Grand Ignition and Jester {{new}}
+- Sand Buddies, Toxic Resonance and Valor {{new}}
+- Hail to the King | Gold → Prismatic
+- Safari Encounter | Gold → Silver
+- Legendary songs and Rivalry | stage 12 only
+
+**Items**
+- FIERY_DRUM | ATK per cast +3 → +2
+- SKY_MELODICA | SPEED per cast +5 → +4
+
+### 8 August 2026
+
+**Pokémon**
+- Politoed | max PP 90 → 100
+
+**Wishes**
+- Wish Festival beta {{new}} | over 200 wishes, offered at stages 4 and 12
+- Chosen Ones | Gold → Prismatic
+- Replicator | Gold → Silver
+- You Forgot Something! | Prismatic → Gold
+- Golden Ticket, Vitamins and Weather Institute | stage 12 only
+- Absolute Darkness | reworked, 5% chance to BLINDED ON_ATTACK, damage becomes TRUE on crits against BLINDED enemies
+- Charging My Bug | permanent ATK 1 → 2
+- Misfits | HP and AP 50 → 40, ATK, DEF and SPE_DEF 5 → 4, now per STAR
+- Quest: Crit | CRIT_POWER needed 5 → 4
+- Quest: Evolve II | evolutions needed 20 → 16
+- Rivalry | permanent ATK 2 → 1, permanent HP 10 → 5
+- Tidal Surge | items needed 3 → 2
+- Vitamins | now at the start of the fight, ATK 1 → 2, AP and SPEED 5 → 10
+- Dragon Orb | renamed from Dragon Fang
+
+### 6 August 2026
+
+**Pokémon**
+- Grubbin Line | AMORPHOUS → SOUND, HP 70/120/180 → 65/115/175, max PP 100 → 85, Charjabug and Vikavolt ATK 11/17 → 10/16
+
+**Abilities**
+- Unbound | the summoned Legendary starts at 50% of its base max HP, plus 25% per 100 AP

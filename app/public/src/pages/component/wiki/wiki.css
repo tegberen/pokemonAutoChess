@@ -393,6 +393,14 @@
   display: inline-block;
 }
 
+#wiki-page .pokemon-portrait > img.wiki-flower-pot {
+  position: absolute;
+  right: -4px;
+  bottom: -4px;
+  image-rendering: pixelated;
+  pointer-events: none;
+}
+
 #wiki-pokemons-all section {
   border-top: 4px solid currentColor;
 }

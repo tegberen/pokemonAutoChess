@@ -591,6 +591,7 @@ export default abstract class PokemonState {
       if (pokemon.status.enraged && shield > 0) shield *= 0.5
 
       shield = Math.round(shield)
+      const hadShield = pokemon.shield > 0
       pokemon.shield = min(0)(pokemon.shield + shield)
       if (caster && shield > 0) {
         if (pokemon.simulation.room.state.time < FIGHTING_PHASE_DURATION) {
@@ -604,7 +605,7 @@ export default abstract class PokemonState {
           })
         }
         caster.shieldDone += shield
-      } else if (shield < 0 && pokemon.shield <= 0) {
+      } else if (shield < 0 && hadShield && pokemon.shield <= 0) {
         const entity = pokemon as PokemonEntity
         entity.getEffects(OnShieldDepletedEffect).forEach((effect) => {
           effect.apply({

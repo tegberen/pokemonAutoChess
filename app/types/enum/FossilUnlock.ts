@@ -28,14 +28,14 @@ const fossilUnlocks = [
   {
     pokemon: Pkm.CRANIDOS,
     conditionKey: "cranidos",
-    target: 6,
+    target: 7,
     minLevel: 7,
     roundScoped: true
   },
   {
     pokemon: Pkm.SHIELDON,
     conditionKey: "shieldon",
-    target: 100,
+    target: 120,
     minLevel: 7,
     roundScoped: true
   },
@@ -49,7 +49,7 @@ const fossilUnlocks = [
   {
     pokemon: Pkm.TYRUNT,
     conditionKey: "tyrunt",
-    target: 12,
+    target: 15,
     minLevel: 7,
     roundScoped: true
   },

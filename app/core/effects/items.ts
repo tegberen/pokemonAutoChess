@@ -654,7 +654,8 @@ const ogerponMaskEffect = new OnItemDroppedEffect(
 export class DojoTicketOnItemDroppedEffect extends OnItemDroppedEffect {
   constructor(ticketLevel: number) {
     super(({ pokemon, player, room, item }) => {
-      if (NonPkm.includes(pokemon.name)) return false
+      if (NonPkm.includes(pokemon.name) || pokemon.manifestationLocked)
+        return false
       const substitute = PokemonFactory.createPokemonFromName(
         Pkm.SUBSTITUTE,
         player

@@ -1910,7 +1910,7 @@
 		"TRI_ATTACK": "Deal [60,120,250,500,SP] SPECIAL. May either inflict 3 second FREEZE, 5 second BURN or 7 second PARALYSIS onto the target.",
 		"ECHO": "Deal [3,6,9,12,SP] SPECIAL to all enemy Pokémon in a 3 tile radius around the user. After every cast, the damage increases by [3,6,9,12,SP] and the range by 1 tile.",
 		"UPROAR": "Deal [5,10,20,40,SP] SPECIAL every second for 3 seconds to all enemies at RANGE ; during this time, allies in the area are immune to SLEEP.",
-		"PETAL_DANCE": "Release [3,4,5,6] petals spread between the closest enemies, each dealing [15,25,35,70,SP] SPECIAL.",
+		"PETAL_DANCE": "Release [3,4,5,6] petals spread between the closest enemies, each dealing [15,20,30,60,SP] SPECIAL.",
 		"HYPER_VOICE": "Deal [30,60,120,240,SP] SPECIAL to all enemy Pokémon in the same row as the target and has [30,LK]% chance to inflict CONFUSION for [1,2,3,6] seconds.",
 		"SHADOW_CLONE": "Summon a clone with [50,50,90,100,SP]% of the user's max HP. The clone steals one random item from your current target.",
 		"VOLT_SWITCH": "Dash to the farthest enemy reachable and deal [25,50,100,200,SP] SPECIAL to all enemy Pokémon in the path.",
@@ -3238,7 +3238,7 @@
 		"PUNCHING_GLOVE": "Attacks deal 10 % of target max HP as additional PHYSICAL ON_HIT",
 		"MUSCLE_BAND": "When the holder takes damage, gain 1 stack. Every 2 stacks, the holder gains +2 DEF, +1 ATK and +5 SPEED (max 20 stacks)",
 		"WONDER_BOX": "At the beginning of each battle, WONDER_BOX is replaced by 2 temporary items (max 3 items held)",
-		"ABILITY_SHIELD": "When combat begins, the holder and allies ADJACENT_IN_THE_SAME_ROW receive 20% of their max HP as SHIELD and RUNE_PROTECT for 5 seconds. When the SHIELD is depleted, user and allies gain 30 AP.",
+		"ABILITY_SHIELD": "At the start of combat, the holder and allies ADJACENT_IN_THE_SAME_ROW gain SHIELD equal to 20% of their max HP and RUNE_PROTECT for 5 seconds. Each of them gains 30 AP when its SHIELD breaks.",
 		"STICKY_BARB": "When struck by an attack at melee range, deal 3 + 15% of DEF as retaliation TRUE to the attacker and inflict WOUND for 3 seconds.",
 		"WIDE_LENS": "The holder gains +2 RANGE. Attacks grant +5% CRIT_CHANCE (stackable)",
 		"RAZOR_CLAW": "The holder gains +50% CRIT_CHANCE",
@@ -6366,7 +6366,7 @@
 		},
 		"ABILITY_SHIELD_BLESSING": {
 			"name": "Supreme Ability Shield",
-			"description": "Gain an ABILITY_SHIELD. It affects all ADJACENT allies."
+			"description": "Gain an ABILITY_SHIELD. It covers all ADJACENT allies instead of only the same row."
 		},
 		"SOOTHE_BELL_BLESSING": {
 			"name": "Soothe Carol",
@@ -6554,10 +6554,10 @@
 			"yanma": "Level 5 + During combat, have a BUG or FLYING Pokémon exceed its base SPEED by 60.",
 			"archen": "Level 5 + During combat, ARMOR_BREAK 6 different Pokémon with ROCK explosions.",
 			"clamperl": "Level 5 + Fish up 6 GOLD worth of Pokémon.",
-			"cranidos": "Level 7 + Start a fight with a total of 6 DRAGON STAR on the board.",
-			"shieldon": "Level 7 + During combat, deal a total of 100 TRUE with ROCK explosions.",
+			"cranidos": "Level 7 + Start a fight with a total of 7 DRAGON STAR on the board.",
+			"shieldon": "Level 7 + During combat, deal a total of 120 TRUE with ROCK explosions.",
 			"amaura": "Level 7 + With LIGHT active, have a FOSSIL or ICE Pokémon under the Lightspot cast their ability twice during combat.",
-			"tyrunt": "Level 7 + Reroll 12 times in a single preparation phase with DRAGON or ROCK active.",
+			"tyrunt": "Level 7 + Reroll 15 times in a single preparation phase with DRAGON or ROCK active.",
 			"regigigas": "Level 9 + Win a fight with Mamoswine alongside 8 FOSSIL Pokémon, with Mamoswine surviving.",
 			"genesect": "Field ARTIFICIAL 6 together with FOSSIL 6."
 		}

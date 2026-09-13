@@ -35,6 +35,11 @@ export const chapters = [
     id: "misc",
     title: "Misc",
     heading: "Misc"
+  },
+  {
+    id: "patchlog",
+    title: "Patch Log",
+    heading: "Patch Log"
   }
 ] as const
 
@@ -72,7 +77,15 @@ const pokemonNameAliases: Record<string, Pkm> = {
   "ALOLAN NINETALES": Pkm.ALOLAN_NINETALES,
   "GALAR WEEZING": Pkm.GALARIAN_WEEZING,
   "HISUIAN ARCANINE": Pkm.HISUI_ARCANINE,
-  "BLOODMOON URSALUNA": Pkm.URSALUNA_BLOODMOON
+  "HISUIAN VOLTORB": Pkm.HISUI_VOLTORB,
+  HIPPOWDON: Pkm.HIPPODOWN,
+  "BLOODMOON URSALUNA": Pkm.URSALUNA_BLOODMOON,
+  DARTRIX: Pkm.DARTIX,
+  "HISUIAN SAMUROTT": Pkm.HISUI_SAMUROTT,
+  "SHAYMIN (SKY)": Pkm.SHAYMIN_SKY,
+  "CINDERACE (PIRATE)": Pkm.CINDERACE_PIRATE,
+  "URSHIFU (SINGLE STRIKE)": Pkm.URSHIFU_SINGLE,
+  "URSHIFU (RAPID STRIKE)": Pkm.URSHIFU_RAPID
 }
 
 // Match the longest form names first; compile once, not once per table row.
@@ -98,16 +111,23 @@ const pokemonLabels = [
 
 function pokemonPortraits(subject: string) {
   let remaining = subject.toUpperCase()
-  const matches = new Set<Pkm>()
+  const positions = new Map<Pkm, number>()
   for (const { pokemon, label, expression } of pokemonLabels) {
-    remaining = remaining.replace(expression, (_, prefix: string) => {
-      matches.add(pokemon)
-      return prefix + " ".repeat(label.length)
-    })
+    remaining = remaining.replace(
+      expression,
+      (_, prefix: string, offset: number) => {
+        if (!positions.has(pokemon))
+          positions.set(pokemon, offset + prefix.length)
+        return prefix + " ".repeat(label.length)
+      }
+    )
   }
+  const matchesInSubjectOrder = [...positions.keys()].sort(
+    (a, b) => positions.get(a)! - positions.get(b)!
+  )
   const portraits = document.createElement("span")
   portraits.className = "guide-pokemon-portraits"
-  for (const pokemon of [...matches].slice(0, 5)) {
+  for (const pokemon of matchesInSubjectOrder.slice(0, 5)) {
     const image = document.createElement("img")
     image.src = getPortraitSrc(PkmIndex[pokemon])
     image.alt = ""
@@ -174,6 +194,178 @@ export function addPokemonPortraits(html: string) {
     list.replaceWith(table)
     wrapTable(table)
   })
+  return root.innerHTML
+}
+
+function appendWithArrows(target: Node, text: string) {
+  text.split("→").forEach((part, index) => {
+    if (index > 0) target.appendChild(patchLogSpan("guide-patchlog-arrow", "→"))
+    if (part) target.appendChild(document.createTextNode(part))
+  })
+}
+
+function patchLogSpan(className: string, text: string) {
+  const span = document.createElement("span")
+  span.className = className
+  span.textContent = text
+  return span
+}
+
+// mutes the value a change moved away from and brings the new one forward
+function emphasiseValueChanges(cell: HTMLElement) {
+  const walker = document.createTreeWalker(cell, NodeFilter.SHOW_TEXT)
+  const nodes: Text[] = []
+  while (walker.nextNode()) {
+    const node = walker.currentNode as Text
+    if (node.textContent?.includes("→")) nodes.push(node)
+  }
+  for (const node of nodes) {
+    const text = node.textContent ?? ""
+    const fragment = document.createDocumentFragment()
+    let last = 0
+    for (const match of text.matchAll(/(\S+)(\s*)→(\s*)([^\s,]+)/g)) {
+      const index = match.index ?? 0
+      appendWithArrows(fragment, text.slice(last, index))
+      fragment.append(
+        patchLogSpan("guide-patchlog-old", match[1]),
+        match[2],
+        patchLogSpan("guide-patchlog-arrow", "→"),
+        match[3],
+        patchLogSpan("guide-patchlog-new", match[4])
+      )
+      last = index + match[0].length
+    }
+    appendWithArrows(fragment, text.slice(last))
+    node.replaceWith(fragment)
+  }
+}
+
+export type PatchLogWish = { name: string; icon: string }
+
+function wishIconMatchers(wishes: PatchLogWish[]) {
+  return wishes
+    .flatMap(({ name, icon }) => {
+      const family = name.replace(/\s+I{1,3}$/, "")
+      return family === name
+        ? [{ label: name, icon }]
+        : [
+            { label: name, icon },
+            { label: family, icon }
+          ]
+    })
+    .sort((a, b) => b.label.length - a.label.length)
+    .map(({ label, icon }) => ({
+      icon,
+      label,
+      expression: new RegExp(
+        `(^|[^A-Za-z])${label.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}(?=[^A-Za-z]|$)`,
+        "i"
+      )
+    }))
+}
+
+function wishIcons(
+  subject: string,
+  matchers: ReturnType<typeof wishIconMatchers>
+) {
+  let remaining = subject
+  const icons = new Set<string>()
+  for (const { label, icon, expression } of matchers) {
+    if (!expression.test(remaining)) continue
+    icons.add(icon)
+    remaining = remaining.replace(
+      expression,
+      (_, prefix: string) => prefix + " ".repeat(label.length)
+    )
+  }
+  const wrapper = document.createElement("span")
+  wrapper.className = "guide-wish-icons"
+  for (const icon of [...icons].slice(0, 3)) {
+    const image = document.createElement("img")
+    image.src = `/assets/blessings/${icon}.svg`
+    image.alt = ""
+    wrapper.append(image)
+  }
+  return wrapper
+}
+
+export function formatPatchLog(html: string, wishes: PatchLogWish[]) {
+  const matchers = wishIconMatchers(wishes)
+  const root = document.createElement("div")
+  root.innerHTML = html
+  let category = ""
+  for (const element of Array.from(root.children)) {
+    const label = element.firstElementChild
+    if (
+      element.tagName === "P" &&
+      element.childNodes.length === 1 &&
+      label?.tagName === "STRONG"
+    ) {
+      category = label.textContent ?? ""
+      const heading = document.createElement("h5")
+      heading.className = "guide-patchlog-category"
+      heading.textContent = category
+      element.replaceWith(heading)
+      continue
+    }
+    if (element.tagName !== "UL") continue
+    const table = document.createElement("table")
+    table.className = "guide-patchlog-table"
+    const body = table.createTBody()
+    for (const item of Array.from(element.children)) {
+      const row = body.insertRow()
+      const walker = document.createTreeWalker(item, NodeFilter.SHOW_TEXT)
+      let separatorNode: Text | null = null
+      while (walker.nextNode()) {
+        if ((walker.currentNode.textContent ?? "").includes("|")) {
+          separatorNode = walker.currentNode as Text
+          break
+        }
+      }
+      if (!separatorNode) {
+        const cell = row.insertCell()
+        cell.colSpan = 2
+        if (item.querySelector(".guide-new-tag")) {
+          cell.className = "guide-patchlog-new-entry"
+        }
+        while (item.firstChild) cell.append(item.firstChild)
+        if (category === "Wishes") {
+          cell.prepend(wishIcons(cell.textContent ?? "", matchers))
+        }
+        continue
+      }
+      const range = document.createRange()
+      range.setStart(item, 0)
+      range.setEnd(
+        separatorNode,
+        (separatorNode.textContent ?? "").indexOf("|") + 1
+      )
+      const subject = row.insertCell()
+      subject.className = "guide-patchlog-subject"
+      subject.append(range.extractContents())
+      // the icon pass wraps any text holding a stat token in a span, so the
+      // separator can end up nested rather than as the cell's last child
+      const subjectTexts = document.createTreeWalker(subject, NodeFilter.SHOW_TEXT)
+      let lastText: Node | null = null
+      while (subjectTexts.nextNode()) lastText = subjectTexts.currentNode
+      if (lastText) {
+        lastText.textContent = (lastText.textContent ?? "").replace(
+          /\s*\|\s*$/,
+          ""
+        )
+      }
+      if (category === "Pokémon") {
+        subject.prepend(pokemonPortraits(subject.textContent ?? ""))
+      } else if (category === "Wishes") {
+        subject.prepend(wishIcons(subject.textContent ?? "", matchers))
+      }
+      const change = row.insertCell()
+      while (item.firstChild) change.append(item.firstChild)
+      emphasiseValueChanges(change)
+    }
+    element.replaceWith(table)
+    wrapTable(table)
+  }
   return root.innerHTML
 }
 

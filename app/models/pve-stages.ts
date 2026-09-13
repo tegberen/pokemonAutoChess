@@ -834,7 +834,10 @@ export const PVEStages: { [turn: number]: PVEStage } = {
     ],
     rewards: CraftableItemsNoScarves,
     getRewards(player: Player) {
-      for (const p of schemaValues(player.board)) {
+      for (const p of [
+        ...schemaValues(player.board),
+        ...player.pokemonsTrainingInDojo.map(({ pokemon }) => pokemon)
+      ]) {
         if (p.name === Pkm.ZACIAN) {
           return [Item.RUSTED_SWORD]
         }

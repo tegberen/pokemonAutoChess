@@ -3538,7 +3538,7 @@ export class Piloswine extends Pokemon {
   rarity = Rarity.COMMON
   stars = 2
   evolution = Pkm.MAMOSWINE
-  hp = 120
+  hp = 100
   atk = 8
   speed = 51
   def = 8
@@ -3552,7 +3552,7 @@ export class Mamoswine extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.GROUND, Synergy.ICE, Synergy.FOSSIL])
   rarity = Rarity.COMMON
   stars = 3
-  hp = 200
+  hp = 180
   atk = 13
   speed = 51
   def = 16
@@ -4155,11 +4155,11 @@ export class Florges extends Pokemon {
 }
 
 export class Chikorita extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.FLORA, Synergy.GRASS, Synergy.FAIRY])
+  types = new SetSchema<Synergy>([Synergy.FLORA, Synergy.FAIRY])
   rarity = Rarity.SPECIAL
   stars = 1
   evolution = Pkm.BAYLEEF
-  hp = 70
+  hp = 80
   atk = 6
   speed = 51
   def = 2
@@ -4170,11 +4170,11 @@ export class Chikorita extends Pokemon {
 }
 
 export class Bayleef extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.FLORA, Synergy.GRASS, Synergy.FAIRY])
+  types = new SetSchema<Synergy>([Synergy.FLORA, Synergy.FAIRY])
   rarity = Rarity.SPECIAL
   stars = 2
   evolution = Pkm.MEGANIUM
-  hp = 140
+  hp = 160
   atk = 10
   speed = 51
   def = 4
@@ -4185,10 +4185,10 @@ export class Bayleef extends Pokemon {
 }
 
 export class Meganium extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.FLORA, Synergy.GRASS, Synergy.FAIRY])
+  types = new SetSchema<Synergy>([Synergy.FLORA, Synergy.FAIRY])
   rarity = Rarity.SPECIAL
   stars = 3
-  hp = 220
+  hp = 280
   atk = 22
   speed = 51
   def = 6
@@ -4243,7 +4243,7 @@ export class Scolipede extends Pokemon {
 }
 
 export class Spheal extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.ICE, Synergy.WATER])
+  types = new SetSchema<Synergy>([Synergy.ICE, Synergy.AQUATIC, Synergy.WATER])
   rarity = Rarity.EPIC
   stars = 1
   evolution = Pkm.SEALEO
@@ -4259,7 +4259,7 @@ export class Spheal extends Pokemon {
 }
 
 export class Sealeo extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.ICE, Synergy.WATER])
+  types = new SetSchema<Synergy>([Synergy.ICE, Synergy.AQUATIC, Synergy.WATER])
   rarity = Rarity.EPIC
   stars = 2
   evolution = Pkm.WALREIN
@@ -4275,7 +4275,7 @@ export class Sealeo extends Pokemon {
 }
 
 export class Walrein extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.ICE, Synergy.WATER])
+  types = new SetSchema<Synergy>([Synergy.ICE, Synergy.AQUATIC, Synergy.WATER])
   rarity = Rarity.EPIC
   stars = 3
   hp = 500
@@ -5056,11 +5056,11 @@ export class Blastoise extends Pokemon {
 }
 
 export class Bellsprout extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.FLORA, Synergy.GRASS, Synergy.POISON])
+  types = new SetSchema<Synergy>([Synergy.FLORA, Synergy.POISON])
   rarity = Rarity.SPECIAL
   stars = 1
   evolution = Pkm.WEEPINBELL
-  hp = 60
+  hp = 70
   atk = 6
   speed = 47
   def = 1
@@ -5071,11 +5071,11 @@ export class Bellsprout extends Pokemon {
 }
 
 export class Weepinbell extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.FLORA, Synergy.GRASS, Synergy.POISON])
+  types = new SetSchema<Synergy>([Synergy.FLORA, Synergy.POISON])
   rarity = Rarity.SPECIAL
   stars = 2
   evolution = Pkm.VICTREEBEL
-  hp = 130
+  hp = 140
   atk = 12
   speed = 47
   def = 3
@@ -5086,10 +5086,10 @@ export class Weepinbell extends Pokemon {
 }
 
 export class Victreebel extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.FLORA, Synergy.GRASS, Synergy.POISON])
+  types = new SetSchema<Synergy>([Synergy.FLORA, Synergy.POISON])
   rarity = Rarity.SPECIAL
   stars = 3
-  hp = 200
+  hp = 220
   atk = 20
   speed = 47
   def = 5
@@ -13206,7 +13206,7 @@ export class Froakie extends Pokemon {
   rarity = Rarity.UNCOMMON
   stars = 1
   evolution = Pkm.FROGADIER
-  hp = 80
+  hp = 60
   atk = 6
   speed = 64
   def = 4
@@ -13221,7 +13221,7 @@ export class Frogadier extends Pokemon {
   rarity = Rarity.UNCOMMON
   stars = 2
   evolution = Pkm.GRENINJA
-  hp = 140
+  hp = 120
   atk = 12
   speed = 64
   def = 6
@@ -15338,7 +15338,7 @@ export class Dracovish extends Pokemon {
   ])
   rarity = Rarity.SPECIAL
   stars = 3
-  hp = 150
+  hp = 120
   atk = 18
   speed = 49
   def = 6
@@ -15363,7 +15363,7 @@ export class Dracozolt extends Pokemon {
   ])
   rarity = Rarity.SPECIAL
   stars = 3
-  hp = 150
+  hp = 120
   atk = 18
   speed = 49
   def = 6
@@ -15388,7 +15388,7 @@ export class Arctozolt extends Pokemon {
   ])
   rarity = Rarity.SPECIAL
   stars = 3
-  hp = 150
+  hp = 120
   atk = 20
   speed = 43
   def = 6
@@ -15409,7 +15409,7 @@ export class Arctovish extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.ICE, Synergy.AQUATIC, Synergy.FOSSIL])
   rarity = Rarity.SPECIAL
   stars = 3
-  hp = 150
+  hp = 120
   atk = 20
   speed = 43
   def = 6
@@ -18857,7 +18857,7 @@ export class Litten extends Pokemon {
   rarity = Rarity.UNCOMMON
   stars = 1
   evolution = Pkm.TORRACAT
-  hp = 90
+  hp = 70
   atk = 7
   speed = 44
   def = 4

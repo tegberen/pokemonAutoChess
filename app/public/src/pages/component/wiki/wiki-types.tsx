@@ -3,8 +3,10 @@ import { useTranslation } from "react-i18next"
 import { Tab, TabList, TabPanel, Tabs } from "react-tabs"
 import { RarityColor, SynergyTiersThresholds } from "../../../../../config"
 import { SynergyTiers } from "../../../../../config/game/synergies"
+import { FlowerMonByPot } from "../../../../../core/flower-pots"
 import { getPokemonData } from "../../../../../models/precomputed/precomputed-pokemon-data"
 import { PRECOMPUTED_POKEMONS_PER_TYPE } from "../../../../../models/precomputed/precomputed-types"
+import { FlowerPots } from "../../../../../types/enum/FlowerPot"
 import { Rarity } from "../../../../../types/enum/Game"
 import { Pkm, PkmFamily } from "../../../../../types/enum/Pokemon"
 import { Synergy, SynergyArray } from "../../../../../types/enum/Synergy"
@@ -28,6 +30,10 @@ import {
   WikiFossilUnlocks
 } from "./wiki-fossil-unlocks"
 import { WikiLetterDelivery } from "./wiki-letter-delivery"
+
+const flowerPotByPokemon = new Map(
+  FlowerPots.flatMap((pot) => FlowerMonByPot[pot].map((pkm) => [pkm, pot] as const))
+)
 
 export default function WikiTypes({
   initialSynergy,
@@ -172,6 +178,7 @@ export function WikiType(props: { type: Synergy; onGoToWeather?: () => void }) {
                 </td>
                 <td>
                   {(pokemonsPerRarity[rarity] ?? []).map((p) => {
+                    const flowerPot = flowerPotByPokemon.get(p.name)
                     return (
                       <div
                         key={p.name}
@@ -189,6 +196,15 @@ export function WikiType(props: { type: Synergy; onGoToWeather?: () => void }) {
                           data-tooltip-id="game-pokemon-detail-tooltip"
                           data-tooltip-content={p.name}
                         />
+                        {flowerPot && (
+                          <img
+                            className="wiki-flower-pot"
+                            src={`assets/environment/flower_pots/${flowerPot.toLowerCase()}.png`}
+                            alt=""
+                            width={20}
+                            height={20}
+                          />
+                        )}
                       </div>
                     )
                   })}

@@ -522,7 +522,7 @@ export class FightingKnockbackEffect extends OnDamageReceivedEffect {
         destination &&
         targetAtContact.items.has(Item.PROTECTIVE_PADS) === false
       ) {
-        targetAtContact.shield = 0
+        targetAtContact.addShield(-targetAtContact.shield, pokemon, 0, false)
         targetAtContact.handleDamage({
           damage: pokemon.atk,
           board,
