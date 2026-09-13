@@ -5210,31 +5210,31 @@
 		},
 		"HEATRANS_SONG": {
 			"name": "Heatran's Song",
-			"description": "Gain a FIERY_DRUM. On stages 17 and 22, gain a Fletchling."
+			"description": "Gain a FIERY_DRUM. On stage 17, gain a Fletchling."
 		},
 		"RAYQUAZAS_SONG": {
 			"name": "Rayquaza's Song",
-			"description": "Gain a SKY_MELODICA. On stages 17 and 22, gain a Fletchling."
+			"description": "Gain a SKY_MELODICA. On stage 17, gain a Fletchling."
 		},
 		"MEWS_SONG": {
 			"name": "Mew's Song",
-			"description": "Gain a GRASS_CORNET. On stages 17 and 22, gain a Grookey."
+			"description": "Gain a GRASS_CORNET. On stage 17, gain a Grookey."
 		},
 		"GROUDONS_SONG": {
 			"name": "Groudon's Song",
-			"description": "Gain a TERRA_CYMBAL. On stages 17 and 22, gain a Rhyhorn."
+			"description": "Gain a TERRA_CYMBAL. On stage 17, gain a Rhyhorn."
 		},
 		"ARTICUNOS_SONG": {
 			"name": "Articuno's Song",
-			"description": "Gain an ICY_FLUTE. On stages 17 and 22, gain a Frigibax."
+			"description": "Gain an ICY_FLUTE. On stage 17, gain a Frigibax."
 		},
 		"GIRATINAS_SONG": {
 			"name": "Giratina's Song",
-			"description": "Gain a ROCK_HORN. On stages 17 and 22, gain a Rhyhorn."
+			"description": "Gain a ROCK_HORN. On stage 17, gain a Rhyhorn."
 		},
 		"KYOGRES_SONG": {
 			"name": "Kyogre's Song",
-			"description": "Gain an AQUA_MONICA. On stages 17 and 22, gain a Sobble."
+			"description": "Gain an AQUA_MONICA. On stage 17, gain a Sobble."
 		},
 		"MIDNIGHT_SUN": {
 			"name": "Midnight Sun",

@@ -470,6 +470,9 @@ Every balance change on this server, newest first.
 - Petal Dance | damage per petal 20/30/50/100 → 15/20/30/60
 - Sand Tomb | 200/300/400/500% → 100/200/300/400%
 
+**Wishes**
+- Legendary songs | the reinforcement Pokémon is only granted on stage 17, no longer on stage 22
+
 **Items**
 - All Fairy wands | additional SPECIAL 15% → 20%
 - BLAST_WAND on critical hit | 30% → 40%

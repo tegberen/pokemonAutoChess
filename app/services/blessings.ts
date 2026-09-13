@@ -663,7 +663,7 @@ const crownEffects = Object.fromEntries(
   ])
 )
 
-const SONG_REINFORCEMENT_STAGES = [17, 22]
+const SONG_REINFORCEMENT_STAGES = [17]
 const SUPPORTIVE_SOUL_ITEM_STAGES = [8, 16]
 const SUPPORTIVE_SOUL_ITEMS = [
   Item.GRACIDEA_FLOWER,
