@@ -1,5 +1,6 @@
 import { Marked } from "marked"
 import { RarityColor } from "../../../../../config/game/shop"
+import { getPokemonData } from "../../../../../models/precomputed/precomputed-pokemon-data"
 import { Rarity } from "../../../../../types/enum/Game"
 import { Pkm, PkmIndex } from "../../../../../types/enum/Pokemon"
 import { Synergy } from "../../../../../types/enum/Synergy"
@@ -109,7 +110,7 @@ const pokemonLabels = [
     )
   }))
 
-function pokemonPortraits(subject: string) {
+function matchPokemons(subject: string) {
   let remaining = subject.toUpperCase()
   const positions = new Map<Pkm, number>()
   for (const { pokemon, label, expression } of pokemonLabels) {
@@ -122,12 +123,15 @@ function pokemonPortraits(subject: string) {
       }
     )
   }
-  const matchesInSubjectOrder = [...positions.keys()].sort(
+  return [...positions.keys()].sort(
     (a, b) => positions.get(a)! - positions.get(b)!
   )
+}
+
+function pokemonPortraits(subject: string) {
   const portraits = document.createElement("span")
   portraits.className = "guide-pokemon-portraits"
-  for (const pokemon of matchesInSubjectOrder.slice(0, 5)) {
+  for (const pokemon of matchPokemons(subject).slice(0, 5)) {
     const image = document.createElement("img")
     image.src = getPortraitSrc(PkmIndex[pokemon])
     image.alt = ""
@@ -136,6 +140,31 @@ function pokemonPortraits(subject: string) {
     portraits.append(image)
   }
   return portraits
+}
+
+const rarityOrder = Object.values(Rarity)
+
+function groupRowsByRarity(body: HTMLTableSectionElement) {
+  const rows = Array.from(body.rows)
+  const rarityOf = (row: HTMLTableRowElement) => {
+    const index = rarityOrder.indexOf(row.dataset.rarity as Rarity)
+    return index < 0 ? rarityOrder.length : index
+  }
+  rows.sort((a, b) => rarityOf(a) - rarityOf(b))
+  let currentRarity: string | undefined
+  for (const row of rows) {
+    const rarity = row.dataset.rarity as Rarity | undefined
+    if (rarity && rarity !== currentRarity) {
+      const heading = body.insertRow()
+      heading.className = "guide-patchlog-rarity"
+      const cell = heading.insertCell()
+      cell.colSpan = 2
+      cell.style.color = RarityColor[rarity]
+      cell.textContent = rarity.charAt(0) + rarity.slice(1).toLowerCase()
+    }
+    currentRarity = rarity
+    body.append(row)
+  }
 }
 
 function wrapTable(table: HTMLTableElement) {
@@ -355,10 +384,14 @@ export function formatPatchLog(html: string, wishes: PatchLogWish[]) {
         )
       }
       if (category === "Pokémon") {
-        subject.prepend(pokemonPortraits(subject.textContent ?? ""))
+        const subjectText = subject.textContent ?? ""
+        const [firstPokemon] = matchPokemons(subjectText)
+        if (firstPokemon) row.dataset.rarity = getPokemonData(firstPokemon).rarity
+        subject.prepend(pokemonPortraits(subjectText))
       } else if (category === "Fixes") {
-        const portraits = pokemonPortraits(subject.textContent ?? "")
-        const icons = wishIcons(subject.textContent ?? "", matchers)
+        const subjectText = subject.textContent ?? ""
+        const portraits = pokemonPortraits(subjectText)
+        const icons = wishIcons(subjectText, matchers)
         if (portraits.childElementCount > 0) subject.prepend(portraits)
         else if (icons.childElementCount > 0) subject.prepend(icons)
       } else if (category === "Wishes") {
@@ -368,6 +401,7 @@ export function formatPatchLog(html: string, wishes: PatchLogWish[]) {
       while (item.firstChild) change.append(item.firstChild)
       emphasiseValueChanges(change)
     }
+    if (category === "Pokémon") groupRowsByRarity(body)
     element.replaceWith(table)
     wrapTable(table)
   }

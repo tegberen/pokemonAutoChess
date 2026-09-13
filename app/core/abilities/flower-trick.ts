@@ -12,7 +12,7 @@ export class FlowerTrickStrategy extends AbilityStrategy {
     crit: boolean
   ) {
     super.process(pokemon, board, target, crit)
-    const damage = [15, 40, 85, 170][pokemon.stars - 1] ?? 170
+    const damage = [25, 50, 100, 200][pokemon.stars - 1] ?? 200
     const startingCritCount = target.count.crit
     pokemon.commands.push(
       new DelayedCommand(() => {
@@ -31,7 +31,7 @@ export class FlowerTrickStrategy extends AbilityStrategy {
               positionY: cell.value.positionY
             })
             cell.value.handleSpecialDamage(
-              damage + 15 * numberOfCrits,
+              damage + 20 * numberOfCrits,
               board,
               AttackType.SPECIAL,
               pokemon,

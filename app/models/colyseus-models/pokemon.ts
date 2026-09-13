@@ -1928,7 +1928,7 @@ export class Roserade extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.GRASS, Synergy.POISON, Synergy.FLORA])
   rarity = Rarity.RARE
   stars = 3
-  hp = 200
+  hp = 180
   atk = 15
   speed = 54
   def = 4
@@ -2437,7 +2437,7 @@ export class Litwick extends Pokemon {
   stars = 1
   evolution = Pkm.LAMPENT
   evolutionRule = { type: EvolutionRuleType.HATCH } as const
-  hp = 70
+  hp = 50
   atk = 4
   speed = 51
   def = 2
@@ -2454,7 +2454,7 @@ export class Lampent extends Pokemon {
   stars = 2
   evolution = Pkm.CHANDELURE
   evolutionRule = { type: EvolutionRuleType.HATCH } as const
-  hp = 110
+  hp = 100
   atk = 7
   speed = 51
   def = 4
@@ -2469,7 +2469,7 @@ export class Chandelure extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.GHOST, Synergy.FIRE, Synergy.LIGHT])
   rarity = Rarity.HATCH
   stars = 3
-  hp = 170
+  hp = 150
   atk = 10
   speed = 51
   def = 6
@@ -2691,7 +2691,7 @@ export class Hydreigon extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.DRAGON, Synergy.DARK])
   rarity = Rarity.HATCH
   stars = 3
-  hp = 200
+  hp = 220
   atk = 15
   speed = 56
   def = 6
@@ -3243,7 +3243,7 @@ export class Lotad extends Pokemon {
   stars = 1
   evolution = Pkm.LOMBRE
   evolutionRule = { type: EvolutionRuleType.HATCH } as const
-  hp = 60
+  hp = 80
   atk = 6
   speed = 47
   def = 2
@@ -3283,8 +3283,8 @@ export class Ludicolo extends Pokemon {
   ])
   rarity = Rarity.HATCH
   stars = 3
-  hp = 190
-  atk = 24
+  hp = 200
+  atk = 21
   speed = 47
   def = 6
   speDef = 6
@@ -4469,7 +4469,7 @@ export class Piplup extends Pokemon {
   evolution = Pkm.PRINPLUP
   evolutionRule = { type: EvolutionRuleType.HATCH } as const
   hp = 60
-  atk = 5
+  atk = 4
   speed = 44
   def = 2
   speDef = 3
@@ -4486,7 +4486,7 @@ export class Prinplup extends Pokemon {
   evolution = Pkm.EMPOLEON
   evolutionRule = { type: EvolutionRuleType.HATCH } as const
   hp = 160
-  atk = 10
+  atk = 8
   speed = 44
   def = 6
   speDef = 7
@@ -4501,7 +4501,7 @@ export class Empoleon extends Pokemon {
   rarity = Rarity.HATCH
   stars = 3
   hp = 280
-  atk = 15
+  atk = 12
   speed = 44
   def = 10
   speDef = 14
@@ -5785,7 +5785,7 @@ export class Sprigatito extends Pokemon {
   stars = 1
   evolution = Pkm.FLORAGATO
   evolutionRule = { type: EvolutionRuleType.HATCH } as const
-  hp = 70
+  hp = 80
   atk = 7
   speed = 63
   def = 4
@@ -5802,7 +5802,7 @@ export class Floragato extends Pokemon {
   stars = 2
   evolution = Pkm.MEOWSCARADA
   evolutionRule = { type: EvolutionRuleType.HATCH } as const
-  hp = 120
+  hp = 130
   atk = 12
   speed = 63
   def = 5
@@ -5817,8 +5817,8 @@ export class Meowscarada extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.GRASS, Synergy.DARK, Synergy.HUMAN])
   rarity = Rarity.HATCH
   stars = 3
-  hp = 230
-  atk = 23
+  hp = 200
+  atk = 21
   speed = 63
   def = 6
   speDef = 6
@@ -8665,9 +8665,9 @@ export class Oddish extends Pokemon {
   hp = 80
   atk = 8
   speed = 41
-  def = 4
+  def = 2
   speDef = 4
-  maxPP = 80
+  maxPP = 100
   range = 1
   skill = Ability.STUN_SPORE
 }
@@ -8680,9 +8680,9 @@ export class Gloom extends Pokemon {
   hp = 150
   atk = 16
   speed = 41
-  def = 6
+  def = 4
   speDef = 6
-  maxPP = 80
+  maxPP = 100
   range = 1
   skill = Ability.STUN_SPORE
 }
@@ -8694,9 +8694,9 @@ export class Vileplume extends Pokemon {
   hp = 250
   atk = 24
   speed = 41
-  def = 8
+  def = 6
   speDef = 8
-  maxPP = 80
+  maxPP = 100
   range = 1
   skill = Ability.STUN_SPORE
 }
@@ -8708,7 +8708,7 @@ export class Bellossom extends Pokemon {
   hp = 300
   atk = 30
   speed = 41
-  def = 10
+  def = 8
   speDef = 10
   maxPP = 10
   range = 1
@@ -9518,7 +9518,7 @@ export class Braixen extends Pokemon {
   stars = 2
   evolution = Pkm.DELPHOX
   evolutionRule = { type: EvolutionRuleType.HATCH } as const
-  hp = 140
+  hp = 130
   atk = 8
   speed = 58
   def = 6
@@ -9532,8 +9532,8 @@ export class Delphox extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.FIRE, Synergy.PSYCHIC, Synergy.HUMAN])
   rarity = Rarity.HATCH
   stars = 3
-  hp = 220
-  atk = 16
+  hp = 200
+  atk = 18
   speed = 58
   def = 8
   speDef = 8
@@ -11771,7 +11771,7 @@ export class Snivy extends Pokemon {
   evolutionRule = {
     type: EvolutionRuleType.HATCH
   } as const satisfies HatchEvolutionRule
-  hp = 90
+  hp = 80
   atk = 4
   speed = 61
   def = 2
@@ -11790,11 +11790,11 @@ export class Servine extends Pokemon {
   evolutionRule = {
     type: EvolutionRuleType.HATCH
   } as const satisfies HatchEvolutionRule
-  hp = 160
+  hp = 130
   atk = 11
   speed = 61
-  def = 2
-  speDef = 2
+  def = 3
+  speDef = 3
   maxPP = 70
   range = 3
   skill = Ability.MAGICAL_LEAF
@@ -11805,11 +11805,11 @@ export class Serperior extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.GRASS, Synergy.FIELD, Synergy.LIGHT])
   rarity = Rarity.HATCH
   stars = 3
-  hp = 240
+  hp = 200
   atk = 21
   speed = 61
-  def = 2
-  speDef = 2
+  def = 4
+  speDef = 4
   maxPP = 70
   range = 3
   skill = Ability.MAGICAL_LEAF
@@ -13459,7 +13459,7 @@ export class Vespiquen extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.BUG, Synergy.FLORA, Synergy.GOURMET])
   rarity = Rarity.UNIQUE
   stars = 3
-  hp = 190
+  hp = 180
   atk = 16
   speed = 38
   def = 6
@@ -15305,11 +15305,11 @@ export class Stoutland extends Pokemon {
   ])
   rarity = Rarity.HATCH
   stars = 3
-  hp = 270
-  atk = 28
+  hp = 240
+  atk = 24
   speed = 51
-  def = 12
-  speDef = 12
+  def = 10
+  speDef = 10
   maxPP = 100
   range = 1
   skill = Ability.RETALIATE
@@ -17768,7 +17768,7 @@ export class Sandile extends Pokemon {
   evolutionRule = {
     type: EvolutionRuleType.HATCH
   } as const satisfies HatchEvolutionRule
-  hp = 80
+  hp = 60
   atk = 6
   speed = 54
   def = 4
@@ -17791,7 +17791,7 @@ export class Krokorok extends Pokemon {
   evolutionRule = {
     type: EvolutionRuleType.HATCH
   } as const satisfies HatchEvolutionRule
-  hp = 150
+  hp = 140
   atk = 12
   speed = 54
   def = 6
@@ -17810,7 +17810,7 @@ export class Krookodile extends Pokemon {
   ])
   rarity = Rarity.HATCH
   stars = 3
-  hp = 220
+  hp = 200
   atk = 20
   speed = 54
   def = 8

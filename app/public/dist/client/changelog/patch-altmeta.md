@@ -462,13 +462,25 @@ Every balance change on this server, newest first.
 - Froakie, Frogadier | HP 80/140 → 60/120
 - Litten | HP 90 → 70
 - Nacli Line | HP 80/160/280 → 75/150/300
-- Sprigatito Line | GRASS / FLORA / DARK → GRASS / DARK / HUMAN
-- Vespiquen | DEF 8 → 6, max PP 90 → 100
-- Bellossom | star level 4 → 3
+- Sprigatito Line | GRASS / FLORA / DARK → GRASS / DARK / HUMAN, HP 70/120/230 → 80/130/200, Meowscarada ATK 23 → 21
+- Stoutland | HP 270 → 240, ATK 28 → 24, DEF and SPE_DEF 12 → 10
+- Sandile Line | HP 80/150/220 → 60/140/200
+- Litwick Line | HP 70/110/170 → 50/100/150
+- Piplup Line | ATK 5/10/15 → 4/8/12
+- Snivy Line | HP 90/160/240 → 80/130/200, DEF and SPE_DEF 2/2/2 → 2/3/4
+- Lotad Line | HP 60/130/190 → 80/130/200, Ludicolo ATK 24 → 21
+- Braixen, Delphox | HP 140/220 → 130/200, Delphox ATK 16 → 18
+- Hydreigon | HP 200 → 220
+- Roserade | HP 200 → 180
+- Oddish Line | DEF 4/6/8 → 2/4/6, max PP 80 → 100
+- Vespiquen | HP 190 → 180, DEF 8 → 6, max PP 90 → 100
+- Bellossom | star level 4 → 3, DEF 10 → 8
 
 **Abilities**
 - Defend Order | SHIELD 10/20/30/50 → 5/10/20/40
+- Flower Trick | 15/40/85/170 → 25/50/100/200, per critical hit 15 → 20
 - Ingrain | damage and heal 15/30/60/120 → 10/20/40/80
+- Mystical Fire | damage per hit 30% → 40% ATK
 - Petal Dance | damage per petal 20/30/50/100 → 15/20/30/60
 - Sand Tomb | 200/300/400/500% → 100/200/300/400%
 
@@ -487,6 +499,7 @@ Every balance change on this server, newest first.
 - Kyurem, Zacian, Zamazenta | still receive their PvE reward item while training in the Dojo
 - FIGHTING knockback | removing a SHIELD now counts as breaking it, triggering ABILITY_SHIELD, EXPLOSIVE_BAND and similar effects
 - Shield breaks | effects no longer trigger when SHIELD is removed from a Pokémon that had none
+- Foul Play | deals the listed 2/4/6× target ATK instead of one star level higher
 
 ### 12 September 2026
 

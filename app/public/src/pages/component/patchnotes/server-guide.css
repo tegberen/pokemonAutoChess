@@ -684,6 +684,23 @@
   vertical-align: middle;
 }
 
+.server-guide .guide-patchlog-table tbody tr.guide-patchlog-rarity {
+  background: transparent;
+}
+
+.server-guide .guide-patchlog-table .guide-patchlog-rarity td {
+  padding: 0.7em 0.7em 0.15em;
+  border-bottom: 0;
+  font-size: 0.72em;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.server-guide .guide-patchlog-table .guide-patchlog-rarity:first-child td {
+  padding-top: 0.2em;
+}
+
 .server-guide .guide-patchlog-category {
   margin: 1.2em 0 0.35em;
   color: var(--color-fg-secondary);

@@ -29,7 +29,7 @@ export class MysticalFireStrategy extends AbilityStrategy {
       const enemy = cell.value
 
       for (let i = 0; i < 4; i++) {
-        enemy.handleSpecialDamage(pokemon.atk * 0.3, board, AttackType.SPECIAL, pokemon, crit)
+        enemy.handleSpecialDamage(pokemon.atk * 0.4, board, AttackType.SPECIAL, pokemon, crit)
         enemy.addAbilityPower(-3, pokemon, 1, crit)
         if (enemy.ap < 0) {
           enemy.status.triggerBurn(burnDuration, enemy, pokemon)
