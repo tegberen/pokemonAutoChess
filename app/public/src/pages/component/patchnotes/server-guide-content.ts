@@ -356,6 +356,11 @@ export function formatPatchLog(html: string, wishes: PatchLogWish[]) {
       }
       if (category === "Pokémon") {
         subject.prepend(pokemonPortraits(subject.textContent ?? ""))
+      } else if (category === "Fixes") {
+        const portraits = pokemonPortraits(subject.textContent ?? "")
+        const icons = wishIcons(subject.textContent ?? "", matchers)
+        if (portraits.childElementCount > 0) subject.prepend(portraits)
+        else if (icons.childElementCount > 0) subject.prepend(icons)
       } else if (category === "Wishes") {
         subject.prepend(wishIcons(subject.textContent ?? "", matchers))
       }

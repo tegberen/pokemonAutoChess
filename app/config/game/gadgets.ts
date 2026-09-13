@@ -33,7 +33,7 @@ export const GADGETS: Record<GadgetName, Gadget> = {
   bag: {
     name: "bag",
     icon: "school-bag",
-    levelRequired: 1
+    levelRequired: 0
   },
   team_planner: {
     name: "team_planner",

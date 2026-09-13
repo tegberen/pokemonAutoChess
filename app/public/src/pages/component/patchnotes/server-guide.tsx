@@ -132,7 +132,8 @@ export default function ServerGuide({
         icon: Blessings[blessing].icon
       })),
       // the synergy-paired names never appear on their own in the log
-      { name: "Gym Trainer", icon: Blessings[Blessing.NORMAL_FAIRY_GYM_TRAINER].icon }
+      { name: "Gym Trainer", icon: Blessings[Blessing.NORMAL_FAIRY_GYM_TRAINER].icon },
+      { name: "Legendary songs", icon: Blessings[Blessing.HEATRANS_SONG].icon }
     ],
     [t]
   )

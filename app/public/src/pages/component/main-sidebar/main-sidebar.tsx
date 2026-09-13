@@ -193,7 +193,7 @@ export function MainSidebar(props: MainSidebarProps) {
             className="blue"
             handleClick={changeModal}
           >
-            {t("collection.title")}
+            {t("collection.menu_title")}
           </NavLink>
         )}
         <NavLink
