@@ -836,7 +836,7 @@ export function applyWandEffects(
   let specialDamageFactor = 0
 
   for (const { wand, dealsSpecialDamage } of wands) {
-    if (dealsSpecialDamage) specialDamageFactor += 0.15
+    if (dealsSpecialDamage) specialDamageFactor += 0.2
     switch (wand) {
       case Item.CONFUSE_WAND: {
         if (chance(wandProcChance, pokemon)) {
@@ -868,7 +868,7 @@ export function applyWandEffects(
       }
       case Item.BLAST_WAND: {
         if (crit) {
-          specialDamageFactor += 0.15
+          specialDamageFactor += 0.2
           pokemon.broadcastAbility({ skill: "PUFF_PINK" })
         }
         break
@@ -912,7 +912,7 @@ export function applyWandEffects(
         break
       }
       case Item.TWO_EDGED_WAND: {
-        specialDamageFactor += 0.15
+        specialDamageFactor += 0.2
         break
       }
     }
