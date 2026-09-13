@@ -5063,7 +5063,7 @@ export class Bellsprout extends Pokemon {
   hp = 60
   atk = 6
   speed = 47
-  def = 3
+  def = 1
   speDef = 3
   maxPP = 100
   range = 1
@@ -5078,7 +5078,7 @@ export class Weepinbell extends Pokemon {
   hp = 130
   atk = 12
   speed = 47
-  def = 5
+  def = 3
   speDef = 5
   maxPP = 100
   range = 1
@@ -5092,7 +5092,7 @@ export class Victreebel extends Pokemon {
   hp = 200
   atk = 20
   speed = 47
-  def = 7
+  def = 5
   speDef = 7
   maxPP = 100
   range = 1

@@ -16,7 +16,7 @@ export class SandTombStrategy extends AbilityStrategy {
 
     const vortexRadius = 4
     const vortexDuration = 5000
-    const damageMultiplier = [2, 3, 4, 5][pokemon.stars - 1] ?? 5
+    const damageMultiplier = [1, 2, 3, 4][pokemon.stars - 1] ?? 4
     const castPositionX = pokemon.positionX
     const castPositionY = pokemon.positionY
     pokemon.sandTombVortexes += 1
