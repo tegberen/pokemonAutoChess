@@ -5780,7 +5780,7 @@ export class Shiftry extends Pokemon {
 }
 
 export class Sprigatito extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.GRASS, Synergy.FLORA, Synergy.DARK])
+  types = new SetSchema<Synergy>([Synergy.GRASS, Synergy.DARK, Synergy.HUMAN])
   rarity = Rarity.HATCH
   stars = 1
   evolution = Pkm.FLORAGATO
@@ -5797,7 +5797,7 @@ export class Sprigatito extends Pokemon {
 }
 
 export class Floragato extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.GRASS, Synergy.FLORA, Synergy.DARK])
+  types = new SetSchema<Synergy>([Synergy.GRASS, Synergy.DARK, Synergy.HUMAN])
   rarity = Rarity.HATCH
   stars = 2
   evolution = Pkm.MEOWSCARADA
@@ -5814,7 +5814,7 @@ export class Floragato extends Pokemon {
 }
 
 export class Meowscarada extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.GRASS, Synergy.FLORA, Synergy.DARK])
+  types = new SetSchema<Synergy>([Synergy.GRASS, Synergy.DARK, Synergy.HUMAN])
   rarity = Rarity.HATCH
   stars = 3
   hp = 230
@@ -18990,7 +18990,7 @@ export class Nacli extends Pokemon {
   rarity = Rarity.UNCOMMON
   stars = 1
   evolution = Pkm.NACLSTACK
-  hp = 80
+  hp = 75
   atk = 7
   speed = 36
   def = 6
@@ -19005,7 +19005,7 @@ export class Naclstack extends Pokemon {
   rarity = Rarity.UNCOMMON
   stars = 2
   evolution = Pkm.GARGANACL
-  hp = 160
+  hp = 150
   atk = 13
   speed = 36
   def = 8
@@ -19019,7 +19019,7 @@ export class Garganacl extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.ROCK, Synergy.GOURMET, Synergy.HUMAN])
   rarity = Rarity.UNCOMMON
   stars = 3
-  hp = 280
+  hp = 300
   atk = 24
   speed = 36
   def = 12

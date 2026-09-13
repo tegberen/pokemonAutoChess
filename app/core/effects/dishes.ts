@@ -204,8 +204,8 @@ export const DishEffects: Record<(typeof Dishes)[number], Effect[]> = {
   ],
   [Item.ROCK_SALT]: [
     new OnSpawnEffect((entity) => {
-      entity.status.triggerRuneProtect(10000, entity, entity)
-      entity.addShield(0.15 * entity.maxHP, entity, 0, false)
+      entity.status.triggerRuneProtect(5000, entity, entity)
+      entity.addShield(0.5 * entity.maxHP, entity, 0, false)
     })
   ],
   [Item.SANDWICH]: [

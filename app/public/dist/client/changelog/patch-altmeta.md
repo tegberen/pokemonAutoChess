@@ -324,7 +324,7 @@ At the beginning of each battle, TIGHT_BELT is replaced by 2 random items. The h
 - Empoleon: WATER / ICE / STEEL.
 - Hydreigon: DRAGON / DARK.
 - Delphox: FIRE / PSYCHIC / HUMAN.
-- Meowscarada: GRASS / FLORA / DARK.
+- Meowscarada: GRASS / DARK / HUMAN.
 - Stoutland: has GROUND
 - Chandelure: SPECIAL carry
 
@@ -461,6 +461,8 @@ Every balance change on this server, newest first.
 - Spheal Line | ICE / WATER → ICE / AQUATIC / WATER
 - Froakie, Frogadier | HP 80/140 → 60/120
 - Litten | HP 90 → 70
+- Nacli Line | HP 80/160/280 → 75/150/300
+- Sprigatito Line | GRASS / FLORA / DARK → GRASS / DARK / HUMAN
 - Vespiquen | DEF 8 → 6, max PP 90 → 100
 - Bellossom | star level 4 → 3
 
@@ -474,6 +476,7 @@ Every balance change on this server, newest first.
 - Legendary songs | the reinforcement Pokémon is only granted on stage 17, no longer on stage 22
 
 **Items**
+- ROCK_SALT | RUNE_PROTECT 10 → 5 seconds, SHIELD 15% → 50% max HP
 - All Fairy wands | additional SPECIAL 15% → 20%
 - BLAST_WAND on critical hit | 30% → 40%
 - TWO_EDGED_WAND | 30% → 40%
