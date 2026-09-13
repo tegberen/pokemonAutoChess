@@ -3575,7 +3575,7 @@
 	},
 	"passive_description": {
 		"NONE": "No passive",
-		"INFLATABLE": "While above base max HP, receiving a critical attack from an ADJACENT enemy removes [5,10,15] current and max HP, then pushes all ADJACENT enemies away. Pushed enemies fall to SLEEP for [1,2,3] seconds. (Cannot go below base max HP.)",
+		"INFLATABLE": "When critically hit by an ADJACENT enemy, lose [5,10,15] max HP and blow all ADJACENT enemies away, putting them to SLEEP for [1,2,3] seconds.",
 		"TYROGUE": "Will choose a combat discipline based on the first item given:\nCHARCOAL MAGNET: $t(pkm.HITMONLEE)\nHEART_SCALE NEVER_MELT_ICE: $t(pkm.HITMONCHAN)\nOthers: $t(pkm.HITMONTOP)",
 		"PROTEAN2": "The Pokémon acquires the typing of the 2 highest synergies on the team",
 		"PROTEAN3": "The Pokémon acquires the typing of the 3 highest synergies on the team",
@@ -7157,7 +7157,7 @@
 		"LAPRAS": "Lapras offers a ride to go to a different region.",
 		"CHIMECHO": "Chimecho recruits a Pokemon onto every carousel item, now and for the rest of the game",
 		"LUDICOLO": "Ludicolo grants a melodic treasure to every player",
-		"BIDOOF": "Jirachi grants Bidoof's wish, and Bidoof spends it on everyone. Both wish selections come out $t(blessing_tier.PRISMATIC)"
+		"BIDOOF": "Both Wish selections are Prismatic."
 	},
 	"loading_hints": {
 		"tab_out": "Don't tab out! Loading is paused when this browser window is inactive.",
