@@ -475,6 +475,7 @@ export default abstract class PokemonState {
         totalDamage,
         isTripleAttack,
         hasAttackKilled,
+        isAttackSuccessful,
         crit
       })
       if (isAttackSuccessful) {

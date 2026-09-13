@@ -1105,6 +1105,7 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
     totalDamage,
     isTripleAttack,
     hasAttackKilled,
+    isAttackSuccessful,
     crit
   }: {
     target: PokemonEntity
@@ -1115,6 +1116,7 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
     totalDamage: number
     isTripleAttack: boolean
     hasAttackKilled: boolean
+    isAttackSuccessful: boolean
     crit: boolean
   }) {
     this.addPP(ON_ATTACK_MANA, this, 0, false)
@@ -1208,6 +1210,7 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
         specialDamage,
         trueDamage,
         totalDamage,
+        isAttackSuccessful,
         isTripleAttack,
         crit
       })

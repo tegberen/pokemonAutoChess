@@ -372,6 +372,7 @@ export interface OnAttackReceivedEffectArgs {
   specialDamage: number
   trueDamage: number
   totalDamage: number
+  isAttackSuccessful: boolean
   isTripleAttack?: boolean
   attackType?: AttackType
   crit: boolean
