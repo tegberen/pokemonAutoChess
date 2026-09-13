@@ -8704,7 +8704,7 @@ export class Vileplume extends Pokemon {
 export class Bellossom extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.FLORA, Synergy.SOUND])
   rarity = Rarity.SPECIAL
-  stars = 4
+  stars = 3
   hp = 300
   atk = 30
   speed = 41
@@ -13462,9 +13462,9 @@ export class Vespiquen extends Pokemon {
   hp = 190
   atk = 16
   speed = 38
-  def = 8
+  def = 6
   speDef = 8
-  maxPP = 90
+  maxPP = 100
   range = 3
   skill = Ability.VESPIQUEN_ORDERS
   passive = Passive.VESPIQUEN
