@@ -2191,7 +2191,7 @@
 		"RECOVER": "Heal for [25,25,50,100,SP]% of max HP.",
 		"CURSE": "Inflict the highest HP enemy Pokémon with CURSE that will KO after [8,5,3,1,SP=-0.2] seconds. The delay decrease by 1% every 5 AP.",
 		"DOOM_DESIRE": "After 2 seconds, deal [100,125,150,300,SP] SPECIAL to the target. Get back to max PP if the target is KO'd in the duration.",
-		"TIME_TRAVEL": "Go back in time to retrieve lost health. Cure the negative status conditions of the user and allies within RANGE, heal them for [25,25,25,50,SP] HP and grant them +1 RANGE.",
+		"TIME_TRAVEL": "Heal the user and allies within RANGE for [25,25,25,50,SP] HP, cure their negative statuses and grant them +1 RANGE.",
 		"POLTERGEIST": "Deal [30,60,120,240,SP] SPECIAL to the target, +[20,SP] SPECIAL for each item held by the target ([40,SP] for tools).",
 		"GOLD_RUSH": "Deal [20,20,20,50,SP] + [100,100,100,300,SP]% of the player's GOLD value as SPECIAL to the target, then the allied player earns 2 GOLD.",
 		"MAKE_IT_RAIN": "Deal [25,50,100,200,SP] + [100,100,100,300,SP]% of the player's GOLD amount in bank to the target as SPECIAL.",
