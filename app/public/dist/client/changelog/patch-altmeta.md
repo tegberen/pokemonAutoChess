@@ -500,6 +500,7 @@ Every balance change on this server, newest first.
 
 **Fixes**
 - Flower pots | once every pot is fully grown, collected mulch is AMAZE_MULCH again instead of RICH_MULCH
+- LOCKED | ending it restores all bonus RANGE, including from COVERT_CLOAK and abilities
 
 ### 13 September 2026
 
