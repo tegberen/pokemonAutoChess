@@ -2222,7 +2222,7 @@
 		"MULTI_ATTACK": "Deal [7,10,13,20,SP] SPECIAL to ADJACENT enemy Pokémon, multiplied by the sum of levels of all $t(pkm.SILVALLY) synergies.",
 		"STICKY_WEB": "Deal [20,35,70,140,SP] SPECIAL to the target and project a web around them. BOARD_EFFECT: Pokémon walking on the web are inflicted with PARALYSIS for 2 seconds.",
 		"ACCELEROCK": "Jump next to the farthest enemy and deal [100,125,250,SP]% of ATK as SPECIAL to them. Immediately **reduce the user's** DEF by 2 and increase their SPEED by 5 up to [5,SP] times.",
-		"PETAL_BLIZZARD": "Deal [10,20,30,50,SP] SPECIAL to enemies within RANGE and gain 10 AP. Damage is reduced by 20% for each space between the user and the target, down to 20%.",
+		"PETAL_BLIZZARD": "Deal 20 + [10,SP] SPECIAL to enemies within RANGE and gain 10 AP. Damage is reduced by 20% for each space between the user and the target, down to 20%.",
 		"SUNSTEEL_STRIKE": "Jump and land in the middle of the enemy team with the power of a meteor, Dealing [40,60,80,150,SP] SPECIAL to all ADJACENT enemy Pokémon.",
 		"MOONGEIST_BEAM": "Deal [60,80,100,200,SP] SPECIAL to all enemy Pokémon in a line behind the target and inflict them with PARALYSIS for 3 seconds. Allied Pokémon in the beam gain [60,80,100,200,SP] SHIELD.",
 		"FLEUR_CANNON": "Launch a devastating laser beam, dealing [50,75,100,200,SP] SPECIAL to all enemy Pokémon in the path and **reduce the user's** AP by 20.",
@@ -5559,7 +5559,7 @@
 		},
 		"AMAZING_GARDENING": {
 			"name": "Amazing Gardening",
-			"description": "Gain an AMAZE_MULCH, plus another for each fully evolved flower. Gain a Gossifleur."
+			"description": "Gain an AMAZE_MULCH, plus another for each fully evolved flower."
 		},
 		"FLYTRAP": {
 			"name": "Flytrap",

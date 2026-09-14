@@ -269,6 +269,23 @@ function emphasiseValueChanges(cell: HTMLElement) {
   }
 }
 
+function breakAtCommas(cell: HTMLElement) {
+  const walker = document.createTreeWalker(cell, NodeFilter.SHOW_TEXT)
+  const nodes: Text[] = []
+  while (walker.nextNode()) {
+    const node = walker.currentNode as Text
+    if (node.textContent?.includes(", ")) nodes.push(node)
+  }
+  for (const node of nodes) {
+    const fragment = document.createDocumentFragment()
+    ;(node.textContent ?? "").split(/,\s+/).forEach((part, index) => {
+      if (index > 0) fragment.append(document.createElement("br"))
+      if (part) fragment.append(part)
+    })
+    node.replaceWith(fragment)
+  }
+}
+
 export type PatchLogWish = { name: string; icon: string }
 
 function wishIconMatchers(wishes: PatchLogWish[]) {
@@ -400,6 +417,7 @@ export function formatPatchLog(html: string, wishes: PatchLogWish[]) {
       const change = row.insertCell()
       while (item.firstChild) change.append(item.firstChild)
       emphasiseValueChanges(change)
+      if (category === "Pokémon") breakAtCommas(change)
     }
     if (category === "Pokémon") groupRowsByRarity(body)
     element.replaceWith(table)

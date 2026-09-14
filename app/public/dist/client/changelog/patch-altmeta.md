@@ -448,6 +448,14 @@ Selectable in Custom Lobbies.
 
 Every balance change on this server, newest first.
 
+### 14 September 2026
+
+**Abilities**
+- Petal Blizzard | damage [30,SP] → 20 + [10,SP]
+
+**Wishes**
+- Amazing Gardening | Gold → Prismatic, no longer grants a Gossifleur
+
 ### 13 September 2026
 
 **Pokémon**

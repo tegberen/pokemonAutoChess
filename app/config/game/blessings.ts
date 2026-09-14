@@ -909,10 +909,10 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     synergy: Synergy.FLORA
   },
   [Blessing.AMAZING_GARDENING]: {
-    tier: BlessingTier.GOLD,
+    tier: BlessingTier.PRISMATIC,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "water_tank",
-    grantsPokemonImmediately: true,
+    grantsPokemonImmediately: false,
     synergy: Synergy.FLORA
   },
   [Blessing.FLYTRAP]: {

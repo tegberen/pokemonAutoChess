@@ -2989,7 +2989,6 @@ export const blessingEffectService: {
   },
 
   [Blessing.AMAZING_GARDENING]: (player) => {
-    if (!giftPokemonIfBenchHasRoom(player, Pkm.GOSSIFLEUR)) return false
     const fullyEvolvedFlowers = getUnlockedFlowerPots(player).filter(
       (pot) => pot.evolution === Pkm.DEFAULT
     ).length

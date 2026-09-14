@@ -6,6 +6,9 @@ import { AbilityStrategy } from "./ability-strategy"
 
 const DAMAGE_LOST_PER_SPACE = 0.2
 const DAMAGE_RATIO_MIN = 0.2
+const FLAT_DAMAGE = 20
+const AP_SCALED_DAMAGE = 10
+const ABILITY_POWER_PER_CAST = 10
 
 export class PetalBlizzardStrategy extends AbilityStrategy {
   process(
@@ -15,7 +18,7 @@ export class PetalBlizzardStrategy extends AbilityStrategy {
     crit: boolean
   ) {
     super.process(pokemon, board, target, crit)
-    const damage = [10, 20, 30, 50][pokemon.stars - 1] ?? 50
+    const damage = FLAT_DAMAGE + AP_SCALED_DAMAGE * (1 + pokemon.ap / 100)
     board
       .getCellsInRange(pokemon.positionX, pokemon.positionY, pokemon.range, false)
       .forEach((cell) => {
@@ -36,10 +39,11 @@ export class PetalBlizzardStrategy extends AbilityStrategy {
             board,
             AttackType.SPECIAL,
             pokemon,
-            crit
+            crit,
+            false
           )
         }
       })
-    pokemon.addAbilityPower(10, pokemon, 0, false)
+    pokemon.addAbilityPower(ABILITY_POWER_PER_CAST, pokemon, 0, false)
   }
 }
