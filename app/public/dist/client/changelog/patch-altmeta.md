@@ -456,6 +456,9 @@ Every balance change on this server, newest first.
 **Wishes**
 - Amazing Gardening | Gold → Prismatic, no longer grants a Gossifleur
 
+**Fixes**
+- Flower pots | once every pot is fully grown, collected mulch is AMAZE_MULCH again instead of RICH_MULCH
+
 ### 13 September 2026
 
 **Pokémon**
@@ -482,7 +485,7 @@ Every balance change on this server, newest first.
 - Roserade | HP 200 → 180
 - Oddish Line | DEF 4/6/8 → 2/4/6, max PP 80 → 100
 - Vespiquen | HP 190 → 180, DEF 8 → 6, max PP 90 → 100
-- Bellossom | star level 4 → 3, DEF 10 → 8
+- Bellossom | DEF 10 → 8
 
 **Abilities**
 - Defend Order | SHIELD 10/20/30/50 → 5/10/20/40

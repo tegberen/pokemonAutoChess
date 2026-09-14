@@ -19,6 +19,7 @@ import { EvolutionManager } from "../../core/evolution-logic/evolution-manager"
 import {
   MulchStockCaps,
   getFlowerPotsUnlocked,
+  getRemainingFlowerEvolutions,
   getWishItemOnPot
 } from "../../core/flower-pots"
 import type { PokemonEntity } from "../../core/pokemon-entity"
@@ -1575,11 +1576,14 @@ export default class Player extends Schema implements IPlayer {
       this.mulch = this.mulch % this.mulchCap
       const index = MulchStockCaps.indexOf(this.mulchCap)
       this.mulchCap = MulchStockCaps[index + 1] ?? MulchStockCaps.at(-1)
-      const mulchCollected =
-        this.items.filter((i) => i === Item.RICH_MULCH).length +
-        this.flowerPots.reduce((acc, pot) => acc + pot.stars, 0) -
-        8
-      this.items.push(mulchCollected >= 8 ? Item.AMAZE_MULCH : Item.RICH_MULCH)
+      const richMulchStillNeeded =
+        this.flowerPots.reduce(
+          (acc, pot) => acc + getRemainingFlowerEvolutions(pot.name),
+          0
+        ) - this.items.filter((i) => i === Item.RICH_MULCH).length
+      this.items.push(
+        richMulchStillNeeded <= 0 ? Item.AMAZE_MULCH : Item.RICH_MULCH
+      )
     }
   }
 

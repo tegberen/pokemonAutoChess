@@ -159,6 +159,11 @@ export function getFlowerPotStarCount(player: IPlayer): number {
   return getUnlockedFlowerPots(player).reduce((sum, pot) => sum + pot.stars, 0)
 }
 
+export function getRemainingFlowerEvolutions(pkm: Pkm): number {
+  const line = Object.values(FlowerMonByPot).find((mons) => mons.includes(pkm))
+  return line ? line.length - 1 - line.indexOf(pkm) : 0
+}
+
 export function getFlowerMonByPot(pot: FlowerPot): Pkm[] {
   return FlowerMonByPot[pot] || []
 }
