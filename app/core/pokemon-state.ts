@@ -940,8 +940,9 @@ export default abstract class PokemonState {
       if (
         (attackType === AttackType.PHYSICAL ||
           attackType === AttackType.SPECIAL) &&
-        pokemon.types.has(Synergy.FIGHTING) &&
-        pokemon.player?.blessings?.includes(Blessing.BRACE_FOR_IMPACT)
+        (pokemon.effects.has(EffectEnum.COACHING) ||
+          (pokemon.types.has(Synergy.FIGHTING) &&
+            pokemon.player?.blessings?.includes(Blessing.BRACE_FOR_IMPACT)))
       ) {
         reducedDamage = Math.min(
           reducedDamage,

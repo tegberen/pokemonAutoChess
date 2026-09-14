@@ -453,8 +453,12 @@ Every balance change on this server, newest first.
 **Abilities**
 - Petal Blizzard | damage [30,SP] → 20 + [10,SP]
 
+**Synergies**
+- FIGHTING 8 | FIGHTING Pokémon cannot take more than 40% of their max HP in a single hit
+
 **Wishes**
 - Amazing Gardening | Gold → Prismatic, no longer grants a Gossifleur
+- Brace for Impact | Gold → Silver, does not stack with FIGHTING 8, which now grants the same effect
 
 **Fixes**
 - Flower pots | once every pot is fully grown, collected mulch is AMAZE_MULCH again instead of RICH_MULCH

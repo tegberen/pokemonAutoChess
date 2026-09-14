@@ -1149,7 +1149,7 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     synergy: Synergy.NORMAL
   },
   [Blessing.BRACE_FOR_IMPACT]: {
-    tier: BlessingTier.GOLD,
+    tier: BlessingTier.SILVER,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "leather_vest",
     grantsPokemonImmediately: true,

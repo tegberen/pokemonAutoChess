@@ -2614,7 +2614,7 @@
 		"GUTS": "Blocks 3 damage",
 		"STURDY": "Blocks 6 damage",
 		"DEFIANT": "Blocks 9 damage",
-		"COACHING": "Blocks 12 damage. Get a Training Bag. Each stage, FIGHTING Pokémon on the bench with a training bag or a pillar on their left will train and gain 4 ATK and 10% base max HP permanently.",
+		"COACHING": "Blocks 12 damage. FIGHTING Pokémon cannot take more than 40% of their max HP in a single instance of PHYSICAL or SPECIAL.",
 		"PRECOGNITION": "+40 AP. A Unown appears every 5 shops.",
 		"AURA": "+80 AP. A Unown appears every 3 shops.",
 		"TRANSCENDENCE": "+120 AP. Get a Unown shop and a free shop reroll after every fight and every 10 shop rerolls.",
@@ -3985,7 +3985,7 @@
 		"FIRE": "FIRE Pokémon have a chance to BURN their enemies, and gain ATK after every attack.",
 		"WATER": "WATER Pokémon generate more PP and can be fished with a rod.",
 		"ELECTRIC": "ELECTRIC Pokémon basic attacks can trigger two additional attacks.{{additionalInfo}}",
-		"FIGHTING": "FIGHTING Pokémon block a flat amount of damage on every hit received. After 10 hits blocked, throw the melee target away, destroying their SHIELD.",
+		"FIGHTING": "FIGHTING Pokémon block a flat amount of damage on every hit received. After 10 hits blocked, throw the melee target away, destroying their SHIELD. At maximum synergy, get a Training Bag: each stage, FIGHTING Pokémon on the bench with the Training Bag or a pillar on their left train and gain 4 ATK and 10% base max HP permanently.",
 		"PSYCHIC": "PSYCHIC Pokémon gain additional AP and attract Unowns.",
 		"DARK": "DARK Pokémon's critical hits are more powerful and more frequent. Melee Dark Pokémon jump to the farthest target reachable. The STRONGEST Melee  DARK Pokémon leaps away with the target once below 50% max HP. One more Pokémon triggering this effect for each synergy step.",
 		"STEEL": "STEEL Pokémon deal a percentage of their damage as TRUE and give 3 DEF to your whole team when activated.",
@@ -5639,7 +5639,7 @@
 		},
 		"BRACE_FOR_IMPACT": {
 			"name": "Brace for Impact",
-			"description": "FIGHTING Pokémon cannot take more than 40% of their maximum HP in a single instance of PHYSICAL or SPECIAL damage. Gain a Machop."
+			"description": "FIGHTING Pokémon cannot take more than 40% of their maximum HP in a single instance of PHYSICAL or SPECIAL. (Does not stack with FIGHTING 8.) Gain a Machop."
 		},
 		"FROST_BARRIER": {
 			"name": "Frost Barrier",
