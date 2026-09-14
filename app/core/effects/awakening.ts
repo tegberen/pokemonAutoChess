@@ -17,6 +17,7 @@ import { chance, pickRandomIn } from "../../utils/random"
 import { Item } from "../../types"
 import { schemaValues } from "../../utils/schemas"
 import { isOnBench } from "../../utils/board"
+import { throwAway } from "./synergies"
 
 const O = EffectEnum.CRYSTALLISATION // effect origin tag
 
@@ -415,6 +416,18 @@ export const AwakeningEffects: Partial<
           false
         )
       }
+    })
+  ],
+
+  [Awakening.ZEN_BALL]: [
+    new OnDeathEffect(({ pokemon, board }) => {
+      board
+        .getAdjacentCells(pokemon.positionX, pokemon.positionY)
+        .forEach((cell) => {
+          if (cell.value && cell.value.team !== pokemon.team) {
+            throwAway(pokemon, cell.value, board)
+          }
+        })
     })
   ]
 }

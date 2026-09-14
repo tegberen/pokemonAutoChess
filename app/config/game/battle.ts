@@ -32,5 +32,13 @@ export const WeatherThreshold: { [weather in Weather]: number } = {
   [Weather.METEOR_SHOWER]: 8,
   [Weather.CLOUDY]: 8,
   [Weather.TERRAIN]: 8,
-  [Weather.BLOSSOM]: 8
+  [Weather.BLOSSOM]: 8,
+  [Weather.ZEN_ZONE]: 8
 }
+
+export const ZEN_ZONE_DAMAGE_BLOCKED = 3
+export const ZEN_ZONE_FIGHTING_DAMAGE_BLOCKED = 6
+export const FIGHTING_BLOCKS_PER_THROW = 10
+export const ZEN_BALL_DEFENSE = 4
+export const SWORDS_OF_JUSTICE_ZEN_ZONE_STAT_GAIN = 4
+export const ZEN_BALL_AWAKENING_TRUE_DAMAGE_DEF_RATIO = 0.4

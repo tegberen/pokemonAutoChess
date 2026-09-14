@@ -59,7 +59,8 @@ export const WeatherSupportPassives: Partial<Record<Passive, Weather>> = {
   [Passive.DISTORTION_WEATHER_SUPPORT]: Weather.DISTORTION,
   [Passive.CLOUDY_WEATHER_SUPPORT]: Weather.CLOUDY,
   [Passive.HARD_TERRAIN_WEATHER_SUPPORT]: Weather.TERRAIN,
-  [Passive.BLOSSOM_WEATHER_SUPPORT]: Weather.BLOSSOM
+  [Passive.BLOSSOM_WEATHER_SUPPORT]: Weather.BLOSSOM,
+  [Passive.ZEN_ZONE_WEATHER_SUPPORT]: Weather.ZEN_ZONE
 }
 
 export function getPlayerWeatherScores(

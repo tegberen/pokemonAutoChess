@@ -1111,7 +1111,8 @@ export default class PokemonSprite extends DraggableObject {
     [Item.FOSSIL_FRAGMENT]: 0xc5c657,
     [Item.CLOUD_ORB]: 0xb380c2,
     [Item.PEAT_BLOCK]: 0x978e89,
-    [Item.BLOSSOM_SHARD]: 0xebbcd5
+    [Item.BLOSSOM_SHARD]: 0xebbcd5,
+    [Item.ZEN_BALL]: 0x5fa88f
   }
 
   // GEM_HARVEST shortens crystallisation, so the bar has one segment less

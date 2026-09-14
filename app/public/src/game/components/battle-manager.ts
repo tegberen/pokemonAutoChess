@@ -458,10 +458,6 @@ export default class BattleManager {
         if (value != 0) {
           this.displayAbilityOnPokemon("FIELD_DEATH", pkm)
         }
-      } else if (field == "fightingBlockCount") {
-        if (value > 0 && value % 10 === 0) {
-          this.displayAbilityOnPokemon("FIGHTING_KNOCKBACK", pkm)
-        }
       } else if (field === "fairyCritCount") {
         if (value != 0) {
           this.displayAbilityOnPokemon("FAIRY_CRIT", pkm)

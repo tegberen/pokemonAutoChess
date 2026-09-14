@@ -103,6 +103,32 @@ each tile of gap.
 
 [Dark in the Wiki](#wiki/types/DARK)
 
+### Fighting
+
+{{synergy:FIGHTING}}
+
+#### Zen Zone weather
+
+{{weather:ZEN_ZONE}}
+
+#### Zen Ball
+
+{{item:ZEN_BALL}}
+
+#### Pokémon
+
+- Meditite Line: Meditate is doubled under ZEN_ZONE.
+- Marshadow: GHOST / FIGHTING, sets the weather to ZEN_ZONE.
+- Makuhita Line: counts as 3 for ZEN_ZONE.
+- Cobalion, Terrakion, Virizion: under ZEN_ZONE, gain 4 DEF, ATK or SPE_DEF the first time each ally falls below 50% HP.
+
+#### Wishes
+
+- Brace for Impact: now a generic wish for all allies, does not stack with FIGHTING 8, which grants the same effect.
+- Shodan: at FIGHTING 8, the single-hit cap drops to 20% max HP and the excess is redirected to an ADJACENT enemy.
+
+[Fighting in the Wiki](#wiki/types/FIGHTING)
+
 ## Weather
 
 [See weather effects, setters and matching items](#wiki/weather).
@@ -121,6 +147,7 @@ each tile of gap.
 | CLOUDY | {{weather:CLOUDY}} |
 | TERRAIN | {{weather:TERRAIN}} |
 | BLOSSOM | {{weather:BLOSSOM}} |
+| ZEN_ZONE | {{weather:ZEN_ZONE}} |
 
 ## Items
 
@@ -450,15 +477,26 @@ Every balance change on this server, newest first.
 
 ### 14 September 2026
 
+**Pokémon**
+- Meditite Line | new passive, Meditate is doubled under ZEN_ZONE
+- Marshadow | loses HUMAN, ATK 20 → 23, new passive sets the weather to ZEN_ZONE
+- Makuhita Line | counts as 3 for ZEN_ZONE
+- Cobalion, Terrakion, Virizion | new passive, under ZEN_ZONE gain 4 DEF, ATK or SPE_DEF the first time each ally falls below 50% HP
+
 **Abilities**
 - Petal Blizzard | damage [30,SP] → 20 + [10,SP]
 
 **Synergies**
 - FIGHTING 8 | FIGHTING Pokémon cannot take more than 40% of their max HP in a single hit
+- ZEN_ZONE {{new}} | FIGHTING weather, all Pokémon block 3 damage on every hit, 6 if FIGHTING
 
 **Wishes**
+- Shodan {{new}} | at FIGHTING 8, the single-hit cap drops from 40% to 20% max HP and the excess is redirected to an ADJACENT enemy
 - Amazing Gardening | Gold → Prismatic, no longer grants a Gossifleur
-- Brace for Impact | Gold → Silver, does not stack with FIGHTING 8, which now grants the same effect
+- Brace for Impact | now a generic wish, all allies cannot take more than 40% max HP in a single hit, no longer grants a Machop, does not stack with FIGHTING 8
+
+**Items**
+- ZEN_BALL {{new}} | counts as 3 towards ZEN_ZONE, your team gains 4 DEF, awakens ROCK Pokémon as FIGHTING
 
 **Fixes**
 - Flower pots | once every pot is fully grown, collected mulch is AMAZE_MULCH again instead of RICH_MULCH

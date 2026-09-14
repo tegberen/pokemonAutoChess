@@ -1335,6 +1335,7 @@ export class Meditite extends Pokemon {
   maxPP = 100
   range = 2
   skill = Ability.MEDITATE
+  passive2 = Passive.ZEN_MEDITATION
   additional = true
 }
 
@@ -1360,6 +1361,7 @@ export class Medicham extends Pokemon {
   skill = Ability.MEDITATE
   additional = true
   passive = Passive.MEDICHAM
+  passive2 = Passive.ZEN_MEDITATION
 }
 
 export class MegaMedicham extends Pokemon {
@@ -1378,6 +1380,7 @@ export class MegaMedicham extends Pokemon {
   maxPP = 100
   range = 3
   skill = Ability.MEDITATE
+  passive2 = Passive.ZEN_MEDITATION
   additional = true
 }
 
@@ -7522,6 +7525,7 @@ export class Terrakion extends Pokemon {
   maxPP = 120
   range = 1
   skill = Ability.SACRED_SWORD_CAVERN
+  passive = Passive.TERRAKION
 }
 
 export class Virizion extends Pokemon {
@@ -7536,6 +7540,7 @@ export class Virizion extends Pokemon {
   maxPP = 120
   range = 1
   skill = Ability.SACRED_SWORD_GRASS
+  passive = Passive.VIRIZION
 }
 
 export class Cobalion extends Pokemon {
@@ -7550,6 +7555,7 @@ export class Cobalion extends Pokemon {
   maxPP = 120
   range = 1
   skill = Ability.SACRED_SWORD_IRON
+  passive = Passive.COBALION
 }
 
 export class Mawile extends Pokemon {
@@ -8137,21 +8143,18 @@ export class ShadowMewtwo extends Pokemon {
 }
 
 export class Marshadow extends Pokemon {
-  types = new SetSchema<Synergy>([
-    Synergy.GHOST,
-    Synergy.FIGHTING,
-    Synergy.HUMAN
-  ])
+  types = new SetSchema<Synergy>([Synergy.GHOST, Synergy.FIGHTING])
   rarity = Rarity.LEGENDARY
   stars = 3
   hp = 200
-  atk = 20
+  atk = 23
   speed = 65
   def = 10
   speDef = 10
   maxPP = 125
   range = 1
   skill = Ability.SPECTRAL_THIEF
+  passive = Passive.ZEN_ZONE
 }
 
 export class Kyurem extends Pokemon {
@@ -10191,6 +10194,7 @@ export class Makuhita extends Pokemon {
   maxPP = 100
   range = 1
   skill = Ability.DYNAMIC_PUNCH
+  passive2 = Passive.ZEN_ZONE_WEATHER_SUPPORT
   additional = true
 }
 export class Hariyama extends Pokemon {
@@ -10205,6 +10209,7 @@ export class Hariyama extends Pokemon {
   maxPP = 80
   range = 1
   skill = Ability.DYNAMIC_PUNCH
+  passive2 = Passive.ZEN_ZONE_WEATHER_SUPPORT
   additional = true
 }
 

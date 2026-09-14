@@ -1,5 +1,5 @@
 import { MapSchema, Schema, type } from "@colyseus/schema"
-import { ARMOR_FACTOR, BENCH_GROUND_HOLES_OFFSET, BOARD_HEIGHT, BOARD_WIDTH, BOARD_SIDE_HEIGHT, getItemCapacity, packBoardCell } from "../config"
+import { ARMOR_FACTOR, BENCH_GROUND_HOLES_OFFSET, BOARD_HEIGHT, BOARD_WIDTH, BOARD_SIDE_HEIGHT, getItemCapacity, packBoardCell, ZEN_BALL_DEFENSE } from "../config"
 import {
   ScribbleShapeTint,
   ScribbleShapeType
@@ -4928,6 +4928,15 @@ export default class Simulation extends Schema implements ISimulation {
                 })
             }, EffectEnum.TERRAIN)
           )
+        }
+        break
+      }
+
+      case EffectEnum.ZEN_ZONE: {
+        const player = pokemon.player
+        const nbZenBalls = player ? count(player.items, Item.ZEN_BALL) : 0
+        if (nbZenBalls > 0) {
+          pokemon.addDefense(ZEN_BALL_DEFENSE * nbZenBalls, "environment", 0, false)
         }
         break
       }

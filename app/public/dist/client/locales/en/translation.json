@@ -1936,7 +1936,7 @@
 		"BLAZE_KICK": "Gain [10,20,40,80]% CRIT_CHANCE, then deal [30,60,120,240,SP] SPECIAL and BURN the target for 2 seconds. If it already has BURN, deal +30% damage. Can crit by default.",
 		"WISH": "Grant [30,60,120,240,SP] SHIELD and 1.5 second PROTECT to the lowest % HP ally.",
 		"LUNAR_BLESSING": "Heal the user and all allied Pokémon for [25,25,25,50,SP]% of their max HP and cure their negative status conditions.",
-		"MEDITATE": "Increase the user's ATK by [100,100,200,400,SP]% of base ATK.",
+		"MEDITATE": "Increase the user's ATK by [100,SP]% of base ATK.",
 		"DEFENSE_CURL": "Increase the user's DEF and SPE_DEF by [5,10,20,40,SP].",
 		"IRON_HEAD": "Increase the user's DEF and SPE_DEF by [5,10,15,30,SP] then hit target with a powerful headbutt, dealing [100,SP]% of (DEF + SPE_DEF) as SPECIAL.",
 		"IRON_DEFENSE": "Grant [20,40,80,160,SP] SHIELD to all allied Pokémon in the same row as the user.",
@@ -2689,6 +2689,7 @@
 		"CRYSTALLISE_CLOUD_ORB": "When the user is affected by a negative status effect, lose 20% of current DEF for the next 5 seconds and gain RUNE_PROTECT for 5 seconds.",
 		"CRYSTALLISE_PEAT_BLOCK": "When the user is KO'd, distribute its current DEF and SPEED equally among allies within a 2-tile radius.",
 		"CRYSTALLISE_BLOSSOM_SHARD": "After casting its ability, the user regains 5% of its max PP for each ADJACENT ally.",
+		"CRYSTALLISE_ZEN_BALL": "Each time the user throws away an enemy, deal 40% of its DEF as TRUE. On ROCK explosion, throw away all ADJACENT enemies.",
 		"CURSE_OF_VULNERABILITY": "The enemy with the highest DEF + SPE_DEF lose 5 of it and is FLINCH",
 		"CURSE_OF_WEAKNESS": "Also, the enemy with the highest ATK lose 20% of it and is PARALYSIS",
 		"CURSE_OF_TORMENT": "Also, the enemy with the highest AP lose 30 of it and is FATIGUE",
@@ -2920,6 +2921,7 @@
 		"CLOUD_ORB": "Cloud Orb",
 		"PEAT_BLOCK": "Peat Block",
 		"BLOSSOM_SHARD": "Blossom Shard",
+		"ZEN_BALL": "Zen Ball",
 		"UTILITY_UMBRELLA": "Utility Umbrella",
 		"NORMAL_GEM": "Normal Gem",
 		"GRASS_GEM": "Grass Gem",
@@ -3340,6 +3342,7 @@
 		"CLOUD_ORB": "Counts as 3 towards CLOUDY. Under CLOUDY, your team deals 1% of target's max HP as SPECIAL ON_ATTACK.\n\nAllows a ROCK Pokémon to undergo Crystallisation, Awakening it as a AMORPHOUS type.",
 		"PEAT_BLOCK": "Counts as 3 towards TERRAIN. Under TERRAIN, your team retaliates against ADJACENT enemies. [5,LK]% chance to slow their SPEED by 3 when hit.\n\nAllows a ROCK Pokémon to undergo Crystallisation, awakening it as a FIELD type.",
 		"BLOSSOM_SHARD": "Counts as 3 towards BLOSSOM. Under BLOSSOM, each time an enemy spawns within a 2-tile radius of one of your units, gain SHIELD equal to 5% of its max HP.\n\nAllows a ROCK Pokémon to undergo Crystallisation, awakening it as a FLORA type.",
+		"ZEN_BALL": "Counts as 3 towards ZEN_ZONE. Under ZEN_ZONE, your team gains 4 DEF.\n\nAllows a ROCK Pokémon to undergo Crystallisation, awakening it as a FIGHTING type.",
 		"UTILITY_UMBRELLA": "Your opponent needs 1 additional count to activate their weather for each UTILITY_UMBRELLA in your inventory.",
 		"NORMAL_GEM": "+1 to NORMAL synergy",
 		"GRASS_GEM": "+1 to GRASS synergy",
@@ -3658,6 +3661,10 @@
 		"ILLUMISE_VOLBEAT": "Illumise and Volbeat gain 5 PP per second for each other member of their species alive on the board",
 		"PRISM": "Necrozma switches between its Ultra form and Normal form depending on its exposure to LIGHT",
 		"BLOSSOM": "Change weather to BLOSSOM",
+		"ZEN_ZONE": "Change weather to ZEN_ZONE",
+		"COBALION": "Under ZEN_ZONE, gain 4 DEF the first time each ally falls below 50% HP.",
+		"TERRAKION": "Under ZEN_ZONE, gain 4 ATK the first time each ally falls below 50% HP.",
+		"VIRIZION": "Under ZEN_ZONE, gain 4 SPE_DEF the first time each ally falls below 50% HP.",
 		"SPECIAL_ATTACK": "Basic attacks deal SPECIAL and scale with AP",
 		"NINCADA": "After evolving, get Shedinja as well if you have a free space on your bench",
 		"FAMILY": "The Pokémon grows with time (turn 15 and turn 20)",
@@ -3681,6 +3688,8 @@
 		"CLOUDY_WEATHER_SUPPORT": "The Pokémon counts as 3 for CLOUDY",
 		"HARD_TERRAIN_WEATHER_SUPPORT": "The Pokémon counts as 3 for TERRAIN",
 		"BLOSSOM_WEATHER_SUPPORT": "The Pokémon counts as 3 for BLOSSOM",
+		"ZEN_ZONE_WEATHER_SUPPORT": "The Pokémon counts as 3 for ZEN_ZONE",
+		"ZEN_MEDITATION": "Meditate is doubled under ZEN_ZONE.",
 		"CARBINK": "Spontanious mutations have been observed during Crystallisation.",
 		"SCYTHER": "Scyther is looking for METAL_ALLOY or BLACK_AUGURITE",
 		"GLUTTON": "Permanently gains max HP when eating: 10 HP for each berry, 20 HP for each dish, 30 HP when cooking as a Chef",
@@ -4267,7 +4276,8 @@
 		"METEOR_SHOWER": "Meteor Shower",
 		"CLOUDY": "Cloudy",
 		"TERRAIN": "Hard Terrain",
-		"BLOSSOM": "Blossom"
+		"BLOSSOM": "Blossom",
+		"ZEN_ZONE": "Zen Zone"
 	},
 	"weather_description": {
 		"NEUTRAL": "Normal weather. No effects.",
@@ -4292,7 +4302,8 @@
 		"METEOR_SHOWER": "Every 7 seconds, a Meteor crashes onto a tile, damaging it and all ADJACENT tiles for 100 PHYSICAL (FOSSIL gain 50% of base ATK when hit).",
 		"CLOUDY": "+10% max PP\n+30% RUNE_PROTECT duration",
 		"TERRAIN": "+1 SPEED for each tile moved",
-		"BLOSSOM": "Spawns gain 20 AP (40 if FLORA). FLORA spawns gain +1 RANGE"
+		"BLOSSOM": "Spawns gain 20 AP (40 if FLORA). FLORA spawns gain +1 RANGE",
+		"ZEN_ZONE": "Block 3 damage on every hit (6 if FIGHTING)"
 	},
 	"board_effect": {
 		"EMBER": "Ember",
@@ -5637,9 +5648,13 @@
 			"name": "Wrapped Up",
 			"description": "NORMAL Pokémon holding a scarf item convert the SHIELD gained from NORMAL into max HP. Gain an Igglybuff."
 		},
+		"SHODAN": {
+			"name": "Shodan",
+			"description": "At FIGHTING 8, the damage cap of FIGHTING Pokémon is 20% of max HP instead of 40%. The excess is retaliated to a random ADJACENT enemy."
+		},
 		"BRACE_FOR_IMPACT": {
 			"name": "Brace for Impact",
-			"description": "FIGHTING Pokémon cannot take more than 40% of their maximum HP in a single instance of PHYSICAL or SPECIAL. (Does not stack with FIGHTING 8.) Gain a Machop."
+			"description": "Allied Pokémon cannot take more than 40% of their maximum HP in a single instance of PHYSICAL or SPECIAL. (Does not stack with FIGHTING 8.)"
 		},
 		"FROST_BARRIER": {
 			"name": "Frost Barrier",

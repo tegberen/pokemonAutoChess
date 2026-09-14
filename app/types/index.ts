@@ -661,6 +661,7 @@ export interface IPokemonEntity {
   inSpotlight: boolean
   isBlessedHero: boolean
   isOnCriticalPath: boolean
+  hasFallenBelowHalfHp: boolean
 }
 
 export interface IStatus {

@@ -221,6 +221,7 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
   sourcePlayer: Player | undefined = undefined
   darkSubstituteTriggered: boolean = false
   darkSubstituteEligible: boolean = false
+  hasFallenBelowHalfHp: boolean = false
   stickyBarbCursed: boolean = false
   critMarkRemainingMs: number = 0
   trueDamageMarkRemainingMs: number = 0

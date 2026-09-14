@@ -1,4 +1,10 @@
-import { ARMOR_FACTOR, FIGHTING_PHASE_DURATION } from "../config"
+import {
+  ARMOR_FACTOR,
+  FIGHTING_PHASE_DURATION,
+  SWORDS_OF_JUSTICE_ZEN_ZONE_STAT_GAIN,
+  ZEN_ZONE_DAMAGE_BLOCKED,
+  ZEN_ZONE_FIGHTING_DAMAGE_BLOCKED
+} from "../config"
 import {
   SPRINGTIDE_DAMAGE_BONUS_PER_SPACE,
   SynergyTiers,
@@ -25,6 +31,7 @@ import {
   AURORA_BOREALIS_DAMAGE_REDUCTION_IN_SNOW_OR_NIGHT,
   Blessing,
   BRACE_FOR_IMPACT_MAX_HP_RATIO,
+  SHODAN_MAX_HP_RATIO,
   PLUSHIFY_SUBSTITUTE_PROTECT_DURATION,
   CONTEMPT_DAMAGE_MULTIPLIER,
   EXPLOIT_DAMAGE_BONUS,
@@ -912,19 +919,23 @@ export default abstract class PokemonState {
           reducedDamage *= 0.7
         }
 
-        if (
-          pokemon.effects.has(EffectEnum.GUTS) ||
-          pokemon.effects.has(EffectEnum.STURDY) ||
-          pokemon.effects.has(EffectEnum.DEFIANT) ||
-          pokemon.effects.has(EffectEnum.COACHING)
-        ) {
-          const damageBlocked = pokemon.effects.has(EffectEnum.COACHING)
-            ? 12
-            : pokemon.effects.has(EffectEnum.DEFIANT)
-              ? 9
-              : pokemon.effects.has(EffectEnum.STURDY)
-                ? 6
-                : 3
+        const fightingDamageBlocked = pokemon.effects.has(EffectEnum.COACHING)
+          ? 12
+          : pokemon.effects.has(EffectEnum.DEFIANT)
+            ? 9
+            : pokemon.effects.has(EffectEnum.STURDY)
+              ? 6
+              : pokemon.effects.has(EffectEnum.GUTS)
+                ? 3
+                : 0
+        const zenZoneDamageBlocked =
+          pokemon.simulation.weather !== Weather.ZEN_ZONE
+            ? 0
+            : pokemon.types.has(Synergy.FIGHTING)
+              ? ZEN_ZONE_FIGHTING_DAMAGE_BLOCKED
+              : ZEN_ZONE_DAMAGE_BLOCKED
+        const damageBlocked = fightingDamageBlocked + zenZoneDamageBlocked
+        if (damageBlocked > 0) {
           reducedDamage = reducedDamage - damageBlocked
           pokemon.count.fightingBlockCount++
         }
@@ -941,13 +952,33 @@ export default abstract class PokemonState {
         (attackType === AttackType.PHYSICAL ||
           attackType === AttackType.SPECIAL) &&
         (pokemon.effects.has(EffectEnum.COACHING) ||
-          (pokemon.types.has(Synergy.FIGHTING) &&
-            pokemon.player?.blessings?.includes(Blessing.BRACE_FOR_IMPACT)))
+          pokemon.player?.blessings?.includes(Blessing.BRACE_FOR_IMPACT))
       ) {
-        reducedDamage = Math.min(
-          reducedDamage,
-          Math.ceil(pokemon.maxHP * BRACE_FOR_IMPACT_MAX_HP_RATIO)
-        )
+        const deflects =
+          pokemon.effects.has(EffectEnum.COACHING) &&
+          pokemon.player?.blessings?.includes(Blessing.SHODAN) === true
+        const maxHpRatio = deflects
+          ? SHODAN_MAX_HP_RATIO
+          : BRACE_FOR_IMPACT_MAX_HP_RATIO
+        const maxDamage = Math.ceil(pokemon.maxHP * maxHpRatio)
+        const excessDamage = reducedDamage - maxDamage
+        reducedDamage = Math.min(reducedDamage, maxDamage)
+        // retaliation is never deflected, so two deflecting units cannot bounce a hit forever
+        if (deflects && excessDamage > 0 && !isRetaliation) {
+          const adjacentEnemies = board
+            .getAdjacentCells(pokemon.positionX, pokemon.positionY)
+            .map((cell) => cell.value)
+            .filter((entity) => entity && entity.team !== pokemon.team)
+          const deflectTarget = pickRandomIn(adjacentEnemies)
+          deflectTarget?.handleDamage({
+            damage: excessDamage,
+            board,
+            attackType,
+            attacker: pokemon,
+            shouldTargetGainMana: true,
+            isRetaliation: true
+          })
+        }
       }
 
       if (
@@ -1139,6 +1170,24 @@ export default abstract class PokemonState {
       }
 
       pokemon.hp = Math.max(0, pokemon.hp - residualDamage)
+      if (
+        !pokemon.hasFallenBelowHalfHp &&
+        pokemon.hp < 0.5 * pokemon.maxHP &&
+        pokemon.simulation.weather === Weather.ZEN_ZONE
+      ) {
+        pokemon.hasFallenBelowHalfHp = true
+        const gain = SWORDS_OF_JUSTICE_ZEN_ZONE_STAT_GAIN
+        board.forEach((x, y, ally) => {
+          if (!ally || ally === pokemon || ally.team !== pokemon.team) return
+          if (ally.passive === Passive.COBALION) {
+            ally.addDefense(gain, ally, 0, false)
+          } else if (ally.passive === Passive.TERRAKION) {
+            ally.addAttack(gain, ally, 0, false)
+          } else if (ally.passive === Passive.VIRIZION) {
+            ally.addSpecialDefense(gain, ally, 0, false)
+          }
+        })
+      }
 
       // logger.debug(`${pokemon.name} took ${damage} and has now ${pokemon.hp} life shield ${pokemon.shield}`);
 

@@ -1149,10 +1149,16 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     synergy: Synergy.NORMAL
   },
   [Blessing.BRACE_FOR_IMPACT]: {
-    tier: BlessingTier.SILVER,
+    tier: BlessingTier.GOLD,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "leather_vest",
-    grantsPokemonImmediately: true,
+    grantsPokemonImmediately: false
+  },
+  [Blessing.SHODAN]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "shodan",
+    grantsPokemonImmediately: false,
     synergy: Synergy.FIGHTING
   },
   [Blessing.FROST_BARRIER]: {

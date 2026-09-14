@@ -19,6 +19,7 @@ export default class WeatherManager {
   image: Phaser.GameObjects.Image | undefined
   images: Phaser.GameObjects.Image[]
   graphics: Phaser.GameObjects.Graphics[]
+  fadingLayers: Phaser.GameObjects.Container[]
   timers: Phaser.Time.TimerEvent[]
   tweens: Phaser.Tweens.BaseTween[]
   containers: Phaser.GameObjects.Container[]
@@ -32,6 +33,7 @@ export default class WeatherManager {
     this.particlesEmitters = []
     this.images = []
     this.graphics = []
+    this.fadingLayers = []
     this.timers = []
     this.tweens = []
     this.containers = []
@@ -2822,7 +2824,324 @@ export default class WeatherManager {
     )
   }
 
+  addZenZone() {
+    const ink = "rgb(115,205,165)"
+    const inkEdge = "rgb(40,85,65)"
+    const floorTilt = 0.75
+    const floorAlpha = { min: 0.3, max: 0.36 }
+    const erosion = { patches: 0.16, pixels: 0.06 }
+    // matches the pixel size of the upscaled map tiles
+    const pixelSize = 2
+    const yinYangRadius = 115
+    const trigramRadius = 191
+    const middleRingRadius = 246
+    const hexagramRadius = 297
+    const outerRingRadius = 345
+    const padding = 8
+
+    // the entrance ends within 1.5s so it never competes with the fight's start
+    const yinYangFadeDuration = 700
+    const ringsDelay = 200
+    const ringsFadeDuration = 700
+    const trigramsDelay = ringsDelay + 200
+    const trigramInterval = 45
+    const hexagramsDelay = trigramsDelay + 8 * trigramInterval
+    const hexagramInterval = 35
+    const symbolFadeDuration = 450
+    const breathingDelay =
+      hexagramsDelay + 8 * hexagramInterval + symbolFadeDuration
+    const breathingPeriod = 8000
+
+    const boardCenterX = BOARD_X_START + (CELL_WIDTH * (BOARD_WIDTH - 1)) / 2
+    const topCellY =
+      BOARD_Y_START - CELL_HEIGHT * (BOARD_HEIGHT + 1) + CELL_HEIGHT / 2
+    const bottomCellY = BOARD_Y_START - CELL_HEIGHT * 2 + CELL_HEIGHT / 2
+    const boardCenterY = (topCellY + bottomCellY) / 2
+
+    const inkStroke = (
+      context: CanvasRenderingContext2D,
+      tracePath: () => void,
+      width: number
+    ) => {
+      context.beginPath()
+      tracePath()
+      context.lineWidth = width + 4
+      context.strokeStyle = inkEdge
+      context.stroke()
+      context.lineWidth = width
+      context.strokeStyle = ink
+      context.stroke()
+    }
+    const inkFill = (
+      context: CanvasRenderingContext2D,
+      tracePath: () => void
+    ) => {
+      context.beginPath()
+      tracePath()
+      context.lineWidth = 4
+      context.strokeStyle = inkEdge
+      context.stroke()
+      context.fillStyle = ink
+      context.fill()
+    }
+    const inkCircle = (
+      context: CanvasRenderingContext2D,
+      center: number,
+      radius: number,
+      width: number
+    ) =>
+      inkStroke(
+        context,
+        () => context.arc(center, center, radius, 0, 2 * Math.PI),
+        width
+      )
+    const inkBars = (
+      context: CanvasRenderingContext2D,
+      pattern: number,
+      nbBars: number,
+      barWidth: number,
+      barHeight: number
+    ) => {
+      const barGap = barHeight
+      const brokenGap = barHeight * 1.8
+      inkFill(context, () => {
+        for (let bar = 0; bar < nbBars; bar++) {
+          const y =
+            (bar - (nbBars - 1) / 2) * (barHeight + barGap) - barHeight / 2
+          if (((pattern >> bar) & 1) === 1) {
+            context.rect(-barWidth / 2, y, barWidth, barHeight)
+          } else {
+            const segment = (barWidth - brokenGap) / 2
+            context.rect(-barWidth / 2, y, segment, barHeight)
+            context.rect(brokenGap / 2, y, segment, barHeight)
+          }
+        }
+      })
+    }
+    const createPixelTexture = (
+      key: string,
+      size: number,
+      draw: (context: CanvasRenderingContext2D, center: number) => void,
+      { wear = 1, seed = 7 } = {}
+    ) => {
+      if (this.scene.textures.exists(key)) return
+      const pixels = Math.ceil(size / pixelSize)
+      const texture = this.scene.textures.createCanvas(key, pixels, pixels)
+      if (!texture) return
+      const context = texture.getContext()
+      context.save()
+      context.scale(1 / pixelSize, 1 / pixelSize)
+      draw(context, size / 2)
+      context.restore()
+      const image = context.getImageData(0, 0, pixels, pixels)
+      // seeded so the wear pattern stays the same from one fight to the next
+      let randomState = seed
+      const random = () => {
+        randomState = (randomState * 16807) % 2147483647
+        return randomState / 2147483647
+      }
+      const patchSize = 4
+      const nbPatchesPerRow = Math.ceil(pixels / patchSize)
+      const patchWear = Array.from(
+        { length: nbPatchesPerRow * nbPatchesPerRow },
+        random
+      )
+      for (let pixel = 0; pixel < pixels * pixels; pixel++) {
+        const alphaIndex = pixel * 4 + 3
+        const x = pixel % pixels
+        const y = Math.floor(pixel / pixels)
+        const patch =
+          patchWear[
+            Math.floor(y / patchSize) * nbPatchesPerRow +
+              Math.floor(x / patchSize)
+          ]
+        const isEroded =
+          patch < erosion.patches * wear ||
+          random() < erosion.pixels * wear
+        image.data[alphaIndex] =
+          image.data[alphaIndex] >= 128 && !isEroded
+            ? Math.round(255 * (1 - 0.4 * wear * (1 - patch)))
+            : 0
+      }
+      context.putImageData(image, 0, 0)
+      texture.refresh()
+      texture.setFilter(Phaser.Textures.FilterMode.NEAREST)
+    }
+    const snapToPixel = (value: number) =>
+      Math.round(value / pixelSize) * pixelSize
+
+    const ringsSize = 2 * (outerRingRadius + padding)
+    createPixelTexture("zen-zone-rings", ringsSize, (context, center) => {
+      inkCircle(context, center, middleRingRadius, 6)
+      inkCircle(context, center, outerRingRadius, 3)
+    })
+
+    createPixelTexture(
+      "zen-zone-yin-yang",
+      2 * (yinYangRadius + padding),
+      (context, center) => {
+        const r = yinYangRadius
+        inkCircle(context, center, r, 3)
+
+        context.beginPath()
+        context.arc(center, center, r, -Math.PI / 2, Math.PI / 2, false)
+        context.arc(
+          center,
+          center + r / 2,
+          r / 2,
+          Math.PI / 2,
+          (3 * Math.PI) / 2,
+          false
+        )
+        context.arc(
+          center,
+          center - r / 2,
+          r / 2,
+          Math.PI / 2,
+          -Math.PI / 2,
+          true
+        )
+        context.closePath()
+        context.fillStyle = ink
+        context.fill()
+
+        // the dark lobe is the ground itself, so its dot is cut out of the ink
+        context.save()
+        context.globalCompositeOperation = "destination-out"
+        context.beginPath()
+        context.arc(center, center + r / 2, r / 7, 0, 2 * Math.PI)
+        context.fill()
+        context.restore()
+
+        context.beginPath()
+        context.arc(center, center - r / 2, r / 7, 0, 2 * Math.PI)
+        context.fillStyle = ink
+        context.fill()
+      },
+      { wear: 0 }
+    )
+
+    const yinYang = this.scene.add
+      .image(0, 0, "zen-zone-yin-yang")
+      .setScale(pixelSize)
+      .setAlpha(0)
+
+    const rings = this.scene.add
+      .image(0, 0, "zen-zone-rings")
+      .setScale(pixelSize)
+      .setAlpha(0)
+
+    const clockwiseFromTop = [6, 7, 0, 1, 2, 3, 4, 5]
+    const trigrams = clockwiseFromTop.map((index) => {
+      const angle = (index * Math.PI) / 4
+      const key = `zen-zone-trigram-${index}`
+      createPixelTexture(
+        key,
+        72,
+        (context, center) => {
+          context.translate(center, center)
+          context.rotate(angle + Math.PI / 2)
+          inkBars(context, index, 3, 46, 6)
+        },
+        { seed: 101 + index }
+      )
+      return this.scene.add
+        .image(
+          snapToPixel(Math.cos(angle) * trigramRadius),
+          snapToPixel(Math.sin(angle) * trigramRadius),
+          key
+        )
+        .setScale(pixelSize)
+        .setAlpha(0)
+    })
+    const hexagrams = clockwiseFromTop.map((index) => {
+      const angle = (index * Math.PI) / 4 + Math.PI / 8
+      const key = `zen-zone-hexagram-${index}`
+      createPixelTexture(
+        key,
+        68,
+        (context, center) => {
+          context.translate(center, center)
+          context.rotate(angle + Math.PI / 2)
+          inkBars(context, (index * 11 + 5) % 64, 6, 30, 4)
+        },
+        { seed: 201 + index }
+      )
+      return this.scene.add
+        .image(
+          snapToPixel(Math.cos(angle) * hexagramRadius),
+          snapToPixel(Math.sin(angle) * hexagramRadius),
+          key
+        )
+        .setScale(pixelSize)
+        .setAlpha(0)
+    })
+
+    // nothing spins: rotated pixel art in a tilted container shears and shimmers
+    const floor = this.scene.add
+      .container(boardCenterX, boardCenterY, [
+        rings,
+        yinYang,
+        ...trigrams,
+        ...hexagrams
+      ])
+      .setScale(1, floorTilt)
+      .setAlpha(floorAlpha.max)
+      .setDepth(DEPTH.BOARD_EFFECT_GROUND_LEVEL)
+    this.fadingLayers.push(floor)
+
+    const fadeIn = (
+      target: Phaser.GameObjects.Image,
+      delay: number,
+      duration: number
+    ) => {
+      this.tweens.push(
+        this.scene.tweens.add({
+          targets: target,
+          alpha: 1,
+          delay,
+          duration,
+          ease: "sine.inOut"
+        })
+      )
+    }
+
+    fadeIn(yinYang, 0, yinYangFadeDuration)
+    fadeIn(rings, ringsDelay, ringsFadeDuration)
+    trigrams.forEach((trigram, order) =>
+      fadeIn(trigram, trigramsDelay + order * trigramInterval, symbolFadeDuration)
+    )
+    hexagrams.forEach((hexagram, order) =>
+      fadeIn(
+        hexagram,
+        hexagramsDelay + order * hexagramInterval,
+        symbolFadeDuration
+      )
+    )
+    this.tweens.push(
+      this.scene.tweens.add({
+        targets: floor,
+        alpha: { from: floorAlpha.max, to: floorAlpha.min },
+        delay: breathingDelay,
+        duration: breathingPeriod / 2,
+        ease: "sine.inOut",
+        yoyo: true,
+        repeat: -1
+      })
+    )
+  }
+
   clearWeather() {
+    this.fadingLayers.forEach((layer) =>
+      this.scene.tweens.add({
+        targets: layer,
+        alpha: 0,
+        duration: 800,
+        ease: "sine.in",
+        onComplete: () => layer.destroy()
+      })
+    )
+    this.fadingLayers = []
     this.particlesEmitters.forEach((emitter) => emitter.destroy())
     this.particlesEmitters = []
     if (this.colorFilter) {

@@ -572,6 +572,8 @@ export class DebugScene extends Phaser.Scene {
       this.weatherManager.addHardTerrain()
     } else if (weather === Weather.BLOSSOM) {
       this.weatherManager.addBlossom()
+    } else if (weather === Weather.ZEN_ZONE) {
+      this.weatherManager.addZenZone()
     } else if (weather === "dawn") {
       this.weatherManager.setTownDaytime(0)
     } else if (weather === "sunset") {

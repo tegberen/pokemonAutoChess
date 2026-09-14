@@ -124,6 +124,7 @@ export enum EffectEnum {
   CLOUDY = "CLOUDY",
   TERRAIN = "TERRAIN",
   BLOSSOM = "BLOSSOM",
+  ZEN_ZONE = "ZEN_ZONE",
   BLOODMOON = "BLOODMOON",
   SMOG = "SMOG",
   SMOKE = "SMOKE",

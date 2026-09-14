@@ -275,7 +275,6 @@ class GameContainer {
       "dodgeCount",
       "ult",
       "fieldCount",
-      "fightingBlockCount",
       "fairyCritCount",
       "starDustCount",
       "spellBlockedCount",
@@ -772,6 +771,8 @@ class GameContainer {
           this.gameScene.weatherManager.addHardTerrain()
         } else if (value === Weather.BLOSSOM) {
           this.gameScene.weatherManager.addBlossom()
+        } else if (value === Weather.ZEN_ZONE) {
+          this.gameScene.weatherManager.addZenZone()
         }
       }
     }

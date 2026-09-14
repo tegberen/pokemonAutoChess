@@ -9,7 +9,9 @@ import {
   MONSTER_AP_BUFF_PER_SYNERGY_TIER,
   MONSTER_ATTACK_BUFF_PER_SYNERGY_TIER,
   MONSTER_MAX_HP_BUFF_FACTOR_PER_SYNERGY_TIER,
-  RarityCost
+  RarityCost,
+  FIGHTING_BLOCKS_PER_THROW,
+  ZEN_BALL_AWAKENING_TRUE_DAMAGE_DEF_RATIO
 } from "../../config"
 import {
   FIRE_ATK_BUFF_PER_SYNERGY_TIER,
@@ -470,6 +472,45 @@ export class FlyingProtectionEffect extends OnDamageReceivedEffect {
   }
 }
 
+export function throwAway(
+  thrower: PokemonEntity,
+  target: PokemonEntity,
+  board: Board
+) {
+  const destination = board.getSafePlaceAwayFrom(
+    target.positionX,
+    target.positionY,
+    target.team
+  )
+  if (!destination || target.items.has(Item.PROTECTIVE_PADS)) return null
+  thrower.broadcastAbility({
+    skill: "FIGHTING_KNOCKBACK",
+    targetX: thrower.positionX,
+    targetY: thrower.positionY
+  })
+  target.addShield(-target.shield, thrower, 0, false)
+  target.handleDamage({
+    damage: thrower.atk,
+    board,
+    attackType: AttackType.PHYSICAL,
+    attacker: thrower,
+    shouldTargetGainMana: true,
+    isRetaliation: true
+  })
+  if (thrower.awakening === Awakening.ZEN_BALL) {
+    target.handleDamage({
+      damage: Math.round(ZEN_BALL_AWAKENING_TRUE_DAMAGE_DEF_RATIO * thrower.def),
+      board,
+      attackType: AttackType.TRUE,
+      attacker: thrower,
+      shouldTargetGainMana: true,
+      isRetaliation: true
+    })
+  }
+  target.moveTo(destination.x, destination.y, board, true)
+  return destination
+}
+
 export class FightingKnockbackEffect extends OnDamageReceivedEffect {
   constructor(effect: EffectEnum) {
     super(undefined, effect)
@@ -479,14 +520,14 @@ export class FightingKnockbackEffect extends OnDamageReceivedEffect {
     if (
       pokemon.name === Pkm.PIKACHU_LIBRE &&
       pokemon.count.fightingBlockCount > 0 &&
-      pokemon.count.fightingBlockCount % 10 === 0
+      pokemon.count.fightingBlockCount % FIGHTING_BLOCKS_PER_THROW === 0
     ) {
       pokemon.status.triggerRage(2000, pokemon)
     }
     // Fighting knockback
     if (
       pokemon.count.fightingBlockCount > 0 &&
-      pokemon.count.fightingBlockCount % 10 === 0 &&
+      pokemon.count.fightingBlockCount % FIGHTING_BLOCKS_PER_THROW === 0 &&
       !isRetaliation &&
       distanceC(
         pokemon.positionX,
@@ -513,25 +554,8 @@ export class FightingKnockbackEffect extends OnDamageReceivedEffect {
         return
       }
 
-      const destination = board.getSafePlaceAwayFrom(
-        pokemon.targetX,
-        pokemon.targetY,
-        targetAtContact.team
-      )
-      if (
-        destination &&
-        targetAtContact.items.has(Item.PROTECTIVE_PADS) === false
-      ) {
-        targetAtContact.addShield(-targetAtContact.shield, pokemon, 0, false)
-        targetAtContact.handleDamage({
-          damage: pokemon.atk,
-          board,
-          attackType: AttackType.PHYSICAL,
-          attacker: pokemon,
-          shouldTargetGainMana: true,
-          isRetaliation: true
-        })
-        targetAtContact.moveTo(destination.x, destination.y, board, true)
+      const destination = throwAway(pokemon, targetAtContact, board)
+      if (destination) {
         if (
           pokemon.types.has(Synergy.WILD) &&
           pokemon.player?.blessings?.includes(Blessing.FURY_UNLEASHED)

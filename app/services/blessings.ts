@@ -2421,8 +2421,9 @@ export const blessingEffectService: {
   [Blessing.WRAPPED_UP]: (player) =>
     giftPokemonIfBenchHasRoom(player, Pkm.IGGLYBUFF),
 
-  [Blessing.BRACE_FOR_IMPACT]: (player) =>
-    giftPokemonIfBenchHasRoom(player, Pkm.MACHOP),
+  [Blessing.BRACE_FOR_IMPACT]: () => true,
+
+  [Blessing.SHODAN]: () => true,
 
   [Blessing.FROST_BARRIER]: (player) =>
     giftPokemonIfBenchHasRoom(player, Pkm.SNORUNT),
