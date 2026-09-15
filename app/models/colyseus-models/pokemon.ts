@@ -4162,7 +4162,7 @@ export class Chikorita extends Pokemon {
   rarity = Rarity.SPECIAL
   stars = 1
   evolution = Pkm.BAYLEEF
-  hp = 80
+  hp = 70
   atk = 6
   speed = 51
   def = 2
@@ -4177,7 +4177,7 @@ export class Bayleef extends Pokemon {
   rarity = Rarity.SPECIAL
   stars = 2
   evolution = Pkm.MEGANIUM
-  hp = 160
+  hp = 140
   atk = 10
   speed = 51
   def = 4
@@ -4191,7 +4191,7 @@ export class Meganium extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.FLORA, Synergy.FAIRY])
   rarity = Rarity.SPECIAL
   stars = 3
-  hp = 280
+  hp = 220
   atk = 22
   speed = 51
   def = 6
@@ -5063,7 +5063,7 @@ export class Bellsprout extends Pokemon {
   rarity = Rarity.SPECIAL
   stars = 1
   evolution = Pkm.WEEPINBELL
-  hp = 70
+  hp = 60
   atk = 6
   speed = 47
   def = 1
@@ -5078,7 +5078,7 @@ export class Weepinbell extends Pokemon {
   rarity = Rarity.SPECIAL
   stars = 2
   evolution = Pkm.VICTREEBEL
-  hp = 140
+  hp = 130
   atk = 12
   speed = 47
   def = 3
@@ -5092,7 +5092,7 @@ export class Victreebel extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.FLORA, Synergy.POISON])
   rarity = Rarity.SPECIAL
   stars = 3
-  hp = 220
+  hp = 200
   atk = 20
   speed = 47
   def = 5

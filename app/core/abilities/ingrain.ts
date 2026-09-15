@@ -22,7 +22,7 @@ export class IngrainStrategy extends AbilityStrategy {
     crit: boolean
   ) {
     super.process(pokemon, board, target, crit)
-    const heal = [10, 20, 30, 40][pokemon.stars - 1] ?? 40
+    const heal = [10, 20, 40, 80][pokemon.stars - 1] ?? 80
 
     const rootsReachEqually =
       FlowerMonByPot[FlowerPot.YELLOW].includes(pokemon.name) &&

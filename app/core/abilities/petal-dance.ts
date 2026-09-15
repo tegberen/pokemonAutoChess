@@ -13,7 +13,7 @@ export class PetalDanceStrategy extends AbilityStrategy {
   process(pokemon: PokemonEntity, board: Board, target: null, crit: boolean) {
     super.process(pokemon, board, target, crit)
 
-    const damage = [15, 20, 30, 60][pokemon.stars - 1] ?? 60
+    const damage = [10, 15, 20, 40][pokemon.stars - 1] ?? 40
     // ROSERADE: one more petal per attack range gained since the fight started
     const bonusPetals =
       pokemon.passive === Passive.ROSERADE

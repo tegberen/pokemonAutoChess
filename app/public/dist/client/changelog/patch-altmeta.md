@@ -479,10 +479,13 @@ Every balance change on this server, newest first.
 
 **Pokémon**
 - Oddish Line | Stun Spore → Sleep Powder
+- Bellsprout Line | HP 70/140/220 → 60/130/200
+- Chikorita Line | HP 80/160/280 → 70/140/220
 
 **Abilities**
 - Sleep Powder {{new}} | put 1/2/3 enemies in the backline to SLEEP for 2s, dealing 10 SPECIAL + 10 per tile between the user and the target
-- Ingrain | no longer deals damage, heal 10/20/40 → 10/20/30
+- Ingrain | no longer deals damage
+- Petal Dance | damage 15/20/30 → 10/15/20
 
 **Synergies**
 - FLORA | Flower Pots must be grown in order
