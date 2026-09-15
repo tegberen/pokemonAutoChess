@@ -486,6 +486,7 @@ Every balance change on this server, newest first.
 - Sleep Powder {{new}} | put 1/2/3 enemies in the backline to SLEEP for 2s, dealing 10 SPECIAL + 10 per tile between the user and the target
 - Ingrain | no longer deals damage
 - Petal Dance | damage 15/20/30 → 10/15/20
+- Flamethrower | eruption no longer hits ADJACENT enemies, PP burn 100/150/200% → 100/200/300% of ATK
 
 **Synergies**
 - FLORA | Flower Pots must be grown in order

@@ -14,7 +14,7 @@ export class FlameThrowerStrategy extends AbilityStrategy {
   ) {
     super.process(pokemon, board, target, crit)
 
-    const ppBurnPercent = [100, 150, 200, 400][pokemon.stars - 1] ?? 400
+    const ppBurnPercent = [100, 200, 300, 400][pokemon.stars - 1] ?? 400
     const ppBurn = Math.round(
       ((pokemon.atk * ppBurnPercent) / 100) * (1 + pokemon.ap / 100)
     )
@@ -42,28 +42,13 @@ export class FlameThrowerStrategy extends AbilityStrategy {
         targetY: enemy.positionY
       })
 
-      board
-        .getAdjacentCells(enemy.positionX, enemy.positionY, true)
-        .forEach((adjacentCell) => {
-          const splashed = adjacentCell.value
-          if (splashed == null || splashed.team === pokemon.team) return
-
-          splashed.handleSpecialDamage(
-            overflow,
-            board,
-            AttackType.SPECIAL,
-            pokemon,
-            crit
-          )
-
-          if (splashed !== enemy) {
-            pokemon.broadcastAbility({
-              skill: "FLAMETHROWER_SPLASH",
-              targetX: splashed.positionX,
-              targetY: splashed.positionY
-            })
-          }
-        })
+      enemy.handleSpecialDamage(
+        overflow,
+        board,
+        AttackType.SPECIAL,
+        pokemon,
+        crit
+      )
     })
   }
 }

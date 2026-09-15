@@ -2940,31 +2940,6 @@ function flamethrowerEruptAnimation(args: AbilityAnimationArgs) {
   }
 }
 
-/** splash feedback on the ADJACENT enemies caught by an eruption */
-function flamethrowerSplashAnimation(args: AbilityAnimationArgs) {
-  const { scene, targetX, targetY, ap, flip } = args
-  const [x, y] = transformEntityCoordinates(targetX, targetY, flip)
-
-  addAbilitySprite(scene, HitSprite.FIRE_HIT, ap, [x, y], {
-    textureKey: "attacks",
-    scale: 3.2,
-    depth: DEPTH.HIT_FX_ABOVE_POKEMON
-  })
-
-  for (let index = 0; index < 3; index++) {
-    const heading = -Math.PI / 2 + randomBetween(-6, 6) / 10
-    flamethrowerEmber(
-      scene,
-      x,
-      y,
-      x + Math.cos(heading) * randomBetween(25, 50),
-      y + Math.sin(heading) * randomBetween(25, 50),
-      randomBetween(200, 280),
-      0
-    )
-  }
-}
-
 /** both eruption animations wait for the flame front to actually get there */
 const flamethrowerDelayed =
   (animation: AbilityAnimation): AbilityAnimation =>
@@ -3011,7 +2986,6 @@ export const AbilitiesAnimations: {
     hitAnim: onTarget({ ability: "PUFF_GREEN", scale: 1 })
   }),
   ["FLAMETHROWER_ERUPT"]: flamethrowerDelayed(flamethrowerEruptAnimation),
-  ["FLAMETHROWER_SPLASH"]: flamethrowerDelayed(flamethrowerSplashAnimation),
   ["TOXIC_RESONANCE_BEAT_1"]: toxicResonanceBeatAnimation(1),
   ["TOXIC_RESONANCE_BEAT_2"]: toxicResonanceBeatAnimation(2),
   ["TOXIC_RESONANCE_BEAT_3"]: toxicResonanceBeatAnimation(3),
