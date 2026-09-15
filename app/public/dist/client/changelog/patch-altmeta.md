@@ -482,7 +482,10 @@ Every balance change on this server, newest first.
 
 **Abilities**
 - Sleep Powder {{new}} | put 1/2/3 enemies in the backline to SLEEP for 2s, dealing 10 SPECIAL + 10 per tile between the user and the target
-- Ingrain | no longer deals damage, heal 10/20/40 → 20/30/40
+- Ingrain | no longer deals damage, heal 10/20/40 → 10/20/30
+
+**Synergies**
+- FLORA | Flower Pots must be grown in order
 
 ### 14 September 2026
 

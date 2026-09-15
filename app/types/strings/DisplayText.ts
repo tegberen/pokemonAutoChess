@@ -5,6 +5,7 @@ import type { Ability } from "../enum/Ability"
 export type DisplayText =
   | `ability.${Ability}`
   | "fully_grown"
+  | "mulch_in_order"
   | "belly_full"
   | "not_hungry"
   | "full"

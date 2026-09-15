@@ -1235,6 +1235,19 @@ export class OnDragDropItemCommand extends Command<
           })
           return
         }
+        // pots carry items, so skipping ahead to grow the strongest carrier first
+        // would concentrate the item spike on it
+        const earlierPotsFullyGrown = player.flowerPots
+          .slice(0, index)
+          .every((pot) => pot.evolution === Pkm.DEFAULT)
+        if (!earlierPotsFullyGrown) {
+          client.send(Transfer.DRAG_DROP_CANCEL, {
+            ...message,
+            text: "mulch_in_order" satisfies DisplayText,
+            pokemonId: pokemon.id
+          })
+          return
+        }
         const potEvolution = PokemonFactory.createPokemonFromName(
           pokemon.evolution,
           player
