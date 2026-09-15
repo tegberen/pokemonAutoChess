@@ -475,6 +475,7 @@ import { SkyAttackShadowStrategy } from "./sky-attack-shadow"
 import { SlackOffStrategy } from "./slack-off"
 import { SlashStrategy } from "./slash"
 import { SlashingClawStrategy } from "./slashing-claw"
+import { SleepPowderStrategy } from "./sleep-powder"
 import { SludgeStrategy } from "./sludge"
 import { SludgeWaveStrategy } from "./sludge-wave"
 import { SmashingWingStrategy } from "./smashing-wing"
@@ -1209,6 +1210,7 @@ export const AbilityStrategies: { [key in Ability]: AbilityStrategy } = {
   [Ability.SLACK_OFF]: new SlackOffStrategy(),
   [Ability.SLASH]: new SlashStrategy(),
   [Ability.SLASHING_CLAW]: new SlashingClawStrategy(),
+  [Ability.SLEEP_POWDER]: new SleepPowderStrategy(),
   [Ability.SLUDGE]: new SludgeStrategy(),
   [Ability.SLUDGE_WAVE]: new SludgeWaveStrategy(),
   [Ability.SMOG]: new SmogStrategy(),

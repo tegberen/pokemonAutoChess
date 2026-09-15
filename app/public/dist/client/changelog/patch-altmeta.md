@@ -35,7 +35,7 @@ each tile of gap.
 | Hoppip | Acrobatics | {{ability:ACROBATICS}} |
 | Bellsprout | Ingrain | {{ability:INGRAIN}} |
 | Chikorita | Sweet Scent | {{ability:SWEET_SCENT}} |
-| Oddish | Stun Spore | {{ability:STUN_SPORE}} |
+| Oddish | Sleep Powder | {{ability:SLEEP_POWDER}} |
 | Bellossom | Petal Blizzard | {{ability:PETAL_BLIZZARD}} |
 | Petilil | Aromatherapy | {{ability:AROMATHERAPY}} |
 | Budew | Petal Dance | {{ability:PETAL_DANCE}} |
@@ -474,6 +474,15 @@ Selectable in Custom Lobbies.
 ## Patch Log
 
 Every balance change on this server, newest first.
+
+### 15 September 2026
+
+**Pokémon**
+- Oddish Line | Stun Spore → Sleep Powder
+
+**Abilities**
+- Sleep Powder {{new}} | put 1/2/3 enemies in the backline to SLEEP for 2s, dealing 10 SPECIAL + 10 per tile between the user and the target
+- Ingrain | no longer deals damage, heal 10/20/40 → 20/30/40
 
 ### 14 September 2026
 

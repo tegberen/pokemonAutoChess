@@ -231,6 +231,13 @@
   object-fit: contain;
 }
 
+/* The synergy token writes its size as an inline style, which beats the rule
+   above. The icon stayed 1.5em and lifted its label off the text baseline */
+.server-guide .guide-article .description-icon.synergy > img {
+  width: 1.15em !important;
+  height: 1.15em !important;
+}
+
 .server-guide .guide-article .description-icon {
   display: inline-flex;
   align-items: center;

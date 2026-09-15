@@ -3295,6 +3295,14 @@ export const AbilitiesAnimations: {
   [Ability.THIEF]: onTargetScale2,
   [Ability.STUN_SPORE]: onTargetScale2,
   ["STUN_SPORE_PINK"]: onTarget({ ability: "STUN_SPORE", tint: 0xff69b4, scale: 1.2 }),
+  // drifts for the same 1s the server waits before the powder lands
+  [Ability.SLEEP_POWDER]: projectile({
+    ability: "STUN_SPORE",
+    tint: 0xa9c8ff,
+    duration: 1000,
+    ease: "Sine.easeInOut",
+    hitAnim: onTarget({ ability: "STUN_SPORE", tint: 0xa9c8ff, scale: 2 })
+  }),
   [Ability.CRABHAMMER]: onTargetScale2,
   [Ability.JAW_LOCK]: onTarget({
     ability: Ability.ICE_FANG,

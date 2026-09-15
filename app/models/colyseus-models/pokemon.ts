@@ -8672,7 +8672,7 @@ export class Oddish extends Pokemon {
   speDef = 4
   maxPP = 100
   range = 1
-  skill = Ability.STUN_SPORE
+  skill = Ability.SLEEP_POWDER
 }
 
 export class Gloom extends Pokemon {
@@ -8687,7 +8687,7 @@ export class Gloom extends Pokemon {
   speDef = 6
   maxPP = 100
   range = 1
-  skill = Ability.STUN_SPORE
+  skill = Ability.SLEEP_POWDER
 }
 
 export class Vileplume extends Pokemon {
@@ -8701,7 +8701,7 @@ export class Vileplume extends Pokemon {
   speDef = 8
   maxPP = 100
   range = 1
-  skill = Ability.STUN_SPORE
+  skill = Ability.SLEEP_POWDER
 }
 
 export class Bellossom extends Pokemon {

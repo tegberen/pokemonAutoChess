@@ -3,7 +3,6 @@ import {
   FLYTRAP_HEAL_PER_LOCKED_ENEMY
 } from "../../types/enum/Blessing"
 import { FlowerPot } from "../../types/enum/FlowerPot"
-import { AttackType } from "../../types/enum/Game"
 import { spacesBetween } from "../../utils/distance"
 import { FlowerMonByPot } from "../flower-pots"
 import type { Board } from "../board"
@@ -23,8 +22,7 @@ export class IngrainStrategy extends AbilityStrategy {
     crit: boolean
   ) {
     super.process(pokemon, board, target, crit)
-    const heal = [10, 20, 40, 80][pokemon.stars - 1] ?? 80
-    const damage = [10, 20, 40, 80][pokemon.stars - 1] ?? 80
+    const heal = [20, 30, 40, 50][pokemon.stars - 1] ?? 50
 
     const rootsReachEqually =
       FlowerMonByPot[FlowerPot.YELLOW].includes(pokemon.name) &&
@@ -53,13 +51,6 @@ export class IngrainStrategy extends AbilityStrategy {
               )
           cell.value.status.triggerLocked(lockedDuration, cell.value)
           enemiesLocked++
-          cell.value.handleSpecialDamage(
-            Math.round(damage * falloff),
-            board,
-            AttackType.SPECIAL,
-            pokemon,
-            crit
-          )
         }
       })
 
