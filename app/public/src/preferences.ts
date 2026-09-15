@@ -31,6 +31,7 @@ export interface IPreferencesState {
   outlineShopUpgrades: boolean
   showBlessingGlow: boolean
   showDamageNumbers: boolean
+  hideElo: boolean
   showEvolutions: boolean
   showWeatherRocks: boolean
   showAltForms: boolean
@@ -65,6 +66,7 @@ const defaultPreferences: IPreferencesState = {
   outlineShopUpgrades: false,
   showBlessingGlow: true,
   showDamageNumbers: true,
+  hideElo: true,
   showEvolutions: true,
   showWeatherRocks: true,
   showAltForms: true,

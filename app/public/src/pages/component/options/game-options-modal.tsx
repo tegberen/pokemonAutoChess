@@ -202,6 +202,14 @@ export default function GameOptionsModal(props: {
           <p>
             <Checkbox
               isDark
+              checked={preferences.hideElo}
+              onToggle={(checked) => setPreferences({ hideElo: checked })}
+              label={t("options.hide_elo")}
+            />
+          </p>
+          <p>
+            <Checkbox
+              isDark
               checked={preferences.disableAnimatedTilemap}
               onToggle={(checked) => {
                 setPreferences({ disableAnimatedTilemap: checked })

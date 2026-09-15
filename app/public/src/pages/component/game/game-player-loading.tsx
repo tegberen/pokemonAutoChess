@@ -3,12 +3,14 @@ import "react-circular-progressbar/dist/styles.css"
 import { useTranslation } from "react-i18next"
 import type { IPlayer } from "../../../../../types"
 import { getAvatarSrc } from "../../../../../utils/avatar"
+import { usePreference } from "../../../preferences"
 import { getGameScene } from "../../game"
 import { cc } from "../../utils/jsx"
 import "./game-player-loading.css"
 
 export default function GamePlayerLoadingBar(props: { player: IPlayer }) {
   const { t } = useTranslation()
+  const [hideElo] = usePreference("hideElo")
   const selfPlayerId = getGameScene()?.uid
   const loadingPercent = props.player.loadingProgress
 
@@ -34,9 +36,11 @@ export default function GamePlayerLoadingBar(props: { player: IPlayer }) {
       </div>
 
       <p style={{ fontWeight: "500" }}>{props.player.name}</p>
-      <p>
-        {t("elo")}: <b>{props.player.elo}</b>
-      </p>
+      {!hideElo && (
+        <p>
+          {t("elo")}: <b>{props.player.elo}</b>
+        </p>
+      )}
     </div>
   )
 }

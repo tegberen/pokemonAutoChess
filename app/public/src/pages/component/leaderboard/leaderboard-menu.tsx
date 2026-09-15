@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next"
 import { Tab, TabList, TabPanel, Tabs } from "react-tabs"
 import type { IRecentVictory } from "../../../../../types/interfaces/RecentVictory"
 import { useAppDispatch, useAppSelector } from "../../../hooks"
+import { usePreference } from "../../../preferences"
 import {
   setBotLeaderboard,
   setEventLeaderboard,
@@ -21,6 +22,9 @@ export default function LeaderboardMenu() {
   const dispatch = useAppDispatch()
 
   const tabIndex: number = useAppSelector((state) => state.lobby.tabIndex)
+  const [hideElo] = usePreference("hideElo")
+  // the ELO ladder is the last tab, so hiding it leaves its index pointing nowhere
+  const selectedIndex = hideElo && tabIndex > 1 ? 0 : tabIndex
 
   useEffect(() => {
     fetch("/leaderboards")
@@ -50,7 +54,7 @@ export default function LeaderboardMenu() {
   return (
     <Tabs
       className="my-container user-menu custom-bg hidden-scrollable"
-      selectedIndex={tabIndex}
+      selectedIndex={selectedIndex}
       onSelect={(i: number) => {
         dispatch(setTabIndex(i))
       }}
@@ -59,7 +63,7 @@ export default function LeaderboardMenu() {
       <TabList>
         <Tab>{t("newspaper.tab")}</Tab>
         <Tab>{t("level")}</Tab>
-        <Tab>{t("players")}</Tab>
+        {!hideElo && <Tab>{t("players")}</Tab>}
       </TabList>
       <TabPanel>
         <Newspaper />
@@ -67,9 +71,11 @@ export default function LeaderboardMenu() {
       <TabPanel>
         <LevelLeaderboard />
       </TabPanel>
-      <TabPanel>
-        <PlayerLeaderboard />
-      </TabPanel>
+      {!hideElo && (
+        <TabPanel>
+          <PlayerLeaderboard />
+        </TabPanel>
+      )}
     </Tabs>
   )
 }

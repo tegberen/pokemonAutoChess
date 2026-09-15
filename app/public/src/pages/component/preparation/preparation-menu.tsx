@@ -15,6 +15,7 @@ import { throttle } from "../../../../../utils/function"
 import { max } from "../../../../../utils/number"
 import { setTitleNotificationIcon } from "../../../../../utils/window"
 import { useAppSelector } from "../../../hooks"
+import { usePreference } from "../../../preferences"
 import {
   addBot,
   gameStartRequest,
@@ -31,6 +32,7 @@ import "./preparation-menu.css"
 
 export default function PreparationMenu() {
   const { t } = useTranslation()
+  const [hideElo] = usePreference("hideElo")
   const users: IGameUser[] = useAppSelector((state) => state.preparation.users)
   const user = useAppSelector((state) => state.preparation.user)
   const name: string = useAppSelector((state) => state.preparation.name)
@@ -154,7 +156,8 @@ export default function PreparationMenu() {
       {noElo !== true &&
         (isEligibleForELO ? (
           <p>
-            {t("eligible_elo_hint")} {t("average_elo")}: {averageElo} ;{" "}
+            {t("eligible_elo_hint")}{" "}
+            {!hideElo && `${t("average_elo")}: ${averageElo} ; `}
             {t("GLHF")}
             {" !"}
           </p>

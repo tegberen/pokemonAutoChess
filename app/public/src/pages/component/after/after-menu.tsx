@@ -9,6 +9,7 @@ import { GameMode } from "../../../../../types/enum/Game"
 import type { Synergy } from "../../../../../types/enum/Synergy"
 import { ItemDetailTooltip } from "../../../game/components/item-detail"
 import { useAppSelector } from "../../../hooks"
+import { usePreference } from "../../../preferences"
 import { addIconsToDescription } from "../../utils/descriptions"
 import { cc } from "../../utils/jsx"
 import { GamePokemonDetailTooltip } from "../game/game-pokemon-detail"
@@ -44,7 +45,8 @@ export default function AfterMenu() {
         false
       )
     : null
-  const shouldShowElo = eligibleToELO && currentPlayer && newElo
+  const [hideElo] = usePreference("hideElo")
+  const shouldShowElo = eligibleToELO && currentPlayer && newElo && !hideElo
 
   return (
     <div className="after-menu">

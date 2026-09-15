@@ -102,6 +102,76 @@
   margin: auto;
 }
 
+.elo-tab .profile-theme-frame {
+  width: 100%;
+  max-width: var(--profile-theme-width);
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6em;
+}
+
+.elo-tab .profile-theme-art {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border: var(--border-thick);
+  border-radius: 12px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
+}
+
+/* The theme paints this through .custom-bg, which is pinned to the whole screen.
+   Inside the frame it has to fit the box instead */
+.elo-tab .profile-theme-art.custom-bg {
+  background-attachment: scroll;
+  background-size: cover;
+  background-position: center;
+}
+
+.elo-tab .profile-theme-frame figcaption {
+  text-align: center;
+  font-style: italic;
+  font-size: 1.1em;
+  color: var(--color-fg-secondary);
+}
+
+/* The frame and the stat cards share one width so their edges line up. The screen
+   height cap shrinks both on short screens while the art stays 16:9 */
+.elo-tab.no-elo {
+  --profile-theme-width: min(560px, 44vh);
+}
+
+.profile-actions .react-tabs__tab-panel:has(> .elo-tab.no-elo) {
+  display: flex;
+}
+
+.profile-actions .elo-tab.no-elo {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Auto margins centre the stack when it fits and drop to 0 when it doesn't, so a
+   panel too short for it scrolls from the top instead of clipping it */
+.elo-tab.no-elo .profile-theme-frame {
+  margin-top: auto;
+}
+
+.elo-tab.no-elo .elo-summary {
+  align-items: center;
+  width: 100%;
+  max-width: var(--profile-theme-width);
+  margin-bottom: auto;
+}
+
+/* side by side only while both cards fit their designed 260px, stacked below that */
+.elo-tab.no-elo .profile-stats {
+  grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr));
+  max-width: none;
+}
+
 .elo-tab .elo-summary {
   display: flex;
   flex-direction: column;

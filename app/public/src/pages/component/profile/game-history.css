@@ -25,6 +25,16 @@
   border: var(--border-thin);
 }
 
+/* With ELO hidden there is no badge, so drop its column instead of leaving a
+   gap before the synergies. Top and date take over its width */
+.game-history.my-box:not(:has(.elo)) {
+  grid-template-areas:
+    "top syn team"
+    "date items team"
+    ". bless team";
+  grid-template-columns: 15ch 160px 1fr;
+}
+
 .game-history .player-team-pokemons {
   padding-left: 0;
   padding-bottom: 10px;
