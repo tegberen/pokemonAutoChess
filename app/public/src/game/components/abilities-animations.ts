@@ -2949,6 +2949,30 @@ const flamethrowerDelayed =
     )
   }
 
+const FIGHTING_THROW_FIST_HOLD = 700
+const FIGHTING_THROW_FIST_SCALE = 3
+
+function fightingThrowFist(args: AbilityAnimationArgs) {
+  const [fromX, fromY] = transformEntityCoordinates(
+    args.positionX,
+    args.positionY,
+    args.flip
+  )
+  const fist = args.scene.add
+    .sprite(fromX, fromY, "attacks", `${AttackSprite.FIGHTING_MELEE}/000.png`)
+    .setDepth(DEPTH.HIT_FX_ABOVE_POKEMON)
+    .setScale(FIGHTING_THROW_FIST_SCALE)
+  fist.anims.play(AttackSprite.FIGHTING_MELEE)
+  args.scene.tweens.add({
+    targets: fist,
+    alpha: 0,
+    delay: FIGHTING_THROW_FIST_HOLD,
+    duration: 250,
+    ease: "sine.in",
+    onComplete: () => fist.destroy()
+  })
+}
+
 export const AbilitiesAnimations: {
   [animKey: string]: AbilityAnimation | AbilityAnimation[]
 } = {
@@ -3346,6 +3370,7 @@ export const AbilitiesAnimations: {
   [Ability.RETALIATE]: onTargetScale2,
   [Ability.THUNDER_CAGE]: onTargetScale2,
   ["FIGHTING_KNOCKBACK"]: onTargetScale2,
+  ["FIGHTING_THROW_FIST"]: fightingThrowFist,
   [Ability.FIRE_BLAST]: onTargetScale3,
   [Ability.CLOSE_COMBAT]: onTargetScale3,
   [Ability.SUPER_FANG]: onTargetScale3,

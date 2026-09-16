@@ -6,6 +6,7 @@ import pkg from "../../../../../package.json"
 import {
   CELL_VISUAL_HEIGHT,
   CELL_VISUAL_WIDTH,
+  FIGHTING_BLOCKS_PER_THROW,
   getRegionTint,
   ItemStats
 } from "../../../../config"
@@ -96,6 +97,24 @@ type IgniteFlameLayer = {
   alpha: number
   add?: boolean
 }
+const KI_AURA_PHASES = [
+  { from: 0.1, strength: 1, pulse: 0.5, simmerSpeed: 1 },
+  { from: 0.4, strength: 2, pulse: 1, simmerSpeed: 1.6 },
+  { from: 0.7, strength: 3, pulse: 1.5, simmerSpeed: 2.6 }
+]
+const KI_AURA_RESIDUAL = { strength: 0.8, pulse: 0.4, simmerSpeed: 0.8 }
+const KI_AURA_COLOR = 0x73cda5
+const KI_AURA_GLOW_SCALE = 0.15
+const KI_AURA_SIMMER_DURATION = 1400
+const KI_AURA_FLAMES_ALPHA = 0.6
+const KI_AURA_FLAMES_PIXEL_SIZE = 2
+const KI_AURA_FLAMES_FRAMES = 3
+const KI_AURA_FLAMES_FRAME_DURATION = 110
+const KI_AURA_FLAMES_GROUND_Y = IGNITE_FLAME_GROUND_Y - 14
+const KI_AURA_STREAK_INTERVAL = 140
+const KI_AURA_STREAK_DURATION = 420
+const KI_AURA_STREAK_RISE = 26
+const KI_AURA_STREAK_TEXTURE = "ki-aura-streak"
 const IGNITE_SPARKS_X_OFFSET = -3
 const IGNITE_SPARKS_Y_OFFSET = 18
 const IGNITE_SPARKS_FRAME_RATE = 24
@@ -161,6 +180,15 @@ export default class PokemonSprite extends DraggableObject {
   reflectShield: GameObjects.Sprite | undefined
   electricField: GameObjects.Sprite | undefined
   igniteFlames: GameObjects.Sprite[] = []
+  kiAuraGlow: Phaser.Filters.Glow | undefined
+  kiAuraSimmerTween: Phaser.Tweens.Tween | undefined
+  kiAuraHeat = { strength: 0, pulse: 0 }
+  kiAuraFlames: GameObjects.Container | undefined
+  kiAuraFlickerTimer: Phaser.Time.TimerEvent | undefined
+  kiAuraStreakTimer: Phaser.Time.TimerEvent | undefined
+  kiAuraPhase = 0
+  kiAuraCharge = 0
+  kiAuraHasReleased = false
   psychicField: GameObjects.Sprite | undefined
   grassField: GameObjects.Sprite | undefined
   fairyField: GameObjects.Sprite | undefined
@@ -479,6 +507,10 @@ export default class PokemonSprite extends DraggableObject {
     this.awakeningGlowTween = undefined
     this.awakeningSurgeTimer?.remove()
     this.awakeningSurgeTimer = undefined
+    this.kiAuraSimmerTween?.remove()
+    this.kiAuraFlickerTimer?.remove()
+    this.kiAuraStreakTimer?.remove()
+    this.scene?.tweens.killTweensOf(this.kiAuraHeat)
     super.destroy(fromScene)
     this.closeDetail()
     this.unloadAnimations(
@@ -1067,6 +1099,200 @@ export default class PokemonSprite extends DraggableObject {
       this.remove(flame, true)
     })
     this.igniteFlames = []
+  }
+
+  updateKiAura(throwCharge: number) {
+    if (!this.kiAuraGlow) this.createKiAura()
+    const hasThrown = throwCharge < this.kiAuraCharge
+    this.kiAuraCharge = throwCharge
+    if (hasThrown) {
+      this.releaseKiAura()
+      return
+    }
+    const progress = throwCharge / FIGHTING_BLOCKS_PER_THROW
+    const phase = KI_AURA_PHASES.filter((p) => progress >= p.from).length
+    if (phase !== this.kiAuraPhase) this.setKiAuraPhase(phase)
+  }
+
+  createKiAura() {
+    this.sprite.enableFilters()
+    this.kiAuraGlow =
+      this.sprite.filters?.internal.addGlow(
+        KI_AURA_COLOR,
+        0,
+        0,
+        KI_AURA_GLOW_SCALE
+      ) ?? undefined
+    const glow = this.kiAuraGlow
+    if (!glow) return
+    this.kiAuraSimmerTween = this.scene.tweens.addCounter({
+      from: 0,
+      to: 1,
+      duration: KI_AURA_SIMMER_DURATION,
+      yoyo: true,
+      repeat: -1,
+      ease: "Sine.easeInOut",
+      onUpdate: (tween) => {
+        const simmer = tween.getValue(0) ?? 0
+        glow.outerStrength =
+          this.kiAuraHeat.strength + simmer * this.kiAuraHeat.pulse
+      }
+    })
+  }
+
+  setKiAuraPhase(phase: number) {
+    this.kiAuraPhase = phase
+    const heat =
+      phase > 0
+        ? KI_AURA_PHASES[phase - 1]
+        : this.kiAuraHasReleased
+          ? KI_AURA_RESIDUAL
+          : { strength: 0, pulse: 0, simmerSpeed: 1 }
+    this.heatKiAura(heat, 400)
+    this.showKiAuraFlames(phase === KI_AURA_PHASES.length)
+  }
+
+  heatKiAura(
+    heat: { strength: number; pulse: number; simmerSpeed: number },
+    duration: number,
+    onComplete?: () => void
+  ) {
+    this.scene.tweens.killTweensOf(this.kiAuraHeat)
+    if (this.kiAuraSimmerTween) {
+      this.kiAuraSimmerTween.timeScale = heat.simmerSpeed
+    }
+    this.scene.tweens.add({
+      targets: this.kiAuraHeat,
+      strength: heat.strength,
+      pulse: heat.pulse,
+      duration,
+      ease: "sine.inOut",
+      onComplete
+    })
+  }
+
+  releaseKiAura() {
+    this.kiAuraHasReleased = true
+    this.kiAuraPhase = 0
+    this.releaseKiAuraFlames()
+    this.heatKiAura({ strength: 0, pulse: 0, simmerSpeed: 1 }, 500, () => {
+      if (this.kiAuraPhase === 0) this.setKiAuraPhase(0)
+    })
+  }
+
+  showKiAuraFlames(visible: boolean) {
+    if (visible && !this.kiAuraFlames) this.createKiAuraFlames()
+    const flames = this.kiAuraFlames
+    if (!flames) return
+    this.scene.tweens.killTweensOf(flames)
+    flames.setScale(1)
+    this.scene.tweens.add({
+      targets: flames,
+      alpha: visible ? KI_AURA_FLAMES_ALPHA : 0,
+      duration: 300,
+      ease: "sine.out"
+    })
+  }
+
+  createKiAuraFlames() {
+    createKiAuraFlameTextures(this.scene)
+    const flame = this.scene.add
+      .image(0, 0, "ki-aura-flame-0")
+      .setOrigin(0.5, 1)
+      .setScale(KI_AURA_FLAMES_PIXEL_SIZE)
+    const core = this.scene.add
+      .image(0, -4, "ki-aura-flame-1")
+      .setOrigin(0.5, 1)
+      .setScale(KI_AURA_FLAMES_PIXEL_SIZE * 0.6)
+    const base = this.scene.add
+      .image(0, 8, "ki-aura-base-0")
+      .setOrigin(0.5, 1)
+      .setScale(KI_AURA_FLAMES_PIXEL_SIZE)
+      .setAlpha(0.8)
+    const middle = this.scene.add
+      .image(0, 4, "ki-aura-middle-0")
+      .setOrigin(0.5, 1)
+      .setScale(KI_AURA_FLAMES_PIXEL_SIZE)
+      .setAlpha(0.85)
+    ;[flame, core, base, middle].forEach((image) =>
+      image.setTint(KI_AURA_COLOR).setBlendMode(Phaser.BlendModes.ADD)
+    )
+    this.kiAuraFlames = this.scene.add
+      .container(IGNITE_FLAME_X_OFFSET, KI_AURA_FLAMES_GROUND_Y, [
+        base,
+        middle,
+        flame,
+        core
+      ])
+      .setAlpha(0)
+    this.addAt(this.kiAuraFlames, 0)
+    this.kiAuraStreakTimer = this.scene.time.addEvent({
+      delay: KI_AURA_STREAK_INTERVAL,
+      loop: true,
+      callback: () => this.spawnKiAuraStreak()
+    })
+
+    let frame = 0
+    this.kiAuraFlickerTimer = this.scene.time.addEvent({
+      delay: KI_AURA_FLAMES_FRAME_DURATION,
+      loop: true,
+      callback: () => {
+        frame = (frame + 1) % KI_AURA_FLAMES_FRAMES
+        flame.setTexture(`ki-aura-flame-${frame}`)
+        const next = (frame + 1) % KI_AURA_FLAMES_FRAMES
+        core.setTexture(`ki-aura-flame-${next}`)
+        middle.setTexture(`ki-aura-middle-${next}`)
+        base.setTexture(
+          `ki-aura-base-${(frame + 2) % KI_AURA_FLAMES_FRAMES}`
+        )
+      }
+    })
+  }
+
+  spawnKiAuraStreak() {
+    const flames = this.kiAuraFlames
+    if (!flames || flames.alpha < 0.3 || !this.exists(this.sprite)) return
+    const streak = this.scene.add
+      .image(
+        IGNITE_FLAME_X_OFFSET + Phaser.Math.Between(-18, 18),
+        KI_AURA_FLAMES_GROUND_Y - Phaser.Math.Between(4, 36),
+        KI_AURA_STREAK_TEXTURE
+      )
+      .setScale(KI_AURA_FLAMES_PIXEL_SIZE)
+      .setTint(KI_AURA_COLOR)
+      .setBlendMode(Phaser.BlendModes.ADD)
+      .setAlpha(0)
+    this.add(streak)
+    if (Math.random() < 0.5) this.moveBelow(streak, this.sprite)
+    else this.moveAbove(streak, this.sprite)
+    this.scene.tweens.add({
+      targets: streak,
+      y: streak.y - KI_AURA_STREAK_RISE,
+      duration: KI_AURA_STREAK_DURATION,
+      ease: "sine.in",
+      onComplete: () => streak.destroy()
+    })
+    this.scene.tweens.add({
+      targets: streak,
+      alpha: 0.8,
+      duration: KI_AURA_STREAK_DURATION / 2,
+      yoyo: true
+    })
+  }
+
+  releaseKiAuraFlames() {
+    const flames = this.kiAuraFlames
+    if (!flames) return
+    this.scene.tweens.killTweensOf(flames)
+    this.scene.tweens.add({
+      targets: flames,
+      scaleX: 0.9,
+      scaleY: 1.35,
+      alpha: 0,
+      duration: 400,
+      ease: "sine.out",
+      onComplete: () => flames.setScale(1)
+    })
   }
 
   crystalliseAnimation(withEmote = false) {
@@ -2357,4 +2583,101 @@ export function loadCompressedAtlas(
       .start()
   })
   return lazyLoadingRequests[index]
+}
+
+function createKiAuraFlameTextures(scene: Phaser.Scene) {
+  if (!scene.textures.exists(KI_AURA_STREAK_TEXTURE)) {
+    const streak = scene.textures.createCanvas(KI_AURA_STREAK_TEXTURE, 1, 5)
+    if (streak) {
+      const context = streak.getContext()
+      context.fillStyle = "#ffffff"
+      context.fillRect(0, 0, 1, 5)
+      streak.refresh()
+      streak.setFilter(Phaser.Textures.FilterMode.NEAREST)
+    }
+  }
+  for (let frame = 0; frame < KI_AURA_FLAMES_FRAMES; frame++) {
+    drawKiAuraFlameTexture(scene, `ki-aura-flame-${frame}`, 17 + frame * 31, {
+      width: 36,
+      height: 60,
+      radiusX: 14,
+      radiusY: 21,
+      nbPoints: 32,
+      spikeMin: 4,
+      spikeRange: 9
+    })
+    drawKiAuraFlameTexture(scene, `ki-aura-middle-${frame}`, 41 + frame * 23, {
+      width: 50,
+      height: 44,
+      radiusX: 20,
+      radiusY: 12,
+      nbPoints: 40,
+      spikeMin: 4,
+      spikeRange: 7
+    })
+    drawKiAuraFlameTexture(scene, `ki-aura-base-${frame}`, 53 + frame * 29, {
+      width: 60,
+      height: 28,
+      radiusX: 26,
+      radiusY: 6,
+      nbPoints: 44,
+      spikeMin: 3,
+      spikeRange: 6
+    })
+  }
+}
+
+function drawKiAuraFlameTexture(
+  scene: Phaser.Scene,
+  key: string,
+  seed: number,
+  shape: {
+    width: number
+    height: number
+    radiusX: number
+    radiusY: number
+    nbPoints: number
+    spikeMin: number
+    spikeRange: number
+  }
+) {
+  if (scene.textures.exists(key)) return
+  const { width, height, radiusX, radiusY, nbPoints, spikeMin, spikeRange } =
+    shape
+  const texture = scene.textures.createCanvas(key, width, height)
+  if (!texture) return
+  const random = () => {
+    seed = (seed * 16807) % 2147483647
+    return seed / 2147483647
+  }
+  const context = texture.getContext()
+  const centerX = width / 2
+  const centerY = height - radiusY - 3
+  context.beginPath()
+  for (let point = 0; point <= nbPoints; point++) {
+    const angle = (point / nbPoints) * 2 * Math.PI
+    const isUpperHalf = Math.sin(angle) < 0
+    const spike =
+      isUpperHalf && point % 2 === 0
+        ? spikeMin + random() * spikeRange
+        : random() * 1.5
+    const x = centerX + Math.cos(angle) * (radiusX + spike * 0.4)
+    const y = centerY + Math.sin(angle) * (radiusY + spike)
+    if (point === 0) context.moveTo(x, y)
+    else context.lineTo(x, y)
+  }
+  context.closePath()
+  context.fillStyle = "rgba(255,255,255,0.3)"
+  context.fill()
+  context.lineWidth = 2
+  context.strokeStyle = "rgba(255,255,255,1)"
+  context.stroke()
+  const image = context.getImageData(0, 0, width, height)
+  for (let i = 3; i < image.data.length; i += 4) {
+    const alpha = image.data[i]
+    image.data[i] = alpha > 150 ? 255 : alpha > 40 ? 110 : 0
+  }
+  context.putImageData(image, 0, 0)
+  texture.refresh()
+  texture.setFilter(Phaser.Textures.FilterMode.NEAREST)
 }

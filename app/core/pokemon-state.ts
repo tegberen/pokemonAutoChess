@@ -1,5 +1,6 @@
 import {
   ARMOR_FACTOR,
+  FIGHTING_BLOCKS_PER_THROW,
   FIGHTING_PHASE_DURATION,
   SWORDS_OF_JUSTICE_ZEN_ZONE_STAT_GAIN,
   ZEN_ZONE_DAMAGE_BLOCKED,
@@ -938,6 +939,10 @@ export default abstract class PokemonState {
         if (damageBlocked > 0) {
           reducedDamage = reducedDamage - damageBlocked
           pokemon.count.fightingBlockCount++
+          pokemon.count.fightingThrowCharge = Math.min(
+            FIGHTING_BLOCKS_PER_THROW,
+            pokemon.count.fightingThrowCharge + 1
+          )
         }
 
         if (pokemon.passive === Passive.WONDER_GUARD) {

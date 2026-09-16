@@ -275,6 +275,7 @@ class GameContainer {
       "dodgeCount",
       "ult",
       "fieldCount",
+      "fightingThrowCharge",
       "fairyCritCount",
       "starDustCount",
       "spellBlockedCount",

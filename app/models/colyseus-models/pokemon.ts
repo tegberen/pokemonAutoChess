@@ -9103,7 +9103,11 @@ export class Bastiodon extends Pokemon {
 }
 
 export class Mienfoo extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.FIGHTING, Synergy.FIELD])
+  types = new SetSchema<Synergy>([
+    Synergy.FIGHTING,
+    Synergy.FIELD,
+    Synergy.NORMAL
+  ])
   rarity = Rarity.RARE
   stars = 1
   evolution = Pkm.MIENSHAO
@@ -9119,7 +9123,11 @@ export class Mienfoo extends Pokemon {
 }
 
 export class Mienshao extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.FIGHTING, Synergy.FIELD])
+  types = new SetSchema<Synergy>([
+    Synergy.FIGHTING,
+    Synergy.FIELD,
+    Synergy.NORMAL
+  ])
   rarity = Rarity.RARE
   stars = 2
   hp = 175

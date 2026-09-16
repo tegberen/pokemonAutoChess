@@ -6,6 +6,8 @@ export function SynergyTierDescription(props: { tier: SynergyTier }) {
   const { t } = useTranslation()
   const description = t(`effect_description.${props.tier}`)
   return (
-    <p className="synergy-description">{addIconsToDescription(description)}</p>
+    <p className="synergy-description" style={{ whiteSpace: "pre-line" }}>
+      {addIconsToDescription(description)}
+    </p>
   )
 }

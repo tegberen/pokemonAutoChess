@@ -458,6 +458,15 @@ export default class BattleManager {
         if (value != 0) {
           this.displayAbilityOnPokemon("FIELD_DEATH", pkm)
         }
+      } else if (field === "fightingThrowCharge") {
+        if (
+          pokemon.effects.has(EffectEnum.GUTS) ||
+          pokemon.effects.has(EffectEnum.STURDY) ||
+          pokemon.effects.has(EffectEnum.DEFIANT) ||
+          pokemon.effects.has(EffectEnum.COACHING)
+        ) {
+          pkm.updateKiAura(value)
+        }
       } else if (field === "fairyCritCount") {
         if (value != 0) {
           this.displayAbilityOnPokemon("FAIRY_CRIT", pkm)

@@ -221,6 +221,8 @@
 }
 
 .server-guide .guide-article .description-icon.synergy {
+  display: inline;
+  vertical-align: baseline;
   white-space: nowrap;
 }
 
@@ -236,6 +238,7 @@
 .server-guide .guide-article .description-icon.synergy > img {
   width: 1.15em !important;
   height: 1.15em !important;
+  vertical-align: -0.25em;
 }
 
 .server-guide .guide-article .description-icon {

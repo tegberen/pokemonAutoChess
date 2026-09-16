@@ -475,6 +475,19 @@ Selectable in Custom Lobbies.
 
 Every balance change on this server, newest first.
 
+### 16 September 2026
+
+**Pokémon**
+- Mienfoo Line | gains NORMAL
+
+**Synergies**
+- FIGHTING | throwing a target away also grants 10% CRIT_CHANCE per STAR
+- FIGHTING | throwing a target away also inflicts PARALYSIS for 2s
+
+**Fixes**
+- FIGHTING | thrown DARK melee Pokémon wait 0.8s before jumping back in
+- FIGHTING | a throw with no melee target in contact is now kept for the next hit instead of being lost
+
 ### 15 September 2026
 
 **Pokémon**

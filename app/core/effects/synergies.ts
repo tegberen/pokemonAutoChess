@@ -11,6 +11,9 @@ import {
   MONSTER_MAX_HP_BUFF_FACTOR_PER_SYNERGY_TIER,
   RarityCost,
   FIGHTING_BLOCKS_PER_THROW,
+  FIGHTING_THROW_CRIT_CHANCE_PER_STAR,
+  FIGHTING_THROW_DARK_JUMP_DELAY,
+  FIGHTING_THROW_PARALYSIS_DURATION,
   ZEN_BALL_AWAKENING_TRUE_DAMAGE_DEF_RATIO
 } from "../../config"
 import {
@@ -507,7 +510,20 @@ export function throwAway(
       isRetaliation: true
     })
   }
+  target.broadcastAbility({
+    skill: "FIGHTING_THROW_FIST",
+    positionX: target.positionX,
+    positionY: target.positionY,
+    targetX: destination.x,
+    targetY: destination.y
+  })
   target.moveTo(destination.x, destination.y, board, true)
+  const wasThrown =
+    target.positionX === destination.x && target.positionY === destination.y
+  // otherwise DARK melee jumps straight back before the throw is visible
+  if (wasThrown && target.types.has(Synergy.DARK) && target.range === 1) {
+    target.cooldown = FIGHTING_THROW_DARK_JUMP_DELAY
+  }
   return destination
 }
 
@@ -524,10 +540,8 @@ export class FightingKnockbackEffect extends OnDamageReceivedEffect {
     ) {
       pokemon.status.triggerRage(2000, pokemon)
     }
-    // Fighting knockback
     if (
-      pokemon.count.fightingBlockCount > 0 &&
-      pokemon.count.fightingBlockCount % FIGHTING_BLOCKS_PER_THROW === 0 &&
+      pokemon.count.fightingThrowCharge >= FIGHTING_BLOCKS_PER_THROW &&
       !isRetaliation &&
       distanceC(
         pokemon.positionX,
@@ -556,6 +570,18 @@ export class FightingKnockbackEffect extends OnDamageReceivedEffect {
 
       const destination = throwAway(pokemon, targetAtContact, board)
       if (destination) {
+        pokemon.count.fightingThrowCharge = 0
+        targetAtContact.status.triggerParalysis(
+          FIGHTING_THROW_PARALYSIS_DURATION,
+          targetAtContact,
+          pokemon
+        )
+        pokemon.addCritChance(
+          FIGHTING_THROW_CRIT_CHANCE_PER_STAR * pokemon.stars,
+          pokemon,
+          0,
+          false
+        )
         if (
           pokemon.types.has(Synergy.WILD) &&
           pokemon.player?.blessings?.includes(Blessing.FURY_UNLEASHED)
