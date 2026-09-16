@@ -3370,7 +3370,14 @@ export const AbilitiesAnimations: {
   [Ability.RETALIATE]: onTargetScale2,
   [Ability.THUNDER_CAGE]: onTargetScale2,
   ["FIGHTING_KNOCKBACK"]: onTargetScale2,
-  ["FIGHTING_THROW_FIST"]: fightingThrowFist,
+  ["FIGHTING_THROW_FIST"]: [
+    fightingThrowFist,
+    onCaster({
+      ability: Ability.SMASHING_WING,
+      scale: 3,
+      depth: DEPTH.ABILITY_BELOW_POKEMON
+    })
+  ],
   [Ability.FIRE_BLAST]: onTargetScale3,
   [Ability.CLOSE_COMBAT]: onTargetScale3,
   [Ability.SUPER_FANG]: onTargetScale3,

@@ -104,8 +104,11 @@ const KI_AURA_PHASES = [
 ]
 const KI_AURA_RESIDUAL = { strength: 0.8, pulse: 0.4, simmerSpeed: 0.8 }
 const KI_AURA_COLOR = 0x73cda5
+const KI_AURA_SHADE_COLOR = 0x1f6b4f
+const KI_AURA_SHADE_ALPHA = 0.45
 const KI_AURA_GLOW_SCALE = 0.15
 const KI_AURA_SIMMER_DURATION = 1400
+const KI_AURA_RELEASE_DURATION = 1000
 const KI_AURA_FLAMES_ALPHA = 0.6
 const KI_AURA_FLAMES_PIXEL_SIZE = 2
 const KI_AURA_FLAMES_FRAMES = 3
@@ -1175,9 +1178,7 @@ export default class PokemonSprite extends DraggableObject {
     this.kiAuraHasReleased = true
     this.kiAuraPhase = 0
     this.releaseKiAuraFlames()
-    this.heatKiAura({ strength: 0, pulse: 0, simmerSpeed: 1 }, 500, () => {
-      if (this.kiAuraPhase === 0) this.setKiAuraPhase(0)
-    })
+    this.heatKiAura(KI_AURA_RESIDUAL, KI_AURA_RELEASE_DURATION)
   }
 
   showKiAuraFlames(visible: boolean) {
@@ -1196,33 +1197,29 @@ export default class PokemonSprite extends DraggableObject {
 
   createKiAuraFlames() {
     createKiAuraFlameTextures(this.scene)
-    const flame = this.scene.add
-      .image(0, 0, "ki-aura-flame-0")
-      .setOrigin(0.5, 1)
-      .setScale(KI_AURA_FLAMES_PIXEL_SIZE)
-    const core = this.scene.add
-      .image(0, -4, "ki-aura-flame-1")
-      .setOrigin(0.5, 1)
-      .setScale(KI_AURA_FLAMES_PIXEL_SIZE * 0.6)
-    const base = this.scene.add
-      .image(0, 8, "ki-aura-base-0")
-      .setOrigin(0.5, 1)
-      .setScale(KI_AURA_FLAMES_PIXEL_SIZE)
-      .setAlpha(0.8)
-    const middle = this.scene.add
-      .image(0, 4, "ki-aura-middle-0")
-      .setOrigin(0.5, 1)
-      .setScale(KI_AURA_FLAMES_PIXEL_SIZE)
-      .setAlpha(0.85)
-    ;[flame, core, base, middle].forEach((image) =>
-      image.setTint(KI_AURA_COLOR).setBlendMode(Phaser.BlendModes.ADD)
-    )
+    const layers = [
+      { key: "ki-aura-base", y: 8, scale: 1, alpha: 0.8, frameOffset: 2 },
+      { key: "ki-aura-middle", y: 4, scale: 1, alpha: 0.85, frameOffset: 1 },
+      { key: "ki-aura-flame", y: 0, scale: 1, alpha: 1, frameOffset: 0 },
+      { key: "ki-aura-flame", y: -4, scale: 0.6, alpha: 1, frameOffset: 1 }
+    ]
+    const createLayerImages = (tint: number, alpha: number) =>
+      layers.map((layer) =>
+        this.scene.add
+          .image(0, layer.y, `${layer.key}-${layer.frameOffset}`)
+          .setOrigin(0.5, 1)
+          .setScale(KI_AURA_FLAMES_PIXEL_SIZE * layer.scale)
+          .setTint(tint)
+          .setAlpha(layer.alpha * alpha)
+      )
+    // additive glow washes out to white on bright maps, the shade underneath keeps the shape readable
+    const shades = createLayerImages(KI_AURA_SHADE_COLOR, KI_AURA_SHADE_ALPHA)
+    const glows = createLayerImages(KI_AURA_COLOR, 1)
+    glows.forEach((glow) => glow.setBlendMode(Phaser.BlendModes.ADD))
     this.kiAuraFlames = this.scene.add
       .container(IGNITE_FLAME_X_OFFSET, KI_AURA_FLAMES_GROUND_Y, [
-        base,
-        middle,
-        flame,
-        core
+        ...shades,
+        ...glows
       ])
       .setAlpha(0)
     this.addAt(this.kiAuraFlames, 0)
@@ -1238,13 +1235,11 @@ export default class PokemonSprite extends DraggableObject {
       loop: true,
       callback: () => {
         frame = (frame + 1) % KI_AURA_FLAMES_FRAMES
-        flame.setTexture(`ki-aura-flame-${frame}`)
-        const next = (frame + 1) % KI_AURA_FLAMES_FRAMES
-        core.setTexture(`ki-aura-flame-${next}`)
-        middle.setTexture(`ki-aura-middle-${next}`)
-        base.setTexture(
-          `ki-aura-base-${(frame + 2) % KI_AURA_FLAMES_FRAMES}`
-        )
+        layers.forEach((layer, index) => {
+          const texture = `${layer.key}-${(frame + layer.frameOffset) % KI_AURA_FLAMES_FRAMES}`
+          shades[index].setTexture(texture)
+          glows[index].setTexture(texture)
+        })
       }
     })
   }
@@ -1260,7 +1255,6 @@ export default class PokemonSprite extends DraggableObject {
       )
       .setScale(KI_AURA_FLAMES_PIXEL_SIZE)
       .setTint(KI_AURA_COLOR)
-      .setBlendMode(Phaser.BlendModes.ADD)
       .setAlpha(0)
     this.add(streak)
     if (Math.random() < 0.5) this.moveBelow(streak, this.sprite)
@@ -1287,10 +1281,10 @@ export default class PokemonSprite extends DraggableObject {
     this.scene.tweens.add({
       targets: flames,
       scaleX: 0.9,
-      scaleY: 1.35,
+      scaleY: 1.2,
       alpha: 0,
-      duration: 400,
-      ease: "sine.out",
+      duration: KI_AURA_RELEASE_DURATION,
+      ease: "sine.inOut",
       onComplete: () => flames.setScale(1)
     })
   }

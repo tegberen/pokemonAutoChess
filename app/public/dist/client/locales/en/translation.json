@@ -3996,7 +3996,7 @@
 		"FIRE": "FIRE Pokémon have a chance to BURN their enemies, and gain ATK after every attack.",
 		"WATER": "WATER Pokémon generate more PP and can be fished with a rod.",
 		"ELECTRIC": "ELECTRIC Pokémon basic attacks can trigger two additional attacks.{{additionalInfo}}",
-		"FIGHTING": "FIGHTING Pokémon block a flat amount of damage on every hit received. After 10 hits blocked, throw the melee target away, destroying their SHIELD and inflicting PARALYSIS for 2s. The user gains 10% CRIT_CHANCE per STAR.",
+		"FIGHTING": "FIGHTING Pokémon block a flat amount of damage on every hit received. After 10 hits blocked, throw the melee target away, destroying their SHIELD and inflicting PARALYSIS for 2s. The user then gains 10% CRIT_CHANCE per STAR.",
 		"PSYCHIC": "PSYCHIC Pokémon gain additional AP and attract Unowns.",
 		"DARK": "DARK Pokémon's critical hits are more powerful and more frequent. Melee Dark Pokémon jump to the farthest target reachable. The STRONGEST Melee  DARK Pokémon leaps away with the target once below 50% max HP. One more Pokémon triggering this effect for each synergy step.",
 		"STEEL": "STEEL Pokémon deal a percentage of their damage as TRUE and give 3 DEF to your whole team when activated.",
