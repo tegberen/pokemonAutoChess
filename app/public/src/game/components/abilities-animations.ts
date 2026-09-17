@@ -2973,6 +2973,200 @@ function fightingThrowFist(args: AbilityAnimationArgs) {
   })
 }
 
+const TROP_KICK_COMBO_RESET = 400
+const TROP_KICK_BASE_SCALE = 1.6
+const TROP_KICK_SCALE_STEP = 0.15
+const TROP_KICK_MAX_SCALE = 2.6
+const TROP_KICK_FINISHER_SCALE = 3.4
+const TROP_KICK_LUNGE_DISTANCE = 12
+const TROP_KICK_HOP_HEIGHT = 12
+const TROP_KICK_LEAN_ANGLE = 20
+const TROP_KICK_MOVE_DURATION = 65
+const TROP_KICK_FINISHER_HOP_HEIGHT = 26
+const TROP_KICK_FINISHER_WINDUP = 140
+const TROP_KICK_TARGET_BOUNCE = 14
+const TROP_KICK_PETAL_COLORS = [0xff7eb6, 0xffd84a, 0x9be15d]
+const TROP_KICK_PETAL_TEXTURE = "trop-kick-petal"
+
+const tropKickCombos = new WeakMap<
+  PokemonSprite,
+  { count: number; lastKickAt: number }
+>()
+
+const pokemonBodyTweens = new WeakMap<
+  GameObjects.Sprite,
+  { tween: Phaser.Tweens.Tween; restX: number; restY: number }
+>()
+
+// back-to-back kicks restart from the resting pose so the Pokémon never drifts or stays tilted
+function tweenPokemonBody(
+  pokemonSprite: PokemonSprite,
+  config: Omit<Phaser.Types.Tweens.TweenBuilderConfig, "targets">
+) {
+  const body = pokemonSprite.sprite
+  pokemonBodyTweens.get(body)?.tween.stop()
+  const restX = body.x
+  const restY = body.y
+  const toRest = () => body.setPosition(restX, restY).setAngle(0)
+  const tween = body.scene.tweens.add({
+    ...config,
+    targets: body,
+    x: restX + ((config.x as number) ?? 0),
+    y: restY + ((config.y as number) ?? 0),
+    onComplete: toRest,
+    onStop: toRest
+  })
+  pokemonBodyTweens.set(body, { tween, restX, restY })
+}
+
+const tropKick = (isFinisher: boolean) =>
+  onSprite(
+    ({ scene, casterSprite, targetSprite, ap, targetX, targetY, flip }) => {
+      const [x, y] = transformEntityCoordinates(targetX, targetY, flip)
+      const now = scene.time.now
+      const combo = casterSprite ? tropKickCombos.get(casterSprite) : undefined
+      const count =
+        combo && now - combo.lastKickAt < TROP_KICK_COMBO_RESET
+          ? combo.count + 1
+          : 0
+
+      if (casterSprite) {
+        tropKickCombos.set(casterSprite, { count, lastKickAt: now })
+        const distance =
+          Math.hypot(x - casterSprite.x, y - casterSprite.y) || 1
+        const towardX = (x - casterSprite.x) / distance
+        const towardY = (y - casterSprite.y) / distance
+        const side = count % 2 === 0 ? 1 : -1
+        if (isFinisher) {
+          tweenPokemonBody(casterSprite, {
+            x: towardX * TROP_KICK_LUNGE_DISTANCE,
+            y: -TROP_KICK_FINISHER_HOP_HEIGHT,
+            angle: TROP_KICK_LEAN_ANGLE * side,
+            duration: TROP_KICK_FINISHER_WINDUP,
+            yoyo: true,
+            ease: "quad.out"
+          })
+        } else {
+          tweenPokemonBody(casterSprite, {
+            x: towardX * TROP_KICK_LUNGE_DISTANCE,
+            y: towardY * TROP_KICK_LUNGE_DISTANCE - TROP_KICK_HOP_HEIGHT,
+            angle: TROP_KICK_LEAN_ANGLE * side,
+            duration: TROP_KICK_MOVE_DURATION,
+            yoyo: true,
+            ease: "sine.out"
+          })
+        }
+      }
+
+      if (!isFinisher) {
+        addAbilitySprite(
+          scene,
+          Ability.TROP_KICK,
+          ap,
+          [x + randomBetween(-10, 10), y + randomBetween(-10, 6)],
+          {
+            scale: Math.min(
+              TROP_KICK_MAX_SCALE,
+              TROP_KICK_BASE_SCALE + count * TROP_KICK_SCALE_STEP
+            ),
+            depth: DEPTH.ABILITY,
+            flipX: count % 2 === 1,
+            angle: randomBetween(-15, 15)
+          }
+        )
+        burstTropKickPetals(scene, x, y, 3, 24)
+        return
+      }
+
+      scene.time.delayedCall(TROP_KICK_FINISHER_WINDUP, () => {
+        const kick = addAbilitySprite(scene, Ability.TROP_KICK, ap, [x, y], {
+          scale: TROP_KICK_FINISHER_SCALE,
+          depth: DEPTH.ABILITY
+        })
+        if (kick) {
+          scene.tweens.add({
+            targets: kick,
+            scale: {
+              from: TROP_KICK_FINISHER_SCALE * 1.3,
+              to: TROP_KICK_FINISHER_SCALE
+            },
+            duration: 140,
+            ease: "back.out"
+          })
+        }
+        if (targetSprite?.active) {
+          tweenPokemonBody(targetSprite, {
+            y: -TROP_KICK_TARGET_BOUNCE,
+            duration: 120,
+            yoyo: true,
+            ease: "quad.out"
+          })
+        }
+        tropKickShockwave(scene, x, y)
+        burstTropKickPetals(scene, x, y, 14, 48)
+      })
+    }
+  )
+
+function tropKickShockwave(scene: GameScene | DebugScene, x: number, y: number) {
+  TROP_KICK_PETAL_COLORS.forEach((color, index) => {
+    const ring = scene.add
+      .graphics({ x, y })
+      .lineStyle(3, color, 1)
+      .strokeCircle(0, 0, 20)
+      .setDepth(DEPTH.ABILITY_MINOR)
+      .setScale(0.3)
+    scene.tweens.add({
+      targets: ring,
+      scale: 2.2,
+      alpha: 0,
+      delay: index * 70,
+      duration: 420,
+      ease: "cubic.out",
+      onComplete: () => ring.destroy()
+    })
+  })
+}
+
+function burstTropKickPetals(
+  scene: GameScene | DebugScene,
+  x: number,
+  y: number,
+  amount: number,
+  reach: number
+) {
+  if (!scene.textures.exists(TROP_KICK_PETAL_TEXTURE)) {
+    const texture = scene.textures.createCanvas(TROP_KICK_PETAL_TEXTURE, 3, 2)
+    if (!texture) return
+    const context = texture.getContext()
+    context.fillStyle = "#ffffff"
+    context.fillRect(1, 0, 2, 1)
+    context.fillRect(0, 1, 2, 1)
+    texture.refresh()
+    texture.setFilter(Phaser.Textures.FilterMode.NEAREST)
+  }
+  for (let i = 0; i < amount; i++) {
+    const direction = Math.random() * 2 * Math.PI
+    const distance = randomBetween(10, reach)
+    const petal = scene.add
+      .image(x, y, TROP_KICK_PETAL_TEXTURE)
+      .setScale(2)
+      .setTint(pickRandomIn(TROP_KICK_PETAL_COLORS))
+      .setAngle(randomBetween(0, 360))
+      .setDepth(DEPTH.ABILITY_MINOR)
+    scene.tweens.add({
+      targets: petal,
+      x: x + Math.cos(direction) * distance,
+      y: y + Math.sin(direction) * distance * 0.6 + 10,
+      angle: petal.angle + randomBetween(-180, 180),
+      alpha: 0,
+      duration: randomBetween(350, 550),
+      ease: "cubic.out",
+      onComplete: () => petal.destroy()
+    })
+  }
+}
+
 export const AbilitiesAnimations: {
   [animKey: string]: AbilityAnimation | AbilityAnimation[]
 } = {
@@ -3904,7 +4098,8 @@ export const AbilitiesAnimations: {
   }),
   [Ability.HIGH_JUMP_KICK]: onTargetScale2,
   [Ability.LUNGE]: onTarget({ ability: Ability.HIGH_JUMP_KICK }),
-  [Ability.TROP_KICK]: onTargetScale2,
+  [Ability.TROP_KICK]: tropKick(false),
+  ["TROP_KICK_FINISHER"]: tropKick(true),
   [Ability.SHELL_TRAP]: onCaster({ ability: Ability.COUNTER }),
   [Ability.SHELL_SMASH]: onCaster({ ability: Ability.COUNTER }),
   [Ability.SONG_OF_DESIRE]: onTarget({ positionOffset: [0, -60] }),

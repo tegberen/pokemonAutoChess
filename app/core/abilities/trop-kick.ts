@@ -1,3 +1,4 @@
+import { Ability } from "../../types/enum/Ability"
 import { AttackType } from "../../types/enum/Game"
 import type { Board } from "../board"
 import type { PokemonEntity } from "../pokemon-entity"
@@ -36,6 +37,7 @@ export class TropKickStrategy extends AbilityStrategy {
           }
           if (!currentTarget) return
           pokemon.broadcastAbility({
+            skill: i === nbKicks - 1 ? "TROP_KICK_FINISHER" : Ability.TROP_KICK,
             targetX: currentTarget.positionX,
             targetY: currentTarget.positionY
           })
