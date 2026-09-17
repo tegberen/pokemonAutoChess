@@ -40,7 +40,9 @@ import {
   VALOR_SHIELD_PER_STAR,
   HAIL_TO_THE_KING_CURSE_DELAY,
   RIVALRY_ATTACK_ON_OWN_SIDE,
+  RIVALRY_MAX_ATTACK,
   RIVALRY_MAX_HP_ON_ENEMY_SIDE,
+  RIVALRY_MAX_MAX_HP,
   SLIPSTREAM_ATTACK,
   SLIPSTREAM_SPEED,
   ZAP_CHAIN_DAMAGE_RATIO,
@@ -1558,16 +1560,33 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
       }
     }
 
+    const rivalryPlayer = this.player
     if (
       this.isRivalryChampionThisFight &&
-      this.player?.blessings?.includes(Blessing.RIVALRY)
+      rivalryPlayer?.blessings?.includes(Blessing.RIVALRY)
     ) {
       const isOnOwnSideOfBoard =
         this.team === Team.BLUE_TEAM ? this.positionY <= 2 : this.positionY >= 3
+      // ghost fights never keep permanent gains, so they must not use up the cap
+      const countsTowardsCap = !this.isGhostOpponent
       if (isOnOwnSideOfBoard) {
-        this.addAttack(RIVALRY_ATTACK_ON_OWN_SIDE, this, 0, false, true)
+        const attack = Math.min(
+          RIVALRY_ATTACK_ON_OWN_SIDE,
+          RIVALRY_MAX_ATTACK - rivalryPlayer.rivalryAttackGained
+        )
+        if (attack > 0) {
+          if (countsTowardsCap) rivalryPlayer.rivalryAttackGained += attack
+          this.addAttack(attack, this, 0, false, true)
+        }
       } else {
-        this.addMaxHP(RIVALRY_MAX_HP_ON_ENEMY_SIDE, this, 0, false, true)
+        const maxHp = Math.min(
+          RIVALRY_MAX_HP_ON_ENEMY_SIDE,
+          RIVALRY_MAX_MAX_HP - rivalryPlayer.rivalryMaxHpGained
+        )
+        if (maxHp > 0) {
+          if (countsTowardsCap) rivalryPlayer.rivalryMaxHpGained += maxHp
+          this.addMaxHP(maxHp, this, 0, false, true)
+        }
       }
     }
 

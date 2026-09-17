@@ -10,7 +10,11 @@ import {
   BAZAAR_SHOP_INTERVAL,
   SpecialGameRule
 } from "../../../../../types/enum/SpecialGameRule"
-import { selectConnectedPlayer, useAppSelector } from "../../../hooks"
+import {
+  selectConnectedPlayer,
+  selectIsBlessingChoicePending,
+  useAppSelector
+} from "../../../hooks"
 import { getGameScene } from "../../game"
 import { cc } from "../../utils/jsx"
 import { useGuideActionAllowed } from "../guide/use-guide-action"
@@ -71,7 +75,9 @@ export default function GameRefresh() {
   const onBerserkerShop =
     (stageLevel + rerollCount) % BERSERKER_HORDES_SHOP_INTERVAL === 0
 
-  const rerollAllowed = useGuideActionAllowed("reroll")
+  const guideAllowsReroll = useGuideActionAllowed("reroll")
+  const blessingChoicePending = useAppSelector(selectIsBlessingChoicePending)
+  const rerollAllowed = guideAllowsReroll && !blessingChoicePending
 
   return (
     <>

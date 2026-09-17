@@ -306,8 +306,9 @@ export default class Player extends Schema implements IPlayer {
   blessingWands: Item[] = []
   // server-only: gold the PLUNDER champion spent casting Treasure Rush this fight
   plunderGoldSpentThisFight: number = 0
-  // server-only: lets WAITING_GAME tell whether the player rerolled this round
-  rerollCountAtLastRoundEnd: number = 0
+  // server-only: RIVALRY gains are capped over the whole game
+  rivalryAttackGained: number = 0
+  rivalryMaxHpGained: number = 0
   // server-only: MANIFESTATION units, passive on the bench until stage 20
   manifestedPokemonIds: string[] = []
   // server-only: RAINBOW_HOUR pays its gold bounty only once
@@ -570,7 +571,6 @@ export default class Player extends Schema implements IPlayer {
       Math.floor(previousPlayerDamageDealt / LUNCH_MONEY_DAMAGE_REQUIRED)
     if (payouts === 0) return
     this.addBlessingGold(payouts * LUNCH_MONEY_GOLD)
-    this.shopFreeRolls += payouts
   }
 
   addBlessingGold(amount: number) {

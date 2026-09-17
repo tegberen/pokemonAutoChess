@@ -44,6 +44,7 @@ import {
   getMaxItemBlessingOptions,
   getMaxSynergyBlessingOptions,
   getBlessingsAvailable,
+  isBlessingChoicePending,
   peekGreedyWishTier,
   rollBlessingTier
 } from "../../config/game/blessings"
@@ -317,6 +318,7 @@ export class OnBuyPokemonCommand extends Command<
       return
     const player = this.state.players.get(playerId)
     if (!player || !player.alive) return
+    if (isBlessingChoicePending(player.choices)) return
 
     // BAZAAR: this slot holds a purchasable item offer instead of a Pokémon
     const bazaarSlot = player.bazaarShop ? player.bazaarSlots[index] : ""
@@ -1748,6 +1750,7 @@ export class OnShopRerollCommand extends Command<GameRoom, string> {
     const player = this.state.players.get(id)
     if (!player || !player.alive) return
     if (!isGuideActionAllowed(this.state, "reroll")) return
+    if (isBlessingChoicePending(player.choices)) return
     const thinkFastActive =
       this.state.phase === GamePhaseState.PICK &&
       player.blessingsRef?.thinkFastActive === true
@@ -1821,6 +1824,7 @@ export class OnLevelUpCommand extends Command<
     const player = this.state.players.get(id)
     if (!player || !player.alive) return
     if (!isGuideActionAllowed(this.state, "levelup")) return
+    if (isBlessingChoicePending(player.choices)) return
     if (player.blessings?.includes(Blessing.WISE_SPENDING)) return
 
     const cost = getLevelUpCost(this.state.specialGameRule)

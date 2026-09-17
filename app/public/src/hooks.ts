@@ -5,6 +5,7 @@ import {
   useSelector
 } from "react-redux"
 import { getGameEventResetDate } from "../../config"
+import { isBlessingChoicePending } from "../../config/game/blessings"
 import type { AppDispatch, RootState } from "./stores"
 import type { IFossilUnlocksState } from "./stores/GameStore"
 
@@ -19,6 +20,9 @@ export const selectSpectatedPlayer = (state: RootState) =>
 // the player that is linked to current user session (undefined when spectating another lobby)
 export const selectConnectedPlayer = (state: RootState) =>
   state.game.players.find((p) => p.id === state.network.uid)
+
+export const selectIsBlessingChoicePending = (state: RootState) =>
+  isBlessingChoicePending(selectConnectedPlayer(state)?.choices)
 
 const NO_FOSSIL_UNLOCKS: IFossilUnlocksState = {
   revealed: false,

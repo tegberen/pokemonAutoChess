@@ -18,6 +18,7 @@ import { getPortraitSrc } from "../../../../../utils/avatar"
 import { schemaValues } from "../../../../../utils/schemas"
 import {
   selectConnectedPlayer,
+  selectIsBlessingChoicePending,
   selectSpectatedPlayer,
   useAppSelector
 } from "../../../hooks"
@@ -86,6 +87,7 @@ export default function GamePokemonPortrait(props: {
     typeof props.pokemon === "string" ? props.pokemon : props.pokemon?.name
   )
   const connectedPlayer = useAppSelector(selectConnectedPlayer)
+  const blessingChoicePending = useAppSelector(selectIsBlessingChoicePending)
 
   const board = connectedPlayer?.board ?? null
 
@@ -211,7 +213,7 @@ export default function GamePokemonPortrait(props: {
   const canBuy =
     spectatedPlayer?.alive &&
     spectatedPlayer?.money >= cost &&
-    (props.origin !== "shop" || guideAllowsBuying)
+    (props.origin !== "shop" || (guideAllowsBuying && !blessingChoicePending))
 
   return (
     <div

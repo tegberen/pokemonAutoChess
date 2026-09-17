@@ -4,6 +4,7 @@ import { getLevelUpCost } from "../../../../../models/colyseus-models/experience
 import { Blessing } from "../../../../../types/enum/Blessing"
 import {
   selectConnectedPlayer,
+  selectIsBlessingChoicePending,
   selectSpectatedPlayer,
   useAppSelector
 } from "../../../hooks"
@@ -44,7 +45,9 @@ export default function GameExperience() {
     spectatedPlayer &&
     spectatedPlayer.money >= levelUpCost
 
-  const levelUpAllowed = useGuideActionAllowed("levelup")
+  const guideAllowsLevelUp = useGuideActionAllowed("levelup")
+  const blessingChoicePending = useAppSelector(selectIsBlessingChoicePending)
+  const levelUpAllowed = guideAllowsLevelUp && !blessingChoicePending
 
   return (
     <div className="game-experience">

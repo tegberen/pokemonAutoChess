@@ -4697,7 +4697,7 @@
 		},
 		"CROAGUNKS_AID": {
 			"name": "Croagunk's Aid",
-			"description": "Gain 3 EXCHANGE_TICKET. Benching a Pokémon now takes back every item it holds."
+			"description": "Gain 10 GOLD and 2 EXCHANGE_TICKET. Benching a Pokémon now takes back every item it holds."
 		},
 		"BAG_OF_SWEETS": {
 			"name": "Bag of Sweets",
@@ -4705,7 +4705,7 @@
 		},
 		"WOBBUFFETS_SILVER_PRIZE": {
 			"name": "Silver Kit",
-			"description": "Gain a random component and 2 RECYCLE_TICKET."
+			"description": "Gain a SILVER_DOJO_TICKET and 2 RECYCLE_TICKET."
 		},
 		"TREASURE_HUNT_I": {
 			"name": "Treasure Hunt I",
@@ -4713,19 +4713,15 @@
 		},
 		"STARTER_PACK": {
 			"name": "Starter Pack",
-			"description": "Gain a 2 STAR Common, a 1 STAR Uncommon and a 1 STAR Rare Pokémon."
+			"description": "Gain a 2 STAR Common, a 2 STAR Uncommon and a 1 STAR Rare Pokémon."
 		},
 		"NUGGET": {
 			"name": "Gold Bar",
 			"description": "Gain 15 GOLD."
 		},
-		"GOLDEN_TICKET": {
-			"name": "Golden Ticket",
-			"description": "Gain a GOLD_DOJO_TICKET."
-		},
 		"TREASURE_HUNT_II": {
 			"name": "Treasure Hunt II",
-			"description": "Gain 3 random synergy gems."
+			"description": "Gain 4 random synergy gems."
 		},
 		"GIMMIGHOULS_TREASURE": {
 			"name": "Gimmighoul's Treasure",
@@ -4737,243 +4733,243 @@
 		},
 		"NORMAL_BADGE_BLESSING": {
 			"name": "NORMAL Badge",
-			"description": "Gain a NORMAL_GEM and a random 1 STAR Uncommon NORMAL Pokémon."
+			"description": "Gain a NORMAL_GEM, a random 1 STAR Uncommon and a random 1 STAR Common NORMAL Pokémon."
 		},
 		"NORMAL_CREST_BLESSING": {
 			"name": "NORMAL Crest",
-			"description": "Gain a FRIEND_BOW and 2 random 1 STAR Uncommon NORMAL Pokémon."
+			"description": "Gain a FRIEND_BOW, a random 1 STAR Uncommon and a random 1 STAR Rare NORMAL Pokémon."
 		},
 		"FLYING_BADGE_BLESSING": {
 			"name": "FLYING Badge",
-			"description": "Gain a FLYING_GEM and a random 1 STAR Uncommon FLYING Pokémon."
+			"description": "Gain a FLYING_GEM, a random 1 STAR Uncommon and a random 1 STAR Common FLYING Pokémon."
 		},
 		"FLYING_CREST_BLESSING": {
 			"name": "FLYING Crest",
-			"description": "Gain an AIR_BALLOON and 2 random 1 STAR Uncommon FLYING Pokémon."
+			"description": "Gain an AIR_BALLOON, a random 1 STAR Uncommon and a random 1 STAR Rare FLYING Pokémon."
 		},
 		"FIELD_BADGE_BLESSING": {
 			"name": "FIELD Badge",
-			"description": "Gain a FIELD_GEM and a random 1 STAR Uncommon FIELD Pokémon."
+			"description": "Gain a FIELD_GEM, a random 1 STAR Uncommon and a random 1 STAR Common FIELD Pokémon."
 		},
 		"FIELD_CREST_BLESSING": {
 			"name": "FIELD Crest",
-			"description": "Gain a RUNNING_SHOES and 2 random 1 STAR Uncommon FIELD Pokémon."
+			"description": "Gain a RUNNING_SHOES, a random 1 STAR Uncommon and a random 1 STAR Rare FIELD Pokémon."
 		},
 		"DARK_BADGE_BLESSING": {
 			"name": "DARK Badge",
-			"description": "Gain a DARK_GEM and a random 1 STAR Uncommon DARK Pokémon."
+			"description": "Gain a DARK_GEM, a random 1 STAR Uncommon and a random 1 STAR Common DARK Pokémon."
 		},
 		"DARK_CREST_BLESSING": {
 			"name": "DARK Crest",
-			"description": "Gain a DUSK_STONE and 2 random 1 STAR Uncommon DARK Pokémon."
+			"description": "Gain a DUSK_STONE, a random 1 STAR Uncommon and a random 1 STAR Rare DARK Pokémon."
 		},
 		"GROUND_BADGE_BLESSING": {
 			"name": "GROUND Badge",
-			"description": "Gain a GROUND_GEM and a random 1 STAR Uncommon GROUND Pokémon."
+			"description": "Gain a GROUND_GEM, a random 1 STAR Uncommon and a random 1 STAR Common GROUND Pokémon."
 		},
 		"GROUND_CREST_BLESSING": {
 			"name": "GROUND Crest",
-			"description": "Gain an EXPLORER_KIT and 2 random 1 STAR Uncommon GROUND Pokémon."
+			"description": "Gain an EXPLORER_KIT, a random 1 STAR Uncommon and a random 1 STAR Rare GROUND Pokémon."
 		},
 		"PSYCHIC_BADGE_BLESSING": {
 			"name": "PSYCHIC Badge",
-			"description": "Gain a PSYCHIC_GEM and a random 1 STAR Uncommon PSYCHIC Pokémon."
+			"description": "Gain a PSYCHIC_GEM, a random 1 STAR Uncommon and a random 1 STAR Common PSYCHIC Pokémon."
 		},
 		"PSYCHIC_CREST_BLESSING": {
 			"name": "PSYCHIC Crest",
-			"description": "Gain a DAWN_STONE and 2 random 1 STAR Uncommon PSYCHIC Pokémon."
+			"description": "Gain a DAWN_STONE, a random 1 STAR Uncommon and a random 1 STAR Rare PSYCHIC Pokémon."
 		},
 		"GRASS_BADGE_BLESSING": {
 			"name": "GRASS Badge",
-			"description": "Gain a GRASS_GEM and a random 1 STAR Uncommon GRASS Pokémon."
+			"description": "Gain a GRASS_GEM, a random 1 STAR Uncommon and a random 1 STAR Common GRASS Pokémon."
 		},
 		"GRASS_CREST_BLESSING": {
 			"name": "GRASS Crest",
-			"description": "Gain a LEAF_STONE and 2 random 1 STAR Uncommon GRASS Pokémon."
+			"description": "Gain a LEAF_STONE, a random 1 STAR Uncommon and a random 1 STAR Rare GRASS Pokémon."
 		},
 		"BUG_BADGE_BLESSING": {
 			"name": "BUG Badge",
-			"description": "Gain a BUG_GEM and a random 1 STAR Uncommon BUG Pokémon."
+			"description": "Gain a BUG_GEM, a random 1 STAR Uncommon and a random 1 STAR Common BUG Pokémon."
 		},
 		"BUG_CREST_BLESSING": {
 			"name": "BUG Crest",
-			"description": "Gain a SHED_SHELL and 2 random 1 STAR Uncommon BUG Pokémon."
+			"description": "Gain a SHED_SHELL, a random 1 STAR Uncommon and a random 1 STAR Rare BUG Pokémon."
 		},
 		"WATER_BADGE_BLESSING": {
 			"name": "WATER Badge",
-			"description": "Gain a WATER_GEM and a random 1 STAR Uncommon WATER Pokémon."
+			"description": "Gain a WATER_GEM, a random 1 STAR Uncommon and a random 1 STAR Common WATER Pokémon."
 		},
 		"WATER_CREST_BLESSING": {
 			"name": "WATER Crest",
-			"description": "Gain a WATER_STONE and 2 random 1 STAR Uncommon WATER Pokémon."
+			"description": "Gain a WATER_STONE, a random 1 STAR Uncommon and a random 1 STAR Rare WATER Pokémon."
 		},
 		"AQUATIC_BADGE_BLESSING": {
 			"name": "AQUATIC Badge",
-			"description": "Gain an AQUATIC_GEM and a random 1 STAR Uncommon AQUATIC Pokémon."
+			"description": "Gain an AQUATIC_GEM, a random 1 STAR Uncommon and a random 1 STAR Common AQUATIC Pokémon."
 		},
 		"AQUATIC_CREST_BLESSING": {
 			"name": "AQUATIC Crest",
-			"description": "Gain a SURFBOARD and 2 random 1 STAR Uncommon AQUATIC Pokémon."
+			"description": "Gain a SURFBOARD, a random 1 STAR Uncommon and a random 1 STAR Rare AQUATIC Pokémon."
 		},
 		"POISON_BADGE_BLESSING": {
 			"name": "POISON Badge",
-			"description": "Gain a POISON_GEM and a random 1 STAR Uncommon POISON Pokémon."
+			"description": "Gain a POISON_GEM, a random 1 STAR Uncommon and a random 1 STAR Common POISON Pokémon."
 		},
 		"POISON_CREST_BLESSING": {
 			"name": "POISON Crest",
-			"description": "Gain a POKERUS_VIAL and 2 random 1 STAR Uncommon POISON Pokémon."
+			"description": "Gain a POKERUS_VIAL, a random 1 STAR Uncommon and a random 1 STAR Rare POISON Pokémon."
 		},
 		"FAIRY_BADGE_BLESSING": {
 			"name": "FAIRY Badge",
-			"description": "Gain a FAIRY_GEM and a random 1 STAR Uncommon FAIRY Pokémon."
+			"description": "Gain a FAIRY_GEM, a random 1 STAR Uncommon and a random 1 STAR Common FAIRY Pokémon."
 		},
 		"FAIRY_CREST_BLESSING": {
 			"name": "FAIRY Crest",
-			"description": "Gain a MOON_STONE and 2 random 1 STAR Uncommon FAIRY Pokémon."
+			"description": "Gain a MOON_STONE, a random 1 STAR Uncommon and a random 1 STAR Rare FAIRY Pokémon."
 		},
 		"FIGHTING_BADGE_BLESSING": {
 			"name": "FIGHTING Badge",
-			"description": "Gain a FIGHTING_GEM and a random 1 STAR Uncommon FIGHTING Pokémon."
+			"description": "Gain a FIGHTING_GEM, a random 1 STAR Uncommon and a random 1 STAR Common FIGHTING Pokémon."
 		},
 		"FIGHTING_CREST_BLESSING": {
 			"name": "FIGHTING Crest",
-			"description": "Gain a MACHO_BRACE and 2 random 1 STAR Uncommon FIGHTING Pokémon."
+			"description": "Gain a MACHO_BRACE, a random 1 STAR Uncommon and a random 1 STAR Rare FIGHTING Pokémon."
 		},
 		"FIRE_BADGE_BLESSING": {
 			"name": "FIRE Badge",
-			"description": "Gain a FIRE_GEM and a random 1 STAR Uncommon FIRE Pokémon."
+			"description": "Gain a FIRE_GEM, a random 1 STAR Uncommon and a random 1 STAR Common FIRE Pokémon."
 		},
 		"FIRE_CREST_BLESSING": {
 			"name": "FIRE Crest",
-			"description": "Gain a FIRE_STONE and 2 random 1 STAR Uncommon FIRE Pokémon."
+			"description": "Gain a FIRE_STONE, a random 1 STAR Uncommon and a random 1 STAR Rare FIRE Pokémon."
 		},
 		"GHOST_BADGE_BLESSING": {
 			"name": "GHOST Badge",
-			"description": "Gain a GHOST_GEM and a random 1 STAR Uncommon GHOST Pokémon."
+			"description": "Gain a GHOST_GEM, a random 1 STAR Uncommon and a random 1 STAR Common GHOST Pokémon."
 		},
 		"GHOST_CREST_BLESSING": {
 			"name": "GHOST Crest",
-			"description": "Gain a SPELL_TAG and 2 random 1 STAR Uncommon GHOST Pokémon."
+			"description": "Gain a SPELL_TAG, a random 1 STAR Uncommon and a random 1 STAR Rare GHOST Pokémon."
 		},
 		"ROCK_BADGE_BLESSING": {
 			"name": "ROCK Badge",
-			"description": "Gain a ROCK_GEM and a random 1 STAR Uncommon ROCK Pokémon."
+			"description": "Gain a ROCK_GEM, a random 1 STAR Uncommon and a random 1 STAR Common ROCK Pokémon."
 		},
 		"ROCK_CREST_BLESSING": {
 			"name": "ROCK Crest",
-			"description": "Gain an EVER_STONE and 2 random 1 STAR Uncommon ROCK Pokémon."
+			"description": "Gain an EVER_STONE, a random 1 STAR Uncommon and a random 1 STAR Rare ROCK Pokémon."
 		},
 		"MONSTER_BADGE_BLESSING": {
 			"name": "MONSTER Badge",
-			"description": "Gain a MONSTER_GEM and a random 1 STAR Uncommon MONSTER Pokémon."
+			"description": "Gain a MONSTER_GEM, a random 1 STAR Uncommon and a random 1 STAR Common MONSTER Pokémon."
 		},
 		"MONSTER_CREST_BLESSING": {
 			"name": "MONSTER Crest",
-			"description": "Gain a BERSERK_GENE and 2 random 1 STAR Uncommon MONSTER Pokémon."
+			"description": "Gain a BERSERK_GENE, a random 1 STAR Uncommon and a random 1 STAR Rare MONSTER Pokémon."
 		},
 		"AMORPHOUS_BADGE_BLESSING": {
 			"name": "AMORPHOUS Badge",
-			"description": "Gain an AMORPHOUS_GEM and a random 1 STAR Uncommon AMORPHOUS Pokémon."
+			"description": "Gain an AMORPHOUS_GEM, a random 1 STAR Uncommon and a random 1 STAR Common AMORPHOUS Pokémon."
 		},
 		"AMORPHOUS_CREST_BLESSING": {
 			"name": "AMORPHOUS Crest",
-			"description": "Gain an AMORPHOUS_GEM and 2 random 1 STAR Uncommon AMORPHOUS Pokémon."
+			"description": "Gain an AMORPHOUS_GEM, a random 1 STAR Uncommon and a random 1 STAR Rare AMORPHOUS Pokémon."
 		},
 		"WILD_BADGE_BLESSING": {
 			"name": "WILD Badge",
-			"description": "Gain a WILD_GEM and a random 1 STAR Uncommon WILD Pokémon."
+			"description": "Gain a WILD_GEM, a random 1 STAR Uncommon and a random 1 STAR Common WILD Pokémon."
 		},
 		"WILD_CREST_BLESSING": {
 			"name": "WILD Crest",
-			"description": "Gain a WHITE_FLUTE and 2 random 1 STAR Uncommon WILD Pokémon."
+			"description": "Gain a WHITE_FLUTE, a random 1 STAR Uncommon and a random 1 STAR Rare WILD Pokémon."
 		},
 		"SOUND_BADGE_BLESSING": {
 			"name": "SOUND Badge",
-			"description": "Gain a SOUND_GEM and a random 1 STAR Uncommon SOUND Pokémon."
+			"description": "Gain a SOUND_GEM, a random 1 STAR Uncommon and a random 1 STAR Common SOUND Pokémon."
 		},
 		"SOUND_CREST_BLESSING": {
 			"name": "SOUND Crest",
-			"description": "Gain a METRONOME and 2 random 1 STAR Uncommon SOUND Pokémon."
+			"description": "Gain a METRONOME, a random 1 STAR Uncommon and a random 1 STAR Rare SOUND Pokémon."
 		},
 		"FLORA_BADGE_BLESSING": {
 			"name": "FLORA Badge",
-			"description": "Gain a FLORA_GEM and a random 1 STAR Uncommon FLORA Pokémon."
+			"description": "Gain a FLORA_GEM, a random 1 STAR Uncommon and a random 1 STAR Common FLORA Pokémon."
 		},
 		"FLORA_CREST_BLESSING": {
 			"name": "FLORA Crest",
-			"description": "Gain an INCENSE and 2 random 1 STAR Uncommon FLORA Pokémon."
+			"description": "Gain an INCENSE, a random 1 STAR Uncommon and a random 1 STAR Rare FLORA Pokémon."
 		},
 		"STEEL_BADGE_BLESSING": {
 			"name": "STEEL Badge",
-			"description": "Gain a STEEL_GEM and a random 1 STAR Uncommon STEEL Pokémon."
+			"description": "Gain a STEEL_GEM, a random 1 STAR Uncommon and a random 1 STAR Common STEEL Pokémon."
 		},
 		"STEEL_CREST_BLESSING": {
 			"name": "STEEL Crest",
-			"description": "Gain a METAL_COAT and 2 random 1 STAR Uncommon STEEL Pokémon."
+			"description": "Gain a METAL_COAT, a random 1 STAR Uncommon and a random 1 STAR Rare STEEL Pokémon."
 		},
 		"ELECTRIC_BADGE_BLESSING": {
 			"name": "ELECTRIC Badge",
-			"description": "Gain an ELECTRIC_GEM and a random 1 STAR Uncommon ELECTRIC Pokémon."
+			"description": "Gain an ELECTRIC_GEM, a random 1 STAR Uncommon and a random 1 STAR Common ELECTRIC Pokémon."
 		},
 		"ELECTRIC_CREST_BLESSING": {
 			"name": "ELECTRIC Crest",
-			"description": "Gain a THUNDER_STONE and 2 random 1 STAR Uncommon ELECTRIC Pokémon."
+			"description": "Gain a THUNDER_STONE, a random 1 STAR Uncommon and a random 1 STAR Rare ELECTRIC Pokémon."
 		},
 		"ICE_BADGE_BLESSING": {
 			"name": "ICE Badge",
-			"description": "Gain an ICE_GEM and a random 1 STAR Uncommon ICE Pokémon."
+			"description": "Gain an ICE_GEM, a random 1 STAR Uncommon and a random 1 STAR Common ICE Pokémon."
 		},
 		"ICE_CREST_BLESSING": {
 			"name": "ICE Crest",
-			"description": "Gain an ICE_STONE and 2 random 1 STAR Uncommon ICE Pokémon."
+			"description": "Gain an ICE_STONE, a random 1 STAR Uncommon and a random 1 STAR Rare ICE Pokémon."
 		},
 		"HUMAN_BADGE_BLESSING": {
 			"name": "HUMAN Badge",
-			"description": "Gain a HUMAN_GEM and a random 1 STAR Uncommon HUMAN Pokémon."
+			"description": "Gain a HUMAN_GEM, a random 1 STAR Uncommon and a random 1 STAR Common HUMAN Pokémon."
 		},
 		"HUMAN_CREST_BLESSING": {
 			"name": "HUMAN Crest",
-			"description": "Gain a HUMAN_GEM and 2 random 1 STAR Uncommon HUMAN Pokémon."
+			"description": "Gain a HUMAN_GEM, a random 1 STAR Uncommon and a random 1 STAR Rare HUMAN Pokémon."
 		},
 		"DRAGON_BADGE_BLESSING": {
 			"name": "DRAGON Badge",
-			"description": "Gain a DRAGON_GEM and a random 1 STAR Uncommon DRAGON Pokémon."
+			"description": "Gain a DRAGON_GEM, a random 1 STAR Uncommon and a random 1 STAR Common DRAGON Pokémon."
 		},
 		"DRAGON_CREST_BLESSING": {
 			"name": "DRAGON Crest",
-			"description": "Gain a DRAGON_SCALE and 2 random 1 STAR Uncommon DRAGON Pokémon."
+			"description": "Gain a DRAGON_SCALE, a random 1 STAR Uncommon and a random 1 STAR Rare DRAGON Pokémon."
 		},
 		"LIGHT_BADGE_BLESSING": {
 			"name": "LIGHT Badge",
-			"description": "Gain a LIGHT_GEM and a random 1 STAR Uncommon LIGHT Pokémon."
+			"description": "Gain a LIGHT_GEM, a random 1 STAR Uncommon and a random 1 STAR Common LIGHT Pokémon."
 		},
 		"LIGHT_CREST_BLESSING": {
 			"name": "LIGHT Crest",
-			"description": "Gain a LIGHT_BALL and 2 random 1 STAR Uncommon LIGHT Pokémon."
+			"description": "Gain a LIGHT_BALL, a random 1 STAR Uncommon and a random 1 STAR Rare LIGHT Pokémon."
 		},
 		"GOURMET_BADGE_BLESSING": {
 			"name": "GOURMET Badge",
-			"description": "Gain a GOURMET_GEM and a random 1 STAR Uncommon GOURMET Pokémon."
+			"description": "Gain a GOURMET_GEM, a random 1 STAR Uncommon and a random 1 STAR Common GOURMET Pokémon."
 		},
 		"GOURMET_CREST_BLESSING": {
 			"name": "GOURMET Crest",
-			"description": "Gain a COOKING_POT and 2 random 1 STAR Uncommon GOURMET Pokémon."
+			"description": "Gain a COOKING_POT, a random 1 STAR Uncommon and a random 1 STAR Rare GOURMET Pokémon."
 		},
 		"FOSSIL_BADGE_BLESSING": {
 			"name": "FOSSIL Badge",
-			"description": "Gain a FOSSIL_GEM and a random 1 STAR Uncommon FOSSIL Pokémon."
+			"description": "Gain a FOSSIL_GEM, a random 1 STAR Uncommon and a random 1 STAR Common FOSSIL Pokémon."
 		},
 		"FOSSIL_CREST_BLESSING": {
 			"name": "FOSSIL Crest",
-			"description": "Gain an OLD_AMBER and 2 random 1 STAR Uncommon FOSSIL Pokémon."
+			"description": "Gain an OLD_AMBER, a random 1 STAR Uncommon and a random 1 STAR Rare FOSSIL Pokémon."
 		},
 		"ARTIFICIAL_BADGE_BLESSING": {
 			"name": "ARTIFICIAL Badge",
-			"description": "Gain an ARTIFICIAL_GEM and a random 1 STAR Uncommon ARTIFICIAL Pokémon."
+			"description": "Gain an ARTIFICIAL_GEM, a random 1 STAR Uncommon and a random 1 STAR Common ARTIFICIAL Pokémon."
 		},
 		"ARTIFICIAL_CREST_BLESSING": {
 			"name": "ARTIFICIAL Crest",
-			"description": "Gain an ARTIFICIAL_GEM and 2 random 1 STAR Uncommon ARTIFICIAL Pokémon."
+			"description": "Gain an ARTIFICIAL_GEM, a random 1 STAR Uncommon and a random 1 STAR Rare ARTIFICIAL Pokémon."
 		},
 		"NORMAL_CROWN_BLESSING": {
 			"name": "NORMAL Crown",
@@ -5137,15 +5133,15 @@
 		},
 		"REQUIEM": {
 			"name": "Requiem",
-			"description": "When an allied Pokémon is KO'd, allies within 2 tiles gain SHIELD equal to 15% of their max HP."
+			"description": "When an allied Pokémon is KO'd, allies within 2 tiles gain SHIELD equal to 25% of their max HP."
 		},
 		"CRITICAL_RUSH_I": {
 			"name": "Critical Rush I",
-			"description": "The first time a Pokémon lands a critical hit, it gains 30 SPEED for 8 seconds."
+			"description": "The first time a Pokémon lands a critical hit, it gains 30 SPEED for 10 seconds."
 		},
 		"CRITICAL_RUSH_II": {
 			"name": "Critical Rush II",
-			"description": "The first time a Pokémon lands a critical hit, it gains 50 SPEED for 12 seconds. Each further critical hit during that time grants 5 SPEED for the rest of combat."
+			"description": "The first time a Pokémon lands a critical hit, it gains 50 SPEED for 15 seconds. Each further critical hit during that time grants 5 SPEED for the rest of combat."
 		},
 		"CRITICAL_PATH_I": {
 			"name": "Critical Path I",
@@ -5157,23 +5153,23 @@
 		},
 		"PULSE_SHIELD_I": {
 			"name": "Pulse Shield I",
-			"description": "At the start of combat, your Pokémon gain SHIELD equal to 70% of their SPEED."
+			"description": "At the start of combat, your Pokémon gain 5 SPEED, then gain SHIELD equal to 35% of their SPEED."
 		},
 		"PULSE_SHIELD_II": {
 			"name": "Pulse Shield II",
-			"description": "At the start of combat, your Pokémon gain 20 SPEED, then gain SHIELD equal to 70% of their SPEED."
+			"description": "At the start of combat, your Pokémon gain 10 SPEED, then gain SHIELD equal to 50% of their SPEED."
 		},
 		"MINIMALIST_I": {
 			"name": "Minimalist I",
-			"description": "At the start of combat, your Pokémon gain 8% of their max PP as starting PP for each empty item slot."
+			"description": "At the start of combat, your Pokémon gain 10% of their max PP as starting PP for each empty item slot. Pokémon holding no item also gain 30 AP."
 		},
 		"MINIMALIST_II": {
 			"name": "Minimalist II",
-			"description": "At the start of combat, your Pokémon gain 12% of their max PP as starting PP for each empty item slot. Pokémon holding no item also gain 40 AP."
+			"description": "At the start of combat, your Pokémon gain 20% of their max PP as starting PP for each empty item slot. Pokémon holding no item also gain 40 AP."
 		},
 		"LASTING_EFFECTS": {
 			"name": "Lasting Effects",
-			"description": "At the start of combat, your Pokémon gain 10 LUCK. Negative statuses they inflict last 40% longer."
+			"description": "At the start of combat, your Pokémon gain 10 LUCK. Negative statuses they inflict last 50% longer."
 		},
 		"RIPPLING_EFFECTS": {
 			"name": "Rippling Effects",
@@ -5189,7 +5185,7 @@
 		},
 		"BRAVE_FORMATION": {
 			"name": "Brave Formation",
-			"description": "At the start of combat, Pokémon gain 10% CRIT_CHANCE for each empty ADJACENT tile."
+			"description": "At the start of combat, Pokémon gain 15% CRIT_CHANCE for each empty ADJACENT tile."
 		},
 		"TOUGH_FORMATION": {
 			"name": "Tough Formation",
@@ -5201,11 +5197,11 @@
 		},
 		"POTION": {
 			"name": "Potion",
-			"description": "Heal 15 player HP. In Double Up, your partner is healed as well."
+			"description": "Gain 5 GOLD and heal 20 player HP. In Double Up, your partner is healed as well."
 		},
 		"POCKET_DAYCARE": {
 			"name": "Pocket Daycare",
-			"description": "Gain an Egg."
+			"description": "Gain an Egg and a SILVER_DOJO_TICKET."
 		},
 		"TRANSFORM": {
 			"name": "Transform",
@@ -5213,7 +5209,7 @@
 		},
 		"TAXES": {
 			"name": "Taxes",
-			"description": "Gain 7 GOLD. All other players lose 1 GOLD."
+			"description": "Gain 8 GOLD. All other players lose 1 GOLD."
 		},
 		"ROCKY_BEGINNINGS": {
 			"name": "Rocky Beginnings",
@@ -5313,59 +5309,59 @@
 		},
 		"NORMAL_FAIRY_GYM_TRAINER": {
 			"name": "NORMAL FAIRY Gym Trainer",
-			"description": "Gain an Igglybuff and a Togepi. You cannot move on the stage 10 carousel, but your Unique Pokémon selection is guaranteed to include a Tandemaus."
+			"description": "Gain an Igglybuff and a Togepi. Your Togepi is locked and sells for 0 GOLD until stage 9. You cannot move on the stage 10 carousel, but your Unique Pokémon selection is guaranteed to include a Tandemaus."
 		},
 		"FLYING_AQUATIC_GYM_TRAINER": {
 			"name": "FLYING AQUATIC Gym Trainer",
-			"description": "Gain a Quaxly and a Wattrel. You cannot move on the stage 10 carousel, but your Unique Pokémon selection is guaranteed to include a Cramorant."
+			"description": "Gain a Quaxly and a Wattrel. Your Wattrel is locked and sells for 0 GOLD until stage 9. You cannot move on the stage 10 carousel, but your Unique Pokémon selection is guaranteed to include a Cramorant."
 		},
 		"DARK_WILD_GYM_TRAINER": {
 			"name": "DARK WILD Gym Trainer",
-			"description": "Gain a Poochyena and a Galarian Zigzagoon. You cannot move on the stage 10 carousel, but your Unique Pokémon selection is guaranteed to include an Absol."
+			"description": "Gain a Poochyena and a Galarian Zigzagoon. Your Galarian Zigzagoon is locked and sells for 0 GOLD until stage 9. You cannot move on the stage 10 carousel, but your Unique Pokémon selection is guaranteed to include an Absol."
 		},
 		"GROUND_BUG_GYM_TRAINER": {
 			"name": "GROUND BUG Gym Trainer",
-			"description": "Gain a Trapinch and a Burmy (Sandy). You cannot move on the stage 10 carousel, but your Unique Pokémon selection is guaranteed to include a Dunsparce."
+			"description": "Gain a Trapinch and a Burmy (Sandy). Your Burmy (Sandy) is locked and sells for 0 GOLD until stage 9. You cannot move on the stage 10 carousel, but your Unique Pokémon selection is guaranteed to include a Dunsparce."
 		},
 		"PSYCHIC_LIGHT_GYM_TRAINER": {
 			"name": "PSYCHIC LIGHT Gym Trainer",
-			"description": "Gain a Flittle and an Elgyem. You cannot move on the stage 10 carousel, but your Unique Pokémon selection is guaranteed to include a Cosmog."
+			"description": "Gain a Flittle and an Elgyem. Your Elgyem is locked and sells for 0 GOLD until stage 9. You cannot move on the stage 10 carousel, but your Unique Pokémon selection is guaranteed to include a Cosmog."
 		},
 		"GRASS_GOURMET_GYM_TRAINER": {
 			"name": "GRASS GOURMET Gym Trainer",
-			"description": "Gain a Capsakid and a Bounsweet. You cannot move on the stage 10 carousel, but your Unique Pokémon selection is guaranteed to include an Applin."
+			"description": "Gain a Capsakid and a Bounsweet. Your Bounsweet is locked and sells for 0 GOLD until stage 9. You cannot move on the stage 10 carousel, but your Unique Pokémon selection is guaranteed to include an Applin."
 		},
 		"POISON_AMORPHOUS_GYM_TRAINER": {
 			"name": "POISON AMORPHOUS Gym Trainer",
-			"description": "Gain a Grimer and a Gastly. You cannot move on the stage 10 carousel, but your Unique Pokémon selection is guaranteed to include a Pyukumuku."
+			"description": "Gain a Grimer and a Gastly. Your Gastly is locked and sells for 0 GOLD until stage 9. You cannot move on the stage 10 carousel, but your Unique Pokémon selection is guaranteed to include a Pyukumuku."
 		},
 		"FIRE_FIELD_GYM_TRAINER": {
 			"name": "FIRE FIELD Gym Trainer",
-			"description": "Gain a Litten and a Cyndaquil. You cannot move on the stage 10 carousel, but your Unique Pokémon selection is guaranteed to include a Heatmor."
+			"description": "Gain a Litten and a Cyndaquil. Your Cyndaquil is locked and sells for 0 GOLD until stage 9. You cannot move on the stage 10 carousel, but your Unique Pokémon selection is guaranteed to include a Heatmor."
 		},
 		"HUMAN_FIGHTING_GYM_TRAINER": {
 			"name": "HUMAN FIGHTING Gym Trainer",
-			"description": "Gain a Machop and a Meditite. You cannot move on the stage 10 carousel, but your Unique Pokémon selection is guaranteed to include a Tyrogue."
+			"description": "Gain a Machop and a Meditite. Your Meditite is locked and sells for 0 GOLD until stage 9. You cannot move on the stage 10 carousel, but your Unique Pokémon selection is guaranteed to include a Tyrogue."
 		},
 		"GHOST_ARTIFICIAL_GYM_TRAINER": {
 			"name": "GHOST ARTIFICIAL Gym Trainer",
-			"description": "Gain a Honedge and a Golett. You cannot move on the stage 10 carousel, but your Unique Pokémon selection is guaranteed to include a Rotom."
+			"description": "Gain a Honedge and a Golett. Your Golett is locked and sells for 0 GOLD until stage 9. You cannot move on the stage 10 carousel, but your Unique Pokémon selection is guaranteed to include a Rotom."
 		},
 		"ROCK_ICE_GYM_TRAINER": {
 			"name": "ROCK ICE Gym Trainer",
-			"description": "Gain a Snorunt and a Shellder. You cannot move on the stage 10 carousel, but your Unique Pokémon selection is guaranteed to include a Cryogonal."
+			"description": "Gain a Snorunt and a Shellder. Your Shellder is locked and sells for 0 GOLD until stage 9. You cannot move on the stage 10 carousel, but your Unique Pokémon selection is guaranteed to include a Cryogonal."
 		},
 		"DRAGON_MONSTER_GYM_TRAINER": {
 			"name": "DRAGON MONSTER Gym Trainer",
-			"description": "Gain a Treecko and a Gible. You cannot move on the stage 10 carousel, but your Unique Pokémon selection is guaranteed to include a Druddigon."
+			"description": "Gain a Treecko and a Gible. Your Gible is locked and sells for 0 GOLD until stage 9. You cannot move on the stage 10 carousel, but your Unique Pokémon selection is guaranteed to include a Druddigon."
 		},
 		"WATER_SOUND_GYM_TRAINER": {
 			"name": "WATER SOUND Gym Trainer",
-			"description": "Gain a Clauncher and a Popplio. You cannot move on the stage 10 carousel, but your Unique Pokémon selection is guaranteed to include a Lapras."
+			"description": "Gain a Clauncher and a Popplio. Your Clauncher is locked and sells for 0 GOLD until stage 9. You cannot move on the stage 10 carousel, but your Unique Pokémon selection is guaranteed to include a Lapras."
 		},
 		"ELECTRIC_STEEL_GYM_TRAINER": {
 			"name": "ELECTRIC STEEL Gym Trainer",
-			"description": "Gain a Magnemite and a Nosepass. You cannot move on the stage 10 carousel, but your Unique Pokémon selection is guaranteed to include a Duraludon."
+			"description": "Gain a Magnemite and a Nosepass. Your Nosepass is locked and sells for 0 GOLD until stage 9. You cannot move on the stage 10 carousel, but your Unique Pokémon selection is guaranteed to include a Duraludon."
 		},
 		"GYM_LEADER": {
 			"name": "Gym Leader",
@@ -5389,7 +5385,7 @@
 		},
 		"MUNCHLAX_DELIVERY": {
 			"name": "Munchlax Delivery",
-			"description": "Gain a PICNIC_SET. After each carousel, gain another."
+			"description": "Gain 5 GOLD and a PICNIC_SET. After each carousel, gain another PICNIC_SET."
 		},
 		"CINCCINOS_GIFTS_I": {
 			"name": "Cinccino's Gifts I",
@@ -5401,7 +5397,7 @@
 		},
 		"RELIC_FRAGMENT": {
 			"name": "Relic Fragment",
-			"description": "Gain a LAPRAS_PASSPORT and 5 GOLD. On stages 10 and 20, gain another passport. Stages already passed are granted immediately."
+			"description": "Gain 5 GOLD and a LAPRAS_PASSPORT. On stages 10 and 20, gain another passport. Stages already passed are granted immediately."
 		},
 		"ITEMFINDER_I": {
 			"name": "Itemfinder",
@@ -5437,11 +5433,11 @@
 		},
 		"ADDITIONAL_RETHINK_I": {
 			"name": "Additional Rethink I",
-			"description": "Gain 4 GOLD. You can reroll your additional pick options once. It rerolls all 3 Pokémon and items."
+			"description": "Gain 5 GOLD. You can reroll your additional pick options once. It rerolls all 3 Pokémon and items."
 		},
 		"SAFARI_ENCOUNTER": {
 			"name": "Safari Encounter",
-			"description": "Gain a BRONZE_DOJO_TICKET and a random additional Pokémon matching your highest synergy, chosen from those not yet in the additional pool."
+			"description": "Gain a SILVER_DOJO_TICKET and a random additional Pokémon matching your highest synergy, chosen from those not yet in the additional pool."
 		},
 		"GYARODOS_TRES_QUATRO": {
 			"name": "Gyarodos, Tres, Quatro",
@@ -5469,7 +5465,7 @@
 		},
 		"VITAMINS": {
 			"name": "Vitamins",
-			"description": "At the start of the fight, your team gains 2 ATK, 10 AP and 10 SPEED."
+			"description": "At the start of the fight, your team gains 20 AP and 10 SPEED."
 		},
 		"DRAGON_FANG": {
 			"name": "Dragon Orb",
@@ -5493,15 +5489,15 @@
 		},
 		"POTENTIAL_ENERGY_I": {
 			"name": "Potential Energy I",
-			"description": "Allies gain 20 SHIELD and 10 SPEED for every STAR they are short of their final form."
+			"description": "Allies gain 15 SHIELD and 10 SPEED for every STAR they are short of their final form."
 		},
 		"POTENTIAL_ENERGY_II": {
 			"name": "Potential Energy II",
-			"description": "Allies gain 30 SHIELD and 20 SPEED for every STAR they are short of their final form."
+			"description": "Allies gain 30 SHIELD and 10 SPEED for every STAR they are short of their final form."
 		},
 		"RIVALRY": {
 			"name": "Rivalry",
-			"description": "When your STRONGEST Pokémon gets a KO, it gains 1 permanent ATK if on your side of the board, or 4 permanent HP if on the enemy side of the board."
+			"description": "When your STRONGEST Pokémon gets a KO, it gains 1 permanent ATK if on your side of the board, or 4 permanent HP if on the enemy side of the board. Up to 20 ATK and 100 HP in total."
 		},
 		"SHINY_SAFEGUARD": {
 			"name": "Shiny Safeguard",
@@ -5513,7 +5509,7 @@
 		},
 		"BABY_OPENER": {
 			"name": "Baby Opener",
-			"description": "Gain 3 random different BABY Pokémon costing 2 or less. Each time you obtain an egg, gain 2 player HP."
+			"description": "Gain 3 random different BABY Pokémon costing 2 or less. Each time you obtain an egg, gain 4 player HP."
 		},
 		"SELECTIVE_GENETICS": {
 			"name": "Selective Genetics",
@@ -5669,7 +5665,7 @@
 		},
 		"FIRST_WIND": {
 			"name": "First Wind",
-			"description": "10 seconds into combat, allies heal 40% of their max HP."
+			"description": "12 seconds into combat, allies heal 40% of their max HP."
 		},
 		"RESURGENCE": {
 			"name": "Resurgence",
@@ -5765,83 +5761,83 @@
 		},
 		"BURNING_FORCE": {
 			"name": "Burning Force",
-			"description": "At the start of combat, Pokémon with no ADJACENT allies are BURN for the rest of the fight and gain 50% of their base ATK."
+			"description": "At the start of combat, Pokémon with no ADJACENT allies are BURN for the rest of the fight and gain 75% of their base ATK."
 		},
 		"SPIKY_GUARD": {
 			"name": "Spiky Guard",
-			"description": "At the start of combat, Pokémon with no ADJACENT allies gain 5 SHIELD for each free ADJACENT tile and retaliate against melee attackers, dealing 15% of their current DEF and SPE_DEF as SPECIAL."
+			"description": "At the start of combat, Pokémon with no ADJACENT allies gain 10 SHIELD for each free ADJACENT tile and retaliate against melee attackers, dealing 15% of their current DEF and SPE_DEF as SPECIAL."
 		},
 		"DRILL_I": {
 			"name": "Drill I",
-			"description": "The first time a Pokémon falls below 70% max HP, its basic attacks deal 50% of its current ATK as additional TRUE for 8 seconds."
+			"description": "The first time a Pokémon falls below 70% max HP, its basic attacks deal 50% of its current ATK as additional TRUE for 10 seconds."
 		},
 		"DRILL_II": {
 			"name": "Drill II",
-			"description": "The first time a Pokémon falls below 70% max HP, its basic attacks deal 50% of its current ATK as additional TRUE for 12 seconds. This also hits an enemy directly behind the target."
+			"description": "The first time a Pokémon falls below 70% max HP, its basic attacks deal 50% of its current ATK as additional TRUE for 15 seconds. This also hits an enemy directly behind the target."
 		},
 		"SHATTER_I": {
 			"name": "Shatter I",
-			"description": "The first time a Pokémon falls below 70% max HP, it deals 40% of its current DEF and SPE_DEF as PHYSICAL to ADJACENT enemies every second for 8 seconds."
+			"description": "The first time a Pokémon falls below 70% max HP, it deals 5 + 10% of its current DEF and SPE_DEF as PHYSICAL to ADJACENT enemies every second for 10 seconds."
 		},
 		"SHATTER_II": {
 			"name": "Shatter II",
-			"description": "The first time a Pokémon falls below 70% max HP, it deals 40% of its current DEF and SPE_DEF as PHYSICAL to ADJACENT enemies every second for 12 seconds."
+			"description": "The first time a Pokémon falls below 70% max HP, it deals 5 + 10% of its current DEF and SPE_DEF as PHYSICAL to ADJACENT enemies every second for 15 seconds."
 		},
 		"SURGE_I": {
 			"name": "Surge I",
-			"description": "The first time a Pokémon falls below 70% max HP, its basic attacks deal 25% of its current SPEED as additional SPECIAL for 8 seconds."
+			"description": "The first time a Pokémon falls below 70% max HP, its basic attacks deal 30% of its current SPEED as additional SPECIAL for 10 seconds."
 		},
 		"SURGE_II": {
 			"name": "Surge II",
-			"description": "The first time a Pokémon falls below 70% max HP, its basic attacks deal 25% of its current SPEED as additional SPECIAL for 12 seconds. This also hits an enemy directly behind the target."
+			"description": "The first time a Pokémon falls below 70% max HP, its basic attacks deal 30% of its current SPEED as additional SPECIAL for 15 seconds. This also hits an enemy directly behind the target."
 		},
 		"EMPOWER_I": {
 			"name": "Empower I",
-			"description": "The first time a Pokémon falls below 70% max HP, all damage it deals is increased by 20% for 8 seconds."
+			"description": "After 5 seconds of combat, all damage your Pokémon deal is increased by 25% for 10 seconds."
 		},
 		"EMPOWER_II": {
 			"name": "Empower II",
-			"description": "The first time a Pokémon falls below 70% max HP, all damage it deals is increased by 40% for 12 seconds."
+			"description": "After 5 seconds of combat, all damage your Pokémon deal is increased by 30% for 15 seconds."
 		},
 		"GEAR_SHIELD_I": {
 			"name": "Gear Shield I",
-			"description": "At the start of combat, melee Pokémon gain 20 SHIELD per held item."
+			"description": "At the start of combat, your Pokémon gain 20 SHIELD per held item."
 		},
 		"GEAR_SHIELD_II": {
 			"name": "Gear Shield II",
-			"description": "At the start of combat, melee Pokémon gain 30 SHIELD per held item. When this SHIELD is depleted, ADJACENT enemies suffer ARMOR_BREAK for 3 seconds."
+			"description": "At the start of combat, your Pokémon gain 30 SHIELD per held item. When this SHIELD is depleted, ADJACENT enemies suffer ARMOR_BREAK for 3 seconds."
 		},
 		"MAGIC_SHIELD_I": {
 			"name": "Magic Shield I",
-			"description": "At the start of combat, your Pokémon gain SHIELD equal to their AP."
+			"description": "At the start of combat, your Pokémon gain 10 AP. Each time they cast their ability, they gain 15 SHIELD."
 		},
 		"MAGIC_SHIELD_II": {
 			"name": "Magic Shield II",
-			"description": "At the start of combat, your Pokémon gain 30 AP, then gain SHIELD equal to their AP."
+			"description": "At the start of combat, your Pokémon gain 20 AP. Each time they cast their ability, they gain 20 SHIELD."
 		},
 		"BRUTE_SHIELD_I": {
 			"name": "Brute Shield I",
-			"description": "At the start of combat, your Pokémon gain SHIELD equal to 300% of their ATK."
+			"description": "At the start of combat, your Pokémon gain 1 ATK, then gain SHIELD equal to 100% of their ATK."
 		},
 		"BRUTE_SHIELD_II": {
 			"name": "Brute Shield II",
-			"description": "At the start of combat, your Pokémon gain 4 ATK, then gain SHIELD equal to 300% of their ATK."
+			"description": "At the start of combat, your Pokémon gain 2 ATK, then gain SHIELD equal to 150% of their ATK."
 		},
 		"HEART_SHIELD_I": {
 			"name": "Heart Shield I",
-			"description": "At the start of combat, each of your Pokémon gains 4 HP for every other ally sharing a synergy with it."
+			"description": "At the start of combat, each of your Pokémon gains 5 HP for every other ally sharing a synergy with it."
 		},
 		"HEART_SHIELD_II": {
 			"name": "Heart Shield II",
-			"description": "At the start of combat, each of your Pokémon gains 8 HP for every other ally sharing a synergy with it."
+			"description": "At the start of combat, each of your Pokémon gains 10 HP for every other ally sharing a synergy with it."
 		},
 		"LAYERED_ARMOR": {
 			"name": "Layered Armor",
-			"description": "Gain 4 Rerolls. At the start of combat, your fully itemized Pokémon gain 4 SHIELD for each shop roll you have done this game, up to 200 SHIELD."
+			"description": "Gain 4 Rerolls. At the start of combat, your fully itemized Pokémon gain 2 SHIELD for each shop roll you have done this game, up to 100 SHIELD."
 		},
 		"MORPH_BALL": {
 			"name": "Morph Ball",
-			"description": "Gain 4 Rerolls. At the start of combat, your fully itemized Pokémon gain 1 SPEED for each 2 shop rolls you have done this game."
+			"description": "Gain 4 Rerolls. At the start of combat, your fully itemized Pokémon gain 1 SPEED for each shop roll you have done this game, up to 50 SPEED."
 		},
 		"ORB_WAND": {
 			"name": "Orb Wand",
@@ -5853,7 +5849,7 @@
 		},
 		"RANK_UP": {
 			"name": "Rank Up",
-			"description": "Now and at the start of each stage, gain 2 XP."
+			"description": "Now and at the start of each stage until stage 10, gain 2 XP."
 		},
 		"PARK_BENCH": {
 			"name": "Park Bench",
@@ -5861,7 +5857,7 @@
 		},
 		"STAR_GUARD": {
 			"name": "Star Guard",
-			"description": "At the start of combat, your Pokémon gain 1 DEF and SPE_DEF for each STAR on your board."
+			"description": "At the start of combat, your Pokémon gain 1 DEF, 1 SPE_DEF and 5 SHIELD for each STAR on your board."
 		},
 		"MACHINE_RESIDUE": {
 			"name": "Machine Residue",
@@ -5953,7 +5949,7 @@
 		},
 		"WOBBUFFETS_GOLD_PRIZE": {
 			"name": "Gold Kit",
-			"description": "Gain a random item component and 2 RECYCLE_TICKET. Each time you use a RECYCLE_TICKET, gain a random item component."
+			"description": "Gain a GOLD_DOJO_TICKET and 2 RECYCLE_TICKET. Each time you use a RECYCLE_TICKET, gain a random item component."
 		},
 		"HARD_COMMIT": {
 			"name": "Hard Commit",
@@ -6001,7 +5997,7 @@
 		},
 		"WAITING_GAME": {
 			"name": "Waiting Game",
-			"description": "After each round, gain a free reroll, or 2 if you did not reroll during that round."
+			"description": "After each round, gain a free reroll."
 		},
 		"PRISMATIC_REROLL": {
 			"name": "Prismatic Reroll",
@@ -6009,7 +6005,7 @@
 		},
 		"LUNCH_MONEY": {
 			"name": "Prize Money",
-			"description": "For every 8 player damage you deal, gain 2 GOLD and a free reroll."
+			"description": "For every 10 player damage you deal, gain 2 GOLD."
 		},
 		"CALCULATED_LOSS": {
 			"name": "Calculated Loss",
@@ -6025,7 +6021,7 @@
 		},
 		"GREEDY_WISH": {
 			"name": "Greedy Wish",
-			"description": "Your next Wish selection is one tier higher. If it is already Prismatic, gain 10 GOLD instead."
+			"description": "Your next Wish selection is one tier higher. If it is already Prismatic, gain 20 GOLD instead."
 		},
 		"GAMBLE_I": {
 			"name": "Gamble I",
@@ -6041,7 +6037,7 @@
 		},
 		"CALLED_SHOT": {
 			"name": "Called Shot",
-			"description": "Set your win streak to 4 and gain 4 GOLD."
+			"description": "Gain 5 GOLD and set your win streak to 5."
 		},
 		"VAMPIRIC": {
 			"name": "Vampiric",
@@ -6049,7 +6045,7 @@
 		},
 		"PROTECT_THE_WEAK": {
 			"name": "Protect the Weak",
-			"description": "Epic, Ultra and Legendary Pokémon gain 20 HP and 7 SPEED for each Common and Uncommon Pokémon on your board."
+			"description": "Epic, Ultra and Legendary Pokémon gain 20 HP and 10 SPEED for each Common and Uncommon Pokémon on your board."
 		},
 		"STURDY": {
 			"name": "Sturdy",
@@ -6069,7 +6065,7 @@
 		},
 		"SUPPORTIVE_SOUL": {
 			"name": "Supportive Soul",
-			"description": "Gain a Substitute holding a random support item on the board. It does not count toward board size and cannot be sold or have its items changed. Every 8 rounds, it gains another support item until full."
+			"description": "Gain a Substitute holding a random support item on the board. It does not count toward board size and cannot be sold or have its items changed. Every 10 rounds, it gains another support item until full."
 		},
 		"LANCES_ACE": {
 			"name": "Lance's Ace",
@@ -6221,7 +6217,7 @@
 		},
 		"STARTER_CHOICE": {
 			"name": "Starter Choice",
-			"description": "Choose between 3 common 1 STAR Pokémon. Gain a copy now and at the start of the next 8 rounds."
+			"description": "Choose between 3 common 1 STAR Pokémon. Gain a copy now and at the start of the next 8 rounds. Gain a SILVER_DOJO_TICKET."
 		},
 		"SINGULARITY_I": {
 			"name": "Singularity I",
@@ -6249,7 +6245,7 @@
 		},
 		"ALL_FOURS": {
 			"name": "All Fours",
-			"description": "Open a shop of all Epic Pokémon. The first one you buy is free. Gain a BRONZE_DOJO_TICKET."
+			"description": "Open a shop of all Epic Pokémon. The first one you buy is free. Gain a SILVER_DOJO_TICKET."
 		},
 		"BEING_OF_KNOWLEDGE": {
 			"name": "Being of Knowledge",
@@ -6265,7 +6261,7 @@
 		},
 		"QUICK_CLAW": {
 			"name": "Quick Claw",
-			"description": "You can move as soon as the carousel round starts. If taken on stage 12, gain a random component."
+			"description": "Gain 5 GOLD. You can move as soon as the carousel round starts. If taken on stage 12, gain a random component."
 		},
 		"COLOUR_CHANGE": {
 			"name": "Colour Change",
@@ -6277,11 +6273,11 @@
 		},
 		"ADDITIONAL_RETHINK_II": {
 			"name": "Additional Rethink II",
-			"description": "Gain 8 GOLD. You can reroll your additional pick options. Each pokemon and item can be individually rerolled."
+			"description": "Gain 10 GOLD. You can reroll your additional pick options. Each pokemon and item can be individually rerolled."
 		},
 		"FREE_COUPON": {
 			"name": "Gift Bag",
-			"description": "Take your item from carousel shops for free. If any player has this Wish, a shop encounter is guaranteed by stage 22."
+			"description": "Gain 5 GOLD. Take your item from carousel shops for free. If any player has this Wish, a shop encounter is guaranteed by stage 22."
 		},
 		"SOUL_DRAIN": {
 			"name": "Soul Drain",

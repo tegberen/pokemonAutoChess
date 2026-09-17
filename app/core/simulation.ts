@@ -138,7 +138,7 @@ import {
   PULSE_SHIELD_SPEED_RATIO,
   PULSE_SHIELD_ALLY_SPEED,
   MINIMALIST_PP_PER_EMPTY_SLOT,
-  MINIMALIST_II_NO_ITEM_AP,
+  MINIMALIST_NO_ITEM_AP,
   CRITICAL_RUSH_SPEED,
   CRITICAL_RUSH_DURATION,
   CRITICAL_RUSH_II_STACK_SPEED,
@@ -155,7 +155,6 @@ import {
   REVEILLE_WALK_DELAY,
   REVEILLE_BENCH_SLOTS,
   VITAMINS_ABILITY_POWER,
-  VITAMINS_ATTACK,
   VITAMINS_SPEED,
   HAIL_TO_THE_KING_MAX_HP,
   HAIL_TO_THE_KING_ATTACK,
@@ -208,10 +207,12 @@ import {
   COMBAT_BLESSING_TRIGGER_HP_RATIO,
   COMBAT_BLESSING_DURATION,
   DRILL_ATTACK_RATIO,
+  SHATTER_BASE_DAMAGE,
   SHATTER_DEFENSE_RATIO,
   SHATTER_PULSE_INTERVAL,
   SURGE_SPEED_RATIO,
   EMPOWER_DAMAGE_AMP,
+  EMPOWER_DELAY,
   GEAR_SHIELD_PER_ITEM,
   HEART_SHIELD_MAX_HP_PER_ALLY,
   ROLL_SCALING_ITEMS_REQUIRED,
@@ -219,13 +220,16 @@ import {
   SPIKY_GUARD_SHIELD_PER_FREE_CELL,
   LAYERED_ARMOR_SHIELD_MAX,
   LAYERED_ARMOR_SHIELD_PER_ROLL,
-  MORPH_BALL_ROLLS_PER_SPEED,
+  MORPH_BALL_SPEED_MAX,
+  MORPH_BALL_SPEED_PER_ROLL,
   ORB_WAND_ABILITY_POWER_MAX,
   ORB_WAND_ABILITY_POWER_PER_ROLL,
   MAGIC_SHIELD_ALLY_AP,
+  MAGIC_SHIELD_PER_CAST,
   BRUTE_SHIELD_ATTACK_RATIO,
   BRUTE_SHIELD_ALLY_ATTACK,
   STAR_GUARD_DEFENSE_PER_STAR,
+  STAR_GUARD_SHIELD_PER_STAR,
   STEAM_ENGINE_SPEED_ON_ATTACK,
   FROZEN_OCEAN_WAVE_RATIO,
   BLIGHTED_GARDEN_POKERUS_MULCH,
@@ -1932,13 +1936,16 @@ export default class Simulation extends Schema implements ISimulation {
     tier: "I" | "II",
     controlsTimerBar: boolean
   ) {
-    const state = { activated: false, remainingMs: 0 }
+    const state = { activated: false, remainingMs: 0, elapsedMs: 0 }
     pokemon.effectsSet.add(
       new PeriodicEffect((entity) => {
-        if (
-          !state.activated &&
-          entity.hp <= entity.maxHP * COMBAT_BLESSING_TRIGGER_HP_RATIO
-        ) {
+        state.elapsedMs += 100
+        // Empower is timed so the whole team, carries included, gets the amp
+        const shouldActivate =
+          kind === "EMPOWER"
+            ? state.elapsedMs >= EMPOWER_DELAY
+            : entity.hp <= entity.maxHP * COMBAT_BLESSING_TRIGGER_HP_RATIO
+        if (!state.activated && shouldActivate) {
           state.activated = true
           state.remainingMs = COMBAT_BLESSING_DURATION[tier]
           if (controlsTimerBar) {
@@ -1979,7 +1986,8 @@ export default class Simulation extends Schema implements ISimulation {
           (entity, board) => {
             if (state.remainingMs <= 0) return
             const damage = Math.round(
-              (entity.def + entity.speDef) * SHATTER_DEFENSE_RATIO
+              SHATTER_BASE_DAMAGE +
+                (entity.def + entity.speDef) * SHATTER_DEFENSE_RATIO
             )
             board
               .getAdjacentCells(entity.positionX, entity.positionY)
@@ -2007,7 +2015,7 @@ export default class Simulation extends Schema implements ISimulation {
         const damage = Math.round(
           kind === "DRILL"
             ? attacker.atk * DRILL_ATTACK_RATIO
-            : attacker.speed * SURGE_SPEED_RATIO
+            : attacker.speed * SURGE_SPEED_RATIO[tier]
         )
         const attackType =
           kind === "DRILL" ? AttackType.TRUE : AttackType.SPECIAL
@@ -2298,7 +2306,10 @@ export default class Simulation extends Schema implements ISimulation {
           fullBagUnits.forEach((ally) => ally.addShield(shield, ally, 0, false))
         }
         if (blessings.includes(Blessing.MORPH_BALL)) {
-          const speed = Math.floor(rollsThisGame / MORPH_BALL_ROLLS_PER_SPEED)
+          const speed = Math.min(
+            rollsThisGame * MORPH_BALL_SPEED_PER_ROLL,
+            MORPH_BALL_SPEED_MAX
+          )
           fullBagUnits.forEach((ally) => ally.addSpeed(speed, ally, 0, false))
         }
         if (blessings.includes(Blessing.ORB_WAND)) {
@@ -2337,7 +2348,7 @@ export default class Simulation extends Schema implements ISimulation {
           ? "I"
           : undefined
       if (gearShieldTier) {
-        ownUnits.filter((ally) => ally.range === 1).forEach((ally) => {
+        ownUnits.forEach((ally) => {
           const shield = GEAR_SHIELD_PER_ITEM[gearShieldTier] * ally.items.size
           if (shield <= 0) return
           if (gearShieldTier === "II") {
@@ -2366,12 +2377,19 @@ export default class Simulation extends Schema implements ISimulation {
           ? "I"
           : undefined
       if (magicShieldTier) {
-        if (magicShieldTier === "II") {
-          ownUnits.forEach((ally) =>
-            ally.addAbilityPower(MAGIC_SHIELD_ALLY_AP, ally, 0, false)
+        ownUnits.forEach((ally) => {
+          ally.addAbilityPower(MAGIC_SHIELD_ALLY_AP[magicShieldTier], ally, 0, false)
+          ally.effectsSet.add(
+            new OnAbilityCastEffect((caster) =>
+              caster.addShield(
+                MAGIC_SHIELD_PER_CAST[magicShieldTier],
+                caster,
+                0,
+                false
+              )
+            )
           )
-        }
-        ownUnits.forEach((ally) => ally.addShield(ally.ap, ally, 0, false))
+        })
       }
 
       if (blessings.includes(Blessing.REQUIEM)) {
@@ -2570,19 +2588,15 @@ export default class Simulation extends Schema implements ISimulation {
           ? "I"
           : undefined
       if (pulseShieldTier) {
-        if (pulseShieldTier === "II") {
-          ownUnits.forEach((ally) =>
-            ally.addSpeed(PULSE_SHIELD_ALLY_SPEED, ally, 0, false)
-          )
-        }
-        ownUnits.forEach((ally) =>
+        ownUnits.forEach((ally) => {
+          ally.addSpeed(PULSE_SHIELD_ALLY_SPEED[pulseShieldTier], ally, 0, false)
           ally.addShield(
-            Math.round(ally.speed * PULSE_SHIELD_SPEED_RATIO),
+            Math.round(ally.speed * PULSE_SHIELD_SPEED_RATIO[pulseShieldTier]),
             ally,
             0,
             false
           )
-        )
+        })
       }
 
       const minimalistTier = blessings.includes(Blessing.MINIMALIST_II)
@@ -2597,8 +2611,13 @@ export default class Simulation extends Schema implements ISimulation {
           const ppRatio =
             (MINIMALIST_PP_PER_EMPTY_SLOT[minimalistTier] * emptySlots) / 100
           ally.addPP(Math.round(ally.maxPP * ppRatio), ally, 0, false)
-          if (minimalistTier === "II" && ally.items.size === 0) {
-            ally.addAbilityPower(MINIMALIST_II_NO_ITEM_AP, ally, 0, false)
+          if (ally.items.size === 0) {
+            ally.addAbilityPower(
+              MINIMALIST_NO_ITEM_AP[minimalistTier],
+              ally,
+              0,
+              false
+            )
           }
         })
       }
@@ -2609,14 +2628,15 @@ export default class Simulation extends Schema implements ISimulation {
           ? "I"
           : undefined
       if (bruteShieldTier) {
-        if (bruteShieldTier === "II") {
-          ownUnits.forEach((ally) =>
-            ally.addAttack(BRUTE_SHIELD_ALLY_ATTACK, ally, 0, false)
+        ownUnits.forEach((ally) => {
+          ally.addAttack(BRUTE_SHIELD_ALLY_ATTACK[bruteShieldTier], ally, 0, false)
+          ally.addShield(
+            ally.atk * BRUTE_SHIELD_ATTACK_RATIO[bruteShieldTier],
+            ally,
+            0,
+            false
           )
-        }
-        ownUnits.forEach((ally) =>
-          ally.addShield(ally.atk * BRUTE_SHIELD_ATTACK_RATIO, ally, 0, false)
-        )
+        })
       }
 
       if (blessings.includes(Blessing.STAR_GUARD)) {
@@ -2625,6 +2645,7 @@ export default class Simulation extends Schema implements ISimulation {
         ownUnits.forEach((ally) => {
           ally.addDefense(defense, ally, 0, false)
           ally.addSpecialDefense(defense, ally, 0, false)
+          ally.addShield(stars * STAR_GUARD_SHIELD_PER_STAR, ally, 0, false)
         })
       }
 
@@ -3036,7 +3057,6 @@ export default class Simulation extends Schema implements ISimulation {
 
       if (blessings.includes(Blessing.VITAMINS)) {
         allies.forEach((ally) => {
-          ally.addAttack(VITAMINS_ATTACK, ally, 0, false)
           ally.addAbilityPower(VITAMINS_ABILITY_POWER, ally, 0, false)
           ally.addSpeed(VITAMINS_SPEED, ally, 0, false)
         })

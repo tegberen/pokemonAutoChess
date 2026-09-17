@@ -55,6 +55,7 @@ import {
   GROUND_HOLE_ROW_STARTS,
   GROUND_HOLE_MAX_DEPTH,
   GYM_TRAINER_ROSTERS,
+  GYM_TRAINER_UNLOCK_STAGE,
   BLESSING_SELECTION_STAGES,
   Blessing,
   BlessingTier,
@@ -104,6 +105,7 @@ import {
   RAINBOW_HOUR_GOLD_REWARD,
   PARK_BENCH_FULL_BENCH_EXPERIENCE,
   RANK_UP_EXPERIENCE,
+  RANK_UP_LAST_STAGE,
   ROCKY_BEGINNINGS_POKEMONS,
   ROLL_SCALING_FREE_ROLLS,
   SELECTIVE_GENETICS_BABIES_GRANTED,
@@ -121,7 +123,6 @@ import {
   TRASH_TO_TREASURE_TRASH_GRANTED_MAX,
   TRASH_TO_TREASURE_TRASH_GRANTED_MIN,
   WAITING_GAME_FREE_ROLLS,
-  WAITING_GAME_FREE_ROLLS_WITHOUT_REROLLING,
   WOBBUFFETS_GOLD_PRIZE_RECYCLE_TICKETS,
   getGymTrainerRoster
 } from "../types/enum/Blessing"
@@ -177,22 +178,27 @@ import { schemaValues } from "../utils/schemas"
 
 const PEARL_GOLD_GAINED = 10
 const RELIC_FRAGMENT_GOLD = 5
-const CROAGUNKS_AID_EXCHANGE_TICKETS = 3
-const ADDITIONAL_RETHINK_GOLD = { I: 4, II: 8 }
+const CROAGUNKS_AID_EXCHANGE_TICKETS = 2
+const CROAGUNKS_AID_GOLD_GAINED = 10
+const ADDITIONAL_RETHINK_GOLD = { I: 5, II: 10 }
 const BAG_OF_SWEETS_AMOUNT = 10
 const BANANA_BUSINESS_NANAB_BERRIES = 3
 const WOBBUFFETS_SILVER_PRIZE_RECYCLE_TICKETS = 2
 const TREASURE_HUNT_I_GEMS = 2
 const NUGGET_GOLD_GAINED = 15
-const TREASURE_HUNT_II_GEMS = 3
+const TREASURE_HUNT_II_GEMS = 4
 const GIMMIGHOULS_TREASURE_COINS = 2
 const GIMMIGHOUL_COIN_GOLD_ON_ACQUIRE = 5
 const LEGENDARY_GAMBIT_STAGE = 20
 const DEEP_INVESTMENTS_PAYOUT_STAGE = 16
 const DEEP_INVESTMENTS_PROFIT = 30
-const POTION_LIFE_HEALED = 15
+const POTION_LIFE_HEALED = 20
+const POTION_GOLD_GAINED = 5
 const TRANSFORM_STAGE = 20
-const TAXES_GOLD_GAINED = 7
+const TAXES_GOLD_GAINED = 8
+const MUNCHLAX_DELIVERY_GOLD_GAINED = 5
+const FREE_COUPON_GOLD_GAINED = 5
+const QUICK_CLAW_GOLD_GAINED = 5
 const TAXES_GOLD_TAKEN_FROM_OTHERS = 1
 const BABYLESS_STAGE = 14
 const CINCCINOS_GIFTS_III_CRAFTED_ITEMS = 2
@@ -348,20 +354,36 @@ export const GemBySynergy = Object.entries(SynergyGivenByGem).reduce(
   {} as { [synergy in Synergy]?: Item }
 )
 
+function getOneStarPokemonsOfSynergy(rarity: Rarity, synergy: Synergy) {
+  return PRECOMPUTED_POKEMONS_PER_RARITY[rarity].filter((pkm: Pkm) => {
+    const data = getPokemonData(pkm)
+    return data.stars === 1 && data.types.includes(synergy)
+  })
+}
+
 function giftUncommonsOfSynergy(
   player: Player,
   synergy: Synergy,
   amount: number
 ) {
-  const candidates = PRECOMPUTED_POKEMONS_PER_RARITY[Rarity.UNCOMMON].filter(
-    (pkm: Pkm) => {
-      const data = getPokemonData(pkm)
-      return data.stars === 1 && data.types.includes(synergy)
-    }
-  )
-  pickNRandomIn(candidates, amount).forEach((pkm) =>
-    giftPokemonIfBenchHasRoom(player, pkm)
-  )
+  pickNRandomIn(
+    getOneStarPokemonsOfSynergy(Rarity.UNCOMMON, synergy),
+    amount
+  ).forEach((pkm) => giftPokemonIfBenchHasRoom(player, pkm))
+}
+
+// not every synergy has a 1 STAR Common or Rare, so those fall back to an Uncommon
+function giftOneStarOfSynergy(
+  player: Player,
+  synergy: Synergy,
+  rarity: Rarity.COMMON | Rarity.RARE
+) {
+  const candidates = getOneStarPokemonsOfSynergy(rarity, synergy)
+  if (candidates.length === 0) {
+    giftUncommonsOfSynergy(player, synergy, 1)
+    return
+  }
+  giftPokemonIfBenchHasRoom(player, pickRandomIn(candidates))
 }
 
 function itemBlessingEffects() {
@@ -407,17 +429,43 @@ function comboBlessingGrants() {
   )
 }
 
+// one starter is locked like a Manifestation, so it cannot be sold straight
+// back for gold
 function gymTrainerGrants() {
   return Object.fromEntries(
     Object.entries(GYM_TRAINER_ROSTERS).map(([blessing, roster]) => [
       blessing,
-      (player: Player) => {
+      (player: Player, state: GameState) => {
         if (getFreeSpaceOnBench(player.board, getBenchSize(player.blessings)) < roster.starters.length) {
           return false
         }
-        roster.starters.forEach((pkm) => giftPokemonIfBenchHasRoom(player, pkm))
+        const lockedStarter =
+          roster.lockedStarter ??
+          [...roster.starters].sort(
+            (a, b) =>
+              RarityCost[getPokemonData(b).rarity] -
+              RarityCost[getPokemonData(a).rarity]
+          )[0]
+        roster.starters
+          .filter((pkm) => pkm !== lockedStarter)
+          .forEach((pkm) => giftPokemonIfBenchHasRoom(player, pkm))
+        const locked = giftLockedPokemon(player, lockedStarter)
+        if (locked) {
+          scheduleBlessingGrant(player, state, blessing as Blessing, [
+            GYM_TRAINER_UNLOCK_STAGE
+          ])
+        }
         return true
       }
+    ])
+  )
+}
+
+function gymTrainerReleases() {
+  return Object.fromEntries(
+    Object.keys(GYM_TRAINER_ROSTERS).map((blessing) => [
+      blessing,
+      (player: Player) => releaseManifestedPokemons(player)
     ])
   )
 }
@@ -517,7 +565,12 @@ function synergyFamilyEffects(
                 ?.items[0]
             : GemBySynergy[synergy]
         if (item) grantSynergyAwareItem(player, item)
-        giftUncommonsOfSynergy(player, synergy, pokemonGranted)
+        giftUncommonsOfSynergy(player, synergy, 1)
+        giftOneStarOfSynergy(
+          player,
+          synergy,
+          family === "CREST" ? Rarity.RARE : Rarity.COMMON
+        )
         return true
       }
     ])
@@ -664,7 +717,7 @@ const crownEffects = Object.fromEntries(
 )
 
 const SONG_REINFORCEMENT_STAGES = [17]
-const SUPPORTIVE_SOUL_ITEM_STAGES = [8, 16]
+const SUPPORTIVE_SOUL_ITEM_STAGES = [10, 20]
 const SUPPORTIVE_SOUL_ITEMS = [
   Item.GRACIDEA_FLOWER,
   Item.ABILITY_SHIELD,
@@ -1483,22 +1536,28 @@ function grantManifestation(
   candidates: Pkm[],
   heldItem: Item
 ): boolean {
-  // parked on the far right, out of the way of the bench the player actually uses
+  const pokemon = giftLockedPokemon(player, pickRandomIn(candidates), heldItem)
+  if (!pokemon) return false
+  scheduleBlessingGrant(player, state, blessing, [MANIFESTATION_UNLOCK_STAGE])
+  return true
+}
+
+// parked on the far right, out of the way of the bench the player actually uses
+function giftLockedPokemon(player: Player, pkm: Pkm, heldItem?: Item) {
   const freeCellX = getLastAvailablePositionInBench(player.board, getBenchSize(player.blessings))
-  if (freeCellX === null) return false
+  if (freeCellX === null) return null
   const pokemon = PokemonFactory.createPokemonFromName(
-    pickRandomIn(candidates),
+    getAltFormForPlayer(pkm, player),
     player
   )
   pokemon.positionX = freeCellX
   pokemon.positionY = 0
-  pokemon.items.add(heldItem)
+  if (heldItem) pokemon.items.add(heldItem)
   pokemon.manifestationLocked = true
   player.board.set(pokemon.id, pokemon)
   pokemon.onAcquired(player)
   player.manifestedPokemonIds.push(pokemon.id)
-  scheduleBlessingGrant(player, state, blessing, [MANIFESTATION_UNLOCK_STAGE])
-  return true
+  return pokemon
 }
 
 function releaseManifestedPokemons(player: Player) {
@@ -1530,16 +1589,8 @@ function giftRandomUniques(player: Player, amount: number): boolean {
   return true
 }
 
-/* the delta since the previous round end is what the player rolled during the
-   prep phase that just finished */
 function grantWaitingGameRerolls(player: Player) {
-  const rerollsThisRound =
-    player.gameStats.rerollCount - player.rerollCountAtLastRoundEnd
-  player.rerollCountAtLastRoundEnd = player.gameStats.rerollCount
-  player.shopFreeRolls +=
-    rerollsThisRound === 0
-      ? WAITING_GAME_FREE_ROLLS_WITHOUT_REROLLING
-      : WAITING_GAME_FREE_ROLLS
+  player.shopFreeRolls += WAITING_GAME_FREE_ROLLS
 }
 
 function grantCalculatedLoss(player: Player) {
@@ -1800,6 +1851,11 @@ export function applyBlessingTrigger(
   })
 }
 
+function grantRankUpExperience(player: Player, state: GameState) {
+  if (state.stageLevel > RANK_UP_LAST_STAGE) return
+  player.addExperience(RANK_UP_EXPERIENCE)
+}
+
 function rewardFullBench(player: Player) {
   if (getFreeSpaceOnBench(player.board, getBenchSize(player.blessings)) === 0) {
     player.addExperience(PARK_BENCH_FULL_BENCH_EXPERIENCE)
@@ -1825,10 +1881,8 @@ export const blessingTriggerEffectService: {
 
   // a round is PVE or PVP, never both, so the two together fire once per round
   [Blessing.RANK_UP]: {
-    [BlessingTrigger.PVE_END]: (player) =>
-      player.addExperience(RANK_UP_EXPERIENCE),
-    [BlessingTrigger.PVP_END]: (player) =>
-      player.addExperience(RANK_UP_EXPERIENCE)
+    [BlessingTrigger.PVE_END]: grantRankUpExperience,
+    [BlessingTrigger.PVP_END]: grantRankUpExperience
   },
 
   [Blessing.SCHOOL_BUS]: {
@@ -1906,6 +1960,8 @@ export const blessingScheduledEffectService: {
     const gem = SynergyGems[value ?? 0]
     if (gem) grantSynergyAwareItem(player, gem)
   },
+
+  ...gymTrainerReleases(),
 
   [Blessing.MANIFESTATION_AP]: (player) => releaseManifestedPokemons(player),
 
@@ -1986,7 +2042,7 @@ export const blessingEffectService: {
   ) => boolean
 } = {
   ...itemBlessingEffects(),
-  ...synergyFamilyEffects("BADGE", 1),
+  ...synergyFamilyEffects("BADGE", 2),
   ...synergyFamilyEffects("CREST", 2),
   ...crownEffects,
   ...gymTrainerGrants(),
@@ -2202,6 +2258,7 @@ export const blessingEffectService: {
   },
 
   [Blessing.CROAGUNKS_AID]: (player) => {
+    player.addMoney(CROAGUNKS_AID_GOLD_GAINED, true, null)
     for (let i = 0; i < CROAGUNKS_AID_EXCHANGE_TICKETS; i++) {
       player.items.push(Item.EXCHANGE_TICKET)
     }
@@ -2212,7 +2269,7 @@ export const blessingEffectService: {
     giftRandomItems(player, BAG_OF_SWEETS_AMOUNT, Sweets),
 
   [Blessing.WOBBUFFETS_SILVER_PRIZE]: (player) => {
-    player.items.push(pickRandomIn(ItemComponents))
+    player.items.push(Item.SILVER_DOJO_TICKET)
     for (let i = 0; i < WOBBUFFETS_SILVER_PRIZE_RECYCLE_TICKETS; i++) {
       player.items.push(Item.RECYCLE_TICKET)
     }
@@ -2234,11 +2291,6 @@ export const blessingEffectService: {
 
   [Blessing.NUGGET]: (player) => {
     player.addMoney(NUGGET_GOLD_GAINED, true, null)
-    return true
-  },
-
-  [Blessing.GOLDEN_TICKET]: (player) => {
-    player.items.push(Item.GOLD_DOJO_TICKET)
     return true
   },
 
@@ -2652,7 +2704,7 @@ export const blessingEffectService: {
   },
 
   [Blessing.WOBBUFFETS_GOLD_PRIZE]: (player) => {
-    player.items.push(pickRandomIn(ItemComponents))
+    player.items.push(Item.GOLD_DOJO_TICKET)
     for (let i = 0; i < WOBBUFFETS_GOLD_PRIZE_RECYCLE_TICKETS; i++) {
       player.items.push(Item.RECYCLE_TICKET)
     }
@@ -2858,6 +2910,7 @@ export const blessingEffectService: {
         pokemons: pickNRandomIn(commons, STARTER_CHOICE_OPTIONS)
       })
     )
+    player.items.push(Item.SILVER_DOJO_TICKET)
     return true
   },
 
@@ -2881,7 +2934,7 @@ export const blessingEffectService: {
 
   [Blessing.ALL_FOURS]: (player, state) => {
     state.shop.assignAllEpicShop(player, state)
-    player.items.push(Item.BRONZE_DOJO_TICKET)
+    player.items.push(Item.SILVER_DOJO_TICKET)
     player.allFoursFreeBuyPending = true
     // the themed shop can be rolled away without paying for it
     player.shopFreeRolls += 1
@@ -2900,6 +2953,7 @@ export const blessingEffectService: {
   },
 
   [Blessing.QUICK_CLAW]: (player, state) => {
+    player.addMoney(QUICK_CLAW_GOLD_GAINED, true, null)
     if (state.stageLevel >= QUICK_CLAW_COMPENSATION_STAGE) {
       player.items.push(pickRandomIn(ItemComponents))
     }
@@ -3028,16 +3082,21 @@ export const blessingEffectService: {
     const encountered = pickRandomIn(candidates)
     state.shop.addAdditionalPokemon(encountered, state)
     if (!giftPokemonIfBenchHasRoom(player, encountered)) return false
-    player.items.push(Item.BRONZE_DOJO_TICKET)
+    player.items.push(Item.SILVER_DOJO_TICKET)
     return true
   },
 
   [Blessing.POTION]: (player, state) => {
     healPlayerLife(player, POTION_LIFE_HEALED, state)
+    player.addMoney(POTION_GOLD_GAINED, true, null)
     return true
   },
 
-  [Blessing.POCKET_DAYCARE]: (player) => giveRandomEgg(player, false) != null,
+  [Blessing.POCKET_DAYCARE]: (player) => {
+    if (giveRandomEgg(player, false) == null) return false
+    player.items.push(Item.SILVER_DOJO_TICKET)
+    return true
+  },
 
   [Blessing.TRANSFORM]: (player, state) => {
     if (!giftPokemonIfBenchHasRoom(player, Pkm.DITTO)) return false
@@ -3142,6 +3201,12 @@ export const blessingEffectService: {
 
   [Blessing.MUNCHLAX_DELIVERY]: (player) => {
     player.items.push(Item.PICNIC_SET)
+    player.addMoney(MUNCHLAX_DELIVERY_GOLD_GAINED, true, null)
+    return true
+  },
+
+  [Blessing.FREE_COUPON]: (player) => {
+    player.addMoney(FREE_COUPON_GOLD_GAINED, true, null)
     return true
   },
 

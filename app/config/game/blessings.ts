@@ -201,7 +201,7 @@ function synergyFamilyDefinitions(
         availableAtStages: BLESSING_SELECTION_STAGES,
         icon,
         grantsPokemonImmediately: true,
-        benchSlotsRequired: family === "CREST" ? 2 : 1,
+        benchSlotsRequired: family === "CROWN" ? 1 : 2,
         synergy,
         family
       }
@@ -682,12 +682,6 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     icon: "gold_bar",
     grantsPokemonImmediately: false
   },
-  [Blessing.GOLDEN_TICKET]: {
-    tier: BlessingTier.GOLD,
-    availableAtStages: [12],
-    icon: "ticket",
-    grantsPokemonImmediately: false
-  },
   [Blessing.TREASURE_HUNT_II]: {
     tier: BlessingTier.GOLD,
     availableAtStages: BLESSING_SELECTION_STAGES,
@@ -786,7 +780,7 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
   },
   [Blessing.MUNCHLAX_DELIVERY]: {
     tier: BlessingTier.SILVER,
-    availableAtStages: BLESSING_SELECTION_STAGES,
+    availableAtStages: [4],
     icon: "basket",
     grantsPokemonImmediately: false
   },
@@ -2136,7 +2130,7 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     )
   },
   [Blessing.STAR_GUARD]: {
-    tier: BlessingTier.GOLD,
+    tier: BlessingTier.PRISMATIC,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "star_guard",
     grantsPokemonImmediately: false
@@ -2506,6 +2500,18 @@ export function drawBlessingOptions(
     drawn.push(candidate)
   }
   return drawn
+}
+
+// the shop stays locked while a Wish is offered, so the shop cannot be scouted
+// or spent before committing to a Wish
+export function isBlessingChoicePending(
+  choices: Iterable<{ type: string }> | undefined
+): boolean {
+  if (!choices) return false
+  for (const choice of choices) {
+    if (choice.type === "blessing") return true
+  }
+  return false
 }
 
 export function getBlessingsAvailable(

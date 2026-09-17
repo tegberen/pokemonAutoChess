@@ -19,7 +19,6 @@ export enum Blessing {
   TREASURE_HUNT_I = "TREASURE_HUNT_I",
   STARTER_PACK = "STARTER_PACK",
   NUGGET = "NUGGET",
-  GOLDEN_TICKET = "GOLDEN_TICKET",
   TREASURE_HUNT_II = "TREASURE_HUNT_II",
   GIMMIGHOULS_TREASURE = "GIMMIGHOULS_TREASURE",
   INSTANT_HYPER_ROLL = "INSTANT_HYPER_ROLL",
@@ -484,18 +483,19 @@ export const BLESSING_OPTIONS_PER_SELECTION = 3
 
 export const BLESSING_REROLLS_PER_OPTION = 1
 
-export const VITAMINS_ATTACK = 2
-export const VITAMINS_ABILITY_POWER = 10
+export const VITAMINS_ABILITY_POWER = 20
 export const VITAMINS_SPEED = 10
 export const DRAGON_FANG_ABILITY_POWER_PER_STAR = 2
 export const QUIET_STRENGTH_LOW_LIFE_THRESHOLD = 25
 export const RIVALRY_ATTACK_ON_OWN_SIDE = 1
 export const RIVALRY_MAX_HP_ON_ENEMY_SIDE = 4
+export const RIVALRY_MAX_ATTACK = 20
+export const RIVALRY_MAX_MAX_HP = 100
 export const SHINY_SAFEGUARD_HP_THRESHOLD = 0.5
 export const SHINY_SAFEGUARD_PROTECT_DURATION = 1500
 export const CONTEMPT_DAMAGE_MULTIPLIER = 1.5
-export const POTENTIAL_ENERGY_SHIELD = { I: 20, II: 30 }
-export const POTENTIAL_ENERGY_SPEED = { I: 10, II: 20 }
+export const POTENTIAL_ENERGY_SHIELD = { I: 15, II: 30 }
+export const POTENTIAL_ENERGY_SPEED = { I: 10, II: 10 }
 export const MISFITS_MAX_HP = 30
 export const MISFITS_ABILITY_POWER = 30
 export const MISFITS_ATTACK = 3
@@ -515,12 +515,12 @@ export const FROST_BARRIER_DEFENSE = 15
 export const FROST_BARRIER_SPEED = 15
 export const FROST_BARRIER_CHECK_INTERVAL = 500
 export const SECOND_WIND_RESURRECTION_INTERVAL = 10000
-export const FIRST_WIND_HEAL_DELAY = 10000
+export const FIRST_WIND_HEAL_DELAY = 12000
 export const FIRST_WIND_HEAL_RATIO = 0.4
 export const YOU_FORGOT_SOMETHING_DELAY = 8000
 export const VAMPIRIC_HEAL_RATIO = 0.2
 export const PROTECT_THE_WEAK_MAX_HP = 20
-export const PROTECT_THE_WEAK_SPEED = 7
+export const PROTECT_THE_WEAK_SPEED = 10
 export const STURDY_MAX_HP = 30
 export const STURDY_DEFENSE = 4
 export const STURDY_SPECIAL_DEFENSE = 4
@@ -548,7 +548,7 @@ export const SACRIFICE_ENRAGE_DURATION = 2000
 export const SACRIFICE_EXECUTE_DAMAGE = 9999
 export const BABY_OPENER_BABIES_GRANTED = 3
 export const BABY_OPENER_MAX_COST = 2
-export const BABY_OPENER_LIFE_PER_EGG = 2
+export const BABY_OPENER_LIFE_PER_EGG = 4
 export const SELECTIVE_GENETICS_BABIES_GRANTED = 3
 export const SELECTIVE_GENETICS_MAX_COST = 4
 export const SELECTIVE_GENETICS_SHINY_ITEM_OPTIONS = 3
@@ -742,6 +742,7 @@ export const RAINBOW_HOUR_FOSSIL_STONES = 2
 export const RAINBOW_HOUR_EEVEELUTIONS_TARGET = 7
 export const RAINBOW_HOUR_GOLD_REWARD = 77
 export const MANIFESTATION_UNLOCK_STAGE = 20
+export const GYM_TRAINER_UNLOCK_STAGE = 9
 export const HERO_BLESSING_HATCH_MAX_HP = 50
 export const QUEST_ASCEND_POKEMONS = 3
 export const ROCKY_BEGINNINGS_POKEMONS = 2
@@ -749,7 +750,7 @@ export const QUEST_EVOLVE_II_RARES_GRANTED = 2
 // lives here rather than in the service so the pick UI can read its length
 export const STARTER_PACK_CONTENT: { rarity: Rarity; stars: number }[] = [
   { rarity: Rarity.COMMON, stars: 2 },
-  { rarity: Rarity.UNCOMMON, stars: 1 },
+  { rarity: Rarity.UNCOMMON, stars: 2 },
   { rarity: Rarity.RARE, stars: 1 }
 ]
 export const MIX_AND_MATCH_I_UNIQUES = 3
@@ -758,10 +759,9 @@ export const MIX_AND_MATCH_II_UNIQUES = 4
 export const MIX_AND_MATCH_II_FIELD_CAP = 3
 
 export const WAITING_GAME_FREE_ROLLS = 1
-export const WAITING_GAME_FREE_ROLLS_WITHOUT_REROLLING = 2
 export const PRISMATIC_REROLL_CHANCE = 0.25
 export const PRISMATIC_REROLL_FREE_ROLLS = 2
-export const LUNCH_MONEY_DAMAGE_REQUIRED = 8
+export const LUNCH_MONEY_DAMAGE_REQUIRED = 10
 export const LUNCH_MONEY_GOLD = 2
 export const CALCULATED_LOSS_GOLD = 2
 export const BP_REWARDS_COMPONENTS = 2
@@ -777,7 +777,7 @@ export const HAIL_TO_THE_KING_CURSE_DELAY = 1000
 export const TRASH_TO_TREASURE_ROUNDS_BY_STAR = [5, 3, 1] as const
 export const TRASH_TO_TREASURE_TRASH_GRANTED_MIN = 1
 export const TRASH_TO_TREASURE_TRASH_GRANTED_MAX = 3
-export const GREEDY_WISH_PRISMATIC_GOLD = 10
+export const GREEDY_WISH_PRISMATIC_GOLD = 20
 export const GAMBLE_REWARDS: {
   [blessing in Blessing]?: { tier: BlessingTier; gold: number }
 } = {
@@ -785,8 +785,8 @@ export const GAMBLE_REWARDS: {
   [Blessing.GAMBLE_II]: { tier: BlessingTier.GOLD, gold: 10 },
   [Blessing.GAMBLE_III]: { tier: BlessingTier.PRISMATIC, gold: 15 }
 }
-export const CALLED_SHOT_GOLD = 4
-export const CALLED_SHOT_STREAK = 4
+export const CALLED_SHOT_GOLD = 5
+export const CALLED_SHOT_STREAK = 5
 export const WISE_SPENDING_EXP_PER_REROLL = 2
 export const BIRTHDAY_PRESENT_GOLD = 1
 export const UP_IS_UP_GOLD = 1
@@ -859,29 +859,32 @@ export const VALOR_SHIELD_PER_STAR = 10
 export const COLONY_SPEWPA_HATCH_TIME = 3
 
 export const EMERALD_ORB_HEAL_RANGE = 2
-export const BURNING_FORCE_ATTACK_RATIO = 0.5
+export const BURNING_FORCE_ATTACK_RATIO = 0.75
 export const COMBAT_BLESSING_TRIGGER_HP_RATIO = 0.7
-export const COMBAT_BLESSING_DURATION = { I: 8000, II: 12000 }
+export const COMBAT_BLESSING_DURATION = { I: 10000, II: 15000 }
 export const DRILL_ATTACK_RATIO = 0.5
-export const SHATTER_DEFENSE_RATIO = 0.4
+export const SHATTER_BASE_DAMAGE = 5
+export const SHATTER_DEFENSE_RATIO = 0.1
 // tanky units attack too slowly to carry an on-attack rider, so SHATTER pulses
 export const SHATTER_PULSE_INTERVAL = 1000
-export const SURGE_SPEED_RATIO = 0.25
+export const SURGE_SPEED_RATIO = { I: 0.3, II: 0.3 }
 // a share, not a multiplier: 0.2 is x1.2 on everything the unit deals
-export const EMPOWER_DAMAGE_AMP = { I: 0.2, II: 0.4 }
+export const EMPOWER_DAMAGE_AMP = { I: 0.25, II: 0.3 }
+export const EMPOWER_DELAY = 5000
 export const GEAR_SHIELD_PER_ITEM = { I: 20, II: 30 }
-export const HEART_SHIELD_MAX_HP_PER_ALLY = { I: 4, II: 8 }
+export const HEART_SHIELD_MAX_HP_PER_ALLY = { I: 5, II: 10 }
 // free rolls count towards rerollCount, so these part-fund their own scaling
 export const ROLL_SCALING_FREE_ROLLS = 4
 export const ROLL_SCALING_ITEMS_REQUIRED = 3
-export const LAYERED_ARMOR_SHIELD_PER_ROLL = 4
-export const LAYERED_ARMOR_SHIELD_MAX = 200
-export const MORPH_BALL_ROLLS_PER_SPEED = 2
+export const LAYERED_ARMOR_SHIELD_PER_ROLL = 2
+export const LAYERED_ARMOR_SHIELD_MAX = 100
+export const MORPH_BALL_SPEED_PER_ROLL = 1
+export const MORPH_BALL_SPEED_MAX = 50
 export const ORB_WAND_ABILITY_POWER_PER_ROLL = 2
 export const ORB_WAND_ABILITY_POWER_MAX = 100
 
 export const SPIKY_GUARD_DEFENSE_RATIO = 0.15
-export const SPIKY_GUARD_SHIELD_PER_FREE_CELL = 5
+export const SPIKY_GUARD_SHIELD_PER_FREE_CELL = 10
 
 export const ABNORMALITY_ABILITY_POWER_PER_EMPTY_CELL = 5
 
@@ -889,12 +892,15 @@ export const SHADY_PRICE_FREE_ROLLS = 32
 export const SHADY_PRICE_REROLL_COST = 4
 
 export const RANK_UP_EXPERIENCE = 2
+export const RANK_UP_LAST_STAGE = 10
 export const PARK_BENCH_EXTRA_SLOTS = 1
 export const PARK_BENCH_FULL_BENCH_EXPERIENCE = 2
-export const MAGIC_SHIELD_ALLY_AP = 30
-export const BRUTE_SHIELD_ATTACK_RATIO = 3
-export const BRUTE_SHIELD_ALLY_ATTACK = 4
+export const MAGIC_SHIELD_ALLY_AP = { I: 10, II: 20 }
+export const MAGIC_SHIELD_PER_CAST = { I: 15, II: 20 }
+export const BRUTE_SHIELD_ATTACK_RATIO = { I: 1, II: 1.5 }
+export const BRUTE_SHIELD_ALLY_ATTACK = { I: 1, II: 2 }
 export const STAR_GUARD_DEFENSE_PER_STAR = 1
+export const STAR_GUARD_SHIELD_PER_STAR = 5
 export const MACHINE_RESIDUE_SHIELD = 50
 export const SAPPHIRE_ORB_BOUNCES = 3
 export const SAPPHIRE_ORB_ARMOR_BREAK_DURATION = 3000
@@ -945,16 +951,16 @@ export const BLESSING_QUEST_TARGETS: {
 }
 
 export const EXPLOIT_DAMAGE_BONUS = 20 // in %
-export const LASTING_EFFECTS_BONUS = 40 // in %
+export const LASTING_EFFECTS_BONUS = 50 // in %
 export const LASTING_EFFECTS_LUCK = 10
 
-export const PULSE_SHIELD_SPEED_RATIO = 0.7
-export const PULSE_SHIELD_ALLY_SPEED = 20
-export const MINIMALIST_PP_PER_EMPTY_SLOT = { I: 8, II: 12 } // in % of max PP
-export const MINIMALIST_II_NO_ITEM_AP = 40
+export const PULSE_SHIELD_SPEED_RATIO = { I: 0.35, II: 0.5 }
+export const PULSE_SHIELD_ALLY_SPEED = { I: 5, II: 10 }
+export const MINIMALIST_PP_PER_EMPTY_SLOT = { I: 10, II: 20 } // in % of max PP
+export const MINIMALIST_NO_ITEM_AP = { I: 30, II: 40 }
 
 export const CRITICAL_RUSH_SPEED = { I: 30, II: 50 }
-export const CRITICAL_RUSH_DURATION = { I: 8000, II: 12000 }
+export const CRITICAL_RUSH_DURATION = { I: 10000, II: 15000 }
 export const CRITICAL_RUSH_II_STACK_SPEED = 5
 // matches REAPER_CLOTH, for abilities that already critically strike
 export const CRITICAL_PATH_CRIT_POWER_FALLBACK = 50 // in %
@@ -966,12 +972,12 @@ export const LONE_WOLF_SPEED_DURATION = 10000
 export const LONE_WOLF_PERMANENT_ATTACK = 2
 export const PARTING_GIFT_ITEMS_REQUIRED = 3
 export const PARTING_GIFT_SHIELD = 100
-export const REQUIEM_SHIELD_RATIO = 0.15
+export const REQUIEM_SHIELD_RATIO = 0.25
 export const REVEILLE_DELAY = 12000
 export const REVEILLE_WALK_DELAY = 1000
 export const REVEILLE_BENCH_SLOTS = 3
 export const GUARD_FORMATION_SHARE_RATIO = 0.5
-export const BRAVE_FORMATION_CRIT_CHANCE_PER_EMPTY_TILE = 10 // in %
+export const BRAVE_FORMATION_CRIT_CHANCE_PER_EMPTY_TILE = 15 // in %
 export const TOUGH_FORMATION_DEFENSE_PER_ADJACENT_ALLY = 2
 
 export const IMPENDING_DOOM_DELAY = 7000
@@ -1310,6 +1316,8 @@ export interface GymTrainerRoster {
   // handed out on pick and worth 6 gold together, either an Uncommon paired
   // with an Epic or two Rares
   starters: [Pkm, Pkm]
+  // locked until GYM_TRAINER_UNLOCK_STAGE; defaults to the pricier starter
+  lockedStarter?: Pkm
   // forced into the Unique proposition screen, and never evolved by GYM_LEADER
   unique: Pkm
 }
@@ -1332,11 +1340,13 @@ export const GYM_TRAINER_ROSTERS: {
   [Blessing.DARK_WILD_GYM_TRAINER]: {
     synergies: [Synergy.DARK, Synergy.WILD],
     starters: [Pkm.POOCHYENA, Pkm.GALARIAN_ZIGZAGOON],
+    lockedStarter: Pkm.GALARIAN_ZIGZAGOON,
     unique: Pkm.ABSOL
   },
   [Blessing.GROUND_BUG_GYM_TRAINER]: {
     synergies: [Synergy.GROUND, Synergy.BUG],
     starters: [Pkm.TRAPINCH, Pkm.BURMY_SANDY],
+    lockedStarter: Pkm.BURMY_SANDY,
     unique: Pkm.DUNSPARCE
   },
   [Blessing.PSYCHIC_LIGHT_GYM_TRAINER]: {
@@ -1367,6 +1377,7 @@ export const GYM_TRAINER_ROSTERS: {
   [Blessing.GHOST_ARTIFICIAL_GYM_TRAINER]: {
     synergies: [Synergy.GHOST, Synergy.ARTIFICIAL],
     starters: [Pkm.HONEDGE, Pkm.GOLETT],
+    lockedStarter: Pkm.GOLETT,
     unique: Pkm.ROTOM
   },
   [Blessing.ROCK_ICE_GYM_TRAINER]: {
@@ -1382,6 +1393,7 @@ export const GYM_TRAINER_ROSTERS: {
   [Blessing.WATER_SOUND_GYM_TRAINER]: {
     synergies: [Synergy.WATER, Synergy.SOUND],
     starters: [Pkm.CLAUNCHER, Pkm.POPPLIO],
+    lockedStarter: Pkm.CLAUNCHER,
     unique: Pkm.LAPRAS
   },
   [Blessing.ELECTRIC_STEEL_GYM_TRAINER]: {

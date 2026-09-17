@@ -100,7 +100,6 @@ const ECONOMY_BLESSINGS = new Set<Blessing>([
   Blessing.TREASURE_HUNT_I,
   Blessing.TREASURE_HUNT_II,
   Blessing.NUGGET,
-  Blessing.GOLDEN_TICKET,
   Blessing.GIMMIGHOULS_TREASURE,
   Blessing.INSTANT_HYPER_ROLL,
   Blessing.DEEP_INVESTMENTS,

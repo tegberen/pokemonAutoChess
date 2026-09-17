@@ -133,7 +133,11 @@ export default function ServerGuide({
       })),
       // the synergy-paired names never appear on their own in the log
       { name: "Gym Trainer", icon: Blessings[Blessing.NORMAL_FAIRY_GYM_TRAINER].icon },
-      { name: "Legendary songs", icon: Blessings[Blessing.HEATRANS_SONG].icon }
+      { name: "Legendary songs", icon: Blessings[Blessing.HEATRANS_SONG].icon },
+      { name: "Badges", icon: Blessings[Blessing.FIGHTING_BADGE_BLESSING].icon },
+      { name: "Crests", icon: Blessings[Blessing.FIGHTING_CREST_BLESSING].icon },
+      // removed Wishes keep their icon in older Patch Log rows
+      { name: "Golden Ticket", icon: "ticket" }
     ],
     [t]
   )

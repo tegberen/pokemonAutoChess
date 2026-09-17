@@ -475,6 +475,62 @@ Selectable in Custom Lobbies.
 
 Every balance change on this server, newest first.
 
+### 17 September 2026
+
+**Wishes**
+- Magic Shield I/II | SHIELD equal to AP → +10/20 AP, each ability cast grants 15/20 SHIELD
+- Brute Shield I/II | +0/4 ATK, SHIELD 300/300% ATK → +1/2 ATK, SHIELD 100/150% ATK
+- Pulse Shield I/II | +0/20 SPEED, SHIELD 70/70% SPEED → +5/10 SPEED, SHIELD 35/50% SPEED
+- Potential Energy I/II | 20/30 SHIELD and 10/20 SPEED per missing STAR → 15/30 SHIELD and 10/10 SPEED per missing STAR
+- Vitamins | 2 ATK, 10 AP → 0 ATK, 20 AP
+- First Wind | heal after 10 → 12 seconds
+- Drill, Surge, Shatter, Empower, Critical Rush I/II | duration 8/12 → 10/15 seconds
+- Shatter I/II | 40% DEF and SPE_DEF → 5 + 10% DEF and SPE_DEF
+- Empower I/II | +20/40% damage below 70% HP → +25/30% damage after 5 seconds of combat
+- Minimalist I/II | 8/12% PP per empty slot → 10/20%, Pokémon without items gain 0/40 → 30/40 AP
+- Spiky Guard | 5 → 10 SHIELD per free tile
+- Protect the Weak | 7 → 10 SPEED per Common and Uncommon Pokémon
+- Requiem | SHIELD 15% → 25% max HP
+- Star Guard | Gold → Prismatic, now also grants 5 SHIELD per STAR
+- Brave Formation | 10% → 15% CRIT_CHANCE per empty tile
+- Burning Force | 50% → 75% base ATK
+- Rivalry | now capped at 20 ATK and 100 HP in total
+- Rank Up | XP every stage → until stage 10
+- Prize Money | no longer grants a free reroll, every 8 → 10 player damage
+- Waiting Game | 1 or 2 free rerolls → 1 free reroll
+- Lasting Effects | negative statuses last 40% → 50% longer
+- Supportive Soul | another support item every 8 → 10 rounds
+- Layered Armor | 4 SHIELD per shop roll, up to 200 → 2 SHIELD per shop roll, up to 100
+- Morph Ball | 1 SPEED per 2 shop rolls → 1 SPEED per shop roll, up to 50 SPEED
+- Surge I/II | 25% → 30% SPEED as SPECIAL
+- Heart Shield I | 4 → 5 HP per ally sharing a synergy
+- Potion | 15 → 20 player HP, now also grants 5 GOLD
+- Starter Pack | the Uncommon is now 2 STAR
+- Silver Kit | random component + 2 RECYCLE_TICKET → SILVER_DOJO_TICKET + 2 RECYCLE_TICKET
+- Additional Rethink I/II | 4/8 → 5/10 GOLD
+- Treasure Hunt II | 3 → 4 synergy gems
+- Badges | one 1 STAR Uncommon → one 1 STAR Uncommon and one 1 STAR Common
+- Gear Shield I/II | now applies to all Pokémon instead of melee only
+- Starter Choice | now also grants a SILVER_DOJO_TICKET
+- Pocket Daycare | now also grants a SILVER_DOJO_TICKET
+- Safari Encounter, All Fours | BRONZE_DOJO_TICKET → SILVER_DOJO_TICKET
+- Taxes | 7 → 8 GOLD
+- Called Shot | win streak 4 → 5, GOLD 4 → 5
+- Munchlax Delivery | now also grants 5 GOLD, stage 4 only
+- Gift Bag | now also grants 5 GOLD
+- Quick Claw | now also grants 5 GOLD
+- Greedy Wish | 10 → 20 GOLD if the next Wish is already Prismatic
+- Baby Opener | 2 → 4 player HP per egg obtained
+- Croagunk's Aid | now also grants 10 GOLD, EXCHANGE_TICKET 3 → 2
+- Gold Kit | random component + 2 RECYCLE_TICKET → GOLD_DOJO_TICKET + 2 RECYCLE_TICKET
+- Golden Ticket | removed
+- Gym Trainer | one starter is locked until stage 9, like a Manifestation (the Epic, or the named Rare)
+- Heart Shield II | 8 → 10 HP per ally sharing a synergy
+- Crests | two 1 STAR Uncommons → one 1 STAR Uncommon and one 1 STAR Rare
+
+**Fixes**
+- Wishes | buying, rerolling and buying XP are locked while a Wish choice is open
+
 ### 16 September 2026
 
 **Pokémon**
