@@ -11,10 +11,11 @@ import type Player from "./colyseus-models/player"
 import { Pokemon, PokemonClasses } from "./colyseus-models/pokemon"
 import { getPkmWithCustom } from "./colyseus-models/pokemon-customs"
 import {
+  DOUBLE_UP_PVE_ABILITY_POWER_RATIO,
   DOUBLE_UP_PVE_HP_BIAS,
   DOUBLE_UP_PVE_MAX_SCALE,
   DOUBLE_UP_PVE_MIN_SCALE,
-  DOUBLE_UP_PVE_STAGE_TUNING,
+  DOUBLE_UP_PVE_TUNING,
   getDoubleUpPvePowerFactor,
   type PVEStage
 } from "./pve-stages"
@@ -88,7 +89,7 @@ export default class PokemonFactory {
             (getDoubleUpPvePowerFactor(stageLevel) * playersPower) / pvePower
           )
         )
-      ) * (DOUBLE_UP_PVE_STAGE_TUNING[stageLevel] ?? 1)
+      ) * DOUBLE_UP_PVE_TUNING
     const hpScale = Math.pow(scale, DOUBLE_UP_PVE_HP_BIAS)
     const atkScale = Math.pow(scale, 2 - DOUBLE_UP_PVE_HP_BIAS)
 
@@ -100,6 +101,9 @@ export default class PokemonFactory {
       if (hpScalingAbilities.includes(pokemon.skill)) {
         pokemon.addAbilityPower(Math.round(100 * (1 / hpScale - 1)))
       }
+      pokemon.addAbilityPower(
+        -Math.round((100 + pokemon.ap) * (1 - DOUBLE_UP_PVE_ABILITY_POWER_RATIO))
+      )
     })
   }
 

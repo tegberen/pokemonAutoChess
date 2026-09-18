@@ -29,10 +29,14 @@ export type PVEStagesNames =
 // Double Up: the team fights one shared PVE encounter, scaled dynamically
 // to the combined power of both boards
 export const DOUBLE_UP_PVE_POWER_FACTOR = 1.0 // target power relative to the duo's boards
-export const DOUBLE_UP_PVE_MIN_SCALE = 1.25 // never weaker than this × solo encounter
+export const DOUBLE_UP_PVE_MIN_SCALE = 1.25
 export const DOUBLE_UP_PVE_MAX_SCALE = 10
+// applied after the min/max clamp, so encounters can end up below solo strength
+export const DOUBLE_UP_PVE_TUNING = 0.4
+// halves the ability damage of every encounter unit: AP -> (100 + AP) / 2 - 100
+export const DOUBLE_UP_PVE_ABILITY_POWER_RATIO = 0.5
 
-// scaled bosses gain more bulk than damage: hp × scale^1.2, atk × scale^0.8
+// scaled bosses gain more bulk than damage: hp × scale^1.4, atk × scale^0.6
 export const DOUBLE_UP_PVE_HP_BIAS = 1.4
 
 // below parity early game, parity at stage 10, then well beyond it since
@@ -41,21 +45,6 @@ export function getDoubleUpPvePowerFactor(stageLevel: number): number {
   const factor =
     stageLevel < 10 ? 0.4 + 0.06 * stageLevel : 1 + 0.15 * (stageLevel - 10)
   return DOUBLE_UP_PVE_POWER_FACTOR * factor
-}
-
-// per-stage tuning multiplier applied to the final stat scale
-export const DOUBLE_UP_PVE_STAGE_TUNING: { [stageLevel: number]: number } = {
-  1: 0.6,
-  2: 0.6,
-  3: 0.6,
-  9: 0.6,
-  14: 0.6,
-  19: 0.6,
-  24: 0.6,
-  28: 0.6,
-  32: 0.6,
-  36: 0.6,
-  40: 0.6
 }
 
 export type PVEStage = {

@@ -475,6 +475,11 @@ Selectable in Custom Lobbies.
 
 Every balance change on this server, newest first.
 
+### 19 September 2026
+
+**Game Mode**
+- Double Up | global PvE nerf
+
 ### 17 September 2026
 
 **Wishes**
