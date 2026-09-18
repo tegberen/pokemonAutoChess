@@ -36,8 +36,6 @@ export const WeatherThreshold: { [weather in Weather]: number } = {
   [Weather.ZEN_ZONE]: 8
 }
 
-export const ZEN_ZONE_DAMAGE_BLOCKED = 3
-export const ZEN_ZONE_FIGHTING_DAMAGE_BLOCKED = 6
 export const FIGHTING_BLOCKS_PER_THROW = 10
 export const FIGHTING_THROW_CRIT_CHANCE_PER_STAR = 10
 export const FIGHTING_THROW_PARALYSIS_DURATION = 2000

@@ -401,6 +401,7 @@ export default class Simulation extends Schema implements ISimulation {
   elderStormTimer = 0
   distortionTimer = 0
   meteorShowerTimer = 0
+  zenZoneTimer = 0
   // meteor impacts are queued so the damage lands ~1s after the visual starts,
   // in sync with the on-screen meteor striking down
   meteorStrikeQueue: { x: number; y: number; delay: number }[] = []
@@ -553,6 +554,9 @@ export default class Simulation extends Schema implements ISimulation {
     }
     if (this.weather === Weather.METEOR_SHOWER) {
       this.meteorShowerTimer = 7000
+    }
+    if (this.weather === Weather.ZEN_ZONE) {
+      this.zenZoneTimer = 5000
     }
 
     this.bluePlayer.board.forEach((pokemon) => {
@@ -5139,6 +5143,20 @@ export default class Simulation extends Schema implements ISimulation {
         }
         this.blueTeam.forEach(empower)
         this.redTeam.forEach(empower)
+      }
+    }
+    if (this.weather === Weather.ZEN_ZONE) {
+      this.zenZoneTimer -= dt
+      if (this.zenZoneTimer <= 0 && !this.finished) {
+        this.zenZoneTimer = 5000
+        const zenZone = (pkm: PokemonEntity) => {
+          pkm.addCritChance(5, pkm, 0, false)
+          if (pkm.types.has(Synergy.FIGHTING)) {
+            pkm.addCritChance(5, pkm, 0, false)
+          }
+        }
+        this.blueTeam.forEach(zenZone)
+        this.redTeam.forEach(zenZone)
       }
     }
 

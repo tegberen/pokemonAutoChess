@@ -2,9 +2,7 @@ import {
   ARMOR_FACTOR,
   FIGHTING_BLOCKS_PER_THROW,
   FIGHTING_PHASE_DURATION,
-  SWORDS_OF_JUSTICE_ZEN_ZONE_STAT_GAIN,
-  ZEN_ZONE_DAMAGE_BLOCKED,
-  ZEN_ZONE_FIGHTING_DAMAGE_BLOCKED
+  SWORDS_OF_JUSTICE_ZEN_ZONE_STAT_GAIN
 } from "../config"
 import {
   SPRINGTIDE_DAMAGE_BONUS_PER_SPACE,
@@ -929,13 +927,7 @@ export default abstract class PokemonState {
               : pokemon.effects.has(EffectEnum.GUTS)
                 ? 3
                 : 0
-        const zenZoneDamageBlocked =
-          pokemon.simulation.weather !== Weather.ZEN_ZONE
-            ? 0
-            : pokemon.types.has(Synergy.FIGHTING)
-              ? ZEN_ZONE_FIGHTING_DAMAGE_BLOCKED
-              : ZEN_ZONE_DAMAGE_BLOCKED
-        const damageBlocked = fightingDamageBlocked + zenZoneDamageBlocked
+        const damageBlocked = fightingDamageBlocked
         if (damageBlocked > 0) {
           reducedDamage = reducedDamage - damageBlocked
           pokemon.count.fightingBlockCount++

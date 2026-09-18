@@ -1769,6 +1769,12 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     icon: "frost_burst",
     grantsPokemonImmediately: true
   },
+  [Blessing.THIRD_EYE]: {
+    tier: BlessingTier.SILVER,
+    availableAtStages: [12],
+    icon: "third_eye",
+    grantsPokemonImmediately: true
+  },
   [Blessing.AURORA_BOREALIS]: {
     tier: BlessingTier.GOLD,
     availableAtStages: [12],

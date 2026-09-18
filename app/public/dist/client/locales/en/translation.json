@@ -3691,7 +3691,6 @@
 		"HARD_TERRAIN_WEATHER_SUPPORT": "The Pokémon counts as 3 for TERRAIN",
 		"BLOSSOM_WEATHER_SUPPORT": "The Pokémon counts as 3 for BLOSSOM",
 		"ZEN_ZONE_WEATHER_SUPPORT": "The Pokémon counts as 3 for ZEN_ZONE",
-		"ZEN_MEDITATION": "Meditate is doubled under ZEN_ZONE.",
 		"CARBINK": "Spontanious mutations have been observed during Crystallisation.",
 		"SCYTHER": "Scyther is looking for METAL_ALLOY or BLACK_AUGURITE",
 		"GLUTTON": "Permanently gains max HP when eating: 10 HP for each berry, 20 HP for each dish, 30 HP when cooking as a Chef",
@@ -3882,8 +3881,8 @@
 		"ARCTOZOLT": "When an allied FOSSIL awakens its primordial power, PARALYSIS enemies ADJACENT to it for 4 seconds. Already PARALYSIS enemies are FREEZE instead.",
 		"DRACOVISH": "When an allied FOSSIL awakens its primordial power, it deals 30% more damage to enemies below 50% HP for the rest of combat.",
 		"ARCTOVISH": "When an allied FOSSIL awakens its primordial power, it gains 20% max HP and RUNE_PROTECT for 1 second.",
-		"URSHIFU_RAPID": "Teaches the Rapid Strike Style. The training bag and pillars also grant 10 SPEED permanently.",
-		"URSHIFU_SINGLE": "Teaches the Single Strike Style. The training bag and pillars also grant 20 AP permanently."
+		"URSHIFU_RAPID": "Teaches the Rapid Strike Style. The training bag and pillars also grant 5 SPEED permanently.",
+		"URSHIFU_SINGLE": "Teaches the Single Strike Style. The training bag and pillars also grant 10 AP permanently."
 	},
 	"stat": {
 		"ATK": "Attack",
@@ -4305,7 +4304,7 @@
 		"CLOUDY": "+10% max PP\n+30% RUNE_PROTECT duration",
 		"TERRAIN": "+1 SPEED for each tile moved",
 		"BLOSSOM": "Spawns gain 20 AP (40 if FLORA). FLORA spawns gain +1 RANGE",
-		"ZEN_ZONE": "Block 3 damage on every hit (6 if FIGHTING)"
+		"ZEN_ZONE": "Every 5 seconds, +5 CRIT_CHANCE (+10 if FIGHTING)"
 	},
 	"board_effect": {
 		"EMBER": "Ember",
@@ -6310,6 +6309,10 @@
 		"FROST_BURST": {
 			"name": "Frost Burst",
 			"description": "Gain a Snover and move to a random Snover region if not in one. When your STRONGEST Snover's ability KO's an enemy, 50% of the damage is dealt to ADJACENT enemies, which can also execute at half the chance. This effect cannot chain."
+		},
+		"THIRD_EYE": {
+			"name": "Third Eye",
+			"description": "Gain a Meditite and add it to the pool. The ability Meditate is doubled under ZEN_ZONE."
 		},
 		"AURORA_BOREALIS": {
 			"name": "Aurora Borealis",

@@ -1335,7 +1335,6 @@ export class Meditite extends Pokemon {
   maxPP = 100
   range = 2
   skill = Ability.MEDITATE
-  passive2 = Passive.ZEN_MEDITATION
   additional = true
 }
 
@@ -1361,7 +1360,6 @@ export class Medicham extends Pokemon {
   skill = Ability.MEDITATE
   additional = true
   passive = Passive.MEDICHAM
-  passive2 = Passive.ZEN_MEDITATION
 }
 
 export class MegaMedicham extends Pokemon {
@@ -1380,7 +1378,6 @@ export class MegaMedicham extends Pokemon {
   maxPP = 100
   range = 3
   skill = Ability.MEDITATE
-  passive2 = Passive.ZEN_MEDITATION
   additional = true
 }
 

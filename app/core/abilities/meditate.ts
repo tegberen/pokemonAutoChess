@@ -1,4 +1,4 @@
-import { Passive } from "../../types/enum/Passive"
+import { Blessing } from "../../types/enum/Blessing"
 import { Weather } from "../../types/enum/Weather"
 import type { Board } from "../board"
 import type { PokemonEntity } from "../pokemon-entity"
@@ -8,11 +8,10 @@ class MeditateStrategy extends AbilityStrategy {
   requiresTarget = false
   process(pokemon: PokemonEntity, board: Board, target: null, crit: boolean) {
     super.process(pokemon, board, target, crit)
-    const hasZenMeditation =
+    const hasThirdEye =
       pokemon.simulation.weather === Weather.ZEN_ZONE &&
-      (pokemon.passive === Passive.ZEN_MEDITATION ||
-        pokemon.passive2 === Passive.ZEN_MEDITATION)
-    const buff = hasZenMeditation ? 2 : 1
+      pokemon.player?.blessings?.includes(Blessing.THIRD_EYE) === true
+    const buff = hasThirdEye ? 2 : 1
     pokemon.addAttack(buff * pokemon.baseAtk, pokemon, 1, crit)
   }
 }

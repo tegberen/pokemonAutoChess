@@ -3005,6 +3005,9 @@ export const blessingEffectService: {
   [Blessing.AURORA_BOREALIS]: (player, state, room) =>
     heroBlessingEffect(Blessing.AURORA_BOREALIS, player, state, room),
 
+  [Blessing.THIRD_EYE]: (player, state, room) =>
+    heroBlessingEffect(Blessing.THIRD_EYE, player, state, room),
+
   [Blessing.RADIANCE]: (player, state, room) =>
     heroBlessingEffect(Blessing.RADIANCE, player, state, room),
 

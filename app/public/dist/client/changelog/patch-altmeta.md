@@ -117,13 +117,13 @@ each tile of gap.
 
 #### Pokémon
 
-- Meditite Line: Meditate is doubled under ZEN_ZONE.
 - Marshadow: GHOST / FIGHTING, sets the weather to ZEN_ZONE.
 - Makuhita Line: counts as 3 for ZEN_ZONE.
 - Cobalion, Terrakion, Virizion: under ZEN_ZONE, gain 4 DEF, ATK or SPE_DEF the first time each ally falls below 50% HP.
 
 #### Wishes
 
+- Third Eye: gain a Meditite and add it to the pool. Meditate is doubled under ZEN_ZONE.
 - Brace for Impact: now a generic wish for all allies, does not stack with FIGHTING 8, which grants the same effect.
 - Shodan: at FIGHTING 8, the single-hit cap drops to 20% max HP and the excess is redirected to an ADJACENT enemy.
 
@@ -392,8 +392,8 @@ At the beginning of each battle, TIGHT_BELT is replaced by 2 random items. The h
 - Heatran: has MONSTER
 - Ogerpon: becomes MONSTER with TEAL_MASK, WELLSPRING_MASK, HEARTHFLAME_MASK or CORNERSTONE_MASK,
 - Celebi: has FAIRY
-- Urshifu (Single Strike): teaches its style, so the training bag and pillars also grant 20 AP permanently.
-- Urshifu (Rapid Strike): teaches its style, so the training bag and pillars also grant 10 SPEED permanently.
+- Urshifu (Single Strike): teaches its style, so the training bag and pillars also grant 10 AP permanently.
+- Urshifu (Rapid Strike): teaches its style, so the training bag and pillars also grant 5 SPEED permanently.
 
 ### Special
 
@@ -524,9 +524,15 @@ Every balance change on this server, newest first.
 - Croagunk's Aid | now also grants 10 GOLD, EXCHANGE_TICKET 3 → 2
 - Gold Kit | random component + 2 RECYCLE_TICKET → GOLD_DOJO_TICKET + 2 RECYCLE_TICKET
 - Golden Ticket | removed
+- Third Eye {{new}} | Silver Wish at stage 12: gain a Meditite and add it to the pool, Meditate is doubled under ZEN_ZONE
+- Meditite Line | loses its passive, Meditate is only doubled with the Third Eye Wish
 - Gym Trainer | one starter is locked until stage 9, like a Manifestation (the Epic, or the named Rare)
 - Heart Shield II | 8 → 10 HP per ally sharing a synergy
 - Crests | two 1 STAR Uncommons → one 1 STAR Uncommon and one 1 STAR Rare
+
+**Pokémon**
+- Urshifu (Single Strike) | training grants 10 AP.
+- Urshifu (Rapid Strike) | training grants 5 SPEED.
 
 **Fixes**
 - Wishes | buying, rerolling and buying XP are locked while a Wish choice is open
@@ -671,9 +677,6 @@ Every balance change on this server, newest first.
 
 ### 11 September 2026
 
-**Pokémon**
-- Urshifu (Single Strike) | training grants 20 AP.
-- Urshifu (Rapid Strike) | training grants 10 SPEED.
 
 **Abilities**
 - Ingrain | damage and healing fall off by 20% per tile of distance
