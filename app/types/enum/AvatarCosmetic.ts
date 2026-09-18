@@ -7,7 +7,9 @@ export const AVATAR_COSMETIC_IDS = [
   "fire-trail",
   "flower-trail",
   "electric-trail",
-  "water-trail"
+  "water-trail",
+  "dragon-king-trail",
+  "slipstream-trail"
 ] as const
 
 export type AvatarCosmeticId = (typeof AVATAR_COSMETIC_IDS)[number]
@@ -20,7 +22,9 @@ export const AVATAR_COSMETIC_BLESSINGS: Record<
   "water-trail": Blessing.TIDAL_SURGE,
   "flower-trail": Blessing.AMAZING_GARDENING,
   "confetti-trail": Blessing.SHOW_OFF,
-  "electric-trail": Blessing.CHARGING_UP
+  "electric-trail": Blessing.CHARGING_UP,
+  "dragon-king-trail": Blessing.LIMIT_BREAKER,
+  "slipstream-trail": Blessing.SLIPSTREAM
 }
 
 export const AVATAR_COSMETIC_TITLES: Partial<

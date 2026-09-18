@@ -2,7 +2,14 @@ import type { AvatarCosmeticId } from "../../../types/enum/AvatarCosmetic"
 
 export type { AvatarCosmeticId } from "../../../types/enum/AvatarCosmetic"
 
-export type AvatarTrail = "confetti" | "fire" | "flowers" | "electric" | "water"
+export type AvatarTrail =
+  | "confetti"
+  | "fire"
+  | "flowers"
+  | "electric"
+  | "water"
+  | "dragonKing"
+  | "slipstream"
 
 export interface AvatarCosmetic {
   id: AvatarCosmeticId
@@ -52,6 +59,20 @@ export const AVATAR_COSMETICS: readonly AvatarCosmetic[] = [
     description: "Ride a foaming wave with sparkling bubbles in your wake.",
     trail: "water",
     emissionIntervalMs: 90
+  },
+  {
+    id: "dragon-king-trail",
+    name: "Celestial",
+    description: "Awaken the celestial veil.",
+    trail: "dragonKing",
+    emissionIntervalMs: 160
+  },
+  {
+    id: "slipstream-trail",
+    name: "Wind Trail",
+    description: "Soft tailwinds drift through your wake.",
+    trail: "slipstream",
+    emissionIntervalMs: 230
   }
 ]
 

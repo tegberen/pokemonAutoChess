@@ -34,18 +34,34 @@ type AuraLayer = {
 type ActiveAura = {
   avatar: PokemonAvatar
   trail: AvatarTrail
-  sprites: Phaser.GameObjects.Sprite[]
+  sprites: Phaser.GameObjects.GameObject[]
   electricGlow?: Phaser.Filters.Glow
   surfSwell?: Phaser.GameObjects.Container
+  dragonKingGlow?: Phaser.Filters.Glow
+  dragonKingSprites?: Array<
+    Phaser.GameObjects.Image | Phaser.GameObjects.Sprite
+  >
+  dragonKingAlphas?: number[]
+  dragonKingFadeIn?: Phaser.Tweens.Tween
+  dragonKingFade?: Phaser.Tweens.Tween
+  dragonKingGlowFade?: Phaser.Tweens.Tween
+  dragonKingUnderlays?: Phaser.GameObjects.Image[]
+  dragonKingUnderlayAlphas?: number[]
+  dragonKingUnderlayFade?: Phaser.Tweens.Tween
 }
 
 const MAX_ACTIVE_TRAIL_EFFECTS = 48
+const DRAGON_KING_IDLE_GRACE_MS = 2000
+const DRAGON_KING_AURA_FADE_MS = 1800
+const SLIPSTREAM_FEATHER = "PRETTY_FEATHER"
 const TRAIL_LIFETIME_MS: Record<AvatarTrail, number> = {
   confetti: 1300,
   flowers: 1400,
   electric: 480,
   water: 750,
-  fire: 560
+  fire: 560,
+  dragonKing: 700,
+  slipstream: 1700
 }
 
 const AURA_LAYERS: Partial<Record<AvatarTrail, AuraLayer[]>> = {
@@ -102,7 +118,8 @@ export class AvatarCosmeticsRenderer {
     this.states.set(playerId, state)
 
     if (!moving) {
-      this.removeAura(playerId)
+      if (cosmetic.trail === "dragonKing") this.fadeDragonKingAura(playerId)
+      else this.removeAura(playerId)
       state.elapsed = 0
       state.lastX = avatar.x
       state.lastY = avatar.y
@@ -190,7 +207,24 @@ export class AvatarCosmeticsRenderer {
     trail: AvatarTrail
   ) {
     const current = this.activeAuras.get(playerId)
-    if (current?.trail === trail && current.avatar === avatar) return
+    if (current?.trail === trail && current.avatar === avatar) {
+      if (trail === "dragonKing" && current.dragonKingFade) {
+        current.dragonKingFade.stop()
+        current.dragonKingFade = undefined
+        current.dragonKingGlowFade?.stop()
+        current.dragonKingGlowFade = undefined
+        if (current.dragonKingGlow) current.dragonKingGlow.outerStrength = 1.05
+        current.dragonKingUnderlayFade?.stop()
+        current.dragonKingUnderlayFade = undefined
+        current.dragonKingUnderlays?.forEach((underlay, index) => {
+          underlay.setAlpha(current.dragonKingUnderlayAlphas?.[index] ?? 1)
+        })
+        current.dragonKingSprites?.forEach((sprite, index) => {
+          sprite.setAlpha(current.dragonKingAlphas?.[index] ?? 1)
+        })
+      }
+      return
+    }
     this.removeAura(playerId)
 
     if (trail === "water") {
@@ -269,6 +303,200 @@ export class AvatarCosmeticsRenderer {
       })
       return
     }
+    if (trail === "dragonKing") {
+      const startingPhase = Phaser.Math.Between(0, 359)
+      const orbitPhase = (base: number) =>
+        (startingPhase + base + Phaser.Math.Between(-20, 20) + 360) % 360
+      const underlays = [
+        this.createDragonKingVoidHaze(avatar),
+        this.createDragonKingUnderlay(avatar)
+      ]
+      const sprites = [
+        ...underlays,
+        this.createDragonKingCurrent(
+          avatar,
+          orbitPhase(248),
+          48,
+          29,
+          0.16,
+          3.2,
+          0.62,
+          0xa04dd1,
+          4800
+        ),
+        this.createDragonKingCurrent(
+          avatar,
+          orbitPhase(82),
+          45,
+          27,
+          0.12,
+          3.5,
+          0.56,
+          0xef6a32,
+          5600
+        ),
+        this.createDragonKingCurrent(
+          avatar,
+          orbitPhase(322),
+          58,
+          35,
+          0.1,
+          4.4,
+          0.54,
+          0xae54d8,
+          3600
+        ),
+        this.createDragonKingOrb(
+          avatar,
+          "DRAGON_PULSE",
+          orbitPhase(0),
+          50,
+          32,
+          0.85,
+          0x9a45c4,
+          0.66,
+          5900
+        ),
+        this.createDragonKingOrb(
+          avatar,
+          "DRAGON_PULSE",
+          orbitPhase(180),
+          46,
+          30,
+          0.72,
+          0xe95c30,
+          0.56,
+          5400
+        ),
+        this.createDragonKingOrb(
+          avatar,
+          "WISP",
+          orbitPhase(92),
+          43,
+          34,
+          0.72,
+          0x813bb1,
+          0.58,
+          4400
+        ),
+        this.createDragonKingOrb(
+          avatar,
+          "WISP",
+          orbitPhase(272),
+          39,
+          30,
+          0.6,
+          0xa143a9,
+          0.5,
+          4600
+        ),
+        this.createDragonKingOrb(
+          avatar,
+          "DRAGON_ENERGY",
+          orbitPhase(48),
+          57,
+          36,
+          0.16,
+          0x9b4dc1,
+          0.32,
+          3600
+        ),
+        this.createDragonKingOrb(
+          avatar,
+          "DRAGON_ENERGY",
+          orbitPhase(228),
+          54,
+          34,
+          0.14,
+          0xe66035,
+          0.28,
+          4100
+        ),
+        this.createDragonKingOrb(
+          avatar,
+          "DRAGON_ENERGY",
+          orbitPhase(136),
+          62,
+          39,
+          0.11,
+          0x9348b8,
+          0.22,
+          3300
+        ),
+        this.createDragonKingOrb(
+          avatar,
+          "ELECTRIC/hit",
+          orbitPhase(36),
+          26,
+          18,
+          0.24,
+          0xa75ddd,
+          0.7,
+          1800
+        ),
+        this.createDragonKingOrb(
+          avatar,
+          "ELECTRIC/hit",
+          orbitPhase(168),
+          23,
+          16,
+          0.2,
+          0xe06a3c,
+          0.58,
+          2200
+        ),
+        this.createDragonKingOrb(
+          avatar,
+          "ELECTRIC/hit",
+          orbitPhase(284),
+          20,
+          14,
+          0.17,
+          0x7d49b5,
+          0.5,
+          1600
+        )
+      ]
+      const dragonKingSprites = sprites.slice(underlays.length) as Array<
+        Phaser.GameObjects.Image | Phaser.GameObjects.Sprite
+      >
+      const dragonKingAlphas = dragonKingSprites.map((sprite) => sprite.alpha)
+      dragonKingSprites.forEach((sprite) => sprite.setAlpha(0))
+      const fadeInDriver = { progress: 0 }
+      const dragonKingFadeIn = this.scene.tweens.add({
+        targets: fadeInDriver,
+        progress: 1,
+        duration: 600,
+        ease: "Sine.easeOut",
+        onUpdate: () => {
+          dragonKingSprites.forEach((sprite, index) => {
+            sprite.setAlpha(dragonKingAlphas[index] * fadeInDriver.progress)
+          })
+        }
+      })
+      let dragonKingGlow: Phaser.Filters.Glow | undefined
+      if (this.scene.game.renderer.type === Phaser.WEBGL) {
+        avatar.sprite.enableFilters()
+        dragonKingGlow = avatar.sprite.filters?.internal.addGlow(
+          0x9e4bcb,
+          1.05,
+          0,
+          0.09
+        )
+      }
+      this.activeAuras.set(playerId, {
+        avatar,
+        trail,
+        sprites,
+        dragonKingGlow,
+        dragonKingSprites,
+        dragonKingAlphas,
+        dragonKingFadeIn,
+        dragonKingUnderlays: underlays,
+        dragonKingUnderlayAlphas: underlays.map((underlay) => underlay.alpha)
+      })
+      return
+    }
 
     const sprites = (AURA_LAYERS[trail] ?? []).map((layer) => {
       const sprite = this.scene.add
@@ -308,8 +536,61 @@ export class AvatarCosmeticsRenderer {
       if (filters) filters.remove(aura.electricGlow)
       else aura.electricGlow.destroy()
     }
-    aura.sprites.forEach((sprite) => sprite.destroy())
+    if (aura.dragonKingGlow) {
+      const filters = aura.avatar.sprite.filters?.internal
+      if (filters) filters.remove(aura.dragonKingGlow)
+      else aura.dragonKingGlow.destroy()
+    }
+    aura.dragonKingFadeIn?.stop()
+    aura.dragonKingFade?.stop()
+    aura.dragonKingGlowFade?.stop()
+    aura.dragonKingUnderlayFade?.stop()
+    aura.sprites.forEach((sprite) => {
+      this.scene.tweens.killTweensOf(sprite)
+      sprite.destroy()
+    })
     this.activeAuras.delete(playerId)
+  }
+
+  private fadeDragonKingAura(playerId: string) {
+    const aura = this.activeAuras.get(playerId)
+    if (
+      !aura ||
+      aura.trail !== "dragonKing" ||
+      aura.dragonKingFade ||
+      !aura.dragonKingSprites?.length
+    ) {
+      return
+    }
+    aura.dragonKingFadeIn?.stop()
+    aura.dragonKingFade = this.scene.tweens.add({
+      targets: aura.dragonKingSprites,
+      alpha: 0,
+      delay: DRAGON_KING_IDLE_GRACE_MS,
+      duration: DRAGON_KING_AURA_FADE_MS,
+      ease: "Sine.easeOut",
+      onComplete: () => {
+        if (this.activeAuras.get(playerId) === aura) this.removeAura(playerId)
+      }
+    })
+    if (aura.dragonKingGlow) {
+      aura.dragonKingGlowFade = this.scene.tweens.add({
+        targets: aura.dragonKingGlow,
+        outerStrength: 0,
+        delay: DRAGON_KING_IDLE_GRACE_MS,
+        duration: DRAGON_KING_AURA_FADE_MS,
+        ease: "Sine.easeOut"
+      })
+    }
+    if (aura.dragonKingUnderlays?.length) {
+      aura.dragonKingUnderlayFade = this.scene.tweens.add({
+        targets: aura.dragonKingUnderlays,
+        alpha: 0,
+        delay: DRAGON_KING_IDLE_GRACE_MS,
+        duration: DRAGON_KING_AURA_FADE_MS,
+        ease: "Sine.easeOut"
+      })
+    }
   }
 
   private createState(avatar: PokemonAvatar): TrailState {
@@ -332,6 +613,15 @@ export class AvatarCosmeticsRenderer {
     if (this.activeTrailEffects.size >= MAX_ACTIVE_TRAIL_EFFECTS) return
     const accent = state.emissions % 6 === 0
     if (trail === "fire") this.spawnTrailingFlame(x, y, accent)
+    if (trail === "dragonKing") return
+    if (trail === "slipstream") {
+      const primarySide: -1 | 1 = state.emissions % 2 === 0 ? -1 : 1
+      this.spawnSlipstreamGust(x, y, state, primarySide)
+      if (state.emissions % 3 === 0) {
+        this.spawnSlipstreamFeather(x, y, state, accent, primarySide)
+      }
+      return
+    }
     const effect = this.createGraphics(x, y)
     if (!effect) return
 
@@ -498,6 +788,204 @@ export class AvatarCosmeticsRenderer {
     }
   }
 
+  private createDragonKingCurrent(
+    avatar: PokemonAvatar,
+    phase: number,
+    radiusX: number,
+    radiusY: number,
+    scale: number,
+    stretch: number,
+    alpha: number,
+    tint: number,
+    duration: number,
+    additive = true
+  ) {
+    const avatarScale = Math.max(
+      1,
+      Math.max(avatar.sprite.displayWidth, avatar.sprite.displayHeight) / 64
+    )
+    const orbitRadiusX = radiusX * avatarScale
+    const orbitRadiusY = radiusY * avatarScale
+    const orbitScale = scale * avatarScale
+    const image = this.scene.add
+      .image(0, -7, this.getDragonKingGlowTexture())
+      .setOrigin(0.5)
+      .setBlendMode(
+        additive ? Phaser.BlendModes.ADD : Phaser.BlendModes.MULTIPLY
+      )
+      .setTint(tint)
+      .setAlpha(alpha)
+    avatar.add(image)
+    const orbitingImage = image as Phaser.GameObjects.Image & {
+      orbitAngle: number
+    }
+    orbitingImage.orbitAngle = phase
+
+    const setCurrentPosition = () => {
+      const angle = Phaser.Math.DegToRad(orbitingImage.orbitAngle)
+      const breathe = 0.84 + Math.sin(angle * 2) * 0.16
+      image
+        .setPosition(
+          Math.cos(angle) * orbitRadiusX,
+          -7 + Math.sin(angle) * orbitRadiusY
+        )
+        .setRotation(angle + Math.PI / 2)
+        .setScale(
+          orbitScale * stretch * breathe,
+          orbitScale * (0.5 + breathe * 0.2)
+        )
+      if (Math.sin(angle) < -0.15) avatar.sendToBack(image)
+      else avatar.bringToTop(image)
+    }
+    setCurrentPosition()
+    this.scene.tweens.add({
+      targets: orbitingImage,
+      orbitAngle: phase + 360,
+      duration,
+      ease: "Sine.easeInOut",
+      repeat: -1,
+      onUpdate: setCurrentPosition
+    })
+    return image
+  }
+
+  private getDragonKingGlowTexture() {
+    const textureKey = "dragon-king-elder-glow"
+    if (this.scene.textures.exists(textureKey)) return textureKey
+
+    const size = 128
+    const texture = this.scene.textures.createCanvas(textureKey, size, size)
+    if (!texture) return textureKey
+    const context = texture.getContext()
+    const radius = size / 2
+    const gradient = context.createRadialGradient(
+      radius,
+      radius,
+      0,
+      radius,
+      radius,
+      radius
+    )
+    gradient.addColorStop(0, "rgba(255,255,255,0.94)")
+    gradient.addColorStop(0.28, "rgba(255,255,255,0.58)")
+    gradient.addColorStop(0.7, "rgba(255,255,255,0.14)")
+    gradient.addColorStop(1, "rgba(255,255,255,0)")
+    context.fillStyle = gradient
+    context.fillRect(0, 0, size, size)
+    texture.refresh()
+    return textureKey
+  }
+
+  private createDragonKingUnderlay(avatar: PokemonAvatar) {
+    const avatarScale = Math.max(
+      1,
+      Math.max(avatar.sprite.displayWidth, avatar.sprite.displayHeight) / 64
+    )
+    const underlay = this.scene.add
+      .image(0, 7, this.getDragonKingGlowTexture())
+      .setOrigin(0.5)
+      .setScale(0.92 * avatarScale, 0.64 * avatarScale)
+      .setBlendMode(Phaser.BlendModes.MULTIPLY)
+      .setTint(0x11243a)
+      .setAlpha(0.48)
+    avatar.add(underlay)
+    avatar.sendToBack(underlay)
+    this.scene.tweens.add({
+      targets: underlay,
+      scaleX: 1.02 * avatarScale,
+      scaleY: 0.7 * avatarScale,
+      duration: 2600,
+      ease: "Sine.easeInOut",
+      yoyo: true,
+      repeat: -1
+    })
+    return underlay
+  }
+
+  private createDragonKingVoidHaze(avatar: PokemonAvatar) {
+    const avatarScale = Math.max(
+      1,
+      Math.max(avatar.sprite.displayWidth, avatar.sprite.displayHeight) / 64
+    )
+    const haze = this.scene.add
+      .image(0, 4, this.getDragonKingGlowTexture())
+      .setOrigin(0.5)
+      .setScale(1.35 * avatarScale, 0.88 * avatarScale)
+      .setBlendMode(Phaser.BlendModes.MULTIPLY)
+      .setTint(0x09182b)
+      .setAlpha(0.3)
+    avatar.add(haze)
+    avatar.sendToBack(haze)
+    this.scene.tweens.add({
+      targets: haze,
+      scaleX: 1.48 * avatarScale,
+      scaleY: 0.96 * avatarScale,
+      duration: 3800,
+      ease: "Sine.easeInOut",
+      yoyo: true,
+      repeat: -1
+    })
+    return haze
+  }
+
+  private createDragonKingOrb(
+    avatar: PokemonAvatar,
+    animation: "DRAGON_ENERGY" | "DRAGON_PULSE" | "ELECTRIC/hit" | "WISP",
+    phase: number,
+    radiusX: number,
+    radiusY: number,
+    scale: number,
+    tint: number,
+    alpha: number,
+    duration: number
+  ) {
+    const avatarScale = Math.max(
+      1,
+      Math.max(avatar.sprite.displayWidth, avatar.sprite.displayHeight) / 64
+    )
+    const orbitRadiusX = radiusX * avatarScale
+    const orbitRadiusY = radiusY * avatarScale
+    const orbitScale = scale * avatarScale
+    const atlas = animation === "ELECTRIC/hit" ? "attacks" : "abilities"
+    const sprite = this.scene.add
+      .sprite(0, -7, atlas, `${animation}/000.png`)
+      .setOrigin(0.5)
+      .setScale(orbitScale)
+      .setAlpha(alpha)
+      .setTint(tint)
+      .setBlendMode(Phaser.BlendModes.ADD)
+    sprite.anims.play({
+      key: animation,
+      repeat: -1,
+      frameRate:
+        animation === "ELECTRIC/hit" ? 20 : animation === "WISP" ? 10 : 12
+    })
+    avatar.add(sprite)
+    sprite.setAngle(phase)
+
+    const setOrbitPosition = () => {
+      const angle = Phaser.Math.DegToRad(sprite.angle)
+      const pulse = 0.9 + Math.sin(angle * 2) * 0.12
+      sprite.setPosition(
+        Math.cos(angle) * orbitRadiusX,
+        -7 + Math.sin(angle) * orbitRadiusY
+      )
+      sprite.setScale(orbitScale * pulse)
+      if (Math.sin(angle) < -0.15) avatar.sendToBack(sprite)
+      else avatar.bringToTop(sprite)
+    }
+    setOrbitPosition()
+    this.scene.tweens.add({
+      targets: sprite,
+      angle: phase + 360,
+      duration,
+      ease: "Linear",
+      repeat: -1,
+      onUpdate: setOrbitPosition
+    })
+    return sprite
+  }
+
   private spawnSurfWake(x: number, y: number, state: TrailState) {
     if (this.activeTrailEffects.size >= MAX_ACTIVE_TRAIL_EFFECTS) return
     const wake = this.scene.add
@@ -651,6 +1139,123 @@ export class AvatarCosmeticsRenderer {
       onComplete: () => {
         this.activeTrailEffects.delete(flame)
         flame.destroy()
+      }
+    })
+  }
+
+  private spawnSlipstreamFeather(
+    x: number,
+    y: number,
+    state: TrailState,
+    accent: boolean,
+    driftDirection: -1 | 1
+  ) {
+    if (this.activeTrailEffects.size >= MAX_ACTIVE_TRAIL_EFFECTS) return
+
+    const sideX = -state.directionY
+    const sideY = state.directionX
+    const driftWidth = Phaser.Math.Between(26, accent ? 48 : 40)
+    const startHeight = Phaser.Math.Between(2, accent ? 18 : 12)
+    const scale =
+      Phaser.Math.FloatBetween(accent ? 0.9 : 0.68, accent ? 1.04 : 0.84) * 0.85
+    const baseAngle = Phaser.Math.Between(-28, 28)
+    const originX = x + state.directionX * 24
+    const originY = y + state.directionY * 24 - 16
+    const startX = originX + sideX * driftDirection * driftWidth * 0.35
+    const startY = originY - startHeight
+    const streamDistance = Phaser.Math.Between(94, accent ? 142 : 122)
+    const endX =
+      startX -
+      state.directionX * streamDistance +
+      sideX * driftDirection * Phaser.Math.Between(8, 22)
+    const endY =
+      startY -
+      state.directionY * streamDistance +
+      sideY * driftDirection * Phaser.Math.Between(8, 22)
+    const flight = { progress: 0 }
+
+    const effect = this.scene.add
+      .image(
+        startX,
+        startY,
+        "abilities",
+        `FEATHER_DANCE/${SLIPSTREAM_FEATHER}.png`
+      )
+      .setOrigin(0.5)
+      .setDepth(DEPTH.ABILITY_BELOW_POKEMON)
+      .setScale(scale)
+      .setAlpha(0)
+      .setAngle(baseAngle)
+    this.activeTrailEffects.add(effect)
+
+    this.scene.tweens.add({
+      targets: flight,
+      progress: 1,
+      duration: Phaser.Math.Between(1250, 1550),
+      ease: "Sine.easeInOut",
+      onUpdate: () => {
+        const progress = flight.progress
+        const sway = Math.sin(progress * Math.PI) * driftDirection
+        const fadeIn = Math.min(1, progress / 0.16)
+        const fadeOut = Math.max(0, 1 - (progress - 0.62) / 0.38)
+        const fade = Math.min(fadeIn, fadeOut)
+        const shrink = 1 - Math.max(0, (progress - 0.58) / 0.42) * 0.58
+
+        effect
+          .setPosition(
+            Phaser.Math.Linear(startX, endX, progress) + sideX * sway * 4,
+            Phaser.Math.Linear(startY, endY, progress) + sideY * sway * 4
+          )
+          .setAngle(baseAngle + driftDirection * (8 + progress * 34) + sway * 8)
+          .setScale(scale * shrink * (1 + sway * 0.025))
+          .setAlpha(0.96 * fade)
+      },
+      onComplete: () => {
+        this.activeTrailEffects.delete(effect)
+        effect.destroy()
+      }
+    })
+  }
+
+  private spawnSlipstreamGust(
+    x: number,
+    y: number,
+    state: TrailState,
+    side: -1 | 1
+  ) {
+    if (this.activeTrailEffects.size >= MAX_ACTIVE_TRAIL_EFFECTS) return
+
+    const sideX = -state.directionY
+    const sideY = state.directionX
+    const heading = Math.atan2(state.directionY, state.directionX)
+    const gust = this.scene.add
+      .sprite(
+        x - state.directionX * 8 + sideX * side * Phaser.Math.Between(34, 62),
+        y - state.directionY * 8 + sideY * side * Phaser.Math.Between(34, 62),
+        "abilities",
+        "TAILWIND/000.png"
+      )
+      .setOrigin(0.5)
+      .setDepth(DEPTH.ABILITY_BELOW_POKEMON)
+      .setRotation(heading + Math.PI / 2)
+      .setScale(1.15, 1.55)
+      .setTint(0xbfeaff)
+      .setBlendMode(Phaser.BlendModes.ADD)
+      .setAlpha(0.34)
+    gust.anims.play({ key: "TAILWIND", repeat: -1, frameRate: 24 })
+    this.activeTrailEffects.add(gust)
+    this.scene.tweens.add({
+      targets: gust,
+      x: gust.x - state.directionX * Phaser.Math.Between(46, 74),
+      y: gust.y - state.directionY * Phaser.Math.Between(46, 74),
+      scaleX: 0.55,
+      scaleY: 0.9,
+      alpha: 0,
+      duration: 720,
+      ease: "Sine.easeOut",
+      onComplete: () => {
+        this.activeTrailEffects.delete(gust)
+        gust.destroy()
       }
     })
   }
