@@ -752,7 +752,7 @@ export const GYM_TRAINER_UNLOCK_STAGE = 9
 export const CURSE_OF_CORAL_LAST_STAGE = 12
 // one per additional pick stage
 export const CHOSEN_ONES_COUNT = 3
-export const CHOSEN_ONES_MAX_HP_GAIN = 5
+export const CHOSEN_ONES_MAX_HP_GAIN = 10
 export const MOLE_MAZE_POP_DELAY = 1100
 export const MOLE_MAZE_EMERGE_DELAY = 2500
 export const HERO_BLESSING_HATCH_MAX_HP = 50

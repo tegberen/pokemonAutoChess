@@ -79,6 +79,7 @@ import { ChargeBeamStrategy } from "./charge-beam"
 import { CharmStrategy } from "./charm"
 import { ChatterStrategy } from "./chatter"
 import { ChloroblastStrategy } from "./chloroblast"
+import { CircuitCannonStrategy } from "./circuit-cannon"
 import { CityShuttleStrategy } from "./city-shuttle"
 import { ClangorousSoulStrategy } from "./clangorous-soul"
 import { CloseCombatStrategy } from "./close-combat"
@@ -832,6 +833,7 @@ export const AbilityStrategies: { [key in Ability]: AbilityStrategy } = {
   [Ability.CHARM]: new CharmStrategy(),
   [Ability.CHATTER]: new ChatterStrategy(),
   [Ability.CHLOROBLAST]: new ChloroblastStrategy(),
+  [Ability.CIRCUIT_CANNON]: new CircuitCannonStrategy(),
   [Ability.CITY_SHUTTLE]: new CityShuttleStrategy(),
   [Ability.CLANGOROUS_SOUL]: new ClangorousSoulStrategy(),
   [Ability.CLOSE_COMBAT]: new CloseCombatStrategy(),

@@ -1830,6 +1830,7 @@
 		"SUPERCELL_SLAM": "Supercell Slam",
 		"HIGH_BREACHING": "High Breaching",
 		"HIGH_HORSEPOWER": "High Horsepower",
+		"CIRCUIT_CANNON": "Circuit Cannon",
 		"CITY_SHUTTLE": "City Shuttle",
 		"BULLET_PUNCH": "Bullet Punch",
 		"EAR_DIG": "Ear Dig",
@@ -2431,6 +2432,7 @@
 		"SUPERCELL_SLAM": "Jump and land in the middle of the enemy team, dealing [10,20,40,80,SP] SPECIAL to all ADJACENT enemy Pokemon and gaining [10,20,40,80,SP] SHIELD",
 		"HIGH_BREACHING": "Gain [15,30,60] SHIELD and deal [10,20,40,SP] SPECIAL to ADJACENT enemies. Every third cast, leap high into the air and crash into the middle of the enemy team, dealing [60,120,240,SP] SPECIAL within 4 tiles and knocking those enemies back 1 tile. Enemies knocked past the edge are washed off the board.",
 		"HIGH_HORSEPOWER": "Charges through the target, then deals [15,30,60,120,SP] SPECIAL to all ADJACENT enemies. If only one enemy is hit, deals double SPECIAL",
+		"CIRCUIT_CANNON": "For [6,SP] seconds, SILENCE the user, gain [10,20,40,SP] SPEED, and replace attacks with cannon shots that deal PHYSICAL to all enemies in a line. Damage is reduced by [20,10,0]% for each enemy the shot passes through, to a minimum of 20% damage.",
 		"CITY_SHUTTLE": "Leap to the closest ally and saddle them on the user's back, then dash to the farthest enemy reachable. Deal [10,20,30,40,SP] SPECIAL + [100,SP]% of the carried ally's ATK to all enemy Pokémon in the path. Grant [20,40,80,160,SP] SHIELD to the user and the carried ally.",
 		"BULLET_PUNCH": "Deal [20,30,40,80,SP] TRUE to the target, then gain [20,30,40,80,SP] SPEED for 2 seconds.",
 		"EAR_DIG": "Deal [30,60,120,240,SP] SPECIAL + [5,10,20,40,SP] per depth level of the hole the target is in. If the target is not in a hole, also dig a hole under them.",
@@ -5430,7 +5432,7 @@
 		},
 		"CHOSEN_ONES": {
 			"name": "Chosen Ones",
-			"description": "When you pick an additional Pokémon, it immediately evolves and cannot be sold. At the start of each fight, if all three are fielded, they each gain 5 permanent max HP."
+			"description": "When you pick an additional Pokémon, it immediately evolves and cannot be sold. At the start of each fight, if all three are fielded, they each gain 10 permanent max HP."
 		},
 		"ADDITIONAL_RETHINK_I": {
 			"name": "Additional Rethink I",

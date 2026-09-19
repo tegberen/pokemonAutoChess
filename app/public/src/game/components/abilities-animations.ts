@@ -3261,6 +3261,151 @@ function moleMazeEmerge(args: AbilityAnimationArgs) {
   })
 }
 
+const CIRCUIT_CANNON_RANGE = 8
+const CIRCUIT_CANNON_TRAVEL = 380
+const CIRCUIT_CANNON_TRAIL_INTERVAL = 18
+const CIRCUIT_CANNON_TRAIL_FADE = 160
+const CIRCUIT_CANNON_GLOW = 0xfff3a0
+
+const circuitCannonSpark = onTarget({
+  ability: HitSprite.ELECTRIC_HIT,
+  textureKey: "attacks",
+  scale: 2,
+  depth: DEPTH.HIT_FX_ABOVE_POKEMON
+})
+
+function circuitCannonShot(args: AbilityAnimationArgs) {
+  const { scene, flip } = args
+  const angleToTarget = Math.atan2(
+    args.targetY - args.positionY,
+    args.targetX - args.positionX
+  )
+  const cellDirection = [Math.cos(angleToTarget), Math.sin(angleToTarget)]
+  const [startX, startY] = transformEntityCoordinates(
+    args.positionX,
+    args.positionY,
+    flip
+  )
+  const [endX, endY] = transformEntityCoordinates(
+    args.positionX + cellDirection[0] * CIRCUIT_CANNON_RANGE,
+    args.positionY + cellDirection[1] * CIRCUIT_CANNON_RANGE,
+    flip
+  )
+  // the attack art points left, hence the half turn
+  const rotation = Math.atan2(endY - startY, endX - startX) + Math.PI
+
+  const muzzle = scene.add
+    .circle(startX, startY, 14, CIRCUIT_CANNON_GLOW)
+    .setBlendMode(Phaser.BlendModes.ADD)
+    .setDepth(DEPTH.ABILITY)
+  scene.abilitiesVfxGroup?.add(muzzle)
+  scene.tweens.add({
+    targets: muzzle,
+    scale: 2.4,
+    alpha: 0,
+    duration: 140,
+    ease: "Cubic.easeOut",
+    onComplete: () => muzzle.destroy()
+  })
+
+  const bolt = addAbilitySprite(
+    scene,
+    AttackSprite.ELECTRIC_RANGE,
+    0,
+    [startX, startY],
+    {
+      textureKey: "attacks",
+      scale: 2,
+      rotation,
+      destroyOnComplete: false,
+      animOptions: { repeat: -1 }
+    }
+  )
+  if (!bolt) return
+  const glow = scene.add
+    .sprite(startX, startY, bolt.texture.key, bolt.frame.name)
+    .setScale(bolt.scaleX * 1.6, bolt.scaleY * 1.6)
+    .setRotation(rotation)
+    .setAlpha(0.45)
+    .setTint(CIRCUIT_CANNON_GLOW)
+    .setBlendMode(Phaser.BlendModes.ADD)
+    .setDepth(DEPTH.ABILITY - 1)
+  scene.abilitiesVfxGroup?.add(glow)
+
+  const trail = scene.time.addEvent({
+    delay: CIRCUIT_CANNON_TRAIL_INTERVAL,
+    loop: true,
+    callback: () => {
+      const ghost = scene.add
+        .sprite(bolt.x, bolt.y, bolt.texture.key, bolt.frame.name)
+        .setScale(bolt.scaleX, bolt.scaleY)
+        .setRotation(rotation)
+        .setAlpha(0.5)
+        .setTint(CIRCUIT_CANNON_GLOW)
+        .setBlendMode(Phaser.BlendModes.ADD)
+        .setDepth(DEPTH.ABILITY - 1)
+      scene.abilitiesVfxGroup?.add(ghost)
+      scene.tweens.add({
+        targets: ghost,
+        alpha: 0,
+        scaleY: 0.2,
+        duration: CIRCUIT_CANNON_TRAIL_FADE,
+        onComplete: () => ghost.destroy()
+      })
+    }
+  })
+
+  scene.tweens.add({
+    targets: [bolt, glow],
+    x: endX,
+    y: endY,
+    duration: CIRCUIT_CANNON_TRAVEL,
+    ease: "Sine.easeIn",
+    onComplete: () => {
+      trail.remove()
+      scene.tweens.add({
+        targets: [bolt, glow],
+        alpha: 0,
+        duration: 80,
+        onComplete: () => {
+          bolt.destroy()
+          glow.destroy()
+        }
+      })
+    }
+  })
+
+  const caster = args.pokemonsOnBoard.find(
+    (sprite) =>
+      sprite.positionX === args.positionX && sprite.positionY === args.positionY
+  )
+  if (!caster || !("team" in caster.pokemon)) return
+  const casterTeam = caster.pokemon.team
+  args.pokemonsOnBoard
+    .filter(
+      (sprite) =>
+        "team" in sprite.pokemon &&
+        sprite.pokemon.team !== casterTeam
+    )
+    .forEach((enemy) => {
+      const relX = enemy.positionX - args.positionX
+      const relY = enemy.positionY - args.positionY
+      const along = relX * cellDirection[0] + relY * cellDirection[1]
+      const across = Math.abs(relX * cellDirection[1] - relY * cellDirection[0])
+      if (along <= 0 || along > CIRCUIT_CANNON_RANGE || across > 0.5) return
+      const progress = along / CIRCUIT_CANNON_RANGE
+      const arrival =
+        (Math.acos(1 - progress) / (Math.PI / 2)) * CIRCUIT_CANNON_TRAVEL
+      scene.time.delayedCall(arrival, () =>
+        circuitCannonSpark({
+          ...args,
+          targetX: enemy.positionX,
+          targetY: enemy.positionY
+        })
+      )
+    })
+}
+
 const FIGHTING_THROW_FIST_HOLD = 700
 const FIGHTING_THROW_FIST_SCALE = 3
 
@@ -5165,6 +5310,12 @@ export const AbilitiesAnimations: {
     endPositionOffset: [0, -80]
   }),
   [Ability.MAGNET_BOMB]: projectile({ duration: 400 }),
+  [Ability.CIRCUIT_CANNON]: onCaster({
+    ability: Ability.MAGNET_BOMB,
+    depth: DEPTH.ABILITY_BELOW_POKEMON,
+    animOptions: { repeat: 2 }
+  }),
+  ["CIRCUIT_CANNON_SHOT"]: circuitCannonShot,
   ["ELECTRO_SHOT_CHARGE"]: onCaster({
     ability: Ability.MAGNET_BOMB,
     depth: DEPTH.ABILITY_BELOW_POKEMON,

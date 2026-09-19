@@ -17052,9 +17052,9 @@ export class Grubbin extends Pokemon {
   speed = 39
   def = 3
   speDef = 3
-  maxPP = 85
+  maxPP = 60
   range = 3
-  skill = Ability.ZAP_CANNON
+  skill = Ability.CIRCUIT_CANNON
 }
 
 export class Charjabug extends Pokemon {
@@ -17071,9 +17071,9 @@ export class Charjabug extends Pokemon {
   speed = 39
   def = 4
   speDef = 4
-  maxPP = 85
+  maxPP = 60
   range = 3
-  skill = Ability.ZAP_CANNON
+  skill = Ability.CIRCUIT_CANNON
 }
 
 export class Vikavolt extends Pokemon {
@@ -17089,9 +17089,9 @@ export class Vikavolt extends Pokemon {
   speed = 39
   def = 5
   speDef = 5
-  maxPP = 85
+  maxPP = 60
   range = 3
-  skill = Ability.ZAP_CANNON
+  skill = Ability.CIRCUIT_CANNON
 }
 
 export class ShellosWestSea extends Pokemon {

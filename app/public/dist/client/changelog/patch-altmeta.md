@@ -483,9 +483,11 @@ Every balance change on this server, newest first.
 **Pokémon**
 - Teddiursa Line | gains LIGHT. Bloodmoon Ursaluna | ROCK → LIGHT
 - Sewaddle Line | now regional
+- Grubbin Line | Zap Cannon → Circuit Cannon, max PP 85 → 60
 
 **Abilities**
 - Eruption | damage 30/60/90 → 30/50/70
+- Circuit Cannon {{new}} | for 6 seconds, SILENCE the user, gain 10/20/40 SPEED, and replace attacks with cannon shots that deal PHYSICAL to all enemies in a line, losing 20/10/0% damage per enemy passed through, down to 20%
 
 **Wishes**
 - High Breaching | stage 4 or 12 → stage 12 only
@@ -494,7 +496,7 @@ Every balance change on this server, newest first.
 - Rampage | no longer doubles damage after 5 seconds of channeling, each ADJACENT KO now grants 20% CRIT_POWER
 - Icebreaker | a KO now also grants 30 SPEED
 - Curse of Coral | stage 12 → stage 4, Corsola after every PvP round until stage 12
-- Chosen Ones | no more boosted stats, cannot be sold, each gains 5 permanent max HP per fight when all three are fielded
+- Chosen Ones | no more boosted stats, cannot be sold, each gains 10 permanent max HP per fight when all three are fielded
 - Fogbound Lake | stage 4 only, no movement on the stage 10 carousel, Unique selection always includes the Illumise and Volbeat duo
 - Molecular Corrosion | 25% → 20% more damage taken
 - Overload | every 8 → 10 seconds
