@@ -488,6 +488,7 @@ Every balance change on this server, newest first.
 **Abilities**
 - Eruption | damage 30/60/90 → 30/50/70
 - Circuit Cannon {{new}} | for 6 seconds, SILENCE the user, gain 10/20/40 SPEED, and replace attacks with cannon shots that deal PHYSICAL to all enemies in a line, losing 20/10/0% damage per enemy passed through, down to 20%
+- Mole Maze {{new}} | burrow into the ground, becoming untargetable. If a dug hole exists, pop out of a random one and dive back in, then jump out of a new hole next to the target. Each time it jumps out, deal 100% of ATK + DEF as SPECIAL to enemies in that hole and ADJACENT to it. (New holes only last until the end of the fight.)
 
 **Wishes**
 - High Breaching | stage 4 or 12 → stage 12 only
@@ -509,7 +510,7 @@ Every balance change on this server, newest first.
 - Verdant Growth | 5 AP → 10 AP and 1 ATK every 2 seconds
 - Wrapped Up | scarf holders also gain their scarf's base stats a second time
 - Aurora Borealis | unlocks Amaura and opens the fossil menu, instead of gifting one and adding it to the pool
-- Mole Maze {{new}} | Gold Wish at stage 12: gain a Drilbur and add it to the pool, your STRONGEST Drilbur's ability is replaced with Mole Maze: burrow into the ground, becoming untargetable. If a dug hole exists, pop out of a random one and dive back in, then burst out of a new hole next to the target. Each time it jumps out, deal 100% of ATK + DEF as SPECIAL to enemies in that hole and ADJACENT to it. (New holes only last until the end of the fight.)
+- Mole Maze {{new}} | Gold Wish at stage 12: gain a Drilbur and add it to the pool, your STRONGEST Drilbur's ability is replaced with Mole Maze
 
 ### 17 September 2026
 

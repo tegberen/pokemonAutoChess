@@ -2268,7 +2268,7 @@
 		"MAGNET_BOMB": "Launch a magnetic bomb dealing [25,50,100,200,SP] SPECIAL to target, [15,30,60,120,SP] SPECIAL to ADJACENT enemy Pokémon and attracting distant enemy Pokémon. All enemies affected are LOCKED for 1.5 second.",
 		"MUDDY_WATER": "Spurt muddy water at up to 3 enemy Pokémon in front of the user, dealing [40,80,160,320,SP] SPECIAL and applying WOUND and ARMOR_BREAK for 4 seconds.",
 		"ANCIENT_POWER": "Launch rocks at the target, dealing [40,80,120,200,SP] SPECIAL. Raise the user's AP by 25.",
-		"MOLE_MAZE": "Burrow into the ground, becoming untargetable. If a dug hole exists, pop out of a random one and dive back in, then burst out of a new hole next to the target. Each time it jumps out, deal [100,SP]% of ATK + DEF as SPECIAL to enemies in that hole and ADJACENT to it. (New holes only last until the end of the fight.)",
+		"MOLE_MAZE": "Burrow into the ground, becoming untargetable. If a dug hole exists, pop out of a random one and dive back in, then jump out of a new hole next to the target. Each time it jumps out, deal [100,SP]% of ATK + DEF as SPECIAL to enemies in that hole and ADJACENT to it. (New holes only last until the end of the fight.)",
 		"MOON_DREAM": "Put the target to SLEEP for [3,6,9,18] seconds and grant [10,20,30,60,SP] SHIELD to the 3 allied Pokémon closest to the target.",
 		"STONE_AXE": "Deal [30,40,50,100,SP] TRUE to the target and lay STEALTH_ROCKS around them. BOARD_EFFECT: stones deal 10 PHYSICAL per second and WOUND non ROCK Pokémon that walk on it.",
 		"FLASH": "Opponents within a 3-tiles radius are BLINDED for [2,4,6,12,SP,ND=1] seconds.",
