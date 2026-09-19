@@ -7038,7 +7038,7 @@
 	"scribble": {
 		"EVERYONE_IS_HERE": "Everyone is here !",
 		"UNIQUE_STARTER": "Unique Starter",
-		"OMELETTE_COOK": "Omelette Cook",
+		"OMELETTE_COOK": "Legends in the Shells",
 		"DITTO_PARTY": "Ditto Party",
 		"GOTTA_CATCH_EM_ALL": "Gotta catch'em all !",
 		"TECHNOLOGIC": "Technologic",
@@ -7072,7 +7072,7 @@
 	"scribble_description": {
 		"EVERYONE_IS_HERE": "All the additional picks are available immediately!",
 		"UNIQUE_STARTER": "Get a random Unique at stage 1",
-		"OMELETTE_COOK": "Get a Pokémon Egg after stage 1, 2 and 3",
+		"OMELETTE_COOK": "Get a Pokémon Egg after stage 1, 2 and 3. When an egg hatches, gain that Pokémon's Prismatic Wish.",
 		"DITTO_PARTY": "Start with 5 Ditto on your bench. Ditto cannot be found in the shop and cannot be sold.",
 		"GOTTA_CATCH_EM_ALL": "Some Pokémon can be caught before each PvE round",
 		"TECHNOLOGIC": "Choose between 3 tools at stage 2 and 4",

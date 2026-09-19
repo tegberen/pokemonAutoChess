@@ -484,6 +484,7 @@ Every balance change on this server, newest first.
 - Smeargle Scribbles and Whimsy | no longer change Elo
 - Ditto Party | removed from Smeargle Scribbles
 - Whimsy | Shiniest Hunter can no longer be rolled
+- Omelette Cook → Legends in the Shells | each egg that hatches grants that Pokémon's Prismatic Wish
 - Light Show → Science & Arts | Smeargle no longer draws shapes: each stage it asks which of two Pokémon has more of a stat, and a correct answer unlocks a shape. Paint every unlocked shape wherever you want on your board from the panel beside it. shapes are now 8 Tetris pieces, 4 defensive ones built for the front row (SHIELD, DEF, SPE_DEF, HP) and 4 offensive ones to slot in behind (ATK, SPEED, CRIT, starting PP), plus a single-cell Dot for +100 AP. Unlocking every shape grants 3 Gold Bows, and painting the whole canvas earns the new Artist title, no more sketchbook rewards
 
 **Pokémon**

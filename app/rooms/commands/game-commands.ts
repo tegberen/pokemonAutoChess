@@ -62,6 +62,7 @@ import {
   grantRobinGemsReward
 } from "../../services/blessings"
 import { ScribbleShapeType } from "../../config/game/scribble-shapes"
+import { PlayerBlessings } from "../../models/colyseus-models/player-blessings"
 import { rollScribbleQuiz } from "../../services/scribble-quiz"
 import { WATER_FOUNTAIN_REROLL_INTERVAL } from "../../config/game/water-ponds"
 import { AbilityStrategies } from "../../core/abilities/abilities"
@@ -4062,6 +4063,12 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
       [2, 3, 4].includes(this.state.stageLevel)
     ) {
       nbEggsFound = 1
+      // the hatch grants a Wish, which needs the player's blessing state
+      if (!player.blessingsRef) {
+        const owned = new PlayerBlessings()
+        this.state.blessingsByPlayerId.set(player.id, owned)
+        player.blessingsRef = owned
+      }
     }
 
     for (let i = 0; i < nbEggsFound; i++) {

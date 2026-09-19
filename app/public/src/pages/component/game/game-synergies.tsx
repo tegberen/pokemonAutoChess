@@ -10,8 +10,13 @@ import WeatherForecast from "../synergy/weather-forecast"
 
 export default function GameSynergies() {
   const synergies = useAppSelector((state) => state.game.synergiesSpectated)
+  // LEGENDS IN THE SHELLS grants Wishes from hatched eggs even when the lobby
+  // has Wishes turned off
   const blessingsEnabled = useAppSelector(
-    (state) => state.game.blessingsEnabled
+    (state) =>
+      state.game.blessingsEnabled ||
+      (state.game.blessingsByPlayerId[state.game.playerIdSpectated]?.length ??
+        0) > 0
   )
   const showBlessingsBook =
     blessingsEnabled && process.env.MODE === "dev"

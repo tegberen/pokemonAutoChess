@@ -14,12 +14,14 @@ import {
 import { PlayerChoice } from "../../models/colyseus-models/player-choice"
 import {
   Blessing,
+  HERO_BLESSING_FAMILY,
   SELECTIVE_GENETICS_SHINY_ITEM_OPTIONS
 } from "../../types/enum/Blessing"
 import { PokemonActionState } from "../../types/enum/Game"
 import { Item, ShinyItems } from "../../types/enum/Item"
 import { pickNRandomIn } from "../../utils/random"
 import { Passive } from "../../types/enum/Passive"
+import { SpecialGameRule } from "../../types/enum/SpecialGameRule"
 import { Pkm, PkmFamily } from "../../types/enum/Pokemon"
 import { OnEvolutionEffect } from "../effects/effect"
 import { PassiveEffects } from "../effects/passives"
@@ -119,6 +121,20 @@ export const EvolutionManager = {
     ) {
       player.items.push(Item.SAFETY_GOGGLES)
       player.sinnohsCoolestRewardGranted = true
+    }
+
+    if (
+      pokemonBeforeEvolution.name === Pkm.EGG &&
+      player.specialGameRule === SpecialGameRule.OMELETTE_COOK
+    ) {
+      const heroBlessing = (Object.keys(HERO_BLESSING_FAMILY) as Blessing[]).find(
+        (blessing) =>
+          HERO_BLESSING_FAMILY[blessing] === PkmFamily[pokemonEvolved.name]
+      )
+      if (heroBlessing && !player.blessings.includes(heroBlessing)) {
+        player.blessings.push(heroBlessing)
+        player.blessingsRef?.blessings.push(heroBlessing)
+      }
     }
 
     if (
