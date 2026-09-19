@@ -1,5 +1,4 @@
 import { Schema, type } from "@colyseus/schema"
-import type { ScribbleShapeType } from "../../config/game/scribble-shapes"
 import type { Emotion } from "../../types/enum/Emotion"
 import type { Item } from "../../types/enum/Item"
 import type { PkmProposition } from "../../types/enum/Pokemon"
@@ -16,7 +15,8 @@ export type PlayerChoiceType =
   | "mission_order"
   | "wand"
   | "armory_assist"
-  | "scribble_shape"
+  // LIGHT_SHOW: which of `pokemons` has more of `quizStat`
+  | "scribble_quiz"
   // reward kinds in `rewards`; any rolled gem in `items[0]`, components in `items2`
   | "evolution_lab_reward"
   | "blessing"
@@ -35,7 +35,12 @@ export class PlayerChoice extends Schema {
   @type(["string"]) items2: Item[] = []
   @type(["string"]) pokemons: PkmProposition[] = []
   @type(["string"]) armoryOptions: ArmoryOptions[] = []
-  @type(["string"]) scribbleShapes: ScribbleShapeType[] = []
+  @type("string") quizStat: string = ""
+  // kept briefly after answering so the card can show the result
+  @type("int8") quizAnswerIndex: number = -1
+  @type("boolean") quizCorrect: boolean = false
+  @type("string") quizUnlockedShape: string = ""
+  @type(["uint16"]) quizValues: number[] = []
   @type(["string"]) galarFossils: GalarFossil[] = []
   @type(["string"]) rewards: string[] = []
   @type(["boolean"]) shinies: boolean[] = []
@@ -54,7 +59,7 @@ export class PlayerChoice extends Schema {
     items2?: Item[]
     pokemons?: PkmProposition[]
     armoryOptions?: ArmoryOptions[]
-    scribbleShapes?: ScribbleShapeType[]
+    quizStat?: string
     galarFossils?: GalarFossil[]
     rewards?: string[]
     shinies?: boolean[]
@@ -73,7 +78,7 @@ export class PlayerChoice extends Schema {
     if (args.items2) this.items2 = args.items2
     if (args.pokemons) this.pokemons = args.pokemons
     if (args.armoryOptions) this.armoryOptions = args.armoryOptions
-    if (args.scribbleShapes) this.scribbleShapes = args.scribbleShapes
+    if (args.quizStat) this.quizStat = args.quizStat
     if (args.galarFossils) this.galarFossils = args.galarFossils
     if (args.rewards) this.rewards = args.rewards
     if (args.shinies) this.shinies = args.shinies

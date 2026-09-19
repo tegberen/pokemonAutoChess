@@ -9,7 +9,7 @@ import { GameMoneyInfo } from "./game-money-info"
 import GameRarityPercentage from "./game-rarity-percentage"
 import GameRefresh from "./game-refresh"
 import { GameRegionalPokemonsIcon } from "./game-regional-pokemons"
-import { GameScribbleSketchbookIcon } from "./game-scribble-sketchbook"
+import { GameLightShowTab } from "./game-scribble-sketchbook"
 import { GameSeedBagIcon } from "./game-seed-bag"
 import GameStore from "./game-store"
 import { GameStreakInfo } from "./game-streak-info"
@@ -29,6 +29,8 @@ export default function GameShop() {
           <GameMoneyInfo />
           <GameStreakInfo />
           <div className="spacer"></div>
+          <GameLightShowTab />
+          <div className="spacer"></div>
           <GameTeamInfo />
           <div className="game-fossil-unlocks-anchor my-container information">
             <GameFossilUnlocksIcon />
@@ -42,7 +44,6 @@ export default function GameShop() {
         <div className="game-additional-pools">
           <GameAdditionalPokemonsIcon />
           <GameRegionalPokemonsIcon />
-          <GameScribbleSketchbookIcon />
           <GameSeedBagIcon />
         </div>
         <GameStore />

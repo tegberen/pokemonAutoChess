@@ -455,13 +455,15 @@ Choose a **Wish at stages 4 and 12**. Stage-12 synergy-specific offers are tailo
 
 Selectable in Custom Lobbies.
 
+Smeargle Scribbles do not change your Elo.
+
 - **Six Pack**: {{scribble:SIX_PACK}}
 - **Evolution Lab**: {{scribble:EVOLUTION_LAB}}
 - **The Bazaar**: {{scribble:BAZAAR}}
 - **Juggernaut**: {{scribble:JUGGERNAUT}}
 - **Kaiju Battle**: {{scribble:KAIJU_BATTLE}}
 - **Avatar**: {{scribble:AVATAR}}
-- **Light Show**: {{scribble:LIGHT_SHOW}}
+- **Science & Arts**: {{scribble:LIGHT_SHOW}}
 - **Smeargle Pack**: {{scribble:SMEARGLE_PACK}}
 - **Overtime**: {{scribble:OVERTIME}}
 
@@ -479,6 +481,10 @@ Every balance change on this server, newest first.
 
 **Game Mode**
 - Double Up | global PvE nerf
+- Smeargle Scribbles and Whimsy | no longer change Elo
+- Ditto Party | removed from Smeargle Scribbles
+- Whimsy | Shiniest Hunter can no longer be rolled
+- Light Show → Science & Arts | Smeargle no longer draws shapes: each stage it asks which of two Pokémon has more of a stat, and a correct answer unlocks a shape. Paint every unlocked shape wherever you want on your board from the panel beside it. shapes are now 8 Tetris pieces, 4 defensive ones built for the front row (SHIELD, DEF, SPE_DEF, HP) and 4 offensive ones to slot in behind (ATK, SPEED, CRIT, starting PP), plus a single-cell Dot for +100 AP. Unlocking every shape grants 3 Gold Bows, and painting the whole canvas earns the new Artist title, no more sketchbook rewards
 
 **Pokémon**
 - Teddiursa Line | gains LIGHT. Bloodmoon Ursaluna | ROCK → LIGHT

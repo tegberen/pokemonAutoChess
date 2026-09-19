@@ -1,5 +1,6 @@
 import type { ArraySchema, MapSchema, SetSchema } from "@colyseus/schema"
 import type { ScribbleShapeType } from "../config/game/scribble-shapes"
+import type { ScribbleShape } from "../models/colyseus-models/scribble-shape"
 import type { Blessing } from "./enum/Blessing"
 import type { Board } from "../core/board"
 import type Dps from "../core/dps"
@@ -147,6 +148,7 @@ export enum Transfer {
   USER_PROFILE = "USER_PROFILE",
   PICK_BERRY = "PICK_BERRY",
   REMOVE_FLOWER_POT_ITEMS = "REMOVE_FLOWER_POT_ITEMS",
+  SET_SCRIBBLE_PAINTING = "SET_SCRIBBLE_PAINTING",
   RESTORE_FOSSIL = "RESTORE_FOSSIL",
   PRELOAD_MAPS = "PRELOAD_MAPS",
   NPC_DIALOG = "NPC_DIALOG",
@@ -342,6 +344,7 @@ export interface IPlayer {
   gameStats: GameStats
   groundHoles: number[]
   scribbleShapesCollected: ArraySchema<ScribbleShapeType>
+  scribbleShapes: ArraySchema<ScribbleShape>
 }
 
 export interface IPokemon {
@@ -860,7 +863,8 @@ export enum Title {
   // finishing one of Slowking's lessons, and finishing all of them
   BOTANIST = "BOTANIST",
   SCHOLAR = "SCHOLAR",
-  DERPY = "DERPY"
+  DERPY = "DERPY",
+  ARTIST = "ARTIST"
 }
 
 export interface IBoardEvent {

@@ -1,21 +1,3 @@
-/* with a third icon in the pools column, switch to a 2-column grid
-   so the icons don't overflow the shop bar height */
-.game-additional-pools:has(.scribble-sketchbook-icon) {
-  display: grid;
-  grid-template-columns: auto auto;
-  align-content: center;
-  justify-content: center;
-}
-
-/* on smaller screens the pools become a horizontal row (see game-shop.css),
-   keep that behavior with the third icon to avoid horizontal clipping */
-@media (aspect-ratio < 4 / 3) {
-  .game-additional-pools:has(.scribble-sketchbook-icon) {
-    display: flex;
-    flex-direction: row;
-  }
-}
-
 .scribble-sketchbook-icon {
   padding: 5px;
   position: relative;
@@ -61,21 +43,6 @@
   border-radius: 4px;
 }
 
-.scribble-sketchbook-milestones {
-  list-style: none;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0 1em;
-  padding: 0;
-  margin: 0 0 0.5em 0;
-  font-size: 0.8em;
-  opacity: 0.8;
-}
-
-.scribble-sketchbook-milestones li.reached {
-  color: gold;
-}
-
 .scribble-sketchbook-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -102,7 +69,6 @@
 
 .scribble-shape-glyph {
   display: grid;
-  grid-auto-rows: 8px;
   gap: 1px;
   justify-content: center;
 }
@@ -111,13 +77,233 @@
   border-radius: 2px;
 }
 
-.game-choice-scribble-shape-glyph {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 70px;
+
+.light-show-button,
+.light-show-drawer {
+  --fossil-accent: #c9a6ff;
+  --fossil-accent-muted: color-mix(
+    in srgb,
+    var(--fossil-accent) 35%,
+    var(--color-bg-secondary)
+  );
+  --fossil-accent-hover: color-mix(in srgb, var(--fossil-accent) 85%, #fff);
+  --fossil-accent-shadow: color-mix(in srgb, var(--fossil-accent) 72%, #000);
 }
 
-.game-choice-scribble-shape-glyph .scribble-shape-glyph {
-  transform: scale(2);
+.game-light-show-anchor {
+  display: flex;
+  align-items: end;
+  border-radius: 12px 12px 0 0;
+  background-color: #5d4a86;
+  background-image: url("assets/ui/scribble.png");
+  background-position: 10px center;
+  background-repeat: no-repeat;
+  background-size: 28px 28px;
+  pointer-events: initial;
+}
+
+/* beats the 36px padding .game-shop .information sets */
+.game-shop .game-light-show-anchor.information {
+  padding-left: 48px;
+}
+
+.game-light-show-anchor .light-show-button {
+  width: auto;
+}
+
+/* the drag offset is measured from this anchor */
+#game-wrapper .light-show-drawer {
+  top: 9%;
+  left: calc(0.5% + 16.5em);
+  width: 380px;
+  font-size: 0.85em;
+}
+
+.light-show-drawer .draggable-window-content {
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+.light-show-progress {
+  position: relative;
+  height: 1.8em;
+  margin: 0.8em 0.9em 0;
+}
+
+.light-show-progress .my-progress {
+  display: block;
+  height: 100%;
+  margin: 0;
+}
+
+.light-show-progress > span {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+}
+
+.light-show-shapes {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.6em;
+  margin: 0;
+  padding: 0.8em 0.9em;
+  list-style: none;
+}
+
+.light-show-shapes li {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25em;
+  padding: 0.5em 0.3em;
+  text-align: center;
+  opacity: 0.55;
+}
+
+.light-show-shapes li.is-collected {
+  opacity: 1;
+  cursor: var(--cursor-hover);
+}
+
+.light-show-shapes li.is-collected:hover,
+.light-show-shapes li.is-painting {
+  background-color: var(--color-bg-accent);
+}
+
+.light-show-shapes li.is-active {
+  box-shadow:
+    0 0 0 2px var(--shape-color),
+    var(--shadow-clickable);
+}
+
+.light-show-shape-glyph {
+  display: grid;
+  min-height: 38px;
+  place-content: center;
+}
+
+.light-show-shapes h3 {
+  margin: 0;
+  font-size: 0.9em;
+}
+
+.light-show-shapes p {
+  margin: 0;
+  font-size: 0.75em;
+  line-height: 1.25;
+}
+
+.light-show-erase {
+  position: absolute;
+  top: 0.3em;
+  right: 0.3em;
+  display: grid;
+  width: 1.8em;
+  height: 1.8em;
+  padding: 0;
+  place-content: center;
+  border: var(--border-thin);
+  border-radius: 6px;
+  color: var(--color-fg-primary);
+  background: var(--color-bg-secondary);
+  box-shadow: var(--shadow-clickable);
+  font-size: 1em;
+  line-height: 1;
+  appearance: none;
+  cursor: var(--cursor-hover);
+  transition: transform 100ms ease;
+}
+
+.light-show-erase:hover,
+.light-show-erase:focus-visible {
+  transform: scale(1.12);
+}
+
+.light-show-erase:active {
+  box-shadow: none;
+  transform: scale(1.12) translateY(1px);
+}
+
+.light-show-complete {
+  margin: 0 0.9em 0.6em;
+  color: var(--color-bg-accent);
+  font-weight: 700;
+  text-align: center;
+}
+
+.light-show-footer {
+  display: flex;
+  align-items: center;
+  gap: 0.6em;
+  padding: 0.5em 0.75em 0.7em;
+  border-top: var(--border-thin);
+}
+
+.light-show-footer p {
+  flex: 1;
+  margin: 0;
+  color: var(--color-fg-secondary);
+  font-size: 0.8em;
+}
+
+.light-show-footer button {
+  padding: 0.2em 0.7em;
+  font-size: 0.85em;
+  white-space: nowrap;
+}
+
+.game-choice-scribble-quiz-question {
+  margin: 0 0 0.5em;
+  font-size: 1.2em;
+  text-align: center;
+}
+
+.game-choice-scribble-quiz-answer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25em;
+  min-width: 8em;
+}
+
+.game-choice-scribble-quiz-answer > img {
+  width: 80px;
+  height: 80px;
+  image-rendering: pixelated;
+}
+
+.game-choice-scribble-quiz-answer h3 {
+  margin: 0;
+}
+
+.game-choice-scribble-quiz-value {
+  display: flex;
+  align-items: center;
+  gap: 0.3em;
+  font-size: 1.1em;
+  font-weight: 700;
+}
+
+.game-choice-scribble-quiz-value img {
+  width: 1.2em;
+  height: 1.2em;
+}
+
+.game-choice-scribble-quiz-answer.is-right {
+  outline: 4px solid #92cc41;
+}
+
+.game-choice-scribble-quiz-answer.is-wrong {
+  outline: 4px solid #e76e55;
+}
+
+.game-choice-scribble-quiz-result {
+  margin: 0.5em 0 0;
+  color: var(--color-fg-secondary);
+  text-align: center;
 }

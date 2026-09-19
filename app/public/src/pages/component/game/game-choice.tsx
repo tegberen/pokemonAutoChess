@@ -5,6 +5,7 @@ import {
   EVOLUTION_LAB_REWARD_GOLD,
   EVOLUTION_LAB_REWARD_REROLLS
 } from "../../../../../config"
+import type { ScribbleShapeType } from "../../../../../config/game/scribble-shapes"
 import type { PlayerChoice } from "../../../../../models/colyseus-models/player-choice"
 import {
   Item,
@@ -16,7 +17,8 @@ import {
   type Pkm,
   PkmDuo,
   PkmDuos,
-  PkmFamily
+  PkmFamily,
+  PkmIndex
 } from "../../../../../types/enum/Pokemon"
 import { SpecialGameRule } from "../../../../../types/enum/SpecialGameRule"
 import { isIn } from "../../../../../utils/array"
@@ -36,9 +38,8 @@ import { addIconsToDescription, iconRegExp } from "../../utils/descriptions"
 import { cc } from "../../utils/jsx"
 import { LocalStoreKeys, localStore } from "../../utils/store"
 import GamePokemonDuoPortrait from "./game-pokemon-duo-portrait"
-import GamePokemonPortrait from "./game-pokemon-portrait"
+import GamePokemonPortrait, { getCachedPortrait } from "./game-pokemon-portrait"
 import GameSmearglePack from "./game-smeargle-pack"
-import { ScribbleShapeGlyph } from "./game-scribble-sketchbook"
 import "./game-choice.css"
 import { ArmoryOptions, ArmoryOptionsPrice } from "../../../../../types/enum/ArmoryOptions"
 
@@ -211,8 +212,8 @@ export default function GameChoice() {
     message = t("player_choices.choose_wand")
   } else if (choice.type === "armory_assist") {
     message = t("player_choices.choose_armory")
-  } else if (choice.type === "scribble_shape") {
-    message = t("player_choices.choose_scribble_shape")
+  } else if (choice.type === "scribble_quiz") {
+    message = t("player_choices.scribble_quiz_title")
   } else if (choice.type === "evolution_lab_reward") {
     message = t("player_choices.choose_evolution_lab_reward")
   } else if (choice.type === "blessing") {
@@ -399,6 +400,77 @@ export default function GameChoice() {
                 </div>
               )
             })}
+          </div>
+        ) : choice.type === "scribble_quiz" ? (
+          <div className="game-choice-scribble-quiz">
+            <p className="game-choice-scribble-quiz-question">
+              {addIconsToDescription(
+                t("player_choices.scribble_quiz_question", {
+                  stat: choice.quizStat
+                })
+              )}
+            </p>
+            <div className="game-choice-items-list">
+              {choice.pokemons.map((pkm, index) => {
+                const isAnswered = choice.quizAnswerIndex !== -1
+                const correctIndex = choice.quizCorrect
+                  ? choice.quizAnswerIndex
+                  : 1 - choice.quizAnswerIndex
+                return (
+                <div
+                  className={cc(
+                    "my-box game-choice-scribble-quiz-answer",
+                    {
+                      "active clickable": !isAnswered,
+                      "is-right": isAnswered && index === correctIndex,
+                      "is-wrong":
+                        isAnswered &&
+                        !choice.quizCorrect &&
+                        index === choice.quizAnswerIndex
+                    }
+                  )}
+                  key={`${choice.id}-${index}`}
+                  onClick={(event) => {
+                    event.stopPropagation()
+                    if (isAnswered) return
+                    playSound(SOUNDS.BUTTON_CLICK)
+                    pickChoice(choice.id, index)
+                  }}
+                >
+                  <img
+                    src={getCachedPortrait(
+                      PkmIndex[pkm as Pkm],
+                      connectedPlayer?.pokemonCustoms
+                    )}
+                    alt=""
+                    draggable="false"
+                  />
+                  <h3>{t(`pkm.${pkm as Pkm}`)}</h3>
+                  {isAnswered && choice.quizValues[index] !== undefined && (
+                    <span className="game-choice-scribble-quiz-value">
+                      <img
+                        src={`assets/icons/${choice.quizStat}.png`}
+                        alt=""
+                        draggable="false"
+                      />
+                      {choice.quizValues[index]}
+                    </span>
+                  )}
+                </div>
+                )
+              })}
+            </div>
+            {choice.quizAnswerIndex !== -1 && (
+              <p className="game-choice-scribble-quiz-result">
+                {choice.quizCorrect && choice.quizUnlockedShape
+                  ? t("scribble_quiz_correct", {
+                      shape: t(
+                        `scribble_shape.${choice.quizUnlockedShape as ScribbleShapeType}`
+                      )
+                    })
+                  : t("scribble_quiz_wrong")}
+              </p>
+            )}
           </div>
         ) : choice.pokemons.length > 0 ? (
           <div className="game-choice-pokemons-list">
@@ -592,48 +664,6 @@ export default function GameChoice() {
                 </h3>
               </div>
             ))}
-          </div>
-        ) : choice.scribbleShapes.length > 0 ? (
-          <div className="game-choice-items-list">
-            {choice.scribbleShapes.map((shapeType, index) => {
-              const isCollected =
-                connectedPlayer?.scribbleShapesCollected.includes(shapeType) ??
-                false
-              return (
-                <div
-                  className="my-box active clickable game-choice-scribble-shape"
-                  key={`${choice.id}-${index}`}
-                  onClick={(event) => {
-                    event.stopPropagation()
-                    playSound(SOUNDS.BUTTON_CLICK)
-                    pickChoice(choice.id, index)
-                  }}
-                >
-                  <div className="game-choice-scribble-shape-glyph">
-                    <ScribbleShapeGlyph shapeType={shapeType} collected={true} />
-                  </div>
-                  <h3 style={{ margin: "0.25em 0" }}>
-                    {t(`scribble_shape.${shapeType}`)}
-                  </h3>
-                  <p style={{ marginBottom: "0.5em" }}>
-                    {addIconsToDescription(
-                      t(`scribble_shape_effect.${shapeType}`)
-                    )}
-                  </p>
-                  <p
-                    className="help"
-                    style={{
-                      marginBottom: "0.5em",
-                      color: isCollected ? "gold" : undefined
-                    }}
-                  >
-                    {isCollected
-                      ? t("scribble_shape_already_collected")
-                      : t("scribble_shape_not_collected")}
-                  </p>
-                </div>
-              )
-            })}
           </div>
         ) : choice.items.length > 0 ? (
           <div className="game-choice-items-list">

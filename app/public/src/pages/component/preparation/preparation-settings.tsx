@@ -30,7 +30,8 @@ import "./preparation-menu.css"
 
 const unavailableScribbleRules: SpecialGameRule[] = [
   SpecialGameRule.DO_IT_ALL_YOURSELF,
-  SpecialGameRule.HALLOWEEN
+  SpecialGameRule.HALLOWEEN,
+  SpecialGameRule.DITTO_PARTY
 ]
 
 export default function PreparationSettings() {

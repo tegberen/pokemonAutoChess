@@ -1128,47 +1128,33 @@ export default class Simulation extends Schema implements ISimulation {
     entity.status.light = true
     entity.status.lightTint = ScribbleShapeTint[shapeType]
     switch (shapeType) {
-      case ScribbleShapeType.DOT:
-        entity.addAttack(Math.ceil(entity.atk * 0.5), entity, 0, false)
-        entity.addAbilityPower(50, entity, 0, false)
+      case ScribbleShapeType.WALL:
+        entity.addShield(Math.ceil(entity.maxHP * 0.5), entity, 0, false)
         break
-      case ScribbleShapeType.LINE:
-        entity.addAttack(Math.ceil(entity.atk * 0.5), entity, 0, false)
-        break
-      case ScribbleShapeType.COLUMN:
-        entity.addSpecialDefense(entity.speDef, entity, 0, false)
-        break
-      case ScribbleShapeType.L:
-        entity.addLuck(30, entity, 0, false)
-        break
-      case ScribbleShapeType.SQUARE:
+      case ScribbleShapeType.BASTION:
         entity.addDefense(entity.def, entity, 0, false)
         break
-      case ScribbleShapeType.T:
-        entity.addAbilityPower(50, entity, 0, false)
+      case ScribbleShapeType.BLOCK:
+        entity.addSpecialDefense(entity.speDef, entity, 0, false)
         break
-      case ScribbleShapeType.TRIANGLE:
-        entity.addPP(Math.ceil(entity.maxPP * 0.3), entity, 0, false)
+      case ScribbleShapeType.HOOK:
+        entity.addMaxHP(Math.ceil(entity.maxHP * 0.5), entity, 0, false)
         break
-      case ScribbleShapeType.ZIGZAG:
-        entity.effectsSet.add(
-          new OnAttackEffect(({ pokemon }) => {
-            pokemon.addSpeed(5, pokemon, 0, false)
-          })
-        )
+      case ScribbleShapeType.SPIKE:
+        entity.addAttack(Math.ceil(entity.atk * 0.5), entity, 0, false)
         break
-      case ScribbleShapeType.DIAGONAL:
+      case ScribbleShapeType.RUSH:
         entity.addSpeed(30, entity, 0, false)
         break
-      case ScribbleShapeType.X:
-        entity.addCritChance(30, entity, 0, false)
-        entity.addCritPower(30, entity, 0, false)
+      case ScribbleShapeType.ZIGZAG:
+        entity.addCritChance(25, entity, 0, false)
+        entity.addCritPower(25, entity, 0, false)
         break
-      case ScribbleShapeType.PLUS:
-        entity.addMaxHP(Math.ceil(entity.maxHP * 0.3), entity, 0, false)
+      case ScribbleShapeType.SPARK:
+        entity.addPP(Math.ceil(entity.maxPP * 0.3), entity, 0, false)
         break
-      case ScribbleShapeType.RING:
-        entity.addShield(Math.ceil(entity.maxHP * 0.4), entity, 0, false)
+      case ScribbleShapeType.DOT:
+        entity.addAbilityPower(100, entity, 0, false)
         break
     }
   }

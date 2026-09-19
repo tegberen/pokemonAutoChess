@@ -34,7 +34,12 @@ import { Weather } from "../../types/enum/Weather"
 const unavailableScribbleRules = [
   SpecialGameRule.DO_IT_ALL_YOURSELF,
   SpecialGameRule.HALLOWEEN,
-  SpecialGameRule.PLAY_TEST
+  SpecialGameRule.PLAY_TEST,
+  SpecialGameRule.DITTO_PARTY
+]
+const unavailableWhimsyRules = [
+  ...unavailableScribbleRules,
+  SpecialGameRule.SHINIEST_HUNTER
 ]
 import { pickRandomIn, randomBetween } from "../../utils/random"
 
@@ -171,7 +176,7 @@ export default class GameState extends Schema {
       // before the deadline still gets its rule
       this.specialGameRule = pickRandomIn(
         Object.values(SpecialGameRule).filter(
-          (rule) => unavailableScribbleRules.includes(rule) === false
+          (rule) => unavailableWhimsyRules.includes(rule) === false
         )
       )
     } else {

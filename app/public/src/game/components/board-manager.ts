@@ -6,7 +6,12 @@ import {
   BENCH_GROUND_HOLES_OFFSET,
   BERRY_TREE_POSITIONS,
   BOARD_HEIGHT,
+  BOARD_SIDE_HEIGHT,
   BOARD_WIDTH,
+  BOARD_X_START,
+  BOARD_Y_START,
+  CELL_HEIGHT,
+  CELL_WIDTH,
   getRegionTint,
   ItemStats,
   packBoardCell,
@@ -16,7 +21,11 @@ import {
 } from "../../../../config"
 import { getMusicAlt } from "../../../../config/game/music"
 import {
+  getScribbleShapeCellsAt,
+  getScribbleShapeSize,
   SCRIBBLE_LABEL_FADE_DURATION,
+  SCRIBBLE_PAINTING_EVENT,
+  type ScribbleShapeType,
   ScribbleShapeTint
 } from "../../../../config/game/scribble-shapes"
 import {
@@ -67,6 +76,12 @@ import { Weather } from "../../../../types/enum/Weather"
 import type { NonFunctionPropNames } from "../../../../types/HelperTypes"
 import { getBenchSize, isOnBench } from "../../../../utils/board"
 import { logger } from "../../../../utils/logger"
+import { clamp } from "../../../../utils/number"
+import {
+  getPaintSplashTexture,
+  PAINT_SPLASH_ALPHA,
+  PAINT_SPLASH_SCALE
+} from "./paint-splash"
 import { pickRandomIn, randomBetween } from "../../../../utils/random"
 import { schemaValues } from "../../../../utils/schemas"
 import { GamePokemonDetailDOMWrapper } from "../../pages/component/game/game-pokemon-detail"
@@ -113,6 +128,7 @@ export const SPECIAL_NPC_Y = 396 - 48 * 1.4
    Effects and Battle Stats panels, of the lesson card docked under the stage
    bar, and of the shop along the bottom. */
 const GUIDE_MESSAGE_MAX_WIDTH = 520
+const SCRIBBLE_BLOCKED_TINT = 0xff4444
 const GUIDE_MESSAGE_AREA = {
   left: 540,
   right: 1740,
@@ -140,6 +156,9 @@ export default class BoardManager {
   lightCell: Phaser.GameObjects.Sprite | null
   treasureTrailCell: Phaser.GameObjects.Sprite | null = null
   scribbleCells: Phaser.GameObjects.Sprite[] = []
+  scribblePaintingType: ScribbleShapeType | null = null
+  scribblePaintingOrigin: { x: number; y: number } | null = null
+  scribblePaintingGhost: Phaser.GameObjects.Sprite[] = []
   pondCells: Phaser.GameObjects.Sprite[] = []
   reveilleSlotMarks: Phaser.GameObjects.Image[] = []
   pondCellIndices: number[] = []
@@ -611,18 +630,11 @@ export default class BoardManager {
         const { x, y } = unpackBoardCell(cell)
         return transformBoardCoordinates(x, y)
       })
-      cellCoordinates.forEach(([x, y]) => {
-        const sprite = this.scene.add.sprite(
-          x,
-          y,
-          "abilities",
-          "LIGHT_CELL/000.png"
+      shape.cells.forEach((cell, index) => {
+        const [x, y] = cellCoordinates[index]
+        this.scribbleCells.push(
+          this.addPaintSplash(x, y, ScribbleShapeTint[shape.shapeType], cell)
         )
-        sprite.setDepth(DEPTH.LIGHT_CELL)
-        sprite.setScale(2)
-        sprite.anims.play("LIGHT_CELL")
-        sprite.setTint(ScribbleShapeTint[shape.shapeType])
-        this.scribbleCells.push(sprite)
       })
       addLabel(
         cellCoordinates,
@@ -816,8 +828,112 @@ export default class BoardManager {
     this.pondSplashTimer = null
   }
 
-  // called when the player's scribble shapes change during the pick phase,
-  // after picking the second shape drawn by Smeargle
+  addPaintSplash(x: number, y: number, tint: number, cell: number) {
+    return this.scene.add
+      .sprite(x, y, getPaintSplashTexture(this.scene, tint, cell))
+      .setScale(PAINT_SPLASH_SCALE)
+      .setFlip(cell % 2 === 1, cell % 3 === 1)
+      .setAlpha(PAINT_SPLASH_ALPHA)
+      .setDepth(DEPTH.LIGHT_CELL)
+  }
+
+  startScribblePainting(shapeType: ScribbleShapeType) {
+    if (this.mode !== BoardMode.PICK) return
+    this.stopScribblePainting()
+    this.scribblePaintingType = shapeType
+    this.scene.dispatchEvent(SCRIBBLE_PAINTING_EVENT, shapeType)
+    this.scene.input.on("pointermove", this.moveScribblePainting, this)
+    this.scene.input.on("pointerdown", this.confirmScribblePainting, this)
+    this.scene.input.keyboard?.on("keydown-ESC", this.stopScribblePainting, this)
+    this.moveScribblePainting(this.scene.input.activePointer)
+  }
+
+  stopScribblePainting() {
+    this.scene.input.off("pointermove", this.moveScribblePainting, this)
+    this.scene.input.off("pointerdown", this.confirmScribblePainting, this)
+    this.scene.input.keyboard?.off(
+      "keydown-ESC",
+      this.stopScribblePainting,
+      this
+    )
+    this.scribblePaintingGhost.forEach((sprite) => sprite.destroy())
+    this.scribblePaintingGhost = []
+    if (this.scribblePaintingType !== null) {
+      this.scene.dispatchEvent(SCRIBBLE_PAINTING_EVENT, null)
+    }
+    this.scribblePaintingType = null
+    this.scribblePaintingOrigin = null
+  }
+
+  moveScribblePainting(pointer: Phaser.Input.Pointer) {
+    const shapeType = this.scribblePaintingType
+    if (!shapeType) return
+    const { width, height } = getScribbleShapeSize(shapeType)
+    const pointerX = (pointer.worldX - BOARD_X_START) / CELL_WIDTH
+    const pointerY =
+      (BOARD_Y_START + CELL_HEIGHT / 2 - pointer.worldY) / CELL_HEIGHT - 1
+    const hoveredX = Math.round(pointerX)
+    const hoveredY = Math.round(pointerY)
+    this.scribblePaintingGhost.forEach((sprite) => sprite.destroy())
+    this.scribblePaintingGhost = []
+    this.scribblePaintingOrigin = null
+    const isOverBoard =
+      hoveredX >= 0 &&
+      hoveredX < BOARD_WIDTH &&
+      hoveredY >= 1 &&
+      hoveredY < BOARD_SIDE_HEIGHT
+    if (!isOverBoard) return
+    // centered on the cursor, clamped so wide pieces still show at the edges
+    const originX = clamp(
+      Math.round(pointerX - (width - 1) / 2),
+      0,
+      BOARD_WIDTH - width
+    )
+    const originY = clamp(
+      Math.round(pointerY - (height - 1) / 2),
+      1,
+      BOARD_SIDE_HEIGHT - height
+    )
+    const cells = getScribbleShapeCellsAt(shapeType, originX, originY)
+    if (!cells) return
+
+    const takenCells = new Set(
+      [...this.player.scribbleShapes]
+        .filter((shape) => shape.shapeType !== shapeType)
+        .flatMap((shape) => [...shape.cells])
+    )
+    const fits = cells.every((cell) => !takenCells.has(cell))
+    if (fits) this.scribblePaintingOrigin = { x: originX, y: originY }
+    cells.forEach((cell) => {
+      const { x, y } = unpackBoardCell(cell)
+      const [px, py] = transformBoardCoordinates(x, y)
+      const sprite = this.addPaintSplash(
+        px,
+        py,
+        fits ? ScribbleShapeTint[shapeType] : SCRIBBLE_BLOCKED_TINT,
+        cell
+      )
+        .setDepth(DEPTH.LIGHT_CELL + 1)
+        .setAlpha(0.6)
+      this.scribblePaintingGhost.push(sprite)
+    })
+  }
+
+  confirmScribblePainting(pointer: Phaser.Input.Pointer) {
+    if (pointer.rightButtonDown()) {
+      this.stopScribblePainting()
+      return
+    }
+    const shapeType = this.scribblePaintingType
+    const origin = this.scribblePaintingOrigin
+    if (!shapeType || !origin) return
+    this.scene.room?.send(Transfer.SET_SCRIBBLE_PAINTING, {
+      shapeType,
+      ...origin
+    })
+    this.stopScribblePainting()
+  }
+
   refreshScribbleShapes() {
     if (this.mode !== BoardMode.PICK) return
     this.showScribbleShapes()
@@ -1426,6 +1542,7 @@ export default class BoardManager {
   battleMode(phaseJustChanged: boolean) {
     // logger.debug('battleMode');
     this.mode = BoardMode.BATTLE
+    this.stopScribblePainting()
     this.hideLightCell()
     this.hideTreasureTrailHighlight()
     this.hideScribbleShapes()
@@ -1503,6 +1620,7 @@ export default class BoardManager {
 
   minigameMode() {
     this.mode = BoardMode.TOWN
+    this.stopScribblePainting()
     this.scene.setMap("town")
     if (this.state.townEncounter === TownEncounters.LUDICOLO) {
       playMusic(this.scene, DungeonMusic.CARNIVAL_LUDICOLO)

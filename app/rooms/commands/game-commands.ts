@@ -33,9 +33,7 @@ import {
   SHINY_UNOWN_ENCOUNTER_CHANCE,
   StageDuration,
   TREASURE_BOX_LIFE_THRESHOLD,
-  UNOWN_ENCOUNTER_CHANCE,
-  UniquePool,
-  unpackBoardCell
+  UNOWN_ENCOUNTER_CHANCE
 } from "../../config"
 import {
   Blessings,
@@ -63,11 +61,8 @@ import {
   grantSynergyAwareItem,
   grantRobinGemsReward
 } from "../../services/blessings"
-import {
-  buildScribbleShapeBag,
-  placeScribbleShapeCompatibleWith,
-  rollScribbleShapes
-} from "../../config/game/scribble-shapes"
+import { ScribbleShapeType } from "../../config/game/scribble-shapes"
+import { rollScribbleQuiz } from "../../services/scribble-quiz"
 import { WATER_FOUNTAIN_REROLL_INTERVAL } from "../../config/game/water-ponds"
 import { AbilityStrategies } from "../../core/abilities/abilities"
 import { castAbility } from "../../core/abilities/cast"
@@ -109,7 +104,6 @@ import {
   type Pokemon,
   PokemonClasses
 } from "../../models/colyseus-models/pokemon"
-import { ScribbleShape } from "../../models/colyseus-models/scribble-shape"
 import Synergies, {
   computeSynergies,
   getSynergyTier
@@ -225,7 +219,6 @@ import {
 } from "../../types/enum/Passive"
 import {
   Pkm,
-  PkmDuos,
   PkmFamily,
   PkmIndex,
   PkmRegionalVariants,
@@ -2579,41 +2572,16 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
     }
     if (
       this.state.specialGameRule === SpecialGameRule.LIGHT_SHOW &&
-      this.state.stageLevel % 3 === 1
+      this.state.stageLevel > 0
     ) {
-      // every 3 stages, Smeargle draws one glowing shape on each player's
-      // board and proposes 3 more to choose a second one from. Shapes not yet
-      // collected in the sketchbook are prioritized.
+      const nbShapes = Object.values(ScribbleShapeType).length
       this.state.players.forEach((player: Player) => {
-        if (!player.alive) return
-        player.choices
-          .filter((choice) => choice.type === "scribble_shape")
-          .forEach((choice) => removeInArray(player.choices, choice))
-        const queue = buildScribbleShapeBag([...player.scribbleShapesCollected])
-        player.scribbleShapes.clear()
-        if (player.isBot) {
-          // bots don't make choices, they get both shapes drawn directly
-          rollScribbleShapes(queue.slice(0, 2)).forEach(
-            ({ shapeType, cells }) => {
-              player.scribbleShapes.push(new ScribbleShape(shapeType, cells))
-            }
-          )
-        } else {
-          const proposedShapes = queue.slice(1, 4)
-          // the first shape is placed so that it cannot block any of the
-          // 3 shapes proposed for the second drawing
-          const cells = placeScribbleShapeCompatibleWith(
-            queue[0],
-            proposedShapes
-          )
-          player.scribbleShapes.push(new ScribbleShape(queue[0], cells))
-          player.choices.push(
-            new PlayerChoice({
-              type: "scribble_shape",
-              scribbleShapes: proposedShapes
-            })
-          )
-        }
+        if (!player.alive || player.isBot) return
+        if (player.scribbleShapesCollected.length >= nbShapes) return
+        const { pokemons, stat } = rollScribbleQuiz()
+        player.choices.push(
+          new PlayerChoice({ type: "scribble_quiz", pokemons, quizStat: stat })
+        )
       })
     }
 
@@ -3322,7 +3290,6 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
         "starter",
         "unique",
         "legendary",
-        "scribble_shape",
         "evolution_lab_reward",
         /* a blessing choice left open is a blessing banked: its scheduled
            grants all fire at once when it is finally picked ten stages later */
@@ -3338,7 +3305,6 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
               ? choice.rewards.length
               : choice.pokemons.length ||
                 choice.items.length ||
-                choice.scribbleShapes.length ||
                 choice.blessings.length
           if (nbOptions === 0) return
           /* same rule the client greys the card out with: a blessing that has
@@ -3665,68 +3631,6 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
     })
   }
 
-  updateScribbleSketchbooks() {
-    this.state.players.forEach((player: Player) => {
-      if (!player.alive || player.isBot) return
-      player.scribbleShapes.forEach((shape) => {
-        if (player.scribbleShapesCollected.includes(shape.shapeType)) return
-        const isShapeFilled = shape.cells.every((cell) => {
-          const { x, y } = unpackBoardCell(cell)
-          return schemaValues(player.board).some(
-            (pokemon) => pokemon.positionX === x && pokemon.positionY === y
-          )
-        })
-        if (isShapeFilled) {
-          player.scribbleShapesCollected.push(shape.shapeType)
-          this.giveSketchbookMilestoneReward(player)
-        }
-      })
-    })
-  }
-
-  giveSketchbookMilestoneReward(player: Player) {
-    switch (player.scribbleShapesCollected.length) {
-      case 2:
-        player.items.push(Item.RECYCLE_TICKET)
-        break
-      case 4:
-        player.items.push(pickRandomIn(ItemComponents))
-        player.items.push(pickRandomIn(ItemComponents))
-        break
-      case 6: {
-        const ditto = PokemonFactory.createPokemonFromName(Pkm.DITTO, player)
-        ditto.positionX = getFirstAvailablePositionInBench(player.board, getBenchSize(player.blessings)) ?? 0
-        ditto.positionY = 0
-        player.board.set(ditto.id, ditto)
-        break
-      }
-      case 8:
-        player.shopFreeRolls += 10
-        break
-      case 10:
-        player.life = Math.min(player.maxLife, player.life + 20)
-        break
-      case 12: {
-        const topSynergy = player.synergies.getTopSynergies()[0]
-        const singleUniques = UniquePool.filter(
-          (p): p is Pkm => !(p in PkmDuos)
-        )
-        const matchingUniques = singleUniques.filter((p) =>
-          getPokemonData(p).types.includes(topSynergy)
-        )
-        const unique = pickRandomIn(
-          matchingUniques.length > 0 ? matchingUniques : singleUniques
-        )
-        const pokemon = PokemonFactory.createPokemonFromName(unique, player)
-        pokemon.positionX = getFirstAvailablePositionInBench(player.board, getBenchSize(player.blessings)) ?? 0
-        pokemon.positionY = 0
-        player.board.set(pokemon.id, pokemon)
-        player.pokemonsPlayed.add(unique)
-        break
-      }
-    }
-  }
-
   initializeFightingPhase() {
     this.state.simulations.clear()
     this.state.phase = GamePhaseState.FIGHT
@@ -3752,9 +3656,12 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
       }
     })
 
-    if (this.state.specialGameRule === SpecialGameRule.LIGHT_SHOW) {
-      this.updateScribbleSketchbooks()
-    }
+    // an unanswered question counts as a wrong answer
+    this.state.players.forEach((player: Player) => {
+      player.choices
+        .filter((choice) => choice.type === "scribble_quiz")
+        .forEach((choice) => removeInArray(player.choices, choice))
+    })
 
     const pveStageBase = getPveStage(this.state, this.state.stageLevel)
     if (pveStageBase) {

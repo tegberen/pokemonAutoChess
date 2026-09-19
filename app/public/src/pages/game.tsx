@@ -1070,7 +1070,11 @@ export default function Game() {
             )
           }
           $player.choices.onChange(dispatchChoices)
-          $player.choices.onAdd(dispatchChoices)
+          $player.choices.onAdd((choice) => {
+            dispatchChoices()
+            // SCRIBBLE_QUIZ: answering only changes fields inside the choice
+            $(choice).listen("quizAnswerIndex", dispatchChoices)
+          })
           $player.choices.onRemove(dispatchChoices)
         }
         $player.listen("life", (value, previousValue) => {
@@ -1133,6 +1137,15 @@ export default function Game() {
           )
         })
         $player.scribbleShapes.onChange(() => {
+          dispatch(
+            changePlayer({
+              id: player.id,
+              field: "scribbleShapes",
+              value: schemaValues(player.scribbleShapes).map((shape) => ({
+                shapeType: shape.shapeType
+              }))
+            })
+          )
           if (player.id === store.getState().game.playerIdSpectated) {
             getGameScene()?.board?.refreshScribbleShapes()
           }

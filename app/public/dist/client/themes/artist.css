@@ -1,0 +1,73 @@
+:root {
+  --color-bg-primary: #1f2a44;
+  --color-bg-secondary: #2e3d5e;
+  --color-bg-tertiary: #43557d;
+  --color-bg-accent: #e9b44c;
+
+  --border-thick: 2px solid #121a2c;
+  --border-thin: 1px solid #121a2c;
+  --border-extra-thin: 1px solid #121a2c;
+}
+
+/* the painting Smeargle sits left of centre, so the crop keeps it in view */
+.custom-bg {
+  background-image: url("/assets/theme/artist/custombg.webp");
+  background-size: cover;
+  background-position: 40% center;
+  background-color: #1f2a44;
+}
+
+/* the studio is sunlit, so white lobby text needs a hard shadow */
+.lobby h2 {
+  text-shadow: 0px 3px 6px black;
+}
+
+/* Panels stay see-through onto the studio, a touch heavier than the darker
+   themes since the window light washes white text out */
+.draggable-window.my-container,
+.game-shop .information > div,
+#game-stage-info,
+.game-spectate-player-info.my-container,
+.team-builder-modal.my-container,
+.game-shop.my-container {
+  background-color: color-mix(in srgb, var(--color-bg-primary) 55%, transparent);
+  backdrop-filter: blur(4px);
+}
+
+.after-menu .my-container,
+.leaderboard .my-container,
+.room-menu.my-container,
+.events-menu .my-container {
+  background-color: color-mix(in srgb, var(--color-bg-primary) 52%, transparent);
+  backdrop-filter: blur(4px);
+}
+
+.leaderboard [data-react-window-index]:nth-child(odd) .my-box {
+  background: color-mix(in srgb, var(--color-bg-secondary) 60%, transparent);
+}
+
+.leaderboard [data-react-window-index]:nth-child(even) .my-box {
+  background: color-mix(in srgb, var(--color-bg-primary) 60%, transparent);
+}
+
+.newspaper-card.my-box {
+  background-color: color-mix(in srgb, var(--color-bg-secondary) 55%, transparent);
+}
+
+.scales-ap .ability-value {
+  color: #f4d38a;
+}
+
+/* New Game button — the theme's ochre with ink text, same bubbly style */
+.lobby .play-button.bubbly.green {
+  background: #e9b44c;
+  color: #1f2a44;
+  box-shadow: inset -6px -6px 0px 0px #bf8a2c, var(--shadow-clickable);
+}
+.lobby .play-button.bubbly.green:not([disabled]):hover {
+  background: #f1c56a;
+}
+.lobby .play-button.bubbly.green:not([disabled]):active {
+  background: #e9b44c;
+  box-shadow: inset 6px 6px 0px 0px #bf8a2c, var(--shadow-clickable);
+}

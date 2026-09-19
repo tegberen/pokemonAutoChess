@@ -10,6 +10,8 @@ import admin from "firebase-admin"
 import {
   AdditionalPicksStages,
   ALLOWED_GAME_RECONNECTION_TIME,
+  BOARD_SIDE_HEIGHT,
+  BOARD_WIDTH,
   EVOLUTION_LAB_REWARD_EXP,
   EVOLUTION_LAB_REWARD_GOLD,
   EVOLUTION_LAB_REWARD_REROLLS,
@@ -30,7 +32,10 @@ import {
   STARTER_CHOICE_EXTRA_ROUNDS
 } from "../types/enum/Blessing"
 import { GADGETS } from "../config/game/gadgets"
-import { placeScribbleShape } from "../config/game/scribble-shapes"
+import {
+  getScribbleShapeCellsAt,
+  type ScribbleShapeType
+} from "../config/game/scribble-shapes"
 import { computeElo } from "../core/elo"
 import { EvolutionManager } from "../core/evolution-logic/evolution-manager"
 import { MiniGame } from "../core/mini-game"
@@ -72,6 +77,12 @@ import { updatePlayerTitlesAfterGame } from "../models/titles"
 import { fetchEventLeaderboard } from "../services/leaderboard"
 import { notificationsService } from "../services/notifications"
 import {
+  getScribbleQuizValues,
+  grantRandomScribbleShape,
+  isScribbleQuizAnswerCorrect,
+  SCRIBBLE_QUIZ_FEEDBACK_DURATION
+} from "../services/scribble-quiz"
+import {
   type IDragDropCombineMessage,
   type IDragDropItemMessage,
   type IDragDropMessage,
@@ -95,7 +106,12 @@ import {
   type AvatarCosmeticId
 } from "../types/enum/AvatarCosmetic"
 import type { EloRank } from "../types/enum/EloRank"
-import { GameMode, PokemonActionState, Rarity } from "../types/enum/Game"
+import {
+  GameMode,
+  GamePhaseState,
+  PokemonActionState,
+  Rarity
+} from "../types/enum/Game"
 import {
   Item,
   ItemComponentsNoScarf,
@@ -815,6 +831,22 @@ export default class GameRoom extends Room<{ state: GameState }> {
       }
     })
 
+    this.onMessage(
+      Transfer.SET_SCRIBBLE_PAINTING,
+      (client, painting: { shapeType: ScribbleShapeType; x?: number; y?: number }) => {
+        if (this.state.gameFinished || !client.auth) return
+        if (this.state.specialGameRule !== SpecialGameRule.LIGHT_SHOW) return
+        if (this.state.phase === GamePhaseState.FIGHT) return
+        const player = this.state.players.get(client.auth.uid)
+        if (!player?.alive) return
+        try {
+          this.setScribblePainting(player, painting)
+        } catch (error) {
+          logger.error("error setting scribble painting", error)
+        }
+      }
+    )
+
     this.onMessage(Transfer.LOADING_PROGRESS, (client, progress: number) => {
       if (client.auth) {
         const player = this.state.players.get(client.auth.uid)
@@ -1188,7 +1220,8 @@ export default class GameRoom extends Room<{ state: GameState }> {
     // a guide run is a scripted tutorial, so nothing about it counts
     const eligibleToELO =
       this.state.gameMode !== GameMode.SCRIBBLE &&
-      this.state.gameMode !== GameMode.GUIDE
+      this.state.gameMode !== GameMode.GUIDE &&
+      this.state.specialGameRule == null
     /*!this.state.noElo &&
       (this.state.stageLevel >= MinStageForGameToCount || hasLeftBeforeEnd) &&
       humans.length >= 2*/
@@ -1917,6 +1950,27 @@ export default class GameRoom extends Room<{ state: GameState }> {
     const choice = player.choices.find((c) => c.id === choiceId)
     if (!choice) return
 
+    if (choice.type === "scribble_quiz") {
+      if (choiceIndex !== 0 && choiceIndex !== 1) return
+      if (choice.quizAnswerIndex !== -1) return
+      const values = getScribbleQuizValues(
+        [...choice.pokemons] as Pkm[],
+        choice.quizStat
+      )
+      const isCorrect = isScribbleQuizAnswerCorrect(values, choiceIndex)
+      choice.quizValues = values
+      choice.quizAnswerIndex = choiceIndex
+      choice.quizCorrect = isCorrect
+      choice.quizUnlockedShape = isCorrect
+        ? (grantRandomScribbleShape(player) ?? "")
+        : ""
+      this.clock.setTimeout(
+        () => removeInArray(player.choices, choice),
+        SCRIBBLE_QUIZ_FEEDBACK_DURATION
+      )
+      return
+    }
+
     /* The client greys the other propositions, but the refusal has to be here:
        picking the wrong unique would leave the lesson's step unreachable with
        no way to choose again. */
@@ -2041,9 +2095,7 @@ export default class GameRoom extends Room<{ state: GameState }> {
     if (
       choiceIndex < 0 ||
       choiceIndex >=
-        (choice.pokemons?.length ||
-          choice.items?.length ||
-          choice.scribbleShapes?.length)
+        (choice.pokemons?.length || choice.items?.length)
     )
       return
 
@@ -2214,19 +2266,64 @@ export default class GameRoom extends Room<{ state: GameState }> {
       }
     }
 
-    if (choice.type === "scribble_shape") {
-      const shapeType = choice.scribbleShapes[choiceIndex]
-      const occupiedCells: number[] = []
-      player.scribbleShapes.forEach((shape) =>
-        occupiedCells.push(...shape.cells)
+    removeInArray(player.choices, choice)
+  }
+
+  // without a position the shape is erased
+  setScribblePainting(
+    player: Player,
+    painting: { shapeType: ScribbleShapeType; x?: number; y?: number }
+  ) {
+    const { shapeType, x, y } = painting
+    if (!player.scribbleShapesCollected.includes(shapeType)) return
+    let cells: number[] | null = null
+    if (x !== undefined || y !== undefined) {
+      if (!Number.isInteger(x) || !Number.isInteger(y)) return
+      cells = getScribbleShapeCellsAt(shapeType, x!, y!)
+      if (cells === null) return
+      const otherCells = new Set(
+        player.scribbleShapes
+          .filter((shape) => shape.shapeType !== shapeType)
+          .flatMap((shape) => [...shape.cells])
       )
-      const cells = placeScribbleShape(shapeType, occupiedCells)
-      if (cells !== null) {
-        player.scribbleShapes.push(new ScribbleShape(shapeType, cells))
-      }
+      if (cells.some((cell) => otherCells.has(cell))) return
+    }
+    const currentIndex = player.scribbleShapes.findIndex(
+      (shape) => shape.shapeType === shapeType
+    )
+    if (currentIndex !== -1) player.scribbleShapes.splice(currentIndex, 1)
+    if (cells !== null) {
+      player.scribbleShapes.push(new ScribbleShape(shapeType, cells))
     }
 
-    removeInArray(player.choices, choice)
+    const paintedCells = new Set(
+      [...player.scribbleShapes].flatMap((shape) => [...shape.cells])
+    )
+    if (paintedCells.size === BOARD_WIDTH * (BOARD_SIDE_HEIGHT - 1)) {
+      this.grantArtistTitle(player)
+    }
+  }
+
+  // saved immediately, the end-of-game save skips short games
+  async grantArtistTitle(player: Player) {
+    if (player.isBot || player.titles.has(Title.ARTIST)) return
+    player.titles.add(Title.ARTIST)
+    try {
+      const usr = await UserMetadata.findOne({ uid: player.id })
+      if (!usr || usr.titles?.includes(Title.ARTIST)) return
+      usr.titles = [...(usr.titles ?? []), Title.ARTIST]
+      notificationsService.addNotification(player.id, "new_title", Title.ARTIST)
+      if (usr.level >= GADGETS.palette.levelRequired) {
+        notificationsService.addNotification(
+          player.id,
+          "new_theme",
+          THEME_BY_TITLE[Title.ARTIST]!
+        )
+      }
+      await usr.save()
+    } catch (error) {
+      logger.error("error granting the artist title", error)
+    }
   }
 
   computeRoundDamage(
