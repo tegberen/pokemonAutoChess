@@ -339,6 +339,7 @@ import { MindBlownStrategy } from "./mind-blown"
 import { MissingNoStrategy } from "./missing-no"
 import { MistBallStrategy } from "./mist-ball"
 import { MistySurgeStrategy } from "./misty-surge"
+import { MoleMazeStrategy } from "./mole-maze"
 import { MoonDreamStrategy } from "./moon-dream"
 import { MoonblastStrategy } from "./moonblast"
 import { MoongeistBeamStrategy } from "./moongeist-beam"
@@ -1079,6 +1080,7 @@ export const AbilityStrategies: { [key in Ability]: AbilityStrategy } = {
   [Ability.MIND_BLOWN]: new MindBlownStrategy(),
   [Ability.MIST_BALL]: new MistBallStrategy(),
   [Ability.MISTY_SURGE]: new MistySurgeStrategy(),
+  [Ability.MOLE_MAZE]: new MoleMazeStrategy(),
   [Ability.MOON_DREAM]: new MoonDreamStrategy(),
   [Ability.MOONBLAST]: new MoonblastStrategy(),
   [Ability.MOONGEIST_BEAM]: new MoongeistBeamStrategy(),

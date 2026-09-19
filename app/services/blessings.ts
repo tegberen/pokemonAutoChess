@@ -3017,6 +3017,9 @@ export const blessingEffectService: {
   [Blessing.MORTAR_SHELLS]: (player, state, room) =>
     heroBlessingEffect(Blessing.MORTAR_SHELLS, player, state, room),
 
+  [Blessing.MOLE_MAZE]: (player, state, room) =>
+    heroBlessingEffect(Blessing.MOLE_MAZE, player, state, room),
+
   [Blessing.ICE_SPEAR]: (player, state, room) =>
     heroBlessingEffect(Blessing.ICE_SPEAR, player, state, room),
 

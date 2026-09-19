@@ -397,6 +397,8 @@ export default class Simulation extends Schema implements ISimulation {
      0 means that side has no doom armed. */
   blueDoomTimer = 0
   redDoomTimer = 0
+  // MOLE_MAZE holes only exist for this fight, as board cell indexes
+  moleMazeHoles = new Set<number>()
   floodWaveTimer = 0
   elderStormTimer = 0
   distortionTimer = 0
@@ -4116,6 +4118,9 @@ export default class Simulation extends Schema implements ISimulation {
       highBreachingChampion.skill = Ability.HIGH_BREACHING
       highBreachingChampion.maxPP = HIGH_BREACHING_MAX_PP
     }
+
+    const moleMazeChampion = championOf.get(Blessing.MOLE_MAZE)
+    if (moleMazeChampion) moleMazeChampion.skill = Ability.MOLE_MAZE
 
     const frostGearChampion = championOf.get(Blessing.FROST_GEAR)
     if (frostGearChampion) {

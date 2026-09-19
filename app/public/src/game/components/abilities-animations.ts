@@ -2949,6 +2949,318 @@ const flamethrowerDelayed =
     )
   }
 
+const MOLE_MAZE_POP_HEIGHT = 60
+const MOLE_MAZE_EMERGE_HEIGHT = 30
+const MOLE_MAZE_SINK_DEPTH = 20
+const MOLE_MAZE_SINK_DURATION = 250
+const MOLE_MAZE_RISE_DURATION = 250
+const MOLE_MAZE_FLASH_DURATION = 120
+const MOLE_MAZE_SHAKE_DURATION = 80
+const MOLE_MAZE_SHAKE_INTENSITY = 0.004
+const MOLE_MAZE_EMERGE_SHAKE_DURATION = 180
+const MOLE_MAZE_EMERGE_SHAKE_INTENSITY = 0.008
+const MOLE_MAZE_KNOCK_UP_HEIGHT = 16
+const MOLE_MAZE_KNOCK_UP_DURATION = 110
+const MOLE_MAZE_DRILL_HOLD = 200
+
+const moleMazeActiveCopy = new WeakMap<PokemonSprite, GameObjects.Sprite>()
+
+// the server passes the burrow cell as position, but the move to the exit hole
+// may already have reached the client
+function findMoleMazeDigger(args: AbilityAnimationArgs) {
+  return (
+    args.pokemonsOnBoard.find(
+      (sprite) =>
+        sprite.positionX === args.positionX &&
+        sprite.positionY === args.positionY
+    ) ??
+    args.pokemonsOnBoard.find(
+      (sprite) =>
+        sprite.positionX === args.targetX && sprite.positionY === args.targetY
+    )
+  )
+}
+
+// fight-only holes stay until abilitiesVfxGroup is cleared at the end of the fight
+function addMoleMazeHole(args: AbilityAnimationArgs) {
+  const [x, y] = transformEntityCoordinates(
+    args.targetX,
+    args.targetY,
+    args.flip
+  )
+  const hole = args.scene.add
+    .sprite(x, y + 10, "ground_holes", "hole5.png")
+    .setScale(2)
+    .setDepth(DEPTH.BOARD_EFFECT_GROUND_LEVEL)
+  args.scene.abilitiesVfxGroup?.add(hole)
+}
+
+// two mirrored DIG sprites spraying dirt to both sides, like HYPER_DRILL
+const moleMazeDirtSpray = (
+  scale: [number, number],
+  positionOffset: [number, number] = [0, 0]
+) =>
+  [false, true].map((flipX) =>
+    onTarget({
+      ability: "DIG",
+      origin: [flipX ? 1 : 0, 1],
+      flipX,
+      scale,
+      positionOffset,
+      depth: DEPTH.ABILITY_BELOW_POKEMON
+    })
+  )
+
+const moleMazeDirtBurst = [
+  ...moleMazeDirtSpray([1, 2]),
+  onTarget({
+    ability: "PUFF_BROWN",
+    scale: 2,
+    depth: DEPTH.ABILITY_BELOW_POKEMON
+  })
+]
+
+function moleMazeDig(args: AbilityAnimationArgs) {
+  addMoleMazeHole(args)
+  moleMazeDirtBurst.forEach((animation) => animation(args))
+}
+
+function moleMazeImpact(args: AbilityAnimationArgs, body: GameObjects.Sprite) {
+  const flash = args.scene.add
+    .sprite(body.x, body.y, body.texture.key, body.frame.name)
+    .setScale(body.scaleX, body.scaleY)
+    .setDepth(DEPTH.HIT_FX_ABOVE_POKEMON)
+    .setBlendMode(Phaser.BlendModes.ADD)
+  args.scene.tweens.add({
+    targets: flash,
+    alpha: 0,
+    scale: body.scaleX * 1.3,
+    duration: MOLE_MAZE_FLASH_DURATION,
+    onUpdate: () => flash.setPosition(body.x, body.y),
+    onComplete: () => flash.destroy()
+  })
+}
+
+const moleMazeShockwave = onTarget({
+  ability: Ability.HEAVY_SLAM,
+  scale: 1.5,
+  depth: DEPTH.ABILITY_BELOW_POKEMON
+})
+const moleMazeFeetDirt = moleMazeDirtSpray([0.75, 1.25], [0, 20])
+
+// shockwave at the exit hole, dirt kicked up under every enemy it hits and a
+// short knock up
+function moleMazeEarthImpact(args: AbilityAnimationArgs, digger: PokemonSprite) {
+  moleMazeShockwave(args)
+  const diggerTeam = "team" in digger.pokemon ? digger.pokemon.team : undefined
+  args.pokemonsOnBoard
+    .filter(
+      (sprite) =>
+        "team" in sprite.pokemon &&
+        sprite.pokemon.team !== diggerTeam &&
+        Math.abs(sprite.positionX - args.targetX) <= 1 &&
+        Math.abs(sprite.positionY - args.targetY) <= 1
+    )
+    .forEach((enemy) => {
+      const enemyCell = {
+        ...args,
+        targetX: enemy.positionX,
+        targetY: enemy.positionY
+      }
+      moleMazeFeetDirt.forEach((animation) => animation(enemyCell))
+      args.scene.tweens.add({
+        targets: enemy.sprite,
+        y: enemy.sprite.y - MOLE_MAZE_KNOCK_UP_HEIGHT,
+        duration: MOLE_MAZE_KNOCK_UP_DURATION,
+        yoyo: true,
+        ease: "quad.out"
+      })
+    })
+  args.scene.shakeCamera({
+    duration: MOLE_MAZE_EMERGE_SHAKE_DURATION,
+    intensity: MOLE_MAZE_EMERGE_SHAKE_INTENSITY
+  })
+}
+
+// only one copy per digger, so a slow drill never overlaps the next hole
+function copyMoleMazeBody(
+  args: AbilityAnimationArgs,
+  digger: PokemonSprite,
+  x: number,
+  y: number
+) {
+  const previousCopy = moleMazeActiveCopy.get(digger)
+  if (previousCopy?.active) {
+    args.scene.tweens.killTweensOf(previousCopy)
+    previousCopy.destroy()
+  }
+  const body = digger.sprite
+  const copy = args.scene.add
+    .sprite(x, y, body.texture.key, body.frame.name)
+    .setScale(body.scaleX, body.scaleY)
+    .setDepth(DEPTH.POKEMON)
+  args.scene.abilitiesVfxGroup?.add(copy)
+  moleMazeActiveCopy.set(digger, copy)
+  return copy
+}
+
+// the ability animation lunges and reopens its arms on its own, so only the
+// windup plays and the first closed drill frame (the narrowest) is held
+function playMoleMazeDrill(
+  args: AbilityAnimationArgs,
+  digger: PokemonSprite,
+  copy: GameObjects.Sprite,
+  orientation: Orientation.DOWN | Orientation.UP,
+  onDrillClosed?: () => void
+) {
+  const [textureIndex, tint] =
+    digger.sprite.anims.currentAnim?.key.split("/") ?? []
+  const drill =
+    args.scene.animationManager?.convertPokemonActionStateToAnimationType(
+      PokemonActionState.ABILITY,
+      digger
+    ) ?? AnimationType.Idle
+  const drillKey = [orientation, Orientation.DOWN]
+    .map(
+      (facing) =>
+        `${textureIndex}/${tint}/${drill}/${SpriteType.ANIM}/${facing}`
+    )
+    .find((key) => args.scene.anims.exists(key))
+  const drillFrames = drillKey ? args.scene.anims.get(drillKey).frames : []
+  if (!drillKey || drillFrames.length === 0) return onDrillClosed?.()
+  const closedDrillFrame = drillFrames.reduce((narrowest, animFrame) =>
+    animFrame.frame.width < narrowest.frame.width ? animFrame : narrowest
+  )
+  const holdClosedDrill = () => {
+    copy.off(Phaser.Animations.Events.ANIMATION_UPDATE, onFrame)
+    copy.anims.stop()
+    copy.setFrame(closedDrillFrame.textureFrame)
+    onDrillClosed?.()
+  }
+  const onFrame = (_: unknown, animFrame: Phaser.Animations.AnimationFrame) => {
+    if (animFrame === closedDrillFrame) holdClosedDrill()
+  }
+  copy.on(Phaser.Animations.Events.ANIMATION_UPDATE, onFrame)
+  copy.anims.play({ key: drillKey, repeat: 0 })
+  if (copy.anims.currentFrame === closedDrillFrame) holdClosedDrill()
+}
+
+function afterMoleMazeHold(
+  args: AbilityAnimationArgs,
+  copy: GameObjects.Sprite,
+  next: () => void
+) {
+  args.scene.time.delayedCall(MOLE_MAZE_DRILL_HOLD, () => {
+    if (copy.active) next()
+  })
+}
+
+function sinkMoleMazeCopy(
+  args: AbilityAnimationArgs,
+  copy: GameObjects.Sprite,
+  holeY: number
+) {
+  args.scene.tweens.add({
+    targets: copy,
+    y: holeY + MOLE_MAZE_SINK_DEPTH,
+    alpha: 0,
+    duration: MOLE_MAZE_SINK_DURATION,
+    ease: "quad.in",
+    onComplete: () => copy.destroy()
+  })
+}
+
+// drills up to a peak above the hole, turns into a drill facing down and dives in
+function leapIntoMoleMazeHole(
+  args: AbilityAnimationArgs,
+  digger: PokemonSprite,
+  copy: GameObjects.Sprite,
+  holeY: number
+) {
+  playMoleMazeDrill(args, digger, copy, Orientation.UP)
+  args.scene.tweens.add({
+    targets: copy,
+    y: holeY - MOLE_MAZE_POP_HEIGHT,
+    duration: MOLE_MAZE_RISE_DURATION,
+    ease: "quad.out",
+    onComplete: () =>
+      afterMoleMazeHold(args, copy, () =>
+        playMoleMazeDrill(args, digger, copy, Orientation.DOWN, () =>
+          sinkMoleMazeCopy(args, copy, holeY)
+        )
+      )
+  })
+}
+
+// the body hides while a copy launches up and dives into its own hole
+function moleMazeBurrow(args: AbilityAnimationArgs) {
+  moleMazeDig(args)
+  const digger = findMoleMazeDigger(args)
+  if (!digger) return
+  digger.isTeleporting = true
+  const [x, y] = transformEntityCoordinates(
+    args.positionX,
+    args.positionY,
+    args.flip
+  )
+  const launcher = copyMoleMazeBody(args, digger, x, y)
+  digger.sprite.setAlpha(0)
+  leapIntoMoleMazeHole(args, digger, launcher, y)
+}
+
+// a copy bursts out of an old hole and dives straight back in
+function moleMazePop(args: AbilityAnimationArgs) {
+  moleMazeDig(args)
+  const digger = findMoleMazeDigger(args)
+  if (!digger) return
+  const [x, y] = transformEntityCoordinates(
+    args.targetX,
+    args.targetY,
+    args.flip
+  )
+  const leaper = copyMoleMazeBody(args, digger, x, y + MOLE_MAZE_SINK_DEPTH)
+  moleMazeImpact(args, leaper)
+  args.scene.shakeCamera({
+    duration: MOLE_MAZE_SHAKE_DURATION,
+    intensity: MOLE_MAZE_SHAKE_INTENSITY
+  })
+  leapIntoMoleMazeHole(args, digger, leaper, y)
+}
+
+// a copy drills up out of the new hole, so the real sprite only shows up once
+// its position patch has landed there
+function moleMazeEmerge(args: AbilityAnimationArgs) {
+  moleMazeDig(args)
+  const digger = findMoleMazeDigger(args)
+  if (!digger) return
+  const [x, y] = transformEntityCoordinates(
+    args.targetX,
+    args.targetY,
+    args.flip
+  )
+  const riser = copyMoleMazeBody(args, digger, x, y + MOLE_MAZE_SINK_DEPTH)
+  moleMazeImpact(args, riser)
+  moleMazeEarthImpact(args, digger)
+  playMoleMazeDrill(args, digger, riser, Orientation.UP)
+  args.scene.tweens.chain({
+    targets: riser,
+    tweens: [
+      {
+        y: y - MOLE_MAZE_EMERGE_HEIGHT,
+        duration: MOLE_MAZE_RISE_DURATION,
+        ease: "quad.out"
+      },
+      { y, duration: MOLE_MAZE_RISE_DURATION, ease: "quad.in" }
+    ],
+    onComplete: () =>
+      afterMoleMazeHold(args, riser, () => {
+        riser.destroy()
+        digger.sprite.setAlpha(1)
+        digger.isTeleporting = false
+      })
+  })
+}
+
 const FIGHTING_THROW_FIST_HOLD = 700
 const FIGHTING_THROW_FIST_SCALE = 3
 
@@ -3564,6 +3876,9 @@ export const AbilitiesAnimations: {
   [Ability.RETALIATE]: onTargetScale2,
   [Ability.THUNDER_CAGE]: onTargetScale2,
   ["FIGHTING_KNOCKBACK"]: onTargetScale2,
+  ["MOLE_MAZE_BURROW"]: moleMazeBurrow,
+  ["MOLE_MAZE_POP"]: moleMazePop,
+  ["MOLE_MAZE_EMERGE"]: moleMazeEmerge,
   ["FIGHTING_THROW_FIST"]: [
     fightingThrowFist,
     onCaster({

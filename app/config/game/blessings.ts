@@ -1586,7 +1586,7 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
   [Blessing.TREASURE_TRAIL]: {
     tier: BlessingTier.SILVER,
     availableAtStages: [4],
-    icon: "mole",
+    icon: "treasure-trail",
     grantsPokemonImmediately: false
   },
   [Blessing.TRAINING_MONTAGE]: {
@@ -1705,7 +1705,7 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
   },
   [Blessing.HIGH_BREACHING]: {
     tier: BlessingTier.PRISMATIC,
-    availableAtStages: BLESSING_SELECTION_STAGES,
+    availableAtStages: [12],
     icon: "high_breaching",
     grantsPokemonImmediately: true
   },
@@ -1797,6 +1797,12 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     tier: BlessingTier.GOLD,
     availableAtStages: [12],
     icon: "mortar_shells",
+    grantsPokemonImmediately: true
+  },
+  [Blessing.MOLE_MAZE]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: [12],
+    icon: "mole",
     grantsPokemonImmediately: true
   },
   [Blessing.ICE_SPEAR]: {

@@ -194,6 +194,7 @@ export enum Blessing {
   RADIANCE = "RADIANCE",
   PACK_ATTACK = "PACK_ATTACK",
   MORTAR_SHELLS = "MORTAR_SHELLS",
+  MOLE_MAZE = "MOLE_MAZE",
   ICE_SPEAR = "ICE_SPEAR",
   FROST_GEAR = "FROST_GEAR",
   SHUTTLE_BUS = "SHUTTLE_BUS",
@@ -744,6 +745,8 @@ export const RAINBOW_HOUR_EEVEELUTIONS_TARGET = 7
 export const RAINBOW_HOUR_GOLD_REWARD = 77
 export const MANIFESTATION_UNLOCK_STAGE = 20
 export const GYM_TRAINER_UNLOCK_STAGE = 9
+export const MOLE_MAZE_POP_DELAY = 1100
+export const MOLE_MAZE_EMERGE_DELAY = 2500
 export const HERO_BLESSING_HATCH_MAX_HP = 50
 export const QUEST_ASCEND_POKEMONS = 3
 export const ROCKY_BEGINNINGS_POKEMONS = 2
@@ -1044,6 +1047,7 @@ export const HERO_BLESSING_GIFT: { [blessing in Blessing]?: Pkm } = {
   [Blessing.ROOSTING_FLOCK]: Pkm.TRANQUILL,
   [Blessing.SHELL_ARMOR_BLESSING]: Pkm.GROTLE,
   [Blessing.MORTAR_SHELLS]: Pkm.MAGBY,
+  [Blessing.MOLE_MAZE]: Pkm.DRILBUR,
   [Blessing.ICE_SPEAR]: Pkm.VANILLITE,
   [Blessing.FROST_GEAR]: Pkm.SHELLDER,
   [Blessing.SHUTTLE_BUS]: Pkm.SKIDDO,
@@ -1077,6 +1081,7 @@ export const HERO_BLESSING_FAMILY: { [blessing in Blessing]?: Pkm } = {
   [Blessing.ROOSTING_FLOCK]: Pkm.PIDOVE,
   [Blessing.SHELL_ARMOR_BLESSING]: Pkm.TURTWIG,
   [Blessing.MORTAR_SHELLS]: Pkm.MAGBY,
+  [Blessing.MOLE_MAZE]: Pkm.DRILBUR,
   [Blessing.ICE_SPEAR]: Pkm.VANILLITE,
   [Blessing.FROST_GEAR]: Pkm.SHELLDER,
   [Blessing.SHUTTLE_BUS]: Pkm.SKIDDO,
@@ -1132,6 +1137,7 @@ export const HERO_BLESSING_ADDS_TO_POOL: Blessing[] = [
   Blessing.PLUNDER,
   Blessing.AURORA_BOREALIS,
   Blessing.THIRD_EYE,
+  Blessing.MOLE_MAZE,
   Blessing.RADIANCE,
   Blessing.PACK_ATTACK,
   Blessing.HIGH_BREACHING
