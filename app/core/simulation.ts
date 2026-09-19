@@ -45,6 +45,7 @@ import {
   Orientation,
   PokemonActionState,
   Rarity,
+  Stat,
   Team,
   GameMode
 } from "../types/enum/Game"
@@ -55,6 +56,7 @@ import {
   ItemComponents,
   ItemRecipe,
   NonSpecialBerries,
+  Scarves,
   Seeds,
   SynergyGems,
   SynergyGivenByGem,
@@ -120,9 +122,6 @@ import {
   FROST_GEAR_MAX_PP,
   FROST_GEAR_RANGE_BONUS,
   HIGH_BREACHING_MAX_PP,
-  MORTAR_SHELLS_ATTACK_RATIO,
-  MORTAR_SHELLS_RANGE_BONUS,
-  MORTAR_SHELLS_SPEED_RATIO,
   ORBITAL_STRIKE_RANGE_BONUS,
   SHUTTLE_BUS_MAX_PP,
   POTENTIAL_ENERGY_SHIELD,
@@ -194,6 +193,9 @@ import {
   UNISON_TRIGGERED_PROGRESS_OFFSET,
   UNISON_FINISHED_PROGRESS,
   UNISON_CHECK_INTERVAL,
+  UNISON_HUMAN_HEAL,
+  UNISON_HUMAN_HEAL_INTERVAL,
+  UNISON_STRIKE_INTERVAL,
   UNISON_STRIKE_ATTACK_RATIO,
   UNISON_NOVA_DELAY,
   UNISON_STRIKE_DELAY,
@@ -241,7 +243,10 @@ import {
   MACHINE_RESIDUE_SHIELD,
   WONDER_BOX_BLESSED_ITEMS,
   CHOICE_SPECS_ALLY_MIN_MAX_PP,
+  CHOSEN_ONES_COUNT,
+  CHOSEN_ONES_MAX_HP_GAIN,
   VERDANT_GROWTH_ABILITY_POWER,
+  VERDANT_GROWTH_ATTACK,
   VERDANT_GROWTH_INTERVAL,
   hasGluttonGrowth
 } from "../types/enum/Blessing"
@@ -262,6 +267,7 @@ import {
   getBenchSize
 } from "../utils/board"
 import { DEFAULT_CRIT_POWER } from "../config/game/battle"
+import { ItemStats } from "../config/game/items"
 import { logger } from "../utils/logger"
 import { clamp, max, min } from "../utils/number"
 import { chance, pickRandomIn, randomBetween, shuffleArray } from "../utils/random"
@@ -2021,7 +2027,7 @@ export default class Simulation extends Schema implements ISimulation {
         const damage = Math.round(
           kind === "DRILL"
             ? attacker.atk * DRILL_ATTACK_RATIO
-            : attacker.speed * SURGE_SPEED_RATIO[tier]
+            : attacker.speed * SURGE_SPEED_RATIO
         )
         const attackType =
           kind === "DRILL" ? AttackType.TRUE : AttackType.SPECIAL
@@ -2207,17 +2213,45 @@ export default class Simulation extends Schema implements ISimulation {
             ally.effectsSet.add(
               // a fresh instance per ally, or they would share one timer
               new PeriodicEffect(
-                (pokemon) =>
+                (pokemon) => {
                   pokemon.addAbilityPower(
                     VERDANT_GROWTH_ABILITY_POWER,
                     pokemon,
                     0,
                     false
-                  ),
+                  )
+                  pokemon.addAttack(VERDANT_GROWTH_ATTACK, pokemon, 0, false)
+                },
                 EffectEnum.GROWTH,
                 VERDANT_GROWTH_INTERVAL
               )
             )
+          )
+      }
+
+      if (blessings.includes(Blessing.CHOSEN_ONES)) {
+        const chosenOnes = ownUnits.filter(
+          (ally) => ally.refToBoardPokemon.chosenOne
+        )
+        chosenOnes.forEach((ally) => (ally.isChosenOne = true))
+        if (chosenOnes.length >= CHOSEN_ONES_COUNT) {
+          chosenOnes.forEach((ally) =>
+            ally.addMaxHP(CHOSEN_ONES_MAX_HP_GAIN, ally, 0, false, true)
+          )
+        }
+      }
+
+      if (blessings.includes(Blessing.WRAPPED_UP)) {
+        ownUnits
+          .filter((ally) => ally.types.has(Synergy.NORMAL))
+          .forEach((ally) =>
+            schemaValues(ally.items)
+              .filter((item) => Scarves.includes(item))
+              .forEach((scarf) =>
+                Object.entries(ItemStats[scarf] ?? {}).forEach(([stat, value]) =>
+                  ally.applyStat(stat as Stat, value)
+                )
+              )
           )
       }
 
@@ -2780,7 +2814,10 @@ export default class Simulation extends Schema implements ISimulation {
       }
 
       if (blessings.includes(Blessing.UNISON)) {
-        player.unisonTriggered = false
+        player.unisonBond = 0
+        player.unisonBlockedSeen.clear()
+        player.unisonHasStruck = false
+        player.unisonMsSinceStrike = 0
         player.blessingsRef?.questProgress.set(Blessing.UNISON, 0)
         ownUnits.forEach((unit) => {
           unit.effectsSet.add(
@@ -2798,19 +2835,27 @@ export default class Simulation extends Schema implements ISimulation {
           )
           if (unit.types.has(Synergy.HUMAN)) {
             unit.effectsSet.add(
-              new OnDeathEffect(() => {
-                if (player.unisonTriggered) return
-                const chargedDamage = Math.min(
-                  UNISON_METER_DAMAGE,
-                  this.getUnisonDamageDealt(team, player)
-                )
-                player.unisonTriggered = true
-                player.blessingsRef?.questProgress.set(
-                  Blessing.UNISON,
-                  UNISON_TRIGGERED_PROGRESS_OFFSET + Math.floor(chargedDamage)
-                )
-                this.strikeUnison(team, player, chargedDamage)
-              })
+              new PeriodicEffect(
+                (human) => {
+                  const adjacentHumans = this.board
+                    .getAdjacentCells(human.positionX, human.positionY)
+                    .filter(
+                      (cell) =>
+                        cell.value &&
+                        cell.value.team === human.team &&
+                        cell.value.types.has(Synergy.HUMAN)
+                    ).length
+                  if (adjacentHumans === 0) return
+                  human.handleHeal(
+                    UNISON_HUMAN_HEAL * adjacentHumans,
+                    human,
+                    0,
+                    false
+                  )
+                },
+                EffectEnum.MERCILESS,
+                UNISON_HUMAN_HEAL_INTERVAL
+              )
             )
           }
         })
@@ -4092,25 +4137,6 @@ export default class Simulation extends Schema implements ISimulation {
         fieldSpreader.status.addPsychicField(fieldSpreader)
       }
       orbitalStrikeChampion.range += ORBITAL_STRIKE_RANGE_BONUS
-    }
-
-    const mortarShellsChampion = championOf.get(Blessing.MORTAR_SHELLS)
-    if (mortarShellsChampion) {
-      mortarShellsChampion.range += MORTAR_SHELLS_RANGE_BONUS
-      mortarShellsChampion.addAttack(
-        Math.round(mortarShellsChampion.baseAtk * MORTAR_SHELLS_ATTACK_RATIO),
-        mortarShellsChampion,
-        0,
-        false
-      )
-      mortarShellsChampion.addSpeed(
-        -Math.round(
-          mortarShellsChampion.baseSpeed * MORTAR_SHELLS_SPEED_RATIO
-        ),
-        mortarShellsChampion,
-        0,
-        false
-      )
     }
 
     const highBreachingChampion = championOf.get(Blessing.HIGH_BREACHING)
@@ -5769,37 +5795,45 @@ export default class Simulation extends Schema implements ISimulation {
     }
   }
 
-  getUnisonDamageDealt(team: MapSchema<PokemonEntity>, player: Player): number {
-    return [...team.values()]
-      .filter(
-        (entity) =>
-          entity.player === player && entity.types.has(Synergy.HUMAN)
-      )
-      .reduce(
-        (total, entity) =>
-          total +
-          entity.physicalDamage +
-          entity.specialDamage +
-          entity.trueDamage,
-        0
-      )
+  // what DEF, SPE_DEF and SHIELD soaked up since the last check, as the damage
+  // meter counts blocked
+  collectUnisonDamageBlocked(team: MapSchema<PokemonEntity>, player: Player) {
+    team.forEach((entity) => {
+      if (entity.player !== player || !entity.types.has(Synergy.HUMAN)) return
+      const blocked =
+        entity.physicalDamageReduced +
+        entity.specialDamageReduced +
+        entity.shieldDamageTaken
+      const seen = player.unisonBlockedSeen.get(entity.id) ?? 0
+      player.unisonBond += min(0)(blocked - seen)
+      player.unisonBlockedSeen.set(entity.id, blocked)
+    })
   }
 
+  // the bond empties into a strike every UNISON_STRIKE_INTERVAL
   updateUnisonMeter(team: MapSchema<PokemonEntity>, player: Player) {
-    if (player.unisonTriggered) return
-    const pooled = this.getUnisonDamageDealt(team, player)
-    player.blessingsRef?.questProgress.set(
-      Blessing.UNISON,
-      Math.min(UNISON_METER_DAMAGE, Math.floor(pooled))
-    )
-    if (pooled < UNISON_METER_DAMAGE) return
+    player.unisonMsSinceStrike += UNISON_CHECK_INTERVAL
+    this.collectUnisonDamageBlocked(team, player)
+    const pooled = Math.floor(Math.min(UNISON_METER_DAMAGE, player.unisonBond))
+    if (player.unisonMsSinceStrike < UNISON_STRIKE_INTERVAL) {
+      const isStriking =
+        player.unisonHasStruck &&
+        player.unisonMsSinceStrike <= UNISON_STRIKE_DELAY
+      if (!isStriking) {
+        player.blessingsRef?.questProgress.set(Blessing.UNISON, pooled)
+      }
+      return
+    }
 
-    player.unisonTriggered = true
+    player.unisonMsSinceStrike = 0
+    if (pooled <= 0) return
+    player.unisonBond = 0
+    player.unisonHasStruck = true
     player.blessingsRef?.questProgress.set(
       Blessing.UNISON,
-      UNISON_TRIGGERED_PROGRESS_OFFSET + UNISON_METER_DAMAGE
+      UNISON_TRIGGERED_PROGRESS_OFFSET + pooled
     )
-    this.strikeUnison(team, player, UNISON_METER_DAMAGE)
+    this.strikeUnison(team, player, pooled)
   }
 
   strikeUnison(
@@ -5919,10 +5953,7 @@ export default class Simulation extends Schema implements ISimulation {
             })
           )
         }
-        player.blessingsRef?.questProgress.set(
-          Blessing.UNISON,
-          UNISON_FINISHED_PROGRESS
-        )
+        player.blessingsRef?.questProgress.set(Blessing.UNISON, 0)
       }, UNISON_STRIKE_DELAY)
     )
   }
@@ -6105,14 +6136,11 @@ export default class Simulation extends Schema implements ISimulation {
       null
     if (strategy.requiresTarget && !followUpTarget) return
 
-    /* swapping skill as well as stars keeps the broadcasts inside the strategy
-       showing the follow-up instead of the ability that was actually cast */
-    const starsBefore = pokemon.stars
+    /* swapping the skill keeps the broadcasts inside the strategy showing the
+       follow-up instead of the ability that was actually cast */
     const skillBefore = pokemon.skill
-    pokemon.stars = 1
     pokemon.skill = ability
     strategy.process(pokemon, board, followUpTarget, false)
-    pokemon.stars = starsBefore
     pokemon.skill = skillBefore
   }
 

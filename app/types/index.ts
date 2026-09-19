@@ -404,6 +404,7 @@ export interface IPokemon {
   manifestationLocked: boolean
   festivePicnicDish: Item | null
   supportiveSoul: boolean
+  chosenOne: boolean
   trashToTreasureRounds: number
 }
 
@@ -660,6 +661,7 @@ export interface IPokemonEntity {
   effectsSet: Set<EffectClass>
   inSpotlight: boolean
   isBlessedHero: boolean
+  isChosenOne: boolean
   isOnCriticalPath: boolean
   hasFallenBelowHalfHp: boolean
 }

@@ -53,6 +53,7 @@ import {
 import {
   isRegionalVariant,
   Pkm,
+  PkmDuo,
   PkmDuos,
   PkmFamily,
   type PkmProposition,
@@ -76,6 +77,7 @@ import {
   Blessing,
   BERSERKER_HORDES_SHOP_INTERVAL,
   CURSOLA_SELL_PRICE,
+  FOGBOUND_LAKE_CAROUSEL_STAGE,
   getCarouselLockForStage,
   GRUDGE_SUBSTITUTE_SELL_COST,
   isGrudgeSubstitute,
@@ -934,6 +936,15 @@ export default class Shop {
       !pokemonsProposed.includes(gymTrainerUnique)
     ) {
       pokemonsProposed[0] = gymTrainerUnique
+    }
+
+    // slot 1, clear of the Gym Trainer's first slot and the Paradox last one
+    if (
+      stageLevel === FOGBOUND_LAKE_CAROUSEL_STAGE &&
+      player.blessings?.includes(Blessing.FOGBOUND_LAKE) &&
+      !pokemonsProposed.includes(PkmDuo.ILLUMISE_VOLBEAT)
+    ) {
+      pokemonsProposed[1] = PkmDuo.ILLUMISE_VOLBEAT
     }
 
     /* CONVERGENT_PARADOX promises a Paradox among the Unique and Legendary

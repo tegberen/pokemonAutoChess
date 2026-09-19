@@ -61,6 +61,7 @@ import {
   REAPER_CLOTH_GHOST_VANISH_DURATION,
   GRACIDEA_FLOWER_HEAL_MAX_HP_RATIO,
   GRIP_CLAW_CRIT_POWER,
+  GRIP_CLAW_MAX_CRIT_CHANCE_MULTIPLIER,
   GRIP_CLAW_MIN_TARGET_CRIT_POWER,
   KINGS_ROCK_FLINCH_DURATION,
   LUCKY_DICE_BOUNCE_DAMAGE_RATIO,
@@ -84,7 +85,7 @@ import {
   SMOKE_BALL_SPIKES_LOCK_DURATION,
   SOOTHE_BELL_MAX_PP_RATIO,
   RAZOR_FANG_FOLLOW_UP_ATTACK_RATIO,
-  STAR_DUST_RUNE_PROTECT_DURATION,
+  STAR_DUST_ADJACENT_SHIELD_RATIO,
   STICKY_BARB_SELF_DAMAGE_ATTACK_RATIO,
   UPGRADE_BLESSED_SPEED_RATIO,
   UPGRADE_BLESSED_STACKS_REQUIRED,
@@ -962,9 +963,10 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
           pokemon.maxPP = player.blessings?.includes(Blessing.MOVE_TUTOR)
             ? MOVE_TUTOR_MAX_PP
             : 100
-          if (player.blessings?.includes(Blessing.UNISON) === false) {
-            removeInArray(player.items, item)
-          }
+          const keepsTM =
+            player.blessings?.includes(Blessing.MOVE_TUTOR) === true &&
+            pokemon.types.has(Synergy.HUMAN)
+          if (!keepsTM) removeInArray(player.items, item)
           return false
         })
       ]
@@ -1863,16 +1865,14 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
       pokemon.addShield(shield, pokemon, 0, false)
       pokemon.count.starDustCount++
       if (hasBlessing(pokemon, Blessing.STAR_DUST_BLESSING)) {
-        pokemon.status.triggerRuneProtect(
-          STAR_DUST_RUNE_PROTECT_DURATION,
-          pokemon,
-          pokemon
+        const adjacentShield = Math.round(
+          shield * STAR_DUST_ADJACENT_SHIELD_RATIO
         )
         board
           .getAdjacentCells(pokemon.positionX, pokemon.positionY)
           .forEach((cell) => {
             if (cell.value && cell.value.team === pokemon.team) {
-              cell.value.addShield(shield, pokemon, 0, false)
+              cell.value.addShield(adjacentShield, pokemon, 0, false)
             }
           })
       }
@@ -2611,15 +2611,20 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
   ],
   [Item.GRIP_CLAW]: [
     new OnAttackEffect(({ pokemon, target, board }) => {
+      const isBlessed = hasBlessing(pokemon, Blessing.GRIP_CLAW_BLESSING)
+      const critPowerGain =
+        isBlessed && pokemon.critChance >= 100
+          ? GRIP_CLAW_CRIT_POWER * GRIP_CLAW_MAX_CRIT_CHANCE_MULTIPLIER
+          : GRIP_CLAW_CRIT_POWER
       // blessed, the crit power is torn off the target rather than conjured
-      if (target && hasBlessing(pokemon, Blessing.GRIP_CLAW_BLESSING)) {
+      if (target && isBlessed) {
         const targetCritBonus = Math.round(
           100 * (target.critPower - GRIP_CLAW_MIN_TARGET_CRIT_POWER)
         )
-        const stolen = clamp(targetCritBonus, 0, GRIP_CLAW_CRIT_POWER)
+        const stolen = clamp(targetCritBonus, 0, critPowerGain)
         if (stolen > 0) target.addCritPower(-stolen, pokemon, 0, false)
       }
-      pokemon.addCritPower(GRIP_CLAW_CRIT_POWER, pokemon, 0, false)
+      pokemon.addCritPower(critPowerGain, pokemon, 0, false)
       pokemon.count.gripClawCount++
     }),
     new OnItemRemovedEffect((pokemon) => {

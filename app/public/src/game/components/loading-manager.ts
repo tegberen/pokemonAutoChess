@@ -73,6 +73,10 @@ export default class LoadingManager {
       width: 64,
       height: 64
     })
+    scene.load.svg("chosen-one", "/assets/blessings/bat_mask.svg", {
+      width: 64,
+      height: 64
+    })
     scene.load.svg(
       "critical-path-mark",
       "/assets/blessings/critical_path.svg",

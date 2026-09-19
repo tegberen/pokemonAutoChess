@@ -418,6 +418,10 @@ export default class PokemonSprite extends DraggableObject {
     return !isEntity(this.pokemon) && this.pokemon.supportiveSoul
   }
 
+  get chosenOne(): boolean {
+    return !isEntity(this.pokemon) && this.pokemon.chosenOne
+  }
+
   lazyLoadAnimations(scene: GameScene | DebugScene): Promise<void> {
     return new Promise((resolve) => {
       const tint = this.pokemon.shiny ? PokemonTint.SHINY : PokemonTint.NORMAL
@@ -1557,6 +1561,8 @@ export default class PokemonSprite extends DraggableObject {
     }
     if (pokemon.isBlessedHero) {
       this.addBlessedHeroMark()
+    } else if (pokemon.isChosenOne) {
+      this.addBlessedHeroMark("chosen-one")
     }
     if (pokemon.status.light) {
       this.addLight(pokemon.status.lightTint)
@@ -2293,14 +2299,10 @@ export default class PokemonSprite extends DraggableObject {
     this.add(icon)
   }
 
-  addBlessedHeroMark() {
+  // CHOSEN_ONES reuses the hero spot with its own Wish icon
+  addBlessedHeroMark(texture: "blessed-hero" | "chosen-one" = "blessed-hero") {
     if (this.blessedHeroMark) return
-    this.blessedHeroMark = new GameObjects.Image(
-      this.scene,
-      0,
-      -14,
-      "blessed-hero"
-    )
+    this.blessedHeroMark = new GameObjects.Image(this.scene, 0, -14, texture)
       .setScale(BLESSED_HERO_MARK_SCALE)
       .setAlpha(0.38)
       .setTint(0x000000)

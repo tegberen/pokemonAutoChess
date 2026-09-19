@@ -36,8 +36,8 @@ import { EvolutionRuleType } from "../types/EvolutionRules"
 import {
   Blessing,
   CAROUSEL_LOCK_RETENTION_DELAY,
-  getCarouselLockForStage,
-  FREE_COUPON_GUARANTEED_SHOP_STAGE
+  FREE_COUPON_GUARANTEED_SHOP_STAGE,
+  isCarouselLockedForStage
 } from "../types/enum/Blessing"
 import {
   getWaterFountainPortalMap,
@@ -404,7 +404,7 @@ export class MiniGame {
 
       /* a carousel lock is bought with a specific stage's movement, so it wins
          over Quick Claw when a player holds both */
-      if (getCarouselLockForStage(player.blessings, stageLevel)) {
+      if (isCarouselLockedForStage(player.blessings, stageLevel)) {
         retentionDelay = CAROUSEL_LOCK_RETENTION_DELAY
       } else if (state.hasBlessing(player.id, Blessing.QUICK_CLAW)) {
         retentionDelay = 0

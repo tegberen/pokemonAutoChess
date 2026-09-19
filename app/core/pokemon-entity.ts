@@ -134,6 +134,7 @@ export function steelTrueDamageRatio(pokemon: PokemonEntity): number {
 export class PokemonEntity extends Schema implements IPokemonEntity {
   @type("boolean") shiny: boolean
   @type("boolean") isBlessedHero = false
+  @type("boolean") isChosenOne = false
   @type("uint8") positionX: number
   @type("uint8") positionY: number
   @type("string") action = PokemonActionState.WALK

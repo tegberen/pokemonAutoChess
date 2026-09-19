@@ -2080,10 +2080,13 @@ export default class GameRoom extends Room<{ state: GameState }> {
           this.state.shop.addAdditionalPokemon(pkm, this.state)
         }
 
-        if (
-          this.state.specialGameRule === SpecialGameRule.CHOSEN_ONES ||
-          this.state.hasBlessing(player.id, Blessing.CHOSEN_ONES)
-        ) {
+        const isChosenOnesRule =
+          this.state.specialGameRule === SpecialGameRule.CHOSEN_ONES
+        const isChosenOnesWish = this.state.hasBlessing(
+          player.id,
+          Blessing.CHOSEN_ONES
+        )
+        if (isChosenOnesRule || isChosenOnesWish) {
           pokemonsObtained = pokemonsObtained.map((pkm) => {
             const evolution = pkm.hasEvolution
               ? EvolutionManager.getEvolution(
@@ -2099,9 +2102,12 @@ export default class GameRoom extends Room<{ state: GameState }> {
               evolution,
               player
             )
-            replacement.addMaxHP([50, 100, 150][rank] ?? 50)
-            replacement.addAttack([5, 10, 15][rank] ?? 5)
-            replacement.addAbilityPower([15, 30, 45][rank] ?? 15)
+            if (isChosenOnesRule) {
+              replacement.addMaxHP([50, 100, 150][rank] ?? 50)
+              replacement.addAttack([5, 10, 15][rank] ?? 5)
+              replacement.addAbilityPower([15, 30, 45][rank] ?? 15)
+            }
+            if (isChosenOnesWish) replacement.chosenOne = true
             return replacement
           })
         }

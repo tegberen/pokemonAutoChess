@@ -723,6 +723,7 @@ export default class GameScene extends Scene {
           if (
             this.sellZone &&
             !gameObject.supportiveSoul &&
+            !gameObject.chosenOne &&
             this.canSellPokemon(this.pokemonDragged.name as Pkm)
           ) {
             this.sellZone.showForPokemon(this.pokemonDragged)
@@ -765,6 +766,7 @@ export default class GameScene extends Scene {
           if (
             this.sellZone?.visible === false &&
             this.pokemonDragged?.supportiveSoul !== true &&
+            this.pokemonDragged?.chosenOne !== true &&
             this.canSellPokemon(this.pokemonDragged.name as Pkm)
           ) {
             this.sellZone.setVisible(true)

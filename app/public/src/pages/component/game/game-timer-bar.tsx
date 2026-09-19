@@ -46,7 +46,7 @@ export function UnisonMeter() {
   )
   return (
     <div className={`unison-meter${triggered ? " is-triggered" : ""}`}>
-      <img src="/assets/icons/ATK.png" alt="ATK" />
+      <img src="/assets/icons/SHIELD.png" alt="SHIELD" />
       <strong>{storedDamage}</strong>
     </div>
   )

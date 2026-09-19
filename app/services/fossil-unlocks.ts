@@ -156,7 +156,7 @@ function setFossilUnlockProgress(player: Player, pokemon: Pkm, value: number) {
   if (progress >= definition.target) unlockFossil(player, pokemon)
 }
 
-function unlockFossil(player: Player, pokemon: Pkm) {
+export function unlockFossil(player: Player, pokemon: Pkm) {
   const unlocks = player.fossilUnlocksRef
   const definition = FossilUnlockDefinitionByPokemon.get(pokemon)
   if (!unlocks || !definition) return

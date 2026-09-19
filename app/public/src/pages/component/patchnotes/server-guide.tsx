@@ -137,7 +137,8 @@ export default function ServerGuide({
       { name: "Badges", icon: Blessings[Blessing.FIGHTING_BADGE_BLESSING].icon },
       { name: "Crests", icon: Blessings[Blessing.FIGHTING_CREST_BLESSING].icon },
       // removed Wishes keep their icon in older Patch Log rows
-      { name: "Golden Ticket", icon: "ticket" }
+      { name: "Golden Ticket", icon: "ticket" },
+      { name: "Mortar Shells", icon: "mortar_shells" }
     ],
     [t]
   )

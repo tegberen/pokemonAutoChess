@@ -265,7 +265,12 @@ export default class Player extends Schema implements IPlayer {
   fogboundLakeLightGranted: boolean = false
   // MAGNETOSPHERE: even pulses attract, odd ones repel
   magnetospherePulseCount: number = 0
-  unisonTriggered: boolean = false
+  // UNISON: blocked HUMAN damage stored since the last strike, built from each
+  // unit's own counter so a KO'd HUMAN never takes its share back out
+  unisonBond: number = 0
+  unisonBlockedSeen = new Map<string, number>()
+  unisonHasStruck: boolean = false
+  unisonMsSinceStrike: number = 0
   // ADOPTION: babies already gifted, so the order never repeats one
   adoptedBabies: Pkm[] = []
   crystalClustersRocksGranted = false

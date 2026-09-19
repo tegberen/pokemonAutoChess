@@ -489,6 +489,24 @@ Every balance change on this server, newest first.
 
 **Wishes**
 - High Breaching | stage 4 or 12 → stage 12 only
+- Toxic Resonance | POISONNED allies gain 5 → 10 PP
+- Colony | Spewpa now evolves into a Vivillon form you do not have yet
+- Rampage | no longer doubles damage after 5 seconds of channeling, each ADJACENT KO now grants 20% CRIT_POWER
+- Icebreaker | a KO now also grants 30 SPEED
+- Curse of Coral | stage 12 → stage 4, Corsola after every PvP round until stage 12
+- Chosen Ones | no more boosted stats, cannot be sold, each gains 5 permanent max HP per fight when all three are fielded
+- Fogbound Lake | stage 4 only, no movement on the stage 10 carousel, Unique selection always includes the Illumise and Volbeat duo
+- Molecular Corrosion | 25% → 20% more damage taken
+- Overload | every 8 → 10 seconds
+- Unison | HUMAN Pokémon heal 20 HP every 2 seconds per ADJACENT allied HUMAN; the bond now builds from damage blocked by HUMAN Pokémon instead of damage dealt, retaliates every 8 seconds with the bond built since the last strike, instead of once on the first HUMAN KO; no longer keeps TMs
+- Bull Leaping | second ability cast at 1 STAR → at the user's own STAR level
+- Seizing Claw | at 100% CRIT_CHANCE, the CRIT_POWER gain is tripled
+- Star Dust Veil | no more RUNE_PROTECT, ADJACENT allies get 100% → 50% of the SHIELD
+- Mortar Shells | removed
+- Move Tutor | TMs taught to HUMAN Pokémon are no longer consumed
+- Verdant Growth | 5 AP → 10 AP and 1 ATK every 2 seconds
+- Wrapped Up | scarf holders also gain their scarf's base stats a second time
+- Aurora Borealis | unlocks Amaura and opens the fossil menu, instead of gifting one and adding it to the pool
 - Mole Maze {{new}} | Gold Wish at stage 12: gain a Drilbur and add it to the pool, your STRONGEST Drilbur's ability is replaced with Mole Maze: burrow into the ground, becoming untargetable. If a dug hole exists, pop out of a random one and dive back in, then burst out of a new hole next to the target. Each time it jumps out, deal 100% of ATK + DEF as SPECIAL to enemies in that hole and ADJACENT to it. (New holes only last until the end of the fight.)
 
 ### 17 September 2026
@@ -518,7 +536,6 @@ Every balance change on this server, newest first.
 - Supportive Soul | another support item every 8 → 10 rounds
 - Layered Armor | 4 SHIELD per shop roll, up to 200 → 2 SHIELD per shop roll, up to 100
 - Morph Ball | 1 SPEED per 2 shop rolls → 1 SPEED per shop roll, up to 50 SPEED
-- Surge I/II | 25% → 30% SPEED as SPECIAL
 - Heart Shield I | 4 → 5 HP per ally sharing a synergy
 - Potion | 15 → 20 player HP, now also grants 5 GOLD
 - Starter Pack | the Uncommon is now 2 STAR

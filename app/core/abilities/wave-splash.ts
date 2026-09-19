@@ -1,4 +1,8 @@
-import { Blessing, ICEBREAKER_LUCK_ON_KO } from "../../types/enum/Blessing"
+import {
+  Blessing,
+  ICEBREAKER_LUCK_ON_KO,
+  ICEBREAKER_SPEED_ON_KO
+} from "../../types/enum/Blessing"
 import { AttackType } from "../../types/enum/Game"
 import type { Board } from "../board"
 import type { PokemonEntity } from "../pokemon-entity"
@@ -28,6 +32,7 @@ export class WaveSplashStrategy extends AbilityStrategy {
     if (isBlessed && death) {
       pokemon.addShield(shieldAmount, pokemon, 1, crit)
       pokemon.addLuck(ICEBREAKER_LUCK_ON_KO, pokemon, 0, false)
+      pokemon.addSpeed(ICEBREAKER_SPEED_ON_KO, pokemon, 0, false)
     }
   }
 }

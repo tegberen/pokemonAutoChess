@@ -193,7 +193,6 @@ export enum Blessing {
   THIRD_EYE = "THIRD_EYE",
   RADIANCE = "RADIANCE",
   PACK_ATTACK = "PACK_ATTACK",
-  MORTAR_SHELLS = "MORTAR_SHELLS",
   MOLE_MAZE = "MOLE_MAZE",
   ICE_SPEAR = "ICE_SPEAR",
   FROST_GEAR = "FROST_GEAR",
@@ -585,7 +584,7 @@ export const POLLUTED_SEA_POISON_DURATION = 3000
 export const TIDAL_SURGE_ITEMS_REQUIRED = 2
 export const STAR_CROSSED_SEAS_MAX_HP = 50
 export const STAR_CROSSED_SEAS_ABILITY_POWER = 25
-export const MOLECULAR_CORROSION_DAMAGE_MULTIPLIER = 1.25
+export const MOLECULAR_CORROSION_DAMAGE_MULTIPLIER = 1.2
 export const RAINBOW_DROPLET_SYNERGIES_REQUIRED = 9
 export const CHAMPIONS_MASK_SHIELD_PER_FIGHTING_TIER = 100
 export const MONSTER_KING_BEAM_INTERVAL = 6000
@@ -642,6 +641,9 @@ export const UNISON_METER_DAMAGE = 1000
 export const UNISON_TRIGGERED_PROGRESS_OFFSET = UNISON_METER_DAMAGE + 1
 export const UNISON_FINISHED_PROGRESS = -1
 export const UNISON_CHECK_INTERVAL = 500
+export const UNISON_STRIKE_INTERVAL = 8000
+export const UNISON_HUMAN_HEAL = 20
+export const UNISON_HUMAN_HEAL_INTERVAL = 2000
 export const UNISON_STRIKE_ATTACK_RATIO = 1
 export const UNISON_NOVA_DELAY = 600
 export const UNISON_STRIKE_DELAY = 1300
@@ -661,10 +663,11 @@ export const ICY_REFLECTION_TRIGGER_MAX_HP_RATIO = 0.25
 export const ICY_REFLECTION_CAST_DELAY = 250
 export const BULL_LEAPING_ARRIVAL_CHECK_INTERVAL = 250
 export const BULL_LEAPING_ARRIVAL_MAX_CHECKS = 12
-export const OVERLOAD_CAST_INTERVAL = 8000
+export const OVERLOAD_CAST_INTERVAL = 10000
 export const OVERLOAD_FIRST_CAST_DELAY = 500
 export const TIDAL_GUARDIAN_WHIRLPOOL_TARGETS = 3
 export const FOGBOUND_LAKE_FIREFLIES: Pkm[] = [Pkm.VOLBEAT, Pkm.ILLUMISE]
+export const FOGBOUND_LAKE_CAROUSEL_STAGE = 10
 export const GRUDGE_CURSE_CHANCE = 0.3
 export const GRUDGE_CURSE_DURATION = 8000
 export const GRUDGE_CURSE_DURATION_REDUCTION_PER_SUBSTITUTE = 1000
@@ -723,7 +726,8 @@ export const BERRY_GROWTH_GOLDEN_BERRIES_STAGE = 12
 // GRASS tier 3, so GRASS 7 and above
 export const BERRY_GROWTH_GOLDEN_TIER = 3
 
-export const VERDANT_GROWTH_ABILITY_POWER = 5
+export const VERDANT_GROWTH_ABILITY_POWER = 10
+export const VERDANT_GROWTH_ATTACK = 1
 export const VERDANT_GROWTH_INTERVAL = 2000
 export const HEX_MANIAC_STATUS_DURATION = 30000
 export const ABSOLUTE_DARKNESS_BLIND_CHANCE = 0.1
@@ -745,6 +749,10 @@ export const RAINBOW_HOUR_EEVEELUTIONS_TARGET = 7
 export const RAINBOW_HOUR_GOLD_REWARD = 77
 export const MANIFESTATION_UNLOCK_STAGE = 20
 export const GYM_TRAINER_UNLOCK_STAGE = 9
+export const CURSE_OF_CORAL_LAST_STAGE = 12
+// one per additional pick stage
+export const CHOSEN_ONES_COUNT = 3
+export const CHOSEN_ONES_MAX_HP_GAIN = 5
 export const MOLE_MAZE_POP_DELAY = 1100
 export const MOLE_MAZE_EMERGE_DELAY = 2500
 export const HERO_BLESSING_HATCH_MAX_HP = 50
@@ -820,10 +828,10 @@ export const HIGH_BREACHING_CRASH_RANGE = 4
 // 500ms up, 500ms of skydive animation, so the crash lands with the sprite
 export const HIGH_BREACHING_CRASH_DELAY = 1000
 export const ICEBREAKER_LUCK_ON_KO = 20
+export const ICEBREAKER_SPEED_ON_KO = 30
 export const PANIC_BUTTON_PLAYER_DAMAGE = 4
 export const RAMPAGE_DURATION_EXTENSION = 2000
-export const RAMPAGE_CHANNEL_THRESHOLD = 5000
-export const RAMPAGE_DAMAGE_MULTIPLIER = 2
+export const RAMPAGE_CRIT_POWER_ON_KO = 20
 
 export const FROST_BURST_SPLASH_RATIO = 0.5
 export const FROST_BURST_EXECUTE_CHANCE_RATIO = 0.5
@@ -832,9 +840,6 @@ export const AURORA_BOREALIS_DAMAGE_REDUCTION_IN_SNOW_OR_NIGHT = 0.15
 export const AURORA_BOREALIS_REDUCTION_PER_ACTIVE_SYNERGY = 0.01
 export const PACK_ATTACK_HOUNDOOM_CHANCE = 0.15
 
-export const MORTAR_SHELLS_RANGE_BONUS = 3
-export const MORTAR_SHELLS_ATTACK_RATIO = 1.5
-export const MORTAR_SHELLS_SPEED_RATIO = 0.5
 export const ICE_SPEAR_PP_REFUND_ON_KILL = 20
 export const FROST_GEAR_RANGE_BONUS = 3
 export const FROST_GEAR_MAX_PP = 70
@@ -847,7 +852,7 @@ export const JESTER_CRIT_POWER_PER_STAR = 0.5
 export const TOXIC_RESONANCE_BEAT_INTERVAL = 3000
 export const TOXIC_RESONANCE_HARMONIC_BEAT = 4
 export const TOXIC_RESONANCE_POISON_DURATION = 3000
-export const TOXIC_RESONANCE_ALLY_PP = 5
+export const TOXIC_RESONANCE_ALLY_PP = 10
 export const TOXIC_RESONANCE_HARMONIC_ALLY_PP = 30
 export const GRAND_IGNITION_TRUE_DAMAGE_RATIO = 0.1
 export const GRAND_IGNITION_MAX_HP_BURNED_RATIO = 0.1
@@ -871,7 +876,7 @@ export const SHATTER_BASE_DAMAGE = 5
 export const SHATTER_DEFENSE_RATIO = 0.1
 // tanky units attack too slowly to carry an on-attack rider, so SHATTER pulses
 export const SHATTER_PULSE_INTERVAL = 1000
-export const SURGE_SPEED_RATIO = { I: 0.3, II: 0.3 }
+export const SURGE_SPEED_RATIO = 0.25
 // a share, not a multiplier: 0.2 is x1.2 on everything the unit deals
 export const EMPOWER_DAMAGE_AMP = { I: 0.25, II: 0.3 }
 export const EMPOWER_DELAY = 5000
@@ -1023,6 +1028,19 @@ export const BEING_OF_KNOWLEDGE_UXIE_ATTACK = 0
 export const BEING_OF_KNOWLEDGE_UXIE_DEFENSE = 0
 export const BEING_OF_KNOWLEDGE_MAX_LEVEL = 10
 
+// FOGBOUND_LAKE trades the stage 10 movement for the Illumise and Volbeat duo,
+// so it has no single guaranteedPick of its own
+export function isCarouselLockedForStage(
+  blessings: Blessing[] | undefined,
+  stage: number
+): boolean {
+  return (
+    getCarouselLockForStage(blessings, stage) !== undefined ||
+    (blessings?.includes(Blessing.FOGBOUND_LAKE) === true &&
+      stage === FOGBOUND_LAKE_CAROUSEL_STAGE)
+  )
+}
+
 export function getCarouselLockForStage(
   blessings: Blessing[] | undefined,
   stage: number
@@ -1046,14 +1064,12 @@ export const HERO_BLESSING_GIFT: { [blessing in Blessing]?: Pkm } = {
   [Blessing.ORBITAL_STRIKE]: Pkm.DOTTLER,
   [Blessing.ROOSTING_FLOCK]: Pkm.TRANQUILL,
   [Blessing.SHELL_ARMOR_BLESSING]: Pkm.GROTLE,
-  [Blessing.MORTAR_SHELLS]: Pkm.MAGBY,
   [Blessing.MOLE_MAZE]: Pkm.DRILBUR,
   [Blessing.ICE_SPEAR]: Pkm.VANILLITE,
   [Blessing.FROST_GEAR]: Pkm.SHELLDER,
   [Blessing.SHUTTLE_BUS]: Pkm.SKIDDO,
   [Blessing.PLUNDER]: Pkm.GALAR_MEOWTH,
   [Blessing.FROST_BURST]: Pkm.SNOVER,
-  [Blessing.AURORA_BOREALIS]: Pkm.AMAURA,
   [Blessing.THIRD_EYE]: Pkm.MEDITITE,
   [Blessing.RADIANCE]: Pkm.LARVESTA,
   [Blessing.PACK_ATTACK]: Pkm.HOUNDOUR,
@@ -1080,7 +1096,6 @@ export const HERO_BLESSING_FAMILY: { [blessing in Blessing]?: Pkm } = {
   [Blessing.ORBITAL_STRIKE]: Pkm.BLIPBUG,
   [Blessing.ROOSTING_FLOCK]: Pkm.PIDOVE,
   [Blessing.SHELL_ARMOR_BLESSING]: Pkm.TURTWIG,
-  [Blessing.MORTAR_SHELLS]: Pkm.MAGBY,
   [Blessing.MOLE_MAZE]: Pkm.DRILBUR,
   [Blessing.ICE_SPEAR]: Pkm.VANILLITE,
   [Blessing.FROST_GEAR]: Pkm.SHELLDER,
@@ -1135,7 +1150,6 @@ export const HERO_BLESSING_ADDS_TO_POOL: Blessing[] = [
   Blessing.FROST_GEAR,
   Blessing.SHUTTLE_BUS,
   Blessing.PLUNDER,
-  Blessing.AURORA_BOREALIS,
   Blessing.THIRD_EYE,
   Blessing.MOLE_MAZE,
   Blessing.RADIANCE,
@@ -1213,7 +1227,7 @@ export const CHOICE_SPECS_ALLY_MIN_MAX_PP = 100
 export const SOOTHE_BELL_MAX_PP_RATIO = 0.25
 export const AQUA_EGG_PHIONE_ALLY_PP = 3
 export const RAZOR_FANG_FOLLOW_UP_ATTACK_RATIO = 0.25
-export const STAR_DUST_RUNE_PROTECT_DURATION = 4000
+export const STAR_DUST_ADJACENT_SHIELD_RATIO = 0.5
 export const DEEP_SEA_TOOTH_EXECUTE_HP_RATIO = 0.5
 export const DEEP_SEA_TOOTH_DAMAGE_MULTIPLIER = 2
 // replaces the 15 PP the unblessed tooth refunds on a kill
@@ -1247,10 +1261,12 @@ export const POKEMONOMICON_DAMAGE_BONUS = 1.4
 export const UPGRADE_BLESSED_STACKS_REQUIRED = 10
 export const UPGRADE_BLESSED_SPEED_RATIO = 0.2
 export const WONDER_BOX_BLESSED_ITEMS = 3
-// the CRIT_POWER a GRIP_CLAW grants per attack, and so the most it can steal
+// the CRIT_POWER a GRIP_CLAW grants per attack, and so the most it can steal,
+// multiplied at 100 CRIT_CHANCE when blessed
 export const GRIP_CLAW_CRIT_POWER = 10
 // a target down to this has no crit bonus left to give
 export const GRIP_CLAW_MIN_TARGET_CRIT_POWER = 1
+export const GRIP_CLAW_MAX_CRIT_CHANCE_MULTIPLIER = 3
 export const COVERT_CLOAK_VANISH_DURATION = 1000
 export const REAPER_CLOTH_GHOST_VANISH_DURATION = 8000
 export const PLUSHIFY_SUBSTITUTE_PROTECT_DURATION = 1500

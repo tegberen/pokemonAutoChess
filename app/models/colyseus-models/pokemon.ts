@@ -74,6 +74,7 @@ import { getFirstAvailablePositionInBench, isOnBench,
 } from "../../utils/board"
 import { distanceC } from "../../utils/distance"
 import { clamp, min } from "../../utils/number"
+import { pickRandomIn } from "../../utils/random"
 import { schemaValues } from "../../utils/schemas"
 import type Player from "./player"
 import { getPkmWithCustom } from "./pokemon-customs"
@@ -125,6 +126,8 @@ export class Pokemon extends Schema implements IPokemon {
   // MANIFESTATION: passive on the bench until stage 20
   @type("boolean") manifestationLocked: boolean = false
   @type("boolean") supportiveSoul: boolean = false
+  // CHOSEN_ONES: an additional pick that cannot be sold
+  @type("boolean") chosenOne: boolean = false
   @type("uint8") trashToTreasureRounds: number = 0
   @type("boolean") ignited: boolean = false
   @type("uint8") ignitionCooldown: number = 0
@@ -21514,6 +21517,15 @@ export class Spewpa extends Pokemon {
   evolutionRule = {
     type: EvolutionRuleType.HATCH,
     divergentEvolution: (pokemon, player) => {
+      if (player.blessings?.includes(Blessing.COLONY)) {
+        const ownedNames = new Set(
+          schemaValues(player.board).map((owned) => owned.name)
+        )
+        const newForms = pokemon.evolutions.filter(
+          (form) => !ownedNames.has(form)
+        )
+        if (newForms.length > 0) return pickRandomIn(newForms)
+      }
       return getAltFormForPlayer(Pkm.VIVILLON, player)
     }
   } satisfies HatchEvolutionRule

@@ -1323,7 +1323,7 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
   },
   [Blessing.FOGBOUND_LAKE]: {
     tier: BlessingTier.PRISMATIC,
-    availableAtStages: BLESSING_SELECTION_STAGES,
+    availableAtStages: [4],
     icon: "fogbound_lake",
     grantsPokemonImmediately: false,
     synergy: Synergy.BUG
@@ -1573,7 +1573,7 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
   },
   [Blessing.CURSE_OF_CORAL]: {
     tier: BlessingTier.PRISMATIC,
-    availableAtStages: [12],
+    availableAtStages: [4],
     icon: "coral",
     grantsPokemonImmediately: true
   },
@@ -1779,7 +1779,7 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     tier: BlessingTier.GOLD,
     availableAtStages: [12],
     icon: "aurora_borealis",
-    grantsPokemonImmediately: true
+    grantsPokemonImmediately: false
   },
   [Blessing.RADIANCE]: {
     tier: BlessingTier.GOLD,
@@ -1791,12 +1791,6 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     tier: BlessingTier.GOLD,
     availableAtStages: [12],
     icon: "pack_attack",
-    grantsPokemonImmediately: true
-  },
-  [Blessing.MORTAR_SHELLS]: {
-    tier: BlessingTier.GOLD,
-    availableAtStages: [12],
-    icon: "mortar_shells",
     grantsPokemonImmediately: true
   },
   [Blessing.MOLE_MAZE]: {

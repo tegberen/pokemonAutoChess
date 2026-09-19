@@ -682,6 +682,14 @@ export default class BattleManager {
           }
           break
 
+        case "isChosenOne":
+          if (value) {
+            pkmSprite.addBlessedHeroMark("chosen-one")
+          } else {
+            pkmSprite.removeBlessedHeroMark()
+          }
+          break
+
         case "speed":
           if (previousValue != null && value && value > previousValue) {
             pkmSprite.displayBoost(Stat.SPEED)

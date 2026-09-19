@@ -1685,6 +1685,7 @@ export class OnSellPokemonCommand extends Command<
 
     if (
       pokemon.supportiveSoul ||
+      pokemon.chosenOne ||
       canSell(pokemon.name, this.state.specialGameRule) === false
     ) {
       return
@@ -4296,10 +4297,11 @@ export function onPokemonChangePosition({
     pokemon.removeItems(itemsToRemove, player)
 
     if (pokemon.tm && TMPerAbility.has(pokemon.tm)) {
-      // UNISON never consumed the TM, so giving it back would duplicate it
-      if (player.blessings?.includes(Blessing.UNISON) === false) {
-        player.items.push(TMPerAbility.get(pokemon.tm)!)
-      }
+      // MOVE_TUTOR never consumed a HUMAN's TM, so giving it back would duplicate it
+      const keptTM =
+        player.blessings?.includes(Blessing.MOVE_TUTOR) === true &&
+        pokemon.types.has(Synergy.HUMAN)
+      if (!keptTM) player.items.push(TMPerAbility.get(pokemon.tm)!)
       pokemon.tm = Ability.DEFAULT
       pokemon.skill = pokemon.baseSkill
       pokemon.maxPP = pokemon.baseMaxPP

@@ -26,7 +26,7 @@ import { PlayerBlessings } from "../models/colyseus-models/player-blessings"
 import { PlayerChoice } from "../models/colyseus-models/player-choice"
 import { PokemonClasses, type Pokemon } from "../models/colyseus-models/pokemon"
 import { getSynergyTier } from "../models/colyseus-models/synergies"
-import { advanceFossilUnlockProgress } from "./fossil-unlocks"
+import { advanceFossilUnlockProgress, unlockFossil } from "./fossil-unlocks"
 import { WaterPond } from "../models/colyseus-models/water-pond"
 import PokemonFactory from "../models/pokemon-factory"
 import {
@@ -52,6 +52,7 @@ import {
   BERRY_GROWTH_GOLDEN_BERRIES_GRANTED,
   BERRY_GROWTH_GOLDEN_BERRIES_STAGE,
   CONVERGENT_PARADOX_GENESECT_TIER,
+  CURSE_OF_CORAL_LAST_STAGE,
   GROUND_HOLE_ROW_STARTS,
   GROUND_HOLE_MAX_DEPTH,
   GYM_TRAINER_ROSTERS,
@@ -1927,8 +1928,11 @@ export const blessingTriggerEffectService: {
   },
 
   [Blessing.CURSE_OF_CORAL]: {
-    [BlessingTrigger.PVP_END]: (player) =>
+    // the stage has already advanced, so this still pays after the stage 11 fight
+    [BlessingTrigger.PVP_END]: (player, state) => {
+      if (state.stageLevel > CURSE_OF_CORAL_LAST_STAGE) return
       giftPokemonIfBenchHasRoom(player, Pkm.CORSOLA)
+    }
   },
 
   [Blessing.TEMPLE_OF_LANGUAGE]: {
@@ -3002,8 +3006,12 @@ export const blessingEffectService: {
   [Blessing.FROST_BURST]: (player, state, room) =>
     heroBlessingEffect(Blessing.FROST_BURST, player, state, room),
 
-  [Blessing.AURORA_BOREALIS]: (player, state, room) =>
-    heroBlessingEffect(Blessing.AURORA_BOREALIS, player, state, room),
+  // an unlock rather than a gift: Amaura joins this player's own shop pool
+  [Blessing.AURORA_BOREALIS]: (player) => {
+    if (player.fossilUnlocksRef) player.fossilUnlocksRef.revealed = true
+    unlockFossil(player, Pkm.AMAURA)
+    return true
+  },
 
   [Blessing.THIRD_EYE]: (player, state, room) =>
     heroBlessingEffect(Blessing.THIRD_EYE, player, state, room),
@@ -3013,9 +3021,6 @@ export const blessingEffectService: {
 
   [Blessing.PACK_ATTACK]: (player, state, room) =>
     heroBlessingEffect(Blessing.PACK_ATTACK, player, state, room),
-
-  [Blessing.MORTAR_SHELLS]: (player, state, room) =>
-    heroBlessingEffect(Blessing.MORTAR_SHELLS, player, state, room),
 
   [Blessing.MOLE_MAZE]: (player, state, room) =>
     heroBlessingEffect(Blessing.MOLE_MAZE, player, state, room),

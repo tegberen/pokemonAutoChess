@@ -5430,7 +5430,7 @@
 		},
 		"CHOSEN_ONES": {
 			"name": "Chosen Ones",
-			"description": "When you pick an additional Pokémon, it immediately evolves with boosted stats."
+			"description": "When you pick an additional Pokémon, it immediately evolves and cannot be sold. At the start of each fight, if all three are fielded, they each gain 5 permanent max HP."
 		},
 		"ADDITIONAL_RETHINK_I": {
 			"name": "Additional Rethink I",
@@ -5538,7 +5538,7 @@
 		},
 		"VERDANT_GROWTH": {
 			"name": "Verdant Growth",
-			"description": "Allied GRASS Pokémon gain 5 AP every 2 seconds. Gain a Chespin."
+			"description": "Allied GRASS Pokémon gain 10 AP and 1 ATK every 2 seconds. Gain a Chespin."
 		},
 		"GEM_RUSH": {
 			"name": "Gem Rush",
@@ -5602,7 +5602,7 @@
 		},
 		"MOVE_TUTOR": {
 			"name": "Move Tutor",
-			"description": "Pokémon with a TM ability have their max PP set to 70."
+			"description": "Pokémon with a TM ability have their max PP set to 70. Your TMs are no longer consumed when taught to a HUMAN Pokémon."
 		},
 		"ZAP": {
 			"name": "Zap!",
@@ -5646,7 +5646,7 @@
 		},
 		"WRAPPED_UP": {
 			"name": "Wrapped Up",
-			"description": "NORMAL Pokémon holding a scarf item convert the SHIELD gained from NORMAL into max HP. Gain an Igglybuff."
+			"description": "NORMAL Pokémon holding a scarf item convert the SHIELD gained from NORMAL into max HP, and also gain their scarf's base stats a second time. Gain an Igglybuff."
 		},
 		"SHODAN": {
 			"name": "Shodan",
@@ -5786,11 +5786,11 @@
 		},
 		"SURGE_I": {
 			"name": "Surge I",
-			"description": "The first time a Pokémon falls below 70% max HP, its basic attacks deal 30% of its current SPEED as additional SPECIAL for 10 seconds."
+			"description": "The first time a Pokémon falls below 70% max HP, its basic attacks deal 25% of its current SPEED as additional SPECIAL for 10 seconds."
 		},
 		"SURGE_II": {
 			"name": "Surge II",
-			"description": "The first time a Pokémon falls below 70% max HP, its basic attacks deal 30% of its current SPEED as additional SPECIAL for 15 seconds. This also hits an enemy directly behind the target."
+			"description": "The first time a Pokémon falls below 70% max HP, its basic attacks deal 25% of its current SPEED as additional SPECIAL for 15 seconds. This also hits an enemy directly behind the target."
 		},
 		"EMPOWER_I": {
 			"name": "Empower I",
@@ -5898,15 +5898,15 @@
 		},
 		"BULL_LEAPING": {
 			"name": "Bull Leaping",
-			"description": "When your FIELD Pokémon cast their ability, they use a second one at 1 STAR right after: melee ones leap with Aqua Jet, Flame Charge or Volt Switch if they are WATER, FIRE or ELECTRIC, or Psyshield Bash otherwise. Ranged ones, and any that would repeat their own ability, use Happy Hour instead."
+			"description": "When your FIELD Pokémon cast their ability, they cast a second ability at their own STAR level right after: melee ones leap with Aqua Jet, Flame Charge or Volt Switch if they are WATER, FIRE or ELECTRIC, or Psyshield Bash otherwise. Ranged ones, and any that would repeat their own ability, use Happy Hour instead."
 		},
 		"OVERLOAD": {
 			"name": "Overload",
-			"description": "At the start of combat and every 8 seconds, the STRONGEST of your ELECTRIC Pokémon (not yet empowered) is empowered by Volt Surge: it gains ELECTRIC_FIELD, 20 SPEED and bonus HP, and every 3rd attack chains lightning to 4 enemies. Its own ability is unchanged."
+			"description": "At the start of combat and every 10 seconds, the STRONGEST of your ELECTRIC Pokémon (not yet empowered) is empowered by Volt Surge: it gains ELECTRIC_FIELD, 20 SPEED and bonus HP, and every 3rd attack chains lightning to 4 enemies. Its own ability is unchanged."
 		},
 		"FOGBOUND_LAKE": {
 			"name": "Fogbound Lake",
-			"description": "When a BUG Pokémon would clone, it spawns a Volbeat or an Illumise instead. BUG 8 adds +1 to LIGHT, and every Volbeat and Illumise gains the effects of your active LIGHT spot."
+			"description": "You cannot move on the stage 10 carousel, but your Unique Pokémon selection always includes the Illumise and Volbeat duo. When a BUG Pokémon would clone, it spawns a Volbeat or an Illumise instead. BUG 8 adds +1 to LIGHT, and every Volbeat and Illumise gains the effects of your active LIGHT spot."
 		},
 		"TIDAL_GUARDIAN": {
 			"name": "Tidal Guardian",
@@ -5934,11 +5934,11 @@
 		},
 		"MOLECULAR_CORROSION": {
 			"name": "Molecular Corrosion",
-			"description": "Enemy Pokémon under POISONNED take 25% more damage from all sources, and your POISONNED can no longer be blocked by RUNE_PROTECT."
+			"description": "Enemy Pokémon under POISONNED take 20% more damage from all sources, and your POISONNED can no longer be blocked by RUNE_PROTECT."
 		},
 		"UNISON": {
 			"name": "Unison",
-			"description": "Your TMs are no longer consumed when taught to a HUMAN Pokémon.\nDamage dealt by your HUMAN Pokémon builds their bond (max 1000). When this bond reaches maximum power or is broken by the first HUMAN Pokémon being KO'd, your surviving Pokémon retaliate together, dividing the accumulated damage between all enemies as SPECIAL. This counts as a HUMAN attack."
+			"description": "HUMAN Pokémon heal 20 HP every 2 seconds for each ADJACENT allied HUMAN Pokémon. Damage blocked by your HUMAN Pokémon builds their bond (max 1000). Every 8 seconds, your surviving Pokémon retaliate together, dividing the stored damage between all enemies as SPECIAL, and the bond resets. This counts as a HUMAN attack."
 		},
 		"BERRY_GROWTH": {
 			"name": "Berry Growth",
@@ -6114,7 +6114,7 @@
 		},
 		"TOXIC_RESONANCE": {
 			"name": "Toxic Resonance",
-			"description": "Gain a strong Tympole. Your STRONGEST Tympole resonates every 3 seconds. Each beat spreads 1 tile further than the last. Pokémon caught in the wave are POISONNED for 3 seconds, allies included. Poisoned allies gain 5 PP. The 4th beat covers the whole board and gives 30 PP instead. The cycle then restarts."
+			"description": "Gain a strong Tympole. Your STRONGEST Tympole resonates every 3 seconds. Each beat spreads 1 tile further than the last. Pokémon caught in the wave are POISONNED for 3 seconds, allies included. Poisoned allies gain 10 PP. The 4th beat covers the whole board and gives 30 PP instead. The cycle then restarts."
 		},
 		"GRAND_IGNITION": {
 			"name": "Grand Ignition",
@@ -6126,7 +6126,7 @@
 		},
 		"COLONY": {
 			"name": "Colony",
-			"description": "Gain a strong Scatterbug. When your STRONGEST Vivillon KO's its target, a Spewpa joins your bench. It evolves after 2 rounds and sells for 0 GOLD. Only one Spewpa is attracted at a time, so it must evolve before the next arrives. Every Vivillon contributes its own synergies. The swarm has grown fond of you and refuses to be sent to your partner."
+			"description": "Gain a strong Scatterbug. When your STRONGEST Vivillon KO's its target, a Spewpa joins your bench. It evolves after 2 rounds into a Vivillon form you do not have yet, and sells for 0 GOLD. Only one Spewpa is attracted at a time, so it must evolve before the next arrives. Every Vivillon contributes its own synergies. The swarm has grown fond of you and refuses to be sent to your partner."
 		},
 		"SAND_BUDDIES": {
 			"name": "Sand Buddies",
@@ -6230,7 +6230,7 @@
 		},
 		"CURSE_OF_CORAL": {
 			"name": "Curse of Coral",
-			"description": "Now and after every PvP round, gain a Corsola. Your Cursola sell for 18 GOLD."
+			"description": "Now and after every PvP round until stage 12, gain a Corsola. Your Cursola sell for 18 GOLD."
 		},
 		"TEMPLE_OF_LANGUAGE": {
 			"name": "Temple of Language",
@@ -6302,11 +6302,11 @@
 		},
 		"ICEBREAKER": {
 			"name": "Icebreaker",
-			"description": "Gain a strong Piplup. Your STRONGEST Piplup's ability executes FREEZE enemies. On a KO, it grants double SHIELD and 20 LUCK."
+			"description": "Gain a strong Piplup. Your STRONGEST Piplup's ability executes FREEZE enemies. On a KO, it gains the SHIELD again, 20 LUCK and 30 SPEED."
 		},
 		"RAMPAGE": {
 			"name": "Rampage",
-			"description": "Gain a strong Deino. Your STRONGEST Deino's ability can critically strike. Each time it KO's an ADJACENT enemy, the ability and its SILENCE last 2 seconds longer. After 5 seconds of channeling, the damage doubles for the rest of the cast."
+			"description": "Gain a strong Deino. Your STRONGEST Deino's ability can critically strike. Each time it KO's an ADJACENT enemy, the ability lasts 2 seconds longer and it gains 20% CRIT_POWER."
 		},
 		"FROST_BURST": {
 			"name": "Frost Burst",
@@ -6318,7 +6318,7 @@
 		},
 		"AURORA_BOREALIS": {
 			"name": "Aurora Borealis",
-			"description": "Gain an Amaura and add it to the pool. While you field an Amaura, your team takes 10% less PHYSICAL and SPECIAL damage, increased to 15% in SNOW or NIGHT, plus 1% per active synergy."
+			"description": "Unlock Amaura. While you field an Amaura, your team takes 10% less PHYSICAL and SPECIAL damage, increased to 15% in SNOW or NIGHT, plus 1% per active synergy."
 		},
 		"RADIANCE": {
 			"name": "Radiance",
@@ -6331,10 +6331,6 @@
 		"MOLE_MAZE": {
 			"name": "Mole Maze",
 			"description": "Gain a Drilbur and add it to the pool. Your STRONGEST Drilbur's ability is replaced with Mole Maze."
-		},
-		"MORTAR_SHELLS": {
-			"name": "Mortar Shells",
-			"description": "Gain a Magby. Your STRONGEST Magby gains +3 RANGE and +150% base ATK, but has 50% reduced base SPEED."
 		},
 		"ICE_SPEAR": {
 			"name": "Ice Spear",
@@ -6402,7 +6398,7 @@
 		},
 		"STAR_DUST_BLESSING": {
 			"name": "Star Dust Veil",
-			"description": "Gain STAR_DUST. After the holder casts its ability, it gains RUNE_PROTECT for 4 seconds and grants the same SHIELD to ADJACENT allies."
+			"description": "Gain STAR_DUST. After the holder casts its ability, it grants 50% of the same SHIELD to ADJACENT allies."
 		},
 		"DEEP_SEA_TOOTH_BLESSING": {
 			"name": "Abyssal Fang",
@@ -6490,7 +6486,7 @@
 		},
 		"GRIP_CLAW_BLESSING": {
 			"name": "Seizing Claw",
-			"description": "Gain a GRIP_CLAW. The CRIT_POWER it grants is stolen from the target, down to no critical bonus at all."
+			"description": "Gain a GRIP_CLAW. The CRIT_POWER it grants is stolen from the target, down to no critical bonus at all. At 100% CRIT_CHANCE, the CRIT_POWER gain is tripled."
 		},
 		"CHOICE_SPECS_BLESSING": {
 			"name": "Shared Vision",
