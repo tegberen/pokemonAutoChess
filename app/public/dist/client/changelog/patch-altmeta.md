@@ -480,9 +480,16 @@ Every balance change on this server, newest first.
 **Game Mode**
 - Double Up | global PvE nerf
 
+**Pokémon**
+- Teddiursa Line | gains LIGHT. Bloodmoon Ursaluna | ROCK → LIGHT
+- Sewaddle Line | now regional
+
+**Abilities**
+- Eruption | damage 30/60/90 → 30/50/70
+
 **Wishes**
 - High Breaching | stage 4 or 12 → stage 12 only
-- Mole Maze {{new}} | Gold Wish at stage 12: gain a Drilbur and add it to the pool, your STRONGEST Drilbur's ability is replaced with Mole Maze: burrow into the ground, becoming untargetable. If a dug hole exists, pop out of a random one and dive back in, then burst out of a new hole next to the target. Each time it jumps out, deal 100% of ATK + DEF as SPECIAL to enemies in that hole and ADJACENT to it. Holes last until the end of the fight.
+- Mole Maze {{new}} | Gold Wish at stage 12: gain a Drilbur and add it to the pool, your STRONGEST Drilbur's ability is replaced with Mole Maze: burrow into the ground, becoming untargetable. If a dug hole exists, pop out of a random one and dive back in, then burst out of a new hole next to the target. Each time it jumps out, deal 100% of ATK + DEF as SPECIAL to enemies in that hole and ADJACENT to it. (New holes only last until the end of the fight.)
 
 ### 17 September 2026
 

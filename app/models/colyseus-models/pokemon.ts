@@ -2539,6 +2539,7 @@ export class Sewaddle extends Pokemon {
   maxPP = 100
   range = 1
   skill = Ability.MANTIS_BLADES
+  regional = true
 }
 
 export class Swadloon extends Pokemon {
@@ -2554,6 +2555,7 @@ export class Swadloon extends Pokemon {
   maxPP = 100
   range = 1
   skill = Ability.MANTIS_BLADES
+  regional = true
 }
 
 export class Leavanny extends Pokemon {
@@ -2568,6 +2570,7 @@ export class Leavanny extends Pokemon {
   maxPP = 100
   range = 1
   skill = Ability.MANTIS_BLADES
+  regional = true
 }
 
 export class Turtwig extends Pokemon {
@@ -15814,7 +15817,7 @@ export class Kangaskhan extends Pokemon {
 }
 
 export class Teddiursa extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.WILD, Synergy.GROUND])
+  types = new SetSchema<Synergy>([Synergy.WILD, Synergy.GROUND, Synergy.LIGHT])
   rarity = Rarity.ULTRA
   stars = 1
   evolution = Pkm.URSARING
@@ -15829,7 +15832,7 @@ export class Teddiursa extends Pokemon {
 }
 
 export class Ursaring extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.WILD, Synergy.GROUND])
+  types = new SetSchema<Synergy>([Synergy.WILD, Synergy.GROUND, Synergy.LIGHT])
   rarity = Rarity.ULTRA
   stars = 2
   evolution = Pkm.URSALUNA
@@ -15844,7 +15847,7 @@ export class Ursaring extends Pokemon {
 }
 
 export class Ursaluna extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.WILD, Synergy.GROUND])
+  types = new SetSchema<Synergy>([Synergy.WILD, Synergy.GROUND, Synergy.LIGHT])
   rarity = Rarity.ULTRA
   stars = 3
   hp = 560
@@ -15870,7 +15873,7 @@ export class Ursaluna extends Pokemon {
 }
 
 export class UrsalunaBloodmoon extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.WILD, Synergy.GROUND, Synergy.ROCK])
+  types = new SetSchema<Synergy>([Synergy.WILD, Synergy.GROUND, Synergy.LIGHT])
   rarity = Rarity.ULTRA
   stars = 3
   hp = 490

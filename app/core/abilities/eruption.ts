@@ -10,7 +10,7 @@ export class EruptionStrategy extends AbilityStrategy {
   requiresTarget = false
   process(pokemon: PokemonEntity, board: Board, target: null, crit: boolean) {
     super.process(pokemon, board, target, crit)
-    const damage = [30, 60, 90, 180][pokemon.stars - 1] ?? 180
+    const damage = [30, 50, 70, 140][pokemon.stars - 1] ?? 140
     const numberOfProjectiles =
       pokemon.stars === 1 ? 20 : pokemon.stars === 2 ? 30 : 45
 
