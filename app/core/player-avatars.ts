@@ -10,6 +10,7 @@ import {
 } from "../config"
 import { PokemonAvatarModel } from "../models/colyseus-models/pokemon-avatar"
 import type GameState from "../rooms/states/game-state"
+import { isTeleportCosmetic } from "../types/enum/AvatarCosmetic"
 import {
   GamePhaseState,
   Orientation,
@@ -56,8 +57,18 @@ export function setPlayerAvatarTarget(
 ) {
   const avatar = state.playerAvatars.get(playerId)
   if (!avatar) return
-  avatar.targetX = clamp(x, AVATAR_ROAM_MIN_X, AVATAR_ROAM_MAX_X)
-  avatar.targetY = clamp(y, AVATAR_ROAM_MIN_Y, AVATAR_ROAM_MAX_Y)
+  const targetX = clamp(x, AVATAR_ROAM_MIN_X, AVATAR_ROAM_MAX_X)
+  const targetY = clamp(y, AVATAR_ROAM_MIN_Y, AVATAR_ROAM_MAX_Y)
+  if (isTeleportCosmetic(avatar.cosmetic)) {
+    avatar.x = avatar.targetX = targetX
+    avatar.y = avatar.targetY = targetY
+    avatar.action = PokemonActionState.IDLE
+    // placed rather than walked, the same signal a phase anchor sends
+    avatar.anchorCount = (avatar.anchorCount + 1) % 256
+    return
+  }
+  avatar.targetX = targetX
+  avatar.targetY = targetY
 }
 
 /**

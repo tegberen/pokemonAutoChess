@@ -53,6 +53,7 @@ import {
   checkBlessingQuests,
   checkIndecisionSynergies,
   absorbFertileSoil,
+  forgeSilverSpoons,
   grantAdoptionBaby,
   serveFestivePicnicDishes,
   rollWaterFountainPonds,
@@ -2598,6 +2599,7 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
     this.state.players.forEach((player: Player) => {
       if (!player.alive) return
       absorbFertileSoil(player)
+      forgeSilverSpoons(player)
       grantAdoptionBaby(player)
       serveFestivePicnicDishes(player)
       endIgnitionRound(player)
@@ -2666,6 +2668,14 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
           : this.state.stageLevel === AdditionalPicksStages[1]
             ? this.room.additionalRarePool
             : this.room.additionalEpicPool
+      // proposing what a Wish already seeded would be a pick that changes nothing
+      const popUnproposedPokemon = () => {
+        let pokemon = pool.pop()
+        while (pokemon && this.state.additionalPokemons.includes(pokemon)) {
+          pokemon = pool.pop()
+        }
+        return pokemon
+      }
       let remainingAddPicks = 8
       this.state.players.forEach((player: Player) => {
         if (!player.isBot) {
@@ -2683,7 +2693,7 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
               : undefined
           const pokemons: Pkm[] = []
           for (let i = 0; i < 3; i++) {
-            const p = pool.pop()
+            const p = popUnproposedPokemon()
             if (p) {
               // If the Pokemon has a regional variant in the player's region, show that instead of the base form.
               // Base form will still be added to the pool for all players
@@ -2735,7 +2745,7 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
       })
 
       repeat(remainingAddPicks)(() => {
-        const p = pool.pop()
+        const p = popUnproposedPokemon()
         if (p) {
           this.state.shop.addAdditionalPokemon(p, this.state)
         }
@@ -4202,12 +4212,15 @@ export function onPokemonChangePosition({
   // called after manually changing position of the pokemon on board
 
   if (newY === 0 && !doNotRemoveItems) {
+    const unloadsEverything =
+      state?.specialGameRule === SpecialGameRule.SLAMINGO ||
+      player.blessings?.includes(Blessing.CROAGUNKS_AID) ||
+      (player.blessings?.includes(Blessing.SILVER_SPOON) === true &&
+        PkmFamily[pokemon.name] === Pkm.ABRA)
     const itemsToRemove = schemaValues(pokemon.items).filter((item) => {
       return (
         isIn(RemovableItems, item) ||
-        ((state?.specialGameRule === SpecialGameRule.SLAMINGO ||
-          player.blessings?.includes(Blessing.CROAGUNKS_AID)) &&
-          item !== Item.RARE_CANDY)
+        (unloadsEverything && item !== Item.RARE_CANDY)
       )
     })
     player.items.push(...itemsToRemove)

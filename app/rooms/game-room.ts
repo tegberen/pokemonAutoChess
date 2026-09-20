@@ -1248,10 +1248,9 @@ export default class GameRoom extends Room<{ state: GameState }> {
         if (!hasLeftBeforeEnd) {
           const unlocked = new Set(usr.unlockedAvatarCosmetics ?? [])
           for (const cosmetic of AVATAR_COSMETIC_IDS) {
-            if (
-              cosmetic !== "none" &&
-              this.state.hasBlessing(player.id, AVATAR_COSMETIC_BLESSINGS[cosmetic])
-            ) {
+            if (cosmetic === "none") continue
+            const blessing = AVATAR_COSMETIC_BLESSINGS[cosmetic]
+            if (this.state.hasBlessing(player.id, blessing)) {
               unlocked.add(cosmetic)
             }
           }
@@ -1821,7 +1820,11 @@ export default class GameRoom extends Room<{ state: GameState }> {
     const previousPokemons = [...choice.pokemons] as Pkm[]
     const replacementIndices = pool
       .map((pokemon, index) => ({ pokemon, index }))
-      .filter(({ pokemon }) => previousPokemons.includes(pokemon) === false)
+      .filter(
+        ({ pokemon }) =>
+          previousPokemons.includes(pokemon) === false &&
+          this.state.additionalPokemons.includes(pokemon) === false
+      )
       .slice(0, previousPokemons.length)
       .map(({ index }) => index)
     if (replacementIndices.length < previousPokemons.length) return
@@ -1886,7 +1889,9 @@ export default class GameRoom extends Room<{ state: GameState }> {
       pool.push(pokemons[slotIndex])
       shuffleArray(pool)
       const drawIndex = pool.findIndex(
-        (candidate) => pokemons.includes(candidate) === false
+        (candidate) =>
+          pokemons.includes(candidate) === false &&
+          this.state.additionalPokemons.includes(candidate) === false
       )
       if (drawIndex === -1) return
       pokemons[slotIndex] = pool.splice(drawIndex, 1)[0]

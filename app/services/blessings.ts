@@ -88,6 +88,7 @@ import {
   MIX_AND_MATCH_I_UNIQUES,
   MIX_AND_MATCH_II_FIELD_CAP,
   MIX_AND_MATCH_II_UNIQUES,
+  MOLE_MAZE_DELAY,
   MORE_EQUAL_THAN_OTHERS_GOLD,
   MORE_EQUAL_THAN_OTHERS_GOLD_FOR_OTHERS,
   MOVE_TUTOR_MAX_PP,
@@ -113,6 +114,8 @@ import {
   SELECTIVE_GENETICS_GOLDEN_EGG_CHANCE,
   SELECTIVE_GENETICS_MAX_COST,
   SHADY_PRICE_FREE_ROLLS,
+  SILVER_SPOON_DELAY,
+  SILVER_SPOON_ROUNDS_BY_STAR,
   SINGULARITY_I_STAGES,
   SINGULARITY_II_STAGES,
   SINGULARITY_OPTIONS,
@@ -910,6 +913,29 @@ export function getWaterFountainPortalMap(
   return eligible.length > 0 ? pickRandomIn(eligible) : null
 }
 
+// one at a time: items are a set, so a second spoon would have nowhere to go
+export function forgeSilverSpoons(player: Player) {
+  if (player.blessings?.includes(Blessing.SILVER_SPOON) !== true) return
+  schemaValues(player.board).forEach((pokemon) => {
+    if (PkmFamily[pokemon.name] !== Pkm.ABRA) return
+    if (pokemon.items.has(Item.TWISTED_SPOON)) return
+    const component = schemaValues(pokemon.items).find(
+      (item) => isIn(ItemComponents, item) && item !== Item.TWISTED_SPOON
+    )
+    if (!component) {
+      pokemon.silverSpoonRounds = 0
+      return
+    }
+    pokemon.silverSpoonRounds += 1
+    const roundsRequired =
+      SILVER_SPOON_ROUNDS_BY_STAR[Math.min(pokemon.stars, 3) - 1] ?? 1
+    if (pokemon.silverSpoonRounds < roundsRequired) return
+    pokemon.removeItems([component], player)
+    pokemon.addItems([Item.TWISTED_SPOON], player)
+    pokemon.silverSpoonRounds = 0
+  })
+}
+
 /* a non ground pokemon standing on a fully dug hole for long enough absorbs the
    soil, turning it into a Ground type with the matching awakening */
 export function absorbFertileSoil(player: Player) {
@@ -1662,7 +1688,7 @@ function heroBlessingEffect(
     const normalForm = (Object.keys(PkmRegionalVariants) as Pkm[]).find((pkm) =>
       PkmRegionalVariants[pkm]!.includes(family)
     )
-    state.shop.addAdditionalPokemon(normalForm ?? family, state)
+    state.shop.addAdditionalPokemon(normalForm ?? family, state, true)
   }
   if (HERO_BLESSING_MOVES_REGION.includes(blessing)) {
     moveToRegionWherePokemonIsFound(player, state, room, family)
@@ -2035,7 +2061,13 @@ export const blessingScheduledEffectService: {
   [Blessing.SUPPORTIVE_SOUL]: (player) => grantSupportiveSoulItem(player),
 
   [Blessing.LANCES_ACE]: (player) =>
-    giftPokemonIfBenchHasRoom(player, Pkm.DRATINI)
+    giftPokemonIfBenchHasRoom(player, Pkm.DRATINI),
+
+  [Blessing.SILVER_SPOON]: (player) =>
+    giftPokemonIfBenchHasRoom(player, Pkm.ABRA),
+
+  [Blessing.MOLE_MAZE]: (player) =>
+    giftPokemonIfBenchHasRoom(player, Pkm.DRILBUR)
 }
 
 export const blessingEffectService: {
@@ -2154,13 +2186,20 @@ export const blessingEffectService: {
     ])
     return true
   },
+  [Blessing.SILVER_SPOON]: (player, state) => {
+    scheduleBlessingGrant(player, state, Blessing.SILVER_SPOON, [
+      state.stageLevel + SILVER_SPOON_DELAY
+    ])
+    return true
+  },
   [Blessing.PANIC_BUTTON]: (player) => grantPanicButtonUnown(player),
   [Blessing.HAIL_TO_THE_KING]: (player) => {
     player.items.push(Item.RELIC_STATUE)
     return true
   },
-  [Blessing.TRASH_TO_TREASURE]: (player) => {
+  [Blessing.TRASH_TO_TREASURE]: (player, state) => {
     if (getFreeSpaceOnBench(player.board, getBenchSize(player.blessings)) < 2) return false
+    state.shop.addAdditionalPokemon(Pkm.TRUBBISH, state, true)
     giftPokemonIfBenchHasRoom(player, Pkm.TRUBBISH)
     giftPokemonIfBenchHasRoom(player, Pkm.BELDUM)
     const trashGranted = randomBetween(
@@ -3022,8 +3061,13 @@ export const blessingEffectService: {
   [Blessing.PACK_ATTACK]: (player, state, room) =>
     heroBlessingEffect(Blessing.PACK_ATTACK, player, state, room),
 
-  [Blessing.MOLE_MAZE]: (player, state, room) =>
-    heroBlessingEffect(Blessing.MOLE_MAZE, player, state, room),
+  // the Drilbur is deferred, the pool addition is not
+  [Blessing.MOLE_MAZE]: (player, state, room) => {
+    scheduleBlessingGrant(player, state, Blessing.MOLE_MAZE, [
+      state.stageLevel + MOLE_MAZE_DELAY
+    ])
+    return heroBlessingEffect(Blessing.MOLE_MAZE, player, state, room)
+  },
 
   [Blessing.ICE_SPEAR]: (player, state, room) =>
     heroBlessingEffect(Blessing.ICE_SPEAR, player, state, room),
@@ -3091,7 +3135,7 @@ export const blessingEffectService: {
        rather than after the gift fails */
     if (getFreeSpaceOnBench(player.board, getBenchSize(player.blessings)) < 1) return false
     const encountered = pickRandomIn(candidates)
-    state.shop.addAdditionalPokemon(encountered, state)
+    state.shop.addAdditionalPokemon(encountered, state, true)
     if (!giftPokemonIfBenchHasRoom(player, encountered)) return false
     player.items.push(Item.SILVER_DOJO_TICKET)
     return true

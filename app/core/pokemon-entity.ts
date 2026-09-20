@@ -1545,6 +1545,10 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
       this.addAbilityPower(1, this, 0, false, true)
     }
 
+    if (this.heroBlessings.has(Blessing.MOLE_MAZE)) {
+      this.addAbilityPower(1, this, 0, false, true)
+    }
+
     /* IMPENDING_DOOM: killing a cursed enemy pulls the killer's own shadow
        forward. The timer is keyed by the killer's team, not the victim's. */
     if (

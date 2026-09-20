@@ -15,6 +15,8 @@ import {
   PokemonActionState
 } from "../../../../types/enum/Game"
 import { getOrientation } from "../../../../utils/orientation"
+import { Ability } from "../../../../types/enum/Ability"
+import { isTeleportCosmetic } from "../../../../types/enum/AvatarCosmetic"
 import { getAvatarCosmetic } from "../../cosmetics/avatar-cosmetics"
 import { equipAvatarCosmetic, moveAvatar } from "../../network"
 import { preference } from "../../preferences"
@@ -27,6 +29,7 @@ import type GameScene from "../scenes/game-scene"
 import { PokemonAnimations } from "./pokemon-animations"
 import PokemonAvatar from "./pokemon-avatar"
 import { AvatarCosmeticsRenderer } from "./avatar-cosmetics-renderer"
+import { addAbilitySprite } from "./abilities-animations"
 
 /* how much of the gap to the server position a remote avatar closes per frame */
 const REMOTE_SMOOTHING = 0.25
@@ -49,6 +52,11 @@ const REACTION_DURATION_MS = 2500
 /* The server re-anchors immediately; fade the destination back in so the
    synchronized placement reads as a transition rather than a hard teleport. */
 const TRANSITION_FADE_MS = 350
+const TELEPORT_VANISH_MS = 180
+const TELEPORT_APPEAR_MS = 220
+const TELEPORT_VANISH_SCALE = 0.4
+// the avatar being solid again is the tell that it can go again
+const TELEPORT_COOLDOWN_MS = TELEPORT_VANISH_MS + TELEPORT_APPEAR_MS
 
 type Predicted = { x: number; y: number; targetX: number; targetY: number }
 
@@ -64,6 +72,8 @@ export default class PlayerAvatarsManager {
   scene: GameScene
   sprites: Map<string, PokemonAvatar> = new Map()
   private predicted: Predicted | null = null
+  private teleportReadyAt = 0
+  private teleporting = false
   private hidden = false
   private lastFlip = false
   private lastPhase: GamePhaseState | undefined
@@ -173,8 +183,20 @@ export default class PlayerAvatarsManager {
       this.predicted.y = this.predicted.targetY = cellY
     }
     const [x, y] = transformEntityCoordinates(cellX, cellY, this.flip)
+    // the local avatar animates its own in startTeleport
+    const remoteTeleport =
+      id !== this.ownId &&
+      isTeleportCosmetic(this.equippedCosmetics.get(id)) &&
+      Phaser.Math.Distance.Between(sprite.x, sprite.y, x, y) > 0
+    if (remoteTeleport) this.playTeleport(sprite)
+    // mid-teleport the sprite is already on its way to this very cell
+    if (id === this.ownId && !this.teleporting) {
+      this.scene.tweens.killTweensOf(sprite)
+      sprite.setScale(1).setAlpha(1)
+    }
     sprite.setPosition(x, y)
     sprite.setData({ serverX: x, serverY: y })
+    if (remoteTeleport) this.playTeleport(sprite)
     if (sprite.action === PokemonActionState.IDLE) {
       sprite.orientation = this.entryOrientation(sprite)
       sprite.animationLocked = false
@@ -235,15 +257,78 @@ export default class PlayerAvatarsManager {
     // Clamp prediction as well as the authoritative server target.
     const x = Phaser.Math.Clamp(rawX, AVATAR_ROAM_MIN_X, AVATAR_ROAM_MAX_X)
     const y = Phaser.Math.Clamp(rawY, AVATAR_ROAM_MIN_Y, AVATAR_ROAM_MAX_Y)
-    this.predicted.targetX = x
-    this.predicted.targetY = y
     const [borderedWorldX, borderedWorldY] = transformEntityCoordinates(
       x,
       y,
       this.flip
     )
+    if (isTeleportCosmetic(this.equippedCosmetics.get(this.ownId))) {
+      if (this.scene.time.now < this.teleportReadyAt) return
+      this.teleportReadyAt = this.scene.time.now + TELEPORT_COOLDOWN_MS
+      this.showClickFeedback(borderedWorldX, borderedWorldY)
+      this.startTeleport(x, y)
+      return
+    }
+    this.predicted.targetX = x
+    this.predicted.targetY = y
     this.showClickFeedback(borderedWorldX, borderedWorldY)
     moveAvatar(x, y)
+  }
+
+  /** the avatar shrinks into its own puff, then reappears at the destination */
+  private startTeleport(cellX: number, cellY: number) {
+    const sprite = this.ownId ? this.sprites.get(this.ownId) : undefined
+    if (!this.predicted || !sprite?.scene) return
+    // hold the prediction still, or the walk integrator drags it mid-vanish
+    this.predicted.targetX = this.predicted.x
+    this.predicted.targetY = this.predicted.y
+    this.teleporting = true
+    this.playTeleport(sprite)
+    this.scene.tweens.killTweensOf(sprite)
+    this.scene.tweens.add({
+      targets: sprite,
+      alpha: 0,
+      scale: TELEPORT_VANISH_SCALE,
+      duration: TELEPORT_VANISH_MS,
+      ease: "Back.easeIn",
+      onComplete: () => this.arriveTeleport(sprite, cellX, cellY)
+    })
+  }
+
+  // the server is told once it lands, so both sides jump together
+  private arriveTeleport(
+    sprite: PokemonAvatar,
+    cellX: number,
+    cellY: number
+  ) {
+    if (!this.predicted || !sprite.scene) {
+      this.teleporting = false
+      return
+    }
+    this.predicted.x = this.predicted.targetX = cellX
+    this.predicted.y = this.predicted.targetY = cellY
+    const [x, y] = transformEntityCoordinates(cellX, cellY, this.flip)
+    sprite.setPosition(x, y)
+    this.playTeleport(sprite)
+    moveAvatar(cellX, cellY)
+    this.scene.tweens.add({
+      targets: sprite,
+      alpha: 1,
+      scale: 1,
+      duration: TELEPORT_APPEAR_MS,
+      ease: "Back.easeOut",
+      onComplete: () => {
+        this.teleporting = false
+      }
+    })
+  }
+
+  private playTeleport(sprite: PokemonAvatar) {
+    if (!sprite.scene || !sprite.visible) return
+    addAbilitySprite(this.scene, Ability.TELEPORT, 0, [sprite.x, sprite.y], {
+      scale: 2,
+      depth: DEPTH.POKEMON
+    })
   }
 
   getEmoteMenuHost(fallback: PokemonAvatar): PokemonAvatar {
@@ -500,9 +585,12 @@ export default class PlayerAvatarsManager {
 
   private fadeInAnchoredAvatars() {
     const visible = this.visibleIds()
+    this.teleporting = false
     this.sprites.forEach((sprite, id) => {
       if (!sprite.scene || !visible.has(id)) return
       this.scene.tweens.killTweensOf(sprite)
+      // a teleport interrupted by the phase change leaves the sprite shrunk
+      sprite.setScale(1)
       sprite.setAlpha(0)
       this.scene.tweens.add({
         targets: sprite,

@@ -72,6 +72,7 @@ export interface GameStateStore {
   redDpsMeter: IDps[]
   emotesUnlocked: Emotion[]
   additionalPokemons: Pkm[]
+  wishAdditionalPokemons: Pkm[]
   blessingsByPlayerId: { [playerId: string]: Blessing[] }
   thinkFastActiveByPlayerId: { [playerId: string]: boolean }
   blessingQuestProgressByPlayerId: {
@@ -131,6 +132,7 @@ const initialState: GameStateStore = {
   redDpsMeter: new Array<IDps>(),
   emotesUnlocked: [],
   additionalPokemons: new Array<Pkm>(),
+  wishAdditionalPokemons: new Array<Pkm>(),
   blessingsByPlayerId: {},
   thinkFastActiveByPlayerId: {},
   blessingQuestProgressByPlayerId: {},
@@ -254,6 +256,9 @@ export const gameSlice: Slice<GameStateStore> = createSlice({
     },
     setAdditionalPokemons: (state, action: PayloadAction<Pkm[]>) => {
       state.additionalPokemons = action.payload
+    },
+    setWishAdditionalPokemons: (state, action: PayloadAction<Pkm[]>) => {
+      state.wishAdditionalPokemons = action.payload
     },
     setBlessingsEnabled: (state, action: PayloadAction<boolean>) => {
       state.blessingsEnabled = action.payload
@@ -461,6 +466,7 @@ export const gameSlice: Slice<GameStateStore> = createSlice({
 export const {
   setSimulation,
   setAdditionalPokemons,
+  setWishAdditionalPokemons,
   setPlayerBlessings,
   setPlayerFossilUnlocks,
   setBlessingsEnabled,

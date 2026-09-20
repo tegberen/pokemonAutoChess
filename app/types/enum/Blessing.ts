@@ -194,6 +194,7 @@ export enum Blessing {
   RADIANCE = "RADIANCE",
   PACK_ATTACK = "PACK_ATTACK",
   MOLE_MAZE = "MOLE_MAZE",
+  SILVER_SPOON = "SILVER_SPOON",
   ICE_SPEAR = "ICE_SPEAR",
   FROST_GEAR = "FROST_GEAR",
   SHUTTLE_BUS = "SHUTTLE_BUS",
@@ -780,13 +781,16 @@ export const BP_REWARDS_COMPONENTS = 2
 export const BP_REWARDS_RECURRING_COMPONENTS = 1
 export const BP_REWARDS_ROUND_INTERVAL = 5
 export const LANCES_ACE_DELAY = 3
+export const SILVER_SPOON_DELAY = 3
+export const SILVER_SPOON_ROUNDS_BY_STAR = [3, 2, 1] as const
+export const MOLE_MAZE_DELAY = 3
 export const HAIL_TO_THE_KING_MAX_HP = 100
 export const HAIL_TO_THE_KING_ATTACK = 10
 export const HAIL_TO_THE_KING_DEFENSE = 10
 export const HAIL_TO_THE_KING_SPECIAL_DEFENSE = 10
 export const HAIL_TO_THE_KING_SPEED = 10
 export const HAIL_TO_THE_KING_CURSE_DELAY = 1000
-export const TRASH_TO_TREASURE_ROUNDS_BY_STAR = [5, 3, 1] as const
+export const TRASH_TO_TREASURE_ROUNDS_BY_STAR = [3, 2, 1] as const
 export const TRASH_TO_TREASURE_TRASH_GRANTED_MIN = 1
 export const TRASH_TO_TREASURE_TRASH_GRANTED_MAX = 3
 export const GREEDY_WISH_PRISMATIC_GOLD = 20
@@ -1064,7 +1068,6 @@ export const HERO_BLESSING_GIFT: { [blessing in Blessing]?: Pkm } = {
   [Blessing.ORBITAL_STRIKE]: Pkm.DOTTLER,
   [Blessing.ROOSTING_FLOCK]: Pkm.TRANQUILL,
   [Blessing.SHELL_ARMOR_BLESSING]: Pkm.GROTLE,
-  [Blessing.MOLE_MAZE]: Pkm.DRILBUR,
   [Blessing.ICE_SPEAR]: Pkm.VANILLITE,
   [Blessing.FROST_GEAR]: Pkm.SHELLDER,
   [Blessing.SHUTTLE_BUS]: Pkm.SKIDDO,
@@ -1122,7 +1125,8 @@ export const HERO_BLESSING_FAMILY: { [blessing in Blessing]?: Pkm } = {
   [Blessing.GRAND_IGNITION]: Pkm.FENNEKIN,
   [Blessing.VALOR]: Pkm.TEPIG,
   [Blessing.COLONY]: Pkm.SCATTERBUG,
-  [Blessing.SAND_BUDDIES]: Pkm.SANDILE
+  [Blessing.SAND_BUDDIES]: Pkm.SANDILE,
+  [Blessing.SILVER_SPOON]: Pkm.ABRA
 }
 
 /* hero blessings that also relocate the player to a region where their family

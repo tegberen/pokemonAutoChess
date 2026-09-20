@@ -834,6 +834,13 @@ export const WeatherRocksByWeather = new Map([
 export const WeatherByWeatherRocks = reverseMap(WeatherRocksByWeather)
 
 export const CraftableItems = Object.keys(ItemRecipe) as Item[]
+
+export const TwistedSpoonItems: Item[] = [
+  Item.TWISTED_SPOON,
+  ...CraftableItems.filter((item) =>
+    ItemRecipe[item]?.includes(Item.TWISTED_SPOON)
+  )
+]
 export const CraftableItemsNoScarves = CraftableItems.filter(
   (item) => !Scarves.includes(item)
 ) as Item[]

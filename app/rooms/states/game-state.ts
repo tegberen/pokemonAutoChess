@@ -59,6 +59,8 @@ export default class GameState extends Schema {
   @type({ map: Portal }) portals = new MapSchema<Portal>()
   @type({ map: SynergySymbol }) symbols = new MapSchema<SynergySymbol>()
   @type(["string"]) additionalPokemons = new ArraySchema<Pkm>()
+  // which of the above a Wish seeded, so the shop pool stays one list
+  @type(["string"]) wishAdditionalPokemons = new ArraySchema<Pkm>()
   @type("uint8") stageLevel = 0
   @type("string") weather: Weather
   @type("boolean") shinyEncounter = false

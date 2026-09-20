@@ -64,6 +64,7 @@ import {
   removeDpsMeter,
   removePlayer,
   setAdditionalPokemons,
+  setWishAdditionalPokemons,
   setPlayerBlessings,
   setPlayerFossilUnlocks,
   setBlessingsEnabled,
@@ -873,6 +874,14 @@ export default function Game() {
       $state.additionalPokemons.onChange(() => {
         dispatch(
           setAdditionalPokemons(schemaValues(room.state.additionalPokemons))
+        )
+      })
+
+      $state.wishAdditionalPokemons.onChange(() => {
+        dispatch(
+          setWishAdditionalPokemons(
+            schemaValues(room.state.wishAdditionalPokemons)
+          )
         )
       })
 

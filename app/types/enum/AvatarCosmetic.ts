@@ -9,7 +9,8 @@ export const AVATAR_COSMETIC_IDS = [
   "electric-trail",
   "water-trail",
   "dragon-king-trail",
-  "slipstream-trail"
+  "slipstream-trail",
+  "teleport"
 ] as const
 
 export type AvatarCosmeticId = (typeof AVATAR_COSMETIC_IDS)[number]
@@ -24,7 +25,8 @@ export const AVATAR_COSMETIC_BLESSINGS: Record<
   "confetti-trail": Blessing.SHOW_OFF,
   "electric-trail": Blessing.CHARGING_UP,
   "dragon-king-trail": Blessing.LIMIT_BREAKER,
-  "slipstream-trail": Blessing.SLIPSTREAM
+  "slipstream-trail": Blessing.SLIPSTREAM,
+  teleport: Blessing.SILVER_SPOON
 }
 
 export const AVATAR_COSMETIC_TITLES: Partial<
@@ -48,6 +50,11 @@ export function getUnlockedAvatarCosmetics(
     }
   })
   return unlocked
+}
+
+// the movement category, checked where the cosmetic list cannot be imported
+export function isTeleportCosmetic(cosmetic: string | undefined): boolean {
+  return cosmetic === "teleport"
 }
 
 export function isAvatarCosmeticId(value: unknown): value is AvatarCosmeticId {

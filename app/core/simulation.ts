@@ -64,6 +64,7 @@ import {
   SynergyItems,
   SynergyStones,
   Tools,
+  TwistedSpoonItems,
   WeatherRocksByWeather
 } from "../types/enum/Item"
 import { Passive } from "../types/enum/Passive"
@@ -2135,6 +2136,36 @@ export default class Simulation extends Schema implements ISimulation {
       if (allies.length === 0) continue
 
       const missingPlayerLife = Math.max(0, player.maxLife - player.life)
+
+      if (blessings.includes(Blessing.SILVER_SPOON)) {
+        allies
+          .filter((ally) =>
+            schemaValues(ally.items).some((item) =>
+              isIn(TwistedSpoonItems, item)
+            )
+          )
+          .forEach((ally) => {
+            /* abilities that move the caster themselves, like Volt Switch,
+               are still mid-flight when the cast resolves and would swallow a
+               teleport, so it waits for the next attack */
+            let teleportPending = false
+            ally.effectsSet.add(
+              new OnAbilityCastEffect(() => {
+                teleportPending = true
+              })
+            )
+            ally.effectsSet.add(
+              new OnAttackEffect(({ pokemon, board }) => {
+                if (!teleportPending) return
+                const safeCell = board.getFlyAwayCell(pokemon)
+                if (!safeCell) return
+                teleportPending = false
+                pokemon.moveTo(safeCell.x, safeCell.y, board, false)
+                pokemon.effects.add(EffectEnum.TELEPORT_NEXT_ATTACK)
+              })
+            )
+          })
+      }
 
       if (blessings.includes(Blessing.BURNING_FORCE)) {
         ownUnits.forEach((ally) => {

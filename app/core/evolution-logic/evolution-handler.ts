@@ -110,4 +110,8 @@ export function carryOverPermanentStats(
   pokemonEvolved.trashToTreasureRounds = Math.max(
     ...pokemonsBeforeEvolution.map((pokemon) => pokemon.trashToTreasureRounds)
   )
+
+  pokemonEvolved.silverSpoonRounds = Math.max(
+    ...pokemonsBeforeEvolution.map((pokemon) => pokemon.silverSpoonRounds)
+  )
 }

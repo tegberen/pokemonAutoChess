@@ -98,6 +98,15 @@
   height: 360px;
 }
 
+/* Wishes seed one or two, so this grid grows by the row */
+.game-additional-pokemons .grid.grid-compact {
+  grid-template: none / repeat(6, 1fr);
+  grid-auto-flow: row;
+  grid-auto-rows: 90px;
+  height: auto;
+  margin-bottom: 0.5em;
+}
+
 .game-regional-pokemons .grid {
   display: grid;
   grid-template-columns: repeat(6, 1fr);

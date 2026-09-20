@@ -485,7 +485,7 @@ Every balance change on this server, newest first.
 - Ditto Party, Play Test | removed from Smeargle Scribbles
 - Whimsy | Shiniest Hunter can no longer be rolled
 - Omelette Cook → Legends in the Shells | its 3 eggs grant that Pokémon's Prismatic Wish when they hatch
-- Light Show → Science & Arts | Smeargle no longer draws shapes: each stage it asks which of two Pokémon has more of a stat, and a correct answer unlocks a shape. Paint every unlocked shape wherever you want on your board from the panel beside it. shapes are now 8 Tetris pieces, 4 defensive ones built for the front row (SHIELD, DEF, SPE_DEF, HP) and 4 offensive ones to slot in behind (ATK, SPEED, CRIT, starting PP), plus a single-cell Dot for +100 AP. Unlocking every shape grants 3 Gold Bows, and painting the whole canvas earns the new Artist title, no more sketchbook rewards
+- Light Show → Science & Arts | Smeargle no longer draws shapes: each stage it asks which of two Pokémon has more of a stat, and a correct answer unlocks a shape. Paint every unlocked shape wherever you want on your board from the panel beside it. shapes are now 8 Tetris pieces, 4 defensive ones built for the front row (SHIELD, DEF, SPE_DEF, HP) and 4 offensive ones to slot in behind (ATK, SPEED, CRIT_CHANCE and CRIT_POWER, starting PP), plus a single-cell Dot for +100 AP. Unlocking every shape grants 3 GOLD_BOW, and painting the whole canvas earns the new Artist title, no more sketchbook rewards
 
 **Pokémon**
 - Teddiursa Line | gains LIGHT. Bloodmoon Ursaluna | ROCK → LIGHT
@@ -517,7 +517,13 @@ Every balance change on this server, newest first.
 - Verdant Growth | 5 AP → 10 AP and 1 ATK every 2 seconds
 - Wrapped Up | scarf holders also gain their scarf's base stats a second time
 - Aurora Borealis | unlocks Amaura and opens the fossil menu, instead of gifting one and adding it to the pool
-- Mole Maze {{new}} | Gold Wish at stage 12: gain a Drilbur and add it to the pool, your STRONGEST Drilbur's ability is replaced with Mole Maze
+- Trash to Treasure | Trubbish is now added to the pool, TRASH recycles into a Tool after 5/3/1 → 3/2/1 rounds
+- Monty's Maze {{new}} | Gold Wish at stage 4: Drilbur is added to the pool, and you gain one after 3 rounds. Your STRONGEST Drilbur's ability is replaced with Mole Maze, and it permanently gains 1 AP each time it scores a KO
+- Silver Spoon {{new}} | Gold Wish at stage 4: gain an Abra after 3 rounds. An Abra line Pokémon holding a component bends it into a TWISTED_SPOON after 3/2/1 rounds at 1/2/3 STAR, and benching one gives back everything it holds. Pokémon holding a TWISTED_SPOON or an item made from it cast Teleport on their next attack after using their ability
+
+**Misc**
+- Add Picks | Pokémon a Wish seeded into the shop now have their own row in the panel, and are no longer proposed as add picks or reroll results
+- Avatar cosmetics | new Teleport movement cosmetic, unlocked by winning with the Silver Spoon Wish. Celestial → Dragon Veil, and the list is now grouped by trails, veils and movement
 
 ### 17 September 2026
 

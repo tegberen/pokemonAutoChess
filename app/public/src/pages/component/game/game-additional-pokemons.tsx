@@ -2,6 +2,7 @@ import { useTranslation } from "react-i18next"
 import { Tooltip } from "react-tooltip"
 import { RarityColor } from "../../../../../config"
 import { getPokemonData } from "../../../../../models/precomputed/precomputed-pokemon-data"
+import type { Pkm } from "../../../../../types/enum/Pokemon"
 import { RulesWithAllPokemonsAvailable } from "../../../../../types/enum/SpecialGameRule"
 import { selectConnectedPlayer, useAppSelector } from "../../../hooks"
 import SynergyIcon from "../icons/synergy-icon"
@@ -27,6 +28,45 @@ export function GameAdditionalPokemonsIcon() {
   )
 }
 
+function PokemonPortraitGrid({
+  pokemons,
+  compact = false
+}: {
+  pokemons: Pkm[]
+  compact?: boolean
+}) {
+  const currentPlayer = useAppSelector(selectConnectedPlayer)
+  return (
+    <div className={compact ? "grid grid-compact" : "grid"}>
+      {pokemons.map((p, index) => {
+        const pokemon = getPokemonData(p)
+        const rarityColor = RarityColor[pokemon.rarity]
+        return (
+          <div
+            className="my-box clickable game-pokemon-portrait"
+            key={"game-additional-pokemons-" + index}
+            style={{
+              backgroundColor: rarityColor,
+              borderColor: rarityColor,
+              backgroundImage: `url("${getCachedPortrait(pokemon.index, currentPlayer?.pokemonCustoms)}")`
+            }}
+          >
+            <ul className="game-pokemon-portrait-types">
+              {Array.from(pokemon.types.values()).map((type) => {
+                return (
+                  <li key={type}>
+                    <SynergyIcon type={type} />
+                  </li>
+                )
+              })}
+            </ul>
+          </div>
+        )
+      })}
+    </div>
+  )
+}
+
 export function GameAdditionalPokemons() {
   const { t } = useTranslation()
 
@@ -34,7 +74,12 @@ export function GameAdditionalPokemons() {
   const additionalPokemons = useAppSelector(
     (state) => state.game.additionalPokemons
   )
-  const currentPlayer = useAppSelector(selectConnectedPlayer)
+  const wishAdditionalPokemons = useAppSelector(
+    (state) => state.game.wishAdditionalPokemons
+  )
+  const carouselPokemons = additionalPokemons.filter(
+    (pokemon) => !wishAdditionalPokemons.includes(pokemon)
+  )
 
   if (
     specialGameRule != null &&
@@ -54,35 +99,19 @@ export function GameAdditionalPokemons() {
   } else {
     return (
       <div className="game-additional-pokemons">
-        <h2>{t("additional_picks")}</h2>
-        <p className="help">{t("additional_pokemon_hint")}</p>
-        <div className="grid">
-          {additionalPokemons.map((p, index) => {
-            const pokemon = getPokemonData(p)
-            const rarityColor = RarityColor[pokemon.rarity]
-            return (
-              <div
-                className="my-box clickable game-pokemon-portrait"
-                key={"game-additional-pokemons-" + index}
-                style={{
-                  backgroundColor: rarityColor,
-                  borderColor: rarityColor,
-                  backgroundImage: `url("${getCachedPortrait(pokemon.index, currentPlayer?.pokemonCustoms)}")`
-                }}
-              >
-                <ul className="game-pokemon-portrait-types">
-                  {Array.from(pokemon.types.values()).map((type) => {
-                    return (
-                      <li key={type}>
-                        <SynergyIcon type={type} />
-                      </li>
-                    )
-                  })}
-                </ul>
-              </div>
-            )
-          })}
-        </div>
+        {carouselPokemons.length > 0 && (
+          <>
+            <h2>{t("additional_picks")}</h2>
+            <p className="help">{t("additional_pokemon_hint")}</p>
+            <PokemonPortraitGrid pokemons={carouselPokemons} />
+          </>
+        )}
+        {wishAdditionalPokemons.length > 0 && (
+          <>
+            <h2>{t("wish_picks")}</h2>
+            <PokemonPortraitGrid pokemons={wishAdditionalPokemons} compact />
+          </>
+        )}
       </div>
     )
   }

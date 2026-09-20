@@ -1795,9 +1795,15 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
   },
   [Blessing.MOLE_MAZE]: {
     tier: BlessingTier.GOLD,
-    availableAtStages: [12],
+    availableAtStages: [4],
     icon: "mole",
-    grantsPokemonImmediately: true
+    grantsPokemonImmediately: false
+  },
+  [Blessing.SILVER_SPOON]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: [4],
+    icon: "silver_spoon",
+    grantsPokemonImmediately: false
   },
   [Blessing.ICE_SPEAR]: {
     tier: BlessingTier.GOLD,
