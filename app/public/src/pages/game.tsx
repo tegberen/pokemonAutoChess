@@ -91,6 +91,7 @@ import {
   setSpectatorCount,
   blessingRefused,
   setStageLevel,
+  setPveVariantIndexByStage,
   setWeatherThreshold,
   setStreak,
   setSynergies,
@@ -855,6 +856,10 @@ export default function Game() {
         dispatch(setStageLevel(value))
       })
 
+      $state.pveVariantIndexByStage.onChange((index, stage) => {
+        dispatch(setPveVariantIndexByStage({ stage, index }))
+      })
+
       $state.listen("weatherThreshold", (value) => {
         dispatch(setWeatherThreshold(value))
       })
@@ -1120,6 +1125,7 @@ export default function Game() {
             })
           }
           $experienceManager.listen("level", (value) => {
+            getGameScene()?.playerAvatars?.updateLevel(player.id, value)
             if (value > 1) {
               toast(
                 <p>

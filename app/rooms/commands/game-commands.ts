@@ -285,6 +285,7 @@ import {
   getPveStage,
   isPveStage
 } from "../../core/guide/guide-stage"
+import { resolvePveStage } from "../../models/pve-stages"
 import { getWeather } from "../../utils/weather"
 import type GameRoom from "../game-room"
 import type GameState from "../states/game-state"
@@ -2871,12 +2872,10 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
       const allOptions = pveStageBase.variants
         ? [pveStageBase, ...pveStageBase.variants]
         : [pveStageBase]
-      /* Guide stages are authored without variants, so rolling one would index
-         past the single option and hand the client a mismatched board. */
+      const rolled =
+        this.state.pveVariantIndexByStage.get(`${this.state.stageLevel}`) ?? 0
       this.state.currentPveVariantIndex =
-        this.state.gameMode === GameMode.GUIDE
-          ? 0
-          : Math.floor(Math.random() * allOptions.length)
+        rolled < allOptions.length ? rolled : 0
 
       this.state.shinyEncounter =
         this.state.townEncounter === TownEncounters.CELEBI ||
@@ -3676,13 +3675,10 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
 
     const pveStageBase = getPveStage(this.state, this.state.stageLevel)
     if (pveStageBase) {
-      const allOptions = pveStageBase.variants
-        ? [pveStageBase, ...pveStageBase.variants]
-        : [pveStageBase]
-      const { variants, ...pveStage } = {
-        ...pveStageBase,
-        ...allOptions[this.state.currentPveVariantIndex]
-      }
+      const pveStage = resolvePveStage(
+        pveStageBase,
+        this.state.currentPveVariantIndex
+      )
 
       // In Double Up, both players of a team fight together in one shared
       // fight against a strengthened PVE encounter

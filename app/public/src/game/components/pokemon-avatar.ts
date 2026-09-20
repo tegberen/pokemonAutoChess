@@ -8,6 +8,8 @@ import { getAvatarString } from "../../../../utils/avatar"
 import { throttle } from "../../../../utils/function"
 import { showEmote } from "../../network"
 import { playSound, SOUNDS } from "../../pages/utils/audio"
+import { getThemeColor } from "../../pages/utils/utils"
+import { subscribeToPreference } from "../../preferences"
 import store from "../../stores"
 import { DEPTH } from "../depths"
 import type GameScene from "../scenes/game-scene"
@@ -18,6 +20,17 @@ import PokemonSprite from "./pokemon"
 
 export const WANDERING_AVATAR_ALPHA = 0.65
 
+const LIFEBAR_Y = 28
+const LIFEBAR_HEIGHT = 8
+const LIFEBAR_LEFT_EDGE = -35
+const LEVEL_BADGE_GAP = 4
+const LEVEL_BADGE_HEIGHT = 12
+const LEVEL_BADGE_MIN_WIDTH = 20
+const LEVEL_BADGE_RADIUS = 6
+const LEVEL_BADGE_BORDER = 1
+const LEVEL_BADGE_FILL_FALLBACK = 0x61738a
+const THEME_REPAINT_DELAY = 100
+
 export default class PokemonAvatar extends PokemonSprite {
   scene: GameScene
   circleHitbox: GameObjects.Ellipse | null = null
@@ -25,6 +38,10 @@ export default class PokemonAvatar extends PokemonSprite {
   isCurrentPlayerAvatar: boolean
   emoteBubble: EmoteBubble | null
   emoteMenu: EmoteMenu | null
+  levelText: GameObjects.Text | null = null
+  levelBadge: GameObjects.Graphics | null = null
+  private level = 1
+  private unsubscribeTheme: (() => void) | null = null
   private emotePhase: GamePhaseState | undefined
   private emoteStageLevel: number | undefined
   constructor(
@@ -120,6 +137,12 @@ export default class PokemonAvatar extends PokemonSprite {
     this.lifebar?.setHp(life)
   }
 
+  destroy(fromScene?: boolean | undefined): void {
+    this.unsubscribeTheme?.()
+    this.unsubscribeTheme = null
+    super.destroy(fromScene)
+  }
+
   drawSpeechBubble(emoteAvatar: string, isOpponent: boolean) {
     if (this.emoteMenu) {
       this.emoteMenu.destroy()
@@ -160,6 +183,50 @@ export default class PokemonAvatar extends PokemonSprite {
       false
     )
     this.add(this.lifebar)
+    this.levelBadge = new GameObjects.Graphics(this.scene)
+    this.levelText = new GameObjects.Text(this.scene, 0, 0, "", {
+      fontSize: "11px",
+      fontFamily: "Jost",
+      color: "#ffffff",
+      align: "center"
+    }).setOrigin(0.5)
+    this.add(this.levelBadge)
+    this.add(this.levelText)
+    this.unsubscribeTheme = subscribeToPreference("theme", () => {
+      this.scene?.time.delayedCall(THEME_REPAINT_DELAY, () => {
+        if (this.scene) this.updateLevel(this.level)
+      })
+    })
+  }
+
+  updateLevel(level: number) {
+    if (!this.levelText || !this.levelBadge) return
+    this.level = level
+    this.levelText.setText(`${level}`)
+    const width = Math.max(LEVEL_BADGE_MIN_WIDTH, this.levelText.width + 10)
+    const x = LIFEBAR_LEFT_EDGE - LEVEL_BADGE_GAP - width / 2
+    const y = LIFEBAR_Y + LIFEBAR_HEIGHT / 2
+    this.levelText.setPosition(x, y)
+    this.levelBadge.clear()
+    this.levelBadge.fillStyle(0x000000, 1)
+    this.levelBadge.fillRoundedRect(
+      x - width / 2,
+      y - LEVEL_BADGE_HEIGHT / 2,
+      width,
+      LEVEL_BADGE_HEIGHT,
+      LEVEL_BADGE_RADIUS
+    )
+    this.levelBadge.fillStyle(
+      getThemeColor("--color-bg-primary", LEVEL_BADGE_FILL_FALLBACK),
+      1
+    )
+    this.levelBadge.fillRoundedRect(
+      x - width / 2 + LEVEL_BADGE_BORDER,
+      y - LEVEL_BADGE_HEIGHT / 2 + LEVEL_BADGE_BORDER,
+      width - LEVEL_BADGE_BORDER * 2,
+      LEVEL_BADGE_HEIGHT - LEVEL_BADGE_BORDER * 2,
+      LEVEL_BADGE_RADIUS - 1
+    )
   }
 
   showEmoteMenu() {

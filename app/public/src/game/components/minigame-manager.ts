@@ -826,14 +826,6 @@ export default class MinigameManager {
             ? ` — ${t("blessing.FREE_COUPON.name")}: ${t("free_of_charge")}`
             : "")
       )
-    } else if (
-      this.scene.room?.state.pokemonCarousel &&
-      ItemCarouselStages.includes(this.scene.room.state.stageLevel)
-    ) {
-      // Chimecho is long gone but every later carousel still carries Pokemon
-      this.showEncounterDescription(
-        t(`town_encounter_description.${TownEncounters.CHIMECHO}`)
-      )
     } else if (specialGameRule && this.scene.room?.state.stageLevel === 0) {
       const smeargle = new PokemonSpecial({
         scene: this.scene,

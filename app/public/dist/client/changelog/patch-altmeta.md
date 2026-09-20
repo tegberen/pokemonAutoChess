@@ -497,6 +497,10 @@ Every balance change on this server, newest first.
 - Circuit Cannon {{new}} | for 6 seconds, SILENCE the user, gain 10/20/40 SPEED, and replace attacks with cannon shots that deal PHYSICAL to all enemies in a line, losing 20/10/0% damage per enemy passed through, down to 20%
 - Mole Maze {{new}} | burrow into the ground, becoming untargetable. If a dug hole exists, pop out of a random one and dive back in, then jump out of a new hole next to the target. Each time it jumps out, deal 100% of ATK + DEF as SPECIAL to enemies in that hole and ADJACENT to it. (New holes only last until the end of the fight.)
 
+**PvE**
+- Stage 3 | every mini-boss is now normalized to the same statline: 150 HP, 10 ATK, 0 DEF, 0 SPE_DEF, -50 AP
+- Stage path | the icon shows the encounter you will actually face, variant included, instead of the default one, and no longer falls back to a missing portrait
+
 **Wishes**
 - High Breaching | stage 4 or 12 → stage 12 only
 - Toxic Resonance | POISONNED allies gain 5 → 10 PP
@@ -518,13 +522,15 @@ Every balance change on this server, newest first.
 - Wrapped Up | scarf holders also gain their scarf's base stats a second time
 - Aurora Borealis | unlocks Amaura and opens the fossil menu, instead of gifting one and adding it to the pool
 - Trash to Treasure | Trubbish is now added to the pool, TRASH recycles into a Tool after 5/3/1 → 3/2/1 rounds
-- Monty's Maze {{new}} | Gold Wish at stage 4: Drilbur is added to the pool, and you gain one after 3 rounds. Your STRONGEST Drilbur's ability is replaced with Mole Maze, and it permanently gains 1 AP each time it scores a KO
+- Mole Maze {{new}} | Gold Wish at stage 4: Drilbur is added to the pool, and you gain one after 3 rounds. Your STRONGEST Drilbur's ability is replaced with Mole Maze, and it permanently gains 1 AP each time it scores a KO
 - Lance's Ace | the Dratini is now gifted on pick instead of after 3 rounds
 - Prismatic Spoon {{new}} | Prismatic Wish at stage 4: gain an Abra. An Abra line Pokémon holding a component bends it into a TWISTED_SPOON after 3/2/1 rounds at 1/2/3 STAR, and benching one gives back everything it holds. Pokémon holding a TWISTED_SPOON or an item made from it cast Teleport on their next attack after using their ability
-
 - Gym Trainers | starters that are add picks are now added to the pool
 
 **Misc**
+- Player panel | hovering a player lists their Wishes, and the rounds since you last fought them moved onto their avatar, hidden for a Double Up partner
+- Walking avatar | shows the player's level next to its HP bar
+- Chimecho | its carousel reminder no longer repeats on every later carousel
 - Add Picks | Pokémon a Wish added to the pool now have their own row in the addpick-panel, and are no longer proposed as add picks or reroll results in Additional Rethink I/II
 - Avatar cosmetics | new Teleport movement cosmetic, unlocked by winning with the Prismatic Spoon Wish. Celestial → Dragon Veil, and the list is now grouped by trails, veils and movement
 

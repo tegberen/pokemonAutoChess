@@ -17,6 +17,7 @@ import {
 } from "../utils/random"
 import { schemaValues } from "../utils/schemas"
 import type Player from "./colyseus-models/player"
+import type { Pokemon } from "./colyseus-models/pokemon"
 
 export type PVEStagesNames =
   | `pkm.${Pkm}`
@@ -58,7 +59,120 @@ export type PVEStage = {
   board: [pkm: Pkm, x: number, y: number][]
   marowakItems?: Item[][]
   statBoosts?: { [stat in Stat]?: number }
-  variants?: Pick<PVEStage, "name" | "avatar" | "board" | "emotion" | "marowakItems" | "statBoosts">[]
+  // absolute values every unit of the encounter is normalized to, applied
+  // after statBoosts so a stage can flatten wildly different species
+  stats?: { [stat in Stat]?: number }
+  variants?: PVEStageVariant[]
+}
+
+// an alternative encounter for the same stage, rolled once per game
+export type PVEStageVariant = Pick<
+  PVEStage,
+  | "name"
+  | "avatar"
+  | "board"
+  | "emotion"
+  | "marowakItems"
+  | "statBoosts"
+  | "stats"
+>
+
+// emotion belongs to the avatar, so a variant that brings its own Pokemon must
+// not inherit a portrait emotion only the base one has art for
+export function resolvePveStage(
+  base: PVEStage,
+  variantIndex: number
+): PVEStage {
+  const options = base.variants ? [base, ...base.variants] : [base]
+  const variant = options[variantIndex] ?? base
+  const { variants, ...merged } = {
+    ...base,
+    ...variant,
+    emotion: variant.emotion
+  }
+  return merged
+}
+
+const FINAL_STAGE_REWARDS = [Item.RARE_CANDY, Item.SACRED_ASH, Item.GOLD_BOW]
+
+const SIGNATURE_ITEMS: Partial<Record<Pkm, Item>> = {
+  [Pkm.ZACIAN]: Item.RUSTED_SWORD,
+  [Pkm.ZAMAZENTA]: Item.RUSTED_SHIELD,
+  [Pkm.KYUREM]: Item.DNA_SPLICER
+}
+
+const PVE_STAT_READERS: { [stat in Stat]?: (pokemon: Pokemon) => number } = {
+  [Stat.HP]: (pokemon) => pokemon.hp,
+  [Stat.ATK]: (pokemon) => pokemon.atk,
+  [Stat.DEF]: (pokemon) => pokemon.def,
+  [Stat.SPE_DEF]: (pokemon) => pokemon.speDef,
+  [Stat.AP]: (pokemon) => pokemon.ap,
+  [Stat.SPEED]: (pokemon) => pokemon.speed,
+  [Stat.PP]: (pokemon) => pokemon.pp,
+  [Stat.SHIELD]: (pokemon) => pokemon.shield,
+  [Stat.CRIT_CHANCE]: (pokemon) => pokemon.critChance,
+  [Stat.CRIT_POWER]: (pokemon) => pokemon.critPower,
+  [Stat.LUCK]: (pokemon) => pokemon.luck
+}
+
+export function applyPveStageStats(pokemon: Pokemon, stage: PVEStage) {
+  for (const [stat, boost] of Object.entries(stage.statBoosts ?? {})) {
+    if (boost !== undefined) pokemon.applyStat(stat as Stat, boost)
+  }
+  for (const [stat, target] of Object.entries(stage.stats ?? {})) {
+    const read = PVE_STAT_READERS[stat as Stat]
+    if (!read || target === undefined) continue
+    pokemon.applyStat(stat as Stat, target - read(pokemon))
+  }
+}
+
+// a Pokemon training in the dojo still counts as owned for reward purposes
+function ownedPokemons(player: Player) {
+  return [
+    ...schemaValues(player.board),
+    ...player.pokemonsTrainingInDojo.map(({ pokemon }) => pokemon)
+  ]
+}
+
+// components the player has not been handed yet, so early rewards spread over
+// the recipe tree instead of piling duplicates
+function unseenComponents(player: Player): Item[] {
+  const unseen = ItemComponentsNoFossilOrScarf.filter(
+    (item) => player.randomComponentsGiven.includes(item) === false
+  )
+  return unseen.length > 0 ? unseen : ItemComponentsNoFossilOrScarf
+}
+
+function giveRandomComponent(player: Player): Item[] {
+  const component = pickRandomIn(unseenComponents(player))
+  player.randomComponentsGiven.push(component)
+  return [component]
+}
+
+function proposeRandomComponents(player: Player, count = 3): Item[] {
+  return pickNRandomIn(unseenComponents(player), count)
+}
+
+// twice the weight for a component the player has not been given yet
+function giveWeightedComponents(player: Player, count: number): Item[] {
+  const weights = Object.fromEntries(
+    ItemComponentsNoFossilOrScarf.map((item) => [
+      item,
+      player.randomComponentsGiven.includes(item) ? 1 : 2
+    ])
+  ) as { [item in Item]?: number }
+  const given = Array.from({ length: count }, () => randomWeighted(weights)!)
+  player.randomComponentsGiven.push(...given)
+  return given
+}
+
+// two items that cannot be crafted into a stone, plus a third from the full set
+function proposeCraftableItems(): Item[] {
+  const rewards = pickNRandomIn(CraftableNoStonesOrScarves, 2)
+  rewards.push(
+    pickRandomIn(CraftableItemsNoScarves.filter((o) => !rewards.includes(o)))
+  )
+  return rewards
 }
 
 export const PVEStages: { [turn: number]: PVEStage } = {
@@ -82,7 +196,6 @@ export const PVEStages: { [turn: number]: PVEStage } = {
           [Stat.DEF]: -4,
           [Stat.SPE_DEF]: -8
         }
-
       },
       {
         name: "pkm.REMORAID",
@@ -114,9 +227,7 @@ export const PVEStages: { [turn: number]: PVEStage } = {
     shinyChance: 1 / 40,
     rewards: ItemComponentsNoFossilOrScarf,
     getRewards(player: Player) {
-      const randomComponent = pickRandomIn(ItemComponentsNoFossilOrScarf)
-      player.randomComponentsGiven.push(randomComponent)
-      return [randomComponent]
+      return giveRandomComponent(player)
     }
   },
 
@@ -197,189 +308,244 @@ export const PVEStages: { [turn: number]: PVEStage } = {
     ],
     rewards: ItemComponentsNoFossilOrScarf,
     getRewardsPropositions(player: Player) {
-      return pickNRandomIn(
-        ItemComponentsNoFossilOrScarf.filter(
-          (i) => player.randomComponentsGiven.includes(i) === false
-        ),
-        3
-      )
+      return proposeRandomComponents(player)
     }
   },
 
   3: {
-    // one random mini-boss, normalized to 150 HP / 10 ATK / 0 DEF / 0 SPE_DEF,
-    // with an AP malus increasing with rarity (stronger abilities)
+    // one random mini-boss, all normalized to the same statline so the roll
+    // does not change the difficulty
     name: "pkm.RAPIDASH",
     avatar: Pkm.RAPIDASH,
     board: [[Pkm.RAPIDASH, 4, 2]],
-    statBoosts: {
-      [Stat.HP]: 10,
-      [Stat.ATK]: -4,
-      [Stat.DEF]: -5,
-      [Stat.SPE_DEF]: -7,
-      [Stat.AP]: -10
+    stats: {
+      [Stat.HP]: 150,
+      [Stat.ATK]: 10,
+      [Stat.DEF]: 0,
+      [Stat.SPE_DEF]: 0,
+      [Stat.AP]: -50
     },
     variants: [
       {
-        name: "pkm.LARVITAR",
-        avatar: Pkm.LARVITAR,
-        board: [[Pkm.LARVITAR, 4, 2]],
-        statBoosts: { [Stat.HP]: 75, [Stat.ATK]: 3, [Stat.DEF]: -5, [Stat.SPE_DEF]: -4 }
-      },
-      {
         name: "pkm.SANDSHREW",
         avatar: Pkm.SANDSHREW,
-        board: [[Pkm.SANDSHREW, 4, 2]],
-        statBoosts: { [Stat.HP]: 60, [Stat.ATK]: 5, [Stat.DEF]: -6, [Stat.SPE_DEF]: -3 }
+        board: [[Pkm.SANDSHREW, 4, 2]]
       },
       {
         name: "pkm.PYUKUMUKU",
         avatar: Pkm.PYUKUMUKU,
-        board: [[Pkm.PYUKUMUKU, 4, 2]],
-        statBoosts: { [Stat.DEF]: -25, [Stat.SPE_DEF]: -25, [Stat.AP]: -40 }
+        board: [[Pkm.PYUKUMUKU, 4, 2]]
       },
       {
         name: "pkm.GASTRODON_EAST_SEA",
         avatar: Pkm.GASTRODON_EAST_SEA,
-        board: [[Pkm.GASTRODON_EAST_SEA, 4, 2]],
-        statBoosts: { [Stat.HP]: -120, [Stat.ATK]: -9, [Stat.DEF]: -10, [Stat.SPE_DEF]: -12, [Stat.AP]: -30 }
+        board: [[Pkm.GASTRODON_EAST_SEA, 4, 2]]
       },
       {
         name: "pkm.FENNEKIN",
         avatar: Pkm.FENNEKIN,
-        board: [[Pkm.FENNEKIN, 4, 2]],
-        statBoosts: { [Stat.HP]: 70, [Stat.ATK]: 5, [Stat.DEF]: -4, [Stat.SPE_DEF]: -4 }
+        board: [[Pkm.FENNEKIN, 4, 2]]
       },
       {
         name: "pkm.SHINX",
         avatar: Pkm.SHINX,
-        board: [[Pkm.SHINX, 4, 2]],
-        statBoosts: { [Stat.HP]: 30, [Stat.ATK]: -3, [Stat.DEF]: -10, [Stat.SPE_DEF]: -10, [Stat.AP]: -30 }
-      },
-      {
-        name: "pkm.MEGA_MAWILE",
-        avatar: Pkm.MEGA_MAWILE,
-        board: [[Pkm.MEGA_MAWILE, 4, 2]],
-        statBoosts: { [Stat.HP]: -70, [Stat.ATK]: -13, [Stat.DEF]: -20, [Stat.SPE_DEF]: -6, [Stat.AP]: -50 }
+        board: [[Pkm.SHINX, 4, 2]]
       },
       {
         name: "pkm.GLACEON",
         avatar: Pkm.GLACEON,
-        board: [[Pkm.GLACEON, 4, 2]],
-        statBoosts: { [Stat.HP]: 30, [Stat.ATK]: -2, [Stat.DEF]: -6, [Stat.SPE_DEF]: -4, [Stat.AP]: -10 }
+        board: [[Pkm.GLACEON, 4, 2]]
       },
       {
         name: "pkm.KECLEON",
         avatar: Pkm.KECLEON,
-        board: [[Pkm.KECLEON, 4, 2]],
-        statBoosts: { [Stat.HP]: -50, [Stat.ATK]: -12, [Stat.DEF]: -6, [Stat.SPE_DEF]: -6, [Stat.AP]: -40 }
+        board: [[Pkm.KECLEON, 4, 2]]
       },
       {
         name: "pkm.SLITHER_WING",
         avatar: Pkm.SLITHER_WING,
-        board: [[Pkm.SLITHER_WING, 4, 2]],
-        statBoosts: { [Stat.HP]: -30, [Stat.ATK]: -10, [Stat.DEF]: -6, [Stat.SPE_DEF]: -8, [Stat.AP]: -40 }
+        board: [[Pkm.SLITHER_WING, 4, 2]]
       },
       {
         name: "pkm.MUDSDALE",
         avatar: Pkm.MUDSDALE,
-        board: [[Pkm.MUDSDALE, 4, 2]],
-        statBoosts: { [Stat.HP]: -100, [Stat.ATK]: -16, [Stat.DEF]: -12, [Stat.SPE_DEF]: -8, [Stat.AP]: -30 }
+        board: [[Pkm.MUDSDALE, 4, 2]]
       },
       {
         name: "pkm.HISUI_ARCANINE",
         avatar: Pkm.HISUI_ARCANINE,
-        board: [[Pkm.HISUI_ARCANINE, 4, 2]],
-        statBoosts: { [Stat.HP]: -150, [Stat.ATK]: -12, [Stat.DEF]: -12, [Stat.SPE_DEF]: -10, [Stat.AP]: -30 }
+        board: [[Pkm.HISUI_ARCANINE, 4, 2]]
       },
       {
         name: "pkm.CRAMORANT",
         avatar: Pkm.CRAMORANT,
-        board: [[Pkm.CRAMORANT, 4, 2]],
-        statBoosts: { [Stat.HP]: -50, [Stat.ATK]: -9, [Stat.DEF]: -6, [Stat.SPE_DEF]: -6, [Stat.AP]: -40 }
+        board: [[Pkm.CRAMORANT, 4, 2]]
       },
       {
         name: "pkm.GALARIAN_ZIGZAGOON",
         avatar: Pkm.GALARIAN_ZIGZAGOON,
-        board: [[Pkm.GALARIAN_ZIGZAGOON, 4, 2]],
-        statBoosts: { [Stat.HP]: 70, [Stat.ATK]: 4, [Stat.DEF]: -10, [Stat.SPE_DEF]: -4 }
+        board: [[Pkm.GALARIAN_ZIGZAGOON, 4, 2]]
       },
       {
         name: "pkm.MAGCARGO",
         avatar: Pkm.MAGCARGO,
-        board: [[Pkm.MAGCARGO, 4, 2]],
-        statBoosts: { [Stat.HP]: -30, [Stat.ATK]: -6, [Stat.DEF]: -16, [Stat.SPE_DEF]: -10, [Stat.AP]: -20 }
+        board: [[Pkm.MAGCARGO, 4, 2]]
       },
       {
         name: "pkm.BRELOOM",
         avatar: Pkm.BRELOOM,
-        board: [[Pkm.BRELOOM, 4, 2]],
-        statBoosts: { [Stat.HP]: -20, [Stat.ATK]: -8, [Stat.DEF]: -6, [Stat.SPE_DEF]: -6, [Stat.AP]: -10 }
+        board: [[Pkm.BRELOOM, 4, 2]]
       },
       {
         name: "pkm.RABOOT",
         avatar: Pkm.RABOOT,
-        board: [[Pkm.RABOOT, 4, 2]],
-        statBoosts: { [Stat.HP]: 70, [Stat.ATK]: 3, [Stat.DEF]: -4, [Stat.SPE_DEF]: -4, [Stat.AP]: -10 }
+        board: [[Pkm.RABOOT, 4, 2]]
       },
       {
         name: "pkm.DUCKLETT",
         avatar: Pkm.DUCKLETT,
-        board: [[Pkm.DUCKLETT, 4, 2]],
-        statBoosts: { [Stat.HP]: 45, [Stat.ATK]: -1, [Stat.DEF]: -6, [Stat.SPE_DEF]: -6, [Stat.AP]: -10 }
-      },
-      {
-        name: "pkm.TOTODILE",
-        avatar: Pkm.TOTODILE,
-        board: [[Pkm.TOTODILE, 4, 2]],
-        statBoosts: { [Stat.HP]: 75, [Stat.ATK]: 3, [Stat.DEF]: -4, [Stat.SPE_DEF]: -4 }
-      },
-      {
-        name: "pkm.LUCARIO",
-        avatar: Pkm.LUCARIO,
-        board: [[Pkm.LUCARIO, 4, 2]],
-        statBoosts: { [Stat.HP]: -20, [Stat.ATK]: -8, [Stat.DEF]: -8, [Stat.SPE_DEF]: -8, [Stat.AP]: -20 }
+        board: [[Pkm.DUCKLETT, 4, 2]]
       },
       {
         name: "pkm.CLEFFA",
         avatar: Pkm.CLEFFA,
-        board: [[Pkm.CLEFFA, 4, 2]],
-        statBoosts: { [Stat.HP]: 80, [Stat.ATK]: 5, [Stat.DEF]: -2, [Stat.SPE_DEF]: -2 }
-      },
-      {
-        name: "pkm.MACHOP",
-        avatar: Pkm.MACHOP,
-        board: [[Pkm.MACHOP, 4, 2]],
-        statBoosts: { [Stat.HP]: 80, [Stat.ATK]: 4, [Stat.DEF]: -6, [Stat.SPE_DEF]: -6 }
-      },
-      {
-        name: "pkm.ARBOLIVA",
-        avatar: Pkm.ARBOLIVA,
-        board: [[Pkm.ARBOLIVA, 4, 2]],
-        statBoosts: { [Stat.HP]: -50, [Stat.ATK]: -6, [Stat.DEF]: -6, [Stat.SPE_DEF]: -8, [Stat.AP]: -10 }
-      },
-      {
-        name: "pkm.UNOWN_A",
-        avatar: Pkm.UNOWN_A,
-        board: [[Pkm.UNOWN_A, 4, 2]],
-        statBoosts: { [Stat.HP]: 50, [Stat.ATK]: 9, [Stat.DEF]: -2, [Stat.SPE_DEF]: -2 }
+        board: [[Pkm.CLEFFA, 4, 2]]
       },
       {
         name: "pkm.PIKACHU_SURFER",
         avatar: Pkm.PIKACHU_SURFER,
-        board: [[Pkm.PIKACHU_SURFER, 4, 2]],
-        statBoosts: { [Stat.HP]: 30, [Stat.ATK]: 2, [Stat.DEF]: -4, [Stat.SPE_DEF]: -6, [Stat.AP]: -10 }
+        board: [[Pkm.PIKACHU_SURFER, 4, 2]]
+      },
+      {
+        name: "pkm.HIPPOPOTAS",
+        avatar: Pkm.HIPPOPOTAS,
+        board: [[Pkm.HIPPOPOTAS, 4, 2]]
+      },
+      {
+        name: "pkm.AZUMARILL",
+        avatar: Pkm.AZUMARILL,
+        board: [[Pkm.AZUMARILL, 4, 2]],
+        
+      },
+      {
+        name: "pkm.VESPIQUEN",
+        avatar: Pkm.VESPIQUEN,
+        board: [[Pkm.VESPIQUEN, 4, 2]]
+      },
+      {
+        name: "pkm.LITWICK",
+        avatar: Pkm.LITWICK,
+        board: [[Pkm.LITWICK, 4, 2]]
+      },
+      {
+        name: "pkm.AXEW",
+        avatar: Pkm.AXEW,
+        board: [[Pkm.AXEW, 4, 2]]
+      },
+      {
+        name: "pkm.STARAPTOR",
+        avatar: Pkm.STARAPTOR,
+        board: [[Pkm.STARAPTOR, 4, 2]]
+      },
+      {
+         name: "pkm.ROWLET",
+        avatar: Pkm.ROWLET,
+        board: [[Pkm.ROWLET, 4, 2]]
+      },
+      {
+        name: "pkm.OSHAWOTT",
+        avatar: Pkm.OSHAWOTT,
+        board: [[Pkm.OSHAWOTT, 4, 2]]
+      },
+      {
+        name: "pkm.SWAMPERT",
+        avatar: Pkm.SWAMPERT,
+        board: [[Pkm.SWAMPERT, 4, 2]]
+      },
+      {
+        name: "pkm.ALOLAN_VULPIX",
+        avatar: Pkm.ALOLAN_VULPIX,
+        board: [[Pkm.ALOLAN_VULPIX, 4, 2]]
+      },
+      {
+        name: "pkm.TANGELA",
+        avatar: Pkm.TANGELA,
+        board: [[Pkm.TANGELA, 4, 2]]
+      },
+      {
+        name: "pkm.MAREANIE",
+        avatar: Pkm.MAREANIE,
+        board: [[Pkm.MAREANIE, 4, 2]]
+      },
+      {
+        name: "pkm.KROOKODILE",
+        avatar: Pkm.KROOKODILE,
+        board: [[Pkm.KROOKODILE, 4, 2]]
+      },
+      {
+        name: "pkm.TINKATON",
+        avatar: Pkm.TINKATON,
+        board: [[Pkm.TINKATON, 4, 2]]
+      },
+      {
+        name: "pkm.MINIOR",
+        avatar: Pkm.MINIOR,
+        board: [[Pkm.MINIOR, 4, 2]]
+      },
+      {
+        name: "pkm.TOXTRICITY_LOW_KEY",
+        avatar: Pkm.TOXTRICITY_LOW_KEY,
+        board: [[Pkm.TOXTRICITY_LOW_KEY, 4, 2]]
+      },
+      {
+        name: "pkm.CASTFORM",
+        avatar: Pkm.CASTFORM,
+        board: [[Pkm.CASTFORM, 4, 2]]
+      },
+      {
+        name: "pkm.HYDRAPPLE",
+        avatar: Pkm.HYDRAPPLE,
+        board: [[Pkm.HYDRAPPLE, 4, 2]]
+      },
+      {
+        name: "pkm.SHEDINJA",
+        avatar: Pkm.SHEDINJA,
+        board: [[Pkm.SHEDINJA, 4, 2]]
+      },
+      {
+        name: "pkm.PIKACHU_LIBRE",
+        avatar: Pkm.PIKACHU_LIBRE,
+        board: [[Pkm.PIKACHU_LIBRE, 4, 2]]
+      },
+      {
+        name: "pkm.MEW",
+        avatar: Pkm.MEW,
+        board: [[Pkm.MEW, 4, 2]]
+      },
+      {
+        name: "pkm.PELIPPER",
+        avatar: Pkm.PELIPPER,
+        board: [[Pkm.PELIPPER, 4, 2]]
+      },
+      {
+        name: "pkm.DRIZZILE",
+        avatar: Pkm.DRIZZILE,
+        board: [[Pkm.DRIZZILE, 4, 2]]
+      },
+      {
+        name: "pkm.TOGEKISS",
+        avatar: Pkm.TOGEKISS,
+        board: [[Pkm.TOGEKISS, 4, 2]]
+      },
+      {
+        name: "pkm.BLAZIKEN",
+        avatar: Pkm.BLAZIKEN,
+        board: [[Pkm.BLAZIKEN, 4, 2]]
       }
     ],
     rewards: ItemComponentsNoFossilOrScarf,
-    getRewards(player) {
-      const randomComponent = pickRandomIn(
-        ItemComponentsNoFossilOrScarf.filter(
-          (i) => player.randomComponentsGiven.includes(i) === false
-        )
-      )
-      player.randomComponentsGiven.push(randomComponent)
-      return [randomComponent]
+    getRewards(player: Player) {
+      return giveRandomComponent(player)
     }
   },
 
@@ -434,7 +600,7 @@ export const PVEStages: { [turn: number]: PVEStage } = {
     rewards: [...ItemComponentsNoFossilOrScarf, Item.RED_SCALE],
     getRewards(_player: Player, shinyEncounter: boolean) {
       if (shinyEncounter) return [Item.RED_SCALE]
-      else return pickNRandomIn(ItemComponentsNoFossilOrScarf, 1)
+      return [pickRandomIn(ItemComponentsNoFossilOrScarf)]
     }
   },
 
@@ -526,31 +692,28 @@ export const PVEStages: { [turn: number]: PVEStage } = {
           [Stat.HP]: 40
         }
       },
+      {
+        name: "pkm.NIDOKING",
+        avatar: Pkm.NIDOKING,
+        board: [
+          [Pkm.NIDOKING, 0, 2],
+          [Pkm.NIDOQUEEN, 7, 2]
+        ]
+      }
     ],
     marowakItems: [[Item.METAL_COAT], [Item.DEEP_SEA_TOOTH]],
     shinyChance: 1 / 100,
     rewards: ItemComponentsNoFossilOrScarf,
     getRewards(player: Player) {
-      const rewards: Item[] = []
-      if (
-        schemaValues(player.board).some((p) => p.name === Pkm.CHARCADET) ||
-        player.pokemonsTrainingInDojo.some(
-          (p) => p.pokemon.name === Pkm.CHARCADET
-        )
-      ) {
-        const psyLevel = player.synergies.get(Synergy.PSYCHIC) || 0
-        const ghostLevel = player.synergies.get(Synergy.GHOST) || 0
-        const armorReceived =
-          psyLevel > ghostLevel
-            ? Item.AUSPICIOUS_ARMOR
-            : psyLevel < ghostLevel
-              ? Item.MALICIOUS_ARMOR
-              : chance(1 / 2)
-                ? Item.AUSPICIOUS_ARMOR
-                : Item.MALICIOUS_ARMOR
-        rewards.push(armorReceived)
-      }
-      return rewards
+      const ownsCharcadet = ownedPokemons(player).some(
+        (pokemon) => pokemon.name === Pkm.CHARCADET
+      )
+      if (!ownsCharcadet) return []
+      const psyLevel = player.synergies.get(Synergy.PSYCHIC) || 0
+      const ghostLevel = player.synergies.get(Synergy.GHOST) || 0
+      const psychicWins =
+        psyLevel === ghostLevel ? chance(1 / 2) : psyLevel > ghostLevel
+      return [psychicWins ? Item.AUSPICIOUS_ARMOR : Item.MALICIOUS_ARMOR]
     },
     getRewardsPropositions(_player: Player, shinyEncounter: boolean) {
       if (shinyEncounter) {
@@ -674,16 +837,7 @@ export const PVEStages: { [turn: number]: PVEStage } = {
     marowakItems: [[Item.STAR_PIECE], [Item.SACRED_ASH]],
     rewards: ItemComponentsNoFossilOrScarf,
     getRewards(player: Player) {
-      const componentsWeights = ItemComponentsNoFossilOrScarf.reduce((o, i) => {
-        return { ...o, [i]: player.randomComponentsGiven.includes(i) ? 1 : 2 } // twice the weight if the player doesn't have it yet
-      }, {})
-      const randomComponentsGiven: Item[] = []
-      for (let i = 0; i < 2; i++) {
-        randomComponentsGiven.push(randomWeighted(componentsWeights)!)
-      }
-
-      player.randomComponentsGiven.push(...randomComponentsGiven)
-      return randomComponentsGiven
+      return giveWeightedComponents(player, 2)
     }
   },
 
@@ -823,30 +977,14 @@ export const PVEStages: { [turn: number]: PVEStage } = {
     ],
     rewards: CraftableItemsNoScarves,
     getRewards(player: Player) {
-      for (const p of [
-        ...schemaValues(player.board),
-        ...player.pokemonsTrainingInDojo.map(({ pokemon }) => pokemon)
-      ]) {
-        if (p.name === Pkm.ZACIAN) {
-          return [Item.RUSTED_SWORD]
-        }
-        if (p.name === Pkm.ZAMAZENTA) {
-          return [Item.RUSTED_SHIELD]
-        }
-        if (p.name === Pkm.KYUREM) {
-          return [Item.DNA_SPLICER]
-        }
+      for (const pokemon of ownedPokemons(player)) {
+        const signature = SIGNATURE_ITEMS[pokemon.name]
+        if (signature) return [signature]
       }
       return []
     },
-    getRewardsPropositions(player: Player) {
-      const rewards = pickNRandomIn(CraftableNoStonesOrScarves, 2)
-      rewards.push(
-        pickRandomIn(
-          CraftableItemsNoScarves.filter((o) => !rewards.includes(o))
-        )
-      )
-      return rewards
+    getRewardsPropositions() {
+      return proposeCraftableItems()
     }
   },
 
@@ -876,10 +1014,23 @@ export const PVEStages: { [turn: number]: PVEStage } = {
         name: "pkm.OGERPON_CORNERSTONE",
         avatar: Pkm.OGERPON_CORNERSTONE,
         board: [
-          [Pkm.OGERPON_CORNERSTONE_MASK, 3, 2],
-          [Pkm.OGERPON_HEARTHFLAME_MASK, 4, 2],
-          [Pkm.OGERPON_WELLSPRING_MASK, 5, 2],
-          [Pkm.OGERPON_TEAL_MASK, 6, 2]
+          [Pkm.OGERPON_CORNERSTONE_MASK, 2, 2],
+          [Pkm.OGERPON_HEARTHFLAME_MASK, 3, 2],
+          [Pkm.OGERPON_WELLSPRING_MASK, 4, 2],
+          [Pkm.OGERPON_TEAL_MASK, 5, 2]
+        ],
+        statBoosts: {
+          [Stat.HP]: 150
+        }
+      },
+      {
+        name: "pkm.DEOXYS",
+        avatar: Pkm.DEOXYS,
+        board: [
+          [Pkm.DEOXYS, 2, 2],
+          [Pkm.DEOXYS_ATTACK, 3, 2],
+          [Pkm.DEOXYS_DEFENSE, 4, 2],
+          [Pkm.DEOXYS_SPEED, 5, 2]
         ],
         statBoosts: {
           [Stat.HP]: 150
@@ -901,14 +1052,8 @@ export const PVEStages: { [turn: number]: PVEStage } = {
       [Item.DEEP_SEA_TOOTH, Item.CHOICE_SPECS]
     ],
     rewards: CraftableItemsNoScarves,
-    getRewardsPropositions(player: Player) {
-      const rewards = pickNRandomIn(CraftableNoStonesOrScarves, 2)
-      rewards.push(
-        pickRandomIn(
-          CraftableItemsNoScarves.filter((o) => !rewards.includes(o))
-        )
-      )
-      return rewards
+    getRewardsPropositions() {
+      return proposeCraftableItems()
     }
   },
 
@@ -933,14 +1078,8 @@ export const PVEStages: { [turn: number]: PVEStage } = {
       [Item.RED_ORB, Item.FLAME_ORB, Item.PROTECTIVE_PADS]
     ],
     rewards: CraftableItemsNoScarves,
-    getRewardsPropositions(player: Player) {
-      const rewards = pickNRandomIn(CraftableNoStonesOrScarves, 2)
-      rewards.push(
-        pickRandomIn(
-          CraftableItemsNoScarves.filter((o) => !rewards.includes(o))
-        )
-      )
-      return rewards
+    getRewardsPropositions() {
+      return proposeCraftableItems()
     }
   },
 
@@ -968,14 +1107,8 @@ export const PVEStages: { [turn: number]: PVEStage } = {
       []
     ],
     rewards: CraftableItemsNoScarves,
-    getRewardsPropositions(player: Player) {
-      const rewards = pickNRandomIn(CraftableNoStonesOrScarves, 2)
-      rewards.push(
-        pickRandomIn(
-          CraftableItemsNoScarves.filter((o) => !rewards.includes(o))
-        )
-      )
-      return rewards
+    getRewardsPropositions() {
+      return proposeCraftableItems()
     }
   },
 
@@ -1002,9 +1135,9 @@ export const PVEStages: { [turn: number]: PVEStage } = {
       [Item.DYNAMAX_BAND],
       [Item.DYNAMAX_BAND]
     ],
-    rewards: [Item.RARE_CANDY, Item.SACRED_ASH, Item.GOLD_BOW],
-    getRewards(player: Player) {
-      return [Item.RARE_CANDY, Item.SACRED_ASH, Item.GOLD_BOW]
+    rewards: FINAL_STAGE_REWARDS,
+    getRewards() {
+      return [...FINAL_STAGE_REWARDS]
     }
   }
 }

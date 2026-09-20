@@ -49,13 +49,42 @@
 
 .game-player .life-text {
   margin: -0.2em auto;
+  position: relative;
   z-index: -1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4em;
   text-align: center;
   color: var(--color-fg-primary);
-  padding: 0;
+  padding: 0 0.4em;
   line-height: 1em;
   transition: margin 100ms ease-out;
-  width: 2.5em;
+  min-width: 2.5em;
+  width: max-content;
+  font-variant-numeric: tabular-nums;
+}
+
+/* hung off the pill rather than inside it: a wider pill would run off the
+   right edge of the screen, where the avatar column sits */
+.game-player .rounds-since-fight {
+  position: absolute;
+  right: calc(100% + 0.3em);
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  gap: 0.2em;
+  padding: 0 0.35em;
+  border: var(--border-thin);
+  font-size: 0.85em;
+  color: var(--color-fg-secondary);
+}
+
+.game-player .rounds-since-fight img {
+  width: 1em;
+  height: 1em;
+  opacity: 0.75;
 }
 
 .game-player.spectated .life-text {

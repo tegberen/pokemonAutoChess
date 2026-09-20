@@ -6335,7 +6335,7 @@
 			"description": "Gain a Houndour. Each Houndour summoned by your STRONGEST Houndour's ability has a 15% chance to be a Houndoom instead."
 		},
 		"MOLE_MAZE": {
-			"name": "Monty's Maze",
+			"name": "Mole Maze",
 			"description": "After 3 rounds, gain a Drilbur. Your STRONGEST Drilbur's ability is replaced with Mole Maze, and it permanently gains 1 AP each time it KO's an enemy."
 		},
 		"SILVER_SPOON": {

@@ -47,6 +47,7 @@ export interface GameStateStore {
   players: IPlayer[]
   simulations: ISimulation[]
   stageLevel: number
+  pveVariantIndexByStage: { [stage: string]: number }
   noElo: boolean
   finale: boolean
   specialGameRule: SpecialGameRule | null
@@ -108,6 +109,7 @@ const initialState: GameStateStore = {
   players: new Array<IPlayer>(),
   simulations: new Array<ISimulation>(),
   stageLevel: 0,
+  pveVariantIndexByStage: {},
   weather: Weather.NEUTRAL,
   weatherThreshold: 8,
   noElo: false,
@@ -164,6 +166,12 @@ export const gameSlice: Slice<GameStateStore> = createSlice({
     },
     setStageLevel: (state, action: PayloadAction<number>) => {
       state.stageLevel = action.payload
+    },
+    setPveVariantIndexByStage: (
+      state,
+      action: PayloadAction<{ stage: string; index: number }>
+    ) => {
+      state.pveVariantIndexByStage[action.payload.stage] = action.payload.index
     },
     setNoELO: (state, action: PayloadAction<boolean>) => {
       state.noElo = action.payload
@@ -488,6 +496,7 @@ export const {
   setAfterGameId,
   setPhase,
   setStageLevel,
+  setPveVariantIndexByStage,
   setWeather,
   setWeatherThreshold,
   setNoELO,

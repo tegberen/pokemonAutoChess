@@ -304,7 +304,7 @@ function wishIconMatchers(wishes: PatchLogWish[]) {
       icon,
       label,
       expression: new RegExp(
-        `(^|[^A-Za-z])${label.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}(?=[^A-Za-z]|$)`,
+        `(^|[^A-Za-z])${label.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}s?(?=[^A-Za-z]|$)`,
         "i"
       )
     }))

@@ -112,8 +112,9 @@ export default class PlayerAvatarsManager {
     /* the server owns facing, and PokemonAvatar defaults it to DOWNLEFT */
     sprite.orientation = avatar.orientation
     sprite.setData({ serverX: x, serverY: y })
-    const life = this.scene.room?.state.players.get(avatar.id)?.life
-    if (life !== undefined) sprite.updateLife(life)
+    const player = this.scene.room?.state.players.get(avatar.id)
+    if (player?.life !== undefined) sprite.updateLife(player.life)
+    if (player) sprite.updateLevel(player.experienceManager.level)
     this.scene.animationManager?.animatePokemon(
       sprite,
       sprite.action,
@@ -243,6 +244,11 @@ export default class PlayerAvatarsManager {
   updateLife(id: string, life: number) {
     const sprite = this.sprites.get(id)
     if (sprite?.scene) sprite.updateLife(life)
+  }
+
+  updateLevel(id: string, level: number) {
+    const sprite = this.sprites.get(id)
+    if (sprite?.scene) sprite.updateLevel(level)
   }
 
   // --- input and reactions -------------------------------------------------

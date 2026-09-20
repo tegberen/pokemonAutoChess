@@ -1,7 +1,6 @@
 import { MapSchema } from "@colyseus/schema"
 import { Emotion, type IPlayer, type PkmCustom } from "../types"
 import { Ability } from "../types/enum/Ability"
-import type { Stat } from "../types/enum/Game"
 import { Pkm, PkmFamily, PkmIndex } from "../types/enum/Pokemon"
 import { type TownEncounter, TownEncounters } from "../types/enum/TownEncounter"
 
@@ -16,6 +15,7 @@ import {
   DOUBLE_UP_PVE_MAX_SCALE,
   DOUBLE_UP_PVE_MIN_SCALE,
   DOUBLE_UP_PVE_TUNING,
+  applyPveStageStats,
   getDoubleUpPvePowerFactor,
   type PVEStage
 } from "./pve-stages"
@@ -34,9 +34,7 @@ export default class PokemonFactory {
       })
       pokemon.positionX = x
       pokemon.positionY = y
-      for (const stat in pveStage.statBoosts) {
-        pokemon.applyStat(stat as Stat, pveStage.statBoosts[stat])
-      }
+      applyPveStageStats(pokemon, pveStage)
       if (
         townEncounter === TownEncounters.MAROWAK &&
         pveStage.marowakItems &&

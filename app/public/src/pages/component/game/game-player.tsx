@@ -1,10 +1,11 @@
 import { CircularProgressbarWithChildren } from "react-circular-progressbar"
 import { Tooltip } from "react-tooltip"
 
+import { getDistance } from "../../../../../core/matchmaking"
 import type { IPlayer } from "../../../../../types"
 import { getAvatarSrc } from "../../../../../utils/avatar"
 import { DEPTH } from "../../../game/depths"
-import { useAppSelector } from "../../../hooks"
+import { selectConnectedPlayer, useAppSelector } from "../../../hooks"
 import { cc } from "../../utils/jsx"
 import GamePlayerDetail from "./game-player-detail"
 
@@ -21,6 +22,13 @@ export default function GamePlayer(props: {
     (state) => state.game.playerIdSpectated
   )
   const connectedPlayerId = useAppSelector((state) => state.network.uid)
+  const connectedPlayer = useAppSelector(selectConnectedPlayer)
+  const roundsSinceLastFight =
+    connectedPlayer &&
+    props.player.id !== connectedPlayer.id &&
+    connectedPlayer.doubleUpPartnerId !== props.player.id
+      ? getDistance(props.player, connectedPlayer, false)
+      : null
 
   function playerClick() {
     if (spectatedPlayerId !== props.player.id) {
@@ -48,7 +56,15 @@ export default function GamePlayer(props: {
           value={props.player.life}
           styles={{ path: { stroke: props.teamColor ?? "#f7d51d" } }}
         />
-        <div className="my-container life-text">{props.player.life}</div>
+        <div className="my-container life-text">
+          {props.player.life}
+          {roundsSinceLastFight != null && (
+            <span className="my-container rounds-since-fight">
+              <img src="/assets/ui/time.svg" alt="" />
+              {roundsSinceLastFight}
+            </span>
+          )}
+        </div>
       </div>
       <Tooltip
         id={"detail-" + props.player.id}

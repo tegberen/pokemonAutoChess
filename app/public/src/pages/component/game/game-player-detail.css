@@ -1,0 +1,138 @@
+.game-player-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6em;
+  min-width: 17em;
+  max-width: 24em;
+}
+
+.game-player-detail header {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6em;
+}
+
+.game-player-detail header .player-name {
+  flex: 1 1 auto;
+  font-size: 1.15em;
+  font-weight: bold;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.game-player-detail header .game-player-detail-level {
+  color: var(--color-fg-secondary);
+  white-space: nowrap;
+}
+
+.game-player-detail-vital {
+  display: flex;
+  align-items: center;
+  gap: 0.2em;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.game-player-detail > ul {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 0.5em;
+  margin: 0;
+  padding: 0.6em 0 0;
+  border-top: 1px solid rgb(255 255 255 / 15%);
+  list-style: none;
+}
+
+.game-player-detail > ul > li {
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  gap: 0.15em;
+  text-align: center;
+}
+
+.game-player-detail > ul > li > span {
+  font-size: 80%;
+  line-height: 1.2;
+  color: var(--color-fg-secondary);
+}
+
+.game-player-detail-match img {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  border: 3px solid transparent;
+}
+
+.game-player-detail-match.win img {
+  border-color: #4aa52e;
+}
+
+.game-player-detail-match.draw img {
+  border-color: #cc6a28;
+}
+
+.game-player-detail-match.defeat img {
+  border-color: #8c2022;
+}
+
+.game-player-detail > ul.game-player-detail-synergies {
+  gap: 0.25em;
+}
+
+.game-player-detail-synergies .synergy-icon {
+  width: 28px;
+  height: 28px;
+}
+
+.game-player-detail-wish {
+  width: 5em;
+}
+
+.game-player-detail-wish img {
+  width: 32px;
+  height: 32px;
+  cursor: default;
+}
+
+.game-player-detail-wish .synergy-icon {
+  width: 1.4em;
+  height: 1.4em;
+  filter: none;
+}
+
+.game-player-detail-wish .description-icon > img {
+  width: 1.4em;
+  height: 1.4em;
+  margin-right: 1px;
+}
+
+.game-player-detail footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75em;
+  padding-top: 0.6em;
+  border-top: 1px solid rgb(255 255 255 / 15%);
+}
+
+.game-player-detail footer > span {
+  display: flex;
+  align-items: center;
+  gap: 0.25em;
+  font-variant-numeric: tabular-nums;
+}
+
+.game-player-detail footer img {
+  width: 22px;
+  height: 22px;
+}
+
+.game-player-detail-totals-label {
+  color: var(--color-fg-secondary);
+  font-size: 85%;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}

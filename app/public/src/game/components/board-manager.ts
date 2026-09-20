@@ -47,7 +47,11 @@ import { PokemonAvatarModel } from "../../../../models/colyseus-models/pokemon-a
 import { getSynergyTier } from "../../../../models/colyseus-models/synergies"
 import PokemonFactory from "../../../../models/pokemon-factory"
 import { getPokemonData } from "../../../../models/precomputed/precomputed-pokemon-data"
-import type { PVEStage } from "../../../../models/pve-stages"
+import {
+  applyPveStageStats,
+  type PVEStage,
+  resolvePveStage
+} from "../../../../models/pve-stages"
 import { getPveStage } from "../../../../core/guide/guide-stage"
 import type GameState from "../../../../rooms/states/game-state"
 import {
@@ -502,12 +506,10 @@ export default class BoardManager {
 
     const pveStage = getPveStage(this.state, this.state.stageLevel)
     if (pveStage && this.mode === BoardMode.PICK) {
-      const base = pveStage
-      const allOptions = base.variants ? [base, ...base.variants] : [base]
-      const resolvedStage = {
-        ...base,
-        ...allOptions[this.state.currentPveVariantIndex]
-      }
+      const resolvedStage = resolvePveStage(
+        pveStage,
+        this.state.currentPveVariantIndex
+      )
       this.addPvePokemons(resolvedStage, phaseJustChanged)
     }
   }
@@ -2160,9 +2162,7 @@ export default class BoardManager {
       const pokemon = PokemonFactory.createPokemonFromName(pkm, {
         shiny: this.state.shinyEncounter
       })
-      for (const stat in pveStage.statBoosts) {
-        pokemon.applyStat(stat as Stat, pveStage.statBoosts[stat])
-      }
+      applyPveStageStats(pokemon, pveStage)
       if (
         this.state.townEncounter === TownEncounters.MAROWAK &&
         pveStage.marowakItems &&

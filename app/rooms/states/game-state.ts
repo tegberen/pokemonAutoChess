@@ -20,6 +20,7 @@ import { PlayerBlessings } from "../../models/colyseus-models/player-blessings"
 import { PlayerFossilUnlocks } from "../../models/colyseus-models/player-fossil-unlocks"
 import { PokemonAvatarModel } from "../../models/colyseus-models/pokemon-avatar"
 import { Portal, SynergySymbol } from "../../models/colyseus-models/portal"
+import { PVEStages } from "../../models/pve-stages"
 import Shop from "../../models/shop"
 import type { Blessing, BlessingTier } from "../../types/enum/Blessing"
 import type { EloRank } from "../../types/enum/EloRank"
@@ -78,6 +79,9 @@ export default class GameState extends Schema {
   @type("string") townEncounter: TownEncounter | null = null
   @type("number") weatherThreshold: number = 8
   @type("number") currentPveVariantIndex: number = 0
+  // rolled up front so the stage path can preview the encounter players will
+  // actually meet, keyed by stage level
+  @type({ map: "uint8" }) pveVariantIndexByStage = new MapSchema<number>()
   @type({ map: PlayerBlessings }) blessingsByPlayerId =
     new MapSchema<PlayerBlessings>()
   @type("boolean") blessingsEnabled = false
@@ -189,6 +193,18 @@ export default class GameState extends Schema {
       this.avatarSynergy = pickRandomIn(
         Object.values(Synergy).filter((s) => s !== Synergy.BABY)
       )
+    }
+
+    // a guide is authored without variants, so rolling one would hand the
+    // client a board the lesson does not expect
+    if (gameMode !== GameMode.GUIDE) {
+      Object.entries(PVEStages).forEach(([stage, pveStage]) => {
+        const options = pveStage.variants ? pveStage.variants.length + 1 : 1
+        this.pveVariantIndexByStage.set(
+          stage,
+          Math.floor(Math.random() * options)
+        )
+      })
     }
   }
 }

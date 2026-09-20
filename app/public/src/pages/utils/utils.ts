@@ -56,3 +56,27 @@ export function transformMiniGameXCoordinate(x: number) {
 export function transformMiniGameYCoordinate(y: number) {
   return BOARD_Y_START - y - CELL_HEIGHT * 1.5
 }
+
+export function getThemeColor(property: string, fallback: number): number {
+  if (typeof window === "undefined") return fallback
+  const value = getComputedStyle(document.documentElement)
+    .getPropertyValue(property)
+    .trim()
+  if (value.startsWith("#")) {
+    const hex = value.slice(1)
+    const full =
+      hex.length === 3
+        ? hex
+            .split("")
+            .map((c) => c + c)
+            .join("")
+        : hex
+    const parsed = Number.parseInt(full.slice(0, 6), 16)
+    return Number.isNaN(parsed) ? fallback : parsed
+  }
+  const rgb = value.match(/\d+/g)
+  if (rgb && rgb.length >= 3) {
+    return (Number(rgb[0]) << 16) + (Number(rgb[1]) << 8) + Number(rgb[2])
+  }
+  return fallback
+}

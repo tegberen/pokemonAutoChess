@@ -9,7 +9,7 @@ import {
   RegionDetails
 } from "../../../../../config"
 import { isPveStage } from "../../../../../core/guide/guide-stage"
-import { PVEStages } from "../../../../../models/pve-stages"
+import { PVEStages, resolvePveStage } from "../../../../../models/pve-stages"
 import { Emotion } from "../../../../../types"
 import { BattleResult, GamePhaseState } from "../../../../../types/enum/Game"
 import { type Pkm, PkmIndex } from "../../../../../types/enum/Pokemon"
@@ -225,6 +225,9 @@ export function StagePath() {
   const history = [...(spectatedPlayer?.history ?? [])]
   const phase = useAppSelector((state) => state.game.phase)
   const stageLevel = useAppSelector((state) => state.game.stageLevel)
+  const pveVariantIndexByStage = useAppSelector(
+    (state) => state.game.pveVariantIndexByStage
+  )
   const startStage = min(1)(stageLevel - 3)
   let level = startStage
   let path: PathStep[] = []
@@ -271,10 +274,20 @@ export function StagePath() {
 
     const pveStage = PVEStages[level]
     if (pveStage) {
+      const encounter = resolvePveStage(
+        pveStage,
+        pveVariantIndexByStage[`${level}`] ?? 0
+      )
       path.push({
         level,
-        icon: getPortraitSrc(PkmIndex[pveStage.avatar], false, Emotion.NORMAL),
-        title: t(record?.name ?? pveStage.name),
+        icon: record?.avatar
+          ? getAvatarSrc(record.avatar)
+          : getPortraitSrc(
+              PkmIndex[encounter.avatar],
+              false,
+              encounter.emotion ?? Emotion.NORMAL
+            ),
+        title: t(record?.name ?? encounter.name),
         result: record?.result
       })
       if (level === stageLevel && currentLevelPathIndex === undefined) {
