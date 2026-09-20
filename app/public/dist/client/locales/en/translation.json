@@ -6727,8 +6727,8 @@
 	"easy_bot": "Easy (900 - 1150)",
 	"normal_bot": "Normal (1150 - 1300)",
 	"hard_bot": "Hard (1300-1450)",
-	"extreme_bot": "Extreme (>1450)",
-	"shiny_bot": "Shiny (>3000)",
+	"extreme_bot": "Extreme (1450 - 1700)",
+	"shiny_bot": "Shiny (1700 - 5000)",
 	"unrealistic_bot": "Unrealistic (>9000)",
 	"room_leader": "Room leader",
 	"room_password": "This room is private, password",
@@ -7072,7 +7072,7 @@
 	"scribble_description": {
 		"EVERYONE_IS_HERE": "All the additional picks are available immediately!",
 		"UNIQUE_STARTER": "Get a random Unique at stage 1",
-		"OMELETTE_COOK": "Get a Pokémon Egg after stage 1, 2 and 3. When an egg hatches, gain that Pokémon's Prismatic Wish.",
+		"OMELETTE_COOK": "Get a Pokémon Egg after stage 1, 2 and 3. When one of those eggs hatches, gain that Pokémon's Prismatic Wish.",
 		"DITTO_PARTY": "Start with 5 Ditto on your bench. Ditto cannot be found in the shop and cannot be sold.",
 		"GOTTA_CATCH_EM_ALL": "Some Pokémon can be caught before each PvE round",
 		"TECHNOLOGIC": "Choose between 3 tools at stage 2 and 4",
@@ -7859,7 +7859,7 @@
 		"MEDIUM": "Medium (1000-1149)",
 		"HARD": "Hard (1150-1299)",
 		"EXTREME": "Extreme (1300-1449)",
-		"MASTER": "Master (>1450)",
+		"MASTER": "Master (>1700)",
 		"CUSTOM": "Custom"
 	},
 	"not_pokemons": "Not Pokémon",

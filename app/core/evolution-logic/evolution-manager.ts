@@ -21,7 +21,6 @@ import { PokemonActionState } from "../../types/enum/Game"
 import { Item, ShinyItems } from "../../types/enum/Item"
 import { pickNRandomIn } from "../../utils/random"
 import { Passive } from "../../types/enum/Passive"
-import { SpecialGameRule } from "../../types/enum/SpecialGameRule"
 import { Pkm, PkmFamily } from "../../types/enum/Pokemon"
 import { OnEvolutionEffect } from "../effects/effect"
 import { PassiveEffects } from "../effects/passives"
@@ -125,7 +124,8 @@ export const EvolutionManager = {
 
     if (
       pokemonBeforeEvolution.name === Pkm.EGG &&
-      player.specialGameRule === SpecialGameRule.OMELETTE_COOK
+      "legendEgg" in pokemonBeforeEvolution &&
+      pokemonBeforeEvolution.legendEgg === true
     ) {
       const heroBlessing = (Object.keys(HERO_BLESSING_FAMILY) as Blessing[]).find(
         (blessing) =>

@@ -1027,6 +1027,8 @@ type OnAddBotPayload = {
   user: IGameUser
 }
 
+const REGULAR_MIX_ELO = { $gte: 1100, $lt: 1700 }
+
 export class OnAddBotCommand extends Command<PreparationRoom, OnAddBotPayload> {
   async execute(data: OnAddBotPayload) {
     try {
@@ -1068,7 +1070,7 @@ export class OnAddBotCommand extends Command<PreparationRoom, OnAddBotPayload> {
             elo = { $gte: 1700 }
             break
           case BotDifficulty.REGULAR:
-            elo = { $gte: 1100, $lt: 1700 }
+            elo = REGULAR_MIX_ELO
             break
           case BotDifficulty.SHINY:
             elo = { $gte: 1700, $lt: 5000 }
@@ -1088,10 +1090,18 @@ export class OnAddBotCommand extends Command<PreparationRoom, OnAddBotPayload> {
           }
         })
 
-        const bots = await BotV2.find(
+        let bots = await BotV2.find(
           { id: { $nin: existingBots }, elo, approved: true },
           ["avatar", "elo", "name", "id"]
         )
+
+        // brackets can be empty depending on the bots in database
+        if (bots.length <= 0 && difficulty !== BotDifficulty.REGULAR) {
+          bots = await BotV2.find(
+            { id: { $nin: existingBots }, elo: REGULAR_MIX_ELO, approved: true },
+            ["avatar", "elo", "name", "id"]
+          )
+        }
 
         if (bots.length <= 0) {
           this.room.state.addMessage({

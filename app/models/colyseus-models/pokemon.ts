@@ -554,6 +554,8 @@ export class Egg extends Pokemon {
     type: EvolutionRuleType.HATCH
   } as const satisfies HatchEvolutionRule
   canHoldItems = false
+  // OMELETTE_COOK: only its own eggs hatch with a Wish
+  legendEgg = false
 }
 
 export class FloetteEternal extends Pokemon {

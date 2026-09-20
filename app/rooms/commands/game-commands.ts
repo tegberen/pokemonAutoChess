@@ -3999,6 +3999,7 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
     )
     const nbOfGoldenEggsOnBench = eggsOnBench.filter((p) => p.shiny).length
     let nbEggsFound = 0
+    let givesLegendEgg = false
     let goldenEggFound = false
 
     if (hasLostLastBattle && hasBabyActive) {
@@ -4063,6 +4064,7 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
       [2, 3, 4].includes(this.state.stageLevel)
     ) {
       nbEggsFound = 1
+      givesLegendEgg = true
       // the hatch grants a Wish, which needs the player's blessing state
       if (!player.blessingsRef) {
         const owned = new PlayerBlessings()
@@ -4075,7 +4077,8 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
       if (getFreeSpaceOnBench(player.board, getBenchSize(player.blessings)) === 0) continue
       const isGoldenEgg =
         goldenEggFound && i === 0 && nbOfGoldenEggsOnBench === 0
-      giveRandomEgg(player, isGoldenEgg)
+      const egg = giveRandomEgg(player, isGoldenEgg)
+      if (egg && givesLegendEgg) egg.legendEgg = true
       if (player.effects.has(EffectEnum.HATCHER)) {
         player.eggChance = 0 // getting an egg resets the stacked egg chance
       }
