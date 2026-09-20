@@ -519,11 +519,14 @@ Every balance change on this server, newest first.
 - Aurora Borealis | unlocks Amaura and opens the fossil menu, instead of gifting one and adding it to the pool
 - Trash to Treasure | Trubbish is now added to the pool, TRASH recycles into a Tool after 5/3/1 → 3/2/1 rounds
 - Monty's Maze {{new}} | Gold Wish at stage 4: Drilbur is added to the pool, and you gain one after 3 rounds. Your STRONGEST Drilbur's ability is replaced with Mole Maze, and it permanently gains 1 AP each time it scores a KO
-- Silver Spoon {{new}} | Gold Wish at stage 4: gain an Abra after 3 rounds. An Abra line Pokémon holding a component bends it into a TWISTED_SPOON after 3/2/1 rounds at 1/2/3 STAR, and benching one gives back everything it holds. Pokémon holding a TWISTED_SPOON or an item made from it cast Teleport on their next attack after using their ability
+- Lance's Ace | the Dratini is now gifted on pick instead of after 3 rounds
+- Prismatic Spoon {{new}} | Prismatic Wish at stage 4: gain an Abra. An Abra line Pokémon holding a component bends it into a TWISTED_SPOON after 3/2/1 rounds at 1/2/3 STAR, and benching one gives back everything it holds. Pokémon holding a TWISTED_SPOON or an item made from it cast Teleport on their next attack after using their ability
+
+- Gym Trainers | starters that are add picks are now added to the pool
 
 **Misc**
-- Add Picks | Pokémon a Wish seeded into the shop now have their own row in the panel, and are no longer proposed as add picks or reroll results
-- Avatar cosmetics | new Teleport movement cosmetic, unlocked by winning with the Silver Spoon Wish. Celestial → Dragon Veil, and the list is now grouped by trails, veils and movement
+- Add Picks | Pokémon a Wish added to the pool now have their own row in the addpick-panel, and are no longer proposed as add picks or reroll results in Additional Rethink I/II
+- Avatar cosmetics | new Teleport movement cosmetic, unlocked by winning with the Prismatic Spoon Wish. Celestial → Dragon Veil, and the list is now grouped by trails, veils and movement
 
 ### 17 September 2026
 

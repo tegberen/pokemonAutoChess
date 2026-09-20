@@ -452,7 +452,7 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     tier: BlessingTier.GOLD,
     availableAtStages: [4],
     icon: "lances_ace",
-    grantsPokemonImmediately: false
+    grantsPokemonImmediately: true
   },
   [Blessing.PANIC_BUTTON]: {
     tier: BlessingTier.SILVER,
@@ -1800,10 +1800,10 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     grantsPokemonImmediately: false
   },
   [Blessing.SILVER_SPOON]: {
-    tier: BlessingTier.GOLD,
+    tier: BlessingTier.PRISMATIC,
     availableAtStages: [4],
     icon: "silver_spoon",
-    grantsPokemonImmediately: false
+    grantsPokemonImmediately: true
   },
   [Blessing.ICE_SPEAR]: {
     tier: BlessingTier.GOLD,

@@ -6076,7 +6076,7 @@
 		},
 		"LANCES_ACE": {
 			"name": "Lance's Ace",
-			"description": "After 3 rounds, gain a Dratini. Your STRONGEST Dratini has +2 RANGE, its Ability is replaced with Hyperbeam, and it permanently gains 1 AP each time it KO's an enemy"
+			"description": "Gain a Dratini. Your STRONGEST Dratini has +2 RANGE, its Ability is replaced with Hyperbeam, and it permanently gains 1 AP each time it KO's an enemy"
 		},
 		"PANIC_BUTTON": {
 			"name": "Panic Button",
@@ -6339,8 +6339,8 @@
 			"description": "After 3 rounds, gain a Drilbur. Your STRONGEST Drilbur's ability is replaced with Mole Maze, and it permanently gains 1 AP each time it KO's an enemy."
 		},
 		"SILVER_SPOON": {
-			"name": "Silver Spoon",
-			"description": "After 3 rounds, gain an Abra. An Abra holding a component bends it into a TWISTED_SPOON after 3/2/1 rounds at 1/2/3 STAR. Benching it returns held items. Pokémon holding a TWISTED_SPOON or item made from it cast Teleport on their next attack after using their ability."
+			"name": "Prismatic Spoon",
+			"description": "Gain an Abra. An Abra holding a component bends it into a TWISTED_SPOON after 3/2/1 rounds at 1/2/3 STAR. Benching it returns held items. Pokémon holding a TWISTED_SPOON or item made from it cast Teleport on their next attack after using their ability."
 		},
 		"ICE_SPEAR": {
 			"name": "Ice Spear",

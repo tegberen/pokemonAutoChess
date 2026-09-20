@@ -81,7 +81,6 @@ import {
   HERO_BLESSING_HATCH_MAX_HP,
   HERO_BLESSING_MOVES_REGION,
   ITEM_GRANTED_BY_BLESSING,
-  LANCES_ACE_DELAY,
   LANGUAGE_BARRIER_UNOWNS_GRANTED,
   MANIFESTATION_UNLOCK_STAGE,
   MIX_AND_MATCH_I_FIELD_CAP,
@@ -114,7 +113,6 @@ import {
   SELECTIVE_GENETICS_GOLDEN_EGG_CHANCE,
   SELECTIVE_GENETICS_MAX_COST,
   SHADY_PRICE_FREE_ROLLS,
-  SILVER_SPOON_DELAY,
   SILVER_SPOON_ROUNDS_BY_STAR,
   SINGULARITY_I_STAGES,
   SINGULARITY_II_STAGES,
@@ -450,6 +448,9 @@ function gymTrainerGrants() {
               RarityCost[getPokemonData(b).rarity] -
               RarityCost[getPokemonData(a).rarity]
           )[0]
+        roster.starters
+          .filter((pkm) => getPokemonData(pkm).additional)
+          .forEach((pkm) => state.shop.addAdditionalPokemon(pkm, state, true))
         roster.starters
           .filter((pkm) => pkm !== lockedStarter)
           .forEach((pkm) => giftPokemonIfBenchHasRoom(player, pkm))
@@ -2060,12 +2061,6 @@ export const blessingScheduledEffectService: {
 
   [Blessing.SUPPORTIVE_SOUL]: (player) => grantSupportiveSoulItem(player),
 
-  [Blessing.LANCES_ACE]: (player) =>
-    giftPokemonIfBenchHasRoom(player, Pkm.DRATINI),
-
-  [Blessing.SILVER_SPOON]: (player) =>
-    giftPokemonIfBenchHasRoom(player, Pkm.ABRA),
-
   [Blessing.MOLE_MAZE]: (player) =>
     giftPokemonIfBenchHasRoom(player, Pkm.DRILBUR)
 }
@@ -2180,18 +2175,10 @@ export const blessingEffectService: {
       player.boardSize = room.getTeamSize(player.board, player.blessings)
     return true
   },
-  [Blessing.LANCES_ACE]: (player, state) => {
-    scheduleBlessingGrant(player, state, Blessing.LANCES_ACE, [
-      state.stageLevel + LANCES_ACE_DELAY
-    ])
-    return true
-  },
-  [Blessing.SILVER_SPOON]: (player, state) => {
-    scheduleBlessingGrant(player, state, Blessing.SILVER_SPOON, [
-      state.stageLevel + SILVER_SPOON_DELAY
-    ])
-    return true
-  },
+  [Blessing.LANCES_ACE]: (player) =>
+    giftPokemonIfBenchHasRoom(player, Pkm.DRATINI),
+  [Blessing.SILVER_SPOON]: (player) =>
+    giftPokemonIfBenchHasRoom(player, Pkm.ABRA),
   [Blessing.PANIC_BUTTON]: (player) => grantPanicButtonUnown(player),
   [Blessing.HAIL_TO_THE_KING]: (player) => {
     player.items.push(Item.RELIC_STATUE)
