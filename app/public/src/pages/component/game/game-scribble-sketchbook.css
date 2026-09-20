@@ -96,25 +96,27 @@
   border-radius: 12px 12px 0 0;
   background-color: #5d4a86;
   background-image: url("assets/ui/scribble.png");
-  background-position: 10px center;
+  background-position: 8px center;
   background-repeat: no-repeat;
-  background-size: 28px 28px;
+  background-size: 24px 24px;
   pointer-events: initial;
 }
 
 /* beats the 36px padding .game-shop .information sets */
 .game-shop .game-light-show-anchor.information {
-  padding-left: 48px;
+  padding-left: 40px;
 }
 
 .game-light-show-anchor .light-show-button {
   width: auto;
+  height: 32px;
+  padding: 3px 10px;
 }
 
 /* the drag offset is measured from this anchor */
 #game-wrapper .light-show-drawer {
   top: 9%;
-  left: calc(0.5% + 16.5em);
+  left: 0.5%;
   width: 380px;
   font-size: 0.85em;
 }
@@ -122,8 +124,18 @@
 .light-show-drawer .draggable-window-content {
   display: flex;
   flex-direction: column;
+  /* stops above the shop bar, whatever the screen height */
+  max-height: calc(100vh - 22em);
   padding: 0;
   overflow-x: hidden;
+  overflow-y: auto;
+}
+
+@media (height <= 900px) {
+  #game-wrapper .light-show-drawer {
+    width: 320px;
+    font-size: 0.72em;
+  }
 }
 
 .light-show-progress {

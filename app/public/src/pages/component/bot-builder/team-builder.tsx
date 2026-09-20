@@ -281,9 +281,9 @@ export default function TeamBuilder(props: {
         <Synergies synergies={synergies} tooltipPortal={false} />
       </div>
       <div className="actions">
-        {ingame && (isAdmin || true) && (
+        {ingame && isAdmin && (
           <details>
-            <summary>Playtest Smeargle Scribble</summary>
+            <summary>Admin</summary>
             <button className="bubbly blue" onClick={overwriteBoard}>
               Overwrite board
             </button>
