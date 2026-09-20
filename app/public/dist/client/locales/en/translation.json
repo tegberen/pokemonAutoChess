@@ -5296,11 +5296,11 @@
 		},
 		"HUMAN_HORROR": {
 			"name": "Human Horror",
-			"description": "Gain a SPELL_TAG and a HUMAN_GEM. Your GHOST Pokémon can learn moves from TMs. When a GHOST ally knowing a TM is KO'd, the attacker is POSSESSED for 2 seconds, plus 1 for each level of HUMAN active. It will immediately cast a random TM ability, scaling with your active HUMAN synergy."
+			"description": "Gain 2 SPELL_TAG. Your GHOST Pokémon can learn moves from TMs. When a GHOST ally knowing a TM is KO'd, the attacker is POSSESSED for 2 seconds, plus 1 for each level of HUMAN active. It will immediately cast a random TM ability, scaling with your active HUMAN synergy."
 		},
 		"HYDRATED_CELLS": {
 			"name": "Hydrated Cells",
-			"description": "Gain an AMORPHOUS_GEM and a WATER_STONE. Your WATER Pokémon gain AP equal to the HP they gain from AMORPHOUS synergy."
+			"description": "Gain 2 WATER_STONE. Your WATER Pokémon gain AP equal to the HP they gain from AMORPHOUS synergy."
 		},
 		"SYMBIOTIC_SYMPHONY": {
 			"name": "Symbiotic Symphony",

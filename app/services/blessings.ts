@@ -412,8 +412,8 @@ const COMBO_BLESSING_ITEMS: { [blessing in Blessing]?: [Item, Item] } = {
   [Blessing.FROZEN_OCEAN]: [Item.ICE_STONE, Item.SURFBOARD],
   [Blessing.MAGICAL_METAL]: [Item.METAL_COAT, Item.MOON_STONE],
   [Blessing.FURY_UNLEASHED]: [Item.WHITE_FLUTE, Item.MACHO_BRACE],
-  [Blessing.HUMAN_HORROR]: [Item.SPELL_TAG, Item.HUMAN_GEM],
-  [Blessing.HYDRATED_CELLS]: [Item.AMORPHOUS_GEM, Item.WATER_STONE],
+  [Blessing.HUMAN_HORROR]: [Item.SPELL_TAG, Item.SPELL_TAG],
+  [Blessing.HYDRATED_CELLS]: [Item.WATER_STONE, Item.WATER_STONE],
   [Blessing.SYMBIOTIC_SYMPHONY]: [Item.LEAF_STONE, Item.METRONOME],
   [Blessing.EARTHEN_BARRIER]: [Item.EXPLORER_KIT, Item.FRIEND_BOW],
   [Blessing.MIND_RUSH]: [Item.DAWN_STONE, Item.RUNNING_SHOES]
