@@ -8,6 +8,7 @@ import type { IChatV2 } from "../../../types"
 import type { EloRank } from "../../../types/enum/EloRank"
 import { GameMode } from "../../../types/enum/Game"
 import type { SpecialGameRule } from "../../../types/enum/SpecialGameRule"
+import type { TournamentLobbyTeamOption } from "../../../rooms/states/preparation-state"
 
 export interface IUserPreparationState {
   users: IGameUser[]
@@ -28,6 +29,7 @@ export interface IUserPreparationState {
   whimsy: boolean
   whitelist: string[]
   blacklist: string[]
+  tournamentTeams: TournamentLobbyTeamOption[]
 }
 
 const initialState: IUserPreparationState = {
@@ -48,7 +50,8 @@ const initialState: IUserPreparationState = {
   blessingsEnabled: false,
   whimsy: false,
   whitelist: [],
-  blacklist: []
+  blacklist: [],
+  tournamentTeams: []
 }
 
 export const preparationSlice = createSlice({
@@ -136,6 +139,12 @@ export const preparationSlice = createSlice({
     },
     setBlackList: (state, action: PayloadAction<string[]>) => {
       state.blacklist = action.payload
+    },
+    setTournamentTeams: (
+      state,
+      action: PayloadAction<TournamentLobbyTeamOption[]>
+    ) => {
+      state.tournamentTeams = action.payload
     }
   }
 })
@@ -162,6 +171,7 @@ export const {
   setScribbleExtended,
   setBlessingsEnabled,
   setWhimsy,
+  setTournamentTeams,
   resetPreparation
 } = preparationSlice.actions
 

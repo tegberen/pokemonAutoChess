@@ -65,6 +65,13 @@ export function Modal(props: ModalProps) {
     }
   }
 
+  // a click on the backdrop reports the dialog itself as its target
+  const handleClick = (event: React.MouseEvent<HTMLDialogElement>) => {
+    if (event.target === ref.current) {
+      close()
+    }
+  }
+
   const handleKeyDown = (event: React.KeyboardEvent<HTMLDialogElement>) => {
     event.stopPropagation()
     if (event.key === "Escape") {
@@ -80,6 +87,7 @@ export function Modal(props: ModalProps) {
           className={cc("modal", "my-container", className)}
           onKeyDown={handleKeyDown}
           onPointerDown={handlePointerDown}
+          onClick={handleClick}
         >
           {header && (
             <header>

@@ -301,6 +301,18 @@
   gap: 0.5em;
 }
 
+.preparation-menu-user.missing {
+  border: 2px dashed rgb(255 255 255 / 20%);
+  background: none;
+  color: var(--color-fg-secondary);
+}
+
+.preparation-menu-user.missing .missing-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .double-up-pair.unpaired::after {
   content: "";
   border: 2px dashed rgba(255,255,255,0.2);

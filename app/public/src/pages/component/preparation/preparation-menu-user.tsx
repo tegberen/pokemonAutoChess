@@ -48,6 +48,9 @@ export default function PreparationMenuUser(props: {
   const DOUBLE_UP_TEAM_COLORS = ["#f9e07f", "#f4a7b9", "#a8e6e6", "#b8e6a0"]
   const teamColor = isDoubleUp ? DOUBLE_UP_TEAM_COLORS[(props.colorIndex ?? 0) % DOUBLE_UP_TEAM_COLORS.length] : undefined
   const myReady = users.find((u) => u.uid === myUid)?.ready
+  const teamsAreFixed = useAppSelector(
+    (state) => state.preparation.tournamentTeams.length > 0
+  )
 
 return (
     <div
@@ -72,7 +75,7 @@ return (
       {isDoubleUp && props.user.ready && (
         <span style={{ color: "#76c442", fontSize: "1.2em", textShadow: "0 0 4px black" }}>✔</span>
       )}
-      {isDoubleUp && !isMe && !myReady && !isPaired && (  
+      {isDoubleUp && !teamsAreFixed && !isMe && !myReady && !isPaired && (
         <button
           className="bubbly orange"
           onClick={() => !props.user.ready && selectPartner(props.user.uid)}

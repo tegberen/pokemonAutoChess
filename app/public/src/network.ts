@@ -430,6 +430,70 @@ export function remakeTournamentLobby(params: {
   rooms.lobby?.send(Transfer.REMAKE_TOURNAMENT_LOBBY, params)
 }
 
+export function addTournamentTestPlayers(params: {
+  tournamentId: string
+  count: number
+}) {
+  rooms.lobby?.send(Transfer.ADD_TOURNAMENT_TEST_PLAYERS, params)
+}
+
+export function simulateTournamentRound(params: { tournamentId: string }) {
+  rooms.lobby?.send(Transfer.SIMULATE_TOURNAMENT_ROUND, params)
+}
+
+export function renameTournament(params: {
+  tournamentId: string
+  name: string
+}) {
+  rooms.lobby?.send(Transfer.RENAME_TOURNAMENT, params)
+}
+
+export function setTournamentWishes(params: {
+  tournamentId: string
+  enabled: boolean
+}) {
+  rooms.lobby?.send(Transfer.SET_TOURNAMENT_WISHES, params)
+}
+
+export function startTournamentLobby(params: { bracketId: string }) {
+  rooms.lobby?.send(Transfer.START_TOURNAMENT_LOBBY, params)
+}
+
+export function replaceTournamentPlayer(params: {
+  tournamentId: string
+  teamId: string
+  outgoingId: string
+  incomingId: string
+}) {
+  rooms.lobby?.send(Transfer.REPLACE_TOURNAMENT_PLAYER, params)
+}
+
+export function tournamentPartner(params: {
+  tournamentId: string
+  targetId: string
+  action: "invite" | "accept" | "decline" | "cancel" | "leave"
+}) {
+  rooms.lobby?.send(Transfer.TOURNAMENT_PARTNER, params)
+}
+
+export function kickTournamentParticipant(params: {
+  tournamentId: string
+  playerId: string
+}) {
+  rooms.lobby?.send(Transfer.KICK_TOURNAMENT_PARTICIPANT, params)
+}
+
+export function startTournament(params: { tournamentId: string }) {
+  rooms.lobby?.send(Transfer.START_TOURNAMENT, params)
+}
+
+export function registerTournamentTeams(params: {
+  tournamentId: string
+  pairs: string[][]
+}) {
+  rooms.lobby?.send(Transfer.REGISTER_TOURNAMENT_TEAMS, params)
+}
+
 export function participateInTournament(params: {
   tournamentId: string
   participate: boolean

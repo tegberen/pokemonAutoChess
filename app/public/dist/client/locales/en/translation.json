@@ -7014,15 +7014,19 @@
 	"tournament": {
 		"tournament_mode_locked": "You need to reach level {{requiredLevel}} to participate in tournaments.",
 		"participate": "Participate",
-		"participating": "Participating",
+		"join_as_substitute": "Join as substitute",
 		"participants": "Participants",
 		"brackets": "Brackets",
 		"ranking": "Ranking",
-		"players_remaining": "Players remaining",
+		"teams_remaining": "Teams remaining",
 		"cancel_tournament_participation": "Cancel your participation in the tournament",
 		"register_tournament_participation": "Register to this tournament",
-		"registrations_open_info": "Registrations will be open one hour before the start of the tournament",
-		"starts_at": "Starts at"
+		"register_as_substitute": "Players without a team can be brought in by the admin when someone cannot play",
+		"registrations_open": "Registration open",
+		"leave_tournament": "Leave tournament",
+		"lobby_hint": "Tournament lobby: starts once all {{players}} players are ready, or after {{minutes}} minutes without the teams that are not here in full: they forfeit and score 0 points.",
+		"lobby_settings_locked": "Tournament lobbies use fixed settings",
+		"not_here_yet": "Not here yet"
 	},
 	"npc_dialog": {
 		"welcome": "Welcome !",
@@ -7469,6 +7473,9 @@
 		"ROOM_EMPTY": "This room has been removed due to lack of players",
 		"ROOM_DELETED": "This room has been deleted",
 		"GAME_ALREADY_STARTED": "This game has already started",
+		"TOURNAMENT_PARTNER_MISSING": "Your partner did not show up in time, so your team forfeits this round and scores 0 points. You are still in the tournament.",
+		"TOURNAMENT_LOBBY_FORFEITED": "Not enough full teams showed up, so this round was decided without a game. Check the tournament ranking for your result.",
+		"TOURNAMENT_SUBSTITUTED": "The admin brought in a substitute for you in this tournament.",
 		"INVALID_PASSWORD": "Wrong password",
 		"UNKNOWN_ERROR": "An unexpected error occurred: {{error}}",
 		"SERVER_SHUTDOWN": "Server is shutting down for maintenance",

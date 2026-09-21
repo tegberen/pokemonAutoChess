@@ -64,6 +64,19 @@ dialog::backdrop {
   border: none;
   color: var(--color-fg-primary);
   font-size: 1em;
+  border-radius: 6px;
+  transition:
+    background-color 100ms ease-out,
+    transform 100ms ease-out;
+}
+
+.modal .close-btn:hover {
+  background-color: rgb(255 255 255 / 15%);
+  transform: scale(1.15);
+}
+
+.modal .close-btn:active {
+  transform: scale(0.95);
 }
 
 .modal-body {

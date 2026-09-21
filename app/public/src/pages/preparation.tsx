@@ -46,6 +46,7 @@ import {
   setScribbleExtended,
   setBlessingsEnabled,
   setWhimsy,
+  setTournamentTeams,
   setUser,
   setWhiteList
 } from "../stores/PreparationStore"
@@ -66,6 +67,9 @@ export default function Preparation() {
   const room: Room<PreparationState> | undefined = rooms.preparation
   const user = useAppSelector((state) => state.preparation.user)
   const gameMode = useAppSelector((state) => state.preparation.gameMode)
+  const isTournamentLobby = useAppSelector(
+    (state) => state.preparation.tournamentTeams.length > 0
+  )
   const initialized = useRef<boolean>(false)
   const connectingToGame = useRef<boolean>(false)
 
@@ -165,6 +169,18 @@ export default function Preparation() {
 
       $state.listen("blacklist", (value, previousValue) => {
         dispatch(setBlackList(value))
+      })
+
+      $state.listen("tournamentTeams", (teams) => {
+        dispatch(
+          setTournamentTeams(
+            [...teams].map((team) => ({
+              name: team.name,
+              playersId: [...team.playersId],
+              playersName: [...team.playersName]
+            }))
+          )
+        )
       })
 
       $state.listen("gameMode", (value, previousValue) => {
@@ -275,7 +291,10 @@ export default function Preparation() {
           CloseCodes.ROOM_EMPTY,
           CloseCodes.USER_BANNED,
           CloseCodes.USER_RANK_TOO_LOW,
-          CloseCodes.USER_TIMEOUT
+          CloseCodes.USER_TIMEOUT,
+          CloseCodes.TOURNAMENT_PARTNER_MISSING,
+          CloseCodes.TOURNAMENT_LOBBY_FORFEITED,
+          CloseCodes.TOURNAMENT_SUBSTITUTED
         ].includes(code)
 
         logger.info(`left preparation room with code ${code}`)
@@ -361,7 +380,14 @@ export default function Preparation() {
                 />
                 {t("chat")}
               </Tab>
-              <Tab>
+              <Tab
+                disabled={isTournamentLobby}
+                title={
+                  isTournamentLobby
+                    ? t("tournament.lobby_settings_locked")
+                    : undefined
+                }
+              >
                 <img
                   src="assets/icons/LOBBY_SETTINGS.svg"
                   alt=""

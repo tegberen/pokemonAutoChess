@@ -5,7 +5,8 @@ import type { NavigateFunction } from "react-router"
 import type {
   TournamentBracketSchema,
   TournamentPlayerSchema,
-  TournamentSchema
+  TournamentSchema,
+  TournamentTeamSchema
 } from "../../../models/colyseus-models/tournament"
 import type LobbyState from "../../../rooms/states/lobby-state"
 import type PreparationState from "../../../rooms/states/preparation-state"
@@ -172,7 +173,11 @@ export async function joinLobbyRoom(
             const fields = [
               "id",
               "name",
-              "startDate"
+              "startDate",
+              "stage",
+              "roundNumber",
+              "wishesEnabled",
+              "finished"
             ] satisfies NonFunctionPropNames<TournamentSchema>[]
 
             fields.forEach((field) => {
@@ -191,7 +196,9 @@ export async function joinLobbyRoom(
               dispatch(updateTournament()) // TOFIX: force redux reactivity
               const $player = $(player)
               const fields = [
-                "eliminated"
+                "eliminated",
+                "partnerId",
+                "invitedPartnerId"
               ] satisfies NonFunctionPropNames<TournamentPlayerSchema>[]
               fields.forEach((field) => {
                 $player.listen(field, (value) => {
@@ -208,6 +215,28 @@ export async function joinLobbyRoom(
             })
 
             $tournament.players.onRemove((player, userId) => {
+              dispatch(updateTournament()) // TOFIX: force redux reactivity
+            })
+
+            // every team field has to be watched or the standings freeze on
+            // screen
+            $tournament.teams.onAdd((team) => {
+              dispatch(updateTournament()) // TOFIX: force redux reactivity
+              const $team = $(team)
+              const teamFields = [
+                "name",
+                "points",
+                "eliminated"
+              ] satisfies NonFunctionPropNames<TournamentTeamSchema>[]
+              teamFields.forEach((field) => {
+                $team.listen(field, () => dispatch(updateTournament()))
+              })
+              $team.placements.onChange(() => dispatch(updateTournament()))
+              $team.opponents.onChange(() => dispatch(updateTournament()))
+              $team.lobbyHistory.onChange(() => dispatch(updateTournament()))
+            })
+
+            $tournament.teams.onRemove(() => {
               dispatch(updateTournament()) // TOFIX: force redux reactivity
             })
 

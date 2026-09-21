@@ -9,6 +9,25 @@ import { GameMode } from "../../types/enum/Game"
 import type { SpecialGameRule } from "../../types/enum/SpecialGameRule"
 import type { Synergy } from "../../types/enum/Synergy"
 
+export type TournamentLobbyTeamOption = {
+  name: string
+  playersId: string[]
+  playersName: string[]
+}
+
+class TournamentLobbyTeam extends Schema {
+  @type("string") name: string
+  @type(["string"]) playersId = new ArraySchema<string>()
+  @type(["string"]) playersName = new ArraySchema<string>()
+
+  constructor(name: string, playersId: string[], playersName: string[]) {
+    super()
+    this.name = name
+    this.playersId.push(...playersId)
+    this.playersName.push(...playersName)
+  }
+}
+
 export interface IPreparationState {
   users: MapSchema<GameUser>
   messages: ArraySchema<Message>
@@ -49,6 +68,9 @@ export default class PreparationState
   @type("boolean") whimsy = false
   /** GUIDE: which synergy the run about to start teaches. */
   @type("string") guideSynergy: Synergy | null = null
+  // replaced whole rather than edited, so the client's listen() sees the change
+  @type([TournamentLobbyTeam]) tournamentTeams =
+    new ArraySchema<TournamentLobbyTeam>()
   abortOnPlayerLeave?: AbortController
 
   constructor(params: {
@@ -64,8 +86,13 @@ export default class PreparationState
     blacklist?: string[]
     whimsy?: boolean
     guideSynergy?: Synergy
+    tournamentTeams?: TournamentLobbyTeamOption[]
+    blessingsEnabled?: boolean
   }) {
     super()
+    if (params.blessingsEnabled !== undefined) {
+      this.blessingsEnabled = params.blessingsEnabled
+    }
     this.whimsy = params.whimsy ?? false
     // Whimsy Weekend is a scribble-rule mode, so blessings never layer onto it
     if (this.whimsy) this.blessingsEnabled = false
@@ -87,6 +114,16 @@ export default class PreparationState
     this.whitelist = params.whitelist ?? []
     this.blacklist = params.blacklist ?? []
     this.guideSynergy = params.guideSynergy ?? null
+    this.setTournamentTeams(params.tournamentTeams ?? [])
+  }
+
+  setTournamentTeams(teams: TournamentLobbyTeamOption[]) {
+    this.tournamentTeams = new ArraySchema<TournamentLobbyTeam>(
+      ...teams.map(
+        (team) =>
+          new TournamentLobbyTeam(team.name, team.playersId, team.playersName)
+      )
+    )
   }
 
   addMessage(params: {

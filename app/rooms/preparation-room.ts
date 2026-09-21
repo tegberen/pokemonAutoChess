@@ -19,6 +19,7 @@ import type { IBot } from "../types/models/bot-v2"
 import { logger } from "../utils/logger"
 import { schemaValues } from "../utils/schemas"
 import {
+  autoAssignPartner,
   OnAddBotCommand,
   OnChangeNoEloCommand,
   OnChangeBlessingsEnabledCommand,
@@ -37,21 +38,34 @@ import {
   OnRoomPasswordCommand,
   OnToggleReadyCommand,
   RemoveMessageCommand,
-  OnSelectPartnerCommand
+  OnSelectPartnerCommand,
+  StartTournamentLobbyCommand
 } from "./commands/preparation-commands"
-import PreparationState from "./states/preparation-state"
+import PreparationState, {
+  type TournamentLobbyTeamOption
+} from "./states/preparation-state"
 
 export default class PreparationRoom extends Room<{ state: PreparationState }> {
   dispatcher: Dispatcher<this>
   clients!: ClientArray<Client<{ auth: UserRecord }>>
   private roomPassword: string | null
   autoStartTimeout: Delayed | null = null
+  // the timer, the admin and a full ready lobby can all ask at once
+  tournamentLobbyStarting = false
 
   constructor() {
     super()
     this.dispatcher = new Dispatcher(this)
     this.maxClients = MAX_PLAYERS_PER_GAME
     this.roomPassword = null
+  }
+
+  get isTournamentLobby(): boolean {
+    return this.state.tournamentTeams.length > 0
+  }
+
+  get doubleUpPairs(): string[][] {
+    return this.state.tournamentTeams.map((team) => [...team.playersId])
   }
 
   async setName(name: string) {
@@ -108,6 +122,8 @@ export default class PreparationRoom extends Room<{ state: PreparationState }> {
     autoStartDelayInSeconds?: number
     whitelist?: string[]
     blacklist?: string[]
+    tournamentTeams?: TournamentLobbyTeamOption[]
+    blessingsEnabled?: boolean
     tournamentId?: string
     bracketId?: string
     whimsy?: boolean
@@ -124,7 +140,10 @@ export default class PreparationRoom extends Room<{ state: PreparationState }> {
     this.state = new PreparationState(options)
     this.setPassword(options.password ?? null)
     this.setMetadata(<IPreparationMetadata>{
-      name: options.roomName.slice(0, 30),
+      // the cap is for names players type; tournament lobbies are named by us
+      name: options.tournamentId
+        ? options.roomName
+        : options.roomName.slice(0, 30),
       ownerName: options.gameMode === GameMode.CLASSIC ? null : options.ownerId,
       minRank: options.minRank ?? null,
       maxRank: options.maxRank ?? null,
@@ -145,7 +164,7 @@ export default class PreparationRoom extends Room<{ state: PreparationState }> {
       blessingsEnabled: this.state.blessingsEnabled
     })
     this.maxClients = 8
-    if (options.gameMode === GameMode.TOURNAMENT) {
+    if (options.gameMode === GameMode.TOURNAMENT || options.tournamentId) {
       this.autoDispose = false
     }
     if (options.gameMode === GameMode.GUIDE) {
@@ -155,7 +174,9 @@ export default class PreparationRoom extends Room<{ state: PreparationState }> {
 
     if (options.autoStartDelayInSeconds) {
       this.autoStartTimeout = this.clock.setTimeout(() => {
-        if (this.state.gameStartedAt != null) {
+        if (this.isTournamentLobby) {
+          this.dispatcher.dispatch(new StartTournamentLobbyCommand())
+        } else if (this.state.gameStartedAt != null) {
           // game has started but the prep room is still open
           logger.debug(
             "game has started but the prep room is still open, forcing close"
@@ -164,18 +185,6 @@ export default class PreparationRoom extends Room<{ state: PreparationState }> {
           return
         } else if (this.state.users.size < 2) {
           // automatically remove lobbies with zero or one players
-          if (this.metadata?.tournamentId) {
-            // automatically give rank 1 if solo in a tournament lobby
-            this.presence.publish("tournament-match-end", {
-              tournamentId: this.metadata?.tournamentId,
-              bracketId: this.metadata?.bracketId,
-              players: schemaValues(this.state.users).map((p) => ({
-                id: p.uid,
-                rank: 1
-              }))
-            })
-          }
-
           this.disconnect(CloseCodes.ROOM_EMPTY)
         } else {
           this.dispatcher.dispatch(new OnGameStartRequestCommand())
@@ -428,6 +437,53 @@ export default class PreparationRoom extends Room<{ state: PreparationState }> {
     this.presence.subscribe("game-started", this.onGameStart)
     this.onRoomDeleted = this.onRoomDeleted.bind(this)
     this.presence.subscribe("room-deleted", this.onRoomDeleted)
+    if (this.isTournamentLobby) {
+      this.onTournamentLobbyStart = this.onTournamentLobbyStart.bind(this)
+      this.presence.subscribe(
+        "tournament-lobby-start",
+        this.onTournamentLobbyStart
+      )
+      this.onTournamentLobbyUpdate = this.onTournamentLobbyUpdate.bind(this)
+      this.presence.subscribe(
+        "tournament-lobby-update",
+        this.onTournamentLobbyUpdate
+      )
+    }
+  }
+
+  onTournamentLobbyStart({ bracketId }: { bracketId: string }) {
+    if (this.metadata?.bracketId === bracketId) {
+      this.dispatcher.dispatch(new StartTournamentLobbyCommand())
+    }
+  }
+
+  // an admin substituted a player while this lobby was waiting to start
+  onTournamentLobbyUpdate({
+    bracketId,
+    teams
+  }: {
+    bracketId: string
+    teams: TournamentLobbyTeamOption[]
+  }) {
+    if (this.metadata?.bracketId !== bracketId) return
+    if (this.state.gameStartedAt != null) return
+    const whitelist = teams.flatMap((team) => team.playersId)
+    const replaced = [...this.state.users.keys()].filter(
+      (uid) => !whitelist.includes(uid)
+    )
+    this.state.setTournamentTeams(teams)
+    this.state.whitelist = whitelist
+    this.setMetadata({ whitelist })
+    replaced.forEach((uid) => {
+      this.state.users.delete(uid)
+      this.clients
+        .find((c) => c.auth?.uid === uid)
+        ?.leave(CloseCodes.TOURNAMENT_SUBSTITUTED)
+    })
+    this.state.users.forEach((user) => {
+      autoAssignPartner(this.state, user.uid, this.doubleUpPairs)
+    })
+    this.updatePlayersInfo()
   }
 
   async onAuth(client: Client, options, context) {
@@ -534,6 +590,16 @@ export default class PreparationRoom extends Room<{ state: PreparationState }> {
 
   onDispose() {
     logger.info("Dispose preparation room", this.roomId)
+    if (this.isTournamentLobby) {
+      this.presence.unsubscribe(
+        "tournament-lobby-start",
+        this.onTournamentLobbyStart
+      )
+      this.presence.unsubscribe(
+        "tournament-lobby-update",
+        this.onTournamentLobbyUpdate
+      )
+    }
     this.dispatcher.stop()
   }
 

@@ -445,6 +445,17 @@ Team up with your partner and outlast every other duo!
 
 [Double Up guide](#wiki/double-up)
 
+### Tournament
+
+Played in Double Up. Join from the Tournament tab, then team up in **Find a partner**.
+
+- **Qualification**: 3 Swiss rounds of 4 teams, scored 8/4/2/1 by team placement. Ties are broken by Buchholz, then average placement
+- **Knockout**: the top 8 play two semi-finals and the top 2 of each play the final. With 8 teams or fewer, the top 4 go straight to the final
+- **Lobbies**: start once everyone is ready, or after 15 minutes without the teams missing a player. Those forfeit the round and score 0 points
+- **No finale**: the game ends as soon as one team is left
+- **Wishes**: off unless enabled for the tournament
+- **Substitutes**: players without a team sit on the bench. A team that swaps one in keeps its points
+
 ### Wish Festival
 
 [Wishes in the Wiki](#wiki/blessings)
@@ -478,6 +489,10 @@ Smeargle Scribbles do not change your Elo.
 Every balance change on this server, newest first.
 
 ### 21 September 2026
+
+**Game Mode**
+- Tournaments | reworked into Double Up tournaments: Swiss qualification, then semi-finals and a final
+- Tournament lobbies | show every expected player, have locked settings, and start after 15 minutes at the latest
 
 **Wishes**
 - Hydrated Cells | AMORPHOUS_GEM and a WATER_STONE → 2 WATER_STONE

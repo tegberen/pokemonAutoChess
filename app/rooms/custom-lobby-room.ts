@@ -12,8 +12,7 @@ import {
   INACTIVITY_TIMEOUT,
   MAX_CONCURRENT_PLAYERS_ON_LOBBY,
   MAX_CONCURRENT_PLAYERS_ON_SERVER,
-  TOURNAMENT_CLEANUP_DELAY,
-  TOURNAMENT_REGISTRATION_TIME
+  TOURNAMENT_CLEANUP_DELAY
 } from "../config"
 import Message from "../models/colyseus-models/message"
 import { TournamentSchema } from "../models/colyseus-models/tournament"
@@ -28,7 +27,6 @@ import { CloseCodes } from "../types/enum/CloseCodes"
 import type { GameMode, RoomRequest } from "../types/enum/Game"
 import type { Language } from "../types/enum/Language"
 import { MaintenanceOrder } from "../types/enum/MaintenanceOrder"
-import type { ITournament } from "../types/interfaces/Tournament"
 import type { IUserMetadataMongo } from "../types/interfaces/UserMetadata"
 import { logger } from "../utils/logger"
 import {
@@ -54,13 +52,21 @@ import {
   UnbanUserCommand
 } from "./commands/lobby-commands"
 import {
-  CreateTournamentLobbiesCommand,
+  AddTournamentTestPlayersCommand,
   DeleteTournamentCommand,
   EndTournamentMatchCommand,
-  NextTournamentStageCommand,
+  KickTournamentParticipantCommand,
   OnCreateTournamentCommand,
   ParticipateInTournamentCommand,
-  RemakeTournamentLobbyCommand
+  RegisterTournamentTeamsCommand,
+  RemakeTournamentLobbyCommand,
+  RenameTournamentCommand,
+  ReplaceTournamentPlayerCommand,
+  SetTournamentWishesCommand,
+  SimulateTournamentRoundCommand,
+  StartTournamentCommand,
+  StartTournamentLobbyNowCommand,
+  TournamentPartnerCommand
 } from "./commands/tournament-commands"
 import LobbyState from "./states/lobby-state"
 
@@ -69,7 +75,6 @@ export default class CustomLobbyRoom extends Room {
   unsubscribeLobby: (() => void) | undefined
   rooms: IRoomCache[] | undefined
   dispatcher: Dispatcher<this>
-  tournamentCronJobs: Map<string, CronJob> = new Map<string, CronJob>()
   cleanUpCronJobs: CronJob[] = []
   users: Map<string, IUserMetadataMongo> = new Map<string, IUserMetadataMongo>()
 
@@ -232,32 +237,77 @@ export default class CustomLobbyRoom extends Room {
     this.onMessage(
       Transfer.REMAKE_TOURNAMENT_LOBBY,
       async (client, message: { tournamentId: string; bracketId: string }) => {
-        if (message.bracketId === "all") {
-          // delete all ongoing games
-          await this.dispatcher.dispatch(new DeleteRoomCommand(), {
+        await this.dispatcher.dispatch(new DeleteRoomCommand(), {
+          client,
+          tournamentId: message.tournamentId,
+          bracketId: message.bracketId
+        })
+        // "all" rebuilds the round in progress rather than drawing a new one,
+        // so pairings and recorded results survive
+        const tournament = this.state.tournaments.find(
+          (t) => t.id === message.tournamentId
+        )
+        const bracketIds =
+          message.bracketId === "all"
+            ? [...(tournament?.brackets.keys() ?? [])]
+            : [message.bracketId]
+        for (const bracketId of bracketIds) {
+          await this.dispatcher.dispatch(new RemakeTournamentLobbyCommand(), {
             client,
             tournamentId: message.tournamentId,
-            bracketId: message.bracketId
-          })
-          this.dispatcher.dispatch(new CreateTournamentLobbiesCommand(), {
-            client,
-            tournamentId: message.tournamentId
-          })
-        } else {
-          // delete ongoing game
-          await this.dispatcher.dispatch(new DeleteRoomCommand(), {
-            client,
-            tournamentId: message.tournamentId,
-            bracketId: message.bracketId
-          })
-
-          // recreate lobby
-          this.dispatcher.dispatch(new RemakeTournamentLobbyCommand(), {
-            client,
-            tournamentId: message.tournamentId,
-            bracketId: message.bracketId
+            bracketId
           })
         }
+      }
+    )
+
+    this.onMessage(
+      Transfer.RENAME_TOURNAMENT,
+      (client, message: { tournamentId: string; name: string }) => {
+        this.dispatcher.dispatch(new RenameTournamentCommand(), {
+          client,
+          tournamentId: message.tournamentId,
+          name: message.name
+        })
+      }
+    )
+
+    this.onMessage(
+      Transfer.SET_TOURNAMENT_WISHES,
+      (client, message: { tournamentId: string; enabled: boolean }) => {
+        this.dispatcher.dispatch(new SetTournamentWishesCommand(), {
+          client,
+          tournamentId: message.tournamentId,
+          enabled: message.enabled
+        })
+      }
+    )
+
+    this.onMessage(
+      Transfer.START_TOURNAMENT_LOBBY,
+      (client, message: { bracketId: string }) => {
+        this.dispatcher.dispatch(new StartTournamentLobbyNowCommand(), {
+          client,
+          bracketId: message.bracketId
+        })
+      }
+    )
+
+    this.onMessage(
+      Transfer.REPLACE_TOURNAMENT_PLAYER,
+      (
+        client,
+        message: {
+          tournamentId: string
+          teamId: string
+          outgoingId: string
+          incomingId: string
+        }
+      ) => {
+        this.dispatcher.dispatch(new ReplaceTournamentPlayerCommand(), {
+          client,
+          ...message
+        })
       }
     )
 
@@ -268,6 +318,78 @@ export default class CustomLobbyRoom extends Room {
           client,
           tournamentId: message.tournamentId,
           participate: message.participate
+        })
+      }
+    )
+
+    this.onMessage(
+      Transfer.ADD_TOURNAMENT_TEST_PLAYERS,
+      (client, message: { tournamentId: string; count: number }) => {
+        this.dispatcher.dispatch(new AddTournamentTestPlayersCommand(), {
+          client,
+          tournamentId: message.tournamentId,
+          count: message.count
+        })
+      }
+    )
+
+    this.onMessage(
+      Transfer.SIMULATE_TOURNAMENT_ROUND,
+      (client, message: { tournamentId: string }) => {
+        this.dispatcher.dispatch(new SimulateTournamentRoundCommand(), {
+          client,
+          tournamentId: message.tournamentId
+        })
+      }
+    )
+
+    this.onMessage(
+      Transfer.TOURNAMENT_PARTNER,
+      (
+        client,
+        message: {
+          tournamentId: string
+          targetId: string
+          action: "invite" | "accept" | "decline" | "cancel" | "leave"
+        }
+      ) => {
+        this.dispatcher.dispatch(new TournamentPartnerCommand(), {
+          client,
+          tournamentId: message.tournamentId,
+          targetId: message.targetId,
+          action: message.action
+        })
+      }
+    )
+
+    this.onMessage(
+      Transfer.KICK_TOURNAMENT_PARTICIPANT,
+      (client, message: { tournamentId: string; playerId: string }) => {
+        this.dispatcher.dispatch(new KickTournamentParticipantCommand(), {
+          client,
+          tournamentId: message.tournamentId,
+          playerId: message.playerId
+        })
+      }
+    )
+
+    this.onMessage(
+      Transfer.START_TOURNAMENT,
+      (client, message: { tournamentId: string }) => {
+        this.dispatcher.dispatch(new StartTournamentCommand(), {
+          client,
+          tournamentId: message.tournamentId
+        })
+      }
+    )
+
+    this.onMessage(
+      Transfer.REGISTER_TOURNAMENT_TEAMS,
+      (client, message: { tournamentId: string; pairs: string[][] }) => {
+        this.dispatcher.dispatch(new RegisterTournamentTeamsCommand(), {
+          client,
+          tournamentId: message.tournamentId,
+          pairs: message.pairs
         })
       }
     )
@@ -628,59 +750,19 @@ export default class CustomLobbyRoom extends Room {
               tournament.startDate,
               tournament.players,
               tournament.brackets,
-              tournament.finished
+              tournament.finished,
+              tournament.teams,
+              tournament.stage,
+              tournament.roundNumber,
+              tournament.wishesEnabled
             )
           )
 
-          if (
-            startDate.getTime() > Date.now() &&
-            this.tournamentCronJobs.has(tournament.id) === false
-          ) {
-            logger.debug(
-              "Start tournament cron job for",
-              new Date(tournament.startDate)
-            )
-            this.tournamentCronJobs.set(
-              tournament.id,
-              new CronJob(
-                startDate,
-                () => this.startTournament(tournament),
-                null,
-                true
-              )
-            )
-
-            if (
-              Date.now() <
-              startDate.getTime() - TOURNAMENT_REGISTRATION_TIME
-            ) {
-              logger.debug(
-                "Start tournament registrations opening cron job for",
-                new Date(startDate.getTime() - TOURNAMENT_REGISTRATION_TIME)
-              )
-              new CronJob(
-                new Date(startDate.getTime() - TOURNAMENT_REGISTRATION_TIME),
-                () =>
-                  this.state.addAnnouncement(
-                    `${tournament.name} is starting in one hour. Tournament registration is now open in the Tournament tab.`
-                  ),
-                null,
-                true
-              )
-            }
-          }
         })
       }
     } catch (error) {
       logger.error(error)
     }
-  }
-
-  startTournament(tournament: ITournament) {
-    logger.info(`Start tournament ${tournament.name}`)
-    this.dispatcher.dispatch(new NextTournamentStageCommand(), {
-      tournamentId: tournament.id
-    })
   }
 
   initCronJobs() {

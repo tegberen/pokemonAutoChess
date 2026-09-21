@@ -83,6 +83,10 @@ export default class LobbyState extends Schema {
       startDate,
       brackets: new Map(),
       players: new Map(),
+      teams: new Map(),
+      stage: "registration",
+      roundNumber: 0,
+      wishesEnabled: false,
       finished: false
     } as unknown as Partial<ITournament>)
   }

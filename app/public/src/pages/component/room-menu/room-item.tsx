@@ -3,6 +3,7 @@ import { useState } from "react"
 import { useTranslation } from "react-i18next"
 import { EloRankThreshold, MAX_PLAYERS_PER_GAME } from "../../../../../config"
 import { GADGETS } from "../../../../../config/game/gadgets"
+import { FINAL_BRACKET_NAME } from "../../../../../core/tournament-swiss"
 import { type IPreparationMetadata, Role } from "../../../../../types"
 import type { EloRank } from "../../../../../types/enum/EloRank"
 import { GameMode } from "../../../../../types/enum/Game"
@@ -89,6 +90,15 @@ export default function RoomItem(props: {
           src="/assets/icons/blessing_stats.svg"
         />
       )}
+      {props.room.metadata?.tournamentId &&
+        props.room.metadata.name === FINAL_BRACKET_NAME && (
+          <img
+            alt=""
+            aria-hidden="true"
+            className="icon"
+            src="/assets/icons/fire_week_streak.svg"
+          />
+        )}
       <span className="room-name" title={title}>
         {formatMinMaxRanks(
           props.room.metadata?.minRank as EloRank | null,

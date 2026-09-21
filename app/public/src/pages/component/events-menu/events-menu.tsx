@@ -73,6 +73,11 @@ export function EventsMenu() {
     >
       <h2>{t("events")}</h2>
       <TabList>
+        {tournaments.length > 0 && (
+          <Tab>
+            <span>{t("game_modes.TOURNAMENT")}</span>
+          </Tab>
+        )}
         <Tab>
           <span>{t("event_calendar")}</span>
         </Tab>
@@ -84,11 +89,6 @@ export function EventsMenu() {
         <Tab>
           <span>{t("feedback")}</span>
         </Tab>
-        {tournaments.length > 0 && (
-          <Tab>
-            <span>{t("game_modes.TOURNAMENT")}</span>
-          </Tab>
-        )}
         {currentGameEvent === GameEvent.EXPEDITIONS && (
           <Tab>
             <span>{t("expeditions.title")}</span>
@@ -100,6 +100,11 @@ export function EventsMenu() {
           </Tab>
         )}
       </TabList>
+      {tournaments.length > 0 && (
+        <TabPanel>
+          <TournamentsList />
+        </TabPanel>
+      )}
       <TabPanel>
         <Calendar />
       </TabPanel>
@@ -111,11 +116,6 @@ export function EventsMenu() {
       <TabPanel>
         <Announcements />
       </TabPanel>
-      {tournaments.length > 0 && (
-        <TabPanel>
-          <TournamentsList />
-        </TabPanel>
-      )}
       {currentGameEvent === GameEvent.EXPEDITIONS && (
         <TabPanel>
           <Expeditions />

@@ -77,11 +77,13 @@ export default function RoomMenu() {
     }
   }
 
-  const hasTournamentLobbies = gameRooms.some(
-    (r) => r.metadata.gameMode === GameMode.TOURNAMENT
-  )
+  // tournament games are Double Up games, told apart by their tournament
+  const hasTournamentLobbies = gameRooms.some((r) => r.metadata.tournamentId)
   const hasDoubleUpLobbies = gameRooms.some(
-    (r) => r.metadata.gameMode === GameMode.DOUBLE_UP && !r.metadata.whimsy
+    (r) =>
+      r.metadata.gameMode === GameMode.DOUBLE_UP &&
+      !r.metadata.whimsy &&
+      !r.metadata.tournamentId
   )
   const hasWhimsyLobbies = gameRooms.some((r) => r.metadata.whimsy)
   const hasCustomLobbies = gameRooms.some(
@@ -136,12 +138,16 @@ export default function RoomMenu() {
       </TabPanel>
       {hasTournamentLobbies && (
         <TabPanel>
-          <IngameRoomsList gameMode={GameMode.TOURNAMENT} />
+          <IngameRoomsList tournament />
         </TabPanel>
       )}
       {hasDoubleUpLobbies && (
         <TabPanel>
-          <IngameRoomsList gameMode={GameMode.DOUBLE_UP} whimsy={false} />
+          <IngameRoomsList
+            gameMode={GameMode.DOUBLE_UP}
+            whimsy={false}
+            tournament={false}
+          />
         </TabPanel>
       )}
       {hasWhimsyLobbies && (

@@ -215,6 +215,9 @@ const lobbySlice = createSlice({
       if (tournament) {
         tournament[action.payload.field] = action.payload.value
       }
+      // the schema already holds the new value, so the write above is not a
+      // change as far as the store can tell
+      state.tournaments = [...state.tournaments]
     },
     updateTournament: (state) => {
       state.tournaments = [...state.tournaments] // TOFIX: force reactivity through immutability

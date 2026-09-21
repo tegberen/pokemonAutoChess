@@ -10,6 +10,7 @@ import { Role } from "../../../../../types"
 import { EloRank } from "../../../../../types/enum/EloRank"
 import { BotDifficulty, GameMode } from "../../../../../types/enum/Game"
 import { SpecialGameRule } from "../../../../../types/enum/SpecialGameRule"
+import { TOURNAMENT_LOBBY_START_DELAY_IN_SECONDS } from "../../../../../core/tournament-swiss"
 import { formatMinMaxRanks } from "../../../../../utils/elo"
 import { throttle } from "../../../../../utils/function"
 import { max } from "../../../../../utils/number"
@@ -49,6 +50,10 @@ export default function PreparationMenu() {
   )
 
   const gameMode = useAppSelector((state) => state.preparation.gameMode)
+  const tournamentTeams = useAppSelector(
+    (state) => state.preparation.tournamentTeams
+  )
+  const isTournamentLobby = tournamentTeams.length > 0
   const scribbleExtended = useAppSelector(
     (state) => state.preparation.scribbleExtended
   )
@@ -99,6 +104,15 @@ export default function PreparationMenu() {
 
   const headerMessage = (
     <>
+      {isTournamentLobby && (
+        <p>
+          {t("tournament.lobby_hint", {
+            players: nbExpectedPlayers,
+            minutes: TOURNAMENT_LOBBY_START_DELAY_IN_SECONDS / 60
+          })}
+        </p>
+      )}
+
       {gameMode === GameMode.RANKED && (
         <p>
           <GameModeIcon gameMode={gameMode} />
@@ -181,6 +195,7 @@ export default function PreparationMenu() {
     )
 
   const addBotButton = process.env.MODE === "dev" &&
+    !isTournamentLobby &&
     (isOwner || isAdmin) &&
     users.length < MAX_PLAYERS_PER_GAME && (
       <button
@@ -191,7 +206,7 @@ export default function PreparationMenu() {
       </button>
     )
 
-  const startGameButton = (isOwner || isAdmin) && (
+  const startGameButton = !isTournamentLobby && (isOwner || isAdmin) && (
     <button
       className={cc("bubbly", {
         green: allUsersReady,
@@ -243,7 +258,37 @@ export default function PreparationMenu() {
       </header>
 
       <div className={`preparation-menu-users${gameMode === GameMode.DOUBLE_UP ? " double-up" : ""}`}>
-        {gameMode === GameMode.DOUBLE_UP
+        {isTournamentLobby
+          ? tournamentTeams.map((team, colorIndex) => (
+              <div
+                key={team.playersId.join()}
+                className="double-up-pair paired"
+              >
+                {team.playersId.map((playerId, i) => {
+                  const seated = users.find((u) => u.uid === playerId)
+                  return seated ? (
+                    <PreparationMenuUser
+                      key={seated.uid}
+                      user={seated}
+                      isOwner={false}
+                      ownerId={ownerId}
+                      colorIndex={colorIndex}
+                    />
+                  ) : (
+                    <div
+                      key={playerId}
+                      className="my-box preparation-menu-user missing"
+                    >
+                      <span className="missing-name">
+                        {team.playersName[i]}
+                      </span>
+                      <span>{t("tournament.not_here_yet")}</span>
+                    </div>
+                  )
+                })}
+              </div>
+            ))
+          : gameMode === GameMode.DOUBLE_UP
           ? (() => {
               const paired: Set<string> = new Set()
               const groups: IGameUser[][] = []

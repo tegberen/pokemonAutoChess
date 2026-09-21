@@ -86,6 +86,13 @@
   border-bottom-color: transparent;
 }
 
+.preparation-side-tabs .react-tabs__tab--disabled,
+.preparation-side-tabs .react-tabs__tab--disabled:hover {
+  background: var(--color-bg-secondary);
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 .preparation-side-tabs .tab-icon {
   width: 1.4em;
   height: 1.4em;

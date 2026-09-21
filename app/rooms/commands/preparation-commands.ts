@@ -39,10 +39,29 @@ import { getDefaultRoomName } from "../../utils/room-name"
 import { schemaEntries, schemaValues } from "../../utils/schemas"
 import type PreparationRoom from "../preparation-room"
 
-function autoAssignPartner(state: PreparationRoom["state"], uid: string) {
+export function autoAssignPartner(
+  state: PreparationRoom["state"],
+  uid: string,
+  registeredPairs: string[][] = []
+) {
   if (state.gameMode !== GameMode.DOUBLE_UP) return
   const newUser = state.users.get(uid)
   if (!newUser) return
+
+  // a tournament's partner is fixed even before they join, so the pair cannot
+  // be broken by who arrives first
+  const pairIndex = registeredPairs.findIndex((pair) => pair.includes(uid))
+  if (pairIndex !== -1) {
+    const partnerId = registeredPairs[pairIndex].find((id) => id !== uid)
+    newUser.doubleUpPartnerId = partnerId ?? ""
+    newUser.doubleUpTeamId = `team-${pairIndex}`
+    const partner = partnerId ? state.users.get(partnerId) : undefined
+    if (partner) {
+      partner.doubleUpPartnerId = uid
+      partner.doubleUpTeamId = `team-${pairIndex}`
+    }
+    return
+  }
   const unpaired = schemaValues(state.users).find(
     (p) => p.uid !== uid && p.doubleUpPartnerId === ""
   )
@@ -89,8 +108,10 @@ export class OnJoinCommand extends Command<
       //   return
       // }
 
+      // a tournament lobby has no owner: its settings and start are not a player's
       if (
         this.state.ownerId == "" &&
+        !this.room.isTournamentLobby &&
         (this.state.gameMode === GameMode.CUSTOM_LOBBY || this.state.gameMode === GameMode.DOUBLE_UP)
       ) {
         this.state.ownerId = auth.uid
@@ -167,7 +188,7 @@ export class OnJoinCommand extends Command<
         this.room.updatePlayersInfo()
 
         // auto-pair in Double Up mode
-        autoAssignPartner(this.state, u.uid)
+        autoAssignPartner(this.state, u.uid, this.room.doubleUpPairs)
 
         if (u.uid == this.state.ownerId) {
           // logger.debug(user.displayName);
@@ -231,6 +252,7 @@ export class OnGameStartRequestCommand extends Command<
       if (this.state.gameStartedAt != null) {
         return // game already started
       }
+      if (client && this.room.isTournamentLobby) return
       let allUsersReady = true
       let nbHumanPlayers = 0
 
@@ -247,6 +269,7 @@ export class OnGameStartRequestCommand extends Command<
 
       if (
         !isGuide &&
+        !this.room.isTournamentLobby &&
         nbHumanPlayers < MIN_HUMAN_PLAYERS &&
         process.env.MODE !== "dev"
       ) {
@@ -861,8 +884,13 @@ export class OnLeaveCommand extends Command<
             }
           }
           this.state.users.delete(client.auth.uid)
+          this.room.updatePlayersInfo()
           if (partnerIdBeforeLeave) {
-            autoAssignPartner(this.state, partnerIdBeforeLeave)
+            autoAssignPartner(
+              this.state,
+              partnerIdBeforeLeave,
+              this.room.doubleUpPairs
+            )
           }
 
           if (client.auth.uid === this.state.ownerId) {
@@ -924,8 +952,9 @@ export class OnToggleReadyCommand extends Command<
           : MAX_PLAYERS_PER_GAME
 
       if (
-        this.state.gameMode !== GameMode.CUSTOM_LOBBY &&
-        this.state.gameMode !== GameMode.DOUBLE_UP &&
+        (this.room.isTournamentLobby ||
+          (this.state.gameMode !== GameMode.CUSTOM_LOBBY &&
+            this.state.gameMode !== GameMode.DOUBLE_UP)) &&
         this.state.users.size === nbExpectedPlayers &&
         schemaValues(this.state.users).every((user) => user.ready)
       ) {
@@ -965,7 +994,9 @@ export class CheckAutoStartRoom extends Command<PreparationRoom, void> {
         })
       }
 
-      return new OnGameStartRequestCommand()
+      return this.room.isTournamentLobby
+        ? new StartTournamentLobbyCommand()
+        : new OnGameStartRequestCommand()
     } catch (e) {
       this.room.state.addMessage({
         authorId: "server",
@@ -1032,6 +1063,8 @@ const REGULAR_MIX_ELO = { $gte: 1100, $lt: 1700 }
 export class OnAddBotCommand extends Command<PreparationRoom, OnAddBotPayload> {
   async execute(data: OnAddBotPayload) {
     try {
+      // a tournament lobby seats only its registered teams
+      if (this.room.isTournamentLobby) return
       if (this.state.users.size >= MAX_PLAYERS_PER_GAME) {
         this.room.state.addMessage({
           authorId: "server",
@@ -1171,7 +1204,11 @@ export class OnRemoveBotCommand extends Command<
         this.state.users.delete(target)
       }
       if (bot?.doubleUpPartnerId) {
-        autoAssignPartner(this.state, bot.doubleUpPartnerId)
+        autoAssignPartner(
+          this.state,
+          bot.doubleUpPartnerId,
+          this.room.doubleUpPairs
+        )
       }
     } catch (error) {
       logger.error(error)
@@ -1189,7 +1226,7 @@ export class OnSelectPartnerCommand extends Command<
   execute({ client, partnerId }) {
     try {
       const uid = client.auth?.uid
-      if (!uid) return
+      if (!uid || this.room.isTournamentLobby) return
       const user = this.state.users.get(uid)
       if (!user) return
       if (user.doubleUpPartnerId === partnerId) {
@@ -1270,6 +1307,67 @@ export class OnSelectPartnerCommand extends Command<
 
     } catch (error) {
       logger.error(error)
+    }
+  }
+}
+
+// plays the teams that turned up in full; the others forfeit with 0 points,
+// and a lone full team wins without a game
+export class StartTournamentLobbyCommand extends Command<PreparationRoom, void> {
+  async execute() {
+    try {
+      if (this.state.gameStartedAt != null || this.room.tournamentLobbyStarting)
+        return
+      this.room.tournamentLobbyStarting = true
+
+      const teams = [...this.state.tournamentTeams].map((team) => ({
+        name: team.name,
+        playersId: [...team.playersId]
+      }))
+      const completeTeams = teams.filter((team) =>
+        team.playersId.every((id) => this.state.users.has(id))
+      )
+      const forfeitingPlayers = teams
+        .filter((team) => !completeTeams.includes(team))
+        .flatMap((team) => {
+          this.state.addMessage({
+            authorId: "server",
+            payload: `${team.name} did not show up in full: they forfeit and score 0 points.`
+          })
+          return team.playersId
+        })
+
+      if (completeTeams.length < 2) {
+        this.room.presence.publish("tournament-match-end", {
+          tournamentId: this.room.metadata?.tournamentId,
+          bracketId: this.room.metadata?.bracketId,
+          players: completeTeams.flatMap((team) =>
+            team.playersId.map((id) => ({ id, rank: 1 }))
+          )
+        })
+        this.room.disconnect(CloseCodes.TOURNAMENT_LOBBY_FORFEITED)
+        return
+      }
+
+      // a lone partner cannot play Double Up, and a bot seat would be unfair
+      // to the teams that came in full
+      forfeitingPlayers.forEach((uid) => {
+        if (!this.state.users.has(uid)) return
+        this.state.users.delete(uid)
+        this.room.clients
+          .find((c) => c.auth?.uid === uid)
+          ?.leave(CloseCodes.TOURNAMENT_PARTNER_MISSING)
+      })
+
+      this.state.users.forEach((user) => {
+        user.ready = true
+      })
+      this.room.updatePlayersInfo()
+      await this.room.dispatcher.dispatch(new OnGameStartRequestCommand())
+    } catch (error) {
+      logger.error(error)
+    } finally {
+      this.room.tournamentLobbyStarting = false
     }
   }
 }

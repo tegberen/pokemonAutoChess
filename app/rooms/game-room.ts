@@ -261,7 +261,11 @@ export default class GameRoom extends Room<{ state: GameState }> {
       name = `${formatMinMaxRanks(minRank, maxRank)} ${name}`
     }
 
-    if (gameMode === GameMode.RANKED || gameMode === GameMode.TOURNAMENT) {
+    if (
+      gameMode === GameMode.RANKED ||
+      gameMode === GameMode.TOURNAMENT ||
+      tournamentId
+    ) {
       this.autoDispose = false // prevent a tournament game to be removed before registering the brackets results
     }
 
@@ -1157,7 +1161,9 @@ export default class GameRoom extends Room<{ state: GameState }> {
         }
       }
 
-      if (this.state.gameMode === GameMode.TOURNAMENT) {
+      // a team tournament plays its games in Double Up, so the bracket is what
+      // marks a game as a tournament one, not the mode
+      if (this.metadata?.tournamentId) {
         this.presence.publish("tournament-match-end", {
           tournamentId: this.metadata?.tournamentId,
           bracketId: this.metadata?.bracketId,

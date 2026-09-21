@@ -2328,7 +2328,8 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
     const aliveTeams = new Set(playersAlive.map((p) => p.doubleUpTeamId))
 
     if (aliveTeams.size <= 1) {
-      if (playersAlive.length === 2) {
+      // a tournament only needs the team placement, so it skips the duel
+      if (playersAlive.length === 2 && !this.room.metadata?.tournamentId) {
         // Last team standing with both partners alive: the finale begins.
         // Both keep rank 1 whatever happens next; the game cycle continues
         // with the partners fighting each other until one falls below 0 HP.
