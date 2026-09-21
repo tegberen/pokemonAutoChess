@@ -6340,7 +6340,7 @@
 		},
 		"SILVER_SPOON": {
 			"name": "Prismatic Spoon",
-			"description": "Gain an Abra. An Abra holding a component bends it into a TWISTED_SPOON after 3/2/1 rounds at 1/2/3 STAR. Benching it returns held items. Pokémon holding a TWISTED_SPOON or item made from it cast Teleport on their next attack after using their ability."
+			"description": "Gain an Abra and 2 random components. An Abra holding a component bends it into a TWISTED_SPOON after 3/2/1 rounds at 1/2/3 STAR. Benching it returns held items. Pokémon holding a TWISTED_SPOON or item made from it cast Teleport on their next attack after using their ability."
 		},
 		"ICE_SPEAR": {
 			"name": "Ice Spear",

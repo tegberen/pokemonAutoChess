@@ -2177,8 +2177,11 @@ export const blessingEffectService: {
   },
   [Blessing.LANCES_ACE]: (player) =>
     giftPokemonIfBenchHasRoom(player, Pkm.DRATINI),
-  [Blessing.SILVER_SPOON]: (player) =>
-    giftPokemonIfBenchHasRoom(player, Pkm.ABRA),
+  [Blessing.SILVER_SPOON]: (player) => {
+    if (!giftPokemonIfBenchHasRoom(player, Pkm.ABRA)) return false
+    player.items.push(pickRandomIn(ItemComponents), pickRandomIn(ItemComponents))
+    return true
+  },
   [Blessing.PANIC_BUTTON]: (player) => grantPanicButtonUnown(player),
   [Blessing.HAIL_TO_THE_KING]: (player) => {
     player.items.push(Item.RELIC_STATUE)
