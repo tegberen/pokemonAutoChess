@@ -17,6 +17,16 @@ export function BlessingIcon(props: {
 }) {
   const { blessing, tooltipId, className, onMouseEnter } = props
   const { t } = useTranslation()
+  if (!Blessings[blessing]) {
+    return (
+      <img
+        src="/assets/icons/blessing_stats.svg"
+        alt="Removed Wish"
+        title="Removed Wish"
+        className={`blessing-panel-icon blessing-removed ${className ?? ""}`}
+      />
+    )
+  }
   return (
     <img
       src={`/assets/blessings/${Blessings[blessing].icon}.svg`}
@@ -47,6 +57,7 @@ export function BlessingTooltipCard(props: {
 }) {
   const { t } = useTranslation()
   const { blessing } = props
+  if (!Blessings[blessing]) return null
   return (
     <div
       className={`wiki-blessing-body blessing-panel-tooltip-card ${blessingTierClass(blessing)}`}

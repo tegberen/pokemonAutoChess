@@ -33,8 +33,6 @@ type CalendarEvent = {
   image: string
   variant: "whimsy" | "jirachi" | "smeargle" | "doubleup"
   start: Date
-  // tournaments are started by hand, so only their date is shown, not a
-  // countdown to it
   showCountdown: boolean
 }
 

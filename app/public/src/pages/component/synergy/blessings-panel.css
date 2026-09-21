@@ -43,6 +43,13 @@
   cursor: var(--cursor-hover);
 }
 
+.blessing-panel-icon.blessing-removed {
+  background: var(--color-bg-secondary);
+  opacity: 0.45;
+  filter: grayscale(1);
+  cursor: default;
+}
+
 .blessing-panel-slot {
   position: relative;
   display: inline-flex;
