@@ -93,7 +93,9 @@ export function TournamentTeamsAdmin(props: { tournament: ITournament }) {
     <div className="tournament-teams-admin">
       <p className="tournament-teams-summary">
         {participants.length} participants · {registered.length} teams
-        registered · {confirmedPairCount} pairs agreed by players
+        registered ({registered.length * 2} players) · {confirmedPairCount}{" "}
+        pairs agreed by players
+        {pairs.length > 0 && ` · ${pairs.length} pending, not registered yet`}
         {justRegistered && (
           <span className="tournament-registered-flash">
             {" "}
@@ -173,7 +175,7 @@ export function TournamentTeamsAdmin(props: { tournament: ITournament }) {
                 }
               >
                 {registered.length > 0 ? "Replace with" : "Register"}{" "}
-                {pairs.length} teams
+                {pairs.length} teams ({pairs.length * 2} players)
               </button>
               <button className="bubbly red" onClick={() => setPairs([])}>
                 Discard changes
@@ -254,6 +256,13 @@ export function TournamentTeamsAdmin(props: { tournament: ITournament }) {
         >
           Start tournament
         </button>
+        {!canStart && (
+          <span className="tournament-teams-warning">
+            {pairs.length > 0
+              ? `Register the ${pairs.length} teams above first`
+              : `Register a multiple of ${TEAMS_PER_LOBBY} teams first`}
+          </span>
+        )}
         <div className="spacer" />
         {[16, 32].map((target) => (
           <button

@@ -591,6 +591,9 @@ export default class PreparationRoom extends Room<{ state: PreparationState }> {
   onDispose() {
     logger.info("Dispose preparation room", this.roomId)
     if (this.isTournamentLobby) {
+      logger.info(
+        `Tournament ${this.metadata?.tournamentId} lobby "${this.state.name}" (bracket ${this.metadata?.bracketId}) closed, game started: ${this.state.gameStartedAt ?? "no"}, players inside: ${[...this.state.users.keys()].join(", ") || "none"}`
+      )
       this.presence.unsubscribe(
         "tournament-lobby-start",
         this.onTournamentLobbyStart

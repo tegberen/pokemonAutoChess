@@ -1337,6 +1337,10 @@ export class StartTournamentLobbyCommand extends Command<PreparationRoom, void> 
           return team.playersId
         })
 
+      logger.info(
+        `Tournament ${this.room.metadata?.tournamentId} lobby "${this.state.name}" (bracket ${this.room.metadata?.bracketId}) starting: ${completeTeams.length} full teams, forfeits: ${teams.filter((team) => !completeTeams.includes(team)).map((team) => team.name).join(", ") || "none"}`
+      )
+
       if (completeTeams.length < 2) {
         this.room.presence.publish("tournament-match-end", {
           tournamentId: this.room.metadata?.tournamentId,

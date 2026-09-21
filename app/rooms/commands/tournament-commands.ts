@@ -304,13 +304,23 @@ export class RegisterTournamentTeamsCommand extends Command<
   }) {
     try {
       const user = this.room.users.get(client.auth.uid)
-      if (!user || user.role !== Role.ADMIN) return
+      if (!user || user.role !== Role.ADMIN) {
+        return client.send(
+          Transfer.ALERT,
+          "Registering teams failed: you are not recognised as an admin in this lobby. Reload the page and try again."
+        )
+      }
 
       const tournament = this.state.tournaments.find(
         (t) => t.id === tournamentId
       )
-      if (!tournament)
-        return logger.error(`Tournament not found: ${tournamentId}`)
+      if (!tournament) {
+        logger.error(`Tournament not found: ${tournamentId}`)
+        return client.send(
+          Transfer.ALERT,
+          "Registering teams failed: this tournament was not found on the server. Reload the page and try again."
+        )
+      }
 
       if (tournament.stage !== "registration") {
         return client.send(
@@ -368,6 +378,10 @@ export class RegisterTournamentTeamsCommand extends Command<
       )
     } catch (error) {
       logger.error(error)
+      client.send(
+        Transfer.ALERT,
+        `Registering teams failed: ${error instanceof Error ? error.message : error}`
+      )
     }
   }
 }
@@ -682,7 +696,7 @@ async function createTournamentLobby(
   bracketId: string,
   bracket: ITournamentBracket
 ) {
-  await matchMaker.createRoom("preparation", {
+  const lobby = await matchMaker.createRoom("preparation", {
     gameMode: GameMode.DOUBLE_UP,
     noElo: true,
     ownerId: null,
@@ -694,6 +708,9 @@ async function createTournamentLobby(
     tournamentId: tournament.id,
     bracketId
   })
+  logger.info(
+    `Tournament ${tournament.id} lobby "${bracket.name}" (bracket ${bracketId}) opened as room ${lobby.roomId} on process ${lobby.processId}`
+  )
 }
 
 export class CreateTournamentLobbiesCommand extends Command<
@@ -866,6 +883,16 @@ export class EndTournamentMatchCommand extends Command<
       bracket.finished = true
 
       recordTeamResults(tournament, bracket, players)
+      logger.info(
+        `Tournament ${tournamentId} lobby "${bracket.name}" (bracket ${bracketId}) result: ${[
+          ...bracket.teamsId
+        ]
+          .map((teamId) => {
+            const team = tournament.teams.get(teamId)
+            return `${team?.name ?? teamId} ${team?.placements.at(-1) ?? "?"}`
+          })
+          .join(", ")}`
+      )
 
       // a result that never went through a game leaves its lobby waiting, and
       // tournament lobbies never dispose on their own
