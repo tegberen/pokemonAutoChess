@@ -197,7 +197,9 @@ If the target has an ally directly behind it, the attack knocks a random held it
 
 #### GRIP_CLAW
 
-Attacks grant +10% CRIT_POWER. (stackable)
+Attacks have a [20,LK]% chance to hit the target again immediately. Extra attacks from any source cannot trigger this.
+
+> Similar to ELECTRIC. Think of it as a LOADED_DICE on the same unit. This item provides another option to do more actions per second, which helps you dish out more damage, but is also useful for ON_HIT and ON_ATTACK effects.
 
 #### COVERT_CLOAK
 
@@ -493,6 +495,9 @@ Every balance change on this server, newest first.
 **Game Mode**
 - Tournaments | reworked into Double Up tournaments: Swiss qualification, then semi-finals and a final
 - Tournament lobbies | show every expected player, have locked settings, and start after 15 minutes at the latest
+
+**Items**
+- GRIP_CLAW | reworked: +10 CRIT_CHANCE, and attacks have a [20,LK]% chance to hit the target again immediately. It no longer stacks CRIT_POWER; Seizing Claw keeps that effect, without the tripling at 100% CRIT_CHANCE
 
 **Wishes**
 - Hydrated Cells | AMORPHOUS_GEM and a WATER_STONE → 2 WATER_STONE

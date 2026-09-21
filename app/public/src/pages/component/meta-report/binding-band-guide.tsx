@@ -71,8 +71,7 @@ const builds: Record<string, BuildPair[]> = {
   ],
   "Grip Claw": [
     {
-      familiar: "Scaling options: UPGRADE or SOUL_DEW",
-      new: "Two more scaling options: GRIP_CLAW and WIDE_LENS"
+      new: "Attack carry: GRIP_CLAW + ON_ATTACK items — every extra hit triggers them again"
     }
   ],
   "Covert Cloak": [

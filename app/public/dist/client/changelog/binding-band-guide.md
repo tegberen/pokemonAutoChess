@@ -86,10 +86,6 @@ A popular super-OG set is XRAY_VISION + RED_ORB + PUNCHING_GLOVE. You can replac
 
 ## Grip Claw
 
-If one item in this new set is both the easiest to understand and the most popular, it is GRIP_CLAW. This is just the scaling version of RAZOR_FANG.
-
-The exact same itemization theory holds here, like UPGRADE and XRAY_VISION, or SOUL_DEW and CHOICE_SPECS. If you think you can scale up, take the scaling version. If you think you need immediate power, go with the immediate version.
-
 ## Covert Cloak
 
 My favourite item. When I grew up, I read a fair share of fantasy books. When I read and think of a cloak, the first thing that comes to my mind are wizards and witches. In my head, magicians are beings that operate at range. So there you have it: another option in the game besides WIDE_LENS to make your Pokémon ranged.

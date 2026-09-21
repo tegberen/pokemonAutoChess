@@ -60,8 +60,8 @@ import {
   GRACIDEA_FLOWER_HEAL_INTERVAL,
   REAPER_CLOTH_GHOST_VANISH_DURATION,
   GRACIDEA_FLOWER_HEAL_MAX_HP_RATIO,
+  GRIP_CLAW_ADDITIONAL_ATTACK_CHANCE,
   GRIP_CLAW_CRIT_POWER,
-  GRIP_CLAW_MAX_CRIT_CHANCE_MULTIPLIER,
   GRIP_CLAW_MIN_TARGET_CRIT_POWER,
   KINGS_ROCK_FLINCH_DURATION,
   LUCKY_DICE_BOUNCE_DAMAGE_RATIO,
@@ -2610,26 +2610,37 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
     })
   ],
   [Item.GRIP_CLAW]: [
-    new OnAttackEffect(({ pokemon, target, board }) => {
-      const isBlessed = hasBlessing(pokemon, Blessing.GRIP_CLAW_BLESSING)
-      const critPowerGain =
-        isBlessed && pokemon.critChance >= 100
-          ? GRIP_CLAW_CRIT_POWER * GRIP_CLAW_MAX_CRIT_CHANCE_MULTIPLIER
-          : GRIP_CLAW_CRIT_POWER
-      // blessed, the crit power is torn off the target rather than conjured
-      if (target && isBlessed) {
+    () => {
+      let lastRolledAttackCount = -1
+      return new OnAttackEffect(({ pokemon, target, board }) => {
+        if (pokemon.count.attackCount === lastRolledAttackCount) return
+        lastRolledAttackCount = pokemon.count.attackCount
+        if (
+          !target ||
+          target.hp <= 0 ||
+          !chance(GRIP_CLAW_ADDITIONAL_ATTACK_CHANCE, pokemon)
+        )
+          return
+        pokemon.count.attackCount++
+        lastRolledAttackCount = pokemon.count.attackCount
+        pokemon.state.attack(pokemon, board, target)
+      })
+    },
+    new OnAttackEffect(({ pokemon, target }) => {
+      if (!hasBlessing(pokemon, Blessing.GRIP_CLAW_BLESSING)) return
+      if (target) {
         const targetCritBonus = Math.round(
           100 * (target.critPower - GRIP_CLAW_MIN_TARGET_CRIT_POWER)
         )
-        const stolen = clamp(targetCritBonus, 0, critPowerGain)
+        const stolen = clamp(targetCritBonus, 0, GRIP_CLAW_CRIT_POWER)
         if (stolen > 0) target.addCritPower(-stolen, pokemon, 0, false)
       }
-      pokemon.addCritPower(critPowerGain, pokemon, 0, false)
+      pokemon.addCritPower(GRIP_CLAW_CRIT_POWER, pokemon, 0, false)
       pokemon.count.gripClawCount++
     }),
     new OnItemRemovedEffect((pokemon) => {
-      pokemon.addCritChance(
-        -10 * pokemon.count.gripClawCount,
+      pokemon.addCritPower(
+        -GRIP_CLAW_CRIT_POWER * pokemon.count.gripClawCount,
         pokemon,
         0,
         false

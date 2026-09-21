@@ -1263,12 +1263,10 @@ export const POKEMONOMICON_DAMAGE_BONUS = 1.4
 export const UPGRADE_BLESSED_STACKS_REQUIRED = 10
 export const UPGRADE_BLESSED_SPEED_RATIO = 0.2
 export const WONDER_BOX_BLESSED_ITEMS = 3
-// the CRIT_POWER a GRIP_CLAW grants per attack, and so the most it can steal,
-// multiplied at 100 CRIT_CHANCE when blessed
+export const GRIP_CLAW_ADDITIONAL_ATTACK_CHANCE = 0.2
 export const GRIP_CLAW_CRIT_POWER = 10
 // a target down to this has no crit bonus left to give
 export const GRIP_CLAW_MIN_TARGET_CRIT_POWER = 1
-export const GRIP_CLAW_MAX_CRIT_CHANCE_MULTIPLIER = 3
 export const COVERT_CLOAK_VANISH_DURATION = 1000
 export const REAPER_CLOTH_GHOST_VANISH_DURATION = 8000
 export const PLUSHIFY_SUBSTITUTE_PROTECT_DURATION = 1500

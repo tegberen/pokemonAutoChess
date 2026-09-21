@@ -534,7 +534,7 @@ export default class BattleManager {
       } else if (field === "machRibbonCount") {
         pkm.itemsContainer.updateCount(Item.MACH_RIBBON, value)
       } else if (field === "gripClawCount") {
-        pkm.itemsContainer.updateCount(Item.GRIP_CLAW, value)
+        pkm.itemsContainer.updateCount(Item.GRIP_CLAW, value, true)
       }
     }
   }

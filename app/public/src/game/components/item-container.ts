@@ -212,7 +212,12 @@ export default class ItemContainer extends DraggableObject {
     this.tempDetail.setVisible(true)
   }
 
-  updateCount(value: number) {
+  updateCount(value: number, hideWhenZero = false) {
+    if (hideWhenZero && value === 0) {
+      this.countText?.setVisible(false)
+      return
+    }
+    this.countText?.setVisible(true)
     if (this.countText === undefined) {
       const textStyle = {
         fontSize: "16px",

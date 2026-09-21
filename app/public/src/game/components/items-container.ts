@@ -111,11 +111,11 @@ export default class ItemsContainer extends GameObjects.Container {
     this.render(player.items)
   }
 
-  updateCount(item: Item, count: number) {
+  updateCount(item: Item, count: number, hideWhenZero = false) {
     for (let i = 0; i < this.list.length; i++) {
       const it = <ItemContainer>this.list[i]
       if (it.name === item) {
-        it.updateCount(count)
+        it.updateCount(count, hideWhenZero)
       }
     }
   }

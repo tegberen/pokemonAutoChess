@@ -3199,7 +3199,7 @@
 		"CLEAR_AMULET": "The first time the holder is affected by any negative status effect, they store the effect and gain RUNE_PROTECT for 10 seconds. On the next attack, apply said negative effect to all ADJACENT enemies for 5 seconds.",
 		"DESTINY_KNOT": "Once the holder is KO, the STRONGEST ally gains the users current LUCK and base ATK for the rest of the fight.",
 		"LUCKY_PUNCH": "If the target has an ally directly behind it, the attack knocks a random held item from the target to that ally. When an item is knocked off, [30, LK]% chance to inflict CONFUSION for 2 seconds.",
-		"GRIP_CLAW": "Attacks grant +10% CRIT_POWER. (stackable)",
+		"GRIP_CLAW": "Attacks have a [20,LK]% chance to hit the target again immediately. Extra attacks from any source cannot trigger this.",
 		"COVERT_CLOAK": "At the start of the fight, and every 4 seconds, steal 5 AP from all enemies within RANGE and deal 5 SPECIAL to them.",
 		"FLUFFY_TAIL": "Gains [15,LK]% dodge chance. The holder is immune to ARMOR_BREAK.",
 		"EVER_STONE": "The holder gains the ROCK type",
@@ -6496,7 +6496,7 @@
 		},
 		"GRIP_CLAW_BLESSING": {
 			"name": "Seizing Claw",
-			"description": "Gain a GRIP_CLAW. The CRIT_POWER it grants is stolen from the target, down to no critical bonus at all. At 100% CRIT_CHANCE, the CRIT_POWER gain is tripled."
+			"description": "Gain a GRIP_CLAW. Its holder's attacks also grant +10% CRIT_POWER (stackable), stolen from the target while it has any left."
 		},
 		"CHOICE_SPECS_BLESSING": {
 			"name": "Shared Vision",
