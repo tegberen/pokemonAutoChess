@@ -33,6 +33,9 @@ type CalendarEvent = {
   image: string
   variant: "whimsy" | "jirachi" | "smeargle" | "doubleup"
   start: Date
+  // tournaments are started by hand, so only their date is shown, not a
+  // countdown to it
+  showCountdown: boolean
 }
 
 function CalendarEventCard(props: Omit<CalendarEvent, "id"> & {
@@ -48,13 +51,17 @@ function CalendarEventCard(props: Omit<CalendarEvent, "id"> & {
           <p>{props.description}</p>
         </div>
         <div className="calendar-event-timer">
-          <img className="calendar-clock" src="assets/ui/clock.png" alt="" aria-hidden="true" />
+          {props.showCountdown && (
+            <img className="calendar-clock" src="assets/ui/clock.png" alt="" aria-hidden="true" />
+          )}
           <div>
-            <p>
-              {t("event_starts_in", {
-                time: formatEventCountdown(props.start.getTime() - props.now.getTime())
-              })}
-            </p>
+            {props.showCountdown && (
+              <p>
+                {t("event_starts_in", {
+                  time: formatEventCountdown(props.start.getTime() - props.now.getTime())
+                })}
+              </p>
+            )}
             <time>{formatDate(props.start, { dateStyle: "long", timeStyle: undefined })}</time>
           </div>
         </div>
@@ -79,7 +86,8 @@ export function Calendar() {
       description: tournament.tournamentMessage,
       image: "",
       variant: "smeargle",
-      start: tournamentStart
+      start: tournamentStart,
+      showCountdown: false
     })
   }
 
@@ -92,7 +100,8 @@ export function Calendar() {
       variant: "doubleup",
       start: tournament.doubleUpDate
         ? new Date(tournament.doubleUpDate)
-        : new Date()
+        : new Date(),
+      showCountdown: false
     })
   }
 
@@ -103,7 +112,8 @@ export function Calendar() {
       description: t("whimsy_weekend_description"),
       image: "",
       variant: "whimsy",
-      start: getNextScribbleWeekendStart(now)
+      start: getNextScribbleWeekendStart(now),
+      showCountdown: true
     })
   }
 
@@ -114,7 +124,8 @@ export function Calendar() {
       description: t("blessing_event_upcoming_description"),
       image: "",
       variant: "jirachi",
-      start: getNextBlessingEventStart(now)
+      start: getNextBlessingEventStart(now),
+      showCountdown: true
     })
   }
 
