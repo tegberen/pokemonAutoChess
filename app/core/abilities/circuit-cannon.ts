@@ -46,10 +46,15 @@ export class CircuitCannonStrategy extends AbilityStrategy {
   process(
     pokemon: PokemonEntity,
     board: Board,
-    target: PokemonEntity,
+    target: PokemonEntity | null,
     crit: boolean
   ) {
-    super.process(pokemon, board, target, crit)
+    super.process(pokemon, board, target, crit, true)
+    pokemon.broadcastAbility({
+      targetX: target?.positionX ?? -1,
+      targetY: target?.positionY ?? -1,
+      ap: 0
+    })
     const duration = Math.round(
       CIRCUIT_CANNON_DURATION * (1 + pokemon.ap / 100)
     )
@@ -57,6 +62,7 @@ export class CircuitCannonStrategy extends AbilityStrategy {
     const falloffPerEnemy = [0.2, 0.1, 0][pokemon.stars - 1] ?? 0
 
     pokemon.status.triggerSilence(duration, pokemon, pokemon)
+    pokemon.resetCooldown(0)
     const speedBefore = pokemon.speed
     pokemon.addSpeed(speedGain, pokemon, 1, false)
     const speedGained = pokemon.speed - speedBefore
