@@ -34,7 +34,6 @@ export default function GameStageInfo() {
   const stageLevel = useAppSelector((state) => state.game.stageLevel)
   const gameMode = useAppSelector((state) => state.game.gameMode)
   const guideSynergy = useAppSelector((state) => state.game.guideSynergy)
-  const finale = useAppSelector((state) => state.game.finale)
   const spectatorCount = useAppSelector((state) => state.game.spectatorCount)
 
   if (!spectatedPlayer) return null
@@ -86,7 +85,6 @@ export default function GameStageInfo() {
           )}
           <p>
             {t("stage")} {stageLevel}
-            {finale && <span className="finale-badge">{t("finale.title")}</span>}
           </p>
         </div>
 

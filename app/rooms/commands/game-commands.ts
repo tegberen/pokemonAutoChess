@@ -578,7 +578,6 @@ function sendPokemonToPartner(
   pokemon: Pokemon,
   item: Item
 ) {
-  if (state.finale) return // partners are opponents now
   const partner = state.players.get(sender.doubleUpPartnerId)
   if (!partner || !partner.alive) return
   if (
@@ -641,7 +640,6 @@ function sendPokemonToPartner(
 }
 
 function offerTradeItem(state: GameState, player: Player, item: Item) {
-  if (state.finale) return // partners are opponents now
   if (!DoubleUpTradeableItems.includes(item)) return
   const croagunk = [...player.wanderers.values()].find(
     (w) => w.type === WandererType.CROAGUNK_TRADE
@@ -1477,7 +1475,6 @@ export class OnDragDropItemCommand extends Command<
       item === Item.PRISON_BOTTLE &&
       this.state.gameMode === GameMode.DOUBLE_UP &&
       this.state.phase === GamePhaseState.PICK &&
-      !this.state.finale &&
       isOnBench(pokemon)
     ) {
       if (
@@ -1952,7 +1949,7 @@ export class OnUpdateCommand extends Command<
 
         if (this.state.gameMode === GameMode.DOUBLE_UP) {
           grantRobinGemsForFinishedDoubleUpSimulations(this.state)
-          if (!this.state.finale) this.checkDoubleUpReinforcements()
+          this.checkDoubleUpReinforcements()
         }
         if (everySimulationFinished && !this.state.updatePhaseNeeded) {
           // wait for 3 seconds victory anim before moving to next stage
@@ -2253,31 +2250,24 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
     }
 
     const playersAlive = schemaValues(this.state.players).filter((p) => p.alive)
+    // a draw can leave nobody alive; checkDeath already ranked those players
+    if (playersAlive.length > 1) return false
+    this.finishGame(playersAlive)
+    return true
+  }
 
-    if (playersAlive.length <= 1) {
-      this.state.gameFinished = true
-      const winner = playersAlive[0]
-      if (winner) {
-        /* there is a case where none of the players is alive because
-         all the remaining players are dead due to a draw battle.
-         In that case, they all already received their rank with checkDeath function */
-        const client = this.room.clients.find(
-          (cli) => cli.auth.uid === winner.id
-        )
-        if (client) {
-          client.send(Transfer.FINAL_RANK, 1)
-        }
-      }
-      this.clock.setTimeout(() => {
-        // dispose the room automatically after 30 seconds
-        this.room.broadcast(Transfer.GAME_END)
-        this.room.disconnect()
-      }, 30 * 1000)
-
-      return true
-    }
-
-    return false
+  finishGame(winners: Player[]) {
+    this.state.gameFinished = true
+    winners.forEach((winner) => {
+      const client = this.room.clients.find(
+        (cli) => cli.auth.uid === winner.id
+      )
+      if (client) client.send(Transfer.FINAL_RANK, 1)
+    })
+    this.clock.setTimeout(() => {
+      this.room.broadcast(Transfer.GAME_END)
+      this.room.disconnect()
+    }, 30 * 1000)
   }
 
   /* A guide run is solo, so the usual "last player standing" test would end it
@@ -2288,94 +2278,18 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
     const lesson = getGuideLesson(this.state)
     if (!lesson || this.state.stageLevel < lesson.lastStage) return false
 
-    this.state.gameFinished = true
-    /* No FINAL_RANK: finishing a lesson is not winning a game, and the podium
-       screen would congratulate the player for beating a scripted opponent. */
-    this.clock.setTimeout(() => {
-      this.room.broadcast(Transfer.GAME_END)
-      this.room.disconnect()
-    }, 30 * 1000)
+    // No FINAL_RANK: finishing a lesson is not winning a game, and the podium
+    // screen would congratulate the player for beating a scripted opponent.
+    this.finishGame([])
     return true
   }
 
   checkEndGameDoubleUp(): boolean {
     const playersAlive = schemaValues(this.state.players).filter((p) => p.alive)
-
-    if (this.state.finale) {
-      // The finale resolves after the single round where the partners fought
-      // each other. Carousel and wild battle stages still play out first.
-      const duelPlayed = playersAlive.some((p) => {
-        const lastFight = p.history.at(-1)
-        return lastFight && lastFight.id === p.doubleUpPartnerId
-      })
-      if (!duelPlayed && playersAlive.length >= 2) return false
-
-      this.state.gameFinished = true
-      playersAlive.forEach((winner) => {
-        // any dead finalist already received their FINAL_RANK from checkDeath
-        const client = this.room.clients.find(
-          (cli) => cli.auth.uid === winner.id
-        )
-        if (client) client.send(Transfer.FINAL_RANK, 1)
-      })
-      this.clock.setTimeout(() => {
-        this.room.broadcast(Transfer.GAME_END)
-        this.room.disconnect()
-      }, 30 * 1000)
-      return true
-    }
-
     const aliveTeams = new Set(playersAlive.map((p) => p.doubleUpTeamId))
-
-    if (aliveTeams.size <= 1) {
-      // a tournament only needs the team placement, so it skips the duel
-      if (playersAlive.length === 2 && !this.room.metadata?.tournamentId) {
-        // Last team standing with both partners alive: the finale begins.
-        // Both keep rank 1 whatever happens next; the game cycle continues
-        // with the partners fighting each other until one falls below 0 HP.
-        this.startFinale(playersAlive)
-        return false
-      }
-      this.state.gameFinished = true
-      playersAlive.forEach((winner) => {
-        const client = this.room.clients.find(
-          (cli) => cli.auth.uid === winner.id
-        )
-        if (client) client.send(Transfer.FINAL_RANK, 1)
-      })
-      this.clock.setTimeout(() => {
-        this.room.broadcast(Transfer.GAME_END)
-        this.room.disconnect()
-      }, 30 * 1000)
-      return true
-    }
-
-    return false
-  }
-
-  startFinale(finalists: Player[]) {
-    this.state.finale = true
-    this.room.broadcast(Transfer.FINALE_START, {
-      playerIds: finalists.map((p) => p.id)
-    })
-    finalists.forEach((player) => {
-      // Refund any pending Croagunk trade offer and dismiss the trader
-      if (player.doubleUpTradeOffer) {
-        player.items.push(player.doubleUpTradeOffer as Item)
-        player.doubleUpTradeOffer = ""
-      }
-      const croagunk = [...player.wanderers.values()].find(
-        (w) => w.type === WandererType.CROAGUNK_TRADE
-      )
-      if (croagunk) player.wanderers.delete(croagunk.id)
-      // Discard pending armory gift choices
-      player.choices
-        .filter((choice) => choice.type === "armory_assist")
-        .forEach((choice) => removeInArray(player.choices, choice))
-      // Partners can no longer send Pokémon to each other
-      removeInArray(player.items, Item.PRISON_BOTTLE)
-      player.doubleUpSendCooldown = 0
-    })
+    if (aliveTeams.size > 1) return false
+    this.finishGame(playersAlive)
+    return true
   }
 
   computeIncome(isPVE: boolean, specialGameRule: SpecialGameRule | null) {
@@ -2489,8 +2403,6 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
   triggerSturdy(protector: Player, protectedPlayers: Player[]) {
     protector.sturdyTriggered = true
     protectedPlayers.forEach((player) => {
-      /* outside the finale both partners already sit on the same life, but
-         during it they diverge and a healthy one must not be dropped to 1 */
       if (player.life <= 0) player.life = 1
     })
     protector.board.forEach((pokemon) => {
@@ -2627,7 +2539,6 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
     // EVOLUTION_LAB replaces add-picks with a reward choice
     if (
       AdditionalPicksStages.includes(this.state.stageLevel) &&
-      !this.state.finale &&
       this.state.specialGameRule === SpecialGameRule.EVOLUTION_LAB
     ) {
       this.state.players.forEach((player: Player) => {
@@ -2660,10 +2571,7 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
           })
         )
       })
-    } else if (
-      AdditionalPicksStages.includes(this.state.stageLevel) &&
-      !this.state.finale
-    ) {
+    } else if (AdditionalPicksStages.includes(this.state.stageLevel)) {
       const pool =
         this.state.stageLevel === AdditionalPicksStages[0]
           ? this.room.additionalUncommonPool
@@ -2819,8 +2727,7 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
 
     if (
       this.state.gameMode === GameMode.DOUBLE_UP &&
-      ArmoryAssistStages.includes(this.state.stageLevel) &&
-      !this.state.finale
+      ArmoryAssistStages.includes(this.state.stageLevel)
     ) {
       const firstGroup: Player[] = []
       const secondGroup: Player[] = []
@@ -2888,8 +2795,7 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
 
     if (
       [14, 24].includes(this.state.stageLevel) &&
-      this.state.gameMode === GameMode.DOUBLE_UP &&
-      !this.state.finale
+      this.state.gameMode === GameMode.DOUBLE_UP
     ) {
       this.state.players.forEach((player: Player) => {
         if (player.alive && !player.isBot) {
@@ -3359,14 +3265,12 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
     }
     if (this.state.gameMode === GameMode.DOUBLE_UP) {
       this.applyDoubleUpDamage()
-      if (!this.state.finale) {
-        this.syncTeamLife()
-      }
+      this.syncTeamLife()
       this.room.rankPlayers()
     }
 
     // Double Up: countdown Prison Bottle cooldown
-    if (this.state.gameMode === GameMode.DOUBLE_UP && !this.state.finale) {
+    if (this.state.gameMode === GameMode.DOUBLE_UP) {
       this.state.players.forEach((player: Player) => {
         if (player.alive && player.doubleUpSendCooldown > 0) {
           player.doubleUpSendCooldown--
@@ -3585,7 +3489,7 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
           )
           if (croagunk) croagunk.data = ""
         }
-        if (player.alive && !this.state.finale) {
+        if (player.alive) {
           const hasCroagunk = [...player.wanderers.values()].some(
             (w) => w.type === WandererType.CROAGUNK_TRADE
           )

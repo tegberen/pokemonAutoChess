@@ -65,8 +65,8 @@ export default function WikiDoubleUp() {
       </section>
 
       <section className="my-box">
-        <h2>7. The Finale</h2>
-        <p>{t("wiki.double_up.finale_desc")}</p>
+        <h2>7. Shared Victory</h2>
+        <p>{t("wiki.double_up.victory_desc")}</p>
       </section>
 
       <section className="my-box">

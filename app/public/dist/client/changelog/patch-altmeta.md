@@ -454,7 +454,6 @@ Played in Double Up. Join from the Tournament tab, then team up in **Find a part
 - **Qualification**: 3 Swiss rounds of 4 teams, scored 8/4/2/1 by team placement. Ties are broken by Buchholz, then average placement
 - **Knockout**: the top 8 play two semi-finals and the top 2 of each play the final. With 8 teams or fewer, the top 4 go straight to the final
 - **Lobbies**: start once everyone is ready, or after 15 minutes without the teams missing a player. Those forfeit the round and score 0 points
-- **No finale**: the game ends as soon as one team is left
 - **Wishes**: off unless enabled for the tournament
 - **Substitutes**: players without a team sit on the bench. A team that swaps one in keeps its points
 
@@ -489,6 +488,11 @@ Smeargle Scribbles do not change your Elo.
 ## Patch Log
 
 Every balance change on this server, newest first.
+
+### 23 September 2026
+
+**Game Mode**
+- Double Up | the finale duel between partners is removed: the game ends as soon as one team is left, and both partners share first place
 
 ### 21 September 2026
 
