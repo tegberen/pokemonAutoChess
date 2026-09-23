@@ -28,6 +28,7 @@ import {
 } from "../config"
 import {
   Blessing,
+  BLESSINGS_WITH_PICK_SONG,
   countsForTeamSize,
   STARTER_CHOICE_EXTRA_ROUNDS
 } from "../types/enum/Blessing"
@@ -2037,10 +2038,10 @@ export default class GameRoom extends Room<{ state: GameState }> {
           .find((cli) => cli.auth.uid === player.id)
           ?.send(Transfer.PLAYER_INCOME, moneyGained)
       }
-      if (blessing === Blessing.SHOW_OFF) {
+      if (isIn(BLESSINGS_WITH_PICK_SONG, blessing)) {
         this.clients
           .find((client) => client.auth.uid === player.id)
-          ?.send(Transfer.SHOW_OFF)
+          ?.send(Transfer.BLESSING_SONG, blessing)
       }
       removeInArray(player.choices, choice)
       return

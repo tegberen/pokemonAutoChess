@@ -6140,6 +6140,10 @@
 			"name": "Sand Buddies",
 			"description": "Gain a strong Sandile. When your STRONGEST Sandile fails to KO its target with its Ability, a Trapinch with full PP appears nearby, at the same STAR level."
 		},
+		"ITS_GOING_DOWN": {
+			"name": "It's Going Down",
+			"description": "Gain a Timburr. Your STRONGEST Timburr gains 2 RANGE, and after each throw it tosses a new pillar to a safe spot. Its thrown pillars deal their remaining HP as PHYSICAL instead of SPECIAL, +15% per tile travelled."
+		},
 		"STONE_SADDLE": {
 			"name": "Stone Saddle",
 			"description": "Gain a Rhyhorn. Your STRONGEST Rhyhorn's ability is replaced with Headlong Rush and set to 80 PP, and executes enemies in its path below 20% max HP. At the start of the fight, it carries your farthest ally on the bench into combat, gaining its base HP, ATK, DEF and SPE_DEF. When Rhyhorn is KO'd, the ally fights on its own."

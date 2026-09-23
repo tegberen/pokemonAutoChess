@@ -512,6 +512,7 @@ Every balance change on this server, newest first.
 - Apex Predator {{new}} | Prismatic Wish at stage 12: gain a Shinx. Your STRONGEST Shinx's ability inflicts BLINDED and WOUND on the enemy it dashes to for 4 seconds. When it arrives, every other enemy within 2 cells gets FEAR for 2 seconds
 - Infinite Conversion {{new}} | Prismatic Wish at stage 12: gain a Porygon. After winning a player combat, your STRONGEST Porygon permanently keeps the synergy it copied in that combat. Once per opponent
 - Stone Saddle {{new}} | Prismatic Wish at stage 12: gain a Rhyhorn. Your STRONGEST Rhyhorn's ability is replaced with Headlong Rush and set to 80 PP, and executes enemies in its path below 20% max HP. At the start of the fight, it carries your farthest ally on the bench into combat, gaining its base HP, ATK, DEF and SPE_DEF. When Rhyhorn is KO'd, the ally fights on its own
+- It's Going Down {{new}} | Prismatic Wish at stage 12: gain a Timburr. Your STRONGEST Timburr gains 2 RANGE, and after each throw it tosses a new pillar to a safe spot. Its thrown pillars deal their remaining HP as PHYSICAL instead of SPECIAL, +15% per tile travelled
 
 **Fixes**
 - Trick Room | hits the target and ADJACENT enemies with FATIGUE and BLINDED, instead of just the target

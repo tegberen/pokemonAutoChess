@@ -1,5 +1,6 @@
 import type Phaser from "phaser"
 import type { Scene } from "phaser"
+import { Blessing } from "../../../../types/enum/Blessing"
 import type { DungeonMusic } from "../../../../types/enum/Dungeon"
 import { logger } from "../../../../utils/logger"
 import { preference, subscribeToPreferences } from "../../preferences"
@@ -21,6 +22,7 @@ export const SOUNDS = {
   FINISH7: "finish7.ogg",
   FINISH8: "finish8.ogg",
   GOLD_TO_LEVEL: "gold_to_level_sound.ogg",
+  ITS_GOING_DOWN: "its_going_down_song.ogg",
   JOIN_ROOM: "joinroom.ogg",
   LEAVE_ROOM: "leaveroom.ogg",
   REFRESH: "refresh.ogg",
@@ -80,13 +82,24 @@ export function playSound(key: Soundkey, volume = 1) {
   }
 }
 
-let showOffFadeInterval: ReturnType<typeof setInterval> | undefined
+const BLESSING_SONGS: { [blessing in Blessing]?: Soundkey } = {
+  [Blessing.SHOW_OFF]: SOUNDS.SHOW_OFF,
+  [Blessing.ITS_GOING_DOWN]: SOUNDS.ITS_GOING_DOWN
+}
 
-export function playShowOffSong(scene?: SceneWithMusic) {
-  const sound = AUDIO_ELEMENTS[SOUNDS.SHOW_OFF]
+let blessingSongPlaying: HTMLAudioElement | undefined
+let blessingSongFadeInterval: ReturnType<typeof setInterval> | undefined
+
+export function playBlessingSong(blessing: Blessing, scene?: SceneWithMusic) {
+  const songKey = BLESSING_SONGS[blessing]
+  const sound = songKey ? AUDIO_ELEMENTS[songKey] : undefined
   if (!sound) return
 
-  if (showOffFadeInterval) clearInterval(showOffFadeInterval)
+  if (blessingSongFadeInterval) clearInterval(blessingSongFadeInterval)
+  if (blessingSongPlaying && blessingSongPlaying !== sound) {
+    blessingSongPlaying.pause()
+  }
+  blessingSongPlaying = sound
   sound.currentTime = 0
   const fadeInDuration = 3
   const fadeOutDuration = 5
@@ -107,14 +120,14 @@ export function playShowOffSong(scene?: SceneWithMusic) {
     if (sound.ended) {
       scene?.music?.setVolume(preference("musicVolume") / 100)
       clearInterval(fadeInterval)
-      if (showOffFadeInterval === fadeInterval) showOffFadeInterval = undefined
+      if (blessingSongFadeInterval === fadeInterval) blessingSongFadeInterval = undefined
     }
   }, 100)
-  showOffFadeInterval = fadeInterval
+  blessingSongFadeInterval = fadeInterval
   void sound.play().catch(() => {
     scene?.music?.setVolume(preference("musicVolume") / 100)
     clearInterval(fadeInterval)
-    if (showOffFadeInterval === fadeInterval) showOffFadeInterval = undefined
+    if (blessingSongFadeInterval === fadeInterval) blessingSongFadeInterval = undefined
   })
 }
 

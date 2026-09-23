@@ -2407,6 +2407,8 @@ export const blessingEffectService: {
     heroBlessingEffect(Blessing.INFINITE_CONVERSION, player, state, room),
   [Blessing.STONE_SADDLE]: (player, state, room) =>
     heroBlessingEffect(Blessing.STONE_SADDLE, player, state, room),
+  [Blessing.ITS_GOING_DOWN]: (player, state, room) =>
+    heroBlessingEffect(Blessing.ITS_GOING_DOWN, player, state, room),
   [Blessing.YOU_FORGOT_SOMETHING]: () => true,
   [Blessing.THINK_FAST]: (player, state) => {
     const owned =

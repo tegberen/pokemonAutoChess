@@ -26,6 +26,7 @@ import {
   Role,
   Transfer
 } from "../../../types"
+import type { Blessing } from "../../../types/enum/Blessing"
 import { CloseCodes, CloseCodesMessages } from "../../../types/enum/CloseCodes"
 import { ConnectionStatus } from "../../../types/enum/ConnectionStatus"
 import { GameMode, GamePhaseState, Team } from "../../../types/enum/Game"
@@ -114,7 +115,7 @@ import GameSynergies from "./component/game/game-synergies"
 import GameToasts from "./component/game/game-toasts"
 import { MainSidebar } from "./component/main-sidebar/main-sidebar"
 import { ConnectionStatusNotification } from "./component/system/connection-status-notification"
-import { playMusic, playShowOffSong, preloadMusic } from "./utils/audio"
+import { playBlessingSong, playMusic, preloadMusic } from "./utils/audio"
 import { LocalStoreKeys, localStore } from "./utils/store"
 import {
   transformBoardCoordinates,
@@ -483,8 +484,8 @@ export default function Game() {
         setLoaded(true)
       })
 
-      room.onMessage(Transfer.SHOW_OFF, () =>
-        playShowOffSong(getGameScene() ?? undefined)
+      room.onMessage(Transfer.BLESSING_SONG, (blessing: Blessing) =>
+        playBlessingSong(blessing, getGameScene() ?? undefined)
       )
 
       /* Guide refusals answer something the player just did on the board, so

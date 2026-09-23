@@ -1841,6 +1841,12 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     icon: "rock_saddle",
     grantsPokemonImmediately: true
   },
+  [Blessing.ITS_GOING_DOWN]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: [12],
+    icon: "its_going_down",
+    grantsPokemonImmediately: true
+  },
   [Blessing.FROST_BURST]: {
     tier: BlessingTier.GOLD,
     availableAtStages: [12],

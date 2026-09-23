@@ -133,6 +133,7 @@ import {
   KINGS_GAMBIT_SPEED,
   KINGS_GAMBIT_ENTRANCE_DELAY,
   STONE_SADDLE_MAX_PP,
+  ITS_GOING_DOWN_RANGE,
   SHUTTLE_BUS_MAX_PP,
   POTENTIAL_ENERGY_SHIELD,
   POTENTIAL_ENERGY_SPEED,
@@ -4260,6 +4261,11 @@ export default class Simulation extends Schema implements ISimulation {
       stoneSaddleChampion.skill = Ability.HEADLONG_RUSH
       stoneSaddleChampion.maxPP = STONE_SADDLE_MAX_PP
       this.mountStoneSaddleRider(stoneSaddleChampion, player)
+    }
+
+    const itsGoingDownChampion = championOf.get(Blessing.ITS_GOING_DOWN)
+    if (itsGoingDownChampion) {
+      itsGoingDownChampion.range += ITS_GOING_DOWN_RANGE
     }
 
     const highBreachingChampion = championOf.get(Blessing.HIGH_BREACHING)
