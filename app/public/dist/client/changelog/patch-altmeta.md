@@ -492,11 +492,11 @@ Every balance change on this server, newest first.
 ### 23 September 2026
 
 **Abilities**
-- Glaive Rush | now aimed at the target's backline and hits all enemies in the target's column, instead of the user's own column
+- Glaive Rush | hits all enemies in the target's column, instead of the user's own column
 - Trick Room | FATIGUE and BLINDED duration 5 → [3,4,5,6,SP] seconds
 
 **Game Mode**
-- Double Up | the finale duel between partners is removed: the game ends as soon as one team is left, and both partners share first place
+- Double Up | removed the finale duel between partners, as it went against the spirit of teaming up. The game ends as soon as one team is left, and both partners share first place
 
 **Wishes**
 - Glaive Strike {{new}} | Prismatic Wish at stage 12: gain a Frigibax. Enemies hit by your STRONGEST Frigibax's ability are marked, and 2 seconds later an Ice Sword falls on each mark, dealing [200,SP]% of ATK + SPE_DEF as SPECIAL, then shatters, dealing the same to ADJACENT enemies
@@ -514,8 +514,7 @@ Every balance change on this server, newest first.
 - Stone Saddle {{new}} | Prismatic Wish at stage 12: gain a Rhyhorn. Your STRONGEST Rhyhorn's ability is replaced with Headlong Rush and set to 80 PP, and executes enemies in its path below 20% max HP. At the start of the fight, it carries your farthest ally on the bench into combat, gaining its base HP, ATK, DEF and SPE_DEF. When Rhyhorn is KO'd, the ally fights on its own
 
 **Fixes**
-- Evolution | permanent CRIT_CHANCE, CRIT_POWER and PP gains now carry over when a Pokémon evolves, like its other permanent stats
-- Trick Room | ADJACENT enemies faster than the user now also receive FATIGUE and BLINDED, as described
+- Trick Room | hits the target and ADJACENT enemies with FATIGUE and BLINDED, instead of just the target
 - Headlong Rush | the farthest enemy now always takes the final hit, even when it is not on the rush line, and enemies pushed into the path are no longer hit twice
 
 ### 21 September 2026
