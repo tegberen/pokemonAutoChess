@@ -783,7 +783,7 @@ export const HONEY_EXPLORATION_FRIEND_RARITIES: {
   { fromStage: 0, rarities: [Rarity.RARE] }
 ]
 export const KINGS_GAMBIT_ALLIES_FALLEN = 4
-export const KINGS_GAMBIT_FALLEN_STATS_RATIO = 0.2
+export const KINGS_GAMBIT_FALLEN_STATS_RATIO = 0.25
 export const KINGS_GAMBIT_SPEED = 50
 export const KINGS_GAMBIT_ENTRANCE_DELAY = 200
 export const APEX_PREDATOR_PREY_DURATION = 4000

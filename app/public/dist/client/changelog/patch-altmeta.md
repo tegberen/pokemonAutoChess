@@ -492,28 +492,32 @@ Every balance change on this server, newest first.
 ### 23 September 2026
 
 **Abilities**
-- Glaive Rush | hits all enemies in the target's column, instead of the user's own column
+- Glaive Rush | hits all enemies in the target's column
 - Trick Room | FATIGUE and BLINDED duration 5 → [3,4,5,6,SP] seconds
 
 **Game Mode**
-- Double Up | removed the finale duel between partners, as it went against the spirit of teaming up. The game ends as soon as one team is left, and both partners share first place
+- Double Up | removed the finale duel between partners, as it went against the spirit of teaming up
+
+**Status**
+- FEAR {{new}} | prevents attacking and casting, and forces the Pokémon to run away from its source. Applied by the Apex Predator Wish
 
 **Wishes**
-- Glaive Strike {{new}} | Prismatic Wish at stage 12: gain a Frigibax. Enemies hit by your STRONGEST Frigibax's ability are marked, and 2 seconds later an Ice Sword falls on each mark, dealing [200,SP]% of ATK + SPE_DEF as SPECIAL, then shatters, dealing the same to ADJACENT enemies
-- Mountain Egg {{new}} | Prismatic Wish at stage 12: gain a Happiny. The NUTRITIOUS_EGG of your STRONGEST Happiny also grants the dish effects of all your GOURMET Pokémon, each dish once, without permanent dish effects
-- Mother Yarn {{new}} | Prismatic Wish at stage 12: gain a Sewaddle and move to a random Sewaddle region. Sewaddle gains NORMAL and returns its items when benched. After 3/2/1 stages at 1/2/3 STAR, your STRONGEST Sewaddle completes its held component with a SILK_SCARF and permanently gains the crafted item's stats, SHIELD as HP
-- Cell Brawler {{new}} | Prismatic Wish at stage 12: gain a Solosis. Your STRONGEST Solosis gains 50% HP, DEF and SPE_DEF but becomes 1 range. It heals for 50% of the damage dealt by its ability, with 50% of overheal gained as max HP
-- Gale Wings {{new}} | Prismatic Wish at stage 12: gain a Fletchling. Your STRONGEST Fletchling starts combat with max PP. After combat, collect any EMBER remaining on the field, gaining 1 GOLD for every 4/3/2 EMBER collected at 1/2/3 STAR, and a FIRE_SHARD if at least 10 are collected, which does not count towards your max total
-- Multishot {{new}} | Prismatic Wish at stage 12: gain a Sobble. Your STRONGEST Sobble's ability fires 2 additional shots through random enemies, each dealing 25% damage. Each cast increases the number of additional shots by 1
-- Decelerate {{new}} | Prismatic Wish at stage 12: gain a Duskull. While a Duskull is on your board, enemies start combat with at most 30 SPEED. Your STRONGEST Duskull's ability also applies FATIGUE and BLINDED to the enemies it damages
-- Jungle Cacophony {{new}} | Prismatic Wish at stage 12: gain a Grookey. Your STRONGEST Grookey drums instead of attacking, even with enemies in RANGE. Its drum beats reach all allies within RANGE instead of only ADJACENT ones, and burn 1/2/4 PP from each enemy within RANGE
-- Honey Exploration {{new}} | Prismatic Wish at stage 12: gain a Teddiursa. At the start of each fight, Teddiursa on your bench go exploring for 3/2/1 stages at 1/2/3 STAR, returning with a HONEY and a strong friend met along the way, which also has WILD synergy. Uniques and legendaries met this way sell for 0 GOLD. Eating HONEY also permanently grants 5 DEF and SPE_DEF
-- King's Gambit {{new}} | Prismatic Wish at stage 12: gain a Pawniard. Your STRONGEST Pawniard disappears at the start of combat and rejoins the fight when 4 allies have been KO'd, or when you have no other units left. It gains 20% of the total ATK and HP of its fallen allies, and 50 SPEED
-- Apex Predator {{new}} | Prismatic Wish at stage 12: gain a Shinx. Your STRONGEST Shinx's ability inflicts BLINDED and WOUND on the enemy it dashes to for 4 seconds. When it arrives, every other enemy within 2 cells gets FEAR for 2 seconds
-- Infinite Conversion {{new}} | Prismatic Wish at stage 12: gain a Porygon. After winning a player combat, your STRONGEST Porygon permanently keeps the synergy it copied in that combat. Once per opponent
-- Stone Saddle {{new}} | Prismatic Wish at stage 12: gain a Rhyhorn. Your STRONGEST Rhyhorn's ability is replaced with Headlong Rush and set to 80 PP, and executes enemies in its path below 20% max HP. At the start of the fight, it carries your farthest ally on the bench into combat, gaining its base HP, ATK, DEF and SPE_DEF. When Rhyhorn is KO'd, the ally fights on its own
-- It's Going Down {{new}} | Prismatic Wish at stage 12: gain a Timburr. Your STRONGEST Timburr gains 2 RANGE, and after each throw it tosses a new pillar to a safe spot. Its thrown pillars deal their remaining HP as PHYSICAL instead of SPECIAL, +15% per tile travelled
-- Rollout Rally {{new}} | Prismatic Wish at stage 12: gain a Venipede. Your STRONGEST Venipede's ability bounces: after reaching the farthest enemy, it rolls again to the enemy farthest from there, dealing 40% less damage each bounce. +1 bounce per 40 SPEED. Allies it rolls over gain 5 SPEED
+- Prismatic Ultra Heroes {{new}} | the following Wishes are all Prismatic and offered at stage 12
+- Glaive Strike {{new}} | Gain a Frigibax. Enemies hit by your STRONGEST Frigibax's ability are marked, and 2 seconds later an Ice Sword falls on each mark, dealing [200,SP]% of ATK + SPE_DEF as SPECIAL, then shatters, dealing the same to ADJACENT enemies
+- Mountain Egg {{new}} | Gain a Happiny. The NUTRITIOUS_EGG of your STRONGEST Happiny also grants the dish effects of all your GOURMET Pokémon, each dish once, without permanent dish effects
+- Mother Yarn {{new}} | Gain a Sewaddle and move to a random Sewaddle region. Sewaddle gains NORMAL and returns its items when benched. After 3/2/1 stages at 1/2/3 STAR, your STRONGEST Sewaddle completes its held component with a SILK_SCARF and permanently gains the crafted item's stats, SHIELD as HP
+- Cell Brawler {{new}} | Gain a Solosis. Your STRONGEST Solosis gains 50% HP, DEF and SPE_DEF but becomes 1 range. It heals for 50% of the damage dealt by its ability, with 50% of overheal gained as max HP
+- Gale Wings {{new}} | Gain a Fletchling. Your STRONGEST Fletchling starts combat with max PP. After combat, collect any EMBER remaining on the field, gaining 1 GOLD for every 4/3/2 EMBER collected at 1/2/3 STAR, and a FIRE_SHARD if at least 10 are collected, which does not count towards your max total
+- Multishot {{new}} | Gain a Sobble. Your STRONGEST Sobble's ability fires 2 additional shots through random enemies, each dealing 25% damage. Each cast increases the number of additional shots by 1
+- Decelerate {{new}} | Gain a Duskull. While a Duskull is on your board, enemies start combat with at most 30 SPEED. Your STRONGEST Duskull's ability also applies FATIGUE and BLINDED to the enemies it damages
+- Jungle Cacophony {{new}} | Gain a Grookey. Your STRONGEST Grookey drums instead of attacking, even with enemies in RANGE. Its drum beats reach all allies within RANGE instead of only ADJACENT ones, and burn 1/2/4 PP from each enemy within RANGE
+- Honey Exploration {{new}} | Gain a Teddiursa. At the start of each fight, Teddiursa on your bench go exploring for 3/2/1 stages at 1/2/3 STAR, returning with a HONEY and a strong friend met along the way, which also has WILD synergy. Eating HONEY also permanently grants 5 DEF and SPE_DEF (uniques and legendaries met this way sell for 0 GOLD)
+- King's Gambit {{new}} | Gain a Pawniard. Your STRONGEST Pawniard disappears at the start of combat and rejoins the fight when 4 allies have been KO'd, or when you have no other units left. It gains 25% of the total ATK and HP of its fallen allies, and 50 SPEED
+- Apex Predator {{new}} | Gain a Shinx. Your STRONGEST Shinx's ability inflicts BLINDED and WOUND on the enemy it dashes to for 4 seconds. When it arrives, every other enemy within 2 tiles gets FEAR for 2 seconds
+- Infinite Conversion {{new}} | Gain a Porygon. After winning a player combat, your STRONGEST Porygon permanently keeps the synergy it copied in that combat. Once per opponent
+- Stone Saddle {{new}} | Gain a Rhyhorn. Your STRONGEST Rhyhorn's ability is replaced with Headlong Rush and set to 80 PP, and executes enemies in its path below 20% max HP. At the start of the fight, it carries your farthest ally on the bench into combat, gaining its base HP, ATK, DEF and SPE_DEF. When Rhyhorn is KO'd, the ally fights on its own
+- It's Going Down {{new}} | Gain a Timburr. Your STRONGEST Timburr gains 2 RANGE, and after each throw it tosses a new pillar to a safe spot. Its thrown pillars deal their remaining HP as PHYSICAL instead of SPECIAL, +15% per tile travelled
+- Rollout Rally {{new}} | Gain a Venipede. Your STRONGEST Venipede's ability bounces: after reaching the farthest enemy, it rolls again to the enemy farthest from there, dealing 40% less damage each bounce. +1 bounce per 40 SPEED. Allies it rolls over gain 5 SPEED
 
 **Fixes**
 - Trick Room | hits the target and ADJACENT enemies with FATIGUE and BLINDED, instead of just the target
