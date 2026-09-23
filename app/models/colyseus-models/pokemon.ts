@@ -111,6 +111,7 @@ export class Pokemon extends Schema implements IPokemon {
   @type({ set: "string" }) dishes = new SetSchema<Item>()
   // MONSTROUS_GLUTTONY needs the cook's size when the dish is finally eaten
   dishChefMaxHP = new Map<Item, number>()
+  mountainEggDishes: Item[] = []
   @type("boolean") shiny: boolean
   @type("string") emotion: Emotion
   @type("string") action: PokemonActionState = PokemonActionState.IDLE

@@ -250,6 +250,7 @@ export enum Blessing {
   COLONY = "COLONY",
   SAND_BUDDIES = "SAND_BUDDIES",
   GLAIVE_STRIKE = "GLAIVE_STRIKE",
+  MOUNTAIN_EGG = "MOUNTAIN_EGG",
   YOU_FORGOT_SOMETHING = "YOU_FORGOT_SOMETHING",
   THINK_FAST = "THINK_FAST",
   WISE_SPENDING = "WISE_SPENDING",
@@ -1098,7 +1099,8 @@ export const HERO_BLESSING_GIFT: { [blessing in Blessing]?: Pkm } = {
   [Blessing.VALOR]: Pkm.PIGNITE,
   [Blessing.COLONY]: Pkm.SCATTERBUG,
   [Blessing.SAND_BUDDIES]: Pkm.SANDILE,
-  [Blessing.GLAIVE_STRIKE]: Pkm.FRIGIBAX
+  [Blessing.GLAIVE_STRIKE]: Pkm.FRIGIBAX,
+  [Blessing.MOUNTAIN_EGG]: Pkm.HAPPINY
 }
 
 export const HERO_BLESSING_FAMILY: { [blessing in Blessing]?: Pkm } = {
@@ -1134,7 +1136,8 @@ export const HERO_BLESSING_FAMILY: { [blessing in Blessing]?: Pkm } = {
   [Blessing.COLONY]: Pkm.SCATTERBUG,
   [Blessing.SAND_BUDDIES]: Pkm.SANDILE,
   [Blessing.SILVER_SPOON]: Pkm.ABRA,
-  [Blessing.GLAIVE_STRIKE]: Pkm.FRIGIBAX
+  [Blessing.GLAIVE_STRIKE]: Pkm.FRIGIBAX,
+  [Blessing.MOUNTAIN_EGG]: Pkm.HAPPINY
 }
 
 /* hero blessings that also relocate the player to a region where their family

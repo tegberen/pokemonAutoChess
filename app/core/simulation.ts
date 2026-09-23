@@ -714,9 +714,14 @@ export default class Simulation extends Schema implements ISimulation {
             boardPokemon.dishes.forEach((dish) => {
               this.applyDishEffects(dish, boardPokemon, entity, entity.player)
             })
+            boardPokemon.mountainEggDishes.forEach((dish) => {
+              if (boardPokemon.dishes.has(dish)) return
+              this.grantDishEffects(dish, boardPokemon, entity, entity.player)
+            })
             boardPokemon.action = PokemonActionState.IDLE
             boardPokemon.dishes.clear() // consume all dishes
             boardPokemon.dishChefMaxHP.clear()
+            boardPokemon.mountainEggDishes = []
           }
           entity.getEffects(OnSimulationStartEffect).forEach((effect) => {
             effect.apply({
@@ -1464,15 +1469,7 @@ export default class Simulation extends Schema implements ISimulation {
     entity: PokemonEntity | undefined,
     player: Player | undefined
   ) {
-    const dishEffects = DishEffects[dish]
-    if (!dishEffects) return
-    dishEffects.forEach((effect) => {
-      entity?.effectsSet.add(effect)
-      if (effect instanceof OnDishConsumedEffect)
-        effect.apply({ pokemon, dish, entity, player })
-      if (effect instanceof OnSpawnEffect && entity)
-        effect.apply(entity, player, true)
-    })
+    this.grantDishEffects(dish, pokemon, entity, player)
 
     if (hasGluttonGrowth(pokemon, player?.blessings)) {
       pokemon.addMaxHP(20)
@@ -1489,6 +1486,22 @@ export default class Simulation extends Schema implements ISimulation {
     ) {
       this.applyMonsterStack(entity, pokemon.dishChefMaxHP.get(dish) ?? 0)
     }
+  }
+
+  // the dish's own effects, without counting as a dish eaten for GLUTTON growth
+  grantDishEffects(
+    dish: Item,
+    pokemon: Pokemon,
+    entity: PokemonEntity | undefined,
+    player: Player | undefined
+  ) {
+    DishEffects[dish]?.forEach((effect) => {
+      entity?.effectsSet.add(effect)
+      if (effect instanceof OnDishConsumedEffect)
+        effect.apply({ pokemon, dish, entity, player })
+      if (effect instanceof OnSpawnEffect && entity)
+        effect.apply(entity, player, true)
+    })
   }
 
   /* the MONSTER synergy normally pays this out on a KO, scaled by the victim's

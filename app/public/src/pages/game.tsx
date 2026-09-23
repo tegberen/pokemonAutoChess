@@ -606,6 +606,18 @@ export default function Game() {
       )
 
       room.onMessage(
+        Transfer.MOUNTAIN_EGG_FEAST,
+        (message: { pokemonId: string; dishes: Item[] }) => {
+          // sent as the egg is served, so the egg lands before the feast plays
+          setTimeout(() => {
+            getGameScene()
+              ?.board?.pokemons.get(message.pokemonId)
+              ?.mountainEggFeastAnimation(message.dishes)
+          }, 300)
+        }
+      )
+
+      room.onMessage(
         Transfer.DIG,
         async (message: { pokemonId: string; buriedItem: Item | null }) => {
           setTimeout(() => {

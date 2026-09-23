@@ -1,5 +1,12 @@
-import { Item } from "../../types/enum/Item"
+import { Item, Sweets } from "../../types/enum/Item"
 import { Pkm } from "../../types/enum/Pokemon"
+
+export const DishesWithPermanentEffects: Item[] = [
+  Item.MOOMOO_MILK,
+  Item.SMOKED_FILET,
+  Item.SWEETS,
+  ...Sweets
+]
 
 export const DishByPkm: { [pkm in Pkm]?: Item | null } = {
   [Pkm.LICKITUNG]: Item.RAGE_CANDY_BAR,

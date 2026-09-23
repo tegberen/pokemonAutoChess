@@ -1,7 +1,9 @@
 import { ARMOR_FACTOR, getItemCapacity, RegionDetails } from "../../config"
-import { DishByPkm } from "../../config/game/dishes"
+import { DishesWithPermanentEffects } from "../../config/game/dishes"
 import { canIgniteEveryRound, isIgnitionActive } from "./synergies"
 import { getSynergyTier } from "../../models/colyseus-models/synergies"
+import type Player from "../../models/colyseus-models/player"
+import type { Pokemon } from "../../models/colyseus-models/pokemon"
 import PokemonFactory from "../../models/pokemon-factory"
 import { PVEStages } from "../../models/pve-stages"
 import { Title, Transfer } from "../../types"
@@ -22,10 +24,8 @@ import {
   ItemComponents,
   ItemRecipe,
   MemoryDiscs,
-  NonSpecialBerries,
   OgerponMasks,
   Scarves,
-  Sweets,
   SynergyGivenByItem,
   SynergyStones,
   TMs,
@@ -99,16 +99,15 @@ import { grantRegionalTreasuresOnRegionChange } from "../../services/blessings"
 import { getFreeSpaceOnBench, isOnBench,
   getBenchSize
 } from "../../utils/board"
-import { canEatMoreDishes } from "../../utils/dishes"
+import {
+  canEatMoreDishes,
+  getChefDish,
+  rollCookedDishes
+} from "../../utils/dishes"
 import { distanceC, distanceM } from "../../utils/distance"
 import { clamp, max, min } from "../../utils/number"
 import { sacrificePlayerLife } from "../../utils/player-life"
-import {
-  chance,
-  pickNRandomIn,
-  pickRandomIn,
-  randomWeighted
-} from "../../utils/random"
+import { chance, pickRandomIn } from "../../utils/random"
 import { schemaValues } from "../../utils/schemas"
 import { AbilityStrategies } from "../abilities/abilities"
 import { Board, Cell, effectInOrientation } from "../board"
@@ -116,7 +115,11 @@ import { EvolutionManager } from "../evolution-logic/evolution-manager"
 import { FlowerPotMons } from "../flower-pots"
 import type { PokemonEntity } from "../pokemon-entity"
 import { DelayedCommand } from "../simulation-command"
-import { getStrongestUnit, getUnitScore } from "../unit-score"
+import {
+  getStrongestUnit,
+  getStrongestUnitOfFamily,
+  getUnitScore
+} from "../unit-score"
 import {
   BeforeAttackEffect,
   type Effect,
@@ -696,16 +699,7 @@ const chefCookEffect = new OnStageStartEffect(({ pokemon, player, room }) => {
   const nbDishes =
     ([0, 1, 2, 2][gourmetTier] ?? 2) +
     (player.blessings?.includes(Blessing.CHEFS_GREED) ? 1 : 0)
-  let dish = DishByPkm[chef.name]
-  if (chef.items.has(Item.COOKING_POT)) {
-    dish = Item.HEARTY_STEW
-  } else if (
-    chef.name.startsWith("ARCEUS") ||
-    chef.name === Pkm.KECLEON ||
-    chef.items.has(Item.GOURMET_MEMORY)
-  ) {
-    dish = Item.SANDWICH
-  }
+  const dish = getChefDish(chef)
 
   if (hasGluttonGrowth(chef, player?.blessings)) {
     chef.addMaxHP(30)
@@ -715,27 +709,7 @@ const chefCookEffect = new OnStageStartEffect(({ pokemon, player, room }) => {
   }
 
   if (dish && nbDishes > 0) {
-    let dishes = Array.from({ length: nbDishes }, () => dish!)
-    if (dish === Item.BERRIES) {
-      dishes = pickNRandomIn(
-        NonSpecialBerries.filter((i) => pokemon.items.has(i) === false),
-        nbDishes
-      )
-    }
-    if (dish === Item.MUSHROOMS) {
-      dishes = Array.from(
-        { length: nbDishes },
-        () =>
-          randomWeighted({
-            [Item.TINY_MUSHROOM]: 77,
-            [Item.BIG_MUSHROOM]: 20,
-            [Item.BALM_MUSHROOM]: 3
-          }) ?? Item.TINY_MUSHROOM
-      )
-    }
-    if (dish === Item.SWEETS) {
-      dishes = pickNRandomIn(Sweets, nbDishes)
-    }
+    const dishes = rollCookedDishes(dish, nbDishes, chef)
     room.clock.setTimeout(async () => {
       room.broadcast(Transfer.COOK, {
         pokemonId: chef.id,
@@ -799,6 +773,18 @@ const chefCookEffect = new OnStageStartEffect(({ pokemon, player, room }) => {
             }
             pokemon.dishes.add(dish)
             pokemon.dishChefMaxHP.set(dish, chef.maxHP)
+            if (
+              dish === Item.NUTRITIOUS_EGG &&
+              isMountainEggChef(chef, player)
+            ) {
+              pokemon.mountainEggDishes = rollMountainEggDishes(pokemon, player)
+              if (pokemon.mountainEggDishes.length > 0) {
+                room.broadcast(Transfer.MOUNTAIN_EGG_FEAST, {
+                  pokemonId: pokemon.id,
+                  dishes: pokemon.mountainEggDishes
+                })
+              }
+            }
             onFossilUnlockHarvest(player)
             pokemon.action = PokemonActionState.EAT
           }
@@ -807,6 +793,30 @@ const chefCookEffect = new OnStageStartEffect(({ pokemon, player, room }) => {
     }, 1000)
   }
 })
+
+// the same fielded champion the simulation will stamp with the hero blessing
+function isMountainEggChef(chef: Pokemon, player: Player) {
+  if (!player.blessings?.includes(Blessing.MOUNTAIN_EGG)) return false
+  const fieldedUnits = schemaValues(player.board).filter((p) => !isOnBench(p))
+  return getStrongestUnitOfFamily(fieldedUnits, Pkm.HAPPINY) === chef
+}
+
+// one of each dish your fielded GOURMET units cook, rolled when the egg is served
+function rollMountainEggDishes(eater: Pokemon, player: Player): Item[] {
+  const chefByDish = new Map<Item, Pokemon>()
+  schemaValues(player.board).forEach((chef) => {
+    if (isOnBench(chef) || !chef.types.has(Synergy.GOURMET)) return
+    const dish = getChefDish(chef)
+    if (dish && !chefByDish.has(dish)) chefByDish.set(dish, chef)
+  })
+  const rolledDishes: Item[] = []
+  chefByDish.forEach((chef, dish) => {
+    if (DishesWithPermanentEffects.includes(dish)) return
+    const [rolledDish] = rollCookedDishes(dish, 1, chef)
+    if (rolledDish && !eater.dishes.has(rolledDish)) rolledDishes.push(rolledDish)
+  })
+  return rolledDishes
+}
 
 export class FishingRodEffect extends OnStageStartEffect {
   constructor(rod: FishingRod) {

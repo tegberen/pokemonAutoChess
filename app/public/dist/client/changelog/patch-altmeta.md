@@ -499,6 +499,7 @@ Every balance change on this server, newest first.
 
 **Wishes**
 - Glaive Strike {{new}} | Prismatic Wish at stage 12: gain a Frigibax. Enemies hit by your STRONGEST Frigibax's ability are marked, and 2 seconds later an Ice Sword falls on each mark, dealing [200,SP]% of ATK + SPE_DEF as SPECIAL, then shatters, dealing the same to ADJACENT enemies
+- Mountain Egg {{new}} | Prismatic Wish at stage 12: gain a Happiny. The NUTRITIOUS_EGG of your STRONGEST Happiny also grants the dish effects of all your GOURMET Pokémon, each dish once, without permanent dish effects
 
 ### 21 September 2026
 

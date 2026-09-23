@@ -6138,6 +6138,10 @@
 			"name": "Sand Buddies",
 			"description": "Gain a strong Sandile. When your STRONGEST Sandile fails to KO its target with its Ability, a Trapinch with full PP appears nearby, at the same STAR level."
 		},
+		"MOUNTAIN_EGG": {
+			"name": "Mountain Egg",
+			"description": "Gain a Happiny. The NUTRITIOUS_EGG of your STRONGEST Happiny also grants the dish effects of all your GOURMET Pokémon. Each dish counts once, and permanent dish effects are not copied."
+		},
 		"GLAIVE_STRIKE": {
 			"name": "Glaive Strike",
 			"description": "Gain a Frigibax. When your STRONGEST Frigibax casts its ability, it marks every enemy it hits. After 2 seconds, an Ice Sword falls on each mark, dealing [200,SP]% of ATK + SPE_DEF as SPECIAL, then shatters, dealing the same to ADJACENT enemies."

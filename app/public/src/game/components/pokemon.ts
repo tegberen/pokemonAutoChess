@@ -936,6 +936,96 @@ export default class PokemonSprite extends DraggableObject {
     })
   }
 
+  // parts are children of this container, so they travel with a unit on the move
+  mountainEggFeastAnimation(dishes: Item[]) {
+    const eggY = -60
+    const egg = this.scene.add
+      .sprite(0, -20, "item", Item.NUTRITIOUS_EGG + ".png")
+      .setScale(0.3)
+      .setAlpha(0)
+    this.add(egg)
+    this.scene.tweens.add({
+      targets: egg,
+      y: eggY,
+      scale: 0.55,
+      alpha: 1,
+      duration: 600,
+      ease: "Sine.easeOut",
+      onComplete: () => this.shakeMountainEgg(egg, eggY, dishes)
+    })
+  }
+
+  // one continuous wobble that swells and settles, so it never snaps back to 0
+  shakeMountainEgg(egg: GameObjects.Sprite, eggY: number, dishes: Item[]) {
+    this.scene.tweens.addCounter({
+      from: 0,
+      to: 1,
+      duration: 800,
+      onUpdate: (tween) => {
+        const progress = (tween.getValue() ?? 0) as number
+        egg.angle =
+          Math.sin(progress * Math.PI * 4) * 10 * Math.sin(progress * Math.PI)
+      },
+      onComplete: () => {
+        if (!this.active) return egg.destroy()
+        this.scene.tweens.add({
+          targets: egg,
+          scale: 0.75,
+          alpha: 0,
+          duration: 250,
+          ease: "Sine.easeOut",
+          onComplete: () => egg.destroy()
+        })
+        const burst = this.scene.add.sprite(0, eggY, "shine").setScale(1.8)
+        this.add(burst)
+        burst.play({ key: "shine", repeat: 0 })
+        burst.once(Phaser.Animations.Events.ANIMATION_COMPLETE, () =>
+          burst.destroy()
+        )
+        dishes.forEach((dish, i) =>
+          this.serveMountainEggDish(dish, i, dishes.length, eggY)
+        )
+      }
+    })
+  }
+
+  serveMountainEggDish(dish: Item, index: number, count: number, fromY: number) {
+    const spread = (index - (count - 1) / 2) * 50
+    const hoverY = fromY - 20 + Math.abs(spread) * 0.3
+    const dishSprite = this.scene.add
+      .sprite(0, fromY, "item", dish + ".png")
+      .setScale(0.25)
+      .setAlpha(0)
+    this.add(dishSprite)
+    this.scene.tweens.chain({
+      targets: dishSprite,
+      tweens: [
+        {
+          x: spread,
+          y: hoverY,
+          scale: 0.4,
+          alpha: 1,
+          duration: 500,
+          delay: index * 120,
+          ease: "Sine.easeOut"
+        },
+        {
+          x: 0,
+          y: 0,
+          scale: 0.1,
+          alpha: 0,
+          duration: 400,
+          delay: 500,
+          ease: "Sine.easeIn"
+        }
+      ],
+      onComplete: () => {
+        dishSprite.destroy()
+        if (index === count - 1 && this.active) this.emoteAnimation()
+      }
+    })
+  }
+
   digAnimation(buriedItem: Item | null) {
     this.orientation = Orientation.UP
     const g = <GameScene>this.scene
