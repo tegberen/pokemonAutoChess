@@ -506,6 +506,7 @@ Every balance change on this server, newest first.
 - Gale Wings {{new}} | Prismatic Wish at stage 12: gain a Fletchling. Your STRONGEST Fletchling starts combat with max PP. After combat, collect any EMBER remaining on the field, gaining 1 GOLD for every 4/3/2 EMBER collected at 1/2/3 STAR, and a FIRE_SHARD if at least 10 are collected, which does not count towards your max total
 - Multishot {{new}} | Prismatic Wish at stage 12: gain a Sobble. Your STRONGEST Sobble's ability fires 2 additional shots through random enemies, each dealing 25% damage. Each cast increases the number of additional shots by 1
 - Decelerate {{new}} | Prismatic Wish at stage 12: gain a Duskull. While a Duskull is on your board, enemies start combat with at most 30 SPEED. Your STRONGEST Duskull's ability also applies FATIGUE and BLINDED to the enemies it damages
+- Jungle Cacophony {{new}} | Prismatic Wish at stage 12: gain a Grookey. Your STRONGEST Grookey drums instead of attacking, even with enemies in RANGE. Its drum beats reach all allies within RANGE instead of only ADJACENT ones, and burn 1/2/4 PP from each enemy within RANGE
 
 **Fixes**
 - Evolution | permanent CRIT_CHANCE, CRIT_POWER and PP gains now carry over when a Pokémon evolves, like its other permanent stats

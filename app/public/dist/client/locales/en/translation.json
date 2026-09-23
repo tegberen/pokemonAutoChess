@@ -6138,6 +6138,10 @@
 			"name": "Sand Buddies",
 			"description": "Gain a strong Sandile. When your STRONGEST Sandile fails to KO its target with its Ability, a Trapinch with full PP appears nearby, at the same STAR level."
 		},
+		"JUNGLE_CACOPHONY": {
+			"name": "Jungle Cacophony",
+			"description": "Gain a Grookey. Your STRONGEST Grookey drums instead of attacking, even with enemies in RANGE. Its drum beats reach all allies within RANGE instead of only ADJACENT ones, and burn 1/2/4 PP from each enemy within RANGE."
+		},
 		"DECELERATE": {
 			"name": "Decelerate",
 			"description": "Gain a Duskull. While a Duskull is on your board, enemies start combat with at most 30 SPEED. Your STRONGEST Duskull's ability also applies FATIGUE and BLINDED to the enemies it damages."

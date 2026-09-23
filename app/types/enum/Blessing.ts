@@ -256,6 +256,7 @@ export enum Blessing {
   GALE_WINGS = "GALE_WINGS",
   MULTISHOT = "MULTISHOT",
   DECELERATE = "DECELERATE",
+  JUNGLE_CACOPHONY = "JUNGLE_CACOPHONY",
   YOU_FORGOT_SOMETHING = "YOU_FORGOT_SOMETHING",
   THINK_FAST = "THINK_FAST",
   WISE_SPENDING = "WISE_SPENDING",
@@ -760,6 +761,7 @@ export const MULTISHOT_BASE_EXTRA_SHOTS = 2
 export const MULTISHOT_DAMAGE_RATIO = 0.25
 export const MULTISHOT_SHOT_INTERVAL = 150
 export const DECELERATE_SPEED_CAP = 30
+export const JUNGLE_CACOPHONY_PP_BURN_BY_STAR = [1, 2, 4] as const
 export const SHELL_ARMOR_SPE_DEF_BY_STARS = [1, 3, 6]
 
 export const WOBBUFFETS_GOLD_PRIZE_RECYCLE_TICKETS = 2
@@ -1122,7 +1124,8 @@ export const HERO_BLESSING_GIFT: { [blessing in Blessing]?: Pkm } = {
   [Blessing.CELL_BRAWLER]: Pkm.SOLOSIS,
   [Blessing.GALE_WINGS]: Pkm.FLETCHLING,
   [Blessing.MULTISHOT]: Pkm.SOBBLE,
-  [Blessing.DECELERATE]: Pkm.DUSKULL
+  [Blessing.DECELERATE]: Pkm.DUSKULL,
+  [Blessing.JUNGLE_CACOPHONY]: Pkm.GROOKEY
 }
 
 export const HERO_BLESSING_FAMILY: { [blessing in Blessing]?: Pkm } = {
@@ -1164,7 +1167,8 @@ export const HERO_BLESSING_FAMILY: { [blessing in Blessing]?: Pkm } = {
   [Blessing.CELL_BRAWLER]: Pkm.SOLOSIS,
   [Blessing.GALE_WINGS]: Pkm.FLETCHLING,
   [Blessing.MULTISHOT]: Pkm.SOBBLE,
-  [Blessing.DECELERATE]: Pkm.DUSKULL
+  [Blessing.DECELERATE]: Pkm.DUSKULL,
+  [Blessing.JUNGLE_CACOPHONY]: Pkm.GROOKEY
 }
 
 /* hero blessings that also relocate the player to a region where their family

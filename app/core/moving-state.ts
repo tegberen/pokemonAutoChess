@@ -1,4 +1,5 @@
 import type Player from "../models/colyseus-models/player"
+import { Blessing } from "../types/enum/Blessing"
 import { EffectEnum } from "../types/enum/Effect"
 import { PokemonActionState } from "../types/enum/Game"
 import { Passive } from "../types/enum/Passive"
@@ -22,6 +23,14 @@ export default class MovingState extends PokemonState {
     if (pokemon.cooldown <= 0) {
       pokemon.cooldown = Math.round(500 / getMoveSpeed(pokemon)) // 500ms to move one cell at 50 speed in normal conditions
       const targetAtRange = this.getNearestTargetAtRange(pokemon, board)
+      const canDrum =
+        pokemon.passive === Passive.DRUMMER &&
+        board.cells.some(
+          (entity) =>
+            entity?.team === pokemon.team &&
+            entity?.passive !== Passive.DRUMMER &&
+            entity?.passive !== Passive.INANIMATE
+        )
       if (pokemon.status.charm && pokemon.canMove) {
         if (
           pokemon.status.charmOrigin &&
@@ -43,17 +52,12 @@ export default class MovingState extends PokemonState {
         AbilityStrategies[pokemon.skill]?.requiresTarget === false
       ) {
         castAbility(AbilityStrategies[pokemon.skill], pokemon, board, null)
-      } else if (targetAtRange) {
-        pokemon.toAttackingState()
       } else if (
-        pokemon.passive === Passive.DRUMMER &&
-        board.cells.some(
-          (entity) =>
-            entity?.team === pokemon.team &&
-            entity?.passive !== Passive.DRUMMER &&
-            entity?.passive !== Passive.INANIMATE
-        )
+        targetAtRange &&
+        !(canDrum && pokemon.heroBlessings?.has(Blessing.JUNGLE_CACOPHONY))
       ) {
+        pokemon.toAttackingState()
+      } else if (canDrum) {
         drumBeat(pokemon, board)
       } else {
         const targetAtSight = this.getNearestTargetAtSight(pokemon, board)

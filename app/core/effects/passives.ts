@@ -9,7 +9,10 @@ import { getSynergyTier } from "../../models/colyseus-models/synergies"
 import PokemonFactory from "../../models/pokemon-factory"
 import { RemovableItems, Transfer } from "../../types"
 import { Ability } from "../../types/enum/Ability"
-import { Blessing } from "../../types/enum/Blessing"
+import {
+  Blessing,
+  JUNGLE_CACOPHONY_PP_BURN_BY_STAR
+} from "../../types/enum/Blessing"
 import { EffectEnum } from "../../types/enum/Effect"
 import { Emotion } from "../../types/enum/Emotion"
 import { AttackType, PokemonActionState, Team } from "../../types/enum/Game"
@@ -85,17 +88,31 @@ export function drumBeat(pokemon: PokemonEntity, board: Board) {
   pokemon.count.attackCount++
   pokemon.targetY = -1
   const ppGained = [2, 3, 5][pokemon.stars - 1] ?? 5
-  board
-    .getAdjacentCells(pokemon.positionX, pokemon.positionY, false)
-    .forEach((cell) => {
-      if (
-        cell.value &&
-        cell.value.team === pokemon.team &&
-        cell.value.passive !== Passive.DRUMMER
-      ) {
-        cell.value.addPP(ppGained, pokemon, 0, false)
-      }
-    })
+  const isJungleConductor = pokemon.heroBlessings?.has(
+    Blessing.JUNGLE_CACOPHONY
+  )
+  const drumCells = isJungleConductor
+    ? board.getCellsInRange(
+        pokemon.positionX,
+        pokemon.positionY,
+        pokemon.range,
+        false
+      )
+    : board.getAdjacentCells(pokemon.positionX, pokemon.positionY, false)
+  const ppBurned =
+    JUNGLE_CACOPHONY_PP_BURN_BY_STAR[Math.min(pokemon.stars, 3) - 1] ?? 4
+  drumCells.forEach((cell) => {
+    if (!cell.value) return
+    if (
+      cell.value.team === pokemon.team &&
+      cell.value.passive !== Passive.DRUMMER
+    ) {
+      cell.value.addPP(ppGained, pokemon, 0, false)
+    } else if (isJungleConductor && cell.value.team !== pokemon.team) {
+      cell.value.addPP(-ppBurned, pokemon, 0, false)
+      cell.value.count.manaBurnCount++
+    }
+  })
   pokemon.getEffects(OnAttackEffect).forEach((effect) => {
     effect.apply({
       pokemon,

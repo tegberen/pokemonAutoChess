@@ -1805,6 +1805,12 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     icon: "decelerate",
     grantsPokemonImmediately: true
   },
+  [Blessing.JUNGLE_CACOPHONY]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: [12],
+    icon: "jungle_cacophony",
+    grantsPokemonImmediately: true
+  },
   [Blessing.FROST_BURST]: {
     tier: BlessingTier.GOLD,
     availableAtStages: [12],
