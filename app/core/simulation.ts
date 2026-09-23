@@ -124,6 +124,7 @@ import {
   FROST_GEAR_RANGE_BONUS,
   HIGH_BREACHING_MAX_PP,
   ORBITAL_STRIKE_RANGE_BONUS,
+  CELL_BRAWLER_STAT_BONUS,
   SHUTTLE_BUS_MAX_PP,
   POTENTIAL_ENERGY_SHIELD,
   POTENTIAL_ENERGY_SPEED,
@@ -4167,6 +4168,29 @@ export default class Simulation extends Schema implements ISimulation {
         fieldSpreader.status.addPsychicField(fieldSpreader)
       }
       orbitalStrikeChampion.range += ORBITAL_STRIKE_RANGE_BONUS
+    }
+
+    const cellBrawlerChampion = championOf.get(Blessing.CELL_BRAWLER)
+    if (cellBrawlerChampion) {
+      cellBrawlerChampion.addMaxHP(
+        CELL_BRAWLER_STAT_BONUS * cellBrawlerChampion.baseHP,
+        cellBrawlerChampion,
+        0,
+        false
+      )
+      cellBrawlerChampion.addDefense(
+        CELL_BRAWLER_STAT_BONUS * cellBrawlerChampion.baseDef,
+        cellBrawlerChampion,
+        0,
+        false
+      )
+      cellBrawlerChampion.addSpecialDefense(
+        CELL_BRAWLER_STAT_BONUS * cellBrawlerChampion.baseSpeDef,
+        cellBrawlerChampion,
+        0,
+        false
+      )
+      cellBrawlerChampion.range = 1
     }
 
     const highBreachingChampion = championOf.get(Blessing.HIGH_BREACHING)

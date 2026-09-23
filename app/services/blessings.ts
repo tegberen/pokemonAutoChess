@@ -2296,6 +2296,8 @@ export const blessingEffectService: {
     heroBlessingEffect(Blessing.MOUNTAIN_EGG, player, state, room),
   [Blessing.MOTHER_YARN]: (player, state, room) =>
     heroBlessingEffect(Blessing.MOTHER_YARN, player, state, room),
+  [Blessing.CELL_BRAWLER]: (player, state, room) =>
+    heroBlessingEffect(Blessing.CELL_BRAWLER, player, state, room),
   [Blessing.YOU_FORGOT_SOMETHING]: () => true,
   [Blessing.THINK_FAST]: (player, state) => {
     const owned =

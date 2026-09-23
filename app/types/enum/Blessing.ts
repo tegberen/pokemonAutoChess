@@ -252,6 +252,7 @@ export enum Blessing {
   GLAIVE_STRIKE = "GLAIVE_STRIKE",
   MOUNTAIN_EGG = "MOUNTAIN_EGG",
   MOTHER_YARN = "MOTHER_YARN",
+  CELL_BRAWLER = "CELL_BRAWLER",
   YOU_FORGOT_SOMETHING = "YOU_FORGOT_SOMETHING",
   THINK_FAST = "THINK_FAST",
   WISE_SPENDING = "WISE_SPENDING",
@@ -747,6 +748,9 @@ export const EXHAUSTING_FLAME_DAMAGE_MULTIPLIER = 0.8
 export const EXHAUSTING_FLAME_LUCK_PER_STAR = 5
 export const ETERNAL_RAGE_DURATION_PER_STAR = 1000
 export const ORBITAL_STRIKE_RANGE_BONUS = 2
+export const CELL_BRAWLER_STAT_BONUS = 0.5
+export const CELL_BRAWLER_ABILITY_LIFESTEAL = 0.5
+export const CELL_BRAWLER_OVERHEAL_TO_MAX_HP = 0.5
 export const SHELL_ARMOR_SPE_DEF_BY_STARS = [1, 3, 6]
 
 export const WOBBUFFETS_GOLD_PRIZE_RECYCLE_TICKETS = 2
@@ -1105,7 +1109,8 @@ export const HERO_BLESSING_GIFT: { [blessing in Blessing]?: Pkm } = {
   [Blessing.SAND_BUDDIES]: Pkm.SANDILE,
   [Blessing.GLAIVE_STRIKE]: Pkm.FRIGIBAX,
   [Blessing.MOUNTAIN_EGG]: Pkm.HAPPINY,
-  [Blessing.MOTHER_YARN]: Pkm.SEWADDLE
+  [Blessing.MOTHER_YARN]: Pkm.SEWADDLE,
+  [Blessing.CELL_BRAWLER]: Pkm.SOLOSIS
 }
 
 export const HERO_BLESSING_FAMILY: { [blessing in Blessing]?: Pkm } = {
@@ -1143,7 +1148,8 @@ export const HERO_BLESSING_FAMILY: { [blessing in Blessing]?: Pkm } = {
   [Blessing.SILVER_SPOON]: Pkm.ABRA,
   [Blessing.GLAIVE_STRIKE]: Pkm.FRIGIBAX,
   [Blessing.MOUNTAIN_EGG]: Pkm.HAPPINY,
-  [Blessing.MOTHER_YARN]: Pkm.SEWADDLE
+  [Blessing.MOTHER_YARN]: Pkm.SEWADDLE,
+  [Blessing.CELL_BRAWLER]: Pkm.SOLOSIS
 }
 
 /* hero blessings that also relocate the player to a region where their family

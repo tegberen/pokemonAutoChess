@@ -6138,6 +6138,10 @@
 			"name": "Sand Buddies",
 			"description": "Gain a strong Sandile. When your STRONGEST Sandile fails to KO its target with its Ability, a Trapinch with full PP appears nearby, at the same STAR level."
 		},
+		"CELL_BRAWLER": {
+			"name": "Cell Brawler",
+			"description": "Gain a Solosis. Your STRONGEST Solosis gains 50% HP, DEF and SPE_DEF but becomes 1 RANGE. It heals for 50% of the damage dealt by its ability, with 50% of overheal gained as max HP."
+		},
 		"MOTHER_YARN": {
 			"name": "Mother Yarn",
 			"description": "Gain a Sewaddle and move to a random Sewaddle region. Sewaddle gains NORMAL and returns its items when benched. After 3/2/1 stages at 1/2/3 STAR, your STRONGEST Sewaddle on board completes its held component with a SILK_SCARF, and permanently gains the crafted item's stats (SHIELD counts as HP)."
