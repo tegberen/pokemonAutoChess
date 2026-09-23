@@ -11287,34 +11287,34 @@ export class Tentacruel extends Pokemon {
 }
 
 export class Snubull extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.WILD, Synergy.FAIRY])
-  rarity = Rarity.ULTRA
+  types = new SetSchema<Synergy>([Synergy.FAIRY, Synergy.FIELD])
+  rarity = Rarity.EPIC
   stars = 1
   evolution = Pkm.GRANBULL
-  hp = 140
-  atk = 16
+  hp = 115
+  atk = 13
   speed = 39
   def = 8
+  speDef = 4
+  maxPP = 70
+  range = 1
+  skill = Ability.ROAR
+  additional = true
+}
+
+export class Granbull extends Pokemon {
+  types = new SetSchema<Synergy>([Synergy.FAIRY, Synergy.FIELD])
+  rarity = Rarity.EPIC
+  stars = 2
+  hp = 265
+  atk = 30
+  speed = 39
+  def = 12
   speDef = 6
   maxPP = 70
   range = 1
   skill = Ability.ROAR
-  regional = true
-}
-
-export class Granbull extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.WILD, Synergy.FAIRY])
-  rarity = Rarity.ULTRA
-  stars = 2
-  hp = 280
-  atk = 32
-  speed = 39
-  def = 14
-  speDef = 12
-  maxPP = 70
-  range = 1
-  skill = Ability.ROAR
-  regional = true
+  additional = true
 }
 
 export class TypeNull extends Pokemon {

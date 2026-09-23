@@ -346,7 +346,6 @@ At the beginning of each battle, TIGHT_BELT is replaced by 2 random items. The h
 - Kingambit: has HUMAN
 - Reuniclus: has MONSTER
 - Dusknoir: with SPEED items and REAPER_CLOTH, it is a carry. Otherwise with PP items, it should provide support
-- Granbull: regular pool, has WILD
 
 ### Hatch
 - Ludicolo: GRASS / AQUATIC / SOUND.
