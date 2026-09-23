@@ -2302,6 +2302,8 @@ export const blessingEffectService: {
     heroBlessingEffect(Blessing.GALE_WINGS, player, state, room),
   [Blessing.MULTISHOT]: (player, state, room) =>
     heroBlessingEffect(Blessing.MULTISHOT, player, state, room),
+  [Blessing.DECELERATE]: (player, state, room) =>
+    heroBlessingEffect(Blessing.DECELERATE, player, state, room),
   [Blessing.YOU_FORGOT_SOMETHING]: () => true,
   [Blessing.THINK_FAST]: (player, state) => {
     const owned =

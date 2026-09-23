@@ -255,6 +255,7 @@ export enum Blessing {
   CELL_BRAWLER = "CELL_BRAWLER",
   GALE_WINGS = "GALE_WINGS",
   MULTISHOT = "MULTISHOT",
+  DECELERATE = "DECELERATE",
   YOU_FORGOT_SOMETHING = "YOU_FORGOT_SOMETHING",
   THINK_FAST = "THINK_FAST",
   WISE_SPENDING = "WISE_SPENDING",
@@ -758,6 +759,7 @@ export const GALE_WINGS_EMBERS_FOR_FIRE_SHARD = 10
 export const MULTISHOT_BASE_EXTRA_SHOTS = 2
 export const MULTISHOT_DAMAGE_RATIO = 0.25
 export const MULTISHOT_SHOT_INTERVAL = 150
+export const DECELERATE_SPEED_CAP = 30
 export const SHELL_ARMOR_SPE_DEF_BY_STARS = [1, 3, 6]
 
 export const WOBBUFFETS_GOLD_PRIZE_RECYCLE_TICKETS = 2
@@ -1119,7 +1121,8 @@ export const HERO_BLESSING_GIFT: { [blessing in Blessing]?: Pkm } = {
   [Blessing.MOTHER_YARN]: Pkm.SEWADDLE,
   [Blessing.CELL_BRAWLER]: Pkm.SOLOSIS,
   [Blessing.GALE_WINGS]: Pkm.FLETCHLING,
-  [Blessing.MULTISHOT]: Pkm.SOBBLE
+  [Blessing.MULTISHOT]: Pkm.SOBBLE,
+  [Blessing.DECELERATE]: Pkm.DUSKULL
 }
 
 export const HERO_BLESSING_FAMILY: { [blessing in Blessing]?: Pkm } = {
@@ -1160,7 +1163,8 @@ export const HERO_BLESSING_FAMILY: { [blessing in Blessing]?: Pkm } = {
   [Blessing.MOTHER_YARN]: Pkm.SEWADDLE,
   [Blessing.CELL_BRAWLER]: Pkm.SOLOSIS,
   [Blessing.GALE_WINGS]: Pkm.FLETCHLING,
-  [Blessing.MULTISHOT]: Pkm.SOBBLE
+  [Blessing.MULTISHOT]: Pkm.SOBBLE,
+  [Blessing.DECELERATE]: Pkm.DUSKULL
 }
 
 /* hero blessings that also relocate the player to a region where their family

@@ -1,3 +1,4 @@
+import { Blessing } from "../../types/enum/Blessing"
 import { AttackType } from "../../types/enum/Game"
 import type { Board } from "../board"
 import type { PokemonEntity } from "../pokemon-entity"
@@ -11,34 +12,55 @@ export class TrickRoomStrategy extends AbilityStrategy {
     crit: boolean
   ) {
     super.process(pokemon, board, target, crit)
-    
+
     const damage = [50, 100, 200, 400][pokemon.stars - 1] ?? 400
-    
-    if (target.speed >= pokemon.speed) {
-      const speedReduction = Math.floor(target.speed / 2)
-      target.addSpeed(-speedReduction, pokemon, 0, false)
-      target.status.triggerFatigue(5000, target, pokemon)
-      target.status.triggerBlinded(5000, target, pokemon)
-    } else {
-      target.handleSpecialDamage(damage, board, AttackType.SPECIAL, pokemon, crit)
-    }
-    
-    const cells = board.getAdjacentCells(
-      target.positionX,
-      target.positionY,
-      false
-    )
-    cells.forEach((cell) => {
-      if (cell && cell.value && cell.value.team !== pokemon.team) {
-        if (cell.value.speed >= pokemon.speed) {
-          const speedReduction = Math.floor(cell.value.speed / 2)
-          cell.value.addSpeed(-speedReduction, pokemon, 0, false)
-          target.status.triggerFatigue(5000, target, pokemon)
-          target.status.triggerBlinded(5000, target, pokemon)
-        } else {
-          cell.value.handleSpecialDamage(damage, board, AttackType.SPECIAL, pokemon, crit)
+    const statusDuration =
+      [3000, 4000, 5000, 6000][pokemon.stars - 1] ?? 6000
+    const enemiesHit = [target]
+    board
+      .getAdjacentCells(target.positionX, target.positionY, false)
+      .forEach((cell) => {
+        if (cell.value && cell.value.team !== pokemon.team) {
+          enemiesHit.push(cell.value)
+        }
+      })
+
+    enemiesHit.forEach((enemy) => {
+      if (enemy.speed >= pokemon.speed) {
+        const speedReduction = Math.floor(enemy.speed / 2)
+        enemy.addSpeed(-speedReduction, pokemon, 0, false)
+        applyTrickRoomStatuses(pokemon, enemy, statusDuration)
+        pokemon.broadcastAbility({
+          skill: "TRICK_ROOM_SLOW",
+          positionX: enemy.positionX,
+          positionY: enemy.positionY
+        })
+      } else {
+        pokemon.broadcastAbility({
+          skill: "TRICK_ROOM_HIT",
+          targetX: enemy.positionX,
+          targetY: enemy.positionY
+        })
+        enemy.handleSpecialDamage(
+          damage,
+          board,
+          AttackType.SPECIAL,
+          pokemon,
+          crit
+        )
+        if (pokemon.heroBlessings?.has(Blessing.DECELERATE)) {
+          applyTrickRoomStatuses(pokemon, enemy, statusDuration)
         }
       }
     })
   }
+}
+
+function applyTrickRoomStatuses(
+  pokemon: PokemonEntity,
+  enemy: PokemonEntity,
+  duration: number
+) {
+  enemy.status.triggerFatigue(duration, enemy, pokemon, true)
+  enemy.status.triggerBlinded(duration, enemy, pokemon, true)
 }

@@ -1036,6 +1036,109 @@ function unisonStarfallAnimation(): AbilityAnimation {
   }
 }
 
+const TRICK_ROOM_PINK = 0xff90d0
+const TRICK_ROOM_WHITE = 0xfff0fa
+const TRICK_ROOM_LINGER = 1000
+// sits just inside the outer edges of the 3x3 cells the ability hits
+const TRICK_ROOM_HALF_SIZE = (CELL_WIDTH * 3 - 16) / 2
+const TRICK_ROOM_CORNER = 24
+
+function trickRoomAnimation(): AbilityAnimation {
+  return ({ scene, targetX, targetY, flip }) => {
+    const [x, y] = transformEntityCoordinates(targetX, targetY, flip)
+    const room = scene.add
+      .graphics({ x, y })
+      .setDepth(DEPTH.ABILITY_GROUND_LEVEL)
+      .setScale(0.3)
+      .setAlpha(0)
+    scene.abilitiesVfxGroup?.add(room)
+    drawTrickRoom(room)
+    scene.tweens.chain({
+      targets: room,
+      tweens: [
+        { scale: 1, alpha: 1, duration: 350, ease: "Sine.easeOut" },
+        { alpha: 0.6, duration: TRICK_ROOM_LINGER, ease: "Sine.easeInOut" },
+        { alpha: 0, duration: 350, ease: "Sine.easeIn" }
+      ],
+      onComplete: () => room.destroy()
+    })
+  }
+}
+
+function drawTrickRoom(room: Phaser.GameObjects.Graphics) {
+  const h = TRICK_ROOM_HALF_SIZE
+  room.fillStyle(TRICK_ROOM_PINK, 0.07)
+  room.fillRect(-h, -h, h * 2, h * 2)
+  drawPixelPath(
+    room,
+    [
+      { x: -h, y: -h },
+      { x: h, y: -h },
+      { x: h, y: h },
+      { x: -h, y: h },
+      { x: -h, y: -h }
+    ],
+    [
+      { grid: 4, size: 4, color: TRICK_ROOM_PINK, alpha: 0.6 },
+      { grid: 2, size: 2, color: TRICK_ROOM_WHITE, alpha: 0.6 }
+    ]
+  )
+  const c = TRICK_ROOM_CORNER
+  for (const [sx, sy] of [
+    [-1, -1],
+    [1, -1],
+    [1, 1],
+    [-1, 1]
+  ]) {
+    drawPixelPath(
+      room,
+      [
+        { x: sx * (h - c), y: sy * (h - 6) },
+        { x: sx * (h - 6), y: sy * (h - 6) },
+        { x: sx * (h - 6), y: sy * (h - c) }
+      ],
+      [{ grid: 3, size: 3, color: TRICK_ROOM_WHITE, alpha: 0.7 }]
+    )
+  }
+}
+
+// three chevrons sliding down: the usual "stat lowered" cue, here for SPEED
+function trickRoomSlowAnimation(): AbilityAnimation {
+  return ({ scene, positionX, positionY, flip }) => {
+    const [x, y] = transformEntityCoordinates(positionX, positionY, flip)
+    const chevrons = scene.add
+      .graphics({ x, y: y - 40 })
+      .setDepth(DEPTH.ABILITY)
+    scene.abilitiesVfxGroup?.add(chevrons)
+    scene.tweens.addCounter({
+      from: 0,
+      to: 1,
+      duration: 700,
+      ease: "Sine.easeIn",
+      onUpdate: (tween) => {
+        const progress = (tween.getValue() ?? 0) as number
+        chevrons.clear()
+        for (let row = 0; row < 3; row++) {
+          const chevronY = row * 12 + progress * 24
+          drawPixelPath(
+            chevrons,
+            [
+              { x: -12, y: chevronY - 8 },
+              { x: 0, y: chevronY },
+              { x: 12, y: chevronY - 8 }
+            ],
+            [
+              { grid: 4, size: 5, color: TRICK_ROOM_PINK, alpha: 1 - progress },
+              { grid: 2, size: 2, color: TRICK_ROOM_WHITE, alpha: 1 - progress }
+            ]
+          )
+        }
+      },
+      onComplete: () => chevrons.destroy()
+    })
+  }
+}
+
 /* aimed in screen space: a flipped board mirrors the vertical axis, so an angle
    taken from grid coordinates points diagonal shots the wrong way */
 function snipeShotProjectile(args: AbilityAnimationArgs, scale: number) {
@@ -5092,10 +5195,14 @@ export const AbilitiesAnimations: {
     duration: 1000,
     scale: 2
   }),
-  [Ability.TRICK_ROOM]: onTarget({ 
-    ability: Ability.WONDER_ROOM,
-    tint:  0xff90d0,
-    scale: 4         
+  [Ability.TRICK_ROOM]: trickRoomAnimation(),
+  ["TRICK_ROOM_SLOW"]: trickRoomSlowAnimation(),
+  ["TRICK_ROOM_HIT"]: onTarget({
+    ability: HitSprite.GHOST_HIT,
+    textureKey: "attacks",
+    scale: 1.5,
+    alpha: 0.8,
+    depth: DEPTH.HIT_FX_ABOVE_POKEMON
   }),
   [Ability.GRUDGE]: projectile({
     duration: 750,

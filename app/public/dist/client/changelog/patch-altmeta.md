@@ -493,6 +493,7 @@ Every balance change on this server, newest first.
 
 **Abilities**
 - Glaive Rush | now aimed at the target's backline and hits all enemies in the target's column, instead of the user's own column
+- Trick Room | FATIGUE and BLINDED duration 5 → [3,4,5,6,SP] seconds
 
 **Game Mode**
 - Double Up | the finale duel between partners is removed: the game ends as soon as one team is left, and both partners share first place
@@ -504,9 +505,11 @@ Every balance change on this server, newest first.
 - Cell Brawler {{new}} | Prismatic Wish at stage 12: gain a Solosis. Your STRONGEST Solosis gains 50% HP, DEF and SPE_DEF but becomes 1 range. It heals for 50% of the damage dealt by its ability, with 50% of overheal gained as max HP
 - Gale Wings {{new}} | Prismatic Wish at stage 12: gain a Fletchling. Your STRONGEST Fletchling starts combat with max PP. After combat, collect any EMBER remaining on the field, gaining 1 GOLD for every 4/3/2 EMBER collected at 1/2/3 STAR, and a FIRE_SHARD if at least 10 are collected, which does not count towards your max total
 - Multishot {{new}} | Prismatic Wish at stage 12: gain a Sobble. Your STRONGEST Sobble's ability fires 2 additional shots through random enemies, each dealing 25% damage. Each cast increases the number of additional shots by 1
+- Decelerate {{new}} | Prismatic Wish at stage 12: gain a Duskull. While a Duskull is on your board, enemies start combat with at most 30 SPEED. Your STRONGEST Duskull's ability also applies FATIGUE and BLINDED to the enemies it damages
 
 **Fixes**
 - Evolution | permanent CRIT_CHANCE, CRIT_POWER and PP gains now carry over when a Pokémon evolves, like its other permanent stats
+- Trick Room | ADJACENT enemies faster than the user now also receive FATIGUE and BLINDED, as described
 
 ### 21 September 2026
 

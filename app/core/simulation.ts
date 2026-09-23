@@ -127,6 +127,7 @@ import {
   CELL_BRAWLER_STAT_BONUS,
   GALE_WINGS_EMBERS_FOR_FIRE_SHARD,
   GALE_WINGS_EMBERS_PER_GOLD_BY_STAR,
+  DECELERATE_SPEED_CAP,
   SHUTTLE_BUS_MAX_PP,
   POTENTIAL_ENERGY_SHIELD,
   POTENTIAL_ENERGY_SPEED,
@@ -2152,6 +2153,25 @@ export default class Simulation extends Schema implements ISimulation {
       if (allies.length === 0) continue
 
       const missingPlayerLife = Math.max(0, player.maxLife - player.life)
+
+      // runs after spawn-time weather, so MAGNET_STORM's speed reset cannot undo it
+      if (
+        blessings.includes(Blessing.DECELERATE) &&
+        ownUnits.some((unit) => PkmFamily[unit.name] === Pkm.DUSKULL)
+      ) {
+        const enemyTeam =
+          teamIndex === Team.BLUE_TEAM ? this.redTeam : this.blueTeam
+        enemyTeam.forEach((enemy) => {
+          if (enemy.speed > DECELERATE_SPEED_CAP) {
+            enemy.addSpeed(
+              DECELERATE_SPEED_CAP - enemy.speed,
+              "environment",
+              0,
+              false
+            )
+          }
+        })
+      }
 
       if (blessings.includes(Blessing.SILVER_SPOON)) {
         allies
