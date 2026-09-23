@@ -135,6 +135,8 @@ export class Pokemon extends Schema implements IPokemon {
   // SILVER_SPOON: only the server counts the bend down, nothing renders it
   silverSpoonRounds: number = 0
   motherYarnStages: number = 0
+  // INFINITE_CONVERSION: synergies copied from opponents and kept for good
+  keptSynergies: Synergy[] = []
   // HONEY_EXPLORATION: a friend keeps WILD for good; synced for the sell price shown
   @type("boolean") honeyExplorationFriend: boolean = false
   dodge: number = 0

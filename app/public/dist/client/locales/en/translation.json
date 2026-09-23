@@ -6140,6 +6140,10 @@
 			"name": "Sand Buddies",
 			"description": "Gain a strong Sandile. When your STRONGEST Sandile fails to KO its target with its Ability, a Trapinch with full PP appears nearby, at the same STAR level."
 		},
+		"INFINITE_CONVERSION": {
+			"name": "Infinite Conversion",
+			"description": "Gain a Porygon. After winning a player combat, your STRONGEST Porygon permanently keeps the synergy it copied in that combat. Once per opponent."
+		},
 		"APEX_PREDATOR": {
 			"name": "Apex Predator",
 			"description": "Gain a Shinx. Your STRONGEST Shinx's ability inflicts BLINDED and WOUND on the enemy it dashes to for 4 seconds. When it arrives, every other enemy within 2 cells gets FEAR for 2 seconds."

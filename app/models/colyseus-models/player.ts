@@ -316,6 +316,8 @@ export default class Player extends Schema implements IPlayer {
   blessingWands: Item[] = []
   // server-only: gold the PLUNDER champion spent casting Treasure Rush this fight
   plunderGoldSpentThisFight: number = 0
+  // server-only: INFINITE_CONVERSION keeps a copied synergy once per opponent
+  infiniteConversionOpponents = new Set<string>()
   // server-only: GALE_WINGS shards held, which the FIRE synergy's one-shard limit ignores
   galeWingsFireShards: number = 0
   // server-only: RIVALRY gains are capped over the whole game
@@ -740,6 +742,7 @@ export default class Player extends Schema implements IPlayer {
     }
     pokemons.forEach((pokemon) => {
       if (pokemon.honeyExplorationFriend) pokemon.types.add(Synergy.WILD)
+      pokemon.keptSynergies.forEach((synergy) => pokemon.types.add(synergy))
     })
     const previousSynergies = this.synergies.toMap()
     let updatedSynergies = computeSynergies(

@@ -260,6 +260,7 @@ export enum Blessing {
   HONEY_EXPLORATION = "HONEY_EXPLORATION",
   KINGS_GAMBIT = "KINGS_GAMBIT",
   APEX_PREDATOR = "APEX_PREDATOR",
+  INFINITE_CONVERSION = "INFINITE_CONVERSION",
   YOU_FORGOT_SOMETHING = "YOU_FORGOT_SOMETHING",
   THINK_FAST = "THINK_FAST",
   WISE_SPENDING = "WISE_SPENDING",
@@ -1151,7 +1152,8 @@ export const HERO_BLESSING_GIFT: { [blessing in Blessing]?: Pkm } = {
   [Blessing.JUNGLE_CACOPHONY]: Pkm.GROOKEY,
   [Blessing.HONEY_EXPLORATION]: Pkm.TEDDIURSA,
   [Blessing.KINGS_GAMBIT]: Pkm.PAWNIARD,
-  [Blessing.APEX_PREDATOR]: Pkm.SHINX
+  [Blessing.APEX_PREDATOR]: Pkm.SHINX,
+  [Blessing.INFINITE_CONVERSION]: Pkm.PORYGON
 }
 
 export const HERO_BLESSING_FAMILY: { [blessing in Blessing]?: Pkm } = {
@@ -1196,7 +1198,8 @@ export const HERO_BLESSING_FAMILY: { [blessing in Blessing]?: Pkm } = {
   [Blessing.DECELERATE]: Pkm.DUSKULL,
   [Blessing.JUNGLE_CACOPHONY]: Pkm.GROOKEY,
   [Blessing.KINGS_GAMBIT]: Pkm.PAWNIARD,
-  [Blessing.APEX_PREDATOR]: Pkm.SHINX
+  [Blessing.APEX_PREDATOR]: Pkm.SHINX,
+  [Blessing.INFINITE_CONVERSION]: Pkm.PORYGON
 }
 
 /* hero blessings that also relocate the player to a region where their family

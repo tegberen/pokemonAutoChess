@@ -462,6 +462,11 @@ export default class Simulation extends Schema implements ISimulation {
     timer: number
     marching?: Pokemon[]
   }[] = []
+  // INFINITE_CONVERSION: what each player's champion Porygon copied this fight
+  infiniteConversionCopies = new Map<
+    string,
+    { pokemonId: string; synergy: Synergy }
+  >()
   kingsGambitWaiting: {
     champion: PokemonEntity
     player: Player
@@ -5652,6 +5657,17 @@ export default class Simulation extends Schema implements ISimulation {
     released.pp = victim.pp
   }
 
+  keepInfiniteConversionSynergy(player: Player, opponentId: string) {
+    const copy = this.infiniteConversionCopies.get(player.id)
+    if (!copy || player.infiniteConversionOpponents.has(opponentId)) return
+    const porygon = player.board.get(copy.pokemonId)
+    if (!porygon) return
+    player.infiniteConversionOpponents.add(opponentId)
+    porygon.keptSynergies.push(copy.synergy)
+    porygon.types.add(copy.synergy)
+    player.updateSynergies()
+  }
+
   collectGaleWingsEmbers(player: Player) {
     if (!player.blessings?.includes(Blessing.GALE_WINGS)) return
     const collector = getStrongestUnitOfFamily(
@@ -5770,6 +5786,10 @@ export default class Simulation extends Schema implements ISimulation {
           : this.winnerId === opponentPlayerId
             ? BattleResult.DEFEAT
             : BattleResult.DRAW
+
+      if (!isGhostPlayer && !isPvE && battleResult === BattleResult.WIN) {
+        this.keepInfiniteConversionSynergy(player, opponentPlayerId)
+      }
 
       // Add battle result
       if (!isGhostPlayer) {

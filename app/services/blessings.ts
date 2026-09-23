@@ -2403,6 +2403,8 @@ export const blessingEffectService: {
     heroBlessingEffect(Blessing.KINGS_GAMBIT, player, state, room),
   [Blessing.APEX_PREDATOR]: (player, state, room) =>
     heroBlessingEffect(Blessing.APEX_PREDATOR, player, state, room),
+  [Blessing.INFINITE_CONVERSION]: (player, state, room) =>
+    heroBlessingEffect(Blessing.INFINITE_CONVERSION, player, state, room),
   [Blessing.YOU_FORGOT_SOMETHING]: () => true,
   [Blessing.THINK_FAST]: (player, state) => {
     const owned =

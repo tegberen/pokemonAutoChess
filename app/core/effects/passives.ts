@@ -874,6 +874,12 @@ const conversionEffect = new OnSimulationStartEffect(
     const synergyCopied = pickRandomIn(opponent.synergies.getTopSynergies(1))
     if (entity.types.has(synergyCopied)) return // does not copy if already has the synergy
     entity.types.add(synergyCopied)
+    if (entity.heroBlessings?.has(Blessing.INFINITE_CONVERSION)) {
+      simulation.infiniteConversionCopies.set(player.id, {
+        pokemonId: entity.refToBoardPokemon.id,
+        synergy: synergyCopied
+      })
+    }
     const effect =
       SynergyTiers[synergyCopied].find((effect) =>
         opponent.effects.has(effect)

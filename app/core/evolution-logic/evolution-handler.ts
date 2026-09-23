@@ -128,4 +128,8 @@ export function carryOverPermanentStats(
   pokemonEvolved.honeyExplorationFriend = pokemonsBeforeEvolution.some(
     (pokemon) => pokemon.honeyExplorationFriend
   )
+
+  pokemonEvolved.keptSynergies = [
+    ...new Set(pokemonsBeforeEvolution.flatMap((pokemon) => pokemon.keptSynergies))
+  ]
 }
