@@ -45,6 +45,15 @@ import {
   PokemonAnimations
 } from "./pokemon-animations"
 
+const GALE_WINGS_COLLECT_RISE = 36
+const GALE_WINGS_COLLECT_RISE_DURATION = 350
+const GALE_WINGS_COLLECT_FLIGHT_DURATION = 600
+const GALE_WINGS_COLLECT_MAX_STAGGER = 60
+// however many embers there are, the last one leaves within this time
+const GALE_WINGS_COLLECT_TOTAL_STAGGER = 900
+// the toast slides in, so it is fired before the last ember lands to arrive with it
+const GALE_WINGS_COLLECT_TOAST_LEAD = 350
+
 export default class BattleManager {
   group: GameObjects.Group
   scene: GameScene
@@ -147,6 +156,70 @@ export default class BattleManager {
         )
       }
     }
+  }
+
+  // GALE_WINGS: the embers left on the field rise, then fly into the gold counter
+  collectGaleWingsEmbers(onCollected: () => void) {
+    const embers = this.boardEventSprites
+      .flat()
+      .filter(
+        (sprite) =>
+          sprite.active && sprite.anims.currentAnim?.key === EffectEnum.EMBER
+      )
+    const goldCounter = this.getGoldCounterWorldPosition()
+    if (embers.length === 0 || !goldCounter) {
+      onCollected()
+      return
+    }
+    const stagger = Math.min(
+      GALE_WINGS_COLLECT_MAX_STAGGER,
+      GALE_WINGS_COLLECT_TOTAL_STAGGER / embers.length
+    )
+    embers.forEach((ember, index) => {
+      ember.setDepth(DEPTH.ABILITY)
+      this.scene.tweens.chain({
+        targets: ember,
+        tweens: [
+          {
+            y: ember.y - GALE_WINGS_COLLECT_RISE,
+            duration: GALE_WINGS_COLLECT_RISE_DURATION,
+            delay: index * stagger,
+            ease: "Sine.easeOut"
+          },
+          {
+            x: goldCounter.x,
+            y: goldCounter.y,
+            scale: 1,
+            duration: GALE_WINGS_COLLECT_FLIGHT_DURATION,
+            ease: "Sine.easeIn"
+          }
+        ],
+        onComplete: () => ember.setVisible(false)
+      })
+    })
+    this.scene.time.delayedCall(
+      (embers.length - 1) * stagger +
+        GALE_WINGS_COLLECT_RISE_DURATION +
+        GALE_WINGS_COLLECT_FLIGHT_DURATION -
+        GALE_WINGS_COLLECT_TOAST_LEAD,
+      onCollected
+    )
+  }
+
+  getGoldCounterWorldPosition() {
+    const goldCounter = document.getElementById("game-money-info")
+    if (!goldCounter) return null
+    const counterRect = goldCounter.getBoundingClientRect()
+    const canvasRect = this.scene.game.canvas.getBoundingClientRect()
+    const screenX =
+      ((counterRect.left + counterRect.width / 2 - canvasRect.left) *
+        this.scene.scale.width) /
+      canvasRect.width
+    const screenY =
+      ((counterRect.top + counterRect.height / 2 - canvasRect.top) *
+        this.scene.scale.height) /
+      canvasRect.height
+    return this.scene.cameras.main.getWorldPoint(screenX, screenY)
   }
 
   clear() {

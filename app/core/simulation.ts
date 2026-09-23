@@ -5741,11 +5741,15 @@ export default class Simulation extends Schema implements ISimulation {
     const embersPerGold =
       GALE_WINGS_EMBERS_PER_GOLD_BY_STAR[Math.min(collector.stars, 3) - 1] ?? 2
     const goldCollected = Math.floor(embers / embersPerGold)
-    if (goldCollected > 0) {
-      player.addMoney(goldCollected, true, null)
+    if (goldCollected > 0) player.addMoney(goldCollected, true, null)
+    // the client flies the embers into the gold counter, then shows the income
+    if (embers > 0) {
       this.room.clients
         .find((client) => client.auth.uid === player.id)
-        ?.send(Transfer.PLAYER_INCOME, goldCollected)
+        ?.send(Transfer.GALE_WINGS_COLLECT, {
+          goldCollected,
+          simulationId: this.id
+        })
     }
     if (embers >= GALE_WINGS_EMBERS_FOR_FIRE_SHARD) {
       player.items.push(Item.FIRE_SHARD)

@@ -488,6 +488,27 @@ export default function Game() {
         playBlessingSong(blessing, getGameScene() ?? undefined)
       )
 
+      room.onMessage(
+        Transfer.GALE_WINGS_COLLECT,
+        ({
+          goldCollected,
+          simulationId
+        }: {
+          goldCollected: number
+          simulationId: string
+        }) => {
+          const showIncome = () => {
+            if (goldCollected > 0) showMoneyToast(goldCollected)
+          }
+          const battle = getGameScene()?.battle
+          if (battle?.simulation?.id === simulationId) {
+            battle.collectGaleWingsEmbers(showIncome)
+          } else {
+            showIncome()
+          }
+        }
+      )
+
       /* Guide refusals answer something the player just did on the board, so
          they float there rather than docking in a corner as a toast. */
       const showGuideMessage = (message: string) => {
