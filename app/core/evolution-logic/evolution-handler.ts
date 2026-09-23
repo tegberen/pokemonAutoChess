@@ -55,7 +55,10 @@ export function carryOverPermanentStats(
     "speDef",
     "speed",
     "ap",
-    "luck"
+    "luck",
+    "critChance",
+    "critPower",
+    "pp"
   ] as const
   const pkm = pokemonsBeforeEvolution[0].name
   const baseData = PokemonFactory.createPokemonFromName(pkm)
@@ -70,7 +73,10 @@ export function carryOverPermanentStats(
       speDef: Stat.SPE_DEF,
       speed: Stat.SPEED,
       ap: Stat.AP,
-      luck: Stat.LUCK
+      luck: Stat.LUCK,
+      critChance: Stat.CRIT_CHANCE,
+      critPower: Stat.CRIT_POWER,
+      pp: Stat.PP
     }
     pokemonEvolved.applyStat(statMapping[stat], sumOfPermaStatsModifier) // can be negative or positive
   }
@@ -113,5 +119,9 @@ export function carryOverPermanentStats(
 
   pokemonEvolved.silverSpoonRounds = Math.max(
     ...pokemonsBeforeEvolution.map((pokemon) => pokemon.silverSpoonRounds)
+  )
+
+  pokemonEvolved.motherYarnStages = Math.max(
+    ...pokemonsBeforeEvolution.map((pokemon) => pokemon.motherYarnStages)
   )
 }

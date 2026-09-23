@@ -251,6 +251,7 @@ export enum Blessing {
   SAND_BUDDIES = "SAND_BUDDIES",
   GLAIVE_STRIKE = "GLAIVE_STRIKE",
   MOUNTAIN_EGG = "MOUNTAIN_EGG",
+  MOTHER_YARN = "MOTHER_YARN",
   YOU_FORGOT_SOMETHING = "YOU_FORGOT_SOMETHING",
   THINK_FAST = "THINK_FAST",
   WISE_SPENDING = "WISE_SPENDING",
@@ -790,6 +791,9 @@ export const BP_REWARDS_COMPONENTS = 2
 export const BP_REWARDS_RECURRING_COMPONENTS = 1
 export const BP_REWARDS_ROUND_INTERVAL = 5
 export const SILVER_SPOON_ROUNDS_BY_STAR = [3, 2, 1] as const
+export const MOTHER_YARN_STAGES_BY_STAR = [3, 2, 1] as const
+// the length of motherYarnWovenAnimation on the client, so the item swaps as it lands
+export const MOTHER_YARN_WEAVE_ANIMATION_DURATION = 2000
 export const MOLE_MAZE_DELAY = 3
 export const HAIL_TO_THE_KING_MAX_HP = 100
 export const HAIL_TO_THE_KING_ATTACK = 10
@@ -1100,7 +1104,8 @@ export const HERO_BLESSING_GIFT: { [blessing in Blessing]?: Pkm } = {
   [Blessing.COLONY]: Pkm.SCATTERBUG,
   [Blessing.SAND_BUDDIES]: Pkm.SANDILE,
   [Blessing.GLAIVE_STRIKE]: Pkm.FRIGIBAX,
-  [Blessing.MOUNTAIN_EGG]: Pkm.HAPPINY
+  [Blessing.MOUNTAIN_EGG]: Pkm.HAPPINY,
+  [Blessing.MOTHER_YARN]: Pkm.SEWADDLE
 }
 
 export const HERO_BLESSING_FAMILY: { [blessing in Blessing]?: Pkm } = {
@@ -1137,7 +1142,8 @@ export const HERO_BLESSING_FAMILY: { [blessing in Blessing]?: Pkm } = {
   [Blessing.SAND_BUDDIES]: Pkm.SANDILE,
   [Blessing.SILVER_SPOON]: Pkm.ABRA,
   [Blessing.GLAIVE_STRIKE]: Pkm.FRIGIBAX,
-  [Blessing.MOUNTAIN_EGG]: Pkm.HAPPINY
+  [Blessing.MOUNTAIN_EGG]: Pkm.HAPPINY,
+  [Blessing.MOTHER_YARN]: Pkm.SEWADDLE
 }
 
 /* hero blessings that also relocate the player to a region where their family
@@ -1146,7 +1152,8 @@ export const HERO_BLESSING_MOVES_REGION: Blessing[] = [
   Blessing.ROOSTING_FLOCK,
   Blessing.SHELL_ARMOR_BLESSING,
   Blessing.PLUNDER,
-  Blessing.FROST_BURST
+  Blessing.FROST_BURST,
+  Blessing.MOTHER_YARN
 ]
 
 /* these hero blessings keep their state on the simulation rather than on the

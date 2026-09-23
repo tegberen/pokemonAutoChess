@@ -724,6 +724,13 @@ export default class Player extends Schema implements IPlayer {
         }
       })
     }
+    if (this.blessings?.includes(Blessing.MOTHER_YARN)) {
+      pokemons.forEach((pokemon) => {
+        if (PkmFamily[pokemon.name] === Pkm.SEWADDLE) {
+          pokemon.types.add(Synergy.NORMAL)
+        }
+      })
+    }
     const previousSynergies = this.synergies.toMap()
     let updatedSynergies = computeSynergies(
       pokemons,

@@ -12,11 +12,13 @@ import {
   WATER_FOUNTAIN_REGIONS,
   getBlessingsAvailable
 } from "../config/game/blessings"
+import { ItemStats } from "../config/game/items"
 import { getAltFormForPlayer } from "../config/game/pokemons"
 import { RarityCost } from "../config/game/shop"
 import { rollWaterPonds } from "../config/game/water-ponds"
 import { giveRandomEgg } from "../core/eggs"
 import { EvolutionManager } from "../core/evolution-logic/evolution-manager"
+import { getStrongestUnitOfFamily } from "../core/unit-score"
 import {
   getUnlockedFlowerPots,
   grantWishItemToFlowerPot
@@ -114,6 +116,8 @@ import {
   SELECTIVE_GENETICS_MAX_COST,
   SHADY_PRICE_FREE_ROLLS,
   SILVER_SPOON_ROUNDS_BY_STAR,
+  MOTHER_YARN_STAGES_BY_STAR,
+  MOTHER_YARN_WEAVE_ANIMATION_DURATION,
   SINGULARITY_I_STAGES,
   SINGULARITY_II_STAGES,
   SINGULARITY_OPTIONS,
@@ -129,7 +133,12 @@ import {
   getGymTrainerRoster
 } from "../types/enum/Blessing"
 import type { DungeonPMDO } from "../types/enum/Dungeon"
-import { BattleResult, PokemonActionState, Rarity } from "../types/enum/Game"
+import {
+  BattleResult,
+  PokemonActionState,
+  Rarity,
+  Stat
+} from "../types/enum/Game"
 import {
   Berries,
   Dishes,
@@ -935,6 +944,61 @@ export function forgeSilverSpoons(player: Player) {
     pokemon.addItems([Item.TWISTED_SPOON], player)
     pokemon.silverSpoonRounds = 0
   })
+}
+
+// a unit holds at most one loose component: a second one crafts with it on drop
+export function weaveMotherYarn(player: Player, room: GameRoom) {
+  if (player.blessings?.includes(Blessing.MOTHER_YARN) !== true) return
+  const fieldedUnits = schemaValues(player.board).filter((p) => !isOnBench(p))
+  const weaver = getStrongestUnitOfFamily(fieldedUnits, Pkm.SEWADDLE)
+  if (!weaver) return
+  const component = schemaValues(weaver.items).find((item) =>
+    isIn(ItemComponents, item)
+  )
+  if (!component) {
+    weaver.motherYarnStages = 0
+    return
+  }
+  weaver.motherYarnStages += 1
+  const stagesRequired =
+    MOTHER_YARN_STAGES_BY_STAR[Math.min(weaver.stars, 3) - 1] ?? 1
+  if (weaver.motherYarnStages < stagesRequired) return
+  const wovenItem = getItemCraftedFrom(component, Item.SILK_SCARF)
+  if (!wovenItem) return
+  weaver.motherYarnStages = 0
+  // like COOK, waits out the client rebuilding its board sprites for the new phase
+  room.clock.setTimeout(() => {
+    room.broadcast(Transfer.MOTHER_YARN_WOVEN, {
+      pokemonId: weaver.id,
+      component,
+      wovenItem
+    })
+    // the item swaps in as the woven item lands on the weaver, not before
+    room.clock.setTimeout(() => {
+      const stillWeaving =
+        player.board.get(weaver.id) === weaver &&
+        !isOnBench(weaver) &&
+        weaver.items.has(component)
+      if (!stillWeaving) return
+      // items are a set, so a copy already held would swallow the new one
+      if (weaver.items.has(wovenItem)) {
+        weaver.removeItems([wovenItem], player)
+        player.items.push(wovenItem)
+      }
+      weaver.removeItems([component], player)
+      weaver.addItems([wovenItem], player)
+      Object.entries(ItemStats[wovenItem] ?? {}).forEach(([stat, value]) =>
+        weaver.applyStat(stat === Stat.SHIELD ? Stat.HP : (stat as Stat), value)
+      )
+    }, MOTHER_YARN_WEAVE_ANIMATION_DURATION)
+  }, 1000)
+}
+
+function getItemCraftedFrom(itemA: Item, itemB: Item): Item | undefined {
+  const components = [itemA, itemB].sort().join()
+  return (Object.entries(ItemRecipe) as [Item, Item[]][]).find(
+    ([, recipe]) => [...recipe].sort().join() === components
+  )?.[0]
 }
 
 /* a non ground pokemon standing on a fully dug hole for long enough absorbs the
@@ -2230,6 +2294,8 @@ export const blessingEffectService: {
     heroBlessingEffect(Blessing.GLAIVE_STRIKE, player, state, room),
   [Blessing.MOUNTAIN_EGG]: (player, state, room) =>
     heroBlessingEffect(Blessing.MOUNTAIN_EGG, player, state, room),
+  [Blessing.MOTHER_YARN]: (player, state, room) =>
+    heroBlessingEffect(Blessing.MOTHER_YARN, player, state, room),
   [Blessing.YOU_FORGOT_SOMETHING]: () => true,
   [Blessing.THINK_FAST]: (player, state) => {
     const owned =

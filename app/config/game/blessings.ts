@@ -1775,6 +1775,12 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     icon: "mountain_egg",
     grantsPokemonImmediately: true
   },
+  [Blessing.MOTHER_YARN]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: [12],
+    icon: "mother_yarn",
+    grantsPokemonImmediately: true
+  },
   [Blessing.FROST_BURST]: {
     tier: BlessingTier.GOLD,
     availableAtStages: [12],

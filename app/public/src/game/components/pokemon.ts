@@ -1026,6 +1026,61 @@ export default class PokemonSprite extends DraggableObject {
     })
   }
 
+  motherYarnWovenAnimation(component: Item, wovenItem: Item) {
+    const knitY = -60
+    const knittingSprites = [
+      { item: component, side: -1 },
+      { item: Item.SILK_SCARF, side: 1 }
+    ].map(({ item, side }) => {
+      const sprite = this.scene.add
+        .sprite(side * 40, knitY, "item", item + ".png")
+        .setScale(0.35)
+        .setAlpha(0)
+      this.add(sprite)
+      this.scene.tweens.chain({
+        targets: sprite,
+        tweens: [
+          { alpha: 1, duration: 300, ease: "Sine.easeOut" },
+          { x: 0, duration: 450, ease: "Sine.easeInOut" }
+        ]
+      })
+      return sprite
+    })
+
+    this.scene.time.delayedCall(750, () => {
+      knittingSprites.forEach((sprite) => sprite.destroy())
+      if (!this.active) return
+      const burst = this.scene.add.sprite(0, knitY, "shine").setScale(1.5)
+      this.add(burst)
+      burst.play({ key: "shine", repeat: 0 })
+      burst.once(Phaser.Animations.Events.ANIMATION_COMPLETE, () =>
+        burst.destroy()
+      )
+      const woven = this.scene.add
+        .sprite(0, knitY, "item", wovenItem + ".png")
+        .setScale(0.35)
+      this.add(woven)
+      this.scene.tweens.chain({
+        targets: woven,
+        tweens: [
+          { scale: 0.5, duration: 350, ease: "Sine.easeOut" },
+          {
+            y: 0,
+            scale: 0.1,
+            alpha: 0,
+            duration: 400,
+            delay: 500,
+            ease: "Sine.easeIn"
+          }
+        ],
+        onComplete: () => {
+          woven.destroy()
+          if (this.active) this.emoteAnimation()
+        }
+      })
+    })
+  }
+
   digAnimation(buriedItem: Item | null) {
     this.orientation = Orientation.UP
     const g = <GameScene>this.scene

@@ -618,6 +618,15 @@ export default function Game() {
       )
 
       room.onMessage(
+        Transfer.MOTHER_YARN_WOVEN,
+        (message: { pokemonId: string; component: Item; wovenItem: Item }) => {
+          getGameScene()
+            ?.board?.pokemons.get(message.pokemonId)
+            ?.motherYarnWovenAnimation(message.component, message.wovenItem)
+        }
+      )
+
+      room.onMessage(
         Transfer.DIG,
         async (message: { pokemonId: string; buriedItem: Item | null }) => {
           setTimeout(() => {

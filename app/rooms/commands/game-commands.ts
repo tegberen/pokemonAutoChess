@@ -54,6 +54,7 @@ import {
   checkIndecisionSynergies,
   absorbFertileSoil,
   forgeSilverSpoons,
+  weaveMotherYarn,
   grantAdoptionBaby,
   serveFestivePicnicDishes,
   rollWaterFountainPonds,
@@ -2514,6 +2515,7 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
       if (!player.alive) return
       absorbFertileSoil(player)
       forgeSilverSpoons(player)
+      weaveMotherYarn(player, this.room)
       grantAdoptionBaby(player)
       serveFestivePicnicDishes(player)
       endIgnitionRound(player)
@@ -4117,7 +4119,9 @@ export function onPokemonChangePosition({
       state?.specialGameRule === SpecialGameRule.SLAMINGO ||
       player.blessings?.includes(Blessing.CROAGUNKS_AID) ||
       (player.blessings?.includes(Blessing.SILVER_SPOON) === true &&
-        PkmFamily[pokemon.name] === Pkm.ABRA)
+        PkmFamily[pokemon.name] === Pkm.ABRA) ||
+      (player.blessings?.includes(Blessing.MOTHER_YARN) === true &&
+        PkmFamily[pokemon.name] === Pkm.SEWADDLE)
     const itemsToRemove = schemaValues(pokemon.items).filter((item) => {
       return (
         isIn(RemovableItems, item) ||
