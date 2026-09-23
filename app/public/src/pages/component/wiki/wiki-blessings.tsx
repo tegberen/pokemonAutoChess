@@ -201,6 +201,7 @@ const PREPARATION_BLESSINGS = new Set<Blessing>([
 ])
 
 const ADDITIONAL_HERO_BLESSINGS = new Set<Blessing>([
+  Blessing.HONEY_EXPLORATION,
   Blessing.ALL_FOR_ONE,
   Blessing.ALL_FOURS,
   Blessing.BABY_OPENER,

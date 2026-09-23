@@ -55,6 +55,8 @@ import {
   absorbFertileSoil,
   forgeSilverSpoons,
   weaveMotherYarn,
+  sendTeddiursasExploring,
+  returnHoneyExplorers,
   grantAdoptionBaby,
   serveFestivePicnicDishes,
   rollWaterFountainPonds,
@@ -2516,6 +2518,7 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
       absorbFertileSoil(player)
       forgeSilverSpoons(player)
       weaveMotherYarn(player, this.room)
+      returnHoneyExplorers(player, this.state, this.room)
       grantAdoptionBaby(player)
       serveFestivePicnicDishes(player)
       endIgnitionRound(player)
@@ -3570,6 +3573,7 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
         /* QUEST_INDECISION banks synergies off the locked combat board, not the
            picking phase, so rotating synergies between rounds still counts */
         checkIndecisionSynergies(player)
+        sendTeddiursasExploring(player, this.state.stageLevel)
       }
     })
 

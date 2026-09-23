@@ -118,6 +118,10 @@ import {
   SILVER_SPOON_ROUNDS_BY_STAR,
   MOTHER_YARN_STAGES_BY_STAR,
   MOTHER_YARN_WEAVE_ANIMATION_DURATION,
+  HONEY_EXPLORATION_STAGES_BY_STAR,
+  HONEY_EXPLORATION_EPIC_STAGE,
+  HONEY_EXPLORATION_ULTRA_STAGE,
+  HONEY_EXPLORATION_LEGENDARY_STAGE,
   SINGULARITY_I_STAGES,
   SINGULARITY_II_STAGES,
   SINGULARITY_OPTIONS,
@@ -994,6 +998,91 @@ export function weaveMotherYarn(player: Player, room: GameRoom) {
   }, 1000)
 }
 
+export function sendTeddiursasExploring(player: Player, stageLevel: number) {
+  if (player.blessings?.includes(Blessing.HONEY_EXPLORATION) !== true) return
+  schemaValues(player.board).forEach((pokemon) => {
+    if (!isOnBench(pokemon) || PkmFamily[pokemon.name] !== Pkm.TEDDIURSA) return
+    if (
+      pokemon.action === PokemonActionState.EXPLORING ||
+      pokemon.action === PokemonActionState.DIGGING
+    ) {
+      return
+    }
+    pokemon.action = PokemonActionState.EXPLORING
+    const stagesAway =
+      HONEY_EXPLORATION_STAGES_BY_STAR[Math.min(pokemon.stars, 3) - 1] ?? 1
+    player.honeyExplorers.push({
+      pokemonId: pokemon.id,
+      returnStage: stageLevel + stagesAway
+    })
+  })
+}
+
+export function returnHoneyExplorers(
+  player: Player,
+  state: GameState,
+  room: GameRoom
+) {
+  const returning = player.honeyExplorers.filter(
+    (explorer) => explorer.returnStage <= state.stageLevel
+  )
+  player.honeyExplorers = player.honeyExplorers.filter(
+    (explorer) => explorer.returnStage > state.stageLevel
+  )
+  returning.forEach(({ pokemonId }) => {
+    const explorer = player.board.get(pokemonId)
+    if (!explorer) return
+    explorer.action = PokemonActionState.IDLE
+    player.items.push(Item.HONEY)
+    const friend = pickHoneyExplorationFriend(player, state)
+    if (friend) {
+      giftPokemonIfBenchHasRoom(player, friend, 0, (pokemon) => {
+        pokemon.honeyExplorationFriend = true
+        pokemon.types.add(Synergy.WILD)
+      })
+    }
+    // like COOK, waits out the client rebuilding its board sprites for the new phase
+    room.clock.setTimeout(() => {
+      room.clients
+        .find((client) => client.auth.uid === player.id)
+        ?.send(Transfer.COOK, { pokemonId, dishes: [Item.HONEY] })
+    }, 1000)
+  })
+  // explorers are skipped by merges while away, so copies may be waiting on them
+  if (returning.length > 0) room.checkEvolutionsAfterPokemonAcquired(player.id)
+}
+
+function pickHoneyExplorationFriend(
+  player: Player,
+  state: GameState
+): Pkm | undefined {
+  const stage = state.stageLevel
+  const isFindable = (pkm: Pkm) => {
+    const { regional, additional, unlockable, types } = getPokemonData(pkm)
+    // an already WILD friend would gain nothing from the WILD it is given
+    if (unlockable || types.includes(Synergy.WILD)) return false
+    if (regional && !player.canFindRegionalPokemon(pkm, state)) return false
+    return !additional || state.additionalPokemons.includes(PkmFamily[pkm])
+  }
+  // stars left out means any star level of that rarity
+  const friendKinds: { rarity: Rarity; stars?: number }[] =
+    stage >= HONEY_EXPLORATION_LEGENDARY_STAGE
+      ? [{ rarity: Rarity.LEGENDARY }]
+      : stage >= HONEY_EXPLORATION_ULTRA_STAGE
+        ? [{ rarity: Rarity.ULTRA, stars: 2 }, { rarity: Rarity.UNIQUE }]
+        : stage >= HONEY_EXPLORATION_EPIC_STAGE
+          ? [{ rarity: Rarity.EPIC, stars: 2 }]
+          : [{ rarity: Rarity.RARE, stars: 2 }]
+  const candidates = friendKinds.flatMap(({ rarity, stars }) =>
+    PRECOMPUTED_POKEMONS_PER_RARITY[rarity].filter(
+      (pkm) =>
+        (stars === undefined || getPokemonData(pkm).stars === stars) &&
+        isFindable(pkm)
+    )
+  )
+  return candidates.length > 0 ? pickRandomIn(candidates) : undefined
+}
+
 function getItemCraftedFrom(itemA: Item, itemB: Item): Item | undefined {
   const components = [itemA, itemB].sort().join()
   return (Object.entries(ItemRecipe) as [Item, Item[]][]).find(
@@ -1135,7 +1224,8 @@ export function rollWaterFountainPonds(player: Player) {
 function giftPokemonIfBenchHasRoom(
   player: Player,
   pkm: Pkm,
-  bonusMaxHp = 0
+  bonusMaxHp = 0,
+  prepare?: (pokemon: Pokemon) => void
 ): boolean {
   const freeCellX = getFirstAvailablePositionInBench(player.board, getBenchSize(player.blessings))
   if (freeCellX === null) return false
@@ -1143,6 +1233,7 @@ function giftPokemonIfBenchHasRoom(
     getAltFormForPlayer(pkm, player),
     player
   )
+  prepare?.(pokemon)
   pokemon.hp += bonusMaxHp
   pokemon.maxHP += bonusMaxHp
   pokemon.positionX = freeCellX
@@ -2306,6 +2397,8 @@ export const blessingEffectService: {
     heroBlessingEffect(Blessing.DECELERATE, player, state, room),
   [Blessing.JUNGLE_CACOPHONY]: (player, state, room) =>
     heroBlessingEffect(Blessing.JUNGLE_CACOPHONY, player, state, room),
+  [Blessing.HONEY_EXPLORATION]: (player, state, room) =>
+    heroBlessingEffect(Blessing.HONEY_EXPLORATION, player, state, room),
   [Blessing.YOU_FORGOT_SOMETHING]: () => true,
   [Blessing.THINK_FAST]: (player, state) => {
     const owned =

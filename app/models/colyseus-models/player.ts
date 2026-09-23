@@ -282,6 +282,11 @@ export default class Player extends Schema implements IPlayer {
     pokemonId: string
     returnStage: number
   }[] = []
+  // HONEY_EXPLORATION trips, kept apart so they neither pay LETTER loot nor block a new LETTER
+  honeyExplorers: {
+    pokemonId: string
+    returnStage: number
+  }[] = []
   scheduledBlessingGrants: ScheduledBlessingGrant[] = []
   // server-only mirror of GameState.blessingsByPlayerId, so combat code can read
   // a player's blessings without reaching for the room state
@@ -733,6 +738,9 @@ export default class Player extends Schema implements IPlayer {
         }
       })
     }
+    pokemons.forEach((pokemon) => {
+      if (pokemon.honeyExplorationFriend) pokemon.types.add(Synergy.WILD)
+    })
     const previousSynergies = this.synergies.toMap()
     let updatedSynergies = computeSynergies(
       pokemons,

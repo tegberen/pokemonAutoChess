@@ -124,4 +124,8 @@ export function carryOverPermanentStats(
   pokemonEvolved.motherYarnStages = Math.max(
     ...pokemonsBeforeEvolution.map((pokemon) => pokemon.motherYarnStages)
   )
+
+  pokemonEvolved.honeyExplorationFriend = pokemonsBeforeEvolution.some(
+    (pokemon) => pokemon.honeyExplorationFriend
+  )
 }

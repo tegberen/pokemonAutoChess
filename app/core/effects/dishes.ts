@@ -1,5 +1,9 @@
 import { FIGHTING_PHASE_DURATION, getBaseAltForm } from "../../config"
 import { Title } from "../../types"
+import {
+  Blessing,
+  HONEY_EXPLORATION_HONEY_DEFENSES
+} from "../../types/enum/Blessing"
 import { EffectEnum } from "../../types/enum/Effect"
 import { Berries, type Dishes, Item } from "../../types/enum/Item"
 import { Pkm } from "../../types/enum/Pokemon"
@@ -138,7 +142,16 @@ export const DishEffects: Record<(typeof Dishes)[number], Effect[]> = {
     })
   ],
   [Item.HERBA_MYSTICA_SALTY]: [runeProtectForNextFight],
-  [Item.HONEY]: [],
+  [Item.HONEY]: [
+    new OnDishConsumedEffect(({ entity, player }) => {
+      if (!entity || !player?.blessings?.includes(Blessing.HONEY_EXPLORATION)) {
+        return
+      }
+      const gain = HONEY_EXPLORATION_HONEY_DEFENSES
+      entity.addDefense(gain, entity, 0, false, true)
+      entity.addSpecialDefense(gain, entity, 0, false, true)
+    })
+  ],
   [Item.LARGE_LEEK]: [
     new OnSpawnEffect((entity) => {
       entity.effects.add(EffectEnum.ABILITY_CRIT)
