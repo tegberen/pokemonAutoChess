@@ -6138,6 +6138,10 @@
 			"name": "Sand Buddies",
 			"description": "Gain a strong Sandile. When your STRONGEST Sandile fails to KO its target with its Ability, a Trapinch with full PP appears nearby, at the same STAR level."
 		},
+		"KINGS_GAMBIT": {
+			"name": "King's Gambit",
+			"description": "Gain a Pawniard. Your STRONGEST Pawniard disappears at the start of combat and rejoins the fight when 4 allies have been KO'd, or when you have no other units left. It gains 20% of the total ATK and HP of its fallen allies, and 50 SPEED."
+		},
 		"HONEY_EXPLORATION": {
 			"name": "Honey Exploration",
 			"description": "Gain a Teddiursa. At the start of each fight, Teddiursa on your bench go exploring for 3/2/1 stages at 1/2/3 STAR. They return with HONEY and strong friends they met along the way, which also has WILD synergy. Eating HONEY also permanently grants 5 DEF and SPE_DEF."

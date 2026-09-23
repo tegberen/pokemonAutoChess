@@ -1284,6 +1284,7 @@ export default abstract class PokemonState {
   ) {
     pokemon.hp = 0 // prevent in-flight damage from killing the unit a second time
     pokemon.team = pokemon.baseTeam
+    pokemon.simulation.onKingsGambitAllyFallen(pokemon)
     if (pokemon.seizedEnemy) {
       pokemon.simulation.releaseSeizedPokemon(pokemon, board)
     }

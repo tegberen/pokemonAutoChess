@@ -258,6 +258,7 @@ export enum Blessing {
   DECELERATE = "DECELERATE",
   JUNGLE_CACOPHONY = "JUNGLE_CACOPHONY",
   HONEY_EXPLORATION = "HONEY_EXPLORATION",
+  KINGS_GAMBIT = "KINGS_GAMBIT",
   YOU_FORGOT_SOMETHING = "YOU_FORGOT_SOMETHING",
   THINK_FAST = "THINK_FAST",
   WISE_SPENDING = "WISE_SPENDING",
@@ -768,6 +769,10 @@ export const HONEY_EXPLORATION_HONEY_DEFENSES = 5
 export const HONEY_EXPLORATION_EPIC_STAGE = 17
 export const HONEY_EXPLORATION_ULTRA_STAGE = 22
 export const HONEY_EXPLORATION_LEGENDARY_STAGE = 27
+export const KINGS_GAMBIT_ALLIES_FALLEN = 4
+export const KINGS_GAMBIT_FALLEN_STATS_RATIO = 0.2
+export const KINGS_GAMBIT_SPEED = 50
+export const KINGS_GAMBIT_ENTRANCE_DELAY = 200
 export const SHELL_ARMOR_SPE_DEF_BY_STARS = [1, 3, 6]
 
 export const WOBBUFFETS_GOLD_PRIZE_RECYCLE_TICKETS = 2
@@ -1132,7 +1137,8 @@ export const HERO_BLESSING_GIFT: { [blessing in Blessing]?: Pkm } = {
   [Blessing.MULTISHOT]: Pkm.SOBBLE,
   [Blessing.DECELERATE]: Pkm.DUSKULL,
   [Blessing.JUNGLE_CACOPHONY]: Pkm.GROOKEY,
-  [Blessing.HONEY_EXPLORATION]: Pkm.TEDDIURSA
+  [Blessing.HONEY_EXPLORATION]: Pkm.TEDDIURSA,
+  [Blessing.KINGS_GAMBIT]: Pkm.PAWNIARD
 }
 
 export const HERO_BLESSING_FAMILY: { [blessing in Blessing]?: Pkm } = {
@@ -1175,7 +1181,8 @@ export const HERO_BLESSING_FAMILY: { [blessing in Blessing]?: Pkm } = {
   [Blessing.GALE_WINGS]: Pkm.FLETCHLING,
   [Blessing.MULTISHOT]: Pkm.SOBBLE,
   [Blessing.DECELERATE]: Pkm.DUSKULL,
-  [Blessing.JUNGLE_CACOPHONY]: Pkm.GROOKEY
+  [Blessing.JUNGLE_CACOPHONY]: Pkm.GROOKEY,
+  [Blessing.KINGS_GAMBIT]: Pkm.PAWNIARD
 }
 
 /* hero blessings that also relocate the player to a region where their family

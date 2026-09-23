@@ -128,6 +128,10 @@ import {
   GALE_WINGS_EMBERS_FOR_FIRE_SHARD,
   GALE_WINGS_EMBERS_PER_GOLD_BY_STAR,
   DECELERATE_SPEED_CAP,
+  KINGS_GAMBIT_ALLIES_FALLEN,
+  KINGS_GAMBIT_FALLEN_STATS_RATIO,
+  KINGS_GAMBIT_SPEED,
+  KINGS_GAMBIT_ENTRANCE_DELAY,
   SHUTTLE_BUS_MAX_PP,
   POTENTIAL_ENERGY_SHIELD,
   POTENTIAL_ENERGY_SPEED,
@@ -370,6 +374,19 @@ function spreadNegativeStatuses(dying: PokemonEntity, board: Board) {
     )
 }
 
+const KINGS_GAMBIT_CARRIED_STATS = [
+  "atk",
+  "def",
+  "speDef",
+  "ap",
+  "speed",
+  "critChance",
+  "critPower",
+  "luck",
+  "range",
+  "shield"
+] as const
+
 export default class Simulation extends Schema implements ISimulation {
   @type("string") weather: Weather = Weather.NEUTRAL
   @type("string") winnerId = ""
@@ -444,6 +461,13 @@ export default class Simulation extends Schema implements ISimulation {
     team: Team
     timer: number
     marching?: Pokemon[]
+  }[] = []
+  kingsGambitWaiting: {
+    champion: PokemonEntity
+    player: Player
+    alliesFallen: number
+    fallenAttack: number
+    fallenMaxHP: number
   }[] = []
   // flags each marched-in unit had before, so stop() restores them exactly
   reveilleLockedPokemon = new Map<
@@ -4218,6 +4242,11 @@ export default class Simulation extends Schema implements ISimulation {
     const galeWingsChampion = championOf.get(Blessing.GALE_WINGS)
     if (galeWingsChampion) galeWingsChampion.pp = galeWingsChampion.maxPP
 
+    const kingsGambitChampion = championOf.get(Blessing.KINGS_GAMBIT)
+    if (kingsGambitChampion) {
+      this.hideKingsGambitChampion(kingsGambitChampion, player)
+    }
+
     const highBreachingChampion = championOf.get(Blessing.HIGH_BREACHING)
     if (highBreachingChampion) {
       highBreachingChampion.skill = Ability.HIGH_BREACHING
@@ -5133,6 +5162,10 @@ export default class Simulation extends Schema implements ISimulation {
   }
 
   update(dt: number) {
+    // a side emptied without a KO (a unit leaving the fight) still gets its king
+    this.kingsGambitWaiting
+      .filter(({ champion }) => this.hasNoKingsGambitUnitsLeft(champion.team))
+      .forEach((waiting) => this.returnKingsGambitChampion(waiting))
     if (this.blueTeam.size === 0 || this.redTeam.size === 0) {
       this.onFinish()
     }
@@ -5480,6 +5513,106 @@ export default class Simulation extends Schema implements ISimulation {
     substitute.positionY = 0
     substitute.manifestationLocked = true
     loser.board.set(substitute.id, substitute)
+  }
+
+  getTeamEntities(team: Team) {
+    return team === Team.BLUE_TEAM ? this.blueTeam : this.redTeam
+  }
+
+  hideKingsGambitChampion(champion: PokemonEntity, player: Player) {
+    this.board.setEntityOnCell(champion.positionX, champion.positionY, undefined)
+    this.getTeamEntities(champion.team).delete(champion.id)
+    this.kingsGambitWaiting.push({
+      champion,
+      player,
+      alliesFallen: 0,
+      fallenAttack: 0,
+      fallenMaxHP: 0
+    })
+  }
+
+  // a Substitute is a decoy, not a unit the king waits behind
+  hasNoKingsGambitUnitsLeft(team: Team, falling?: PokemonEntity) {
+    return [...this.getTeamEntities(team).values()].every(
+      (ally) =>
+        ally === falling || ally.hp <= 0 || ally.name === Pkm.SUBSTITUTE
+    )
+  }
+
+  // runs before the fallen unit's own death effects, so an effect that hands
+  // something to an ally, like DESTINY_KNOT, can already find the returned king
+  onKingsGambitAllyFallen(fallen: PokemonEntity) {
+    this.kingsGambitWaiting
+      .filter(({ champion }) => fallen.team === champion.team)
+      .forEach((waiting) => {
+        if (
+          !fallen.isSpawn &&
+          fallen.name !== Pkm.SUBSTITUTE &&
+          fallen.player === waiting.player
+        ) {
+          waiting.alliesFallen += 1
+          waiting.fallenAttack += fallen.atk
+          waiting.fallenMaxHP += fallen.maxHP
+        }
+        if (
+          waiting.alliesFallen >= KINGS_GAMBIT_ALLIES_FALLEN ||
+          this.hasNoKingsGambitUnitsLeft(fallen.team, fallen)
+        ) {
+          this.returnKingsGambitChampion(waiting)
+        }
+      })
+  }
+
+  // spawned fresh for the same reason as releaseSeizedPokemon
+  returnKingsGambitChampion(waiting: Simulation["kingsGambitWaiting"][number]) {
+    this.kingsGambitWaiting = this.kingsGambitWaiting.filter(
+      (other) => other !== waiting
+    )
+    const { champion, player } = waiting
+    const place =
+      this.board.getClosestAvailablePlace(
+        champion.positionX,
+        champion.positionY
+      ) ?? this.getFirstFreeCell(champion.team)
+    if (!place) return
+    const returned = this.addPokemon(
+      champion.refToBoardPokemon as Pokemon,
+      place.x,
+      place.y,
+      champion.team,
+      false,
+      false,
+      player
+    )
+    returned.heroBlessings.add(Blessing.KINGS_GAMBIT)
+    returned.isBlessedHero = true
+    // the fresh unit only re-runs its items and synergies, so it takes over the
+    // hidden king's stats to keep what combat start did to it (GRACIDEA_FLOWER,
+    // Wish bonuses, an enemy's SPEED cap); max HP goes through addMaxHP to heal
+    KINGS_GAMBIT_CARRIED_STATS.forEach((stat) => {
+      returned[stat] = champion[stat]
+    })
+    returned.addMaxHP(champion.maxHP - returned.maxHP, returned, 0, false)
+    // waits for the client to draw the fresh unit, so the swords have a king to circle
+    returned.commands.push(
+      new DelayedCommand(
+        () => returned.broadcastAbility({ skill: "KINGS_GAMBIT_ENTRANCE" }),
+        KINGS_GAMBIT_ENTRANCE_DELAY
+      )
+    )
+    returned.addAttack(
+      KINGS_GAMBIT_FALLEN_STATS_RATIO * waiting.fallenAttack,
+      returned,
+      0,
+      false
+    )
+    returned.addMaxHP(
+      KINGS_GAMBIT_FALLEN_STATS_RATIO * waiting.fallenMaxHP,
+      returned,
+      0,
+      false
+    )
+    returned.addSpeed(KINGS_GAMBIT_SPEED, returned, 0, false)
   }
 
   /* Dracovish takes an enemy out of the fight: it leaves the board and its team

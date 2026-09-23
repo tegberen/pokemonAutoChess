@@ -508,6 +508,7 @@ Every balance change on this server, newest first.
 - Decelerate {{new}} | Prismatic Wish at stage 12: gain a Duskull. While a Duskull is on your board, enemies start combat with at most 30 SPEED. Your STRONGEST Duskull's ability also applies FATIGUE and BLINDED to the enemies it damages
 - Jungle Cacophony {{new}} | Prismatic Wish at stage 12: gain a Grookey. Your STRONGEST Grookey drums instead of attacking, even with enemies in RANGE. Its drum beats reach all allies within RANGE instead of only ADJACENT ones, and burn 1/2/4 PP from each enemy within RANGE
 - Honey Exploration {{new}} | Prismatic Wish at stage 12: gain a Teddiursa. At the start of each fight, Teddiursa on your bench go exploring for 3/2/1 stages at 1/2/3 STAR, returning with a HONEY and a strong friend met along the way, which also has WILD synergy. Eating HONEY also permanently grants 5 DEF and SPE_DEF
+- King's Gambit {{new}} | Prismatic Wish at stage 12: gain a Pawniard. Your STRONGEST Pawniard disappears at the start of combat and rejoins the fight when 4 allies have been KO'd, or when you have no other units left. It gains 20% of the total ATK and HP of its fallen allies, and 50 SPEED
 
 **Fixes**
 - Evolution | permanent CRIT_CHANCE, CRIT_POWER and PP gains now carry over when a Pokémon evolves, like its other permanent stats

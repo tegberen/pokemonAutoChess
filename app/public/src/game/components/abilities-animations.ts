@@ -1036,6 +1036,75 @@ function unisonStarfallAnimation(): AbilityAnimation {
   }
 }
 
+const KINGS_GAMBIT_SWORDS = 4
+const KINGS_GAMBIT_SWORD_SCALE = 1.3
+const KINGS_GAMBIT_ORBIT_RADIUS = 58
+const KINGS_GAMBIT_ORBIT_FLATTEN = 0.45
+const KINGS_GAMBIT_ORBIT_TURNS = 1.5
+const KINGS_GAMBIT_ORBIT_HEIGHT = -20
+const KINGS_GAMBIT_SPIRAL_OUT = 0.3
+const KINGS_GAMBIT_ORBIT_DURATION = 2000
+const KINGS_GAMBIT_GLOW_COLOR = 0xffd35a
+
+// the returning king's swords spiral out and circle it, tips to the sky. Judgement
+// is drawn tip-down, so each is turned over; the orbit is an ellipse on the board
+// plane, and a sword passes behind the king on the far half of the circle
+function kingsGambitEntranceAnimation(): AbilityAnimation {
+  return ({ scene, positionX, positionY, flip, pokemonsOnBoard }) => {
+    const king = pokemonsOnBoard.find(
+      (sprite) =>
+        sprite.positionX === positionX && sprite.positionY === positionY
+    )
+    const [cellX, cellY] = transformEntityCoordinates(positionX, positionY, flip)
+    const swords = range(0, KINGS_GAMBIT_SWORDS - 1).flatMap(() => {
+      const sword = addAbilitySprite(scene, Ability.JUDGEMENT, 0, [cellX, cellY], {
+        rotation: Math.PI,
+        scale: KINGS_GAMBIT_SWORD_SCALE,
+        alpha: 0,
+        destroyOnComplete: false,
+        animOptions: { repeat: -1 }
+      })
+      if (!sword) return []
+      sword.enableFilters()
+      sword.filters?.internal.addGlow(KINGS_GAMBIT_GLOW_COLOR, 6, 0, 0.2)
+      return [sword]
+    })
+    if (swords.length === 0) return
+    king?.royalAuraAnimation(KINGS_GAMBIT_ORBIT_DURATION)
+
+    scene.tweens.addCounter({
+      from: 0,
+      to: 1,
+      duration: KINGS_GAMBIT_ORBIT_DURATION,
+      onUpdate: (tween) => {
+        const progress = (tween.getValue() ?? 0) as number
+        const centerX = king?.active ? king.x : cellX
+        const centerY =
+          (king?.active ? king.y : cellY) + KINGS_GAMBIT_ORBIT_HEIGHT
+        const spiral = Math.min(1, progress / KINGS_GAMBIT_SPIRAL_OUT)
+        const radius = KINGS_GAMBIT_ORBIT_RADIUS * Phaser.Math.Easing.Sine.Out(spiral)
+        const alpha = Math.min(spiral * 2, (1 - progress) / 0.2, 1)
+        swords.forEach((sword, index) => {
+          // the swords can be wiped early with the fight's other effects
+          if (!sword.active) return
+          const angle =
+            (index / swords.length) * Math.PI * 2 +
+            progress * KINGS_GAMBIT_ORBIT_TURNS * Math.PI * 2
+          const depthSide = Math.sin(angle)
+          sword
+            .setPosition(
+              centerX + Math.cos(angle) * radius,
+              centerY + depthSide * radius * KINGS_GAMBIT_ORBIT_FLATTEN
+            )
+            .setDepth(depthSide < 0 ? DEPTH.BOOST_BACK : DEPTH.BOOST_FRONT)
+            .setAlpha(alpha)
+        })
+      },
+      onComplete: () => swords.forEach((sword) => sword.destroy())
+    })
+  }
+}
+
 const TRICK_ROOM_PINK = 0xff90d0
 const TRICK_ROOM_WHITE = 0xfff0fa
 const TRICK_ROOM_LINGER = 1000
@@ -1139,8 +1208,8 @@ function trickRoomSlowAnimation(): AbilityAnimation {
   }
 }
 
-/* aimed in screen space: a flipped board mirrors the vertical axis, so an angle
-   taken from grid coordinates points diagonal shots the wrong way */
+// aimed in screen space: a flipped board mirrors the vertical axis, so an angle
+// taken from grid coordinates points diagonal shots the wrong way
 function snipeShotProjectile(args: AbilityAnimationArgs, scale: number) {
   const gridAngle = angleBetween(
     [args.positionX, args.positionY],
@@ -3943,6 +4012,7 @@ export const AbilitiesAnimations: {
   ["UNISON_NOVA"]: unisonNovaAnimation(),
   ["UNISON_STARFALL"]: unisonStarfallAnimation(),
   ["MULTISHOT"]: (args) => snipeShotProjectile(args, 1.5),
+  ["KINGS_GAMBIT_ENTRANCE"]: kingsGambitEntranceAnimation(),
   ["GLAIVE_STRIKE_MARK"]: glaiveStrikeMarkAnimation(),
   ["GLAIVE_STRIKE_SWORD"]: glaiveStrikeSwordAnimation(),
   ["MAGNETOSPHERE_ATTRACT"]: magnetosphereFieldAnimation(true),

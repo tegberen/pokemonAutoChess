@@ -104,6 +104,8 @@ const KI_AURA_PHASES = [
 ]
 const KI_AURA_RESIDUAL = { strength: 0.8, pulse: 0.4, simmerSpeed: 0.8 }
 const KI_AURA_COLOR = 0x73cda5
+const ROYAL_AURA_COLOR = 0xffd35a
+const ROYAL_AURA_STRENGTH = 10
 const KI_AURA_SHADE_COLOR = 0x1f6b4f
 const KI_AURA_SHADE_ALPHA = 0.45
 const KI_AURA_GLOW_SCALE = 0.15
@@ -1149,6 +1151,26 @@ export default class PokemonSprite extends DraggableObject {
       })
     }
   }
+
+  // swells in, beats slowly, fades out, then the glow is removed so it never lingers
+  royalAuraAnimation(duration: number) {
+    this.sprite.enableFilters()
+    const glow = this.sprite.filters?.internal.addGlow(ROYAL_AURA_COLOR, 0, 0, 0.2)
+    if (!glow) return
+    this.scene.tweens.addCounter({
+      from: 0,
+      to: 1,
+      duration,
+      onUpdate: (tween) => {
+        const progress = tween.getValue() ?? 0
+        const envelope = Math.sin(progress * Math.PI)
+        const heartbeat = 1 + 0.35 * Math.sin(progress * Math.PI * 6)
+        glow.outerStrength = ROYAL_AURA_STRENGTH * envelope * heartbeat
+      },
+      onComplete: () => this.sprite.filters?.internal.remove(glow)
+    })
+  }
+
   auraAnimation(
     scene: GameScene | DebugScene,
     alreadyActive: boolean,
