@@ -2298,6 +2298,8 @@ export const blessingEffectService: {
     heroBlessingEffect(Blessing.MOTHER_YARN, player, state, room),
   [Blessing.CELL_BRAWLER]: (player, state, room) =>
     heroBlessingEffect(Blessing.CELL_BRAWLER, player, state, room),
+  [Blessing.GALE_WINGS]: (player, state, room) =>
+    heroBlessingEffect(Blessing.GALE_WINGS, player, state, room),
   [Blessing.YOU_FORGOT_SOMETHING]: () => true,
   [Blessing.THINK_FAST]: (player, state) => {
     const owned =

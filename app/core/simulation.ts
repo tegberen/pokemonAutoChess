@@ -125,6 +125,8 @@ import {
   HIGH_BREACHING_MAX_PP,
   ORBITAL_STRIKE_RANGE_BONUS,
   CELL_BRAWLER_STAT_BONUS,
+  GALE_WINGS_EMBERS_FOR_FIRE_SHARD,
+  GALE_WINGS_EMBERS_PER_GOLD_BY_STAR,
   SHUTTLE_BUS_MAX_PP,
   POTENTIAL_ENERGY_SHIELD,
   POTENTIAL_ENERGY_SPEED,
@@ -4193,6 +4195,9 @@ export default class Simulation extends Schema implements ISimulation {
       cellBrawlerChampion.range = 1
     }
 
+    const galeWingsChampion = championOf.get(Blessing.GALE_WINGS)
+    if (galeWingsChampion) galeWingsChampion.pp = galeWingsChampion.maxPP
+
     const highBreachingChampion = championOf.get(Blessing.HIGH_BREACHING)
     if (highBreachingChampion) {
       highBreachingChampion.skill = Ability.HIGH_BREACHING
@@ -5494,6 +5499,31 @@ export default class Simulation extends Schema implements ISimulation {
     released.pp = victim.pp
   }
 
+  collectGaleWingsEmbers(player: Player) {
+    if (!player.blessings?.includes(Blessing.GALE_WINGS)) return
+    const collector = getStrongestUnitOfFamily(
+      schemaValues(player.board).filter((pokemon) => !isOnBench(pokemon)),
+      Pkm.FLETCHLING
+    )
+    if (!collector) return
+    const embers = this.board.boardEffects.filter((effects) =>
+      effects.has(EffectEnum.EMBER)
+    ).length
+    const embersPerGold =
+      GALE_WINGS_EMBERS_PER_GOLD_BY_STAR[Math.min(collector.stars, 3) - 1] ?? 2
+    const goldCollected = Math.floor(embers / embersPerGold)
+    if (goldCollected > 0) {
+      player.addMoney(goldCollected, true, null)
+      this.room.clients
+        .find((client) => client.auth.uid === player.id)
+        ?.send(Transfer.PLAYER_INCOME, goldCollected)
+    }
+    if (embers >= GALE_WINGS_EMBERS_FOR_FIRE_SHARD) {
+      player.items.push(Item.FIRE_SHARD)
+      player.galeWingsFireShards += 1
+    }
+  }
+
   onFinish() {
     this.finishedAt = Date.now()
     this.finished = true
@@ -5577,6 +5607,7 @@ export default class Simulation extends Schema implements ISimulation {
       const isPVEPlayer = playerId === "pve" || !player
       if (isPVEPlayer) continue
       const isGhostPlayer = this.id !== player.simulationId
+      if (!isGhostPlayer) this.collectGaleWingsEmbers(player)
       const isGhostOpponent =
         sideId === this.bluePlayerId && this.isGhostBattle
       const isPvE = opponentPlayerId === "pve"

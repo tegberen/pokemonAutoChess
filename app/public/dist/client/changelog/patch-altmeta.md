@@ -502,6 +502,7 @@ Every balance change on this server, newest first.
 - Mountain Egg {{new}} | Prismatic Wish at stage 12: gain a Happiny. The NUTRITIOUS_EGG of your STRONGEST Happiny also grants the dish effects of all your GOURMET Pokémon, each dish once, without permanent dish effects
 - Mother Yarn {{new}} | Prismatic Wish at stage 12: gain a Sewaddle and move to a random Sewaddle region. Sewaddle gains NORMAL and returns its items when benched. After 3/2/1 stages at 1/2/3 STAR, your STRONGEST Sewaddle completes its held component with a SILK_SCARF and permanently gains the crafted item's stats, SHIELD as HP
 - Cell Brawler {{new}} | Prismatic Wish at stage 12: gain a Solosis. Your STRONGEST Solosis gains 50% HP, DEF and SPE_DEF but becomes 1 range. It heals for 50% of the damage dealt by its ability, with 50% of overheal gained as max HP
+- Gale Wings {{new}} | Prismatic Wish at stage 12: gain a Fletchling. Your STRONGEST Fletchling starts combat with max PP. After combat, collect any EMBER remaining on the field, gaining 1 GOLD for every 4/3/2 EMBER collected at 1/2/3 STAR, and a FIRE_SHARD if at least 10 are collected, which does not count towards your max total
 
 **Fixes**
 - Evolution | permanent CRIT_CHANCE, CRIT_POWER and PP gains now carry over when a Pokémon evolves, like its other permanent stats

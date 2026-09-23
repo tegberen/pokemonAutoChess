@@ -1787,6 +1787,12 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     icon: "cell_brawler",
     grantsPokemonImmediately: true
   },
+  [Blessing.GALE_WINGS]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: [12],
+    icon: "gale_wings",
+    grantsPokemonImmediately: true
+  },
   [Blessing.FROST_BURST]: {
     tier: BlessingTier.GOLD,
     availableAtStages: [12],

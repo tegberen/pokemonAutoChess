@@ -311,6 +311,8 @@ export default class Player extends Schema implements IPlayer {
   blessingWands: Item[] = []
   // server-only: gold the PLUNDER champion spent casting Treasure Rush this fight
   plunderGoldSpentThisFight: number = 0
+  // server-only: GALE_WINGS shards held, which the FIRE synergy's one-shard limit ignores
+  galeWingsFireShards: number = 0
   // server-only: RIVALRY gains are capped over the whole game
   rivalryAttackGained: number = 0
   rivalryMaxHpGained: number = 0

@@ -1548,9 +1548,17 @@ export function endIgnitionRound(player: Player) {
 }
 
 const giveFireShardEffect = new OnStageStartEffect(({ player }) => {
+  const fireShardsHeld = player.items.filter(
+    (item) => item === Item.FIRE_SHARD
+  ).length
+  // a spent shard is counted as the synergy's own, so the next one comes back
+  player.galeWingsFireShards = Math.min(
+    player.galeWingsFireShards,
+    fireShardsHeld
+  )
   if (
     getSynergyTier(player.synergies, Synergy.FIRE) >= FIRE_SHARD_MIN_TIER &&
-    player.items.includes(Item.FIRE_SHARD) === false &&
+    fireShardsHeld === player.galeWingsFireShards &&
     player.life > FIRE_SHARD_LIFE_COST
   ) {
     player.items.push(Item.FIRE_SHARD)
