@@ -6140,6 +6140,10 @@
 			"name": "Sand Buddies",
 			"description": "Gain a strong Sandile. When your STRONGEST Sandile fails to KO its target with its Ability, a Trapinch with full PP appears nearby, at the same STAR level."
 		},
+		"STONE_SADDLE": {
+			"name": "Stone Saddle",
+			"description": "Gain a Rhyhorn. Your STRONGEST Rhyhorn's ability is replaced with Headlong Rush and set to 80 PP, and executes enemies in its path below 20% max HP. At the start of the fight, it carries your farthest ally on the bench into combat, gaining its base HP, ATK, DEF and SPE_DEF. When Rhyhorn is KO'd, the ally fights on its own."
+		},
 		"INFINITE_CONVERSION": {
 			"name": "Infinite Conversion",
 			"description": "Gain a Porygon. After winning a player combat, your STRONGEST Porygon permanently keeps the synergy it copied in that combat. Once per opponent."

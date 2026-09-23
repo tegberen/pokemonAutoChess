@@ -23,6 +23,7 @@ import {
 } from "../../../../types"
 import {
   type AbilityAnimationArgs,
+  AnimationType,
   AttackSprite,
   AttackSpriteScale
 } from "../../../../types/Animation"
@@ -30,8 +31,10 @@ import { Ability } from "../../../../types/enum/Ability"
 import { Awakening } from "../../../../types/enum/Awakening"
 import {
   Orientation,
+  OrientationFlip,
   PokemonActionState,
   PokemonTint,
+  SpriteType,
   Stat,
   Team
 } from "../../../../types/enum/Game"
@@ -107,6 +110,18 @@ const KI_AURA_COLOR = 0x73cda5
 const FEAR_TINT = 0xb070ff
 const ROYAL_AURA_COLOR = 0xffd35a
 const ROYAL_AURA_STRENGTH = 10
+const STONE_SADDLE_RIDER_HEIGHT = 18
+const STONE_SADDLE_RIDER_SCALE = 1.8
+const STONE_SADDLE_RIDER_ANIMATION_ROLES = [
+  "walk",
+  "attack",
+  "ability",
+  "emote",
+  "hop",
+  "hurt",
+  "sleep",
+  "eat"
+] as const
 const KI_AURA_SHADE_COLOR = 0x1f6b4f
 const KI_AURA_SHADE_ALPHA = 0.45
 const KI_AURA_GLOW_SCALE = 0.15
@@ -208,6 +223,7 @@ export default class PokemonSprite extends DraggableObject {
   blessedHeroMark: GameObjects.Image | undefined
   shinySafeguardMark: GameObjects.Image | undefined
   criticalPathMark: GameObjects.Image | undefined
+  stoneSaddleRider: GameObjects.Sprite | undefined
   ignitionCooldownBadge: GameObjects.Container | undefined
   awakeningGlow: Phaser.Filters.Glow | undefined
   awakeningGlowTween: Phaser.Tweens.Tween | undefined
@@ -1728,6 +1744,9 @@ export default class PokemonSprite extends DraggableObject {
     if (pokemon.isOnCriticalPath) {
       this.addCriticalPathMark()
     }
+    if (pokemon.stoneSaddleRiderIndex) {
+      this.addStoneSaddleRider(pokemon.stoneSaddleRiderIndex)
+    }
     if (pokemon.isBlessedHero) {
       this.addBlessedHeroMark()
     } else if (pokemon.isChosenOne) {
@@ -2572,6 +2591,73 @@ export default class PokemonSprite extends DraggableObject {
       .setTintMode(Phaser.TintModes.FILL)
       .setDepth(DEPTH.POKEMON_SHADOW)
     this.addAt(this.criticalPathMark, 0)
+  }
+
+  // the rider copies its mount's action through its own species' animation for that role
+  animateStoneSaddleRider(
+    mountAnimation: AnimationType,
+    orientation: Orientation,
+    repeat = -1,
+    timeScale = 1
+  ) {
+    const rider = this.stoneSaddleRider
+    if (!rider) return
+    const riderIndex = rider.texture.key
+    const mountConfig = {
+      ...DEFAULT_POKEMON_ANIMATION_CONFIG,
+      ...PokemonAnimations[PkmByIndex[this.pokemon.index]]
+    }
+    const riderConfig = {
+      ...DEFAULT_POKEMON_ANIMATION_CONFIG,
+      ...PokemonAnimations[PkmByIndex[riderIndex]]
+    }
+    const role = STONE_SADDLE_RIDER_ANIMATION_ROLES.find(
+      (role) => mountConfig[role] === mountAnimation
+    )
+    const riderAnimation = role ? riderConfig[role] : mountAnimation
+    const riderAnimationKey = (animation: AnimationType, facing: Orientation) =>
+      `${riderIndex}/${PokemonTint.NORMAL}/${animation}/${SpriteType.ANIM}/${facing}`
+    const key = [
+      riderAnimationKey(riderAnimation, orientation),
+      riderAnimationKey(riderAnimation, Orientation.DOWN),
+      riderAnimationKey(AnimationType.Idle, orientation),
+      riderAnimationKey(AnimationType.Idle, Orientation.DOWN)
+    ].find((candidate) => this.scene.anims.exists(candidate))
+    if (!key) return
+    const alreadyLooping =
+      rider.anims.currentAnim?.key === key &&
+      rider.anims.isPlaying &&
+      repeat === -1
+    if (alreadyLooping) return
+    rider.anims.play({ key, repeat, timeScale })
+  }
+
+  addStoneSaddleRider(riderIndex: string) {
+    const riderIdlePrefix = `${PokemonTint.NORMAL}/${AnimationType.Idle}/${SpriteType.ANIM}/${Orientation.DOWN}`
+    const riderTextureLoaded = this.scene.textures.exists(riderIndex)
+      ? Promise.resolve()
+      : loadCompressedAtlas(this.scene, riderIndex)
+    riderTextureLoaded.then(() => {
+      if (!this.active || this.stoneSaddleRider) return
+      if (!this.scene.textures.exists(riderIndex)) return
+      this.scene.animationManager?.createPokemonAnimations(
+        riderIndex,
+        PokemonTint.NORMAL
+      )
+      const rider = new GameObjects.Sprite(
+        this.scene,
+        0,
+        -STONE_SADDLE_RIDER_HEIGHT,
+        riderIndex,
+        `${riderIdlePrefix}/0000`
+      ).setScale(STONE_SADDLE_RIDER_SCALE)
+      this.stoneSaddleRider = rider
+      this.animateStoneSaddleRider(
+        AnimationType.Idle,
+        this.flip ? OrientationFlip[this.orientation] : this.orientation
+      )
+      this.addAt(rider, this.getIndex(this.sprite) + 1)
+    })
   }
 
   removeCriticalPathMark() {

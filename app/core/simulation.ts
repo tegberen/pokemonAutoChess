@@ -132,6 +132,7 @@ import {
   KINGS_GAMBIT_FALLEN_STATS_RATIO,
   KINGS_GAMBIT_SPEED,
   KINGS_GAMBIT_ENTRANCE_DELAY,
+  STONE_SADDLE_MAX_PP,
   SHUTTLE_BUS_MAX_PP,
   POTENTIAL_ENERGY_SHIELD,
   POTENTIAL_ENERGY_SPEED,
@@ -462,6 +463,8 @@ export default class Simulation extends Schema implements ISimulation {
     timer: number
     marching?: Pokemon[]
   }[] = []
+  // STONE_SADDLE: the bench ally each champion Rhyhorn carries, keyed by the mount
+  stoneSaddleRiders = new Map<string, { rider: Pokemon; player: Player }>()
   // INFINITE_CONVERSION: what each player's champion Porygon copied this fight
   infiniteConversionCopies = new Map<
     string,
@@ -4252,6 +4255,13 @@ export default class Simulation extends Schema implements ISimulation {
       this.hideKingsGambitChampion(kingsGambitChampion, player)
     }
 
+    const stoneSaddleChampion = championOf.get(Blessing.STONE_SADDLE)
+    if (stoneSaddleChampion) {
+      stoneSaddleChampion.skill = Ability.HEADLONG_RUSH
+      stoneSaddleChampion.maxPP = STONE_SADDLE_MAX_PP
+      this.mountStoneSaddleRider(stoneSaddleChampion, player)
+    }
+
     const highBreachingChampion = championOf.get(Blessing.HIGH_BREACHING)
     if (highBreachingChampion) {
       highBreachingChampion.skill = Ability.HIGH_BREACHING
@@ -5655,6 +5665,50 @@ export default class Simulation extends Schema implements ISimulation {
     released.hp = victim.hp
     released.shield = victim.shield
     released.pp = victim.pp
+  }
+
+  // the farthest bench ally rides the champion in, lending it its base stats
+  mountStoneSaddleRider(champion: PokemonEntity, player: Player) {
+    const rider = schemaValues(player.board)
+      .filter(
+        (pokemon) =>
+          isOnBench(pokemon) &&
+          pokemon.name !== Pkm.EGG &&
+          pokemon.action !== PokemonActionState.EXPLORING &&
+          pokemon.action !== PokemonActionState.DIGGING &&
+          !pokemon.supportiveSoul &&
+          !isGrudgeSubstitute(pokemon)
+      )
+      .sort((a, b) => b.positionX - a.positionX)[0]
+    if (!rider) return
+    // a ghost fight's player is fighting elsewhere; its real bench is not ours to lock
+    if (player.simulationId === this.id) this.lockReveilleUnit(rider)
+    champion.addMaxHP(rider.maxHP, champion, 0, false)
+    champion.addAttack(rider.atk, champion, 0, false)
+    champion.addDefense(rider.def, champion, 0, false)
+    champion.addSpecialDefense(rider.speDef, champion, 0, false)
+    champion.stoneSaddleRiderIndex = rider.index
+    this.stoneSaddleRiders.set(champion.id, { rider, player })
+  }
+
+  // the rider fights on its own once its mount falls
+  onStoneSaddleMountFallen(mount: PokemonEntity) {
+    const riding = this.stoneSaddleRiders.get(mount.id)
+    if (!riding) return
+    this.stoneSaddleRiders.delete(mount.id)
+    const place =
+      this.board.getClosestAvailablePlace(mount.positionX, mount.positionY) ??
+      this.getClosestFreeCellTo(mount.positionX, mount.positionY, mount.team)
+    if (!place) return
+    this.addPokemon(
+      riding.rider,
+      place.x,
+      place.y,
+      mount.team,
+      false,
+      false,
+      riding.player
+    )
   }
 
   keepInfiniteConversionSynergy(player: Player, opponentId: string) {

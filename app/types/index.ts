@@ -678,6 +678,7 @@ export interface IPokemonEntity {
   isBlessedHero: boolean
   isChosenOne: boolean
   isOnCriticalPath: boolean
+  stoneSaddleRiderIndex: string
   hasFallenBelowHalfHp: boolean
 }
 

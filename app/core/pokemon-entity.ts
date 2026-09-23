@@ -184,6 +184,7 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
   @type("uint8") focusPunchCharge: number = 0
   @type("uint8") trueDamageMarkTimer: number = 0
   @type("boolean") isOnCriticalPath: boolean = false
+  @type("string") stoneSaddleRiderIndex: string = ""
   cooldown = 500
   oneSecondCooldown = 1000
   state: PokemonState

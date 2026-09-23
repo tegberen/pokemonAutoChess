@@ -511,10 +511,12 @@ Every balance change on this server, newest first.
 - King's Gambit {{new}} | Prismatic Wish at stage 12: gain a Pawniard. Your STRONGEST Pawniard disappears at the start of combat and rejoins the fight when 4 allies have been KO'd, or when you have no other units left. It gains 20% of the total ATK and HP of its fallen allies, and 50 SPEED
 - Apex Predator {{new}} | Prismatic Wish at stage 12: gain a Shinx. Your STRONGEST Shinx's ability inflicts BLINDED and WOUND on the enemy it dashes to for 4 seconds. When it arrives, every other enemy within 2 cells gets FEAR for 2 seconds
 - Infinite Conversion {{new}} | Prismatic Wish at stage 12: gain a Porygon. After winning a player combat, your STRONGEST Porygon permanently keeps the synergy it copied in that combat. Once per opponent
+- Stone Saddle {{new}} | Prismatic Wish at stage 12: gain a Rhyhorn. Your STRONGEST Rhyhorn's ability is replaced with Headlong Rush and set to 80 PP, and executes enemies in its path below 20% max HP. At the start of the fight, it carries your farthest ally on the bench into combat, gaining its base HP, ATK, DEF and SPE_DEF. When Rhyhorn is KO'd, the ally fights on its own
 
 **Fixes**
 - Evolution | permanent CRIT_CHANCE, CRIT_POWER and PP gains now carry over when a Pokémon evolves, like its other permanent stats
 - Trick Room | ADJACENT enemies faster than the user now also receive FATIGUE and BLINDED, as described
+- Headlong Rush | the farthest enemy now always takes the final hit, even when it is not on the rush line, and enemies pushed into the path are no longer hit twice
 
 ### 21 September 2026
 

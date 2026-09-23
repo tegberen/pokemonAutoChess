@@ -447,6 +447,14 @@ export default class AnimationManager {
       animKey = `${textureIndex}/${tint}/${animation}/${SpriteType.ANIM}/${orientation}`
     }
     const shadowKey = `${textureIndex}/${tint}/${animation}/${SpriteType.SHADOW}/${orientation}`
+    pkmSprite.animateStoneSaddleRider(
+      animation,
+      config.flip
+        ? OrientationFlip[pkmSprite.orientation]
+        : pkmSprite.orientation,
+      config.repeat,
+      config.timeScale
+    )
 
     if (
       pkmSprite.sprite.anims.currentAnim?.key === animKey &&
