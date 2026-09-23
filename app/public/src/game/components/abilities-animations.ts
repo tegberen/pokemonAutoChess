@@ -1036,6 +1036,34 @@ function unisonStarfallAnimation(): AbilityAnimation {
   }
 }
 
+/* aimed in screen space: a flipped board mirrors the vertical axis, so an angle
+   taken from grid coordinates points diagonal shots the wrong way */
+function snipeShotProjectile(args: AbilityAnimationArgs, scale: number) {
+  const gridAngle = angleBetween(
+    [args.positionX, args.positionY],
+    [args.targetX, args.targetY]
+  )
+  const endX = args.positionX + Math.round(Math.cos(gridAngle) * 10)
+  const endY = args.positionY + Math.round(Math.sin(gridAngle) * 10)
+  const [startScreenX, startScreenY] = transformEntityCoordinates(
+    args.positionX,
+    args.positionY,
+    args.flip
+  )
+  const [endScreenX, endScreenY] = transformEntityCoordinates(
+    endX,
+    endY,
+    args.flip
+  )
+  projectile({
+    ability: "SNIPE_SHOT/projectile",
+    scale,
+    duration: 1000,
+    rotation: Math.atan2(endScreenY - startScreenY, endScreenX - startScreenX),
+    endCoords: [endX, endY, args.flip]
+  })(args)
+}
+
 // the mark follows the unit it was put on, so it stays readable if it moves
 function glaiveStrikeMarkAnimation(): AbilityAnimation {
   return ({ scene, positionX, positionY, flip, pokemonsOnBoard }) => {
@@ -3811,6 +3839,7 @@ export const AbilitiesAnimations: {
   ["UNISON_BEAM"]: unisonBeamAnimation(),
   ["UNISON_NOVA"]: unisonNovaAnimation(),
   ["UNISON_STARFALL"]: unisonStarfallAnimation(),
+  ["MULTISHOT"]: (args) => snipeShotProjectile(args, 1.5),
   ["GLAIVE_STRIKE_MARK"]: glaiveStrikeMarkAnimation(),
   ["GLAIVE_STRIKE_SWORD"]: glaiveStrikeSwordAnimation(),
   ["MAGNETOSPHERE_ATTRACT"]: magnetosphereFieldAnimation(true),
@@ -5883,27 +5912,13 @@ export const AbilitiesAnimations: {
   },
 
   [Ability.SNIPE_SHOT]: (args) => {
-    const targetAngle = angleBetween(
-      [args.positionX, args.positionY],
-      [args.targetX, args.targetY]
-    )
     const orientationAngle = OrientationAngle[args.orientation] ?? 0
     const coordinates = transformEntityCoordinates(
       args.positionX,
       args.positionY,
       args.flip
     )
-    projectile({
-      ability: "SNIPE_SHOT/projectile",
-      scale: 3,
-      duration: 1000,
-      rotation: -targetAngle,
-      endCoords: [
-        args.positionX + Math.round(Math.cos(targetAngle) * 10),
-        args.positionY + Math.round(Math.sin(targetAngle) * 10),
-        args.flip
-      ]
-    })(args)
+    snipeShotProjectile(args, 3)
     staticAnimation({
       ability: "SNIPE_SHOT/shoot",
       x: coordinates[0] + Math.round(Math.cos(orientationAngle) * 30),

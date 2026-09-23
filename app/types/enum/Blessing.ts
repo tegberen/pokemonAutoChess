@@ -254,6 +254,7 @@ export enum Blessing {
   MOTHER_YARN = "MOTHER_YARN",
   CELL_BRAWLER = "CELL_BRAWLER",
   GALE_WINGS = "GALE_WINGS",
+  MULTISHOT = "MULTISHOT",
   YOU_FORGOT_SOMETHING = "YOU_FORGOT_SOMETHING",
   THINK_FAST = "THINK_FAST",
   WISE_SPENDING = "WISE_SPENDING",
@@ -754,6 +755,9 @@ export const CELL_BRAWLER_ABILITY_LIFESTEAL = 0.5
 export const CELL_BRAWLER_OVERHEAL_TO_MAX_HP = 0.5
 export const GALE_WINGS_EMBERS_PER_GOLD_BY_STAR = [4, 3, 2] as const
 export const GALE_WINGS_EMBERS_FOR_FIRE_SHARD = 10
+export const MULTISHOT_BASE_EXTRA_SHOTS = 2
+export const MULTISHOT_DAMAGE_RATIO = 0.25
+export const MULTISHOT_SHOT_INTERVAL = 150
 export const SHELL_ARMOR_SPE_DEF_BY_STARS = [1, 3, 6]
 
 export const WOBBUFFETS_GOLD_PRIZE_RECYCLE_TICKETS = 2
@@ -1114,7 +1118,8 @@ export const HERO_BLESSING_GIFT: { [blessing in Blessing]?: Pkm } = {
   [Blessing.MOUNTAIN_EGG]: Pkm.HAPPINY,
   [Blessing.MOTHER_YARN]: Pkm.SEWADDLE,
   [Blessing.CELL_BRAWLER]: Pkm.SOLOSIS,
-  [Blessing.GALE_WINGS]: Pkm.FLETCHLING
+  [Blessing.GALE_WINGS]: Pkm.FLETCHLING,
+  [Blessing.MULTISHOT]: Pkm.SOBBLE
 }
 
 export const HERO_BLESSING_FAMILY: { [blessing in Blessing]?: Pkm } = {
@@ -1154,7 +1159,8 @@ export const HERO_BLESSING_FAMILY: { [blessing in Blessing]?: Pkm } = {
   [Blessing.MOUNTAIN_EGG]: Pkm.HAPPINY,
   [Blessing.MOTHER_YARN]: Pkm.SEWADDLE,
   [Blessing.CELL_BRAWLER]: Pkm.SOLOSIS,
-  [Blessing.GALE_WINGS]: Pkm.FLETCHLING
+  [Blessing.GALE_WINGS]: Pkm.FLETCHLING,
+  [Blessing.MULTISHOT]: Pkm.SOBBLE
 }
 
 /* hero blessings that also relocate the player to a region where their family

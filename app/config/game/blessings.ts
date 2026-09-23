@@ -1793,6 +1793,12 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     icon: "gale_wings",
     grantsPokemonImmediately: true
   },
+  [Blessing.MULTISHOT]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: [12],
+    icon: "multishot",
+    grantsPokemonImmediately: true
+  },
   [Blessing.FROST_BURST]: {
     tier: BlessingTier.GOLD,
     availableAtStages: [12],
