@@ -1219,12 +1219,24 @@ function apexPredatorRoarAnimation(args: AbilityAnimationArgs) {
   })
 }
 
-const TRICK_ROOM_PINK = 0xff90d0
-const TRICK_ROOM_WHITE = 0xfff0fa
+// dusky tones so the room sits in the scene instead of glowing on top of it
+const TRICK_ROOM_OUTLINE = 0x2e1f44
+const TRICK_ROOM_FLOOR = 0x1e1230
+const TRICK_ROOM_FACE_DARK = 0x4a3668
+const TRICK_ROOM_FACE = 0x6b5090
+const TRICK_ROOM_TOP = 0xb9a3d4
+const TRICK_ROOM_TOP_LIGHT = 0xd9c9ec
+// the one saturated tone, kept to lit edges so the room still reads as PSYCHIC
+const TRICK_ROOM_ACCENT = 0xe07ac8
+const TRICK_ROOM_GLARE = 0xf4ecfa
 const TRICK_ROOM_LINGER = 1000
+const TRICK_ROOM_RISE = 350
 // sits just inside the outer edges of the 3x3 cells the ability hits
 const TRICK_ROOM_HALF_SIZE = (CELL_WIDTH * 3 - 16) / 2
-const TRICK_ROOM_CORNER = 24
+// one art pixel on screen, so the room shares the terrain's chunky grid
+const TRICK_ROOM_PIXEL = 3
+const TRICK_ROOM_WALL_HEIGHT = 8
+const TRICK_ROOM_WALL_THICKNESS = 2
 
 function trickRoomAnimation(): AbilityAnimation {
   return ({ scene, targetX, targetY, flip }) => {
@@ -1232,57 +1244,153 @@ function trickRoomAnimation(): AbilityAnimation {
     const room = scene.add
       .graphics({ x, y })
       .setDepth(DEPTH.ABILITY_GROUND_LEVEL)
-      .setScale(0.3)
       .setAlpha(0)
     scene.abilitiesVfxGroup?.add(room)
-    drawTrickRoom(room)
-    scene.tweens.chain({
-      targets: room,
-      tweens: [
-        { scale: 1, alpha: 1, duration: 350, ease: "Sine.easeOut" },
-        { alpha: 0.6, duration: TRICK_ROOM_LINGER, ease: "Sine.easeInOut" },
-        { alpha: 0, duration: 350, ease: "Sine.easeIn" }
-      ],
-      onComplete: () => room.destroy()
+    scene.tweens.addCounter({
+      from: 0,
+      to: 1,
+      duration: TRICK_ROOM_RISE,
+      ease: "Sine.easeOut",
+      onUpdate: (tween) => {
+        const rise = (tween.getValue() ?? 0) as number
+        room.setAlpha(rise)
+        drawTrickRoom(room, Math.round(rise * TRICK_ROOM_WALL_HEIGHT))
+      },
+      onComplete: () =>
+        scene.tweens.addCounter({
+          from: 0,
+          to: 1,
+          duration: TRICK_ROOM_LINGER,
+          ease: "Sine.easeInOut",
+          onUpdate: (tween) => {
+            const sweep = (tween.getValue() ?? 0) as number
+            room.setAlpha(1 - 0.25 * sweep)
+            drawTrickRoom(room, TRICK_ROOM_WALL_HEIGHT, sweep)
+          },
+          onComplete: () =>
+            scene.tweens.add({
+              targets: room,
+              alpha: 0,
+              duration: 350,
+              ease: "Sine.easeIn",
+              onComplete: () => room.destroy()
+            })
+        })
     })
   }
 }
 
-function drawTrickRoom(room: Phaser.GameObjects.Graphics) {
-  const h = TRICK_ROOM_HALF_SIZE
-  room.fillStyle(TRICK_ROOM_PINK, 0.07)
-  room.fillRect(-h, -h, h * 2, h * 2)
-  drawPixelPath(
-    room,
-    [
-      { x: -h, y: -h },
-      { x: h, y: -h },
-      { x: h, y: h },
-      { x: -h, y: h },
-      { x: -h, y: -h }
-    ],
-    [
-      { grid: 4, size: 4, color: TRICK_ROOM_PINK, alpha: 0.6 },
-      { grid: 2, size: 2, color: TRICK_ROOM_WHITE, alpha: 0.6 }
-    ]
-  )
-  const c = TRICK_ROOM_CORNER
-  for (const [sx, sy] of [
-    [-1, -1],
-    [1, -1],
-    [1, 1],
-    [-1, 1]
-  ]) {
-    drawPixelPath(
-      room,
-      [
-        { x: sx * (h - c), y: sy * (h - 6) },
-        { x: sx * (h - 6), y: sy * (h - 6) },
-        { x: sx * (h - 6), y: sy * (h - c) }
-      ],
-      [{ grid: 3, size: 3, color: TRICK_ROOM_WHITE, alpha: 0.7 }]
-    )
+// seen from the front like the rest of the board: walls stand straight up the
+// screen, showing the back wall's inner face, the front wall's outer face and
+// the tops of all four. Everything is in art pixels, in flat tones
+function drawTrickRoom(
+  room: Phaser.GameObjects.Graphics,
+  wallHeight: number,
+  sweep?: number
+) {
+  const P = TRICK_ROOM_PIXEL
+  const half = Math.round(TRICK_ROOM_HALF_SIZE / P)
+  const thickness = TRICK_ROOM_WALL_THICKNESS
+  const block = (
+    color: number,
+    alpha: number,
+    left: number,
+    top: number,
+    width: number,
+    height: number
+  ) => {
+    if (width <= 0 || height <= 0) return
+    room.fillStyle(color, alpha)
+    room.fillRect(left * P, top * P, width * P, height * P)
   }
+  // a glare streak leaning up and to the right, one art pixel per row
+  const streak = (
+    face: { left: number; top: number; width: number },
+    column: number,
+    width: number,
+    alpha: number
+  ) => {
+    for (let row = 0; row < wallHeight; row++) {
+      const start = column + (wallHeight - 1 - row)
+      const left = Math.max(start, face.left)
+      const right = Math.min(start + width, face.left + face.width)
+      block(TRICK_ROOM_GLARE, alpha, left, face.top + row, right - left, 1)
+    }
+  }
+  room.clear()
+
+  const inner = half * 2
+  const outerLeft = -half - thickness
+  const outer = inner + thickness * 2
+  const backTop = -half - wallHeight
+  const frontTop = half - wallHeight
+
+  block(TRICK_ROOM_FACE, 0.08, -half, -half, inner, inner)
+  // contact shadow where the floor meets the back wall
+  block(TRICK_ROOM_FLOOR, 0.14, -half, -half, inner, 2)
+  for (const line of [-1, 1]) {
+    const offset = Math.round((line * half) / 3)
+    block(TRICK_ROOM_TOP, 0.08, offset, -half, 1, inner)
+    block(TRICK_ROOM_TOP, 0.08, -half, offset, inner, 1)
+  }
+
+  // back wall, inner face
+  block(TRICK_ROOM_FACE, 0.3, -half, backTop, inner, wallHeight)
+  block(TRICK_ROOM_TOP, 0.25, -half, backTop, inner, 1)
+  block(TRICK_ROOM_FACE_DARK, 0.3, -half, -half - 1, inner, 1)
+
+  // front wall, outer face, spanning the side walls' ends too
+  block(TRICK_ROOM_FACE_DARK, 0.28, outerLeft, frontTop, outer, wallHeight)
+  block(TRICK_ROOM_FACE, 0.3, outerLeft, frontTop, outer, 1)
+
+  const backFace = { left: -half, top: backTop, width: inner }
+  const frontFace = { left: outerLeft, top: frontTop, width: outer }
+  const backGlare = -half + Math.round(inner * 0.12)
+  const frontGlare = -half + Math.round(inner * 0.62)
+  streak(backFace, backGlare, 2, 0.3)
+  streak(backFace, backGlare + 4, 1, 0.3)
+  streak(frontFace, frontGlare, 2, 0.25)
+  streak(frontFace, frontGlare + 4, 1, 0.25)
+  if (sweep !== undefined) {
+    const sweepColumn = Math.round(
+      outerLeft - wallHeight + sweep * (outer + wallHeight)
+    )
+    const sweepAlpha = 0.4 * Math.sin(sweep * Math.PI)
+    streak(backFace, sweepColumn, 3, sweepAlpha)
+    streak(frontFace, sweepColumn, 3, sweepAlpha)
+  }
+
+  // the four wall tops, lit from above
+  const tops: [number, number, number, number][] = [
+    [outerLeft, backTop - thickness, outer, thickness],
+    [outerLeft, frontTop - thickness, outer, thickness],
+    [outerLeft, backTop, thickness, frontTop - backTop - thickness],
+    [half, backTop, thickness, frontTop - backTop - thickness]
+  ]
+  tops.forEach(([left, top, width, height]) => {
+    block(TRICK_ROOM_TOP, 0.6, left, top, width, height)
+    block(TRICK_ROOM_TOP_LIGHT, 0.5, left, top, width, 1)
+  })
+  // the back wall's top catches the most light
+  block(TRICK_ROOM_ACCENT, 0.8, -half, backTop - thickness, inner, 1)
+  // 3x3 caps overhang the 2-pixel wall tops outward by one pixel
+  for (const [left, top] of [
+    [outerLeft - 1, backTop - thickness - 1],
+    [half, backTop - thickness - 1],
+    [outerLeft - 1, frontTop - thickness - 1],
+    [half, frontTop - thickness - 1]
+  ]) {
+    block(TRICK_ROOM_ACCENT, 0.95, left, top, 3, 3)
+    block(TRICK_ROOM_GLARE, 0.9, left, top, 1, 1)
+  }
+
+  // one-pixel outline around the whole silhouette
+  const outlineTop = backTop - thickness - 1
+  const outlineHeight = half + 1 - outlineTop
+  block(TRICK_ROOM_OUTLINE, 0.55, outerLeft - 1, outlineTop, outer + 2, 1)
+  block(TRICK_ROOM_OUTLINE, 0.55, outerLeft - 1, half, outer + 2, 1)
+  block(TRICK_ROOM_OUTLINE, 0.55, outerLeft - 1, outlineTop, 1, outlineHeight)
+  block(TRICK_ROOM_OUTLINE, 0.55, half + thickness, outlineTop, 1, outlineHeight)
 }
 
 // three chevrons sliding down: the usual "stat lowered" cue, here for SPEED
@@ -1311,8 +1419,8 @@ function trickRoomSlowAnimation(): AbilityAnimation {
               { x: 12, y: chevronY - 8 }
             ],
             [
-              { grid: 4, size: 5, color: TRICK_ROOM_PINK, alpha: 1 - progress },
-              { grid: 2, size: 2, color: TRICK_ROOM_WHITE, alpha: 1 - progress }
+              { grid: 4, size: 5, color: TRICK_ROOM_FACE, alpha: 1 - progress },
+              { grid: 2, size: 2, color: TRICK_ROOM_TOP_LIGHT, alpha: 1 - progress }
             ]
           )
         }
