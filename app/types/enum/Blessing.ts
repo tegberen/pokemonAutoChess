@@ -803,6 +803,25 @@ export const BLESSINGS_WITH_PICK_SONG = [
   Blessing.ITS_GOING_DOWN
 ]
 
+// winning a game with each of these unlocks the ULTRA title
+export const PRISMATIC_ULTRA_HEROES = [
+  Blessing.GLAIVE_STRIKE,
+  Blessing.MOUNTAIN_EGG,
+  Blessing.MOTHER_YARN,
+  Blessing.CELL_BRAWLER,
+  Blessing.GALE_WINGS,
+  Blessing.MULTISHOT,
+  Blessing.DECELERATE,
+  Blessing.JUNGLE_CACOPHONY,
+  Blessing.HONEY_EXPLORATION,
+  Blessing.KINGS_GAMBIT,
+  Blessing.APEX_PREDATOR,
+  Blessing.INFINITE_CONVERSION,
+  Blessing.STONE_SADDLE,
+  Blessing.ITS_GOING_DOWN,
+  Blessing.ROLLOUT_RALLY
+]
+
 export const SHELL_ARMOR_SPE_DEF_BY_STARS = [1, 3, 6]
 
 export const WOBBUFFETS_GOLD_PRIZE_RECYCLE_TICKETS = 2

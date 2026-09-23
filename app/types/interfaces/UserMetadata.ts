@@ -1,4 +1,5 @@
 import type { Emotion, Role, Title } from ".."
+import type { Blessing } from "../enum/Blessing"
 import type { Language } from "../enum/Language"
 import type { Synergy } from "../enum/Synergy"
 import type { AvatarCosmeticId } from "../enum/AvatarCosmetic"
@@ -30,6 +31,8 @@ interface IUserMetadata {
   titles: Title[]
   // synergies whose lesson has been completed, for the SCHOLAR title
   guideLessonsCompleted?: Synergy[]
+  // Prismatic Ultra Hero Wishes won a game with, for the ULTRA title
+  ultraHeroesWon?: Blessing[]
   unlockedAvatarCosmetics?: AvatarCosmeticId[]
   title: "" | Title
   role: Role

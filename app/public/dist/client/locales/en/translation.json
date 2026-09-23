@@ -4139,6 +4139,8 @@
 		"PRIDE": "Pride",
 		"THE_SCRIBBLER": "The Scribbler",
 		"SHOW_OFF": "Show Off",
+		"ULTRA": "Ultra",
+		"GRAND_CHAMPION": "Grand Champion",
 		"HOT_STREAK": "Hot",
 		"ANCIENT": "Ancient",
 		"BOTANIST": "Botanist",
@@ -4254,6 +4256,8 @@
 		"PRIDE": "Complete the Rainbow Hour Wish Mission",
 		"THE_SCRIBBLER": "Win a Smeargle Scribble Tournament",
 		"SHOW_OFF": "Win a game with the Show Off Wish",
+		"ULTRA": "Win a game with every Prismatic Ultra Hero Wish",
+		"GRAND_CHAMPION": "Victor of the semi-annual Wish Festival Tournament",
 		"HOT_STREAK": "Win 3 games in a row",
 		"ANCIENT": "Complete every Fossil unlock in a single game",
 		"WHALE": "Win a game with the High Breaching Wish"
@@ -6186,7 +6190,7 @@
 		},
 		"CELL_BRAWLER": {
 			"name": "Cell Brawler",
-			"description": "Gain a Solosis. Your STRONGEST Solosis gains 50% HP, DEF and SPE_DEF but becomes 1 RANGE. It heals for 50% of the damage dealt by its ability, with 50% of overheal gained as max HP."
+			"description": "Gain a Solosis. Your STRONGEST Solosis gains 50% HP, DEF and SPE_DEF, but its RANGE is set to 1. It heals for 50% of the damage dealt by its ability, with 50% of overheal gained as max HP."
 		},
 		"MOTHER_YARN": {
 			"name": "Mother Yarn",

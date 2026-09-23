@@ -5,6 +5,7 @@ import { CollectionUtils } from "../../core/collection"
 import { notificationsService } from "../../services/notifications"
 import { Emotion, Role, Title } from "../../types"
 import { AVATAR_COSMETIC_IDS } from "../../types/enum/AvatarCosmetic"
+import { Blessing } from "../../types/enum/Blessing"
 import { Pkm, PkmIndex } from "../../types/enum/Pokemon"
 import { Synergy } from "../../types/enum/Synergy"
 import type {
@@ -122,6 +123,7 @@ const userMetadataSchema = new Schema({
     }
   ],
   guideLessonsCompleted: [{ type: String, enum: Synergy }],
+  ultraHeroesWon: [{ type: String, enum: Blessing }],
   unlockedAvatarCosmetics: [{ type: String, enum: AVATAR_COSMETIC_IDS }],
   pokemonCollection: {
     type: Map,

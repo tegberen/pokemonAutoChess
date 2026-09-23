@@ -550,6 +550,40 @@ ul.titles > li.selected .title-name {
   color: var(--color-fg-gold);
 }
 
+.title-ultra-toggle {
+  margin-left: 0.5em;
+  padding: 0 0.4em;
+  background: none;
+  border: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  transform: rotate(180deg);
+  transition: transform 0.15s;
+}
+
+.title-ultra-toggle.open {
+  transform: none;
+}
+
+.title-ultra-heroes {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35em;
+  margin-top: 0.4em;
+}
+
+.title-ultra-heroes img {
+  opacity: 0.3;
+  filter: grayscale(1);
+}
+
+.title-ultra-heroes img.won {
+  opacity: 1;
+  filter: none;
+}
+
 .search-suggestions {
   display: flex;
   padding: 0;

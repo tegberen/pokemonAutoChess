@@ -5,7 +5,9 @@ import {
   TITLES_UNLOCKING_THEMES,
   type TitleUnlockingTheme
 } from "../../../../../config"
+import { Blessings } from "../../../../../config/game/blessings"
 import { Title } from "../../../../../types"
+import { PRISMATIC_ULTRA_HEROES } from "../../../../../types/enum/Blessing"
 import { isIn } from "../../../../../utils/array"
 import { useAppDispatch, useAppSelector } from "../../../hooks"
 import {
@@ -35,6 +37,8 @@ const JAC_TITLES = new Set<Title>([
   Title.THE_SCRIBBLER,
   Title.CHAMPION,
   Title.SHOW_OFF,
+  Title.ULTRA,
+  Title.GRAND_CHAMPION,
   Title.HOT_STREAK,
   Title.PRIDE,
   Title.STARRY,
@@ -47,9 +51,11 @@ const JAC_TITLES = new Set<Title>([
 
 export function TitleTab() {
   const [showUnlocked, setShowUnlocked] = useState<boolean>(true)
+  const [showUltraHeroes, setShowUltraHeroes] = useState<boolean>(false)
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
   const user = useAppSelector((state) => state.network.profile)
+  const ultraHeroesWon = user?.ultraHeroesWon ?? []
   const [titles, setTitles] = useState<ITitleStatistic[]>([])
   const visibleTitleNames = Object.values(Title).filter(
     (title) => !HIDDEN_TITLES.has(title)
@@ -90,7 +96,46 @@ export function TitleTab() {
       >
         <span className="title-name">{t(`title.${title.name}`)}</span>
         <div className="title-description">
-          <p>{addIconsToDescription(t(`title_description.${title.name}`))}</p>
+          <p>
+            {addIconsToDescription(t(`title_description.${title.name}`))}
+            {title.name === Title.ULTRA && (
+              <button
+                type="button"
+                className={cc("title-ultra-toggle", {
+                  open: showUltraHeroes
+                })}
+                onClick={(event) => {
+                  event.stopPropagation()
+                  setShowUltraHeroes(!showUltraHeroes)
+                }}
+              >
+                ^
+              </button>
+            )}
+          </p>
+          {title.name === Title.ULTRA && showUltraHeroes && (
+            <div className="title-ultra-heroes">
+              <span>
+                {
+                  PRISMATIC_ULTRA_HEROES.filter((hero) =>
+                    isIn(ultraHeroesWon, hero)
+                  ).length
+                }
+                /{PRISMATIC_ULTRA_HEROES.length}
+              </span>
+              {PRISMATIC_ULTRA_HEROES.map((hero) => (
+                <img
+                  key={hero}
+                  src={`/assets/blessings/${Blessings[hero].icon}.svg`}
+                  alt={t(`blessing.${hero}.name`)}
+                  title={t(`blessing.${hero}.name`)}
+                  width="32"
+                  height="32"
+                  className={cc({ won: isIn(ultraHeroesWon, hero) })}
+                />
+              ))}
+            </div>
+          )}
           {isIn(TITLES_UNLOCKING_THEMES, title.name) && (
             <p>
               <img src="/assets/ui/palette.svg" height="24" width="24" />{" "}

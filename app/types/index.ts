@@ -871,6 +871,9 @@ export enum Title {
   PRIDE = "PRIDE",
   THE_SCRIBBLER = "THE_SCRIBBLER",
   SHOW_OFF = "SHOW_OFF",
+  ULTRA = "ULTRA",
+  // given by hand to the championship winner, never unlocked in game
+  GRAND_CHAMPION = "GRAND_CHAMPION",
   HOT_STREAK = "HOT_STREAK",
   ANCIENT = "ANCIENT",
   WHALE = "WHALE",

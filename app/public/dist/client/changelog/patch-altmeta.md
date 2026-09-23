@@ -494,6 +494,9 @@ Every balance change on this server, newest first.
 - Glaive Rush | hits all enemies in the target's column
 - Trick Room | FATIGUE and BLINDED duration 5 → [3,4,5,6,SP] seconds
 
+**Pokémon**
+- Snubbull / Granbull | reverted to the original: FAIRY / FIELD Epic additional pick, instead of a WILD / FAIRY Ultra in the regular pool
+
 **Game Mode**
 - Double Up | removed the finale duel between partners, as it went against the spirit of teaming up
 
@@ -505,7 +508,7 @@ Every balance change on this server, newest first.
 - Glaive Strike {{new}} | Gain a Frigibax. Enemies hit by your STRONGEST Frigibax's ability are marked, and 2 seconds later an Ice Sword falls on each mark, dealing [200,SP]% of ATK + SPE_DEF as SPECIAL, then shatters, dealing the same to ADJACENT enemies
 - Mountain Egg {{new}} | Gain a Happiny. The NUTRITIOUS_EGG of your STRONGEST Happiny also grants the dish effects of all your GOURMET Pokémon, each dish once, without permanent dish effects
 - Mother Yarn {{new}} | Gain a Sewaddle and move to a random Sewaddle region. Sewaddle gains NORMAL and returns its items when benched. After 3/2/1 stages at 1/2/3 STAR, your STRONGEST Sewaddle completes its held component with a SILK_SCARF and permanently gains the crafted item's stats, SHIELD as HP
-- Cell Brawler {{new}} | Gain a Solosis. Your STRONGEST Solosis gains 50% HP, DEF and SPE_DEF but becomes 1 range. It heals for 50% of the damage dealt by its ability, with 50% of overheal gained as max HP
+- Cell Brawler {{new}} | Gain a Solosis. Your STRONGEST Solosis gains 50% HP, DEF and SPE_DEF, but its RANGE is set to 1. It heals for 50% of the damage dealt by its ability, with 50% of overheal gained as max HP
 - Gale Wings {{new}} | Gain a Fletchling. Your STRONGEST Fletchling starts combat with max PP. After combat, collect any EMBER remaining on the field, gaining 1 GOLD for every 4/3/2 EMBER collected at 1/2/3 STAR, and a FIRE_SHARD if at least 10 are collected, which does not count towards your max total
 - Multishot {{new}} | Gain a Sobble. Your STRONGEST Sobble's ability fires 2 additional shots through random enemies, each dealing 25% damage. Each cast increases the number of additional shots by 1
 - Decelerate {{new}} | Gain a Duskull. While a Duskull is on your board, enemies start combat with at most 30 SPEED. Your STRONGEST Duskull's ability also applies FATIGUE and BLINDED to the enemies it damages
@@ -517,6 +520,9 @@ Every balance change on this server, newest first.
 - Stone Saddle {{new}} | Gain a Rhyhorn. Your STRONGEST Rhyhorn's ability is replaced with Headlong Rush and set to 80 PP, and executes enemies in its path below 20% max HP. At the start of the fight, it carries your farthest ally on the bench into combat, gaining its base HP, ATK, DEF and SPE_DEF. When Rhyhorn is KO'd, the ally fights on its own
 - It's Going Down {{new}} | Gain a Timburr. Your STRONGEST Timburr gains 2 RANGE, and after each throw it tosses a new pillar to a safe spot. Its thrown pillars deal their remaining HP as PHYSICAL instead of SPECIAL, +15% per tile travelled
 - Rollout Rally {{new}} | Gain a Venipede. Your STRONGEST Venipede's ability bounces: after reaching the farthest enemy, it rolls again to the enemy farthest from there, dealing 40% less damage each bounce. +1 bounce per 40 SPEED. Allies it rolls over gain 5 SPEED
+
+**Titles**
+- Ultra {{new}} | win a game with every Prismatic Ultra Hero Wish
 
 **Fixes**
 - Trick Room | hits the target and ADJACENT enemies with FATIGUE and BLINDED, instead of just the target

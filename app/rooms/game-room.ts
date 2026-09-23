@@ -29,6 +29,7 @@ import {
 import {
   Blessing,
   BLESSINGS_WITH_PICK_SONG,
+  PRISMATIC_ULTRA_HEROES,
   countsForTeamSize,
   STARTER_CHOICE_EXTRA_ROUNDS
 } from "../types/enum/Blessing"
@@ -1273,6 +1274,14 @@ export default class GameRoom extends Room<{ state: GameState }> {
           this.state.hasBlessing(player.doubleUpPartnerId, Blessing.SHOW_OFF)
         ) {
           player.titles.add(Title.SHOW_OFF)
+        }
+        const ultraHeroesWon = new Set(usr.ultraHeroesWon ?? [])
+        for (const hero of PRISMATIC_ULTRA_HEROES) {
+          if (this.state.hasBlessing(player.id, hero)) ultraHeroesWon.add(hero)
+        }
+        usr.ultraHeroesWon = [...ultraHeroesWon]
+        if (PRISMATIC_ULTRA_HEROES.every((hero) => ultraHeroesWon.has(hero))) {
+          player.titles.add(Title.ULTRA)
         }
         if (this.state.hasBlessing(player.id, Blessing.HIGH_BREACHING)) {
           player.titles.add(Title.WHALE)
