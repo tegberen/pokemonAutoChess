@@ -1823,6 +1823,12 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     icon: "kings_gambit",
     grantsPokemonImmediately: true
   },
+  [Blessing.APEX_PREDATOR]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: [12],
+    icon: "apex_predator",
+    grantsPokemonImmediately: true
+  },
   [Blessing.FROST_BURST]: {
     tier: BlessingTier.GOLD,
     availableAtStages: [12],

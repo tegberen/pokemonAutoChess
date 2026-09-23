@@ -4,7 +4,7 @@ import { EffectEnum } from "../types/enum/Effect"
 import { PokemonActionState } from "../types/enum/Game"
 import { Passive } from "../types/enum/Passive"
 import { Synergy } from "../types/enum/Synergy"
-import { distanceC } from "../utils/distance"
+import { distanceC, distanceM } from "../utils/distance"
 import { findPath } from "../utils/pathfind"
 import { AbilityStrategies } from "./abilities/abilities"
 import { castAbility } from "./abilities/cast"
@@ -31,7 +31,26 @@ export default class MovingState extends PokemonState {
             entity?.passive !== Passive.DRUMMER &&
             entity?.passive !== Passive.INANIMATE
         )
-      if (pokemon.status.charm && pokemon.canMove) {
+      if (pokemon.status.fear) {
+        const fearOrigin = pokemon.status.fearOrigin
+        if (fearOrigin && pokemon.canMove) {
+          // panics toward the free spot farthest from its source, usually an edge
+          const distanceFromOrigin = (x: number, y: number) =>
+            distanceM(x, y, fearOrigin.positionX, fearOrigin.positionY)
+          let refuge = { x: pokemon.positionX, y: pokemon.positionY }
+          board.forEach((x, y, entity) => {
+            if (
+              entity === undefined &&
+              distanceFromOrigin(x, y) > distanceFromOrigin(refuge.x, refuge.y)
+            ) {
+              refuge = { x, y }
+            }
+          })
+          if (refuge.x !== pokemon.positionX || refuge.y !== pokemon.positionY) {
+            this.flee(pokemon, board, refuge)
+          }
+        }
+      } else if (pokemon.status.charm && pokemon.canMove) {
         if (
           pokemon.status.charmOrigin &&
           distanceC(
@@ -154,6 +173,21 @@ export default class MovingState extends PokemonState {
         this.onMove(pokemon, board, oldX, oldY, x, y)
       }
     }
+  }
+
+  // one plain step toward the refuge: move() would dark-jump at enemies or stop at range
+  flee(pokemon: PokemonEntity, board: Board, refuge: { x: number; y: number }) {
+    const [nextStep] = findPath(
+      board.getAllPokemonCoordinates(),
+      [pokemon.positionX, pokemon.positionY],
+      [refuge.x, refuge.y]
+    )
+    if (!nextStep) return
+    const oldX = pokemon.positionX
+    const oldY = pokemon.positionY
+    pokemon.action = PokemonActionState.WALK
+    board.swapCells(oldX, oldY, nextStep[0], nextStep[1])
+    this.onMove(pokemon, board, oldX, oldY, nextStep[0], nextStep[1])
   }
 
   onMove(

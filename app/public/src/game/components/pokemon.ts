@@ -104,6 +104,7 @@ const KI_AURA_PHASES = [
 ]
 const KI_AURA_RESIDUAL = { strength: 0.8, pulse: 0.4, simmerSpeed: 0.8 }
 const KI_AURA_COLOR = 0x73cda5
+const FEAR_TINT = 0xb070ff
 const ROYAL_AURA_COLOR = 0xffd35a
 const ROYAL_AURA_STRENGTH = 10
 const KI_AURA_SHADE_COLOR = 0x1f6b4f
@@ -176,6 +177,7 @@ export default class PokemonSprite extends DraggableObject {
   blinded: GameObjects.Sprite | undefined
   armorReduction: GameObjects.Sprite | undefined
   charm: GameObjects.Sprite | undefined
+  fear: GameObjects.Sprite | undefined
   flinch: GameObjects.Sprite | undefined
   curse: GameObjects.Sprite | undefined
   poison: GameObjects.Sprite | undefined
@@ -1779,6 +1781,9 @@ export default class PokemonSprite extends DraggableObject {
     if (pokemon.status.charm) {
       this.addCharm()
     }
+    if (pokemon.status.fear) {
+      this.addFear()
+    }
     if (pokemon.status.flinch) {
       this.addFlinch()
     }
@@ -2070,6 +2075,25 @@ export default class PokemonSprite extends DraggableObject {
     if (this.charm) {
       this.remove(this.charm, true)
       this.charm = undefined
+    }
+  }
+
+  // FEAR has no sprite of its own yet, so it borrows FLINCH in purple
+  addFear() {
+    if (!this.fear) {
+      this.fear = this.scene.add
+        .sprite(0, -40, "status", "FLINCH/000.png")
+        .setScale(2)
+        .setTint(FEAR_TINT)
+      this.fear.anims.play("FLINCH")
+      this.add(this.fear)
+    }
+  }
+
+  removeFear() {
+    if (this.fear) {
+      this.remove(this.fear, true)
+      this.fear = undefined
     }
   }
 

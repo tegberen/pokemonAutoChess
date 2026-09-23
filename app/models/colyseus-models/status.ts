@@ -62,6 +62,7 @@ export default class Status extends Schema implements IStatus {
   @type("boolean") armorReduction = false
   @type("boolean") runeProtect = false
   @type("boolean") charm = false
+  @type("boolean") fear = false
   @type("boolean") flinch = false
   @type("boolean") electricField = false
   @type("boolean") psychicField = false
@@ -87,6 +88,7 @@ export default class Status extends Schema implements IStatus {
   silenceOrigin: PokemonEntity | undefined = undefined
   woundOrigin: PokemonEntity | undefined = undefined
   charmOrigin: PokemonEntity | undefined = undefined
+  fearOrigin: PokemonEntity | undefined = undefined
   possessedOrigin: PokemonEntity | undefined = undefined
   burnCooldown = 0
   burnDamageCooldown = 1000
@@ -103,6 +105,7 @@ export default class Status extends Schema implements IStatus {
   armorReductionCooldown = 0
   runeProtectCooldown = 0
   charmCooldown = 0
+  fearCooldown = 0
   flinchCooldown = 0
   enrageCooldown = 0
   spikeArmorCooldown = 0
@@ -159,6 +162,7 @@ export default class Status extends Schema implements IStatus {
     this.woundCooldown = 0
     this.paralysisCooldown = 0
     this.charmCooldown = 0
+    this.fearCooldown = 0
     this.flinchCooldown = 0
     this.armorReductionCooldown = 0
     if (this.curse && this.curseCooldown > 0) {
@@ -186,6 +190,7 @@ export default class Status extends Schema implements IStatus {
       this.wound ||
       this.paralysis ||
       this.charm ||
+      this.fear ||
       this.flinch ||
       this.armorReduction ||
       this.curse ||
@@ -324,6 +329,10 @@ export default class Status extends Schema implements IStatus {
 
     if (this.charm) {
       this.updateCharm(dt, pokemon)
+    }
+
+    if (this.fear) {
+      this.updateFear(dt, pokemon)
     }
 
     if (this.flinch) {
@@ -971,6 +980,25 @@ export default class Status extends Schema implements IStatus {
       this.charmCooldown = duration
       this.charmOrigin = origin
       pkm.setTarget(origin)
+    }
+  }
+
+  // the reverse of charm: the unit flees its origin instead of walking up to it
+  triggerFear(duration: number, pkm: PokemonEntity, origin: PokemonEntity) {
+    if (this.fear || this.runeProtect) return
+    duration = this.applyStatusDurationReductions(duration, pkm)
+    this.fear = true
+    this.fearCooldown = duration
+    this.fearOrigin = origin
+  }
+
+  updateFear(dt: number, pkm: PokemonEntity) {
+    if (this.fearCooldown - dt <= 0) {
+      this.fear = false
+      this.fearOrigin = undefined
+      pkm.setTarget(null) // force retargeting
+    } else {
+      this.fearCooldown -= dt
     }
   }
 

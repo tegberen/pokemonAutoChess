@@ -71,7 +71,7 @@ export default class AttackingState extends PokemonState {
       }
 
       // no target at range, changing to moving state
-      if (!target || pokemon.status.charm) {
+      if (!target || pokemon.status.charm || pokemon.status.fear) {
         const targetAtSight = this.getNearestTargetAtSight(pokemon, board)
         if (targetAtSight) {
           pokemon.toMovingState()

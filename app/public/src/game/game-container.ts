@@ -220,6 +220,7 @@ class GameContainer {
       "electricField",
       "fairyField",
       "fatigue",
+      "fear",
       "flinch",
       "freeze",
       "grassField",

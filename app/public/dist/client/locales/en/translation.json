@@ -3924,6 +3924,7 @@
 		"BLINDED": "Blinded",
 		"ARMOR_BREAK": "Armor Break",
 		"CHARM": "Infatuation",
+		"FEAR": "Fear",
 		"FLINCH": "Flinch",
 		"CURSE": "Curse",
 		"RUNE_PROTECT": "Rune Protect",
@@ -3948,6 +3949,7 @@
 		"POKERUS": "Every 2.5 seconds, gain 1 ATK and 10 AP before infecting 2 ADJACENT allies with POKERUS",
 		"ARMOR_BREAK": "Reduce the effectiveness of DEF & SPE_DEF by 50%",
 		"CHARM": "Prevents attacking the target and forces to get closer to it",
+		"FEAR": "Prevents attacking and casting, and forces to run away from its source",
 		"FLINCH": "50% of incoming damage bypass SHIELD",
 		"CURSE": "KOs the cursed Pokémon after some time. Applying curse on an already cursed Pokémon triggers KO immediately.",
 		"RUNE_PROTECT": "Protects from status alterations",
@@ -6137,6 +6139,10 @@
 		"SAND_BUDDIES": {
 			"name": "Sand Buddies",
 			"description": "Gain a strong Sandile. When your STRONGEST Sandile fails to KO its target with its Ability, a Trapinch with full PP appears nearby, at the same STAR level."
+		},
+		"APEX_PREDATOR": {
+			"name": "Apex Predator",
+			"description": "Gain a Shinx. Your STRONGEST Shinx's ability inflicts BLINDED and WOUND on the enemy it dashes to for 4 seconds. When it arrives, every other enemy within 2 cells gets FEAR for 2 seconds."
 		},
 		"KINGS_GAMBIT": {
 			"name": "King's Gambit",

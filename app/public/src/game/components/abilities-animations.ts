@@ -1105,6 +1105,120 @@ function kingsGambitEntranceAnimation(): AbilityAnimation {
   }
 }
 
+// the Volt Switch bolt is drawn downward from its top and is 122px long
+const VOLT_SWITCH_BOLT_LENGTH = 122
+
+const VOLT_SWITCH_TRAIL_FADE = 420
+const VOLT_SWITCH_TRAIL_SLICES = 16
+const VOLT_SWITCH_TRAIL_STAGGER = 22
+// the ability message can land before the position update that starts the dash
+const VOLT_SWITCH_DASH_START = 100
+
+// the bolt is a trail: anchored at the dash start, it grows behind the runner as it moves
+function voltSwitchBolt(args: AbilityAnimationArgs) {
+  const { scene } = args
+  const [startX, startY] = transformEntityCoordinates(
+    args.positionX,
+    args.positionY,
+    args.flip
+  )
+  const [endX, endY] = transformEntityCoordinates(
+    args.targetX,
+    args.targetY,
+    args.flip
+  )
+  const dashLength = Math.hypot(endX - startX, endY - startY)
+  if (dashLength === 0) return
+  const bolt = addAbilitySprite(scene, Ability.VOLT_SWITCH, 0, [startX, startY], {
+    origin: [0.5, 0],
+    rotation: Math.atan2(endY - startY, endX - startX) - Math.PI / 2,
+    scale: [2, 0],
+    depth: DEPTH.ABILITY_BELOW_POKEMON,
+    destroyOnComplete: false,
+    animOptions: { repeat: -1 }
+  })
+  if (!bolt) return
+  const reachTo = (length: number) =>
+    bolt.setScale(2, Math.min(length, dashLength) / VOLT_SWITCH_BOLT_LENGTH)
+  // light dims in place, oldest first: the full trail is swapped for slices of itself,
+  // each cropped to its stretch of the path, fading from the start toward the runner
+  const fadeOut = () => {
+    if (!bolt.active) return
+    const frameHeight = bolt.frame.height
+    const sliceHeight = frameHeight / VOLT_SWITCH_TRAIL_SLICES
+    range(0, VOLT_SWITCH_TRAIL_SLICES - 1).forEach((slice) => {
+      const piece = scene.add
+        .sprite(startX, startY, bolt.texture.key, bolt.frame.name)
+        .setOrigin(0.5, 0)
+        .setRotation(bolt.rotation)
+        .setScale(2, dashLength / VOLT_SWITCH_BOLT_LENGTH)
+        .setDepth(bolt.depth)
+        .setCrop(0, slice * sliceHeight, bolt.frame.width, sliceHeight)
+      scene.abilitiesVfxGroup?.add(piece)
+      scene.tweens.add({
+        targets: piece,
+        alpha: 0,
+        scaleX: 1.7,
+        delay: slice * VOLT_SWITCH_TRAIL_STAGGER,
+        duration: VOLT_SWITCH_TRAIL_FADE,
+        ease: "Sine.easeInOut",
+        onComplete: () => piece.destroy()
+      })
+    })
+    bolt.destroy()
+  }
+
+  scene.time.delayedCall(VOLT_SWITCH_DASH_START, () => {
+    const runner = args.pokemonsOnBoard.find(
+      (sprite) =>
+        sprite.positionX === args.targetX && sprite.positionY === args.targetY
+    )
+    if (!runner?.moveManager.isRunning) return fadeOut()
+    const stopTrailing = () =>
+      scene.events.off(Phaser.Scenes.Events.UPDATE, trailRunner)
+    const trailRunner = () => {
+      if (!bolt.active || !runner.active) return stopTrailing()
+      reachTo(Math.hypot(runner.x - startX, runner.y - startY))
+    }
+    scene.events.on(Phaser.Scenes.Events.UPDATE, trailRunner)
+    runner.moveManager.once("complete", () => {
+      stopTrailing()
+      fadeOut()
+    })
+  })
+}
+
+// the Shockwave bolts span about 94px, so this carries them 2 cells out: the fear's reach
+const APEX_PREDATOR_ROAR_SCALE = 4.4
+const APEX_PREDATOR_ROAR_ECHO = 120
+
+// an electric roar: a pulse of bolts, then a wider echo out to the feared enemies.
+// The dash's on-screen length depends on Shinx's SPEED, so it waits for the sprite to land
+function apexPredatorRoarAnimation(args: AbilityAnimationArgs) {
+  const roar = () => {
+    onCaster({
+      ability: Ability.SHOCKWAVE,
+      scale: APEX_PREDATOR_ROAR_SCALE * 0.6,
+      alpha: 0.7
+    })(args)
+    onCaster({
+      ability: Ability.SHOCKWAVE,
+      scale: APEX_PREDATOR_ROAR_SCALE,
+      alpha: 0.7,
+      delay: APEX_PREDATOR_ROAR_ECHO
+    })(args)
+  }
+  args.scene.time.delayedCall(VOLT_SWITCH_DASH_START, () => {
+    const shinx = args.pokemonsOnBoard.find(
+      (sprite) =>
+        sprite.positionX === args.positionX &&
+        sprite.positionY === args.positionY
+    )
+    if (shinx?.moveManager.isRunning) shinx.moveManager.once("complete", roar)
+    else roar()
+  })
+}
+
 const TRICK_ROOM_PINK = 0xff90d0
 const TRICK_ROOM_WHITE = 0xfff0fa
 const TRICK_ROOM_LINGER = 1000
@@ -4013,6 +4127,7 @@ export const AbilitiesAnimations: {
   ["UNISON_STARFALL"]: unisonStarfallAnimation(),
   ["MULTISHOT"]: (args) => snipeShotProjectile(args, 1.5),
   ["KINGS_GAMBIT_ENTRANCE"]: kingsGambitEntranceAnimation(),
+  ["APEX_PREDATOR_FEAR"]: apexPredatorRoarAnimation,
   ["GLAIVE_STRIKE_MARK"]: glaiveStrikeMarkAnimation(),
   ["GLAIVE_STRIKE_SWORD"]: glaiveStrikeSwordAnimation(),
   ["MAGNETOSPHERE_ATTRACT"]: magnetosphereFieldAnimation(true),
@@ -4641,12 +4756,7 @@ export const AbilitiesAnimations: {
     onTargetScale2,
     onTarget({ ability: Ability.FACADE, scale: 1 })
   ],
-  [Ability.VOLT_SWITCH]: onTarget({
-    origin: [0.5, 0],
-    oriented: true,
-    rotation: -Math.PI / 2,
-    scale: 2
-  }),
+  [Ability.VOLT_SWITCH]: voltSwitchBolt,
   [Ability.BEHEMOTH_BLADE]: onCaster({
     ability: Ability.VOLT_SWITCH,
     origin: [0.5, 0],

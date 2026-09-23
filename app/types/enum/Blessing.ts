@@ -259,6 +259,7 @@ export enum Blessing {
   JUNGLE_CACOPHONY = "JUNGLE_CACOPHONY",
   HONEY_EXPLORATION = "HONEY_EXPLORATION",
   KINGS_GAMBIT = "KINGS_GAMBIT",
+  APEX_PREDATOR = "APEX_PREDATOR",
   YOU_FORGOT_SOMETHING = "YOU_FORGOT_SOMETHING",
   THINK_FAST = "THINK_FAST",
   WISE_SPENDING = "WISE_SPENDING",
@@ -781,6 +782,9 @@ export const KINGS_GAMBIT_ALLIES_FALLEN = 4
 export const KINGS_GAMBIT_FALLEN_STATS_RATIO = 0.2
 export const KINGS_GAMBIT_SPEED = 50
 export const KINGS_GAMBIT_ENTRANCE_DELAY = 200
+export const APEX_PREDATOR_PREY_DURATION = 4000
+export const APEX_PREDATOR_FEAR_RANGE = 2
+export const APEX_PREDATOR_FEAR_DURATION = 2000
 export const SHELL_ARMOR_SPE_DEF_BY_STARS = [1, 3, 6]
 
 export const WOBBUFFETS_GOLD_PRIZE_RECYCLE_TICKETS = 2
@@ -1146,7 +1150,8 @@ export const HERO_BLESSING_GIFT: { [blessing in Blessing]?: Pkm } = {
   [Blessing.DECELERATE]: Pkm.DUSKULL,
   [Blessing.JUNGLE_CACOPHONY]: Pkm.GROOKEY,
   [Blessing.HONEY_EXPLORATION]: Pkm.TEDDIURSA,
-  [Blessing.KINGS_GAMBIT]: Pkm.PAWNIARD
+  [Blessing.KINGS_GAMBIT]: Pkm.PAWNIARD,
+  [Blessing.APEX_PREDATOR]: Pkm.SHINX
 }
 
 export const HERO_BLESSING_FAMILY: { [blessing in Blessing]?: Pkm } = {
@@ -1190,7 +1195,8 @@ export const HERO_BLESSING_FAMILY: { [blessing in Blessing]?: Pkm } = {
   [Blessing.MULTISHOT]: Pkm.SOBBLE,
   [Blessing.DECELERATE]: Pkm.DUSKULL,
   [Blessing.JUNGLE_CACOPHONY]: Pkm.GROOKEY,
-  [Blessing.KINGS_GAMBIT]: Pkm.PAWNIARD
+  [Blessing.KINGS_GAMBIT]: Pkm.PAWNIARD,
+  [Blessing.APEX_PREDATOR]: Pkm.SHINX
 }
 
 /* hero blessings that also relocate the player to a region where their family

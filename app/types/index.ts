@@ -683,6 +683,7 @@ export interface IPokemonEntity {
 
 export interface IStatus {
   burn: boolean
+  fear: boolean
   silence: boolean
   fatigue: boolean
   poisonStacks: number

@@ -338,6 +338,12 @@ export default class BattleManager {
         } else {
           pkm.removeCharm()
         }
+      } else if (field === "fear") {
+        if (pokemon.status.fear) {
+          pkm.addFear()
+        } else {
+          pkm.removeFear()
+        }
       } else if (field === "flinch") {
         if (pokemon.status.flinch) {
           pkm.addFlinch()
