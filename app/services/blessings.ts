@@ -119,9 +119,7 @@ import {
   MOTHER_YARN_STAGES_BY_STAR,
   MOTHER_YARN_WEAVE_ANIMATION_DURATION,
   HONEY_EXPLORATION_STAGES_BY_STAR,
-  HONEY_EXPLORATION_EPIC_STAGE,
-  HONEY_EXPLORATION_ULTRA_STAGE,
-  HONEY_EXPLORATION_LEGENDARY_STAGE,
+  HONEY_EXPLORATION_FRIEND_RARITIES,
   SINGULARITY_I_STAGES,
   SINGULARITY_II_STAGES,
   SINGULARITY_OPTIONS,
@@ -1036,6 +1034,9 @@ export function returnHoneyExplorers(
     player.items.push(Item.HONEY)
     const friend = pickHoneyExplorationFriend(player, state)
     if (friend) {
+      if (getPokemonData(friend).additional) {
+        state.shop.addAdditionalPokemon(friend, state, true)
+      }
       giftPokemonIfBenchHasRoom(player, friend, 0, (pokemon) => {
         pokemon.honeyExplorationFriend = true
         pokemon.types.add(Synergy.WILD)
@@ -1056,31 +1057,30 @@ function pickHoneyExplorationFriend(
   player: Player,
   state: GameState
 ): Pkm | undefined {
-  const stage = state.stageLevel
-  const isFindable = (pkm: Pkm) => {
-    const { regional, additional, unlockable, types } = getPokemonData(pkm)
+  // regular pool friends arrive at 2 STAR, add-picks at their 1 STAR base;
+  // uniques and legendaries have a single form
+  const isFriend = (pkm: Pkm, rarity: Rarity) => {
+    const { regional, additional, unlockable, types, stars } = getPokemonData(pkm)
     // an already WILD friend would gain nothing from the WILD it is given
     if (unlockable || types.includes(Synergy.WILD)) return false
     if (regional && !player.canFindRegionalPokemon(pkm, state)) return false
-    return !additional || state.additionalPokemons.includes(PkmFamily[pkm])
+    if (rarity === Rarity.UNIQUE || rarity === Rarity.LEGENDARY) return true
+    return stars === (additional ? 1 : 2)
   }
-  // stars left out means any star level of that rarity
-  const friendKinds: { rarity: Rarity; stars?: number }[] =
-    stage >= HONEY_EXPLORATION_LEGENDARY_STAGE
-      ? [{ rarity: Rarity.LEGENDARY }]
-      : stage >= HONEY_EXPLORATION_ULTRA_STAGE
-        ? [{ rarity: Rarity.ULTRA, stars: 2 }, { rarity: Rarity.UNIQUE }]
-        : stage >= HONEY_EXPLORATION_EPIC_STAGE
-          ? [{ rarity: Rarity.EPIC, stars: 2 }]
-          : [{ rarity: Rarity.RARE, stars: 2 }]
-  const candidates = friendKinds.flatMap(({ rarity, stars }) =>
-    PRECOMPUTED_POKEMONS_PER_RARITY[rarity].filter(
-      (pkm) =>
-        (stars === undefined || getPokemonData(pkm).stars === stars) &&
-        isFindable(pkm)
+  const { rarities } =
+    HONEY_EXPLORATION_FRIEND_RARITIES.find(
+      ({ fromStage }) => state.stageLevel >= fromStage
+    ) ?? { rarities: [Rarity.RARE] }
+  // the rarity is rolled first, so a rarity with many species does not crowd out the other
+  const friendsByRarity = rarities
+    .map((rarity) =>
+      PRECOMPUTED_POKEMONS_PER_RARITY[rarity].filter((pkm) =>
+        isFriend(pkm, rarity)
+      )
     )
-  )
-  return candidates.length > 0 ? pickRandomIn(candidates) : undefined
+    .filter((friends) => friends.length > 0)
+  if (friendsByRarity.length === 0) return undefined
+  return pickRandomIn(pickRandomIn(friendsByRarity))
 }
 
 function getItemCraftedFrom(itemA: Item, itemB: Item): Item | undefined {

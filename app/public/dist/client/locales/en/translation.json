@@ -6144,7 +6144,7 @@
 		},
 		"HONEY_EXPLORATION": {
 			"name": "Honey Exploration",
-			"description": "Gain a Teddiursa. At the start of each fight, Teddiursa on your bench go exploring for 3/2/1 stages at 1/2/3 STAR. They return with HONEY and strong friends they met along the way, which also has WILD synergy. Eating HONEY also permanently grants 5 DEF and SPE_DEF."
+			"description": "Gain a Teddiursa. At the start of each fight, Teddiursa on your bench go exploring for 3/2/1 stages at 1/2/3 STAR. They return with HONEY and strong friends they met along the way, which also have WILD synergy. Uniques and legendaries met this way sell for 0 GOLD. Eating HONEY also permanently grants 5 DEF and SPE_DEF."
 		},
 		"JUNGLE_CACOPHONY": {
 			"name": "Jungle Cacophony",

@@ -135,8 +135,8 @@ export class Pokemon extends Schema implements IPokemon {
   // SILVER_SPOON: only the server counts the bend down, nothing renders it
   silverSpoonRounds: number = 0
   motherYarnStages: number = 0
-  // HONEY_EXPLORATION: a friend brought back from exploring keeps WILD for good
-  honeyExplorationFriend = false
+  // HONEY_EXPLORATION: a friend keeps WILD for good; synced for the sell price shown
+  @type("boolean") honeyExplorationFriend: boolean = false
   dodge: number = 0
   deathCount: number = 0
   killCount: number = 0

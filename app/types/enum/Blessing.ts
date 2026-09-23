@@ -766,9 +766,17 @@ export const DECELERATE_SPEED_CAP = 30
 export const JUNGLE_CACOPHONY_PP_BURN_BY_STAR = [1, 2, 4] as const
 export const HONEY_EXPLORATION_STAGES_BY_STAR = [3, 2, 1] as const
 export const HONEY_EXPLORATION_HONEY_DEFENSES = 5
-export const HONEY_EXPLORATION_EPIC_STAGE = 17
-export const HONEY_EXPLORATION_ULTRA_STAGE = 22
-export const HONEY_EXPLORATION_LEGENDARY_STAGE = 27
+// the friend's possible rarities by the stage the explorer returns at, latest first
+export const HONEY_EXPLORATION_FRIEND_RARITIES: {
+  fromStage: number
+  rarities: Rarity[]
+}[] = [
+  { fromStage: 28, rarities: [Rarity.UNIQUE, Rarity.LEGENDARY] },
+  { fromStage: 24, rarities: [Rarity.ULTRA, Rarity.UNIQUE] },
+  { fromStage: 20, rarities: [Rarity.EPIC, Rarity.ULTRA] },
+  { fromStage: 16, rarities: [Rarity.RARE, Rarity.EPIC] },
+  { fromStage: 0, rarities: [Rarity.RARE] }
+]
 export const KINGS_GAMBIT_ALLIES_FALLEN = 4
 export const KINGS_GAMBIT_FALLEN_STATS_RATIO = 0.2
 export const KINGS_GAMBIT_SPEED = 50

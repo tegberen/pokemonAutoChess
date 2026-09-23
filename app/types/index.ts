@@ -420,6 +420,7 @@ export interface IPokemon {
   supportiveSoul: boolean
   chosenOne: boolean
   trashToTreasureRounds: number
+  honeyExplorationFriend: boolean
 }
 
 export interface IExperienceManager {

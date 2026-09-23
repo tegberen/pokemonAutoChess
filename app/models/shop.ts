@@ -139,6 +139,15 @@ export function getSellPrice(
   )
     return 0
 
+  // HONEY_EXPLORATION: its free uniques and legendaries cannot be cashed in
+  if (
+    "honeyExplorationFriend" in pokemon &&
+    pokemon.honeyExplorationFriend &&
+    (pokemon.rarity === Rarity.UNIQUE || pokemon.rarity === Rarity.LEGENDARY)
+  ) {
+    return 0
+  }
+
   if ("manifestationLocked" in pokemon && isGrudgeSubstitute(pokemon)) {
     return -GRUDGE_SUBSTITUTE_SELL_COST
   }
