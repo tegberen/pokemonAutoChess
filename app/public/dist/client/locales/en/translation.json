@@ -2287,7 +2287,7 @@
 		"ENTRAINMENT": "Dance to a strange rhythm, restoring [10,10,10,30,SP] PP and forcing the target to imitate them, which replaces their ability with Entrainment. If target is already entrained, pick another enemy Pokémon nearby.",
 		"OCTAZOOKA": "Shoot a projectile that deals [300,300,300,600,SP]% of the user's ATK as SPECIAL and leave an ink cloud that makes the target BLINDED for 4 seconds.",
 		"PSYCHO_SHIFT": "Shift the position of the target and the farthest enemy, dealing [20,40,60,120,SP] SPECIAL to each.",
-		"GLAIVE_RUSH": "A reckless charge to the enemy backline hits all enemies in its column. User and enemies hit gets ARMOR_BREAK for 6 seconds, then enemies hit receive [50,100,200,400,SP] SPECIAL.",
+		"GLAIVE_RUSH": "A reckless charge aimed at the target's backline. The user hits all enemies in the target's column. User and enemies hit get ARMOR_BREAK for 6 seconds, then enemies hit receive [50,100,200,400,SP] SPECIAL.",
 		"FOUL_PLAY": "Deal [2,4,6,12,SP,ND=1] x the target's ATK as SPECIAL to the target.",
 		"DOUBLE_IRON_BASH": "The user rotates, centering the hex nut in its chest, striking with its arms twice in a row for [150,150,150,300,SP]% of its ATK as PHYSICAL for each hit. This causes the target to FLINCH for 3 seconds.",
 		"STONE_EDGE": "For [5,8,10,10,SP] seconds, inflict the user with SILENCE, gain 2 RANGE, [20,SP] CRIT_CHANCE and apply [100,100,200,400,SP]% of its DEF as PHYSICAL on attacks.",
@@ -6137,6 +6137,10 @@
 		"SAND_BUDDIES": {
 			"name": "Sand Buddies",
 			"description": "Gain a strong Sandile. When your STRONGEST Sandile fails to KO its target with its Ability, a Trapinch with full PP appears nearby, at the same STAR level."
+		},
+		"GLAIVE_STRIKE": {
+			"name": "Glaive Strike",
+			"description": "Gain a Frigibax. When your STRONGEST Frigibax casts its ability, it marks every enemy it hits. After 2 seconds, an Ice Sword falls on each mark, dealing [200,SP]% of ATK + SPE_DEF as SPECIAL, then shatters, dealing the same to ADJACENT enemies."
 		},
 		"YOU_FORGOT_SOMETHING": {
 			"name": "You Forgot Something!",

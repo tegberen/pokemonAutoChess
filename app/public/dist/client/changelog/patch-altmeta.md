@@ -491,8 +491,14 @@ Every balance change on this server, newest first.
 
 ### 23 September 2026
 
+**Abilities**
+- Glaive Rush | now aimed at the target's backline and hits all enemies in the target's column, instead of the user's own column
+
 **Game Mode**
 - Double Up | the finale duel between partners is removed: the game ends as soon as one team is left, and both partners share first place
+
+**Wishes**
+- Glaive Strike {{new}} | Prismatic Wish at stage 12: gain a Frigibax. Enemies hit by your STRONGEST Frigibax's ability are marked, and 2 seconds later an Ice Sword falls on each mark, dealing [200,SP]% of ATK + SPE_DEF as SPECIAL, then shatters, dealing the same to ADJACENT enemies
 
 ### 21 September 2026
 

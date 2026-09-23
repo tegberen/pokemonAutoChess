@@ -2226,6 +2226,8 @@ export const blessingEffectService: {
     heroBlessingEffect(Blessing.COLONY, player, state, room),
   [Blessing.SAND_BUDDIES]: (player, state, room) =>
     heroBlessingEffect(Blessing.SAND_BUDDIES, player, state, room),
+  [Blessing.GLAIVE_STRIKE]: (player, state, room) =>
+    heroBlessingEffect(Blessing.GLAIVE_STRIKE, player, state, room),
   [Blessing.YOU_FORGOT_SOMETHING]: () => true,
   [Blessing.THINK_FAST]: (player, state) => {
     const owned =

@@ -249,6 +249,7 @@ export enum Blessing {
   VALOR = "VALOR",
   COLONY = "COLONY",
   SAND_BUDDIES = "SAND_BUDDIES",
+  GLAIVE_STRIKE = "GLAIVE_STRIKE",
   YOU_FORGOT_SOMETHING = "YOU_FORGOT_SOMETHING",
   THINK_FAST = "THINK_FAST",
   WISE_SPENDING = "WISE_SPENDING",
@@ -649,6 +650,13 @@ export const UNISON_STRIKE_ATTACK_RATIO = 1
 export const UNISON_NOVA_DELAY = 600
 export const UNISON_STRIKE_DELAY = 1300
 export const UNISON_STARFALL_WARNING = 250
+export const GLAIVE_STRIKE_DELAY = 2000
+export const GLAIVE_STRIKE_DAMAGE_RATIO = 2
+export const GLAIVE_STRIKE_SWORD_FALL_DURATION = 350
+export const GLAIVE_STRIKE_SHATTER_DELAY = 450
+// the shards play ICICLE_CRASH reversed at its atlas rate of 20 fps, so 900ms
+// lands the damage on its scattered frame
+export const GLAIVE_STRIKE_SHATTER_SPREAD_DELAY = 900
 export const LIMIT_BREAKER_REROLLS_PER_GOLD = 4
 export const GEM_HARVEST_CHARGE_REDUCTION = 1
 export const GEM_HARVEST_ABILITY_POWER_PER_GEM = 10
@@ -1089,7 +1097,8 @@ export const HERO_BLESSING_GIFT: { [blessing in Blessing]?: Pkm } = {
   [Blessing.GRAND_IGNITION]: Pkm.FENNEKIN,
   [Blessing.VALOR]: Pkm.PIGNITE,
   [Blessing.COLONY]: Pkm.SCATTERBUG,
-  [Blessing.SAND_BUDDIES]: Pkm.SANDILE
+  [Blessing.SAND_BUDDIES]: Pkm.SANDILE,
+  [Blessing.GLAIVE_STRIKE]: Pkm.FRIGIBAX
 }
 
 export const HERO_BLESSING_FAMILY: { [blessing in Blessing]?: Pkm } = {
@@ -1124,7 +1133,8 @@ export const HERO_BLESSING_FAMILY: { [blessing in Blessing]?: Pkm } = {
   [Blessing.VALOR]: Pkm.TEPIG,
   [Blessing.COLONY]: Pkm.SCATTERBUG,
   [Blessing.SAND_BUDDIES]: Pkm.SANDILE,
-  [Blessing.SILVER_SPOON]: Pkm.ABRA
+  [Blessing.SILVER_SPOON]: Pkm.ABRA,
+  [Blessing.GLAIVE_STRIKE]: Pkm.FRIGIBAX
 }
 
 /* hero blessings that also relocate the player to a region where their family

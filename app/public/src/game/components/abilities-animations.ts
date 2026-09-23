@@ -18,6 +18,9 @@ import {
 } from "../../../../types/Animation"
 import { Ability } from "../../../../types/enum/Ability"
 import {
+  GLAIVE_STRIKE_DELAY,
+  GLAIVE_STRIKE_SHATTER_DELAY,
+  GLAIVE_STRIKE_SWORD_FALL_DURATION,
   UNISON_STARFALL_WARNING
 } from "../../../../types/enum/Blessing"
 import {
@@ -547,6 +550,11 @@ const UNISON_NOVA_DEEP = 0xff5a1e
 const UNISON_CONSTELLATION_RAYS = 20
 const UNISON_IMPACT_SHARDS = 10
 
+const GLAIVE_ICE_WHITE = 0xf0fbff
+const GLAIVE_ICE_CYAN = 0x7fdcff
+const GLAIVE_ICE_DEEP = 0x2f7fff
+const GLAIVE_SWORD_DROP_HEIGHT = 320
+
 function unisonBeamAnimation(): AbilityAnimation {
   return ({
     scene,
@@ -1026,6 +1034,135 @@ function unisonStarfallAnimation(): AbilityAnimation {
       onComplete: () => light.destroy()
     })
   }
+}
+
+// the mark follows the unit it was put on, so it stays readable if it moves
+function glaiveStrikeMarkAnimation(): AbilityAnimation {
+  return ({ scene, positionX, positionY, flip, pokemonsOnBoard }) => {
+    const markedSprite = pokemonsOnBoard.find(
+      (sprite) =>
+        sprite.positionX === positionX && sprite.positionY === positionY
+    )
+    const [x, y] = transformEntityCoordinates(positionX, positionY, flip)
+    const snowflake = boardPlaneGraphics(scene, x, y)
+    const sparkles = addAbilitySprite(scene, Ability.GLACIATE, 0, [x, y], {
+      scale: 2,
+      tint: GLAIVE_ICE_CYAN,
+      destroyOnComplete: false,
+      animOptions: { repeat: -1 }
+    })
+
+    scene.tweens.addCounter({
+      from: 0,
+      to: 1,
+      duration: GLAIVE_STRIKE_DELAY,
+      ease: "Sine.easeOut",
+      onUpdate: (tween) => {
+        const progress = (tween.getValue() ?? 0) as number
+        if (markedSprite?.active) {
+          snowflake.setPosition(markedSprite.x, markedSprite.y)
+          sparkles?.setPosition(markedSprite.x, markedSprite.y)
+        }
+        snowflake.clear()
+        glaiveSnowflakePaths(8 + progress * 36).forEach((path) =>
+          drawPixelPath(snowflake, path, [
+            { grid: 6, size: 6, color: GLAIVE_ICE_DEEP, alpha: 0.4 },
+            { grid: 3, size: 3, color: GLAIVE_ICE_WHITE, alpha: 0.9 }
+          ])
+        )
+      },
+      onComplete: () => {
+        snowflake.destroy()
+        sparkles?.destroy()
+      }
+    })
+  }
+}
+
+function glaiveSnowflakePaths(armLength: number) {
+  const point = (angle: number, distance: number, from = { x: 0, y: 0 }) => ({
+    x: from.x + Math.cos(angle) * distance,
+    y: from.y + Math.sin(angle) * distance
+  })
+  return range(0, 5).flatMap((arm) => {
+    const angle = (arm * Math.PI) / 3
+    const branchRoot = point(angle, armLength * 0.6)
+    return [
+      [point(angle, 0), point(angle, armLength)],
+      [branchRoot, point(angle + Math.PI / 4, armLength * 0.3, branchRoot)],
+      [branchRoot, point(angle - Math.PI / 4, armLength * 0.3, branchRoot)]
+    ]
+  })
+}
+
+function glaiveStrikeSwordAnimation(): AbilityAnimation {
+  return ({ scene, positionX, positionY, flip }) => {
+    const [x, y] = transformEntityCoordinates(positionX, positionY, flip)
+    const sword = addAbilitySprite(
+      scene,
+      "SACRED_SWORD",
+      0,
+      [x, y - GLAIVE_SWORD_DROP_HEIGHT],
+      {
+        origin: [0.5, 0.2],
+        rotation: Math.PI,
+        scale: 2.5,
+        tint: GLAIVE_ICE_CYAN,
+        alpha: 0,
+        destroyOnComplete: false,
+        animOptions: { repeat: -1 }
+      }
+    )
+    if (!sword) return
+
+    const trail = scene.add
+      .graphics()
+      .setDepth(DEPTH.ABILITY)
+      .setBlendMode(Phaser.BlendModes.ADD)
+    scene.abilitiesVfxGroup?.add(trail)
+
+    scene.tweens.add({
+      targets: sword,
+      y,
+      alpha: 1,
+      duration: GLAIVE_STRIKE_SWORD_FALL_DURATION,
+      ease: "Quad.easeIn",
+      onUpdate: () => {
+        const travelled = sword.y - (y - GLAIVE_SWORD_DROP_HEIGHT)
+        trail.clear()
+        trail.fillStyle(GLAIVE_ICE_CYAN, 0.35)
+        trail.fillRect(x - 6, sword.y - travelled, 12, travelled)
+        trail.fillStyle(GLAIVE_ICE_WHITE, 0.7)
+        trail.fillRect(x - 2, sword.y - travelled, 4, travelled)
+      },
+      onComplete: () => {
+        trail.destroy()
+        scene.tweens.add({
+          targets: sword,
+          x: x + 2,
+          duration: 40,
+          yoyo: true,
+          repeat: -1
+        })
+        scene.time.delayedCall(GLAIVE_STRIKE_SHATTER_DELAY, () => {
+          scene.tweens.killTweensOf(sword)
+          sword.destroy()
+          glaiveStrikeShatter(scene, x, y)
+        })
+      }
+    })
+  }
+}
+
+function glaiveStrikeShatter(
+  scene: GameScene | DebugScene,
+  x: number,
+  y: number
+) {
+  // ICICLE_CRASH is drawn converging onto its target, reversed it shatters outwards
+  addAbilitySprite(scene, Ability.ICICLE_CRASH, 0, [x, y], {
+    scale: 2.5
+  })?.playReverse(Ability.ICICLE_CRASH)
 }
 
 function boardPlaneGraphics(
@@ -3674,6 +3811,8 @@ export const AbilitiesAnimations: {
   ["UNISON_BEAM"]: unisonBeamAnimation(),
   ["UNISON_NOVA"]: unisonNovaAnimation(),
   ["UNISON_STARFALL"]: unisonStarfallAnimation(),
+  ["GLAIVE_STRIKE_MARK"]: glaiveStrikeMarkAnimation(),
+  ["GLAIVE_STRIKE_SWORD"]: glaiveStrikeSwordAnimation(),
   ["MAGNETOSPHERE_ATTRACT"]: magnetosphereFieldAnimation(true),
   ["MAGNETOSPHERE_REPEL"]: magnetosphereFieldAnimation(false),
   // soul fragment travelling back to the caster, for the SOUL_DRAIN blessing
