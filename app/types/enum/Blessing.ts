@@ -263,6 +263,7 @@ export enum Blessing {
   INFINITE_CONVERSION = "INFINITE_CONVERSION",
   STONE_SADDLE = "STONE_SADDLE",
   ITS_GOING_DOWN = "ITS_GOING_DOWN",
+  ROLLOUT_RALLY = "ROLLOUT_RALLY",
   YOU_FORGOT_SOMETHING = "YOU_FORGOT_SOMETHING",
   THINK_FAST = "THINK_FAST",
   WISE_SPENDING = "WISE_SPENDING",
@@ -792,6 +793,10 @@ export const STONE_SADDLE_MAX_PP = 80
 export const STONE_SADDLE_EXECUTE_THRESHOLD = 0.2
 export const ITS_GOING_DOWN_RANGE = 2
 export const ITS_GOING_DOWN_DAMAGE_PER_TILE_THROWN = 0.15
+export const ROLLOUT_RALLY_SPEED_PER_BOUNCE = 40
+export const ROLLOUT_RALLY_BOUNCE_DELAY = 400
+export const ROLLOUT_RALLY_BOUNCE_DAMAGE_RATIO = 0.6
+export const ROLLOUT_RALLY_ALLY_SPEED = 5
 
 export const BLESSINGS_WITH_PICK_SONG = [
   Blessing.SHOW_OFF,
@@ -1167,7 +1172,8 @@ export const HERO_BLESSING_GIFT: { [blessing in Blessing]?: Pkm } = {
   [Blessing.APEX_PREDATOR]: Pkm.SHINX,
   [Blessing.INFINITE_CONVERSION]: Pkm.PORYGON,
   [Blessing.STONE_SADDLE]: Pkm.RHYHORN,
-  [Blessing.ITS_GOING_DOWN]: Pkm.TIMBURR
+  [Blessing.ITS_GOING_DOWN]: Pkm.TIMBURR,
+  [Blessing.ROLLOUT_RALLY]: Pkm.VENIPEDE
 }
 
 export const HERO_BLESSING_FAMILY: { [blessing in Blessing]?: Pkm } = {
@@ -1215,7 +1221,8 @@ export const HERO_BLESSING_FAMILY: { [blessing in Blessing]?: Pkm } = {
   [Blessing.APEX_PREDATOR]: Pkm.SHINX,
   [Blessing.INFINITE_CONVERSION]: Pkm.PORYGON,
   [Blessing.STONE_SADDLE]: Pkm.RHYHORN,
-  [Blessing.ITS_GOING_DOWN]: Pkm.TIMBURR
+  [Blessing.ITS_GOING_DOWN]: Pkm.TIMBURR,
+  [Blessing.ROLLOUT_RALLY]: Pkm.VENIPEDE
 }
 
 /* hero blessings that also relocate the player to a region where their family

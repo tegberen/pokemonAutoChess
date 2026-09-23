@@ -6140,6 +6140,10 @@
 			"name": "Sand Buddies",
 			"description": "Gain a strong Sandile. When your STRONGEST Sandile fails to KO its target with its Ability, a Trapinch with full PP appears nearby, at the same STAR level."
 		},
+		"ROLLOUT_RALLY": {
+			"name": "Rollout Rally",
+			"description": "Gain a Venipede. Your STRONGEST Venipede's ability bounces: after reaching the farthest enemy, it rolls again to the enemy farthest from there, dealing 40% less damage each bounce. +1 bounce per 40 SPEED. Allies it rolls over gain 5 SPEED."
+		},
 		"ITS_GOING_DOWN": {
 			"name": "It's Going Down",
 			"description": "Gain a Timburr. Your STRONGEST Timburr gains 2 RANGE, and after each throw it tosses a new pillar to a safe spot. Its thrown pillars deal their remaining HP as PHYSICAL instead of SPECIAL, +15% per tile travelled."

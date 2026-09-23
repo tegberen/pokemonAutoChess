@@ -513,6 +513,7 @@ Every balance change on this server, newest first.
 - Infinite Conversion {{new}} | Prismatic Wish at stage 12: gain a Porygon. After winning a player combat, your STRONGEST Porygon permanently keeps the synergy it copied in that combat. Once per opponent
 - Stone Saddle {{new}} | Prismatic Wish at stage 12: gain a Rhyhorn. Your STRONGEST Rhyhorn's ability is replaced with Headlong Rush and set to 80 PP, and executes enemies in its path below 20% max HP. At the start of the fight, it carries your farthest ally on the bench into combat, gaining its base HP, ATK, DEF and SPE_DEF. When Rhyhorn is KO'd, the ally fights on its own
 - It's Going Down {{new}} | Prismatic Wish at stage 12: gain a Timburr. Your STRONGEST Timburr gains 2 RANGE, and after each throw it tosses a new pillar to a safe spot. Its thrown pillars deal their remaining HP as PHYSICAL instead of SPECIAL, +15% per tile travelled
+- Rollout Rally {{new}} | Prismatic Wish at stage 12: gain a Venipede. Your STRONGEST Venipede's ability bounces: after reaching the farthest enemy, it rolls again to the enemy farthest from there, dealing 40% less damage each bounce. +1 bounce per 40 SPEED. Allies it rolls over gain 5 SPEED
 
 **Fixes**
 - Trick Room | hits the target and ADJACENT enemies with FATIGUE and BLINDED, instead of just the target
