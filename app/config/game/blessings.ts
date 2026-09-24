@@ -1,5 +1,6 @@
 import { SynergyTiersThresholds } from "../../config"
 import type Player from "../../models/colyseus-models/player"
+import { getPokemonData } from "../../models/precomputed/precomputed-pokemon-data"
 import {
   BABY_OPENER_BABIES_GRANTED,
   BLESSING_SELECTION_STAGES,
@@ -7,6 +8,9 @@ import {
   BlessingTier,
   GREEDY_WISH_PRISMATIC_GOLD,
   GYM_TRAINER_ROSTERS,
+  HERO_BLESSING_EXTRA_SYNERGIES,
+  HERO_BLESSING_GIFT,
+  HERO_BLESSING_POKEMON,
   ITEM_BLESSING_STAGES_OVERRIDE,
   ITEM_GRANTED_BY_BLESSING,
   LANGUAGE_BARRIER_UNOWNS_GRANTED,
@@ -21,6 +25,7 @@ import {
 } from "../../types/enum/Blessing"
 import { DungeonPMDO } from "../../types/enum/Dungeon"
 import { Rarity } from "../../types/enum/Game"
+import type { Pkm } from "../../types/enum/Pokemon"
 import { SpecialGameRule } from "../../types/enum/SpecialGameRule"
 import { Synergy } from "../../types/enum/Synergy"
 import { randomWeighted, shuffleArray } from "../../utils/random"
@@ -121,6 +126,41 @@ export function hasUniqueOfSynergy(player: Player, synergies: Synergy[]) {
     (pokemon) =>
       pokemon.rarity === Rarity.UNIQUE &&
       synergies.some((synergy) => pokemon.types.has(synergy))
+  )
+}
+
+export const BLESSING_MAX_HERO_OPTIONS = 2
+
+function getHeroBlessingPokemon(blessing: Blessing): Pkm[] {
+  const gift = HERO_BLESSING_GIFT[blessing]
+  return gift !== undefined ? [gift] : (HERO_BLESSING_POKEMON[blessing] ?? [])
+}
+
+export function isHeroBlessing(blessing: Blessing) {
+  return getHeroBlessingPokemon(blessing).length > 0
+}
+
+export function getHeroBlessingSynergies(blessing: Blessing): Synergy[] {
+  return [
+    ...getHeroBlessingPokemon(blessing).flatMap(
+      (pokemon) => getPokemonData(pokemon).types
+    ),
+    ...(HERO_BLESSING_EXTRA_SYNERGIES[blessing] ?? [])
+  ]
+}
+
+function isHeroRequirementMet(
+  blessing: Blessing,
+  player: Player,
+  stage: number
+) {
+  if (stage < BLESSING_SYNERGY_GATED_STAGE || !isHeroBlessing(blessing)) {
+    return true
+  }
+  const heroSynergies = getHeroBlessingSynergies(blessing)
+  return (
+    heroSynergies.some((synergy) => isSynergyActiveForPlayer(player, synergy)) ||
+    hasUniqueOfSynergy(player, heroSynergies)
   )
 }
 
@@ -1887,7 +1927,7 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     tier: BlessingTier.GOLD,
     availableAtStages: [4],
     icon: "mole",
-    grantsPokemonImmediately: false
+    grantsPokemonImmediately: true
   },
   [Blessing.SILVER_SPOON]: {
     tier: BlessingTier.PRISMATIC,
@@ -2580,6 +2620,13 @@ function isItemOptionCapReached(
   )
 }
 
+function isHeroOptionCapReached(alreadyDrawn: Blessing[], candidate: Blessing) {
+  if (!isHeroBlessing(candidate)) return false
+  return (
+    alreadyDrawn.filter(isHeroBlessing).length >= BLESSING_MAX_HERO_OPTIONS
+  )
+}
+
 // these reach a pool only once the pick that unlocks them has been made, and
 // that pick has no other payoff, so they take a slot rather than a chance
 const GUARANTEED_BLESSINGS: Blessing[] = [Blessing.GYM_LEADER]
@@ -2599,6 +2646,7 @@ export function drawBlessingOptions(
     if (isFamilyCapReached(drawn, candidate)) continue
     if (isSynergyOptionCapReached(drawn, candidate, maxSynergyOptions)) continue
     if (isItemOptionCapReached(drawn, candidate, maxItemOptions)) continue
+    if (isHeroOptionCapReached(drawn, candidate)) continue
     drawn.push(candidate)
   }
   return drawn
@@ -2635,6 +2683,7 @@ export function getBlessingsAvailable(
         BLESSING_SANDBOX_MODE ||
         definition.availableAtStages.includes(stage)) &&
       isSynergyRequirementMet(definition, player, stage) &&
+      (isTesting || isHeroRequirementMet(blessing, player, stage)) &&
       (definition.isAvailable?.(player, stage) ?? true)
     )
   })

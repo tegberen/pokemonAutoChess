@@ -89,7 +89,6 @@ import {
   MIX_AND_MATCH_I_UNIQUES,
   MIX_AND_MATCH_II_FIELD_CAP,
   MIX_AND_MATCH_II_UNIQUES,
-  MOLE_MAZE_DELAY,
   MORE_EQUAL_THAN_OTHERS_GOLD,
   MORE_EQUAL_THAN_OTHERS_GOLD_FOR_OTHERS,
   MOVE_TUTOR_MAX_PP,
@@ -2214,10 +2213,7 @@ export const blessingScheduledEffectService: {
   [Blessing.KYOGRES_SONG]: (player) =>
     grantSongReinforcement(player, Blessing.KYOGRES_SONG),
 
-  [Blessing.SUPPORTIVE_SOUL]: (player) => grantSupportiveSoulItem(player),
-
-  [Blessing.MOLE_MAZE]: (player) =>
-    giftPokemonIfBenchHasRoom(player, Pkm.DRILBUR)
+  [Blessing.SUPPORTIVE_SOUL]: (player) => grantSupportiveSoulItem(player)
 }
 
 export const blessingEffectService: {
@@ -3236,13 +3232,8 @@ export const blessingEffectService: {
   [Blessing.PACK_ATTACK]: (player, state, room) =>
     heroBlessingEffect(Blessing.PACK_ATTACK, player, state, room),
 
-  // the Drilbur is deferred, the pool addition is not
-  [Blessing.MOLE_MAZE]: (player, state, room) => {
-    scheduleBlessingGrant(player, state, Blessing.MOLE_MAZE, [
-      state.stageLevel + MOLE_MAZE_DELAY
-    ])
-    return heroBlessingEffect(Blessing.MOLE_MAZE, player, state, room)
-  },
+  [Blessing.MOLE_MAZE]: (player, state, room) =>
+    heroBlessingEffect(Blessing.MOLE_MAZE, player, state, room),
 
   [Blessing.ICE_SPEAR]: (player, state, room) =>
     heroBlessingEffect(Blessing.ICE_SPEAR, player, state, room),

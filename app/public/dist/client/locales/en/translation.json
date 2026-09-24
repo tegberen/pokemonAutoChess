@@ -6402,7 +6402,7 @@
 		},
 		"MOLE_MAZE": {
 			"name": "Mole Maze",
-			"description": "After 3 rounds, gain a Drilbur. Your STRONGEST Drilbur's ability is replaced with Mole Maze, and it permanently gains 1 AP each time it KO's an enemy."
+			"description": "Gain a Drilbur. Your STRONGEST Drilbur's ability is replaced with Mole Maze, and it permanently gains 1 AP each time it KO's an enemy."
 		},
 		"SILVER_SPOON": {
 			"name": "Prismatic Spoon",

@@ -871,7 +871,6 @@ export const SILVER_SPOON_ROUNDS_BY_STAR = [3, 2, 1] as const
 export const MOTHER_YARN_STAGES_BY_STAR = [3, 2, 1] as const
 // the length of motherYarnWovenAnimation on the client, so the item swaps as it lands
 export const MOTHER_YARN_WEAVE_ANIMATION_DURATION = 2000
-export const MOLE_MAZE_DELAY = 3
 export const HAIL_TO_THE_KING_MAX_HP = 100
 export const HAIL_TO_THE_KING_ATTACK = 10
 export const HAIL_TO_THE_KING_DEFENSE = 10
@@ -1194,7 +1193,39 @@ export const HERO_BLESSING_GIFT: { [blessing in Blessing]?: Pkm } = {
   [Blessing.INFINITE_CONVERSION]: Pkm.PORYGON,
   [Blessing.STONE_SADDLE]: Pkm.RHYHORN,
   [Blessing.ITS_GOING_DOWN]: Pkm.TIMBURR,
-  [Blessing.ROLLOUT_RALLY]: Pkm.VENIPEDE
+  [Blessing.ROLLOUT_RALLY]: Pkm.VENIPEDE,
+  [Blessing.MOLE_MAZE]: Pkm.DRILBUR
+}
+
+export const HERO_BLESSING_POKEMON: { [blessing in Blessing]?: Pkm[] } = {
+  [Blessing.LANCES_ACE]: [Pkm.DRATINI],
+  [Blessing.SILVER_SPOON]: [Pkm.ABRA],
+  [Blessing.TRASH_TO_TREASURE]: [Pkm.TRUBBISH, Pkm.BELDUM],
+  [Blessing.SINNOHS_COOLEST]: [Pkm.STARAVIA],
+  [Blessing.CURSE_OF_CORAL]: [Pkm.CORSOLA],
+  [Blessing.SCHOOL_BUS]: [Pkm.WISHIWASHI]
+}
+
+export const HERO_BLESSING_EXTRA_SYNERGIES: {
+  [blessing in Blessing]?: Synergy[]
+} = {
+  [Blessing.MOUNTAIN_EGG]: [Synergy.GOURMET],
+  [Blessing.MOTHER_YARN]: [Synergy.NORMAL],
+  [Blessing.DECELERATE]: [Synergy.PSYCHIC],
+  [Blessing.HONEY_EXPLORATION]: [Synergy.GOURMET],
+  [Blessing.RADIANCE]: [Synergy.LIGHT, Synergy.FLYING],
+  [Blessing.SCHOOL_BUS]: [Synergy.MONSTER, Synergy.AMORPHOUS],
+  [Blessing.TRASH_TO_TREASURE]: [Synergy.GROUND, Synergy.GRASS],
+  [Blessing.PLUNDER]: [Synergy.WILD, Synergy.DARK],
+  [Blessing.GLAIVE_STRIKE]: [Synergy.ROCK],
+  [Blessing.STONE_SADDLE]: [Synergy.ICE, Synergy.FOSSIL],
+  [Blessing.MULTISHOT]: [Synergy.POISON, Synergy.PSYCHIC],
+  [Blessing.GALE_WINGS]: [Synergy.LIGHT],
+  [Blessing.HIGH_BREACHING]: [Synergy.LIGHT, Synergy.AQUATIC],
+  [Blessing.SHUTTLE_BUS]: [Synergy.FLORA],
+  [Blessing.JUNGLE_CACOPHONY]: [Synergy.FLORA],
+  [Blessing.INFINITE_CONVERSION]: [Synergy.AMORPHOUS],
+  [Blessing.ROLLOUT_RALLY]: [Synergy.AMORPHOUS]
 }
 
 export const HERO_BLESSING_FAMILY: { [blessing in Blessing]?: Pkm } = {
