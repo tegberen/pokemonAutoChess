@@ -5130,7 +5130,7 @@
 		},
 		"CHARGING_UP": {
 			"name": "Charging Up",
-			"description": "Gain a Mareep and a CELL_BATTERY. For every 12 player damage you deal, gain another CELL_BATTERY."
+			"description": "For every 12 player damage you deal, gain a CELL_BATTERY. Gain a Mareep and a CELL_BATTERY."
 		},
 		"LONE_WOLF": {
 			"name": "Lone Wolf",
@@ -5206,7 +5206,7 @@
 		},
 		"BURNING_SHARDS": {
 			"name": "Burning Shards",
-			"description": "Gain a Scorbunny and a FIRE_SHARD. For every 12 player damage you deal, gain another FIRE_SHARD."
+			"description": "For every 12 player damage you deal, gain a FIRE_SHARD. Gain a Scorbunny and a FIRE_SHARD."
 		},
 		"POTION": {
 			"name": "Potion",
@@ -5322,59 +5322,59 @@
 		},
 		"NORMAL_FAIRY_GYM_TRAINER": {
 			"name": "NORMAL FAIRY Gym Trainer",
-			"description": "Gain an Igglybuff and a Togepi. Your Togepi is locked and sells for 0 GOLD until stage 9. You cannot move on the stage 10 carousel, but your Unique Pokémon selection is guaranteed to include a Tandemaus."
+			"description": "You cannot move on the stage 10 carousel, but your Unique Pokémon selection is guaranteed to include a Tandemaus. Gain an Igglybuff and a Togepi. Your Togepi is locked and sells for 0 GOLD until stage 9."
 		},
 		"FLYING_AQUATIC_GYM_TRAINER": {
 			"name": "FLYING AQUATIC Gym Trainer",
-			"description": "Gain a Quaxly and a Wattrel. Your Wattrel is locked and sells for 0 GOLD until stage 9. You cannot move on the stage 10 carousel, but your Unique Pokémon selection is guaranteed to include a Cramorant."
+			"description": "You cannot move on the stage 10 carousel, but your Unique Pokémon selection is guaranteed to include a Cramorant. Gain a Quaxly and a Wattrel. Your Wattrel is locked and sells for 0 GOLD until stage 9."
 		},
 		"DARK_WILD_GYM_TRAINER": {
 			"name": "DARK WILD Gym Trainer",
-			"description": "Gain a Poochyena and a Galarian Zigzagoon. Your Galarian Zigzagoon is locked and sells for 0 GOLD until stage 9. You cannot move on the stage 10 carousel, but your Unique Pokémon selection is guaranteed to include an Absol."
+			"description": "You cannot move on the stage 10 carousel, but your Unique Pokémon selection is guaranteed to include an Absol. Gain a Poochyena and a Galarian Zigzagoon. Your Galarian Zigzagoon is locked and sells for 0 GOLD until stage 9."
 		},
 		"GROUND_BUG_GYM_TRAINER": {
 			"name": "GROUND BUG Gym Trainer",
-			"description": "Gain a Trapinch and a Burmy (Sandy). Your Burmy (Sandy) is locked and sells for 0 GOLD until stage 9. You cannot move on the stage 10 carousel, but your Unique Pokémon selection is guaranteed to include a Dunsparce."
+			"description": "You cannot move on the stage 10 carousel, but your Unique Pokémon selection is guaranteed to include a Dunsparce. Gain a Trapinch and a Burmy (Sandy). Your Burmy (Sandy) is locked and sells for 0 GOLD until stage 9."
 		},
 		"PSYCHIC_LIGHT_GYM_TRAINER": {
 			"name": "PSYCHIC LIGHT Gym Trainer",
-			"description": "Gain a Flittle and an Elgyem. Your Elgyem is locked and sells for 0 GOLD until stage 9. You cannot move on the stage 10 carousel, but your Unique Pokémon selection is guaranteed to include a Cosmog."
+			"description": "You cannot move on the stage 10 carousel, but your Unique Pokémon selection is guaranteed to include a Cosmog. Gain a Flittle and an Elgyem. Your Elgyem is locked and sells for 0 GOLD until stage 9."
 		},
 		"GRASS_GOURMET_GYM_TRAINER": {
 			"name": "GRASS GOURMET Gym Trainer",
-			"description": "Gain a Capsakid and a Bounsweet. Your Bounsweet is locked and sells for 0 GOLD until stage 9. You cannot move on the stage 10 carousel, but your Unique Pokémon selection is guaranteed to include an Applin."
+			"description": "You cannot move on the stage 10 carousel, but your Unique Pokémon selection is guaranteed to include an Applin. Gain a Capsakid and a Bounsweet. Your Bounsweet is locked and sells for 0 GOLD until stage 9."
 		},
 		"POISON_AMORPHOUS_GYM_TRAINER": {
 			"name": "POISON AMORPHOUS Gym Trainer",
-			"description": "Gain a Grimer and a Gastly. Your Gastly is locked and sells for 0 GOLD until stage 9. You cannot move on the stage 10 carousel, but your Unique Pokémon selection is guaranteed to include a Pyukumuku."
+			"description": "You cannot move on the stage 10 carousel, but your Unique Pokémon selection is guaranteed to include a Pyukumuku. Gain a Grimer and a Gastly. Your Gastly is locked and sells for 0 GOLD until stage 9."
 		},
 		"FIRE_FIELD_GYM_TRAINER": {
 			"name": "FIRE FIELD Gym Trainer",
-			"description": "Gain a Litten and a Cyndaquil. Your Cyndaquil is locked and sells for 0 GOLD until stage 9. You cannot move on the stage 10 carousel, but your Unique Pokémon selection is guaranteed to include a Heatmor."
+			"description": "You cannot move on the stage 10 carousel, but your Unique Pokémon selection is guaranteed to include a Heatmor. Gain a Litten and a Cyndaquil. Your Cyndaquil is locked and sells for 0 GOLD until stage 9."
 		},
 		"HUMAN_FIGHTING_GYM_TRAINER": {
 			"name": "HUMAN FIGHTING Gym Trainer",
-			"description": "Gain a Machop and a Meditite. Your Meditite is locked and sells for 0 GOLD until stage 9. You cannot move on the stage 10 carousel, but your Unique Pokémon selection is guaranteed to include a Tyrogue."
+			"description": "You cannot move on the stage 10 carousel, but your Unique Pokémon selection is guaranteed to include a Tyrogue. Gain a Machop and a Meditite. Your Meditite is locked and sells for 0 GOLD until stage 9."
 		},
 		"GHOST_ARTIFICIAL_GYM_TRAINER": {
 			"name": "GHOST ARTIFICIAL Gym Trainer",
-			"description": "Gain a Honedge and a Golett. Your Golett is locked and sells for 0 GOLD until stage 9. You cannot move on the stage 10 carousel, but your Unique Pokémon selection is guaranteed to include a Rotom."
+			"description": "You cannot move on the stage 10 carousel, but your Unique Pokémon selection is guaranteed to include a Rotom. Gain a Honedge and a Golett. Your Golett is locked and sells for 0 GOLD until stage 9."
 		},
 		"ROCK_ICE_GYM_TRAINER": {
 			"name": "ROCK ICE Gym Trainer",
-			"description": "Gain a Snorunt and a Shellder. Your Shellder is locked and sells for 0 GOLD until stage 9. You cannot move on the stage 10 carousel, but your Unique Pokémon selection is guaranteed to include a Cryogonal."
+			"description": "You cannot move on the stage 10 carousel, but your Unique Pokémon selection is guaranteed to include a Cryogonal. Gain a Snorunt and a Shellder. Your Shellder is locked and sells for 0 GOLD until stage 9."
 		},
 		"DRAGON_MONSTER_GYM_TRAINER": {
 			"name": "DRAGON MONSTER Gym Trainer",
-			"description": "Gain a Treecko and a Gible. Your Gible is locked and sells for 0 GOLD until stage 9. You cannot move on the stage 10 carousel, but your Unique Pokémon selection is guaranteed to include a Druddigon."
+			"description": "You cannot move on the stage 10 carousel, but your Unique Pokémon selection is guaranteed to include a Druddigon. Gain a Treecko and a Gible. Your Gible is locked and sells for 0 GOLD until stage 9."
 		},
 		"WATER_SOUND_GYM_TRAINER": {
 			"name": "WATER SOUND Gym Trainer",
-			"description": "Gain a Clauncher and a Popplio. Your Clauncher is locked and sells for 0 GOLD until stage 9. You cannot move on the stage 10 carousel, but your Unique Pokémon selection is guaranteed to include a Lapras."
+			"description": "You cannot move on the stage 10 carousel, but your Unique Pokémon selection is guaranteed to include a Lapras. Gain a Clauncher and a Popplio. Your Clauncher is locked and sells for 0 GOLD until stage 9."
 		},
 		"ELECTRIC_STEEL_GYM_TRAINER": {
 			"name": "ELECTRIC STEEL Gym Trainer",
-			"description": "Gain a Magnemite and a Nosepass. Your Nosepass is locked and sells for 0 GOLD until stage 9. You cannot move on the stage 10 carousel, but your Unique Pokémon selection is guaranteed to include a Duraludon."
+			"description": "You cannot move on the stage 10 carousel, but your Unique Pokémon selection is guaranteed to include a Duraludon. Gain a Magnemite and a Nosepass. Your Nosepass is locked and sells for 0 GOLD until stage 9."
 		},
 		"GYM_LEADER": {
 			"name": "Gym Leader",
