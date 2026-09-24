@@ -56,6 +56,7 @@ import {
   FIRE_SHARD_ATTACK,
   FIRE_SHARD_LIFE_COST,
   FIRE_SHARD_SPEED,
+  CHAMPIONS_MASK_CRIT_PER_FIGHTING_TIER,
   CHAMPIONS_MASK_SHIELD_PER_FIGHTING_TIER,
   GRACIDEA_FLOWER_HEAL_INTERVAL,
   REAPER_CLOTH_GHOST_VANISH_DURATION,
@@ -1954,6 +1955,18 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
       const fightingTier = getSynergyTier(player.synergies, Synergy.FIGHTING)
       entity.addShield(
         CHAMPIONS_MASK_SHIELD_PER_FIGHTING_TIER * fightingTier,
+        entity,
+        0,
+        false
+      )
+      entity.addCritChance(
+        CHAMPIONS_MASK_CRIT_PER_FIGHTING_TIER * fightingTier,
+        entity,
+        0,
+        false
+      )
+      entity.addCritPower(
+        CHAMPIONS_MASK_CRIT_PER_FIGHTING_TIER * fightingTier,
         entity,
         0,
         false

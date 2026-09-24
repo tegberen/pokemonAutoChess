@@ -493,11 +493,16 @@ Every balance change on this server, newest first.
 **Abilities**
 - Mud Bubble | now always deals [15,30,60,120,SP] SPECIAL to ADJACENT enemies and applies BLINDED, doubled against enemies already BLINDED, instead of damaging only those already BLINDED
 
+**Synergies**
+- FIGHTING 8 | the 40% max HP single-hit cap now only applies to PHYSICAL, no longer to SPECIAL
+
 **Wishes**
+- Shodan | reworked: FIGHTING Pokémon gain 10% chance to dodge, scaling with LUCK, and when they dodge an attack, their next attack is a guaranteed critical hit. Gain a Machop
+- Champion's Mask | SHIELD per FIGHTING tier 100 → 40, now also grants 10% CRIT_CHANCE and 10% CRIT_POWER per FIGHTING tier
 - Brave Formation | Gold → Silver, 15% → 5% CRIT_CHANCE per empty ADJACENT tile
 - Overload | empowers a new ELECTRIC Pokémon every 10 → 12 seconds
 - Zap! | chain damage 50% → 40% of the initial damage
-- Brace for Impact | damage cap 40% → 50% max HP
+- Brace for Impact | the 40% max HP single-hit cap now only applies to PHYSICAL, no longer to SPECIAL
 - Critical Rush I/II | SPEED 30/50 → 20/40
 
 **Pokémon**

@@ -1192,7 +1192,7 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     tier: BlessingTier.GOLD,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "shodan",
-    grantsPokemonImmediately: false,
+    grantsPokemonImmediately: true,
     synergy: Synergy.FIGHTING
   },
   [Blessing.FROST_BARRIER]: {

@@ -31,7 +31,6 @@ import {
   Blessing,
   BRACE_FOR_IMPACT_MAX_HP_RATIO,
   COACHING_MAX_HP_RATIO,
-  SHODAN_MAX_HP_RATIO,
   PLUSHIFY_SUBSTITUTE_PROTECT_DURATION,
   CONTEMPT_DAMAGE_MULTIPLIER,
   EXPLOIT_DAMAGE_BONUS,
@@ -178,9 +177,11 @@ export default abstract class PokemonState {
       const hasAbsoluteDarkness =
         target.status.blinded && hasAbsoluteDarknessBlessing
       const crit =
+        pokemon.shodanCritReady ||
         chance(critChance, pokemon) ||
         target.critMarkRemainingMs > 0 ||
         (target.status.sleep && pokemon.passive === Passive.BAD_DREAMS)
+      pokemon.shodanCritReady = false
 
       if (
         pokemon.items.has(Item.DEEP_SEA_TOOTH) &&
@@ -283,6 +284,12 @@ export default abstract class PokemonState {
         isAttackSuccessful = false
         damage = 0
         target.count.dodgeCount += 1
+        if (
+          target.types.has(Synergy.FIGHTING) &&
+          target.player?.blessings?.includes(Blessing.SHODAN)
+        ) {
+          target.shodanCritReady = true
+        }
         if (target.passive === Passive.AURA) {
           target.addAttack(3, target, 0, false)
           target.addAbilityPower(10, target, 0, false)
@@ -946,39 +953,20 @@ export default abstract class PokemonState {
 
       reducedDamage = min(1)(Math.ceil(reducedDamage)) // should deal 1 damage at least
 
-      if (
-        (attackType === AttackType.PHYSICAL ||
-          attackType === AttackType.SPECIAL) &&
-        (pokemon.effects.has(EffectEnum.COACHING) ||
-          pokemon.player?.blessings?.includes(Blessing.BRACE_FOR_IMPACT))
-      ) {
-        const deflects =
-          pokemon.effects.has(EffectEnum.COACHING) &&
-          pokemon.player?.blessings?.includes(Blessing.SHODAN) === true
-        const maxHpRatio = deflects
-          ? SHODAN_MAX_HP_RATIO
-          : pokemon.effects.has(EffectEnum.COACHING)
-            ? COACHING_MAX_HP_RATIO
-            : BRACE_FOR_IMPACT_MAX_HP_RATIO
-        const maxDamage = Math.ceil(pokemon.maxHP * maxHpRatio)
-        const excessDamage = reducedDamage - maxDamage
-        reducedDamage = Math.min(reducedDamage, maxDamage)
-        // retaliation is never deflected, so two deflecting units cannot bounce a hit forever
-        if (deflects && excessDamage > 0 && !isRetaliation) {
-          const adjacentEnemies = board
-            .getAdjacentCells(pokemon.positionX, pokemon.positionY)
-            .map((cell) => cell.value)
-            .filter((entity) => entity && entity.team !== pokemon.team)
-          const deflectTarget = pickRandomIn(adjacentEnemies)
-          deflectTarget?.handleDamage({
-            damage: excessDamage,
-            board,
-            attackType,
-            attacker: pokemon,
-            shouldTargetGainMana: true,
-            isRetaliation: true
-          })
-        }
+      const coachingCapsHit =
+        attackType === AttackType.PHYSICAL &&
+        pokemon.effects.has(EffectEnum.COACHING)
+      const braceForImpactCapsHit =
+        attackType === AttackType.PHYSICAL &&
+        pokemon.player?.blessings?.includes(Blessing.BRACE_FOR_IMPACT) === true
+      if (coachingCapsHit || braceForImpactCapsHit) {
+        const maxHpRatio = coachingCapsHit
+          ? COACHING_MAX_HP_RATIO
+          : BRACE_FOR_IMPACT_MAX_HP_RATIO
+        reducedDamage = Math.min(
+          reducedDamage,
+          Math.ceil(pokemon.maxHP * maxHpRatio)
+        )
       }
 
       if (

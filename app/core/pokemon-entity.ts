@@ -209,6 +209,7 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
   sandTombVortexes = 0
   fairySplashCooldown = 0
   isSpawn = false
+  shodanCritReady = false
   refToBoardPokemon: IPokemon
   /* Galar fossil combat state, all reset with the entity each fight */
   ampingBeakStacks: number = 0

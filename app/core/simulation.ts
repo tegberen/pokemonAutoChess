@@ -143,6 +143,7 @@ import {
   SHINY_SAFEGUARD_PROTECT_DURATION,
   GUARD_FORMATION_SHARE_RATIO,
   BRAVE_FORMATION_CRIT_CHANCE_PER_EMPTY_TILE,
+  SHODAN_DODGE_CHANCE,
   TOUGH_FORMATION_DEFENSE_PER_ADJACENT_ALLY,
   LASTING_EFFECTS_LUCK,
   PULSE_SHIELD_SPEED_RATIO,
@@ -3424,6 +3425,14 @@ export default class Simulation extends Schema implements ISimulation {
             false
           )
         })
+      }
+
+      if (blessings.includes(Blessing.SHODAN)) {
+        allies
+          .filter((ally) => ally.types.has(Synergy.FIGHTING))
+          .forEach((ally) =>
+            ally.addDodgeChance(SHODAN_DODGE_CHANCE, ally, 0, false)
+          )
       }
 
       if (blessings.includes(Blessing.TOUGH_FORMATION)) {

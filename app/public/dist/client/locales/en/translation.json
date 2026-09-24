@@ -2620,7 +2620,7 @@
 		"GUTS": "Blocks 3 damage",
 		"STURDY": "Blocks 6 damage",
 		"DEFIANT": "Blocks 9 damage",
-		"COACHING": "Blocks 12 damage. FIGHTING Pokémon cannot take more than 40% of their max HP in a single instance of PHYSICAL or SPECIAL.\nGet a Training Bag: each stage, FIGHTING Pokémon on the bench with the Training Bag or a pillar on their left train and gain 4 ATK and 10% base max HP permanently.",
+		"COACHING": "Blocks 12 damage. FIGHTING Pokémon cannot take more than 40% of their max HP in a single instance of PHYSICAL.\nGet a Training Bag: each stage, FIGHTING Pokémon on the bench with the Training Bag or a pillar on their left train and gain 4 ATK and 10% base max HP permanently.",
 		"PRECOGNITION": "+40 AP. A Unown appears every 5 shops.",
 		"AURA": "+80 AP. A Unown appears every 3 shops.",
 		"TRANSCENDENCE": "+120 AP. Get a Unown shop and a free shop reroll after every fight and every 10 shop rerolls.",
@@ -5662,11 +5662,11 @@
 		},
 		"SHODAN": {
 			"name": "Shodan",
-			"description": "At FIGHTING 8, the damage cap of FIGHTING Pokémon is 20% of max HP instead of 40%. The excess is retaliated to a random ADJACENT enemy."
+			"description": "FIGHTING Pokémon gain [10,LK]% chance to dodge. When they dodge an attack, their next attack is a guaranteed critical hit. Gain a Machop."
 		},
 		"BRACE_FOR_IMPACT": {
 			"name": "Brace for Impact",
-			"description": "Allied Pokémon cannot take more than 50% of their maximum HP in a single instance of PHYSICAL or SPECIAL. (Does not stack with FIGHTING 8.)"
+			"description": "All allied Pokémon cannot take more than 40% of their maximum HP in a single instance of PHYSICAL."
 		},
 		"FROST_BARRIER": {
 			"name": "Frost Barrier",
@@ -5758,7 +5758,7 @@
 		},
 		"CHAMPIONS_MASK": {
 			"name": "Champion's Mask",
-			"description": "Gain a CHAMPIONS_MASK. At the start of combat, allies with a CHAMPIONS_MASK gain 100 SHIELD per FIGHTING tier."
+			"description": "Gain a CHAMPIONS_MASK. At the start of combat, allies with a CHAMPIONS_MASK gain 40 SHIELD, 10% CRIT_CHANCE and 10% CRIT_POWER per FIGHTING tier."
 		},
 		"AUTO_CRAFTING": {
 			"name": "Auto-Crafting",

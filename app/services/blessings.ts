@@ -2689,7 +2689,8 @@ export const blessingEffectService: {
 
   [Blessing.BRACE_FOR_IMPACT]: () => true,
 
-  [Blessing.SHODAN]: () => true,
+  [Blessing.SHODAN]: (player) =>
+    giftPokemonIfBenchHasRoom(player, Pkm.MACHOP),
 
   [Blessing.FROST_BARRIER]: (player) =>
     giftPokemonIfBenchHasRoom(player, Pkm.SNORUNT),
