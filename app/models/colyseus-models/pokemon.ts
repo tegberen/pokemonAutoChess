@@ -225,11 +225,16 @@ export class Pokemon extends Schema implements IPokemon {
       this.countsForTeamSize &&
       this.passive !== Passive.INANIMATE &&
       this.passive !== Passive.FIGHTING_SUBSTITUTE &&
-      // covers both substitutes that reach a board: Supportive Soul's companion
-      // and the one All for One fuses the team into
-      this.passive !== Passive.SUBSTITUTE &&
+      // covers Supportive Soul's companion and the one All for One fuses the
+      // team into, but not the Dojo stand-in, which holds a real team slot
+      (this.passive !== Passive.SUBSTITUTE || this.isDojoStandIn) &&
       this.items.has(Item.GOLD_BOW) === false
     )
+  }
+
+  // the Dojo stores the training pokemon's name in evolution
+  get isDojoStandIn(): boolean {
+    return this.name === Pkm.SUBSTITUTE && this.evolution !== Pkm.DEFAULT
   }
 
   onItemGiven(item: Item, player: Player) {

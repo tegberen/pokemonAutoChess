@@ -521,6 +521,9 @@ Every balance change on this server, newest first.
 - Solosis line | max PP 100 / 90 / 80 → 80 PP
 - Gothitelle | Fake Tears damage 30 → 40
 
+**Fixes**
+- Dojo | the Substitute left behind while a Pokémon trains now counts toward team size again
+
 ### 23 September 2026
 
 **Abilities**
