@@ -126,6 +126,7 @@ import {
   SOUL_BLAZE_FIRE_SHARDS,
   STARTER_PACK_CONTENT,
   SYNARCH_GEMS_PER_UNIQUE,
+  SYNERGY_BLESSING_GIFT,
   TRASH_TO_TREASURE_ROUNDS_BY_STAR,
   TRASH_TO_TREASURE_TRASH_GRANTED_MAX,
   TRASH_TO_TREASURE_TRASH_GRANTED_MIN,
@@ -2216,6 +2217,19 @@ export const blessingScheduledEffectService: {
   [Blessing.SUPPORTIVE_SOUL]: (player) => grantSupportiveSoulItem(player)
 }
 
+function grantRandomUnowns(player: Player) {
+  if (
+    getFreeSpaceOnBench(player.board, getBenchSize(player.blessings)) <
+    LANGUAGE_BARRIER_UNOWNS_GRANTED
+  ) {
+    return false
+  }
+  for (let i = 0; i < LANGUAGE_BARRIER_UNOWNS_GRANTED; i++) {
+    giftPokemonIfBenchHasRoom(player, pickRandomIn(Unowns))
+  }
+  return true
+}
+
 export const blessingEffectService: {
   [blessing in Blessing]?: (
     player: Player,
@@ -2644,7 +2658,7 @@ export const blessingEffectService: {
     giftPokemonIfBenchHasRoom(player, Pkm.GRUBBIN),
 
   [Blessing.SACRIFICE]: (player) =>
-    giftPokemonIfBenchHasRoom(player, Pkm.LAIRON),
+    giftPokemonIfBenchHasRoom(player, Pkm.TREECKO),
 
   [Blessing.DRAGON_KING]: (player) =>
     giftPokemonIfBenchHasRoom(player, Pkm.CHARMANDER),
@@ -2663,15 +2677,7 @@ export const blessingEffectService: {
   [Blessing.SHAPELESS_SYNERGIES]: (player) =>
     giftPokemonIfBenchHasRoom(player, Pkm.TYNAMO),
 
-  [Blessing.LANGUAGE_BARRIER]: (player) => {
-    if (getFreeSpaceOnBench(player.board, getBenchSize(player.blessings)) < LANGUAGE_BARRIER_UNOWNS_GRANTED) {
-      return false
-    }
-    for (let i = 0; i < LANGUAGE_BARRIER_UNOWNS_GRANTED; i++) {
-      giftPokemonIfBenchHasRoom(player, pickRandomIn(Unowns))
-    }
-    return true
-  },
+  [Blessing.LANGUAGE_BARRIER]: (player) => grantRandomUnowns(player),
 
   /* MOVE_TUTOR also applies to TMs taught later, in the TM item effect */
   [Blessing.MOVE_TUTOR]: (player) => {
@@ -2809,7 +2815,7 @@ export const blessingEffectService: {
 
   [Blessing.CENTER_STAGE]: () => true,
 
-  [Blessing.HIEROGLYPHS]: () => true,
+  [Blessing.HIEROGLYPHS]: (player) => grantRandomUnowns(player),
 
   [Blessing.BURNING_FORCE]: () => true,
   [Blessing.SPIKY_GUARD]: () => true,
@@ -3513,4 +3519,14 @@ export const blessingEffectService: {
     ).forEach((item) => player.items.push(item))
     return true
   }
+}
+
+for (const [blessing, gift] of Object.entries(SYNERGY_BLESSING_GIFT) as [
+  Blessing,
+  Pkm
+][]) {
+  const applyOwnEffect = blessingEffectService[blessing]
+  blessingEffectService[blessing] = (player, state, room) =>
+    giftPokemonIfBenchHasRoom(player, gift) &&
+    (applyOwnEffect?.(player, state, room) ?? true)
 }

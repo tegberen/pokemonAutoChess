@@ -497,6 +497,10 @@ Every balance change on this server, newest first.
 - FIGHTING 8 | the 40% max HP single-hit cap now only applies to PHYSICAL, no longer to SPECIAL
 
 **Wishes**
+- Prismatic synergy Wishes | now also grant a Pokémon, the same one as the Gold Wish of their synergy. Hieroglyphs grants 2 random Unown, like Language Barrier
+- Tidal Surge and Tidal Guardian | now grant a Quaxly
+- Move Tutor and Unison | now grant a Machop
+- Sacrifice | grants a Treecko instead of a Lairon
 - Shodan | reworked: FIGHTING Pokémon gain 10% chance to dodge, scaling with LUCK, and when they dodge an attack, their next attack is a guaranteed critical hit. Gain a Machop
 - Champion's Mask | SHIELD per FIGHTING tier 100 → 40, now also grants 10% CRIT_CHANCE and 10% CRIT_POWER per FIGHTING tier
 - Brave Formation | Gold → Silver, 15% → 5% CRIT_CHANCE per empty ADJACENT tile

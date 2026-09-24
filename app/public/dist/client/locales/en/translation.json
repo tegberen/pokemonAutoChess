@@ -5474,7 +5474,7 @@
 		},
 		"CURSE_OF_TWO": {
 			"name": "Curse of Two",
-			"description": "Each of your GHOST curses affects 2 enemies at once."
+			"description": "Each of your GHOST curses affects 2 enemies at once. Gain a Snorunt."
 		},
 		"VITAMINS": {
 			"name": "Vitamins",
@@ -5542,7 +5542,7 @@
 		},
 		"CHEFS_GREED": {
 			"name": "Chef's Greed",
-			"description": "Your chefs cook an extra portion of their dish for themselves. Pokémon holding a CHEF_HAT can eat 2 dishes, and gain Munchlax's Glutton passive."
+			"description": "Your chefs cook an extra portion of their dish for themselves. Pokémon holding a CHEF_HAT can eat 2 dishes, and gain Munchlax's Glutton passive. Gain a Nacli."
 		},
 		"BERRY_BREAKFAST": {
 			"name": "Berry Breakfast",
@@ -5570,7 +5570,7 @@
 		},
 		"BERSERKER_HORDES": {
 			"name": "Berserker Hordes",
-			"description": "WILD Pokémon cost 1 GOLD less for each WILD Pokémon at 3 STAR or more on your board, minimum 0. Every 8 shops, your shop will contain only WILD Pokémon."
+			"description": "WILD Pokémon cost 1 GOLD less for each WILD Pokémon at 3 STAR or more on your board, minimum 0. Every 8 shops, your shop will contain only WILD Pokémon. Gain an Aipom."
 		},
 		"GARDENING": {
 			"name": "Gardening",
@@ -5582,7 +5582,7 @@
 		},
 		"AMAZING_GARDENING": {
 			"name": "Amazing Gardening",
-			"description": "Gain an AMAZE_MULCH, plus another for each fully evolved flower."
+			"description": "Gain an AMAZE_MULCH, plus another for each fully evolved flower. Gain a Gossifleur."
 		},
 		"FLYTRAP": {
 			"name": "Flytrap",
@@ -5598,11 +5598,11 @@
 		},
 		"BLOSSOM_FESTIVAL": {
 			"name": "Blossom Festival",
-			"description": "The Mulch gained from KO'd FLORA allies is doubled until you get Bellossom. Your STRONGEST Bellossom gains GRASS synergy and 1 RANGE every 3 casts."
+			"description": "The Mulch gained from KO'd FLORA allies is doubled until you get Bellossom. Your STRONGEST Bellossom gains GRASS synergy and 1 RANGE every 3 casts. Gain a Gossifleur."
 		},
 		"NOT_THE_BEES": {
 			"name": "Not the Bees!",
-			"description": "At combat start, spawn a Combee on a random tile for each STAR level of your flower pots, up to 16."
+			"description": "At combat start, spawn a Combee on a random tile for each STAR level of your flower pots, up to 16. Gain a Gossifleur."
 		},
 		"ECHO_CHAMBER": {
 			"name": "Echo Chamber",
@@ -5614,7 +5614,7 @@
 		},
 		"MOVE_TUTOR": {
 			"name": "Move Tutor",
-			"description": "Pokémon with a TM ability have their max PP set to 70. Your TMs are no longer consumed when taught to a HUMAN Pokémon."
+			"description": "Pokémon with a TM ability have their max PP set to 70. Your TMs are no longer consumed when taught to a HUMAN Pokémon. Gain a Machop."
 		},
 		"ZAP": {
 			"name": "Zap!",
@@ -5626,7 +5626,7 @@
 		},
 		"SACRIFICE": {
 			"name": "Sacrifice",
-			"description": "At combat start, if MONSTER 2 is active, your STRONGEST MONSTER Pokémon KOs the weakest ADJACENT ally and is RAGE for 2 seconds. Gain a Lairon."
+			"description": "At combat start, if MONSTER 2 is active, your STRONGEST MONSTER Pokémon KOs the weakest ADJACENT ally and is RAGE for 2 seconds. Gain a Treecko."
 		},
 		"DRAGON_KING": {
 			"name": "Dragon King",
@@ -5638,7 +5638,7 @@
 		},
 		"SHARE_THE_SPOTLIGHT": {
 			"name": "Share the Spotlight",
-			"description": "The Pokémon in your LIGHT spot shares 50% of its ATK, AP, DEF and SPE_DEF with ADJACENT allies."
+			"description": "The Pokémon in your LIGHT spot shares 50% of its ATK, AP, DEF and SPE_DEF with ADJACENT allies. Gain a Cherrim."
 		},
 		"SLIPSTREAM": {
 			"name": "Slipstream",
@@ -5690,11 +5690,11 @@
 		},
 		"TIDAL_SURGE": {
 			"name": "Tidal Surge",
-			"description": "When the TIDAL_WAVE hits, ranged AQUATIC Pokémon holding 2 items cast Hydro Pump, and melee AQUATIC Pokémon holding 2 items cast Dive."
+			"description": "When the TIDAL_WAVE hits, ranged AQUATIC Pokémon holding 2 items cast Hydro Pump, and melee AQUATIC Pokémon holding 2 items cast Dive. Gain a Quaxly."
 		},
 		"ATLANTEAN_MAGIC": {
 			"name": "Atlantean Magic",
-			"description": "When a WATER Pokémon casts its ability, it gains 1 permanent AP per STAR level."
+			"description": "When a WATER Pokémon casts its ability, it gains 1 permanent AP per STAR level. Gain a Squirtle."
 		},
 		"STAR_CROSSED_SEAS": {
 			"name": "Star-Crossed Seas",
@@ -5738,7 +5738,7 @@
 		},
 		"MONSTER_KING": {
 			"name": "King of the Monsters",
-			"description": "Every 6 seconds, your ally with the most MONSTER stacks fires Hyper Beam (at its own STAR level), towards the largest group of enemies."
+			"description": "Every 6 seconds, your ally with the most MONSTER stacks fires Hyper Beam (at its own STAR level), towards the largest group of enemies. Gain a Treecko."
 		},
 		"ADOPTION": {
 			"name": "Adoption Agency",
@@ -5746,31 +5746,31 @@
 		},
 		"RAINBOW_DROPLET": {
 			"name": "Rainbow Droplet",
-			"description": "The first time you reach AMORPHOUS 7 with 9 synergies active, every synergy except AMORPHOUS permanently gains +1."
+			"description": "The first time you reach AMORPHOUS 7 with 9 synergies active, every synergy except AMORPHOUS permanently gains +1. Gain a Tynamo."
 		},
 		"ARCHEOLOGY": {
 			"name": "Archeological Site",
-			"description": "FOSSIL Pokémon dig every round even without GROUND active. Fully digging a hole unearths a random FOSSIL Pokémon. Fully digging a row unearths a FOSSIL unique, and the whole board a FOSSIL legendary."
+			"description": "FOSSIL Pokémon dig every round even without GROUND active. Fully digging a hole unearths a random FOSSIL Pokémon. Fully digging a row unearths a FOSSIL unique, and the whole board a FOSSIL legendary. Gain a Piloswine."
 		},
 		"LIMIT_BREAKER": {
 			"name": "Limit Breaker",
-			"description": "Abilities of your fully evolved DRAGON Pokémon are one STAR level stronger.\nEvery time you get a 3 STAR DRAGON, you gain free rerolls:\n- Common: 4\n- Uncommon: 8\n- Rare: 12\n- Epic: 16\n- Ultra: 20\nOther Rarities are excluded."
+			"description": "Abilities of your fully evolved DRAGON Pokémon are one STAR level stronger.\nEvery time you get a 3 STAR DRAGON, you gain free rerolls:\n- Common: 4\n- Uncommon: 8\n- Rare: 12\n- Epic: 16\n- Ultra: 20\nOther Rarities are excluded.\nGain a Charmander."
 		},
 		"CHAMPIONS_MASK": {
 			"name": "Champion's Mask",
-			"description": "Gain a CHAMPIONS_MASK. At the start of combat, allies with a CHAMPIONS_MASK gain 40 SHIELD, 10% CRIT_CHANCE and 10% CRIT_POWER per FIGHTING tier."
+			"description": "Gain a CHAMPIONS_MASK. At the start of combat, allies with a CHAMPIONS_MASK gain 40 SHIELD, 10% CRIT_CHANCE and 10% CRIT_POWER per FIGHTING tier. Gain a Machop."
 		},
 		"AUTO_CRAFTING": {
 			"name": "Auto-Crafting",
-			"description": "At the start of combat, each ARTIFICIAL Pokémon holding a component turns it into a random craftable item made with that component for that combat. Synergy stones and WONDER_BOX are excluded. Gain 3 random components."
+			"description": "At the start of combat, each ARTIFICIAL Pokémon holding a component turns it into a random craftable item made with that component for that combat. Synergy stones and WONDER_BOX are excluded. Gain 3 random components and a Klang."
 		},
 		"CENTER_STAGE": {
 			"name": "Center Stage",
-			"description": "At the start of combat, your STRONGEST SOUND ally gains a pink spotlight. Other ADJACENT SOUND Pokémon emit twice as many sound cries. (The Grookey family has stage fright and refuses the spotlight.)"
+			"description": "At the start of combat, your STRONGEST SOUND ally gains a pink spotlight. Other ADJACENT SOUND Pokémon emit twice as many sound cries. (The Grookey family has stage fright and refuses the spotlight.) Gain an Igglybuff."
 		},
 		"HIEROGLYPHS": {
 			"name": "Hieroglyphs",
-			"description": "Unown have 50% less max PP. When an Unown casts its ability, summon a random Unown in the safest corner of the board. Unown ! and Unown Q cannot trigger this summon or be summoned."
+			"description": "Unown have 50% less max PP. When an Unown casts its ability, summon a random Unown in the safest corner of the board. Unown ! and Unown Q cannot trigger this summon or be summoned. Gain 2 random Unown."
 		},
 		"BURNING_FORCE": {
 			"name": "Burning Force",
@@ -5886,19 +5886,19 @@
 		},
 		"FURIOUS_FABRIC": {
 			"name": "Furious Fabric",
-			"description": "Every item crafted from a SILK_SCARF also gives a synergy to the Pokémon holding it:\n- BIG_EATER_BELT: GOURMET\n- EFFICIENT_BANDANNA: SOUND\n- COVER_BAND: GROUND\n- TWIST_BAND: PSYCHIC\n- EXPLOSIVE_BAND: WILD\n- MACH_RIBBON: FIELD\n- BLACK_BELT: FIGHTING\n- LUCKY_RIBBON: FAIRY\n- TIGHT_BELT: BUG\n- FRIEND_BOW: GRASS\n- NULLIFY_BANDANNA: FLYING"
+			"description": "Every item crafted from a SILK_SCARF also gives a synergy to the Pokémon holding it:\n- BIG_EATER_BELT: GOURMET\n- EFFICIENT_BANDANNA: SOUND\n- COVER_BAND: GROUND\n- TWIST_BAND: PSYCHIC\n- EXPLOSIVE_BAND: WILD\n- MACH_RIBBON: FIELD\n- BLACK_BELT: FIGHTING\n- LUCKY_RIBBON: FAIRY\n- TIGHT_BELT: BUG\n- FRIEND_BOW: GRASS\n- NULLIFY_BANDANNA: FLYING\nGain an Igglybuff."
 		},
 		"GEM_HARVEST": {
 			"name": "Gem Harvest",
-			"description": "Crystallisation takes 1 round less to complete. When a crystallisation finishes, you gain a gem matching the crystal's type. Each gem in your inventory gives your Pokémon 10 AP if they share its synergy."
+			"description": "Crystallisation takes 1 round less to complete. When a crystallisation finishes, you gain a gem matching the crystal's type. Each gem in your inventory gives your Pokémon 10 AP if they share its synergy. Gain a Snorunt."
 		},
 		"MAGNETOSPHERE": {
 			"name": "Magnetosphere",
-			"description": "Your STEEL Pokémon create a magnetic field with 1 RANGE per tier of STEEL, switching between attraction and repulsion every 8 seconds. Attraction pulls enemies in RANGE into contact and inflicts PARALYSIS for 8 seconds. Repulsion pushes them away, inflicts LOCKED for 2 seconds, and grants your STEEL Pokémon that much RANGE while it lasts."
+			"description": "Your STEEL Pokémon create a magnetic field with 1 RANGE per tier of STEEL, switching between attraction and repulsion every 8 seconds. Attraction pulls enemies in RANGE into contact and inflicts PARALYSIS for 8 seconds. Repulsion pushes them away, inflicts LOCKED for 2 seconds, and grants your STEEL Pokémon that much RANGE while it lasts. Gain a Magnemite."
 		},
 		"MYSTOGAN": {
 			"name": "Mystogan",
-			"description": "At each FAIRY tier, your FAIRY Pokémon also gain the effect of the wand that was left out of the offer, but not its extra SPECIAL. Wand effects are [5,LK]% more likely to happen."
+			"description": "At each FAIRY tier, your FAIRY Pokémon also gain the effect of the wand that was left out of the offer, but not its extra SPECIAL. Wand effects are [5,LK]% more likely to happen. Gain a Hatenna."
 		},
 		"FESTIVE_PICNIC": {
 			"name": "Festive Picnic",
@@ -5906,55 +5906,55 @@
 		},
 		"ICY_REFLECTION": {
 			"name": "Icy Reflection",
-			"description": "Your ICE Pokémon store all the damage their SPE_DEF blocks. Every time the stored amount reaches 25% of their max HP, they cast back the last ability that damaged them, at their own STAR level."
+			"description": "Your ICE Pokémon store all the damage their SPE_DEF blocks. Every time the stored amount reaches 25% of their max HP, they cast back the last ability that damaged them, at their own STAR level. Gain a Snorunt."
 		},
 		"BULL_LEAPING": {
 			"name": "Bull Leaping",
-			"description": "When your FIELD Pokémon cast their ability, they cast a second ability at their own STAR level right after: melee ones leap with Aqua Jet, Flame Charge or Volt Switch if they are WATER, FIRE or ELECTRIC, or Psyshield Bash otherwise. Ranged ones, and any that would repeat their own ability, use Happy Hour instead."
+			"description": "When your FIELD Pokémon cast their ability, they cast a second ability at their own STAR level right after: melee ones leap with Aqua Jet, Flame Charge or Volt Switch if they are WATER, FIRE or ELECTRIC, or Psyshield Bash otherwise. Ranged ones, and any that would repeat their own ability, use Happy Hour instead. Gain a Litten."
 		},
 		"OVERLOAD": {
 			"name": "Overload",
-			"description": "At the start of combat and every 12 seconds, the STRONGEST of your ELECTRIC Pokémon (not yet empowered) is empowered by Volt Surge: it gains ELECTRIC_FIELD, 20 SPEED and bonus HP, and every 3rd attack chains lightning to 4 enemies. Its own ability is unchanged."
+			"description": "At the start of combat and every 12 seconds, the STRONGEST of your ELECTRIC Pokémon (not yet empowered) is empowered by Volt Surge: it gains ELECTRIC_FIELD, 20 SPEED and bonus HP, and every 3rd attack chains lightning to 4 enemies. Its own ability is unchanged. Gain a Grubbin."
 		},
 		"FOGBOUND_LAKE": {
 			"name": "Fogbound Lake",
-			"description": "You cannot move on the stage 10 carousel, but your Unique Pokémon selection always includes the Illumise and Volbeat duo. When a BUG Pokémon would clone, it spawns a Volbeat or an Illumise instead. BUG 8 adds +1 to LIGHT, and every Volbeat and Illumise gains the effects of your active LIGHT spot."
+			"description": "You cannot move on the stage 10 carousel, but your Unique Pokémon selection always includes the Illumise and Volbeat duo. When a BUG Pokémon would clone, it spawns a Volbeat or an Illumise instead. BUG 8 adds +1 to LIGHT, and every Volbeat and Illumise gains the effects of your active LIGHT spot. Gain a Grubbin."
 		},
 		"TIDAL_GUARDIAN": {
 			"name": "Tidal Guardian",
-			"description": "AQUATIC 8 now summons Lugia instead of Surfing Pikachu. On every TIDAL_WAVE, Lugia casts Whirlpool on 3 different random enemies."
+			"description": "AQUATIC 8 now summons Lugia instead of Surfing Pikachu. On every TIDAL_WAVE, Lugia casts Whirlpool on 3 different random enemies. Gain a Quaxly."
 		},
 		"GRUDGE": {
 			"name": "Grudge",
-			"description": "When one of your GHOST Pokémon is KO'd, it has a [30,LK]% chance to CURSE the enemy that defeated it (8 seconds). If you win the fight and your opponent has a free bench slot, they receive a locked Substitute that costs them 4 GOLD to sell. Each locked Substitute on their bench reduces the duration of any CURSE you inflict by 1 second, whatever its source."
+			"description": "When one of your GHOST Pokémon is KO'd, it has a [30,LK]% chance to CURSE the enemy that defeated it (8 seconds). If you win the fight and your opponent has a free bench slot, they receive a locked Substitute that costs them 4 GOLD to sell. Each locked Substitute on their bench reduces the duration of any CURSE you inflict by 1 second, whatever its source. Gain a Snorunt."
 		},
 		"SOUL_BLAZE": {
 			"name": "Soul Blaze",
-			"description": "A FIRE_SHARD ignites at any FIRE tier, and your Pokémon never wait between two ignitions. Gain 5 FIRE_SHARD."
+			"description": "A FIRE_SHARD ignites at any FIRE tier, and your Pokémon never wait between two ignitions. Gain 5 FIRE_SHARD and a Litten."
 		},
 		"FERTILE_SOIL": {
 			"name": "Fertile Soil",
-			"description": "GROUND Pokémon gain 5 permanent max HP each time they dig. Pokémon starting a fight on a fully dug hole gain 10% max HP. A non-GROUND Pokémon that spends 5 rounds on a fully dug hole absorbs the soil, becoming GROUND and gaining the SMOOTH_ROCK awakening."
+			"description": "GROUND Pokémon gain 5 permanent max HP each time they dig. Pokémon starting a fight on a fully dug hole gain 10% max HP. A non-GROUND Pokémon that spends 5 rounds on a fully dug hole absorbs the soil, becoming GROUND and gaining the SMOOTH_ROCK awakening. Gain a Nidoran♂."
 		},
 		"DEEP_WOUNDS": {
 			"name": "Deep Wounds",
-			"description": "Critical hits inflict ARMOR_BREAK for 5 seconds. If already ARMOR_BREAK, [30,LK]% chance to remove 4 DEF and SPE_DEF permanently."
+			"description": "Critical hits inflict ARMOR_BREAK for 5 seconds. If already ARMOR_BREAK, [30,LK]% chance to remove 4 DEF and SPE_DEF permanently. Gain an Impidimp."
 		},
 		"FAST_DELIVERY": {
 			"name": "Fast Delivery",
-			"description": "FLYING Pokémon always deliver the LETTER in 1 turn. At the start of combat, your FLYING Pokémon gain 2 ATK and 5 LUCK for each Seed you have collected."
+			"description": "FLYING Pokémon always deliver the LETTER in 1 turn. At the start of combat, your FLYING Pokémon gain 2 ATK and 5 LUCK for each Seed you have collected. Gain a Quaxly."
 		},
 		"MOLECULAR_CORROSION": {
 			"name": "Molecular Corrosion",
-			"description": "Enemy Pokémon under POISONNED take 20% more damage from all sources, and your POISONNED can no longer be blocked by RUNE_PROTECT."
+			"description": "Enemy Pokémon under POISONNED take 20% more damage from all sources, and your POISONNED can no longer be blocked by RUNE_PROTECT. Gain a Spinarak."
 		},
 		"UNISON": {
 			"name": "Unison",
-			"description": "HUMAN Pokémon heal 20 HP every 2 seconds for each ADJACENT allied HUMAN Pokémon. Damage blocked by your HUMAN Pokémon builds their bond (max 1000). Every 8 seconds, your surviving Pokémon retaliate together, dividing the stored damage between all enemies as SPECIAL, and the bond resets. This counts as a HUMAN attack."
+			"description": "HUMAN Pokémon heal 20 HP every 2 seconds for each ADJACENT allied HUMAN Pokémon. Damage blocked by your HUMAN Pokémon builds their bond (max 1000). Every 8 seconds, your surviving Pokémon retaliate together, dividing the stored damage between all enemies as SPECIAL, and the bond resets. This counts as a HUMAN attack. Gain a Machop."
 		},
 		"BERRY_GROWTH": {
 			"name": "Berry Growth",
-			"description": "Every Berry eaten also grants the Pokémon +20 permanent max HP, or +30 for a golden Berry. At GRASS 7, your berry trees turn golden. If taken on stage 12, gain 5 golden Berries."
+			"description": "Every Berry eaten also grants the Pokémon +20 permanent max HP, or +30 for a golden Berry. At GRASS 7, your berry trees turn golden. If taken on stage 12, gain 5 golden Berries. Gain a Chespin."
 		},
 		"WATER_FOUNTAIN": {
 			"name": "Water Fountain",

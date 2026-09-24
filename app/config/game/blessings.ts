@@ -12,6 +12,7 @@ import {
   HERO_BLESSING_GIFT,
   HERO_BLESSING_POKEMON,
   ITEM_BLESSING_STAGES_OVERRIDE,
+  SYNERGY_BLESSING_GIFT,
   ITEM_GRANTED_BY_BLESSING,
   LANGUAGE_BARRIER_UNOWNS_GRANTED,
   MIX_AND_MATCH_I_UNIQUES,
@@ -1296,7 +1297,8 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     tier: BlessingTier.PRISMATIC,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "hieroglyphs",
-    grantsPokemonImmediately: false,
+    grantsPokemonImmediately: true,
+    benchSlotsRequired: LANGUAGE_BARRIER_UNOWNS_GRANTED,
     synergy: Synergy.PSYCHIC
   },
   [Blessing.FURIOUS_FABRIC]: {
@@ -2482,6 +2484,10 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     grantsPokemonImmediately: false,
     synergies: [Synergy.PSYCHIC, Synergy.FIELD]
   }
+}
+
+for (const blessing of Object.keys(SYNERGY_BLESSING_GIFT) as Blessing[]) {
+  Blessings[blessing].grantsPokemonImmediately = true
 }
 
 export const BLESSING_TIER_CHANCES_FIRST: { [tier in BlessingTier]: number } = {

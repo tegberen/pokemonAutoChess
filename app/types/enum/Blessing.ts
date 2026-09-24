@@ -1148,6 +1148,43 @@ export function getCarouselLockForStage(
     : undefined
 }
 
+export const SYNERGY_BLESSING_GIFT: { [blessing in Blessing]?: Pkm } = {
+  [Blessing.RAINBOW_DROPLET]: Pkm.TYNAMO,
+  [Blessing.TIDAL_SURGE]: Pkm.QUAXLY,
+  [Blessing.TIDAL_GUARDIAN]: Pkm.QUAXLY,
+  [Blessing.AUTO_CRAFTING]: Pkm.KLANG,
+  [Blessing.FOGBOUND_LAKE]: Pkm.GRUBBIN,
+  [Blessing.DEEP_WOUNDS]: Pkm.IMPIDIMP,
+  [Blessing.LIMIT_BREAKER]: Pkm.CHARMANDER,
+  [Blessing.OVERLOAD]: Pkm.GRUBBIN,
+  [Blessing.MYSTOGAN]: Pkm.HATENNA,
+  [Blessing.BULL_LEAPING]: Pkm.LITTEN,
+  [Blessing.CHAMPIONS_MASK]: Pkm.MACHOP,
+  [Blessing.SOUL_BLAZE]: Pkm.LITTEN,
+  [Blessing.AMAZING_GARDENING]: Pkm.GOSSIFLEUR,
+  [Blessing.BLOSSOM_FESTIVAL]: Pkm.GOSSIFLEUR,
+  [Blessing.NOT_THE_BEES]: Pkm.GOSSIFLEUR,
+  [Blessing.FAST_DELIVERY]: Pkm.QUAXLY,
+  [Blessing.ARCHEOLOGY]: Pkm.PILOSWINE,
+  [Blessing.CURSE_OF_TWO]: Pkm.SNORUNT,
+  [Blessing.GRUDGE]: Pkm.SNORUNT,
+  [Blessing.CHEFS_GREED]: Pkm.NACLI,
+  [Blessing.BERRY_GROWTH]: Pkm.CHESPIN,
+  [Blessing.FERTILE_SOIL]: Pkm.NIDORANM,
+  [Blessing.MOVE_TUTOR]: Pkm.MACHOP,
+  [Blessing.UNISON]: Pkm.MACHOP,
+  [Blessing.ICY_REFLECTION]: Pkm.SNORUNT,
+  [Blessing.SHARE_THE_SPOTLIGHT]: Pkm.CHERRIM,
+  [Blessing.MONSTER_KING]: Pkm.TREECKO,
+  [Blessing.FURIOUS_FABRIC]: Pkm.IGGLYBUFF,
+  [Blessing.MOLECULAR_CORROSION]: Pkm.SPINARAK,
+  [Blessing.GEM_HARVEST]: Pkm.SNORUNT,
+  [Blessing.CENTER_STAGE]: Pkm.IGGLYBUFF,
+  [Blessing.MAGNETOSPHERE]: Pkm.MAGNEMITE,
+  [Blessing.ATLANTEAN_MAGIC]: Pkm.SQUIRTLE,
+  [Blessing.BERSERKER_HORDES]: Pkm.AIPOM
+}
+
 /* the Pokemon each hero blessing gifts on pick, and the family whose strongest
    fielded member the blessing then empowers every combat */
 export const HERO_BLESSING_GIFT: { [blessing in Blessing]?: Pkm } = {
