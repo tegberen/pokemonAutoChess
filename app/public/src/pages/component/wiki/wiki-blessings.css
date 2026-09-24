@@ -275,6 +275,9 @@
   position: relative;
   flex: 1;
   min-width: 0;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
 }
 
 .wiki-blessings-list > li,
@@ -378,8 +381,24 @@
   line-height: 1.4;
 }
 
-.wiki-blessings-stages-label {
-  margin-top: 0.7em;
+.wiki-blessing-body .blessing-grant {
+  font-size: 0.85em;
+  line-height: 1.4;
+}
+
+.wiki-blessing-body .blessing-grant-block {
+  margin-top: auto;
+  padding-top: 0.9em;
+}
+
+.wiki-blessing-body .blessing-grant-block + .wiki-blessings-stages-label {
+  margin-top: 0;
+  padding-top: 0.3em;
+}
+
+.wiki-blessing-body .wiki-blessings-stages-label {
+  margin-top: auto;
+  padding-top: 0.9em;
   opacity: 0.7;
   font-size: 0.8em;
 }

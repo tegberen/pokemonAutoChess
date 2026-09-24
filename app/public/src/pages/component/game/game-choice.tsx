@@ -35,6 +35,7 @@ import { GameMode } from "../../../../../types/enum/Game"
 import { getGameScene } from "../../game"
 import { playSound, SOUNDS } from "../../utils/audio"
 import { addIconsToDescription, iconRegExp } from "../../utils/descriptions"
+import { BlessingDescription } from "../synergy/blessing-description"
 import { cc } from "../../utils/jsx"
 import { LocalStoreKeys, localStore } from "../../utils/store"
 import GamePokemonDuoPortrait from "./game-pokemon-duo-portrait"
@@ -309,11 +310,7 @@ export default function GameChoice() {
                   <h3>
                     {addIconsToDescription(t(`blessing.${blessing}.name`))}
                   </h3>
-                  <p>
-                    {addIconsToDescription(
-                      t(`blessing.${blessing}.description`)
-                    )}
-                  </p>
+                  <BlessingDescription blessing={blessing} />
                 </div>
               </div>
               <button

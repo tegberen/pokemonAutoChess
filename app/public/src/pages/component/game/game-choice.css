@@ -285,6 +285,16 @@
   opacity: 0.9;
 }
 
+.blessing-body > .blessing-grant-block {
+  width: 85%;
+}
+
+.blessing-body .blessing-grant {
+  margin: 0;
+  font-size: 0.9em;
+  opacity: 0.9;
+}
+
 .game-choice-blessing-slot > .my-box.blessing-glow {
   position: relative;
   /* tight blur radii for a crisp edge rather than a haze; the alphas stay at

@@ -12,6 +12,7 @@ import {
   HERO_BLESSING_FAMILY
 } from "../../../../../types/enum/Blessing"
 import { addIconsToDescription } from "../../utils/descriptions"
+import { BlessingDescription } from "../synergy/blessing-description"
 import { cc } from "../../utils/jsx"
 import SynergyIcon from "../icons/synergy-icon"
 import { compareBlessingsBySynergy } from "../tier-list/blessing-short-label"
@@ -61,9 +62,7 @@ function BlessingCard(props: { blessing: Blessing }) {
               {addIconsToDescription(t(`blessing.${props.blessing}.name`))}
             </span>
           </h3>
-          <p>
-            {addIconsToDescription(t(`blessing.${props.blessing}.description`))}
-          </p>
+          <BlessingDescription blessing={props.blessing} />
           <p className="wiki-blessings-stages-label">
             {definition.availableAtStages
               .map((stage) => `${t("stage")} ${stage}`)

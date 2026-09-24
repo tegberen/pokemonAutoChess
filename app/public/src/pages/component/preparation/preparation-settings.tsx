@@ -22,6 +22,7 @@ import { useWhimsyWeekendWindow } from "../whimsy-weekend/whimsy-weekend"
 import { Blessings } from "../../../../../config/game/blessings"
 import type { Blessing } from "../../../../../types/enum/Blessing"
 import { addIconsToDescription } from "../../utils/descriptions"
+import { BlessingDescription } from "../synergy/blessing-description"
 import { cc } from "../../utils/jsx"
 import { LocalStoreKeys, localStore } from "../../utils/store"
 import { Modal } from "../modal/modal"
@@ -348,9 +349,7 @@ export default function PreparationSettings() {
                   {blessingsUnderTest.includes(blessing) ? "✔ " : ""}
                   {addIconsToDescription(t(`blessing.${blessing}.name`))}
                 </h3>
-                <p>
-                  {addIconsToDescription(t(`blessing.${blessing}.description`))}
-                </p>
+                <BlessingDescription blessing={blessing} />
               </li>
             ))}
           </ul>

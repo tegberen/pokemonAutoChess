@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next"
 import { Blessings } from "../../../../../config/game/blessings"
 import type { Blessing } from "../../../../../types/enum/Blessing"
 import { addIconsToDescription } from "../../utils/descriptions"
+import { BlessingDescription } from "./blessing-description"
 import "./blessings-panel.css"
 
 export function blessingTierClass(blessing: Blessing) {
@@ -67,7 +68,7 @@ export function BlessingTooltipCard(props: {
         <h3>
           <span>{addIconsToDescription(t(`blessing.${blessing}.name`))}</span>
         </h3>
-        <p>{addIconsToDescription(t(`blessing.${blessing}.description`))}</p>
+        <BlessingDescription blessing={blessing} />
         {props.children}
       </div>
     </div>
