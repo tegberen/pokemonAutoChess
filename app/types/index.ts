@@ -423,6 +423,7 @@ export interface IPokemon {
   chosenOne: boolean
   trashToTreasureRounds: number
   honeyExplorationFriend: boolean
+  honeyExplorationGift: boolean
 }
 
 export interface IExperienceManager {

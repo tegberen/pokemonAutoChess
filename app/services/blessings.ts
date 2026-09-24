@@ -1039,6 +1039,7 @@ export function returnHoneyExplorers(
       }
       giftPokemonIfBenchHasRoom(player, friend, 0, (pokemon) => {
         pokemon.honeyExplorationFriend = true
+        pokemon.honeyExplorationGift = true
         pokemon.types.add(Synergy.WILD)
       })
     }

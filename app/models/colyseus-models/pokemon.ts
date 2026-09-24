@@ -139,6 +139,7 @@ export class Pokemon extends Schema implements IPokemon {
   keptSynergies: Synergy[] = []
   // HONEY_EXPLORATION: a friend keeps WILD for good; synced for the sell price shown
   @type("boolean") honeyExplorationFriend: boolean = false
+  @type("boolean") honeyExplorationGift: boolean = false
   dodge: number = 0
   deathCount: number = 0
   killCount: number = 0

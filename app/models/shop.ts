@@ -139,12 +139,7 @@ export function getSellPrice(
   )
     return 0
 
-  // HONEY_EXPLORATION: its free uniques and legendaries cannot be cashed in
-  if (
-    "honeyExplorationFriend" in pokemon &&
-    pokemon.honeyExplorationFriend &&
-    (pokemon.rarity === Rarity.UNIQUE || pokemon.rarity === Rarity.LEGENDARY)
-  ) {
+  if ("honeyExplorationGift" in pokemon && pokemon.honeyExplorationGift) {
     return 0
   }
 
