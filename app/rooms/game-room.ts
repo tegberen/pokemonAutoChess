@@ -209,6 +209,7 @@ export default class GameRoom extends Room<{ state: GameState }> {
   private unlockedAvatarCosmetics = new Map<string, Set<AvatarCosmeticId>>()
   dailyDuel = false
   private dailyDuelPodiumUids: string[] = []
+  private dailyDuelPodiumSave: Promise<void> = Promise.resolve()
   private matchAvatarCosmetics = new Map<string, AvatarCosmeticId>()
   constructor() {
     super()
@@ -1263,13 +1264,20 @@ export default class GameRoom extends Room<{ state: GameState }> {
       const countsAsAGame = this.state.gameMode !== GameMode.GUIDE
       if (countsAsAGame) usr.games += 1
       if (this.dailyDuel && !player.isBot) {
-        if (rank <= 3) this.dailyDuelPodiumUids[rank - 1] = player.id
+        if (rank <= 3) {
+          this.dailyDuelPodiumUids[rank - 1] = player.id
+          // players are processed as they leave, in any order, so every podium
+          // finish saves, chained so an older snapshot never lands last
+          const podiumSnapshot = [0, 1, 2].map(
+            (slot) => this.dailyDuelPodiumUids[slot] ?? ""
+          )
+          this.dailyDuelPodiumSave = this.dailyDuelPodiumSave
+            .then(() => setDailyDuelPodiumUids(podiumSnapshot))
+            .catch((error) => logger.error("Daily Duel podium save", error))
+        }
         if (rank === 1) {
           usr.dailyDuelWins = (usr.dailyDuelWins ?? 0) + 1
           player.titles.add(Title.DUELIST)
-          await setDailyDuelPodiumUids(
-            [0, 1, 2].map((slot) => this.dailyDuelPodiumUids[slot] ?? "")
-          )
         }
       }
       if (rank === 1 && countsAsAGame) {

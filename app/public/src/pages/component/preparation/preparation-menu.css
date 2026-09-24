@@ -44,9 +44,9 @@
 
 .preparation-menu .daily-duel-count {
   padding: 0.15em 0.7em;
-  border: 1px solid #1a1204;
+  border: 1px solid #1b1d24;
   border-radius: 999px;
-  background-color: #2a1f08;
+  background-color: var(--color-blessing-card);
   color: #ffffff;
   font-size: 0.55em;
   letter-spacing: normal;
@@ -60,14 +60,20 @@
   width: 100%;
   margin: 0.2em 0 1em;
   padding: 0.6em 1em;
-  border: 1px solid #1a1204;
-  background-color: #2a1f08;
-  background-image: repeating-linear-gradient(
-    135deg,
-    color-mix(in srgb, #ffc107 26%, transparent) 0 16px,
-    color-mix(in srgb, #c9a000 26%, transparent) 16px 32px,
-    color-mix(in srgb, #ffe082 26%, transparent) 32px 48px
+  border: 1px solid #1b1d24;
+  background-color: color-mix(
+    in srgb,
+    var(--color-bg-gold) 8%,
+    var(--color-blessing-card)
   );
+  background-image:
+    linear-gradient(rgb(0 0 0 / 12%), rgb(0 0 0 / 12%)),
+    repeating-linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--color-fg-gold) 26%, transparent) 0 16px,
+      color-mix(in srgb, var(--color-bg-gold) 26%, transparent) 16px 32px,
+      color-mix(in srgb, var(--color-rarity-legendary) 26%, transparent) 32px 48px
+    );
   color: #ffffff;
 }
 

@@ -29,21 +29,36 @@
   gap: 0.5em;
   margin-bottom: 0.5em;
   padding: 0.3em 0.6em;
-  border: 1px solid #1a1204;
-  background-color: #2a1f08;
-  background-image: repeating-linear-gradient(
-    135deg,
-    color-mix(in srgb, #ffc107 26%, transparent) 0 16px,
-    color-mix(in srgb, #c9a000 26%, transparent) 16px 32px,
-    color-mix(in srgb, #ffe082 26%, transparent) 32px 48px
+  border: 1px solid #1b1d24;
+  background-color: color-mix(
+    in srgb,
+    var(--color-bg-gold) 8%,
+    var(--color-blessing-card)
   );
+  background-image:
+    linear-gradient(rgb(0 0 0 / 12%), rgb(0 0 0 / 12%)),
+    repeating-linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--color-fg-gold) 26%, transparent) 0 16px,
+      color-mix(in srgb, var(--color-bg-gold) 26%, transparent) 16px 32px,
+      color-mix(in srgb, var(--color-rarity-legendary) 26%, transparent) 32px 48px
+    );
   color: #ffffff;
   text-shadow: 1px 1px 2px #05090f;
 }
 
 .daily-duel-countdown .icon {
-  width: 1.6em;
-  height: 1.6em;
+  box-sizing: border-box;
+  width: 1.9em;
+  height: 1.9em;
+  padding: 0.2em;
+  border: 1px solid #1b1d24;
+  border-radius: 8px;
+  background-color: color-mix(
+    in srgb,
+    var(--color-bg-gold) 15%,
+    color-mix(in srgb, #000000 30%, var(--color-blessing-card))
+  );
 }
 
 .daily-duel-countdown-label {
@@ -52,23 +67,33 @@
 
 .daily-duel-countdown-time {
   padding: 0.1em 0.7em;
-  border: 1px solid #1a1204;
+  border: 1px solid #1b1d24;
   border-radius: 999px;
-  background-color: color-mix(in srgb, #c9a000 35%, #2a1f08);
+  background-color: color-mix(
+    in srgb,
+    var(--color-bg-gold) 15%,
+    color-mix(in srgb, #000000 30%, var(--color-blessing-card))
+  );
   font-weight: bold;
   white-space: nowrap;
 }
 
 .room-item.daily-duel {
-  border: 1px solid #1a1204;
-  background-color: #2a1f08;
-  color: #ffffff;
-  background-image: repeating-linear-gradient(
-    135deg,
-    color-mix(in srgb, #ffc107 26%, transparent) 0 16px,
-    color-mix(in srgb, #c9a000 26%, transparent) 16px 32px,
-    color-mix(in srgb, #ffe082 26%, transparent) 32px 48px
+  border: 1px solid #1b1d24;
+  background-color: color-mix(
+    in srgb,
+    var(--color-bg-gold) 8%,
+    var(--color-blessing-card)
   );
+  color: #ffffff;
+  background-image:
+    linear-gradient(rgb(0 0 0 / 12%), rgb(0 0 0 / 12%)),
+    repeating-linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--color-fg-gold) 26%, transparent) 0 16px,
+      color-mix(in srgb, var(--color-bg-gold) 26%, transparent) 16px 32px,
+      color-mix(in srgb, var(--color-rarity-legendary) 26%, transparent) 32px 48px
+    );
   box-shadow: 0 0 10px
     color-mix(in srgb, #ffc107 45%, transparent);
 }
@@ -90,7 +115,7 @@
 
 .room-item.daily-duel .daily-duel-count {
   padding: 0.1em 0.6em;
-  border: 1px solid #1a1204;
+  border: 1px solid #1b1d24;
   border-radius: 999px;
-  background-color: #2a1f08;
+  background-color: var(--color-blessing-card);
 }

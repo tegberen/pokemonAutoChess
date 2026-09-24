@@ -678,7 +678,8 @@ export default class MinigameManager {
       name: Pkm.LUDICOLO
     })
 
-    const podiumPokemons = podium.map((p, rank) => {
+    const podiumPokemons = podium.map((p) => {
+      const rank = p.rank - 1
       const { name, shiny } = getPokemonCustomFromAvatar(p.avatar)
       const champion = new PokemonSpecial({
         scene: this.scene,
