@@ -491,13 +491,16 @@ Every balance change on this server, newest first.
 ### 24 September 2026
 
 **Game Mode**
-- Daily Duel {{new}} | every day at 20:00 UTC, a ranked lobby with Wishes opens in Rooms and starts once full. The new Daily Duel tab shows the top 3 comps of the last 2 days, the winner earns the Duelist title and its Duelist's Arena theme, wins are counted on the profile, and the town podium now shows the latest Daily Duel top 3
+- Daily Duel {{new}} | a ranked lobby with Wishes opens in Rooms every day at 20:00 UTC and starts once full. Winners earn the Duelist title and the Duelist's Arena theme, and their wins are tracked on their profile. The top 3 comps of the last 2 days appear in the new Daily Duel tab, and the town podium shows the latest top 3
 
 **Abilities**
 - Mud Bubble | now always deals [15,30,60,120,SP] SPECIAL to ADJACENT enemies and applies BLINDED, doubled against enemies already BLINDED, instead of damaging only those already BLINDED
 
 **Synergies**
 - FIGHTING 8 | the 40% max HP single-hit cap now only applies to PHYSICAL, no longer to SPECIAL
+
+**Items**
+- UTILITY_UMBRELLA | reworked: at the start of the fight, if a weather is active, your Pokémon gain RUNE_PROTECT for 1 second and 10 SHIELD per STAR for each UTILITY_UMBRELLA in your inventory. No longer raises the opponent's weather count
 
 **Wishes**
 - Prismatic synergy Wishes | now also grant a Pokémon, the same one as the Gold Wish of their synergy. Hieroglyphs grants 2 random Unown, like Language Barrier

@@ -6,9 +6,7 @@ import { Tooltip } from "react-tooltip"
 import type Player from "../../../../../models/colyseus-models/player"
 import type { Pokemon } from "../../../../../models/colyseus-models/pokemon"
 import { GamePhaseState } from "../../../../../types/enum/Game"
-import { Item } from "../../../../../types/enum/Item"
 import { Weather } from "../../../../../types/enum/Weather"
-import { count } from "../../../../../utils/array"
 import { getPlayerWeatherScores, getWeather } from "../../../../../utils/weather"
 import { selectSpectatedPlayer, useAppSelector } from "../../../hooks"
 import { Blessing } from "../../../../../types/enum/Blessing"
@@ -63,14 +61,6 @@ export default function WeatherForecast() {
         )
       : new Map<Weather, number>()
 
-  const myUmbrellas = isSchema(spectatedPlayer.items)
-    ? count(spectatedPlayer.items, Item.UTILITY_UMBRELLA)
-    : 0
-  const opponentUmbrellas =
-    opponent && isSchema(opponent.items)
-      ? count(opponent.items, Item.UTILITY_UMBRELLA)
-      : 0
-
   const canResolve =
     isSchema(spectatedPlayer.board) &&
     isSchema(spectatedPlayer.items) &&
@@ -91,11 +81,10 @@ export default function WeatherForecast() {
     .map((weather) => {
       const mine = myScores.get(weather) ?? 0
       const theirs = opponentScores.get(weather) ?? 0
-      const nonOwnerUmbrellas = mine >= theirs ? opponentUmbrellas : myUmbrellas
       return {
         weather,
         score: mine + theirs,
-        threshold: baseThreshold + nonOwnerUmbrellas,
+        threshold: baseThreshold,
         predicted: weather === predicted && predicted !== Weather.NEUTRAL
       }
     })

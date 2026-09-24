@@ -12,7 +12,6 @@ import {
   Weather,
   WeatherAssociatedToSynergy
 } from "../types/enum/Weather"
-import { count } from "./array"
 import { distanceC } from "./distance"
 import { hasKey } from "./map"
 import { schemaValues } from "./schemas"
@@ -128,8 +127,8 @@ export function getWeather(
   }
 
   const boardWeatherScore = new Map<Weather, number>()
-  // per-player contributions, used to attribute the dominant weather to whoever
-  // is driving it (so the *other* player's Utility Umbrellas oppose it)
+  // per-player contributions, so Castform and the Forces of Nature follow their
+  // own side's weather
   const blueWeatherScore = new Map<Weather, number>()
   const redWeatherScore = new Map<Weather, number>()
 
@@ -378,19 +377,8 @@ export function getWeather(
   //logger.debug("boardWeatherScore", boardWeatherScore)
   const dominantWeather = getDominantWeather(boardWeatherScore)
   if (dominantWeather) {
-    // whoever contributes more owns the weather; the opposing player's Utility
-    // Umbrellas raise the count needed to activate it
-    const blueContribution = blueWeatherScore.get(dominantWeather) ?? 0
-    const redContribution = redWeatherScore.get(dominantWeather) ?? 0
-    const opponent = blueContribution >= redContribution ? redPlayer : bluePlayer
-    const umbrellas = opponent
-      ? count(opponent.items, Item.UTILITY_UMBRELLA)
-      : 0
-
     const threshold =
-      WeatherThreshold[dominantWeather] -
-      (castformEncounter ? 1 : 0) +
-      umbrellas
+      WeatherThreshold[dominantWeather] - (castformEncounter ? 1 : 0)
 
     if ((boardWeatherScore.get(dominantWeather) ?? 0) >= threshold) {
       return dominantWeather
