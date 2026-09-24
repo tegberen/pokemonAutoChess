@@ -33,6 +33,7 @@ interface IUserMetadata {
   guideLessonsCompleted?: Synergy[]
   // Prismatic Ultra Hero Wishes won a game with, for the ULTRA title
   ultraHeroesWon?: Blessing[]
+  dailyDuelWins?: number
   unlockedAvatarCosmetics?: AvatarCosmeticId[]
   title: "" | Title
   role: Role

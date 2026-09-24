@@ -13,6 +13,7 @@ import {
   setTabIndex
 } from "../../../stores/LobbyStore"
 import Newspaper from "../newspaper/newspaper"
+import DailyDuelGazette from "./daily-duel-gazette"
 import LevelLeaderboard from "./level-leaderboard"
 import PlayerLeaderboard from "./player-leaderboard"
 import "./leaderboard-menu.css"
@@ -24,7 +25,7 @@ export default function LeaderboardMenu() {
   const tabIndex: number = useAppSelector((state) => state.lobby.tabIndex)
   const [hideElo] = usePreference("hideElo")
   // the ELO ladder is the last tab, so hiding it leaves its index pointing nowhere
-  const selectedIndex = hideElo && tabIndex > 1 ? 0 : tabIndex
+  const selectedIndex = hideElo && tabIndex > 2 ? 0 : tabIndex
 
   useEffect(() => {
     fetch("/leaderboards")
@@ -63,6 +64,7 @@ export default function LeaderboardMenu() {
       <TabList>
         <Tab>{t("newspaper.tab")}</Tab>
         <Tab>{t("level")}</Tab>
+        <Tab>{t("daily_duel")}</Tab>
         {!hideElo && <Tab>{t("players")}</Tab>}
       </TabList>
       <TabPanel>
@@ -70,6 +72,9 @@ export default function LeaderboardMenu() {
       </TabPanel>
       <TabPanel>
         <LevelLeaderboard />
+      </TabPanel>
+      <TabPanel>
+        <DailyDuelGazette />
       </TabPanel>
       {!hideElo && (
         <TabPanel>

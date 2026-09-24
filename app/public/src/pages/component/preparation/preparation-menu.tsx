@@ -58,6 +58,7 @@ export default function PreparationMenu() {
     (state) => state.preparation.scribbleExtended
   )
   const isWhimsyWeekend = useAppSelector((state) => state.preparation.whimsy)
+  const dailyDuel = useAppSelector((state) => state.preparation.dailyDuel)
   const blessingsEnabled = useAppSelector(
     (state) => state.preparation.blessingsEnabled
   )
@@ -102,7 +103,17 @@ export default function PreparationMenu() {
     }
   }, 1000)
 
-  const headerMessage = (
+  const headerMessage = dailyDuel ? (
+    <div className="daily-duel-banner my-box">
+      <img
+        className="daily-duel-banner-icon"
+        src="/assets/icons/blessing_stats.svg"
+        alt=""
+        aria-hidden="true"
+      />
+      <p>{t("daily_duel_hint")}</p>
+    </div>
+  ) : (
     <>
       {isTournamentLobby && (
         <p>
@@ -220,8 +231,20 @@ export default function PreparationMenu() {
   )
 
   return (
-    <div className="preparation-menu my-container is-centered custom-bg">
+    <div
+      className={cc("preparation-menu my-container is-centered custom-bg", {
+        "daily-duel": dailyDuel
+      })}
+    >
       <header>
+        {dailyDuel ? (
+          <h1 className="daily-duel-title">
+            {name}
+            <span className="daily-duel-count">
+              {users.length}/{nbExpectedPlayers}
+            </span>
+          </h1>
+        ) : (
         <h1>
           {blessingsEnabled && (
             <img
@@ -254,6 +277,7 @@ export default function PreparationMenu() {
               : t("scribble_extended_off_short")}
           </span>
         </h1>
+        )}
         {headerMessage}
       </header>
 

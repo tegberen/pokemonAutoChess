@@ -37,7 +37,7 @@ export function IngameRoomsList({
     }
     return gameMode
       ? r.metadata.gameMode === gameMode
-      : r.metadata.gameMode !== GameMode.RANKED
+      : r.metadata.gameMode !== GameMode.RANKED || r.metadata.dailyDuel
   })
   const navigate = useNavigate()
   const [isJoining, setJoining] = useState<boolean>(false)

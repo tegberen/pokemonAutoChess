@@ -27,6 +27,7 @@ export interface IUserPreparationState {
   scribbleExtended: boolean
   blessingsEnabled: boolean
   whimsy: boolean
+  dailyDuel: boolean
   whitelist: string[]
   blacklist: string[]
   tournamentTeams: TournamentLobbyTeamOption[]
@@ -49,6 +50,7 @@ const initialState: IUserPreparationState = {
   scribbleExtended: false,
   blessingsEnabled: false,
   whimsy: false,
+  dailyDuel: false,
   whitelist: [],
   blacklist: [],
   tournamentTeams: []
@@ -124,6 +126,9 @@ export const preparationSlice = createSlice({
     setWhimsy: (state, action: PayloadAction<boolean>) => {
       state.whimsy = action.payload
     },
+    setDailyDuel: (state, action: PayloadAction<boolean>) => {
+      state.dailyDuel = action.payload
+    },
     setMinRank: (state, action: PayloadAction<EloRank | null>) => {
       state.minRank = action.payload
     },
@@ -171,6 +176,7 @@ export const {
   setScribbleExtended,
   setBlessingsEnabled,
   setWhimsy,
+  setDailyDuel,
   setTournamentTeams,
   resetPreparation
 } = preparationSlice.actions

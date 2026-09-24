@@ -747,6 +747,7 @@ export interface IPreparationMetadata {
   scribbleExtended: boolean
   whimsy: boolean
   blessingsEnabled: boolean
+  dailyDuel: boolean
 }
 
 export interface IGameMetadata {
@@ -754,6 +755,7 @@ export interface IGameMetadata {
   ownerName: string
   gameMode: GameMode
   whimsy: boolean
+  dailyDuel: boolean
   playerIds: string[]
   playersInfo: string[]
   stageLevel: number
@@ -876,6 +878,7 @@ export enum Title {
   ULTRA = "ULTRA",
   // given by hand to the championship winner, never unlocked in game
   GRAND_CHAMPION = "GRAND_CHAMPION",
+  DUELIST = "DUELIST",
   HOT_STREAK = "HOT_STREAK",
   ANCIENT = "ANCIENT",
   WHALE = "WHALE",

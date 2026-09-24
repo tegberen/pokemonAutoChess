@@ -415,7 +415,8 @@ export class OnGameStartRequestCommand extends Command<
           tournamentId: this.room.metadata?.tournamentId,
           bracketId: this.room.metadata?.bracketId,
           minRank: this.state.minRank,
-          guideSynergy: this.state.guideSynergy
+          guideSynergy: this.state.guideSynergy,
+          dailyDuel: this.room.metadata?.dailyDuel ?? false
         })
 
         this.state.users.forEach((user) => {

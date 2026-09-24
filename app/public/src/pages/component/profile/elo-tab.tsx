@@ -12,6 +12,7 @@ type RecordUser = Pick<
   | "activeWeeks"
   | "currentFirstPlaceStreak"
   | "highestFirstPlaceStreak"
+  | "dailyDuelWins"
 >
 
 export function EloTab({
@@ -125,6 +126,25 @@ export function EloTab({
             <span className="profile-stat-label">
               <small>Community</small>
               <b>Active weeks</b>
+            </span>
+          </div>
+          <div
+            className="profile-stat"
+            title="Daily Duel Ranked matches won."
+          >
+            <span className="profile-stat-emblem">
+              <img
+                src="/assets/icons/blessing_stats.svg"
+                alt=""
+                aria-hidden="true"
+              />
+            </span>
+            <strong className="profile-stat-count">
+              {user.dailyDuelWins ?? 0}
+            </strong>
+            <span className="profile-stat-label">
+              <small>{t("daily_duel")}</small>
+              <b>Wins</b>
             </span>
           </div>
         </div>

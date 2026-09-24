@@ -128,6 +128,7 @@ export default class PreparationRoom extends Room<{ state: PreparationState }> {
     bracketId?: string
     whimsy?: boolean
     guideSynergy?: Synergy
+    dailyDuel?: boolean
   }) {
     logger.info("create Preparation ", this.roomId)
     // logger.debug(options);
@@ -161,10 +162,15 @@ export default class PreparationRoom extends Room<{ state: PreparationState }> {
       type: "preparation",
       scribbleExtended: false,
       whimsy: options.whimsy ?? false,
-      blessingsEnabled: this.state.blessingsEnabled
+      blessingsEnabled: this.state.blessingsEnabled,
+      dailyDuel: options.dailyDuel ?? false
     })
     this.maxClients = 8
-    if (options.gameMode === GameMode.TOURNAMENT || options.tournamentId) {
+    if (
+      options.gameMode === GameMode.TOURNAMENT ||
+      options.tournamentId ||
+      options.dailyDuel
+    ) {
       this.autoDispose = false
     }
     if (options.gameMode === GameMode.GUIDE) {

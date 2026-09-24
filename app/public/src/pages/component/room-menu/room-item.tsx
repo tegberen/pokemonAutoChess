@@ -80,6 +80,50 @@ export default function RoomItem(props: {
   const title = `${props.room.metadata?.ownerName ? "Owner: " + props.room.metadata?.ownerName : ""}\n${props.room.metadata?.playersInfo?.join("\n")}`
   const [joining, setJoining] = useState<boolean>(false)
 
+  if (props.room.metadata?.dailyDuel) {
+    return (
+      <div className="room-item daily-duel my-box">
+        <img
+          alt=""
+          aria-hidden="true"
+          className="icon"
+          src="/assets/icons/blessing_stats.svg"
+        />
+        <span className="room-name" title={title}>
+          <b>{props.room.metadata.name}</b>
+          <small>{t("daily_duel_room_hint")}</small>
+        </span>
+        <span className="daily-duel-count">
+          {props.room.clients}/{nbPlayersExpected}
+        </span>
+        {isAdmin && (
+          <button
+            title={t("delete_room")}
+            onClick={() => {
+              props.click("delete")
+            }}
+          >
+            X
+          </button>
+        )}
+        <button
+          title={disabledReason ?? t("join")}
+          disabled={!canJoin || joining}
+          className={cc("bubbly", joining ? "loading" : "", "green")}
+          onClick={() => {
+            if (canJoin && !joining) {
+              props.click("join")
+              setJoining(true)
+              setTimeout(() => setJoining(false), 3000)
+            }
+          }}
+        >
+          {t("join")}
+        </button>
+      </div>
+    )
+  }
+
   return (
     <div className="room-item my-box">
       {props.room.metadata?.blessingsEnabled && (

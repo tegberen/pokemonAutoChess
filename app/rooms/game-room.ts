@@ -62,6 +62,7 @@ import type { Pokemon } from "../models/colyseus-models/pokemon"
 import { ScribbleShape } from "../models/colyseus-models/scribble-shape"
 import { updatePlayerExpeditionsAfterGame } from "../models/expeditions"
 import { BotV2 } from "../models/mongo-models/bot-v2"
+import { setDailyDuelPodiumUids } from "../models/mongo-models/daily-duel-podium"
 import DetailledStatistic from "../models/mongo-models/detailled-statistic-v2"
 import UserMetadata, {
   giveUserExp,
@@ -206,6 +207,8 @@ export default class GameRoom extends Room<{ state: GameState }> {
   additionalEpicPool: Array<Pkm>
   miniGame: MiniGame
   private unlockedAvatarCosmetics = new Map<string, Set<AvatarCosmeticId>>()
+  dailyDuel = false
+  private dailyDuelPodiumUids: string[] = []
   private matchAvatarCosmetics = new Map<string, AvatarCosmeticId>()
   constructor() {
     super()
@@ -233,7 +236,8 @@ export default class GameRoom extends Room<{ state: GameState }> {
     maxRank,
     tournamentId,
     bracketId,
-    guideSynergy
+    guideSynergy,
+    dailyDuel
   }: {
     users: Record<string, IGameUser>
     preparationId: string
@@ -251,8 +255,10 @@ export default class GameRoom extends Room<{ state: GameState }> {
     tournamentId: string | null
     bracketId: string | null
     guideSynergy?: Synergy | null
+    dailyDuel?: boolean
   }) {
     logger.info("Create Game ", this.roomId)
+    this.dailyDuel = dailyDuel ?? false
 
     this.onRoomDeleted = this.onRoomDeleted.bind(this)
     this.presence.subscribe("room-deleted", this.onRoomDeleted)
@@ -276,6 +282,7 @@ export default class GameRoom extends Room<{ state: GameState }> {
       ownerName,
       gameMode,
       whimsy: whimsy ?? false,
+      dailyDuel: this.dailyDuel,
       playerIds: Object.keys(users).filter((id) => users[id].isBot === false),
       playersInfo: Object.keys(users).map(
         (u) => `${users[u].name} [${users[u].elo}]`
@@ -1255,6 +1262,16 @@ export default class GameRoom extends Room<{ state: GameState }> {
          hand out a free win and inflate the games played. */
       const countsAsAGame = this.state.gameMode !== GameMode.GUIDE
       if (countsAsAGame) usr.games += 1
+      if (this.dailyDuel && !player.isBot) {
+        if (rank <= 3) this.dailyDuelPodiumUids[rank - 1] = player.id
+        if (rank === 1) {
+          usr.dailyDuelWins = (usr.dailyDuelWins ?? 0) + 1
+          player.titles.add(Title.DUELIST)
+          await setDailyDuelPodiumUids(
+            [0, 1, 2].map((slot) => this.dailyDuelPodiumUids[slot] ?? "")
+          )
+        }
+      }
       if (rank === 1 && countsAsAGame) {
         usr.wins += 1
         if (!hasLeftBeforeEnd) {
@@ -1510,6 +1527,7 @@ export default class GameRoom extends Room<{ state: GameState }> {
           synergies: synergiesMap,
           gameMode: this.state.gameMode,
           whimsy: this.state.whimsy,
+          dailyDuel: this.dailyDuel,
           regions: player.regions,
           blessings: player.blessings ?? []
         })

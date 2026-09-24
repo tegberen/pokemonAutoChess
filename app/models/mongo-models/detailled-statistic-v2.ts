@@ -28,6 +28,7 @@ export interface IDetailledStatistic {
   regions: DungeonPMDO[]
   gameMode: GameMode
   whimsy?: boolean
+  dailyDuel?: boolean
   unholdableItems: Item[]
   blessings: Blessing[]
 }
@@ -88,6 +89,9 @@ const statisticSchema = new Schema({
     type: String
   },
   whimsy: {
+    type: Boolean
+  },
+  dailyDuel: {
     type: Boolean
   },
   unholdableItems: [

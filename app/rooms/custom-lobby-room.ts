@@ -9,6 +9,8 @@ import {
 import { CronJob } from "cron"
 import admin from "firebase-admin"
 import {
+  DAILY_DUEL_LOBBY_CRON,
+  DAILY_DUEL_ROOM_NAME,
   INACTIVITY_TIMEOUT,
   MAX_CONCURRENT_PLAYERS_ON_LOBBY,
   MAX_CONCURRENT_PLAYERS_ON_SERVER,
@@ -24,7 +26,7 @@ import UserMetadata, {
 import { notificationsService } from "../services/notifications"
 import { type Emotion, Role, type Title, Transfer } from "../types"
 import { CloseCodes } from "../types/enum/CloseCodes"
-import type { GameMode, RoomRequest } from "../types/enum/Game"
+import { GameMode, type RoomRequest } from "../types/enum/Game"
 import type { Language } from "../types/enum/Language"
 import { MaintenanceOrder } from "../types/enum/MaintenanceOrder"
 import type { IUserMetadataMongo } from "../types/interfaces/UserMetadata"
@@ -831,5 +833,30 @@ export default class CustomLobbyRoom extends Room {
       })
       this.cleanUpCronJobs.push(afkJob)
     }
+
+    const dailyDuelJob = CronJob.from({
+      cronTime: DAILY_DUEL_LOBBY_CRON,
+      timeZone: "UTC",
+      onTick: () => this.openDailyDuelLobby(),
+      start: true
+    })
+    this.cleanUpCronJobs.push(dailyDuelJob)
+  }
+
+  async openDailyDuelLobby() {
+    const alreadyWaiting = this.rooms?.some(
+      (room) =>
+        room.metadata?.type === "preparation" &&
+        room.metadata?.dailyDuel === true &&
+        room.metadata?.gameStartedAt == null
+    )
+    if (alreadyWaiting) return
+    await matchMaker.createRoom("preparation", {
+      gameMode: GameMode.RANKED,
+      noElo: false,
+      roomName: DAILY_DUEL_ROOM_NAME,
+      blessingsEnabled: true,
+      dailyDuel: true
+    })
   }
 }

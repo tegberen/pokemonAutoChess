@@ -1,3 +1,4 @@
+import { getDailyDuelPodiumUids } from "../models/mongo-models/daily-duel-podium"
 import { getDoubleUpChampionUids } from "../models/mongo-models/double-up-champions"
 import { getSmeargleScribbleChampionUid } from "../models/mongo-models/smeargle-scribble-champion"
 import UserMetadata from "../models/mongo-models/user-metadata"
@@ -14,6 +15,7 @@ let botLeaderboard = new Array<ILeaderboardBotInfo>()
 let eventLeaderboard = new Array<ILeaderboardInfo>()
 let doubleUpChampions = new Array<ILeaderboardInfo>()
 let smeargleScribbleChampion = new Array<ILeaderboardInfo>()
+let dailyDuelPodium = new Array<ILeaderboardInfo>()
 
 export function fetchLeaderboards() {
   logger.info("Refreshing leaderboards...")
@@ -23,8 +25,35 @@ export function fetchLeaderboards() {
     fetchLevelLeaderboard(),
     fetchEventLeaderboard(),
     fetchDoubleUpChampions(),
-    fetchSmeargleScribbleChampion()
+    fetchSmeargleScribbleChampion(),
+    fetchDailyDuelPodium()
   ])
+}
+
+export async function fetchDailyDuelPodium() {
+  const uids = await getDailyDuelPodiumUids()
+  const users = await UserMetadata.find(
+    { uid: { $in: uids.filter((uid) => uid !== "") } },
+    ["displayName", "avatar", "elo", "uid", "twitchLogin", "twitchDisplayName"]
+  ).lean()
+
+  dailyDuelPodium = uids
+    .map((uid, i): ILeaderboardInfo | null => {
+      const user = users.find((u) => u.uid === uid)
+      if (!user) return null
+      return {
+        name: user.displayName,
+        rank: i + 1,
+        avatar: user.avatar,
+        value: user.elo,
+        id: user.uid,
+        twitchLogin: user.twitchLogin,
+        twitchDisplayName: user.twitchDisplayName
+      }
+    })
+    .filter((info): info is ILeaderboardInfo => info != null)
+
+  return dailyDuelPodium
 }
 
 export async function fetchUserLeaderboard() {
@@ -183,6 +212,7 @@ export function getLeaderboard() {
     levelLeaderboard,
     eventLeaderboard,
     doubleUpChampions,
-    smeargleScribbleChampion
+    smeargleScribbleChampion,
+    dailyDuelPodium
   }
 }

@@ -46,6 +46,7 @@ import {
   setScribbleExtended,
   setBlessingsEnabled,
   setWhimsy,
+  setDailyDuel,
   setTournamentTeams,
   setUser,
   setWhiteList
@@ -201,6 +202,10 @@ export default function Preparation() {
 
       $state.listen("whimsy", (value, previousValue) => {
         dispatch(setWhimsy(value))
+      })
+
+      $state.listen("dailyDuel", (value) => {
+        dispatch(setDailyDuel(value))
       })
 
       $state.users.onAdd((user) => {

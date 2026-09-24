@@ -66,6 +66,7 @@ export default class PreparationState
   blessingsUnderTest: Blessing[] = []
   /** Whimsy Weekend: a Double Up room that rolls a random scribble rule. */
   @type("boolean") whimsy = false
+  @type("boolean") dailyDuel = false
   /** GUIDE: which synergy the run about to start teaches. */
   @type("string") guideSynergy: Synergy | null = null
   // replaced whole rather than edited, so the client's listen() sees the change
@@ -88,12 +89,14 @@ export default class PreparationState
     guideSynergy?: Synergy
     tournamentTeams?: TournamentLobbyTeamOption[]
     blessingsEnabled?: boolean
+    dailyDuel?: boolean
   }) {
     super()
     if (params.blessingsEnabled !== undefined) {
       this.blessingsEnabled = params.blessingsEnabled
     }
     this.whimsy = params.whimsy ?? false
+    this.dailyDuel = params.dailyDuel ?? false
     // Whimsy Weekend is a scribble-rule mode, so blessings never layer onto it
     if (this.whimsy) this.blessingsEnabled = false
     // a lesson teaches the base game, so an active blessing event never leaks in

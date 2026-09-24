@@ -39,6 +39,7 @@ const JAC_TITLES = new Set<Title>([
   Title.SHOW_OFF,
   Title.ULTRA,
   Title.GRAND_CHAMPION,
+  Title.DUELIST,
   Title.HOT_STREAK,
   Title.PRIDE,
   Title.STARRY,

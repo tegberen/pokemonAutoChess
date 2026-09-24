@@ -3,6 +3,7 @@ import { t as tBase} from "i18next"
 const t = tBase as any
 import Phaser from "phaser"
 import {
+  DAILY_DUEL_ROOM_NAME,
   isBlessingEvent,
   ItemCarouselStages,
   TownEncounterSellPrice
@@ -688,7 +689,7 @@ export default class MinigameManager {
         orientation: Orientation.DOWN,
         animation: PokemonActionState.IDLE,
         dialog: p.name,
-        dialogTitle: getRankLabel(rank + 1)
+        dialogTitle: `${DAILY_DUEL_ROOM_NAME} · ${getRankLabel(rank + 1)}`
       })
       champion.sprite.setDepth(DEPTH.POKEMON + (2 - rank)) //ensure top 1 is on top
       return champion

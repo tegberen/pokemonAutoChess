@@ -20,7 +20,11 @@ export default function GameRoomItem(props: {
   const title = `${props.room.metadata?.ownerName ? "Owner: " + props.room.metadata?.ownerName : ""}\n${props.room.metadata?.playersInfo?.join("\n")}`
 
   return (
-    <div className="room-item my-box">
+    <div
+      className={cc("room-item my-box", {
+        "daily-duel": props.room.metadata?.dailyDuel === true
+      })}
+    >
       {props.room.metadata?.gameMode && (
         <GameModeIcon
           gameMode={props.room.metadata.gameMode}

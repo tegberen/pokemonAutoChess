@@ -67,7 +67,7 @@ export default function Newspaper() {
   )
 }
 
-function VictoryCard({ victory }: { victory: IRecentVictory }) {
+export function VictoryCard({ victory }: { victory: IRecentVictory }) {
   const match = victory.winners[0].game
   return (
     <article className="my-box newspaper-card">

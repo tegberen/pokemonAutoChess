@@ -12,6 +12,7 @@ import { rooms } from "../../../network"
 import { GameModeIcon } from "../icons/game-mode-icon"
 import { IngameRoomsList } from "./game-rooms-menu"
 import RoomItem from "./room-item"
+import { DailyDuelCountdown } from "./daily-duel-countdown"
 import { RoomSelectionMenu } from "./room-selection-menu"
 import "./room-menu.css"
 
@@ -89,6 +90,7 @@ export default function RoomMenu() {
   const hasCustomLobbies = gameRooms.some(
     (r) => r.metadata.gameMode === GameMode.CUSTOM_LOBBY
   )
+  const hasDailyDuelLobby = preparationRooms.some((r) => r.metadata?.dailyDuel)
 
   return (
     <Tabs className="my-container room-menu custom-bg hidden-scrollable">
@@ -131,6 +133,7 @@ export default function RoomMenu() {
       {!user && <p className="subtitle">{t("loading")}</p>}
 
       <TabPanel>
+        {!hasDailyDuelLobby && <DailyDuelCountdown />}
         <RoomList onRoomAction={onRoomAction} />
       </TabPanel>
       <TabPanel>

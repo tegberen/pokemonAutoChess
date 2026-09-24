@@ -424,7 +424,7 @@ export default function Game() {
       fetch("/leaderboards")
         .then((res) => res.json())
         .then((data) => {
-          dispatch(setPodium(data.leaderboard.slice(0, 3)))
+          dispatch(setPodium(data.dailyDuelPodium ?? []))
           dispatch(setDoubleUpChampions(data.doubleUpChampions ?? []))
           dispatch(
             setSmeargleScribbleChampion(data.smeargleScribbleChampion ?? [])

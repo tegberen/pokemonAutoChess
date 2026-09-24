@@ -97,6 +97,8 @@ const isDevelopment = process.env.MODE === "dev"
 const NEWSPAPER_RECORDS_SCANNED = 30
 // the number of cards the Gazette shows: the panel renders whatever it is sent
 const NEWSPAPER_VICTORIES_RETURNED = 4
+const DAILY_DUEL_RESULTS_WINDOW = 2 * 24 * 60 * 60 * 1000
+const DAILY_DUEL_RESULTS_RETURNED = 6
 // legacy records predate gameId and can only be paired back up by their mode,
 // player count and the near-identical time at which they were written
 const SAME_MATCH_TIME_WINDOW = 30_000
@@ -561,6 +563,46 @@ export const server = defineServer({
         res.set("Cache-Control", "no-cache")
       }
       res.send(getLeaderboard()?.eventLeaderboard)
+    })
+
+    app.get("/daily-duel-results", async (req, res) => {
+      if (!isDevelopment) {
+        res.set("Cache-Control", "no-cache")
+      }
+      try {
+        const stats = await DetailledStatistic.find(
+          {
+            dailyDuel: true,
+            rank: { $lte: 3 },
+            time: { $gte: Date.now() - DAILY_DUEL_RESULTS_WINDOW }
+          },
+          [
+            "playerId",
+            "gameId",
+            "name",
+            "avatar",
+            "pokemons",
+            "time",
+            "rank",
+            "nbplayers",
+            "elo",
+            "gameMode",
+            "whimsy",
+            "unholdableItems",
+            "blessings"
+          ],
+          { limit: DAILY_DUEL_RESULTS_RETURNED, sort: { time: -1 } }
+        )
+        const results: IRecentVictory[] = stats.map((record) => ({
+          winners: [toVictoryWinner(record)]
+        }))
+        return res.status(200).json(results)
+      } catch (error) {
+        logger.error("Error fetching daily duel results", error)
+        return res
+          .status(500)
+          .json({ error: "Error fetching daily duel results" })
+      }
     })
 
     app.get("/twitch/streams", async (req, res) => {
