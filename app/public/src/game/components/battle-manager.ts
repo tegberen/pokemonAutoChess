@@ -23,7 +23,8 @@ import {
   type Orientation,
   PokemonActionState,
   PokemonTint,
-  Stat
+  Stat,
+  Team
 } from "../../../../types/enum/Game"
 import { Item } from "../../../../types/enum/Item"
 import { Passive } from "../../../../types/enum/Passive"
@@ -40,6 +41,7 @@ import { DEPTH } from "../depths"
 import type GameScene from "../scenes/game-scene"
 import { displayAbility, displayHit } from "./abilities-animations"
 import PokemonSprite from "./pokemon"
+import { Portal } from "./portal"
 import {
   DEFAULT_POKEMON_ANIMATION_CONFIG,
   PokemonAnimations
@@ -53,6 +55,17 @@ const GALE_WINGS_COLLECT_MAX_STAGGER = 60
 const GALE_WINGS_COLLECT_TOTAL_STAGGER = 900
 // the toast slides in, so it is fired before the last ember lands to arrive with it
 const GALE_WINGS_COLLECT_TOAST_LEAD = 350
+const REINFORCEMENT_PORTAL_OPEN_DURATION = 400
+// the size of the portal the team walks into at the start of a round
+const REINFORCEMENT_PORTAL_SCALE = 1.5
+// opened 2.5s before the jump, and held past it in case the jump is late
+const REINFORCEMENT_DEPARTURE_PORTAL_LIFETIME = 3500
+const REINFORCEMENT_ARRIVAL_PORTAL_LIFETIME = 2000
+// the winner's view switches to the partner's board 650ms after the jump in
+// starts, so it must be over by then
+const REINFORCEMENT_JUMP_DURATION = 500
+const REINFORCEMENT_JUMP_HEIGHT = 40
+const REINFORCEMENT_EMERGE_DELAY = 250
 
 export default class BattleManager {
   group: GameObjects.Group
@@ -62,6 +75,11 @@ export default class BattleManager {
   player: Player
   boardEventSprites: GameObjects.Sprite[][]
   pokemonSprites: Map<string, PokemonSprite> = new Map()
+  reinforcementPortal: Portal | undefined
+  departurePortal: Portal | undefined
+  reinforcementPortalTeam: Team | undefined
+  reinforcementsExpected = 0
+  renderedFlip: boolean | undefined
 
   constructor(
     scene: GameScene,
@@ -137,6 +155,24 @@ export default class BattleManager {
       this.group.add(pokemonUI)
       this.pokemonSprites.set(pokemon.id, pokemonUI)
       if (
+        this.reinforcementsExpected > 0 &&
+        this.reinforcementPortal &&
+        pokemon.team === this.reinforcementPortalTeam
+      ) {
+        this.reinforcementsExpected--
+        pokemonUI.setScale(0)
+        this.jumpAlongArc(pokemonUI, {
+          fromX: this.reinforcementPortal.x,
+          fromY: this.reinforcementPortal.y,
+          toX: coordinates[0],
+          toY: coordinates[1],
+          fromScale: 0,
+          toScale: 1,
+          duration: REINFORCEMENT_JUMP_DURATION,
+          delay: REINFORCEMENT_EMERGE_DELAY + Phaser.Math.Between(0, 250)
+        })
+      }
+      if (
         pokemon.name === Pkm.FALINKS_BRASS ||
         pokemon.passive === Passive.AVALUGG
       ) {
@@ -156,6 +192,143 @@ export default class BattleManager {
         )
       }
     }
+  }
+
+  openReinforcementPortal(event: {
+    simulationId: string
+    team: Team
+    phase: "open" | "depart" | "arrive"
+    count: number
+  }) {
+    if (this.simulation?.id !== event.simulationId) return
+
+    if (event.phase === "open") {
+      this.departurePortal = this.createReinforcementPortal(
+        event.team,
+        REINFORCEMENT_DEPARTURE_PORTAL_LIFETIME
+      )
+      return
+    }
+
+    if (event.phase === "depart") {
+      const portal =
+        this.departurePortal?.active === true
+          ? this.departurePortal
+          : this.createReinforcementPortal(
+              event.team,
+              REINFORCEMENT_JUMP_DURATION
+            )
+      this.pokemonSprites.forEach((sprite) => {
+        const entity = sprite.pokemon as IPokemonEntity
+        if (entity.team !== event.team || !sprite.visible) return
+        this.jumpAlongArc(sprite, {
+          fromX: sprite.x,
+          fromY: sprite.y,
+          toX: portal.x,
+          toY: portal.y,
+          fromScale: 1,
+          toScale: 0,
+          duration: REINFORCEMENT_JUMP_DURATION,
+          delay: Phaser.Math.Between(0, 150),
+          onComplete: () => sprite.setVisible(false)
+        })
+      })
+      return
+    }
+
+    this.reinforcementPortal = this.createReinforcementPortal(
+      event.team,
+      REINFORCEMENT_ARRIVAL_PORTAL_LIFETIME
+    )
+    this.reinforcementPortalTeam = event.team
+    this.reinforcementsExpected = event.count
+  }
+
+  createReinforcementPortal(team: Team, lifetime: number) {
+    const [x, y] = transformEntityCoordinates(
+      3.5,
+      team === Team.BLUE_TEAM ? -0.5 : BOARD_HEIGHT - 0.5,
+      this.flip
+    )
+    const portal = new Portal(this.scene, "reinforcement-portal", x, y)
+    portal.setScale(0)
+    this.group.add(portal)
+    this.scene.tweens.chain({
+      targets: portal,
+      tweens: [
+        {
+          scale: REINFORCEMENT_PORTAL_SCALE,
+          duration: REINFORCEMENT_PORTAL_OPEN_DURATION,
+          ease: Phaser.Math.Easing.Sine.Out
+        },
+        {
+          scale: 0,
+          delay: lifetime,
+          duration: REINFORCEMENT_PORTAL_OPEN_DURATION,
+          ease: Phaser.Math.Easing.Quadratic.In
+        }
+      ],
+      onComplete: () => {
+        if (this.reinforcementPortal === portal) {
+          this.reinforcementPortal = undefined
+          this.reinforcementsExpected = 0
+        }
+        portal.destroy()
+      }
+    })
+    return portal
+  }
+
+  jumpAlongArc(
+    sprite: PokemonSprite,
+    jump: {
+      fromX: number
+      fromY: number
+      toX: number
+      toY: number
+      fromScale: number
+      toScale: number
+      duration: number
+      delay: number
+      onComplete?: () => void
+    }
+  ) {
+    this.scene.time.delayedCall(jump.delay, () => {
+      if (!sprite.active) return
+      this.animationManager.animatePokemon(
+        sprite,
+        PokemonActionState.HOP,
+        this.flip,
+        false
+      )
+      this.scene.tweens.addCounter({
+        from: 0,
+        to: 1,
+        duration: jump.duration,
+        onUpdate: (tween) => {
+          const progress = (tween.getValue() ?? 0) as number
+          const arc = 4 * progress * (1 - progress) * REINFORCEMENT_JUMP_HEIGHT
+          sprite.setPosition(
+            Phaser.Math.Linear(jump.fromX, jump.toX, progress),
+            Phaser.Math.Linear(jump.fromY, jump.toY, progress) - arc
+          )
+          sprite.setScale(
+            Phaser.Math.Linear(jump.fromScale, jump.toScale, progress)
+          )
+        },
+        onComplete: () => {
+          if (!sprite.active) return
+          sprite.setPosition(jump.toX, jump.toY).setScale(jump.toScale)
+          sprite.animationLocked = false
+          this.animationManager.animatePokemon(
+            sprite,
+            PokemonActionState.IDLE,
+            this.flip
+          )
+          jump.onComplete?.()
+        }
+      })
+    })
   }
 
   // GALE_WINGS: the embers left on the field rise, then fly into the gold counter
@@ -223,6 +396,9 @@ export default class BattleManager {
   }
 
   clear() {
+    this.reinforcementPortal = undefined
+    this.departurePortal = undefined
+    this.reinforcementsExpected = 0
     this.group.clear(true, true)
     this.boardEventSprites = Array.from(
       { length: BOARD_WIDTH * BOARD_HEIGHT },
@@ -1603,7 +1779,18 @@ export default class BattleManager {
   }
 
   setSimulation(simulation: Simulation) {
+    // switching to spectate a fight echoes back as a second set of the same
+    // fight, and rebuilding it would cut short what is playing on it
+    const previousSimulationId = this.simulation?.id
     this.simulation = simulation
+    if (
+      previousSimulationId === simulation.id &&
+      this.renderedFlip === this.flip &&
+      this.pokemonSprites.size > 0
+    ) {
+      return
+    }
+    this.renderedFlip = this.flip
     this.clear()
     this.buildPokemons()
   }

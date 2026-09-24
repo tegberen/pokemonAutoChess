@@ -441,6 +441,7 @@ export default class Simulation extends Schema implements ISimulation {
   entities: IPokemonEntity[] = []
   finishedAt: number = 0
   reinforcementsSent: boolean = false
+  reinforcementPortalOpened = false
   robinGemsRewardProcessed = false
   snifferDogPulledPokemonIds = new Set<string>()
   toxicResonanceByTeam = new Map<
@@ -1244,30 +1245,30 @@ export default class Simulation extends Schema implements ISimulation {
   }
 
   getFirstFreeCell(team: Team): { x: number; y: number } | null {
+    return this.getFreeCells(team, 1)[0] ?? null
+  }
+
+  getFreeCells(team: Team, count: number): { x: number; y: number }[] {
+    const freeCells: { x: number; y: number }[] = []
+    const collect = (x: number, y: number) => {
+      if (
+        freeCells.length < count &&
+        this.board.isOnBoard(x, y) &&
+        this.board.getEntityOnCell(x, y) === undefined
+      ) {
+        freeCells.push({ x, y })
+      }
+    }
     if (team === Team.BLUE_TEAM) {
       for (let y = 0; y <= BOARD_SIDE_HEIGHT - 1; y++) {
-        for (let x = 0; x < this.board.columns; x++) {
-          if (
-            this.board.isOnBoard(x, y) &&
-            this.board.getEntityOnCell(x, y) === undefined
-          ) {
-            return { x, y }
-          }
-        }
+        for (let x = 0; x < this.board.columns; x++) collect(x, y)
       }
     } else {
       for (let y = this.board.rows - 1; y >= this.board.rows - BOARD_SIDE_HEIGHT; y--) {
-        for (let x = this.board.columns - 1; x >= 0; x--) {
-          if (
-            this.board.isOnBoard(x, y) &&
-            this.board.getEntityOnCell(x, y) === undefined
-          ) {
-            return { x, y }
-          }
-        }
+        for (let x = this.board.columns - 1; x >= 0; x--) collect(x, y)
       }
     }
-    return null
+    return freeCells
   }
 
   getClosestFreeCellTo(

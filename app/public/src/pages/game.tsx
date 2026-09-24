@@ -739,6 +739,15 @@ export default function Game() {
 
       room.onMessage(Transfer.GAME_END, leave)
       room.onMessage(
+        Transfer.DOUBLE_UP_REINFORCEMENT_PORTAL,
+        (event: {
+          simulationId: string
+          team: Team
+          phase: "open" | "depart" | "arrive"
+          count: number
+        }) => getGameScene()?.battle?.openReinforcementPortal(event)
+      )
+      room.onMessage(
         Transfer.DOUBLE_UP_REINFORCEMENT_SENT,
         ({ partnerPlayerId }: { partnerPlayerId: string }) => {
           const partnerPlayer = room.state.players.get(partnerPlayerId)

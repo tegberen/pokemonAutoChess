@@ -301,6 +301,11 @@ import {
   onFossilUnlockRoundStart
 } from "../../services/fossil-unlocks"
 
+const DOUBLE_UP_REINFORCEMENT_PORTAL_OPEN_AT = 500
+const DOUBLE_UP_REINFORCEMENT_SEND_AT = 3000
+const DOUBLE_UP_REINFORCEMENT_VIEW_SWITCH_DELAY = 650
+const DOUBLE_UP_REINFORCEMENT_LANDING_DELAY = 1200
+
 export class OnBuyPokemonCommand extends Command<
   GameRoom,
   {
@@ -2027,7 +2032,8 @@ export class OnUpdateCommand extends Command<
   checkDoubleUpReinforcements() {
     this.state.simulations.forEach((sim) => {
       if (!sim.finished || sim.reinforcementsSent) return
-      if (Date.now() - sim.finishedAt < 3000) return
+      const sinceFinished = Date.now() - sim.finishedAt
+      if (sinceFinished < DOUBLE_UP_REINFORCEMENT_PORTAL_OPEN_AT) return
       if (!sim.winnerId) return // draw, no reinforcements
 
       // Ghost battle where the ghost side wins → no reinforcements
@@ -2045,6 +2051,17 @@ export class OnUpdateCommand extends Command<
 
       const partnerSim = this.state.simulations.get(partnerPlayer.simulationId)
       if (!partnerSim || partnerSim.finished || !partnerSim.started) return
+
+      if (!sim.reinforcementPortalOpened) {
+        sim.reinforcementPortalOpened = true
+        this.room.broadcast(Transfer.DOUBLE_UP_REINFORCEMENT_PORTAL, {
+          simulationId: sim.id,
+          team: winnerIsBlue ? Team.BLUE_TEAM : Team.RED_TEAM,
+          phase: "open",
+          count: 0
+        })
+      }
+      if (sinceFinished < DOUBLE_UP_REINFORCEMENT_SEND_AT) return
 
       sim.reinforcementsSent = true
       this.sendReinforcements(sim, partnerSim)
@@ -2075,8 +2092,53 @@ export class OnUpdateCommand extends Command<
     })
     if (survivors.length === 0) return
 
-    for (const entity of survivors) {
-      const coord = target.getFirstFreeCell(partnerTeam)
+    const landingCells = target.getFreeCells(partnerTeam, survivors.length)
+    this.room.broadcast(Transfer.DOUBLE_UP_REINFORCEMENT_PORTAL, {
+      simulationId: source.id,
+      team: winnerIsBlue ? Team.BLUE_TEAM : Team.RED_TEAM,
+      phase: "depart",
+      count: survivors.length
+    })
+    this.room.clock.setTimeout(() => {
+      if (target.finished) return
+      this.room.clients
+        .find((cli) => cli.auth.uid === winnerPlayer.id)
+        ?.send(Transfer.DOUBLE_UP_REINFORCEMENT_SENT, {
+          partnerPlayerId: winnerPlayer.doubleUpPartnerId
+        })
+      this.room.broadcast(Transfer.DOUBLE_UP_REINFORCEMENT_PORTAL, {
+        simulationId: target.id,
+        team: partnerTeam,
+        phase: "arrive",
+        count: landingCells.length
+      })
+    }, DOUBLE_UP_REINFORCEMENT_VIEW_SWITCH_DELAY)
+    this.room.clock.setTimeout(() => {
+      if (target.finished) return
+      this.landReinforcements(
+        target,
+        partnerTeam,
+        winnerPlayer,
+        survivors,
+        landingCells
+      )
+    }, DOUBLE_UP_REINFORCEMENT_LANDING_DELAY)
+  }
+
+  landReinforcements(
+    target: Simulation,
+    partnerTeam: Team,
+    winnerPlayer: Player,
+    survivors: PokemonEntity[],
+    landingCells: { x: number; y: number }[]
+  ) {
+    for (const [index, entity] of survivors.entries()) {
+      const plannedCell = landingCells[index]
+      const coord =
+        plannedCell &&
+        target.board.getEntityOnCell(plannedCell.x, plannedCell.y) === undefined
+          ? plannedCell
+          : target.getFirstFreeCell(partnerTeam)
       if (!coord) {
         // logger.warn(`[DoubleUp] No free cell for reinforcement — stopping`)
         break
@@ -2169,12 +2231,6 @@ export class OnUpdateCommand extends Command<
       }
     })
 
-    const winnerClient = this.room.clients.find(
-      (cli) => cli.auth.uid === winnerPlayer.id
-    )
-    winnerClient?.send(Transfer.DOUBLE_UP_REINFORCEMENT_SENT, {
-      partnerPlayerId: winnerPlayer.doubleUpPartnerId
-    })
   }
 }
 
