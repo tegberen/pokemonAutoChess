@@ -491,7 +491,7 @@ Every balance change on this server, newest first.
 ### 24 September 2026
 
 **Game Mode**
-- Daily Duel {{new}} | every day at 20:00 UTC, a ranked lobby with Wishes opens in Rooms and starts once full. The new Daily Duel tab shows the top 3 comps of the last 2 days, the winner earns the Duelist title, wins are counted on the profile, and the town podium now shows the latest Daily Duel top 3
+- Daily Duel {{new}} | every day at 20:00 UTC, a ranked lobby with Wishes opens in Rooms and starts once full. The new Daily Duel tab shows the top 3 comps of the last 2 days, the winner earns the Duelist title and its Duelist's Arena theme, wins are counted on the profile, and the town podium now shows the latest Daily Duel top 3
 
 **Abilities**
 - Mud Bubble | now always deals [15,30,60,120,SP] SPECIAL to ADJACENT enemies and applies BLINDED, doubled against enemies already BLINDED, instead of damaging only those already BLINDED

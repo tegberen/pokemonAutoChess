@@ -44,7 +44,7 @@
 
 .preparation-menu .daily-duel-count {
   padding: 0.15em 0.7em;
-  border: var(--border-thin);
+  border: 1px solid #1a1204;
   border-radius: 999px;
   background-color: #2a1f08;
   color: #ffffff;
@@ -60,6 +60,7 @@
   width: 100%;
   margin: 0.2em 0 1em;
   padding: 0.6em 1em;
+  border: 1px solid #1a1204;
   background-color: #2a1f08;
   background-image: repeating-linear-gradient(
     135deg,

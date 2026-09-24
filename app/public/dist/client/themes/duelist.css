@@ -1,0 +1,75 @@
+:root {
+  --color-bg-primary: #3a1224;
+  --color-bg-secondary: #5a1d34;
+  --color-bg-tertiary: #43203f;
+  --color-bg-accent: #a57ad8;
+
+  --border-thick: 2px solid #1c0816;
+  --border-thin: 1px solid #1c0816;
+  --border-extra-thin: 1px solid #1c0816;
+}
+
+.custom-bg {
+  background-image: url("/assets/theme/duelist/custombg.webp");
+  background-size: cover;
+  background-position: center 30%;
+}
+
+.lobby h2 {
+  text-shadow: 0px 3px 6px black;
+}
+
+.draggable-window.my-container,
+.game-shop .information > div,
+#game-stage-info,
+.game-spectate-player-info.my-container,
+.team-builder-modal.my-container,
+.game-shop.my-container {
+  background-color: color-mix(in srgb, var(--color-bg-primary) 45%, transparent);
+  backdrop-filter: blur(4px);
+}
+
+.after-menu .my-container,
+.leaderboard .my-container,
+.room-menu.my-container,
+.events-menu .my-container {
+  background-color: color-mix(in srgb, var(--color-bg-primary) 40%, transparent);
+  backdrop-filter: blur(4px);
+}
+
+.leaderboard [data-react-window-index]:nth-child(odd) .my-box {
+  background: color-mix(in srgb, var(--color-bg-secondary) 55%, transparent);
+}
+
+.leaderboard [data-react-window-index]:nth-child(even) .my-box {
+  background: color-mix(in srgb, var(--color-bg-tertiary) 45%, transparent);
+}
+
+.newspaper-card.my-box {
+  background-color: color-mix(in srgb, var(--color-bg-secondary) 55%, transparent);
+}
+
+.react-tabs__tab--selected {
+  background-color: var(--color-bg-secondary);
+}
+
+.react-tabs__tab--selected:after {
+  background: var(--color-bg-accent);
+}
+
+.scales-ap .ability-value {
+  color: #7fdde0;
+}
+
+.lobby .play-button.bubbly.green {
+  background: linear-gradient(90deg, #b3263a, #7a45c2);
+  color: #ffffff;
+  box-shadow: inset -6px -6px 0px 0px #00000040, var(--shadow-clickable);
+}
+.lobby .play-button.bubbly.green:not([disabled]):hover {
+  background: linear-gradient(90deg, #c8344a, #8c56d6);
+}
+.lobby .play-button.bubbly.green:not([disabled]):active {
+  background: linear-gradient(90deg, #b3263a, #7a45c2);
+  box-shadow: inset 6px 6px 0px 0px #00000040, var(--shadow-clickable);
+}
