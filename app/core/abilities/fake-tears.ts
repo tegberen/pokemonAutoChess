@@ -11,7 +11,7 @@ export class FakeTearsStrategy extends AbilityStrategy {
     crit: boolean
   ) {
     super.process(pokemon, board, target, crit)
-    const damage = [10, 20, 30, 60][pokemon.stars - 1] ?? 60
+    const damage = [10, 20, 40, 60][pokemon.stars - 1] ?? 60
     const shred = [3, 6, 9, 18][pokemon.stars - 1] ?? 18
     board
       .getCellsInRadius(pokemon.positionX, pokemon.positionY, 5, true)

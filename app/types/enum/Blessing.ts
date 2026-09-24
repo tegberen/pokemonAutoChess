@@ -525,7 +525,9 @@ export const NOT_THE_BEES_MAX_COMBEES = 16
 export const SPORE_CLOUDS_INTERVAL = 3000
 export const SPORE_CLOUDS_STATUS_DURATION = 2000
 export const FLYTRAP_HEAL_PER_LOCKED_ENEMY = 10
-export const BRACE_FOR_IMPACT_MAX_HP_RATIO = 0.4
+export const BRACE_FOR_IMPACT_MAX_HP_RATIO = 0.5
+// FIGHTING 8 grants the same cap, but a stricter one
+export const COACHING_MAX_HP_RATIO = 0.4
 export const SHODAN_MAX_HP_RATIO = 0.2
 export const FROST_BARRIER_HP_THRESHOLD = 0.5
 export const FROST_BARRIER_DEFENSE = 15
@@ -549,7 +551,7 @@ export const ECHO_CHAMBER_PP_TO_ALLIES = 4
 export const LANGUAGE_BARRIER_SHIELD = 30
 export const LANGUAGE_BARRIER_UNOWNS_GRANTED = 2
 export const MOVE_TUTOR_MAX_PP = 70
-export const ZAP_CHAIN_DAMAGE_RATIO = 0.5
+export const ZAP_CHAIN_DAMAGE_RATIO = 0.4
 // on top of the clone the BUG synergy already makes, for three copies in total
 export const BUG_CLONE_TRIPLE = 1
 export const DRAGON_KING_SHIELD_PER_STAR = 10
@@ -686,7 +688,7 @@ export const ICY_REFLECTION_TRIGGER_MAX_HP_RATIO = 0.25
 export const ICY_REFLECTION_CAST_DELAY = 250
 export const BULL_LEAPING_ARRIVAL_CHECK_INTERVAL = 250
 export const BULL_LEAPING_ARRIVAL_MAX_CHECKS = 12
-export const OVERLOAD_CAST_INTERVAL = 10000
+export const OVERLOAD_CAST_INTERVAL = 12000
 export const OVERLOAD_FIRST_CAST_DELAY = 500
 export const TIDAL_GUARDIAN_WHIRLPOOL_TARGETS = 3
 export const FOGBOUND_LAKE_FIREFLIES: Pkm[] = [Pkm.VOLBEAT, Pkm.ILLUMISE]
@@ -1058,7 +1060,7 @@ export const PULSE_SHIELD_ALLY_SPEED = { I: 5, II: 10 }
 export const MINIMALIST_PP_PER_EMPTY_SLOT = { I: 10, II: 20 } // in % of max PP
 export const MINIMALIST_NO_ITEM_AP = { I: 30, II: 40 }
 
-export const CRITICAL_RUSH_SPEED = { I: 30, II: 50 }
+export const CRITICAL_RUSH_SPEED = { I: 20, II: 40 }
 export const CRITICAL_RUSH_DURATION = { I: 10000, II: 15000 }
 export const CRITICAL_RUSH_II_STACK_SPEED = 5
 // matches REAPER_CLOTH, for abilities that already critically strike
@@ -1076,7 +1078,7 @@ export const REVEILLE_DELAY = 12000
 export const REVEILLE_WALK_DELAY = 1000
 export const REVEILLE_BENCH_SLOTS = 3
 export const GUARD_FORMATION_SHARE_RATIO = 0.5
-export const BRAVE_FORMATION_CRIT_CHANCE_PER_EMPTY_TILE = 15 // in %
+export const BRAVE_FORMATION_CRIT_CHANCE_PER_EMPTY_TILE = 5 // in %
 export const TOUGH_FORMATION_DEFENSE_PER_ADJACENT_ALLY = 2
 
 export const IMPENDING_DOOM_DELAY = 7000

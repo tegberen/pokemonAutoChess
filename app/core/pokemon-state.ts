@@ -30,6 +30,7 @@ import {
   AURORA_BOREALIS_DAMAGE_REDUCTION_IN_SNOW_OR_NIGHT,
   Blessing,
   BRACE_FOR_IMPACT_MAX_HP_RATIO,
+  COACHING_MAX_HP_RATIO,
   SHODAN_MAX_HP_RATIO,
   PLUSHIFY_SUBSTITUTE_PROTECT_DURATION,
   CONTEMPT_DAMAGE_MULTIPLIER,
@@ -956,7 +957,9 @@ export default abstract class PokemonState {
           pokemon.player?.blessings?.includes(Blessing.SHODAN) === true
         const maxHpRatio = deflects
           ? SHODAN_MAX_HP_RATIO
-          : BRACE_FOR_IMPACT_MAX_HP_RATIO
+          : pokemon.effects.has(EffectEnum.COACHING)
+            ? COACHING_MAX_HP_RATIO
+            : BRACE_FOR_IMPACT_MAX_HP_RATIO
         const maxDamage = Math.ceil(pokemon.maxHP * maxHpRatio)
         const excessDamage = reducedDamage - maxDamage
         reducedDamage = Math.min(reducedDamage, maxDamage)

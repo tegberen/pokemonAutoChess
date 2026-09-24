@@ -2032,7 +2032,7 @@
 		"DIVE": "Dive underwater and gain [15,30,60,120] SHIELD, then reappear in the middle of the enemy team, dealing [10,20,40,80,SP] SPECIAL.",
 		"SPIKY_SHIELD": "For [3,5,10,10] seconds, units that melee attack the user get WOUND for 2 seconds and take SPECIAL equal to [60,80,100,200,SP]% of the user's DEF. When casting again before the end of the effect, throw spikes in all directions, dealing [30,30,30,60,SP] SPECIAL to all enemies hit.",
 		"FUTURE_SIGHT": "Select 5 enemey Pokémon. After 2 seconds, deal [10,15,20,30, 60,SP] SPECIAL to each of them, +20% of that damage to ADJACENT enemies.",
-		"FAKE_TEARS": "Deal [10,20,30,60,SP] SPECIAL to all enemy Pokémon in a 5-tile radius around the user and inflict them with ARMOR_BREAK for 3 seconds. If already ARMOR_BREAK, remove [3, 6, 9] SPE_DEF additionally.",
+		"FAKE_TEARS": "Deal [10,20,40,60,SP] SPECIAL to all enemy Pokémon in a 5-tile radius around the user and inflict them with ARMOR_BREAK for 3 seconds. If already ARMOR_BREAK, remove [3, 6, 9] SPE_DEF additionally.",
 		"SPARKLING_ARIA": "Deal [25,50,100,200,SP] SPECIAL to the target and ADJACENT enemy Pokémon. Cure BURN from all ADJACENT allied Pokémon.",
 		"DRAGON_DARTS": "Throw 3 darts that deals [10,20,40,80,SP] SPECIAL each to the target. If the target is KO'd, restore [40,40,40,80] PP.",
 		"GRASSY_SURGE": "Increase ATK of all GRASS allies by [5,5,5,10,SP] except the user.",
@@ -2101,7 +2101,7 @@
 		"HAIL": "A hailstorm hits [10,20,30] random tiles on the target's side of the board. BOARD_EFFECT: The tiles deal [50,50,50,80,SP] SPECIAL on impact and stay on the ground.",
 		"LUSTER_PURGE": "Launch a ball of light in a straight line, which rebounds after travelling 4 tiles, dealing [5,15,25,40,80,SP] SPECIAL and lowering the SPE_DEF by 5 each time it passes through an enemy.",
 		"MIST_BALL": "Launch a mist bubble in a straight line, which rebounds after travelling 4 tiles, dealing [5,15,25,40,80,SP] SPECIAL and lowering the AP by 30 each time it passes through an enemy.",
-		"MUD_BUBBLE": "Heal the user for [20,40,80,160,SP] HP, then BLINDED all ADJACENT enemy Pokémon for [2,4,6,12] seconds. If already BLINDED, deal [30,60,120,240,SP] SPECIAL instead.",
+		"MUD_BUBBLE": "Heal the user for [20,40,80,160,SP] HP, then deal [15,30,60,120,SP] SPECIAL to all ADJACENT enemy Pokémon and BLINDED them for [2,4,6,12] seconds. Enemies already BLINDED take double damage instead.",
 		"LINK_CABLE": "Dash to the farthest reachable enemy Pokémon, then trigger an electric arc between $t(pkm.PLUSLE) and $t(pkm.MINUN), dealing [40,40,40,80,SP] SPECIAL. If $t(pkm.PLUSLE) or $t(pkm.MINUN) are alone, deal half this damage to ADJACENT enemy Pokémon instead.",
 		"MAGIC_BOUNCE": "For 5 seconds, whenever the user is hit by an ability, block the damage and reflect [50,100,200,400,SP]% SPECIAL to the caster.",
 		"REFLECT": "For [3,3,3,5] seconds, whenever the user received PHYSICAL, block the damage and reflect [50,75,100,150,SP]% of the damage as SPECIAL to the attacker.",
@@ -5150,11 +5150,11 @@
 		},
 		"CRITICAL_RUSH_I": {
 			"name": "Critical Rush I",
-			"description": "The first time a Pokémon lands a critical hit, it gains 30 SPEED for 10 seconds."
+			"description": "The first time a Pokémon lands a critical hit, it gains 20 SPEED for 10 seconds."
 		},
 		"CRITICAL_RUSH_II": {
 			"name": "Critical Rush II",
-			"description": "The first time a Pokémon lands a critical hit, it gains 50 SPEED for 15 seconds. Each further critical hit during that time grants 5 SPEED for the rest of combat."
+			"description": "The first time a Pokémon lands a critical hit, it gains 40 SPEED for 15 seconds. Each further critical hit during that time grants 5 SPEED for the rest of combat."
 		},
 		"CRITICAL_PATH_I": {
 			"name": "Critical Path I",
@@ -5198,7 +5198,7 @@
 		},
 		"BRAVE_FORMATION": {
 			"name": "Brave Formation",
-			"description": "At the start of combat, Pokémon gain 15% CRIT_CHANCE for each empty ADJACENT tile."
+			"description": "At the start of combat, Pokémon gain 5% CRIT_CHANCE for each empty ADJACENT tile."
 		},
 		"TOUGH_FORMATION": {
 			"name": "Tough Formation",
@@ -5618,7 +5618,7 @@
 		},
 		"ZAP": {
 			"name": "Zap!",
-			"description": "ELECTRIC triple attacks chain to a random ADJACENT enemy, dealing 50% of the initial damage and applying ON_HIT effects. Gain a Grubbin."
+			"description": "ELECTRIC triple attacks chain to a random ADJACENT enemy, dealing 40% of the initial damage and applying ON_HIT effects. Gain a Grubbin."
 		},
 		"SEEING_TRIPLE": {
 			"name": "Seeing Triple",
@@ -5666,7 +5666,7 @@
 		},
 		"BRACE_FOR_IMPACT": {
 			"name": "Brace for Impact",
-			"description": "Allied Pokémon cannot take more than 40% of their maximum HP in a single instance of PHYSICAL or SPECIAL. (Does not stack with FIGHTING 8.)"
+			"description": "Allied Pokémon cannot take more than 50% of their maximum HP in a single instance of PHYSICAL or SPECIAL. (Does not stack with FIGHTING 8.)"
 		},
 		"FROST_BARRIER": {
 			"name": "Frost Barrier",
@@ -5914,7 +5914,7 @@
 		},
 		"OVERLOAD": {
 			"name": "Overload",
-			"description": "At the start of combat and every 10 seconds, the STRONGEST of your ELECTRIC Pokémon (not yet empowered) is empowered by Volt Surge: it gains ELECTRIC_FIELD, 20 SPEED and bonus HP, and every 3rd attack chains lightning to 4 enemies. Its own ability is unchanged."
+			"description": "At the start of combat and every 12 seconds, the STRONGEST of your ELECTRIC Pokémon (not yet empowered) is empowered by Volt Surge: it gains ELECTRIC_FIELD, 20 SPEED and bonus HP, and every 3rd attack chains lightning to 4 enemies. Its own ability is unchanged."
 		},
 		"FOGBOUND_LAKE": {
 			"name": "Fogbound Lake",

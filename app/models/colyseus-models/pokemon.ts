@@ -2868,7 +2868,7 @@ export class Solosis extends Pokemon {
   speed = 35
   def = 4
   speDef = 5
-  maxPP = 100
+  maxPP = 80
   range = 2
   skill = Ability.PSYCHIC
 }
@@ -2887,7 +2887,7 @@ export class Duosion extends Pokemon {
   speed = 35
   def = 6
   speDef = 7
-  maxPP = 90
+  maxPP = 80
   range = 2
   skill = Ability.PSYCHIC
 }
@@ -7889,7 +7889,7 @@ export class MegaAbsol extends Pokemon {
   rarity = Rarity.UNIQUE
   stars = 4
   hp = 200
-  atk = 21
+  atk = 19
   speed = 49
   def = 10
   speDef = 10
@@ -7988,11 +7988,7 @@ export class Latios extends Pokemon {
 }
 
 export class MegaLatias extends Pokemon {
-  types = new SetSchema<Synergy>([
-    Synergy.DRAGON,
-    Synergy.PSYCHIC,
-    Synergy.FLYING
-  ])
+  types = new SetSchema<Synergy>([Synergy.DRAGON, Synergy.PSYCHIC])
   rarity = Rarity.UNIQUE
   stars = 4
   hp = 120
@@ -8007,11 +8003,7 @@ export class MegaLatias extends Pokemon {
 }
 
 export class MegaLatios extends Pokemon {
-  types = new SetSchema<Synergy>([
-    Synergy.DRAGON,
-    Synergy.PSYCHIC,
-    Synergy.FLYING
-  ])
+  types = new SetSchema<Synergy>([Synergy.DRAGON, Synergy.PSYCHIC])
   rarity = Rarity.UNIQUE
   stars = 4
   hp = 120
@@ -12265,7 +12257,7 @@ export class Probopass extends Pokemon {
   ])
   rarity = Rarity.EPIC
   stars = 2
-  hp = 200
+  hp = 180
   atk = 16
   speed = 38
   def = 20
@@ -15084,7 +15076,7 @@ export class Minior extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.FLYING, Synergy.ROCK, Synergy.LIGHT])
   rarity = Rarity.UNIQUE
   stars = 3
-  hp = 200
+  hp = 180
   atk = 14
   speed = 44
   def = 10
@@ -15099,7 +15091,7 @@ export class MiniorKernelBlue extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.FLYING, Synergy.ROCK, Synergy.LIGHT])
   rarity = Rarity.UNIQUE
   stars = 3
-  hp = 200
+  hp = 180
   atk = 14
   speed = 44
   def = 10
@@ -15114,7 +15106,7 @@ export class MiniorKernelRed extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.FLYING, Synergy.ROCK, Synergy.LIGHT])
   rarity = Rarity.UNIQUE
   stars = 3
-  hp = 200
+  hp = 180
   atk = 14
   speed = 44
   def = 10
@@ -15129,7 +15121,7 @@ export class MiniorKernelOrange extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.FLYING, Synergy.ROCK, Synergy.LIGHT])
   rarity = Rarity.UNIQUE
   stars = 3
-  hp = 200
+  hp = 180
   atk = 14
   speed = 44
   def = 10
@@ -15144,7 +15136,7 @@ export class MiniorKernelGreen extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.FLYING, Synergy.ROCK, Synergy.LIGHT])
   rarity = Rarity.UNIQUE
   stars = 3
-  hp = 200
+  hp = 180
   atk = 14
   speed = 44
   def = 10
@@ -15657,7 +15649,7 @@ export class Bisharp extends Pokemon {
   stars = 2
   evolution = Pkm.KINGAMBIT
   hp = 220
-  atk = 32
+  atk = 30
   speed = 41
   def = 16
   speDef = 8

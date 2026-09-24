@@ -488,6 +488,27 @@ Smeargle Scribbles do not change your Elo.
 
 Every balance change on this server, newest first.
 
+### 24 September 2026
+
+**Abilities**
+- Mud Bubble | now always deals [15,30,60,120,SP] SPECIAL to ADJACENT enemies and applies BLINDED, doubled against enemies already BLINDED, instead of damaging only those already BLINDED
+
+**Wishes**
+- Brave Formation | Gold → Silver, 15% → 5% CRIT_CHANCE per empty ADJACENT tile
+- Overload | empowers a new ELECTRIC Pokémon every 10 → 12 seconds
+- Zap! | chain damage 50% → 40% of the initial damage
+- Brace for Impact | damage cap 40% → 50% max HP
+- Critical Rush I/II | SPEED 30/50 → 20/40
+
+**Pokémon**
+- Mega Absol | ATK 21 → 19
+- Mega Latias / Mega Latios | no longer FLYING
+- Minior | HP 200 → 180
+- Probopass | HP 200 → 180
+- Bisharp | ATK 32 → 30
+- Solosis line | max PP 100 / 90 / 80 → 80 PP
+- Gothitelle | Fake Tears damage 30 → 40
+
 ### 23 September 2026
 
 **Abilities**

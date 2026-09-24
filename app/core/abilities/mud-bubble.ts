@@ -9,18 +9,24 @@ export class MudBubbleStrategy extends AbilityStrategy {
     super.process(pokemon, board, target, crit)
     const heal = [20, 40, 80, 160][pokemon.stars - 1] ?? 160
     const blindDuration = [2000, 4000, 6000, 12000][pokemon.stars - 1] ?? 12000
-    const damage = [30, 60, 120, 240][pokemon.stars - 1] ?? 240
+    const damage = [15, 30, 60, 120][pokemon.stars - 1] ?? 120
 
     pokemon.handleHeal(heal, pokemon, 1, crit)
     pokemon.resetCooldown(250, pokemon.speed)
 
     board.getAdjacentCells(pokemon.positionX, pokemon.positionY).forEach((cell) => {
       if (cell.value && cell.value.team !== pokemon.team) {
-        if (cell.value.status.blinded) {
-          cell.value.handleSpecialDamage(damage, board, AttackType.SPECIAL, pokemon, crit)
-        } else {
+        const wasBlinded = cell.value.status.blinded
+        if (!wasBlinded) {
           cell.value.status.triggerBlinded(blindDuration, cell.value, pokemon)
         }
+        cell.value.handleSpecialDamage(
+          wasBlinded ? damage * 2 : damage,
+          board,
+          AttackType.SPECIAL,
+          pokemon,
+          crit
+        )
       }
     })
   }
