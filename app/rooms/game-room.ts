@@ -21,6 +21,9 @@ import {
   MAX_LOADING_TIME,
   MAX_SIMULATION_DELTA_TIME,
   MinStageForGameToCount,
+  PARTNER_CHAT_HISTORY_SIZE,
+  PARTNER_CHAT_LEVEL_REQUIRED,
+  PARTNER_MESSAGE_MAX_LENGTH,
   THEME_BY_TITLE,
   TITLES_UNLOCKING_THEMES,
   VICTORY_ROAD_MAX_EVENT_POINTS,
@@ -86,6 +89,7 @@ import {
   SCRIBBLE_QUIZ_FEEDBACK_DURATION
 } from "../services/scribble-quiz"
 import {
+  type IChatV2,
   type IDragDropCombineMessage,
   type IDragDropItemMessage,
   type IDragDropMessage,
@@ -160,6 +164,8 @@ import {
 import { isValidDate } from "../utils/date"
 import { formatMinMaxRanks, getRank } from "../utils/elo"
 import { logger } from "../utils/logger"
+import { cleanProfanity } from "../utils/profanity-filter"
+import chatV2 from "../models/mongo-models/chat-v2"
 import { clamp } from "../utils/number"
 import { pickNRandomIn, pickRandomIn, shuffleArray } from "../utils/random"
 import { schemaValues } from "../utils/schemas"
@@ -200,6 +206,10 @@ import {
 } from "../services/fossil-unlocks"
 import type { GalarFossil } from "../types/enum/FossilUnlock"
 
+function getPartnerChatKey(player: Player) {
+  return [player.id, player.doubleUpPartnerId].sort().join("|")
+}
+
 export default class GameRoom extends Room<{ state: GameState }> {
   dispatcher: Dispatcher<this>
   additionalUncommonPool: Array<Pkm>
@@ -207,6 +217,8 @@ export default class GameRoom extends Room<{ state: GameState }> {
   additionalEpicPool: Array<Pkm>
   miniGame: MiniGame
   private unlockedAvatarCosmetics = new Map<string, Set<AvatarCosmeticId>>()
+  private accountLevels = new Map<string, number>()
+  private partnerChatHistory = new Map<string, IChatV2[]>()
   dailyDuel = false
   private dailyDuelPodiumUids: string[] = []
   private dailyDuelPodiumSave: Promise<void> = Promise.resolve()
@@ -773,6 +785,49 @@ export default class GameRoom extends Room<{ state: GameState }> {
       }
     })
 
+    this.onMessage(Transfer.PARTNER_CHAT_AVAILABLE, (client: Client) => {
+      const player = client.auth && this.state.players.get(client.auth.uid)
+      const available = player ? this.isPartnerChatAvailable(player) : false
+      client.send(Transfer.PARTNER_CHAT_AVAILABLE, available)
+      if (player && available) {
+        client.send(
+          Transfer.PARTNER_CHAT_HISTORY,
+          this.partnerChatHistory.get(getPartnerChatKey(player)) ?? []
+        )
+      }
+    })
+
+    this.onMessage(Transfer.NEW_MESSAGE, (client: Client, payload: unknown) => {
+      if (typeof payload !== "string") return
+      const sender = client.auth && this.state.players.get(client.auth.uid)
+      const text = cleanProfanity(
+        payload.substring(0, PARTNER_MESSAGE_MAX_LENGTH)
+      ).trim()
+      if (!sender || !this.isPartnerChatAvailable(sender) || text === "") return
+      const message: IChatV2 = {
+        id: crypto.randomUUID(),
+        payload: text,
+        authorId: sender.id,
+        author: sender.name,
+        avatar: sender.avatar,
+        time: Date.now()
+      }
+      this.clients.forEach((recipient) => {
+        const uid = recipient.auth?.uid
+        if (uid === sender.id || uid === sender.doubleUpPartnerId) {
+          recipient.send(Transfer.NEW_MESSAGE, message)
+        }
+      })
+      const chatKey = getPartnerChatKey(sender)
+      const history = this.partnerChatHistory.get(chatKey) ?? []
+      history.push(message)
+      if (history.length > PARTNER_CHAT_HISTORY_SIZE) history.shift()
+      this.partnerChatHistory.set(chatKey, history)
+      chatV2
+        .create({ ...message, payload: `[Double Up] ${text}` })
+        .catch((error) => logger.error("Double Up chat log", error))
+    })
+
     this.onMessage(
       Transfer.WANDERER_CLICKED,
       async (client, msg: { id: string }) => {
@@ -964,6 +1019,27 @@ export default class GameRoom extends Room<{ state: GameState }> {
     }
   }
 
+  isPartnerChatAvailable(player: Player): boolean {
+    const partner = this.state.players.get(player.doubleUpPartnerId)
+    if (!partner || partner.isBot) return false
+    return [player.id, partner.id].every(
+      (uid) => (this.accountLevels.get(uid) ?? 0) >= PARTNER_CHAT_LEVEL_REQUIRED
+    )
+  }
+
+  // the joining client asks for itself once its handlers are registered
+  notifyPartnerOfChatAvailability(uid: string) {
+    const player = this.state.players.get(uid)
+    const partner = player && this.state.players.get(player.doubleUpPartnerId)
+    if (!player || !partner) return
+    const available = this.isPartnerChatAvailable(player)
+    this.clients.forEach((client) => {
+      if (client.auth?.uid === partner.id) {
+        client.send(Transfer.PARTNER_CHAT_AVAILABLE, available)
+      }
+    })
+  }
+
   async onJoin(client: Client) {
     const userProfile = await UserMetadata.findOne({ uid: client.auth.uid })
     if (userProfile?.banned) {
@@ -973,6 +1049,8 @@ export default class GameRoom extends Room<{ state: GameState }> {
       client.auth.uid,
       getUnlockedAvatarCosmetics(userProfile)
     )
+    this.accountLevels.set(client.auth.uid, userProfile?.level ?? 0)
+    this.notifyPartnerOfChatAvailability(client.auth.uid)
     this.dispatcher.dispatch(new OnJoinCommand(), { client })
     const pendingGame = await getPendingGame(this.presence, client.auth.uid)
     if (pendingGame?.gameId === this.roomId) {

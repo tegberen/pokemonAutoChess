@@ -488,6 +488,14 @@ Smeargle Scribbles do not change your Elo.
 
 Every balance change on this server, newest first.
 
+### 25 September 2026
+
+**Game Mode**
+- Double Up chat {{new}} | Level 100+ unlocks partner chat with the C hotkey. Be respectful, don't spam
+
+**Items**
+- UTILITY_UMBRELLA | reworked: at the start of the fight, if a weather is active, your Pokémon gain RUNE_PROTECT for 1 second and 10 SHIELD per STAR for each UTILITY_UMBRELLA in your inventory. No longer raises the opponent's weather count
+
 ### 24 September 2026
 
 **Game Mode**
@@ -498,9 +506,6 @@ Every balance change on this server, newest first.
 
 **Synergies**
 - FIGHTING 8 | the 40% max HP single-hit cap now only applies to PHYSICAL, no longer to SPECIAL
-
-**Items**
-- UTILITY_UMBRELLA | reworked: at the start of the fight, if a weather is active, your Pokémon gain RUNE_PROTECT for 1 second and 10 SHIELD per STAR for each UTILITY_UMBRELLA in your inventory. No longer raises the opponent's weather count
 
 **Wishes**
 - Prismatic synergy Wishes | now also grant a Pokémon, the same one as the Gold Wish of their synergy. Hieroglyphs grants 2 random Unown, like Language Barrier

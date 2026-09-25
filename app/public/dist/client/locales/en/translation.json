@@ -4554,6 +4554,10 @@
 		"title": "Community Servers"
 	},
 	"send": "Send",
+	"partner_chat_placeholder": "Be respectful, don't spam · Esc to close",
+	"partner_chat_muted": "Chat muted · Esc to close",
+	"partner_chat_mute": "Hide {{name}}'s messages for this game",
+	"partner_chat_unmute": "Show {{name}}'s messages again",
 	"chat_disabled_anonymous": "Chat disabled for anonymous users",
 	"type_here": "Type here ...",
 	"send_message": "Send message",
@@ -4632,6 +4636,7 @@
 			"wiki": "Open/close wiki",
 			"meta_report": "Open/close meta report",
 			"team_planner": "Open/close team planner",
+			"chat": "Chat with your Double Up partner [Level 100+]",
 			"avatar_emotes": "Toggle emote menu",
 			"avatar_show_emote": "Trigger emote"
 		},

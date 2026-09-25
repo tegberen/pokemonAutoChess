@@ -136,6 +136,11 @@ export default function KeybindInfo() {
         <dd>{t("options.key_description.meta_report")}</dd>
 
         <dt>
+          <RemappableKey keyId="chat" />
+        </dt>
+        <dd>{t("options.key_description.chat")}</dd>
+
+        <dt>
           <kbd>Ctrl</kbd>
         </dt>
         <dd>{t("options.key_description.avatar_emotes")}</dd>

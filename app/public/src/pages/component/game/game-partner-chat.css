@@ -1,0 +1,118 @@
+/* the offset clears the life / money row on top of the shop */
+.game-partner-chat {
+  position: absolute;
+  left: 0;
+  bottom: calc(100% + 48px);
+  width: min(32vw, 480px);
+  display: flex;
+  flex-direction: column;
+  gap: 0.4em;
+  pointer-events: none;
+}
+
+.game-partner-chat.typing {
+  pointer-events: auto;
+}
+
+.game-partner-chat-lines.my-box {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15em;
+  margin: 0;
+  padding: 0.4em 0.7em;
+  list-style: none;
+  background-color: color-mix(
+    in srgb,
+    var(--color-bg-secondary) 90%,
+    transparent
+  );
+  backdrop-filter: blur(1.5px);
+  transition: opacity 2s;
+}
+
+.game-partner-chat-lines.fading {
+  opacity: 0;
+}
+
+.game-partner-chat-lines li {
+  overflow-wrap: anywhere;
+}
+
+.game-partner-chat-lines li b {
+  margin-right: 0.3em;
+  color: var(--color-fg-accent);
+}
+
+.game-partner-chat-lines li.mine b {
+  color: var(--color-fg-gold);
+}
+
+.game-partner-chat-hint.my-box {
+  align-self: flex-start;
+  display: flex;
+  align-items: center;
+  gap: 0.35em;
+  margin: 0;
+  padding: 0.3em 0.4em;
+  opacity: 0.85;
+  pointer-events: auto;
+  cursor: var(--cursor-hover);
+}
+
+.game-partner-chat-hint.my-box:hover {
+  opacity: 1;
+}
+
+.game-partner-chat-hint img {
+  width: 1.6em;
+  height: 1.6em;
+}
+
+.game-partner-chat-hint kbd {
+  padding: 0 0.3em;
+  border: var(--border-thin);
+  border-radius: 4px;
+  background-color: var(--color-bg-primary);
+  font-size: 0.7em;
+  font-weight: bold;
+  line-height: 1.4;
+}
+
+.game-partner-chat form,
+.game-partner-chat-hint.my-box {
+  height: 2.6em;
+  box-sizing: border-box;
+  animation: game-partner-chat-fade-in 150ms ease-out;
+}
+
+@keyframes game-partner-chat-fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+.game-partner-chat form {
+  display: flex;
+  gap: 0.25em;
+}
+
+.game-partner-chat form input {
+  flex: 1;
+  min-width: 0;
+}
+
+.game-partner-chat-mute img {
+  display: block;
+  width: 1.4em;
+  height: 1.4em;
+}
+
+.game-partner-chat.muted form input {
+  background-color: var(--color-bg-tertiary);
+  cursor: not-allowed;
+}
+
+.game-partner-chat.muted .game-partner-chat-hint,
+.game-partner-chat.muted .game-partner-chat-lines {
+  filter: grayscale(1);
+}

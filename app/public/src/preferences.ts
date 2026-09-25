@@ -18,6 +18,7 @@ export type Keybindings = {
   wiki: string
   team_planner: string
   meta_report: string
+  chat: string
 }
 export interface IPreferencesState {
   musicVolume: number
@@ -97,7 +98,8 @@ const defaultPreferences: IPreferencesState = {
     board_return: "HOME",
     wiki: "W",
     meta_report: "M",
-    team_planner: "T"
+    team_planner: "T",
+    chat: "C"
   }
 }
 

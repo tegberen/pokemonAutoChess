@@ -5,6 +5,7 @@ import { GameFossilUnlockNotifications } from "./game-fossil-unlock-notification
 import { GameFossilUnlocksIcon } from "./game-fossil-unlocks"
 import { GameLifeInfo } from "./game-life-info"
 import GameLock from "./game-lock"
+import GamePartnerChat from "./game-partner-chat"
 import { GameMoneyInfo } from "./game-money-info"
 import GameRarityPercentage from "./game-rarity-percentage"
 import GameRefresh from "./game-refresh"
@@ -49,6 +50,7 @@ export default function GameShop() {
         <GameStore />
         <GameExperience />
         <GameFossilUnlockNotifications />
+        <GamePartnerChat />
       </div>
       <ToastContainer
         className="toast"

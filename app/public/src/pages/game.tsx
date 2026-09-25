@@ -17,6 +17,7 @@ import type GameState from "../../../rooms/states/game-state"
 import {
   type IAfterGamePlayer,
   type IBoardEvent,
+  type IChatV2,
   type IDps,
   type IDragDropCombineMessage,
   type IDragDropItemMessage,
@@ -61,7 +62,10 @@ import {
   changeShopJuggernautStats,
   setBazaarSlot,
   type IBazaarOffer,
+  addPartnerMessage,
   leaveGame,
+  setPartnerChatAvailable,
+  setPartnerMessages,
   removeDpsMeter,
   removePlayer,
   setAdditionalPokemons,
@@ -567,6 +571,19 @@ export default function Game() {
             .start()
         }
       })
+
+      room.onMessage(Transfer.NEW_MESSAGE, (message: IChatV2) => {
+        dispatch(addPartnerMessage({ ...message, time: Date.now() }))
+      })
+
+      room.onMessage(Transfer.PARTNER_CHAT_AVAILABLE, (available: boolean) => {
+        dispatch(setPartnerChatAvailable(available))
+      })
+      // time 0 so restored lines only show when the input is opened
+      room.onMessage(Transfer.PARTNER_CHAT_HISTORY, (history: IChatV2[]) => {
+        dispatch(setPartnerMessages(history.map((m) => ({ ...m, time: 0 }))))
+      })
+      room.send(Transfer.PARTNER_CHAT_AVAILABLE)
 
       room.onMessage(Transfer.SHOW_EMOTE, (message) => {
         const g = getGameScene()

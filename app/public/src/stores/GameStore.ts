@@ -1,10 +1,11 @@
 import { createSlice, type PayloadAction, type Slice } from "@reduxjs/toolkit"
-import { StageDuration } from "../../../config"
+import { PARTNER_CHAT_HISTORY_SIZE, StageDuration } from "../../../config"
 import type Simulation from "../../../core/simulation"
 import ExperienceManager from "../../../models/colyseus-models/experience-manager"
 import Synergies from "../../../models/colyseus-models/synergies"
 import type {
   Emotion,
+  IChatV2,
   IDps,
   IExperienceManager,
   IPlayer,
@@ -40,6 +41,9 @@ export interface IFossilUnlocksState {
 
 export interface GameStateStore {
   afterGameId: string
+  partnerMessages: IChatV2[]
+  partnerChatAvailable: boolean
+  partnerChatMuted: boolean
   gameMode: GameMode
   phaseDuration: number
   roundTime: number
@@ -98,6 +102,9 @@ export interface GameStateStore {
 
 const initialState: GameStateStore = {
   afterGameId: "",
+  partnerMessages: [],
+  partnerChatAvailable: false,
+  partnerChatMuted: false,
   gameMode: GameMode.CUSTOM_LOBBY,
   guideSynergy: null,
   guideStep: 0,
@@ -158,6 +165,21 @@ export const gameSlice: Slice<GameStateStore> = createSlice({
     },
     setAfterGameId: (state, action: PayloadAction<string>) => {
       state.afterGameId = action.payload
+    },
+    addPartnerMessage: (state, action: PayloadAction<IChatV2>) => {
+      state.partnerMessages.push(action.payload)
+      if (state.partnerMessages.length > PARTNER_CHAT_HISTORY_SIZE) {
+        state.partnerMessages.shift()
+      }
+    },
+    setPartnerMessages: (state, action: PayloadAction<IChatV2[]>) => {
+      state.partnerMessages = action.payload
+    },
+    setPartnerChatAvailable: (state, action: PayloadAction<boolean>) => {
+      state.partnerChatAvailable = action.payload
+    },
+    setPartnerChatMuted: (state, action: PayloadAction<boolean>) => {
+      state.partnerChatMuted = action.payload
     },
     setPhase: (state, action: PayloadAction<GamePhaseState>) => {
       state.phase = action.payload
@@ -476,6 +498,10 @@ export const {
   setPokemonProposition,
   setEmotesUnlocked,
   leaveGame,
+  addPartnerMessage,
+  setPartnerChatAvailable,
+  setPartnerChatMuted,
+  setPartnerMessages,
   removeDpsMeter,
   changeDpsMeter,
   addDpsMeter,
