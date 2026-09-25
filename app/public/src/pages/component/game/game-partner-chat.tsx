@@ -18,7 +18,7 @@ type NavigatorWithKeyboardLock = Navigator & {
   keyboard?: { lock(keys: string[]): Promise<void>; unlock(): void }
 }
 
-const VISIBLE_LINES = 6
+const VISIBLE_LINES = 4
 const LINE_LIFETIME_MS = 8000
 
 export default function GamePartnerChat() {
@@ -32,6 +32,7 @@ export default function GamePartnerChat() {
   )
   const messages = useAppSelector((state) => state.game.partnerMessages)
   const [keybindings] = usePreference("keybindings")
+  const [dismissedAt, setDismissedAt] = useState(0)
   const [isTyping, setTyping] = useState(false)
   const [text, setText] = useState("")
   const dispatch = useAppDispatch()
@@ -39,9 +40,22 @@ export default function GamePartnerChat() {
   const [now, setNow] = useState(() => Date.now())
   const [closedAt, setClosedAt] = useState(0)
   const inputRef = useRef<HTMLInputElement>(null)
+  const containerRef = useRef<HTMLDivElement>(null)
   const canUsePartnerChat = useAppSelector(
     (state) => state.game.partnerChatAvailable
   )
+
+  const recentMessages = messages
+    .filter((m) => !isPartnerMuted || m.authorId === connectedPlayer?.id)
+    .slice(-VISIBLE_LINES)
+  // lines seen while typing stay a full lifetime after closing, then fade
+  const shownFor = (m: { time: number }) => now - Math.max(m.time, closedAt)
+  const visibleMessages = isTyping
+    ? recentMessages
+    : recentMessages.filter(
+        (m) => shownFor(m) < LINE_LIFETIME_MS && m.time > dismissedAt
+      )
+  const hasVisibleMessages = canUsePartnerChat && visibleMessages.length > 0
 
   useEffect(() => {
     if (!canUsePartnerChat) return
@@ -58,25 +72,52 @@ export default function GamePartnerChat() {
       ) {
         event.preventDefault()
         setTyping(true)
+      } else if (event.key === "Escape" && !isTypingElsewhere) {
+        if (hasVisibleMessages) setDismissedAt(Date.now())
+        else if (document.fullscreenElement) {
+          document.exitFullscreen().catch(() => {})
+        }
       }
     }
     window.addEventListener("keydown", openOnChatKey)
     return () => window.removeEventListener("keydown", openOnChatKey)
-  }, [canUsePartnerChat, keybindings.chat])
+  }, [canUsePartnerChat, keybindings.chat, hasVisibleMessages])
 
   useEffect(() => {
     if (isTyping) inputRef.current?.focus()
   }, [isTyping])
 
-  // keeps Esc from leaving fullscreen while typing (Chromium only)
+  // the game canvas swallows mousedown, so the input never blurs on a board click
+  const clickOutsideCloses = isTyping || hasVisibleMessages
+  useEffect(() => {
+    if (!clickOutsideCloses) return
+    const closeOnOutsidePress = (event: PointerEvent) => {
+      if (containerRef.current?.contains(event.target as Node)) return
+      setText("")
+      setTyping(false)
+      setClosedAt(Date.now())
+      setDismissedAt(Date.now())
+    }
+    window.addEventListener("pointerdown", closeOnOutsidePress, true)
+    return () =>
+      window.removeEventListener("pointerdown", closeOnOutsidePress, true)
+  }, [clickOutsideCloses])
+
+  // in fullscreen the chat owns Esc and leaves fullscreen itself (Chromium only)
   useEffect(() => {
     const keyboard = (navigator as NavigatorWithKeyboardLock).keyboard
-    if (!isTyping || !document.fullscreenElement || !keyboard) return
-    keyboard.lock(["Escape"]).catch(() => {})
-    // released on keyup, since fullscreen exits on the Esc keyup
-    return () =>
-      window.addEventListener("keyup", () => keyboard.unlock(), { once: true })
-  }, [isTyping])
+    if (!canUsePartnerChat || !keyboard) return
+    const syncLock = () => {
+      if (document.fullscreenElement) keyboard.lock(["Escape"]).catch(() => {})
+      else keyboard.unlock()
+    }
+    syncLock()
+    document.addEventListener("fullscreenchange", syncLock)
+    return () => {
+      document.removeEventListener("fullscreenchange", syncLock)
+      keyboard.unlock()
+    }
+  }, [canUsePartnerChat])
 
   useEffect(() => {
     const interval = setInterval(() => setNow(Date.now()), 1000)
@@ -98,17 +139,9 @@ export default function GamePartnerChat() {
     closeInput()
   }
 
-  const recentMessages = messages
-    .filter((m) => !isPartnerMuted || m.authorId === connectedPlayer?.id)
-    .slice(-VISIBLE_LINES)
-  // lines seen while typing stay a full lifetime after closing, then fade
-  const shownFor = (m: { time: number }) => now - Math.max(m.time, closedAt)
-  const visibleMessages = isTyping
-    ? recentMessages
-    : recentMessages.filter((m) => shownFor(m) < LINE_LIFETIME_MS)
-
   return (
     <div
+      ref={containerRef}
       className={cc("game-partner-chat", {
         typing: isTyping,
         muted: isPartnerMuted
