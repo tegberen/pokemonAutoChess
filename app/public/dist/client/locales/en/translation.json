@@ -5301,7 +5301,7 @@
 		},
 		"SHEDDING_SCALES": {
 			"name": "Shedding Scales",
-			"description": "Move to a random DRAGON region and gain a Dratini. The first time each DRAGON ally flies away in a fight, gain a free reroll. Each Salamence, Charizard, Dragonite or Dragapult you obtain grants a DRAGON_SCALE."
+			"description": "Move to a random DRAGON region and gain a Dratini. The first time each DRAGON ally flies away in a fight, gain 2 free rerolls. Each Salamence, Charizard, Dragonite or Dragapult you obtain grants a DRAGON_SCALE."
 		},
 		"FROZEN_OCEAN": {
 			"name": "Frozen Ocean",

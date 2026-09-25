@@ -509,10 +509,12 @@ Every balance change on this server, newest first.
 - Symbiotic Symphony | GRASS HP per SOUND cry 5 → 10, SOUND PP per heal 2 → 4
 - Frozen Ocean | AQUATIC ICE allies hit by the TIDAL_WAVE now also cast Deep Freeze at their own STAR level
 - Synarch | a duo (Illumise & Volbeat, Plusle & Minun, the Indeedee) counts once, no longer twice
+- Shedding Scales | free rerolls per DRAGON ally flying away 1 → 2
 
 **Fixes**
 - Charging My Bug | only your STRONGEST Grubbin gains the ATK, no longer every Grubbin standing in a fully dug hole
 - Festive Picnic | a dish fed by hand now replaces the picnic dish, and Pokémon that change form (like Deoxys) can be fed again
+- Shedding Scales | now always moves you to a DRAGON region
 
 ### 24 September 2026
 

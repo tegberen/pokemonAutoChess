@@ -1424,17 +1424,22 @@ function moveToRegionWherePokemonIsFound(
   player: Player,
   state: GameState,
   room: GameRoom | undefined,
-  pkm: Pkm
+  pkm: Pkm,
+  requiredSynergy?: Synergy
 ) {
   const previousMap = player.map
   const regionalMon = new PokemonClasses[pkm](pkm)
-  if (previousMap !== "town" && regionalMon.isInRegion(previousMap, state)) {
+  const isValidRegion = (map: DungeonPMDO) =>
+    regionalMon.isInRegion(map, state) &&
+    (!requiredSynergy ||
+      RegionDetails[map]?.synergies.includes(requiredSynergy) === true)
+  if (previousMap !== "town" && isValidRegion(previousMap)) {
     player.updateRegionalPool(state, true, previousMap)
     return
   }
 
   const candidateMaps = (Object.keys(RegionDetails) as DungeonPMDO[]).filter(
-    (map) => map !== previousMap && regionalMon.isInRegion(map, state)
+    (map) => map !== previousMap && isValidRegion(map)
   )
   if (candidateMaps.length === 0) return
 
@@ -2799,7 +2804,13 @@ export const blessingEffectService: {
 
   [Blessing.SHEDDING_SCALES]: (player, state, room) => {
     if (!giftPokemonIfBenchHasRoom(player, Pkm.DRATINI)) return false
-    moveToRegionWherePokemonIsFound(player, state, room, Pkm.DRATINI)
+    moveToRegionWherePokemonIsFound(
+      player,
+      state,
+      room,
+      Pkm.DRATINI,
+      Synergy.DRAGON
+    )
     return true
   },
 
