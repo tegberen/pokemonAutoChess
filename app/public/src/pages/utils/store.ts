@@ -100,6 +100,7 @@ export enum LocalStoreKeys {
   RECONNECTION_GAME = "reconnection_game",
   RECONNECTION_AFTER_GAME = "reconnection_after-game",
   TEAM_PLANNER = "team_planner",
+  TEAM_PLANNER_MARKED_SYNERGIES = "team_planner_marked_synergies",
   TIER_LIST = "tier_list",
   LAST_PATCH_READ = "last_patch_read",
   COLLECTION_FILTER = "collection_filter",

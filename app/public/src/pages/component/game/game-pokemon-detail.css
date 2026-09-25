@@ -8,6 +8,11 @@
   grid-template-columns: 88px 1fr auto;
 }
 
+/* transparent to the grid everywhere except where a layout places it itself */
+.game-pokemon-detail-abilities {
+  display: contents;
+}
+
 .react-tooltip.game-pokemon-detail-tooltip,
 .my-container.game-pokemon-detail-tooltip {
   padding: 5px;

@@ -21,6 +21,7 @@ import { rooms } from "../../../network"
 import Synergies from "../synergy/synergies"
 import BotAvatar from "./bot-avatar"
 import ItemPicker from "./item-picker"
+import { useMarkedSynergies } from "./marked-synergies"
 import PokemonPicker from "./pokemon-picker"
 import SelectedEntity from "./selected-entity"
 import TeamEditor from "./team-editor"
@@ -34,6 +35,7 @@ export default function TeamBuilder(props: {
   error?: string
 }) {
   const { t } = useTranslation()
+  const { markedSynergies, clearMarkedSynergies } = useMarkedSynergies()
   const [selection, setSelection] = useState<Item | PkmWithCustom>({
     name: Pkm.MAGIKARP,
     shiny: false,
@@ -304,6 +306,14 @@ export default function TeamBuilder(props: {
             <img src="assets/ui/load.svg" /> {t("load")}
           </button>
         )}
+        {!inBotBuilder && markedSynergies.length > 0 && (
+          <button
+            className="bubbly orange unmark-all-button"
+            onClick={clearMarkedSynergies}
+          >
+            <img src="assets/ui/planned.png" alt="" /> {t("unmark_all")}
+          </button>
+        )}
         <button className="bubbly red" onClick={reset}>
           <img src="assets/ui/trash.svg" /> {t("reset")}
         </button>
@@ -314,17 +324,21 @@ export default function TeamBuilder(props: {
         handleDrop={handleDrop}
         showBench={inBotBuilder}
       />
-      <SelectedEntity entity={selection} onChange={updateSelectedPokemon} />
       <ItemPicker
         selectEntity={setSelection}
         selected={selection}
         origin={inBotBuilder ? "bot-builder" : "team-planner"}
+        infoPanel={
+          <SelectedEntity entity={selection} onChange={updateSelectedPokemon} />
+        }
       />
       <PokemonPicker
         selectEntity={setSelection}
         addEntity={addPokemonOnFirstEmptyCell}
         selected={selection}
         showDevItems={!inBotBuilder && process.env.MODE === "dev"}
+        hideHoverDetail
+        canMarkSynergies={!inBotBuilder}
       />
       {props.bot && props.onChangeAvatar && (
         <BotAvatar

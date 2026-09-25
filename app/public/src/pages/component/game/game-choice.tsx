@@ -26,6 +26,10 @@ import { DEPTH } from "../../../game/depths"
 import { selectConnectedPlayer, useAppSelector } from "../../../hooks"
 import { usePreference } from "../../../preferences"
 import type { IDetailledPokemon } from "../../../models/bot-v2"
+import {
+  hasMarkedSynergy,
+  useMarkedSynergies
+} from "../bot-builder/marked-synergies"
 import { pickChoice, pickArmoryGift, rerollChoice } from "../../../network"
 import { Blessings } from "../../../../../config/game/blessings"
 import type { Blessing } from "../../../../../types/enum/Blessing"
@@ -78,6 +82,7 @@ export default function GameChoice() {
   const [teamPlanner, setTeamPlanner] = useState<IDetailledPokemon[]>(
     localStore.get(LocalStoreKeys.TEAM_PLANNER)
   )
+  const { markedSynergies } = useMarkedSynergies()
 
   useEffect(() => {
     const updateTeamPlanner = (event: StorageEvent) => {
@@ -512,11 +517,15 @@ export default function GameChoice() {
                       index={index}
                       duo={proposition as PkmDuo}
                       inPlanner={
-                        teamPlanner?.some(
+                        (teamPlanner?.some(
                           (pokemon) =>
                             pokemon.name === proposition[0] ||
                             pokemon.name === proposition[1]
-                        ) ?? false
+                        ) ??
+                          false) ||
+                        PkmDuos[proposition as PkmDuo].some((pkm) =>
+                          hasMarkedSynergy(pkm, markedSynergies)
+                        )
                       }
                     />
                   ) : (
@@ -526,13 +535,15 @@ export default function GameChoice() {
                       index={index}
                       pokemon={proposition as Pkm}
                       inPlanner={
-                        teamPlanner?.some((pokemon) => {
+                        (teamPlanner?.some((pokemon) => {
                           if (proposition in PkmDuos) {
                             return PkmDuos[proposition].includes(pokemon.name)
                           }
 
                           return PkmFamily[pokemon.name] === proposition
-                        }) ?? false
+                        }) ??
+                          false) ||
+                        hasMarkedSynergy(proposition as Pkm, markedSynergies)
                       }
                     />
                   )}

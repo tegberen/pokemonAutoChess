@@ -4568,7 +4568,7 @@
 	"show_evolutions": "Show evolutions",
 	"show_weather_rocks": "Show weather rocks",
 	"show_alt_forms": "Show alternative forms",
-	"show_only_available_picks": "Show only available add picks / regionals",
+	"show_only_available_picks": "Show only available add picks / regionals",	"unmark_all": "Unmark all",	"mark_synergy_in_shop_hint": "Highlight every {{synergy}} Pokémon in your shop",
 	"close": "Close",
 	"additional_pokemon_hint": "Each player picked additional Pokémon to be available in all players shop for this game.",
 	"regional_pokemon_hint": "After travelling to a new region, you will encounter new regional species of Pokémon.",
@@ -4680,6 +4680,7 @@
 	"filters": "Filters",
 	"save": "Save",
 	"reset": "Reset",
+	"pokemon_info": "Info",
 	"snapshot": "Snapshot",
 	"player_choices": {
 		"choose_item": "Choose one item from the following",

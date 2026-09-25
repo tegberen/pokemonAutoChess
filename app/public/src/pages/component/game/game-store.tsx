@@ -3,6 +3,10 @@ import { isSameFamily } from "../../../../../models/pokemon-factory"
 import { Pkm } from "../../../../../types/enum/Pokemon"
 import { useAppSelector } from "../../../hooks"
 import type { IDetailledPokemon } from "../../../models/bot-v2"
+import {
+  hasMarkedSynergy,
+  useMarkedSynergies
+} from "../bot-builder/marked-synergies"
 import { buyInShop } from "../../../network"
 import { getGameScene } from "../../game"
 import { playSound, SOUNDS } from "../../utils/audio"
@@ -14,6 +18,7 @@ import GamePokemonPortrait from "./game-pokemon-portrait"
 export default function GameStore() {
   const shop = useAppSelector((state) => state.game.shop)
   const bazaarOffers = useAppSelector((state) => state.game.bazaarOffers)
+  const { markedSynergies } = useMarkedSynergies()
   const [teamPlanner, setTeamPlanner] = useState<IDetailledPokemon[]>(
     localStore.get(LocalStoreKeys.TEAM_PLANNER)
   )
@@ -70,9 +75,10 @@ export default function GameStore() {
               origin="shop"
               index={index}
               pokemon={pokemon}
-              inPlanner={teamPlanner?.some((p) =>
-                isSameFamily(p.name, pokemon)
-              )}
+              inPlanner={
+                teamPlanner?.some((p) => isSameFamily(p.name, pokemon)) ||
+                hasMarkedSynergy(pokemon, markedSynergies)
+              }
               onMouseEnter={() => {
                 if (scene) {
                   if (scene.pokemonHovered) {

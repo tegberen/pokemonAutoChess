@@ -334,6 +334,7 @@ export function GamePokemonDetail(props: {
           </div>
         ))}
       </div>
+      <div className="game-pokemon-detail-abilities">
       {dish && (
         <div className="game-pokemon-detail-dish">
           <div className="game-pokemon-detail-dish-name">
@@ -453,6 +454,7 @@ export function GamePokemonDetail(props: {
           </div>
         </div>
       )}
+      </div>
     </div>
   )
 }

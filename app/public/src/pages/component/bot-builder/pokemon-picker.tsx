@@ -6,6 +6,7 @@ import { Tooltip } from "react-tooltip"
 import { RarityColor } from "../../../../../config"
 import { Blessings } from "../../../../../config/game/blessings"
 import { getPokemonData } from "../../../../../models/precomputed/precomputed-pokemon-data"
+import { useMarkedSynergies } from "./marked-synergies"
 import { PRECOMPUTED_POKEMONS_PER_TYPE } from "../../../../../models/precomputed/precomputed-types"
 import { Emotion, type PkmWithCustom } from "../../../../../types"
 import { Blessing } from "../../../../../types/enum/Blessing"
@@ -57,7 +58,10 @@ export default function PokemonPicker(props: {
   addEntity?: (e: PkmWithCustom) => void
   showDevItems?: boolean
   showBlessings?: boolean
+  hideHoverDetail?: boolean
+  canMarkSynergies?: boolean
 }) {
+  const { markedSynergies, toggleMarkedSynergy } = useMarkedSynergies()
   const pokemonTabs = [...Object.keys(PRECOMPUTED_POKEMONS_PER_TYPE), "none"]
   const tabs = [
     ...pokemonTabs,
@@ -89,7 +93,14 @@ export default function PokemonPicker(props: {
       <TabList>
         {tabs.map((t) => {
           return (
-            <Tab key={t}>
+            <Tab
+              key={t}
+              className={cc("react-tabs__tab", {
+                marked:
+                  !!props.canMarkSynergies &&
+                  markedSynergies.includes(t as Synergy)
+              })}
+            >
               {t === "blessings" ? (
                 <img
                   className="blessings-tab-icon"
@@ -137,6 +148,13 @@ export default function PokemonPicker(props: {
               selected={props.selected}
               selectEntity={props.selectEntity}
               addEntity={props.addEntity}
+              hideHoverDetail={props.hideHoverDetail}
+              isMarked={
+                props.canMarkSynergies
+                  ? markedSynergies.includes(tabs[i] as Synergy)
+                  : undefined
+              }
+              onToggleMark={() => toggleMarkedSynergy(tabs[i] as Synergy)}
               pokemons={pokemons}
               type={tabs[i] as Synergy}
             />
@@ -257,6 +275,9 @@ function PokemonPickerTab(props: {
   selected?: PkmWithCustom | Item
   selectEntity?: React.Dispatch<React.SetStateAction<PkmWithCustom | Item>>
   addEntity?: (e: PkmWithCustom) => void
+  hideHoverDetail?: boolean
+  isMarked?: boolean
+  onToggleMark?: () => void
   type: Synergy | "none"
 }) {
   const [preferences, setPreferences] = usePreferences()
@@ -352,11 +373,28 @@ function PokemonPickerTab(props: {
         style={{
           display: "flex",
           justifyContent: "end",
-          gap: "1em",
-          float: "right",
-          marginLeft: "1em"
+          gap: "1em"
         }}
       >
+        {props.isMarked !== undefined && props.type !== "none" && (
+          <button
+            className={cc(
+              "bubbly",
+              props.isMarked ? "red" : "green",
+              "mark-synergy-button"
+            )}
+            title={t("mark_synergy_in_shop_hint", {
+              synergy: t(`synergy.${props.type}`)
+            })}
+            onClick={props.onToggleMark}
+          >
+            <img
+              className="mark-synergy-pawn"
+              src="assets/ui/planned.png"
+              alt=""
+            />
+          </button>
+        )}
         {ingame && (
           <Checkbox
             checked={preferences.filterAvailableAddsAndRegionals}
@@ -423,7 +461,11 @@ function PokemonPickerTab(props: {
                     })
                   }}
                   key={p.name}
-                  data-tooltip-id="game-pokemon-detail-tooltip"
+                  data-tooltip-id={
+                    props.hideHoverDetail
+                      ? undefined
+                      : "game-pokemon-detail-tooltip"
+                  }
                   data-tooltip-content={p.name}
                   draggable
                   onDragStart={(e) => handleOnDragStart(e, p.name)}
@@ -436,10 +478,12 @@ function PokemonPickerTab(props: {
           </React.Fragment>
         ))}
       </dl>
-      <GamePokemonDetailTooltip
-        origin="planner"
-        {...(isDragging ? { isOpen: false } : {})}
-      />
+      {!props.hideHoverDetail && (
+        <GamePokemonDetailTooltip
+          origin="planner"
+          {...(isDragging ? { isOpen: false } : {})}
+        />
+      )}
     </>
   )
 }

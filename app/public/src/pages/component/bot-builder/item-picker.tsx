@@ -32,6 +32,7 @@ export default function ItemPicker(props: {
   selectEntity?: React.Dispatch<React.SetStateAction<PkmWithCustom | Item>>
   origin: "tier-list" | "bot-builder" | "team-planner"
   showUnholdableItems?: boolean
+  infoPanel?: React.ReactNode
 }) {
   function handleOnDragStart(e: React.DragEvent, item: Item | TierListSymbol) {
     e.stopPropagation()
@@ -112,12 +113,34 @@ export default function ItemPicker(props: {
   }
 
   return (
-    <Tabs className="my-box" id="item-picker">
+    <Tabs
+      className="my-box"
+      id="item-picker"
+      defaultIndex={
+        props.origin === "tier-list" || props.infoPanel
+          ? 0
+          : Math.max(
+              0,
+              tabs.findIndex((tab) => tab.key === "craftable")
+            )
+      }
+    >
       <TabList>
+        {props.infoPanel && (
+          <Tab className="react-tabs__tab item-picker-info-tab">
+            <img src="assets/ui/pokeball.svg" alt="" />
+            {t("pokemon_info")}
+          </Tab>
+        )}
         {tabs.map((t) => (
           <Tab key={t.key}>{t.label}</Tab>
         ))}
       </TabList>
+      {props.infoPanel && (
+        <TabPanel className="react-tabs__tab-panel item-picker-info">
+          {props.infoPanel}
+        </TabPanel>
+      )}
       {tabs.map((t) => (
         <TabPanel key={t.key}>
           {t.items.map((item) => {
