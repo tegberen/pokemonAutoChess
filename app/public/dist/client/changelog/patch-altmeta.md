@@ -495,6 +495,9 @@ Every balance change on this server, newest first.
 
 > I can't moderate chat for everyone, so it's a level 100+ thank you for the regulars who've put many hours into playing on JAC.
 
+**Interface**
+- Battle Stats and Effects | more compact, so they cover less of the board
+
 **Items**
 - UTILITY_UMBRELLA | reworked: if a weather is active, your Pokémon start the fight with 1 second of RUNE_PROTECT and 10 SHIELD per STAR. No longer raises the opponent's weather count
 - POKE_RADAR | the Speaker is renamed to Poké Radar

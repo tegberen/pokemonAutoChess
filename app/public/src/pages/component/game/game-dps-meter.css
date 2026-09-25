@@ -5,31 +5,40 @@
 }
 
 .game-dps-meter.maximized {
-  width: 320px;
+  width: 15.5em;
 }
 
 .game-dps-meter .draggable-window-content {
   max-height: calc(78vh - 50px);
 }
 
-.game-dps-meter .draggable-window-content header {
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  gap: 0.5em;
-  text-align: center;
-}
-
-.game-dps-meter .draggable-window-content header img {
-  width: 60px;
-  height: 60px;
-}
-
 .game-dps-meter .react-tabs__tab-list {
   display: flex;
   justify-content: space-evenly;
-  margin-top: 0.5em;
-  font-size: 1rem;
+}
+
+.game-dps-meter .react-tabs__tab {
+  flex: 1;
+  padding: 0.2em 0.4em;
+  text-align: center;
+}
+
+.game-dps-meter .react-tabs__tab img {
+  display: block;
+  width: 26px;
+  height: 26px;
+  margin: 0 auto;
+}
+
+.game-dps-meter .react-tabs__tab-panel {
+  column-gap: 0.6em;
+}
+
+.game-dps-total {
+  margin-top: 0.2em;
+  font-size: 0.85em;
+  font-weight: bold;
+  opacity: 0.85;
 }
 
 .game-dps-meter .react-tabs__tab-panel {
@@ -44,10 +53,10 @@
   font-size: 0.8em;
 }
 
-/* the portrait (40px) plus the gap that used to be margin-bottom; rows are
+/* the portrait (34px) plus the gap that used to be margin-bottom; rows are
    positioned from this rather than stacked, so it owns the row geometry */
 .game-dps-meter {
-  --dps-row-height: 48px;
+  --dps-row-height: 40px;
 }
 
 .game-dps-list {
@@ -74,8 +83,8 @@
 }
 
 .game-dps-bar img {
-  width: 40px;
-  height: 40px;
+  width: 34px;
+  height: 34px;
 }
 
 .game-dps-progress-wrapper {
@@ -91,10 +100,11 @@
   margin-top: -6px;
   margin-bottom: -6px;
   margin-left: 4px;
+  font-size: 0.95em;
 }
 
 .game-dps-progress-wrapper .my-progress {
-  height: 14px;
+  height: 12px;
   border-width: 2px;
   border-image-outset: 1.5;
   box-shadow: 1px 1px 0 #00000060;

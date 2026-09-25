@@ -62,7 +62,7 @@ export default function GamePlayerDpsTakenMeter({
         )
       })}
       {sortedDamageTaken.length > 0 && (
-        <div>
+        <div className="game-dps-total">
           {t("total")}: {totalDamageTaken}
         </div>
       )}

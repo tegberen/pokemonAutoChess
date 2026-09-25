@@ -43,7 +43,7 @@ export default function GamePlayerHpsMeter({
         <GameDpsHeal key={p.id} dpsMeter={p} maxHeal={maxHealAmount} />
       ))}
       {sortedHps.length > 0 && (
-        <div>
+        <div className="game-dps-total">
           {t("total")}: {totalHealAmount}
         </div>
       )}

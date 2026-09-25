@@ -7,8 +7,10 @@
 
 .blessings-panel-recent {
   justify-content: center;
-  padding: 0.5em 0.4em;
-  border-bottom: var(--border-thin);
+  margin: 4px 4px 6px;
+  padding: 0.4em;
+  border-radius: 10px;
+  background-color: color-mix(in srgb, black 18%, transparent);
 }
 
 .blessings-panel-empty {

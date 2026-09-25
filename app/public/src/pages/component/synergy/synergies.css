@@ -64,6 +64,70 @@
   }
 }
 
+.synergy-row {
+  display: grid;
+  grid-template-columns: 36px 2.6ch 1fr;
+  align-items: center;
+  column-gap: 0.35em;
+  margin: 3px 4px;
+  padding: 4px 0.4em 4px 3px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  cursor: var(--cursor-hover);
+}
+
+.synergy-row.active {
+  border: var(--border-thin);
+  background-color: var(--color-bg-secondary);
+}
+
+.synergy-row .synergy-icon {
+  height: 36px;
+}
+
+.synergy-row-count {
+  font-size: 1.8em;
+  font-weight: bold;
+  text-align: center;
+  color: var(--color-fg-secondary);
+  text-shadow: 1px 1px 2px #000000c0;
+}
+
+.synergy-row.active .synergy-row-count {
+  color: #ffffff;
+}
+
+.synergy-row-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  line-height: 1.25;
+}
+
+.synergy-row-name {
+  margin: 0;
+  overflow: hidden;
+  font-weight: 500;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.synergy-row-tiers {
+  display: flex;
+  justify-content: space-evenly;
+  color: var(--color-fg-secondary);
+  font-weight: bold;
+}
+
+.synergy-row-tiers .reached {
+  color: var(--color-fg-primary);
+}
+
+.synergy-row-tiers .current {
+  color: var(--color-fg-gold);
+}
+
 /* Fossil (8): which Galar fossils this player holds and what they restored */
 .synergy-fossil-restoration {
   display: flex;

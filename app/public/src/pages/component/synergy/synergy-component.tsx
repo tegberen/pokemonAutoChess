@@ -4,6 +4,7 @@ import { GameMode } from "../../../../../types/enum/Game"
 import { Synergy } from "../../../../../types/enum/Synergy"
 import { selectSpectatedPlayer, useAppSelector } from "../../../hooks"
 import { getGameScene } from "../../game"
+import { cc } from "../../utils/jsx"
 import SynergyIcon from "../icons/synergy-icon"
 
 export default function SynergyComponent(props: {
@@ -51,20 +52,7 @@ export default function SynergyComponent(props: {
 
   return (
     <div
-      style={{
-        display: "grid",
-        gridTemplateColumns: "40px 2ch 1fr",
-        alignItems: "center",
-        justifyContent: "space-around",
-        backgroundColor: isActive
-          ? "var(--color-bg-secondary)"
-          : "rgba(84, 89, 107,0)",
-        margin: "4px",
-        borderRadius: "12px",
-        padding: "2px 0",
-        border: isActive ? "var(--border-thin)" : "none",
-        cursor: "var(--cursor-hover)"
-      }}
+      className={cc("synergy-row", { active: isActive })}
       data-tooltip-id="detail-synergy"
       onMouseEnter={() => {
         highlightSynergy(props.type)
@@ -76,30 +64,9 @@ export default function SynergyComponent(props: {
       }}
     >
       <SynergyIcon type={props.type} />
-      <span
-        style={{
-          fontSize: "2em",
-          textShadow: "2px 2px 2px #000000c0",
-          textAlign: "center",
-          marginRight: "4px",
-          color: thresholdReached > 0 ? "#ffffff" : "#b8b8b8"
-        }}
-      >
-        {props.value}
-      </span>
-      <div
-        style={{
-          display: "flex",
-          flexFlow: "column",
-          lineHeight: 1.25
-        }}
-      >
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-evenly"
-          }}
-        >
+      <span className="synergy-row-count">{props.value}</span>
+      <div className="synergy-row-info">
+        <div className="synergy-row-tiers">
           {SynergyTiersThresholds[props.type]
             .filter(
               // In Double Up, the Baby synergy caps at its second tier (Baby 5),
@@ -111,27 +78,19 @@ export default function SynergyComponent(props: {
                   threshold > SynergyTiersThresholds[Synergy.BABY][1]
                 )
             )
-            .map((t) => {
-              return (
+            .map((tier) => (
               <span
-                key={t}
-                style={{
-                  color:
-                    thresholdReached === t
-                      ? "var(--color-fg-gold)"
-                      : props.value >= t
-                        ? "var(--color-fg-primary)"
-                        : "var(--color-fg-secondary)"
-                }}
+                key={tier}
+                className={cc({
+                  current: thresholdReached === tier,
+                  reached: props.value >= tier
+                })}
               >
-                {t}
+                {tier}
               </span>
-            )
-          })}
+            ))}
         </div>
-        <p style={{ margin: "0px", textAlign: "center", fontWeight: "500" }}>
-          {t(`synergy.${props.type}`)}
-        </p>
+        <p className="synergy-row-name">{t(`synergy.${props.type}`)}</p>
       </div>
     </div>
   )

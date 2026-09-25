@@ -1,13 +1,10 @@
 import { useTranslation } from "react-i18next"
 import { Tab, TabList, TabPanel, Tabs } from "react-tabs"
-import { isPveStage } from "../../../../../core/guide/guide-stage"
-import { GamePhaseState, Team } from "../../../../../types/enum/Game"
-import type { Pkm } from "../../../../../types/enum/Pokemon"
+import { Team } from "../../../../../types/enum/Game"
 import { DEPTH } from "../../../game/depths"
 import { selectSpectatedPlayer, useAppSelector } from "../../../hooks"
 import { usePreference } from "../../../preferences"
 import DraggableWindow from "../modal/draggable-window"
-import PokemonPortrait from "../pokemon-portrait"
 import GamePlayerDpsMeter from "./game-player-dps-meter"
 import GamePlayerDpsTakenMeter from "./game-player-dps-taken-meter"
 import GamePlayerHpsMeter from "./game-player-hps-meter"
@@ -17,10 +14,6 @@ export default function GameDpsMeter() {
   const { t } = useTranslation()
   const spectatedPlayer = useAppSelector(selectSpectatedPlayer)
   const team = useAppSelector((state) => state.game.teamSpectated)
-  const stageLevel = useAppSelector((state) => state.game.stageLevel)
-  const phase = useAppSelector((state) => state.game.phase)
-  const gameMode = useAppSelector((state) => state.game.gameMode)
-  const guideSynergy = useAppSelector((state) => state.game.guideSynergy)
   const [showDpsMeter, setShowDpsMeter] = usePreference("showDpsMeter")
   const [dpsMeterPosition, setDpsMeterPosition] =
     usePreference("dpsMeterPosition")
@@ -30,25 +23,7 @@ export default function GameDpsMeter() {
   const myDpsMeter = team === Team.BLUE_TEAM ? blueDpsMeter : redDpsMeter
   const opponentDpsMeter = team === Team.BLUE_TEAM ? redDpsMeter : blueDpsMeter
 
-  if (!spectatedPlayer) return null
-
-  /* Guide stages are PVE too and most are not in the vanilla table, so the
-     opponent name has to be resolved the same way the stage header does it or
-     it renders as the raw "pkm.SLOWKING" key. During the picking phase the
-     opponent shown is still the one from the fight that just ended. */
-  const isPVE = isPveStage(
-    { gameMode, guideSynergy },
-    phase === GamePhaseState.FIGHT ? stageLevel : stageLevel - 1
-  )
-
-  const name = spectatedPlayer.name
-  const avatar = spectatedPlayer.avatar
-  const opponentName = spectatedPlayer.opponentName
-  const opponentAvatar = spectatedPlayer.opponentAvatar
-
-  if (opponentAvatar == "") {
-    return null
-  }
+  if (!spectatedPlayer || spectatedPlayer.opponentAvatar == "") return null
 
   return (
     <DraggableWindow
@@ -60,17 +35,6 @@ export default function GameDpsMeter() {
       onToggleMinimize={(minimized) => setShowDpsMeter(!minimized)}
       onMove={(position) => setDpsMeterPosition(position)}
     >
-      <header>
-        <div>
-          <PokemonPortrait avatar={avatar} />
-          <p>{name}</p>
-        </div>
-        <span style={{ fontSize: "2rem" }}>vs</span>
-        <div>
-          <PokemonPortrait avatar={opponentAvatar} />
-          <p>{isPVE ? t(opponentName as `pkm.${Pkm}`) : opponentName}</p>
-        </div>
-      </header>
       <Tabs>
         <TabList>
           <Tab key="damage_dealt">

@@ -63,7 +63,7 @@ export default function GamePlayerDpsMeter({
         ))}
       </div>
       {visibleDps.length > 0 && (
-        <div>
+        <div className="game-dps-total">
           {t("total")}: {totalDamage}
         </div>
       )}
