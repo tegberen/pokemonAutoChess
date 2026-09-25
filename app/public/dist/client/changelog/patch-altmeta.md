@@ -507,6 +507,7 @@ Every balance change on this server, newest first.
 
 **Fixes**
 - Charging My Bug | only your STRONGEST Grubbin gains the ATK, no longer every Grubbin standing in a fully dug hole
+- Festive Picnic | a dish fed by hand now replaces the picnic dish, and Pokémon that change form (like Deoxys) can be fed again
 
 ### 24 September 2026
 

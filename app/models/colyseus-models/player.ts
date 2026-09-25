@@ -688,6 +688,7 @@ export default class Player extends Schema implements IPlayer {
       }
     })
     newPokemon.dishes = pokemon.dishes
+    newPokemon.festivePicnicDish = pokemon.festivePicnicDish
     newPokemon.positionX = pokemon.positionX
     newPokemon.positionY = pokemon.positionY
     this.board.delete(pokemon.id)

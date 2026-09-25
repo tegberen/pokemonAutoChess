@@ -1455,6 +1455,10 @@ export class OnDragDropItemCommand extends Command<
         canEatMoreDishes(pokemon, player.blessings) &&
         !pokemon.dishes.has(item)
       ) {
+        if (pokemon.festivePicnicDish != null) {
+          pokemon.dishes.delete(pokemon.festivePicnicDish)
+          pokemon.festivePicnicDish = null
+        }
         pokemon.dishes.add(item)
         pokemon.action = PokemonActionState.EAT
         removeInArray(player.items, item)
