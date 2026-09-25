@@ -496,6 +496,9 @@ Every balance change on this server, newest first.
 **Items**
 - UTILITY_UMBRELLA | reworked: at the start of the fight, if a weather is active, your Pokémon gain RUNE_PROTECT for 1 second and 10 SHIELD per STAR for each UTILITY_UMBRELLA in your inventory. No longer raises the opponent's weather count
 
+**Fixes**
+- Charging My Bug | only your STRONGEST Grubbin gains the ATK, no longer every Grubbin standing in a fully dug hole
+
 ### 24 September 2026
 
 **Game Mode**

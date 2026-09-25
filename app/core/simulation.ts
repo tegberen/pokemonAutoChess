@@ -3256,18 +3256,17 @@ export default class Simulation extends Schema implements ISimulation {
       }
 
       if (blessings.includes(Blessing.CHARGING_MY_BUG)) {
-        ownUnits
-          .filter((ally) => PkmFamily[ally.name] === Pkm.GRUBBIN)
-          .forEach((ally) => {
-            const boardY =
-              ally.team === Team.RED_TEAM
-                ? BOARD_HEIGHT - 1 - ally.positionY
-                : ally.positionY
-            const holeIndex = boardY * BOARD_WIDTH + ally.positionX
-            if (player.groundHoles[holeIndex] === 5) {
-              ally.addAttack(2, ally, 0, false, true)
-            }
-          })
+        const grubbin = getStrongestUnitOfFamily(ownUnits, Pkm.GRUBBIN)
+        if (grubbin) {
+          const boardY =
+            grubbin.team === Team.RED_TEAM
+              ? BOARD_HEIGHT - 1 - grubbin.positionY
+              : grubbin.positionY
+          const holeIndex = boardY * BOARD_WIDTH + grubbin.positionX
+          if (player.groundHoles[holeIndex] === 5) {
+            grubbin.addAttack(2, grubbin, 0, false, true)
+          }
+        }
       }
 
       if (blessings.includes(Blessing.PROTECT_THE_WEAK)) {
