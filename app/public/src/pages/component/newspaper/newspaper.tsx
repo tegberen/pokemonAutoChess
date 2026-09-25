@@ -67,10 +67,16 @@ export default function Newspaper() {
   )
 }
 
-export function VictoryCard({ victory }: { victory: IRecentVictory }) {
+export function VictoryCard({
+  victory,
+  className
+}: {
+  victory: IRecentVictory
+  className?: string
+}) {
   const match = victory.winners[0].game
   return (
-    <article className="my-box newspaper-card">
+    <article className={`my-box newspaper-card ${className ?? ""}`}>
       <header className="newspaper-kicker">
         <img
           src="/assets/icons/LAUREL_CROWN_ICON.svg"

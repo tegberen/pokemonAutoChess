@@ -1,0 +1,25 @@
+.newspaper-card.my-box.daily-duel-winner {
+  --daily-duel-gold-edge: color-mix(in srgb, var(--color-bg-gold) 65%, #000000);
+  --newspaper-card-border-width: 3px;
+
+  border: var(--newspaper-card-border-width) solid var(--daily-duel-gold-edge);
+  background-clip: padding-box;
+  background-color: color-mix(
+    in srgb,
+    var(--color-bg-gold) 8%,
+    var(--color-blessing-card)
+  );
+  background-image:
+    linear-gradient(rgb(0 0 0 / 12%), rgb(0 0 0 / 12%)),
+    repeating-linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--color-fg-gold) 26%, transparent) 0 16px,
+      color-mix(in srgb, var(--color-bg-gold) 26%, transparent) 16px 32px,
+      color-mix(in srgb, var(--color-rarity-legendary) 26%, transparent) 32px 48px
+    );
+}
+
+.daily-duel-winner .newspaper-kicker,
+.daily-duel-winner .newspaper-buildup {
+  border-color: var(--daily-duel-gold-edge);
+}

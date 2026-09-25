@@ -6,6 +6,7 @@ import { GamePokemonDetailTooltip } from "../game/game-pokemon-detail"
 import { VictoryCard } from "../newspaper/newspaper"
 import { BlessingHistoryTooltip } from "../profile/game-history"
 import "../newspaper/newspaper.css"
+import "./daily-duel-gazette.css"
 
 export default function DailyDuelGazette() {
   const { t } = useTranslation()
@@ -32,6 +33,9 @@ export default function DailyDuelGazette() {
           <VictoryCard
             key={`${result.winners[0].playerId}-${result.winners[0].game.time}`}
             victory={result}
+            className={
+              result.winners[0].game.rank === 1 ? "daily-duel-winner" : ""
+            }
           />
         ))
       )}
