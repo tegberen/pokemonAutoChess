@@ -767,7 +767,7 @@ export default class Simulation extends Schema implements ISimulation {
               ? count(entity.player.items, Item.UTILITY_UMBRELLA)
               : 0
           if (nbUtilityUmbrellas > 0) {
-            entity.status.triggerRuneProtect(1000, entity, entity)
+            entity.status.triggerRuneProtect(1000 * entity.stars, entity, entity)
             entity.addShield(
               10 * entity.stars * nbUtilityUmbrellas,
               entity,

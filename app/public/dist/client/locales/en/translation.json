@@ -3349,7 +3349,7 @@
 		"PEAT_BLOCK": "Counts as 3 towards TERRAIN. Under TERRAIN, your team retaliates against ADJACENT enemies. [5,LK]% chance to slow their SPEED by 3 when hit.\n\nAllows a ROCK Pokémon to undergo Crystallisation, awakening it as a FIELD type.",
 		"BLOSSOM_SHARD": "Counts as 3 towards BLOSSOM. Under BLOSSOM, each time an enemy spawns within a 2-tile radius of one of your units, gain SHIELD equal to 5% of its max HP.\n\nAllows a ROCK Pokémon to undergo Crystallisation, awakening it as a FLORA type.",
 		"ZEN_BALL": "Counts as 3 towards ZEN_ZONE. Under ZEN_ZONE, your team gains 4 DEF.\n\nAllows a ROCK Pokémon to undergo Crystallisation, awakening it as a FIGHTING type.",
-		"UTILITY_UMBRELLA": "At the start of the fight, if a weather is active, your Pokémon gain RUNE_PROTECT for 1 second and 10 SHIELD per STAR for each UTILITY_UMBRELLA in your inventory.",
+		"UTILITY_UMBRELLA": "If a weather is active, your Pokémon start the fight with 1 second of RUNE_PROTECT and 10 SHIELD per STAR.",
 		"NORMAL_GEM": "+1 to NORMAL synergy",
 		"GRASS_GEM": "+1 to GRASS synergy",
 		"FIRE_GEM": "+1 to FIRE synergy",

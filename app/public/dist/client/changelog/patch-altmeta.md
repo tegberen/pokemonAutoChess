@@ -494,7 +494,7 @@ Every balance change on this server, newest first.
 - Double Up chat {{new}} | Level 100+ unlocks partner chat with the C hotkey. Be respectful, don't spam
 
 **Items**
-- UTILITY_UMBRELLA | reworked: at the start of the fight, if a weather is active, your Pokémon gain RUNE_PROTECT for 1 second and 10 SHIELD per STAR for each UTILITY_UMBRELLA in your inventory. No longer raises the opponent's weather count
+- UTILITY_UMBRELLA | reworked: if a weather is active, your Pokémon start the fight with 1 second of RUNE_PROTECT and 10 SHIELD per STAR. No longer raises the opponent's weather count
 
 **Fixes**
 - Charging My Bug | only your STRONGEST Grubbin gains the ATK, no longer every Grubbin standing in a fully dug hole
