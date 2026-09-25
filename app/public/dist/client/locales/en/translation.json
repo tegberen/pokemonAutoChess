@@ -6841,6 +6841,8 @@
 	"already_held": "ALREADY HELD",
 	"caught": "CAUGHT !",
 	"request_sent": "REQUEST SENT !",
+	"send_from_bench": "SEND FROM BENCH !",
+	"send_during_preparation": "SEND DURING PREPARATION !",
 	"speaker_request": "is looking for",
 	"drop_here_to_sell": "Drop here to sell",
 	"drop_here_to_discard_for_gold": "Drop here to discard for -{{price}} gold",

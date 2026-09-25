@@ -495,6 +495,8 @@ Every balance change on this server, newest first.
 
 **Items**
 - UTILITY_UMBRELLA | reworked: if a weather is active, your Pokémon start the fight with 1 second of RUNE_PROTECT and 10 SHIELD per STAR. No longer raises the opponent's weather count
+- POKE_RADAR | the Speaker is renamed to Poké Radar
+- PRISON_BOTTLE | while recharging, it stays in your inventory showing the rounds left
 
 **Fixes**
 - Charging My Bug | only your STRONGEST Grubbin gains the ATK, no longer every Grubbin standing in a fully dug hole

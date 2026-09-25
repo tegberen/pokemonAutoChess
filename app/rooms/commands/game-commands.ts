@@ -1481,6 +1481,24 @@ export class OnDragDropItemCommand extends Command<
     }
     if (
       item === Item.PRISON_BOTTLE &&
+      this.state.gameMode === GameMode.DOUBLE_UP
+    ) {
+      const prisonBottleHint: DisplayText | null = !isOnBench(pokemon)
+        ? "send_from_bench"
+        : this.state.phase !== GamePhaseState.PICK
+          ? "send_during_preparation"
+          : null
+      if (prisonBottleHint) {
+        client.send(Transfer.DRAG_DROP_CANCEL, {
+          ...message,
+          text: prisonBottleHint,
+          pokemonId: pokemon.id
+        })
+        return
+      }
+    }
+    if (
+      item === Item.PRISON_BOTTLE &&
       this.state.gameMode === GameMode.DOUBLE_UP &&
       this.state.phase === GamePhaseState.PICK &&
       isOnBench(pokemon)

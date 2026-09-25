@@ -212,6 +212,27 @@ export default class ItemContainer extends DraggableObject {
     this.tempDetail.setVisible(true)
   }
 
+  showCooldown(roundsLeft: number) {
+    this.draggable = false
+    this.circle?.setFrame(this.cellIndex * 3 + 2)
+    this.sprite.setTint(0x777777)
+    const cooldownText = new GameObjects.Text(
+      this.scene,
+      0,
+      0,
+      roundsLeft.toString(),
+      {
+        fontSize: "22px",
+        fontFamily: "Jost",
+        fontStyle: "bold",
+        color: "#FFFFFF",
+        stroke: "#000000",
+        strokeThickness: 3
+      }
+    ).setOrigin(0.5)
+    this.add(cooldownText)
+  }
+
   updateCount(value: number, hideWhenZero = false) {
     if (hideWhenZero && value === 0) {
       this.countText?.setVisible(false)

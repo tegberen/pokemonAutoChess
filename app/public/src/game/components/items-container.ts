@@ -4,7 +4,7 @@ import type Player from "../../../../models/colyseus-models/player"
 import {
   Berries,
   Dishes,
-  type Item,
+  Item,
   Seeds,
   ShinyItems,
   SpecialItems,
@@ -64,6 +64,9 @@ export default class ItemsContainer extends GameObjects.Container {
       items = items.filter((it) => !isIn(Seeds, it) || it === activeSeed)
     }
 
+    const prisonBottleCooldown = this.getPrisonBottleCooldown(items)
+    if (prisonBottleCooldown > 0) items.push(Item.PRISON_BOTTLE)
+
     this.items = []
     items
       .sort((a, b) => this.getOrderPriority(b) - this.getOrderPriority(a))
@@ -82,8 +85,18 @@ export default class ItemsContainer extends GameObjects.Container {
           this.playerId
         )
         if (scale !== 1) itemContainer.setScale(scale)
+        if (item === Item.PRISON_BOTTLE && prisonBottleCooldown > 0) {
+          itemContainer.showCooldown(prisonBottleCooldown)
+        }
         this.add(itemContainer)
       })
+  }
+
+  // the bottle leaves the inventory while recharging, so a copy shows the rounds left
+  getPrisonBottleCooldown(items: Item[]): number {
+    if (this.pokemonId !== null || items.includes(Item.PRISON_BOTTLE)) return 0
+    const player = this.scene.room?.state.players.get(this.playerId)
+    return player?.doubleUpSendCooldown ?? 0
   }
 
   getOrderPriority(item: Item): number {

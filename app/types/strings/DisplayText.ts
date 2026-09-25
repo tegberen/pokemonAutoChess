@@ -12,3 +12,5 @@ export type DisplayText =
   | "already_held"
   | "bark"
   | "request_sent"
+  | "send_from_bench"
+  | "send_during_preparation"

@@ -1315,11 +1315,12 @@ export default class BoardManager {
       this.scene.add.tween({
         targets: [text],
         ease: "linear",
-        duration: 1500,
+        duration: 2000,
         delay: 0,
         alpha: {
           getStart: () => 1,
-          getEnd: () => 0
+          getEnd: () => 0,
+          ease: "Cubic.easeIn"
         },
         y: {
           getStart: () => y - 50,

@@ -631,6 +631,11 @@ class GameContainer {
     $player.items.onAdd(refreshItems)
     $player.items.onRemove(refreshItems)
     $player.items.onChange(refreshItems)
+    $player.listen("doubleUpSendCooldown", () => {
+      if (player.id === this.playerIdSpectated) {
+        this.gameScene?.itemsContainer?.render(player.items)
+      }
+    })
     $player.listen("doubleUpTradeOffer", (offer: string) => {
       if (player.id === this.playerIdSpectated) {
         const partner = this.room.state.players.get(player.doubleUpPartnerId)
