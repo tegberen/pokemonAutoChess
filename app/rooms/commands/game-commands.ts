@@ -1349,7 +1349,7 @@ export class OnDragDropItemCommand extends Command<
       }
     }
 
-    if (item === Item.SPEAKER) {
+    if (item === Item.POKE_RADAR) {
       let requestSent = false
       if (
         this.state.gameMode === GameMode.DOUBLE_UP &&

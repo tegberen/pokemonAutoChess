@@ -464,7 +464,7 @@ export default class Player extends Schema implements IPlayer {
 
     if (state.gameMode === GameMode.DOUBLE_UP && !isBot) {
       // used to request a pokemon to your partner
-      this.items.push(Item.SPEAKER)
+      this.items.push(Item.POKE_RADAR)
     }
   }
 

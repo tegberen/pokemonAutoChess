@@ -610,17 +610,24 @@ export default function Game() {
           if (!sender) return
           toast(
             <div className="toast-speaker-request">
-              <img
-                className="portrait"
-                src={getPortraitSrc(PkmIndex[pokemon])}
-                alt={pokemon}
-              />
-              <p>
-                {t("speaker_request", {
-                  player: sender.name,
-                  pokemon: t(`pkm.${pokemon}`)
-                })}
-              </p>
+              <div className="toast-speaker-request-portrait">
+                <img
+                  className="portrait"
+                  src={getPortraitSrc(PkmIndex[pokemon])}
+                  alt={pokemon}
+                />
+                <img
+                  className="radar-icon"
+                  src="assets/item/POKE_RADAR.png"
+                  alt=""
+                />
+              </div>
+              <div className="toast-speaker-request-text">
+                <span className="player">{sender.name}</span>
+                <span>
+                  {t("speaker_request")} <b>{t(`pkm.${pokemon}`)}</b>
+                </span>
+              </div>
             </div>,
             {
               containerId: playerId,
