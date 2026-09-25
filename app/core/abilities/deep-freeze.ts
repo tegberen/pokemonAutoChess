@@ -1,3 +1,4 @@
+import { Ability } from "../../types/enum/Ability"
 import { AttackType } from "../../types/enum/Game"
 import type { Board } from "../board"
 import type { PokemonEntity } from "../pokemon-entity"
@@ -34,6 +35,7 @@ export class DeepFreezeStrategy extends AbilityStrategy {
 
       // Animate ice bolt from current position to target
       pokemon.broadcastAbility({
+        skill: Ability.DEEP_FREEZE,
         positionX: startingProjectileCoordinates.x,
         positionY: startingProjectileCoordinates.y,
         targetX: currentTarget.positionX,

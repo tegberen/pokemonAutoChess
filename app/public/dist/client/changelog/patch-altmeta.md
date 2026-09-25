@@ -498,6 +498,13 @@ Every balance change on this server, newest first.
 - POKE_RADAR | the Speaker is renamed to Poké Radar
 - PRISON_BOTTLE | while recharging, it stays in your inventory showing the rounds left
 
+**Wishes**
+- Robin Gems | Prismatic → Gold
+- Gale Wings | EMBER per GOLD 4/3/2 → 5/4/3 at 1/2/3 STAR
+- Symbiotic Symphony | GRASS HP per SOUND cry 5 → 10, SOUND PP per heal 2 → 4
+- Frozen Ocean | AQUATIC ICE allies hit by the TIDAL_WAVE now also cast Deep Freeze at their own STAR level
+- Synarch | a duo (Illumise & Volbeat, Plusle & Minun, the Indeedee) counts once, no longer twice
+
 **Fixes**
 - Charging My Bug | only your STRONGEST Grubbin gains the ATK, no longer every Grubbin standing in a fully dug hole
 

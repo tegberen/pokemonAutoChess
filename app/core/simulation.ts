@@ -6717,6 +6717,22 @@ export default class Simulation extends Schema implements ISimulation {
     ) {
       return
     }
+    const deepFreezeTarget = this.board.getClosestEnemy(
+      pokemon.positionX,
+      pokemon.positionY,
+      pokemon.team === Team.BLUE_TEAM ? Team.RED_TEAM : Team.BLUE_TEAM
+    )
+    if (deepFreezeTarget) {
+      // a bonus cast, so the unit keeps the PP it built towards its own ability
+      const ppBeforeCast = pokemon.pp
+      AbilityStrategies[Ability.DEEP_FREEZE].process(
+        pokemon,
+        this.board,
+        deepFreezeTarget,
+        false
+      )
+      pokemon.pp = ppBeforeCast
+    }
     pokemon.addPP(
       Math.round(FROZEN_OCEAN_WAVE_RATIO * pokemon.maxPP),
       pokemon,

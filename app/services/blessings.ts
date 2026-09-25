@@ -159,6 +159,7 @@ import {
 } from "../types/enum/Item"
 import {
   Pkm,
+  PkmDuos,
   PkmFamily,
   PkmRegionalVariants,
   Unowns
@@ -2958,9 +2959,18 @@ export const blessingEffectService: {
   },
 
   [Blessing.SYNARCH]: (player) => {
-    const uniques = schemaValues(player.board).filter(
-      (pokemon) => pokemon.rarity === Rarity.UNIQUE
-    )
+    // a duo is one pick, so it only counts once
+    const countedDuos = new Set<string>()
+    const uniques = schemaValues(player.board).filter((pokemon) => {
+      if (pokemon.rarity !== Rarity.UNIQUE) return false
+      const duo = Object.entries(PkmDuos).find(([, members]) =>
+        members.includes(pokemon.name)
+      )?.[0]
+      if (!duo) return true
+      if (countedDuos.has(duo)) return false
+      countedDuos.add(duo)
+      return true
+    })
     const baseSynergies = uniques.flatMap((unique) => [
       ...getPokemonData(unique.name).types
     ])

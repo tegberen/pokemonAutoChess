@@ -5304,7 +5304,7 @@
 		},
 		"FROZEN_OCEAN": {
 			"name": "Frozen Ocean",
-			"description": "Gain an ICE_STONE and a SURFBOARD. When hit by an TIDAL_WAVE, allies with both AQUATIC and ICE synergy restore 20% of their max + their current SPE_DEF as PP."
+			"description": "Gain an ICE_STONE and a SURFBOARD. When hit by a TIDAL_WAVE, allies with both AQUATIC and ICE cast Deep Freeze at their own STAR level, restore 20% of their max PP and double their SPE_DEF."
 		},
 		"MAGICAL_METAL": {
 			"name": "Magic Metals",
@@ -5324,7 +5324,7 @@
 		},
 		"SYMBIOTIC_SYMPHONY": {
 			"name": "Symbiotic Symphony",
-			"description": "Gain a LEAF_STONE and a METRONOME. GRASS Pokémon gain 5 HP upon hearing allied sound cries. SOUND Pokémon gain 2 PP upon receiving healing."
+			"description": "Gain a LEAF_STONE and a METRONOME. GRASS Pokémon gain 10 HP upon hearing allied sound cries. SOUND Pokémon gain 4 PP upon receiving healing."
 		},
 		"EARTHEN_BARRIER": {
 			"name": "Earthen Barrier",
@@ -5992,7 +5992,7 @@
 		},
 		"SYNARCH": {
 			"name": "Synarch",
-			"description": "Gain a gem matching each base synergy of your Unique Pokémon. If that is less than 3 gems, random gems make up the difference."
+			"description": "Gain a gem matching each base synergy of your Unique Pokémon, counting a duo once. If that is less than 3 gems, random gems make up the difference."
 		},
 		"FLEXIBILITY": {
 			"name": "Flexibility",
@@ -6200,7 +6200,7 @@
 		},
 		"GALE_WINGS": {
 			"name": "Gale Wings",
-			"description": "Gain a Fletchling. Your STRONGEST Fletchling starts combat with max PP. After combat, collect any EMBER remaining on the field, gaining 1 GOLD for every 4/3/2 EMBER collected at 1/2/3 STAR, and a FIRE_SHARD if at least 10 are collected. FIRE_SHARD gained this way do not count towards your max total."
+			"description": "Gain a Fletchling. Your STRONGEST Fletchling starts combat with max PP. After combat, collect any EMBER remaining on the field, gaining 1 GOLD for every 5/4/3 EMBER collected at 1/2/3 STAR, and a FIRE_SHARD if at least 10 are collected. FIRE_SHARD gained this way do not count towards your max total."
 		},
 		"CELL_BRAWLER": {
 			"name": "Cell Brawler",
