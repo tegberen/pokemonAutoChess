@@ -116,13 +116,16 @@
   flex-flow: column;
   align-items: center;
   gap: 1em;
-  width: 320px;
-  max-width: 20vw;
+  width: clamp(280px, 24vw, 400px);
 }
 
+/* grows with its text so it reads whole, and only scrolls past the screen */
 .game-choice-blessing-slot > .my-box {
   perspective: 700px;
-  height: 17em;
+  flex: 1;
+  box-sizing: border-box;
+  min-height: 17em;
+  max-height: calc(100vh - 260px);
   overflow: hidden;
   width: 100%;
   padding: 5px;
@@ -277,7 +280,7 @@
 }
 
 .blessing-body > p {
-  width: 85%;
+  width: 92%;
   padding-top: 0.5em;
   border-top: 1px solid
     color-mix(in srgb, var(--color-fg-primary) 30%, transparent);
@@ -286,7 +289,7 @@
 }
 
 .blessing-body > .blessing-grant-block {
-  width: 85%;
+  width: 92%;
 }
 
 .blessing-body .blessing-grant {
