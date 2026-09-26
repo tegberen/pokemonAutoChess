@@ -42,6 +42,7 @@
     "csv-export": "cd gen && ts-node csv-export.ts",
     "check-labels": "cd gen && ts-node check-labels.ts",
     "check-guides": "cd gen && ts-node check-guides.ts",
+    "check-hero-balance": "cd gen && ts-node --transpile-only check-hero-balance.ts",
     "add-pokemon": "cd edit && ts-node add-pokemon.ts",
     "colyseus-post-deploy": "npx colyseus-post-deploy",
     "deploy-live": "pm2 deploy production update",
