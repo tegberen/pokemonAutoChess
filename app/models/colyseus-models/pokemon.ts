@@ -15232,6 +15232,7 @@ export class Sobble extends Pokemon {
   maxPP = 100
   range = 3
   skill = Ability.SNIPE_SHOT
+  passive = Passive.SOBBLE
 }
 
 export class Drizzile extends Pokemon {
@@ -15247,6 +15248,7 @@ export class Drizzile extends Pokemon {
   maxPP = 100
   range = 3
   skill = Ability.SNIPE_SHOT
+  passive = Passive.SOBBLE
 }
 
 export class Inteleon extends Pokemon {
@@ -15261,6 +15263,7 @@ export class Inteleon extends Pokemon {
   maxPP = 100
   range = 4
   skill = Ability.SNIPE_SHOT
+  passive = Passive.SOBBLE
 }
 
 export class Comfey extends Pokemon {

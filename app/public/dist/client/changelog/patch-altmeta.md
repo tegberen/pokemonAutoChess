@@ -498,6 +498,9 @@ Every balance change on this server, newest first.
 - Team Planner | revamped with Synergy Highlighting (use the {{meeple}})
 - Battle Stats and Effects | compacted
 
+**Pokémon**
+- Sobble line | immune to FLOOD knockback. FLOOD heals twice as much and also gives that much PP
+
 ### 25 September 2026
 
 **Game Mode**

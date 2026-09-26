@@ -6595,7 +6595,10 @@ export default class Simulation extends Schema implements ISimulation {
 
     for (const pkm of entities) {
       if (pkm.types.has(Synergy.AQUATIC)) {
-        const { healReceived } = pkm.handleHeal(0.03 * pkm.maxHP, pkm, 0, false)
+        const healRatio = pkm.passive === Passive.SOBBLE ? 0.06 : 0.03
+        const heal = healRatio * pkm.maxHP
+        const { healReceived } = pkm.handleHeal(heal, pkm, 0, false)
+        if (pkm.passive === Passive.SOBBLE) pkm.addPP(heal, pkm, 0, false)
         if (healReceived > 0) {
           // fold flood heal into the Tidal Wave row of the Battle Stats
           pkm.healDone = Math.max(0, pkm.healDone - healReceived)
@@ -6629,6 +6632,8 @@ export default class Simulation extends Schema implements ISimulation {
       if (nbPearlStones > 0) {
         pkm.addShield(10 * nbPearlStones, pkm, 0, false)
       }
+
+      if (pkm.passive === Passive.SOBBLE) continue
 
       // knockback in the wave's direction, resisted by 1 tile per pearl stone
       const tiles = Math.max(0, WAVE_KNOCKBACK - nbPearlStones)
