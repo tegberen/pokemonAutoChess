@@ -1931,10 +1931,10 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     icon: "mole",
     grantsPokemonImmediately: true
   },
-  [Blessing.CATAPULT]: {
+  [Blessing.GALVANIC_RAIN]: {
     tier: BlessingTier.GOLD,
     availableAtStages: [4],
-    icon: "catapult",
+    icon: "galvanic_rain",
     grantsPokemonImmediately: true
   },
   [Blessing.SILVER_SPOON]: {

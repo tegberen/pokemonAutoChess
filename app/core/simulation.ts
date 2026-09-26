@@ -124,9 +124,9 @@ import {
   FROST_GEAR_RANGE_BONUS,
   HIGH_BREACHING_MAX_PP,
   ORBITAL_STRIKE_RANGE_BONUS,
-  CATAPULT_RANGE_BONUS,
-  CATAPULT_THROW_CHANCE,
-  CATAPULT_THROW_FLIGHT_MS,
+  GALVANIC_RAIN_RANGE_BONUS,
+  GALVANIC_RAIN_THROW_CHANCE,
+  GALVANIC_RAIN_THROW_FLIGHT_MS,
   CELL_BRAWLER_STAT_BONUS,
   GALE_WINGS_EMBERS_FOR_FIRE_SHARD,
   GALE_WINGS_EMBERS_PER_GOLD_BY_STAR,
@@ -4253,16 +4253,16 @@ export default class Simulation extends Schema implements ISimulation {
       orbitalStrikeChampion.range += ORBITAL_STRIKE_RANGE_BONUS
     }
 
-    const catapultChampion = championOf.get(Blessing.CATAPULT)
-    if (catapultChampion) {
-      catapultChampion.skill = Ability.ELECTRIC_SURGE
-      catapultChampion.range += CATAPULT_RANGE_BONUS
+    const galvanicRainChampion = championOf.get(Blessing.GALVANIC_RAIN)
+    if (galvanicRainChampion) {
+      galvanicRainChampion.skill = Ability.ELECTRIC_SURGE
+      galvanicRainChampion.range += GALVANIC_RAIN_RANGE_BONUS
       // Grip Claw rolls a second throw in the same tick, before the first
       // Geodude exists, so both would otherwise aim at the same free cell
       const landingsInFlight = new Set<string>()
-      catapultChampion.effectsSet.add(
+      galvanicRainChampion.effectsSet.add(
         new OnAttackEffect(({ pokemon, target }) => {
-          if (!target || !chance(CATAPULT_THROW_CHANCE, pokemon)) return
+          if (!target || !chance(GALVANIC_RAIN_THROW_CHANCE, pokemon)) return
           const throwTarget = target
           const landing = this.getClosestFreeCellTo(
             target.positionX,
@@ -4274,7 +4274,7 @@ export default class Simulation extends Schema implements ISimulation {
           const landingKey = `${landing.x},${landing.y}`
           landingsInFlight.add(landingKey)
           pokemon.broadcastAbility({
-            skill: "CATAPULT_THROW",
+            skill: "GALVANIC_RAIN_THROW",
             targetX: landing.x,
             targetY: landing.y
           })
@@ -4310,7 +4310,7 @@ export default class Simulation extends Schema implements ISimulation {
                   throwTarget
                 )
               }
-            }, CATAPULT_THROW_FLIGHT_MS)
+            }, GALVANIC_RAIN_THROW_FLIGHT_MS)
           )
         })
       )

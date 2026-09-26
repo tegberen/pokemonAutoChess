@@ -400,6 +400,18 @@ function giftOneStarOfSynergy(
   giftPokemonIfBenchHasRoom(player, pickRandomIn(candidates))
 }
 
+// the Wish is only owned after its effect runs, so an item bolted on before the
+// gift's synergy update, or before a refused pick, fell back into the inventory
+function giftThenBoltWishItemOnPot(
+  player: Player,
+  blessing: Blessing,
+  gift: Pkm
+): boolean {
+  if (!giftPokemonIfBenchHasRoom(player, gift)) return false
+  grantWishItemToFlowerPot(player, blessing)
+  return true
+}
+
 function itemBlessingEffects() {
   const grants = Object.entries(ITEM_GRANTED_BY_BLESSING) as [Blessing, Item][]
   return Object.fromEntries(
@@ -2555,15 +2567,11 @@ export const blessingEffectService: {
   [Blessing.DOUBLE_WINDFALL]: (player) =>
     giftPokemonIfBenchHasRoom(player, Pkm.FLABEBE),
 
-  [Blessing.FLYTRAP]: (player) => {
-    grantWishItemToFlowerPot(player, Blessing.FLYTRAP)
-    return giftPokemonIfBenchHasRoom(player, Pkm.GOSSIFLEUR)
-  },
+  [Blessing.FLYTRAP]: (player) =>
+    giftThenBoltWishItemOnPot(player, Blessing.FLYTRAP, Pkm.GOSSIFLEUR),
 
-  [Blessing.MEGA_SOL]: (player) => {
-    grantWishItemToFlowerPot(player, Blessing.MEGA_SOL)
-    return giftPokemonIfBenchHasRoom(player, Pkm.GOSSIFLEUR)
-  },
+  [Blessing.MEGA_SOL]: (player) =>
+    giftThenBoltWishItemOnPot(player, Blessing.MEGA_SOL, Pkm.GOSSIFLEUR),
 
   [Blessing.BABY_OPENER]: (player) =>
     giftBabiesUnderCost(
@@ -3264,8 +3272,8 @@ export const blessingEffectService: {
   [Blessing.MOLE_MAZE]: (player, state, room) =>
     heroBlessingEffect(Blessing.MOLE_MAZE, player, state, room),
 
-  [Blessing.CATAPULT]: (player, state, room) =>
-    heroBlessingEffect(Blessing.CATAPULT, player, state, room),
+  [Blessing.GALVANIC_RAIN]: (player, state, room) =>
+    heroBlessingEffect(Blessing.GALVANIC_RAIN, player, state, room),
 
   [Blessing.ICE_SPEAR]: (player, state, room) =>
     heroBlessingEffect(Blessing.ICE_SPEAR, player, state, room),
@@ -3291,10 +3299,8 @@ export const blessingEffectService: {
   [Blessing.SHELL_ARMOR_BLESSING]: (player, state, room) =>
     heroBlessingEffect(Blessing.SHELL_ARMOR_BLESSING, player, state, room),
 
-  [Blessing.SPORE_CLOUDS]: (player) => {
-    grantWishItemToFlowerPot(player, Blessing.SPORE_CLOUDS)
-    return giftPokemonIfBenchHasRoom(player, Pkm.FLABEBE)
-  },
+  [Blessing.SPORE_CLOUDS]: (player) =>
+    giftThenBoltWishItemOnPot(player, Blessing.SPORE_CLOUDS, Pkm.FLABEBE),
 
   [Blessing.AMAZING_GARDENING]: (player) => {
     const fullyEvolvedFlowers = getUnlockedFlowerPots(player).filter(

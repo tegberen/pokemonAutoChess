@@ -18,7 +18,7 @@ import {
 } from "../../../../types/Animation"
 import { Ability } from "../../../../types/enum/Ability"
 import {
-  CATAPULT_THROW_FLIGHT_MS,
+  GALVANIC_RAIN_THROW_FLIGHT_MS,
   GLAIVE_STRIKE_DELAY,
   GLAIVE_STRIKE_SHATTER_DELAY,
   GLAIVE_STRIKE_SWORD_FALL_DURATION,
@@ -1189,12 +1189,12 @@ function voltSwitchBolt(args: AbilityAnimationArgs) {
   })
 }
 
-const CATAPULT_THROW_ARC_HEIGHT = 140
-const CATAPULT_THROW_MIN_FLIGHT = 200
+const GALVANIC_RAIN_THROW_ARC_HEIGHT = 140
+const GALVANIC_RAIN_THROW_MIN_FLIGHT = 200
 
 // a stand-in Geodude sprite flies the arc; the server spawns the real unit on
-// the landing cell once CATAPULT_THROW_FLIGHT_MS is up
-function catapultThrowAnimation(args: AbilityAnimationArgs) {
+// the landing cell once GALVANIC_RAIN_THROW_FLIGHT_MS is up
+function galvanicRainThrowAnimation(args: AbilityAnimationArgs) {
   const { scene, positionX, positionY, targetX, targetY, flip } = args
   const [startX, startY] = transformEntityCoordinates(positionX, positionY, flip)
   const [landingX, landingY] = transformEntityCoordinates(targetX, targetY, flip)
@@ -1224,8 +1224,8 @@ function catapultThrowAnimation(args: AbilityAnimationArgs) {
     const tumbleDirection = landingX >= startX ? 1 : -1
     // loading the texture ate into the flight, so the landing still matches the spawn
     const flightLeft = Math.max(
-      CATAPULT_THROW_MIN_FLIGHT,
-      CATAPULT_THROW_FLIGHT_MS - (scene.time.now - thrownAt)
+      GALVANIC_RAIN_THROW_MIN_FLIGHT,
+      GALVANIC_RAIN_THROW_FLIGHT_MS - (scene.time.now - thrownAt)
     )
     scene.tweens.addCounter({
       from: 0,
@@ -1233,7 +1233,7 @@ function catapultThrowAnimation(args: AbilityAnimationArgs) {
       duration: flightLeft,
       onUpdate: (tween) => {
         const progress = tween.getValue() ?? 1
-        const arc = 4 * progress * (1 - progress) * CATAPULT_THROW_ARC_HEIGHT
+        const arc = 4 * progress * (1 - progress) * GALVANIC_RAIN_THROW_ARC_HEIGHT
         flyingGeodude.setPosition(
           startX + (landingX - startX) * progress,
           startY + (landingY - startY) * progress - arc
@@ -4268,7 +4268,7 @@ export const AbilitiesAnimations: {
     duration: 400,
     scale: 5
   }),
-  ["CATAPULT_THROW"]: catapultThrowAnimation,
+  ["GALVANIC_RAIN_THROW"]: galvanicRainThrowAnimation,
   // projectile for the LEAF_TORNADO blessing ricochet
   ["GRASS_RANGE"]: projectile({
     ability: "GRASS/range",

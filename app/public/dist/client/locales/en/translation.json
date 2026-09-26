@@ -5624,7 +5624,7 @@
 		},
 		"BLOSSOM_FESTIVAL": {
 			"name": "Blossom Festival",
-			"description": "The Mulch gained from KO'd FLORA allies is doubled until you get Bellossom. Your STRONGEST Bellossom gains GRASS synergy and 1 RANGE every 3 casts. Gain a Gossifleur."
+			"description": "Your STRONGEST Bellossom gains GRASS synergy and 1 RANGE every 3 casts. The Mulch gained from KO'd FLORA allies is doubled until you get Bellossom. Gain a Gossifleur."
 		},
 		"NOT_THE_BEES": {
 			"name": "Not the Bees!",
@@ -6430,8 +6430,8 @@
 			"name": "Mole Maze",
 			"description": "Gain a Drilbur. Your STRONGEST Drilbur's ability is replaced with Mole Maze, and it permanently gains 1 AP each time it KO's an enemy."
 		},
-		"CATAPULT": {
-			"name": "Galvanic Throw",
+		"GALVANIC_RAIN": {
+			"name": "Galvanic Rain",
 			"description": "Gain an Alolan Graveler and move to a random ELECTRIC region if not in one. Your STRONGEST Alolan Geodude's ability is replaced with Electric Surge, it gets +2 RANGE, and its attacks have a [10,LK]% chance to throw an Alolan Geodude with full PP next to the target."
 		},
 		"SILVER_SPOON": {
