@@ -4255,6 +4255,7 @@ export default class Simulation extends Schema implements ISimulation {
 
     const catapultChampion = championOf.get(Blessing.CATAPULT)
     if (catapultChampion) {
+      catapultChampion.skill = Ability.ELECTRIC_SURGE
       catapultChampion.range += CATAPULT_RANGE_BONUS
       // Grip Claw rolls a second throw in the same tick, before the first
       // Geodude exists, so both would otherwise aim at the same free cell
