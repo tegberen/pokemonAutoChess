@@ -1,5 +1,8 @@
 import { Ability } from "../../types/enum/Ability"
 
+// each Dragon Darts dart is thrown as the previous one lands, and hits on arrival
+export const DRAGON_DARTS_DART_FLIGHT_MS = 200
+
 export const InimitableAbilities: Ability[] = [
   Ability.ASSIST,
   Ability.AURA_WHEEL,

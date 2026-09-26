@@ -6430,6 +6430,10 @@
 			"name": "Mole Maze",
 			"description": "Gain a Drilbur. Your STRONGEST Drilbur's ability is replaced with Mole Maze, and it permanently gains 1 AP each time it KO's an enemy."
 		},
+		"DREEPY_DEPLOYMENT": {
+			"name": "Dreepy Deployment",
+			"description": "Gain a Dreepy and move to a random Dreepy region if not in one. Each dart of your STRONGEST Dreepy has a [10,LK]% chance to deploy a Dreepy with full PP 2 tiles from the target, or always if the ability KO's the target."
+		},
 		"PRIMAL_MAGNETISM": {
 			"name": "Primal Magnetism",
 			"description": "Gain a Magnemite. Your STRONGEST Magnemite casts Magnetic Absorption on the first enemy it attacks, then after every third cast of its own ability."

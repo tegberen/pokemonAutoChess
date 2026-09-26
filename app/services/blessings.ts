@@ -3278,6 +3278,9 @@ export const blessingEffectService: {
   [Blessing.PRIMAL_MAGNETISM]: (player, state, room) =>
     heroBlessingEffect(Blessing.PRIMAL_MAGNETISM, player, state, room),
 
+  [Blessing.DREEPY_DEPLOYMENT]: (player, state, room) =>
+    heroBlessingEffect(Blessing.DREEPY_DEPLOYMENT, player, state, room),
+
   [Blessing.ICE_SPEAR]: (player, state, room) =>
     heroBlessingEffect(Blessing.ICE_SPEAR, player, state, room),
 

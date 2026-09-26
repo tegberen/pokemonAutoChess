@@ -16,6 +16,7 @@ import {
   AttackSpriteScale,
   HitSprite
 } from "../../../../types/Animation"
+import { DRAGON_DARTS_DART_FLIGHT_MS } from "../../../../config/game/abilities"
 import { Ability } from "../../../../types/enum/Ability"
 import {
   GALVANIC_RAIN_THROW_FLIGHT_MS,
@@ -5843,7 +5844,7 @@ export const AbilitiesAnimations: {
     scale: 1,
     oriented: true,
     positionOffset: [0, -30],
-    duration: 400,
+    duration: DRAGON_DARTS_DART_FLIGHT_MS,
     rotation: -Math.PI / 2,
     hitAnim: onTarget({ ability: "PUFF_PINK", scale: 1 })
   }),
