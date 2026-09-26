@@ -124,6 +124,9 @@ import {
   FROST_GEAR_RANGE_BONUS,
   HIGH_BREACHING_MAX_PP,
   ORBITAL_STRIKE_RANGE_BONUS,
+  CATAPULT_RANGE_BONUS,
+  CATAPULT_THROW_CHANCE,
+  CATAPULT_THROW_FLIGHT_MS,
   CELL_BRAWLER_STAT_BONUS,
   GALE_WINGS_EMBERS_FOR_FIRE_SHARD,
   GALE_WINGS_EMBERS_PER_GOLD_BY_STAR,
@@ -1285,10 +1288,12 @@ export default class Simulation extends Schema implements ISimulation {
     return freeCells
   }
 
+  // reservedCells holds "x,y" keys of cells promised to a unit that has not spawned yet
   getClosestFreeCellTo(
     positionX: number,
     positionY: number,
-    team: Team
+    team: Team,
+    reservedCells?: Set<string>
   ): { x: number; y: number } | null {
     const placesToConsiderByOrderOfPriority = [
       [0, 0],
@@ -1333,7 +1338,8 @@ export default class Simulation extends Schema implements ISimulation {
 
       if (
         this.board.isOnBoard(x, y) &&
-        this.board.getEntityOnCell(x, y) === undefined
+        this.board.getEntityOnCell(x, y) === undefined &&
+        !reservedCells?.has(`${x},${y}`)
       ) {
         return { x, y }
       }
@@ -4245,6 +4251,68 @@ export default class Simulation extends Schema implements ISimulation {
         fieldSpreader.status.addPsychicField(fieldSpreader)
       }
       orbitalStrikeChampion.range += ORBITAL_STRIKE_RANGE_BONUS
+    }
+
+    const catapultChampion = championOf.get(Blessing.CATAPULT)
+    if (catapultChampion) {
+      catapultChampion.range += CATAPULT_RANGE_BONUS
+      // Grip Claw rolls a second throw in the same tick, before the first
+      // Geodude exists, so both would otherwise aim at the same free cell
+      const landingsInFlight = new Set<string>()
+      catapultChampion.effectsSet.add(
+        new OnAttackEffect(({ pokemon, target }) => {
+          if (!target || !chance(CATAPULT_THROW_CHANCE, pokemon)) return
+          const throwTarget = target
+          const landing = this.getClosestFreeCellTo(
+            target.positionX,
+            target.positionY,
+            pokemon.team,
+            landingsInFlight
+          )
+          if (!landing) return
+          const landingKey = `${landing.x},${landing.y}`
+          landingsInFlight.add(landingKey)
+          pokemon.broadcastAbility({
+            skill: "CATAPULT_THROW",
+            targetX: landing.x,
+            targetY: landing.y
+          })
+          // the unit joins the fight where the client's thrown sprite lands
+          pokemon.commands.push(
+            new DelayedCommand(() => {
+              landingsInFlight.delete(landingKey)
+              const cell = this.getClosestFreeCellTo(
+                landing.x,
+                landing.y,
+                pokemon.team,
+                landingsInFlight
+              )
+              if (!cell) return
+              const thrownGeodude = this.addPokemon(
+                PokemonFactory.createPokemonFromName(
+                  Pkm.ALOLAN_GEODUDE,
+                  pokemon.player
+                ),
+                cell.x,
+                cell.y,
+                pokemon.team,
+                true
+              )
+              thrownGeodude.pp = thrownGeodude.maxPP
+              if (throwTarget.hp > 0) {
+                thrownGeodude.orientation = this.board.orientation(
+                  cell.x,
+                  cell.y,
+                  throwTarget.positionX,
+                  throwTarget.positionY,
+                  thrownGeodude,
+                  throwTarget
+                )
+              }
+            }, CATAPULT_THROW_FLIGHT_MS)
+          )
+        })
+      )
     }
 
     const cellBrawlerChampion = championOf.get(Blessing.CELL_BRAWLER)

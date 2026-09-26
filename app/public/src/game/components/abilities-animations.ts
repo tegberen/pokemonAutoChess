@@ -18,6 +18,7 @@ import {
 } from "../../../../types/Animation"
 import { Ability } from "../../../../types/enum/Ability"
 import {
+  CATAPULT_THROW_FLIGHT_MS,
   GLAIVE_STRIKE_DELAY,
   GLAIVE_STRIKE_SHATTER_DELAY,
   GLAIVE_STRIKE_SWORD_FALL_DURATION,
@@ -48,7 +49,7 @@ import { transformEntityCoordinates } from "../../pages/utils/utils"
 import { DEPTH } from "../depths"
 import type { DebugScene } from "../scenes/debug-scene"
 import type GameScene from "../scenes/game-scene"
-import PokemonSprite from "./pokemon"
+import PokemonSprite, { loadCompressedAtlas } from "./pokemon"
 
 /** Fixed base angle (degrees) per feather type so each stat feather has a distinct tilt */
 const FeatherBaseAngles: Record<string, number> = {
@@ -1184,6 +1185,62 @@ function voltSwitchBolt(args: AbilityAnimationArgs) {
     runner.moveManager.once("complete", () => {
       stopTrailing()
       fadeOut()
+    })
+  })
+}
+
+const CATAPULT_THROW_ARC_HEIGHT = 140
+const CATAPULT_THROW_MIN_FLIGHT = 200
+
+// a stand-in Geodude sprite flies the arc; the server spawns the real unit on
+// the landing cell once CATAPULT_THROW_FLIGHT_MS is up
+function catapultThrowAnimation(args: AbilityAnimationArgs) {
+  const { scene, positionX, positionY, targetX, targetY, flip } = args
+  const [startX, startY] = transformEntityCoordinates(positionX, positionY, flip)
+  const [landingX, landingY] = transformEntityCoordinates(targetX, targetY, flip)
+  const geodudeIndex = PkmIndex[Pkm.ALOLAN_GEODUDE]
+  // screen coordinates, so it faces where it flies even on a flipped board
+  const flightDirection = getOrientation(startX, startY, landingX, landingY)
+  const idlePath = `${PokemonTint.NORMAL}/${AnimationType.Idle}/${SpriteType.ANIM}/${flightDirection}`
+  const thrownAt = scene.time.now
+
+  const textureReady = scene.textures.exists(geodudeIndex)
+    ? Promise.resolve()
+    : loadCompressedAtlas(scene, geodudeIndex)
+  textureReady.then(() => {
+    if (!scene.sys?.isActive() || !scene.textures.exists(geodudeIndex)) return
+    scene.animationManager?.createPokemonAnimations(
+      geodudeIndex,
+      PokemonTint.NORMAL
+    )
+    const flyingGeodude = scene.add
+      .sprite(startX, startY, geodudeIndex, `${idlePath}/0000`)
+      .setScale(2)
+      .setDepth(DEPTH.ABILITY)
+    const idleAnimation = `${geodudeIndex}/${idlePath}`
+    if (scene.anims.exists(idleAnimation)) {
+      flyingGeodude.anims.play({ key: idleAnimation, repeat: -1 })
+    }
+    const tumbleDirection = landingX >= startX ? 1 : -1
+    // loading the texture ate into the flight, so the landing still matches the spawn
+    const flightLeft = Math.max(
+      CATAPULT_THROW_MIN_FLIGHT,
+      CATAPULT_THROW_FLIGHT_MS - (scene.time.now - thrownAt)
+    )
+    scene.tweens.addCounter({
+      from: 0,
+      to: 1,
+      duration: flightLeft,
+      onUpdate: (tween) => {
+        const progress = tween.getValue() ?? 1
+        const arc = 4 * progress * (1 - progress) * CATAPULT_THROW_ARC_HEIGHT
+        flyingGeodude.setPosition(
+          startX + (landingX - startX) * progress,
+          startY + (landingY - startY) * progress - arc
+        )
+        flyingGeodude.setAngle(tumbleDirection * 360 * progress)
+      },
+      onComplete: () => flyingGeodude.destroy()
     })
   })
 }
@@ -4211,6 +4268,7 @@ export const AbilitiesAnimations: {
     duration: 400,
     scale: 5
   }),
+  ["CATAPULT_THROW"]: catapultThrowAnimation,
   // projectile for the LEAF_TORNADO blessing ricochet
   ["GRASS_RANGE"]: projectile({
     ability: "GRASS/range",

@@ -1931,6 +1931,12 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     icon: "mole",
     grantsPokemonImmediately: true
   },
+  [Blessing.CATAPULT]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: [4],
+    icon: "catapult",
+    grantsPokemonImmediately: true
+  },
   [Blessing.SILVER_SPOON]: {
     tier: BlessingTier.PRISMATIC,
     availableAtStages: [4],

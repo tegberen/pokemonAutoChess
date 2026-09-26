@@ -194,6 +194,7 @@ export enum Blessing {
   RADIANCE = "RADIANCE",
   PACK_ATTACK = "PACK_ATTACK",
   MOLE_MAZE = "MOLE_MAZE",
+  CATAPULT = "CATAPULT",
   SILVER_SPOON = "SILVER_SPOON",
   ICE_SPEAR = "ICE_SPEAR",
   FROST_GEAR = "FROST_GEAR",
@@ -761,6 +762,9 @@ export const EXHAUSTING_FLAME_DAMAGE_MULTIPLIER = 0.8
 export const EXHAUSTING_FLAME_LUCK_PER_STAR = 5
 export const ETERNAL_RAGE_DURATION_PER_STAR = 1000
 export const ORBITAL_STRIKE_RANGE_BONUS = 2
+export const CATAPULT_RANGE_BONUS = 2
+export const CATAPULT_THROW_CHANCE = 0.1
+export const CATAPULT_THROW_FLIGHT_MS = 600
 export const CELL_BRAWLER_STAT_BONUS = 0.5
 export const CELL_BRAWLER_ABILITY_LIFESTEAL = 0.5
 export const CELL_BRAWLER_OVERHEAL_TO_MAX_HP = 0.5
@@ -1231,7 +1235,8 @@ export const HERO_BLESSING_GIFT: { [blessing in Blessing]?: Pkm } = {
   [Blessing.STONE_SADDLE]: Pkm.RHYHORN,
   [Blessing.ITS_GOING_DOWN]: Pkm.TIMBURR,
   [Blessing.ROLLOUT_RALLY]: Pkm.VENIPEDE,
-  [Blessing.MOLE_MAZE]: Pkm.DRILBUR
+  [Blessing.MOLE_MAZE]: Pkm.DRILBUR,
+  [Blessing.CATAPULT]: Pkm.ALOLAN_GRAVELER
 }
 
 export const HERO_BLESSING_POKEMON: { [blessing in Blessing]?: Pkm[] } = {
@@ -1311,7 +1316,8 @@ export const HERO_BLESSING_FAMILY: { [blessing in Blessing]?: Pkm } = {
   [Blessing.INFINITE_CONVERSION]: Pkm.PORYGON,
   [Blessing.STONE_SADDLE]: Pkm.RHYHORN,
   [Blessing.ITS_GOING_DOWN]: Pkm.TIMBURR,
-  [Blessing.ROLLOUT_RALLY]: Pkm.VENIPEDE
+  [Blessing.ROLLOUT_RALLY]: Pkm.VENIPEDE,
+  [Blessing.CATAPULT]: Pkm.ALOLAN_GEODUDE
 }
 
 /* hero blessings that also relocate the player to a region where their family
@@ -1321,7 +1327,8 @@ export const HERO_BLESSING_MOVES_REGION: Blessing[] = [
   Blessing.SHELL_ARMOR_BLESSING,
   Blessing.PLUNDER,
   Blessing.FROST_BURST,
-  Blessing.MOTHER_YARN
+  Blessing.MOTHER_YARN,
+  Blessing.CATAPULT
 ]
 
 /* these hero blessings keep their state on the simulation rather than on the
@@ -1333,7 +1340,8 @@ export const SIMULATION_SCOPED_HERO_BLESSINGS: Blessing[] = [
   Blessing.SNIFFER_DOG,
   Blessing.JESTER,
   Blessing.COLONY,
-  Blessing.SAND_BUDDIES
+  Blessing.SAND_BUDDIES,
+  Blessing.CATAPULT
 ]
 
 export const HERO_BLESSING_ADDS_TO_POOL: Blessing[] = [
@@ -1344,7 +1352,8 @@ export const HERO_BLESSING_ADDS_TO_POOL: Blessing[] = [
   Blessing.MOLE_MAZE,
   Blessing.RADIANCE,
   Blessing.PACK_ATTACK,
-  Blessing.HIGH_BREACHING
+  Blessing.HIGH_BREACHING,
+  Blessing.CATAPULT
 ]
 
 // Item blessings all follow the same shape: picking one hands the player the

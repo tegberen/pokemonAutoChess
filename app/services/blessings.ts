@@ -3264,6 +3264,9 @@ export const blessingEffectService: {
   [Blessing.MOLE_MAZE]: (player, state, room) =>
     heroBlessingEffect(Blessing.MOLE_MAZE, player, state, room),
 
+  [Blessing.CATAPULT]: (player, state, room) =>
+    heroBlessingEffect(Blessing.CATAPULT, player, state, room),
+
   [Blessing.ICE_SPEAR]: (player, state, room) =>
     heroBlessingEffect(Blessing.ICE_SPEAR, player, state, room),
 

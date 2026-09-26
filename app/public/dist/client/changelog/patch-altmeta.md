@@ -502,6 +502,9 @@ Every balance change on this server, newest first.
 **Pokémon**
 - Sobble line | immune to FLOOD knockback. FLOOD heals twice as much and also gives that much PP
 
+**Wishes**
+- Galvanic Throw {{new}} | Gain an Alolan Graveler and move to a random ELECTRIC region if not in one. Your STRONGEST Alolan Geodude gets +2 RANGE, and its attacks have a [10,LK]% chance to throw an Alolan Geodude with full PP next to the target
+
 ### 25 September 2026
 
 **Game Mode**
