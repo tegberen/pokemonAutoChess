@@ -5,7 +5,7 @@ import {
   spawnPlayerAvatar
 } from "../core/player-avatars"
 import type { MapSchema } from "@colyseus/schema"
-import { type Client, CloseCode, Room } from "colyseus"
+import { type Client, CloseCode, type Delayed, Room } from "colyseus"
 import admin from "firebase-admin"
 import {
   AdditionalPicksStages,
@@ -189,7 +189,9 @@ import {
   OnSpectateCommand,
   OnSwitchBenchAndBoardCommand,
   OnUpdateCommand,
-  OnCancelTradeOfferCommand
+  OnCancelTradeOfferCommand,
+  OnFinaleDeclineCommand,
+  OnFinaleRequestCommand
 } from "./commands/game-commands"
 import GameState from "./states/game-state"
 import { ArmoryOptionsPrice } from "../types/enum/ArmoryOptions"
@@ -223,6 +225,11 @@ export default class GameRoom extends Room<{ state: GameState }> {
   private dailyDuelPodiumUids: string[] = []
   private dailyDuelPodiumSave: Promise<void> = Promise.resolve()
   private matchAvatarCosmetics = new Map<string, AvatarCosmeticId>()
+  private gameEndDisposal: Delayed | null = null
+  finaleRequesterIds = new Set<string>()
+  finalePlayed = false
+  finaleLifeByPlayerId = new Map<string, number>()
+  finaleRevivedIds = new Set<string>()
   constructor() {
     super()
     this.dispatcher = new Dispatcher(this)
@@ -855,6 +862,26 @@ export default class GameRoom extends Room<{ state: GameState }> {
         }
       }
     })
+    this.onMessage(Transfer.FINALE_REQUEST, (client) => {
+      if (!client.auth) return
+      try {
+        this.dispatcher.dispatch(new OnFinaleRequestCommand(), {
+          playerId: client.auth.uid
+        })
+      } catch (e) {
+        logger.error("finale request error", e)
+      }
+    })
+    this.onMessage(Transfer.FINALE_DECLINE, (client) => {
+      if (!client.auth) return
+      try {
+        this.dispatcher.dispatch(new OnFinaleDeclineCommand(), {
+          playerId: client.auth.uid
+        })
+      } catch (e) {
+        logger.error("finale decline error", e)
+      }
+    })
 
     this.onMessage(
       Transfer.RESTORE_FOSSIL,
@@ -974,6 +1001,19 @@ export default class GameRoom extends Room<{ state: GameState }> {
         }
       }
     })
+  }
+
+  scheduleGameEndDisposal() {
+    this.gameEndDisposal?.clear()
+    this.gameEndDisposal = this.clock.setTimeout(() => {
+      this.broadcast(Transfer.GAME_END)
+      this.disconnect()
+    }, 90 * 1000)
+  }
+
+  cancelGameEndDisposal() {
+    this.gameEndDisposal?.clear()
+    this.gameEndDisposal = null
   }
 
   startGame() {
@@ -1126,7 +1166,10 @@ export default class GameRoom extends Room<{ state: GameState }> {
       //logger.info(`${client.auth.displayName} left game`)
       const player = this.state.players.get(client.auth.uid)
       const hasLeftGameBeforeTheEnd =
-        player && player.life > 0 && !this.state.gameFinished
+        player &&
+        player.life > 0 &&
+        !this.state.gameFinished &&
+        !this.state.finale
       const otherHumans = schemaValues(this.state.players).filter(
         (p) => !p.isBot && p.id !== client.auth.uid
       )
@@ -1158,7 +1201,8 @@ export default class GameRoom extends Room<{ state: GameState }> {
         player.hasLeftGame = true
         player.spectatedPlayerId = player.id
 
-        const hasLeftBeforeEnd = player.life > 0 && !this.state.gameFinished
+        const hasLeftBeforeEnd =
+          player.life > 0 && !this.state.gameFinished && !this.state.finale
         if (hasLeftBeforeEnd) {
           // player left before being eliminated, in that case we consider this a surrender and give them the worst possible rank
           player.life = -99
@@ -1191,6 +1235,7 @@ export default class GameRoom extends Room<{ state: GameState }> {
     // that is at least two players including one human are still alive
     if (
       !this.state.gameFinished &&
+      !this.state.finale &&
       playersAlive.length >= 2 &&
       humansAlive.length >= 1
     ) {

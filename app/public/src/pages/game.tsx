@@ -7,9 +7,11 @@ import { toast } from "react-toastify"
 import {
   getCurrentGameEvent,
   MinStageForGameToCount,
-  RegionDetails
+  RegionDetails,
+  SynergyTiersThresholds
 } from "../../../config"
 import type { IPokemonRecord } from "../../../models/colyseus-models/game-record"
+import { sortSynergiesForDisplay } from "../../../models/colyseus-models/synergies"
 import type { Wanderer } from "../../../models/colyseus-models/wanderer"
 import { isPveStage } from "../../../core/guide/guide-stage"
 import type AfterGameState from "../../../rooms/states/after-game-state"
@@ -42,6 +44,7 @@ import type { ErrorMessage } from "../../../types/strings/ErrorMessage"
 import { getAvatarString, getPortraitSrc } from "../../../utils/avatar"
 import { logger } from "../../../utils/logger"
 import { schemaValues } from "../../../utils/schemas"
+import type { VictoryWinner } from "../game/components/double-up-victory"
 import GameContainer from "../game/game-container"
 import GuideOverlay from "./component/guide/guide-overlay"
 import type GameScene from "../game/scenes/game-scene"
@@ -85,6 +88,7 @@ import {
   setMoney,
   setDoubleUpChampions,
   setNoELO,
+  setFinalistIds,
   setPhase,
   setPodium,
   setSmeargleScribbleChampion,
@@ -116,6 +120,9 @@ import GameShop from "./component/game/game-shop"
 import GameSpectatePlayerInfo from "./component/game/game-spectate-player-info"
 import GameStageInfo from "./component/game/game-stage-info"
 import GameSynergies from "./component/game/game-synergies"
+import GameVictoryGazette, {
+  type VictoryResult
+} from "./component/game/game-victory-gazette"
 import GameToasts from "./component/game/game-toasts"
 import { MainSidebar } from "./component/main-sidebar/main-sidebar"
 import { ConnectionStatusNotification } from "./component/system/connection-status-notification"
@@ -182,6 +189,8 @@ function showMoneyToast(value: number) {
   )
 }
 
+const VICTORY_SCENE_DURATION_MS = 10000
+
 export default function Game() {
   const dispatch = useAppDispatch()
   const { t: tBase } = useTranslation(); const t = tBase as any
@@ -208,6 +217,45 @@ export default function Game() {
   const initialized = useRef<boolean>(false)
   const connecting = useRef<boolean>(false)
   const connected = useRef<boolean>(false)
+  const victorySceneShown = useRef<boolean>(false)
+  const [isVictoryScene, setVictoryScene] = useState<boolean>(false)
+  const [victoryResults, setVictoryResults] = useState<VictoryResult[]>([])
+  const [isWinnerWaitingForVictory, setWinnerWaitingForVictory] =
+    useState<boolean>(false)
+  const playVictoryScene = (
+    winners: VictoryWinner[],
+    results: VictoryResult[],
+    isWinner: boolean
+  ) => {
+    setWinnerWaitingForVictory(isWinner)
+    getGameScene()?.board?.transitionToVictory(winners, () => {
+      setVictoryResults(results)
+      setVictoryScene(true)
+    })
+  }
+  const showFinalBoard = () => {
+    getGameScene()?.board?.exitVictoryMode()
+    setVictoryScene(false)
+    spectateTillTheEnd()
+  }
+  const victoryWinnerIds = useRef<string[]>([])
+  const [canRequestFinale, setCanRequestFinale] = useState<boolean>(false)
+  const [isFinaleRequested, setFinaleRequested] = useState<boolean>(false)
+  const [finaleProposerName, setFinaleProposerName] = useState<string | null>(
+    null
+  )
+  const requestFinale = () => {
+    room?.send(Transfer.FINALE_REQUEST)
+    setFinaleRequested(true)
+  }
+  const acceptFinale = () => {
+    setFinaleProposerName(null)
+    requestFinale()
+  }
+  const declineFinale = () => {
+    setFinaleProposerName(null)
+    room?.send(Transfer.FINALE_DECLINE)
+  }
   const [loaded, setLoaded] = useState<boolean>(false)
   const [connectError, setConnectError] = useState<string>("")
   const [finalRank, setFinalRank] = useState<number>(0)
@@ -549,9 +597,137 @@ export default function Game() {
         showGuideMessage(t("guide.wrong_target", { pkm: t(`pkm.${pkm}`) }))
       })
 
+      const playDoubleUpVictory = (winnerIds: string[]) => {
+        const winners = winnerIds.flatMap((id) => {
+          const player = room.state.players.get(id)
+          if (!player) return []
+          return [
+            {
+              name: player.name,
+              avatar: player.avatar,
+              team: schemaValues(player.board).filter((p) => p.positionY > 0)
+            }
+          ]
+        })
+        const results = winnerIds.flatMap((id): VictoryResult[] => {
+          const player = room.state.players.get(id)
+          if (!player) return []
+          return [
+            {
+              id: player.id,
+              name: player.name,
+              avatar: player.avatar,
+              moneyEarned: player.gameStats.totalMoneyEarned,
+              damageDealt: player.gameStats.totalPlayerDamageDealt,
+              rerolls: player.gameStats.rerollCount,
+              pokemons: schemaValues(player.board)
+                .filter(
+                  (pokemon) =>
+                    pokemon.positionY !== 0 &&
+                    pokemon.passive !== Passive.INANIMATE
+                )
+                .map((pokemon) => ({
+                  name: pokemon.name,
+                  avatar: getAvatarString(
+                    pokemon.index,
+                    pokemon.shiny,
+                    pokemon.emotion
+                  ),
+                  items: [...pokemon.items]
+                })),
+              activeSynergies: sortSynergiesForDisplay(
+                Array.from(player.synergies) as [string, number][]
+              ).filter(
+                ([type, value]) => value >= SynergyTiersThresholds[type][0]
+              ),
+              blessings:
+                store.getState().game.blessingsByPlayerId[player.id] ?? []
+            }
+          ]
+        })
+        playVictoryScene(
+          winners,
+          results,
+          winnerIds.includes(store.getState().network.uid)
+        )
+      }
+      const startDoubleUpVictory = (winnerIds: string[]) => {
+        if (victorySceneShown.current) return
+        victorySceneShown.current = true
+        victoryWinnerIds.current = winnerIds
+        setCanRequestFinale(
+          winnerIds.length === 2 &&
+            winnerIds.includes(store.getState().network.uid)
+        )
+        playDoubleUpVictory(winnerIds)
+      }
+      room.onMessage(Transfer.DOUBLE_UP_VICTORY, startDoubleUpVictory)
+
+      room.onMessage(
+        Transfer.FINALE_PROPOSAL,
+        ({ playerId }: { playerId: string }) => {
+          setFinaleProposerName(room.state.players.get(playerId)?.name ?? "")
+        }
+      )
+      room.onMessage(Transfer.FINALE_DECLINED, () => setFinaleRequested(false))
+      room.onMessage(
+        Transfer.FINALE_START,
+        ({ playerIds }: { playerIds: string[] }) => {
+          const selfId = store.getState().network.uid
+          dispatch(setFinalistIds(playerIds))
+          setFinaleProposerName(null)
+          setFinaleRequested(false)
+          setVictoryScene(false)
+          setFinalRankVisibility(FinalRankVisibility.CLOSED)
+          setWinnerWaitingForVictory(false)
+          if (playerIds.includes(selfId)) {
+            gameContainer.spectate = false
+            if (gameContainer.gameScene) gameContainer.gameScene.spectate = false
+            playerClick(selfId)
+          } else if (
+            !playerIds.includes(store.getState().game.playerIdSpectated)
+          ) {
+            playerClick(playerIds[0])
+          }
+          getGameScene()?.board?.startFinale()
+          if (gameContainer.player) {
+            getGameScene()?.itemsContainer?.render(gameContainer.player.items)
+          }
+        }
+      )
+      room.onMessage(Transfer.FINALE_END, () => {
+        setCanRequestFinale(false)
+        dispatch(setFinalistIds([]))
+        playDoubleUpVictory(victoryWinnerIds.current)
+        window.setTimeout(() => {
+          setFinalRankVisibility(FinalRankVisibility.VISIBLE)
+          setWinnerWaitingForVictory(false)
+        }, VICTORY_SCENE_DURATION_MS)
+      })
+
       room.onMessage(Transfer.FINAL_RANK, (finalRank) => {
         setFinalRank(finalRank)
-        setFinalRankVisibility(FinalRankVisibility.VISIBLE)
+        if (finalRank === 1 && room.state.gameMode === GameMode.DOUBLE_UP) {
+          const self = room.state.players.get(store.getState().network.uid)
+          if (self) {
+            startDoubleUpVictory(
+              schemaValues(room.state.players)
+                .filter(
+                  (player) =>
+                    player.doubleUpTeamId === self.doubleUpTeamId &&
+                    (player.alive || player.id === self.id)
+                )
+                .map((player) => player.id)
+            )
+          }
+        }
+        window.setTimeout(
+          () => {
+            setFinalRankVisibility(FinalRankVisibility.VISIBLE)
+            setWinnerWaitingForVictory(false)
+          },
+          victorySceneShown.current ? VICTORY_SCENE_DURATION_MS : 0
+        )
       })
 
       room.onMessage(Transfer.PRELOAD_MAPS, async (maps) => {
@@ -1362,19 +1538,76 @@ export default function Game() {
       <div id="game" ref={container}></div>
       {loaded ? (
         <>
-          <MainSidebar page="game" leave={leave} leaveLabel={t("leave_game")} />
+          <MainSidebar
+            page="game"
+            leave={leave}
+            leaveLabel={t("leave_game")}
+            leaveDisabled={isWinnerWaitingForVictory}
+          />
           <GameFinalRank
             rank={finalRank}
             hide={spectateTillTheEnd}
             leave={leave}
-            visible={finalRankVisibility === FinalRankVisibility.VISIBLE}
+            visible={
+              !isVictoryScene &&
+              finalRankVisibility === FinalRankVisibility.VISIBLE
+            }
           />
-          {spectate ? <GameSpectatePlayerInfo /> : <GameShop />}
-          <GameStageInfo />
-          <GamePlayers click={(id: string) => playerClick(id)} />
-          <GameSynergies />
+          {isVictoryScene &&
+            finalRankVisibility === FinalRankVisibility.VISIBLE && (
+              <div className="victory-actions">
+                <button className="bubbly blue" onClick={showFinalBoard}>
+                  <img src="assets/ui/team-builder.svg" alt="" />
+                  {t("double_up_victory_show_board")}
+                </button>
+                {canRequestFinale && (
+                  <button
+                    className="bubbly green"
+                    onClick={requestFinale}
+                    disabled={isFinaleRequested}
+                  >
+                    <img src="/assets/icons/FINALE.svg" alt="" />
+                    {isFinaleRequested
+                      ? t("double_up_finale_waiting")
+                      : t("double_up_finale")}
+                  </button>
+                )}
+                <button className="bubbly red" onClick={leave}>
+                  <img src="assets/ui/exit-door.svg" alt="" />
+                  {t("double_up_victory_leave")}
+                </button>
+              </div>
+            )}
+          {!isVictoryScene &&
+            (spectate ? <GameSpectatePlayerInfo /> : <GameShop />)}
+          {!isVictoryScene && <GameStageInfo />}
+          {!isVictoryScene && (
+            <GamePlayers click={(id: string) => playerClick(id)} />
+          )}
+          {!isVictoryScene && <GameSynergies />}
+          {isVictoryScene && victoryResults.length > 0 && (
+            <GameVictoryGazette results={victoryResults} />
+          )}
+          {finaleProposerName !== null && (
+            <div className="finale-proposal my-box">
+              <img src="/assets/icons/FINALE.svg" alt="" />
+              <p>
+                {t("double_up_finale_proposal", {
+                  player: finaleProposerName
+                })}
+              </p>
+              <div className="finale-proposal-actions">
+                <button className="bubbly green" onClick={acceptFinale}>
+                  {t("double_up_finale_accept")}
+                </button>
+                <button className="bubbly red" onClick={declineFinale}>
+                  {t("double_up_finale_decline")}
+                </button>
+              </div>
+            </div>
+          )}
           <GameChoice />
-          <GameDpsMeter />
+          {!isVictoryScene && <GameDpsMeter />}
           <GameToasts />
           <GuideOverlay />
           {currentGameEvent === GameEvent.EXPEDITIONS && !spectate && (

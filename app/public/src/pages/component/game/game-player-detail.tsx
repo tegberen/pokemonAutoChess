@@ -22,7 +22,10 @@ const MATCH_RESULT_CLASS = {
   [BattleResult.DEFEAT]: "defeat"
 }
 
-export default function GamePlayerDetail(props: { player: IPlayer }) {
+export default function GamePlayerDetail(props: {
+  player: IPlayer
+  hideLife?: boolean
+}) {
   const { t } = useTranslation()
   const blessings = useAppSelector(
     (state) => state.game.blessingsByPlayerId[props.player.id] ?? NO_BLESSINGS
@@ -50,9 +53,11 @@ export default function GamePlayerDetail(props: { player: IPlayer }) {
         <span className="game-player-detail-level">
           {t("lvl")} {props.player.experienceManager.level}
         </span>
-        <span className="game-player-detail-vital">
-          <Life value={props.player.life} />
-        </span>
+        {!props.hideLife && (
+          <span className="game-player-detail-vital">
+            <Life value={props.player.life} />
+          </span>
+        )}
         <span className="game-player-detail-vital">
           <Money value={props.player.money} />
         </span>

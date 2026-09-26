@@ -5,7 +5,7 @@ export enum DungeonMusic {
   A_NEW_WORLD = "A New World",
   APPLE_WOODS = "Apple Woods",
   AT_THE_SNOWY_MOUNTAIN = "At the Snowy Mountain",
-  AT_THE_END_OF_THE_DAY = "At the End of the Day", // UNUSED
+  AT_THE_END_OF_THE_DAY = "At the End of the Day",
   BARREN_VALLEY = "Barren Valley",
   BATTLE_WITH_RAYQUAZA = "Battle with Rayquaza",
   BEACH_CAVE = "Beach Cave",

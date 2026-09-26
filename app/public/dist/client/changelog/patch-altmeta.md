@@ -488,15 +488,22 @@ Smeargle Scribbles do not change your Elo.
 
 Every balance change on this server, newest first.
 
+### 26 September 2026
+
+**Game Mode**
+- Double Up Victory Scene {{new}} | celebrate the win together in town
+- Double Up Finale | brought back as an option in the victory scene
+
+**Interface**
+- Team Planner | revamped with Synergy Highlighting (use the {{meeple}})
+- Battle Stats and Effects | compacted
+
 ### 25 September 2026
 
 **Game Mode**
 - Double Up chat {{new}} | Level 100+ unlocks partner chat with the C hotkey. Be respectful, don't spam
 
 > I can't moderate chat for everyone, so it's a level 100+ thank you for the regulars who've put many hours into playing on JAC.
-
-**Interface**
-- Battle Stats and Effects | more compact, so they cover less of the board
 
 **Items**
 - UTILITY_UMBRELLA | reworked: if a weather is active, your Pokémon start the fight with 1 second of RUNE_PROTECT and 10 SHIELD per STAR. No longer raises the opponent's weather count

@@ -1,0 +1,239 @@
+#game-wrapper .victory-actions {
+  position: absolute;
+  left: 50%;
+  top: 63%;
+  display: flex;
+  gap: 12px;
+  transform: translate(-50%, -50%);
+}
+
+#game-wrapper .victory-actions button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+#game-wrapper .victory-actions img {
+  width: 24px;
+  height: 24px;
+}
+
+#game-wrapper .game-victory-gazette {
+  position: absolute;
+  left: 0.5%;
+  top: 9%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 23em;
+  max-height: 80%;
+  overflow-y: auto;
+  padding: 10px;
+  background-color: color-mix(in srgb, var(--color-bg-primary) 82%, transparent);
+  color: var(--color-fg-primary);
+}
+
+.game-victory-gazette header {
+  text-align: center;
+  padding: 2px 0 4px;
+}
+
+.game-victory-gazette h2 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 0;
+  font-size: 1.7em;
+  line-height: 1.1;
+}
+
+.game-victory-gazette h2 img {
+  height: 1.1em;
+}
+
+.game-victory-gazette header p {
+  margin: 2px 0 0;
+  font-size: 0.75em;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-fg-secondary);
+}
+
+.game-victory-gazette section.my-box {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 8px 8px 0;
+  overflow: hidden;
+  background-color: color-mix(
+    in srgb,
+    var(--color-bg-secondary) 85%,
+    transparent
+  );
+}
+
+.game-victory-gazette-player {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.game-victory-gazette-player > .pokemon-portrait {
+  width: 36px;
+  height: 36px;
+}
+
+.game-victory-gazette-player strong {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 1.15em;
+}
+
+.game-victory-gazette-stats {
+  display: flex;
+  gap: 8px;
+  padding: 3px 8px;
+  border-radius: 8px;
+  background-color: color-mix(in srgb, black 22%, transparent);
+  font-size: 0.8em;
+  color: var(--color-fg-secondary);
+}
+
+.game-victory-gazette-stats span {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.game-victory-gazette-stats img {
+  width: 16px;
+  height: 16px;
+}
+
+.game-victory-gazette-team {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.game-victory-gazette-team li {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 2px;
+  border-radius: 8px;
+  background-color: color-mix(in srgb, black 22%, transparent);
+}
+
+.game-victory-gazette-team .pokemon-portrait {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1;
+}
+
+.game-victory-gazette-items {
+  display: flex;
+  justify-content: center;
+  gap: 1px;
+  min-height: 15px;
+}
+
+.game-victory-gazette-items img {
+  width: 15px;
+  height: 15px;
+  min-width: 0;
+}
+
+.game-victory-gazette-team li:has(.game-victory-gazette-items img:nth-child(3)) {
+  background-color: color-mix(
+    in srgb,
+    var(--color-bg-primary) 55%,
+    var(--color-bg-tertiary)
+  );
+  box-shadow: inset 0 0 0 1px
+    color-mix(in srgb, var(--color-fg-secondary) 28%, black);
+}
+
+.game-victory-gazette-buildup {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 -8px;
+  padding: 6px 8px;
+  border-top: var(--border-thin);
+  background-color: color-mix(in srgb, black 22%, transparent);
+}
+
+.game-victory-gazette-synergies {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.9em;
+  font-weight: bold;
+}
+
+.game-victory-gazette-synergies li {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.game-victory-gazette-synergies .synergy-icon {
+  height: 22px;
+}
+
+.game-victory-gazette-blessings {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin: 0 0 0 auto;
+  padding: 0 0 0 8px;
+  border-left: var(--border-thin);
+  list-style: none;
+}
+
+.game-victory-gazette-blessings .blessing-panel-icon {
+  width: 22px;
+  height: 22px;
+  cursor: help;
+}
+
+#game-wrapper .finale-proposal {
+  position: absolute;
+  left: 50%;
+  top: 40%;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+#game-wrapper .finale-proposal img {
+  width: 40px;
+  height: 40px;
+}
+
+#game-wrapper .finale-proposal p {
+  margin: 0;
+}
+
+.finale-proposal-actions {
+  display: flex;
+  gap: 12px;
+}

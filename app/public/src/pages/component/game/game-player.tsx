@@ -17,6 +17,7 @@ export default function GamePlayer(props: {
   click: (id: string) => void
   index: number
   teamColor?: string
+  hideLife?: boolean
 }) {
   const spectatedPlayerId = useAppSelector(
     (state) => state.game.playerIdSpectated
@@ -47,24 +48,26 @@ export default function GamePlayer(props: {
         className={cc("game-player", {
           spectated: spectatedPlayerId === props.player.id,
           self: connectedPlayerId === props.player.id,
-          dead: props.player.life <= 0
+          dead: !props.hideLife && props.player.life <= 0
         })}
         onClick={playerClick}
         data-tooltip-id={"detail-" + props.player.id}
       >
         <CircularProgressbarWithChildren
-          value={props.player.life}
+          value={props.hideLife ? 100 : props.player.life}
           styles={{ path: { stroke: props.teamColor ?? "#f7d51d" } }}
         />
-        <div className="my-container life-text">
-          {props.player.life}
-          {roundsSinceLastFight != null && (
-            <span className="my-container rounds-since-fight">
-              <img src="/assets/ui/time.svg" alt="" />
-              {roundsSinceLastFight}
-            </span>
-          )}
-        </div>
+        {!props.hideLife && (
+          <div className="my-container life-text">
+            {props.player.life}
+            {roundsSinceLastFight != null && (
+              <span className="my-container rounds-since-fight">
+                <img src="/assets/ui/time.svg" alt="" />
+                {roundsSinceLastFight}
+              </span>
+            )}
+          </div>
+        )}
       </div>
       <Tooltip
         id={"detail-" + props.player.id}
@@ -73,7 +76,7 @@ export default function GamePlayer(props: {
         data-tooltip-offset={{ left: 30, bottom: props.index === 0 ? 50 : 0 }}
         style={{ zIndex: DEPTH.TOOLTIP }}
       >
-        <GamePlayerDetail player={props.player} />
+        <GamePlayerDetail player={props.player} hideLife={props.hideLife} />
       </Tooltip>
     </div>
   )

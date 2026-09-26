@@ -111,6 +111,10 @@ export default function ServerGuide({
             return [description, "", ...tiers].join("\n")
           })
           .replace(/\{\{new\}\}/g, '<span class="guide-new-tag">NEW</span>')
+          .replace(
+            /\{\{meeple\}\}/g,
+            '<img class="guide-inline-icon" src="assets/ui/planned.png" alt="Meeple">'
+          )
           .replace(/\{\{scribble:([A-Z_]+)\}\}/g, (token, name) => {
             const rule = Object.values(SpecialGameRule).find(
               (value) => value === name

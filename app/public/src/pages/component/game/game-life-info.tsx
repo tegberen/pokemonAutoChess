@@ -6,7 +6,8 @@ import { Life } from "../icons/life"
 export function GameLifeInfo() {
   const { t } = useTranslation()
   const spectatedPlayer = useAppSelector(selectSpectatedPlayer)
-  if (!spectatedPlayer) return null
+  const isFinale = useAppSelector((state) => state.game.finalistIds.length > 0)
+  if (!spectatedPlayer || isFinale) return null
   return (
     <div id="game-life-info" className="my-container life information">
       <div data-tooltip-id="detail-life">

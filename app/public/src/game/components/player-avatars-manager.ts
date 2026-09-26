@@ -30,6 +30,7 @@ import { PokemonAnimations } from "./pokemon-animations"
 import PokemonAvatar from "./pokemon-avatar"
 import { AvatarCosmeticsRenderer } from "./avatar-cosmetics-renderer"
 import { addAbilitySprite } from "./abilities-animations"
+import { BoardMode } from "./board-manager"
 
 /* how much of the gap to the server position a remote avatar closes per frame */
 const REMOTE_SMOOTHING = 0.25
@@ -541,6 +542,7 @@ export default class PlayerAvatarsManager {
     const phase = this.scene.room?.state.phase
     if (
       this.hidden ||
+      this.scene.board?.mode === BoardMode.VICTORY ||
       (phase !== GamePhaseState.PICK && phase !== GamePhaseState.FIGHT)
     ) {
       return ids

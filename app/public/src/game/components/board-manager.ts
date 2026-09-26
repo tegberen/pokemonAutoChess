@@ -90,7 +90,8 @@ import { pickRandomIn, randomBetween } from "../../../../utils/random"
 import { schemaValues } from "../../../../utils/schemas"
 import { GamePokemonDetailDOMWrapper } from "../../pages/component/game/game-pokemon-detail"
 import { getGameContainer } from "../../pages/game"
-import { playMusic } from "../../pages/utils/audio"
+import { fadeToMusic, playMusic, preloadMusic } from "../../pages/utils/audio"
+import { showDoubleUpVictory, type VictoryWinner } from "./double-up-victory"
 import {
   transformBoardCoordinates,
   transformEntityCoordinates
@@ -121,11 +122,18 @@ import { Portal } from "./portal"
 export enum BoardMode {
   PICK = "pick",
   BATTLE = "battle",
-  TOWN = "town"
+  TOWN = "town",
+  VICTORY = "victory"
 }
 
 export const SPECIAL_NPC_X = 1512
 export const SPECIAL_NPC_Y = 396 - 48 * 1.4
+
+const VICTORY_MUSIC_FADE_OUT_MS = 1200
+const VICTORY_MUSIC_FADE_IN_MS = 3000
+const VICTORY_MUSIC_VOLUME_SCALE = 0.6
+const VICTORY_SCENE_FADE_OUT_MS = 700
+const VICTORY_SCENE_FADE_IN_MS = 1000
 
 /* The scene is 1950x1000 and scaled to FIT, so these are world coordinates. The
    readable middle of it: clear of the left sidebar and the item column, of the
@@ -180,6 +188,7 @@ export default class BoardManager {
   trainingBag: Phaser.GameObjects.Sprite | null = null
   trainingRack: Phaser.GameObjects.Sprite | null = null
   portal: Portal | undefined
+  removeVictoryScene: (() => void) | null = null
   smeargle: PokemonSprite | null = null
   specialGameRule: SpecialGameRule | null = null
   boardReconciliationTimers: Phaser.Time.TimerEvent[] = []
@@ -476,6 +485,7 @@ export default class BoardManager {
 
   renderBoard(phaseJustChanged: boolean) {
     this.clearBoard()
+    if (this.mode === BoardMode.VICTORY) return
 
     if (this.mode !== BoardMode.TOWN) {
       this.renderBerryTrees()
@@ -1452,6 +1462,7 @@ export default class BoardManager {
         !spectatedPlayer ||
         spectatedPlayer.id === p.id || // can't scout yourself
         this.mode === BoardMode.TOWN || // no scouting in town
+        this.mode === BoardMode.VICTORY ||
         p.id === this.opponentAvatar?.playerId // avatar already in opponent box
       )
         return false
@@ -1621,6 +1632,96 @@ export default class BoardManager {
     this.scheduleBoardReconciliation()
   }
 
+  startVictoryMusic() {
+    const key = "music_" + DungeonMusic.AT_THE_END_OF_THE_DAY
+    const fadeIn = () =>
+      fadeToMusic(
+        this.scene,
+        DungeonMusic.AT_THE_END_OF_THE_DAY,
+        VICTORY_MUSIC_FADE_OUT_MS,
+        VICTORY_MUSIC_FADE_IN_MS,
+        VICTORY_MUSIC_VOLUME_SCALE
+      )
+    if (this.scene.cache.audio.has(key)) {
+      fadeIn()
+      return
+    }
+    this.scene.load.once(`filecomplete-audio-${key}`, fadeIn)
+    preloadMusic(this.scene, DungeonMusic.AT_THE_END_OF_THE_DAY)
+    this.scene.load.start()
+  }
+
+  transitionToVictory(winners: VictoryWinner[], onTownShown: () => void) {
+    this.startVictoryMusic()
+    const camera = this.scene.cameras.main
+    camera.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => {
+      this.victoryMode(winners)
+      onTownShown()
+    })
+    camera.fadeOut(VICTORY_SCENE_FADE_OUT_MS)
+  }
+
+  victoryMode(winners: VictoryWinner[]) {
+    this.mode = BoardMode.VICTORY
+    this.stopScribblePainting()
+    this.scene.setMap("town")
+    this.scene.cameras.main.fadeIn(VICTORY_SCENE_FADE_IN_MS)
+    this.hideLightCell()
+    this.hideTreasureTrailHighlight()
+    this.hideScribbleShapes()
+    this.hideBerryTrees()
+    this.hideFlowerPots()
+    this.hideGroundHoles()
+    this.hideTrainingBag()
+    this.clearBoard()
+    this.scene.closeTooltips()
+    this.scene.itemsContainer?.setVisible(false)
+    this.scene.wandererManager?.removeCroagunkTrader()
+    this.scene.battle?.clear()
+    if (this.portal) {
+      this.scene.tweens.killTweensOf(this.portal)
+      this.portal.destroy()
+      this.portal = undefined
+    }
+    if (this.playerAvatar) {
+      this.scene.tweens.killTweensOf(this.playerAvatar)
+      this.playerAvatar.destroy()
+      this.playerAvatar = null
+    }
+    this.updateOpponentAvatar(null, null)
+    this.updateScoutingAvatars(true)
+    if (this.smeargle) {
+      this.smeargle.destroy()
+      this.smeargle = null
+    }
+    this.scene.minigameManager?.addVillagers(
+      null,
+      store.getState().game.podium,
+      store.getState().game.doubleUpChampions,
+      store.getState().game.smeargleScribbleChampion
+    )
+    this.removeVictoryScene?.()
+    this.removeVictoryScene = showDoubleUpVictory(this.scene, winners)
+  }
+
+  exitVictoryMode() {
+    if (this.mode !== BoardMode.VICTORY) return
+    this.removeVictoryScene?.()
+    this.removeVictoryScene = null
+    this.scene.minigameManager?.dispose()
+    this.scene.itemsContainer?.setVisible(true)
+    this.pickMode(false)
+  }
+
+  startFinale() {
+    if (this.mode === BoardMode.VICTORY) this.exitVictoryMode()
+    else this.renderBoard(false)
+    const regionMusic = RegionDetails[this.player.map].music
+    if (this.scene.cache.audio.has("music_" + regionMusic)) {
+      playMusic(this.scene, regionMusic)
+    }
+  }
+
   minigameMode() {
     this.mode = BoardMode.TOWN
     this.stopScribblePainting()
@@ -1671,6 +1772,7 @@ export default class BoardManager {
   }
 
   setPlayer(player: Player) {
+    if (this.mode === BoardMode.VICTORY) return
     if (player.id != this.player.id) {
       this.player = player
       this.renderBoard(false)

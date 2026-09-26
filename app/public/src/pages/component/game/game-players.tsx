@@ -16,6 +16,8 @@ const style: CSS.Properties = {
 export default function GamePlayers(props: { click: (id: string) => void }) {
   const players = useAppSelector((state) => state.game.players)
   const gameMode = useAppSelector((state) => state.game.gameMode)
+  const finalistIds = useAppSelector((state) => state.game.finalistIds)
+  const isFinale = finalistIds.length > 0
 
   const DOUBLE_UP_TEAM_COLORS = ["#f9e07f", "#f4a7b9", "#a8e6e6", "#b8e6a0"]
 
@@ -29,7 +31,9 @@ let colorIndex = 0
     }
   })
 
-const sortedPlayers = sortPlayersByRankAndTeam(players, gameMode)
+const sortedPlayers = sortPlayersByRankAndTeam(players, gameMode).filter(
+  (p) => !isFinale || finalistIds.includes(p.id)
+)
 
   return (
     <div id="game-players" style={{ zIndex: DEPTH.PLAYER_ICON }}>
@@ -40,6 +44,7 @@ const sortedPlayers = sortPlayersByRankAndTeam(players, gameMode)
           click={(id: string) => props.click(id)}
           index={i}
           teamColor={gameMode === "DOUBLE_UP" ? teamColorMap.get(p.doubleUpTeamId) : undefined}
+          hideLife={isFinale}
         />
       ))}
     </div>

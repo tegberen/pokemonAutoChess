@@ -17,6 +17,7 @@ import { clamp } from "../../../../utils/number"
 import { chance } from "../../../../utils/random"
 import { DEPTH } from "../depths"
 import type GameScene from "../scenes/game-scene"
+import { BoardMode } from "./board-manager"
 import PokemonSprite from "./pokemon"
 import PokemonSpecial from "./pokemon-special"
 import { transformBoardCoordinates } from "../../pages/utils/utils"
@@ -41,6 +42,7 @@ export default class WanderersManager {
   }
 
   addWanderer(wanderer: Wanderer) {
+    if (this.scene.board?.mode === BoardMode.VICTORY) return
     if (wanderer.type === WandererType.UNOWN) {
       this.addWanderingUnown(wanderer)
     } else if (wanderer.type === WandererType.UNOWN_SPELL) {
@@ -387,6 +389,11 @@ export default class WanderersManager {
         this.scene.room?.send(Transfer.CANCEL_TRADE_OFFER)
       }
     })
+  }
+
+  removeCroagunkTrader() {
+    this.croagunkSprite?.destroy()
+    this.croagunkSprite = null
   }
 
   updateCroagunkItem(myOffer: string, partnerOffer: string = "") {

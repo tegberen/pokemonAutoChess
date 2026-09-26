@@ -55,7 +55,7 @@ import { preference, savePreferences } from "../../preferences"
 import AnimationManager from "../animation-manager"
 import { clearAbilityAnimations } from "../components/abilities-animations"
 import BattleManager from "../components/battle-manager"
-import BoardManager from "../components/board-manager"
+import BoardManager, { BoardMode } from "../components/board-manager"
 import ItemContainer from "../components/item-container"
 import ItemsContainer from "../components/items-container"
 import LoadingManager from "../components/loading-manager"
@@ -456,7 +456,13 @@ export default class GameScene extends Scene {
     this.room?.send(Transfer.SWITCH_BENCH_AND_BOARD, pokemon.id)
   }
 
+  // leaving destroys the game before the room is left; late patches must not touch it
+  isDestroyed() {
+    return this.cameras?.main == null
+  }
+
   updatePhase(newPhase: GamePhaseState, previousPhase: GamePhaseState) {
+    if (this.isDestroyed()) return
     this.weatherManager?.clearWeather()
     clearAbilityAnimations(this)
     this.resetDragState()
@@ -465,6 +471,8 @@ export default class GameScene extends Scene {
     if (previousPhase === GamePhaseState.TOWN) {
       this.minigameManager?.dispose()
     }
+
+    if (this.board?.mode === BoardMode.VICTORY) return
 
     if (newPhase === GamePhaseState.FIGHT) {
       this.board?.battleMode(true)
@@ -511,6 +519,8 @@ export default class GameScene extends Scene {
   }
 
   async setMap(mapName: DungeonPMDO | "town") {
+    if (this.isDestroyed()) return
+    if (this.board?.mode === BoardMode.VICTORY && mapName !== "town") return
     this.board?.hideGroundHoles()
     /* rebuilding tears down and recreates every layer of the tilemap, and
        pickMode calls this on entering every pick phase with a region that only

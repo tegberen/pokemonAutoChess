@@ -35,6 +35,10 @@ export default function GameStageInfo() {
   const gameMode = useAppSelector((state) => state.game.gameMode)
   const guideSynergy = useAppSelector((state) => state.game.guideSynergy)
   const spectatorCount = useAppSelector((state) => state.game.spectatorCount)
+  const finalistIds = useAppSelector((state) => state.game.finalistIds)
+  const players = useAppSelector((state) => state.game.players)
+  const isFinale = finalistIds.length > 0
+  const finalists = players.filter((player) => finalistIds.includes(player.id))
 
   if (!spectatedPlayer) return null
 
@@ -84,37 +88,65 @@ export default function GameStageInfo() {
             document.body
           )}
           <p>
-            {t("stage")} {stageLevel}
+            {isFinale ? t("double_up_finale") : `${t("stage")} ${stageLevel}`}
           </p>
         </div>
 
-        {opponentName === "" && <StagePath />}
-
-        <div
-          className={cc("players-information", {
-            "has-opponent": opponentName != ""
-          })}
-        >
-          <div className="player-information">
-            <PokemonPortrait avatar={avatar} />
-            {title && <p className="player-title">{t(`title.${title}`)}</p>}
-            <p className="player-name">{name}</p>
-          </div>
-          {opponentName && (
-            <>
-              <span>vs</span>
-              <div className="player-information">
-                <PokemonPortrait avatar={opponentAvatar} />
-                {opponentTitle && (
-                  <p className="player-title">{t(`title.${opponentTitle}`)}</p>
+        {isFinale && (
+          <div className="finale-matchup">
+            {finalists.map((finalist, index) => (
+              <React.Fragment key={finalist.id}>
+                {index === 1 && (
+                  <div className="finale-matchup-badge">
+                    <img src="/assets/icons/FINALE.svg" alt="" />
+                  </div>
                 )}
-                <p className="player-name">
-                  {isPVE ? t(opponentName as `pkm.${Pkm}`) : opponentName}
-                </p>
-              </div>
-            </>
-          )}
-        </div>
+                <div
+                  className={cc("finale-finalist", {
+                    spectated: finalist.id === spectatedPlayer.id
+                  })}
+                >
+                  <div className="finale-finalist-content">
+                    <PokemonPortrait avatar={finalist.avatar} />
+                    <p className="player-name">{finalist.name}</p>
+                  </div>
+                </div>
+              </React.Fragment>
+            ))}
+          </div>
+        )}
+
+        {opponentName === "" && !isFinale && <StagePath />}
+
+        {!isFinale && (
+          <div
+            className={cc("players-information", {
+              "has-opponent": opponentName != ""
+            })}
+          >
+            <div className="player-information">
+              <PokemonPortrait avatar={avatar} />
+              {title && <p className="player-title">{t(`title.${title}`)}</p>}
+              <p className="player-name">{name}</p>
+            </div>
+            {opponentName && (
+              <>
+                <span>vs</span>
+                <div className="player-information">
+                  <PokemonPortrait avatar={opponentAvatar} />
+                  {opponentTitle && (
+                    <p className="player-title">
+                      {t(`title.${opponentTitle}`)}
+                    </p>
+                  )}
+                  <p className="player-name">
+                    {isPVE ? t(opponentName as `pkm.${Pkm}`) : opponentName}
+                  </p>
+                </div>
+              </>
+            )}
+          </div>
+        )}
 
         {spectatedPlayer.map && (
           <div className="map-information" data-tooltip-id="detail-map">

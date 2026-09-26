@@ -53,6 +53,7 @@ export interface GameStateStore {
   stageLevel: number
   pveVariantIndexByStage: { [stage: string]: number }
   noElo: boolean
+  finalistIds: string[]
   specialGameRule: SpecialGameRule | null
   playerIdSpectated: string
   simulationIdSpectated: string
@@ -119,6 +120,7 @@ const initialState: GameStateStore = {
   weather: Weather.NEUTRAL,
   weatherThreshold: 8,
   noElo: false,
+  finalistIds: [],
   playerIdSpectated: "",
   simulationIdSpectated: "",
   teamSpectated: Team.BLUE_TEAM,
@@ -195,6 +197,9 @@ export const gameSlice: Slice<GameStateStore> = createSlice({
     },
     setNoELO: (state, action: PayloadAction<boolean>) => {
       state.noElo = action.payload
+    },
+    setFinalistIds: (state, action: PayloadAction<string[]>) => {
+      state.finalistIds = action.payload
     },
     setSpecialGameRule: (
       state,
@@ -521,6 +526,7 @@ export const {
   setWeather,
   setWeatherThreshold,
   setNoELO,
+  setFinalistIds,
   setSpecialGameRule,
   addPlayer,
   removePlayer,

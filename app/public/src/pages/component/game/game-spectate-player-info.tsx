@@ -13,6 +13,7 @@ import "./game-spectate-player-info.css"
 export default function GameSpectatePlayerInfo() {
   const { t } = useTranslation()
   const spectatedPlayer = useAppSelector(selectSpectatedPlayer)
+  const isFinale = useAppSelector((state) => state.game.finalistIds.length > 0)
   return (
     spectatedPlayer && (
       <div
@@ -43,9 +44,11 @@ export default function GameSpectatePlayerInfo() {
             <span>
               {t("lvl")} {spectatedPlayer.experienceManager.level}
             </span>
-            <span>
-              <Life value={spectatedPlayer.life} />
-            </span>
+            {!isFinale && (
+              <span>
+                <Life value={spectatedPlayer.life} />
+              </span>
+            )}
             <span>
               <Money value={spectatedPlayer.money} />
             </span>

@@ -836,6 +836,7 @@ class GameContainer {
     if (
       board &&
       player.id === this.playerIdSpectated &&
+      board.mode !== BoardMode.VICTORY &&
       (board.mode === BoardMode.PICK || pokemon.positionY === 0)
     ) {
       const pokemonUI = this.gameScene?.board?.addPokemonSprite(pokemon)

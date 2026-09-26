@@ -7,6 +7,7 @@ import { getMusicAlt } from "../../../../config/game/music"
 import type Player from "../../../../models/colyseus-models/player"
 import { getPkmWithCustom } from "../../../../models/colyseus-models/pokemon-customs"
 import { DungeonMusic, type DungeonPMDO } from "../../../../types/enum/Dungeon"
+import { GameMode } from "../../../../types/enum/Game"
 import { PkmIndex } from "../../../../types/enum/Pokemon"
 import { getPortraitSrc } from "../../../../utils/avatar"
 import { schemaValues } from "../../../../utils/schemas"
@@ -161,6 +162,10 @@ export default class LoadingManager {
           .filter<DungeonPMDO>((map): map is DungeonPMDO => map !== "town")
       )
       preloadMusic(scene, RegionDetails[player.map].music)
+      // loading it only at the win raced the rest of the loader and stayed silent
+      if (scene.room?.state.gameMode === GameMode.DOUBLE_UP) {
+        preloadMusic(scene, DungeonMusic.AT_THE_END_OF_THE_DAY)
+      }
       preloadPortraits(this.scene, player)
     }
 

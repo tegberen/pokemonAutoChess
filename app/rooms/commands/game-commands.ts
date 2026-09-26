@@ -2,6 +2,7 @@ import { Command } from "@colyseus/command"
 import {
   anchorPlayerAvatars,
   removePlayerAvatar,
+  spawnPlayerAvatar,
   updatePlayerAvatars
 } from "../../core/player-avatars"
 import { MapSchema, SetSchema, StateView } from "@colyseus/schema"
@@ -586,6 +587,7 @@ function sendPokemonToPartner(
   pokemon: Pokemon,
   item: Item
 ) {
+  if (state.finale) return
   const partner = state.players.get(sender.doubleUpPartnerId)
   if (!partner || !partner.alive) return
   if (
@@ -648,6 +650,7 @@ function sendPokemonToPartner(
 }
 
 function offerTradeItem(state: GameState, player: Player, item: Item) {
+  if (state.finale) return
   if (!DoubleUpTradeableItems.includes(item)) return
   const croagunk = [...player.wanderers.values()].find(
     (w) => w.type === WandererType.CROAGUNK_TRADE
@@ -705,6 +708,108 @@ export class OnCancelTradeOfferCommand extends Command<
     player.items.push(player.doubleUpTradeOffer as Item)
     player.doubleUpTradeOffer = ""
     if (croagunk) croagunk.data = ""
+  }
+}
+
+function getFinalePartner(
+  room: GameRoom,
+  player: Player | undefined
+): Player | null {
+  const state = room.state
+  if (!player || state.gameMode !== GameMode.DOUBLE_UP) return null
+  if (!state.gameFinished || state.finale || room.finalePlayed) return null
+  // the next tournament round waits on this room
+  if (room.metadata?.tournamentId) return null
+  const partner = state.players.get(player.doubleUpPartnerId)
+  if (!partner) return null
+  // rank, not alive: a double KO team wins while already out
+  const bothWon = [player, partner].every(
+    (p) => p.rank === 1 && !p.hasLeftGame
+  )
+  return bothWon ? partner : null
+}
+
+// accepting is the partner sending a request too
+export class OnFinaleRequestCommand extends Command<
+  GameRoom,
+  { playerId: string }
+> {
+  execute({ playerId }) {
+    const player = this.state.players.get(playerId)
+    const partner = getFinalePartner(this.room, player)
+    const requesterClient = this.room.clients.find(
+      (cli) => cli.auth?.uid === playerId
+    )
+    const partnerClient = partner
+      ? this.room.clients.find((cli) => cli.auth?.uid === partner.id)
+      : undefined
+    if (!player || !partner || (!partner.isBot && !partnerClient)) {
+      requesterClient?.send(Transfer.FINALE_DECLINED)
+      return
+    }
+    if (partner.isBot || this.room.finaleRequesterIds.has(partner.id)) {
+      this.startFinale([player, partner])
+      return
+    }
+    if (this.room.finaleRequesterIds.has(playerId)) return
+    this.room.finaleRequesterIds.add(playerId)
+    partnerClient?.send(Transfer.FINALE_PROPOSAL, { playerId })
+    this.room.scheduleGameEndDisposal()
+  }
+
+  startFinale(finalists: Player[]) {
+    this.room.finaleRequesterIds.clear()
+    this.room.cancelGameEndDisposal()
+    this.room.finalePlayed = true
+    this.state.finale = true
+    this.state.gameFinished = false
+    finalists.forEach((player) => {
+      this.room.finaleLifeByPlayerId.set(player.id, player.life)
+      if (!player.alive) {
+        this.room.finaleRevivedIds.add(player.id)
+        player.alive = true
+        if (!player.isBot) {
+          spawnPlayerAvatar(this.state, player.id)
+          this.state.shop.assignShop(player, false, this.state)
+        }
+      }
+      if (player.doubleUpTradeOffer) {
+        player.items.push(player.doubleUpTradeOffer as Item)
+        player.doubleUpTradeOffer = ""
+      }
+      const croagunk = [...player.wanderers.values()].find(
+        (w) => w.type === WandererType.CROAGUNK_TRADE
+      )
+      if (croagunk) player.wanderers.delete(croagunk.id)
+      // the game ended into a picking phase that dealt this stage's choices again
+      ;[...player.choices].forEach((choice) =>
+        removeInArray(player.choices, choice)
+      )
+    })
+    this.state.phase = GamePhaseState.PICK
+    this.state.time =
+      (StageDuration[this.state.stageLevel] ?? StageDuration.DEFAULT) * 1000
+    this.state.roundTime = Math.round(this.state.time / 1000)
+    this.state.updatePhaseNeeded = false
+    anchorPlayerAvatars(this.state)
+    this.room.broadcast(Transfer.FINALE_START, {
+      playerIds: finalists.map((p) => p.id)
+    })
+  }
+}
+
+export class OnFinaleDeclineCommand extends Command<
+  GameRoom,
+  { playerId: string }
+> {
+  execute({ playerId }) {
+    const player = this.state.players.get(playerId)
+    if (!player) return
+    const requesterId = player.doubleUpPartnerId
+    if (!this.room.finaleRequesterIds.delete(requesterId)) return
+    this.room.clients
+      .find((cli) => cli.auth?.uid === requesterId)
+      ?.send(Transfer.FINALE_DECLINED)
   }
 }
 
@@ -1487,6 +1592,10 @@ export class OnDragDropItemCommand extends Command<
       item === Item.PRISON_BOTTLE &&
       this.state.gameMode === GameMode.DOUBLE_UP
     ) {
+      if (this.state.finale) {
+        client.send(Transfer.DRAG_DROP_CANCEL, message)
+        return
+      }
       const prisonBottleHint: DisplayText | null = !isOnBench(pokemon)
         ? "send_from_bench"
         : this.state.phase !== GamePhaseState.PICK
@@ -1977,7 +2086,7 @@ export class OnUpdateCommand extends Command<
           }
         })
 
-        if (this.state.gameMode === GameMode.DOUBLE_UP) {
+        if (this.state.gameMode === GameMode.DOUBLE_UP && !this.state.finale) {
           grantRobinGemsForFinishedDoubleUpSimulations(this.state)
           this.checkDoubleUpReinforcements()
         }
@@ -2301,6 +2410,10 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
       this.checkForLazyTeam()
       this.initializeFightingPhase()
     } else if (this.state.phase == GamePhaseState.FIGHT) {
+      if (this.state.finale) {
+        this.stopFinaleFight()
+        return
+      }
       this.stopFightingPhase()
       if (
         (ItemCarouselStages.includes(this.state.stageLevel) ||
@@ -2339,16 +2452,43 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
 
   finishGame(winners: Player[]) {
     this.state.gameFinished = true
+    if (this.state.gameMode === GameMode.DOUBLE_UP && winners.length > 0) {
+      this.room.broadcast(
+        Transfer.DOUBLE_UP_VICTORY,
+        winners.map((winner) => winner.id)
+      )
+    }
     winners.forEach((winner) => {
       const client = this.room.clients.find(
         (cli) => cli.auth.uid === winner.id
       )
       if (client) client.send(Transfer.FINAL_RANK, 1)
     })
-    this.clock.setTimeout(() => {
-      this.room.broadcast(Transfer.GAME_END)
-      this.room.disconnect()
-    }, 30 * 1000)
+    this.room.scheduleGameEndDisposal()
+  }
+
+  stopFinaleFight() {
+    this.state.simulations.forEach((simulation) => {
+      if (!simulation.finished) simulation.onFinish()
+      simulation.stop()
+    })
+    this.room.finaleLifeByPlayerId.forEach((life, playerId) => {
+      const player = this.state.players.get(playerId)
+      if (player) player.life = life
+    })
+    this.room.finaleLifeByPlayerId.clear()
+    this.room.finaleRevivedIds.forEach((playerId) => {
+      const player = this.state.players.get(playerId)
+      if (!player) return
+      player.alive = false
+      removePlayerAvatar(this.state, player.id)
+      if (!player.isBot) this.state.shop.releaseCurrentShop(player, this.state)
+    })
+    this.room.finaleRevivedIds.clear()
+    this.state.finale = false
+    this.state.gameFinished = true
+    this.room.broadcast(Transfer.FINALE_END)
+    this.room.scheduleGameEndDisposal()
   }
 
   /* A guide run is solo, so the usual "last player standing" test would end it
@@ -2369,7 +2509,12 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
     const playersAlive = schemaValues(this.state.players).filter((p) => p.alive)
     const aliveTeams = new Set(playersAlive.map((p) => p.doubleUpTeamId))
     if (aliveTeams.size > 1) return false
-    this.finishGame(playersAlive)
+    // a double KO leaves nobody alive; the less-negative team is ranked first
+    const winners =
+      playersAlive.length > 0
+        ? playersAlive
+        : schemaValues(this.state.players).filter((p) => p.rank === 1)
+    this.finishGame(winners)
     return true
   }
 
@@ -2474,6 +2619,10 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
 
     // Pass 3: send correct rank to each
     newlyDead.forEach((player) => {
+      // a dead rank 1 is a double KO: finishGame sends it after the victory broadcast
+      if (this.state.gameMode === GameMode.DOUBLE_UP && player.rank === 1) {
+        return
+      }
       const client = this.room.clients.find((cli) => cli.auth.uid === player.id)
       if (client) {
         client.send(Transfer.FINAL_RANK, player.rank)
@@ -2810,7 +2959,8 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
 
     if (
       this.state.gameMode === GameMode.DOUBLE_UP &&
-      ArmoryAssistStages.includes(this.state.stageLevel)
+      ArmoryAssistStages.includes(this.state.stageLevel) &&
+      !this.state.gameFinished
     ) {
       const firstGroup: Player[] = []
       const secondGroup: Player[] = []
@@ -3662,7 +3812,9 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
         .forEach((choice) => removeInArray(player.choices, choice))
     })
 
-    const pveStageBase = getPveStage(this.state, this.state.stageLevel)
+    const pveStageBase = this.state.finale
+      ? null
+      : getPveStage(this.state, this.state.stageLevel)
     if (pveStageBase) {
       const pveStage = resolvePveStage(
         pveStageBase,

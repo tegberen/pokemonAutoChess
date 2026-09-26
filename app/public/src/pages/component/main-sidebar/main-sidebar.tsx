@@ -41,10 +41,11 @@ interface MainSidebarProps {
   page: Page
   leave: () => void
   leaveLabel: string
+  leaveDisabled?: boolean
 }
 
 export function MainSidebar(props: MainSidebarProps) {
-  const { page, leave, leaveLabel } = props
+  const { page, leave, leaveLabel, leaveDisabled } = props
   const [collapsed, setCollapsed] = useState(true)
   const navigate = useNavigate()
   const [modal, setModal] = useState<Modals>()
@@ -368,7 +369,12 @@ export function MainSidebar(props: MainSidebarProps) {
           </NavLink>
         )}
 
-        <NavLink svg="exit-door" className="red logout" onClick={onClickLeave}>
+        <NavLink
+          svg="exit-door"
+          className="red logout"
+          onClick={onClickLeave}
+          disabled={leaveDisabled}
+        >
           {leaveLabel}
         </NavLink>
       </Menu>
@@ -422,13 +428,16 @@ function NavLink(props: NavLinkProps) {
     png,
     icon,
     className = "default",
-    onClick
+    onClick,
+    disabled
   } = props
 
   return (
     <MenuItem
       className={cc("menu-item", className, shimmer ? "shimmer" : "")}
+      disabled={disabled}
       onClick={(e) => {
+        if (disabled) return
         onClick?.(e)
         if (location) {
           handleClick?.(location)

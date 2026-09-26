@@ -118,6 +118,7 @@ export default class GameState extends Schema {
   shop: Shop = new Shop()
   simulationPaused = false
   gameFinished = false
+  finale = false
   gameLoaded = false
   name: string
   startTime: number

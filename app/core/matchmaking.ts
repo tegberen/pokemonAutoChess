@@ -86,6 +86,18 @@ export function selectDoubleUpMatchups(state: GameState): Matchup[] {
   )
   if (players.length <= 1) return []
 
+  if (state.finale) {
+    const [bluePlayer, redPlayer] = players
+    return [
+      {
+        bluePlayer,
+        redPlayer,
+        count: getCount(bluePlayer, redPlayer, false),
+        distance: getDistance(bluePlayer, redPlayer, false)
+      }
+    ]
+  }
+
   // Same pipeline as selectMatchups, but teammates are never paired
   const matchups = getAllPossibleMatchups(players).filter(
     (m) => m.bluePlayer.doubleUpTeamId !== m.redPlayer.doubleUpTeamId

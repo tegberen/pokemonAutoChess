@@ -329,6 +329,7 @@ export class HiddenPowerQStrategy extends HiddenPowerStrategy {
     if (
       unown.player &&
       !unown.isGhostOpponent &&
+      !unown.simulation.room.state.finale &&
       unown.player.blessings?.includes(Blessing.PANIC_BUTTON)
     ) {
       const opponent =

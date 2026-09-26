@@ -30,6 +30,72 @@
   margin: 0 0.25em;
 }
 
+#game-stage-info .finale-matchup {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#game-stage-info .finale-finalist {
+  padding: 3px 12px;
+  background-color: var(--color-bg-tertiary);
+  border: var(--border-thin);
+  border-radius: 6px;
+  transform: skewX(-14deg);
+}
+
+#game-stage-info .finale-finalist:first-child {
+  padding-right: 1.8em;
+}
+
+#game-stage-info .finale-finalist:last-child {
+  padding-left: 1.8em;
+}
+
+#game-stage-info .finale-finalist.spectated {
+  background-color: var(--color-bg-secondary);
+}
+
+#game-stage-info .finale-finalist:not(.spectated) .player-name {
+  color: var(--color-fg-secondary);
+}
+
+#game-stage-info .finale-finalist-content {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transform: skewX(14deg);
+}
+
+#game-stage-info .finale-finalist img {
+  width: 2em;
+  height: 2em;
+}
+
+#game-stage-info .finale-finalist .player-name {
+  margin: 0;
+}
+
+#game-stage-info .finale-matchup-badge {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 2.6em;
+  height: 2.6em;
+  margin: 0 -1.3em;
+  background-color: var(--color-bg-primary);
+  border: var(--border-thin);
+  border-radius: 50%;
+}
+
+#game-stage-info .finale-matchup-badge img {
+  width: 1.6em;
+  height: 1.6em;
+}
+
 #game-stage-info .players-information {
   display: flex;
   flex: 1;

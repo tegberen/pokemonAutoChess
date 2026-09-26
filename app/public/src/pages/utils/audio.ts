@@ -135,13 +135,60 @@ interface SceneWithMusic extends Phaser.Scene {
   music?: Phaser.Sound.WebAudioSound
 }
 
-export function playMusic(scene: SceneWithMusic, name: string) {
+export function fadeToMusic(
+  scene: SceneWithMusic,
+  name: string,
+  fadeOutMs: number,
+  fadeInMs: number,
+  volumeScale = 1
+) {
   if (scene == null || scene.music?.key === "music_" + name) return
-  if (scene.music) scene.music.destroy()
+  const startNewTrack = () => {
+    playMusic(scene, name, 0)
+    const music = scene.music
+    if (!music) return
+    // tweening music.volume starts from the gain node's lagging value, blasting at full volume
+    scene.tweens.addCounter({
+      from: 0,
+      to: (preference("musicVolume") / 100) * volumeScale,
+      duration: fadeInMs,
+      onUpdate: (tween) => {
+        // killTweensOf(music) can't reach a counter
+        if (scene.music !== music) return tween.stop()
+        music.setVolume(tween.getValue() ?? 0)
+      }
+    })
+  }
+  if (!scene.music?.isPlaying) {
+    startNewTrack()
+    return
+  }
+  scene.tweens.killTweensOf(scene.music)
+  scene.tweens.add({
+    targets: scene.music,
+    volume: 0,
+    duration: fadeOutMs,
+    onComplete: startNewTrack
+  })
+}
+
+// a volume set after play() gets overridden by the play config, so it goes in up front
+export function playMusic(
+  scene: SceneWithMusic,
+  name: string,
+  startVolume = preference("musicVolume") / 100
+) {
+  if (scene == null || scene.music?.key === "music_" + name) return
+  if (scene.music) {
+    // a fade left running on a destroyed track throws every frame
+    scene.tweens.killTweensOf(scene.music)
+    scene.music.destroy()
+  }
 
   try {
     const music = scene.sound.add("music_" + name, {
-      loop: true
+      loop: true,
+      volume: startVolume
     }) as Phaser.Sound.WebAudioSound
 
     const unsubscribeToPreferences = subscribeToPreferences(
@@ -155,7 +202,7 @@ export function playMusic(scene: SceneWithMusic, name: string) {
     scene.sound.pauseOnBlur = !preference("playInBackground")
 
     scene.music.play({
-      volume: preference("musicVolume") / 100,
+      volume: startVolume,
       loop: true
     })
   } catch (err) {

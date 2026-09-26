@@ -5957,7 +5957,7 @@ export default class Simulation extends Schema implements ISimulation {
             client?.send(Transfer.PLAYER_DAMAGE, playerDamage)
           }
         }
-        if (opponentPlayer && !isGhostOpponent) {
+        if (opponentPlayer && !isGhostOpponent && !this.room.state.finale) {
           const previousPlayerDamageDealt =
             opponentPlayer.gameStats.totalPlayerDamageDealt
           opponentPlayer.gameStats.totalPlayerDamageDealt += playerDamage
