@@ -166,7 +166,7 @@ function printTable(title: string, tierHeroes: Hero[], lowTotal: number) {
   console.log(`\n${BOLD}${title}${RESET} (${tierHeroes.length} heroes)`)
   console.log(BOLD + header + RESET)
 
-  const needsWork: { synergy: Synergy; heroCount: number }[] = []
+  const synergyCounts: { synergy: Synergy; heroCount: number }[] = []
   for (const synergy of Object.values(Synergy)) {
     const withSynergy = tierHeroes.filter((hero) =>
       hero.synergies.includes(synergy)
@@ -178,7 +178,7 @@ function printTable(title: string, tierHeroes: Hero[], lowTotal: number) {
         : DIM + "·".padStart(COUNT_WIDTH) + RESET
     })
     const isLow = withSynergy.length <= lowTotal
-    if (isLow) needsWork.push({ synergy, heroCount: withSynergy.length })
+    synergyCounts.push({ synergy, heroCount: withSynergy.length })
     const color = isLow ? RED : GREEN
     console.log(
       color +
@@ -221,18 +221,21 @@ function printTable(title: string, tierHeroes: Hero[], lowTotal: number) {
       ) +
       RESET
   )
-  if (needsWork.length === 0) {
-    console.log(`${GREEN}Every synergy is covered${RESET}`)
-    return
-  }
-  console.log(`${RED}${BOLD}Needs work, most urgent first:${RESET}`)
-  for (let heroCount = 0; heroCount <= lowTotal; heroCount++) {
-    const synergiesAtCount = needsWork
+  console.log(
+    `${BOLD}Urgency ranking, fewest heroes first${RESET} ${DIM}(red: ${lowTotal} or less)${RESET}`
+  )
+  const heroCounts = [
+    ...new Set(synergyCounts.map((entry) => entry.heroCount))
+  ].sort((a, b) => a - b)
+  for (const heroCount of heroCounts) {
+    const synergiesAtCount = synergyCounts
       .filter((entry) => entry.heroCount === heroCount)
       .map((entry) => entry.synergy)
-    if (synergiesAtCount.length === 0) continue
     const label = `${heroCount} hero${heroCount === 1 ? "" : "es"}`
-    console.log(`${RED}  ${label.padEnd(10)}${synergiesAtCount.join(", ")}${RESET}`)
+    const color = heroCount <= lowTotal ? RED : GREEN
+    console.log(
+      `${color}  ${label.padEnd(10)}${synergiesAtCount.join(", ")}${RESET}`
+    )
   }
 }
 
