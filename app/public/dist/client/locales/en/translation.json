@@ -4654,6 +4654,7 @@
 	},
 	"theme": {
 		"default": "Classic",
+		"modernclassic": "Modern Classic",
 		"super": "Super",
 		"autumn": "Autumn",
 		"lilac": "Lilac",

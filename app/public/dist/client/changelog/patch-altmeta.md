@@ -495,6 +495,7 @@ Every balance change on this server, newest first.
 - Double Up Finale | brought back as an option in the victory scene
 
 **Interface**
+- Modern Classic theme {{new}} | the Classic colors with see-through panels, so you see more of the board
 - Team Planner | revamped with Synergy Highlighting (use the {{meeple}})
 - Battle Stats and Effects | compacted
 

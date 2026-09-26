@@ -1,0 +1,112 @@
+:root {
+  --border-thick: 2px solid color-mix(in srgb, black 70%, transparent);
+  --border-thin: 1px solid color-mix(in srgb, black 60%, transparent);
+  --border-extra-thin: 1px solid color-mix(in srgb, black 50%, transparent);
+  --gloss-edge: inset 0 1px 0 color-mix(in srgb, white 22%, transparent);
+  --see-through-primary: color-mix(
+    in srgb,
+    color-mix(in srgb, var(--color-bg-primary) 85%, black) 45%,
+    transparent
+  );
+  --see-through-secondary: color-mix(
+    in srgb,
+    color-mix(in srgb, var(--color-bg-secondary) 85%, black) 45%,
+    transparent
+  );
+  --see-through-tertiary: color-mix(
+    in srgb,
+    color-mix(in srgb, var(--color-bg-tertiary) 85%, black) 45%,
+    transparent
+  );
+  --soft-see-through-secondary: color-mix(
+    in srgb,
+    var(--color-bg-secondary) 75%,
+    transparent
+  );
+  --see-through-text-shadow: 0 0 2px black, 0 1px 2px black;
+}
+
+html .my-container,
+html .game-shop .information > div,
+html .game-additional-pokemons,
+html .game-regional-pokemons {
+  background-color: var(--see-through-primary);
+  box-shadow: var(--gloss-edge);
+  text-shadow: var(--see-through-text-shadow);
+}
+
+html .custom-theme-tooltip {
+  background-color: var(--see-through-primary) !important;
+  box-shadow: var(--gloss-edge);
+  text-shadow: var(--see-through-text-shadow);
+}
+
+html .my-box {
+  background-color: var(--see-through-secondary);
+  box-shadow: var(--gloss-edge);
+}
+
+html .my-box.clickable,
+html .clickable > .my-box {
+  box-shadow: var(--gloss-edge), var(--shadow-clickable);
+}
+
+html .leaderboard [data-react-window-index]:nth-child(even) .my-box,
+html .react-tabs__tab {
+  background: var(--see-through-tertiary);
+}
+
+html .react-tabs__tab--selected,
+html aside.sidebar {
+  background: var(--see-through-primary);
+}
+
+html .leaderboard [data-react-window-index]:nth-child(odd) .my-box,
+html .draggable-window-header,
+html .synergy-row.active,
+html .synergies-container .react-tabs__tab--selected {
+  background: var(--see-through-secondary);
+}
+
+html .game-history.my-box,
+html .profile-actions .react-tabs__tab-panel,
+html .profile-actions > .my-container,
+html .modal > header,
+html #team-builder .synergies-container,
+html #team-editor td,
+html #selected-entity .game-pokemon-detail::before,
+html #selected-entity .game-pokemon-detail-abilities,
+html #team-builder #pokemon-picker .filters summary,
+html select:not(.is-light),
+html .chat-message-container {
+  background: var(--soft-see-through-secondary);
+}
+
+html .sidebar-logo,
+html .draggable-window-header-button:not(:hover),
+html .menu-item a.ps-menu-button:not(:hover) {
+  background: transparent;
+}
+
+html .game-rarity-percentage,
+html .game-pokemon-portrait-cost,
+html .fossil-unlocks-button,
+html .fossil-unlocks-button-label,
+html .fossil-unlock-state,
+html .fossil-unlock-gate,
+html .server-guide .guide-new-tag,
+html .booster-card .new,
+html .pokemon-collection-item.new::before,
+html .pokemon-emotion.new::before,
+html .pokemon-portrait.regional::after,
+html .pokemon-portrait.acquired::before,
+html .emote-menu li .counter,
+html .section-edit-badge,
+html .tempo-stage-zone,
+html .tier-list-label-cell,
+html .tier-list-rapid-sorter-rows .tier-list-rapid-sorter-row-button,
+html .wiki-fossil-blessing,
+html #pokemon-select-form .dropdown,
+html select.is-light {
+  text-shadow: none;
+}
