@@ -501,8 +501,10 @@ Every balance change on this server, newest first.
 
 **Pokémon**
 - Sobble line | immune to FLOOD knockback. FLOOD heals twice as much and also gives that much PP
+- Magnetic Absorption | damage [80,80,80,120] → [20,40,80,120] per STAR, so Sandy Shocks is unchanged
 
 **Wishes**
+- Primal Magnetism {{new}} | Gain a Magnemite. Your STRONGEST Magnemite casts Magnetic Absorption on the first enemy it attacks, then after every third cast of its own ability
 - Mega Sol, Flytrap and Spore Clouds | their item no longer drops into your inventory when taken before the pot is unlocked
 - Galvanic Rain {{new}} | Gain an Alolan Graveler and move to a random ELECTRIC region if not in one. Your STRONGEST Alolan Geodude's ability is replaced with Electric Surge, it gets +2 RANGE, and its attacks have a [10,LK]% chance to throw an Alolan Geodude with full PP next to the target
 

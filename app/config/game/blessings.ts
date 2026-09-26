@@ -1937,6 +1937,12 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     icon: "galvanic_rain",
     grantsPokemonImmediately: true
   },
+  [Blessing.PRIMAL_MAGNETISM]: {
+    tier: BlessingTier.SILVER,
+    availableAtStages: [4],
+    icon: "primal_magnetism",
+    grantsPokemonImmediately: true
+  },
   [Blessing.SILVER_SPOON]: {
     tier: BlessingTier.PRISMATIC,
     availableAtStages: [4],

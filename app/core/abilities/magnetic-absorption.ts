@@ -13,7 +13,7 @@ export class MagneticAbsorptionStrategy extends AbilityStrategy {
     crit: boolean
   ) {
     super.process(pokemon, board, target, crit)
-    const damage = [80, 80, 80, 120][pokemon.stars - 1] ?? 120
+    const damage = [20, 40, 80, 120][pokemon.stars - 1] ?? 120
 
     // User gains +1 range
     pokemon.range += 1

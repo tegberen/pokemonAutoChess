@@ -1189,6 +1189,10 @@ function voltSwitchBolt(args: AbilityAnimationArgs) {
   })
 }
 
+const MAGNETIC_ABSORPTION_TINT = 0xf1c232
+const MAGNETIC_ABSORPTION_SPARK_DELAYS = [0, 90, 180, 270]
+const MAGNETIC_ABSORPTION_SPARK_FLIGHT = 420
+
 const GALVANIC_RAIN_THROW_ARC_HEIGHT = 140
 const GALVANIC_RAIN_THROW_MIN_FLIGHT = 200
 
@@ -4338,7 +4342,24 @@ export const AbilitiesAnimations: {
     depth: DEPTH.ABILITY_BELOW_POKEMON,
     positionOffset: [0, -10]
   }),
-  [Ability.MAGNETIC_ABSORPTION]: onTarget({scale: 4, tint: 0xf1c232, positionOffset: [0, -20] }),
+  [Ability.MAGNETIC_ABSORPTION]: [
+    onTarget({ scale: 3, tint: MAGNETIC_ABSORPTION_TINT, positionOffset: [0, -20] }),
+    ...MAGNETIC_ABSORPTION_SPARK_DELAYS.map((delay, index) =>
+      projectile({
+        ability: "ELECTRIC/range",
+        textureKey: "attacks",
+        startCoords: "target",
+        endCoords: "caster",
+        duration: MAGNETIC_ABSORPTION_SPARK_FLIGHT,
+        // oriented aims from the user to the target, these fly the other way
+        oriented: true,
+        rotation: Math.PI,
+        scale: 2.5 - index * 0.4,
+        tint: MAGNETIC_ABSORPTION_TINT,
+        delay
+      })
+    )
+  ],
   [Ability.FRENZY_PLANT]: (args) => {
     const { scene, targetX, targetY, flip, ap } = args
     const [tx, ty] = transformEntityCoordinates(targetX, targetY, flip)

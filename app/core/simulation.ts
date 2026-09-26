@@ -127,6 +127,7 @@ import {
   GALVANIC_RAIN_RANGE_BONUS,
   GALVANIC_RAIN_THROW_CHANCE,
   GALVANIC_RAIN_THROW_FLIGHT_MS,
+  PRIMAL_MAGNETISM_CASTS_PER_ABSORPTION,
   CELL_BRAWLER_STAT_BONUS,
   GALE_WINGS_EMBERS_FOR_FIRE_SHARD,
   GALE_WINGS_EMBERS_PER_GOLD_BY_STAR,
@@ -4316,6 +4317,29 @@ export default class Simulation extends Schema implements ISimulation {
       )
     }
 
+    const primalMagnetismChampion = championOf.get(Blessing.PRIMAL_MAGNETISM)
+    if (primalMagnetismChampion) {
+      let hasOpenedWithAbsorption = false
+      primalMagnetismChampion.effectsSet.add(
+        new OnAttackEffect(({ pokemon, target }) => {
+          if (hasOpenedWithAbsorption || !target) return
+          hasOpenedWithAbsorption = true
+          this.castPrimalMagnetism(pokemon, target)
+        })
+      )
+      let castsSinceAbsorption = 0
+      primalMagnetismChampion.effectsSet.add(
+        new OnAbilityCastEffect((pokemon) => {
+          castsSinceAbsorption++
+          if (castsSinceAbsorption < PRIMAL_MAGNETISM_CASTS_PER_ABSORPTION) {
+            return
+          }
+          castsSinceAbsorption = 0
+          this.castPrimalMagnetism(pokemon)
+        })
+      )
+    }
+
     const cellBrawlerChampion = championOf.get(Blessing.CELL_BRAWLER)
     if (cellBrawlerChampion) {
       cellBrawlerChampion.addMaxHP(
@@ -6555,6 +6579,30 @@ export default class Simulation extends Schema implements ISimulation {
     pokemon.skill = ability
     strategy.process(pokemon, board, followUpTarget, false)
     pokemon.skill = skillBefore
+  }
+
+  // an extra cast on top of its own ability, so the PP it built and its cast
+  // count are kept
+  castPrimalMagnetism(magnemite: PokemonEntity, preferredTarget?: PokemonEntity) {
+    if (magnemite.hp <= 0) return
+    const target =
+      preferredTarget && preferredTarget.hp > 0
+        ? preferredTarget
+        : magnemite.state.getNearestTargetAtSight(magnemite, this.board)?.target
+    if (!target) return
+    const ppBefore = magnemite.pp
+    const castCountBefore = magnemite.count.ult
+    const skillBefore = magnemite.skill
+    magnemite.skill = Ability.MAGNETIC_ABSORPTION
+    AbilityStrategies[Ability.MAGNETIC_ABSORPTION].process(
+      magnemite,
+      this.board,
+      target,
+      false
+    )
+    magnemite.skill = skillBefore
+    magnemite.pp = ppBefore
+    magnemite.count.ult = castCountBefore
   }
 
   castOverloadVoltSurge(team: MapSchema<PokemonEntity>, player: Player) {

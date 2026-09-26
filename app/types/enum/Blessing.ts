@@ -195,6 +195,7 @@ export enum Blessing {
   PACK_ATTACK = "PACK_ATTACK",
   MOLE_MAZE = "MOLE_MAZE",
   GALVANIC_RAIN = "GALVANIC_RAIN",
+  PRIMAL_MAGNETISM = "PRIMAL_MAGNETISM",
   SILVER_SPOON = "SILVER_SPOON",
   ICE_SPEAR = "ICE_SPEAR",
   FROST_GEAR = "FROST_GEAR",
@@ -765,6 +766,7 @@ export const ORBITAL_STRIKE_RANGE_BONUS = 2
 export const GALVANIC_RAIN_RANGE_BONUS = 2
 export const GALVANIC_RAIN_THROW_CHANCE = 0.1
 export const GALVANIC_RAIN_THROW_FLIGHT_MS = 600
+export const PRIMAL_MAGNETISM_CASTS_PER_ABSORPTION = 3
 export const CELL_BRAWLER_STAT_BONUS = 0.5
 export const CELL_BRAWLER_ABILITY_LIFESTEAL = 0.5
 export const CELL_BRAWLER_OVERHEAL_TO_MAX_HP = 0.5
@@ -1236,7 +1238,8 @@ export const HERO_BLESSING_GIFT: { [blessing in Blessing]?: Pkm } = {
   [Blessing.ITS_GOING_DOWN]: Pkm.TIMBURR,
   [Blessing.ROLLOUT_RALLY]: Pkm.VENIPEDE,
   [Blessing.MOLE_MAZE]: Pkm.DRILBUR,
-  [Blessing.GALVANIC_RAIN]: Pkm.ALOLAN_GRAVELER
+  [Blessing.GALVANIC_RAIN]: Pkm.ALOLAN_GRAVELER,
+  [Blessing.PRIMAL_MAGNETISM]: Pkm.MAGNEMITE
 }
 
 export const HERO_BLESSING_POKEMON: { [blessing in Blessing]?: Pkm[] } = {
@@ -1318,7 +1321,8 @@ export const HERO_BLESSING_FAMILY: { [blessing in Blessing]?: Pkm } = {
   [Blessing.STONE_SADDLE]: Pkm.RHYHORN,
   [Blessing.ITS_GOING_DOWN]: Pkm.TIMBURR,
   [Blessing.ROLLOUT_RALLY]: Pkm.VENIPEDE,
-  [Blessing.GALVANIC_RAIN]: Pkm.ALOLAN_GEODUDE
+  [Blessing.GALVANIC_RAIN]: Pkm.ALOLAN_GEODUDE,
+  [Blessing.PRIMAL_MAGNETISM]: Pkm.MAGNEMITE
 }
 
 /* hero blessings that also relocate the player to a region where their family
@@ -1342,7 +1346,8 @@ export const SIMULATION_SCOPED_HERO_BLESSINGS: Blessing[] = [
   Blessing.JESTER,
   Blessing.COLONY,
   Blessing.SAND_BUDDIES,
-  Blessing.GALVANIC_RAIN
+  Blessing.GALVANIC_RAIN,
+  Blessing.PRIMAL_MAGNETISM
 ]
 
 export const HERO_BLESSING_ADDS_TO_POOL: Blessing[] = [

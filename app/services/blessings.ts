@@ -3275,6 +3275,9 @@ export const blessingEffectService: {
   [Blessing.GALVANIC_RAIN]: (player, state, room) =>
     heroBlessingEffect(Blessing.GALVANIC_RAIN, player, state, room),
 
+  [Blessing.PRIMAL_MAGNETISM]: (player, state, room) =>
+    heroBlessingEffect(Blessing.PRIMAL_MAGNETISM, player, state, room),
+
   [Blessing.ICE_SPEAR]: (player, state, room) =>
     heroBlessingEffect(Blessing.ICE_SPEAR, player, state, room),
 
