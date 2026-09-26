@@ -229,6 +229,8 @@ export default function Game() {
   ) => {
     setWinnerWaitingForVictory(isWinner)
     getGameScene()?.board?.transitionToVictory(winners, () => {
+      // cleared only now so the stage and HP don't flash back during the fade
+      dispatch(setFinalistIds([]))
       setVictoryResults(results)
       setVictoryScene(true)
     })
@@ -697,7 +699,6 @@ export default function Game() {
       )
       room.onMessage(Transfer.FINALE_END, () => {
         setCanRequestFinale(false)
-        dispatch(setFinalistIds([]))
         playDoubleUpVictory(victoryWinnerIds.current)
         window.setTimeout(() => {
           setFinalRankVisibility(FinalRankVisibility.VISIBLE)
