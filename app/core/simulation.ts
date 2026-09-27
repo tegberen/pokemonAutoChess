@@ -130,6 +130,9 @@ import {
   GALVANIC_RAIN_THROW_FLIGHT_MS,
   PRIMAL_MAGNETISM_CASTS_PER_ABSORPTION,
   PRIMAL_RAMPAGE_KO_RECOIL,
+  GOOEY_GLOBULES_THROW_CHANCE,
+  GOOEY_GLOBULES_SPEED_LOSS,
+  GOOEY_GLOBULES_ALLY_HEAL,
   PRIMAL_RAMPAGE_KO_PP,
   CELL_BRAWLER_STAT_BONUS,
   GALE_WINGS_EMBERS_FOR_FIRE_SHARD,
@@ -4333,6 +4336,45 @@ export default class Simulation extends Schema implements ISimulation {
               }
             }, GALVANIC_RAIN_THROW_FLIGHT_MS)
           )
+        })
+      )
+    }
+
+    const gooeyGlobulesChampion = championOf.get(Blessing.GOOEY_GLOBULES)
+    if (gooeyGlobulesChampion) {
+      gooeyGlobulesChampion.effectsSet.add(
+        new OnAttackReceivedEffect(({ pokemon, board, isAttackSuccessful }) => {
+          if (
+            !isAttackSuccessful ||
+            !chance(GOOEY_GLOBULES_THROW_CHANCE, pokemon)
+          ) {
+            return
+          }
+          const neighbours = board
+            .getAdjacentCells(pokemon.positionX, pokemon.positionY)
+            .map((cell) => cell.value)
+            .filter(
+              (unit): unit is PokemonEntity => unit !== undefined && unit.hp > 0
+            )
+          if (neighbours.length === 0) return
+          const splattered = pickRandomIn(neighbours)
+          pokemon.broadcastAbility({
+            skill: "GOOEY_GLOBULES_BLOB",
+            targetX: splattered.positionX,
+            targetY: splattered.positionY
+          })
+          if (splattered.team === pokemon.team) {
+            splattered.handleHeal(GOOEY_GLOBULES_ALLY_HEAL, pokemon, 0, false)
+          } else {
+            splattered.handleDamage({
+              damage: pokemon.def,
+              board,
+              attackType: AttackType.TRUE,
+              attacker: pokemon,
+              shouldTargetGainMana: true
+            })
+            splattered.addSpeed(-GOOEY_GLOBULES_SPEED_LOSS, pokemon, 0, false)
+          }
         })
       )
     }

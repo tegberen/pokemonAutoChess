@@ -204,6 +204,7 @@ export enum Blessing {
   CLANGOROUS_SOULBLAZE = "CLANGOROUS_SOULBLAZE",
   WINDY_SANDS = "WINDY_SANDS",
   THUNDER_AND_LIGHTNING = "THUNDER_AND_LIGHTNING",
+  GOOEY_GLOBULES = "GOOEY_GLOBULES",
   SILVER_SPOON = "SILVER_SPOON",
   ICE_SPEAR = "ICE_SPEAR",
   FROST_GEAR = "FROST_GEAR",
@@ -786,6 +787,9 @@ export const WICKED_HUNTER_MONSTER_BONUS_PER_STATUS = 0.1
 export const CLANGOROUS_SOULBLAZE_BUFF_MULTIPLIER = 2
 export const WINDY_SANDS_HEAL_RATIO = 0.5
 export const WINDY_SANDS_RADIUS = 4
+export const GOOEY_GLOBULES_THROW_CHANCE = 0.5
+export const GOOEY_GLOBULES_SPEED_LOSS = 20
+export const GOOEY_GLOBULES_ALLY_HEAL = 50
 export const CELL_BRAWLER_STAT_BONUS = 0.5
 export const CELL_BRAWLER_ABILITY_LIFESTEAL = 0.5
 export const CELL_BRAWLER_OVERHEAL_TO_MAX_HP = 0.5
@@ -1265,7 +1269,8 @@ export const HERO_BLESSING_GIFT: { [blessing in Blessing]?: Pkm } = {
   [Blessing.WICKED_HUNTER]: Pkm.HISUI_SNEASEL,
   [Blessing.CLANGOROUS_SOULBLAZE]: Pkm.JANGMO_O,
   [Blessing.WINDY_SANDS]: Pkm.HIPPOPOTAS,
-  [Blessing.THUNDER_AND_LIGHTNING]: Pkm.TOXEL
+  [Blessing.THUNDER_AND_LIGHTNING]: Pkm.TOXEL,
+  [Blessing.GOOEY_GLOBULES]: Pkm.SLIGOO
 }
 
 export const HERO_BLESSING_POKEMON: { [blessing in Blessing]?: Pkm[] } = {
@@ -1357,7 +1362,8 @@ export const HERO_BLESSING_FAMILY: { [blessing in Blessing]?: Pkm } = {
   [Blessing.WICKED_HUNTER]: Pkm.HISUI_SNEASEL,
   [Blessing.CLANGOROUS_SOULBLAZE]: Pkm.JANGMO_O,
   [Blessing.WINDY_SANDS]: Pkm.HIPPOPOTAS,
-  [Blessing.THUNDER_AND_LIGHTNING]: Pkm.TOXEL
+  [Blessing.THUNDER_AND_LIGHTNING]: Pkm.TOXEL,
+  [Blessing.GOOEY_GLOBULES]: Pkm.GOOMY
 }
 
 // hero Wishes whose effect is not tied to one unit: they keep their family for

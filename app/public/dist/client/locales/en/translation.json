@@ -6430,6 +6430,10 @@
 			"name": "Mole Maze",
 			"description": "Gain a Drilbur. Your STRONGEST Drilbur's ability is replaced with Mole Maze, and it permanently gains 1 AP each time it KO's an enemy."
 		},
+		"GOOEY_GLOBULES": {
+			"name": "Gooey Globules",
+			"description": "Gain a Sliggoo. When your STRONGEST Goomy is hit by an attack, it has a [50,LK]% chance to throw a blob at a random ADJACENT Pokémon. Enemies hit take TRUE damage equal to its DEF and lose 20 SPEED; allies hit heal 50 HP."
+		},
 		"THUNDER_AND_LIGHTNING": {
 			"name": "Thunder and Lightning",
 			"description": "Gain a Toxel and move to a random Toxel region if not in one. The first time a Toxel evolves, also gain the other Toxtricity form, and both forms count towards your synergies. Each of your SOUND Pokémon casts Electrify on itself after its first ability of the fight."

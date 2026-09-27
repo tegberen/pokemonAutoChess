@@ -495,6 +495,7 @@ Every balance change on this server, newest first.
 - Magnetic Absorption | damage [80,80,80,120] → [20,40,80,120] per STAR, so Sandy Shocks is unchanged
 
 **Wishes**
+- Gooey Globules {{new}} | Gain a Sliggoo. When your STRONGEST Goomy is hit by an attack, it has a [50,LK]% chance to throw a blob at a random ADJACENT Pokémon. Enemies hit take TRUE damage equal to its DEF and lose 20 SPEED; allies hit heal 50 HP
 - Thunder and Lightning {{new}} | Gain a Toxel and move to a random Toxel region if not in one. The first time a Toxel evolves, also gain the other Toxtricity form, and both forms count towards your synergies. Each of your SOUND Pokémon casts Electrify on itself after its first ability of the fight
 - Windy Sands {{new}} | Gain a Hippopotas and add it to the pool. Your STRONGEST Hippopotas heals for 50% of the SANDSTORM_DAMAGE taken by enemies within 4 tiles. When it casts its ability, enemies caught in it are pulled 1 tile towards it
 - Clangorous Soulblaze {{new}} | Gain a Jangmo-o and move to a random Jangmo-o region if not in one. Your STRONGEST Jangmo-o's ability only affects itself, but grants twice the stats. When it is KO'd, it passes the stats it gained this way to allies within its RANGE

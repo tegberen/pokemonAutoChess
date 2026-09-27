@@ -1196,6 +1196,50 @@ const MAGNETIC_ABSORPTION_SPARK_FLIGHT = 420
 
 const CLANGOROUS_SOULBLAZE_TINT = 0xff7a1a
 
+// Sliggoo's pale lilac
+const GOOEY_GLOBULES_TINT = 0xd2b4f0
+const GOOEY_GLOBULES_FLIGHT = 450
+const GOOEY_GLOBULES_ARC_HEIGHT = 55
+const GOOEY_GLOBULES_GLOBULE_SCALE = 0.4
+
+function gooeyGlobulesBlobAnimation(args: AbilityAnimationArgs) {
+  const { scene, positionX, positionY, targetX, targetY, flip } = args
+  const [startX, startY] = transformEntityCoordinates(positionX, positionY, flip)
+  const [endX, endY] = transformEntityCoordinates(targetX, targetY, flip)
+  const blob = scene.add
+    .sprite(startX, startY, "abilities", "GOOEY_GLOBULE/000.png")
+    .setScale(GOOEY_GLOBULES_GLOBULE_SCALE)
+    .setDepth(DEPTH.ABILITY)
+  scene.tweens.addCounter({
+    from: 0,
+    to: 1,
+    duration: GOOEY_GLOBULES_FLIGHT,
+    onUpdate: (tween) => {
+      const progress = tween.getValue() ?? 1
+      const arc = 4 * progress * (1 - progress) * GOOEY_GLOBULES_ARC_HEIGHT
+      blob.setPosition(
+        startX + (endX - startX) * progress,
+        startY + (endY - startY) * progress - arc
+      )
+      // a jelly wobble: it stretches on the way up and squashes coming down
+      const wobble = Math.sin(progress * Math.PI * 3) * 0.25
+      blob.setScale(
+        GOOEY_GLOBULES_GLOBULE_SCALE * (1 + wobble),
+        GOOEY_GLOBULES_GLOBULE_SCALE * (1 - wobble)
+      )
+    },
+    onComplete: () => {
+      blob.destroy()
+      onTarget({
+        ability: "ACID_SPRAY",
+        scale: 1.5,
+        tint: GOOEY_GLOBULES_TINT
+      })(args)
+      onTarget({ ability: "PUFF_PINK", scale: 1.5 })(args)
+    }
+  })
+}
+
 const SALT_SHAKER_FLIGHT = 600
 const SALT_SHAKER_ARC_HEIGHT = 110
 const SALT_SHAKER_ICON_SCALE = 0.75
@@ -4316,6 +4360,7 @@ export const AbilitiesAnimations: {
   }),
   ["GALVANIC_RAIN_THROW"]: galvanicRainThrowAnimation,
   ["SALT_SHAKER_ROCK_SALT"]: saltShakerRockSaltAnimation,
+  ["GOOEY_GLOBULES_BLOB"]: gooeyGlobulesBlobAnimation,
   ["CLANGOROUS_SOULBLAZE_BURST"]: [
     onCaster({
       ability: Ability.CLANGOROUS_SOUL,

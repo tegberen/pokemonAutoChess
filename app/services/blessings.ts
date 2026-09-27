@@ -3299,6 +3299,9 @@ export const blessingEffectService: {
   [Blessing.THUNDER_AND_LIGHTNING]: (player, state, room) =>
     heroBlessingEffect(Blessing.THUNDER_AND_LIGHTNING, player, state, room),
 
+  [Blessing.GOOEY_GLOBULES]: (player, state, room) =>
+    heroBlessingEffect(Blessing.GOOEY_GLOBULES, player, state, room),
+
   // an unlock like Aurora Borealis: Cranidos joins this player's own shop pool
   [Blessing.PRIMAL_RAMPAGE]: (player) => {
     if (player.fossilUnlocksRef) player.fossilUnlocksRef.revealed = true
