@@ -525,6 +525,9 @@ Every balance change on this server, newest first.
 - Galvanic Rain {{new}} | Gain an Alolan Graveler and move to a random ELECTRIC region if not in one. Your STRONGEST Alolan Geodude's ability is replaced with Electric Surge, it gets +2 RANGE, and its attacks have a [10,LK]% chance to throw an Alolan Geodude with full PP next to the target
 - Mega Sol, Flytrap and Spore Clouds | their item no longer drops into your inventory when taken before the pot is unlocked
 
+**Interface**
+- Wish cosmetic marker {{new}} | a small wand icon in the corner of a Wish card means winning with it unlocks an avatar cosmetic you do not have yet
+
 ### 26 September 2026
 
 **Game Mode**

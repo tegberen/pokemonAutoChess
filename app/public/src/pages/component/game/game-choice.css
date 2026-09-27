@@ -121,6 +121,7 @@
 
 /* grows with its text so it reads whole, and only scrolls past the screen */
 .game-choice-blessing-slot > .my-box {
+  position: relative;
   perspective: 700px;
   flex: 1;
   box-sizing: border-box;
@@ -135,6 +136,16 @@
   justify-content: start;
   text-align: center;
   gap: 0.5em;
+}
+
+.blessing-cosmetic-marker {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  z-index: 2;
+  width: 1em;
+  height: 1em;
+  opacity: 0.8;
 }
 
 .game-choice-blessing-slot > .my-box.clickable:hover {

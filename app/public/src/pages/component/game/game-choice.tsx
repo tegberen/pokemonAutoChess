@@ -33,6 +33,11 @@ import {
 import { pickChoice, pickArmoryGift, rerollChoice } from "../../../network"
 import { Blessings } from "../../../../../config/game/blessings"
 import type { Blessing } from "../../../../../types/enum/Blessing"
+import {
+  AVATAR_COSMETIC_BLESSINGS,
+  type AvatarCosmeticId,
+  getUnlockedAvatarCosmetics
+} from "../../../../../types/enum/AvatarCosmetic"
 import { GuideLessons } from "../../../../../core/guide/lessons"
 import { useGuideIsReading } from "../guide/use-guide-action"
 import { GameMode } from "../../../../../types/enum/Game"
@@ -58,6 +63,16 @@ function isPokemonChoice(choice: PlayerChoice): boolean {
 export default function GameChoice() {
   const { t } = useTranslation()
   const connectedPlayer = useAppSelector(selectConnectedPlayer)
+  const profile = useAppSelector((state) => state.network.profile)
+  const unlockedAvatarCosmetics = getUnlockedAvatarCosmetics(profile)
+  const lockedCosmeticBlessings = new Set<Blessing>(
+    Object.entries(AVATAR_COSMETIC_BLESSINGS)
+      .filter(
+        ([cosmetic]) =>
+          !unlockedAvatarCosmetics.has(cosmetic as AvatarCosmeticId)
+      )
+      .map(([, blessing]) => blessing)
+  )
   const specialGameRule = useAppSelector((state) => state.game.specialGameRule)
   const gameMode = useAppSelector((state) => state.game.gameMode)
   const guideSynergy = useAppSelector((state) => state.game.guideSynergy)
@@ -317,6 +332,14 @@ export default function GameChoice() {
                   </h3>
                   <BlessingDescription blessing={blessing} />
                 </div>
+                {lockedCosmeticBlessings.has(blessing) && (
+                  <img
+                    className="blessing-cosmetic-marker"
+                    src="/assets/icons/blessing_stats.svg"
+                    alt=""
+                    title="Win a game with this Wish to unlock an avatar cosmetic"
+                  />
+                )}
               </div>
               <button
                 className="bubbly blue blessing-reroll-button"
