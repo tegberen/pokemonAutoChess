@@ -495,6 +495,7 @@ Every balance change on this server, newest first.
 - Magnetic Absorption | damage [80,80,80,120] → [20,40,80,120] per STAR, so Sandy Shocks is unchanged
 
 **Wishes**
+- Cyber Blade {{new}} | Gain a Honedge. After your STRONGEST Honedge casts King's Shield, its ability is replaced with Laser Blade and its max PP is set to 50
 - Salt Shaker {{new}} | Gain a Nacli. Your STRONGEST Nacli's Salt Cure reaches [2,3,4] tiles. When a BURN enemy is KO'd within that range, the closest ally without RUNE_PROTECT gains the effect of ROCK_SALT
 - Primal Rampage {{new}} | Unlock Cranidos. Your STRONGEST Cranidos's ability is replaced with Torment. Each time it KO's an enemy, it takes 20 PHYSICAL retaliation damage and regains 40 PP
 - Dreepy Deployment {{new}} | Gain a Dreepy and move to a random Dreepy region if not in one. Each dart of your STRONGEST Dreepy has a [10,LK]% chance to deploy a Dreepy with full PP 2 tiles from the target, or always if the ability KO's the target

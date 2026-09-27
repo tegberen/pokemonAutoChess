@@ -1,8 +1,15 @@
+import {
+  Blessing,
+  CYBER_BLADE_MAX_PP
+} from "../../types/enum/Blessing"
+import { Ability } from "../../types/enum/Ability"
 import { Pkm, PkmIndex } from "../../types/enum/Pokemon"
 import type { Board } from "../board"
 import type { PokemonEntity } from "../pokemon-entity"
 import { DelayedCommand } from "../simulation-command"
 import { AbilityStrategy } from "./ability-strategy"
+
+const KING_SHIELD_FORM_CHANGE_DELAY = 1500
 
 export class KingShieldStrategy extends AbilityStrategy {
   process(
@@ -36,7 +43,7 @@ export class KingShieldStrategy extends AbilityStrategy {
           if (pokemon.player) {
             pokemon.player.pokemonsPlayed.add(Pkm.AEGISLASH_BLADE)
           }
-        }, 1500)
+        }, KING_SHIELD_FORM_CHANGE_DELAY)
       )
     } else if (pokemon.name === Pkm.AEGISLASH_BLADE) {
       pokemon.commands.push(
@@ -46,7 +53,18 @@ export class KingShieldStrategy extends AbilityStrategy {
           pokemon.addSpecialDefense(5, pokemon, 1, crit)
           pokemon.name = Pkm.AEGISLASH
           pokemon.index = PkmIndex[Pkm.AEGISLASH]
-        }, 1500)
+        }, KING_SHIELD_FORM_CHANGE_DELAY)
+      )
+    }
+
+    // pushed after the form change and on the same delay, so Aegislash is
+    // already in Blade form when Laser Blade first reads its ATK
+    if (pokemon.heroBlessings?.has(Blessing.CYBER_BLADE)) {
+      pokemon.commands.push(
+        new DelayedCommand(() => {
+          pokemon.skill = Ability.LASER_BLADE
+          pokemon.maxPP = CYBER_BLADE_MAX_PP
+        }, KING_SHIELD_FORM_CHANGE_DELAY)
       )
     }
   }

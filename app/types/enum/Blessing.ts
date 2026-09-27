@@ -199,6 +199,7 @@ export enum Blessing {
   DREEPY_DEPLOYMENT = "DREEPY_DEPLOYMENT",
   PRIMAL_RAMPAGE = "PRIMAL_RAMPAGE",
   SALT_SHAKER = "SALT_SHAKER",
+  CYBER_BLADE = "CYBER_BLADE",
   SILVER_SPOON = "SILVER_SPOON",
   ICE_SPEAR = "ICE_SPEAR",
   FROST_GEAR = "FROST_GEAR",
@@ -775,6 +776,7 @@ export const DREEPY_DEPLOYMENT_SPAWN_DISTANCE = 2
 export const PRIMAL_RAMPAGE_KO_RECOIL = 20
 export const PRIMAL_RAMPAGE_KO_PP = 40
 export const SALT_SHAKER_RADIUS_BY_STAR = [2, 3, 4]
+export const CYBER_BLADE_MAX_PP = 50
 export const CELL_BRAWLER_STAT_BONUS = 0.5
 export const CELL_BRAWLER_ABILITY_LIFESTEAL = 0.5
 export const CELL_BRAWLER_OVERHEAL_TO_MAX_HP = 0.5
@@ -1249,7 +1251,8 @@ export const HERO_BLESSING_GIFT: { [blessing in Blessing]?: Pkm } = {
   [Blessing.GALVANIC_RAIN]: Pkm.ALOLAN_GRAVELER,
   [Blessing.PRIMAL_MAGNETISM]: Pkm.MAGNEMITE,
   [Blessing.DREEPY_DEPLOYMENT]: Pkm.DREEPY,
-  [Blessing.SALT_SHAKER]: Pkm.NACLI
+  [Blessing.SALT_SHAKER]: Pkm.NACLI,
+  [Blessing.CYBER_BLADE]: Pkm.HONEDGE
 }
 
 export const HERO_BLESSING_POKEMON: { [blessing in Blessing]?: Pkm[] } = {
@@ -1336,7 +1339,8 @@ export const HERO_BLESSING_FAMILY: { [blessing in Blessing]?: Pkm } = {
   [Blessing.PRIMAL_MAGNETISM]: Pkm.MAGNEMITE,
   [Blessing.DREEPY_DEPLOYMENT]: Pkm.DREEPY,
   [Blessing.PRIMAL_RAMPAGE]: Pkm.CRANIDOS,
-  [Blessing.SALT_SHAKER]: Pkm.NACLI
+  [Blessing.SALT_SHAKER]: Pkm.NACLI,
+  [Blessing.CYBER_BLADE]: Pkm.HONEDGE
 }
 
 /* hero blessings that also relocate the player to a region where their family
