@@ -6430,6 +6430,10 @@
 			"name": "Mole Maze",
 			"description": "Gain a Drilbur. Your STRONGEST Drilbur's ability is replaced with Mole Maze, and it permanently gains 1 AP each time it KO's an enemy."
 		},
+		"SWAMP_FATHER": {
+			"name": "Swamp Father",
+			"description": "Gain a Mudkip and move to a random Mudkip region if not in one. Your Mudkip gains GRASS synergy. At the start of combat, your STRONGEST Mudkip hydrates ADJACENT GRASS allies: they become AQUATIC and gain all the effects of active AQUATIC synergy. It permanently gains 5 AP for each berry it eats."
+		},
 		"ROLLING_SNOWBALL": {
 			"name": "Rolling Snowball",
 			"description": "Gain a Spheal. When your STRONGEST Spheal's Ice Ball KO's its target, it rolls through to the cell behind it and gains 20 SHIELD and 50 PP."
@@ -6444,7 +6448,7 @@
 		},
 		"UNSEALED_GOLEMANCY": {
 			"name": "Unsealed Golemancy",
-			"description": "Gain a Golett and add it to the pool. Your Golett count as MONSTER. When your STRONGEST Golett KO's an enemy, it summons a Golett for a 1 STAR target, a Golurk for 2 STAR, and once per fight a random Regi for 3 STAR."
+			"description": "Gain a Golett and add it to the pool. Your Golett gains MONSTER synergy. When your STRONGEST Golett KO's an enemy, it summons a Golett for a 1 STAR target, a Golurk for 2 STAR, and once per fight a random Regi for 3 STAR."
 		},
 		"SHINTO_SHRINE_MIRROR": {
 			"name": "Shinto Shrine Mirror",

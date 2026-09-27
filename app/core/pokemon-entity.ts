@@ -48,6 +48,7 @@ import {
   ZAP_CHAIN_DAMAGE_RATIO,
   VAMPIRIC_HEAL_RATIO,
   BERRY_GROWTH_PERMANENT_HP,
+  SWAMP_FATHER_AP_PER_BERRY,
   BERRY_GROWTH_GOLDEN_PERMANENT_HP,
   GRUDGE_CURSE_CHANCE,
   GRUDGE_CURSE_DURATION,
@@ -2197,6 +2198,10 @@ flyAway(
         ? BERRY_GROWTH_GOLDEN_PERMANENT_HP
         : BERRY_GROWTH_PERMANENT_HP
       this.addMaxHP(permanentHp, this, 0, false, true)
+    }
+
+    if (this.heroBlessings.has(Blessing.SWAMP_FATHER)) {
+      this.addAbilityPower(SWAMP_FATHER_AP_PER_BERRY, this, 0, false, true)
     }
 
     switch (berry) {

@@ -4595,6 +4595,33 @@ export default class Simulation extends Schema implements ISimulation {
       shuttleBusChampion.pp = SHUTTLE_BUS_MAX_PP
     }
 
+    const swampFatherChampion = championOf.get(Blessing.SWAMP_FATHER)
+    if (swampFatherChampion) {
+      const activeAquaticEffects = SynergyTiers[Synergy.AQUATIC].filter(
+        (aquaticEffect) => teamEffects.has(aquaticEffect)
+      )
+      this.board
+        .getAdjacentCells(
+          swampFatherChampion.positionX,
+          swampFatherChampion.positionY
+        )
+        .forEach((cell) => {
+          const ally = cell.value
+          if (
+            !ally ||
+            ally.team !== swampFatherChampion.team ||
+            !ally.types.has(Synergy.GRASS) ||
+            ally.types.has(Synergy.AQUATIC)
+          ) {
+            return
+          }
+          ally.types.add(Synergy.AQUATIC)
+          activeAquaticEffects.forEach((aquaticEffect) =>
+            this.applyEffect(ally, aquaticEffect)
+          )
+        })
+    }
+
     const cursedCoffinChampion = championOf.get(Blessing.CURSED_COFFIN)
     if (cursedCoffinChampion) {
       cursedCoffinChampion.effectsSet.add(

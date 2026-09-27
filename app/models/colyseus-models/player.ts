@@ -743,6 +743,13 @@ export default class Player extends Schema implements IPlayer {
         }
       })
     }
+    if (this.blessings?.includes(Blessing.SWAMP_FATHER)) {
+      pokemons.forEach((pokemon) => {
+        if (PkmFamily[pokemon.name] === Pkm.MUDKIP) {
+          pokemon.types.add(Synergy.GRASS)
+        }
+      })
+    }
     if (this.blessings?.includes(Blessing.UNSEALED_GOLEMANCY)) {
       pokemons.forEach((pokemon) => {
         if (PkmFamily[pokemon.name] === Pkm.GOLETT) {

@@ -213,6 +213,7 @@ export enum Blessing {
   LIGHT_OF_OLIVINE = "LIGHT_OF_OLIVINE",
   CURSED_COFFIN = "CURSED_COFFIN",
   ROLLING_SNOWBALL = "ROLLING_SNOWBALL",
+  SWAMP_FATHER = "SWAMP_FATHER",
   SILVER_SPOON = "SILVER_SPOON",
   ICE_SPEAR = "ICE_SPEAR",
   FROST_GEAR = "FROST_GEAR",
@@ -819,6 +820,7 @@ export const CURSED_COFFIN_PP_DRAIN = 5
 export const CURSED_COFFIN_DRAIN_INTERVAL = 1000
 export const ROLLING_SNOWBALL_SHIELD = 20
 export const ROLLING_SNOWBALL_PP = 50
+export const SWAMP_FATHER_AP_PER_BERRY = 5
 export const CELL_BRAWLER_STAT_BONUS = 0.5
 export const CELL_BRAWLER_ABILITY_LIFESTEAL = 0.5
 export const CELL_BRAWLER_OVERHEAL_TO_MAX_HP = 0.5
@@ -1310,7 +1312,8 @@ export const HERO_BLESSING_GIFT: { [blessing in Blessing]?: Pkm } = {
   [Blessing.UNSEALED_GOLEMANCY]: Pkm.GOLETT,
   [Blessing.LIGHT_OF_OLIVINE]: Pkm.FLAFFY,
   [Blessing.CURSED_COFFIN]: Pkm.YAMASK,
-  [Blessing.ROLLING_SNOWBALL]: Pkm.SPHEAL
+  [Blessing.ROLLING_SNOWBALL]: Pkm.SPHEAL,
+  [Blessing.SWAMP_FATHER]: Pkm.MUDKIP
 }
 
 export const HERO_BLESSING_POKEMON: { [blessing in Blessing]?: Pkm[] } = {
@@ -1411,7 +1414,8 @@ export const HERO_BLESSING_FAMILY: { [blessing in Blessing]?: Pkm } = {
   [Blessing.UNSEALED_GOLEMANCY]: Pkm.GOLETT,
   [Blessing.LIGHT_OF_OLIVINE]: Pkm.MAREEP,
   [Blessing.CURSED_COFFIN]: Pkm.YAMASK,
-  [Blessing.ROLLING_SNOWBALL]: Pkm.SPHEAL
+  [Blessing.ROLLING_SNOWBALL]: Pkm.SPHEAL,
+  [Blessing.SWAMP_FATHER]: Pkm.MUDKIP
 }
 
 // hero Wishes whose effect is not tied to one unit: they keep their family for
@@ -1434,7 +1438,8 @@ export const HERO_BLESSING_MOVES_REGION: Blessing[] = [
   Blessing.CLANGOROUS_SOULBLAZE,
   Blessing.THUNDER_AND_LIGHTNING,
   Blessing.LUNARIAN,
-  Blessing.SHINTO_SHRINE_MIRROR
+  Blessing.SHINTO_SHRINE_MIRROR,
+  Blessing.SWAMP_FATHER
 ]
 
 /* these hero blessings keep their state on the simulation rather than on the

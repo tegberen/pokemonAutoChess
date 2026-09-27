@@ -498,10 +498,11 @@ Every balance change on this server, newest first.
 - ELDER_CRYSTAL | a 2 STAR ROCK Pokémon holding a STAR_PIECE can now be crystallised with it
 
 **Wishes**
+- Swamp Father {{new}} | Gain a Mudkip and move to a random Mudkip region if not in one. Your Mudkip gains GRASS synergy. At the start of combat, your STRONGEST Mudkip hydrates ADJACENT GRASS allies: they become AQUATIC and gain all the effects of active AQUATIC synergy. It permanently gains 5 AP for each berry it eats
 - Rolling Snowball {{new}} | Gain a Spheal. When your STRONGEST Spheal's Ice Ball KO's its target, it rolls through to the cell behind it and gains 20 SHIELD and 50 PP
 - Cursed Coffin {{new}} | Gain a Yamask and add it to the pool. Your STRONGEST Yamask no longer attacks. Instead, every second it drains 15 HP and 5 PP from each ADJACENT enemy. Its Spite drains from the target and all ADJACENT enemies, and heals it for the PP drained
 - Light of Olivine {{new}} | Gain a Flaaffy. When your STRONGEST Mareep KO's an enemy with its ability, it gains your LIGHT spot's effects. If it already has them, your STRONGEST ally without them gains them instead
-- Unsealed Golemancy {{new}} | Gain a Golett and add it to the pool. Your Golett count as MONSTER. When your STRONGEST Golett KO's an enemy, it summons a Golett for a 1 STAR target, a Golurk for 2 STAR, and once per fight a random Regi for 3 STAR
+- Unsealed Golemancy {{new}} | Gain a Golett and add it to the pool. Your Golett gains MONSTER synergy. When your STRONGEST Golett KO's an enemy, it summons a Golett for a 1 STAR target, a Golurk for 2 STAR, and once per fight a random Regi for 3 STAR
 - Shinto Shrine Mirror {{new}} | Gain a Morgrem and move to a random Impidimp region if not in one. Your STRONGEST Impidimp uses Reflect at the start of combat. Every 6 seconds, it uses Reflect if it has taken more PHYSICAL than SPECIAL damage this fight, otherwise Magic Bounce
 - Lunarian {{new}} | Gain a Clefairy and move to a random Cleffa region if not in one. Your STRONGEST Cleffa's Metronome casts legendary abilities in a set order: an attack, then a disruption, then a utility, on repeat. Its LUCK no longer affects the ability picked, but gives a [10,LK]% chance to cast it 1 STAR higher
 - Fleur de Lure {{new}} | Gain a strong Fomantis and add it to the pool. Once per cast, when your STRONGEST Fomantis reaches 80% PP, the 3 closest enemies are CHARM for 3 seconds. Its Solar Blade always crits CHARM enemies, and executes CHARM BUG enemies
