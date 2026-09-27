@@ -2884,7 +2884,10 @@ const weatherRockAwakeningEffect = new OnItemDroppedEffect(
         (player.blessings?.includes(Blessing.CRYSTAL_CLUSTERS)
           ? CRYSTAL_CLUSTERS_SIMULTANEOUS
           : 1) ||
-      (item === Item.ELDER_CRYSTAL && pokemon.stars < 3)
+      // STAR_PIECE's extra star only lands on the fight entity, so it is
+      // counted here by hand for the planning board
+      (item === Item.ELDER_CRYSTAL &&
+        pokemon.stars + (pokemon.items.has(Item.STAR_PIECE) ? 1 : 0) < 3)
     ) {
       return false // reject: the rock stays on the bench
     }

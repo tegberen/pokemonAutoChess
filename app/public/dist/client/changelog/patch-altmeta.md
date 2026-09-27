@@ -494,6 +494,9 @@ Every balance change on this server, newest first.
 - Dragon Darts | darts now hit one after another, and stop once the target is KO'd
 - Magnetic Absorption | damage [80,80,80,120] → [20,40,80,120] per STAR, so Sandy Shocks is unchanged
 
+**Items**
+- ELDER_CRYSTAL | a 2 STAR ROCK Pokémon holding a STAR_PIECE can now be crystallised with it
+
 **Wishes**
 - Crystal Guardian {{new}} | Gain an Onix and add it to the pool. Your STRONGEST Onix can crystallise again with other weather rocks: only its first crystal grants an awakening effect, each further one adds its synergy. It permanently gains 20 max HP for every crystallisation it completes. The first time you get a Steelix, gain 3 random weather rocks
 - Gooey Globules {{new}} | Gain a Sliggoo. When your STRONGEST Goomy is hit by an attack, it has a [50,LK]% chance to throw a blob at a random ADJACENT Pokémon. Enemies hit take TRUE damage equal to its DEF and lose 20 SPEED; allies hit heal 50 HP
