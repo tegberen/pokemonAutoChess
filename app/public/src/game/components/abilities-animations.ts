@@ -1196,6 +1196,25 @@ const MAGNETIC_ABSORPTION_SPARK_FLIGHT = 420
 
 const CLANGOROUS_SOULBLAZE_TINT = 0xff7a1a
 
+const CURSED_COFFIN_WISP_FLIGHT = 500
+
+function cursedCoffinDrainAnimation(
+  wispDelays: number[],
+  wispScale: number
+): AbilityAnimation[] {
+  return wispDelays.map((delay, index) =>
+    projectile({
+      ability: "GHOST/range",
+      textureKey: "attacks",
+      startCoords: "target",
+      endCoords: "caster",
+      duration: CURSED_COFFIN_WISP_FLIGHT,
+      scale: wispScale - index * 0.2,
+      delay
+    })
+  )
+}
+
 // Sliggoo's pale lilac
 const GOOEY_GLOBULES_TINT = 0xd2b4f0
 const GOOEY_GLOBULES_FLIGHT = 450
@@ -4361,6 +4380,11 @@ export const AbilitiesAnimations: {
   ["GALVANIC_RAIN_THROW"]: galvanicRainThrowAnimation,
   ["SALT_SHAKER_ROCK_SALT"]: saltShakerRockSaltAnimation,
   ["GOOEY_GLOBULES_BLOB"]: gooeyGlobulesBlobAnimation,
+  ["CURSED_COFFIN_DRAIN"]: cursedCoffinDrainAnimation([0, 150], 1.2),
+  ["CURSED_COFFIN_SPITE_DRAIN"]: [
+    onTarget({ ability: Ability.ACID_SPRAY, scale: 2 }),
+    ...cursedCoffinDrainAnimation([0, 100, 200, 300], 1.8)
+  ],
   ["CLANGOROUS_SOULBLAZE_BURST"]: [
     onCaster({
       ability: Ability.CLANGOROUS_SOUL,

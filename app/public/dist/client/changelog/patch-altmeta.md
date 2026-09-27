@@ -498,6 +498,7 @@ Every balance change on this server, newest first.
 - ELDER_CRYSTAL | a 2 STAR ROCK Pokémon holding a STAR_PIECE can now be crystallised with it
 
 **Wishes**
+- Cursed Coffin {{new}} | Gain a Yamask and add it to the pool. Your STRONGEST Yamask no longer attacks. Instead, every second it drains 15 HP and 5 PP from each ADJACENT enemy. Its Spite drains from the target and all ADJACENT enemies, and heals it for the PP drained
 - Light of Olivine {{new}} | Gain a Flaaffy. When your STRONGEST Mareep KO's an enemy with its ability, it gains your LIGHT spot's effects. If it already has them, your STRONGEST ally without them gains them instead
 - Unsealed Golemancy {{new}} | Gain a Golett and add it to the pool. Your Golett count as MONSTER. When your STRONGEST Golett KO's an enemy, it summons a Golett for a 1 STAR target, a Golurk for 2 STAR, and once per fight a random Regi for 3 STAR
 - Shinto Shrine Mirror {{new}} | Gain a Morgrem and move to a random Impidimp region if not in one. Your STRONGEST Impidimp uses Reflect at the start of combat. Every 6 seconds, it uses Reflect if it has taken more PHYSICAL than SPECIAL damage this fight, otherwise Magic Bounce

@@ -2,6 +2,7 @@ import { BASE_PROJECTILE_SPEED } from "../config"
 import type Player from "../models/colyseus-models/player"
 import type { IPokemonEntity } from "../types"
 import delays from "../types/delays.json"
+import { Blessing } from "../types/enum/Blessing"
 import { EffectEnum } from "../types/enum/Effect"
 import { PokemonActionState } from "../types/enum/Game"
 import { distanceC } from "../utils/distance"
@@ -92,7 +93,7 @@ export default class AttackingState extends PokemonState {
         if (pokemon.pp >= pokemon.maxPP && pokemon.canCast) {
           // CAST ABILITY
           castAbility(AbilityStrategies[pokemon.skill], pokemon, board, target)
-        } else {
+        } else if (!pokemon.heroBlessings.has(Blessing.CURSED_COFFIN)) {
           // BASIC ATTACK
           pokemon.count.attackCount++
           const { delayBeforeShoot, travelTime } = getAttackTimings(pokemon)

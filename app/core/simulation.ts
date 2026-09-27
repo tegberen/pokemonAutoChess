@@ -138,6 +138,9 @@ import {
   SHINTO_SHRINE_MIRROR_INTERVAL,
   SHINTO_SHRINE_MIRROR_DURATION,
   UNSEALED_GOLEMANCY_REGIS,
+  CURSED_COFFIN_HP_DRAIN,
+  CURSED_COFFIN_PP_DRAIN,
+  CURSED_COFFIN_DRAIN_INTERVAL,
   GOOEY_GLOBULES_SPEED_LOSS,
   GOOEY_GLOBULES_ALLY_HEAL,
   PRIMAL_RAMPAGE_KO_PP,
@@ -4590,6 +4593,43 @@ export default class Simulation extends Schema implements ISimulation {
     if (shuttleBusChampion) {
       shuttleBusChampion.maxPP = SHUTTLE_BUS_MAX_PP
       shuttleBusChampion.pp = SHUTTLE_BUS_MAX_PP
+    }
+
+    const cursedCoffinChampion = championOf.get(Blessing.CURSED_COFFIN)
+    if (cursedCoffinChampion) {
+      cursedCoffinChampion.effectsSet.add(
+        new PeriodicEffect(
+          (pokemon, board) => {
+            board
+              .getAdjacentCells(pokemon.positionX, pokemon.positionY)
+              .forEach((cell) => {
+                const enemy = cell.value
+                if (!enemy || enemy.team === pokemon.team || enemy.hp <= 0) {
+                  return
+                }
+                const { takenDamage } = enemy.handleSpecialDamage(
+                  CURSED_COFFIN_HP_DRAIN,
+                  board,
+                  AttackType.SPECIAL,
+                  pokemon,
+                  false,
+                  false
+                )
+                pokemon.broadcastAbility({
+                  skill: "CURSED_COFFIN_DRAIN",
+                  targetX: enemy.positionX,
+                  targetY: enemy.positionY
+                })
+                pokemon.handleHeal(takenDamage, pokemon, 0, false)
+                const ppBefore = enemy.pp
+                enemy.addPP(-CURSED_COFFIN_PP_DRAIN, pokemon, 0, false)
+                pokemon.addPP(ppBefore - enemy.pp, pokemon, 0, false)
+              })
+          },
+          Ability.SPITE,
+          CURSED_COFFIN_DRAIN_INTERVAL
+        )
+      )
     }
 
     const lightOfOlivineChampion = championOf.get(Blessing.LIGHT_OF_OLIVINE)

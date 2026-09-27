@@ -211,6 +211,7 @@ export enum Blessing {
   SHINTO_SHRINE_MIRROR = "SHINTO_SHRINE_MIRROR",
   UNSEALED_GOLEMANCY = "UNSEALED_GOLEMANCY",
   LIGHT_OF_OLIVINE = "LIGHT_OF_OLIVINE",
+  CURSED_COFFIN = "CURSED_COFFIN",
   SILVER_SPOON = "SILVER_SPOON",
   ICE_SPEAR = "ICE_SPEAR",
   FROST_GEAR = "FROST_GEAR",
@@ -812,6 +813,9 @@ export const UNSEALED_GOLEMANCY_REGIS: Pkm[] = [
   Pkm.REGIELEKI,
   Pkm.REGIDRAGO
 ]
+export const CURSED_COFFIN_HP_DRAIN = 15
+export const CURSED_COFFIN_PP_DRAIN = 5
+export const CURSED_COFFIN_DRAIN_INTERVAL = 1000
 export const CELL_BRAWLER_STAT_BONUS = 0.5
 export const CELL_BRAWLER_ABILITY_LIFESTEAL = 0.5
 export const CELL_BRAWLER_OVERHEAL_TO_MAX_HP = 0.5
@@ -1301,7 +1305,8 @@ export const HERO_BLESSING_GIFT: { [blessing in Blessing]?: Pkm } = {
   [Blessing.LUNARIAN]: Pkm.CLEFAIRY,
   [Blessing.SHINTO_SHRINE_MIRROR]: Pkm.MORGREM,
   [Blessing.UNSEALED_GOLEMANCY]: Pkm.GOLETT,
-  [Blessing.LIGHT_OF_OLIVINE]: Pkm.FLAFFY
+  [Blessing.LIGHT_OF_OLIVINE]: Pkm.FLAFFY,
+  [Blessing.CURSED_COFFIN]: Pkm.YAMASK
 }
 
 export const HERO_BLESSING_POKEMON: { [blessing in Blessing]?: Pkm[] } = {
@@ -1400,7 +1405,8 @@ export const HERO_BLESSING_FAMILY: { [blessing in Blessing]?: Pkm } = {
   [Blessing.LUNARIAN]: Pkm.CLEFFA,
   [Blessing.SHINTO_SHRINE_MIRROR]: Pkm.IMPIDIMP,
   [Blessing.UNSEALED_GOLEMANCY]: Pkm.GOLETT,
-  [Blessing.LIGHT_OF_OLIVINE]: Pkm.MAREEP
+  [Blessing.LIGHT_OF_OLIVINE]: Pkm.MAREEP,
+  [Blessing.CURSED_COFFIN]: Pkm.YAMASK
 }
 
 // hero Wishes whose effect is not tied to one unit: they keep their family for
@@ -1455,7 +1461,8 @@ export const HERO_BLESSING_ADDS_TO_POOL: Blessing[] = [
   Blessing.WINDY_SANDS,
   Blessing.CRYSTAL_GUARDIAN,
   Blessing.FLEUR_DE_LURE,
-  Blessing.UNSEALED_GOLEMANCY
+  Blessing.UNSEALED_GOLEMANCY,
+  Blessing.CURSED_COFFIN
 ]
 
 // Item blessings all follow the same shape: picking one hands the player the
