@@ -93,7 +93,10 @@ export default class AttackingState extends PokemonState {
         if (pokemon.pp >= pokemon.maxPP && pokemon.canCast) {
           // CAST ABILITY
           castAbility(AbilityStrategies[pokemon.skill], pokemon, board, target)
-        } else if (!pokemon.heroBlessings.has(Blessing.CURSED_COFFIN)) {
+        } else if (
+          !pokemon.heroBlessings.has(Blessing.CURSED_COFFIN) &&
+          !pokemon.heroBlessings.has(Blessing.SPOOKY_SCARECROW)
+        ) {
           // BASIC ATTACK
           pokemon.count.attackCount++
           const { delayBeforeShoot, travelTime } = getAttackTimings(pokemon)
@@ -114,7 +117,12 @@ export default class AttackingState extends PokemonState {
 
   onEnter(pokemon) {
     super.onEnter(pokemon)
-    pokemon.action = PokemonActionState.ATTACK
+    const hasNoAttackAnimation =
+      pokemon.heroBlessings.has(Blessing.CURSED_COFFIN) ||
+      pokemon.heroBlessings.has(Blessing.SPOOKY_SCARECROW)
+    pokemon.action = hasNoAttackAnimation
+      ? PokemonActionState.IDLE
+      : PokemonActionState.ATTACK
     pokemon.cooldown = 0
   }
 

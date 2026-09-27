@@ -215,6 +215,7 @@ export enum Blessing {
   ROLLING_SNOWBALL = "ROLLING_SNOWBALL",
   SWAMP_FATHER = "SWAMP_FATHER",
   BONEMERANG_RANGER = "BONEMERANG_RANGER",
+  SPOOKY_SCARECROW = "SPOOKY_SCARECROW",
   SILVER_SPOON = "SILVER_SPOON",
   ICE_SPEAR = "ICE_SPEAR",
   FROST_GEAR = "FROST_GEAR",
@@ -826,6 +827,8 @@ export const BONEMERANG_RANGER_RANGE_BONUS = 2
 export const BONEMERANG_RANGER_DAMAGE_LOSS_PER_HIT = 0.2
 export const BONEMERANG_RANGER_MIN_DAMAGE_RATIO = 0.2
 export const BONEMERANG_RANGER_RETURN_DELAY = 500
+export const SPOOKY_SCARECROW_MURKROWS_ON_OWN_KO = 3
+export const SPOOKY_SCARECROW_DEF_PER_ALLY_KO = 5
 export const CELL_BRAWLER_STAT_BONUS = 0.5
 export const CELL_BRAWLER_ABILITY_LIFESTEAL = 0.5
 export const CELL_BRAWLER_OVERHEAL_TO_MAX_HP = 0.5
@@ -1319,7 +1322,8 @@ export const HERO_BLESSING_GIFT: { [blessing in Blessing]?: Pkm } = {
   [Blessing.CURSED_COFFIN]: Pkm.YAMASK,
   [Blessing.ROLLING_SNOWBALL]: Pkm.SPHEAL,
   [Blessing.SWAMP_FATHER]: Pkm.MUDKIP,
-  [Blessing.BONEMERANG_RANGER]: Pkm.CUBONE
+  [Blessing.BONEMERANG_RANGER]: Pkm.CUBONE,
+  [Blessing.SPOOKY_SCARECROW]: Pkm.CACNEA
 }
 
 export const HERO_BLESSING_POKEMON: { [blessing in Blessing]?: Pkm[] } = {
@@ -1422,7 +1426,8 @@ export const HERO_BLESSING_FAMILY: { [blessing in Blessing]?: Pkm } = {
   [Blessing.CURSED_COFFIN]: Pkm.YAMASK,
   [Blessing.ROLLING_SNOWBALL]: Pkm.SPHEAL,
   [Blessing.SWAMP_FATHER]: Pkm.MUDKIP,
-  [Blessing.BONEMERANG_RANGER]: Pkm.CUBONE
+  [Blessing.BONEMERANG_RANGER]: Pkm.CUBONE,
+  [Blessing.SPOOKY_SCARECROW]: Pkm.CACNEA
 }
 
 // hero Wishes whose effect is not tied to one unit: they keep their family for
@@ -1480,7 +1485,8 @@ export const HERO_BLESSING_ADDS_TO_POOL: Blessing[] = [
   Blessing.FLEUR_DE_LURE,
   Blessing.UNSEALED_GOLEMANCY,
   Blessing.CURSED_COFFIN,
-  Blessing.BONEMERANG_RANGER
+  Blessing.BONEMERANG_RANGER,
+  Blessing.SPOOKY_SCARECROW
 ]
 
 // Item blessings all follow the same shape: picking one hands the player the

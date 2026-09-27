@@ -6430,6 +6430,10 @@
 			"name": "Mole Maze",
 			"description": "Gain a Drilbur. Your STRONGEST Drilbur's ability is replaced with Mole Maze, and it permanently gains 1 AP each time it KO's an enemy."
 		},
+		"SPOOKY_SCARECROW": {
+			"name": "Spooky Scarecrow",
+			"description": "Gain a Cacnea and add it to the pool. Your STRONGEST Cacnea cannot move or attack, and its ability is replaced with Spiky Shield. Each time an ally is KO'd, it gains 5 DEF and summons a Murkrow with full PP. When it is KO'd itself, it summons 3 Murkrow instead."
+		},
 		"BONEMERANG_RANGER": {
 			"name": "Bonemerang Ranger",
 			"description": "Gain a Cubone and add it to the pool. Your STRONGEST Cubone gains 2 RANGE and its ability is replaced with Torment. Its attacks throw a bonemerang that hits every enemy in a line on the way out and back. Each hit after the first deals 20% less PHYSICAL, down to 20%, and only the first triggers ON_ATTACK and ON_HIT effects."

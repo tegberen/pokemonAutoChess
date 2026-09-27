@@ -68,7 +68,8 @@ export default class MovingState extends PokemonState {
       } else if (
         pokemon.pp >= pokemon.maxPP &&
         pokemon.canCast &&
-        AbilityStrategies[pokemon.skill]?.requiresTarget === false
+        (AbilityStrategies[pokemon.skill]?.requiresTarget === false ||
+          pokemon.heroBlessings.has(Blessing.SPOOKY_SCARECROW))
       ) {
         castAbility(AbilityStrategies[pokemon.skill], pokemon, board, null)
       } else if (
@@ -80,7 +81,11 @@ export default class MovingState extends PokemonState {
         drumBeat(pokemon, board)
       } else {
         const targetAtSight = this.getNearestTargetAtSight(pokemon, board)
-        if (targetAtSight && pokemon.canMove) {
+        if (
+          targetAtSight &&
+          pokemon.canMove &&
+          !pokemon.heroBlessings.has(Blessing.SPOOKY_SCARECROW)
+        ) {
           this.move(pokemon, board, targetAtSight)
         }
       }

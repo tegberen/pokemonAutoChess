@@ -4599,6 +4599,11 @@ export default class Simulation extends Schema implements ISimulation {
       shuttleBusChampion.pp = SHUTTLE_BUS_MAX_PP
     }
 
+    const spookyScarecrowChampion = championOf.get(Blessing.SPOOKY_SCARECROW)
+    if (spookyScarecrowChampion) {
+      spookyScarecrowChampion.skill = Ability.SPIKY_SHIELD
+    }
+
     const bonemerangRangerChampion = championOf.get(Blessing.BONEMERANG_RANGER)
     if (bonemerangRangerChampion) {
       bonemerangRangerChampion.range += BONEMERANG_RANGER_RANGE_BONUS

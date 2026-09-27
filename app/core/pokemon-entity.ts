@@ -85,6 +85,7 @@ import { isOnBench } from "../utils/board"
 import { distanceC, distanceM } from "../utils/distance"
 import { spreadClangorousSoulblazeBuffs } from "./clangorous-soulblaze"
 import { grantSaltShakerRockSalt } from "./salt-shaker"
+import { summonSpookyScarecrowMurkrows } from "./spooky-scarecrow"
 import { isPlainFunction } from "../utils/function"
 import { chance, pickNRandomIn, pickRandomIn } from "../utils/random"
 import { clamp, max, min, roundToNDigits } from "../utils/number"
@@ -1666,6 +1667,7 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
 
     if (this.status.burn) grantSaltShakerRockSalt(this, board)
     spreadClangorousSoulblazeBuffs(this, board)
+    summonSpookyScarecrowMurkrows(this, board)
 
     /* TOXIC_BURST is owned by the opposing player, since the unit bursting is
        an enemy from the blessing owner's point of view */
