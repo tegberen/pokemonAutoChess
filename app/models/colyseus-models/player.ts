@@ -227,6 +227,7 @@ export default class Player extends Schema implements IPlayer {
   opponents: Map<string, number> = new Map<string, number>()
   titles: Set<Title> = new Set<Title>()
   sinnohsCoolestRewardGranted = false
+  thunderAndLightningFormGranted = false
   artificialItems: Item[] = pickNRandomIn(ArtificialItems, 3)
   buriedItems: (Item | null)[] = initBuriedItems()
   tms: Item[] = pickRandomTMs()
@@ -756,7 +757,10 @@ export default class Player extends Schema implements IPlayer {
         ...(this.blessings?.includes(Blessing.BEAUTY_CONTEST)
           ? [Pkm.FEEBAS]
           : []),
-        ...(this.blessings?.includes(Blessing.COLONY) ? [Pkm.SCATTERBUG] : [])
+        ...(this.blessings?.includes(Blessing.COLONY) ? [Pkm.SCATTERBUG] : []),
+        ...(this.blessings?.includes(Blessing.THUNDER_AND_LIGHTNING)
+          ? [Pkm.TOXEL]
+          : [])
       ],
       this.blessings
     )

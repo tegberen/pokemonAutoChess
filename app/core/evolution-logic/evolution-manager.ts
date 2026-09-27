@@ -28,6 +28,16 @@ import { CountEvolutionHandler } from "./count-evolution-handler"
 import type { EvolutionHandler } from "./evolution-handler"
 import { HatchEvolutionHandler } from "./hatch-evolution-handler"
 import { getHatchTime } from "./hatch-time"
+import PokemonFactory from "../../models/pokemon-factory"
+import {
+  getBenchSize,
+  getFirstAvailablePositionInBench
+} from "../../utils/board"
+
+const TOXTRICITY_OTHER_FORM: Partial<Record<Pkm, Pkm>> = {
+  [Pkm.TOXTRICITY]: Pkm.TOXTRICITY_LOW_KEY,
+  [Pkm.TOXTRICITY_LOW_KEY]: Pkm.TOXTRICITY
+}
 import { ItemEvolutionHandler } from "./item-evolution-handler"
 import { MoneyEvolutionHandler } from "./money-evolution-handler"
 import { PlacementEvolutionHandler } from "./placement-evolution-handler"
@@ -120,6 +130,31 @@ export const EvolutionManager = {
     ) {
       player.items.push(Item.SAFETY_GOGGLES)
       player.sinnohsCoolestRewardGranted = true
+    }
+
+    const otherToxtricityForm = TOXTRICITY_OTHER_FORM[pokemonEvolved.name]
+    if (
+      otherToxtricityForm &&
+      player.blessings?.includes(Blessing.THUNDER_AND_LIGHTNING) &&
+      !player.thunderAndLightningFormGranted
+    ) {
+      const freeBenchX = getFirstAvailablePositionInBench(
+        player.board,
+        getBenchSize(player.blessings)
+      )
+      // a full bench leaves the flag down, so the next Toxtricity still grants it
+      if (freeBenchX !== null) {
+        const otherForm = PokemonFactory.createPokemonFromName(
+          otherToxtricityForm,
+          player
+        )
+        otherForm.positionX = freeBenchX
+        otherForm.positionY = 0
+        player.board.set(otherForm.id, otherForm)
+        otherForm.onAcquired(player)
+        player.thunderAndLightningFormGranted = true
+        player.updateSynergies()
+      }
     }
 
     if (

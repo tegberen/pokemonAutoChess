@@ -203,6 +203,7 @@ export enum Blessing {
   WICKED_HUNTER = "WICKED_HUNTER",
   CLANGOROUS_SOULBLAZE = "CLANGOROUS_SOULBLAZE",
   WINDY_SANDS = "WINDY_SANDS",
+  THUNDER_AND_LIGHTNING = "THUNDER_AND_LIGHTNING",
   SILVER_SPOON = "SILVER_SPOON",
   ICE_SPEAR = "ICE_SPEAR",
   FROST_GEAR = "FROST_GEAR",
@@ -1263,7 +1264,8 @@ export const HERO_BLESSING_GIFT: { [blessing in Blessing]?: Pkm } = {
   [Blessing.CYBER_BLADE]: Pkm.HONEDGE,
   [Blessing.WICKED_HUNTER]: Pkm.HISUI_SNEASEL,
   [Blessing.CLANGOROUS_SOULBLAZE]: Pkm.JANGMO_O,
-  [Blessing.WINDY_SANDS]: Pkm.HIPPOPOTAS
+  [Blessing.WINDY_SANDS]: Pkm.HIPPOPOTAS,
+  [Blessing.THUNDER_AND_LIGHTNING]: Pkm.TOXEL
 }
 
 export const HERO_BLESSING_POKEMON: { [blessing in Blessing]?: Pkm[] } = {
@@ -1354,8 +1356,15 @@ export const HERO_BLESSING_FAMILY: { [blessing in Blessing]?: Pkm } = {
   [Blessing.CYBER_BLADE]: Pkm.HONEDGE,
   [Blessing.WICKED_HUNTER]: Pkm.HISUI_SNEASEL,
   [Blessing.CLANGOROUS_SOULBLAZE]: Pkm.JANGMO_O,
-  [Blessing.WINDY_SANDS]: Pkm.HIPPOPOTAS
+  [Blessing.WINDY_SANDS]: Pkm.HIPPOPOTAS,
+  [Blessing.THUNDER_AND_LIGHTNING]: Pkm.TOXEL
 }
+
+// hero Wishes whose effect is not tied to one unit: they keep their family for
+// the gift and region move, but no unit is marked as their hero in combat
+export const HERO_BLESSINGS_WITHOUT_CHAMPION: Blessing[] = [
+  Blessing.THUNDER_AND_LIGHTNING
+]
 
 /* hero blessings that also relocate the player to a region where their family
    is findable */
@@ -1368,7 +1377,8 @@ export const HERO_BLESSING_MOVES_REGION: Blessing[] = [
   Blessing.GALVANIC_RAIN,
   Blessing.DREEPY_DEPLOYMENT,
   Blessing.WICKED_HUNTER,
-  Blessing.CLANGOROUS_SOULBLAZE
+  Blessing.CLANGOROUS_SOULBLAZE,
+  Blessing.THUNDER_AND_LIGHTNING
 ]
 
 /* these hero blessings keep their state on the simulation rather than on the

@@ -21,19 +21,27 @@ export class ElectrifyStrategy extends AbilityStrategy {
     ) as PokemonEntity[]
     const strongestAlly = getStrongestUnit(nonElectricAllies)
     const buffedUnit = strongestAlly ?? pokemon //  If no ally is found, self-cast instead.
-    const shield = [15, 30, 60, 120][pokemon.stars - 1] ?? 120
-    buffedUnit.status.addElectricField(buffedUnit)
-    buffedUnit.addShield(shield, pokemon, 1, crit)
-    if (buffedUnit.types.has(Synergy.ELECTRIC) === false) {
-      buffedUnit.types.add(Synergy.ELECTRIC)
-      pokemon.simulation.applySynergyEffects(buffedUnit, Synergy.ELECTRIC)
-      if (pokemon.player) {
-        const nbCellBatteries = schemaValues(pokemon.player.items).filter(
-          (item) => item === Item.CELL_BATTERY
-        ).length
-        if (nbCellBatteries > 0) {
-          buffedUnit.addSpeed(2 * nbCellBatteries, pokemon, 0, false)
-        }
+    electrify(pokemon, buffedUnit, crit)
+  }
+}
+
+export function electrify(
+  caster: PokemonEntity,
+  buffedUnit: PokemonEntity,
+  crit: boolean
+) {
+  const shield = [15, 30, 60, 120][caster.stars - 1] ?? 120
+  buffedUnit.status.addElectricField(buffedUnit)
+  buffedUnit.addShield(shield, caster, 1, crit)
+  if (buffedUnit.types.has(Synergy.ELECTRIC) === false) {
+    buffedUnit.types.add(Synergy.ELECTRIC)
+    caster.simulation.applySynergyEffects(buffedUnit, Synergy.ELECTRIC)
+    if (caster.player) {
+      const nbCellBatteries = schemaValues(caster.player.items).filter(
+        (item) => item === Item.CELL_BATTERY
+      ).length
+      if (nbCellBatteries > 0) {
+        buffedUnit.addSpeed(2 * nbCellBatteries, caster, 0, false)
       }
     }
   }

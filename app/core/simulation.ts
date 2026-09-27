@@ -113,6 +113,7 @@ import {
   PROTECT_THE_WEAK_SPEED,
   VAMPIRIC_HEAL_RATIO,
   HERO_BLESSING_FAMILY,
+  HERO_BLESSINGS_WITHOUT_CHAMPION,
   AURORA_BOREALIS_REDUCTION_PER_ACTIVE_SYNERGY,
   FLEXIBILITY_HP_PER_SYNERGY_ITEM,
   FLOWER_QUEEN_MAX_PP_REDUCTION,
@@ -297,6 +298,7 @@ import {
   onFossilUnlockTidalWave
 } from "../services/fossil-unlocks"
 import { AbilityStrategies } from "./abilities/abilities"
+import { electrify } from "./abilities/electrify"
 import { applyWhirlpoolDamage } from "./abilities/whirlpool"
 import type { SurfStrategy } from "./abilities/surf"
 import { Board } from "./board"
@@ -3135,6 +3137,22 @@ export default class Simulation extends Schema implements ISimulation {
         })
       }
 
+      if (blessings.includes(Blessing.THUNDER_AND_LIGHTNING)) {
+        ownUnits
+          .filter((unit) => unit.types.has(Synergy.SOUND))
+          .forEach((unit) => {
+            let hasElectrified = false
+            unit.effectsSet.add(
+              new OnAbilityCastEffect((pokemon, _board, _target, crit) => {
+                if (hasElectrified) return
+                hasElectrified = true
+                pokemon.broadcastAbility({ skill: Ability.ELECTRIFY })
+                electrify(pokemon, pokemon, crit)
+              })
+            )
+          })
+      }
+
       if (blessings.includes(Blessing.MONSTER_KING)) {
         const enemyTeam =
           teamIndex === Team.BLUE_TEAM ? Team.RED_TEAM : Team.BLUE_TEAM
@@ -3933,7 +3951,7 @@ export default class Simulation extends Schema implements ISimulation {
     const championOf = new Map<Blessing, PokemonEntity>()
     blessings.forEach((blessing) => {
       const family = HERO_BLESSING_FAMILY[blessing]
-      if (!family) return
+      if (!family || HERO_BLESSINGS_WITHOUT_CHAMPION.includes(blessing)) return
       /* alt forms are their own family: the player's Flabebe colour is decided
          by their first flower pot, so the champion must be resolved per player */
       const champion = getStrongestUnitOfFamily(
