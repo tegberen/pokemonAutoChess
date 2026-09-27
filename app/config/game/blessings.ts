@@ -2359,6 +2359,12 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     icon: "orb_wand",
     grantsPokemonImmediately: false
   },
+  [Blessing.LIFE_PRICE]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: [4],
+    icon: "life_price",
+    grantsPokemonImmediately: false
+  },
   [Blessing.SHADY_PRICE]: {
     tier: BlessingTier.SILVER,
     availableAtStages: BLESSING_SELECTION_STAGES,

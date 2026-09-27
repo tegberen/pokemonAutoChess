@@ -2873,6 +2873,7 @@ export const blessingEffectService: {
     player.shopFreeRolls += SHADY_PRICE_FREE_ROLLS
     return true
   },
+  [Blessing.LIFE_PRICE]: () => true,
   [Blessing.MAGIC_SHIELD_I]: () => true,
   [Blessing.MAGIC_SHIELD_II]: () => true,
   [Blessing.BRUTE_SHIELD_I]: () => true,

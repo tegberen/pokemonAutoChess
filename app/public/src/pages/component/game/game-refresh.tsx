@@ -102,7 +102,9 @@ export default function GameRefresh() {
         }}
       >
         <img src={`/assets/ui/refresh.svg`} />
-        {cost === 0 ? (
+        {cost === 0 && shopFreeRolls === 0 && !thinkFastActive ? (
+          t("refresh")
+        ) : cost === 0 ? (
           `${t("refresh")} (${thinkFastActive ? "∞" : shopFreeRolls})`
         ) : (
           <Money value={`${t("refresh")} ${cost}`} />

@@ -498,6 +498,7 @@ Every balance change on this server, newest first.
 - ELDER_CRYSTAL | a 2 STAR ROCK Pokémon holding a STAR_PIECE can now be crystallised with it
 
 **Wishes**
+- Life Price {{new}} | Rerolling your shop no longer costs GOLD. Instead, every 2 rerolls cost you 1 HP, and your partner too in Double Up. It cannot bring either of you below 1 HP
 - Seasonal Herd {{new}} | Gain a Deerling of the current season and add it to the pool. Each time you start a fight with its season's synergy at 4 (spring FLORA, summer GOURMET, autumn WILD, winter ICE), gain the next season's Deerling and add it to the pool. Your Deerling and Sawsbuck gain 40 HP per Sawsbuck in play. With all 4 Sawsbuck fielded, they gain 1 STAR
 - Purrfect Plan {{new}} | Gain a Glameow and add it to the pool. CONFUSION enemies never target your STRONGEST Glameow unless it is the only target in RANGE, and always crit their allies while it is alive. Your Unique options always include Spinda or Chatot
 - Spooky Scarecrow {{new}} | Gain a Cacnea and add it to the pool. Your STRONGEST Cacnea cannot move or attack, and its ability is replaced with Spiky Shield. Each time an ally is KO'd, it gains 5 DEF and summons a Murkrow with full PP. When it is KO'd itself, it summons 3 Murkrow instead

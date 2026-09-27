@@ -5882,6 +5882,10 @@
 			"name": "Orb Wand",
 			"description": "Gain 4 Rerolls. At the start of combat, your fully itemized Pokémon gain 2 AP for each shop roll you have done this game, up to 100 AP."
 		},
+		"LIFE_PRICE": {
+			"name": "Life Price",
+			"description": "Rerolling your shop no longer costs GOLD. Instead, every 2 rerolls cost you 1 HP, and your partner too in Double Up. It cannot bring either of you below 1 HP."
+		},
 		"SHADY_PRICE": {
 			"name": "Shady Price",
 			"description": "Gain 32 Rerolls. Once they are spent, rerolling your shop costs 4 GOLD for the rest of the game."

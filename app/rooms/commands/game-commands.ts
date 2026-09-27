@@ -159,6 +159,8 @@ import {
   countsForTeamSize,
   PRISMATIC_REROLL_CHANCE,
   PRISMATIC_REROLL_FREE_ROLLS,
+  LIFE_PRICE_REROLLS_PER_LIFE,
+  LIFE_PRICE_LIFE_PER_PAYMENT,
   STURDY_DEFENSE,
   STURDY_MAX_HP,
   STURDY_SPECIAL_DEFENSE,
@@ -1899,8 +1901,20 @@ export class OnShopRerollCommand extends Command<GameRoom, string> {
             this.state.stageLevel
           )
     const canRoll = (player?.money ?? 0) >= rollCost
+    const paysWithLife =
+      player.shopFreeRolls <= 0 &&
+      !thinkFastActive &&
+      player.blessings?.includes(Blessing.LIFE_PRICE) === true
+    const lifePriceDue =
+      paysWithLife &&
+      (player.lifePriceRerolls + 1) % LIFE_PRICE_REROLLS_PER_LIFE === 0
+    if (lifePriceDue && player.life <= 1) return
 
     if (canRoll) {
+      if (paysWithLife) {
+        player.lifePriceRerolls++
+        if (lifePriceDue) this.payLifePrice(player)
+      }
       player.gameStats.rerollCount++
       player.money -= rollCost
       onFossilUnlockReroll(player)
@@ -1925,6 +1939,25 @@ export class OnShopRerollCommand extends Command<GameRoom, string> {
       }
       this.state.shop.assignShop(player, true, this.state)
     }
+  }
+
+  // the partner shares the cost, but neither is ever brought below 1 HP
+  payLifePrice(player: Player) {
+    const payers = [player]
+    if (player.doubleUpTeamId) {
+      this.state.players.forEach((other: Player) => {
+        if (
+          other !== player &&
+          other.alive &&
+          other.doubleUpTeamId === player.doubleUpTeamId
+        ) {
+          payers.push(other)
+        }
+      })
+    }
+    payers.forEach((payer) => {
+      payer.life = Math.max(1, payer.life - LIFE_PRICE_LIFE_PER_PAYMENT)
+    })
   }
 }
 

@@ -40,6 +40,7 @@ export function getRerollCostForBlessings(
   specialGameRule?: SpecialGameRule | null,
   stageLevel = 0
 ): number {
+  if (blessings?.includes(Blessing.LIFE_PRICE)) return 0
   if (blessings?.includes(Blessing.SHADY_PRICE)) return SHADY_PRICE_REROLL_COST
   return getRerollCost(specialGameRule, stageLevel)
 }
