@@ -1531,7 +1531,9 @@ export default class PokemonSprite extends DraggableObject {
     awakening: string,
     segments = 3
   ) {
-    const awakened = awakening !== Awakening.NONE
+    // a Crystal Guardian Onix charges a new rock while already awakened, and
+    // the charging bar takes priority over the awakened look until it completes
+    const awakened = awakening !== Awakening.NONE && rock === ""
     if (!awakened && rock === "") {
       this.awakeningGlowTween?.remove()
       this.awakeningGlowTween = undefined

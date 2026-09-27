@@ -1997,6 +1997,12 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     icon: "gooey_globules",
     grantsPokemonImmediately: true
   },
+  [Blessing.CRYSTAL_GUARDIAN]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: [12],
+    icon: "crystal_guardian",
+    grantsPokemonImmediately: true
+  },
   [Blessing.SILVER_SPOON]: {
     tier: BlessingTier.PRISMATIC,
     availableAtStages: [4],

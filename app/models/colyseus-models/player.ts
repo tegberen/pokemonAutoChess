@@ -228,6 +228,7 @@ export default class Player extends Schema implements IPlayer {
   titles: Set<Title> = new Set<Title>()
   sinnohsCoolestRewardGranted = false
   thunderAndLightningFormGranted = false
+  crystalGuardianRocksGranted = false
   artificialItems: Item[] = pickNRandomIn(ArtificialItems, 3)
   buriedItems: (Item | null)[] = initBuriedItems()
   tms: Item[] = pickRandomTMs()

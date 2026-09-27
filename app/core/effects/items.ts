@@ -9,7 +9,12 @@ import { PVEStages } from "../../models/pve-stages"
 import { Title, Transfer } from "../../types"
 import { EvolutionRuleType } from "../../types/EvolutionRules"
 import { Ability } from "../../types/enum/Ability"
-import { Awakening, ROCK_AWAKENING_TIER } from "../../types/enum/Awakening"
+import {
+  Awakening,
+  AwakeningTypes,
+  ROCK_AWAKENING_TIER
+} from "../../types/enum/Awakening"
+import { isCrystalGuardian } from "../crystal-guardian"
 import { DungeonPMDO } from "../../types/enum/Dungeon"
 import { EffectEnum } from "../../types/enum/Effect"
 import { AttackType, PokemonActionState, Team } from "../../types/enum/Game"
@@ -2862,11 +2867,18 @@ const weatherRockAwakeningEffect = new OnItemDroppedEffect(
 
     // Weather rocks are never equipped — they either crystallise a Rock Pokémon
     // (only at Rock 8) or stay on the bench, where they set the weather.
+    // Crystal Guardian: its Onix may crystallise again, but a rock whose
+    // synergy it already has would add nothing
+    const rockSynergy = AwakeningTypes[item as Awakening]
+    const canCrystalliseAgain =
+      isCrystalGuardian(pokemon, player) &&
+      rockSynergy !== undefined &&
+      !pokemon.types.has(rockSynergy)
     if (
       !pokemon.types.has(Synergy.ROCK) ||
       isOnBench(pokemon) ||
       getSynergyTier(player.synergies, Synergy.ROCK) < ROCK_AWAKENING_TIER ||
-      pokemon.awakening !== Awakening.NONE ||
+      (pokemon.awakening !== Awakening.NONE && !canCrystalliseAgain) ||
       pokemon.awakeningRock !== "" ||
       schemaValues(player.board).filter((p) => p.awakeningRock !== "").length >=
         (player.blessings?.includes(Blessing.CRYSTAL_CLUSTERS)

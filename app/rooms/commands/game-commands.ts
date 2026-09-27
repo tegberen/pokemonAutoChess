@@ -142,7 +142,7 @@ import {
   PaidOptions
 } from "../../types/enum/ArmoryOptions"
 import {
-  type Awakening,
+  Awakening,
   AwakeningTypes,
   ROCK_AWAKENING_TIER
 } from "../../types/enum/Awakening"
@@ -165,6 +165,7 @@ import {
   UP_IS_UP_LIFE,
   WISE_SPENDING_EXP_PER_REROLL,
   GEM_HARVEST_CHARGE_REDUCTION,
+  CRYSTAL_GUARDIAN_MAX_HP_PER_CRYSTAL,
   GRUDGE_SUBSTITUTE_SELL_COST,
   isGrudgeSubstitute,
   SIMULATION_SCOPED_HERO_BLESSINGS
@@ -278,6 +279,7 @@ import {
   updateGuideProgress
 } from "../../core/guide/guide-progress"
 import { isGuideWildStage } from "../../core/guide/guide-opponents"
+import { isCrystalGuardian } from "../../core/crystal-guardian"
 import {
   getGuideCarouselTarget,
   getGuideForcedPickItem,
@@ -3332,7 +3334,20 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
               : 0)
           pokemon.awakeningCharge = Math.min(3, pokemon.awakeningCharge + 1)
           if (pokemon.awakeningCharge >= chargeNeeded) {
-            pokemon.awakening = pokemon.awakeningRock as Awakening
+            const crystalRock = pokemon.awakeningRock as Awakening
+            if (isCrystalGuardian(pokemon, player)) {
+              pokemon.applyStat(Stat.HP, CRYSTAL_GUARDIAN_MAX_HP_PER_CRYSTAL)
+            }
+            // Crystal Guardian: only the first crystal awakens; later ones just
+            // add their synergy, so the unit keeps a single awakening effect
+            if (pokemon.awakening === Awakening.NONE) {
+              pokemon.awakening = crystalRock
+            } else {
+              const crystalRockSynergy = AwakeningTypes[crystalRock]
+              if (crystalRockSynergy) {
+                pokemon.keptSynergies.push(crystalRockSynergy)
+              }
+            }
             pokemon.awakeningRock = ""
             // rock freed → resync weather rocks so it returns to the bench
             player.updateWeatherRocks()
@@ -3342,7 +3357,7 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
             /* GEM_HARVEST: the crystal leaves behind a gem of its own type.
                Kept last so the awakening itself completes regardless */
             if (player.blessings?.includes(Blessing.GEM_HARVEST)) {
-              const crystalSynergy = AwakeningTypes[pokemon.awakening]
+              const crystalSynergy = AwakeningTypes[crystalRock]
               const gem = crystalSynergy ? GemBySynergy[crystalSynergy] : null
               // a gem grants its synergy through bonusSynergies, not by being held
               if (gem) grantSynergyAwareItem(player, gem)

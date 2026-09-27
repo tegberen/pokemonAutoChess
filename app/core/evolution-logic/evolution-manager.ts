@@ -14,12 +14,13 @@ import {
 import { PlayerChoice } from "../../models/colyseus-models/player-choice"
 import {
   Blessing,
+  CRYSTAL_GUARDIAN_ROCKS_GRANTED,
   HERO_BLESSING_FAMILY,
   SELECTIVE_GENETICS_SHINY_ITEM_OPTIONS
 } from "../../types/enum/Blessing"
 import { PokemonActionState } from "../../types/enum/Game"
-import { Item, ShinyItems } from "../../types/enum/Item"
-import { pickNRandomIn } from "../../utils/random"
+import { Item, ShinyItems, WeatherRocks } from "../../types/enum/Item"
+import { pickNRandomIn, pickRandomIn } from "../../utils/random"
 import { Passive } from "../../types/enum/Passive"
 import { Pkm, PkmFamily } from "../../types/enum/Pokemon"
 import { OnEvolutionEffect } from "../effects/effect"
@@ -130,6 +131,19 @@ export const EvolutionManager = {
     ) {
       player.items.push(Item.SAFETY_GOGGLES)
       player.sinnohsCoolestRewardGranted = true
+    }
+
+    if (
+      pokemonEvolved.name === Pkm.STEELIX &&
+      player.blessings?.includes(Blessing.CRYSTAL_GUARDIAN) &&
+      !player.crystalGuardianRocksGranted
+    ) {
+      player.crystalGuardianRocksGranted = true
+      // collected rocks show up in the inventory as far as the ROCK tier allows
+      for (let i = 0; i < CRYSTAL_GUARDIAN_ROCKS_GRANTED; i++) {
+        player.weatherRocks.push(pickRandomIn(WeatherRocks))
+      }
+      player.updateWeatherRocks()
     }
 
     const otherToxtricityForm = TOXTRICITY_OTHER_FORM[pokemonEvolved.name]
