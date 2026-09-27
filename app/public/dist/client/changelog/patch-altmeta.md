@@ -495,8 +495,11 @@ Every balance change on this server, newest first.
 - Magnetic Absorption | damage [80,80,80,120] → [20,40,80,120] per STAR, so Sandy Shocks is unchanged
 
 **Wishes**
+- Primal Rampage {{new}} | Unlock Cranidos. Your STRONGEST Cranidos's ability is replaced with Torment. Each time it KO's an enemy, it takes 20 PHYSICAL retaliation damage and regains 40 PP
 - Dreepy Deployment {{new}} | Gain a Dreepy and move to a random Dreepy region if not in one. Each dart of your STRONGEST Dreepy has a [10,LK]% chance to deploy a Dreepy with full PP 2 tiles from the target, or always if the ability KO's the target
 - Primal Magnetism {{new}} | Gain a Magnemite. Your STRONGEST Magnemite casts Magnetic Absorption on the first enemy it attacks, then after every third cast of its own ability
+- Galvanic Rain {{new}} | Gain an Alolan Graveler and move to a random ELECTRIC region if not in one. Your STRONGEST Alolan Geodude's ability is replaced with Electric Surge, it gets +2 RANGE, and its attacks have a [10,LK]% chance to throw an Alolan Geodude with full PP next to the target
+- Mega Sol, Flytrap and Spore Clouds | their item no longer drops into your inventory when taken before the pot is unlocked
 
 ### 26 September 2026
 
@@ -511,10 +514,6 @@ Every balance change on this server, newest first.
 
 **Pokémon**
 - Sobble line | immune to FLOOD knockback. FLOOD heals twice as much and also gives that much PP
-
-**Wishes**
-- Mega Sol, Flytrap and Spore Clouds | their item no longer drops into your inventory when taken before the pot is unlocked
-- Galvanic Rain {{new}} | Gain an Alolan Graveler and move to a random ELECTRIC region if not in one. Your STRONGEST Alolan Geodude's ability is replaced with Electric Surge, it gets +2 RANGE, and its attacks have a [10,LK]% chance to throw an Alolan Geodude with full PP next to the target
 
 ### 25 September 2026
 

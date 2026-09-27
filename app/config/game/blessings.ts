@@ -1949,6 +1949,12 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     icon: "dreepy_deployment",
     grantsPokemonImmediately: true
   },
+  [Blessing.PRIMAL_RAMPAGE]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: [12],
+    icon: "primal_rampage",
+    grantsPokemonImmediately: false
+  },
   [Blessing.SILVER_SPOON]: {
     tier: BlessingTier.PRISMATIC,
     availableAtStages: [4],

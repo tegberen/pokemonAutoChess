@@ -197,6 +197,7 @@ export enum Blessing {
   GALVANIC_RAIN = "GALVANIC_RAIN",
   PRIMAL_MAGNETISM = "PRIMAL_MAGNETISM",
   DREEPY_DEPLOYMENT = "DREEPY_DEPLOYMENT",
+  PRIMAL_RAMPAGE = "PRIMAL_RAMPAGE",
   SILVER_SPOON = "SILVER_SPOON",
   ICE_SPEAR = "ICE_SPEAR",
   FROST_GEAR = "FROST_GEAR",
@@ -770,6 +771,8 @@ export const GALVANIC_RAIN_THROW_FLIGHT_MS = 600
 export const PRIMAL_MAGNETISM_CASTS_PER_ABSORPTION = 3
 export const DREEPY_DEPLOYMENT_SPAWN_CHANCE = 0.1
 export const DREEPY_DEPLOYMENT_SPAWN_DISTANCE = 2
+export const PRIMAL_RAMPAGE_KO_RECOIL = 20
+export const PRIMAL_RAMPAGE_KO_PP = 40
 export const CELL_BRAWLER_STAT_BONUS = 0.5
 export const CELL_BRAWLER_ABILITY_LIFESTEAL = 0.5
 export const CELL_BRAWLER_OVERHEAL_TO_MAX_HP = 0.5
@@ -1253,7 +1256,8 @@ export const HERO_BLESSING_POKEMON: { [blessing in Blessing]?: Pkm[] } = {
   [Blessing.SINNOHS_COOLEST]: [Pkm.STARAVIA],
   [Blessing.CURSE_OF_CORAL]: [Pkm.CORSOLA],
   [Blessing.SCHOOL_BUS]: [Pkm.WISHIWASHI],
-  [Blessing.AURORA_BOREALIS]: [Pkm.AMAURA]
+  [Blessing.AURORA_BOREALIS]: [Pkm.AMAURA],
+  [Blessing.PRIMAL_RAMPAGE]: [Pkm.CRANIDOS]
 }
 
 export const HERO_BLESSING_EXTRA_SYNERGIES: {
@@ -1327,7 +1331,8 @@ export const HERO_BLESSING_FAMILY: { [blessing in Blessing]?: Pkm } = {
   [Blessing.ROLLOUT_RALLY]: Pkm.VENIPEDE,
   [Blessing.GALVANIC_RAIN]: Pkm.ALOLAN_GEODUDE,
   [Blessing.PRIMAL_MAGNETISM]: Pkm.MAGNEMITE,
-  [Blessing.DREEPY_DEPLOYMENT]: Pkm.DREEPY
+  [Blessing.DREEPY_DEPLOYMENT]: Pkm.DREEPY,
+  [Blessing.PRIMAL_RAMPAGE]: Pkm.CRANIDOS
 }
 
 /* hero blessings that also relocate the player to a region where their family

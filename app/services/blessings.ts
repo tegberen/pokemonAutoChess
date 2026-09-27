@@ -3281,6 +3281,13 @@ export const blessingEffectService: {
   [Blessing.DREEPY_DEPLOYMENT]: (player, state, room) =>
     heroBlessingEffect(Blessing.DREEPY_DEPLOYMENT, player, state, room),
 
+  // an unlock like Aurora Borealis: Cranidos joins this player's own shop pool
+  [Blessing.PRIMAL_RAMPAGE]: (player) => {
+    if (player.fossilUnlocksRef) player.fossilUnlocksRef.revealed = true
+    unlockFossil(player, Pkm.CRANIDOS)
+    return true
+  },
+
   [Blessing.ICE_SPEAR]: (player, state, room) =>
     heroBlessingEffect(Blessing.ICE_SPEAR, player, state, room),
 

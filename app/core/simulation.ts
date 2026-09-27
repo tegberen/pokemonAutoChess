@@ -128,6 +128,8 @@ import {
   GALVANIC_RAIN_THROW_CHANCE,
   GALVANIC_RAIN_THROW_FLIGHT_MS,
   PRIMAL_MAGNETISM_CASTS_PER_ABSORPTION,
+  PRIMAL_RAMPAGE_KO_RECOIL,
+  PRIMAL_RAMPAGE_KO_PP,
   CELL_BRAWLER_STAT_BONUS,
   GALE_WINGS_EMBERS_FOR_FIRE_SHARD,
   GALE_WINGS_EMBERS_PER_GOLD_BY_STAR,
@@ -4313,6 +4315,24 @@ export default class Simulation extends Schema implements ISimulation {
               }
             }, GALVANIC_RAIN_THROW_FLIGHT_MS)
           )
+        })
+      )
+    }
+
+    const primalRampageChampion = championOf.get(Blessing.PRIMAL_RAMPAGE)
+    if (primalRampageChampion) {
+      primalRampageChampion.skill = Ability.TORMENT
+      primalRampageChampion.effectsSet.add(
+        new OnKillEffect(({ attacker, board }) => {
+          attacker.handleDamage({
+            damage: PRIMAL_RAMPAGE_KO_RECOIL,
+            board,
+            attackType: AttackType.PHYSICAL,
+            attacker,
+            shouldTargetGainMana: false,
+            isRetaliation: true
+          })
+          attacker.addPP(PRIMAL_RAMPAGE_KO_PP, attacker, 0, false)
         })
       )
     }
