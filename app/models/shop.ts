@@ -75,6 +75,7 @@ import {
 } from "../services/fossil-unlocks"
 import {
   Blessing,
+  PURRFECT_PLAN_UNIQUES,
   BERSERKER_HORDES_SHOP_INTERVAL,
   CURSOLA_SELL_PRICE,
   FOGBOUND_LAKE_CAROUSEL_STAGE,
@@ -954,6 +955,17 @@ export default class Shop {
       !pokemonsProposed.includes(PkmDuo.ILLUMISE_VOLBEAT)
     ) {
       pokemonsProposed[1] = PkmDuo.ILLUMISE_VOLBEAT
+    }
+
+    // slot 2, clear of the Gym Trainer, Fogbound Lake and Paradox slots
+    if (
+      stageLevel === PortalCarouselStages[1] &&
+      player.blessings?.includes(Blessing.PURRFECT_PLAN) &&
+      !pokemonsProposed.some((proposition) =>
+        PURRFECT_PLAN_UNIQUES.includes(proposition as Pkm)
+      )
+    ) {
+      pokemonsProposed[2] = pickRandomIn(PURRFECT_PLAN_UNIQUES)
     }
 
     /* CONVERGENT_PARADOX promises a Paradox among the Unique and Legendary

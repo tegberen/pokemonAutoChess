@@ -3338,6 +3338,9 @@ export const blessingEffectService: {
   [Blessing.SPOOKY_SCARECROW]: (player, state, room) =>
     heroBlessingEffect(Blessing.SPOOKY_SCARECROW, player, state, room),
 
+  [Blessing.PURRFECT_PLAN]: (player, state, room) =>
+    heroBlessingEffect(Blessing.PURRFECT_PLAN, player, state, room),
+
   // an unlock like Aurora Borealis: Cranidos joins this player's own shop pool
   [Blessing.PRIMAL_RAMPAGE]: (player) => {
     if (player.fossilUnlocksRef) player.fossilUnlocksRef.revealed = true

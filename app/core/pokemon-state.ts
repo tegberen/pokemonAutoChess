@@ -50,6 +50,10 @@ import {
   FLUFFY_TAIL_RARITY_STAGE,
   SYMBIOTIC_SYMPHONY_SOUND_PP_PER_HEAL
 } from "../types/enum/Blessing"
+import {
+  isFacingFieldedPurrfectPlanGlameow,
+  isPurrfectPlanGlameow
+} from "./purrfect-plan"
 import { EffectEnum } from "../types/enum/Effect"
 import {
   AttackType,
@@ -181,7 +185,11 @@ export default abstract class PokemonState {
         pokemon.shodanCritReady ||
         chance(critChance, pokemon) ||
         target.critMarkRemainingMs > 0 ||
-        (target.status.sleep && pokemon.passive === Passive.BAD_DREAMS)
+        (target.status.sleep && pokemon.passive === Passive.BAD_DREAMS) ||
+        (pokemon.status.confusion &&
+          target !== pokemon &&
+          target.team === pokemon.team &&
+          isFacingFieldedPurrfectPlanGlameow(pokemon, board))
       pokemon.shodanCritReady = false
 
       if (
@@ -1861,6 +1869,7 @@ export default abstract class PokemonState {
   ): PokemonEntity | undefined {
     let distance = pokemon.range + 1
     let candidates: PokemonEntity[] = []
+    const skippedPurrfectPlanGlameows: PokemonEntity[] = []
 
     board.forEach((x: number, y: number, pkm: PokemonEntity | undefined) => {
       if (
@@ -1868,6 +1877,10 @@ export default abstract class PokemonState {
         pkm.id !== pokemon.id &&
         pkm.isTargettableBy(pokemon, true, true)
       ) {
+        if (isPurrfectPlanGlameow(pkm, pokemon)) {
+          skippedPurrfectPlanGlameows.push(pkm)
+          return
+        }
         const candidateDistance = distanceM(
           pokemon.positionX,
           pokemon.positionY,
@@ -1882,6 +1895,18 @@ export default abstract class PokemonState {
         }
       }
     })
+
+    if (candidates.length === 0) {
+      candidates = skippedPurrfectPlanGlameows.filter(
+        (glameow) =>
+          distanceM(
+            pokemon.positionX,
+            pokemon.positionY,
+            glameow.positionX,
+            glameow.positionY
+          ) <= pokemon.range
+      )
+    }
 
     candidates.push(pokemon) // sometimes attack itself when confused
 
