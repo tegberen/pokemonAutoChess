@@ -2869,7 +2869,7 @@ const weatherRockAwakeningEffect = new OnItemDroppedEffect(
     // (only at Rock 8) or stay on the bench, where they set the weather.
     // Crystal Guardian: its Onix may crystallise again, but a rock whose
     // synergy it already has would add nothing
-    const rockSynergy = AwakeningTypes[item as Awakening]
+    const rockSynergy = AwakeningTypes[item as string as Awakening]
     const canCrystalliseAgain =
       isCrystalGuardian(pokemon, player) &&
       rockSynergy !== undefined &&
