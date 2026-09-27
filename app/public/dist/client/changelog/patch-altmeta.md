@@ -498,6 +498,7 @@ Every balance change on this server, newest first.
 - ELDER_CRYSTAL | a 2 STAR ROCK Pokémon holding a STAR_PIECE can now be crystallised with it
 
 **Wishes**
+- Fleur de Lure {{new}} | Gain a Fomantis and add it to the pool. Once per cast, when your STRONGEST Fomantis reaches 80% PP, the 3 closest enemies are CHARM for 3 seconds. Its Solar Blade always crits CHARM enemies, and executes CHARM BUG enemies
 - Crystal Guardian {{new}} | Gain an Onix and add it to the pool. Your STRONGEST Onix can crystallise again with other weather rocks: only its first crystal grants an awakening effect, each further one adds its synergy. It permanently gains 20 max HP for every crystallisation it completes. The first time you get a Steelix, gain 3 random weather rocks
 - Gooey Globules {{new}} | Gain a Sliggoo. When your STRONGEST Goomy is hit by an attack, it has a [50,LK]% chance to throw a blob at a random ADJACENT Pokémon. Enemies hit take TRUE damage equal to its DEF and lose 20 SPEED; allies hit heal 50 HP
 - Thunder and Lightning {{new}} | Gain a Toxel and move to a random Toxel region if not in one. The first time a Toxel evolves, also gain the other Toxtricity form, and both forms count towards your synergies. Each of your SOUND Pokémon casts Electrify on itself after its first ability of the fight

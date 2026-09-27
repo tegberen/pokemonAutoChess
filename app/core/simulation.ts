@@ -131,6 +131,10 @@ import {
   PRIMAL_MAGNETISM_CASTS_PER_ABSORPTION,
   PRIMAL_RAMPAGE_KO_RECOIL,
   GOOEY_GLOBULES_THROW_CHANCE,
+  FLEUR_DE_LURE_PP_THRESHOLD,
+  FLEUR_DE_LURE_TARGETS,
+  FLEUR_DE_LURE_CHARM_DURATION,
+  FLEUR_DE_LURE_CHECK_INTERVAL,
   GOOEY_GLOBULES_SPEED_LOSS,
   GOOEY_GLOBULES_ALLY_HEAL,
   PRIMAL_RAMPAGE_KO_PP,
@@ -4336,6 +4340,44 @@ export default class Simulation extends Schema implements ISimulation {
               }
             }, GALVANIC_RAIN_THROW_FLIGHT_MS)
           )
+        })
+      )
+    }
+
+    const fleurDeLureChampion = championOf.get(Blessing.FLEUR_DE_LURE)
+    if (fleurDeLureChampion) {
+      let hasLuredThisCast = false
+      fleurDeLureChampion.effectsSet.add(
+        new PeriodicEffect(
+          (pokemon, board) => {
+            if (
+              hasLuredThisCast ||
+              pokemon.pp < FLEUR_DE_LURE_PP_THRESHOLD * pokemon.maxPP
+            ) {
+              return
+            }
+            hasLuredThisCast = true
+            const enemyTeam =
+              pokemon.team === Team.BLUE_TEAM ? Team.RED_TEAM : Team.BLUE_TEAM
+            board
+              .getClosestEnemies(pokemon.positionX, pokemon.positionY, enemyTeam)
+              .filter((enemy) => enemy.hp > 0)
+              .slice(0, FLEUR_DE_LURE_TARGETS)
+              .forEach((enemy) =>
+                enemy.status.triggerCharm(
+                  FLEUR_DE_LURE_CHARM_DURATION,
+                  enemy,
+                  pokemon
+                )
+              )
+          },
+          Ability.SOLAR_BLADE,
+          FLEUR_DE_LURE_CHECK_INTERVAL
+        )
+      )
+      fleurDeLureChampion.effectsSet.add(
+        new OnAbilityCastEffect(() => {
+          hasLuredThisCast = false
         })
       )
     }

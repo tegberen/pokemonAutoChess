@@ -1,5 +1,7 @@
 import { Ability } from "../../types/enum/Ability"
+import { Blessing } from "../../types/enum/Blessing"
 import { AttackType } from "../../types/enum/Game"
+import { Synergy } from "../../types/enum/Synergy"
 import type { Board } from "../board"
 import type { PokemonEntity } from "../pokemon-entity"
 import { DelayedCommand } from "../simulation-command"
@@ -33,15 +35,29 @@ export class SolarBladeStrategy extends AbilityStrategy {
             positionY: pokemon.positionY,
             orientation: pokemon.orientation
           })
+          const isFleurDeLure = pokemon.heroBlessings?.has(
+            Blessing.FLEUR_DE_LURE
+          )
           const cells = board.getCellsInFront(pokemon, target, 1)
           cells.forEach((cell) => {
             if (cell.value && cell.value.team !== pokemon.team) {
+              const isInfatuated = isFleurDeLure && cell.value.status.charm
+              if (isInfatuated && cell.value.types.has(Synergy.BUG)) {
+                cell.value.handleSpecialDamage(
+                  9999,
+                  board,
+                  AttackType.TRUE,
+                  pokemon,
+                  crit
+                )
+                return
+              }
               cell.value.handleSpecialDamage(
                 damage,
                 board,
                 AttackType.TRUE,
                 pokemon,
-                crit
+                crit || isInfatuated
               )
             }
           })
