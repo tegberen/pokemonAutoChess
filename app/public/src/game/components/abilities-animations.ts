@@ -4380,6 +4380,11 @@ export const AbilitiesAnimations: {
   ["GALVANIC_RAIN_THROW"]: galvanicRainThrowAnimation,
   ["SALT_SHAKER_ROCK_SALT"]: saltShakerRockSaltAnimation,
   ["GOOEY_GLOBULES_BLOB"]: gooeyGlobulesBlobAnimation,
+  ["ROLLING_SNOWBALL_IMPACT"]: onTarget({
+    ability: "ICE/hit",
+    textureKey: "attacks",
+    scale: 2
+  }),
   ["CURSED_COFFIN_DRAIN"]: cursedCoffinDrainAnimation([0, 150], 1.2),
   ["CURSED_COFFIN_SPITE_DRAIN"]: [
     onTarget({ ability: Ability.ACID_SPRAY, scale: 2 }),

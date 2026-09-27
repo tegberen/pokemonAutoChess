@@ -6430,6 +6430,10 @@
 			"name": "Mole Maze",
 			"description": "Gain a Drilbur. Your STRONGEST Drilbur's ability is replaced with Mole Maze, and it permanently gains 1 AP each time it KO's an enemy."
 		},
+		"ROLLING_SNOWBALL": {
+			"name": "Rolling Snowball",
+			"description": "Gain a Spheal. When your STRONGEST Spheal's Ice Ball KO's its target, it rolls through to the cell behind it and gains 20 SHIELD and 50 PP."
+		},
 		"CURSED_COFFIN": {
 			"name": "Cursed Coffin",
 			"description": "Gain a Yamask and add it to the pool. Your STRONGEST Yamask no longer attacks. Instead, every second it drains 15 HP and 5 PP from each ADJACENT enemy. Its Spite drains from the target and all ADJACENT enemies, and heals it for the PP drained."
