@@ -639,6 +639,12 @@ export default class BattleManager {
         } else {
           pkm.removeReflectShieldAnim()
         }
+      } else if (field === "light") {
+        if (pokemon.status.light) {
+          pkm.addLight(pokemon.status.lightTint)
+        } else {
+          pkm.removeLight()
+        }
       } else if (field === "reflect") {
         if (pokemon.status.reflect) {
           pkm.addReflectShieldAnim(0xff3030)

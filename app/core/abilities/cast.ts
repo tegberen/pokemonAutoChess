@@ -47,7 +47,9 @@ export function castAbility(
   ) {
     crit = chance(pokemon.critChance / 100, pokemon)
   }
+  pokemon.isProcessingAbility = true
   abilityStrategy.process(pokemon, board, target, crit, preventDefaultAnim)
+  pokemon.isProcessingAbility = false
 
   const casterBlessings = pokemon.player?.blessings
   pokemon.getEffects(OnAbilityCastEffect).forEach((effect) => {

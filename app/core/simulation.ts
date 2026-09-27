@@ -4592,6 +4592,40 @@ export default class Simulation extends Schema implements ISimulation {
       shuttleBusChampion.pp = SHUTTLE_BUS_MAX_PP
     }
 
+    const lightOfOlivineChampion = championOf.get(Blessing.LIGHT_OF_OLIVINE)
+    if (lightOfOlivineChampion) {
+      lightOfOlivineChampion.effectsSet.add(
+        new OnKillEffect(({ attacker, board }) => {
+          if (!attacker.isProcessingAbility) return
+          const activeLightEffects = SynergyTiers[Synergy.LIGHT].filter(
+            (lightEffect) => teamEffects.has(lightEffect)
+          )
+          if (activeLightEffects.length === 0) return
+          let lit = attacker
+          if (attacker.inSpotlight) {
+            const unlitAllies: PokemonEntity[] = []
+            board.forEach((x, y, ally) => {
+              if (
+                ally &&
+                ally.team === attacker.team &&
+                ally.hp > 0 &&
+                !ally.inSpotlight
+              ) {
+                unlitAllies.push(ally)
+              }
+            })
+            if (unlitAllies.length === 0) return
+            lit = getStrongestUnit(unlitAllies)
+          }
+          lit.hasOwnSpotlight = true
+          lit.status.light = true
+          activeLightEffects.forEach((lightEffect) =>
+            this.applyEffect(lit, lightEffect)
+          )
+        })
+      )
+    }
+
     const radianceChampion = championOf.get(Blessing.RADIANCE)
     if (radianceChampion) {
       radianceChampion.types.add(Synergy.LIGHT)

@@ -224,6 +224,7 @@ class GameContainer {
       "flinch",
       "freeze",
       "grassField",
+      "light",
       "paralysis",
       "pokerus",
       "poisonStacks",

@@ -2027,6 +2027,12 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     icon: "unsealed_golemancy",
     grantsPokemonImmediately: true
   },
+  [Blessing.LIGHT_OF_OLIVINE]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: [4],
+    icon: "light_of_olivine",
+    grantsPokemonImmediately: true
+  },
   [Blessing.SILVER_SPOON]: {
     tier: BlessingTier.PRISMATIC,
     availableAtStages: [4],

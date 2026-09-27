@@ -210,6 +210,7 @@ export enum Blessing {
   LUNARIAN = "LUNARIAN",
   SHINTO_SHRINE_MIRROR = "SHINTO_SHRINE_MIRROR",
   UNSEALED_GOLEMANCY = "UNSEALED_GOLEMANCY",
+  LIGHT_OF_OLIVINE = "LIGHT_OF_OLIVINE",
   SILVER_SPOON = "SILVER_SPOON",
   ICE_SPEAR = "ICE_SPEAR",
   FROST_GEAR = "FROST_GEAR",
@@ -1299,7 +1300,8 @@ export const HERO_BLESSING_GIFT: { [blessing in Blessing]?: Pkm } = {
   [Blessing.FLEUR_DE_LURE]: Pkm.FOMANTIS,
   [Blessing.LUNARIAN]: Pkm.CLEFAIRY,
   [Blessing.SHINTO_SHRINE_MIRROR]: Pkm.MORGREM,
-  [Blessing.UNSEALED_GOLEMANCY]: Pkm.GOLETT
+  [Blessing.UNSEALED_GOLEMANCY]: Pkm.GOLETT,
+  [Blessing.LIGHT_OF_OLIVINE]: Pkm.FLAFFY
 }
 
 export const HERO_BLESSING_POKEMON: { [blessing in Blessing]?: Pkm[] } = {
@@ -1397,7 +1399,8 @@ export const HERO_BLESSING_FAMILY: { [blessing in Blessing]?: Pkm } = {
   [Blessing.FLEUR_DE_LURE]: Pkm.FOMANTIS,
   [Blessing.LUNARIAN]: Pkm.CLEFFA,
   [Blessing.SHINTO_SHRINE_MIRROR]: Pkm.IMPIDIMP,
-  [Blessing.UNSEALED_GOLEMANCY]: Pkm.GOLETT
+  [Blessing.UNSEALED_GOLEMANCY]: Pkm.GOLETT,
+  [Blessing.LIGHT_OF_OLIVINE]: Pkm.MAREEP
 }
 
 // hero Wishes whose effect is not tied to one unit: they keep their family for

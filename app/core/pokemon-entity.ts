@@ -255,6 +255,7 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
   unremovableItems: Set<Item> = new Set()
   heroBlessings = new Set<Blessing>()
   hasOwnSpotlight: boolean = false
+  isProcessingAbility: boolean = false
   isTidalGuardian: boolean = false
   overloadVoltSurged: boolean = false
   magnetosphereRangeBonus: number = 0
