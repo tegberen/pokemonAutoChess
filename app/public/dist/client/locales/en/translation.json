@@ -6430,6 +6430,10 @@
 			"name": "Mole Maze",
 			"description": "Gain a Drilbur. Your STRONGEST Drilbur's ability is replaced with Mole Maze, and it permanently gains 1 AP each time it KO's an enemy."
 		},
+		"WICKED_HUNTER": {
+			"name": "Wicked Hunter",
+			"description": "Gain a Hisuian Sneasel and move to a random Hisuian Sneasel region if not in one. Your STRONGEST Hisuian Sneasel's ability inflicts all 3 statuses, and has a [10,LK]% chance per negative status the target already has to execute it. The stats your allies gain from MONSTER are increased by 10% for each negative status on the KO'd enemy, rounded down."
+		},
 		"CYBER_BLADE": {
 			"name": "Cyber Blade",
 			"description": "Gain a Honedge. After your STRONGEST Honedge casts King's Shield, its ability is replaced with Laser Blade and its max PP is set to 50."

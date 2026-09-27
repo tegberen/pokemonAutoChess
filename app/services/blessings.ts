@@ -3287,6 +3287,9 @@ export const blessingEffectService: {
   [Blessing.CYBER_BLADE]: (player, state, room) =>
     heroBlessingEffect(Blessing.CYBER_BLADE, player, state, room),
 
+  [Blessing.WICKED_HUNTER]: (player, state, room) =>
+    heroBlessingEffect(Blessing.WICKED_HUNTER, player, state, room),
+
   // an unlock like Aurora Borealis: Cranidos joins this player's own shop pool
   [Blessing.PRIMAL_RAMPAGE]: (player) => {
     if (player.fossilUnlocksRef) player.fossilUnlocksRef.revealed = true

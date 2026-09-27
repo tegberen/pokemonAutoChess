@@ -200,6 +200,7 @@ export enum Blessing {
   PRIMAL_RAMPAGE = "PRIMAL_RAMPAGE",
   SALT_SHAKER = "SALT_SHAKER",
   CYBER_BLADE = "CYBER_BLADE",
+  WICKED_HUNTER = "WICKED_HUNTER",
   SILVER_SPOON = "SILVER_SPOON",
   ICE_SPEAR = "ICE_SPEAR",
   FROST_GEAR = "FROST_GEAR",
@@ -777,6 +778,8 @@ export const PRIMAL_RAMPAGE_KO_RECOIL = 20
 export const PRIMAL_RAMPAGE_KO_PP = 40
 export const SALT_SHAKER_RADIUS_BY_STAR = [2, 3, 4]
 export const CYBER_BLADE_MAX_PP = 50
+export const WICKED_HUNTER_EXECUTE_CHANCE_PER_STATUS = 0.1
+export const WICKED_HUNTER_MONSTER_BONUS_PER_STATUS = 0.1
 export const CELL_BRAWLER_STAT_BONUS = 0.5
 export const CELL_BRAWLER_ABILITY_LIFESTEAL = 0.5
 export const CELL_BRAWLER_OVERHEAL_TO_MAX_HP = 0.5
@@ -1252,7 +1255,8 @@ export const HERO_BLESSING_GIFT: { [blessing in Blessing]?: Pkm } = {
   [Blessing.PRIMAL_MAGNETISM]: Pkm.MAGNEMITE,
   [Blessing.DREEPY_DEPLOYMENT]: Pkm.DREEPY,
   [Blessing.SALT_SHAKER]: Pkm.NACLI,
-  [Blessing.CYBER_BLADE]: Pkm.HONEDGE
+  [Blessing.CYBER_BLADE]: Pkm.HONEDGE,
+  [Blessing.WICKED_HUNTER]: Pkm.HISUI_SNEASEL
 }
 
 export const HERO_BLESSING_POKEMON: { [blessing in Blessing]?: Pkm[] } = {
@@ -1340,7 +1344,8 @@ export const HERO_BLESSING_FAMILY: { [blessing in Blessing]?: Pkm } = {
   [Blessing.DREEPY_DEPLOYMENT]: Pkm.DREEPY,
   [Blessing.PRIMAL_RAMPAGE]: Pkm.CRANIDOS,
   [Blessing.SALT_SHAKER]: Pkm.NACLI,
-  [Blessing.CYBER_BLADE]: Pkm.HONEDGE
+  [Blessing.CYBER_BLADE]: Pkm.HONEDGE,
+  [Blessing.WICKED_HUNTER]: Pkm.HISUI_SNEASEL
 }
 
 /* hero blessings that also relocate the player to a region where their family
@@ -1352,7 +1357,8 @@ export const HERO_BLESSING_MOVES_REGION: Blessing[] = [
   Blessing.FROST_BURST,
   Blessing.MOTHER_YARN,
   Blessing.GALVANIC_RAIN,
-  Blessing.DREEPY_DEPLOYMENT
+  Blessing.DREEPY_DEPLOYMENT,
+  Blessing.WICKED_HUNTER
 ]
 
 /* these hero blessings keep their state on the simulation rather than on the
@@ -1379,7 +1385,8 @@ export const HERO_BLESSING_ADDS_TO_POOL: Blessing[] = [
   Blessing.PACK_ATTACK,
   Blessing.HIGH_BREACHING,
   Blessing.GALVANIC_RAIN,
-  Blessing.DREEPY_DEPLOYMENT
+  Blessing.DREEPY_DEPLOYMENT,
+  Blessing.WICKED_HUNTER
 ]
 
 // Item blessings all follow the same shape: picking one hands the player the

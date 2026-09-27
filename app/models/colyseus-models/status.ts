@@ -178,6 +178,29 @@ export default class Status extends Schema implements IStatus {
     this.blindCooldown = 0
   }
 
+  // the same statuses hasNegativeStatus checks, counted
+  countNegativeStatuses() {
+    return [
+      this.burn,
+      this.silence,
+      this.fatigue,
+      this.poisonStacks > 0,
+      this.freeze,
+      this.sleep,
+      this.confusion,
+      this.wound,
+      this.paralysis,
+      this.charm,
+      this.fear,
+      this.flinch,
+      this.armorReduction,
+      this.curse,
+      this.locked,
+      this.blinded,
+      this.possessed
+    ].filter(Boolean).length
+  }
+
   hasNegativeStatus() {
     return (
       this.burn ||

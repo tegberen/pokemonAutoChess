@@ -59,7 +59,8 @@ import {
   FIRE_IGNITION_TIER,
   IGNITION_COOLDOWN_ROUNDS,
   BERRY_GROWTH_GOLDEN_TIER,
-  ABNORMALITY_ABILITY_POWER_PER_EMPTY_CELL
+  ABNORMALITY_ABILITY_POWER_PER_EMPTY_CELL,
+  WICKED_HUNTER_MONSTER_BONUS_PER_STATUS
 } from "../../types/enum/Blessing"
 import {
   grantArcheologyRewards,
@@ -146,9 +147,18 @@ export class MonsterKillEffect extends OnKillEffect {
     ) {
       hpGain *= 3
     }
-    const lifeBoost = hpGain * target.maxHP
-    attacker.addAttack(attackBoost, attacker, 0, false)
-    attacker.addAbilityPower(apBoost, attacker, 0, false)
+    const hasWickedHunter =
+      attacker.player?.blessings?.includes(Blessing.WICKED_HUNTER) === true
+    const wickedHunterBonus =
+      1 +
+      WICKED_HUNTER_MONSTER_BONUS_PER_STATUS *
+        target.status.countNegativeStatuses()
+    // only rounded under the Wish, so plain Monster keeps its exact values
+    const withWickedHunter = (stat: number) =>
+      hasWickedHunter ? Math.floor(stat * wickedHunterBonus) : stat
+    const lifeBoost = withWickedHunter(hpGain * target.maxHP)
+    attacker.addAttack(withWickedHunter(attackBoost), attacker, 0, false)
+    attacker.addAbilityPower(withWickedHunter(apBoost), attacker, 0, false)
     attacker.addMaxHP(lifeBoost, attacker, 0, false)
     this.hpBoosted += lifeBoost
     this.count += 1
