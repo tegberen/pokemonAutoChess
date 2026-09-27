@@ -2009,6 +2009,12 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     icon: "fleur_de_lure",
     grantsPokemonImmediately: true
   },
+  [Blessing.LUNARIAN]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: [4],
+    icon: "lunarian",
+    grantsPokemonImmediately: true
+  },
   [Blessing.SILVER_SPOON]: {
     tier: BlessingTier.PRISMATIC,
     availableAtStages: [4],

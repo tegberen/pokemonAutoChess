@@ -207,6 +207,7 @@ export enum Blessing {
   GOOEY_GLOBULES = "GOOEY_GLOBULES",
   CRYSTAL_GUARDIAN = "CRYSTAL_GUARDIAN",
   FLEUR_DE_LURE = "FLEUR_DE_LURE",
+  LUNARIAN = "LUNARIAN",
   SILVER_SPOON = "SILVER_SPOON",
   ICE_SPEAR = "ICE_SPEAR",
   FROST_GEAR = "FROST_GEAR",
@@ -798,6 +799,7 @@ export const FLEUR_DE_LURE_PP_THRESHOLD = 0.8
 export const FLEUR_DE_LURE_TARGETS = 3
 export const FLEUR_DE_LURE_CHARM_DURATION = 3000
 export const FLEUR_DE_LURE_CHECK_INTERVAL = 100
+export const LUNARIAN_STAR_UP_CHANCE = 0.1
 export const CELL_BRAWLER_STAT_BONUS = 0.5
 export const CELL_BRAWLER_ABILITY_LIFESTEAL = 0.5
 export const CELL_BRAWLER_OVERHEAL_TO_MAX_HP = 0.5
@@ -1280,7 +1282,8 @@ export const HERO_BLESSING_GIFT: { [blessing in Blessing]?: Pkm } = {
   [Blessing.THUNDER_AND_LIGHTNING]: Pkm.TOXEL,
   [Blessing.GOOEY_GLOBULES]: Pkm.SLIGOO,
   [Blessing.CRYSTAL_GUARDIAN]: Pkm.ONIX,
-  [Blessing.FLEUR_DE_LURE]: Pkm.FOMANTIS
+  [Blessing.FLEUR_DE_LURE]: Pkm.FOMANTIS,
+  [Blessing.LUNARIAN]: Pkm.CLEFAIRY
 }
 
 export const HERO_BLESSING_POKEMON: { [blessing in Blessing]?: Pkm[] } = {
@@ -1375,7 +1378,8 @@ export const HERO_BLESSING_FAMILY: { [blessing in Blessing]?: Pkm } = {
   [Blessing.THUNDER_AND_LIGHTNING]: Pkm.TOXEL,
   [Blessing.GOOEY_GLOBULES]: Pkm.GOOMY,
   [Blessing.CRYSTAL_GUARDIAN]: Pkm.ONIX,
-  [Blessing.FLEUR_DE_LURE]: Pkm.FOMANTIS
+  [Blessing.FLEUR_DE_LURE]: Pkm.FOMANTIS,
+  [Blessing.LUNARIAN]: Pkm.CLEFFA
 }
 
 // hero Wishes whose effect is not tied to one unit: they keep their family for
@@ -1396,7 +1400,8 @@ export const HERO_BLESSING_MOVES_REGION: Blessing[] = [
   Blessing.DREEPY_DEPLOYMENT,
   Blessing.WICKED_HUNTER,
   Blessing.CLANGOROUS_SOULBLAZE,
-  Blessing.THUNDER_AND_LIGHTNING
+  Blessing.THUNDER_AND_LIGHTNING,
+  Blessing.LUNARIAN
 ]
 
 /* these hero blessings keep their state on the simulation rather than on the

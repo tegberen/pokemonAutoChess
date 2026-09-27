@@ -6430,6 +6430,10 @@
 			"name": "Mole Maze",
 			"description": "Gain a Drilbur. Your STRONGEST Drilbur's ability is replaced with Mole Maze, and it permanently gains 1 AP each time it KO's an enemy."
 		},
+		"LUNARIAN": {
+			"name": "Lunarian",
+			"description": "Gain a Clefairy and move to a random Cleffa region if not in one. Your STRONGEST Cleffa's Metronome casts legendary abilities in a set order: an attack, then a disruption, then a utility, on repeat. Its LUCK no longer affects the ability picked, but gives a [10,LK]% chance to cast it 1 STAR higher."
+		},
 		"FLEUR_DE_LURE": {
 			"name": "Fleur de Lure",
 			"description": "Gain a Fomantis and add it to the pool. Once per cast, when your STRONGEST Fomantis reaches 80% PP, the 3 closest enemies are CHARM for 3 seconds. Its Solar Blade always crits CHARM enemies, and executes CHARM BUG enemies."

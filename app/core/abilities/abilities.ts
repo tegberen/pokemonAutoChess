@@ -3,9 +3,10 @@ import { getPokemonData } from "../../models/precomputed/precomputed-pokemon-dat
 import { PRECOMPUTED_POKEMONS_PER_RARITY } from "../../models/precomputed/precomputed-rarity"
 import { Transfer } from "../../types"
 import { Ability } from "../../types/enum/Ability"
+import { Blessing, LUNARIAN_STAR_UP_CHANCE } from "../../types/enum/Blessing"
 import { Rarity, Team } from "../../types/enum/Game"
 import type { DisplayText } from "../../types/strings/DisplayText"
-import { pickRandomIn } from "../../utils/random"
+import { chance, pickRandomIn } from "../../utils/random"
 import type { Board } from "../board"
 import type { PokemonEntity } from "../pokemon-entity"
 import { AbilityStrategy } from "./ability-strategy"
@@ -676,6 +677,33 @@ export class MetronomeStrategy extends AbilityStrategy {
     target: PokemonEntity,
     crit: boolean
   ) {
+    const isLunarian = pokemon.heroBlessings?.has(Blessing.LUNARIAN) === true
+    const skill = isLunarian
+      ? pickRandomIn(
+          LUNARIAN_ABILITY_POOLS[
+            pokemon.count.ult % LUNARIAN_ABILITY_POOLS.length
+          ]
+        )
+      : this.pickRandomSkill(pokemon)
+
+    // LUNARIAN: luck no longer steers the pick, it can raise the cast a STAR
+    const starsBefore = pokemon.stars
+    if (isLunarian && chance(LUNARIAN_STAR_UP_CHANCE, pokemon)) {
+      pokemon.stars = starsBefore + 1
+    }
+    pokemon.broadcastAbility({ skill })
+    AbilityStrategies[skill].process(pokemon, board, target, crit)
+    pokemon.stars = starsBefore
+
+    pokemon.simulation.broadcastToSpectators(Transfer.DISPLAY_TEXT, {
+      id: pokemon.simulation.id,
+      text: `ability.${skill}` as DisplayText,
+      x: pokemon.positionX,
+      y: pokemon.positionY
+    })
+  }
+
+  pickRandomSkill(pokemon: PokemonEntity): Ability {
     const threshold = Math.pow(Math.random(), 1 + pokemon.luck / 100)
     let rarity = Rarity.COMMON
     if (pokemon.metronomeForcedRarity) {
@@ -707,21 +735,36 @@ export class MetronomeStrategy extends AbilityStrategy {
       ...new Set(pokemonOptions.map((p) => getPokemonData(p).skill))
     ]
 
-    const skill = pickRandomIn(
+    return pickRandomIn(
       skillOptions.filter((s) => InimitableAbilities.includes(s) === false)
     )
-
-    pokemon.broadcastAbility({ skill })
-    AbilityStrategies[skill].process(pokemon, board, target, crit)
-
-    pokemon.simulation.broadcastToSpectators(Transfer.DISPLAY_TEXT, {
-      id: pokemon.simulation.id,
-      text: `ability.${skill}` as DisplayText,
-      x: pokemon.positionX,
-      y: pokemon.positionY
-    })
   }
 }
+
+// cast 1, 2, 3 then around again: offensive, disruptive, utility
+const LUNARIAN_ABILITY_POOLS: Ability[][] = [
+  [
+    Ability.DRACO_METEOR,
+    Ability.FLEUR_CANNON,
+    Ability.DYNAMAX_CANNON,
+    Ability.ORIGIN_PULSE,
+    Ability.THUNDER
+  ],
+  [
+    Ability.BLIZZARD,
+    Ability.SPACIAL_REND,
+    Ability.STEALTH_ROCKS,
+    Ability.SPRINGTIDE_STORM,
+    Ability.CURSED_LAND
+  ],
+  [
+    Ability.LUNAR_BLESSING,
+    Ability.TIME_TRAVEL,
+    Ability.MOONGEIST_BEAM,
+    Ability.ROAR_OF_TIME,
+    Ability.PRIMAL_ROAR
+  ]
+]
 
 export class MimicStrategy extends AbilityStrategy {
   process(
