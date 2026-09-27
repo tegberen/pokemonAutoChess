@@ -1194,6 +1194,8 @@ const MAGNETIC_ABSORPTION_TINT = 0xf1c232
 const MAGNETIC_ABSORPTION_SPARK_DELAYS = [0, 90, 180, 270]
 const MAGNETIC_ABSORPTION_SPARK_FLIGHT = 420
 
+const CLANGOROUS_SOULBLAZE_TINT = 0xff7a1a
+
 const SALT_SHAKER_FLIGHT = 600
 const SALT_SHAKER_ARC_HEIGHT = 110
 const SALT_SHAKER_ICON_SCALE = 0.75
@@ -4314,6 +4316,34 @@ export const AbilitiesAnimations: {
   }),
   ["GALVANIC_RAIN_THROW"]: galvanicRainThrowAnimation,
   ["SALT_SHAKER_ROCK_SALT"]: saltShakerRockSaltAnimation,
+  ["CLANGOROUS_SOULBLAZE_BURST"]: [
+    onCaster({
+      ability: Ability.CLANGOROUS_SOUL,
+      scale: 5,
+      tint: CLANGOROUS_SOULBLAZE_TINT
+    }),
+    onCaster({
+      ability: Ability.CLANGOROUS_SOUL,
+      scale: 3,
+      tint: CLANGOROUS_SOULBLAZE_TINT,
+      delay: 150
+    }),
+    shakeCamera({ duration: 350, intensity: 0.006 })
+  ],
+  ["CLANGOROUS_SOULBLAZE_SPREAD"]: projectile({
+    ability: "DRAGON/range",
+    textureKey: "attacks",
+    duration: 500,
+    scale: 3,
+    oriented: true,
+    tint: CLANGOROUS_SOULBLAZE_TINT,
+    delay: 200,
+    hitAnim: onTarget({
+      ability: Ability.CLANGOROUS_SOUL,
+      scale: 2,
+      tint: CLANGOROUS_SOULBLAZE_TINT
+    })
+  }),
   // projectile for the LEAF_TORNADO blessing ricochet
   ["GRASS_RANGE"]: projectile({
     ability: "GRASS/range",

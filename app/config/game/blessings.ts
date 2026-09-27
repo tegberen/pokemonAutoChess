@@ -1973,6 +1973,12 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     icon: "wicked_hunter",
     grantsPokemonImmediately: true
   },
+  [Blessing.CLANGOROUS_SOULBLAZE]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: [12],
+    icon: "clangorous_soulblaze",
+    grantsPokemonImmediately: true
+  },
   [Blessing.SILVER_SPOON]: {
     tier: BlessingTier.PRISMATIC,
     availableAtStages: [4],

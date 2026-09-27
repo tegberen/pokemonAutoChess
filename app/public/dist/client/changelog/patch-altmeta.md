@@ -495,6 +495,7 @@ Every balance change on this server, newest first.
 - Magnetic Absorption | damage [80,80,80,120] → [20,40,80,120] per STAR, so Sandy Shocks is unchanged
 
 **Wishes**
+- Clangorous Soulblaze {{new}} | Gain a Jangmo-o and move to a random Jangmo-o region if not in one. Your STRONGEST Jangmo-o's ability only affects itself, but grants twice the stats. When it is KO'd, it passes the stats it gained this way to allies within its RANGE
 - Wicked Hunter {{new}} | Gain a Hisuian Sneasel and move to a random Hisuian Sneasel region if not in one. Your STRONGEST Hisuian Sneasel's ability inflicts all 3 statuses, and has a [10,LK]% chance per negative status the target already has to execute it. The stats your allies gain from MONSTER are increased by 10% for each negative status on the KO'd enemy, rounded down
 - Cyber Blade {{new}} | Gain a Honedge. After your STRONGEST Honedge casts King's Shield, its ability is replaced with Laser Blade and its max PP is set to 50
 - Salt Shaker {{new}} | Gain a Nacli. Your STRONGEST Nacli's Salt Cure reaches [2,3,4] tiles. When a BURN enemy is KO'd within that range, the closest ally without RUNE_PROTECT gains the effect of ROCK_SALT
