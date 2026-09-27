@@ -82,6 +82,7 @@ import { isUnderZenith } from "../utils/weather"
 import { count, isIn } from "../utils/array"
 import { isOnBench } from "../utils/board"
 import { distanceC, distanceM } from "../utils/distance"
+import { grantSaltShakerRockSalt } from "./salt-shaker"
 import { isPlainFunction } from "../utils/function"
 import { chance, pickNRandomIn, pickRandomIn } from "../utils/random"
 import { clamp, max, min, roundToNDigits } from "../utils/number"
@@ -1659,6 +1660,8 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
     this.getEffects(OnDeathEffect).forEach((effect) =>
       effect.apply({ pokemon: this, board, attacker })
     )
+
+    if (this.status.burn) grantSaltShakerRockSalt(this, board)
 
     /* TOXIC_BURST is owned by the opposing player, since the unit bursting is
        an enemy from the blessing owner's point of view */

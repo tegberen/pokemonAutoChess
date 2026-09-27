@@ -6430,6 +6430,10 @@
 			"name": "Mole Maze",
 			"description": "Gain a Drilbur. Your STRONGEST Drilbur's ability is replaced with Mole Maze, and it permanently gains 1 AP each time it KO's an enemy."
 		},
+		"SALT_SHAKER": {
+			"name": "Salt Shaker",
+			"description": "Gain a Nacli. Your STRONGEST Nacli's Salt Cure reaches [2,3,4] tiles. When a BURN enemy is KO'd within that range, the closest ally without RUNE_PROTECT gains the effect of ROCK_SALT."
+		},
 		"PRIMAL_RAMPAGE": {
 			"name": "Primal Rampage",
 			"description": "Unlock Cranidos. Your STRONGEST Cranidos's ability is replaced with Torment. Each time it KO's an enemy, it takes 20 PHYSICAL retaliation damage and regains 40 PP."

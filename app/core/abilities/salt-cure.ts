@@ -1,6 +1,7 @@
 import { Synergy } from "../../types/enum/Synergy"
 import type { Board } from "../board"
 import type { PokemonEntity } from "../pokemon-entity"
+import { getSaltCureRadius } from "../salt-shaker"
 import { AbilityStrategy } from "./ability-strategy"
 
 export class SaltCureStrategy extends AbilityStrategy {
@@ -16,7 +17,7 @@ export class SaltCureStrategy extends AbilityStrategy {
     const cells = board.getCellsInRadius(
       pokemon.positionX,
       pokemon.positionY,
-      2,
+      getSaltCureRadius(pokemon),
       false
     )
     cells.forEach((cell) => {

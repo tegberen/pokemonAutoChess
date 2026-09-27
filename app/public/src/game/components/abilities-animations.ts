@@ -33,7 +33,7 @@ import {
   SpriteType,
   Stat
 } from "../../../../types/enum/Game"
-import { Sweets } from "../../../../types/enum/Item"
+import { Item, Sweets } from "../../../../types/enum/Item"
 import { Pillars, Pkm, PkmIndex } from "../../../../types/enum/Pokemon"
 import { range } from "../../../../utils/array"
 import { distanceE, distanceM } from "../../../../utils/distance"
@@ -1193,6 +1193,45 @@ function voltSwitchBolt(args: AbilityAnimationArgs) {
 const MAGNETIC_ABSORPTION_TINT = 0xf1c232
 const MAGNETIC_ABSORPTION_SPARK_DELAYS = [0, 90, 180, 270]
 const MAGNETIC_ABSORPTION_SPARK_FLIGHT = 420
+
+const SALT_SHAKER_FLIGHT = 600
+const SALT_SHAKER_ARC_HEIGHT = 110
+const SALT_SHAKER_ICON_SCALE = 0.75
+
+function saltShakerRockSaltAnimation(args: AbilityAnimationArgs) {
+  const { scene, positionX, positionY, targetX, targetY, flip } = args
+  const [startX, startY] = transformEntityCoordinates(positionX, positionY, flip)
+  const [endX, endY] = transformEntityCoordinates(targetX, targetY, flip)
+  const rockSalt = scene.add
+    .sprite(startX, startY, "item", `${Item.ROCK_SALT}.png`)
+    .setScale(SALT_SHAKER_ICON_SCALE)
+    .setDepth(DEPTH.ABILITY)
+  const tumbleDirection = endX >= startX ? 1 : -1
+  scene.tweens.addCounter({
+    from: 0,
+    to: 1,
+    duration: SALT_SHAKER_FLIGHT,
+    onUpdate: (tween) => {
+      const progress = tween.getValue() ?? 1
+      const arc = 4 * progress * (1 - progress) * SALT_SHAKER_ARC_HEIGHT
+      rockSalt.setPosition(
+        startX + (endX - startX) * progress,
+        startY + (endY - startY) * progress - arc
+      )
+      rockSalt.setAngle(tumbleDirection * 360 * progress)
+    },
+    onComplete: () => {
+      onTarget({ ability: "PUFF_BROWN", scale: 2 })(args)
+      scene.tweens.add({
+        targets: rockSalt,
+        scale: SALT_SHAKER_ICON_SCALE * 1.5,
+        alpha: 0,
+        duration: 300,
+        onComplete: () => rockSalt.destroy()
+      })
+    }
+  })
+}
 
 const GALVANIC_RAIN_THROW_ARC_HEIGHT = 140
 const GALVANIC_RAIN_THROW_MIN_FLIGHT = 200
@@ -4274,6 +4313,7 @@ export const AbilitiesAnimations: {
     scale: 5
   }),
   ["GALVANIC_RAIN_THROW"]: galvanicRainThrowAnimation,
+  ["SALT_SHAKER_ROCK_SALT"]: saltShakerRockSaltAnimation,
   // projectile for the LEAF_TORNADO blessing ricochet
   ["GRASS_RANGE"]: projectile({
     ability: "GRASS/range",
