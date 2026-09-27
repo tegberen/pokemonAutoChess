@@ -3311,6 +3311,9 @@ export const blessingEffectService: {
   [Blessing.LUNARIAN]: (player, state, room) =>
     heroBlessingEffect(Blessing.LUNARIAN, player, state, room),
 
+  [Blessing.SHINTO_SHRINE_MIRROR]: (player, state, room) =>
+    heroBlessingEffect(Blessing.SHINTO_SHRINE_MIRROR, player, state, room),
+
   // an unlock like Aurora Borealis: Cranidos joins this player's own shop pool
   [Blessing.PRIMAL_RAMPAGE]: (player) => {
     if (player.fossilUnlocksRef) player.fossilUnlocksRef.revealed = true

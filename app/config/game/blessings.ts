@@ -2015,6 +2015,12 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     icon: "lunarian",
     grantsPokemonImmediately: true
   },
+  [Blessing.SHINTO_SHRINE_MIRROR]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: [4],
+    icon: "shinto_shrine_mirror",
+    grantsPokemonImmediately: true
+  },
   [Blessing.SILVER_SPOON]: {
     tier: BlessingTier.PRISMATIC,
     availableAtStages: [4],

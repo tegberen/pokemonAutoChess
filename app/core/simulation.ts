@@ -135,6 +135,8 @@ import {
   FLEUR_DE_LURE_TARGETS,
   FLEUR_DE_LURE_CHARM_DURATION,
   FLEUR_DE_LURE_CHECK_INTERVAL,
+  SHINTO_SHRINE_MIRROR_INTERVAL,
+  SHINTO_SHRINE_MIRROR_DURATION,
   GOOEY_GLOBULES_SPEED_LOSS,
   GOOEY_GLOBULES_ALLY_HEAL,
   PRIMAL_RAMPAGE_KO_PP,
@@ -4341,6 +4343,37 @@ export default class Simulation extends Schema implements ISimulation {
             }, GALVANIC_RAIN_THROW_FLIGHT_MS)
           )
         })
+      )
+    }
+
+    const shintoShrineMirrorChampion = championOf.get(
+      Blessing.SHINTO_SHRINE_MIRROR
+    )
+    if (shintoShrineMirrorChampion) {
+      let physicalDamageTaken = 0
+      let specialDamageTaken = 0
+      shintoShrineMirrorChampion.status.triggerReflect(
+        SHINTO_SHRINE_MIRROR_DURATION
+      )
+      shintoShrineMirrorChampion.effectsSet.add(
+        new OnDamageReceivedEffect(({ damage, attackType }) => {
+          if (attackType === AttackType.PHYSICAL) physicalDamageTaken += damage
+          else if (attackType === AttackType.SPECIAL)
+            specialDamageTaken += damage
+        })
+      )
+      shintoShrineMirrorChampion.effectsSet.add(
+        new PeriodicEffect(
+          (pokemon) => {
+            if (physicalDamageTaken >= specialDamageTaken) {
+              pokemon.status.triggerReflect(SHINTO_SHRINE_MIRROR_DURATION)
+            } else {
+              pokemon.status.triggerMagicBounce(SHINTO_SHRINE_MIRROR_DURATION)
+            }
+          },
+          Ability.REFLECT,
+          SHINTO_SHRINE_MIRROR_INTERVAL
+        )
       )
     }
 
