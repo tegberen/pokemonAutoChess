@@ -81,6 +81,7 @@ import {
   HERO_BLESSING_FAMILY,
   HERO_BLESSING_GIFT,
   HERO_BLESSING_HATCH_MAX_HP,
+  HERO_BLESSINGS_WITH_STRONG_GIFT,
   HERO_BLESSING_MOVES_REGION,
   ITEM_GRANTED_BY_BLESSING,
   LANGUAGE_BARRIER_UNOWNS_GRANTED,
@@ -1844,7 +1845,9 @@ function heroBlessingEffect(
 ): boolean {
   const gift = HERO_BLESSING_GIFT[blessing]
   const bonusMaxHp =
-    gift && getPokemonData(gift).rarity === Rarity.HATCH
+    gift &&
+    (getPokemonData(gift).rarity === Rarity.HATCH ||
+      HERO_BLESSINGS_WITH_STRONG_GIFT.includes(blessing))
       ? HERO_BLESSING_HATCH_MAX_HP
       : 0
   if (

@@ -2004,7 +2004,7 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     grantsPokemonImmediately: true
   },
   [Blessing.FLEUR_DE_LURE]: {
-    tier: BlessingTier.GOLD,
+    tier: BlessingTier.PRISMATIC,
     availableAtStages: [4],
     icon: "fleur_de_lure",
     grantsPokemonImmediately: true

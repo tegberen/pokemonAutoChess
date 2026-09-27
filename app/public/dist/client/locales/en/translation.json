@@ -6440,7 +6440,7 @@
 		},
 		"FLEUR_DE_LURE": {
 			"name": "Fleur de Lure",
-			"description": "Gain a Fomantis and add it to the pool. Once per cast, when your STRONGEST Fomantis reaches 80% PP, the 3 closest enemies are CHARM for 3 seconds. Its Solar Blade always crits CHARM enemies, and executes CHARM BUG enemies."
+			"description": "Gain a strong Fomantis and add it to the pool. Once per cast, when your STRONGEST Fomantis reaches 80% PP, the 3 closest enemies are CHARM for 3 seconds. Its Solar Blade always crits CHARM enemies, and executes CHARM BUG enemies."
 		},
 		"CRYSTAL_GUARDIAN": {
 			"name": "Crystal Guardian",

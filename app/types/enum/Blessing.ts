@@ -886,6 +886,9 @@ export const CHOSEN_ONES_MAX_HP_GAIN = 10
 export const MOLE_MAZE_POP_DELAY = 1100
 export const MOLE_MAZE_EMERGE_DELAY = 2500
 export const HERO_BLESSING_HATCH_MAX_HP = 50
+export const HERO_BLESSINGS_WITH_STRONG_GIFT: Blessing[] = [
+  Blessing.FLEUR_DE_LURE
+]
 export const QUEST_ASCEND_POKEMONS = 3
 export const ROCKY_BEGINNINGS_POKEMONS = 2
 export const QUEST_EVOLVE_II_RARES_GRANTED = 2
