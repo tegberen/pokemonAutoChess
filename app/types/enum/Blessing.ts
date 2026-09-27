@@ -209,6 +209,7 @@ export enum Blessing {
   FLEUR_DE_LURE = "FLEUR_DE_LURE",
   LUNARIAN = "LUNARIAN",
   SHINTO_SHRINE_MIRROR = "SHINTO_SHRINE_MIRROR",
+  UNSEALED_GOLEMANCY = "UNSEALED_GOLEMANCY",
   SILVER_SPOON = "SILVER_SPOON",
   ICE_SPEAR = "ICE_SPEAR",
   FROST_GEAR = "FROST_GEAR",
@@ -803,6 +804,13 @@ export const FLEUR_DE_LURE_CHECK_INTERVAL = 100
 export const LUNARIAN_STAR_UP_CHANCE = 0.1
 export const SHINTO_SHRINE_MIRROR_INTERVAL = 6000
 export const SHINTO_SHRINE_MIRROR_DURATION = 3000
+export const UNSEALED_GOLEMANCY_REGIS: Pkm[] = [
+  Pkm.REGIROCK,
+  Pkm.REGICE,
+  Pkm.REGISTEEL,
+  Pkm.REGIELEKI,
+  Pkm.REGIDRAGO
+]
 export const CELL_BRAWLER_STAT_BONUS = 0.5
 export const CELL_BRAWLER_ABILITY_LIFESTEAL = 0.5
 export const CELL_BRAWLER_OVERHEAL_TO_MAX_HP = 0.5
@@ -1290,7 +1298,8 @@ export const HERO_BLESSING_GIFT: { [blessing in Blessing]?: Pkm } = {
   [Blessing.CRYSTAL_GUARDIAN]: Pkm.ONIX,
   [Blessing.FLEUR_DE_LURE]: Pkm.FOMANTIS,
   [Blessing.LUNARIAN]: Pkm.CLEFAIRY,
-  [Blessing.SHINTO_SHRINE_MIRROR]: Pkm.MORGREM
+  [Blessing.SHINTO_SHRINE_MIRROR]: Pkm.MORGREM,
+  [Blessing.UNSEALED_GOLEMANCY]: Pkm.GOLETT
 }
 
 export const HERO_BLESSING_POKEMON: { [blessing in Blessing]?: Pkm[] } = {
@@ -1387,7 +1396,8 @@ export const HERO_BLESSING_FAMILY: { [blessing in Blessing]?: Pkm } = {
   [Blessing.CRYSTAL_GUARDIAN]: Pkm.ONIX,
   [Blessing.FLEUR_DE_LURE]: Pkm.FOMANTIS,
   [Blessing.LUNARIAN]: Pkm.CLEFFA,
-  [Blessing.SHINTO_SHRINE_MIRROR]: Pkm.IMPIDIMP
+  [Blessing.SHINTO_SHRINE_MIRROR]: Pkm.IMPIDIMP,
+  [Blessing.UNSEALED_GOLEMANCY]: Pkm.GOLETT
 }
 
 // hero Wishes whose effect is not tied to one unit: they keep their family for
@@ -1441,7 +1451,8 @@ export const HERO_BLESSING_ADDS_TO_POOL: Blessing[] = [
   Blessing.WICKED_HUNTER,
   Blessing.WINDY_SANDS,
   Blessing.CRYSTAL_GUARDIAN,
-  Blessing.FLEUR_DE_LURE
+  Blessing.FLEUR_DE_LURE,
+  Blessing.UNSEALED_GOLEMANCY
 ]
 
 // Item blessings all follow the same shape: picking one hands the player the

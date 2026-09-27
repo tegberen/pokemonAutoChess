@@ -2021,6 +2021,12 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     icon: "shinto_shrine_mirror",
     grantsPokemonImmediately: true
   },
+  [Blessing.UNSEALED_GOLEMANCY]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: [12],
+    icon: "unsealed_golemancy",
+    grantsPokemonImmediately: true
+  },
   [Blessing.SILVER_SPOON]: {
     tier: BlessingTier.PRISMATIC,
     availableAtStages: [4],

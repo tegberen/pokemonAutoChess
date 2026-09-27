@@ -743,6 +743,13 @@ export default class Player extends Schema implements IPlayer {
         }
       })
     }
+    if (this.blessings?.includes(Blessing.UNSEALED_GOLEMANCY)) {
+      pokemons.forEach((pokemon) => {
+        if (PkmFamily[pokemon.name] === Pkm.GOLETT) {
+          pokemon.types.add(Synergy.MONSTER)
+        }
+      })
+    }
     pokemons.forEach((pokemon) => {
       if (pokemon.honeyExplorationFriend) pokemon.types.add(Synergy.WILD)
       pokemon.keptSynergies.forEach((synergy) => pokemon.types.add(synergy))

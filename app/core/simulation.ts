@@ -137,6 +137,7 @@ import {
   FLEUR_DE_LURE_CHECK_INTERVAL,
   SHINTO_SHRINE_MIRROR_INTERVAL,
   SHINTO_SHRINE_MIRROR_DURATION,
+  UNSEALED_GOLEMANCY_REGIS,
   GOOEY_GLOBULES_SPEED_LOSS,
   GOOEY_GLOBULES_ALLY_HEAL,
   PRIMAL_RAMPAGE_KO_PP,
@@ -4450,6 +4451,37 @@ export default class Simulation extends Schema implements ISimulation {
             })
             splattered.addSpeed(-GOOEY_GLOBULES_SPEED_LOSS, pokemon, 0, false)
           }
+        })
+      )
+    }
+
+    const unsealedGolemancyChampion = championOf.get(
+      Blessing.UNSEALED_GOLEMANCY
+    )
+    if (unsealedGolemancyChampion) {
+      let hasSummonedRegi = false
+      unsealedGolemancyChampion.effectsSet.add(
+        new OnKillEffect(({ attacker, target }) => {
+          let summoned: Pkm
+          if (target.stars <= 1) summoned = Pkm.GOLETT
+          else if (target.stars === 2 || hasSummonedRegi) summoned = Pkm.GOLURK
+          else {
+            hasSummonedRegi = true
+            summoned = pickRandomIn(UNSEALED_GOLEMANCY_REGIS)
+          }
+          const landing = this.getClosestFreeCellTo(
+            target.positionX,
+            target.positionY,
+            attacker.team
+          )
+          if (!landing) return
+          this.addPokemon(
+            PokemonFactory.createPokemonFromName(summoned, attacker.player),
+            landing.x,
+            landing.y,
+            attacker.team,
+            true
+          )
         })
       )
     }
