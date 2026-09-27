@@ -1,3 +1,4 @@
+import { Blessing } from "../../types/enum/Blessing"
 import { AttackType } from "../../types/enum/Game"
 import type { Board } from "../board"
 import type { PokemonEntity } from "../pokemon-entity"
@@ -20,6 +21,11 @@ export class SandTombStrategy extends AbilityStrategy {
     const castPositionX = pokemon.positionX
     const castPositionY = pokemon.positionY
     pokemon.sandTombVortexes += 1
+
+    // drawn in before the silence is measured, so they end up silenced longer
+    if (pokemon.heroBlessings?.has(Blessing.WINDY_SANDS)) {
+      pullEnemiesOneTileCloser(pokemon, board, vortexRadius)
+    }
 
     board
       .getCellsInRadius(castPositionX, castPositionY, vortexRadius, false)
@@ -67,4 +73,33 @@ export class SandTombStrategy extends AbilityStrategy {
         })
     }, vortexDuration)
   }
+}
+
+// nearest first, so each one frees the tile the next enemy is pulled into
+function pullEnemiesOneTileCloser(
+  hippopotas: PokemonEntity,
+  board: Board,
+  radius: number
+) {
+  const distanceToHippopotas = (enemy: PokemonEntity) =>
+    Math.hypot(
+      enemy.positionX - hippopotas.positionX,
+      enemy.positionY - hippopotas.positionY
+    )
+  board
+    .getCellsInRadius(hippopotas.positionX, hippopotas.positionY, radius, false)
+    .map((cell) => cell.value)
+    .filter(
+      (enemy): enemy is PokemonEntity =>
+        enemy !== undefined && enemy.team !== hippopotas.team && enemy.hp > 0
+    )
+    .sort((a, b) => distanceToHippopotas(a) - distanceToHippopotas(b))
+    .forEach((enemy) => {
+      const x =
+        enemy.positionX + Math.sign(hippopotas.positionX - enemy.positionX)
+      const y =
+        enemy.positionY + Math.sign(hippopotas.positionY - enemy.positionY)
+      if (board.getEntityOnCell(x, y) !== undefined) return
+      enemy.moveTo(x, y, board, true)
+    })
 }

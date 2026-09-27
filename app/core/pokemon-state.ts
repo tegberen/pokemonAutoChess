@@ -89,6 +89,7 @@ import {
   onPrimordialPowerAwakened
 } from "./effects/galar-fossil-passives"
 import { steelTrueDamageRatio, type PokemonEntity } from "./pokemon-entity"
+import { healWindySandsFromSandstorm } from "./windy-sands"
 
 function tickBlessingMark(
   pokemon: PokemonEntity,
@@ -1475,6 +1476,7 @@ export default abstract class PokemonState {
             AttackType.SPECIAL,
             takenDamage
           )
+          healWindySandsFromSandstorm(pokemon, takenDamage, board)
         }
       }
     }

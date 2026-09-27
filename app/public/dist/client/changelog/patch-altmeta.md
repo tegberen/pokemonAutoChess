@@ -495,6 +495,7 @@ Every balance change on this server, newest first.
 - Magnetic Absorption | damage [80,80,80,120] → [20,40,80,120] per STAR, so Sandy Shocks is unchanged
 
 **Wishes**
+- Windy Sands {{new}} | Gain a Hippopotas and add it to the pool. Your STRONGEST Hippopotas heals for 50% of the SANDSTORM_DAMAGE taken by enemies within 4 tiles. When it casts its ability, enemies caught in it are pulled 1 tile towards it
 - Clangorous Soulblaze {{new}} | Gain a Jangmo-o and move to a random Jangmo-o region if not in one. Your STRONGEST Jangmo-o's ability only affects itself, but grants twice the stats. When it is KO'd, it passes the stats it gained this way to allies within its RANGE
 - Wicked Hunter {{new}} | Gain a Hisuian Sneasel and move to a random Hisuian Sneasel region if not in one. Your STRONGEST Hisuian Sneasel's ability inflicts all 3 statuses, and has a [10,LK]% chance per negative status the target already has to execute it. The stats your allies gain from MONSTER are increased by 10% for each negative status on the KO'd enemy, rounded down
 - Cyber Blade {{new}} | Gain a Honedge. After your STRONGEST Honedge casts King's Shield, its ability is replaced with Laser Blade and its max PP is set to 50

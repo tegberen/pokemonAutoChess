@@ -6430,6 +6430,10 @@
 			"name": "Mole Maze",
 			"description": "Gain a Drilbur. Your STRONGEST Drilbur's ability is replaced with Mole Maze, and it permanently gains 1 AP each time it KO's an enemy."
 		},
+		"WINDY_SANDS": {
+			"name": "Windy Sands",
+			"description": "Gain a Hippopotas and add it to the pool. Your STRONGEST Hippopotas heals for 50% of the SANDSTORM_DAMAGE taken by enemies within 4 tiles. When it casts its ability, enemies caught in it are pulled 1 tile towards it."
+		},
 		"CLANGOROUS_SOULBLAZE": {
 			"name": "Clangorous Soulblaze",
 			"description": "Gain a Jangmo-o and move to a random Jangmo-o region if not in one. Your STRONGEST Jangmo-o's ability only affects itself, but grants twice the stats. When it is KO'd, it passes the stats it gained this way to allies within its RANGE."

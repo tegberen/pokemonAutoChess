@@ -202,6 +202,7 @@ export enum Blessing {
   CYBER_BLADE = "CYBER_BLADE",
   WICKED_HUNTER = "WICKED_HUNTER",
   CLANGOROUS_SOULBLAZE = "CLANGOROUS_SOULBLAZE",
+  WINDY_SANDS = "WINDY_SANDS",
   SILVER_SPOON = "SILVER_SPOON",
   ICE_SPEAR = "ICE_SPEAR",
   FROST_GEAR = "FROST_GEAR",
@@ -782,6 +783,8 @@ export const CYBER_BLADE_MAX_PP = 50
 export const WICKED_HUNTER_EXECUTE_CHANCE_PER_STATUS = 0.1
 export const WICKED_HUNTER_MONSTER_BONUS_PER_STATUS = 0.1
 export const CLANGOROUS_SOULBLAZE_BUFF_MULTIPLIER = 2
+export const WINDY_SANDS_HEAL_RATIO = 0.5
+export const WINDY_SANDS_RADIUS = 4
 export const CELL_BRAWLER_STAT_BONUS = 0.5
 export const CELL_BRAWLER_ABILITY_LIFESTEAL = 0.5
 export const CELL_BRAWLER_OVERHEAL_TO_MAX_HP = 0.5
@@ -1259,7 +1262,8 @@ export const HERO_BLESSING_GIFT: { [blessing in Blessing]?: Pkm } = {
   [Blessing.SALT_SHAKER]: Pkm.NACLI,
   [Blessing.CYBER_BLADE]: Pkm.HONEDGE,
   [Blessing.WICKED_HUNTER]: Pkm.HISUI_SNEASEL,
-  [Blessing.CLANGOROUS_SOULBLAZE]: Pkm.JANGMO_O
+  [Blessing.CLANGOROUS_SOULBLAZE]: Pkm.JANGMO_O,
+  [Blessing.WINDY_SANDS]: Pkm.HIPPOPOTAS
 }
 
 export const HERO_BLESSING_POKEMON: { [blessing in Blessing]?: Pkm[] } = {
@@ -1349,7 +1353,8 @@ export const HERO_BLESSING_FAMILY: { [blessing in Blessing]?: Pkm } = {
   [Blessing.SALT_SHAKER]: Pkm.NACLI,
   [Blessing.CYBER_BLADE]: Pkm.HONEDGE,
   [Blessing.WICKED_HUNTER]: Pkm.HISUI_SNEASEL,
-  [Blessing.CLANGOROUS_SOULBLAZE]: Pkm.JANGMO_O
+  [Blessing.CLANGOROUS_SOULBLAZE]: Pkm.JANGMO_O,
+  [Blessing.WINDY_SANDS]: Pkm.HIPPOPOTAS
 }
 
 /* hero blessings that also relocate the player to a region where their family
@@ -1391,7 +1396,8 @@ export const HERO_BLESSING_ADDS_TO_POOL: Blessing[] = [
   Blessing.HIGH_BREACHING,
   Blessing.GALVANIC_RAIN,
   Blessing.DREEPY_DEPLOYMENT,
-  Blessing.WICKED_HUNTER
+  Blessing.WICKED_HUNTER,
+  Blessing.WINDY_SANDS
 ]
 
 // Item blessings all follow the same shape: picking one hands the player the
