@@ -4380,6 +4380,13 @@ export const AbilitiesAnimations: {
   ["GALVANIC_RAIN_THROW"]: galvanicRainThrowAnimation,
   ["SALT_SHAKER_ROCK_SALT"]: saltShakerRockSaltAnimation,
   ["GOOEY_GLOBULES_BLOB"]: gooeyGlobulesBlobAnimation,
+  ["BONEMERANG_RANGER_THROW"]: projectile({
+    ability: Ability.BONEMERANG,
+    duration: 500,
+    ease: "Power2",
+    scale: 2,
+    tweenProps: { yoyo: true }
+  }),
   ["ROLLING_SNOWBALL_IMPACT"]: onTarget({
     ability: "ICE/hit",
     textureKey: "attacks",

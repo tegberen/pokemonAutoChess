@@ -3332,6 +3332,9 @@ export const blessingEffectService: {
   [Blessing.SWAMP_FATHER]: (player, state, room) =>
     heroBlessingEffect(Blessing.SWAMP_FATHER, player, state, room),
 
+  [Blessing.BONEMERANG_RANGER]: (player, state, room) =>
+    heroBlessingEffect(Blessing.BONEMERANG_RANGER, player, state, room),
+
   // an unlock like Aurora Borealis: Cranidos joins this player's own shop pool
   [Blessing.PRIMAL_RAMPAGE]: (player) => {
     if (player.fossilUnlocksRef) player.fossilUnlocksRef.revealed = true

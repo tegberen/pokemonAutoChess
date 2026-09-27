@@ -144,6 +144,10 @@ import {
   GOOEY_GLOBULES_SPEED_LOSS,
   GOOEY_GLOBULES_ALLY_HEAL,
   PRIMAL_RAMPAGE_KO_PP,
+  BONEMERANG_RANGER_RANGE_BONUS,
+  BONEMERANG_RANGER_DAMAGE_LOSS_PER_HIT,
+  BONEMERANG_RANGER_MIN_DAMAGE_RATIO,
+  BONEMERANG_RANGER_RETURN_DELAY,
   CELL_BRAWLER_STAT_BONUS,
   GALE_WINGS_EMBERS_FOR_FIRE_SHARD,
   GALE_WINGS_EMBERS_PER_GOLD_BY_STAR,
@@ -314,7 +318,7 @@ import { AbilityStrategies } from "./abilities/abilities"
 import { electrify } from "./abilities/electrify"
 import { applyWhirlpoolDamage } from "./abilities/whirlpool"
 import type { SurfStrategy } from "./abilities/surf"
-import { Board } from "./board"
+import { Board, effectInLine } from "./board"
 import Dps from "./dps"
 import { DishEffects } from "./effects/dishes"
 import {
@@ -4593,6 +4597,67 @@ export default class Simulation extends Schema implements ISimulation {
     if (shuttleBusChampion) {
       shuttleBusChampion.maxPP = SHUTTLE_BUS_MAX_PP
       shuttleBusChampion.pp = SHUTTLE_BUS_MAX_PP
+    }
+
+    const bonemerangRangerChampion = championOf.get(Blessing.BONEMERANG_RANGER)
+    if (bonemerangRangerChampion) {
+      bonemerangRangerChampion.range += BONEMERANG_RANGER_RANGE_BONUS
+      bonemerangRangerChampion.skill = Ability.TORMENT
+      bonemerangRangerChampion.effectsSet.add(
+        new OnAttackEffect(({ pokemon, target, board, crit }) => {
+          if (!target) return
+          const enemiesInLine: PokemonEntity[] = []
+          let lineEndX = target.positionX
+          let lineEndY = target.positionY
+          effectInLine(board, pokemon, target, (cell) => {
+            lineEndX = cell.x
+            lineEndY = cell.y
+            if (cell.value && cell.value.team !== pokemon.team) {
+              enemiesInLine.push(cell.value)
+            }
+          })
+          const hits = [...enemiesInLine, ...[...enemiesInLine].reverse()]
+          // the basic attack itself is the bonemerang's hit on its target
+          const targetHitIndex = hits.indexOf(target)
+          if (targetHitIndex >= 0) hits.splice(targetHitIndex, 1)
+          const boneDamage = pokemon.atk * (crit ? pokemon.critPower : 1)
+          const damageForHit = (hitIndex: number) =>
+            boneDamage *
+            Math.max(
+              BONEMERANG_RANGER_MIN_DAMAGE_RATIO,
+              1 - BONEMERANG_RANGER_DAMAGE_LOSS_PER_HIT * (hitIndex + 1)
+            )
+          const hitEnemy = (enemy: PokemonEntity, hitIndex: number) => {
+            if (enemy.hp <= 0) return
+            enemy.handleDamage({
+              damage: damageForHit(hitIndex),
+              board,
+              attackType: AttackType.PHYSICAL,
+              attacker: pokemon,
+              shouldTargetGainMana: true
+            })
+          }
+          pokemon.broadcastAbility({
+            skill: "BONEMERANG_RANGER_THROW",
+            targetX: lineEndX,
+            targetY: lineEndY
+          })
+          const outboundHitCount =
+            enemiesInLine.length - (targetHitIndex >= 0 ? 1 : 0)
+          hits.forEach((enemy, hitIndex) => {
+            if (hitIndex < outboundHitCount) {
+              hitEnemy(enemy, hitIndex)
+            } else {
+              pokemon.commands.push(
+                new DelayedCommand(
+                  () => hitEnemy(enemy, hitIndex),
+                  BONEMERANG_RANGER_RETURN_DELAY
+                )
+              )
+            }
+          })
+        })
+      )
     }
 
     const swampFatherChampion = championOf.get(Blessing.SWAMP_FATHER)
