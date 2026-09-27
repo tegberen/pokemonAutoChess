@@ -66,6 +66,7 @@ import {
   grantSynergyAwareItem,
   grantRobinGemsReward
 } from "../../services/blessings"
+import { unlockNextSeasonalHerdDeerling } from "../../core/seasonal-herd"
 import { ScribbleShapeType } from "../../config/game/scribble-shapes"
 import { PlayerBlessings } from "../../models/colyseus-models/player-blessings"
 import { rollScribbleQuiz } from "../../services/scribble-quiz"
@@ -3817,6 +3818,9 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
            picking phase, so rotating synergies between rounds still counts */
         checkIndecisionSynergies(player)
         sendTeddiursasExploring(player, this.state.stageLevel)
+        if (player.blessings.includes(Blessing.SEASONAL_HERD)) {
+          unlockNextSeasonalHerdDeerling(player, this.state)
+        }
       }
     })
 

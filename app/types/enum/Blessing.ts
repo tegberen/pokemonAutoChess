@@ -217,6 +217,7 @@ export enum Blessing {
   BONEMERANG_RANGER = "BONEMERANG_RANGER",
   SPOOKY_SCARECROW = "SPOOKY_SCARECROW",
   PURRFECT_PLAN = "PURRFECT_PLAN",
+  SEASONAL_HERD = "SEASONAL_HERD",
   SILVER_SPOON = "SILVER_SPOON",
   ICE_SPEAR = "ICE_SPEAR",
   FROST_GEAR = "FROST_GEAR",
@@ -831,6 +832,27 @@ export const BONEMERANG_RANGER_RETURN_DELAY = 500
 export const SPOOKY_SCARECROW_MURKROWS_ON_OWN_KO = 3
 export const SPOOKY_SCARECROW_DEF_PER_ALLY_KO = 5
 export const PURRFECT_PLAN_UNIQUES: Pkm[] = [Pkm.SPINDA, Pkm.CHATOT]
+// the three herd lists share one index per season: spring, summer, autumn, winter
+export const SEASONAL_HERD_DEERLINGS: Pkm[] = [
+  Pkm.DEERLING_SPRING,
+  Pkm.DEERLING_SUMMER,
+  Pkm.DEERLING_AUTUMN,
+  Pkm.DEERLING_WINTER
+]
+export const SEASONAL_HERD_SAWSBUCKS: Pkm[] = [
+  Pkm.SAWSBUCK_SPRING,
+  Pkm.SAWSBUCK_SUMMER,
+  Pkm.SAWSBUCK_AUTUMN,
+  Pkm.SAWSBUCK_WINTER
+]
+export const SEASONAL_HERD_SEASON_SYNERGIES: Synergy[] = [
+  Synergy.FLORA,
+  Synergy.GOURMET,
+  Synergy.WILD,
+  Synergy.ICE
+]
+export const SEASONAL_HERD_HP_PER_SAWSBUCK = 40
+export const SEASONAL_HERD_SYNERGY_TO_UNLOCK_NEXT = 4
 export const CELL_BRAWLER_STAT_BONUS = 0.5
 export const CELL_BRAWLER_ABILITY_LIFESTEAL = 0.5
 export const CELL_BRAWLER_OVERHEAL_TO_MAX_HP = 0.5
@@ -1331,6 +1353,7 @@ export const HERO_BLESSING_GIFT: { [blessing in Blessing]?: Pkm } = {
 
 export const HERO_BLESSING_POKEMON: { [blessing in Blessing]?: Pkm[] } = {
   [Blessing.LANCES_ACE]: [Pkm.DRATINI],
+  [Blessing.SEASONAL_HERD]: SEASONAL_HERD_DEERLINGS,
   [Blessing.SILVER_SPOON]: [Pkm.ABRA],
   [Blessing.TRASH_TO_TREASURE]: [Pkm.TRUBBISH, Pkm.BELDUM],
   [Blessing.SINNOHS_COOLEST]: [Pkm.STARAVIA],

@@ -141,6 +141,9 @@ import {
   CURSED_COFFIN_HP_DRAIN,
   CURSED_COFFIN_PP_DRAIN,
   CURSED_COFFIN_DRAIN_INTERVAL,
+  SEASONAL_HERD_DEERLINGS,
+  SEASONAL_HERD_SAWSBUCKS,
+  SEASONAL_HERD_HP_PER_SAWSBUCK,
   GOOEY_GLOBULES_SPEED_LOSS,
   GOOEY_GLOBULES_ALLY_HEAL,
   PRIMAL_RAMPAGE_KO_PP,
@@ -3152,6 +3155,31 @@ export default class Simulation extends Schema implements ISimulation {
             )
           )
         })
+      }
+
+      if (blessings.includes(Blessing.SEASONAL_HERD)) {
+        const herd = ownUnits.filter(
+          (unit) =>
+            SEASONAL_HERD_DEERLINGS.includes(unit.name) ||
+            SEASONAL_HERD_SAWSBUCKS.includes(unit.name)
+        )
+        const sawsbucks = herd.filter((unit) =>
+          SEASONAL_HERD_SAWSBUCKS.includes(unit.name)
+        )
+        herd.forEach((unit) =>
+          unit.addMaxHP(
+            SEASONAL_HERD_HP_PER_SAWSBUCK * sawsbucks.length,
+            unit,
+            0,
+            false
+          )
+        )
+        const areAllSawsbuckFielded =
+          new Set(sawsbucks.map((sawsbuck) => sawsbuck.name)).size ===
+          SEASONAL_HERD_SAWSBUCKS.length
+        if (areAllSawsbuckFielded) {
+          sawsbucks.forEach((sawsbuck) => (sawsbuck.stars += 1))
+        }
       }
 
       if (blessings.includes(Blessing.THUNDER_AND_LIGHTNING)) {

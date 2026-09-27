@@ -2069,6 +2069,12 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     icon: "purrfect_plan",
     grantsPokemonImmediately: true
   },
+  [Blessing.SEASONAL_HERD]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: [4],
+    icon: "seasonal_herd",
+    grantsPokemonImmediately: true
+  },
   [Blessing.SILVER_SPOON]: {
     tier: BlessingTier.PRISMATIC,
     availableAtStages: [4],

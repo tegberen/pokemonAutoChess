@@ -498,6 +498,7 @@ Every balance change on this server, newest first.
 - ELDER_CRYSTAL | a 2 STAR ROCK Pokémon holding a STAR_PIECE can now be crystallised with it
 
 **Wishes**
+- Seasonal Herd {{new}} | Gain a Deerling of the current season and add it to the pool. Each time you start a fight with its season's synergy at 4 (spring FLORA, summer GOURMET, autumn WILD, winter ICE), gain the next season's Deerling and add it to the pool. Your Deerling and Sawsbuck gain 40 HP per Sawsbuck in play. With all 4 Sawsbuck fielded, they gain 1 STAR
 - Purrfect Plan {{new}} | Gain a Glameow and add it to the pool. CONFUSION enemies never target your STRONGEST Glameow unless it is the only target in RANGE, and always crit their allies while it is alive. Your Unique options always include Spinda or Chatot
 - Spooky Scarecrow {{new}} | Gain a Cacnea and add it to the pool. Your STRONGEST Cacnea cannot move or attack, and its ability is replaced with Spiky Shield. Each time an ally is KO'd, it gains 5 DEF and summons a Murkrow with full PP. When it is KO'd itself, it summons 3 Murkrow instead
 - Bonemerang Ranger {{new}} | Gain a Cubone and add it to the pool. Your STRONGEST Cubone gains 2 RANGE and its ability is replaced with Torment. Its attacks throw a bonemerang that hits every enemy in a line on the way out and back. Each hit after the first deals 20% less PHYSICAL, down to 20%, and only the first triggers ON_ATTACK and ON_HIT effects

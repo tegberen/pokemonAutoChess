@@ -82,6 +82,7 @@ import {
   HERO_BLESSING_GIFT,
   HERO_BLESSING_HATCH_MAX_HP,
   HERO_BLESSINGS_WITH_STRONG_GIFT,
+  SEASONAL_HERD_DEERLINGS,
   HERO_BLESSING_MOVES_REGION,
   ITEM_GRANTED_BY_BLESSING,
   LANGUAGE_BARRIER_UNOWNS_GRANTED,
@@ -189,6 +190,7 @@ import {
   randomWeighted,
   shuffleArray
 } from "../utils/random"
+import { SEASONS, getCurrentSeason } from "../utils/season"
 import { schemaValues } from "../utils/schemas"
 
 const PEARL_GOLD_GAINED = 10
@@ -3340,6 +3342,15 @@ export const blessingEffectService: {
 
   [Blessing.PURRFECT_PLAN]: (player, state, room) =>
     heroBlessingEffect(Blessing.PURRFECT_PLAN, player, state, room),
+
+  [Blessing.SEASONAL_HERD]: (player, state) => {
+    const deerling =
+      SEASONAL_HERD_DEERLINGS[SEASONS.indexOf(getCurrentSeason())]
+    if (!giftPokemonIfBenchHasRoom(player, deerling)) return false
+    state.shop.addAdditionalPokemon(deerling, state, true)
+    player.seasonalHerdUnlockedDeerlings.push(deerling)
+    return true
+  },
 
   // an unlock like Aurora Borealis: Cranidos joins this player's own shop pool
   [Blessing.PRIMAL_RAMPAGE]: (player) => {

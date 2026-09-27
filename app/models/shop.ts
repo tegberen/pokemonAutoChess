@@ -76,6 +76,7 @@ import {
 import {
   Blessing,
   PURRFECT_PLAN_UNIQUES,
+  SEASONAL_HERD_DEERLINGS,
   BERSERKER_HORDES_SHOP_INTERVAL,
   CURSOLA_SELL_PRICE,
   FOGBOUND_LAKE_CAROUSEL_STAGE,
@@ -1069,7 +1070,9 @@ export default class Shop {
           ? specificTypesWanted.some((specificTypeWanted) =>
               types.includes(specificTypeWanted)
             )
-          : types.includes(Synergy.WILD) === false
+          : types.includes(Synergy.WILD) === false ||
+            (SEASONAL_HERD_DEERLINGS.includes(pkm) &&
+              player.blessings?.includes(Blessing.SEASONAL_HERD) === true)
 
         if (
           PkmsWithAltForms.includes(pkm) &&

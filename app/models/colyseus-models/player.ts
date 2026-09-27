@@ -229,6 +229,7 @@ export default class Player extends Schema implements IPlayer {
   sinnohsCoolestRewardGranted = false
   thunderAndLightningFormGranted = false
   crystalGuardianRocksGranted = false
+  seasonalHerdUnlockedDeerlings: Pkm[] = []
   artificialItems: Item[] = pickNRandomIn(ArtificialItems, 3)
   buriedItems: (Item | null)[] = initBuriedItems()
   tms: Item[] = pickRandomTMs()
