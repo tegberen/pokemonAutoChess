@@ -4508,8 +4508,7 @@
 	"rooms_other": "{{count}} rooms",
 	"players": "Players",
 	"daily_duel": "Daily Duel",
-	"daily_duel_room_hint": "Ranked",
-	"daily_duel_hint": "One ranked match a day. The winner takes the town podium.",
+	"daily_duel_hint": "A single ranked match. The top 3 take the town podium.",
 	"daily_duel_no_results": "No Daily Duel has been played in the last 2 days.",
 	"daily_duel_next": "Next Daily Duel · {{time}}",
 	"daily_duel_in": "in {{time}}",
@@ -7229,8 +7228,7 @@
 		"registrations_open": "Registration open",
 		"leave_tournament": "Leave tournament",
 		"lobby_hint": "Tournament lobby: starts once all {{players}} players are ready, or after {{minutes}} minutes without the teams that are not here in full: they forfeit and score 0 points.",
-		"lobby_settings_locked": "Tournament lobbies use fixed settings",
-		"not_here_yet": "Not here yet"
+		"lobby_settings_locked": "Tournament lobbies use fixed settings"
 	},
 	"npc_dialog": {
 		"welcome": "Welcome !",

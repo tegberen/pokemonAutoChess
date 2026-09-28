@@ -108,10 +108,12 @@
   background-color: var(--room-folder-front-bg);
 }
 
-.room-folder > .room-item .tournament-icon {
+/* a lighter take on the card's text shadow, so the icon sits in the same style */
+.room-folder > .room-item .event-icon {
   flex: none;
   width: 1.5em;
   height: 1.5em;
+  filter: drop-shadow(1px 1px 1px color-mix(in srgb, #05090f 60%, transparent));
 }
 
 .room-folder > .room-item .hp-badge {
@@ -166,6 +168,12 @@
   box-shadow: none;
 }
 
+/* Daily Duels glow gold around the whole folder; tournaments override it
+   with their purple glow below */
+.room-folder.event-folder {
+  filter: var(--daily-duel-glow);
+}
+
 /* tournaments wear the Daily Duel stripes in epic purple.
    drop-shadow traces the whole folder outline, a box-shadow on the card
    would bleed over the seam with its tab */
@@ -184,9 +192,9 @@
 }
 
 /* the Wish cards' holo sweep (blessing-sheen, game-choice.css) on every
-   Daily Duel and tournament room. In a folder it runs over the tab and the
-   card together: both sweeps are the folder's full width (cqw) from its
-   left edge, so one band crosses them in step */
+   Daily Duel and tournament room. It runs over the tab and the card
+   together: both sweeps are the folder's full width (cqw) from its left
+   edge, so one band crosses them in step */
 .room-folder.event-folder {
   container-type: inline-size;
 }
@@ -283,34 +291,4 @@
   );
   font-weight: bold;
   white-space: nowrap;
-}
-
-.room-item.daily-duel {
-  border: 1px solid #1b1d24;
-  background-color: var(--daily-duel-bg);
-  background-image: var(--daily-duel-stripes);
-  color: #ffffff;
-  box-shadow: 0 0 10px color-mix(in srgb, #ffc107 45%, transparent);
-}
-
-.room-item.daily-duel .room-name {
-  display: flex;
-  flex-direction: column;
-  text-shadow: 1px 1px 2px #05090f;
-}
-
-.room-item.daily-duel .room-name b {
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
-
-.room-item.daily-duel .room-name small {
-  opacity: 0.85;
-}
-
-.room-item.daily-duel .daily-duel-count {
-  padding: 0.1em 0.6em;
-  border: 1px solid #1b1d24;
-  border-radius: 999px;
-  background-color: var(--color-blessing-card);
 }

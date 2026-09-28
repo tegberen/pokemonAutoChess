@@ -84,57 +84,15 @@ export default function RoomItem(props: {
   const title = `${props.room.metadata?.ownerName ? "Owner: " + props.room.metadata?.ownerName : ""}\n${props.room.metadata?.playersInfo?.join("\n")}`
   const [joining, setJoining] = useState<boolean>(false)
 
-  if (props.room.metadata?.dailyDuel) {
-    return (
-      <div className="room-item daily-duel my-box">
-        <img
-          alt=""
-          aria-hidden="true"
-          className="icon"
-          src="/assets/icons/blessing_stats.svg"
-        />
-        <span className="room-name" title={title}>
-          <b>{props.room.metadata.name}</b>
-          <small>{t("daily_duel_room_hint")}</small>
-        </span>
-        <span className="daily-duel-count">
-          {props.room.clients}/{nbPlayersExpected}
-        </span>
-        {isAdmin && (
-          <button
-            title={t("delete_room")}
-            onClick={() => {
-              props.click("delete")
-            }}
-          >
-            X
-          </button>
-        )}
-        <button
-          title={disabledReason ?? t("join")}
-          disabled={!canJoin || joining}
-          className={cc("bubbly", joining ? "loading" : "", "green")}
-          onClick={() => {
-            if (canJoin && !joining) {
-              props.click("join")
-              setJoining(true)
-              setTimeout(() => setJoining(false), 3000)
-            }
-          }}
-        >
-          {t("join")}
-        </button>
-      </div>
-    )
-  }
-
   const metadata = props.room.metadata
+  const isDailyDuel = metadata?.dailyDuel === true
   // Solo and Duo rooms are named after their game mode, like their lobby header
   // tournament rooms keep their bracket name (Qualification, Finals…)
   const showsModification =
-    (metadata?.gameMode === GameMode.CUSTOM_LOBBY ||
+    ((metadata?.gameMode === GameMode.CUSTOM_LOBBY ||
       metadata?.gameMode === GameMode.DOUBLE_UP) &&
-    !metadata?.tournamentId
+      !metadata?.tournamentId) ||
+    isDailyDuel
   const modification = getGameModification({
     blessingsEnabled: metadata?.blessingsEnabled ?? false,
     whimsy: metadata?.whimsy ?? false,
@@ -144,11 +102,12 @@ export default function RoomItem(props: {
     ? t(`scribble.${metadata.specialGameRule}`)
     : t(`game_modification.${modification}`)
   const isTournament = !!metadata?.tournamentId
+  const isEvent = isDailyDuel || isTournament
 
   return (
     <div
       className={cc("room-folder", {
-        "event-folder": isTournament,
+        "event-folder": isEvent,
         "tournament-folder": isTournament
       })}
       title={title}
@@ -172,22 +131,28 @@ export default function RoomItem(props: {
               metadata?.maxRank as EloRank | null
             ) + " "}
             {showsModification &&
-            !hasCustomRoomName(
-              metadata?.name,
-              metadata?.gameMode,
-              modificationLabel
-            )
+            (isDailyDuel ||
+              !hasCustomRoomName(
+                metadata?.name,
+                metadata?.gameMode,
+                modificationLabel
+              ))
               ? modificationLabel
               : metadata?.name}
           </span>
+          {isDailyDuel && (
+            <span className="game-event-tag">
+              {t("game_event_tag.DAILY_DUEL")}
+            </span>
+          )}
         </div>
       </div>
-      <div className={cc("room-item my-box", { "daily-duel": isTournament })}>
-        {isTournament && (
+      <div className={cc("room-item my-box", { "daily-duel": isEvent })}>
+        {isEvent && (
           <img
             alt=""
             aria-hidden="true"
-            className="tournament-icon"
+            className="event-icon"
             src="/assets/icons/fire_week_streak.svg"
           />
         )}

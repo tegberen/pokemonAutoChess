@@ -122,24 +122,38 @@ export default function PreparationMenu() {
   }, 1000)
 
   const headerMessage = dailyDuel ? (
-    <div className="daily-duel-banner my-box">
+    <div className="rule-banner event-banner my-box">
       <img
-        className="daily-duel-banner-icon"
-        src="/assets/icons/blessing_stats.svg"
+        className="rule-banner-icon"
+        src="/assets/ui/game_modes/solo_wishes_daily_duel.webp"
         alt=""
         aria-hidden="true"
       />
-      <p>{t("daily_duel_hint")}</p>
+      <div className="rule-banner-text">
+        <h3>{t("game_event_tag.DAILY_DUEL")}</h3>
+        <p>{t("daily_duel_hint")}</p>
+      </div>
     </div>
   ) : (
     <>
       {isTournamentLobby && (
-        <p>
-          {t("tournament.lobby_hint", {
-            players: nbExpectedPlayers,
-            minutes: TOURNAMENT_LOBBY_START_DELAY_IN_SECONDS / 60
-          })}
-        </p>
+        <div className="rule-banner event-banner tournament-banner my-box">
+          <img
+            className="rule-banner-icon"
+            src="/assets/ui/game_modes/duo_classic_tournament.webp"
+            alt=""
+            aria-hidden="true"
+          />
+          <div className="rule-banner-text">
+            <h3>{t("game_event_tag.TOURNAMENT")}</h3>
+            <p>
+              {t("tournament.lobby_hint", {
+                players: nbExpectedPlayers,
+                minutes: TOURNAMENT_LOBBY_START_DELAY_IN_SECONDS / 60
+              })}
+            </p>
+          </div>
+        </div>
       )}
 
       {gameMode === GameMode.RANKED && (
@@ -149,10 +163,12 @@ export default function PreparationMenu() {
         </p>
       )}
 
-      <GameModificationBanner
-        modification={modification}
-        specialGameRule={specialGameRule}
-      />
+      {!isTournamentLobby && (
+        <GameModificationBanner
+          modification={modification}
+          specialGameRule={specialGameRule}
+        />
+      )}
 
       {gameMode === GameMode.CLASSIC && (
         <p>
@@ -203,7 +219,8 @@ export default function PreparationMenu() {
   // one click from the lobby, since picking a mode is the most common setup step
   const canPickModification =
     (isOwner || isAdmin || user?.role === Role.MODERATOR) &&
-    (gameMode === GameMode.CUSTOM_LOBBY || gameMode === GameMode.DOUBLE_UP)
+    (gameMode === GameMode.CUSTOM_LOBBY || gameMode === GameMode.DOUBLE_UP) &&
+    !isTournamentLobby
   const modificationSwitch = canPickModification && (
     <div className="modification-switch" role="radiogroup">
       {Object.values(GameModification).map((option) => (
@@ -239,18 +256,11 @@ export default function PreparationMenu() {
   return (
     <div
       className={cc("preparation-menu my-container is-centered custom-bg", {
-        "daily-duel": dailyDuel
+        "daily-duel": dailyDuel,
+        tournament: isTournamentLobby
       })}
     >
       <header>
-        {dailyDuel ? (
-          <h1 className="daily-duel-title">
-            {name}
-            <span className="daily-duel-count">
-              {users.length}/{nbExpectedPlayers}
-            </span>
-          </h1>
-        ) : (
         <h1 title={name}>
           <img
             alt=""
@@ -270,7 +280,6 @@ export default function PreparationMenu() {
               : t("new_game_solo")}
           </span>
         </h1>
-        )}
         {headerMessage}
       </header>
 
@@ -299,7 +308,6 @@ export default function PreparationMenu() {
                       <span className="missing-name">
                         {team.playersName[i]}
                       </span>
-                      <span>{t("tournament.not_here_yet")}</span>
                     </div>
                   )
                 })}

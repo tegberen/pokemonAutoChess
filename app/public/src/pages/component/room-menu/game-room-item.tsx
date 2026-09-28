@@ -89,11 +89,11 @@ ${metadata?.ownerName ? "Owner: " + metadata.ownerName : ""}\n${metadata?.player
         </div>
       </div>
       <div className={cc("room-item my-box", { "daily-duel": isEvent })}>
-        {isTournament && (
+        {isEvent && (
           <img
             alt=""
             aria-hidden="true"
-            className="tournament-icon"
+            className="event-icon"
             src="/assets/icons/fire_week_streak.svg"
           />
         )}

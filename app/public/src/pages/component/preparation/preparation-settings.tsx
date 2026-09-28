@@ -96,6 +96,9 @@ export default function PreparationSettings() {
   )
   const whimsy = useAppSelector((state) => state.preparation.whimsy)
   const gameMode = useAppSelector((state) => state.preparation.gameMode)
+  const isTournamentLobby = useAppSelector(
+    (state) => state.preparation.tournamentTeams.length > 0
+  )
   const isOwner = useAppSelector(
     (state) => state.preparation.ownerId === state.network.uid
   )
@@ -105,9 +108,10 @@ export default function PreparationSettings() {
   const canEditRoom = isOwner || isModerator || isAdmin
   const isCustomLobby = gameMode === GameMode.CUSTOM_LOBBY
   // Double Up gets the custom-room controls, minus the rule picker: its scribble
-  // rule is rolled at game start, unless an admin pins one
+  // rule is rolled at game start, unless an admin pins one. A tournament lobby
+  // is fixed by its bracket, so it gets none of them
   const hasCustomLobbySettings =
-    isCustomLobby || gameMode === GameMode.DOUBLE_UP
+    (isCustomLobby || gameMode === GameMode.DOUBLE_UP) && !isTournamentLobby
   const canPickScribbleRule = gameMode !== GameMode.DOUBLE_UP || isAdmin
 
   function togglePrivate() {
