@@ -78,12 +78,9 @@ const pokemonNameAliases: Record<string, Pkm> = {
   INTELLION: Pkm.INTELEON,
   "ALOLAN NINETALES": Pkm.ALOLAN_NINETALES,
   "GALAR WEEZING": Pkm.GALARIAN_WEEZING,
-  "HISUIAN ARCANINE": Pkm.HISUI_ARCANINE,
-  "HISUIAN VOLTORB": Pkm.HISUI_VOLTORB,
   HIPPOWDON: Pkm.HIPPODOWN,
   "BLOODMOON URSALUNA": Pkm.URSALUNA_BLOODMOON,
   DARTRIX: Pkm.DARTIX,
-  "HISUIAN SAMUROTT": Pkm.HISUI_SAMUROTT,
   "SHAYMIN (SKY)": Pkm.SHAYMIN_SKY,
   "CINDERACE (PIRATE)": Pkm.CINDERACE_PIRATE,
   "URSHIFU (SINGLE STRIKE)": Pkm.URSHIFU_SINGLE,
@@ -96,6 +93,14 @@ const pokemonLabels = [
     label,
     pokemon
   })),
+  // the log writes "Hisuian X" while the key is HISUI_X; without this the
+  // plain "X" would match and show the regular form's portrait
+  ...Object.values(Pkm)
+    .filter((pokemon) => pokemon.startsWith("HISUI_"))
+    .map((pokemon) => ({
+      pokemon,
+      label: `HISUIAN ${pokemon.slice("HISUI_".length).replaceAll("_", " ")}`
+    })),
   ...Object.values(Pkm).map((pokemon) => ({
     pokemon,
     label: pokemon.replaceAll("_", " ")

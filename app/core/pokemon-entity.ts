@@ -53,7 +53,8 @@ import {
   GRUDGE_CURSE_CHANCE,
   GRUDGE_CURSE_DURATION,
   hasGluttonGrowth,
-  SHEDDING_SCALES_FREE_ROLLS_PER_FLIGHT
+  SHEDDING_SCALES_FREE_ROLLS_PER_FLIGHT,
+  POKEMONOMICON_DAMAGE_BONUS
 } from "../types/enum/Blessing"
 import { getStrongestUnit } from "./unit-score"
 import { EffectEnum } from "../types/enum/Effect"
@@ -488,6 +489,15 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
     return this.state.handleDamage({ target: this, ...params })
   }
 
+  // Scorching Tome amplifies only attacks and abilities, never BURN or
+  // POISONNED ticks, which reach handleDamage directly
+  scorchingTomeMultiplier(attacker: PokemonEntity | null) {
+    return (this.status.burn || this.status.wound) &&
+      attacker?.player?.blessings?.includes(Blessing.POKEMONOMICON_BLESSING)
+      ? POKEMONOMICON_DAMAGE_BONUS
+      : 1
+  }
+
   handleSpecialDamage(
     damage: number,
     board: Board,
@@ -574,6 +584,7 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
         this.status.triggerBurn(3000, this, attacker)
         this.addSpecialDefense(-1, attacker, 0, false)
       }
+      specialDamage *= this.scorchingTomeMultiplier(attacker)
       if (attacker?.passive === Passive.BERSERK_2) {
         attacker.addAbilityPower(5, attacker, 0, false, false)
       }

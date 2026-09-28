@@ -149,7 +149,8 @@ export default function ServerGuide({
       })),
       // removed Wishes keep their icon in older Patch Log rows
       { name: "Golden Ticket", icon: "ticket" },
-      { name: "Mortar Shells", icon: "mortar_shells" }
+      { name: "Mortar Shells", icon: "mortar_shells" },
+      { name: "Big Pecks", icon: "big_peck_letter" }
     ],
     [t]
   )

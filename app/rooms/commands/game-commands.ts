@@ -1506,9 +1506,9 @@ export class OnDragDropItemCommand extends Command<
       }
       pokemon.action = PokemonActionState.EXPLORING
 
-      const hasFasterDelivery =
-        player.blessings?.includes(Blessing.BIG_PECKS) ||
-        schemaValues(player.board).some((p) => p.name === Pkm.PELIPPER)
+      const hasFasterDelivery = schemaValues(player.board).some(
+        (p) => p.name === Pkm.PELIPPER
+      )
       const baseDelay =
         pokemon.name === Pkm.GYARADOS
           ? 5

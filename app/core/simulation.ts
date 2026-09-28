@@ -3336,7 +3336,8 @@ export default class Simulation extends Schema implements ISimulation {
               : grubbin.positionY
           const holeIndex = boardY * BOARD_WIDTH + grubbin.positionX
           if (player.groundHoles[holeIndex] === 5) {
-            grubbin.addAttack(2, grubbin, 0, false, true)
+            const attackGain = [1, 1, 2][grubbin.stars - 1] ?? 2
+            grubbin.addAttack(attackGain, grubbin, 0, false, true)
           }
         }
       }

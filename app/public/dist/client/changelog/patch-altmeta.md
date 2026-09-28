@@ -488,13 +488,13 @@ Smeargle Scribbles do not change your Elo.
 
 Every balance change on this server, newest first.
 
-### 28 September 2026
+### 27 September 2026
 
 **Game Modes**
 - Game Structure | [Format/Game Mode/Event]
 - Format | Solo or Duo
 - Game Mode | Classic, Wishes or Scribble
-- <img class="description-icon" src="/assets/ui/game_modes/classic_icon.svg" alt="" /> Classic | the official tournament format, without modifications
+- <img class="description-icon" src="/assets/ui/game_modes/classic_icon.svg" alt="" /> Classic | the official main tournament format, without modifications
 - <img class="description-icon" src="/assets/ui/game_modes/wishes_icon.svg" alt="" /> Wishes | integrated into the base game, the Wish Festival event is removed
 - <img class="description-icon" src="/assets/ui/game_modes/scribble_icon.svg" alt="" /> Scribble | in Solo the owner can pick a rule, in Duo it is always random
 - Event | Monthly Tournament, Daily Duel or Half-Yearly Wish Cup
@@ -502,19 +502,27 @@ Every balance change on this server, newest first.
 - Daily Duel | [Format: Solo; Game Mode: Wishes]
 - Half-Yearly Wish Cup | [Format: Solo; Game Mode: Wishes]
 
-**UI**
-- Open Rooms and In Game | revamped room cards, with events standing out
-- Profile | revamped game history, each game reads Format · Game Mode
-- Wish cards | a small wand in the corner marks a Wish that unlocks an avatar cosmetic you do not have yet when you win with it
-
-### 27 September 2026
-
 **Pokémon**
 - Dragon Darts | darts now hit one after another, and stop once the target is KO'd
 - Magnetic Absorption | damage [80,80,80,120] → [20,40,80,120] per STAR, so Sandy Shocks is unchanged
+- Poipole / Naganadel | max PP 75 → 90
+- Grubbin line | HP [65,115,175] → [60,110,170], ATK [5,10,16] → [5,10,15], Circuit Cannon SPEED [10,20,40] → [10,20,30]
+- Venipede line | HP [90,220,440] → [100,200,400]
+- Gastly line | ATK [12,15,27] → [7,14,28]
+- Klink line | SPEED 54 → 44
+- Magnemite line | max PP [100,90,80] → [100,100,100]
+- Scyther | HP 160 → 150, ATK 16 → 15
+- Hisuian Decidueye | HP 180 → 150, ATK 18 → 20
+- Gardevoir / Gallade | HP 170 → 180
+- Vulpix / Ninetales | Fire Spin damage [50,100,200]% → [75,150,200]% of ATK
+- Galarian Ponyta / Galarian Rapidash | Pastel Veil SHIELD [10,20,30] → [15,30,45]
+
+**Synergies**
+- POISON | PP ON_ATTACK at Venomous and Toxic [4,6] → [3,5]
 
 **Items**
 - ELDER_CRYSTAL | a 2 STAR ROCK Pokémon holding a STAR_PIECE can now be crystallised with it
+- FLAME_ORB | ATK 5 → 3
 
 **Wishes**
 - Life Price {{new}} | Rerolling your shop no longer costs GOLD. Instead, every 2 rerolls cost you 1 HP, and your partner too in Double Up. It cannot bring either of you below 1 HP
@@ -543,9 +551,17 @@ Every balance change on this server, newest first.
 - Primal Magnetism {{new}} | Gain a Magnemite. Your STRONGEST Magnemite casts Magnetic Absorption on the first enemy it attacks, then after every third cast of its own ability
 - Galvanic Rain {{new}} | Gain an Alolan Graveler and move to a random ELECTRIC region if not in one. Your STRONGEST Alolan Geodude's ability is replaced with Electric Surge, it gets +2 RANGE, and its attacks have a [10,LK]% chance to throw an Alolan Geodude with full PP next to the target
 - Mega Sol, Flytrap and Spore Clouds | their item no longer drops into your inventory when taken before the pot is unlocked
+- Starter Choice | SILVER_DOJO_TICKET → BRONZE_DOJO_TICKET
+- Soothe Carol | PP restored 25% → 20% of max PP
+- Scorching Tome | the 40% damage bonus now only applies to your attacks and abilities
+- Charging My Bug | gain a Grubbin instead of a Charjabug, ATK gained in a dug hole 2 → [1,1,2] per STAR
+- Third Eye | Silver → Gold
+- Big Pecks | removed
 
 **Interface**
 - Wish cosmetic marker {{new}} | a small wand icon in the corner of a Wish card means winning with it unlocks an avatar cosmetic you do not have yet
+- Open Rooms and In Game | revamped room cards, with events standing out
+- Profile | revamped game history, each game reads Format · Game Mode · Event
 
 ### 26 September 2026
 

@@ -273,7 +273,7 @@ export const GROUND_ATK_BUFF_PER_SYNERGY_TIER = [0, 3, 5, 8, 8]
 
 export const FIRE_ATK_BUFF_PER_SYNERGY_TIER = [0, 0, 1, 2, 4]
 
-export const POISON_PP_GAIN_PER_SYNERGY_TIER = [0, 0, 4, 6]
+export const POISON_PP_GAIN_PER_SYNERGY_TIER = [0, 0, 3, 5]
 export const POISON_EXPLOSION_PP_RATIO_PER_SYNERGY_TIER = [0, 0, 0.6, 1]
 
 export const SOUND_ATK_BUFF_PER_SYNERGY_TIER = [0, 2, 1, 1]

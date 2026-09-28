@@ -84,7 +84,7 @@ export const ItemStats: { [item in Item]?: { [stat in Stat]?: number } } = {
   [Item.AMULET_COIN]: {},
   [Item.POKE_DOLL]: { [Stat.DEF]: 3, [Stat.SPE_DEF]: 3 },
   [Item.RED_ORB]: { [Stat.ATK]: 10 },
-  [Item.FLAME_ORB]: { [Stat.ATK]: 5, [Stat.DEF]: 3 },
+  [Item.FLAME_ORB]: { [Stat.ATK]: 3, [Stat.DEF]: 3 },
   [Item.ROCKY_HELMET]: { [Stat.DEF]: 25 },
   [Item.MAGMARIZER]: { [Stat.ATK]: 5 },
   [Item.MACHO_BRACE]: { [Stat.ATK]: 15, [Stat.SPEED]: -15 },

@@ -58,7 +58,7 @@ export class CircuitCannonStrategy extends AbilityStrategy {
     const duration = Math.round(
       CIRCUIT_CANNON_DURATION * (1 + pokemon.ap / 100)
     )
-    const speedGain = [10, 20, 40][pokemon.stars - 1] ?? 40
+    const speedGain = [10, 20, 30][pokemon.stars - 1] ?? 30
     const falloffPerEnemy = [0.2, 0.1, 0][pokemon.stars - 1] ?? 0
 
     pokemon.status.triggerSilence(duration, pokemon, pokemon)

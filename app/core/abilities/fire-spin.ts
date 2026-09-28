@@ -11,7 +11,7 @@ export class FireSpinStrategy extends AbilityStrategy {
     crit: boolean
   ) {
     super.process(pokemon, board, target, crit)
-    const multiplier = [0.5, 1, 2, 4][pokemon.stars - 1] ?? 4
+    const multiplier = [0.75, 1.5, 2, 4][pokemon.stars - 1] ?? 4
     const cells = board.getAdjacentCells(
       target.positionX,
       target.positionY,

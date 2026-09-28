@@ -2691,9 +2691,6 @@ export const blessingEffectService: {
   [Blessing.SLIPSTREAM]: (player) =>
     giftPokemonIfBenchHasRoom(player, Pkm.QUAXLY),
 
-  [Blessing.BIG_PECKS]: (player) =>
-    giftPokemonIfBenchHasRoom(player, Pkm.QUAXLY),
-
   [Blessing.SHAPELESS_SYNERGIES]: (player) =>
     giftPokemonIfBenchHasRoom(player, Pkm.TYNAMO),
 
@@ -3167,7 +3164,7 @@ export const blessingEffectService: {
         pokemons: pickNRandomIn(commons, STARTER_CHOICE_OPTIONS)
       })
     )
-    player.items.push(Item.SILVER_DOJO_TICKET)
+    player.items.push(Item.BRONZE_DOJO_TICKET)
     return true
   },
 

@@ -44,7 +44,6 @@ import {
   SHELL_ARMOR_SPE_DEF_BY_STARS,
   DEEP_SEA_TOOTH_DAMAGE_MULTIPLIER,
   DEEP_SEA_TOOTH_EXECUTE_HP_RATIO,
-  POKEMONOMICON_DAMAGE_BONUS,
   SCOPE_LENS_MARK_DURATION,
   SHINY_CHARM_MARK_DURATION,
   FLUFFY_TAIL_RARITY_STAGE,
@@ -452,7 +451,7 @@ export default abstract class PokemonState {
       if (physicalDamage > 0) {
         // Apply attack physical damage
         const { takenDamage, death } = target.handleDamage({
-          damage: physicalDamage,
+          damage: physicalDamage * target.scorchingTomeMultiplier(pokemon),
           board,
           attackType: AttackType.PHYSICAL,
           attacker: pokemon,
@@ -479,7 +478,7 @@ export default abstract class PokemonState {
       if (trueDamage > 0) {
         // Apply true damage
         const { takenDamage, death } = target.handleDamage({
-          damage: trueDamage,
+          damage: trueDamage * target.scorchingTomeMultiplier(pokemon),
           board,
           attackType: AttackType.TRUE,
           attacker: pokemon,
@@ -833,13 +832,6 @@ export default abstract class PokemonState {
         attacker.effects.has(EffectEnum.SHEER_COLD)
       ) {
         damage *= 1.3
-      }
-
-      if (
-        (pokemon.status.burn || pokemon.status.wound) &&
-        attacker?.player?.blessings?.includes(Blessing.POKEMONOMICON_BLESSING)
-      ) {
-        damage *= POKEMONOMICON_DAMAGE_BONUS
       }
 
       let def = pokemon.status.armorReduction

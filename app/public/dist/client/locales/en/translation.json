@@ -1995,7 +1995,7 @@
 		"ELECTRO_WEB": "Deal [15,30,60,120,SP] SPECIAL to all ADJACENT enemy Pokémon and steal [15,30,60,120,SP] SPEED.",
 		"MYSTICAL_FIRE": "Circling the target with four flames, explodes on the target and ADJACENT enemies. Each hit deals [40,SP]% ATK as SPECIAL and reduces AP by [3,SP]. If a hit drops their AP below 0, they are BURN for [1,2,3,6,SP] seconds.",
 		"FLAME_CHARGE": "Dash into the enemy team's back line and deal [20,30,100,200,SP] SPECIAL to all enemy Pokémon in the path.",
-		"PASTEL_VEIL": "Dash to the farthest ally. Grant [10,20,30,60,SP] SHIELD to the user and all allied Pokémon on the way and cure their negative status conditions.",
+		"PASTEL_VEIL": "Dash to the farthest ally. Grant [15,30,45,90,SP] SHIELD to the user and all allied Pokémon on the way and cure their negative status conditions.",
 		"LEECH_SEED": "POISONNED the target for [4,8,16,32] seconds and heal the user for [25,50,100,200,SP] HP.",
 		"LOCK_ON": "Lock on the target. The next attack cannot miss and deals [200,200,200,500,SP]% additional TRUE.",
 		"DISABLE": "Deal [12,25,50,100,SP] SPECIAL to the target and all ADJACENT enemy Pokémon and SILENCE them for [2,3,4,8] seconds.",
@@ -2076,7 +2076,7 @@
 		"BUG_BITE": " Deal [20,40,80,160,SP] SPECIAL to the target and steal and eat one of their berries if it holds one.",
 		"SHELL_TRAP": "The user's SHIELD explodes, dealing [50,50,50,100,SP] SPECIAL + current SHIELD to all ADJACENT enemy Pokémon. If the user has no SHIELD, gain [25,50,75,150,SP] SHIELD instead.",
 		"DIG": "Dig underground and reappear next to the farthest enemy Pokémon, dealing [10,20,40,80,SP] SPECIAL to all enemy Pokémon in the path.",
-		"FIRE_SPIN": "Deal [50,100,200,400,SP]% of ATK as SPECIAL to the target and ADJACENT enemy Pokémon and BURN them for 3 seconds.",
+		"FIRE_SPIN": "Deal [75,150,200,400,SP]% of ATK as SPECIAL to the target and ADJACENT enemy Pokémon and BURN them for 3 seconds.",
 		"SEARING_SHOT": "An inferno of scarlet flames torches everything around Victini. Deal [30,40,50,100,SP] SPECIAL to all enemy Pokémon within 2 tiles of the user and BURN them for [3,3,3,6] seconds.",
 		"SPLASH": "The user just flops and splashes around to no effect at all...",
 		"PECK": "Deal [10,30,50,100,SP] SPECIAL to the target.",
@@ -2432,7 +2432,7 @@
 		"SUPERCELL_SLAM": "Jump and land in the middle of the enemy team, dealing [10,20,40,80,SP] SPECIAL to all ADJACENT enemy Pokemon and gaining [10,20,40,80,SP] SHIELD",
 		"HIGH_BREACHING": "Gain [15,30,60] SHIELD and deal [10,20,40,SP] SPECIAL to ADJACENT enemies. Every third cast, leap high into the air and crash into the middle of the enemy team, dealing [60,120,240,SP] SPECIAL within 4 tiles and knocking those enemies back 1 tile. Enemies knocked past the edge are washed off the board.",
 		"HIGH_HORSEPOWER": "Charges through the target, then deals [15,30,60,120,SP] SPECIAL to all ADJACENT enemies. If only one enemy is hit, deals double SPECIAL",
-		"CIRCUIT_CANNON": "For [6,SP] seconds, SILENCE the user, gain [10,20,40,SP] SPEED, and replace attacks with cannon shots that deal PHYSICAL to all enemies in a line. Damage is reduced by [20,10,0]% for each enemy the shot passes through, to a minimum of 20% damage.",
+		"CIRCUIT_CANNON": "For [6,SP] seconds, SILENCE the user, gain [10,20,30,SP] SPEED, and replace attacks with cannon shots that deal PHYSICAL to all enemies in a line. Damage is reduced by [20,10,0]% for each enemy the shot passes through, to a minimum of 20% damage.",
 		"CITY_SHUTTLE": "Leap to the closest ally and saddle them on the user's back, then dash to the farthest enemy reachable. Deal [10,20,30,40,SP] SPECIAL + [100,SP]% of the carried ally's ATK to all enemy Pokémon in the path. Grant [20,40,80,160,SP] SHIELD to the user and the carried ally.",
 		"BULLET_PUNCH": "Deal [20,30,40,80,SP] TRUE to the target, then gain [20,30,40,80,SP] SPEED for 2 seconds.",
 		"EAR_DIG": "Deal [30,60,120,240,SP] SPECIAL + [5,10,20,40,SP] per depth level of the hole the target is in. If the target is not in a hole, also dig a hole under them.",
@@ -2637,8 +2637,8 @@
 		"DRILLER": "Gain from +3 to +15 DEF and SPE_DEF and +8 ATK at max depth",
 		"DEEP_MINER": "Gain 5 extra DEF and SPE_DEF for each fully dug row and +8 ATK when your half of the board is fully dug",
 		"POISONOUS": "[30,LK]% chance to POISONNED ON_HIT.",
-		"VENOMOUS": "[60,LK]% chance to POISONNED ON_HIT, +1 max POISONNED stacks. +4 PP ON_ATTACK. On KO, rupture for 60% of remaining PP as SPECIAL",
-		"TOXIC": "[100,LK]% chance to POISONNED ON_HIT, +2 max POISONNED stacks. +6 PP ON_ATTACK. On KO, rupture for 100% of remaining PP as SPECIAL",
+		"VENOMOUS": "[60,LK]% chance to POISONNED ON_HIT, +1 max POISONNED stacks. +3 PP ON_ATTACK. On KO, rupture for 60% of remaining PP as SPECIAL",
+		"TOXIC": "[100,LK]% chance to POISONNED ON_HIT, +2 max POISONNED stacks. +5 PP ON_ATTACK. On KO, rupture for 100% of remaining PP as SPECIAL",
 		"DRAGON_ENERGY": "Dragon's second synergy counts double (not the third)",
 		"DRAGON_SCALES": "Dragons gain 5 SHIELD for each STAR of all your DRAGON units on board",
 		"DRAGON_DANCE": "Dragons gain 1 SPEED and 1 AP for each STAR of all your DRAGON units on board",
@@ -5688,10 +5688,6 @@
 			"name": "Slipstream",
 			"description": "When a FLYING Pokémon flies away, it gains 5 SPEED and 1 ATK, and grants the same to allies it passes through. Gain a Quaxly."
 		},
-		"BIG_PECKS": {
-			"name": "Big Pecks",
-			"description": "Your FLYING Pokémon will deliver their LETTER one stage faster. Gain a Quaxly."
-		},
 		"SHAPELESS_SYNERGIES": {
 			"name": "Shapeless Synergies",
 			"description": "Allies with at least 3 of their synergies active, including those granted by held items, gain 50% more SPEED and HP from the AMORPHOUS synergy, rounded up. Gain a Tynamo."
@@ -6146,7 +6142,7 @@
 		},
 		"CHARGING_MY_BUG": {
 			"name": "Charging My Bug",
-			"description": "Gain a Charjabug. Your STRONGEST Grubbin gains 2 permanent ATK when starting combat in a fully dug hole on board."
+			"description": "Gain a Grubbin. Your STRONGEST Grubbin gains 1 permanent ATK when starting combat in a fully dug hole on board, 2 at 3 STAR."
 		},
 		"NEUROFORCE": {
 			"name": "Neuroforce",
@@ -6338,7 +6334,7 @@
 		},
 		"STARTER_CHOICE": {
 			"name": "Starter Choice",
-			"description": "Choose between 3 common 1 STAR Pokémon. Gain a copy now and at the start of the next 8 rounds. Gain a SILVER_DOJO_TICKET."
+			"description": "Choose between 3 common 1 STAR Pokémon. Gain a copy now and at the start of the next 8 rounds. Gain a BRONZE_DOJO_TICKET."
 		},
 		"SINGULARITY_I": {
 			"name": "Singularity I",
@@ -6610,7 +6606,7 @@
 		},
 		"SOOTHE_BELL_BLESSING": {
 			"name": "Soothe Carol",
-			"description": "Gain a Soothe Bell. The ally it shields also restores 25% of its max PP."
+			"description": "Gain a Soothe Bell. The ally it shields also restores 20% of its max PP."
 		},
 		"AQUA_EGG_BLESSING": {
 			"name": "Blessing of Phione",
@@ -6674,7 +6670,7 @@
 		},
 		"POKEMONOMICON_BLESSING": {
 			"name": "Scorching Tome",
-			"description": "Gain a POKEMONOMICON. The holder also applies WOUND for 3 seconds, and enemies affected by BURN or WOUND take 40% increased damage from all sources."
+			"description": "Gain a POKEMONOMICON. The holder also applies WOUND for 3 seconds, and enemies affected by BURN or WOUND take 40% increased damage from your attacks and abilities."
 		},
 		"DESTINY_KNOT_BLESSING": {
 			"name": "Red Thread",

@@ -1092,8 +1092,8 @@ export class Scyther extends Pokemon {
     divergentEvolution: (pokemon, player, item) =>
       item === Item.BLACK_AUGURITE ? Pkm.KLEAVOR : Pkm.SCIZOR
   } satisfies ItemEvolutionRule
-  hp = 160
-  atk = 16
+  hp = 150
+  atk = 15
   speed = 59
   def = 6
   speDef = 6
@@ -1788,7 +1788,7 @@ export class Gardevoir extends Pokemon {
   evolution = Pkm.MEGA_GARDEVOIR
   evolutionRule = { type: EvolutionRuleType.STACK } as const
   stacksRequired: number = 25
-  hp = 170
+  hp = 180
   atk = 16
   speed = 51
   def = 4
@@ -1830,7 +1830,7 @@ export class Gallade extends Pokemon {
   evolution = Pkm.MEGA_GALLADE
   evolutionRule = { type: EvolutionRuleType.STACK } as const
   stacksRequired: number = 25
-  hp = 170
+  hp = 180
   atk = 20
   speed = 51
   def = 4
@@ -2319,7 +2319,7 @@ export class Gastly extends Pokemon {
   stars = 1
   evolution = Pkm.HAUNTER
   hp = 90
-  atk = 12
+  atk = 7
   speed = 60
   def = 5
   speDef = 6
@@ -2338,7 +2338,7 @@ export class Haunter extends Pokemon {
   stars = 2
   evolution = Pkm.GENGAR
   hp = 150
-  atk = 15
+  atk = 14
   speed = 60
   def = 7
   speDef = 8
@@ -2359,7 +2359,7 @@ export class Gengar extends Pokemon {
   evolutionRule = { type: EvolutionRuleType.STACK } as const
   stacksRequired: number = 10
   hp = 270
-  atk = 27
+  atk = 28
   speed = 60
   def = 8
   speDef = 10
@@ -4028,7 +4028,7 @@ export class Magneton extends Pokemon {
   speed = 44
   def = 2
   speDef = 2
-  maxPP = 90
+  maxPP = 100
   range = 2
   skill = Ability.MAGNET_BOMB
 }
@@ -4046,7 +4046,7 @@ export class Magnezone extends Pokemon {
   speed = 44
   def = 4
   speDef = 4
-  maxPP = 80
+  maxPP = 100
   range = 2
   skill = Ability.MAGNET_BOMB
 }
@@ -4225,7 +4225,7 @@ export class Venipede extends Pokemon {
   rarity = Rarity.ULTRA
   stars = 1
   evolution = Pkm.WHIRLIPEDE
-  hp = 90
+  hp = 100
   atk = 12
   speed = 72
   def = 6
@@ -4240,7 +4240,7 @@ export class Whirlipede extends Pokemon {
   rarity = Rarity.ULTRA
   stars = 2
   evolution = Pkm.SCOLIPEDE
-  hp = 220
+  hp = 200
   atk = 24
   speed = 72
   def = 10
@@ -4254,7 +4254,7 @@ export class Scolipede extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.BUG, Synergy.POISON, Synergy.FIELD])
   rarity = Rarity.ULTRA
   stars = 3
-  hp = 440
+  hp = 400
   atk = 36
   speed = 72
   def = 14
@@ -10519,7 +10519,7 @@ export class Poipole extends Pokemon {
   speed = 64
   def = 6
   speDef = 6
-  maxPP = 75
+  maxPP = 90
   range = 1
   skill = Ability.FELL_STINGER
   passive = Passive.POIPOLE
@@ -10534,7 +10534,7 @@ export class Naganadel extends Pokemon {
   speed = 64
   def = 6
   speDef = 6
-  maxPP = 75
+  maxPP = 90
   range = 1
   skill = Ability.FELL_STINGER
   passive = Passive.NAGANADEL
@@ -12964,8 +12964,8 @@ export class HisuiDecidueye extends Pokemon {
   ])
   rarity = Rarity.COMMON
   stars = 3
-  hp = 180
-  atk = 18
+  hp = 150
+  atk = 20
   speed = 42
   def = 4
   speDef = 3
@@ -17058,7 +17058,7 @@ export class Grubbin extends Pokemon {
   rarity = Rarity.UNCOMMON
   stars = 1
   evolution = Pkm.CHARJABUG
-  hp = 65
+  hp = 60
   atk = 5
   speed = 39
   def = 3
@@ -17077,7 +17077,7 @@ export class Charjabug extends Pokemon {
   rarity = Rarity.UNCOMMON
   stars = 2
   evolution = Pkm.VIKAVOLT
-  hp = 115
+  hp = 110
   atk = 10
   speed = 39
   def = 4
@@ -17095,8 +17095,8 @@ export class Vikavolt extends Pokemon {
   ])
   rarity = Rarity.UNCOMMON
   stars = 3
-  hp = 175
-  atk = 16
+  hp = 170
+  atk = 15
   speed = 39
   def = 5
   speDef = 5
@@ -21209,7 +21209,7 @@ export class Klink extends Pokemon {
   evolution = Pkm.KLANG
   hp = 50
   atk = 4
-  speed = 54
+  speed = 44
   def = 3
   speDef = 2
   maxPP = 100
@@ -21225,7 +21225,7 @@ export class Klang extends Pokemon {
   evolution = Pkm.KLINKLANG
   hp = 100
   atk = 7
-  speed = 54
+  speed = 44
   def = 5
   speDef = 3
   maxPP = 100
@@ -21240,7 +21240,7 @@ export class Klinklang extends Pokemon {
   stars = 3
   hp = 150
   atk = 14
-  speed = 54
+  speed = 44
   def = 9
   speDef = 6
   maxPP = 100

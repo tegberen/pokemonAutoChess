@@ -12,7 +12,7 @@ export class PastelVeilStrategy extends AbilityStrategy {
   ) {
     super.process(pokemon, board, target, crit, true)
 
-    const shield = [10, 20, 30, 60][pokemon.stars - 1] ?? 60
+    const shield = [15, 30, 45, 90][pokemon.stars - 1] ?? 90
     const farthestCoordinate = board.getFarthestTargetCoordinateAvailablePlace(
       pokemon,
       true

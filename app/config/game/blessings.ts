@@ -1155,13 +1155,6 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     grantsPokemonImmediately: true,
     synergy: Synergy.FLYING
   },
-  [Blessing.BIG_PECKS]: {
-    tier: BlessingTier.GOLD,
-    availableAtStages: BLESSING_SELECTION_STAGES,
-    icon: "big_peck_letter",
-    grantsPokemonImmediately: true,
-    synergy: Synergy.FLYING
-  },
   [Blessing.SHAPELESS_SYNERGIES]: {
     tier: BlessingTier.GOLD,
     availableAtStages: BLESSING_SELECTION_STAGES,
@@ -1902,7 +1895,7 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     grantsPokemonImmediately: true
   },
   [Blessing.THIRD_EYE]: {
-    tier: BlessingTier.SILVER,
+    tier: BlessingTier.GOLD,
     availableAtStages: [12],
     icon: "third_eye",
     grantsPokemonImmediately: true
