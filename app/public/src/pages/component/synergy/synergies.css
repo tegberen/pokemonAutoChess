@@ -147,26 +147,3 @@
   filter: brightness(0);
   opacity: 0.4;
 }
-
-.synergy-fossil-restoration span {
-  margin-left: 0.4em;
-  color: var(--color-fg-secondary);
-  font-size: 0.85em;
-}
-
-.synergy-fossil-passive {
-  margin: 0.35em 0 0;
-  color: var(--color-fg-secondary);
-  font-size: 0.85em;
-  font-style: italic;
-  line-height: 1.35;
-}
-
-/* the restored Pokemon is SPECIAL rarity, so it wears that rarity border like
-   the portraits in the lists below */
-.synergy-fossil-restoration .restored-portrait {
-  width: 30px;
-  height: 30px;
-  border: 3px solid var(--color-rarity-special);
-  border-radius: 4px;
-}

@@ -96,9 +96,6 @@ export function WikiFossilRestorations() {
             )
           )}
       </p>
-      <p className="wiki-fossil-capstone">
-        {addIconsToDescription(t("fossil_unlocks.restoration_capstone"))}
-      </p>
       <ul>
         {GalarFossilRestorations.map(({ fossils, pokemon }) => {
           const restored = getPokemonData(pokemon)
@@ -113,7 +110,7 @@ export function WikiFossilRestorations() {
                 <img src={`assets/item/${fossils[0]}.webp`} alt={fossils[0]} />
                 <b>+</b>
                 <img src={`assets/item/${fossils[1]}.webp`} alt={fossils[1]} />
-                <b>&rarr;</b>
+                <b>=</b>
               </span>
               <img
                 src={getPortraitSrc(restored.index)}

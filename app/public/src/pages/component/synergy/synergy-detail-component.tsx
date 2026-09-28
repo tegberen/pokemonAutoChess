@@ -36,7 +36,10 @@ import { addIconsToDescription } from "../../utils/descriptions"
 import { cc } from "../../utils/jsx"
 import { getCachedPortrait } from "../game/game-pokemon-portrait"
 import SynergyIcon from "../icons/synergy-icon"
-import { SynergyTierDescription } from "./synergy-tier-description"
+import {
+  FossilRestorationList,
+  SynergyTierDescription
+} from "./synergy-tier-description"
 
 const keepFirstOfFamily = (arr: Pkm[]): Pkm[] => {
   const seenFamilies = new Set<Pkm>()
@@ -210,7 +213,12 @@ export default function SynergyDetailComponent(props: {
             </h4>
             <SynergyTierDescription tier={tier} />
             {tier === EffectEnum.PRIMORDIAL_POWER && (
-              <FossilRestorationState unlocks={fossilUnlocks} />
+              <>
+                <FossilRestorationList
+                  restoredPokemon={fossilUnlocks.restoredPokemon}
+                />
+                <FossilRestorationState unlocks={fossilUnlocks} />
+              </>
             )}
           </div>
         )
@@ -255,20 +263,15 @@ export default function SynergyDetailComponent(props: {
   )
 }
 
-/* Restoration state is public: which Galar fossils this player holds, and the
-   form they currently have restored. Their quest progress is not shown. */
+/* Restoration state is public: which Galar fossils this player holds. The form
+   they restored is highlighted in the tier's recipe list above. Their quest
+   progress is not shown. */
 function FossilRestorationState(props: { unlocks: IFossilUnlocksState }) {
   const { t } = useTranslation()
-  const { galarFossils, restoredPokemon } = props.unlocks
-  if (galarFossils.length === 0 && restoredPokemon === "") return null
-
-  /* the restored form's passive is the real payoff of the tier, so it is spelled
-     out here rather than left to a hover on the portrait */
-  const restoredPassive =
-    restoredPokemon === "" ? null : getPokemonData(restoredPokemon).passive
+  const { galarFossils } = props.unlocks
+  if (galarFossils.length === 0) return null
 
   return (
-    <>
     <div className="synergy-fossil-restoration">
       {Object.values(GalarFossil).map((fossil) => (
         <img
@@ -279,31 +282,7 @@ function FossilRestorationState(props: { unlocks: IFossilUnlocksState }) {
           title={t(`galar_fossil.${fossil}`)}
         />
       ))}
-      {restoredPokemon !== "" && (
-        <>
-          <span>{t("fossil_unlocks.active_restoration")}</span>
-          <img
-            className="restored-portrait"
-            src={getCachedPortrait(
-              getPokemonData(restoredPokemon).index,
-              undefined
-            )}
-            alt={t(`pkm.${restoredPokemon}`)}
-            title={t(`pkm.${restoredPokemon}`)}
-          />
-        </>
-      )}
     </div>
-    {restoredPassive && (
-      <p className="synergy-fossil-passive">
-        {/* defaultValue widens the key to string: four Passive members have
-            no description, so the template union is not a valid key type */}
-        {addIconsToDescription(
-          t(`passive_description.${restoredPassive}`, { defaultValue: "" })
-        )}
-      </p>
-    )}
-    </>
   )
 }
 

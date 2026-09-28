@@ -1,0 +1,70 @@
+/* its own row under the FOSSIL (8) tier, indented a fixed step so it reads as
+   that tier's sub-list whatever the tier name's length */
+.fossil-restoration-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+  margin: 0.5em 0 0.25em;
+  padding: 0 0 0 1.5em;
+  list-style: none;
+}
+
+.fossil-restoration-list li {
+  display: flex;
+  align-items: center;
+  gap: 0.35em;
+  padding: 0.2em 0.4em;
+  border: 1px solid transparent;
+  border-radius: 8px;
+}
+
+/* in game, the recipe the player has restored stands out, the others recede */
+.fossil-restoration-list li.active {
+  border-color: var(--color-bg-accent);
+  background-color: color-mix(in srgb, var(--color-bg-accent) 18%, transparent);
+}
+
+.fossil-restoration-list li.active .fossil-restoration-effect {
+  color: var(--color-fg-primary);
+}
+
+.fossil-restoration-list li.inactive {
+  opacity: 0.5;
+}
+
+/* "Bird + Drake =" reads as one recipe */
+.fossil-restoration-recipe {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 0.2em;
+}
+
+.fossil-restoration-recipe img {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+}
+
+.fossil-restoration-joiner {
+  color: var(--color-fg-secondary);
+  font-size: 0.85em;
+}
+
+/* the restored Pokemon is SPECIAL rarity, bordered like the synergy panel's
+   portraits */
+.fossil-restoration-portrait {
+  flex: none;
+  box-sizing: border-box;
+  margin-right: 0.3em;
+  border: 2px solid var(--color-rarity-special);
+  border-radius: 4px;
+}
+
+.fossil-restoration-effect {
+  min-width: 0;
+  font-size: 0.92em;
+  font-weight: normal;
+  line-height: 1.4;
+  color: var(--color-fg-secondary);
+}

@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { Fragment, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { Tab, TabList, TabPanel, Tabs } from "react-tabs"
 import { RarityColor, SynergyTiersThresholds } from "../../../../../config"
@@ -6,6 +6,7 @@ import { SynergyTiers } from "../../../../../config/game/synergies"
 import { FlowerMonByPot } from "../../../../../core/flower-pots"
 import { getPokemonData } from "../../../../../models/precomputed/precomputed-pokemon-data"
 import { PRECOMPUTED_POKEMONS_PER_TYPE } from "../../../../../models/precomputed/precomputed-types"
+import { EffectEnum } from "../../../../../types/enum/Effect"
 import { FlowerPots } from "../../../../../types/enum/FlowerPot"
 import { Rarity } from "../../../../../types/enum/Game"
 import { Pkm, PkmFamily } from "../../../../../types/enum/Pokemon"
@@ -22,7 +23,10 @@ import {
   filterPokemonsAccordingToPreferences,
   PokemonFilters
 } from "../pokemon-filters/pokemon-filters"
-import { SynergyTierDescription } from "../synergy/synergy-tier-description"
+import {
+  FossilRestorationList,
+  SynergyTierDescription
+} from "../synergy/synergy-tier-description"
 import { SynergyOverlaps } from "../synergy-overlaps/synergy-overlaps"
 import WikiAwakening from "./wiki-awakening"
 import {
@@ -131,16 +135,16 @@ export function WikiType(props: { type: Synergy; onGoToWeather?: () => void }) {
       </p>
       {synergyTiers.map((tier: (typeof synergyTiers)[number], i) => {
         return (
-          <div
-            key={t(`effect.${tier}`)}
-            style={{ display: "flex", alignItems: "flex-start" }}
-          >
-            <span style={{ whiteSpace: "nowrap" }}>
-              ({SynergyTiersThresholds[props.type][i]}) {t(`effect.${tier}`)}
-              :&nbsp;
-            </span>
-            <SynergyTierDescription tier={tier} />
-          </div>
+          <Fragment key={t(`effect.${tier}`)}>
+            <div style={{ display: "flex", alignItems: "flex-start" }}>
+              <span style={{ whiteSpace: "nowrap" }}>
+                ({SynergyTiersThresholds[props.type][i]}) {t(`effect.${tier}`)}
+                :&nbsp;
+              </span>
+              <SynergyTierDescription tier={tier} />
+            </div>
+            {tier === EffectEnum.PRIMORDIAL_POWER && <FossilRestorationList />}
+          </Fragment>
         )
       })}
 
