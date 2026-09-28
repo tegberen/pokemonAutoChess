@@ -2,7 +2,6 @@ import { useCallback, useEffect, useRef, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { Menu, MenuItem, type MenuItemProps, Sidebar } from "react-pro-sidebar"
 import { useNavigate } from "react-router"
-import pkg from "../../../../../../package.json"
 import { GADGETS } from "../../../../../config/game/gadgets"
 import { Role } from "../../../../../types"
 import {
@@ -66,8 +65,6 @@ export function MainSidebar(props: MainSidebarProps) {
   const [preferences] = usePreferences()
 
   const { isNewPatch, updateVersionChecked } = usePatchVersion()
-
-  const version = pkg.version
 
   useEffect(() => {
     if (!sidebarRef.current) {
@@ -155,8 +152,7 @@ export function MainSidebar(props: MainSidebarProps) {
         <div className="sidebar-logo" onClick={() => setCollapsed(!collapsed)}>
           <img src={`assets/ui/colyseus-icon.png`} />
           <div>
-            <h1>Pokemon Auto Chess</h1>
-            <small>v{version}</small>
+            <h1>John Auto Chess</h1>
           </div>
         </div>
 
@@ -244,17 +240,18 @@ export function MainSidebar(props: MainSidebarProps) {
             </NavLink>
           )}
 
-        {((!GADGETS.synergy_wheel.disabled &&
-          profileLevel >= GADGETS.synergy_wheel.levelRequired) ||
-          profileRole === Role.ADMIN) && (
-          <NavLink
-            svg="synergy-wheel"
-            location="synergy-wheel"
-            handleClick={changeModal}
-          >
-            {t("gadget.synergy_wheel")}
-          </NavLink>
-        )}
+        {page !== "game" &&
+          ((!GADGETS.synergy_wheel.disabled &&
+            profileLevel >= GADGETS.synergy_wheel.levelRequired) ||
+            profileRole === Role.ADMIN) && (
+            <NavLink
+              svg="synergy-wheel"
+              location="synergy-wheel"
+              handleClick={changeModal}
+            >
+              {t("gadget.synergy_wheel")}
+            </NavLink>
+          )}
 
         {page !== "game" &&
           ((!GADGETS.bot_builder.disabled &&
@@ -274,29 +271,31 @@ export function MainSidebar(props: MainSidebarProps) {
             </NavLink>
           )}
 
-        {((!GADGETS.tier_list_maker.disabled &&
-          profileLevel >= GADGETS.tier_list_maker.levelRequired) ||
-          profileRole === Role.ADMIN) && (
-          <NavLink
-            svg="tier-list"
-            location="tier-list"
-            handleClick={changeModal}
-          >
-            {t("gadget.tier_list_maker")}
-          </NavLink>
-        )}
+        {page !== "game" &&
+          ((!GADGETS.tier_list_maker.disabled &&
+            profileLevel >= GADGETS.tier_list_maker.levelRequired) ||
+            profileRole === Role.ADMIN) && (
+            <NavLink
+              svg="tier-list"
+              location="tier-list"
+              handleClick={changeModal}
+            >
+              {t("gadget.tier_list_maker")}
+            </NavLink>
+          )}
 
-        {((!GADGETS.sprite_tracker.disabled &&
-          profileLevel >= GADGETS.sprite_tracker.levelRequired) ||
-          profileRole === Role.ADMIN) && (
-          <NavLink
-            svg="pokemon-sprite"
-            location="sprite-tracker"
-            handleClick={changeModal}
-          >
-            {t("gadget.sprite_tracker")}
-          </NavLink>
-        )}
+        {page !== "game" &&
+          ((!GADGETS.sprite_tracker.disabled &&
+            profileLevel >= GADGETS.sprite_tracker.levelRequired) ||
+            profileRole === Role.ADMIN) && (
+            <NavLink
+              svg="pokemon-sprite"
+              location="sprite-tracker"
+              handleClick={changeModal}
+            >
+              {t("gadget.sprite_tracker")}
+            </NavLink>
+          )}
 
         {page !== "game" &&
           (profileRole === Role.MODERATOR || profileRole === Role.ADMIN) && (

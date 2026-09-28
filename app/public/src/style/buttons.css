@@ -221,10 +221,12 @@ button {
 }
 
 /* Themed buttons: a theme that defines --theme-button repaints the main
-   action buttons with it, New Game, every preparation room button and the
-   room lists' Join / Reconnect / Spectate. A confirmed Ready ✓ takes
-   --theme-ready. theme.ts sets data-themed-buttons once such a theme loaded */
+   action buttons with it, New Game, every preparation room button, the
+   room lists' Join / Reconnect / Spectate and the after-game Back to Lobby.
+   A confirmed Ready ✓ takes --theme-ready. theme.ts sets
+   data-themed-buttons once such a theme loaded */
 :root[data-themed-buttons] .lobby .play-button.bubbly.green,
+:root[data-themed-buttons] .after-game > .bubbly.blue,
 :root[data-themed-buttons] .preparation-page .bubbly.orange,
 :root[data-themed-buttons] .preparation-page .bubbly.green,
 :root[data-themed-buttons] .preparation-page .bubbly.blue,
@@ -240,6 +242,7 @@ button {
 }
 
 :root[data-themed-buttons] .lobby .play-button.bubbly.green:not([disabled]):hover,
+:root[data-themed-buttons] .after-game > .bubbly.blue:not([disabled]):hover,
 :root[data-themed-buttons] .preparation-page .bubbly.orange:not([disabled]):hover,
 :root[data-themed-buttons] .preparation-page .bubbly.green:not([disabled]):hover,
 :root[data-themed-buttons] .preparation-page .bubbly.blue:not([disabled]):hover,
@@ -250,6 +253,7 @@ button {
 }
 
 :root[data-themed-buttons] .lobby .play-button.bubbly.green:not([disabled]):active,
+:root[data-themed-buttons] .after-game > .bubbly.blue:not([disabled]):active,
 :root[data-themed-buttons] .preparation-page .bubbly.orange:not([disabled]):active,
 :root[data-themed-buttons] .preparation-page .bubbly.green:not([disabled]):active,
 :root[data-themed-buttons] .preparation-page .bubbly.blue:not([disabled]):active,
