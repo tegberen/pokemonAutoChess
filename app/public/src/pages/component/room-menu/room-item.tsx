@@ -10,6 +10,7 @@ import {
   getGameModification
 } from "../../../../../types/enum/Game"
 import { formatMinMaxRanks, getRank } from "../../../../../utils/elo"
+import { hasCustomRoomName } from "../../../../../utils/room-name"
 import { useAppSelector } from "../../../hooks"
 import { cc } from "../../utils/jsx"
 import { GameModeIcon } from "../icons/game-mode-icon"
@@ -170,7 +171,14 @@ export default function RoomItem(props: {
               metadata?.minRank as EloRank | null,
               metadata?.maxRank as EloRank | null
             ) + " "}
-            {showsModification ? modificationLabel : metadata?.name}
+            {showsModification &&
+            !hasCustomRoomName(
+              metadata?.name,
+              metadata?.gameMode,
+              modificationLabel
+            )
+              ? modificationLabel
+              : metadata?.name}
           </span>
         </div>
       </div>

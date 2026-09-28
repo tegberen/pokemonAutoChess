@@ -19,6 +19,7 @@ import { TOURNAMENT_LOBBY_START_DELAY_IN_SECONDS } from "../../../../../core/tou
 import { formatMinMaxRanks } from "../../../../../utils/elo"
 import { throttle } from "../../../../../utils/function"
 import { max } from "../../../../../utils/number"
+import { hasCustomRoomName } from "../../../../../utils/room-name"
 import { setTitleNotificationIcon } from "../../../../../utils/window"
 import { useAppSelector } from "../../../hooks"
 import { usePreference } from "../../../preferences"
@@ -257,7 +258,11 @@ export default function PreparationMenu() {
             className="preparation-header-icon"
             src={GameModificationIcon[modification]}
           />
-          {formatMinMaxRanks(minRank, maxRank)} {modificationLabel}:{" "}
+          {formatMinMaxRanks(minRank, maxRank)}{" "}
+          {hasCustomRoomName(name, gameMode, modificationLabel)
+            ? name
+            : modificationLabel}
+          :{" "}
           {users.length}/{nbExpectedPlayers}
           <span className="mode-tag">
             {gameMode === GameMode.DOUBLE_UP

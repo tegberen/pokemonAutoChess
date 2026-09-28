@@ -5,6 +5,7 @@ import {
   GameMode,
   getGameModification
 } from "../../../../../types/enum/Game"
+import { hasCustomRoomName } from "../../../../../utils/room-name"
 import { useAppSelector } from "../../../hooks"
 import { cc } from "../../utils/jsx"
 import { GameModeIcon } from "../icons/game-mode-icon"
@@ -68,7 +69,15 @@ ${metadata?.ownerName ? "Owner: " + metadata.ownerName : ""}\n${metadata?.player
             />
           )}
           <span className="room-name">
-            {showsModification ? modificationLabel : metadata?.name}
+            {showsModification &&
+            (metadata?.dailyDuel ||
+              !hasCustomRoomName(
+                metadata?.name,
+                metadata?.gameMode,
+                modificationLabel
+              ))
+              ? modificationLabel
+              : metadata?.name}
           </span>
           {isEvent && (
             <span className="game-event-tag">

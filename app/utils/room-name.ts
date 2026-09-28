@@ -16,3 +16,18 @@ export function getDefaultRoomName(gameMode: GameMode, whimsy = false) {
       return "Custom Room"
   }
 }
+
+// a room's cards and header show its game mode unless the owner renamed it; a pinned
+// Scribble rule renames it to the rule, which the mode label already says
+export function hasCustomRoomName(
+  name: string | undefined,
+  gameMode: GameMode | undefined,
+  modeLabel: string
+) {
+  if (!name || name === modeLabel) return false
+  if (!gameMode) return true
+  return (
+    name !== getDefaultRoomName(gameMode, false) &&
+    name !== getDefaultRoomName(gameMode, true)
+  )
+}
