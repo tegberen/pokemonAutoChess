@@ -498,9 +498,9 @@ Every balance change on this server, newest first.
 - <img class="description-icon" src="/assets/ui/game_modes/wishes_icon.svg" alt="" /> Wishes | integrated into the base game, the Wish Festival event is removed
 - <img class="description-icon" src="/assets/ui/game_modes/scribble_icon.svg" alt="" /> Scribble | in Solo the owner can pick a rule, in Duo it is always random
 - Event | Monthly Tournament, Daily Duel or Half-Yearly Wish Cup
-- Monthly Tournament | [Format: Duo; Game Mode: Classic]<br>[Format: Solo; Game Mode: Scribble / Smeargle Pack]
-- Daily Duel | [Format: Solo; Game Mode: Wishes]
-- Half-Yearly Wish Cup | [Format: Solo; Game Mode: Wishes]
+- Monthly Tournament | [Format: Duo; Game Mode: Classic] · Prize: Duo Podium<br>[Format: Solo; Game Mode: Scribble / Smeargle Pack] · Prize: Scribble Podium
+- Daily Duel | [Format: Solo; Game Mode: Wishes] · Prize: Title & Theme, 1st to 3rd place Podium
+- Half-Yearly Wish Cup | [Format: Solo; Game Mode: Wishes] · Prize: a custom designed Wish named after the winner
 
 **Pokémon**
 - Dragon Darts | darts now hit one after another, and stop once the target is KO'd
