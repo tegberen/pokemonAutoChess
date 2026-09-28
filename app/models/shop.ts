@@ -969,6 +969,16 @@ export default class Shop {
       pokemonsProposed[2] = pickRandomIn(PURRFECT_PLAN_UNIQUES)
     }
 
+    // slot 3, clear of the slots above and the Paradox last one; Sandy Shocks
+    // being a Paradox, it also satisfies CONVERGENT_PARADOX below
+    if (
+      stageLevel === PortalCarouselStages[1] &&
+      player.blessings?.includes(Blessing.PRIMAL_MAGNETISM) &&
+      !pokemonsProposed.includes(Pkm.SANDY_SHOCKS)
+    ) {
+      pokemonsProposed[3] = Pkm.SANDY_SHOCKS
+    }
+
     /* CONVERGENT_PARADOX promises a Paradox among the Unique and Legendary
        options, so one slot is swapped when the roll produced none */
     const paradoxRoster =
