@@ -147,7 +147,8 @@ export default function ServerGuide({
         icon: Blessings[blessing].icon,
         tier: Blessings[blessing].tier
       })),
-      // removed Wishes keep their icon in older Patch Log rows
+      // removed or renamed Wishes keep their icon in older Patch Log rows
+      { name: "Park Bench", icon: "park_bench" },
       { name: "Golden Ticket", icon: "ticket" },
       { name: "Mortar Shells", icon: "mortar_shells" },
       { name: "Big Pecks", icon: "big_peck_letter" }

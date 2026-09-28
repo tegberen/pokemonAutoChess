@@ -22,7 +22,8 @@ import {
   ROCKY_BEGINNINGS_POKEMONS,
   SELECTIVE_GENETICS_BABIES_GRANTED,
   STARTER_PACK_CONTENT,
-  getGymTrainerRoster
+  getGymTrainerRoster,
+  PARK_BENCH_WATER_POKEMONS
 } from "../../types/enum/Blessing"
 import { DungeonPMDO } from "../../types/enum/Dungeon"
 import { Rarity } from "../../types/enum/Game"
@@ -2353,7 +2354,7 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     grantsPokemonImmediately: false
   },
   [Blessing.LIFE_PRICE]: {
-    tier: BlessingTier.PRISMATIC,
+    tier: BlessingTier.GOLD,
     availableAtStages: [4],
     icon: "life_price",
     grantsPokemonImmediately: false
@@ -2372,9 +2373,11 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
   },
   [Blessing.PARK_BENCH]: {
     tier: BlessingTier.SILVER,
-    availableAtStages: [4],
+    availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "park_bench",
-    grantsPokemonImmediately: false
+    grantsPokemonImmediately: true,
+    benchSlotsRequired: PARK_BENCH_WATER_POKEMONS,
+    synergy: Synergy.WATER
   },
   [Blessing.MAGIC_SHIELD_I]: {
     tier: BlessingTier.SILVER,
@@ -2650,9 +2653,9 @@ export const BLESSING_TIER_CHANCES_AFTER: {
     [BlessingTier.PRISMATIC]: 0.05
   },
   [BlessingTier.GOLD]: {
-    [BlessingTier.SILVER]: 0.2,
+    [BlessingTier.SILVER]: 0.25,
     [BlessingTier.GOLD]: 0.5,
-    [BlessingTier.PRISMATIC]: 0.3
+    [BlessingTier.PRISMATIC]: 0.25
   },
   [BlessingTier.PRISMATIC]: {
     [BlessingTier.SILVER]: 0.5,

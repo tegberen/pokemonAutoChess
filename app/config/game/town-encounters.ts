@@ -26,7 +26,7 @@ export const TownEncountersByStage: {
     [Pkm.LAPRAS]: 1 / 20,
     [Pkm.CASTFORM]: 1 / 20,
     [Pkm.CHIMECHO]: 1 / 10,
-    [Pkm.BIDOOF]: 1 / 20
+    [Pkm.BIDOOF]: 1 / 40
   },
   12: {
     [Pkm.KANGASKHAN]: 1 / 20,

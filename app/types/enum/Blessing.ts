@@ -1092,6 +1092,9 @@ export const RANK_UP_EXPERIENCE = 2
 export const RANK_UP_LAST_STAGE = 10
 export const PARK_BENCH_EXTRA_SLOTS = 1
 export const PARK_BENCH_FULL_BENCH_EXPERIENCE = 2
+export const PARK_BENCH_WATER_POKEMONS = 3
+// Common 1 STAR WATER fossils: gifting one opens the fossil menu
+export const PARK_BENCH_FOSSILS: Pkm[] = [Pkm.OMANYTE, Pkm.KABUTO, Pkm.WIMPOD]
 export const MAGIC_SHIELD_ALLY_AP = { I: 10, II: 20 }
 export const MAGIC_SHIELD_PER_CAST = { I: 15, II: 20 }
 export const BRUTE_SHIELD_ATTACK_RATIO = { I: 1, II: 1.5 }

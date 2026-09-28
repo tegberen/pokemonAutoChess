@@ -551,7 +551,9 @@ Every balance change on this server, newest first.
 - Primal Magnetism {{new}} | Gain a Magnemite. Your Magnemite gains FOSSIL synergy. Your STRONGEST Magnemite casts Magnetic Absorption on the first enemy it attacks, then after every third cast of its own ability
 - Galvanic Rain {{new}} | Gain an Alolan Graveler and move to a random ELECTRIC region if not in one. Your STRONGEST Alolan Geodude's ability is replaced with Electric Surge, it gets +2 RANGE, and its attacks have a [10,LK]% chance to throw an Alolan Geodude with full PP next to the target
 - Mega Sol, Flytrap and Spore Clouds | their item no longer drops into your inventory when taken before the pot is unlocked
-- Swamp Father | your Mudkip can now also be found in GRASS regions, and at stage 12 the Wish is also offered when GRASS is active- Starter Choice | SILVER_DOJO_TICKET → BRONZE_DOJO_TICKET
+- Park Bench by the River | renamed from Park Bench, now a WATER Wish that also grants 3 random 1 STAR Common WATER Pokémon
+- Wishes odds | Prismatic at stage 12 after a Gold 30% → 25%, Silver at stage 12 after Gold 20% → 25%; Bidoof encounter: 1/20 → 1/40
+- Starter Choice | SILVER_DOJO_TICKET → BRONZE_DOJO_TICKET
 - Soothe Carol | PP restored 25% → 20% of max PP
 - Scorching Tome | the 40% damage bonus now only applies to your attacks and abilities
 - Charging My Bug | gain a Grubbin instead of a Charjabug, ATK gained in a dug hole 2 → [1,1,2] per STAR

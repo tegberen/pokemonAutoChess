@@ -169,7 +169,7 @@ export default class Player extends Schema implements IPlayer {
   @type(ExperienceManager) experienceManager = new ExperienceManager()
   @type({ map: "uint8" }) synergies = new Synergies()
   @type("uint16") money = process.env.MODE == "dev" ? 999 : 5
-  @type("int16") life = process.env.MODE == "dev" ? 1000 : 100
+  @type("int16") life = process.env.MODE == "dev" ? 10 : 100
   @view() @type("boolean") shopLocked: boolean = false
   @view() @type("uint8") shopFreeRolls: number = 0
   @type("uint8") streak: number = 0

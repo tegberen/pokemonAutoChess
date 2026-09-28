@@ -5909,8 +5909,8 @@
 			"description": "Now and at the start of each stage until stage 10, gain 2 XP."
 		},
 		"PARK_BENCH": {
-			"name": "Park Bench",
-			"description": "Gain a 9th bench slot for the rest of the game. At the start of each round, gain 2 XP if your bench is full."
+			"name": "Park Bench by the River",
+			"description": "Gain 3 random 1 STAR Common WATER Pokémon and a 9th bench slot for the rest of the game. At the start of each round, gain 2 XP if your bench is full."
 		},
 		"STAR_GUARD": {
 			"name": "Star Guard",

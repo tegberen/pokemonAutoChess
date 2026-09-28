@@ -109,6 +109,8 @@ import {
   RAINBOW_HOUR_FOSSIL_STONES,
   RAINBOW_HOUR_GOLD_REWARD,
   PARK_BENCH_FULL_BENCH_EXPERIENCE,
+  PARK_BENCH_WATER_POKEMONS,
+  PARK_BENCH_FOSSILS,
   RANK_UP_EXPERIENCE,
   RANK_UP_LAST_STAGE,
   ROCKY_BEGINNINGS_POKEMONS,
@@ -3522,7 +3524,19 @@ export const blessingEffectService: {
     return true
   },
 
-  [Blessing.PARK_BENCH]: () => true,
+  // a fossil among the gifts opens the fossil menu, as Aurora Borealis does
+  [Blessing.PARK_BENCH]: (player) => {
+    pickNRandomIn(
+      getOneStarPokemonsOfSynergy(Rarity.COMMON, Synergy.WATER),
+      PARK_BENCH_WATER_POKEMONS
+    ).forEach((pkm) => {
+      giftPokemonIfBenchHasRoom(player, pkm)
+      if (PARK_BENCH_FOSSILS.includes(pkm) && player.fossilUnlocksRef) {
+        player.fossilUnlocksRef.revealed = true
+      }
+    })
+    return true
+  },
 
   [Blessing.RANK_UP]: (player) => {
     player.addExperience(RANK_UP_EXPERIENCE)
