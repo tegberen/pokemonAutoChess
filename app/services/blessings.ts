@@ -24,6 +24,7 @@ import {
   grantWishItemToFlowerPot
 } from "../core/flower-pots"
 import type Player from "../models/colyseus-models/player"
+import { isInHeroExtraRegion } from "../models/colyseus-models/player"
 import { PlayerBlessings } from "../models/colyseus-models/player-blessings"
 import { PlayerChoice } from "../models/colyseus-models/player-choice"
 import { PokemonClasses, type Pokemon } from "../models/colyseus-models/pokemon"
@@ -1440,16 +1441,23 @@ function moveToRegionWherePokemonIsFound(
   state: GameState,
   room: GameRoom | undefined,
   pkm: Pkm,
-  requiredSynergy?: Synergy
+  requiredSynergy?: Synergy,
+  // the Wish being picked is not in player.blessings yet when this runs
+  pickedBlessing?: Blessing
 ) {
   const previousMap = player.map
   const regionalMon = new PokemonClasses[pkm](pkm)
+  const pickedBlessings = pickedBlessing ? [pickedBlessing] : []
   const isValidRegion = (map: DungeonPMDO) =>
-    regionalMon.isInRegion(map, state) &&
+    (regionalMon.isInRegion(map, state) ||
+      isInHeroExtraRegion(pkm, map, [
+        ...player.blessings,
+        ...pickedBlessings
+      ])) &&
     (!requiredSynergy ||
       RegionDetails[map]?.synergies.includes(requiredSynergy) === true)
   if (previousMap !== "town" && isValidRegion(previousMap)) {
-    player.updateRegionalPool(state, true, previousMap)
+    player.updateRegionalPool(state, true, previousMap, pickedBlessings)
     return
   }
 
@@ -1469,7 +1477,7 @@ function moveToRegionWherePokemonIsFound(
   setTimeout(() => {
     player.map = newMap
     player.regions.push(newMap)
-    player.updateRegionalPool(state, true, previousMap)
+    player.updateRegionalPool(state, true, previousMap, pickedBlessings)
     grantRegionalTreasuresOnRegionChange(player)
   }, LAPRAS_TRAVEL_DURATION)
 }
@@ -1871,7 +1879,14 @@ function heroBlessingEffect(
     state.shop.addAdditionalPokemon(normalForm ?? family, state, true)
   }
   if (HERO_BLESSING_MOVES_REGION.includes(blessing)) {
-    moveToRegionWherePokemonIsFound(player, state, room, family)
+    moveToRegionWherePokemonIsFound(
+      player,
+      state,
+      room,
+      family,
+      undefined,
+      blessing
+    )
   }
   return true
 }

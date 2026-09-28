@@ -535,7 +535,7 @@ Every balance change on this server, newest first.
 - Cursed Coffin {{new}} | Gain a Yamask. Your STRONGEST Yamask no longer attacks. Instead, every second it drains 15 HP and 5 PP from each ADJACENT enemy. Its Spite drains from the target and all ADJACENT enemies, and heals it for the PP drained
 - Light of Olivine {{new}} | Gain a Flaaffy. When your STRONGEST Mareep KO's an enemy with its ability, it gains your LIGHT spot's effects. If it already has them, your STRONGEST ally without them gains them instead
 - Unsealed Golemancy {{new}} | Gain a Golett. Your Golett gains MONSTER synergy. When your STRONGEST Golett KO's an enemy, it summons a Golett for a 1 STAR target, a Golurk for 2 STAR, and once per fight a random Regi for 3 STAR
-- Shinto Shrine Mirror {{new}} | Gain a Morgrem and move to a random Impidimp region if not in one. Your STRONGEST Impidimp uses Reflect at the start of combat. Every 6 seconds, it uses Reflect if it has taken more PHYSICAL than SPECIAL this fight, otherwise Magic Bounce
+- Shinto Shrine Mirror {{new}} | Gain an Impidimp and move to a random Impidimp region if not in one. Your STRONGEST Impidimp uses Reflect at the start of combat. Every 6 seconds, it uses Reflect if it has taken more PHYSICAL than SPECIAL this fight, otherwise Magic Bounce
 - Lunarian {{new}} | Gain a Clefairy and move to a random Cleffa region if not in one. Your STRONGEST Cleffa's Metronome casts legendary abilities in a set order: an attack, then a disruption, then a utility, on repeat. Its LUCK no longer affects the ability picked, but gives a [10,LK]% chance to cast it 1 STAR higher
 - Fleur de Lure {{new}} | Gain a strong Fomantis. Once per cast, when your STRONGEST Fomantis reaches 80% PP, the 3 closest enemies are CHARM for 3 seconds. Its Solar Blade always crits CHARM enemies, and executes CHARM BUG enemies
 - Crystal Guardian {{new}} | Gain an Onix. Your STRONGEST Onix can crystallise again with other weather rocks: only its first crystal grants an awakening effect, each further one adds its synergy. It permanently gains 20 max HP for every crystallisation it completes. The first time you get a Steelix, gain 3 random weather rocks
@@ -548,10 +548,10 @@ Every balance change on this server, newest first.
 - Salt Shaker {{new}} | Gain a Nacli. Your STRONGEST Nacli's Salt Cure reaches [2,3,4] tiles. When a BURN enemy is KO'd within that range, the closest ally without RUNE_PROTECT gains the effect of ROCK_SALT
 - Primal Rampage {{new}} | Unlock Cranidos. Your STRONGEST Cranidos's ability is replaced with Torment. Each time it KO's an enemy, it takes 20 PHYSICAL retaliation damage and regains 40 PP
 - Dreepy Deployment {{new}} | Gain a Dreepy and move to a random Dreepy region if not in one. Each dart of your STRONGEST Dreepy has a [10,LK]% chance to deploy a Dreepy with full PP 2 tiles from the target, or always if the ability KO's the target
-- Primal Magnetism {{new}} | Gain a Magnemite. Your STRONGEST Magnemite casts Magnetic Absorption on the first enemy it attacks, then after every third cast of its own ability
+- Primal Magnetism {{new}} | Gain a Magnemite. Your Magnemite gains FOSSIL synergy. Your STRONGEST Magnemite casts Magnetic Absorption on the first enemy it attacks, then after every third cast of its own ability
 - Galvanic Rain {{new}} | Gain an Alolan Graveler and move to a random ELECTRIC region if not in one. Your STRONGEST Alolan Geodude's ability is replaced with Electric Surge, it gets +2 RANGE, and its attacks have a [10,LK]% chance to throw an Alolan Geodude with full PP next to the target
 - Mega Sol, Flytrap and Spore Clouds | their item no longer drops into your inventory when taken before the pot is unlocked
-- Starter Choice | SILVER_DOJO_TICKET → BRONZE_DOJO_TICKET
+- Swamp Father | your Mudkip can now also be found in GRASS regions, and at stage 12 the Wish is also offered when GRASS is active- Starter Choice | SILVER_DOJO_TICKET → BRONZE_DOJO_TICKET
 - Soothe Carol | PP restored 25% → 20% of max PP
 - Scorching Tome | the 40% damage bonus now only applies to your attacks and abilities
 - Charging My Bug | gain a Grubbin instead of a Charjabug, ATK gained in a dug hole 2 → [1,1,2] per STAR

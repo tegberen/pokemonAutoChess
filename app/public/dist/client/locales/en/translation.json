@@ -6486,7 +6486,7 @@
 		},
 		"SHINTO_SHRINE_MIRROR": {
 			"name": "Shinto Shrine Mirror",
-			"description": "Gain a Morgrem and move to a random Impidimp region if not in one. Your STRONGEST Impidimp uses Reflect at the start of combat. Every 6 seconds, it uses Reflect if it has taken more PHYSICAL than SPECIAL this fight, otherwise Magic Bounce."
+			"description": "Gain an Impidimp and move to a random Impidimp region if not in one. Your STRONGEST Impidimp uses Reflect at the start of combat. Every 6 seconds, it uses Reflect if it has taken more PHYSICAL than SPECIAL this fight, otherwise Magic Bounce."
 		},
 		"LUNARIAN": {
 			"name": "Lunarian",
@@ -6538,7 +6538,7 @@
 		},
 		"PRIMAL_MAGNETISM": {
 			"name": "Primal Magnetism",
-			"description": "Gain a Magnemite. Your STRONGEST Magnemite casts Magnetic Absorption on the first enemy it attacks, then after every third cast of its own ability."
+			"description": "Gain a Magnemite. Your Magnemite gains FOSSIL synergy. Your STRONGEST Magnemite casts Magnetic Absorption on the first enemy it attacks, then after every third cast of its own ability."
 		},
 		"GALVANIC_RAIN": {
 			"name": "Galvanic Rain",

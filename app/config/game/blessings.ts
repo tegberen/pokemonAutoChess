@@ -1931,14 +1931,14 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     grantsPokemonImmediately: true
   },
   [Blessing.PRIMAL_MAGNETISM]: {
-    tier: BlessingTier.SILVER,
+    tier: BlessingTier.GOLD,
     availableAtStages: [4],
     icon: "primal_magnetism",
     grantsPokemonImmediately: true
   },
   [Blessing.DREEPY_DEPLOYMENT]: {
     tier: BlessingTier.GOLD,
-    availableAtStages: [4],
+    availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "dreepy_deployment",
     grantsPokemonImmediately: true
   },
@@ -1956,7 +1956,7 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
   },
   [Blessing.CYBER_BLADE]: {
     tier: BlessingTier.GOLD,
-    availableAtStages: [4],
+    availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "cyber_blade",
     grantsPokemonImmediately: true
   },
@@ -1980,7 +1980,7 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
   },
   [Blessing.THUNDER_AND_LIGHTNING]: {
     tier: BlessingTier.PRISMATIC,
-    availableAtStages: [12],
+    availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "thunder_and_lightning",
     grantsPokemonImmediately: true
   },
@@ -1998,19 +1998,19 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
   },
   [Blessing.FLEUR_DE_LURE]: {
     tier: BlessingTier.PRISMATIC,
-    availableAtStages: [4],
+    availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "fleur_de_lure",
     grantsPokemonImmediately: true
   },
   [Blessing.LUNARIAN]: {
     tier: BlessingTier.PRISMATIC,
-    availableAtStages: [4],
+    availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "lunarian",
     grantsPokemonImmediately: true
   },
   [Blessing.SHINTO_SHRINE_MIRROR]: {
     tier: BlessingTier.GOLD,
-    availableAtStages: [4],
+    availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "shinto_shrine_mirror",
     grantsPokemonImmediately: true
   },
@@ -2028,7 +2028,7 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
   },
   [Blessing.CURSED_COFFIN]: {
     tier: BlessingTier.GOLD,
-    availableAtStages: [12],
+    availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "cursed_coffin",
     grantsPokemonImmediately: true
   },
@@ -2040,7 +2040,7 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
   },
   [Blessing.SWAMP_FATHER]: {
     tier: BlessingTier.GOLD,
-    availableAtStages: [12],
+    availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "swamp_father",
     grantsPokemonImmediately: true
   },
@@ -2052,7 +2052,7 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
   },
   [Blessing.SPOOKY_SCARECROW]: {
     tier: BlessingTier.GOLD,
-    availableAtStages: [12],
+    availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "spooky_scarecrow",
     grantsPokemonImmediately: true
   },

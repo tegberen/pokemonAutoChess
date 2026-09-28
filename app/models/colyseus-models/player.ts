@@ -44,7 +44,9 @@ import {
   CRYSTAL_CLUSTERS_ROCKS_GRANTED,
   LUNCH_MONEY_DAMAGE_REQUIRED,
   LUNCH_MONEY_GOLD,
-  getSynergiesGivenByItem
+  getSynergiesGivenByItem,
+  HERO_BLESSING_EXTRA_REGION_SYNERGY,
+  HERO_BLESSING_FAMILY
 } from "../../types/enum/Blessing"
 import { ROCK_AWAKENING_TIER } from "../../types/enum/Awakening"
 import type { PlayerBlessings } from "./player-blessings"
@@ -135,6 +137,24 @@ import { ArmoryOptions } from "../../types/enum/ArmoryOptions"
 // the top tier of each, so DERPY asks for both synergies fully capped
 const DERPY_WATER_REQUIRED = 9
 const DERPY_BUG_REQUIRED = 8
+
+// a hero Wish can open its family to an extra region synergy, only for the
+// player owning it: Swamp Father finds the Mudkip line in GRASS regions
+export function isInHeroExtraRegion(
+  pkm: Pkm,
+  map: DungeonPMDO,
+  blessings: Blessing[]
+) {
+  const regionSynergies = RegionDetails[map]?.synergies ?? []
+  return blessings.some((blessing) => {
+    const synergy = HERO_BLESSING_EXTRA_REGION_SYNERGY[blessing]
+    return (
+      synergy !== undefined &&
+      PkmFamily[pkm] === HERO_BLESSING_FAMILY[blessing] &&
+      regionSynergies.includes(synergy)
+    )
+  })
+}
 
 export default class Player extends Schema implements IPlayer {
   @type("string") id: string
@@ -749,6 +769,13 @@ export default class Player extends Schema implements IPlayer {
       pokemons.forEach((pokemon) => {
         if (PkmFamily[pokemon.name] === Pkm.MUDKIP) {
           pokemon.types.add(Synergy.GRASS)
+        }
+      })
+    }
+    if (this.blessings?.includes(Blessing.PRIMAL_MAGNETISM)) {
+      pokemons.forEach((pokemon) => {
+        if (PkmFamily[pokemon.name] === Pkm.MAGNEMITE) {
+          pokemon.types.add(Synergy.FOSSIL)
         }
       })
     }
@@ -1439,9 +1466,23 @@ export default class Player extends Schema implements IPlayer {
   /* Single source of truth for "can this player encounter this regional mon".
      Every availability gate must go through this and not raw isInRegion, or a
      mon can end up seeded into the pool but filtered out of the shop roll */
-  canFindRegionalPokemon(pkm: Pkm, state?: GameState): boolean {
+  // pickedBlessings: a Wish being picked, whose effect runs before it joins
+  // this.blessings
+  canFindRegionalPokemon(
+    pkm: Pkm,
+    state?: GameState,
+    pickedBlessings: Blessing[] = []
+  ): boolean {
     if (this.map === "town") return false
     if (new PokemonClasses[pkm](pkm).isInRegion(this.map, state!)) return true
+    if (
+      isInHeroExtraRegion(pkm, this.map, [
+        ...this.blessings,
+        ...pickedBlessings
+      ])
+    ) {
+      return true
+    }
     // the two Shellos have mutually exclusive region gates, so only
     // STAR_CROSSED_SEAS can make both findable at once
     return (
@@ -1454,7 +1495,8 @@ export default class Player extends Schema implements IPlayer {
   updateRegionalPool(
     state: GameState,
     mapChanged: boolean,
-    previousMap?: string
+    previousMap?: string,
+    pickedBlessings: Blessing[] = []
   ) {
     if (this.map === "town") {
       resetArraySchema(this.regionalPokemons, [])
@@ -1462,7 +1504,7 @@ export default class Player extends Schema implements IPlayer {
     }
 
     const newRegionalPokemons = PRECOMPUTED_REGIONAL_MONS.filter((p) =>
-      this.canFindRegionalPokemon(p, state)
+      this.canFindRegionalPokemon(p, state, pickedBlessings)
     )
 
     if (mapChanged) {

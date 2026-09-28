@@ -1342,7 +1342,7 @@ export const HERO_BLESSING_GIFT: { [blessing in Blessing]?: Pkm } = {
   [Blessing.CRYSTAL_GUARDIAN]: Pkm.ONIX,
   [Blessing.FLEUR_DE_LURE]: Pkm.FOMANTIS,
   [Blessing.LUNARIAN]: Pkm.CLEFAIRY,
-  [Blessing.SHINTO_SHRINE_MIRROR]: Pkm.MORGREM,
+  [Blessing.SHINTO_SHRINE_MIRROR]: Pkm.IMPIDIMP,
   [Blessing.UNSEALED_GOLEMANCY]: Pkm.GOLETT,
   [Blessing.LIGHT_OF_OLIVINE]: Pkm.FLAFFY,
   [Blessing.CURSED_COFFIN]: Pkm.YAMASK,
@@ -1375,6 +1375,7 @@ export const HERO_BLESSING_EXTRA_SYNERGIES: {
   [Blessing.RADIANCE]: [Synergy.LIGHT, Synergy.FLYING],
   [Blessing.SCHOOL_BUS]: [Synergy.MONSTER, Synergy.AMORPHOUS],
   [Blessing.TRASH_TO_TREASURE]: [Synergy.GROUND, Synergy.GRASS],
+  [Blessing.SWAMP_FATHER]: [Synergy.GRASS],
   [Blessing.PLUNDER]: [Synergy.WILD, Synergy.DARK],
   [Blessing.GLAIVE_STRIKE]: [Synergy.ROCK],
   [Blessing.STONE_SADDLE]: [Synergy.ICE, Synergy.FOSSIL],
@@ -1482,6 +1483,14 @@ export const HERO_BLESSING_MOVES_REGION: Blessing[] = [
   Blessing.SHINTO_SHRINE_MIRROR,
   Blessing.SWAMP_FATHER
 ]
+
+// for the owner only, the hero's family is also findable in regions of this
+// synergy, on top of its own types
+export const HERO_BLESSING_EXTRA_REGION_SYNERGY: {
+  [blessing in Blessing]?: Synergy
+} = {
+  [Blessing.SWAMP_FATHER]: Synergy.GRASS
+}
 
 /* these hero blessings keep their state on the simulation rather than on the
    unit, so a reinforcement crossing into the partner's fight cannot bring them
