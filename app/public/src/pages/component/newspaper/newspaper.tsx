@@ -85,7 +85,7 @@ export function VictoryCard({
         />
         <strong>{getRankLabel(match.rank)}</strong>
         <span className="newspaper-match-meta">
-          <GameModeIcon gameMode={match.gameMode} whimsy={match.whimsy} />
+          <GameModeIcon gameMode={match.gameMode} />
           <span>{formatRelativeDate(match.time)}</span>
         </span>
       </header>

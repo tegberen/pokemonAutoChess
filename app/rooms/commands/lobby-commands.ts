@@ -3,7 +3,6 @@ import { type Client, matchMaker } from "colyseus"
 // import { randomBytes } from "crypto"
 import {
   EloRankThreshold,
-  isScribbleWeekend,
   MAX_PLAYERS_PER_GAME,
   USERNAME_REGEXP
 } from "../../config"
@@ -693,11 +692,6 @@ export class JoinOrOpenRoomCommand extends Command<
     }
 
     if (gameMode === WHIMSY_WEEKEND_REQUEST) {
-      // the client hides the entry outside the window, but never trust its clock
-      if (!isScribbleWeekend()) {
-        client.send(Transfer.ALERT, "Whimsy Weekend is not running right now.")
-        return
-      }
       return [
         new OpenGameCommand().setPayload({
           gameMode: GameMode.DOUBLE_UP,

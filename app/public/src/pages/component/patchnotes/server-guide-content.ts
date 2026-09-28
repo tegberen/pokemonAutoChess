@@ -1,6 +1,7 @@
 import { Marked } from "marked"
 import { RarityColor } from "../../../../../config/game/shop"
 import { getPokemonData } from "../../../../../models/precomputed/precomputed-pokemon-data"
+import { BlessingTier } from "../../../../../types/enum/Blessing"
 import { Rarity } from "../../../../../types/enum/Game"
 import { Pkm, PkmIndex } from "../../../../../types/enum/Pokemon"
 import { Synergy } from "../../../../../types/enum/Synergy"
@@ -286,22 +287,24 @@ function breakAtCommas(cell: HTMLElement) {
   }
 }
 
-export type PatchLogWish = { name: string; icon: string }
+// removed Wishes have no tier: their rows sit after the tier groups
+export type PatchLogWish = { name: string; icon: string; tier?: BlessingTier }
 
 function wishIconMatchers(wishes: PatchLogWish[]) {
   return wishes
-    .flatMap(({ name, icon }) => {
+    .flatMap(({ name, icon, tier }) => {
       const family = name.replace(/\s+I{1,3}$/, "")
       return family === name
-        ? [{ label: name, icon }]
+        ? [{ label: name, icon, tier }]
         : [
-            { label: name, icon },
-            { label: family, icon }
+            { label: name, icon, tier },
+            { label: family, icon, tier }
           ]
     })
     .sort((a, b) => b.label.length - a.label.length)
-    .map(({ label, icon }) => ({
+    .map(({ label, icon, tier }) => ({
       icon,
+      tier,
       label,
       expression: new RegExp(
         `(^|[^A-Za-z])${label.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}s?(?=[^A-Za-z]|$)`,
@@ -333,6 +336,49 @@ function wishIcons(
     wrapper.append(image)
   }
   return wrapper
+}
+
+function wishTier(
+  subject: string,
+  matchers: ReturnType<typeof wishIconMatchers>
+) {
+  return matchers.find(({ expression }) => expression.test(subject))?.tier
+}
+
+const tierOrder = [
+  BlessingTier.SILVER,
+  BlessingTier.GOLD,
+  BlessingTier.PRISMATIC
+]
+
+const TierColor: Record<BlessingTier, string> = {
+  [BlessingTier.SILVER]: "var(--color-rarity-common)",
+  [BlessingTier.GOLD]: "var(--color-fg-gold)",
+  [BlessingTier.PRISMATIC]: "var(--color-rarity-epic)"
+}
+
+// the Wishes twin of groupRowsByRarity, with the same heading rows
+function groupRowsByTier(body: HTMLTableSectionElement) {
+  const rows = Array.from(body.rows)
+  const tierOf = (row: HTMLTableRowElement) => {
+    const index = tierOrder.indexOf(row.dataset.tier as BlessingTier)
+    return index < 0 ? tierOrder.length : index
+  }
+  rows.sort((a, b) => tierOf(a) - tierOf(b))
+  let currentTier: string | undefined
+  for (const row of rows) {
+    const tier = row.dataset.tier as BlessingTier | undefined
+    if (tier && tier !== currentTier) {
+      const heading = body.insertRow()
+      heading.className = "guide-patchlog-rarity"
+      const cell = heading.insertCell()
+      cell.colSpan = 2
+      cell.style.color = TierColor[tier]
+      cell.textContent = tier.charAt(0) + tier.slice(1).toLowerCase()
+    }
+    currentTier = tier
+    body.append(row)
+  }
 }
 
 export function formatPatchLog(html: string, wishes: PatchLogWish[]) {
@@ -376,7 +422,10 @@ export function formatPatchLog(html: string, wishes: PatchLogWish[]) {
         }
         while (item.firstChild) cell.append(item.firstChild)
         if (category === "Wishes") {
-          cell.prepend(wishIcons(cell.textContent ?? "", matchers))
+          const cellText = cell.textContent ?? ""
+          const tier = wishTier(cellText, matchers)
+          if (tier) row.dataset.tier = tier
+          cell.prepend(wishIcons(cellText, matchers))
         }
         continue
       }
@@ -412,7 +461,10 @@ export function formatPatchLog(html: string, wishes: PatchLogWish[]) {
         if (portraits.childElementCount > 0) subject.prepend(portraits)
         else if (icons.childElementCount > 0) subject.prepend(icons)
       } else if (category === "Wishes") {
-        subject.prepend(wishIcons(subject.textContent ?? "", matchers))
+        const subjectText = subject.textContent ?? ""
+        const tier = wishTier(subjectText, matchers)
+        if (tier) row.dataset.tier = tier
+        subject.prepend(wishIcons(subjectText, matchers))
       }
       const change = row.insertCell()
       while (item.firstChild) change.append(item.firstChild)
@@ -420,6 +472,7 @@ export function formatPatchLog(html: string, wishes: PatchLogWish[]) {
       if (category === "Pokémon") breakAtCommas(change)
     }
     if (category === "Pokémon") groupRowsByRarity(body)
+    if (category === "Wishes") groupRowsByTier(body)
     element.replaceWith(table)
     wrapTable(table)
   }

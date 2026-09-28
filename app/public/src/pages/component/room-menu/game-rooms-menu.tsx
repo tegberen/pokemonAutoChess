@@ -17,11 +17,9 @@ import { joinGame as networkJoinGame } from "../../../network"
 
 export function IngameRoomsList({
   gameMode,
-  whimsy,
   tournament
 }: {
   gameMode?: GameMode
-  whimsy?: boolean
   tournament?: boolean
 }) {
   const { t } = useTranslation()
@@ -29,9 +27,6 @@ export function IngameRoomsList({
   const gameRooms: RoomAvailable[] = useAppSelector(
     (state) => state.lobby.gameRooms
   ).filter((r) => {
-    if (whimsy !== undefined && (r.metadata.whimsy ?? false) !== whimsy) {
-      return false
-    }
     if (tournament !== undefined && !!r.metadata.tournamentId !== tournament) {
       return false
     }

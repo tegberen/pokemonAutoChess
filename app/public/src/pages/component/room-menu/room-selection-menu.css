@@ -1,42 +1,63 @@
-.modal.room-selection-menu.anchor-top {
-  margin-top: 10vh;
+.modal.room-selection-menu {
+  width: min(840px, 95vw);
 }
 
-/* same inset as the mode list below, so the edges line up */
-.room-selection-menu .blessing-event-banner {
-  margin: 0.5em;
+.modal.room-selection-menu.anchor-top {
+  margin-top: 10vh;
 }
 
 .room-selection-menu ul {
   list-style: none;
   padding: 0;
-  margin: 0.5em;
+  margin: 1em;
   display: flex;
   gap: 1em;
   flex-wrap: wrap;
 }
 
-.room-selection-menu li {
-  text-align: center;
-  flex: 1 1 240px;
-  padding: 1em 0.5em;
-}
-
-.room-selection-menu li > * {
+.room-selection-menu .room-choice-card {
+  flex: 1 1 290px;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  overflow: hidden;
   user-select: none;
 }
 
-.room-selection-menu li:hover {
-  background-color: var(--color-bg-accent);
+/* brightens rather than recolours, so the caption text keeps its contrast */
+.room-selection-menu .room-choice-card:hover {
   cursor: var(--cursor-hover);
+  filter: brightness(1.12);
 }
 
-.room-selection-menu li img {
-  width: 100%;
-  max-width: 200px;
-  margin: 0 auto;
+.room-selection-menu .room-choice-art {
+  aspect-ratio: 16 / 11;
+  background-size: cover;
+  background-position: center;
 }
 
-.room-selection-menu p {
-  white-space: pre-line;
+/* a tall painting: frame Smeargle at work below the mural's Arceus */
+.room-selection-menu .room-choice-art.solo-art {
+  background-position: center 62%;
+}
+
+.room-selection-menu .room-choice-art.duo-art {
+  background-position: center top;
+}
+
+.room-selection-menu .room-choice-caption {
+  position: relative;
+  padding: 0.6em 0.9em 0.8em;
+  text-align: left;
+}
+
+.room-selection-menu .room-choice-caption h2 {
+  margin: 0;
+  font-size: 1.6em;
+}
+
+.room-selection-menu .room-choice-caption p {
+  margin: 0.2em 0 0;
+  font-size: 0.9em;
+  color: var(--color-fg-secondary);
 }

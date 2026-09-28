@@ -1,26 +1,228 @@
 .room-item {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   gap: 0.5em;
 }
 
-.room-item .room-name,
 .room-item .room-info {
-  flex: 1;
+  flex: 1 1 auto;
+  white-space: nowrap;
 }
 
-.room-item .room-name {
-  word-break: break-word;
+.room-item > .icon,
+.room-item > button {
+  flex: none;
+}
+
+.room-item > button:first-of-type {
+  margin-left: auto;
+}
+
+/* like a file explorer folder: the Solo/Duo tab and the card are one darker
+   front piece, the mode sits on the lighter back piece behind it.
+   Themes turn --room-folder-bg see-through, alongside their .newspaper-card */
+.room-folder {
+  --room-folder-bg: var(--color-bg-secondary);
+  --room-folder-front-bg: color-mix(in srgb, var(--room-folder-bg) 78%, black);
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 0;
+}
+
+.room-folder-header {
+  display: flex;
+  align-items: flex-end;
+  align-self: stretch;
+  min-width: 0;
+}
+
+/* its rounded top-right corner must end above the mode strip, so the step
+   between them stays taller than that radius */
+.room-folder-tab {
+  flex: none;
+  padding: 0.45em 1em 0.3em;
+  border: var(--border-thin);
+  border-bottom: none;
+  border-radius: 10px 6px 0 0;
+  background-color: var(--room-folder-front-bg);
+  color: var(--color-fg-primary);
+  font-weight: bold;
+}
+
+.room-folder-tab .gamemode-badge {
+  padding: 0;
+  border: none;
+  background: none;
+  font-size: 1.2em;
+}
+
+/* a step lower than the tab and flush against it, running to the card's
+   right edge. The card has no top border, this one's bottom border draws
+   it, so the tab flows into the card with no line */
+.room-mode {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: 0.4em;
+  min-width: 0;
+  padding: 0.15em 0.8em;
+  border: var(--border-thin);
+  border-left: none;
+  border-radius: 0 10px 0 0;
+  background-color: var(--room-folder-bg);
+  color: var(--color-fg-primary);
+  font-weight: bold;
+}
+
+.room-mode .room-name {
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.room-mode .modification-icon {
+  flex: none;
+  width: 1.15em;
+  height: 1.15em;
+}
+
+/* pinned to the strip's right end, so it lines up across rooms whatever
+   the mode name's length */
+.room-mode .game-event-tag {
+  flex: none;
+  margin-left: auto;
+}
+
+.room-folder > .room-item {
+  align-self: stretch;
+  flex-wrap: nowrap;
+  padding: 0.45em 0.5em 0.45em 1em;
+  border-top: none;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  background-color: var(--room-folder-front-bg);
+}
+
+.room-folder > .room-item .tournament-icon {
+  flex: none;
+  width: 1.5em;
+  height: 1.5em;
+}
+
+.room-folder > .room-item .room-info {
+  flex: none;
+  font-size: 1.1em;
+  font-weight: bold;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.room-folder.event-folder .room-mode {
+  border: 1px solid #1b1d24;
+  border-left: none;
+  background-color: var(--daily-duel-bg);
+}
+
+/* the tab and card are one striped front piece: stripes anchored to the
+   viewport line up across the seam between them */
+.room-folder.event-folder .room-folder-tab,
+.room-folder.event-folder > .room-item.daily-duel {
+  border: 1px solid #1b1d24;
+  background-color: var(--daily-duel-bg);
+  background-image: var(--daily-duel-stripes);
+  background-attachment: fixed;
+  color: #ffffff;
+  text-shadow: 1px 1px 2px #05090f;
+}
+
+.room-folder.event-folder .room-folder-tab {
+  border-bottom: none;
+}
+
+.room-folder.event-folder > .room-item.daily-duel {
+  border-top: none;
+  box-shadow: none;
+}
+
+/* tournaments wear the Daily Duel stripes in epic purple.
+   drop-shadow traces the whole folder outline, a box-shadow on the card
+   would bleed over the seam with its tab */
+.room-folder.tournament-folder {
+  filter: var(--tournament-glow);
+}
+
+.room-folder.tournament-folder .room-mode {
+  background-color: var(--tournament-bg);
+}
+
+.room-folder.tournament-folder .room-folder-tab,
+.room-folder.tournament-folder > .room-item.daily-duel {
+  background-color: var(--tournament-bg);
+  background-image: var(--tournament-stripes);
+}
+
+/* the Wish cards' holo sweep (blessing-sheen, game-choice.css) on every
+   Daily Duel and tournament room. In a folder it runs over the tab and the
+   card together: both sweeps are the folder's full width (cqw) from its
+   left edge, so one band crosses them in step */
+.room-folder.event-folder {
+  container-type: inline-size;
+}
+
+.room-folder.event-folder .room-folder-tab,
+.room-item.daily-duel {
+  position: relative;
+  overflow: hidden;
+}
+
+.room-folder.event-folder .room-folder-tab::after,
+.room-item.daily-duel::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  pointer-events: none;
+  background: var(--holo-sheen);
+  animation: blessing-sheen 6s ease-in-out infinite;
+}
+
+/* a slanted band only lines up across the seam when both sweeps share the
+   same box, so each is the same 240px tall and centred on the seam */
+.room-folder.event-folder .room-folder-tab::after,
+.room-folder.event-folder > .room-item.daily-duel::after {
+  width: 100cqw;
+  height: 240px;
+}
+
+.room-folder.event-folder .room-folder-tab::after {
+  top: auto;
+  bottom: -120px;
+}
+
+.room-folder.event-folder > .room-item.daily-duel::after {
+  top: -120px;
+  bottom: auto;
+}
+
+.room-folder.tournament-folder .game-event-tag {
+  background-color: color-mix(
+    in srgb,
+    var(--color-rarity-epic) 30%,
+    var(--color-blessing-card)
+  );
 }
 
 .room-item .icon {
   width: 2em;
   height: 2em;
-
-  &.gamemode {
-    border-radius: 50%;
-  }
 }
 
 .daily-duel-countdown.my-box {
@@ -30,19 +232,8 @@
   margin-bottom: 0.5em;
   padding: 0.3em 0.6em;
   border: 1px solid #1b1d24;
-  background-color: color-mix(
-    in srgb,
-    var(--color-bg-gold) 8%,
-    var(--color-blessing-card)
-  );
-  background-image:
-    linear-gradient(rgb(0 0 0 / 12%), rgb(0 0 0 / 12%)),
-    repeating-linear-gradient(
-      135deg,
-      color-mix(in srgb, var(--color-fg-gold) 26%, transparent) 0 16px,
-      color-mix(in srgb, var(--color-bg-gold) 26%, transparent) 16px 32px,
-      color-mix(in srgb, var(--color-rarity-legendary) 26%, transparent) 32px 48px
-    );
+  background-color: var(--daily-duel-bg);
+  background-image: var(--daily-duel-stripes);
   color: #ffffff;
   text-shadow: 1px 1px 2px #05090f;
 }
@@ -80,22 +271,10 @@
 
 .room-item.daily-duel {
   border: 1px solid #1b1d24;
-  background-color: color-mix(
-    in srgb,
-    var(--color-bg-gold) 8%,
-    var(--color-blessing-card)
-  );
+  background-color: var(--daily-duel-bg);
+  background-image: var(--daily-duel-stripes);
   color: #ffffff;
-  background-image:
-    linear-gradient(rgb(0 0 0 / 12%), rgb(0 0 0 / 12%)),
-    repeating-linear-gradient(
-      135deg,
-      color-mix(in srgb, var(--color-fg-gold) 26%, transparent) 0 16px,
-      color-mix(in srgb, var(--color-bg-gold) 26%, transparent) 16px 32px,
-      color-mix(in srgb, var(--color-rarity-legendary) 26%, transparent) 32px 48px
-    );
-  box-shadow: 0 0 10px
-    color-mix(in srgb, #ffc107 45%, transparent);
+  box-shadow: 0 0 10px color-mix(in srgb, #ffc107 45%, transparent);
 }
 
 .room-item.daily-duel .room-name {

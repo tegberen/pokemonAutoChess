@@ -2,9 +2,13 @@ import { useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { BOTS_ENABLED } from "../../../../../config"
 import { Role } from "../../../../../types"
-import { BotDifficulty, GameMode } from "../../../../../types/enum/Game"
+import {
+  BotDifficulty,
+  GameMode,
+  GameModification,
+  getGameModification
+} from "../../../../../types/enum/Game"
 import { SpecialGameRule } from "../../../../../types/enum/SpecialGameRule"
-import { pickRandomIn } from "../../../../../utils/random"
 import { getDefaultRoomName } from "../../../../../utils/room-name"
 import { keys } from "../../../../../utils/object"
 import { useAppSelector } from "../../../hooks"
@@ -14,11 +18,10 @@ import {
   changeRoomPassword,
   setBlessingsEnabled,
   setBlessingsUnderTest as setBlessingsUnderTestNetwork,
+  setGameModification,
   setScribbleExtended,
-  setSpecialRule,
-  setWhimsy
+  setSpecialRule
 } from "../../../network"
-import { useWhimsyWeekendWindow } from "../whimsy-weekend/whimsy-weekend"
 import { Blessings } from "../../../../../config/game/blessings"
 import type { Blessing } from "../../../../../types/enum/Blessing"
 import { addIconsToDescription } from "../../utils/descriptions"
@@ -82,7 +85,6 @@ export default function PreparationSettings() {
   const user = useAppSelector((state) => state.preparation.user)
   const name = useAppSelector((state) => state.preparation.name)
   const password = useAppSelector((state) => state.preparation.password)
-  const noElo = useAppSelector((state) => state.preparation.noElo)
   const specialGameRule = useAppSelector(
     (state) => state.preparation.specialGameRule
   )
@@ -98,15 +100,15 @@ export default function PreparationSettings() {
     (state) => state.preparation.ownerId === state.network.uid
   )
 
-  const { active: whimsyWeekendActive } = useWhimsyWeekendWindow()
   const isAdmin = user?.role === Role.ADMIN
   const isModerator = user?.role === Role.MODERATOR
   const canEditRoom = isOwner || isModerator || isAdmin
   const isCustomLobby = gameMode === GameMode.CUSTOM_LOBBY
   // Double Up gets the custom-room controls, minus the rule picker: its scribble
-  // rule is rolled at game start
+  // rule is rolled at game start, unless an admin pins one
   const hasCustomLobbySettings =
     isCustomLobby || gameMode === GameMode.DOUBLE_UP
+  const canPickScribbleRule = gameMode !== GameMode.DOUBLE_UP || isAdmin
 
   function togglePrivate() {
     if (password === null || password === undefined) {
@@ -132,13 +134,16 @@ export default function PreparationSettings() {
     )
   }
 
+  const modification = getGameModification({
+    blessingsEnabled,
+    whimsy,
+    specialGameRule
+  })
+
+  // back to a random roll: the room returns to its default name as well
   const pickRandomRule = () => {
-    const rules = Object.values(SpecialGameRule).filter(
-      (rule) =>
-        unavailableScribbleRules.includes(rule) === false &&
-        rule !== specialGameRule
-    )
-    changeSpecialRule(pickRandomIn(rules))
+    setGameModification(GameModification.SCRIBBLE)
+    changeRoomName(getDefaultRoomName(gameMode, true))
   }
 
   const roomNameSetting = hasCustomLobbySettings &&
@@ -204,41 +209,59 @@ export default function PreparationSettings() {
     </div>
   )
 
-  // blessings are not playtested alongside a scribble rule, so only one shows
-  /* stays visible during the festival: picking a rule turns the festival off,
-     so hiding it just made scribbles look unavailable for the whole event */
-  const scribbleRuleSetting = isCustomLobby &&
-    isOwner &&
-    noElo && (
+  const modificationSetting = hasCustomLobbySettings && canEditRoom && (
     <div className="lobby-setting">
-      <span className="setting-label">{t("game_modes.SCRIBBLE")}</span>
+      <span className="setting-label">{t("game_modification_label")}</span>
       <div className="setting-control">
-        <button
-          className="rule-pick-button"
-          onClick={() => setShowRulePicker(true)}
-          title={t("scribble_pick_rule_hint")}
+        <select
+          value={modification}
+          onChange={(e) =>
+            setGameModification(e.target.value as GameModification)
+          }
         >
-          {specialGameRule ? t(`scribble.${specialGameRule}`) : t("no_rule")}
-        </button>
-        <button
-          className="bubbly blue"
-          onClick={pickRandomRule}
-          title={t("random_rule_hint")}
-        >
-          {t("random_rule")}
-        </button>
+          {Object.values(GameModification).map((option) => (
+            <option key={option} value={option}>
+              {t(`game_modification.${option}`)}
+            </option>
+          ))}
+        </select>
+        {modification === GameModification.SCRIBBLE && canPickScribbleRule && (
+          <button
+            className="rule-pick-button"
+            onClick={() => setShowRulePicker(true)}
+            title={t("scribble_pick_rule_hint")}
+          >
+            {specialGameRule
+              ? t(`scribble.${specialGameRule}`)
+              : t("random_rule")}
+          </button>
+        )}
       </div>
     </div>
   )
 
-  const pickRule = (rule: SpecialGameRule | "none") => {
-    changeSpecialRule(rule)
+  const pickRule = (rule: SpecialGameRule | "random") => {
+    if (rule === "random") pickRandomRule()
+    else changeSpecialRule(rule)
     setShowRulePicker(false)
   }
 
-  // newest rules first (the enum lists them chronologically, so reverse it)
-  const filteredRules = [...keys(SpecialGameRule)].reverse().filter((rule) => {
+  // Smeargle Pack first as the most played, then newest rules first (the enum
+  // lists them chronologically, so reverse it)
+  const orderedRules = [
+    SpecialGameRule.SMEARGLE_PACK,
+    ...[...keys(SpecialGameRule)]
+      .reverse()
+      .filter((rule) => rule !== SpecialGameRule.SMEARGLE_PACK)
+  ]
+  const filteredRules = orderedRules.filter((rule) => {
     if (unavailableScribbleRules.includes(rule as SpecialGameRule)) return false
+    if (
+      gameMode === GameMode.DOUBLE_UP &&
+      rule === SpecialGameRule.SHINIEST_HUNTER
+    ) {
+      return false
+    }
     const q = ruleQuery.trim().toLowerCase()
     if (!q) return true
     return (
@@ -263,25 +286,15 @@ export default function PreparationSettings() {
               value={ruleQuery}
               onChange={(e) => setRuleQuery(e.target.value)}
             />
-            <button
-              className="bubbly blue"
-              onClick={() => {
-                pickRandomRule()
-                setShowRulePicker(false)
-              }}
-              title={t("random_rule_hint")}
-            >
-              {t("random_rule")}
-            </button>
           </div>
           <ul className="rule-list">
             <li
               className={cc("my-box", "rule-card", "no-rule", {
                 selected: specialGameRule == null
               })}
-              onClick={() => pickRule("none")}
+              onClick={() => pickRule("random")}
             >
-              <h3>{t("no_rule")}</h3>
+              <h3>{t("random_rule")}</h3>
             </li>
             {filteredRules.map((rule) => (
               <li
@@ -404,53 +417,6 @@ export default function PreparationSettings() {
     </div>
   )
 
-  const whimsySetting = gameMode === GameMode.DOUBLE_UP &&
-    whimsyWeekendActive &&
-    canEditRoom && (
-      <div className="lobby-setting" title={t("whimsy_rules_hint")}>
-        <span className="setting-label">
-          {t("whimsy_rules_label")}
-          <img
-            src="/assets/ui/whimsy_weekend.jpg"
-            alt=""
-            className="setting-icon setting-icon-round"
-          />
-        </span>
-        <div className="setting-control">
-          <select
-            value={whimsy ? "on" : "off"}
-            onChange={(e) => setWhimsy(e.target.value === "on")}
-          >
-            <option value="on">{t("whimsy_rules_on")}</option>
-            <option value="off">{t("whimsy_rules_off")}</option>
-          </select>
-        </div>
-      </div>
-    )
-
-  // Whimsy Weekend always rolls a scribble rule, so blessings are not offered
-  const blessingsSetting = hasCustomLobbySettings && !whimsy && isAdmin && (
-    <div className="lobby-setting" title={t("blessings_enabled_hint")}>
-      <span className="setting-label">
-        {t("blessings_enabled_label")}
-        <img
-          src="assets/ui/blessing_event_icon.jpg"
-          alt=""
-          className="setting-icon setting-icon-round"
-        />
-      </span>
-      <div className="setting-control">
-        <select
-          value={blessingsEnabled ? "on" : "off"}
-          onChange={(e) => setBlessingsEnabled(e.target.value === "on")}
-        >
-          <option value="off">{t("blessings_enabled_off")}</option>
-          <option value="on">{t("blessings_enabled_on")}</option>
-        </select>
-      </div>
-    </div>
-  )
-
   const botSetting = hasCustomLobbySettings &&
     (isOwner || isAdmin) &&
     (BOTS_ENABLED || isAdmin) && (
@@ -495,9 +461,8 @@ export default function PreparationSettings() {
   const hasSettings =
     roomNameSetting ||
     privacySetting ||
-    scribbleRuleSetting ||
+    modificationSetting ||
     playerHpSetting ||
-    whimsySetting ||
     blessingsUnderTestSetting ||
     botSetting
 
@@ -507,10 +472,8 @@ export default function PreparationSettings() {
         <div className="lobby-settings">
           {roomNameSetting}
           {botSetting}
-          {scribbleRuleSetting}
-          {whimsySetting}
+          {modificationSetting}
           {playerHpSetting}
-          {blessingsSetting}
           {blessingsUnderTestSetting}
           {privacySetting}
         </div>

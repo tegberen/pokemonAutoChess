@@ -6,7 +6,6 @@ import type { UserRecord } from "firebase-admin/lib/auth/user-record"
 import type { QueryFilter } from "mongoose"
 import {
   EloRankThreshold,
-  isScribbleWeekend,
   MAX_PLAYERS_PER_GAME,
   MIN_HUMAN_PLAYERS
 } from "../../config"
@@ -27,7 +26,12 @@ import UserMetadata from "../../models/mongo-models/user-metadata"
 import { Role } from "../../types"
 import { CloseCodes } from "../../types/enum/CloseCodes"
 import type { EloRank } from "../../types/enum/EloRank"
-import { BotDifficulty, GameMode } from "../../types/enum/Game"
+import {
+  BotDifficulty,
+  GameMode,
+  GameModification,
+  getGameModification
+} from "../../types/enum/Game"
 import type { SpecialGameRule } from "../../types/enum/SpecialGameRule"
 import type { IBot } from "../../types/models/bot-v2"
 import { getRank } from "../../utils/elo"
@@ -569,6 +573,15 @@ export class OnRoomChangeSpecialRule extends Command<
         return
       }
 
+      // Duo rolls its Scribble rule at game start, only admins may pin one
+      if (
+        this.state.gameMode === GameMode.DOUBLE_UP &&
+        specialRule != null &&
+        u.role !== Role.ADMIN
+      ) {
+        return
+      }
+
       if (client.auth?.uid == this.state.ownerId) {
         /* the other half of the blessings/scribble exclusion: picking a rule
            turns the festival off, mirroring how enabling it clears the rule */
@@ -585,6 +598,12 @@ export class OnRoomChangeSpecialRule extends Command<
           })
         }
         this.state.specialGameRule = specialRule
+        this.room.setSpecialGameRule(specialRule)
+        // a pinned rule replaces the random roll
+        if (specialRule != null && this.state.whimsy) {
+          this.state.whimsy = false
+          this.room.setWhimsy(false)
+        }
         if (specialRule != null) {
           this.state.noElo = true
           this.room.setNoElo(true)
@@ -737,8 +756,7 @@ export class OnChangeWhimsyCommand extends Command<
         (client.auth?.uid === this.state.ownerId ||
           user?.role === Role.ADMIN ||
           user?.role === Role.MODERATOR) &&
-        this.state.gameMode === GameMode.DOUBLE_UP &&
-        isScribbleWeekend()
+        this.state.gameMode === GameMode.DOUBLE_UP
       if (isAllowed && this.state.whimsy !== whimsy) {
         // the room keeps a name the owner typed, but follows the toggle otherwise
         if (this.state.name === getDefaultRoomName(this.state.gameMode, !whimsy)) {
@@ -760,6 +778,66 @@ export class OnChangeWhimsyCommand extends Command<
           if (!user.isBot) user.ready = false
         })
       }
+    } catch (error) {
+      logger.error(error)
+    }
+  }
+}
+
+export class OnChangeGameModificationCommand extends Command<
+  PreparationRoom,
+  {
+    client: Client
+    modification: GameModification
+  }
+> {
+  execute({ client, modification }) {
+    try {
+      const user = this.state.users.get(client.auth?.uid ?? "")
+      const isAllowed =
+        (client.auth?.uid === this.state.ownerId ||
+          user?.role === Role.ADMIN ||
+          user?.role === Role.MODERATOR) &&
+        (this.state.gameMode === GameMode.CUSTOM_LOBBY ||
+          this.state.gameMode === GameMode.DOUBLE_UP) &&
+        Object.values(GameModification).includes(modification)
+      // Scribble again is how a pinned rule goes back to a random roll
+      const isUnchanged =
+        getGameModification(this.state) === modification &&
+        !(
+          modification === GameModification.SCRIBBLE &&
+          this.state.specialGameRule != null
+        )
+      if (!isAllowed || isUnchanged) return
+
+      const previousDefaultName = getDefaultRoomName(
+        this.state.gameMode,
+        this.state.whimsy
+      )
+      this.state.blessingsEnabled = modification === GameModification.WISHES
+      this.state.whimsy = modification === GameModification.SCRIBBLE
+      this.state.specialGameRule = null
+      this.room.setSpecialGameRule(null)
+      this.room.setBlessingsEnabled(this.state.blessingsEnabled)
+      this.room.setWhimsy(this.state.whimsy)
+      // the room keeps a name the owner typed, but follows the modification otherwise
+      if (this.state.name === previousDefaultName) {
+        this.state.name = getDefaultRoomName(
+          this.state.gameMode,
+          this.state.whimsy
+        )
+        this.room.setName(this.state.name)
+      }
+
+      this.room.state.addMessage({
+        author: "Server",
+        authorId: "server",
+        payload: `This game is now played as ${modification.toLowerCase()}. Players need to ready again.`,
+        avatar: user?.avatar
+      })
+      this.state.users.forEach((user) => {
+        if (!user.isBot) user.ready = false
+      })
     } catch (error) {
       logger.error(error)
     }

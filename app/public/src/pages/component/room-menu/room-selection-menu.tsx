@@ -1,21 +1,6 @@
-import { useState } from "react"
 import { useTranslation } from "react-i18next"
-import { GADGETS } from "../../../../../config/game/gadgets"
-import { Role } from "../../../../../types"
-import {
-  GameMode,
-  type RoomRequest,
-  WHIMSY_WEEKEND_REQUEST
-} from "../../../../../types/enum/Game"
-import type { Synergy } from "../../../../../types/enum/Synergy"
-import { useAppSelector } from "../../../hooks"
-import { GuideMenu } from "../guide/guide-menu"
+import { GameMode, type RoomRequest } from "../../../../../types/enum/Game"
 import { Modal } from "../modal/modal"
-import { BlessingEventBanner } from "../blessing-event/blessing-event"
-import {
-  useWhimsyWeekendWindow,
-  WhimsyWeekendCountdown
-} from "../whimsy-weekend/whimsy-weekend"
 import "./room-selection-menu.css"
 
 export function RoomSelectionMenu(props: {
@@ -24,84 +9,47 @@ export function RoomSelectionMenu(props: {
   onSelectMode: (mode: RoomRequest) => void
 }) {
   const { t } = useTranslation()
-  const profile = useAppSelector((state) => state.network.profile)
-  const profileLevel = profile?.level ?? 0
-  const { active: whimsyWeekend } = useWhimsyWeekendWindow()
-  const [showGuideMenu, setShowGuideMenu] = useState(false)
 
   return (
-    <>
     <Modal
       show={props.show}
       onClose={props.onClose}
       className="room-selection-menu anchor-top"
       header={t("new_game")}
       body={
-        <>
-        <BlessingEventBanner />
         <ul>
-
           <li
-            className="my-box"
+            className="my-box room-choice-card"
             onClick={() => props.onSelectMode(GameMode.CUSTOM_LOBBY)}
           >
-            <img
-              src="assets/ui/game_modes/custom_lobby.png"
-              alt={t(`game_modes.${GameMode.CUSTOM_LOBBY}`)}
-              draggable="false"
+            <div
+              className="room-choice-art solo-art"
+              style={{
+                backgroundImage: "url(assets/ui/cards/solo_card.jpeg)"
+              }}
             />
-            <h2>{t(`game_modes.${GameMode.CUSTOM_LOBBY}`)}</h2>
-            <p>{t(`game_modes_descriptions.${GameMode.CUSTOM_LOBBY}`)}</p>
+            <div className="room-choice-caption">
+              <h2>{t("new_game_solo")}</h2>
+              <p>{t("new_game_solo_description")}</p>
+            </div>
           </li>
-          {whimsyWeekend ? (
-            <li
-              className="my-box"
-              onClick={() => props.onSelectMode(WHIMSY_WEEKEND_REQUEST)}
-            >
-              <img
-                src="assets/ui/game_modes/whimsy_weekend.png"
-                alt={t("whimsy_weekend")}
-                draggable="false"
-              />
-              <h2>{t("whimsy_weekend")}</h2>
-              <p>{t("whimsy_weekend_description")}</p>
-              <WhimsyWeekendCountdown />
-            </li>
-          ) : (
-            <li
-              className="my-box"
-              onClick={() => props.onSelectMode(GameMode.DOUBLE_UP)}
-            >
-              <img
-                src="assets/ui/game_modes/double_up.png"
-                alt={t(`game_modes.${GameMode.DOUBLE_UP}`)}
-                draggable="false"
-              />
-              <h2>{t(`game_modes.${GameMode.DOUBLE_UP}`)}</h2>
-              <p>{t(`game_modes_descriptions.${GameMode.DOUBLE_UP}`)}</p>
-            </li>
-          )}
-          <li className="my-box" onClick={() => setShowGuideMenu(true)}>
-            <img
-              src="assets/ui/game_modes/guide.png"
-              alt={t(`game_modes.${GameMode.GUIDE}`)}
-              draggable="false"
+          <li
+            className="my-box room-choice-card"
+            onClick={() => props.onSelectMode(GameMode.DOUBLE_UP)}
+          >
+            <div
+              className="room-choice-art duo-art"
+              style={{
+                backgroundImage: "url(assets/ui/cards/duo_card.png)"
+              }}
             />
-            <h2>{t(`game_modes.${GameMode.GUIDE}`)}</h2>
-            <p>{t(`game_modes_descriptions.${GameMode.GUIDE}`)}</p>
+            <div className="room-choice-caption">
+              <h2>{t("new_game_duo")}</h2>
+              <p>{t("new_game_duo_description")}</p>
+            </div>
           </li>
         </ul>
-        </>
       }
     />
-    <GuideMenu
-      show={showGuideMenu}
-      onClose={() => setShowGuideMenu(false)}
-      onSelectSynergy={(synergy: Synergy) => {
-        setShowGuideMenu(false)
-        props.onSelectMode({ gameMode: GameMode.GUIDE, synergy })
-      }}
-    />
-    </>
   )
 }

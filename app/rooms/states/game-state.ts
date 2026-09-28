@@ -73,6 +73,8 @@ export default class GameState extends Schema {
   @type("uint8") lightY = randomBetween(1, BOARD_HEIGHT / 2)
   @type("string") specialGameRule: SpecialGameRule | null = null
   scribbleExtended = false
+  // Scribble with a random rule rolled at game start, in any Format; the name
+  // is left from the Whimsy Weekend event
   @type("boolean") whimsy = false
   @type("string") avatarSynergy: Synergy | null = null
   @type("string") townEncounter: TownEncounter | null = null
@@ -178,11 +180,13 @@ export default class GameState extends Schema {
         )
       )
     } else if (whimsy) {
-      // the window was checked at room creation, so a lobby that started just
-      // before the deadline still gets its rule
+      const unavailableRules =
+        gameMode === GameMode.DOUBLE_UP
+          ? unavailableWhimsyRules
+          : unavailableScribbleRules
       this.specialGameRule = pickRandomIn(
         Object.values(SpecialGameRule).filter(
-          (rule) => unavailableWhimsyRules.includes(rule) === false
+          (rule) => unavailableRules.includes(rule) === false
         )
       )
     } else {

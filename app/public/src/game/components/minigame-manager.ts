@@ -4,7 +4,6 @@ const t = tBase as any
 import Phaser from "phaser"
 import {
   DAILY_DUEL_ROOM_NAME,
-  isBlessingEvent,
   ItemCarouselStages,
   TownEncounterSellPrice
 } from "../../../../config"
@@ -582,10 +581,9 @@ export default class MinigameManager {
       y: blessingsEnabled ? SPECIAL_NPC_Y : (6.5 + 0.05) * 48,
       name: Pkm.JIRACHI,
       orientation: blessingsEnabled ? Orientation.DOWNLEFT : undefined,
-      animation:
-        blessingsEnabled || isBlessingEvent()
-          ? PokemonActionState.IDLE
-          : PokemonActionState.SLEEP,
+      animation: blessingsEnabled
+        ? PokemonActionState.IDLE
+        : PokemonActionState.SLEEP,
       dialog: blessingsEnabled ? t("blessing_event_description") : undefined,
       dialogTitle: blessingsEnabled ? t("blessing_event_title") : undefined
     })

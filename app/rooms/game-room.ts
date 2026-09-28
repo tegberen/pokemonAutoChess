@@ -17,7 +17,6 @@ import {
   EVOLUTION_LAB_REWARD_REROLLS,
   ExpPlace,
   getCurrentGameEvent,
-  isBlessingEvent,
   MAX_LOADING_TIME,
   MAX_SIMULATION_DELTA_TIME,
   MinStageForGameToCount,
@@ -331,6 +330,11 @@ export default class GameRoom extends Room<{ state: GameState }> {
       blessingsUnderTest ?? [],
       guideSynergy ?? null
     )
+    // the rule is only known once the state has rolled it
+    this.setMetadata(<IGameMetadata>{
+      blessingsEnabled: this.state.blessingsEnabled,
+      specialGameRule: this.state.specialGameRule
+    })
     this.miniGame.create(
       this.state.avatars,
       this.state.floatingItems,
@@ -1410,12 +1414,13 @@ export default class GameRoom extends Room<{ state: GameState }> {
         if (this.state.hasBlessing(player.id, Blessing.HIGH_BREACHING)) {
           player.titles.add(Title.WHALE)
         }
-        // both members of a Double Up team share rank 1
-        if (this.state.whimsy) {
+        // a Duo Scribble game, whose rule is always rolled; both members of a
+        // Double Up team share rank 1
+        if (this.state.whimsy && this.state.gameMode === GameMode.DOUBLE_UP) {
           player.titles.add(Title.WHIMSY)
         }
         if (
-          isBlessingEvent() &&
+          this.state.blessingsEnabled &&
           schemaValues(player.board).some((pokemon) => pokemon.name === Pkm.JIRACHI)
         ) {
           player.titles.add(Title.STARRY)
@@ -1634,7 +1639,9 @@ export default class GameRoom extends Room<{ state: GameState }> {
           synergies: synergiesMap,
           gameMode: this.state.gameMode,
           whimsy: this.state.whimsy,
+          specialGameRule: this.state.specialGameRule,
           dailyDuel: this.dailyDuel,
+          tournament: !!this.metadata?.tournamentId,
           regions: player.regions,
           blessings: player.blessings ?? []
         })

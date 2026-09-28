@@ -2400,7 +2400,7 @@
 		"SAND_SPIT": "Spits sand at the 3 enemy Pokémon in front of the user, dealing [30,60,120,240,SP] SPECIAL and inflicting BLINDED for 2 seconds.",
 		"HYPER_DRILL": "Deals [10,20,40,50,100,SP] TRUE that can break PROTECT, and dig deeper into the ground under the target, destroying any eventual buried items in the process. Double damage if target is already on a fully dug hole.",
 		"TERRAIN_PULSE": "If user has no field, gets GRASS_FIELD.\nField effects in your team propagate to ADJACENT allies, then trigger an effect:\nGRASS_FIELD: heal [5,7,10,15,SP]% of max HP\nELECTRIC_FIELD: gain [10,12,15,20,SP] SPEED\nPSYCHIC_FIELD: gain [10,12,15,20,SP] PP\nFAIRY_FIELD: gain [5,7,10,15,SP]% of max HP as SHIELD",
-		"AXE_BLAST": "Deals SPECIAL damage equal to [300,SP]% of the user's ATK to the target and ADJACENT enemies in an X-Shape. If your team has more total STAR than the opposing team, this has a [30,LK]% chance to execute the target, increased by 5% for each additional STAR.",
+		"AXE_BLAST": "Deals SPECIAL equal to [300,SP]% of the user's ATK to the target and ADJACENT enemies in an X-Shape. If your team has more total STAR than the opposing team, this has a [30,LK]% chance to execute the target, increased by 5% for each additional STAR.",
 		"AXE_KICK": "Leap to the enemy with the highest PP then deal [25,50,100,200,SP] SPECIAL and burn [15,15,30,60,SP] PP. Has [30,LK]% chance to inflict CONFUSION for 3 seconds.",
 		"EXPANDING_FORCE": "The user gains PSYCHIC_FIELD, or spreads it to a nearby ally. Then its psychic energy reverbates on all allies in a PSYCHIC_FIELD, dealing [10,20,40,80,SP] SPECIAL to ADJACENT enemies.",
 		"SPITE": "Drains [20,40,60,100,SP] PP from target and redistributes [20,40,60,100,SP] PP to ADJACENT allies",
@@ -4018,7 +4018,7 @@
 		"FLORA": "When a FLORA Pokémon is KO'd, a Flower Pot blossoms and you collect RICH_MULCH. Higher STAR units give more mulch, which can be used to evolve your Flower Pots. They can be itemized.",
 		"FAIRY": "FAIRY Pokémon use wands to deal additional SPECIAL and various effects with their attacks.{{additionalInfo}}",
 		"FAIRY_WANDS": "\nWands equipped: {{wands}}",
-		"ROCK": "ROCK Pokémon gain DEF, better resist to critical attacks, and can adapt to weather. When ROCK Pokémon are KO'd they explode, deal TRUE damage and ARMOR_BREAK all ADJACENT enemies",
+		"ROCK": "ROCK Pokémon gain DEF, better resist to critical attacks, and can adapt to weather. When ROCK Pokémon are KO'd they explode, deal TRUE and ARMOR_BREAK all ADJACENT enemies",
 		"GHOST": "GHOST applies various curses on opposing Pokémon. GHOST Pokémon have a [15,LK]% chance to dodge attacks and apply SILENCE on hit when synergy active.",
 		"ICE": "ICE Pokémon have [20,LK]% chance to FREEZE the enemy for 2 seconds after a hit and give SPE_DEF to your whole team.",
 		"FOSSIL": "At 30% HP, FOSSIL Pokemon awaken their primordial power, gaining SHIELD and ATK.",
@@ -4253,8 +4253,8 @@
 		"GUILDMASTER": "Complete a rank S expedition",
 		"LEGIONNAIRE": "Make a Falinks formation with 8 troopers or more",
 		"FIVE_STARS": "Play with a five stars Pokémon in your team",
-		"WHIMSY": "Win a Whimsy Weekend Scribble with your partner",
-		"STARRY": "Win a game during the Wish Festival Event with a Jirachi on your board",
+		"WHIMSY": "Win a Duo game in the Scribble Game Mode",
+		"STARRY": "Win a game in the Wishes Game Mode with a Jirachi on your board",
 		"PRIDE": "Complete the Rainbow Hour Wish Mission",
 		"THE_SCRIBBLER": "Win a Smeargle Scribble Tournament",
 		"SHOW_OFF": "Win a game with the Show Off Wish",
@@ -4470,6 +4470,24 @@
 	"private": "Private",
 	"available_rooms": "Open rooms",
 	"new_game": "New Game",
+	"new_game_solo": "Solo",
+	"new_game_duo": "Duo",
+	"game_event_tag": {
+		"DAILY_DUEL": "Daily Duel",
+		"TOURNAMENT": "Tournament"
+	},
+	"new_game_solo_description": "Build your own board and lead it to victory.",
+	"new_game_duo_description": "Team up with a partner and outlast every other duo.",
+	"game_modification_label": "Game mode",
+	"game_modification_description": {
+		"CLASSIC": "The standard game. Tournaments are hosted in this format.",
+		"WISHES": "Make your wish while the star is near. Two blessings await: one early, one late."
+	},
+	"game_modification": {
+		"CLASSIC": "Classic",
+		"WISHES": "Wishes",
+		"SCRIBBLE": "Scribble"
+	},
 	"in_game": "In Game",
 	"games_in_progress_one": "{{count}} game in progress",
 	"games_in_progress_other": "{{count}} games in progress",
@@ -6420,7 +6438,7 @@
 		},
 		"AURORA_BOREALIS": {
 			"name": "Aurora Borealis",
-			"description": "Unlock Amaura. While you field an Amaura, your team takes 10% less PHYSICAL and SPECIAL damage, increased to 15% in SNOW or NIGHT, plus 1% per active synergy."
+			"description": "Unlock Amaura. While you field an Amaura, your team takes 10% less PHYSICAL and SPECIAL, increased to 15% in SNOW or NIGHT, plus 1% per active synergy."
 		},
 		"RADIANCE": {
 			"name": "Radiance",
@@ -6436,19 +6454,19 @@
 		},
 		"SEASONAL_HERD": {
 			"name": "Seasonal Herd",
-			"description": "Gain a Deerling of the current season and add it to the pool. Each time you start a fight with its season's synergy at 4 (spring FLORA, summer GOURMET, autumn WILD, winter ICE), gain the next season's Deerling and add it to the pool. Your Deerling and Sawsbuck gain 40 HP per Sawsbuck in play. With all 4 Sawsbuck fielded, they gain 1 STAR."
+			"description": "Gain a Deerling of the current season. Each time you start a fight with its season's synergy at 4 (spring FLORA, summer GOURMET, autumn WILD, winter ICE), gain the next season's Deerling. Your Deerling and Sawsbuck gain 40 HP per Sawsbuck in play. With all 4 Sawsbuck fielded, they gain 1 STAR."
 		},
 		"PURRFECT_PLAN": {
 			"name": "Purrfect Plan",
-			"description": "Gain a Glameow and add it to the pool. CONFUSION enemies never target your STRONGEST Glameow unless it is the only target in RANGE, and always crit their allies while it is alive. Your Unique options always include Spinda or Chatot."
+			"description": "Gain a Glameow. CONFUSION enemies never target your STRONGEST Glameow unless it is the only target in RANGE, and always crit their allies while it is alive. Your Unique options always include Spinda or Chatot."
 		},
 		"SPOOKY_SCARECROW": {
 			"name": "Spooky Scarecrow",
-			"description": "Gain a Cacnea and add it to the pool. Your STRONGEST Cacnea cannot move or attack, and its ability is replaced with Spiky Shield. Each time an ally is KO'd, it gains 5 DEF and summons a Murkrow with full PP. When it is KO'd itself, it summons 3 Murkrow instead."
+			"description": "Gain a Cacnea. Your STRONGEST Cacnea cannot move or attack, and its ability is replaced with Spiky Shield. Each time an ally is KO'd, it gains 5 DEF and summons a Murkrow with full PP. When it is KO'd itself, it summons 3 Murkrow instead."
 		},
 		"BONEMERANG_RANGER": {
 			"name": "Bonemerang Ranger",
-			"description": "Gain a Cubone and add it to the pool. Your STRONGEST Cubone gains 2 RANGE and its ability is replaced with Torment. Its attacks throw a bonemerang that hits every enemy in a line on the way out and back. Each hit after the first deals 20% less PHYSICAL, down to 20%, and only the first triggers ON_ATTACK and ON_HIT effects."
+			"description": "Gain a Cubone. Your STRONGEST Cubone gains 2 RANGE and its ability is replaced with Torment. Its attacks throw a bonemerang that hits every enemy in a line on the way out and back. Each hit after the first deals 20% less PHYSICAL, down to 20%, and only the first triggers ON_ATTACK and ON_HIT effects."
 		},
 		"SWAMP_FATHER": {
 			"name": "Swamp Father",
@@ -6460,7 +6478,7 @@
 		},
 		"CURSED_COFFIN": {
 			"name": "Cursed Coffin",
-			"description": "Gain a Yamask and add it to the pool. Your STRONGEST Yamask no longer attacks. Instead, every second it drains 15 HP and 5 PP from each ADJACENT enemy. Its Spite drains from the target and all ADJACENT enemies, and heals it for the PP drained."
+			"description": "Gain a Yamask. Your STRONGEST Yamask no longer attacks. Instead, every second it drains 15 HP and 5 PP from each ADJACENT enemy. Its Spite drains from the target and all ADJACENT enemies, and heals it for the PP drained."
 		},
 		"LIGHT_OF_OLIVINE": {
 			"name": "Light of Olivine",
@@ -6468,11 +6486,11 @@
 		},
 		"UNSEALED_GOLEMANCY": {
 			"name": "Unsealed Golemancy",
-			"description": "Gain a Golett and add it to the pool. Your Golett gains MONSTER synergy. When your STRONGEST Golett KO's an enemy, it summons a Golett for a 1 STAR target, a Golurk for 2 STAR, and once per fight a random Regi for 3 STAR."
+			"description": "Gain a Golett. Your Golett gains MONSTER synergy. When your STRONGEST Golett KO's an enemy, it summons a Golett for a 1 STAR target, a Golurk for 2 STAR, and once per fight a random Regi for 3 STAR."
 		},
 		"SHINTO_SHRINE_MIRROR": {
 			"name": "Shinto Shrine Mirror",
-			"description": "Gain a Morgrem and move to a random Impidimp region if not in one. Your STRONGEST Impidimp uses Reflect at the start of combat. Every 6 seconds, it uses Reflect if it has taken more PHYSICAL than SPECIAL damage this fight, otherwise Magic Bounce."
+			"description": "Gain a Morgrem and move to a random Impidimp region if not in one. Your STRONGEST Impidimp uses Reflect at the start of combat. Every 6 seconds, it uses Reflect if it has taken more PHYSICAL than SPECIAL this fight, otherwise Magic Bounce."
 		},
 		"LUNARIAN": {
 			"name": "Lunarian",
@@ -6480,15 +6498,15 @@
 		},
 		"FLEUR_DE_LURE": {
 			"name": "Fleur de Lure",
-			"description": "Gain a strong Fomantis and add it to the pool. Once per cast, when your STRONGEST Fomantis reaches 80% PP, the 3 closest enemies are CHARM for 3 seconds. Its Solar Blade always crits CHARM enemies, and executes CHARM BUG enemies."
+			"description": "Gain a strong Fomantis. Once per cast, when your STRONGEST Fomantis reaches 80% PP, the 3 closest enemies are CHARM for 3 seconds. Its Solar Blade always crits CHARM enemies, and executes CHARM BUG enemies."
 		},
 		"CRYSTAL_GUARDIAN": {
 			"name": "Crystal Guardian",
-			"description": "Gain an Onix and add it to the pool. Your STRONGEST Onix can crystallise again with other weather rocks: only its first crystal grants an awakening effect, each further one adds its synergy. It permanently gains 20 max HP for every crystallisation it completes. The first time you get a Steelix, gain 3 random weather rocks."
+			"description": "Gain an Onix. Your STRONGEST Onix can crystallise again with other weather rocks: only its first crystal grants an awakening effect, each further one adds its synergy. It permanently gains 20 max HP for every crystallisation it completes. The first time you get a Steelix, gain 3 random weather rocks."
 		},
 		"GOOEY_GLOBULES": {
 			"name": "Gooey Globules",
-			"description": "Gain a Sliggoo. When your STRONGEST Goomy is hit by an attack, it has a [50,LK]% chance to throw a blob at a random ADJACENT Pokémon. Enemies hit take TRUE damage equal to its DEF and lose 20 SPEED; allies hit heal 50 HP."
+			"description": "Gain a Sliggoo. When your STRONGEST Goomy is hit by an attack, it has a [50,LK]% chance to throw a blob at a random ADJACENT Pokémon. Enemies hit take TRUE equal to its DEF and lose 20 SPEED; allies hit heal 50 HP."
 		},
 		"THUNDER_AND_LIGHTNING": {
 			"name": "Thunder and Lightning",
@@ -6496,7 +6514,7 @@
 		},
 		"WINDY_SANDS": {
 			"name": "Windy Sands",
-			"description": "Gain a Hippopotas and add it to the pool. Your STRONGEST Hippopotas heals for 50% of the SANDSTORM_DAMAGE taken by enemies within 4 tiles. When it casts its ability, enemies caught in it are pulled 1 tile towards it."
+			"description": "Gain a Hippopotas. Your STRONGEST Hippopotas heals for 50% of the SANDSTORM_DAMAGE taken by enemies within 4 tiles. When it casts its ability, enemies caught in it are pulled 1 tile towards it."
 		},
 		"CLANGOROUS_SOULBLAZE": {
 			"name": "Clangorous Soulblaze",
@@ -8079,7 +8097,7 @@
 	"whimsy_rules_hint": "Whimsy Weekend adds a random Smeargle's Scribble rule to Double Up. Turn it off to play a plain Double Up game.",
 	"whimsy_rules_on": "Random Smeargle's Scribble Rule",
 	"whimsy_rules_off": "Off (plain Double Up)",
-	"blessing_event_title": "Wish Festival",
+	"blessing_event_title": "Wishes",
 	"blessing_event_description": "Make your wish while the star is near. Two blessings await: one early, one late.",
 	"blessing_event_upcoming_description": "A wishing star has appeared. What you ask for will shape your journey.",
 	"blessing_event_ends_in": "Ends in {{time}}"

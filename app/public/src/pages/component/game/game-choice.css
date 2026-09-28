@@ -244,14 +244,7 @@
   position: absolute;
   inset: 0;
   pointer-events: none;
-  background: linear-gradient(
-    105deg,
-    transparent 30%,
-    color-mix(in srgb, var(--color-fg-primary) 10%, transparent) 42%,
-    color-mix(in srgb, var(--color-fg-primary) 28%, transparent) 50%,
-    color-mix(in srgb, var(--color-fg-primary) 10%, transparent) 58%,
-    transparent 70%
-  );
+  background: var(--holo-sheen);
   animation: blessing-sheen 6s ease-in-out infinite;
 }
 

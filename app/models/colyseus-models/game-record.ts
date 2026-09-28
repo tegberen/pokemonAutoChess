@@ -2,6 +2,7 @@ import { ArraySchema, Schema, type } from "@colyseus/schema"
 import { Emotion } from "../../types"
 import type { Blessing } from "../../types/enum/Blessing"
 import { GameMode } from "../../types/enum/Game"
+import type { SpecialGameRule } from "../../types/enum/SpecialGameRule"
 import type { Item } from "../../types/enum/Item"
 import { type Pkm, PkmIndex } from "../../types/enum/Pokemon"
 export interface IPokemonRecord {
@@ -34,6 +35,10 @@ export interface IGameRecord {
   elo: number
   gameMode: GameMode
   whimsy?: boolean
+  // "" is how the schema stores "no rule", since a string field cannot be null
+  specialGameRule?: SpecialGameRule | "" | null
+  dailyDuel?: boolean
+  tournament?: boolean
   unholdableItems: Item[]
   blessings: Blessing[]
 }
@@ -46,7 +51,13 @@ export class GameRecord extends Schema implements IGameRecord {
   @type(["string"]) blessings = new ArraySchema<Blessing>()
   @type("uint16") elo: number
   @type("string") gameMode: GameMode = GameMode.CUSTOM_LOBBY
+  // Scribble with a random rule, in any Format; named after the old Whimsy
+  // Weekend event
   @type("boolean") whimsy = false
+  // empty for Classic and Wishes games, and for records older than this field
+  @type("string") specialGameRule: SpecialGameRule | "" = ""
+  @type("boolean") dailyDuel = false
+  @type("boolean") tournament = false
 
   constructor(
     time: number,
@@ -56,7 +67,10 @@ export class GameRecord extends Schema implements IGameRecord {
     gameMode: GameMode,
     unholdableItems: Item[],
     whimsy = false,
-    blessings: Blessing[] = []
+    blessings: Blessing[] = [],
+    specialGameRule: SpecialGameRule | null = null,
+    dailyDuel = false,
+    tournament = false
   ) {
     super()
     this.time = time
@@ -64,6 +78,10 @@ export class GameRecord extends Schema implements IGameRecord {
     this.elo = elo
     this.gameMode = gameMode
     this.whimsy = whimsy
+    this.specialGameRule = specialGameRule ?? ""
+    this.dailyDuel = dailyDuel
+    // older tournament games still carry the retired TOURNAMENT mode
+    this.tournament = tournament || gameMode === GameMode.TOURNAMENT
     this.unholdableItems.push(...(unholdableItems ?? []))
     this.blessings.push(...(blessings ?? []))
 

@@ -25,6 +25,7 @@ import type { Awakening } from "./enum/Awakening"
 import type { DungeonPMDO } from "./enum/Dungeon"
 import type { EffectEnum } from "./enum/Effect"
 import type { EloRank } from "./enum/EloRank"
+import type { SpecialGameRule } from "./enum/SpecialGameRule"
 import type { Emotion } from "./enum/Emotion"
 import type { FlowerPot } from "./enum/FlowerPot"
 import type {
@@ -79,6 +80,7 @@ export enum Transfer {
   CHANGE_SCRIBBLE_EXTENDED = "CHANGE_SCRIBBLE_EXTENDED",
   CHANGE_BLESSINGS_ENABLED = "CHANGE_BLESSINGS_ENABLED",
   CHANGE_WHIMSY = "CHANGE_WHIMSY",
+  CHANGE_GAME_MODIFICATION = "CHANGE_GAME_MODIFICATION",
   CHANGE_BLESSINGS_UNDER_TEST = "CHANGE_BLESSINGS_UNDER_TEST",
   REFRESH = "REFRESH",
   SPECTATE = "SPECTATE",
@@ -756,6 +758,7 @@ export interface IPreparationMetadata {
   scribbleExtended: boolean
   whimsy: boolean
   blessingsEnabled: boolean
+  specialGameRule: SpecialGameRule | null
   dailyDuel: boolean
 }
 
@@ -764,6 +767,8 @@ export interface IGameMetadata {
   ownerName: string
   gameMode: GameMode
   whimsy: boolean
+  blessingsEnabled: boolean
+  specialGameRule: SpecialGameRule | null
   dailyDuel: boolean
   playerIds: string[]
   playersInfo: string[]

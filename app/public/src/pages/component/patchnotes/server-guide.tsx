@@ -133,13 +133,20 @@ export default function ServerGuide({
     () => [
       ...(Object.keys(Blessings) as Blessing[]).map((blessing) => ({
         name: t(`blessing.${blessing}.name`),
-        icon: Blessings[blessing].icon
+        icon: Blessings[blessing].icon,
+        tier: Blessings[blessing].tier
       })),
       // the synergy-paired names never appear on their own in the log
-      { name: "Gym Trainer", icon: Blessings[Blessing.NORMAL_FAIRY_GYM_TRAINER].icon },
-      { name: "Legendary songs", icon: Blessings[Blessing.HEATRANS_SONG].icon },
-      { name: "Badges", icon: Blessings[Blessing.FIGHTING_BADGE_BLESSING].icon },
-      { name: "Crests", icon: Blessings[Blessing.FIGHTING_CREST_BLESSING].icon },
+      ...[
+        { name: "Gym Trainer", blessing: Blessing.NORMAL_FAIRY_GYM_TRAINER },
+        { name: "Legendary songs", blessing: Blessing.HEATRANS_SONG },
+        { name: "Badges", blessing: Blessing.FIGHTING_BADGE_BLESSING },
+        { name: "Crests", blessing: Blessing.FIGHTING_CREST_BLESSING }
+      ].map(({ name, blessing }) => ({
+        name,
+        icon: Blessings[blessing].icon,
+        tier: Blessings[blessing].tier
+      })),
       // removed Wishes keep their icon in older Patch Log rows
       { name: "Golden Ticket", icon: "ticket" },
       { name: "Mortar Shells", icon: "mortar_shells" }

@@ -22,3 +22,18 @@
 .scales-ap .ability-value {
   color: #bfc560;
 }
+
+/* New Game button — the theme's olive accent, same bubbly style */
+.lobby .play-button.bubbly.green {
+  background: #bfc560;
+  color: #151a23;
+  text-shadow: none;
+  box-shadow: inset -6px -6px 0px 0px #8f9440, var(--shadow-clickable);
+}
+.lobby .play-button.bubbly.green:not([disabled]):hover {
+  background: #cfd47c;
+}
+.lobby .play-button.bubbly.green:not([disabled]):active {
+  background: #bfc560;
+  box-shadow: inset 6px 6px 0px 0px #8f9440, var(--shadow-clickable);
+}

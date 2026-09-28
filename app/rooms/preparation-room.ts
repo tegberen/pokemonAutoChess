@@ -13,7 +13,12 @@ import UserMetadata from "../models/mongo-models/user-metadata"
 import { type IPreparationMetadata, Role, Transfer } from "../types"
 import { CloseCodes } from "../types/enum/CloseCodes"
 import type { EloRank } from "../types/enum/EloRank"
-import { type BotDifficulty, GameMode } from "../types/enum/Game"
+import type { SpecialGameRule } from "../types/enum/SpecialGameRule"
+import {
+  type BotDifficulty,
+  GameMode,
+  type GameModification
+} from "../types/enum/Game"
 import type { Synergy } from "../types/enum/Synergy"
 import type { IBot } from "../types/models/bot-v2"
 import { logger } from "../utils/logger"
@@ -24,6 +29,7 @@ import {
   OnChangeNoEloCommand,
   OnChangeBlessingsEnabledCommand,
   OnChangeBlessingsUnderTestCommand,
+  OnChangeGameModificationCommand,
   OnChangeScribbleExtendedCommand,
   OnChangeWhimsyCommand,
   OnGameStartRequestCommand,
@@ -111,6 +117,10 @@ export default class PreparationRoom extends Room<{ state: PreparationState }> {
     await this.setMetadata(<IPreparationMetadata>{ whimsy })
   }
 
+  async setSpecialGameRule(specialGameRule: SpecialGameRule | null) {
+    await this.setMetadata(<IPreparationMetadata>{ specialGameRule })
+  }
+
   onCreate(options: {
     ownerId?: string
     roomName: string
@@ -163,6 +173,7 @@ export default class PreparationRoom extends Room<{ state: PreparationState }> {
       scribbleExtended: false,
       whimsy: options.whimsy ?? false,
       blessingsEnabled: this.state.blessingsEnabled,
+      specialGameRule: null,
       dailyDuel: options.dailyDuel ?? false
     })
     this.maxClients = 8
@@ -342,6 +353,25 @@ export default class PreparationRoom extends Room<{ state: PreparationState }> {
         logger.error(error)
       }
     })
+
+    this.onMessage(
+      Transfer.CHANGE_GAME_MODIFICATION,
+      (client, modification: GameModification) => {
+        logger.info(
+          Transfer.CHANGE_GAME_MODIFICATION,
+          this.roomName,
+          modification
+        )
+        try {
+          this.dispatcher.dispatch(new OnChangeGameModificationCommand(), {
+            client,
+            modification
+          })
+        } catch (error) {
+          logger.error(error)
+        }
+      }
+    )
 
     this.onMessage(Transfer.CHANGE_WHIMSY, (client, whimsy) => {
       logger.info(Transfer.CHANGE_WHIMSY, this.roomName, whimsy)

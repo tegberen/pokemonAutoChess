@@ -3,14 +3,17 @@ import { useState } from "react"
 import { useTranslation } from "react-i18next"
 import { EloRankThreshold, MAX_PLAYERS_PER_GAME } from "../../../../../config"
 import { GADGETS } from "../../../../../config/game/gadgets"
-import { FINAL_BRACKET_NAME } from "../../../../../core/tournament-swiss"
 import { type IPreparationMetadata, Role } from "../../../../../types"
 import type { EloRank } from "../../../../../types/enum/EloRank"
-import { GameMode } from "../../../../../types/enum/Game"
+import {
+  GameMode,
+  getGameModification
+} from "../../../../../types/enum/Game"
 import { formatMinMaxRanks, getRank } from "../../../../../utils/elo"
 import { useAppSelector } from "../../../hooks"
 import { cc } from "../../utils/jsx"
 import { GameModeIcon } from "../icons/game-mode-icon"
+import { GameModificationIcon } from "../preparation/game-modification-banner"
 import "./room-item.css"
 
 export default function RoomItem(props: {
@@ -124,98 +127,118 @@ export default function RoomItem(props: {
     )
   }
 
+  const metadata = props.room.metadata
+  // Solo and Duo rooms are named after their game mode, like their lobby header
+  // tournament rooms keep their bracket name (Qualification, Finals…)
+  const showsModification =
+    (metadata?.gameMode === GameMode.CUSTOM_LOBBY ||
+      metadata?.gameMode === GameMode.DOUBLE_UP) &&
+    !metadata?.tournamentId
+  const modification = getGameModification({
+    blessingsEnabled: metadata?.blessingsEnabled ?? false,
+    whimsy: metadata?.whimsy ?? false,
+    specialGameRule: metadata?.specialGameRule ?? null
+  })
+  const modificationLabel = metadata?.specialGameRule
+    ? t(`scribble.${metadata.specialGameRule}`)
+    : t(`game_modification.${modification}`)
+  const isTournament = !!metadata?.tournamentId
+
   return (
-    <div className="room-item my-box">
-      {props.room.metadata?.blessingsEnabled && (
-        <img
-          alt={t("blessings")}
-          title={t("blessing_event_title")}
-          className="blessings icon"
-          src="/assets/icons/blessing_stats.svg"
-        />
-      )}
-      {props.room.metadata?.tournamentId &&
-        props.room.metadata.name === FINAL_BRACKET_NAME && (
+    <div
+      className={cc("room-folder", {
+        "event-folder": isTournament,
+        "tournament-folder": isTournament
+      })}
+    >
+      <div className="room-folder-header">
+        <div className="room-folder-tab" title={title}>
+          {metadata?.gameMode && <GameModeIcon gameMode={metadata.gameMode} />}
+        </div>
+        <div className="room-mode">
+          {showsModification && (
+            <img
+              alt=""
+              aria-hidden="true"
+              className="modification-icon"
+              src={GameModificationIcon[modification]}
+            />
+          )}
+          <span className="room-name">
+            {formatMinMaxRanks(
+              metadata?.minRank as EloRank | null,
+              metadata?.maxRank as EloRank | null
+            ) + " "}
+            {showsModification ? modificationLabel : metadata?.name}
+          </span>
+        </div>
+      </div>
+      <div
+        className={cc("room-item my-box", { "daily-duel": isTournament })}
+        title={metadata?.name}
+      >
+        {isTournament && (
           <img
             alt=""
             aria-hidden="true"
-            className="icon"
+            className="tournament-icon"
             src="/assets/icons/fire_week_streak.svg"
           />
         )}
-      <span className="room-name" title={title}>
-        {formatMinMaxRanks(
-          props.room.metadata?.minRank as EloRank | null,
-          props.room.metadata?.maxRank as EloRank | null
-        ) + " "}
-        {props.room.metadata?.name}
-      </span>
-      {props.room.metadata?.gameMode === GameMode.CUSTOM_LOBBY &&
-        props.room.metadata?.scribbleExtended && (
-          <span className="hp-badge" title={t("player_hp")}>
-            150 HP
-          </span>
-      )}
-      {props.room.metadata?.passwordProtected && (
-        <img
-          alt={t("private")}
-          title={t("password_protected")}
-          className="lock icon"
-          src="/assets/ui/lock.svg"
-        />
-      )}
-      {props.room.metadata?.gameMode === GameMode.SCRIBBLE && (
-        <GameModeIcon gameMode={GameMode.SCRIBBLE} />
-      )}
-      {props.room.metadata?.gameMode === GameMode.CLASSIC && (
-        <GameModeIcon gameMode={GameMode.CLASSIC} />
-      )}
-      {props.room.metadata?.gameMode === GameMode.RANKED && (
-        <GameModeIcon gameMode={GameMode.RANKED} />
-      )}
-      {props.room.metadata?.minRank && (
-        <img
-          alt={t("minimum_rank")}
-          title={
-            t("minimum_rank") +
-            ": " +
-            t(`elorank.${props.room.metadata?.minRank}`)
-          }
-          className="rank icon"
-          src={"/assets/ranks/" + props.room.metadata?.minRank + ".svg"}
-        />
-      )}
-      <span>
-        {props.room.clients}/{nbPlayersExpected}
-      </span>
-      {isAdmin && (
+        <span className="room-info">
+          {props.room.clients}/{nbPlayersExpected}
+        </span>
+        {metadata?.gameMode === GameMode.CUSTOM_LOBBY &&
+          metadata?.scribbleExtended && (
+            <span className="hp-badge" title={t("player_hp")}>
+              150 HP
+            </span>
+          )}
+        {metadata?.passwordProtected && (
+          <img
+            alt={t("private")}
+            title={t("password_protected")}
+            className="lock icon"
+            src="/assets/ui/lock.svg"
+          />
+        )}
+        {metadata?.minRank && (
+          <img
+            alt={t("minimum_rank")}
+            title={t("minimum_rank") + ": " + t(`elorank.${metadata.minRank}`)}
+            className="rank icon"
+            src={"/assets/ranks/" + metadata.minRank + ".svg"}
+          />
+        )}
+        {isAdmin && (
+          <button
+            title={t("delete_room")}
+            onClick={() => {
+              props.click("delete")
+            }}
+          >
+            X
+          </button>
+        )}
         <button
-          title={t("delete_room")}
+          title={disabledReason ?? t("join")}
+          disabled={!canJoin || joining}
+          className={cc(
+            "bubbly",
+            joining ? "loading" : "",
+            metadata?.passwordProtected ? "orange" : "green"
+          )}
           onClick={() => {
-            props.click("delete")
+            if (canJoin && !joining) {
+              props.click("join")
+              setJoining(true)
+              setTimeout(() => setJoining(false), 3000)
+            }
           }}
         >
-          X
+          {t("join")}
         </button>
-      )}
-      <button
-        title={disabledReason ?? t("join")}
-        disabled={!canJoin || joining}
-        className={cc(
-          "bubbly",
-          joining ? "loading" : "",
-          props.room.metadata?.passwordProtected ? "orange" : "green"
-        )}
-        onClick={() => {
-          if (canJoin && !joining) {
-            props.click("join")
-            setJoining(true)
-            setTimeout(() => setJoining(false), 3000)
-          }
-        }}
-      >
-        {t("join")}
-      </button>
+      </div>
     </div>
   )
 }

@@ -54,6 +54,10 @@
   background-color: color-mix(in srgb, var(--color-bg-secondary) 55%, transparent);
 }
 
+.room-folder {
+  --room-folder-bg: color-mix(in srgb, var(--color-bg-secondary) 55%, transparent);
+}
+
 .scales-ap .ability-value {
   color: #cfe3b4;
 }

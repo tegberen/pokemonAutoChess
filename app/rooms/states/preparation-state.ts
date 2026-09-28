@@ -1,5 +1,4 @@
 import { ArraySchema, MapSchema, Schema, type } from "@colyseus/schema"
-import { isBlessingEvent } from "../../config/game/events"
 import type { Blessing } from "../../types/enum/Blessing"
 import { GameUser } from "../../models/colyseus-models/game-user"
 import Message from "../../models/colyseus-models/message"
@@ -60,11 +59,11 @@ export default class PreparationState
   @type(["string"]) whitelist: string[]
   @type(["string"]) blacklist: string[]
   @type("boolean") scribbleExtended = false
-  /** Blessing event: rule layer on any game mode, on by default while it runs. */
-  @type("boolean") blessingsEnabled = isBlessingEvent()
+  /** the Wishes game modification */
+  @type("boolean") blessingsEnabled = false
   // dev only, undecorated: restricts the pool without costing a schema field
   blessingsUnderTest: Blessing[] = []
-  /** Whimsy Weekend: a Double Up room that rolls a random scribble rule. */
+  /** the Scribble game modification, rolling a random rule unless one is pinned */
   @type("boolean") whimsy = false
   @type("boolean") dailyDuel = false
   /** GUIDE: which synergy the run about to start teaches. */
@@ -97,9 +96,9 @@ export default class PreparationState
     }
     this.whimsy = params.whimsy ?? false
     this.dailyDuel = params.dailyDuel ?? false
-    // Whimsy Weekend is a scribble-rule mode, so blessings never layer onto it
+    // Wishes and Scribble are mutually exclusive modifications
     if (this.whimsy) this.blessingsEnabled = false
-    // a lesson teaches the base game, so an active blessing event never leaks in
+    // a lesson teaches the base game, never a modification
     if (params.gameMode === GameMode.GUIDE) this.blessingsEnabled = false
     this.ownerId =
       (params.gameMode === GameMode.CUSTOM_LOBBY || params.gameMode === GameMode.DOUBLE_UP)

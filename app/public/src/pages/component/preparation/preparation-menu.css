@@ -61,19 +61,8 @@
   margin: 0.2em 0 1em;
   padding: 0.6em 1em;
   border: 1px solid #1b1d24;
-  background-color: color-mix(
-    in srgb,
-    var(--color-bg-gold) 8%,
-    var(--color-blessing-card)
-  );
-  background-image:
-    linear-gradient(rgb(0 0 0 / 12%), rgb(0 0 0 / 12%)),
-    repeating-linear-gradient(
-      135deg,
-      color-mix(in srgb, var(--color-fg-gold) 26%, transparent) 0 16px,
-      color-mix(in srgb, var(--color-bg-gold) 26%, transparent) 16px 32px,
-      color-mix(in srgb, var(--color-rarity-legendary) 26%, transparent) 32px 48px
-    );
+  background-color: var(--daily-duel-bg);
+  background-image: var(--daily-duel-stripes);
   color: #ffffff;
 }
 
@@ -96,7 +85,7 @@
   text-shadow: 1px 1px 2px #05090f;
 }
 
-.preparation-menu h1 .hp-badge {
+.preparation-menu h1 .mode-tag {
   padding: 0.2em 0.6em;
   border: var(--border-thin);
   border-radius: 0.7em;
@@ -174,6 +163,58 @@
   align-items: center;
   gap: 0.5em;
   margin-top: 0.5em;
+}
+
+/* one segmented bar; the chosen segment is the darker one, the game's usual
+   way of showing a confirmed choice */
+.preparation-menu .modification-switch {
+  display: flex;
+  border: var(--border-thin);
+  border-radius: 0.8em;
+  overflow: hidden;
+  background-color: var(--color-bg-primary);
+}
+
+.preparation-menu .modification-switch button {
+  display: flex;
+  align-items: center;
+  gap: 0.4em;
+  padding: 0.45em 1em;
+  border: none;
+  border-radius: 0;
+  background: none;
+  color: var(--color-fg-primary);
+  font: inherit;
+  font-size: 1.05em;
+  font-weight: bold;
+  cursor: var(--cursor-hover);
+}
+
+.preparation-menu .modification-switch button + button {
+  border-left: var(--border-thin);
+}
+
+.preparation-menu .modification-switch button:not(.chosen):hover {
+  background-color: color-mix(
+    in srgb,
+    var(--color-fg-primary) 10%,
+    transparent
+  );
+}
+
+.preparation-menu .modification-switch button.chosen {
+  background-color: var(--color-bg-tertiary);
+  cursor: default;
+}
+
+.preparation-menu .modification-switch button img {
+  width: 1.2em;
+  height: 1.2em;
+}
+
+/* soft shading: a blurred shadow lifts the switch off the artwork */
+.preparation-menu .modification-switch {
+  box-shadow: 0 2px 8px color-mix(in srgb, black 35%, transparent);
 }
 
 .preparation-settings .no-settings {
@@ -383,4 +424,190 @@
   content: "";
   border: 2px dashed rgba(255,255,255,0.2);
   border-radius: 8px;
+}
+
+/* the header's mode banner: one geometry, themed per game mode */
+.rule-banner.my-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9em;
+  gap: 1.25em;
+  padding: 0.5em 0.9em;
+  margin-bottom: 1.25em;
+  min-height: 112px;
+  --mode-stripe-alpha: 22%;
+  background-color: color-mix(
+    in srgb,
+    var(--mode-hue) 40%,
+    var(--color-blessing-card)
+  );
+  background-image: repeating-linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--mode-stripe-a) var(--mode-stripe-alpha), transparent) 0px,
+    color-mix(in srgb, var(--mode-stripe-a) var(--mode-stripe-alpha), transparent) 16px,
+    color-mix(in srgb, var(--mode-stripe-b) var(--mode-stripe-alpha), transparent) 16px,
+    color-mix(in srgb, var(--mode-stripe-b) var(--mode-stripe-alpha), transparent) 32px,
+    color-mix(in srgb, var(--mode-stripe-c) var(--mode-stripe-alpha), transparent) 32px,
+    color-mix(in srgb, var(--mode-stripe-c) var(--mode-stripe-alpha), transparent) 48px,
+    color-mix(in srgb, var(--mode-stripe-d) var(--mode-stripe-alpha), transparent) 48px,
+    color-mix(in srgb, var(--mode-stripe-d) var(--mode-stripe-alpha), transparent) 64px
+  );
+  /* one 64px repeat along the 135deg diagonal, so the tile edges line up */
+  background-size: 90.5097px 90.5097px;
+  color: #ffffff;
+  text-shadow: 2px 2px 0 var(--color-shadow);
+}
+
+/* Rapidash: warm, happy fire */
+.rule-banner.modification-classic {
+  --mode-hue: #f07a2e;
+  --mode-stripe-a: #ffc94a;
+  --mode-stripe-b: #f07a2e;
+  --mode-stripe-c: #ff5a3a;
+  --mode-stripe-d: #b8322a;
+}
+
+/* Jirachi: the old Wish Festival night sky, with aurora and stars */
+.rule-banner.modification-wishes.my-box {
+  position: relative;
+  overflow: hidden;
+  background-color: #17132f;
+  background-image: none;
+}
+
+.rule-banner.modification-wishes::before {
+  content: "";
+  position: absolute;
+  inset: -30%;
+  pointer-events: none;
+  /* deep blues only: screen blending lightens, so bright stops read as daylight */
+  background-image: linear-gradient(
+    102deg,
+    transparent 0%,
+    #24406f59 20%,
+    #30508966 44%,
+    #182a5259 68%,
+    transparent 100%
+  );
+  background-size: 220% 140%;
+  mix-blend-mode: screen;
+  filter: blur(46px);
+  animation: wishes-banner-aurora 48s linear infinite;
+}
+
+@keyframes wishes-banner-aurora {
+  0% {
+    background-position: 0 40%;
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 0.55;
+  }
+  100% {
+    background-position: 220% 60%;
+    opacity: 0.35;
+  }
+}
+
+/* starfield, faded in and out so it reads as twinkling rather than drifting */
+.rule-banner.modification-wishes::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    radial-gradient(1.5px 1.5px at 14% 28%, #fff, transparent),
+    radial-gradient(1px 1px at 32% 66%, #fff, transparent),
+    radial-gradient(1.5px 1.5px at 52% 18%, #fff, transparent),
+    radial-gradient(1px 1px at 61% 78%, #fff, transparent),
+    radial-gradient(1.5px 1.5px at 74% 52%, #fff, transparent),
+    radial-gradient(1px 1px at 88% 34%, #fff, transparent),
+    radial-gradient(1px 1px at 44% 88%, #fff, transparent);
+  animation: wishes-banner-twinkle 6s ease-in-out infinite;
+}
+
+@keyframes wishes-banner-twinkle {
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 0.9;
+  }
+}
+
+.rule-banner.modification-wishes > * {
+  position: relative;
+  z-index: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rule-banner.modification-wishes::before,
+  .rule-banner.modification-wishes::after {
+    animation: none;
+  }
+}
+
+/* Smeargle: its four primary paints on a canvas tone */
+.rule-banner.modification-scribble {
+  --mode-hue: #d8c7a8;
+  --mode-stripe-a: #e8392f;
+  --mode-stripe-b: #f5c82a;
+  --mode-stripe-c: #2f6fd8;
+  --mode-stripe-d: #3aa84a;
+  --mode-stripe-e: #e35fb0;
+  --mode-stripe-alpha: 40%;
+  /* five paints, the pink keeps the four primaries from reading as a logo */
+  background-image: repeating-linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--mode-stripe-a) var(--mode-stripe-alpha), transparent) 0px,
+    color-mix(in srgb, var(--mode-stripe-a) var(--mode-stripe-alpha), transparent) 16px,
+    color-mix(in srgb, var(--mode-stripe-b) var(--mode-stripe-alpha), transparent) 16px,
+    color-mix(in srgb, var(--mode-stripe-b) var(--mode-stripe-alpha), transparent) 32px,
+    color-mix(in srgb, var(--mode-stripe-e) var(--mode-stripe-alpha), transparent) 32px,
+    color-mix(in srgb, var(--mode-stripe-e) var(--mode-stripe-alpha), transparent) 48px,
+    color-mix(in srgb, var(--mode-stripe-c) var(--mode-stripe-alpha), transparent) 48px,
+    color-mix(in srgb, var(--mode-stripe-c) var(--mode-stripe-alpha), transparent) 64px,
+    color-mix(in srgb, var(--mode-stripe-d) var(--mode-stripe-alpha), transparent) 64px,
+    color-mix(in srgb, var(--mode-stripe-d) var(--mode-stripe-alpha), transparent) 80px
+  );
+  background-size: 113.1371px 113.1371px;
+}
+
+.rule-banner.my-box > img.rule-banner-icon {
+  width: 96px;
+  height: 96px;
+  flex: none;
+  margin: 0;
+  object-fit: contain;
+}
+
+.rule-banner.my-box .rule-banner-text {
+  flex: 0 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4em;
+}
+
+.rule-banner.my-box .rule-banner-text p {
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  background: none;
+  border: none;
+  text-align: left;
+}
+
+.rule-banner h3 {
+  margin: 0 !important;
+  font-size: 1.35em;
+  letter-spacing: 0.04em;
+}
+
+.rule-banner p {
+  margin: 0;
+  font-size: 1.05em;
+  line-height: 1.4;
 }

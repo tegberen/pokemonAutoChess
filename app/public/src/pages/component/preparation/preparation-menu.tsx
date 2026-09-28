@@ -8,7 +8,12 @@ import {
 import type { IGameUser } from "../../../../../models/colyseus-models/game-user"
 import { Role } from "../../../../../types"
 import { EloRank } from "../../../../../types/enum/EloRank"
-import { BotDifficulty, GameMode } from "../../../../../types/enum/Game"
+import {
+  BotDifficulty,
+  GameMode,
+  GameModification,
+  getGameModification
+} from "../../../../../types/enum/Game"
 import { SpecialGameRule } from "../../../../../types/enum/SpecialGameRule"
 import { TOURNAMENT_LOBBY_START_DELAY_IN_SECONDS } from "../../../../../core/tournament-swiss"
 import { formatMinMaxRanks } from "../../../../../utils/elo"
@@ -21,13 +26,16 @@ import {
   addBot,
   gameStartRequest,
   rooms,
+  setGameModification,
   toggleReady
 } from "../../../network"
-import { addIconsToDescription } from "../../utils/descriptions"
 import { cc } from "../../utils/jsx"
 import { GameModeIcon } from "../icons/game-mode-icon"
-import { BlessingEventBanner } from "../blessing-event/blessing-event"
-import { WhimsyWeekendCountdown } from "../whimsy-weekend/whimsy-weekend"
+import {
+  GameModificationBanner,
+  GameModificationIcon,
+  useGameModificationLabel
+} from "./game-modification-banner"
 import PreparationMenuUser from "./preparation-menu-user"
 import "./preparation-menu.css"
 
@@ -54,13 +62,22 @@ export default function PreparationMenu() {
     (state) => state.preparation.tournamentTeams
   )
   const isTournamentLobby = tournamentTeams.length > 0
-  const scribbleExtended = useAppSelector(
-    (state) => state.preparation.scribbleExtended
+  const rollsRandomScribble = useAppSelector(
+    (state) => state.preparation.whimsy
   )
-  const isWhimsyWeekend = useAppSelector((state) => state.preparation.whimsy)
   const dailyDuel = useAppSelector((state) => state.preparation.dailyDuel)
   const blessingsEnabled = useAppSelector(
     (state) => state.preparation.blessingsEnabled
+  )
+
+  const modification = getGameModification({
+    blessingsEnabled,
+    whimsy: rollsRandomScribble,
+    specialGameRule
+  })
+  const modificationLabel = useGameModificationLabel(
+    modification,
+    specialGameRule
   )
 
   const isReady = users.find((user) => user.uid === uid)?.ready
@@ -131,45 +148,10 @@ export default function PreparationMenu() {
         </p>
       )}
 
-      {isWhimsyWeekend && (
-        <>
-          <p>
-            <GameModeIcon gameMode={GameMode.DOUBLE_UP} whimsy />
-            <b>{t("whimsy_weekend")}</b>: {t("whimsy_weekend_description")}
-          </p>
-          <WhimsyWeekendCountdown />
-        </>
-      )}
-
-      {(gameMode === GameMode.SCRIBBLE || specialGameRule != null) && (
-        <div className="rule-banner scribble-rule-banner my-box">
-          <img
-            className="rule-banner-icon"
-            src="assets/ui/game_modes/scribble.png"
-            alt=""
-            aria-hidden="true"
-          />
-          <div className="rule-banner-text">
-            <h3>
-              {specialGameRule != null
-                ? t(`scribble.${specialGameRule}`)
-                : t("game_modes.SCRIBBLE")}
-            </h3>
-            <p>
-              {specialGameRule != null
-                ? addIconsToDescription(
-                    t(`scribble_description.${specialGameRule}`, {
-                      type: "(random Synergy)"
-                    })
-                  )
-                : t("smeargle_scribble_hint")}
-            </p>
-          </div>
-        </div>
-      )}
-
-      {/* the global event can be running while this room has blessings off */}
-      {blessingsEnabled && <BlessingEventBanner />}
+      <GameModificationBanner
+        modification={modification}
+        specialGameRule={specialGameRule}
+      />
 
       {gameMode === GameMode.CLASSIC && (
         <p>
@@ -217,6 +199,29 @@ export default function PreparationMenu() {
       </button>
     )
 
+  // one click from the lobby, since picking a mode is the most common setup step
+  const canPickModification =
+    (isOwner || isAdmin || user?.role === Role.MODERATOR) &&
+    (gameMode === GameMode.CUSTOM_LOBBY || gameMode === GameMode.DOUBLE_UP)
+  const modificationSwitch = canPickModification && (
+    <div className="modification-switch" role="radiogroup">
+      {Object.values(GameModification).map((option) => (
+        <button
+          key={option}
+          role="radio"
+          aria-checked={modification === option}
+          className={cc({ chosen: modification === option })}
+          onClick={() => {
+            if (modification !== option) setGameModification(option)
+          }}
+        >
+          <img src={GameModificationIcon[option]} alt="" aria-hidden="true" />
+          {t(`game_modification.${option}`)}
+        </button>
+      ))}
+    </div>
+  )
+
   const startGameButton = !isTournamentLobby && (isOwner || isAdmin) && (
     <button
       className={cc("bubbly", {
@@ -245,36 +250,19 @@ export default function PreparationMenu() {
             </span>
           </h1>
         ) : (
-        <h1>
-          {blessingsEnabled && (
-            <img
-              alt={t("blessings")}
-              title={t("blessing_event_title")}
-              className="preparation-header-icon"
-              src="/assets/icons/blessing_stats.svg"
-            />
-          )}
-          {specialGameRule != null && (
-            <img
-              alt={t("game_modes.SCRIBBLE")}
-              title={t(`scribble.${specialGameRule}`)}
-              className="preparation-header-icon"
-              src="/assets/icons/smeargle_scribble_icon.svg"
-            />
-          )}
-          {formatMinMaxRanks(minRank, maxRank)} {name}: {users.length}/
-          {nbExpectedPlayers}
-          <span
-            className="hp-badge"
-            title={
-              scribbleExtended
-                ? t("scribble_extended_on")
-                : t("scribble_extended_off")
-            }
-          >
-            {scribbleExtended
-              ? t("scribble_extended_on_short")
-              : t("scribble_extended_off_short")}
+        <h1 title={name}>
+          <img
+            alt=""
+            aria-hidden="true"
+            className="preparation-header-icon"
+            src={GameModificationIcon[modification]}
+          />
+          {formatMinMaxRanks(minRank, maxRank)} {modificationLabel}:{" "}
+          {users.length}/{nbExpectedPlayers}
+          <span className="mode-tag">
+            {gameMode === GameMode.DOUBLE_UP
+              ? t("new_game_duo")
+              : t("new_game_solo")}
           </span>
         </h1>
         )}
@@ -362,6 +350,7 @@ export default function PreparationMenu() {
 
       <div className="actions">
         <div className="actions-bar">
+          {modificationSwitch}
           <div className="spacer" />
           {addBotButton}
           {readyButton}

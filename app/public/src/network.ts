@@ -12,7 +12,7 @@ import type { Booster } from "../../types/Booster"
 import { CloseCodes } from "../../types/enum/CloseCodes"
 import type { Item } from "../../types/enum/Item"
 import type { EloRank } from "../../types/enum/EloRank"
-import type { BotDifficulty } from "../../types/enum/Game"
+import type { BotDifficulty, GameModification } from "../../types/enum/Game"
 import type { MaintenanceOrder } from "../../types/enum/MaintenanceOrder"
 import type { SpecialGameRule } from "../../types/enum/SpecialGameRule"
 import type { IUserMetadataJSON } from "../../types/interfaces/UserMetadata"
@@ -230,6 +230,10 @@ export function setBlessingsEnabled(enabled: boolean) {
 
 export function setWhimsy(whimsy: boolean) {
   rooms.preparation?.send(Transfer.CHANGE_WHIMSY, whimsy)
+}
+
+export function setGameModification(modification: GameModification) {
+  rooms.preparation?.send(Transfer.CHANGE_GAME_MODIFICATION, modification)
 }
 
 export function lockShop() {

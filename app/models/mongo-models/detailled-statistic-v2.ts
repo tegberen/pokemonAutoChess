@@ -2,6 +2,7 @@ import { model, Schema } from "mongoose"
 import { Blessing } from "../../types/enum/Blessing"
 import { DungeonPMDO } from "../../types/enum/Dungeon"
 import type { GameMode } from "../../types/enum/Game"
+import type { SpecialGameRule } from "../../types/enum/SpecialGameRule"
 import { Item } from "../../types/enum/Item"
 import { Pkm } from "../../types/enum/Pokemon"
 import type { Synergy } from "../../types/enum/Synergy"
@@ -28,7 +29,9 @@ export interface IDetailledStatistic {
   regions: DungeonPMDO[]
   gameMode: GameMode
   whimsy?: boolean
+  specialGameRule?: SpecialGameRule | null
   dailyDuel?: boolean
+  tournament?: boolean
   unholdableItems: Item[]
   blessings: Blessing[]
 }
@@ -91,7 +94,13 @@ const statisticSchema = new Schema({
   whimsy: {
     type: Boolean
   },
+  specialGameRule: {
+    type: String
+  },
   dailyDuel: {
+    type: Boolean
+  },
+  tournament: {
     type: Boolean
   },
   unholdableItems: [

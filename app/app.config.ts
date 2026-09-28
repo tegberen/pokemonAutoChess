@@ -125,7 +125,10 @@ function toVictoryWinner(record: IDetailledStatistic): IVictoryWinner {
       record.gameMode,
       record.unholdableItems,
       record.whimsy,
-      record.blessings
+      record.blessings,
+      record.specialGameRule,
+      record.dailyDuel,
+      record.tournament
     )
   }
 }
@@ -689,7 +692,7 @@ export const server = defineServer({
 
       const stats = await DetailledStatistic.find(
         params,
-        ["pokemons", "time", "rank", "elo", "gameMode", "whimsy", "unholdableItems", "blessings"],
+        ["pokemons", "time", "rank", "elo", "gameMode", "whimsy", "specialGameRule", "dailyDuel", "tournament", "unholdableItems", "blessings"],
         { limit: limit, skip: skip, sort: { time: -1 } }
       )
       if (stats) {
@@ -703,7 +706,10 @@ export const server = defineServer({
               record.gameMode,
               record.unholdableItems,
               record.whimsy,
-              record.blessings
+              record.blessings,
+              record.specialGameRule,
+              record.dailyDuel,
+              record.tournament
             )
         )
 

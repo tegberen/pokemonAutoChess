@@ -123,7 +123,7 @@ each tile of gap.
 
 #### Wishes
 
-- Third Eye: gain a Meditite and add it to the pool. Meditate is doubled under ZEN_ZONE.
+- Third Eye: gain a Meditite. Meditate is doubled under ZEN_ZONE.
 - Brace for Impact: now a generic wish for all allies, does not stack with FIGHTING 8, which grants the same effect.
 - Shodan: at FIGHTING 8, the single-hit cap drops to 20% max HP and the excess is redirected to an ADJACENT enemy.
 
@@ -488,6 +488,25 @@ Smeargle Scribbles do not change your Elo.
 
 Every balance change on this server, newest first.
 
+### 28 September 2026
+
+**Game Modes**
+- Game Structure | [Format/Game Mode/Event]
+- Format | Solo or Duo
+- Game Mode | Classic, Wishes or Scribble
+- <img class="description-icon" src="/assets/ui/game_modes/classic_icon.svg" alt="" /> Classic | the official tournament format, without modifications
+- <img class="description-icon" src="/assets/ui/game_modes/wishes_icon.svg" alt="" /> Wishes | integrated into the base game, the Wish Festival event is removed
+- <img class="description-icon" src="/assets/ui/game_modes/scribble_icon.svg" alt="" /> Scribble | in Solo the owner can pick a rule, in Duo it is always random
+- Event | Monthly Tournament, Daily Duel or Half-Yearly Wish Cup
+- Monthly Tournament | [Format: Duo; Game Mode: Classic]<br>[Format: Solo; Game Mode: Scribble / Smeargle Pack]
+- Daily Duel | [Format: Solo; Game Mode: Wishes]
+- Half-Yearly Wish Cup | [Format: Solo; Game Mode: Wishes]
+
+**UI**
+- Open Rooms and In Game | revamped room cards, with events standing out
+- Profile | revamped game history, each game reads Format · Game Mode
+- Wish cards | a small wand in the corner marks a Wish that unlocks an avatar cosmetic you do not have yet when you win with it
+
 ### 27 September 2026
 
 **Pokémon**
@@ -499,22 +518,22 @@ Every balance change on this server, newest first.
 
 **Wishes**
 - Life Price {{new}} | Rerolling your shop no longer costs GOLD. Instead, every 2 rerolls cost you 1 HP, and your partner too in Double Up. It cannot bring either of you below 1 HP
-- Seasonal Herd {{new}} | Gain a Deerling of the current season and add it to the pool. Each time you start a fight with its season's synergy at 4 (spring FLORA, summer GOURMET, autumn WILD, winter ICE), gain the next season's Deerling and add it to the pool. Your Deerling and Sawsbuck gain 40 HP per Sawsbuck in play. With all 4 Sawsbuck fielded, they gain 1 STAR
-- Purrfect Plan {{new}} | Gain a Glameow and add it to the pool. CONFUSION enemies never target your STRONGEST Glameow unless it is the only target in RANGE, and always crit their allies while it is alive. Your Unique options always include Spinda or Chatot
-- Spooky Scarecrow {{new}} | Gain a Cacnea and add it to the pool. Your STRONGEST Cacnea cannot move or attack, and its ability is replaced with Spiky Shield. Each time an ally is KO'd, it gains 5 DEF and summons a Murkrow with full PP. When it is KO'd itself, it summons 3 Murkrow instead
-- Bonemerang Ranger {{new}} | Gain a Cubone and add it to the pool. Your STRONGEST Cubone gains 2 RANGE and its ability is replaced with Torment. Its attacks throw a bonemerang that hits every enemy in a line on the way out and back. Each hit after the first deals 20% less PHYSICAL, down to 20%, and only the first triggers ON_ATTACK and ON_HIT effects
+- Seasonal Herd {{new}} | Gain a Deerling of the current season. Each time you start a fight with its season's synergy at 4 (spring FLORA, summer GOURMET, autumn WILD, winter ICE), gain the next season's Deerling. Your Deerling and Sawsbuck gain 40 HP per Sawsbuck in play. With all 4 Sawsbuck fielded, they gain 1 STAR
+- Purrfect Plan {{new}} | Gain a Glameow. CONFUSION enemies never target your STRONGEST Glameow unless it is the only target in RANGE, and always crit their allies while it is alive. Your Unique options always include Spinda or Chatot
+- Spooky Scarecrow {{new}} | Gain a Cacnea. Your STRONGEST Cacnea cannot move or attack, and its ability is replaced with Spiky Shield. Each time an ally is KO'd, it gains 5 DEF and summons a Murkrow with full PP. When it is KO'd itself, it summons 3 Murkrow instead
+- Bonemerang Ranger {{new}} | Gain a Cubone. Your STRONGEST Cubone gains 2 RANGE and its ability is replaced with Torment. Its attacks throw a bonemerang that hits every enemy in a line on the way out and back. Each hit after the first deals 20% less PHYSICAL, down to 20%, and only the first triggers ON_ATTACK and ON_HIT effects
 - Swamp Father {{new}} | Gain a Mudkip and move to a random Mudkip region if not in one. Your Mudkip gains GRASS synergy. At the start of combat, your STRONGEST Mudkip hydrates ADJACENT GRASS allies: they become AQUATIC and gain all the effects of active AQUATIC synergy. It permanently gains 5 AP for each berry it eats
 - Rolling Snowball {{new}} | Gain a Spheal. When your STRONGEST Spheal's Ice Ball KO's its target, it rolls through to the cell behind it and gains 20 SHIELD and 50 PP
-- Cursed Coffin {{new}} | Gain a Yamask and add it to the pool. Your STRONGEST Yamask no longer attacks. Instead, every second it drains 15 HP and 5 PP from each ADJACENT enemy. Its Spite drains from the target and all ADJACENT enemies, and heals it for the PP drained
+- Cursed Coffin {{new}} | Gain a Yamask. Your STRONGEST Yamask no longer attacks. Instead, every second it drains 15 HP and 5 PP from each ADJACENT enemy. Its Spite drains from the target and all ADJACENT enemies, and heals it for the PP drained
 - Light of Olivine {{new}} | Gain a Flaaffy. When your STRONGEST Mareep KO's an enemy with its ability, it gains your LIGHT spot's effects. If it already has them, your STRONGEST ally without them gains them instead
-- Unsealed Golemancy {{new}} | Gain a Golett and add it to the pool. Your Golett gains MONSTER synergy. When your STRONGEST Golett KO's an enemy, it summons a Golett for a 1 STAR target, a Golurk for 2 STAR, and once per fight a random Regi for 3 STAR
-- Shinto Shrine Mirror {{new}} | Gain a Morgrem and move to a random Impidimp region if not in one. Your STRONGEST Impidimp uses Reflect at the start of combat. Every 6 seconds, it uses Reflect if it has taken more PHYSICAL than SPECIAL damage this fight, otherwise Magic Bounce
+- Unsealed Golemancy {{new}} | Gain a Golett. Your Golett gains MONSTER synergy. When your STRONGEST Golett KO's an enemy, it summons a Golett for a 1 STAR target, a Golurk for 2 STAR, and once per fight a random Regi for 3 STAR
+- Shinto Shrine Mirror {{new}} | Gain a Morgrem and move to a random Impidimp region if not in one. Your STRONGEST Impidimp uses Reflect at the start of combat. Every 6 seconds, it uses Reflect if it has taken more PHYSICAL than SPECIAL this fight, otherwise Magic Bounce
 - Lunarian {{new}} | Gain a Clefairy and move to a random Cleffa region if not in one. Your STRONGEST Cleffa's Metronome casts legendary abilities in a set order: an attack, then a disruption, then a utility, on repeat. Its LUCK no longer affects the ability picked, but gives a [10,LK]% chance to cast it 1 STAR higher
-- Fleur de Lure {{new}} | Gain a strong Fomantis and add it to the pool. Once per cast, when your STRONGEST Fomantis reaches 80% PP, the 3 closest enemies are CHARM for 3 seconds. Its Solar Blade always crits CHARM enemies, and executes CHARM BUG enemies
-- Crystal Guardian {{new}} | Gain an Onix and add it to the pool. Your STRONGEST Onix can crystallise again with other weather rocks: only its first crystal grants an awakening effect, each further one adds its synergy. It permanently gains 20 max HP for every crystallisation it completes. The first time you get a Steelix, gain 3 random weather rocks
-- Gooey Globules {{new}} | Gain a Sliggoo. When your STRONGEST Goomy is hit by an attack, it has a [50,LK]% chance to throw a blob at a random ADJACENT Pokémon. Enemies hit take TRUE damage equal to its DEF and lose 20 SPEED; allies hit heal 50 HP
+- Fleur de Lure {{new}} | Gain a strong Fomantis. Once per cast, when your STRONGEST Fomantis reaches 80% PP, the 3 closest enemies are CHARM for 3 seconds. Its Solar Blade always crits CHARM enemies, and executes CHARM BUG enemies
+- Crystal Guardian {{new}} | Gain an Onix. Your STRONGEST Onix can crystallise again with other weather rocks: only its first crystal grants an awakening effect, each further one adds its synergy. It permanently gains 20 max HP for every crystallisation it completes. The first time you get a Steelix, gain 3 random weather rocks
+- Gooey Globules {{new}} | Gain a Sliggoo. When your STRONGEST Goomy is hit by an attack, it has a [50,LK]% chance to throw a blob at a random ADJACENT Pokémon. Enemies hit take TRUE equal to its DEF and lose 20 SPEED; allies hit heal 50 HP
 - Thunder and Lightning {{new}} | Gain a Toxel and move to a random Toxel region if not in one. The first time a Toxel evolves, also gain the other Toxtricity form, and both forms count towards your synergies. Each of your SOUND Pokémon casts Electrify on itself after its first ability of the fight
-- Windy Sands {{new}} | Gain a Hippopotas and add it to the pool. Your STRONGEST Hippopotas heals for 50% of the SANDSTORM_DAMAGE taken by enemies within 4 tiles. When it casts its ability, enemies caught in it are pulled 1 tile towards it
+- Windy Sands {{new}} | Gain a Hippopotas. Your STRONGEST Hippopotas heals for 50% of the SANDSTORM_DAMAGE taken by enemies within 4 tiles. When it casts its ability, enemies caught in it are pulled 1 tile towards it
 - Clangorous Soulblaze {{new}} | Gain a Jangmo-o and move to a random Jangmo-o region if not in one. Your STRONGEST Jangmo-o's ability only affects itself, but grants twice the stats. When it is KO'd, it passes the stats it gained this way to allies within its RANGE
 - Wicked Hunter {{new}} | Gain a Hisuian Sneasel and move to a random Hisuian Sneasel region if not in one. Your STRONGEST Hisuian Sneasel's ability inflicts all 3 statuses, and has a [10,LK]% chance per negative status the target already has to execute it. The stats your allies gain from MONSTER are increased by 10% for each negative status on the KO'd enemy, rounded down
 - Cyber Blade {{new}} | Gain a Honedge. After your STRONGEST Honedge casts King's Shield, its ability is replaced with Laser Blade and its max PP is set to 50
@@ -761,7 +780,7 @@ Every balance change on this server, newest first.
 - Croagunk's Aid | now also grants 10 GOLD, EXCHANGE_TICKET 3 → 2
 - Gold Kit | random component + 2 RECYCLE_TICKET → GOLD_DOJO_TICKET + 2 RECYCLE_TICKET
 - Golden Ticket | removed
-- Third Eye {{new}} | Silver Wish at stage 12: gain a Meditite and add it to the pool, Meditate is doubled under ZEN_ZONE
+- Third Eye {{new}} | Silver Wish at stage 12: gain a Meditite, Meditate is doubled under ZEN_ZONE
 - Meditite Line | loses its passive, Meditate is only doubled with the Third Eye Wish
 - Gym Trainer | one starter is locked until stage 9, like a Manifestation (the Epic, or the named Rare)
 - Heart Shield II | 8 → 10 HP per ally sharing a synergy

@@ -2250,7 +2250,7 @@ export default class BoardManager {
       scene: this.scene,
       x: SPECIAL_NPC_X,
       y: SPECIAL_NPC_Y,
-      name: this.state.whimsy ? Pkm.WHIMSICOTT : Pkm.SMEARGLE,
+      name: Pkm.SMEARGLE,
       orientation: Orientation.DOWNLEFT,
       dialog,
       dialogTitle: t(`scribble.${specialGameRule}`)

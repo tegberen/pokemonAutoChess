@@ -1,12 +1,6 @@
 import { useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { useAppSelector } from "../../../hooks"
-import {
-  getNextBlessingEventStart,
-  getNextScribbleWeekendStart,
-  isBlessingEvent,
-  isScribbleWeekend
-} from "../../../../../config"
 import { formatDate } from "../../utils/date"
 import "./calendar.css"
 
@@ -31,7 +25,7 @@ type CalendarEvent = {
   name: string
   description: string
   image: string
-  variant: "whimsy" | "jirachi" | "smeargle" | "doubleup"
+  variant: "smeargle" | "doubleup"
   start: Date
   showCountdown: boolean
 }
@@ -41,7 +35,7 @@ function CalendarEventCard(props: Omit<CalendarEvent, "id"> & {
 }) {
   const { t } = useTranslation()
   return (
-    <article className={`calendar-event-card ${props.variant}${props.variant === "whimsy" ? " whimsy-v2" : ""}`}>
+    <article className={`calendar-event-card ${props.variant}`}>
       {props.image && <img src={`assets/ui/${props.image}`} alt="" />}
       <div className="calendar-event-content">
         <div className="calendar-event-copy">
@@ -69,7 +63,6 @@ function CalendarEventCard(props: Omit<CalendarEvent, "id"> & {
 }
 
 export function Calendar() {
-  const { t } = useTranslation()
   const now = useCalendarNow()
   const tournament = useAppSelector((state) => state.lobby.eventNpc)
   const tournamentStart = tournament.tournamentDate
@@ -100,30 +93,6 @@ export function Calendar() {
         ? new Date(tournament.doubleUpDate)
         : new Date(),
       showCountdown: false
-    })
-  }
-
-  if (!isScribbleWeekend(now)) {
-    events.push({
-      id: "whimsy",
-      name: t("whimsy_weekend"),
-      description: t("whimsy_weekend_description"),
-      image: "",
-      variant: "whimsy",
-      start: getNextScribbleWeekendStart(now),
-      showCountdown: true
-    })
-  }
-
-  if (!isBlessingEvent(now)) {
-    events.push({
-      id: "jirachi",
-      name: "Wish Festival",
-      description: t("blessing_event_upcoming_description"),
-      image: "",
-      variant: "jirachi",
-      start: getNextBlessingEventStart(now),
-      showCountdown: true
     })
   }
 

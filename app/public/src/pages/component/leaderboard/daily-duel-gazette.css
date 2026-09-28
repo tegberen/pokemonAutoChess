@@ -4,19 +4,24 @@
 
   border: var(--newspaper-card-border-width) solid var(--daily-duel-gold-edge);
   background-clip: padding-box;
-  background-color: color-mix(
-    in srgb,
-    var(--color-bg-gold) 8%,
-    var(--color-blessing-card)
-  );
-  background-image:
-    linear-gradient(rgb(0 0 0 / 12%), rgb(0 0 0 / 12%)),
-    repeating-linear-gradient(
-      135deg,
-      color-mix(in srgb, var(--color-fg-gold) 26%, transparent) 0 16px,
-      color-mix(in srgb, var(--color-bg-gold) 26%, transparent) 16px 32px,
-      color-mix(in srgb, var(--color-rarity-legendary) 26%, transparent) 32px 48px
-    );
+  background-color: var(--daily-duel-bg);
+  background-image: var(--daily-duel-stripes);
+}
+
+/* the Wish cards' holo sweep (blessing-sheen, game-choice.css), like the
+   Daily Duel rooms */
+.newspaper-card.daily-duel-winner {
+  position: relative;
+  overflow: hidden;
+}
+
+.newspaper-card.daily-duel-winner::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: var(--holo-sheen);
+  animation: blessing-sheen 6s ease-in-out infinite;
 }
 
 .daily-duel-winner .newspaper-kicker,

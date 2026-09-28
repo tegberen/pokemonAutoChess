@@ -17,6 +17,56 @@
   --border-thin: 2px solid black;
   --border-extra-thin: 1px solid black;
   --shadow-clickable: #2d334b 2px 2px 0px;
+
+  /* the Daily Duel and tournament looks, shared by the lobby rooms, the
+     profile history, the Gazette and the preparation banner */
+  --daily-duel-bg: color-mix(in srgb, var(--color-bg-gold) 8%, var(--color-blessing-card));
+  --daily-duel-stripes:
+    linear-gradient(rgb(0 0 0 / 12%), rgb(0 0 0 / 12%)),
+    repeating-linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--color-fg-gold) 26%, transparent) 0 16px,
+      color-mix(in srgb, var(--color-bg-gold) 26%, transparent) 16px 32px,
+      color-mix(in srgb, var(--color-rarity-legendary) 26%, transparent) 32px 48px,
+      color-mix(
+          in srgb,
+          color-mix(in srgb, var(--color-bg-gold) 60%, white) 26%,
+          transparent
+        )
+        48px 64px
+    );
+  --tournament-bg: color-mix(in srgb, var(--color-rarity-epic) 8%, var(--color-blessing-card));
+  --tournament-stripes:
+    linear-gradient(rgb(0 0 0 / 12%), rgb(0 0 0 / 12%)),
+    repeating-linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--color-rarity-epic) 26%, transparent) 0 16px,
+      color-mix(in srgb, var(--color-rarity-special) 26%, transparent) 16px 32px,
+      color-mix(
+          in srgb,
+          color-mix(in srgb, var(--color-rarity-epic) 60%, black) 26%,
+          transparent
+        )
+        32px 48px,
+      color-mix(
+          in srgb,
+          color-mix(in srgb, var(--color-rarity-epic) 60%, white) 26%,
+          transparent
+        )
+        48px 64px
+    );
+  --tournament-glow:
+    drop-shadow(0 0 2px color-mix(in srgb, var(--color-rarity-epic) 85%, transparent))
+    drop-shadow(0 0 7px color-mix(in srgb, var(--color-rarity-epic) 50%, transparent));
+  /* the Wish cards' holo sweep band, run with the blessing-sheen animation */
+  --holo-sheen: linear-gradient(
+    105deg,
+    transparent 30%,
+    color-mix(in srgb, var(--color-fg-primary) 10%, transparent) 42%,
+    color-mix(in srgb, var(--color-fg-primary) 28%, transparent) 50%,
+    color-mix(in srgb, var(--color-fg-primary) 10%, transparent) 58%,
+    transparent 70%
+  );
 }
 
 *,
@@ -81,10 +131,36 @@ img {
   border-style: none;
 }
 
-/* the whimsy badge is opaque artwork, unlike the transparent mode icons it sits next to */
-img.gamemode.whimsy {
-  border-radius: 50%;
-  object-fit: cover;
+/* Daily Duel and tournament games: an event on top of Solo/Duo and the mode */
+.game-event-tag {
+  display: inline-block;
+  padding: 0.1em 0.6em;
+  border: 1px solid color-mix(in srgb, var(--color-fg-secondary) 45%, transparent);
+  border-radius: 0.5em;
+  font-size: 0.8em;
+  white-space: nowrap;
+  color: #ffffff;
+  /* solid, and warmed with the gold of the event rows it sits on */
+  background-color: color-mix(
+    in srgb,
+    var(--color-bg-gold) 30%,
+    var(--color-blessing-card)
+  );
+}
+
+/* Solo/Duo is the headline of a game, so its tag stands a tad taller than
+   the mode name beside it */
+.gamemode-badge {
+  display: inline-block;
+  padding: 0.25em 0.7em;
+  border-radius: 0.5em;
+  font-size: 1em;
+  font-weight: bold;
+  line-height: 1.1;
+  white-space: nowrap;
+  border: 1px solid color-mix(in srgb, var(--color-fg-secondary) 45%, transparent);
+  color: var(--color-fg-primary);
+  background-color: var(--color-bg-tertiary);
 }
 
 table {

@@ -49,6 +49,10 @@
   background-color: color-mix(in srgb, var(--color-bg-secondary) 55%, transparent);
 }
 
+.room-folder {
+  --room-folder-bg: color-mix(in srgb, var(--color-bg-secondary) 55%, transparent);
+}
+
 .react-tabs__tab--selected {
   background-color: var(--color-bg-secondary);
 }

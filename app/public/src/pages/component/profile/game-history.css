@@ -14,25 +14,17 @@
   align-items: center;
   gap: 0 0.5em;
   grid-template-areas:
-    "top elo syn team"
-    "date date items team"
-    ". . bless team";
-  grid-template-columns: 8ch 7ch 160px 1fr;
+    "meta syn team"
+    "meta items team"
+    "meta bless team";
+  grid-template-columns: 17ch 160px minmax(0, 1fr);
+  box-sizing: border-box;
   background-color: var(--color-bg-secondary);
-  margin: 0 0 0.5em 0;
+  /* leaves room for the list's scrollbar, which otherwise covers the team */
+  margin: 0 12px 0.5em 0;
   padding: 0.25em;
   justify-items: center;
   border: var(--border-thin);
-}
-
-/* With ELO hidden there is no badge, so drop its column instead of leaving a
-   gap before the synergies. Top and date take over its width */
-.game-history.my-box:not(:has(.elo)) {
-  grid-template-areas:
-    "top syn team"
-    "date items team"
-    ". bless team";
-  grid-template-columns: 15ch 160px 1fr;
 }
 
 .game-history .player-team-pokemons {
@@ -41,26 +33,145 @@
   grid-area: team;
   align-self: start;
   justify-self: start;
+  min-width: 0;
+  max-width: 100%;
 }
 
-.game-history .gamemode.icon {
-  width: 2em;
-  height: 2em;
-  border-radius: 50%;
+/* smaller portraits keep a full team on one line on narrower screens */
+@media (width <= 1600px) {
+  .game-history .player-team-pokemons {
+    gap: 6px;
+  }
+
+  .game-history .player-team-pokemons .pokemon-portrait {
+    width: 48px;
+    height: 48px;
+  }
+
+  .game-history .player-team-pokemons .pokemon-items {
+    top: 58px;
+  }
+
+  .game-history .player-team-pokemons .pokemon-items img {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+/* Daily Duel games wear the Daily Duel room's gold stripes */
+.game-history.my-box.event-game {
+  border: 1px solid #1b1d24;
+  background-color: var(--daily-duel-bg);
+  background-image: var(--daily-duel-stripes);
+  color: #ffffff;
+}
+
+/* tournament games match the lobby's tournament rooms: epic purple stripes
+   and a purple glow */
+.game-history.my-box.tournament-game {
+  background-color: var(--tournament-bg);
+  background-image: var(--tournament-stripes);
+  /* box-shadow, not the rooms' filter: a filter would trap the row's fixed
+     Wish tooltips inside it */
+  box-shadow:
+    0 0 2px color-mix(in srgb, var(--color-rarity-epic) 85%, transparent),
+    0 0 7px color-mix(in srgb, var(--color-rarity-epic) 50%, transparent);
+}
+
+/* the Wish cards' holo sweep (blessing-sheen, game-choice.css) on every
+   Daily Duel and tournament game */
+.game-history.event-game {
+  position: relative;
+  overflow: hidden;
+}
+
+.game-history.event-game::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: var(--holo-sheen);
+  animation: blessing-sheen 6s ease-in-out infinite;
+}
+
+.game-history.event-game .game-meta {
+  text-shadow: 1px 1px 2px #05090f;
+}
+
+/* result first, then what kind of game it was, then when */
+.game-history .game-meta {
+  grid-area: meta;
+  align-self: stretch;
+  justify-self: start;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.3em;
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+  padding-left: 0.5em;
 }
 
 .game-history .top {
-  grid-area: top;
+  font-size: 1.25em;
+  font-weight: bold;
+  line-height: 1.1;
+}
+
+.game-history .game-tags {
+  display: flex;
+  align-items: baseline;
+  gap: 0.3em;
+  min-width: 0;
+  max-width: 100%;
+}
+
+/* the Elo sits beside the result, so the row keeps one layout whether it
+   is shown or hidden */
+.game-history .result {
   display: flex;
   align-items: center;
-  gap: 0.25em;
+  gap: 0.5em;
 }
-.game-history .elo {
-  grid-area: elo;
+
+.game-history .result .elo.badge {
+  flex-basis: auto;
+  gap: 3px;
+  font-size: 0.85em;
+  color: var(--color-fg-secondary);
+}
+
+.game-history .result .elo.badge img {
+  width: 22px;
+  height: 22px;
+}
+
+.game-history .game-tags .gamemode-badge {
+  padding: 0;
+  border: none;
+  background: none;
+  font-size: 0.95em;
+}
+
+.game-history .game-modification img {
+  width: 1.1em;
+  height: 1.1em;
+  margin: 0 0.25em 0 0.3em;
+  vertical-align: -0.2em;
+}
+
+.game-history .game-modification {
+  min-width: 0;
+  font-size: 0.95em;
+  font-weight: bold;
+  color: var(--color-fg-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .game-history .date {
-  grid-area: date;
   color: var(--color-fg-secondary);
   font-size: 0.8em;
   margin: 0;
@@ -102,6 +213,7 @@
   flex-wrap: wrap;
   justify-self: center;
   gap: 2px;
+  margin-top: 6px;
 }
 
 .game-history .player-blessings .blessing-panel-icon {
@@ -113,11 +225,11 @@
 @media (width <= 640px) {
   .game-history.my-box {
     grid-template-areas:
-      "top elo date"
-      "syn syn syn"
-      "items items items"
-      "bless bless bless"
-      "team team team";
-    grid-template-columns: 5ch 7ch 1fr;
+      "meta"
+      "syn"
+      "items"
+      "bless"
+      "team";
+    grid-template-columns: 1fr;
   }
 }

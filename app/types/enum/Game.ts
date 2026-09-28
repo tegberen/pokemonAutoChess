@@ -27,6 +27,26 @@ export enum GameMode {
    in the room-creation menu, hence this request token. */
 export const WHIMSY_WEEKEND_REQUEST = "WHIMSY_WEEKEND"
 
+// a Solo or Duo room plays exactly one of these; SCRIBBLE rolls a random rule
+// through the `whimsy` flag unless the owner pins one as the special game rule
+export enum GameModification {
+  CLASSIC = "CLASSIC",
+  WISHES = "WISHES",
+  SCRIBBLE = "SCRIBBLE"
+}
+
+export function getGameModification(room: {
+  blessingsEnabled: boolean
+  whimsy: boolean
+  specialGameRule: unknown
+}): GameModification {
+  if (room.blessingsEnabled) return GameModification.WISHES
+  if (room.whimsy || room.specialGameRule != null) {
+    return GameModification.SCRIBBLE
+  }
+  return GameModification.CLASSIC
+}
+
 /* Guide is the only mode that needs a parameter to open a room, so its request
    is an object rather than a bare mode token. */
 export type GuideRoomRequest = { gameMode: GameMode.GUIDE; synergy: Synergy }

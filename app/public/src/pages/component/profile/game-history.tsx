@@ -23,6 +23,8 @@ import { formatDate } from "../../utils/date"
 import Team from "../after/team"
 import { GamePokemonDetailTooltip } from "../game/game-pokemon-detail"
 import { GameModeIcon } from "../icons/game-mode-icon"
+import { GameModificationIcon } from "../preparation/game-modification-banner"
+import { getGameModification } from "../../../../../types/enum/Game"
 import SynergyIcon from "../icons/synergy-icon"
 import {
   BlessingIcon,
@@ -157,15 +159,48 @@ function GameHistoryRow({
 } & HistoryRowData): React.ReactElement | null {
   const r = gameHistory[index]
   const { t } = useTranslation()
+  // Wishes games are recognised by the Wishes picked, since records do not
+  // keep the room's settings; the rule was only stored from this update on
+  const modification = getGameModification({
+    blessingsEnabled: (r.blessings?.length ?? 0) > 0,
+    whimsy: r.whimsy ?? false,
+    specialGameRule: r.specialGameRule || null
+  })
+  const modificationLabel = r.specialGameRule
+    ? t(`scribble.${r.specialGameRule}`)
+    : t(`game_modification.${modification}`)
+  const eventTag = r.dailyDuel
+    ? t("game_event_tag.DAILY_DUEL")
+    : r.tournament
+      ? t("game_event_tag.TOURNAMENT")
+      : null
 
   return (
     <div style={style}>
-      <div className="my-box game-history">
-        <span className="top">
-          <GameModeIcon gameMode={r.gameMode} whimsy={r.whimsy} />
-          {t("top")} {r.rank}
-        </span>
-        <EloBadge elo={r.elo} />
+      <div
+        className={`my-box game-history${eventTag ? " event-game" : ""}${r.tournament ? " tournament-game" : ""}`}
+      >
+        <div className="game-meta">
+          <span className="result">
+            <span className="top">
+              {t("top")} {r.rank}
+            </span>
+            <EloBadge elo={r.elo} />
+          </span>
+          <span className="game-tags">
+            <GameModeIcon gameMode={r.gameMode} />
+            <span className="game-modification" title={modificationLabel}>
+              ·
+              <img
+                src={GameModificationIcon[modification]}
+                alt=""
+                aria-hidden="true"
+              />
+              {modificationLabel}
+            </span>
+          </span>
+          <p className="date">{formatDate(r.time)}</p>
+        </div>
         <ul className="synergies">
           {getTopSynergies(r.pokemons).map(([type, value]) => (
             <li key={r.time + type}>
@@ -174,7 +209,6 @@ function GameHistoryRow({
             </li>
           ))}
         </ul>
-        <p className="date">{formatDate(r.time)}</p>
         <Team team={r.pokemons}></Team>
         <div className="player-items">
           {r.unholdableItems.map((item, i) => (

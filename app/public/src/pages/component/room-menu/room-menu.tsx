@@ -9,7 +9,6 @@ import { block, throttle } from "../../../../../utils/function"
 import { joinExistingPreparationRoom } from "../../../game/lobby-logic"
 import { useAppDispatch, useAppSelector } from "../../../hooks"
 import { rooms } from "../../../network"
-import { GameModeIcon } from "../icons/game-mode-icon"
 import { IngameRoomsList } from "./game-rooms-menu"
 import RoomItem from "./room-item"
 import { DailyDuelCountdown } from "./daily-duel-countdown"
@@ -82,11 +81,8 @@ export default function RoomMenu() {
   const hasTournamentLobbies = gameRooms.some((r) => r.metadata.tournamentId)
   const hasDoubleUpLobbies = gameRooms.some(
     (r) =>
-      r.metadata.gameMode === GameMode.DOUBLE_UP &&
-      !r.metadata.whimsy &&
-      !r.metadata.tournamentId
+      r.metadata.gameMode === GameMode.DOUBLE_UP && !r.metadata.tournamentId
   )
-  const hasWhimsyLobbies = gameRooms.some((r) => r.metadata.whimsy)
   const hasCustomLobbies = gameRooms.some(
     (r) => r.metadata.gameMode === GameMode.CUSTOM_LOBBY
   )
@@ -107,26 +103,17 @@ export default function RoomMenu() {
 
         {hasTournamentLobbies && (
           <Tab>
-            <GameModeIcon gameMode={GameMode.TOURNAMENT} />
             <span>{t(`game_modes.${GameMode.TOURNAMENT}`)}</span>
           </Tab>
         )}
         {hasDoubleUpLobbies && (
           <Tab>
-            <GameModeIcon gameMode={GameMode.DOUBLE_UP} />
-            <span>{t(`game_modes.${GameMode.DOUBLE_UP}`)}</span>
-          </Tab>
-        )}
-        {hasWhimsyLobbies && (
-          <Tab>
-            <GameModeIcon gameMode={GameMode.DOUBLE_UP} whimsy />
-            <span>{t("whimsy_weekend")}</span>
+            <span>{t("new_game_duo")}</span>
           </Tab>
         )}
         {hasCustomLobbies && (
           <Tab>
-            <GameModeIcon gameMode={GameMode.CUSTOM_LOBBY} />
-            <span>{t(`game_modes.${GameMode.CUSTOM_LOBBY}`)}</span>
+            <span>{t("new_game_solo")}</span>
           </Tab>
         )}
       </TabList>
@@ -146,16 +133,7 @@ export default function RoomMenu() {
       )}
       {hasDoubleUpLobbies && (
         <TabPanel>
-          <IngameRoomsList
-            gameMode={GameMode.DOUBLE_UP}
-            whimsy={false}
-            tournament={false}
-          />
-        </TabPanel>
-      )}
-      {hasWhimsyLobbies && (
-        <TabPanel>
-          <IngameRoomsList whimsy={true} />
+          <IngameRoomsList gameMode={GameMode.DOUBLE_UP} tournament={false} />
         </TabPanel>
       )}
       {hasCustomLobbies && (
