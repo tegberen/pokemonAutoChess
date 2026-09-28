@@ -4689,7 +4689,7 @@
 		"bazaar": "Bazaar",
 		"whimsicott": "Whimsicott",
 		"ikebana": "Ikebana",
-		"wishfestival": "Wish Festival",
+		"wishfestival": "Starry",
 		"hot": "Arcanine's Blaze",
 		"embersofthepast": "Embers of the Past",
 		"wailord": "Wailord's World",
@@ -7658,7 +7658,8 @@
 			"family_GYM_TRAINER_name": "Gym Trainers",
 			"family_GYM_TRAINER_hint": "Gain two Pokémon sharing a pair of synergies, and a guaranteed Unique of that pair in your Unique selection.",
 			"combos_hint": "At stage 12, a Combo is only offered if you own a Unique with one of its two synergies, on your board or bench.",
-			"synergy_hint": "At stage 12, these are only offered if their synergy is active."
+			"synergy_hint": "At stage 12, these are only offered if their synergy is active.",
+			"hero_hint": "At stage 12, a hero Wish is only offered if one of its hero's synergies is active, or you own a Unique sharing one of the synergies. At most 2 hero Wishes appear per wish selection."
 		}
 	},
 	"errors": {

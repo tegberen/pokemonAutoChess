@@ -7,6 +7,40 @@
   --border-thick: 2px solid #1a231a;
   --border-thin: 1px solid #1a231a;
   --border-extra-thin: 1px solid #1a231a;
+
+  /* button gradients: sunny cream eases into fresh leaf green, angled so
+     short buttons do not read as two halves; Ready ✓ runs into a livelier
+     green */
+  --theme-button: linear-gradient(
+    105deg,
+    #f4e0a8 0%,
+    #e9dc95 45%,
+    #cdd683 75%,
+    #aecb74 100%
+  );
+  --theme-button-hover: linear-gradient(
+    105deg,
+    #f8e9c0 0%,
+    #f0e6ae 45%,
+    #d9e09c 75%,
+    #bfd68e 100%
+  );
+  --theme-ready: linear-gradient(
+    105deg,
+    #f4e0a8 0%,
+    #cfd982 45%,
+    #9cc668 75%,
+    #72b25a 100%
+  );
+  --theme-ready-hover: linear-gradient(
+    105deg,
+    #f8e9c0 0%,
+    #dae39a 45%,
+    #aed282 75%,
+    #88c070 100%
+  );
+  --theme-button-text: #2b3a2c;
+  --theme-button-text-shadow: none;
 }
 
 .custom-bg {
@@ -60,18 +94,4 @@
 
 .scales-ap .ability-value {
   color: #cfe3b4;
-}
-
-/* New Game button — wicker cream on the garden palette, same bubbly style */
-.lobby .play-button.bubbly.green {
-  background: #d9c9a3;
-  color: #2b3a2c;
-  box-shadow: inset -6px -6px 0px 0px #b3a37c, var(--shadow-clickable);
-}
-.lobby .play-button.bubbly.green:not([disabled]):hover {
-  background: #e7dabb;
-}
-.lobby .play-button.bubbly.green:not([disabled]):active {
-  background: #d9c9a3;
-  box-shadow: inset 6px 6px 0px 0px #b3a37c, var(--shadow-clickable);
 }

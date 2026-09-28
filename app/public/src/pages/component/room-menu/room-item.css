@@ -114,6 +114,22 @@
   height: 1.5em;
 }
 
+.room-folder > .room-item .hp-badge {
+  flex: none;
+  font-size: 1.1em;
+  font-weight: bold;
+}
+
+/* the lock joins the buttons on the right, taking over the push to the
+   right edge from the first button */
+.room-folder > .room-item > .lock {
+  margin-left: auto;
+}
+
+.room-folder > .room-item > .lock ~ button:first-of-type {
+  margin-left: 0;
+}
+
 .room-folder > .room-item .room-info {
   flex: none;
   font-size: 1.1em;

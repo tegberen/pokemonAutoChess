@@ -149,7 +149,8 @@ img {
 }
 
 /* Solo/Duo is the headline of a game, so its tag stands a tad taller than
-   the mode name beside it */
+   the mode name beside it. Same fill as a panel's title bar, like Battle
+   Stats */
 .gamemode-badge {
   display: inline-block;
   padding: 0.25em 0.7em;
@@ -158,9 +159,9 @@ img {
   font-weight: bold;
   line-height: 1.1;
   white-space: nowrap;
-  border: 1px solid color-mix(in srgb, var(--color-fg-secondary) 45%, transparent);
+  border: var(--border-thin);
   color: var(--color-fg-primary);
-  background-color: var(--color-bg-tertiary);
+  background-color: var(--color-bg-secondary);
 }
 
 table {

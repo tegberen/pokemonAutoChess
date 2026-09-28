@@ -7,6 +7,14 @@
   --border-thick: 2px solid #232c29;
   --border-thin: 1px solid #232c29;
   --border-extra-thin: 1px solid #232c29;
+
+  /* buttons stay flat: the accent, and green once Ready ✓ */
+  --theme-button: var(--color-bg-accent);
+  --theme-button-hover: color-mix(in srgb, var(--color-bg-accent) 80%, white);
+  --theme-ready: #8fc27e;
+  --theme-ready-hover: #a3cf94;
+  --theme-button-text: #232c29;
+  --theme-button-text-shadow: none;
 }
 
 .custom-bg {

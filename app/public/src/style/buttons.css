@@ -219,3 +219,58 @@ button {
     transform: rotate(1turn);
   }
 }
+
+/* Themed buttons: a theme that defines --theme-button repaints the main
+   action buttons with it, New Game, every preparation room button and the
+   room lists' Join / Reconnect / Spectate. A confirmed Ready ✓ takes
+   --theme-ready. theme.ts sets data-themed-buttons once such a theme loaded */
+:root[data-themed-buttons] .lobby .play-button.bubbly.green,
+:root[data-themed-buttons] .preparation-page .bubbly.orange,
+:root[data-themed-buttons] .preparation-page .bubbly.green,
+:root[data-themed-buttons] .preparation-page .bubbly.blue,
+:root[data-themed-buttons] .room-item > .bubbly.orange,
+:root[data-themed-buttons] .room-item > .bubbly.green,
+:root[data-themed-buttons] .room-item > .bubbly.blue {
+  background: var(--theme-button);
+  color: var(--theme-button-text);
+  text-shadow: var(--theme-button-text-shadow);
+  box-shadow:
+    inset -6px -6px 0px 0px #00000040,
+    var(--shadow-clickable);
+}
+
+:root[data-themed-buttons] .lobby .play-button.bubbly.green:not([disabled]):hover,
+:root[data-themed-buttons] .preparation-page .bubbly.orange:not([disabled]):hover,
+:root[data-themed-buttons] .preparation-page .bubbly.green:not([disabled]):hover,
+:root[data-themed-buttons] .preparation-page .bubbly.blue:not([disabled]):hover,
+:root[data-themed-buttons] .room-item > .bubbly.orange:not([disabled]):hover,
+:root[data-themed-buttons] .room-item > .bubbly.green:not([disabled]):hover,
+:root[data-themed-buttons] .room-item > .bubbly.blue:not([disabled]):hover {
+  background: var(--theme-button-hover);
+}
+
+:root[data-themed-buttons] .lobby .play-button.bubbly.green:not([disabled]):active,
+:root[data-themed-buttons] .preparation-page .bubbly.orange:not([disabled]):active,
+:root[data-themed-buttons] .preparation-page .bubbly.green:not([disabled]):active,
+:root[data-themed-buttons] .preparation-page .bubbly.blue:not([disabled]):active,
+:root[data-themed-buttons] .room-item > .bubbly.orange:not([disabled]):active,
+:root[data-themed-buttons] .room-item > .bubbly.green:not([disabled]):active,
+:root[data-themed-buttons] .room-item > .bubbly.blue:not([disabled]):active {
+  background: var(--theme-button);
+  box-shadow:
+    inset 6px 6px 0px 0px #00000040,
+    var(--shadow-clickable);
+}
+
+:root[data-themed-buttons] .preparation-page .ready-button.bubbly.green,
+:root[data-themed-buttons]
+  .preparation-page
+  .ready-button.bubbly.green:not([disabled]):active {
+  background: var(--theme-ready);
+}
+
+:root[data-themed-buttons]
+  .preparation-page
+  .ready-button.bubbly.green:not([disabled]):hover {
+  background: var(--theme-ready-hover);
+}

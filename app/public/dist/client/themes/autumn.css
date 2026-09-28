@@ -3,6 +3,14 @@
   --color-bg-secondary: #3a3536;
   --color-bg-tertiary: #613b38;
   --color-bg-accent: #b37b4d;
+
+  /* buttons stay flat: the accent, and green once Ready ✓ */
+  --theme-button: var(--color-bg-accent);
+  --theme-button-hover: color-mix(in srgb, var(--color-bg-accent) 80%, white);
+  --theme-ready: #8fc27e;
+  --theme-ready-hover: #a3cf94;
+  --theme-button-text: #1b1b1b;
+  --theme-button-text-shadow: none;
 }
 
 .custom-bg {

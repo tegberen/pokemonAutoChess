@@ -829,12 +829,6 @@ export class OnChangeGameModificationCommand extends Command<
         this.room.setName(this.state.name)
       }
 
-      this.room.state.addMessage({
-        author: "Server",
-        authorId: "server",
-        payload: `This game is now played as ${modification.toLowerCase()}. Players need to ready again.`,
-        avatar: user?.avatar
-      })
       this.state.users.forEach((user) => {
         if (!user.isBot) user.ready = false
       })

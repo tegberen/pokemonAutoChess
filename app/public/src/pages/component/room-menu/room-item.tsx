@@ -150,9 +150,10 @@ export default function RoomItem(props: {
         "event-folder": isTournament,
         "tournament-folder": isTournament
       })}
+      title={title}
     >
       <div className="room-folder-header">
-        <div className="room-folder-tab" title={title}>
+        <div className="room-folder-tab">
           {metadata?.gameMode && <GameModeIcon gameMode={metadata.gameMode} />}
         </div>
         <div className="room-mode">
@@ -173,10 +174,7 @@ export default function RoomItem(props: {
           </span>
         </div>
       </div>
-      <div
-        className={cc("room-item my-box", { "daily-duel": isTournament })}
-        title={metadata?.name}
-      >
+      <div className={cc("room-item my-box", { "daily-duel": isTournament })}>
         {isTournament && (
           <img
             alt=""
@@ -188,7 +186,8 @@ export default function RoomItem(props: {
         <span className="room-info">
           {props.room.clients}/{nbPlayersExpected}
         </span>
-        {metadata?.gameMode === GameMode.CUSTOM_LOBBY &&
+        {(metadata?.gameMode === GameMode.CUSTOM_LOBBY ||
+          metadata?.gameMode === GameMode.DOUBLE_UP) &&
           metadata?.scribbleExtended && (
             <span className="hp-badge" title={t("player_hp")}>
               150 HP

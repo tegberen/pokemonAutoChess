@@ -412,7 +412,7 @@ export default function WikiBlessings() {
       <p className="wiki-blessings-intro">{t("wiki.blessings.intro")}</p>
 
       <p className="wiki-blessings-wish-quote">
-        <img src="assets/ui/blessing_event_icon.jpg" alt="" />
+        <img src="assets/ui/game_modes/wishes_icon.svg" alt="" />
         <span>{t("wiki.blessings.wish_quote")}</span>
       </p>
 
@@ -553,6 +553,9 @@ export default function WikiBlessings() {
                   </h3>
                   {category === "synergy" && (
                     <p>{t("wiki.blessings.synergy_hint")}</p>
+                  )}
+                  {category === "hero" && (
+                    <p>{t("wiki.blessings.hero_hint")}</p>
                   )}
                   <ul className="wiki-blessings-list">
                     {category === "synergy" &&

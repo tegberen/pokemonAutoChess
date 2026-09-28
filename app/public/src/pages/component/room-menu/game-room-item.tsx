@@ -52,8 +52,9 @@ ${metadata?.ownerName ? "Owner: " + metadata.ownerName : ""}\n${metadata?.player
         "event-folder": isEvent,
         "tournament-folder": isTournament
       })}
+      title={title}
     >
-      <div className="room-folder-header" title={title}>
+      <div className="room-folder-header">
         <div className="room-folder-tab">
           {metadata?.gameMode && <GameModeIcon gameMode={metadata.gameMode} />}
         </div>

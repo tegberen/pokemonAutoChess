@@ -124,7 +124,7 @@ export function GameScribbleSketchbookIcon() {
       className="my-box scribble-sketchbook-icon"
       data-tooltip-id="game-scribble-sketchbook"
     >
-      <img src="assets/ui/scribble.png" draggable="false" />
+      <img src="assets/ui/game_modes/scribble_icon.svg" draggable="false" />
       <span>
         {spectatedPlayer.scribbleShapesCollected.length}/{ALL_SHAPES.length}
       </span>

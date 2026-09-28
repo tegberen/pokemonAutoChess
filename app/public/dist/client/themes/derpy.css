@@ -7,6 +7,14 @@
   --border-thick: 2px solid #12222d;
   --border-thin: 1px solid #12222d;
   --border-extra-thin: 1px solid #12222d;
+
+  /* buttons stay flat: cheek-spike yellow, and green once Ready ✓ */
+  --theme-button: #f4c14a;
+  --theme-button-hover: #f8d27a;
+  --theme-ready: #8fc27e;
+  --theme-ready-hover: #a3cf94;
+  --theme-button-text: #12222d;
+  --theme-button-text-shadow: none;
 }
 
 /* Same three layer trick the hot theme uses. The artwork is a close-up at
@@ -73,18 +81,4 @@
 
 .scales-ap .ability-value {
   color: #8fd3ea;
-}
-
-/* New Game button — cheek-spike yellow on the pond palette, same bubbly style */
-.lobby .play-button.bubbly.green {
-  background: #f4c14a;
-  color: #12222d;
-  box-shadow: inset -6px -6px 0px 0px #c89932, var(--shadow-clickable);
-}
-.lobby .play-button.bubbly.green:not([disabled]):hover {
-  background: #f8d27a;
-}
-.lobby .play-button.bubbly.green:not([disabled]):active {
-  background: #f4c14a;
-  box-shadow: inset 6px 6px 0px 0px #c89932, var(--shadow-clickable);
 }

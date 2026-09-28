@@ -7,6 +7,40 @@
   --border-thick: 2px solid #151a23;
   --border-thin: 1px solid #151a23;
   --border-extra-thin: 1px solid #151a23;
+
+  /* button gradients: lightning yellow holds most of the button, then eases
+     through olive into storm grey (or Rayquaza green once ready), angled so
+     short buttons do not read as two halves */
+  --theme-button: linear-gradient(
+    105deg,
+    #cbd05c 0%,
+    #bec565 45%,
+    #a3ab76 75%,
+    #8f9a88 100%
+  );
+  --theme-button-hover: linear-gradient(
+    105deg,
+    #d8dc78 0%,
+    #cbd180 45%,
+    #b2ba8c 75%,
+    #a0aa9a 100%
+  );
+  --theme-ready: linear-gradient(
+    105deg,
+    #cbd05c 0%,
+    #b5c560 45%,
+    #8db564 75%,
+    #6fa266 100%
+  );
+  --theme-ready-hover: linear-gradient(
+    105deg,
+    #d8dc78 0%,
+    #c3d27a 45%,
+    #9fc47c 75%,
+    #83b27c 100%
+  );
+  --theme-button-text: #151a23;
+  --theme-button-text-shadow: none;
 }
 
 .custom-bg {
@@ -19,21 +53,40 @@
   text-shadow: 0px 3px 6px black;
 }
 
-.scales-ap .ability-value {
-  color: #bfc560;
+/* See-through onto the storm, like duelist, but without the blur so the art
+   stays sharp instead of frosting over; the dark slate tint keeps text legible */
+.draggable-window.my-container,
+.game-shop .information > div,
+#game-stage-info,
+.game-spectate-player-info.my-container,
+.team-builder-modal.my-container,
+.game-shop.my-container {
+  background-color: color-mix(in srgb, var(--color-bg-primary) 60%, transparent);
 }
 
-/* New Game button — the theme's olive accent, same bubbly style */
-.lobby .play-button.bubbly.green {
-  background: #bfc560;
-  color: #151a23;
-  text-shadow: none;
-  box-shadow: inset -6px -6px 0px 0px #8f9440, var(--shadow-clickable);
+.after-menu .my-container,
+.leaderboard .my-container,
+.room-menu.my-container,
+.events-menu .my-container {
+  background-color: color-mix(in srgb, var(--color-bg-primary) 50%, transparent);
 }
-.lobby .play-button.bubbly.green:not([disabled]):hover {
-  background: #cfd47c;
+
+.leaderboard [data-react-window-index]:nth-child(odd) .my-box {
+  background: color-mix(in srgb, var(--color-bg-secondary) 65%, transparent);
 }
-.lobby .play-button.bubbly.green:not([disabled]):active {
-  background: #bfc560;
-  box-shadow: inset 6px 6px 0px 0px #8f9440, var(--shadow-clickable);
+
+.leaderboard [data-react-window-index]:nth-child(even) .my-box {
+  background: color-mix(in srgb, var(--color-bg-tertiary) 55%, transparent);
+}
+
+.newspaper-card.my-box {
+  background-color: color-mix(in srgb, var(--color-bg-secondary) 65%, transparent);
+}
+
+.room-folder {
+  --room-folder-bg: color-mix(in srgb, var(--color-bg-secondary) 65%, transparent);
+}
+
+.scales-ap .ability-value {
+  color: #bfc560;
 }

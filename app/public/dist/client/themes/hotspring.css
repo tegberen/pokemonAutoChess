@@ -7,6 +7,14 @@
   --border-thick: 2px solid #19221f;
   --border-thin: 1px solid #19221f;
   --border-extra-thin: 1px solid #19221f;
+
+  /* buttons stay flat: sunlit gold, and spring green once Ready ✓ */
+  --theme-button: #f6c85a;
+  --theme-button-hover: #fad67f;
+  --theme-ready: #8fc27e;
+  --theme-ready-hover: #a3cf94;
+  --theme-button-text: #19221f;
+  --theme-button-text-shadow: none;
 }
 
 .custom-bg {

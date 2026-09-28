@@ -560,8 +560,9 @@ Every balance change on this server, newest first.
 
 **Interface**
 - Wish cosmetic marker {{new}} | a small wand icon in the corner of a Wish card means winning with it unlocks an avatar cosmetic you do not have yet
-- Open Rooms and In Game | revamped room cards, with events standing out
+- Lobby | revamped Lobby UI
 - Profile | revamped game history, each game reads Format · Game Mode · Event
+- Themes | revamped and cleaned up
 
 ### 26 September 2026
 
