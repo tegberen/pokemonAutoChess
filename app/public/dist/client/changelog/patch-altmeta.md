@@ -511,9 +511,16 @@ Every balance change on this server, newest first.
 - Evolve Bundle | if nothing can evolve, gives a SILVER_DOJO_TICKET instead of a stat boost
 - Gift selection | +10 seconds to choose. If no gift is chosen in time, nothing is gifted and that gift is lost
 
+**Pokémon**
+- Houndour / Houndoom / Mega Houndoom | DEF [6/10/10] → [3/5/5], SPE_DEF [10/14/14] → [5/7/7]
+
+**Synergies**
+- POISON (5) | no longer ruptures on KO, only POISON (7) does, to cut some midgame tempo
+
 **Wishes**
 - Scorching Tome | damage bonus against BURN or WOUND 40% → 30%
-- Molecular Corrosion | your POISONNED only ignores RUNE_PROTECT after 12 seconds
+- Spooky Scarecrow | Gold → Prismatic, stage 12 only. Summoned allies being KO'd no longer trigger it
+- Molecular Corrosion | damage taken by POISONNED enemies 20% → 30%, your POISONNED only ignores RUNE_PROTECT after 12 seconds
 
 **Abilities**
 - Lurantis | Solar Blade's CONE reaches as far as its RANGE, each tile further away takes 50% less than the one before
@@ -521,6 +528,7 @@ Every balance change on this server, newest first.
 **Fixes**
 - Baby Opener | in Double Up the HP gained per egg now heals the team
 - Victory scene | GROUND holes no longer show up on it
+- Dreepy Deployment / Galvanic Rain | no longer add their Pokémon to every player's shop pool, since they are regional
 
 **Interface**
 - Avatar cosmetics {{new}} | added Rainbow Trail, Autumn Leaves Trail

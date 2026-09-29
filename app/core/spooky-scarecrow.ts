@@ -17,7 +17,7 @@ export function summonSpookyScarecrowMurkrows(
   fallen: PokemonEntity,
   board: Board
 ) {
-  if (summonedMurkrows.has(fallen)) return
+  if (summonedMurkrows.has(fallen) || fallen.isSpawn) return
 
   if (fallen.heroBlessings.has(Blessing.SPOOKY_SCARECROW)) {
     for (let i = 0; i < SPOOKY_SCARECROW_MURKROWS_ON_OWN_KO; i++) {

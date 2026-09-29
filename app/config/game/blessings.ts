@@ -2052,8 +2052,8 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     grantsPokemonImmediately: true
   },
   [Blessing.SPOOKY_SCARECROW]: {
-    tier: BlessingTier.GOLD,
-    availableAtStages: BLESSING_SELECTION_STAGES,
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: [12],
     icon: "spooky_scarecrow",
     grantsPokemonImmediately: true
   },

@@ -9887,8 +9887,8 @@ export class Houndour extends Pokemon {
   hp = 80
   atk = 7
   speed = 55
-  def = 6
-  speDef = 10
+  def = 3
+  speDef = 5
   maxPP = 140
   range = 1
   skill = Ability.BEAT_UP
@@ -9905,8 +9905,8 @@ export class Houndoom extends Pokemon {
   hp = 160
   atk = 20
   speed = 55
-  def = 10
-  speDef = 14
+  def = 5
+  speDef = 7
   maxPP = 140
   range = 1
   skill = Ability.BEAT_UP
@@ -9921,8 +9921,8 @@ export class MegaHoundoom extends Pokemon {
   hp = 180
   atk = 20
   speed = 57
-  def = 10
-  speDef = 14
+  def = 5
+  speDef = 7
   maxPP = 140
   range = 1
   skill = Ability.BEAT_UP

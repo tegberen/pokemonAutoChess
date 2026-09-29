@@ -2637,8 +2637,8 @@
 		"DRILLER": "Gain from +3 to +15 DEF and SPE_DEF and +8 ATK at max depth",
 		"DEEP_MINER": "Gain 5 extra DEF and SPE_DEF for each fully dug row and +8 ATK when your half of the board is fully dug",
 		"POISONOUS": "[30,LK]% chance to POISONNED ON_HIT.",
-		"VENOMOUS": "[60,LK]% chance to POISONNED ON_HIT, +1 max POISONNED stacks. +3 PP ON_ATTACK. On KO, rupture for 60% of remaining PP as SPECIAL",
-		"TOXIC": "[100,LK]% chance to POISONNED ON_HIT, +2 max POISONNED stacks. +5 PP ON_ATTACK. On KO, rupture for 100% of remaining PP as SPECIAL",
+		"VENOMOUS": "[60,LK]% chance to POISONNED ON_HIT, +1 max POISONNED stacks. +3 PP ON_ATTACK.",
+		"TOXIC": "[100,LK]% chance to POISONNED ON_HIT, +2 max POISONNED stacks. +5 PP ON_ATTACK. On KO, rupture for 100% of remaining PP as SPECIAL.",
 		"DRAGON_ENERGY": "Dragon's second synergy counts double (not the third)",
 		"DRAGON_SCALES": "Dragons gain 5 SHIELD for each STAR of all your DRAGON units on board",
 		"DRAGON_DANCE": "Dragons gain 1 SPEED and 1 AP for each STAR of all your DRAGON units on board",
@@ -5988,7 +5988,7 @@
 		},
 		"MOLECULAR_CORROSION": {
 			"name": "Molecular Corrosion",
-			"description": "Enemy Pokémon under POISONNED take 20% more damage from all sources. After 12s your POISONNED can no longer be blocked by RUNE_PROTECT. Gain a Spinarak."
+			"description": "Enemy Pokémon under POISONNED take 30% more damage from all sources. After 12s your POISONNED can no longer be blocked by RUNE_PROTECT. Gain a Spinarak."
 		},
 		"UNISON": {
 			"name": "Unison",
@@ -6456,7 +6456,7 @@
 		},
 		"SPOOKY_SCARECROW": {
 			"name": "Spooky Scarecrow",
-			"description": "Gain a Cacnea. Your STRONGEST Cacnea cannot move or attack, and its ability is replaced with Spiky Shield. Each time an ally is KO'd, it gains 5 DEF and summons a Murkrow with full PP. When it is KO'd itself, it summons 3 Murkrow instead."
+			"description": "Gain a Cacnea. Your STRONGEST Cacnea cannot move or attack, and its ability is replaced with Spiky Shield. Each time an ally that was not summoned is KO'd, it gains 5 DEF and summons a Murkrow with full PP. When it is KO'd itself, it summons 3 Murkrow instead."
 		},
 		"BONEMERANG_RANGER": {
 			"name": "Bonemerang Ranger",
