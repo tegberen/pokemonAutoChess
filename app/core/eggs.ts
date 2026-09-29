@@ -3,6 +3,7 @@ import type { Egg } from "../models/colyseus-models/pokemon"
 import PokemonFactory from "../models/pokemon-factory"
 import { getPokemonData } from "../models/precomputed/precomputed-pokemon-data"
 import { PRECOMPUTED_POKEMONS_PER_RARITY } from "../models/precomputed/precomputed-rarity"
+import type GameState from "../rooms/states/game-state"
 import {
   BABY_OPENER_LIFE_PER_EGG,
   Blessing
@@ -12,6 +13,7 @@ import { Pkm } from "../types/enum/Pokemon"
 import { getFirstAvailablePositionInBench,
   getBenchSize
 } from "../utils/board"
+import { healPlayerLife } from "../utils/player-life"
 import { pickRandomIn } from "../utils/random"
 import { getHatchTime } from "./evolution-logic/hatch-time"
 
@@ -38,7 +40,11 @@ export function createRandomEgg(player: Player, shiny: boolean): Egg {
   return egg as Egg
 }
 
-export function giveRandomEgg(player: Player, shiny = false): Egg | undefined {
+export function giveRandomEgg(
+  player: Player,
+  shiny: boolean,
+  state: GameState
+): Egg | undefined {
   const egg = createRandomEgg(player, shiny)
 
   const x = getFirstAvailablePositionInBench(player.board, getBenchSize(player.blessings))
@@ -48,10 +54,7 @@ export function giveRandomEgg(player: Player, shiny = false): Egg | undefined {
     player.board.set(egg.id, egg)
     player.pokemonsPlayed.add(Pkm.EGG)
     if (player.blessings?.includes(Blessing.BABY_OPENER)) {
-      player.life = Math.min(
-        player.maxLife,
-        player.life + BABY_OPENER_LIFE_PER_EGG
-      )
+      healPlayerLife(player, BABY_OPENER_LIFE_PER_EGG, state)
     }
     return egg
   }

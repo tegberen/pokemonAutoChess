@@ -1914,7 +1914,7 @@ export default class GameRoom extends Room<{ state: GameState }> {
       const giftEffect = armoryGiftService[gift]
 
       // Process each gift - each armory option has its corresponding function to trigger
-      const res = giftEffect?.(partner, player);
+      const res = giftEffect?.(partner, player, this.state);
 
       if (!res) return
       player.doubleUpGifts.push(gift)

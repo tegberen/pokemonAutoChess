@@ -34,7 +34,11 @@ export class EggBombStrategy extends AbilityStrategy {
             pokemon.player &&
             chance(0.25, pokemon)
           ) {
-            const egg = giveRandomEgg(pokemon.player, false)
+            const egg = giveRandomEgg(
+              pokemon.player,
+              false,
+              pokemon.simulation.room.state
+            )
             if (egg) {
               egg.stacks = getHatchTime(egg, pokemon.player) - 1
             }

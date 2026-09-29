@@ -2240,7 +2240,8 @@ export const blessingScheduledEffectService: {
   [Blessing.TRANSFORM]: (player) =>
     giftPokemonIfBenchHasRoom(player, Pkm.DITTO),
 
-  [Blessing.BABYLESS]: (player) => giveRandomEgg(player, true) != null,
+  [Blessing.BABYLESS]: (player, state) =>
+    giveRandomEgg(player, true, state) != null,
 
   [Blessing.HEATRANS_SONG]: (player) =>
     grantSongReinforcement(player, Blessing.HEATRANS_SONG),
@@ -2610,14 +2611,14 @@ export const blessingEffectService: {
       BABY_OPENER_BABIES_GRANTED
     ),
 
-  [Blessing.SELECTIVE_GENETICS]: (player) => {
+  [Blessing.SELECTIVE_GENETICS]: (player, state) => {
     // at most one of the three babies is swapped for a Golden Egg
     const golden = chance(SELECTIVE_GENETICS_GOLDEN_EGG_CHANCE)
     const babies = SELECTIVE_GENETICS_BABIES_GRANTED - (golden ? 1 : 0)
     if (getFreeSpaceOnBench(player.board, getBenchSize(player.blessings)) < SELECTIVE_GENETICS_BABIES_GRANTED) {
       return false
     }
-    if (golden) giveRandomEgg(player, true)
+    if (golden) giveRandomEgg(player, true, state)
     return giftBabiesUnderCost(
       player,
       SELECTIVE_GENETICS_MAX_COST,
@@ -3458,8 +3459,8 @@ export const blessingEffectService: {
     return true
   },
 
-  [Blessing.POCKET_DAYCARE]: (player) => {
-    if (giveRandomEgg(player, false) == null) return false
+  [Blessing.POCKET_DAYCARE]: (player, state) => {
+    if (giveRandomEgg(player, false, state) == null) return false
     player.items.push(Item.SILVER_DOJO_TICKET)
     return true
   },

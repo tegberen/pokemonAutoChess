@@ -577,7 +577,7 @@ export class OnPokemonCatchCommand extends Command<
     } else if (wanderer.type === WandererType.OUTLAW) {
       if (wanderer.pkm === Pkm.TOGEPI_MAFIA) {
         // give additonally a random egg when Mafia Togepi pogchamp
-        giveRandomEgg(player, false)
+        giveRandomEgg(player, false, this.state)
       }
       player.addMoney(OUTLAW_GOLD_REWARD, true, null)
       removeInArray(player.items, Item.WANTED_NOTICE)
@@ -4276,7 +4276,7 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
       if (getFreeSpaceOnBench(player.board, getBenchSize(player.blessings)) === 0) continue
       const isGoldenEgg =
         goldenEggFound && i === 0 && nbOfGoldenEggsOnBench === 0
-      const egg = giveRandomEgg(player, isGoldenEgg)
+      const egg = giveRandomEgg(player, isGoldenEgg, this.state)
       if (egg && givesLegendEgg) egg.legendEgg = true
       if (player.effects.has(EffectEnum.HATCHER)) {
         player.eggChance = 0 // getting an egg resets the stacked egg chance

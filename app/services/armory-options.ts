@@ -7,6 +7,7 @@ import { Pokemon } from "../models/colyseus-models/pokemon"
 import PokemonFactory from "../models/pokemon-factory"
 import { getPokemonData } from "../models/precomputed/precomputed-pokemon-data"
 import { PRECOMPUTED_POKEMONS_PER_RARITY } from "../models/precomputed/precomputed-rarity"
+import type GameState from "../rooms/states/game-state"
 import { Berries, CraftableItemsNoScarves, Dishes, IPokemon, Item, Sweets, SynergyGems, SynergyGivenByGem, Tools } from "../types"
 import { FreeOptions, PaidOptions, ArmoryOptions } from "../types/enum/ArmoryOptions"
 import { Rarity } from "../types/enum/Game"
@@ -89,7 +90,11 @@ const giftAmountOfPokemon = (toPlayer: Player, amount: number, pokemon: Pkm): bo
     return true
 }
 
-const giftHatchPokemon = (toPlayer: Player, amount: number): boolean => {
+const giftHatchPokemon = (
+    toPlayer: Player,
+    amount: number,
+    state: GameState
+): boolean => {
     const spaceInBench = getFreeSpaceOnBench(toPlayer.board, getBenchSize(toPlayer.blessings))
     if (spaceInBench < amount) return false
 
@@ -114,7 +119,7 @@ const giftHatchPokemon = (toPlayer: Player, amount: number): boolean => {
             replacement.onAcquired(toPlayer)
         })
     } else {
-        giveRandomEgg(toPlayer, true)
+        giveRandomEgg(toPlayer, true, state)
     }
 
     return true
@@ -246,13 +251,20 @@ const giftFoodAndPicnic = (toPlayer: Player): boolean => {
     return true
 }
 
-export const armoryGiftService: { [key in ArmoryOptions ]? : (toPlayer: Player, fromPlayer: Player) => boolean } = {
+export const armoryGiftService: {
+    [key in ArmoryOptions]?: (
+        toPlayer: Player,
+        fromPlayer: Player,
+        state: GameState
+    ) => boolean
+} = {
     [FreeOptions.BERRYBUNDLE]: (toPlayer: Player, fromPlayer: Player) => giftAmountOfItem(toPlayer, 7, "BERRIES"),
     [FreeOptions.SWEETSBUNDLE]: (toPlayer: Player, fromPlayer: Player) => giftAmountOfItem(toPlayer, 7, "SWEETS"),
     [FreeOptions.UNOWNBUNDLE]: (toPlayer: Player, fromPlayer: Player) => giftAmountOfPokemon(toPlayer, 5, Pkm.UNOWN_A),
     [FreeOptions.DITTOBUNDLE]: (toPlayer: Player, fromPlayer: Player) => giftAmountOfPokemon(toPlayer, 1, Pkm.DITTO),
     [FreeOptions.TICKETBUNDLE] : (toPlayer: Player, fromPlayer: Player) => giftSetOfItems(toPlayer, "TICKETS"),
-    [FreeOptions.HATCHBUNDLE] : (toPlayer: Player, fromPlayer: Player) => giftHatchPokemon(toPlayer, 2),
+    [FreeOptions.HATCHBUNDLE]: (toPlayer: Player, fromPlayer: Player, state: GameState) =>
+        giftHatchPokemon(toPlayer, 2, state),
     [FreeOptions.REGIONBUNDLE] : (toPlayer: Player, fromPlayer: Player) => giftSetOfItems(toPlayer, "REGION"),
     [FreeOptions.COOKINGBUNDLE] : (toPlayer: Player, fromPlayer: Player) => giftFoodAndPicnic(toPlayer),
     

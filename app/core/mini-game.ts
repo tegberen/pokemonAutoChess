@@ -1051,7 +1051,7 @@ export class MiniGame {
         const item = this.items?.get(avatar.itemId)
         if (item && player && !player.isBot) {
           if (item.name === Item.EGG_FOR_SELL) {
-            giveRandomEgg(player, false)
+            giveRandomEgg(player, false, state)
           } else if (item.name === Item.GIMMIGHOUL_COIN) {
             player.items.push(item.name)
             player.addMoney(5, true, null)

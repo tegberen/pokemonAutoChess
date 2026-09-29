@@ -113,7 +113,11 @@ export class HiddenPowerEStrategy extends HiddenPowerStrategy {
   process(unown: PokemonEntity, board: Board, target: null, crit: boolean) {
     super.process(unown, board, target, crit)
     if (!unown.isGhostOpponent && unown.player) {
-      const egg = giveRandomEgg(unown.player, false)
+      const egg = giveRandomEgg(
+        unown.player,
+        false,
+        unown.simulation.room.state
+      )
       if (!egg) return
       egg.stacks = getHatchTime(egg, unown.player) - 1
     }
