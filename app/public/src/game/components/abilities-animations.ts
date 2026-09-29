@@ -6324,13 +6324,32 @@ export const AbilitiesAnimations: {
   [Ability.WILDBOLT_STORM]: projectile({ duration: 2000, distance: 12 }),
   [Ability.BLEAKWIND_STORM]: projectile({ duration: 2000, distance: 12 }),
   [Ability.SPRINGTIDE_STORM]: projectile({ duration: 2000, distance: 12 }),
-  [Ability.SOLAR_BLADE]: projectile({
-    distance: 1,
-    scale: 2,
-    oriented: true,
-    rotation: -Math.PI / 2,
-    duration: 400
-  }),
+  // delay carries the blade's reach in tiles. The angle is measured on screen,
+  // so it holds for all 8 facings and on a flipped board
+  [Ability.SOLAR_BLADE]: (args) => {
+    const reach = args.delay ?? 1
+    const [facingX, facingY] = OrientationVector[args.orientation]
+    const [startX, startY] = transformEntityCoordinates(
+      args.positionX,
+      args.positionY,
+      args.flip
+    )
+    const [endX, endY] = transformEntityCoordinates(
+      args.positionX + facingX * reach,
+      args.positionY + facingY * reach,
+      args.flip
+    )
+    return projectile({
+      delay: 0,
+      distance: reach,
+      orientation: true,
+      rotation: Math.atan2(endY - startY, endX - startX) + Math.PI / 2,
+      scale: 2 + 0.4 * (reach - 1),
+      duration: 250 + 150 * reach,
+      ease: "Cubic.easeOut",
+      tweenProps: { alpha: { value: 0, ease: "Quad.easeIn" } }
+    })(args)
+  },
   [Ability.AXE_BLAST]: [
     onTarget({
       ability: Ability.SOLAR_BLADE,

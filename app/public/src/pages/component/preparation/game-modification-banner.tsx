@@ -30,10 +30,15 @@ export function GameModificationBanner(props: {
   specialGameRule: SpecialGameRule | null
 }) {
   const { t } = useTranslation()
-  const title = useGameModificationLabel(
+  const label = useGameModificationLabel(
     props.modification,
     props.specialGameRule
   )
+  // the header already says Scribble; the banner says the rule is rolled
+  const title =
+    props.modification === GameModification.SCRIBBLE && !props.specialGameRule
+      ? t("random_scribble")
+      : label
   const description =
     props.modification === GameModification.SCRIBBLE
       ? props.specialGameRule

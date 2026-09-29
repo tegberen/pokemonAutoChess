@@ -490,11 +490,11 @@ Every balance change on this server, newest first.
 
 ### 29 September 2026
 
-**Game Modes**
-- Solo Tournament {{new}} | Solo · Scribble: Smeargle Pack. 3 qualification rounds of 8 players scored [8/7/6/5/4/3/2/1], the top 16 play 2 semi-finals, the top 4 of each reach the final
-
 **Wishes**
 - Scorching Tome | damage bonus against BURN or WOUND 40% → 30%
+
+**Abilities**
+- Lurantis | Solar Blade's CONE reaches as far as its RANGE, each tile further away takes 50% less than the one before
 
 **Fixes**
 - Baby Opener | in Double Up the HP gained per egg now heals the team
