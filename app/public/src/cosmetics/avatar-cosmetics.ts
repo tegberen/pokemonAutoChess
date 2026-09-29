@@ -11,6 +11,7 @@ export type AvatarTrail =
   | "dragonKing"
   | "slipstream"
   | "rainbow"
+  | "leaves"
 
 export type AvatarCosmeticCategory = "none" | "trail" | "veil" | "movement"
 
@@ -104,6 +105,14 @@ export const AVATAR_COSMETICS: readonly AvatarCosmetic[] = [
     description: "A pride rainbow ribbons out behind every step.",
     trail: "rainbow",
     emissionIntervalMs: 160
+  },
+  {
+    id: "autumn-leaves-trail",
+    name: "Autumn Leaves",
+    category: "trail",
+    description: "Every step kicks up crisp autumn leaves.",
+    trail: "leaves",
+    emissionIntervalMs: 140
   },
   {
     id: "teleport",

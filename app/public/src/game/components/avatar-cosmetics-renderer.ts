@@ -62,8 +62,29 @@ const TRAIL_LIFETIME_MS: Record<AvatarTrail, number> = {
   fire: 560,
   dragonKing: 700,
   slipstream: 1700,
-  rainbow: 900
+  rainbow: 900,
+  leaves: 1400
 }
+const AUTUMN_LEAF_COLORS = [0xf26b1d, 0xe83a25, 0xffb627, 0xd9531e, 0xffd23f]
+// maple outline as [angle from the stem axis in degrees, radius]: five pointed
+// lobes with notches between them, pinched in at the stem
+const MAPLE_LEAF_OUTLINE: Array<[number, number]> = [
+  [0, 1],
+  [28, 0.45],
+  [55, 0.9],
+  [82, 0.42],
+  [110, 0.62],
+  [150, 0.3],
+  [180, 0.12],
+  [210, 0.3],
+  [250, 0.62],
+  [278, 0.42],
+  [305, 0.9],
+  [332, 0.45]
+]
+const MAPLE_LEAF_LOBE_TIPS = [0, 55, 110, 250, 305]
+const LEAVES_FEET_OFFSET = 20
+const LEAVES_STRAY_CHANCE = 0.12
 const PRIDE_FLAG_COLORS = [
   0xff6b6b, 0xffb050, 0xfff06a, 0x6fdc84, 0x6aa6ff, 0xb77ee6
 ]
@@ -645,6 +666,10 @@ export class AvatarCosmeticsRenderer {
       }
       return
     }
+    if (trail === "leaves") {
+      this.spawnAutumnLeaves(x, y, state, accent)
+      return
+    }
     const effect = this.createGraphics(x, y)
     if (!effect) return
 
@@ -656,6 +681,71 @@ export class AvatarCosmeticsRenderer {
     else if (trail === "rainbow") this.drawRainbowSparkles(effect)
 
     this.animateFootprint(effect, trail, x, y, state)
+  }
+
+  // every leaf is its own object with its own arc, spin and timing, so a step
+  // kicks up a loose scatter rather than a rigid cluster
+  private spawnAutumnLeaves(
+    x: number,
+    y: number,
+    state: TrailState,
+    accent: boolean
+  ) {
+    const sideX = -state.directionY
+    const sideY = state.directionX
+    const leaves = Phaser.Math.Between(accent ? 2 : 0, accent ? 5 : 3)
+    for (let leaf = 0; leaf < leaves; leaf++) {
+      const feetSpread = Phaser.Math.Between(-12, 12)
+      const feetX = x + state.directionX * LEAVES_FEET_OFFSET + sideX * feetSpread
+      const feetY = y + state.directionY * LEAVES_FEET_OFFSET + sideY * feetSpread
+      const effect = this.createGraphics(feetX, feetY)
+      if (!effect) return
+      this.drawMapleLeaf(effect, Phaser.Math.Between(6, accent ? 11 : 9))
+      effect.setAngle(Phaser.Math.Between(0, 359))
+
+      const throwBack = Phaser.Math.Between(-4, 30)
+      const strays = Math.random() < LEAVES_STRAY_CHANCE
+      const drift = strays
+        ? Phaser.Math.RND.sign() * Phaser.Math.Between(55, 85)
+        : Phaser.Math.Between(-36, 36)
+      const landingX = x - state.directionX * throwBack + sideX * drift
+      const landingY = y - state.directionY * throwBack + sideY * drift
+      const spin = Phaser.Math.Between(-140, 140)
+      const destroy = () => {
+        this.activeTrailEffects.delete(effect)
+        effect.destroy()
+      }
+      // chained as separate tweens so clear() can kill whichever one is running
+      this.scene.tweens.add({
+        targets: effect,
+        x: Phaser.Math.Linear(feetX, landingX, 0.6),
+        y:
+          Phaser.Math.Linear(feetY, landingY, 0.6) -
+          Phaser.Math.Between(6, 22) -
+          (strays ? 10 : 0),
+        angle: effect.angle + spin * 0.6,
+        duration: Phaser.Math.Between(150, 260),
+        ease: "Quad.easeOut",
+        onComplete: () =>
+          this.scene.tweens.add({
+            targets: effect,
+            x: landingX,
+            y: landingY + Phaser.Math.Between(2, 6),
+            angle: effect.angle + spin * 0.4,
+            duration: Phaser.Math.Between(260, 420),
+            ease: "Quad.easeIn",
+            onComplete: () =>
+              this.scene.tweens.add({
+                targets: effect,
+                alpha: 0,
+                delay: Phaser.Math.Between(250, 650),
+                duration: Phaser.Math.Between(350, 550),
+                ease: "Sine.easeIn",
+                onComplete: destroy
+              })
+          })
+      })
+    }
   }
 
   private drawEmbers(effect: Phaser.GameObjects.Graphics, accent: boolean) {
@@ -1228,6 +1318,31 @@ export class AvatarCosmeticsRenderer {
     }
   }
 
+  private drawMapleLeaf(effect: Phaser.GameObjects.Graphics, radius: number) {
+    const atAngle = (degrees: number, distanceFromCenter: number) => {
+      const angle = Phaser.Math.DegToRad(degrees)
+      return {
+        x: Math.cos(angle) * distanceFromCenter,
+        y: Math.sin(angle) * distanceFromCenter
+      }
+    }
+    const outline = MAPLE_LEAF_OUTLINE.map(([degrees, scale]) =>
+      atAngle(degrees, scale * radius)
+    )
+    effect.fillStyle(Phaser.Math.RND.pick(AUTUMN_LEAF_COLORS), 1)
+    effect.fillPoints(outline, true)
+    effect.lineStyle(1, 0x5a220c, 0.75)
+    effect.strokePoints(outline, true)
+    effect.lineStyle(1, 0x7a3410, 0.5)
+    MAPLE_LEAF_LOBE_TIPS.forEach((degrees) => {
+      const tip = atAngle(degrees, radius * 0.7)
+      effect.lineBetween(0, 0, tip.x, tip.y)
+    })
+    const stemEnd = atAngle(180, radius * 0.65)
+    effect.lineStyle(1.5, 0x5a220c, 0.9)
+    effect.lineBetween(0, 0, stemEnd.x, stemEnd.y)
+  }
+
   private createGraphics(x: number, y: number) {
     if (this.activeTrailEffects.size >= MAX_ACTIVE_TRAIL_EFFECTS) return
     const graphics = this.scene.add
@@ -1424,10 +1539,7 @@ export class AvatarCosmeticsRenderer {
             : 1.18,
       alpha: 0,
       duration: TRAIL_LIFETIME_MS[trail],
-      ease:
-        trail === "confetti" || trail === "flowers"
-          ? "Sine.easeIn"
-          : "Sine.easeOut",
+      ease: scatters ? "Sine.easeIn" : "Sine.easeOut",
       onComplete: () => {
         this.activeTrailEffects.delete(effect)
         effect.destroy()
