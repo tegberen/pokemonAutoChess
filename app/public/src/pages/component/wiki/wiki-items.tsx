@@ -28,8 +28,13 @@ import { isIn } from "../../../../../utils/array"
 import { ItemDetailTooltip } from "../../../game/components/item-detail"
 import { addIconsToDescription } from "../../utils/descriptions"
 import SynergyIcon from "../icons/synergy-icon"
-import { FreeOptions, PaidOptions } from "../../../../../types/enum/ArmoryOptions"
-import { BundleDetailTooltip } from "../../../game/components/bundle-detail"
+import { ArmoryAssistStages } from "../../../../../config"
+import {
+  type ArmoryOptions,
+  ArmoryOptionsPrice,
+  FreeOptions,
+  PaidOptions
+} from "../../../../../types/enum/ArmoryOptions"
 
 export function ItemList(props: { items: readonly Item[]; icon?: string }) {
   return props.items.map((i) => (
@@ -40,6 +45,31 @@ export function ItemList(props: { items: readonly Item[]; icon?: string }) {
       ></img>
     </li>
   ))
+}
+
+function BundleList(props: { bundles: ArmoryOptions[] }) {
+  const { t } = useTranslation()
+  const bundles = [...props.bundles].sort(
+    (a, b) => ArmoryOptionsPrice[a] - ArmoryOptionsPrice[b]
+  )
+  return (
+    <ul className="wiki-bundles">
+      {bundles.map((bundle) => (
+        <li key={bundle}>
+          <img src={`assets/item/${bundle}.png`} alt="" className="item" />
+          <div className="wiki-bundle-text">
+            <h4>{t(`armory.${bundle}`)}</h4>
+            <p>{addIconsToDescription(t(`armory_description.${bundle}`))}</p>
+          </div>
+          <span className="wiki-bundle-price">
+            {ArmoryOptionsPrice[bundle] === 0
+              ? t("wiki.items.bundles_free")
+              : addIconsToDescription(`${ArmoryOptionsPrice[bundle]} GOLD`)}
+          </span>
+        </li>
+      ))}
+    </ul>
+  )
 }
 
 export default function WikiItems() {
@@ -67,10 +97,40 @@ export default function WikiItems() {
 
   const components = ItemComponentsNoScarf
 
+  const sections = [
+    { id: "wiki-items-recipes", label: t("wiki.items.item_recipes") },
+    { id: "wiki-items-shiny", label: t("shiny_items") },
+    { id: "wiki-items-town", label: t("wiki.items.town_items") },
+    { id: "wiki-items-special", label: t("special_items") },
+    {
+      id: "wiki-items-synergies",
+      label: t("wiki.items.items_from_synergies")
+    },
+    { id: "wiki-items-bundles", label: t("wiki.items.bundles") }
+  ]
+
   return (
     <div id="wiki-items">
+      <nav className="wiki-items-shortcuts">
+        <span className="wiki-items-shortcuts-label">
+          {t("wiki.items.jump_to")}
+        </span>
+        {sections.map((section) => (
+          <button
+            key={section.id}
+            type="button"
+            onClick={() =>
+              document
+                .getElementById(section.id)
+                ?.scrollIntoView({ behavior: "smooth", block: "start" })
+            }
+          >
+            {section.label}
+          </button>
+        ))}
+      </nav>
       <article className="craftable">
-        <h2>{t("wiki.items.item_recipes")}</h2>
+        <h2 id="wiki-items-recipes">{t("wiki.items.item_recipes")}</h2>
         <p>
           {addIconsToDescription(t("wiki.items.craftable_items_description"))}
         </p>
@@ -146,39 +206,29 @@ export default function WikiItems() {
         </table>
       </article>
       <article>
-        <h2>{t("shiny_items")}</h2>
+        <h2 id="wiki-items-shiny">{t("shiny_items")}</h2>
         <p>{addIconsToDescription(t("wiki.items.shiny_items_description"))}</p>
         <ul className="shiny">
           <ItemList items={ShinyItems} />
         </ul>
 
-        <h2>{t("wiki.items.town_items")}</h2>
+        <h2 id="wiki-items-town">{t("wiki.items.town_items")}</h2>
         <p>{t("wiki.items.town_items_description")}</p>
         <ul className="town">
           <ItemList items={TownItems} />
         </ul>
 
-        <h2>{t("special_items")}</h2>
+        <h2 id="wiki-items-special">{t("special_items")}</h2>
         <p>{t("wiki.items.special_items_description")}</p>
         <ul className="special">
           <ItemList items={specialItems} />
         </ul>
-        <h2>{t("wiki.items.bundles")}</h2>
-        <p>{t("wiki.items.bundles_description")}</p>
-        <ul className="town">
-          {[...Object.values(FreeOptions), ...Object.values(PaidOptions)].map((bundle) => (
-            <li key={bundle} data-tooltip-id="bundle-detail-tooltip" data-tooltip-content={bundle}>
-              <img
-                src={`assets/item/${bundle}.png`}
-                className="item"
-              />
-            </li>
-          ))}
-        </ul>
       </article>
 
       <article className="synergy-items">
-        <h2>{t("wiki.items.items_from_synergies")}</h2>
+        <h2 id="wiki-items-synergies">
+          {t("wiki.items.items_from_synergies")}
+        </h2>
 
         <h3>
           <SynergyIcon type={Synergy.NORMAL} /> {t("scarves")}
@@ -395,8 +445,27 @@ export default function WikiItems() {
 
       </article>
 
+      <article className="bundles">
+        <h2 id="wiki-items-bundles">{t("wiki.items.bundles")}</h2>
+        <p>
+          {addIconsToDescription(
+            t("wiki.items.bundles_description", {
+              stages: ArmoryAssistStages.join(", ")
+            })
+          )}
+        </p>
+        <p>{t("wiki.items.bundles_bench_note")}</p>
+        <h3 className="wiki-bundles-heading">
+          {t("wiki.items.bundles_free")}
+        </h3>
+        <BundleList bundles={Object.values(FreeOptions)} />
+        <h3 className="wiki-bundles-heading">
+          {t("wiki.items.bundles_paid")}
+        </h3>
+        <BundleList bundles={Object.values(PaidOptions)} />
+      </article>
+
       <ItemDetailTooltip />
-      <BundleDetailTooltip />
     </div>
   )
 }

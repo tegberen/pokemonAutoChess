@@ -1,8 +1,6 @@
 export enum FreeOptions {
     BERRYBUNDLE = "BERRY_BUNDLE",
-    UNOWNBUNDLE = "UNOWN_BUNDLE",
     SWEETSBUNDLE = "SWEETS_BUNDLE",
-    DITTOBUNDLE = "DITTO_BUNDLE",
     TICKETBUNDLE = "TICKET_BUNDLE",
     HATCHBUNDLE = "HATCH_BUNDLE",
     REGIONBUNDLE = "REGION_BUNDLE",
@@ -10,6 +8,7 @@ export enum FreeOptions {
 }
 
 export enum PaidOptions {
+    DITTOBUNDLE = "DITTO_BUNDLE",
     GEMSBUNDLE = "GEMS_BUNDLE",
     POTION = "POTION",
     DELUXE_BOX = "DELUXE_BOX",
@@ -28,26 +27,25 @@ export enum PaidOptions {
 
 export const ArmoryOptionsPrice: { [key in ArmoryOptions ] : number } = {
     [FreeOptions.BERRYBUNDLE] : 0,
-    [FreeOptions.UNOWNBUNDLE] : 0,
     [FreeOptions.SWEETSBUNDLE] : 0,
-    [FreeOptions.DITTOBUNDLE] : 0,
     [FreeOptions.TICKETBUNDLE] : 0,
     [FreeOptions.HATCHBUNDLE] : 0,
     [FreeOptions.REGIONBUNDLE] : 0,
     [FreeOptions.COOKINGBUNDLE] : 0,
     
+    [PaidOptions.DITTOBUNDLE] : 5,
     [PaidOptions.EVOLVEBUNDLE] : 15,
-    [PaidOptions.GEMSBUNDLE] : 5,
+    [PaidOptions.GEMSBUNDLE] : 10,
     [PaidOptions.POTION] : 5,
     [PaidOptions.DELUXE_BOX] : 15,
     [PaidOptions.TOOLBUNDLE] : 20,
     [PaidOptions.COMMONBUNDLE] : 15,
-    [PaidOptions.UNCOMMONBUNDLE] : 6,
-    [PaidOptions.RAREBUNDLE] : 9,
-    [PaidOptions.EPICBUNDLE] : 12,
+    [PaidOptions.UNCOMMONBUNDLE] : 5,
+    [PaidOptions.RAREBUNDLE] : 10,
+    [PaidOptions.EPICBUNDLE] : 15,
     [PaidOptions.ULTRABUNDLE] : 5,
     [PaidOptions.UNIQUEBUNDLE] : 15,
-    [PaidOptions.LEGENDARYBUNDLE] : 50,
+    [PaidOptions.LEGENDARYBUNDLE] : 40,
     [PaidOptions.EXPBUNDLE] : 20,
 }
 

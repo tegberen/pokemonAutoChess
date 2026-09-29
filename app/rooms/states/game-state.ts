@@ -203,11 +203,12 @@ export default class GameState extends Schema {
     // client a board the lesson does not expect
     if (gameMode !== GameMode.GUIDE) {
       Object.entries(PVEStages).forEach(([stage, pveStage]) => {
-        const options = pveStage.variants ? pveStage.variants.length + 1 : 1
-        this.pveVariantIndexByStage.set(
-          stage,
-          Math.floor(Math.random() * options)
-        )
+        const variantCount = pveStage.variants?.length ?? 0
+        const index =
+          pveStage.baseIsShinyOnly && variantCount > 0
+            ? 1 + Math.floor(Math.random() * variantCount)
+            : Math.floor(Math.random() * (variantCount + 1))
+        this.pveVariantIndexByStage.set(stage, index)
       })
     }
   }

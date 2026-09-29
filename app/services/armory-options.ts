@@ -8,7 +8,7 @@ import PokemonFactory from "../models/pokemon-factory"
 import { getPokemonData } from "../models/precomputed/precomputed-pokemon-data"
 import { PRECOMPUTED_POKEMONS_PER_RARITY } from "../models/precomputed/precomputed-rarity"
 import type GameState from "../rooms/states/game-state"
-import { Berries, CraftableItemsNoScarves, Dishes, IPokemon, Item, Sweets, SynergyGems, SynergyGivenByGem, Tools } from "../types"
+import { Berries, CraftableItemsNoScarves, Item, Sweets, SynergyGems, SynergyGivenByGem, Tools } from "../types"
 import { FreeOptions, PaidOptions, ArmoryOptions } from "../types/enum/ArmoryOptions"
 import { Rarity } from "../types/enum/Game"
 import { Pkm, Unowns } from "../types/enum/Pokemon"
@@ -16,7 +16,7 @@ import { Synergy } from "../types/enum/Synergy"
 import { getFirstAvailablePositionInBench, getFreeSpaceOnBench,
   getBenchSize
 } from "../utils/board"
-import { pickNRandomIn, pickRandomIn, randomWeighted } from "../utils/random"
+import { pickNRandomIn, pickRandomIn } from "../utils/random"
 
 const giftAmountOfItem = (toPlayer: Player, amount: number, itemName: string): boolean => {
     if (itemName === "BERRIES") {
@@ -58,7 +58,7 @@ const giftSetOfItems = (toPlayer: Player, itemName: string): boolean => {
     }
     else if(itemName === "REGION"){
         toPlayer.items.push(Item.LAPRAS_PASSPORT)
-        toPlayer.shopFreeRolls += 10
+        toPlayer.shopFreeRolls += 5
     }
     else {
         return false;
@@ -98,8 +98,8 @@ const giftHatchPokemon = (
     const spaceInBench = getFreeSpaceOnBench(toPlayer.board, getBenchSize(toPlayer.blessings))
     if (spaceInBench < amount) return false
 
-    var d = Math.random() // 5% chance of getting a golden egg
-    if (d > 0.05) {
+    var d = Math.random() // 1% chance of getting a golden egg
+    if (d > 0.01) {
         const hatchList = PRECOMPUTED_POKEMONS_PER_RARITY.HATCH.filter((p) => getPokemonData(p).stars === 1)
     
         let randomHatches = pickNRandomIn(hatchList, amount)
@@ -149,7 +149,8 @@ const giftRandomPokemonByRarity = (toPlayer: Player, rarity: Rarity): boolean =>
             break
     }
 
-    const nbOfSynergies = (rarity === Rarity.ULTRA || rarity === Rarity.LEGENDARY) ? 2 : 1
+    const nbOfSynergies =
+        rarity === Rarity.LEGENDARY ? 4 : rarity === Rarity.ULTRA ? 3 : 1
     let wantedSynergy = toPlayer.synergies.getTopSynergies(nbOfSynergies)
     if (wantedSynergy.includes(Synergy.BABY)) {
         wantedSynergy = toPlayer.synergies.getTopSynergies(nbOfSynergies + 1)
@@ -194,26 +195,15 @@ const giftPotion = (toPlayer: Player, fromPlayer: Player): boolean => {
 }
 
 const evolveRandomPokemonInBoard = (toPlayer: Player): boolean => {
-    let pokemonThatCanEvolve : Pokemon[] = []
-    let otherPokemon : Pokemon[] = []
-    toPlayer.board.forEach((pkm : Pokemon) => {
+    const pokemonThatCanEvolve: Pokemon[] = []
+    toPlayer.board.forEach((pkm: Pokemon) => {
         if (pkm.hasEvolution) pokemonThatCanEvolve.push(pkm)
-        else otherPokemon.push(pkm)
     })
 
     if (pokemonThatCanEvolve.length !== 0) {
-        const randomPkm = pickRandomIn(pokemonThatCanEvolve)
-        EvolutionManager.evolve(randomPkm, toPlayer)
+        EvolutionManager.evolve(pickRandomIn(pokemonThatCanEvolve), toPlayer)
     } else {
-        if (otherPokemon.length === 0) return false // deny bundle if no units in board
-        const randomPkm2 = pickRandomIn(otherPokemon)
-        randomPkm2.addMaxHP(200)
-        randomPkm2.addAttack(10)
-        randomPkm2.addAbilityPower(50)
-        randomPkm2.addDefense(5)
-        randomPkm2.addSpecialDefense(5)
-        randomPkm2.addSpeed(20)
-        randomPkm2.addLuck(15)
+        toPlayer.items.push(Item.SILVER_DOJO_TICKET)
     }
     return true
 }
@@ -225,24 +215,6 @@ const giftExperienceAndRaiseLevelCap = (toPlayer: Player): boolean => {
 }
 
 const giftFoodAndPicnic = (toPlayer: Player): boolean => {
-    toPlayer.board.forEach((p: IPokemon) => {
-        if (p.canEat) {
-            let randomDish = pickRandomIn(Dishes.filter((d) => d !== Item.HERBA_MYSTICA))
-            if (randomDish === Item.SWEETS) {
-                randomDish = pickRandomIn(Sweets)
-            } else if (randomDish === Item.MUSHROOMS) {
-                randomDish =
-                    randomWeighted({
-                    [Item.TINY_MUSHROOM]: 77,
-                    [Item.BIG_MUSHROOM]: 20,
-                    [Item.BALM_MUSHROOM]: 3
-                    }) ?? Item.TINY_MUSHROOM
-            }
-
-            p.dishes.add(randomDish)
-        }
-    })
-
     toPlayer.items.push(Item.TINY_MUSHROOM)
     toPlayer.items.push(Item.BIG_MUSHROOM)
     toPlayer.items.push(Item.BALM_MUSHROOM)
@@ -260,14 +232,13 @@ export const armoryGiftService: {
 } = {
     [FreeOptions.BERRYBUNDLE]: (toPlayer: Player, fromPlayer: Player) => giftAmountOfItem(toPlayer, 7, "BERRIES"),
     [FreeOptions.SWEETSBUNDLE]: (toPlayer: Player, fromPlayer: Player) => giftAmountOfItem(toPlayer, 7, "SWEETS"),
-    [FreeOptions.UNOWNBUNDLE]: (toPlayer: Player, fromPlayer: Player) => giftAmountOfPokemon(toPlayer, 5, Pkm.UNOWN_A),
-    [FreeOptions.DITTOBUNDLE]: (toPlayer: Player, fromPlayer: Player) => giftAmountOfPokemon(toPlayer, 1, Pkm.DITTO),
     [FreeOptions.TICKETBUNDLE] : (toPlayer: Player, fromPlayer: Player) => giftSetOfItems(toPlayer, "TICKETS"),
     [FreeOptions.HATCHBUNDLE]: (toPlayer: Player, fromPlayer: Player, state: GameState) =>
         giftHatchPokemon(toPlayer, 2, state),
     [FreeOptions.REGIONBUNDLE] : (toPlayer: Player, fromPlayer: Player) => giftSetOfItems(toPlayer, "REGION"),
     [FreeOptions.COOKINGBUNDLE] : (toPlayer: Player, fromPlayer: Player) => giftFoodAndPicnic(toPlayer),
     
+    [PaidOptions.DITTOBUNDLE]: (toPlayer: Player, fromPlayer: Player) => giftAmountOfPokemon(toPlayer, 1, Pkm.DITTO),
     [PaidOptions.EVOLVEBUNDLE] : (toPlayer: Player, fromPlayer: Player) => evolveRandomPokemonInBoard(toPlayer),
     [PaidOptions.GEMSBUNDLE] : (toPlayer: Player, fromPlayer: Player) => giftAmountOfItem(toPlayer, 3, "GEMS"),
     [PaidOptions.POTION] : (toPlayer: Player, fromPlayer: Player) => giftPotion(toPlayer, fromPlayer),

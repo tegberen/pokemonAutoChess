@@ -1,4 +1,6 @@
 import { Emotion } from "../types"
+import { Ability } from "../types/enum/Ability"
+import { Passive } from "../types/enum/Passive"
 import { Stat } from "../types/enum/Game"
 import {
   CraftableItemsNoScarves,
@@ -62,6 +64,11 @@ export type PVEStage = {
   // absolute values every unit of the encounter is normalized to, applied
   // after statBoosts so a stage can flatten wildly different species
   stats?: { [stat in Stat]?: number }
+  skill?: Ability
+  noPassives?: boolean
+  stars?: number
+  // the base only appears as the shiny encounter
+  baseIsShinyOnly?: boolean
   variants?: PVEStageVariant[]
 }
 
@@ -75,6 +82,7 @@ export type PVEStageVariant = Pick<
   | "marowakItems"
   | "statBoosts"
   | "stats"
+  | "skill"
 >
 
 // emotion belongs to the avatar, so a variant that brings its own Pokemon must
@@ -116,6 +124,12 @@ const PVE_STAT_READERS: { [stat in Stat]?: (pokemon: Pokemon) => number } = {
 }
 
 export function applyPveStageStats(pokemon: Pokemon, stage: PVEStage) {
+  if (stage.skill) pokemon.skill = stage.skill
+  if (stage.stars) pokemon.stars = stage.stars
+  if (stage.noPassives) {
+    pokemon.passive = Passive.NONE
+    pokemon.passive2 = Passive.NONE
+  }
   for (const [stat, boost] of Object.entries(stage.statBoosts ?? {})) {
     if (boost !== undefined) pokemon.applyStat(stat as Stat, boost)
   }
@@ -173,6 +187,62 @@ function proposeCraftableItems(): Item[] {
     pickRandomIn(CraftableItemsNoScarves.filter((o) => !rewards.includes(o)))
   )
   return rewards
+}
+
+// normalized to one statline so the roll keeps the difficulty
+const STAGE_9_MINI_BOSSES: Pkm[] = [
+  Pkm.RAPIDASH,
+  Pkm.SANDSHREW,
+  Pkm.PYUKUMUKU,
+  Pkm.GASTRODON_EAST_SEA,
+  Pkm.FENNEKIN,
+  Pkm.SHINX,
+  Pkm.GLACEON,
+  Pkm.KECLEON,
+  Pkm.SLITHER_WING,
+  Pkm.MUDSDALE,
+  Pkm.HISUI_ARCANINE,
+  Pkm.CRAMORANT,
+  Pkm.GALARIAN_ZIGZAGOON,
+  Pkm.MAGCARGO,
+  Pkm.BRELOOM,
+  Pkm.RABOOT,
+  Pkm.DUCKLETT,
+  Pkm.CLEFFA,
+  Pkm.PIKACHU_SURFER,
+  Pkm.HIPPOPOTAS,
+  Pkm.AZUMARILL,
+  Pkm.VESPIQUEN,
+  Pkm.LITWICK,
+  Pkm.AXEW,
+  Pkm.STARAPTOR,
+  Pkm.ROWLET,
+  Pkm.OSHAWOTT,
+  Pkm.SWAMPERT,
+  Pkm.ALOLAN_VULPIX,
+  Pkm.TANGELA,
+  Pkm.MAREANIE,
+  Pkm.KROOKODILE,
+  Pkm.TINKATON,
+  Pkm.MINIOR,
+  Pkm.TOXTRICITY_LOW_KEY,
+  Pkm.CASTFORM,
+  Pkm.HYDRAPPLE,
+  Pkm.SHEDINJA,
+  Pkm.PIKACHU_LIBRE,
+  Pkm.MEW,
+  Pkm.PELIPPER,
+  Pkm.DRIZZILE,
+  Pkm.TOGEKISS,
+  Pkm.BLAZIKEN
+]
+
+const STAGE_9_MINI_BOSS_STATS: { [stat in Stat]?: number } = {
+  [Stat.HP]: 300,
+  [Stat.ATK]: 28,
+  [Stat.DEF]: 10,
+  [Stat.SPE_DEF]: 2,
+  [Stat.AP]: 0
 }
 
 export const PVEStages: { [turn: number]: PVEStage } = {
@@ -313,234 +383,38 @@ export const PVEStages: { [turn: number]: PVEStage } = {
   },
 
   3: {
-    // one random mini-boss, all normalized to the same statline so the roll
-    // does not change the difficulty
-    name: "pkm.RAPIDASH",
-    avatar: Pkm.RAPIDASH,
-    board: [[Pkm.RAPIDASH, 4, 2]],
+    name: "pkm.PIDGEY",
+    avatar: Pkm.PIDGEY,
+    board: [
+      [Pkm.PIDGEY, 3, 1],
+      [Pkm.PIDGEY, 5, 1],
+      [Pkm.PIDGEY, 4, 2]
+    ],
     stats: {
-      [Stat.HP]: 150,
-      [Stat.ATK]: 10,
-      [Stat.DEF]: 0,
-      [Stat.SPE_DEF]: 0,
+      [Stat.HP]: 60,
+      [Stat.ATK]: 4,
+      [Stat.DEF]: 2,
+      [Stat.SPE_DEF]: 2,
       [Stat.AP]: -50
     },
     variants: [
       {
-        name: "pkm.SANDSHREW",
-        avatar: Pkm.SANDSHREW,
-        board: [[Pkm.SANDSHREW, 4, 2]]
+        name: "pkm.STARLY",
+        avatar: Pkm.STARLY,
+        board: [
+          [Pkm.STARLY, 3, 1],
+          [Pkm.STARLY, 5, 1],
+          [Pkm.STARLY, 4, 2]
+        ]
       },
       {
-        name: "pkm.PYUKUMUKU",
-        avatar: Pkm.PYUKUMUKU,
-        board: [[Pkm.PYUKUMUKU, 4, 2]]
-      },
-      {
-        name: "pkm.GASTRODON_EAST_SEA",
-        avatar: Pkm.GASTRODON_EAST_SEA,
-        board: [[Pkm.GASTRODON_EAST_SEA, 4, 2]]
-      },
-      {
-        name: "pkm.FENNEKIN",
-        avatar: Pkm.FENNEKIN,
-        board: [[Pkm.FENNEKIN, 4, 2]]
-      },
-      {
-        name: "pkm.SHINX",
-        avatar: Pkm.SHINX,
-        board: [[Pkm.SHINX, 4, 2]]
-      },
-      {
-        name: "pkm.GLACEON",
-        avatar: Pkm.GLACEON,
-        board: [[Pkm.GLACEON, 4, 2]]
-      },
-      {
-        name: "pkm.KECLEON",
-        avatar: Pkm.KECLEON,
-        board: [[Pkm.KECLEON, 4, 2]]
-      },
-      {
-        name: "pkm.SLITHER_WING",
-        avatar: Pkm.SLITHER_WING,
-        board: [[Pkm.SLITHER_WING, 4, 2]]
-      },
-      {
-        name: "pkm.MUDSDALE",
-        avatar: Pkm.MUDSDALE,
-        board: [[Pkm.MUDSDALE, 4, 2]]
-      },
-      {
-        name: "pkm.HISUI_ARCANINE",
-        avatar: Pkm.HISUI_ARCANINE,
-        board: [[Pkm.HISUI_ARCANINE, 4, 2]]
-      },
-      {
-        name: "pkm.CRAMORANT",
-        avatar: Pkm.CRAMORANT,
-        board: [[Pkm.CRAMORANT, 4, 2]]
-      },
-      {
-        name: "pkm.GALARIAN_ZIGZAGOON",
-        avatar: Pkm.GALARIAN_ZIGZAGOON,
-        board: [[Pkm.GALARIAN_ZIGZAGOON, 4, 2]]
-      },
-      {
-        name: "pkm.MAGCARGO",
-        avatar: Pkm.MAGCARGO,
-        board: [[Pkm.MAGCARGO, 4, 2]]
-      },
-      {
-        name: "pkm.BRELOOM",
-        avatar: Pkm.BRELOOM,
-        board: [[Pkm.BRELOOM, 4, 2]]
-      },
-      {
-        name: "pkm.RABOOT",
-        avatar: Pkm.RABOOT,
-        board: [[Pkm.RABOOT, 4, 2]]
-      },
-      {
-        name: "pkm.DUCKLETT",
-        avatar: Pkm.DUCKLETT,
-        board: [[Pkm.DUCKLETT, 4, 2]]
-      },
-      {
-        name: "pkm.CLEFFA",
-        avatar: Pkm.CLEFFA,
-        board: [[Pkm.CLEFFA, 4, 2]]
-      },
-      {
-        name: "pkm.PIKACHU_SURFER",
-        avatar: Pkm.PIKACHU_SURFER,
-        board: [[Pkm.PIKACHU_SURFER, 4, 2]]
-      },
-      {
-        name: "pkm.HIPPOPOTAS",
-        avatar: Pkm.HIPPOPOTAS,
-        board: [[Pkm.HIPPOPOTAS, 4, 2]]
-      },
-      {
-        name: "pkm.AZUMARILL",
-        avatar: Pkm.AZUMARILL,
-        board: [[Pkm.AZUMARILL, 4, 2]],
-        
-      },
-      {
-        name: "pkm.VESPIQUEN",
-        avatar: Pkm.VESPIQUEN,
-        board: [[Pkm.VESPIQUEN, 4, 2]]
-      },
-      {
-        name: "pkm.LITWICK",
-        avatar: Pkm.LITWICK,
-        board: [[Pkm.LITWICK, 4, 2]]
-      },
-      {
-        name: "pkm.AXEW",
-        avatar: Pkm.AXEW,
-        board: [[Pkm.AXEW, 4, 2]]
-      },
-      {
-        name: "pkm.STARAPTOR",
-        avatar: Pkm.STARAPTOR,
-        board: [[Pkm.STARAPTOR, 4, 2]]
-      },
-      {
-         name: "pkm.ROWLET",
-        avatar: Pkm.ROWLET,
-        board: [[Pkm.ROWLET, 4, 2]]
-      },
-      {
-        name: "pkm.OSHAWOTT",
-        avatar: Pkm.OSHAWOTT,
-        board: [[Pkm.OSHAWOTT, 4, 2]]
-      },
-      {
-        name: "pkm.SWAMPERT",
-        avatar: Pkm.SWAMPERT,
-        board: [[Pkm.SWAMPERT, 4, 2]]
-      },
-      {
-        name: "pkm.ALOLAN_VULPIX",
-        avatar: Pkm.ALOLAN_VULPIX,
-        board: [[Pkm.ALOLAN_VULPIX, 4, 2]]
-      },
-      {
-        name: "pkm.TANGELA",
-        avatar: Pkm.TANGELA,
-        board: [[Pkm.TANGELA, 4, 2]]
-      },
-      {
-        name: "pkm.MAREANIE",
-        avatar: Pkm.MAREANIE,
-        board: [[Pkm.MAREANIE, 4, 2]]
-      },
-      {
-        name: "pkm.KROOKODILE",
-        avatar: Pkm.KROOKODILE,
-        board: [[Pkm.KROOKODILE, 4, 2]]
-      },
-      {
-        name: "pkm.TINKATON",
-        avatar: Pkm.TINKATON,
-        board: [[Pkm.TINKATON, 4, 2]]
-      },
-      {
-        name: "pkm.MINIOR",
-        avatar: Pkm.MINIOR,
-        board: [[Pkm.MINIOR, 4, 2]]
-      },
-      {
-        name: "pkm.TOXTRICITY_LOW_KEY",
-        avatar: Pkm.TOXTRICITY_LOW_KEY,
-        board: [[Pkm.TOXTRICITY_LOW_KEY, 4, 2]]
-      },
-      {
-        name: "pkm.CASTFORM",
-        avatar: Pkm.CASTFORM,
-        board: [[Pkm.CASTFORM, 4, 2]]
-      },
-      {
-        name: "pkm.HYDRAPPLE",
-        avatar: Pkm.HYDRAPPLE,
-        board: [[Pkm.HYDRAPPLE, 4, 2]]
-      },
-      {
-        name: "pkm.SHEDINJA",
-        avatar: Pkm.SHEDINJA,
-        board: [[Pkm.SHEDINJA, 4, 2]]
-      },
-      {
-        name: "pkm.PIKACHU_LIBRE",
-        avatar: Pkm.PIKACHU_LIBRE,
-        board: [[Pkm.PIKACHU_LIBRE, 4, 2]]
-      },
-      {
-        name: "pkm.MEW",
-        avatar: Pkm.MEW,
-        board: [[Pkm.MEW, 4, 2]]
-      },
-      {
-        name: "pkm.PELIPPER",
-        avatar: Pkm.PELIPPER,
-        board: [[Pkm.PELIPPER, 4, 2]]
-      },
-      {
-        name: "pkm.DRIZZILE",
-        avatar: Pkm.DRIZZILE,
-        board: [[Pkm.DRIZZILE, 4, 2]]
-      },
-      {
-        name: "pkm.TOGEKISS",
-        avatar: Pkm.TOGEKISS,
-        board: [[Pkm.TOGEKISS, 4, 2]]
-      },
-      {
-        name: "pkm.BLAZIKEN",
-        avatar: Pkm.BLAZIKEN,
-        board: [[Pkm.BLAZIKEN, 4, 2]]
+        name: "pkm.PIDOVE",
+        avatar: Pkm.PIDOVE,
+        board: [
+          [Pkm.PIDOVE, 3, 1],
+          [Pkm.PIDOVE, 5, 1],
+          [Pkm.PIDOVE, 4, 2]
+        ]
       }
     ],
     rewards: ItemComponentsNoFossilOrScarf,
@@ -553,47 +427,17 @@ export const PVEStages: { [turn: number]: PVEStage } = {
     name: "pkm.GYARADOS",
     avatar: Pkm.GYARADOS,
     board: [[Pkm.GYARADOS, 4, 2]],
+    skill: Ability.HAPPY_HOUR,
+    noPassives: true,
+    stars: 3,
+    baseIsShinyOnly: true,
     variants: [
-      {
-        name: "pkm.MILOTIC",
-        avatar: Pkm.MILOTIC,
-        board: [
-          [Pkm.MILOTIC, 4, 2]
-        ]
-      },
-      {
-        name: "pkm.WISHIWASHI_SCHOOL",
-        avatar: Pkm.WISHIWASHI_SCHOOL,
-        board: [
-          [Pkm.WISHIWASHI_SCHOOL, 4, 2]
-        ]
-      },
-      {
-        name: "pkm.WHISCASH",
-        avatar: Pkm.WHISCASH,
-        board: [[Pkm.WHISCASH, 4, 2]],
-        statBoosts: {
-          [Stat.HP]: 50,
-          [Stat.ATK]: 4
-        }
-      },
-      {
-        name: "pkm.DONDOZO",
-        avatar: Pkm.DONDOZO,
-        board: [[Pkm.DONDOZO, 4, 2]],
-        statBoosts: {
-          [Stat.HP]: 50,
-          [Stat.ATK]: 8
-        }
-      },
-      {
-        name: "pkm.WAILORD",
-        avatar: Pkm.WAILORD,
-        board: [[Pkm.WAILORD, 4, 2]],
-        statBoosts: {
-          [Stat.ATK]: 10
-        }
-      }
+      ...STAGE_9_MINI_BOSSES.map((pokemon) => ({
+        name: `pkm.${pokemon}` as const,
+        avatar: pokemon,
+        board: [[pokemon, 4, 2]] as [Pkm, number, number][],
+        stats: STAGE_9_MINI_BOSS_STATS
+      }))
     ],
     marowakItems: [[Item.KINGS_ROCK]],
     shinyChance: 1 / 40,

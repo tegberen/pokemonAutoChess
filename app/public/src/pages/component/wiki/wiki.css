@@ -681,8 +681,65 @@
 #wiki-items {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  grid-template-rows: 1fr auto;
+  grid-template-rows: auto 1fr auto;
   justify-content: space-evenly;
+}
+
+#wiki-items .wiki-items-shortcuts {
+  grid-column: 1 / 3;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.2em;
+  margin: 0.75em 1em 0;
+  padding-bottom: 0.6em;
+  border-bottom: 1px solid var(--color-bg-tertiary);
+}
+
+#wiki-items .wiki-items-shortcuts-label {
+  margin-right: 0.4em;
+  color: var(--color-fg-secondary);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+#wiki-items .wiki-items-shortcuts-label::after {
+  content: ":";
+}
+
+#wiki-items .wiki-items-shortcuts button {
+  margin: 0;
+  padding: 0.25em 0.6em;
+  color: var(--color-fg-secondary);
+  background: transparent;
+  border: 0;
+  border-radius: 4px;
+  box-shadow: none;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  cursor: var(--cursor-hover);
+}
+
+#wiki-items .wiki-items-shortcuts button:hover {
+  color: var(--color-fg-primary);
+  background: color-mix(in srgb, var(--color-bg-tertiary) 55%, transparent);
+}
+
+#wiki-items h2[id] {
+  scroll-margin-top: 0.5em;
+}
+
+#wiki-items article > h2:not(:first-child) {
+  margin-top: 1.5em;
+}
+
+#wiki-items article > h2 + p {
+  margin-top: 0;
+  margin-bottom: 0.6em;
 }
 
 #wiki-items article {
@@ -702,6 +759,54 @@
   margin: 0;
 }
 
+#wiki-items h3.wiki-bundles-heading {
+  margin: 0.75em 0 0.25em;
+}
+
+#wiki-items ul.wiki-bundles {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(22em, 1fr));
+  gap: 0.5em;
+}
+
+#wiki-items .wiki-bundles li {
+  display: flex;
+  align-items: center;
+  gap: 0.6em;
+  padding: 0.4em 0.6em;
+  border: var(--border-thin);
+  border-radius: 12px;
+  background-color: var(--color-bg-secondary);
+  list-style: none;
+}
+
+#wiki-items .wiki-bundles img.item {
+  flex: none;
+  margin: 0;
+  cursor: default;
+}
+
+#wiki-items .wiki-bundle-text {
+  flex: 1;
+  min-width: 0;
+}
+
+#wiki-items .wiki-bundle-text h4 {
+  margin: 0;
+}
+
+#wiki-items .wiki-bundle-text p {
+  margin: 0.15em 0 0;
+  font-size: 0.9em;
+  color: var(--color-fg-secondary);
+}
+
+#wiki-items .wiki-bundle-price {
+  flex: none;
+  font-weight: bold;
+  white-space: nowrap;
+}
+
 #wiki-items .craftable table {
   margin: 1em;
 }
@@ -710,7 +815,7 @@
   grid-column: 1 / 3;
 }
 
-#wiki-items article:nth-child(n + 3) {
+#wiki-items article:nth-of-type(n + 3) {
   grid-column: 1 / 3;
 }
 

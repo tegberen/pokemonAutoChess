@@ -490,6 +490,24 @@ Every balance change on this server, newest first.
 
 ### 29 September 2026
 
+**PvE**
+- Stage 3 | Pidgey, Starly or Pidove
+- Stage 9 | now the stage 3 mini-bosses, all 3 STAR with the Happy Hour ability and no passive
+- Shiny Gyarados | only appears as the shiny stage 9
+
+**Game Mode**
+- Ditto Bundle | free → 5 GOLD
+- Unown Bundle | removed
+- Regional Rolls Bundle | free rolls 10 → 5
+- Cooking Bundle | no longer gives a dish to every Pokémon
+- Hatch Bundle | Golden Egg chance 5% → 1%
+- Gems Bundle | 5 → 10 GOLD
+- Uncommon / Rare / Epic Bundle | [6/9/12] → [5/10/15] GOLD
+- Ultra Bundle | matches one of your partner's 2 → 3 most common synergies
+- Legendary Bundle | 50 → 40 GOLD, matches one of your partner's 2 → 4 most common synergies
+- Evolve Bundle | if nothing can evolve, gives a SILVER_DOJO_TICKET instead of a stat boost
+- Gift selection | +10 seconds to choose. If no gift is chosen in time, nothing is gifted and that gift is lost
+
 **Wishes**
 - Scorching Tome | damage bonus against BURN or WOUND 40% → 30%
 

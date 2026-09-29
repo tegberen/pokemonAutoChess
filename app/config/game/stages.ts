@@ -21,3 +21,4 @@ export const ItemCarouselStages = [4, 12, 17, 22, 27, 34]
 export const AdditionalPicksStages = [5, 8, 11]
 export const PortalCarouselStages = [0, 10, 20]
 export const ArmoryAssistStages = [15, 16, 25, 26]
+export const ARMORY_ASSIST_EXTRA_TIME = 10000

@@ -9,6 +9,7 @@ import { MapSchema, SetSchema, StateView } from "@colyseus/schema"
 import { type Client, updateLobby } from "colyseus"
 import {
   AdditionalPicksStages,
+  ARMORY_ASSIST_EXTRA_TIME,
   ArmoryAssistStages,
   BOARD_SIDE_HEIGHT,
   BOARD_WIDTH,
@@ -2998,6 +2999,7 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
       ArmoryAssistStages.includes(this.state.stageLevel) &&
       !this.state.gameFinished
     ) {
+      this.state.time += ARMORY_ASSIST_EXTRA_TIME
       const firstGroup: Player[] = []
       const secondGroup: Player[] = []
       // Make groups by user id
@@ -3060,6 +3062,11 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
           pveStageBase.shinyChance !== undefined) ||
         this.state.specialGameRule === SpecialGameRule.SHINIEST_HUNTER ||
         chance(pveStageBase.shinyChance ?? 0)
+
+      if (this.state.shinyEncounter && pveStageBase.baseIsShinyOnly) {
+        this.state.currentPveVariantIndex = 0
+        this.state.pveVariantIndexByStage.set(`${this.state.stageLevel}`, 0)
+      }
     }
 
     if (
@@ -3527,6 +3534,11 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
           }
         })
       if (player.blessingsRef) player.blessingsRef.thinkFastActive = false
+
+      // an unanswered gift is lost, not held into later stages
+      player.choices
+        .filter((choice) => choice.type === "armory_assist")
+        .forEach((choice) => removeInArray(player.choices, choice))
     })
   }
 

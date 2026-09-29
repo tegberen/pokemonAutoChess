@@ -1,11 +1,15 @@
 import { useTranslation } from "react-i18next"
-import type { ArmoryOptions } from "../../../../types/enum/ArmoryOptions"
+import {
+  type ArmoryOptions,
+  ArmoryOptionsPrice
+} from "../../../../types/enum/ArmoryOptions"
 import { Tooltip } from "react-tooltip"
 import "./item-detail.css"
 import { addIconsToDescription } from "../../pages/utils/descriptions"
 
 export function BundleDetailTooltipContent({ item }: { item: ArmoryOptions }) {
   const { t } = useTranslation()
+  const price = ArmoryOptionsPrice[item]
   return (
     <div className="game-item-detail">
       <img
@@ -13,10 +17,18 @@ export function BundleDetailTooltipContent({ item }: { item: ArmoryOptions }) {
         src={`assets/item/${item}.png`}
         alt={t(`armory.${item}` as any)}
       />
-    <div className="game-item-detail-name">
-      {t(`armory.${item}` as any)}
+      <div className="game-item-detail-name">
+        {t(`armory.${item}` as any)}
+      </div>
+      <p className="game-item-detail-description">
+        {addIconsToDescription(t(`armory_description.${item}` as any))}
+      </p>
+      <p className="game-item-detail-description">
+        {price === 0
+          ? t("wiki.items.bundles_free")
+          : addIconsToDescription(`${price} GOLD`)}
+      </p>
     </div>
-    <p className="game-item-detail-description">{addIconsToDescription(t(`armory_description.${item}` as any))}</p>    </div>
   )
 }
 
