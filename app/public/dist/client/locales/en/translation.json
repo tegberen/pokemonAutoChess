@@ -6669,7 +6669,7 @@
 		},
 		"POKEMONOMICON_BLESSING": {
 			"name": "Scorching Tome",
-			"description": "Gain a POKEMONOMICON. The holder also applies WOUND for 3 seconds, and enemies affected by BURN or WOUND take 40% increased damage from your attacks and abilities."
+			"description": "Gain a POKEMONOMICON. The holder also applies WOUND for 3 seconds, and enemies affected by BURN or WOUND take 30% increased damage from your attacks and abilities."
 		},
 		"DESTINY_KNOT_BLESSING": {
 			"name": "Red Thread",
