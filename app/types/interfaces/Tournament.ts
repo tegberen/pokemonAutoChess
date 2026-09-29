@@ -12,10 +12,15 @@ export type TournamentStage =
   | "final"
   | "finished"
 
+// duo plays Double Up Classic in teams of 2; solo plays Smeargle Pack Scribble
+// with every player as a team of 1
+export type TournamentFormat = "duo" | "solo"
+
 export interface ITournament {
   id: string
   name: string
   startDate: string
+  format: TournamentFormat
   players: MapSchema<TournamentPlayerSchema>
   teams: MapSchema<TournamentTeamSchema>
   brackets: MapSchema<TournamentBracketSchema>

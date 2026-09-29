@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react"
-import { TEAMS_PER_LOBBY } from "../../../../../core/tournament-swiss"
+import { TOURNAMENT_RULES } from "../../../../../core/tournament-swiss"
 import type { ITournament } from "../../../../../types/interfaces/Tournament"
 import { schemaEntries } from "../../../../../utils/schemas"
 import {
@@ -10,6 +10,8 @@ import {
 } from "../../../network"
 
 type Participant = { id: string; name: string }
+
+const DUO_TEAMS_PER_LOBBY = TOURNAMENT_RULES.duo.teamsPerLobby
 
 export function TournamentTeamsAdmin(props: { tournament: ITournament }) {
   // not memoised: the MapSchema mutates in place and never changes identity
@@ -85,9 +87,9 @@ export function TournamentTeamsAdmin(props: { tournament: ITournament }) {
     setPairs([...workingPairs(), ...next])
   }
 
-  const fillsLobbies = pairs.length > 0 && pairs.length % TEAMS_PER_LOBBY === 0
+  const fillsLobbies = pairs.length > 0 && pairs.length % DUO_TEAMS_PER_LOBBY === 0
   const canStart =
-    registered.length > 0 && registered.length % TEAMS_PER_LOBBY === 0
+    registered.length > 0 && registered.length % DUO_TEAMS_PER_LOBBY === 0
 
   return (
     <div className="tournament-teams-admin">
@@ -163,9 +165,9 @@ export function TournamentTeamsAdmin(props: { tournament: ITournament }) {
                     ? unpaired.length > 0
                       ? `${unpaired.length} participants stay on the bench`
                       : ""
-                    : `Lobbies hold ${TEAMS_PER_LOBBY} teams: add ${
-                        TEAMS_PER_LOBBY - (pairs.length % TEAMS_PER_LOBBY)
-                      } more or remove ${pairs.length % TEAMS_PER_LOBBY}`
+                    : `Lobbies hold ${DUO_TEAMS_PER_LOBBY} teams: add ${
+                        DUO_TEAMS_PER_LOBBY - (pairs.length % DUO_TEAMS_PER_LOBBY)
+                      } more or remove ${pairs.length % DUO_TEAMS_PER_LOBBY}`
                 }
                 onClick={() =>
                   registerTournamentTeams({
@@ -182,7 +184,7 @@ export function TournamentTeamsAdmin(props: { tournament: ITournament }) {
               </button>
               {!fillsLobbies && (
                 <span className="tournament-teams-warning">
-                  Needs a multiple of {TEAMS_PER_LOBBY} teams
+                  Needs a multiple of {DUO_TEAMS_PER_LOBBY} teams
                 </span>
               )}
             </div>
@@ -244,7 +246,7 @@ export function TournamentTeamsAdmin(props: { tournament: ITournament }) {
           title={
             canStart
               ? "Open the lobbies of the first round now"
-              : `Register a multiple of ${TEAMS_PER_LOBBY} teams first`
+              : `Register a multiple of ${DUO_TEAMS_PER_LOBBY} teams first`
           }
           onClick={() => {
             if (
@@ -260,7 +262,7 @@ export function TournamentTeamsAdmin(props: { tournament: ITournament }) {
           <span className="tournament-teams-warning">
             {pairs.length > 0
               ? `Register the ${pairs.length} teams above first`
-              : `Register a multiple of ${TEAMS_PER_LOBBY} teams first`}
+              : `Register a multiple of ${DUO_TEAMS_PER_LOBBY} teams first`}
           </span>
         )}
         <div className="spacer" />
@@ -323,6 +325,95 @@ function PairPicker(props: {
       >
         Add team
       </button>
+    </div>
+  )
+}
+
+// Solo needs no pairing: every participant is a team of one, built on start
+export function TournamentSoloAdmin(props: { tournament: ITournament }) {
+  const participants: Participant[] = schemaEntries(
+    props.tournament.players
+  ).map(([id, player]) => ({ id, name: player.name }))
+  const { teamsPerLobby } = TOURNAMENT_RULES.solo
+  const leftOver = participants.length % teamsPerLobby
+  const canStart = participants.length > 0 && leftOver === 0
+
+  return (
+    <div className="tournament-teams-admin">
+      <p className="tournament-teams-summary">
+        {participants.length} participants · lobbies hold {teamsPerLobby}{" "}
+        players
+      </p>
+
+      {participants.length > 0 && (
+        <section>
+          <h3>Participants</h3>
+          <ol className="tournament-team-list">
+            {participants.map((p) => (
+              <li key={p.id}>
+                <button
+                  className="remove-btn bubbly red"
+                  title="Remove from the tournament"
+                  onClick={() =>
+                    kickTournamentParticipant({
+                      tournamentId: props.tournament.id,
+                      playerId: p.id
+                    })
+                  }
+                >
+                  x
+                </button>
+                {p.name}
+              </li>
+            ))}
+          </ol>
+        </section>
+      )}
+
+      <footer className="actions">
+        <button
+          className="bubbly green"
+          disabled={!canStart}
+          title={
+            canStart
+              ? "Open the lobbies of the first round now"
+              : `Needs a multiple of ${teamsPerLobby} participants`
+          }
+          onClick={() => {
+            if (
+              confirm(
+                `Start the tournament with ${participants.length} players ?`
+              )
+            ) {
+              startTournament({ tournamentId: props.tournament.id })
+            }
+          }}
+        >
+          Start tournament
+        </button>
+        {!canStart && participants.length > 0 && (
+          <span className="tournament-teams-warning">
+            Add {teamsPerLobby - leftOver} or remove {leftOver} participants
+          </span>
+        )}
+        <div className="spacer" />
+        {[16, 32].map((target) => (
+          <button
+            key={target}
+            className="bubbly"
+            title="Test tool: adds stand-in participants"
+            disabled={participants.length >= target}
+            onClick={() =>
+              addTournamentTestPlayers({
+                tournamentId: props.tournament.id,
+                count: target - participants.length
+              })
+            }
+          >
+            Fill to {target}
+          </button>
+        ))}
+      </footer>
     </div>
   )
 }

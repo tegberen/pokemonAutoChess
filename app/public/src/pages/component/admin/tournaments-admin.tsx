@@ -2,9 +2,14 @@ import type { RoomAvailable } from "@colyseus/sdk"
 import { useState } from "react"
 import {
   getTeamFinalRanking,
-  getTeamTournamentStage
+  getTeamTournamentStage,
+  getTournamentRules
 } from "../../../../../core/tournament-logic"
-import type { ITournament } from "../../../../../types/interfaces/Tournament"
+import { TOURNAMENT_RULES } from "../../../../../core/tournament-swiss"
+import type {
+  ITournament,
+  TournamentFormat
+} from "../../../../../types/interfaces/Tournament"
 import { schemaEntries } from "../../../../../utils/schemas"
 import { useAppSelector } from "../../../hooks"
 import {
@@ -18,11 +23,15 @@ import {
   startTournamentLobby
 } from "../../../network"
 import { cc } from "../../utils/jsx"
-import { TournamentTeamsAdmin } from "./tournament-teams-admin"
+import {
+  TournamentSoloAdmin,
+  TournamentTeamsAdmin
+} from "./tournament-teams-admin"
 import "./tournament-admin.css"
 
 export function TournamentsAdmin() {
   const [tournamentName, setTournamentName] = useState<string>("")
+  const [format, setFormat] = useState<TournamentFormat>("duo")
   const tournaments = useAppSelector((state) => state.lobby.tournaments)
 
   function createNewTournament(event) {
@@ -30,7 +39,8 @@ export function TournamentsAdmin() {
     createTournament({
       name: tournamentName,
       // the admin starts it by hand, so this is only a creation timestamp
-      startDate: new Date().toISOString()
+      startDate: new Date().toISOString(),
+      format
     })
     setTournamentName("")
   }
@@ -45,6 +55,20 @@ export function TournamentsAdmin() {
           value={tournamentName}
           onChange={(event) => setTournamentName(event.target.value)}
         />
+        <select
+          value={format}
+          onChange={(event) =>
+            setFormat(event.target.value as TournamentFormat)
+          }
+        >
+          {(Object.keys(TOURNAMENT_RULES) as TournamentFormat[]).map(
+            (option) => (
+              <option key={option} value={option}>
+                {TOURNAMENT_RULES[option].label}
+              </option>
+            )
+          )}
+        </select>
         <button type="submit" className="bubbly blue">
           Create tournament
         </button>
@@ -63,6 +87,7 @@ export function TournamentsAdmin() {
 
 function TournamentAdminItem(props: { tournament: ITournament }) {
   const { tournament } = props
+  const isSolo = tournament.format === "solo"
   const stage =
     tournament.stage === "registration"
       ? "Registration"
@@ -72,20 +97,24 @@ function TournamentAdminItem(props: { tournament: ITournament }) {
     <div className="my-box tournament-admin-item">
       <header>
         <h2>{tournament.name}</h2>
-        <span className="tournament-admin-stage">{stage}</span>
+        <span className="tournament-admin-stage">
+          {getTournamentRules(tournament).label} · {stage}
+        </span>
         <div className="spacer" />
-        <button
-          className={cc("bubbly", tournament.wishesEnabled ? "green" : "")}
-          title="Applies to the lobbies opened from now on"
-          onClick={() =>
-            setTournamentWishes({
-              tournamentId: tournament.id,
-              enabled: !tournament.wishesEnabled
-            })
-          }
-        >
-          Wishes {tournament.wishesEnabled ? "on" : "off"}
-        </button>
+        {!isSolo && (
+          <button
+            className={cc("bubbly", tournament.wishesEnabled ? "green" : "")}
+            title="Applies to the lobbies opened from now on"
+            onClick={() =>
+              setTournamentWishes({
+                tournamentId: tournament.id,
+                enabled: !tournament.wishesEnabled
+              })
+            }
+          >
+            Wishes {tournament.wishesEnabled ? "on" : "off"}
+          </button>
+        )}
         <button
           className="bubbly blue"
           onClick={() => {
@@ -108,9 +137,12 @@ function TournamentAdminItem(props: { tournament: ITournament }) {
           Delete
         </button>
       </header>
-      {tournament.stage === "registration" && (
-        <TournamentTeamsAdmin tournament={tournament} />
-      )}
+      {tournament.stage === "registration" &&
+        (isSolo ? (
+          <TournamentSoloAdmin tournament={tournament} />
+        ) : (
+          <TournamentTeamsAdmin tournament={tournament} />
+        ))}
       {tournament.stage !== "registration" && !tournament.finished && (
         <>
           <TournamentLobbiesAdmin tournament={tournament} />

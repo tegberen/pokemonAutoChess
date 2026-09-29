@@ -236,12 +236,45 @@
   bottom: auto;
 }
 
+/* its rainbow glow is two rings drawn behind it (index.css), not a filter */
+.room-folder.tournament-folder.scribble-tournament-folder {
+  filter: none;
+}
+
+/* the stripes darkened, so the room name keeps its contrast */
+.room-folder.scribble-tournament-folder .room-mode {
+  background-color: var(--scribble-tournament-bg);
+  background-image:
+    linear-gradient(rgb(0 0 0 / 20%), rgb(0 0 0 / 20%)),
+    var(--scribble-tournament-stripes);
+  /* anchored to the viewport like the tab and card, so the stripes run on
+     across the seams instead of restarting */
+  background-attachment: fixed;
+}
+
+.room-folder.scribble-tournament-folder .room-folder-tab,
+.room-folder.scribble-tournament-folder > .room-item.daily-duel {
+  background-color: var(--scribble-tournament-bg);
+  background-image: var(--scribble-tournament-stripes);
+}
+
 .room-folder.tournament-folder .game-event-tag {
   background-color: color-mix(
     in srgb,
     var(--color-rarity-epic) 30%,
     var(--color-blessing-card)
   );
+}
+
+/* the mode strip's stripes, a shade darker, so the tag sits in the pattern
+   as a darker inset */
+.room-folder.scribble-tournament-folder .game-event-tag {
+  border-color: #1b1d24;
+  background-color: var(--scribble-tournament-bg);
+  background-image:
+    linear-gradient(rgb(0 0 0 / 35%), rgb(0 0 0 / 35%)),
+    var(--scribble-tournament-stripes);
+  background-attachment: fixed;
 }
 
 .room-item .icon {

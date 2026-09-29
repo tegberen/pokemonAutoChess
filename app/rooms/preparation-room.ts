@@ -127,6 +127,7 @@ export default class PreparationRoom extends Room<{ state: PreparationState }> {
     minRank?: EloRank
     maxRank?: EloRank
     gameMode: GameMode
+    specialGameRule?: SpecialGameRule
     noElo?: boolean
     password?: string
     autoStartDelayInSeconds?: number
@@ -173,7 +174,7 @@ export default class PreparationRoom extends Room<{ state: PreparationState }> {
       scribbleExtended: false,
       whimsy: options.whimsy ?? false,
       blessingsEnabled: this.state.blessingsEnabled,
-      specialGameRule: null,
+      specialGameRule: this.state.specialGameRule,
       dailyDuel: options.dailyDuel ?? false
     })
     this.maxClients = 8

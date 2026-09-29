@@ -45,6 +45,12 @@ section.room-menu .room-menu > ul {
   list-style: none;
 }
 
+/* the list scrolls, so it clips whatever sticks out of it: this keeps room
+   for the event cards' glow on their outer edges */
+.room-menu .react-tabs__tab-panel--selected ul.room-list {
+  padding: 4px;
+}
+
 .room-menu .room-list {
   display: grid;
   grid-template-columns: 1fr 1fr;

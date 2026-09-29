@@ -78,6 +78,14 @@
     0 0 7px color-mix(in srgb, var(--color-rarity-epic) 50%, transparent);
 }
 
+/* Solo Smeargle Pack tournament games wear their rooms' rainbow stripes
+   instead of Duo Classic's purple, without a glow */
+.game-history.my-box.tournament-game.scribble-tournament-game {
+  background-color: var(--scribble-tournament-bg);
+  background-image: var(--scribble-tournament-stripes);
+  box-shadow: none;
+}
+
 /* the Wish cards' holo sweep (blessing-sheen, game-choice.css) on every
    Daily Duel and tournament game */
 .game-history.event-game {

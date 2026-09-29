@@ -490,6 +490,9 @@ Every balance change on this server, newest first.
 
 ### 29 September 2026
 
+**Game Modes**
+- Solo Tournament {{new}} | Solo · Scribble: Smeargle Pack. 3 qualification rounds of 8 players scored [8/7/6/5/4/3/2/1], the top 16 play 2 semi-finals, the top 4 of each reach the final
+
 **Fixes**
 - Baby Opener | in Double Up the HP gained per egg now heals the team
 

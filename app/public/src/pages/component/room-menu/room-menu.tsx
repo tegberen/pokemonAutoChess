@@ -77,14 +77,16 @@ export default function RoomMenu() {
     }
   }
 
-  // tournament games are Double Up games, told apart by their tournament
+  // tournament games are Double Up or Solo custom games, told apart by their
+  // tournament
   const hasTournamentLobbies = gameRooms.some((r) => r.metadata.tournamentId)
   const hasDoubleUpLobbies = gameRooms.some(
     (r) =>
       r.metadata.gameMode === GameMode.DOUBLE_UP && !r.metadata.tournamentId
   )
   const hasCustomLobbies = gameRooms.some(
-    (r) => r.metadata.gameMode === GameMode.CUSTOM_LOBBY
+    (r) =>
+      r.metadata.gameMode === GameMode.CUSTOM_LOBBY && !r.metadata.tournamentId
   )
   const hasDailyDuelLobby = preparationRooms.some((r) => r.metadata?.dailyDuel)
 
@@ -138,7 +140,7 @@ export default function RoomMenu() {
       )}
       {hasCustomLobbies && (
         <TabPanel>
-          <IngameRoomsList gameMode={GameMode.CUSTOM_LOBBY} />
+          <IngameRoomsList gameMode={GameMode.CUSTOM_LOBBY} tournament={false} />
         </TabPanel>
       )}
 

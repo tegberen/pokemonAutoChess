@@ -9,6 +9,7 @@ import { hasCustomRoomName } from "../../../../../utils/room-name"
 import { useAppSelector } from "../../../hooks"
 import { cc } from "../../utils/jsx"
 import { GameModeIcon } from "../icons/game-mode-icon"
+import { useFolderGlowGeometry } from "./use-folder-glow-geometry"
 import { GameModificationIcon } from "../preparation/game-modification-banner"
 import "./room-item.css"
 
@@ -44,14 +45,20 @@ export default function GameRoomItem(props: {
 ${metadata?.ownerName ? "Owner: " + metadata.ownerName : ""}\n${metadata?.playersInfo?.join("\n")}`
 
   const isTournament = !!metadata?.tournamentId
+  // Solo tournaments play Smeargle Pack custom games, Duo ones Double Up
+  const isScribbleTournament =
+    isTournament && metadata?.gameMode === GameMode.CUSTOM_LOBBY
   // Daily Duels and tournaments share the striped, sheened event look
   const isEvent = metadata?.dailyDuel === true || isTournament
+  const folderRef = useFolderGlowGeometry<HTMLDivElement>(isScribbleTournament)
 
   return (
     <div
+      ref={folderRef}
       className={cc("room-folder", {
         "event-folder": isEvent,
-        "tournament-folder": isTournament
+        "tournament-folder": isTournament,
+        "scribble-tournament-folder": isScribbleTournament
       })}
       title={title}
     >

@@ -5,14 +5,13 @@ import {
   getTeamFinalRanking,
   getTeamStandings,
   getTeamTournamentStage,
+  getTournamentRules,
   makeTeamBrackets
 } from "../../core/tournament-logic"
 import {
-  SEMIFINALISTS,
+  finalistsPerSemifinal,
   skipsSemifinals,
   SWISS_ROUNDS,
-  TEAM_PLACEMENT_POINTS,
-  TEAMS_PER_LOBBY,
   TOURNAMENT_LOBBY_START_DELAY_IN_SECONDS
 } from "../../core/tournament-swiss"
 import {
@@ -24,9 +23,11 @@ import { Tournament } from "../../models/mongo-models/tournament"
 import UserMetadata from "../../models/mongo-models/user-metadata"
 import { Role, Transfer } from "../../types"
 import { GameMode } from "../../types/enum/Game"
+import { SpecialGameRule } from "../../types/enum/SpecialGameRule"
 import type {
   ITournament,
-  ITournamentBracket
+  ITournamentBracket,
+  TournamentFormat
 } from "../../types/interfaces/Tournament"
 import { logger } from "../../utils/logger"
 import { shuffleArray } from "../../utils/random"
@@ -35,21 +36,23 @@ import type CustomLobbyRoom from "../custom-lobby-room"
 
 export class OnCreateTournamentCommand extends Command<
   CustomLobbyRoom,
-  { client: Client; name: string; startDate: string }
+  { client: Client; name: string; startDate: string; format: TournamentFormat }
 > {
   async execute({
     client,
     name,
-    startDate
+    startDate,
+    format
   }: {
     client: Client
     name: string
     startDate: string
+    format: TournamentFormat
   }) {
     try {
       const user = this.room.users.get(client.auth.uid)
       if (user && user.role && user.role === Role.ADMIN) {
-        await this.state.createTournament(name, startDate)
+        await this.state.createTournament(name, startDate, format)
         await this.room.fetchTournaments()
         this.room.presence.publish(
           "announcement",
@@ -250,8 +253,8 @@ function advanceTeamTournament(tournament: ITournament, tournamentId: string) {
     return [new EndTournamentCommand().setPayload({ tournamentId })]
   }
 
+  const rules = getTournamentRules(tournament)
   if (tournament.stage === "semifinals") {
-    // the top two of each semifinal lobby reach the final
     tournament.brackets.forEach((bracket) => {
       const ranked = [...bracket.teamsId]
         .map((id) => ({ id, team: tournament.teams.get(id) }))
@@ -261,7 +264,7 @@ function advanceTeamTournament(tournament: ITournament, tournamentId: string) {
             (a.team!.placements.at(-1) ?? 99) -
             (b.team!.placements.at(-1) ?? 99)
         )
-      ranked.slice(2).forEach(({ team }) => {
+      ranked.slice(finalistsPerSemifinal(rules)).forEach(({ team }) => {
         team!.eliminated = true
       })
     })
@@ -273,10 +276,10 @@ function advanceTeamTournament(tournament: ITournament, tournamentId: string) {
   if (tournament.roundNumber >= SWISS_ROUNDS) {
     // with no more teams than semifinal seats, the semifinals would cut
     // nobody, so the top of the table goes straight to the final
-    const skipSemifinals = skipsSemifinals(tournament.teams.size)
+    const skipSemifinals = skipsSemifinals(tournament.teams.size, rules)
     const qualified = new Set(
       getTeamStandings(tournament)
-        .slice(0, skipSemifinals ? TEAMS_PER_LOBBY : SEMIFINALISTS)
+        .slice(0, skipSemifinals ? rules.teamsPerLobby : rules.semifinalists)
         .map((team) => team.id)
     )
     tournament.teams.forEach((team, id) => {
@@ -328,7 +331,14 @@ export class RegisterTournamentTeamsCommand extends Command<
           "Teams can only be registered before the tournament starts."
         )
       }
+      if (tournament.format === "solo") {
+        return client.send(
+          Transfer.ALERT,
+          "A Solo tournament has no teams to register: every participant plays alone."
+        )
+      }
 
+      const { teamsPerLobby } = getTournamentRules(tournament)
       const seen = new Set<string>()
       for (const pair of pairs) {
         if (pair.length !== 2) {
@@ -350,10 +360,10 @@ export class RegisterTournamentTeamsCommand extends Command<
           seen.add(playerId)
         }
       }
-      if (pairs.length % TEAMS_PER_LOBBY !== 0) {
+      if (pairs.length % teamsPerLobby !== 0) {
         return client.send(
           Transfer.ALERT,
-          `${pairs.length} teams cannot fill whole lobbies of ${TEAMS_PER_LOBBY}.`
+          `${pairs.length} teams cannot fill whole lobbies of ${teamsPerLobby}.`
         )
       }
 
@@ -413,6 +423,7 @@ export class TournamentPartnerCommand extends Command<
       )
       if (!tournament)
         return logger.error(`Tournament not found: ${tournamentId}`)
+      if (tournament.format === "solo") return
       if (tournament.stage !== "registration") {
         return client.send(
           Transfer.ALERT,
@@ -616,6 +627,17 @@ export class StartTournamentLobbyNowCommand extends Command<
   }
 }
 
+// the Swiss engine ranks teams, so in Solo every participant is a team of one
+function registerSoloTeams(tournament: ITournament) {
+  tournament.teams.clear()
+  tournament.players.forEach((player, playerId) => {
+    tournament.teams.set(
+      `team-${playerId}`,
+      new TournamentTeamSchema(player.name, [playerId])
+    )
+  })
+}
+
 export class StartTournamentCommand extends Command<
   CustomLobbyRoom,
   { client: Client; tournamentId: string }
@@ -637,13 +659,23 @@ export class StartTournamentCommand extends Command<
           "This tournament has already started."
         )
       }
+      const { teamsPerLobby } = getTournamentRules(tournament)
+      if (tournament.format === "solo") {
+        if (tournament.players.size % teamsPerLobby !== 0) {
+          return client.send(
+            Transfer.ALERT,
+            `${tournament.players.size} players cannot fill whole lobbies of ${teamsPerLobby}. Add or remove participants first.`
+          )
+        }
+        registerSoloTeams(tournament)
+      }
       if (tournament.teams.size === 0) {
         return client.send(Transfer.ALERT, "Register the teams first.")
       }
-      if (tournament.teams.size % TEAMS_PER_LOBBY !== 0) {
+      if (tournament.teams.size % teamsPerLobby !== 0) {
         return client.send(
           Transfer.ALERT,
-          `${tournament.teams.size} teams cannot fill whole lobbies of ${TEAMS_PER_LOBBY}. Re-register the teams.`
+          `${tournament.teams.size} teams cannot fill whole lobbies of ${teamsPerLobby}. Re-register the teams.`
         )
       }
 
@@ -696,13 +728,18 @@ async function createTournamentLobby(
   bracketId: string,
   bracket: ITournamentBracket
 ) {
+  // a Solo Scribble room is a custom lobby with its rule fixed:
+  // GameMode.SCRIBBLE would roll a random rule instead of Smeargle Pack
+  const isSolo = tournament.format === "solo"
   const lobby = await matchMaker.createRoom("preparation", {
-    gameMode: GameMode.DOUBLE_UP,
+    gameMode: isSolo ? GameMode.CUSTOM_LOBBY : GameMode.DOUBLE_UP,
+    specialGameRule: isSolo ? SpecialGameRule.SMEARGLE_PACK : undefined,
     noElo: true,
     ownerId: null,
     roomName: bracket.name,
     autoStartDelayInSeconds: TOURNAMENT_LOBBY_START_DELAY_IN_SECONDS,
-    blessingsEnabled: tournament.wishesEnabled,
+    // Wishes and Scribble are mutually exclusive modifications
+    blessingsEnabled: isSolo ? false : tournament.wishesEnabled,
     whitelist: [...bracket.playersId],
     tournamentTeams: lobbyTeams(tournament, bracket.teamsId),
     tournamentId: tournament.id,
@@ -820,13 +857,14 @@ export class RemakeTournamentLobbyCommand extends Command<
   }
 }
 
-// both partners of a Double Up team share the same rank, so a lobby's four
-// team placements are read straight off the players
+// both partners of a Double Up team share the same rank, and a Solo team is
+// one player, so a lobby's team placements are read straight off the players
 function recordTeamResults(
   tournament: ITournament,
   bracket: { teamsId: { forEach: (fn: (id: string) => void) => void } },
   players: { id: string; rank: number }[]
 ) {
+  const { teamsPerLobby, placementPoints } = getTournamentRules(tournament)
   const rankByPlayer = new Map(players.map((p) => [p.id, p.rank]))
   const lobbyTeamIds: string[] = []
   bracket.teamsId.forEach((id) => lobbyTeamIds.push(id))
@@ -838,9 +876,9 @@ function recordTeamResults(
       .map((playerId) => rankByPlayer.get(playerId))
       .find((rank) => rank !== undefined)
     // a forfeit is recorded as last place for the tiebreaks, but scores nothing
-    team.placements.push(placement ?? TEAMS_PER_LOBBY)
+    team.placements.push(placement ?? teamsPerLobby)
     if (placement !== undefined) {
-      team.points += TEAM_PLACEMENT_POINTS[placement] ?? 0
+      team.points += placementPoints[placement] ?? 0
     }
     team.lobbyHistory.push(lobbyTeamIds.join(","))
     lobbyTeamIds

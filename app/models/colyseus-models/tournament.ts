@@ -4,6 +4,7 @@ import type {
   ITournamentBracket,
   ITournamentPlayer,
   ITournamentTeam,
+  TournamentFormat,
   TournamentStage
 } from "../../types/interfaces/Tournament"
 import { resetArraySchema } from "../../utils/schemas"
@@ -96,6 +97,7 @@ export class TournamentSchema extends Schema implements ITournament {
   @type("string") id: string
   @type("string") name: string
   @type("string") startDate: string
+  @type("string") format: TournamentFormat
   @type({ map: TournamentPlayerSchema }) players =
     new MapSchema<TournamentPlayerSchema>()
   @type({ map: TournamentTeamSchema }) teams =
@@ -118,12 +120,14 @@ export class TournamentSchema extends Schema implements ITournament {
     teams?: MapSchema<ITournamentTeam, string>,
     stage: TournamentStage = "registration",
     roundNumber: number = 0,
-    wishesEnabled: boolean = false
+    wishesEnabled: boolean = false,
+    format: TournamentFormat = "duo"
   ) {
     super()
     this.id = id
     this.name = name
     this.startDate = startDate
+    this.format = format
     this.finished = finished
     this.stage = stage
     this.roundNumber = roundNumber

@@ -32,6 +32,7 @@ const tournamentBracketSchema = new Schema({
 const tournamentSchema = new Schema({
   name: String,
   startDate: String,
+  format: { type: String, default: "duo" },
   players: {
     type: Map,
     of: tournamentPlayerSchema

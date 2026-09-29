@@ -24,7 +24,7 @@ import Team from "../after/team"
 import { GamePokemonDetailTooltip } from "../game/game-pokemon-detail"
 import { GameModeIcon } from "../icons/game-mode-icon"
 import { GameModificationIcon } from "../preparation/game-modification-banner"
-import { getGameModification } from "../../../../../types/enum/Game"
+import { GameMode, getGameModification } from "../../../../../types/enum/Game"
 import SynergyIcon from "../icons/synergy-icon"
 import {
   BlessingIcon,
@@ -174,11 +174,14 @@ function GameHistoryRow({
     : r.tournament
       ? t("game_event_tag.TOURNAMENT")
       : null
+  // Solo tournaments play Smeargle Pack custom games, Duo ones Double Up
+  const isScribbleTournament =
+    r.tournament === true && r.gameMode === GameMode.CUSTOM_LOBBY
 
   return (
     <div style={style}>
       <div
-        className={`my-box game-history${eventTag ? " event-game" : ""}${r.tournament ? " tournament-game" : ""}`}
+        className={`my-box game-history${eventTag ? " event-game" : ""}${r.tournament ? " tournament-game" : ""}${isScribbleTournament ? " scribble-tournament-game" : ""}`}
       >
         <div className="game-meta">
           <span className="result">

@@ -30,6 +30,7 @@ import {
   setGameModification,
   toggleReady
 } from "../../../network"
+import { addIconsToDescription } from "../../utils/descriptions"
 import { cc } from "../../utils/jsx"
 import { GameModeIcon } from "../icons/game-mode-icon"
 import {
@@ -63,6 +64,9 @@ export default function PreparationMenu() {
     (state) => state.preparation.tournamentTeams
   )
   const isTournamentLobby = tournamentTeams.length > 0
+  // Solo tournaments play Smeargle Pack custom games, Duo ones Double Up
+  const isScribbleTournament =
+    isTournamentLobby && gameMode === GameMode.CUSTOM_LOBBY
   const rollsRandomScribble = useAppSelector(
     (state) => state.preparation.whimsy
   )
@@ -136,7 +140,7 @@ export default function PreparationMenu() {
     </div>
   ) : (
     <>
-      {isTournamentLobby && (
+      {isTournamentLobby && !isScribbleTournament && (
         <div className="rule-banner event-banner tournament-banner my-box">
           <img
             className="rule-banner-icon"
@@ -148,6 +152,36 @@ export default function PreparationMenu() {
             <h3>{t("game_event_tag.TOURNAMENT")}</h3>
             <p>
               {t("tournament.lobby_hint", {
+                players: nbExpectedPlayers,
+                minutes: TOURNAMENT_LOBBY_START_DELAY_IN_SECONDS / 60
+              })}
+            </p>
+          </div>
+        </div>
+      )}
+
+      {isScribbleTournament && specialGameRule && (
+        <div className="rule-banner event-banner scribble-tournament-banner my-box">
+          <img
+            className="rule-banner-icon"
+            src="/assets/ui/game_modes/solo_scribble_tournament.webp"
+            alt=""
+            aria-hidden="true"
+          />
+          <div className="rule-banner-text">
+            <h3>
+              {t("game_event_tag.TOURNAMENT")} ·{" "}
+              {t(`scribble.${specialGameRule}`)}
+            </h3>
+            <p>
+              {addIconsToDescription(
+                t(`scribble_description.${specialGameRule}`, {
+                  type: "(random Synergy)"
+                })
+              )}
+            </p>
+            <p>
+              {t("tournament.lobby_hint_solo", {
                 players: nbExpectedPlayers,
                 minutes: TOURNAMENT_LOBBY_START_DELAY_IN_SECONDS / 60
               })}
@@ -257,7 +291,8 @@ export default function PreparationMenu() {
     <div
       className={cc("preparation-menu my-container is-centered custom-bg", {
         "daily-duel": dailyDuel,
-        tournament: isTournamentLobby
+        tournament: isTournamentLobby && !isScribbleTournament,
+        "scribble-tournament": isScribbleTournament
       })}
     >
       <header>
@@ -285,34 +320,42 @@ export default function PreparationMenu() {
 
       <div className={`preparation-menu-users${gameMode === GameMode.DOUBLE_UP ? " double-up" : ""}`}>
         {isTournamentLobby
-          ? tournamentTeams.map((team, colorIndex) => (
-              <div
-                key={team.playersId.join()}
-                className="double-up-pair paired"
-              >
-                {team.playersId.map((playerId, i) => {
-                  const seated = users.find((u) => u.uid === playerId)
-                  return seated ? (
-                    <PreparationMenuUser
-                      key={seated.uid}
-                      user={seated}
-                      isOwner={false}
-                      ownerId={ownerId}
-                      colorIndex={colorIndex}
-                    />
-                  ) : (
-                    <div
-                      key={playerId}
-                      className="my-box preparation-menu-user missing"
-                    >
-                      <span className="missing-name">
-                        {team.playersName[i]}
-                      </span>
-                    </div>
-                  )
-                })}
-              </div>
-            ))
+          ? tournamentTeams.map((team, colorIndex) => {
+              const seats = team.playersId.map((playerId, i) => {
+                const seated = users.find((u) => u.uid === playerId)
+                return seated ? (
+                  <PreparationMenuUser
+                    key={seated.uid}
+                    user={seated}
+                    isOwner={false}
+                    ownerId={ownerId}
+                    colorIndex={
+                      gameMode === GameMode.DOUBLE_UP ? colorIndex : undefined
+                    }
+                  />
+                ) : (
+                  <div
+                    key={playerId}
+                    className="my-box preparation-menu-user missing"
+                  >
+                    <span className="missing-name">
+                      {team.playersName[i]}
+                    </span>
+                  </div>
+                )
+              })
+              // a Solo tournament seats its players one by one, unpaired
+              return gameMode === GameMode.DOUBLE_UP ? (
+                <div
+                  key={team.playersId.join()}
+                  className="double-up-pair paired"
+                >
+                  {seats}
+                </div>
+              ) : (
+                seats
+              )
+            })
           : gameMode === GameMode.DOUBLE_UP
           ? (() => {
               const paired: Set<string> = new Set()

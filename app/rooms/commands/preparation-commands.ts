@@ -1405,7 +1405,10 @@ export class StartTournamentLobbyCommand extends Command<PreparationRoom, void> 
         .flatMap((team) => {
           this.state.addMessage({
             authorId: "server",
-            payload: `${team.name} did not show up in full: they forfeit and score 0 points.`
+            payload:
+              team.playersId.length === 1
+                ? `${team.name} did not show up: they forfeit and score 0 points.`
+                : `${team.name} did not show up in full: they forfeit and score 0 points.`
           })
           return team.playersId
         })

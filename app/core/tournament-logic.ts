@@ -8,12 +8,17 @@ import {
   FINAL_BRACKET_NAME,
   makeSemifinalLobbies,
   makeSwissLobbies,
-  SEMIFINALISTS,
   standings,
   SWISS_ROUNDS,
   type SwissTeam,
-  TEAMS_PER_LOBBY
+  TOURNAMENT_RULES,
+  type TournamentRules
 } from "./tournament-swiss"
+
+// tournaments saved before Solo existed have no format and are all Duo
+export function getTournamentRules(tournament: ITournament): TournamentRules {
+  return TOURNAMENT_RULES[tournament.format ?? "duo"]
+}
 
 type RankedTeam = SwissTeam & { name: string; eliminated: boolean }
 
@@ -60,9 +65,13 @@ function teamBracket(
 export function makeTeamBrackets(
   tournament: ITournament
 ): ITournamentBracket[] {
+  const rules = getTournamentRules(tournament)
   if (tournament.stage === "semifinals") {
-    const topEight = getTeamStandings(tournament).slice(0, SEMIFINALISTS)
-    return makeSemifinalLobbies(topEight).map((lobby, index) =>
+    const qualified = getTeamStandings(tournament).slice(
+      0,
+      rules.semifinalists
+    )
+    return makeSemifinalLobbies(qualified).map((lobby, index) =>
       teamBracket(tournament, `Semi-Final ${index + 1}`, lobby)
     )
   }
@@ -73,7 +82,11 @@ export function makeTeamBrackets(
   }
 
   const round = tournament.roundNumber + 1
-  const lobbies = makeSwissLobbies(getRemainingTeams(tournament), round)
+  const lobbies = makeSwissLobbies(
+    getRemainingTeams(tournament),
+    round,
+    rules.teamsPerLobby
+  )
   return lobbies.map((lobby, index) =>
     teamBracket(
       tournament,
@@ -101,6 +114,7 @@ export function getTeamTournamentStage(tournament: ITournament): string {
 export function getTeamFinalRanking(tournament: ITournament): RankedTeam[] {
   const bySwiss = getTeamStandings(tournament)
   const swissOrder = new Map(bySwiss.map((team, index) => [team.id, index]))
+  const { teamsPerLobby } = getTournamentRules(tournament)
   return [...bySwiss].sort((a, b) => {
     if (a.eliminated !== b.eliminated) return a.eliminated ? 1 : -1
     if (a.placements.length !== b.placements.length) {
@@ -110,8 +124,8 @@ export function getTeamFinalRanking(tournament: ITournament): RankedTeam[] {
     // knockout placement splits teams here
     const playedKnockout = a.placements.length > SWISS_ROUNDS
     if (playedKnockout) {
-      const lastA = a.placements.at(-1) ?? TEAMS_PER_LOBBY
-      const lastB = b.placements.at(-1) ?? TEAMS_PER_LOBBY
+      const lastA = a.placements.at(-1) ?? teamsPerLobby
+      const lastB = b.placements.at(-1) ?? teamsPerLobby
       if (lastA !== lastB) return lastA - lastB
     }
     return (swissOrder.get(a.id) ?? 0) - (swissOrder.get(b.id) ?? 0)

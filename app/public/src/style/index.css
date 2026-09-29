@@ -55,6 +55,20 @@
         )
         48px 64px
     );
+  /* the Solo Smeargle Pack tournament: the Scribble banner's five paints plus
+     an orange, laid out in rainbow order */
+  --scribble-tournament-bg: var(--color-blessing-card);
+  --scribble-tournament-stripes:
+    linear-gradient(rgb(0 0 0 / 12%), rgb(0 0 0 / 12%)),
+    repeating-linear-gradient(
+      135deg,
+      color-mix(in srgb, #e8392f 34%, transparent) 0 16px,
+      color-mix(in srgb, #f28c28 34%, transparent) 16px 32px,
+      color-mix(in srgb, #f5c82a 34%, transparent) 32px 48px,
+      color-mix(in srgb, #3aa84a 34%, transparent) 48px 64px,
+      color-mix(in srgb, #2f6fd8 34%, transparent) 64px 80px,
+      color-mix(in srgb, #e35fb0 34%, transparent) 80px 96px
+    );
   --daily-duel-glow:
     drop-shadow(0 0 2px color-mix(in srgb, #ffc107 80%, transparent))
     drop-shadow(0 0 7px color-mix(in srgb, #ffc107 45%, transparent));
@@ -76,6 +90,179 @@
 ::after,
 ::before {
   box-sizing: border-box;
+}
+
+/* the Solo Smeargle Pack tournament glow, on its room cards and its lobby:
+   every stripe paint glows at once around the rim and slowly turns. A soft
+   band peaking on the element's edge is masked out of a rotating rainbow,
+   since a blur would be cut sharp again by the mask */
+@property --scribble-glow-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@keyframes scribble-glow-spin {
+  to {
+    --scribble-glow-angle: 360deg;
+  }
+}
+
+.room-folder.scribble-tournament-folder,
+.preparation-menu.scribble-tournament {
+  position: relative;
+  isolation: isolate;
+}
+
+.room-folder.scribble-tournament-folder::before,
+.room-folder.scribble-tournament-folder::after,
+.preparation-menu.scribble-tournament::before {
+  --glow-reach: 4px;
+  --glow-band: calc(2 * var(--glow-reach));
+  /* each corner's outer radius: the element's own radius plus the reach */
+  --glow-radius-top-left: calc(12px + var(--glow-reach));
+  --glow-radius-top-right: calc(12px + var(--glow-reach));
+  --glow-radius-bottom-right: calc(12px + var(--glow-reach));
+  --glow-radius-bottom-left: calc(12px + var(--glow-reach));
+  content: "";
+  position: absolute;
+  inset: calc(-1 * var(--glow-reach));
+  z-index: -1;
+  pointer-events: none;
+  background: conic-gradient(
+    from var(--scribble-glow-angle) at var(--glow-center-x, 50%)
+      var(--glow-center-y, 50%),
+    #e8392f,
+    #f28c28,
+    #f5c82a,
+    #3aa84a,
+    #2f6fd8,
+    #e35fb0,
+    #e8392f
+  );
+  opacity: 0.5;
+  /* the same soft band all the way round: four straight edge bands that stop
+     where the corners start, and a curved band in each corner. None of them
+     overlap, so no corner glows brighter or squarer than the edges */
+  mask-image:
+    linear-gradient(
+      to bottom,
+      transparent,
+      black var(--glow-reach),
+      transparent var(--glow-band)
+    ),
+    linear-gradient(
+      to left,
+      transparent,
+      black var(--glow-reach),
+      transparent var(--glow-band)
+    ),
+    linear-gradient(
+      to top,
+      transparent,
+      black var(--glow-reach),
+      transparent var(--glow-band)
+    ),
+    linear-gradient(
+      to right,
+      transparent,
+      black var(--glow-reach),
+      transparent var(--glow-band)
+    ),
+    radial-gradient(
+      circle at 100% 100%,
+      transparent calc(var(--glow-radius-top-left) - var(--glow-band)),
+      black calc(var(--glow-radius-top-left) - var(--glow-reach)),
+      transparent var(--glow-radius-top-left)
+    ),
+    radial-gradient(
+      circle at 0 100%,
+      transparent calc(var(--glow-radius-top-right) - var(--glow-band)),
+      black calc(var(--glow-radius-top-right) - var(--glow-reach)),
+      transparent var(--glow-radius-top-right)
+    ),
+    radial-gradient(
+      circle at 0 0,
+      transparent calc(var(--glow-radius-bottom-right) - var(--glow-band)),
+      black calc(var(--glow-radius-bottom-right) - var(--glow-reach)),
+      transparent var(--glow-radius-bottom-right)
+    ),
+    radial-gradient(
+      circle at 100% 0,
+      transparent calc(var(--glow-radius-bottom-left) - var(--glow-band)),
+      black calc(var(--glow-radius-bottom-left) - var(--glow-reach)),
+      transparent var(--glow-radius-bottom-left)
+    );
+  mask-size:
+    calc(100% - var(--glow-radius-top-left) - var(--glow-radius-top-right))
+      var(--glow-band),
+    var(--glow-band)
+      calc(
+        100% - var(--glow-radius-top-right) - var(--glow-radius-bottom-right)
+      ),
+    calc(
+        100% - var(--glow-radius-bottom-left) -
+          var(--glow-radius-bottom-right)
+      )
+      var(--glow-band),
+    var(--glow-band)
+      calc(100% - var(--glow-radius-top-left) - var(--glow-radius-bottom-left)),
+    var(--glow-radius-top-left) var(--glow-radius-top-left),
+    var(--glow-radius-top-right) var(--glow-radius-top-right),
+    var(--glow-radius-bottom-right) var(--glow-radius-bottom-right),
+    var(--glow-radius-bottom-left) var(--glow-radius-bottom-left);
+  mask-position:
+    var(--glow-radius-top-left) 0,
+    100% var(--glow-radius-top-right),
+    var(--glow-radius-bottom-left) 100%,
+    0 var(--glow-radius-top-left),
+    0 0,
+    100% 0,
+    100% 100%,
+    0 100%;
+  mask-repeat: no-repeat;
+  mask-composite: add;
+  animation: scribble-glow-spin 8s linear infinite;
+}
+
+/* a room card's outline steps down from its tab to its mode strip, so it
+   glows as two rings sized by useFolderGlowGeometry: the pieces' own
+   backgrounds hide wherever the rings overlap them, leaving only the outline.
+   Both rainbows turn around the folder's centre, so their colours meet */
+.room-folder.scribble-tournament-folder::before {
+  top: calc(var(--glow-step, 0px) - var(--glow-reach));
+  /* the top-left corner sits under the tab and never shows */
+  --glow-radius-top-left: var(--glow-band);
+  --glow-radius-top-right: calc(10px + var(--glow-reach));
+  --glow-center-x: calc(var(--glow-folder-width, 0px) / 2 + var(--glow-reach));
+  --glow-center-y: calc(
+    var(--glow-folder-height, 0px) / 2 - var(--glow-step, 0px) +
+      var(--glow-reach)
+  );
+}
+
+.room-folder.scribble-tournament-folder::after {
+  right: auto;
+  bottom: auto;
+  width: calc(var(--glow-tab-width, 0px) + 2 * var(--glow-reach));
+  height: calc(var(--glow-tab-height, 0px) + 2 * var(--glow-reach));
+  --glow-radius-top-left: calc(10px + var(--glow-reach));
+  --glow-radius-top-right: calc(6px + var(--glow-reach));
+  /* the bottom corners sit on the card and never show */
+  --glow-radius-bottom-right: var(--glow-band);
+  --glow-radius-bottom-left: var(--glow-band);
+  --glow-center-x: calc(var(--glow-folder-width, 0px) / 2 + var(--glow-reach));
+  --glow-center-y: calc(
+    var(--glow-folder-height, 0px) / 2 + var(--glow-reach)
+  );
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .room-folder.scribble-tournament-folder::before,
+  .room-folder.scribble-tournament-folder::after,
+  .preparation-menu.scribble-tournament::before {
+    animation: none;
+  }
 }
 
 body {

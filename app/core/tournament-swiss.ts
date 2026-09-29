@@ -1,23 +1,46 @@
+import type { TournamentFormat } from "../types/interfaces/Tournament"
 import { shuffleArray } from "../utils/random"
 
 // pure functions over a minimal team shape, so they run without a room or a
 // schema
 
-export const TEAM_PLACEMENT_POINTS: { [placement: number]: number } = {
-  1: 8,
-  2: 4,
-  3: 2,
-  4: 1
+export type TournamentRules = {
+  label: string
+  teamsPerLobby: number
+  placementPoints: { [placement: number]: number }
+  // two semifinal lobbies, so twice the lobby size
+  semifinalists: number
 }
 
-export const TEAMS_PER_LOBBY = 4
+export const TOURNAMENT_RULES: Record<TournamentFormat, TournamentRules> = {
+  duo: {
+    label: "Duo · Classic",
+    teamsPerLobby: 4,
+    placementPoints: { 1: 8, 2: 4, 3: 2, 4: 1 },
+    semifinalists: 8
+  },
+  solo: {
+    label: "Solo · Scribble: Smeargle Pack",
+    teamsPerLobby: 8,
+    placementPoints: { 1: 8, 2: 7, 3: 6, 4: 5, 5: 4, 6: 3, 7: 2, 8: 1 },
+    semifinalists: 16
+  }
+}
+
 export const SWISS_ROUNDS = 3
-export const SEMIFINALISTS = 8
 export const TOURNAMENT_LOBBY_START_DELAY_IN_SECONDS = 15 * 60
 export const FINAL_BRACKET_NAME = "Final"
 
-export function skipsSemifinals(teamCount: number): boolean {
-  return teamCount <= SEMIFINALISTS
+export function skipsSemifinals(
+  teamCount: number,
+  rules: TournamentRules
+): boolean {
+  return teamCount <= rules.semifinalists
+}
+
+// the top half of each semifinal lobby fills the final
+export function finalistsPerSemifinal(rules: TournamentRules): number {
+  return rules.teamsPerLobby / 2
 }
 
 export type SwissTeam = {
@@ -103,15 +126,18 @@ function countRepeats(lobby: SwissTeam[]): number {
 
 // seat the strongest team of each lobby first, then fill every seat with
 // whichever remaining team brings the fewest rematches
-function buildLowRepeatLobbies(ordered: SwissTeam[]): SwissTeam[][] {
+function buildLowRepeatLobbies(
+  ordered: SwissTeam[],
+  teamsPerLobby: number
+): SwissTeam[][] {
   const remaining = [...ordered]
   const lobbies: SwissTeam[][] = Array.from(
-    { length: ordered.length / TEAMS_PER_LOBBY },
+    { length: ordered.length / teamsPerLobby },
     () => []
   )
   lobbies.forEach((lobby) => lobby.push(remaining.shift()!))
   lobbies.forEach((lobby) => {
-    while (lobby.length < TEAMS_PER_LOBBY) {
+    while (lobby.length < teamsPerLobby) {
       let bestIndex = 0
       let bestRepeats = Number.POSITIVE_INFINITY
       for (let i = 0; i < remaining.length; i++) {
@@ -165,29 +191,34 @@ function reduceRepeatsBySwapping(
 
 export function makeSwissLobbies(
   teams: SwissTeam[],
-  roundNumber: number
+  roundNumber: number,
+  teamsPerLobby: number
 ): SwissTeam[][] {
-  if (teams.length % TEAMS_PER_LOBBY !== 0) {
+  if (teams.length % teamsPerLobby !== 0) {
     throw new Error(
-      `${teams.length} teams cannot fill whole lobbies of ${TEAMS_PER_LOBBY}`
+      `${teams.length} teams cannot fill whole lobbies of ${teamsPerLobby}`
     )
   }
-  if (roundNumber <= 1) return chunk(shuffleArray([...teams]))
-  return buildLowRepeatLobbies(standings(teams))
+  if (roundNumber <= 1) return chunk(shuffleArray([...teams]), teamsPerLobby)
+  return buildLowRepeatLobbies(standings(teams), teamsPerLobby)
 }
 
-// cross-seeded so the top qualifiers cannot meet before the final
-export function makeSemifinalLobbies(topEight: SwissTeam[]): SwissTeam[][] {
-  return [
-    [topEight[0], topEight[3], topEight[4], topEight[7]],
-    [topEight[1], topEight[2], topEight[5], topEight[6]]
-  ]
+// cross-seeded in a snake, so seeds 1 and 2 cannot meet before the final:
+// seeds 1,4,5,8,... sit in the first lobby and 2,3,6,7,... in the second
+export function makeSemifinalLobbies(qualified: SwissTeam[]): SwissTeam[][] {
+  const lobbies: SwissTeam[][] = [[], []]
+  qualified.forEach((team, seed) => {
+    const pairIsReversed = Math.floor(seed / 2) % 2 === 1
+    const lobby = pairIsReversed ? 1 - (seed % 2) : seed % 2
+    lobbies[lobby].push(team)
+  })
+  return lobbies
 }
 
-function chunk(teams: SwissTeam[]): SwissTeam[][] {
+function chunk(teams: SwissTeam[], teamsPerLobby: number): SwissTeam[][] {
   const lobbies: SwissTeam[][] = []
-  for (let i = 0; i < teams.length; i += TEAMS_PER_LOBBY) {
-    lobbies.push(teams.slice(i, i + TEAMS_PER_LOBBY))
+  for (let i = 0; i < teams.length; i += teamsPerLobby) {
+    lobbies.push(teams.slice(i, i + teamsPerLobby))
   }
   return lobbies
 }

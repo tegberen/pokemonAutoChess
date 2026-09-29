@@ -4,7 +4,10 @@ import { TournamentSchema } from "../../models/colyseus-models/tournament"
 import chatV2 from "../../models/mongo-models/chat-v2"
 import eventNpc, { type IEventNpc } from "../../models/mongo-models/event-npc"
 import tournament from "../../models/mongo-models/tournament"
-import type { ITournament } from "../../types/interfaces/Tournament"
+import type {
+  ITournament,
+  TournamentFormat
+} from "../../types/interfaces/Tournament"
 import { logger } from "../../utils/logger"
 
 export default class LobbyState extends Schema {
@@ -74,13 +77,18 @@ export default class LobbyState extends Schema {
     this.addMessage(message, "server", "Server Announcement", "0294/Joyous")
   }
 
-  async createTournament(name: string, startDate: string) {
+  async createTournament(
+    name: string,
+    startDate: string,
+    format: TournamentFormat
+  ) {
     const id = crypto.randomUUID()
     logger.debug(`creating tournament id ${id}`)
     return tournament.create({
       id,
       name,
       startDate,
+      format,
       brackets: new Map(),
       players: new Map(),
       teams: new Map(),

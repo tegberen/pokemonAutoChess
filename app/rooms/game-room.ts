@@ -1278,7 +1278,7 @@ export default class GameRoom extends Room<{ state: GameState }> {
         }
       }
 
-      // a team tournament plays its games in Double Up, so the bracket is what
+      // tournaments play Double Up or Solo custom games, so the bracket is what
       // marks a game as a tournament one, not the mode
       if (this.metadata?.tournamentId) {
         this.presence.publish("tournament-match-end", {

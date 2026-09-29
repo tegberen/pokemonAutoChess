@@ -29,6 +29,7 @@ import { CloseCodes } from "../types/enum/CloseCodes"
 import { GameMode, type RoomRequest } from "../types/enum/Game"
 import type { Language } from "../types/enum/Language"
 import { MaintenanceOrder } from "../types/enum/MaintenanceOrder"
+import type { TournamentFormat } from "../types/interfaces/Tournament"
 import type { IUserMetadataMongo } from "../types/interfaces/UserMetadata"
 import { logger } from "../utils/logger"
 import {
@@ -217,11 +218,15 @@ export default class CustomLobbyRoom extends Room {
 
     this.onMessage(
       Transfer.NEW_TOURNAMENT,
-      (client, message: { name: string; startDate: string }) => {
+      (
+        client,
+        message: { name: string; startDate: string; format: TournamentFormat }
+      ) => {
         this.dispatcher.dispatch(new OnCreateTournamentCommand(), {
           client,
           name: message.name,
-          startDate: message.startDate
+          startDate: message.startDate,
+          format: message.format === "solo" ? "solo" : "duo"
         })
       }
     )
@@ -756,7 +761,8 @@ export default class CustomLobbyRoom extends Room {
               tournament.teams,
               tournament.stage,
               tournament.roundNumber,
-              tournament.wishesEnabled
+              tournament.wishesEnabled,
+              tournament.format
             )
           )
 

@@ -20,6 +20,39 @@
   padding: 0.6em;
 }
 
+/* a Solo Smeargle Pack tournament wears its rooms' rainbow stripes, without
+   a glow */
+.tournament-item.my-box.scribble-tournament {
+  border: 1px solid #1b1d24;
+  background-color: var(--scribble-tournament-bg);
+  background-image: var(--scribble-tournament-stripes);
+  background-attachment: fixed;
+  color: #ffffff;
+  text-shadow: 1px 1px 2px #05090f;
+}
+
+/* a Duo Classic tournament wears its rooms' epic purple stripes, without a
+   glow */
+.tournament-item.my-box.duo-tournament {
+  border: 1px solid #1b1d24;
+  background-color: var(--tournament-bg);
+  background-image: var(--tournament-stripes);
+  background-attachment: fixed;
+  color: #ffffff;
+  text-shadow: 1px 1px 2px #05090f;
+}
+
+.tournament-item.scribble-tournament .tournament-format,
+.tournament-item.duo-tournament .tournament-format {
+  color: #e6e8f0;
+}
+
+.tournament-item .tournament-format {
+  margin: -0.4em 0 0;
+  color: var(--color-fg-secondary);
+  font-size: 0.9em;
+}
+
 .tournament-item .actions {
   display: flex;
   flex-wrap: wrap;

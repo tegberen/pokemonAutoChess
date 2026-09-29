@@ -7226,6 +7226,7 @@
 		"registrations_open": "Registration open",
 		"leave_tournament": "Leave tournament",
 		"lobby_hint": "Tournament lobby: starts once all {{players}} players are ready, or after {{minutes}} minutes without the teams that are not here in full: they forfeit and score 0 points.",
+		"lobby_hint_solo": "Tournament lobby: starts once all {{players}} players are ready, or after {{minutes}} minutes without the players who are not here: they forfeit and score 0 points.",
 		"lobby_settings_locked": "Tournament lobbies use fixed settings"
 	},
 	"npc_dialog": {

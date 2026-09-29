@@ -61,6 +61,13 @@
   background-image: var(--tournament-stripes);
 }
 
+/* the purple is Duo Classic's; the Solo Smeargle Pack tournament paints its
+   lobby banner in the Scribble rainbow instead */
+.rule-banner.event-banner.scribble-tournament-banner.my-box {
+  background-color: var(--scribble-tournament-bg);
+  background-image: var(--scribble-tournament-stripes);
+}
+
 .rule-banner.event-banner::after {
   content: "";
   position: absolute;

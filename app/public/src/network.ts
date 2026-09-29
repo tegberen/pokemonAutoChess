@@ -15,6 +15,7 @@ import type { EloRank } from "../../types/enum/EloRank"
 import type { BotDifficulty, GameModification } from "../../types/enum/Game"
 import type { MaintenanceOrder } from "../../types/enum/MaintenanceOrder"
 import type { SpecialGameRule } from "../../types/enum/SpecialGameRule"
+import type { TournamentFormat } from "../../types/interfaces/Tournament"
 import type { IUserMetadataJSON } from "../../types/interfaces/UserMetadata"
 import { logger } from "../../utils/logger"
 import type { IBot } from "./models/bot-v2"
@@ -633,7 +634,11 @@ export function unban(params: { uid: string; reason: string }) {
   rooms.lobby?.send(Transfer.UNBAN, params)
 }
 
-export function createTournament(params: { name: string; startDate: string }) {
+export function createTournament(params: {
+  name: string
+  startDate: string
+  format: TournamentFormat
+}) {
   rooms.lobby?.send(Transfer.NEW_TOURNAMENT, params)
 }
 

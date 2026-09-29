@@ -5,7 +5,8 @@ import { GADGETS } from "../../../../../config/game/gadgets"
 import {
   getTeamFinalRanking,
   getTeamStandings,
-  getTeamTournamentStage
+  getTeamTournamentStage,
+  getTournamentRules
 } from "../../../../../core/tournament-logic"
 import type {
   TournamentPlayerSchema,
@@ -15,11 +16,9 @@ import type {
 import {
   buchholz,
   FINAL_BRACKET_NAME,
-  SEMIFINALISTS,
+  finalistsPerSemifinal,
   skipsSemifinals,
-  SWISS_ROUNDS,
-  TEAM_PLACEMENT_POINTS,
-  TEAMS_PER_LOBBY
+  SWISS_ROUNDS
 } from "../../../../../core/tournament-swiss"
 import { average } from "../../../../../utils/number"
 import { schemaEntries, schemaValues } from "../../../../../utils/schemas"
@@ -52,6 +51,11 @@ export default function TournamentItem(props: {
   const tournamentStarted = !registrationsOpen && !tournamentFinished
   const players = schemaValues(props.tournament.players)
   const [showPairing, setShowPairing] = useState(false)
+  const rules = getTournamentRules(props.tournament)
+  // in Solo every team is one player, so the teams tab would repeat the
+  // participants and "team" reads as "player"
+  const isSolo = props.tournament.format === "solo"
+  const entrant = isSolo ? "player" : "team"
   const teams = schemaValues(props.tournament.teams)
   const teamPlayerIds = new Set(teams.flatMap((team) => [...team.playersId]))
   const inATeam = teamPlayerIds.has(uid)
@@ -86,7 +90,7 @@ export default function TournamentItem(props: {
     }
   } = {
     teams: {
-      shown: teams.length > 0 || confirmedPairs.length > 0,
+      shown: !isSolo && (teams.length > 0 || confirmedPairs.length > 0),
       label: `Teams (${teams.length > 0 ? teams.length : confirmedPairs.length})`,
       className: "ranking",
       panel: (
@@ -186,15 +190,17 @@ export default function TournamentItem(props: {
       panel: (
         <>
           <p className="help">
-            Qualification is {SWISS_ROUNDS} rounds of 4 teams, scored{" "}
-            {Object.values(TEAM_PLACEMENT_POINTS).join("/")} by placement.{" "}
-            {skipsSemifinals(teams.length)
-              ? `The top ${TEAMS_PER_LOBBY} reach the final.`
-              : `The top ${SEMIFINALISTS} reach the semi-finals, and the top 2 of each semi-final reach the final.`}
+            Qualification is {SWISS_ROUNDS} rounds of{" "}
+            {rules.teamsPerLobby} {entrant}s, scored{" "}
+            {Object.values(rules.placementPoints).join("/")} by placement.{" "}
+            {skipsSemifinals(teams.length, rules)
+              ? `The top ${rules.teamsPerLobby} reach the final.`
+              : `The top ${rules.semifinalists} reach the semi-finals, and the top ${finalistsPerSemifinal(rules)} of each semi-final reach the final.`}
           </p>
           <p className="help">
-            Buchholz is the total points of every team you have faced: it
-            separates teams on equal points by how hard their lobbies were.
+            Buchholz is the total points of every {entrant} you have faced: it
+            separates {entrant}s on equal points by how hard their lobbies
+            were.
           </p>
           <h4 className="tournament-info-heading">
             Qualification table
@@ -207,7 +213,7 @@ export default function TournamentItem(props: {
             <thead>
               <tr>
                 <th>#</th>
-                <th>Team</th>
+                <th>{isSolo ? "Player" : "Team"}</th>
                 <th>Pts</th>
                 <th>Buchholz</th>
                 <th>Avg</th>
@@ -248,6 +254,7 @@ export default function TournamentItem(props: {
                 key={id}
                 playerId={id}
                 player={player}
+                inTeamLabel={isSolo ? "Playing" : "In team"}
                 // until teams are registered nobody is a substitute yet
                 role={
                   teams.length === 0
@@ -274,7 +281,12 @@ export default function TournamentItem(props: {
     .map((id) => ({ id, ...tabContent[id] }))
 
   return (
-    <div className="tournament-item my-box">
+    <div
+      className={cc("tournament-item my-box", {
+        "scribble-tournament": isSolo,
+        "duo-tournament": !isSolo
+      })}
+    >
       <span className="tournament-name">
         <img
           width="32"
@@ -284,16 +296,25 @@ export default function TournamentItem(props: {
         />
         {props.tournament.name}
       </span>
+      <p className="tournament-format">{rules.label}</p>
       {tournamentFinished ? (
         <p>
           Congratulations to <strong>{rankedTeams[0]?.name}</strong> for the
           win!
         </p>
       ) : tournamentStarted ? (
-        <div style={{ display: "flex", justifyContent: "space-between" }}>
+        <div
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+            justifyContent: "space-between",
+            gap: "0 1em"
+          }}
+        >
           <span>{getTeamTournamentStage(props.tournament)}</span>
           <span>
-            {t("tournament.teams_remaining")}: {remainingTeams.length}
+            {isSolo ? "Players remaining" : t("tournament.teams_remaining")}:{" "}
+            {remainingTeams.length}
           </span>
         </div>
       ) : (
@@ -344,7 +365,7 @@ export default function TournamentItem(props: {
                   : t("tournament.join_as_substitute")}
               </button>
             )}
-            {participating && registrationsOpen && (
+            {participating && registrationsOpen && !isSolo && (
               <button
                 className="bubbly blue"
                 onClick={() => setShowPairing(true)}
@@ -379,6 +400,7 @@ export default function TournamentItem(props: {
 function TournamentPlayer(props: {
   playerId: string
   player: TournamentPlayerSchema
+  inTeamLabel: string
   role?: "in-team" | "sub"
 }) {
   const uid: string = useAppSelector((state) => state.network.uid)
@@ -390,7 +412,7 @@ function TournamentPlayer(props: {
       </p>
       {props.role && (
         <span className={cc("tournament-role", props.role)}>
-          {props.role === "sub" ? "Sub" : "In team"}
+          {props.role === "sub" ? "Sub" : props.inTeamLabel}
         </span>
       )}
       <EloBadge elo={props.player.elo} />

@@ -232,7 +232,8 @@ button {
 :root[data-themed-buttons] .preparation-page .bubbly.blue,
 :root[data-themed-buttons] .room-item > .bubbly.orange,
 :root[data-themed-buttons] .room-item > .bubbly.green,
-:root[data-themed-buttons] .room-item > .bubbly.blue {
+:root[data-themed-buttons] .room-item > .bubbly.blue,
+:root[data-themed-buttons] .tournament-item .actions > .bubbly.blue {
   background: var(--theme-button);
   color: var(--theme-button-text);
   text-shadow: var(--theme-button-text-shadow);
@@ -248,7 +249,8 @@ button {
 :root[data-themed-buttons] .preparation-page .bubbly.blue:not([disabled]):hover,
 :root[data-themed-buttons] .room-item > .bubbly.orange:not([disabled]):hover,
 :root[data-themed-buttons] .room-item > .bubbly.green:not([disabled]):hover,
-:root[data-themed-buttons] .room-item > .bubbly.blue:not([disabled]):hover {
+:root[data-themed-buttons] .room-item > .bubbly.blue:not([disabled]):hover,
+:root[data-themed-buttons] .tournament-item .actions > .bubbly.blue:not([disabled]):hover {
   background: var(--theme-button-hover);
 }
 
@@ -259,7 +261,8 @@ button {
 :root[data-themed-buttons] .preparation-page .bubbly.blue:not([disabled]):active,
 :root[data-themed-buttons] .room-item > .bubbly.orange:not([disabled]):active,
 :root[data-themed-buttons] .room-item > .bubbly.green:not([disabled]):active,
-:root[data-themed-buttons] .room-item > .bubbly.blue:not([disabled]):active {
+:root[data-themed-buttons] .room-item > .bubbly.blue:not([disabled]):active,
+:root[data-themed-buttons] .tournament-item .actions > .bubbly.blue:not([disabled]):active {
   background: var(--theme-button);
   box-shadow:
     inset 6px 6px 0px 0px #00000040,
