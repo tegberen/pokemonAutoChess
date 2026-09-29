@@ -498,6 +498,7 @@ Every balance change on this server, newest first.
 
 **Fixes**
 - Baby Opener | in Double Up the HP gained per egg now heals the team
+- Victory scene | GROUND holes no longer show up on it
 
 **Interface**
 - Avatar cosmetics {{new}} | added Rainbow Trail, Autumn Leaves Trail

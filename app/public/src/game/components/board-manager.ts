@@ -1136,6 +1136,9 @@ export default class BoardManager {
   renderGroundHoles() {
     this.groundHoles.forEach((hole) => hole.destroy())
     this.groundHoles = []
+    // the holes also redraw whenever they change, which can land after the
+    // board has already turned into the victory scene or the town
+    if (this.mode === BoardMode.VICTORY || this.mode === BoardMode.TOWN) return
     const pondCells = this.getPondCells()
     for (let row = 0; row < BOARD_HEIGHT / 2; row++) {
       for (let col = 0; col < BOARD_WIDTH; col++) {
