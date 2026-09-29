@@ -83,6 +83,7 @@ export type PVEStageVariant = Pick<
   | "statBoosts"
   | "stats"
   | "skill"
+  | "noPassives"
 >
 
 // emotion belongs to the avatar, so a variant that brings its own Pokemon must
@@ -277,7 +278,8 @@ export const PVEStages: { [turn: number]: PVEStage } = {
         statBoosts: {
           [Stat.ATK]: -12,
           [Stat.DEF]: -4,
-          [Stat.SPE_DEF]: -2
+          [Stat.SPE_DEF]: -2,
+          [Stat.AP]: -50
         }
       },
       {
@@ -368,6 +370,7 @@ export const PVEStages: { [turn: number]: PVEStage } = {
           [Pkm.ZIGZAGOON, 3, 1],
           [Pkm.ZIGZAGOON, 5, 1]
         ],
+        noPassives: true,
         statBoosts: {
           [Stat.ATK]: -4,
           [Stat.DEF]: -8,

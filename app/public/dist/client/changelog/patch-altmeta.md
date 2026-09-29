@@ -491,11 +491,14 @@ Every balance change on this server, newest first.
 ### 29 September 2026
 
 **PvE**
+- Stage 1 Remoraid | -50 AP
+- Stage 2 Zigzagoon | no passive
 - Stage 3 | Pidgey, Starly or Pidove
-- Stage 9 | now the stage 3 mini-bosses, all 3 STAR with the Happy Hour ability and no passive
+- Stage 9 | community members set to 3 STAR with the ability Happy Hour. No passives active
 - Shiny Gyarados | only appears as the shiny stage 9
 
 **Game Mode**
+- Duo damage | a lost fight now also deals 1 per surviving enemy Pokémon (spawns excluded), like in Solo
 - Ditto Bundle | free → 5 GOLD
 - Unown Bundle | removed
 - Regional Rolls Bundle | free rolls 10 → 5
