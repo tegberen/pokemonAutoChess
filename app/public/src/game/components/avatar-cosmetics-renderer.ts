@@ -710,42 +710,80 @@ export class AvatarCosmeticsRenderer {
         : Phaser.Math.Between(-36, 36)
       const landingX = x - state.directionX * throwBack + sideX * drift
       const landingY = y - state.directionY * throwBack + sideY * drift
-      const spin = Phaser.Math.Between(-140, 140)
-      const destroy = () => {
-        this.activeTrailEffects.delete(effect)
-        effect.destroy()
-      }
-      // chained as separate tweens so clear() can kill whichever one is running
-      this.scene.tweens.add({
-        targets: effect,
-        x: Phaser.Math.Linear(feetX, landingX, 0.6),
-        y:
-          Phaser.Math.Linear(feetY, landingY, 0.6) -
-          Phaser.Math.Between(6, 22) -
-          (strays ? 10 : 0),
-        angle: effect.angle + spin * 0.6,
-        duration: Phaser.Math.Between(150, 260),
-        ease: "Quad.easeOut",
-        onComplete: () =>
-          this.scene.tweens.add({
-            targets: effect,
-            x: landingX,
-            y: landingY + Phaser.Math.Between(2, 6),
-            angle: effect.angle + spin * 0.4,
-            duration: Phaser.Math.Between(260, 420),
-            ease: "Quad.easeIn",
-            onComplete: () =>
-              this.scene.tweens.add({
-                targets: effect,
-                alpha: 0,
-                delay: Phaser.Math.Between(250, 650),
-                duration: Phaser.Math.Between(350, 550),
-                ease: "Sine.easeIn",
-                onComplete: destroy
-              })
-          })
+      this.flyAutumnLeaf(effect, {
+        fromX: feetX,
+        fromY: feetY,
+        toX: landingX,
+        toY: landingY + Phaser.Math.Between(2, 6),
+        height: Phaser.Math.Between(8, 22) + (strays ? 10 : 0)
       })
     }
+  }
+
+  // one continuous flight: air drag slows the throw, the leaf peaks early and
+  // sinks back gently while it flutters side to side and tumbles, then lies
+  // on the ground before fading
+  private flyAutumnLeaf(
+    effect: Phaser.GameObjects.Graphics,
+    flight: {
+      fromX: number
+      fromY: number
+      toX: number
+      toY: number
+      height: number
+    }
+  ) {
+    const peakAt = Phaser.Math.FloatBetween(0.25, 0.35)
+    const flutters = Phaser.Math.FloatBetween(1, 1.6)
+    const flutterWidth = Phaser.Math.FloatBetween(1.5, 3.5)
+    const flutterPhase = Phaser.Math.FloatBetween(0, Math.PI * 2)
+    const startAngle = effect.angle
+    const spin = Phaser.Math.Between(-120, 120)
+    const destroy = () => {
+      this.activeTrailEffects.delete(effect)
+      effect.destroy()
+    }
+    this.scene.tweens.addCounter({
+      from: 0,
+      to: 1,
+      duration: Phaser.Math.Between(560, 820),
+      onUpdate: (tween) => {
+        if (!effect.scene) return
+        const progress = tween.getValue() ?? 0
+        const lift =
+          progress < peakAt
+            ? Phaser.Math.Easing.Quadratic.Out(progress / peakAt)
+            : 1 -
+              Phaser.Math.Easing.Sine.InOut(
+                (progress - peakAt) / (1 - peakAt)
+              )
+        const flutterAngle = flutterPhase + progress * flutters * Math.PI * 2
+        // swells mid-flight and dies out before touchdown, so the leaf settles
+        const flutterStrength = Math.sin(Math.PI * progress) ** 2
+        const flutter = Math.sin(flutterAngle) * flutterStrength
+        const travel = Phaser.Math.Easing.Quadratic.Out(progress)
+        effect.setPosition(
+          Phaser.Math.Linear(flight.fromX, flight.toX, travel) +
+            flutter * flutterWidth,
+          Phaser.Math.Linear(flight.fromY, flight.toY, travel) -
+            lift * flight.height
+        )
+        effect.setAngle(startAngle + spin * travel + flutter * 12)
+        effect.scaleX =
+          1 - 0.25 * flutterStrength * (1 - Math.abs(Math.cos(flutterAngle)))
+      },
+      onComplete: () => {
+        if (!effect.scene) return
+        this.scene.tweens.add({
+          targets: effect,
+          alpha: 0,
+          delay: Phaser.Math.Between(250, 650),
+          duration: Phaser.Math.Between(350, 550),
+          ease: "Sine.easeIn",
+          onComplete: destroy
+        })
+      }
+    })
   }
 
   private drawEmbers(effect: Phaser.GameObjects.Graphics, accent: boolean) {
