@@ -61,7 +61,22 @@ const TRAIL_LIFETIME_MS: Record<AvatarTrail, number> = {
   water: 750,
   fire: 560,
   dragonKing: 700,
-  slipstream: 1700
+  slipstream: 1700,
+  rainbow: 900
+}
+const PRIDE_FLAG_COLORS = [
+  0xff6b6b, 0xffb050, 0xfff06a, 0x6fdc84, 0x6aa6ff, 0xb77ee6
+]
+const RAINBOW_RIBBON_LIFETIME_MS = 1080
+const RAINBOW_RIBBON_BAND_WIDTH = 7
+const RAINBOW_RIBBON_POINT_SPACING = 6
+const RAINBOW_RIBBON_OFFSET_Y = 10
+const RAINBOW_RIBBON_HEAD_FADE_DISTANCE = 28
+const RAINBOW_RIBBON_TELEPORT_DISTANCE = 128
+
+type RainbowRibbon = {
+  graphics: Phaser.GameObjects.Graphics
+  points: Array<{ x: number; y: number; age: number }>
 }
 
 const AURA_LAYERS: Partial<Record<AvatarTrail, AuraLayer[]>> = {
@@ -99,6 +114,7 @@ export class AvatarCosmeticsRenderer {
   private activeAuras = new Map<string, ActiveAura>()
   private activeTrailEffects = new Set<Phaser.GameObjects.GameObject>()
   private states = new Map<string, TrailState>()
+  private rainbowRibbons = new Map<string, RainbowRibbon>()
 
   constructor(private scene: GameScene) {}
 
@@ -114,6 +130,9 @@ export class AvatarCosmeticsRenderer {
       return
     }
     if (!Number.isFinite(delta) || delta < 0) return
+    if (cosmetic.trail === "rainbow") {
+      this.updateRainbowRibbon(playerId, avatar, moving, delta)
+    } else this.removeRainbowRibbon(playerId)
     const state = this.states.get(playerId) ?? this.createState(avatar)
     this.states.set(playerId, state)
 
@@ -188,11 +207,15 @@ export class AvatarCosmeticsRenderer {
 
   remove(playerId: string) {
     this.removeAura(playerId)
+    this.removeRainbowRibbon(playerId)
     this.states.delete(playerId)
   }
 
   clear() {
     for (const playerId of this.activeAuras.keys()) this.removeAura(playerId)
+    for (const playerId of this.rainbowRibbons.keys()) {
+      this.removeRainbowRibbon(playerId)
+    }
     this.activeTrailEffects.forEach((effect) => {
       this.scene.tweens.killTweensOf(effect)
       effect.destroy()
@@ -630,6 +653,7 @@ export class AvatarCosmeticsRenderer {
     else if (trail === "flowers") this.drawFlowerStep(effect, accent)
     else if (trail === "confetti") this.drawConfetti(effect, accent, state)
     else if (trail === "water") this.drawSurf(effect, accent, state)
+    else if (trail === "rainbow") this.drawRainbowSparkles(effect)
 
     this.animateFootprint(effect, trail, x, y, state)
   }
@@ -1096,6 +1120,114 @@ export class AvatarCosmeticsRenderer {
     }
   }
 
+  // one ribbon redrawn every frame along the recent path, so the bands bend
+  // with each turn instead of fanning out as separate footprints
+  private updateRainbowRibbon(
+    playerId: string,
+    avatar: PokemonAvatar,
+    moving: boolean,
+    delta: number
+  ) {
+    let ribbon = this.rainbowRibbons.get(playerId)
+    if (!ribbon) {
+      if (!moving) return
+      ribbon = {
+        graphics: this.scene.add.graphics().setDepth(DEPTH.GROUND_DECORATION),
+        points: []
+      }
+      this.rainbowRibbons.set(playerId, ribbon)
+    }
+    ribbon.points.forEach((point) => {
+      point.age += delta
+    })
+    ribbon.points = ribbon.points.filter(
+      (point) => point.age < RAINBOW_RIBBON_LIFETIME_MS
+    )
+    if (moving) {
+      const x = avatar.x
+      const y = avatar.y + RAINBOW_RIBBON_OFFSET_Y
+      const head = ribbon.points.at(-1)
+      const distance = head ? Math.hypot(x - head.x, y - head.y) : Infinity
+      if (distance > RAINBOW_RIBBON_TELEPORT_DISTANCE) ribbon.points = []
+      if (distance >= RAINBOW_RIBBON_POINT_SPACING) {
+        ribbon.points.push({ x, y, age: 0 })
+      }
+    }
+    if (ribbon.points.length === 0) {
+      this.removeRainbowRibbon(playerId)
+      return
+    }
+    this.drawRainbowRibbon(ribbon)
+  }
+
+  private drawRainbowRibbon({ graphics, points }: RainbowRibbon) {
+    graphics.clear()
+    if (points.length < 2) return
+    const normals = points.map((_, index) => {
+      const previous = points[Math.max(0, index - 1)]
+      const next = points[Math.min(points.length - 1, index + 1)]
+      const length = Math.hypot(next.x - previous.x, next.y - previous.y) || 1
+      return {
+        x: -(next.y - previous.y) / length,
+        y: (next.x - previous.x) / length
+      }
+    })
+    const taper = points.map(
+      (point) => 1 - (0.4 * point.age) / RAINBOW_RIBBON_LIFETIME_MS
+    )
+    const distanceFromHead = new Array<number>(points.length).fill(0)
+    for (let index = points.length - 2; index >= 0; index--) {
+      distanceFromHead[index] =
+        distanceFromHead[index + 1] +
+        Math.hypot(
+          points[index + 1].x - points[index].x,
+          points[index + 1].y - points[index].y
+        )
+    }
+    const offsetAt = (index: number, offset: number) => ({
+      x: points[index].x + normals[index].x * offset * taper[index],
+      y: points[index].y + normals[index].y * offset * taper[index]
+    })
+    PRIDE_FLAG_COLORS.forEach((color, band) => {
+      const inner =
+        (band - PRIDE_FLAG_COLORS.length / 2) * RAINBOW_RIBBON_BAND_WIDTH
+      const outer = inner + RAINBOW_RIBBON_BAND_WIDTH
+      for (let index = 0; index < points.length - 1; index++) {
+        const tailFade = 1 - points[index].age / RAINBOW_RIBBON_LIFETIME_MS
+        const headFade = Math.min(
+          1,
+          distanceFromHead[index + 1] / RAINBOW_RIBBON_HEAD_FADE_DISTANCE
+        )
+        graphics.fillStyle(color, 0.7 * tailFade * headFade)
+        graphics.fillPoints(
+          [
+            offsetAt(index, inner),
+            offsetAt(index + 1, inner),
+            offsetAt(index + 1, outer),
+            offsetAt(index, outer)
+          ],
+          true
+        )
+      }
+    })
+  }
+
+  private removeRainbowRibbon(playerId: string) {
+    this.rainbowRibbons.get(playerId)?.graphics.destroy()
+    this.rainbowRibbons.delete(playerId)
+  }
+
+  private drawRainbowSparkles(effect: Phaser.GameObjects.Graphics) {
+    effect.fillStyle(0xffffff, 0.95)
+    for (let sparkle = 0; sparkle < 2; sparkle++) {
+      effect.fillCircle(
+        Phaser.Math.Between(-14, 14),
+        Phaser.Math.Between(-12, 12),
+        Phaser.Math.FloatBetween(1, 2)
+      )
+    }
+  }
+
   private createGraphics(x: number, y: number) {
     if (this.activeTrailEffects.size >= MAX_ACTIVE_TRAIL_EFFECTS) return
     const graphics = this.scene.add
@@ -1287,7 +1419,7 @@ export class AvatarCosmeticsRenderer {
       scale:
         trail === "fire"
           ? 0.55
-          : trail === "electric" || trail === "water"
+          : trail === "electric" || trail === "water" || trail === "rainbow"
             ? 1
             : 1.18,
       alpha: 0,

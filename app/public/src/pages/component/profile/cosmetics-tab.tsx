@@ -61,6 +61,14 @@ export function CosmeticsTab() {
                       <p>
                         {cosmetic.id === "none" ? (
                           "Always available."
+                        ) : cosmetic.id === "rainbow-trail" ? (
+                          <>
+                            With the{" "}
+                            <strong>{t("blessing.RAINBOW_HOUR.name")}</strong>{" "}
+                            Wish, field all 9 Eeveelutions at the same time
+                            (Vaporeon, Jolteon, Flareon, Espeon, Umbreon,
+                            Leafeon, Glaceon, Sylveon and Mafia Eevee).
+                          </>
                         ) : (
                           <>
                             Win a game with the{" "}

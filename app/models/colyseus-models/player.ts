@@ -351,6 +351,8 @@ export default class Player extends Schema implements IPlayer {
   manifestedPokemonIds: string[] = []
   // server-only: RAINBOW_HOUR pays its gold bounty only once
   rainbowHourRewarded: boolean = false
+  // server-only: saved as the Rainbow Trail unlock when the player leaves
+  rainbowTrailEarned: boolean = false
   convergentParadoxAmberGranted: boolean = false
   convergentParadoxGenesectGranted: boolean = false
   earthenBarrierScarvesGranted: number = 0

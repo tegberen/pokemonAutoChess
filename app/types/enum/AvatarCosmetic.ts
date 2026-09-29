@@ -10,6 +10,7 @@ export const AVATAR_COSMETIC_IDS = [
   "water-trail",
   "dragon-king-trail",
   "slipstream-trail",
+  "rainbow-trail",
   "teleport"
 ] as const
 
@@ -26,6 +27,7 @@ export const AVATAR_COSMETIC_BLESSINGS: Record<
   "electric-trail": Blessing.CHARGING_UP,
   "dragon-king-trail": Blessing.LIMIT_BREAKER,
   "slipstream-trail": Blessing.SLIPSTREAM,
+  "rainbow-trail": Blessing.RAINBOW_HOUR,
   teleport: Blessing.SILVER_SPOON
 }
 

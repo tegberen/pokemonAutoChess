@@ -488,6 +488,11 @@ Smeargle Scribbles do not change your Elo.
 
 Every balance change on this server, newest first.
 
+### 29 September 2026
+
+**Interface**
+- Rainbow Trail {{new}} | avatar trail in the pride flag colors, unlocked by fielding all 9 Eeveelutions at the same time with Rainbow Hour (Vaporeon, Jolteon, Flareon, Espeon, Umbreon, Leafeon, Glaceon, Sylveon and Mafia Eevee)
+
 ### 27 September 2026
 
 **Game Modes**

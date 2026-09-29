@@ -1366,6 +1366,11 @@ export default class GameRoom extends Room<{ state: GameState }> {
          hand out a free win and inflate the games played. */
       const countsAsAGame = this.state.gameMode !== GameMode.GUIDE
       if (countsAsAGame) usr.games += 1
+      if (player.rainbowTrailEarned) {
+        const unlocked = new Set(usr.unlockedAvatarCosmetics ?? [])
+        unlocked.add("rainbow-trail")
+        usr.unlockedAvatarCosmetics = [...unlocked]
+      }
       if (this.dailyDuel && !player.isBot) {
         if (rank <= 3) {
           this.dailyDuelPodiumUids[rank - 1] = player.id
@@ -1388,7 +1393,7 @@ export default class GameRoom extends Room<{ state: GameState }> {
         if (!hasLeftBeforeEnd) {
           const unlocked = new Set(usr.unlockedAvatarCosmetics ?? [])
           for (const cosmetic of AVATAR_COSMETIC_IDS) {
-            if (cosmetic === "none") continue
+            if (cosmetic === "none" || cosmetic === "rainbow-trail") continue
             const blessing = AVATAR_COSMETIC_BLESSINGS[cosmetic]
             if (this.state.hasBlessing(player.id, blessing)) {
               unlocked.add(cosmetic)

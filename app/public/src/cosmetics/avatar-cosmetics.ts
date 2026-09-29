@@ -10,6 +10,7 @@ export type AvatarTrail =
   | "water"
   | "dragonKing"
   | "slipstream"
+  | "rainbow"
 
 export type AvatarCosmeticCategory = "none" | "trail" | "veil" | "movement"
 
@@ -95,6 +96,14 @@ export const AVATAR_COSMETICS: readonly AvatarCosmetic[] = [
     description: "Soft tailwinds drift through your wake.",
     trail: "slipstream",
     emissionIntervalMs: 230
+  },
+  {
+    id: "rainbow-trail",
+    name: "Rainbow Trail",
+    category: "trail",
+    description: "A pride rainbow ribbons out behind every step.",
+    trail: "rainbow",
+    emissionIntervalMs: 160
   },
   {
     id: "teleport",
