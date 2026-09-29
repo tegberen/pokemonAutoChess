@@ -494,8 +494,7 @@ Every balance change on this server, newest first.
 - Baby Opener | in Double Up the HP gained per egg now heals the team
 
 **Interface**
-- Rainbow Trail {{new}} | avatar trail in the pride flag colors, unlocked by fielding all 9 Eeveelutions at the same time with Rainbow Hour (Vaporeon, Jolteon, Flareon, Espeon, Umbreon, Leafeon, Glaceon, Sylveon and Mafia Eevee)
-- Autumn Leaves {{new}} | avatar trail of maple leaves kicked up with every step, unlocked by winning a game with Seasonal Herd
+- Avatar cosmetics {{new}} | added Rainbow Trail, Autumn Leaves Trail
 
 ### 27 September 2026
 

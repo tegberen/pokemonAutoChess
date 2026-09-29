@@ -1312,10 +1312,11 @@ export class AvatarCosmeticsRenderer {
           points[index + 1].y - points[index].y
         )
     }
-    const offsetAt = (index: number, offset: number) => ({
-      x: points[index].x + normals[index].x * offset * taper[index],
-      y: points[index].y + normals[index].y * offset * taper[index]
-    })
+    const offsetAt = (index: number, offset: number) =>
+      new Phaser.Math.Vector2(
+        points[index].x + normals[index].x * offset * taper[index],
+        points[index].y + normals[index].y * offset * taper[index]
+      )
     PRIDE_FLAG_COLORS.forEach((color, band) => {
       const inner =
         (band - PRIDE_FLAG_COLORS.length / 2) * RAINBOW_RIBBON_BAND_WIDTH
@@ -1359,10 +1360,10 @@ export class AvatarCosmeticsRenderer {
   private drawMapleLeaf(effect: Phaser.GameObjects.Graphics, radius: number) {
     const atAngle = (degrees: number, distanceFromCenter: number) => {
       const angle = Phaser.Math.DegToRad(degrees)
-      return {
-        x: Math.cos(angle) * distanceFromCenter,
-        y: Math.sin(angle) * distanceFromCenter
-      }
+      return new Phaser.Math.Vector2(
+        Math.cos(angle) * distanceFromCenter,
+        Math.sin(angle) * distanceFromCenter
+      )
     }
     const outline = MAPLE_LEAF_OUTLINE.map(([degrees, scale]) =>
       atAngle(degrees, scale * radius)
