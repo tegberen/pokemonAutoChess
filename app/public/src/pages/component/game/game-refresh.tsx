@@ -1,11 +1,20 @@
+import { useEffect, useRef } from "react"
 import { useTranslation } from "react-i18next"
 import { Tooltip } from "react-tooltip"
-import { getRerollCostForBlessings } from "../../../../../config"
+import {
+  getRerollCostForBlessings,
+  SynergyTiersThresholds,
+  UNOWN_PSY3_NB_SHOPS_INTERVAL,
+  UNOWN_PSY5_NB_SHOPS_INTERVAL,
+  UNOWN_PSY7_NB_SHOPS_INTERVAL
+} from "../../../../../config"
 import {
   BERSERKER_HORDES_SHOP_INTERVAL,
   Blessing
 } from "../../../../../types/enum/Blessing"
 import { GamePhaseState } from "../../../../../types/enum/Game"
+import { Pkm, Unowns } from "../../../../../types/enum/Pokemon"
+import { Synergy } from "../../../../../types/enum/Synergy"
 import {
   BAZAAR_SHOP_INTERVAL,
   SpecialGameRule
@@ -16,6 +25,7 @@ import {
   useAppSelector
 } from "../../../hooks"
 import { getGameScene } from "../../game"
+import { addIconsToDescription } from "../../utils/descriptions"
 import { cc } from "../../utils/jsx"
 import { useGuideActionAllowed } from "../guide/use-guide-action"
 import { Money } from "../icons/money"
@@ -75,6 +85,40 @@ export default function GameRefresh() {
   const onBerserkerShop =
     (stageLevel + rerollCount) % BERSERKER_HORDES_SHOP_INTERVAL === 0
 
+  // PSYCHIC: Transcendence's counter is server-only, so it is counted here
+  const psychicLevel = useAppSelector(
+    (state) =>
+      selectConnectedPlayer(state)?.synergies.get(Synergy.PSYCHIC) ?? 0
+  )
+  const [precognition, aura, transcendence] =
+    SynergyTiersThresholds[Synergy.PSYCHIC]
+  const shop = useAppSelector((state) => state.game.shop)
+  const hasUnownShop =
+    shop.some((pkm) => Unowns.includes(pkm)) &&
+    shop.every((pkm) => Unowns.includes(pkm) || pkm === Pkm.DEFAULT)
+  const rerollCountAtLastUnownShop = useRef<number | null>(null)
+  useEffect(() => {
+    if (hasUnownShop) rerollCountAtLastUnownShop.current = rerollCount
+  }, [hasUnownShop, rerollCount])
+  const hasUnownCountdown = psychicLevel >= precognition
+  const hasTranscendence = psychicLevel >= transcendence
+  const rerollsUntilUnown = (interval: number) =>
+    interval - ((stageLevel + rerollCount) % interval)
+  const unownCountdowns = [
+    { tier: precognition, interval: UNOWN_PSY3_NB_SHOPS_INTERVAL },
+    { tier: aura, interval: UNOWN_PSY5_NB_SHOPS_INTERVAL }
+  ].filter(({ tier }) => psychicLevel >= tier)
+  const onUnownSlot = Unowns.includes(shop[5])
+  const rerollsUntilUnownShop =
+    hasUnownShop || rerollCountAtLastUnownShop.current === null
+      ? UNOWN_PSY7_NB_SHOPS_INTERVAL
+      : Math.max(
+          1,
+          UNOWN_PSY7_NB_SHOPS_INTERVAL -
+            (rerollCount - rerollCountAtLastUnownShop.current)
+        )
+  const showsUnownHint = !isBazaar && !hasBerserkerHordes && hasUnownCountdown
+
   const guideAllowsReroll = useGuideActionAllowed("reroll")
   const blessingChoicePending = useAppSelector(selectIsBlessingChoicePending)
   const rerollAllowed = guideAllowsReroll && !blessingChoicePending
@@ -87,14 +131,18 @@ export default function GameRefresh() {
         })}
         disabled={!rerollAllowed}
         title={
-          isBazaar || hasBerserkerHordes ? undefined : t("refresh_gold_hint")
+          isBazaar || hasBerserkerHordes || showsUnownHint
+            ? undefined
+            : t("refresh_gold_hint")
         }
         data-tooltip-id={
           isBazaar
             ? "next-bazaar-tooltip"
             : hasBerserkerHordes
               ? "next-berserker-tooltip"
-              : undefined
+              : showsUnownHint
+                ? "next-unown-tooltip"
+                : undefined
         }
         onClick={() => {
           if (!rerollAllowed) return
@@ -134,6 +182,45 @@ export default function GameRefresh() {
               ? t("berserker_current_hint")
               : t("next_berserker_hint", { count: shopsUntilBerserker })}
           </p>
+        </Tooltip>
+      )}
+      {showsUnownHint && (
+        <Tooltip
+          id="next-unown-tooltip"
+          className="custom-theme-tooltip"
+          place="top"
+        >
+          {hasUnownShop ? (
+            <p className="help">{t("unown_shop_current_hint")}</p>
+          ) : (
+            onUnownSlot && <p className="help">{t("unown_current_hint")}</p>
+          )}
+          {unownCountdowns.map(({ tier, interval }, index) => (
+            <p
+              key={tier}
+              className={cc("help", {
+                "is-main":
+                  !hasTranscendence && index === unownCountdowns.length - 1
+              })}
+            >
+              {addIconsToDescription(
+                t("next_unown_rerolls_hint", {
+                  tier: `PSYCHIC (${tier})`,
+                  count: rerollsUntilUnown(interval)
+                })
+              )}
+            </p>
+          ))}
+          {hasTranscendence && (
+            <p className="help is-main">
+              {addIconsToDescription(
+                t("next_unown_shop_hint", {
+                  tier: `PSYCHIC (${transcendence})`,
+                  count: rerollsUntilUnownShop
+                })
+              )}
+            </p>
+          )}
         </Tooltip>
       )}
     </>

@@ -513,6 +513,7 @@ Every balance change on this server, newest first.
 
 **Wishes**
 - Scorching Tome | damage bonus against BURN or WOUND 40% → 30%
+- Molecular Corrosion | your POISONNED only ignores RUNE_PROTECT after 12 seconds
 
 **Abilities**
 - Lurantis | Solar Blade's CONE reaches as far as its RANGE, each tile further away takes 50% less than the one before
@@ -523,6 +524,7 @@ Every balance change on this server, newest first.
 
 **Interface**
 - Avatar cosmetics {{new}} | added Rainbow Trail, Autumn Leaves Trail
+- PSYCHIC Unowns | hover the Refresh button to see when the next Unown comes, like the Bazaar
 
 ### 27 September 2026
 

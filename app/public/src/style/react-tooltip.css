@@ -17,6 +17,10 @@
   color: var(--color-fg-secondary);
 }
 
+.react-tooltip .help.is-main {
+  color: var(--color-fg-primary);
+}
+
 .react-tooltip p:last-child {
   margin-bottom: 0;
 }

@@ -3,6 +3,7 @@ import { CC_COOLDOWN, FIGHTING_PHASE_DURATION } from "../../config"
 import {
   Blessing,
   LASTING_EFFECTS_BONUS,
+  MOLECULAR_CORROSION_RUNE_PROTECT_DELAY,
   applyGrudgeCurseReduction
 } from "../../types/enum/Blessing"
 import type { Board } from "../../core/board"
@@ -679,8 +680,12 @@ export default class Status extends Schema implements IStatus {
   ) {
     duration = lastingEffects(duration, origin)
     // MOLECULAR_CORROSION eats through RUNE_PROTECT, but not poison immunity
+    const fightElapsed = origin?.simulation?.room
+      ? FIGHTING_PHASE_DURATION - origin.simulation.room.state.time
+      : 0
     const ignoresRuneProtect =
-      origin?.player?.blessings?.includes(Blessing.MOLECULAR_CORROSION) === true
+      origin?.player?.blessings?.includes(Blessing.MOLECULAR_CORROSION) ===
+        true && fightElapsed >= MOLECULAR_CORROSION_RUNE_PROTECT_DELAY
     if (
       !pkm.effects.has(EffectEnum.IMMUNITY_POISON) &&
       (!this.runeProtect || ignoresRuneProtect)

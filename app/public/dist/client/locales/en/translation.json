@@ -5988,7 +5988,7 @@
 		},
 		"MOLECULAR_CORROSION": {
 			"name": "Molecular Corrosion",
-			"description": "Enemy Pokémon under POISONNED take 20% more damage from all sources, and your POISONNED can no longer be blocked by RUNE_PROTECT. Gain a Spinarak."
+			"description": "Enemy Pokémon under POISONNED take 20% more damage from all sources. After 12s your POISONNED can no longer be blocked by RUNE_PROTECT. Gain a Spinarak."
 		},
 		"UNISON": {
 			"name": "Unison",
@@ -6747,6 +6747,12 @@
 	"next_berserker_hint_one": "Next all-Wild shop in {{count}} shop",
 	"next_berserker_hint_other": "Next all-Wild shop in {{count}} shops",
 	"berserker_current_hint": "This is an all-Wild shop!",
+	"unown_current_hint": "A Unown is in this shop!",
+	"next_unown_rerolls_hint_one": "{{tier}}: next Unown in {{count}} reroll",
+	"next_unown_rerolls_hint_other": "{{tier}}: next Unown in {{count}} rerolls",
+	"next_unown_shop_hint_one": "{{tier}}: next Unown shop in {{count}} reroll",
+	"next_unown_shop_hint_other": "{{tier}}: next Unown shop in {{count}} rerolls",
+	"unown_shop_current_hint": "This is a Unown shop!",
 	"refresh": "Reroll",
 	"pve_stages": "PvE Stages",
 	"carousel_stages": "Carousel Stages",
