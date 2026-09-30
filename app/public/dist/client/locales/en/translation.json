@@ -2599,10 +2599,10 @@
 		"BANQUET": "Banquet"
 	},
 	"effect_description": {
-		"STAMINA": "Gain 15 SHIELD. Get a SILK_SCARF.",
-		"STRENGTH": "Gain 20 SHIELD. Get a second SILK_SCARF.",
-		"ENDURE": "Gain 25 SHIELD. Get a third SILK_SCARF.",
-		"PURE_POWER": "Gain 30 SHIELD. Get a fourth SILK_SCARF. All NORMAL SILK_SCARF-made item holders gain 30% base ATK and 30 AP.",
+		"STAMINA": "4 SHIELD per ally. Get a SILK_SCARF.",
+		"STRENGTH": "8 SHIELD per ally. Get a second SILK_SCARF.",
+		"ENDURE": "12 SHIELD per ally. Get a third SILK_SCARF.",
+		"PURE_POWER": "16 SHIELD per ally. Get a fourth SILK_SCARF. NORMAL holders of SILK_SCARF-made items gain 30% base ATK and 30 AP.",
 		"INGRAIN": "Restore 5 HP every 2 seconds. Get a berry tree.",
 		"GROWTH": "Restore 15 HP every 2 seconds. Get another berry tree.",
 		"SPORE": "Restore 25 HP every 2 seconds. Get a third berry tree.",
@@ -3994,7 +3994,7 @@
 		"GOURMET": "Gourmet"
 	},
 	"synergy_description": {
-		"NORMAL": "NORMAL Pokémon and their ADJACENT allies gain SHIELD when combat starts, and can craft various scarves.{{additionalInfo}}",
+		"NORMAL": "When combat starts, NORMAL Pokémon give allied Pokémon SHIELD for each ally on the board. NORMAL Pokémon can craft various scarves.{{additionalInfo}}",
 		"NORMAL_SCARVES": "\nScarves made: {{scarves}}",
 		"GRASS": "GRASS Pokémon heal and produce berries over time. 40% of overheal is gained as max HP.",
 		"FIRE": "FIRE Pokémon have a chance to BURN their enemies, and gain ATK after every attack.",
@@ -5692,7 +5692,7 @@
 		},
 		"ABNORMALITY": {
 			"name": "Abnormality",
-			"description": "When NORMAL is active, its Pokémon gain SHIELD and 5 AP for each empty ADJACENT space instead of giving SHIELD to ADJACENT allies. Gain an Igglybuff."
+			"description": "When NORMAL is active, its Pokémon gain SHIELD and 5 AP for each empty ADJACENT space instead of giving SHIELD to your team. Gain an Igglybuff."
 		},
 		"WRAPPED_UP": {
 			"name": "Wrapped Up",

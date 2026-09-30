@@ -516,6 +516,7 @@ Every balance change on this server, newest first.
 
 **Synergies**
 - POISON (5) | no longer ruptures on KO, only POISON (7) does, to cut some midgame tempo
+- NORMAL | allied Pokémon gain [4/8/12/16] SHIELD per ally on the board, instead of NORMAL Pokémon and their ADJACENT allies gaining [15/20/25/30]
 - FOSSIL | SHIELD and ATK gained [40/70/100]% → [25/50/100]%
 - FIELD | summoned allies being KO'd no longer trigger it, e.g. Houndoom's Beat Up
 

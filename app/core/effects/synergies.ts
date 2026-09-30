@@ -20,6 +20,7 @@ import {
   FIRE_ATK_BUFF_PER_SYNERGY_TIER,
   GROUND_ATK_BUFF_PER_SYNERGY_TIER,
   GROUND_DEF_BUFF_PER_SYNERGY_TIER,
+  NORMAL_SHIELD_PER_ALLY_PER_SYNERGY_TIER,
   POISON_EXPLOSION_PP_RATIO_PER_SYNERGY_TIER,
   SOUND_ATK_BUFF_PER_SYNERGY_TIER,
   SOUND_PP_GAIN_PER_SYNERGY_TIER,
@@ -807,14 +808,18 @@ export const normalShieldEffect = new OnSimulationStartEffect(
 
       /* WRAPPED_UP turns whatever NORMAL would have shielded into permanent max
          HP for scarf holders, so it has to wrap every grant below */
-      const grantNormalBonus = (target: PokemonEntity, amount: number) => {
+      const grantNormalBonus = (
+        target: PokemonEntity,
+        amount: number,
+        giver: PokemonEntity = entity
+      ) => {
         const wrapsIntoMaxHP =
           blessings?.includes(Blessing.WRAPPED_UP) &&
           schemaValues(target.items).some((item) => Scarves.includes(item))
         if (wrapsIntoMaxHP) {
-          target.addMaxHP(amount, entity, 0, false)
+          target.addMaxHP(amount, giver, 0, false)
         } else {
-          target.addShield(amount, entity, 0, false)
+          target.addShield(amount, giver, 0, false)
         }
       }
 
@@ -829,17 +834,44 @@ export const normalShieldEffect = new OnSimulationStartEffect(
           0,
           false
         )
-      } else {
-        grantNormalBonus(entity, shieldBonus)
-        cells.forEach((cell) => {
-          if (cell.value && entity.team == cell.value.team) {
-            grantNormalBonus(cell.value, shieldBonus)
+      } else if (!normalTeamsShielded.get(simulation)?.has(entity.team)) {
+        // every NORMAL Pokémon carries this effect, but the team is shielded once
+        const teamsShielded =
+          normalTeamsShielded.get(simulation) ?? new Set<Team>()
+        normalTeamsShielded.set(simulation, teamsShielded.add(entity.team))
+        const synergyTier =
+          SynergyTiers[Synergy.NORMAL].findIndex((effect) =>
+            entity.effects.has(effect)
+          ) + 1
+        const shieldPerAlly =
+          NORMAL_SHIELD_PER_ALLY_PER_SYNERGY_TIER[synergyTier] ?? 0
+        const allies: PokemonEntity[] = []
+        simulation.board.forEach((x, y, ally) => {
+          if (ally && ally.team === entity.team && ally.hp > 0) {
+            allies.push(ally)
           }
         })
+        // each NORMAL Pokémon gives its share, so Battle Stats credit them all.
+        // Spawns have no Battle Stats row, so their share would vanish
+        const givers = allies.filter(
+          (ally) => ally.types.has(Synergy.NORMAL) && !ally.isSpawn
+        )
+        if (givers.length === 0) givers.push(entity)
+        const shieldPerTarget = shieldPerAlly * allies.length
+        allies.forEach((ally) =>
+          givers.forEach((giver, index) => {
+            const share =
+              Math.floor(shieldPerTarget / givers.length) +
+              (index < shieldPerTarget % givers.length ? 1 : 0)
+            grantNormalBonus(ally, share, giver)
+          })
+        )
       }
     }
   }
 )
+
+const normalTeamsShielded = new WeakMap<Simulation, Set<Team>>()
 
 export const bugSwarmSpawnEffect = new OnStageStartEffect(
   ({ player, room }) => {
