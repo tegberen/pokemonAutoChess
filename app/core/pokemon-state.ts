@@ -1083,16 +1083,16 @@ export default abstract class PokemonState {
             pokemon.effects.has(EffectEnum.FORGOTTEN_POWER)
               ? 1
               : pokemon.effects.has(EffectEnum.ELDER_POWER)
-                ? 0.7
-                : 0.4)
+                ? 0.5
+                : 0.25)
         )
         const attackBonus =
           pokemon.effects.has(EffectEnum.PRIMORDIAL_POWER) ||
           pokemon.effects.has(EffectEnum.FORGOTTEN_POWER)
             ? 1
             : pokemon.effects.has(EffectEnum.ELDER_POWER)
-              ? 0.7
-              : 0.4
+              ? 0.5
+              : 0.25
 
         if (pokemon.awakening === Awakening.FOSSIL_FRAGMENT) {
           const damageOnRevive = max(0.5 * shield)(residualDamage)

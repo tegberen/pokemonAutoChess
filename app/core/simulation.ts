@@ -287,6 +287,8 @@ import {
   VERDANT_GROWTH_ABILITY_POWER,
   VERDANT_GROWTH_ATTACK,
   VERDANT_GROWTH_INTERVAL,
+  SWAMP_FATHER_BUBBLE_DELAY,
+  SWAMP_FATHER_BUBBLE_POP_TIME,
   hasGluttonGrowth
 } from "../types/enum/Blessing"
 import { GracideaBlossomEffect } from "./effects/items"
@@ -4699,6 +4701,7 @@ export default class Simulation extends Schema implements ISimulation {
       const activeAquaticEffects = SynergyTiers[Synergy.AQUATIC].filter(
         (aquaticEffect) => teamEffects.has(aquaticEffect)
       )
+      const hydratedAllies: PokemonEntity[] = []
       this.board
         .getAdjacentCells(
           swampFatherChampion.positionX,
@@ -4718,7 +4721,30 @@ export default class Simulation extends Schema implements ISimulation {
           activeAquaticEffects.forEach((aquaticEffect) =>
             this.applyEffect(ally, aquaticEffect)
           )
+          hydratedAllies.push(ally)
         })
+      if (hydratedAllies.length > 0) {
+        swampFatherChampion.commands.push(
+          new DelayedCommand(
+            () =>
+              swampFatherChampion.broadcastAbility({
+                skill: "SWAMP_FATHER_BUBBLE"
+              }),
+            SWAMP_FATHER_BUBBLE_DELAY
+          ),
+          new DelayedCommand(
+            () =>
+              hydratedAllies.forEach((ally) =>
+                swampFatherChampion.broadcastAbility({
+                  skill: "SWAMP_FATHER_RAIN",
+                  targetX: ally.positionX,
+                  targetY: ally.positionY
+                })
+              ),
+            SWAMP_FATHER_BUBBLE_DELAY + SWAMP_FATHER_BUBBLE_POP_TIME
+          )
+        )
+      }
     }
 
     const cursedCoffinChampion = championOf.get(Blessing.CURSED_COFFIN)

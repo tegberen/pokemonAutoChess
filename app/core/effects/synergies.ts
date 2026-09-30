@@ -409,6 +409,7 @@ export function applyFieldDeathBuffs(
   board: Board,
   effect?: SynergyTier<Synergy.FIELD>
 ) {
+  if (pokemon.isSpawn) return
   const allyEffects =
     pokemon.team === Team.BLUE_TEAM
       ? pokemon.simulation.blueEffects

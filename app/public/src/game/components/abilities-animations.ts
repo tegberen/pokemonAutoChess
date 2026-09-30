@@ -16,13 +16,18 @@ import {
   AttackSpriteScale,
   HitSprite
 } from "../../../../types/Animation"
-import { DRAGON_DARTS_DART_FLIGHT_MS } from "../../../../config/game/abilities"
+import {
+  DRAGON_DARTS_DART_FLIGHT_MS,
+  MUD_BUBBLE_HOP_MS
+} from "../../../../config/game/abilities"
 import { Ability } from "../../../../types/enum/Ability"
 import {
   GALVANIC_RAIN_THROW_FLIGHT_MS,
   GLAIVE_STRIKE_DELAY,
   GLAIVE_STRIKE_SHATTER_DELAY,
   GLAIVE_STRIKE_SWORD_FALL_DURATION,
+  SWAMP_FATHER_BUBBLE_RISE_TIME,
+  SWAMP_FATHER_HOP_TIME,
   UNISON_STARFALL_WARNING
 } from "../../../../types/enum/Blessing"
 import {
@@ -741,6 +746,127 @@ function unisonNovaAnimation(): AbilityAnimation {
         })
         scene.shakeCamera({ duration: 360, intensity: 0.006 })
       }
+    })
+  }
+}
+
+function mudBubbleAnimation(args: AbilityAnimationArgs) {
+  const { scene, positionX, positionY, flip } = args
+  const [x, y] = transformEntityCoordinates(positionX, positionY, flip)
+  addAbilitySprite(scene, Ability.MUD_BUBBLE, 0, [x, y], { scale: 2 })
+
+  hopThen(args, MUD_BUBBLE_HOP_MS, () => {
+    scene.shakeCamera({ duration: 160, intensity: 0.004 })
+    addAbilitySprite(scene, Ability.SMASHING_WING, 0, [x, y], {
+      scale: 2.5,
+      depth: DEPTH.ABILITY_BELOW_POKEMON,
+      tint: 0x8b4513
+    })
+  })
+}
+
+function hopThen(
+  args: AbilityAnimationArgs,
+  duration: number,
+  onLanded: () => void
+) {
+  const hopper = args.pokemonsOnBoard.find(
+    (sprite) =>
+      sprite.positionX === args.positionX && sprite.positionY === args.positionY
+  )
+  if (!hopper) return onLanded()
+  bounceSprite(args.scene, hopper.sprite, 18, duration / 2, onLanded)
+}
+
+const bouncesInProgress = new WeakMap<
+  GameObjects.Sprite,
+  { tween: Phaser.Tweens.Tween; restingY: number }
+>()
+
+function bounceSprite(
+  scene: GameScene | DebugScene,
+  sprite: GameObjects.Sprite,
+  height: number,
+  riseDuration: number,
+  onLanded?: () => void
+) {
+  // a bounce started mid-air would otherwise never come back down
+  const previousBounce = bouncesInProgress.get(sprite)
+  if (previousBounce) {
+    previousBounce.tween.stop()
+    sprite.y = previousBounce.restingY
+  }
+  const restingY = sprite.y
+  const tween = scene.tweens.add({
+    targets: sprite,
+    y: restingY - height,
+    duration: riseDuration,
+    yoyo: true,
+    ease: "quad.out",
+    onComplete: () => {
+      sprite.y = restingY
+      bouncesInProgress.delete(sprite)
+      onLanded?.()
+    }
+  })
+  bouncesInProgress.set(sprite, { tween, restingY })
+}
+
+const SWAMP_FATHER_BUBBLE_RADIUS = 12
+const SWAMP_FATHER_BUBBLE_RISE = 110
+
+function swampFatherBubbleAnimation(args: AbilityAnimationArgs) {
+  const { scene, positionX, positionY, flip } = args
+  const [x, y] = transformEntityCoordinates(positionX, positionY, flip)
+  const pixel = VFX_PIXEL
+  const radius = SWAMP_FATHER_BUBBLE_RADIUS
+
+  hopThen(args, SWAMP_FATHER_HOP_TIME, () => {
+    const bubble = scene.add.graphics().setDepth(DEPTH.ABILITY)
+    scene.abilitiesVfxGroup?.add(bubble)
+    bubble.fillStyle(0x8fd0ff, 0.35)
+    bubble.fillCircle(0, 0, radius)
+    bubble.lineStyle(pixel, 0xbfe6ff, 1)
+    bubble.strokeCircle(0, 0, radius)
+    bubble.fillStyle(0xffffff, 0.9)
+    bubble.fillRect(-radius / 2, -radius / 2 - pixel, pixel * 2, pixel)
+    bubble.setPosition(x, y - 20).setScale(0.4)
+
+    scene.tweens.add({
+      targets: bubble,
+      y: y - 20 - SWAMP_FATHER_BUBBLE_RISE,
+      scale: 1,
+      duration: SWAMP_FATHER_BUBBLE_RISE_TIME,
+      ease: "sine.out",
+      onComplete: () => {
+        popSwampFatherBubble(scene, bubble.x, bubble.y)
+        bubble.destroy()
+      }
+    })
+  })
+}
+
+function popSwampFatherBubble(
+  scene: GameScene | DebugScene,
+  x: number,
+  y: number
+) {
+  const pixel = VFX_PIXEL
+  const shards = 10
+  for (let shard = 0; shard < shards; shard++) {
+    const angle = (shard / shards) * Math.PI * 2
+    const droplet = scene.add
+      .rectangle(x, y, pixel, pixel, shard % 3 ? 0x8fd0ff : 0xffffff)
+      .setDepth(DEPTH.ABILITY)
+    scene.abilitiesVfxGroup?.add(droplet)
+    scene.tweens.add({
+      targets: droplet,
+      x: x + Math.cos(angle) * SWAMP_FATHER_BUBBLE_RADIUS * 2,
+      y: y + Math.sin(angle) * SWAMP_FATHER_BUBBLE_RADIUS * 2 + 12,
+      alpha: 0,
+      duration: 260,
+      ease: "quad.out",
+      onComplete: () => droplet.destroy()
     })
   }
 }
@@ -3793,13 +3919,12 @@ function moleMazeEarthImpact(args: AbilityAnimationArgs, digger: PokemonSprite) 
         targetY: enemy.positionY
       }
       moleMazeFeetDirt.forEach((animation) => animation(enemyCell))
-      args.scene.tweens.add({
-        targets: enemy.sprite,
-        y: enemy.sprite.y - MOLE_MAZE_KNOCK_UP_HEIGHT,
-        duration: MOLE_MAZE_KNOCK_UP_DURATION,
-        yoyo: true,
-        ease: "quad.out"
-      })
+      bounceSprite(
+        args.scene,
+        enemy.sprite,
+        MOLE_MAZE_KNOCK_UP_HEIGHT,
+        MOLE_MAZE_KNOCK_UP_DURATION
+      )
     })
   args.scene.shakeCamera({
     duration: MOLE_MAZE_EMERGE_SHAKE_DURATION,
@@ -4380,6 +4505,12 @@ export const AbilitiesAnimations: {
   ["GALVANIC_RAIN_THROW"]: galvanicRainThrowAnimation,
   ["SALT_SHAKER_ROCK_SALT"]: saltShakerRockSaltAnimation,
   ["GOOEY_GLOBULES_BLOB"]: gooeyGlobulesBlobAnimation,
+  ["SWAMP_FATHER_BUBBLE"]: swampFatherBubbleAnimation,
+  ["SWAMP_FATHER_RAIN"]: onTarget({
+    ability: Ability.MUDDY_WATER,
+    origin: [0.5, 1],
+    scale: 0.8
+  }),
   ["BONEMERANG_RANGER_THROW"]: projectile({
     ability: Ability.BONEMERANG,
     duration: 500,
@@ -4621,10 +4752,7 @@ export const AbilitiesAnimations: {
     ability: Ability.YAWN
   }),
   [Ability.MEDITATE]: onCasterScale2,
-  [Ability.MUD_BUBBLE]: [
-    onCasterScale2,
-    onCaster({ ability: Ability.SMASHING_WING, scale: 2.5, depth: DEPTH.ABILITY_BELOW_POKEMON, tint: 0x8B4513 })
-  ],
+  [Ability.MUD_BUBBLE]: mudBubbleAnimation,
   [Ability.SOFT_BOILED]: onCasterScale2,
   [Ability.FAKE_TEARS]: onCasterScale2,
   ["COVERT_CLOAK"]: onCaster({ ability: Ability.FAKE_TEARS, scale: 1.5, tint: 0xff9900 }),

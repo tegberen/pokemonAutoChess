@@ -511,11 +511,10 @@ Every balance change on this server, newest first.
 - Evolve Bundle | if nothing can evolve, gives a SILVER_DOJO_TICKET instead of a stat boost
 - Gift selection | +10 seconds to choose. If no gift is chosen in time, nothing is gifted and that gift is lost
 
-**Pokémon**
-- Houndour / Houndoom / Mega Houndoom | DEF [6/10/10] → [3/5/5], SPE_DEF [10/14/14] → [5/7/7]
-
 **Synergies**
 - POISON (5) | no longer ruptures on KO, only POISON (7) does, to cut some midgame tempo
+- FOSSIL | SHIELD and ATK gained [40/70/100]% → [25/50/100]%
+- FIELD | summoned allies being KO'd no longer trigger it, e.g. Houndoom's Beat Up
 
 **Wishes**
 - Scorching Tome | damage bonus against BURN or WOUND 40% → 30%
@@ -523,14 +522,15 @@ Every balance change on this server, newest first.
 - Molecular Corrosion | damage taken by POISONNED enemies 20% → 30%, your POISONNED only ignores RUNE_PROTECT after 12 seconds
 
 **Abilities**
+- Swampert | Mud Bubble renamed Mud Splash. It waits for an enemy in RANGE before casting, and hits when Swampert lands from its jump
 - Lurantis | Solar Blade's CONE reaches as far as its RANGE, each tile further away takes 50% less than the one before
 
 **Fixes**
 - Baby Opener | in Double Up the HP gained per egg now heals the team
 - Victory scene | GROUND holes no longer show up on it
 - Dreepy Deployment / Galvanic Rain | no longer add their Pokémon to every player's shop pool, since they are regional
-- FIELD | a FIELD Pokémon KO'd on the last blow of a fight no longer crashes the server
 - PSYCHIC (7) countdown | now also counts the new shop you get after buying a Unown, and no longer gets stuck at 10
+- Mole Maze | enemies knocked up twice in a row no longer stay floating
 
 **Interface**
 - Avatar cosmetics {{new}} | added Rainbow Trail, Autumn Leaves Trail
