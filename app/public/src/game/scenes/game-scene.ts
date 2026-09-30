@@ -198,6 +198,9 @@ export default class GameScene extends Scene {
 
       this.weatherManager = new WeatherManager(this)
       this.weatherManager?.setTownDaytime(0)
+      if (this.room.state.phase === GamePhaseState.TOWN) {
+        this.addAutumnLeaves(this.room.state.stageLevel)
+      }
 
       this.wandererManager = new WanderersManager(this)
       this.playerAvatars = new PlayerAvatarsManager(this)
@@ -461,6 +464,12 @@ export default class GameScene extends Scene {
     return this.cameras?.main == null
   }
 
+  addAutumnLeaves(stageLevel: number) {
+    if (AUTUMN_LEAVES_STAGES.includes(stageLevel) && isAutumn(new Date())) {
+      this.weatherManager?.addFallingLeaves()
+    }
+  }
+
   updatePhase(newPhase: GamePhaseState, previousPhase: GamePhaseState) {
     if (this.isDestroyed()) return
     this.weatherManager?.clearWeather()
@@ -479,6 +488,7 @@ export default class GameScene extends Scene {
     } else if (newPhase === GamePhaseState.TOWN) {
       this.board?.minigameMode()
       this.weatherManager?.setTownDaytime(this.room?.state.stageLevel ?? 0)
+      this.addAutumnLeaves(this.room?.state.stageLevel ?? 0)
     } else {
       this.board?.pickMode(true)
     }
@@ -1203,4 +1213,18 @@ export default class GameScene extends Scene {
       })
     )
   }
+}
+
+const AUTUMN_LEAVES_STAGES = [0, 10, 20]
+
+// northern autumn, from the September equinox to the December solstice
+function isAutumn(date: Date) {
+  const month = date.getMonth()
+  const day = date.getDate()
+  return (
+    (month === 8 && day >= 22) ||
+    month === 9 ||
+    month === 10 ||
+    (month === 11 && day < 21)
+  )
 }

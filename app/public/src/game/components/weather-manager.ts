@@ -10,6 +10,7 @@ import {
 import { preference } from "../../preferences"
 import { DEPTH } from "../depths"
 import type GameScene from "../scenes/game-scene"
+import { AUTUMN_LEAF_COLORS, drawMapleLeaf } from "./maple-leaf"
 
 export default class WeatherManager {
   scene: Phaser.Scene
@@ -2381,6 +2382,51 @@ export default class WeatherManager {
         alpha
       ).setDepth(DEPTH.WEATHER_FX)
     )
+  }
+
+  // leaves blowing over Treasure Town from the upper-left, like addBlossom's
+  // petals but slower and heavier, one emitter per leaf color
+  addFallingLeaves() {
+    const deathZoneSource = new Phaser.Geom.Rectangle(-200, -200, 2600, 2400)
+    AUTUMN_LEAF_COLORS.forEach((color, index) => {
+      const textureKey = `falling_leaf_${index}`
+      if (!this.scene.textures.exists(textureKey)) {
+        // drawn large and scaled down with smooth filtering, so it stays crisp.
+        // generateTexture ignores the position, so the drawing itself is moved
+        const leaf = this.scene.add.graphics()
+        leaf.translateCanvas(32, 32)
+        drawMapleLeaf(leaf, 26, color)
+        leaf.generateTexture(textureKey, 64, 64)
+        leaf.destroy()
+        this.scene.textures
+          .get(textureKey)
+          .setFilter(Phaser.Textures.FilterMode.LINEAR)
+      }
+      const emitter = this.scene.add.particles(0, 0, textureKey, {
+        x: { min: -150, max: 0 },
+        deathZone: { source: deathZoneSource, type: "onLeave" },
+        frequency: 2180,
+        lifespan: 30000,
+        gravityY: 4,
+        speedX: { min: 60, max: 95 },
+        speedY: { min: 20, max: 40 },
+        scale: { min: 0.22, max: 0.35 },
+        alpha: { min: 0.55, max: 0.8 },
+        // a slow sway across the wind reads as a leaf fluttering down
+        y: {
+          onEmit: () => Phaser.Math.Between(-150, 900),
+          onUpdate: (_particle, _key, lifeProgress, y) =>
+            y + Math.sin(lifeProgress * Math.PI * 24) * 0.35
+        },
+        rotate: {
+          onEmit: () => Phaser.Math.Between(0, 360),
+          onUpdate: (_particle, _key, _lifeProgress, rotation) =>
+            rotation + 0.3
+        }
+      })
+      emitter.setDepth(DEPTH.BOARD_EFFECT_AIR_LEVEL)
+      this.particlesEmitters.push(emitter)
+    })
   }
 
   addCloudy() {
