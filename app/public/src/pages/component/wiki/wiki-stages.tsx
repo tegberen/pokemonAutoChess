@@ -32,7 +32,7 @@ export default function WikiStages() {
   const [selectedStage, setSelectedStage] = useState<number | null>(null)
   const [highlightedType, setHighlightedType] = useState<StageType | null>(null)
 
-  const allStages = generateStageInfo(t)
+  const allStages = generateStageInfo(t, true)
   const selectedStageInfo =
     selectedStage !== null
       ? allStages.find((s) => s.level === selectedStage)
@@ -46,6 +46,7 @@ export default function WikiStages() {
           <StageLegend
             highlightedType={highlightedType}
             onHighlightType={setHighlightedType}
+            withOptionalStages
           />
         </div>
         <StagePath
@@ -268,6 +269,18 @@ function StageDetail({ stageInfo }: { stageInfo: StageInfo }) {
               <li key={pkm}>{pokemonDetail(pkm)}</li>
             ))}
           </ul>
+        </div>
+      )}
+
+      {stageInfo.type === "wish" && (
+        <div className="wish-stage-details">
+          <p>{t("wiki.stages.wish_description")}</p>
+        </div>
+      )}
+
+      {stageInfo.type === "gift" && (
+        <div className="gift-stage-details">
+          <p>{t("wiki.double_up.gift_desc")}</p>
         </div>
       )}
 

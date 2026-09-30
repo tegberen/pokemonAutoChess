@@ -3,10 +3,12 @@ import React from "react"
 import { useTranslation } from "react-i18next"
 import {
   AdditionalPicksStages,
+  ArmoryAssistStages,
   ItemCarouselStages,
   PortalCarouselStages
 } from "../../../../../config"
 import { type PVEStage, PVEStages } from "../../../../../models/pve-stages"
+import { BLESSING_SELECTION_STAGES } from "../../../../../types/enum/Blessing"
 import { Emotion } from "../../../../../types"
 import { Pkm, PkmIndex } from "../../../../../types/enum/Pokemon"
 import { getPortraitSrc } from "../../../../../utils/avatar"
@@ -15,7 +17,17 @@ import "./stage-path.css"
 
 const LAST_STAGE = 40
 
-export type StageType = "pve" | "carousel" | "additional" | "portal" | "battle"
+export type StageType =
+  | "pve"
+  | "carousel"
+  | "additional"
+  | "portal"
+  | "battle"
+  | "gift"
+  | "wish"
+
+const GIFT_ICON = "/assets/blessings/shopping_bag.svg"
+const WISH_ICON = "/assets/ui/game_modes/wishes_icon.svg"
 
 export type StageInfo = {
   level: number
@@ -25,10 +37,21 @@ export type StageInfo = {
   stageData?: PVEStage
 }
 
-export function generateStageInfo(t: TFunction): StageInfo[] {
+// Wishes and Double Up gifts depend on the game, so only the wiki lists them
+export function generateStageInfo(
+  t: TFunction,
+  withOptionalStages = false
+): StageInfo[] {
   const stages: StageInfo[] = []
 
   for (let level = 0; level <= LAST_STAGE; level++) {
+    if (withOptionalStages && BLESSING_SELECTION_STAGES.includes(level)) {
+      stages.push({ level, icon: WISH_ICON, type: "wish" })
+    }
+    if (withOptionalStages && ArmoryAssistStages.includes(level)) {
+      stages.push({ level, icon: GIFT_ICON, type: "gift" })
+    }
+
     if (ItemCarouselStages.includes(level)) {
       stages.push({
         level,
@@ -90,10 +113,12 @@ export function generateStageInfo(t: TFunction): StageInfo[] {
 
 export function StageLegend({
   highlightedType,
-  onHighlightType
+  onHighlightType,
+  withOptionalStages = false
 }: {
   highlightedType: StageType | null
   onHighlightType: (type: StageType | null) => void
+  withOptionalStages?: boolean
 }) {
   const { t } = useTranslation()
   const legends: { type: StageType; icon: string; alt: string }[] = [
@@ -109,7 +134,13 @@ export function StageLegend({
       icon: "/assets/ui/additional-pick.svg",
       alt: "Additional"
     },
-    { type: "battle", icon: "/assets/ui/battle.svg", alt: "Battle" }
+    { type: "battle", icon: "/assets/ui/battle.svg", alt: "Battle" },
+    ...(withOptionalStages
+      ? [
+          { type: "wish" as const, icon: WISH_ICON, alt: "Wish" },
+          { type: "gift" as const, icon: GIFT_ICON, alt: "Double Up gift" }
+        ]
+      : [])
   ]
 
   return (

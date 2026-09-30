@@ -498,7 +498,7 @@ Every balance change on this server, newest first.
 - Shiny Gyarados | only appears as the shiny stage 9
 
 **Game Mode**
-- Duo damage | a lost fight now also deals 1 per surviving enemy Pokémon (spawns excluded), like in Solo
+- Duo damage | +1 player HP damage per 2 surviving enemy Pokémon, rounded down
 - Ditto Bundle | free → 5 GOLD
 - Unown Bundle | removed
 - Regional Rolls Bundle | free rolls 10 → 5
@@ -509,6 +509,7 @@ Every balance change on this server, newest first.
 - Ultra Bundle | matches one of your partner's 2 → 3 most common synergies
 - Legendary Bundle | 50 → 40 GOLD, matches one of your partner's 2 → 4 most common synergies
 - Evolve Bundle | if nothing can evolve, gives a SILVER_DOJO_TICKET instead of a stat boost
+- Gift bundles | the second round of gifts moves from stages 25–26 to 22–23, since most games now end around stage 24
 - Gift selection | +10 seconds to choose. If no gift is chosen in time, nothing is gifted and that gift is lost
 
 **Pokémon**

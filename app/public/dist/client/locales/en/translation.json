@@ -7563,6 +7563,7 @@
 			"portal_description_3": "If you decide to not take any portal, you will stay in your current region, and the Pokémon proposed will be totally random.",
 			"additional_description": "Choose an additional pick and an item component among 3 propositions. Additional picks are 2-stage evolutions Pokémon that can be found in all players shops after being picked.",
 			"battle_description": "Regular battle stage where you fight against other players or bots.",
+			"wish_description": "When Wishes are on, pick one of 3 Wishes before the fight.",
 			"starter_pick": "Starter pick",
 			"legendary_pick": "Legendary pick"
 		},
@@ -7630,7 +7631,7 @@
 			"prison_bottle_cooldown_short": "COMMON, UNCOMMON, RARE: 3 rounds cooldown",
 			"reinforcements_desc": "If you defeat your opponent before your partner finishes their round, your Pokémon will join their battle as reinforcements. Active synergies, itemization, and permanent stats from your team will carry over. Your Pokémon will not contribute to or gain any new synergy effects from your partner's team. There is a 3-second delay before reinforcements arrive. Unowns are too shy, to reinforce.",
 			"shared_pve_desc": "During PvE rounds, you and your partner fight side by side in a single battle against strong encounters. They adapt to your team's board and scale of your total board power. Do not sit on your gold and items!",
-			"gift_desc": "At stages 15–16 and 25–26. Send your partner a gift bundle containing Pokémon, gems, items, and more — paid or free. Make sure your partner has a free bench slot before sending a Pokémon! Make sure you have enough Gold! Gifts can turn the tide of the game, so choose wisely.",
+			"gift_desc": "At stages 15–16 and 22–23. Send your partner a gift bundle containing Pokémon, gems, items, and more — paid or free. Make sure your partner has a free bench slot before sending a Pokémon! Make sure you have enough Gold! Gifts can turn the tide of the game, so choose wisely.",
 			"victory_desc": "The game ends as soon as your team is the last one standing. You and your partner share first place. From the victory screen, you can propose a friendly Finale duel to your partner: if they accept, you get one preparation phase and fight each other, without losing your first place.",
 			"lobby_desc": "Open a lobby, add bots if needed, and select a partner. Once both players in a pair click Ready, they are locked in and cannot be selected by others. If your partner gets stolen before readying, you'll need to find a new partner and ready again. No elo is gained or lost. No elo lost or gained. Good Luck! May the best team win ٩(^ᗜ^ )و ´- vinper & tegberen"
 		},
@@ -7781,7 +7782,9 @@
 		"carousel": "Item Carousel",
 		"portal": "Portal Carousel",
 		"additional": "Additional Pick",
-		"battle": "Player Battle"
+		"battle": "Player Battle",
+		"gift": "Double Up Gift",
+		"wish": "Wish"
 	},
 	"type_fluid": "Type-Fluid",
 	"rounds_since_last_fight": "Rounds since last fight: {{count}}",

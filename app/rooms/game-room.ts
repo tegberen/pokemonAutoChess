@@ -2492,15 +2492,18 @@ export default class GameRoom extends Room<{ state: GameState }> {
     opponentTeam: MapSchema<IPokemonEntity>,
     stageLevel: number
   ) {
-    let damage = Math.ceil(stageLevel / 2)
-    if (opponentTeam.size > 0) {
-      opponentTeam.forEach((pokemon) => {
-        if (!pokemon.isSpawn && pokemon.passive !== Passive.INANIMATE) {
-          damage += 1
-        }
-      })
-    }
-    return damage
+    let survivors = 0
+    opponentTeam.forEach((pokemon) => {
+      if (!pokemon.isSpawn && pokemon.passive !== Passive.INANIMATE) {
+        survivors += 1
+      }
+    })
+    // the team shares its life in Double Up, so each survivor weighs half
+    const survivorDamage =
+      this.state.gameMode === GameMode.DOUBLE_UP
+        ? Math.floor(survivors / 2)
+        : survivors
+    return Math.ceil(stageLevel / 2) + survivorDamage
   }
 
   rankPlayers() {

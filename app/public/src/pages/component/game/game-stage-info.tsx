@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next"
 import { Tooltip } from "react-tooltip"
 import {
   AdditionalPicksStages,
+  ArmoryAssistStages,
   ItemCarouselStages,
   PortalCarouselStages,
   RegionDetails
@@ -11,7 +12,12 @@ import {
 import { isPveStage } from "../../../../../core/guide/guide-stage"
 import { PVEStages, resolvePveStage } from "../../../../../models/pve-stages"
 import { Emotion } from "../../../../../types"
-import { BattleResult, GamePhaseState } from "../../../../../types/enum/Game"
+import { BLESSING_SELECTION_STAGES } from "../../../../../types/enum/Blessing"
+import {
+  BattleResult,
+  GameMode,
+  GamePhaseState
+} from "../../../../../types/enum/Game"
 import { type Pkm, PkmIndex } from "../../../../../types/enum/Pokemon"
 import { SynergyAssociatedToWeather } from "../../../../../types/enum/Weather"
 import { getAvatarSrc, getPortraitSrc } from "../../../../../utils/avatar"
@@ -255,6 +261,10 @@ export function StagePath() {
   const history = [...(spectatedPlayer?.history ?? [])]
   const phase = useAppSelector((state) => state.game.phase)
   const stageLevel = useAppSelector((state) => state.game.stageLevel)
+  const gameMode = useAppSelector((state) => state.game.gameMode)
+  const blessingsEnabled = useAppSelector(
+    (state) => state.game.blessingsEnabled
+  )
   const pveVariantIndexByStage = useAppSelector(
     (state) => state.game.pveVariantIndexByStage
   )
@@ -300,6 +310,34 @@ export function StagePath() {
       if (level === stageLevel && phase === GamePhaseState.PICK) {
         currentLevelPathIndex = path.length - 1
       }
+    }
+
+    // like additional picks, a past Wish or gift leaves the path
+    const isChoiceAhead =
+      level > stageLevel ||
+      (level === stageLevel && phase === GamePhaseState.PICK)
+    const addChoiceStep = (icon: string, title: string) => {
+      path.push({ level, icon, title })
+      if (level === stageLevel && phase === GamePhaseState.PICK) {
+        currentLevelPathIndex ??= path.length - 1
+      }
+    }
+    if (
+      isChoiceAhead &&
+      blessingsEnabled &&
+      BLESSING_SELECTION_STAGES.includes(level)
+    ) {
+      addChoiceStep(
+        "/assets/ui/game_modes/wishes_icon.svg",
+        t("stage_type.wish")
+      )
+    }
+    if (
+      isChoiceAhead &&
+      gameMode === GameMode.DOUBLE_UP &&
+      ArmoryAssistStages.includes(level)
+    ) {
+      addChoiceStep("/assets/blessings/shopping_bag.svg", t("stage_type.gift"))
     }
 
     const pveStage = PVEStages[level]

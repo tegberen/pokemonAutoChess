@@ -3069,8 +3069,13 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
       }
     }
 
+    // Kecleon previews each gift round one stage ahead
+    const giftShopPreviewStages = [
+      ArmoryAssistStages[0] - 1,
+      ArmoryAssistStages[2] - 1
+    ]
     if (
-      [14, 24].includes(this.state.stageLevel) &&
+      giftShopPreviewStages.includes(this.state.stageLevel) &&
       this.state.gameMode === GameMode.DOUBLE_UP
     ) {
       this.state.players.forEach((player: Player) => {

@@ -5,6 +5,8 @@
   --stage-portal-color: #e6cb49;
   --stage-additional-color: #927fff;
   --stage-battle-color: #666;
+  --stage-gift-color: #2c3f8f;
+  --stage-wish-color: #a24fd6;
 }
 
 .stage-path {
@@ -72,6 +74,14 @@
 
 .stage-path-item.battle {
   border-color: var(--stage-battle-color);
+}
+
+.stage-path-item.gift {
+  border-color: var(--stage-gift-color);
+}
+
+.stage-path-item.wish {
+  border-color: var(--stage-wish-color);
 }
 
 .stage-path-item.zone-green,
@@ -162,6 +172,14 @@
 
 .stage-legend .legend-item.battle {
   border-color: var(--stage-battle-color);
+}
+
+.stage-legend .legend-item.gift {
+  border-color: var(--stage-gift-color);
+}
+
+.stage-legend .legend-item.wish {
+  border-color: var(--stage-wish-color);
 }
 
 .stage-legend .legend-item img {
