@@ -133,8 +133,7 @@ function eruptFromHole(
   })
 }
 
-// the caster is always passed at its burrow cell, so the client can find its
-// sprite before the move to the exit hole reaches it
+// the caster id lets the client find its sprite wherever its position patch is
 function broadcastMoleMaze(
   pokemon: PokemonEntity,
   skill: string,
@@ -146,6 +145,7 @@ function broadcastMoleMaze(
     positionX: burrowCell.x,
     positionY: burrowCell.y,
     targetX: hole.x,
-    targetY: hole.y
+    targetY: hole.y,
+    casterId: pokemon.id
   })
 }

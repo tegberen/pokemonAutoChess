@@ -2373,7 +2373,8 @@ flyAway(
     orientation = this.orientation,
     targetX = this.targetX,
     targetY = this.targetY,
-    delay
+    delay,
+    casterId
   }: {
     skill?: Ability | string
     ap?: number
@@ -2383,6 +2384,7 @@ flyAway(
     targetX?: number
     targetY?: number
     delay?: number
+    casterId?: string
   } = {}) {
     if (!this.simulation || !this.simulation.room) {
       return
@@ -2396,7 +2398,8 @@ flyAway(
       orientation,
       targetX,
       targetY,
-      delay
+      delay,
+      casterId
     })
   }
 

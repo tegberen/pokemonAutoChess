@@ -825,6 +825,7 @@ class GameContainer {
     targetY?: number
     delay?: number
     ap?: number
+    casterId?: string
   }) {
     if (document.hidden) return // do not display abilities when the tab is not focused
     this.gameScene?.battle?.displayAbility(message)

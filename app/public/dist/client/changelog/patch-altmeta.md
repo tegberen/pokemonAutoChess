@@ -531,6 +531,7 @@ Every balance change on this server, newest first.
 - Dreepy Deployment / Galvanic Rain | no longer add their Pokémon to every player's shop pool, since they are regional
 - PSYCHIC (7) countdown | now also counts the new shop you get after buying a Unown, and no longer gets stuck at 10
 - Mole Maze | enemies knocked up twice in a row no longer stay floating
+- Mole Maze | the digger no longer stays invisible after coming back up
 
 **Interface**
 - Avatar cosmetics {{new}} | added Rainbow Trail, Autumn Leaves Trail

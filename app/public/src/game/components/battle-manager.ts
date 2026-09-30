@@ -1233,6 +1233,7 @@ export default class BattleManager {
     targetX?: number
     targetY?: number
     delay?: number
+    casterId?: string
   }) {
     if (this.simulation?.id === args.id && args.skill) {
       displayAbility({
@@ -1246,7 +1247,8 @@ export default class BattleManager {
         targetX: args.targetX ?? -1,
         targetY: args.targetY ?? -1,
         flip: this.flip,
-        delay: args.delay ?? -1
+        delay: args.delay ?? -1,
+        casterId: args.casterId
       })
     }
   }

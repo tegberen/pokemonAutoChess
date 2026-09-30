@@ -26,6 +26,8 @@ import {
   GLAIVE_STRIKE_DELAY,
   GLAIVE_STRIKE_SHATTER_DELAY,
   GLAIVE_STRIKE_SWORD_FALL_DURATION,
+  MOLE_MAZE_EMERGE_DELAY,
+  MOLE_MAZE_POP_DELAY,
   SWAMP_FATHER_BUBBLE_RISE_TIME,
   SWAMP_FATHER_HOP_TIME,
   UNISON_STARFALL_WARNING
@@ -3815,10 +3817,20 @@ const MOLE_MAZE_KNOCK_UP_DURATION = 110
 const MOLE_MAZE_DRILL_HOLD = 200
 
 const moleMazeActiveCopy = new WeakMap<PokemonSprite, GameObjects.Sprite>()
+const moleMazeHiddenBurrows = new WeakMap<PokemonSprite, number>()
+let moleMazeBurrowCount = 0
+// longest the body can be underground on the server, plus the emerge animation
+const MOLE_MAZE_REVEAL_FALLBACK =
+  Math.max(MOLE_MAZE_EMERGE_DELAY, MOLE_MAZE_POP_DELAY) +
+  MOLE_MAZE_RISE_DURATION * 2 +
+  MOLE_MAZE_DRILL_HOLD +
+  500
 
-// the server passes the burrow cell as position, but the move to the exit hole
-// may already have reached the client
+// positions are only a fallback for messages sent without the caster id
 function findMoleMazeDigger(args: AbilityAnimationArgs) {
+  if (args.casterId) {
+    return args.pokemonsOnBoard.find((sprite) => sprite.id === args.casterId)
+  }
   return (
     args.pokemonsOnBoard.find(
       (sprite) =>
@@ -4042,19 +4054,42 @@ function leapIntoMoleMazeHole(
   })
 }
 
+// the emerge message is skipped while the tab is hidden, so the body also
+// comes back on its own once the dig must be over
+function hideMoleMazeDigger(
+  args: AbilityAnimationArgs,
+  digger: PokemonSprite
+) {
+  digger.isTeleporting = true
+  digger.sprite.setAlpha(0)
+  const burrow = ++moleMazeBurrowCount
+  moleMazeHiddenBurrows.set(digger, burrow)
+  args.scene.time.delayedCall(MOLE_MAZE_REVEAL_FALLBACK, () => {
+    if (moleMazeHiddenBurrows.get(digger) === burrow) {
+      revealMoleMazeDigger(digger)
+    }
+  })
+}
+
+function revealMoleMazeDigger(digger: PokemonSprite) {
+  moleMazeHiddenBurrows.delete(digger)
+  if (!digger.active) return
+  digger.sprite.setAlpha(1)
+  digger.isTeleporting = false
+}
+
 // the body hides while a copy launches up and dives into its own hole
 function moleMazeBurrow(args: AbilityAnimationArgs) {
   moleMazeDig(args)
   const digger = findMoleMazeDigger(args)
   if (!digger) return
-  digger.isTeleporting = true
   const [x, y] = transformEntityCoordinates(
     args.positionX,
     args.positionY,
     args.flip
   )
   const launcher = copyMoleMazeBody(args, digger, x, y)
-  digger.sprite.setAlpha(0)
+  hideMoleMazeDigger(args, digger)
   leapIntoMoleMazeHole(args, digger, launcher, y)
 }
 
@@ -4089,6 +4124,8 @@ function moleMazeEmerge(args: AbilityAnimationArgs) {
     args.flip
   )
   const riser = copyMoleMazeBody(args, digger, x, y + MOLE_MAZE_SINK_DEPTH)
+  // a missed burrow would leave the body showing next to its copy
+  hideMoleMazeDigger(args, digger)
   moleMazeImpact(args, riser)
   moleMazeEarthImpact(args, digger)
   playMoleMazeDrill(args, digger, riser, Orientation.UP)
@@ -4105,8 +4142,7 @@ function moleMazeEmerge(args: AbilityAnimationArgs) {
     onComplete: () =>
       afterMoleMazeHold(args, riser, () => {
         riser.destroy()
-        digger.sprite.setAlpha(1)
-        digger.isTeleporting = false
+        revealMoleMazeDigger(digger)
       })
   })
 }
