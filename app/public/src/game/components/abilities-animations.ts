@@ -18,7 +18,10 @@ import {
 } from "../../../../types/Animation"
 import {
   DRAGON_DARTS_DART_FLIGHT_MS,
-  MUD_BUBBLE_HOP_MS
+  MUD_BUBBLE_HOP_MS,
+  WATER_SHURIKEN_FLIGHT_MS,
+  WATER_SHURIKEN_GIANT_MS_PER_CELL,
+  WATER_SHURIKEN_GIANT_WINDUP_MS
 } from "../../../../config/game/abilities"
 import { Ability } from "../../../../types/enum/Ability"
 import {
@@ -871,6 +874,215 @@ function popSwampFatherBubble(
       onComplete: () => droplet.destroy()
     })
   }
+}
+
+const WATER_SHURIKEN_CURVE = 30
+const WATER_SHURIKEN_TRAIL_INTERVAL = 28
+
+const WATER_SHURIKEN_BODY_TINT = 0x8fd8ff
+const WATER_SHURIKEN_CORE_TINT = 0xffffff
+
+// the sprite's own navy reads too dark on the board, so it is filled light
+// blue with a white core, in the flat colors of the other water effects
+function addWaterShuriken(
+  scene: GameScene | DebugScene,
+  x: number,
+  y: number,
+  scale: number
+) {
+  const options = { destroyOnComplete: false, animOptions: { repeat: -1 } }
+  const body = addAbilitySprite(scene, Ability.WATER_SHURIKEN, 0, [x, y], {
+    ...options,
+    scale,
+    tintFill: WATER_SHURIKEN_BODY_TINT
+  })
+  const core = addAbilitySprite(scene, Ability.WATER_SHURIKEN, 0, [x, y], {
+    ...options,
+    scale: scale * 0.45,
+    tintFill: WATER_SHURIKEN_CORE_TINT
+  })
+  if (!body || !core) {
+    body?.destroy()
+    core?.destroy()
+    return null
+  }
+  return [body, core]
+}
+
+function leaveWaterShurikenTrail(
+  scene: GameScene | DebugScene,
+  shuriken: GameObjects.Sprite
+) {
+  const ghost = scene.add
+    .sprite(shuriken.x, shuriken.y, shuriken.texture.key, shuriken.frame.name)
+    .setScale(shuriken.scaleX * 0.8)
+    .setRotation(shuriken.rotation)
+    .setAlpha(0.5)
+    .setTint(WATER_SHURIKEN_BODY_TINT)
+    .setTintMode(Phaser.TintModes.FILL)
+    .setDepth(DEPTH.ABILITY_BELOW_POKEMON)
+  scene.abilitiesVfxGroup?.add(ghost)
+  scene.tweens.add({
+    targets: ghost,
+    alpha: 0,
+    scale: ghost.scaleX * 0.5,
+    duration: 180,
+    onComplete: () => ghost.destroy()
+  })
+}
+
+function flyWaterShuriken(
+  scene: GameScene | DebugScene,
+  [shuriken, core]: GameObjects.Sprite[],
+  path: (progress: number) => [number, number],
+  duration: number,
+  spins: number,
+  onArrival: () => void,
+  isGiantShuriken = false
+) {
+  let lastTrail = 0
+  let trailCount = 0
+  scene.tweens.addCounter({
+    from: 0,
+    to: 1,
+    duration,
+    onUpdate: (tween) => {
+      const progress = (tween.getValue() ?? 0) as number
+      const [x, y] = path(progress)
+      const rotation = progress * spins * Math.PI * 2
+      shuriken.setPosition(x, y).setRotation(rotation)
+      core.setPosition(x, y).setRotation(rotation)
+      if (isGiantShuriken && progress > 0.75) {
+        const fadeOut = (1 - progress) / 0.25
+        shuriken.setAlpha(fadeOut)
+        core.setAlpha(fadeOut)
+      }
+      const elapsed = progress * duration
+      if (elapsed - lastTrail >= WATER_SHURIKEN_TRAIL_INTERVAL) {
+        lastTrail = elapsed
+        leaveWaterShurikenTrail(scene, shuriken)
+        if (isGiantShuriken && trailCount++ % 3 === 0) {
+          addAbilitySprite(
+            scene,
+            Ability.WAVE_SPLASH,
+            0,
+            [shuriken.x, shuriken.y + 18],
+            {
+              origin: [0.5, 1],
+              scale: 0.9,
+              depth: DEPTH.ABILITY_BELOW_POKEMON
+            }
+          )
+        }
+      }
+    },
+    onComplete: () => {
+      shuriken.destroy()
+      core.destroy()
+      onArrival()
+    }
+  })
+}
+
+function waterShurikenThrowAnimation(args: AbilityAnimationArgs) {
+  const { scene, flip } = args
+  const [startX, startY] = transformEntityCoordinates(
+    args.positionX,
+    args.positionY,
+    flip
+  )
+  const [endX, endY] = transformEntityCoordinates(
+    args.targetX,
+    args.targetY,
+    flip
+  )
+  const shuriken = addWaterShuriken(scene, startX, startY - 10, 2.5)
+  if (!shuriken) return
+  const curveSide = [0, -1, 1][(args.delay ?? 0) % 3]
+  const length = Math.hypot(endX - startX, endY - startY) || 1
+  const normalX = -(endY - startY) / length
+  const normalY = (endX - startX) / length
+  flyWaterShuriken(
+    scene,
+    shuriken,
+    (progress) => {
+      const bend = Math.sin(Math.PI * progress) * WATER_SHURIKEN_CURVE
+      return [
+        startX + (endX - startX) * progress + normalX * bend * curveSide,
+        startY -
+          10 +
+          (endY - startY + 10) * progress +
+          normalY * bend * curveSide
+      ]
+    },
+    WATER_SHURIKEN_FLIGHT_MS,
+    2,
+    () => burstWaterShurikenHit(scene, endX, endY, 2)
+  )
+}
+
+// moves one tile per step of the server's hit timing, so each enemy is hit
+// as the shuriken passes it
+function waterShurikenGiantAnimation(args: AbilityAnimationArgs) {
+  const { scene, flip } = args
+  const offsetX = args.targetX - args.positionX
+  const offsetY = args.targetY - args.positionY
+  const tilesToTarget = Math.max(Math.abs(offsetX), Math.abs(offsetY), 1)
+  const stepX = offsetX / tilesToTarget
+  const stepY = offsetY / tilesToTarget
+  const tiles = BOARD_WIDTH
+  const [startX, startY] = transformEntityCoordinates(
+    args.positionX,
+    args.positionY,
+    flip
+  )
+  const [endX, endY] = transformEntityCoordinates(
+    args.positionX + stepX * tiles,
+    args.positionY + stepY * tiles,
+    flip
+  )
+  addAbilitySprite(scene, Ability.AQUA_RING, 0, [startX, startY], {
+    scale: 2
+  })
+
+  hopThen(args, WATER_SHURIKEN_GIANT_WINDUP_MS, () => {
+    const shuriken = addWaterShuriken(scene, startX, startY - 10, 5)
+    if (!shuriken) return
+    flyWaterShuriken(
+      scene,
+      shuriken,
+      (progress) => [
+        startX + (endX - startX) * progress,
+        startY - 10 + (endY - startY) * progress
+      ],
+      tiles * WATER_SHURIKEN_GIANT_MS_PER_CELL,
+      6,
+      () => {},
+      true
+    )
+  })
+}
+
+function waterShurikenGiantHitAnimation(args: AbilityAnimationArgs) {
+  const [x, y] = transformEntityCoordinates(
+    args.targetX,
+    args.targetY,
+    args.flip
+  )
+  burstWaterShurikenHit(args.scene, x, y, 3.5)
+}
+
+function burstWaterShurikenHit(
+  scene: GameScene | DebugScene,
+  x: number,
+  y: number,
+  scale: number
+) {
+  addAbilitySprite(scene, HitSprite.WATER_HIT, 0, [x, y], {
+    textureKey: "attacks",
+    scale,
+    depth: DEPTH.HIT_FX_ABOVE_POKEMON
+  })
 }
 
 function sandTombAnimation(): AbilityAnimation {
@@ -6721,16 +6933,9 @@ export const AbilitiesAnimations: {
     positionOffset: [0, -20]
   }),
 
-  [Ability.WATER_SHURIKEN]: (args) => {
-    const orientations = [
-      args.orientation,
-      OrientationArray[(OrientationArray.indexOf(args.orientation) + 1) % 8],
-      OrientationArray[(OrientationArray.indexOf(args.orientation) + 7) % 8]
-    ]
-    orientations.forEach((orientation) => {
-      projectile({ orientation, distance: 8, duration: 1000 })(args)
-    })
-  },
+  ["WATER_SHURIKEN_THROW"]: waterShurikenThrowAnimation,
+  ["WATER_SHURIKEN_GIANT"]: waterShurikenGiantAnimation,
+  ["WATER_SHURIKEN_GIANT_HIT"]: waterShurikenGiantHitAnimation,
 
   [Ability.SHADOW_FORCE]: (args) => {
     OrientationArray.forEach((orientation) => {

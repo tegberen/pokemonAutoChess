@@ -2050,7 +2050,7 @@
 		"AGILITY": "Immediately increase SPEED by [10,20,30,60,SP]",
 		"SPIRIT_SHACKLE": "Shoot a Piercing Arrow, dealing [20,40,80,160,SP] SPECIAL in a line behind the target and apply WOUND for 4 seconds.",
 		"TRIPLE_ARROWS": "Shoot 3 Piercing Arrows in a line, dealing [10,20,40,80,SP] SPECIAL. Each arrow reduces the target's DEF by 2 and applies FLINCH for 1 second. Can crit by default.",
-		"WATER_SHURIKEN": "Throw 3 shuriken in 3 directions that pass through enemy Pokémon and deal [20,40,60,120,SP] SPECIAL.",
+		"WATER_SHURIKEN": "Throw 3 shuriken at the closest enemies, each dealing [10,20,30,60,SP] SPECIAL.\nIf a shuriken KOs an enemy, the next cast throws one giant shuriken at the farthest enemy instead, dealing [30,60,90,180,SP] SPECIAL to every enemy on the way.",
 		"SHADOW_SNEAK": "Deal [25,40,50,100,SP] SPECIAL to the target. If the target suffers from SILENCE, deal TRUE instead.",
 		"MACH_PUNCH": "Deal [25,50,100,200,SP] SPECIAL to the target and attack immediately after.",
 		"MEGA_PUNCH": "Deal [20,40,60,120,SP] SPECIAL to the target. The damage is doubled if the user has a higher DEF than the target.",

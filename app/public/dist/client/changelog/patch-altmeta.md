@@ -511,6 +511,9 @@ Every balance change on this server, newest first.
 - Evolve Bundle | if nothing can evolve, gives a SILVER_DOJO_TICKET instead of a stat boost
 - Gift selection | +10 seconds to choose. If no gift is chosen in time, nothing is gifted and that gift is lost
 
+**Pokémon**
+- Froakie / Frogadier / Greninja | RANGE 1 → 2, HP [60/120/220] → [50/100/200], DEF [4/6/8] → [2/3/4], SPE_DEF [4/8/12] → [2/4/6], PP [80/75/70] → 80
+
 **Synergies**
 - POISON (5) | no longer ruptures on KO, only POISON (7) does, to cut some midgame tempo
 - FOSSIL | SHIELD and ATK gained [40/70/100]% → [25/50/100]%
@@ -523,6 +526,7 @@ Every balance change on this server, newest first.
 - Cyber Blade | casts Laser Blade right away when King's Shield turns into it
 
 **Abilities**
+- Greninja | Water Shuriken throws 3 shuriken at the closest enemies, each dealing [10,20,30,60,SP] SPECIAL. If a shuriken KOs an enemy, the next cast throws one giant shuriken at the farthest enemy instead, dealing [30,60,90,180,SP] SPECIAL to every enemy on the way
 - Swampert | Mud Bubble renamed Mud Splash. It waits for an enemy in RANGE before casting
 - Lurantis | Solar Blade's CONE reaches as far as its RANGE, each tile further away takes 50% less than the one before
 

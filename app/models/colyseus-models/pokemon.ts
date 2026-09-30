@@ -13230,13 +13230,13 @@ export class Froakie extends Pokemon {
   rarity = Rarity.UNCOMMON
   stars = 1
   evolution = Pkm.FROGADIER
-  hp = 60
+  hp = 50
   atk = 6
   speed = 64
-  def = 4
-  speDef = 4
+  def = 2
+  speDef = 2
   maxPP = 80
-  range = 1
+  range = 2
   skill = Ability.WATER_SHURIKEN
 }
 
@@ -13245,13 +13245,13 @@ export class Frogadier extends Pokemon {
   rarity = Rarity.UNCOMMON
   stars = 2
   evolution = Pkm.GRENINJA
-  hp = 120
+  hp = 100
   atk = 12
   speed = 64
-  def = 6
-  speDef = 8
-  maxPP = 75
-  range = 1
+  def = 3
+  speDef = 4
+  maxPP = 80
+  range = 2
   skill = Ability.WATER_SHURIKEN
 }
 
@@ -13259,13 +13259,13 @@ export class Greninja extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.WATER, Synergy.AQUATIC, Synergy.DARK])
   rarity = Rarity.UNCOMMON
   stars = 3
-  hp = 220
+  hp = 200
   atk = 19
   speed = 64
-  def = 8
-  speDef = 12
-  maxPP = 70
-  range = 1
+  def = 4
+  speDef = 6
+  maxPP = 80
+  range = 2
   skill = Ability.WATER_SHURIKEN
 }
 

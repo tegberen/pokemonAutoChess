@@ -6,6 +6,13 @@ export const DRAGON_DARTS_DART_FLIGHT_MS = 200
 // Mud Splash hits as the user lands from its hop
 export const MUD_BUBBLE_HOP_MS = 300
 
+// each Water Shuriken hits on arrival; the next one leaves a moment later
+export const WATER_SHURIKEN_FLIGHT_MS = 260
+export const WATER_SHURIKEN_STAGGER_MS = 110
+export const WATER_SHURIKEN_GIANT_MS_PER_CELL = 70
+// the giant shuriken is thrown after the user's hop
+export const WATER_SHURIKEN_GIANT_WINDUP_MS = 300
+
 export const InimitableAbilities: Ability[] = [
   Ability.ASSIST,
   Ability.AURA_WHEEL,

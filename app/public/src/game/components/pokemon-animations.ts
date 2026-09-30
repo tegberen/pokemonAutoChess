@@ -4256,24 +4256,24 @@ export const PokemonAnimations: {
     hitSprite: HitSprite.GHOST_HIT
   },
   [Pkm.FROAKIE]: {
-    attack: AnimationType.Attack,
+    attack: AnimationType.Shoot,
     ability: AnimationType.Shoot,
     emote: AnimationType.Shoot,
-    attackSprite: AttackSprite.WATER_MELEE,
+    attackSprite: AttackSprite.WATER_RANGE,
     hitSprite: HitSprite.WATER_HIT
   },
   [Pkm.FROGADIER]: {
-    attack: AnimationType.Attack,
+    attack: AnimationType.Shoot,
     ability: AnimationType.Attack,
     emote: AnimationType.Shoot,
-    attackSprite: AttackSprite.WATER_MELEE,
+    attackSprite: AttackSprite.WATER_RANGE,
     hitSprite: HitSprite.WATER_HIT
   },
   [Pkm.GRENINJA]: {
-    attack: AnimationType.Attack,
+    attack: AnimationType.Shoot,
     ability: AnimationType.Shoot,
     emote: AnimationType.Attack,
-    attackSprite: AttackSprite.WATER_MELEE,
+    attackSprite: AttackSprite.WATER_RANGE,
     hitSprite: HitSprite.WATER_HIT
   },
   [Pkm.TYROGUE]: {

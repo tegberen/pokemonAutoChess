@@ -50,7 +50,7 @@ export class SnipeShotStrategy extends AbilityStrategy {
   }
 }
 
-function getEnemiesInLineOfFire(
+export function getEnemiesInLineOfFire(
   pokemon: PokemonEntity,
   target: PokemonEntity,
   board: Board
