@@ -420,10 +420,14 @@ export function applyFieldDeathBuffs(
   const synergyTier = SynergyTiers[Synergy.FIELD].indexOf(activeEffect) + 1
   const heal = FIELD_HEAL_PER_SYNERGY_TIER[synergyTier] ?? 0
   const speedBoost = FIELD_SPEED_BUFF_PER_SYNERGY_TIER[synergyTier] ?? 0
-  pokemon.simulation.room.clock.setTimeout(() => {
+  const simulation = pokemon.simulation
+  simulation.room.clock.setTimeout(() => {
+    // the room clock outlives the fight, which can end within this tick
+    if (simulation.finished) return
     board.forEach((x, y, value) => {
       if (
         value &&
+        value.simulation &&
         value.team === pokemon.team &&
         value.types.has(Synergy.FIELD)
       ) {

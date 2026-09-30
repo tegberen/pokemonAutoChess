@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react"
+import { useEffect, useReducer } from "react"
 import { useTranslation } from "react-i18next"
 import { Tooltip } from "react-tooltip"
 import {
@@ -29,6 +29,12 @@ import { addIconsToDescription } from "../../utils/descriptions"
 import { cc } from "../../utils/jsx"
 import { useGuideActionAllowed } from "../guide/use-guide-action"
 import { Money } from "../icons/money"
+
+// kept outside the component so a remount keeps the Transcendence count
+const shopRefreshTrackers = new Map<
+  string,
+  { shop: Pkm[]; rerollCount: number; refreshes: number }
+>()
 
 export default function GameRefresh() {
   const { t } = useTranslation()
@@ -93,15 +99,44 @@ export default function GameRefresh() {
   const [precognition, aura, transcendence] =
     SynergyTiersThresholds[Synergy.PSYCHIC]
   const shop = useAppSelector((state) => state.game.shop)
+  // a lone Unown in the last slot is a lower tier's, not a Unown shop
   const hasUnownShop =
-    shop.some((pkm) => Unowns.includes(pkm)) &&
+    shop.slice(0, 5).some((pkm) => Unowns.includes(pkm)) &&
     shop.every((pkm) => Unowns.includes(pkm) || pkm === Pkm.DEFAULT)
-  const rerollCountAtLastUnownShop = useRef<number | null>(null)
-  useEffect(() => {
-    if (hasUnownShop) rerollCountAtLastUnownShop.current = rerollCount
-  }, [hasUnownShop, rerollCount])
   const hasUnownCountdown = psychicLevel >= precognition
   const hasTranscendence = psychicLevel >= transcendence
+  const [, rerender] = useReducer((n: number) => n + 1, 0)
+  const tracker = connectedPlayerId
+    ? shopRefreshTrackers.get(connectedPlayerId)
+    : undefined
+  useEffect(() => {
+    if (!connectedPlayerId) return
+    const previous = shopRefreshTrackers.get(connectedPlayerId)
+    // shop refreshes, not rerolls: buying a Unown also refreshes the shop.
+    // Like the server, nothing is counted below PSYCHIC 7
+    const isNewGame =
+      previous !== undefined && rerollCount < previous.rerollCount
+    let refreshes = isNewGame ? 0 : (previous?.refreshes ?? 0)
+    if (hasTranscendence) {
+      if (hasUnownShop) refreshes = 0
+      else if (previous && !isNewGame) {
+        const rerolls = rerollCount - previous.rerollCount
+        const swapped = previous.shop.some(
+          (pkm, index) =>
+            pkm !== Pkm.DEFAULT &&
+            shop[index] !== Pkm.DEFAULT &&
+            shop[index] !== pkm
+        )
+        refreshes += Math.max(rerolls, swapped ? 1 : 0)
+      } else refreshes = 0
+    }
+    shopRefreshTrackers.set(connectedPlayerId, {
+      shop: [...shop],
+      rerollCount,
+      refreshes
+    })
+    if (refreshes !== previous?.refreshes) rerender()
+  }, [connectedPlayerId, hasTranscendence, hasUnownShop, shop, rerollCount])
   const rerollsUntilUnown = (interval: number) =>
     interval - ((stageLevel + rerollCount) % interval)
   const unownCountdowns = [
@@ -110,13 +145,9 @@ export default function GameRefresh() {
   ].filter(({ tier }) => psychicLevel >= tier)
   const onUnownSlot = Unowns.includes(shop[5])
   const rerollsUntilUnownShop =
-    hasUnownShop || rerollCountAtLastUnownShop.current === null
+    hasUnownShop || !tracker
       ? UNOWN_PSY7_NB_SHOPS_INTERVAL
-      : Math.max(
-          1,
-          UNOWN_PSY7_NB_SHOPS_INTERVAL -
-            (rerollCount - rerollCountAtLastUnownShop.current)
-        )
+      : Math.max(1, UNOWN_PSY7_NB_SHOPS_INTERVAL - tracker.refreshes)
   const showsUnownHint = !isBazaar && !hasBerserkerHordes && hasUnownCountdown
 
   const guideAllowsReroll = useGuideActionAllowed("reroll")

@@ -529,6 +529,8 @@ Every balance change on this server, newest first.
 - Baby Opener | in Double Up the HP gained per egg now heals the team
 - Victory scene | GROUND holes no longer show up on it
 - Dreepy Deployment / Galvanic Rain | no longer add their Pokémon to every player's shop pool, since they are regional
+- FIELD | a FIELD Pokémon KO'd on the last blow of a fight no longer crashes the server
+- PSYCHIC (7) countdown | now also counts the new shop you get after buying a Unown, and no longer gets stuck at 10
 
 **Interface**
 - Avatar cosmetics {{new}} | added Rainbow Trail, Autumn Leaves Trail
