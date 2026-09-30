@@ -4066,16 +4066,28 @@ function hideMoleMazeDigger(
   moleMazeHiddenBurrows.set(digger, burrow)
   args.scene.time.delayedCall(MOLE_MAZE_REVEAL_FALLBACK, () => {
     if (moleMazeHiddenBurrows.get(digger) === burrow) {
-      revealMoleMazeDigger(digger)
+      revealMoleMazeDigger(args, digger)
     }
   })
 }
 
-function revealMoleMazeDigger(digger: PokemonSprite) {
+// clears whatever the dig left behind: a copy still drilling, or the lock of
+// the ability animation the hidden body played when it snapped to the hole
+function revealMoleMazeDigger(
+  args: AbilityAnimationArgs,
+  digger: PokemonSprite
+) {
   moleMazeHiddenBurrows.delete(digger)
+  const leftoverCopy = moleMazeActiveCopy.get(digger)
+  if (leftoverCopy?.active) {
+    args.scene.tweens.killTweensOf(leftoverCopy)
+    leftoverCopy.destroy()
+  }
   if (!digger.active) return
   digger.sprite.setAlpha(1)
   digger.isTeleporting = false
+  digger.animationLocked = false
+  args.scene.animationManager?.animatePokemon(digger, digger.action, args.flip)
 }
 
 // the body hides while a copy launches up and dives into its own hole
@@ -4129,6 +4141,21 @@ function moleMazeEmerge(args: AbilityAnimationArgs) {
   moleMazeImpact(args, riser)
   moleMazeEarthImpact(args, digger)
   playMoleMazeDrill(args, digger, riser, Orientation.UP)
+
+  const stopWatchingWalk = () =>
+    args.scene.events.off(Phaser.Scenes.Events.UPDATE, handOverIfWalking)
+  const handOverToBody = () => {
+    stopWatchingWalk()
+    revealMoleMazeDigger(args, digger)
+  }
+  // a melee digger walks on to a target that moved, so the body takes over
+  // instead of leaving its lifebar walking away from the copy
+  const handOverIfWalking = () => {
+    if (!riser.active) return stopWatchingWalk()
+    if (digger.moveManager.isRunning) handOverToBody()
+  }
+  args.scene.events.on(Phaser.Scenes.Events.UPDATE, handOverIfWalking)
+
   args.scene.tweens.chain({
     targets: riser,
     tweens: [
@@ -4139,11 +4166,7 @@ function moleMazeEmerge(args: AbilityAnimationArgs) {
       },
       { y, duration: MOLE_MAZE_RISE_DURATION, ease: "quad.in" }
     ],
-    onComplete: () =>
-      afterMoleMazeHold(args, riser, () => {
-        riser.destroy()
-        revealMoleMazeDigger(digger)
-      })
+    onComplete: () => afterMoleMazeHold(args, riser, handOverToBody)
   })
 }
 
