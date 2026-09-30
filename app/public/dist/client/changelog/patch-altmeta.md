@@ -520,22 +520,19 @@ Every balance change on this server, newest first.
 - Scorching Tome | damage bonus against BURN or WOUND 40% → 30%
 - Spooky Scarecrow | Gold → Prismatic, stage 12 only. Summoned allies being KO'd no longer trigger it
 - Molecular Corrosion | damage taken by POISONNED enemies 20% → 30%, your POISONNED only ignores RUNE_PROTECT after 12 seconds
+- Cyber Blade | casts Laser Blade right away when King's Shield turns into it
 
 **Abilities**
-- Swampert | Mud Bubble renamed Mud Splash. It waits for an enemy in RANGE before casting, and hits when Swampert lands from its jump
+- Swampert | Mud Bubble renamed Mud Splash. It waits for an enemy in RANGE before casting
 - Lurantis | Solar Blade's CONE reaches as far as its RANGE, each tile further away takes 50% less than the one before
 
 **Fixes**
 - Baby Opener | in Double Up the HP gained per egg now heals the team
 - Victory scene | GROUND holes no longer show up on it
 - Dreepy Deployment / Galvanic Rain | no longer add their Pokémon to every player's shop pool, since they are regional
-- PSYCHIC (7) countdown | now also counts the new shop you get after buying a Unown, and no longer gets stuck at 10
-- Mole Maze | enemies knocked up twice in a row no longer stay floating
-- Mole Maze | the digger no longer stays invisible, doubled or frozen after coming back up
 
 **Interface**
 - Avatar cosmetics {{new}} | added Rainbow Trail, Autumn Leaves Trail
-- PSYCHIC Unowns | hover the Refresh button to see when the next Unown comes, like the Bazaar
 
 ### 27 September 2026
 

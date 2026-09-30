@@ -465,6 +465,9 @@ export function formatPatchLog(html: string, wishes: PatchLogWish[]) {
         const icons = wishIcons(subjectText, matchers)
         if (portraits.childElementCount > 0) subject.prepend(portraits)
         else if (icons.childElementCount > 0) subject.prepend(icons)
+      } else if (category === "Abilities") {
+        const portraits = pokemonPortraits(subject.textContent ?? "")
+        if (portraits.childElementCount > 0) subject.prepend(portraits)
       } else if (category === "Wishes") {
         const subjectText = subject.textContent ?? ""
         const tier = wishTier(subjectText, matchers)

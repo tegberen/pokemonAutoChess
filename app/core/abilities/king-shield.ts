@@ -58,12 +58,17 @@ export class KingShieldStrategy extends AbilityStrategy {
     }
 
     // pushed after the form change and on the same delay, so Aegislash is
-    // already in Blade form when Laser Blade first reads its ATK
+    // already in Blade form when Laser Blade first reads its ATK.
+    // PROTECT blocks PP gain, so the PP is refilled to cast Laser Blade at once
     if (pokemon.heroBlessings?.has(Blessing.CYBER_BLADE)) {
       pokemon.commands.push(
         new DelayedCommand(() => {
           pokemon.skill = Ability.LASER_BLADE
           pokemon.maxPP = CYBER_BLADE_MAX_PP
+          pokemon.pp = pokemon.maxPP
+          // Laser Blade alternates on the cast count, so the first cast is the
+          // spin behind the target. Counting up avoids redoing first-cast effects
+          if (pokemon.count.ult % 2 === 1) pokemon.count.ult += 1
         }, KING_SHIELD_FORM_CHANGE_DELAY)
       )
     }

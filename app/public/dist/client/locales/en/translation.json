@@ -6520,7 +6520,7 @@
 		},
 		"CYBER_BLADE": {
 			"name": "Cyber Blade",
-			"description": "Gain a Honedge. After your STRONGEST Honedge casts King's Shield, its ability is replaced with Laser Blade and its max PP is set to 50."
+			"description": "Gain a Honedge. After your STRONGEST Honedge casts King's Shield, its ability is replaced with Laser Blade, which it casts right away. Its max PP is set to 50."
 		},
 		"SALT_SHAKER": {
 			"name": "Salt Shaker",
