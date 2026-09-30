@@ -33,6 +33,8 @@ import {
   BLESSINGS_WITH_PICK_SONG,
   PRISMATIC_ULTRA_HEROES,
   countsForTeamSize,
+  GOLDEN_FLIP_LANDED_PAUSE_MS,
+  GOLDEN_FLIP_TOSS_MS,
   STARTER_CHOICE_EXTRA_ROUNDS
 } from "../types/enum/Blessing"
 import { GADGETS } from "../config/game/gadgets"
@@ -199,7 +201,9 @@ import { armoryGiftService } from "../services/armory-options"
 import {
   blessingEffectService,
   giftStarterChoiceCopy,
-  grantGambleReward
+  grantGambleReward,
+  grantRandomBlessingOfTier,
+  rollGoldenFlipTier
 } from "../services/blessings"
 import {
   discoverGalarFossil,
@@ -2178,6 +2182,7 @@ export default class GameRoom extends Room<{ state: GameState }> {
       owned.blessings.push(blessing)
       player.blessings.push(blessing)
       grantGambleReward(player, this.state, this, blessing)
+      if (blessing === Blessing.GOLDEN_FLIP) this.tossGoldenFlip(player)
       const moneyGained = player.money - moneyBeforeBlessing
       if (moneyGained > 0) {
         this.clients
@@ -2486,6 +2491,18 @@ export default class GameRoom extends Room<{ state: GameState }> {
     } catch (error) {
       logger.error("error granting the artist title", error)
     }
+  }
+
+  // the coin face is sent at once, the Wish only once the coin has landed
+  tossGoldenFlip(player: Player) {
+    const client = () =>
+      this.clients.find((connected) => connected.auth.uid === player.id)
+    const tier = rollGoldenFlipTier()
+    client()?.send(Transfer.GOLDEN_FLIP_TOSS, tier)
+    this.clock.setTimeout(() => {
+      const reward = grantRandomBlessingOfTier(player, this.state, this, tier)
+      client()?.send(Transfer.GOLDEN_FLIP_RESULT, reward ?? null)
+    }, GOLDEN_FLIP_TOSS_MS + GOLDEN_FLIP_LANDED_PAUSE_MS)
   }
 
   computeRoundDamage(

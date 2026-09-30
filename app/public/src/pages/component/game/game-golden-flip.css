@@ -1,0 +1,88 @@
+.game-golden-flip {
+  position: absolute;
+  top: 140px;
+  left: 50%;
+  transform: translateX(-50%);
+  pointer-events: none;
+  perspective: 900px;
+}
+
+/* the toss arc: up while it spins fast, back down as it slows */
+.golden-flip-toss.tossed {
+  animation-name: golden-flip-arc;
+  animation-timing-function: cubic-bezier(0.3, 0.7, 0.4, 1);
+}
+
+.golden-flip-coin {
+  position: relative;
+  width: 9rem;
+  height: 9rem;
+  transform-style: preserve-3d;
+  transition-property: transform;
+  transition-timing-function: cubic-bezier(0.12, 0.62, 0.22, 1);
+}
+
+.golden-flip-face {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: var(--border-thin);
+  backface-visibility: hidden;
+  overflow: hidden;
+}
+
+.golden-flip-face.back {
+  transform: rotateX(180deg);
+}
+
+/* like the Wish card body: a darker panel inside the striped frame */
+.golden-flip-face-body {
+  position: absolute;
+  inset: 8px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: color-mix(in srgb, var(--color-shadow) 65%, transparent);
+}
+
+/* the Wish cards' light sweep, passing over the coin */
+.golden-flip-face::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: var(--holo-sheen);
+  animation: blessing-sheen 2.4s ease-in-out infinite;
+}
+
+.golden-flip-face-body img {
+  width: 4.5rem;
+  height: 4.5rem;
+}
+
+.golden-flip-reveal > .my-container {
+  animation: golden-flip-reveal 380ms ease-out;
+}
+
+@keyframes golden-flip-arc {
+  0% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-90px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+/* the coin turns into the Wish card */
+@keyframes golden-flip-reveal {
+  0% {
+    transform: rotateX(90deg) scale(0.8);
+  }
+  100% {
+    transform: rotateX(0) scale(1);
+  }
+}

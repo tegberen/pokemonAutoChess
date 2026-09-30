@@ -192,7 +192,8 @@
   --blessing-stripe-alpha: 22%;
 }
 
-.game-choice-blessing-slot > .my-box {
+.game-choice-blessing-slot > .my-box,
+.golden-flip-face {
   background-color: color-mix(
     in srgb,
     var(--blessing-hue) var(--blessing-mix),
@@ -458,7 +459,8 @@
   }
 }
 
-.game-choice-blessing-slot > .my-box.blessing-tier-prismatic {
+.game-choice-blessing-slot > .my-box.blessing-tier-prismatic,
+.golden-flip-face.blessing-tier-prismatic {
   padding: 8px;
   /* six 8px bands keep the 48px period the seamless tile size depends on */
   background-image: repeating-linear-gradient(

@@ -249,6 +249,7 @@ export enum Blessing {
   GAMBLE_I = "GAMBLE_I",
   GAMBLE_II = "GAMBLE_II",
   GAMBLE_III = "GAMBLE_III",
+  GOLDEN_FLIP = "GOLDEN_FLIP",
   CALLED_SHOT = "CALLED_SHOT",
   VAMPIRIC = "VAMPIRIC",
   PROTECT_THE_WEAK = "PROTECT_THE_WEAK",
@@ -993,6 +994,10 @@ export const GAMBLE_REWARDS: {
   [Blessing.GAMBLE_II]: { tier: BlessingTier.GOLD, gold: 10 },
   [Blessing.GAMBLE_III]: { tier: BlessingTier.PRISMATIC, gold: 15 }
 }
+export const GOLDEN_FLIP_PRISMATIC_CHANCE = 0.5
+// the rolled Wish is granted as the coin lands, so its rewards match the reveal
+export const GOLDEN_FLIP_TOSS_MS = 1700
+export const GOLDEN_FLIP_LANDED_PAUSE_MS = 450
 export const CALLED_SHOT_GOLD = 5
 export const CALLED_SHOT_STREAK = 5
 export const WISE_SPENDING_EXP_PER_REROLL = 2

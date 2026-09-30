@@ -446,6 +446,12 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     icon: "gamble",
     grantsPokemonImmediately: false
   },
+  [Blessing.GOLDEN_FLIP]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "golden_flip",
+    grantsPokemonImmediately: false
+  },
   [Blessing.CALLED_SHOT]: {
     tier: BlessingTier.SILVER,
     availableAtStages: BLESSING_SELECTION_STAGES,

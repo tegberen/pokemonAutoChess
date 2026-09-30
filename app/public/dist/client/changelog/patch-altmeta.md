@@ -513,7 +513,8 @@ Every balance change on this server, newest first.
 - Gift selection | +10 seconds to choose. If no gift is chosen in time, nothing is gifted and that gift is lost
 
 **Pokémon**
-- Froakie / Frogadier / Greninja | RANGE 1 → 2, HP [60/120/220] → [50/100/200], DEF [4/6/8] → [2/3/4], SPE_DEF [4/8/12] → [2/4/6], PP [80/75/70] → 80
+- Froakie / Frogadier / Greninja | RANGE 1 → 2, HP [60/120/220] → [80/130/230], DEF [4/6/8] → [2/3/4], SPE_DEF [4/8/12] → [3/4/5], PP [80/75/70] → 80
+- Magneton / Magnezone | HP [150/250] → [140/240]
 
 **Synergies**
 - POISON (5) | no longer ruptures on KO, only POISON (7) does, to cut some midgame tempo
@@ -526,9 +527,10 @@ Every balance change on this server, newest first.
 - Spooky Scarecrow | Gold → Prismatic, stage 12 only. Summoned allies being KO'd no longer trigger it
 - Molecular Corrosion | damage taken by POISONNED enemies 20% → 30%, your POISONNED only ignores RUNE_PROTECT after 12 seconds
 - Cyber Blade | casts Laser Blade right away when King's Shield turns into it
+- Golden Flip {{new}} | Gold Wish: flip a coin to gain a random Silver or Prismatic Wish
 
 **Abilities**
-- Greninja | Water Shuriken throws 3 shuriken at the closest enemies, each dealing [10,20,30,60,SP] SPECIAL. If a shuriken KOs an enemy, the next cast throws one giant shuriken at the farthest enemy instead, dealing [30,60,90,180,SP] SPECIAL to every enemy on the way
+- Greninja | Water Shuriken throws 3 shuriken at the closest enemies, each dealing [10,20,40,80,SP] SPECIAL. If a shuriken KOs an enemy, the next cast throws one giant shuriken at the farthest enemy instead, dealing [20,40,80,160,SP] SPECIAL to every enemy on the way
 - Swampert | Mud Bubble renamed Mud Splash. It waits for an enemy in RANGE before casting
 - Lurantis | Solar Blade's CONE reaches as far as its RANGE, each tile further away takes 50% less than the one before
 

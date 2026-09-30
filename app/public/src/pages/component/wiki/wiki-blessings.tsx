@@ -112,6 +112,7 @@ const ECONOMY_BLESSINGS = new Set<Blessing>([
   Blessing.GAMBLE_I,
   Blessing.GAMBLE_II,
   Blessing.GAMBLE_III,
+  Blessing.GOLDEN_FLIP,
   Blessing.CALLED_SHOT,
   Blessing.WISE_SPENDING,
   Blessing.MORE_EQUAL_THAN_OTHERS,

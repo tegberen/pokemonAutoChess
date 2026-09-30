@@ -29,7 +29,7 @@ import {
   Role,
   Transfer
 } from "../../../types"
-import type { Blessing } from "../../../types/enum/Blessing"
+import type { Blessing, BlessingTier } from "../../../types/enum/Blessing"
 import { CloseCodes, CloseCodesMessages } from "../../../types/enum/CloseCodes"
 import { ConnectionStatus } from "../../../types/enum/ConnectionStatus"
 import { GameMode, GamePhaseState, Team } from "../../../types/enum/Game"
@@ -98,6 +98,8 @@ import {
   setSpecialGameRule,
   setSpectatorCount,
   blessingRefused,
+  startGoldenFlip,
+  revealGoldenFlip,
   setStageLevel,
   setPveVariantIndexByStage,
   setWeatherThreshold,
@@ -111,6 +113,7 @@ import {
   setErrorAlertMessage
 } from "../stores/NetworkStore"
 import GameChoice from "./component/game/game-choice"
+import GameGoldenFlip from "./component/game/game-golden-flip"
 import GameDpsMeter from "./component/game/game-dps-meter"
 import GameExpeditions from "./component/game/game-expeditions"
 import GameFinalRank from "./component/game/game-final-rank"
@@ -540,6 +543,15 @@ export default function Game() {
 
       room.onMessage(Transfer.BLESSING_SONG, (blessing: Blessing) =>
         playBlessingSong(blessing, getGameScene() ?? undefined)
+      )
+
+      room.onMessage(Transfer.GOLDEN_FLIP_TOSS, (tier: BlessingTier) =>
+        dispatch(startGoldenFlip(tier))
+      )
+
+      room.onMessage(
+        Transfer.GOLDEN_FLIP_RESULT,
+        (blessing: Blessing | null) => dispatch(revealGoldenFlip(blessing))
       )
 
       room.onMessage(
@@ -1608,6 +1620,7 @@ export default function Game() {
             </div>
           )}
           <GameChoice />
+          <GameGoldenFlip />
           {!isVictoryScene && <GameDpsMeter />}
           <GameToasts />
           <GuideOverlay />

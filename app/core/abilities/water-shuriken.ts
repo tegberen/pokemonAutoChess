@@ -13,7 +13,7 @@ import { AbilityStrategy } from "./ability-strategy"
 import { getEnemiesInLineOfFire } from "./snipe-shot"
 
 const WATER_SHURIKEN_COUNT = 3
-const GIANT_SHURIKEN_DAMAGE_MULTIPLIER = 3
+const GIANT_SHURIKEN_DAMAGE_MULTIPLIER = 2
 
 const giantShurikenReady = new WeakSet<PokemonEntity>()
 
@@ -25,7 +25,7 @@ export class WaterShurikenStrategy extends AbilityStrategy {
     crit: boolean
   ) {
     super.process(pokemon, board, target, crit, true)
-    const damage = [10, 20, 30, 60][pokemon.stars - 1] ?? 60
+    const damage = [10, 20, 40, 80][pokemon.stars - 1] ?? 80
 
     if (giantShurikenReady.has(pokemon)) {
       giantShurikenReady.delete(pokemon)

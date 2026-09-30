@@ -4023,7 +4023,7 @@ export class Magneton extends Pokemon {
   rarity = Rarity.UNCOMMON
   stars = 2
   evolution = Pkm.MAGNEZONE
-  hp = 150
+  hp = 140
   atk = 9
   speed = 44
   def = 2
@@ -4041,7 +4041,7 @@ export class Magnezone extends Pokemon {
   ])
   rarity = Rarity.UNCOMMON
   stars = 3
-  hp = 250
+  hp = 240
   atk = 15
   speed = 44
   def = 4
@@ -13230,11 +13230,11 @@ export class Froakie extends Pokemon {
   rarity = Rarity.UNCOMMON
   stars = 1
   evolution = Pkm.FROGADIER
-  hp = 50
+  hp = 80
   atk = 6
   speed = 64
   def = 2
-  speDef = 2
+  speDef = 3
   maxPP = 80
   range = 2
   skill = Ability.WATER_SHURIKEN
@@ -13245,7 +13245,7 @@ export class Frogadier extends Pokemon {
   rarity = Rarity.UNCOMMON
   stars = 2
   evolution = Pkm.GRENINJA
-  hp = 100
+  hp = 130
   atk = 12
   speed = 64
   def = 3
@@ -13259,11 +13259,11 @@ export class Greninja extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.WATER, Synergy.AQUATIC, Synergy.DARK])
   rarity = Rarity.UNCOMMON
   stars = 3
-  hp = 200
+  hp = 230
   atk = 19
   speed = 64
   def = 4
-  speDef = 6
+  speDef = 5
   maxPP = 80
   range = 2
   skill = Ability.WATER_SHURIKEN

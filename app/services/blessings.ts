@@ -65,6 +65,7 @@ import {
   BlessingTier,
   BlessingTrigger,
   GAMBLE_REWARDS,
+  GOLDEN_FLIP_PRISMATIC_CHANCE,
   BP_REWARDS_COMPONENTS,
   BP_REWARDS_RECURRING_COMPONENTS,
   BP_REWARDS_ROUND_INTERVAL,
@@ -534,12 +535,12 @@ function isBlockedByFullBench(player: Player, blessing: Blessing) {
 }
 
 // the Gambles are excluded from their own pool so one cannot chain into another
-function grantRandomBlessingOfTier(
+export function grantRandomBlessingOfTier(
   player: Player,
   state: GameState,
   room: GameRoom | undefined,
   tier: BlessingTier
-) {
+): Blessing | undefined {
   // a choice can be banked and picked stages later, and every definition is
   // gated on a selection stage, so asking for the current one matches nothing
   const selectionStage =
@@ -558,7 +559,7 @@ function grantRandomBlessingOfTier(
     if (applyEffect && applyEffect(player, state, room) === false) continue
     state.blessingsByPlayerId.get(player.id)?.blessings.push(blessing)
     player.blessings.push(blessing)
-    return
+    return blessing
   }
 }
 
@@ -583,6 +584,12 @@ export function grantGambleReward(
 ) {
   const reward = GAMBLE_REWARDS[picked]
   if (reward) grantRandomBlessingOfTier(player, state, room, reward.tier)
+}
+
+export function rollGoldenFlipTier() {
+  return chance(GOLDEN_FLIP_PRISMATIC_CHANCE)
+    ? BlessingTier.PRISMATIC
+    : BlessingTier.SILVER
 }
 
 function synergyFamilyEffects(

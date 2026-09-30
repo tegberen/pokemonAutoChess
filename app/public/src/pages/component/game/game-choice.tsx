@@ -32,7 +32,7 @@ import {
 } from "../bot-builder/marked-synergies"
 import { pickChoice, pickArmoryGift, rerollChoice } from "../../../network"
 import { Blessings } from "../../../../../config/game/blessings"
-import type { Blessing } from "../../../../../types/enum/Blessing"
+import { Blessing } from "../../../../../types/enum/Blessing"
 import {
   AVATAR_COSMETIC_BLESSINGS,
   type AvatarCosmeticId,
@@ -303,7 +303,10 @@ export default function GameChoice() {
                 onClick={(event) => {
                   event.stopPropagation()
                   if (blockedByFullBench || pickedBlessingIndex !== null) return
-                  playSound(SOUNDS.BLESSING)
+                  // Golden Flip plays it once its Wish is rolled instead
+                  if (blessing !== Blessing.GOLDEN_FLIP) {
+                    playSound(SOUNDS.BLESSING)
+                  }
                   const card = event.currentTarget.getBoundingClientRect()
                   setPickOrigin({
                     x: `${((event.clientX - card.left) / card.width) * 100}%`,

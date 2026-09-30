@@ -13,7 +13,7 @@ import type {
 } from "../../../types"
 import { GameMode, GamePhaseState, Team } from "../../../types/enum/Game"
 import type { Item } from "../../../types/enum/Item"
-import type { Blessing } from "../../../types/enum/Blessing"
+import type { Blessing, BlessingTier } from "../../../types/enum/Blessing"
 import type { GalarFossil } from "../../../types/enum/FossilUnlock"
 import type { Pkm, PkmProposition } from "../../../types/enum/Pokemon"
 import type { SpecialGameRule } from "../../../types/enum/SpecialGameRule"
@@ -95,6 +95,8 @@ export interface GameStateStore {
   blessingRefusedCount: number
   // which selection was refused, so the hint only shows on that one
   blessingRefusedChoiceId: string | null
+  // a Golden Flip in progress: the tier the coin lands on, then its Wish
+  goldenFlip: { tier: BlessingTier; result?: Blessing } | null
   // GUIDE mode: the synergy being taught and how far the player has read
   guideSynergy: Synergy | null
   guideStep: number
@@ -154,7 +156,8 @@ const initialState: GameStateStore = {
   smeargleScribbleChampion: new Array<ILeaderboardInfo>(),
   spectatorCount: 0,
   blessingRefusedCount: 0,
-  blessingRefusedChoiceId: null
+  blessingRefusedChoiceId: null,
+  goldenFlip: null
 }
 
 export const gameSlice: Slice<GameStateStore> = createSlice({
@@ -489,6 +492,21 @@ export const gameSlice: Slice<GameStateStore> = createSlice({
       state.blessingRefusedChoiceId = action.payload
     },
 
+    startGoldenFlip: (state, action: PayloadAction<BlessingTier>) => {
+      state.goldenFlip = { tier: action.payload }
+    },
+
+    // no Wish could be granted when the pool was empty, so the coin just leaves
+    revealGoldenFlip: (state, action: PayloadAction<Blessing | null>) => {
+      if (!state.goldenFlip) return
+      if (action.payload === null) state.goldenFlip = null
+      else state.goldenFlip.result = action.payload
+    },
+
+    endGoldenFlip: (state) => {
+      state.goldenFlip = null
+    },
+
     leaveGame: () => initialState
   }
 })
@@ -547,7 +565,10 @@ export const {
   setDoubleUpChampions,
   setSmeargleScribbleChampion,
   setSpectatorCount,
-  blessingRefused
+  blessingRefused,
+  startGoldenFlip,
+  revealGoldenFlip,
+  endGoldenFlip
 } = gameSlice.actions
 
 export default gameSlice.reducer
