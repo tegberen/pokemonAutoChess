@@ -13,10 +13,16 @@
   flex-wrap: wrap;
 }
 
+.preparation-menu-user.ready,
+.preparation-menu-user.not-ready {
+  border: var(--border-thin);
+  box-shadow: inset 0 0 0 4px var(--ready-state-color);
+}
+
 .preparation-menu-user.ready {
-  border-color: #76c442;
+  --ready-state-color: #92cc41;
 }
 
 .preparation-menu-user.not-ready {
-  border-color: #ce372b;
+  --ready-state-color: #e76e55;
 }
