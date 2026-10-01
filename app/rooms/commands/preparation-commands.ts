@@ -233,6 +233,16 @@ export class OnJoinCommand extends Command<
             payload: `Bot ${bot.name} removed to make room for new player.`
           })
           this.state.users.delete(key)
+          // the newcomer was paired before this bot left, so its partner is
+          // freed and teamed with whoever is still alone, usually the newcomer
+          const partnerOfRemovedBot = schemaValues(this.state.users).find(
+            (user) => user.doubleUpPartnerId === key
+          )
+          if (partnerOfRemovedBot) {
+            partnerOfRemovedBot.doubleUpPartnerId = ""
+            partnerOfRemovedBot.doubleUpTeamId = ""
+            autoAssignPartner(this.state, partnerOfRemovedBot.uid)
+          }
         } else {
           throw new Error(
             `There is more than 8 players in the lobby which was not supposed to happen`
