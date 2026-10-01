@@ -515,6 +515,7 @@ Every balance change on this server, newest first.
 **Pokémon**
 - Froakie / Frogadier / Greninja | RANGE 1 → 2, HP [60/120/220] → [80/120/240], ATK [6/12/19] → [6/10/16], DEF [4/6/8] → [2/3/4], SPE_DEF [4/8/12] → [3/4/5], PP [80/75/70] → 80
 - Magneton / Magnezone | HP [150/250] → [140/240]
+- Floette (Eternal) / Mega Floette (Eternal) | ATK 18 → 12, gains LIGHT
 
 **Synergies**
 - POISON (5) | no longer ruptures on KO, only POISON (7) does, to cut some midgame tempo
@@ -531,6 +532,7 @@ Every balance change on this server, newest first.
 
 **Abilities**
 - Greninja | Water Shuriken throws 3 shuriken at the closest enemies, each dealing [10,20,40,80,SP] SPECIAL. If a shuriken KOs an enemy, the next cast throws one giant shuriken at the farthest enemy instead, dealing [20,40,80,160,SP] SPECIAL to every enemy on the way
+- Floette (Eternal) | tweaked Light of Ruin animation
 - Swampert | Mud Bubble renamed Mud Splash. It waits for an enemy in RANGE before casting
 - Lurantis | Solar Blade's CONE reaches as far as its RANGE, each tile further away takes 50% less than the one before
 

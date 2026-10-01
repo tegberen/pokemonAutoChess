@@ -18,6 +18,7 @@ import {
 } from "../../../../types/Animation"
 import {
   DRAGON_DARTS_DART_FLIGHT_MS,
+  LIGHT_OF_RUIN_CHARGE_MS,
   MUD_BUBBLE_HOP_MS,
   WATER_SHURIKEN_FLIGHT_MS,
   WATER_SHURIKEN_GIANT_MS_PER_CELL,
@@ -1082,6 +1083,446 @@ function burstWaterShurikenHit(
     textureKey: "attacks",
     scale,
     depth: DEPTH.HIT_FX_ABOVE_POKEMON
+  })
+}
+
+const LIGHT_OF_RUIN_DURATION = 950
+const LIGHT_OF_RUIN_LENGTH = 1800
+const LIGHT_OF_RUIN_FRONT = 30
+const LIGHT_OF_RUIN_BASE_FADE = 70
+const LIGHT_OF_RUIN_HAZE = 0xff8fd0
+const LIGHT_OF_RUIN_BODY = 0xff3fa0
+const LIGHT_OF_RUIN_DEEP = 0xd81b86
+const LIGHT_OF_RUIN_CORE = 0xffd6ec
+const LIGHT_OF_RUIN_THUNDER = 0x2a0f2c
+const LIGHT_OF_RUIN_WIND = 0xf6d3e6
+
+// aimed at the exact angle the server's effectInLine hits along
+function lightOfRuinAnimation(args: AbilityAnimationArgs) {
+  const { scene, flip } = args
+  const [casterX, casterY] = transformEntityCoordinates(
+    args.positionX,
+    args.positionY,
+    flip
+  )
+  const [aimX, aimY] = transformEntityCoordinates(
+    args.targetX,
+    args.targetY,
+    flip
+  )
+  const angle = Math.atan2(aimY - casterY, aimX - casterX)
+  const originX = casterX + Math.cos(angle) * LIGHT_OF_RUIN_FRONT
+  const originY = casterY - 14 + Math.sin(angle) * LIGHT_OF_RUIN_FRONT
+  const beam = scene.add
+    .graphics()
+    .setPosition(originX, originY)
+    .setRotation(angle)
+    .setDepth(DEPTH.ABILITY)
+  const burst = scene.add
+    .graphics()
+    .setPosition(originX, originY)
+    .setDepth(DEPTH.ABILITY)
+  // the swirl ring is drawn flat, then tilted like a ring seen from the side
+  const ring = scene.add
+    .graphics()
+    .setPosition(originX, originY)
+    .setRotation(Phaser.Math.DegToRad(-24))
+    .setDepth(DEPTH.ABILITY)
+  scene.abilitiesVfxGroup?.add(beam)
+  scene.abilitiesVfxGroup?.add(burst)
+  scene.abilitiesVfxGroup?.add(ring)
+
+  const inwardStreaks = Array.from({ length: 18 }, () => ({
+    angle: Math.random() * Math.PI * 2,
+    start: randomBetween(110, 170),
+    delay: Math.random() * 0.5,
+    length: randomBetween(18, 34)
+  }))
+  const rayColors = [
+    LIGHT_OF_RUIN_CORE,
+    LIGHT_OF_RUIN_HAZE,
+    LIGHT_OF_RUIN_BODY
+  ]
+  const rays = Array.from({ length: 16 }, (_, index) => ({
+    spread: randomBetween(-60, 60) / 1000,
+    length: randomBetween(55, 100) / 100,
+    thickness: randomBetween(3, 11),
+    color: rayColors[index % rayColors.length],
+    flicker: Math.random() * Math.PI * 2
+  }))
+  const spikes = Array.from({ length: 12 }, (_, index) => ({
+    angle: (index / 12) * Math.PI * 2 + Math.random() * 0.3,
+    length: randomBetween(28, 62),
+    color: index % 2 === 0 ? LIGHT_OF_RUIN_CORE : LIGHT_OF_RUIN_BODY
+  }))
+  const crescents = [
+    { from: -150, sweep: 110, radius: 44, delay: 0 },
+    { from: 40, sweep: 120, radius: 60, delay: 0.08 },
+    { from: 160, sweep: 90, radius: 76, delay: 0.16 }
+  ]
+  const sparkles = Array.from({ length: 14 }, () => ({
+    along: randomBetween(30, 700),
+    offset: randomBetween(-40, 40),
+    size: randomBetween(4, 9),
+    twinkle: Math.random() * Math.PI * 2
+  }))
+  const swirlSlashes = Array.from({ length: 5 }, (_, index) => ({
+    radius: 34 + index * 9,
+    start: Math.random() * Math.PI * 2,
+    sweep: randomBetween(70, 130),
+    speed: (index % 2 === 0 ? 1 : -1) * randomBetween(8, 12)
+  }))
+  const shards = Array.from({ length: 9 }, () => ({
+    angle:
+      angle +
+      Math.PI +
+      (Math.random() < 0.5 ? -1 : 1) * (randomBetween(20, 150) / 100),
+    length: randomBetween(44, 98),
+    width: randomBetween(10, 18)
+  }))
+  const gusts = Array.from({ length: 4 }, (_, index) => ({
+    tilt: (index - 1.5) * 0.35,
+    sweep: randomBetween(60, 100),
+    delay: index * 0.05,
+    strokes: 2 + (index % 2)
+  }))
+  const debris = Array.from({ length: 10 }, () => ({
+    angle: angle + randomBetween(-90, 90) / 100,
+    speed: randomBetween(120, 220),
+    delay: Math.random() * 0.2
+  }))
+  let lastThunder = -1
+  let thunderBolts: number[][][] = []
+
+  const drawSparkle = (x: number, y: number, size: number, alpha: number) => {
+    beam.fillStyle(LIGHT_OF_RUIN_CORE, alpha)
+    beam.fillTriangle(x - size, y, x, y - 1.5, x, y + 1.5)
+    beam.fillTriangle(x + size, y, x, y - 1.5, x, y + 1.5)
+    beam.fillTriangle(x, y - size, x - 1.5, y, x + 1.5, y)
+    beam.fillTriangle(x, y + size, x - 1.5, y, x + 1.5, y)
+  }
+
+  // jagged dark bolts, rebuilt a few times a second so they crackle
+  const strokeThunder = (
+    graphics: Phaser.GameObjects.Graphics,
+    alpha: number
+  ) => {
+    thunderBolts.forEach((bolt) => {
+      const strokes: [number, number, number][] = [
+        [3, LIGHT_OF_RUIN_THUNDER, alpha],
+        [1, LIGHT_OF_RUIN_DEEP, alpha * 0.9]
+      ]
+      strokes.forEach(([width, color, strokeAlpha]) => {
+        graphics.lineStyle(width, color, strokeAlpha)
+        graphics.beginPath()
+        bolt.forEach(([x, y], index) =>
+          index === 0 ? graphics.moveTo(x, y) : graphics.lineTo(x, y)
+        )
+        graphics.strokePath()
+      })
+    })
+  }
+  const crackleAround = (radius: number) =>
+    Array.from({ length: 4 }, () => {
+      const startAngle = Math.random() * Math.PI * 2
+      return Array.from({ length: 6 }, (_, step) => {
+        const boltAngle = startAngle + step * 0.3
+        const reach = radius * 1.35 + randomBetween(-7, 7)
+        return [Math.cos(boltAngle) * reach, Math.sin(boltAngle) * reach]
+      })
+    })
+  const crackleAlongBeam = (reach: number, width: number) =>
+    Array.from({ length: 5 }, () => {
+      const start = randomBetween(20, Math.max(40, Math.min(reach, 700)))
+      const side = Math.random() < 0.5 ? -1 : 1
+      return Array.from({ length: 7 }, (_, step) => [
+        start + step * randomBetween(12, 20),
+        side * (width * 0.7 + randomBetween(-4, 6))
+      ])
+    })
+
+  const drawCharge = (chargeProgress: number) => {
+    const swell = chargeProgress * chargeProgress
+    const radius = 8 + 32 * swell
+    const pulse = 1 + Math.sin(chargeProgress * Math.PI * 10) * 0.06
+
+    inwardStreaks.forEach((streak) => {
+      const local = (chargeProgress - streak.delay) / (1 - streak.delay)
+      if (local <= 0 || local >= 1) return
+      const distance = radius + (streak.start - radius) * (1 - local)
+      const tipX = Math.cos(streak.angle) * distance
+      const tipY = Math.sin(streak.angle) * distance
+      const tailX = Math.cos(streak.angle) * (distance + streak.length)
+      const tailY = Math.sin(streak.angle) * (distance + streak.length)
+      const side = streak.angle + Math.PI / 2
+      burst.fillStyle(LIGHT_OF_RUIN_CORE, 0.7 * local)
+      burst.fillTriangle(
+        tailX + Math.cos(side) * 1.5,
+        tailY + Math.sin(side) * 1.5,
+        tailX - Math.cos(side) * 1.5,
+        tailY - Math.sin(side) * 1.5,
+        tipX,
+        tipY
+      )
+    })
+
+    burst.fillStyle(LIGHT_OF_RUIN_DEEP, 0.4)
+    burst.fillCircle(0, 0, radius * 1.25 * pulse)
+    burst.fillStyle(LIGHT_OF_RUIN_BODY, 0.7)
+    burst.fillCircle(0, 0, radius * pulse)
+    burst.lineStyle(1.5, LIGHT_OF_RUIN_DEEP, 0.8)
+    burst.strokeCircle(0, 0, radius * pulse)
+    burst.fillStyle(LIGHT_OF_RUIN_CORE, 0.8)
+    burst.fillCircle(0, 0, radius * 0.5 * pulse)
+
+    const thunderFrame = Math.floor(chargeProgress * 14)
+    if (thunderFrame !== lastThunder) {
+      lastThunder = thunderFrame
+      thunderBolts = crackleAround(radius)
+    }
+    strokeThunder(burst, 0.9)
+
+    swirlSlashes.forEach((slash) => {
+      const from = slash.start + chargeProgress * slash.speed
+      const to = from + Phaser.Math.DegToRad(slash.sweep)
+      const slashRadius = slash.radius * (0.6 + 0.6 * chargeProgress)
+      burst.lineStyle(5, LIGHT_OF_RUIN_HAZE, 0.5 * chargeProgress)
+      burst.beginPath()
+      burst.arc(0, 0, slashRadius, from, to)
+      burst.strokePath()
+      burst.lineStyle(2, LIGHT_OF_RUIN_CORE, 0.85 * chargeProgress)
+      burst.beginPath()
+      burst.arc(0, 0, slashRadius, from, to)
+      burst.strokePath()
+    })
+
+    const ringRadius = radius * 2.2
+    const spin = chargeProgress * Math.PI * 4
+    ring.lineStyle(4, LIGHT_OF_RUIN_HAZE, 0.6)
+    ring.strokeEllipse(0, 0, ringRadius * 2, ringRadius * 0.7)
+    ring.lineStyle(2, LIGHT_OF_RUIN_CORE, 0.8)
+    ring.beginPath()
+    for (let step = 0; step <= 12; step++) {
+      const ringAngle = spin + (step / 12) * Math.PI * 0.8
+      const x = Math.cos(ringAngle) * ringRadius
+      const y = Math.sin(ringAngle) * ringRadius * 0.35
+      if (step === 0) ring.moveTo(x, y)
+      else ring.lineTo(x, y)
+    }
+    ring.strokePath()
+  }
+
+  // a wedge whose first stretch fades in from the origin, so the beam has no
+  // hard edge where it leaves the burst
+  const drawFadingWedge = (
+    halfWidth: number,
+    length: number,
+    color: number,
+    alpha: number
+  ) => {
+    if (length <= LIGHT_OF_RUIN_BASE_FADE) return
+    const fadeEnd = LIGHT_OF_RUIN_BASE_FADE
+    const widthAtFadeEnd = halfWidth * (1 - fadeEnd / length)
+    beam.fillGradientStyle(color, color, color, color, 0, alpha, 0, alpha)
+    beam.fillTriangle(0, -halfWidth, fadeEnd, -widthAtFadeEnd, 0, halfWidth)
+    beam.fillGradientStyle(color, color, color, color, alpha, alpha, 0, alpha)
+    beam.fillTriangle(
+      fadeEnd,
+      -widthAtFadeEnd,
+      fadeEnd,
+      widthAtFadeEnd,
+      0,
+      halfWidth
+    )
+    beam.fillStyle(color, alpha)
+    beam.fillTriangle(
+      fadeEnd,
+      -widthAtFadeEnd,
+      fadeEnd,
+      widthAtFadeEnd,
+      length,
+      0
+    )
+  }
+
+  const drawBeam = (progress: number) => {
+    // shoots out almost at once, matching the damage landing as it fires
+    const reach = LIGHT_OF_RUIN_LENGTH * Math.min(1, progress / 0.08)
+    const fade = progress < 0.6 ? 1 : 1 - (progress - 0.6) / 0.4
+
+    if (progress < 0.15) {
+      const flash = progress / 0.15
+      burst.fillStyle(LIGHT_OF_RUIN_CORE, 0.7 * (1 - flash))
+      burst.fillCircle(0, 0, 40 + flash * 80)
+    }
+
+    const coreWidth = 38 * fade
+    drawFadingWedge(coreWidth * 1.7, reach, LIGHT_OF_RUIN_HAZE, 0.14 * fade)
+    drawFadingWedge(coreWidth, reach, LIGHT_OF_RUIN_DEEP, 0.45 * fade)
+    const rimStart = coreWidth * (1 - LIGHT_OF_RUIN_BASE_FADE / reach)
+    beam.lineStyle(2, LIGHT_OF_RUIN_THUNDER, 0.35 * fade)
+    beam.lineBetween(LIGHT_OF_RUIN_BASE_FADE, -rimStart, reach, 0)
+    beam.lineBetween(LIGHT_OF_RUIN_BASE_FADE, rimStart, reach, 0)
+    drawFadingWedge(coreWidth * 0.6, reach, LIGHT_OF_RUIN_BODY, 0.65 * fade)
+    drawFadingWedge(
+      coreWidth * 0.25,
+      reach * 0.7,
+      LIGHT_OF_RUIN_CORE,
+      0.75 * fade
+    )
+
+    rays.forEach((ray) => {
+      const flicker = 0.85 + 0.15 * Math.sin(progress * 30 + ray.flicker)
+      const rayLength = reach * ray.length * flicker
+      const half = (ray.thickness * fade) / 2
+      // invisible at the origin, so rays grow out of the burst
+      const color = ray.color
+      beam.fillGradientStyle(color, color, color, color, 0, 0, 0.55 * fade, 0)
+      beam.fillTriangle(0, -half, 0, half, rayLength, rayLength * ray.spread)
+    })
+
+    sparkles.forEach((sparkle) => {
+      if (sparkle.along > reach) return
+      const twinkle = 0.5 + 0.5 * Math.sin(progress * 24 + sparkle.twinkle)
+      drawSparkle(
+        sparkle.along,
+        sparkle.offset * (0.4 + progress),
+        sparkle.size * twinkle,
+        0.8 * fade
+      )
+    })
+
+    const thunderFrame = 100 + Math.floor(progress * 16)
+    if (thunderFrame !== lastThunder) {
+      lastThunder = thunderFrame
+      thunderBolts = crackleAlongBeam(reach, coreWidth)
+    }
+    strokeThunder(beam, 0.85 * fade)
+
+    gusts.forEach((gust) => {
+      const local = Math.max(0, Math.min(1, (progress - gust.delay) / 0.55))
+      if (local <= 0 || local >= 1) return
+      const middle = angle + gust.tilt
+      const half = Phaser.Math.DegToRad(gust.sweep) / 2
+      for (let stroke = 0; stroke < gust.strokes; stroke++) {
+        const radius = 40 + local * 140 + stroke * 6
+        burst.lineStyle(2, LIGHT_OF_RUIN_WIND, 0.55 * (1 - local))
+        burst.beginPath()
+        burst.arc(0, 0, radius, middle - half, middle + half)
+        burst.strokePath()
+      }
+    })
+    debris.forEach((piece) => {
+      const local = Math.max(0, (progress - piece.delay) / 0.6)
+      if (local >= 1) return
+      const distance = 20 + local * piece.speed
+      const headX = Math.cos(piece.angle) * distance
+      const headY = Math.sin(piece.angle) * distance
+      burst.lineStyle(2, LIGHT_OF_RUIN_WIND, 0.7 * (1 - local))
+      burst.lineBetween(
+        headX,
+        headY,
+        headX - Math.cos(piece.angle) * 8,
+        headY - Math.sin(piece.angle) * 8
+      )
+    })
+
+    const shardGrowth = Math.min(1, progress / 0.1)
+    shards.forEach((shard) => {
+      const length = shard.length * shardGrowth
+      const side = shard.angle + Math.PI / 2
+      const corners = [
+        new Phaser.Math.Vector2(
+          Math.cos(side) * shard.width * 0.5,
+          Math.sin(side) * shard.width * 0.5
+        ),
+        new Phaser.Math.Vector2(
+          Math.cos(shard.angle) * length,
+          Math.sin(shard.angle) * length
+        ),
+        new Phaser.Math.Vector2(
+          -Math.cos(side) * shard.width * 0.5,
+          -Math.sin(side) * shard.width * 0.5
+        )
+      ]
+      const [leftBase, tip, rightBase] = corners
+      burst.fillStyle(LIGHT_OF_RUIN_BODY, 0.85 * fade)
+      burst.fillTriangle(0, 0, leftBase.x, leftBase.y, tip.x, tip.y)
+      burst.fillStyle(LIGHT_OF_RUIN_DEEP, 0.85 * fade)
+      burst.fillTriangle(0, 0, tip.x, tip.y, rightBase.x, rightBase.y)
+      burst.lineStyle(1.5, LIGHT_OF_RUIN_THUNDER, 0.9 * fade)
+      burst.strokePoints(corners, true)
+    })
+
+    spikes.forEach((spike) => {
+      const spikeAngle = spike.angle + progress * 0.8
+      const length = spike.length * (0.7 + 0.3 * fade)
+      const side = Math.PI / 2
+      burst.fillStyle(spike.color, 0.8 * fade)
+      burst.fillTriangle(
+        Math.cos(spikeAngle + side) * 4,
+        Math.sin(spikeAngle + side) * 4,
+        Math.cos(spikeAngle - side) * 4,
+        Math.sin(spikeAngle - side) * 4,
+        Math.cos(spikeAngle) * length,
+        Math.sin(spikeAngle) * length
+      )
+    })
+    burst.fillStyle(LIGHT_OF_RUIN_HAZE, 0.2 * fade)
+    burst.fillCircle(0, 0, 34 * fade)
+    burst.fillStyle(LIGHT_OF_RUIN_BODY, 0.7 * fade)
+    burst.fillCircle(0, 0, 21 * fade)
+    burst.lineStyle(1.5, LIGHT_OF_RUIN_DEEP, 0.8 * fade)
+    burst.strokeCircle(0, 0, 21 * fade)
+    burst.fillStyle(LIGHT_OF_RUIN_CORE, 0.85 * fade)
+    burst.fillCircle(0, 0, 13 * fade)
+
+    crescents.forEach((crescent) => {
+      const local = Math.max(
+        0,
+        Math.min(1, (progress - crescent.delay) / 0.5)
+      )
+      if (local <= 0 || local >= 1) return
+      const radius = crescent.radius * (0.6 + 0.6 * local)
+      const from = Phaser.Math.DegToRad(crescent.from) + angle
+      const to = from + Phaser.Math.DegToRad(crescent.sweep) * local
+      burst.lineStyle(
+        5 * (1 - local) + 1,
+        LIGHT_OF_RUIN_HAZE,
+        0.8 * (1 - local)
+      )
+      burst.beginPath()
+      burst.arc(0, 0, radius, from, to)
+      burst.strokePath()
+      burst.lineStyle(2, LIGHT_OF_RUIN_CORE, 0.8 * (1 - local))
+      burst.beginPath()
+      burst.arc(0, 0, radius, from, to)
+      burst.strokePath()
+    })
+  }
+
+  scene.tweens.addCounter({
+    from: 0,
+    to: LIGHT_OF_RUIN_CHARGE_MS + LIGHT_OF_RUIN_DURATION,
+    duration: LIGHT_OF_RUIN_CHARGE_MS + LIGHT_OF_RUIN_DURATION,
+    onUpdate: (tween) => {
+      const elapsed = (tween.getValue() ?? 0) as number
+      beam.clear()
+      burst.clear()
+      ring.clear()
+      if (elapsed < LIGHT_OF_RUIN_CHARGE_MS) {
+        drawCharge(elapsed / LIGHT_OF_RUIN_CHARGE_MS)
+      } else {
+        const beamProgress =
+          (elapsed - LIGHT_OF_RUIN_CHARGE_MS) / LIGHT_OF_RUIN_DURATION
+        drawBeam(beamProgress)
+      }
+    },
+    onComplete: () => {
+      beam.destroy()
+      burst.destroy()
+      ring.destroy()
+    }
   })
 }
 
@@ -4961,27 +5402,7 @@ export const AbilitiesAnimations: {
       })(args)
     }
   ],
-  [Ability.LIGHT_OF_RUIN]: [
-    (args) => {
-      const coordinates = transformEntityCoordinates(
-        args.positionX,
-        args.positionY,
-        args.flip
-      )
-      const [dx, dy] = OrientationVector[args.orientation]
-      return staticAnimation({
-        x: coordinates[0] + dx * 16,
-        y: coordinates[1] - dy * 16,
-        depth: DEPTH.ABILITY_BELOW_POKEMON,
-        origin: [0.5, 0],
-        oriented: true,
-        scale: 3,
-        rotation: -Math.PI / 2,
-        flipY: true,
-        animOptions: { frameRate: 12 }  // lower = slower, default is usually 16
-      })(args)
-    }
-  ],
+  [Ability.LIGHT_OF_RUIN]: lightOfRuinAnimation,
 
   [Ability.DIAMOND_STORM]: onCasterScale2,
   [Ability.THRASH]: onCasterScale2,

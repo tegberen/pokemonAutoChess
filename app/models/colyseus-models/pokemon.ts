@@ -573,14 +573,18 @@ export class Egg extends Pokemon {
 }
 
 export class FloetteEternal extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.FAIRY, Synergy.FLORA])
+  types = new SetSchema<Synergy>([
+    Synergy.FAIRY,
+    Synergy.FLORA,
+    Synergy.LIGHT
+  ])
   rarity = Rarity.UNIQUE
   hp = 120
   stars = 3
   evolution = Pkm.MEGA_FLOETTE_ETERNAL
   evolutionRule = { type: EvolutionRuleType.STACK } as const
   stacksRequired = 20
-  atk = 18
+  atk = 12
   speed = 55
   def = 6
   speDef = 12
@@ -590,11 +594,15 @@ export class FloetteEternal extends Pokemon {
   passive = Passive.FLOETTE_ETERNAL
 }
 export class MegaFloetteEternal extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.FAIRY, Synergy.FLORA])
+  types = new SetSchema<Synergy>([
+    Synergy.FAIRY,
+    Synergy.FLORA,
+    Synergy.LIGHT
+  ])
   rarity = Rarity.UNIQUE
   stars = 4
   hp = 200
-  atk = 18
+  atk = 12
   speed = 55
   def = 6
   speDef = 12
