@@ -388,10 +388,11 @@
     grid-template-columns: minmax(0, 1fr);
   }
 }
+/* teams sit further apart than partners, so each pair reads as a unit */
 .preparation-menu-users.double-up {
   display: flex;
   flex-direction: column;
-  gap: 0.5em;
+  gap: 1em;
 }
 
 .double-up-pair {
@@ -400,8 +401,11 @@
   gap: 0.5em;
 }
 
+/* an empty seat matches a seated card: the 40px avatar height and the same
+   3px border, so the rows line up */
 .preparation-menu-user.missing {
-  border: 2px dashed rgb(255 255 255 / 20%);
+  min-height: 40px;
+  border: 3px dashed rgb(255 255 255 / 20%);
   background: none;
   color: var(--color-fg-secondary);
 }

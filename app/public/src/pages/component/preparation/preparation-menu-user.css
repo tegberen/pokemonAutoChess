@@ -15,8 +15,8 @@
 
 .preparation-menu-user.ready,
 .preparation-menu-user.not-ready {
-  border: var(--border-thin);
-  box-shadow: inset 0 0 0 4px var(--ready-state-color);
+  /* in Double Up the border shows the team instead, ready is the checkmark */
+  border: 3px solid var(--team-color, var(--ready-state-color));
 }
 
 .preparation-menu-user.ready {

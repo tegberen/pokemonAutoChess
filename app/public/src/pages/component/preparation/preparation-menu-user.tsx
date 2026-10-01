@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react"
 import { useTranslation } from "react-i18next"
 import type { IGameUser } from "../../../../../models/colyseus-models/game-user"
 import { Role } from "../../../../../types"
@@ -57,10 +58,14 @@ return (
       className={`my-container player my-box preparation-menu-user ${
         props.user.ready ? "ready" : "not-ready"
       }`}
-      style={isDoubleUp ? { 
-        borderColor: teamColor,
-        position: "relative" 
-      } : undefined}
+      style={
+        isDoubleUp
+          ? ({
+              "--team-color": teamColor,
+              position: "relative"
+            } as CSSProperties)
+          : undefined
+      }
     >
       <EloBadge elo={props.user?.elo} />
       <InlineAvatar
