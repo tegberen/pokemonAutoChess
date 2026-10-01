@@ -13245,8 +13245,8 @@ export class Frogadier extends Pokemon {
   rarity = Rarity.UNCOMMON
   stars = 2
   evolution = Pkm.GRENINJA
-  hp = 130
-  atk = 12
+  hp = 120
+  atk = 10
   speed = 64
   def = 3
   speDef = 4
@@ -13259,8 +13259,8 @@ export class Greninja extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.WATER, Synergy.AQUATIC, Synergy.DARK])
   rarity = Rarity.UNCOMMON
   stars = 3
-  hp = 230
-  atk = 19
+  hp = 240
+  atk = 16
   speed = 64
   def = 4
   speDef = 5

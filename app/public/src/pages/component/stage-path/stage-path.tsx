@@ -45,12 +45,6 @@ export function generateStageInfo(
   const stages: StageInfo[] = []
 
   for (let level = 0; level <= LAST_STAGE; level++) {
-    if (withOptionalStages && BLESSING_SELECTION_STAGES.includes(level)) {
-      stages.push({ level, icon: WISH_ICON, type: "wish" })
-    }
-    if (withOptionalStages && ArmoryAssistStages.includes(level)) {
-      stages.push({ level, icon: GIFT_ICON, type: "gift" })
-    }
 
     if (ItemCarouselStages.includes(level)) {
       stages.push({
@@ -88,6 +82,14 @@ export function generateStageInfo(
                 ? t("rarity.EPIC")
                 : undefined
       })
+    }
+
+    // offered in the pick phase, after the carousel and before the fight
+    if (withOptionalStages && BLESSING_SELECTION_STAGES.includes(level)) {
+      stages.push({ level, icon: WISH_ICON, type: "wish" })
+    }
+    if (withOptionalStages && ArmoryAssistStages.includes(level)) {
+      stages.push({ level, icon: GIFT_ICON, type: "gift" })
     }
 
     const pveStage = PVEStages[level]
@@ -173,7 +175,7 @@ export function StageIcon({
   highlighted?: boolean
   dimmed?: boolean
   zone?: string
-  onClick?: (level: number) => void
+  onClick?: () => void
 }) {
   const { t } = useTranslation()
   const label = stage.title ?? t(`stage_type.${stage.type}`)
@@ -185,7 +187,7 @@ export function StageIcon({
         dimmed,
         clickable: onClick != null
       })}
-      onClick={onClick ? () => onClick(stage.level) : undefined}
+      onClick={onClick}
       title={`${t("stage")} ${stage.level}: ${label}`}
     >
       <img src={stage.icon} alt={stage.title} />
@@ -194,18 +196,19 @@ export function StageIcon({
   )
 }
 
+// selected by position, since a carousel and a gift can share a stage number
 export function StagePath({
   stages,
-  selectedStage = null,
+  selectedIndex = null,
   highlightedType = null,
   zoneByStage,
   onSelect
 }: {
   stages: StageInfo[]
-  selectedStage?: number | null
+  selectedIndex?: number | null
   highlightedType?: StageType | null
   zoneByStage?: Record<number, string>
-  onSelect?: (level: number) => void
+  onSelect?: (index: number) => void
 }) {
   const lastLevel = stages[stages.length - 1]?.level ?? 0
   return (
@@ -214,13 +217,13 @@ export function StagePath({
         <React.Fragment key={`stage-${stage.level}-${index}`}>
           <StageIcon
             stage={stage}
-            selected={selectedStage === stage.level}
+            selected={selectedIndex === index}
             highlighted={highlightedType === stage.type}
             zone={zoneByStage?.[stage.level]}
             dimmed={
               zoneByStage != null && zoneByStage[stage.level] === undefined
             }
-            onClick={onSelect}
+            onClick={onSelect ? () => onSelect(index) : undefined}
           />
           {stage.level < lastLevel && (
             <span className="stage-connector">―</span>

@@ -29,14 +29,12 @@ import "./wiki-stages.css"
 
 export default function WikiStages() {
   const { t } = useTranslation()
-  const [selectedStage, setSelectedStage] = useState<number | null>(null)
+  const [selectedIndex, setSelectedIndex] = useState<number | null>(null)
   const [highlightedType, setHighlightedType] = useState<StageType | null>(null)
 
   const allStages = generateStageInfo(t, true)
   const selectedStageInfo =
-    selectedStage !== null
-      ? allStages.find((s) => s.level === selectedStage)
-      : null
+    selectedIndex !== null ? allStages[selectedIndex] : null
 
   return (
     <div id="wiki-stages">
@@ -51,10 +49,10 @@ export default function WikiStages() {
         </div>
         <StagePath
           stages={allStages}
-          selectedStage={selectedStage}
+          selectedIndex={selectedIndex}
           highlightedType={highlightedType}
-          onSelect={(level) =>
-            setSelectedStage(selectedStage === level ? null : level)
+          onSelect={(index) =>
+            setSelectedIndex(selectedIndex === index ? null : index)
           }
         />
       </div>

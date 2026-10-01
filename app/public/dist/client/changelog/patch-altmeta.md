@@ -513,12 +513,12 @@ Every balance change on this server, newest first.
 - Gift selection | +10 seconds to choose. If no gift is chosen in time, nothing is gifted and that gift is lost
 
 **Pokémon**
-- Froakie / Frogadier / Greninja | RANGE 1 → 2, HP [60/120/220] → [80/130/230], DEF [4/6/8] → [2/3/4], SPE_DEF [4/8/12] → [3/4/5], PP [80/75/70] → 80
+- Froakie / Frogadier / Greninja | RANGE 1 → 2, HP [60/120/220] → [80/120/240], ATK [6/12/19] → [6/10/16], DEF [4/6/8] → [2/3/4], SPE_DEF [4/8/12] → [3/4/5], PP [80/75/70] → 80
 - Magneton / Magnezone | HP [150/250] → [140/240]
 
 **Synergies**
 - POISON (5) | no longer ruptures on KO, only POISON (7) does, to cut some midgame tempo
-- NORMAL | allied Pokémon gain [4/8/12/16] SHIELD per ally on the board, instead of NORMAL Pokémon and their ADJACENT allies gaining [15/20/25/30]
+- NORMAL | allied Pokémon gain [5/10/15/20] SHIELD per ally on the board, instead of NORMAL Pokémon and their ADJACENT allies gaining [15/20/25/30]
 - FOSSIL | SHIELD and ATK gained [40/70/100]% → [25/50/100]%
 - FIELD | summoned allies being KO'd no longer trigger it, e.g. Houndoom's Beat Up
 

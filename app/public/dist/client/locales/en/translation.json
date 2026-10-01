@@ -2599,10 +2599,10 @@
 		"BANQUET": "Banquet"
 	},
 	"effect_description": {
-		"STAMINA": "4 SHIELD per ally. Get a SILK_SCARF.",
-		"STRENGTH": "8 SHIELD per ally. Get a second SILK_SCARF.",
-		"ENDURE": "12 SHIELD per ally. Get a third SILK_SCARF.",
-		"PURE_POWER": "16 SHIELD per ally. Get a fourth SILK_SCARF. NORMAL holders of SILK_SCARF-made items gain 30% base ATK and 30 AP.",
+		"STAMINA": "5 SHIELD per ally. Get a SILK_SCARF.",
+		"STRENGTH": "10 SHIELD per ally. Get a second SILK_SCARF.",
+		"ENDURE": "15 SHIELD per ally. Get a third SILK_SCARF.",
+		"PURE_POWER": "20 SHIELD per ally. Get a fourth SILK_SCARF. NORMAL holders of SILK_SCARF-made items gain 30% base ATK and 30 AP.",
 		"INGRAIN": "Restore 5 HP every 2 seconds. Get a berry tree.",
 		"GROWTH": "Restore 15 HP every 2 seconds. Get another berry tree.",
 		"SPORE": "Restore 25 HP every 2 seconds. Get a third berry tree.",
@@ -7787,7 +7787,7 @@
 		"portal": "Portal Carousel",
 		"additional": "Additional Pick",
 		"battle": "Player Battle",
-		"gift": "Double Up Gift",
+		"gift": "Double Up Bundles",
 		"wish": "Wish"
 	},
 	"type_fluid": "Type-Fluid",
