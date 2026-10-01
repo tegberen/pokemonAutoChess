@@ -5690,10 +5690,6 @@
 			"name": "Shapeless Synergies",
 			"description": "Allies with at least 3 of their synergies active, including those granted by held items, gain 50% more SPEED and HP from the AMORPHOUS synergy, rounded up. Gain a Tynamo."
 		},
-		"ABNORMALITY": {
-			"name": "Abnormality",
-			"description": "When NORMAL is active, its Pokémon gain SHIELD and 5 AP for each empty ADJACENT space instead of giving SHIELD to your team. Gain an Igglybuff."
-		},
 		"WRAPPED_UP": {
 			"name": "Wrapped Up",
 			"description": "NORMAL Pokémon holding a scarf item convert the SHIELD gained from NORMAL into max HP, and also gain their scarf's base stats a second time. Gain an Igglybuff."

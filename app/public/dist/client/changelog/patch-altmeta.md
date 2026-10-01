@@ -528,6 +528,7 @@ Every balance change on this server, newest first.
 - Spooky Scarecrow | Gold → Prismatic, stage 12 only. Summoned allies being KO'd no longer trigger it
 - Molecular Corrosion | damage taken by POISONNED enemies 20% → 30%, your POISONNED only ignores RUNE_PROTECT after 12 seconds
 - Cyber Blade | casts Laser Blade right away when King's Shield turns into it
+- Abnormality | removed
 - Golden Flip {{new}} | Gold Wish: flip a coin to gain a random Silver or Prismatic Wish
 
 **Abilities**

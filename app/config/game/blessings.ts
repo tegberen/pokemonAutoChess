@@ -1169,13 +1169,6 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     grantsPokemonImmediately: true,
     synergy: Synergy.AMORPHOUS
   },
-  [Blessing.ABNORMALITY]: {
-    tier: BlessingTier.SILVER,
-    availableAtStages: BLESSING_SELECTION_STAGES,
-    icon: "spread_shield",
-    grantsPokemonImmediately: true,
-    synergy: Synergy.NORMAL
-  },
   [Blessing.WRAPPED_UP]: {
     tier: BlessingTier.GOLD,
     availableAtStages: BLESSING_SELECTION_STAGES,

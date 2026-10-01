@@ -151,7 +151,8 @@ export default function ServerGuide({
       { name: "Park Bench", icon: "park_bench" },
       { name: "Golden Ticket", icon: "ticket" },
       { name: "Mortar Shells", icon: "mortar_shells" },
-      { name: "Big Pecks", icon: "big_peck_letter" }
+      { name: "Big Pecks", icon: "big_peck_letter" },
+      { name: "Abnormality", icon: "spread_shield" }
     ],
     [t]
   )

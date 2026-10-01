@@ -2737,9 +2737,6 @@ export const blessingEffectService: {
     return true
   },
 
-  [Blessing.ABNORMALITY]: (player) =>
-    giftPokemonIfBenchHasRoom(player, Pkm.IGGLYBUFF),
-
   [Blessing.WRAPPED_UP]: (player) =>
     giftPokemonIfBenchHasRoom(player, Pkm.IGGLYBUFF),
 

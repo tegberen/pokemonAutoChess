@@ -60,7 +60,6 @@ import {
   FIRE_IGNITION_TIER,
   IGNITION_COOLDOWN_ROUNDS,
   BERRY_GROWTH_GOLDEN_TIER,
-  ABNORMALITY_ABILITY_POWER_PER_EMPTY_CELL,
   WICKED_HUNTER_MONSTER_BONUS_PER_STATUS
 } from "../../types/enum/Blessing"
 import {
@@ -781,93 +780,66 @@ export const wildBerserkEffect = new OnDamageReceivedEffect(
 
 export const normalShieldEffect = new OnSimulationStartEffect(
   ({ entity, simulation }) => {
-    let shieldBonus = 0
-    if (entity.effects.has(EffectEnum.STAMINA)) {
-      shieldBonus = 15
+    if (
+      entity.effects.has(EffectEnum.PURE_POWER) &&
+      schemaValues(entity.items).some((item) => Scarves.includes(item))
+    ) {
+      // All Silk Scarf-made item holders gain 30% base Attack and 30 Ability Power.
+      entity.addAttack(Math.round(0.3 * entity.baseAtk), entity, 0, false)
+      entity.addAbilityPower(30, entity, 0, false)
     }
-    if (entity.effects.has(EffectEnum.STRENGTH)) {
-      shieldBonus += 20
-    }
-    if (entity.effects.has(EffectEnum.ENDURE)) {
-      shieldBonus += 25
-    }
-    if (entity.effects.has(EffectEnum.PURE_POWER)) {
-      shieldBonus += 30
-      if (schemaValues(entity.items).some((item) => Scarves.includes(item))) {
-        // All Silk Scarf-made item holders gain 30% base Attack and 30 Ability Power.
-        entity.addAttack(Math.round(0.3 * entity.baseAtk), entity, 0, false)
-        entity.addAbilityPower(30, entity, 0, false)
-      }
-    }
-    if (shieldBonus >= 0) {
-      const blessings = entity.player?.blessings
-      const cells = simulation.board.getAdjacentCells(
-        entity.positionX,
-        entity.positionY
-      )
 
-      /* WRAPPED_UP turns whatever NORMAL would have shielded into permanent max
-         HP for scarf holders, so it has to wrap every grant below */
-      const grantNormalBonus = (
-        target: PokemonEntity,
-        amount: number,
-        giver: PokemonEntity = entity
-      ) => {
-        const wrapsIntoMaxHP =
-          blessings?.includes(Blessing.WRAPPED_UP) &&
-          schemaValues(target.items).some((item) => Scarves.includes(item))
-        if (wrapsIntoMaxHP) {
-          target.addMaxHP(amount, giver, 0, false)
-        } else {
-          target.addShield(amount, giver, 0, false)
-        }
-      }
+    // every NORMAL Pokémon carries this effect, but the team is shielded once
+    if (normalTeamsShielded.get(simulation)?.has(entity.team)) return
+    const teamsShielded =
+      normalTeamsShielded.get(simulation) ?? new Set<Team>()
+    normalTeamsShielded.set(simulation, teamsShielded.add(entity.team))
 
-      if (blessings?.includes(Blessing.ABNORMALITY)) {
-        const emptyAdjacentCells = cells.filter(
-          (cell) => cell.value === undefined
-        ).length
-        grantNormalBonus(entity, shieldBonus * emptyAdjacentCells)
-        entity.addAbilityPower(
-          ABNORMALITY_ABILITY_POWER_PER_EMPTY_CELL * emptyAdjacentCells,
-          entity,
-          0,
-          false
-        )
-      } else if (!normalTeamsShielded.get(simulation)?.has(entity.team)) {
-        // every NORMAL Pokémon carries this effect, but the team is shielded once
-        const teamsShielded =
-          normalTeamsShielded.get(simulation) ?? new Set<Team>()
-        normalTeamsShielded.set(simulation, teamsShielded.add(entity.team))
-        const synergyTier =
-          SynergyTiers[Synergy.NORMAL].findIndex((effect) =>
-            entity.effects.has(effect)
-          ) + 1
-        const shieldPerAlly =
-          NORMAL_SHIELD_PER_ALLY_PER_SYNERGY_TIER[synergyTier] ?? 0
-        const allies: PokemonEntity[] = []
-        simulation.board.forEach((x, y, ally) => {
-          if (ally && ally.team === entity.team && ally.hp > 0) {
-            allies.push(ally)
-          }
-        })
-        // each NORMAL Pokémon gives its share, so Battle Stats credit them all.
-        // Spawns have no Battle Stats row, so their share would vanish
-        const givers = allies.filter(
-          (ally) => ally.types.has(Synergy.NORMAL) && !ally.isSpawn
-        )
-        if (givers.length === 0) givers.push(entity)
-        const shieldPerTarget = shieldPerAlly * allies.length
-        allies.forEach((ally) =>
-          givers.forEach((giver, index) => {
-            const share =
-              Math.floor(shieldPerTarget / givers.length) +
-              (index < shieldPerTarget % givers.length ? 1 : 0)
-            grantNormalBonus(ally, share, giver)
-          })
-        )
+    const blessings = entity.player?.blessings
+    /* WRAPPED_UP turns whatever NORMAL would have shielded into permanent max
+       HP for scarf holders, so it has to wrap every grant below */
+    const grantNormalBonus = (
+      target: PokemonEntity,
+      amount: number,
+      giver: PokemonEntity
+    ) => {
+      const wrapsIntoMaxHP =
+        blessings?.includes(Blessing.WRAPPED_UP) &&
+        schemaValues(target.items).some((item) => Scarves.includes(item))
+      if (wrapsIntoMaxHP) {
+        target.addMaxHP(amount, giver, 0, false)
+      } else {
+        target.addShield(amount, giver, 0, false)
       }
     }
+
+    const synergyTier =
+      SynergyTiers[Synergy.NORMAL].findIndex((effect) =>
+        entity.effects.has(effect)
+      ) + 1
+    const shieldPerAlly =
+      NORMAL_SHIELD_PER_ALLY_PER_SYNERGY_TIER[synergyTier] ?? 0
+    const allies: PokemonEntity[] = []
+    simulation.board.forEach((x, y, ally) => {
+      if (ally && ally.team === entity.team && ally.hp > 0) {
+        allies.push(ally)
+      }
+    })
+    // each NORMAL Pokémon gives its share, so Battle Stats credit them all.
+    // Spawns have no Battle Stats row, so their share would vanish
+    const givers = allies.filter(
+      (ally) => ally.types.has(Synergy.NORMAL) && !ally.isSpawn
+    )
+    if (givers.length === 0) givers.push(entity)
+    const shieldPerTarget = shieldPerAlly * allies.length
+    allies.forEach((ally) =>
+      givers.forEach((giver, index) => {
+        const share =
+          Math.floor(shieldPerTarget / givers.length) +
+          (index < shieldPerTarget % givers.length ? 1 : 0)
+        grantNormalBonus(ally, share, giver)
+      })
+    )
   }
 )
 
