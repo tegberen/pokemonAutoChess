@@ -41,8 +41,9 @@
   background-position: center 62%;
 }
 
+/* a tall painting: frame the two partners sitting on the cliff */
 .room-selection-menu .room-choice-art.duo-art {
-  background-position: center top;
+  background-position: center 72%;
 }
 
 .room-selection-menu .room-choice-caption {

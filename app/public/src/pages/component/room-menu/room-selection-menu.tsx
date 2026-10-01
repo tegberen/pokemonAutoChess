@@ -40,7 +40,7 @@ export function RoomSelectionMenu(props: {
             <div
               className="room-choice-art duo-art"
               style={{
-                backgroundImage: "url(assets/ui/cards/duo_card.png)"
+                backgroundImage: "url(assets/ui/cards/duo_card_2.webp)"
               }}
             />
             <div className="room-choice-caption">
