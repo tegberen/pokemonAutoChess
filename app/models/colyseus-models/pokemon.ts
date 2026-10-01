@@ -13238,8 +13238,8 @@ export class Froakie extends Pokemon {
   rarity = Rarity.UNCOMMON
   stars = 1
   evolution = Pkm.FROGADIER
-  hp = 80
-  atk = 6
+  hp = 60
+  atk = 5
   speed = 64
   def = 2
   speDef = 3
@@ -13268,7 +13268,7 @@ export class Greninja extends Pokemon {
   rarity = Rarity.UNCOMMON
   stars = 3
   hp = 240
-  atk = 16
+  atk = 15
   speed = 64
   def = 4
   speDef = 5

@@ -513,7 +513,7 @@ Every balance change on this server, newest first.
 - Gift selection | +10 seconds to choose. If no gift is chosen in time, nothing is gifted and that gift is lost
 
 **Pokémon**
-- Froakie / Frogadier / Greninja | RANGE 1 → 2, HP [60/120/220] → [80/120/240], ATK [6/12/19] → [6/10/16], DEF [4/6/8] → [2/3/4], SPE_DEF [4/8/12] → [3/4/5], PP [80/75/70] → 80
+- Froakie / Frogadier / Greninja | RANGE 1 → 2, HP [60/120/220] → [60/120/240], ATK [6/12/19] → [5/10/15], DEF [4/6/8] → [2/3/4], SPE_DEF [4/8/12] → [3/4/5], PP [80/75/70] → 80
 - Magneton / Magnezone | HP [150/250] → [140/240]
 - Floette (Eternal) / Mega Floette (Eternal) | ATK 18 → 12, gains LIGHT
 
