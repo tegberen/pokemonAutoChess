@@ -9,7 +9,7 @@ import {
 import { DEPTH } from "../../../game/depths"
 import { useAppDispatch, useAppSelector } from "../../../hooks"
 import { usePreference } from "../../../preferences"
-import { endGoldenFlip } from "../../../stores/GameStore"
+import { revealGoldenFlip } from "../../../stores/GameStore"
 import { playSound, SOUNDS } from "../../utils/audio"
 import { addIconsToDescription } from "../../utils/descriptions"
 import { cc } from "../../utils/jsx"
@@ -40,7 +40,7 @@ export default function GameGoldenFlip() {
     if (!result) return
     playSound(SOUNDS.BLESSING)
     const close = setTimeout(
-      () => dispatch(endGoldenFlip()),
+      () => dispatch(revealGoldenFlip(null)),
       GOLDEN_FLIP_REVEAL_MS
     )
     return () => clearTimeout(close)
@@ -52,7 +52,7 @@ export default function GameGoldenFlip() {
     return (
       <RevealedWish
         blessing={result}
-        onClose={() => dispatch(endGoldenFlip())}
+        onClose={() => dispatch(revealGoldenFlip(null))}
       />
     )
   }

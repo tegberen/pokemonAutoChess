@@ -496,15 +496,11 @@ export const gameSlice: Slice<GameStateStore> = createSlice({
       state.goldenFlip = { tier: action.payload }
     },
 
-    // no Wish could be granted when the pool was empty, so the coin just leaves
+    // null ends the flip: once its Wish is shown, or when none could be granted
     revealGoldenFlip: (state, action: PayloadAction<Blessing | null>) => {
       if (!state.goldenFlip) return
       if (action.payload === null) state.goldenFlip = null
       else state.goldenFlip.result = action.payload
-    },
-
-    endGoldenFlip: (state) => {
-      state.goldenFlip = null
     },
 
     leaveGame: () => initialState
@@ -567,8 +563,7 @@ export const {
   setSpectatorCount,
   blessingRefused,
   startGoldenFlip,
-  revealGoldenFlip,
-  endGoldenFlip
+  revealGoldenFlip
 } = gameSlice.actions
 
 export default gameSlice.reducer
