@@ -24,6 +24,7 @@ import store from "./stores"
 import { setBoosterContent } from "./stores/BoostersStore"
 import { logIn, setProfile } from "./stores/NetworkStore"
 import type { GalarFossil } from "../../types/enum/FossilUnlock"
+import type { PrismaticQuest } from "../../types/enum/PrismaticQuest"
 
 const endpoint = `${window.location.protocol.replace("http", "ws")}//${
   window.location.host
@@ -243,6 +244,10 @@ export function lockShop() {
 
 export function restoreFossil(fossils: [GalarFossil, GalarFossil]) {
   rooms.game?.send(Transfer.RESTORE_FOSSIL, { fossils })
+}
+
+export function claimPrismaticQuest(quest: PrismaticQuest) {
+  rooms.game?.send(Transfer.CLAIM_PRISMATIC_QUEST, quest)
 }
 
 export function skipStage() {

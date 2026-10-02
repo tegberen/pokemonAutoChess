@@ -3,6 +3,10 @@ import { GameAdditionalPokemonsIcon } from "./game-additional-pokemons"
 import GameExperience from "./game-experience"
 import { GameFossilUnlockNotifications } from "./game-fossil-unlock-notifications"
 import { GameFossilUnlocksIcon } from "./game-fossil-unlocks"
+import {
+  GamePrismaticQuestNotifications,
+  GamePrismaticQuestsButton
+} from "./game-prismatic-quests"
 import { GameLifeInfo } from "./game-life-info"
 import GameLock from "./game-lock"
 import GamePartnerChat from "./game-partner-chat"
@@ -35,6 +39,10 @@ export default function GameShop() {
           <GameTeamInfo />
           <div className="game-fossil-unlocks-anchor my-container information">
             <GameFossilUnlocksIcon />
+          </div>
+          <div className="game-quests-anchor my-container information">
+            <GamePrismaticQuestsButton />
+            <GamePrismaticQuestNotifications />
           </div>
         </div>
         <div className="game-shop-actions">

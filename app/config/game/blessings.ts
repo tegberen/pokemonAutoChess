@@ -17,8 +17,6 @@ import {
   LANGUAGE_BARRIER_UNOWNS_GRANTED,
   MIX_AND_MATCH_I_UNIQUES,
   MIX_AND_MATCH_II_UNIQUES,
-  QUEST_ASCEND_POKEMONS,
-  QUEST_EVOLVE_II_RARES_GRANTED,
   ROCKY_BEGINNINGS_POKEMONS,
   SELECTIVE_GENETICS_BABIES_GRANTED,
   STARTER_PACK_CONTENT,
@@ -599,43 +597,6 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     availableAtStages: [4],
     icon: "shopping_bag",
     grantsPokemonImmediately: false
-  },
-  [Blessing.QUEST_REROLL]: {
-    tier: BlessingTier.PRISMATIC,
-    availableAtStages: [4],
-    icon: "reroll_quest",
-    grantsPokemonImmediately: false
-  },
-  [Blessing.QUEST_GROW]: {
-    tier: BlessingTier.PRISMATIC,
-    availableAtStages: [4],
-    icon: "grow_quest",
-    grantsPokemonImmediately: false
-  },
-  [Blessing.QUEST_SHINE]: {
-    tier: BlessingTier.PRISMATIC,
-    availableAtStages: [4],
-    icon: "shine_quest",
-    grantsPokemonImmediately: false
-  },
-  [Blessing.QUEST_EPIC]: {
-    tier: BlessingTier.PRISMATIC,
-    availableAtStages: [4],
-    icon: "epic_ultra_quest",
-    grantsPokemonImmediately: true
-  },
-  [Blessing.QUEST_EXPAND]: {
-    tier: BlessingTier.PRISMATIC,
-    availableAtStages: [4],
-    icon: "expand_quest",
-    grantsPokemonImmediately: false
-  },
-  [Blessing.QUEST_ASCEND]: {
-    tier: BlessingTier.PRISMATIC,
-    availableAtStages: [4],
-    icon: "ascend_quest",
-    grantsPokemonImmediately: true,
-    benchSlotsRequired: QUEST_ASCEND_POKEMONS
   },
   [Blessing.CHARGING_UP]: {
     tier: BlessingTier.SILVER,
@@ -1539,42 +1500,13 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     icon: "tied_scroll",
     grantsPokemonImmediately: true
   },
-  [Blessing.QUEST_INDECISION]: {
+  [Blessing.PRISMATIC_QUEST]: {
     tier: BlessingTier.PRISMATIC,
     availableAtStages: [4],
-    icon: "indecision_quest",
-    grantsPokemonImmediately: false
-  },
-  [Blessing.QUEST_CRIT]: {
-    tier: BlessingTier.PRISMATIC,
-    availableAtStages: [4],
-    icon: "crit_quest",
-    grantsPokemonImmediately: false
-  },
-  [Blessing.QUEST_ABSORB]: {
-    tier: BlessingTier.PRISMATIC,
-    availableAtStages: [4],
-    icon: "absorb_quest",
-    grantsPokemonImmediately: false
-  },
-  [Blessing.QUEST_REVIVE]: {
-    tier: BlessingTier.PRISMATIC,
-    availableAtStages: [4],
-    icon: "revive_quest",
-    grantsPokemonImmediately: false
-  },
-  [Blessing.QUEST_PILLAGE]: {
-    tier: BlessingTier.PRISMATIC,
-    availableAtStages: [4],
-    icon: "pillage_quest",
-    grantsPokemonImmediately: false
-  },
-  [Blessing.QUEST_EVOLVE_II]: {
-    tier: BlessingTier.PRISMATIC,
-    availableAtStages: [4],
-    icon: "evolve_two_quest",
-    grantsPokemonImmediately: true,
-    benchSlotsRequired: 1 + QUEST_EVOLVE_II_RARES_GRANTED
+    icon: "quest_panel",
+    grantsPokemonImmediately: false,
+    isAvailable: (player) =>
+      player.specialGameRule !== SpecialGameRule.QUEST_BOARD
   },
   [Blessing.IMPENDING_DOOM]: {
     tier: BlessingTier.SILVER,

@@ -56,6 +56,7 @@ import {
   SHEDDING_SCALES_FREE_ROLLS_PER_FLIGHT,
   POKEMONOMICON_DAMAGE_BONUS
 } from "../types/enum/Blessing"
+import { PrismaticQuest } from "../types/enum/PrismaticQuest"
 import { getStrongestUnit } from "./unit-score"
 import { EffectEnum } from "../types/enum/Effect"
 import {
@@ -1534,6 +1535,7 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
   }) {
     if (!this.isGhostOpponent) {
       this.refToBoardPokemon.killCount++
+      this.player?.advancePrismaticQuest(PrismaticQuest.PILLAGE)
     }
     this.getEffects(OnKillEffect).forEach((effect) => {
       effect.apply({ attacker: this, target, board, attackType })

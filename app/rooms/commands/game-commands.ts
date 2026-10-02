@@ -54,6 +54,7 @@ import {
   applyScheduledBlessingGrants,
   checkBlessingQuests,
   checkIndecisionSynergies,
+  updatePrismaticQuests,
   absorbFertileSoil,
   forgeSilverSpoons,
   weaveMotherYarn,
@@ -236,6 +237,7 @@ import {
   Unowns,
   UnownsForScribble
 } from "../../types/enum/Pokemon"
+import { PrismaticQuest } from "../../types/enum/PrismaticQuest"
 import { SpecialGameRule } from "../../types/enum/SpecialGameRule"
 import { Synergy } from "../../types/enum/Synergy"
 import { TownEncounters } from "../../types/enum/TownEncounter"
@@ -1917,6 +1919,7 @@ export class OnShopRerollCommand extends Command<GameRoom, string> {
         if (lifePriceDue) this.payLifePrice(player)
       }
       player.gameStats.rerollCount++
+      player.advancePrismaticQuest(PrismaticQuest.REROLL)
       player.money -= rollCost
       onFossilUnlockReroll(player)
       if (!thinkFastActive && player.shopFreeRolls > 0) {
@@ -2939,6 +2942,7 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
       applyScheduledBlessingGrants(player, this.state)
       applyRecurringBlessingGrants(player, this.state)
       checkBlessingQuests(player, this.state)
+      updatePrismaticQuests(player)
       if (ItemCarouselStages.includes(this.state.stageLevel)) {
         applyBlessingTrigger(player, this.state, BlessingTrigger.CAROUSEL_END)
       }
@@ -3060,7 +3064,6 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
         this.state.townEncounter === TownEncounters.CELEBI ||
         (this.state.specialGameRule === SpecialGameRule.SHINY_HUNTER &&
           pveStageBase.shinyChance !== undefined) ||
-        this.state.specialGameRule === SpecialGameRule.SHINIEST_HUNTER ||
         chance(pveStageBase.shinyChance ?? 0)
 
       if (this.state.shinyEncounter && pveStageBase.baseIsShinyOnly) {
@@ -3864,9 +3867,10 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
         player.registerPlayedPokemons()
         player.checkDerpyTitle()
         onFossilUnlockCombatStart(player)
-        /* QUEST_INDECISION banks synergies off the locked combat board, not the
-           picking phase, so rotating synergies between rounds still counts */
+        // the board quests read the locked combat board, so rotating
+        // synergies between rounds still counts toward Indecision
         checkIndecisionSynergies(player)
+        updatePrismaticQuests(player)
         sendTeddiursasExploring(player, this.state.stageLevel)
         if (player.blessings.includes(Blessing.SEASONAL_HERD)) {
           unlockNextSeasonalHerdDeerling(player, this.state)
@@ -3949,8 +3953,8 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
 
           const wantsShinyPropositions =
             !gaveShinyItemReward &&
-            ((this.state.shinyEncounter && this.state.stageLevel > 1) ||
-              this.state.specialGameRule === SpecialGameRule.SHINIEST_HUNTER)
+            this.state.shinyEncounter &&
+            this.state.stageLevel > 1
           const rewardsPropositions = isGuide
             ? ([] as Item[])
             : wantsShinyPropositions

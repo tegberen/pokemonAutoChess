@@ -15,7 +15,6 @@ import {
   BP_REWARDS_ROUND_INTERVAL,
   MIX_AND_MATCH_I_FIELD_CAP,
   MIX_AND_MATCH_II_FIELD_CAP,
-  BLESSING_QUEST_TARGETS,
   Blessing,
   RAINBOW_DROPLET_SYNERGIES_REQUIRED,
   GRUDGE_CURSE_DURATION_REDUCTION_PER_SUBSTITUTE,
@@ -286,20 +285,6 @@ export default function BlessingsPanel(props: { recentOnly?: boolean }) {
                 {nbFieldedUniques}/{uniqueFieldCap}
               </span>
             )}
-          {BLESSING_QUEST_TARGETS[blessing] && (
-            <span
-              className={cc("blessing-panel-counter", {
-                full:
-                  (questProgress[blessing] ?? 0) >=
-                  BLESSING_QUEST_TARGETS[blessing]!.target
-              })}
-            >
-              {(questProgress[blessing] ?? 0).toFixed(
-                BLESSING_QUEST_TARGETS[blessing]!.decimals ?? 0
-              )}
-              /{BLESSING_QUEST_TARGETS[blessing]!.target}
-            </span>
-          )}
           {blessing === Blessing.BP_REWARDS && (
             <span className="blessing-panel-counter">
               {bpRewardsRoundsLeft}

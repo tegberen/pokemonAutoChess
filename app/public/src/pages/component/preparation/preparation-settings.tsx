@@ -260,12 +260,6 @@ export default function PreparationSettings() {
   ]
   const filteredRules = orderedRules.filter((rule) => {
     if (unavailableScribbleRules.includes(rule as SpecialGameRule)) return false
-    if (
-      gameMode === GameMode.DOUBLE_UP &&
-      rule === SpecialGameRule.SHINIEST_HUNTER
-    ) {
-      return false
-    }
     const q = ruleQuery.trim().toLowerCase()
     if (!q) return true
     return (

@@ -18,6 +18,7 @@ import {
   HERO_BLESSING_FAMILY,
   SELECTIVE_GENETICS_SHINY_ITEM_OPTIONS
 } from "../../types/enum/Blessing"
+import { PrismaticQuest } from "../../types/enum/PrismaticQuest"
 import { PokemonActionState } from "../../types/enum/Game"
 import { Item, ShinyItems, WeatherRocks } from "../../types/enum/Item"
 import { pickNRandomIn, pickRandomIn } from "../../utils/random"
@@ -86,7 +87,7 @@ export const EvolutionManager = {
     ...additionalArgs: unknown[]
   ): Pokemon {
     // counted here rather than in tryEvolve so every rule type is included
-    player.advanceBlessingQuest(Blessing.QUEST_EVOLVE_II)
+    player.advancePrismaticQuest(PrismaticQuest.MATURE)
     const handler = this.getHandler(pokemon.evolutionRule)
     const pokemonEvolved = handler.evolve(pokemon, player, ...additionalArgs)
     this.afterEvolve(pokemonEvolved, pokemon, player, ...additionalArgs)
@@ -108,7 +109,7 @@ export const EvolutionManager = {
     // the handler consumes only what it recognises as a copy, so an Eviolite
     // holder or a locked unit would leave it nothing to evolve from
     if (!handler.countsAsCopy(pokemon, pokemon)) return
-    player.advanceBlessingQuest(Blessing.QUEST_EVOLVE_II)
+    player.advancePrismaticQuest(PrismaticQuest.MATURE)
     const pokemonEvolved = handler.evolve(pokemon, player)
     this.afterEvolve(pokemonEvolved, pokemon, player)
     return pokemonEvolved

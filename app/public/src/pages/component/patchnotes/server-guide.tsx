@@ -11,7 +11,7 @@ import { RarityColor } from "../../../../../config/game/shop"
 import { SynergyTiersThresholds } from "../../../../../config"
 import { Blessings } from "../../../../../config/game/blessings"
 import { Ability } from "../../../../../types/enum/Ability"
-import { Blessing } from "../../../../../types/enum/Blessing"
+import { Blessing, BlessingTier } from "../../../../../types/enum/Blessing"
 import { Item } from "../../../../../types/enum/Item"
 import { Weather } from "../../../../../types/enum/Weather"
 import { Synergy } from "../../../../../types/enum/Synergy"
@@ -152,7 +152,22 @@ export default function ServerGuide({
       { name: "Golden Ticket", icon: "ticket" },
       { name: "Mortar Shells", icon: "mortar_shells" },
       { name: "Big Pecks", icon: "big_peck_letter" },
-      { name: "Abnormality", icon: "spread_shield" }
+      { name: "Abnormality", icon: "spread_shield" },
+      ...[
+        { name: "Quest: Crit", icon: "crit_quest" },
+        { name: "Quest: Grow", icon: "grow_quest" },
+        { name: "Quest: Shine", icon: "shine_quest" },
+        { name: "Quest: Epic", icon: "epic_ultra_quest" },
+        { name: "Quest: Expand", icon: "expand_quest" },
+        { name: "Quest: Ascend", icon: "ascend_quest" },
+        { name: "Quest: Indecision", icon: "indecision_quest" },
+        { name: "Quest: Absorb", icon: "absorb_quest" },
+        { name: "Quest: Revive", icon: "revive_quest" },
+        { name: "Quest: Evolve II", icon: "evolve_two_quest" },
+        { name: "Quest: Mature", icon: "evolve_two_quest" },
+        { name: "Quest: Pillage", icon: "pillage_quest" },
+        { name: "Quest: Reroll", icon: "reroll_quest" }
+      ].map((quest) => ({ ...quest, tier: BlessingTier.PRISMATIC }))
     ],
     [t]
   )

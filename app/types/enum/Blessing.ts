@@ -319,18 +319,7 @@ export enum Blessing {
   QUEST_LEVEL_UP = "QUEST_LEVEL_UP",
   QUEST_DIVERSIFY = "QUEST_DIVERSIFY",
   QUEST_PROSPER = "QUEST_PROSPER",
-  QUEST_INDECISION = "QUEST_INDECISION",
-  QUEST_CRIT = "QUEST_CRIT",
-  QUEST_ABSORB = "QUEST_ABSORB",
-  QUEST_REVIVE = "QUEST_REVIVE",
-  QUEST_PILLAGE = "QUEST_PILLAGE",
-  QUEST_EVOLVE_II = "QUEST_EVOLVE_II",
-  QUEST_REROLL = "QUEST_REROLL",
-  QUEST_GROW = "QUEST_GROW",
-  QUEST_SHINE = "QUEST_SHINE",
-  QUEST_EPIC = "QUEST_EPIC",
-  QUEST_EXPAND = "QUEST_EXPAND",
-  QUEST_ASCEND = "QUEST_ASCEND",
+  PRISMATIC_QUEST = "PRISMATIC_QUEST",
   CHARGING_UP = "CHARGING_UP",
   BURNING_SHARDS = "BURNING_SHARDS",
   EXPLOIT = "EXPLOIT",
@@ -949,9 +938,7 @@ export const HERO_BLESSING_HATCH_MAX_HP = 50
 export const HERO_BLESSINGS_WITH_STRONG_GIFT: Blessing[] = [
   Blessing.FLEUR_DE_LURE
 ]
-export const QUEST_ASCEND_POKEMONS = 3
 export const ROCKY_BEGINNINGS_POKEMONS = 2
-export const QUEST_EVOLVE_II_RARES_GRANTED = 2
 // lives here rather than in the service so the pick UI can read its length
 export const STARTER_PACK_CONTENT: { rarity: Rarity; stars: number }[] = [
   { rarity: Rarity.COMMON, stars: 2 },
@@ -1138,28 +1125,6 @@ export const GYM_TRAINER_CAROUSEL_LOCK_STAGE = 10
 export const QUICK_CLAW_COMPENSATION_STAGE = 12
 
 export const BLESSING_SELECTION_EXTRA_TIME = 30000
-
-export const QUEST_INDECISION_SYNERGIES_TARGET = 3
-export const QUEST_CRIT_POWER_TARGET = 4.5
-export const QUEST_ABSORB_DAMAGE_BLOCKED_TARGET = 1000
-export const QUEST_REVIVE_TARGET = 16
-export const QUEST_PILLAGE_GOLD_TARGET = 30
-export const QUEST_PILLAGE_CRIT_PER_GOLD = 0.5
-export const QUEST_EVOLVE_II_TARGET = 12
-
-/* quests whose questProgress counter is shown on the Effects tab icon.
-   `decimals` is for the ones tracking a best-in-a-fight record rather than a
-   running tally, where the value is fractional. */
-export const BLESSING_QUEST_TARGETS: {
-  [blessing in Blessing]?: { target: number; decimals?: number }
-} = {
-  [Blessing.QUEST_EVOLVE_II]: { target: QUEST_EVOLVE_II_TARGET },
-  [Blessing.QUEST_REVIVE]: { target: QUEST_REVIVE_TARGET },
-  [Blessing.QUEST_PILLAGE]: { target: QUEST_PILLAGE_GOLD_TARGET },
-  [Blessing.QUEST_INDECISION]: { target: QUEST_INDECISION_SYNERGIES_TARGET },
-  [Blessing.QUEST_CRIT]: { target: QUEST_CRIT_POWER_TARGET, decimals: 1 },
-  [Blessing.QUEST_ABSORB]: { target: QUEST_ABSORB_DAMAGE_BLOCKED_TARGET }
-}
 
 export const EXPLOIT_DAMAGE_BONUS = 20 // in %
 export const LASTING_EFFECTS_BONUS = 50 // in %

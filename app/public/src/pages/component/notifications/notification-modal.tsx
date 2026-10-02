@@ -12,6 +12,10 @@ import type { EloRank } from "../../../../../types/enum/EloRank"
 import type { ExpeditionType } from "../../../../../types/enum/Expedition"
 import { cc } from "../../utils/jsx"
 
+const TITLE_ILLUSTRATION_EXTENSION: { [title in Title]?: string } = {
+  [Title.SHINY]: "webp"
+}
+
 interface NotificationModalProps {
   notifications: INotification[]
   onClose: (notificationId: string) => void
@@ -149,7 +153,9 @@ export function NotificationModal({
         }
         const guideSynergy = getSynergyForGuideTitle(notification.message)
         if (guideSynergy) return `/assets/types/${guideSynergy}.svg`
-        return `/assets/titles/${notification.message}.svg`
+        const extension =
+          TITLE_ILLUSTRATION_EXTENSION[notification.message as Title] ?? "svg"
+        return `/assets/titles/${notification.message}.${extension}`
       }
       case "new_gadget":
         return `/assets/ui/${GADGETS[notification.message as keyof typeof GADGETS].icon}.svg`

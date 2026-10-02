@@ -471,6 +471,7 @@ Smeargle Scribbles do not change your Elo.
 - **Six Pack**: {{scribble:SIX_PACK}}
 - **Evolution Lab**: {{scribble:EVOLUTION_LAB}}
 - **The Bazaar**: {{scribble:BAZAAR}}
+- **Quest Board**: {{scribble:QUEST_BOARD}}
 - **Juggernaut**: {{scribble:JUGGERNAUT}}
 - **Kaiju Battle**: {{scribble:KAIJU_BATTLE}}
 - **Avatar**: {{scribble:AVATAR}}
@@ -487,6 +488,32 @@ Smeargle Scribbles do not change your Elo.
 ## Patch Log
 
 Every balance change on this server, newest first.
+
+### 1 November 2026
+
+**Wishes**
+- Prismatic Quest {{new}} | Gain 10 GOLD and unlock the Quest Panel. Stage 4 only. Replaces the 12 Prismatic quest Wishes
+- Quest Panel | every quest tracks at once, but you can only claim one reward. Quests no longer give starting items, and rewards no longer include an EXCHANGE_TICKET and a RECYCLE_TICKET
+- Quest: Crit | hold 100 GOLD at once. Reward: GOLD_BOTTLE_CAP
+- Quest: Grow | an ally reaches 1000 HP in a fight. Reward: DYNAMAX_BAND
+- Quest: Shine | LIGHT 7 → 6. Reward: SHINY_STONE
+- Quest: Epic | field 6 Epic Pokémon. Reward: EVIOLITE
+- Quest: Expand | reach level 9. Reward: GOLD_BOW
+- Quest: Ascend | get any 3 STAR Pokémon except Unique and Legendary, Common included. Reward: STAR_PIECE
+- Quest: Indecision | synergies at their final tier 3 → 2. Reward: GOLD_MASK
+- Quest: Absorb | damage blocked by one ally 1000 → 777. Reward: ABSORB_BULB
+- Quest: Revive | revives 16 → 10. Reward: SACRED_ASH
+- Quest: Mature | renamed from Quest: Evolve II. Evolutions 12 → 10. Reward: RARE_CANDY
+- Quest: Pillage | KO 30 enemy Pokémon. Reward: BOOSTER_ENERGY
+- Quest: Reroll | reroll 50 times. Reward: REPEAT_BALL
+- Mission: Evolve, Mission: Destroy, Mission: Level Up, Mission: Diversify, Mission: Prosper | renamed from Quest
+
+**Game Mode**
+- Quest Board {{new}} | new Scribble: everyone starts with the Quest Panel and can claim every reward from the quests they complete
+- Shiniest Hunter | removed
+
+**Titles**
+- Shiny {{new}} | complete all 12 Prismatic Quests in a single game
 
 ### 29 September 2026
 

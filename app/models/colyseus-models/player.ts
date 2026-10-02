@@ -49,7 +49,7 @@ import {
   HERO_BLESSING_FAMILY
 } from "../../types/enum/Blessing"
 import { ROCK_AWAKENING_TIER } from "../../types/enum/Awakening"
-import type { PlayerBlessings } from "./player-blessings"
+import { PlayerBlessings } from "./player-blessings"
 import type { PlayerFossilUnlocks } from "./player-fossil-unlocks"
 import { FOSSIL_RESTORATION_SYNERGY_LEVEL } from "../../types/enum/FossilUnlock"
 import type { ScheduledBlessingGrant } from "../../types/enum/Blessing"
@@ -133,6 +133,12 @@ import Synergies, {
 } from "./synergies"
 import { Wanderer } from "./wanderer"
 import { ArmoryOptions } from "../../types/enum/ArmoryOptions"
+import {
+  PrismaticQuest,
+  PrismaticQuestDefinitions,
+  PrismaticQuestsInOrder,
+  getPrismaticQuestProgressKey
+} from "../../types/enum/PrismaticQuest"
 
 // the top tier of each, so DERPY asks for both synergies fully capped
 const DERPY_WATER_REQUIRED = 9
@@ -334,7 +340,7 @@ export default class Player extends Schema implements IPlayer {
   fossilUnlockRevealPending: boolean = false
   // guards updateFossilRestoration against recursing through updateSynergies
   fossilRestorationUpdating: boolean = false
-  // server-only: synergies whose final tier QUEST_INDECISION has already banked
+  // server-only: synergies whose final tier the Indecision quest has banked
   indecisionSynergiesReached: Set<Synergy> = new Set<Synergy>()
   // server-only: wands granted by FIND_A_LOST_WAND, exempt from synergy removal
   blessingWands: Item[] = []
@@ -373,7 +379,6 @@ export default class Player extends Schema implements IPlayer {
   sweetTreat: Item | null = null
   forgottenPvePokemon: Pkm | null = null
   forgottenPveItems: Item[] = []
-  blessingQuestsCompleted: Set<Blessing> = new Set<Blessing>()
   blessingQuestThresholdsReached: Map<Blessing, number> = new Map<
     Blessing,
     number
@@ -462,6 +467,12 @@ export default class Player extends Schema implements IPlayer {
       this.lightY = 2
     }
 
+    if (state.specialGameRule === SpecialGameRule.QUEST_BOARD) {
+      const owned = new PlayerBlessings()
+      state.blessingsByPlayerId.set(this.id, owned)
+      this.blessingsRef = owned
+    }
+
     if (state.specialGameRule === SpecialGameRule.DITTO_PARTY) {
       for (let i = 0; i < 5; i++) {
         const ditto = PokemonFactory.createPokemonFromName(Pkm.DITTO, this)
@@ -502,20 +513,56 @@ export default class Player extends Schema implements IPlayer {
     progress.set(blessing, (progress.get(blessing) ?? 0) + amount)
   }
 
-  // for quests tracking a personal best rather than a running tally
-  recordBlessingQuestBest(blessing: Blessing, value: number) {
-    if (!this.blessings?.includes(blessing) || !this.blessingsRef) return
-    const progress = this.blessingsRef.questProgress
-    if (value > (progress.get(blessing) ?? 0)) progress.set(blessing, value)
+  hasPrismaticQuests() {
+    return (
+      this.specialGameRule === SpecialGameRule.QUEST_BOARD ||
+      this.blessings?.includes(Blessing.PRISMATIC_QUEST) === true
+    )
   }
 
-  getBlessingQuestProgress(blessing: Blessing): number {
-    return this.blessingsRef?.questProgress.get(blessing) ?? 0
+  advancePrismaticQuest(quest: PrismaticQuest, amount = 1) {
+    if (!this.hasPrismaticQuests()) return
+    const progress = this.blessingsRef?.questProgress
+    if (!progress) return
+    const key = getPrismaticQuestProgressKey(quest)
+    progress.set(key, (progress.get(key) ?? 0) + amount)
+    this.checkShinyTitle()
+  }
+
+  recordPrismaticQuestBest(quest: PrismaticQuest, value: number) {
+    if (!this.hasPrismaticQuests()) return
+    const progress = this.blessingsRef?.questProgress
+    if (!progress) return
+    const key = getPrismaticQuestProgressKey(quest)
+    if (value > (progress.get(key) ?? 0)) progress.set(key, value)
+    this.checkShinyTitle()
+  }
+
+  checkShinyTitle() {
+    if (this.titles.has(Title.SHINY)) return
+    const completedEveryQuest = PrismaticQuestsInOrder.every(
+      (quest) =>
+        this.getPrismaticQuestProgress(quest) >=
+        PrismaticQuestDefinitions[quest].target
+    )
+    if (completedEveryQuest) this.titles.add(Title.SHINY)
+  }
+
+  getPrismaticQuestProgress(quest: PrismaticQuest): number {
+    return (
+      this.blessingsRef?.questProgress.get(
+        getPrismaticQuestProgressKey(quest)
+      ) ?? 0
+    )
   }
 
   addExperience(value: number) {
     const previousLevel = this.experienceManager.level
     this.experienceManager.addExperience(value)
+    this.recordPrismaticQuestBest(
+      PrismaticQuest.EXPAND,
+      this.experienceManager.level
+    )
     if (
       this.blessings?.includes(Blessing.A_NEW_FRIEND) &&
       this.aNewFriendPokemon
@@ -655,6 +702,7 @@ export default class Player extends Schema implements IPlayer {
     }
     this.money += value
     if (countTotalEarned && value > 0) this.gameStats.totalMoneyEarned += value
+    this.recordPrismaticQuestBest(PrismaticQuest.CRIT, this.money)
     this.board.forEach((pokemon) => {
       if (pokemon.evolutionRule.type === EvolutionRuleType.MONEY) {
         EvolutionManager.tryEvolve(pokemon, this, this.money)
@@ -1008,6 +1056,36 @@ export default class Player extends Schema implements IPlayer {
     } else if (getSynergyTier(updatedSynergies, Synergy.FLYING) === 4) {
       this.grantLetterIfEligible()
     }
+
+    this.trackPrismaticBoardQuests()
+  }
+
+  trackPrismaticBoardQuests() {
+    if (!this.hasPrismaticQuests()) return
+    this.recordPrismaticQuestBest(
+      PrismaticQuest.SHINE,
+      this.synergies.get(Synergy.LIGHT) ?? 0
+    )
+    let fieldedEpics = 0
+    let ascended = false
+    this.board.forEach((pokemon) => {
+      if (
+        pokemon.stars >= 3 &&
+        pokemon.rarity !== Rarity.UNIQUE &&
+        pokemon.rarity !== Rarity.LEGENDARY
+      ) {
+        ascended = true
+      }
+      if (
+        pokemon.positionY > 0 &&
+        pokemon.rarity === Rarity.EPIC &&
+        pokemon.name !== Pkm.SCYTHER
+      ) {
+        fieldedEpics++
+      }
+    })
+    this.recordPrismaticQuestBest(PrismaticQuest.EPIC, fieldedEpics)
+    if (ascended) this.recordPrismaticQuestBest(PrismaticQuest.ASCEND, 1)
   }
 
   // a pot the player no longer has the Flora tier for hands its items back to the bag

@@ -9,7 +9,6 @@ export enum SpecialGameRule {
   CROWDED = "CROWDED",
   FREE_MARKET = "FREE_MARKET",
   SHINY_HUNTER = "SHINY_HUNTER",
-  SHINIEST_HUNTER = "SHINIEST_HUNTER",
   DO_IT_ALL_YOURSELF = "DO_IT_ALL_YOURSELF",
   FIRST_PARTNER = "FIRST_PARTNER",
   SLAMINGO = "SLAMINGO",
@@ -31,6 +30,7 @@ export enum SpecialGameRule {
   SIX_PACK = "SIX_PACK",
   EVOLUTION_LAB = "EVOLUTION_LAB",
   BAZAAR = "BAZAAR",
+  QUEST_BOARD = "QUEST_BOARD",
 }
 
 export const RulesWithAllPokemonsAvailable: SpecialGameRule[] = [

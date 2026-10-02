@@ -4147,11 +4147,13 @@
 		"SCHOLAR": "Scholar",
 		"WHALE": "Whale",
 		"DERPY": "Derpy",
-		"ARTIST": "Artist"
+		"ARTIST": "Artist",
+		"SHINY": "Shiny"
 	},
 	"title_description": {
 		"DERPY": "Start a fight with WATER 9 and BUG 8, or win the game with a Beedrill holding a WATER_STONE",
 		"ARTIST": "Paint the whole canvas in Science & Arts",
+		"SHINY": "Complete all 12 Prismatic Quests in a single game",
 		"BOTANIST": "Complete the GRASS lesson in Slowking's School of Synergies",
 		"SCHOLAR": "Complete every lesson in Slowking's School of Synergies",
 		"NOVICE": "Play your first game",
@@ -5145,30 +5147,6 @@
 		"ARTIFICIAL_CROWN_BLESSING": {
 			"name": "ARTIFICIAL Crown",
 			"description": "Gain an ARTIFICIAL_GEM, a WONDER_BOX, a LAPRAS_PASSPORT and a Magneton."
-		},
-		"QUEST_REROLL": {
-			"name": "Quest: Reroll",
-			"description": "Gain 10 free rerolls. After rerolling 50 times, gain a REPEAT_BALL, an EXCHANGE_TICKET and a RECYCLE_TICKET."
-		},
-		"QUEST_GROW": {
-			"name": "Quest: Grow",
-			"description": "Gain a BERSERK_GENE. The first time an ally reaches 1000 HP in a fight, gain a DYNAMAX_BAND, an EXCHANGE_TICKET and a RECYCLE_TICKET."
-		},
-		"QUEST_SHINE": {
-			"name": "Quest: Shine",
-			"description": "Gain a LIGHT_BALL. The first time you activate Light 7, gain a SHINY_STONE, an EXCHANGE_TICKET and a RECYCLE_TICKET."
-		},
-		"QUEST_EPIC": {
-			"name": "Quest: Epic",
-			"description": "Gain a 1 STAR Epic Pokémon and 6 XP. The first time you fight with 7 Unique, 7 Epic, or 7 Ultra Pokémon fielded, gain an EVIOLITE, an EXCHANGE_TICKET and a RECYCLE_TICKET. (Scyther does not count)"
-		},
-		"QUEST_EXPAND": {
-			"name": "Quest: Expand",
-			"description": "Gain 10 XP. After fielding 8 Pokémon that all have a sell price of 4 or more at once, gain a GOLD_BOW, an EXCHANGE_TICKET and a RECYCLE_TICKET."
-		},
-		"QUEST_ASCEND": {
-			"name": "Quest: Ascend",
-			"description": "Gain 3 1 STAR Rare Pokémon. The first time you get a 3 STAR Uncommon, Rare, Epic or Ultra Pokémon, gain a STAR_PIECE, an EXCHANGE_TICKET and a RECYCLE_TICKET."
 		},
 		"CHARGING_UP": {
 			"name": "Charging Up",
@@ -6279,48 +6257,28 @@
 			"description": "Immediately reach level 4 if below it. Each level up costs 4 less XP, and you can now reach level 10."
 		},
 		"QUEST_EVOLVE": {
-			"name": "Quest: Evolve",
+			"name": "Mission: Evolve",
 			"description": "Gain MISSION_ORDER_PINK and a random 2 STAR common Pokémon."
 		},
 		"QUEST_DESTROY": {
-			"name": "Quest: Destroy",
+			"name": "Mission: Destroy",
 			"description": "Gain MISSION_ORDER_RED and a random 2 STAR common Pokémon."
 		},
 		"QUEST_LEVEL_UP": {
-			"name": "Quest: Level Up",
+			"name": "Mission: Level Up",
 			"description": "Gain MISSION_ORDER_BLUE and a random 2 STAR common Pokémon."
 		},
 		"QUEST_DIVERSIFY": {
-			"name": "Quest: Diversify",
+			"name": "Mission: Diversify",
 			"description": "Gain MISSION_ORDER_GREEN and a random 2 STAR common Pokémon."
 		},
+		"PRISMATIC_QUEST": {
+			"name": "Prismatic Quest",
+			"description": "Gain 10 GOLD and unlock the Quest Panel."
+		},
 		"QUEST_PROSPER": {
-			"name": "Quest: Prosper",
+			"name": "Mission: Prosper",
 			"description": "Gain MISSION_ORDER_GOLD and a random 2 STAR common Pokémon."
-		},
-		"QUEST_INDECISION": {
-			"name": "Quest: Indecision",
-			"description": "Gain 2 random gems. Entering a fight with a synergy at its highest tier counts it. After 3 different synergies, gain a GOLD_MASK, an EXCHANGE_TICKET and a RECYCLE_TICKET. They do not have to be active at once."
-		},
-		"QUEST_CRIT": {
-			"name": "Quest: Crit",
-			"description": "Gain 2 BLACK_GLASSES. The first time an ally reaches 4.5 CRIT_POWER in a fight, gain a GOLD_BOTTLE_CAP, an EXCHANGE_TICKET and a RECYCLE_TICKET."
-		},
-		"QUEST_ABSORB": {
-			"name": "Quest: Absorb",
-			"description": "Gain a HEART_SCALE and a NEVER_MELT_ICE. The first time an ally blocks 1000 damage in a fight, gain an ABSORB_BULB, an EXCHANGE_TICKET and a RECYCLE_TICKET."
-		},
-		"QUEST_REVIVE": {
-			"name": "Quest: Revive",
-			"description": "Gain a MAX_REVIVE. After allies have been revived 16 times, gain a SACRED_ASH, an EXCHANGE_TICKET and a RECYCLE_TICKET."
-		},
-		"QUEST_PILLAGE": {
-			"name": "Quest: Pillage",
-			"description": "Gain an AMULET_COIN. Its holder gains 1 CRIT_CHANCE for every 2 GOLD at the start of the fight. After it has made you 30 GOLD, gain a BOOSTER_ENERGY, an EXCHANGE_TICKET and a RECYCLE_TICKET."
-		},
-		"QUEST_EVOLVE_II": {
-			"name": "Quest: Evolve II",
-			"description": "Gain an Eevee and 2 Rare 1 STAR Pokémon. After evolving Pokémon 12 times, gain a RARE_CANDY, an EXCHANGE_TICKET and a RECYCLE_TICKET."
 		},
 		"IMPENDING_DOOM": {
 			"name": "Impending Doom",
@@ -6761,6 +6719,68 @@
 		"FOSSILIZED_DINO": "Fossilized Dino",
 		"FOSSILIZED_DRAKE": "Fossilized Drake",
 		"FOSSILIZED_FISH": "Fossilized Fish"
+	},
+	"prismatic_quests": {
+		"title": "Prismatic Quests",
+		"subtitle": "You can only claim one reward.",
+		"subtitle_every": "Claim every quest you complete.",
+		"button": "Quests",
+		"claim": "Claim",
+		"claimed": "Claimed",
+		"best": "Best",
+		"best_hint": "Your best attempt at the quest. Not a running progress bar.",
+		"unlocked": "Quest Panel unlocked",
+		"complete": "Quest complete",
+		"quests": {
+			"CRIT": {
+				"name": "Crit",
+				"condition": "Hold 100 GOLD at once"
+			},
+			"GROW": {
+				"name": "Grow",
+				"condition": "One ally reaches 1000 HP within the same fight"
+			},
+			"SHINE": {
+				"name": "Shine",
+				"condition": "Activate 6 LIGHT"
+			},
+			"EPIC": {
+				"name": "Epic",
+				"condition": "Field 6 Epic Pokémon"
+			},
+			"EXPAND": {
+				"name": "Expand",
+				"condition": "Reach level 9"
+			},
+			"ASCEND": {
+				"name": "Ascend",
+				"condition": "Get a 3 STAR Pokémon that is not Unique or Legendary"
+			},
+			"INDECISION": {
+				"name": "Indecision",
+				"condition": "Start a fight with a synergy at its final tier, for 2 different synergies. They do not have to be active at the same time"
+			},
+			"ABSORB": {
+				"name": "Absorb",
+				"condition": "One ally blocks 777 damage within the same fight"
+			},
+			"REVIVE": {
+				"name": "Revive",
+				"condition": "Trigger RESURRECTION 10 times"
+			},
+			"MATURE": {
+				"name": "Mature",
+				"condition": "Evolve Pokémon 10 times"
+			},
+			"PILLAGE": {
+				"name": "Pillage",
+				"condition": "KO 30 enemy Pokémon"
+			},
+			"REROLL": {
+				"name": "Reroll",
+				"condition": "Reroll the shop 50 times"
+			}
+		}
 	},
 	"fossil_unlocks": {
 		"title": "Fossil Unlocks",
@@ -7274,7 +7294,6 @@
 		"CHOSEN_ONES": "The Chosen Ones",
 		"PLAY_TEST": "Play Test",
 		"HALLOWEEN": "Halloween",
-		"SHINIEST_HUNTER": "Shiniest Hunter",
 		"KAIJU_BATTLE": "Kaiju Battle",
 		"AVATAR": "Avatar",
 		"LIGHT_SHOW": "Science & Arts",
@@ -7282,7 +7301,8 @@
 		"OVERTIME": "Overtime",
 		"SIX_PACK": "Six Pack",
 		"EVOLUTION_LAB": "Evolution Lab",
-		"BAZAAR": "The Bazaar"
+		"BAZAAR": "The Bazaar",
+		"QUEST_BOARD": "Quest Board"
 	},
 	"scribble_description": {
 		"EVERYONE_IS_HERE": "All the additional picks are available immediately!",
@@ -7308,7 +7328,6 @@
 		"CHOSEN_ONES": "The add picks you choose evolve immediately and gain bonus stats.",
 		"PLAY_TEST": "Play Test Mode: Summon the board from Team Planner",
 		"HALLOWEEN": "Everyone is GHOST 8. GHOST 16 summons Ghost",
-		"SHINIEST_HUNTER": "All PvE encounters are shiny",
 		"KAIJU_BATTLE": "Every Pokémon that is not MONSTER gains the MONSTER type. The HP gain is tripled.",
 		"AVATAR": "Every Pokémon that is not {{type}} gains the {{type}} type.",
 		"LIGHT_SHOW": "Each stage, Smeargle asks a question about the game. Answer correctly to unlock a shape, then paint your shapes anywhere on your board. Unlock them all to gain 3 GOLD_BOW. Pokémon starting a fight on a painted cell gain that shape's bonus:",
@@ -7316,7 +7335,8 @@
 		"OVERTIME": "Everyone starts with 200 HP and can reach level 10.",
 		"SIX_PACK": "Pokémon can hold up to 6 items instead of 3. More items and components can be found throughout the game.",
 		"EVOLUTION_LAB": "Welcome to the Evolution Lab! Every Pokémon can be found here, but the lab follows its own rules...",
-		"BAZAAR": "The Bazaar visits the town!"
+		"BAZAAR": "The Bazaar visits the town!",
+		"QUEST_BOARD": "Everyone starts with the Quest Panel and can claim every reward from the quests they complete."
 	},
 	"scribble_shape": {
 		"WALL": "Wall",

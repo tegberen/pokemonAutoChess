@@ -1,0 +1,325 @@
+/* a fixed dark Wish-card base: themes recolour --color-bg-secondary but not
+   this, so the stripes read the same under every theme */
+.prismatic-quests-modal,
+.prismatic-quest-toast {
+  --prismatic-quest-surface: color-mix(
+    in srgb,
+    var(--color-rarity-epic) 10%,
+    color-mix(in srgb, var(--color-blessing-card-shade) 70%, #000)
+  );
+}
+
+.game-quests-anchor:empty {
+  display: none;
+}
+
+.game-quests-anchor {
+  position: relative;
+  display: flex;
+  align-items: end;
+  pointer-events: initial;
+  border-radius: 12px 12px 0 0;
+}
+
+.game-shop .game-quests-anchor.information {
+  padding: 0;
+}
+
+.prismatic-quests-button {
+  position: relative;
+  display: flex;
+  height: 42px;
+  padding: 5px 14px;
+  align-items: center;
+  gap: 0.45em;
+  border: 0;
+  border-radius: 9px 9px 0 0;
+  color: var(--color-fg-invert);
+  background-color: var(--color-fg-primary);
+  background-image: repeating-linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--color-rarity-ultra) 55%, transparent) 0 8px,
+    color-mix(in srgb, var(--color-rarity-legendary) 55%, transparent) 8px 16px,
+    color-mix(in srgb, var(--color-rarity-uncommon) 55%, transparent) 16px 24px,
+    color-mix(in srgb, var(--color-rarity-rare) 55%, transparent) 24px 32px,
+    color-mix(in srgb, var(--color-rarity-epic) 55%, transparent) 32px 40px,
+    color-mix(in srgb, var(--color-rarity-special) 55%, transparent) 40px 48px
+  );
+  box-shadow:
+    inset 0 -5px 0 rgb(0 0 0 / 25%),
+    var(--shadow-clickable);
+  font-size: 1em;
+  cursor: var(--cursor-hover);
+  transition: transform 100ms ease;
+}
+
+.prismatic-quests-button:hover,
+.prismatic-quests-button:focus-visible {
+  outline: 2px solid var(--color-fg-primary);
+  outline-offset: -2px;
+}
+
+.prismatic-quests-button:active {
+  box-shadow: inset 0 5px 0 rgb(0 0 0 / 25%);
+  transform: translateY(1px);
+}
+
+.prismatic-quests-button-label {
+  font-weight: 600;
+  white-space: nowrap;
+  text-shadow: none;
+}
+
+.prismatic-quests-button-badge {
+  min-width: 1.4em;
+  padding: 0 0.3em;
+  border-radius: 1em;
+  color: var(--color-fg-primary);
+  background: var(--color-bg-primary);
+  font-size: 0.85em;
+  text-align: center;
+}
+
+.prismatic-quests-modal {
+  width: min(720px, 96vw);
+  border: var(--border-thin);
+  border-radius: 12px;
+  color: var(--color-fg-primary);
+  background: var(--color-bg-primary);
+  box-shadow: 6px 6px 0 var(--color-shadow);
+}
+
+.modal.prismatic-quests-modal > header {
+  position: relative;
+  padding: 0.65em 3.25em;
+  background-color: var(--prismatic-quest-surface);
+  background-image: repeating-linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--color-rarity-ultra) 22%, transparent) 0 8px,
+    color-mix(in srgb, var(--color-rarity-legendary) 22%, transparent) 8px 16px,
+    color-mix(in srgb, var(--color-rarity-uncommon) 22%, transparent) 16px 24px,
+    color-mix(in srgb, var(--color-rarity-rare) 22%, transparent) 24px 32px,
+    color-mix(in srgb, var(--color-rarity-epic) 22%, transparent) 32px 40px,
+    color-mix(in srgb, var(--color-rarity-special) 22%, transparent) 40px 48px
+  );
+}
+
+/* centred with auto margins, because the shared hover and active scale
+   transforms would replace a translate and drop the button */
+.prismatic-quests-modal > header .close-btn {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0.75em;
+  height: fit-content;
+  float: none;
+  margin: auto 0;
+}
+
+.prismatic-quests-heading h2 {
+  margin: 0;
+}
+
+.prismatic-quests-heading p {
+  margin: 0.2em 0 0;
+  color: var(--color-fg-secondary);
+}
+
+.prismatic-quests-list {
+  display: grid;
+  gap: 0.5em;
+  max-height: 70vh;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  list-style: none;
+}
+
+.prismatic-quest {
+  display: grid;
+  grid-template-columns: 50px 1fr 5.5em 32px 6.5em;
+  align-items: center;
+  gap: 0.75em;
+  padding: 0.5em 0.75em;
+  border: var(--border-thin);
+  border-radius: 10px;
+  background: var(--color-bg-secondary);
+}
+
+.prismatic-quest.is-closed {
+  opacity: 0.45;
+  filter: grayscale(1);
+}
+
+.prismatic-quest-icon,
+.prismatic-quest-toast-icon {
+  display: grid;
+  place-items: center;
+  box-sizing: border-box;
+  border: var(--border-thin);
+  border-radius: 8px;
+  background-color: color-mix(
+    in srgb,
+    var(--color-rarity-epic) 32%,
+    var(--color-blessing-card)
+  );
+}
+
+.prismatic-quest-icon {
+  width: 50px;
+  height: 50px;
+}
+
+.prismatic-quest-details {
+  display: grid;
+  gap: 0.2em;
+}
+
+.prismatic-quest-details > span {
+  color: var(--color-fg-secondary);
+  font-size: 0.9em;
+}
+
+.prismatic-quest-progress {
+  height: 8px;
+  overflow: hidden;
+  border: var(--border-thin);
+  border-radius: 8px;
+  background: var(--color-bg-input);
+}
+
+.prismatic-quest-progress i {
+  display: block;
+  height: 100%;
+  background: var(--color-rarity-epic);
+  transition: width 250ms ease;
+}
+
+.prismatic-quest.is-complete .prismatic-quest-progress i {
+  background: #92cc41;
+  box-shadow: inset 0 -3px 0 #65a013;
+}
+
+.prismatic-quest-count {
+  display: grid;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.prismatic-quest-count small {
+  color: var(--color-fg-secondary);
+  font-size: 0.7em;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.prismatic-quest-reward {
+  width: 32px;
+  height: 32px;
+  image-rendering: pixelated;
+}
+
+.prismatic-quest-claimed {
+  padding: 0.35em 0;
+  border: var(--border-thin);
+  border-radius: 8px;
+  color: var(--color-fg-secondary);
+  background: var(--color-bg-input);
+  font-weight: 600;
+  text-align: center;
+  cursor: default;
+}
+
+.prismatic-quest-toasts {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 64px);
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: end;
+  gap: 0.4em;
+  pointer-events: none;
+}
+
+/* the shop paints every div inside an information tab as a tab body */
+.game-shop .game-quests-anchor > .prismatic-quest-toasts {
+  height: auto;
+  padding: 0;
+  border-radius: 0;
+  background: none;
+}
+
+.prismatic-quest-toast {
+  position: relative;
+  display: grid;
+  grid-template-columns: 40px 1fr auto;
+  align-items: center;
+  gap: 0.65em;
+  width: 270px;
+  padding: 0.45em 0.6em;
+  overflow: hidden;
+  border: var(--border-thin);
+  border-radius: 10px;
+  color: var(--color-fg-primary);
+  background-color: var(--prismatic-quest-surface);
+  background-image: repeating-linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--color-rarity-ultra) 22%, transparent) 0 8px,
+    color-mix(in srgb, var(--color-rarity-legendary) 22%, transparent) 8px 16px,
+    color-mix(in srgb, var(--color-rarity-uncommon) 22%, transparent) 16px 24px,
+    color-mix(in srgb, var(--color-rarity-rare) 22%, transparent) 24px 32px,
+    color-mix(in srgb, var(--color-rarity-epic) 22%, transparent) 32px 40px,
+    color-mix(in srgb, var(--color-rarity-special) 22%, transparent) 40px 48px
+  );
+  box-shadow: var(--shadow-clickable);
+  animation: prismatic-quest-toast-in 250ms ease-out both;
+}
+
+.prismatic-quest-toast-icon {
+  width: 40px;
+  height: 40px;
+}
+
+.prismatic-quest-icon img {
+  display: block;
+  width: 40px;
+  height: 40px;
+}
+
+.prismatic-quest-toast-icon img {
+  display: block;
+  width: 30px;
+  height: 30px;
+}
+
+.prismatic-quest-toast > div {
+  display: grid;
+  gap: 1px;
+}
+
+.prismatic-quest-toast strong {
+  font-size: 0.9em;
+}
+
+.prismatic-quest-toast span {
+  color: var(--color-fg-secondary);
+  font-size: 0.8em;
+}
+
+.prismatic-quest-toast-reward {
+  width: 32px;
+  height: 32px;
+  image-rendering: pixelated;
+}
+
+@keyframes prismatic-quest-toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}

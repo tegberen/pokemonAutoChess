@@ -38,10 +38,6 @@ const unavailableScribbleRules = [
   SpecialGameRule.PLAY_TEST,
   SpecialGameRule.DITTO_PARTY
 ]
-const unavailableWhimsyRules = [
-  ...unavailableScribbleRules,
-  SpecialGameRule.SHINIEST_HUNTER
-]
 import { pickRandomIn, randomBetween } from "../../utils/random"
 
 export default class GameState extends Schema {
@@ -180,13 +176,9 @@ export default class GameState extends Schema {
         )
       )
     } else if (whimsy) {
-      const unavailableRules =
-        gameMode === GameMode.DOUBLE_UP
-          ? unavailableWhimsyRules
-          : unavailableScribbleRules
       this.specialGameRule = pickRandomIn(
         Object.values(SpecialGameRule).filter(
-          (rule) => unavailableRules.includes(rule) === false
+          (rule) => unavailableScribbleRules.includes(rule) === false
         )
       )
     } else {

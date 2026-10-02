@@ -38,7 +38,6 @@ import {
 } from "../models/precomputed/precomputed-pokemon-data"
 import { PRECOMPUTED_POKEMONS_PER_RARITY } from "../models/precomputed/precomputed-rarity"
 import { PRECOMPUTED_POKEMONS_PER_TYPE } from "../models/precomputed/precomputed-types"
-import { getSellPrice } from "../models/shop"
 import type GameRoom from "../rooms/game-room"
 import type GameState from "../rooms/states/game-state"
 import { Title, Transfer } from "../types"
@@ -97,14 +96,6 @@ import {
   MORE_EQUAL_THAN_OTHERS_GOLD_FOR_OTHERS,
   MOVE_TUTOR_MAX_PP,
   PLUNDER_GOLD_MULTIPLIER,
-  QUEST_ABSORB_DAMAGE_BLOCKED_TARGET,
-  QUEST_ASCEND_POKEMONS,
-  QUEST_CRIT_POWER_TARGET,
-  QUEST_EVOLVE_II_RARES_GRANTED,
-  QUEST_EVOLVE_II_TARGET,
-  QUEST_INDECISION_SYNERGIES_TARGET,
-  QUEST_PILLAGE_GOLD_TARGET,
-  QUEST_REVIVE_TARGET,
   QUICK_CLAW_COMPENSATION_STAGE,
   RAINBOW_HOUR_EEVEELUTIONS_TARGET,
   RAINBOW_HOUR_FOSSIL_STONES,
@@ -171,6 +162,14 @@ import {
   PkmRegionalVariants,
   Unowns
 } from "../types/enum/Pokemon"
+import {
+  PRISMATIC_QUEST_GOLD,
+  PrismaticQuest,
+  PrismaticQuestDefinitions,
+  PrismaticQuestsInOrder,
+  getPrismaticQuestClaimedKey
+} from "../types/enum/PrismaticQuest"
+import { SpecialGameRule } from "../types/enum/SpecialGameRule"
 import { Synergy } from "../types/enum/Synergy"
 import {
   LAPRAS_TRAVEL_DURATION,
@@ -1908,109 +1907,22 @@ function heroBlessingEffect(
   return true
 }
 
-const QUEST_REROLL_TARGET = 50
-const QUEST_GROW_TARGET_HP = 1000
-const QUEST_SHINE_LIGHT_TARGET = 7
-const QUEST_EPIC_RARITY_TARGET = 7
-const QUEST_EXPAND_TARGET = 8
-const QUEST_EXPAND_MIN_SELL_PRICE = 4
 const SHARD_DAMAGE_PER_GRANT = 12
-const QUEST_REROLL_FREE_ROLLS = 10
-const QUEST_EPIC_EXPERIENCE = 6
-const QUEST_EXPAND_EXPERIENCE = 10
 
-const blessingQuestConditions: {
-  [blessing in Blessing]?: (player: Player) => boolean
-} = {
-  [Blessing.QUEST_REROLL]: (player) =>
-    player.gameStats.rerollCount >= QUEST_REROLL_TARGET,
-
-  [Blessing.QUEST_GROW]: (player) =>
-    player.gameStats.maxHP >= QUEST_GROW_TARGET_HP,
-
-  [Blessing.QUEST_SHINE]: (player) =>
-    (player.synergies.get(Synergy.LIGHT) ?? 0) >= QUEST_SHINE_LIGHT_TARGET,
-
-  [Blessing.QUEST_EPIC]: (player) => {
-    const fieldedByRarity = {
-      [Rarity.UNIQUE]: 0,
-      [Rarity.EPIC]: 0,
-      [Rarity.ULTRA]: 0
-    }
-    player.board.forEach((pokemon) => {
-      if (
-        pokemon.positionY > 0 &&
-        pokemon.name !== Pkm.SCYTHER &&
-        (pokemon.rarity === Rarity.UNIQUE ||
-          pokemon.rarity === Rarity.EPIC ||
-          pokemon.rarity === Rarity.ULTRA)
-      ) {
-        fieldedByRarity[pokemon.rarity]++
-      }
-    })
-    return Object.values(fieldedByRarity).some(
-      (fielded) => fielded >= QUEST_EPIC_RARITY_TARGET
-    )
-  },
-
-  [Blessing.QUEST_EXPAND]: (player) => {
-    let valuableFielded = 0
-    player.board.forEach((pokemon) => {
-      if (
-        pokemon.positionY > 0 &&
-        getSellPrice(pokemon, player.specialGameRule) >=
-          QUEST_EXPAND_MIN_SELL_PRICE
-      ) {
-        valuableFielded++
-      }
-    })
-    return valuableFielded >= QUEST_EXPAND_TARGET
-  },
-
-  [Blessing.QUEST_ASCEND]: (player) => {
-    let ascended = false
-    player.board.forEach((pokemon) => {
-      if (
-        pokemon.stars >= 3 &&
-        [Rarity.UNCOMMON, Rarity.RARE, Rarity.EPIC, Rarity.ULTRA].includes(
-          pokemon.rarity
-        )
-      ) {
-        ascended = true
-      }
-    })
-    return ascended
-  },
-
-  [Blessing.QUEST_CRIT]: (player) =>
-    player.getBlessingQuestProgress(Blessing.QUEST_CRIT) >=
-    QUEST_CRIT_POWER_TARGET,
-
-  [Blessing.QUEST_ABSORB]: (player) =>
-    player.getBlessingQuestProgress(Blessing.QUEST_ABSORB) >=
-    QUEST_ABSORB_DAMAGE_BLOCKED_TARGET,
-
-  [Blessing.QUEST_REVIVE]: (player) =>
-    player.getBlessingQuestProgress(Blessing.QUEST_REVIVE) >=
-    QUEST_REVIVE_TARGET,
-
-  [Blessing.QUEST_PILLAGE]: (player) =>
-    player.getBlessingQuestProgress(Blessing.QUEST_PILLAGE) >=
-    QUEST_PILLAGE_GOLD_TARGET,
-
-  [Blessing.QUEST_EVOLVE_II]: (player) =>
-    player.getBlessingQuestProgress(Blessing.QUEST_EVOLVE_II) >=
-    QUEST_EVOLVE_II_TARGET,
-
-  [Blessing.QUEST_INDECISION]: (player) =>
-    player.getBlessingQuestProgress(Blessing.QUEST_INDECISION) >=
-    QUEST_INDECISION_SYNERGIES_TARGET
+export function updatePrismaticQuests(player: Player) {
+  if (!player.hasPrismaticQuests()) return
+  player.recordPrismaticQuestBest(PrismaticQuest.CRIT, player.money)
+  player.recordPrismaticQuestBest(
+    PrismaticQuest.EXPAND,
+    player.experienceManager.level
+  )
+  player.trackPrismaticBoardQuests()
 }
 
-/* QUEST_INDECISION counts synergies whose FINAL tier has been reached at any
-   point, so the three do not have to be active together */
+// a synergy counts once its final tier has been reached at any point, so the
+// two do not have to be active together
 export function checkIndecisionSynergies(player: Player) {
-  if (!player.blessings?.includes(Blessing.QUEST_INDECISION)) return
+  if (!player.hasPrismaticQuests()) return
   Object.values(Synergy).forEach((synergy) => {
     const maxTier = getHighestReachableSynergyTier(synergy, player.gameMode)
     if (
@@ -2019,24 +1931,31 @@ export function checkIndecisionSynergies(player: Player) {
       !player.indecisionSynergiesReached.has(synergy)
     ) {
       player.indecisionSynergiesReached.add(synergy)
-      player.advanceBlessingQuest(Blessing.QUEST_INDECISION)
+      player.advancePrismaticQuest(PrismaticQuest.INDECISION)
     }
   })
 }
 
-const blessingQuestRewards: { [blessing in Blessing]?: Item } = {
-  [Blessing.QUEST_INDECISION]: Item.GOLD_MASK,
-  [Blessing.QUEST_CRIT]: Item.GOLD_BOTTLE_CAP,
-  [Blessing.QUEST_ABSORB]: Item.ABSORB_BULB,
-  [Blessing.QUEST_REVIVE]: Item.SACRED_ASH,
-  [Blessing.QUEST_PILLAGE]: Item.BOOSTER_ENERGY,
-  [Blessing.QUEST_EVOLVE_II]: Item.RARE_CANDY,
-  [Blessing.QUEST_REROLL]: Item.REPEAT_BALL,
-  [Blessing.QUEST_GROW]: Item.DYNAMAX_BAND,
-  [Blessing.QUEST_SHINE]: Item.SHINY_STONE,
-  [Blessing.QUEST_EPIC]: Item.EVIOLITE,
-  [Blessing.QUEST_EXPAND]: Item.GOLD_BOW,
-  [Blessing.QUEST_ASCEND]: Item.STAR_PIECE
+export function claimPrismaticQuest(player: Player, quest: PrismaticQuest) {
+  const progress = player.blessingsRef?.questProgress
+  const definition = PrismaticQuestDefinitions[quest]
+  if (
+    !progress ||
+    !definition ||
+    !player.hasPrismaticQuests() ||
+    progress.has(getPrismaticQuestClaimedKey(quest)) ||
+    player.getPrismaticQuestProgress(quest) < definition.target
+  ) {
+    return
+  }
+  const claimsEveryQuest =
+    player.specialGameRule === SpecialGameRule.QUEST_BOARD
+  const alreadyClaimedOne = PrismaticQuestsInOrder.some((claimed) =>
+    progress.has(getPrismaticQuestClaimedKey(claimed))
+  )
+  if (!claimsEveryQuest && alreadyClaimedOne) return
+  progress.set(getPrismaticQuestClaimedKey(quest), 1)
+  player.items.push(definition.reward)
 }
 
 const blessingShardRewards: { [blessing in Blessing]?: Item } = {
@@ -2049,18 +1968,6 @@ export function checkBlessingQuests(player: Player, state: GameState) {
   if (!owned) return
 
   owned.blessings.forEach((blessing) => {
-    const condition = blessingQuestConditions[blessing]
-    if (
-      condition &&
-      !player.blessingQuestsCompleted.has(blessing) &&
-      condition(player)
-    ) {
-      player.blessingQuestsCompleted.add(blessing)
-      const reward = blessingQuestRewards[blessing]
-      if (reward) player.items.push(reward)
-      player.items.push(Item.EXCHANGE_TICKET, Item.RECYCLE_TICKET)
-    }
-
     const shardReward = blessingShardRewards[blessing]
     if (shardReward) {
       const earned = Math.floor(
@@ -2490,40 +2397,6 @@ export const blessingEffectService: {
   [Blessing.WISE_SPENDING]: () => true,
   [Blessing.BIRTHDAY_PRESENT]: () => true,
   [Blessing.UP_IS_UP]: () => true,
-
-  [Blessing.QUEST_REROLL]: (player) => {
-    player.shopFreeRolls += QUEST_REROLL_FREE_ROLLS
-    return true
-  },
-
-  [Blessing.QUEST_GROW]: (player) => {
-    player.items.push(Item.BERSERK_GENE)
-    return true
-  },
-
-  [Blessing.QUEST_SHINE]: (player) => {
-    player.items.push(Item.LIGHT_BALL)
-    return true
-  },
-
-  [Blessing.QUEST_EPIC]: (player) => {
-    if (!giftPokemonOfRarityAndStars(player, Rarity.EPIC, 1)) return false
-    player.addExperience(QUEST_EPIC_EXPERIENCE)
-    return true
-  },
-
-  [Blessing.QUEST_EXPAND]: (player) => {
-    player.addExperience(QUEST_EXPAND_EXPERIENCE)
-    return true
-  },
-
-  [Blessing.QUEST_ASCEND]: (player) => {
-    if (getFreeSpaceOnBench(player.board, getBenchSize(player.blessings)) < QUEST_ASCEND_POKEMONS) return false
-    for (let i = 0; i < QUEST_ASCEND_POKEMONS; i++) {
-      giftPokemonOfRarityAndStars(player, Rarity.RARE, 1)
-    }
-    return true
-  },
 
   [Blessing.CHARGING_UP]: (player) => {
     if (giftPokemonIfBenchHasRoom(player, Pkm.MAREEP) === false) return false
@@ -3108,48 +2981,8 @@ export const blessingEffectService: {
   [Blessing.QUEST_PROSPER]: (player) =>
     grantMissionOrderQuest(player, Item.MISSION_ORDER_GOLD),
 
-  [Blessing.QUEST_INDECISION]: (player) => {
-    pickNRandomIn([...SynergyGems], 2).forEach((gem) =>
-      grantSynergyAwareItem(player, gem)
-    )
-    return true
-  },
-
-  [Blessing.QUEST_CRIT]: (player) => {
-    player.items.push(Item.BLACK_GLASSES, Item.BLACK_GLASSES)
-    return true
-  },
-
-  [Blessing.QUEST_ABSORB]: (player) => {
-    player.items.push(Item.HEART_SCALE, Item.NEVER_MELT_ICE)
-    return true
-  },
-
-  [Blessing.QUEST_REVIVE]: (player) => {
-    player.items.push(Item.MAX_REVIVE)
-    return true
-  },
-
-  [Blessing.QUEST_PILLAGE]: (player) => {
-    player.items.push(Item.AMULET_COIN)
-    return true
-  },
-
-  [Blessing.QUEST_EVOLVE_II]: (player) => {
-    if (
-      getFreeSpaceOnBench(player.board, getBenchSize(player.blessings)) <
-      1 + QUEST_EVOLVE_II_RARES_GRANTED
-    ) {
-      return false
-    }
-    giftPokemonIfBenchHasRoom(player, Pkm.EEVEE)
-    const rares = PRECOMPUTED_POKEMONS_PER_RARITY.RARE.filter(
-      (pkm) =>
-        getPokemonData(pkm).stars === 1 && player.canFindRegionalPokemon(pkm)
-    )
-    pickNRandomIn(rares, QUEST_EVOLVE_II_RARES_GRANTED).forEach((pkm) =>
-      giftPokemonIfBenchHasRoom(player, pkm)
-    )
+  [Blessing.PRISMATIC_QUEST]: (player) => {
+    player.addMoney(PRISMATIC_QUEST_GOLD, true, null)
     return true
   },
 

@@ -200,6 +200,7 @@ import { ArmoryOptionsPrice } from "../types/enum/ArmoryOptions"
 import { armoryGiftService } from "../services/armory-options"
 import {
   blessingEffectService,
+  claimPrismaticQuest,
   giftStarterChoiceCopy,
   grantGambleReward,
   grantRandomBlessingOfTier,
@@ -211,6 +212,7 @@ import {
   restoreGalarFossilPokemon
 } from "../services/fossil-unlocks"
 import type { GalarFossil } from "../types/enum/FossilUnlock"
+import { PrismaticQuest } from "../types/enum/PrismaticQuest"
 
 function getPartnerChatKey(player: Player) {
   return [player.id, player.doubleUpPartnerId].sort().join("|")
@@ -881,6 +883,21 @@ export default class GameRoom extends Room<{ state: GameState }> {
           }
         } catch (error) {
           logger.error("error restoring fossil", error)
+        }
+      }
+    )
+
+    this.onMessage(
+      Transfer.CLAIM_PRISMATIC_QUEST,
+      (client, quest: PrismaticQuest) => {
+        if (this.state.gameFinished || !client.auth) return
+        const player = this.state.players.get(client.auth.uid)
+        if (!player || !player.alive) return
+        if (!Object.values(PrismaticQuest).includes(quest)) return
+        try {
+          claimPrismaticQuest(player, quest)
+        } catch (error) {
+          logger.error("error claiming prismatic quest", error)
         }
       }
     )

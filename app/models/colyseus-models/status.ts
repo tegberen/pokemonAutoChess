@@ -6,6 +6,7 @@ import {
   MOLECULAR_CORROSION_RUNE_PROTECT_DELAY,
   applyGrudgeCurseReduction
 } from "../../types/enum/Blessing"
+import { PrismaticQuest } from "../../types/enum/PrismaticQuest"
 import type { Board } from "../../core/board"
 import { transformToIceFace } from "../../core/effects/passives"
 import type { PokemonEntity } from "../../core/pokemon-entity"
@@ -1224,10 +1225,10 @@ export default class Status extends Schema implements IStatus {
   }
 
   triggerResurrection(pokemon: PokemonEntity, board: Board) {
-    // QUEST_REVIVE counts real resurrections only, not the Fossil self-revive,
-    // and not the ones a ghost copy racks up in someone else's fight
+    // the Revive quest counts real resurrections only, not the Fossil
+    // self-revive, and not a ghost copy's in someone else's fight
     if (!pokemon.isGhostOpponent) {
-      pokemon.player?.advanceBlessingQuest(Blessing.QUEST_REVIVE)
+      pokemon.player?.advancePrismaticQuest(PrismaticQuest.REVIVE)
     }
     this.resurrection = false
     this.resurrecting = true

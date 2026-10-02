@@ -68,6 +68,7 @@ import {
   WeatherRocksByWeather
 } from "../types/enum/Item"
 import { Passive } from "../types/enum/Passive"
+import { PrismaticQuest } from "../types/enum/PrismaticQuest"
 import { Pkm, PkmFamily, Unowns } from "../types/enum/Pokemon"
 import { Synergy } from "../types/enum/Synergy"
 import { getSynergyTier } from "../models/colyseus-models/synergies"
@@ -164,7 +165,6 @@ import {
   SHUTTLE_BUS_MAX_PP,
   POTENTIAL_ENERGY_SHIELD,
   POTENTIAL_ENERGY_SPEED,
-  QUEST_PILLAGE_CRIT_PER_GOLD,
   QUIET_STRENGTH_LOW_LIFE_THRESHOLD,
   SHINY_SAFEGUARD_HP_THRESHOLD,
   SHINY_SAFEGUARD_PROTECT_DURATION,
@@ -3288,15 +3288,6 @@ export default class Simulation extends Schema implements ISimulation {
         })
       }
 
-      if (blessings.includes(Blessing.QUEST_PILLAGE)) {
-        const critChance = Math.floor(
-          player.money * QUEST_PILLAGE_CRIT_PER_GOLD
-        )
-        ownUnits
-          .filter((ally) => ally.items.has(Item.AMULET_COIN))
-          .forEach((ally) => ally.addCritChance(critChance, ally, 0, false))
-      }
-
       if (blessings.includes(Blessing.DRAGON_FANG)) {
         const totalStars = ownUnits.reduce((sum, ally) => sum + ally.stars, 0)
         const abilityPower = totalStars * DRAGON_FANG_ABILITY_POWER_PER_STAR
@@ -5677,9 +5668,6 @@ export default class Simulation extends Schema implements ISimulation {
     }
   }
 
-  /* QUEST_CRIT and QUEST_ABSORB track the best value any ally has reached in a
-     single fight, so the Effects tab can show the record and the quest completes
-     once it passes the target */
   checkCombatQuestThresholds() {
     const sides: [Player | undefined, MapSchema<PokemonEntity>][] = [
       [this.bluePlayer, this.blueTeam],
@@ -5688,24 +5676,17 @@ export default class Simulation extends Schema implements ISimulation {
     // the red side of a ghost battle is a copy of a player fighting elsewhere
     if (!this.isGhostBattle) sides.push([this.redPlayer, this.redTeam])
     for (const [player, team] of sides) {
-      if (!player?.blessings?.length) continue
-      const wantsCrit = player.blessings.includes(Blessing.QUEST_CRIT)
-      const wantsAbsorb = player.blessings.includes(Blessing.QUEST_ABSORB)
-      if (!wantsCrit && !wantsAbsorb) continue
+      if (!player?.hasPrismaticQuests()) continue
 
       team.forEach((pkm) => {
         if (pkm.player !== player) return
-        if (wantsCrit) {
-          player.recordBlessingQuestBest(Blessing.QUEST_CRIT, pkm.critPower)
-        }
-        if (wantsAbsorb) {
-          player.recordBlessingQuestBest(
-            Blessing.QUEST_ABSORB,
-            pkm.physicalDamageReduced +
-              pkm.specialDamageReduced +
-              pkm.shieldDamageTaken
-          )
-        }
+        player.recordPrismaticQuestBest(PrismaticQuest.GROW, pkm.maxHP)
+        player.recordPrismaticQuestBest(
+          PrismaticQuest.ABSORB,
+          pkm.physicalDamageReduced +
+            pkm.specialDamageReduced +
+            pkm.shieldDamageTaken
+        )
       })
     }
   }
