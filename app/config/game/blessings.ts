@@ -1508,6 +1508,24 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     isAvailable: (player) =>
       player.specialGameRule !== SpecialGameRule.QUEST_BOARD
   },
+  [Blessing.KINGDOM]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: [4],
+    icon: "high_tower_castle",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.BASTION]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: [4],
+    icon: "training_ground",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.PALACE]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: [4],
+    icon: "palace",
+    grantsPokemonImmediately: false
+  },
   [Blessing.IMPENDING_DOOM]: {
     tier: BlessingTier.SILVER,
     availableAtStages: BLESSING_SELECTION_STAGES,

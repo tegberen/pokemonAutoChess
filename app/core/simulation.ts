@@ -284,6 +284,10 @@ import {
   CHOICE_SPECS_ALLY_MIN_MAX_PP,
   CHOSEN_ONES_COUNT,
   CHOSEN_ONES_MAX_HP_GAIN,
+  KINGDOM_SPEED,
+  BASTION_DEFENSE,
+  PALACE_ABILITY_POWER,
+  KINGDOM_BASTION_PALACE_MAX_HP,
   VERDANT_GROWTH_ABILITY_POWER,
   VERDANT_GROWTH_ATTACK,
   VERDANT_GROWTH_INTERVAL,
@@ -2373,6 +2377,28 @@ export default class Simulation extends Schema implements ISimulation {
             ally.addMaxHP(CHOSEN_ONES_MAX_HP_GAIN, ally, 0, false, true)
           )
         }
+      }
+
+      if (blessings.includes(Blessing.KINGDOM)) {
+        ownUnits.forEach((ally) => {
+          ally.addSpeed(KINGDOM_SPEED, ally, 0, false, true)
+          ally.addMaxHP(KINGDOM_BASTION_PALACE_MAX_HP, ally, 0, false, true)
+        })
+      }
+
+      if (blessings.includes(Blessing.BASTION)) {
+        ownUnits.forEach((ally) => {
+          ally.addDefense(BASTION_DEFENSE, ally, 0, false, true)
+          ally.addSpecialDefense(BASTION_DEFENSE, ally, 0, false, true)
+          ally.addMaxHP(KINGDOM_BASTION_PALACE_MAX_HP, ally, 0, false, true)
+        })
+      }
+
+      if (blessings.includes(Blessing.PALACE)) {
+        ownUnits.forEach((ally) => {
+          ally.addAbilityPower(PALACE_ABILITY_POWER, ally, 0, false, true)
+          ally.addMaxHP(KINGDOM_BASTION_PALACE_MAX_HP, ally, 0, false, true)
+        })
       }
 
       if (blessings.includes(Blessing.WRAPPED_UP)) {

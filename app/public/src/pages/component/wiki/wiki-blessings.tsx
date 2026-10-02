@@ -232,6 +232,7 @@ const ADDITIONAL_HERO_BLESSINGS = new Set<Blessing>([
 ])
 
 const DEFENSIVE_COMBAT_BLESSINGS = new Set<Blessing>([
+  Blessing.BASTION,
   Blessing.GEAR_SHIELD_I,
   Blessing.GEAR_SHIELD_II,
   Blessing.MAGIC_SHIELD_I,
@@ -257,6 +258,8 @@ const DEFENSIVE_COMBAT_BLESSINGS = new Set<Blessing>([
 ])
 
 const OFFENSIVE_COMBAT_BLESSINGS = new Set<Blessing>([
+  Blessing.KINGDOM,
+  Blessing.PALACE,
   Blessing.BURNING_FORCE,
   Blessing.DRILL_I,
   Blessing.DRILL_II,

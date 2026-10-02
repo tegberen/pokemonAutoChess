@@ -141,7 +141,8 @@ export default function ServerGuide({
         { name: "Gym Trainer", blessing: Blessing.NORMAL_FAIRY_GYM_TRAINER },
         { name: "Legendary songs", blessing: Blessing.HEATRANS_SONG },
         { name: "Badges", blessing: Blessing.FIGHTING_BADGE_BLESSING },
-        { name: "Crests", blessing: Blessing.FIGHTING_CREST_BLESSING }
+        { name: "Crests", blessing: Blessing.FIGHTING_CREST_BLESSING },
+        { name: "Missions", blessing: Blessing.QUEST_EVOLVE }
       ].map(({ name, blessing }) => ({
         name,
         icon: Blessings[blessing].icon,

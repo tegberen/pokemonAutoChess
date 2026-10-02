@@ -6272,6 +6272,18 @@
 			"name": "Mission: Diversify",
 			"description": "Gain MISSION_ORDER_GREEN and a random 2 STAR common Pokémon."
 		},
+		"KINGDOM": {
+			"name": "High Tower Castle",
+			"description": "At the start of each fight, all allies on the board gain 1 SPEED and 2 HP permanently."
+		},
+		"BASTION": {
+			"name": "Training Ground",
+			"description": "At the start of each fight, all allies on the board gain 1 DEF, 1 SPE_DEF and 2 HP permanently."
+		},
+		"PALACE": {
+			"name": "Magic Palace",
+			"description": "At the start of each fight, all allies on the board gain 2 AP and 2 HP permanently."
+		},
 		"PRISMATIC_QUEST": {
 			"name": "Prismatic Quest",
 			"description": "Gain 10 GOLD and unlock the Quest Panel."

@@ -492,6 +492,9 @@ Every balance change on this server, newest first.
 ### 1 November 2026
 
 **Wishes**
+- High Tower Castle {{new}} | Prismatic, stage 4 only. At the start of each fight, all allies on the board gain 1 SPEED and 2 HP permanently
+- Training Ground {{new}} | Prismatic, stage 4 only. At the start of each fight, all allies on the board gain 1 DEF, 1 SPE_DEF and 2 HP permanently
+- Magic Palace {{new}} | Prismatic, stage 4 only. At the start of each fight, all allies on the board gain 2 AP and 2 HP permanently
 - Prismatic Quest {{new}} | Gain 10 GOLD and unlock the Quest Panel. Stage 4 only. Replaces the 12 Prismatic quest Wishes
 - Quest Panel | every quest tracks at once, but you can only claim one reward. Quests no longer give starting items, and rewards no longer include an EXCHANGE_TICKET and a RECYCLE_TICKET
 - Quest: Crit | hold 100 GOLD at once. Reward: GOLD_BOTTLE_CAP
@@ -506,7 +509,7 @@ Every balance change on this server, newest first.
 - Quest: Mature | renamed from Quest: Evolve II. Evolutions 12 → 10. Reward: RARE_CANDY
 - Quest: Pillage | KO 30 enemy Pokémon. Reward: BOOSTER_ENERGY
 - Quest: Reroll | reroll 50 times. Reward: REPEAT_BALL
-- Mission: Evolve, Mission: Destroy, Mission: Level Up, Mission: Diversify, Mission: Prosper | renamed from Quest
+- Missions | Quest: Evolve, Destroy, Level Up, Diversify and Prosper are renamed to Mission
 
 **Game Mode**
 - Quest Board {{new}} | new Scribble: everyone starts with the Quest Panel and can claim every reward from the quests they complete

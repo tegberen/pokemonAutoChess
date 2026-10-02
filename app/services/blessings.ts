@@ -2986,6 +2986,9 @@ export const blessingEffectService: {
     return true
   },
 
+  [Blessing.KINGDOM]: () => true,
+  [Blessing.BASTION]: () => true,
+  [Blessing.PALACE]: () => true,
   [Blessing.IMPENDING_DOOM]: () => true,
 
   [Blessing.SYNCHRONICITY]: (player) => {
