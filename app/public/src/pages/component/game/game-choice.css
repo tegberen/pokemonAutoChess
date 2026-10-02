@@ -513,3 +513,294 @@
   opacity: 0.45;
   cursor: not-allowed;
 }
+
+/* the tier stripes frame the scene, the moon and icon ring take its colour */
+.wish-season-halloween .blessing-tier-silver {
+  --halloween-moon: color-mix(in srgb, var(--color-fg-secondary) 70%, #fff);
+}
+
+.wish-season-halloween .blessing-tier-gold {
+  --halloween-moon: color-mix(in srgb, var(--color-fg-gold) 45%, #9a917f);
+}
+
+.wish-season-halloween .blessing-tier-prismatic {
+  --halloween-moon: #d6c2f0;
+}
+
+.halloween-scene {
+  position: absolute;
+  inset: 6px;
+  overflow: hidden;
+  border-radius: 8px;
+  pointer-events: none;
+}
+
+.halloween-sky {
+  inset: 0;
+  background:
+    radial-gradient(circle, rgb(255 255 255 / 90%) 0 1.4px, transparent 2px)
+      45% 14px / 6px 6px no-repeat,
+    radial-gradient(circle, rgb(255 255 255 / 50%) 0 0.8px, transparent 1.4px)
+      58% 40px / 6px 6px no-repeat,
+    radial-gradient(circle, rgb(255 255 255 / 75%) 0 1px, transparent 1.6px)
+      74% 22px / 6px 6px no-repeat,
+    radial-gradient(circle, rgb(255 255 255 / 40%) 0 0.8px, transparent 1.4px)
+      87% 9px / 6px 6px no-repeat,
+    radial-gradient(circle, rgb(255 255 255 / 85%) 0 1.6px, transparent 2.2px)
+      94% 48px / 6px 6px no-repeat,
+    radial-gradient(circle, rgb(255 255 255 / 45%) 0 0.8px, transparent 1.4px)
+      67% 71px / 6px 6px no-repeat,
+    radial-gradient(circle, rgb(255 255 255 / 35%) 0 0.8px, transparent 1.4px)
+      52% 104px / 6px 6px no-repeat,
+    radial-gradient(circle, rgb(255 255 255 / 70%) 0 1.2px, transparent 1.8px)
+      39% 58px / 6px 6px no-repeat,
+    radial-gradient(circle, rgb(255 255 255 / 40%) 0 0.8px, transparent 1.4px)
+      8% 132px / 6px 6px no-repeat,
+    radial-gradient(circle, rgb(255 255 255 / 55%) 0 1px, transparent 1.6px)
+      22% 151px / 6px 6px no-repeat,
+    #2a1f4c;
+}
+
+.halloween-scene > * {
+  position: absolute;
+}
+
+.halloween-moon {
+  top: -32px;
+  left: -32px;
+  width: 116px;
+  height: 116px;
+  border-radius: 50%;
+  --halloween-crater: color-mix(in srgb, var(--halloween-moon) 88%, #000);
+  background:
+    radial-gradient(
+      circle at 62% 64%,
+      var(--halloween-crater) 0 9px,
+      transparent 10px
+    ),
+    radial-gradient(
+      circle at 44% 76%,
+      var(--halloween-crater) 0 5px,
+      transparent 6px
+    ),
+    radial-gradient(
+      circle at 76% 44%,
+      var(--halloween-crater) 0 6px,
+      transparent 7px
+    ),
+    radial-gradient(
+      ellipse 18px 12px at 54% 50%,
+      color-mix(in srgb, var(--halloween-moon) 94%, #000) 0 100%,
+      transparent 100%
+    ),
+    var(--halloween-moon);
+}
+
+.halloween-hill {
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.halloween-hill-far {
+  height: 118px;
+  background: #231a42;
+  clip-path: polygon(
+    0 52%, 8% 44%, 16% 47%, 26% 36%, 36% 41%, 46% 30%, 56% 37%, 66% 28%,
+    76% 36%, 86% 31%, 94% 38%, 100% 34%, 100% 100%, 0 100%
+  );
+}
+
+.halloween-gengar {
+  left: 50%;
+  bottom: 52px;
+  width: 60px;
+  height: 40px;
+  background: #0f0a1f;
+  clip-path: path(
+    "M8 40 C8 32 9 26 10 22 Q4 14 0 3 Q12 9 19 15 L23 9 L26 13 L30 5 L33 12 L37 4 L40 11 L44 8 L44 15 Q51 9 60 2 Q56 14 50 22 C51 26 52 32 52 40 Z"
+  );
+  mask-image: linear-gradient(to top, transparent, #000 25%);
+}
+
+.halloween-gengar::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: #e5354d;
+  clip-path: path(
+    "M17 19.5 L25.5 24 Q21.5 26.5 18 24 Q16.5 22 17 19.5 Z M43 19.5 L34.5 24 Q38.5 26.5 42 24 Q43.5 22 43 19.5 Z"
+  );
+}
+
+.halloween-gengar::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: #ece4ff;
+  clip-path: path("M16 28 Q30 33 45 27 Q40 36 30 37 Q20 36 16 28 Z");
+}
+
+.halloween-hill-mid {
+  height: 86px;
+  background: #1a1333;
+  clip-path: polygon(
+    0 34%, 10% 27%, 22% 23%, 34% 24%, 46% 29%, 58% 37%, 70% 45%, 82% 50%,
+    100% 52%, 100% 100%, 0 100%
+  );
+}
+
+.halloween-hill-front {
+  height: 50px;
+  background: #110b22;
+  clip-path: polygon(
+    0 46%, 14% 38%, 28% 40%, 42% 48%, 56% 54%, 70% 50%, 84% 40%, 100% 30%,
+    100% 100%, 0 100%
+  );
+}
+
+.halloween-fence {
+  left: 6%;
+  bottom: 56px;
+  width: 41%;
+  height: 24px;
+}
+
+.halloween-fence-rail {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: #120c26;
+}
+
+.halloween-fence-picket {
+  position: absolute;
+  width: 4px;
+  background: #120c26;
+  transform-origin: bottom;
+  clip-path: polygon(0 18%, 50% 0, 100% 18%, 100% 100%, 0 100%);
+}
+
+.halloween-tree {
+  right: -8px;
+  bottom: 14px;
+  width: 140px;
+  height: 250px;
+  background: #0a0614;
+  clip-path: polygon(
+    78px 250px, 90px 228px, 96px 196px, 94px 168px, 86px 138px, 64px 128px,
+    40px 124px, 22px 128px, 2px 122px, 20px 116px, 34px 114px, 28px 100px,
+    42px 112px, 66px 116px, 90px 124px, 86px 104px, 74px 88px, 60px 74px,
+    50px 62px, 46px 50px, 56px 58px, 62px 52px, 64px 64px, 70px 70px,
+    84px 84px, 96px 108px, 100px 86px, 108px 64px, 116px 44px, 112px 30px,
+    120px 36px, 128px 8px, 130px 26px, 126px 46px, 118px 72px, 112px 98px,
+    110px 122px, 112px 156px, 118px 190px, 124px 220px, 140px 250px
+  );
+}
+
+.halloween-bat {
+  background: #0a0614;
+  clip-path: polygon(
+    0% 40%, 14% 18%, 24% 34%, 36% 24%, 46% 30%, 50% 12%, 54% 30%, 64% 24%,
+    76% 34%, 86% 18%, 100% 40%, 82% 52%, 70% 62%, 60% 56%, 50% 76%, 40% 56%,
+    30% 62%, 18% 52%
+  );
+}
+
+.halloween-bat-near {
+  top: 26px;
+  left: 58%;
+  width: 28px;
+  height: 13px;
+}
+
+.halloween-bat-far {
+  top: 86px;
+  left: 40%;
+  width: 17px;
+  height: 8px;
+}
+
+.halloween-pumpkin {
+  border-radius: 48%;
+  background: #0a0614;
+  box-shadow:
+    inset 6px 0 0 #170f2e,
+    inset -6px 0 0 #170f2e;
+}
+
+.halloween-pumpkin::before {
+  content: "";
+  position: absolute;
+  top: -6px;
+  left: 46%;
+  width: 4px;
+  height: 8px;
+  border-radius: 2px;
+  background: #0a0614;
+  transform: rotate(14deg);
+}
+
+.halloween-pumpkin::after {
+  content: "";
+  position: absolute;
+  left: 26%;
+  right: 26%;
+  top: 36%;
+  height: 38%;
+  background: #f3c74a;
+  clip-path: polygon(
+    0 0, 22% 28%, 32% 0, 50% 30%, 68% 0, 78% 28%, 100% 0, 100% 30%,
+    82% 100%, 64% 74%, 50% 100%, 36% 74%, 18% 100%, 0 30%
+  );
+}
+
+.halloween-pumpkin-big {
+  left: 9%;
+  bottom: 10px;
+  width: 38px;
+  height: 27px;
+}
+
+.halloween-pumpkin-small {
+  left: 27%;
+  bottom: 16px;
+  width: 26px;
+  height: 19px;
+}
+
+.halloween-firefly {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: #e9e48a;
+  opacity: 0.85;
+}
+
+.halloween-firefly-dim {
+  width: 2px;
+  height: 2px;
+  opacity: 0.6;
+}
+
+.wish-season-halloween .blessing-icon {
+  padding: 0.45rem;
+  border: 3px solid var(--blessing-glow-hue);
+  border-radius: 50%;
+  background-color: #1f1638;
+}
+
+/* letter shadows instead of a panel, which broke up the scene */
+.wish-season-halloween .blessing-body {
+  background-color: transparent;
+  text-shadow:
+    0 1px 0 #0a0614,
+    0 0 3px #0a0614,
+    0 0 6px #0a0614;
+}
+
+.wish-season-halloween .blessing-body > p,
+.wish-season-halloween .blessing-body .blessing-grant {
+  opacity: 1;
+}

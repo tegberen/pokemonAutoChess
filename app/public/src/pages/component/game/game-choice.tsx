@@ -60,7 +60,72 @@ function isPokemonChoice(choice: PlayerChoice): boolean {
   return choice.pokemons.length > 0
 }
 
+type WishCardSeason = "halloween"
+
+// ?wishSeason=halloween previews a season outside its month
+function getWishCardSeason(now = new Date()): WishCardSeason | null {
+  const preview = new URLSearchParams(window.location.search).get("wishSeason")
+  if (preview === "halloween") return preview
+  if (now.getMonth() === 10) return "halloween"
+  return null
+}
+
+const HALLOWEEN_FENCE_PICKETS = [
+  { left: "0%", bottom: 2, height: 20 },
+  { left: "9.8%", bottom: 2, height: 19 },
+  { left: "19.5%", bottom: 2, height: 21 },
+  { left: "29.3%", bottom: 2, height: 19, rotate: -9 },
+  { left: "48.8%", bottom: 2, height: 20 },
+  { left: "58.5%", bottom: 1, height: 18 },
+  { left: "68.3%", bottom: 1, height: 20 },
+  { left: "78%", bottom: 0, height: 19, rotate: 5 },
+  { left: "90.2%", bottom: 0, height: 20 }
+]
+
+function HalloweenWishScene() {
+  return (
+    <div className="halloween-scene" aria-hidden>
+      <div className="halloween-sky" />
+      <div className="halloween-moon" />
+      <div className="halloween-hill halloween-hill-far" />
+      <div className="halloween-gengar" />
+      <div className="halloween-hill halloween-hill-mid" />
+      <div className="halloween-fence">
+        <span className="halloween-fence-rail" style={{ bottom: 16 }} />
+        <span className="halloween-fence-rail" style={{ bottom: 8 }} />
+        {HALLOWEEN_FENCE_PICKETS.map((picket) => (
+          <span
+            key={picket.left}
+            className="halloween-fence-picket"
+            style={{
+              left: picket.left,
+              bottom: picket.bottom,
+              height: picket.height,
+              transform: picket.rotate
+                ? `rotate(${picket.rotate}deg)`
+                : undefined
+            }}
+          />
+        ))}
+      </div>
+      <div className="halloween-hill halloween-hill-front" />
+      <div className="halloween-tree" />
+      <div className="halloween-bat halloween-bat-near" />
+      <div className="halloween-bat halloween-bat-far" />
+      <div className="halloween-pumpkin halloween-pumpkin-big" />
+      <div className="halloween-pumpkin halloween-pumpkin-small" />
+      <div className="halloween-firefly" style={{ left: "50%", bottom: 64 }} />
+      <div
+        className="halloween-firefly halloween-firefly-dim"
+        style={{ left: "58%", bottom: 90 }}
+      />
+      <div className="halloween-firefly" style={{ left: "18%", bottom: 96 }} />
+    </div>
+  )
+}
+
 export default function GameChoice() {
+  const wishCardSeason = getWishCardSeason()
   const { t } = useTranslation()
   const connectedPlayer = useAppSelector(selectConnectedPlayer)
   const profile = useAppSelector((state) => state.network.profile)
@@ -261,7 +326,12 @@ export default function GameChoice() {
         )}
 
         {choice.type === "blessing" ? (
-          <div className="game-choice-items-list game-choice-blessings-list">
+          <div
+            className={cc(
+              "game-choice-items-list game-choice-blessings-list",
+              { [`wish-season-${wishCardSeason}`]: wishCardSeason !== null }
+            )}
+          >
             {choice.blessings.map((blessing, index) => {
               const blessingDefinition = Blessings[blessing]
               const wasRerolled =
@@ -319,6 +389,7 @@ export default function GameChoice() {
                   )
                 }}
               >
+                {wishCardSeason === "halloween" && <HalloweenWishScene />}
                 <div
                   className={cc("blessing-body", {
                     "blessing-body-flip": wasRerolled
