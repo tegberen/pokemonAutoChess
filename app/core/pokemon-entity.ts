@@ -227,6 +227,7 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
   spotlightCasts: number = 0
   // set by an ability that may only resolve once per combat
   spentForCombat: boolean = false
+  fightingThrowCount: number = 0
   commands = new Array<SimulationCommand>()
   effectsSet = new Set<EffectClass>()
   sourcePlayer: Player | undefined = undefined

@@ -95,6 +95,7 @@ import { CottonGuardStrategy } from "./cotton-guard"
 import { CottonSporeStrategy } from "./cotton-spore"
 import { CounterStrategy } from "./counter"
 import { CrabHammerStrategy } from "./crab-hammer"
+import { CrossChopStrategy } from "./cross-chop"
 import { CrossPoisonStrategy } from "./cross-poison"
 import { CrunchStrategy } from "./crunch"
 import { CrushClawStrategy } from "./crush-claw"
@@ -891,6 +892,7 @@ export const AbilityStrategies: { [key in Ability]: AbilityStrategy } = {
   [Ability.COTTON_SPORE]: new CottonSporeStrategy(),
   [Ability.COUNTER]: new CounterStrategy(),
   [Ability.CRABHAMMER]: new CrabHammerStrategy(),
+  [Ability.CROSS_CHOP]: new CrossChopStrategy(),
   [Ability.CROSS_POISON]: new CrossPoisonStrategy(),
   [Ability.CRUNCH]: new CrunchStrategy(),
   [Ability.CRUSH_CLAW]: new CrushClawStrategy(),

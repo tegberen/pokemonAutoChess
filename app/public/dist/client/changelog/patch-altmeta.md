@@ -491,6 +491,9 @@ Every balance change on this server, newest first.
 
 ### 1 November 2026
 
+**Abilities**
+- Machop Line | Guillotine → Cross Chop. Deal [300,SP]% of ATK as SPECIAL to the target. Each FIGHTING throw this fight gives this ability +[25,50,100,200]% CRIT_POWER. Can crit by default
+
 **Wishes**
 - High Tower Castle {{new}} | Prismatic, stage 4 only. At the start of each fight, all allies on the board gain 1 SPEED and 2 HP permanently
 - Training Ground {{new}} | Prismatic, stage 4 only. At the start of each fight, all allies on the board gain 1 DEF, 1 SPE_DEF and 2 HP permanently

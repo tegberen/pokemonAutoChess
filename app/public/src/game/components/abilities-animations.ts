@@ -24,7 +24,10 @@ import {
   WATER_SHURIKEN_GIANT_MS_PER_CELL,
   WATER_SHURIKEN_GIANT_WINDUP_MS
 } from "../../../../config/game/abilities"
-import { Ability } from "../../../../types/enum/Ability"
+import {
+  Ability,
+  CROSS_CHOP_CRIT_ANIMATION
+} from "../../../../types/enum/Ability"
 import {
   GALVANIC_RAIN_THROW_FLIGHT_MS,
   GLAIVE_STRIKE_DELAY,
@@ -1098,6 +1101,460 @@ const LIGHT_OF_RUIN_THUNDER = 0x2a0f2c
 const LIGHT_OF_RUIN_WIND = 0xf6d3e6
 
 // aimed at the exact angle the server's effectInLine hits along
+const CROSS_CHOP_BEAM_LENGTH = 92
+const CROSS_CHOP_BEAM_WIDTH = 13
+const CROSS_CHOP_FOCUS_MS = 145
+const CROSS_CHOP_HANDS_MS = 130
+const CROSS_CHOP_HANDS_AT = CROSS_CHOP_FOCUS_MS - 60
+const CROSS_CHOP_STRIKE_AT = CROSS_CHOP_HANDS_AT + CROSS_CHOP_HANDS_MS
+const CROSS_CHOP_SLASH_MS = 70
+const CROSS_CHOP_SECOND_SLASH_DELAY = 45
+const CROSS_CHOP_HARDEN_AT =
+  CROSS_CHOP_STRIKE_AT +
+  CROSS_CHOP_SECOND_SLASH_DELAY +
+  CROSS_CHOP_SLASH_MS +
+  25
+const CROSS_CHOP_FINISH_AT = CROSS_CHOP_HARDEN_AT + 70
+const CROSS_CHOP_WIND_STREAKS = 8
+const CROSS_CHOP_RAYS = 10
+const CROSS_CHOP_EMBERS = 7
+const CROSS_CHOP_SPEED_STREAKS = 12
+const CROSS_CHOP_COLOR_BANDS = 5
+const CROSS_CHOP_THUNDER_CENTER = 0x5a5cff
+const CROSS_CHOP_BEAM_TIP = 0xff4a1f
+const CROSS_CHOP_FLAME_CENTER = 0xffb13a
+const CROSS_CHOP_FLAME_EDGE = 0xff4a1f
+const CROSS_CHOP_FLAME_GLOW = 0xffa53a
+const CROSS_CHOP_HAND = 0xffd84a
+const CROSS_CHOP_DIAGONALS = [Math.PI / 4, -Math.PI / 4]
+const CROSS_CHOP_SLASH_ANGLES = [Math.PI / 4, (3 * Math.PI) / 4]
+
+function mixCrossChopColor(from: number, to: number, ratio: number) {
+  const channel = (shift: number) => {
+    const start = (from >> shift) & 0xff
+    const end = (to >> shift) & 0xff
+    return Math.round(start + (end - start) * ratio) << shift
+  }
+  return channel(16) | channel(8) | channel(0)
+}
+
+function crossChopBeamOutline(halfLength: number, halfThickness: number) {
+  const shoulder = halfLength - Math.min(halfLength * 0.24, 20)
+  return [
+    new Phaser.Math.Vector2(-halfLength, -halfThickness * 0.2),
+    new Phaser.Math.Vector2(-shoulder, -halfThickness),
+    new Phaser.Math.Vector2(shoulder, -halfThickness),
+    new Phaser.Math.Vector2(halfLength, -halfThickness * 0.2),
+    new Phaser.Math.Vector2(halfLength, halfThickness * 0.2),
+    new Phaser.Math.Vector2(shoulder, halfThickness),
+    new Phaser.Math.Vector2(-shoulder, halfThickness),
+    new Phaser.Math.Vector2(-halfLength, halfThickness * 0.2)
+  ]
+}
+
+// normal blending keeps the colour bands from summing to white
+function addCrossChopBeam(
+  scene: AbilityAnimationArgs["scene"],
+  x: number,
+  y: number,
+  rotation: number,
+  halfLength: number,
+  halfWidth: number,
+  centerColor: number,
+  tipColor: number,
+  growsFromTip = false
+) {
+  const body = scene.add.graphics()
+  for (let band = 0; band < CROSS_CHOP_COLOR_BANDS; band++) {
+    const ratio = band / (CROSS_CHOP_COLOR_BANDS - 1)
+    body.fillStyle(mixCrossChopColor(tipColor, centerColor, ratio), 0.95)
+    body.fillPoints(
+      crossChopBeamOutline(halfLength * (1 - ratio * 0.7), halfWidth),
+      true
+    )
+  }
+  const core = scene.add.graphics().setBlendMode(Phaser.BlendModes.ADD)
+  core.fillStyle(0xffffff, 1)
+  core.fillPoints(
+    crossChopBeamOutline(halfLength * 0.9, halfWidth * 0.35),
+    true
+  )
+  const offset = growsFromTip ? halfLength : 0
+  body.x = offset
+  core.x = offset
+  const beam = scene.add
+    .container(
+      x - Math.cos(rotation) * offset,
+      y - Math.sin(rotation) * offset,
+      [body, core]
+    )
+    .setRotation(rotation)
+    .setDepth(DEPTH.ABILITY)
+  scene.abilitiesVfxGroup?.add(beam)
+  return beam
+}
+
+function addCrossChopBolt(
+  scene: AbilityAnimationArgs["scene"],
+  x: number,
+  y: number,
+  rotation: number,
+  halfLength: number
+) {
+  const bolt = scene.add
+    .graphics()
+    .setPosition(
+      x - Math.cos(rotation) * halfLength,
+      y - Math.sin(rotation) * halfLength
+    )
+    .setRotation(rotation)
+    .setDepth(DEPTH.ABILITY)
+    .setBlendMode(Phaser.BlendModes.ADD)
+  const segments = 9
+  const points: Phaser.Math.Vector2[] = []
+  for (let index = 0; index <= segments; index++) {
+    const along = (index / segments) * halfLength * 2
+    const isEnd = index === 0 || index === segments
+    const jitter = isEnd ? 0 : index % 2 === 0 ? -3 : 3
+    points.push(new Phaser.Math.Vector2(along, jitter))
+  }
+  bolt.lineStyle(3, 0xffffff, 1)
+  bolt.strokePoints(points)
+  scene.abilitiesVfxGroup?.add(bolt)
+  return bolt
+}
+
+function fadeOutCrossChopPart(
+  scene: AbilityAnimationArgs["scene"],
+  part: Phaser.GameObjects.GameObject,
+  delay: number,
+  duration: number
+) {
+  scene.tweens.add({
+    targets: part,
+    alpha: 0,
+    delay,
+    duration,
+    onComplete: () => part.destroy()
+  })
+}
+
+function playCrossChopFocus(
+  scene: AbilityAnimationArgs["scene"],
+  casterX: number,
+  casterY: number
+) {
+  for (let index = 0; index < CROSS_CHOP_WIND_STREAKS; index++) {
+    const angle = (index / CROSS_CHOP_WIND_STREAKS) * Math.PI * 2 + 0.3
+    const streak = scene.add
+      .rectangle(
+        casterX + Math.cos(angle) * 42,
+        casterY + Math.sin(angle) * 42,
+        16,
+        2,
+        0xffffff
+      )
+      .setRotation(angle)
+      .setDepth(DEPTH.ABILITY)
+      .setAlpha(0)
+    scene.abilitiesVfxGroup?.add(streak)
+    scene.tweens.add({
+      targets: streak,
+      x: casterX + Math.cos(angle) * 12,
+      y: casterY + Math.sin(angle) * 12,
+      alpha: { from: 0.9, to: 0 },
+      delay: (index % 3) * 20,
+      duration: CROSS_CHOP_FOCUS_MS - 40,
+      ease: "Sine.easeIn",
+      onComplete: () => streak.destroy()
+    })
+  }
+  const focusRing = scene.add
+    .circle(casterX, casterY, 30)
+    .setStrokeStyle(2, 0xffffff, 0.8)
+    .setDepth(DEPTH.ABILITY)
+  scene.abilitiesVfxGroup?.add(focusRing)
+  scene.tweens.add({
+    targets: focusRing,
+    scale: 0.3,
+    alpha: 0,
+    duration: CROSS_CHOP_FOCUS_MS,
+    ease: "Sine.easeIn",
+    onComplete: () => focusRing.destroy()
+  })
+}
+
+function playCrossChopHands(
+  scene: AbilityAnimationArgs["scene"],
+  x: number,
+  y: number,
+  scale: number
+) {
+  for (const side of [-1, 1]) {
+    const hand = scene.add
+      .ellipse(x + side * 30 * scale, y - 34 * scale, 12, 26, CROSS_CHOP_HAND)
+      .setRotation(side * 0.5)
+      .setDepth(DEPTH.ABILITY)
+      .setBlendMode(Phaser.BlendModes.ADD)
+      .setAlpha(0)
+    scene.abilitiesVfxGroup?.add(hand)
+    scene.tweens.add({
+      targets: hand,
+      alpha: 1,
+      delay: CROSS_CHOP_HANDS_AT - 30,
+      duration: 90,
+      onComplete: () =>
+        scene.tweens.add({
+          targets: hand,
+          x,
+          y,
+          rotation: -side * 0.8,
+          duration: CROSS_CHOP_HANDS_MS - 50,
+          ease: "Cubic.easeIn",
+          onComplete: () => fadeOutCrossChopPart(scene, hand, 0, 110)
+        })
+    })
+  }
+}
+
+function playCrossChopFlameBurst(
+  scene: AbilityAnimationArgs["scene"],
+  x: number,
+  y: number,
+  scale: number,
+  crit: boolean
+) {
+  const burst = scene.add
+    .graphics()
+    .setPosition(x, y)
+    .setDepth(DEPTH.ABILITY)
+    .setBlendMode(Phaser.BlendModes.ADD)
+    .setScale(0.3)
+  const rayCount = crit ? CROSS_CHOP_RAYS * 2 : CROSS_CHOP_RAYS
+  for (let index = 0; index < rayCount; index++) {
+    const angle = (index / rayCount) * Math.PI * 2
+    const reach = (index % 2 === 0 ? 34 : 22) * scale
+    burst.fillStyle(CROSS_CHOP_FLAME_GLOW, 0.9)
+    burst.fillTriangle(
+      Math.cos(angle - 0.12) * 6,
+      Math.sin(angle - 0.12) * 6,
+      Math.cos(angle) * reach,
+      Math.sin(angle) * reach,
+      Math.cos(angle + 0.12) * 6,
+      Math.sin(angle + 0.12) * 6
+    )
+  }
+  burst.fillStyle(CROSS_CHOP_FLAME_EDGE, 0.6)
+  burst.fillCircle(0, 0, 14 * scale)
+  burst.fillStyle(0xffffff, 1)
+  burst.fillCircle(0, 0, 8 * scale)
+  scene.abilitiesVfxGroup?.add(burst)
+  scene.tweens.add({
+    targets: burst,
+    scale: crit ? 1.5 : 1.15,
+    alpha: { from: 1, to: 0 },
+    duration: crit ? 290 : 220,
+    ease: "Cubic.easeOut",
+    onComplete: () => burst.destroy()
+  })
+
+  const streakCount = crit
+    ? CROSS_CHOP_SPEED_STREAKS * 1.5
+    : CROSS_CHOP_SPEED_STREAKS
+  for (let index = 0; index < streakCount; index++) {
+    const angle = (index / streakCount) * Math.PI * 2 + Math.random() * 0.2
+    const streak = scene.add
+      .rectangle(
+        x + Math.cos(angle) * 12,
+        y + Math.sin(angle) * 12,
+        (18 + Math.random() * 14) * scale,
+        2,
+        index % 3 === 0 ? 0xffffff : CROSS_CHOP_FLAME_GLOW
+      )
+      .setRotation(angle)
+      .setDepth(DEPTH.ABILITY)
+      .setBlendMode(Phaser.BlendModes.ADD)
+    scene.abilitiesVfxGroup?.add(streak)
+    const reach = (70 + Math.random() * 30) * scale
+    scene.tweens.add({
+      targets: streak,
+      x: x + Math.cos(angle) * reach,
+      y: y + Math.sin(angle) * reach,
+      alpha: { from: 1, to: 0 },
+      duration: 170 + Math.random() * 70,
+      ease: "Quad.easeOut",
+      onComplete: () => streak.destroy()
+    })
+  }
+
+  const emberCount = crit ? CROSS_CHOP_EMBERS * 2 : CROSS_CHOP_EMBERS
+  for (let index = 0; index < emberCount; index++) {
+    const angle = Math.random() * Math.PI * 2
+    const distance = (26 + Math.random() * 26) * scale
+    const ember = scene.add
+      .ellipse(x, y, 7, 4, CROSS_CHOP_FLAME_EDGE)
+      .setRotation(angle)
+      .setDepth(DEPTH.ABILITY)
+      .setBlendMode(Phaser.BlendModes.ADD)
+    scene.abilitiesVfxGroup?.add(ember)
+    scene.tweens.add({
+      targets: ember,
+      x: x + Math.cos(angle) * distance,
+      y: y + Math.sin(angle) * distance,
+      alpha: { from: 1, to: 0 },
+      scaleX: { from: 1.4, to: 0.4 },
+      duration: 240 + Math.random() * 100,
+      ease: "Quad.easeOut",
+      onComplete: () => ember.destroy()
+    })
+  }
+}
+
+function playCrossChopEnergyBall(
+  scene: AbilityAnimationArgs["scene"],
+  x: number,
+  y: number,
+  scale: number,
+  crit: boolean
+) {
+  const ball = scene.add
+    .graphics()
+    .setPosition(x, y)
+    .setDepth(DEPTH.ABILITY)
+    .setBlendMode(Phaser.BlendModes.ADD)
+    .setScale(0.2)
+    .setAlpha(0)
+  scene.tweens.add({
+    targets: ball,
+    alpha: 1,
+    duration: 140,
+    ease: "Sine.easeOut"
+  })
+  ball.fillStyle(CROSS_CHOP_FLAME_EDGE, 0.45)
+  ball.fillCircle(0, 0, 20 * scale)
+  ball.fillStyle(CROSS_CHOP_FLAME_GLOW, 0.8)
+  ball.fillCircle(0, 0, 14 * scale)
+  ball.fillStyle(0xffffff, 1)
+  ball.fillCircle(0, 0, 8 * scale)
+  scene.abilitiesVfxGroup?.add(ball)
+  scene.tweens.add({
+    targets: ball,
+    scale: 1,
+    duration: CROSS_CHOP_FINISH_AT - CROSS_CHOP_STRIKE_AT,
+    ease: "Back.easeOut",
+    onComplete: () =>
+      scene.tweens.add({
+        targets: ball,
+        scale: crit ? 2 : 1.7,
+        alpha: 0,
+        duration: crit ? 260 : 220,
+        ease: "Sine.easeOut",
+        onComplete: () => ball.destroy()
+      })
+  })
+}
+
+function crossChopAnimation(args: AbilityAnimationArgs, crit: boolean) {
+  const { scene, flip } = args
+  const [casterX, casterY] = transformEntityCoordinates(
+    args.positionX,
+    args.positionY,
+    flip
+  )
+  const [x, y] = transformEntityCoordinates(args.targetX, args.targetY, flip)
+  const centerY = y - 12
+  const scale = crit ? 1.35 : 1
+  const halfLength = CROSS_CHOP_BEAM_LENGTH * scale
+  const halfWidth = (CROSS_CHOP_BEAM_WIDTH * scale) / 2
+
+  playCrossChopFocus(scene, casterX, casterY - 12)
+  playCrossChopHands(scene, x, centerY, scale)
+
+  scene.time.delayedCall(CROSS_CHOP_STRIKE_AT, () => {
+    const untilHarden = CROSS_CHOP_HARDEN_AT - CROSS_CHOP_STRIKE_AT
+    playCrossChopEnergyBall(scene, x, centerY, scale, crit)
+    CROSS_CHOP_SLASH_ANGLES.forEach((rotation, slash) => {
+      const thunder = addCrossChopBeam(
+        scene,
+        x,
+        centerY,
+        rotation,
+        halfLength,
+        halfWidth,
+        CROSS_CHOP_THUNDER_CENTER,
+        CROSS_CHOP_BEAM_TIP,
+        true
+      )
+        .setScale(0, 1)
+        .setAlpha(0)
+      const bolt = addCrossChopBolt(
+        scene,
+        x,
+        centerY,
+        rotation,
+        halfLength
+      )
+        .setScale(0, 1)
+        .setAlpha(0)
+      scene.tweens.add({
+        targets: [thunder, bolt],
+        scaleX: 1,
+        delay: slash * CROSS_CHOP_SECOND_SLASH_DELAY,
+        duration: CROSS_CHOP_SLASH_MS,
+        ease: "Quad.easeOut"
+      })
+      scene.tweens.add({
+        targets: [thunder, bolt],
+        alpha: 1,
+        delay: slash * CROSS_CHOP_SECOND_SLASH_DELAY,
+        duration: CROSS_CHOP_SLASH_MS + 40,
+        ease: "Sine.easeOut"
+      })
+      fadeOutCrossChopPart(scene, thunder, untilHarden, 190)
+      fadeOutCrossChopPart(scene, bolt, untilHarden - 25, 150)
+    })
+  })
+
+  scene.time.delayedCall(CROSS_CHOP_HARDEN_AT, () => {
+    for (const rotation of CROSS_CHOP_DIAGONALS) {
+      const flame = addCrossChopBeam(
+        scene,
+        x,
+        centerY,
+        rotation,
+        halfLength,
+        halfWidth,
+        CROSS_CHOP_FLAME_CENTER,
+        CROSS_CHOP_BEAM_TIP
+      ).setAlpha(0)
+      scene.tweens.add({
+        targets: flame,
+        alpha: 1,
+        duration: 160,
+        ease: "Sine.easeInOut"
+      })
+      const burstDelay = CROSS_CHOP_FINISH_AT - CROSS_CHOP_HARDEN_AT
+      const burstDuration = crit ? 300 : 250
+      scene.tweens.add({
+        targets: flame,
+        scaleX: crit ? 1.15 : 1.1,
+        duration: burstDelay + burstDuration,
+        ease: "Sine.easeOut"
+      })
+      scene.tweens.add({
+        targets: flame,
+        scaleY: 0,
+        alpha: 0,
+        delay: burstDelay,
+        duration: burstDuration,
+        ease: "Sine.easeIn",
+        onComplete: () => flame.destroy()
+      })
+    }
+    playCrossChopFlameBurst(scene, x, centerY, scale, crit)
+  })
+}
+
 function lightOfRuinAnimation(args: AbilityAnimationArgs) {
   const { scene, flip } = args
   const [casterX, casterY] = transformEntityCoordinates(
@@ -5403,6 +5860,8 @@ export const AbilitiesAnimations: {
     }
   ],
   [Ability.LIGHT_OF_RUIN]: lightOfRuinAnimation,
+  [Ability.CROSS_CHOP]: (args) => crossChopAnimation(args, false),
+  [CROSS_CHOP_CRIT_ANIMATION]: (args) => crossChopAnimation(args, true),
 
   [Ability.DIAMOND_STORM]: onCasterScale2,
   [Ability.THRASH]: onCasterScale2,

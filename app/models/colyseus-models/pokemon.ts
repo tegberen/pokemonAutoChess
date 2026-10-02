@@ -4460,7 +4460,7 @@ export class Machop extends Pokemon {
   speDef = 6
   maxPP = 100
   range = 1
-  skill = Ability.GUILLOTINE
+  skill = Ability.CROSS_CHOP
 }
 
 export class Machoke extends Pokemon {
@@ -4475,7 +4475,7 @@ export class Machoke extends Pokemon {
   speDef = 8
   maxPP = 100
   range = 1
-  skill = Ability.GUILLOTINE
+  skill = Ability.CROSS_CHOP
 }
 
 export class Machamp extends Pokemon {
@@ -4489,7 +4489,7 @@ export class Machamp extends Pokemon {
   speDef = 10
   maxPP = 100
   range = 1
-  skill = Ability.GUILLOTINE
+  skill = Ability.CROSS_CHOP
 }
 
 export class Piplup extends Pokemon {

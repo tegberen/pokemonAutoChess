@@ -586,6 +586,7 @@ export class FightingKnockbackEffect extends OnDamageReceivedEffect {
       const destination = throwAway(pokemon, targetAtContact, board)
       if (destination) {
         pokemon.count.fightingThrowCharge = 0
+        pokemon.fightingThrowCount++
         targetAtContact.status.triggerParalysis(
           FIGHTING_THROW_PARALYSIS_DURATION,
           targetAtContact,
