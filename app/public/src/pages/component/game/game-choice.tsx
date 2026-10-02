@@ -60,13 +60,13 @@ function isPokemonChoice(choice: PlayerChoice): boolean {
   return choice.pokemons.length > 0
 }
 
-type WishCardSeason = "halloween"
+type WishCardSeason = "halloween" | "christmas"
 
-// ?wishSeason=halloween previews a season outside its month
 function getWishCardSeason(now = new Date()): WishCardSeason | null {
   const preview = new URLSearchParams(window.location.search).get("wishSeason")
-  if (preview === "halloween") return preview
+  if (preview === "halloween" || preview === "christmas") return preview
   if (now.getMonth() === 10) return "halloween"
+  if (now.getMonth() === 11) return "christmas"
   return null
 }
 
@@ -84,12 +84,12 @@ const HALLOWEEN_FENCE_PICKETS = [
 
 function HalloweenWishScene() {
   return (
-    <div className="halloween-scene" aria-hidden>
+    <div className="wish-season-scene" aria-hidden>
       <div className="halloween-sky" />
-      <div className="halloween-moon" />
-      <div className="halloween-hill halloween-hill-far" />
+      <div className="wish-season-moon" />
+      <div className="wish-season-hill halloween-hill-far" />
       <div className="halloween-gengar" />
-      <div className="halloween-hill halloween-hill-mid" />
+      <div className="wish-season-hill halloween-hill-mid" />
       <div className="halloween-fence">
         <span className="halloween-fence-rail" style={{ bottom: 16 }} />
         <span className="halloween-fence-rail" style={{ bottom: 8 }} />
@@ -108,7 +108,7 @@ function HalloweenWishScene() {
           />
         ))}
       </div>
-      <div className="halloween-hill halloween-hill-front" />
+      <div className="wish-season-hill halloween-hill-front" />
       <div className="halloween-tree" />
       <div className="halloween-bat halloween-bat-near" />
       <div className="halloween-bat halloween-bat-far" />
@@ -120,6 +120,132 @@ function HalloweenWishScene() {
         style={{ left: "58%", bottom: 90 }}
       />
       <div className="halloween-firefly" style={{ left: "18%", bottom: 96 }} />
+    </div>
+  )
+}
+
+const CHRISTMAS_FAR_PINES = [
+  { left: "38%", bottom: 63, width: 12, height: 20 },
+  { left: "43%", bottom: 62, width: 9, height: 14 },
+  { left: "60%", bottom: 58, width: 10, height: 17 },
+  { left: "86%", bottom: 64, width: 13, height: 22 },
+  { left: "91%", bottom: 64, width: 9, height: 15 }
+]
+
+const CHRISTMAS_CHIMNEY_SMOKE = [
+  { left: 30, bottom: 42, size: 7, opacity: 0.6 },
+  { left: 35, bottom: 50, size: 9, opacity: 0.4 },
+  { left: 43, bottom: 59, size: 11, opacity: 0.22 }
+]
+
+const CHRISTMAS_FENCE_POSTS = [
+  { left: "0%", bottom: 6 },
+  { left: "31.8%", bottom: 5 },
+  { left: "63.6%", bottom: 3 },
+  { left: "95.5%", bottom: 0 }
+]
+
+const CHRISTMAS_FENCE_BULBS = [
+  { left: "13.6%", bottom: 14, color: "#e5354d" },
+  { left: "47.7%", bottom: 13, color: "#f3c74a" },
+  { left: "79.5%", bottom: 11, color: "#4fb06a" }
+]
+
+const CHRISTMAS_PINE_SNOW = [
+  { right: 8, bottom: 46, width: 20, height: 4 },
+  { right: 4, bottom: 31, width: 28, height: 5 },
+  { right: 1, bottom: 14, width: 34, height: 5 }
+]
+
+const CHRISTMAS_ORNAMENTS = [
+  { right: 14, bottom: 51, color: "#e5354d" },
+  { right: 25, bottom: 36, color: "#5aa0e6" },
+  { right: 7, bottom: 22, color: "#f3c74a" },
+  { right: 28, bottom: 19, color: "#e5354d" }
+]
+
+function ChristmasWishScene() {
+  return (
+    <div className="wish-season-scene" aria-hidden>
+      <div className="christmas-sky" />
+      <div className="christmas-crescent-moon" />
+      <div className="wish-season-hill christmas-mountains" />
+      <div className="wish-season-hill christmas-mountains-shade" />
+      <div className="wish-season-hill christmas-mountains-snow" />
+      <div className="wish-season-hill christmas-mist" />
+      <div className="christmas-village-lights" />
+      {CHRISTMAS_FAR_PINES.map((pine) => (
+        <div key={pine.left} className="christmas-far-pine" style={pine} />
+      ))}
+      <div className="wish-season-hill christmas-hill-mid" />
+      <div className="wish-season-hill christmas-hill-mid-lit" />
+      <div className="christmas-cabin">
+        {CHRISTMAS_CHIMNEY_SMOKE.map((puff) => (
+          <span
+            key={puff.left}
+            className="christmas-smoke"
+            style={{
+              left: puff.left,
+              bottom: puff.bottom,
+              width: puff.size,
+              height: puff.size,
+              opacity: puff.opacity
+            }}
+          />
+        ))}
+        <span className="christmas-cabin-chimney" />
+        <span className="christmas-cabin-eaves" />
+        <span className="christmas-cabin-roof" />
+        <span className="christmas-cabin-window" />
+        <span className="christmas-cabin-door" />
+      </div>
+      <div className="christmas-fence">
+        <span className="christmas-fence-rail" style={{ bottom: 16 }} />
+        <span className="christmas-fence-rail" style={{ bottom: 10 }} />
+        {CHRISTMAS_FENCE_POSTS.map((post) => (
+          <span
+            key={post.left}
+            className="christmas-fence-post"
+            style={post}
+          />
+        ))}
+        {CHRISTMAS_FENCE_BULBS.map((bulb) => (
+          <span
+            key={bulb.left}
+            className="christmas-fence-bulb"
+            style={{
+              left: bulb.left,
+              bottom: bulb.bottom,
+              background: bulb.color
+            }}
+          />
+        ))}
+      </div>
+      <div className="wish-season-hill christmas-hill-front" />
+      <div className="wish-season-hill christmas-hill-front-shade" />
+      <div className="christmas-pine">
+        <span className="christmas-pine-tree" />
+        {CHRISTMAS_PINE_SNOW.map((snow) => (
+          <span
+            key={snow.bottom}
+            className="christmas-pine-snow"
+            style={snow}
+          />
+        ))}
+        <span className="christmas-pine-star" />
+        {CHRISTMAS_ORNAMENTS.map((ornament) => (
+          <span
+            key={ornament.bottom}
+            className="christmas-ornament"
+            style={{
+              right: ornament.right,
+              bottom: ornament.bottom,
+              background: ornament.color
+            }}
+          />
+        ))}
+      </div>
+      <div className="christmas-snowfall" />
     </div>
   )
 }
@@ -390,6 +516,7 @@ export default function GameChoice() {
                 }}
               >
                 {wishCardSeason === "halloween" && <HalloweenWishScene />}
+                {wishCardSeason === "christmas" && <ChristmasWishScene />}
                 <div
                   className={cc("blessing-body", {
                     "blessing-body-flip": wasRerolled

@@ -514,25 +514,25 @@
   cursor: not-allowed;
 }
 
-/* the tier stripes frame the scene, the moon and icon ring take its colour */
-.wish-season-halloween .blessing-tier-silver {
-  --halloween-moon: color-mix(in srgb, var(--color-fg-secondary) 70%, #fff);
+.blessing-tier-silver {
+  --wish-season-moon: color-mix(in srgb, var(--color-fg-secondary) 70%, #fff);
 }
 
-.wish-season-halloween .blessing-tier-gold {
-  --halloween-moon: color-mix(in srgb, var(--color-fg-gold) 45%, #9a917f);
+.blessing-tier-gold {
+  --wish-season-moon: color-mix(in srgb, var(--color-fg-gold) 45%, #9a917f);
 }
 
-.wish-season-halloween .blessing-tier-prismatic {
-  --halloween-moon: #d6c2f0;
+.blessing-tier-prismatic {
+  --wish-season-moon: #d6c2f0;
 }
 
-.halloween-scene {
+.wish-season-scene {
   position: absolute;
   inset: 6px;
   overflow: hidden;
   border-radius: 8px;
   pointer-events: none;
+  will-change: transform;
 }
 
 .halloween-sky {
@@ -561,42 +561,42 @@
     #2a1f4c;
 }
 
-.halloween-scene > * {
+.wish-season-scene > * {
   position: absolute;
 }
 
-.halloween-moon {
+.wish-season-moon {
   top: -32px;
   left: -32px;
   width: 116px;
   height: 116px;
   border-radius: 50%;
-  --halloween-crater: color-mix(in srgb, var(--halloween-moon) 88%, #000);
+  --wish-season-crater: color-mix(in srgb, var(--wish-season-moon) 88%, #000);
   background:
     radial-gradient(
       circle at 62% 64%,
-      var(--halloween-crater) 0 9px,
+      var(--wish-season-crater) 0 9px,
       transparent 10px
     ),
     radial-gradient(
       circle at 44% 76%,
-      var(--halloween-crater) 0 5px,
+      var(--wish-season-crater) 0 5px,
       transparent 6px
     ),
     radial-gradient(
       circle at 76% 44%,
-      var(--halloween-crater) 0 6px,
+      var(--wish-season-crater) 0 6px,
       transparent 7px
     ),
     radial-gradient(
       ellipse 18px 12px at 54% 50%,
-      color-mix(in srgb, var(--halloween-moon) 94%, #000) 0 100%,
+      color-mix(in srgb, var(--wish-season-moon) 94%, #000) 0 100%,
       transparent 100%
     ),
-    var(--halloween-moon);
+    var(--wish-season-moon);
 }
 
-.halloween-hill {
+.wish-season-hill {
   left: 0;
   right: 0;
   bottom: 0;
@@ -784,23 +784,439 @@
   opacity: 0.6;
 }
 
-.wish-season-halloween .blessing-icon {
+.christmas-sky {
+  inset: 0;
+  background:
+    radial-gradient(circle, rgb(255 255 255 / 85%) 0 1.6px, transparent 2.2px)
+      46% 18px / 6px 6px no-repeat,
+    radial-gradient(circle, rgb(255 255 255 / 55%) 0 1.2px, transparent 1.8px)
+      61% 46px / 6px 6px no-repeat,
+    radial-gradient(circle, rgb(255 255 255 / 80%) 0 2px, transparent 2.6px)
+      77% 14px / 6px 6px no-repeat,
+    radial-gradient(circle, rgb(255 255 255 / 45%) 0 1px, transparent 1.6px)
+      88% 52px / 6px 6px no-repeat,
+    radial-gradient(circle, rgb(255 255 255 / 70%) 0 1.4px, transparent 2px)
+      96% 30px / 6px 6px no-repeat,
+    radial-gradient(circle, rgb(255 255 255 / 60%) 0 1.6px, transparent 2.2px)
+      68% 88px / 6px 6px no-repeat,
+    radial-gradient(circle, rgb(255 255 255 / 40%) 0 1px, transparent 1.6px)
+      52% 112px / 6px 6px no-repeat,
+    radial-gradient(circle, rgb(255 255 255 / 75%) 0 1.8px, transparent 2.4px)
+      36% 70px / 6px 6px no-repeat,
+    radial-gradient(circle, rgb(255 255 255 / 50%) 0 1.2px, transparent 1.8px)
+      9% 126px / 6px 6px no-repeat,
+    radial-gradient(circle, rgb(255 255 255 / 65%) 0 1.6px, transparent 2.2px)
+      24% 150px / 6px 6px no-repeat,
+    radial-gradient(circle, rgb(255 255 255 / 55%) 0 1.2px, transparent 1.8px)
+      84% 120px / 6px 6px no-repeat,
+    radial-gradient(circle, rgb(255 255 255 / 45%) 0 1px, transparent 1.6px)
+      4% 96px / 6px 6px no-repeat,
+    #1c2b52;
+}
+
+.christmas-crescent-moon {
+  top: 14px;
+  left: 14px;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  mask-image: radial-gradient(
+    circle 19px at 31px 17px,
+    transparent 98%,
+    #000 100%
+  );
+  box-shadow: inset 4px -3px 0
+    color-mix(in srgb, var(--wish-season-moon) 78%, #000);
+  background:
+    radial-gradient(
+      circle at 31px 17px,
+      transparent 19px,
+      color-mix(in srgb, var(--wish-season-moon) 70%, #fff) 19px 22px,
+      transparent 22px
+    ),
+    radial-gradient(
+      circle at 20% 58%,
+      color-mix(in srgb, var(--wish-season-moon) 88%, #000) 0 3px,
+      transparent 4px
+    ),
+    radial-gradient(
+      circle at 42% 84%,
+      color-mix(in srgb, var(--wish-season-moon) 88%, #000) 0 2.5px,
+      transparent 3.5px
+    ),
+    radial-gradient(
+      circle at 74% 80%,
+      color-mix(in srgb, var(--wish-season-moon) 88%, #000) 0 1.5px,
+      transparent 2.5px
+    ),
+    var(--wish-season-moon);
+}
+
+.christmas-snowfall {
+  inset: 0;
+  background:
+    radial-gradient(circle, rgb(255 255 255 / 90%) 0 2.2px, transparent 2.8px)
+      14% 62% / 8px 8px no-repeat,
+    radial-gradient(circle, rgb(255 255 255 / 60%) 0 1.8px, transparent 2.4px)
+      58% 74% / 8px 8px no-repeat,
+    radial-gradient(circle, rgb(255 255 255 / 75%) 0 2.2px, transparent 2.8px)
+      92% 48% / 8px 8px no-repeat,
+    radial-gradient(circle, rgb(255 255 255 / 55%) 0 1.6px, transparent 2.2px)
+      34% 86% / 8px 8px no-repeat,
+    radial-gradient(circle, rgb(255 255 255 / 70%) 0 2px, transparent 2.6px)
+      76% 92% / 8px 8px no-repeat,
+    radial-gradient(circle, rgb(255 255 255 / 50%) 0 1.6px, transparent 2.2px)
+      4% 82% / 8px 8px no-repeat;
+}
+
+.christmas-mountains,
+.christmas-mountains-shade,
+.christmas-mountains-snow {
+  height: 112px;
+}
+
+.christmas-mountains {
+  background: #34477c;
+  clip-path: polygon(
+    0 60%, 12% 42%, 22% 52%, 34% 24%, 46% 46%, 56% 36%, 66% 50%, 78% 20%,
+    90% 40%, 100% 32%, 100% 100%, 0 100%
+  );
+}
+
+.christmas-mountains-shade {
+  background: #283a6a;
+  clip-path: polygon(
+    12% 42%, 22% 52%, 17% 100%, 34% 100%, 34% 24%, 46% 46%, 40% 100%,
+    56% 100%, 56% 36%, 66% 50%, 62% 100%, 78% 100%, 78% 20%, 90% 40%,
+    85% 100%, 17% 100%
+  );
+}
+
+.christmas-mountains-snow {
+  background: #7f91bf;
+  clip-path: polygon(
+    9.5% 45.5%, 12% 42%, 15.5% 47%, 14% 46.5%, 12.5% 48%, 11% 46.8%,
+    31% 28.5%, 34% 24%, 39.5% 33.5%, 37.5% 32.6%, 35.5% 34.6%, 33.5% 33%,
+    31.5% 34%, 30% 32.5%, 54.5% 38.2%, 56% 36%, 59% 40.5%, 57.5% 40.2%,
+    55.5% 41%, 53.5% 40%, 75% 25%, 78% 20%, 83% 28.4%, 81% 27.6%, 79% 29.8%,
+    77% 28%, 75% 29.4%, 73.5% 28%
+  );
+}
+
+.christmas-mist {
+  height: 72px;
+  background: #6a7db3;
+  opacity: 0.5;
+  mask-image: linear-gradient(to top, #000 35%, transparent);
+}
+
+.christmas-village-lights {
+  left: 0;
+  right: 0;
+  bottom: 57px;
+  height: 6px;
+  opacity: 0.6;
+  background: radial-gradient(circle, #f3c74a 0 1px, transparent 1.5px) 0 0 /
+    37px 6px;
+}
+
+.christmas-far-pine {
+  background: #22345f;
+  clip-path: polygon(
+    50% 0, 58% 18%, 55% 18%, 68% 42%, 63% 42%, 80% 70%, 73% 70%, 96% 100%,
+    4% 100%, 27% 70%, 20% 70%, 37% 42%, 32% 42%, 45% 18%, 42% 18%
+  );
+}
+
+.christmas-hill-mid,
+.christmas-hill-mid-lit {
+  height: 70px;
+  clip-path: polygon(
+    0 30%, 8% 27%, 16% 26%, 24% 27.5%, 32% 31%, 40% 35.5%, 48% 40%,
+    56% 43.5%, 64% 45.5%, 72% 46.5%, 80% 46%, 88% 44.5%, 100% 42%,
+    100% 100%, 0 100%
+  );
+}
+
+.christmas-hill-mid {
+  background: #5d72a8;
+}
+
+.christmas-hill-mid-lit {
+  background: #7488bf;
+  mask-image: linear-gradient(to bottom, #000 26%, transparent 52%);
+}
+
+.christmas-cabin {
+  left: 8%;
+  bottom: 48px;
+  width: 42px;
+  height: 23px;
+  background:
+    repeating-linear-gradient(
+      to bottom,
+      transparent 0 5px,
+      rgb(0 0 0 / 22%) 5px 6px
+    ),
+    #3d2b40;
+  box-shadow: inset -10px 0 0 #2e2033;
+}
+
+.christmas-cabin > * {
+  position: absolute;
+}
+
+.christmas-cabin::after {
+  content: "";
+  position: absolute;
+  left: -5px;
+  right: -5px;
+  bottom: -2px;
+  height: 5px;
+  border-radius: 50% 50% 0 0;
+  background: #93a6d6;
+}
+
+.christmas-cabin-chimney {
+  left: 30px;
+  bottom: 28px;
+  width: 6px;
+  height: 14px;
+  background: #3d2b40;
+  box-shadow: inset -2px 0 0 #2e2033;
+}
+
+.christmas-cabin-chimney::before {
+  content: "";
+  position: absolute;
+  left: -1px;
+  top: -3px;
+  width: 8px;
+  height: 4px;
+  border-radius: 50% 50% 1px 1px;
+  background: #e8eefb;
+}
+
+.christmas-cabin-eaves {
+  left: -6px;
+  bottom: 20px;
+  width: 54px;
+  height: 17px;
+  background: #4a3236;
+  clip-path: polygon(50% 0, 100% 86%, 100% 100%, 0 100%, 0 86%);
+}
+
+.christmas-cabin-roof {
+  left: -5px;
+  bottom: 21px;
+  width: 52px;
+  height: 15px;
+  background: #e8eefb;
+  clip-path: polygon(
+    50% 0, 100% 80%, 98% 88%, 93% 84%, 89% 96%, 85% 86%, 70% 88%, 65% 98%,
+    60% 88%, 42% 88%, 36% 100%, 31% 88%, 15% 86%, 11% 96%, 7% 84%, 2% 88%,
+    0 80%
+  );
+}
+
+.christmas-cabin-roof::after {
+  content: "";
+  position: absolute;
+  inset: 0 0 0 50%;
+  background: #c3cfe9;
+}
+
+.christmas-cabin-window {
+  left: 6px;
+  bottom: 7px;
+  width: 9px;
+  height: 8px;
+  background:
+    linear-gradient(#3d2b40, #3d2b40) center / 1px 100% no-repeat,
+    linear-gradient(#3d2b40, #3d2b40) center / 100% 1px no-repeat,
+    #f3c74a;
+  box-shadow: 0 0 0 1px #2a1d2e;
+}
+
+.christmas-cabin-window::after {
+  content: "";
+  position: absolute;
+  left: -2px;
+  right: -2px;
+  bottom: -3px;
+  height: 2px;
+  border-radius: 1px;
+  background: #e8eefb;
+}
+
+.christmas-cabin-door {
+  left: 24px;
+  bottom: 0;
+  width: 8px;
+  height: 13px;
+  border-radius: 3px 3px 0 0;
+  background:
+    radial-gradient(circle at 75% 55%, #f3c74a 0 1px, transparent 1.4px),
+    #5a3826;
+  box-shadow: inset -2px 0 0 #47291c;
+}
+
+.christmas-smoke {
+  border-radius: 50%;
+  background: #8a97c0;
+}
+
+.christmas-fence {
+  left: 25%;
+  bottom: 41px;
+  width: 22%;
+  height: 20px;
+}
+
+.christmas-fence > * {
+  position: absolute;
+}
+
+.christmas-fence-rail {
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: #4a3236;
+}
+
+.christmas-fence-post {
+  width: 3px;
+  height: 15px;
+  background: #4a3236;
+}
+
+.christmas-fence-post::before {
+  content: "";
+  position: absolute;
+  left: -1px;
+  top: -3px;
+  width: 5px;
+  height: 4px;
+  border-radius: 50% 50% 1px 1px;
+  background: #e8eefb;
+}
+
+.christmas-fence-bulb {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+}
+
+.christmas-hill-front,
+.christmas-hill-front-shade {
+  height: 60px;
+  clip-path: polygon(
+    0 82%, 7.1% 79.6%, 14.3% 76.4%, 21.4% 72.7%, 28.6% 68.6%, 35.7% 64.3%,
+    42.9% 59.8%, 50% 55.1%, 57.1% 50.2%, 64.3% 45.2%, 71.4% 40%,
+    78.6% 34.7%, 85.7% 29.2%, 92.9% 23.7%, 100% 18%, 100% 100%, 0 100%
+  );
+}
+
+.christmas-hill-front {
+  background: #b4c3e4;
+}
+
+.christmas-hill-front-shade {
+  background: #8b9dcb;
+  mask-image: linear-gradient(to top, #000, transparent 55%);
+}
+
+.christmas-pine {
+  right: 14px;
+  bottom: 36px;
+  width: 36px;
+  height: 64px;
+}
+
+.christmas-pine > * {
+  position: absolute;
+}
+
+.christmas-pine-tree {
+  inset: 0;
+  background: #12352f;
+  clip-path: polygon(
+    50% 0, 58% 14%, 62% 22%, 56% 21%, 66% 34%, 74% 44%, 66% 43%, 78% 58%,
+    88% 68%, 78% 67%, 90% 80%, 100% 90%, 56% 90%, 56% 100%, 44% 100%,
+    44% 90%, 0 90%, 10% 80%, 22% 67%, 12% 68%, 22% 58%, 34% 43%, 26% 44%,
+    34% 34%, 44% 21%, 38% 22%, 42% 14%
+  );
+}
+
+.christmas-pine-tree::before {
+  content: "";
+  position: absolute;
+  inset: 0 50% 0 0;
+  background: #1b4a3f;
+}
+
+.christmas-pine-snow {
+  background: #e8eefb;
+  border-radius: 50% 50% 40% 40% / 100% 100% 40% 40%;
+}
+
+.christmas-pine-star {
+  right: 13px;
+  bottom: 62px;
+  width: 10px;
+  height: 10px;
+  background: #f3c74a;
+  clip-path: polygon(
+    50% 0, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%,
+    2% 35%, 39% 35%
+  );
+}
+
+.christmas-ornament {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  box-shadow: inset -1px -1px 0 rgb(0 0 0 / 25%);
+}
+
+.wish-season-halloween {
+  --wish-season-ink: #0a0614;
+  --wish-season-plate: #1f1638;
+}
+
+.wish-season-christmas {
+  --wish-season-ink: #0d1530;
+  --wish-season-plate: #1c2a4d;
+}
+
+:is(.wish-season-halloween, .wish-season-christmas) .blessing-icon {
   padding: 0.45rem;
   border: 3px solid var(--blessing-glow-hue);
   border-radius: 50%;
-  background-color: #1f1638;
+  background-color: var(--wish-season-plate);
 }
 
-/* letter shadows instead of a panel, which broke up the scene */
-.wish-season-halloween .blessing-body {
+:is(.wish-season-halloween, .wish-season-christmas) .blessing-body {
   background-color: transparent;
   text-shadow:
-    0 1px 0 #0a0614,
-    0 0 3px #0a0614,
-    0 0 6px #0a0614;
+    0 1px 0 var(--wish-season-ink),
+    0 0 3px var(--wish-season-ink),
+    0 0 6px var(--wish-season-ink);
 }
 
-.wish-season-halloween .blessing-body > p,
-.wish-season-halloween .blessing-body .blessing-grant {
+.wish-season-christmas .game-choice-blessing-slot > .my-box {
+  padding-bottom: 84px;
+}
+
+.wish-season-christmas .blessing-body {
+  text-shadow:
+    0 1px 0 var(--wish-season-ink),
+    0 0 3px var(--wish-season-ink),
+    0 0 6px var(--wish-season-ink),
+    0 0 10px var(--wish-season-ink);
+}
+
+:is(.wish-season-halloween, .wish-season-christmas) .blessing-body > p,
+:is(.wish-season-halloween, .wish-season-christmas) .blessing-grant {
   opacity: 1;
 }
