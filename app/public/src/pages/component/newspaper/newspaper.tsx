@@ -56,7 +56,10 @@ export default function Newspaper() {
         // how many cards there are is the endpoint's call, see
         // NEWSPAPER_VICTORIES_RETURNED
         victories.map((victory) => (
-          <VictoryCard key={victory.winners[0].playerId} victory={victory} />
+          <VictoryCard
+            key={`${victory.winners[0].playerId}-${victory.winners[0].game.time}`}
+            victory={victory}
+          />
         ))
       )}
 
