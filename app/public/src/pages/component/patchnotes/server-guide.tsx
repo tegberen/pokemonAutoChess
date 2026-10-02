@@ -196,6 +196,10 @@ export default function ServerGuide({
           const title = line.match(/^#{3,4} (.+)$/)
           if (title) {
             const heading = title[1]
+            // repeated headings share one anchor in the page
+            if (entries.some((entry) => entry.target === sectionId(heading))) {
+              continue
+            }
             entries.push({
               title: Object.values(Item).includes(heading as Item)
                 ? t(`item.${heading as Item}`)
