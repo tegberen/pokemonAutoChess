@@ -75,6 +75,7 @@ import {
   setWishAdditionalPokemons,
   setPlayerBlessings,
   setPlayerFossilUnlocks,
+  setPlayerGhostIncantations,
   setBlessingsEnabled,
   setEmotesUnlocked,
   setGameMode,
@@ -1199,6 +1200,18 @@ export default function Game() {
         $(fossilUnlocks).progress.onChange(dispatchFossilUnlocks)
         $(fossilUnlocks).pendingGuarantees.onChange(dispatchFossilUnlocks)
         $(fossilUnlocks).shopWeight.onChange(dispatchFossilUnlocks)
+      })
+
+      $state.ghostIncantationsByPlayerId.onAdd((incantations, playerId) => {
+        const dispatchGhostIncantations = () =>
+          dispatch(
+            setPlayerGhostIncantations({
+              playerId,
+              written: schemaValues(incantations.written)
+            })
+          )
+        dispatchGhostIncantations()
+        $(incantations).written.onChange(dispatchGhostIncantations)
       })
 
       $state.simulations.onRemove(() => {

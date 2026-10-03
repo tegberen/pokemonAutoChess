@@ -2554,10 +2554,10 @@
 		"MOUTAIN_RESISTANCE": "Mountain Resistance",
 		"DIAMOND_STORM": "Diamond Storm",
 		"CRYSTALLISATION": "Crystallisation",
-		"CURSE_OF_VULNERABILITY": "Curse of Vulnerability",
-		"CURSE_OF_WEAKNESS": "Curse of Weakness",
-		"CURSE_OF_TORMENT": "Curse of Torment",
-		"CURSE_OF_FATE": "Curse of Fate",
+		"CURSE_OF_VULNERABILITY": "Hex",
+		"CURSE_OF_WEAKNESS": "Ominous Wind",
+		"CURSE_OF_TORMENT": "Bitter Malice",
+		"CURSE_OF_FATE": "Never-Ending Nightmare",
 		"AROMATIC_MIST": "Aromatic Mist",
 		"FAIRY_WIND": "Fairy Wind",
 		"STRANGE_STEAM": "Strange Steam",
@@ -2698,10 +2698,10 @@
 		"CRYSTALLISE_PEAT_BLOCK": "When the user is KO'd, distribute its current DEF and SPEED equally among allies within a 2-tile radius.",
 		"CRYSTALLISE_BLOSSOM_SHARD": "After casting its ability, the user regains 5% of its max PP for each ADJACENT ally.",
 		"CRYSTALLISE_ZEN_BALL": "Each time the user throws away an enemy, deal 40% of its DEF as TRUE. On ROCK explosion, throw away all ADJACENT enemies.",
-		"CURSE_OF_VULNERABILITY": "The enemy with the highest DEF + SPE_DEF lose 5 of it and is FLINCH",
-		"CURSE_OF_WEAKNESS": "Also, the enemy with the highest ATK lose 20% of it and is PARALYSIS",
-		"CURSE_OF_TORMENT": "Also, the enemy with the highest AP lose 30 of it and is FATIGUE",
-		"CURSE_OF_FATE": "Also, the STRONGEST enemy is CURSE and will be KO after 8 seconds",
+		"CURSE_OF_VULNERABILITY": "Write your first HEXING_INCANTATION.",
+		"CURSE_OF_WEAKNESS": "Write your second HEXING_INCANTATION.",
+		"CURSE_OF_TORMENT": "Write your RITUAL_INCANTATION. Each HEXING_INCANTATION gets STRONGER.",
+		"CURSE_OF_FATE": "Write your FATED_INCANTATION, which empowers your other incantations. Both HEXING_INCANTATION and the RITUAL_INCANTATION get STRONGER.",
 		"AROMATIC_MIST": "Pick one of three wands among BLAST_WAND, HP_SWAP_WAND, SPIRIT_WAND, LONG_WAND",
 		"FAIRY_WIND": "Pick one of three wands among CONFUSE_WAND, PETRIFY_WAND, SLOW_WAND, SLUMBER_WAND",
 		"STRANGE_STEAM": "Pick one of three wands among GUIDING_WAND, SURROUND_WAND, POUNCE_WAND, TWO_EDGED_WAND",
@@ -4019,7 +4019,7 @@
 		"FAIRY": "FAIRY Pokémon use wands to deal additional SPECIAL and various effects with their attacks.{{additionalInfo}}",
 		"FAIRY_WANDS": "\nWands equipped: {{wands}}",
 		"ROCK": "ROCK Pokémon gain DEF, better resist to critical attacks, and can adapt to weather. When ROCK Pokémon are KO'd they explode, deal TRUE and ARMOR_BREAK all ADJACENT enemies",
-		"GHOST": "GHOST applies various curses on opposing Pokémon. GHOST Pokémon have a [15,LK]% chance to dodge attacks and apply SILENCE on hit when synergy active.",
+		"GHOST": "GHOST lets you write incantations that curse the enemy team. GHOST Pokémon have a [15,LK]% chance to dodge attacks and apply SILENCE for 2s ON_HIT. An enemy's negative LUCK counts as bonus LUCK for GHOST Pokémon against it.",
 		"ICE": "ICE Pokémon have [20,LK]% chance to FREEZE the enemy for 2 seconds after a hit and give SPE_DEF to your whole team.",
 		"FOSSIL": "At 30% HP, FOSSIL Pokemon awaken their primordial power, gaining SHIELD and ATK.",
 		"SOUND": "SOUND Pokémon emit a cry when they use their abilities, waking up sleeping allies and giving them bonus stats.",
@@ -4742,7 +4742,8 @@
 		"smeargle_pack_reveal": "Open the booster",
 		"free_slot_hint": "You must have one free slot on the bench, or two for Duos",
 		"blessing_refused_hint": "This wish cannot be granted right now. Choose another one",
-		"more_choices": "{{count}} more choice(s) after this one!"
+		"more_choices_one": "{{count}} more choice after this one",
+		"more_choices_other": "{{count}} more choices after this one"
 	},
 	"blessing_tier": {
 		"SILVER": "Silver Wish",
@@ -6734,6 +6735,95 @@
 		"FOSSILIZED_DRAKE": "Fossilized Drake",
 		"FOSSILIZED_FISH": "Fossilized Fish"
 	},
+	"ghost_incantations": {
+		"write": "Write",
+		"activations": "{{count}} times",
+		"activations_attacks": "{{count}} times ({{attacks}} attacks)",
+		"sentence": {
+			"HEXING": "At the start of each fight, {{cause}} {{effect}} and {{bonus}}.",
+			"RITUAL": "{{cause}}, {{effect}} and {{bonus}}.",
+			"FATED": "HEXING_INCANTATION: {{cause}}. RITUAL_INCANTATION: {{effect}}."
+		},
+		"HEXING": {
+			"title": "Write your Hexing Incantation",
+			"columns": {
+				"0": "Cause",
+				"1": "Effect",
+				"2": "Negative status"
+			},
+			"0": {
+				"HIGHEST_DEFENSES": "The enemy with the highest DEF + SPE_DEF",
+				"HIGHEST_AP": "The enemy with the highest AP",
+				"HIGHEST_ATK": "The enemy with the highest ATK",
+				"HIGHEST_SPEED": "The enemy with the highest SPEED"
+			},
+			"1": {
+				"STAT": "Loses {{value}} {{stat}}",
+				"STAT_PERCENT": "Loses {{value}}% {{stat}}",
+				"STAT_UNKNOWN": "Loses the stat it was chosen for",
+				"GOLD_ON_KO": "Grants {{value}} GOLD when KO'd",
+				"LUCK": "Loses {{value}} LUCK",
+				"MAX_PP": "Has its max PP increased by {{value}}%",
+				"MAX_HP": "Loses {{value}}% max HP"
+			},
+			"2": {
+				"FLINCH": "Is FLINCH",
+				"ARMOR_BREAK": "Is ARMOR_BREAK",
+				"FATIGUE": "Is FATIGUE",
+				"PARALYSIS": "Is PARALYSIS"
+			}
+		},
+		"RITUAL": {
+			"title": "Write your Ritual Incantation",
+			"columns": {
+				"0": "Cause",
+				"1": "Effect",
+				"2": "Bewitching"
+			},
+			"0": {
+				"GHOST_CASTS": "When a GHOST Pokémon casts its ability",
+				"GHOST_ATTACKS": "When a GHOST Pokémon attacks {{count}} times",
+				"GHOST_KOD": "When a GHOST Pokémon is KO'd",
+				"ENEMY_KOD": "When an enemy is KO'd"
+			},
+			"1": {
+				"GHOST_LUCK": "GHOST Pokémon gain {{value}} LUCK",
+				"ENEMY_LUCK_LOSS": "All enemies lose {{value}} LUCK",
+				"SILENCE": "Enemies are SILENCE",
+				"SILENCE_DAMAGED": "Enemies damaged by the ability are SILENCE for {{seconds}} seconds",
+				"SILENCE_ONE": "The target is SILENCE for {{seconds}} seconds",
+				"SILENCE_NEAREST": "The {{targets}} nearest enemies without SILENCE are SILENCE for {{seconds}} seconds",
+				"GHOST_SPEED": "GHOST Pokémon gain {{value}} SPEED",
+				"GHOST_PP": "GHOST Pokémon gain {{value}} PP",
+				"GHOST_MAX_HP": "GHOST Pokémon gain {{value}} max HP"
+			},
+			"2": {
+				"GOLD_CHANCE": "You have a [{{chance}},LK]% chance to gain {{gold}} GOLD",
+				"PERMANENT_HP": "The ally with the highest max HP gains {{value}} permanent HP",
+				"PERMANENT_AP": "The ally with the highest AP gains {{value}} permanent AP",
+				"PERMANENT_SPEED": "The ally with the highest ATK gains {{value}} permanent SPEED"
+			}
+		},
+		"FATED": {
+			"title": "Write your Fated Incantation",
+			"columns": {
+				"0": "Both HEXING_INCANTATION",
+				"1": "Your RITUAL_INCANTATION"
+			},
+			"0": {
+				"TWO_TARGETS": "Affect 2 enemies at once",
+				"DOOM": "Their target gets CURSE and is KO'd after {{seconds}}s",
+				"SPREAD_STATUS": "When a hexed enemy is KO'd, ADJACENT enemies get its negative status for {{spreadSeconds}}s",
+				"SPREAD_HEX": "When a hexed enemy is KO'd, its HEXING_INCANTATION spreads to {{targets}} new enemies"
+			},
+			"1": {
+				"ECHO": "[{{value}},LK]% chance to be repeated",
+				"DOUBLE_REWARDS": "Grants double GOLD and permanent stat gains",
+				"RESURRECT": "After activating {{value}}, give RESURRECTION to the STRONGEST ally",
+				"SPAWN_GHOST": "[{{value}},LK]% chance to put a GHOST Pokémon costing 3 GOLD or less on your bench"
+			}
+		}
+	},
 	"prismatic_quests": {
 		"title": "Prismatic Quests",
 		"subtitle": "You can only claim one reward.",
@@ -7760,7 +7850,11 @@
 		"ON_HIT": "on hit",
 		"ON_ATTACK": "on attack",
 		"SEED_BAG": "Seed Bag",
-		"STRONGEST": "strongest"
+		"STRONGEST": "strongest",
+		"STRONGER": "stronger",
+		"HEXING_INCANTATION": "Hexing Incantation",
+		"RITUAL_INCANTATION": "Ritual Incantation",
+		"FATED_INCANTATION": "Fated Incantation"
 	},
 	"technical_terms_definitions": {
 		"ADJACENT": "the 8 tiles surrounding a unit",
@@ -7773,7 +7867,11 @@
 		"ON_HIT": "On Hit effects trigger when a unit is hit by an attack or an ability. They are triggered even if target has SHIELD, but not if the target dodges or has PROTECT.",
 		"ON_ATTACK": "On Attack effects trigger when a unit makes a basic attack on another unit that is still alive, at the time the attack is supposed to hit, whether the attack actually hits or not.",
 		"SEED_BAG": "The Seed Bag stores Seeds earned from Letter deliveries. Select one active Seed to apply its effect at the start of the next fight.",
-		"STRONGEST": "Strongest is defined as, by order of priority: 1. Number of items held, 2. Unit tier, 3. Unit rarity"
+		"STRONGEST": "Strongest is defined as, by order of priority: 1. Number of items held, 2. Unit tier, 3. Unit rarity",
+		"STRONGER": "A stronger GHOST incantation moves up a Tier and uses its higher values. Each HEXING_INCANTATION gets stronger at GHOST 6 and 8, the RITUAL_INCANTATION at GHOST 8.",
+		"HEXING_INCANTATION": "Written at GHOST 2 and 4. At the start of each fight, it hexes one enemy with a malus and a status for the whole fight.",
+		"RITUAL_INCANTATION": "Written at GHOST 6. Every time its Cause happens during a fight, its Effect and Bewitching trigger.",
+		"FATED_INCANTATION": "Written at GHOST 8. Empowers your HEXING_INCANTATION and RITUAL_INCANTATION."
 	},
 	"seed_bag": {
 		"title": "Seed Bag",

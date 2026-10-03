@@ -1,0 +1,138 @@
+/* the choice overlay passes clicks through to the board */
+.game-incantation-choice {
+  pointer-events: initial;
+  color: var(--color-fg-primary);
+}
+
+.game-incantation-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+}
+
+.game-incantation-kind-icon {
+  width: 26px;
+  height: 26px;
+}
+
+.game-incantation-pending {
+  color: var(--color-fg-secondary);
+  font-size: 0.85em;
+}
+
+.game-incantation-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25em;
+  padding: 1em 1.25em 1.25em;
+}
+
+.game-incantation-panels {
+  display: flex;
+  align-items: stretch;
+}
+
+.game-incantation-gap {
+  flex: none;
+  width: 1.25em;
+}
+
+.game-incantation-panel {
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: column;
+  gap: 0.75em;
+  min-width: 15em;
+  max-width: 21em;
+  padding: 0.9em 0.9em 1em;
+  border: var(--border-thin);
+  border-radius: 12px;
+  background-color: color-mix(
+    in srgb,
+    var(--color-bg-primary) 40%,
+    transparent
+  );
+}
+
+.game-incantation-panel h3 {
+  margin: 0 0 0.15em;
+  color: var(--color-fg-secondary);
+  font-size: 1em;
+  text-align: center;
+}
+
+.game-incantation-panel h3.status-label {
+  color: var(--color-fg-negative);
+}
+
+.game-incantation-chevron {
+  position: relative;
+  flex: none;
+  width: 2.25em;
+}
+
+.game-incantation-chevron::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0.9em;
+  height: 0.9em;
+  border-top: 5px solid var(--color-fg-secondary);
+  border-right: 5px solid var(--color-fg-secondary);
+  border-radius: 2px;
+  transform: translate(-70%, -50%) rotate(45deg);
+}
+
+.game-incantation-option {
+  display: flex;
+  flex: 1 1 auto;
+  align-items: center;
+  min-height: 3.2em;
+  padding: 0.65em 1.1em;
+  border: var(--border-thin);
+  border-radius: 10px;
+  color: var(--color-fg-primary);
+  background-color: color-mix(
+    in srgb,
+    var(--color-bg-secondary) 80%,
+    transparent
+  );
+  font-size: 0.95em;
+  line-height: 1.35;
+  text-align: left;
+  cursor: var(--cursor-hover);
+  transition: background-color 120ms ease;
+}
+
+.game-incantation-option:hover,
+.game-incantation-option.selected {
+  background-color: var(--color-bg-accent);
+}
+
+.game-incantation-sentence {
+  max-width: 44em;
+  margin: 0;
+  padding: 0.6em 1.1em;
+  border: var(--border-thin);
+  border-radius: 10px;
+  background-color: color-mix(
+    in srgb,
+    var(--color-bg-secondary) 60%,
+    transparent
+  );
+  line-height: 1.5;
+  text-align: center;
+}
+
+.game-incantation-write {
+  min-width: 11em;
+}
+
+/* themed through the draggable-window class, without its dragging layout */
+.game-choice > .draggable-window.my-container {
+  position: static;
+  display: block;
+  user-select: auto;
+}

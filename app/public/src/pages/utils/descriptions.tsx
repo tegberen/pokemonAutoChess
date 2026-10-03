@@ -1,5 +1,6 @@
 import { t } from "i18next"
 import React, { type ReactElement } from "react"
+import { IncantationKind } from "../../../../config/game/ghost-incantations"
 import { DocumentedBoardEffects } from "../../../../types/enum/Effect"
 import { Damage, Stat } from "../../../../types/enum/Game"
 import { Item } from "../../../../types/enum/Item"
@@ -17,6 +18,10 @@ import {
 import { isIn } from "../../../../utils/array"
 import { max, roundToNDigits } from "../../../../utils/number"
 import { keys } from "../../../../utils/object"
+import {
+  getIncantationIcon,
+  INCANTATION_UPGRADE_ICON
+} from "../component/game/ghost-incantation-text"
 import SynergyIcon from "../component/icons/synergy-icon"
 import { cc } from "./jsx"
 
@@ -26,10 +31,20 @@ const Weathers = keys(Weather)
 const Synergies = keys(Synergy)
 const Items = keys(Item)
 
+const IncantationKindByTechnicalTerm: { [term: string]: IncantationKind } = {
+  [TechnicalTerm.HEXING_INCANTATION]: IncantationKind.HEXING,
+  [TechnicalTerm.RITUAL_INCANTATION]: IncantationKind.RITUAL,
+  [TechnicalTerm.FATED_INCANTATION]: IncantationKind.FATED
+}
+
 const getTechnicalTermIcon = (term: string) =>
   term === TechnicalTerm.SEED_BAG
     ? "/assets/icons/SEED_BAG.svg"
-    : `/assets/ui/${term.toLowerCase()}.svg`
+    : term === TechnicalTerm.STRONGER
+      ? INCANTATION_UPGRADE_ICON
+      : term in IncantationKindByTechnicalTerm
+        ? getIncantationIcon(IncantationKindByTechnicalTerm[term])
+        : `/assets/ui/${term.toLowerCase()}.svg`
 
 // board-effect tiles plus the AQUATIC tidal wave and the two weather damage
 // sources — all rendered with an icon from assets/icons/<TOKEN>.svg and

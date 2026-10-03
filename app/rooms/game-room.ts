@@ -902,6 +902,24 @@ export default class GameRoom extends Room<{ state: GameState }> {
       }
     )
 
+    this.onMessage(
+      Transfer.WRITE_INCANTATION,
+      (client, message: { choiceId: string; selections: string[] }) => {
+        if (this.state.gameFinished || !client.auth) return
+        const player = this.state.players.get(client.auth.uid)
+        if (!player || !player.alive) return
+        const choice = player.choices.find(
+          (c) => c.id === message?.choiceId && c.type === "incantation"
+        )
+        if (!choice || !Array.isArray(message.selections)) return
+        try {
+          player.writeGhostIncantation(choice, message.selections)
+        } catch (error) {
+          logger.error("error writing incantation", error)
+        }
+      }
+    )
+
     this.onMessage(Transfer.PICK_BERRY, async (client, index) => {
       if (!this.state.gameFinished && client.auth) {
         try {

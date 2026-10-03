@@ -86,6 +86,7 @@ export interface GameStateStore {
   mystoganWandsByPlayerId: { [playerId: string]: Item[] }
   blessingsEnabled: boolean
   fossilUnlocksByPlayerId: { [playerId: string]: IFossilUnlocksState }
+  ghostIncantationsByPlayerId: { [playerId: string]: string[] }
   podium: ILeaderboardInfo[]
   doubleUpChampions: ILeaderboardInfo[]
   smeargleScribbleChampion: ILeaderboardInfo[]
@@ -150,6 +151,7 @@ const initialState: GameStateStore = {
   mystoganWandsByPlayerId: {},
   blessingsEnabled: false,
   fossilUnlocksByPlayerId: {},
+  ghostIncantationsByPlayerId: {},
   specialGameRule: null,
   podium: new Array<ILeaderboardInfo>(),
   doubleUpChampions: new Array<ILeaderboardInfo>(),
@@ -326,6 +328,13 @@ export const gameSlice: Slice<GameStateStore> = createSlice({
     ) => {
       state.fossilUnlocksByPlayerId[action.payload.playerId] =
         action.payload.unlocks
+    },
+    setPlayerGhostIncantations: (
+      state,
+      action: PayloadAction<{ playerId: string; written: string[] }>
+    ) => {
+      state.ghostIncantationsByPlayerId[action.payload.playerId] =
+        action.payload.written
     },
     setSynergies: (
       state,
@@ -513,6 +522,7 @@ export const {
   setWishAdditionalPokemons,
   setPlayerBlessings,
   setPlayerFossilUnlocks,
+  setPlayerGhostIncantations,
   setBlessingsEnabled,
   setPokemonProposition,
   setEmotesUnlocked,

@@ -18,6 +18,7 @@ import { FloatingItem } from "../../models/colyseus-models/floating-item"
 import Player from "../../models/colyseus-models/player"
 import { PlayerBlessings } from "../../models/colyseus-models/player-blessings"
 import { PlayerFossilUnlocks } from "../../models/colyseus-models/player-fossil-unlocks"
+import { PlayerIncantations } from "../../models/colyseus-models/player-incantations"
 import { PokemonAvatarModel } from "../../models/colyseus-models/pokemon-avatar"
 import { Portal, SynergySymbol } from "../../models/colyseus-models/portal"
 import { PVEStages } from "../../models/pve-stages"
@@ -96,6 +97,9 @@ export default class GameState extends Schema {
      outlives the encounter that set it. Must stay after guideStepAcked so
      existing fields keep their wire index. */
   @type("boolean") pokemonCarousel = false
+  // written GHOST incantations; must stay last for the same wire-index reason
+  @type({ map: PlayerIncantations }) ghostIncantationsByPlayerId =
+    new MapSchema<PlayerIncantations>()
   // server-only cursor recording which step already handed out its grants
   guideStepEntered = -1
   // server-only: true while a guide stage is being replayed with a different

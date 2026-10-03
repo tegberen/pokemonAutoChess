@@ -47,6 +47,7 @@ import { addIconsToDescription, iconRegExp } from "../../utils/descriptions"
 import { BlessingDescription } from "../synergy/blessing-description"
 import { cc } from "../../utils/jsx"
 import { LocalStoreKeys, localStore } from "../../utils/store"
+import { GameIncantationChoice } from "./game-incantation-choice"
 import GamePokemonDuoPortrait from "./game-pokemon-duo-portrait"
 import GamePokemonPortrait, { getCachedPortrait } from "./game-pokemon-portrait"
 import GameSmearglePack from "./game-smeargle-pack"
@@ -441,11 +442,13 @@ export default function GameChoice() {
   return (
     <div className="game-choice" style={{ zIndex: DEPTH.MODAL }}>
       <div
-        className="my-container"
+        className={cc("my-container", {
+          "draggable-window": choice.type === "incantation"
+        })}
         style={{ visibility: visible ? "visible" : "hidden" }}
       >
         {message && <h2>{message}</h2>}
-        {choices.length > 1 && (
+        {choices.length > 1 && choice.type !== "incantation" && (
           <p style={{ textAlign: "center", opacity: 0.7, fontSize: "0.9em" }}>
             {t("player_choices.more_choices", { count: choices.length - 1 })}
           </p>
@@ -558,6 +561,12 @@ export default function GameChoice() {
               )
             })}
           </div>
+        ) : choice.type === "incantation" ? (
+          <GameIncantationChoice
+            key={choice.id}
+            choice={choice}
+            pendingChoices={choices.length - 1}
+          />
         ) : choice.type === "evolution_lab_reward" ? (
           <div className="game-choice-items-list game-choice-reward-list">
             {choice.rewards.map((reward, index) => {

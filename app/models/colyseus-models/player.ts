@@ -50,6 +50,7 @@ import {
 } from "../../types/enum/Blessing"
 import { ROCK_AWAKENING_TIER } from "../../types/enum/Awakening"
 import { PlayerBlessings } from "./player-blessings"
+import { PlayerIncantations } from "./player-incantations"
 import type { PlayerFossilUnlocks } from "./player-fossil-unlocks"
 import { FOSSIL_RESTORATION_SYNERGY_LEVEL } from "../../types/enum/FossilUnlock"
 import type { ScheduledBlessingGrant } from "../../types/enum/Blessing"
@@ -133,6 +134,15 @@ import Synergies, {
 } from "./synergies"
 import { Wanderer } from "./wanderer"
 import { ArmoryOptions } from "../../types/enum/ArmoryOptions"
+import {
+  GHOST_INCANTATION_SLOTS,
+  type GhostIncantation,
+  INCANTATION_COLUMNS,
+  INCANTATION_OPTIONS_SHOWN,
+  IncantationKind,
+  encodeGhostIncantation,
+  getIncantationStrength
+} from "../../config/game/ghost-incantations"
 import {
   PrismaticQuest,
   PrismaticQuestDefinitions,
@@ -344,6 +354,9 @@ export default class Player extends Schema implements IPlayer {
   indecisionSynergiesReached: Set<Synergy> = new Set<Synergy>()
   // server-only: wands granted by FIND_A_LOST_WAND, exempt from synergy removal
   blessingWands: Item[] = []
+  // server-only: the GHOST incantations written so far
+  ghostIncantations: GhostIncantation[] = []
+  ghostIncantationsRef: PlayerIncantations | null = null
   // server-only: gold the PLUNDER champion spent casting Treasure Rush this fight
   plunderGoldSpentThisFight: number = 0
   // server-only: INFINITE_CONVERSION keeps a copied synergy once per opponent
@@ -466,6 +479,9 @@ export default class Player extends Schema implements IPlayer {
       this.lightX = 3
       this.lightY = 2
     }
+
+    this.ghostIncantationsRef = new PlayerIncantations()
+    state.ghostIncantationsByPlayerId.set(this.id, this.ghostIncantationsRef)
 
     if (state.specialGameRule === SpecialGameRule.QUEST_BOARD) {
       const owned = new PlayerBlessings()
@@ -1029,6 +1045,13 @@ export default class Player extends Schema implements IPlayer {
       this.updateFairyWands()
     }
 
+    if (
+      previousSynergies.get(Synergy.GHOST) !==
+      updatedSynergies.get(Synergy.GHOST)
+    ) {
+      this.updateGhostIncantations()
+    }
+
     this.effects.update(this.synergies, this.board)
 
     // locked pots hand their items back, which changes what those items were counting
@@ -1397,6 +1420,95 @@ export default class Player extends Schema implements IPlayer {
         }
       }
     } while (newNbHats !== currentNbHats)
+  }
+
+  updateGhostIncantations() {
+    const ghostLevel = this.synergies.get(Synergy.GHOST) ?? 0
+    const unlockedSlots = GHOST_INCANTATION_SLOTS.filter(
+      (slot) => ghostLevel >= slot.ghostLevel
+    ).length
+    for (let index = this.choices.length - 1; index >= 0; index--) {
+      const choice = this.choices[index]
+      if (choice.type !== "incantation") continue
+      if (choice.incantationSlot >= unlockedSlots) {
+        this.choices.splice(index, 1)
+      } else {
+        choice.incantationStrength = getIncantationStrength(
+          choice.incantationKind as IncantationKind,
+          ghostLevel
+        )
+      }
+    }
+
+    const nextSlot = this.ghostIncantations.length
+    const isOffered = this.choices.some(
+      (choice) => choice.type === "incantation"
+    )
+    if (nextSlot >= unlockedSlots || isOffered) return
+
+    const choice = this.rollGhostIncantationChoice(nextSlot, ghostLevel)
+    if (this.isBot) {
+      this.writeGhostIncantation(choice, [
+        choice.incantationCauses[0],
+        choice.incantationEffects[0],
+        choice.incantationBonuses[0] ?? ""
+      ])
+    } else {
+      this.choices.push(choice)
+    }
+  }
+
+  rollGhostIncantationChoice(slot: number, ghostLevel: number) {
+    const { kind } = GHOST_INCANTATION_SLOTS[slot]
+    const [causes, effects, bonuses = []] = INCANTATION_COLUMNS[kind]
+    const firstHexCause = this.ghostIncantations.find(
+      (written) => written.kind === IncantationKind.HEXING
+    )?.cause
+    const offeredCauses =
+      slot === 1 ? causes.filter((cause) => cause !== firstHexCause) : causes
+    const ritualTrigger =
+      this.ghostIncantations.find(
+        (written) => written.kind === IncantationKind.RITUAL
+      )?.cause ?? ""
+    return new PlayerChoice({
+      type: "incantation",
+      incantation: {
+        kind,
+        slot,
+        causes: pickNRandomIn(offeredCauses, INCANTATION_OPTIONS_SHOWN),
+        effects: pickNRandomIn(effects, INCANTATION_OPTIONS_SHOWN),
+        bonuses: pickNRandomIn(bonuses, INCANTATION_OPTIONS_SHOWN),
+        strength: getIncantationStrength(kind, ghostLevel),
+        context: kind === IncantationKind.FATED ? ritualTrigger : ""
+      }
+    })
+  }
+
+  writeGhostIncantation(choice: PlayerChoice, selections: string[]) {
+    const [cause, effect, bonus] = selections
+    const isOffered = (option: string, offered: string[]) =>
+      offered.length === 0 ? !option : offered.includes(option)
+    if (
+      !isOffered(cause, choice.incantationCauses) ||
+      !isOffered(effect, choice.incantationEffects) ||
+      !isOffered(bonus ?? "", choice.incantationBonuses)
+    ) {
+      return false
+    }
+    const incantation: GhostIncantation = {
+      kind: choice.incantationKind as IncantationKind,
+      cause,
+      effect,
+      bonus: bonus ?? ""
+    }
+    this.ghostIncantations.push(incantation)
+    this.ghostIncantationsRef?.written.push(
+      encodeGhostIncantation(incantation)
+    )
+    const choiceIndex = this.choices.findIndex((c) => c.id === choice.id)
+    if (choiceIndex >= 0) this.choices.splice(choiceIndex, 1)
+    this.updateGhostIncantations()
+    return true
   }
 
   updateFairyWands() {

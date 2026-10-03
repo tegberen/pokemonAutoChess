@@ -5,6 +5,11 @@ import {
   SynergyTiersThresholds
 } from "../../../../../config"
 import {
+  decodeGhostIncantation,
+  getIncantationStrength,
+  IncantationKind
+} from "../../../../../config/game/ghost-incantations"
+import {
   type SynergyTier,
   SynergyTiers
 } from "../../../../../config/game/synergies"
@@ -35,11 +40,45 @@ import type { IFossilUnlocksState } from "../../../stores/GameStore"
 import { addIconsToDescription } from "../../utils/descriptions"
 import { cc } from "../../utils/jsx"
 import { getCachedPortrait } from "../game/game-pokemon-portrait"
+import {
+  describeIncantationSentence,
+  getIncantationIcon
+} from "../game/ghost-incantation-text"
 import SynergyIcon from "../icons/synergy-icon"
 import {
   FossilRestorationList,
   SynergyTierDescription
 } from "./synergy-tier-description"
+
+function WrittenIncantation(props: {
+  encoded: string
+  ghostLevel: number
+  ritualTrigger: string
+}) {
+  const { t: tBase } = useTranslation()
+  const t = tBase as any
+  const incantation = decodeGhostIncantation(props.encoded)
+  const strength = getIncantationStrength(incantation.kind, props.ghostLevel)
+  const sentence = describeIncantationSentence(
+    t,
+    incantation.kind,
+    [incantation.cause, incantation.effect, incantation.bonus],
+    props.ritualTrigger
+  )
+  return (
+    <p className="synergy-written-incantation">
+      <img src={getIncantationIcon(incantation.kind)} alt="" />
+      <span>
+        {addIconsToDescription(sentence, {
+          ap: 0,
+          luck: 0,
+          stars: strength + 1,
+          showAbilityTiers: true
+        })}
+      </span>
+    </p>
+  )
+}
 
 const keepFirstOfFamily = (arr: Pkm[]): Pkm[] => {
   const seenFamilies = new Set<Pkm>()
@@ -69,6 +108,10 @@ export default function SynergyDetailComponent(props: {
   const spectatedPlayer = useAppSelector(selectSpectatedPlayer)
   const specialGameRule = useAppSelector((state) => state.game.specialGameRule)
   const gameMode = useAppSelector((state) => state.game.gameMode)
+  const writtenIncantations = useAppSelector(
+    (state) =>
+      state.game.ghostIncantationsByPlayerId[spectatedPlayer?.id ?? ""]
+  )
 
   const thresholdReached = SynergyTiersThresholds[props.type]
     .filter((n) => n <= props.value)
@@ -212,6 +255,18 @@ export default function SynergyDetailComponent(props: {
               ({SynergyTiersThresholds[props.type][i]}) {t(`effect.${tier}`)}
             </h4>
             <SynergyTierDescription tier={tier} />
+            {props.type === Synergy.GHOST && writtenIncantations?.[i] && (
+              <WrittenIncantation
+                encoded={writtenIncantations[i]}
+                ghostLevel={props.value}
+                ritualTrigger={
+                  writtenIncantations
+                    .map(decodeGhostIncantation)
+                    .find(({ kind }) => kind === IncantationKind.RITUAL)
+                    ?.cause ?? ""
+                }
+              />
+            )}
             {tier === EffectEnum.PRIMORDIAL_POWER && (
               <>
                 <FossilRestorationList

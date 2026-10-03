@@ -68,3 +68,21 @@
   line-height: 1.4;
   color: var(--color-fg-secondary);
 }
+
+.synergy-written-incantation {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.4em;
+  margin: 0.3em 0 0;
+  padding-left: 0.6em;
+  border-left: 3px solid var(--color-fg-secondary);
+  color: var(--color-fg-primary);
+  font-size: 0.95em;
+}
+
+.synergy-written-incantation > img {
+  flex: none;
+  width: 1.2em;
+  height: 1.2em;
+  margin-top: 0.1em;
+}

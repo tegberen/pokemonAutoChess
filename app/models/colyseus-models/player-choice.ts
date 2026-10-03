@@ -26,6 +26,7 @@ export type PlayerChoiceType =
   | "singularity"
   | "starter_choice"
   | "galar_fossil"
+  | "incantation"
 
 export class PlayerChoice extends Schema {
   @type("string") id: string
@@ -51,7 +52,14 @@ export class PlayerChoice extends Schema {
   // ADDITIONAL_RETHINK_II: item slots reroll independently of pokemon slots
   @type(["boolean"]) rerollableItemSlots: boolean[] = []
   @type("boolean") canReroll: boolean = false
+  @type("string") incantationKind: string = ""
+  @type(["string"]) incantationCauses: string[] = []
+  @type(["string"]) incantationEffects: string[] = []
+  @type(["string"]) incantationBonuses: string[] = []
+  @type("uint8") incantationStrength: number = 0
+  @type("string") incantationContext: string = ""
   isPveReward = false
+  incantationSlot = -1
 
   constructor(args: {
     type: PlayerChoiceType
@@ -70,6 +78,15 @@ export class PlayerChoice extends Schema {
     rerollableItemSlots?: boolean[]
     canReroll?: boolean
     isPveReward?: boolean
+    incantation?: {
+      kind: string
+      slot: number
+      causes: string[]
+      effects: string[]
+      bonuses: string[]
+      strength: number
+      context: string
+    }
   }) {
     super()
     this.id = crypto.randomUUID()
@@ -90,5 +107,14 @@ export class PlayerChoice extends Schema {
       this.rerollableItemSlots = args.rerollableItemSlots
     if (args.canReroll) this.canReroll = args.canReroll
     if (args.isPveReward) this.isPveReward = args.isPveReward
+    if (args.incantation) {
+      this.incantationKind = args.incantation.kind
+      this.incantationSlot = args.incantation.slot
+      this.incantationCauses = args.incantation.causes
+      this.incantationEffects = args.incantation.effects
+      this.incantationBonuses = args.incantation.bonuses
+      this.incantationStrength = args.incantation.strength
+      this.incantationContext = args.incantation.context
+    }
   }
 }

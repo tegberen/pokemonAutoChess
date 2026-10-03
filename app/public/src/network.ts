@@ -250,6 +250,10 @@ export function claimPrismaticQuest(quest: PrismaticQuest) {
   rooms.game?.send(Transfer.CLAIM_PRISMATIC_QUEST, quest)
 }
 
+export function writeIncantation(choiceId: string, selections: string[]) {
+  rooms.game?.send(Transfer.WRITE_INCANTATION, { choiceId, selections })
+}
+
 export function skipStage() {
   // dev command, ignored by the server when not running in dev mode
   rooms.game?.send(Transfer.DEV, { action: "skipStage" })
