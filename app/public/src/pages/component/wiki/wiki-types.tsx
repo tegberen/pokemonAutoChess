@@ -33,6 +33,7 @@ import {
   WikiFossilRestorations,
   WikiFossilUnlocks
 } from "./wiki-fossil-unlocks"
+import { WikiGhostIncantations } from "./wiki-ghost-incantations"
 import { WikiLetterDelivery } from "./wiki-letter-delivery"
 
 const flowerPotByPokemon = new Map(
@@ -159,6 +160,13 @@ export function WikiType(props: { type: Synergy; onGoToWeather?: () => void }) {
         <>
           <hr />
           <WikiAwakening onGoToWeather={props.onGoToWeather} />
+        </>
+      )}
+
+      {props.type === Synergy.GHOST && (
+        <>
+          <hr />
+          <WikiGhostIncantations />
         </>
       )}
 

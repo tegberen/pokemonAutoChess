@@ -7533,6 +7533,81 @@
 	},
 	"wiki": {
 		"title": "Wiki",
+		"ghost": {
+			"title": "Incantations",
+			"intro": "Each GHOST level lets you write an incantation: pick one option in every column. It stays written for the rest of the game. At higher GHOST levels, incantations get STRONGER: they move up a Tier and use its higher values.",
+			"writes": "Writes",
+			"hexing_tier": "Hexing values",
+			"ritual_tier": "Ritual values",
+			"tier": "Tier {{tier}}",
+			"tier_legend": "Values are listed in Tier order:",
+			"none": "–",
+			"example": "Example: {{sentence}}",
+			"example_label": "Example:",
+			"negative_status": "negative status",
+			"slot": {
+				"0": "First HEXING_INCANTATION",
+				"1": "Second HEXING_INCANTATION",
+				"2": "RITUAL_INCANTATION",
+				"3": "FATED_INCANTATION"
+			},
+			"hexing": {
+				"title": "Hexing Incantations",
+				"intro": "At the start of each fight, the enemy chosen by the Cause gets the Effect and the {{negativeStatus}} for the whole fight. Your second HEXING_INCANTATION cannot use the same Cause as the first."
+			},
+			"ritual": {
+				"title": "Ritual Incantation",
+				"intro": "Each time the Cause happens, the Effect and the Bewitching trigger.",
+				"causes": {
+					"GHOST_CASTS": "GHOST casts",
+					"GHOST_ATTACKS": "Every {{count}} GHOST attacks",
+					"GHOST_KOD": "GHOST KO'd",
+					"ENEMY_KOD": "Enemy KO'd"
+				},
+				"ghost_gain": "Allied GHOST Pokémon gain",
+				"enemies": "Enemies",
+				"effects": {
+					"GHOST_LUCK": "LUCK",
+					"ENEMY_LUCK_LOSS": "All lose LUCK",
+					"SILENCE": "SILENCE",
+					"GHOST_SPEED": "SPEED",
+					"GHOST_PP": "PP",
+					"GHOST_MAX_HP": "max HP"
+				},
+				"bonuses": {
+					"GOLD_CHANCE": "You have a chance to gain GOLD",
+					"PERMANENT_HP": "Highest max HP ally gains permanent HP",
+					"PERMANENT_AP": "Highest AP ally gains permanent AP",
+					"PERMANENT_SPEED": "Highest ATK ally gains permanent SPEED"
+				},
+				"silence_damaged": "Damaged enemies for {{seconds}} seconds",
+				"silence_target": "The target for {{seconds}} seconds",
+				"silence_nearest": "{{targets}} nearest for {{seconds}} seconds",
+				"gold_chance": "Chance",
+				"gold_amount": "Amount"
+			},
+			"fated": {
+				"title": "Fated Incantation",
+				"intro": "Pick one way to empower each kind of incantation.",
+				"hexing_heading": "Empower both HEXING_INCANTATION",
+				"ritual_heading": "Empower your RITUAL_INCANTATION",
+				"rituals": {
+					"ECHO": "Chance to repeat the Ritual",
+					"DOUBLE_REWARDS": "Double GOLD and permanent stat gains",
+					"RESURRECT": "Give RESURRECTION to the STRONGEST ally after activating",
+					"SPAWN_GHOST": "Chance to put a GHOST Pokémon costing 3 GOLD or less on your bench"
+				},
+				"all_causes": "Every Cause"
+			},
+			"hexing_effects": {
+				"STAT": "Loses the stat of its Cause",
+				"GOLD_ON_KO": "Grants GOLD when KO'd",
+				"LUCK": "Loses LUCK",
+				"MAX_PP": "Max PP increased",
+				"MAX_HP": "Loses max HP"
+			},
+			"curse_duration": "Lasts the whole fight."
+		},
 		"nav": {
 			"how_to_play": "How to play ?",
 			"pokemons_label": "Pokémon",

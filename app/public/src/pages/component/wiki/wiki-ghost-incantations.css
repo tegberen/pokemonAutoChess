@@ -1,0 +1,215 @@
+#wiki-ghost-incantations {
+  display: grid;
+  gap: 1em;
+  margin: 1em 0;
+}
+
+.wiki-ghost-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75em;
+  padding: 1.25em 1.5em 1.5em;
+}
+
+.wiki-ghost-card h2,
+.wiki-ghost-card h3,
+.wiki-ghost-card h4 {
+  margin: 0;
+}
+
+.wiki-ghost-card h4 {
+  color: var(--color-fg-primary);
+}
+
+.wiki-ghost-step {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6em;
+  margin-top: 0.75em;
+}
+
+.wiki-ghost-intro {
+  max-width: 100ch;
+  margin: 0;
+  color: var(--color-fg-secondary);
+  line-height: 1.5;
+}
+
+.wiki-ghost-kind-heading {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+}
+
+.wiki-ghost-header-icon {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+}
+
+.wiki-ghost-header-icon img,
+.wiki-ghost-kind-heading img {
+  flex: none;
+  width: 1.4em;
+  height: 1.4em;
+}
+
+.wiki-ghost-table-wrap {
+  overflow-x: auto;
+}
+
+.wiki-ghost-card table {
+  width: 100%;
+  table-layout: fixed;
+  text-align: center;
+  background-color: var(--color-bg-secondary);
+}
+
+.wiki-ghost-card thead {
+  border-bottom: 2px solid currentColor;
+}
+
+.wiki-ghost-card th,
+.wiki-ghost-card td {
+  padding: 0.55em 0.75em;
+  font-weight: normal;
+  line-height: 1.4;
+}
+
+.wiki-ghost-card thead th {
+  font-size: 0.78em;
+  font-weight: bold;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  vertical-align: middle;
+}
+
+.wiki-ghost-card tbody tr:nth-child(odd) {
+  background-color: var(--color-bg-primary);
+}
+
+.wiki-ghost-card tbody th {
+  text-align: left;
+  border-right: 1px solid
+    color-mix(in srgb, var(--color-fg-primary) 25%, transparent);
+}
+
+.wiki-ghost-example {
+  max-width: 100ch;
+  margin: 0;
+  padding: 0.5em 0.8em;
+  border-left: 3px solid var(--color-fg-secondary);
+  border-radius: 6px;
+  background-color: var(--color-bg-primary);
+  line-height: 1.5;
+}
+
+.wiki-ghost-example-line {
+  display: block;
+}
+
+.wiki-ghost-card tbody tr.wiki-ghost-group {
+  background-color: transparent;
+}
+
+.wiki-ghost-card tbody .wiki-ghost-group th {
+  border-right: 0;
+  font-weight: bold;
+}
+
+.wiki-ghost-card tbody .wiki-ghost-group-member th {
+  padding-left: 2em;
+}
+
+.wiki-ghost-card thead .wiki-ghost-span-header {
+  padding-bottom: 0.3em;
+  border-bottom: 1px solid
+    color-mix(in srgb, var(--color-fg-primary) 25%, transparent);
+  color: var(--color-fg-secondary);
+}
+
+.wiki-ghost-tier-legend {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5em;
+  margin: 0;
+  color: var(--color-fg-secondary);
+  font-size: 0.92em;
+}
+
+.wiki-ghost-tier-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35em;
+  padding: 0.2em 0.6em;
+  border: var(--border-thin);
+  border-radius: 6px;
+  color: var(--color-fg-primary);
+  background-color: var(--color-bg-primary);
+}
+
+.wiki-ghost-tier-chip .synergy-icon {
+  width: 1.2em;
+  height: 1.2em;
+}
+
+.wiki-ghost-label-column {
+  width: 36%;
+}
+
+.wiki-ghost-card thead tr:first-child th:first-child {
+  width: 36%;
+  text-align: left;
+}
+
+.wiki-ghost-matrix thead tr:first-child th:first-child {
+  width: 30%;
+}
+
+.wiki-ghost-unlocks td {
+  text-align: left;
+}
+
+.wiki-ghost-options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.5em;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.wiki-ghost-options li,
+.wiki-ghost-fated-hexing li {
+  padding: 0.5em 0.75em;
+  font-weight: normal;
+  border: var(--border-thin);
+  border-radius: 8px;
+  background-color: var(--color-bg-secondary);
+}
+
+.wiki-ghost-curse {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25em;
+}
+
+.wiki-ghost-curse-description {
+  color: var(--color-fg-secondary);
+  font-size: 0.92em;
+}
+
+.wiki-ghost-fated-hexing {
+  display: grid;
+  gap: 0.5em;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+@media (width <= 960px) {
+  .wiki-ghost-options {
+    grid-template-columns: 1fr;
+  }
+}
