@@ -1,4 +1,4 @@
-import { AttackType, Team } from "../../types/enum/Game"
+import { AttackType } from "../../types/enum/Game"
 import { Awakening } from "../../types/enum/Awakening"
 import { BoardEffects, EffectEnum } from "../../types/enum/Effect"
 import { distanceC } from "../../utils/distance"
@@ -18,6 +18,7 @@ import { Item } from "../../types"
 import { schemaValues } from "../../utils/schemas"
 import { isOnBench } from "../../utils/board"
 import { throwAway } from "./synergies"
+import { applyHexingIncantations } from "../ghost-incantations"
 
 const O = EffectEnum.CRYSTALLISATION // effect origin tag
 
@@ -263,10 +264,8 @@ export const AwakeningEffects: Partial<
       )
     },
     new OnDeathEffect(({ pokemon }) => {
-      const enemyTeam =
-        pokemon.team === Team.BLUE_TEAM ? Team.RED_TEAM : Team.BLUE_TEAM
-      pokemon.simulation.applyCurse(EffectEnum.CURSE_OF_WEAKNESS, enemyTeam)
-      pokemon.simulation.applyCurse(EffectEnum.CURSE_OF_TORMENT, enemyTeam)
+      const side = pokemon.simulation.incantationSides.get(pokemon.team)
+      if (side) applyHexingIncantations(pokemon.simulation, side)
     })
   ],
   [Awakening.METAL_ALLOY]: [

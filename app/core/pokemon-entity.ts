@@ -10,6 +10,10 @@ import {
   ON_ATTACK_MANA
 } from "../config"
 import {
+  RITUAL_ATTACKS_PER_TRIGGER,
+  RitualTrigger
+} from "../config/game/ghost-incantations"
+import {
   POISON_PP_GAIN_PER_SYNERGY_TIER,
   SynergyTiers
 } from "../config/game/synergies"
@@ -114,6 +118,12 @@ import {
   OnSpawnEffect
 } from "./effects/effect"
 import { ItemEffects } from "./effects/items"
+import {
+  type Hex,
+  onHexedEnemyKnockedOut,
+  reapplyHexStatuses,
+  triggerRitual
+} from "./ghost-incantations"
 import { AwakeningEffects } from "./effects/awakening"
 import { PassiveEffects } from "./effects/passives"
 import {
@@ -261,6 +271,9 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
   heroBlessings = new Set<Blessing>()
   hasOwnSpotlight: boolean = false
   isProcessingAbility: boolean = false
+  hexes: Hex[] = []
+  ghostAttacksSinceRitual = 0
+  enemiesDamagedByCast: Set<PokemonEntity> | null = null
   isTidalGuardian: boolean = false
   overloadVoltSurged: boolean = false
   magnetosphereRangeBonus: number = 0
@@ -464,6 +477,16 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
     return SynergyTiers[synergy].some((effect) => this.effects.has(effect))
   }
 
+  reapplyHexStatuses() {
+    reapplyHexStatuses(this)
+  }
+
+  luckAgainst(enemy: PokemonEntity) {
+    const enemyLuckLoss =
+      this.hasSynergyEffect(Synergy.GHOST) && enemy.luck < 0 ? -enemy.luck : 0
+    return this.luck + enemyLuckLoss
+  }
+
   resetCooldown(baseDuration: number, speed = this.speed) {
     this.cooldown = Math.round(baseDuration / (0.4 + speed * 0.007))
   }
@@ -553,6 +576,9 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
       }
       return { death: false, takenDamage: 0 }
     } else {
+      if (attacker?.enemiesDamagedByCast && attacker.team !== this.team) {
+        attacker.enemiesDamagedByCast.add(this)
+      }
       let specialDamage =
         damage + (damage * (attacker && apBoost ? attacker.ap : 0)) / 100
       if (attacker && attacker.effects.has(EffectEnum.DOUBLE_DAMAGE)) {
@@ -1147,6 +1173,19 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
   }) {
     this.addPP(ON_ATTACK_MANA, this, 0, false)
 
+    if (this.types.has(Synergy.GHOST)) {
+      this.ghostAttacksSinceRitual++
+      if (this.ghostAttacksSinceRitual >= RITUAL_ATTACKS_PER_TRIGGER) {
+        this.ghostAttacksSinceRitual = 0
+        triggerRitual(
+          this.simulation,
+          this.simulation.incantationSides.get(this.team),
+          RitualTrigger.GHOST_ATTACKS,
+          { source: this, target }
+        )
+      }
+    }
+
     const poisonTierIndex = SynergyTiers[Synergy.POISON].findLastIndex(
       (effect) => this.effects.has(effect)
     )
@@ -1333,7 +1372,7 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
 
     if (this.hasSynergyEffect(Synergy.GHOST)) {
       const silenceChance = 0.15
-      if (chance(silenceChance, this)) {
+      if (chance(silenceChance, { luck: this.luckAgainst(target) })) {
         target.status.triggerSilence(2000, target, this)
         if (this.name === Pkm.GENGAR) {
           this.addStack()
@@ -1809,17 +1848,29 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
       })
     }
 
-    if (this.status.curseVulnerability) {
-      this.simulation.applyCurse(EffectEnum.CURSE_OF_VULNERABILITY, this.team)
-    }
-    if (this.status.curseWeakness) {
-      this.simulation.applyCurse(EffectEnum.CURSE_OF_WEAKNESS, this.team)
-    }
-    if (this.status.curseTorment) {
-      this.simulation.applyCurse(EffectEnum.CURSE_OF_TORMENT, this.team)
-    }
-    if (this.status.curseFate) {
-      this.simulation.applyCurse(EffectEnum.CURSE_OF_FATE, this.team)
+    onHexedEnemyKnockedOut(this.simulation, this, board)
+    // summons are left out, or a swarm of them would farm KO rewards
+    if (!this.isSpawn) {
+      const incantationSides = this.simulation.incantationSides
+      if (this.types.has(Synergy.GHOST)) {
+        triggerRitual(
+          this.simulation,
+          incantationSides.get(this.team),
+          RitualTrigger.GHOST_KOD,
+          { source: this, origin: this }
+        )
+      }
+      const opposingTeam =
+        this.team === Team.BLUE_TEAM ? Team.RED_TEAM : Team.BLUE_TEAM
+      triggerRitual(
+        this.simulation,
+        incantationSides.get(opposingTeam),
+        RitualTrigger.ENEMY_KOD,
+        {
+          source: attacker?.team === opposingTeam ? attacker : undefined,
+          origin: this
+        }
+      )
     }
 
     // Trigger Last Respects ability for adjacent allies

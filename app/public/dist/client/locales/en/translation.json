@@ -1899,7 +1899,7 @@
 		"U_TURN": "Gain [15,30,50,100,SP] SHIELD, swap positions with the target and inflict them with CHARM for 1 second.",
 		"EXPLOSION": "Deal [50,100,200,400,SP] SPECIAL to all ADJACENT enemy Pokémon. Damages user by the same amount.",
 		"CHLOROBLAST": "Deal [50,100,200,400,SP] SPECIAL to all ADJACENT enemy Pokémon. The user loses 50% of its max HP.",
-		"NIGHTMARE": "FATIGUE all enemy Pokémon for [2,4,6,10,SP] seconds. Any enemy suffering from a GHOST curse take [25,50,100,200,SP] SPECIAL.",
+		"NIGHTMARE": "FATIGUE all enemy Pokémon for [2,4,6,10,SP] seconds. Enemies hexed by a HEXING_INCANTATION take [25,50,100,200,SP] SPECIAL.",
 		"PHANTOM_FORCE": "SILENCE all enemy Pokémon for 2 seconds, then vanish. After 1 second, reappear in the middle of the enemy team and deal [10,20,40,60,80,SP] SPECIAL to all ADJACENT enemy Pokémon. Double the damage to targets with SILENCE or FATIGUE.",
 		"CLANGOROUS_SOUL": "The user and allied Pokémon in RANGE gain [2,4,8,16, SP] ATK, DEF and SPE_DEF.",
 		"BONEMERANG": "Throw a bone like a boomerang through the enemy team, dealing 2 times [15,30,60,120,SP] SPECIAL to every enemy Pokémon in its path.",
@@ -2686,7 +2686,7 @@
 		"CRYSTALLISE_MIST_STONE": "Depending on 1/6 LUCK, lower 1 to 6 of the target's stat(s) ON_ATTACK. (-2 ATK, -5 AP, -2 DEF, -2 SPE_DEF, -5 SPEED or -5 LUCK).",
 		"CRYSTALLISE_BLOOD_STONE": "At the start of the fight, gain 20% of the user's DEF as ATK, then loose 50% of current DEF. On ROCK explosion, ADJACENT allies are RAGE for 2 seconds.",
 		"CRYSTALLISE_SMELLY_CLAY": "Heal the user for 25% of the POISONNED damage within a 2-tile radius received by enemy Pokémon. On ROCK explosion inflict enemies within a 2-tile radius with 2 stacks of POISONNED for 3 seconds.",
-		"CRYSTALLISE_ODD_KEYSTONE": "Gain +1 LUCK and +2 AP for each dodged attack. On ROCK explosion inflict Curse of Weakness on enemies with higher ATK and Curse of Torment on enemies with higher AP than the user.",
+		"CRYSTALLISE_ODD_KEYSTONE": "Gain +1 LUCK and +2 AP for each dodged attack. On ROCK explosion, each HEXING_INCANTATION hexes a new enemy.",
 		"CRYSTALLISE_METAL_ALLOY": "ON_ATTACK [5, LK] % chance to absorb 1 RANGE from the target. If the target can't lose RANGE, push back the target and apply LOCKED for 2s instead. The push back distance increases relative to user RANGE.",
 		"CRYSTALLISE_STICKY_GLOB": "Every held item has a [30, LK]% chance to be copied to the BUG clone",
 		"CRYSTALLISE_ECLIPSE_STONE": "At the start of the fight, gain 100% of DEF as AP and 50% of DEF as starting PP.",
@@ -6727,6 +6727,7 @@
 	"next_unown_shop_hint_other": "{{tier}}: next Unown shop in {{count}} rerolls",
 	"unown_shop_current_hint": "This is a Unown shop!",
 	"refresh": "Reroll",
+	"negative_status": "negative status",
 	"pve_stages": "PvE Stages",
 	"carousel_stages": "Carousel Stages",
 	"galar_fossil": {
@@ -6742,14 +6743,15 @@
 		"sentence": {
 			"HEXING": "At the start of each fight, {{cause}} {{effect}} and {{bonus}}.",
 			"RITUAL": "{{cause}}, {{effect}} and {{bonus}}.",
-			"FATED": "HEXING_INCANTATION: {{cause}}. RITUAL_INCANTATION: {{effect}}."
+			"FATED_HEXING": "HEXING_INCANTATION: {{cause}}.",
+			"FATED_RITUAL": "RITUAL_INCANTATION: {{effect}}."
 		},
 		"HEXING": {
 			"title": "Write your Hexing Incantation",
 			"columns": {
 				"0": "Cause",
 				"1": "Effect",
-				"2": "Negative status"
+				"2": "NEGATIVE_STATUS"
 			},
 			"0": {
 				"HIGHEST_DEFENSES": "The enemy with the highest DEF + SPE_DEF",
@@ -6800,7 +6802,7 @@
 			"2": {
 				"GOLD_CHANCE": "You have a [{{chance}},LK]% chance to gain {{gold}} GOLD",
 				"PERMANENT_HP": "The ally with the highest max HP gains {{value}} permanent HP",
-				"PERMANENT_AP": "The ally with the highest AP gains {{value}} permanent AP",
+				"PERMANENT_PP": "The ally with the highest AP gains {{value}} permanent starting PP",
 				"PERMANENT_SPEED": "The ally with the highest ATK gains {{value}} permanent SPEED"
 			}
 		},
@@ -6811,13 +6813,13 @@
 				"1": "Your RITUAL_INCANTATION"
 			},
 			"0": {
-				"TWO_TARGETS": "Affect 2 enemies at once",
+				"TWO_TARGETS": "At the start of each fight, affect 2 enemies at once",
 				"DOOM": "Their target gets CURSE and is KO'd after {{seconds}}s",
-				"SPREAD_STATUS": "When a hexed enemy is KO'd, ADJACENT enemies get its negative status for {{spreadSeconds}}s",
+				"SPREAD_STATUS": "When a hexed enemy is KO'd, ADJACENT enemies get its NEGATIVE_STATUS for {{spreadSeconds}}s",
 				"SPREAD_HEX": "When a hexed enemy is KO'd, its HEXING_INCANTATION spreads to {{targets}} new enemies"
 			},
 			"1": {
-				"ECHO": "[{{value}},LK]% chance to be repeated",
+				"ECHO": "[{{value}},LK]% chance to repeat the RITUAL_INCANTATION",
 				"DOUBLE_REWARDS": "Grants double GOLD and permanent stat gains",
 				"RESURRECT": "After activating {{value}}, give RESURRECTION to the STRONGEST ally",
 				"SPAWN_GHOST": "[{{value}},LK]% chance to put a GHOST Pokémon costing 3 GOLD or less on your bench"
@@ -7544,7 +7546,6 @@
 			"none": "–",
 			"example": "Example: {{sentence}}",
 			"example_label": "Example:",
-			"negative_status": "negative status",
 			"slot": {
 				"0": "First HEXING_INCANTATION",
 				"1": "Second HEXING_INCANTATION",
@@ -7553,7 +7554,7 @@
 			},
 			"hexing": {
 				"title": "Hexing Incantations",
-				"intro": "At the start of each fight, the enemy chosen by the Cause gets the Effect and the {{negativeStatus}} for the whole fight. Your second HEXING_INCANTATION cannot use the same Cause as the first."
+				"intro": "At the start of each fight, the enemy chosen by the Cause gets the Effect and the NEGATIVE_STATUS for the whole fight. Your second HEXING_INCANTATION cannot use the same Cause as the first."
 			},
 			"ritual": {
 				"title": "Ritual Incantation",
@@ -7577,7 +7578,7 @@
 				"bonuses": {
 					"GOLD_CHANCE": "You have a chance to gain GOLD",
 					"PERMANENT_HP": "Highest max HP ally gains permanent HP",
-					"PERMANENT_AP": "Highest AP ally gains permanent AP",
+					"PERMANENT_PP": "Highest AP ally gains permanent starting PP",
 					"PERMANENT_SPEED": "Highest ATK ally gains permanent SPEED"
 				},
 				"silence_damaged": "Damaged enemies for {{seconds}} seconds",
@@ -7592,7 +7593,7 @@
 				"hexing_heading": "Empower both HEXING_INCANTATION",
 				"ritual_heading": "Empower your RITUAL_INCANTATION",
 				"rituals": {
-					"ECHO": "Chance to repeat the Ritual",
+					"ECHO": "Chance to repeat the RITUAL_INCANTATION",
 					"DOUBLE_REWARDS": "Double GOLD and permanent stat gains",
 					"RESURRECT": "Give RESURRECTION to the STRONGEST ally after activating",
 					"SPAWN_GHOST": "Chance to put a GHOST Pokémon costing 3 GOLD or less on your bench"
@@ -7944,7 +7945,7 @@
 		"SEED_BAG": "The Seed Bag stores Seeds earned from Letter deliveries. Select one active Seed to apply its effect at the start of the next fight.",
 		"STRONGEST": "Strongest is defined as, by order of priority: 1. Number of items held, 2. Unit tier, 3. Unit rarity",
 		"STRONGER": "A stronger GHOST incantation moves up a Tier and uses its higher values. Each HEXING_INCANTATION gets stronger at GHOST 6 and 8, the RITUAL_INCANTATION at GHOST 8.",
-		"HEXING_INCANTATION": "Written at GHOST 2 and 4. At the start of each fight, it hexes one enemy with a malus and a status for the whole fight.",
+		"HEXING_INCANTATION": "Written at GHOST 2 and 4. At the start of each fight, it hexes one enemy with a malus and a NEGATIVE_STATUS for the whole fight.",
 		"RITUAL_INCANTATION": "Written at GHOST 6. Every time its Cause happens during a fight, its Effect and Bewitching trigger.",
 		"FATED_INCANTATION": "Written at GHOST 8. Empowers your HEXING_INCANTATION and RITUAL_INCANTATION."
 	},

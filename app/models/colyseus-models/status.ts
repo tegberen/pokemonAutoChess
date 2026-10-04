@@ -390,21 +390,7 @@ export default class Status extends Schema implements IStatus {
       this.ccCooldown = min(0)(this.ccCooldown - dt)
     }
 
-    if (pokemon.status.curseVulnerability && !pokemon.status.flinch) {
-      this.triggerFlinch(30000, pokemon)
-    }
-
-    if (pokemon.status.curseWeakness && !pokemon.status.paralysis) {
-      this.triggerParalysis(30000, pokemon, null)
-    }
-
-    if (pokemon.status.curseTorment && !pokemon.status.fatigue) {
-      this.triggerFatigue(30000, pokemon, null)
-    }
-
-    if (pokemon.status.curseFate && !pokemon.status.curse) {
-      this.triggerCurse(8100, pokemon) // +100 ms to trigger just after tidal wave
-    }
+    pokemon.reapplyHexStatuses()
   }
 
   triggerArmorReduction(duration: number, pkm: PokemonEntity) {

@@ -41,7 +41,7 @@ import { addIconsToDescription } from "../../utils/descriptions"
 import { cc } from "../../utils/jsx"
 import { getCachedPortrait } from "../game/game-pokemon-portrait"
 import {
-  describeIncantationSentence,
+  describeIncantationLines,
   getIncantationIcon
 } from "../game/ghost-incantation-text"
 import SynergyIcon from "../icons/synergy-icon"
@@ -59,7 +59,7 @@ function WrittenIncantation(props: {
   const t = tBase as any
   const incantation = decodeGhostIncantation(props.encoded)
   const strength = getIncantationStrength(incantation.kind, props.ghostLevel)
-  const sentence = describeIncantationSentence(
+  const lines = describeIncantationLines(
     t,
     incantation.kind,
     [incantation.cause, incantation.effect, incantation.bonus],
@@ -69,12 +69,16 @@ function WrittenIncantation(props: {
     <p className="synergy-written-incantation">
       <img src={getIncantationIcon(incantation.kind)} alt="" />
       <span>
-        {addIconsToDescription(sentence, {
-          ap: 0,
-          luck: 0,
-          stars: strength + 1,
-          showAbilityTiers: true
-        })}
+        {lines.map((line, index) => (
+          <span key={index} className="synergy-written-incantation-line">
+            {addIconsToDescription(line, {
+              ap: 0,
+              luck: 0,
+              stars: strength + 1,
+              showAbilityTiers: true
+            })}
+          </span>
+        ))}
       </span>
     </p>
   )

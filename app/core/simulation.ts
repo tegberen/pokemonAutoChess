@@ -75,7 +75,6 @@ import { getSynergyTier } from "../models/colyseus-models/synergies"
 import {
   Blessing,
   BLOSSOM_FESTIVAL_CASTS_PER_RANGE_GAIN,
-  HEX_MANIAC_STATUS_DURATION,
   NOT_THE_BEES_MAX_COMBEES,
   POLLUTED_SEA_POISON_DURATION,
   STAR_CROSSED_SEAS_ABILITY_POWER,
@@ -370,6 +369,11 @@ import {
   makeFrostBarrierEffect,
   isIgnitionActive
 } from "./effects/synergies"
+import {
+  applyHexingIncantations,
+  createIncantationSide,
+  type IncantationSide
+} from "./ghost-incantations"
 import { PokemonEntity } from "./pokemon-entity"
 import { DelayedCommand } from "./simulation-command"
 import { SpecialGameRule } from "../types/enum/SpecialGameRule"
@@ -451,6 +455,7 @@ export default class Simulation extends Schema implements ISimulation {
   // Double Up shared PVE fights: the partner fights alongside the blue player
   bluePartnerPlayer: Player | undefined
   bluePartnerEffects = new Set<EffectEnum>()
+  incantationSides = new Map<Team, IncantationSide>()
   blueAbilitiesCast: Ability[] = []
   redAbilitiesCast: Ability[] = []
   stormLightningTimer = 0
@@ -1946,39 +1951,28 @@ export default class Simulation extends Schema implements ISimulation {
     this.awardFlowerPotTitles(sides)
     this.applyCombatStartBlessings(sides)
 
-    // TARGET SELECTION EFFECTS (ghost curse)
-    for (const { teamIndex, effects: teamEffects } of sides) {
-      const opponentTeam =
-        teamIndex === Team.BLUE_TEAM ? Team.RED_TEAM : Team.BLUE_TEAM
-
-      if (
-        teamEffects.has(EffectEnum.CURSE_OF_VULNERABILITY) ||
-        teamEffects.has(EffectEnum.CURSE_OF_WEAKNESS) ||
-        teamEffects.has(EffectEnum.CURSE_OF_TORMENT) ||
-        teamEffects.has(EffectEnum.CURSE_OF_FATE)
-      ) {
-        this.applyCurse(EffectEnum.CURSE_OF_VULNERABILITY, opponentTeam)
+    this.incantationSides.clear()
+    const incantationTeams = [
+      {
+        team: Team.BLUE_TEAM,
+        player: this.bluePlayer,
+        effects: this.blueEffects,
+        canEarnRewards: true
+      },
+      {
+        team: Team.RED_TEAM,
+        player: this.redPlayer,
+        effects: this.redEffects,
+        canEarnRewards: !this.isGhostBattle
       }
-
-      if (
-        teamEffects.has(EffectEnum.CURSE_OF_WEAKNESS) ||
-        teamEffects.has(EffectEnum.CURSE_OF_TORMENT) ||
-        teamEffects.has(EffectEnum.CURSE_OF_FATE)
-      ) {
-        this.applyCurse(EffectEnum.CURSE_OF_WEAKNESS, opponentTeam)
-      }
-
-      if (
-        teamEffects.has(EffectEnum.CURSE_OF_TORMENT) ||
-        teamEffects.has(EffectEnum.CURSE_OF_FATE)
-      ) {
-        this.applyCurse(EffectEnum.CURSE_OF_TORMENT, opponentTeam)
-      }
-
-      if (teamEffects.has(EffectEnum.CURSE_OF_FATE)) {
-        this.applyCurse(EffectEnum.CURSE_OF_FATE, opponentTeam)
-      }
+    ]
+    for (const { team, player, effects, canEarnRewards } of incantationTeams) {
+      const side = createIncantationSide(team, player, effects, canEarnRewards)
+      if (side) this.incantationSides.set(team, side)
     }
+    this.incantationSides.forEach((side) =>
+      applyHexingIncantations(this, side)
+    )
   }
 
   grantSecondWindResurrection(player: Player, teamIndex: Team) {
@@ -6513,129 +6507,6 @@ export default class Simulation extends Schema implements ISimulation {
     }
 
     this.room.rankPlayers()
-  }
-
-  /* called from inside each curse branch, so CURSE_OF_TWO's second pass gets
-     these statuses on its extra target too */
-  applyHexManiacStatus(
-    effect: EffectEnum,
-    target: PokemonEntity,
-    curser: PokemonEntity
-  ) {
-    if (!curser.player?.blessings?.includes(Blessing.HEX_MANIAC)) return
-    const duration = HEX_MANIAC_STATUS_DURATION
-    if (effect === EffectEnum.CURSE_OF_VULNERABILITY) {
-      target.status.triggerArmorReduction(duration, target)
-    } else if (effect === EffectEnum.CURSE_OF_WEAKNESS) {
-      target.status.triggerFatigue(duration, target, curser)
-    } else if (effect === EffectEnum.CURSE_OF_TORMENT) {
-      target.status.triggerParalysis(duration, target, curser)
-    } else if (effect === EffectEnum.CURSE_OF_FATE) {
-      target.status.triggerSilence(duration, target, curser)
-    }
-  }
-
-  applyCurse(effect: EffectEnum, opponentTeamNumber: number, pass = 1) {
-    const team =
-      opponentTeamNumber === Team.RED_TEAM ? this.blueTeam : this.redTeam
-    const opponentTeam =
-      opponentTeamNumber === Team.BLUE_TEAM ? this.blueTeam : this.redTeam
-    const isCursed: { [key in EffectEnum]?: (p: PokemonEntity) => boolean } = {
-      [EffectEnum.CURSE_OF_VULNERABILITY]: (p) => p.status.curseVulnerability,
-      [EffectEnum.CURSE_OF_WEAKNESS]: (p) => p.status.curseWeakness,
-      [EffectEnum.CURSE_OF_TORMENT]: (p) => p.status.curseTorment,
-      [EffectEnum.CURSE_OF_FATE]: (p) => p.status.curseFate
-    }
-    const cursingPlayer =
-      opponentTeamNumber === Team.RED_TEAM ? this.bluePlayer : this.redPlayer
-    const maxTargets = cursingPlayer?.blessings?.includes(Blessing.CURSE_OF_TWO)
-      ? 2
-      : 1
-    const activeTargets = [...opponentTeam.values()].filter(
-      (pokemon) => pokemon.hp > 0 && isCursed[effect]?.(pokemon) === true
-    ).length
-    if (activeTargets >= maxTargets) return
-    const opponentsCursable = (
-      shuffleArray([...opponentTeam.values()]).filter(
-        (p) => p.hp > 0
-      ) as PokemonEntity[]
-    ).filter((p) => isCursed[effect]?.(p) !== true)
-    const curser = schemaValues(team).find((e) => e.types.has(Synergy.GHOST)) ?? schemaValues(team)[0]
-    // the curser is not important, we just need a reference to an opponent for stat debuffs
-    if (!curser) return
-
-    if (effect === EffectEnum.CURSE_OF_VULNERABILITY) {
-      const highestDef = Math.max(
-        ...opponentsCursable.map((p) => p.def + p.speDef)
-      )
-      const enemyWithHighestDef = pickRandomIn(
-        opponentsCursable.filter((p) => p.def + p.speDef === highestDef)
-      )
-      if (enemyWithHighestDef) {
-        enemyWithHighestDef.addDefense(-5, curser, 0, false)
-        enemyWithHighestDef.addSpecialDefense(-5, curser, 0, false)
-        enemyWithHighestDef.status.curseVulnerability = true
-        enemyWithHighestDef.status.triggerFlinch(30000, enemyWithHighestDef)
-        this.applyHexManiacStatus(effect, enemyWithHighestDef, curser)
-      }
-    }
-
-    if (effect === EffectEnum.CURSE_OF_WEAKNESS) {
-      const highestAtk = Math.max(...opponentsCursable.map((p) => p.atk))
-      const enemyWithHighestAtk = pickRandomIn(
-        opponentsCursable.filter((p) => p.atk === highestAtk)
-      )
-      if (enemyWithHighestAtk) {
-        enemyWithHighestAtk.addAttack(
-          Math.round(-0.2 * enemyWithHighestAtk.atk),
-          curser,
-          0,
-          false
-        )
-        enemyWithHighestAtk.status.curseWeakness = true
-        enemyWithHighestAtk.status.triggerParalysis(
-          30000,
-          enemyWithHighestAtk,
-          null
-        )
-        this.applyHexManiacStatus(effect, enemyWithHighestAtk, curser)
-      }
-    }
-
-    if (effect === EffectEnum.CURSE_OF_TORMENT) {
-      const highestAP = Math.max(...opponentsCursable.map((p) => p.ap))
-      const enemyWithHighestAP = pickRandomIn(
-        opponentsCursable.filter((p) => p.ap === highestAP)
-      )
-      if (enemyWithHighestAP) {
-        enemyWithHighestAP.addAbilityPower(-30, curser, 0, false)
-        enemyWithHighestAP.status.curseTorment = true
-        enemyWithHighestAP.status.triggerFatigue(
-          30000,
-          enemyWithHighestAP,
-          null
-        )
-        this.applyHexManiacStatus(effect, enemyWithHighestAP, curser)
-      }
-    }
-
-    if (effect === EffectEnum.CURSE_OF_FATE) {
-      const strongestEnemy = getStrongestUnit(opponentsCursable)
-      if (strongestEnemy) {
-        strongestEnemy.status.curseFate = true
-        strongestEnemy.status.triggerCurse(8000, strongestEnemy)
-        this.applyHexManiacStatus(effect, strongestEnemy, curser)
-      }
-    }
-
-    /* CURSE_OF_TWO blessing: curse a second enemy. The pass counter bounds the
-       recursion, and the already cursed filter above picks a different target */
-    if (
-      pass === 1 &&
-      cursingPlayer?.blessings?.includes(Blessing.CURSE_OF_TWO)
-    ) {
-      this.applyCurse(effect, opponentTeamNumber, 2)
-    }
   }
 
   addPikachuSurferToBoard(team: Team) {

@@ -62,10 +62,6 @@
   text-align: center;
 }
 
-.game-incantation-panel h3.status-label {
-  color: var(--color-fg-negative);
-}
-
 .game-incantation-chevron {
   position: relative;
   flex: none;
@@ -124,6 +120,10 @@
   );
   line-height: 1.5;
   text-align: center;
+}
+
+.game-incantation-sentence-line {
+  display: block;
 }
 
 .game-incantation-write {

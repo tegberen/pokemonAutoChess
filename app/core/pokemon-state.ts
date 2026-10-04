@@ -280,7 +280,7 @@ export default abstract class PokemonState {
       }
 
       if (
-        chance(dodgeChance, target, 0.9) &&
+        chance(dodgeChance, { luck: target.luckAgainst(pokemon) }, 0.9) &&
         !pokemon.items.has(Item.XRAY_VISION) &&
         !pokemon.effects.has(EffectEnum.LOCK_ON) &&
         !pokemon.player?.items.includes(Item.EYEDROP_SEED) && //flying rework

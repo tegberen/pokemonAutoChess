@@ -93,6 +93,10 @@ import {
   SynergyEffects
 } from "../../core/effects/synergies"
 import { giveRandomEgg } from "../../core/eggs"
+import {
+  applyHexingIncantations,
+  createIncantationSide
+} from "../../core/ghost-incantations"
 import { EvolutionManager } from "../../core/evolution-logic/evolution-manager"
 import {
   canItemGoOnFlowerPot,
@@ -2387,21 +2391,18 @@ export class OnUpdateCommand extends Command<
       reinforcement.axeBlastExecuteChance = entity.axeBlastExecuteChance
       reinforcement.ignited = entity.ignited
     }
-    // apply ghost curses, outside the loop to avoid multiple applications
-    const opponentTeam =
-      partnerTeam === Team.BLUE_TEAM ? Team.RED_TEAM : Team.BLUE_TEAM
-    const ghostCurseEffects = [
-      EffectEnum.CURSE_OF_VULNERABILITY,
-      EffectEnum.CURSE_OF_WEAKNESS,
-      EffectEnum.CURSE_OF_TORMENT,
-      EffectEnum.CURSE_OF_FATE
-    ]
-    ghostCurseEffects.forEach((curse) => {
-      if (survivors.some((e) => e.effects.has(curse))) {
-        target.applyCurse(curse, opponentTeam)
+    if (!target.incantationSides.has(partnerTeam)) {
+      const partnerSide = createIncantationSide(
+        partnerTeam,
+        winnerPlayer,
+        new Set(survivors.flatMap((survivor) => [...survivor.effects])),
+        true
+      )
+      if (partnerSide) {
+        target.incantationSides.set(partnerTeam, partnerSide)
+        applyHexingIncantations(target, partnerSide)
       }
-    })
-
+    }
   }
 }
 

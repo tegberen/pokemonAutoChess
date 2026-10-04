@@ -27,6 +27,7 @@ import { SynergyTiers } from "../../../../../config/game/synergies"
 import { Synergy } from "../../../../../types/enum/Synergy"
 import { addIconsToDescription } from "../../utils/descriptions"
 import {
+  describeIncantationLines,
   describeIncantationOption,
   describeIncantationSentence,
   describeResurrectActivations,
@@ -98,26 +99,6 @@ function KindHeading({
       <img src={getIncantationIcon(kind)} alt="" aria-hidden="true" />
       {title}
     </h3>
-  )
-}
-
-const FATED_EXAMPLE = [
-  { term: "HEXING_INCANTATION", option: FatedHexing.SPREAD_HEX },
-  { term: "RITUAL_INCANTATION", option: FatedRitual.ECHO }
-]
-
-const NEGATIVE_STATUS_MARKER = "\u0000"
-
-function HexingIntro({ t }: { t: Translate }) {
-  const [before, after] = t("wiki.ghost.hexing.intro", {
-    negativeStatus: NEGATIVE_STATUS_MARKER
-  }).split(NEGATIVE_STATUS_MARKER)
-  return (
-    <>
-      {addIconsToDescription(before)}
-      <span className="status-label">{t("wiki.ghost.negative_status")}</span>
-      {addIconsToDescription(after ?? "")}
-    </>
   )
 }
 
@@ -193,7 +174,7 @@ function describeRitualEffectValue(
 
 const PERMANENT_RITUAL_BONUSES = [
   RitualBonus.PERMANENT_HP,
-  RitualBonus.PERMANENT_AP,
+  RitualBonus.PERMANENT_PP,
   RitualBonus.PERMANENT_SPEED
 ] as const
 
@@ -299,7 +280,7 @@ export function WikiGhostIncantations() {
           title={t("wiki.ghost.hexing.title")}
         />
         <p className="wiki-ghost-intro">
-          <HexingIntro t={t} />
+          {addIconsToDescription(t("wiki.ghost.hexing.intro"))}
         </p>
         <p className="wiki-ghost-example">
           {addIconsToDescription(
@@ -385,10 +366,7 @@ export function WikiGhostIncantations() {
         </section>
         <section className="wiki-ghost-step">
           <h4>
-            3.{" "}
-            <span className="status-label">
-              {t("ghost_incantations.HEXING.columns.2")}
-            </span>
+            3. {addIconsToDescription(t("ghost_incantations.HEXING.columns.2"))}
           </h4>
           <p className="wiki-ghost-intro">{t("wiki.ghost.curse_duration")}</p>
           <ul className="wiki-ghost-options">
@@ -540,18 +518,14 @@ export function WikiGhostIncantations() {
         </p>
         <p className="wiki-ghost-example">
           {t("wiki.ghost.example_label")}
-          {FATED_EXAMPLE.map(({ term, option }, column) => (
-            <span key={option} className="wiki-ghost-example-line">
-              {addIconsToDescription(
-                `${term}: ${describeIncantationOption(
-                  t,
-                  IncantationKind.FATED,
-                  column,
-                  option,
-                  null,
-                  ""
-                )}.`
-              )}
+          {describeIncantationLines(
+            t,
+            IncantationKind.FATED,
+            [FatedHexing.SPREAD_HEX, FatedRitual.ECHO],
+            ""
+          ).map((line, index) => (
+            <span key={index} className="wiki-ghost-example-line">
+              {addIconsToDescription(line)}
             </span>
           ))}
         </p>

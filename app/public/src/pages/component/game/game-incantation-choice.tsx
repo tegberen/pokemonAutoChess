@@ -7,7 +7,7 @@ import { addIconsToDescription } from "../../utils/descriptions"
 import { cc } from "../../utils/jsx"
 import {
   describeIncantationOption,
-  describeIncantationSentence,
+  describeIncantationLines,
   getIncantationIcon
 } from "./ghost-incantation-text"
 import "./game-incantation-choice.css"
@@ -90,12 +90,7 @@ export function GameIncantationChoice({
                 />
               )}
               <section className="game-incantation-panel">
-                <h3
-                  className={cc({
-                    "status-label":
-                      kind === IncantationKind.HEXING && column === 2
-                  })}
-                >
+                <h3>
                   {addIconsToDescription(
                     t(`ghost_incantations.${kind}.columns.${column}`)
                   )}
@@ -121,15 +116,16 @@ export function GameIncantationChoice({
           ))}
         </div>
         <p className="game-incantation-sentence">
-          {addIconsToDescription(
-            describeIncantationSentence(
-              t,
-              kind,
-              selected,
-              choice.incantationContext
-            ),
-            tierParams
-          )}
+          {describeIncantationLines(
+            t,
+            kind,
+            selected,
+            choice.incantationContext
+          ).map((line, index) => (
+            <span key={index} className="game-incantation-sentence-line">
+              {addIconsToDescription(line, tierParams)}
+            </span>
+          ))}
         </p>
         <button
           className="bubbly green game-incantation-write"

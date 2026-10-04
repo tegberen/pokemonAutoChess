@@ -173,7 +173,7 @@ function asContinuation(text: string) {
   return text.charAt(0).toLowerCase() + text.slice(1)
 }
 
-export function describeIncantationSentence(
+export function describeIncantationLines(
   t: Translate,
   kind: IncantationKind,
   selections: (string | null)[],
@@ -193,15 +193,29 @@ export function describeIncantationSentence(
       : UNKNOWN_VALUE
   const continuation = (column: number, option: string | null | undefined) =>
     option ? asContinuation(part(column, option)) : UNKNOWN_VALUE
-  return t(`ghost_incantations.sentence.${kind}`, {
-    cause:
-      kind === IncantationKind.HEXING
-        ? continuation(0, cause)
-        : part(0, cause),
-    effect:
-      kind === IncantationKind.FATED
-        ? part(1, effect)
-        : continuation(1, effect),
-    bonus: continuation(2, bonus)
-  })
+  if (kind === IncantationKind.FATED) {
+    return [
+      t("ghost_incantations.sentence.FATED_HEXING", { cause: part(0, cause) }),
+      t("ghost_incantations.sentence.FATED_RITUAL", { effect: part(1, effect) })
+    ]
+  }
+  return [
+    t(`ghost_incantations.sentence.${kind}`, {
+      cause:
+        kind === IncantationKind.HEXING
+          ? continuation(0, cause)
+          : part(0, cause),
+      effect: continuation(1, effect),
+      bonus: continuation(2, bonus)
+    })
+  ]
+}
+
+export function describeIncantationSentence(
+  t: Translate,
+  kind: IncantationKind,
+  selections: (string | null)[],
+  context: string
+) {
+  return describeIncantationLines(t, kind, selections, context).join(" ")
 }

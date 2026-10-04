@@ -1,3 +1,4 @@
+import { RitualTrigger } from "../../config/game/ghost-incantations"
 import PokemonFactory from "../../models/pokemon-factory"
 import { Awakening } from "../../types/enum/Awakening"
 import {
@@ -16,6 +17,7 @@ import { distanceC } from "../../utils/distance"
 import { chance, pickRandomIn } from "../../utils/random"
 import type { Board } from "../board"
 import { OnAbilityCastEffect } from "../effects/effect"
+import { triggerRitual } from "../ghost-incantations"
 import type { PokemonEntity } from "../pokemon-entity"
 import type { AbilityStrategy } from "./ability-strategy"
 
@@ -47,9 +49,21 @@ export function castAbility(
   ) {
     crit = chance(pokemon.critChance / 100, pokemon)
   }
+  const incantationSide = pokemon.types.has(Synergy.GHOST)
+    ? pokemon.simulation.incantationSides.get(pokemon.team)
+    : undefined
+  if (incantationSide) pokemon.enemiesDamagedByCast = new Set()
   pokemon.isProcessingAbility = true
   abilityStrategy.process(pokemon, board, target, crit, preventDefaultAnim)
   pokemon.isProcessingAbility = false
+  const enemiesDamagedByCast = [...(pokemon.enemiesDamagedByCast ?? [])]
+  pokemon.enemiesDamagedByCast = null
+  triggerRitual(
+    pokemon.simulation,
+    incantationSide,
+    RitualTrigger.GHOST_CASTS,
+    { source: pokemon, enemiesDamagedByCast }
+  )
 
   const casterBlessings = pokemon.player?.blessings
   pokemon.getEffects(OnAbilityCastEffect).forEach((effect) => {

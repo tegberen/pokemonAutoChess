@@ -69,7 +69,8 @@ export const iconRegExp = new RegExp(
     ...Items,
     ...TechnicalTerms,
     "GOLD",
-    "STAR"
+    "STAR",
+    "NEGATIVE_STATUS"
   ].join("|")}|\\[[^\\]]+\\])(?=\\W|$)`,
   "g"
 )
@@ -122,6 +123,16 @@ export function addIconsToDescription(
             src="/assets/icons/money.svg"
             alt="$"
           />
+        )
+      } else if (token === "NEGATIVE_STATUS") {
+        const isFirstWord = descriptionParts[i - 1].trim() === ""
+        const label = t("negative_status")
+        icon = (
+          <span className="status-label">
+            {isFirstWord || isAtStartOfSentence
+              ? label.charAt(0).toUpperCase() + label.slice(1)
+              : label}
+          </span>
         )
       } else if (token === "STAR") {
         icon = (
@@ -354,6 +365,8 @@ export function addIconsToHtml(
         if (token === "GOLD") {
           iconHTML =
             '<img class="description-icon icon-money" src="/assets/icons/money.svg" alt="$" />'
+        } else if (token === "NEGATIVE_STATUS") {
+          iconHTML = `<span class="status-label">${t("negative_status")}</span>`
         } else if (token === "STAR") {
           iconHTML =
             '<img class="description-icon icon-star" src="/assets/ui/star.svg" alt="⭐" />'

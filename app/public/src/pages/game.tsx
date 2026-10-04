@@ -1212,6 +1212,12 @@ export default function Game() {
           )
         dispatchGhostIncantations()
         $(incantations).written.onChange(dispatchGhostIncantations)
+        let previousIncantationGoldEarned = incantations.goldEarned
+        $(incantations).listen("goldEarned", (goldEarned) => {
+          const amount = goldEarned - previousIncantationGoldEarned
+          previousIncantationGoldEarned = goldEarned
+          if (playerId === uid && amount > 0) showMoneyToast(amount)
+        })
       })
 
       $state.simulations.onRemove(() => {
