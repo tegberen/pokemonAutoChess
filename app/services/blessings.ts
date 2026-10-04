@@ -2467,8 +2467,6 @@ export const blessingEffectService: {
   [Blessing.INSTANT_HYPER_ROLL]: (player) =>
     giftPokemonOfRarityAndStars(player, Rarity.COMMON, 3),
 
-  [Blessing.CURSE_OF_TWO]: () => true,
-
   [Blessing.ARCANE_METALS]: (player) =>
     giftPokemonIfBenchHasRoom(player, Pkm.MAGNEMITE),
 
@@ -2797,9 +2795,6 @@ export const blessingEffectService: {
     giftPokemonIfBenchHasRoom(player, Pkm.SQUIRTLE)
     return true
   },
-
-  [Blessing.HEX_MANIAC]: (player) =>
-    giftPokemonIfBenchHasRoom(player, Pkm.SNORUNT),
 
   [Blessing.ABSOLUTE_DARKNESS]: (player) =>
     giftPokemonIfBenchHasRoom(player, Pkm.IMPIDIMP),

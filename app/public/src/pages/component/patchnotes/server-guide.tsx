@@ -154,6 +154,8 @@ export default function ServerGuide({
       { name: "Mortar Shells", icon: "mortar_shells" },
       { name: "Big Pecks", icon: "big_peck_letter" },
       { name: "Abnormality", icon: "spread_shield" },
+      { name: "Curse of Two", icon: "ghost_spectre" },
+      { name: "Hex Maniac", icon: "hex_maniac" },
       ...[
         { name: "Quest: Crit", icon: "crit_quest" },
         { name: "Quest: Grow", icon: "grow_quest" },

@@ -811,13 +811,6 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     icon: "honey_comb",
     grantsPokemonImmediately: false
   },
-  [Blessing.CURSE_OF_TWO]: {
-    tier: BlessingTier.PRISMATIC,
-    availableAtStages: BLESSING_SELECTION_STAGES,
-    icon: "ghost_spectre",
-    grantsPokemonImmediately: false,
-    synergy: Synergy.GHOST
-  },
   [Blessing.ARCANE_METALS]: {
     tier: BlessingTier.GOLD,
     availableAtStages: BLESSING_SELECTION_STAGES,
@@ -1409,13 +1402,6 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     icon: "sea",
     grantsPokemonImmediately: false,
     synergy: Synergy.AMORPHOUS
-  },
-  [Blessing.HEX_MANIAC]: {
-    tier: BlessingTier.GOLD,
-    availableAtStages: BLESSING_SELECTION_STAGES,
-    icon: "hex_maniac",
-    grantsPokemonImmediately: true,
-    synergy: Synergy.GHOST
   },
   [Blessing.ABSOLUTE_DARKNESS]: {
     tier: BlessingTier.GOLD,

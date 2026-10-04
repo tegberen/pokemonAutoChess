@@ -5495,10 +5495,6 @@
 			"name": "Arcane Metals",
 			"description": "STEEL synergy converts ability damage into TRUE. Gain a Magnemite."
 		},
-		"CURSE_OF_TWO": {
-			"name": "Curse of Two",
-			"description": "Each of your GHOST curses affects 2 enemies at once. Gain a Snorunt."
-		},
 		"VITAMINS": {
 			"name": "Vitamins",
 			"description": "At the start of the fight, your team gains 20 AP and 10 SPEED."
@@ -5714,10 +5710,6 @@
 		"STAR_CROSSED_SEAS": {
 			"name": "Star-Crossed Seas",
 			"description": "Move to an AMORPHOUS region if not currently in one. You can find both kinds of Shellos in AMORPHOUS regions. Fielding them both at once grants each one 50 HP and 25 AP."
-		},
-		"HEX_MANIAC": {
-			"name": "Hex Maniac",
-			"description": "At GHOST 2/4/6/8, curses also inflict ARMOR_BREAK,FATIGUE,PARALYSIS,SILENCE. Gain a Snorunt."
 		},
 		"ABSOLUTE_DARKNESS": {
 			"name": "Absolute Darkness",
