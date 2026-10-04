@@ -123,6 +123,7 @@ import Synergies, {
 } from "../../models/colyseus-models/synergies"
 import { Effects } from "../../models/effects"
 import UserMetadata from "../../models/mongo-models/user-metadata"
+import { openMysteryBox } from "../../models/mystery-box"
 import PokemonFactory, {
   getPokemonBaseline
 } from "../../models/pokemon-factory"
@@ -336,6 +337,13 @@ export class OnBuyPokemonCommand extends Command<
     const player = this.state.players.get(playerId)
     if (!player || !player.alive) return
     if (isBlessingChoicePending(player.choices)) return
+    // the bench stays free until the Mystery Box opens after the first portal
+    if (
+      this.state.specialGameRule === SpecialGameRule.MISFITS &&
+      this.state.stageLevel === 0
+    ) {
+      return
+    }
 
     // BAZAAR: this slot holds a purchasable item offer instead of a Pokémon
     const bazaarSlot = player.bazaarShop ? player.bazaarSlots[index] : ""
@@ -2443,6 +2451,12 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
       this.stopTownPhase()
       /* Normally Stage level is bumped after a fighting phase, but since magikarp is round 1, we need to increase stage level from 0 -> 1 to avoid a PVP round 1. There is probably a better solution*/
       if (this.state.stageLevel === 0) {
+        const mysteryBox = this.state.mysteryBox
+        if (mysteryBox) {
+          this.state.players.forEach((player) =>
+            openMysteryBox(player, mysteryBox, this.state)
+          )
+        }
         this.state.stageLevel = 1
       }
       this.initializePickingPhase()

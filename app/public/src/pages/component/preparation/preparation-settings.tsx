@@ -306,7 +306,8 @@ export default function PreparationSettings() {
                 <p>
                   {addIconsToDescription(
                     t(`scribble_description.${rule}`, {
-                      type: "(random Synergy)"
+                      type: "(random Synergy)",
+                      gold: "12, 18 or 26"
                     })
                   )}
                 </p>

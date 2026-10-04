@@ -21,6 +21,7 @@ import { PlayerFossilUnlocks } from "../../models/colyseus-models/player-fossil-
 import { PlayerIncantations } from "../../models/colyseus-models/player-incantations"
 import { PokemonAvatarModel } from "../../models/colyseus-models/pokemon-avatar"
 import { Portal, SynergySymbol } from "../../models/colyseus-models/portal"
+import { MYSTERY_BOXES, type MysteryBox } from "../../models/mystery-box"
 import { PVEStages } from "../../models/pve-stages"
 import Shop from "../../models/shop"
 import type { Blessing, BlessingTier } from "../../types/enum/Blessing"
@@ -97,9 +98,11 @@ export default class GameState extends Schema {
      outlives the encounter that set it. Must stay after guideStepAcked so
      existing fields keep their wire index. */
   @type("boolean") pokemonCarousel = false
-  // written GHOST incantations; must stay last for the same wire-index reason
+  // written GHOST incantations, after the older fields for the same reason
   @type({ map: PlayerIncantations }) ghostIncantationsByPlayerId =
     new MapSchema<PlayerIncantations>()
+  // the rolled Mystery Box value shown in the Misfits description, kept last
+  @type("uint8") mysteryBoxGold = 0
   // server-only cursor recording which step already handed out its grants
   guideStepEntered = -1
   // server-only: true while a guide stage is being replayed with a different
@@ -114,6 +117,7 @@ export default class GameState extends Schema {
   blessingsUnderTest: Blessing[] = []
   // the lobby's last rolled tier, which the next selection's odds hang off
   previousBlessingTier: BlessingTier | undefined = undefined
+  mysteryBox: MysteryBox | null = null
   time = StageDuration[0] * 1000
   updatePhaseNeeded = false
   botManager: BotManager = new BotManager()
@@ -193,6 +197,11 @@ export default class GameState extends Schema {
       this.avatarSynergy = pickRandomIn(
         Object.values(Synergy).filter((s) => s !== Synergy.BABY)
       )
+    }
+
+    if (this.specialGameRule === SpecialGameRule.MISFITS) {
+      this.mysteryBox = pickRandomIn(MYSTERY_BOXES)
+      this.mysteryBoxGold = this.mysteryBox.gold
     }
 
     // a guide is authored without variants, so rolling one would hand the

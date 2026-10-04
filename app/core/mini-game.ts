@@ -24,6 +24,7 @@ import { Portal, SynergySymbol } from "../models/colyseus-models/portal"
 import { getSynergyTier } from "../models/colyseus-models/synergies"
 import PokemonFactory from "../models/pokemon-factory"
 import { getPokemonData } from "../models/precomputed/precomputed-pokemon-data"
+import { PRECOMPUTED_POKEMONS_PER_RARITY } from "../models/precomputed/precomputed-rarity"
 import type GameRoom from "../rooms/game-room"
 import type GameState from "../rooms/states/game-state"
 import {
@@ -59,7 +60,11 @@ import {
   SevenTreasures
 } from "../types/enum/Item"
 import { Pkm, PkmFamily } from "../types/enum/Pokemon"
-import { SpecialGameRule } from "../types/enum/SpecialGameRule"
+import {
+  MISFITS_CHIMECHO_STAGE,
+  MISFITS_EXCLUDED_ENCOUNTERS,
+  SpecialGameRule
+} from "../types/enum/SpecialGameRule"
 import { Synergy, SynergyArray } from "../types/enum/Synergy"
 import { type TownEncounter, TownEncounters } from "../types/enum/TownEncounter"
 import type { NpcDialog } from "../types/strings/NpcDialog"
@@ -318,6 +323,11 @@ export class MiniGame {
            up with a stage that has no encounter at all. */
         delete encounterWeights[TownEncounters.BIDOOF]
       }
+      if (state.specialGameRule === SpecialGameRule.MISFITS) {
+        for (const encounter of MISFITS_EXCLUDED_ENCOUNTERS) {
+          delete encounterWeights[encounter]
+        }
+      }
       let encounter = randomWeighted(
         encounterWeights,
         state.specialGameRule === SpecialGameRule.TOWN_FESTIVAL ? undefined : 1
@@ -345,6 +355,13 @@ export class MiniGame {
           (Object.keys(TownEncountersByStage[stageLevel]) as TownEncounter[])
             .filter((candidate) => candidate in TownEncounterSellPrice)
         )
+      }
+
+      if (
+        state.specialGameRule === SpecialGameRule.MISFITS &&
+        stageLevel === MISFITS_CHIMECHO_STAGE
+      ) {
+        encounter = TownEncounters.CHIMECHO
       }
 
       state.townEncounter = encounter ?? null
@@ -539,9 +556,24 @@ export class MiniGame {
     const rarities = getCarouselPokemonRarities(state.stageLevel, nbSlots)
     const drawn: Pkm[] = []
     rarities.forEach((rarity) => {
-      drawn.push(this.drawCarouselPokemon(state, rarity, drawn))
+      drawn.push(
+        state.specialGameRule === SpecialGameRule.MISFITS
+          ? this.drawMisfitsCarouselPokemon(rarity, drawn)
+          : this.drawCarouselPokemon(state, rarity, drawn)
+      )
     })
     return drawn
+  }
+
+  // Misfits draws 2 STAR units outside the pool, so none go back to it
+  drawMisfitsCarouselPokemon(rarity: Rarity, alreadyDrawn: Pkm[]): Pkm {
+    const candidates = PRECOMPUTED_POKEMONS_PER_RARITY[rarity].filter(
+      (pkm) => getPokemonData(pkm).stars === 2
+    )
+    const unseen = candidates.filter(
+      (pkm) => !alreadyDrawn.some((d) => PkmFamily[d] === PkmFamily[pkm])
+    )
+    return pickRandomIn(unseen.length > 0 ? unseen : candidates) ?? Pkm.DITTO
   }
 
   drawCarouselPokemon(
@@ -565,6 +597,7 @@ export class MiniGame {
   }
 
   returnCarouselPokemonToPool(state: GameState, pkm: Pkm) {
+    if (state.specialGameRule === SpecialGameRule.MISFITS) return
     state.shop.getPool(getPokemonData(pkm).rarity)?.push(pkm)
   }
 

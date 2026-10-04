@@ -176,7 +176,8 @@ export default function PreparationMenu() {
             <p>
               {addIconsToDescription(
                 t(`scribble_description.${specialGameRule}`, {
-                  type: "(random Synergy)"
+                  type: "(random Synergy)",
+                  gold: "12, 18 or 26"
                 })
               )}
             </p>

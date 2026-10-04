@@ -372,6 +372,10 @@ export default class Shop {
     if (state.additionalPokemons.includes(pkm)) return // already added, like in Everyone is here scribble
     state.additionalPokemons.push(pkm)
     if (fromWish) state.wishAdditionalPokemons.push(pkm)
+    this.addCopiesToPool(pkm)
+  }
+
+  addCopiesToPool(pkm: Pkm) {
     const { rarity, stages } = getPokemonData(pkm)
     const pool = this.getPool(rarity)
     const entityNumber = getPoolSize(rarity, stages)

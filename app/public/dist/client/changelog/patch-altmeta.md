@@ -484,6 +484,7 @@ Selectable in Custom Lobbies.
 
 Smeargle Scribbles do not change your Elo.
 
+- **Misfits**: {{scribble:MISFITS}}
 - **Six Pack**: {{scribble:SIX_PACK}}
 - **Evolution Lab**: {{scribble:EVOLUTION_LAB}}
 - **The Bazaar**: {{scribble:BAZAAR}}
@@ -549,6 +550,7 @@ Every balance change on this server, newest first.
 - Missions | Quest: Evolve, Destroy, Level Up, Diversify and Prosper are renamed to Mission
 
 **Game Mode**
+- Misfits {{new}} | new Scribble: everyone receives a Mystery Box worth the same GOLD, a surprise haul of 12, 18 or 26 GOLD with a guaranteed Rare, Epic or Ultra. At the start of each fight, units with no active synergy gain a very strong bonus, scaling with each STAR. Stage 4 always brings Chimecho, whose carousel offers 2 STAR Pokémon, regionals and additional picks included
 - Quest Board {{new}} | new Scribble: everyone starts with the Quest Panel and can claim every reward from the quests they complete
 - Shiniest Hunter | removed
 

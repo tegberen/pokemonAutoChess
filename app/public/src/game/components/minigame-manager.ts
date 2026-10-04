@@ -838,7 +838,8 @@ export default class MinigameManager {
         t(`scribble.${specialGameRule}`) +
           " - " +
           t(`scribble_description.${specialGameRule}`, {
-            type: this.scene.room?.state.avatarSynergy ?? ""
+            type: this.scene.room?.state.avatarSynergy ?? "",
+            gold: this.scene.room?.state.mysteryBoxGold ?? 0
           })
       )
     }

@@ -1,3 +1,5 @@
+import { type TownEncounter, TownEncounters } from "./TownEncounter"
+
 export enum SpecialGameRule {
   PLAY_TEST = "PLAY_TEST",
   EVERYONE_IS_HERE = "EVERYONE_IS_HERE",
@@ -31,6 +33,7 @@ export enum SpecialGameRule {
   EVOLUTION_LAB = "EVOLUTION_LAB",
   BAZAAR = "BAZAAR",
   QUEST_BOARD = "QUEST_BOARD",
+  MISFITS = "MISFITS"
 }
 
 export const RulesWithAllPokemonsAvailable: SpecialGameRule[] = [
@@ -39,3 +42,9 @@ export const RulesWithAllPokemonsAvailable: SpecialGameRule[] = [
 ]
 
 export const BAZAAR_SHOP_INTERVAL = 8
+export const MISFITS_CHIMECHO_STAGE = 4
+export const MISFITS_EXCLUDED_ENCOUNTERS: TownEncounter[] = [
+  TownEncounters.ELECTIVIRE,
+  TownEncounters.KECLEON,
+  TownEncounters.SABLEYE
+]

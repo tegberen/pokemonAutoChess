@@ -121,7 +121,8 @@ export default function ServerGuide({
             )
             return rule
               ? t(`scribble_description.${rule}`, {
-                  type: "the selected synergy"
+                  type: "the selected synergy",
+                  gold: "12, 18 or 26"
                 })
               : token
           })

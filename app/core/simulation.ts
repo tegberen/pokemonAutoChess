@@ -2222,7 +2222,12 @@ export default class Simulation extends Schema implements ISimulation {
   ) {
     for (const { teamIndex, player } of sides) {
       const blessings = player?.blessings
-      if (!player || !blessings || blessings.length === 0) continue
+      const hasMisfits =
+        player?.specialGameRule === SpecialGameRule.MISFITS ||
+        blessings?.includes(Blessing.MISFITS) === true
+      if (!player || !blessings || (blessings.length === 0 && !hasMisfits)) {
+        continue
+      }
       const team = teamIndex === Team.BLUE_TEAM ? this.blueTeam : this.redTeam
       const allies = [...team.values()].filter(
         (entity): entity is PokemonEntity =>
@@ -3316,7 +3321,7 @@ export default class Simulation extends Schema implements ISimulation {
         )
       }
 
-      if (blessings.includes(Blessing.MISFITS)) {
+      if (hasMisfits) {
         allies
           .filter(
             (ally) =>

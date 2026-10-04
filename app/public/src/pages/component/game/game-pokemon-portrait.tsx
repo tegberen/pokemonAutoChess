@@ -208,12 +208,17 @@ export default function GamePokemonPortrait(props: {
         )
       : []
 
+  const isWaitingForMysteryBox =
+    specialGameRule === SpecialGameRule.MISFITS && stageLevel === 0
   /* A guide draws a normal shop but only the lesson's units are live, so a comp
      it never mentions cannot be bought into by accident. */
   const canBuy =
     spectatedPlayer?.alive &&
     spectatedPlayer?.money >= cost &&
-    (props.origin !== "shop" || (guideAllowsBuying && !blessingChoicePending))
+    (props.origin !== "shop" ||
+      (guideAllowsBuying &&
+        !blessingChoicePending &&
+        !isWaitingForMysteryBox))
 
   return (
     <div

@@ -44,7 +44,8 @@ export function GameModificationBanner(props: {
       ? props.specialGameRule
         ? addIconsToDescription(
             t(`scribble_description.${props.specialGameRule}`, {
-              type: "(random Synergy)"
+              type: "(random Synergy)",
+              gold: "12, 18 or 26"
             })
           )
         : t("smeargle_scribble_hint")

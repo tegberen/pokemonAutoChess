@@ -2242,7 +2242,8 @@ export default class BoardManager {
 
   addSmeargle(specialGameRule: SpecialGameRule) {
     let dialog = t(`scribble_description.${specialGameRule}`, {
-      type: this.state.avatarSynergy ?? ""
+      type: this.state.avatarSynergy ?? "",
+      gold: this.state.mysteryBoxGold
     })
     if (specialGameRule === SpecialGameRule.LIGHT_SHOW) {
       this.player.scribbleShapes.forEach((shape) => {

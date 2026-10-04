@@ -7400,7 +7400,8 @@
 		"SIX_PACK": "Six Pack",
 		"EVOLUTION_LAB": "Evolution Lab",
 		"BAZAAR": "The Bazaar",
-		"QUEST_BOARD": "Quest Board"
+		"QUEST_BOARD": "Quest Board",
+		"MISFITS": "Misfits"
 	},
 	"scribble_description": {
 		"EVERYONE_IS_HERE": "All the additional picks are available immediately!",
@@ -7434,7 +7435,8 @@
 		"SIX_PACK": "Pokémon can hold up to 6 items instead of 3. More items and components can be found throughout the game.",
 		"EVOLUTION_LAB": "Welcome to the Evolution Lab! Every Pokémon can be found here, but the lab follows its own rules...",
 		"BAZAAR": "The Bazaar visits the town!",
-		"QUEST_BOARD": "Everyone starts with the Quest Panel and can claim every reward from the quests they complete."
+		"QUEST_BOARD": "Everyone starts with the Quest Panel and can claim every reward from the quests they complete.",
+		"MISFITS": "At the start of each fight, units with no active synergy gain a very strong bonus, scaling with each STAR. Gain a surprise haul of {{gold}} GOLD."
 	},
 	"scribble_shape": {
 		"WALL": "Wall",
