@@ -129,6 +129,22 @@ each tile of gap.
 
 [Fighting in the Wiki](#wiki/types/FIGHTING)
 
+### Ghost
+
+{{synergy:GHOST}}
+
+> CURSE is no longer the GHOST (8) capstone. GHOST (8) now writes a
+> FATED_INCANTATION, and one of its options still gives access to CURSE: each
+> hexed enemy gets CURSE for 10s. However, that CURSE stays on the hexed unit
+> and does not move on after a KO anymore. Though watch out! A Pokémon can be
+> the target of both HEXING_INCANTATION, so it can get CURSE twice, and a CURSE
+> on an already CURSE unit executes it at once.
+>
+> The GHOST Wishes are removed for now. We will bring them back once everyone
+> is familiar with the new mechanics.
+
+[Ghost in the Wiki](#wiki/types/GHOST)
+
 ## Weather
 
 [See weather effects, setters and matching items](#wiki/weather).
@@ -491,10 +507,26 @@ Every balance change on this server, newest first.
 
 ### 1 November 2026
 
+**Pokémon**
+- Gimmighoul | PP 90 → 100
+- Gholdengo | PP 90 → 100
+- Darkrai | passive: gains a stack only for KOs of enemies hexed by a HEXING_INCANTATION. Stacks to Mega evolve 20 → 10
+
 **Abilities**
 - Machop Line | Guillotine → Cross Chop. Deal [300,SP]% of ATK as SPECIAL to the target. Each FIGHTING throw this fight gives this ability +[25,50,100,200]% CRIT_POWER. Can crit by default
+- Gastly Line | Nightmare: the bonus damage hits enemies hexed by a HEXING_INCANTATION instead of cursed ones
+- Gimmighoul | Gold Rush: GOLD gained 2 → 1
+- Shuppet Line | Shadow Clone: only steals an item if the target is hexed by a HEXING_INCANTATION. Clone max HP [50,50,90,100]% → [50,50,50,100]%
+
+**Synergies**
+- GHOST {{new}} | synergy reworked: write HEXING_INCANTATION, RITUAL_INCANTATION and FATED_INCANTATION
+- GHOST {{new}} | rule: an enemy's negative LUCK counts as bonus LUCK for GHOST Pokémon against it
+- MURKY | LUCK -30 → -10, GHOST are still immune
+- ODD_KEYSTONE | on ROCK explosion, each HEXING_INCANTATION hexes a new enemy instead of applying two GHOST curses
 
 **Wishes**
+- Curse of Two | removed
+- Hex Maniac | removed
 - High Tower Castle {{new}} | Prismatic, stage 4 only. At the start of each fight, all allies on the board gain 1 SPEED and 2 HP permanently
 - Training Ground {{new}} | Prismatic, stage 4 only. At the start of each fight, all allies on the board gain 1 DEF, 1 SPE_DEF and 2 HP permanently
 - Magic Palace {{new}} | Prismatic, stage 4 only. At the start of each fight, all allies on the board gain 2 AP and 2 HP permanently
