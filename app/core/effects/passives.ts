@@ -2425,9 +2425,10 @@ export const PassiveEffects: Partial<
   ],
   [Passive.FORESTS_CURSE]: [ForestsCurseDeathEffect],
   [Passive.DARKRAI]: [
-    new OnKillEffect(({ attacker }) => {
+    new OnKillEffect(({ attacker, target }) => {
       if (attacker.isGhostOpponent) return
       if (!attacker.player) return
+      if (target.hexes.length === 0) return
       attacker.addStack()
     })
   ],

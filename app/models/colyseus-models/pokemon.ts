@@ -7125,7 +7125,7 @@ export class Darkrai extends Pokemon {
   stars = 3
   evolution = Pkm.MEGA_DARKRAI
   evolutionRule = { type: EvolutionRuleType.STACK } as const
-  stacksRequired = 20
+  stacksRequired = 10
   hp = 250
   atk = 22
   speed = 65
@@ -15198,7 +15198,7 @@ export class Gimmighoul extends Pokemon {
   speed = 52
   def = 8
   speDef = 8
-  maxPP = 90
+  maxPP = 100
   range = 1
   skill = Ability.GOLD_RUSH
   evolution = Pkm.GHOLDENGO
@@ -15218,7 +15218,7 @@ export class Gholdengo extends Pokemon {
   speed = 52
   def = 10
   speDef = 10
-  maxPP = 90
+  maxPP = 100
   range = 1
   skill = Ability.MAKE_IT_RAIN
   passive = Passive.GHOLDENGO

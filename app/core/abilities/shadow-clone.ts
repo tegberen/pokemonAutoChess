@@ -26,7 +26,7 @@ export class ShadowCloneStrategy extends AbilityStrategy {
         shiny: pokemon.shiny
       })
       let itemStolen: Item | null = null
-      if (target.items.size > 0) {
+      if (target.hexes.length > 0 && target.items.size > 0) {
         itemStolen = pickRandomIn(schemaValues(target.items))
         target.removeItem(itemStolen)
       }
@@ -38,7 +38,7 @@ export class ShadowCloneStrategy extends AbilityStrategy {
         pokemon.team,
         true
       )
-      const hpPct = [0.5, 0.5, 0.9, 1.0][pokemon.stars - 1] ?? 1.0
+      const hpPct = [0.5, 0.5, 0.5, 1.0][pokemon.stars - 1] ?? 1.0
       clone.maxHP = min(1)(
         Math.ceil(
           hpPct *

@@ -5532,7 +5532,7 @@ export default class Simulation extends Schema implements ISimulation {
         const player = pokemon.player
         const nbOddStones = player ? count(player.items, Item.ODD_KEYSTONE) : 0
         const luckDebuff =
-          10 * nbOddStones - (pokemon.types.has(Synergy.GHOST) ? 0 : 30)
+          10 * nbOddStones - (pokemon.types.has(Synergy.GHOST) ? 0 : 10)
         pokemon.addLuck(luckDebuff, "environment", 0, false)
         break
       }
