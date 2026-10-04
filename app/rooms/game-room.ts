@@ -65,7 +65,6 @@ import { PlayerChoice } from "../models/colyseus-models/player-choice"
 import type { Pokemon } from "../models/colyseus-models/pokemon"
 import { ScribbleShape } from "../models/colyseus-models/scribble-shape"
 import { updatePlayerExpeditionsAfterGame } from "../models/expeditions"
-import { BotV2 } from "../models/mongo-models/bot-v2"
 import { setDailyDuelPodiumUids } from "../models/mongo-models/daily-duel-podium"
 import DetailledStatistic from "../models/mongo-models/detailled-statistic-v2"
 import UserMetadata, {
@@ -99,7 +98,6 @@ import {
   type IGameMetadata,
   type IPokemon,
   type IPokemonEntity,
-  type ISimplePlayer,
   Role,
   Title,
   Transfer
@@ -1273,40 +1271,14 @@ export default class GameRoom extends Room<{ state: GameState }> {
       this.state.endTime = Date.now()
 
       const humans: Player[] = []
-      const bots: Player[] = []
-
       this.state.players.forEach((player) => {
-        if (player.isBot) {
-          bots.push(player)
-        } else {
-          humans.push(player)
-        }
+        if (!player.isBot) humans.push(player)
       })
-
-      const players: ISimplePlayer[] = [...humans, ...bots].map((p) =>
-        this.transformToSimplePlayer(p)
-      )
 
       if (this.state.stageLevel >= MinStageForGameToCount) {
         const eligibleToXP = this.state.players.size >= 2
+        // bots keep the elo they were created with, games never move it
         if (eligibleToXP) {
-          for (let i = 0; i < bots.length; i++) {
-            const botPlayer = bots[i]
-            const bot = await BotV2.findOne({ id: botPlayer.id })
-            const isNonSpecialRule = this.state.specialGameRule == null
-            if (bot && isNonSpecialRule) {
-              bot.elo = computeElo(
-                this.transformToSimplePlayer(botPlayer),
-                botPlayer.rank,
-                bot.elo,
-                players,
-                this.state.gameMode,
-                true
-              )
-              bot.save()
-            }
-          }
-
           for (let i = 0; i < humans.length; i++) {
             const player = humans[i]
             if (!player.hasLeftGame) {
