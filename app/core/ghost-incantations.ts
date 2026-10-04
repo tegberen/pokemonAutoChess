@@ -345,7 +345,7 @@ function activateRitual(
   const effect = ritual.effect as RitualEffect
 
   if (effect === RitualEffect.SILENCE) {
-    silenceEnemies(trigger, strength, enemies, context)
+    silenceEnemies(simulation.board, trigger, strength, enemies, context)
   } else {
     const value = RITUAL_EFFECT_VALUES[effect][trigger][strength]
     if (effect === RitualEffect.GHOST_LUCK) {
@@ -399,7 +399,30 @@ function activateRitual(
   }
 }
 
+function getEnemiesInLineBehindTarget(
+  board: Board,
+  source: PokemonEntity,
+  target: PokemonEntity
+) {
+  const stepX = Math.sign(target.positionX - source.positionX)
+  const stepY = Math.sign(target.positionY - source.positionY)
+  const enemiesBehindTarget: PokemonEntity[] = []
+  if (stepX === 0 && stepY === 0) return enemiesBehindTarget
+  for (
+    let x = target.positionX + stepX, y = target.positionY + stepY;
+    board.isOnBoard(x, y);
+    x += stepX, y += stepY
+  ) {
+    const entity = board.getEntityOnCell(x, y)
+    if (entity && entity.team === target.team && entity.hp > 0) {
+      enemiesBehindTarget.push(entity)
+    }
+  }
+  return enemiesBehindTarget
+}
+
 function silenceEnemies(
+  board: Board,
   trigger: RitualTrigger,
   strength: number,
   enemies: PokemonEntity[],
@@ -413,7 +436,13 @@ function silenceEnemies(
   if (trigger === RitualTrigger.GHOST_CASTS) {
     context.enemiesDamagedByCast?.forEach(silence)
   } else if (trigger === RitualTrigger.GHOST_ATTACKS) {
-    if (context.target && context.target.hp > 0) silence(context.target)
+    if (context.source && context.target) {
+      getEnemiesInLineBehindTarget(
+        board,
+        context.source,
+        context.target
+      ).forEach(silence)
+    }
   } else if (context.origin) {
     const origin = context.origin
     const distanceToOrigin = (enemy: PokemonEntity) =>
@@ -423,8 +452,10 @@ function silenceEnemies(
         origin.positionX,
         origin.positionY
       )
+    const isAdjacentToOrigin = (enemy: PokemonEntity) =>
+      trigger !== RitualTrigger.ENEMY_KOD || distanceToOrigin(enemy) <= 1
     enemies
-      .filter((enemy) => !enemy.status.silence)
+      .filter((enemy) => !enemy.status.silence && isAdjacentToOrigin(enemy))
       .sort((a, b) => distanceToOrigin(a) - distanceToOrigin(b))
       .slice(0, targets[strength])
       .forEach(silence)

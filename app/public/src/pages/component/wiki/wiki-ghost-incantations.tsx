@@ -156,7 +156,10 @@ function describeSilence(t: Translate, trigger: RitualTrigger) {
     return t("wiki.ghost.ritual.silence_damaged", params)
   }
   if (trigger === RitualTrigger.GHOST_ATTACKS) {
-    return t("wiki.ghost.ritual.silence_target", params)
+    return t("wiki.ghost.ritual.silence_behind_target", params)
+  }
+  if (trigger === RitualTrigger.ENEMY_KOD) {
+    return t("wiki.ghost.ritual.silence_adjacent", params)
   }
   return t("wiki.ghost.ritual.silence_nearest", params)
 }

@@ -336,7 +336,7 @@ At the beginning of each battle, TIGHT_BELT is replaced by 2 random items. The h
 - Fossil unlock pool: Cranidos, Shieldon, Amaura, Tyrunt.
 - Rampardos: counts twice toward MONSTER. Evolves from Cranidos.
 - Bastiodon: Hard Face. Gain Shield and retaliate with true damage against melee attacks while that Shield remains. Evolves from Shieldon.
-- Scizor / Kleavor: Scyther is in the regular pool and has WILD; evolves via Metal Alloy or Black Augurite.
+- Scizor / Kleavor: Scyther is in the regular pool and has WILD; evolves with 3 copies into Kleavor in a ROCK region, Scizor elsewhere.
 - Lycanroc Dusk / Lycanroc Day / Lycanroc Night: Rockruff comes from Addpicks.
 - Crustle: regional pool (BUG).
 - Beheeyem: has ARTIFICIAL.
@@ -522,6 +522,7 @@ Every balance change on this server, newest first.
 - Gholdengo | PP 90 → 100
 - Darkrai | passive: gains a stack only for KOs of enemies hexed by a HEXING_INCANTATION. Stacks to Mega evolve 20 → 10
 - Golett Line | PP 100 → 140
+- Scyther Line | HP 150/220 → 85/170, Scyther ATK 15 → 12, evolves with 3 copies instead of METAL_ALLOY or BLACK_AUGURITE, into Kleavor in a ROCK region and Scizor elsewhere
 
 **Abilities**
 - Machop Line | Guillotine → Cross Chop. Deal [300,SP]% of ATK as SPECIAL to the target. Each FIGHTING throw this fight gives this ability +[25,50,100,200]% CRIT_POWER. Can crit by default

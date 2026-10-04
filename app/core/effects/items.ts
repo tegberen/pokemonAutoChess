@@ -2848,9 +2848,9 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
 // Only one crystallisation can run at a time
 const weatherRockAwakeningEffect = new OnItemDroppedEffect(
   ({ pokemon, player, item }) => {
-    // A Pokémon that item-evolves from this weather rock (e.g. Scyther +
-    // METAL_ALLOY → Scizor / BLACK_AUGURITE → Kleavor) evolves on drop, and the
-    // rock is NOT consumed — it returns to the bench to keep setting the weather.
+    // A Pokémon that item-evolves from this weather rock evolves on drop, and
+    // the rock is NOT consumed: it returns to the bench to keep setting the
+    // weather.
     if (
       pokemon.evolutionRule.type === EvolutionRuleType.ITEM &&
       pokemon.evolutionRule.itemsTriggeringEvolution.includes(item) &&

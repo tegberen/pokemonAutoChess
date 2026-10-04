@@ -1095,27 +1095,26 @@ export class Scyther extends Pokemon {
   stars = 1
   evolutions = [Pkm.SCIZOR, Pkm.KLEAVOR]
   evolutionRule = {
-    type: EvolutionRuleType.ITEM,
-    itemsTriggeringEvolution: [Item.METAL_ALLOY, Item.BLACK_AUGURITE],
-    divergentEvolution: (pokemon, player, item) =>
-      item === Item.BLACK_AUGURITE ? Pkm.KLEAVOR : Pkm.SCIZOR
-  } satisfies ItemEvolutionRule
-  hp = 150
-  atk = 15
+    type: EvolutionRuleType.COUNT,
+    numberRequired: 3,
+    divergentEvolution: (pokemon, player) =>
+      player.regionalPokemons.includes(Pkm.KLEAVOR) ? Pkm.KLEAVOR : Pkm.SCIZOR
+  } satisfies CountEvolutionRule
+  hp = 85
+  atk = 12
   speed = 59
   def = 6
   speDef = 6
   maxPP = 80
   range = 1
   skill = Ability.X_SCISSOR
-  passive = Passive.SCYTHER
 }
 
 export class Scizor extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.WILD, Synergy.BUG, Synergy.STEEL])
   rarity = Rarity.EPIC
   stars = 2
-  hp = 220
+  hp = 170
   atk = 24
   speed = 42
   def = 10
@@ -1129,7 +1128,7 @@ export class Kleavor extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.WILD, Synergy.BUG, Synergy.ROCK])
   rarity = Rarity.EPIC
   stars = 2
-  hp = 220
+  hp = 170
   atk = 22
   speed = 55
   def = 12
@@ -1137,6 +1136,11 @@ export class Kleavor extends Pokemon {
   maxPP = 80
   range = 1
   skill = Ability.STONE_AXE
+  regional = true
+  isInRegion(map: DungeonPMDO, state?: GameState) {
+    const regionSynergies = RegionDetails[map]?.synergies
+    return regionSynergies.includes(Synergy.ROCK)
+  }
 }
 
 export class Bounsweet extends Pokemon {

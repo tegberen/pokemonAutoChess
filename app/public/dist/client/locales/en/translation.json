@@ -3697,7 +3697,6 @@
 		"BLOSSOM_WEATHER_SUPPORT": "The Pokémon counts as 3 for BLOSSOM",
 		"ZEN_ZONE_WEATHER_SUPPORT": "The Pokémon counts as 3 for ZEN_ZONE",
 		"CARBINK": "Spontanious mutations have been observed during Crystallisation.",
-		"SCYTHER": "Scyther is looking for METAL_ALLOY or BLACK_AUGURITE",
 		"GLUTTON": "Permanently gains max HP when eating: 10 HP for each berry, 20 HP for each dish, 30 HP when cooking as a Chef",
 		"COMFEY": "Comfey cannot hold items. At the start of the fight, the STRONGEST nearest ally with a free item slot wears Comfey and gains its base max HP, ATK, DEF and SPE_DEF. Comfey casts its ability at the same time as its holder. When its holder is KO, Comfey fights on its own.",
 		"HISUIAN_TYPHLOSION": "The Pokémon inflicts 20% extra damage on a BURN or SILENCE target",
@@ -7576,8 +7575,9 @@
 					"PERMANENT_SPEED": "Highest ATK ally gains permanent SPEED"
 				},
 				"silence_damaged": "Damaged enemies for {{seconds}} seconds",
-				"silence_target": "The target for {{seconds}} seconds",
+				"silence_behind_target": "Enemies in a line behind the target for {{seconds}} seconds",
 				"silence_nearest": "{{targets}} nearest for {{seconds}} seconds",
+				"silence_adjacent": "{{targets}} ADJACENT for {{seconds}} seconds",
 				"gold_chance": "Chance",
 				"gold_amount": "Amount"
 			},
