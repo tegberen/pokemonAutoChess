@@ -16999,7 +16999,7 @@ export class Golett extends Pokemon {
   speed = 43
   def = 4
   speDef = 4
-  maxPP = 100
+  maxPP = 140
   range = 1
   skill = Ability.SHADOW_PUNCH
   additional = true
@@ -17018,7 +17018,7 @@ export class Golurk extends Pokemon {
   speed = 43
   def = 8
   speDef = 8
-  maxPP = 100
+  maxPP = 140
   range = 1
   skill = Ability.SHADOW_PUNCH
   additional = true

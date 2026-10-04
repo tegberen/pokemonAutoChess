@@ -16,6 +16,12 @@ export const WATER_SHURIKEN_GIANT_MS_PER_CELL = 70
 // the giant shuriken is thrown after the user's hop
 export const WATER_SHURIKEN_GIANT_WINDUP_MS = 300
 
+// Shadow Punch fires its fist once the user lies down into its cannon pose,
+// and hits on arrival
+export const SHADOW_PUNCH_WINDUP_MS = 330
+export const SHADOW_PUNCH_FLIGHT_MS = 160
+export const SHADOW_PUNCH_LAUNCH_MS = 260
+
 export const InimitableAbilities: Ability[] = [
   Ability.ASSIST,
   Ability.AURA_WHEEL,

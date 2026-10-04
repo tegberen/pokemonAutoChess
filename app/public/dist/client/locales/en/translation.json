@@ -2265,7 +2265,7 @@
 		"BLOODMOON_ABILITY": "Ursaluna concentrates all their energy into the blood-red moon on their forehead and projects it in a line, dealing [500,SP]% of ATK as SPECIAL and applying WOUND for 3 seconds to all enemy Pokémon hit.",
 		"TEA_TIME": "Heal all allied Pokémon for [15,30,60,120,SP] HP. All Pokémon holding a berry eat it immediately.",
 		"SPIKES": "BOARD_EFFECT: Throw up to [6, SP] metal SPIKES within a 3 tiles range CONE, dealing [25,50,100,200,SP] SPECIAL to any enemy Pokémon in the area.",
-		"SHADOW_PUNCH": "Fly towards the target with the lowest HP. The next attack deals additional [30,60,120,240,SP] SPECIAL.",
+		"SHADOW_PUNCH": "Fire a giant phantom fist that deals [40,80,SP] SPECIAL and knocks the target back to the board edge. Enemies in its path take half and are catapulted aside. Then rush in and strike the target for [60,120,SP] SPECIAL.",
 		"GUNK_SHOT": "Deal [25,50,100,200,SP] SPECIAL to the target and inflict POISONNED for [2,4,8,16,SP] seconds.",
 		"MAGNET_BOMB": "Launch a magnetic bomb dealing [25,50,100,200,SP] SPECIAL to target, [15,30,60,120,SP] SPECIAL to ADJACENT enemy Pokémon and attracting distant enemy Pokémon. All enemies affected are LOCKED for 1.5 second.",
 		"MUDDY_WATER": "Spurt muddy water at up to 3 enemy Pokémon in front of the user, dealing [40,80,160,320,SP] SPECIAL and applying WOUND and ARMOR_BREAK for 4 seconds.",

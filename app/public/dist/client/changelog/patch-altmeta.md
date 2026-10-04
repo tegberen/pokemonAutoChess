@@ -511,11 +511,13 @@ Every balance change on this server, newest first.
 - Gimmighoul | PP 90 → 100
 - Gholdengo | PP 90 → 100
 - Darkrai | passive: gains a stack only for KOs of enemies hexed by a HEXING_INCANTATION. Stacks to Mega evolve 20 → 10
+- Golett Line | PP 100 → 140
 
 **Abilities**
 - Machop Line | Guillotine → Cross Chop. Deal [300,SP]% of ATK as SPECIAL to the target. Each FIGHTING throw this fight gives this ability +[25,50,100,200]% CRIT_POWER. Can crit by default
 - Gastly Line | Nightmare: the bonus damage hits enemies hexed by a HEXING_INCANTATION instead of cursed ones
 - Gimmighoul | Gold Rush: GOLD gained 2 → 1
+- Golett Line | Shadow Punch reworked: a giant phantom fist deals [40,80,SP] SPECIAL and knocks the target back to the board edge, catapulting the enemies in its path. Then the user rushes in for [60,120,SP] SPECIAL
 - Shuppet Line | Shadow Clone: only steals an item if the target is hexed by a HEXING_INCANTATION. Clone max HP [50,50,90,100]% → [50,50,50,100]%
 
 **Synergies**

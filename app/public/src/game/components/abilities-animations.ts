@@ -20,6 +20,9 @@ import {
   DRAGON_DARTS_DART_FLIGHT_MS,
   LIGHT_OF_RUIN_CHARGE_MS,
   MUD_BUBBLE_HOP_MS,
+  SHADOW_PUNCH_FLIGHT_MS,
+  SHADOW_PUNCH_LAUNCH_MS,
+  SHADOW_PUNCH_WINDUP_MS,
   WATER_SHURIKEN_FLIGHT_MS,
   WATER_SHURIKEN_GIANT_MS_PER_CELL,
   WATER_SHURIKEN_GIANT_WINDUP_MS
@@ -1552,6 +1555,364 @@ function crossChopAnimation(args: AbilityAnimationArgs, crit: boolean) {
       })
     }
     playCrossChopFlameBurst(scene, x, centerY, scale, crit)
+  })
+}
+
+const SHADOW_PUNCH_FIST_SIZE = 64
+const SHADOW_PUNCH_BLAST_PUFFS = 12
+const SHADOW_PUNCH_SHARDS = 14
+const SHADOW_PUNCH_SPARKS = 12
+const SHADOW_PUNCH_CYAN = 0x5ff6ff
+const SHADOW_PUNCH_BLUE = 0x3d7bff
+const SHADOW_PUNCH_PURPLE = 0xb04dff
+const SHADOW_PUNCH_VIOLET = 0x6a2bd8
+
+function addShadowPunchFist(
+  scene: AbilityAnimationArgs["scene"],
+  x: number,
+  y: number,
+  rotation: number,
+  size: number
+) {
+  const unit = size / 20
+  const outline = Math.max(2, unit * 0.9)
+  const fist = scene.add
+    .graphics()
+    .setPosition(x, y)
+    .setRotation(rotation)
+    .setDepth(DEPTH.ABILITY)
+    .setBlendMode(Phaser.BlendModes.ADD)
+  const shapes = [
+    { x: -9, y: -7, width: 10, height: 14, radius: 3 },
+    { x: 0, y: -7, width: 7, height: 3.6, radius: 1.6 },
+    { x: 0.5, y: -3.5, width: 7.5, height: 3.6, radius: 1.6 },
+    { x: 0.5, y: 0, width: 7.5, height: 3.6, radius: 1.6 },
+    { x: 0, y: 3.5, width: 7, height: 3.6, radius: 1.6 },
+    { x: -6, y: 5.5, width: 8, height: 3.4, radius: 1.6 }
+  ]
+  fist.fillStyle(SHADOW_PUNCH_BLUE, 0.3)
+  fist.lineStyle(outline, SHADOW_PUNCH_CYAN, 1)
+  for (const shape of shapes) {
+    fist.fillRoundedRect(
+      shape.x * unit,
+      shape.y * unit,
+      shape.width * unit,
+      shape.height * unit,
+      shape.radius * unit
+    )
+    fist.strokeRoundedRect(
+      shape.x * unit,
+      shape.y * unit,
+      shape.width * unit,
+      shape.height * unit,
+      shape.radius * unit
+    )
+  }
+  fist.lineStyle(outline * 0.6, 0xffffff, 0.9)
+  fist.strokeRoundedRect(-7 * unit, -5 * unit, 6 * unit, 10 * unit, 2 * unit)
+  scene.abilitiesVfxGroup?.add(fist)
+  return fist
+}
+
+function playShadowPunchBlast(
+  scene: AbilityAnimationArgs["scene"],
+  x: number,
+  y: number,
+  rotation: number,
+  scale: number
+) {
+  for (let index = 0; index < SHADOW_PUNCH_BLAST_PUFFS; index++) {
+    const angle = rotation + (Math.random() - 0.5) * Math.PI * 1.4
+    const distance = (10 + Math.random() * 26) * scale
+    const puff = scene.add
+      .circle(
+        x,
+        y,
+        (8 + Math.random() * 10) * scale,
+        index % 3 === 0 ? SHADOW_PUNCH_VIOLET : SHADOW_PUNCH_PURPLE,
+        0.7
+      )
+      .setDepth(DEPTH.ABILITY)
+      .setBlendMode(Phaser.BlendModes.ADD)
+    scene.abilitiesVfxGroup?.add(puff)
+    scene.tweens.add({
+      targets: puff,
+      x: x + Math.cos(angle) * distance,
+      y: y + Math.sin(angle) * distance,
+      scale: { from: 0.5, to: 1.4 },
+      alpha: { from: 0.8, to: 0 },
+      duration: 280 + Math.random() * 160,
+      ease: "Cubic.easeOut",
+      onComplete: () => puff.destroy()
+    })
+  }
+  playShadowPunchImpact(scene, x, y, scale * 0.8)
+}
+
+function playShadowPunchImpact(
+  scene: AbilityAnimationArgs["scene"],
+  x: number,
+  y: number,
+  scale: number
+) {
+  const flash = scene.add
+    .circle(x, y, 20 * scale, 0xffffff, 1)
+    .setDepth(DEPTH.ABILITY)
+    .setBlendMode(Phaser.BlendModes.ADD)
+  scene.abilitiesVfxGroup?.add(flash)
+  scene.tweens.add({
+    targets: flash,
+    scale: 1.8,
+    alpha: 0,
+    duration: 160,
+    ease: "Quad.easeOut",
+    onComplete: () => flash.destroy()
+  })
+
+  const ring = scene.add
+    .circle(x, y, 18 * scale)
+    .setStrokeStyle(3, SHADOW_PUNCH_CYAN, 1)
+    .setDepth(DEPTH.ABILITY)
+  scene.abilitiesVfxGroup?.add(ring)
+  scene.tweens.add({
+    targets: ring,
+    scale: 3,
+    alpha: 0,
+    duration: 320,
+    ease: "Cubic.easeOut",
+    onComplete: () => ring.destroy()
+  })
+
+  const shards = scene.add
+    .graphics()
+    .setPosition(x, y)
+    .setDepth(DEPTH.ABILITY)
+    .setBlendMode(Phaser.BlendModes.ADD)
+    .setScale(0.4)
+  for (let index = 0; index < SHADOW_PUNCH_SHARDS; index++) {
+    const angle = (index / SHADOW_PUNCH_SHARDS) * Math.PI * 2 + index * 0.37
+    const reach = (index % 2 === 0 ? 46 : 30) * scale
+    shards.fillStyle(
+      index % 3 === 0 ? SHADOW_PUNCH_CYAN : SHADOW_PUNCH_PURPLE,
+      0.9
+    )
+    shards.fillTriangle(
+      Math.cos(angle - 0.16) * 8,
+      Math.sin(angle - 0.16) * 8,
+      Math.cos(angle) * reach,
+      Math.sin(angle) * reach,
+      Math.cos(angle + 0.16) * 8,
+      Math.sin(angle + 0.16) * 8
+    )
+  }
+  scene.abilitiesVfxGroup?.add(shards)
+  scene.tweens.add({
+    targets: shards,
+    scale: 1.2,
+    alpha: { from: 1, to: 0 },
+    duration: 300,
+    ease: "Cubic.easeOut",
+    onComplete: () => shards.destroy()
+  })
+
+  for (let index = 0; index < SHADOW_PUNCH_SPARKS; index++) {
+    const angle = Math.random() * Math.PI * 2
+    const distance = (34 + Math.random() * 30) * scale
+    const spark = scene.add
+      .rectangle(x, y, 4, 4, index % 2 === 0 ? 0xffffff : SHADOW_PUNCH_CYAN)
+      .setDepth(DEPTH.ABILITY)
+      .setBlendMode(Phaser.BlendModes.ADD)
+    scene.abilitiesVfxGroup?.add(spark)
+    scene.tweens.add({
+      targets: spark,
+      x: x + Math.cos(angle) * distance,
+      y: y + Math.sin(angle) * distance,
+      alpha: { from: 1, to: 0 },
+      duration: 260 + Math.random() * 120,
+      ease: "Quad.easeOut",
+      onComplete: () => spark.destroy()
+    })
+  }
+}
+
+function addShadowPunchTrail(
+  scene: AbilityAnimationArgs["scene"],
+  fromX: number,
+  fromY: number,
+  toX: number,
+  toY: number,
+  delay: number,
+  duration: number
+) {
+  const trail = scene.add
+    .rectangle(
+      fromX,
+      fromY,
+      Math.hypot(toX - fromX, toY - fromY),
+      10,
+      SHADOW_PUNCH_PURPLE,
+      0.55
+    )
+    .setOrigin(0, 0.5)
+    .setRotation(Math.atan2(toY - fromY, toX - fromX))
+    .setScale(0, 1)
+    .setDepth(DEPTH.ABILITY)
+    .setBlendMode(Phaser.BlendModes.ADD)
+  scene.abilitiesVfxGroup?.add(trail)
+  scene.tweens.add({
+    targets: trail,
+    scaleX: 1,
+    delay,
+    duration,
+    ease: "Quad.easeOut",
+    onComplete: () =>
+      scene.tweens.add({
+        targets: trail,
+        scaleY: 0,
+        alpha: 0,
+        duration: 180,
+        onComplete: () => trail.destroy()
+      })
+  })
+}
+
+function shadowPunchAnimation(args: AbilityAnimationArgs) {
+  const { scene, flip } = args
+  const [casterX, casterY] = transformEntityCoordinates(
+    args.positionX,
+    args.positionY,
+    flip
+  )
+  const [targetX, targetY] = transformEntityCoordinates(
+    args.targetX,
+    args.targetY,
+    flip
+  )
+  const fromY = casterY - 12
+  const toY = targetY - 12
+  const rotation = Math.atan2(toY - fromY, targetX - casterX)
+  const muzzleX = casterX + Math.cos(rotation) * 20
+  const muzzleY = fromY + Math.sin(rotation) * 20
+
+  const charge = scene.add
+    .circle(muzzleX, muzzleY, 26, SHADOW_PUNCH_PURPLE, 0.35)
+    .setDepth(DEPTH.ABILITY)
+    .setBlendMode(Phaser.BlendModes.ADD)
+  scene.abilitiesVfxGroup?.add(charge)
+  scene.tweens.add({
+    targets: charge,
+    scale: { from: 1.5, to: 0.3 },
+    alpha: { from: 0.2, to: 0.8 },
+    duration: SHADOW_PUNCH_WINDUP_MS,
+    ease: "Sine.easeIn",
+    onComplete: () => charge.destroy()
+  })
+
+  scene.time.delayedCall(SHADOW_PUNCH_WINDUP_MS, () => {
+    playShadowPunchBlast(scene, muzzleX, muzzleY, rotation, 1.2)
+    scene.shakeCamera({ intensity: 0.004, duration: 120 })
+    const fist = addShadowPunchFist(
+      scene,
+      muzzleX,
+      muzzleY,
+      rotation,
+      SHADOW_PUNCH_FIST_SIZE
+    ).setScale(0.6)
+    scene.tweens.add({
+      targets: fist,
+      x: targetX,
+      y: toY,
+      scale: 1,
+      duration: SHADOW_PUNCH_FLIGHT_MS,
+      ease: "Quad.easeIn",
+      onComplete: () => {
+        playShadowPunchImpact(scene, targetX, toY, 1.2)
+        scene.shakeCamera({ intensity: 0.007, duration: 180 })
+        fadeOutCrossChopPart(scene, fist, 40, 160)
+      }
+    })
+  })
+  addShadowPunchTrail(
+    scene,
+    muzzleX,
+    muzzleY,
+    targetX,
+    toY,
+    SHADOW_PUNCH_WINDUP_MS,
+    SHADOW_PUNCH_FLIGHT_MS
+  )
+}
+
+function shadowPunchLaunchAnimation(args: AbilityAnimationArgs) {
+  const { scene, flip } = args
+  const [fromX, fromY] = transformEntityCoordinates(
+    args.positionX,
+    args.positionY,
+    flip
+  )
+  const [toX, toY] = transformEntityCoordinates(
+    args.targetX,
+    args.targetY,
+    flip
+  )
+  addShadowPunchTrail(scene, fromX, fromY - 12, toX, toY - 12, 0, 220)
+  const fist = addShadowPunchFist(
+    scene,
+    fromX,
+    fromY - 12,
+    Math.atan2(toY - fromY, toX - fromX),
+    SHADOW_PUNCH_FIST_SIZE * 0.8
+  )
+  scene.tweens.add({
+    targets: fist,
+    x: toX,
+    y: toY - 12,
+    duration: SHADOW_PUNCH_LAUNCH_MS,
+    ease: "Quad.easeOut",
+    onComplete: () => {
+      playShadowPunchImpact(scene, toX, toY - 12, 0.7)
+      fadeOutCrossChopPart(scene, fist, 0, 160)
+    }
+  })
+}
+
+function shadowPunchCatapultAnimation(args: AbilityAnimationArgs) {
+  const { scene, flip } = args
+  const [fromX, fromY] = transformEntityCoordinates(
+    args.positionX,
+    args.positionY,
+    flip
+  )
+  const [toX, toY] = transformEntityCoordinates(
+    args.targetX,
+    args.targetY,
+    flip
+  )
+  playShadowPunchImpact(scene, fromX, fromY - 12, 0.5)
+  const orb = scene.add
+    .circle(fromX, fromY - 12, 7, SHADOW_PUNCH_PURPLE, 0.9)
+    .setDepth(DEPTH.ABILITY)
+    .setBlendMode(Phaser.BlendModes.ADD)
+  scene.abilitiesVfxGroup?.add(orb)
+  scene.tweens.addCounter({
+    from: 0,
+    to: 1,
+    duration: 300,
+    ease: "Sine.easeOut",
+    onUpdate: (tween) => {
+      const progress = tween.getValue() ?? 0
+      orb.setPosition(
+        fromX + (toX - fromX) * progress,
+        fromY -
+          12 +
+          (toY - fromY) * progress -
+          Math.sin(progress * Math.PI) * 40
+      )
+    },
+    onComplete: () => {
+      playShadowPunchImpact(scene, toX, toY - 12, 0.4)
+      orb.destroy()
+    }
   })
 }
 
@@ -5861,6 +6222,9 @@ export const AbilitiesAnimations: {
   ],
   [Ability.LIGHT_OF_RUIN]: lightOfRuinAnimation,
   [Ability.CROSS_CHOP]: (args) => crossChopAnimation(args, false),
+  [Ability.SHADOW_PUNCH]: shadowPunchAnimation,
+  ["SHADOW_PUNCH_LAUNCH"]: shadowPunchLaunchAnimation,
+  ["SHADOW_PUNCH_CATAPULT"]: shadowPunchCatapultAnimation,
   [CROSS_CHOP_CRIT_ANIMATION]: (args) => crossChopAnimation(args, true),
 
   [Ability.DIAMOND_STORM]: onCasterScale2,

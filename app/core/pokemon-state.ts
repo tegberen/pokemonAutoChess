@@ -383,7 +383,7 @@ export default abstract class PokemonState {
       if (pokemon.effects.has(EffectEnum.SHADOW_PUNCH_NEXT_ATTACK)) {
         const abilityCrit = pokemon.effects.has(EffectEnum.ABILITY_CRIT) && crit
         specialDamage += Math.ceil(
-          ([30, 60, 120, 240][pokemon.stars - 1] ?? 240) *
+          ([60, 120, 240, 480][pokemon.stars - 1] ?? 480) *
             (1 + pokemon.ap / 100) *
             (abilityCrit ? min(1)(pokemon.critPower * reductionFactor) : 1)
         )
