@@ -4019,7 +4019,7 @@
 		"FAIRY": "FAIRY Pokémon use wands to deal additional SPECIAL and various effects with their attacks.{{additionalInfo}}",
 		"FAIRY_WANDS": "\nWands equipped: {{wands}}",
 		"ROCK": "ROCK Pokémon gain DEF, better resist to critical attacks, and can adapt to weather. When ROCK Pokémon are KO'd they explode, deal TRUE and ARMOR_BREAK all ADJACENT enemies",
-		"GHOST": "GHOST lets you write incantations that curse the enemy team. GHOST Pokémon have a [15,LK]% chance to dodge attacks and apply SILENCE for 2s ON_HIT. An enemy's negative LUCK counts as bonus LUCK for GHOST Pokémon against it.",
+		"GHOST": "GHOST lets you write incantations that curse the enemy team. GHOST Pokémon have a [15,LK]% chance to dodge attacks and apply SILENCE for 2s ON_HIT. Enemies with negative LUCK are easier for GHOST Pokémon to dodge and SILENCE.",
 		"ICE": "ICE Pokémon have [20,LK]% chance to FREEZE the enemy for 2 seconds after a hit and give SPE_DEF to your whole team.",
 		"FOSSIL": "At 30% HP, FOSSIL Pokemon awaken their primordial power, gaining SHIELD and ATK.",
 		"SOUND": "SOUND Pokémon emit a cry when they use their abilities, waking up sleeping allies and giving them bonus stats.",

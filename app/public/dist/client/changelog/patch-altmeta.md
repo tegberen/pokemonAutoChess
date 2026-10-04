@@ -133,6 +133,15 @@ each tile of gap.
 
 {{synergy:GHOST}}
 
+#### Negative LUCK
+
+When a GHOST Pokémon rolls to dodge an enemy's attack, or to apply SILENCE on
+hit, that enemy's negative LUCK is added to the GHOST Pokémon's own LUCK for the
+roll. Only these two rolls use it: crits, item procs and abilities do not.
+
+For example, a GHOST Pokémon with 0 LUCK against an enemy with -20 LUCK rolls
+with 20 LUCK, so its 15% chance becomes about 22%.
+
 > CURSE is no longer the GHOST (8) capstone. GHOST (8) now writes a
 > FATED_INCANTATION, and one of its options still gives access to CURSE: each
 > hexed enemy gets CURSE for 10s. However, that CURSE stays on the hexed unit
@@ -523,7 +532,7 @@ Every balance change on this server, newest first.
 
 **Synergies**
 - GHOST {{new}} | synergy reworked: write HEXING_INCANTATION, RITUAL_INCANTATION and FATED_INCANTATION
-- GHOST {{new}} | rule: an enemy's negative LUCK counts as bonus LUCK for GHOST Pokémon against it
+- GHOST {{new}} | rule: enemies with negative LUCK are easier for GHOST Pokémon to dodge and SILENCE
 - MURKY | LUCK -30 → -10, GHOST are still immune
 - ODD_KEYSTONE | on ROCK explosion, each HEXING_INCANTATION hexes a new enemy instead of applying two GHOST curses
 
