@@ -20,12 +20,15 @@
   font-size: 0.85em;
 }
 
+/* stays clear of the shop bar on short screens */
 .game-incantation-body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1.25em;
-  padding: 1em 1.25em 1.25em;
+  gap: 0.9em;
+  max-height: calc(100vh - 250px);
+  padding: 0.8em 1.25em 1em;
+  overflow-y: auto;
 }
 
 .game-incantation-panels {
@@ -42,7 +45,7 @@
   display: flex;
   flex: 1 1 0;
   flex-direction: column;
-  gap: 0.75em;
+  gap: 0.6em;
   min-width: 15em;
   max-width: 21em;
   padding: 0.9em 0.9em 1em;
@@ -81,9 +84,15 @@
   transform: translate(-70%, -50%) rotate(45deg);
 }
 
+.game-incantation-options {
+  display: grid;
+  flex: 1 1 auto;
+  grid-auto-rows: 1fr;
+  gap: 0.6em;
+}
+
 .game-incantation-option {
   display: flex;
-  flex: 1 1 auto;
   align-items: center;
   min-height: 3.2em;
   padding: 0.65em 1.1em;
@@ -100,6 +109,26 @@
   text-align: left;
   cursor: var(--cursor-hover);
   transition: background-color 120ms ease;
+}
+
+.game-incantation-choice.fated .game-incantation-panel {
+  max-width: 28em;
+}
+
+.game-incantation-choice.fated .game-incantation-option {
+  font-size: 0.9em;
+}
+
+.game-incantation-current {
+  margin: 0;
+  padding: 0 0.3em;
+  font-size: 0.8em;
+  line-height: 1.35;
+  color: var(--color-fg-secondary);
+}
+
+.game-incantation-line {
+  display: block;
 }
 
 .game-incantation-option:hover,
@@ -131,6 +160,12 @@
 }
 
 /* themed through the draggable-window class, without its dragging layout */
+.game-choice.game-choice-incantation {
+  top: 70px;
+  width: max-content;
+  max-width: 94vw;
+}
+
 .game-choice > .draggable-window.my-container {
   position: static;
   display: block;

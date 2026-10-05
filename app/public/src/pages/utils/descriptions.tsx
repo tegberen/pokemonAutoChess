@@ -238,6 +238,8 @@ export function addIconsToDescription(
         let scaleType: "AP" | "LUCK" | null = null
         let scaleFactor = 1
         let nbDigits = 0
+        const isReplacedValue = array.at(-1) === "OLD"
+        if (isReplacedValue) array.pop()
         if (array.at(-1)?.includes("ND")) {
           nbDigits = Number(array.pop()?.replace("ND=", "")) || 0
         }
@@ -260,7 +262,8 @@ export function addIconsToDescription(
           <span
             className={cc("description-icon", {
               "scales-ap": scaleType === "AP",
-              "scales-luck": scaleType === "LUCK"
+              "scales-luck": scaleType === "LUCK",
+              "replaced-value": isReplacedValue
             })}
           >
             {scaleType === "AP" && (

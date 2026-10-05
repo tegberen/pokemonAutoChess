@@ -67,9 +67,10 @@ export const INCANTATION_OPTIONS_SHOWN = 3
 export const INCANTATION_STATUS_DURATION = 30000
 export const RITUAL_ATTACKS_PER_TRIGGER = 8
 export const FATED_DOOM_DELAY = 10000
-export const FATED_SPREAD_STATUS_DURATION = 3000
+export const FATED_SPREAD_STATUS_DURATION = 30000
 export const FATED_SPREAD_HEX_TARGETS = 2
-export const FATED_ECHO_CHANCE = 25
+export const FATED_ECHO_CHANCE = 50
+export const RITUAL_PERMANENT_STAT_CAP = 0.5
 export const FATED_SPAWN_RARITY_WEIGHTS = { COMMON: 50, UNCOMMON: 30, RARE: 20 }
 
 export const GHOST_INCANTATION_SLOTS: {
@@ -102,7 +103,7 @@ export function getIncantationStrength(
 export const HEXING_STAT_LOSS_VALUES: {
   [target in HexingTarget]: { values: number[]; isPercent: boolean }
 } = {
-  [HexingTarget.HIGHEST_DEFENSES]: { values: [5, 7, 9], isPercent: false },
+  [HexingTarget.HIGHEST_DEFENSES]: { values: [6, 9, 12], isPercent: false },
   [HexingTarget.HIGHEST_AP]: { values: [20, 40, 60], isPercent: false },
   [HexingTarget.HIGHEST_ATK]: { values: [10, 20, 30], isPercent: true },
   [HexingTarget.HIGHEST_SPEED]: { values: [15, 30, 45], isPercent: false }
@@ -112,8 +113,8 @@ export const HEXING_LOSS_VALUES: {
   [loss in Exclude<HexingLoss, HexingLoss.STAT>]: number[]
 } = {
   [HexingLoss.GOLD_ON_KO]: [1, 2, 3],
-  [HexingLoss.LUCK]: [10, 15, 20],
-  [HexingLoss.MAX_PP]: [10, 15, 20],
+  [HexingLoss.LUCK]: [10, 20, 30],
+  [HexingLoss.MAX_PP]: [10, 20, 30],
   [HexingLoss.MAX_HP]: [10, 15, 20]
 }
 
@@ -126,32 +127,32 @@ export const RITUAL_EFFECT_VALUES: {
   [RitualEffect.GHOST_LUCK]: {
     [RitualTrigger.GHOST_CASTS]: [2, 3],
     [RitualTrigger.GHOST_ATTACKS]: [2, 3],
-    [RitualTrigger.GHOST_KOD]: [3, 5],
+    [RitualTrigger.GHOST_KOD]: [4, 8],
     [RitualTrigger.ENEMY_KOD]: [3, 5]
   },
   [RitualEffect.ENEMY_LUCK_LOSS]: {
     [RitualTrigger.GHOST_CASTS]: [2, 3],
     [RitualTrigger.GHOST_ATTACKS]: [2, 3],
     [RitualTrigger.GHOST_KOD]: [4, 8],
-    [RitualTrigger.ENEMY_KOD]: [4, 8]
+    [RitualTrigger.ENEMY_KOD]: [3, 5]
   },
   [RitualEffect.GHOST_SPEED]: {
-    [RitualTrigger.GHOST_CASTS]: [3, 5],
-    [RitualTrigger.GHOST_ATTACKS]: [3, 5],
-    [RitualTrigger.GHOST_KOD]: [15, 20],
-    [RitualTrigger.ENEMY_KOD]: [10, 15]
+    [RitualTrigger.GHOST_CASTS]: [4, 5],
+    [RitualTrigger.GHOST_ATTACKS]: [6, 8],
+    [RitualTrigger.GHOST_KOD]: [12, 20],
+    [RitualTrigger.ENEMY_KOD]: [8, 15]
   },
   [RitualEffect.GHOST_PP]: {
-    [RitualTrigger.GHOST_CASTS]: [2, 3],
-    [RitualTrigger.GHOST_ATTACKS]: [1, 2],
-    [RitualTrigger.GHOST_KOD]: [20, 30],
-    [RitualTrigger.ENEMY_KOD]: [15, 25]
+    [RitualTrigger.GHOST_CASTS]: [4, 5],
+    [RitualTrigger.GHOST_ATTACKS]: [6, 8],
+    [RitualTrigger.GHOST_KOD]: [12, 20],
+    [RitualTrigger.ENEMY_KOD]: [8, 15]
   },
   [RitualEffect.GHOST_MAX_HP]: {
-    [RitualTrigger.GHOST_CASTS]: [3, 5],
-    [RitualTrigger.GHOST_ATTACKS]: [3, 5],
-    [RitualTrigger.GHOST_KOD]: [25, 35],
-    [RitualTrigger.ENEMY_KOD]: [20, 30]
+    [RitualTrigger.GHOST_CASTS]: [5, 8],
+    [RitualTrigger.GHOST_ATTACKS]: [8, 12],
+    [RitualTrigger.GHOST_KOD]: [15, 25],
+    [RitualTrigger.ENEMY_KOD]: [10, 20]
   }
 }
 
@@ -161,17 +162,17 @@ export const RITUAL_SILENCE_VALUES: ByRitualTrigger<{
   seconds: number[]
 }> = {
   [RitualTrigger.GHOST_CASTS]: { targets: [0, 0], seconds: [1, 2] },
-  [RitualTrigger.GHOST_ATTACKS]: { targets: [0, 0], seconds: [1, 2] },
-  [RitualTrigger.GHOST_KOD]: { targets: [1, 2], seconds: [2, 3] },
-  [RitualTrigger.ENEMY_KOD]: { targets: [1, 2], seconds: [2, 3] }
+  [RitualTrigger.GHOST_ATTACKS]: { targets: [0, 0], seconds: [3, 4] },
+  [RitualTrigger.GHOST_KOD]: { targets: [2, 3], seconds: [2, 3] },
+  [RitualTrigger.ENEMY_KOD]: { targets: [2, 3], seconds: [2, 3] }
 }
 
 export const RITUAL_GOLD_CHANCE_VALUES: ByRitualTrigger<{
   chance: number[]
   gold: number[]
 }> = {
-  [RitualTrigger.GHOST_CASTS]: { chance: [3, 5], gold: [1, 2] },
-  [RitualTrigger.GHOST_ATTACKS]: { chance: [2, 3], gold: [1, 2] },
+  [RitualTrigger.GHOST_CASTS]: { chance: [5, 8], gold: [1, 2] },
+  [RitualTrigger.GHOST_ATTACKS]: { chance: [8, 12], gold: [1, 2] },
   [RitualTrigger.GHOST_KOD]: { chance: [15, 25], gold: [1, 2] },
   [RitualTrigger.ENEMY_KOD]: { chance: [10, 20], gold: [1, 2] }
 }
@@ -181,36 +182,36 @@ export const RITUAL_BONUS_VALUES: {
 } = {
   [RitualBonus.PERMANENT_HP]: {
     [RitualTrigger.GHOST_CASTS]: [1, 2],
-    [RitualTrigger.GHOST_ATTACKS]: [1, 2],
-    [RitualTrigger.GHOST_KOD]: [3, 5],
+    [RitualTrigger.GHOST_ATTACKS]: [2, 3],
+    [RitualTrigger.GHOST_KOD]: [4, 6],
     [RitualTrigger.ENEMY_KOD]: [3, 5]
   },
   [RitualBonus.PERMANENT_PP]: {
-    [RitualTrigger.GHOST_CASTS]: [1, 1],
-    [RitualTrigger.GHOST_ATTACKS]: [1, 1],
-    [RitualTrigger.GHOST_KOD]: [1, 2],
-    [RitualTrigger.ENEMY_KOD]: [1, 2]
+    [RitualTrigger.GHOST_CASTS]: [1, 2],
+    [RitualTrigger.GHOST_ATTACKS]: [1, 2],
+    [RitualTrigger.GHOST_KOD]: [3, 5],
+    [RitualTrigger.ENEMY_KOD]: [2, 3]
   },
   [RitualBonus.PERMANENT_SPEED]: {
     [RitualTrigger.GHOST_CASTS]: [1, 2],
     [RitualTrigger.GHOST_ATTACKS]: [1, 2],
-    [RitualTrigger.GHOST_KOD]: [2, 3],
+    [RitualTrigger.GHOST_KOD]: [3, 5],
     [RitualTrigger.ENEMY_KOD]: [2, 3]
   }
 }
 
 export const FATED_RESURRECT_ACTIVATIONS: ByRitualTrigger<number> = {
-  [RitualTrigger.GHOST_CASTS]: 12,
+  [RitualTrigger.GHOST_CASTS]: 15,
   [RitualTrigger.GHOST_ATTACKS]: 10,
   [RitualTrigger.GHOST_KOD]: 5,
-  [RitualTrigger.ENEMY_KOD]: 4
+  [RitualTrigger.ENEMY_KOD]: 6
 }
 
 export const FATED_SPAWN_GHOST_CHANCE: ByRitualTrigger<number> = {
-  [RitualTrigger.GHOST_CASTS]: 3,
-  [RitualTrigger.GHOST_ATTACKS]: 3,
-  [RitualTrigger.GHOST_KOD]: 10,
-  [RitualTrigger.ENEMY_KOD]: 8
+  [RitualTrigger.GHOST_CASTS]: 8,
+  [RitualTrigger.GHOST_ATTACKS]: 10,
+  [RitualTrigger.GHOST_KOD]: 20,
+  [RitualTrigger.ENEMY_KOD]: 15
 }
 
 export interface GhostIncantation {

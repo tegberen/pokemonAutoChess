@@ -22,6 +22,7 @@ import {
   RITUAL_BONUS_VALUES,
   RITUAL_EFFECT_VALUES,
   RITUAL_GOLD_CHANCE_VALUES,
+  RITUAL_PERMANENT_STAT_CAP,
   RITUAL_SILENCE_VALUES,
   RitualBonus,
   RitualEffect,
@@ -58,6 +59,8 @@ export interface IncantationSide {
   ritualStrength: number
   canEarnRewards: boolean
   ritualActivations: number
+  goldPaidHexSlots: Set<number>
+  doomedHexSlots: Set<number>
 }
 
 export interface Hex {
@@ -98,7 +101,9 @@ export function createIncantationSide(
     hexingStrength: getHexingStrength(ghostLevel),
     ritualStrength: getRitualStrength(ghostLevel),
     canEarnRewards,
-    ritualActivations: 0
+    ritualActivations: 0,
+    goldPaidHexSlots: new Set(),
+    doomedHexSlots: new Set()
   }
 }
 
@@ -155,7 +160,7 @@ function hexNewEnemy(
   const score = HEX_TARGET_SCORE[incantation.cause as HexingTarget]
   if (candidates.length === 0 || !score) return
   const highestScore = Math.max(...candidates.map(score))
-  const target = pickRandomIn(
+  const target = getStrongestUnit(
     candidates.filter((enemy) => score(enemy) === highestScore)
   )
   const curser = getCurser(simulation, side)
@@ -163,9 +168,9 @@ function hexNewEnemy(
   applyHex(side, slot, incantation, target, curser)
 }
 
-function applyHex(
+// resurrect() rebuilds these stats, so they are applied again after a revive
+function applyHexStatLoss(
   side: IncantationSide,
-  slot: number,
   incantation: GhostIncantation,
   target: PokemonEntity,
   curser: PokemonEntity
@@ -189,17 +194,38 @@ function applyHex(
     }
   } else if (loss === HexingLoss.LUCK) {
     target.addLuck(-HEXING_LOSS_VALUES[loss][strength], curser, 0, false)
-  } else if (loss === HexingLoss.MAX_PP) {
-    const increase = HEXING_LOSS_VALUES[loss][strength]
-    target.maxPP = Math.min(
-      255,
-      Math.round((target.maxPP * (100 + increase)) / 100)
-    )
   } else if (loss === HexingLoss.MAX_HP) {
     const hpLoss = Math.round(
       (target.maxHP * HEXING_LOSS_VALUES[loss][strength]) / 100
     )
     target.addMaxHP(-hpLoss, curser, 0, false)
+  }
+}
+
+export function reapplyHexStatLosses(
+  simulation: Simulation,
+  target: PokemonEntity
+) {
+  for (const hex of target.hexes) {
+    const curser = getCurser(simulation, hex.side)
+    if (curser) applyHexStatLoss(hex.side, hex.incantation, target, curser)
+  }
+}
+
+function applyHex(
+  side: IncantationSide,
+  slot: number,
+  incantation: GhostIncantation,
+  target: PokemonEntity,
+  curser: PokemonEntity
+) {
+  applyHexStatLoss(side, incantation, target, curser)
+  if (incantation.effect === HexingLoss.MAX_PP) {
+    const increase = HEXING_LOSS_VALUES[HexingLoss.MAX_PP][side.hexingStrength]
+    target.maxPP = Math.min(
+      255,
+      Math.round((target.maxPP * (100 + increase)) / 100)
+    )
   }
 
   triggerHexStatus(
@@ -211,7 +237,11 @@ function applyHex(
   if (slot === 0) target.status.curseVulnerability = true
   else target.status.curseWeakness = true
 
-  if (side.fated?.cause === FatedHexing.DOOM) {
+  if (
+    side.fated?.cause === FatedHexing.DOOM &&
+    !side.doomedHexSlots.has(slot)
+  ) {
+    side.doomedHexSlots.add(slot)
     target.status.curseFate = true
     target.status.triggerCurse(FATED_DOOM_DELAY, target)
   }
@@ -240,14 +270,15 @@ function hasHexStatus(target: PokemonEntity, status: HexingStatus) {
   return target.status.paralysis
 }
 
-// like the old GHOST curses, hexes come back after a cleanse
+// hexes and spread statuses come back after a cleanse, like the old curses
 export function reapplyHexStatuses(target: PokemonEntity) {
-  for (const hex of target.hexes) {
-    const status = hex.incantation.bonus as HexingStatus
+  const reapply = (status: HexingStatus) => {
     if (!hasHexStatus(target, status)) {
       triggerHexStatus(target, status, INCANTATION_STATUS_DURATION)
     }
   }
+  for (const hex of target.hexes) reapply(hex.incantation.bonus as HexingStatus)
+  target.spreadHexStatuses.forEach(reapply)
   if (target.status.curseFate && !target.status.curse) {
     target.status.triggerCurse(FATED_DOOM_DELAY, target)
   }
@@ -260,7 +291,12 @@ export function onHexedEnemyKnockedOut(
 ) {
   for (const hex of enemy.hexes) {
     const { side, incantation } = hex
-    if (incantation.effect === HexingLoss.GOLD_ON_KO && !enemy.isSpawn) {
+    if (
+      incantation.effect === HexingLoss.GOLD_ON_KO &&
+      !enemy.isSpawn &&
+      !side.goldPaidHexSlots.has(hex.slot)
+    ) {
+      side.goldPaidHexSlots.add(hex.slot)
       grantIncantationGold(
         side,
         HEXING_LOSS_VALUES[HexingLoss.GOLD_ON_KO][side.hexingStrength]
@@ -271,11 +307,9 @@ export function onHexedEnemyKnockedOut(
         .getAdjacentCells(enemy.positionX, enemy.positionY)
         .forEach((cell) => {
           if (cell.value && cell.value.team === enemy.team) {
-            triggerHexStatus(
-              cell.value,
-              incantation.bonus as HexingStatus,
-              FATED_SPREAD_STATUS_DURATION
-            )
+            const status = incantation.bonus as HexingStatus
+            cell.value.spreadHexStatuses.add(status)
+            triggerHexStatus(cell.value, status, FATED_SPREAD_STATUS_DURATION)
           }
         })
     }
@@ -379,24 +413,78 @@ function activateRitual(
     (ally) => ally.player === side.player && !ally.isSpawn
   )
   const value = RITUAL_BONUS_VALUES[bonus][trigger][strength] * rewardMultiplier
-  const highestBy = (score: (ally: PokemonEntity) => number) => {
-    const highest = Math.max(...ownUnits.map(score))
-    return pickRandomIn(ownUnits.filter((ally) => score(ally) === highest))
+  const highestBy = (
+    units: PokemonEntity[],
+    score: (ally: PokemonEntity) => number
+  ) => {
+    const highest = Math.max(...units.map(score))
+    return getStrongestUnit(units.filter((ally) => score(ally) === highest))
   }
   if (bonus === RitualBonus.PERMANENT_HP) {
-    const ally = highestBy((unit) => unit.maxHP)
-    ally?.addMaxHP(value, ally, 0, false, true)
-  } else if (bonus === RitualBonus.PERMANENT_PP) {
-    const ally = highestBy((unit) => unit.ap)
+    const ally = highestBy(
+      ownUnits.filter((unit) => getPermanentHPRoom(unit) > 0),
+      (unit) => unit.maxHP
+    )
     if (ally) {
-      ally.addPP(value, ally, 0, false)
+      const gain = Math.min(value, getPermanentHPRoom(ally))
+      ally.addMaxHP(gain, ally, 0, false, true)
+      if (!ally.isGhostOpponent) {
+        const boardPokemon = ally.refToBoardPokemon as Pokemon
+        boardPokemon.ghostRitualHPGained += gain
+      }
+    }
+  } else if (bonus === RitualBonus.PERMANENT_PP) {
+    const ally = highestBy(
+      ownUnits.filter((unit) => getPermanentPPRoom(unit) > 0),
+      (unit) => unit.ap
+    )
+    if (ally) {
+      const gain = Math.min(value, getPermanentPPRoom(ally))
+      ally.addPP(gain, ally, 0, false)
       const boardPokemon = ally.refToBoardPokemon as Pokemon
-      if (!ally.isGhostOpponent) boardPokemon.addPP(value)
+      if (!ally.isGhostOpponent) {
+        boardPokemon.addPP(gain)
+        boardPokemon.ghostRitualPPGained += gain
+      }
     }
   } else if (bonus === RitualBonus.PERMANENT_SPEED) {
-    const ally = highestBy((unit) => unit.atk)
-    ally?.addSpeed(value, ally, 0, false, true)
+    const ally = highestBy(
+      ownUnits.filter((unit) => getPermanentSpeedRoom(unit) > 0),
+      (unit) => unit.atk
+    )
+    if (ally) {
+      const gain = Math.min(value, getPermanentSpeedRoom(ally))
+      ally.addSpeed(gain, ally, 0, false, true)
+      if (!ally.isGhostOpponent) {
+        const boardPokemon = ally.refToBoardPokemon as Pokemon
+        boardPokemon.ghostRitualSpeedGained += gain
+      }
+    }
   }
+}
+
+function getPermanentHPRoom(unit: PokemonEntity) {
+  const boardPokemon = unit.refToBoardPokemon as Pokemon
+  return (
+    Math.floor(getPokemonData(unit.name).hp * RITUAL_PERMANENT_STAT_CAP) -
+    boardPokemon.ghostRitualHPGained
+  )
+}
+
+function getPermanentPPRoom(unit: PokemonEntity) {
+  const boardPokemon = unit.refToBoardPokemon as Pokemon
+  return (
+    Math.floor(boardPokemon.maxPP * RITUAL_PERMANENT_STAT_CAP) -
+    boardPokemon.ghostRitualPPGained
+  )
+}
+
+function getPermanentSpeedRoom(unit: PokemonEntity) {
+  const boardPokemon = unit.refToBoardPokemon as Pokemon
+  return (
+    Math.floor(unit.baseSpeed * RITUAL_PERMANENT_STAT_CAP) -
+    boardPokemon.ghostRitualSpeedGained
+  )
 }
 
 function getEnemiesInLineBehindTarget(

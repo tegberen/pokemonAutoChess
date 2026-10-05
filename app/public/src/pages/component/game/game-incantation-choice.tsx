@@ -1,13 +1,24 @@
 import { Fragment, useState } from "react"
 import { useTranslation } from "react-i18next"
-import { IncantationKind } from "../../../../../config/game/ghost-incantations"
+import {
+  decodeGhostIncantation,
+  FatedRitual,
+  getHexingStrength,
+  getRitualStrength,
+  GHOST_INCANTATION_SLOTS,
+  IncantationKind
+} from "../../../../../config/game/ghost-incantations"
 import type { PlayerChoice } from "../../../../../models/colyseus-models/player-choice"
+import { useAppSelector } from "../../../hooks"
 import { writeIncantation } from "../../../network"
+import { playSound, SOUNDS } from "../../utils/audio"
 import { addIconsToDescription } from "../../utils/descriptions"
 import { cc } from "../../utils/jsx"
 import {
   describeIncantationOption,
   describeIncantationLines,
+  describeIncantationSentence,
+  describeHexingSummary,
   getIncantationIcon
 } from "./ghost-incantation-text"
 import "./game-incantation-choice.css"
@@ -27,6 +38,20 @@ export function GameIncantationChoice({
     choice.incantationEffects,
     choice.incantationBonuses
   ].filter((options) => options.length > 0)
+  const writtenIncantations = useAppSelector(
+    (state) => state.game.ghostIncantationsByPlayerId[state.network.uid] ?? []
+  )
+  const decodedIncantations = writtenIncantations.map(decodeGhostIncantation)
+  const writtenHexings = decodedIncantations.filter(
+    (written) => written.kind === IncantationKind.HEXING
+  )
+  const writtenRitual = decodedIncantations.find(
+    (written) => written.kind === IncantationKind.RITUAL
+  )
+  const fatedGhostLevel =
+    GHOST_INCANTATION_SLOTS.find(
+      (slot) => slot.kind === IncantationKind.FATED
+    )?.ghostLevel ?? 0
   const [selected, setSelected] = useState<(string | null)[]>(
     columns.map(() => null)
   )
@@ -58,7 +83,11 @@ export function GameIncantationChoice({
   const isSequence = kind !== IncantationKind.FATED
 
   return (
-    <div className="game-incantation-choice">
+    <div
+      className={cc("game-incantation-choice", {
+        fated: kind === IncantationKind.FATED
+      })}
+    >
       <header className="draggable-window-header">
         <span className="game-incantation-title">
           <img
@@ -95,47 +124,99 @@ export function GameIncantationChoice({
                     t(`ghost_incantations.${kind}.columns.${column}`)
                   )}
                 </h3>
-                {options.map((option) => (
-                  <button
-                    key={option}
-                    className={cc("game-incantation-option", {
-                      selected: selected[column] === option
-                    })}
-                    onClick={() => select(column, option)}
-                  >
-                    <span>
+                {kind === IncantationKind.FATED &&
+                  column === 0 &&
+                  writtenHexings.length > 0 && (
+                    <p className="game-incantation-current">
+                      {writtenHexings.map((hexing, index) => (
+                        <span key={index} className="game-incantation-line">
+                          {index + 1}.{" "}
+                          {addIconsToDescription(
+                            describeHexingSummary(
+                              t,
+                              hexing,
+                              getHexingStrength(fatedGhostLevel)
+                            )
+                          )}
+                        </span>
+                      ))}
+                    </p>
+                  )}
+                {kind === IncantationKind.FATED &&
+                  column === 1 &&
+                  writtenRitual && (
+                    <p className="game-incantation-current">
                       {addIconsToDescription(
-                        describe(column, option),
-                        tierParams
+                        describeIncantationSentence(
+                          t,
+                          IncantationKind.RITUAL,
+                          [
+                            writtenRitual.cause,
+                            writtenRitual.effect,
+                            writtenRitual.bonus
+                          ],
+                          "",
+                          selected[1] === FatedRitual.DOUBLE_REWARDS ? 2 : 1
+                        ),
+                        {
+                          ...tierParams,
+                          stars: getRitualStrength(fatedGhostLevel) + 1
+                        }
                       )}
-                    </span>
-                  </button>
-                ))}
+                    </p>
+                  )}
+                <div className="game-incantation-options">
+                  {options.map((option) => (
+                    <button
+                      key={option}
+                      className={cc("game-incantation-option", {
+                        selected: selected[column] === option
+                      })}
+                      onClick={() => select(column, option)}
+                    >
+                      <span>
+                        {addIconsToDescription(
+                          describe(column, option),
+                          tierParams
+                        )}
+                      </span>
+                    </button>
+                  ))}
+                </div>
               </section>
             </Fragment>
           ))}
         </div>
-        <p className="game-incantation-sentence">
-          {describeIncantationLines(
-            t,
-            kind,
-            selected,
-            choice.incantationContext
-          ).map((line, index) => (
-            <span key={index} className="game-incantation-sentence-line">
-              {addIconsToDescription(line, tierParams)}
-            </span>
-          ))}
-        </p>
+        {isSequence && (
+          <p className="game-incantation-sentence">
+            {describeIncantationLines(
+              t,
+              kind,
+              selected,
+              choice.incantationContext
+            ).map((line, index) => (
+              <span key={index} className="game-incantation-sentence-line">
+                {addIconsToDescription(line, tierParams)}
+              </span>
+            ))}
+          </p>
+        )}
         <button
           className="bubbly green game-incantation-write"
           disabled={!isComplete}
-          onClick={() =>
+          onClick={() => {
+            playSound(
+              kind === IncantationKind.FATED
+                ? SOUNDS.GHOST_CHOICE_FATED
+                : kind === IncantationKind.RITUAL
+                  ? SOUNDS.GHOST_CHOICE_RITUAL
+                  : SOUNDS.GHOST_CHOICE_HEX
+            )
             writeIncantation(
               choice.id,
               selected.map((option) => option ?? "")
             )
-          }
+          }}
         >
           {t("ghost_incantations.write")}
         </button>

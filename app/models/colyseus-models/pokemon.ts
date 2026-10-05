@@ -137,6 +137,9 @@ export class Pokemon extends Schema implements IPokemon {
   motherYarnStages: number = 0
   // INFINITE_CONVERSION: synergies copied from opponents and kept for good
   keptSynergies: Synergy[] = []
+  ghostRitualHPGained: number = 0
+  ghostRitualPPGained: number = 0
+  ghostRitualSpeedGained: number = 0
   // HONEY_EXPLORATION: a friend keeps WILD for good; synced for the sell price shown
   @type("boolean") honeyExplorationFriend: boolean = false
   @type("boolean") honeyExplorationGift: boolean = false

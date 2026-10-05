@@ -6758,7 +6758,7 @@
 				"STAT": "Loses {{value}} {{stat}}",
 				"STAT_PERCENT": "Loses {{value}}% {{stat}}",
 				"STAT_UNKNOWN": "Loses the stat it was chosen for",
-				"GOLD_ON_KO": "Grants {{value}} GOLD when KO'd",
+				"GOLD_ON_KO": "Grants {{value}} GOLD when KO'd, once per fight",
 				"LUCK": "Loses {{value}} LUCK",
 				"MAX_PP": "Has its max PP increased by {{value}}%",
 				"MAX_HP": "Loses {{value}}% max HP"
@@ -6788,17 +6788,18 @@
 				"ENEMY_LUCK_LOSS": "All enemies lose {{value}} LUCK",
 				"SILENCE": "Enemies are SILENCE",
 				"SILENCE_DAMAGED": "Enemies damaged by the ability are SILENCE for {{seconds}} seconds",
-				"SILENCE_ONE": "The target is SILENCE for {{seconds}} seconds",
+				"SILENCE_BEHIND_TARGET": "Enemies in a line behind the target are SILENCE for {{seconds}} seconds",
 				"SILENCE_NEAREST": "The {{targets}} nearest enemies without SILENCE are SILENCE for {{seconds}} seconds",
+				"SILENCE_ADJACENT": "{{targets}} ADJACENT enemies without SILENCE are SILENCE for {{seconds}} seconds",
 				"GHOST_SPEED": "GHOST Pokémon gain {{value}} SPEED",
 				"GHOST_PP": "GHOST Pokémon gain {{value}} PP",
 				"GHOST_MAX_HP": "GHOST Pokémon gain {{value}} max HP"
 			},
 			"2": {
 				"GOLD_CHANCE": "You have a [{{chance}},LK]% chance to gain {{gold}} GOLD",
-				"PERMANENT_HP": "The ally with the highest max HP gains {{value}} permanent HP",
-				"PERMANENT_PP": "The ally with the highest AP gains {{value}} permanent starting PP",
-				"PERMANENT_SPEED": "The ally with the highest ATK gains {{value}} permanent SPEED"
+				"PERMANENT_HP": "The ally with the highest max HP gains {{value}} permanent HP, up to half its base HP",
+				"PERMANENT_PP": "The ally with the highest AP gains {{value}} permanent starting PP, up to half its max PP",
+				"PERMANENT_SPEED": "The ally with the highest ATK gains {{value}} permanent SPEED, up to half its base SPEED"
 			}
 		},
 		"FATED": {
@@ -6809,8 +6810,8 @@
 			},
 			"0": {
 				"TWO_TARGETS": "At the start of each fight, affect 2 enemies at once",
-				"DOOM": "Their target gets CURSE and is KO'd after {{seconds}}s",
-				"SPREAD_STATUS": "When a hexed enemy is KO'd, ADJACENT enemies get its NEGATIVE_STATUS for {{spreadSeconds}}s",
+				"DOOM": "Their targets get CURSE and are KO'd after {{seconds}}s. The CURSE does not move to the next hexed enemy",
+				"SPREAD_STATUS": "When a hexed enemy is KO'd, ADJACENT enemies get its NEGATIVE_STATUS for the rest of the fight",
 				"SPREAD_HEX": "When a hexed enemy is KO'd, its HEXING_INCANTATION spreads to {{targets}} new enemies"
 			},
 			"1": {
@@ -6819,6 +6820,21 @@
 				"RESURRECT": "After activating {{value}}, give RESURRECTION to the STRONGEST ally",
 				"SPAWN_GHOST": "[{{value}},LK]% chance to put a GHOST Pokémon costing 3 GOLD or less on your bench"
 			}
+		},
+		"summary": {
+			"HEXING": "{{target}} · {{loss}} · {{status}}",
+			"targets": {
+				"HIGHEST_DEFENSES": "Highest DEF + SPE_DEF",
+				"HIGHEST_AP": "Highest AP",
+				"HIGHEST_ATK": "Highest ATK",
+				"HIGHEST_SPEED": "Highest SPEED"
+			},
+			"STAT": "−{{value}} {{stat}}",
+			"STAT_PERCENT": "−{{value}}% {{stat}}",
+			"GOLD_ON_KO": "{{value}} GOLD on KO",
+			"LUCK": "−{{value}} LUCK",
+			"MAX_PP": "+{{value}}% max PP",
+			"MAX_HP": "−{{value}}% max HP"
 		}
 	},
 	"prismatic_quests": {
@@ -7551,7 +7567,7 @@
 			},
 			"hexing": {
 				"title": "Hexing Incantations",
-				"intro": "At the start of each fight, the enemy chosen by the Cause gets the Effect and the NEGATIVE_STATUS for the whole fight. Your second HEXING_INCANTATION cannot use the same Cause as the first."
+				"intro": "At the start of each fight, the enemy chosen by the Cause gets the Effect and the NEGATIVE_STATUS for the whole fight. When several enemies tie on that stat, the STRONGEST one is chosen. Your second HEXING_INCANTATION cannot use the same Cause as the first."
 			},
 			"ritual": {
 				"title": "Ritual Incantation",
@@ -7583,7 +7599,8 @@
 				"silence_nearest": "{{targets}} nearest for {{seconds}} seconds",
 				"silence_adjacent": "{{targets}} ADJACENT for {{seconds}} seconds",
 				"gold_chance": "Chance",
-				"gold_amount": "Amount"
+				"gold_amount": "Amount",
+				"permanent_cap_note": "Each Pokémon can gain up to half its base HP, max PP and base SPEED from these bonuses. When several allies tie on that stat, the STRONGEST one is chosen. Once a Pokémon reaches its cap, the next best ally gains them instead. Example: a Pokémon with 200 base HP, 100 max PP and 60 base SPEED can gain at most 100 HP, 50 starting PP and 30 SPEED."
 			},
 			"fated": {
 				"title": "Fated Incantation",
@@ -7596,11 +7613,12 @@
 					"RESURRECT": "Give RESURRECTION to the STRONGEST ally after activating",
 					"SPAWN_GHOST": "Chance to put a GHOST Pokémon costing 3 GOLD or less on your bench"
 				},
-				"all_causes": "Every Cause"
+				"all_causes": "Every Cause",
+				"hexing_gold_note": "When a FATED_INCANTATION makes a HEXING_INCANTATION affect several enemies, each of them gets its debuff and NEGATIVE_STATUS, but its GOLD is still granted only once per fight: at most 3 GOLD, or 6 with two GOLD hexes."
 			},
 			"hexing_effects": {
 				"STAT": "Loses the stat of its Cause",
-				"GOLD_ON_KO": "Grants GOLD when KO'd",
+				"GOLD_ON_KO": "Grants GOLD when KO'd, once per fight",
 				"LUCK": "Loses LUCK",
 				"MAX_PP": "Max PP increased",
 				"MAX_HP": "Loses max HP"

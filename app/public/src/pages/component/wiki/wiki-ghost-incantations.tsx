@@ -508,6 +508,9 @@ export function WikiGhostIncantations() {
               </tbody>
             </table>
           </div>
+          <p className="wiki-ghost-example">
+            {addIconsToDescription(t("wiki.ghost.ritual.permanent_cap_note"))}
+          </p>
         </section>
       </div>
 
@@ -536,7 +539,7 @@ export function WikiGhostIncantations() {
           <h4>
             {addIconsToDescription(t("wiki.ghost.fated.hexing_heading"))}
           </h4>
-          <ul className="wiki-ghost-fated-hexing">
+          <ul className="wiki-ghost-options">
             {Object.values(FatedHexing).map((hexing) => (
               <li key={hexing}>
                 {addIconsToDescription(
@@ -552,6 +555,9 @@ export function WikiGhostIncantations() {
               </li>
             ))}
           </ul>
+          <p className="wiki-ghost-example">
+            {addIconsToDescription(t("wiki.ghost.fated.hexing_gold_note"))}
+          </p>
         </section>
         <section className="wiki-ghost-step">
           <h4>

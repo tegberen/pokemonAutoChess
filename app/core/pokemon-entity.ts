@@ -10,6 +10,7 @@ import {
   ON_ATTACK_MANA
 } from "../config"
 import {
+  type HexingStatus,
   RITUAL_ATTACKS_PER_TRIGGER,
   RitualTrigger
 } from "../config/game/ghost-incantations"
@@ -121,6 +122,7 @@ import { ItemEffects } from "./effects/items"
 import {
   type Hex,
   onHexedEnemyKnockedOut,
+  reapplyHexStatLosses,
   reapplyHexStatuses,
   triggerRitual
 } from "./ghost-incantations"
@@ -272,6 +274,7 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
   hasOwnSpotlight: boolean = false
   isProcessingAbility: boolean = false
   hexes: Hex[] = []
+  spreadHexStatuses = new Set<HexingStatus>()
   ghostAttacksSinceRitual = 0
   enemiesDamagedByCast: Set<PokemonEntity> | null = null
   isTidalGuardian: boolean = false
@@ -2243,6 +2246,7 @@ flyAway(
     this.status.burn = cloneReference.status.burn // from flame orb
     this.status.burnCooldown = cloneReference.status.burnCooldown
 
+    reapplyHexStatLosses(this.simulation, this)
     this.hp = this.maxHP
     this.pp = 0
     this.shield = 0

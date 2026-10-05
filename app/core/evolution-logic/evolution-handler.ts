@@ -132,4 +132,14 @@ export function carryOverPermanentStats(
   pokemonEvolved.keptSynergies = [
     ...new Set(pokemonsBeforeEvolution.flatMap((pokemon) => pokemon.keptSynergies))
   ]
+
+  pokemonEvolved.ghostRitualHPGained = sum(
+    pokemonsBeforeEvolution.map((pokemon) => pokemon.ghostRitualHPGained)
+  )
+  pokemonEvolved.ghostRitualPPGained = sum(
+    pokemonsBeforeEvolution.map((pokemon) => pokemon.ghostRitualPPGained)
+  )
+  pokemonEvolved.ghostRitualSpeedGained = sum(
+    pokemonsBeforeEvolution.map((pokemon) => pokemon.ghostRitualSpeedGained)
+  )
 }

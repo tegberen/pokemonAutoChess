@@ -4,8 +4,8 @@ import {
   FATED_RESURRECT_ACTIVATIONS,
   FATED_SPAWN_GHOST_CHANCE,
   FATED_SPREAD_HEX_TARGETS,
-  FATED_SPREAD_STATUS_DURATION,
   FatedRitual,
+  type GhostIncantation,
   HEXING_LOSS_VALUES,
   HEXING_STAT_LOSS_VALUES,
   HexingLoss,
@@ -61,9 +61,9 @@ function describeHexingLoss(loss: HexingLoss, target: string | null) {
 
 const SILENCE_KEY_BY_TRIGGER: { [trigger in RitualTrigger]: string } = {
   GHOST_CASTS: "SILENCE_DAMAGED",
-  GHOST_ATTACKS: "SILENCE_ONE",
+  GHOST_ATTACKS: "SILENCE_BEHIND_TARGET",
   GHOST_KOD: "SILENCE_NEAREST",
-  ENEMY_KOD: "SILENCE_NEAREST"
+  ENEMY_KOD: "SILENCE_ADJACENT"
 }
 
 function describeRitualEffect(effect: RitualEffect, trigger: string | null) {
@@ -84,20 +84,33 @@ function describeRitualEffect(effect: RitualEffect, trigger: string | null) {
   return { key: effect, params: { value: tiers(values) } }
 }
 
-function describeRitualBonus(bonus: RitualBonus, trigger: string | null) {
+function multipliedTiers(
+  values: readonly number[] | undefined,
+  rewardMultiplier: number
+) {
+  if (!values || rewardMultiplier === 1) return tiers(values)
+  const multiplied = values.map((value) => value * rewardMultiplier)
+  return `[${values.join(",")},OLD] → ${tiers(multiplied)}`
+}
+
+function describeRitualBonus(
+  bonus: RitualBonus,
+  trigger: string | null,
+  rewardMultiplier: number
+) {
   if (bonus === RitualBonus.GOLD_CHANCE) {
     const gold = trigger
       ? RITUAL_GOLD_CHANCE_VALUES[trigger as RitualTrigger]
       : null
     return {
       chance: gold ? gold.chance.join(",") : UNKNOWN_VALUE,
-      gold: tiers(gold?.gold)
+      gold: multipliedTiers(gold?.gold, rewardMultiplier)
     }
   }
   const values = trigger
     ? RITUAL_BONUS_VALUES[bonus][trigger as RitualTrigger]
     : undefined
-  return { value: tiers(values) }
+  return { value: multipliedTiers(values, rewardMultiplier) }
 }
 
 export function describeResurrectActivations(
@@ -136,7 +149,8 @@ export function describeIncantationOption(
   column: number,
   option: string,
   cause: string | null,
-  context: string
+  context: string,
+  rewardMultiplier = 1
 ) {
   const base = `ghost_incantations.${kind}.${column}.${option}`
   if (kind === IncantationKind.HEXING) {
@@ -155,16 +169,45 @@ export function describeIncantationOption(
       )
       return t(`ghost_incantations.${kind}.1.${key}`, params)
     }
-    return t(base, describeRitualBonus(option as RitualBonus, cause))
+    return t(
+      base,
+      describeRitualBonus(option as RitualBonus, cause, rewardMultiplier)
+    )
   }
   if (column === 0) {
     return t(base, {
       seconds: FATED_DOOM_DELAY / 1000,
-      spreadSeconds: FATED_SPREAD_STATUS_DURATION / 1000,
       targets: FATED_SPREAD_HEX_TARGETS
     })
   }
   return t(base, describeFatedRitual(t, option as FatedRitual, context))
+}
+
+export function describeHexingSummary(
+  t: Translate,
+  hexing: GhostIncantation,
+  strength: number
+) {
+  const loss = hexing.effect as HexingLoss
+  let lossText: string
+  if (loss === HexingLoss.STAT) {
+    const target = hexing.cause as HexingTarget
+    const statLoss = HEXING_STAT_LOSS_VALUES[target]
+    const key = statLoss.isPercent ? "STAT_PERCENT" : "STAT"
+    lossText = t(`ghost_incantations.summary.${key}`, {
+      value: statLoss.values[strength],
+      stat: HEXING_TARGET_STAT[target]
+    })
+  } else {
+    lossText = t(`ghost_incantations.summary.${loss}`, {
+      value: HEXING_LOSS_VALUES[loss][strength]
+    })
+  }
+  return t("ghost_incantations.summary.HEXING", {
+    target: t(`ghost_incantations.summary.targets.${hexing.cause}`),
+    loss: lossText,
+    status: hexing.bonus
+  })
 }
 
 function asContinuation(text: string) {
@@ -177,7 +220,8 @@ export function describeIncantationLines(
   t: Translate,
   kind: IncantationKind,
   selections: (string | null)[],
-  context: string
+  context: string,
+  rewardMultiplier = 1
 ) {
   const [cause, effect, bonus] = selections
   const part = (column: number, option: string | null | undefined) =>
@@ -188,7 +232,8 @@ export function describeIncantationLines(
           column,
           option,
           cause ?? null,
-          context
+          context,
+          rewardMultiplier
         )
       : UNKNOWN_VALUE
   const continuation = (column: number, option: string | null | undefined) =>
@@ -215,7 +260,14 @@ export function describeIncantationSentence(
   t: Translate,
   kind: IncantationKind,
   selections: (string | null)[],
-  context: string
+  context: string,
+  rewardMultiplier = 1
 ) {
-  return describeIncantationLines(t, kind, selections, context).join(" ")
+  return describeIncantationLines(
+    t,
+    kind,
+    selections,
+    context,
+    rewardMultiplier
+  ).join(" ")
 }

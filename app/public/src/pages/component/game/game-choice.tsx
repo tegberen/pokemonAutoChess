@@ -440,7 +440,12 @@ export default function GameChoice() {
   }
 
   return (
-    <div className="game-choice" style={{ zIndex: DEPTH.MODAL }}>
+    <div
+      className={cc("game-choice", {
+        "game-choice-incantation": choice.type === "incantation"
+      })}
+      style={{ zIndex: DEPTH.MODAL }}
+    >
       <div
         className={cc("my-container", {
           "draggable-window": choice.type === "incantation"
