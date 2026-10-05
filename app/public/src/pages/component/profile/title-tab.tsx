@@ -30,6 +30,8 @@ const HIDDEN_TITLES = new Set<Title>([
   Title.ARCHEOLOGIST
 ])
 
+const EASTER_EGG_TITLES = new Set<Title>([Title.SHADY])
+
 const JAC_TITLES = new Set<Title>([
   Title.IKEBANA,
   Title.WHALE,
@@ -48,7 +50,8 @@ const JAC_TITLES = new Set<Title>([
   Title.SCHOLAR,
   Title.DERPY,
   Title.ARTIST,
-  Title.SHINY
+  Title.SHINY,
+  Title.SHADY
 ])
 
 export function TitleTab() {
@@ -60,7 +63,9 @@ export function TitleTab() {
   const ultraHeroesWon = user?.ultraHeroesWon ?? []
   const [titles, setTitles] = useState<ITitleStatistic[]>([])
   const visibleTitleNames = Object.values(Title).filter(
-    (title) => !HIDDEN_TITLES.has(title)
+    (title) =>
+      !HIDDEN_TITLES.has(title) &&
+      (!EASTER_EGG_TITLES.has(title) || isIn(user?.titles ?? [], title))
   )
   const nbTitlesUnlocked = user
     ? visibleTitleNames.filter((title) => isIn(user.titles, title)).length
@@ -73,7 +78,14 @@ export function TitleTab() {
           res.push({ name: title, rarity: 0 })
         }
       })
-      setTitles(res.filter((title) => !HIDDEN_TITLES.has(title.name)))
+      setTitles(
+        res.filter(
+          (title) =>
+            !HIDDEN_TITLES.has(title.name) &&
+            (!EASTER_EGG_TITLES.has(title.name) ||
+              isIn(user?.titles ?? [], title.name))
+        )
+      )
     })
   }, [])
 

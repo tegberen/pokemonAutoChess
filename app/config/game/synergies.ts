@@ -181,6 +181,8 @@ export const SynergyTiers = {
   ]
 } satisfies { [key in Synergy]: readonly EffectEnum[] }
 
+export const GHOST_NIGHT_SHADE_THRESHOLD = 10
+
 export type SynergyTier<T extends Synergy = Synergy> =
   (typeof SynergyTiers)[T][number]
 

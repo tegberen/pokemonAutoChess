@@ -1,5 +1,8 @@
 import { useTranslation } from "react-i18next"
-import { SynergyTiersThresholds } from "../../../../../config"
+import {
+  GHOST_NIGHT_SHADE_THRESHOLD,
+  SynergyTiersThresholds
+} from "../../../../../config"
 import { GameMode } from "../../../../../types/enum/Game"
 import { Synergy } from "../../../../../types/enum/Synergy"
 import { selectSpectatedPlayer, useAppSelector } from "../../../hooks"
@@ -19,6 +22,14 @@ export default function SynergyComponent(props: {
     SynergyTiersThresholds[props.type].filter((n) => n <= props.value).at(-1) ??
     0
   const isActive = thresholdReached > 0
+  const isNightShadeActive =
+    props.type === Synergy.GHOST && props.value >= GHOST_NIGHT_SHADE_THRESHOLD
+  const displayedThresholds = isNightShadeActive
+    ? [...SynergyTiersThresholds[props.type], GHOST_NIGHT_SHADE_THRESHOLD]
+    : SynergyTiersThresholds[props.type]
+  const displayedThresholdReached = isNightShadeActive
+    ? GHOST_NIGHT_SHADE_THRESHOLD
+    : thresholdReached
 
   const spectatedPlayer = useAppSelector(selectSpectatedPlayer)
   const gameMode = useAppSelector((state) => state.game.gameMode)
@@ -67,7 +78,7 @@ export default function SynergyComponent(props: {
       <span className="synergy-row-count">{props.value}</span>
       <div className="synergy-row-info">
         <div className="synergy-row-tiers">
-          {SynergyTiersThresholds[props.type]
+          {displayedThresholds
             .filter(
               // In Double Up, the Baby synergy caps at its second tier (Baby 5),
               // so hide the unreachable third threshold (Baby 7 / Golden Eggs)
@@ -82,7 +93,7 @@ export default function SynergyComponent(props: {
               <span
                 key={tier}
                 className={cc({
-                  current: thresholdReached === tier,
+                  current: displayedThresholdReached === tier,
                   reached: props.value >= tier
                 })}
               >

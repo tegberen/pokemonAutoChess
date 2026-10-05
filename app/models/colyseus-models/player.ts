@@ -3,6 +3,7 @@ import {
   AdditionalPicksStages,
   GROUND_HOLES_LENGTH,
   FAIRY_WANDS_BY_SYNERGY_LEVEL,
+  GHOST_NIGHT_SHADE_THRESHOLD,
   getHighestReachableSynergyTier,
   RegionDetails,
   SynergyTiersThresholds
@@ -1050,6 +1051,12 @@ export default class Player extends Schema implements IPlayer {
       updatedSynergies.get(Synergy.GHOST)
     ) {
       this.updateGhostIncantations()
+    }
+
+    if (
+      (updatedSynergies.get(Synergy.GHOST) ?? 0) >= GHOST_NIGHT_SHADE_THRESHOLD
+    ) {
+      this.titles.add(Title.SHADY)
     }
 
     this.effects.update(this.synergies, this.board)

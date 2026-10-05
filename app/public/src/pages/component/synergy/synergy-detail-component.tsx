@@ -10,9 +10,11 @@ import {
   IncantationKind
 } from "../../../../../config/game/ghost-incantations"
 import {
+  GHOST_NIGHT_SHADE_THRESHOLD,
   type SynergyTier,
   SynergyTiers
 } from "../../../../../config/game/synergies"
+import type { Pokemon } from "../../../../../models/colyseus-models/pokemon"
 import { getWildChance } from "../../../../../models/colyseus-models/synergies"
 import { getPokemonData } from "../../../../../models/precomputed/precomputed-pokemon-data"
 import { PRECOMPUTED_POKEMONS_PER_TYPE_AND_CATEGORY } from "../../../../../models/precomputed/precomputed-types-and-categories"
@@ -82,6 +84,15 @@ function WrittenIncantation(props: {
       </span>
     </p>
   )
+}
+
+// the store holds a JSON copy of each player, so the board is a plain object
+// until a live MapSchema replaces it
+function getBoardPokemons(player: IPlayer) {
+  const board = player.board
+  return typeof board.forEach === "function"
+    ? schemaValues(board)
+    : (Object.values(board) as ReturnType<typeof schemaValues<Pokemon>>)
 }
 
 const keepFirstOfFamily = (arr: Pkm[]): Pkm[] => {
@@ -179,7 +190,7 @@ export default function SynergyDetailComponent(props: {
         break
       }
       case Synergy.DRAGON: {
-        const totalDragonStars = schemaValues(spectatedPlayer.board).reduce(
+        const totalDragonStars = getBoardPokemons(spectatedPlayer).reduce(
           (acc, pokemon) =>
             acc +
             (pokemon.types.has(Synergy.DRAGON) && !isOnBench(pokemon)
@@ -282,6 +293,26 @@ export default function SynergyDetailComponent(props: {
           </div>
         )
       })}
+      {props.type === Synergy.GHOST &&
+        props.value >= GHOST_NIGHT_SHADE_THRESHOLD && (
+          <div
+            style={{
+              color: "var(--color-fg-primary)",
+              backgroundColor: "var(--color-bg-secondary)",
+              border: "var(--border-thick)",
+              borderRadius: "12px",
+              padding: "5px"
+            }}
+          >
+            <h4 style={{ fontSize: "1.2em", marginBottom: 0 }}>
+              ({GHOST_NIGHT_SHADE_THRESHOLD}){" "}
+              {t("synergy_description.GHOST_NIGHT_SHADE")}
+            </h4>
+            <p className="synergy-description">
+              {t("synergy_description.GHOST_NIGHT_SHADE_DESCRIPTION")}
+            </p>
+          </div>
+        )}
       <PokemonPortraitList
         pokemons={regulars}
         type={props.type}
@@ -355,7 +386,7 @@ function PokemonPortraitList(props: {
   const teamFamilies = new Set(
     props.player == null
       ? []
-      : schemaValues(props.player.board)
+      : getBoardPokemons(props.player)
           .filter((x) => x.types.has(props.type))
           .map((x) => PkmFamily[x.name])
   )
