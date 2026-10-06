@@ -20,6 +20,9 @@ export type Keybindings = {
   meta_report: string
   chat: string
 }
+// changing it switches every player to it once, then they can pick again
+const FORCED_THEME = "halloween"
+
 export interface IPreferencesState {
   musicVolume: number
   sfxVolume: number
@@ -51,6 +54,7 @@ export interface IPreferencesState {
   antialiasing: boolean
   colorblindMode: boolean
   theme: string
+  lastForcedTheme: string
 }
 
 export type PreferenceKey = keyof IPreferencesState
@@ -84,7 +88,8 @@ const defaultPreferences: IPreferencesState = {
   renderer: Phaser.AUTO,
   antialiasing: true,
   colorblindMode: false,
-  theme: "beyondtheforecast",
+  theme: FORCED_THEME,
+  lastForcedTheme: FORCED_THEME,
   keybindings: {
     sell: "E",
     buy_xp: "F",
@@ -143,7 +148,12 @@ function loadPreferences(): IPreferencesState {
     const stored = localStore.get(LocalStoreKeys.PREFERENCES)
 
     const { migrated, changed } = migrateLegacyKeybindings(stored)
-    if (changed) {
+    const mustForceTheme = migrated?.lastForcedTheme !== FORCED_THEME
+    if (mustForceTheme) {
+      migrated.theme = FORCED_THEME
+      migrated.lastForcedTheme = FORCED_THEME
+    }
+    if (changed || mustForceTheme) {
       localStore.put(LocalStoreKeys.PREFERENCES, migrated, Infinity)
     }
 

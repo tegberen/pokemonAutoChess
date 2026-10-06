@@ -29,7 +29,8 @@ export const THEMES = [
   "ikebana",
   "derpy",
   "artist",
-  "duelist"
+  "duelist",
+  "halloween"
 ] as const
 
 export type Theme = (typeof THEMES)[number]

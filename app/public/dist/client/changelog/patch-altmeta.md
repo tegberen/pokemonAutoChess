@@ -569,6 +569,9 @@ Every balance change on this server, newest first.
 **Titles**
 - Shiny {{new}} | complete all 12 Prismatic Quests in a single game
 
+**Interface**
+- Halloween theme {{new}} | the new default theme, with see-through panels
+
 ### 29 September 2026
 
 **PvE**

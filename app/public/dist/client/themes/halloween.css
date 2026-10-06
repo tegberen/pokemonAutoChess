@@ -1,0 +1,90 @@
+:root {
+  --color-bg-primary: #201025;
+  --color-bg-secondary: #381a38;
+  --color-bg-tertiary: #2e152a;
+  --see-through-primary: #160a1a;
+  --see-through-secondary: #2b1430;
+  --see-through-tertiary: #221026;
+  --color-bg-accent: #f0973a;
+
+  --border-thick: 2px solid #10070f;
+  --border-thin: 1px solid #10070f;
+  --border-extra-thin: 1px solid #10070f;
+
+  --theme-button: linear-gradient(
+    180deg,
+    #fff3d6 0 22%,
+    #ffb52e 22% 58%,
+    #ef6a1a 58% 100%
+  );
+  --theme-button-hover: linear-gradient(
+    180deg,
+    #ffffff 0 22%,
+    #ffc44f 22% 58%,
+    #f77d30 58% 100%
+  );
+  --theme-ready: linear-gradient(
+    180deg,
+    #f3e8ff 0 22%,
+    #b48ae0 22% 58%,
+    #6e2d78 58% 100%
+  );
+  --theme-ready-hover: linear-gradient(
+    180deg,
+    #ffffff 0 22%,
+    #c4a0ec 22% 58%,
+    #82408c 58% 100%
+  );
+  --theme-button-text: #3a1430;
+  --theme-button-text-shadow: 1px 1px 0 #fff3d680;
+}
+
+.custom-bg {
+  background-image: url("/assets/theme/halloween/custombg.webp");
+  background-size: cover;
+  background-position: center 40%;
+}
+
+.lobby h2 {
+  text-shadow: 0px 3px 6px black;
+}
+
+.draggable-window.my-container,
+.game-shop .information > div,
+#game-stage-info,
+.game-spectate-player-info.my-container,
+.team-builder-modal.my-container,
+.game-shop.my-container {
+  background-color: color-mix(in srgb, var(--see-through-primary) 60%, transparent);
+}
+
+.after-menu .my-container,
+.leaderboard .my-container,
+.room-menu.my-container,
+.events-menu .my-container {
+  background-color: color-mix(in srgb, var(--see-through-primary) 50%, transparent);
+}
+
+.leaderboard [data-react-window-index]:nth-child(odd) .my-box {
+  background: color-mix(in srgb, var(--see-through-secondary) 65%, transparent);
+}
+
+.leaderboard [data-react-window-index]:nth-child(even) .my-box {
+  background: color-mix(in srgb, var(--see-through-tertiary) 55%, transparent);
+}
+
+.newspaper-card.my-box {
+  background-color: color-mix(in srgb, var(--see-through-secondary) 65%, transparent);
+}
+
+.room-folder {
+  --room-folder-bg: color-mix(in srgb, var(--see-through-secondary) 65%, transparent);
+}
+
+.react-tabs__tab--selected {
+  background-color: var(--color-bg-secondary);
+}
+
+.react-tabs__tab--selected:after {
+  background: var(--color-bg-accent);
+}
