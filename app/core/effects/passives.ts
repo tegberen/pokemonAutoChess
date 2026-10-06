@@ -103,7 +103,7 @@ export function drumBeat(pokemon: PokemonEntity, board: Board) {
       )
     : board.getAdjacentCells(pokemon.positionX, pokemon.positionY, false)
   const ppBurned =
-    JUNGLE_CACOPHONY_PP_BURN_BY_STAR[Math.min(pokemon.stars, 3) - 1] ?? 4
+    JUNGLE_CACOPHONY_PP_BURN_BY_STAR[Math.min(pokemon.stars, 3) - 1] ?? 8
   drumCells.forEach((cell) => {
     if (!cell.value) return
     if (

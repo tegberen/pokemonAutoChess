@@ -6176,7 +6176,7 @@
 		},
 		"ITS_GOING_DOWN": {
 			"name": "It's Going Down",
-			"description": "Gain a Timburr. Your STRONGEST Timburr gains 2 RANGE, and after each throw it tosses a new pillar to a safe spot. Its thrown pillars deal their remaining HP as PHYSICAL instead of SPECIAL, +15% per tile travelled."
+			"description": "Gain a Timburr. Your STRONGEST Timburr gains 2 RANGE, and after each throw it tosses a new pillar to a safe spot, with 50 more HP for each throw this fight. Its thrown pillars deal their remaining HP as PHYSICAL instead of SPECIAL, +15% per tile travelled."
 		},
 		"STONE_SADDLE": {
 			"name": "Stone Saddle",
@@ -6192,7 +6192,7 @@
 		},
 		"KINGS_GAMBIT": {
 			"name": "King's Gambit",
-			"description": "Gain a Pawniard. Your STRONGEST Pawniard disappears at the start of combat and rejoins the fight when 4 allies have been KO'd, or when you have no other units left. It gains 25% of the total ATK and HP of its fallen allies, and 50 SPEED."
+			"description": "Gain a Pawniard. Your STRONGEST Pawniard disappears at the start of combat and rejoins the fight when 4 allies have been KO'd, or when you have no other units left. It gains 50% of the total ATK and HP of its fallen allies, and 50 SPEED."
 		},
 		"HONEY_EXPLORATION": {
 			"name": "Honey Exploration",
@@ -6200,7 +6200,7 @@
 		},
 		"JUNGLE_CACOPHONY": {
 			"name": "Jungle Cacophony",
-			"description": "Gain a Grookey. Your STRONGEST Grookey drums instead of attacking, even with enemies in RANGE. Its drum beats reach all allies within RANGE instead of only ADJACENT ones, and burn 1/2/4 PP from each enemy within RANGE."
+			"description": "Gain a Grookey. Your STRONGEST Grookey drums instead of attacking, even with enemies in RANGE. Its drum beats reach all allies within RANGE instead of only ADJACENT ones, and burn 2/4/8 PP from each enemy within RANGE."
 		},
 		"DECELERATE": {
 			"name": "Decelerate",
@@ -6224,7 +6224,7 @@
 		},
 		"MOUNTAIN_EGG": {
 			"name": "Mountain Egg",
-			"description": "Gain a Happiny. The NUTRITIOUS_EGG of your STRONGEST Happiny also grants the dish effects of all your GOURMET Pokémon. Each dish counts once, and permanent dish effects are not copied."
+			"description": "Gain a Happiny and 10 free rerolls. The NUTRITIOUS_EGG of your STRONGEST Happiny also grants the dish effects of all your GOURMET Pokémon. Each dish counts once, and permanent dish effects are not copied."
 		},
 		"GLAIVE_STRIKE": {
 			"name": "Glaive Strike",

@@ -534,6 +534,10 @@ Every balance change on this server, newest first.
 - Panic Button | now also gives an Unown-Q after each PvE round
 - Curse of Two | removed
 - Hex Maniac | removed
+- Jungle Cacophony | PP burned per drum beat 1/2/4 → 2/4/8
+- King's Gambit | ATK and HP gained from fallen allies 25% → 50%
+- It's Going Down | each new pillar gains 50 HP for each throw this fight
+- Mountain Egg | also gives 10 free rerolls
 - High Tower Castle {{new}} | Prismatic, stage 4 only. At the start of each fight, all allies on the board gain 1 SPEED and 4 HP permanently
 - Training Ground {{new}} | Prismatic, stage 4 only. At the start of each fight, all allies on the board gain 1 DEF, 1 SPE_DEF and 2 HP permanently
 - Magic Palace {{new}} | Prismatic, stage 4 only. At the start of each fight, all allies on the board gain 2 AP and 4 HP permanently

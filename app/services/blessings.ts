@@ -131,6 +131,7 @@ import {
   TRASH_TO_TREASURE_TRASH_GRANTED_MAX,
   TRASH_TO_TREASURE_TRASH_GRANTED_MIN,
   WAITING_GAME_FREE_ROLLS,
+  MOUNTAIN_EGG_FREE_ROLLS,
   WOBBUFFETS_GOLD_PRIZE_RECYCLE_TICKETS,
   getGymTrainerRoster
 } from "../types/enum/Blessing"
@@ -2377,8 +2378,13 @@ export const blessingEffectService: {
     heroBlessingEffect(Blessing.SAND_BUDDIES, player, state, room),
   [Blessing.GLAIVE_STRIKE]: (player, state, room) =>
     heroBlessingEffect(Blessing.GLAIVE_STRIKE, player, state, room),
-  [Blessing.MOUNTAIN_EGG]: (player, state, room) =>
-    heroBlessingEffect(Blessing.MOUNTAIN_EGG, player, state, room),
+  [Blessing.MOUNTAIN_EGG]: (player, state, room) => {
+    if (!heroBlessingEffect(Blessing.MOUNTAIN_EGG, player, state, room)) {
+      return false
+    }
+    player.shopFreeRolls += MOUNTAIN_EGG_FREE_ROLLS
+    return true
+  },
   [Blessing.MOTHER_YARN]: (player, state, room) =>
     heroBlessingEffect(Blessing.MOTHER_YARN, player, state, room),
   [Blessing.CELL_BRAWLER]: (player, state, room) =>

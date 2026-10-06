@@ -2,7 +2,8 @@ import PokemonFactory from "../../models/pokemon-factory"
 import { Ability } from "../../types/enum/Ability"
 import {
   Blessing,
-  ITS_GOING_DOWN_DAMAGE_PER_TILE_THROWN
+  ITS_GOING_DOWN_DAMAGE_PER_TILE_THROWN,
+  ITS_GOING_DOWN_PILLAR_HP_PER_THROW
 } from "../../types/enum/Blessing"
 import { AttackType } from "../../types/enum/Game"
 import { Pillars, Pkm } from "../../types/enum/Pokemon"
@@ -116,9 +117,14 @@ export class ColumnCrushStrategy extends AbilityStrategy {
             )
           }
           if (hasItsGoingDown) {
+            const throwsThisFight =
+              (pillarThrowsByThrower.get(pokemon) ?? 0) + 1
+            pillarThrowsByThrower.set(pokemon, throwsThisFight)
+            const bonusMaxHP =
+              throwsThisFight * ITS_GOING_DOWN_PILLAR_HP_PER_THROW
             pokemon.commands.push(
               new DelayedCommand(
-                () => throwNewPillar(pokemon, board),
+                () => throwNewPillar(pokemon, board, bonusMaxHP),
                 NEW_PILLAR_THROW_DELAY
               )
             )
@@ -132,22 +138,27 @@ export class ColumnCrushStrategy extends AbilityStrategy {
 }
 
 const NEW_PILLAR_THROW_DELAY = 300
+const pillarThrowsByThrower = new WeakMap<PokemonEntity, number>()
 // matches the client's COLUMN_CRUSH projectile speed
 const NEW_PILLAR_FLIGHT_TIME_PER_CELL = 200
 
 //Builds a pillar of 100/200/300 HP and 1/3/5 DEF and SPE_DEF on the closest empty spot.
-function buildPillar(pokemon: PokemonEntity) {
+function buildPillar(pokemon: PokemonEntity, bonusMaxHP = 0) {
   const coord = pokemon.simulation.getClosestFreeCellToPokemonEntity(pokemon)
   if (!coord) return
-  addPillar(pokemon, coord.x, coord.y)
+  addPillar(pokemon, coord.x, coord.y, bonusMaxHP)
 }
 
 // thrown to the cell a FLYING unit would fly away to: safe, and far enough that
 // the next cast starts with a jump
-function throwNewPillar(pokemon: PokemonEntity, board: Board) {
+function throwNewPillar(
+  pokemon: PokemonEntity,
+  board: Board,
+  bonusMaxHP: number
+) {
   const landing = board.getFlyAwayCell(pokemon)
   if (!landing) {
-    buildPillar(pokemon)
+    buildPillar(pokemon, bonusMaxHP)
     return
   }
   pokemon.broadcastAbility({
@@ -166,7 +177,7 @@ function throwNewPillar(pokemon: PokemonEntity, board: Board) {
         board.getEntityOnCell(landing.x, landing.y) === undefined
           ? landing
           : board.getClosestAvailablePlace(landing.x, landing.y)
-      if (place) addPillar(pokemon, place.x, place.y)
+      if (place) addPillar(pokemon, place.x, place.y, bonusMaxHP)
     }, flightTime)
   )
 }
@@ -175,10 +186,22 @@ function pillarTypeOf(pokemon: PokemonEntity) {
   return Pillars[pokemon.stars - 1] ?? Pkm.PILLAR_CONCRETE
 }
 
-function addPillar(pokemon: PokemonEntity, x: number, y: number) {
+function addPillar(
+  pokemon: PokemonEntity,
+  x: number,
+  y: number,
+  bonusMaxHP = 0
+) {
   const pillar = PokemonFactory.createPokemonFromName(
     pillarTypeOf(pokemon),
     pokemon.player
   )
-  pokemon.simulation.addPokemon(pillar, x, y, pokemon.team, true)
+  const pillarEntity = pokemon.simulation.addPokemon(
+    pillar,
+    x,
+    y,
+    pokemon.team,
+    true
+  )
+  if (bonusMaxHP > 0) pillarEntity.addMaxHP(bonusMaxHP, pokemon, 0, false)
 }

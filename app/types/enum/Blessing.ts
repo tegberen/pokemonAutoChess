@@ -861,7 +861,7 @@ export const MULTISHOT_BASE_EXTRA_SHOTS = 2
 export const MULTISHOT_DAMAGE_RATIO = 0.25
 export const MULTISHOT_SHOT_INTERVAL = 150
 export const DECELERATE_SPEED_CAP = 30
-export const JUNGLE_CACOPHONY_PP_BURN_BY_STAR = [1, 2, 4] as const
+export const JUNGLE_CACOPHONY_PP_BURN_BY_STAR = [2, 4, 8] as const
 export const HONEY_EXPLORATION_STAGES_BY_STAR = [3, 2, 1] as const
 export const HONEY_EXPLORATION_HONEY_DEFENSES = 5
 // the friend's possible rarities by the stage the explorer returns at, latest first
@@ -876,7 +876,7 @@ export const HONEY_EXPLORATION_FRIEND_RARITIES: {
   { fromStage: 0, rarities: [Rarity.RARE] }
 ]
 export const KINGS_GAMBIT_ALLIES_FALLEN = 4
-export const KINGS_GAMBIT_FALLEN_STATS_RATIO = 0.25
+export const KINGS_GAMBIT_FALLEN_STATS_RATIO = 0.5
 export const KINGS_GAMBIT_SPEED = 50
 export const KINGS_GAMBIT_ENTRANCE_DELAY = 200
 export const APEX_PREDATOR_PREY_DURATION = 4000
@@ -886,6 +886,8 @@ export const STONE_SADDLE_MAX_PP = 80
 export const STONE_SADDLE_EXECUTE_THRESHOLD = 0.2
 export const ITS_GOING_DOWN_RANGE = 2
 export const ITS_GOING_DOWN_DAMAGE_PER_TILE_THROWN = 0.15
+export const ITS_GOING_DOWN_PILLAR_HP_PER_THROW = 50
+export const MOUNTAIN_EGG_FREE_ROLLS = 10
 export const ROLLOUT_RALLY_SPEED_PER_BOUNCE = 40
 export const ROLLOUT_RALLY_BOUNCE_DELAY = 400
 export const ROLLOUT_RALLY_BOUNCE_DAMAGE_RATIO = 0.6
