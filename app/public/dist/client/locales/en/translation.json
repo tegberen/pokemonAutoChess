@@ -3578,7 +3578,7 @@
 		"TRAINING_SEED": "In the next fight, FLYING allies gain permanently 1 ATK for each of their own KO's.",
 		"VIOLENT_SEED": "After a Sky Dive attack, the user is RAGE for 2 seconds.",
 		"WARP_SEED": "All Sky Dive attacks have [30,LK]% chance to swap the target with the farthest enemy and CONFUSION it for 1 second.",
-		"STAR_PIECE": "Gives the holder one additional STAR, which increases the power of their ability.",
+		"STAR_PIECE": "Gives the holder one additional STAR, which increases the power of their ability. The holder has RUNE_PROTECT for the whole fight.",
 		"TM_SUBSTITUTE": "$t(item_description.TM)\n$t(ability.SUBSTITUTE): $t(ability_description.SUBSTITUTE)",
 		"BALL": "A ball made of a large hard berry. When casting ability, throws the ball to the furthest FIELD ally to pass them the BALL and 50 SHIELD. If no FIELD ally with a free item slot at sight, throws the ball to the furthest enemy instead, dealing [30,SP]% of user's SPEED as PHYSICAL"
 	},
@@ -6105,7 +6105,7 @@
 		},
 		"PANIC_BUTTON": {
 			"name": "Panic Button",
-			"description": "Gain an Unown-Q. Its max PP is set to 10, and the draw it casts now deals 4 player damage to your opponent."
+			"description": "Now and after each PvE round, gain an Unown-Q. Its max PP is set to 10, and the draw it casts now deals 4 player damage to your opponent."
 		},
 		"HAIL_TO_THE_KING": {
 			"name": "Hail to the King",
@@ -6273,15 +6273,15 @@
 		},
 		"KINGDOM": {
 			"name": "High Tower Castle",
-			"description": "At the start of each fight, all allies on the board gain 1 SPEED and 2 HP permanently."
+			"description": "At the start of each fight, all allies on the board gain 1 SPEED and 4 HP permanently."
 		},
 		"BASTION": {
 			"name": "Training Ground",
-			"description": "At the start of each fight, all allies on the board gain 1 DEF, 1 SPE_DEF and 2 HP permanently."
+			"description": "At the start of each fight, all allies on the board gain 1 DEF, 1 SPE_DEF and 4 HP permanently."
 		},
 		"PALACE": {
 			"name": "Magic Palace",
-			"description": "At the start of each fight, all allies on the board gain 2 AP and 2 HP permanently."
+			"description": "At the start of each fight, all allies on the board gain 2 AP and 4 HP permanently."
 		},
 		"SIX_SEVEN": {
 			"name": "67",

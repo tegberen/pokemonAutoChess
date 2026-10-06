@@ -521,8 +521,11 @@ Every balance change on this server, newest first.
 - Gimmighoul | PP 90 → 100
 - Gholdengo | PP 90 → 100
 - Darkrai | passive: gains a stack only for KOs of enemies hexed by a HEXING_INCANTATION. Stacks to Mega evolve 20 → 10
-- Golett Line | PP 100 → 140
+- Golett Line | PP 100 → 120
 - Scyther Line | HP 150/220 → 85/170, Scyther ATK 15 → 12, evolves with 3 copies instead of METAL_ALLOY or BLACK_AUGURITE, into Kleavor in a ROCK region and Scizor elsewhere
+
+**Items**
+- STAR_PIECE | the holder also has RUNE_PROTECT for the whole fight
 
 **Abilities**
 - Machop Line | Guillotine → Cross Chop. Deal [300,SP]% of ATK as SPECIAL to the target. Each FIGHTING throw this fight gives this ability +[25,50,100,200]% CRIT_POWER. Can crit by default
@@ -539,11 +542,12 @@ Every balance change on this server, newest first.
 - POISON (7) | the enemy a POISON Pokémon KOs bursts for 50% of its remaining PP as SPECIAL to ADJACENT enemies, instead of the POISON Pokémon bursting when KO'd
 
 **Wishes**
+- Panic Button | now also gives an Unown-Q after each PvE round
 - Curse of Two | removed
 - Hex Maniac | removed
-- High Tower Castle {{new}} | Prismatic, stage 4 only. At the start of each fight, all allies on the board gain 1 SPEED and 2 HP permanently
-- Training Ground {{new}} | Prismatic, stage 4 only. At the start of each fight, all allies on the board gain 1 DEF, 1 SPE_DEF and 2 HP permanently
-- Magic Palace {{new}} | Prismatic, stage 4 only. At the start of each fight, all allies on the board gain 2 AP and 2 HP permanently
+- High Tower Castle {{new}} | Prismatic, stage 4 only. At the start of each fight, all allies on the board gain 1 SPEED and 4 HP permanently
+- Training Ground {{new}} | Prismatic, stage 4 only. At the start of each fight, all allies on the board gain 1 DEF, 1 SPE_DEF and 4 HP permanently
+- Magic Palace {{new}} | Prismatic, stage 4 only. At the start of each fight, all allies on the board gain 2 AP and 4 HP permanently
 - 67 {{new}} | Prismatic, stage 4 only. Gain 67 GOLD and lose 67 player HP
 - Prismatic Quest {{new}} | Gain 10 GOLD and unlock the Quest Panel. Stage 4 only. Replaces the 12 Prismatic quest Wishes
 - Quest Panel | every quest tracks at once, but you can only claim one reward. Quests no longer give starting items, and rewards no longer include an EXCHANGE_TICKET and a RECYCLE_TICKET

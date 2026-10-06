@@ -2326,9 +2326,11 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
       if (pokemon.stars === 5 && pokemon.player) {
         pokemon.player.titles.add(Title.FIVE_STARS)
       }
+      pokemon.status.triggerRuneProtect(60000, pokemon, pokemon)
     }),
     new OnItemRemovedEffect((pokemon) => {
       pokemon.stars = min(1)(pokemon.stars - 1)
+      pokemon.status.runeProtectCooldown = 0
     })
   ],
 

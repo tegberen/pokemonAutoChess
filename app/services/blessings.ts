@@ -2085,6 +2085,12 @@ export const blessingTriggerEffectService: {
     }
   },
 
+  [Blessing.PANIC_BUTTON]: {
+    [BlessingTrigger.PVE_END]: (player) => {
+      grantPanicButtonUnown(player)
+    }
+  },
+
   [Blessing.TEMPLE_OF_LANGUAGE]: {
     [BlessingTrigger.PVE_END]: (player) =>
       giftPokemonIfBenchHasRoom(player, pickRandomIn(Unowns))
