@@ -51,6 +51,7 @@ const JAC_TITLES = new Set<Title>([
   Title.DERPY,
   Title.ARTIST,
   Title.SHINY,
+  Title.META,
   Title.SHADY
 ])
 

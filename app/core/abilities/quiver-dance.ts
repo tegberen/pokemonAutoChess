@@ -10,24 +10,24 @@ export class QuiverDanceStrategy extends AbilityStrategy {
     super.process(pokemon, board, target, crit)
     const weather = pokemon.simulation.weather
     const isWormadam = pokemon.passive === Passive.WORMADAM
-    const doubledIn = (boostedWeather: Weather) =>
-      isWormadam && weather === boostedWeather ? 2 : 1
+    const boostedIn = (boostedWeather: Weather) =>
+      isWormadam && weather === boostedWeather ? 1.5 : 1
     const attackAndSpecialDefenseGain = [3, 4, 5, 10][pokemon.stars - 1] ?? 10
     const speedGain = [10, 10, 10, 15][pokemon.stars - 1] ?? 15
     pokemon.addAttack(
-      attackAndSpecialDefenseGain * doubledIn(Weather.ZENITH),
+      attackAndSpecialDefenseGain * boostedIn(Weather.ZENITH),
       pokemon,
       1,
       crit
     )
     pokemon.addSpecialDefense(
-      attackAndSpecialDefenseGain * doubledIn(Weather.SANDSTORM),
+      attackAndSpecialDefenseGain * boostedIn(Weather.SANDSTORM),
       pokemon,
       1,
       crit
     )
     pokemon.addSpeed(
-      speedGain * doubledIn(Weather.DISTORTION),
+      speedGain * boostedIn(Weather.DISTORTION),
       pokemon,
       1,
       crit

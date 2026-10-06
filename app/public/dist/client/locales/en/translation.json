@@ -1887,9 +1887,9 @@
 		"CURSED_LAND": "Grants [25,25,25,50,SP] AP to all allies within a 2-tile radius, then torments all enemies in the same radius with one of the following effects:\n- deal [50,50,50,75,SP]% of their max HP as SPECIAL\n- inflict SILENCE for [2,2,2,2,SP] seconds.",
 		"MAGNETIC_ABSORPTION": "Steals 1 RANGE from the target and ADJACENT enemies, then steps back 1 tile. Enemies with no RANGE left to steal take [20,40,80,120,SP] SPECIAL and are LOCKED for 2 seconds instead.",
 		"FRENZY_PLANT": "Strikes the target 3 times with enormous tree roots, dealing [15,30,60,120,SP] SPECIAL per hit, multiplied by the number of ADJACENT enemies surrounding the target. If the target is defeated, remaining roots lash out at the nearest enemy.",
-		"TEMPORAL_RUPTURE": "Channel for 3 seconds, then unleash a temporal pulse. All enemy Pokémon in a 4-tile radius take [50,75,100,200,SP]% of the damage received during the last 3 seconds as TRUE. Allies are healed for [50, 75, 100, 200,SP]% HP of the damage they took in the last 3 seconds.",
+		"TEMPORAL_RUPTURE": "Channel for 3 seconds without moving or attacking, then unleash a temporal pulse. All enemy Pokémon in a 4-tile radius take [50,75,100,200,SP]% of the damage received during the last 3 seconds as TRUE. Allies in that radius are healed for [50,75,100,200,SP]% of the damage they took in the last 3 seconds.",
 		"PRIMAL_ROAR": "Increase the user's ATK and SPEED by [4,8,10,20,SP] and RAGE all allied Pokémon for 2 second. Everytime the user uses this ability, increase the RAGE duration by 1 second.",
-		"SUBSPACE_SWELL": "Channel for 3 seconds. Allies gain 40% more PP from all sources. When the channel ends, unleash a burst in a 4-tile radius dealing [5,10,20,40,SP] SPECIAL times the amount of allies cast during the channel.",
+		"SUBSPACE_SWELL": "Channel for 3 seconds without moving or attacking. Allies gain 40% more PP from all sources. When the channel ends, unleash a burst in a 4-tile radius dealing [5,10,20,40,SP] SPECIAL times the amount of allies cast during the channel.",
 		"SOFT_BOILED": "Cure all status conditions and grant [20,40,80,160,SP] SHIELD to all allied Pokémon.",
 		"PRECIPICE_BLADES": "Deal [25,50,100,120,240,SP] SPECIAL to all enemy Pokémon in the same row or column as the user.",
 		"SONG_OF_DESIRE": "Inflict [1,1,2,3] targets on the back line with CHARM for 3 seconds and reduce their ATK by [3,SP].",
@@ -3180,7 +3180,7 @@
 		"UNIQUE_BUNDLE": "Gift a random Unique Pokémon to your partner. It will have your partner's most common synergy.",
 		"LEGENDARY_BUNDLE": "Gift a random Legendary Pokémon to your partner. It will have one of your partner's 4 most common synergies.",
 		"REGION_BUNDLE": "Gift a LAPRAS_PASSPORT to your partner and 5 free shop rolls. Let's get those regionals!",
-		"EXP_BUNDLE": "Your partner gains 32 experience and their max level is set to 10. Amofus angle.",
+		"EXP_BUNDLE": "Your partner gains 32 XP and their max level is set to 10. Amofus angle.",
 		"EVOLVE_BUNDLE": "Evolve one random Pokémon on your partner's board or bench. If none of them can evolve, your partner gains a SILVER_DOJO_TICKET instead.",
 		"COOKING_BUNDLE": "Gift one mushroom of each type and a picnic set to your partner. Bon appetit!"
 	},
@@ -3759,7 +3759,7 @@
 		"APPLIN": "Applin will evolve when given an apple:\nTART_APPLE: $t(pkm.FLAPPLE)\nSWEET_APPLE: $t(pkm.APPLETUN)\nSIRUPY_APPLE: $t(pkm.DIPPLIN)",
 		"DIPPLIN": "Dipplin is looking for a SIRUPY_APPLE.",
 		"WELL_BAKED": "The Pokémon doesn't suffer from BURN damage. Instead, it gains 20 DEF when burning.",
-		"WORMADAM": "Its ability gives double ATK under ZENITH, double SPE_DEF under SANDSTORM and double SPEED under DISTORTION.",
+		"WORMADAM": "Its ability gives 50% more ATK under ZENITH, 50% more SPE_DEF under SANDSTORM and 50% more SPEED under DISTORTION.",
 		"CONVERSION": "Conversion: Get the highest synergy of your opponent and its effects at the start of the fight.",
 		"CREAM": "$t(pkm.MILCERY) is looking for a delicious flavor...",
 		"VANILLA_CREAM": "Upon casting, the VANILLA_FLAVOR adds [50,SP] SHIELD to the decorated ally",
@@ -4153,12 +4153,14 @@
 		"WHALE": "Whale",
 		"DERPY": "Derpy",
 		"ARTIST": "Artist",
-		"SHINY": "Shiny"
+		"SHINY": "Shiny",
+		"META": "Meta"
 	},
 	"title_description": {
 		"DERPY": "Start a fight with WATER 9 and BUG 8, or win the game with a Beedrill holding a WATER_STONE",
 		"ARTIST": "Paint the whole canvas in Science & Arts",
 		"SHINY": "Complete all 12 Prismatic Quests in a single game",
+		"META": "Win with a Pokémon holding MUSCLE_BAND, SOUL_DEW and SHELL_BELL",
 		"BOTANIST": "Complete the GRASS lesson in Slowking's School of Synergies",
 		"SCHOLAR": "Complete every lesson in Slowking's School of Synergies",
 		"NOVICE": "Play your first game",
@@ -6278,7 +6280,7 @@
 		},
 		"BASTION": {
 			"name": "Training Ground",
-			"description": "At the start of each fight, all allies on the board gain 1 DEF, 1 SPE_DEF and 4 HP permanently."
+			"description": "At the start of each fight, all allies on the board gain 1 DEF, 1 SPE_DEF and 2 HP permanently."
 		},
 		"PALACE": {
 			"name": "Magic Palace",

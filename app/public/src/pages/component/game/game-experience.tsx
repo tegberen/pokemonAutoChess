@@ -23,6 +23,9 @@ export default function GameExperience() {
   const isLevelMax = experienceManager.level >= experienceManager.maxLevel
   const specialGameRule = useAppSelector((state) => state.game.specialGameRule)
   const levelUpCost = getLevelUpCost(specialGameRule)
+  const [buyXpLabelBeforeXp, buyXpLabelAfterXp = ""] = t("buy_xp", {
+    cost: levelUpCost
+  }).split("XP")
   const goldToLevelUp = isLevelMax
     ? null
     : Math.ceil(
@@ -78,7 +81,15 @@ export default function GameExperience() {
           levelClick()
         }}
       >
-        <Money value={t("buy_xp", { cost: levelUpCost })} />
+        <span className="buy-xp-label">
+          {buyXpLabelBeforeXp}
+          <span className="buy-xp-word">
+            <span className="buy-xp-icon" aria-hidden="true" />
+            XP
+          </span>
+          {buyXpLabelAfterXp}
+          <Money />
+        </span>
       </button>
       <div className="progress-bar" data-tooltip-id="gold-to-levelup-tooltip">
         <progress

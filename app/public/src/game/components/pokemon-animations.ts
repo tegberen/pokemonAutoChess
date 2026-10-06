@@ -4938,7 +4938,7 @@ export const PokemonAnimations: {
     attack: AnimationType.Attack,
     ability: AnimationType.Attack,
     emote: AnimationType.Shoot,
-    attackSprite: AttackSprite.STEEL_MELEE,
+    attackSprite: AttackSprite.STEEL_RANGE,
     hitSprite: HitSprite.STEEL_HIT
   },
   [Pkm.CHINGLING]: {

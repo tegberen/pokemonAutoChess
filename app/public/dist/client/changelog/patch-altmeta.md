@@ -524,14 +524,19 @@ Every balance change on this server, newest first.
 - Golett Line | PP 100 → 120
 - Fuecoco Line | PP 80/70/60 → 80/80/80, ATK 5/13/24 → 5/15/30
 - Flapple | HP 180 → 150, ATK 19 → 28
-- Appletun | HP 250 → 300, ATK 15 → 10
+- Appletun | HP 250 → 300, ATK 15 → 8
+- Applin | ATK 12 → 8
+- Kartana | HP 250 → 180, PP 70 → 80, RANGE 1 → 2
+- Xurkitree | HP 220 → 180
+- Regieleki | HP 250 → 220
+- Origin Dialga | ATK 32 → 23
+- Origin Palkia | ATK 32 → 22
 - Smoliv Line | basic attacks no longer deal SPECIAL and no longer scale with AP
 - Turtwig Line | passive removed: no longer gains DEF from critical hits or is immune to ARMOR_BREAK
-- Torterra | HP 200 → 220
 - Chespin Line | HP 70/140/250 → 80/150/250, DEF 6/10/20 → 10/14/24
 - Snover Line | PP 120 → 100
 - Burmy Line | RANGE 2 → 3
-- Wormadam {{new}} | passive: its ability gives double ATK under ZENITH, double SPE_DEF under SANDSTORM and double SPEED under DISTORTION. The doubled value is the new base that AP then boosts
+- Wormadam {{new}} | passive: its ability gives 50% more ATK under ZENITH, 50% more SPE_DEF under SANDSTORM and 50% more SPEED under DISTORTION. The boosted value is the new base that AP then boosts
 - Scyther Line | HP 150/220 → 85/170, Scyther ATK 15 → 12, evolves with 3 copies instead of METAL_ALLOY or BLACK_AUGURITE, into Kleavor in a ROCK region and Scizor elsewhere
 
 **Items**
@@ -540,6 +545,7 @@ Every balance change on this server, newest first.
 - STAR_PIECE | the holder also has RUNE_PROTECT for the whole fight
 
 **Weather**
+- MURKY | LUCK -30 → -10, GHOST are still immune
 - ZENITH | healing bonus +20% → +30%
 
 **Abilities**
@@ -548,15 +554,16 @@ Every balance change on this server, newest first.
 - Appletun | Apple Acid: deals [50,100,200,400,SP]% of (DEF + SPE_DEF) as SPECIAL instead of [15,30,50,100,SP], no longer doubled against 0 SPE_DEF
 - Flapple | Grav Apple: deals [50,100,200,400,SP]% of ATK as PHYSICAL instead of [20,40,80,160,SP], no longer doubled against 0 DEF
 - Gimmighoul | Gold Rush: GOLD gained 2 → 1
+- Origin Dialga | Temporal Rupture: now a real channel, the user cannot move or attack for 3 seconds. The pulse only reaches units within 4 tiles, as described
+- Origin Palkia | Subspace Swell: now a real channel, the user cannot move or attack for 3 seconds
 - Turtwig Line | Bulldoze: enemies hit lose 20 SPEED at every star instead of [5,5,10,20]
 - Golett Line | Shadow Punch reworked: a giant phantom fist deals [40,80,SP] SPECIAL and knocks the target back to the board edge, catapulting the enemies in its path. Then the user rushes in for [60,120,SP] SPECIAL
 - Shuppet Line | Shadow Clone: only steals an item if the target is hexed by a HEXING_INCANTATION. Clone max HP [50,50,90,100]% → [50,50,50,100]%
 
 **Synergies**
-- FAIRY | added a cooldown to the FAIRY wands
+- GHOST {{new}} | reworked: write HEXING_INCANTATION, RITUAL_INCANTATION and FATED_INCANTATION. Enemies with negative LUCK are easier to dodge and SILENCE, see [GHOST in the Wiki](#wiki/types/GHOST)
+- FAIRY | added a cooldown to the FAIRY wands, see [FAIRY in the Wiki](#wiki/types/FAIRY)
 - GRASS | harvesting a berry gives 2 XP
-- GHOST {{new}} | reworked: write HEXING_INCANTATION, RITUAL_INCANTATION and FATED_INCANTATION. Enemies with negative LUCK are easier to dodge and SILENCE
-- MURKY | LUCK -30 → -10, GHOST are still immune
 - POISON (7) | the enemy a POISON Pokémon KOs bursts for 50% of its remaining PP as SPECIAL to ADJACENT enemies, instead of the POISON Pokémon bursting when KO'd
 
 **Wishes**
@@ -564,9 +571,9 @@ Every balance change on this server, newest first.
 - Curse of Two | removed
 - Hex Maniac | removed
 - High Tower Castle {{new}} | Prismatic, stage 4 only. At the start of each fight, all allies on the board gain 1 SPEED and 4 HP permanently
-- Training Ground {{new}} | Prismatic, stage 4 only. At the start of each fight, all allies on the board gain 1 DEF, 1 SPE_DEF and 4 HP permanently
+- Training Ground {{new}} | Prismatic, stage 4 only. At the start of each fight, all allies on the board gain 1 DEF, 1 SPE_DEF and 2 HP permanently
 - Magic Palace {{new}} | Prismatic, stage 4 only. At the start of each fight, all allies on the board gain 2 AP and 4 HP permanently
-- 67 {{new}} | Prismatic, stage 4 only. Gain 67 GOLD and lose 67 player HP
+- 67 {{new}} | Prismatic, stage 4 only. Gain 67 GOLD and lose 67 player HP (cannot be rolled by Gamble III or Golden Flip)
 - Prismatic Quest {{new}} | Gain 10 GOLD and unlock the Quest Panel. Stage 4 only. Replaces the 12 Prismatic quest Wishes
 - Quest Panel | every quest tracks at once, but you can only claim one reward. Quests no longer give starting items, and rewards no longer include an EXCHANGE_TICKET and a RECYCLE_TICKET
 - Quest: Crit | hold 100 GOLD at once. Reward: GOLD_BOTTLE_CAP
@@ -584,18 +591,21 @@ Every balance change on this server, newest first.
 - Missions | Quest: Evolve, Destroy, Level Up, Diversify and Prosper are renamed to Mission
 
 **Game Mode**
-- Misfits {{new}} | new Scribble: everyone receives a Mystery Box worth the same GOLD, a surprise haul of 12, 18 or 26 GOLD with a guaranteed Rare, Epic or Ultra. At the start of each fight, units with no active synergy gain a very strong bonus, scaling with each STAR. Stage 4 always brings Chimecho, whose carousel offers 2 STAR Pokémon, regionals and additional picks included
-- Quest Board {{new}} | new Scribble: everyone starts with the Quest Panel and can claim every reward from the quests they complete
+- Misfits {{new}} | new Scribble: {{scribble:MISFITS}}
+- Quest Board {{new}} | new Scribble: {{scribble:QUEST_BOARD}}
 - Shiniest Hunter | removed
 
 **Titles**
 - Shiny {{new}} | complete all 12 Prismatic Quests in a single game
+- Meta {{new}} | win with a Pokémon holding MUSCLE_BAND, SOUL_DEW and SHELL_BELL
 
 **Fixes**
+- Origin Palkia | Subspace Swell no longer leaves its PP boost on allies for the rest of the fight when Origin Palkia is KO'd mid-channel
 - Crocalor | long-lasting bug finally fixed: Crocalor no longer has the BUG type
 
 **Interface**
-- Halloween theme {{new}} | the new default theme, with see-through panels
+- Experience Icon {{new}} | XP now shows its icon in descriptions and on the Buy XP button
+- Halloween theme {{new}} | new patch theme
 
 ### 29 September 2026
 

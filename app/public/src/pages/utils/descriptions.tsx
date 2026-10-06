@@ -74,6 +74,7 @@ export const iconRegExp = new RegExp(
     ...DebuffWords,
     ...BuffWords,
     "GOLD",
+    "XP",
     "STAR",
     "NEGATIVE_STATUS"
   ].join("|")}|\\[[^\\]]+\\])(?=\\W|$)`,
@@ -128,6 +129,13 @@ export function addIconsToDescription(
             src="/assets/icons/money.svg"
             alt="$"
           />
+        )
+      } else if (token === "XP") {
+        icon = (
+          <span className="description-icon stat">
+            <img src="assets/icons/EXP.svg" alt="" />
+            <span className="stat-label">XP</span>
+          </span>
         )
       } else if (token === "NEGATIVE_STATUS") {
         const isFirstWord = descriptionParts[i - 1].trim() === ""
@@ -393,6 +401,11 @@ export function addIconsToHtml(
         } else if (token === "STAR") {
           iconHTML =
             '<img class="description-icon icon-star" src="/assets/ui/star.svg" alt="⭐" />'
+        } else if (token === "XP") {
+          iconHTML = `<span class="description-icon stat">
+            <img src="assets/icons/EXP.svg" alt="" />
+            <span class="stat-label">XP</span>
+          </span>`
         } else if (isIn(DamageTypes, token)) {
           const className =
             token === Damage.PHYSICAL

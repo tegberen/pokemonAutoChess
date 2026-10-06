@@ -1,61 +1,115 @@
 import { Ability } from "../../types/enum/Ability"
+import { EffectEnum } from "../../types/enum/Effect"
 import { AttackType } from "../../types/enum/Game"
 import type { Board } from "../board"
-import { OnDamageReceivedEffect, PeriodicEffect } from "../effects/effect"
+import {
+  OnDamageReceivedEffect,
+  OnDeathEffect,
+  PeriodicEffect
+} from "../effects/effect"
 import type { PokemonEntity } from "../pokemon-entity"
 import { AbilityStrategy } from "./ability-strategy"
 
-class TemporalRuptureEffect extends PeriodicEffect {
-  duration: number
-  damageTracked: Map<PokemonEntity, number> = new Map()
-  monitors: OnDamageReceivedEffect[] = []
+const TEMPORAL_RUPTURE_RADIUS = 4
 
-  constructor(pokemon: PokemonEntity, duration: number, board: Board, crit: boolean) {
+class TemporalRuptureEffect extends PeriodicEffect {
+  remainingMs: number
+  damageReceivedByUnit = new Map<PokemonEntity, number>()
+  damageMonitorsByUnit = new Map<PokemonEntity, OnDamageReceivedEffect>()
+  // a KO stops the caster's periodic effects, so the channel is ended here
+  endChannelOnDeath = new OnDeathEffect(({ pokemon }) => {
+    this.endChannel(pokemon)
+  }, Ability.TEMPORAL_RUPTURE)
+
+  constructor(
+    pokemon: PokemonEntity,
+    durationMs: number,
+    board: Board,
+    crit: boolean
+  ) {
     super(
       (pokemon) => {
-        if (this.duration <= 0) {
-          // cleanup monitors
-          this.monitors.forEach((m) => {
-            board.cells.forEach((cell) => {
-              if (cell) cell.effectsSet.delete(m)
-            })
-          })
-          pokemon.broadcastAbility({ skill: Ability.TEMPORAL_RUPTURE })
-          this.damageTracked.forEach((damage, unit) => {
-            if (unit.hp <= 0) return
-            const amount = Math.round(damage) // define like thise for ap adjustments
-            const damageMultiplier = [0.5, 0.75, 1, 2][pokemon.stars - 1] ?? 2
+        this.remainingMs -= this.intervalMs
+        if (this.remainingMs > 0) return
+        const damageReceivedByUnit = new Map(this.damageReceivedByUnit)
+        this.endChannel(pokemon)
+        pokemon.broadcastAbility({ skill: Ability.TEMPORAL_RUPTURE })
+        const ratio = [0.5, 0.75, 1, 2][pokemon.stars - 1] ?? 2
+        board
+          .getCellsInRadius(
+            pokemon.positionX,
+            pokemon.positionY,
+            TEMPORAL_RUPTURE_RADIUS,
+            true
+          )
+          .forEach((cell) => {
+            const unit = cell.value
+            const damageReceived = unit && damageReceivedByUnit.get(unit)
+            if (!unit || !damageReceived || unit.hp <= 0) return
+            const amount = Math.round(damageReceived * ratio)
             if (unit.team !== pokemon.team) {
-              unit.handleSpecialDamage(amount * damageMultiplier, board, AttackType.TRUE, pokemon, crit)
+              unit.handleSpecialDamage(
+                amount,
+                board,
+                AttackType.TRUE,
+                pokemon,
+                crit
+              )
             } else {
-              unit.handleHeal(Math.round(amount * damageMultiplier * (1 + pokemon.ap / 100)), pokemon, 0, false)
+              unit.handleHeal(
+                Math.round(amount * (1 + pokemon.ap / 100)),
+                pokemon,
+                0,
+                false
+              )
             }
           })
-          pokemon.effectsSet.delete(this)
-        } else {
-          this.duration -= this.intervalMs
-        }
       },
       Ability.TEMPORAL_RUPTURE,
-      1000
+      500
     )
-    this.duration = duration
+    this.remainingMs = durationMs
 
-    // add monitor to every unit on the board
     board.cells.forEach((unit) => {
       if (!unit) return
-      const monitor = new OnDamageReceivedEffect(({ damage }) => {
-        this.damageTracked.set(unit, (this.damageTracked.get(unit) ?? 0) + damage)
+      const damageMonitor = new OnDamageReceivedEffect(({ damage }) => {
+        const damageSoFar = this.damageReceivedByUnit.get(unit) ?? 0
+        this.damageReceivedByUnit.set(unit, damageSoFar + damage)
       }, Ability.TEMPORAL_RUPTURE)
-      this.monitors.push(monitor)
-      unit.effectsSet.add(monitor)
+      this.damageMonitorsByUnit.set(unit, damageMonitor)
+      unit.effectsSet.add(damageMonitor)
     })
+    pokemon.effects.add(EffectEnum.CHANNELING)
+    pokemon.effectsSet.add(this.endChannelOnDeath)
+  }
+
+  endChannel(pokemon: PokemonEntity) {
+    this.damageMonitorsByUnit.forEach((damageMonitor, unit) => {
+      unit.effectsSet.delete(damageMonitor)
+    })
+    this.damageMonitorsByUnit.clear()
+    this.damageReceivedByUnit.clear()
+    pokemon.effects.delete(EffectEnum.CHANNELING)
+    pokemon.effectsSet.delete(this.endChannelOnDeath)
+    pokemon.effectsSet.delete(this)
   }
 }
 
 export class TemporalRuptureStrategy extends AbilityStrategy {
-  process(pokemon: PokemonEntity, board: Board, target: PokemonEntity, crit: boolean) {
+  process(
+    pokemon: PokemonEntity,
+    board: Board,
+    target: PokemonEntity,
+    crit: boolean
+  ) {
     super.process(pokemon, board, target, crit, true)
-    pokemon.effectsSet.add(new TemporalRuptureEffect(pokemon, 3000, board, crit))
+    const alreadyChanneling = [...pokemon.effectsSet].some(
+      (effect) => effect instanceof TemporalRuptureEffect
+    )
+    if (!alreadyChanneling) {
+      pokemon.effectsSet.add(
+        new TemporalRuptureEffect(pokemon, 3000, board, crit)
+      )
+    }
   }
 }

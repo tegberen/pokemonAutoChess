@@ -907,7 +907,8 @@ export enum Title {
   SCHOLAR = "SCHOLAR",
   DERPY = "DERPY",
   ARTIST = "ARTIST",
-  SHINY = "SHINY"
+  SHINY = "SHINY",
+  META = "META"
 }
 
 export interface IBoardEvent {

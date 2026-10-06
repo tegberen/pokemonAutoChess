@@ -1450,6 +1450,16 @@ export default class GameRoom extends Room<{ state: GameState }> {
         ) {
           player.titles.add(Title.DERPY)
         }
+        if (
+          schemaValues(player.board).some(
+            (pokemon) =>
+              pokemon.items.has(Item.MUSCLE_BAND) &&
+              pokemon.items.has(Item.SOUL_DEW) &&
+              pokemon.items.has(Item.SHELL_BELL)
+          )
+        ) {
+          player.titles.add(Title.META)
+        }
         if (this.state.gameMode === GameMode.RANKED) {
           player.titles.add(Title.VANQUISHER)
           const minElo = Math.min(

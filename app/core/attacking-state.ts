@@ -19,6 +19,8 @@ export default class AttackingState extends PokemonState {
 
   update(pokemon: PokemonEntity, dt: number, board: Board, player: Player) {
     super.update(pokemon, dt, board, player)
+    // PP keeps filling while channeling, so a full bar casts right after
+    if (pokemon.effects.has(EffectEnum.CHANNELING)) return
 
     if (pokemon.cooldown <= 0) {
       const speed = pokemon.status.paralysis ? pokemon.speed / 2 : pokemon.speed

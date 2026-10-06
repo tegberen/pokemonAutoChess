@@ -2664,7 +2664,7 @@ export class Torterra extends Pokemon {
   ])
   rarity = Rarity.COMMON
   stars = 3
-  hp = 220
+  hp = 200
   atk = 18
   speed = 43
   def = 16
@@ -6477,7 +6477,7 @@ export class OriginDialga extends Pokemon {
   rarity = Rarity.LEGENDARY
   stars = 3
   hp = 250
-  atk = 32
+  atk = 23
   speed = 54
   def = 10
   speDef = 10
@@ -6535,7 +6535,7 @@ export class OriginPalkia extends Pokemon {
   rarity = Rarity.LEGENDARY
   stars = 3
   hp = 250
-  atk = 32
+  atk = 22
   speed = 57
   def = 10
   speDef = 10
@@ -9579,7 +9579,7 @@ export class Regieleki extends Pokemon {
   ])
   rarity = Rarity.LEGENDARY
   stars = 3
-  hp = 250
+  hp = 220
   atk = 20
   speed = 89
   def = 6
@@ -11433,7 +11433,7 @@ export class Applin extends Pokemon {
     }
   } satisfies ItemEvolutionRule
   hp = 160
-  atk = 12
+  atk = 8
   speed = 31
   def = 6
   speDef = 6
@@ -11481,7 +11481,7 @@ export class Appletun extends Pokemon {
   rarity = Rarity.UNIQUE
   stars = 3
   hp = 300
-  atk = 10
+  atk = 8
   speed = 31
   def = 12
   speDef = 12
@@ -13770,13 +13770,13 @@ export class Kartana extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.STEEL, Synergy.GRASS])
   rarity = Rarity.LEGENDARY
   stars = 3
-  hp = 250
+  hp = 180
   atk = 35
   speed = 60
   def = 20
   speDef = 4
-  maxPP = 70
-  range = 1
+  maxPP = 80
+  range = 2
   skill = Ability.LEAF_BLADE
   passive = Passive.BEAST_BOOST_ATK
 }
@@ -14963,7 +14963,7 @@ export class Xurkitree extends Pokemon {
   ])
   rarity = Rarity.LEGENDARY
   stars = 3
-  hp = 220
+  hp = 180
   atk = 20
   speed = 52
   def = 6

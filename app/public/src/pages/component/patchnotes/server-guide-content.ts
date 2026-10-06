@@ -411,6 +411,7 @@ export function formatPatchLog(html: string, wishes: PatchLogWish[]) {
     const table = document.createElement("table")
     table.className = "guide-patchlog-table"
     const body = table.createTBody()
+    let isAfterPrismaticQuest = false
     for (const item of Array.from(element.children)) {
       const row = body.insertRow()
       const walker = document.createTreeWalker(item, NodeFilter.SHOW_TEXT)
@@ -475,6 +476,12 @@ export function formatPatchLog(html: string, wishes: PatchLogWish[]) {
         const tier = wishTier(subjectText, matchers)
         if (tier) row.dataset.tier = tier
         subject.prepend(wishIcons(subjectText, matchers))
+        // the Quest rows that follow Prismatic Quest are its own quests
+        if (subjectText.startsWith("Prismatic Quest")) {
+          isAfterPrismaticQuest = true
+        } else if (isAfterPrismaticQuest && subjectText.startsWith("Quest:")) {
+          subject.classList.add("guide-patchlog-subrow")
+        }
       }
       const change = row.insertCell()
       while (item.firstChild) change.append(item.firstChild)

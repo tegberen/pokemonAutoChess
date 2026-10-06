@@ -748,6 +748,10 @@
   font-weight: 600;
 }
 
+.server-guide .guide-patchlog-subject.guide-patchlog-subrow {
+  padding-left: 2em;
+}
+
 .server-guide .guide-patchlog-new-entry {
   font-weight: 600;
 }
