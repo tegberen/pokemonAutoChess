@@ -162,7 +162,7 @@ export const RITUAL_SILENCE_VALUES: ByRitualTrigger<{
   seconds: number[]
 }> = {
   [RitualTrigger.GHOST_CASTS]: { targets: [0, 0], seconds: [1, 2] },
-  [RitualTrigger.GHOST_ATTACKS]: { targets: [0, 0], seconds: [3, 4] },
+  [RitualTrigger.GHOST_ATTACKS]: { targets: [0, 0], seconds: [2, 3] },
   [RitualTrigger.GHOST_KOD]: { targets: [2, 3], seconds: [2, 3] },
   [RitualTrigger.ENEMY_KOD]: { targets: [2, 3], seconds: [2, 3] }
 }

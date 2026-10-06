@@ -34,7 +34,6 @@ import {
   getIncantationIcon,
   type Translate
 } from "../game/ghost-incantation-text"
-import SynergyIcon from "../icons/synergy-icon"
 import "./wiki-ghost-incantations.css"
 
 const GHOST_SLOT_LEVELS = GHOST_INCANTATION_SLOTS.map((slot) => slot.ghostLevel)
@@ -103,19 +102,21 @@ function KindHeading({
 }
 
 function TierLegend({ t, tiers }: { t: Translate; tiers: number[][] }) {
+  const tiersByLevel = tiers
+    .map((levels, strength) =>
+      t("wiki.ghost.tier_at", {
+        tier: strength + 1,
+        levels: levels
+          .map((level) => t("wiki.ghost.level", { level }))
+          .join(` ${t("wiki.ghost.and")} `)
+      })
+    )
+    .join(", ")
   return (
     <p className="wiki-ghost-tier-legend">
-      {t("wiki.ghost.tier_legend")}
-      {tiers.map((levels, strength) => (
-        <Fragment key={strength}>
-          {strength > 0 && <span aria-hidden="true">/</span>}
-          <span className="wiki-ghost-tier-chip">
-            {t("wiki.ghost.tier", { tier: strength + 1 })}
-            <SynergyIcon type={Synergy.GHOST} />
-            {levels.join(", ")}
-          </span>
-        </Fragment>
-      ))}
+      {addIconsToDescription(
+        t("wiki.ghost.tier_legend", { tiers: tiersByLevel })
+      )}
     </p>
   )
 }
@@ -132,9 +133,11 @@ function RitualMatrixHead({ t }: { t: Translate }) {
       <tr>
         {RITUAL_TRIGGERS.map((trigger) => (
           <th key={trigger}>
-            {t(`wiki.ghost.ritual.causes.${trigger}`, {
-              count: RITUAL_ATTACKS_PER_TRIGGER
-            })}
+            {addIconsToDescription(
+              t(`wiki.ghost.ritual.causes.${trigger}`, {
+                count: RITUAL_ATTACKS_PER_TRIGGER
+              })
+            )}
           </th>
         ))}
       </tr>
@@ -329,7 +332,9 @@ export function WikiGhostIncantations() {
               <tbody>
                 <tr className="wiki-ghost-group">
                   <th scope="rowgroup" colSpan={2}>
-                    {t("wiki.ghost.hexing_effects.STAT")}
+                    {addIconsToDescription(
+                      t("wiki.ghost.hexing_effects.STAT")
+                    )}
                   </th>
                 </tr>
                 {Object.values(HexingTarget).map((target) => {

@@ -30,6 +30,9 @@ const Stats = keys(Stat)
 const Weathers = keys(Weather)
 const Synergies = keys(Synergy)
 const Items = keys(Item)
+// colored words that tell a GHOST hexing debuff apart from a ritual buff
+const DebuffWords = ["DEBUFF", "LOSE", "LOSES", "INCREASED"]
+const BuffWords = ["BUFF", "GAIN", "GAINS", "GRANTS"]
 
 const IncantationKindByTechnicalTerm: { [term: string]: IncantationKind } = {
   [TechnicalTerm.HEXING_INCANTATION]: IncantationKind.HEXING,
@@ -68,6 +71,8 @@ export const iconRegExp = new RegExp(
     ...Synergies,
     ...Items,
     ...TechnicalTerms,
+    ...DebuffWords,
+    ...BuffWords,
     "GOLD",
     "STAR",
     "NEGATIVE_STATUS"
@@ -219,6 +224,21 @@ export function addIconsToDescription(
           <span className="description-icon synergy">
             <SynergyIcon type={token as Synergy} />
             <span className="synergy-label">{t(`synergy.${token}`)}</span>
+          </span>
+        )
+      } else if (isIn(DebuffWords, token) || isIn(BuffWords, token)) {
+        const word = token.toLowerCase()
+        const isFirstWordOrStartOfSentence =
+          isAtStartOfSentence || descriptionParts[i - 1].trim() === ""
+        icon = (
+          <span
+            className={cc("status-label", {
+              positive: isIn(BuffWords, token)
+            })}
+          >
+            {isFirstWordOrStartOfSentence
+              ? word.charAt(0).toUpperCase() + word.slice(1)
+              : word}
           </span>
         )
       } else if (isIn(TechnicalTerms, token)) {
@@ -412,6 +432,9 @@ export function addIconsToHtml(
             <img src="assets/types/${token}.svg" style="width: 1.5em; height: 1.5em;" />
             <span class="synergy-label">${t(`synergy.${token}`)}</span>
           </span>`
+        } else if (isIn(DebuffWords, token) || isIn(BuffWords, token)) {
+          const isBuff = isIn(BuffWords, token)
+          iconHTML = `<span class="status-label${isBuff ? " positive" : ""}">${token.toLowerCase()}</span>`
         } else if (isIn(TechnicalTerms, token)) {
           iconHTML = `<span class="description-icon technical-term" title="${t(`technical_terms_definitions.${token}`)}">
             <img src="${getTechnicalTermIcon(token)}" />

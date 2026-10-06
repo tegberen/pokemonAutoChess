@@ -4018,7 +4018,7 @@
 		"FAIRY": "FAIRY Pokémon use wands to deal additional SPECIAL and various effects with their attacks.{{additionalInfo}}",
 		"FAIRY_WANDS": "\nWands equipped: {{wands}}",
 		"ROCK": "ROCK Pokémon gain DEF, better resist to critical attacks, and can adapt to weather. When ROCK Pokémon are KO'd they explode, deal TRUE and ARMOR_BREAK all ADJACENT enemies",
-		"GHOST": "GHOST lets you write incantations that curse the enemy team. GHOST Pokémon have a [15,LK]% chance to dodge attacks and apply SILENCE for 2s ON_HIT. Enemies with negative LUCK are easier for GHOST Pokémon to dodge and SILENCE.",
+		"GHOST": "GHOST lets you write incantations: a HEXING_INCANTATION DEBUFF at 2 and 4, a RITUAL_INCANTATION BUFF at 6 and a FATED_INCANTATION that empowers both at 8. GHOST Pokémon have a [15,LK]% chance to dodge attacks and apply SILENCE for 2s ON_HIT. Enemies with negative LUCK are easier for GHOST Pokémon to dodge and SILENCE.",
 		"GHOST_NIGHT_SHADE": "Night Shade",
 		"GHOST_NIGHT_SHADE_DESCRIPTION": "Unlock the Shady title. One does not simply leak how to get Shady.",
 		"ICE": "ICE Pokémon have [20,LK]% chance to FREEZE the enemy for 2 seconds after a hit and give SPE_DEF to your whole team.",
@@ -6760,13 +6760,13 @@
 				"HIGHEST_SPEED": "The enemy with the highest SPEED"
 			},
 			"1": {
-				"STAT": "Loses {{value}} {{stat}}",
-				"STAT_PERCENT": "Loses {{value}}% {{stat}}",
-				"STAT_UNKNOWN": "Loses the stat it was chosen for",
-				"GOLD_ON_KO": "Grants {{value}} GOLD when KO'd, once per fight",
-				"LUCK": "Loses {{value}} LUCK",
-				"MAX_PP": "Has its max PP increased by {{value}}%",
-				"MAX_HP": "Loses {{value}}% max HP"
+				"STAT": "LOSES {{value}} {{stat}}",
+				"STAT_PERCENT": "LOSES {{value}}% {{stat}}",
+				"STAT_UNKNOWN": "LOSES the stat it was chosen for",
+				"GOLD_ON_KO": "GRANTS {{value}} GOLD when KO'd, once per fight",
+				"LUCK": "LOSES {{value}} LUCK",
+				"MAX_PP": "Has its max PP INCREASED by {{value}}%",
+				"MAX_HP": "LOSES {{value}}% max HP"
 			},
 			"2": {
 				"FLINCH": "Is FLINCH",
@@ -6789,22 +6789,22 @@
 				"ENEMY_KOD": "When an enemy is KO'd"
 			},
 			"1": {
-				"GHOST_LUCK": "GHOST Pokémon gain {{value}} LUCK",
-				"ENEMY_LUCK_LOSS": "All enemies lose {{value}} LUCK",
+				"GHOST_LUCK": "GHOST Pokémon GAIN {{value}} LUCK",
+				"ENEMY_LUCK_LOSS": "All enemies LOSE {{value}} LUCK",
 				"SILENCE": "Enemies are SILENCE",
 				"SILENCE_DAMAGED": "Enemies damaged by the ability are SILENCE for {{seconds}} seconds",
 				"SILENCE_BEHIND_TARGET": "Enemies in a line behind the target are SILENCE for {{seconds}} seconds",
 				"SILENCE_NEAREST": "The {{targets}} nearest enemies without SILENCE are SILENCE for {{seconds}} seconds",
 				"SILENCE_ADJACENT": "{{targets}} ADJACENT enemies without SILENCE are SILENCE for {{seconds}} seconds",
-				"GHOST_SPEED": "GHOST Pokémon gain {{value}} SPEED",
-				"GHOST_PP": "GHOST Pokémon gain {{value}} PP",
-				"GHOST_MAX_HP": "GHOST Pokémon gain {{value}} max HP"
+				"GHOST_SPEED": "GHOST Pokémon GAIN {{value}} SPEED",
+				"GHOST_PP": "GHOST Pokémon GAIN {{value}} PP",
+				"GHOST_MAX_HP": "GHOST Pokémon GAIN {{value}} max HP"
 			},
 			"2": {
-				"GOLD_CHANCE": "You have a [{{chance}},LK]% chance to gain {{gold}} GOLD",
-				"PERMANENT_HP": "The ally with the highest max HP gains {{value}} permanent HP, up to half its base HP",
-				"PERMANENT_PP": "The ally with the highest AP gains {{value}} permanent starting PP, up to half its max PP",
-				"PERMANENT_SPEED": "The ally with the highest ATK gains {{value}} permanent SPEED, up to half its base SPEED"
+				"GOLD_CHANCE": "You have a [{{chance}},LK]% chance to GAIN {{gold}} GOLD",
+				"PERMANENT_HP": "The ally with the highest max HP GAINS {{value}} permanent HP, up to half its base HP",
+				"PERMANENT_PP": "The ally with the highest AP GAINS {{value}} permanent starting PP, up to half its max PP",
+				"PERMANENT_SPEED": "The ally with the highest ATK GAINS {{value}} permanent SPEED, up to half its base SPEED"
 			}
 		},
 		"FATED": {
@@ -6821,7 +6821,7 @@
 			},
 			"1": {
 				"ECHO": "[{{value}},LK]% chance to repeat the RITUAL_INCANTATION",
-				"DOUBLE_REWARDS": "Grants double GOLD and permanent stat gains",
+				"DOUBLE_REWARDS": "Grants double GOLD and permanent stat GAINS",
 				"RESURRECT": "After activating {{value}}, give RESURRECTION to the STRONGEST ally",
 				"SPAWN_GHOST": "[{{value}},LK]% chance to put a GHOST Pokémon costing 3 GOLD or less on your bench"
 			}
@@ -7585,7 +7585,10 @@
 			"hexing_tier": "Hexing values",
 			"ritual_tier": "Ritual values",
 			"tier": "Tier {{tier}}",
-			"tier_legend": "Values are listed in Tier order:",
+			"tier_legend": "Values are listed by Tier, from your GHOST level: {{tiers}}.",
+			"tier_at": "Tier {{tier}} at {{levels}}",
+			"and": "and",
+			"level": "Lvl {{level}}",
 			"none": "–",
 			"example": "Example: {{sentence}}",
 			"example_label": "Example:",
@@ -7597,32 +7600,32 @@
 			},
 			"hexing": {
 				"title": "Hexing Incantations",
-				"intro": "At the start of each fight, the enemy chosen by the Cause gets the Effect and the NEGATIVE_STATUS for the whole fight. When several enemies tie on that stat, the STRONGEST one is chosen. Your second HEXING_INCANTATION cannot use the same Cause as the first."
+				"intro": "Your DEBUFF at GHOST 2 and 4. At the start of each fight, the enemy chosen by the Cause gets the Effect and the NEGATIVE_STATUS for the whole fight. When several enemies tie on that stat, the STRONGEST one is chosen. Your second HEXING_INCANTATION cannot use the same Cause as the first."
 			},
 			"ritual": {
 				"title": "Ritual Incantation",
-				"intro": "Each time the Cause happens, the Effect and the Bewitching trigger.",
+				"intro": "Your BUFF at GHOST 6. Each time the Cause happens, the Effect and the Bewitching trigger.",
 				"causes": {
 					"GHOST_CASTS": "GHOST casts",
 					"GHOST_ATTACKS": "Every {{count}} GHOST attacks",
 					"GHOST_KOD": "GHOST KO'd",
 					"ENEMY_KOD": "Enemy KO'd"
 				},
-				"ghost_gain": "Allied GHOST Pokémon gain",
+				"ghost_gain": "Allied GHOST Pokémon GAIN",
 				"enemies": "Enemies",
 				"effects": {
 					"GHOST_LUCK": "LUCK",
-					"ENEMY_LUCK_LOSS": "All lose LUCK",
+					"ENEMY_LUCK_LOSS": "All LOSE LUCK",
 					"SILENCE": "SILENCE",
 					"GHOST_SPEED": "SPEED",
 					"GHOST_PP": "PP",
 					"GHOST_MAX_HP": "max HP"
 				},
 				"bonuses": {
-					"GOLD_CHANCE": "You have a chance to gain GOLD",
-					"PERMANENT_HP": "Highest max HP ally gains permanent HP",
-					"PERMANENT_PP": "Highest AP ally gains permanent starting PP",
-					"PERMANENT_SPEED": "Highest ATK ally gains permanent SPEED"
+					"GOLD_CHANCE": "You have a chance to GAIN GOLD",
+					"PERMANENT_HP": "Highest max HP ally GAINS permanent HP",
+					"PERMANENT_PP": "Highest AP ally GAINS permanent starting PP",
+					"PERMANENT_SPEED": "Highest ATK ally GAINS permanent SPEED"
 				},
 				"silence_damaged": "Damaged enemies for {{seconds}} seconds",
 				"silence_behind_target": "Enemies in a line behind the target for {{seconds}} seconds",
@@ -7634,12 +7637,12 @@
 			},
 			"fated": {
 				"title": "Fated Incantation",
-				"intro": "Pick one way to empower each kind of incantation.",
+				"intro": "Written at GHOST 8 to empower your other incantations. Pick one way to empower each kind.",
 				"hexing_heading": "Empower both HEXING_INCANTATION",
 				"ritual_heading": "Empower your RITUAL_INCANTATION",
 				"rituals": {
 					"ECHO": "Chance to repeat the RITUAL_INCANTATION",
-					"DOUBLE_REWARDS": "Double GOLD and permanent stat gains",
+					"DOUBLE_REWARDS": "Double GOLD and permanent stat GAINS",
 					"RESURRECT": "Give RESURRECTION to the STRONGEST ally after activating",
 					"SPAWN_GHOST": "Chance to put a GHOST Pokémon costing 3 GOLD or less on your bench"
 				},
@@ -7647,11 +7650,11 @@
 				"hexing_gold_note": "When a FATED_INCANTATION makes a HEXING_INCANTATION affect several enemies, each of them gets its debuff and NEGATIVE_STATUS, but its GOLD is still granted only once per fight: at most 3 GOLD, or 6 with two GOLD hexes."
 			},
 			"hexing_effects": {
-				"STAT": "Loses the stat of its Cause",
-				"GOLD_ON_KO": "Grants GOLD when KO'd, once per fight",
-				"LUCK": "Loses LUCK",
-				"MAX_PP": "Max PP increased",
-				"MAX_HP": "Loses max HP"
+				"STAT": "LOSES the stat of its Cause",
+				"GOLD_ON_KO": "GRANTS GOLD when KO'd, once per fight",
+				"LUCK": "LOSES LUCK",
+				"MAX_PP": "Max PP INCREASED",
+				"MAX_HP": "LOSES max HP"
 			},
 			"curse_duration": "Lasts the whole fight."
 		},
@@ -7991,9 +7994,9 @@
 		"SEED_BAG": "The Seed Bag stores Seeds earned from Letter deliveries. Select one active Seed to apply its effect at the start of the next fight.",
 		"STRONGEST": "Strongest is defined as, by order of priority: 1. Number of items held, 2. Unit tier, 3. Unit rarity",
 		"STRONGER": "A stronger GHOST incantation moves up a Tier and uses its higher values. Each HEXING_INCANTATION gets stronger at GHOST 6 and 8, the RITUAL_INCANTATION at GHOST 8.",
-		"HEXING_INCANTATION": "Written at GHOST 2 and 4. At the start of each fight, it hexes one enemy with a malus and a NEGATIVE_STATUS for the whole fight.",
-		"RITUAL_INCANTATION": "Written at GHOST 6. Every time its Cause happens during a fight, its Effect and Bewitching trigger.",
-		"FATED_INCANTATION": "Written at GHOST 8. Empowers your HEXING_INCANTATION and RITUAL_INCANTATION."
+		"HEXING_INCANTATION": "Your DEBUFF, written at GHOST 2 and 4. At the start of each fight, it hexes one enemy with a malus and a NEGATIVE_STATUS for the whole fight.",
+		"RITUAL_INCANTATION": "Your BUFF, written at GHOST 6. Every time its Cause happens during a fight, its Effect and Bewitching trigger.",
+		"FATED_INCANTATION": "Written at GHOST 8 to empower your HEXING_INCANTATION and RITUAL_INCANTATION."
 	},
 	"seed_bag": {
 		"title": "Seed Bag",
