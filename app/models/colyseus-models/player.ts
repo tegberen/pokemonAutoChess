@@ -317,6 +317,8 @@ export default class Player extends Schema implements IPlayer {
   crystalClustersRocksGranted = false
   // server-only: FAST_FOOD_DELIVERY dishes and the rounds left before they rot
   fastFoodDishes: { dish: Item; roundsLeft: number }[] = []
+  // server-only: Swadloons that just turned GHOST, emoted on the next tick
+  ghostSwadloonIdsToEmote: string[] = []
   hasLeftGame: boolean = false
   bonusSynergies: Map<Synergy, number> = new Map<Synergy, number>()
   pokemonsExploring: {

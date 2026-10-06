@@ -2585,6 +2585,18 @@ export class Swadloon extends Pokemon {
   range = 1
   skill = Ability.MANTIS_BLADES
   regional = true
+  // easter egg: shiny Swadloon looks like a ghost, so the charm makes it one
+  onItemGiven(item: Item, player: Player) {
+    if (item === Item.SHINY_CHARM) this.turnGhost(player)
+  }
+  onAcquired(player: Player) {
+    super.onAcquired(player)
+    if (this.items.has(Item.SHINY_CHARM)) this.turnGhost(player)
+  }
+  turnGhost(player: Player) {
+    this.types.add(Synergy.GHOST)
+    player.ghostSwadloonIdsToEmote.push(this.id)
+  }
 }
 
 export class Leavanny extends Pokemon {

@@ -1794,14 +1794,6 @@ export class OnDragDropItemCommand extends Command<
     if (pokemon.items.has(Item.SHINY_CHARM)) {
       pokemon.shiny = true
     }
-    // easter egg: shiny Swadloon looks like a ghost, so the charm makes it one
-    if (item === Item.SHINY_CHARM && pokemon.name === Pkm.SWADLOON) {
-      pokemon.types.add(Synergy.GHOST)
-      this.room.broadcast(Transfer.SHOW_EMOTE, {
-        id: pokemon.id,
-        emote: getAvatarString(pokemon.index, true, Emotion.NORMAL)
-      })
-    }
 
     this.room.checkEvolutionsAfterItemAcquired(playerId, pokemon, item)
 

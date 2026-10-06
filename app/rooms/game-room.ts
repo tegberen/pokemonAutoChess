@@ -89,6 +89,7 @@ import {
   SCRIBBLE_QUIZ_FEEDBACK_DURATION
 } from "../services/scribble-quiz"
 import {
+  Emotion,
   type IChatV2,
   type IDragDropCombineMessage,
   type IDragDropItemMessage,
@@ -1040,6 +1041,7 @@ export default class GameRoom extends Room<{ state: GameState }> {
       /* in case of lag spikes, the game should feel slower, 
       but this max simulation dt helps preserving the correctness of simulation result */
       deltaTime = Math.min(MAX_SIMULATION_DELTA_TIME, deltaTime)
+      this.emoteGhostSwadloons()
       if (!this.state.gameFinished && !this.state.simulationPaused) {
         try {
           this.dispatcher.dispatch(new OnUpdateCommand(), { deltaTime })
@@ -1862,6 +1864,21 @@ export default class GameRoom extends Room<{ state: GameState }> {
 
     player.boardSize = this.getTeamSize(player.board, player.blessings)
     return hasEvolved
+  }
+
+  emoteGhostSwadloons() {
+    this.state.players.forEach((player) => {
+      if (player.ghostSwadloonIdsToEmote.length === 0) return
+      for (const pokemonId of player.ghostSwadloonIdsToEmote) {
+        const pokemon = player.board.get(pokemonId)
+        if (!pokemon) continue
+        this.broadcast(Transfer.SHOW_EMOTE, {
+          id: pokemon.id,
+          emote: getAvatarString(pokemon.index, true, Emotion.NORMAL)
+        })
+      }
+      player.ghostSwadloonIdsToEmote = []
+    })
   }
 
   checkEvolutionsAfterItemAcquired(
