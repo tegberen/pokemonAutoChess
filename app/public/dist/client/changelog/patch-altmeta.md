@@ -525,26 +525,38 @@ Every balance change on this server, newest first.
 - Fuecoco Line | PP 80/70/60 → 80/80/80, ATK 5/13/24 → 5/15/30
 - Flapple | HP 180 → 150, ATK 19 → 28
 - Appletun | HP 250 → 300, ATK 15 → 10
+- Smoliv Line | basic attacks no longer deal SPECIAL and no longer scale with AP
+- Turtwig Line | passive removed: no longer gains DEF from critical hits or is immune to ARMOR_BREAK
+- Torterra | HP 200 → 220
+- Chespin Line | HP 70/140/250 → 80/150/250, DEF 6/10/20 → 10/14/24
+- Snover Line | PP 120 → 100
+- Burmy Line | RANGE 2 → 3
+- Wormadam {{new}} | passive: its ability gives double ATK under ZENITH, double SPE_DEF under SANDSTORM and double SPEED under DISTORTION. The doubled value is the new base that AP then boosts
 - Scyther Line | HP 150/220 → 85/170, Scyther ATK 15 → 12, evolves with 3 copies instead of METAL_ALLOY or BLACK_AUGURITE, into Kleavor in a ROCK region and Scizor elsewhere
 
 **Items**
+- BIG_ROOT | heals for 40% of the damage dealt instead of 33%
+- ODD_KEYSTONE | on ROCK explosion, each HEXING_INCANTATION hexes a new enemy instead of applying two GHOST curses
 - STAR_PIECE | the holder also has RUNE_PROTECT for the whole fight
+
+**Weather**
+- ZENITH | healing bonus +20% → +30%
 
 **Abilities**
 - Machop Line | Guillotine → Cross Chop. Deal [300,SP]% of ATK as SPECIAL to the target. Each FIGHTING throw this fight gives this ability +[25,50,100,200]% CRIT_POWER. Can crit by default
 - Gastly Line | Nightmare: the bonus damage hits enemies hexed by a HEXING_INCANTATION instead of cursed ones
-- Appletun | Apple Acid: deals [50,100,200,400,SP]% of (DEF + SPE_DEF) as SPECIAL instead of [15,30,50,100,SP], no longer doubled against 0 SPE_DEF. The first cast each fight gives you a SWEET_APPLE
-- Flapple | Grav Apple: deals [50,100,200,400,SP]% of ATK as PHYSICAL instead of [20,40,80,160,SP], no longer doubled against 0 DEF. The first cast each fight gives you a TART_APPLE
-- Dipplin | Syrup Bomb: the first cast each fight gives you a SIRUPY_APPLE
+- Appletun | Apple Acid: deals [50,100,200,400,SP]% of (DEF + SPE_DEF) as SPECIAL instead of [15,30,50,100,SP], no longer doubled against 0 SPE_DEF
+- Flapple | Grav Apple: deals [50,100,200,400,SP]% of ATK as PHYSICAL instead of [20,40,80,160,SP], no longer doubled against 0 DEF
 - Gimmighoul | Gold Rush: GOLD gained 2 → 1
+- Turtwig Line | Bulldoze: enemies hit lose 20 SPEED at every star instead of [5,5,10,20]
 - Golett Line | Shadow Punch reworked: a giant phantom fist deals [40,80,SP] SPECIAL and knocks the target back to the board edge, catapulting the enemies in its path. Then the user rushes in for [60,120,SP] SPECIAL
 - Shuppet Line | Shadow Clone: only steals an item if the target is hexed by a HEXING_INCANTATION. Clone max HP [50,50,90,100]% → [50,50,50,100]%
 
 **Synergies**
 - FAIRY | added a cooldown to the FAIRY wands
+- GRASS | harvesting a berry gives 2 XP
 - GHOST {{new}} | reworked: write HEXING_INCANTATION, RITUAL_INCANTATION and FATED_INCANTATION. Enemies with negative LUCK are easier to dodge and SILENCE
 - MURKY | LUCK -30 → -10, GHOST are still immune
-- ODD_KEYSTONE | on ROCK explosion, each HEXING_INCANTATION hexes a new enemy instead of applying two GHOST curses
 - POISON (7) | the enemy a POISON Pokémon KOs bursts for 50% of its remaining PP as SPECIAL to ADJACENT enemies, instead of the POISON Pokémon bursting when KO'd
 
 **Wishes**

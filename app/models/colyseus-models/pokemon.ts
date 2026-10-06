@@ -2619,7 +2619,6 @@ export class Turtwig extends Pokemon {
   maxPP = 100
   range = 1
   skill = Ability.BULLDOZE
-  passive = Passive.SHELL_ARMOR
   regional = true
   isInRegion(map: DungeonPMDO, state?: GameState) {
     const regionSynergies = RegionDetails[map]?.synergies
@@ -2647,7 +2646,6 @@ export class Grotle extends Pokemon {
   maxPP = 100
   range = 1
   skill = Ability.BULLDOZE
-  passive = Passive.SHELL_ARMOR
   regional = true
   isInRegion(map: DungeonPMDO, state?: GameState) {
     const regionSynergies = RegionDetails[map]?.synergies
@@ -2666,7 +2664,7 @@ export class Torterra extends Pokemon {
   ])
   rarity = Rarity.COMMON
   stars = 3
-  hp = 200
+  hp = 220
   atk = 18
   speed = 43
   def = 16
@@ -2674,7 +2672,6 @@ export class Torterra extends Pokemon {
   maxPP = 100
   range = 1
   skill = Ability.BULLDOZE
-  passive = Passive.SHELL_ARMOR
   regional = true
   isInRegion(map: DungeonPMDO, state?: GameState) {
     const regionSynergies = RegionDetails[map]?.synergies
@@ -3604,7 +3601,7 @@ export class Snover extends Pokemon {
   speed = 44
   def = 6
   speDef = 6
-  maxPP = 120
+  maxPP = 100
   range = 1
   skill = Ability.SHEER_COLD
   regional = true
@@ -3621,7 +3618,7 @@ export class Abomasnow extends Pokemon {
   speed = 44
   def = 12
   speDef = 14
-  maxPP = 120
+  maxPP = 100
   range = 1
   skill = Ability.SHEER_COLD
   regional = true
@@ -16585,7 +16582,7 @@ export class BurmyPlant extends Pokemon {
   def = 2
   speDef = 6
   maxPP = 100
-  range = 2
+  range = 3
   skill = Ability.QUIVER_DANCE
   passive = Passive.BURMY
   regional = true
@@ -16611,7 +16608,7 @@ export class BurmySandy extends Pokemon {
   def = 6
   speDef = 2
   maxPP = 100
-  range = 2
+  range = 3
   skill = Ability.QUIVER_DANCE
   passive = Passive.BURMY
   regional = true
@@ -16640,7 +16637,7 @@ export class BurmyTrash extends Pokemon {
   def = 4
   speDef = 4
   maxPP = 100
-  range = 2
+  range = 3
   skill = Ability.QUIVER_DANCE
   passive = Passive.BURMY
   regional = true
@@ -16664,8 +16661,9 @@ export class WormadamPlant extends Pokemon {
   def = 3
   speDef = 9
   maxPP = 100
-  range = 2
+  range = 3
   skill = Ability.QUIVER_DANCE
+  passive = Passive.WORMADAM
   regional = true
   isInRegion(map: DungeonPMDO) {
     const regionSynergies = RegionDetails[map]?.synergies
@@ -16683,8 +16681,9 @@ export class WormadamSandy extends Pokemon {
   def = 9
   speDef = 3
   maxPP = 100
-  range = 2
+  range = 3
   skill = Ability.QUIVER_DANCE
+  passive = Passive.WORMADAM
   regional = true
   isInRegion(map: DungeonPMDO) {
     const regionSynergies = RegionDetails[map]?.synergies
@@ -16705,8 +16704,9 @@ export class WormadamTrash extends Pokemon {
   def = 6
   speDef = 6
   maxPP = 100
-  range = 2
+  range = 3
   skill = Ability.QUIVER_DANCE
+  passive = Passive.WORMADAM
   regional = true
   isInRegion(map: DungeonPMDO) {
     const regionSynergies = RegionDetails[map]?.synergies
@@ -16728,7 +16728,7 @@ export class Mothim extends Pokemon {
   def = 5
   speDef = 5
   maxPP = 100
-  range = 2
+  range = 3
   skill = Ability.QUIVER_DANCE
   regional = true
   isInRegion(map: DungeonPMDO, state?: GameState) {
@@ -20679,7 +20679,6 @@ export class Smoliv extends Pokemon {
   maxPP = 90
   range = 2
   skill = Ability.TERRAIN_PULSE
-  passive = Passive.SPECIAL_ATTACK
 }
 
 export class Dolliv extends Pokemon {
@@ -20699,7 +20698,6 @@ export class Dolliv extends Pokemon {
   maxPP = 90
   range = 2
   skill = Ability.TERRAIN_PULSE
-  passive = Passive.SPECIAL_ATTACK
 }
 
 export class Arboliva extends Pokemon {
@@ -20718,7 +20716,6 @@ export class Arboliva extends Pokemon {
   maxPP = 90
   range = 2
   skill = Ability.TERRAIN_PULSE
-  passive = Passive.SPECIAL_ATTACK
 }
 
 export class Chespin extends Pokemon {
@@ -20726,10 +20723,10 @@ export class Chespin extends Pokemon {
   rarity = Rarity.UNCOMMON
   stars = 1
   evolution = Pkm.QUILLADIN
-  hp = 70
+  hp = 80
   atk = 7
   speed = 41
-  def = 6
+  def = 10
   speDef = 3
   maxPP = 100
   range = 1
@@ -20742,10 +20739,10 @@ export class Quilladin extends Pokemon {
   rarity = Rarity.UNCOMMON
   stars = 2
   evolution = Pkm.CHESNAUGHT
-  hp = 140
+  hp = 150
   atk = 12
   speed = 41
-  def = 10
+  def = 14
   speDef = 5
   maxPP = 100
   range = 1
@@ -20760,7 +20757,7 @@ export class Chesnaught extends Pokemon {
   hp = 250
   atk = 23
   speed = 41
-  def = 20
+  def = 24
   speDef = 8
   maxPP = 100
   range = 1

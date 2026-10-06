@@ -1,10 +1,7 @@
 import { AttackType } from "../../types/enum/Game"
-import { Item } from "../../types/enum/Item"
 import type { Board } from "../board"
 import type { PokemonEntity } from "../pokemon-entity"
 import { AbilityStrategy } from "./ability-strategy"
-
-const castersThatDroppedAnApple = new WeakSet<PokemonEntity>()
 
 export class GravAppleStrategy extends AbilityStrategy {
   process(
@@ -23,13 +20,5 @@ export class GravAppleStrategy extends AbilityStrategy {
       pokemon,
       crit
     )
-    if (
-      pokemon.player &&
-      !pokemon.isGhostOpponent &&
-      !castersThatDroppedAnApple.has(pokemon)
-    ) {
-      castersThatDroppedAnApple.add(pokemon)
-      pokemon.player.addFreshApple(Item.TART_APPLE)
-    }
   }
 }

@@ -16,6 +16,7 @@ import {
   BENCH_MAX_WIDTH,
   FIGHTING_PHASE_DURATION,
   GOLDEN_BERRY_TREE_TYPES,
+  GRASS_BERRY_HARVEST_EXPERIENCE,
   getAltFormForPlayer,
   ITEM_CAROUSEL_BASE_DURATION,
   ItemCarouselStages,
@@ -2047,6 +2048,7 @@ export class OnPickBerryCommand extends Command<
           ? GOLDEN_BERRY_TREE_TYPES[berryIndex]
           : player.berryTreesType[berryIndex]
       player.items.push(type)
+      player.addExperience(GRASS_BERRY_HARVEST_EXPERIENCE)
       onFossilUnlockHarvest(player)
     }
   }
@@ -3276,15 +3278,6 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
       [Item.TART_APPLE, Item.SWEET_APPLE]
     ])
 
-    const freshApplesStillInInventory: Item[] = []
-    for (const freshApple of player.freshApples) {
-      const index = player.items.indexOf(freshApple)
-      if (index >= 0) {
-        player.items.splice(index, 1)
-        freshApplesStillInInventory.push(freshApple)
-      }
-    }
-
     for (const rottingItem of rottingItems.keys()) {
       while (player.items.includes(rottingItem as Item)) {
         const index = player.items.indexOf(rottingItem)
@@ -3296,8 +3289,6 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
         }
       }
     }
-    player.items.push(...freshApplesStillInInventory)
-    player.freshApples = []
 
     if (
       this.state.specialGameRule === SpecialGameRule.FIRST_PARTNER &&

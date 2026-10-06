@@ -74,6 +74,8 @@ export function chapterMarkdown(markdown: string, heading: string) {
 
 const pokemonNameAliases: Record<string, Pkm> = {
   ALCREMIE: Pkm.ALCREMIE_VANILLA,
+  BURMY: Pkm.BURMY_PLANT,
+  WORMADAM: Pkm.WORMADAM_PLANT,
   MAMOOSH: Pkm.MAMOSWINE,
   INTELLION: Pkm.INTELEON,
   "ALOLAN NINETALES": Pkm.ALOLAN_NINETALES,
