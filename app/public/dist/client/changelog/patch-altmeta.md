@@ -544,6 +544,7 @@ Every balance change on this server, newest first.
 - High Tower Castle {{new}} | Prismatic, stage 4 only. At the start of each fight, all allies on the board gain 1 SPEED and 2 HP permanently
 - Training Ground {{new}} | Prismatic, stage 4 only. At the start of each fight, all allies on the board gain 1 DEF, 1 SPE_DEF and 2 HP permanently
 - Magic Palace {{new}} | Prismatic, stage 4 only. At the start of each fight, all allies on the board gain 2 AP and 2 HP permanently
+- 67 {{new}} | Prismatic, stage 4 only. Gain 67 GOLD and lose 67 player HP
 - Prismatic Quest {{new}} | Gain 10 GOLD and unlock the Quest Panel. Stage 4 only. Replaces the 12 Prismatic quest Wishes
 - Quest Panel | every quest tracks at once, but you can only claim one reward. Quests no longer give starting items, and rewards no longer include an EXCHANGE_TICKET and a RECYCLE_TICKET
 - Quest: Crit | hold 100 GOLD at once. Reward: GOLD_BOTTLE_CAP

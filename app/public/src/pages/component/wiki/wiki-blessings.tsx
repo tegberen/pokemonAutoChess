@@ -93,6 +93,7 @@ const HATCH_BLESSINGS = new Set<Blessing>([
 
 const ECONOMY_BLESSINGS = new Set<Blessing>([
   Blessing.PEARL,
+  Blessing.SIX_SEVEN,
   Blessing.CROAGUNKS_AID,
   Blessing.WOBBUFFETS_SILVER_PRIZE,
   Blessing.WOBBUFFETS_GOLD_PRIZE,

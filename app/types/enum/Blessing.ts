@@ -321,6 +321,7 @@ export enum Blessing {
   KINGDOM = "KINGDOM",
   BASTION = "BASTION",
   PALACE = "PALACE",
+  SIX_SEVEN = "SIX_SEVEN",
   CHARGING_UP = "CHARGING_UP",
   BURNING_SHARDS = "BURNING_SHARDS",
   EXPLOIT = "EXPLOIT",
@@ -1089,6 +1090,8 @@ export const SPIKY_GUARD_SHIELD_PER_FREE_CELL = 10
 
 export const SHADY_PRICE_FREE_ROLLS = 32
 export const SHADY_PRICE_REROLL_COST = 4
+export const SIX_SEVEN_GOLD = 67
+export const SIX_SEVEN_LIFE_COST = 67
 
 export const RANK_UP_EXPERIENCE = 2
 export const RANK_UP_LAST_STAGE = 10

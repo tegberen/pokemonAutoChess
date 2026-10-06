@@ -112,6 +112,8 @@ import {
   SELECTIVE_GENETICS_GOLDEN_EGG_CHANCE,
   SELECTIVE_GENETICS_MAX_COST,
   SHADY_PRICE_FREE_ROLLS,
+  SIX_SEVEN_GOLD,
+  SIX_SEVEN_LIFE_COST,
   SILVER_SPOON_ROUNDS_BY_STAR,
   MOTHER_YARN_STAGES_BY_STAR,
   MOTHER_YARN_WEAVE_ANIMATION_DURATION,
@@ -185,7 +187,7 @@ import {
   isOnBench,
   getBenchSize
 } from "../utils/board"
-import { healPlayerLife } from "../utils/player-life"
+import { healPlayerLife, sacrificePlayerLife } from "../utils/player-life"
 import {
   chance,
   pickNRandomIn,
@@ -533,6 +535,8 @@ function isBlockedByFullBench(player: Player, blessing: Blessing) {
   )
 }
 
+const EXCLUDED_FROM_RANDOM_GRANTS = new Set<Blessing>([Blessing.SIX_SEVEN])
+
 // the Gambles are excluded from their own pool so one cannot chain into another
 export function grantRandomBlessingOfTier(
   player: Player,
@@ -550,6 +554,7 @@ export function grantRandomBlessingOfTier(
     getBlessingsAvailable(tier, selectionStage, player).filter(
       (blessing) =>
         blessing in GAMBLE_REWARDS === false &&
+        !EXCLUDED_FROM_RANDOM_GRANTS.has(blessing) &&
         isBlockedByFullBench(player, blessing) === false
     )
   )
@@ -2984,6 +2989,11 @@ export const blessingEffectService: {
   [Blessing.KINGDOM]: () => true,
   [Blessing.BASTION]: () => true,
   [Blessing.PALACE]: () => true,
+  [Blessing.SIX_SEVEN]: (player, state) => {
+    player.addMoney(SIX_SEVEN_GOLD, true, null)
+    sacrificePlayerLife(player, SIX_SEVEN_LIFE_COST, state)
+    return true
+  },
   [Blessing.IMPENDING_DOOM]: () => true,
 
   [Blessing.SYNCHRONICITY]: (player) => {

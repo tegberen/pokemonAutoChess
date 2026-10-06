@@ -1512,6 +1512,12 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     icon: "palace",
     grantsPokemonImmediately: false
   },
+  [Blessing.SIX_SEVEN]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: [4],
+    icon: "six_seven",
+    grantsPokemonImmediately: false
+  },
   [Blessing.IMPENDING_DOOM]: {
     tier: BlessingTier.SILVER,
     availableAtStages: BLESSING_SELECTION_STAGES,
