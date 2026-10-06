@@ -536,6 +536,7 @@ Every balance change on this server, newest first.
 - GHOST {{new}} | rule: enemies with negative LUCK are easier for GHOST Pokémon to dodge and SILENCE
 - MURKY | LUCK -30 → -10, GHOST are still immune
 - ODD_KEYSTONE | on ROCK explosion, each HEXING_INCANTATION hexes a new enemy instead of applying two GHOST curses
+- POISON (7) | the enemy a POISON Pokémon KOs bursts for 50% of its remaining PP as SPECIAL to ADJACENT enemies, instead of the POISON Pokémon bursting when KO'd
 
 **Wishes**
 - Curse of Two | removed
