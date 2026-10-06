@@ -568,9 +568,6 @@ export const guideParser = new Marked({
       if (depth === 4)
         return `<h4 id="${sectionId(text)}">${this.parser.parseInline(tokens)}</h4>`
       if (depth !== 3) return false
-      if (text === "Mega Evolution") {
-        return `<h3 id="${sectionId(text)}" class="guide-section-heading guide-mega-heading"><span class="guide-mega-label">${this.parser.parseInline(tokens)}</span></h3>`
-      }
       const rarity = Object.values(Rarity).find(
         (value) => value === text.toUpperCase()
       )

@@ -7978,6 +7978,7 @@ export class Latias extends Pokemon {
   range = 3
   skill = Ability.MIST_BALL
   passive = Passive.SHARED_VISION
+  passive2 = Passive.LATI_MEGA
 }
 
 export class Latios extends Pokemon {
@@ -7998,6 +7999,7 @@ export class Latios extends Pokemon {
   range = 3
   skill = Ability.LUSTER_PURGE
   passive = Passive.SHARED_VISION
+  passive2 = Passive.LATI_MEGA
 }
 
 export class MegaLatias extends Pokemon {
@@ -8594,6 +8596,7 @@ export class Drampa extends Pokemon {
   range = 3
   skill = Ability.DRAGON_PULSE
   passive = Passive.BERSERK
+  passive2 = Passive.DRAMPA_MEGA
 }
 
 export class MegaDrampa extends Pokemon {
@@ -18438,6 +18441,7 @@ export class Zygarde10 extends Pokemon {
   range = 1
   skill = Ability.LANDS_WRATH
   passive = Passive.ZYGARDE
+  passive2 = Passive.ZYGARDE_MEGA
   onAcquired(player: Player) {
     if (player.items.includes(Item.ZYGARDE_CUBE) === false) {
       player.items.push(Item.ZYGARDE_CUBE)
@@ -18464,6 +18468,7 @@ export class Zygarde50 extends Pokemon {
   range = 3
   skill = Ability.THOUSAND_ARROWS
   passive = Passive.ZYGARDE
+  passive2 = Passive.ZYGARDE_MEGA
   onAcquired(player: Player) {
     if (player.items.includes(Item.ZYGARDE_CUBE) === false) {
       player.items.push(Item.ZYGARDE_CUBE)
@@ -18489,6 +18494,7 @@ export class Zygarde100 extends Pokemon {
   maxPP = 100
   range = 2
   skill = Ability.CORE_ENFORCER
+  passive2 = Passive.ZYGARDE_MEGA
 }
 
 export class MegaZygarde extends Pokemon {

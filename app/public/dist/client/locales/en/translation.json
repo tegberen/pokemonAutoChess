@@ -3636,7 +3636,7 @@
 		"ECLIPSE_OR_NIGHT": "Change weather to ECLIPSE or NIGHT based on your dominant synergy between PSYCHIC and DARK",
 		"RAIN_OR_STORM": "Change weather to RAIN or STORM based on your dominant synergy between WATER and ELECTRIC",
 		"AIRLOCK": "Change weather to NEUTRAL",
-		"SHARED_VISION": "Shared Vision: All Pokémon with Shared Vision will attack the same target, if at range. Rumour has it they will Mega Evolve when facing great danger.",
+		"SHARED_VISION": "Shared Vision: All Pokémon with Shared Vision will attack the same target, if at range.",
 		"SHARED_VISION_2": "Shared Vision: All Pokémon with Shared Vision will attack the same target, if at range.",
 		"WATER_SPRING": "Whenever an enemy uses their ability, gain 5 PP",
 		"SOBBLE": "\"gain mana from flood wave instead of push- my sniping 5 cost is worthless when it gets 1st wave pushed INTO MY FRONTLINE AS A BACKLINER SNIPER\"*\n\n*Immune to FLOOD knockback. FLOOD heals twice as much and also gives that much PP.",
@@ -3750,11 +3750,14 @@
 		"BAD_LUCK": "Reduce all opponents LUCK by 20",
 		"GOOD_LUCK": "Increase the LUCK of all allies by [5,10,20]",
 		"PRIMEAPE": "Primeape becomes angrier when knocked out, gaining 1 permanent ATK. After Primeape is knocked out 10 times, it evolves into Annihilape.",
-		"ZYGARDE": "Zygarde cells emerge from fully dug holes every second to join Zygarde, giving it 1 max HP each. When 95 cells have been collected, transforms into its complete form. Mega evolves when facing great danger.",
+		"ZYGARDE": "Zygarde cells emerge from fully dug holes every second to join Zygarde, giving it 1 max HP each. When 95 cells have been collected, transforms into its complete form.",
 		"GLIMMORA": "BOARD_EFFECT: Once below 50% max HP, throws TOXIC_SPIKES in a 2x3 rectangle in front of itself, dealing 20 SPECIAL.",
 		"PILLAR": "Builds [1,1,2] movable pillars that block the path of enemies, with increased HP, DEF and SPE_DEF based on unit STAR.",
 		"INANIMATE": "Inanimate objects cannot be copied, benched or sold. They cannot move or attack, and are immune to status effects.",
-		"BERSERK": "Gains 5 AP each time a Pokémon is affected by its ability. Receives a stack for every 50 AP gained. Mega evolves after 20 stacks.",
+		"BERSERK": "Gains 5 AP each time a Pokémon is affected by its ability.",
+		"DRAMPA_MEGA": "Receives a stack for every 50 AP gained. Mega evolves after 20 stacks.",
+		"LATI_MEGA": "Mega evolves when you are at 25 player HP or less.",
+		"ZYGARDE_MEGA": "Mega evolves when you are at 20 player HP or less.",
 		"BERSERK_2": "Gains 5 AP each time a Pokémon is affected by its ability.",
 		"APPLIN": "Applin will evolve when given an apple:\nTART_APPLE: $t(pkm.FLAPPLE)\nSWEET_APPLE: $t(pkm.APPLETUN)\nSIRUPY_APPLE: $t(pkm.DIPPLIN)",
 		"DIPPLIN": "Dipplin is looking for a SIRUPY_APPLE.",
@@ -4604,6 +4607,7 @@
 	"show_evolutions": "Show evolutions",
 	"show_weather_rocks": "Show weather rocks",
 	"show_alt_forms": "Show alternative forms",
+	"show_mega_evolutions": "Show Mega Evolutions",
 	"show_only_available_picks": "Show only available add picks / regionals",	"unmark_all": "Unmark all",	"mark_synergy_in_shop_hint": "Highlight every {{synergy}} Pokémon in your shop",
 	"close": "Close",
 	"additional_pokemon_hint": "Each player picked additional Pokémon to be available in all players shop for this game.",
@@ -7428,7 +7432,8 @@
 		"EVOLUTION_LAB": "Evolution Lab",
 		"BAZAAR": "The Bazaar",
 		"QUEST_BOARD": "Quest Board",
-		"MISFITS": "Misfits"
+		"MISFITS": "Misfits",
+		"MEGA_EVOLUTION": "Mega Evolution"
 	},
 	"scribble_description": {
 		"EVERYONE_IS_HERE": "All the additional picks are available immediately!",
@@ -7463,7 +7468,8 @@
 		"EVOLUTION_LAB": "Welcome to the Evolution Lab! Every Pokémon can be found here, but the lab follows its own rules...",
 		"BAZAAR": "The Bazaar visits the town!",
 		"QUEST_BOARD": "Everyone starts with the Quest Panel and can claim every reward from the quests they complete.",
-		"MISFITS": "At the start of each fight, units with no active synergy gain a very strong bonus, scaling with each STAR. Gain a surprise haul of {{gold}} GOLD."
+		"MISFITS": "At the start of each fight, units with no active synergy gain a very strong bonus, scaling with each STAR. Gain a surprise haul of {{gold}} GOLD.",
+		"MEGA_EVOLUTION": "Pokémon can Mega Evolve."
 	},
 	"scribble_shape": {
 		"WALL": "Wall",
@@ -7556,6 +7562,15 @@
 	},
 	"wiki": {
 		"title": "Wiki",
+		"mega": {
+			"title": "Mega Evolutions",
+			"intro": "Mega Evolutions only happen in the Mega Evolution Scribble. Rayquaza is the exception and Mega Evolves in every game.",
+			"pokemon": "Pokémon",
+			"condition": "Condition",
+			"conditions": {
+				"RAYQUAZA": "Mega evolves when holding a GREEN_ORB."
+			}
+		},
 		"fairy": {
 			"title": "Wands",
 			"intro": "Each FAIRY level offers a choice of one wand from its row. Every wand makes FAIRY attacks deal 20% additional SPECIAL ON_HIT, on top of its effect below. Wands with a cooldown can trigger only once per cooldown for each FAIRY Pokémon, and each wand has its own cooldown.",

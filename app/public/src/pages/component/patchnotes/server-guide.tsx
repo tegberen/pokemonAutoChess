@@ -455,9 +455,6 @@ export default function ServerGuide({
                                     value === section.title.toUpperCase()
                                 )
                               : undefined
-                          const isMega =
-                            selected === "pokemon" &&
-                            section.title === "Mega Evolution"
                           const color = rarity
                             ? RarityColor[rarity]
                             : synergy
@@ -465,7 +462,7 @@ export default function ServerGuide({
                               : "var(--color-fg-primary)"
                           return (
                             <button
-                              className={`bubbly guide-section-button${isMega ? " guide-mega-button" : ""}`}
+                              className="bubbly guide-section-button"
                               key={section.id}
                               style={
                                 {
@@ -483,17 +480,13 @@ export default function ServerGuide({
                                   alt=""
                                 />
                               )}
-                              {(rarity || isMega) && (
+                              {rarity && (
                                 <span
                                   className="guide-rarity-mark"
                                   aria-hidden="true"
                                 />
                               )}
-                              <span
-                                className={
-                                  isMega ? "guide-mega-label" : undefined
-                                }
-                              >
+                              <span>
                                 {section.title.replaceAll("_", " ")}
                               </span>
                             </button>

@@ -558,63 +558,6 @@
   border: var(--border-extra-thin);
 }
 
-/* Keep the same framing; Mega Evolution uses a static rainbow underline. */
-.server-guide .guide-mega-heading,
-.server-guide .guide-mega-button {
-  --guide-mega-gradient: linear-gradient(
-    90deg,
-    var(--color-rarity-ultra),
-    var(--color-rarity-legendary),
-    var(--color-rarity-uncommon),
-    var(--color-rarity-rare),
-    var(--color-rarity-epic),
-    var(--color-rarity-special)
-  );
-  position: relative;
-}
-
-.server-guide .guide-article .guide-mega-heading,
-.server-guide .guide-mega-button {
-  border-bottom-color: transparent;
-}
-
-.server-guide .guide-mega-heading::after,
-.server-guide .guide-mega-button::after {
-  content: "";
-  position: absolute;
-  right: 0;
-  bottom: -4px;
-  left: 0;
-  height: 4px;
-  background: var(--guide-mega-gradient);
-  pointer-events: none;
-}
-
-.server-guide .guide-mega-button::after {
-  inset: -2px -2px -4px;
-  height: auto;
-  border: 0 solid transparent;
-  border-bottom-width: 4px;
-  border-radius: inherit;
-  mask:
-    linear-gradient(#fff 0 0) padding-box,
-    linear-gradient(#fff 0 0) border-box;
-  mask-composite: exclude;
-}
-
-.server-guide .guide-mega-button .guide-rarity-mark {
-  background: var(--guide-mega-gradient);
-}
-
-.server-guide .guide-mega-label {
-  background: var(--guide-mega-gradient);
-  background-clip: text;
-  -webkit-background-clip: text;
-  color: transparent;
-  -webkit-text-fill-color: transparent;
-  text-shadow: none;
-  filter: brightness(1.25);
-}
 .server-guide .guide-article [tabindex="-1"]:focus {
   outline: 2px solid var(--color-fg-accent);
   outline-offset: 2px;

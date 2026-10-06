@@ -13,6 +13,7 @@ import { Ability } from "../../../../../types/enum/Ability"
 import { Rarity } from "../../../../../types/enum/Game"
 import { NonPkm, type Pkm, PkmFamily } from "../../../../../types/enum/Pokemon"
 import type { PoolType } from "../../../../../types/enum/PoolType"
+import { isMegaEvolutionLocked } from "../../../../../types/enum/SpecialGameRule"
 
 export function PokemonFilters() {
   const { t } = useTranslation()
@@ -71,6 +72,14 @@ export function PokemonFilters() {
           label={t("show_alt_forms")}
           isDark
         />
+        <Checkbox
+          checked={preferences.showMegaEvolutions}
+          onToggle={(checked) => {
+            setPreferences({ showMegaEvolutions: checked })
+          }}
+          label={t("show_mega_evolutions")}
+          isDark
+        />
       </div>
     </details>
   )
@@ -100,6 +109,9 @@ export function filterPokemonsAccordingToPreferences(
       return false
 
     if (PkmAltForms.includes(p) && !preferences.showAltForms) return false
+    if (!preferences.showMegaEvolutions && isMegaEvolutionLocked(p, null)) {
+      return false
+    }
     if (!preferences.showEvolutions) {
       const prevolution = data.find((p2) => {
         return (

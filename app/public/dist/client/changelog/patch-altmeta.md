@@ -390,7 +390,7 @@ At the beginning of each battle, TIGHT_BELT is replaced by 2 random items. The h
 
 - Alcremie: evolves from Milcery, a Unique Pokémon.
 - Carbink: interacts with Crystallization. See [Awakenings](#wiki/awakening).
-- Sableye: has ROCK; Crystallization unlocks Mega Sableye.
+- Sableye: has ROCK.
 - Minior: has LIGHT.
 - Veluza: has MONSTER
 
@@ -426,43 +426,6 @@ At the beginning of each battle, TIGHT_BELT is replaced by 2 random items. The h
 - Galarian Fossils: Special Pokémon. Restore Dracovish, Dracozolt, Arctovish or Arctozolt in the Fossil menu.
 - Mafia Eevee: via EVER_STONE
 
-### Mega Evolution
-
-- Mega Charizard X: evolves from Charizard.
-- Mega Lopunny: evolves from Lopunny.
-- Mega Camerupt: evolves from Camerupt.
-- Mega Houndoom: evolves from Houndoom.
-- Mega Steelix: evolves from Steelix.
-- Mega Altaria: evolves from Altaria.
-- Mega Banette: evolves from Banette.
-- Mega Manectric: evolves from Manectric.
-- Mega Slowbro: evolves from Slowbro; has ROCK.
-- Mega Gallade: evolves from Gallade.
-- Mega Gardevoir: evolves from Gardevoir.
-- Mega Medicham: evolves from Medicham.
-- Mega Alakazam: evolves from Alakazam.
-- Mega Tyranitar: evolves from Tyranitar.
-- Mega Aerodactyl: evolves from Aerodactyl.
-- Mega Diancie: evolves from Diancie.
-- Mega Gengar: evolves from Gengar.
-- Mega Lucario: evolves from Lucario.
-- Mega Mawile: evolves from Mawile.
-- Mega Absol: evolves from Absol.
-- Mega Mewtwo Y: evolves from Mewtwo.
-- Mega Latias: evolves from Latias.
-- Mega Latios: evolves from Latios.
-- Mega Drampa: evolves from Drampa.
-- Mega Excadrill: evolves from Excadrill.
-- Mega Dragalge: evolves from Dragalge.
-- Mega Zygarde: evolves from Zygarde.
-- Mega Floette Eternal: evolves from Floette Eternal.
-- Mega Feraligatr: evolves from Feraligatr; passive triggers once per fight.
-- Mega Skarmory: evolves from Skarmory.
-- Mega Zeraora: evolves from Zeraora.
-- Mega Darkrai: evolves from Darkrai.
-- Mega Sableye: Crystallization unlocks Sableye's Mega Evolution.
-- Mega Eelektross: evolves from Eelektross.
-
 ## Game Mode
 
 ### Double Up
@@ -494,6 +457,7 @@ Selectable in Custom Lobbies.
 Smeargle Scribbles do not change your Elo.
 
 - **Misfits**: {{scribble:MISFITS}}
+- **Mega Evolution**: {{scribble:MEGA_EVOLUTION}}
 - **Six Pack**: {{scribble:SIX_PACK}}
 - **Evolution Lab**: {{scribble:EVOLUTION_LAB}}
 - **The Bazaar**: {{scribble:BAZAAR}}
@@ -574,8 +538,8 @@ Every balance change on this server, newest first.
 - Training Ground {{new}} | Prismatic, stage 4 only. At the start of each fight, all allies on the board gain 1 DEF, 1 SPE_DEF and 2 HP permanently
 - Magic Palace {{new}} | Prismatic, stage 4 only. At the start of each fight, all allies on the board gain 2 AP and 4 HP permanently
 - 67 {{new}} | Prismatic, stage 4 only. Gain 67 GOLD and lose 67 player HP (cannot be rolled by Gamble III or Golden Flip)
-- Prismatic Quest {{new}} | Gain 10 GOLD and unlock the Quest Panel. Stage 4 only. Replaces the 12 Prismatic quest Wishes
-- Quest Panel | every quest tracks at once, but you can only claim one reward. Quests no longer give starting items, and rewards no longer include an EXCHANGE_TICKET and a RECYCLE_TICKET
+- Prismatic Quest {{new}} | Gain 10 GOLD and unlock the Quest Panel UI. Stage 4 only
+- Quest Panel | the 12 Prismatic quest Wishes are merged into one Wish, Prismatic Quest, which unlocks the Quest Panel UI. It tracks all 12 quests at once: complete as many as you like, each unlocks its shiny item, but you can only claim one. Quests no longer give starting items, and rewards no longer include an EXCHANGE_TICKET and a RECYCLE_TICKET
 - Quest: Crit | hold 100 GOLD at once. Reward: GOLD_BOTTLE_CAP
 - Quest: Grow | an ally reaches 1000 HP in a fight. Reward: DYNAMAX_BAND
 - Quest: Shine | LIGHT 7 → 6. Reward: SHINY_STONE
@@ -591,6 +555,8 @@ Every balance change on this server, newest first.
 - Missions | Quest: Evolve, Destroy, Level Up, Diversify and Prosper are renamed to Mission
 
 **Game Mode**
+- Mega Evolution {{new}} | new Scribble: {{scribble:MEGA_EVOLUTION}}
+- Mega Pokémon | removed from the base game
 - Misfits {{new}} | new Scribble: {{scribble:MISFITS}}
 - Quest Board {{new}} | new Scribble: {{scribble:QUEST_BOARD}}
 - Shiniest Hunter | removed

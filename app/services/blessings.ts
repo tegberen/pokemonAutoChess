@@ -171,7 +171,10 @@ import {
   PrismaticQuestsInOrder,
   getPrismaticQuestClaimedKey
 } from "../types/enum/PrismaticQuest"
-import { SpecialGameRule } from "../types/enum/SpecialGameRule"
+import {
+  isMegaEvolutionLocked,
+  SpecialGameRule
+} from "../types/enum/SpecialGameRule"
 import { Synergy } from "../types/enum/Synergy"
 import {
   LAPRAS_TRAVEL_DURATION,
@@ -257,7 +260,9 @@ function giftPokemonOfRarityAndStars(
   stars: number
 ): boolean {
   const candidates = PRECOMPUTED_POKEMONS_PER_RARITY[rarity].filter(
-    (pkm: Pkm) => getPokemonData(pkm).stars === stars
+    (pkm: Pkm) =>
+      getPokemonData(pkm).stars === stars &&
+      !isMegaEvolutionLocked(pkm, player.specialGameRule)
   )
   if (candidates.length === 0) return false
 
@@ -277,7 +282,9 @@ function giftPokemonOfRarityAndStars(
 
 function giftLegendaryMatchingTopSynergy(player: Player): boolean {
   const [topSynergy] = player.synergies.getTopSynergies(1)
-  const legendaries = PRECOMPUTED_POKEMONS_PER_RARITY[Rarity.LEGENDARY]
+  const legendaries = PRECOMPUTED_POKEMONS_PER_RARITY[
+    Rarity.LEGENDARY
+  ].filter((pkm) => !isMegaEvolutionLocked(pkm, player.specialGameRule))
   const matching = legendaries.filter((pkm: Pkm) =>
     getPokemonData(pkm).types.includes(topSynergy)
   )
@@ -1815,7 +1822,9 @@ function releaseManifestedPokemons(player: Player) {
 function giftRandomUniques(player: Player, amount: number): boolean {
   if (getFreeSpaceOnBench(player.board, getBenchSize(player.blessings)) < amount) return false
   const candidates = PRECOMPUTED_POKEMONS_PER_RARITY[Rarity.UNIQUE].filter(
-    (pkm) => PkmFamily[pkm] !== Pkm.COSMOG
+    (pkm) =>
+      PkmFamily[pkm] !== Pkm.COSMOG &&
+      !isMegaEvolutionLocked(pkm, player.specialGameRule)
   )
   pickNRandomIn(candidates, amount).forEach((pkm: Pkm) =>
     giftPokemonIfBenchHasRoom(player, pkm)

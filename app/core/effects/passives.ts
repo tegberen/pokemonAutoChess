@@ -28,7 +28,10 @@ import {
 } from "../../types/enum/Item"
 import { Passive } from "../../types/enum/Passive"
 import { Pkm, PkmFamily, PkmIndex } from "../../types/enum/Pokemon"
-import { SpecialGameRule } from "../../types/enum/SpecialGameRule"
+import {
+  isMegaEvolutionLocked,
+  SpecialGameRule
+} from "../../types/enum/SpecialGameRule"
 import { Synergy, SynergyArray } from "../../types/enum/Synergy"
 import { Weather } from "../../types/enum/Weather"
 import { isUnderZenith } from "../../utils/weather"
@@ -1277,7 +1280,11 @@ const MewtwoOnKillEffect = new OnKillEffect(
       }
       if (
         pokemon.refToBoardPokemon.stacks >= MAX_STACKS &&
-        pokemon.player.items.includes(Item.MEWTWONITE_Y) === false
+        pokemon.player.items.includes(Item.MEWTWONITE_Y) === false &&
+        !isMegaEvolutionLocked(
+          Pkm.MEGA_MEWTWO_Y,
+          pokemon.player.specialGameRule
+        )
       ) {
         pokemon.player.items.push(Item.MEWTWONITE_Y)
       }

@@ -83,7 +83,10 @@ import {
 import { Awakening } from "../types/enum/Awakening"
 import { Passive } from "../types/enum/Passive"
 import { Pkm, PkmByIndex, Unowns } from "../types/enum/Pokemon"
-import { SpecialGameRule } from "../types/enum/SpecialGameRule"
+import {
+  isMegaEvolutionLocked,
+  SpecialGameRule
+} from "../types/enum/SpecialGameRule"
 import { Synergy } from "../types/enum/Synergy"
 import { Weather } from "../types/enum/Weather"
 import { isUnderZenith } from "../utils/weather"
@@ -2500,6 +2503,19 @@ flyAway(
   addStack(amount = 1) {
     if (!this.player) return
     this.refToBoardPokemon.stacks += amount
+    // a locked Mega never evolves and resets, so stacks would overflow uint8
+    if (
+      this.refToBoardPokemon.stacksRequired > 0 &&
+      isMegaEvolutionLocked(
+        this.refToBoardPokemon.evolution,
+        this.player.specialGameRule
+      )
+    ) {
+      const stacksRequired = this.refToBoardPokemon.stacksRequired
+      this.refToBoardPokemon.stacks = max(stacksRequired)(
+        this.refToBoardPokemon.stacks
+      )
+    }
     this.stacks = this.refToBoardPokemon.stacks
     //logger.debug(`${this.name} gained a stack (${this.stacks}/${this.stacksRequired})`)
     if (

@@ -39,6 +39,7 @@ export interface IPreferencesState {
   showEvolutions: boolean
   showWeatherRocks: boolean
   showAltForms: boolean
+  showMegaEvolutions: boolean
   showRegularPool: boolean
   showAdditionalPool: boolean
   showRegionalPool: boolean
@@ -75,6 +76,7 @@ const defaultPreferences: IPreferencesState = {
   showEvolutions: true,
   showWeatherRocks: true,
   showAltForms: true,
+  showMegaEvolutions: false,
   showRegularPool: true,
   showAdditionalPool: true,
   showRegionalPool: true,

@@ -38,6 +38,7 @@ import {
 } from "../../types/enum/Item"
 import { Passive } from "../../types/enum/Passive"
 import { NonPkm, Pkm, PkmFamily } from "../../types/enum/Pokemon"
+import { isMegaEvolutionLocked } from "../../types/enum/SpecialGameRule"
 import { Synergy } from "../../types/enum/Synergy"
 import {
   LAPRAS_TRAVEL_DURATION,
@@ -2029,7 +2030,10 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
   ],
   [Item.MEWTWONITE_Y]: [
     new OnItemDroppedEffect(({ pokemon, player }) => {
-      if (pokemon?.name === Pkm.MEWTWO) {
+      if (
+        pokemon?.name === Pkm.MEWTWO &&
+        !isMegaEvolutionLocked(Pkm.MEGA_MEWTWO_Y, player.specialGameRule)
+      ) {
         player.transformPokemon(pokemon, Pkm.MEGA_MEWTWO_Y)
       }
       return false
@@ -2274,6 +2278,7 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
       if (
         !evolution ||
         evolution === Pkm.DEFAULT ||
+        isMegaEvolutionLocked(evolution, player.specialGameRule) ||
         pokemon.items.has(Item.EVIOLITE) ||
         pokemon.items.size >= 3
       ) {

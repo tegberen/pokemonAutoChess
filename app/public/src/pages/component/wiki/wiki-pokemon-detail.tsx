@@ -7,6 +7,7 @@ import { Ability } from "../../../../../types/enum/Ability"
 import { Stat } from "../../../../../types/enum/Game"
 import { Passive } from "../../../../../types/enum/Passive"
 import { Pkm, PkmIndex } from "../../../../../types/enum/Pokemon"
+import { isMegaStackPassiveHidden } from "../../../../../types/enum/SpecialGameRule"
 import { getPortraitSrc } from "../../../../../utils/avatar"
 import { addIconsToDescription } from "../../utils/descriptions"
 import { AbilityTooltip } from "../ability/ability-tooltip"
@@ -170,7 +171,12 @@ export default function WikiPokemonDetail(props: {
             </dd>
           </>
         )}
-        {pokemonData.passive !== Passive.NONE && (
+        {pokemonData.passive !== Passive.NONE &&
+          !isMegaStackPassiveHidden(
+            pokemonData.passive,
+            pokemonData.evolution,
+            null
+          ) && (
           <>
             <dt>{t("wiki.pokemons.passive")}</dt>
             <dd>
@@ -182,7 +188,12 @@ export default function WikiPokemonDetail(props: {
             </dd>
           </>
         )}
-        {pokemonData.passive2 !== Passive.NONE && (
+        {pokemonData.passive2 !== Passive.NONE &&
+          !isMegaStackPassiveHidden(
+            pokemonData.passive2,
+            pokemonData.evolution,
+            null
+          ) && (
           <>
             <dt>{t("wiki.pokemons.passive")}</dt>
             <dd>

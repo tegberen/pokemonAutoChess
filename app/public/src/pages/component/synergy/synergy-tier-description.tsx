@@ -3,6 +3,7 @@ import type { SynergyTier } from "../../../../../config/game/synergies"
 import { getPokemonData } from "../../../../../models/precomputed/precomputed-pokemon-data"
 import { GalarFossilRestorations } from "../../../../../types/enum/FossilUnlock"
 import { type Pkm, PkmIndex } from "../../../../../types/enum/Pokemon"
+import { isMegaStackPassiveHidden } from "../../../../../types/enum/SpecialGameRule"
 import { getPortraitSrc } from "../../../../../utils/avatar"
 import { addIconsToDescription } from "../../utils/descriptions"
 import { cc } from "../../utils/jsx"
@@ -49,11 +50,17 @@ export function FossilRestorationList(props: { restoredPokemon?: Pkm | "" }) {
             height={32}
           />
           <span className="fossil-restoration-effect">
-            {addIconsToDescription(
-              t(`passive_description.${getPokemonData(pokemon).passive}`, {
-                defaultValue: ""
-              })
-            )}
+            {isMegaStackPassiveHidden(
+              getPokemonData(pokemon).passive,
+              getPokemonData(pokemon).evolution,
+              null
+            )
+              ? null
+              : addIconsToDescription(
+                  t(`passive_description.${getPokemonData(pokemon).passive}`, {
+                    defaultValue: ""
+                  })
+                )}
           </span>
         </li>
       ))}

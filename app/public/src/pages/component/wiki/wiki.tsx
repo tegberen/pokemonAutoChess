@@ -7,6 +7,7 @@ import WikiAbility from "./wiki-ability"
 import WikiBlessings from "./wiki-blessings"
 import WikiData from "./wiki-data"
 import WikiDoubleUp from "./wiki-double-up"
+import WikiMegaEvolutions from "./wiki-mega-evolutions"
 import WikiFaq from "./wiki-faq"
 import WikiGlossary from "./wiki-glossary"
 import WikiItems from "./wiki-items"
@@ -61,7 +62,16 @@ export default function Wiki({
             </>
           )
         },
-        { key: "double-up", label: "Double Up" }
+        { key: "double-up", label: "Double Up" },
+        {
+          key: "mega-evolutions",
+          label: (
+            <>
+              <img src="assets/ui/game_modes/scribble_icon.svg" alt="" />
+              {t("wiki.mega.title")}
+            </>
+          )
+        }
       ]
     },
     {
@@ -188,6 +198,9 @@ export default function Wiki({
         </TabPanel>
         <TabPanel key="double-up">
           <WikiDoubleUp />
+        </TabPanel>
+        <TabPanel key="mega-evolutions">
+          <WikiMegaEvolutions />
         </TabPanel>
         <TabPanel key="town">
           <WikiTown />

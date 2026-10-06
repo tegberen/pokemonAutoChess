@@ -23,4 +23,5 @@ export interface IPokemonData {
   evolution: Pkm | null
   evolutions: Pkm[]
   stages: number
+  stagesWithoutLockedMegas: number
 }

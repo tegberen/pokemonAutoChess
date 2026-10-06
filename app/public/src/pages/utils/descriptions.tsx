@@ -31,8 +31,8 @@ const Weathers = keys(Weather)
 const Synergies = keys(Synergy)
 const Items = keys(Item)
 // colored words that tell a GHOST hexing debuff apart from a ritual buff
-const DebuffWords = ["DEBUFF", "LOSE", "LOSES", "INCREASED"]
-const BuffWords = ["BUFF", "GAIN", "GAINS", "GRANTS"]
+const DebuffWords = ["DEBUFF", "LOSE", "LOSES", "INCREASED"] as const
+const BuffWords = ["BUFF", "GAIN", "GAINS", "GRANTS"] as const
 
 const IncantationKindByTechnicalTerm: { [term: string]: IncantationKind } = {
   [TechnicalTerm.HEXING_INCANTATION]: IncantationKind.HEXING,

@@ -2,6 +2,7 @@ import { Ability } from "../../types/enum/Ability"
 import { Rarity } from "../../types/enum/Game"
 import { Passive } from "../../types/enum/Passive"
 import { Pkm, PkmFamily, PkmIndex } from "../../types/enum/Pokemon"
+import { isMegaEvolutionLocked } from "../../types/enum/SpecialGameRule"
 import type { Synergy } from "../../types/enum/Synergy"
 import type { IPokemonData } from "../../types/interfaces/PokemonData"
 import { mapToObj } from "../../utils/map"
@@ -15,12 +16,19 @@ const data = new Map<Pkm, Omit<IPokemonData, "name" | "index">>()
 // highest star count in each family, worked out once up front so the loop
 // below can look it up instead of searching the whole list for every pokemon
 const maxStarsByFamily = new Map<Pkm, number>()
+// the base game has no Megas, so their star is left out of the family
+const maxStarsByFamilyWithoutLockedMegas = new Map<Pkm, number>()
 precomputedPokemons.forEach((pokemon) => {
   if (pokemon.skill === Ability.DEFAULT) return
   const family = PkmFamily[pokemon.name]
   const highest = maxStarsByFamily.get(family)
   if (highest === undefined || pokemon.stars > highest) {
     maxStarsByFamily.set(family, pokemon.stars)
+  }
+  if (isMegaEvolutionLocked(pokemon.name, null)) return
+  const highestNonMega = maxStarsByFamilyWithoutLockedMegas.get(family)
+  if (highestNonMega === undefined || pokemon.stars > highestNonMega) {
+    maxStarsByFamilyWithoutLockedMegas.set(family, pokemon.stars)
   }
 })
 
@@ -44,6 +52,9 @@ precomputedPokemons.forEach((pokemon) => {
     // -Infinity when nobody in the family has a skill yet, same as before
     stages:
       maxStarsByFamily.get(PkmFamily[pokemon.name]) ??
+      Number.NEGATIVE_INFINITY,
+    stagesWithoutLockedMegas:
+      maxStarsByFamilyWithoutLockedMegas.get(PkmFamily[pokemon.name]) ??
       Number.NEGATIVE_INFINITY
   })
 })
@@ -78,6 +89,7 @@ export function getPokemonData(name: Pkm): IPokemonData {
     rarity: Rarity.SPECIAL,
     stars: 1,
     stages: 1,
+    stagesWithoutLockedMegas: 1,
     skill: Ability.DEFAULT,
     passive: Passive.NONE,
     passive2: Passive.NONE,

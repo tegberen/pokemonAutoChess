@@ -19,6 +19,7 @@ import {
   SELECTIVE_GENETICS_SHINY_ITEM_OPTIONS
 } from "../../types/enum/Blessing"
 import { PrismaticQuest } from "../../types/enum/PrismaticQuest"
+import { isMegaEvolutionLocked } from "../../types/enum/SpecialGameRule"
 import { PokemonActionState } from "../../types/enum/Game"
 import { Item, ShinyItems, WeatherRocks } from "../../types/enum/Item"
 import { pickNRandomIn, pickRandomIn } from "../../utils/random"
@@ -74,6 +75,7 @@ export const EvolutionManager = {
     player: Player,
     ...additionalArgs: unknown[]
   ): void | Pokemon {
+    if (isMegaEvolutionLocked(pokemon.evolution, player.specialGameRule)) return
     const handler = this.getHandler(pokemon.evolutionRule)
     if (handler.canEvolve(pokemon, player, ...additionalArgs)) {
       const pokemonEvolved = this.evolve(pokemon, player, ...additionalArgs)
@@ -86,6 +88,9 @@ export const EvolutionManager = {
     player: Player,
     ...additionalArgs: unknown[]
   ): Pokemon {
+    if (isMegaEvolutionLocked(pokemon.evolution, player.specialGameRule)) {
+      return pokemon
+    }
     // counted here rather than in tryEvolve so every rule type is included
     player.advancePrismaticQuest(PrismaticQuest.MATURE)
     const handler = this.getHandler(pokemon.evolutionRule)
@@ -242,6 +247,9 @@ export const EvolutionManager = {
     player: Player,
     ...additionalArgs: unknown[]
   ): boolean {
+    if (isMegaEvolutionLocked(pokemon.evolution, player.specialGameRule)) {
+      return false
+    }
     const handler = this.getHandler(pokemon.evolutionRule)
     return handler.canEvolve(pokemon, player, ...additionalArgs)
   },

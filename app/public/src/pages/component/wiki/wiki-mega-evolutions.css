@@ -1,0 +1,44 @@
+.wiki-mega-evolutions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75em;
+  margin: 1em 0;
+  padding: 1.25em 1.5em 1.5em;
+}
+
+.wiki-mega-evolutions h2,
+.wiki-mega-evolutions p {
+  margin: 0;
+}
+
+.wiki-mega-evolutions table {
+  width: 100%;
+  background-color: var(--color-bg-secondary);
+}
+
+.wiki-mega-evolutions thead {
+  border-bottom: 2px solid currentColor;
+}
+
+.wiki-mega-evolutions th,
+.wiki-mega-evolutions td {
+  padding: 0.45em 0.75em;
+  font-weight: normal;
+  line-height: 1.4;
+  text-align: left;
+}
+
+.wiki-mega-evolutions thead th {
+  font-weight: bold;
+}
+
+.wiki-mega-evolutions tbody tr:nth-child(odd) {
+  background-color: var(--color-bg-primary);
+}
+
+.wiki-mega-evolutions-pair {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  white-space: nowrap;
+}

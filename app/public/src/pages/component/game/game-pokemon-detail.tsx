@@ -21,10 +21,16 @@ import {
 } from "../../../../../types/enum/Item"
 import { Passive } from "../../../../../types/enum/Passive"
 import { Pkm, PkmIndex } from "../../../../../types/enum/Pokemon"
+import {
+  isMegaEvolutionLocked,
+  isMegaStackPassiveHidden,
+  SpecialGameRule
+} from "../../../../../types/enum/SpecialGameRule"
 import { Synergy } from "../../../../../types/enum/Synergy"
 import { getPortraitSrc } from "../../../../../utils/avatar"
 import { roundToNDigits } from "../../../../../utils/number"
 import { schemaValues } from "../../../../../utils/schemas"
+import store from "../../../stores"
 import { addIconsToDescription } from "../../utils/descriptions"
 import { cc } from "../../utils/jsx"
 import { AbilityTooltip } from "../ability/ability-tooltip"
@@ -249,6 +255,13 @@ export function GamePokemonDetail(props: {
 
   const stars =
     pokemon.stars + (pokemon.items.has(Item.STAR_PIECE) && !isInFight ? 1 : 0)
+  const pokemonData = getPokemonData(pokemon.name)
+  const showsMegaStage =
+    isMegaEvolutionLocked(pokemon.name, null) ||
+    store.getState().game.specialGameRule === SpecialGameRule.MEGA_EVOLUTION
+  const stages = showsMegaStage
+    ? pokemonData.stages
+    : pokemonData.stagesWithoutLockedMegas
 
   return (
     <div className="game-pokemon-detail">
@@ -288,7 +301,7 @@ export function GamePokemonDetail(props: {
             <img key={index} src="assets/ui/star.svg" height="16"></img>
           ))}
           {Array.from(
-            { length: getPokemonData(pokemon.name).stages - stars },
+            { length: Math.max(0, stages - stars) },
             (_, index) => (
               <img key={index} src="assets/ui/star_empty.svg" height="16"></img>
             )
@@ -350,7 +363,12 @@ export function GamePokemonDetail(props: {
           <p>{addIconsToDescription(t(`item_description.${dish}`))}</p>
         </div>
       )}
-      {pokemon.passive !== Passive.NONE && (
+      {pokemon.passive !== Passive.NONE &&
+        !isMegaStackPassiveHidden(
+          pokemon.passive,
+          getPokemonData(pokemon.name).evolution,
+          store.getState().game.specialGameRule
+        ) && (
         <div className="game-pokemon-detail-passive">
           <p>
             {addIconsToDescription(
@@ -361,12 +379,16 @@ export function GamePokemonDetail(props: {
                 ap: pokemon.ap,
                 luck: pokemon.luck,
                 stars,
-                stages: getPokemonData(pokemon.name).stages,
+                stages,
                 showAbilityTiers: props.origin === "wiki"
               }
             )}
           </p>
-          {pokemon.stacksRequired > 0 && (
+          {pokemon.stacksRequired > 0 &&
+            !isMegaEvolutionLocked(
+              getPokemonData(pokemon.name).evolution ?? Pkm.DEFAULT,
+              store.getState().game.specialGameRule
+            ) && (
             <div className="game-pokemon-detail-passive-bar">
               <GameTooltipBar
                 type="XP"
@@ -380,7 +402,12 @@ export function GamePokemonDetail(props: {
       )}
 
       {/* Secondary passive (e.g. a weather-support passive) */}
-      {pokemon.passive2 !== Passive.NONE && (
+      {pokemon.passive2 !== Passive.NONE &&
+        !isMegaStackPassiveHidden(
+          pokemon.passive2,
+          getPokemonData(pokemon.name).evolution,
+          store.getState().game.specialGameRule
+        ) && (
         <div className="game-pokemon-detail-passive">
           <p>
             {addIconsToDescription(
@@ -391,7 +418,7 @@ export function GamePokemonDetail(props: {
                 ap: pokemon.ap,
                 luck: pokemon.luck,
                 stars,
-                stages: getPokemonData(pokemon.name).stages,
+                stages,
                 showAbilityTiers: props.origin === "wiki"
               }
             )}
@@ -446,7 +473,7 @@ export function GamePokemonDetail(props: {
                 ap: getStatWithItemBonus(Stat.AP) ?? pokemon.ap,
                 luck: getStatWithItemBonus(Stat.LUCK) ?? pokemon.luck,
                 stars,
-                stages: getPokemonData(pokemon.name).stages,
+                stages,
                 showAbilityTiers: props.origin === "wiki"
               }}
               key={pokemon.id}

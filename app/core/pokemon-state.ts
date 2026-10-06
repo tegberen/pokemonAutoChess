@@ -66,6 +66,7 @@ import { Passive } from "../types/enum/Passive"
 import { Pkm } from "../types/enum/Pokemon"
 import { Synergy } from "../types/enum/Synergy"
 import { Weather } from "../types/enum/Weather"
+import { isMegaEvolutionLocked } from "../types/enum/SpecialGameRule"
 import { isUnderZenith } from "../utils/weather"
 import { count } from "../utils/array"
 import { distanceC, distanceM, spacesBetween } from "../utils/distance"
@@ -113,6 +114,9 @@ function summonFluffyTailDecoy(pokemon: PokemonEntity, board: Board) {
     (pkm) => {
       const data = getPokemonData(pkm)
       if (data.stars !== pokemon.stars) return false
+      if (isMegaEvolutionLocked(pkm, pokemon.player?.specialGameRule)) {
+        return false
+      }
       return stageLevel >= (FLUFFY_TAIL_RARITY_STAGE[data.rarity] ?? 0)
     }
   )

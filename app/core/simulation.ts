@@ -377,7 +377,10 @@ import {
 } from "./ghost-incantations"
 import { PokemonEntity } from "./pokemon-entity"
 import { DelayedCommand } from "./simulation-command"
-import { SpecialGameRule } from "../types/enum/SpecialGameRule"
+import {
+  isMegaEvolutionLocked,
+  SpecialGameRule
+} from "../types/enum/SpecialGameRule"
 import {
   getStrongestUnit,
   getStrongestUnitOfFamily,
@@ -1701,6 +1704,7 @@ export default class Simulation extends Schema implements ISimulation {
           const sharedTypes = [...pokemon.types]
           const candidates = sharedTypes
             .flatMap((type) => PRECOMPUTED_POKEMONS_PER_TYPE[type] ?? [])
+            .filter((p) => !isMegaEvolutionLocked(p, player?.specialGameRule))
             .map((p) => getPokemonData(p))
             .filter((p, i, arr) => arr.findIndex((x) => x.name === p.name) === i)
           const spawns: IPokemonData[] = []

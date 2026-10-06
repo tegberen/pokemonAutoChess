@@ -1,3 +1,5 @@
+import { Passive } from "./Passive"
+import { Pkm } from "./Pokemon"
 import { type TownEncounter, TownEncounters } from "./TownEncounter"
 
 export enum SpecialGameRule {
@@ -33,7 +35,8 @@ export enum SpecialGameRule {
   EVOLUTION_LAB = "EVOLUTION_LAB",
   BAZAAR = "BAZAAR",
   QUEST_BOARD = "QUEST_BOARD",
-  MISFITS = "MISFITS"
+  MISFITS = "MISFITS",
+  MEGA_EVOLUTION = "MEGA_EVOLUTION"
 }
 
 export const RulesWithAllPokemonsAvailable: SpecialGameRule[] = [
@@ -48,3 +51,63 @@ export const MISFITS_EXCLUDED_ENCOUNTERS: TownEncounter[] = [
   TownEncounters.KECLEON,
   TownEncounters.SABLEYE
 ]
+
+// Mega Rayquaza keeps its Green Orb evolution in every game
+export function isMegaEvolutionLocked(
+  evolution: Pkm,
+  specialGameRule: SpecialGameRule | null | undefined
+): boolean {
+  return (
+    evolution.startsWith("MEGA_") &&
+    evolution !== Pkm.MEGA_RAYQUAZA &&
+    specialGameRule !== SpecialGameRule.MEGA_EVOLUTION
+  )
+}
+
+// passives whose only purpose is reaching a Mega Evolution
+export const MEGA_STACK_PASSIVES: Passive[] = [
+  Passive.LATI_MEGA,
+  Passive.DRAMPA_MEGA,
+  Passive.ZYGARDE_MEGA,
+  Passive.FLOETTE_ETERNAL,
+  Passive.MANECTRIC,
+  Passive.BANETTE,
+  Passive.LUCARIO,
+  Passive.ALTARIA,
+  Passive.LOPUNNY,
+  Passive.STEELIX,
+  Passive.CAMERUPT,
+  Passive.MEDICHAM,
+  Passive.GARDEVOIR,
+  Passive.GALLADE,
+  Passive.TYRANITAR,
+  Passive.GENGAR,
+  Passive.ALAKAZAM,
+  Passive.SLOWBRO,
+  Passive.FERALIGATR,
+  Passive.CHARIZARD,
+  Passive.ZERAORA,
+  Passive.DARKRAI,
+  Passive.MAWILE,
+  Passive.ABSOL,
+  Passive.MEWTWO,
+  Passive.DIANCIE,
+  Passive.AERODACTYL,
+  Passive.HOUNDOOM,
+  Passive.SABLEYE,
+  Passive.SKARMORY_PRE,
+  Passive.DRAGALGE,
+  Passive.EELEKTROSS,
+  Passive.EXCADRILL
+]
+
+export function isMegaStackPassiveHidden(
+  passive: Passive,
+  evolution: Pkm | null,
+  specialGameRule: SpecialGameRule | null | undefined
+): boolean {
+  return (
+    MEGA_STACK_PASSIVES.includes(passive) &&
+    isMegaEvolutionLocked(evolution ?? Pkm.DEFAULT, specialGameRule)
+  )
+}

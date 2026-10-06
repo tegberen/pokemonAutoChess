@@ -12,6 +12,7 @@ import { Berries, CraftableItemsNoScarves, Item, Sweets, SynergyGems, SynergyGiv
 import { FreeOptions, PaidOptions, ArmoryOptions } from "../types/enum/ArmoryOptions"
 import { Rarity } from "../types/enum/Game"
 import { Pkm, Unowns } from "../types/enum/Pokemon"
+import { isMegaEvolutionLocked } from "../types/enum/SpecialGameRule"
 import { Synergy } from "../types/enum/Synergy"
 import { getFirstAvailablePositionInBench, getFreeSpaceOnBench,
   getBenchSize
@@ -162,6 +163,7 @@ const giftRandomPokemonByRarity = (toPlayer: Player, rarity: Rarity): boolean =>
         if (PkmsWithAltForms.includes(p) && getBaseAltForm(p) !== p) return false
         if (pkmData.stars !== wantedStars) return false
         if (pkmData.unlockable) return false
+        if (isMegaEvolutionLocked(p, toPlayer.specialGameRule)) return false
         if ((pkmData.additional || pkmData.regional) !== regionalOrAdditional) return false
         if (pkmData.regional && !toPlayer.regionalPokemons.includes(p)) return false
         return pkmData.types.some((syn) => wantedSynergy.includes(syn))
@@ -197,7 +199,12 @@ const giftPotion = (toPlayer: Player, fromPlayer: Player): boolean => {
 const evolveRandomPokemonInBoard = (toPlayer: Player): boolean => {
     const pokemonThatCanEvolve: Pokemon[] = []
     toPlayer.board.forEach((pkm: Pokemon) => {
-        if (pkm.hasEvolution) pokemonThatCanEvolve.push(pkm)
+        if (
+            pkm.hasEvolution &&
+            !isMegaEvolutionLocked(pkm.evolution, toPlayer.specialGameRule)
+        ) {
+            pokemonThatCanEvolve.push(pkm)
+        }
     })
 
     if (pokemonThatCanEvolve.length !== 0) {
