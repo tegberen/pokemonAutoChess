@@ -296,6 +296,19 @@ export const FAIRY_WANDS_BY_SYNERGY_LEVEL = [
   [Item.TUNNEL_WAND, Item.WHIRLWIND_WAND, Item.SWITCHER_WAND, Item.WARP_WAND]
 ]
 
+// longer than the 2s wand statuses, so 100 LUCK cannot chain them into a lock
+export const WAND_PROC_COOLDOWN_MS = 4000
+export const WANDS_WITH_PROC_COOLDOWN = [
+  Item.CONFUSE_WAND,
+  Item.PETRIFY_WAND,
+  Item.SLOW_WAND,
+  Item.SLUMBER_WAND,
+  Item.WARP_WAND,
+  Item.SWITCHER_WAND,
+  Item.WHIRLWIND_WAND,
+  Item.TUNNEL_WAND
+]
+
 export const UNOWN_ENCOUNTER_CHANCE = 0.033
 export const SHINY_UNOWN_ENCOUNTER_CHANCE = 0.05
 export const SHARDS_PER_UNOWN_WANDERER = 50

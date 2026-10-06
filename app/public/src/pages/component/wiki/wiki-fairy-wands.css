@@ -1,0 +1,53 @@
+.wiki-fairy-wands {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75em;
+  margin: 1em 0;
+  padding: 1.25em 1.5em 1.5em;
+}
+
+.wiki-fairy-wands h2,
+.wiki-fairy-wands p {
+  margin: 0;
+}
+
+.wiki-fairy-wands table {
+  width: 100%;
+  background-color: var(--color-bg-secondary);
+}
+
+.wiki-fairy-wands thead {
+  border-bottom: 2px solid currentColor;
+}
+
+.wiki-fairy-wands th,
+.wiki-fairy-wands td {
+  padding: 0.55em 0.75em;
+  font-weight: normal;
+  line-height: 1.4;
+  text-align: left;
+}
+
+.wiki-fairy-wands thead th {
+  font-size: 0.78em;
+  font-weight: bold;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.wiki-fairy-wands tbody tr:nth-child(odd) {
+  background-color: var(--color-bg-primary);
+}
+
+.wiki-fairy-wands tbody th[scope="row"] {
+  white-space: nowrap;
+}
+
+.wiki-fairy-wands-tier th {
+  font-weight: bold;
+}
+
+.wiki-fairy-wands-cooldown {
+  white-space: nowrap;
+  text-align: center;
+}

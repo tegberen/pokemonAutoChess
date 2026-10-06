@@ -29,6 +29,7 @@ import {
 } from "../synergy/synergy-tier-description"
 import { SynergyOverlaps } from "../synergy-overlaps/synergy-overlaps"
 import WikiAwakening from "./wiki-awakening"
+import { WikiFairyWands } from "./wiki-fairy-wands"
 import {
   WikiFossilRestorations,
   WikiFossilUnlocks
@@ -167,6 +168,13 @@ export function WikiType(props: { type: Synergy; onGoToWeather?: () => void }) {
         <>
           <hr />
           <WikiGhostIncantations />
+        </>
+      )}
+
+      {props.type === Synergy.FAIRY && (
+        <>
+          <hr />
+          <WikiFairyWands />
         </>
       )}
 

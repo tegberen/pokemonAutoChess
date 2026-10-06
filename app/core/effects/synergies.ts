@@ -28,7 +28,8 @@ import {
   type SynergyTier,
   SynergyTiers,
   GOLDEN_BERRY_TREE_TYPES,
-  VESPIQUEN_CLONE
+  VESPIQUEN_CLONE,
+  WAND_PROC_COOLDOWN_MS
 } from "../../config/game/synergies"
 import type Player from "../../models/colyseus-models/player"
 import { getSynergyTier } from "../../models/colyseus-models/synergies"
@@ -861,6 +862,31 @@ export const bugSwarmSpawnEffect = new OnStageStartEffect(
 )
 
 const WAND_BASE_PROC_CHANCE = 0.05
+const lastWandProcTimeByAttacker = new WeakMap<
+  PokemonEntity,
+  Map<Item, number>
+>()
+
+function rollWandProc(
+  attacker: PokemonEntity,
+  wand: Item,
+  wandProcChance: number
+): boolean {
+  let lastProcTimeByWand = lastWandProcTimeByAttacker.get(attacker)
+  if (!lastProcTimeByWand) {
+    lastProcTimeByWand = new Map()
+    lastWandProcTimeByAttacker.set(attacker, lastProcTimeByWand)
+  }
+  const lastProcTime = lastProcTimeByWand.get(wand)
+  if (
+    lastProcTime !== undefined &&
+    Date.now() - lastProcTime < WAND_PROC_COOLDOWN_MS
+  )
+    return false
+  if (!chance(wandProcChance, attacker)) return false
+  lastProcTimeByWand.set(wand, Date.now())
+  return true
+}
 
 /* MYSTOGAN: at every FAIRY tier reached, the one wand the offer left out */
 export function getMystoganWands(player: Player): Item[] {
@@ -909,28 +935,28 @@ export function applyWandEffects(
     if (dealsSpecialDamage) specialDamageFactor += 0.2
     switch (wand) {
       case Item.CONFUSE_WAND: {
-        if (chance(wandProcChance, pokemon)) {
+        if (rollWandProc(pokemon, wand, wandProcChance)) {
           target.status.triggerConfusion(2000, target, pokemon)
           target.addSpecialDefense(-3, pokemon, 0, false)
         }
         break
       }
       case Item.PETRIFY_WAND: {
-        if (chance(wandProcChance, pokemon)) {
+        if (rollWandProc(pokemon, wand, wandProcChance)) {
           target.status.triggerLocked(2000, target)
           target.addDefense(-3, pokemon, 0, false)
         }
         break
       }
       case Item.SLOW_WAND: {
-        if (chance(wandProcChance, pokemon)) {
+        if (rollWandProc(pokemon, wand, wandProcChance)) {
           target.status.triggerParalysis(2000, target, pokemon)
           target.addSpeed(-10, pokemon, 0, false)
         }
         break
       }
       case Item.SLUMBER_WAND: {
-        if (chance(wandProcChance, pokemon)) {
+        if (rollWandProc(pokemon, wand, wandProcChance)) {
           target.status.triggerSleep(2000, target)
           target.addAttack(-3, pokemon, 0, false)
         }
@@ -1059,7 +1085,7 @@ export function applyWandEffects(
         break
       }
       case Item.WARP_WAND: {
-        if (chance(wandProcChance, pokemon) && target.hp > 0) {
+        if (rollWandProc(pokemon, wand, wandProcChance) && target.hp > 0) {
           const teleportationCell = board.getTeleportationCell(
             target.positionX,
             target.positionY,
@@ -1082,7 +1108,7 @@ export function applyWandEffects(
         break
       }
       case Item.SWITCHER_WAND: {
-        if (chance(wandProcChance, pokemon) && target.hp > 0) {
+        if (rollWandProc(pokemon, wand, wandProcChance) && target.hp > 0) {
           const farthestTarget = pokemon.state.getFarthestTarget(pokemon, board)
           if (farthestTarget) {
             pokemon.broadcastAbility({
@@ -1106,7 +1132,7 @@ export function applyWandEffects(
         break
       }
       case Item.WHIRLWIND_WAND: {
-        if (chance(wandProcChance, pokemon)) {
+        if (rollWandProc(pokemon, wand, wandProcChance)) {
           pokemon.broadcastAbility({ skill: "WHIRLWIND_WAND" })
           effectInLine(board, pokemon, target, (cell) => {
             if (cell.value && cell.value.team !== pokemon.team) {
@@ -1130,7 +1156,7 @@ export function applyWandEffects(
         break
       }
       case Item.TUNNEL_WAND: {
-        if (chance(wandProcChance, pokemon)) {
+        if (rollWandProc(pokemon, wand, wandProcChance)) {
           pokemon.broadcastAbility({ skill: "FAIRY_TUNNEL" })
           effectInLine(board, pokemon, target, (cell) => {
             if (

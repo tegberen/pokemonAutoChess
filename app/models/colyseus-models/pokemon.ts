@@ -1893,21 +1893,16 @@ export class Fuecoco extends Pokemon {
 }
 
 export class Crocalor extends Pokemon {
-  types = new SetSchema<Synergy>([
-    Synergy.FIRE,
-    Synergy.SOUND,
-    Synergy.GHOST,
-    Synergy.BUG
-  ])
+  types = new SetSchema<Synergy>([Synergy.FIRE, Synergy.SOUND, Synergy.GHOST])
   rarity = Rarity.EPIC
   stars = 2
   evolution = Pkm.SKELEDIRGE
   hp = 170
-  atk = 13
+  atk = 15
   speed = 46
   def = 6
   speDef = 4
-  maxPP = 70
+  maxPP = 80
   range = 2
   skill = Ability.TORCH_SONG
   regional = true
@@ -1918,11 +1913,11 @@ export class Skeledirge extends Pokemon {
   rarity = Rarity.EPIC
   stars = 3
   hp = 350
-  atk = 24
+  atk = 30
   speed = 46
   def = 8
   speDef = 6
-  maxPP = 60
+  maxPP = 80
   range = 2
   skill = Ability.TORCH_SONG
   regional = true

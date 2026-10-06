@@ -522,6 +522,7 @@ Every balance change on this server, newest first.
 - Gholdengo | PP 90 → 100
 - Darkrai | passive: gains a stack only for KOs of enemies hexed by a HEXING_INCANTATION. Stacks to Mega evolve 20 → 10
 - Golett Line | PP 100 → 120
+- Fuecoco Line | PP 80/70/60 → 80/80/80, ATK 5/13/24 → 5/15/30
 - Scyther Line | HP 150/220 → 85/170, Scyther ATK 15 → 12, evolves with 3 copies instead of METAL_ALLOY or BLACK_AUGURITE, into Kleavor in a ROCK region and Scizor elsewhere
 
 **Items**
@@ -535,8 +536,8 @@ Every balance change on this server, newest first.
 - Shuppet Line | Shadow Clone: only steals an item if the target is hexed by a HEXING_INCANTATION. Clone max HP [50,50,90,100]% → [50,50,50,100]%
 
 **Synergies**
-- GHOST {{new}} | synergy reworked: write HEXING_INCANTATION, RITUAL_INCANTATION and FATED_INCANTATION
-- GHOST {{new}} | rule: enemies with negative LUCK are easier for GHOST Pokémon to dodge and SILENCE
+- FAIRY | added a cooldown to the FAIRY wands
+- GHOST {{new}} | reworked: write HEXING_INCANTATION, RITUAL_INCANTATION and FATED_INCANTATION. Enemies with negative LUCK are easier to dodge and SILENCE
 - MURKY | LUCK -30 → -10, GHOST are still immune
 - ODD_KEYSTONE | on ROCK explosion, each HEXING_INCANTATION hexes a new enemy instead of applying two GHOST curses
 - POISON (7) | the enemy a POISON Pokémon KOs bursts for 50% of its remaining PP as SPECIAL to ADJACENT enemies, instead of the POISON Pokémon bursting when KO'd
@@ -572,6 +573,9 @@ Every balance change on this server, newest first.
 
 **Titles**
 - Shiny {{new}} | complete all 12 Prismatic Quests in a single game
+
+**Fixes**
+- Crocalor | long-lasting bug finally fixed: Crocalor no longer has the BUG type
 
 **Interface**
 - Halloween theme {{new}} | the new default theme, with see-through panels
