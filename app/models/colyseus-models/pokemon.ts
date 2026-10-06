@@ -11483,8 +11483,8 @@ export class Appletun extends Pokemon {
   ])
   rarity = Rarity.UNIQUE
   stars = 3
-  hp = 250
-  atk = 15
+  hp = 300
+  atk = 10
   speed = 31
   def = 12
   speDef = 12
@@ -11506,8 +11506,8 @@ export class Flapple extends Pokemon {
   ])
   rarity = Rarity.UNIQUE
   stars = 3
-  hp = 180
-  atk = 19
+  hp = 150
+  atk = 28
   speed = 50
   def = 4
   speDef = 4

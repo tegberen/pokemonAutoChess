@@ -3276,6 +3276,15 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
       [Item.TART_APPLE, Item.SWEET_APPLE]
     ])
 
+    const freshApplesStillInInventory: Item[] = []
+    for (const freshApple of player.freshApples) {
+      const index = player.items.indexOf(freshApple)
+      if (index >= 0) {
+        player.items.splice(index, 1)
+        freshApplesStillInInventory.push(freshApple)
+      }
+    }
+
     for (const rottingItem of rottingItems.keys()) {
       while (player.items.includes(rottingItem as Item)) {
         const index = player.items.indexOf(rottingItem)
@@ -3287,6 +3296,8 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
         }
       }
     }
+    player.items.push(...freshApplesStillInInventory)
+    player.freshApples = []
 
     if (
       this.state.specialGameRule === SpecialGameRule.FIRST_PARTNER &&

@@ -317,6 +317,8 @@ export default class Player extends Schema implements IPlayer {
   crystalClustersRocksGranted = false
   // server-only: FAST_FOOD_DELIVERY dishes and the rounds left before they rot
   fastFoodDishes: { dish: Item; roundsLeft: number }[] = []
+  // server-only: apples dropped mid-fight skip that round's ripening
+  freshApples: Item[] = []
   hasLeftGame: boolean = false
   bonusSynergies: Map<Synergy, number> = new Map<Synergy, number>()
   pokemonsExploring: {
@@ -707,6 +709,11 @@ export default class Player extends Schema implements IPlayer {
     this.board.set(uxie.id, uxie)
     uxie.onAcquired(this)
     this.updateSynergies()
+  }
+
+  addFreshApple(apple: Item) {
+    this.items.push(apple)
+    this.freshApples.push(apple)
   }
 
   addMoney(
