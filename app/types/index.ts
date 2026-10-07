@@ -427,6 +427,7 @@ export interface IPokemon {
   aura: boolean
   ignited: boolean
   ignitionCooldown: number
+  megaCooldown: number
   awakening: Awakening
   awakeningRock: string
   awakeningCharge: number
@@ -438,7 +439,7 @@ export interface IPokemon {
   chosenOne: boolean
   trashToTreasureRounds: number
   honeyExplorationFriend: boolean
-  honeyExplorationGift: boolean
+  sellsForFree: boolean
 }
 
 export interface IExperienceManager {

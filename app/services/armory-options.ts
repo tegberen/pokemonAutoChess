@@ -163,7 +163,7 @@ const giftRandomPokemonByRarity = (toPlayer: Player, rarity: Rarity): boolean =>
         if (PkmsWithAltForms.includes(p) && getBaseAltForm(p) !== p) return false
         if (pkmData.stars !== wantedStars) return false
         if (pkmData.unlockable) return false
-        if (isMegaEvolutionLocked(p, toPlayer.specialGameRule)) return false
+        if (isMegaEvolutionLocked(p)) return false
         if ((pkmData.additional || pkmData.regional) !== regionalOrAdditional) return false
         if (pkmData.regional && !toPlayer.regionalPokemons.includes(p)) return false
         return pkmData.types.some((syn) => wantedSynergy.includes(syn))
@@ -201,7 +201,7 @@ const evolveRandomPokemonInBoard = (toPlayer: Player): boolean => {
     toPlayer.board.forEach((pkm: Pokemon) => {
         if (
             pkm.hasEvolution &&
-            !isMegaEvolutionLocked(pkm.evolution, toPlayer.specialGameRule)
+            !isMegaEvolutionLocked(pkm.evolution)
         ) {
             pokemonThatCanEvolve.push(pkm)
         }

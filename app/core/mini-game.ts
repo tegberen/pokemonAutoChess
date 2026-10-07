@@ -61,7 +61,7 @@ import {
 } from "../types/enum/Item"
 import { Pkm, PkmFamily } from "../types/enum/Pokemon"
 import {
-  MISFITS_CHIMECHO_STAGE,
+  CHIMECHO_CAROUSEL_STAGE,
   MISFITS_EXCLUDED_ENCOUNTERS,
   SpecialGameRule
 } from "../types/enum/SpecialGameRule"
@@ -92,6 +92,10 @@ import {
   getGuideCarouselTarget,
   getGuideRegionSynergy
 } from "./guide/guide-stage"
+import {
+  getMegaDuoPartner,
+  getPreMegaCarouselPool
+} from "./mega-evolution"
 import { spawnDIAYAvatar } from "./scribbles"
 
 const PLAYER_VELOCITY = 2
@@ -304,6 +308,10 @@ export class MiniGame {
     const { players, stageLevel } = state
     this.timeElapsed = 0
     this.rotationDirection = 1
+    // unlike Misfits, only the stage 4 carousel offers Megas, to keep them rare
+    if (state.specialGameRule === SpecialGameRule.MEGA_EVOLUTION) {
+      state.pokemonCarousel = false
+    }
 
     /* A guide carousel is scripted down to which component is on the floor, and
        an encounter rewrites that wholesale - Chansey swaps the item set for
@@ -358,8 +366,9 @@ export class MiniGame {
       }
 
       if (
-        state.specialGameRule === SpecialGameRule.MISFITS &&
-        stageLevel === MISFITS_CHIMECHO_STAGE
+        (state.specialGameRule === SpecialGameRule.MISFITS ||
+          state.specialGameRule === SpecialGameRule.MEGA_EVOLUTION) &&
+        stageLevel === CHIMECHO_CAROUSEL_STAGE
       ) {
         encounter = TownEncounters.CHIMECHO
       }
@@ -553,6 +562,9 @@ export class MiniGame {
      per-player and the carousel is shared, so only the non-regional pool is
      ever touched. */
   drawCarouselPokemons(state: GameState, nbSlots: number): Pkm[] {
+    if (state.specialGameRule === SpecialGameRule.MEGA_EVOLUTION) {
+      return pickNRandomIn(getPreMegaCarouselPool(), nbSlots)
+    }
     const rarities = getCarouselPokemonRarities(state.stageLevel, nbSlots)
     const drawn: Pkm[] = []
     rarities.forEach((rarity) => {
@@ -597,7 +609,13 @@ export class MiniGame {
   }
 
   returnCarouselPokemonToPool(state: GameState, pkm: Pkm) {
-    if (state.specialGameRule === SpecialGameRule.MISFITS) return
+    // both draw their carousel Pokemon outside the pool
+    if (
+      state.specialGameRule === SpecialGameRule.MISFITS ||
+      state.specialGameRule === SpecialGameRule.MEGA_EVOLUTION
+    ) {
+      return
+    }
     state.shop.getPool(getPokemonData(pkm).rarity)?.push(pkm)
   }
 
@@ -1022,7 +1040,12 @@ export class MiniGame {
     }
   }
 
-  grantCarouselPokemon(player: Player, pkm: Pkm, room: GameRoom): boolean {
+  grantCarouselPokemon(
+    player: Player,
+    pkm: Pkm,
+    room: GameRoom,
+    withDuoPartner = true
+  ): boolean {
     const pokemon = PokemonFactory.createPokemonFromName(pkm, player)
     const hasSpaceOnBench =
       getFreeSpaceOnBench(player.board, getBenchSize(player.blessings)) > 0 ||
@@ -1032,9 +1055,20 @@ export class MiniGame {
 
     pokemon.positionX = getFirstAvailablePositionInBench(player.board, getBenchSize(player.blessings)) ?? -1
     pokemon.positionY = 0
+    pokemon.sellsForFree =
+      room.state.specialGameRule === SpecialGameRule.MEGA_EVOLUTION
     player.board.set(pokemon.id, pokemon)
     pokemon.onAcquired(player)
     room.checkEvolutionsAfterPokemonAcquired(player.id)
+    // a duo comes as a pair, like when bought in the shop
+    const partner = getMegaDuoPartner(pkm)
+    if (
+      withDuoPartner &&
+      partner &&
+      room.state.specialGameRule === SpecialGameRule.MEGA_EVOLUTION
+    ) {
+      this.grantCarouselPokemon(player, partner, room, false)
+    }
     return true
   }
 

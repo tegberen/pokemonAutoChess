@@ -114,7 +114,7 @@ function summonFluffyTailDecoy(pokemon: PokemonEntity, board: Board) {
     (pkm) => {
       const data = getPokemonData(pkm)
       if (data.stars !== pokemon.stars) return false
-      if (isMegaEvolutionLocked(pkm, pokemon.player?.specialGameRule)) {
+      if (isMegaEvolutionLocked(pkm)) {
         return false
       }
       return stageLevel >= (FLUFFY_TAIL_RARITY_STAGE[data.rarity] ?? 0)

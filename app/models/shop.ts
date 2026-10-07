@@ -141,7 +141,7 @@ export function getSellPrice(
   )
     return 0
 
-  if ("honeyExplorationGift" in pokemon && pokemon.honeyExplorationGift) {
+  if ("sellsForFree" in pokemon && pokemon.sellsForFree) {
     return 0
   }
 

@@ -132,6 +132,8 @@ export class Pokemon extends Schema implements IPokemon {
   @type("uint8") trashToTreasureRounds: number = 0
   @type("boolean") ignited: boolean = false
   @type("uint8") ignitionCooldown: number = 0
+  // MEGA_EVOLUTION: fights left before the Key Stone works on it again
+  @type("uint8") megaCooldown: number = 0
   // SILVER_SPOON: only the server counts the bend down, nothing renders it
   silverSpoonRounds: number = 0
   motherYarnStages: number = 0
@@ -140,9 +142,11 @@ export class Pokemon extends Schema implements IPokemon {
   ghostRitualHPGained: number = 0
   ghostRitualPPGained: number = 0
   ghostRitualSpeedGained: number = 0
-  // HONEY_EXPLORATION: a friend keeps WILD for good; synced for the sell price shown
+  // HONEY_EXPLORATION: a friend keeps WILD for good
   @type("boolean") honeyExplorationFriend: boolean = false
-  @type("boolean") honeyExplorationGift: boolean = false
+  // HONEY_EXPLORATION friends and MEGA_EVOLUTION carousel Pokemon; synced for
+  // the sell price shown
+  @type("boolean") sellsForFree: boolean = false
   dodge: number = 0
   deathCount: number = 0
   killCount: number = 0
@@ -604,8 +608,8 @@ export class MegaFloetteEternal extends Pokemon {
   ])
   rarity = Rarity.UNIQUE
   stars = 4
-  hp = 200
-  atk = 12
+  hp = 270
+  atk = 27
   speed = 55
   def = 6
   speDef = 12
@@ -816,11 +820,11 @@ export class MegaManectric extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.ELECTRIC, Synergy.FIELD])
   rarity = Rarity.RARE
   stars = 3
-  hp = 220
-  atk = 20
+  hp = 340
+  atk = 32
   speed = 74
-  def = 12
-  speDef = 12
+  def = 9
+  speDef = 9
   maxPP = 100
   range = 1
   skill = Ability.RISING_VOLTAGE
@@ -866,8 +870,8 @@ export class MegaBanette extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.GHOST, Synergy.ARTIFICIAL])
   rarity = Rarity.EPIC
   stars = 3
-  hp = 200
-  atk = 22
+  hp = 330
+  atk = 35
   speed = 46
   def = 6
   speDef = 8
@@ -920,8 +924,8 @@ export class MegaLucario extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.FIGHTING, Synergy.STEEL])
   rarity = Rarity.RARE
   stars = 3
-  hp = 170
-  atk = 25
+  hp = 320
+  atk = 33
   speed = 54
   def = 8
   speDef = 8
@@ -1080,8 +1084,8 @@ export class MegaAltaria extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.DRAGON, Synergy.FAIRY, Synergy.AMORPHOUS])
   rarity = Rarity.EPIC
   stars = 3
-  hp = 220
-  atk = 19
+  hp = 350
+  atk = 34
   speed = 51
   def = 8
   speDef = 8
@@ -1241,10 +1245,10 @@ export class MegaLopunny extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.NORMAL, Synergy.FIGHTING])
   rarity = Rarity.UNCOMMON
   stars = 3
-  hp = 200
-  atk = 20
+  hp = 270
+  atk = 28
   speed = 59
-  def = 10
+  def = 8
   speDef = 10
   maxPP = 80
   range = 1
@@ -1291,11 +1295,11 @@ export class MegaSteelix extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.ROCK, Synergy.GROUND, Synergy.STEEL])
   rarity = Rarity.EPIC
   stars = 3
-  hp = 300
-  atk = 13
+  hp = 350
+  atk = 28
   speed = 35
   def = 40
-  speDef = 12
+  speDef = 10
   maxPP = 100
   range = 1
   skill = Ability.IRON_TAIL
@@ -1341,11 +1345,11 @@ export class MegaCamerupt extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.FIRE, Synergy.GROUND])
   rarity = Rarity.EPIC
   stars = 3
-  hp = 240
-  atk = 22
+  hp = 360
+  atk = 30
   speed = 38
-  def = 22
-  speDef = 22
+  def = 14
+  speDef = 14
   maxPP = 120
   range = 1
   skill = Ability.ERUPTION
@@ -1404,11 +1408,11 @@ export class MegaMedicham extends Pokemon {
   ])
   rarity = Rarity.EPIC
   stars = 3
-  hp = 240
-  atk = 23
-  speed = 56
-  def = 16
-  speDef = 16
+  hp = 310
+  atk = 31
+  speed = 51
+  def = 12
+  speDef = 12
   maxPP = 100
   range = 3
   skill = Ability.MEDITATE
@@ -1823,11 +1827,11 @@ export class MegaGardevoir extends Pokemon {
   ])
   rarity = Rarity.COMMON
   stars = 4
-  hp = 190
-  atk = 18
-  speed = 55
-  def = 6
-  speDef = 8
+  hp = 330
+  atk = 31
+  speed = 51
+  def = 4
+  speDef = 5
   maxPP = 85
   range = 3
   skill = Ability.FUTURE_SIGHT
@@ -1865,11 +1869,11 @@ export class MegaGallade extends Pokemon {
   ])
   rarity = Rarity.COMMON
   stars = 4
-  hp = 190
-  atk = 22
-  speed = 55
-  def = 6
-  speDef = 8
+  hp = 330
+  atk = 35
+  speed = 51
+  def = 4
+  speDef = 5
   maxPP = 95
   range = 1
   skill = Ability.PSYCHO_CUT
@@ -2229,11 +2233,11 @@ export class MegaTyranitar extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.DARK, Synergy.MONSTER, Synergy.ROCK])
   rarity = Rarity.RARE
   stars = 4
-  hp = 230
-  atk = 32
+  hp = 360
+  atk = 41
   speed = 39
-  def = 14
-  speDef = 12
+  def = 12
+  speDef = 10
   maxPP = 90
   range = 1
   skill = Ability.BITE
@@ -2387,8 +2391,8 @@ export class MegaGengar extends Pokemon {
   ])
   rarity = Rarity.EPIC
   stars = 4
-  hp = 300
-  atk = 30
+  hp = 420
+  atk = 43
   speed = 60
   def = 8
   speDef = 10
@@ -2449,8 +2453,8 @@ export class MegaAlakazam extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.PSYCHIC, Synergy.HUMAN])
   rarity = Rarity.RARE
   stars = 4
-  hp = 230
-  atk = 19
+  hp = 380
+  atk = 34
   speed = 63
   def = 8
   speDef = 16
@@ -4911,11 +4915,11 @@ export class MegaSlowbro extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.PSYCHIC, Synergy.WATER, Synergy.ROCK])
   rarity = Rarity.UNCOMMON
   stars = 3
-  hp = 180
-  atk = 12
+  hp = 310
+  atk = 27
   speed = 35
-  def = 12
-  speDef = 8
+  def = 10
+  speDef = 6
   maxPP = 100
   range = 1
   skill = Ability.YAWN
@@ -5318,10 +5322,10 @@ export class MegaFeraligatr extends Pokemon {
   ])
   rarity = Rarity.RARE
   stars = 4
-  hp = 240
-  atk = 30
+  hp = 390
+  atk = 42
   speed = 50
-  def = 14
+  def = 10
   speDef = 10
   maxPP = 100
   range = 1
@@ -5920,10 +5924,10 @@ export class MegaCharizardX extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.DRAGON, Synergy.FIRE, Synergy.FLYING])
   rarity = Rarity.UNCOMMON
   stars = 4
-  hp = 260
-  atk = 20
+  hp = 390
+  atk = 33
   speed = 57
-  def = 10
+  def = 8
   speDef = 8
   maxPP = 100
   range = 1
@@ -6285,8 +6289,8 @@ export class MegaZeraora extends Pokemon {
   ])
   rarity = Rarity.UNIQUE
   stars = 4
-  hp = 240
-  atk = 18
+  hp = 370
+  atk = 31
   speed = 71
   def = 10
   speDef = 10
@@ -7157,8 +7161,8 @@ export class MegaDarkrai extends Pokemon {
   rarity = Rarity.LEGENDARY
   stars = 4
   evolution = Pkm.DARKRAI
-  hp = 250
-  atk = 27
+  hp = 400
+  atk = 37
   speed = 65
   def = 4
   speDef = 4
@@ -7626,10 +7630,10 @@ export class MegaMawile extends Pokemon {
   ])
   rarity = Rarity.UNIQUE
   stars = 4
-  hp = 220
-  atk = 23
-  speed = 41
-  def = 20
+  hp = 330
+  atk = 33
+  speed = 47
+  def = 12
   speDef = 6
   maxPP = 80
   range = 1
@@ -7913,8 +7917,8 @@ export class MegaAbsol extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.WILD, Synergy.DARK, Synergy.FAIRY])
   rarity = Rarity.UNIQUE
   stars = 4
-  hp = 200
-  atk = 19
+  hp = 350
+  atk = 34
   speed = 49
   def = 10
   speDef = 10
@@ -8018,8 +8022,8 @@ export class MegaLatias extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.DRAGON, Synergy.PSYCHIC])
   rarity = Rarity.UNIQUE
   stars = 4
-  hp = 120
-  atk = 14
+  hp = 270
+  atk = 27
   speed = 60
   def = 4
   speDef = 4
@@ -8033,8 +8037,8 @@ export class MegaLatios extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.DRAGON, Synergy.PSYCHIC])
   rarity = Rarity.UNIQUE
   stars = 4
-  hp = 120
-  atk = 14
+  hp = 270
+  atk = 27
   speed = 60
   def = 4
   speDef = 4
@@ -8112,10 +8116,7 @@ export class Mewtwo extends Pokemon {
   ])
   rarity = Rarity.LEGENDARY
   evolution = Pkm.MEGA_MEWTWO_Y
-  evolutionRule = {
-    type: EvolutionRuleType.ITEM,
-    itemsTriggeringEvolution: [Item.MEWTWONITE_Y]
-  } as ItemEvolutionRule
+  evolutionRule = { type: EvolutionRuleType.STACK } as const
   stacksRequired = 20
   stars = 3
   hp = 200
@@ -8137,18 +8138,14 @@ export class MegaMewtwoY extends Pokemon {
   ])
   rarity = Rarity.LEGENDARY
   stars = 4
-  hp = 220
-  atk = 27
+  hp = 350
+  atk = 40
   speed = 67
   def = 10
   speDef = 10
   maxPP = 100
   range = 3
   skill = Ability.PSYCHIC_INFINITY
-  onAcquired(player: Player): void {
-    removeInArray(player.items, Item.MEWTWONITE_Y)
-    this.items.delete(Item.MEWTWONITE_Y)
-  }
 }
 
 export class ShadowMewtwo extends Pokemon {
@@ -8619,8 +8616,8 @@ export class MegaDrampa extends Pokemon {
   ])
   rarity = Rarity.UNIQUE
   stars = 4
-  hp = 250
-  atk = 12
+  hp = 400
+  atk = 27
   speed = 37
   def =  6
   speDef = 6
@@ -8824,8 +8821,8 @@ export class MegaDiancie extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.ROCK, Synergy.FAIRY, Synergy.FOSSIL])
   rarity = Rarity.LEGENDARY
   stars = 4
-  hp = 250
-  atk = 25
+  hp = 350
+  atk = 35
   speed = 41
   def = 30
   speDef = 30
@@ -9469,11 +9466,11 @@ export class MegaAerodactyl extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.ROCK, Synergy.FLYING, Synergy.FOSSIL])
   rarity = Rarity.UNIQUE
   stars = 4
-  hp = 220
-  atk = 14
+  hp = 350
+  atk = 29
   speed = 67
   def = 6
-  speDef = 8
+  speDef = 6
   maxPP = 100
   range = 1
   skill = Ability.ROCK_SLIDE
@@ -9940,9 +9937,9 @@ export class MegaHoundoom extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.FIRE, Synergy.DARK, Synergy.FIELD])
   rarity = Rarity.EPIC
   stars = 3
-  hp = 180
-  atk = 20
-  speed = 57
+  hp = 310
+  atk = 35
+  speed = 55
   def = 10
   speDef = 14
   maxPP = 140
@@ -13870,11 +13867,11 @@ export class MegaSableye extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.DARK, Synergy.GHOST, Synergy.ROCK])
   rarity = Rarity.UNIQUE
   stars = 4
-  hp = 220
-  atk = 9
-  speed = 31
-  def = 20 
-  speDef = 16
+  hp = 350
+  atk = 24
+  speed = 41
+  def = 8
+  speDef = 8
   maxPP = 100
   range = 1
   skill = Ability.KNOCK_OFF
@@ -17925,10 +17922,10 @@ export class MegaSkarmory extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.STEEL, Synergy.FLYING])
   rarity = Rarity.UNIQUE
   stars = 4
-  hp = 200
-  atk = 24
+  hp = 350
+  atk = 35
   speed = 47
-  def = 12
+  def = 16
   speDef = 8
   maxPP = 80
   range = 1
@@ -18517,8 +18514,8 @@ export class MegaZygarde extends Pokemon {
   ])
   rarity = Rarity.LEGENDARY
   stars = 4
-  hp = 350
-  atk = 28
+  hp = 500
+  atk = 41
   speed = 50
   def = 10
   speDef = 10
@@ -18998,8 +18995,8 @@ export class MegaDragalge extends Pokemon {
   ])
   rarity = Rarity.UNCOMMON
   stars = 3
-  hp = 150
-  atk = 17
+  hp = 280
+  atk = 30
   speed = 39
   def = 4
   speDef = 4
@@ -19713,8 +19710,8 @@ export class MegaEelektross extends Pokemon {
   ])
   rarity = Rarity.UNCOMMON
   stars = 4
-  hp = 250
-  atk = 24
+  hp = 400
+  atk = 39
   speed = 41
   def = 12
   speDef = 12
@@ -20531,10 +20528,10 @@ export class MegaExcadrill extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.GROUND, Synergy.STEEL])
   rarity = Rarity.RARE
   stars = 3
-  hp = 220
-  atk = 25
+  hp = 330
+  atk = 34
   speed = 56
-  def = 12
+  def = 8
   speDef = 8
   maxPP = 100
   range = 1

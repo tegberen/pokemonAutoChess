@@ -263,7 +263,7 @@ function giftPokemonOfRarityAndStars(
   const candidates = PRECOMPUTED_POKEMONS_PER_RARITY[rarity].filter(
     (pkm: Pkm) =>
       getPokemonData(pkm).stars === stars &&
-      !isMegaEvolutionLocked(pkm, player.specialGameRule)
+      !isMegaEvolutionLocked(pkm)
   )
   if (candidates.length === 0) return false
 
@@ -285,7 +285,7 @@ function giftLegendaryMatchingTopSynergy(player: Player): boolean {
   const [topSynergy] = player.synergies.getTopSynergies(1)
   const legendaries = PRECOMPUTED_POKEMONS_PER_RARITY[
     Rarity.LEGENDARY
-  ].filter((pkm) => !isMegaEvolutionLocked(pkm, player.specialGameRule))
+  ].filter((pkm) => !isMegaEvolutionLocked(pkm))
   const matching = legendaries.filter((pkm: Pkm) =>
     getPokemonData(pkm).types.includes(topSynergy)
   )
@@ -1078,7 +1078,7 @@ export function returnHoneyExplorers(
       }
       giftPokemonIfBenchHasRoom(player, friend, 0, (pokemon) => {
         pokemon.honeyExplorationFriend = true
-        pokemon.honeyExplorationGift = true
+        pokemon.sellsForFree = true
         pokemon.types.add(Synergy.WILD)
       })
     }
@@ -1825,7 +1825,7 @@ function giftRandomUniques(player: Player, amount: number): boolean {
   const candidates = PRECOMPUTED_POKEMONS_PER_RARITY[Rarity.UNIQUE].filter(
     (pkm) =>
       PkmFamily[pkm] !== Pkm.COSMOG &&
-      !isMegaEvolutionLocked(pkm, player.specialGameRule)
+      !isMegaEvolutionLocked(pkm)
   )
   pickNRandomIn(candidates, amount).forEach((pkm: Pkm) =>
     giftPokemonIfBenchHasRoom(player, pkm)

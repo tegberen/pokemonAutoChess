@@ -114,6 +114,7 @@ import type GameScene from "../scenes/game-scene"
 import { displayBoost } from "./abilities-animations"
 import { BerryTree } from "./berry-tree"
 import { GameDialog } from "./game-dialog"
+import { lookOf, type OriginalLook } from "./mega-evolution-animation"
 import PokemonSprite, { getAwakeningSegments } from "./pokemon"
 import PokemonAvatar from "./pokemon-avatar"
 import PokemonSpecial from "./pokemon-special"
@@ -148,6 +149,8 @@ const GUIDE_MESSAGE_AREA = {
   bottom: 830
 }
 
+type RemovedLook = OriginalLook & { name: Pkm; at: number }
+
 export default class BoardManager {
   pokemons: Map<string, PokemonSprite>
   uid: string
@@ -158,6 +161,10 @@ export default class BoardManager {
   mode: BoardMode
   animationManager: AnimationManager
   shatteredIds = new Set<string>()
+  // a form change removes the old sprite right before adding the new one, so
+  // its look is kept per cell for the Mega animation to fade it out; a duo
+  // swaps two cells in the same patch
+  removedLooks = new Map<string, RemovedLook>()
   playerAvatar: PokemonAvatar | null
   opponentAvatar: PokemonAvatar | null
   scoutingAvatars: PokemonAvatar[] = []
@@ -412,9 +419,22 @@ export default class BoardManager {
   removePokemon(pokemonToRemove: IPokemon) {
     const pokemonUI = this.pokemons.get(pokemonToRemove.id)
     if (pokemonUI) {
+      const { positionX: x, positionY: y } = pokemonToRemove
+      this.removedLooks.set(`${x},${y}`, {
+        ...lookOf(pokemonUI.sprite),
+        name: pokemonToRemove.name,
+        at: this.scene.time.now
+      })
       pokemonUI.destroy()
     }
     this.pokemons.delete(pokemonToRemove.id)
+  }
+
+  takeRemovedLook(x: number, y: number): RemovedLook | null {
+    const look = this.removedLooks.get(`${x},${y}`)
+    this.removedLooks.delete(`${x},${y}`)
+    if (!look || this.scene.time.now - look.at > 500) return null
+    return look
   }
 
   clearBoard() {
@@ -2133,6 +2153,10 @@ export default class BoardManager {
 
         case "ignitionCooldown":
           pokemonSprite.setIgnitionCooldown(value as number)
+          break
+
+        case "megaCooldown":
+          pokemonSprite.setMegaCooldown(value as number)
           break
 
         case "awakeningCharge":

@@ -52,8 +52,7 @@ export function FossilRestorationList(props: { restoredPokemon?: Pkm | "" }) {
           <span className="fossil-restoration-effect">
             {isMegaStackPassiveHidden(
               getPokemonData(pokemon).passive,
-              getPokemonData(pokemon).evolution,
-              null
+              getPokemonData(pokemon).evolution
             )
               ? null
               : addIconsToDescription(

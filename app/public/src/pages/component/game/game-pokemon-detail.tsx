@@ -23,14 +23,12 @@ import { Passive } from "../../../../../types/enum/Passive"
 import { Pkm, PkmIndex } from "../../../../../types/enum/Pokemon"
 import {
   isMegaEvolutionLocked,
-  isMegaStackPassiveHidden,
-  SpecialGameRule
+  isMegaStackPassiveHidden
 } from "../../../../../types/enum/SpecialGameRule"
 import { Synergy } from "../../../../../types/enum/Synergy"
 import { getPortraitSrc } from "../../../../../utils/avatar"
 import { roundToNDigits } from "../../../../../utils/number"
 import { schemaValues } from "../../../../../utils/schemas"
-import store from "../../../stores"
 import { addIconsToDescription } from "../../utils/descriptions"
 import { cc } from "../../utils/jsx"
 import { AbilityTooltip } from "../ability/ability-tooltip"
@@ -256,10 +254,7 @@ export function GamePokemonDetail(props: {
   const stars =
     pokemon.stars + (pokemon.items.has(Item.STAR_PIECE) && !isInFight ? 1 : 0)
   const pokemonData = getPokemonData(pokemon.name)
-  const showsMegaStage =
-    isMegaEvolutionLocked(pokemon.name, null) ||
-    store.getState().game.specialGameRule === SpecialGameRule.MEGA_EVOLUTION
-  const stages = showsMegaStage
+  const stages = isMegaEvolutionLocked(pokemon.name)
     ? pokemonData.stages
     : pokemonData.stagesWithoutLockedMegas
 
@@ -366,8 +361,7 @@ export function GamePokemonDetail(props: {
       {pokemon.passive !== Passive.NONE &&
         !isMegaStackPassiveHidden(
           pokemon.passive,
-          getPokemonData(pokemon.name).evolution,
-          store.getState().game.specialGameRule
+          getPokemonData(pokemon.name).evolution
         ) && (
         <div className="game-pokemon-detail-passive">
           <p>
@@ -386,8 +380,7 @@ export function GamePokemonDetail(props: {
           </p>
           {pokemon.stacksRequired > 0 &&
             !isMegaEvolutionLocked(
-              getPokemonData(pokemon.name).evolution ?? Pkm.DEFAULT,
-              store.getState().game.specialGameRule
+              getPokemonData(pokemon.name).evolution ?? Pkm.DEFAULT
             ) && (
             <div className="game-pokemon-detail-passive-bar">
               <GameTooltipBar
@@ -405,8 +398,7 @@ export function GamePokemonDetail(props: {
       {pokemon.passive2 !== Passive.NONE &&
         !isMegaStackPassiveHidden(
           pokemon.passive2,
-          getPokemonData(pokemon.name).evolution,
-          store.getState().game.specialGameRule
+          getPokemonData(pokemon.name).evolution
         ) && (
         <div className="game-pokemon-detail-passive">
           <p>

@@ -820,8 +820,13 @@ export default class MinigameManager {
         specialGameRule === SpecialGameRule.TOWN_FESTIVAL
           ? 0
           : TownEncounterSellPrice[encounter]
+      const descriptionKey =
+        encounter === TownEncounters.CHIMECHO &&
+        specialGameRule === SpecialGameRule.MEGA_EVOLUTION
+          ? "CHIMECHO_MEGA_EVOLUTION"
+          : encounter
       this.showEncounterDescription(
-        t(`town_encounter_description.${encounter}`, { cost }) +
+        t(`town_encounter_description.${descriptionKey}`, { cost }) +
           (isShop && hasFreeCoupon
             ? ` — ${t("blessing.FREE_COUPON.name")}: ${t("free_of_charge")}`
             : "")

@@ -174,8 +174,7 @@ export default function WikiPokemonDetail(props: {
         {pokemonData.passive !== Passive.NONE &&
           !isMegaStackPassiveHidden(
             pokemonData.passive,
-            pokemonData.evolution,
-            null
+            pokemonData.evolution
           ) && (
           <>
             <dt>{t("wiki.pokemons.passive")}</dt>
@@ -191,8 +190,7 @@ export default function WikiPokemonDetail(props: {
         {pokemonData.passive2 !== Passive.NONE &&
           !isMegaStackPassiveHidden(
             pokemonData.passive2,
-            pokemonData.evolution,
-            null
+            pokemonData.evolution
           ) && (
           <>
             <dt>{t("wiki.pokemons.passive")}</dt>

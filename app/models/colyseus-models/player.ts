@@ -317,6 +317,9 @@ export default class Player extends Schema implements IPlayer {
   crystalClustersRocksGranted = false
   // server-only: FAST_FOOD_DELIVERY dishes and the rounds left before they rot
   fastFoodDishes: { dish: Item; roundsLeft: number }[] = []
+  // server-only: MEGA_EVOLUTION Megas reverting after the fight (two for a
+  // duo); while any is set, the Key Stone cannot be used again
+  activeMegas: { id: string; preMega: Pkm }[] = []
   // server-only: Swadloons that just turned GHOST, emoted on the next tick
   ghostSwadloonIdsToEmote: string[] = []
   hasLeftGame: boolean = false
@@ -782,6 +785,7 @@ export default class Player extends Schema implements IPlayer {
     })
     newPokemon.dishes = pokemon.dishes
     newPokemon.festivePicnicDish = pokemon.festivePicnicDish
+    newPokemon.sellsForFree = pokemon.sellsForFree
     newPokemon.positionX = pokemon.positionX
     newPokemon.positionY = pokemon.positionY
     this.board.delete(pokemon.id)

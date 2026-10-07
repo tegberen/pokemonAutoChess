@@ -75,7 +75,7 @@ export const EvolutionManager = {
     player: Player,
     ...additionalArgs: unknown[]
   ): void | Pokemon {
-    if (isMegaEvolutionLocked(pokemon.evolution, player.specialGameRule)) return
+    if (isMegaEvolutionLocked(pokemon.evolution)) return
     const handler = this.getHandler(pokemon.evolutionRule)
     if (handler.canEvolve(pokemon, player, ...additionalArgs)) {
       const pokemonEvolved = this.evolve(pokemon, player, ...additionalArgs)
@@ -88,7 +88,7 @@ export const EvolutionManager = {
     player: Player,
     ...additionalArgs: unknown[]
   ): Pokemon {
-    if (isMegaEvolutionLocked(pokemon.evolution, player.specialGameRule)) {
+    if (isMegaEvolutionLocked(pokemon.evolution)) {
       return pokemon
     }
     // counted here rather than in tryEvolve so every rule type is included
@@ -247,7 +247,7 @@ export const EvolutionManager = {
     player: Player,
     ...additionalArgs: unknown[]
   ): boolean {
-    if (isMegaEvolutionLocked(pokemon.evolution, player.specialGameRule)) {
+    if (isMegaEvolutionLocked(pokemon.evolution)) {
       return false
     }
     const handler = this.getHandler(pokemon.evolutionRule)

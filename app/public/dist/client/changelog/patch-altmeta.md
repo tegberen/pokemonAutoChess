@@ -559,11 +559,14 @@ Every balance change on this server, newest first.
 - Missions | Quest: Evolve, Destroy, Level Up, Diversify and Prosper are renamed to Mission
 
 **Game Mode**
-- Mega Evolution {{new}} | new Scribble: {{scribble:MEGA_EVOLUTION}}
+- Mega Evolution {{new}} | new Scribble: {{scribble:MEGA_EVOLUTION}} [Mega Evolutions in the Wiki](#wiki/mega-evolutions)
 - Mega Pokémon | removed from the base game
+- Mega Pokémon | base stats now match the form before them, plus 150 HP and 15 ATK
+- Mega Zygarde | based on Zygarde 100%: HP 385 → 500, ATK 39 → 41
+- Mewtwonite Y | removed: Mewtwo Mega Evolves with the KEY_STONE like every other Mega
 - Misfits {{new}} | new Scribble: {{scribble:MISFITS}}
 - Quest Board {{new}} | new Scribble: {{scribble:QUEST_BOARD}}
-- Shiniest Hunter | removed
+- Shiniest Hunter | removed, replaced by the Quest Board Scribble
 
 **Titles**
 - Shiny {{new}} | complete all 12 Prismatic Quests in a single game

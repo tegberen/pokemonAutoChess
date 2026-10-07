@@ -28,6 +28,7 @@ export const SOUNDS = {
   ITS_GOING_DOWN: "its_going_down_song.ogg",
   JOIN_ROOM: "joinroom.ogg",
   LEAVE_ROOM: "leaveroom.ogg",
+  MEGA_EVOLUTION: "mega_evolution.mp3",
   REFRESH: "refresh.ogg",
   SELL_UNIT: "sell_unit_sound.ogg",
   SET_READY: "setready.ogg",

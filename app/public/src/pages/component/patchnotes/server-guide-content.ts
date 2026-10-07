@@ -412,6 +412,7 @@ export function formatPatchLog(html: string, wishes: PatchLogWish[]) {
     table.className = "guide-patchlog-table"
     const body = table.createTBody()
     let isAfterPrismaticQuest = false
+    let isAfterNewGameMode = false
     for (const item of Array.from(element.children)) {
       const row = body.insertRow()
       const walker = document.createTreeWalker(item, NodeFilter.SHOW_TEXT)
@@ -480,6 +481,13 @@ export function formatPatchLog(html: string, wishes: PatchLogWish[]) {
         if (subjectText.startsWith("Prismatic Quest")) {
           isAfterPrismaticQuest = true
         } else if (isAfterPrismaticQuest && subjectText.startsWith("Quest:")) {
+          subject.classList.add("guide-patchlog-subrow")
+        }
+      } else if (category === "Game Mode") {
+        // rows without the NEW tag below a new Scribble are its follow-ups
+        if (subject.querySelector(".guide-new-tag")) {
+          isAfterNewGameMode = true
+        } else if (isAfterNewGameMode) {
           subject.classList.add("guide-patchlog-subrow")
         }
       }

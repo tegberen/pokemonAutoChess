@@ -9,6 +9,7 @@ import {
   useAppSelector
 } from "../../../hooks"
 import { levelClick, skipStage } from "../../../network"
+import { getGameScene } from "../../game"
 import { playSound, SOUNDS } from "../../utils/audio"
 import { addIconsToDescription } from "../../utils/descriptions"
 import { useGuideActionAllowed } from "../guide/use-guide-action"
@@ -64,6 +65,20 @@ export default function GameExperience() {
           onClick={() => skipStage()}
         >
           SKIP
+        </button>
+      )}
+      {process.env.MODE === "dev" && (
+        <button
+          className="bubbly orange mega-test-button"
+          title="Play the Mega Evolution animation on your board (dev only)"
+          onClick={() => {
+            playSound(SOUNDS.MEGA_EVOLUTION)
+            getGameScene()?.board?.pokemons.forEach((pokemonSprite) =>
+              pokemonSprite.megaEvolutionAnimation()
+            )
+          }}
+        >
+          MEGA
         </button>
       )}
       <button

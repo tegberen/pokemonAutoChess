@@ -199,6 +199,15 @@
   white-space: nowrap;
 }
 
+.game-experience .mega-test-button.bubbly {
+  position: absolute;
+  right: calc(100% + 6px);
+  bottom: calc(100% + 6px);
+  font-size: 1em;
+  padding: 0.25em 0.5em;
+  white-space: nowrap;
+}
+
 .game-experience > span {
   color: var(--color-fg-primary);
 }

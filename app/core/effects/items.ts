@@ -17,7 +17,12 @@ import {
 import { isCrystalGuardian } from "../crystal-guardian"
 import { DungeonPMDO } from "../../types/enum/Dungeon"
 import { EffectEnum } from "../../types/enum/Effect"
-import { AttackType, PokemonActionState, Team } from "../../types/enum/Game"
+import {
+  AttackType,
+  GamePhaseState,
+  PokemonActionState,
+  Team
+} from "../../types/enum/Game"
 import {
   AbilityPerTM,
   CraftableItemsNoScarves,
@@ -120,6 +125,10 @@ import { AbilityStrategies } from "../abilities/abilities"
 import { Board, Cell, effectInOrientation } from "../board"
 import { EvolutionManager } from "../evolution-logic/evolution-manager"
 import { FlowerPotMons } from "../flower-pots"
+import {
+  canMegaEvolveWithKeyStone,
+  megaEvolveWithKeyStone
+} from "../mega-evolution"
 import type { PokemonEntity } from "../pokemon-entity"
 import { DelayedCommand } from "../simulation-command"
 import {
@@ -2028,13 +2037,14 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
       return false
     })
   ],
-  [Item.MEWTWONITE_Y]: [
-    new OnItemDroppedEffect(({ pokemon, player }) => {
+  [Item.KEY_STONE]: [
+    new OnItemDroppedEffect(({ pokemon, player, room, item }) => {
       if (
-        pokemon?.name === Pkm.MEWTWO &&
-        !isMegaEvolutionLocked(Pkm.MEGA_MEWTWO_Y, player.specialGameRule)
+        room.state.phase === GamePhaseState.PICK &&
+        canMegaEvolveWithKeyStone(player, pokemon)
       ) {
-        player.transformPokemon(pokemon, Pkm.MEGA_MEWTWO_Y)
+        removeInArray(player.items, item)
+        megaEvolveWithKeyStone(player, pokemon)
       }
       return false
     })
@@ -2278,7 +2288,7 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
       if (
         !evolution ||
         evolution === Pkm.DEFAULT ||
-        isMegaEvolutionLocked(evolution, player.specialGameRule) ||
+        isMegaEvolutionLocked(evolution) ||
         pokemon.items.has(Item.EVIOLITE) ||
         pokemon.items.size >= 3
       ) {

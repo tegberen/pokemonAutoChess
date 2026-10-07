@@ -1704,7 +1704,7 @@ export default class Simulation extends Schema implements ISimulation {
           const sharedTypes = [...pokemon.types]
           const candidates = sharedTypes
             .flatMap((type) => PRECOMPUTED_POKEMONS_PER_TYPE[type] ?? [])
-            .filter((p) => !isMegaEvolutionLocked(p, player?.specialGameRule))
+            .filter((p) => !isMegaEvolutionLocked(p))
             .map((p) => getPokemonData(p))
             .filter((p, i, arr) => arr.findIndex((x) => x.name === p.name) === i)
           const spawns: IPokemonData[] = []

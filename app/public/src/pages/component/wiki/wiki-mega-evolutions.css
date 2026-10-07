@@ -11,34 +11,41 @@
   margin: 0;
 }
 
-.wiki-mega-evolutions table {
-  width: 100%;
-  background-color: var(--color-bg-secondary);
+.wiki-mega-evolutions-group {
+  display: grid;
+  grid-template-columns: 6em 1fr;
+  align-items: center;
+  gap: 0.75em;
 }
 
-.wiki-mega-evolutions thead {
-  border-bottom: 2px solid currentColor;
+.wiki-mega-evolutions-group h3 {
+  margin: 0;
+  font-size: 1em;
+  color: var(--color-fg-secondary);
 }
 
-.wiki-mega-evolutions th,
-.wiki-mega-evolutions td {
-  padding: 0.45em 0.75em;
-  font-weight: normal;
-  line-height: 1.4;
-  text-align: left;
+.wiki-mega-evolutions-cooldown {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3em;
+  font-size: 1.2em;
 }
 
-.wiki-mega-evolutions thead th {
-  font-weight: bold;
-}
-
-.wiki-mega-evolutions tbody tr:nth-child(odd) {
-  background-color: var(--color-bg-primary);
+.wiki-mega-evolutions-group ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5em;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
 .wiki-mega-evolutions-pair {
-  display: inline-flex;
+  display: flex;
   align-items: center;
-  gap: 0.4em;
-  white-space: nowrap;
+  gap: 0.25em;
+  padding: 0.25em 0.4em;
+  border: var(--border-thin);
+  border-radius: 8px;
+  background-color: var(--color-bg-primary);
 }

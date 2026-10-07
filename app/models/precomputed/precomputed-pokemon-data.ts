@@ -25,7 +25,7 @@ precomputedPokemons.forEach((pokemon) => {
   if (highest === undefined || pokemon.stars > highest) {
     maxStarsByFamily.set(family, pokemon.stars)
   }
-  if (isMegaEvolutionLocked(pokemon.name, null)) return
+  if (isMegaEvolutionLocked(pokemon.name)) return
   const highestNonMega = maxStarsByFamilyWithoutLockedMegas.get(family)
   if (highestNonMega === undefined || pokemon.stars > highestNonMega) {
     maxStarsByFamilyWithoutLockedMegas.set(family, pokemon.stars)

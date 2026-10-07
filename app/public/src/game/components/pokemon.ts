@@ -69,6 +69,10 @@ import type { GameDialog } from "./game-dialog"
 import ItemsContainer from "./items-container"
 import Lifebar from "./life-bar"
 import {
+  type OriginalLook,
+  playMegaEvolutionAnimation
+} from "./mega-evolution-animation"
+import {
   DEFAULT_POKEMON_ANIMATION_CONFIG,
   PokemonAnimations
 } from "./pokemon-animations"
@@ -88,6 +92,8 @@ const IGNITION_COOLDOWN_ICON_SCALE = 0.42
 const IGNITION_COOLDOWN_BADGE_X = 0
 const IGNITION_COOLDOWN_BADGE_GAP = 6
 const IGNITION_COOLDOWN_ICON_TEXT_GAP = 2
+const MEGA_COOLDOWN_ICON_SCALE = 0.26
+const MEGA_COOLDOWN_BADGE_STACK_GAP = 24
 const IGNITE_FLAME_SIZE = 5
 const IGNITE_FLAME_GROUND_Y = 10 + IGNITE_FLAME_SIZE * 8
 const IGNITE_FLAME_X_OFFSET = 3
@@ -225,6 +231,7 @@ export default class PokemonSprite extends DraggableObject {
   criticalPathMark: GameObjects.Image | undefined
   stoneSaddleRider: GameObjects.Sprite | undefined
   ignitionCooldownBadge: GameObjects.Container | undefined
+  megaCooldownBadge: GameObjects.Container | undefined
   awakeningGlow: Phaser.Filters.Glow | undefined
   awakeningGlowTween: Phaser.Tweens.Tween | undefined
   awakeningCrystal: GameObjects.Sprite | undefined
@@ -410,6 +417,9 @@ export default class PokemonSprite extends DraggableObject {
       }
       if (!isEntity(pokemon) && pokemon.ignitionCooldown > 0) {
         this.setIgnitionCooldown(pokemon.ignitionCooldown)
+      }
+      if (!isEntity(pokemon) && pokemon.megaCooldown > 0) {
+        this.setMegaCooldown(pokemon.megaCooldown)
       }
       if (
         !isEntity(pokemon) &&
@@ -909,6 +919,10 @@ export default class PokemonSprite extends DraggableObject {
   evolutionAnimation() {
     this.displayAnimation("EVOLUTION")
     this.emoteAnimation()
+  }
+
+  megaEvolutionAnimation(originalLook?: OriginalLook | null) {
+    playMegaEvolutionAnimation(this, originalLook)
   }
 
   spawnAnimation() {
@@ -2529,18 +2543,58 @@ export default class PokemonSprite extends DraggableObject {
   setIgnitionCooldown(roundsLeft: number) {
     this.removeIgnitionCooldownBadge()
     if (roundsLeft <= 0) return
-    // both are white, so the counter sits beside the flame and never over it
-    const icon = new GameObjects.Image(
-      this.scene,
-      0,
-      0,
-      "ignition-cooldown"
-    ).setScale(IGNITION_COOLDOWN_ICON_SCALE)
+    this.ignitionCooldownBadge = this.createCooldownBadge(
+      new GameObjects.Image(this.scene, 0, 0, "ignition-cooldown").setScale(
+        IGNITION_COOLDOWN_ICON_SCALE
+      ),
+      roundsLeft
+    )
+    this.placeMegaCooldownBadge()
+  }
+
+  removeIgnitionCooldownBadge() {
+    if (this.ignitionCooldownBadge) {
+      this.remove(this.ignitionCooldownBadge, true)
+      this.ignitionCooldownBadge = undefined
+    }
+    this.placeMegaCooldownBadge()
+  }
+
+  setMegaCooldown(fightsLeft: number) {
+    if (this.megaCooldownBadge) {
+      this.remove(this.megaCooldownBadge, true)
+      this.megaCooldownBadge = undefined
+    }
+    if (fightsLeft <= 0) return
+    this.megaCooldownBadge = this.createCooldownBadge(
+      new GameObjects.Image(
+        this.scene,
+        0,
+        0,
+        "item",
+        `${Item.KEY_STONE}.png`
+      ).setScale(MEGA_COOLDOWN_ICON_SCALE),
+      fightsLeft
+    )
+    this.placeMegaCooldownBadge()
+  }
+
+  // stacked above the ignition badge when a FIRE pre-Mega waits on both
+  placeMegaCooldownBadge() {
+    if (!this.megaCooldownBadge) return
+    this.megaCooldownBadge.y =
+      -this.sprite.displayHeight / 2 -
+      IGNITION_COOLDOWN_BADGE_GAP -
+      (this.ignitionCooldownBadge ? MEGA_COOLDOWN_BADGE_STACK_GAP : 0)
+  }
+
+  createCooldownBadge(icon: GameObjects.Image, count: number) {
+    // both are white, so the counter sits beside the icon and never over it
     const counter = new GameObjects.Text(
       this.scene,
       0,
       0,
-      roundsLeft.toString(),
+      count.toString(),
       {
         fontSize: "16px",
         fontFamily: "Jost",
@@ -2550,26 +2604,20 @@ export default class PokemonSprite extends DraggableObject {
         stroke: "#000000"
       }
     ).setOrigin(0.5)
-    /* the flame is far wider than the digit, so both are laid out from the
-       measured widths to keep the pair centered above the unit */
+    // the icon is far wider than the digit, so both are laid out from the
+    // measured widths to keep the pair centered above the unit
     const badgeWidth =
       icon.displayWidth + IGNITION_COOLDOWN_ICON_TEXT_GAP + counter.width
     icon.x = -badgeWidth / 2 + icon.displayWidth / 2
     counter.x = badgeWidth / 2 - counter.width / 2
-    this.ignitionCooldownBadge = new GameObjects.Container(
+    const badge = new GameObjects.Container(
       this.scene,
       IGNITION_COOLDOWN_BADGE_X,
       -this.sprite.displayHeight / 2 - IGNITION_COOLDOWN_BADGE_GAP,
       [icon, counter]
     ).setDepth(DEPTH.POKEMON + 1)
-    this.add(this.ignitionCooldownBadge)
-  }
-
-  removeIgnitionCooldownBadge() {
-    if (this.ignitionCooldownBadge) {
-      this.remove(this.ignitionCooldownBadge, true)
-      this.ignitionCooldownBadge = undefined
-    }
+    this.add(badge)
+    return badge
   }
 
   removeBlessedHeroMark() {

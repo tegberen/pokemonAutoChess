@@ -3059,7 +3059,7 @@
 		"BRONZE_DOJO_TICKET": "Bronze Dojo Ticket",
 		"SILVER_DOJO_TICKET": "Silver Dojo Ticket",
 		"GOLD_DOJO_TICKET": "Gold Dojo Ticket",
-		"MEWTWONITE_Y": "Mewtwonite Y",
+		"KEY_STONE": "Key Stone",
 		"MEMORY_DISCS": "Memory Discs",
 		"FIRE_MEMORY": "Fire Memory",
 		"FOSSIL_MEMORY": "Fossil Memory",
@@ -3480,7 +3480,7 @@
 		"BRONZE_DOJO_TICKET": "Use it on a Pokémon to send them to the Dojo for 3 stages, returning with +50 max HP, +5 ATK and +15 AP. A substitute takes their place in the meantime.",
 		"SILVER_DOJO_TICKET": "Use it on a Pokémon to send them to the Dojo for 3 stages, returning with +100 max HP, +10 ATK and +30 AP. A substitute takes their place in the meantime.",
 		"GOLD_DOJO_TICKET": "Use it on a Pokémon to send them to the Dojo for 3 stages, returning with +150 max HP, +15 ATK and +45 AP. A substitute takes their place in the meantime.",
-		"MEWTWONITE_Y": "A mysterious stone that can be used to mega evolve Mewtwo.",
+		"KEY_STONE": "Once per fight, Mega Evolve one Pokemon. It gains 150 HP and 15 ATK, then is on cooldown for 3 to 10 fights, depending on its rarity and stars.",
 		"MEMORY_DISCS": "Can be equipped on $t(pkm.SILVALLY) to get a previously used type.",
 		"FIRE_MEMORY": "Can be equipped on $t(pkm.SILVALLY) to get FIRE type.",
 		"FOSSIL_MEMORY": "Can be equipped on $t(pkm.SILVALLY) to get FOSSIL type.",
@@ -3623,7 +3623,7 @@
 		"DISTORTION": "Change weather to DISTORTION",
 		"METEOR_SHOWER": "Change weather to METEOR_SHOWER",
 		"BLOODMOON": "Change weather to BLOODMOON",
-		"MEWTWO": "Gain 1 stack for each KO, 2 stacks if the user has more AP than the target. Receive MEWTWONITE_Y when fully stacked. Can be used to Mega Evolve.",
+		"MEWTWO": "Gain 1 stack for each KO, 2 stacks if the user has more AP than the target.",
 		"KYUREM": "Obtain the DNA_SPLICER after defeating the legendary birds",
 		"LANDORUS": "Change weather to SANDSTORM or WINDY based on your dominant synergy between GROUND and FLYING",
 		"THUNDURUS": "Change weather to STORM or WINDY based on your dominant synergy between ELECTRIC and FLYING",
@@ -7467,9 +7467,9 @@
 		"SIX_PACK": "Pokémon can hold up to 6 items instead of 3. More items and components can be found throughout the game.",
 		"EVOLUTION_LAB": "Welcome to the Evolution Lab! Every Pokémon can be found here, but the lab follows its own rules...",
 		"BAZAAR": "The Bazaar visits the town!",
-		"QUEST_BOARD": "Everyone starts with the Quest Panel and can claim every reward from the quests they complete.",
+		"QUEST_BOARD": "The Explorers Guild is here! Everyone gets a Quest Panel and keeps every reward they earn.",
 		"MISFITS": "At the start of each fight, units with no active synergy gain a very strong bonus, scaling with each STAR. Gain a surprise haul of {{gold}} GOLD.",
-		"MEGA_EVOLUTION": "Pokémon can Mega Evolve."
+		"MEGA_EVOLUTION": "Start with a KEY_STONE. The first carousel offers Pokemon that can Mega Evolve."
 	},
 	"scribble_shape": {
 		"WALL": "Wall",
@@ -7544,6 +7544,7 @@
 		"KINGAMBIT": "Kingambit has given the player in first place the LEADERS_CREST. Beat them in battle to earn extra GOLD!",
 		"LAPRAS": "Lapras offers a ride to go to a different region.",
 		"CHIMECHO": "Chimecho recruits a Pokemon onto every carousel item, now and for the rest of the game",
+		"CHIMECHO_MEGA_EVOLUTION": "Chimecho recruits a Pokemon that can Mega Evolve onto every carousel item",
 		"LUDICOLO": "Ludicolo grants a melodic treasure to every player",
 		"BIDOOF": "Both Wish selections are Prismatic."
 	},
@@ -7564,12 +7565,8 @@
 		"title": "Wiki",
 		"mega": {
 			"title": "Mega Evolutions",
-			"intro": "Mega Evolutions only happen in the Mega Evolution Scribble. Rayquaza is the exception and Mega Evolves in every game.",
-			"pokemon": "Pokémon",
-			"condition": "Condition",
-			"conditions": {
-				"RAYQUAZA": "Mega evolves when holding a GREEN_ORB."
-			}
+			"intro": "Only in the Mega Evolution Scribble. Once per fight, use the KEY_STONE on a Pokemon below: it Mega Evolves for that fight with 150 HP and 15 ATK more, then is on cooldown until it can Mega Evolve again.",
+			"cooldown": "{{count}} fights"
 		},
 		"fairy": {
 			"title": "Wands",

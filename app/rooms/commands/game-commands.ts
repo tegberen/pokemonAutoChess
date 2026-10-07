@@ -105,6 +105,7 @@ import {
   getWishItemOnPot
 } from "../../core/flower-pots"
 import { selectDoubleUpMatchups, selectMatchups } from "../../core/matchmaking"
+import { revertMegaEvolution } from "../../core/mega-evolution"
 import { canSell, PokemonEntity } from "../../core/pokemon-entity"
 import { rollExplorerBonusReward } from "../../core/seeds"
 import Simulation from "../../core/simulation"
@@ -2739,6 +2740,16 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
     }
   }
 
+  handOutKeyStones() {
+    if (
+      this.state.specialGameRule !== SpecialGameRule.MEGA_EVOLUTION ||
+      this.state.stageLevel !== 1
+    ) {
+      return
+    }
+    this.state.players.forEach((player) => player.items.push(Item.KEY_STONE))
+  }
+
   initializePickingPhase() {
     this.state.phase = GamePhaseState.PICK
     this.state.players.forEach(onFossilUnlockRoundStart)
@@ -2748,6 +2759,7 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
 
 
     this.applyGuideStageSetup()
+    this.handOutKeyStones()
 
     if (
       this.state.stageLevel === 1 &&
@@ -3605,6 +3617,7 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
     })
 
     this.state.players.forEach(onFossilUnlockCombatEnd)
+    this.state.players.forEach(revertMegaEvolution)
 
     this.computeAchievements()
     this.checkDeath()

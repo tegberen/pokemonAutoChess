@@ -59,6 +59,9 @@ import store from "../stores"
 import { changePlayer, setPlayer, setSimulation } from "../stores/GameStore"
 import { clearAbilityAnimations } from "./components/abilities-animations"
 import { BoardMode } from "./components/board-manager"
+import {
+  hasMegaEvolutionAnimation
+} from "./components/mega-evolution-animation"
 import { DEPTH } from "./depths"
 import GameScene from "./scenes/game-scene"
 
@@ -520,6 +523,7 @@ class GameContainer {
         "supercharged",
         "ignited",
         "ignitionCooldown",
+        "megaCooldown",
         "aura",
         "awakening",
         "awakeningRock",
@@ -843,10 +847,19 @@ class GameContainer {
     ) {
       const pokemonUI = this.gameScene?.board?.addPokemonSprite(pokemon)
       if (!pokemonUI) return
+      const removedLook = board.takeRemovedLook(
+        pokemon.positionX,
+        pokemon.positionY
+      )
       if (pokemon.action === PokemonActionState.FISH) {
         pokemonUI.fishingAnimation()
       } else if (pokemon.action === PokemonActionState.NEST) {
         pokemonUI.nestAnimation(false)
+      } else if (hasMegaEvolutionAnimation(pokemon.name)) {
+        pokemonUI.megaEvolutionAnimation(removedLook)
+        playSound(SOUNDS.MEGA_EVOLUTION)
+      } else if (removedLook?.name.startsWith("MEGA_")) {
+        // a Mega reverting after its fight is not an evolution
       } else if (pokemon.stars > 1) {
         pokemonUI.evolutionAnimation()
         playSound(

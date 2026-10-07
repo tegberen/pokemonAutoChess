@@ -109,7 +109,7 @@ export function filterPokemonsAccordingToPreferences(
       return false
 
     if (PkmAltForms.includes(p) && !preferences.showAltForms) return false
-    if (!preferences.showMegaEvolutions && isMegaEvolutionLocked(p, null)) {
+    if (!preferences.showMegaEvolutions && isMegaEvolutionLocked(p)) {
       return false
     }
     if (!preferences.showEvolutions) {

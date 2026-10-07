@@ -2506,10 +2506,7 @@ flyAway(
     // a locked Mega never evolves and resets, so stacks would overflow uint8
     if (
       this.refToBoardPokemon.stacksRequired > 0 &&
-      isMegaEvolutionLocked(
-        this.refToBoardPokemon.evolution,
-        this.player.specialGameRule
-      )
+      isMegaEvolutionLocked(this.refToBoardPokemon.evolution)
     ) {
       const stacksRequired = this.refToBoardPokemon.stacksRequired
       this.refToBoardPokemon.stacks = max(stacksRequired)(

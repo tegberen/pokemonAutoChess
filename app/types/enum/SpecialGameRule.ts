@@ -45,27 +45,21 @@ export const RulesWithAllPokemonsAvailable: SpecialGameRule[] = [
 ]
 
 export const BAZAAR_SHOP_INTERVAL = 8
-export const MISFITS_CHIMECHO_STAGE = 4
+export const CHIMECHO_CAROUSEL_STAGE = 4
 export const MISFITS_EXCLUDED_ENCOUNTERS: TownEncounter[] = [
   TownEncounters.ELECTIVIRE,
   TownEncounters.KECLEON,
   TownEncounters.SABLEYE
 ]
 
-// Mega Rayquaza keeps its Green Orb evolution in every game
-export function isMegaEvolutionLocked(
-  evolution: Pkm,
-  specialGameRule: SpecialGameRule | null | undefined
-): boolean {
-  return (
-    evolution.startsWith("MEGA_") &&
-    evolution !== Pkm.MEGA_RAYQUAZA &&
-    specialGameRule !== SpecialGameRule.MEGA_EVOLUTION
-  )
+// Megas only appear through the Key Stone, except Mega Rayquaza, which keeps
+// its Green Orb evolution in every game
+export function isMegaEvolutionLocked(evolution: Pkm): boolean {
+  return evolution.startsWith("MEGA_") && evolution !== Pkm.MEGA_RAYQUAZA
 }
 
 // passives whose only purpose is reaching a Mega Evolution
-export const MEGA_STACK_PASSIVES: Passive[] = [
+const MEGA_STACK_PASSIVES: Passive[] = [
   Passive.LATI_MEGA,
   Passive.DRAMPA_MEGA,
   Passive.ZYGARDE_MEGA,
@@ -103,11 +97,10 @@ export const MEGA_STACK_PASSIVES: Passive[] = [
 
 export function isMegaStackPassiveHidden(
   passive: Passive,
-  evolution: Pkm | null,
-  specialGameRule: SpecialGameRule | null | undefined
+  evolution: Pkm | null
 ): boolean {
   return (
     MEGA_STACK_PASSIVES.includes(passive) &&
-    isMegaEvolutionLocked(evolution ?? Pkm.DEFAULT, specialGameRule)
+    isMegaEvolutionLocked(evolution ?? Pkm.DEFAULT)
   )
 }
