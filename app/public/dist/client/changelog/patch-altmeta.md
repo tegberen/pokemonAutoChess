@@ -482,13 +482,11 @@ Every balance change on this server, newest first.
 ### 1 November 2026
 
 **Pokémon**
-- Gimmighoul | PP 90 → 100
-- Gholdengo | PP 90 → 100
-- Darkrai | passive: gains a stack only for KOs of enemies hexed by a HEXING_INCANTATION. Stacks to Mega evolve 20 → 10
+- Gimmighoul Line | PP 90 → 100
 - Golett Line | PP 100 → 120
-- Fuecoco Line | PP 80/70/60 → 80/80/80, ATK 5/13/24 → 5/15/30
-- Flapple | HP 180 → 150, ATK 19 → 28
-- Appletun | HP 250 → 300, ATK 15 → 8
+- Fuecoco Line | PP 80/70/60 → 80, ATK 5/13/24 → 5/15/30
+- Flapple | HP 180 → 150, ATK 19 → 25
+- Appletun | HP 250 → 300, ATK 15 → 10
 - Applin | ATK 12 → 8
 - Kartana | HP 250 → 180, PP 70 → 80, RANGE 1 → 2
 - Xurkitree | HP 220 → 180
@@ -497,7 +495,7 @@ Every balance change on this server, newest first.
 - Origin Palkia | ATK 32 → 22
 - Smoliv Line | basic attacks no longer deal SPECIAL and no longer scale with AP
 - Turtwig Line | passive removed: no longer gains DEF from critical hits or is immune to ARMOR_BREAK
-- Chespin Line | HP 70/140/250 → 80/150/250, DEF 6/10/20 → 10/14/24
+- Chespin Line | DEF 6/10/20 → 8/12/22
 - Snover Line | PP 120 → 100
 - Burmy Line | RANGE 2 → 3
 - Wormadam {{new}} | passive: its ability gives 50% more ATK under ZENITH, 50% more SPE_DEF under SANDSTORM and 50% more SPEED under DISTORTION. The boosted value is the new base that AP then boosts
@@ -515,8 +513,8 @@ Every balance change on this server, newest first.
 **Abilities**
 - Machop Line | Guillotine → Cross Chop. Deal [300,SP]% of ATK as SPECIAL to the target. Each FIGHTING throw this fight gives this ability +[25,50,100,200]% CRIT_POWER. Can crit by default
 - Gastly Line | Nightmare: the bonus damage hits enemies hexed by a HEXING_INCANTATION instead of cursed ones
-- Appletun | Apple Acid: deals [50,100,200,400,SP]% of (DEF + SPE_DEF) as SPECIAL instead of [15,30,50,100,SP], no longer doubled against 0 SPE_DEF
-- Flapple | Grav Apple: deals [50,100,200,400,SP]% of ATK as PHYSICAL instead of [20,40,80,160,SP], no longer doubled against 0 DEF
+- Appletun | Apple Acid: deals [100,200,300,400,SP]% of (DEF + SPE_DEF) as SPECIAL instead of [15,30,50,100,SP], no longer doubled against 0 SPE_DEF
+- Flapple | Grav Apple: deals [100,200,300,400,SP]% of ATK as PHYSICAL instead of [20,40,80,160,SP], no longer doubled against 0 DEF
 - Gimmighoul | Gold Rush: GOLD gained 2 → 1
 - Origin Dialga | Temporal Rupture: now a real channel, the user cannot move or attack for 3 seconds. The pulse only reaches units within 4 tiles, as described
 - Origin Palkia | Subspace Swell: now a real channel, the user cannot move or attack for 3 seconds
@@ -532,8 +530,6 @@ Every balance change on this server, newest first.
 
 **Wishes**
 - Panic Button | now also gives an Unown-Q after each PvE round
-- Curse of Two | removed
-- Hex Maniac | removed
 - Jungle Cacophony | PP burned per drum beat 1/2/4 → 2/4/8
 - King's Gambit | ATK and HP gained from fallen allies 25% → 50%
 - It's Going Down | each new pillar gains 50 HP for each throw this fight
@@ -557,13 +553,14 @@ Every balance change on this server, newest first.
 - Quest: Pillage | KO 30 enemy Pokémon. Reward: BOOSTER_ENERGY
 - Quest: Reroll | reroll 50 times. Reward: REPEAT_BALL
 - Missions | Quest: Evolve, Destroy, Level Up, Diversify and Prosper are renamed to Mission
+- Curse of Two | removed
+- Hex Maniac | removed
 
 **Game Mode**
 - Mega Evolution {{new}} | new Scribble: {{scribble:MEGA_EVOLUTION}} [Mega Evolutions in the Wiki](#wiki/mega-evolutions)
-- Mega Pokémon | removed from the base game
-- Mega Pokémon | base stats now match the form before them, plus 150 HP and 15 ATK
-- Mega Zygarde | based on Zygarde 100%: HP 385 → 500, ATK 39 → 41
-- Mewtwonite Y | removed: Mewtwo Mega Evolves with the KEY_STONE like every other Mega
+- | Mega Pokémon removed from the base game
+- | Mega Pokémon base stats now match the form before them, plus 150 HP and 15 ATK
+- | added animation
 - Misfits {{new}} | new Scribble: {{scribble:MISFITS}}
 - Quest Board {{new}} | new Scribble: {{scribble:QUEST_BOARD}}
 - Shiniest Hunter | removed, replaced by the Quest Board Scribble

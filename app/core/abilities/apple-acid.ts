@@ -12,7 +12,7 @@ export class AppleAcidStrategy extends AbilityStrategy {
   ) {
     super.process(pokemon, board, target, crit, true)
     const cells = board.getCellsInFront(pokemon, target)
-    const damageRatio = [0.5, 1, 2, 4][pokemon.stars - 1] ?? 4
+    const damageRatio = [1, 2, 3, 4][pokemon.stars - 1] ?? 4
     const damage = damageRatio * (pokemon.def + pokemon.speDef)
     cells.forEach((cell) => {
       if (cell.value && cell.value.team !== pokemon.team) {

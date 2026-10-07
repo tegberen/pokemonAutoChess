@@ -11493,7 +11493,7 @@ export class Appletun extends Pokemon {
   rarity = Rarity.UNIQUE
   stars = 3
   hp = 300
-  atk = 8
+  atk = 10
   speed = 31
   def = 12
   speDef = 12
@@ -11516,7 +11516,7 @@ export class Flapple extends Pokemon {
   rarity = Rarity.UNIQUE
   stars = 3
   hp = 150
-  atk = 28
+  atk = 25
   speed = 50
   def = 4
   speDef = 4
@@ -20738,10 +20738,10 @@ export class Chespin extends Pokemon {
   rarity = Rarity.UNCOMMON
   stars = 1
   evolution = Pkm.QUILLADIN
-  hp = 80
+  hp = 70
   atk = 7
   speed = 41
-  def = 10
+  def = 8
   speDef = 3
   maxPP = 100
   range = 1
@@ -20754,10 +20754,10 @@ export class Quilladin extends Pokemon {
   rarity = Rarity.UNCOMMON
   stars = 2
   evolution = Pkm.CHESNAUGHT
-  hp = 150
+  hp = 140
   atk = 12
   speed = 41
-  def = 14
+  def = 12
   speDef = 5
   maxPP = 100
   range = 1
@@ -20772,7 +20772,7 @@ export class Chesnaught extends Pokemon {
   hp = 250
   atk = 23
   speed = 41
-  def = 24
+  def = 22
   speDef = 8
   maxPP = 100
   range = 1

@@ -11,7 +11,7 @@ export class GravAppleStrategy extends AbilityStrategy {
     crit: boolean
   ) {
     super.process(pokemon, board, target, crit)
-    const damageRatio = [0.5, 1, 2, 4][pokemon.stars - 1] ?? 4
+    const damageRatio = [1, 2, 3, 4][pokemon.stars - 1] ?? 4
     const damage = damageRatio * pokemon.atk
     target.handleSpecialDamage(
       damage,
