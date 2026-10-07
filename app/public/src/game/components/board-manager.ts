@@ -104,6 +104,7 @@ import {
   TREASURE_TRAIL_HIGHLIGHT_ANIM,
   TREASURE_TRAIL_HIGHLIGHT_SCALE
 } from "../../../../types/enum/Blessing"
+import { playSound, SOUNDS } from "../../pages/utils/audio"
 import { preference } from "../../preferences"
 import store from "../../stores"
 import { refreshShopUI } from "../../stores/GameStore"
@@ -114,7 +115,11 @@ import type GameScene from "../scenes/game-scene"
 import { displayBoost } from "./abilities-animations"
 import { BerryTree } from "./berry-tree"
 import { GameDialog } from "./game-dialog"
-import { lookOf, type OriginalLook } from "./mega-evolution-animation"
+import {
+  hasMegaEvolutionAnimation,
+  lookOf,
+  type OriginalLook
+} from "./mega-evolution-animation"
 import PokemonSprite, { getAwakeningSegments } from "./pokemon"
 import PokemonAvatar from "./pokemon-avatar"
 import PokemonSpecial from "./pokemon-special"
@@ -151,6 +156,14 @@ const GUIDE_MESSAGE_AREA = {
 
 type RemovedLook = OriginalLook & { name: Pkm; at: number }
 
+// the regular form a Mega or Primal comes from, like Kyogre for Primal Kyogre
+function getFormBeforeMegaEvolution(pkm: Pkm): Pkm | undefined {
+  if (!hasMegaEvolutionAnimation(pkm)) return undefined
+  return Object.values(Pkm).find(
+    (other) => getPokemonData(other).evolution === pkm
+  )
+}
+
 export default class BoardManager {
   pokemons: Map<string, PokemonSprite>
   uid: string
@@ -165,6 +178,9 @@ export default class BoardManager {
   // its look is kept per cell for the Mega animation to fade it out; a duo
   // swaps two cells in the same patch
   removedLooks = new Map<string, RemovedLook>()
+  // a re-render later in the same stage, such as a spectate switch, shows the
+  // PvE Megas already evolved instead of walking them in again
+  pveMegaEvolutionStage = -1
   playerAvatar: PokemonAvatar | null
   opponentAvatar: PokemonAvatar | null
   scoutingAvatars: PokemonAvatar[] = []
@@ -2286,36 +2302,47 @@ export default class BoardManager {
   }
 
   addPvePokemons(pveStage: PVEStage, immediately: boolean) {
+    let evolvingThisRender = false
     pveStage.board.forEach(([pkm, boardX, boardY], i) => {
       const [x, y] = transformEntityCoordinates(boardX, boardY - 1, true)
       const id = `pve_${this.state.stageLevel}_${i}`
 
-      const pokemon = PokemonFactory.createPokemonFromName(pkm, {
-        shiny: this.state.shinyEncounter
-      })
-      applyPveStageStats(pokemon, pveStage)
-      if (
-        this.state.townEncounter === TownEncounters.MAROWAK &&
-        pveStage.marowakItems &&
-        i in pveStage.marowakItems
-      ) {
-        pveStage.marowakItems[i]!.forEach((item) => pokemon.items.add(item))
+      const createPveSprite = (name: Pkm) => {
+        const pokemon = PokemonFactory.createPokemonFromName(name, {
+          shiny: this.state.shinyEncounter
+        })
+        applyPveStageStats(pokemon, pveStage)
+        if (
+          this.state.townEncounter === TownEncounters.MAROWAK &&
+          pveStage.marowakItems &&
+          i in pveStage.marowakItems
+        ) {
+          pveStage.marowakItems[i]!.forEach((item) => pokemon.items.add(item))
+        }
+        const sprite = new PokemonSprite(
+          this.scene,
+          x,
+          y,
+          pokemon,
+          id,
+          false,
+          false
+        )
+        this.pokemons.set(id, sprite)
+        sprite.setDepth(DEPTH.POKEMON)
+        return sprite
       }
 
-      const pkmSprite = new PokemonSprite(
-        this.scene,
-        x,
-        y,
-        pokemon,
-        id,
-        false,
-        false
-      )
+      // a Mega or Primal walks in as its regular form and evolves in place,
+      // once per stage: a re-render later in the stage shows it evolved
+      const formBefore =
+        this.pveMegaEvolutionStage === this.state.stageLevel
+          ? undefined
+          : getFormBeforeMegaEvolution(pkm)
+      if (formBefore) evolvingThisRender = true
+      const pkmSprite = createPveSprite(formBefore ?? pkm)
 
-      this.pokemons.set(id, pkmSprite)
-      pkmSprite.setDepth(DEPTH.POKEMON)
-
-      if (immediately) {
+      if (immediately && !formBefore) {
         pkmSprite.orientation = Orientation.DOWNLEFT
         this.scene.animationManager?.animatePokemon(
           pkmSprite,
@@ -2333,18 +2360,28 @@ export default class BoardManager {
           ease: "Linear",
           duration: 3000,
           onComplete: () => {
-            if (pkmSprite) {
-              pkmSprite.orientation = Orientation.DOWNLEFT
-              this.scene.animationManager?.animatePokemon(
-                pkmSprite,
-                PokemonActionState.IDLE,
-                false
-              )
+            if (this.pokemons.get(id) !== pkmSprite) return
+            let arrived = pkmSprite
+            if (formBefore) {
+              const look = lookOf(pkmSprite.sprite)
+              pkmSprite.destroy()
+              arrived = createPveSprite(pkm)
+              arrived.megaEvolutionAnimation(look)
+              playSound(SOUNDS.MEGA_EVOLUTION)
             }
+            arrived.orientation = Orientation.DOWNLEFT
+            this.scene.animationManager?.animatePokemon(
+              arrived,
+              PokemonActionState.IDLE,
+              false
+            )
           }
         })
       }
     })
+    if (evolvingThisRender) {
+      this.pveMegaEvolutionStage = this.state.stageLevel
+    }
   }
 
   addPortal() {
