@@ -575,6 +575,7 @@ Every balance change on this server, newest first.
 **Fixes**
 - Origin Palkia | Subspace Swell no longer leaves its PP boost on allies for the rest of the fight when Origin Palkia is KO'd mid-channel
 - Crocalor | long-lasting bug finally fixed: Crocalor no longer has the BUG type
+- Gamble and Golden Flip | can no longer roll Golden Flip or another Gamble
 
 **Interface**
 - Experience Icon {{new}} | XP now shows its icon in descriptions and on the Buy XP button

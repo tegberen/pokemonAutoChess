@@ -292,13 +292,11 @@ const SEAM_GLOW_WIDTH = 0.08
 const SEAM_CORE_RATIO = 0.4
 const SEAM_HALO_BRIGHTNESS = 0.55
 const NB_ENERGY_BOLTS = 14
-const NB_BOLT_SEGMENTS = 4
+const NB_BOLT_SEGMENTS = 6
 const ENERGY_BOLT_WIDTH = 0.032
 const BOLT_CORE_RATIO = 0.6
 // each bolt strobes on and off in steps of this many ms, like crackling energy
 const BOLT_FLICKER_MS = 70
-// pixels the globe shakes by right before it bursts
-const RUMBLE_AMPLITUDE = 1
 const NB_ORBIT_RIBBONS = 4
 const ORBIT_RADIUS = 1.12
 const ORBIT_SPEED = 1.4
@@ -681,8 +679,9 @@ function createEnergyBolts(random: () => number): BoltSegment[] {
     let heading = normalize(
       cross(point, [random() - 0.5, random() - 0.5, random() - 0.5])
     )
-    const start = random() * 0.5
-    const pace = 0.08 + random() * 0.08
+    // every piece shows up before the burst: 0.4 + 5 steps × 0.1 < 1
+    const start = random() * 0.4
+    const pace = 0.06 + random() * 0.04
     for (let step = 0; step < NB_BOLT_SEGMENTS; step++) {
       // hard turns and straight runs, so it reads as lightning, not a worm
       const turn = (step % 2 === 0 ? 1 : -1) * (0.9 + random() * 0.4)
@@ -690,7 +689,7 @@ function createEnergyBolts(random: () => number): BoltSegment[] {
       heading = heading.map(
         (value, axis) => value * Math.cos(turn) + side[axis] * Math.sin(turn)
       ) as Vector3
-      const length = 0.08 + random() * 0.06
+      const length = 0.1 + random() * 0.08
       const next = normalize(
         point.map((value, axis) => value + heading[axis] * length) as Vector3
       )
@@ -732,18 +731,9 @@ function drawFrame(
   ctx.scale(1 / PIXEL_SCALE, 1 / PIXEL_SCALE)
   ctx.translate(DRAW_SIZE / 2, DRAW_SIZE / 2)
   if (time < BURST_START) {
-    // a rumble building up to the burst, in whole art pixels
-    const rumble =
-      clamp01((time - CRACK_START) / CRACK_DURATION) ** 2 * RUMBLE_AMPLITUDE
-    ctx.save()
-    ctx.translate(
-      Math.round(Math.sin(time / 23) * rumble) * PIXEL_SCALE,
-      Math.round(Math.cos(time / 31) * rumble) * PIXEL_SCALE
-    )
     drawSwirl(ctx, time, scenery, false)
     drawSphere(ctx, time, scenery)
     drawSwirl(ctx, time, scenery, true)
-    ctx.restore()
   }
   drawLightRays(ctx, time, scenery)
   drawShatteredShell(ctx, time, scenery)

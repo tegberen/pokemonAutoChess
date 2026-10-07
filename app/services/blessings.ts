@@ -545,7 +545,12 @@ function isBlockedByFullBench(player: Player, blessing: Blessing) {
 
 const EXCLUDED_FROM_RANDOM_GRANTS = new Set<Blessing>([Blessing.SIX_SEVEN])
 
-// the Gambles are excluded from their own pool so one cannot chain into another
+// every Wish that hands out a random Wish, so one cannot chain into another
+const GAMBLE_BLESSINGS = new Set<Blessing>([
+  ...(Object.keys(GAMBLE_REWARDS) as Blessing[]),
+  Blessing.GOLDEN_FLIP
+])
+
 export function grantRandomBlessingOfTier(
   player: Player,
   state: GameState,
@@ -561,7 +566,7 @@ export function grantRandomBlessingOfTier(
   const candidates = shuffleArray(
     getBlessingsAvailable(tier, selectionStage, player).filter(
       (blessing) =>
-        blessing in GAMBLE_REWARDS === false &&
+        !GAMBLE_BLESSINGS.has(blessing) &&
         !EXCLUDED_FROM_RANDOM_GRANTS.has(blessing) &&
         isBlockedByFullBench(player, blessing) === false
     )
