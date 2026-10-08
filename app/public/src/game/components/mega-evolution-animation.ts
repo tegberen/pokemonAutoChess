@@ -359,50 +359,50 @@ const MEGA_ABSOL_PALETTE: MegaAnimationPalette = {
 
 const MEGA_AERODACTYL_PALETTE: MegaAnimationPalette = {
   swirlArcs: [
-    ["#ff70b8", "#f0308a"],
-    ["#c8b0e8", "#4a2a7a"],
+    ["#d8c9f0", "#7e6699"],
     ["#f0308a", "#1a1420"],
-    ["#a890d0", "#1a1420"],
-    ["#ff9ac8", "#4a2a7a"]
+    ["#a797c7", "#3f3758"],
+    ["#bfcff7", "#4f5f97"],
+    ["#ff9ac8", "#571f77"]
   ],
-  swirlFilaments: ["#ffffff", "#1a1420", "#ffb0d8", "#e0d4f4"],
+  swirlFilaments: ["#ffffff", "#1a1420", "#bfcff7", "#ffb0d8"],
   revealRibbons: [
-    ["#f0308a", "#1a1420"],
-    ["#c8b0e8", "#4a2a7a"],
-    ["#40c0c0", "#1a1420"]
+    ["#d8c9f0", "#1a1420"],
+    ["#f0308a", "#571f77"],
+    ["#00a050", "#1a1420"]
   ],
-  bands: ["#1a1420", "#a890d0", "#f0308a", "#4a2a7a", "#f06aa0", "#c8b0e8"],
-  bandRim: "#ffb0d8",
+  bands: ["#3f3758", "#a797c7", "#f0308a", "#6787af", "#d8c9f0", "#4a3599"],
+  bandRim: "#d8c9f0",
   orbit: [
+    ["#f4eeff", "#a797c7"],
     ["#ffd0e8", "#f0308a"],
-    ["#f0e8ff", "#a890d0"],
-    ["#d0f8f8", "#40c0c0"]
+    ["#c0f0d8", "#00a050"]
   ],
-  shatterSparks: [0xffffff, 0xffb0d8, 0xf0308a, 0xc8b0e8, 0x40c0c0],
-  lightRays: ["#ffffff", "#ffd0e8", "#ff70b8", "#e0d4f4", "#ffb0d8"],
+  shatterSparks: [0xffffff, 0xd8c9f0, 0xa797c7, 0xf0308a, 0x00a050],
+  lightRays: ["#ffffff", "#f4eeff", "#d8c9f0", "#ffb0d8", "#bfcff7"],
   aura: [
+    [126, 102, 153],
     [240, 48, 138],
-    [168, 144, 208],
-    [26, 20, 32],
-    [240, 106, 160]
+    [216, 201, 240],
+    [103, 135, 175]
   ],
   seams: [
     [240, 48, 138],
-    [255, 112, 184],
-    [200, 176, 232]
+    [216, 201, 240],
+    [255, 112, 184]
   ],
   crack: [255, 248, 252],
   shells: [
-    [36, 28, 42],
-    [30, 22, 36],
-    [58, 36, 92]
+    [63, 55, 88],
+    [52, 46, 72],
+    [56, 66, 112]
   ],
-  halo: [240, 48, 138],
-  rim: [168, 144, 208],
+  halo: [216, 201, 240],
+  rim: [126, 102, 153],
   coreCenter: "#ffffff",
   coreEdge: [
-    [255, 112, 184],
-    [168, 144, 208]
+    [216, 201, 240],
+    [240, 48, 138]
   ],
   boltCore: [255, 248, 252],
   boltEdges: [
@@ -748,55 +748,56 @@ const MEGA_DARKRAI_PALETTE: MegaAnimationPalette = {
 
 const MEGA_DIANCIE_PALETTE: MegaAnimationPalette = {
   swirlArcs: [
-    ["#ffd0e4", "#e8247c"],
-    ["#48c8f0", "#1a4a7a"],
-    ["#ffe838", "#d89a20"],
-    ["#f8a8c8", "#8a1a50"],
-    ["#ffffff", "#48c8f0"]
+    ["#ffffff", "#f4a8c8"],
+    ["#ffd8e8", "#b05a84"],
+    ["#c8b8e8", "#7a5a98"],
+    ["#e87aa8", "#8a3a60"],
+    ["#b0d8f0", "#5a7aa8"]
   ],
-  swirlFilaments: ["#ffffff", "#ffe838", "#b8e8ff", "#ffc0dc"],
+  swirlFilaments: ["#ffffff", "#ffe8f2", "#e8f4ff", "#fff8d8"],
   revealRibbons: [
-    ["#e8247c", "#5a1238"],
-    ["#48c8f0", "#1a4a7a"],
-    ["#ffe838", "#d89a20"]
+    ["#ffffff", "#e87aa8"],
+    ["#ffd8e8", "#b05a84"],
+    ["#c8b8e8", "#7a5a98"]
   ],
-  bands: ["#e8247c", "#ffd0e4", "#48c8f0", "#8a1a50", "#ffe838", "#ffffff"],
+  bands: ["#e87aa8", "#ffffff", "#f4a8c8", "#b05a84", "#c8b8e8", "#ffd8e8"],
   bandRim: "#ffffff",
   orbit: [
-    ["#ffffff", "#f8a8c8"],
-    ["#e0f8ff", "#48c8f0"],
-    ["#fff8c0", "#f0c048"]
+    ["#ffffff", "#f4a8c8"],
+    ["#f4f0ff", "#c8b8e8"],
+    ["#fffae0", "#fff0a0"]
   ],
-  shatterSparks: [0xffffff, 0xffd0e4, 0xf8a8c8, 0x48c8f0, 0xffe838],
-  lightRays: ["#ffffff", "#ffd0e4", "#fff8c0", "#b8e8ff", "#f8a8c8"],
+  shatterSparks: [0xffffff, 0xffd8e8, 0xf4a8c8, 0xc8b8e8, 0xb0d8f0, 0xfff0a0],
+  lightRays: ["#ffffff", "#ffe8f2", "#ffd8e8", "#e8f4ff", "#fff8d8"],
   aura: [
-    [248, 168, 200],
-    [232, 36, 124],
-    [72, 200, 240],
-    [255, 232, 56]
+    [244, 168, 200],
+    [255, 255, 255],
+    [200, 184, 232],
+    [184, 232, 208]
   ],
   seams: [
-    [255, 208, 228],
     [255, 255, 255],
-    [72, 200, 240]
+    [255, 216, 232],
+    [200, 184, 232],
+    [176, 216, 240]
   ],
   crack: [255, 255, 255],
   shells: [
-    [128, 44, 88],
-    [108, 36, 76],
-    [74, 72, 88]
+    [176, 90, 132],
+    [154, 76, 114],
+    [122, 90, 152]
   ],
-  halo: [248, 168, 200],
-  rim: [232, 36, 124],
+  halo: [255, 216, 232],
+  rim: [232, 122, 168],
   coreCenter: "#ffffff",
   coreEdge: [
-    [255, 208, 228],
-    [255, 232, 56]
+    [255, 216, 232],
+    [244, 168, 200]
   ],
   boltCore: [255, 255, 255],
   boltEdges: [
-    [248, 168, 200],
-    [72, 200, 240]
+    [255, 216, 232],
+    [200, 184, 232]
   ]
 }
 
@@ -967,60 +968,59 @@ const MEGA_EELEKTROSS_PALETTE: MegaAnimationPalette = {
   ]
 }
 
-// gold cores: white never reads on red
 const MEGA_EXCADRILL_PALETTE: MegaAnimationPalette = {
   swirlArcs: [
-    ["#ffe020", "#e82020"],
-    ["#c8c8cc", "#2a2a2e"],
-    ["#f07020", "#2a2a2e"],
-    ["#ffe020", "#8a1010"],
-    ["#e82020", "#4a4a50"]
+    ["#eef2f8", "#8a9098"],
+    ["#c8ccd4", "#2a2c32"],
+    ["#d82828", "#4a1414"],
+    ["#a0603a", "#2a2c32"],
+    ["#b8d0e8", "#4a4e58"]
   ],
-  swirlFilaments: ["#fff8a0", "#2a2a2e", "#ffb040", "#e8e8ec"],
+  swirlFilaments: ["#ffffff", "#2a2c32", "#dce8f4", "#2a2c32"],
   revealRibbons: [
-    ["#e82020", "#2a2a2e"],
-    ["#ffe020", "#f07020"],
-    ["#c8c8cc", "#4a4a50"]
+    ["#c8ccd4", "#2a2c32"],
+    ["#d82828", "#4a1414"],
+    ["#b8d0e8", "#6a4a38"]
   ],
-  bands: ["#2a2a2e", "#e82020", "#ffe020", "#4a4a50", "#f07020", "#c8c8cc"],
-  bandRim: "#ffe020",
+  bands: ["#4a4e58", "#c8ccd4", "#6a4a38", "#2a2c32", "#d82828", "#a0603a"],
+  bandRim: "#eef2f8",
   orbit: [
-    ["#fff8a0", "#f07020"],
-    ["#ffffff", "#8a8a90"],
-    ["#ffd040", "#e82020"]
+    ["#ffffff", "#8a9098"],
+    ["#ffb0a8", "#d82828"],
+    ["#eef6ff", "#b8d0e8"]
   ],
-  shatterSparks: [0xfff8a0, 0xffe020, 0xf07020, 0xe82020, 0xc8c8cc],
-  lightRays: ["#fff8a0", "#ffe020", "#ffb040", "#f07020", "#e8e8ec"],
+  shatterSparks: [0xffffff, 0xdce8f4, 0xc8ccd4, 0xd82828, 0xa0603a],
+  lightRays: ["#ffffff", "#eef2f8", "#dce8f4", "#c8ccd4", "#b8d0e8"],
   aura: [
-    [232, 32, 32],
-    [240, 112, 32],
-    [255, 224, 32],
-    [42, 42, 46]
+    [200, 204, 212],
+    [216, 40, 40],
+    [106, 74, 56],
+    [184, 208, 232]
   ],
   seams: [
-    [255, 224, 32],
-    [240, 112, 32],
-    [232, 32, 32]
+    [216, 40, 40],
+    [238, 242, 248],
+    [255, 112, 96]
   ],
-  crack: [255, 248, 200],
+  crack: [248, 250, 255],
   shells: [
-    [46, 46, 52],
-    [38, 38, 42],
-    [60, 58, 60]
+    [58, 60, 68],
+    [48, 50, 56],
+    [70, 52, 42]
   ],
-  halo: [240, 112, 32],
-  rim: [200, 176, 64],
-  coreCenter: "#fff8a0",
+  halo: [184, 208, 232],
+  rim: [200, 204, 212],
+  coreCenter: "#ffffff",
   coreEdge: [
-    [255, 224, 32],
-    [232, 32, 32]
+    [238, 242, 248],
+    [138, 144, 152]
   ],
-  boltCore: [255, 248, 200],
+  boltCore: [255, 255, 255],
   boltEdges: [
-    [255, 176, 64],
-    [232, 32, 32]
+    [216, 40, 40],
+    [255, 112, 96]
   ],
-  thickFilaments: ["#2a2a2e"]
+  thickFilaments: ["#2a2c32"]
 }
 
 const MEGA_FERALIGATR_PALETTE: MegaAnimationPalette = {
@@ -1235,61 +1235,60 @@ const MEGA_GARDEVOIR_PALETTE: MegaAnimationPalette = {
   ]
 }
 
-// one acid lime flame from its other card
 const MEGA_GENGAR_PALETTE: MegaAnimationPalette = {
   swirlArcs: [
-    ["#ff70c8", "#e030a0"],
-    ["#fff060", "#f8c010"],
-    ["#a070e8", "#140c18"],
-    ["#e030a0", "#140c18"],
-    ["#fff060", "#5a3ab0"]
+    ["#b797df", "#572f9f"],
+    ["#f4ecd8", "#2f1832"],
+    ["#d020b0", "#2f1832"],
+    ["#8f67bf", "#373f8f"],
+    ["#eaeffc", "#674d8a"]
   ],
-  swirlFilaments: ["#ffffff", "#140c18", "#fff8a0", "#140c18"],
+  swirlFilaments: ["#fffaf0", "#140a16", "#d8c4f0", "#140a16"],
   revealRibbons: [
-    ["#e030a0", "#140c18"],
-    ["#f8e020", "#5a3ab0"],
-    ["#c81830", "#140c18"]
+    ["#eaeffc", "#2f1832"],
+    ["#8f67bf", "#140a16"],
+    ["#e63e3e", "#532a63"]
   ],
-  bands: ["#5a3ab0", "#e030a0", "#f8e020", "#140c18", "#c81830", "#a070e8"],
-  bandRim: "#ffb0e0",
+  bands: ["#572f9f", "#f4ecd8", "#9e0983", "#2f1832", "#8f67bf", "#e63e3e"],
+  bandRim: "#d8c4f0",
   orbit: [
-    ["#ffd0ec", "#e030a0"],
-    ["#fffcc0", "#f8e020"],
-    ["#f4ffc0", "#a0e030"]
+    ["#f4eeff", "#b797df"],
+    ["#f8c8ec", "#9e0983"],
+    ["#ffc8a8", "#d73f00"]
   ],
-  shatterSparks: [0xffffff, 0xfff060, 0xff70c8, 0xf8a020, 0xa070e8, 0xa0e030],
-  lightRays: ["#ffffff", "#fff8a0", "#ff70c8", "#f8e020", "#c0a0f0"],
+  shatterSparks: [0xfffaf0, 0xd8c4f0, 0xb797df, 0xd020b0, 0xe63e3e, 0xf0d020],
+  lightRays: ["#fffaf0", "#eaeffc", "#d8c4f0", "#b797df", "#f8c8ec"],
   aura: [
-    [224, 48, 160],
-    [248, 224, 32],
-    [90, 58, 176],
-    [20, 12, 24]
+    [143, 103, 191],
+    [158, 9, 131],
+    [230, 62, 62],
+    [87, 47, 159]
   ],
   seams: [
-    [224, 48, 160],
-    [248, 224, 32],
-    [255, 112, 200],
-    [255, 240, 96]
+    [208, 32, 176],
+    [183, 151, 223],
+    [244, 236, 216],
+    [230, 62, 62]
   ],
-  crack: [255, 252, 230],
+  crack: [255, 250, 240],
   shells: [
+    [64, 42, 86],
     [58, 36, 104],
-    [46, 28, 86],
-    [90, 18, 40]
+    [76, 56, 100]
   ],
-  halo: [224, 48, 160],
-  rim: [248, 224, 32],
-  coreCenter: "#fffcc0",
+  halo: [183, 151, 223],
+  rim: [143, 103, 191],
+  coreCenter: "#fffaf0",
   coreEdge: [
-    [255, 112, 200],
-    [248, 224, 32]
+    [234, 239, 252],
+    [183, 151, 223]
   ],
-  boltCore: [255, 255, 255],
+  boltCore: [255, 250, 240],
   boltEdges: [
-    [248, 224, 32],
-    [224, 48, 160]
+    [208, 32, 176],
+    [183, 151, 223]
   ],
-  thickFilaments: ["#140c18"],
+  thickFilaments: ["#140a16"],
   auraRings: [
     [14, 0.08],
     [10, 0.1],
@@ -1298,59 +1297,66 @@ const MEGA_GENGAR_PALETTE: MegaAnimationPalette = {
   ]
 }
 
-// bone white only in small touches: it never reads on red
 const MEGA_HOUNDOOM_PALETTE: MegaAnimationPalette = {
   swirlArcs: [
-    ["#ffc040", "#e03828"],
-    ["#f08030", "#1c1a20"],
-    ["#e8dce4", "#4a2a24"],
-    ["#e03828", "#1c1a20"],
-    ["#ffc040", "#a04a2a"]
+    ["#ffb098", "#cf5f2f"],
+    ["#ff8f6e", "#121416"],
+    ["#d7dfdf", "#121416"],
+    ["#cf5f2f", "#121416"],
+    ["#ffffff", "#cf5f2f"]
   ],
-  swirlFilaments: ["#ffe08a", "#1c1a20", "#f08030", "#e8dce4"],
+  swirlFilaments: ["#ffffff", "#121416", "#ffc0a8", "#121416"],
   revealRibbons: [
-    ["#f08030", "#1c1a20"],
-    ["#e8dce4", "#4a2a24"],
-    ["#ffc040", "#e03828"]
+    ["#cf5f2f", "#121416"],
+    ["#ff8f6e", "#a15c54"],
+    ["#d7dfdf", "#121416"]
   ],
-  bands: ["#1c1a20", "#f08030", "#4a2a24", "#e03828", "#2c2830", "#ffc040"],
-  bandRim: "#ffc040",
+  bands: ["#121416", "#cf5f2f", "#7f8f97", "#121416", "#cf5f2f", "#d7dfdf"],
+  bandRim: "#ffc0a8",
   orbit: [
-    ["#ffe08a", "#f08030"],
-    ["#e8dce4", "#4a2a24"],
-    ["#ffc040", "#e03828"]
+    ["#ffe0d4", "#cf5f2f"],
+    ["#ffd8c8", "#ff8f6e"],
+    ["#ffffff", "#afb7bf"]
   ],
-  shatterSparks: [0xffe08a, 0xffc040, 0xf08030, 0xe03828],
-  lightRays: ["#ffe08a", "#ffc040", "#f08030", "#e8dce4", "#e03828"],
+  shatterSparks: [0xffffff, 0xffc0a8, 0xcf5f2f, 0xff8f6e, 0xff6a3a, 0xd7dfdf],
+  lightRays: ["#ffffff", "#ffe0d4", "#ff8f6e", "#ff6a3a", "#ffc0a8"],
   aura: [
-    [224, 56, 40],
-    [240, 128, 48],
-    [28, 26, 32],
-    [255, 192, 64]
+    [207, 95, 47],
+    [255, 143, 110],
+    [18, 20, 22],
+    [127, 143, 151]
   ],
   seams: [
-    [255, 160, 60],
-    [255, 210, 110],
-    [230, 80, 50]
+    [255, 106, 58],
+    [255, 192, 168],
+    [255, 143, 110],
+    [207, 95, 47]
   ],
-  crack: [255, 236, 190],
+  crack: [255, 248, 236],
   shells: [
-    [40, 34, 40],
-    [32, 27, 32]
+    [26, 28, 30],
+    [20, 22, 24],
+    [36, 40, 44]
   ],
-  halo: [240, 128, 48],
-  rim: [224, 56, 40],
-  coreCenter: "#ffe08a",
+  halo: [207, 95, 47],
+  rim: [207, 95, 47],
+  coreCenter: "#ffffff",
   coreEdge: [
-    [255, 160, 60],
-    [224, 56, 40]
+    [255, 192, 168],
+    [207, 95, 47]
   ],
-  boltCore: [255, 236, 190],
+  boltCore: [255, 255, 255],
   boltEdges: [
-    [240, 128, 48],
-    [224, 56, 40]
+    [255, 106, 58],
+    [255, 143, 110]
   ],
-  thickFilaments: ["#1c1a20"]
+  thickFilaments: ["#121416"],
+  auraRings: [
+    [14, 0.08],
+    [10, 0.1],
+    [6, 0.14],
+    [3, 0.2]
+  ]
 }
 
 const MEGA_LATI_PALETTE: MegaAnimationPalette = {
@@ -1523,55 +1529,55 @@ const MEGA_LUCARIO_PALETTE: MegaAnimationPalette = {
 
 const MEGA_MANECTRIC_PALETTE: MegaAnimationPalette = {
   swirlArcs: [
-    ["#fff8a0", "#f8e020"],
-    ["#ff70b8", "#e8208a"],
-    ["#f8e020", "#1a2a5a"],
-    ["#40b8c8", "#1a2a5a"],
-    ["#e8208a", "#6a3ab0"]
+    ["#fff700", "#a76f00"],
+    ["#209fe6", "#00305a"],
+    ["#9fe7ff", "#0067b7"],
+    ["#dfb700", "#00305a"],
+    ["#ffffff", "#209fe6"]
   ],
-  swirlFilaments: ["#ffffff", "#fff8a0", "#ffb0d8", "#fff8a0"],
+  swirlFilaments: ["#ffffff", "#fffa80", "#9fe7ff", "#ffffff"],
   revealRibbons: [
-    ["#f8e020", "#e8208a"],
-    ["#fff8a0", "#6a3ab0"],
-    ["#e8208a", "#1a2a5a"]
+    ["#fff700", "#00305a"],
+    ["#209fe6", "#0067b7"],
+    ["#dfb700", "#a76f00"]
   ],
-  bands: ["#1a2a5a", "#f8e020", "#e8208a", "#6a3ab0", "#40b8c8", "#fff8a0"],
-  bandRim: "#fff8a0",
+  bands: ["#0067b7", "#fff700", "#209fe6", "#00305a", "#dfb700", "#9fe7ff"],
+  bandRim: "#fffa80",
   orbit: [
-    ["#ffffff", "#f8e020"],
-    ["#ffd0e8", "#e8208a"],
-    ["#d8f8ff", "#40b8c8"]
+    ["#ffffff", "#fff700"],
+    ["#e0f8ff", "#209fe6"],
+    ["#fff4b0", "#dfb700"]
   ],
-  shatterSparks: [0xffffff, 0xfff8a0, 0xf8e020, 0xff70b8, 0x80e0f0],
-  lightRays: ["#ffffff", "#fff8a0", "#f8e020", "#ffb0d8", "#fff8a0"],
+  shatterSparks: [0xffffff, 0xfffa80, 0xfff700, 0x9fe7ff, 0x209fe6],
+  lightRays: ["#ffffff", "#fffa80", "#fff700", "#9fe7ff", "#ffffff"],
   aura: [
-    [248, 224, 32],
-    [232, 32, 138],
-    [106, 58, 176],
-    [64, 184, 200]
+    [255, 247, 0],
+    [32, 159, 230],
+    [223, 183, 0],
+    [0, 103, 183]
   ],
   seams: [
-    [248, 224, 32],
-    [255, 112, 184],
-    [255, 248, 160]
+    [255, 247, 0],
+    [159, 231, 255],
+    [32, 159, 230]
   ],
-  crack: [255, 255, 240],
+  crack: [255, 255, 230],
   shells: [
-    [30, 36, 84],
-    [24, 28, 68],
-    [52, 30, 84]
+    [0, 48, 90],
+    [0, 38, 74],
+    [0, 66, 122]
   ],
-  halo: [248, 224, 32],
-  rim: [232, 32, 138],
+  halo: [255, 247, 0],
+  rim: [32, 159, 230],
   coreCenter: "#ffffff",
   coreEdge: [
-    [255, 248, 160],
-    [248, 224, 32]
+    [255, 250, 128],
+    [32, 159, 230]
   ],
   boltCore: [255, 255, 255],
   boltEdges: [
-    [248, 224, 32],
-    [255, 112, 184]
+    [255, 247, 0],
+    [159, 231, 255]
   ],
   auraRings: [
     [14, 0.08],
@@ -1800,55 +1806,55 @@ const MEGA_SABLEYE_PALETTE: MegaAnimationPalette = {
 
 const MEGA_SKARMORY_PALETTE: MegaAnimationPalette = {
   swirlArcs: [
-    ["#fff4a0", "#d8a010"],
-    ["#3a6ae0", "#101c50"],
-    ["#ff8a30", "#7a1a5a"],
-    ["#f0c020", "#101c50"],
-    ["#d040b0", "#4a1a6a"]
+    ["#fff090", "#d8a818"],
+    ["#2a98f0", "#1e2a44"],
+    ["#f8d8f0", "#4a5a78"],
+    ["#f0c828", "#1e2a44"],
+    ["#80c8ff", "#2a3a58"]
   ],
-  swirlFilaments: ["#ffffff", "#fff4a0", "#80a8ff", "#ffb070"],
+  swirlFilaments: ["#ffffff", "#fff090", "#c0e4ff", "#ffe8f8"],
   revealRibbons: [
-    ["#f0c020", "#101c50"],
-    ["#3a6ae0", "#101c50"],
-    ["#ff8a30", "#7a1a5a"]
+    ["#f0c828", "#1e2a44"],
+    ["#2a98f0", "#2a3a58"],
+    ["#e03030", "#1e2a44"]
   ],
-  bands: ["#101c50", "#f0c020", "#3a6ae0", "#7a1a5a", "#ff8a30", "#fff4a0"],
-  bandRim: "#fff4a0",
+  bands: ["#2a3a58", "#f0c828", "#2a98f0", "#1e2a44", "#f8d8f0", "#4a5a78"],
+  bandRim: "#fff090",
   orbit: [
-    ["#fffce0", "#f0c020"],
-    ["#d8e4ff", "#3a6ae0"],
-    ["#ffd8b0", "#ff8a30"]
+    ["#fffce0", "#f0c828"],
+    ["#e0f2ff", "#2a98f0"],
+    ["#ffffff", "#f8d8f0"]
   ],
-  shatterSparks: [0xffffff, 0xfff4a0, 0xf0c020, 0x80a8ff, 0xff8a30],
-  lightRays: ["#ffffff", "#fff4a0", "#f0c020", "#80a8ff", "#ffb070"],
+  shatterSparks: [0xffffff, 0xfff090, 0xf0c828, 0x80c8ff, 0xf8d8f0],
+  lightRays: ["#ffffff", "#fffce0", "#fff090", "#c0e4ff", "#ffe8f8"],
   aura: [
-    [240, 192, 32],
-    [58, 106, 224],
-    [208, 64, 176],
-    [255, 138, 48]
+    [240, 200, 40],
+    [42, 152, 240],
+    [248, 216, 240],
+    [42, 58, 88]
   ],
   seams: [
-    [240, 192, 32],
-    [255, 244, 160],
-    [128, 168, 255]
+    [240, 200, 40],
+    [255, 240, 144],
+    [128, 200, 255]
   ],
   crack: [255, 252, 230],
   shells: [
-    [24, 34, 80],
-    [18, 28, 66],
-    [70, 26, 70]
+    [36, 48, 74],
+    [30, 40, 62],
+    [50, 62, 90]
   ],
-  halo: [240, 192, 32],
-  rim: [240, 192, 32],
+  halo: [240, 200, 40],
+  rim: [240, 200, 40],
   coreCenter: "#fffce0",
   coreEdge: [
-    [255, 244, 160],
-    [58, 106, 224]
+    [255, 240, 144],
+    [42, 152, 240]
   ],
   boltCore: [255, 255, 255],
   boltEdges: [
-    [240, 192, 32],
-    [128, 168, 255]
+    [240, 200, 40],
+    [128, 200, 255]
   ]
 }
 
@@ -1908,55 +1914,55 @@ const MEGA_SLOWBRO_PALETTE: MegaAnimationPalette = {
 
 const MEGA_STEELIX_PALETTE: MegaAnimationPalette = {
   swirlArcs: [
-    ["#c8d0f0", "#596a82"],
+    ["#cbd1e4", "#616982"],
+    ["#008cce", "#1e2448"],
+    ["#9c9cb7", "#4f4f4f"],
     ["#30e0f0", "#1e2448"],
-    ["#9aa0d0", "#29364b"],
-    ["#8a5ad8", "#1e2448"],
-    ["#a0f4ff", "#3a3a6a"]
+    ["#f5f7fa", "#9c9cb7"]
   ],
-  swirlFilaments: ["#ffffff", "#c8d0f0", "#a0f4ff", "#e8e4ff"],
+  swirlFilaments: ["#ffffff", "#cbd1e4", "#c6e7ef", "#ffc7df"],
   revealRibbons: [
-    ["#c8d0f0", "#29364b"],
-    ["#30e0f0", "#1e2448"],
+    ["#cbd1e4", "#4f4f4f"],
+    ["#008cce", "#1e2448"],
     ["#8a5ad8", "#3a3a6a"]
   ],
-  bands: ["#29364b", "#9aa0d0", "#30e0f0", "#3a3a6a", "#c8d0f0", "#8a5ad8"],
-  bandRim: "#e8ecff",
+  bands: ["#616982", "#cbd1e4", "#008cce", "#4f4f4f", "#9c9cb7", "#30e0f0"],
+  bandRim: "#f5f7fa",
   orbit: [
-    ["#ffffff", "#9aa0d0"],
-    ["#e0fcff", "#30e0f0"],
-    ["#ece0ff", "#8a5ad8"]
+    ["#ffffff", "#9c9cb7"],
+    ["#d0f0ff", "#008cce"],
+    ["#e0fcff", "#30e0f0"]
   ],
-  shatterSparks: [0xffffff, 0xc8d0f0, 0x30e0f0, 0xb1adcb, 0xf0b830],
-  lightRays: ["#ffffff", "#e8ecff", "#a0f4ff", "#c8d0f0", "#f0d070"],
+  shatterSparks: [0xffffff, 0xcbd1e4, 0x008cce, 0x30e0f0, 0xffc7df],
+  lightRays: ["#ffffff", "#f5f7fa", "#c6e7ef", "#cbd1e4", "#a0f4ff"],
   aura: [
-    [154, 160, 208],
+    [156, 156, 183],
+    [0, 140, 206],
     [48, 224, 240],
-    [138, 90, 216],
-    [41, 54, 75]
+    [97, 105, 130]
   ],
   seams: [
+    [0, 140, 206],
     [48, 224, 240],
-    [160, 244, 255],
-    [200, 208, 240]
+    [203, 209, 228]
   ],
   crack: [240, 252, 255],
   shells: [
-    [58, 64, 104],
-    [46, 52, 86],
-    [41, 54, 75]
+    [70, 74, 94],
+    [58, 62, 80],
+    [79, 79, 79]
   ],
   halo: [48, 224, 240],
-  rim: [154, 160, 208],
+  rim: [156, 156, 183],
   coreCenter: "#ffffff",
   coreEdge: [
-    [160, 244, 255],
-    [48, 224, 240]
+    [198, 231, 239],
+    [0, 140, 206]
   ],
   boltCore: [255, 255, 255],
   boltEdges: [
-    [48, 224, 240],
-    [160, 244, 255]
+    [0, 140, 206],
+    [48, 224, 240]
   ]
 }
 
@@ -2187,6 +2193,14 @@ const PRIMAL_FORMS: Pkm[] = [Pkm.PRIMAL_GROUDON, Pkm.PRIMAL_KYOGRE]
 // Megas and Primal Reversions share this animation
 export function hasMegaEvolutionAnimation(pkm: Pkm) {
   return pkm.startsWith("MEGA_") || PRIMAL_FORMS.includes(pkm)
+}
+
+// the regular form a Mega or Primal comes from, like Kyogre for Primal Kyogre
+export function getFormBeforeMegaEvolution(pkm: Pkm): Pkm | undefined {
+  if (!hasMegaEvolutionAnimation(pkm)) return undefined
+  return Object.values(Pkm).find(
+    (other) => getPokemonData(other).evolution === pkm
+  )
 }
 
 const LIGHT_DIRECTION = [-0.45, -0.55, 0.7]

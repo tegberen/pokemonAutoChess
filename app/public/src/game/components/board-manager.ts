@@ -116,7 +116,7 @@ import { displayBoost } from "./abilities-animations"
 import { BerryTree } from "./berry-tree"
 import { GameDialog } from "./game-dialog"
 import {
-  hasMegaEvolutionAnimation,
+  getFormBeforeMegaEvolution,
   lookOf,
   type OriginalLook
 } from "./mega-evolution-animation"
@@ -155,14 +155,6 @@ const GUIDE_MESSAGE_AREA = {
 }
 
 type RemovedLook = OriginalLook & { name: Pkm; at: number }
-
-// the regular form a Mega or Primal comes from, like Kyogre for Primal Kyogre
-function getFormBeforeMegaEvolution(pkm: Pkm): Pkm | undefined {
-  if (!hasMegaEvolutionAnimation(pkm)) return undefined
-  return Object.values(Pkm).find(
-    (other) => getPokemonData(other).evolution === pkm
-  )
-}
 
 export default class BoardManager {
   pokemons: Map<string, PokemonSprite>

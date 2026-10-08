@@ -4,6 +4,9 @@ import { useNavigate } from "react-router"
 import { Orientation } from "../../../types/enum/Game"
 import { Pkm } from "../../../types/enum/Pokemon"
 import { Status } from "../../../types/enum/Status"
+import {
+  hasMegaEvolutionAnimation
+} from "../game/components/mega-evolution-animation"
 import { Checkbox } from "./component/checkbox/checkbox"
 import DebugScene from "./component/debug/debug-scene"
 import { MainSidebar } from "./component/main-sidebar/main-sidebar"
@@ -19,6 +22,10 @@ export function SpriteDebug() {
   )
   const [animationType, setAnimType] = useState<string>("Idle")
   const [status, setStatus] = useState<Status | "">("")
+  const isMegaEvolution = animationType === "MegaEvolution"
+  const pokemonOptions = Object.values(Pkm)
+    .filter((option) => !isMegaEvolution || hasMegaEvolutionAnimation(option))
+    .sort((a, b) => t(`pkm.${a}`).localeCompare(t(`pkm.${b}`)))
 
   return (
     <div className="sprite-viewer-root">
@@ -32,9 +39,7 @@ export function SpriteDebug() {
           <label htmlFor="pokemon-typeahead">Pokemon</label>
           <PokemonTypeahead
             value={pkm}
-            options={Object.values(Pkm).sort((a, b) =>
-              t(`pkm.${a}`).localeCompare(t(`pkm.${b}`))
-            )}
+            options={pokemonOptions}
             onChange={(pkm) => {
               if (pkm) {
                 setPkm(pkm)
@@ -67,7 +72,16 @@ export function SpriteDebug() {
           <select
             id="sprite-viewer-anim-type"
             value={animationType}
-            onChange={(e) => setAnimType(e.currentTarget.value)}
+            onChange={(e) => {
+              const nextAnimationType = e.currentTarget.value
+              setAnimType(nextAnimationType)
+              if (
+                nextAnimationType === "MegaEvolution" &&
+                !hasMegaEvolutionAnimation(pkm)
+              ) {
+                setPkm(Pkm.MEGA_ABSOL)
+              }
+            }}
           >
             <option value="Idle">Idle</option>
             <option value="Walk">Walk</option>
@@ -78,6 +92,7 @@ export function SpriteDebug() {
             <option value="Attack">Attack</option>
             <option value="Ability">Ability</option>
             <option value="Emote">Emote</option>
+            <option value="MegaEvolution">Mega Evolution</option>
           </select>
 
           <label htmlFor="sprite-viewer-status">Status</label>

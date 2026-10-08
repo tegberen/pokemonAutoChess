@@ -26,6 +26,10 @@ import {
   displayHit
 } from "../components/abilities-animations"
 import LoadingManager from "../components/loading-manager"
+import {
+  getFormBeforeMegaEvolution,
+  lookOf
+} from "../components/mega-evolution-animation"
 import PokemonSprite, { resetSpriteCounts } from "../components/pokemon"
 import {
   DEFAULT_POKEMON_ANIMATION_CONFIG,
@@ -33,6 +37,9 @@ import {
 } from "../components/pokemon-animations"
 import WeatherManager from "../components/weather-manager"
 import { DEPTH } from "../depths"
+
+const MEGA_EVOLUTION_LEAD_IN_MS = 800
+const MEGA_EVOLUTION_REPLAY_MS = 6500
 
 type Boost =
   | "BOOST/ATK"
@@ -61,6 +68,7 @@ export class DebugScene extends Phaser.Scene {
   attackAnimInterval: ReturnType<typeof setInterval> | undefined
   abilitiesVfxGroup: Phaser.GameObjects.Group | undefined
   landscape: Phaser.GameObjects.Sprite[] = []
+  megaEvolutionLoop: Phaser.Time.TimerEvent | undefined
 
   constructor(
     height: number,
@@ -107,6 +115,12 @@ export class DebugScene extends Phaser.Scene {
     if (this.target) {
       this.target.destroy()
       clearInterval(this.attackAnimInterval)
+    }
+    this.megaEvolutionLoop?.remove()
+    if (animationType === "MegaEvolution") {
+      this.pokemonSprite = undefined
+      this.playMegaEvolutionLoop(pkm, orientation, shiny)
+      return
     }
     const [px, py] = transformEntityCoordinates(3, 3, false)
     this.pokemonSprite = new PokemonSprite(
@@ -171,6 +185,52 @@ export class DebugScene extends Phaser.Scene {
       }
       this.applyStatusAnimation(status)
     })
+  }
+
+  // the form before the Mega idles briefly, then evolves, over and over
+  playMegaEvolutionLoop(pkm: Pkm, orientation: Orientation, shiny: boolean) {
+    const evolve = () => {
+      this.pokemonSprite?.destroy()
+      const before = this.addIdleSprite(
+        getFormBeforeMegaEvolution(pkm) ?? pkm,
+        orientation,
+        shiny
+      )
+      this.time.delayedCall(MEGA_EVOLUTION_LEAD_IN_MS, () => {
+        if (this.pokemonSprite !== before) return
+        const look = lookOf(before.sprite)
+        before.destroy()
+        this.addIdleSprite(pkm, orientation, shiny).megaEvolutionAnimation(look)
+      })
+    }
+    evolve()
+    this.megaEvolutionLoop = this.time.addEvent({
+      delay: MEGA_EVOLUTION_REPLAY_MS,
+      loop: true,
+      callback: evolve
+    })
+  }
+
+  addIdleSprite(pkm: Pkm, orientation: Orientation, shiny: boolean) {
+    const [px, py] = transformEntityCoordinates(3, 3, false)
+    const pokemonSprite = new PokemonSprite(
+      this,
+      px,
+      py,
+      PokemonFactory.createPokemonFromName(pkm, { shiny }),
+      "debug",
+      false,
+      false
+    )
+    pokemonSprite.orientation = orientation
+    pokemonSprite.setDepth(DEPTH.POKEMON)
+    pokemonSprite.once("loaded", () => {
+      this.animationManager?.play(pokemonSprite, AnimationType.Idle, {
+        repeat: -1
+      })
+    })
+    this.pokemonSprite = pokemonSprite
+    return pokemonSprite
   }
 
   updateMap(mapName: DungeonPMDO | "town"): Promise<void> {
