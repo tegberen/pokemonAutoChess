@@ -1518,6 +1518,18 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     icon: "six_seven",
     grantsPokemonImmediately: false
   },
+  [Blessing.GOTTA_CATCH_EM_ALL]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: [4],
+    icon: "catch",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.REGIONAL_SPECIALTIES]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "regional_specialties",
+    grantsPokemonImmediately: false
+  },
   [Blessing.IMPENDING_DOOM]: {
     tier: BlessingTier.SILVER,
     availableAtStages: BLESSING_SELECTION_STAGES,

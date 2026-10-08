@@ -33,13 +33,6 @@ import { SpecialGameRule } from "../../types/enum/SpecialGameRule"
 import { Synergy } from "../../types/enum/Synergy"
 import type { TownEncounter } from "../../types/enum/TownEncounter"
 import { Weather } from "../../types/enum/Weather"
-
-const unavailableScribbleRules = [
-  SpecialGameRule.DO_IT_ALL_YOURSELF,
-  SpecialGameRule.HALLOWEEN,
-  SpecialGameRule.PLAY_TEST,
-  SpecialGameRule.DITTO_PARTY
-]
 import { pickRandomIn, randomBetween } from "../../utils/random"
 
 export default class GameState extends Schema {
@@ -177,18 +170,8 @@ export default class GameState extends Schema {
     this.maxRank = maxRank
     this.weather = Weather.NEUTRAL
 
-    if (gameMode === GameMode.SCRIBBLE) {
-      this.specialGameRule = pickRandomIn(
-        Object.values(SpecialGameRule).filter(
-          (rule) => unavailableScribbleRules.includes(rule) === false
-        )
-      )
-    } else if (whimsy) {
-      this.specialGameRule = pickRandomIn(
-        Object.values(SpecialGameRule).filter(
-          (rule) => unavailableScribbleRules.includes(rule) === false
-        )
-      )
+    if (gameMode === GameMode.SCRIBBLE || whimsy) {
+      this.specialGameRule = pickRandomIn(Object.values(SpecialGameRule))
     } else {
       this.specialGameRule = specialGameRule
     }

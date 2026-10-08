@@ -424,7 +424,7 @@ export default class GameScene extends Scene {
      well as on the server so the sell zone never opens, the sell sound never
      plays, and the sprite snaps straight back instead of sticking to the zone. */
   canSellPokemon(pkm: Pkm): boolean {
-    if (!canSell(pkm, this.room?.state.specialGameRule)) return false
+    if (!canSell(pkm)) return false
     const state = this.room?.state
     if (!state || state.gameMode !== GameMode.GUIDE || !state.guideSynergy) {
       return true

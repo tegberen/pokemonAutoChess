@@ -147,7 +147,7 @@ export const REPEAT_BALL_LEGENDARY_CAP = 120
 export const REPEAT_BALL_UNIQUE_CAP = 80
 export const REPEAT_BALL_UNIQUE_INTERVAL = 10
 
-export const HIGH_ROLLER_CHANCE = 2 / 100
+export const BAZAAR_SPECIAL_POKEMON_CHANCE = 2 / 100
 
 /* sell prices */
 export const SellPrices = {

@@ -1,5 +1,6 @@
 import {
   ARCEUS_RATE,
+  BAZAAR_SPECIAL_POKEMON_CHANCE,
   BuyPrices,
   DITTO_RATE,
   EEVEE_RATE,
@@ -7,7 +8,6 @@ import {
   FishRarityProbability,
   getAltFormForPlayer,
   getUnownsPoolPerStage,
-  HIGH_ROLLER_CHANCE,
   HONEY_CHANCE,
   INCENSE_CHANCE,
   JUGGERNAUT_COPY_RATE,
@@ -38,7 +38,6 @@ import {
 import { BAZAAR_SHOP_INTERVAL, createBazaarShopOffers } from "../core/bazaar"
 import {
   createSmearglePackPropositions,
-  pickFirstPartners,
   pickJuggernautChampions
 } from "../core/scribbles"
 import type GameState from "../rooms/states/game-state"
@@ -787,14 +786,11 @@ export default class Shop {
 
     let allCandidates: PkmProposition[] = poolByType[type] || []
 
-    if (stageLevel === 0) {
-      if (state.specialGameRule === SpecialGameRule.UNIQUE_STARTER) {
-        allCandidates = [...UniquePool]
-      } else if (state.specialGameRule === SpecialGameRule.FIRST_PARTNER) {
-        allCandidates = pickFirstPartners(player, state)
-      } else if (state.specialGameRule === SpecialGameRule.JUGGERNAUT) {
-        allCandidates = pickJuggernautChampions(player, state)
-      }
+    if (
+      stageLevel === 0 &&
+      state.specialGameRule === SpecialGameRule.JUGGERNAUT
+    ) {
+      allCandidates = pickJuggernautChampions(player, state)
     }
 
     if (state.specialGameRule === SpecialGameRule.EVOLUTION_LAB) {
@@ -914,8 +910,6 @@ export default class Shop {
         stageLevel === PortalCarouselStages[0] &&
         pokemonsProposed.includes(Pkm.EEVEE) === false &&
         (chance(EEVEE_RATE) || initialCandidatesEmpty) &&
-        state.specialGameRule !== SpecialGameRule.FIRST_PARTNER &&
-        state.specialGameRule !== SpecialGameRule.UNIQUE_STARTER &&
         state.specialGameRule !== SpecialGameRule.JUGGERNAUT
       ) {
         selected = Pkm.EEVEE
@@ -1144,7 +1138,6 @@ export default class Shop {
     }
 
     if (
-      state.specialGameRule !== SpecialGameRule.DITTO_PARTY &&
       state.specialGameRule !== SpecialGameRule.EVOLUTION_LAB &&
       chance(DITTO_RATE) &&
       state.stageLevel >= MIN_STAGE_FOR_DITTO &&
@@ -1211,8 +1204,8 @@ export default class Shop {
     ][i - 1]
 
     if (
-      state.specialGameRule === SpecialGameRule.HIGH_ROLLER &&
-      chance(HIGH_ROLLER_CHANCE) &&
+      state.specialGameRule === SpecialGameRule.BAZAAR &&
+      chance(BAZAAR_SPECIAL_POKEMON_CHANCE) &&
       !noSpecial
     ) {
       if (state.stageLevel < 10) return this.pickSpecialPokemon(Rarity.HATCH)

@@ -258,7 +258,6 @@ import {
   getFirstAvailablePositionInBench,
   getFirstAvailablePositionOnBoard,
   getFreeSpaceOnBench,
-  getMaxTeamSize,
   isOnBench,
   isPositionEmpty,
   getBenchSize
@@ -968,12 +967,7 @@ export class OnDragDropPokemonCommand extends Command<
         } else if (this.state.phase == GamePhaseState.PICK) {
           // On pick, allow to drop on / from board
           const teamSize = this.room.getTeamSize(player.board, player.blessings)
-          const isBoardFull =
-            teamSize >=
-            getMaxTeamSize(
-              player.experienceManager.level,
-              this.room.state.specialGameRule
-            )
+          const isBoardFull = teamSize >= player.experienceManager.level
           const dropToEmptyPlace = isPositionEmpty(x, y, player.board)
           const target = player.getPokemonAt(x, y)
           // swapping onto a unit that is free to field would raise the count by one
@@ -1106,12 +1100,7 @@ export class OnSwitchBenchAndBoardCommand extends Command<
     if (pokemon.positionY === 0) {
       // pokemon is on bench, switch to board
       const teamSize = this.room.getTeamSize(player.board, player.blessings)
-      const isBoardFull =
-        teamSize >=
-        getMaxTeamSize(
-          player.experienceManager.level,
-          this.room.state.specialGameRule
-        )
+      const isBoardFull = teamSize >= player.experienceManager.level
       const destination = getFirstAvailablePositionOnBoard(
         player.board,
         pokemon.range
@@ -1840,7 +1829,7 @@ export class OnSellPokemonCommand extends Command<
     if (
       pokemon.supportiveSoul ||
       pokemon.chosenOne ||
-      canSell(pokemon.name, this.state.specialGameRule) === false
+      canSell(pokemon.name) === false
     ) {
       return
     }
@@ -2576,7 +2565,7 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
     return true
   }
 
-  computeIncome(isPVE: boolean, specialGameRule: SpecialGameRule | null) {
+  computeIncome(isPVE: boolean) {
     this.state.players.forEach((player) => {
       let income = 0
       if (player.alive && !player.isBot) {
@@ -2592,12 +2581,8 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
           (item) => item === Item.RED_SCALE
         ).length
         player.maxInterest = 5 + nbGimmighoulCoins - nbAmuletCoins
-        if (specialGameRule !== SpecialGameRule.BLOOD_MONEY) {
-          player.interest = max(player.maxInterest)(
-            Math.floor(player.money / 10)
-          )
-          income += player.interest
-        }
+        player.interest = max(player.maxInterest)(Math.floor(player.money / 10))
+        income += player.interest
         if (!isPVE) {
           income += max(5)(player.streak)
         }
@@ -3303,21 +3288,6 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
     }
 
     if (
-      this.state.specialGameRule === SpecialGameRule.FIRST_PARTNER &&
-      this.state.stageLevel > 1 &&
-      this.state.stageLevel < 10 &&
-      player.firstPartner
-    ) {
-      this.room.spawnOnBench(player, player.firstPartner, "spawn")
-    }
-
-    if (this.state.specialGameRule === SpecialGameRule.GO_BIG_OR_GO_HOME) {
-      board.forEach((pokemon) => {
-        pokemon.addMaxHP(5)
-      })
-    }
-
-    if (
       player.pokemonsTrainingInDojo.some(
         (p) => p.returnStage === this.state.stageLevel
       )
@@ -3467,10 +3437,7 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
       if (player.isBot) return
 
       const teamSize = this.room.getTeamSize(player.board, player.blessings)
-      const maxTeamSize = getMaxTeamSize(
-        player.experienceManager.level,
-        this.state.specialGameRule
-      )
+      const maxTeamSize = player.experienceManager.level
       if (teamSize < maxTeamSize) {
         const numberOfPokemonsToMove = maxTeamSize - teamSize
         for (let i = 0; i < numberOfPokemonsToMove; i++) {
@@ -3626,7 +3593,7 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
     if (!isGameFinished) {
       this.state.stageLevel += 1
       this.room.setMetadata({ stageLevel: this.state.stageLevel })
-      this.computeIncome(isPVE, this.state.specialGameRule)
+      this.computeIncome(isPVE)
       this.state.players.forEach((player: Player) => {
         const croagunk = [...player.wanderers.values()].find(
           (w) => w.type === WandererType.CROAGUNK_TRADE
@@ -4111,7 +4078,7 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
     /* after every simulation exists, so each player's side is known */
     anchorPlayerAvatars(this.state)
 
-    if (this.state.specialGameRule === SpecialGameRule.UNOWN_SPELL) {
+    if (this.state.specialGameRule === SpecialGameRule.TOWN_FESTIVAL) {
       this.state.simulations.forEach((simulation) => {
         const unown = pickRandomIn(UnownsForScribble)
         ;[
@@ -4215,7 +4182,7 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
 
         if (
           isPVE &&
-          this.state.specialGameRule === SpecialGameRule.GOTTA_CATCH_EM_ALL
+          player.blessings?.includes(Blessing.GOTTA_CATCH_EM_ALL)
         ) {
           const nbPokemonsToSpawn = Math.ceil(this.state.stageLevel / 2)
           for (let i = 0; i < nbPokemonsToSpawn; i++) {
@@ -4348,12 +4315,7 @@ export class OnOverwriteBoardCommand extends Command<GameRoom> {
     board: IDetailledPokemon[]
   }) {
     const player = this.room.state.players.get(playerId)
-    if (
-      !player ||
-      (player.role !== Role.ADMIN &&
-        this.room.state.specialGameRule !== SpecialGameRule.PLAY_TEST)
-    )
-      return
+    if (!player || player.role !== Role.ADMIN) return
     player.board.clear()
     board.forEach((p) => {
       const pokemon = PokemonFactory.createPokemonFromName(p.name, p)
@@ -4453,7 +4415,6 @@ export function onPokemonChangePosition({
 
   if (newY === 0 && !doNotRemoveItems) {
     const unloadsEverything =
-      state?.specialGameRule === SpecialGameRule.SLAMINGO ||
       player.blessings?.includes(Blessing.CROAGUNKS_AID) ||
       (player.blessings?.includes(Blessing.SILVER_SPOON) === true &&
         PkmFamily[pokemon.name] === Pkm.ABRA) ||

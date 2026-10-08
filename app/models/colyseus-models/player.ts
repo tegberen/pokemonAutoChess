@@ -67,7 +67,6 @@ import {
   AbilityPerTM,
   ArtificialItems,
   Item,
-  ItemComponentsNoFossilOrScarf,
   type MissionOrder,
   NonSpecialBerries,
   type ScarfItem,
@@ -452,6 +451,7 @@ export default class Player extends Schema implements IPlayer {
     if (state.scribbleExtended) {
       this.maxLife = 150
       this.life = this.maxLife
+      this.experienceManager.maxLevel = 10
     }
     this.avatarSynergy = state.avatarSynergy
     this.flowerPots = initFlowerPots(this)
@@ -493,32 +493,6 @@ export default class Player extends Schema implements IPlayer {
       const owned = new PlayerBlessings()
       state.blessingsByPlayerId.set(this.id, owned)
       this.blessingsRef = owned
-    }
-
-    if (state.specialGameRule === SpecialGameRule.DITTO_PARTY) {
-      for (let i = 0; i < 5; i++) {
-        const ditto = PokemonFactory.createPokemonFromName(Pkm.DITTO, this)
-        ditto.positionX = getFirstAvailablePositionInBench(this.board, getBenchSize(this.blessings)) ?? 0
-        ditto.positionY = 0
-        this.board.set(ditto.id, ditto)
-        ditto.onAcquired(this)
-      }
-    }
-
-    if (state.specialGameRule === SpecialGameRule.SLAMINGO) {
-      for (let i = 0; i < 4; i++)
-        this.items.push(pickRandomIn(ItemComponentsNoFossilOrScarf))
-    }
-
-    if (state.specialGameRule === SpecialGameRule.HALLOWEEN) {
-      this.bonusSynergies.set(Synergy.GHOST, 8)
-      this.updateSynergies()
-    }
-
-    if (state.specialGameRule === SpecialGameRule.OVERTIME) {
-      this.maxLife = 200
-      this.life = this.maxLife
-      this.experienceManager.maxLevel = 10
     }
 
     if (state.gameMode === GameMode.DOUBLE_UP && !isBot) {
@@ -1697,6 +1671,35 @@ export default class Player extends Schema implements IPlayer {
     )
   }
 
+  applyRegionalSpecialties(previousMap?: string) {
+    if (this.map === "town") return
+    if (previousMap && previousMap !== "town") {
+      const { synergies: previousSynergies } = RegionDetails[previousMap]
+      previousSynergies.forEach((synergy) => {
+        this.bonusSynergies.set(
+          synergy,
+          min(0)((this.bonusSynergies.get(synergy) ?? 0) - 1)
+        )
+      })
+    }
+
+    const { synergies, regionalSpeciality } = RegionDetails[this.map]
+    synergies.forEach((synergy) => {
+      this.bonusSynergies.set(
+        synergy,
+        (this.bonusSynergies.get(synergy) ?? 0) + 1
+      )
+    })
+    this.updateSynergies()
+    if (regionalSpeciality) {
+      this.board.forEach((pokemon) => {
+        if (pokemon.canEat && !pokemon.dishes.has(regionalSpeciality)) {
+          pokemon.dishes.add(regionalSpeciality)
+        }
+      })
+    }
+  }
+
   updateRegionalPool(
     state: GameState,
     mapChanged: boolean,
@@ -1723,32 +1726,8 @@ export default class Player extends Schema implements IPlayer {
         }
       })
 
-      if (state.specialGameRule === SpecialGameRule.REGIONAL_SPECIALTIES) {
-        if (previousMap) {
-          const { synergies: previousSynergies } = RegionDetails[previousMap]
-          previousSynergies.forEach((synergy) => {
-            this.bonusSynergies.set(
-              synergy,
-              min(0)((this.bonusSynergies.get(synergy) ?? 0) - 1)
-            )
-          })
-        }
-
-        const { synergies, regionalSpeciality } = RegionDetails[this.map]
-        synergies.forEach((synergy) => {
-          this.bonusSynergies.set(
-            synergy,
-            (this.bonusSynergies.get(synergy) ?? 0) + 1
-          )
-        })
-        this.updateSynergies()
-        if (regionalSpeciality) {
-          this.board.forEach((pokemon) => {
-            if (pokemon.canEat && !pokemon.dishes.has(regionalSpeciality)) {
-              pokemon.dishes.add(regionalSpeciality)
-            }
-          })
-        }
+      if (this.blessings?.includes(Blessing.REGIONAL_SPECIALTIES)) {
+        this.applyRegionalSpecialties(previousMap)
       }
 
       // Cannot be a ConditionBasedEvolutionRule because it has another CountEvolutionRule for Wormadam

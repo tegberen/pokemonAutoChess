@@ -8,7 +8,6 @@ import {
   BOARD_WIDTH
 } from "../config/game/board"
 import { Blessing } from "../types/enum/Blessing"
-import { SpecialGameRule } from "../types/enum/SpecialGameRule"
 import { schemaValues } from "./schemas"
 
 export function getBenchSize(
@@ -97,12 +96,4 @@ export function getFreeSpaceOnBench(
     }
   }
   return numberOfFreeSpace
-}
-
-export function getMaxTeamSize(
-  playerLevel: number,
-  specialGameRule?: SpecialGameRule | null
-) {
-  if (specialGameRule === SpecialGameRule.CROWDED) return playerLevel + 3
-  return playerLevel
 }

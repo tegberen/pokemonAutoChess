@@ -28,7 +28,6 @@ import {
 } from "../../types/enum/Item"
 import { Passive } from "../../types/enum/Passive"
 import { Pkm, PkmFamily, PkmIndex } from "../../types/enum/Pokemon"
-import { SpecialGameRule } from "../../types/enum/SpecialGameRule"
 import { Synergy, SynergyArray } from "../../types/enum/Synergy"
 import { Weather } from "../../types/enum/Weather"
 import { isUnderZenith } from "../../utils/weather"
@@ -1847,13 +1846,12 @@ export const PassiveEffects: Partial<
     })
   ],
   [Passive.RKS_SYSTEM]: [
-    new OnChangePositionEffect(({ newY, pokemon, player, state }) => {
+    new OnChangePositionEffect(({ newY, pokemon, player }) => {
       if (newY === 0) {
         const itemsToRemove = schemaValues(pokemon.items).filter((item) => {
           return (
             isIn(RemovableItems, item) ||
-            ((state?.specialGameRule === SpecialGameRule.SLAMINGO ||
-              player.blessings?.includes(Blessing.CROAGUNKS_AID)) &&
+            (player.blessings?.includes(Blessing.CROAGUNKS_AID) &&
               item !== Item.RARE_CANDY) ||
             isIn(SynergyItems, item)
           )

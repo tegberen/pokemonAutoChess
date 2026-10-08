@@ -409,10 +409,7 @@ export default function GameChoice() {
   if (choice.type === "addPick") {
     message = t("player_choices.choose_add_pick")
   } else if (choice.type === "starter") {
-    message =
-      specialGameRule === SpecialGameRule.FIRST_PARTNER
-        ? t("player_choices.choose_first_partner")
-        : t("player_choices.choose_starter")
+    message = t("player_choices.choose_starter")
   } else if (choice.type === "mission_order") {
     message = t("player_choices.choose_mission_order")
   } else if (choice.type === "unique") {

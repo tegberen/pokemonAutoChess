@@ -19,7 +19,9 @@ import {
   PkmRegionalBaseVariants,
   PkmRegionalVariants
 } from "../../../../../types/enum/Pokemon"
-import { SpecialGameRule } from "../../../../../types/enum/SpecialGameRule"
+import {
+  RulesWithAllPokemonsAvailable
+} from "../../../../../types/enum/SpecialGameRule"
 import type { Synergy } from "../../../../../types/enum/Synergy"
 import type { IPokemonData } from "../../../../../types/interfaces/PokemonData"
 import { groupBy } from "../../../../../utils/array"
@@ -332,7 +334,8 @@ function PokemonPickerTab(props: {
             !ingame ||
             !preferences.filterAvailableAddsAndRegionals ||
             isAvailable ||
-            specialGameRule === SpecialGameRule.EVERYONE_IS_HERE
+            (specialGameRule != null &&
+              RulesWithAllPokemonsAvailable.includes(specialGameRule))
           )
         }),
     [

@@ -32,13 +32,6 @@ import { Modal } from "../modal/modal"
 import { BotSelectModal } from "./bot-select-modal"
 import "./preparation-menu.css"
 
-const unavailableScribbleRules: SpecialGameRule[] = [
-  SpecialGameRule.DO_IT_ALL_YOURSELF,
-  SpecialGameRule.HALLOWEEN,
-  SpecialGameRule.DITTO_PARTY,
-  SpecialGameRule.PLAY_TEST
-]
-
 export default function PreparationSettings() {
   const { t } = useTranslation()
   const [inputValue, setInputValue] = useState<string>("")
@@ -259,7 +252,6 @@ export default function PreparationSettings() {
       .filter((rule) => rule !== SpecialGameRule.SMEARGLE_PACK)
   ]
   const filteredRules = orderedRules.filter((rule) => {
-    if (unavailableScribbleRules.includes(rule as SpecialGameRule)) return false
     const q = ruleQuery.trim().toLowerCase()
     if (!q) return true
     return (
@@ -287,12 +279,13 @@ export default function PreparationSettings() {
           </div>
           <ul className="rule-list">
             <li
-              className={cc("my-box", "rule-card", "no-rule", {
+              className={cc("my-box", "rule-card", "random-rule", {
                 selected: specialGameRule == null
               })}
               onClick={() => pickRule("random")}
             >
-              <h3>{t("random_rule")}</h3>
+              <h3>{t("random_scribble")}</h3>
+              <p>{t("smeargle_scribble_hint")}</p>
             </li>
             {filteredRules.map((rule) => (
               <li

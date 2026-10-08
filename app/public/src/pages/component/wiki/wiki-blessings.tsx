@@ -139,7 +139,9 @@ const TEAM_BUILDING_BLESSINGS = new Set<Blessing>([
   Blessing.TRANSFORM,
   Blessing.REGIONAL_TREASURES,
   Blessing.REGIONAL_TREASURES_II,
-  Blessing.GYM_LEADER
+  Blessing.GYM_LEADER,
+  Blessing.GOTTA_CATCH_EM_ALL,
+  Blessing.REGIONAL_SPECIALTIES
 ])
 
 // blessings that hand out loot, as opposed to the Item Blessings category

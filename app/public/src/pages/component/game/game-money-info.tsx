@@ -1,7 +1,6 @@
 import { useTranslation } from "react-i18next"
 import { Tooltip } from "react-tooltip"
 import { BattleResult, GameMode } from "../../../../../types/enum/Game"
-import { SpecialGameRule } from "../../../../../types/enum/SpecialGameRule"
 import { max } from "../../../../../utils/number"
 import { selectSpectatedPlayer, useAppSelector } from "../../../hooks"
 import { addIconsToDescription } from "../../utils/descriptions"
@@ -37,7 +36,6 @@ export function GameMoneyInfo() {
 
 export function GameMoneyDetail() {
   const { t } = useTranslation()
-  const specialGameRule = useAppSelector((state) => state.game.specialGameRule)
   const currentPlayer = useAppSelector(selectSpectatedPlayer)
   const streak = useAppSelector((state) => state.game.streak)
   const lastPlayerBattle =
@@ -64,22 +62,18 @@ export function GameMoneyDetail() {
         {lastBattleResult !== null && `(${streakLabel})`}
       </p>
       <p className="help">{addIconsToDescription(t("streak_income_hint"))}</p>
-      {specialGameRule !== SpecialGameRule.BLOOD_MONEY && (
-        <>
-          <p style={{ marginTop: "0.5em" }}>
-            <Money value={t("interest", { interest })} />(
-            {addIconsToDescription(t("max_interest", { maxInterest }))})
-          </p>
-          <p className="help">
-            {addIconsToDescription(
-              t("additional_income_hint", {
-                maxInterest,
-                maxInterestGolds: maxInterest * 10
-              })
-            )}
-          </p>
-        </>
-      )}
+      <p style={{ marginTop: "0.5em" }}>
+        <Money value={t("interest", { interest })} />(
+        {addIconsToDescription(t("max_interest", { maxInterest }))})
+      </p>
+      <p className="help">
+        {addIconsToDescription(
+          t("additional_income_hint", {
+            maxInterest,
+            maxInterestGolds: maxInterest * 10
+          })
+        )}
+      </p>
     </div>
   )
 }

@@ -3020,6 +3020,11 @@ export const blessingEffectService: {
     sacrificePlayerLife(player, SIX_SEVEN_LIFE_COST, state)
     return true
   },
+  [Blessing.GOTTA_CATCH_EM_ALL]: () => true,
+  [Blessing.REGIONAL_SPECIALTIES]: (player) => {
+    player.applyRegionalSpecialties()
+    return true
+  },
   [Blessing.IMPENDING_DOOM]: () => true,
 
   [Blessing.SYNCHRONICITY]: (player) => {

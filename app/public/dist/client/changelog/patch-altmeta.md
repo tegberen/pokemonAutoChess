@@ -463,11 +463,9 @@ Smeargle Scribbles do not change your Elo.
 - **The Bazaar**: {{scribble:BAZAAR}}
 - **Quest Board**: {{scribble:QUEST_BOARD}}
 - **Juggernaut**: {{scribble:JUGGERNAUT}}
-- **Kaiju Battle**: {{scribble:KAIJU_BATTLE}}
 - **Avatar**: {{scribble:AVATAR}}
 - **Science & Arts**: {{scribble:LIGHT_SHOW}}
 - **Smeargle Pack**: {{scribble:SMEARGLE_PACK}}
-- **Overtime**: {{scribble:OVERTIME}}
 
 ## Misc
 
@@ -534,10 +532,10 @@ Every balance change on this server, newest first.
 - King's Gambit | ATK and HP gained from fallen allies 25% → 50%
 - It's Going Down | each new pillar gains 50 HP for each throw this fight
 - Mountain Egg | also gives 10 free rerolls
-- High Tower Castle {{new}} | Prismatic, stage 4 only. At the start of each fight, all allies on the board gain 1 SPEED and 4 HP permanently
-- Training Ground {{new}} | Prismatic, stage 4 only. At the start of each fight, all allies on the board gain 1 DEF, 1 SPE_DEF and 2 HP permanently
-- Magic Palace {{new}} | Prismatic, stage 4 only. At the start of each fight, all allies on the board gain 2 AP and 4 HP permanently
-- 67 {{new}} | Prismatic, stage 4 only. Gain 67 GOLD and lose 67 player HP (cannot be rolled by Gamble III or Golden Flip)
+- High Tower Castle {{new}} | Stage 4 only. At the start of each fight, all allies on the board gain 1 SPEED and 4 HP permanently
+- Training Ground {{new}} | Stage 4 only. At the start of each fight, all allies on the board gain 1 DEF, 1 SPE_DEF and 2 HP permanently
+- Magic Palace {{new}} | Stage 4 only. At the start of each fight, all allies on the board gain 2 AP and 4 HP permanently
+- 67 {{new}} | Stage 4 only. Gain 67 GOLD and lose 67 player HP (cannot be rolled by Gamble III or Golden Flip)
 - Prismatic Quest {{new}} | Gain 10 GOLD and unlock the Quest Panel UI. Stage 4 only
 - Quest Panel | the 12 Prismatic quest Wishes are merged into one Wish, Prismatic Quest, which unlocks the Quest Panel UI. It tracks all 12 quests at once: complete as many as you like, each unlocks its shiny item, but you can only claim one. Quests no longer give starting items, and rewards no longer include an EXCHANGE_TICKET and a RECYCLE_TICKET
 - Quest: Crit | hold 100 GOLD at once. Reward: GOLD_BOTTLE_CAP
@@ -553,10 +551,24 @@ Every balance change on this server, newest first.
 - Quest: Pillage | KO 30 enemy Pokémon. Reward: BOOSTER_ENERGY
 - Quest: Reroll | reroll 50 times. Reward: REPEAT_BALL
 - Missions | Quest: Evolve, Destroy, Level Up, Diversify and Prosper are renamed to Mission
+- Gotta Catch 'Em All {{new}} | Stage 4 only. Before each PvE round, wild Pokémon you can catch run across your board. Was a Scribble
+- Regional Specialties {{new}} | Your current region types count towards your synergies. Your team tastes the local dish now and after each region change. Was a Scribble
 - Curse of Two | removed
 - Hex Maniac | removed
 
 **Game Mode**
+- Unown Festival | Town Festival is renamed and merged with Unown Spell: Unowns cast spells on both teams each round
+- Slamingo | removed, now the Croagunk's Aid Wish
+- Unique Starter and First Partner | removed, replaced by the Smeargle Pack Scribble
+- Everyone is here! | removed, replaced by the Evolution Lab Scribble
+- Go big or go home | removed, now the Prismatic High Tower Castle, Training Ground and Magic Palace Wishes
+- Blood Money | removed
+- Crowded Board | removed, replaced by the Science & Arts Scribble
+- The Bazaar | merged with High Roller: shops have a chance to contain Hatch at stages 0-10, Unique at stages 10-20 and Legendary after stage 20
+- Overtime | removed, since starting HP can be set in the lobby settings. Starting at 150 HP now also lets players reach level 10
+- Gotta catch'em all! | removed, now a Gold Wish
+- Regional Specialties | removed, now a Gold Wish
+- Kaiju Battle | merged into Avatar
 - Mega Evolution {{new}} | new Scribble: {{scribble:MEGA_EVOLUTION}} [Mega Evolutions in the Wiki](#wiki/mega-evolutions)
 - | Mega Pokémon removed from the base game
 - | Mega Pokémon base stats now match the form before them, plus 150 HP and 15 ATK

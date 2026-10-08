@@ -123,11 +123,7 @@ export function computeSynergies(
     }
 
     const typeGivenByRule =
-      specialGameRule === SpecialGameRule.KAIJU_BATTLE
-        ? Synergy.MONSTER
-        : specialGameRule === SpecialGameRule.AVATAR
-          ? avatarSynergy
-          : null
+      specialGameRule === SpecialGameRule.AVATAR ? avatarSynergy : null
     if (typeGivenByRule && !pkm.types.has(typeGivenByRule)) {
       if (typeGivenByRule === Synergy.DRAGON) {
         // dragon always goes first

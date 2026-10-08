@@ -1098,9 +1098,6 @@ export default class Simulation extends Schema implements ISimulation {
     const player =
       sourcePlayer ??
       (team === Team.BLUE_TEAM ? this.bluePlayer : this.redPlayer)
-    if (this.room?.state.specialGameRule === SpecialGameRule.KAIJU_BATTLE) {
-      pokemon.types.add(Synergy.MONSTER)
-    }
     if (
       this.room?.state.specialGameRule === SpecialGameRule.AVATAR &&
       this.room.state.avatarSynergy
@@ -1765,18 +1762,6 @@ export default class Simulation extends Schema implements ISimulation {
           })
         }
       })
-
-      if (
-        this.room.state.specialGameRule === SpecialGameRule.HALLOWEEN &&
-        player &&
-        (player?.synergies.get(Synergy.GHOST) ?? 0) >= 16
-      ) {
-        const ghost = PokemonFactory.createPokemonFromName(Pkm.GHOST)
-        const coord = this.getFirstFreeCell(teamIndex)
-        if (coord) {
-          this.addPokemon(ghost, coord.x, coord.y, teamIndex, true)
-        }
-      }
     }
 
     // DARK SUBSTITUTE - decide which units are eligible to trigger at fight start

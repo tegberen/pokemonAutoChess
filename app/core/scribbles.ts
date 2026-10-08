@@ -6,9 +6,8 @@ import {
 } from "../config"
 import type Player from "../models/colyseus-models/player"
 import { type Pokemon, PokemonClasses } from "../models/colyseus-models/pokemon"
-import PokemonFactory from "../models/pokemon-factory"
 import { getAvailableEmotions } from "../models/precomputed/precomputed-emotions"
-import { getPokemonData, getRegularsTier1 } from "../models/precomputed/precomputed-pokemon-data"
+import { getPokemonData } from "../models/precomputed/precomputed-pokemon-data"
 import { PRECOMPUTED_POKEMONS_PER_RARITY } from "../models/precomputed/precomputed-rarity"
 import { PokemonAnimations } from "../public/src/game/components/pokemon-animations"
 import type GameState from "../rooms/states/game-state"
@@ -16,88 +15,9 @@ import { Ability } from "../types/enum/Ability"
 import { Emotion } from "../types/enum/Emotion"
 import { Rarity } from "../types/enum/Game"
 import { Pkm, PkmFamily, PkmIndex, PkmRegionalVariants, Unowns } from "../types/enum/Pokemon"
-import { getPokemonCustomFromAvatar } from "../utils/avatar"
-import { getFirstAvailablePositionInBench,
-  getBenchSize
-} from "../utils/board"
 import { min } from "../utils/number"
 import { chance, pickRandomIn, randomWeighted, simpleHashSeededCoinFlip } from "../utils/random"
 import { getUnitPowerScore } from "./bot-logic"
-import { createRandomEgg } from "./eggs"
-
-export function spawnDIAYAvatar(player: Player): Pokemon {
-  const {
-    name,
-    emotion,
-    shiny = false
-  } = getPokemonCustomFromAvatar(player.avatar)
-  player.firstPartner = name
-  let powerScore = getUnitPowerScore(name)
-
-  switch (player.firstPartner) {
-    case Pkm.AEGISLASH_BLADE:
-      player.firstPartner = Pkm.AEGISLASH
-      break
-
-    case Pkm.HOOPA_UNBOUND:
-      player.firstPartner = Pkm.HOOPA
-      break
-
-    case Pkm.MINIOR_KERNEL_BLUE:
-    case Pkm.MINIOR_KERNEL_GREEN:
-    case Pkm.MINIOR_KERNEL_ORANGE:
-    case Pkm.MINIOR_KERNEL_RED:
-      player.firstPartner = Pkm.MINIOR
-      break
-
-    case Pkm.MORPEKO_HANGRY:
-      player.firstPartner = Pkm.MORPEKO
-      break
-
-    case Pkm.DARMANITAN_ZEN:
-      player.firstPartner = Pkm.DARMANITAN
-      break
-
-    case Pkm.COSMOG:
-    case Pkm.POIPOLE:
-    case Pkm.CHIMECHO:
-    case Pkm.GIMMIGHOUL:
-      powerScore = 5
-      break
-
-    case Pkm.COSMOEM:
-      powerScore = 6
-      break
-
-    case Pkm.NAGANADEL:
-    case Pkm.GHOLDENGO:
-      powerScore = 8
-      break
-  }
-
-  let avatar: Pokemon
-  if (player.firstPartner === Pkm.EGG) {
-    avatar = createRandomEgg(player, false)
-    powerScore = 5
-  } else {
-    avatar = PokemonFactory.createPokemonFromName(player.firstPartner, {
-      emotion,
-      shiny
-    })
-  }
-
-  avatar.positionX = getFirstAvailablePositionInBench(player.board, getBenchSize(player.blessings)) ?? 0
-  avatar.positionY = 0
-
-  applyScribbleStarterStats(avatar, player, powerScore)
-  return avatar
-}
-
-// Per-family AP adjustments to the whole line
-export const SCRIBBLE_STARTER_AP_OVERRIDES: Partial<Record<Pkm, number>> = {
-  [Pkm.HOUNDOUR]: -50,
-  [Pkm.SHUPPET]: -50
-}
 
 export function applyScribbleStarterStats(
   avatar: Pokemon,
@@ -125,11 +45,6 @@ export function applyScribbleStarterStats(
   const bonusHP = Math.round(150 - powerScore * 30)
   avatar.maxHP = min(10)(avatar.maxHP + bonusHP)
   avatar.hp = avatar.maxHP
-
-  const apOverride = SCRIBBLE_STARTER_AP_OVERRIDES[PkmFamily[avatar.name]]
-  if (apOverride) {
-    avatar.addAbilityPower(apOverride)
-  }
 }
 
 export function getScribbleStarterPowerScore(name: Pkm): number {
@@ -355,28 +270,4 @@ export function applyJuggernautStats(champion: Pokemon, state: GameState) {
     normalize(champion.speDef, t.speDef, mean.speDef) - champion.speDef
   )
   champion.addMaxHP(normalize(champion.hp, t.hp, mean.hp) - champion.hp)
-}
-
-export function pickFirstPartners(player: Player, state: GameState): Pkm[] {
-  const rarities = [Rarity.COMMON, Rarity.UNCOMMON, Rarity.RARE, Rarity.EPIC]
-  const hash = Array.from(state.preparationId).reduce(
-    (acc, char) => acc + char.charCodeAt(0),
-    0
-  )
-  const rarityIndex = hash % 4
-  const rarityPartner = rarities[rarityIndex]
-  return getRegularsTier1(PRECOMPUTED_POKEMONS_PER_RARITY[rarityPartner])
-    .filter((p) => getPokemonData(p).stages === 3)
-    .map((pkm) => {
-      if (pkm in PkmRegionalVariants) {
-        const regionalVariants = PkmRegionalVariants[pkm]!.filter((p) =>
-          player.regionalPokemons.includes(p)
-        )
-        if (regionalVariants.length > 0) pkm = pickRandomIn(regionalVariants)
-      }
-      if (PkmsWithAltForms.includes(pkm)) {
-        pkm = getAltFormForPlayer(pkm, player)
-      }
-      return pkm
-    })
 }

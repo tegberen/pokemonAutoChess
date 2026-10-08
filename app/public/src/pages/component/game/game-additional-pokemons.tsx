@@ -87,7 +87,7 @@ export function GameAdditionalPokemons() {
   ) {
     return (
       <div className="game-additional-pokemons">
-        <p>{t("scribble.EVERYONE_IS_HERE")}</p>
+        <p>{t("all_additional_picks_available")}</p>
       </div>
     )
   } else if (!additionalPokemons || additionalPokemons.length === 0) {

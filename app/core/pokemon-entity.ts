@@ -83,10 +83,7 @@ import {
 import { Awakening } from "../types/enum/Awakening"
 import { Passive } from "../types/enum/Passive"
 import { Pkm, PkmByIndex, Unowns } from "../types/enum/Pokemon"
-import {
-  isMegaEvolutionLocked,
-  SpecialGameRule
-} from "../types/enum/SpecialGameRule"
+import { isMegaEvolutionLocked } from "../types/enum/SpecialGameRule"
 import { Synergy } from "../types/enum/Synergy"
 import { Weather } from "../types/enum/Weather"
 import { isUnderZenith } from "../utils/weather"
@@ -1687,16 +1684,6 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
     }
 
     if (
-      this.player &&
-      this.simulation.room.state.specialGameRule ===
-        SpecialGameRule.BLOOD_MONEY &&
-      !target.isSpawn
-    ) {
-      this.player.addMoney(1, true, this)
-      this.count.moneyCount += 1
-    }
-
-    if (
       (target.name === Pkm.MAGIKARP ||
       target.name === Pkm.FEEBAS ||
       target.name === Pkm.REMORAID ||
@@ -2538,14 +2525,7 @@ flyAway(
   }
 }
 
-export function canSell(
-  pkm: Pkm,
-  specialGameRule: SpecialGameRule | undefined | null
-) {
-  if (specialGameRule === SpecialGameRule.DITTO_PARTY && pkm === Pkm.DITTO) {
-    return false
-  }
-
+export function canSell(pkm: Pkm) {
   return new PokemonClasses[pkm](pkm).canBeSold
 }
 

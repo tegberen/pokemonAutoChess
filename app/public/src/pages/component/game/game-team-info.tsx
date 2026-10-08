@@ -1,19 +1,14 @@
 import { useTranslation } from "react-i18next"
 import { Tooltip } from "react-tooltip"
-import { getMaxTeamSize } from "../../../../../utils/board"
 import { selectSpectatedPlayer, useAppSelector } from "../../../hooks"
 
 export function GameTeamInfo() {
   const { t } = useTranslation()
   const spectatedPlayer = useAppSelector(selectSpectatedPlayer)
-  const specialGameRule = useAppSelector((state) => state.game.specialGameRule)
 
   if (!spectatedPlayer) return null
 
-  const maxTeamSize = getMaxTeamSize(
-    spectatedPlayer.experienceManager.level,
-    specialGameRule
-  )
+  const maxTeamSize = spectatedPlayer.experienceManager.level
 
   return (
     <div id="game-team-info" className="my-container team-size information">

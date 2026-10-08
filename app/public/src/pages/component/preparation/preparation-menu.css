@@ -359,28 +359,20 @@
   color: var(--color-fg-primary);
 }
 
-.rule-picker .rule-card.no-rule h3 {
-  padding-bottom: 0;
-  border-bottom: none;
-}
-
 .rule-picker .rule-card p {
   margin: 0;
   font-size: 0.85em;
   line-height: 1.3;
 }
 
-.rule-picker .rule-card.no-rule {
-  align-items: center;
-  justify-content: center;
-}
-
 .rule-picker .rule-card:hover {
-  background: var(--color-bg-accent);
+  background-color: var(--color-bg-accent);
 }
 
+/* a frame rather than a fill, so the Random card keeps its paint stripes */
 .rule-picker .rule-card.selected {
-  background: var(--color-bg-accent);
+  outline: 3px solid var(--color-bg-accent);
+  outline-offset: -3px;
 }
 
 @media (width <= 640px) {
@@ -546,7 +538,8 @@
 }
 
 /* Smeargle: its four primary paints on a canvas tone */
-.rule-banner.modification-scribble {
+.rule-banner.modification-scribble,
+.rule-picker .rule-card.random-rule {
   --mode-hue: #d8c7a8;
   --mode-stripe-a: #e8392f;
   --mode-stripe-b: #f5c82a;

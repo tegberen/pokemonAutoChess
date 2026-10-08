@@ -142,9 +142,10 @@ export class MonsterKillEffect extends OnKillEffect {
     const apBoost = MONSTER_AP_BUFF_PER_SYNERGY_TIER[this.synergyTier] ?? 0
     let hpGain =
       MONSTER_MAX_HP_BUFF_FACTOR_PER_SYNERGY_TIER[this.synergyTier] ?? 0
+    const { specialGameRule, avatarSynergy } = attacker.simulation.room.state
     if (
-      attacker.simulation.room.state.specialGameRule ===
-      SpecialGameRule.KAIJU_BATTLE
+      specialGameRule === SpecialGameRule.AVATAR &&
+      avatarSynergy === Synergy.MONSTER
     ) {
       hpGain *= 3
     }
