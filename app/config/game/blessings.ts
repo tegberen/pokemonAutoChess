@@ -19,7 +19,6 @@ import {
   MIX_AND_MATCH_II_UNIQUES,
   ROCKY_BEGINNINGS_POKEMONS,
   SELECTIVE_GENETICS_BABIES_GRANTED,
-  STARTER_PACK_CONTENT,
   getGymTrainerRoster,
   PARK_BENCH_WATER_POKEMONS
 } from "../../types/enum/Blessing"
@@ -648,11 +647,11 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     icon: "tough_formation",
     grantsPokemonImmediately: false
   },
-  [Blessing.PEARL]: {
+  [Blessing.BOOSTER_PACK_I]: {
     tier: BlessingTier.SILVER,
     availableAtStages: BLESSING_SELECTION_STAGES,
-    icon: "pearl",
-    grantsPokemonImmediately: false
+    icon: "booster_pack_silver",
+    grantsPokemonImmediately: true
   },
   [Blessing.CROAGUNKS_AID]: {
     tier: BlessingTier.GOLD,
@@ -678,18 +677,17 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     icon: "gems",
     grantsPokemonImmediately: false
   },
-  [Blessing.STARTER_PACK]: {
-    tier: BlessingTier.SILVER,
-    availableAtStages: [4],
-    icon: "gift_box",
-    grantsPokemonImmediately: true,
-    benchSlotsRequired: STARTER_PACK_CONTENT.length
-  },
-  [Blessing.NUGGET]: {
+  [Blessing.BOOSTER_PACK_II]: {
     tier: BlessingTier.GOLD,
     availableAtStages: BLESSING_SELECTION_STAGES,
-    icon: "gold_bar",
-    grantsPokemonImmediately: false
+    icon: "booster_pack_gold",
+    grantsPokemonImmediately: true
+  },
+  [Blessing.BOOSTER_PACK_III]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "booster_pack_prismatic",
+    grantsPokemonImmediately: true
   },
   [Blessing.TREASURE_HUNT_II]: {
     tier: BlessingTier.GOLD,

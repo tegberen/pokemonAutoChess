@@ -124,7 +124,6 @@ import {
   SINGULARITY_OPTIONS,
   STARTER_CHOICE_OPTIONS,
   SOUL_BLAZE_FIRE_SHARDS,
-  STARTER_PACK_CONTENT,
   SYNARCH_GEMS_PER_UNIQUE,
   SYNERGY_BLESSING_GIFT,
   TRASH_TO_TREASURE_ROUNDS_BY_STAR,
@@ -203,7 +202,13 @@ import {
 import { SEASONS, getCurrentSeason } from "../utils/season"
 import { schemaValues } from "../utils/schemas"
 
-const PEARL_GOLD_GAINED = 10
+const BOOSTER_PACKS: Partial<
+  Record<Blessing, { value: number; guaranteedRarity: Rarity }>
+> = {
+  [Blessing.BOOSTER_PACK_I]: { value: 12, guaranteedRarity: Rarity.UNCOMMON },
+  [Blessing.BOOSTER_PACK_II]: { value: 18, guaranteedRarity: Rarity.RARE },
+  [Blessing.BOOSTER_PACK_III]: { value: 24, guaranteedRarity: Rarity.EPIC }
+}
 const RELIC_FRAGMENT_GOLD = 5
 const CROAGUNKS_AID_EXCHANGE_TICKETS = 2
 const CROAGUNKS_AID_GOLD_GAINED = 10
@@ -212,7 +217,6 @@ const BAG_OF_SWEETS_AMOUNT = 10
 const BANANA_BUSINESS_NANAB_BERRIES = 3
 const WOBBUFFETS_SILVER_PRIZE_RECYCLE_TICKETS = 2
 const TREASURE_HUNT_I_GEMS = 2
-const NUGGET_GOLD_GAINED = 15
 const TREASURE_HUNT_II_GEMS = 4
 const GIMMIGHOULS_TREASURE_COINS = 2
 const GIMMIGHOUL_COIN_GOLD_ON_ACQUIRE = 5
@@ -278,6 +282,54 @@ function giftPokemonOfRarityAndStars(
   pokemon.positionY = 0
   player.board.set(pokemon.id, pokemon)
   pokemon.onAcquired(player)
+  return true
+}
+
+// the guaranteed unit first, then units of that rarity or the one below
+// until the value is spent; a remainder too small for both becomes one
+// cheaper unit, so the pack is worth exactly its value
+function rollBoosterPackRarities(
+  value: number,
+  guaranteedRarity: Rarity
+): Rarity[] {
+  const rarityByCost = [
+    Rarity.COMMON,
+    Rarity.UNCOMMON,
+    Rarity.RARE,
+    Rarity.EPIC,
+    Rarity.ULTRA
+  ]
+  const fillRarities = [
+    rarityByCost[rarityByCost.indexOf(guaranteedRarity) - 1],
+    guaranteedRarity
+  ]
+  const rarities = [guaranteedRarity]
+  let remaining = value - RarityCost[guaranteedRarity]
+  while (remaining > 0) {
+    const affordable = fillRarities.filter(
+      (rarity) => RarityCost[rarity] <= remaining
+    )
+    const rarity =
+      affordable.length > 0
+        ? pickRandomIn(affordable)
+        : rarityByCost[remaining - 1]
+    rarities.push(rarity)
+    remaining -= RarityCost[rarity]
+  }
+  return rarities
+}
+
+// a unit that does not fit on the bench is paid out at its value instead
+function giftBoosterPack(player: Player, blessing: Blessing): boolean {
+  const pack = BOOSTER_PACKS[blessing]
+  if (!pack) return false
+  rollBoosterPackRarities(pack.value, pack.guaranteedRarity).forEach(
+    (rarity) => {
+      if (!giftPokemonOfRarityAndStars(player, rarity, 1)) {
+        player.addMoney(RarityCost[rarity], true, null)
+      }
+    }
+  )
   return true
 }
 
@@ -2441,10 +2493,12 @@ export const blessingEffectService: {
     return true
   },
 
-  [Blessing.PEARL]: (player) => {
-    player.addMoney(PEARL_GOLD_GAINED, true, null)
-    return true
-  },
+  [Blessing.BOOSTER_PACK_I]: (player) =>
+    giftBoosterPack(player, Blessing.BOOSTER_PACK_I),
+  [Blessing.BOOSTER_PACK_II]: (player) =>
+    giftBoosterPack(player, Blessing.BOOSTER_PACK_II),
+  [Blessing.BOOSTER_PACK_III]: (player) =>
+    giftBoosterPack(player, Blessing.BOOSTER_PACK_III),
 
   [Blessing.CROAGUNKS_AID]: (player) => {
     player.addMoney(CROAGUNKS_AID_GOLD_GAINED, true, null)
@@ -2468,20 +2522,6 @@ export const blessingEffectService: {
   [Blessing.TREASURE_HUNT_I]: (player) =>
     giftRandomSynergyGems(player, TREASURE_HUNT_I_GEMS),
 
-  [Blessing.STARTER_PACK]: (player) => {
-    if (getFreeSpaceOnBench(player.board, getBenchSize(player.blessings)) < STARTER_PACK_CONTENT.length) {
-      return false
-    }
-    STARTER_PACK_CONTENT.forEach(({ rarity, stars }) =>
-      giftPokemonOfRarityAndStars(player, rarity, stars)
-    )
-    return true
-  },
-
-  [Blessing.NUGGET]: (player) => {
-    player.addMoney(NUGGET_GOLD_GAINED, true, null)
-    return true
-  },
 
   [Blessing.TREASURE_HUNT_II]: (player) =>
     giftRandomSynergyGems(player, TREASURE_HUNT_II_GEMS),

@@ -157,6 +157,10 @@ export default function ServerGuide({
       { name: "Abnormality", icon: "spread_shield" },
       { name: "Curse of Two", icon: "ghost_spectre" },
       { name: "Hex Maniac", icon: "hex_maniac" },
+      { name: "Pearl", icon: "pearl" },
+      { name: "Gold Bar", icon: "gold_bar" },
+      { name: "Nugget", icon: "gold_bar" },
+      { name: "Starter Pack", icon: "gift_box" },
       ...[
         { name: "Quest: Crit", icon: "crit_quest" },
         { name: "Quest: Grow", icon: "grow_quest" },

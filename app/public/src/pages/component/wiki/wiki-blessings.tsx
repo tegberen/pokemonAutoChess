@@ -92,14 +92,15 @@ const HATCH_BLESSINGS = new Set<Blessing>([
 ])
 
 const ECONOMY_BLESSINGS = new Set<Blessing>([
-  Blessing.PEARL,
+  Blessing.BOOSTER_PACK_I,
+  Blessing.BOOSTER_PACK_II,
+  Blessing.BOOSTER_PACK_III,
   Blessing.SIX_SEVEN,
   Blessing.CROAGUNKS_AID,
   Blessing.WOBBUFFETS_SILVER_PRIZE,
   Blessing.WOBBUFFETS_GOLD_PRIZE,
   Blessing.TREASURE_HUNT_I,
   Blessing.TREASURE_HUNT_II,
-  Blessing.NUGGET,
   Blessing.GIMMIGHOULS_TREASURE,
   Blessing.INSTANT_HYPER_ROLL,
   Blessing.DEEP_INVESTMENTS,
@@ -124,8 +125,7 @@ const ECONOMY_BLESSINGS = new Set<Blessing>([
   Blessing.BABY_OPENER,
   Blessing.SAFARI_ENCOUNTER,
   Blessing.POCKET_DAYCARE,
-  Blessing.TRANSFORM,
-  Blessing.STARTER_PACK
+  Blessing.TRANSFORM
 ])
 
 const TEAM_BUILDING_BLESSINGS = new Set<Blessing>([
@@ -146,7 +146,6 @@ const TEAM_BUILDING_BLESSINGS = new Set<Blessing>([
 
 // blessings that hand out loot, as opposed to the Item Blessings category
 const LOOT_BLESSINGS = new Set<Blessing>([
-  Blessing.STARTER_PACK,
   Blessing.CINCCINOS_GIFTS_I,
   Blessing.CINCCINOS_GIFTS_II,
   Blessing.CINCCINOS_GIFTS_III,
@@ -200,7 +199,6 @@ const ADDITIONAL_HERO_BLESSINGS = new Set<Blessing>([
   Blessing.SAFARI_ENCOUNTER,
   Blessing.POCKET_DAYCARE,
   Blessing.TRANSFORM,
-  Blessing.STARTER_PACK,
   Blessing.SINNOHS_COOLEST,
   Blessing.SCHOOL_BUS,
   Blessing.TRASH_TO_TREASURE,

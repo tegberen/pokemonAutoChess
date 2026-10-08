@@ -4761,9 +4761,9 @@
 		"PRISMATIC": "Prismatic Wish"
 	},
 	"blessing": {
-		"PEARL": {
-			"name": "Pearl",
-			"description": "Gain 10 GOLD."
+		"BOOSTER_PACK_I": {
+			"name": "Silver Booster Pack",
+			"description": "Gain random Pokémon worth 12 GOLD, including at least one Uncommon."
 		},
 		"CROAGUNKS_AID": {
 			"name": "Croagunk's Aid",
@@ -4781,13 +4781,13 @@
 			"name": "Treasure Hunt I",
 			"description": "Gain 2 random synergy gems."
 		},
-		"STARTER_PACK": {
-			"name": "Starter Pack",
-			"description": "Gain a 2 STAR Common, a 2 STAR Uncommon and a 1 STAR Rare Pokémon."
+		"BOOSTER_PACK_II": {
+			"name": "Gold Booster Pack",
+			"description": "Gain random Pokémon worth 18 GOLD, including at least one Rare."
 		},
-		"NUGGET": {
-			"name": "Gold Bar",
-			"description": "Gain 15 GOLD."
+		"BOOSTER_PACK_III": {
+			"name": "Prismatic Booster Pack",
+			"description": "Gain random Pokémon worth 24 GOLD, including at least one Epic."
 		},
 		"TREASURE_HUNT_II": {
 			"name": "Treasure Hunt II",

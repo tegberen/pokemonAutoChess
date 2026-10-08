@@ -553,7 +553,11 @@ Every balance change on this server, newest first.
 - Missions | Quest: Evolve, Destroy, Level Up, Diversify and Prosper are renamed to Mission
 - Gotta Catch 'Em All {{new}} | Stage 4 only. Before each PvE round, wild Pokémon you can catch run across your board. Was a Scribble
 - Regional Specialties {{new}} | Your current region types count towards your synergies. Your team tastes the local dish now and after each region change. Was a Scribble
+- Silver Booster Pack {{new}} | Gain random Pokémon worth 12 GOLD, including at least one Uncommon
+- Gold Booster Pack {{new}} | Gain random Pokémon worth 18 GOLD, including at least one Rare
+- Prismatic Booster Pack {{new}} | Gain random Pokémon worth 24 GOLD, including at least one Epic
 - Curse of Two | removed
+- Pearl, Gold Bar and Starter Pack | removed, replaced by the Booster Packs
 - Hex Maniac | removed
 
 **Game Mode**

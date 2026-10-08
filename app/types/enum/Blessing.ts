@@ -12,13 +12,13 @@ export enum BlessingTier {
 }
 
 export enum Blessing {
-  PEARL = "PEARL",
+  BOOSTER_PACK_I = "BOOSTER_PACK_I",
   CROAGUNKS_AID = "CROAGUNKS_AID",
   BAG_OF_SWEETS = "BAG_OF_SWEETS",
   WOBBUFFETS_SILVER_PRIZE = "WOBBUFFETS_SILVER_PRIZE",
   TREASURE_HUNT_I = "TREASURE_HUNT_I",
-  STARTER_PACK = "STARTER_PACK",
-  NUGGET = "NUGGET",
+  BOOSTER_PACK_II = "BOOSTER_PACK_II",
+  BOOSTER_PACK_III = "BOOSTER_PACK_III",
   TREASURE_HUNT_II = "TREASURE_HUNT_II",
   GIMMIGHOULS_TREASURE = "GIMMIGHOULS_TREASURE",
   INSTANT_HYPER_ROLL = "INSTANT_HYPER_ROLL",
@@ -949,12 +949,6 @@ export const HERO_BLESSINGS_WITH_STRONG_GIFT: Blessing[] = [
   Blessing.FLEUR_DE_LURE
 ]
 export const ROCKY_BEGINNINGS_POKEMONS = 2
-// lives here rather than in the service so the pick UI can read its length
-export const STARTER_PACK_CONTENT: { rarity: Rarity; stars: number }[] = [
-  { rarity: Rarity.COMMON, stars: 2 },
-  { rarity: Rarity.UNCOMMON, stars: 2 },
-  { rarity: Rarity.RARE, stars: 1 }
-]
 export const MIX_AND_MATCH_I_UNIQUES = 3
 export const MIX_AND_MATCH_I_FIELD_CAP = 2
 export const MIX_AND_MATCH_II_UNIQUES = 4
