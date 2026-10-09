@@ -3505,6 +3505,7 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
            grants all fire at once when it is finally picked ten stages later */
         "blessing",
         "singularity",
+        "glorious_battle",
         "starter_choice"
       ]
       player.choices

@@ -2242,6 +2242,16 @@ export default class GameRoom extends Room<{ state: GameState }> {
       return
     }
 
+    if (choice.type === "glorious_battle") {
+      const item = choice.items[choiceIndex]
+      if (!item) return
+      player.items.push(item)
+      player.gloriousBattleReward =
+        choice.items.find((other) => other !== item) ?? null
+      removeInArray(player.choices, choice)
+      return
+    }
+
     /* resolved before the generic validation below, which measures the index
        against pokemons/items/scribbleShapes and would reject every index here */
     if (choice.type === "galar_fossil") {

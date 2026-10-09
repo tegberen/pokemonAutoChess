@@ -15,6 +15,7 @@ import {
   MONSTER_AP_BUFF_PER_SYNERGY_TIER,
   MONSTER_MAX_HP_BUFF_FACTOR_PER_SYNERGY_TIER,
   SynergyTiers,
+  SynergyTiersThresholds,
   VESPIQUEN_CLONE
 } from "../config/game/synergies"
 import type Player from "../models/colyseus-models/player"
@@ -192,6 +193,11 @@ import {
   CORE_REACTOR_PARALYSIS_DELAY,
   CORE_REACTOR_PARALYSIS_DURATION,
   RUNE_SWORD_BASE_ATK_RATIO,
+  FURTHER_BEYOND_HP_PER_POINT,
+  FURTHER_BEYOND_ATK_PER_POINT,
+  FURTHER_BEYOND_AP_PER_POINT,
+  FURTHER_BEYOND_SPEED_PER_POINT,
+  GLORIOUS_BATTLE_WINS_REQUIRED,
   RUNE_SWORD_COMPONENTS,
   VIKING_HELMET_MAX_HP_RATIO,
   VIKING_HELMET_COMPONENTS,
@@ -241,6 +247,7 @@ import {
   FOGBOUND_LAKE_FIREFLIES,
   OVERLOAD_CAST_INTERVAL,
   OVERLOAD_FIRST_CAST_DELAY,
+  VICTORIOUS_CAST_DELAY,
   BULL_LEAPING_FOLLOW_UP_DELAY,
   BULL_LEAPING_ARRIVAL_CHECK_INTERVAL,
   BULL_LEAPING_ARRIVAL_MAX_CHECKS,
@@ -347,6 +354,7 @@ import { AbilityStrategies } from "./abilities/abilities"
 import { electrify } from "./abilities/electrify"
 import { applyWhirlpoolDamage } from "./abilities/whirlpool"
 import type { SurfStrategy } from "./abilities/surf"
+import { danceToVictory } from "./abilities/victory-dance"
 import { Board, effectInLine } from "./board"
 import Dps from "./dps"
 import { DishEffects } from "./effects/dishes"
@@ -801,7 +809,8 @@ export default class Simulation extends Schema implements ISimulation {
         ]
         if (
           strongestAllySeeds.some((seed) => player.activeSeed === seed) ||
-          player.blessings?.includes(Blessing.DROP_RATES)
+          player.blessings?.includes(Blessing.DROP_RATES) ||
+          player.blessings?.includes(Blessing.MOXIE)
         ) {
           const entities = [...team.values()].filter(
             (e): e is PokemonEntity =>
@@ -2890,6 +2899,73 @@ export default class Simulation extends Schema implements ISimulation {
               false
             )
           )
+      }
+      if (blessings.includes(Blessing.VICTORIOUS) && ownUnits.length > 0) {
+        const lastPlayerCombat = player.history
+          .filter((stage) => stage.id !== "pve")
+          .at(-1)
+        if (
+          player.victoriousCastPending ||
+          lastPlayerCombat?.result === BattleResult.WIN
+        ) {
+          // deferred like OVERLOAD: clients do not have the board yet, so the
+          // dance animation sent now would be dropped
+          const dancer = getStrongestUnit(ownUnits)
+          dancer.commands.push(
+            new DelayedCommand(() => {
+              if (dancer.hp <= 0) return
+              dancer.broadcastAbility({ skill: Ability.VICTORY_DANCE })
+              danceToVictory(dancer, false)
+            }, VICTORIOUS_CAST_DELAY)
+          )
+        }
+        // a ghost of this player fighting elsewhere must not use up the cast
+        if (player.simulationId === this.id) {
+          player.victoriousCastPending = false
+        }
+      }
+      if (blessings.includes(Blessing.FURTHER_BEYOND)) {
+        let beyondSynergy: Synergy | null = null
+        let pointsBeyond = 0
+        for (const synergy of Object.values(Synergy)) {
+          const lastThreshold = SynergyTiersThresholds[synergy].at(-1) ?? 0
+          const points = (player.synergies.get(synergy) ?? 0) - lastThreshold
+          if (points > pointsBeyond) {
+            beyondSynergy = synergy
+            pointsBeyond = points
+          }
+        }
+        const synergyBeyond = beyondSynergy
+        if (synergyBeyond) {
+          ownUnits
+            .filter((ally) => ally.types.has(synergyBeyond))
+            .forEach((ally) => {
+              ally.addMaxHP(
+                FURTHER_BEYOND_HP_PER_POINT * pointsBeyond,
+                ally,
+                0,
+                false
+              )
+              ally.addAttack(
+                FURTHER_BEYOND_ATK_PER_POINT * pointsBeyond,
+                ally,
+                0,
+                false
+              )
+              ally.addAbilityPower(
+                FURTHER_BEYOND_AP_PER_POINT * pointsBeyond,
+                ally,
+                0,
+                false
+              )
+              ally.addSpeed(
+                FURTHER_BEYOND_SPEED_PER_POINT * pointsBeyond,
+                ally,
+                0,
+                false
+              )
+            })
+        }
       }
       if (blessings.includes(Blessing.RUNE_SWORD)) {
         ownUnits
@@ -6614,6 +6690,13 @@ export default class Simulation extends Schema implements ISimulation {
 
       if (!isGhostPlayer && !isPvE && battleResult === BattleResult.WIN) {
         this.keepInfiniteConversionSynergy(player, opponentPlayerId)
+        if (player.gloriousBattleReward) {
+          player.gloriousBattleWins++
+          if (player.gloriousBattleWins >= GLORIOUS_BATTLE_WINS_REQUIRED) {
+            player.items.push(player.gloriousBattleReward)
+            player.gloriousBattleReward = null
+          }
+        }
       }
 
       // Add battle result

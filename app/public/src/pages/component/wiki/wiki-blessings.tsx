@@ -172,7 +172,8 @@ const LOOT_BLESSINGS = new Set<Blessing>([
   Blessing.TRASH_TO_TREASURE,
   Blessing.SWEET_TREATS,
   Blessing.BIRTHDAY_PRESENT,
-  Blessing.DROP_RATES
+  Blessing.DROP_RATES,
+  Blessing.GLORIOUS_BATTLE
 ])
 
 const PREPARATION_BLESSINGS = new Set<Blessing>([
@@ -264,7 +265,8 @@ const DEFENSIVE_COMBAT_BLESSINGS = new Set<Blessing>([
   Blessing.LONE_WOLF,
   Blessing.PARTING_GIFT,
   Blessing.REQUIEM,
-  Blessing.REVEILLE
+  Blessing.REVEILLE,
+  Blessing.FROZEN_CHRYSALIS
 ])
 
 const OFFENSIVE_COMBAT_BLESSINGS = new Set<Blessing>([
@@ -298,7 +300,10 @@ const OFFENSIVE_COMBAT_BLESSINGS = new Set<Blessing>([
   Blessing.RUNE_STONE,
   Blessing.VIKING_HELMET,
   Blessing.UNITY_CORE,
-  Blessing.CORE_REACTOR
+  Blessing.CORE_REACTOR,
+  Blessing.MOXIE,
+  Blessing.VICTORIOUS,
+  Blessing.FURTHER_BEYOND
 ])
 
 function compareCombatBlessings(a: Blessing, b: Blessing): number {

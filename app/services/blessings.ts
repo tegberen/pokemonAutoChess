@@ -125,6 +125,7 @@ import {
   NEST_EGGS_GRANTED,
   RUNE_STONE_COMPONENTS,
   RUNE_SWORD_COMPONENTS,
+  GLORIOUS_BATTLE_ITEMS,
   VIKING_HELMET_COMPONENTS,
   SILVER_SPOON_ROUNDS_BY_STAR,
   MOTHER_YARN_STAGES_BY_STAR,
@@ -3174,6 +3175,22 @@ export const blessingEffectService: {
   },
   [Blessing.UNITY_CORE]: () => true,
   [Blessing.CORE_REACTOR]: () => true,
+  [Blessing.MOXIE]: () => true,
+  [Blessing.VICTORIOUS]: (player) => {
+    player.victoriousCastPending = true
+    return true
+  },
+  [Blessing.FURTHER_BEYOND]: () => true,
+  [Blessing.FROZEN_CHRYSALIS]: () => true,
+  [Blessing.GLORIOUS_BATTLE]: (player) => {
+    player.choices.push(
+      new PlayerChoice({
+        type: "glorious_battle",
+        items: [...GLORIOUS_BATTLE_ITEMS]
+      })
+    )
+    return true
+  },
   [Blessing.GOTTA_CATCH_EM_ALL]: () => true,
   [Blessing.REGIONAL_SPECIALTIES]: (player) => {
     player.applyRegionalSpecialties()

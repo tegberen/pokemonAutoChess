@@ -2374,7 +2374,7 @@
 		"PSYCHO_CUT": "Three psychic blades cut and pierce enemies in a line behind the target, each dealing [10,20,30,40,80,SP] SPECIAL to all enemies hit. Can crit by default.",
 		"WICKED_BLOW": "Deal [30,45,60,120,SP] TRUE to the target. Always deal a critical hit.",
 		"SURGING_STRIKES": "Strikes the target with a flowing motion 3 times in a row, dealing [100,100,100,200,SP]% of ATK each as SPECIAL. Always deal critical hits.",
-		"VICTORY_DANCE": "Performs a dance to usher in victory. Raise user's ATK and DEF by [3,SP] and SPEED by [10,SP].",
+		"VICTORY_DANCE": "Performs a dance to usher in victory. Raise user's ATK by [3,6,12,24,SP], DEF by [3,6,9,12,SP] and SPEED by [10,20,30,40,SP].",
 		"BOOMBURST": "Deal [10,20,40, 80,SP] SPECIAL to all ADJACENT units including allies, and causing FLINCH for 4 seconds.",
 		"FOLLOW_ME": "Jump to a free tile far away and gain [10,20,40,80,SP] SHIELD. Enemies that were targeting the user get CHARM for [1,2,3,5] seconds.",
 		"AFTER_YOU": "Gives [5,10,15,30,SP] PP and [5,10,15,20,SP] SPEED buff to the STRONGEST closest ally.",
@@ -6340,6 +6340,26 @@
 			"name": "Core Reactor",
 			"description": "At the start of combat, your Pokémon deal 2% more damage for each enemy in the front row and gain 2 HP for each enemy behind it. 12 seconds into combat, all enemies get PARALYSIS for 2 seconds."
 		},
+		"MOXIE": {
+			"name": "Moxie",
+			"description": "When an enemy is KO, your STRONGEST Pokémon gains ATK equal to its STAR level."
+		},
+		"VICTORIOUS": {
+			"name": "Victorious",
+			"description": "At the start of combat, if you won your last player combat and on the first combat after you pick this Wish, your STRONGEST Pokémon casts Victory Dance."
+		},
+		"FURTHER_BEYOND": {
+			"name": "Further Beyond",
+			"description": "For each point your top synergy is above its last level, your Pokémon with that synergy gain 30 HP, 5 ATK, 20 AP and 20 SPEED."
+		},
+		"FROZEN_CHRYSALIS": {
+			"name": "Frozen Chrysalis",
+			"description": "The first time each of your Pokémon drops below 50% HP, it casts Frozen Beak."
+		},
+		"GLORIOUS_BATTLE": {
+			"name": "Glorious Battle",
+			"description": "Choose a RUSTED_SWORD or a RUSTED_SHIELD. Gain the other after 8 player combat wins."
+		},
 		"GOTTA_CATCH_EM_ALL": {
 			"name": "Gotta Catch 'Em All",
 			"description": "Before each PvE round, wild Pokémon you can catch run across your board."
@@ -6494,7 +6514,7 @@
 		},
 		"CAPTAINS_BOUNTY": {
 			"name": "Captain's Bounty",
-			"description": "Gain a Scorbunny. At the start of each fight, your STRONGEST Scorbunny gains your GOLD as CRIT_CHANCE. Raboot evolves into Pirate Cinderace."
+			"description": "Gain a Raboot. At the start of each fight, your STRONGEST Scorbunny gains your GOLD as CRIT_CHANCE. Raboot evolves into Pirate Cinderace."
 		},
 		"INFILTRATOR": {
 			"name": "Infiltrator",

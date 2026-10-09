@@ -86,7 +86,10 @@ import {
   humanHealEffect
 } from "./effects/synergies"
 import { onFossilUnlockCrit } from "../services/fossil-unlocks"
-import { FROZEN_BEAK_DAMAGE_REDUCTION } from "./abilities/frozen-beak"
+import {
+  FROZEN_BEAK_DAMAGE_REDUCTION,
+  freezeOverWithBeak
+} from "./abilities/frozen-beak"
 import {
   FISHIOUS_REND_LOW_HP_DAMAGE_MULTIPLIER,
   FISHIOUS_REND_LOW_HP_THRESHOLD,
@@ -1166,23 +1169,28 @@ export default abstract class PokemonState {
       }
 
       pokemon.hp = Math.max(0, pokemon.hp - residualDamage)
-      if (
-        !pokemon.hasFallenBelowHalfHp &&
-        pokemon.hp < 0.5 * pokemon.maxHP &&
-        pokemon.simulation.weather === Weather.ZEN_ZONE
-      ) {
+      if (!pokemon.hasFallenBelowHalfHp && pokemon.hp < 0.5 * pokemon.maxHP) {
         pokemon.hasFallenBelowHalfHp = true
-        const gain = SWORDS_OF_JUSTICE_ZEN_ZONE_STAT_GAIN
-        board.forEach((x, y, ally) => {
-          if (!ally || ally === pokemon || ally.team !== pokemon.team) return
-          if (ally.passive === Passive.COBALION) {
-            ally.addDefense(gain, ally, 0, false)
-          } else if (ally.passive === Passive.TERRAKION) {
-            ally.addAttack(gain, ally, 0, false)
-          } else if (ally.passive === Passive.VIRIZION) {
-            ally.addSpecialDefense(gain, ally, 0, false)
-          }
-        })
+        if (pokemon.simulation.weather === Weather.ZEN_ZONE) {
+          const gain = SWORDS_OF_JUSTICE_ZEN_ZONE_STAT_GAIN
+          board.forEach((x, y, ally) => {
+            if (!ally || ally === pokemon || ally.team !== pokemon.team) return
+            if (ally.passive === Passive.COBALION) {
+              ally.addDefense(gain, ally, 0, false)
+            } else if (ally.passive === Passive.TERRAKION) {
+              ally.addAttack(gain, ally, 0, false)
+            } else if (ally.passive === Passive.VIRIZION) {
+              ally.addSpecialDefense(gain, ally, 0, false)
+            }
+          })
+        }
+        if (
+          pokemon.hp > 0 &&
+          !pokemon.isSpawn &&
+          pokemon.player?.blessings?.includes(Blessing.FROZEN_CHRYSALIS)
+        ) {
+          freezeOverWithBeak(pokemon, false)
+        }
       }
 
       // logger.debug(`${pokemon.name} took ${damage} and has now ${pokemon.hp} life shield ${pokemon.shield}`);

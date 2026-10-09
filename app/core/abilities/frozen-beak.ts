@@ -17,12 +17,17 @@ export class FrozenBeakStrategy extends AbilityStrategy {
     crit: boolean
   ) {
     super.process(pokemon, board, target, crit, true)
-    pokemon.addShield(FROZEN_BEAK_SHIELD, pokemon, 1, crit)
-    pokemon.frozenBeakArmed = true
-    pokemon.status.triggerFreeze(
-      FROZEN_BEAK_SELF_FREEZE_DURATION,
-      pokemon,
-      undefined
-    )
+    freezeOverWithBeak(pokemon, crit)
   }
+}
+
+// also used by the FROZEN_CHRYSALIS Wish, which must not spend the unit's PP
+export function freezeOverWithBeak(pokemon: PokemonEntity, crit: boolean) {
+  pokemon.addShield(FROZEN_BEAK_SHIELD, pokemon, 1, crit)
+  pokemon.frozenBeakArmed = true
+  pokemon.status.triggerFreeze(
+    FROZEN_BEAK_SELF_FREEZE_DURATION,
+    pokemon,
+    undefined
+  )
 }

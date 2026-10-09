@@ -398,6 +398,11 @@ export default class Player extends Schema implements IPlayer {
   beingOfKnowledgeUxieGranted: boolean = false
   // server-only: the component SINGULARITY_I/II re-grants on its later stages
   singularityComponent: Item | null = null
+  // server-only: VICTORIOUS's guaranteed first cast, and the item
+  // GLORIOUS_BATTLE grants once enough wins are counted
+  victoriousCastPending = false
+  gloriousBattleReward: Item | null = null
+  gloriousBattleWins = 0
   // server-only: STARTER_CHOICE's pick, and how many round-starts still owe a copy
   starterChoicePokemon: Pkm | null = null
   starterChoiceRoundsLeft: number = 0

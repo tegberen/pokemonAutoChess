@@ -1596,6 +1596,36 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     icon: "core_reactor",
     grantsPokemonImmediately: false
   },
+  [Blessing.MOXIE]: {
+    tier: BlessingTier.SILVER,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "moxie",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.VICTORIOUS]: {
+    tier: BlessingTier.SILVER,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "victorious",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.FURTHER_BEYOND]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: [12],
+    icon: "further_beyond",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.FROZEN_CHRYSALIS]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "frozen_chrysalis",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.GLORIOUS_BATTLE]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "glorious_battle",
+    grantsPokemonImmediately: false
+  },
   [Blessing.GOTTA_CATCH_EM_ALL]: {
     tier: BlessingTier.GOLD,
     availableAtStages: [4],

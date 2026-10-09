@@ -421,7 +421,7 @@ export default function GameChoice() {
     message = t("player_choices.choose_unique")
   } else if (choice.type === "legendary") {
     message = t("player_choices.choose_legendary")
-  } else if (choice.type === "item") {
+  } else if (choice.type === "item" || choice.type === "glorious_battle") {
     message = t("player_choices.choose_item")
   } else if (choice.type === "wand") {
     message = t("player_choices.choose_wand")

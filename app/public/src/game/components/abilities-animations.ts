@@ -3015,15 +3015,15 @@ const TRICK_ROOM_TILE_COLORS = [
 // enough to stay well under the photosensitive flash rate
 const TRICK_ROOM_DISCO_SECONDS = 0.7
 const TRICK_ROOM_TRAPPED_TINT = 0xc4b0ff
-// the twinkles and colour changes stop for players who reduce motion
-const TRICK_ROOM_CALM =
+// effects calm down for players who reduce motion
+const REDUCED_MOTION =
   typeof window !== "undefined" &&
   window.matchMedia?.("(prefers-reduced-motion: reduce)").matches === true
 
 // staggered across the room so the tiles shimmer instead of blinking in sync
 function trickRoomTileColor(row: number, column: number, seconds: number) {
   const base = (row * 7 + column * 13 + row * column) % 5
-  if (TRICK_ROOM_CALM) {
+  if (REDUCED_MOTION) {
     return { color: TRICK_ROOM_TILE_COLORS[base], next: 0, blend: 0, base }
   }
   const phase =
@@ -3330,7 +3330,7 @@ function drawTrickRoomTiles(
       }
 
       if (base === 0) {
-        const twinkle = TRICK_ROOM_CALM
+        const twinkle = REDUCED_MOTION
           ? 0.6
           : 0.3 + 0.3 * Math.sin(seconds * 3 + row + column)
         const glint = lit * twinkle
@@ -3384,6 +3384,127 @@ function trickRoomCastAnimation(): AbilityAnimation {
         })
       }
     })
+  }
+}
+
+// flat golds in the same 3px art pixels as Trick Room, so the dance sits in
+// the pixel art instead of glowing over it
+const VICTORY_DANCE_PIXEL = 3
+const VICTORY_DANCE_LIGHT = 0xfff3c4
+const VICTORY_DANCE_GOLD = 0xf2c94c
+const VICTORY_DANCE_DARK = 0xc98a2e
+const VICTORY_DANCE_SPIN_MS = 1100
+// the last stretch of the climb fades out instead of hanging in the air
+const VICTORY_DANCE_FADE_FROM = 0.65
+// in art pixels, from the sprite's centre
+const VICTORY_DANCE_ORBIT_X = 12
+const VICTORY_DANCE_ORBIT_Y = 4
+const VICTORY_DANCE_START = 7
+const VICTORY_DANCE_CLIMB = 24
+// under half a turn each, so the two ribbons never close into one ring
+const VICTORY_DANCE_TRAIL = 26
+const VICTORY_DANCE_SPARKLES = 6
+
+function victoryDanceAnimation(): AbilityAnimation {
+  return ({ scene, pokemonsOnBoard, positionX, positionY, flip }) => {
+    const [x, y] = transformEntityCoordinates(positionX, positionY, flip)
+    // the Wish casts it as units start walking, so it follows the dancer
+    const dancer = pokemonsOnBoard.find(
+      (pokemon) =>
+        pokemon.positionX === positionX && pokemon.positionY === positionY
+    )
+    const behind = scene.add
+      .graphics({ x, y })
+      .setDepth(DEPTH.ABILITY_BELOW_POKEMON)
+    const inFront = scene.add.graphics({ x, y }).setDepth(DEPTH.ABILITY)
+    scene.abilitiesVfxGroup?.add(behind)
+    scene.abilitiesVfxGroup?.add(inFront)
+    scene.tweens.addCounter({
+      from: 0,
+      to: 1,
+      duration: VICTORY_DANCE_SPIN_MS,
+      onUpdate: (tween) => {
+        const progress = (tween.getValue() ?? 0) as number
+        const fade = Math.min(
+          1,
+          (1 - progress) / (1 - VICTORY_DANCE_FADE_FROM)
+        )
+        if (dancer?.active) {
+          behind.setPosition(dancer.x, dancer.y)
+          inFront.setPosition(dancer.x, dancer.y)
+        }
+        behind.setAlpha(fade)
+        inFront.setAlpha(fade)
+        drawVictoryDance(behind, inFront, progress)
+      },
+      onComplete: () => {
+        behind.destroy()
+        inFront.destroy()
+      }
+    })
+  }
+}
+
+// two ribbons spiral up around the dancer: the half of each loop nearer the
+// camera is drawn over the Pokemon, the far half behind it
+function drawVictoryDance(
+  behind: Phaser.GameObjects.Graphics,
+  inFront: Phaser.GameObjects.Graphics,
+  progress: number
+) {
+  const P = VICTORY_DANCE_PIXEL
+  const block = (
+    graphics: Phaser.GameObjects.Graphics,
+    color: number,
+    alpha: number,
+    left: number,
+    top: number,
+    width = 1
+  ) => {
+    if (alpha <= 0) return
+    graphics.fillStyle(color, alpha)
+    graphics.fillRect(left * P, top * P, width * P, P)
+  }
+  behind.clear()
+  inFront.clear()
+
+  const turns = REDUCED_MOTION ? 1 : 2.5
+  for (const ribbon of [0, 0.5]) {
+    for (let step = 0; step < VICTORY_DANCE_TRAIL; step++) {
+      const along = progress - step * 0.006
+      if (along < 0) break
+      const angle = (along * turns + ribbon) * Math.PI * 2
+      const left = Math.round(Math.cos(angle) * VICTORY_DANCE_ORBIT_X)
+      const top = Math.round(
+        Math.sin(angle) * VICTORY_DANCE_ORBIT_Y +
+          VICTORY_DANCE_START -
+          along * VICTORY_DANCE_CLIMB
+      )
+      const color =
+        step < 3
+          ? VICTORY_DANCE_LIGHT
+          : step < VICTORY_DANCE_TRAIL / 2
+            ? VICTORY_DANCE_GOLD
+            : VICTORY_DANCE_DARK
+      const layer = Math.sin(angle) > 0 ? inFront : behind
+      block(layer, color, 1 - step / VICTORY_DANCE_TRAIL, left, top, 2)
+    }
+  }
+
+  // sparkles fade in and out rather than blink, to stay photosensitive-safe
+  for (let sparkle = 0; sparkle < VICTORY_DANCE_SPARKLES; sparkle++) {
+    const life = (progress - sparkle * 0.1) / 0.5
+    if (life <= 0 || life >= 1) continue
+    const alpha = Math.sin(life * Math.PI)
+    const left = ((sparkle * 37) % 19) - 9
+    const center = Math.round(
+      VICTORY_DANCE_START - 6 - ((sparkle * 11) % 18) - life * 6
+    )
+    block(inFront, VICTORY_DANCE_LIGHT, alpha, left, center)
+    block(inFront, VICTORY_DANCE_GOLD, alpha * 0.8, left - 1, center)
+    block(inFront, VICTORY_DANCE_GOLD, alpha * 0.8, left + 1, center)
+    block(inFront, VICTORY_DANCE_GOLD, alpha * 0.8, left, center - 1)
+    block(inFront, VICTORY_DANCE_GOLD, alpha * 0.8, left, center + 1)
   }
 }
 
@@ -6575,6 +6696,7 @@ export const AbilitiesAnimations: {
   [Ability.BRICK_BREAK]: onTargetScale2,
   [Ability.RETURN]: onTarget({ ability: Ability.BRICK_BREAK, scale: 2 }),
   [Ability.BULK_UP]: onCasterScale2,
+  [Ability.VICTORY_DANCE]: victoryDanceAnimation(),
   [Ability.FLASH]: onCasterScale2,
   ["CLEAR_AMULET"]: onCaster({ ability: "FLASH", tint: 0x87e5fa, scale: 2 }),
   [Ability.METEOR_MASH]: onTarget({ ability: Ability.FLASH }),

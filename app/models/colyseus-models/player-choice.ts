@@ -24,6 +24,7 @@ export type PlayerChoiceType =
      and starter branches grant the pick and forget it, but these have to record
      what was chosen so later stages can re-grant the same thing */
   | "singularity"
+  | "glorious_battle"
   | "starter_choice"
   | "galar_fossil"
   | "incantation"

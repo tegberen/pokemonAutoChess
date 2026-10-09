@@ -1593,6 +1593,17 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
         v.addAttack(target.stars, v, 0, false)
     )
 
+    if (!target.isSpawn && this.player?.blessings?.includes(Blessing.MOXIE)) {
+      board.forEach(
+        (x, y, ally) =>
+          ally &&
+          ally.team === this.team &&
+          ally.hp > 0 &&
+          ally.isStrongestAllyThisFight &&
+          ally.addAttack(target.stars, ally, 0, false)
+      )
+    }
+
     if (
       this.isStrongestAllyThisFight &&
       this.player?.blessings?.includes(Blessing.DROP_RATES) &&

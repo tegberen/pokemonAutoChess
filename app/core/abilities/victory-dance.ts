@@ -6,9 +6,16 @@ export class VictoryDanceStrategy extends AbilityStrategy {
   requiresTarget = false
   process(pokemon: PokemonEntity, board: Board, target: null, crit: boolean) {
     super.process(pokemon, board, target, true)
-    // gain 3 Attack, 3 Defense and 10 Speed.
-    pokemon.addAttack(3, pokemon, 1, crit)
-    pokemon.addDefense(3, pokemon, 1, crit)
-    pokemon.addSpeed(10, pokemon, 1, crit)
+    danceToVictory(pokemon, crit)
   }
+}
+
+// also used by the VICTORIOUS Wish, which must not spend the unit's PP
+export function danceToVictory(pokemon: PokemonEntity, crit: boolean) {
+  const attack = [3, 6, 12, 24][pokemon.stars - 1] ?? 24
+  const defense = [3, 6, 9, 12][pokemon.stars - 1] ?? 12
+  const speed = [10, 20, 30, 40][pokemon.stars - 1] ?? 40
+  pokemon.addAttack(attack, pokemon, 1, crit)
+  pokemon.addDefense(defense, pokemon, 1, crit)
+  pokemon.addSpeed(speed, pokemon, 1, crit)
 }
