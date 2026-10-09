@@ -6858,7 +6858,7 @@
 				"GHOST_LUCK": "GHOST Pokémon GAIN {{value}} LUCK",
 				"ENEMY_LUCK_LOSS": "All enemies LOSE {{value}} LUCK",
 				"SILENCE": "Enemies are SILENCE",
-				"SILENCE_DAMAGED": "Enemies damaged by the ability are SILENCE for {{seconds}} seconds",
+				"SILENCE_FARTHEST": "The {{targets}} farthest back enemies are SILENCE for {{seconds}} seconds",
 				"SILENCE_BEHIND_TARGET": "Enemies in a line behind the target are SILENCE for {{seconds}} seconds",
 				"SILENCE_NEAREST": "The {{targets}} nearest enemies without SILENCE are SILENCE for {{seconds}} seconds",
 				"SILENCE_ADJACENT": "{{targets}} ADJACENT enemies without SILENCE are SILENCE for {{seconds}} seconds",

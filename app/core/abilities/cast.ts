@@ -17,7 +17,7 @@ import { distanceC } from "../../utils/distance"
 import { chance, pickRandomIn } from "../../utils/random"
 import type { Board } from "../board"
 import { OnAbilityCastEffect } from "../effects/effect"
-import { triggerRitual } from "../ghost-incantations"
+import { getIncantationSideOf, triggerRitual } from "../ghost-incantations"
 import type { PokemonEntity } from "../pokemon-entity"
 import type { AbilityStrategy } from "./ability-strategy"
 
@@ -50,19 +50,19 @@ export function castAbility(
     crit = chance(pokemon.critChance / 100, pokemon)
   }
   const incantationSide = pokemon.types.has(Synergy.GHOST)
-    ? pokemon.simulation.incantationSides.get(pokemon.team)
+    ? getIncantationSideOf(pokemon)
     : undefined
-  if (incantationSide) pokemon.enemiesDamagedByCast = new Set()
+  const previousSummoningCaster = pokemon.simulation.summoningCaster
+  pokemon.simulation.summoningCaster = pokemon
   pokemon.isProcessingAbility = true
   abilityStrategy.process(pokemon, board, target, crit, preventDefaultAnim)
   pokemon.isProcessingAbility = false
-  const enemiesDamagedByCast = [...(pokemon.enemiesDamagedByCast ?? [])]
-  pokemon.enemiesDamagedByCast = null
+  pokemon.simulation.summoningCaster = previousSummoningCaster
   triggerRitual(
     pokemon.simulation,
     incantationSide,
     RitualTrigger.GHOST_CASTS,
-    { source: pokemon, enemiesDamagedByCast }
+    { source: pokemon }
   )
 
   const casterBlessings = pokemon.player?.blessings

@@ -156,12 +156,12 @@ export const RITUAL_EFFECT_VALUES: {
   }
 }
 
-// targets 0 means every enemy the ability damaged
+// targets 0 means every enemy in the line behind the attack's target
 export const RITUAL_SILENCE_VALUES: ByRitualTrigger<{
   targets: number[]
   seconds: number[]
 }> = {
-  [RitualTrigger.GHOST_CASTS]: { targets: [0, 0], seconds: [1, 2] },
+  [RitualTrigger.GHOST_CASTS]: { targets: [1, 2], seconds: [1, 2] },
   [RitualTrigger.GHOST_ATTACKS]: { targets: [0, 0], seconds: [2, 3] },
   [RitualTrigger.GHOST_KOD]: { targets: [2, 3], seconds: [2, 3] },
   [RitualTrigger.ENEMY_KOD]: { targets: [2, 3], seconds: [2, 3] }

@@ -36,6 +36,7 @@ import { getPokemonData } from "../models/precomputed/precomputed-pokemon-data"
 import { PRECOMPUTED_POKEMONS_PER_TYPE_AND_CATEGORY } from "../models/precomputed/precomputed-types-and-categories"
 import type { EffectEnum } from "../types/enum/Effect"
 import { Rarity, Team } from "../types/enum/Game"
+import { Item } from "../types/enum/Item"
 import type { Pkm } from "../types/enum/Pokemon"
 import { Synergy } from "../types/enum/Synergy"
 import {
@@ -72,7 +73,6 @@ export interface Hex {
 interface RitualContext {
   source?: PokemonEntity
   target?: PokemonEntity
-  enemiesDamagedByCast?: PokemonEntity[]
   origin?: PokemonEntity
 }
 
@@ -107,6 +107,27 @@ export function createIncantationSide(
   }
 }
 
+// the owner, not the current team: a charmed GHOST still feeds its own ritual
+function getOwner(entity: PokemonEntity) {
+  if (entity.sourcePlayer) return entity.sourcePlayer
+  // a Double Up summon made outside a cast could belong to either partner
+  if (
+    entity.isSpawn &&
+    entity.baseTeam === Team.BLUE_TEAM &&
+    entity.simulation.bluePartnerPlayer
+  ) {
+    return undefined
+  }
+  return entity.baseTeam === Team.BLUE_TEAM
+    ? entity.simulation.bluePlayer
+    : entity.simulation.redPlayer
+}
+
+export function getIncantationSideOf(entity: PokemonEntity) {
+  const owner = getOwner(entity)
+  return owner ? entity.simulation.incantationSides.get(owner.id) : undefined
+}
+
 function getTeamEntities(simulation: Simulation, team: Team) {
   const entities =
     team === Team.BLUE_TEAM ? simulation.blueTeam : simulation.redTeam
@@ -119,7 +140,12 @@ function getOpposingTeam(team: Team) {
 
 function getCurser(simulation: Simulation, side: IncantationSide) {
   const allies = getTeamEntities(simulation, side.team)
-  return allies.find((ally) => ally.types.has(Synergy.GHOST)) ?? allies[0]
+  const ownAllies = allies.filter((ally) => getOwner(ally) === side.player)
+  return (
+    ownAllies.find((ally) => ally.types.has(Synergy.GHOST)) ??
+    ownAllies[0] ??
+    allies[0]
+  )
 }
 
 const HEX_TARGET_SCORE: {
@@ -361,7 +387,7 @@ export function triggerRitual(
     side.canEarnRewards &&
     chance(FATED_SPAWN_GHOST_CHANCE[trigger] / 100, context.source)
   ) {
-    benchRandomGhost(side.player)
+    benchRandomGhost(simulation, side.player)
   }
 }
 
@@ -374,7 +400,9 @@ function activateRitual(
 ) {
   const strength = side.ritualStrength
   const allies = getTeamEntities(simulation, side.team)
-  const ghostAllies = allies.filter((ally) => ally.types.has(Synergy.GHOST))
+  const ghostAllies = allies.filter(
+    (ally) => ally.types.has(Synergy.GHOST) && getOwner(ally) === side.player
+  )
   const enemies = getTeamEntities(simulation, getOpposingTeam(side.team))
   const effect = ritual.effect as RitualEffect
 
@@ -426,11 +454,11 @@ function activateRitual(
       (unit) => unit.maxHP
     )
     if (ally) {
-      const gain = Math.min(value, getPermanentHPRoom(ally))
+      const gain = fitGainToRoom(ally, value, getPermanentHPRoom(ally))
       ally.addMaxHP(gain, ally, 0, false, true)
       if (!ally.isGhostOpponent) {
         const boardPokemon = ally.refToBoardPokemon as Pokemon
-        boardPokemon.ghostRitualHPGained += gain
+        boardPokemon.ghostRitualHPGained += withBeltBonus(ally, gain)
       }
     }
   } else if (bonus === RitualBonus.PERMANENT_PP) {
@@ -453,14 +481,26 @@ function activateRitual(
       (unit) => unit.atk
     )
     if (ally) {
-      const gain = Math.min(value, getPermanentSpeedRoom(ally))
+      const gain = fitGainToRoom(ally, value, getPermanentSpeedRoom(ally))
       ally.addSpeed(gain, ally, 0, false, true)
       if (!ally.isGhostOpponent) {
         const boardPokemon = ally.refToBoardPokemon as Pokemon
-        boardPokemon.ghostRitualSpeedGained += gain
+        boardPokemon.ghostRitualSpeedGained += withBeltBonus(ally, gain)
       }
     }
   }
+}
+
+// Big Eater Belt adds 25% on top, so the cap is checked on what really lands.
+// The SPEED a Melmetal turns into ATK still counts, or its gains never stop
+function withBeltBonus(unit: PokemonEntity, value: number) {
+  return unit.items.has(Item.BIG_EATER_BELT) ? Math.floor(value * 1.25) : value
+}
+
+function fitGainToRoom(unit: PokemonEntity, value: number, room: number) {
+  let gain = Math.min(value, room)
+  while (gain > 0 && withBeltBonus(unit, gain) > room) gain--
+  return gain
 }
 
 function getPermanentHPRoom(unit: PokemonEntity) {
@@ -522,7 +562,15 @@ function silenceEnemies(
     enemy.status.triggerSilence(duration, enemy, context.source)
 
   if (trigger === RitualTrigger.GHOST_CASTS) {
-    context.enemiesDamagedByCast?.forEach(silence)
+    // the farthest back first, like Sing
+    enemies
+      .sort((a, b) =>
+        a.team === Team.BLUE_TEAM
+          ? a.positionY - b.positionY
+          : b.positionY - a.positionY
+      )
+      .slice(0, targets[strength])
+      .forEach(silence)
   } else if (trigger === RitualTrigger.GHOST_ATTACKS) {
     if (context.source && context.target) {
       getEnemiesInLineBehindTarget(
@@ -550,7 +598,7 @@ function silenceEnemies(
   }
 }
 
-function benchRandomGhost(player: Player) {
+function benchRandomGhost(simulation: Simulation, player: Player) {
   const x = getFirstAvailablePositionInBench(
     player.board,
     getBenchSize(player.blessings)
@@ -572,4 +620,6 @@ function benchRandomGhost(player: Player) {
   pokemon.positionX = x
   pokemon.positionY = 0
   player.board.set(pokemon.id, pokemon)
+  pokemon.onAcquired(player)
+  simulation.room?.checkEvolutionsAfterPokemonAcquired(player.id)
 }

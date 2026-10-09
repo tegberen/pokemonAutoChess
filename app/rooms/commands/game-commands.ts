@@ -2391,7 +2391,7 @@ export class OnUpdateCommand extends Command<
       reinforcement.axeBlastExecuteChance = entity.axeBlastExecuteChance
       reinforcement.ignited = entity.ignited
     }
-    if (!target.incantationSides.has(partnerTeam)) {
+    if (!target.incantationSides.has(winnerPlayer.id)) {
       const partnerSide = createIncantationSide(
         partnerTeam,
         winnerPlayer,
@@ -2399,7 +2399,7 @@ export class OnUpdateCommand extends Command<
         true
       )
       if (partnerSide) {
-        target.incantationSides.set(partnerTeam, partnerSide)
+        target.incantationSides.set(winnerPlayer.id, partnerSide)
         applyHexingIncantations(target, partnerSide)
       }
     }

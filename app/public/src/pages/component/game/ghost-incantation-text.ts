@@ -60,7 +60,7 @@ function describeHexingLoss(loss: HexingLoss, target: string | null) {
 }
 
 const SILENCE_KEY_BY_TRIGGER: { [trigger in RitualTrigger]: string } = {
-  GHOST_CASTS: "SILENCE_DAMAGED",
+  GHOST_CASTS: "SILENCE_FARTHEST",
   GHOST_ATTACKS: "SILENCE_BEHIND_TARGET",
   GHOST_KOD: "SILENCE_NEAREST",
   ENEMY_KOD: "SILENCE_ADJACENT"

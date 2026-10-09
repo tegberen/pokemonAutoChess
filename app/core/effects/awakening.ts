@@ -18,7 +18,10 @@ import { Item } from "../../types"
 import { schemaValues } from "../../utils/schemas"
 import { isOnBench } from "../../utils/board"
 import { throwAway } from "./synergies"
-import { applyHexingIncantations } from "../ghost-incantations"
+import {
+  applyHexingIncantations,
+  getIncantationSideOf
+} from "../ghost-incantations"
 
 const O = EffectEnum.CRYSTALLISATION // effect origin tag
 
@@ -264,7 +267,7 @@ export const AwakeningEffects: Partial<
       )
     },
     new OnDeathEffect(({ pokemon }) => {
-      const side = pokemon.simulation.incantationSides.get(pokemon.team)
+      const side = getIncantationSideOf(pokemon)
       if (side) applyHexingIncantations(pokemon.simulation, side)
     })
   ],

@@ -366,6 +366,9 @@ export default class Player extends Schema implements IPlayer {
   // server-only: the GHOST incantations written so far
   ghostIncantations: GhostIncantation[] = []
   ghostIncantationsRef: PlayerIncantations | null = null
+  // server-only: the next slot's options, kept while GHOST drops below it so
+  // moving a GHOST to the bench and back cannot reroll them
+  rolledIncantationChoice: PlayerChoice | null = null
   // server-only: gold the PLUNDER champion spent casting Treasure Rush this fight
   plunderGoldSpentThisFight: number = 0
   // server-only: INFINITE_CONVERSION keeps a copied synergy once per opponent
@@ -1449,7 +1452,26 @@ export default class Player extends Schema implements IPlayer {
     )
     if (nextSlot >= unlockedSlots || isOffered) return
 
-    const choice = this.rollGhostIncantationChoice(nextSlot, ghostLevel)
+    const rolled =
+      this.rolledIncantationChoice?.incantationSlot === nextSlot
+        ? this.rolledIncantationChoice
+        : this.rollGhostIncantationChoice(nextSlot, ghostLevel)
+    this.rolledIncantationChoice = rolled
+    const choice = new PlayerChoice({
+      type: "incantation",
+      incantation: {
+        kind: rolled.incantationKind as IncantationKind,
+        slot: nextSlot,
+        causes: [...rolled.incantationCauses],
+        effects: [...rolled.incantationEffects],
+        bonuses: [...rolled.incantationBonuses],
+        strength: getIncantationStrength(
+          rolled.incantationKind as IncantationKind,
+          ghostLevel
+        ),
+        context: rolled.incantationContext
+      }
+    })
     if (this.isBot) {
       this.writeGhostIncantation(choice, [
         choice.incantationCauses[0],
@@ -1505,6 +1527,7 @@ export default class Player extends Schema implements IPlayer {
       bonus: bonus ?? ""
     }
     this.ghostIncantations.push(incantation)
+    this.rolledIncantationChoice = null
     this.ghostIncantationsRef?.written.push(
       encodeGhostIncantation(incantation)
     )

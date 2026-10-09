@@ -475,7 +475,10 @@ export default class Simulation extends Schema implements ISimulation {
   // Double Up shared PVE fights: the partner fights alongside the blue player
   bluePartnerPlayer: Player | undefined
   bluePartnerEffects = new Set<EffectEnum>()
-  incantationSides = new Map<Team, IncantationSide>()
+  // keyed by player id, so both Double Up partners keep their own incantations
+  incantationSides = new Map<string, IncantationSide>()
+  // the unit whose ability is running, so its summons know their owner
+  summoningCaster: PokemonEntity | null = null
   blueAbilitiesCast: Ability[] = []
   redAbilitiesCast: Ability[] = []
   stormLightningTimer = 0
@@ -1139,6 +1142,9 @@ export default class Simulation extends Schema implements ISimulation {
     skipSynergyEffects = false,
     sourcePlayer?: Player
   ) {
+    if (!sourcePlayer && isSpawn && this.summoningCaster?.team === team) {
+      sourcePlayer = this.summoningCaster.player
+    }
     const player =
       sourcePlayer ??
       (team === Team.BLUE_TEAM ? this.bluePlayer : this.redPlayer)
@@ -1994,6 +2000,12 @@ export default class Simulation extends Schema implements ISimulation {
         canEarnRewards: true
       },
       {
+        team: Team.BLUE_TEAM,
+        player: this.bluePartnerPlayer,
+        effects: this.bluePartnerEffects,
+        canEarnRewards: true
+      },
+      {
         team: Team.RED_TEAM,
         player: this.redPlayer,
         effects: this.redEffects,
@@ -2002,7 +2014,7 @@ export default class Simulation extends Schema implements ISimulation {
     ]
     for (const { team, player, effects, canEarnRewards } of incantationTeams) {
       const side = createIncantationSide(team, player, effects, canEarnRewards)
-      if (side) this.incantationSides.set(team, side)
+      if (side) this.incantationSides.set(side.player.id, side)
     }
     this.incantationSides.forEach((side) =>
       applyHexingIncantations(this, side)

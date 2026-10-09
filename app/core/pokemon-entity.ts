@@ -121,6 +121,7 @@ import {
 import { ItemEffects } from "./effects/items"
 import {
   type Hex,
+  getIncantationSideOf,
   onHexedEnemyKnockedOut,
   reapplyHexStatLosses,
   reapplyHexStatuses,
@@ -279,7 +280,6 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
   hexes: Hex[] = []
   spreadHexStatuses = new Set<HexingStatus>()
   ghostAttacksSinceRitual = 0
-  enemiesDamagedByCast: Set<PokemonEntity> | null = null
   isTidalGuardian: boolean = false
   overloadVoltSurged: boolean = false
   magnetosphereRangeBonus: number = 0
@@ -582,9 +582,6 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
       }
       return { death: false, takenDamage: 0 }
     } else {
-      if (attacker?.enemiesDamagedByCast && attacker.team !== this.team) {
-        attacker.enemiesDamagedByCast.add(this)
-      }
       let specialDamage =
         damage + (damage * (attacker && apBoost ? attacker.ap : 0)) / 100
       if (attacker && attacker.effects.has(EffectEnum.DOUBLE_DAMAGE)) {
@@ -1185,7 +1182,7 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
         this.ghostAttacksSinceRitual = 0
         triggerRitual(
           this.simulation,
-          this.simulation.incantationSides.get(this.team),
+          getIncantationSideOf(this),
           RitualTrigger.GHOST_ATTACKS,
           { source: this, target }
         )
@@ -1847,26 +1844,23 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
     onHexedEnemyKnockedOut(this.simulation, this, board)
     // summons are left out, or a swarm of them would farm KO rewards
     if (!this.isSpawn) {
-      const incantationSides = this.simulation.incantationSides
       if (this.types.has(Synergy.GHOST)) {
         triggerRitual(
           this.simulation,
-          incantationSides.get(this.team),
+          getIncantationSideOf(this),
           RitualTrigger.GHOST_KOD,
           { source: this, origin: this }
         )
       }
       const opposingTeam =
         this.team === Team.BLUE_TEAM ? Team.RED_TEAM : Team.BLUE_TEAM
-      triggerRitual(
-        this.simulation,
-        incantationSides.get(opposingTeam),
-        RitualTrigger.ENEMY_KOD,
-        {
+      this.simulation.incantationSides.forEach((side) => {
+        if (side.team !== opposingTeam) return
+        triggerRitual(this.simulation, side, RitualTrigger.ENEMY_KOD, {
           source: attacker?.team === opposingTeam ? attacker : undefined,
           origin: this
-        }
-      )
+        })
+      })
     }
 
     // Trigger Last Respects ability for adjacent allies
