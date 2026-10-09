@@ -5719,7 +5719,7 @@
 		},
 		"STAR_CROSSED_SEAS": {
 			"name": "Star-Crossed Seas",
-			"description": "Move to an AMORPHOUS region if not currently in one. You can find both kinds of Shellos in AMORPHOUS regions. Fielding them both at once grants each one 50 HP and 25 AP."
+			"description": "Gain both kinds of Shellos and move to an AMORPHOUS region, where you can find both. Fielding both grants each 50 HP and 25 AP."
 		},
 		"ABSOLUTE_DARKNESS": {
 			"name": "Absolute Darkness",
@@ -5823,11 +5823,11 @@
 		},
 		"EMPOWER_I": {
 			"name": "Empower I",
-			"description": "After 5 seconds of combat, all damage your Pokémon deal is increased by 25% for 10 seconds."
+			"description": "After 8 seconds of combat, all damage your Pokémon deal is increased by 25% for 10 seconds."
 		},
 		"EMPOWER_II": {
 			"name": "Empower II",
-			"description": "After 5 seconds of combat, all damage your Pokémon deal is increased by 30% for 15 seconds."
+			"description": "After 8 seconds of combat, all damage your Pokémon deal is increased by 30% for 15 seconds."
 		},
 		"GEAR_SHIELD_I": {
 			"name": "Gear Shield I",
@@ -6347,7 +6347,7 @@
 		},
 		"STARTER_CHOICE": {
 			"name": "Starter Choice",
-			"description": "Choose between 3 common 1 STAR Pokémon. Gain a copy now and at the start of the next 8 rounds. Gain a BRONZE_DOJO_TICKET."
+			"description": "Choose between 3 common Pokémon that evolve to 3 STAR. Gain a copy now and at the start of the next 8 rounds. Gain a BRONZE_DOJO_TICKET."
 		},
 		"SINGULARITY_I": {
 			"name": "Singularity I",

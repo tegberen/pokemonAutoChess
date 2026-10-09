@@ -1398,8 +1398,8 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     tier: BlessingTier.GOLD,
     availableAtStages: [12],
     icon: "sea",
-    grantsPokemonImmediately: false,
-    synergy: Synergy.AMORPHOUS
+    grantsPokemonImmediately: true,
+    benchSlotsRequired: 2
   },
   [Blessing.ABSOLUTE_DARKNESS]: {
     tier: BlessingTier.GOLD,

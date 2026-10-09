@@ -532,6 +532,9 @@ Every balance change on this server, newest first.
 - King's Gambit | ATK and HP gained from fallen allies 25% → 50%
 - It's Going Down | each new pillar gains 50 HP for each throw this fight
 - Mountain Egg | also gives 10 free rerolls
+- Empower I/II | delay 5 → 8 seconds
+- Starter Choice | only offers common Pokémon that evolve to 3 STAR
+- Star-Crossed Seas | now a hero Wish. Gives one of each Shellos on pick. Only the strongest of each line is the hero and gains 50 HP and 25 AP
 - High Tower Castle {{new}} | Stage 4 only. At the start of each fight, all allies on the board gain 1 SPEED and 4 HP permanently
 - Training Ground {{new}} | Stage 4 only. At the start of each fight, all allies on the board gain 1 DEF, 1 SPE_DEF and 2 HP permanently
 - Magic Palace {{new}} | Stage 4 only. At the start of each fight, all allies on the board gain 2 AP and 4 HP permanently

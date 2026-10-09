@@ -1077,7 +1077,7 @@ export const SHATTER_PULSE_INTERVAL = 1000
 export const SURGE_SPEED_RATIO = 0.25
 // a share, not a multiplier: 0.2 is x1.2 on everything the unit deals
 export const EMPOWER_DAMAGE_AMP = { I: 0.25, II: 0.3 }
-export const EMPOWER_DELAY = 5000
+export const EMPOWER_DELAY = 8000
 export const GEAR_SHIELD_PER_ITEM = { I: 20, II: 30 }
 export const HEART_SHIELD_MAX_HP_PER_ALLY = { I: 5, II: 10 }
 // free rolls count towards rerollCount, so these part-fund their own scaling
@@ -1369,6 +1369,7 @@ export const HERO_BLESSING_POKEMON: { [blessing in Blessing]?: Pkm[] } = {
   [Blessing.SEASONAL_HERD]: SEASONAL_HERD_DEERLINGS,
   [Blessing.SILVER_SPOON]: [Pkm.ABRA],
   [Blessing.TRASH_TO_TREASURE]: [Pkm.TRUBBISH, Pkm.BELDUM],
+  [Blessing.STAR_CROSSED_SEAS]: [Pkm.SHELLOS_EAST_SEA, Pkm.SHELLOS_WEST_SEA],
   [Blessing.SINNOHS_COOLEST]: [Pkm.STARAVIA],
   [Blessing.CURSE_OF_CORAL]: [Pkm.CORSOLA],
   [Blessing.SCHOOL_BUS]: [Pkm.WISHIWASHI],

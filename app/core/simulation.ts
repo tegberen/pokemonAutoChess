@@ -3628,16 +3628,19 @@ export default class Simulation extends Schema implements ISimulation {
       }
 
       if (blessings.includes(Blessing.STAR_CROSSED_SEAS)) {
-        const seaFamilies = [Pkm.SHELLOS_EAST_SEA, Pkm.SHELLOS_WEST_SEA]
-        const fieldedSeaMons = seaFamilies.map((shellos) =>
-          allies.filter((ally) => PkmFamily[ally.name] === shellos)
+        const seaHeroes = [Pkm.SHELLOS_EAST_SEA, Pkm.SHELLOS_WEST_SEA].map(
+          (shellos) => getStrongestUnitOfFamily(ownUnits, shellos)
         )
-        if (fieldedSeaMons.every((mons) => mons.length > 0)) {
-          fieldedSeaMons.flat().forEach((ally) => {
-            ally.addMaxHP(STAR_CROSSED_SEAS_MAX_HP, ally, 0, false)
-            ally.addAbilityPower(
+        if (
+          seaHeroes.every((hero): hero is PokemonEntity => hero !== undefined)
+        ) {
+          seaHeroes.forEach((hero) => {
+            hero.isBlessedHero = true
+            hero.heroBlessings.add(Blessing.STAR_CROSSED_SEAS)
+            hero.addMaxHP(STAR_CROSSED_SEAS_MAX_HP, hero, 0, false)
+            hero.addAbilityPower(
               STAR_CROSSED_SEAS_ABILITY_POWER,
-              ally,
+              hero,
               0,
               false
             )

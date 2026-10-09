@@ -2919,6 +2919,11 @@ export const blessingEffectService: {
   [Blessing.ATLANTEAN_MAGIC]: () => true,
 
   [Blessing.STAR_CROSSED_SEAS]: (player, state, room) => {
+    if (getFreeSpaceOnBench(player.board, getBenchSize(player.blessings)) < 2) {
+      return false
+    }
+    giftPokemonIfBenchHasRoom(player, Pkm.SHELLOS_EAST_SEA)
+    giftPokemonIfBenchHasRoom(player, Pkm.SHELLOS_WEST_SEA)
     const previousMap = player.map
     const isAmorphousRegion =
       previousMap !== "town" &&
@@ -3154,10 +3159,14 @@ export const blessingEffectService: {
   },
 
   [Blessing.STARTER_CHOICE]: (player) => {
-    const commons = PRECOMPUTED_POKEMONS_PER_RARITY.COMMON.filter(
-      (pkm) =>
-        getPokemonData(pkm).stars === 1 && player.canFindRegionalPokemon(pkm)
-    )
+    const commons = PRECOMPUTED_POKEMONS_PER_RARITY.COMMON.filter((pkm) => {
+      const data = getPokemonData(pkm)
+      return (
+        data.stars === 1 &&
+        data.stagesWithoutLockedMegas >= 3 &&
+        player.canFindRegionalPokemon(pkm)
+      )
+    })
     if (commons.length === 0) return false
     player.choices.push(
       new PlayerChoice({
