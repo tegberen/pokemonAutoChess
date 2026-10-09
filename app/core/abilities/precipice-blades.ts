@@ -1,5 +1,5 @@
 import { AttackType } from "../../types/enum/Game"
-import type { Board } from "../board"
+import { type Board, effectInLine } from "../board"
 import type { PokemonEntity } from "../pokemon-entity"
 import { AbilityStrategy } from "./ability-strategy"
 
@@ -12,14 +12,17 @@ export class PrecipiceBladesStrategy extends AbilityStrategy {
   ) {
     super.process(pokemon, board, target, crit)
     const damage = [25, 50, 100, 120, 240][pokemon.stars - 1] ?? 240
-    board.forEach((x: number, y: number, tg: PokemonEntity | undefined) => {
-      if (
-        (tg && pokemon.team !== tg.team && pokemon.positionY === y) ||
-        (tg && pokemon.team !== tg.team && pokemon.positionX === x)
-      ) {
-        tg.handleSpecialDamage(damage, board, AttackType.SPECIAL, pokemon, crit)
-        pokemon.broadcastAbility({ positionX: x, positionY: y })
-      }
+    effectInLine(board, pokemon, target, (cell) => {
+      if (cell.x === pokemon.positionX && cell.y === pokemon.positionY) return
+      pokemon.broadcastAbility({ positionX: cell.x, positionY: cell.y })
+      if (cell.value == null || cell.value.team === pokemon.team) return
+      cell.value.handleSpecialDamage(
+        damage,
+        board,
+        AttackType.SPECIAL,
+        pokemon,
+        crit
+      )
     })
   }
 }

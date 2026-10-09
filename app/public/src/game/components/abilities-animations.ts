@@ -7139,7 +7139,11 @@ export const AbilitiesAnimations: {
   [Ability.ICE_SPINNER]: onTarget({ scale: 1 }),
   [Ability.METAL_CLAW]: onTarget({ ability: Ability.CRUSH_CLAW, scale: 2 }),
   [Ability.DRAGON_CLAW]: onTargetScale1,
-  [Ability.PRECIPICE_BLADES]: [onCasterScale3, shakeCamera({ duration: 350 })],
+  // one blade per cell of the line, so AP must not grow them into each other
+  [Ability.PRECIPICE_BLADES]: [
+    (args) => onCaster({ scale: 2 })({ ...args, ap: 0 }),
+    shakeCamera({ duration: 350 })
+  ],
   [Ability.OCTAZOOKA]: projectile({
     ability: Ability.ARMOR_CANNON,
     scale: 1,

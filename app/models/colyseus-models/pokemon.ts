@@ -8637,7 +8637,7 @@ export class PrimalGroudon extends Pokemon {
   rarity = Rarity.LEGENDARY
   stars = 4
   hp = 400
-  atk = 18
+  atk = 20
   speed = 54
   def = 12
   speDef = 6

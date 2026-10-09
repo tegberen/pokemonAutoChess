@@ -482,6 +482,7 @@ Every balance change on this server, newest first.
 **Pokémon**
 - Gimmighoul Line | PP 90 → 100
 - Golett Line | PP 100 → 120
+- Primal Groudon | ATK 18 → 20
 - Fuecoco Line | PP 80/70/60 → 80, ATK 5/13/24 → 5/15/30
 - Flapple | HP 180 → 150, ATK 19 → 25
 - Appletun | HP 250 → 300, ATK 15 → 10
@@ -519,6 +520,7 @@ Every balance change on this server, newest first.
 - Turtwig Line | Bulldoze: enemies hit lose 20 SPEED at every star instead of [5,5,10,20]
 - Golett Line | Shadow Punch reworked: a giant phantom fist deals [40,80,SP] SPECIAL and knocks the target back to the board edge, catapulting the enemies in its path. Then the user rushes in for [60,120,SP] SPECIAL
 - Shuppet Line | Shadow Clone: only steals an item if the target is hexed by a HEXING_INCANTATION. Clone max HP [50,50,90,100]% → [50,50,50,100]%
+- Groudon, Primal Groudon | Precipice Blades: hits all enemies in a line through the target instead of its row and column
 
 **Synergies**
 - GHOST {{new}} | reworked: write HEXING_INCANTATION, RITUAL_INCANTATION and FATED_INCANTATION. Enemies with negative LUCK are easier to dodge and SILENCE, see [GHOST in the Wiki](#wiki/types/GHOST)

@@ -1891,7 +1891,7 @@
 		"PRIMAL_ROAR": "Increase the user's ATK and SPEED by [4,8,10,20,SP] and RAGE all allied Pokémon for 2 second. Everytime the user uses this ability, increase the RAGE duration by 1 second.",
 		"SUBSPACE_SWELL": "Channel for 3 seconds without moving or attacking. Allies gain 40% more PP from all sources. When the channel ends, unleash a burst in a 4-tile radius dealing [5,10,20,40,SP] SPECIAL times the amount of allies cast during the channel.",
 		"SOFT_BOILED": "Cure all status conditions and grant [20,40,80,160,SP] SHIELD to all allied Pokémon.",
-		"PRECIPICE_BLADES": "Deal [25,50,100,120,240,SP] SPECIAL to all enemy Pokémon in the same row or column as the user.",
+		"PRECIPICE_BLADES": "Deal [25,50,100,120,240,SP] SPECIAL to all enemies in a line through the target.",
 		"SONG_OF_DESIRE": "Inflict [1,1,2,3] targets on the back line with CHARM for 3 seconds and reduce their ATK by [3,SP].",
 		"CONFUSING_MIND": "Inflict [1,2,3,5] opponents on the back line with CONFUSION for [3,SP] seconds.",
 		"KNOWLEDGE_THIEF": "Use the target's ability if not INIMITABLE. The allied player gains [1,1,1,2,3] XP.",
