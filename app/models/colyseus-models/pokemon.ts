@@ -9948,7 +9948,7 @@ export class MegaHoundoom extends Pokemon {
 }
 
 export class Cacnea extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.GRASS, Synergy.DARK, Synergy.HUMAN])
+  types = new SetSchema<Synergy>([Synergy.GRASS, Synergy.DARK, Synergy.GHOST])
   rarity = Rarity.RARE
   stars = 1
   evolution = Pkm.CACTURNE
@@ -9964,7 +9964,7 @@ export class Cacnea extends Pokemon {
 }
 
 export class Cacturne extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.GRASS, Synergy.DARK, Synergy.HUMAN])
+  types = new SetSchema<Synergy>([Synergy.GRASS, Synergy.DARK, Synergy.GHOST])
   rarity = Rarity.RARE
   stars = 2
   hp = 180

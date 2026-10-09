@@ -486,6 +486,7 @@ Every balance change on this server, newest first.
 - Chandelure | max PP 40 → 50
 - Politoed | HP 220 → 200
 - Gastly Line | max PP 90/85/80 → 90
+- Cacnea Line | GRASS / DARK / HUMAN → GRASS / DARK / GHOST
 - Crobat | loses its passive, which moves to the Infiltrator Wish
 - Feraligatr (Pirate) | WATER / MONSTER / DARK → DARK / MONSTER / AQUATIC, loses its passive, which moves to the Jolly Roger Wish. Croconaw only evolves into it with that Wish
 - Cinderace (Pirate) | loses its passive, which moves to the Captain's Bounty Wish. Raboot only evolves into it with that Wish
