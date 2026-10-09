@@ -229,6 +229,8 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
   fairySplashCooldown = 0
   isSpawn = false
   shodanCritReady = false
+  // FORESTS_CURSE: this unit's GRASS_FIELD is the curse mark
+  forestsCursed = false
   refToBoardPokemon: IPokemon
   /* Galar fossil combat state, all reset with the entity each fight */
   ampingBeakStacks: number = 0

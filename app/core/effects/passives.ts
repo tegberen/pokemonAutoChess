@@ -1232,9 +1232,9 @@ const superchargeTadbulb = (
 
 const ForestsCurseDeathEffect = new OnDeathEffect(
   ({ pokemon, board }) => {
-    const curseDuration = [8000, 4000, 2000][pokemon.stars - 1] ?? 2000
+    const curseDuration = [8000, 4000][pokemon.stars - 1] ?? 4000
     board.cells.forEach((p) => {
-      if (p && p.team !== pokemon.team && p.status.grassField) {
+      if (p && p.team !== pokemon.team && p.forestsCursed) {
         p.status.triggerCurse(curseDuration, p)
       }
     })

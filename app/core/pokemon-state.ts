@@ -728,7 +728,12 @@ export default abstract class PokemonState {
         damage *= 1.2
       }
 
-      if (attacker && attacker.status.grassField) {
+      // only GRASS Pokémon, as GRASS_FIELD says: FORESTS_CURSE marks others
+      if (
+        attacker &&
+        attacker.status.grassField &&
+        attacker.types.has(Synergy.GRASS)
+      ) {
         damage *= 1.2
       }
 
@@ -1349,7 +1354,12 @@ export default abstract class PokemonState {
       effectsRemovedList.push(EffectEnum.PSYCHIC_TERRAIN)
     } else if (pokemon.passive === Passive.GRASSY_TERRAIN) {
       board.forEach((x, y, pkm) => {
-        if (pkm && pkm.team == pokemon.team && pkm.status.grassField) {
+        if (
+          pkm &&
+          pkm.team == pokemon.team &&
+          pkm.status.grassField &&
+          !pkm.forestsCursed
+        ) {
           pkm.status.grassField = false
         }
       })

@@ -1586,6 +1586,7 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
           }
           if (
             pokemon.status.grassField &&
+            !pokemon.forestsCursed &&
             !ally.status.grassField &&
             ally.types.has(Synergy.GRASS)
           ) {
