@@ -1546,6 +1546,12 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     icon: "spinda_casino",
     grantsPokemonImmediately: false
   },
+  [Blessing.QUICK_STREAK]: {
+    tier: BlessingTier.SILVER,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "quick_streak",
+    grantsPokemonImmediately: false
+  },
   [Blessing.GOTTA_CATCH_EM_ALL]: {
     tier: BlessingTier.GOLD,
     availableAtStages: [4],

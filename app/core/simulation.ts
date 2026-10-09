@@ -156,6 +156,7 @@ import {
   GALE_WINGS_EMBERS_PER_GOLD_BY_STAR,
   LECHONK_BANK_GOLD,
   ALL_ABOARD_GOLD,
+  QUICK_STREAK_STEP,
   DECELERATE_SPEED_CAP,
   KINGS_GAMBIT_ALLIES_FALLEN,
   KINGS_GAMBIT_FALLEN_STATS_RATIO,
@@ -6453,7 +6454,9 @@ export default class Simulation extends Schema implements ISimulation {
             // reset streak
             player.streak = 0
           } else {
-            player.streak += 1
+            player.streak += player.blessings?.includes(Blessing.QUICK_STREAK)
+              ? QUICK_STREAK_STEP
+              : 1
           }
         }
       }

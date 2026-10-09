@@ -116,6 +116,7 @@ import {
   SIX_SEVEN_LIFE_COST,
   SPINDA_CASINO_JACKPOT_GOLD,
   SPINDA_CASINO_REWARD,
+  QUICK_STREAK_GOLD,
   SILVER_SPOON_ROUNDS_BY_STAR,
   MOTHER_YARN_STAGES_BY_STAR,
   MOTHER_YARN_WEAVE_ANIMATION_DURATION,
@@ -3086,6 +3087,10 @@ export const blessingEffectService: {
   },
   [Blessing.SPINDA_CASINO]: (player) => {
     pullSpindaCasino(player)
+    return true
+  },
+  [Blessing.QUICK_STREAK]: (player) => {
+    player.addMoney(QUICK_STREAK_GOLD, true, null)
     return true
   },
   [Blessing.GOTTA_CATCH_EM_ALL]: () => true,

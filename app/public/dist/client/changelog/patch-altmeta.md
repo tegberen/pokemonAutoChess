@@ -561,6 +561,7 @@ Every balance change on this server, newest first.
 - Luminous Spring {{new}} | Each time you merge a Pokémon to 2 STAR, gain 1 free reroll. Each time you merge one to 3 STAR, gain 3
 - Epic Commitment {{new}} | When you reach level 8, gain 12 GOLD. Flip a coin: on heads, gain 4 more GOLD
 - Spinda Casino {{new}} | Pull Spinda's slots: 10 free rerolls, 10 GOLD or 10 XP. JACKPOT: gain a NUGGET and pull again
+- Quick Streak {{new}} | Gain 5 GOLD. Your win and lose streaks grow twice as fast
 - Curse of Two | removed
 - Pearl, Gold Bar and Starter Pack | removed, replaced by the Booster Packs
 - Hex Maniac | removed
