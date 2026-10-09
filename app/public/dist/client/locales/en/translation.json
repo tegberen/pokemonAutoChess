@@ -6046,7 +6046,7 @@
 		},
 		"BP_REWARDS": {
 			"name": "Battle Point Rewards",
-			"description": "Gain 2 random item components. Every 5 rounds after selecting this Wish, gain 1 more."
+			"description": "Gain a random item component. Every 5 rounds after selecting this Wish, gain 1 more."
 		},
 		"GREEDY_WISH": {
 			"name": "Greedy Wish",

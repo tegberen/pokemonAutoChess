@@ -544,6 +544,7 @@ Every balance change on this server, newest first.
 - It's Going Down | each new pillar gains 50 HP for each throw this fight
 - Mountain Egg | also gives 10 free rerolls
 - Empower I/II | delay 5 → 8 seconds
+- Battle Point Rewards | components on pick 2 → 1
 - Starter Choice | only offers common Pokémon that evolve to 3 STAR
 - Star-Crossed Seas | now a hero Wish. Gives one of each Shellos on pick. Only the strongest of each line is the hero and gains 50 HP and 25 AP
 - High Tower Castle {{new}} | Stage 4 only. At the start of each fight, all allies on the board gain 1 SPEED and 4 HP permanently
