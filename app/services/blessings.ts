@@ -115,7 +115,10 @@ import {
   SIX_SEVEN_GOLD,
   SIX_SEVEN_LIFE_COST,
   SPINDA_CASINO_JACKPOT_GOLD,
+  SPINDA_CASINO_PULL_MS,
   SPINDA_CASINO_REWARD,
+  SPINDA_CASINO_SLOTS,
+  type SpindaCasinoSlot,
   QUICK_STREAK_GOLD,
   INSTANT_TREASURE_BOX_GOLD,
   SILVER_SPOON_ROUNDS_BY_STAR,
@@ -2277,18 +2280,33 @@ function grantRandomUnowns(player: Player) {
   return true
 }
 
-const SPINDA_CASINO_SLOTS = ["FREE_ROLLS", "GOLD", "XP", "JACKPOT"] as const
-
-// a jackpot pays a NUGGET's worth of GOLD and pulls again
-function pullSpindaCasino(player: Player) {
-  let slot = pickRandomIn(SPINDA_CASINO_SLOTS)
-  while (slot === "JACKPOT") {
-    player.addMoney(SPINDA_CASINO_JACKPOT_GOLD, true, null)
-    slot = pickRandomIn(SPINDA_CASINO_SLOTS)
-  }
-  if (slot === "FREE_ROLLS") player.shopFreeRolls += SPINDA_CASINO_REWARD
-  else if (slot === "GOLD") player.addMoney(SPINDA_CASINO_REWARD, true, null)
+function grantSpindaCasinoSlot(player: Player, slot: SpindaCasinoSlot) {
+  if (slot === "JACKPOT") player.addBlessingGold(SPINDA_CASINO_JACKPOT_GOLD)
+  else if (slot === "FREE_ROLLS") player.shopFreeRolls += SPINDA_CASINO_REWARD
+  else if (slot === "GOLD") player.addBlessingGold(SPINDA_CASINO_REWARD)
   else player.addExperience(SPINDA_CASINO_REWARD)
+}
+
+// every pull is rolled up front for the client's slot machine, then paid as
+// its reels stop
+function pullSpindaCasino(player: Player, room?: GameRoom) {
+  const pulls: SpindaCasinoSlot[] = [pickRandomIn(SPINDA_CASINO_SLOTS)]
+  while (pulls.at(-1) === "JACKPOT") {
+    pulls.push(pickRandomIn(SPINDA_CASINO_SLOTS))
+  }
+  if (!room) {
+    pulls.forEach((slot) => grantSpindaCasinoSlot(player, slot))
+    return
+  }
+  room.clients
+    .find((client) => client.auth.uid === player.id)
+    ?.send(Transfer.SPINDA_CASINO_PULLS, pulls)
+  pulls.forEach((slot, index) => {
+    room.clock.setTimeout(
+      () => grantSpindaCasinoSlot(player, slot),
+      (index + 1) * SPINDA_CASINO_PULL_MS
+    )
+  })
 }
 
 export const blessingEffectService: {
@@ -3082,13 +3100,14 @@ export const blessingEffectService: {
   [Blessing.LECHONK_BANK]: () => true,
   [Blessing.ALL_ABOARD]: () => true,
   [Blessing.LUMINOUS_SPRING]: () => true,
-  // a player already at the level is paid as soon as they pick it
-  [Blessing.EPIC_COMMITMENT]: (player) => {
-    player.payEpicCommitment()
+  // paid after the pick so the pick's GOLD toast leaves it to the coin flip
+  [Blessing.EPIC_COMMITMENT]: (player, state, room) => {
+    if (room) room.clock.setTimeout(() => player.payEpicCommitment(), 0)
+    else player.payEpicCommitment()
     return true
   },
-  [Blessing.SPINDA_CASINO]: (player) => {
-    pullSpindaCasino(player)
+  [Blessing.SPINDA_CASINO]: (player, state, room) => {
+    pullSpindaCasino(player, room)
     return true
   },
   [Blessing.QUICK_STREAK]: (player) => {

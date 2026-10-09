@@ -1,0 +1,125 @@
+/* Spinda's colours: a cream body, coral patches and dark swirls */
+.game-spinda-casino {
+  --spinda-cream: #f4e9d8;
+  --spinda-coral: #e2766d;
+  --spinda-swirl: #3a2a2a;
+  --spinda-symbol-size: 96px;
+
+  position: absolute;
+  top: 140px;
+  left: 50%;
+  transform: translateX(-50%);
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75em;
+  padding: 1em 1.75em 1.25em;
+  border: 5px solid var(--spinda-coral);
+  border-radius: 20px;
+  background-color: var(--spinda-cream);
+  color: var(--spinda-swirl);
+  box-shadow:
+    0 12px 28px rgba(0, 0, 0, 0.35),
+    0 3px 8px rgba(0, 0, 0, 0.25);
+  animation: spinda-casino-appear 250ms ease-out;
+}
+
+.game-spinda-casino h2 {
+  margin: 0;
+  font-size: 1.6em;
+}
+
+.spinda-slot-machine {
+  display: flex;
+  gap: 0.9em;
+  padding: 0.9em;
+  border-radius: 14px;
+  background-color: var(--spinda-coral);
+  box-shadow:
+    inset 0 -5px 0 rgba(58, 42, 42, 0.22),
+    inset 0 0 12px rgba(58, 42, 42, 0.45);
+}
+
+.spinda-reel {
+  width: var(--spinda-symbol-size);
+  height: var(--spinda-symbol-size);
+  overflow: hidden;
+  border: 4px solid var(--spinda-cream);
+  border-radius: 12px;
+  /* a dark window, since the GOLD, EXP and reroll icons are white */
+  background-color: var(--spinda-swirl);
+  box-shadow:
+    inset 0 0 8px rgba(0, 0, 0, 0.5),
+    0 3px 0 rgba(58, 42, 42, 0.35);
+}
+
+.spinda-reel-symbols {
+  display: flex;
+  flex-direction: column;
+}
+
+.spinda-symbol {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: var(--spinda-symbol-size);
+  height: var(--spinda-symbol-size);
+}
+
+.spinda-symbol img {
+  width: calc(var(--spinda-symbol-size) * 0.7);
+  height: calc(var(--spinda-symbol-size) * 0.7);
+  image-rendering: pixelated;
+}
+
+.spinda-reel.spinning .spinda-reel-symbols {
+  animation: spinda-reel-spin 0.08s linear infinite;
+}
+
+.spinda-reel.stopping .spinda-reel-symbols {
+  animation: spinda-reel-stop 0.5s ease-out forwards;
+}
+
+.spinda-result {
+  min-height: 1.5em;
+  margin: 0;
+  font-size: 1.3em;
+  font-weight: bold;
+  visibility: hidden;
+}
+
+.spinda-result.landed {
+  visibility: visible;
+}
+
+@keyframes spinda-reel-spin {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(calc(var(--spinda-symbol-size) * -20));
+  }
+}
+
+/* lands on the 4th symbol, where the result is placed */
+@keyframes spinda-reel-stop {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(calc(var(--spinda-symbol-size) * -3));
+  }
+}
+
+@keyframes spinda-casino-appear {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) scale(1);
+  }
+}

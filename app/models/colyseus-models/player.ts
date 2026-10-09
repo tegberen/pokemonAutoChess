@@ -562,11 +562,11 @@ export default class Player extends Schema implements IPlayer {
     if (this.experienceManager.level < EPIC_COMMITMENT_LEVEL) return
     this.epicCommitmentPaid = true
     const heads = chance(0.5)
-    this.addMoney(
-      EPIC_COMMITMENT_GOLD + (heads ? EPIC_COMMITMENT_HEADS_GOLD : 0),
-      true,
-      null
-    )
+    const gold = EPIC_COMMITMENT_GOLD + (heads ? EPIC_COMMITMENT_HEADS_GOLD : 0)
+    this.addMoney(gold, true, null)
+    if (this.blessingsRef) {
+      this.blessingsRef.epicCommitmentFlip = heads ? "HEADS" : "TAILS"
+    }
   }
 
   addExperience(value: number) {

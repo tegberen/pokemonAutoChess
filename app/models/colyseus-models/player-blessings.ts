@@ -20,4 +20,6 @@ export class PlayerBlessings extends Schema {
   /* MYSTOGAN: the wands left out of each FAIRY offer, so the Effects tab can
      name them. Declared LAST for the same wire-index reason as above. */
   @type(["string"]) mystoganWands = new ArraySchema<Item>()
+  // declared LAST for the same wire-index reason as above
+  @type("string") epicCommitmentFlip: "" | "HEADS" | "TAILS" = ""
 }

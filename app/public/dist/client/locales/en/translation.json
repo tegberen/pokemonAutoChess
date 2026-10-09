@@ -6294,7 +6294,7 @@
 			"description": "Gain 67 GOLD. Lose 67 player HP."
 		},
 		"LECHONK_BANK": {
-			"name": "Lechonk Bank",
+			"name": "Piggy Bank",
 			"description": "At the start of each fight, spawn a Lechonk. When it is KO'd, gain 1 GOLD."
 		},
 		"ALL_ABOARD": {
@@ -6303,15 +6303,15 @@
 		},
 		"LUMINOUS_SPRING": {
 			"name": "Luminous Spring",
-			"description": "Each time you merge a Pokémon to 2 STAR, gain 1 free reroll. Each time you merge one to 3 STAR, gain 3."
+			"description": "Each time you merge a Pokémon to 2 STAR, gain 1 GOLD. Each time you merge one to 3 STAR, gain 3 GOLD."
 		},
 		"EPIC_COMMITMENT": {
 			"name": "Epic Commitment",
-			"description": "When you reach level 8, gain 12 GOLD. Flip a coin: on heads, gain 4 more GOLD."
+			"description": "When you reach level 8, gain 12 GOLD. Flip a coin to gain 4 more GOLD."
 		},
 		"SPINDA_CASINO": {
 			"name": "Spinda Casino",
-			"description": "Pull Spinda's slots: 10 free rerolls, 10 GOLD or 10 XP. JACKPOT: gain a NUGGET and pull again."
+			"description": "Spin the slot machine for 10 free rerolls, 10 GOLD or 10 XP. Jackpot: gain a NUGGET and spin again."
 		},
 		"QUICK_STREAK": {
 			"name": "Quick Streak",
@@ -6319,7 +6319,7 @@
 		},
 		"INSTANT_TREASURE_BOX": {
 			"name": "Instant Treasure Box",
-			"description": "Xatu appraises a treasure box: gain 10 GOLD or a random completed item."
+			"description": "Gain 10 GOLD or a random completed item."
 		},
 		"GOTTA_CATCH_EM_ALL": {
 			"name": "Gotta Catch 'Em All",
@@ -6883,6 +6883,12 @@
 			"MAX_PP": "+{{value}}% max PP",
 			"MAX_HP": "−{{value}}% max HP"
 		}
+	},
+	"spinda_casino": {
+		"FREE_ROLLS": "{{count}} free rerolls",
+		"GOLD": "{{count}} GOLD",
+		"XP": "{{count}} XP",
+		"JACKPOT": "Jackpot! NUGGET, spin again"
 	},
 	"prismatic_quests": {
 		"title": "Prismatic Quests",

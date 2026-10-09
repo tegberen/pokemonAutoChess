@@ -16,7 +16,7 @@ import {
   Blessing,
   CRYSTAL_GUARDIAN_ROCKS_GRANTED,
   HERO_BLESSING_FAMILY,
-  LUMINOUS_SPRING_FREE_ROLLS_BY_STAR,
+  LUMINOUS_SPRING_GOLD_BY_STAR,
   SELECTIVE_GENETICS_SHINY_ITEM_OPTIONS
 } from "../../types/enum/Blessing"
 import { PrismaticQuest } from "../../types/enum/PrismaticQuest"
@@ -100,8 +100,9 @@ export const EvolutionManager = {
       pokemon.evolutionRule.type === EvolutionRuleType.COUNT &&
       player.blessings?.includes(Blessing.LUMINOUS_SPRING)
     ) {
-      player.shopFreeRolls +=
-        LUMINOUS_SPRING_FREE_ROLLS_BY_STAR[pokemonEvolved.stars - 1] ?? 0
+      player.addBlessingGold(
+        LUMINOUS_SPRING_GOLD_BY_STAR[pokemonEvolved.stars - 1] ?? 0
+      )
     }
     this.afterEvolve(pokemonEvolved, pokemon, player, ...additionalArgs)
     return pokemonEvolved

@@ -742,7 +742,7 @@ export default class Simulation extends Schema implements ISimulation {
       // a ghost copy of an opponent earns nothing
       if (team === Team.RED_TEAM && this.isGhostBattle) continue
       lechonk.effectsSet.add(
-        new OnDeathEffect(() => player.addMoney(LECHONK_BANK_GOLD, true, null))
+        new OnDeathEffect(() => player.addBlessingGold(LECHONK_BANK_GOLD))
       )
     }
   }
@@ -6323,7 +6323,7 @@ export default class Simulation extends Schema implements ISimulation {
       (entity) => !entity.isSpawn && entity.player?.id === player.id
     ).length
     if (fielded > 0 && survivors >= Math.ceil(fielded / 2)) {
-      player.addMoney(ALL_ABOARD_GOLD, true, null)
+      player.addBlessingGold(ALL_ABOARD_GOLD)
     }
   }
 

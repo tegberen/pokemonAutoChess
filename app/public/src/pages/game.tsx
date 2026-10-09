@@ -29,7 +29,14 @@ import {
   Role,
   Transfer
 } from "../../../types"
-import type { Blessing, BlessingTier } from "../../../types/enum/Blessing"
+import {
+  type Blessing,
+  type BlessingTier,
+  EPIC_COMMITMENT_GOLD,
+  EPIC_COMMITMENT_HEADS_GOLD,
+  GOLDEN_FLIP_TOSS_MS,
+  type SpindaCasinoSlot
+} from "../../../types/enum/Blessing"
 import { CloseCodes, CloseCodesMessages } from "../../../types/enum/CloseCodes"
 import { ConnectionStatus } from "../../../types/enum/ConnectionStatus"
 import { GameMode, GamePhaseState, Team } from "../../../types/enum/Game"
@@ -101,6 +108,8 @@ import {
   blessingRefused,
   startGoldenFlip,
   revealGoldenFlip,
+  setSpindaCasinoPulls,
+  setEpicCommitmentFlip,
   setStageLevel,
   setPveVariantIndexByStage,
   setWeatherThreshold,
@@ -115,6 +124,8 @@ import {
 } from "../stores/NetworkStore"
 import GameChoice from "./component/game/game-choice"
 import GameGoldenFlip from "./component/game/game-golden-flip"
+import GameSpindaCasino from "./component/game/game-spinda-casino"
+import GameEpicCommitmentFlip from "./component/game/game-epic-commitment-flip"
 import GameDpsMeter from "./component/game/game-dps-meter"
 import GameExpeditions from "./component/game/game-expeditions"
 import GameFinalRank from "./component/game/game-final-rank"
@@ -553,6 +564,11 @@ export default function Game() {
       room.onMessage(
         Transfer.GOLDEN_FLIP_RESULT,
         (blessing: Blessing | null) => dispatch(revealGoldenFlip(blessing))
+      )
+
+      room.onMessage(
+        Transfer.SPINDA_CASINO_PULLS,
+        (pulls: SpindaCasinoSlot[]) => dispatch(setSpindaCasinoPulls(pulls))
       )
 
       room.onMessage(
@@ -1154,6 +1170,15 @@ export default function Game() {
             getGameScene()?.board?.renderTrainingBag()
           }
         })
+        // the first call replays the stored result on join, not a new flip
+        $(playerBlessings).listen("epicCommitmentFlip", (flip, previous) => {
+          if (playerId !== uid || !flip || previous === undefined) return
+          dispatch(setEpicCommitmentFlip(flip))
+          const gold =
+            EPIC_COMMITMENT_GOLD +
+            (flip === "HEADS" ? EPIC_COMMITMENT_HEADS_GOLD : 0)
+          setTimeout(() => showMoneyToast(gold), GOLDEN_FLIP_TOSS_MS)
+        })
         $(playerBlessings).listen("mystoganWands", dispatchBlessings)
         $(playerBlessings).mystoganWands.onChange(dispatchBlessings)
         $(playerBlessings).waterPonds.onChange(() => {
@@ -1640,6 +1665,8 @@ export default function Game() {
           )}
           <GameChoice />
           <GameGoldenFlip />
+          <GameSpindaCasino />
+          <GameEpicCommitmentFlip />
           {!isVictoryScene && <GameDpsMeter />}
           <GameToasts />
           <GuideOverlay />

@@ -13,7 +13,11 @@ import type {
 } from "../../../types"
 import { GameMode, GamePhaseState, Team } from "../../../types/enum/Game"
 import type { Item } from "../../../types/enum/Item"
-import type { Blessing, BlessingTier } from "../../../types/enum/Blessing"
+import type {
+  Blessing,
+  BlessingTier,
+  SpindaCasinoSlot
+} from "../../../types/enum/Blessing"
 import type { GalarFossil } from "../../../types/enum/FossilUnlock"
 import type { Pkm, PkmProposition } from "../../../types/enum/Pokemon"
 import type { SpecialGameRule } from "../../../types/enum/SpecialGameRule"
@@ -98,6 +102,8 @@ export interface GameStateStore {
   blessingRefusedChoiceId: string | null
   // a Golden Flip in progress: the tier the coin lands on, then its Wish
   goldenFlip: { tier: BlessingTier; result?: Blessing } | null
+  spindaCasinoPulls: SpindaCasinoSlot[] | null
+  epicCommitmentFlip: "HEADS" | "TAILS" | null
   // GUIDE mode: the synergy being taught and how far the player has read
   guideSynergy: Synergy | null
   guideStep: number
@@ -159,7 +165,9 @@ const initialState: GameStateStore = {
   spectatorCount: 0,
   blessingRefusedCount: 0,
   blessingRefusedChoiceId: null,
-  goldenFlip: null
+  goldenFlip: null,
+  spindaCasinoPulls: null,
+  epicCommitmentFlip: null
 }
 
 export const gameSlice: Slice<GameStateStore> = createSlice({
@@ -512,6 +520,20 @@ export const gameSlice: Slice<GameStateStore> = createSlice({
       else state.goldenFlip.result = action.payload
     },
 
+    setSpindaCasinoPulls: (
+      state,
+      action: PayloadAction<SpindaCasinoSlot[] | null>
+    ) => {
+      state.spindaCasinoPulls = action.payload
+    },
+
+    setEpicCommitmentFlip: (
+      state,
+      action: PayloadAction<"HEADS" | "TAILS" | null>
+    ) => {
+      state.epicCommitmentFlip = action.payload
+    },
+
     leaveGame: () => initialState
   }
 })
@@ -573,7 +595,9 @@ export const {
   setSpectatorCount,
   blessingRefused,
   startGoldenFlip,
-  revealGoldenFlip
+  revealGoldenFlip,
+  setSpindaCasinoPulls,
+  setEpicCommitmentFlip
 } = gameSlice.actions
 
 export default gameSlice.reducer

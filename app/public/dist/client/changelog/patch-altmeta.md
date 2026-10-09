@@ -556,13 +556,13 @@ Every balance change on this server, newest first.
 - Silver Booster Pack {{new}} | Gain random Pokémon worth 12 GOLD, including at least one Uncommon
 - Gold Booster Pack {{new}} | Gain random Pokémon worth 18 GOLD, including at least one Rare
 - Prismatic Booster Pack {{new}} | Gain random Pokémon worth 24 GOLD, including at least one Epic
-- Lechonk Bank {{new}} | Stage 4 only. At the start of each fight, spawn a Lechonk. When it is KO'd, gain 1 GOLD
-- All Aboard {{new}} | At the end of each fight, if at least half of your Pokémon are still standing, gain 2 GOLD
-- Luminous Spring {{new}} | Each time you merge a Pokémon to 2 STAR, gain 1 free reroll. Each time you merge one to 3 STAR, gain 3
-- Epic Commitment {{new}} | When you reach level 8, gain 12 GOLD. Flip a coin: on heads, gain 4 more GOLD
-- Spinda Casino {{new}} | Pull Spinda's slots: 10 free rerolls, 10 GOLD or 10 XP. JACKPOT: gain a NUGGET and pull again
+- Piggy Bank {{new}} | Stage 4 only. At the start of each fight, spawn a Lechonk. When it is KO'd, gain 1 GOLD
+- All Aboard {{new}} | At the end of each fight, if at least half of your Pokémon are still standing, gain 2 GOLD. Summoned units are not counted
+- Luminous Spring {{new}} | Each time you merge a Pokémon to 2 STAR, gain 1 GOLD. Each time you merge one to 3 STAR, gain 3 GOLD. A 3 STAR merge often shows 4 GOLD: 1 for the 2 STAR merged on the way, and 3 for the 3 STAR
+- Epic Commitment {{new}} | When you reach level 8, gain 12 GOLD. Flip a coin to gain 4 more GOLD
+- Spinda Casino {{new}} | Spin the slot machine for 10 free rerolls, 10 GOLD or 10 XP. Jackpot: gain a NUGGET and spin again
 - Quick Streak {{new}} | Gain 5 GOLD. Your win and lose streaks grow twice as fast
-- Instant Treasure Box {{new}} | Xatu appraises a treasure box: gain 10 GOLD or a random completed item
+- Instant Treasure Box {{new}} | Gain 10 GOLD or a random completed item
 - Curse of Two | removed
 - Pearl, Gold Bar and Starter Pack | removed, replaced by the Booster Packs
 - Hex Maniac | removed

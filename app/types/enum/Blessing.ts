@@ -1100,12 +1100,21 @@ export const SIX_SEVEN_GOLD = 67
 export const SIX_SEVEN_LIFE_COST = 67
 export const LECHONK_BANK_GOLD = 1
 export const ALL_ABOARD_GOLD = 2
-export const LUMINOUS_SPRING_FREE_ROLLS_BY_STAR = [0, 1, 3]
+export const LUMINOUS_SPRING_GOLD_BY_STAR = [0, 1, 3]
 export const EPIC_COMMITMENT_LEVEL = 8
 export const EPIC_COMMITMENT_GOLD = 12
 export const EPIC_COMMITMENT_HEADS_GOLD = 4
 export const SPINDA_CASINO_REWARD = 10
 export const SPINDA_CASINO_JACKPOT_GOLD = 3
+// each pull spins, stops its three reels and holds the result for a moment
+export const SPINDA_CASINO_PULL_MS = 2400
+export const SPINDA_CASINO_SLOTS = [
+  "FREE_ROLLS",
+  "GOLD",
+  "XP",
+  "JACKPOT"
+] as const
+export type SpindaCasinoSlot = (typeof SPINDA_CASINO_SLOTS)[number]
 export const QUICK_STREAK_GOLD = 5
 export const QUICK_STREAK_STEP = 2
 export const INSTANT_TREASURE_BOX_GOLD = 10
