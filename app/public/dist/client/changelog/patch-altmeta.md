@@ -562,6 +562,7 @@ Every balance change on this server, newest first.
 - Epic Commitment {{new}} | When you reach level 8, gain 12 GOLD. Flip a coin: on heads, gain 4 more GOLD
 - Spinda Casino {{new}} | Pull Spinda's slots: 10 free rerolls, 10 GOLD or 10 XP. JACKPOT: gain a NUGGET and pull again
 - Quick Streak {{new}} | Gain 5 GOLD. Your win and lose streaks grow twice as fast
+- Instant Treasure Box {{new}} | Xatu appraises a treasure box: gain 10 GOLD or a random completed item
 - Curse of Two | removed
 - Pearl, Gold Bar and Starter Pack | removed, replaced by the Booster Packs
 - Hex Maniac | removed

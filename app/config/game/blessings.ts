@@ -1552,6 +1552,12 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     icon: "quick_streak",
     grantsPokemonImmediately: false
   },
+  [Blessing.INSTANT_TREASURE_BOX]: {
+    tier: BlessingTier.SILVER,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "instant_treasure_box",
+    grantsPokemonImmediately: false
+  },
   [Blessing.GOTTA_CATCH_EM_ALL]: {
     tier: BlessingTier.GOLD,
     availableAtStages: [4],

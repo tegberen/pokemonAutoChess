@@ -117,6 +117,7 @@ import {
   SPINDA_CASINO_JACKPOT_GOLD,
   SPINDA_CASINO_REWARD,
   QUICK_STREAK_GOLD,
+  INSTANT_TREASURE_BOX_GOLD,
   SILVER_SPOON_ROUNDS_BY_STAR,
   MOTHER_YARN_STAGES_BY_STAR,
   MOTHER_YARN_WEAVE_ANIMATION_DURATION,
@@ -146,6 +147,7 @@ import {
 } from "../types/enum/Game"
 import {
   Berries,
+  CraftableItemsNoScarves,
   Dishes,
   DishesGoingToInventory,
   GoldenBerries,
@@ -3091,6 +3093,11 @@ export const blessingEffectService: {
   },
   [Blessing.QUICK_STREAK]: (player) => {
     player.addMoney(QUICK_STREAK_GOLD, true, null)
+    return true
+  },
+  [Blessing.INSTANT_TREASURE_BOX]: (player) => {
+    if (chance(0.5)) player.addMoney(INSTANT_TREASURE_BOX_GOLD, true, null)
+    else player.items.push(pickRandomIn(CraftableItemsNoScarves))
     return true
   },
   [Blessing.GOTTA_CATCH_EM_ALL]: () => true,

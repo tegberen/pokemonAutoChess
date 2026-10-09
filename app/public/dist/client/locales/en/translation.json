@@ -6317,6 +6317,10 @@
 			"name": "Quick Streak",
 			"description": "Gain 5 GOLD. Your win and lose streaks grow twice as fast."
 		},
+		"INSTANT_TREASURE_BOX": {
+			"name": "Instant Treasure Box",
+			"description": "Xatu appraises a treasure box: gain 10 GOLD or a random completed item."
+		},
 		"GOTTA_CATCH_EM_ALL": {
 			"name": "Gotta Catch 'Em All",
 			"description": "Before each PvE round, wild Pokémon you can catch run across your board."
