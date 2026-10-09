@@ -114,6 +114,8 @@ import {
   SHADY_PRICE_FREE_ROLLS,
   SIX_SEVEN_GOLD,
   SIX_SEVEN_LIFE_COST,
+  SPINDA_CASINO_JACKPOT_GOLD,
+  SPINDA_CASINO_REWARD,
   SILVER_SPOON_ROUNDS_BY_STAR,
   MOTHER_YARN_STAGES_BY_STAR,
   MOTHER_YARN_WEAVE_ANIMATION_DURATION,
@@ -2272,6 +2274,20 @@ function grantRandomUnowns(player: Player) {
   return true
 }
 
+const SPINDA_CASINO_SLOTS = ["FREE_ROLLS", "GOLD", "XP", "JACKPOT"] as const
+
+// a jackpot pays a NUGGET's worth of GOLD and pulls again
+function pullSpindaCasino(player: Player) {
+  let slot = pickRandomIn(SPINDA_CASINO_SLOTS)
+  while (slot === "JACKPOT") {
+    player.addMoney(SPINDA_CASINO_JACKPOT_GOLD, true, null)
+    slot = pickRandomIn(SPINDA_CASINO_SLOTS)
+  }
+  if (slot === "FREE_ROLLS") player.shopFreeRolls += SPINDA_CASINO_REWARD
+  else if (slot === "GOLD") player.addMoney(SPINDA_CASINO_REWARD, true, null)
+  else player.addExperience(SPINDA_CASINO_REWARD)
+}
+
 export const blessingEffectService: {
   [blessing in Blessing]?: (
     player: Player,
@@ -3066,6 +3082,10 @@ export const blessingEffectService: {
   // a player already at the level is paid as soon as they pick it
   [Blessing.EPIC_COMMITMENT]: (player) => {
     player.payEpicCommitment()
+    return true
+  },
+  [Blessing.SPINDA_CASINO]: (player) => {
+    pullSpindaCasino(player)
     return true
   },
   [Blessing.GOTTA_CATCH_EM_ALL]: () => true,

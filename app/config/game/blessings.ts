@@ -390,7 +390,7 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
   [Blessing.PRISMATIC_REROLL]: {
     tier: BlessingTier.PRISMATIC,
     availableAtStages: BLESSING_SELECTION_STAGES,
-    icon: "slot_mashine",
+    icon: "prismatic_reroll",
     grantsPokemonImmediately: false
   },
   [Blessing.LUNCH_MONEY]: {
@@ -1538,6 +1538,12 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     tier: BlessingTier.SILVER,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "epic_commitment",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.SPINDA_CASINO]: {
+    tier: BlessingTier.SILVER,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "spinda_casino",
     grantsPokemonImmediately: false
   },
   [Blessing.GOTTA_CATCH_EM_ALL]: {

@@ -100,6 +100,7 @@ const ECONOMY_BLESSINGS = new Set<Blessing>([
   Blessing.ALL_ABOARD,
   Blessing.LUMINOUS_SPRING,
   Blessing.EPIC_COMMITMENT,
+  Blessing.SPINDA_CASINO,
   Blessing.CROAGUNKS_AID,
   Blessing.WOBBUFFETS_SILVER_PRIZE,
   Blessing.WOBBUFFETS_GOLD_PRIZE,

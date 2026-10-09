@@ -6309,6 +6309,10 @@
 			"name": "Epic Commitment",
 			"description": "When you reach level 8, gain 12 GOLD. Flip a coin: on heads, gain 4 more GOLD."
 		},
+		"SPINDA_CASINO": {
+			"name": "Spinda Casino",
+			"description": "Pull Spinda's slots: 10 free rerolls, 10 GOLD or 10 XP. JACKPOT: gain a NUGGET and pull again."
+		},
 		"GOTTA_CATCH_EM_ALL": {
 			"name": "Gotta Catch 'Em All",
 			"description": "Before each PvE round, wild Pokémon you can catch run across your board."
