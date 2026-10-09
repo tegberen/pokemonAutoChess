@@ -3181,6 +3181,7 @@ export const blessingEffectService: {
     return true
   },
   [Blessing.FURTHER_BEYOND]: () => true,
+  [Blessing.SHARK_BAIT]: () => true,
   [Blessing.FROZEN_CHRYSALIS]: () => true,
   [Blessing.GLORIOUS_BATTLE]: (player) => {
     player.choices.push(

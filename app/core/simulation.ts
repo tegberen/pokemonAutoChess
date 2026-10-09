@@ -198,6 +198,9 @@ import {
   FURTHER_BEYOND_AP_PER_POINT,
   FURTHER_BEYOND_SPEED_PER_POINT,
   GLORIOUS_BATTLE_WINS_REQUIRED,
+  SHARK_BAIT_FISH,
+  SHARK_BAIT_SCHOOL_ODDS,
+  SHARK_BAIT_SHARPEDO_STAGE,
   RUNE_SWORD_COMPONENTS,
   VIKING_HELMET_MAX_HP_RATIO,
   VIKING_HELMET_COMPONENTS,
@@ -721,6 +724,7 @@ export default class Simulation extends Schema implements ISimulation {
 
     this.summonWeatherInstituteCastforms()
     this.summonLechonkBanks()
+    this.summonSharkBaitFish()
     this.applyPostEffects(bluePlayer.board, redBoard)
   }
 
@@ -775,6 +779,64 @@ export default class Simulation extends Schema implements ISimulation {
         new OnDeathEffect(() => player.addBlessingGold(LECHONK_BANK_GOLD))
       )
     }
+  }
+
+  summonSharkBaitFish() {
+    for (const [player, team] of [
+      [this.bluePlayer, Team.BLUE_TEAM],
+      [this.redPlayer, Team.RED_TEAM]
+    ] as const) {
+      if (!player?.blessings?.includes(Blessing.SHARK_BAIT)) continue
+      let roll = Math.random()
+      let schoolSize = 1
+      for (const [index, odds] of SHARK_BAIT_SCHOOL_ODDS.entries()) {
+        roll -= odds
+        schoolSize = index + 1
+        if (roll < 0) break
+      }
+      // the bait goes up front, where it gets eaten
+      const frontRow = team === Team.BLUE_TEAM ? 2 : BOARD_HEIGHT - 3
+      for (let i = 0; i < schoolSize; i++) {
+        const coord =
+          this.getClosestFreeCellTo(3, frontRow, team) ??
+          this.getFirstFreeCell(team)
+        if (!coord) break
+        const fish = this.addPokemon(
+          PokemonFactory.createPokemonFromName(
+            pickRandomIn(SHARK_BAIT_FISH),
+            player
+          ),
+          coord.x,
+          coord.y,
+          team,
+          true
+        )
+        fish.effectsSet.add(
+          new OnDeathEffect(({ pokemon }) =>
+            this.summonSharkBaitPredator(pokemon, player)
+          )
+        )
+      }
+    }
+  }
+
+  summonSharkBaitPredator(fish: PokemonEntity, player: Player) {
+    const backRow = fish.team === Team.BLUE_TEAM ? 0 : BOARD_HEIGHT - 1
+    const coord = this.getClosestFreeCellTo(fish.positionX, backRow, fish.team)
+    if (!coord) return
+    const predator = this.addPokemon(
+      PokemonFactory.createPokemonFromName(
+        this.stageLevel < SHARK_BAIT_SHARPEDO_STAGE
+          ? Pkm.CARVANHA
+          : Pkm.SHARPEDO,
+        player
+      ),
+      coord.x,
+      coord.y,
+      fish.team,
+      true
+    )
+    predator.pp = predator.maxPP
   }
 
   broadcastToSpectators(transfer: Transfer, data: any) {

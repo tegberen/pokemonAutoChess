@@ -1968,7 +1968,7 @@
 		"STOMP": "Deal [300,400,500,1000,SP]% of user ATK as SPECIAL to the target.",
 		"HORN_DRILL": "Deal [300,400,500,1000,SP]% of user ATK as SPECIAL to the target, with [30,LK]% chance to execute it. The more ATK the user has relative to the target, the higher the chance.",
 		"SHADOW_BALL": "Deal [30,60,100,200,SP] SPECIAL to the target and decrease the SPE_DEF of all enemy Pokémon by 2.",
-		"TRICK_ROOM": "Drop a room on the largest group of enemies. Faster enemies inside are slowed to the user's base SPEED and their max PP is increased by [10,20,30]% for the rest of the fight, then they take [25,50,100,SP]% of their max PP as SPECIAL.",
+		"TRICK_ROOM": "Drop a room on the largest group of enemies. Faster enemies inside are slowed to the user's base SPEED and their max PP is increased by [5,10,20]% for the rest of the fight, then they take [25,50,100,SP]% of their max PP as SPECIAL.",
 		"BUG_BUZZ": "Deal [20,40,80,160,SP] SPECIAL to the target. The damage is doubled if the target suffers from PARALYSIS.",
 		"STRING_SHOT": "Deal [10,20,50,100,SP] SPECIAL to the target and inflict PARALYSIS for 5 seconds.",
 		"VENOSHOCK": "Deal [30,60,120,240,SP] SPECIAL to the target. The damage is doubled if the target suffers from POISONNED.",
@@ -6360,6 +6360,10 @@
 			"name": "Glorious Battle",
 			"description": "Choose a RUSTED_SWORD or a RUSTED_SHIELD. Gain the other after 8 player combat wins."
 		},
+		"SHARK_BAIT": {
+			"name": "Shark Bait",
+			"description": "At the start of combat, a few tasty fish join your front row. When one is KO, a hungry shark shows up with full PP."
+		},
 		"GOTTA_CATCH_EM_ALL": {
 			"name": "Gotta Catch 'Em All",
 			"description": "Before each PvE round, wild Pokémon you can catch run across your board."
@@ -6518,7 +6522,7 @@
 		},
 		"INFILTRATOR": {
 			"name": "Infiltrator",
-			"description": "Gain a Golbat. Attacks of your STRONGEST Zubat steal [3,4,5] PP and destroy PROTECT, Magic Bounce and Reflect."
+			"description": "Gain a Golbat. Your STRONGEST Zubat steals [3,4,5] PP and destroys PROTECT, Magic Bounce and Reflect ON_ATTACK."
 		},
 		"JOLLY_ROGER": {
 			"name": "Jolly Roger",

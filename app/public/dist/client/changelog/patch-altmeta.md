@@ -519,7 +519,7 @@ Every balance change on this server, newest first.
 **Abilities**
 - Machop Line | Guillotine → Cross Chop. Deal [300,SP]% of ATK as SPECIAL to the target. Each FIGHTING throw this fight gives this ability +[25,50,100,200]% CRIT_POWER. Can crit by default
 - Gastly Line | Nightmare: the bonus damage hits enemies suffering under a HEXING_INCANTATION or a NEGATIVE_STATUS instead of cursed ones
-- Duskull Line | Trick Room reworked: drops a room on the largest group of enemies. Faster enemies inside are slowed to the user's base SPEED and their max PP is increased by [10,20,30]% for the rest of the fight, then they take [25,50,100,SP]% of their max PP as SPECIAL
+- Duskull Line | Trick Room reworked: drops a room on the largest group of enemies. Faster enemies inside are slowed to the user's base SPEED and their max PP is increased by [5,10,20]% for the rest of the fight, then they take [25,50,100,SP]% of their max PP as SPECIAL
 - Hisuian Lilligant | Victory Dance now scales with star level: ATK and DEF 3 → 6, SPEED 10 → 20
 - Appletun | Apple Acid: deals [100,200,300,400,SP]% of (DEF + SPE_DEF) as SPECIAL instead of [15,30,50,100,SP], no longer doubled against 0 SPE_DEF
 - Flapple | Grav Apple: deals [100,200,300,400,SP]% of ATK as PHYSICAL instead of [20,40,80,160,SP], no longer doubled against 0 DEF
@@ -580,7 +580,7 @@ Every balance change on this server, newest first.
 - Instant Treasure Box {{new}} | Gain 10 GOLD or a random completed item
 - Nest Eggs {{new}} | Stage 4 only. Gain 3 Eggs that hatch immediately
 - Jolly Roger {{new}} | Stage 4 only. Gain a Totodile. When your STRONGEST Totodile KO's an enemy, steal 1 GOLD from the opponent, or 2 GOLD with its ability. Croconaw evolves into Pirate Feraligatr
-- Infiltrator {{new}} | Stage 4 only. Gain a Golbat. Attacks of your STRONGEST Zubat steal [3,4,5] PP and destroy PROTECT, Magic Bounce and Reflect
+- Infiltrator {{new}} | Stage 4 only. Gain a Golbat. Your STRONGEST Zubat steals [3,4,5] PP and destroys PROTECT, Magic Bounce and Reflect ON_ATTACK
 - Captain's Bounty {{new}} | Stage 4 only. Gain a Raboot. At the start of each fight, your STRONGEST Scorbunny gains your GOLD as CRIT_CHANCE. Raboot evolves into Pirate Cinderace
 - Royal Romance {{new}} | Stage 4 only. Gain a Nidoran♂. At the start of each fight, your STRONGEST Nidoran♂ has a [50,LK]% chance to attract a catchable Nidoran♀ when no Nidoqueen is on the board
 - Viking Helmet {{new}} | Gain a random HEART_SCALE, NEVER_MELT_ICE or MIRACLE_SEED. At the start of combat, Pokémon holding 3 items, one of them made with one of these, gain 40% of their max HP
@@ -593,6 +593,7 @@ Every balance change on this server, newest first.
 - Further Beyond {{new}} | Stage 12 only. For each point your top synergy is above its last level, your Pokémon with that synergy gain 30 HP, 5 ATK, 20 AP and 20 SPEED
 - Frozen Chrysalis {{new}} | The first time each of your Pokémon drops below 50% HP, it casts Frozen Beak: gain 100 SHIELD and FREEZE itself for 2 seconds, taking 50% less damage while FREEZE
 - Glorious Battle {{new}} | Choose a RUSTED_SWORD or a RUSTED_SHIELD. Gain the other after 8 player combat wins
+- Shark Bait {{new}} | At the start of combat, 1 to 3 Magikarp, Wishiwashi or Feebas join your front row. When one is KO, a Carvanha arrives in your back row with full PP, or a Sharpedo from stage 15. 1 fish 70%, 2 fish 20%, 3 fish 10%
 - Curse of Two | removed
 - Pearl, Gold Bar and Starter Pack | removed, replaced by the new economy Wishes
 - Hex Maniac | removed
