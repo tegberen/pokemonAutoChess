@@ -1534,6 +1534,12 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     icon: "luminous_spring",
     grantsPokemonImmediately: false
   },
+  [Blessing.EPIC_COMMITMENT]: {
+    tier: BlessingTier.SILVER,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "epic_commitment",
+    grantsPokemonImmediately: false
+  },
   [Blessing.GOTTA_CATCH_EM_ALL]: {
     tier: BlessingTier.GOLD,
     availableAtStages: [4],

@@ -3063,6 +3063,11 @@ export const blessingEffectService: {
   [Blessing.LECHONK_BANK]: () => true,
   [Blessing.ALL_ABOARD]: () => true,
   [Blessing.LUMINOUS_SPRING]: () => true,
+  // a player already at the level is paid as soon as they pick it
+  [Blessing.EPIC_COMMITMENT]: (player) => {
+    player.payEpicCommitment()
+    return true
+  },
   [Blessing.GOTTA_CATCH_EM_ALL]: () => true,
   [Blessing.REGIONAL_SPECIALTIES]: (player) => {
     player.applyRegionalSpecialties()

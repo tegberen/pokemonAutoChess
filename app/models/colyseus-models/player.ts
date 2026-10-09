@@ -43,6 +43,9 @@ import {
   RAINBOW_DROPLET_SYNERGIES_REQUIRED,
   BIRTHDAY_PRESENT_GOLD,
   CRYSTAL_CLUSTERS_ROCKS_GRANTED,
+  EPIC_COMMITMENT_GOLD,
+  EPIC_COMMITMENT_HEADS_GOLD,
+  EPIC_COMMITMENT_LEVEL,
   LUNCH_MONEY_DAMAGE_REQUIRED,
   LUNCH_MONEY_GOLD,
   getSynergiesGivenByItem,
@@ -340,6 +343,7 @@ export default class Player extends Schema implements IPlayer {
   bpRewardsNextStage = 0
   greedyWishPending = false
   calledShotPending = false
+  epicCommitmentPaid = false
   sturdyTriggered = false
   // server-only handle on the same entry, for writing synced quest progress
   blessingsRef: PlayerBlessings | null = null
@@ -552,6 +556,19 @@ export default class Player extends Schema implements IPlayer {
     )
   }
 
+  // paid once, the first time the player is at the required level
+  payEpicCommitment() {
+    if (this.epicCommitmentPaid) return
+    if (this.experienceManager.level < EPIC_COMMITMENT_LEVEL) return
+    this.epicCommitmentPaid = true
+    const heads = chance(0.5)
+    this.addMoney(
+      EPIC_COMMITMENT_GOLD + (heads ? EPIC_COMMITMENT_HEADS_GOLD : 0),
+      true,
+      null
+    )
+  }
+
   addExperience(value: number) {
     const previousLevel = this.experienceManager.level
     this.experienceManager.addExperience(value)
@@ -559,6 +576,9 @@ export default class Player extends Schema implements IPlayer {
       PrismaticQuest.EXPAND,
       this.experienceManager.level
     )
+    if (this.blessings?.includes(Blessing.EPIC_COMMITMENT)) {
+      this.payEpicCommitment()
+    }
     if (
       this.blessings?.includes(Blessing.A_NEW_FRIEND) &&
       this.aNewFriendPokemon
