@@ -2701,7 +2701,7 @@
 		"CURSE_OF_VULNERABILITY": "Write your first HEXING_INCANTATION.",
 		"CURSE_OF_WEAKNESS": "Write your second HEXING_INCANTATION.",
 		"CURSE_OF_TORMENT": "Write your RITUAL_INCANTATION. Each HEXING_INCANTATION gets STRONGER.",
-		"CURSE_OF_FATE": "Write your FATED_INCANTATION, which empowers your other incantations. Both HEXING_INCANTATION and the RITUAL_INCANTATION get STRONGER.",
+		"CURSE_OF_FATE": "Write your FATED_INCANTATION. Both other incantations get STRONGER.",
 		"AROMATIC_MIST": "Pick one of three wands among BLAST_WAND, HP_SWAP_WAND, SPIRIT_WAND, LONG_WAND",
 		"FAIRY_WIND": "Pick one of three wands among CONFUSE_WAND, PETRIFY_WAND, SLOW_WAND, SLUMBER_WAND",
 		"STRANGE_STEAM": "Pick one of three wands among GUIDING_WAND, SURROUND_WAND, POUNCE_WAND, TWO_EDGED_WAND",
@@ -4017,7 +4017,7 @@
 		"FAIRY": "FAIRY Pokémon use wands to deal additional SPECIAL and various effects with their attacks.{{additionalInfo}}",
 		"FAIRY_WANDS": "\nWands equipped: {{wands}}",
 		"ROCK": "ROCK Pokémon gain DEF, better resist to critical attacks, and can adapt to weather. When ROCK Pokémon are KO'd they explode, deal TRUE and ARMOR_BREAK all ADJACENT enemies",
-		"GHOST": "GHOST lets you write incantations: a HEXING_INCANTATION DEBUFF at 2 and 4, a RITUAL_INCANTATION BUFF at 6 and a FATED_INCANTATION that empowers both at 8. GHOST Pokémon have a [15,LK]% chance to dodge attacks and apply SILENCE for 2s ON_HIT. Enemies with negative LUCK are easier for GHOST Pokémon to dodge and SILENCE.",
+		"GHOST": "GHOST lets you write incantations: a HEXING_INCANTATION DEBUFF at 2 and 4, a RITUAL_INCANTATION BUFF at 6 and a FATED_INCANTATION at 8. GHOST Pokémon have a [15,LK]% chance to dodge attacks and apply SILENCE for 2s ON_HIT, more against negative LUCK.",
 		"GHOST_NIGHT_SHADE": "Night Shade",
 		"GHOST_NIGHT_SHADE_DESCRIPTION": "Unlock the Shady title. One does not simply leak how to get Shady.",
 		"ICE": "ICE Pokémon have [20,LK]% chance to FREEZE the enemy for 2 seconds after a hit and give SPE_DEF to your whole team.",
@@ -6917,8 +6917,8 @@
 			"0": {
 				"TWO_TARGETS": "At the start of each fight, affect 2 enemies at once",
 				"DOOM": "Their targets get CURSE and are KO'd after {{seconds}}s. The CURSE does not move to the next hexed enemy",
-				"SPREAD_STATUS": "When a hexed enemy is KO'd, ADJACENT enemies get its NEGATIVE_STATUS for the rest of the fight",
-				"SPREAD_HEX": "When a hexed enemy is KO'd, its HEXING_INCANTATION spreads to {{targets}} new enemies"
+				"REAP": "Reap: your STRONGEST GHOST Pokémon GAINS what their targets LOSE, and their GOLD on KO is doubled",
+				"PLAGUE": "At the start of each fight, their NEGATIVE_STATUS also hits the enemies ADJACENT to their targets"
 			},
 			"1": {
 				"ECHO": "[{{value}},LK]% chance to repeat the RITUAL_INCANTATION",
@@ -6940,7 +6940,25 @@
 			"GOLD_ON_KO": "{{value}} GOLD on KO",
 			"LUCK": "−{{value}} LUCK",
 			"MAX_PP": "+{{value}}% max PP",
-			"MAX_HP": "−{{value}}% max HP"
+			"MAX_HP": "−{{value}}% max HP",
+			"reap": {
+				"STAT": "+{{value}} {{stat}}",
+				"STAT_PERCENT": "+the {{stat}} lost",
+				"LUCK": "+{{value}} LUCK",
+				"MAX_PP": "−{{value}}% max PP",
+				"MAX_HP": "+the max HP lost"
+			},
+			"fated": {
+				"TWO_TARGETS": "2 × {{target}}",
+				"DOOM": "CURSE, KO after {{seconds}}s",
+				"REAP": "your GHOST {{gain}}",
+				"PLAGUE": "{{status}} + ADJACENT"
+			},
+			"fated_ritual": {
+				"ECHO": "[{{value}},LK]% chance it all happens twice.",
+				"RESURRECT": "Once it happened {{value}}, the STRONGEST ally gets RESURRECTION.",
+				"SPAWN_GHOST": "[{{value}},LK]% chance to also bench a GHOST Pokémon."
+			}
 		}
 	},
 	"spinda_casino": {
@@ -7689,6 +7707,9 @@
 			"and": "and",
 			"level": "Lvl {{level}}",
 			"none": "–",
+			"negative_luck_title": "Negative LUCK",
+			"negative_luck": "When a GHOST Pokémon rolls to dodge an enemy's attack or to apply SILENCE ON_HIT, that enemy's negative LUCK is added to its own LUCK for the roll. Only these two rolls use it: crits, item procs and abilities do not.",
+			"negative_luck_example": "Example: a GHOST Pokémon with 0 LUCK against an enemy with -20 LUCK rolls with 20 LUCK, so its 15% chance becomes about 22%.",
 			"example": "Example: {{sentence}}",
 			"example_label": "Example:",
 			"slot": {
@@ -7746,7 +7767,8 @@
 					"SPAWN_GHOST": "Chance to put a GHOST Pokémon costing 3 GOLD or less on your bench"
 				},
 				"all_causes": "Every Cause",
-				"hexing_gold_note": "When a FATED_INCANTATION makes a HEXING_INCANTATION affect several enemies, each of them gets its debuff and NEGATIVE_STATUS, but its GOLD is still granted only once per fight: at most 3 GOLD, or 6 with two GOLD hexes."
+				"hexing_reap_note": "Reap example, with Tier 3 hexes at GHOST 8: a target LOSES 60 AP, your STRONGEST GHOST Pokémon GAINS 60 AP. A target's max PP INCREASED by 30% lowers your GHOST Pokémon's max PP by 30%.",
+				"hexing_gold_note": "When a FATED_INCANTATION makes a HEXING_INCANTATION affect several enemies, each of them gets its debuff and NEGATIVE_STATUS, but its GOLD is still granted only once per fight: at most 3 GOLD, or 6 with two GOLD hexes. With Reap, each GOLD hex grants 6 GOLD instead of 3, or 12 with two GOLD hexes."
 			},
 			"hexing_effects": {
 				"STAT": "LOSES the stat of its Cause",

@@ -18,6 +18,7 @@ import {
   describeIncantationOption,
   describeIncantationLines,
   describeIncantationSentence,
+  describeFatedRitualSummary,
   describeHexingSummary,
   getIncantationIcon
 } from "./ghost-incantation-text"
@@ -135,7 +136,8 @@ export function GameIncantationChoice({
                             describeHexingSummary(
                               t,
                               hexing,
-                              getHexingStrength(fatedGhostLevel)
+                              getHexingStrength(fatedGhostLevel),
+                              selected[0]
                             )
                           )}
                         </span>
@@ -157,7 +159,12 @@ export function GameIncantationChoice({
                           ],
                           "",
                           selected[1] === FatedRitual.DOUBLE_REWARDS ? 2 : 1
-                        ),
+                        ) +
+                          describeFatedRitualSummary(
+                            t,
+                            selected[1],
+                            writtenRitual.cause
+                          ),
                         {
                           ...tierParams,
                           stars: getRitualStrength(fatedGhostLevel) + 1

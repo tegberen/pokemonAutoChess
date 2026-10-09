@@ -5,8 +5,6 @@ import {
   FATED_RESURRECT_ACTIVATIONS,
   FATED_SPAWN_GHOST_CHANCE,
   FATED_SPAWN_RARITY_WEIGHTS,
-  FATED_SPREAD_HEX_TARGETS,
-  FATED_SPREAD_STATUS_DURATION,
   FatedHexing,
   FatedRitual,
   type GhostIncantation,
@@ -191,15 +189,18 @@ function hexNewEnemy(
   )
   const curser = getCurser(simulation, side)
   if (!target || !curser) return
-  applyHex(side, slot, incantation, target, curser)
+  applyHex(side, slot, incantation, target, curser, getReaper(simulation, side))
 }
 
 // resurrect() rebuilds these stats, so they are applied again after a revive
+// only applyHex passes a REAP reaper, so re-applying after a revive never pays
+// it twice
 function applyHexStatLoss(
   side: IncantationSide,
   incantation: GhostIncantation,
   target: PokemonEntity,
-  curser: PokemonEntity
+  curser: PokemonEntity,
+  reaper?: PokemonEntity
 ) {
   const strength = side.hexingStrength
   const loss = incantation.effect as HexingLoss
@@ -210,22 +211,42 @@ function applyHexStatLoss(
     if (cause === HexingTarget.HIGHEST_DEFENSES) {
       target.addDefense(-value, curser, 0, false)
       target.addSpecialDefense(-value, curser, 0, false)
+      reaper?.addDefense(value, reaper, 0, false)
+      reaper?.addSpecialDefense(value, reaper, 0, false)
     } else if (cause === HexingTarget.HIGHEST_AP) {
       target.addAbilityPower(-value, curser, 0, false)
+      reaper?.addAbilityPower(value, reaper, 0, false)
     } else if (cause === HexingTarget.HIGHEST_ATK) {
       const atkLoss = isPercent ? Math.round((target.atk * value) / 100) : value
       target.addAttack(-atkLoss, curser, 0, false)
+      reaper?.addAttack(atkLoss, reaper, 0, false)
     } else if (cause === HexingTarget.HIGHEST_SPEED) {
       target.addSpeed(-value, curser, 0, false)
+      reaper?.addSpeed(value, reaper, 0, false)
     }
   } else if (loss === HexingLoss.LUCK) {
-    target.addLuck(-HEXING_LOSS_VALUES[loss][strength], curser, 0, false)
+    const luckLoss = HEXING_LOSS_VALUES[loss][strength]
+    target.addLuck(-luckLoss, curser, 0, false)
+    reaper?.addLuck(luckLoss, reaper, 0, false)
   } else if (loss === HexingLoss.MAX_HP) {
     const hpLoss = Math.round(
       (target.maxHP * HEXING_LOSS_VALUES[loss][strength]) / 100
     )
     target.addMaxHP(-hpLoss, curser, 0, false)
+    reaper?.addMaxHP(hpLoss, reaper, 0, false)
   }
+}
+
+function getReaper(simulation: Simulation, side: IncantationSide) {
+  if (side.fated?.cause !== FatedHexing.REAP) return undefined
+  return getStrongestUnit(
+    getTeamEntities(simulation, side.team).filter(
+      (ally) =>
+        ally.types.has(Synergy.GHOST) &&
+        getOwner(ally) === side.player &&
+        !ally.isSpawn
+    )
+  )
 }
 
 export function reapplyHexStatLosses(
@@ -243,22 +264,32 @@ function applyHex(
   slot: number,
   incantation: GhostIncantation,
   target: PokemonEntity,
-  curser: PokemonEntity
+  curser: PokemonEntity,
+  reaper?: PokemonEntity
 ) {
-  applyHexStatLoss(side, incantation, target, curser)
+  applyHexStatLoss(side, incantation, target, curser, reaper)
   if (incantation.effect === HexingLoss.MAX_PP) {
     const increase = HEXING_LOSS_VALUES[HexingLoss.MAX_PP][side.hexingStrength]
     target.maxPP = Math.min(
       255,
       Math.round((target.maxPP * (100 + increase)) / 100)
     )
+    if (reaper) {
+      reaper.maxPP = Math.round((reaper.maxPP * (100 - increase)) / 100)
+    }
   }
 
-  triggerHexStatus(
-    target,
-    incantation.bonus as HexingStatus,
-    INCANTATION_STATUS_DURATION
-  )
+  const status = incantation.bonus as HexingStatus
+  triggerHexStatus(target, status, INCANTATION_STATUS_DURATION)
+  if (side.fated?.cause === FatedHexing.PLAGUE) {
+    target.simulation.board
+      .getAdjacentCells(target.positionX, target.positionY)
+      .forEach(({ value: neighbour }) => {
+        if (!neighbour || neighbour.team !== target.team) return
+        neighbour.plagueHexStatuses.add(status)
+        triggerHexStatus(neighbour, status, INCANTATION_STATUS_DURATION)
+      })
+  }
   target.hexes.push({ side, slot, incantation })
   if (slot === 0) target.status.curseVulnerability = true
   else target.status.curseWeakness = true
@@ -296,7 +327,7 @@ function hasHexStatus(target: PokemonEntity, status: HexingStatus) {
   return target.status.paralysis
 }
 
-// hexes and spread statuses come back after a cleanse, like the old curses
+// hex and plague statuses come back after a cleanse, like the old curses
 export function reapplyHexStatuses(target: PokemonEntity) {
   const reapply = (status: HexingStatus) => {
     if (!hasHexStatus(target, status)) {
@@ -304,17 +335,13 @@ export function reapplyHexStatuses(target: PokemonEntity) {
     }
   }
   for (const hex of target.hexes) reapply(hex.incantation.bonus as HexingStatus)
-  target.spreadHexStatuses.forEach(reapply)
+  target.plagueHexStatuses.forEach(reapply)
   if (target.status.curseFate && !target.status.curse) {
     target.status.triggerCurse(FATED_DOOM_DELAY, target)
   }
 }
 
-export function onHexedEnemyKnockedOut(
-  simulation: Simulation,
-  enemy: PokemonEntity,
-  board: Board
-) {
+export function onHexedEnemyKnockedOut(enemy: PokemonEntity) {
   for (const hex of enemy.hexes) {
     const { side, incantation } = hex
     if (
@@ -323,26 +350,12 @@ export function onHexedEnemyKnockedOut(
       !side.goldPaidHexSlots.has(hex.slot)
     ) {
       side.goldPaidHexSlots.add(hex.slot)
+      const reapMultiplier = side.fated?.cause === FatedHexing.REAP ? 2 : 1
       grantIncantationGold(
         side,
-        HEXING_LOSS_VALUES[HexingLoss.GOLD_ON_KO][side.hexingStrength]
+        HEXING_LOSS_VALUES[HexingLoss.GOLD_ON_KO][side.hexingStrength] *
+          reapMultiplier
       )
-    }
-    if (side.fated?.cause === FatedHexing.SPREAD_STATUS) {
-      board
-        .getAdjacentCells(enemy.positionX, enemy.positionY)
-        .forEach((cell) => {
-          if (cell.value && cell.value.team === enemy.team) {
-            const status = incantation.bonus as HexingStatus
-            cell.value.spreadHexStatuses.add(status)
-            triggerHexStatus(cell.value, status, FATED_SPREAD_STATUS_DURATION)
-          }
-        })
-    }
-    if (side.fated?.cause === FatedHexing.SPREAD_HEX) {
-      for (let count = 0; count < FATED_SPREAD_HEX_TARGETS; count++) {
-        hexNewEnemy(simulation, side, hex.slot, incantation)
-      }
     }
   }
 }

@@ -236,8 +236,11 @@ export function addIconsToDescription(
         )
       } else if (isIn(DebuffWords, token) || isIn(BuffWords, token)) {
         const word = token.toLowerCase()
+        // the text between two tokens is empty, so look back to the last
+        // real text: "highest AP GAINS" must not read as a new sentence
+        const textBefore = descriptionParts.slice(0, i).join("").trim()
         const isFirstWordOrStartOfSentence =
-          isAtStartOfSentence || descriptionParts[i - 1].trim() === ""
+          textBefore === "" || textBefore.endsWith(".")
         icon = (
           <span
             className={cc("status-label", {

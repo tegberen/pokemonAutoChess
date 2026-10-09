@@ -82,6 +82,13 @@
   display: block;
 }
 
+.synergy-written-incantation-kind {
+  width: 1.2em;
+  height: 1.2em;
+  margin-right: 0.3em;
+  vertical-align: middle;
+}
+
 .synergy-written-incantation > img {
   flex: none;
   box-sizing: border-box;

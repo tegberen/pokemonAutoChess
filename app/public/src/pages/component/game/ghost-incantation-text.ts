@@ -3,7 +3,7 @@ import {
   FATED_ECHO_CHANCE,
   FATED_RESURRECT_ACTIVATIONS,
   FATED_SPAWN_GHOST_CHANCE,
-  FATED_SPREAD_HEX_TARGETS,
+  FatedHexing,
   FatedRitual,
   type GhostIncantation,
   HEXING_LOSS_VALUES,
@@ -143,6 +143,17 @@ function describeFatedRitual(
   return { value: FATED_ECHO_CHANCE }
 }
 
+// DOUBLE_REWARDS already shows in the ritual's own numbers
+export function describeFatedRitualSummary(
+  t: Translate,
+  ritual: string | null,
+  trigger: string
+) {
+  if (!ritual || ritual === FatedRitual.DOUBLE_REWARDS) return ""
+  const params = describeFatedRitual(t, ritual as FatedRitual, trigger)
+  return ` ${t(`ghost_incantations.summary.fated_ritual.${ritual}`, params)}`
+}
+
 export function describeIncantationOption(
   t: Translate,
   kind: IncantationKind,
@@ -176,8 +187,7 @@ export function describeIncantationOption(
   }
   if (column === 0) {
     return t(base, {
-      seconds: FATED_DOOM_DELAY / 1000,
-      targets: FATED_SPREAD_HEX_TARGETS
+      seconds: FATED_DOOM_DELAY / 1000
     })
   }
   return t(base, describeFatedRitual(t, option as FatedRitual, context))
@@ -186,28 +196,57 @@ export function describeIncantationOption(
 export function describeHexingSummary(
   t: Translate,
   hexing: GhostIncantation,
-  strength: number
+  strength: number,
+  fated: string | null = null
 ) {
   const loss = hexing.effect as HexingLoss
   let lossText: string
+  let reapGain: string | null = null
   if (loss === HexingLoss.STAT) {
     const target = hexing.cause as HexingTarget
     const statLoss = HEXING_STAT_LOSS_VALUES[target]
     const key = statLoss.isPercent ? "STAT_PERCENT" : "STAT"
-    lossText = t(`ghost_incantations.summary.${key}`, {
+    const params = {
       value: statLoss.values[strength],
       stat: HEXING_TARGET_STAT[target]
+    }
+    lossText = t(`ghost_incantations.summary.${key}`, params)
+    reapGain = t(`ghost_incantations.summary.reap.${key}`, params)
+  } else if (loss === HexingLoss.GOLD_ON_KO) {
+    const gold = HEXING_LOSS_VALUES[loss][strength]
+    lossText = t(`ghost_incantations.summary.${loss}`, {
+      value: fated === FatedHexing.REAP ? `[${gold},OLD] → ${gold * 2}` : gold
     })
   } else {
-    lossText = t(`ghost_incantations.summary.${loss}`, {
-      value: HEXING_LOSS_VALUES[loss][strength]
-    })
+    const params = { value: HEXING_LOSS_VALUES[loss][strength] }
+    lossText = t(`ghost_incantations.summary.${loss}`, params)
+    reapGain = t(`ghost_incantations.summary.reap.${loss}`, params)
   }
-  return t("ghost_incantations.summary.HEXING", {
-    target: t(`ghost_incantations.summary.targets.${hexing.cause}`),
+  const target = t(`ghost_incantations.summary.targets.${hexing.cause}`)
+  const summary = t("ghost_incantations.summary.HEXING", {
+    target:
+      fated === FatedHexing.TWO_TARGETS
+        ? t("ghost_incantations.summary.fated.TWO_TARGETS", { target })
+        : target,
     loss: lossText,
-    status: hexing.bonus
+    status:
+      fated === FatedHexing.PLAGUE
+        ? t("ghost_incantations.summary.fated.PLAGUE", {
+            status: hexing.bonus
+          })
+        : hexing.bonus
   })
+  if (fated === FatedHexing.DOOM) {
+    const doom = t("ghost_incantations.summary.fated.DOOM", {
+      seconds: FATED_DOOM_DELAY / 1000
+    })
+    return `${summary} · ${doom}`
+  }
+  if (fated === FatedHexing.REAP && reapGain) {
+    const reap = t("ghost_incantations.summary.fated.REAP", { gain: reapGain })
+    return `${summary} · ${reap}`
+  }
+  return summary
 }
 
 function asContinuation(text: string) {

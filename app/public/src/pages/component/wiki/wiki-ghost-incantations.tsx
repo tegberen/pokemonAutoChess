@@ -278,6 +278,15 @@ export function WikiGhostIncantations() {
             </tbody>
           </table>
         </div>
+        <section className="wiki-ghost-step">
+          <h4>{addIconsToDescription(t("wiki.ghost.negative_luck_title"))}</h4>
+          <p className="wiki-ghost-intro">
+            {addIconsToDescription(t("wiki.ghost.negative_luck"))}
+          </p>
+          <p className="wiki-ghost-example">
+            {addIconsToDescription(t("wiki.ghost.negative_luck_example"))}
+          </p>
+        </section>
       </div>
 
       <div className="my-box wiki-ghost-card">
@@ -532,7 +541,7 @@ export function WikiGhostIncantations() {
           {describeIncantationLines(
             t,
             IncantationKind.FATED,
-            [FatedHexing.SPREAD_HEX, FatedRitual.ECHO],
+            [FatedHexing.REAP, FatedRitual.ECHO],
             ""
           ).map((line, index) => (
             <span key={index} className="wiki-ghost-example-line">
@@ -560,6 +569,9 @@ export function WikiGhostIncantations() {
               </li>
             ))}
           </ul>
+          <p className="wiki-ghost-example">
+            {addIconsToDescription(t("wiki.ghost.fated.hexing_reap_note"))}
+          </p>
           <p className="wiki-ghost-example">
             {addIconsToDescription(t("wiki.ghost.fated.hexing_gold_note"))}
           </p>

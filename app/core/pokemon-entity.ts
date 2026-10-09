@@ -280,7 +280,7 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
   hasOwnSpotlight: boolean = false
   isProcessingAbility: boolean = false
   hexes: Hex[] = []
-  spreadHexStatuses = new Set<HexingStatus>()
+  plagueHexStatuses = new Set<HexingStatus>()
   ghostAttacksSinceRitual = 0
   isTidalGuardian: boolean = false
   overloadVoltSurged: boolean = false
@@ -1854,7 +1854,7 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
       })
     }
 
-    onHexedEnemyKnockedOut(this.simulation, this, board)
+    onHexedEnemyKnockedOut(this)
     // summons are left out, or a swarm of them would farm KO rewards
     if (!this.isSpawn) {
       if (this.types.has(Synergy.GHOST)) {

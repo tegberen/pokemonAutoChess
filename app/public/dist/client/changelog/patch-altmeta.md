@@ -133,18 +133,33 @@ each tile of gap.
 
 {{synergy:GHOST}}
 
-#### Negative LUCK
+#### Picking your FATED_INCANTATION
 
-When a GHOST Pokémon rolls to dodge an enemy's attack, or to apply SILENCE on
-hit, that enemy's negative LUCK is added to the GHOST Pokémon's own LUCK for the
-roll. Only these two rolls use it: crits, item procs and abilities do not.
+It has one pick for both HEXING_INCANTATION and one for your RITUAL_INCANTATION.
 
-For example, a GHOST Pokémon with 0 LUCK against an enemy with -20 LUCK rolls
-with 20 LUCK, so its 15% chance becomes about 22%.
+HEXING_INCANTATION:
+
+A HEXING_INCANTATION hexes its target at the start of each fight: a loss and a
+NEGATIVE_STATUS.
+
+- Affect 2 enemies at once: twice the losses and statuses. Your hexes are what wins
+- CURSE and KO after 8s: removes the hexed targets whatever their HP. Your hexes target the enemy carries. Not against RUNE_PROTECT
+- Reap what they lose: your STRONGEST GHOST Pokémon gains the hexed stats. Big hex losses, one GHOST carry
+- NEGATIVE_STATUS also hits ADJACENT enemies: from the start of the fight. Tanky boards that stand close
+
+RITUAL_INCANTATION:
+
+A RITUAL_INCANTATION gives two things each time its Cause happens: its Effect
+for this fight, and its Bewitching (permanent stats or GOLD).
+
+- Repeat the RITUAL_INCANTATION: Effect and Bewitching again, on a LUCK chance. High LUCK teams. 50% at 0 LUCK, 71% at 50 LUCK, 100% at 100 LUCK
+- Double GOLD and permanent stat GAINS: only the Bewitching, but always. Low LUCK teams
+- RESURRECTION: one carry wins your fights
+- Bench a GHOST Pokémon: you still need GHOST Pokémon
 
 > CURSE is no longer the GHOST (8) capstone. GHOST (8) now writes a
 > FATED_INCANTATION, and one of its options still gives access to CURSE: each
-> hexed enemy gets CURSE for 10s. However, that CURSE stays on the hexed unit
+> hexed enemy gets CURSE for 8s. However, that CURSE stays on the hexed unit
 > and does not move on after a KO anymore. Though watch out! A Pokémon can be
 > the target of both HEXING_INCANTATION, so it can get CURSE twice, and a CURSE
 > on an already CURSE unit executes it at once.

@@ -44,6 +44,7 @@ import { cc } from "../../utils/jsx"
 import { getCachedPortrait } from "../game/game-pokemon-portrait"
 import {
   describeIncantationLines,
+  describeIncantationOption,
   getIncantationIcon
 } from "../game/ghost-incantation-text"
 import SynergyIcon from "../icons/synergy-icon"
@@ -61,19 +62,52 @@ function WrittenIncantation(props: {
   const t = tBase as any
   const incantation = decodeGhostIncantation(props.encoded)
   const strength = getIncantationStrength(incantation.kind, props.ghostLevel)
-  const lines = describeIncantationLines(
-    t,
-    incantation.kind,
-    [incantation.cause, incantation.effect, incantation.bonus],
-    props.ritualTrigger
-  )
+  const lines: { kind: IncantationKind | null; text: string }[] =
+    incantation.kind === IncantationKind.FATED
+      ? [
+          {
+            kind: IncantationKind.HEXING,
+            text: describeIncantationOption(
+              t,
+              IncantationKind.FATED,
+              0,
+              incantation.cause,
+              null,
+              props.ritualTrigger
+            )
+          },
+          {
+            kind: IncantationKind.RITUAL,
+            text: describeIncantationOption(
+              t,
+              IncantationKind.FATED,
+              1,
+              incantation.effect,
+              null,
+              props.ritualTrigger
+            )
+          }
+        ]
+      : describeIncantationLines(
+          t,
+          incantation.kind,
+          [incantation.cause, incantation.effect, incantation.bonus],
+          props.ritualTrigger
+        ).map((text) => ({ kind: null, text }))
   return (
     <p className="synergy-written-incantation">
       <img src={getIncantationIcon(incantation.kind)} alt="" />
       <span>
         {lines.map((line, index) => (
           <span key={index} className="synergy-written-incantation-line">
-            {addIconsToDescription(line, {
+            {line.kind && (
+              <img
+                className="synergy-written-incantation-kind"
+                src={getIncantationIcon(line.kind)}
+                alt=""
+              />
+            )}
+            {addIconsToDescription(line.kind ? `${line.text}.` : line.text, {
               ap: 0,
               luck: 0,
               stars: strength + 1,
