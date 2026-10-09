@@ -214,12 +214,28 @@ import {
 import { SEASONS, getCurrentSeason } from "../utils/season"
 import { schemaValues } from "../utils/schemas"
 
+const BOOSTER_PACK_LATE_STAGE = 12
 const BOOSTER_PACKS: Partial<
-  Record<Blessing, { value: number; guaranteedRarity: Rarity }>
+  Record<
+    Blessing,
+    { value: number; lateValue: number; guaranteedRarity: Rarity }
+  >
 > = {
-  [Blessing.BOOSTER_PACK_I]: { value: 12, guaranteedRarity: Rarity.UNCOMMON },
-  [Blessing.BOOSTER_PACK_II]: { value: 18, guaranteedRarity: Rarity.RARE },
-  [Blessing.BOOSTER_PACK_III]: { value: 24, guaranteedRarity: Rarity.EPIC }
+  [Blessing.BOOSTER_PACK_I]: {
+    value: 10,
+    lateValue: 12,
+    guaranteedRarity: Rarity.UNCOMMON
+  },
+  [Blessing.BOOSTER_PACK_II]: {
+    value: 15,
+    lateValue: 18,
+    guaranteedRarity: Rarity.RARE
+  },
+  [Blessing.BOOSTER_PACK_III]: {
+    value: 20,
+    lateValue: 24,
+    guaranteedRarity: Rarity.EPIC
+  }
 }
 const RELIC_FRAGMENT_GOLD = 5
 const CROAGUNKS_AID_EXCHANGE_TICKETS = 2
@@ -332,10 +348,16 @@ function rollBoosterPackRarities(
 }
 
 // a unit that does not fit on the bench is paid out at its value instead
-function giftBoosterPack(player: Player, blessing: Blessing): boolean {
+function giftBoosterPack(
+  player: Player,
+  state: GameState,
+  blessing: Blessing
+): boolean {
   const pack = BOOSTER_PACKS[blessing]
   if (!pack) return false
-  rollBoosterPackRarities(pack.value, pack.guaranteedRarity).forEach(
+  const value =
+    state.stageLevel >= BOOSTER_PACK_LATE_STAGE ? pack.lateValue : pack.value
+  rollBoosterPackRarities(value, pack.guaranteedRarity).forEach(
     (rarity) => {
       if (!giftPokemonOfRarityAndStars(player, rarity, 1)) {
         player.addMoney(RarityCost[rarity], true, null)
@@ -2534,12 +2556,12 @@ export const blessingEffectService: {
     return true
   },
 
-  [Blessing.BOOSTER_PACK_I]: (player) =>
-    giftBoosterPack(player, Blessing.BOOSTER_PACK_I),
-  [Blessing.BOOSTER_PACK_II]: (player) =>
-    giftBoosterPack(player, Blessing.BOOSTER_PACK_II),
-  [Blessing.BOOSTER_PACK_III]: (player) =>
-    giftBoosterPack(player, Blessing.BOOSTER_PACK_III),
+  [Blessing.BOOSTER_PACK_I]: (player, state) =>
+    giftBoosterPack(player, state, Blessing.BOOSTER_PACK_I),
+  [Blessing.BOOSTER_PACK_II]: (player, state) =>
+    giftBoosterPack(player, state, Blessing.BOOSTER_PACK_II),
+  [Blessing.BOOSTER_PACK_III]: (player, state) =>
+    giftBoosterPack(player, state, Blessing.BOOSTER_PACK_III),
 
   [Blessing.CROAGUNKS_AID]: (player) => {
     player.addMoney(CROAGUNKS_AID_GOLD_GAINED, true, null)

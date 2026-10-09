@@ -556,9 +556,9 @@ Every balance change on this server, newest first.
 - Missions | Quest: Evolve, Destroy, Level Up, Diversify and Prosper are renamed to Mission
 - Gotta Catch 'Em All {{new}} | Stage 4 only. Before each PvE round, wild Pokémon you can catch run across your board. Was a Scribble
 - Regional Specialties {{new}} | Your current region types count towards your synergies. Your team tastes the local dish now and after each region change. Was a Scribble
-- Silver Booster Pack {{new}} | Gain random Pokémon worth 12 GOLD, including at least one Uncommon
-- Gold Booster Pack {{new}} | Gain random Pokémon worth 18 GOLD, including at least one Rare
-- Prismatic Booster Pack {{new}} | Gain random Pokémon worth 24 GOLD, including at least one Epic
+- Silver Booster Pack {{new}} | Gain random Pokémon worth 10 GOLD (12 GOLD at stage 12), including at least one Uncommon
+- Gold Booster Pack {{new}} | Gain random Pokémon worth 15 GOLD (18 GOLD at stage 12), including at least one Rare
+- Prismatic Booster Pack {{new}} | Gain random Pokémon worth 20 GOLD (24 GOLD at stage 12), including at least one Epic
 - Piggy Bank {{new}} | Stage 4 only. At the start of each fight, spawn a Lechonk. When it is KO'd, gain 1 GOLD
 - All Aboard {{new}} | At the end of each fight, if at least half of your Pokémon are still standing, gain 2 GOLD. Summoned units are not counted
 - Luminous Spring {{new}} | Each time you merge a Pokémon to 2 STAR, gain 1 GOLD. Each time you merge one to 3 STAR, gain 3 GOLD. A 3 STAR merge often shows 4 GOLD: 1 for the 2 STAR merged on the way, and 3 for the 3 STAR

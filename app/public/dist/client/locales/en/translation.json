@@ -4763,7 +4763,7 @@
 	"blessing": {
 		"BOOSTER_PACK_I": {
 			"name": "Silver Booster Pack",
-			"description": "Gain random Pokémon worth 12 GOLD, including at least one Uncommon."
+			"description": "Gain random Pokémon worth 10 GOLD (12 GOLD at stage 12), including at least one Uncommon."
 		},
 		"CROAGUNKS_AID": {
 			"name": "Croagunk's Aid",
@@ -4783,11 +4783,11 @@
 		},
 		"BOOSTER_PACK_II": {
 			"name": "Gold Booster Pack",
-			"description": "Gain random Pokémon worth 18 GOLD, including at least one Rare."
+			"description": "Gain random Pokémon worth 15 GOLD (18 GOLD at stage 12), including at least one Rare."
 		},
 		"BOOSTER_PACK_III": {
 			"name": "Prismatic Booster Pack",
-			"description": "Gain random Pokémon worth 24 GOLD, including at least one Epic."
+			"description": "Gain random Pokémon worth 20 GOLD (24 GOLD at stage 12), including at least one Epic."
 		},
 		"TREASURE_HUNT_II": {
 			"name": "Treasure Hunt II",
