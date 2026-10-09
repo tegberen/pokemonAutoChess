@@ -12,7 +12,8 @@ export class NightmareStrategy extends AbilityStrategy {
 
     board.forEach((x: number, y: number, enemy: PokemonEntity | undefined) => {
       if (enemy && pokemon.team != enemy.team) {
-        if (enemy.hexes.length > 0) {
+        // checked before this cast's own FATIGUE, or every enemy would qualify
+        if (enemy.hexes.length > 0 || enemy.status.hasNegativeStatus()) {
           enemy.handleSpecialDamage(
             damage,
             board,

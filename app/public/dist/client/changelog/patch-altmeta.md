@@ -485,6 +485,7 @@ Every balance change on this server, newest first.
 - Primal Groudon | ATK 18 → 20
 - Chandelure | max PP 40 → 50
 - Politoed | HP 220 → 200
+- Gastly Line | max PP 90/85/80 → 90
 - Crobat | loses its passive, which moves to the Infiltrator Wish
 - Feraligatr (Pirate) | WATER / MONSTER / DARK → DARK / MONSTER / AQUATIC, loses its passive, which moves to the Jolly Roger Wish. Croconaw only evolves into it with that Wish
 - Cinderace (Pirate) | loses its passive, which moves to the Captain's Bounty Wish. Raboot only evolves into it with that Wish
@@ -517,7 +518,8 @@ Every balance change on this server, newest first.
 
 **Abilities**
 - Machop Line | Guillotine → Cross Chop. Deal [300,SP]% of ATK as SPECIAL to the target. Each FIGHTING throw this fight gives this ability +[25,50,100,200]% CRIT_POWER. Can crit by default
-- Gastly Line | Nightmare: the bonus damage hits enemies hexed by a HEXING_INCANTATION instead of cursed ones
+- Gastly Line | Nightmare: the bonus damage hits enemies suffering under a HEXING_INCANTATION or a NEGATIVE_STATUS instead of cursed ones
+- Duskull Line | Trick Room reworked: drops a room on the largest group of enemies. Faster enemies inside are slowed to the user's base SPEED and their max PP is increased by [10,20,30]% for the rest of the fight, then they take [100,SP]% of their max PP as SPECIAL
 - Appletun | Apple Acid: deals [100,200,300,400,SP]% of (DEF + SPE_DEF) as SPECIAL instead of [15,30,50,100,SP], no longer doubled against 0 SPE_DEF
 - Flapple | Grav Apple: deals [100,200,300,400,SP]% of ATK as PHYSICAL instead of [20,40,80,160,SP], no longer doubled against 0 DEF
 - Gimmighoul | Gold Rush: GOLD gained 2 → 1

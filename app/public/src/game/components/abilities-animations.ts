@@ -23,6 +23,7 @@ import {
   SHADOW_PUNCH_FLIGHT_MS,
   SHADOW_PUNCH_LAUNCH_MS,
   SHADOW_PUNCH_WINDUP_MS,
+  TRICK_ROOM_TILES_MS,
   WATER_SHURIKEN_FLIGHT_MS,
   WATER_SHURIKEN_GIANT_MS_PER_CELL,
   WATER_SHURIKEN_GIANT_WINDUP_MS
@@ -2986,7 +2987,6 @@ function apexPredatorRoarAnimation(args: AbilityAnimationArgs) {
 
 // dusky tones so the room sits in the scene instead of glowing on top of it
 const TRICK_ROOM_OUTLINE = 0x2e1f44
-const TRICK_ROOM_FLOOR = 0x1e1230
 const TRICK_ROOM_FACE_DARK = 0x4a3668
 const TRICK_ROOM_FACE = 0x6b5090
 const TRICK_ROOM_TOP = 0xb9a3d4
@@ -2995,22 +2995,105 @@ const TRICK_ROOM_TOP_LIGHT = 0xd9c9ec
 const TRICK_ROOM_ACCENT = 0xe07ac8
 const TRICK_ROOM_GLARE = 0xf4ecfa
 const TRICK_ROOM_LINGER = 1000
-const TRICK_ROOM_RISE = 350
+const TRICK_ROOM_RISE = 600
 // sits just inside the outer edges of the 3x3 cells the ability hits
 const TRICK_ROOM_HALF_SIZE = (CELL_WIDTH * 3 - 16) / 2
 // one art pixel on screen, so the room shares the terrain's chunky grid
 const TRICK_ROOM_PIXEL = 3
-const TRICK_ROOM_WALL_HEIGHT = 8
+const TRICK_ROOM_GRID_TILES = 6
+// one tile in art pixels, shared by the floor and the walls so they line up
+const TRICK_ROOM_TILE = Math.round(
+  (Math.round(TRICK_ROOM_HALF_SIZE / TRICK_ROOM_PIXEL) * 2) /
+    TRICK_ROOM_GRID_TILES
+)
+const TRICK_ROOM_WALL_HEIGHT = TRICK_ROOM_TILE * 2
 const TRICK_ROOM_WALL_THICKNESS = 2
+const TRICK_ROOM_TILE_COLORS = [
+  0x4fd6f2, 0x3d7be8, 0x2f4fc4, 0x6a5cf0, 0x9a6ee6
+]
+// each tile holds a colour this long, then eases into the next one: slow
+// enough to stay well under the photosensitive flash rate
+const TRICK_ROOM_DISCO_SECONDS = 0.7
+const TRICK_ROOM_TRAPPED_TINT = 0xc4b0ff
+// the twinkles and colour changes stop for players who reduce motion
+const TRICK_ROOM_CALM =
+  typeof window !== "undefined" &&
+  window.matchMedia?.("(prefers-reduced-motion: reduce)").matches === true
+
+// staggered across the room so the tiles shimmer instead of blinking in sync
+function trickRoomTileColor(row: number, column: number, seconds: number) {
+  const base = (row * 7 + column * 13 + row * column) % 5
+  if (TRICK_ROOM_CALM) {
+    return { color: TRICK_ROOM_TILE_COLORS[base], next: 0, blend: 0, base }
+  }
+  const phase =
+    seconds / TRICK_ROOM_DISCO_SECONDS + ((row * 3 + column * 5) % 4) / 4
+  const step = Math.floor(phase)
+  const blend = Math.min(1, Math.max(0, (phase - step - 0.6) / 0.4))
+  return {
+    color: TRICK_ROOM_TILE_COLORS[(base + step) % 5],
+    next: TRICK_ROOM_TILE_COLORS[(base + step + 1) % 5],
+    blend,
+    base
+  }
+}
+
+// a unit already tinted by another effect is left alone, and only the room's
+// own tint is ever cleared
+function trapInTrickRoom(
+  scene: Phaser.Scene,
+  pokemonsOnBoard: PokemonSprite[],
+  caster: { x: number; y: number },
+  room: { x: number; y: number }
+) {
+  const casterSprite = pokemonsOnBoard.find(
+    (pokemon) =>
+      pokemon.positionX === caster.x && pokemon.positionY === caster.y
+  )
+  const teamOf = (sprite: PokemonSprite | undefined) =>
+    sprite && "team" in sprite.pokemon ? sprite.pokemon.team : undefined
+  const trapped = pokemonsOnBoard.filter(
+    (pokemon) =>
+      Math.abs(pokemon.positionX - room.x) <= 1 &&
+      Math.abs(pokemon.positionY - room.y) <= 1 &&
+      teamOf(pokemon) !== teamOf(casterSprite) &&
+      !pokemon.sprite.isTinted
+  )
+  trapped.forEach((pokemon) => pokemon.sprite.setTint(TRICK_ROOM_TRAPPED_TINT))
+  scene.time.delayedCall(TRICK_ROOM_RISE + TRICK_ROOM_LINGER + 350, () =>
+    trapped.forEach((pokemon) => {
+      if (
+        pokemon.sprite?.active &&
+        pokemon.sprite.tintTopLeft === TRICK_ROOM_TRAPPED_TINT
+      ) {
+        pokemon.sprite.clearTint()
+      }
+    })
+  )
+}
 
 function trickRoomAnimation(): AbilityAnimation {
-  return ({ scene, targetX, targetY, flip }) => {
+  return ({
+    scene,
+    pokemonsOnBoard,
+    positionX,
+    positionY,
+    targetX,
+    targetY,
+    flip
+  }) => {
     const [x, y] = transformEntityCoordinates(targetX, targetY, flip)
     const room = scene.add
       .graphics({ x, y })
       .setDepth(DEPTH.ABILITY_GROUND_LEVEL)
       .setAlpha(0)
     scene.abilitiesVfxGroup?.add(room)
+    trapInTrickRoom(
+      scene,
+      pokemonsOnBoard,
+      { x: positionX, y: positionY },
+      { x: targetX, y: targetY }
+    )
     scene.tweens.addCounter({
       from: 0,
       to: 1,
@@ -3019,7 +3102,11 @@ function trickRoomAnimation(): AbilityAnimation {
       onUpdate: (tween) => {
         const rise = (tween.getValue() ?? 0) as number
         room.setAlpha(rise)
-        drawTrickRoom(room, Math.round(rise * TRICK_ROOM_WALL_HEIGHT))
+        drawTrickRoom(
+          room,
+          Math.round(rise * TRICK_ROOM_WALL_HEIGHT),
+          scene.time.now / 1000
+        )
       },
       onComplete: () =>
         scene.tweens.addCounter({
@@ -3030,7 +3117,12 @@ function trickRoomAnimation(): AbilityAnimation {
           onUpdate: (tween) => {
             const sweep = (tween.getValue() ?? 0) as number
             room.setAlpha(1 - 0.25 * sweep)
-            drawTrickRoom(room, TRICK_ROOM_WALL_HEIGHT, sweep)
+            drawTrickRoom(
+              room,
+              TRICK_ROOM_WALL_HEIGHT,
+              scene.time.now / 1000,
+              sweep
+            )
           },
           onComplete: () =>
             scene.tweens.add({
@@ -3045,120 +3137,258 @@ function trickRoomAnimation(): AbilityAnimation {
   }
 }
 
-// seen from the front like the rest of the board: walls stand straight up the
-// screen, showing the back wall's inner face, the front wall's outer face and
-// the tops of all four. Everything is in art pixels, in flat tones
+// seen from the board's angled camera, so walls stand straight up the screen
+// and only the side walls' tops show. Everything is in art pixels
 function drawTrickRoom(
   room: Phaser.GameObjects.Graphics,
   wallHeight: number,
+  seconds: number,
   sweep?: number
 ) {
   const P = TRICK_ROOM_PIXEL
   const half = Math.round(TRICK_ROOM_HALF_SIZE / P)
   const thickness = TRICK_ROOM_WALL_THICKNESS
+  const tile = TRICK_ROOM_TILE
   const block = (
     color: number,
     alpha: number,
     left: number,
     top: number,
-    width: number,
-    height: number
+    width = 1,
+    height = 1
   ) => {
-    if (width <= 0 || height <= 0) return
+    if (width <= 0 || height <= 0 || alpha <= 0) return
     room.fillStyle(color, alpha)
     room.fillRect(left * P, top * P, width * P, height * P)
-  }
-  // a glare streak leaning up and to the right, one art pixel per row
-  const streak = (
-    face: { left: number; top: number; width: number },
-    column: number,
-    width: number,
-    alpha: number
-  ) => {
-    for (let row = 0; row < wallHeight; row++) {
-      const start = column + (wallHeight - 1 - row)
-      const left = Math.max(start, face.left)
-      const right = Math.min(start + width, face.left + face.width)
-      block(TRICK_ROOM_GLARE, alpha, left, face.top + row, right - left, 1)
-    }
   }
   room.clear()
 
   const inner = half * 2
-  const outerLeft = -half - thickness
-  const outer = inner + thickness * 2
+  const lastTile = TRICK_ROOM_GRID_TILES - 1
+
+  // darker toward the back wall, so the floor recedes
+  block(TRICK_ROOM_ACCENT, 0.16, -half, -half, inner, inner)
+  for (let row = 0; row < TRICK_ROOM_GRID_TILES; row++) {
+    const depth = 0.16 * (1 - row / lastTile)
+    block(TRICK_ROOM_OUTLINE, depth, -half, -half + row * tile, inner, tile)
+  }
+  for (let line = 1; line < TRICK_ROOM_GRID_TILES; line++) {
+    const offset = -half + line * tile
+    block(TRICK_ROOM_GLARE, 0.22, offset, -half, 1, inner)
+    block(TRICK_ROOM_GLARE, 0.22, -half, offset, inner, 1)
+  }
+  if (wallHeight <= 0) return
+
   const backTop = -half - wallHeight
   const frontTop = half - wallHeight
 
-  block(TRICK_ROOM_FACE, 0.08, -half, -half, inner, inner)
-  // contact shadow where the floor meets the back wall
-  block(TRICK_ROOM_FLOOR, 0.14, -half, -half, inner, 2)
-  for (const line of [-1, 1]) {
-    const offset = Math.round((line * half) / 3)
-    block(TRICK_ROOM_TOP, 0.08, offset, -half, 1, inner)
-    block(TRICK_ROOM_TOP, 0.08, -half, offset, inner, 1)
+  // each wall reflects the floor rows nearest it, fading toward its top
+  const wallFace = (
+    top: number,
+    footRow: number,
+    rowStep: number,
+    footAlpha: number,
+    topAlpha: number
+  ) => {
+    for (let y = 0; y < wallHeight; y++) {
+      const fromFoot = wallHeight - 1 - y
+      if (fromFoot % tile === tile - 1) continue
+      const row = footRow + rowStep * Math.floor(fromFoot / tile)
+      const nearFoot = (y + 1) / wallHeight
+      const alpha = topAlpha + (footAlpha - topAlpha) * nearFoot
+      for (let column = 0; column < TRICK_ROOM_GRID_TILES; column++) {
+        const { color, next, blend } = trickRoomTileColor(row, column, seconds)
+        const left = -half + column * tile
+        block(color, alpha * (1 - blend), left, top + y, tile - 1)
+        block(next, alpha * blend, left, top + y, tile - 1)
+      }
+    }
   }
+  wallFace(backTop, 0, 1, 0.85, 0.35)
+  block(TRICK_ROOM_OUTLINE, 0.18, -half, backTop, inner, wallHeight)
+  // the front wall is glass, faint so the units behind it stay visible
+  wallFace(frontTop, lastTile, -1, 0.3, 0.12)
+  block(TRICK_ROOM_GLARE, 0.06, -half, frontTop, inner, wallHeight)
 
-  // back wall, inner face
-  block(TRICK_ROOM_FACE, 0.3, -half, backTop, inner, wallHeight)
-  block(TRICK_ROOM_TOP, 0.25, -half, backTop, inner, 1)
-  block(TRICK_ROOM_FACE_DARK, 0.3, -half, -half - 1, inner, 1)
-
-  // front wall, outer face, spanning the side walls' ends too
-  block(TRICK_ROOM_FACE_DARK, 0.28, outerLeft, frontTop, outer, wallHeight)
-  block(TRICK_ROOM_FACE, 0.3, outerLeft, frontTop, outer, 1)
-
-  const backFace = { left: -half, top: backTop, width: inner }
-  const frontFace = { left: outerLeft, top: frontTop, width: outer }
+  const streak = (
+    top: number,
+    column: number,
+    width: number,
+    alpha: number
+  ) => {
+    for (let y = 0; y < wallHeight; y++) {
+      const start = column + (wallHeight - 1 - y)
+      const left = Math.max(start, -half)
+      const right = Math.min(start + width, half)
+      block(TRICK_ROOM_GLARE, alpha, left, top + y, right - left)
+    }
+  }
   const backGlare = -half + Math.round(inner * 0.12)
   const frontGlare = -half + Math.round(inner * 0.62)
-  streak(backFace, backGlare, 2, 0.3)
-  streak(backFace, backGlare + 4, 1, 0.3)
-  streak(frontFace, frontGlare, 2, 0.25)
-  streak(frontFace, frontGlare + 4, 1, 0.25)
+  streak(backTop, backGlare, 2, 0.18)
+  streak(backTop, backGlare + 4, 1, 0.18)
+  streak(frontTop, frontGlare, 2, 0.15)
+  streak(frontTop, frontGlare + 4, 1, 0.15)
   if (sweep !== undefined) {
-    const sweepColumn = Math.round(
-      outerLeft - wallHeight + sweep * (outer + wallHeight)
+    const column = Math.round(
+      -half - wallHeight + sweep * (inner + wallHeight)
     )
-    const sweepAlpha = 0.4 * Math.sin(sweep * Math.PI)
-    streak(backFace, sweepColumn, 3, sweepAlpha)
-    streak(frontFace, sweepColumn, 3, sweepAlpha)
+    const alpha = 0.4 * Math.sin(sweep * Math.PI)
+    streak(backTop, column, 3, alpha)
+    streak(frontTop, column, 3, alpha)
   }
 
-  // the four wall tops, lit from above
-  const tops: [number, number, number, number][] = [
-    [outerLeft, backTop - thickness, outer, thickness],
-    [outerLeft, frontTop - thickness, outer, thickness],
-    [outerLeft, backTop, thickness, frontTop - backTop - thickness],
-    [half, backTop, thickness, frontTop - backTop - thickness]
-  ]
-  tops.forEach(([left, top, width, height]) => {
-    block(TRICK_ROOM_TOP, 0.6, left, top, width, height)
-    block(TRICK_ROOM_TOP_LIGHT, 0.5, left, top, width, 1)
-  })
+  // one light from the top left for every face
+  const outerLeft = -half - thickness
+  const outerWidth = inner + thickness * 2
+  const sideHeight = frontTop - backTop
+  const backRim = backTop - thickness
+  const frontRim = frontTop - thickness
+  block(TRICK_ROOM_TOP, 0.6, outerLeft, backRim, outerWidth, thickness)
+  block(TRICK_ROOM_TOP, 0.6, outerLeft, frontRim, outerWidth, thickness)
+  block(TRICK_ROOM_TOP, 0.6, outerLeft, backTop, thickness, sideHeight)
+  block(TRICK_ROOM_TOP, 0.6, half, backTop, thickness, sideHeight)
+  block(TRICK_ROOM_TOP_LIGHT, 0.6, outerLeft, backRim, outerWidth)
+  block(TRICK_ROOM_TOP_LIGHT, 0.5, outerLeft, frontRim, outerWidth)
+  block(TRICK_ROOM_TOP_LIGHT, 0.5, outerLeft, backTop, 1, sideHeight)
+  const rightEdge = half + thickness - 1
+  block(TRICK_ROOM_FACE_DARK, 0.5, rightEdge, backTop, 1, sideHeight)
+  block(TRICK_ROOM_FACE_DARK, 0.4, outerLeft, half - 1, outerWidth)
   // the back wall's top catches the most light
-  block(TRICK_ROOM_ACCENT, 0.8, -half, backTop - thickness, inner, 1)
-  // 3x3 caps overhang the 2-pixel wall tops outward by one pixel
+  block(TRICK_ROOM_ACCENT, 0.8, -half, backRim, inner)
   for (const [left, top] of [
-    [outerLeft - 1, backTop - thickness - 1],
-    [half, backTop - thickness - 1],
-    [outerLeft - 1, frontTop - thickness - 1],
-    [half, frontTop - thickness - 1]
+    [outerLeft - 1, backRim - 1],
+    [half, backRim - 1],
+    [outerLeft - 1, frontRim - 1],
+    [half, frontRim - 1]
   ]) {
     block(TRICK_ROOM_ACCENT, 0.95, left, top, 3, 3)
-    block(TRICK_ROOM_GLARE, 0.9, left, top, 1, 1)
+    block(TRICK_ROOM_GLARE, 0.9, left, top)
   }
 
   // one-pixel outline around the whole silhouette
-  const outlineTop = backTop - thickness - 1
+  const outlineTop = backRim - 1
   const outlineHeight = half + 1 - outlineTop
-  block(TRICK_ROOM_OUTLINE, 0.55, outerLeft - 1, outlineTop, outer + 2, 1)
-  block(TRICK_ROOM_OUTLINE, 0.55, outerLeft - 1, half, outer + 2, 1)
+  const outlineWidth = outerWidth + 2
+  const outlineRight = half + thickness
+  block(TRICK_ROOM_OUTLINE, 0.55, outerLeft - 1, outlineTop, outlineWidth)
+  block(TRICK_ROOM_OUTLINE, 0.55, outerLeft - 1, half, outlineWidth)
   block(TRICK_ROOM_OUTLINE, 0.55, outerLeft - 1, outlineTop, 1, outlineHeight)
-  block(TRICK_ROOM_OUTLINE, 0.55, half + thickness, outlineTop, 1, outlineHeight)
+  block(TRICK_ROOM_OUTLINE, 0.55, outlineRight, outlineTop, 1, outlineHeight)
 }
 
-// three chevrons sliding down: the usual "stat lowered" cue, here for SPEED
+// the floor creeps in from the centre, and the walls rise once it has
+function drawTrickRoomTiles(
+  tiles: Phaser.GameObjects.Graphics,
+  ripple: number,
+  fade: number,
+  seconds: number
+) {
+  const P = TRICK_ROOM_PIXEL
+  const half = Math.round(TRICK_ROOM_HALF_SIZE / P)
+  const tileSize = TRICK_ROOM_TILE
+  const centre = (TRICK_ROOM_GRID_TILES - 1) / 2
+  const block = (
+    color: number,
+    alpha: number,
+    left: number,
+    top: number,
+    width = 1,
+    height = 1
+  ) => {
+    if (alpha <= 0) return
+    tiles.fillStyle(color, alpha)
+    tiles.fillRect(left * P, top * P, width * P, height * P)
+  }
+  tiles.clear()
+  for (let row = 0; row < TRICK_ROOM_GRID_TILES; row++) {
+    for (let column = 0; column < TRICK_ROOM_GRID_TILES; column++) {
+      const distance =
+        Math.max(Math.abs(row - centre), Math.abs(column - centre)) /
+        (centre + 0.5)
+      // a wide, soft edge: tiles creep in rather than switching on
+      const lit = Math.min(1, Math.max(0, (ripple - distance) * 2)) * fade
+      if (lit === 0) continue
+      const { color, next, blend, base } = trickRoomTileColor(
+        row,
+        column,
+        seconds
+      )
+      const left = -half + column * tileSize
+      const top = -half + row * tileSize
+      const inner = tileSize - 1
+
+      block(color, lit * 0.7 * (1 - blend), left, top, inner, inner)
+      block(next, lit * 0.7 * blend, left, top, inner, inner)
+      block(TRICK_ROOM_GLARE, lit * 0.45, left, top, inner, 1)
+      block(TRICK_ROOM_GLARE, lit * 0.3, left, top + 1, 1, inner - 1)
+      const edge = inner - 1
+      block(TRICK_ROOM_OUTLINE, lit * 0.4, left + 1, top + edge, edge)
+      block(TRICK_ROOM_OUTLINE, lit * 0.4, left + edge, top + 1, 1, edge - 1)
+      for (let step = 0; step < 3; step++) {
+        block(TRICK_ROOM_GLARE, lit * 0.35, left + 2 + step, top + 4 - step)
+      }
+
+      if (base === 0) {
+        const twinkle = TRICK_ROOM_CALM
+          ? 0.6
+          : 0.3 + 0.3 * Math.sin(seconds * 3 + row + column)
+        const glint = lit * twinkle
+        block(TRICK_ROOM_GLARE, glint, left - 1, top - 1)
+        block(TRICK_ROOM_TOP_LIGHT, glint * 0.7, left - 2, top - 1)
+        block(TRICK_ROOM_TOP_LIGHT, glint * 0.7, left, top - 1)
+        block(TRICK_ROOM_TOP_LIGHT, glint * 0.7, left - 1, top - 2)
+        block(TRICK_ROOM_TOP_LIGHT, glint * 0.7, left - 1, top)
+      }
+    }
+  }
+}
+
+function trickRoomCastAnimation(): AbilityAnimation {
+  const openRoom = trickRoomAnimation()
+  return (args) => {
+    const { scene, targetX, targetY, flip } = args
+    const [x, y] = transformEntityCoordinates(targetX, targetY, flip)
+    const tiles = scene.add
+      .graphics({ x, y })
+      .setDepth(DEPTH.ABILITY_GROUND_LEVEL)
+    scene.abilitiesVfxGroup?.add(tiles)
+    scene.tweens.addCounter({
+      from: 0,
+      // past 1 so the outer tiles have fully faded in before the walls rise
+      to: 1.5,
+      duration: TRICK_ROOM_TILES_MS,
+      ease: "Sine.easeInOut",
+      onUpdate: (tween) =>
+        drawTrickRoomTiles(
+          tiles,
+          (tween.getValue() ?? 0) as number,
+          1,
+          scene.time.now / 1000
+        ),
+      onComplete: () => {
+        openRoom(args)
+        scene.tweens.addCounter({
+          from: 1,
+          to: 0,
+          duration: TRICK_ROOM_RISE + TRICK_ROOM_LINGER,
+          ease: "Sine.easeIn",
+          onUpdate: (tween) =>
+            drawTrickRoomTiles(
+              tiles,
+              1.5,
+              (tween.getValue() ?? 0) as number,
+              scene.time.now / 1000
+            ),
+          onComplete: () => tiles.destroy()
+        })
+      }
+    })
+  }
+}
+
+// three chevrons sliding down: the usual "stat lowered" cue, here for the
+// SPEED and casting a Trick Room takes away
 function trickRoomSlowAnimation(): AbilityAnimation {
   return ({ scene, positionX, positionY, flip }) => {
     const [x, y] = transformEntityCoordinates(positionX, positionY, flip)
@@ -7361,7 +7591,7 @@ export const AbilitiesAnimations: {
     duration: 1000,
     scale: 2
   }),
-  [Ability.TRICK_ROOM]: trickRoomAnimation(),
+  [Ability.TRICK_ROOM]: trickRoomCastAnimation(),
   ["TRICK_ROOM_SLOW"]: trickRoomSlowAnimation(),
   ["TRICK_ROOM_HIT"]: onTarget({
     ability: HitSprite.GHOST_HIT,

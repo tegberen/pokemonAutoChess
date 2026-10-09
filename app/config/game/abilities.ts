@@ -22,6 +22,9 @@ export const SHADOW_PUNCH_WINDUP_MS = 330
 export const SHADOW_PUNCH_FLIGHT_MS = 160
 export const SHADOW_PUNCH_LAUNCH_MS = 260
 
+// Trick Room's floor tiles light up first, and the room opens once they have
+export const TRICK_ROOM_TILES_MS = 1000
+
 export const InimitableAbilities: Ability[] = [
   Ability.ASSIST,
   Ability.AURA_WHEEL,

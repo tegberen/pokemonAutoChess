@@ -2356,7 +2356,7 @@ export class Haunter extends Pokemon {
   speed = 60
   def = 7
   speDef = 8
-  maxPP = 85
+  maxPP = 90
   range = 2
   skill = Ability.NIGHTMARE
 }
@@ -2377,7 +2377,7 @@ export class Gengar extends Pokemon {
   speed = 60
   def = 8
   speDef = 10
-  maxPP = 80
+  maxPP = 90
   range = 2
   skill = Ability.NIGHTMARE
   passive = Passive.GENGAR
