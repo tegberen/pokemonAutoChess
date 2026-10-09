@@ -1621,3 +1621,59 @@ Every balance change on this server, newest first.
 
 **Abilities**
 - Unbound | the summoned Legendary starts at 50% of its base max HP, plus 25% per 100 AP
+
+### 31 July 2026
+
+**Synergies**
+- ROCK 8 | only one Crystallisation can run at a time
+- Crystallisation: Heat Rock | ATK per attack 2 → 4, RAGE at 400% → 1000% of base ATK
+- Crystallisation: Damp Rock | max PP can no longer drop below 20
+- Crystallisation: Elder Crystal | also deals the target's current SPEED
+
+### 28 July 2026
+
+**Pokémon**
+- Turtonator | gains ROCK
+- Wiglett Line | GROUND → ROCK
+
+**Interface**
+- Beyond the Forecast, Rock, Diancie, Hot Spring and Bazaar themes {{new}}
+
+### 24 July 2026
+
+**Synergies**
+- FLYING | Seeds are stored in the SEED_BAG, and the active Seed applies at the start of the next fight
+- Ban, Blinker, Sleep, Stun and Totter Seeds | Sky Dive 500% → 300% of ATK, the user no longer gets the status
+- Blast Seed | ATK 100% → 50% of base ATK
+- Decoy Seed | Substitute HP 50% → 25% of max HP
+- Empowerment Seed | CRIT_POWER 50% → 25%
+- Energy Seed | front row DEF 200% → 100%, middle row SPE_DEF 150% → 100%, back row ATK 50% → 25%
+- Eyedrop Seed | SPEED after Sky Dive 25 → 20
+- Joy Seed | component chance 30% → 5%
+- Tiny Reviver Seed | no longer raises SPEED
+- Training Seed | permanent ATK 3 → 1, SPEED 5 → 2, no longer grants max HP
+
+### 21 July 2026
+
+**Weather**
+- Blossom, Cloudy, Distortion, Elder Storm, Eclipse, Flood, Hard Terrain, Magnet Storm, Meteor Shower and Plague {{new}} | see [Weather in the Wiki](#wiki/weather)
+- Weather rocks {{new}} | each new weather has its own weather rock
+- Weather setters | each weather is set by its own Pokémon, see the Wiki
+
+### 17 July 2026
+
+**Abilities**
+- Diamond Storm | 100/100/150/300% → 50/100/150/200/400% of DEF
+- Smog | 10/20/40/80 → 30/60/120/240
+- Gunk Shot | 50/100/200/400 → 25/50/100/200
+- Strange Steam | CONFUSION chance 30/30/100/100% → 40/80/100/100%, duration 3 → 5 seconds
+
+**Game Mode**
+- Castform {{new}} | town encounter
+
+### 16 July 2026
+
+**Synergies**
+- ROCK 8 {{new}} | Crystallisation: expose a ROCK Pokémon to a weather rock to awaken it with a powerful effect and the rock's synergy
+- ROCK 4 | DEF 25 → 20
+- ROCK 6 | DEF 50 → 40

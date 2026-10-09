@@ -388,12 +388,89 @@ function groupRowsByTier(body: HTMLTableSectionElement) {
   }
 }
 
+// each named patch opens on its theme art, above the day it was released
+const PATCH_LOG_COVERS: {
+  [day: string]: {
+    name: string
+    tagline?: string
+    theme: string
+    focus: string
+    credit?: string
+  }
+} = {
+  "1 November 2026": {
+    name: "Midnight Séance",
+    tagline:
+      "A letter arrived, signed by no one living in this world… (Pelipper Post Office)",
+    theme: "halloween",
+    focus: "50% 60%",
+    credit: "Teatimerabbit"
+  },
+  "22 August 2026": {
+    name: "Embers of the Past",
+    theme: "embersofthepast",
+    focus: "60% 50%"
+  },
+  "8 August 2026": {
+    name: "Wish Festival",
+    tagline: "A Wishing Star has appeared…",
+    theme: "wishfestival",
+    focus: "40% 50%"
+  },
+  "31 July 2026": {
+    name: "Beyond the Forecast",
+    theme: "beyondtheforecast",
+    focus: "65% 35%"
+  }
+}
+
+function patchLogCover(day: string, isNewest: boolean) {
+  const cover = PATCH_LOG_COVERS[day]
+  if (!cover) return null
+  const figure = document.createElement("figure")
+  figure.className = "guide-patch-cover"
+  const image = document.createElement("img")
+  image.src = `/assets/theme/${cover.theme}/custombg.webp`
+  image.alt = ""
+  image.style.objectPosition = cover.focus
+  const caption = document.createElement("figcaption")
+  const label = document.createElement("span")
+  label.textContent = isNewest ? "New patch" : "Patch"
+  const name = document.createElement("strong")
+  name.textContent = cover.name
+  caption.append(label, name)
+  if (cover.tagline) {
+    const tagline = document.createElement("em")
+    tagline.textContent = cover.tagline
+    caption.append(tagline)
+  }
+  figure.append(image, caption)
+  if (cover.credit) {
+    const credit = document.createElement("small")
+    credit.className = "guide-patch-cover-credit"
+    credit.textContent = `Art by ${cover.credit}`
+    figure.append(credit)
+  }
+  return figure
+}
+
 export function formatPatchLog(html: string, wishes: PatchLogWish[]) {
   const matchers = wishIconMatchers(wishes)
   const root = document.createElement("div")
   root.innerHTML = html
   let category = ""
+  let hasCover = false
   for (const element of Array.from(root.children)) {
+    if (element.tagName === "H3") {
+      const cover = patchLogCover(element.textContent ?? "", !hasCover)
+      if (cover) {
+        // the newest cover opens the page, above the intro line
+        if (hasCover) element.before(cover)
+        else root.prepend(cover)
+        hasCover = true
+      }
+      continue
+    }
     const label = element.firstElementChild
     if (
       element.tagName === "P" &&
