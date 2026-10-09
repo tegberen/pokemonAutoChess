@@ -2507,7 +2507,7 @@ export class Chandelure extends Pokemon {
   speed = 51
   def = 6
   speDef = 6
-  maxPP = 40
+  maxPP = 50
   range = 3
   skill = Ability.HEX
 }
@@ -2811,7 +2811,7 @@ export class Politoed extends Pokemon {
   ])
   rarity = Rarity.COMMON
   stars = 3
-  hp = 220
+  hp = 200
   atk = 17
   speed = 54
   def = 6
@@ -4403,7 +4403,6 @@ export class Nidoqueen extends Pokemon {
     const regionSynergies = RegionDetails[map]?.synergies
     return regionSynergies.includes(Synergy.POISON)
   }
-  passive = Passive.NIDOQUEEN
 }
 
 export class NidoranM extends Pokemon {
@@ -4460,7 +4459,6 @@ export class Nidoking extends Pokemon {
   maxPP = 90
   range = 1
   skill = Ability.HORN_ATTACK
-  passive = Passive.NIDOKING
 }
 
 export class Machop extends Pokemon {
@@ -5275,11 +5273,10 @@ export class Croconaw extends Pokemon {
   evolutionRule = {
     type: EvolutionRuleType.COUNT,
     numberRequired: 3,
-    divergentEvolution: (pokemon, player) => {
-      const aquaticCount = player.synergies.get(Synergy.AQUATIC) ?? 0
-      const darkCount = player.synergies.get(Synergy.DARK) ?? 0
-      return darkCount >= aquaticCount ? Pkm.FERALIGATR_PIRATE : Pkm.FERALIGATR
-    }
+    divergentEvolution: (pokemon, player) =>
+      player.blessings?.includes(Blessing.JOLLY_ROGER)
+        ? Pkm.FERALIGATR_PIRATE
+        : Pkm.FERALIGATR
   } as const
   hp = 130
   atk = 14
@@ -5334,7 +5331,11 @@ export class MegaFeraligatr extends Pokemon {
 }
 
 export class FeraligatrPirate extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.WATER, Synergy.MONSTER, Synergy.DARK])
+  types = new SetSchema<Synergy>([
+    Synergy.DARK,
+    Synergy.MONSTER,
+    Synergy.AQUATIC
+  ])
   rarity = Rarity.RARE
   stars = 3
   hp = 240
@@ -5345,7 +5346,6 @@ export class FeraligatrPirate extends Pokemon {
   maxPP = 100
   range = 1
   skill = Ability.CRUNCH
-  passive = Passive.FERALIGATR_PIRATE
 }
 
 export class Azurill extends Pokemon {
@@ -5446,7 +5446,6 @@ export class Crobat extends Pokemon {
   maxPP = 100
   range = 2
   skill = Ability.LEECH_LIFE
-  passive = Passive.INFILTRATOR
 }
 
 export class Mareep extends Pokemon {
@@ -11978,11 +11977,10 @@ export class Raboot extends Pokemon {
   evolutionRule = {
     type: EvolutionRuleType.COUNT,
     numberRequired: 3,
-    divergentEvolution: (pokemon, player) => {
-      const normalCount = player.synergies.get(Synergy.NORMAL) ?? 0
-      const aquaticCount = player.synergies.get(Synergy.AQUATIC) ?? 0
-      return aquaticCount >= normalCount ? Pkm.CINDERACE_PIRATE : Pkm.CINDERACE
-    }
+    divergentEvolution: (pokemon, player) =>
+      player.blessings?.includes(Blessing.CAPTAINS_BOUNTY)
+        ? Pkm.CINDERACE_PIRATE
+        : Pkm.CINDERACE
   } as const
 
   hp = 80
@@ -12022,7 +12020,6 @@ export class CinderacePirate extends Pokemon {
   maxPP = 100
   range = 3
   skill = Ability.PYRO_BALL
-  passive = Passive.CINDERACE_PIRATE
 }
 
 export class AlolanGeodude extends Pokemon {

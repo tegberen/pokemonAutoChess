@@ -3399,6 +3399,14 @@ export const blessingEffectService: {
 
   [Blessing.PURRFECT_PLAN]: (player, state, room) =>
     heroBlessingEffect(Blessing.PURRFECT_PLAN, player, state, room),
+  [Blessing.ROYAL_ROMANCE]: (player, state, room) =>
+    heroBlessingEffect(Blessing.ROYAL_ROMANCE, player, state, room),
+  [Blessing.CAPTAINS_BOUNTY]: (player, state, room) =>
+    heroBlessingEffect(Blessing.CAPTAINS_BOUNTY, player, state, room),
+  [Blessing.INFILTRATOR]: (player, state, room) =>
+    heroBlessingEffect(Blessing.INFILTRATOR, player, state, room),
+  [Blessing.JOLLY_ROGER]: (player, state, room) =>
+    heroBlessingEffect(Blessing.JOLLY_ROGER, player, state, room),
 
   [Blessing.SEASONAL_HERD]: (player, state) => {
     const deerling =

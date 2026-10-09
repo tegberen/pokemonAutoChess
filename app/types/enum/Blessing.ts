@@ -213,6 +213,10 @@ export enum Blessing {
   BONEMERANG_RANGER = "BONEMERANG_RANGER",
   SPOOKY_SCARECROW = "SPOOKY_SCARECROW",
   PURRFECT_PLAN = "PURRFECT_PLAN",
+  ROYAL_ROMANCE = "ROYAL_ROMANCE",
+  CAPTAINS_BOUNTY = "CAPTAINS_BOUNTY",
+  INFILTRATOR = "INFILTRATOR",
+  JOLLY_ROGER = "JOLLY_ROGER",
   SEASONAL_HERD = "SEASONAL_HERD",
   LIFE_PRICE = "LIFE_PRICE",
   SILVER_SPOON = "SILVER_SPOON",
@@ -844,6 +848,10 @@ export const BONEMERANG_RANGER_RETURN_DELAY = 500
 export const SPOOKY_SCARECROW_MURKROWS_ON_OWN_KO = 3
 export const SPOOKY_SCARECROW_DEF_PER_ALLY_KO = 5
 export const PURRFECT_PLAN_UNIQUES: Pkm[] = [Pkm.SPINDA, Pkm.CHATOT]
+export const ROYAL_ROMANCE_ATTRACT_CHANCE = 0.5
+export const INFILTRATOR_PP_STOLEN_BY_STAR = [3, 4, 5]
+export const JOLLY_ROGER_ATTACK_KO_GOLD = 1
+export const JOLLY_ROGER_ABILITY_KO_GOLD = 2
 // the three herd lists share one index per season: spring, summer, autumn, winter
 export const SEASONAL_HERD_DEERLINGS: Pkm[] = [
   Pkm.DEERLING_SPRING,
@@ -1393,7 +1401,11 @@ export const HERO_BLESSING_GIFT: { [blessing in Blessing]?: Pkm } = {
   [Blessing.SWAMP_FATHER]: Pkm.MUDKIP,
   [Blessing.BONEMERANG_RANGER]: Pkm.CUBONE,
   [Blessing.SPOOKY_SCARECROW]: Pkm.CACNEA,
-  [Blessing.PURRFECT_PLAN]: Pkm.GLAMEOW
+  [Blessing.PURRFECT_PLAN]: Pkm.GLAMEOW,
+  [Blessing.ROYAL_ROMANCE]: Pkm.NIDORANM,
+  [Blessing.CAPTAINS_BOUNTY]: Pkm.SCORBUNNY,
+  [Blessing.INFILTRATOR]: Pkm.GOLBAT,
+  [Blessing.JOLLY_ROGER]: Pkm.TOTODILE
 }
 
 export const HERO_BLESSING_POKEMON: { [blessing in Blessing]?: Pkm[] } = {
@@ -1501,7 +1513,11 @@ export const HERO_BLESSING_FAMILY: { [blessing in Blessing]?: Pkm } = {
   [Blessing.SWAMP_FATHER]: Pkm.MUDKIP,
   [Blessing.BONEMERANG_RANGER]: Pkm.CUBONE,
   [Blessing.SPOOKY_SCARECROW]: Pkm.CACNEA,
-  [Blessing.PURRFECT_PLAN]: Pkm.GLAMEOW
+  [Blessing.PURRFECT_PLAN]: Pkm.GLAMEOW,
+  [Blessing.ROYAL_ROMANCE]: Pkm.NIDORANM,
+  [Blessing.CAPTAINS_BOUNTY]: Pkm.SCORBUNNY,
+  [Blessing.INFILTRATOR]: Pkm.ZUBAT,
+  [Blessing.JOLLY_ROGER]: Pkm.TOTODILE
 }
 
 // hero Wishes whose effect is not tied to one unit: they keep their family for

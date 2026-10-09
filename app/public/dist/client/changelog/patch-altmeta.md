@@ -265,12 +265,12 @@ At the beginning of each battle, TIGHT_BELT is replaced by 2 random items. The h
 
 ### Common
 
-- Crobat: attacks destroy Protect, Magic Bounce and Reflect.
+- Crobat: with the Infiltrator Wish, attacks destroy Protect, Magic Bounce and Reflect.
 
 - Fossil unlock pool: Omanyte, Kabuto, Wimpod.
 - Golisopod: has FOSSIL. Evolves from Wimpod.
 - Kabutops: has DARK. Evolves from Kabuto.
-- Cinderace: has NORMAL. Raboot evolves into Cinderace Pirate, which swaps NORMAL for AQUATIC, when your AQUATIC count is at least your NORMAL count
+- Cinderace: has NORMAL. With the Captain's Bounty Wish, Raboot evolves into Cinderace Pirate, which swaps NORMAL for AQUATIC
 - Butterfree: regional pool
 
 - Kingdra: RANGE 3
@@ -301,7 +301,7 @@ At the beginning of each battle, TIGHT_BELT is replaced by 2 random items. The h
 - Sceptile: has DRAGON after 2 STAR; 2 range
 - Greninja: regular pool
 
-- Nidoking / Nidoqueen: have MONSTER and attract catchable Nidoran♀ / Nidoran♂ respectively.
+- Nidoking / Nidoqueen: have MONSTER.
 - Eldegoss: has GRASS
 - Garganacl: has HUMAN after 3 STAR
 
@@ -483,6 +483,12 @@ Every balance change on this server, newest first.
 - Gimmighoul Line | PP 90 → 100
 - Golett Line | PP 100 → 120
 - Primal Groudon | ATK 18 → 20
+- Chandelure | max PP 40 → 50
+- Politoed | HP 220 → 200
+- Crobat | loses its passive, which moves to the Infiltrator Wish
+- Feraligatr (Pirate) | WATER / MONSTER / DARK → DARK / MONSTER / AQUATIC, loses its passive, which moves to the Jolly Roger Wish. Croconaw only evolves into it with that Wish
+- Cinderace (Pirate) | loses its passive, which moves to the Captain's Bounty Wish. Raboot only evolves into it with that Wish
+- Nidoking, Nidoqueen | lose their passives. Nidoking's moves to the Royal Romance Wish
 - Fuecoco Line | PP 80/70/60 → 80, ATK 5/13/24 → 5/15/30
 - Flapple | HP 180 → 150, ATK 19 → 25
 - Appletun | HP 250 → 300, ATK 15 → 10
@@ -569,6 +575,10 @@ Every balance change on this server, newest first.
 - Quick Streak {{new}} | Gain 5 GOLD. Your win and lose streaks grow twice as fast
 - Instant Treasure Box {{new}} | Gain 10 GOLD or a random completed item
 - Nest Eggs {{new}} | Stage 4 only. Gain 3 Eggs that hatch immediately
+- Jolly Roger {{new}} | Stage 4 only. Gain a Totodile. When your STRONGEST Totodile KO's an enemy, steal 1 GOLD from the opponent, or 2 GOLD with its ability. Croconaw evolves into Pirate Feraligatr
+- Infiltrator {{new}} | Stage 4 only. Gain a Golbat. Attacks of your STRONGEST Zubat steal [3,4,5] PP and destroy PROTECT, Magic Bounce and Reflect
+- Captain's Bounty {{new}} | Stage 4 only. Gain a Scorbunny. At the start of each fight, your STRONGEST Scorbunny gains your GOLD as CRIT_CHANCE. Raboot evolves into Pirate Cinderace
+- Royal Romance {{new}} | Stage 4 only. Gain a Nidoran♂. At the start of each fight, your STRONGEST Nidoran♂ has a [50,LK]% chance to attract a catchable Nidoran♀ when no Nidoqueen is on the board
 - Viking Helmet {{new}} | Gain a random HEART_SCALE, NEVER_MELT_ICE or MIRACLE_SEED. At the start of combat, Pokémon holding 3 items, one of them made with one of these, gain 40% of their max HP
 - Rune Sword {{new}} | Gain a random CHARCOAL, BLACK_GLASSES or MAGNET. At the start of combat, Pokémon holding 3 items, one of them made with one of these, gain 40% of their base SPEED
 - Rune Stone {{new}} | Gain a random MYSTIC_WATER, TWISTED_SPOON or BINDING_BAND. At the start of combat, Pokémon holding 3 items, one of them made with one of these, gain 40% of their max PP as starting PP

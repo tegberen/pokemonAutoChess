@@ -148,6 +148,9 @@ import {
   GOOEY_GLOBULES_ALLY_HEAL,
   PRIMAL_RAMPAGE_KO_PP,
   BONEMERANG_RANGER_RANGE_BONUS,
+  ROYAL_ROMANCE_ATTRACT_CHANCE,
+  INFILTRATOR_PP_STOLEN_BY_STAR,
+  JOLLY_ROGER_ATTACK_KO_GOLD,
   BONEMERANG_RANGER_DAMAGE_LOSS_PER_HIT,
   BONEMERANG_RANGER_MIN_DAMAGE_RATIO,
   BONEMERANG_RANGER_RETURN_DELAY,
@@ -332,6 +335,7 @@ import { ItemStats } from "../config/game/items"
 import { logger } from "../utils/logger"
 import { clamp, max, min } from "../utils/number"
 import { chance, pickRandomIn, randomBetween, shuffleArray } from "../utils/random"
+import { WandererBehavior, WandererType } from "../types/enum/Wanderer"
 import { OrientationVector } from "../utils/orientation"
 import { healPlayerLife } from "../utils/player-life"
 import { schemaValues } from "../utils/schemas"
@@ -403,6 +407,7 @@ import {
   getStrongestUnits,
   getUnitScore
 } from "./unit-score"
+import { stealGoldOnKO } from "./jolly-roger"
 import { SeedEffects } from "./seeds"
 import { getAltFormForPlayer } from "../config/game/pokemons"
 
@@ -4775,6 +4780,56 @@ export default class Simulation extends Schema implements ISimulation {
       shuttleBusChampion.maxPP = SHUTTLE_BUS_MAX_PP
       shuttleBusChampion.pp = SHUTTLE_BUS_MAX_PP
     }
+
+    const royalRomanceChampion = championOf.get(Blessing.ROYAL_ROMANCE)
+    if (
+      royalRomanceChampion &&
+      !royalRomanceChampion.isGhostOpponent &&
+      !schemaValues(player.board).some(
+        (pokemon) => pokemon.name === Pkm.NIDOQUEEN
+      ) &&
+      chance(ROYAL_ROMANCE_ATTRACT_CHANCE, royalRomanceChampion)
+    ) {
+      player.spawnWanderingPokemon({
+        pkm: Pkm.NIDORANF,
+        behavior: WandererBehavior.SPECTATE,
+        type: WandererType.CATCHABLE
+      })
+    }
+
+    const captainsBountyChampion = championOf.get(Blessing.CAPTAINS_BOUNTY)
+    captainsBountyChampion?.addCritChance(
+      player.money,
+      captainsBountyChampion,
+      0,
+      false
+    )
+
+    championOf.get(Blessing.JOLLY_ROGER)?.effectsSet.add(
+      new OnAttackEffect(({ pokemon, target, hasAttackKilled }) => {
+        if (target && hasAttackKilled) {
+          stealGoldOnKO(pokemon, target, JOLLY_ROGER_ATTACK_KO_GOLD)
+        }
+      })
+    )
+
+    championOf.get(Blessing.INFILTRATOR)?.effectsSet.add(
+      new OnAttackEffect(({ pokemon, target }) => {
+        if (!target) return
+        const stolenPP = Math.min(
+          target.pp,
+          INFILTRATOR_PP_STOLEN_BY_STAR[pokemon.stars - 1] ?? 5
+        )
+        target.addPP(-stolenPP, pokemon, 0, false)
+        pokemon.addPP(stolenPP, pokemon, 0, false)
+        target.status.reflectCooldown = 0
+        target.status.reflect = false
+        target.status.protectCooldown = 0
+        target.status.protect = false
+        target.status.magicBounce = false
+        target.status.magicBounceCooldown = 0
+      })
+    )
 
     const spookyScarecrowChampion = championOf.get(Blessing.SPOOKY_SCARECROW)
     if (spookyScarecrowChampion) {

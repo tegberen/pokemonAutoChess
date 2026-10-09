@@ -2094,6 +2094,30 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     icon: "purrfect_plan",
     grantsPokemonImmediately: true
   },
+  [Blessing.ROYAL_ROMANCE]: {
+    tier: BlessingTier.SILVER,
+    availableAtStages: [4],
+    icon: "royal_romance",
+    grantsPokemonImmediately: true
+  },
+  [Blessing.CAPTAINS_BOUNTY]: {
+    tier: BlessingTier.SILVER,
+    availableAtStages: [4],
+    icon: "captains_bounty",
+    grantsPokemonImmediately: true
+  },
+  [Blessing.INFILTRATOR]: {
+    tier: BlessingTier.SILVER,
+    availableAtStages: [4],
+    icon: "infiltrator",
+    grantsPokemonImmediately: true
+  },
+  [Blessing.JOLLY_ROGER]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: [4],
+    icon: "jolly_roger",
+    grantsPokemonImmediately: true
+  },
   [Blessing.SEASONAL_HERD]: {
     tier: BlessingTier.PRISMATIC,
     availableAtStages: [4],

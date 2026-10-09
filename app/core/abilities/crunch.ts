@@ -1,4 +1,8 @@
-import { Passive } from "../../types/enum/Passive"
+import {
+  Blessing,
+  JOLLY_ROGER_ABILITY_KO_GOLD
+} from "../../types/enum/Blessing"
+import { stealGoldOnKO } from "../jolly-roger"
 import { min } from "../../utils/number"
 import { AttackType } from "../../types/enum/Game"
 import type { Board } from "../board"
@@ -24,14 +28,8 @@ export class CrunchStrategy extends AbilityStrategy {
     )
     if (death) {
       pokemon.handleHeal(Math.ceil(0.5 * target.maxHP), pokemon, 0, false)
-      if (pokemon.passive === Passive.FERALIGATR_PIRATE && pokemon.player && target.player) {
-        const moneyStolen = Math.min(target.player.money, 1)
-        if (target.player && moneyStolen > 0) {
-          target.player.addMoney(-moneyStolen, false, target)
-          pokemon.player.addMoney(moneyStolen, true, pokemon)
-          pokemon.count.moneyCount += moneyStolen
-        }
-
+      if (pokemon.heroBlessings.has(Blessing.JOLLY_ROGER)) {
+        stealGoldOnKO(pokemon, target, JOLLY_ROGER_ABILITY_KO_GOLD)
       }
     }
   }

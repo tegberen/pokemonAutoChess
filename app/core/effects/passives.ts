@@ -67,7 +67,6 @@ import {
   OnStageStartEffect,
   PeriodicEffect
 } from "./effect"
-import { WandererBehavior, WandererType } from "../../types/enum/Wanderer"
 import { AccelerationEffect } from "./passives/acceleration"
 import { BergmiteOnBackEffect } from "./passives/bergmite-on-back"
 import { FalinksFormationEffect } from "./passives/falinks-formation"
@@ -1804,12 +1803,6 @@ export const PassiveEffects: Partial<
       })
     })
   ],
-  [Passive.CINDERACE_PIRATE]: [
-    new OnSimulationStartEffect(({ simulation, entity }) => {
-      const gold = entity.player?.money ?? 0
-      entity.addCritChance(gold, entity, 0, false)
-    })
-  ],
   [Passive.STARAPTOR_FASHION]: [
     new OnKillEffect(({ attacker }) => {
       if (attacker.player) {
@@ -2264,38 +2257,6 @@ export const PassiveEffects: Partial<
       })
     }, Passive.SLITHER_WING)
   ],
-  [Passive.NIDOKING]: [
-    new OnSimulationStartEffect(({ entity, player }) => {
-      if (!player) return
-      const alreadyHasNidoF = schemaValues(player.board).some((p) =>
-        p.name === Pkm.NIDOQUEEN
-      )
-      if (alreadyHasNidoF) return
-      if (chance(0.5, entity)) {
-        player.spawnWanderingPokemon({
-          pkm: Pkm.NIDORANF,
-          behavior: WandererBehavior.SPECTATE,
-          type: WandererType.CATCHABLE
-        })
-      }
-    })
-  ],
-  [Passive.NIDOQUEEN]: [
-    new OnSimulationStartEffect(({ entity, player }) => {
-      if (!player) return
-      const alreadyHasNidoM = schemaValues(player.board).some((p) =>
-        p.name === Pkm.NIDOKING
-      )
-      if (alreadyHasNidoM) return
-      if (chance(0.5, entity)) {
-        player.spawnWanderingPokemon({
-          pkm: Pkm.NIDORANM,
-          behavior: WandererBehavior.SPECTATE,
-          type: WandererType.CATCHABLE
-        })
-      }
-    })
-  ],
   [Passive.BERSERK]: [
     () => new class extends PeriodicEffect {
       stacksGiven = 0
@@ -2430,17 +2391,6 @@ export const PassiveEffects: Partial<
     }),
     new OnEvolutionEffect(({ player }) => {
       player.updatePillars()
-    })
-  ],
-  [Passive.INFILTRATOR]: [
-    new OnAttackEffect(({ pokemon, target }) => {
-      if (!target) return
-      target.status.reflectCooldown = 0
-      target.status.reflect = false
-      target.status.protectCooldown = 0
-      target.status.protect = false
-      target.status.magicBounce = false
-      target.status.magicBounceCooldown = 0
     })
   ],
   [Passive.STOUTLAND_SEARCH]: [
