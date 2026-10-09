@@ -558,6 +558,7 @@ Every balance change on this server, newest first.
 - Prismatic Booster Pack {{new}} | Gain random Pokémon worth 24 GOLD, including at least one Epic
 - Lechonk Bank {{new}} | Stage 4 only. At the start of each fight, spawn a Lechonk. When it is KO'd, gain 1 GOLD
 - All Aboard {{new}} | At the end of each fight, if at least half of your Pokémon are still standing, gain 2 GOLD
+- Luminous Spring {{new}} | Each time you merge a Pokémon to 2 STAR, gain 1 free reroll. Each time you merge one to 3 STAR, gain 3
 - Curse of Two | removed
 - Pearl, Gold Bar and Starter Pack | removed, replaced by the Booster Packs
 - Hex Maniac | removed

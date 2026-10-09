@@ -6301,6 +6301,10 @@
 			"name": "All Aboard",
 			"description": "At the end of each fight, if at least half of your Pokémon are still standing, gain 2 GOLD."
 		},
+		"LUMINOUS_SPRING": {
+			"name": "Luminous Spring",
+			"description": "Each time you merge a Pokémon to 2 STAR, gain 1 free reroll. Each time you merge one to 3 STAR, gain 3."
+		},
 		"GOTTA_CATCH_EM_ALL": {
 			"name": "Gotta Catch 'Em All",
 			"description": "Before each PvE round, wild Pokémon you can catch run across your board."
