@@ -7254,6 +7254,8 @@
 		"gameboy_desc": "Play the Gameboy prototype of the game",
 		"pokeguesser": "PokéGuessr",
 		"pokeguesser_desc": "Guess the Pokémon trivia game when waiting for lobby to start",
+		"wish_quiz": "Wish Quiz",
+		"wish_quiz_desc": "Learn the Wishes while waiting for the lobby to start: read what a Wish does and pick its icon",
 		"synergy_wheel": "Synergy Wheel",
 		"synergy_wheel_desc": "Randomly draws synergies when looking for inspiration",
 		"tier_list_maker": "Tier List Maker",
@@ -8018,6 +8020,13 @@
 	"connection_status": {
 		"CONNECTION_LOST": "Connection lost. Attempting to reconnect...",
 		"CONNECTION_FAILED": "Connection failed. Try to refresh page."
+	},
+	"wish_quiz": {
+		"question": "Which Wish is this?",
+		"next": "Next Wish",
+		"all_tiers": "All",
+		"streak": "Streak: {{count}}",
+		"best": "Best: {{count}}"
 	},
 	"pokeguessr": {
 		"whosthatpokemon": "Who's that Pokémon ?",

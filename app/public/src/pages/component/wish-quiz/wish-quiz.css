@@ -1,0 +1,197 @@
+.wish-quiz-modal {
+  width: min(56em, 95vw);
+}
+
+.wish-quiz-modal .modal-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25em;
+  padding: 1em 1.5em 1.5em;
+}
+
+.wish-quiz-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5em;
+  width: 100%;
+}
+
+.wish-quiz-tiers {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4em;
+}
+
+.wish-quiz-score {
+  display: flex;
+  gap: 0.4em;
+  margin: 0;
+  font-weight: bold;
+}
+
+.wish-quiz-score span {
+  padding: 0.2em 0.7em;
+  border-radius: 8px;
+  background-color: var(--color-bg-secondary);
+}
+
+/* one fixed size for every Wish, so the answers below never jump; a rare long
+   description scrolls inside the card instead */
+.wish-quiz-card {
+  width: min(40em, 100%);
+  height: 15em;
+}
+
+/* the striped tier frame comes from the wiki cards, see wiki-blessings.css */
+.wish-quiz-face {
+  box-sizing: border-box;
+  height: 100%;
+  border: var(--border-thick);
+  border-radius: 12px;
+}
+
+/* only the content crossfades: the frame and panel stay put, so the card
+   never dims to the window behind it mid reveal */
+.wish-quiz-face-panel {
+  box-sizing: border-box;
+  display: grid;
+  height: 100%;
+  padding: 1em 1.25em;
+  overflow-y: auto;
+  border-radius: 9px;
+  text-align: center;
+  /* darker than the wiki cards, so the stripes stay calm behind longer text */
+  background-color: color-mix(in srgb, var(--color-shadow) 88%, transparent);
+}
+
+.wish-quiz-side {
+  grid-area: 1 / 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* safe, or a description taller than the card loses its top to the scroll */
+  justify-content: safe center;
+  gap: 0.4em;
+  transition: opacity 0.45s ease-in-out;
+}
+
+.wish-quiz-icon {
+  width: 4em;
+  height: 4em;
+}
+
+.wish-quiz-side h2 {
+  margin: 0;
+  font-size: 1.4em;
+}
+
+.wish-quiz-side p {
+  margin: 0;
+}
+
+.wish-quiz-card:not(.revealed) .wish-quiz-side-answer,
+.wish-quiz-card.revealed .wish-quiz-side:not(.wish-quiz-side-answer) {
+  opacity: 0;
+}
+
+/* keeps its place under the answers while hidden, so nothing shifts */
+.wish-quiz-next {
+  visibility: hidden;
+}
+
+.wish-quiz-next.revealed {
+  visibility: visible;
+}
+
+.wish-quiz-question {
+  opacity: 0.8;
+}
+
+.wish-quiz-answers {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1em;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.wish-quiz-answer {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 8.5em;
+  margin: 0;
+  padding: 0.5em;
+  text-align: center;
+  color: var(--color-fg-primary);
+  font: inherit;
+  cursor: var(--cursor-hover, pointer);
+}
+
+/* the name sits over the tile's lower part and the icon moves up for it, so
+   revealing the answers never resizes the tiles */
+.wish-quiz-answer .wish-quiz-icon {
+  transition: transform 0.45s ease-in-out;
+}
+
+.wish-quiz-answer.revealed .wish-quiz-icon {
+  transform: translateY(-1em);
+}
+
+.wish-quiz-answer-name {
+  position: absolute;
+  right: 0.4em;
+  bottom: 0.5em;
+  left: 0.4em;
+  font-weight: bold;
+  line-height: 1.2;
+  opacity: 0;
+  transition: opacity 0.45s ease-in-out;
+}
+
+.wish-quiz-answer.revealed .wish-quiz-answer-name {
+  opacity: 1;
+}
+
+.wish-quiz-answer:not(:disabled):hover {
+  background-color: color-mix(
+    in srgb,
+    var(--color-bg-accent) 35%,
+    var(--color-bg-secondary)
+  );
+}
+
+.wish-quiz-answer:disabled {
+  cursor: default;
+}
+
+/* the in-game right and wrong colours, as an inset frame: a real border would
+   push the marked tiles' content off line with the others */
+.wish-quiz-answer.correct {
+  box-shadow: inset 0 0 0 3px var(--color-fg-green);
+}
+
+.wish-quiz-answer.wrong {
+  box-shadow: inset 0 0 0 3px var(--color-fg-red);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wish-quiz-side,
+  .wish-quiz-answer .wish-quiz-icon,
+  .wish-quiz-answer-name {
+    transition: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .wish-quiz-answers {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

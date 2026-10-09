@@ -529,7 +529,7 @@ Every balance change on this server, newest first.
 - Groudon, Primal Groudon | Precipice Blades: hits all enemies in a line through the target instead of its row and column
 
 **Synergies**
-- GHOST {{new}} | reworked: write HEXING_INCANTATION, RITUAL_INCANTATION and FATED_INCANTATION. Enemies with negative LUCK are easier to dodge and SILENCE, see [GHOST in the Wiki](#wiki/types/GHOST)
+- GHOST {{new}} | reworked: write HEXING_INCANTATION, RITUAL_INCANTATION and FATED_INCANTATION. Enemies with negative LUCK are easier to dodge and SILENCE, see [GHOST in the Guide](#guide/synergies/Ghost) and [GHOST in the Wiki](#wiki/types/GHOST)
 - FAIRY | added a cooldown to the FAIRY wands, see [FAIRY in the Wiki](#wiki/types/FAIRY)
 - GRASS | harvesting a berry gives 2 XP
 - POISON (7) | the enemy a POISON Pokémon KOs bursts for 50% of its remaining PP as SPECIAL to ADJACENT enemies, instead of the POISON Pokémon bursting when KO'd
@@ -621,6 +621,7 @@ Every balance change on this server, newest first.
 **Interface**
 - Experience Icon {{new}} | XP now shows its icon in descriptions and on the Buy XP button
 - Halloween theme {{new}} | new patch theme
+- Wish Quiz {{new}} | a sidebar gadget for the lobby and waiting rooms: read what a Wish does and pick its icon, and build a streak
 
 ### 29 September 2026
 

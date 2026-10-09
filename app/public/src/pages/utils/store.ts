@@ -106,7 +106,8 @@ export enum LocalStoreKeys {
   COLLECTION_FILTER = "collection_filter",
   TRANSLATION_EDITS = "translation_edits",
   LAST_TAB_OPENED_PICKER = "last_tab_opened_picker",
-  BLESSINGS_UNDER_TEST = "blessings_under_test"
+  BLESSINGS_UNDER_TEST = "blessings_under_test",
+  WISH_QUIZ_BEST_STREAK = "wish_quiz_best_streak"
 }
 
 export const localStore = new LocalStore<LocalStoreKeys>()

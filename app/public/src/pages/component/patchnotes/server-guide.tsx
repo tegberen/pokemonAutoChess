@@ -515,6 +515,21 @@ export default function ServerGuide({
                           onOpenBookmarks(href.split("/")[1])
                           return
                         }
+                        if (href?.startsWith("#guide/")) {
+                          event.preventDefault()
+                          const [, chapterId, section] = href.split("/")
+                          const chapter = guidePages.find(
+                            (page) =>
+                              page.id === chapterId && page.id !== "home"
+                          )
+                          if (chapter && section) {
+                            jumpToChapter(
+                              chapter.id as GuideChapterId,
+                              sectionId(section)
+                            )
+                          }
+                          return
+                        }
                         if (!href?.startsWith("#wiki/")) return
                         event.preventDefault()
                         const [, tab, type] = href.split("/")

@@ -10,6 +10,7 @@ export const GADGETS_NAMES = [
   "synergy_wheel",
   "gameboy",
   "pokeguesser",
+  "wish_quiz",
   "bot_builder",
   "tier_list_maker",
   "sprite_tracker"
@@ -63,6 +64,11 @@ export const GADGETS: Record<GadgetName, Gadget> = {
   pokeguesser: {
     name: "pokeguesser",
     icon: "pokeguesser",
+    levelRequired: 1
+  },
+  wish_quiz: {
+    name: "wish_quiz",
+    icon: "game_modes/wishes_icon",
     levelRequired: 1
   },
   bot_builder: {

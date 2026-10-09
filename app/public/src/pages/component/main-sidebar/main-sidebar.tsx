@@ -25,6 +25,7 @@ import GameOptionsModal from "../options/game-options-modal"
 import Patchnotes from "../patchnotes/patchnotes"
 import { usePatchVersion } from "../patchnotes/usePatchVersion"
 import PokeGuesser from "../pokeguesser/pokeguesser"
+import WishQuiz from "../wish-quiz/wish-quiz"
 import Profile from "../profile/profile"
 import ServersList from "../servers/servers-list"
 import SpriteTrackerModal from "../sprite-tracker/sprite-tracker-modal"
@@ -237,6 +238,19 @@ export function MainSidebar(props: MainSidebarProps) {
               handleClick={changeModal}
             >
               {t("gadget.pokeguesser")}
+            </NavLink>
+          )}
+
+        {page !== "game" &&
+          ((!GADGETS.wish_quiz.disabled &&
+            profileLevel >= GADGETS.wish_quiz.levelRequired) ||
+            profileRole === Role.ADMIN) && (
+            <NavLink
+              svg={GADGETS.wish_quiz.icon}
+              location="wish-quiz"
+              handleClick={changeModal}
+            >
+              {t("gadget.wish_quiz")}
             </NavLink>
           )}
 
@@ -483,6 +497,7 @@ export type Modals =
   | "team-builder"
   | "tier-list"
   | "wiki"
+  | "wish-quiz"
 
 function Modals({
   modal,
@@ -610,6 +625,7 @@ function Modals({
       </Modal>
       <Jukebox show={modal === "jukebox"} handleClose={closeModal} />
       <PokeGuesser show={modal === "pokeguesser"} handleClose={closeModal} />
+      <WishQuiz show={modal === "wish-quiz"} handleClose={closeModal} />
       <SynergyWheelModal
         show={modal === "synergy-wheel"}
         handleClose={closeModal}

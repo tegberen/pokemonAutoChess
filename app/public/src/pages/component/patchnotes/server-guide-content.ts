@@ -667,8 +667,12 @@ export const guideParser = new Marked({
     },
     link({ href, tokens }) {
       const text = this.parser.parseInline(tokens)
-      // Only internal Wiki and Bookmarks links get the shared button treatment.
-      if (href.startsWith("#wiki/") || href.startsWith("#meta/")) {
+      // Only internal Wiki, Bookmarks and guide links get the button treatment.
+      if (
+        href.startsWith("#wiki/") ||
+        href.startsWith("#meta/") ||
+        href.startsWith("#guide/")
+      ) {
         return `<a class="bubbly blue" href="${href}">${text}</a>`
       }
       return false
