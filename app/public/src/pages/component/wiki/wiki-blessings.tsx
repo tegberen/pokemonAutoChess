@@ -86,6 +86,7 @@ const HATCH_BLESSINGS = new Set<Blessing>([
   Blessing.POCKET_DAYCARE,
   Blessing.BABYLESS,
   Blessing.BABY_OPENER,
+  Blessing.NEST_EGGS,
   Blessing.SELECTIVE_GENETICS,
   Blessing.ADOPTION,
   Blessing.COLONY
@@ -205,6 +206,7 @@ const ADDITIONAL_HERO_BLESSINGS = new Set<Blessing>([
   Blessing.BABY_OPENER,
   Blessing.SAFARI_ENCOUNTER,
   Blessing.POCKET_DAYCARE,
+  Blessing.NEST_EGGS,
   Blessing.TRANSFORM,
   Blessing.SINNOHS_COOLEST,
   Blessing.SCHOOL_BUS,
@@ -291,7 +293,12 @@ const OFFENSIVE_COMBAT_BLESSINGS = new Set<Blessing>([
   Blessing.CRITICAL_RUSH_I,
   Blessing.CRITICAL_RUSH_II,
   Blessing.CRITICAL_PATH_I,
-  Blessing.CRITICAL_PATH_II
+  Blessing.CRITICAL_PATH_II,
+  Blessing.RUNE_SWORD,
+  Blessing.RUNE_STONE,
+  Blessing.VIKING_HELMET,
+  Blessing.UNITY_CORE,
+  Blessing.CORE_REACTOR
 ])
 
 function compareCombatBlessings(a: Blessing, b: Blessing): number {

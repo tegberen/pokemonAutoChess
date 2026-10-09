@@ -261,6 +261,9 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
   hasSheddingScalesRerolled: boolean = false
   // EMPOWER: extra share of every point of damage this unit deals, while active
   damageAmp: number = 0
+  // UNITY_CORE and CORE_REACTOR: kept apart from damageAmp, which EMPOWER
+  // rewrites every tick
+  blessingDamageAmp: number = 0
   skillBeforePossession: Ability | null = null
   // CELEBI caps how much player life one fight can hand back
   timeTravelLifeHealedThisFight: number = 0

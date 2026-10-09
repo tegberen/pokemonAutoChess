@@ -179,6 +179,19 @@ import {
   PULSE_SHIELD_ALLY_SPEED,
   MINIMALIST_PP_PER_EMPTY_SLOT,
   MINIMALIST_NO_ITEM_AP,
+  FULL_KIT_ITEM_COUNT,
+  RUNE_STONE_COMPONENTS,
+  RUNE_STONE_MAX_PP_RATIO,
+  UNITY_CORE_DAMAGE_AMP_PER_SYNERGY,
+  UNITY_CORE_MAX_HP_PER_SYNERGY,
+  CORE_REACTOR_DAMAGE_AMP_PER_FRONT_ROW_ENEMY,
+  CORE_REACTOR_MAX_HP_PER_OTHER_ENEMY,
+  CORE_REACTOR_PARALYSIS_DELAY,
+  CORE_REACTOR_PARALYSIS_DURATION,
+  RUNE_SWORD_BASE_SPEED_RATIO,
+  RUNE_SWORD_COMPONENTS,
+  VIKING_HELMET_MAX_HP_RATIO,
+  VIKING_HELMET_COMPONENTS,
   CRITICAL_RUSH_SPEED,
   CRITICAL_RUSH_DURATION,
   CRITICAL_RUSH_II_STACK_SPEED,
@@ -469,6 +482,7 @@ export default class Simulation extends Schema implements ISimulation {
   tidalWaveTimer = 0
   secondWindTimer = 0
   firstWindTimer = 0
+  coreReactorTimer = 0
   /* IMPENDING_DOOM is per owning team: a holder's shadow only strikes the units
      opposing them, so two holders in one fight run independent countdowns.
      0 means that side has no doom armed. */
@@ -2841,6 +2855,63 @@ export default class Simulation extends Schema implements ISimulation {
         })
       }
 
+      const holdsFullKitWith = (ally: PokemonEntity, components: Item[]) =>
+        ally.items.size >= FULL_KIT_ITEM_COUNT &&
+        [...ally.items].some((item) =>
+          [item, ...(ItemRecipe[item] ?? [])].some((part) =>
+            components.includes(part)
+          )
+        )
+      if (blessings.includes(Blessing.VIKING_HELMET)) {
+        ownUnits
+          .filter((ally) => holdsFullKitWith(ally, VIKING_HELMET_COMPONENTS))
+          .forEach((ally) =>
+            ally.addMaxHP(
+              Math.round(ally.maxHP * VIKING_HELMET_MAX_HP_RATIO),
+              ally,
+              0,
+              false
+            )
+          )
+      }
+      if (blessings.includes(Blessing.RUNE_SWORD)) {
+        ownUnits
+          .filter((ally) => holdsFullKitWith(ally, RUNE_SWORD_COMPONENTS))
+          .forEach((ally) =>
+            ally.addSpeed(
+              Math.round(ally.baseSpeed * RUNE_SWORD_BASE_SPEED_RATIO),
+              ally,
+              0,
+              false
+            )
+          )
+      }
+      if (blessings.includes(Blessing.RUNE_STONE)) {
+        ownUnits
+          .filter((ally) => holdsFullKitWith(ally, RUNE_STONE_COMPONENTS))
+          .forEach((ally) =>
+            ally.addPP(
+              Math.round(ally.maxPP * RUNE_STONE_MAX_PP_RATIO),
+              ally,
+              0,
+              false
+            )
+          )
+      }
+      if (blessings.includes(Blessing.UNITY_CORE)) {
+        const activeSynergies = player.synergies.countActiveSynergies()
+        allies.forEach((ally) => {
+          ally.blessingDamageAmp +=
+            activeSynergies * UNITY_CORE_DAMAGE_AMP_PER_SYNERGY
+          ally.addMaxHP(
+            activeSynergies * UNITY_CORE_MAX_HP_PER_SYNERGY,
+            ally,
+            0,
+            false
+          )
+        })
+      }
+
       const bruteShieldTier = blessings.includes(Blessing.BRUTE_SHIELD_II)
         ? "II"
         : blessings.includes(Blessing.BRUTE_SHIELD_I)
@@ -3695,6 +3766,30 @@ export default class Simulation extends Schema implements ISimulation {
 
       if (blessings.includes(Blessing.FIRST_WIND)) {
         this.firstWindTimer = FIRST_WIND_HEAL_DELAY
+      }
+
+      if (blessings.includes(Blessing.CORE_REACTOR)) {
+        const enemyTeam =
+          teamIndex === Team.BLUE_TEAM ? this.redTeam : this.blueTeam
+        const enemies = [...enemyTeam.values()].filter(
+          (enemy) => enemy.hp > 0
+        )
+        const enemyFrontRow = teamIndex === Team.BLUE_TEAM ? 3 : 2
+        const frontRowEnemies = enemies.filter(
+          (enemy) => enemy.positionY === enemyFrontRow
+        ).length
+        const otherEnemies = enemies.length - frontRowEnemies
+        allies.forEach((ally) => {
+          ally.blessingDamageAmp +=
+            frontRowEnemies * CORE_REACTOR_DAMAGE_AMP_PER_FRONT_ROW_ENEMY
+          ally.addMaxHP(
+            otherEnemies * CORE_REACTOR_MAX_HP_PER_OTHER_ENEMY,
+            ally,
+            0,
+            false
+          )
+        })
+        this.coreReactorTimer = CORE_REACTOR_PARALYSIS_DELAY
       }
 
       if (blessings.includes(Blessing.ECHO_CHAMBER)) {
@@ -5970,6 +6065,31 @@ export default class Simulation extends Schema implements ISimulation {
         ] as const) {
           if (player?.blessings?.includes(Blessing.SECOND_WIND)) {
             this.grantSecondWindResurrection(player, teamIndex)
+          }
+        }
+      }
+    }
+
+    if (this.coreReactorTimer > 0) {
+      this.coreReactorTimer -= dt
+      if (this.coreReactorTimer <= 0) {
+        for (const [player, teamIndex] of [
+          [this.bluePlayer, Team.BLUE_TEAM],
+          [this.bluePartnerPlayer, Team.BLUE_TEAM],
+          [this.redPlayer, Team.RED_TEAM]
+        ] as const) {
+          if (player?.blessings?.includes(Blessing.CORE_REACTOR)) {
+            const enemyTeam =
+              teamIndex === Team.BLUE_TEAM ? this.redTeam : this.blueTeam
+            enemyTeam.forEach((enemy) => {
+              if (enemy.hp > 0) {
+                enemy.status.triggerParalysis(
+                  CORE_REACTOR_PARALYSIS_DURATION,
+                  enemy,
+                  null
+                )
+              }
+            })
           }
         }
       }

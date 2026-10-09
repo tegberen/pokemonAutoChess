@@ -6321,6 +6321,30 @@
 			"name": "Instant Treasure Box",
 			"description": "Gain 10 GOLD or a random completed item."
 		},
+		"NEST_EGGS": {
+			"name": "Nest Eggs",
+			"description": "Gain 3 Eggs that hatch immediately."
+		},
+		"VIKING_HELMET": {
+			"name": "Viking Helmet",
+			"description": "Gain a random HEART_SCALE, NEVER_MELT_ICE or MIRACLE_SEED. At the start of combat, Pokémon holding 3 items, one of them made with one of these, gain 40% of their max HP."
+		},
+		"RUNE_SWORD": {
+			"name": "Rune Sword",
+			"description": "Gain a random CHARCOAL, BLACK_GLASSES or MAGNET. At the start of combat, Pokémon holding 3 items, one of them made with one of these, gain 40% of their base SPEED."
+		},
+		"RUNE_STONE": {
+			"name": "Rune Stone",
+			"description": "Gain a random MYSTIC_WATER, TWISTED_SPOON or BINDING_BAND. At the start of combat, Pokémon holding 3 items, one of them made with one of these, gain 40% of their max PP as starting PP."
+		},
+		"UNITY_CORE": {
+			"name": "Unity Core",
+			"description": "At the start of combat, your Pokémon gain 4 HP and deal 2% more damage for each active synergy."
+		},
+		"CORE_REACTOR": {
+			"name": "Core Reactor",
+			"description": "At the start of combat, your Pokémon deal 2% more damage for each enemy in the front row and gain 2 HP for each enemy behind it. 12 seconds into combat, all enemies get PARALYSIS for 2 seconds."
+		},
 		"GOTTA_CATCH_EM_ALL": {
 			"name": "Gotta Catch 'Em All",
 			"description": "Before each PvE round, wild Pokémon you can catch run across your board."

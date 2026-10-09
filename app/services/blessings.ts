@@ -121,6 +121,10 @@ import {
   type SpindaCasinoSlot,
   QUICK_STREAK_GOLD,
   INSTANT_TREASURE_BOX_GOLD,
+  NEST_EGGS_GRANTED,
+  RUNE_STONE_COMPONENTS,
+  RUNE_SWORD_COMPONENTS,
+  VIKING_HELMET_COMPONENTS,
   SILVER_SPOON_ROUNDS_BY_STAR,
   MOTHER_YARN_STAGES_BY_STAR,
   MOTHER_YARN_WEAVE_ANIMATION_DURATION,
@@ -3124,6 +3128,29 @@ export const blessingEffectService: {
     else player.items.push(pickRandomIn(CraftableItemsNoScarves))
     return true
   },
+  [Blessing.NEST_EGGS]: (player, state) => {
+    for (let i = 0; i < NEST_EGGS_GRANTED; i++) {
+      const egg = giveRandomEgg(player, false, state)
+      if (!egg) continue
+      egg.stacks = egg.stacksRequired - 1
+      EvolutionManager.updateHatch(egg, player)
+    }
+    return true
+  },
+  [Blessing.VIKING_HELMET]: (player) => {
+    player.items.push(pickRandomIn(VIKING_HELMET_COMPONENTS))
+    return true
+  },
+  [Blessing.RUNE_SWORD]: (player) => {
+    player.items.push(pickRandomIn(RUNE_SWORD_COMPONENTS))
+    return true
+  },
+  [Blessing.RUNE_STONE]: (player) => {
+    player.items.push(pickRandomIn(RUNE_STONE_COMPONENTS))
+    return true
+  },
+  [Blessing.UNITY_CORE]: () => true,
+  [Blessing.CORE_REACTOR]: () => true,
   [Blessing.GOTTA_CATCH_EM_ALL]: () => true,
   [Blessing.REGIONAL_SPECIALTIES]: (player) => {
     player.applyRegionalSpecialties()

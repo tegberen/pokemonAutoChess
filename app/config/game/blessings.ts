@@ -17,6 +17,7 @@ import {
   LANGUAGE_BARRIER_UNOWNS_GRANTED,
   MIX_AND_MATCH_I_UNIQUES,
   MIX_AND_MATCH_II_UNIQUES,
+  NEST_EGGS_GRANTED,
   ROCKY_BEGINNINGS_POKEMONS,
   SELECTIVE_GENETICS_BABIES_GRANTED,
   getGymTrainerRoster,
@@ -947,7 +948,7 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
   [Blessing.BABY_OPENER]: {
     tier: BlessingTier.SILVER,
     availableAtStages: [4],
-    icon: "nest_eggs",
+    icon: "baby_opener",
     grantsPokemonImmediately: true,
     benchSlotsRequired: BABY_OPENER_BABIES_GRANTED
   },
@@ -1556,6 +1557,43 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     tier: BlessingTier.SILVER,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "instant_treasure_box",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.NEST_EGGS]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: [4],
+    icon: "nest_eggs",
+    grantsPokemonImmediately: true,
+    benchSlotsRequired: NEST_EGGS_GRANTED
+  },
+  [Blessing.VIKING_HELMET]: {
+    tier: BlessingTier.SILVER,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "viking_helmet",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.RUNE_SWORD]: {
+    tier: BlessingTier.SILVER,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "rune_sword",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.RUNE_STONE]: {
+    tier: BlessingTier.SILVER,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "rune_stone",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.UNITY_CORE]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "unity_core",
+    grantsPokemonImmediately: false
+  },
+  [Blessing.CORE_REACTOR]: {
+    tier: BlessingTier.SILVER,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "core_reactor",
     grantsPokemonImmediately: false
   },
   [Blessing.GOTTA_CATCH_EM_ALL]: {

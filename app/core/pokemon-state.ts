@@ -759,8 +759,11 @@ export default abstract class PokemonState {
         damage *= CONTEMPT_DAMAGE_MULTIPLIER
       }
 
-      if (attacker && attacker.damageAmp > 0) {
-        damage *= 1 + attacker.damageAmp
+      const attackerDamageAmp = attacker
+        ? attacker.damageAmp + attacker.blessingDamageAmp
+        : 0
+      if (attackerDamageAmp > 0) {
+        damage *= 1 + attackerDamageAmp
       }
 
       if (

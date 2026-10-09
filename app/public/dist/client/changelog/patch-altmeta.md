@@ -566,6 +566,12 @@ Every balance change on this server, newest first.
 - Spinda Casino {{new}} | Spin the slot machine for 10 free rerolls, 10 GOLD or 10 XP. Jackpot: gain a NUGGET and spin again
 - Quick Streak {{new}} | Gain 5 GOLD. Your win and lose streaks grow twice as fast
 - Instant Treasure Box {{new}} | Gain 10 GOLD or a random completed item
+- Nest Eggs {{new}} | Stage 4 only. Gain 3 Eggs that hatch immediately
+- Viking Helmet {{new}} | Gain a random HEART_SCALE, NEVER_MELT_ICE or MIRACLE_SEED. At the start of combat, Pokémon holding 3 items, one of them made with one of these, gain 40% of their max HP
+- Rune Sword {{new}} | Gain a random CHARCOAL, BLACK_GLASSES or MAGNET. At the start of combat, Pokémon holding 3 items, one of them made with one of these, gain 40% of their base SPEED
+- Rune Stone {{new}} | Gain a random MYSTIC_WATER, TWISTED_SPOON or BINDING_BAND. At the start of combat, Pokémon holding 3 items, one of them made with one of these, gain 40% of their max PP as starting PP
+- Unity Core {{new}} | At the start of combat, your Pokémon gain 4 HP and deal 2% more damage for each active synergy. Its damage bonus adds to the Empower Wish
+- Core Reactor {{new}} | At the start of combat, your Pokémon deal 2% more damage for each enemy in the front row and gain 2 HP for each enemy behind it. 12 seconds into combat, all enemies get PARALYSIS for 2 seconds
 - Curse of Two | removed
 - Pearl, Gold Bar and Starter Pack | removed, replaced by the new economy Wishes
 - Hex Maniac | removed
