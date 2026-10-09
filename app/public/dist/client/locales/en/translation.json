@@ -6297,6 +6297,10 @@
 			"name": "Lechonk Bank",
 			"description": "At the start of each fight, spawn a Lechonk. When it is KO'd, gain 1 GOLD."
 		},
+		"ALL_ABOARD": {
+			"name": "All Aboard",
+			"description": "At the end of each fight, if at least half of your Pokémon are still standing, gain 2 GOLD."
+		},
 		"GOTTA_CATCH_EM_ALL": {
 			"name": "Gotta Catch 'Em All",
 			"description": "Before each PvE round, wild Pokémon you can catch run across your board."

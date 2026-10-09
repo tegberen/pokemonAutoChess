@@ -3061,6 +3061,7 @@ export const blessingEffectService: {
     return true
   },
   [Blessing.LECHONK_BANK]: () => true,
+  [Blessing.ALL_ABOARD]: () => true,
   [Blessing.GOTTA_CATCH_EM_ALL]: () => true,
   [Blessing.REGIONAL_SPECIALTIES]: (player) => {
     player.applyRegionalSpecialties()

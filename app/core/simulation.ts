@@ -155,6 +155,7 @@ import {
   GALE_WINGS_EMBERS_FOR_FIRE_SHARD,
   GALE_WINGS_EMBERS_PER_GOLD_BY_STAR,
   LECHONK_BANK_GOLD,
+  ALL_ABOARD_GOLD,
   DECELERATE_SPEED_CAP,
   KINGS_GAMBIT_ALLIES_FALLEN,
   KINGS_GAMBIT_FALLEN_STATS_RATIO,
@@ -6309,6 +6310,22 @@ export default class Simulation extends Schema implements ISimulation {
     }
   }
 
+  // paid when at least half the Pokemon the player fielded are still standing;
+  // KO'd units have left the team, and summons count on neither side
+  payAllAboard(player: Player, sideId: string) {
+    if (!player.blessings?.includes(Blessing.ALL_ABOARD)) return
+    const fielded = schemaValues(player.board).filter(
+      (pokemon) => !isOnBench(pokemon)
+    ).length
+    const team = sideId === this.bluePlayerId ? this.blueTeam : this.redTeam
+    const survivors = schemaValues(team).filter(
+      (entity) => !entity.isSpawn && entity.player?.id === player.id
+    ).length
+    if (fielded > 0 && survivors >= Math.ceil(fielded / 2)) {
+      player.addMoney(ALL_ABOARD_GOLD, true, null)
+    }
+  }
+
   onFinish() {
     this.finishedAt = Date.now()
     this.finished = true
@@ -6393,6 +6410,7 @@ export default class Simulation extends Schema implements ISimulation {
       if (isPVEPlayer) continue
       const isGhostPlayer = this.id !== player.simulationId
       if (!isGhostPlayer) this.collectGaleWingsEmbers(player)
+      if (!isGhostPlayer) this.payAllAboard(player, sideId)
       const isGhostOpponent =
         sideId === this.bluePlayerId && this.isGhostBattle
       const isPvE = opponentPlayerId === "pve"

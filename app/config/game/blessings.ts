@@ -1522,6 +1522,12 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     icon: "lechonk_bank",
     grantsPokemonImmediately: false
   },
+  [Blessing.ALL_ABOARD]: {
+    tier: BlessingTier.SILVER,
+    availableAtStages: BLESSING_SELECTION_STAGES,
+    icon: "all_aboard",
+    grantsPokemonImmediately: false
+  },
   [Blessing.GOTTA_CATCH_EM_ALL]: {
     tier: BlessingTier.GOLD,
     availableAtStages: [4],
