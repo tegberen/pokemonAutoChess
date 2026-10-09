@@ -556,6 +556,7 @@ Every balance change on this server, newest first.
 - Silver Booster Pack {{new}} | Gain random Pokémon worth 12 GOLD, including at least one Uncommon
 - Gold Booster Pack {{new}} | Gain random Pokémon worth 18 GOLD, including at least one Rare
 - Prismatic Booster Pack {{new}} | Gain random Pokémon worth 24 GOLD, including at least one Epic
+- Lechonk Bank {{new}} | Stage 4 only. At the start of each fight, spawn a Lechonk. When it is KO'd, gain 1 GOLD
 - Curse of Two | removed
 - Pearl, Gold Bar and Starter Pack | removed, replaced by the Booster Packs
 - Hex Maniac | removed

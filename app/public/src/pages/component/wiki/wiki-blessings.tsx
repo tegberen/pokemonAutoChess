@@ -96,6 +96,7 @@ const ECONOMY_BLESSINGS = new Set<Blessing>([
   Blessing.BOOSTER_PACK_II,
   Blessing.BOOSTER_PACK_III,
   Blessing.SIX_SEVEN,
+  Blessing.LECHONK_BANK,
   Blessing.CROAGUNKS_AID,
   Blessing.WOBBUFFETS_SILVER_PRIZE,
   Blessing.WOBBUFFETS_GOLD_PRIZE,

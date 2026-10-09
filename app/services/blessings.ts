@@ -3060,6 +3060,7 @@ export const blessingEffectService: {
     sacrificePlayerLife(player, SIX_SEVEN_LIFE_COST, state)
     return true
   },
+  [Blessing.LECHONK_BANK]: () => true,
   [Blessing.GOTTA_CATCH_EM_ALL]: () => true,
   [Blessing.REGIONAL_SPECIALTIES]: (player) => {
     player.applyRegionalSpecialties()

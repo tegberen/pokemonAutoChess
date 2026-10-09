@@ -6293,6 +6293,10 @@
 			"name": "67",
 			"description": "Gain 67 GOLD. Lose 67 player HP."
 		},
+		"LECHONK_BANK": {
+			"name": "Lechonk Bank",
+			"description": "At the start of each fight, spawn a Lechonk. When it is KO'd, gain 1 GOLD."
+		},
 		"GOTTA_CATCH_EM_ALL": {
 			"name": "Gotta Catch 'Em All",
 			"description": "Before each PvE round, wild Pokémon you can catch run across your board."

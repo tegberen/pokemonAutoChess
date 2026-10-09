@@ -154,6 +154,7 @@ import {
   CELL_BRAWLER_STAT_BONUS,
   GALE_WINGS_EMBERS_FOR_FIRE_SHARD,
   GALE_WINGS_EMBERS_PER_GOLD_BY_STAR,
+  LECHONK_BANK_GOLD,
   DECELERATE_SPEED_CAP,
   KINGS_GAMBIT_ALLIES_FALLEN,
   KINGS_GAMBIT_FALLEN_STATS_RATIO,
@@ -687,6 +688,7 @@ export default class Simulation extends Schema implements ISimulation {
     })
 
     this.summonWeatherInstituteCastforms()
+    this.summonLechonkBanks()
     this.applyPostEffects(bluePlayer.board, redBoard)
   }
 
@@ -714,6 +716,32 @@ export default class Simulation extends Schema implements ISimulation {
       const summoned = PokemonFactory.createPokemonFromName(castform, player)
       summoned.items.add(Item.AQUA_EGG)
       this.addPokemon(summoned, coord.x, coord.y, team, false)
+    }
+  }
+
+  summonLechonkBanks() {
+    for (const [player, team] of [
+      [this.bluePlayer, Team.BLUE_TEAM],
+      [this.redPlayer, Team.RED_TEAM]
+    ] as const) {
+      if (!player?.blessings?.includes(Blessing.LECHONK_BANK)) continue
+      const backRow = team === Team.BLUE_TEAM ? 0 : BOARD_HEIGHT - 1
+      const coord =
+        this.getClosestFreeCellTo(3, backRow, team) ??
+        this.getFirstFreeCell(team)
+      if (!coord) continue
+      const lechonk = this.addPokemon(
+        PokemonFactory.createPokemonFromName(Pkm.LECHONK, player),
+        coord.x,
+        coord.y,
+        team,
+        true
+      )
+      // a ghost copy of an opponent earns nothing
+      if (team === Team.RED_TEAM && this.isGhostBattle) continue
+      lechonk.effectsSet.add(
+        new OnDeathEffect(() => player.addMoney(LECHONK_BANK_GOLD, true, null))
+      )
     }
   }
 
