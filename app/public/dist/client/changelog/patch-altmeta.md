@@ -567,7 +567,7 @@ Every balance change on this server, newest first.
 - Quick Streak {{new}} | Gain 5 GOLD. Your win and lose streaks grow twice as fast
 - Instant Treasure Box {{new}} | Gain 10 GOLD or a random completed item
 - Curse of Two | removed
-- Pearl, Gold Bar and Starter Pack | removed, replaced by the Booster Packs
+- Pearl, Gold Bar and Starter Pack | removed, replaced by the new economy Wishes
 - Hex Maniac | removed
 
 **Game Mode**

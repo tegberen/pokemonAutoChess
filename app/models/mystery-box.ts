@@ -18,7 +18,7 @@ export interface MysteryBox {
 export const MYSTERY_BOXES: MysteryBox[] = [
   { gold: 12, guaranteedRarity: Rarity.RARE },
   { gold: 18, guaranteedRarity: Rarity.EPIC },
-  { gold: 26, guaranteedRarity: Rarity.ULTRA }
+  { gold: 24, guaranteedRarity: Rarity.ULTRA }
 ]
 
 const RARITY_BY_COST: { [cost: number]: Rarity } = {
