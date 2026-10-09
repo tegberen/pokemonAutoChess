@@ -381,6 +381,9 @@ export function addIconsToHtml(
   // Function to process text nodes and add icon markup
   const processTextNode = (textNode: Text) => {
     const text = textNode.textContent || ""
+    // every token is CAPS or a [..] value list; this check is far cheaper than
+    // the full token regex on the many text nodes that hold neither
+    if (!/[A-Z]{2}|\[/.test(text)) return
     const matchIcon = text.match(iconRegExp)
 
     if (!matchIcon) return

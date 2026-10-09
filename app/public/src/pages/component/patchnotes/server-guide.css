@@ -73,6 +73,12 @@
   gap: 0.25em;
 }
 
+.server-guide .react-tabs__tab.guide-tab-patchlog {
+  background-color: var(--color-bg-accent);
+  padding: 6px 20px;
+  font-size: 1.4rem;
+}
+
 .server-guide .react-tabs__tab-panel--selected {
   display: flex;
   flex: 1;
@@ -189,6 +195,11 @@
   .server-guide .react-tabs__tab {
     flex-shrink: 0;
     white-space: nowrap;
+  }
+
+  .server-guide .react-tabs__tab.guide-tab-patchlog {
+    padding: 6px 14px;
+    font-size: 16px;
   }
 }
 

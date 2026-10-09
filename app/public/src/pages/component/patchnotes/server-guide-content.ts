@@ -123,6 +123,8 @@ function matchPokemons(subject: string) {
   let remaining = subject.toUpperCase()
   const positions = new Map<Pkm, number>()
   for (const { pokemon, label, expression } of pokemonLabels) {
+    // a substring check first: ~1500 regexes per row made the log slow to open
+    if (!remaining.includes(label)) continue
     remaining = remaining.replace(
       expression,
       (_, prefix: string, offset: number) => {
@@ -314,6 +316,7 @@ function wishIconMatchers(wishes: PatchLogWish[]) {
       icon,
       tier,
       label,
+      lowerLabel: label.toLowerCase(),
       expression: new RegExp(
         `(^|[^A-Za-z])${label.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}s?(?=[^A-Za-z]|$)`,
         "i"
@@ -326,8 +329,10 @@ function wishIcons(
   matchers: ReturnType<typeof wishIconMatchers>
 ) {
   let remaining = subject
+  const lowerSubject = subject.toLowerCase()
   const icons = new Set<string>()
-  for (const { label, icon, expression } of matchers) {
+  for (const { label, lowerLabel, icon, expression } of matchers) {
+    if (!lowerSubject.includes(lowerLabel)) continue
     if (!expression.test(remaining)) continue
     icons.add(icon)
     remaining = remaining.replace(
@@ -350,7 +355,11 @@ function wishTier(
   subject: string,
   matchers: ReturnType<typeof wishIconMatchers>
 ) {
-  return matchers.find(({ expression }) => expression.test(subject))?.tier
+  const lowerSubject = subject.toLowerCase()
+  return matchers.find(
+    ({ lowerLabel, expression }) =>
+      lowerSubject.includes(lowerLabel) && expression.test(subject)
+  )?.tier
 }
 
 const tierOrder = [

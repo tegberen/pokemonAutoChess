@@ -1,3 +1,4 @@
+import { t as translate } from "i18next"
 import { useTranslation } from "react-i18next"
 import { type CSSProperties, useEffect, useMemo, useRef, useState } from "react"
 import { Tab, TabList, TabPanel, Tabs } from "react-tabs"
@@ -37,6 +38,179 @@ import {
 } from "./server-guide-content"
 import "./server-guide.css"
 
+const GUIDE_URL = "/changelog/patch-altmeta.md"
+
+// the window remounts on every open: keeping the fetched guide and each built
+// page lets it reopen without downloading and rebuilding the Patch Log again
+let loadedGuideMarkdown = ""
+const builtGuidePages = new Map<GuidePageId, { source: string; html: string }>()
+
+function resolveGuideTokens(markdown: string) {
+  const t = translate
+  return markdown
+    .replace(/\{\{item:([A-Z_]+)\}\}/g, (token, name) => {
+      const item = Object.values(Item).find((value) => value === name)
+      return item
+        ? t(`item_description.${item}`)
+            .replace(/\r?\n/g, "<br>")
+            .replace(/\|/g, "&#124;")
+        : token
+    })
+    .replace(/\{\{ability:([A-Z_]+)\}\}/g, (token, name) => {
+      // Ability.DEFAULT is the only one with no description to look up
+      const ability = Object.values(Ability).find(
+        (value): value is Exclude<Ability, Ability.DEFAULT> =>
+          value === name && value !== Ability.DEFAULT
+      )
+      return ability
+        ? t(`ability_description.${ability}`)
+            .replace(/\r?\n/g, "<br>")
+            .replace(/\|/g, "&#124;")
+        : token
+    })
+    .replace(/\{\{weather:([A-Z_]+)\}\}/g, (token, name) => {
+      const weather = Object.values(Weather).find((value) => value === name)
+      return weather
+        ? t(`weather_description.${weather}`)
+            .replace(/\r?\n/g, "<br>")
+            .replace(/\|/g, "&#124;")
+        : token
+    })
+    .replace(/\{\{synergy:([A-Z_]+)\}\}/g, (token, name) => {
+      const synergy = Object.values(Synergy).find((value) => value === name)
+      if (!synergy) return token
+      const description = t(`synergy_description.${synergy}`, {
+        additionalInfo: ""
+      })
+      const tiers = SynergyTiers[synergy].map(
+        (tier: SynergyTier, index: number) =>
+          `- **(${SynergyTiersThresholds[synergy][index]}) ${t(`effect.${tier}`)}:** ${t(`effect_description.${tier}`)}`
+      )
+      return [description, "", ...tiers].join("\n")
+    })
+    .replace(/\{\{new\}\}/g, '<span class="guide-new-tag">NEW</span>')
+    .replace(
+      /\{\{meeple\}\}/g,
+      '<img class="guide-inline-icon" src="assets/ui/planned.png" alt="Meeple">'
+    )
+    .replace(/\{\{scribble:([A-Z_]+)\}\}/g, (token, name) => {
+      const rule = Object.values(SpecialGameRule).find(
+        (value) => value === name
+      )
+      return rule
+        ? t(`scribble_description.${rule}`, {
+            type: "the selected synergy",
+            gold: "12, 18 or 24"
+          })
+        : token
+    })
+}
+
+function listPatchLogWishes(): PatchLogWish[] {
+  return [
+    ...(Object.keys(Blessings) as Blessing[]).map((blessing) => ({
+      name: translate(`blessing.${blessing}.name`),
+      icon: Blessings[blessing].icon,
+      tier: Blessings[blessing].tier
+    })),
+    // the synergy-paired names never appear on their own in the log
+    ...[
+      { name: "Gym Trainer", blessing: Blessing.NORMAL_FAIRY_GYM_TRAINER },
+      { name: "Legendary songs", blessing: Blessing.HEATRANS_SONG },
+      { name: "Badges", blessing: Blessing.FIGHTING_BADGE_BLESSING },
+      { name: "Crests", blessing: Blessing.FIGHTING_CREST_BLESSING },
+      { name: "Missions", blessing: Blessing.QUEST_EVOLVE }
+    ].map(({ name, blessing }) => ({
+      name,
+      icon: Blessings[blessing].icon,
+      tier: Blessings[blessing].tier
+    })),
+    // removed or renamed Wishes keep their icon in older Patch Log rows
+    { name: "Park Bench", icon: "park_bench" },
+    { name: "Golden Ticket", icon: "ticket" },
+    { name: "Mortar Shells", icon: "mortar_shells" },
+    { name: "Big Pecks", icon: "big_peck_letter" },
+    { name: "Abnormality", icon: "spread_shield" },
+    { name: "Curse of Two", icon: "ghost_spectre" },
+    { name: "Hex Maniac", icon: "hex_maniac" },
+    { name: "Pearl", icon: "pearl" },
+    { name: "Gold Bar", icon: "gold_bar" },
+    { name: "Nugget", icon: "gold_bar" },
+    { name: "Starter Pack", icon: "gift_box" },
+    ...[
+      { name: "Quest: Crit", icon: "crit_quest" },
+      { name: "Quest: Grow", icon: "grow_quest" },
+      { name: "Quest: Shine", icon: "shine_quest" },
+      { name: "Quest: Epic", icon: "epic_ultra_quest" },
+      { name: "Quest: Expand", icon: "expand_quest" },
+      { name: "Quest: Ascend", icon: "ascend_quest" },
+      { name: "Quest: Indecision", icon: "indecision_quest" },
+      { name: "Quest: Absorb", icon: "absorb_quest" },
+      { name: "Quest: Revive", icon: "revive_quest" },
+      { name: "Quest: Evolve II", icon: "evolve_two_quest" },
+      { name: "Quest: Mature", icon: "evolve_two_quest" },
+      { name: "Quest: Pillage", icon: "pillage_quest" },
+      { name: "Quest: Reroll", icon: "reroll_quest" }
+    ].map((quest) => ({ ...quest, tier: BlessingTier.PRISMATIC }))
+  ]
+}
+
+function buildGuidePage(
+  markdown: string,
+  page: GuidePageId,
+  wishes: PatchLogWish[]
+) {
+  const parsed = guideParser.parse(markdown, { async: false })
+  const withIcons = addIconsToHtml(parsed)
+  if (page === "pokemon") return addPokemonPortraits(withIcons)
+  if (page === "synergies") return formatGuideArticle(withIcons, "synergy")
+  if (page === "items") return formatGuideArticle(withIcons, "item")
+  if (page === "weather") return formatGuideArticle(withIcons, "weather")
+  if (page === "patchlog") return formatPatchLog(withIcons, wishes)
+  return withIcons
+}
+
+function getGuidePage(
+  markdown: string,
+  page: GuidePageId,
+  wishes: PatchLogWish[]
+) {
+  // Wish names change with the language, and the Patch Log matches on them
+  const wishNames = wishes.map(({ name }) => name).join("|")
+  const source = `${markdown}\n${wishNames}`
+  const built = builtGuidePages.get(page)
+  if (built?.source === source) return built.html
+  const html = buildGuidePage(markdown, page, wishes)
+  builtGuidePages.set(page, { source, html })
+  return html
+}
+
+// called from the lobby: downloads the guide and builds the Patch Log while
+// the browser is idle, so even the first open of the window is instant
+export function prepareServerGuide() {
+  if (loadedGuideMarkdown) return
+  fetch(GUIDE_URL)
+    .then((response) => (response.ok ? response.text() : ""))
+    .then((text) => {
+      if (!text || loadedGuideMarkdown) return
+      loadedGuideMarkdown = text
+      const patchLog = chapters.find((entry) => entry.id === "patchlog")
+      if (!patchLog) return
+      const build = () =>
+        getGuidePage(
+          resolveGuideTokens(chapterMarkdown(text, patchLog.heading)),
+          "patchlog",
+          listPatchLogWishes()
+        )
+      if ("requestIdleCallback" in window) {
+        window.requestIdleCallback(build, { timeout: 10000 })
+      } else {
+        setTimeout(build, 2000)
+      }
+    })
+    .catch(() => {})
+}
+
 export default function ServerGuide({
   onArchive,
   onOpenInterface,
@@ -47,9 +221,11 @@ export default function ServerGuide({
   onOpenBookmarks: (tab: string) => void
 }) {
   const { t } = useTranslation()
-  const [selected, setSelected] = useState<GuidePageId>("home")
-  const [markdown, setMarkdown] = useState("")
-  const [status, setStatus] = useState<"loading" | "ready" | "error">("loading")
+  const [selected, setSelected] = useState<GuidePageId>("patchlog")
+  const [markdown, setMarkdown] = useState(loadedGuideMarkdown)
+  const [status, setStatus] = useState<"loading" | "ready" | "error">(
+    loadedGuideMarkdown ? "ready" : "loading"
+  )
   const [attempt, setAttempt] = useState(0)
   const [wikiTarget, setWikiTarget] = useState<{
     tab: string
@@ -61,153 +237,48 @@ export default function ServerGuide({
   const chapterIndex = chapters.findIndex((entry) => entry.id === selected)
   const chapter = chapters[chapterIndex]
   const nextChapter = chapterIndex >= 0 ? chapters[chapterIndex + 1] : undefined
+  // t is a dependency so a language change rebuilds the pages
   const sections = useMemo(
     () =>
       chapters.map((entry) => ({
         ...entry,
-        markdown: chapterMarkdown(markdown, entry.heading)
-          .replace(/\{\{item:([A-Z_]+)\}\}/g, (token, name) => {
-            const item = Object.values(Item).find((value) => value === name)
-            return item
-              ? t(`item_description.${item}`)
-                  .replace(/\r?\n/g, "<br>")
-                  .replace(/\|/g, "&#124;")
-              : token
-          })
-          .replace(/\{\{ability:([A-Z_]+)\}\}/g, (token, name) => {
-            // Ability.DEFAULT is the only one with no description to look up
-            const ability = Object.values(Ability).find(
-              (value): value is Exclude<Ability, Ability.DEFAULT> =>
-                value === name && value !== Ability.DEFAULT
-            )
-            return ability
-              ? t(`ability_description.${ability}`)
-                  .replace(/\r?\n/g, "<br>")
-                  .replace(/\|/g, "&#124;")
-              : token
-          })
-          .replace(/\{\{weather:([A-Z_]+)\}\}/g, (token, name) => {
-            const weather = Object.values(Weather).find(
-              (value) => value === name
-            )
-            return weather
-              ? t(`weather_description.${weather}`)
-                  .replace(/\r?\n/g, "<br>")
-                  .replace(/\|/g, "&#124;")
-              : token
-          })
-          .replace(/\{\{synergy:([A-Z_]+)\}\}/g, (token, name) => {
-            const synergy = Object.values(Synergy).find(
-              (value) => value === name
-            )
-            if (!synergy) return token
-            const description = t(`synergy_description.${synergy}`, {
-              additionalInfo: ""
-            })
-            const tiers = SynergyTiers[synergy].map(
-              (tier: SynergyTier, index: number) =>
-                `- **(${SynergyTiersThresholds[synergy][index]}) ${t(`effect.${tier}`)}:** ${t(`effect_description.${tier}`)}`
-            )
-            return [description, "", ...tiers].join("\n")
-          })
-          .replace(/\{\{new\}\}/g, '<span class="guide-new-tag">NEW</span>')
-          .replace(
-            /\{\{meeple\}\}/g,
-            '<img class="guide-inline-icon" src="assets/ui/planned.png" alt="Meeple">'
-          )
-          .replace(/\{\{scribble:([A-Z_]+)\}\}/g, (token, name) => {
-            const rule = Object.values(SpecialGameRule).find(
-              (value) => value === name
-            )
-            return rule
-              ? t(`scribble_description.${rule}`, {
-                  type: "the selected synergy",
-                  gold: "12, 18 or 24"
-                })
-              : token
-          })
+        markdown: resolveGuideTokens(chapterMarkdown(markdown, entry.heading))
       })),
     [markdown, t]
   )
   const active = sections.find((entry) => entry.id === selected)
-  const patchLogWishes = useMemo<PatchLogWish[]>(
-    () => [
-      ...(Object.keys(Blessings) as Blessing[]).map((blessing) => ({
-        name: t(`blessing.${blessing}.name`),
-        icon: Blessings[blessing].icon,
-        tier: Blessings[blessing].tier
-      })),
-      // the synergy-paired names never appear on their own in the log
-      ...[
-        { name: "Gym Trainer", blessing: Blessing.NORMAL_FAIRY_GYM_TRAINER },
-        { name: "Legendary songs", blessing: Blessing.HEATRANS_SONG },
-        { name: "Badges", blessing: Blessing.FIGHTING_BADGE_BLESSING },
-        { name: "Crests", blessing: Blessing.FIGHTING_CREST_BLESSING },
-        { name: "Missions", blessing: Blessing.QUEST_EVOLVE }
-      ].map(({ name, blessing }) => ({
-        name,
-        icon: Blessings[blessing].icon,
-        tier: Blessings[blessing].tier
-      })),
-      // removed or renamed Wishes keep their icon in older Patch Log rows
-      { name: "Park Bench", icon: "park_bench" },
-      { name: "Golden Ticket", icon: "ticket" },
-      { name: "Mortar Shells", icon: "mortar_shells" },
-      { name: "Big Pecks", icon: "big_peck_letter" },
-      { name: "Abnormality", icon: "spread_shield" },
-      { name: "Curse of Two", icon: "ghost_spectre" },
-      { name: "Hex Maniac", icon: "hex_maniac" },
-      { name: "Pearl", icon: "pearl" },
-      { name: "Gold Bar", icon: "gold_bar" },
-      { name: "Nugget", icon: "gold_bar" },
-      { name: "Starter Pack", icon: "gift_box" },
-      ...[
-        { name: "Quest: Crit", icon: "crit_quest" },
-        { name: "Quest: Grow", icon: "grow_quest" },
-        { name: "Quest: Shine", icon: "shine_quest" },
-        { name: "Quest: Epic", icon: "epic_ultra_quest" },
-        { name: "Quest: Expand", icon: "expand_quest" },
-        { name: "Quest: Ascend", icon: "ascend_quest" },
-        { name: "Quest: Indecision", icon: "indecision_quest" },
-        { name: "Quest: Absorb", icon: "absorb_quest" },
-        { name: "Quest: Revive", icon: "revive_quest" },
-        { name: "Quest: Evolve II", icon: "evolve_two_quest" },
-        { name: "Quest: Mature", icon: "evolve_two_quest" },
-        { name: "Quest: Pillage", icon: "pillage_quest" },
-        { name: "Quest: Reroll", icon: "reroll_quest" }
-      ].map((quest) => ({ ...quest, tier: BlessingTier.PRISMATIC }))
-    ],
-    [t]
+  const patchLogWishes = useMemo(() => listPatchLogWishes(), [t])
+  const html = useMemo(
+    () => getGuidePage(active?.markdown ?? "", selected, patchLogWishes),
+    [active?.markdown, selected, patchLogWishes]
   )
-  const html = useMemo(() => {
-    const parsed = guideParser.parse(active?.markdown ?? "", { async: false })
-    const withIcons = addIconsToHtml(parsed)
-    if (selected === "pokemon") return addPokemonPortraits(withIcons)
-    if (selected === "synergies") return formatGuideArticle(withIcons, "synergy")
-    if (selected === "items") return formatGuideArticle(withIcons, "item")
-    if (selected === "weather") return formatGuideArticle(withIcons, "weather")
-    if (selected === "patchlog") return formatPatchLog(withIcons, patchLogWishes)
-    return withIcons
-  }, [active?.markdown, selected, patchLogWishes])
-  const subsections = [
-    ...(active?.markdown ?? "").matchAll(/^### (.+)$/gm)
-  ].map((match) => ({ title: match[1], id: sectionId(match[1]) }))
-  const patchLogMonths: {
-    title: string
-    days: { title: string; id: string; day: string }[]
-  }[] = []
-  if (selected === "patchlog") {
+  // memoised because the scroll spy re-renders on every section it passes
+  const subsections = useMemo(
+    () =>
+      [...(active?.markdown ?? "").matchAll(/^### (.+)$/gm)].map((match) => ({
+        title: match[1],
+        id: sectionId(match[1])
+      })),
+    [active?.markdown]
+  )
+  const patchLogMonths = useMemo(() => {
+    const months: {
+      title: string
+      days: { title: string; id: string; day: string }[]
+    }[] = []
+    if (selected !== "patchlog") return months
     for (const section of subsections) {
       const [day, ...monthAndYear] = section.title.split(" ")
       const monthTitle = monthAndYear.join(" ")
-      let month = patchLogMonths.at(-1)
+      let month = months.at(-1)
       if (month?.title !== monthTitle) {
         month = { title: monthTitle, days: [] }
-        patchLogMonths.push(month)
+        months.push(month)
       }
       month.days.push({ ...section, day })
     }
-  }
+    return months
+  }, [selected, subsections])
   const indexGroups = useMemo(
     () =>
       sections.map((chapter) => {
@@ -275,15 +346,17 @@ export default function ServerGuide({
   }
 
   useEffect(() => {
+    if (attempt === 0 && loadedGuideMarkdown) return
     const controller = new AbortController()
     setStatus("loading")
-    fetch("/changelog/patch-altmeta.md", { signal: controller.signal })
+    fetch(GUIDE_URL, { signal: controller.signal })
       .then((response) => {
         if (!response.ok) throw new Error("Guide unavailable")
         return response.text()
       })
       .then((text) => {
         if (controller.signal.aborted) return
+        loadedGuideMarkdown = text
         setMarkdown(text)
         setStatus("ready")
       })
@@ -341,7 +414,16 @@ export default function ServerGuide({
       >
         <TabList>
           {guidePages.map((page) => (
-            <Tab key={page.id}>{page.title}</Tab>
+            <Tab
+              key={page.id}
+              className={
+                page.id === "patchlog"
+                  ? "react-tabs__tab guide-tab-patchlog"
+                  : "react-tabs__tab"
+              }
+            >
+              {page.title}
+            </Tab>
           ))}
         </TabList>
         {guidePages.map((page) => (

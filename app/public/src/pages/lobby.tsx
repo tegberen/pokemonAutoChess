@@ -24,6 +24,7 @@ import { MainSidebar } from "./component/main-sidebar/main-sidebar"
 import { Modal } from "./component/modal/modal"
 import { NotificationModal } from "./component/notifications/notification-modal"
 import RoomMenu from "./component/room-menu/room-menu"
+import { prepareServerGuide } from "./component/patchnotes/server-guide"
 import { cc } from "./utils/jsx"
 import { LocalStoreKeys, localStore } from "./utils/store"
 import "./lobby.css"
@@ -52,6 +53,8 @@ export default function Lobby() {
       lobbyJoined.current = true
     }
   }, [dispatch, navigate])
+
+  useEffect(() => prepareServerGuide(), [])
 
   const signOut = useCallback(async () => {
     leaveRoom("lobby")
