@@ -1968,7 +1968,7 @@
 		"STOMP": "Deal [300,400,500,1000,SP]% of user ATK as SPECIAL to the target.",
 		"HORN_DRILL": "Deal [300,400,500,1000,SP]% of user ATK as SPECIAL to the target, with [30,LK]% chance to execute it. The more ATK the user has relative to the target, the higher the chance.",
 		"SHADOW_BALL": "Deal [30,60,100,200,SP] SPECIAL to the target and decrease the SPE_DEF of all enemy Pokémon by 2.",
-		"TRICK_ROOM": "Drop a room on the largest group of enemies. Faster enemies inside are slowed to the user's base SPEED and their max PP is increased by [10,20,30]% for the rest of the fight, then they take [100,SP]% of their max PP as SPECIAL.",
+		"TRICK_ROOM": "Drop a room on the largest group of enemies. Faster enemies inside are slowed to the user's base SPEED and their max PP is increased by [10,20,30]% for the rest of the fight, then they take [25,50,100,SP]% of their max PP as SPECIAL.",
 		"BUG_BUZZ": "Deal [20,40,80,160,SP] SPECIAL to the target. The damage is doubled if the target suffers from PARALYSIS.",
 		"STRING_SHOT": "Deal [10,20,50,100,SP] SPECIAL to the target and inflict PARALYSIS for 5 seconds.",
 		"VENOSHOCK": "Deal [30,60,120,240,SP] SPECIAL to the target. The damage is doubled if the target suffers from POISONNED.",
@@ -6326,7 +6326,7 @@
 		},
 		"RUNE_SWORD": {
 			"name": "Rune Sword",
-			"description": "Gain a random CHARCOAL, BLACK_GLASSES or MAGNET. At the start of combat, Pokémon holding 3 items, one of them made with one of these, gain 40% of their base SPEED."
+			"description": "Gain a random CHARCOAL, BLACK_GLASSES or MAGNET. At the start of combat, Pokémon holding 3 items, one of them made with one of these, gain 40% of their base ATK."
 		},
 		"RUNE_STONE": {
 			"name": "Rune Stone",
@@ -6346,7 +6346,7 @@
 		},
 		"REGIONAL_SPECIALTIES": {
 			"name": "Regional Specialties",
-			"description": "Your current region types count towards your synergies. Your team tastes the local dish now and after each region change."
+			"description": "Your current region types count towards your synergies. Your team tastes the local dish now and after each region change. Gain 3 LAPRAS_PASSPORT."
 		},
 		"PRISMATIC_QUEST": {
 			"name": "Prismatic Quest",

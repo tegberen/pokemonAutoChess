@@ -519,7 +519,7 @@ Every balance change on this server, newest first.
 **Abilities**
 - Machop Line | Guillotine → Cross Chop. Deal [300,SP]% of ATK as SPECIAL to the target. Each FIGHTING throw this fight gives this ability +[25,50,100,200]% CRIT_POWER. Can crit by default
 - Gastly Line | Nightmare: the bonus damage hits enemies suffering under a HEXING_INCANTATION or a NEGATIVE_STATUS instead of cursed ones
-- Duskull Line | Trick Room reworked: drops a room on the largest group of enemies. Faster enemies inside are slowed to the user's base SPEED and their max PP is increased by [10,20,30]% for the rest of the fight, then they take [100,SP]% of their max PP as SPECIAL
+- Duskull Line | Trick Room reworked: drops a room on the largest group of enemies. Faster enemies inside are slowed to the user's base SPEED and their max PP is increased by [10,20,30]% for the rest of the fight, then they take [25,50,100,SP]% of their max PP as SPECIAL
 - Appletun | Apple Acid: deals [100,200,300,400,SP]% of (DEF + SPE_DEF) as SPECIAL instead of [15,30,50,100,SP], no longer doubled against 0 SPE_DEF
 - Flapple | Grav Apple: deals [100,200,300,400,SP]% of ATK as PHYSICAL instead of [20,40,80,160,SP], no longer doubled against 0 DEF
 - Gimmighoul | Gold Rush: GOLD gained 2 → 1
@@ -565,7 +565,7 @@ Every balance change on this server, newest first.
 - Quest: Reroll | reroll 50 times. Reward: REPEAT_BALL
 - Missions | Quest: Evolve, Destroy, Level Up, Diversify and Prosper are renamed to Mission
 - Gotta Catch 'Em All {{new}} | Stage 4 only. Before each PvE round, wild Pokémon you can catch run across your board. Was a Scribble
-- Regional Specialties {{new}} | Your current region types count towards your synergies. Your team tastes the local dish now and after each region change. Was a Scribble
+- Regional Specialties {{new}} | Prismatic. Your current region types count towards your synergies. Your team tastes the local dish now and after each region change. Gain 3 LAPRAS_PASSPORT. Was a Scribble
 - Silver Booster Pack {{new}} | Gain random Pokémon worth 10 GOLD (12 GOLD at stage 12), including at least one Uncommon
 - Gold Booster Pack {{new}} | Gain random Pokémon worth 15 GOLD (18 GOLD at stage 12), including at least one Rare
 - Prismatic Booster Pack {{new}} | Gain random Pokémon worth 20 GOLD (24 GOLD at stage 12), including at least one Epic
@@ -582,7 +582,7 @@ Every balance change on this server, newest first.
 - Captain's Bounty {{new}} | Stage 4 only. Gain a Scorbunny. At the start of each fight, your STRONGEST Scorbunny gains your GOLD as CRIT_CHANCE. Raboot evolves into Pirate Cinderace
 - Royal Romance {{new}} | Stage 4 only. Gain a Nidoran♂. At the start of each fight, your STRONGEST Nidoran♂ has a [50,LK]% chance to attract a catchable Nidoran♀ when no Nidoqueen is on the board
 - Viking Helmet {{new}} | Gain a random HEART_SCALE, NEVER_MELT_ICE or MIRACLE_SEED. At the start of combat, Pokémon holding 3 items, one of them made with one of these, gain 40% of their max HP
-- Rune Sword {{new}} | Gain a random CHARCOAL, BLACK_GLASSES or MAGNET. At the start of combat, Pokémon holding 3 items, one of them made with one of these, gain 40% of their base SPEED
+- Rune Sword {{new}} | Gain a random CHARCOAL, BLACK_GLASSES or MAGNET. At the start of combat, Pokémon holding 3 items, one of them made with one of these, gain 40% of their base ATK
 - Rune Stone {{new}} | Gain a random MYSTIC_WATER, TWISTED_SPOON or BINDING_BAND. At the start of combat, Pokémon holding 3 items, one of them made with one of these, gain 40% of their max PP as starting PP
 - Unity Core {{new}} | At the start of combat, your Pokémon gain 4 HP and deal 2% more damage for each active synergy. Its damage bonus adds to the Empower Wish
 - Core Reactor {{new}} | At the start of combat, your Pokémon deal 2% more damage for each enemy in the front row and gain 2 HP for each enemy behind it. 12 seconds into combat, all enemies get PARALYSIS for 2 seconds
@@ -601,7 +601,7 @@ Every balance change on this server, newest first.
 - The Bazaar | merged with High Roller: shops have a chance to contain Hatch at stages 0-10, Unique at stages 10-20 and Legendary after stage 20
 - Overtime | removed, since starting HP can be set in the lobby settings. Starting at 150 HP now also lets players reach level 10
 - Gotta catch'em all! | removed, now a Gold Wish
-- Regional Specialties | removed, now a Gold Wish
+- Regional Specialties | removed, now a Prismatic Wish
 - Kaiju Battle | merged into Avatar
 - Mega Evolution {{new}} | new Scribble: {{scribble:MEGA_EVOLUTION}} [Mega Evolutions in the Wiki](#wiki/mega-evolutions)
 - | Mega Pokémon removed from the base game
@@ -623,7 +623,7 @@ Every balance change on this server, newest first.
 **Interface**
 - Experience Icon {{new}} | XP now shows its icon in descriptions and on the Buy XP button
 - Halloween theme {{new}} | new patch theme
-- Wish Quiz {{new}} | a sidebar gadget for the lobby and waiting rooms: read what a Wish does and pick its icon, and build a streak
+- Wish Quiz {{new}} | a sidebar gadget for the lobby and waiting rooms
 
 ### 29 September 2026
 

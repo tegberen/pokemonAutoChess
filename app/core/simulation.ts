@@ -191,7 +191,7 @@ import {
   CORE_REACTOR_MAX_HP_PER_OTHER_ENEMY,
   CORE_REACTOR_PARALYSIS_DELAY,
   CORE_REACTOR_PARALYSIS_DURATION,
-  RUNE_SWORD_BASE_SPEED_RATIO,
+  RUNE_SWORD_BASE_ATK_RATIO,
   RUNE_SWORD_COMPONENTS,
   VIKING_HELMET_MAX_HP_RATIO,
   VIKING_HELMET_COMPONENTS,
@@ -2895,8 +2895,8 @@ export default class Simulation extends Schema implements ISimulation {
         ownUnits
           .filter((ally) => holdsFullKitWith(ally, RUNE_SWORD_COMPONENTS))
           .forEach((ally) =>
-            ally.addSpeed(
-              Math.round(ally.baseSpeed * RUNE_SWORD_BASE_SPEED_RATIO),
+            ally.addAttack(
+              Math.round(ally.baseAtk * RUNE_SWORD_BASE_ATK_RATIO),
               ally,
               0,
               false

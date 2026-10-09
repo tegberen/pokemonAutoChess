@@ -121,6 +121,7 @@ import {
   type SpindaCasinoSlot,
   QUICK_STREAK_GOLD,
   INSTANT_TREASURE_BOX_GOLD,
+  REGIONAL_SPECIALTIES_PASSPORTS,
   NEST_EGGS_GRANTED,
   RUNE_STONE_COMPONENTS,
   RUNE_SWORD_COMPONENTS,
@@ -3176,6 +3177,9 @@ export const blessingEffectService: {
   [Blessing.GOTTA_CATCH_EM_ALL]: () => true,
   [Blessing.REGIONAL_SPECIALTIES]: (player) => {
     player.applyRegionalSpecialties()
+    for (let i = 0; i < REGIONAL_SPECIALTIES_PASSPORTS; i++) {
+      player.items.push(Item.LAPRAS_PASSPORT)
+    }
     return true
   },
   [Blessing.IMPENDING_DOOM]: () => true,

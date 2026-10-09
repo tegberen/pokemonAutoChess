@@ -17,6 +17,7 @@ export class TrickRoomStrategy extends AbilityStrategy {
     super.process(pokemon, board, target, crit, true)
 
     const maxPPIncrease = [10, 20, 30, 30][pokemon.stars - 1] ?? 30
+    const maxPPDamagePercent = [25, 50, 100, 100][pokemon.stars - 1] ?? 100
     const statusDuration =
       [3000, 4000, 5000, 6000][pokemon.stars - 1] ?? 6000
     // the speed it entered the fight with, so buffs gained since never let the
@@ -45,7 +46,7 @@ export class TrickRoomStrategy extends AbilityStrategy {
               Math.round((enemy.maxPP * (100 + maxPPIncrease)) / 100)
             )
             enemy.handleSpecialDamage(
-              enemy.maxPP,
+              Math.round((enemy.maxPP * maxPPDamagePercent) / 100),
               board,
               AttackType.SPECIAL,
               pokemon,

@@ -1132,6 +1132,7 @@ export type SpindaCasinoSlot = (typeof SPINDA_CASINO_SLOTS)[number]
 export const QUICK_STREAK_GOLD = 5
 export const QUICK_STREAK_STEP = 2
 export const INSTANT_TREASURE_BOX_GOLD = 10
+export const REGIONAL_SPECIALTIES_PASSPORTS = 3
 export const NEST_EGGS_GRANTED = 3
 export const FULL_KIT_ITEM_COUNT = 3
 export const VIKING_HELMET_COMPONENTS = [
@@ -1145,7 +1146,7 @@ export const RUNE_SWORD_COMPONENTS = [
   Item.BLACK_GLASSES,
   Item.MAGNET
 ]
-export const RUNE_SWORD_BASE_SPEED_RATIO = 0.4
+export const RUNE_SWORD_BASE_ATK_RATIO = 0.4
 export const RUNE_STONE_COMPONENTS = [
   Item.MYSTIC_WATER,
   Item.TWISTED_SPOON,

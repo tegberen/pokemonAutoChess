@@ -1603,7 +1603,7 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     grantsPokemonImmediately: false
   },
   [Blessing.REGIONAL_SPECIALTIES]: {
-    tier: BlessingTier.GOLD,
+    tier: BlessingTier.PRISMATIC,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "regional_specialties",
     grantsPokemonImmediately: false
