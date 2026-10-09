@@ -63,10 +63,15 @@ function isPokemonChoice(choice: PlayerChoice): boolean {
 
 type WishCardSeason = "halloween" | "christmas"
 
+// the three weeks leading up to Halloween, October 10 to 31
+const HALLOWEEN_CARDS_FIRST_DAY = 10
+
 function getWishCardSeason(now = new Date()): WishCardSeason | null {
   const preview = new URLSearchParams(window.location.search).get("wishSeason")
   if (preview === "halloween" || preview === "christmas") return preview
-  if (now.getMonth() === 10) return "halloween"
+  if (now.getMonth() === 9 && now.getDate() >= HALLOWEEN_CARDS_FIRST_DAY) {
+    return "halloween"
+  }
   if (now.getMonth() === 11) return "christmas"
   return null
 }
