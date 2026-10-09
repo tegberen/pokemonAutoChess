@@ -1106,11 +1106,7 @@ export default class Player extends Schema implements IPlayer {
       ) {
         ascended = true
       }
-      if (
-        pokemon.positionY > 0 &&
-        pokemon.rarity === Rarity.EPIC &&
-        pokemon.name !== Pkm.SCYTHER
-      ) {
+      if (pokemon.positionY > 0 && pokemon.rarity === Rarity.EPIC) {
         fieldedEpics++
       }
     })
