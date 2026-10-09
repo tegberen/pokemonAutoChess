@@ -5930,7 +5930,7 @@
 		},
 		"OVERLOAD": {
 			"name": "Overload",
-			"description": "At the start of combat and every 12 seconds, the STRONGEST of your ELECTRIC Pokémon (not yet empowered) is empowered by Volt Surge: it gains ELECTRIC_FIELD, 20 SPEED and bonus HP, and every 3rd attack chains lightning to 4 enemies. Its own ability is unchanged. Gain a Grubbin."
+			"description": "4 seconds into combat, then every 12 seconds, Volt Surge empowers your STRONGEST ELECTRIC Pokémon that isn't empowered yet: it gains ELECTRIC_FIELD, 20 SPEED and bonus HP, and every 3rd attack chains lightning to 4 enemies. Gain a Grubbin."
 		},
 		"FOGBOUND_LAKE": {
 			"name": "Fogbound Lake",
@@ -6642,11 +6642,11 @@
 		},
 		"SAPPHIRE_ORB": {
 			"name": "Sapphire Orb",
-			"description": "Gain a BLUE_ORB. Its chain lightning hits 1 additional enemy and applies ARMOR_BREAK for 3 seconds."
+			"description": "Gain a BLUE_ORB. A BLUE_ORB's chain lightning hits 1 additional enemy and applies ARMOR_BREAK for 3 seconds."
 		},
 		"RUBY_ORB": {
 			"name": "Ruby Orb",
-			"description": "Gain a RED_ORB. Every 4 attacks, its holder erupts a fire tornado on the target and ADJACENT enemies, dealing 20 SPECIAL and BURN for 4 seconds."
+			"description": "Gain a RED_ORB. Every 4 attacks, a RED_ORB holder erupts a fire tornado on the target and ADJACENT enemies, dealing 20 SPECIAL and BURN for 4 seconds."
 		},
 		"KINGS_ROCK_BLESSING": {
 			"name": "King's Crown",
@@ -6658,7 +6658,7 @@
 		},
 		"MAX_REVIVE_BLESSING": {
 			"name": "Revival Pulse",
-			"description": "Gain a MAX_REVIVE. When it triggers, grant 30 SPEED to all allies within a 2-tile radius."
+			"description": "Gain a MAX_REVIVE. When a MAX_REVIVE triggers, grant 30 SPEED to all allies within a 2-tile radius."
 		},
 		"PROTECTIVE_PADS_BLESSING": {
 			"name": "Counter Pads",
@@ -6666,7 +6666,7 @@
 		},
 		"GRACIDEA_FLOWER_BLESSING": {
 			"name": "Gracidea Garden",
-			"description": "Gain a GRACIDEA_FLOWER. At the start of combat, allies it affects blossom and restore 10% of their max HP every 2 seconds."
+			"description": "Gain a GRACIDEA_FLOWER. At the start of combat, allies a GRACIDEA_FLOWER affects blossom and restore 10% of their max HP every 2 seconds."
 		},
 		"SMOKE_BALL_BLESSING": {
 			"name": "Shuriken",
@@ -6674,7 +6674,7 @@
 		},
 		"ABILITY_SHIELD_BLESSING": {
 			"name": "Supreme Ability Shield",
-			"description": "Gain an ABILITY_SHIELD. It covers all ADJACENT allies instead of only the same row."
+			"description": "Gain an ABILITY_SHIELD. An ABILITY_SHIELD covers all ADJACENT allies instead of only the same row."
 		},
 		"SOOTHE_BELL_BLESSING": {
 			"name": "Soothe Carol",
@@ -6698,7 +6698,7 @@
 		},
 		"EXP_CHARM_BLESSING": {
 			"name": "Exp Book",
-			"description": "Gain an EXP_CHARM. The holder grants 1 additional XP when it is KO."
+			"description": "Gain an EXP_CHARM. The holder now gains 2 + your current level PP after getting hit by an attack. [30,LK]% chance to increase that PP gain by 1 after each received hit (max 10 stacks). When the holder is KO, gain 2 XP."
 		},
 		"MUSCLE_BAND_BLESSING": {
 			"name": "Training Band",
@@ -6710,7 +6710,7 @@
 		},
 		"RELIC_CROWN_BLESSING": {
 			"name": "Ancient Crown",
-			"description": "Gain a RELIC_CROWN. It triggers when an ally is KO anywhere on the board, not only nearby."
+			"description": "Gain a RELIC_CROWN. A RELIC_CROWN triggers when an ally is KO anywhere on the board, not only nearby."
 		},
 		"FAIRY_FEATHER_BLESSING": {
 			"name": "Lucky Feather",
@@ -6730,7 +6730,7 @@
 		},
 		"CLEAR_AMULET_BLESSING": {
 			"name": "Clear Diamond",
-			"description": "Gain a CLEAR_AMULET. Its effect radius is increased to 2 tiles around the holder."
+			"description": "Gain a CLEAR_AMULET. A CLEAR_AMULET's effect radius is increased to 2 tiles around the holder."
 		},
 		"PUNCHING_GLOVE_BLESSING": {
 			"name": "Focus Glove",
@@ -6766,7 +6766,7 @@
 		},
 		"WONDER_BOX_BLESSING": {
 			"name": "President Box",
-			"description": "Gain a WONDER_BOX. It creates 3 temporary items instead of 2."
+			"description": "Gain a WONDER_BOX. A WONDER_BOX creates 3 temporary items instead of 2."
 		},
 		"REAPER_CLOTH_BLESSING": {
 			"name": "Haunted Cloth",
@@ -6774,7 +6774,7 @@
 		},
 		"GRIP_CLAW_BLESSING": {
 			"name": "Seizing Claw",
-			"description": "Gain a GRIP_CLAW. Its holder's attacks also grant +10% CRIT_POWER (stackable), stolen from the target while it has any left."
+			"description": "Gain a GRIP_CLAW. Attacks from a GRIP_CLAW holder also grant +10% CRIT_POWER (stackable), stolen from the target while it has any left."
 		},
 		"CHOICE_SPECS_BLESSING": {
 			"name": "Shared Vision",
@@ -6782,11 +6782,11 @@
 		},
 		"COVERT_CLOAK_BLESSING": {
 			"name": "Mist Cloak",
-			"description": "Gain a COVERT_CLOAK. Every time it steals AP, the holder becomes untargettable for 1 second."
+			"description": "Gain a COVERT_CLOAK. Every time a COVERT_CLOAK steals AP, the holder becomes untargettable for 1 second."
 		},
 		"SHINY_CHARM_BLESSING": {
 			"name": "Charm of Truth",
-			"description": "Gain a SHINY_CHARM. When it triggers, mark all ADJACENT enemies for 4 seconds. All damage dealt to marked enemies is converted to TRUE."
+			"description": "Gain a SHINY_CHARM. When a SHINY_CHARM triggers, mark all ADJACENT enemies for 4 seconds. All damage dealt to marked enemies is converted to TRUE."
 		},
 		"FLUFFY_TAIL_BLESSING": {
 			"name": "Wild Escape",
@@ -6794,7 +6794,7 @@
 		},
 		"LUCKY_DICE_BLESSING": {
 			"name": "Lucky Ward",
-			"description": "Gain a LOADED_DICE. It keeps bouncing to ADJACENT enemies after the first, with the chance halving every time. It cannot bounce to the same enemy twice."
+			"description": "Gain a LOADED_DICE. A LOADED_DICE keeps bouncing to ADJACENT enemies after the first, with the chance halving every time. It cannot bounce to the same enemy twice."
 		},
 		"SHELL_ARMOR_BLESSING": {
 			"name": "Shell Armor",

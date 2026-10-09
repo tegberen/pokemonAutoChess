@@ -59,8 +59,8 @@ import {
   CRYSTAL_CLUSTERS_SIMULTANEOUS,
   DEEP_SEA_TOOTH_PP_ON_KILL,
   EMERALD_ORB_HEAL_RANGE,
-  EXP_CHARM_BLESSED_EXPERIENCE,
   FAIRY_FEATHER_DEFENSE_ON_ATTACK,
+  EXP_CHARM_BLESSED_EXPERIENCE,
   FAIRY_FEATHER_LUCK_ON_ATTACK,
   FAST_FOOD_DELIVERY_ROUNDS_BEFORE_ROTTING,
   FESTIVE_PICNIC_MAX_HP_ON_OVERWRITE,
@@ -2460,7 +2460,10 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
   [Item.EXP_CHARM]: [
     new OnAttackReceivedEffect(({ pokemon, totalDamage, isAttackSuccessful }) => {
       if (!isAttackSuccessful || totalDamage <= 0) return
-      const ppGain = 2 + pokemon.count.expCharmCount
+      const basePPGain = hasBlessing(pokemon, Blessing.EXP_CHARM_BLESSING)
+        ? 2 + (pokemon.player?.experienceManager.level ?? 0)
+        : 2
+      const ppGain = basePPGain + pokemon.count.expCharmCount
       pokemon.addPP(ppGain, pokemon, 0, false)
       if (chance(0.3, pokemon) && pokemon.count.expCharmCount < 10) {
         pokemon.count.expCharmCount++

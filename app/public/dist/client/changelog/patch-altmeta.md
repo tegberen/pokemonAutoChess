@@ -545,6 +545,8 @@ Every balance change on this server, newest first.
 - Mountain Egg | also gives 10 free rerolls
 - Empower I/II | delay 5 → 8 seconds
 - Battle Point Rewards | components on pick 2 → 1
+- Exp Book | the holder's PP gain when hit is now 2 + your current level
+- Overload | first empower at the start of combat → 4 seconds in, then every 12 seconds from there
 - Starter Choice | only offers common Pokémon that evolve to 3 STAR
 - Star-Crossed Seas | now a hero Wish. Gives one of each Shellos on pick. Only the strongest of each line is the hero and gains 50 HP and 25 AP
 - High Tower Castle {{new}} | Stage 4 only. At the start of each fight, all allies on the board gain 1 SPEED and 4 HP permanently

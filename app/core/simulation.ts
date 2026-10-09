@@ -3400,33 +3400,23 @@ export default class Simulation extends Schema implements ISimulation {
       }
 
       if (blessings.includes(Blessing.OVERLOAD)) {
-        /* deferred to the first ticks of combat: this runs from applyPostEffects,
-           before clients have the board, so the Volt Surge visual sent now would
-           be dropped */
-        getStrongestUnit(
-          ownUnits.filter((unit) => unit.types.has(Synergy.ELECTRIC))
-        )?.commands.push(
-          new DelayedCommand(
-            () => this.castOverloadVoltSurge(team, player),
-            OVERLOAD_FIRST_CAST_DELAY
-          )
-        )
         ownUnits.forEach((unit) => {
-          unit.effectsSet.add(
-            new PeriodicEffect(
-              (pokemon) => {
-                /* every ally carries the timer so it survives deaths, but only
-                   one of them drives the pulse */
-                const conductor = [...team.values()]
-                  .filter((entity) => entity.player === player && entity.hp > 0)
-                  .sort((a, b) => a.id.localeCompare(b.id))[0]
-                if (!conductor || conductor.id !== pokemon.id) return
-                this.castOverloadVoltSurge(team, player)
-              },
-              Ability.VOLT_SURGE,
-              OVERLOAD_CAST_INTERVAL
-            )
+          const pulse = new PeriodicEffect(
+            (pokemon) => {
+              /* every ally carries the timer so it survives deaths, but only
+                 one of them drives the pulse */
+              const conductor = [...team.values()]
+                .filter((entity) => entity.player === player && entity.hp > 0)
+                .sort((a, b) => a.id.localeCompare(b.id))[0]
+              if (!conductor || conductor.id !== pokemon.id) return
+              this.castOverloadVoltSurge(team, player)
+            },
+            Ability.VOLT_SURGE,
+            OVERLOAD_CAST_INTERVAL
           )
+          // the first pulse comes early, then the interval counts from it
+          pulse.timer = OVERLOAD_FIRST_CAST_DELAY
+          unit.effectsSet.add(pulse)
         })
       }
 
