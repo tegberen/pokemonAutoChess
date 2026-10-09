@@ -714,6 +714,13 @@
   background: var(--color-bg-primary);
 }
 
+.server-guide .guide-patchlog-note {
+  margin: 1em 0;
+  padding: 0.75em 1em;
+  border-radius: 8px;
+  background: var(--color-bg-primary);
+}
+
 .server-guide .guide-patchlog-subject {
   width: 32%;
   min-width: 11em;

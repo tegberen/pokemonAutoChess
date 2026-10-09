@@ -408,7 +408,7 @@ const PATCH_LOG_COVERS: {
     credit?: string
   }
 } = {
-  "1 November 2026": {
+  "10 October 2026": {
     name: "Midnight Séance",
     tagline:
       "A letter arrived, signed by no one living in this world… (Pelipper Post Office)",
@@ -482,6 +482,15 @@ export function formatPatchLog(html: string, wishes: PatchLogWish[]) {
       continue
     }
     const label = element.firstElementChild
+    // a paragraph written all in italics is a dev note
+    if (
+      element.tagName === "P" &&
+      element.childNodes.length === 1 &&
+      label?.tagName === "EM"
+    ) {
+      element.className = "guide-patchlog-note"
+      continue
+    }
     if (
       element.tagName === "P" &&
       element.childNodes.length === 1 &&

@@ -101,56 +101,49 @@ export function ItemizationTheory() {
         you know exactly what you are doing. Most people don't know what they
         are doing. Play the game. Make items.
       </p>
-      <div className="my-box itemization-table-scroll">
-        <table className="itemization-table">
-          <caption>Building Pairs</caption>
-          <tbody>
-            {builds.map(({ role, accent, options }) => (
-              <tr
-                key={role}
-                style={{ "--role-accent": accent } as CSSProperties}
-              >
-                <th scope="row">{role}</th>
-                <td>
-                  <ul className="itemization-options">
-                    {options.map((option, index) => (
-                      <li className="itemization-option" key={index}>
-                        {options.length > 1 && (
-                          <span className="itemization-index">{index + 1}</span>
-                        )}
-                        {option.map((slot, slotIndex) => (
-                          <SlotView
-                            key={slot.join()}
-                            slot={slot}
-                            showPlus={slotIndex > 0}
-                          />
-                        ))}
-                      </li>
-                    ))}
-                  </ul>
-                  <details className="itemization-effects">
-                    <summary>Item effects</summary>
-                    <dl>
-                      {[...new Set(options.flat(3))].map((item) => (
-                        <div key={item}>
-                          <dt>
-                            <ItemName item={item} />
-                          </dt>
-                          <dd>
-                            {addIconsToDescription(
-                              t(`item_description.${item}`)
-                            )}
-                          </dd>
-                        </div>
-                      ))}
-                    </dl>
-                  </details>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      <section className="my-box itemization-builds">
+        <h3>Building Pairs</h3>
+        {builds.map(({ role, accent, options }) => (
+          <section
+            key={role}
+            className="itemization-role"
+            style={{ "--role-accent": accent } as CSSProperties}
+          >
+            <h4>{role}</h4>
+            <ul className="itemization-options">
+              {options.map((option, index) => (
+                <li className="itemization-option" key={index}>
+                  {options.length > 1 && (
+                    <span className="itemization-index">{index + 1}</span>
+                  )}
+                  {option.map((slot, slotIndex) => (
+                    <SlotView
+                      key={slot.join()}
+                      slot={slot}
+                      showPlus={slotIndex > 0}
+                    />
+                  ))}
+                </li>
+              ))}
+            </ul>
+            <details className="itemization-effects">
+              <summary>Item effects</summary>
+              <dl>
+                {[...new Set(options.flat(3))].map((item) => (
+                  <div key={item}>
+                    <dt>
+                      <ItemName item={item} />
+                    </dt>
+                    <dd>
+                      {addIconsToDescription(t(`item_description.${item}`))}
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+            </details>
+          </section>
+        ))}
+      </section>
       <p className="itemization-outro">
         If your intuition tells you that you can replace one of these items with
         a different item, do it. Your intuition is right. These sets only serve

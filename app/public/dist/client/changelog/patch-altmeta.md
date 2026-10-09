@@ -492,7 +492,7 @@ Smeargle Scribbles do not change your Elo.
 
 Every balance change on this server, newest first.
 
-### 1 November 2026
+### 10 October 2026
 
 **Pokémon**
 - Gimmighoul Line | PP 90 → 100
@@ -650,6 +650,10 @@ Every balance change on this server, newest first.
 - Experience Icon {{new}} | XP now shows its icon in descriptions and on the Buy XP button
 - Halloween theme {{new}} | new patch theme
 - Wish Quiz {{new}} | a sidebar gadget for the lobby and waiting rooms
+
+*Thank you for playing John Auto Chess! I'm going on vacation until spring, so
+the JAC journey pauses for now. Maybe I'll catch you in one of the tournaments
+or on the Discord for a little chat and gossip. Cheers!*
 
 ### 29 September 2026
 

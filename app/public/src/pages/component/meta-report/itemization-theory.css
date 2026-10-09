@@ -16,47 +16,28 @@
   line-height: 1.6;
 }
 
-.itemization-table-scroll {
-  overflow-x: auto;
+.itemization-builds {
   max-width: 72em;
-}
-
-.itemization-table {
-  width: 100%;
-  border-collapse: collapse;
-  text-align: left;
   line-height: 1.5;
 }
 
-.itemization-table caption {
-  text-align: left;
-  font-size: 1.17em;
-  font-weight: 700;
-  padding-bottom: 0.25em;
-  margin-bottom: 0.5em;
-  border-bottom: 4px solid currentColor;
+.itemization-builds h3 {
+  margin: 0;
 }
 
-.itemization-table th,
-.itemization-table td {
-  padding: 0.9em 0.75em;
-  vertical-align: middle;
+.itemization-role {
+  padding: 0.9em 0;
   border-bottom: var(--border-extra-thin);
 }
 
-.itemization-table tbody tr:last-child th,
-.itemization-table tbody tr:last-child td {
+.itemization-role:last-child {
+  padding-bottom: 0;
   border-bottom: none;
 }
 
-.itemization-table tbody th {
-  width: 1%;
-  white-space: nowrap;
+.itemization-role h4 {
+  margin: 0 0 0.5em;
   color: var(--role-accent);
-  font-size: 0.9em;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
 }
 
 .itemization-options {
@@ -75,21 +56,13 @@
   gap: 0.4em 0.75em;
   padding: 0.5em 0.9em;
   border-radius: 6px;
-  border-left: 4px solid var(--role-accent);
   background: var(--color-bg-secondary);
 }
 
 .itemization-index {
-  display: grid;
-  place-items: center;
   flex: none;
-  width: 1.5em;
-  height: 1.5em;
-  margin-left: -0.25em;
-  border-radius: 50%;
-  background: color-mix(in srgb, var(--role-accent) 25%, transparent);
-  color: var(--role-accent);
-  font-size: 0.8em;
+  color: var(--color-fg-secondary);
+  font-size: 0.85em;
   font-weight: 700;
 }
 
