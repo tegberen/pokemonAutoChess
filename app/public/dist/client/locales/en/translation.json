@@ -3239,7 +3239,7 @@
 		"GREEN_ORB": "Holder and ADJACENT allies regain 5% of their max HP every 2 seconds. 30% of overheal is converted to PP.",
 		"DEEP_SEA_TOOTH": "Holder restore 5 additional PP ON_ATTACK. If the attack knocks out the target, restore 15 additional PP.",
 		"SMOKE_BALL": "Once below 40% max HP, drop the smoke ball, gain 70 SHIELD and jump to a tile away. Every ADJACENT enemy is PARALYSIS and BLINDED for 4 seconds.",
-		"XRAY_VISION": "Holder is immune to SLEEP and their attacks can no longer miss. Attacks have [30,LK] % chance to inflict FLINCH for 3 seconds.",
+		"XRAY_VISION": "Holder is immune to SLEEP and their attacks can no longer miss. Attacks inflict FLINCH for 2 seconds ON_HIT.",
 		"RAZOR_FANG": "+100% CRIT_POWER. Critical attacks apply ARMOR_BREAK for 2 seconds ON_HIT.",
 		"PROTECTIVE_PADS": "Holder deals double damage against units with  SHIELD, and is protected from recoil damage and retaliation effects.",
 		"LOADED_DICE": "Attacks have [50,LK]% chance to also hit the lowest health enemy ADJACENT to target for 75% of the damage, which also trigger ON_HIT effects.",
@@ -3248,7 +3248,7 @@
 		"WONDER_BOX": "At the beginning of each battle, WONDER_BOX is replaced by 2 temporary items (max 3 items held)",
 		"ABILITY_SHIELD": "At the start of combat, the holder and allies ADJACENT_IN_THE_SAME_ROW gain SHIELD equal to 20% of their max HP and RUNE_PROTECT for 5 seconds. Each of them gains 30 AP when its SHIELD breaks.",
 		"STICKY_BARB": "When struck by an attack at melee range, deal 3 + 15% of DEF as retaliation TRUE to the attacker and inflict WOUND for 3 seconds.",
-		"WIDE_LENS": "The holder gains +2 RANGE. Attacks grant +5% CRIT_CHANCE (stackable)",
+		"WIDE_LENS": "The holder gains +2 RANGE and its attacks can no longer miss. Attacks grant +5% CRIT_CHANCE (stackable)",
 		"RAZOR_CLAW": "The holder gains +50% CRIT_CHANCE",
 		"SAFETY_GOGGLES": "Holder is immune to all negative status effects and to sandstorm damage",
 		"KINGS_ROCK": "+100 HP. 30% of max HP are gained as SHIELD when combat begins.",
@@ -6917,7 +6917,7 @@
 			"0": {
 				"TWO_TARGETS": "Each HEXING_INCANTATION affects 2 enemies at once",
 				"DOOM": "Their targets get CURSE and are KO'd after {{seconds}}s",
-				"REAP": "Reap: your STRONGEST GHOST Pokémon GAINS what their targets LOSE, and double GOLD on KO",
+				"REAP": "Reap: your STRONGEST GHOST Pokémon GAINS what their targets LOSE",
 				"PLAGUE": "Their NEGATIVE_STATUS also hits ADJACENT enemies, for the whole fight"
 			},
 			"1": {
@@ -7768,7 +7768,7 @@
 				},
 				"all_causes": "Every Cause",
 				"hexing_reap_note": "Reap example, with Tier 3 hexes at GHOST 8: a target LOSES 60 AP, your STRONGEST GHOST Pokémon GAINS 60 AP. A target's max PP INCREASED by 30% lowers your GHOST Pokémon's max PP by 30%.",
-				"hexing_gold_note": "When a FATED_INCANTATION makes a HEXING_INCANTATION affect several enemies, each of them gets its debuff and NEGATIVE_STATUS, but its GOLD is still granted only once per fight: at most 3 GOLD per GOLD hex. Reap instead doubles it to 6 GOLD per GOLD hex."
+				"hexing_gold_note": "When a FATED_INCANTATION makes a HEXING_INCANTATION affect several enemies, each of them gets its debuff and NEGATIVE_STATUS, but its GOLD is still granted only once per fight: at most 3 GOLD per GOLD hex."
 			},
 			"hexing_effects": {
 				"STAT": "LOSES the stat of its Cause",

@@ -611,18 +611,12 @@ export default class BattleManager {
         } else {
           pkm.removeCurse()
         }
-      } else if (field === "curseVulnerability") {
-        if (pokemon.status.curseVulnerability) {
-          pkm.addCurseVulnerability()
-        }
-      } else if (field === "curseWeakness") {
-        if (pokemon.status.curseWeakness) {
-          pkm.addCurseWeakness()
-        }
-      } else if (field === "curseTorment") {
-        if (pokemon.status.curseTorment) {
-          pkm.addCurseTorment()
-        }
+      } else if (field === "hexFirst") {
+        if (pokemon.status.hexFirst) pkm.addHexMark(0)
+      } else if (field === "hexSecond") {
+        if (pokemon.status.hexSecond) pkm.addHexMark(1)
+      } else if (field === "hexPlagued") {
+        if (pokemon.status.hexPlagued) pkm.addPlagueMark()
       } else if (field === "curseFate") {
         if (pokemon.status.curseFate) {
           pkm.addCurseFate()

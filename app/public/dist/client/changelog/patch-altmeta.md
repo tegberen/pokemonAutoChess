@@ -152,7 +152,7 @@ RITUAL_INCANTATION:
 A RITUAL_INCANTATION gives two things each time its Cause happens: its Effect
 for this fight, and its Bewitching (permanent stats or GOLD).
 
-- Repeat the RITUAL_INCANTATION: Effect and Bewitching again, on a LUCK chance. High LUCK teams. 50% at 0 LUCK, 71% at 50 LUCK, 100% at 100 LUCK
+- Repeat the RITUAL_INCANTATION: Effect and Bewitching again, on a LUCK chance. High LUCK teams. 40% at 0 LUCK, 63% at 50 LUCK, 100% at 100 LUCK
 - Double GOLD and permanent stat GAINS: only the Bewitching, but always. Low LUCK teams
 - RESURRECTION: one carry wins your fights
 - Bench a GHOST Pokémon: you still need GHOST Pokémon
@@ -527,6 +527,8 @@ Every balance change on this server, newest first.
 - BIG_ROOT | heals for 40% of the damage dealt instead of 33%
 - ODD_KEYSTONE | on ROCK explosion, each HEXING_INCANTATION hexes a new enemy instead of applying two GHOST curses
 - STAR_PIECE | the holder also has RUNE_PROTECT for the whole fight
+- WIDE_LENS | the holder's attacks can no longer miss
+- XRAY_VISION | always FLINCH for 2 seconds ON_HIT
 
 **Weather**
 - MURKY | LUCK -30 → -10, GHOST are still immune
@@ -645,6 +647,8 @@ Every balance change on this server, newest first.
 - Origin Palkia | Subspace Swell no longer leaves its PP boost on allies for the rest of the fight when Origin Palkia is KO'd mid-channel
 - Crocalor | long-lasting bug finally fixed: Crocalor no longer has the BUG type
 - Gamble and Golden Flip | can no longer roll Golden Flip or another Gamble
+- CLEAR_AMULET | now also stores FEAR
+- Victini | its team now never misses
 
 **Interface**
 - Experience Icon {{new}} | XP now shows its icon in descriptions and on the Buy XP button

@@ -2,6 +2,7 @@ import { SynergyTiersThresholds } from "../config"
 import {
   FATED_DOOM_DELAY,
   FATED_ECHO_CHANCE,
+  FATED_PLAGUE_SPREAD_MS,
   FATED_RESURRECT_ACTIVATIONS,
   FATED_SPAWN_GHOST_CHANCE,
   FATED_SPAWN_RARITY_WEIGHTS,
@@ -15,6 +16,7 @@ import {
   HexingLoss,
   HexingStatus,
   HexingTarget,
+  INCANTATION_ANIMATION_DELAY,
   INCANTATION_STATUS_DURATION,
   IncantationKind,
   RITUAL_BONUS_VALUES,
@@ -45,6 +47,7 @@ import { distanceC } from "../utils/distance"
 import { chance, pickRandomIn, randomWeighted } from "../utils/random"
 import type { Board } from "./board"
 import type { PokemonEntity } from "./pokemon-entity"
+import { DelayedCommand } from "./simulation-command"
 import type Simulation from "./simulation"
 import { getStrongestUnit } from "./unit-score"
 
@@ -278,6 +281,22 @@ function applyHex(
       reaper.maxPP = Math.round((reaper.maxPP * (100 - increase)) / 100)
     }
   }
+  if (reaper) {
+    // sent a moment later: at the start of a fight clients do not have the
+    // board yet, so an animation sent now would be dropped
+    reaper.commands.push(
+      new DelayedCommand(() => {
+        if (reaper.hp <= 0 || target.hp <= 0) return
+        reaper.broadcastAbility({
+          skill: "REAP",
+          positionX: target.positionX,
+          positionY: target.positionY,
+          targetX: reaper.positionX,
+          targetY: reaper.positionY
+        })
+      }, INCANTATION_ANIMATION_DELAY)
+    )
+  }
 
   const status = incantation.bonus as HexingStatus
   triggerHexStatus(target, status, INCANTATION_STATUS_DURATION)
@@ -288,11 +307,26 @@ function applyHex(
         if (!neighbour || neighbour.team !== target.team) return
         neighbour.plagueHexStatuses.add(status)
         triggerHexStatus(neighbour, status, INCANTATION_STATUS_DURATION)
+        // the spread is shown once clients have the board, and the mark only
+        // appears when it lands
+        neighbour.commands.push(
+          new DelayedCommand(() => {
+            if (target.hp <= 0 || neighbour.hp <= 0) return
+            target.broadcastAbility({
+              skill: "PLAGUE",
+              targetX: neighbour.positionX,
+              targetY: neighbour.positionY
+            })
+          }, INCANTATION_ANIMATION_DELAY),
+          new DelayedCommand(() => {
+            neighbour.status.hexPlagued = true
+          }, INCANTATION_ANIMATION_DELAY + FATED_PLAGUE_SPREAD_MS)
+        )
       })
   }
   target.hexes.push({ side, slot, incantation })
-  if (slot === 0) target.status.curseVulnerability = true
-  else target.status.curseWeakness = true
+  if (slot === 0) target.status.hexFirst = true
+  else target.status.hexSecond = true
 
   if (
     side.fated?.cause === FatedHexing.DOOM &&
@@ -350,11 +384,9 @@ export function onHexedEnemyKnockedOut(enemy: PokemonEntity) {
       !side.goldPaidHexSlots.has(hex.slot)
     ) {
       side.goldPaidHexSlots.add(hex.slot)
-      const reapMultiplier = side.fated?.cause === FatedHexing.REAP ? 2 : 1
       grantIncantationGold(
         side,
-        HEXING_LOSS_VALUES[HexingLoss.GOLD_ON_KO][side.hexingStrength] *
-          reapMultiplier
+        HEXING_LOSS_VALUES[HexingLoss.GOLD_ON_KO][side.hexingStrength]
       )
     }
   }
@@ -376,11 +408,16 @@ export function triggerRitual(
 ) {
   if (!side?.ritual || side.ritual.cause !== trigger) return
   activateRitual(simulation, side, side.ritual, trigger, context)
+  showRitual(simulation, side, context)
   if (
     side.fated?.effect === FatedRitual.ECHO &&
     chance(FATED_ECHO_CHANCE / 100, context.source)
   ) {
     activateRitual(simulation, side, side.ritual, trigger, context)
+    // a repeat gets its own, stronger cue on the unit that set it off
+    if (context.source && context.source.hp > 0) {
+      context.source.broadcastAbility({ skill: "RITUAL_ECHO" })
+    }
   }
 
   side.ritualActivations++
@@ -401,6 +438,23 @@ export function triggerRitual(
     chance(FATED_SPAWN_GHOST_CHANCE[trigger] / 100, context.source)
   ) {
     benchRandomGhost(simulation, side.player)
+  }
+}
+
+// a gain only marks the unit that set the ritual off, to keep the board calm;
+// a LUCK loss comes from one of the side's own units so the client knows who
+// the enemies are. SILENCE already shows on its targets
+function showRitual(
+  simulation: Simulation,
+  side: IncantationSide,
+  context: RitualContext
+) {
+  const effect = side.ritual?.effect as RitualEffect
+  if (effect === RitualEffect.SILENCE) return
+  if (effect === RitualEffect.ENEMY_LUCK_LOSS) {
+    getCurser(simulation, side)?.broadcastAbility({ skill: "RITUAL_ENEMIES" })
+  } else if (context.source && context.source.hp > 0) {
+    context.source.broadcastAbility({ skill: "RITUAL_ALLIES" })
   }
 }
 

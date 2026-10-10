@@ -76,9 +76,9 @@ export default class Status extends Schema implements IStatus {
   @type("boolean") light = false
   @type("uint32") lightTint = 0
   @type("boolean") curse = false
-  @type("boolean") curseVulnerability = false
-  @type("boolean") curseWeakness = false
-  @type("boolean") curseTorment = false
+  @type("boolean") hexFirst = false
+  @type("boolean") hexSecond = false
+  @type("boolean") hexPlagued = false
   @type("boolean") curseFate = false
   @type("boolean") enraged = false
   @type("boolean") skydiving = false

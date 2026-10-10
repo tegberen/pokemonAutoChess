@@ -220,9 +220,8 @@ export default class PokemonSprite extends DraggableObject {
   psychicField: GameObjects.Sprite | undefined
   grassField: GameObjects.Sprite | undefined
   fairyField: GameObjects.Sprite | undefined
-  curseVulnerability: GameObjects.Sprite | undefined
-  curseWeakness: GameObjects.Sprite | undefined
-  curseTorment: GameObjects.Sprite | undefined
+  hexMarks: (GameObjects.Sprite | undefined)[] = []
+  plagueMark: GameObjects.Sprite | undefined
   curseFate: GameObjects.Sprite | undefined
   light: GameObjects.Sprite | undefined
   centerStageSpotlight: GameObjects.Sprite | undefined
@@ -1858,15 +1857,9 @@ export default class PokemonSprite extends DraggableObject {
     if (pokemon.status.fairyField) {
       this.addFairyField()
     }
-    if (pokemon.status.curseVulnerability) {
-      this.addCurseVulnerability()
-    }
-    if (pokemon.status.curseWeakness) {
-      this.addCurseWeakness()
-    }
-    if (pokemon.status.curseTorment) {
-      this.addCurseTorment()
-    }
+    if (pokemon.status.hexFirst) this.addHexMark(0)
+    if (pokemon.status.hexSecond) this.addHexMark(1)
+    if (pokemon.status.hexPlagued) this.addPlagueMark()
     if (pokemon.status.curseFate) {
       this.addCurseFate()
     }
@@ -2166,34 +2159,36 @@ export default class PokemonSprite extends DraggableObject {
     }
   }
 
-  addCurseVulnerability() {
-    if (!this.curseVulnerability) {
-      this.curseVulnerability = this.scene.add
-        .sprite(0, 15, "abilities", "CURSE_OF_VULNERABILITY/000.png")
-        .setScale(1)
-      this.curseVulnerability.anims.play("CURSE_OF_VULNERABILITY")
-      this.add(this.curseVulnerability)
-    }
+  addHexMark(slot: number) {
+    if (this.hexMarks[slot]) return
+    this.hexMarks[slot] = this.addFootMark("CURSE_OF_VULNERABILITY")
+    this.layoutFootMarks()
   }
 
-  addCurseWeakness() {
-    if (!this.curseWeakness) {
-      this.curseWeakness = this.scene.add
-        .sprite(-30, -15, "abilities", "CURSE_OF_WEAKNESS/000.png")
-        .setScale(1)
-      this.curseWeakness.anims.play("CURSE_OF_WEAKNESS")
-      this.add(this.curseWeakness)
-    }
+  addPlagueMark() {
+    if (this.plagueMark) return
+    this.plagueMark = this.addFootMark("CURSE_OF_TORMENT")
+    this.layoutFootMarks()
   }
 
-  addCurseTorment() {
-    if (!this.curseTorment) {
-      this.curseTorment = this.scene.add
-        .sprite(30, -15, "abilities", "CURSE_OF_TORMENT/000.png")
-        .setScale(1)
-      this.curseTorment.anims.play("CURSE_OF_TORMENT")
-      this.add(this.curseTorment)
-    }
+  addFootMark(animation: string) {
+    const mark = this.scene.add
+      .sprite(0, 15, "abilities", `${animation}/000.png`)
+      .setScale(1)
+    mark.anims.play(animation)
+    this.add(mark)
+    return mark
+  }
+
+  // hex and plague marks share one row at the feet, centred under the unit,
+  // hexes first
+  layoutFootMarks() {
+    const marks = [...this.hexMarks, this.plagueMark].filter(
+      (footMark) => footMark !== undefined
+    )
+    marks.forEach((footMark, index) =>
+      footMark.setX((index - (marks.length - 1) / 2) * 28)
+    )
   }
 
   addCurseFate() {

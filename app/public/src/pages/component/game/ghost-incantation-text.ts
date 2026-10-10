@@ -213,9 +213,8 @@ export function describeHexingSummary(
     lossText = t(`ghost_incantations.summary.${key}`, params)
     reapGain = t(`ghost_incantations.summary.reap.${key}`, params)
   } else if (loss === HexingLoss.GOLD_ON_KO) {
-    const gold = HEXING_LOSS_VALUES[loss][strength]
     lossText = t(`ghost_incantations.summary.${loss}`, {
-      value: fated === FatedHexing.REAP ? `[${gold},OLD] → ${gold * 2}` : gold
+      value: HEXING_LOSS_VALUES[loss][strength]
     })
   } else {
     const params = { value: HEXING_LOSS_VALUES[loss][strength] }

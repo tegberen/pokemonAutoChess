@@ -5787,9 +5787,10 @@ export default class Simulation extends Schema implements ISimulation {
         }
         break
 
+      // checked in the dodge roll itself: a negative dodge chance could still
+      // roll under LUCK
       case EffectEnum.VICTINI_PASSIVE: {
         pokemon.effects.add(effect)
-        pokemon.addDodgeChance(-1, pokemon, 0, false)
         break
       }
 

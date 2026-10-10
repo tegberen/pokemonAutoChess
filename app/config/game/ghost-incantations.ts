@@ -67,7 +67,9 @@ export const INCANTATION_OPTIONS_SHOWN = 3
 export const INCANTATION_STATUS_DURATION = 30000
 export const RITUAL_ATTACKS_PER_TRIGGER = 8
 export const FATED_DOOM_DELAY = 8000
-export const FATED_ECHO_CHANCE = 50
+export const INCANTATION_ANIMATION_DELAY = 500
+export const FATED_PLAGUE_SPREAD_MS = 700
+export const FATED_ECHO_CHANCE = 40
 export const RITUAL_PERMANENT_STAT_CAP = 0.5
 export const FATED_SPAWN_RARITY_WEIGHTS = { COMMON: 50, UNCOMMON: 30, RARE: 20 }
 
@@ -129,10 +131,10 @@ export const RITUAL_EFFECT_VALUES: {
     [RitualTrigger.ENEMY_KOD]: [3, 5]
   },
   [RitualEffect.ENEMY_LUCK_LOSS]: {
-    [RitualTrigger.GHOST_CASTS]: [3, 5],
-    [RitualTrigger.GHOST_ATTACKS]: [3, 5],
-    [RitualTrigger.GHOST_KOD]: [6, 12],
-    [RitualTrigger.ENEMY_KOD]: [5, 8]
+    [RitualTrigger.GHOST_CASTS]: [2, 3],
+    [RitualTrigger.GHOST_ATTACKS]: [2, 3],
+    [RitualTrigger.GHOST_KOD]: [4, 8],
+    [RitualTrigger.ENEMY_KOD]: [3, 5]
   },
   [RitualEffect.GHOST_SPEED]: {
     [RitualTrigger.GHOST_CASTS]: [4, 5],

@@ -1684,6 +1684,7 @@ export const SHINY_CHARM_MARK_DURATION = 4000
 // XRAY_VISION exposes with the same true damage mark SHINY_CHARM applies, so
 // the two read as the same effect earned two different ways
 export const XRAY_VISION_HITS_TO_EXPOSE = 2
+export const XRAY_VISION_FLINCH_DURATION = 2000
 export const XRAY_VISION_EXPOSE_DURATION = 4000
 // the wild summons stay ordinary until the late game
 // the stage each rarity of decoy becomes reachable, so a 3 STAR summon stays in

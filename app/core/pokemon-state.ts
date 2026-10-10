@@ -289,7 +289,9 @@ export default abstract class PokemonState {
       if (
         chance(dodgeChance, { luck: target.luckAgainst(pokemon) }, 0.9) &&
         !pokemon.items.has(Item.XRAY_VISION) &&
+        !pokemon.items.has(Item.WIDE_LENS) &&
         !pokemon.effects.has(EffectEnum.LOCK_ON) &&
+        !target.effects.has(EffectEnum.VICTINI_PASSIVE) &&
         !pokemon.player?.items.includes(Item.EYEDROP_SEED) && //flying rework
         !target.status.paralysis &&
         !target.status.sleep &&

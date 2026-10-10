@@ -103,6 +103,7 @@ import {
   UPGRADE_BLESSED_STACKS_REQUIRED,
   WIDE_LENS_BLESSED_RANGE,
   XRAY_VISION_EXPOSE_DURATION,
+  XRAY_VISION_FLINCH_DURATION,
   XRAY_VISION_HITS_TO_EXPOSE,
   hasGluttonGrowth
 } from "../../types/enum/Blessing"
@@ -1233,11 +1234,8 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
     new OnItemGainedEffect((pokemon) => {
       pokemon.effects.add(EffectEnum.IMMUNITY_SLEEP)
     }),
-    new OnAttackEffect(({ pokemon, target }) => {
-      if (!target) return
-      if (chance(0.3, pokemon)) {
-        target.status.triggerFlinch(3000, pokemon)
-      }
+    new OnHitEffect(({ attacker, target }) => {
+      target.status.triggerFlinch(XRAY_VISION_FLINCH_DURATION, target, attacker)
     }),
     // the count is per target, so switching away resets it: exposing something
     // is meant to reward staying on it
@@ -2504,6 +2502,7 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
               else if (s.locked) effect.storedStatus = "locked"
               else if (s.blinded) effect.storedStatus = "blinded"
               else if (s.charm) effect.storedStatus = "charm"
+              else if (s.fear) effect.storedStatus = "fear"
               else if (s.curse) effect.storedStatus = "curse"
               else if (s.fatigue) effect.storedStatus = "fatigue"
               else if (s.armorReduction) effect.storedStatus = "armorReduction"
@@ -2586,6 +2585,9 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
             break
           case "charm":
             enemy.status.triggerCharm(5000, enemy, pokemon)
+            break
+          case "fear":
+            enemy.status.triggerFear(5000, enemy, pokemon)
             break
           case "curse":
             enemy.status.triggerCurse(5000, enemy)

@@ -33,6 +33,9 @@ import {
   CROSS_CHOP_CRIT_ANIMATION
 } from "../../../../types/enum/Ability"
 import {
+  FATED_PLAGUE_SPREAD_MS
+} from "../../../../config/game/ghost-incantations"
+import {
   GALVANIC_RAIN_THROW_FLIGHT_MS,
   GLAIVE_STRIKE_DELAY,
   GLAIVE_STRIKE_SHATTER_DELAY,
@@ -3505,6 +3508,132 @@ function drawVictoryDance(
     block(inFront, VICTORY_DANCE_GOLD, alpha * 0.8, left + 1, center)
     block(inFront, VICTORY_DANCE_GOLD, alpha * 0.8, left, center - 1)
     block(inFront, VICTORY_DANCE_GOLD, alpha * 0.8, left, center + 1)
+  }
+}
+
+// effects played on a unit keep following it while it walks
+function followUnit(
+  scene: Phaser.Scene,
+  effect: Phaser.GameObjects.Sprite,
+  unit: PokemonSprite
+) {
+  const follow = () => {
+    if (unit.active) effect.setPosition(unit.x, unit.y)
+  }
+  scene.events.on(Phaser.Scenes.Events.UPDATE, follow)
+  effect.once(Phaser.GameObjects.Events.DESTROY, () =>
+    scene.events.off(Phaser.Scenes.Events.UPDATE, follow)
+  )
+}
+
+function spriteAt(pokemons: PokemonSprite[], x: number, y: number) {
+  return pokemons.find(
+    (pokemon) => pokemon.positionX === x && pokemon.positionY === y
+  )
+}
+
+// one effect on the unit the event comes from, following it while it walks
+function onUnit(
+  ability: Ability,
+  options: AbilityAnimationOptions
+): AbilityAnimation {
+  return ({ scene, pokemonsOnBoard, positionX, positionY }) => {
+    const unit = spriteAt(pokemonsOnBoard, positionX, positionY)
+    if (!unit) return
+    const position = [unit.x, unit.y]
+    const effect = addAbilitySprite(scene, ability, 0, position, options)
+    if (effect) followUnit(scene, effect, unit)
+  }
+}
+
+const GHOST_SCALE = 1.8
+// one ghost per unit at a time, or frequent LUCK rituals would stack them
+const ghostsOnUnits = new WeakMap<PokemonSprite, Phaser.GameObjects.Sprite>()
+
+function playGhostOn(scene: GameScene | DebugScene, unit: PokemonSprite) {
+  if (ghostsOnUnits.get(unit)?.active) return
+  const position = [unit.x, unit.y]
+  const effect = addAbilitySprite(scene, Ability.PHANTOM_FORCE, 0, position, {
+    scale: GHOST_SCALE
+  })
+  if (!effect) return
+  ghostsOnUnits.set(unit, effect)
+  followUnit(scene, effect, unit)
+}
+
+// the event comes from one of the side's own units: every enemy loses
+function ritualLossAnimation(): AbilityAnimation {
+  return ({ scene, pokemonsOnBoard, positionX, positionY }) => {
+    const teamOf = (sprite: PokemonSprite | undefined) =>
+      sprite && "team" in sprite.pokemon ? sprite.pokemon.team : undefined
+    const team = teamOf(spriteAt(pokemonsOnBoard, positionX, positionY))
+    if (team === undefined) return
+    pokemonsOnBoard
+      .filter((pokemon) => {
+        const enemyTeam = teamOf(pokemon)
+        return enemyTeam !== undefined && enemyTeam !== team
+      })
+      .forEach((pokemon) => playGhostOn(scene, pokemon))
+  }
+}
+
+// flies from the event's position to the unit at its target, homing in every
+// frame so it still lands when that unit walks away mid-flight
+function homingAnimation(options: {
+  ability: string
+  duration: number
+  scale: number
+  oriented?: boolean
+  burst?: { ability: string; scale: number }
+}): AbilityAnimation {
+  const { ability, duration, scale, oriented, burst } = options
+  return ({
+    scene,
+    pokemonsOnBoard,
+    positionX,
+    positionY,
+    targetX,
+    targetY,
+    flip,
+    ap
+  }) => {
+    const start = transformEntityCoordinates(positionX, positionY, flip)
+    const receiver = spriteAt(pokemonsOnBoard, targetX, targetY)
+    const receiverStart = transformEntityCoordinates(targetX, targetY, flip)
+    const receiverPosition = () =>
+      receiver?.active ? [receiver.x, receiver.y] : receiverStart
+    if (burst) {
+      addAbilitySprite(scene, burst.ability, ap, start, { scale: burst.scale })
+    }
+    const flying = addAbilitySprite(scene, ability, ap, start, {
+      scale,
+      destroyOnComplete: false,
+      animOptions: { repeat: -1 }
+    })
+    if (!flying) return
+    scene.tweens.addCounter({
+      from: 0,
+      to: 1,
+      duration,
+      onUpdate: (tween) => {
+        const progress = (tween.getValue() ?? 0) as number
+        const [endX, endY] = receiverPosition()
+        const x = start[0] + (endX - start[0]) * progress
+        const y = start[1] + (endY - start[1]) * progress
+        if (oriented) {
+          flying.setRotation(Math.atan2(endY - y, endX - x) + Math.PI / 2)
+        }
+        flying.setPosition(x, y)
+      },
+      onComplete: () => {
+        flying.destroy()
+        if (burst) {
+          addAbilitySprite(scene, burst.ability, ap, receiverPosition(), {
+            scale: burst.scale
+          })
+        }
+      }
+    })
   }
 }
 
@@ -7715,6 +7844,24 @@ export const AbilitiesAnimations: {
   }),
   [Ability.TRICK_ROOM]: trickRoomCastAnimation(),
   ["TRICK_ROOM_SLOW"]: trickRoomSlowAnimation(),
+  // the hexed enemy is the "caster" and the reaper the "target"
+  ["REAP"]: homingAnimation({
+    ability: "WISP",
+    duration: 800,
+    scale: 1.5,
+    oriented: true,
+    burst: { ability: Ability.SPECTRAL_THIEF, scale: 2 }
+  }),
+  ["PLAGUE"]: homingAnimation({
+    ability: "CURSE_OF_TORMENT",
+    duration: FATED_PLAGUE_SPREAD_MS,
+    scale: 1.5
+  }),
+  // a soft shimmer on the unit that set the ritual off
+  ["RITUAL_ALLIES"]: onUnit(Ability.MEDITATE, { scale: 1.2, alpha: 0.6 }),
+  // the same shimmer at full strength: the ritual fired twice
+  ["RITUAL_ECHO"]: onUnit(Ability.MEDITATE, { scale: 1.8 }),
+  ["RITUAL_ENEMIES"]: ritualLossAnimation(),
   ["TRICK_ROOM_HIT"]: onTarget({
     ability: HitSprite.GHOST_HIT,
     textureKey: "attacks",
