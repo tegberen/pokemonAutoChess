@@ -655,8 +655,10 @@ Every balance change on this server, newest first.
 - Halloween theme {{new}} | new patch theme
 - Wish Quiz {{new}} | a sidebar gadget for the lobby and waiting rooms
 
-*Thank you for playing John Auto Chess! I'm going on vacation until spring, so
-the JAC journey pauses for now. Maybe I'll catch you in one of the tournaments
+*Thank you for playing John Auto Chess! I'm going on vacation, and this is the
+last content patch until spring. Expect a few balance adjustments and hotfixes
+in the coming weeks; once things settle, there will be no major gameplay
+changes, so the meta stays stable for the upcoming tournaments. Maybe I'll catch you in one of the tournaments
 or on the Discord for a little chat and gossip. Cheers!*
 
 ### 29 September 2026
