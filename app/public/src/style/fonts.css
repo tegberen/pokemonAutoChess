@@ -3,6 +3,12 @@
   src: url("assets/ui/Jost-VF.ttf") format("truetype");
 }
 
+/* the origin theme declares it too, but patch covers need it in every theme */
+@font-face {
+  font-family: PokemonClassic;
+  src: url("assets/ui/PokemonClassic.ttf") format("truetype");
+}
+
 html {
   font-family: Jost, sans-serif;
   font-weight: 600;

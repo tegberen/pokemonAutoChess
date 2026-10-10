@@ -6915,10 +6915,10 @@
 				"1": "Your RITUAL_INCANTATION"
 			},
 			"0": {
-				"TWO_TARGETS": "At the start of each fight, affect 2 enemies at once",
-				"DOOM": "Their targets get CURSE and are KO'd after {{seconds}}s. The CURSE does not move to the next hexed enemy",
-				"REAP": "Reap: your STRONGEST GHOST Pokémon GAINS what their targets LOSE, and their GOLD on KO is doubled",
-				"PLAGUE": "At the start of each fight, their NEGATIVE_STATUS also hits the enemies ADJACENT to their targets"
+				"TWO_TARGETS": "Each HEXING_INCANTATION affects 2 enemies at once",
+				"DOOM": "Their targets get CURSE and are KO'd after {{seconds}}s",
+				"REAP": "Reap: your STRONGEST GHOST Pokémon GAINS what their targets LOSE, and double GOLD on KO",
+				"PLAGUE": "Their NEGATIVE_STATUS also hits ADJACENT enemies, for the whole fight"
 			},
 			"1": {
 				"ECHO": "[{{value}},LK]% chance to repeat the RITUAL_INCANTATION",
@@ -7747,7 +7747,7 @@
 					"PERMANENT_PP": "Highest AP ally GAINS permanent starting PP",
 					"PERMANENT_SPEED": "Highest ATK ally GAINS permanent SPEED"
 				},
-				"silence_damaged": "Damaged enemies for {{seconds}} seconds",
+				"silence_farthest": "{{targets}} farthest back for {{seconds}} seconds",
 				"silence_behind_target": "Enemies in a line behind the target for {{seconds}} seconds",
 				"silence_nearest": "{{targets}} nearest for {{seconds}} seconds",
 				"silence_adjacent": "{{targets}} ADJACENT for {{seconds}} seconds",
@@ -7768,7 +7768,7 @@
 				},
 				"all_causes": "Every Cause",
 				"hexing_reap_note": "Reap example, with Tier 3 hexes at GHOST 8: a target LOSES 60 AP, your STRONGEST GHOST Pokémon GAINS 60 AP. A target's max PP INCREASED by 30% lowers your GHOST Pokémon's max PP by 30%.",
-				"hexing_gold_note": "When a FATED_INCANTATION makes a HEXING_INCANTATION affect several enemies, each of them gets its debuff and NEGATIVE_STATUS, but its GOLD is still granted only once per fight: at most 3 GOLD, or 6 with two GOLD hexes. With Reap, each GOLD hex grants 6 GOLD instead of 3, or 12 with two GOLD hexes."
+				"hexing_gold_note": "When a FATED_INCANTATION makes a HEXING_INCANTATION affect several enemies, each of them gets its debuff and NEGATIVE_STATUS, but its GOLD is still granted only once per fight: at most 3 GOLD per GOLD hex. Reap instead doubles it to 6 GOLD per GOLD hex."
 			},
 			"hexing_effects": {
 				"STAT": "LOSES the stat of its Cause",

@@ -156,7 +156,7 @@ function describeSilence(t: Translate, trigger: RitualTrigger) {
     seconds: `[${seconds.join(",")}]`
   }
   if (trigger === RitualTrigger.GHOST_CASTS) {
-    return t("wiki.ghost.ritual.silence_damaged", params)
+    return t("wiki.ghost.ritual.silence_farthest", params)
   }
   if (trigger === RitualTrigger.GHOST_ATTACKS) {
     return t("wiki.ghost.ritual.silence_behind_target", params)
