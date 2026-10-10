@@ -1,10 +1,10 @@
 :root {
-  --color-bg-primary: #201025;
-  --color-bg-secondary: #381a38;
-  --color-bg-tertiary: #2e152a;
-  --see-through-primary: #160a1a;
-  --see-through-secondary: #2b1430;
-  --see-through-tertiary: #221026;
+  --color-bg-primary: #1d0e21;
+  --color-bg-secondary: #321732;
+  --color-bg-tertiary: #291326;
+  --see-through-primary: #140917;
+  --see-through-secondary: #27122b;
+  --see-through-tertiary: #1f0e22;
   --color-bg-accent: #f0973a;
 
   --border-thick: 2px solid #10070f;
@@ -87,4 +87,30 @@
 
 .react-tabs__tab--selected:after {
   background: var(--color-bg-accent);
+}
+
+/* the light orange accent needs dark text: white and the red or green token
+   labels wash out on it */
+.game-incantation-option:hover,
+.game-incantation-option.selected {
+  color: var(--theme-button-text);
+}
+
+.game-incantation-option:hover
+  :is(.status-label, .stat-label, .item-label, .technical-term-label),
+.game-incantation-option.selected
+  :is(.status-label, .stat-label, .item-label, .technical-term-label) {
+  color: inherit;
+}
+
+.game-incantation-option:hover .ability-value,
+.game-incantation-option:hover .ability-value .active,
+.game-incantation-option.selected .ability-value,
+.game-incantation-option.selected .ability-value .active {
+  color: inherit;
+}
+
+.game-incantation-option:hover .ability-value > :not(.active),
+.game-incantation-option.selected .ability-value > :not(.active) {
+  opacity: 0.6;
 }
