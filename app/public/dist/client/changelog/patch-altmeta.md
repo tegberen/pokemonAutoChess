@@ -133,40 +133,6 @@ each tile of gap.
 
 {{synergy:GHOST}}
 
-#### Picking your FATED_INCANTATION
-
-It has one pick for both HEXING_INCANTATION and one for your RITUAL_INCANTATION.
-
-HEXING_INCANTATION:
-
-A HEXING_INCANTATION hexes its target at the start of each fight: a loss and a
-NEGATIVE_STATUS.
-
-- Affect 2 enemies at once: twice the losses and statuses. Your hexes are what wins
-- CURSE and KO after 8s: removes the hexed targets whatever their HP. Your hexes target the enemy carries. Not against RUNE_PROTECT
-- Reap what they lose: your STRONGEST GHOST Pokémon gains the hexed stats. Big hex losses, one GHOST carry
-- NEGATIVE_STATUS also hits ADJACENT enemies: from the start of the fight. Tanky boards that stand close
-
-RITUAL_INCANTATION:
-
-A RITUAL_INCANTATION gives two things each time its Cause happens: its Effect
-for this fight, and its Bewitching (permanent stats or GOLD).
-
-- Repeat the RITUAL_INCANTATION: Effect and Bewitching again, on a LUCK chance. High LUCK teams. 40% at 0 LUCK, 63% at 50 LUCK, 100% at 100 LUCK
-- Double GOLD and permanent stat GAINS: only the Bewitching, but always. Low LUCK teams
-- RESURRECTION: one carry wins your fights
-- Bench a GHOST Pokémon: you still need GHOST Pokémon
-
-> CURSE is no longer the GHOST (8) capstone. GHOST (8) now writes a
-> FATED_INCANTATION, and one of its options still gives access to CURSE: each
-> hexed enemy gets CURSE for 8s. However, that CURSE stays on the hexed unit
-> and does not move on after a KO anymore. Though watch out! A Pokémon can be
-> the target of both HEXING_INCANTATION, so it can get CURSE twice, and a CURSE
-> on an already CURSE unit executes it at once.
->
-> The GHOST Wishes are removed for now. We will bring them back once everyone
-> is familiar with the new mechanics.
-
 [Ghost in the Wiki](#wiki/types/GHOST)
 
 ## Weather
@@ -551,7 +517,7 @@ Every balance change on this server, newest first.
 - Groudon, Primal Groudon | Precipice Blades: hits all enemies in a line through the target instead of its row and column
 
 **Synergies**
-- GHOST {{new}} | reworked: write HEXING_INCANTATION, RITUAL_INCANTATION and FATED_INCANTATION. Enemies with negative LUCK are easier to dodge and SILENCE, see [GHOST in the Guide](#guide/synergies/Ghost) and [GHOST in the Wiki](#wiki/types/GHOST)
+- GHOST {{new}} | reworked: write HEXING_INCANTATION, RITUAL_INCANTATION and FATED_INCANTATION. Enemies with negative LUCK are easier to dodge and SILENCE, see [GHOST in the Wiki](#wiki/types/GHOST)
 - FAIRY | added a cooldown to the FAIRY wands, see [FAIRY in the Wiki](#wiki/types/FAIRY)
 - GRASS | harvesting a berry gives 2 XP
 - POISON (7) | the enemy a POISON Pokémon KOs bursts for 50% of its remaining PP as SPECIAL to ADJACENT enemies, instead of the POISON Pokémon bursting when KO'd
@@ -573,8 +539,7 @@ Every balance change on this server, newest first.
 - Training Ground {{new}} | Stage 4 only. At the start of each fight, all allies on the board gain 1 DEF, 1 SPE_DEF and 2 HP permanently
 - Magic Palace {{new}} | Stage 4 only. At the start of each fight, all allies on the board gain 2 AP and 4 HP permanently
 - 67 {{new}} | Stage 4 only. Gain 67 GOLD and lose 67 player HP (cannot be rolled by Gamble III or Golden Flip)
-- Prismatic Quest {{new}} | Gain 10 GOLD and unlock the Quest Panel UI. Stage 4 only
-- Quest Panel | the 12 Prismatic quest Wishes are merged into one Wish, Prismatic Quest, which unlocks the Quest Panel UI. It tracks all 12 quests at once: complete as many as you like, each unlocks its shiny item, but you can only claim one. Quests no longer give starting items, and rewards no longer include an EXCHANGE_TICKET and a RECYCLE_TICKET
+- Prismatic Quest {{new}} | Gain 10 GOLD and unlock the Quest Panel UI. Stage 4 only. It replaces the 12 Prismatic quest Wishes and tracks all 12 quests at once: complete as many as you like, each unlocks its shiny item, but you can only claim one. Quests no longer give starting items, and rewards no longer include an EXCHANGE_TICKET and a RECYCLE_TICKET
 - Quest: Crit | hold 100 GOLD at once. Reward: GOLD_BOTTLE_CAP
 - Quest: Grow | an ally reaches 1000 HP in a fight. Reward: DYNAMAX_BAND
 - Quest: Shine | LIGHT 7 → 6. Reward: SHINY_STONE
