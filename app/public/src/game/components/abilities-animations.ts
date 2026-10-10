@@ -1570,6 +1570,27 @@ const SHADOW_PUNCH_CYAN = 0x5ff6ff
 const SHADOW_PUNCH_BLUE = 0x3d7bff
 const SHADOW_PUNCH_PURPLE = 0xb04dff
 const SHADOW_PUNCH_VIOLET = 0x6a2bd8
+// bright accents: the blast is drawn additively, so darker tones would vanish
+const SHADOW_PUNCH_TEAL = 0x2fd6c8
+const SHADOW_PUNCH_GOLD = 0xffd65a
+const SHADOW_PUNCH_PINK = 0xff6ad5
+const SHADOW_PUNCH_PIXEL_SIZE = 2
+const SHADOW_PUNCH_PUFF_COLORS = [
+  SHADOW_PUNCH_PURPLE,
+  SHADOW_PUNCH_VIOLET,
+  SHADOW_PUNCH_TEAL,
+  SHADOW_PUNCH_PINK
+]
+const SHADOW_PUNCH_SHARD_COLORS = [
+  SHADOW_PUNCH_CYAN,
+  SHADOW_PUNCH_PURPLE,
+  SHADOW_PUNCH_GOLD
+]
+const SHADOW_PUNCH_SPARK_COLORS = [
+  0xffffff,
+  SHADOW_PUNCH_CYAN,
+  SHADOW_PUNCH_GOLD
+]
 
 function addShadowPunchFist(
   scene: AbilityAnimationArgs["scene"],
@@ -1614,6 +1635,8 @@ function addShadowPunchFist(
   }
   fist.lineStyle(outline * 0.6, 0xffffff, 0.9)
   fist.strokeRoundedRect(-7 * unit, -5 * unit, 6 * unit, 10 * unit, 2 * unit)
+  fist.lineStyle(outline * 0.6, SHADOW_PUNCH_GOLD, 0.8)
+  fist.strokeRoundedRect(-5 * unit, 6 * unit, 6 * unit, 2 * unit, unit)
   scene.abilitiesVfxGroup?.add(fist)
   return fist
 }
@@ -1628,29 +1651,113 @@ function playShadowPunchBlast(
   for (let index = 0; index < SHADOW_PUNCH_BLAST_PUFFS; index++) {
     const angle = rotation + (Math.random() - 0.5) * Math.PI * 1.4
     const distance = (10 + Math.random() * 26) * scale
-    const puff = scene.add
-      .circle(
-        x,
-        y,
-        (8 + Math.random() * 10) * scale,
-        index % 3 === 0 ? SHADOW_PUNCH_VIOLET : SHADOW_PUNCH_PURPLE,
-        0.7
-      )
-      .setDepth(DEPTH.ABILITY)
-      .setBlendMode(Phaser.BlendModes.ADD)
-    scene.abilitiesVfxGroup?.add(puff)
-    scene.tweens.add({
-      targets: puff,
-      x: x + Math.cos(angle) * distance,
-      y: y + Math.sin(angle) * distance,
-      scale: { from: 0.5, to: 1.4 },
-      alpha: { from: 0.8, to: 0 },
+    const radius = (8 + Math.random() * 10) * scale
+    playPixelCircle(scene, {
+      x,
+      y,
+      toX: x + Math.cos(angle) * distance,
+      toY: y + Math.sin(angle) * distance,
+      color: SHADOW_PUNCH_PUFF_COLORS[index % SHADOW_PUNCH_PUFF_COLORS.length],
+      fromRadius: radius * 0.5,
+      toRadius: radius * 1.4,
+      fromAlpha: 0.56,
+      toAlpha: 0,
+      pixelSize: SHADOW_PUNCH_PIXEL_SIZE,
+      additive: true,
       duration: 280 + Math.random() * 160,
-      ease: "Cubic.easeOut",
-      onComplete: () => puff.destroy()
+      ease: "Cubic.easeOut"
     })
   }
   playShadowPunchImpact(scene, x, y, scale * 0.8)
+}
+
+function drawPixelRing(
+  graphics: Phaser.GameObjects.Graphics,
+  radius: number,
+  pixelSize: number,
+  color: number
+) {
+  graphics.clear()
+  drawPixelPath(graphics, ringPoints(radius), [
+    { grid: pixelSize, size: pixelSize, color, alpha: 1 }
+  ])
+}
+
+function drawPixelDisc(
+  graphics: Phaser.GameObjects.Graphics,
+  radius: number,
+  pixelSize: number,
+  color: number
+) {
+  graphics.clear()
+  graphics.fillStyle(color, 1)
+  const halfRows = Math.floor(radius / pixelSize)
+  for (let row = -halfRows; row <= halfRows; row++) {
+    const halfCells = Math.floor(
+      Math.sqrt(Math.max(0, radius ** 2 - (row * pixelSize) ** 2)) / pixelSize
+    )
+    graphics.fillRect(
+      (-halfCells - 0.5) * pixelSize,
+      (row - 0.5) * pixelSize,
+      (halfCells * 2 + 1) * pixelSize,
+      pixelSize
+    )
+  }
+}
+
+function playPixelCircle(
+  scene: AbilityAnimationArgs["scene"],
+  options: {
+    x: number
+    y: number
+    toX?: number
+    toY?: number
+    color: number
+    fromRadius: number
+    toRadius: number
+    fromAlpha: number
+    toAlpha: number
+    pixelSize: number
+    hollow?: boolean
+    additive?: boolean
+    delay?: number
+    duration: number
+    ease: string
+  }
+) {
+  const circle = scene.add
+    .graphics()
+    .setPosition(options.x, options.y)
+    .setDepth(DEPTH.ABILITY)
+  if (options.additive) circle.setBlendMode(Phaser.BlendModes.ADD)
+  scene.abilitiesVfxGroup?.add(circle)
+  const drawCircle = options.hollow ? drawPixelRing : drawPixelDisc
+  scene.tweens.addCounter({
+    from: 0,
+    to: 1,
+    delay: options.delay ?? 0,
+    duration: options.duration,
+    ease: options.ease,
+    onUpdate: (tween) => {
+      if (!circle.scene) return
+      const progress = tween.getValue() ?? 0
+      drawCircle(
+        circle,
+        Phaser.Math.Linear(options.fromRadius, options.toRadius, progress),
+        options.pixelSize,
+        options.color
+      )
+      circle
+        .setAlpha(
+          Phaser.Math.Linear(options.fromAlpha, options.toAlpha, progress)
+        )
+        .setPosition(
+          Phaser.Math.Linear(options.x, options.toX ?? options.x, progress),
+          Phaser.Math.Linear(options.y, options.toY ?? options.y, progress)
+        )
+    },
+    onComplete: () => circle.destroy()
+  })
 }
 
 function playShadowPunchImpact(
@@ -1659,33 +1766,41 @@ function playShadowPunchImpact(
   y: number,
   scale: number
 ) {
-  const flash = scene.add
-    .circle(x, y, 20 * scale, 0xffffff, 1)
-    .setDepth(DEPTH.ABILITY)
-    .setBlendMode(Phaser.BlendModes.ADD)
-  scene.abilitiesVfxGroup?.add(flash)
-  scene.tweens.add({
-    targets: flash,
-    scale: 1.8,
-    alpha: 0,
+  playPixelCircle(scene, {
+    x,
+    y,
+    color: 0xffffff,
+    fromRadius: 16 * scale,
+    toRadius: 29 * scale,
+    fromAlpha: 0.5,
+    toAlpha: 0,
+    pixelSize: SHADOW_PUNCH_PIXEL_SIZE,
+    additive: true,
     duration: 160,
-    ease: "Quad.easeOut",
-    onComplete: () => flash.destroy()
+    ease: "Quad.easeOut"
   })
 
-  const ring = scene.add
-    .circle(x, y, 18 * scale)
-    .setStrokeStyle(3, SHADOW_PUNCH_CYAN, 1)
-    .setDepth(DEPTH.ABILITY)
-  scene.abilitiesVfxGroup?.add(ring)
-  scene.tweens.add({
-    targets: ring,
-    scale: 3,
-    alpha: 0,
-    duration: 320,
-    ease: "Cubic.easeOut",
-    onComplete: () => ring.destroy()
-  })
+  const ringLayers = [
+    { color: SHADOW_PUNCH_CYAN, pixelSize: 3, endScale: 3, delay: 0 },
+    { color: SHADOW_PUNCH_PINK, pixelSize: 2, endScale: 2.3, delay: 40 },
+    { color: SHADOW_PUNCH_TEAL, pixelSize: 2, endScale: 3.7, delay: 90 }
+  ]
+  for (const layer of REDUCED_MOTION ? ringLayers.slice(0, 1) : ringLayers) {
+    playPixelCircle(scene, {
+      x,
+      y,
+      color: layer.color,
+      fromRadius: 18 * scale,
+      toRadius: 18 * scale * layer.endScale,
+      fromAlpha: 0.6,
+      toAlpha: 0,
+      pixelSize: layer.pixelSize,
+      hollow: true,
+      delay: layer.delay,
+      duration: 320,
+      ease: "Cubic.easeOut"
+    })
+  }
 
   const shards = scene.add
     .graphics()
@@ -1697,8 +1812,8 @@ function playShadowPunchImpact(
     const angle = (index / SHADOW_PUNCH_SHARDS) * Math.PI * 2 + index * 0.37
     const reach = (index % 2 === 0 ? 46 : 30) * scale
     shards.fillStyle(
-      index % 3 === 0 ? SHADOW_PUNCH_CYAN : SHADOW_PUNCH_PURPLE,
-      0.9
+      SHADOW_PUNCH_SHARD_COLORS[index % SHADOW_PUNCH_SHARD_COLORS.length],
+      0.55
     )
     shards.fillTriangle(
       Math.cos(angle - 0.16) * 8,
@@ -1713,7 +1828,7 @@ function playShadowPunchImpact(
   scene.tweens.add({
     targets: shards,
     scale: 1.2,
-    alpha: { from: 1, to: 0 },
+    alpha: { from: 0.7, to: 0 },
     duration: 300,
     ease: "Cubic.easeOut",
     onComplete: () => shards.destroy()
@@ -1723,7 +1838,13 @@ function playShadowPunchImpact(
     const angle = Math.random() * Math.PI * 2
     const distance = (34 + Math.random() * 30) * scale
     const spark = scene.add
-      .rectangle(x, y, 4, 4, index % 2 === 0 ? 0xffffff : SHADOW_PUNCH_CYAN)
+      .rectangle(
+        x,
+        y,
+        4,
+        4,
+        SHADOW_PUNCH_SPARK_COLORS[index % SHADOW_PUNCH_SPARK_COLORS.length]
+      )
       .setDepth(DEPTH.ABILITY)
       .setBlendMode(Phaser.BlendModes.ADD)
     scene.abilitiesVfxGroup?.add(spark)
@@ -1731,7 +1852,7 @@ function playShadowPunchImpact(
       targets: spark,
       x: x + Math.cos(angle) * distance,
       y: y + Math.sin(angle) * distance,
-      alpha: { from: 1, to: 0 },
+      alpha: { from: 0.7, to: 0 },
       duration: 260 + Math.random() * 120,
       ease: "Quad.easeOut",
       onComplete: () => spark.destroy()
@@ -1748,36 +1869,44 @@ function addShadowPunchTrail(
   delay: number,
   duration: number
 ) {
-  const trail = scene.add
-    .rectangle(
-      fromX,
-      fromY,
-      Math.hypot(toX - fromX, toY - fromY),
-      10,
-      SHADOW_PUNCH_PURPLE,
-      0.55
-    )
-    .setOrigin(0, 0.5)
-    .setRotation(Math.atan2(toY - fromY, toX - fromX))
-    .setScale(0, 1)
-    .setDepth(DEPTH.ABILITY)
-    .setBlendMode(Phaser.BlendModes.ADD)
-  scene.abilitiesVfxGroup?.add(trail)
-  scene.tweens.add({
-    targets: trail,
-    scaleX: 1,
-    delay,
-    duration,
-    ease: "Quad.easeOut",
-    onComplete: () =>
-      scene.tweens.add({
-        targets: trail,
-        scaleY: 0,
-        alpha: 0,
-        duration: 180,
-        onComplete: () => trail.destroy()
-      })
-  })
+  const trailLayers = [
+    { color: SHADOW_PUNCH_VIOLET, thickness: 18, alpha: 0.35 },
+    { color: SHADOW_PUNCH_PURPLE, thickness: 10, alpha: 0.55 },
+    { color: SHADOW_PUNCH_PINK, thickness: 5, alpha: 0.6 },
+    { color: SHADOW_PUNCH_CYAN, thickness: 2, alpha: 0.9 }
+  ]
+  for (const layer of trailLayers) {
+    const trail = scene.add
+      .rectangle(
+        fromX,
+        fromY,
+        Math.hypot(toX - fromX, toY - fromY),
+        layer.thickness,
+        layer.color,
+        layer.alpha
+      )
+      .setOrigin(0, 0.5)
+      .setRotation(Math.atan2(toY - fromY, toX - fromX))
+      .setScale(0, 1)
+      .setDepth(DEPTH.ABILITY)
+      .setBlendMode(Phaser.BlendModes.ADD)
+    scene.abilitiesVfxGroup?.add(trail)
+    scene.tweens.add({
+      targets: trail,
+      scaleX: 1,
+      delay,
+      duration,
+      ease: "Quad.easeOut",
+      onComplete: () =>
+        scene.tweens.add({
+          targets: trail,
+          scaleY: 0,
+          alpha: 0,
+          duration: 180,
+          onComplete: () => trail.destroy()
+        })
+    })
+  }
 }
 
 function shadowPunchAnimation(args: AbilityAnimationArgs) {
@@ -1798,19 +1927,42 @@ function shadowPunchAnimation(args: AbilityAnimationArgs) {
   const muzzleX = casterX + Math.cos(rotation) * 20
   const muzzleY = fromY + Math.sin(rotation) * 20
 
-  const charge = scene.add
-    .circle(muzzleX, muzzleY, 26, SHADOW_PUNCH_PURPLE, 0.35)
-    .setDepth(DEPTH.ABILITY)
-    .setBlendMode(Phaser.BlendModes.ADD)
-  scene.abilitiesVfxGroup?.add(charge)
-  scene.tweens.add({
-    targets: charge,
-    scale: { from: 1.5, to: 0.3 },
-    alpha: { from: 0.2, to: 0.8 },
-    duration: SHADOW_PUNCH_WINDUP_MS,
-    ease: "Sine.easeIn",
-    onComplete: () => charge.destroy()
-  })
+  const chargeLayers = [
+    { color: SHADOW_PUNCH_VIOLET, radius: 30, startScale: 1.6, alpha: 0.6 },
+    { color: SHADOW_PUNCH_PURPLE, radius: 22, startScale: 1.5, alpha: 0.7 },
+    { color: SHADOW_PUNCH_PINK, radius: 13, startScale: 1.3, alpha: 0.6 },
+    { color: SHADOW_PUNCH_CYAN, radius: 6, startScale: 1, alpha: 0.9 }
+  ]
+  for (const layer of chargeLayers) {
+    playPixelCircle(scene, {
+      x: muzzleX,
+      y: muzzleY,
+      color: layer.color,
+      fromRadius: layer.radius * layer.startScale,
+      toRadius: layer.radius * 0.3,
+      fromAlpha: 0.15,
+      toAlpha: layer.alpha,
+      pixelSize: SHADOW_PUNCH_PIXEL_SIZE,
+      additive: true,
+      duration: SHADOW_PUNCH_WINDUP_MS,
+      ease: "Sine.easeIn"
+    })
+  }
+  if (!REDUCED_MOTION) {
+    playPixelCircle(scene, {
+      x: muzzleX,
+      y: muzzleY,
+      color: SHADOW_PUNCH_TEAL,
+      fromRadius: 34 * 1.4,
+      toRadius: 34 * 0.2,
+      fromAlpha: 0,
+      toAlpha: 1,
+      pixelSize: SHADOW_PUNCH_PIXEL_SIZE,
+      hollow: true,
+      duration: SHADOW_PUNCH_WINDUP_MS,
+      ease: "Quad.easeIn"
+    })
+  }
 
   scene.time.delayedCall(SHADOW_PUNCH_WINDUP_MS, () => {
     playShadowPunchBlast(scene, muzzleX, muzzleY, rotation, 1.2)
@@ -3547,6 +3699,7 @@ function onUnit(
 }
 
 const GHOST_SCALE = 1.8
+const RITUAL_TINT = 0xc8a8f0
 // one ghost per unit at a time, or frequent LUCK rituals would stack them
 const ghostsOnUnits = new WeakMap<PokemonSprite, Phaser.GameObjects.Sprite>()
 
@@ -7858,9 +8011,13 @@ export const AbilitiesAnimations: {
     scale: 1.5
   }),
   // a soft shimmer on the unit that set the ritual off
-  ["RITUAL_ALLIES"]: onUnit(Ability.MEDITATE, { scale: 1.2, alpha: 0.6 }),
+  ["RITUAL_ALLIES"]: onUnit(Ability.MEDITATE, {
+    scale: 1.2,
+    alpha: 0.6,
+    tint: RITUAL_TINT
+  }),
   // the same shimmer at full strength: the ritual fired twice
-  ["RITUAL_ECHO"]: onUnit(Ability.MEDITATE, { scale: 1.8 }),
+  ["RITUAL_ECHO"]: onUnit(Ability.MEDITATE, { scale: 1.8, tint: RITUAL_TINT }),
   ["RITUAL_ENEMIES"]: ritualLossAnimation(),
   ["TRICK_ROOM_HIT"]: onTarget({
     ability: HitSprite.GHOST_HIT,

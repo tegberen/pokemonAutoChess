@@ -498,7 +498,7 @@ Every balance change on this server, newest first.
 - Gimmighoul Line | PP 90 → 100
 - Golett Line | PP 100 → 120
 - Primal Groudon | ATK 18 → 20
-- Chandelure | max PP 40 → 50
+- Litwick Line | max PP 40 → 50, Hex damage 20/40/60 → 20/30/40, also doubled against a HEXING_INCANTATION target
 - Politoed | HP 220 → 200
 - Gastly Line | max PP 90/85/80 → 90
 - Cacnea Line | GRASS / DARK / HUMAN → GRASS / DARK / GHOST

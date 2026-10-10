@@ -2475,7 +2475,7 @@ export class Litwick extends Pokemon {
   speed = 51
   def = 2
   speDef = 2
-  maxPP = 40
+  maxPP = 50
   range = 3
   skill = Ability.HEX
   passive = Passive.HATCH
@@ -2492,7 +2492,7 @@ export class Lampent extends Pokemon {
   speed = 51
   def = 4
   speDef = 4
-  maxPP = 40
+  maxPP = 50
   range = 3
   skill = Ability.HEX
   passive = Passive.HATCH
