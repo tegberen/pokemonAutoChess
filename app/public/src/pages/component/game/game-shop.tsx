@@ -32,7 +32,7 @@ export default function GameShop() {
         <div id="game-shop-info">
           <GameLifeInfo />
           <GameMoneyInfo />
-          <GameStreakInfo />
+          <GameStreakInfo variant="shop" />
           <div className="spacer"></div>
           <GameLightShowTab />
           <div className="spacer"></div>
