@@ -239,7 +239,8 @@ const ADDITIONAL_HERO_BLESSINGS = new Set<Blessing>([
   Blessing.HYPER_HYPER_ROLL,
   Blessing.BIRTHDAY_PRESENT,
   Blessing.LEGENDARY_GAMBIT,
-  Blessing.BABYLESS
+  Blessing.BABYLESS,
+  Blessing.SEA_CRYSTAL
 ])
 
 const DEFENSIVE_COMBAT_BLESSINGS = new Set<Blessing>([

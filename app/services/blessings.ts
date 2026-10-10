@@ -126,6 +126,7 @@ import {
   RUNE_STONE_COMPONENTS,
   RUNE_SWORD_COMPONENTS,
   GLORIOUS_BATTLE_ITEMS,
+  SEA_CRYSTAL_GOLD_REQUIRED,
   VIKING_HELMET_COMPONENTS,
   SILVER_SPOON_ROUNDS_BY_STAR,
   MOTHER_YARN_STAGES_BY_STAR,
@@ -425,6 +426,31 @@ function nextStages(state: GameState, count: number): number[] {
     { length: count },
     (_, index) => state.stageLevel + index + 1
   )
+}
+
+export function countSeaCrystalSale(
+  player: Player,
+  state: GameState,
+  soldPokemon: Pokemon,
+  sellPrice: number
+) {
+  if (
+    !player.blessings.includes(Blessing.SEA_CRYSTAL) ||
+    player.seaCrystalGoldSold >= SEA_CRYSTAL_GOLD_REQUIRED ||
+    !soldPokemon.types.has(Synergy.WATER)
+  ) {
+    return
+  }
+  player.seaCrystalGoldSold += sellPrice
+  player.blessingsRef?.questProgress.set(
+    Blessing.SEA_CRYSTAL,
+    player.seaCrystalGoldSold
+  )
+  if (player.seaCrystalGoldSold >= SEA_CRYSTAL_GOLD_REQUIRED) {
+    scheduleBlessingGrant(player, state, Blessing.SEA_CRYSTAL, [
+      state.stageLevel
+    ])
+  }
 }
 
 export function applyScheduledBlessingGrants(player: Player, state: GameState) {
@@ -2226,6 +2252,9 @@ export const blessingScheduledEffectService: {
 
   ...gymTrainerReleases(),
 
+  [Blessing.SEA_CRYSTAL]: (player) =>
+    giftPokemonIfBenchHasRoom(player, Pkm.PHIONE),
+
   [Blessing.MANIFESTATION_AP]: (player) => releaseManifestedPokemons(player),
 
   [Blessing.MANIFESTATION_AD]: (player) => releaseManifestedPokemons(player),
@@ -3192,6 +3221,7 @@ export const blessingEffectService: {
     )
     return true
   },
+  [Blessing.SEA_CRYSTAL]: () => true,
   [Blessing.GOTTA_CATCH_EM_ALL]: () => true,
   [Blessing.REGIONAL_SPECIALTIES]: (player) => {
     player.applyRegionalSpecialties()

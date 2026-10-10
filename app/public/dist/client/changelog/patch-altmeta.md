@@ -557,6 +557,7 @@ Every balance change on this server, newest first.
 - POISON (7) | the enemy a POISON Pokémon KOs bursts for 50% of its remaining PP as SPECIAL to ADJACENT enemies, instead of the POISON Pokémon bursting when KO'd
 
 **Wishes**
+- Sea Crystal {{new}} | Silver, stages 4 and 12. Sell 20 GOLD worth of WATER Pokémon to gain a Phione
 - Panic Button | now also gives an Unown-Q after each PvE round
 - Jungle Cacophony | PP burned per drum beat 1/2/4 → 2/4/8
 - King's Gambit | ATK and HP gained from fallen allies 25% → 50%
@@ -657,10 +658,11 @@ Every balance change on this server, newest first.
 - Wish Quiz {{new}} | a sidebar gadget for the lobby and waiting rooms
 
 *Thank you for playing John Auto Chess! I'm going on vacation, and this is the
-last content patch until spring. Expect a few balance adjustments and hotfixes
-in the coming weeks; once things settle, there will be no major gameplay
-changes, so the meta stays stable for the upcoming tournaments. Maybe I'll catch you in one of the tournaments
-or on the Discord for a little chat and gossip. Cheers!*
+last content patch until late spring. Expect a few balance adjustments and
+hotfixes in the coming weeks; once things settle, there will be no major
+gameplay changes, so the meta stays stable for the upcoming tournaments. Maybe
+I'll catch you in one of the tournaments or on the Discord for a little chat
+and gossip. Cheers!*
 
 ### 29 September 2026
 

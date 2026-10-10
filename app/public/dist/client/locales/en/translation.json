@@ -6360,6 +6360,10 @@
 			"name": "Glorious Battle",
 			"description": "Choose a RUSTED_SWORD or a RUSTED_SHIELD. Gain the other after 8 player combat wins."
 		},
+		"SEA_CRYSTAL": {
+			"name": "Sea Crystal",
+			"description": "Sell 20 GOLD worth of WATER Pokémon to gain a Phione."
+		},
 		"SHARK_BAIT": {
 			"name": "Shark Bait",
 			"description": "At the start of combat, a few tasty fish join your front row. When one is KO, a hungry shark shows up with full PP."

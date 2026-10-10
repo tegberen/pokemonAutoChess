@@ -18,6 +18,7 @@ import {
   Blessing,
   RAINBOW_DROPLET_SYNERGIES_REQUIRED,
   GRUDGE_CURSE_DURATION_REDUCTION_PER_SUBSTITUTE,
+  SEA_CRYSTAL_GOLD_REQUIRED,
   GEM_HARVEST_ABILITY_POWER_PER_GEM,
   DRAGON_FANG_ABILITY_POWER_PER_STAR,
   STAR_GUARD_DEFENSE_PER_STAR,
@@ -84,6 +85,10 @@ export default function BlessingsPanel(props: { recentOnly?: boolean }) {
   )
   const reveilleSecondsLeft = questProgress[Blessing.REVEILLE] ?? 0
   const grudgeSubstitutesPlanted = questProgress[Blessing.GRUDGE] ?? 0
+  const seaCrystalGoldSold = Math.min(
+    questProgress[Blessing.SEA_CRYSTAL] ?? 0,
+    SEA_CRYSTAL_GOLD_REQUIRED
+  )
   const grudgeCurseSecondsSaved =
     (grudgeSubstitutesPlanted * GRUDGE_CURSE_DURATION_REDUCTION_PER_SUBSTITUTE) /
     1000
@@ -318,6 +323,7 @@ export default function BlessingsPanel(props: { recentOnly?: boolean }) {
                 {blessing === Blessing.VALOR && <p className="blessing-panel-live-value">{addIconsToDescription(`${valorWildStarsOnBench} WILD STAR on bench: +${valorWildStarsOnBench * VALOR_ATTACK_PER_STAR} ATK, +${valorWildStarsOnBench * VALOR_SHIELD_PER_STAR} SHIELD`)}</p>}
                 {blessing === Blessing.REVEILLE && reveilleSecondsLeft > 0 && <p className="blessing-panel-live-value">Marching in {reveilleSecondsLeft}s</p>}
                 {blessing === Blessing.GRUDGE && <p className="blessing-panel-live-value">{addIconsToDescription(`${grudgeSubstitutesPlanted} Substitute${grudgeSubstitutesPlanted === 1 ? "" : "s"} on the opponent bench: every CURSE you inflict is ${grudgeCurseSecondsSaved} seconds shorter`)}</p>}
+                {blessing === Blessing.SEA_CRYSTAL && <p className="blessing-panel-live-value">{addIconsToDescription(seaCrystalGoldSold >= SEA_CRYSTAL_GOLD_REQUIRED ? "Phione earned" : `${seaCrystalGoldSold}/${SEA_CRYSTAL_GOLD_REQUIRED} GOLD of WATER Pokémon sold`)}</p>}
                 {blessing === Blessing.MYSTOGAN && <p className="blessing-panel-live-value">{mystoganWands && mystoganWands.length > 0 ? addIconsToDescription(mystoganWands.map((wand) => wand as string).join(", ")) : "No FAIRY tier reached yet"}</p>}
                 {blessing === Blessing.MAGNETOSPHERE && <p className="blessing-panel-live-value">{addIconsToDescription(`STEEL ${steelCount}: ${magnetosphereReach} RANGE of attraction and repulsion around each STEEL Pokémon`)}</p>}
                 {blessing === Blessing.DRAGON_FANG && <p className="blessing-panel-live-value">{addIconsToDescription(`${fieldedStars} STAR on your board: +${fieldedStars * DRAGON_FANG_ABILITY_POWER_PER_STAR} AP`)}</p>}

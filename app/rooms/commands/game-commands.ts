@@ -53,6 +53,7 @@ import {
   applyBlessingTrigger,
   applyRecurringBlessingGrants,
   applyScheduledBlessingGrants,
+  countSeaCrystalSale,
   checkBlessingQuests,
   checkIndecisionSynergies,
   updatePrismaticQuests,
@@ -1876,6 +1877,7 @@ export class OnSellPokemonCommand extends Command<
     pokemon.items.forEach((it) => {
       player.items.push(it)
     })
+    countSeaCrystalSale(player, this.state, pokemon, sellPrice)
 
     player.updateSynergies()
     if (pokemon.awakeningRock !== "") {

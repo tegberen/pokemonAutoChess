@@ -1626,6 +1626,12 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     icon: "glorious_battle",
     grantsPokemonImmediately: false
   },
+  [Blessing.SEA_CRYSTAL]: {
+    tier: BlessingTier.SILVER,
+    availableAtStages: [4, 12],
+    icon: "sea_crystal",
+    grantsPokemonImmediately: false
+  },
   [Blessing.SHARK_BAIT]: {
     tier: BlessingTier.SILVER,
     availableAtStages: BLESSING_SELECTION_STAGES,

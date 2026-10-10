@@ -344,6 +344,7 @@ export enum Blessing {
   FURTHER_BEYOND = "FURTHER_BEYOND",
   FROZEN_CHRYSALIS = "FROZEN_CHRYSALIS",
   GLORIOUS_BATTLE = "GLORIOUS_BATTLE",
+  SEA_CRYSTAL = "SEA_CRYSTAL",
   SHARK_BAIT = "SHARK_BAIT",
   GOTTA_CATCH_EM_ALL = "GOTTA_CATCH_EM_ALL",
   REGIONAL_SPECIALTIES = "REGIONAL_SPECIALTIES",
@@ -1172,6 +1173,7 @@ export const FURTHER_BEYOND_AP_PER_POINT = 20
 export const FURTHER_BEYOND_SPEED_PER_POINT = 20
 export const GLORIOUS_BATTLE_ITEMS = [Item.RUSTED_SWORD, Item.RUSTED_SHIELD]
 export const GLORIOUS_BATTLE_WINS_REQUIRED = 8
+export const SEA_CRYSTAL_GOLD_REQUIRED = 20
 export const SHARK_BAIT_FISH = [Pkm.MAGIKARP, Pkm.WISHIWASHI, Pkm.FEEBAS]
 // the chance of a school of 1, 2 or 3 fish: there is always at least one
 export const SHARK_BAIT_SCHOOL_ODDS = [0.7, 0.2, 0.1]
@@ -1436,7 +1438,8 @@ export const HERO_BLESSING_POKEMON: { [blessing in Blessing]?: Pkm[] } = {
   [Blessing.CURSE_OF_CORAL]: [Pkm.CORSOLA],
   [Blessing.SCHOOL_BUS]: [Pkm.WISHIWASHI],
   [Blessing.AURORA_BOREALIS]: [Pkm.AMAURA],
-  [Blessing.PRIMAL_RAMPAGE]: [Pkm.CRANIDOS]
+  [Blessing.PRIMAL_RAMPAGE]: [Pkm.CRANIDOS],
+  [Blessing.SEA_CRYSTAL]: [Pkm.PHIONE]
 }
 
 export const HERO_BLESSING_EXTRA_SYNERGIES: {
