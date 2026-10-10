@@ -480,6 +480,12 @@
   grid-column: 1 / -1;
 }
 
+/* hundreds of striped cards: let the browser skip the ones off screen */
+.wiki-blessings-list > li {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 9em;
+}
+
 .wiki-blessings-family-list {
   margin-top: 0.5em;
 }

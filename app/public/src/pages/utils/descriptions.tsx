@@ -91,6 +91,9 @@ export function addIconsToDescription(
     showAbilityTiers?: boolean
   }
 ) {
+  // every token is CAPS or a [..] value list; this check is far cheaper than
+  // the full token regex on the many texts that hold neither
+  if (!/[A-Z]{2}|\[/.test(description)) return description
   const matchIcon = description.match(iconRegExp)
   if (matchIcon === null) return description
   const descriptionParts = description.split(iconRegExp)

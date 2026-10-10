@@ -658,11 +658,11 @@ Every balance change on this server, newest first.
 - Wish Quiz {{new}} | a sidebar gadget for the lobby and waiting rooms
 
 *Thank you for playing John Auto Chess! I'm going on vacation, and this is the
-last content patch until late spring. Expect a few balance adjustments and
-hotfixes in the coming weeks; once things settle, there will be no major
-gameplay changes, so the meta stays stable for the upcoming tournaments. Maybe
-I'll catch you in one of the tournaments or on the Discord for a little chat
-and gossip. Cheers!*
+last content patch until late spring next year. Expect a few balance
+adjustments and hotfixes in the coming weeks; once things settle, there will be
+no major gameplay changes, so the meta stays stable for the upcoming
+tournaments. Maybe I'll catch you in one of the tournaments or on the Discord
+for a little chat and gossip. Cheers!*
 
 ### 29 September 2026
 

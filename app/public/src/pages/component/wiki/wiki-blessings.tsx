@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react"
+import { memo, useEffect, useMemo, useRef, useState } from "react"
 import { useTranslation } from "react-i18next"
 import {
   type BlessingFamily,
@@ -29,7 +29,11 @@ const TIER_ORDER = [
   BlessingTier.PRISMATIC
 ]
 
-function BlessingCard(props: { blessing: Blessing }) {
+// memoised: typing in the search box re-renders the page, and every card
+// would otherwise re-parse its description on each keystroke
+const BlessingCard = memo(function BlessingCard(props: {
+  blessing: Blessing
+}) {
   const { t } = useTranslation()
   const definition = Blessings[props.blessing]
   const synergy = getBlessingSynergy(props.blessing)
@@ -70,6 +74,47 @@ function BlessingCard(props: { blessing: Blessing }) {
           </p>
         </div>
       </div>
+    </li>
+  )
+})
+
+// a closed family renders none of its cards, there are dozens per family
+function BlessingFamilyCard(props: {
+  family: BlessingFamily
+  members: Blessing[]
+}) {
+  const { t } = useTranslation()
+  const [open, setOpen] = useState(false)
+  return (
+    <li className="my-box wiki-blessings-family">
+      <details onToggle={(event) => setOpen(event.currentTarget.open)}>
+        <summary>
+          <div className="wiki-blessing-body">
+            <img
+              src={`/assets/blessings/${Blessings[props.members[0]].icon}.svg`}
+              alt=""
+            />
+            <div>
+              <h3>
+                {t(`wiki.blessings.family_${props.family}_name`)}
+                <span className="wiki-blessings-chevron" />
+              </h3>
+              <p>
+                {addIconsToDescription(
+                  t(`wiki.blessings.family_${props.family}_hint`)
+                )}
+              </p>
+            </div>
+          </div>
+        </summary>
+        {open && (
+          <ul className="wiki-blessings-list wiki-blessings-family-list">
+            {props.members.map((blessing) => (
+              <BlessingCard key={blessing} blessing={blessing} />
+            ))}
+          </ul>
+        )}
+      </details>
     </li>
   )
 }
@@ -574,51 +619,15 @@ export default function WikiBlessings() {
                   )}
                   <ul className="wiki-blessings-list">
                     {category === "synergy" &&
-                      families.map((family) => {
-                        const familyMembers = blessings.filter(
-                          (blessing) => Blessings[blessing].family === family
-                        )
-                        return (
-                          <li
-                            key={family}
-                            className="my-box wiki-blessings-family"
-                          >
-                            <details>
-                              <summary>
-                                <div className="wiki-blessing-body">
-                                  <img
-                                    src={`/assets/blessings/${Blessings[familyMembers[0]].icon}.svg`}
-                                    alt=""
-                                  />
-                                  <div>
-                                    <h3>
-                                      {t(
-                                        `wiki.blessings.family_${family}_name`
-                                      )}
-                                      <span className="wiki-blessings-chevron" />
-                                    </h3>
-                                    <p>
-                                      {addIconsToDescription(
-                                        t(
-                                          `wiki.blessings.family_${family}_hint`
-                                        )
-                                      )}
-                                    </p>
-                                  </div>
-                                </div>
-                              </summary>
-                              <ul className="wiki-blessings-list wiki-blessings-family-list">
-                                {familyMembers.map((blessing) => (
-                                  <BlessingCard
-                                    key={blessing}
-                                    blessing={blessing}
-                                  />
-                                ))}
-                              </ul>
-                            </details>
-                          </li>
-                        )
-                      })}
+                      families.map((family) => (
+                        <BlessingFamilyCard
+                          key={family}
+                          family={family}
+                          members={blessings.filter(
+                            (blessing) => Blessings[blessing].family === family
+                          )}
+                        />
+                      ))}
                     {members.map((blessing) => (
                       <BlessingCard key={blessing} blessing={blessing} />
                     ))}

@@ -437,7 +437,8 @@ export function countSeaCrystalSale(
   if (
     !player.blessings.includes(Blessing.SEA_CRYSTAL) ||
     player.seaCrystalGoldSold >= SEA_CRYSTAL_GOLD_REQUIRED ||
-    !soldPokemon.types.has(Synergy.WATER)
+    // the species' own types: a WATER_STONE must not make any unit count
+    !getPokemonData(soldPokemon.name).types.includes(Synergy.WATER)
   ) {
     return
   }
