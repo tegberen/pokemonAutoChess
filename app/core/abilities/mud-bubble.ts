@@ -8,8 +8,8 @@ import { AbilityStrategy } from "./ability-strategy"
 export class MudBubbleStrategy extends AbilityStrategy {
   process(pokemon: PokemonEntity, board: Board, target: null, crit: boolean) {
     super.process(pokemon, board, target, crit)
-    const heal = [20, 40, 80, 160][pokemon.stars - 1] ?? 160
-    const blindDuration = [2000, 4000, 6000, 12000][pokemon.stars - 1] ?? 12000
+    const heal = [15, 30, 60, 120][pokemon.stars - 1] ?? 120
+    const blindDuration = [1000, 2000, 4000, 8000][pokemon.stars - 1] ?? 8000
     const damage = [15, 30, 60, 120][pokemon.stars - 1] ?? 120
 
     pokemon.handleHeal(heal, pokemon, 1, crit)

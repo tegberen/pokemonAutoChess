@@ -156,6 +156,15 @@
   min-width: 0;
 }
 
+/* an inline span ignores overflow, so a long name ran under the placements */
+.tournament-item .team-box .player-name {
+  display: block;
+}
+
+.tournament-item .team-box .player-ranks {
+  flex-shrink: 0;
+}
+
 .tournament-item .team-box .team-portraits {
   display: flex;
   flex-shrink: 0;

@@ -682,17 +682,30 @@ export default function Game() {
           winnerIds.includes(store.getState().network.uid)
         )
       }
-      const startDoubleUpVictory = (winnerIds: string[]) => {
+      const startDoubleUpVictory = (
+        winnerIds: string[],
+        finaleAvailable: boolean
+      ) => {
         if (victorySceneShown.current) return
         victorySceneShown.current = true
         victoryWinnerIds.current = winnerIds
         setCanRequestFinale(
-          winnerIds.length === 2 &&
+          finaleAvailable &&
+            winnerIds.length === 2 &&
             winnerIds.includes(store.getState().network.uid)
         )
         playDoubleUpVictory(winnerIds)
       }
-      room.onMessage(Transfer.DOUBLE_UP_VICTORY, startDoubleUpVictory)
+      room.onMessage(
+        Transfer.DOUBLE_UP_VICTORY,
+        ({
+          winnerIds,
+          finaleAvailable
+        }: {
+          winnerIds: string[]
+          finaleAvailable: boolean
+        }) => startDoubleUpVictory(winnerIds, finaleAvailable)
+      )
 
       room.onMessage(
         Transfer.FINALE_PROPOSAL,
@@ -747,7 +760,10 @@ export default function Game() {
                     player.doubleUpTeamId === self.doubleUpTeamId &&
                     (player.alive || player.id === self.id)
                 )
-                .map((player) => player.id)
+                .map((player) => player.id),
+              // the victory broadcast always comes first and carries whether
+              // a Finale is allowed, so this fallback never offers one
+              false
             )
           }
         }

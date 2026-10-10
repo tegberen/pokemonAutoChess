@@ -498,6 +498,7 @@ Every balance change on this server, newest first.
 - Gimmighoul Line | PP 90 → 100
 - Golett Line | PP 100 → 120
 - Primal Groudon | ATK 18 → 20
+- Mudkip Line | Mud Splash heal 20/40/80 → 15/30/60, BLINDED 2/4/6s → 1/2/4s
 - Litwick Line | max PP 40 → 50, Hex damage 20/40/60 → 20/30/40, also doubled against a HEXING_INCANTATION target
 - Politoed | HP 220 → 200
 - Gastly Line | max PP 90/85/80 → 90

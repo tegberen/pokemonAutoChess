@@ -2500,10 +2500,10 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
   finishGame(winners: Player[]) {
     this.state.gameFinished = true
     if (this.state.gameMode === GameMode.DOUBLE_UP && winners.length > 0) {
-      this.room.broadcast(
-        Transfer.DOUBLE_UP_VICTORY,
-        winners.map((winner) => winner.id)
-      )
+      this.room.broadcast(Transfer.DOUBLE_UP_VICTORY, {
+        winnerIds: winners.map((winner) => winner.id),
+        finaleAvailable: !this.room.metadata?.tournamentId
+      })
     }
     winners.forEach((winner) => {
       const client = this.room.clients.find(

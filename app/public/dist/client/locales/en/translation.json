@@ -2102,7 +2102,7 @@
 		"HAIL": "A hailstorm hits [10,20,30] random tiles on the target's side of the board. BOARD_EFFECT: The tiles deal [50,50,50,80,SP] SPECIAL on impact and stay on the ground.",
 		"LUSTER_PURGE": "Launch a ball of light in a straight line, which rebounds after travelling 4 tiles, dealing [5,15,25,40,80,SP] SPECIAL and lowering the SPE_DEF by 5 each time it passes through an enemy.",
 		"MIST_BALL": "Launch a mist bubble in a straight line, which rebounds after travelling 4 tiles, dealing [5,15,25,40,80,SP] SPECIAL and lowering the AP by 30 each time it passes through an enemy.",
-		"MUD_BUBBLE": "Heal the user for [20,40,80,160,SP] HP, then deal [15,30,60,120,SP] SPECIAL to all ADJACENT enemy Pokémon and BLINDED them for [2,4,6,12] seconds. Enemies already BLINDED take double damage instead.",
+		"MUD_BUBBLE": "Heal the user for [15,30,60,120,SP] HP, then deal [15,30,60,120,SP] SPECIAL to all ADJACENT enemy Pokémon and BLINDED them for [1,2,4,8] seconds. Enemies already BLINDED take double damage instead.",
 		"LINK_CABLE": "Dash to the farthest reachable enemy Pokémon, then trigger an electric arc between $t(pkm.PLUSLE) and $t(pkm.MINUN), dealing [40,40,40,80,SP] SPECIAL. If $t(pkm.PLUSLE) or $t(pkm.MINUN) are alone, deal half this damage to ADJACENT enemy Pokémon instead.",
 		"MAGIC_BOUNCE": "For 5 seconds, whenever the user is hit by an ability, block the damage and reflect [50,100,200,400,SP]% SPECIAL to the caster.",
 		"REFLECT": "For [3,3,3,5] seconds, whenever the user received PHYSICAL, block the damage and reflect [50,75,100,150,SP]% of the damage as SPECIAL to the attacker.",
