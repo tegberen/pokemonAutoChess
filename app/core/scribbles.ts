@@ -14,7 +14,14 @@ import type GameState from "../rooms/states/game-state"
 import { Ability } from "../types/enum/Ability"
 import { Emotion } from "../types/enum/Emotion"
 import { Rarity } from "../types/enum/Game"
-import { Pkm, PkmFamily, PkmIndex, PkmRegionalVariants, Unowns } from "../types/enum/Pokemon"
+import {
+  NonPkm,
+  Pkm,
+  PkmFamily,
+  PkmIndex,
+  PkmRegionalVariants,
+  Unowns
+} from "../types/enum/Pokemon"
 import { min } from "../utils/number"
 import { chance, pickRandomIn, randomWeighted, simpleHashSeededCoinFlip } from "../utils/random"
 import { getUnitPowerScore } from "./bot-logic"
@@ -75,6 +82,16 @@ export type SmearglePackCard = {
   emotion: Emotion
 }
 
+// summon-only units that would make odd starters
+const SMEARGLE_PACK_EXCLUDED_UNITS: Pkm[] = [
+  ...NonPkm,
+  Pkm.GHOST,
+  Pkm.FALINKS_TROOPER,
+  Pkm.COMBEE,
+  Pkm.ARROKUDA,
+  Pkm.REMORAID
+]
+
 export function createSmearglePackPropositions(
   player: Player,
   size = SMEARGLE_PACK_SIZE
@@ -94,6 +111,7 @@ export function createSmearglePackPropositions(
         (base) =>
           getPokemonData(base).skill !== Ability.DEFAULT &&
           Unowns.includes(base) === false &&
+          SMEARGLE_PACK_EXCLUDED_UNITS.includes(base) === false &&
           families.has(base) === false
       )
     if (candidates.length === 0) continue
