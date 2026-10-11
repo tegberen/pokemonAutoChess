@@ -17,7 +17,10 @@ import { Item } from "../../../../../types/enum/Item"
 import { Weather } from "../../../../../types/enum/Weather"
 import { Synergy } from "../../../../../types/enum/Synergy"
 import { SpecialGameRule } from "../../../../../types/enum/SpecialGameRule"
-import { addIconsToHtml } from "../../utils/descriptions"
+import {
+  addIconsToHtml,
+  getGhostSpiritCoinSentence
+} from "../../utils/descriptions"
 import { GamePokemonDetailTooltip } from "../game/game-pokemon-detail"
 import { ItemDetailTooltip } from "../../../game/components/item-detail"
 import { Modal } from "../modal/modal"
@@ -80,7 +83,8 @@ function resolveGuideTokens(markdown: string) {
       const synergy = Object.values(Synergy).find((value) => value === name)
       if (!synergy) return token
       const description = t(`synergy_description.${synergy}`, {
-        additionalInfo: ""
+        additionalInfo:
+          synergy === Synergy.GHOST ? getGhostSpiritCoinSentence() : ""
       })
       const tiers = SynergyTiers[synergy].map(
         (tier: SynergyTier, index: number) =>

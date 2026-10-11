@@ -404,7 +404,7 @@ export default class Player extends Schema implements IPlayer {
   gloriousBattleReward: Item | null = null
   gloriousBattleWins = 0
   seaCrystalGoldSold = 0
-  ritualGoldCount = 0
+  ritualSpiritCoinCount = 0
   // server-only: STARTER_CHOICE's pick, and how many round-starts still owe a copy
   starterChoicePokemon: Pkm | null = null
   starterChoiceRoundsLeft: number = 0

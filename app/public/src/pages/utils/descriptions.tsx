@@ -1,6 +1,9 @@
 import { t } from "i18next"
 import React, { type ReactElement } from "react"
-import { IncantationKind } from "../../../../config/game/ghost-incantations"
+import {
+  IncantationKind,
+  type SpiritCoinReward
+} from "../../../../config/game/ghost-incantations"
 import { DocumentedBoardEffects } from "../../../../types/enum/Effect"
 import { Damage, Stat } from "../../../../types/enum/Game"
 import { Item } from "../../../../types/enum/Item"
@@ -48,6 +51,25 @@ const getTechnicalTermIcon = (term: string) =>
       : term in IncantationKindByTechnicalTerm
         ? getIncantationIcon(IncantationKindByTechnicalTerm[term])
         : `/assets/ui/${term.toLowerCase()}.svg`
+
+export const IconOnlyTechnicalTerms: string[] = [TechnicalTerm.SPIRIT_COIN]
+
+let spiritCoinRewardThisGame: SpiritCoinReward | null = null
+export function setSpiritCoinRewardThisGame(reward: SpiritCoinReward | null) {
+  spiritCoinRewardThisGame = reward
+}
+
+const getTechnicalTermDefinition = (term: TechnicalTerm) =>
+  term === TechnicalTerm.SPIRIT_COIN && spiritCoinRewardThisGame
+    ? t(`spirit_coin_reward_this_game.${spiritCoinRewardThisGame}`)
+    : t(`technical_terms_definitions.${term}`)
+
+export const getGhostSpiritCoinSentence = () =>
+  t(
+    spiritCoinRewardThisGame
+      ? `synergy_description.GHOST_SPIRIT_COIN_${spiritCoinRewardThisGame}`
+      : "synergy_description.GHOST_SPIRIT_COIN"
+  )
 
 // board-effect tiles plus the AQUATIC tidal wave and the two weather damage
 // sources — all rendered with an icon from assets/icons/<TOKEN>.svg and
@@ -259,12 +281,14 @@ export function addIconsToDescription(
         icon = (
           <span
             className="description-icon technical-term"
-            title={t(`technical_terms_definitions.${token}`)}
+            title={getTechnicalTermDefinition(token)}
           >
             <img src={getTechnicalTermIcon(token)} />
-            <i className="technical-term-label">
-              {capitalize(t(`technical_terms.${token}`))}
-            </i>
+            {!IconOnlyTechnicalTerms.includes(token) && (
+              <i className="technical-term-label">
+                {capitalize(t(`technical_terms.${token}`))}
+              </i>
+            )}
           </span>
         )
       } else if (/\[[^\]]+\]/.test(token)) {
@@ -458,9 +482,12 @@ export function addIconsToHtml(
           const isBuff = isIn(BuffWords, token)
           iconHTML = `<span class="status-label${isBuff ? " positive" : ""}">${token.toLowerCase()}</span>`
         } else if (isIn(TechnicalTerms, token)) {
-          iconHTML = `<span class="description-icon technical-term" title="${t(`technical_terms_definitions.${token}`)}">
+          const labelHTML = IconOnlyTechnicalTerms.includes(token)
+            ? ""
+            : `<i class="technical-term-label">${t(`technical_terms.${token}`)}</i>`
+          iconHTML = `<span class="description-icon technical-term" title="${getTechnicalTermDefinition(token)}">
             <img src="${getTechnicalTermIcon(token)}" />
-            <i class="technical-term-label">${t(`technical_terms.${token}`)}</i>
+            ${labelHTML}
           </span>`
         } else if (/\[[^\]]+\]/.test(token)) {
           const array = token.slice(1, -1).split(",")

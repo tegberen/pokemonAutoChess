@@ -14,9 +14,9 @@ import {
   RITUAL_ATTACKS_PER_TRIGGER,
   RITUAL_BONUS_VALUES,
   RITUAL_EFFECT_VALUES,
-  RITUAL_GOLD_EVERY,
-  RITUAL_GOLD_PAYOUT,
   RITUAL_SILENCE_VALUES,
+  RITUAL_SPIRIT_COIN_EVERY,
+  RITUAL_SPIRIT_COIN_PAYOUT,
   RitualBonus,
   RitualEffect,
   RitualTrigger
@@ -99,11 +99,13 @@ function describeRitualBonus(
   trigger: string | null,
   rewardMultiplier: number
 ) {
-  if (bonus === RitualBonus.GOLD_EVERY) {
-    const every = trigger ? RITUAL_GOLD_EVERY[trigger as RitualTrigger] : null
+  if (bonus === RitualBonus.SPIRIT_COIN_EVERY) {
+    const every = trigger
+      ? RITUAL_SPIRIT_COIN_EVERY[trigger as RitualTrigger]
+      : null
     return {
       every: every ? every.join(",") : UNKNOWN_VALUE,
-      gold: multipliedTiers([RITUAL_GOLD_PAYOUT], rewardMultiplier)
+      coins: multipliedTiers([RITUAL_SPIRIT_COIN_PAYOUT], rewardMultiplier)
     }
   }
   const values = trigger
@@ -215,7 +217,7 @@ export function describeHexingSummary(
     }
     lossText = t(`ghost_incantations.summary.${key}`, params)
     reapGain = t(`ghost_incantations.summary.reap.${key}`, params)
-  } else if (loss === HexingEffect.GOLD_ON_KO) {
+  } else if (loss === HexingEffect.SPIRIT_COIN_ON_KO) {
     lossText = t(`ghost_incantations.summary.${loss}`, {
       value: HEXING_EFFECT_VALUES[loss][strength]
     })

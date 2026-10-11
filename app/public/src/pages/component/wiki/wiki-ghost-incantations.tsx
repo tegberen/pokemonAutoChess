@@ -17,9 +17,9 @@ import {
   RITUAL_ATTACKS_PER_TRIGGER,
   RITUAL_BONUS_VALUES,
   RITUAL_EFFECT_VALUES,
-  RITUAL_GOLD_EVERY,
-  RITUAL_GOLD_PAYOUT,
   RITUAL_SILENCE_VALUES,
+  RITUAL_SPIRIT_COIN_EVERY,
+  RITUAL_SPIRIT_COIN_PAYOUT,
   RitualBonus,
   RitualEffect,
   RitualTrigger
@@ -81,7 +81,7 @@ const HEXING_TARGET_STAT_TOKENS: { [target in HexingTarget]: string } = {
 const HEXING_EFFECT_UNITS: {
   [loss in Exclude<HexingEffect, HexingEffect.STAT>]: string
 } = {
-  GOLD_ON_KO: " GOLD",
+  SPIRIT_COIN_ON_KO: " SPIRIT_COIN",
   CRIT_POWER_ON_KO: "%",
   LUCK: " LUCK",
   MAX_PP: "%",
@@ -186,17 +186,21 @@ const PERMANENT_RITUAL_BONUSES = [
   RitualBonus.PERMANENT_SPEED
 ] as const
 
-const ATTACK_GOLD_EVERY = RITUAL_GOLD_EVERY[RitualTrigger.GHOST_ATTACKS]
+const ATTACK_SPIRIT_COIN_EVERY =
+  RITUAL_SPIRIT_COIN_EVERY[RitualTrigger.GHOST_ATTACKS]
 
-const GOLD_ROWS = [
+const SPIRIT_COIN_ROWS = [
   {
-    label: "gold_every",
+    label: "spirit_coin_every",
     describe: (trigger: RitualTrigger) =>
-      addIconsToDescription(`[${RITUAL_GOLD_EVERY[trigger].join(",")}]`)
+      addIconsToDescription(
+        `[${RITUAL_SPIRIT_COIN_EVERY[trigger].join(",")}]`
+      )
   },
   {
-    label: "gold_amount",
-    describe: () => addIconsToDescription(`${RITUAL_GOLD_PAYOUT} GOLD`)
+    label: "spirit_coin_amount",
+    describe: () =>
+      addIconsToDescription(`${RITUAL_SPIRIT_COIN_PAYOUT} SPIRIT_COIN`)
   }
 ]
 
@@ -419,7 +423,7 @@ export function WikiGhostIncantations() {
                 [
                   RitualTrigger.ENEMY_KOD,
                   RitualEffect.GHOST_SPEED,
-                  RitualBonus.GOLD_EVERY
+                  RitualBonus.SPIRIT_COIN_EVERY
                 ],
                 ""
               )
@@ -494,11 +498,11 @@ export function WikiGhostIncantations() {
                     colSpan={RITUAL_TRIGGERS.length + 1}
                   >
                     {addIconsToDescription(
-                      t("wiki.ghost.ritual.bonuses.GOLD_EVERY")
+                      t("wiki.ghost.ritual.bonuses.SPIRIT_COIN_EVERY")
                     )}
                   </th>
                 </tr>
-                {GOLD_ROWS.map(({ label, describe }) => (
+                {SPIRIT_COIN_ROWS.map(({ label, describe }) => (
                   <tr key={label} className="wiki-ghost-group-member">
                     <th scope="row">
                       {addIconsToDescription(t(`wiki.ghost.ritual.${label}`))}
@@ -530,13 +534,14 @@ export function WikiGhostIncantations() {
           </p>
           <p className="wiki-ghost-example">
             {addIconsToDescription(
-              t("wiki.ghost.ritual.gold_example", {
+              t("wiki.ghost.ritual.spirit_coin_example", {
                 attacks: RITUAL_ATTACKS_PER_TRIGGER,
-                gold: RITUAL_GOLD_PAYOUT,
-                every: ATTACK_GOLD_EVERY[0],
-                strongerEvery: ATTACK_GOLD_EVERY[1],
-                total: RITUAL_ATTACKS_PER_TRIGGER * ATTACK_GOLD_EVERY[0],
-                strongerTotal: RITUAL_ATTACKS_PER_TRIGGER * ATTACK_GOLD_EVERY[1]
+                coins: RITUAL_SPIRIT_COIN_PAYOUT,
+                every: ATTACK_SPIRIT_COIN_EVERY[0],
+                strongerEvery: ATTACK_SPIRIT_COIN_EVERY[1],
+                total: RITUAL_ATTACKS_PER_TRIGGER * ATTACK_SPIRIT_COIN_EVERY[0],
+                strongerTotal:
+                  RITUAL_ATTACKS_PER_TRIGGER * ATTACK_SPIRIT_COIN_EVERY[1]
               })
             )}
           </p>

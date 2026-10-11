@@ -4017,7 +4017,11 @@
 		"FAIRY": "FAIRY Pokémon use wands to deal additional SPECIAL and various effects with their attacks.{{additionalInfo}}",
 		"FAIRY_WANDS": "\nWands equipped: {{wands}}",
 		"ROCK": "ROCK Pokémon gain DEF, better resist to critical attacks, and can adapt to weather. When ROCK Pokémon are KO'd they explode, deal TRUE and ARMOR_BREAK all ADJACENT enemies",
-		"GHOST": "GHOST lets you write incantations: a HEXING_INCANTATION DEBUFF at 2 and 4, a RITUAL_INCANTATION BUFF at 6 and a FATED_INCANTATION at 8. GHOST Pokémon have a [15,LK]% chance to dodge attacks and apply SILENCE for 2s ON_HIT, more against negative LUCK.",
+		"GHOST": "GHOST lets you write incantations: a HEXING_INCANTATION DEBUFF at 2 and 4, a RITUAL_INCANTATION BUFF at 6 and a FATED_INCANTATION at 8. GHOST Pokémon have a [15,LK]% chance to dodge attacks and apply SILENCE for 2s ON_HIT, more against negative LUCK.{{additionalInfo}}",
+		"GHOST_SPIRIT_COIN": " A SPIRIT_COIN is worth 1 GOLD, 1 free shop reroll or 1 XP, decided at the start of each game.",
+		"GHOST_SPIRIT_COIN_GOLD": " This game, a SPIRIT_COIN is worth 1 GOLD.",
+		"GHOST_SPIRIT_COIN_REROLL": " This game, a SPIRIT_COIN is worth 1 free shop reroll.",
+		"GHOST_SPIRIT_COIN_XP": " This game, a SPIRIT_COIN is worth 1 XP.",
 		"GHOST_NIGHT_SHADE": "Night Shade",
 		"GHOST_NIGHT_SHADE_DESCRIPTION": "Unlock the Shady title. One does not simply leak how to get Shady.",
 		"ICE": "ICE Pokémon have [20,LK]% chance to FREEZE the enemy for 2 seconds after a hit and give SPE_DEF to your whole team.",
@@ -6868,7 +6872,7 @@
 				"STAT": "LOSES {{value}} {{stat}}",
 				"STAT_PERCENT": "LOSES {{value}}% {{stat}}",
 				"STAT_UNKNOWN": "LOSES the stat of its Cause",
-				"GOLD_ON_KO": "GRANTS you {{value}} GOLD when KO'd",
+				"SPIRIT_COIN_ON_KO": "GRANTS you {{value}} SPIRIT_COIN when KO'd",
 				"CRIT_POWER_ON_KO": "Makes its team LOSE {{value}}% CRIT_POWER when KO'd",
 				"LUCK": "LOSES {{value}} LUCK",
 				"MAX_PP": "Has its max PP INCREASED by {{value}}%",
@@ -6907,7 +6911,7 @@
 				"GHOST_MAX_HP": "GHOST Pokémon GAIN {{value}} max HP"
 			},
 			"2": {
-				"GOLD_EVERY": "Each [{{every}}] times it happens, you GAIN {{gold}} GOLD",
+				"SPIRIT_COIN_EVERY": "Each [{{every}}] times it happens, you GAIN {{coins}} SPIRIT_COIN",
 				"PERMANENT_HP": "The ally with the highest max HP GAINS {{value}} permanent HP, up to half its base HP",
 				"PERMANENT_PP": "The ally with the highest AP GAINS {{value}} permanent starting PP, up to half its max PP",
 				"PERMANENT_SPEED": "The ally with the highest ATK GAINS {{value}} permanent SPEED, up to half its base SPEED"
@@ -6927,7 +6931,7 @@
 			},
 			"1": {
 				"ECHO": "[{{value}},LK]% chance to repeat the RITUAL_INCANTATION",
-				"DOUBLE_REWARDS": "Grants double GOLD and permanent stat GAINS",
+				"DOUBLE_REWARDS": "Grants double SPIRIT_COIN and permanent stat GAINS",
 				"RESURRECT": "After activating {{value}}, give RESURRECTION to the STRONGEST ally",
 				"SPAWN_GHOST": "[{{value}},LK]% chance to put a GHOST Pokémon costing 3 GOLD or less on your bench"
 			}
@@ -6942,7 +6946,7 @@
 			},
 			"STAT": "−{{value}} {{stat}}",
 			"STAT_PERCENT": "−{{value}}% {{stat}}",
-			"GOLD_ON_KO": "{{value}} GOLD on KO",
+			"SPIRIT_COIN_ON_KO": "{{value}} SPIRIT_COIN on KO",
 			"CRIT_POWER_ON_KO": "−{{value}}% team CRIT_POWER on KO",
 			"LUCK": "−{{value}} LUCK",
 			"MAX_PP": "+{{value}}% max PP",
@@ -7750,7 +7754,7 @@
 					"GHOST_MAX_HP": "max HP"
 				},
 				"bonuses": {
-					"GOLD_EVERY": "After enough times, you GAIN GOLD",
+					"SPIRIT_COIN_EVERY": "After enough times, you GAIN SPIRIT_COIN",
 					"PERMANENT_HP": "Highest max HP ally GAINS permanent HP",
 					"PERMANENT_PP": "Highest AP ally GAINS permanent starting PP",
 					"PERMANENT_SPEED": "Highest ATK ally GAINS permanent SPEED"
@@ -7759,10 +7763,10 @@
 				"silence_behind_target": "Enemies in a line behind the target for {{seconds}} seconds",
 				"silence_nearest": "{{targets}} nearest for {{seconds}} seconds",
 				"silence_adjacent": "{{targets}} ADJACENT for {{seconds}} seconds",
-				"gold_every": "Times needed",
-				"gold_amount": "Amount",
+				"spirit_coin_every": "Times needed",
+				"spirit_coin_amount": "Amount",
 				"permanent_cap_note": "Each Pokémon can gain up to half its base HP, max PP and base SPEED from the \"permanent HP\", \"permanent starting PP\" and \"permanent SPEED\" Bewitchings. When several allies tie on that stat, the STRONGEST one is chosen. Once a Pokémon reaches its cap, the next best ally gains them instead. Example: a Pokémon with 200 base HP, 100 max PP and 60 base SPEED can gain at most 100 HP, 50 starting PP and 30 SPEED.",
-				"gold_example": "Example with the \"After enough times, you GAIN GOLD\" Bewitching: the Cause \"Every {{attacks}} attacks by one allied GHOST Pokémon\" has to happen {{every}} times before you GAIN {{gold}} GOLD: {{total}} GHOST attacks ({{attacks}} × {{every}}). Once it is STRONGER, it only has to happen {{strongerEvery}} times: {{strongerTotal}} GHOST attacks ({{attacks}} × {{strongerEvery}}). All your GHOST Pokémon count together. Each Pokémon's attacks restart at 0 every fight, but the times it happened carry over."
+				"spirit_coin_example": "Example with the \"After enough times, you GAIN SPIRIT_COIN\" Bewitching: the Cause \"Every {{attacks}} attacks by one allied GHOST Pokémon\" has to happen {{every}} times before you GAIN {{coins}} SPIRIT_COIN: {{total}} GHOST attacks ({{attacks}} × {{every}}). Once it is STRONGER, it only has to happen {{strongerEvery}} times: {{strongerTotal}} GHOST attacks ({{attacks}} × {{strongerEvery}}). All your GHOST Pokémon count together. Each Pokémon's attacks restart at 0 every fight, but the times it happened carry over."
 			},
 			"fated": {
 				"title": "Fated Incantation",
@@ -7771,7 +7775,7 @@
 				"ritual_heading": "Empower your RITUAL_INCANTATION",
 				"rituals": {
 					"ECHO": "Chance to repeat the RITUAL_INCANTATION",
-					"DOUBLE_REWARDS": "Double GOLD and permanent stat GAINS",
+					"DOUBLE_REWARDS": "Double SPIRIT_COIN and permanent stat GAINS",
 					"RESURRECT": "Give RESURRECTION to the STRONGEST ally after activating",
 					"SPAWN_GHOST": "Chance to put a GHOST Pokémon costing 3 GOLD or less on your bench"
 				},
@@ -7784,7 +7788,7 @@
 				"LUCK": "LOSES LUCK",
 				"MAX_HP": "LOSES max HP",
 				"MAX_PP": "Has its max PP INCREASED",
-				"GOLD_ON_KO": "When KO'd, GRANTS you GOLD",
+				"SPIRIT_COIN_ON_KO": "When KO'd, GRANTS you SPIRIT_COIN",
 				"CRIT_POWER_ON_KO": "When KO'd, its team LOSES CRIT_POWER"
 			},
 			"curse_duration": "Lasts the whole fight."
@@ -8117,7 +8121,8 @@
 		"STRONGER": "stronger",
 		"HEXING_INCANTATION": "Hexing Incantation",
 		"RITUAL_INCANTATION": "Ritual Incantation",
-		"FATED_INCANTATION": "Fated Incantation"
+		"FATED_INCANTATION": "Fated Incantation",
+		"SPIRIT_COIN": "Spirit Coin"
 	},
 	"technical_terms_definitions": {
 		"ADJACENT": "the 8 tiles surrounding a unit",
@@ -8134,7 +8139,13 @@
 		"STRONGER": "A stronger GHOST incantation moves up a Tier and uses its higher values. Each HEXING_INCANTATION gets stronger at GHOST 6 and 8, the RITUAL_INCANTATION at GHOST 8.",
 		"HEXING_INCANTATION": "Your DEBUFF, written at GHOST 2 and 4. At the start of each fight, it hexes one enemy with a malus and a NEGATIVE_STATUS for the whole fight.",
 		"RITUAL_INCANTATION": "Your BUFF, written at GHOST 6. Every time its Cause happens during a fight, its Effect and Bewitching trigger.",
-		"FATED_INCANTATION": "Written at GHOST 8 to empower your HEXING_INCANTATION and RITUAL_INCANTATION."
+		"FATED_INCANTATION": "Written at GHOST 8 to empower your HEXING_INCANTATION and RITUAL_INCANTATION.",
+		"SPIRIT_COIN": "Worth 1 GOLD, 1 free shop reroll or 1 XP, decided at the start of each game."
+	},
+	"spirit_coin_reward_this_game": {
+		"GOLD": "Spirit Coin: worth 1 gold this game.",
+		"REROLL": "Spirit Coin: worth 1 free shop reroll this game.",
+		"XP": "Spirit Coin: worth 1 XP this game."
 	},
 	"seed_bag": {
 		"title": "Seed Bag",

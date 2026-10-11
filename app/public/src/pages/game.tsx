@@ -142,6 +142,7 @@ import GameToasts from "./component/game/game-toasts"
 import { MainSidebar } from "./component/main-sidebar/main-sidebar"
 import { ConnectionStatusNotification } from "./component/system/connection-status-notification"
 import { playBlessingSong, playMusic, preloadMusic } from "./utils/audio"
+import { setSpiritCoinRewardThisGame } from "./utils/descriptions"
 import { LocalStoreKeys, localStore } from "./utils/store"
 import {
   transformBoardCoordinates,
@@ -421,6 +422,7 @@ export default function Game() {
       await r.leave(false)
     }
     dispatch(leaveGame(0))
+    setSpiritCoinRewardThisGame(null)
     navigate("/after")
     if (room?.connection.isOpen) {
       room.leave()
@@ -1143,6 +1145,10 @@ export default function Game() {
 
       $state.listen("specialGameRule", (value) => {
         dispatch(setSpecialGameRule(value))
+      })
+
+      $state.listen("spiritCoinReward", (value) => {
+        setSpiritCoinRewardThisGame(value)
       })
 
       $state.additionalPokemons.onChange(() => {

@@ -16,8 +16,14 @@ export enum HexingEffect {
   LUCK = "LUCK",
   MAX_HP = "MAX_HP",
   MAX_PP = "MAX_PP",
-  GOLD_ON_KO = "GOLD_ON_KO",
+  SPIRIT_COIN_ON_KO = "SPIRIT_COIN_ON_KO",
   CRIT_POWER_ON_KO = "CRIT_POWER_ON_KO"
+}
+
+export enum SpiritCoinReward {
+  GOLD = "GOLD",
+  REROLL = "REROLL",
+  XP = "XP"
 }
 
 export enum HexingStatus {
@@ -44,7 +50,7 @@ export enum RitualEffect {
 }
 
 export enum RitualBonus {
-  GOLD_EVERY = "GOLD_EVERY",
+  SPIRIT_COIN_EVERY = "SPIRIT_COIN_EVERY",
   PERMANENT_HP = "PERMANENT_HP",
   PERMANENT_PP = "PERMANENT_PP",
   PERMANENT_SPEED = "PERMANENT_SPEED"
@@ -113,7 +119,7 @@ export const HEXING_STAT_LOSS_VALUES: {
 export const HEXING_EFFECT_VALUES: {
   [loss in Exclude<HexingEffect, HexingEffect.STAT>]: number[]
 } = {
-  [HexingEffect.GOLD_ON_KO]: [1, 2, 3],
+  [HexingEffect.SPIRIT_COIN_ON_KO]: [1, 2, 3],
   [HexingEffect.CRIT_POWER_ON_KO]: [10, 20, 30],
   [HexingEffect.LUCK]: [10, 20, 30],
   [HexingEffect.MAX_PP]: [10, 20, 30],
@@ -170,16 +176,16 @@ export const RITUAL_SILENCE_VALUES: ByRitualTrigger<{
 }
 
 // a counter, not a chance: LUCK the ritual itself grants would snowball a roll
-export const RITUAL_GOLD_EVERY: ByRitualTrigger<number[]> = {
+export const RITUAL_SPIRIT_COIN_EVERY: ByRitualTrigger<number[]> = {
   [RitualTrigger.GHOST_CASTS]: [10, 5],
   [RitualTrigger.GHOST_ATTACKS]: [10, 5],
   [RitualTrigger.GHOST_KOD]: [6, 3],
   [RitualTrigger.ENEMY_KOD]: [8, 4]
 }
-export const RITUAL_GOLD_PAYOUT = 1
+export const RITUAL_SPIRIT_COIN_PAYOUT = 1
 
 export const RITUAL_BONUS_VALUES: {
-  [bonus in Exclude<RitualBonus, RitualBonus.GOLD_EVERY>]: RitualValues
+  [bonus in Exclude<RitualBonus, RitualBonus.SPIRIT_COIN_EVERY>]: RitualValues
 } = {
   [RitualBonus.PERMANENT_HP]: {
     [RitualTrigger.GHOST_CASTS]: [1, 2],

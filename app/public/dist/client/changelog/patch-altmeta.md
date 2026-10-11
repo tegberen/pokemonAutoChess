@@ -133,6 +133,12 @@ each tile of gap.
 
 {{synergy:GHOST}}
 
+#### SPIRIT_COIN Spirit Coins
+
+- If it is GOLD: the best and most flexible.
+- If it is a free shop reroll: make sure to spend those early if you are in a lobby that is contesting your Pokémon.
+- If it is XP: the least flexible and has a hard cap once you are at max level. It is good to not choose that many SPIRIT_COIN incantations and to focus on damage or sustain instead.
+
 [Ghost in the Wiki](#wiki/types/GHOST)
 
 ## Weather
@@ -464,8 +470,10 @@ Every balance change on this server, newest first.
 - All Fours, Safari Encounter, Pocket Daycare | SILVER_DOJO_TICKET → BRONZE_DOJO_TICKET
 - Potion | player HP healed 20 → 10
 - HEXING_INCANTATION {{new}} | new Effect: when its target is KO'd, the target's team LOSES 10/20/30% CRIT_POWER<br>The two HEXING_INCANTATION can no longer share the same Effect or NEGATIVE_STATUS
+- SPIRIT_COIN Spirit Coin {{new}} | replaces GOLD from incantations to lower its value: worth 1 GOLD, 1 free shop reroll or 1 XP, decided at the start of each game, the same for every player
+- HEXING_INCANTATION | the GOLD Effect now GRANTS 1/2/3 SPIRIT_COIN instead of GOLD when its target is KO'd
 - FATED_INCANTATION | chance to repeat the RITUAL_INCANTATION 40% → 25%
-- RITUAL_INCANTATION | the GOLD Bewitching is no longer a LUCK chance but a count:<br>GHOST ally casts: 1 GOLD each 10/5 times<br>8 attacks by one GHOST ally: 1 GOLD each 10/5 times<br>GHOST ally KO'd: 1 GOLD each 6/3 times<br>Enemy KO'd: 1 GOLD each 8/4 times
+- RITUAL_INCANTATION | the GOLD Bewitching now GRANTS SPIRIT_COIN instead, and is no longer a LUCK chance but a count:<br>GHOST ally casts: 1 SPIRIT_COIN each 10/5 times<br>8 attacks by one GHOST ally: 1 SPIRIT_COIN each 10/5 times<br>GHOST ally KO'd: 1 SPIRIT_COIN each 6/3 times<br>Enemy KO'd: 1 SPIRIT_COIN each 8/4 times
 
 ### 10 October 2026
 

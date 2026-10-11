@@ -39,7 +39,10 @@ import {
   useAppSelector
 } from "../../../hooks"
 import type { IFossilUnlocksState } from "../../../stores/GameStore"
-import { addIconsToDescription } from "../../utils/descriptions"
+import {
+  addIconsToDescription,
+  getGhostSpiritCoinSentence
+} from "../../utils/descriptions"
 import { cc } from "../../utils/jsx"
 import { getCachedPortrait } from "../game/game-pokemon-portrait"
 import {
@@ -252,6 +255,10 @@ export default function SynergyDetailComponent(props: {
       default:
         break
     }
+  }
+
+  if (props.type === Synergy.GHOST) {
+    additionalInfo = getGhostSpiritCoinSentence()
   }
 
   if (props.type === Synergy.FAIRY && spectatedPlayer) {

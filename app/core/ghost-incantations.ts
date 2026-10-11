@@ -21,13 +21,14 @@ import {
   IncantationKind,
   RITUAL_BONUS_VALUES,
   RITUAL_EFFECT_VALUES,
-  RITUAL_GOLD_EVERY,
-  RITUAL_GOLD_PAYOUT,
   RITUAL_PERMANENT_STAT_CAP,
   RITUAL_SILENCE_VALUES,
+  RITUAL_SPIRIT_COIN_EVERY,
+  RITUAL_SPIRIT_COIN_PAYOUT,
   RitualBonus,
   RitualEffect,
-  RitualTrigger
+  RitualTrigger,
+  SpiritCoinReward
 } from "../config/game/ghost-incantations"
 import { SynergyTiers } from "../config/game/synergies"
 import type Player from "../models/colyseus-models/player"
@@ -383,7 +384,7 @@ export function onHexedEnemyKnockedOut(enemy: PokemonEntity) {
     const { side, incantation } = hex
     const effect = incantation.effect as HexingEffect
     if (
-      effect !== HexingEffect.GOLD_ON_KO &&
+      effect !== HexingEffect.SPIRIT_COIN_ON_KO &&
       effect !== HexingEffect.CRIT_POWER_ON_KO
     ) {
       continue
@@ -393,8 +394,8 @@ export function onHexedEnemyKnockedOut(enemy: PokemonEntity) {
     if (side.koPaidHexes.has(paidKey)) continue
     side.koPaidHexes.add(paidKey)
     const value = HEXING_EFFECT_VALUES[effect][side.hexingStrength]
-    if (effect === HexingEffect.GOLD_ON_KO) {
-      grantIncantationGold(side, value)
+    if (effect === HexingEffect.SPIRIT_COIN_ON_KO) {
+      grantSpiritCoins(enemy.simulation, side, value)
     } else {
       const curser = getCurser(enemy.simulation, side)
       if (!curser) continue
@@ -414,6 +415,22 @@ export function onHexedEnemyKnockedOut(enemy: PokemonEntity) {
         })
       }
     }
+  }
+}
+
+function grantSpiritCoins(
+  simulation: Simulation,
+  side: IncantationSide,
+  count: number
+) {
+  if (!side.canEarnRewards) return
+  const reward = simulation.room.state.spiritCoinReward
+  if (reward === SpiritCoinReward.GOLD) {
+    grantIncantationGold(side, count)
+  } else if (reward === SpiritCoinReward.REROLL) {
+    side.player.shopFreeRolls = Math.min(255, side.player.shopFreeRolls + count)
+  } else {
+    side.player.addExperience(count)
   }
 }
 
@@ -521,13 +538,18 @@ function activateRitual(
   const rewardMultiplier =
     side.fated?.effect === FatedRitual.DOUBLE_REWARDS ? 2 : 1
   const bonus = ritual.bonus as RitualBonus
-  if (bonus === RitualBonus.GOLD_EVERY) {
+  if (bonus === RitualBonus.SPIRIT_COIN_EVERY) {
     // a ghost fight must not move the real player's count
     if (!side.canEarnRewards) return
-    side.player.ritualGoldCount += 1
-    if (side.player.ritualGoldCount >= RITUAL_GOLD_EVERY[trigger][strength]) {
-      side.player.ritualGoldCount = 0
-      grantIncantationGold(side, RITUAL_GOLD_PAYOUT * rewardMultiplier)
+    side.player.ritualSpiritCoinCount += 1
+    const needed = RITUAL_SPIRIT_COIN_EVERY[trigger][strength]
+    if (side.player.ritualSpiritCoinCount >= needed) {
+      side.player.ritualSpiritCoinCount = 0
+      grantSpiritCoins(
+        simulation,
+        side,
+        RITUAL_SPIRIT_COIN_PAYOUT * rewardMultiplier
+      )
     }
     return
   }

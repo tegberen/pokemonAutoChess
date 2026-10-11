@@ -12,6 +12,7 @@ import {
   StageDuration,
   type TreasureBoxReward
 } from "../../config"
+import { SpiritCoinReward } from "../../config/game/ghost-incantations"
 import BotManager from "../../core/bot-manager"
 import Simulation from "../../core/simulation"
 import { FloatingItem } from "../../models/colyseus-models/floating-item"
@@ -94,8 +95,12 @@ export default class GameState extends Schema {
   // written GHOST incantations, after the older fields for the same reason
   @type({ map: PlayerIncantations }) ghostIncantationsByPlayerId =
     new MapSchema<PlayerIncantations>()
-  // the rolled Mystery Box value shown in the Misfits description, kept last
+  // the rolled Mystery Box value shown in the Misfits description
   @type("uint8") mysteryBoxGold = 0
+  // rolled once so a SPIRIT_COIN reads the same all game, kept last
+  @type("string") spiritCoinReward = pickRandomIn(
+    Object.values(SpiritCoinReward)
+  )
   // server-only cursor recording which step already handed out its grants
   guideStepEntered = -1
   // server-only: true while a guide stage is being replayed with a different

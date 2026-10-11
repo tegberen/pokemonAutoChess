@@ -2,7 +2,8 @@ import { useTranslation } from "react-i18next"
 import { TechnicalTerms } from "../../../../../types/strings/TechnicalTerm"
 import {
   addIconsToDescription,
-  DocumentedEffects
+  DocumentedEffects,
+  IconOnlyTechnicalTerms
 } from "../../utils/descriptions"
 import "./wiki-glossary.css"
 
@@ -49,7 +50,14 @@ export default function WikiGlossary() {
       <dl>
         {TechnicalTerms.map((term) => (
           <div key={term} className="my-box glossary-term">
-            <dt>{addIconsToDescription(term)}</dt>
+            <dt>
+              {addIconsToDescription(term)}
+              {IconOnlyTechnicalTerms.includes(term) && (
+                <i className="technical-term-label">
+                  {t(`technical_terms.${term}`)}
+                </i>
+              )}
+            </dt>
             <dd>
               {addIconsToDescription(t(`technical_terms_definitions.${term}`))}
             </dd>

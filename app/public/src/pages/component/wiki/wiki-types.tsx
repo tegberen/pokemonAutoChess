@@ -15,7 +15,10 @@ import type { IPokemonData } from "../../../../../types/interfaces/PokemonData"
 import { groupBy } from "../../../../../utils/array"
 import { getPortraitSrc } from "../../../../../utils/avatar"
 import { usePreferences } from "../../../preferences"
-import { addIconsToDescription } from "../../utils/descriptions"
+import {
+  addIconsToDescription,
+  getGhostSpiritCoinSentence
+} from "../../utils/descriptions"
 import { cc } from "../../utils/jsx"
 import { GamePokemonDetailTooltip } from "../game/game-pokemon-detail"
 import SynergyIcon from "../icons/synergy-icon"
@@ -132,7 +135,10 @@ export function WikiType(props: { type: Synergy; onGoToWeather?: () => void }) {
       </h2>
       <p>
         {addIconsToDescription(
-          t(`synergy_description.${props.type}`, { additionalInfo: "" })
+          t(`synergy_description.${props.type}`, {
+            additionalInfo:
+              props.type === Synergy.GHOST ? getGhostSpiritCoinSentence() : ""
+          })
         )}
       </p>
       {synergyTiers.map((tier: (typeof synergyTiers)[number], i) => {
