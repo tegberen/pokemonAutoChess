@@ -21,6 +21,7 @@ aside.sidebar {
 
 .sidebar .sidebar-logo > div {
   overflow: hidden;
+  padding-left: 8px;
 }
 
 .sidebar .sidebar-logo h1 {
