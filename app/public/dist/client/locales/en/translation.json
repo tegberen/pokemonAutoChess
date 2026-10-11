@@ -6952,12 +6952,14 @@
 				"STAT_PERCENT": "+the {{stat}} lost",
 				"LUCK": "+{{value}} LUCK",
 				"MAX_PP": "−{{value}}% max PP",
-				"MAX_HP": "+the max HP lost"
+				"MAX_HP": "+the max HP lost",
+				"CRIT_POWER_ON_KO": "+{{value}}% CRIT_POWER"
 			},
 			"fated": {
 				"TWO_TARGETS": "2 × {{target}}",
 				"DOOM": "CURSE, KO after {{seconds}}s",
 				"REAP": "your GHOST {{gain}}",
+				"REAP_TEAM": "your team {{gain}}",
 				"PLAGUE": "{{status}} + ADJACENT"
 			},
 			"fated_ritual": {
@@ -7726,15 +7728,15 @@
 			},
 			"hexing": {
 				"title": "Hexing Incantations",
-				"intro": "Your DEBUFF at GHOST 2 and 4. At the start of each fight, the enemy chosen by the Cause gets the Effect and the NEGATIVE_STATUS for the whole fight. When several enemies tie on that stat, the STRONGEST one is chosen. Your second HEXING_INCANTATION cannot use the same Cause or Effect as the first."
+				"intro": "Your DEBUFF at GHOST 2 and 4. At the start of each fight, the enemy chosen by the Cause gets the Effect and the NEGATIVE_STATUS for the whole fight. When several enemies tie on that stat, the STRONGEST one is chosen. Your second HEXING_INCANTATION cannot use the same Cause, Effect or NEGATIVE_STATUS as the first."
 			},
 			"ritual": {
 				"title": "Ritual Incantation",
 				"intro": "Your BUFF at GHOST 6. Each time the Cause happens, the Effect and the Bewitching trigger.",
 				"causes": {
-					"GHOST_CASTS": "GHOST casts",
-					"GHOST_ATTACKS": "{{count}} attacks by one GHOST",
-					"GHOST_KOD": "GHOST KO'd",
+					"GHOST_CASTS": "GHOST ally casts",
+					"GHOST_ATTACKS": "{{count}} attacks by one GHOST ally",
+					"GHOST_KOD": "GHOST ally KO'd",
 					"ENEMY_KOD": "Enemy KO'd"
 				},
 				"ghost_gain": "Allied GHOST Pokémon GAIN",
@@ -7774,7 +7776,7 @@
 					"SPAWN_GHOST": "Chance to put a GHOST Pokémon costing 3 GOLD or less on your bench"
 				},
 				"all_causes": "Every Cause",
-				"hexing_reap_note": "Reap example, with Tier 3 hexes at GHOST 8: a target LOSES 60 AP, your STRONGEST GHOST Pokémon GAINS 60 AP. A target's max PP INCREASED by 30% lowers your GHOST Pokémon's max PP by 30%.",
+				"hexing_reap_note": "Reap example, with Tier 3 hexes at GHOST 8: a target LOSES 60 AP, your STRONGEST GHOST Pokémon GAINS 60 AP. A target's max PP INCREASED by 30% lowers your GHOST Pokémon's max PP by 30%. When a target whose team LOSES CRIT_POWER is KO'd, your whole team GAINS that CRIT_POWER.",
 				"hexing_doom_note": "If both HEXING_INCANTATION hex the same enemy, it gets CURSE twice: the second CURSE KOs it at once."
 			},
 			"hexing_effects": {

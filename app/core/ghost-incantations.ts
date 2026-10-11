@@ -397,9 +397,21 @@ export function onHexedEnemyKnockedOut(enemy: PokemonEntity) {
     } else {
       const curser = getCurser(enemy.simulation, side)
       if (!curser) continue
-      getTeamEntities(enemy.simulation, enemy.team).forEach((ally) =>
-        ally.addCritPower(-value, curser, 0, false)
+      getTeamEntities(enemy.simulation, enemy.team).forEach((teammate) =>
+        teammate.addCritPower(-value, curser, 0, false)
       )
+      if (side.fated?.cause === FatedHexing.REAP) {
+        getTeamEntities(enemy.simulation, side.team).forEach((ally) => {
+          ally.addCritPower(value, ally, 0, false)
+          ally.broadcastAbility({
+            skill: "REAP_CRIT_POWER",
+            positionX: enemy.positionX,
+            positionY: enemy.positionY,
+            targetX: ally.positionX,
+            targetY: ally.positionY
+          })
+        })
+      }
     }
   }
 }

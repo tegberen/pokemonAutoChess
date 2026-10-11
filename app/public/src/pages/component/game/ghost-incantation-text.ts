@@ -205,6 +205,7 @@ export function describeHexingSummary(
   const loss = hexing.effect as HexingEffect
   let lossText: string
   let reapGain: string | null = null
+  let reapsWholeTeam = false
   if (loss === HexingEffect.STAT) {
     const target = hexing.cause as HexingTarget
     const statLoss = HEXING_STAT_LOSS_VALUES[target]
@@ -215,13 +216,15 @@ export function describeHexingSummary(
     }
     lossText = t(`ghost_incantations.summary.${key}`, params)
     reapGain = t(`ghost_incantations.summary.reap.${key}`, params)
-  } else if (
-    loss === HexingEffect.GOLD_ON_KO ||
-    loss === HexingEffect.CRIT_POWER_ON_KO
-  ) {
+  } else if (loss === HexingEffect.GOLD_ON_KO) {
     lossText = t(`ghost_incantations.summary.${loss}`, {
       value: HEXING_EFFECT_VALUES[loss][strength]
     })
+  } else if (loss === HexingEffect.CRIT_POWER_ON_KO) {
+    const params = { value: HEXING_EFFECT_VALUES[loss][strength] }
+    lossText = t(`ghost_incantations.summary.${loss}`, params)
+    reapGain = t(`ghost_incantations.summary.reap.${loss}`, params)
+    reapsWholeTeam = true
   } else {
     const params = { value: HEXING_EFFECT_VALUES[loss][strength] }
     lossText = t(`ghost_incantations.summary.${loss}`, params)
@@ -248,7 +251,10 @@ export function describeHexingSummary(
     return `${summary} · ${doom}`
   }
   if (fated === FatedHexing.REAP && reapGain) {
-    const reap = t("ghost_incantations.summary.fated.REAP", { gain: reapGain })
+    const reapKey = reapsWholeTeam ? "REAP_TEAM" : "REAP"
+    const reap = t(`ghost_incantations.summary.fated.${reapKey}`, {
+      gain: reapGain
+    })
     return `${summary} · ${reap}`
   }
   return summary

@@ -1502,6 +1502,10 @@ export default class Player extends Schema implements IPlayer {
       slot === 1
         ? effects.filter((effect) => effect !== firstHex?.effect)
         : effects
+    const offeredBonuses =
+      slot === 1
+        ? bonuses.filter((bonus) => bonus !== firstHex?.bonus)
+        : bonuses
     const ritualTrigger =
       this.ghostIncantations.find(
         (written) => written.kind === IncantationKind.RITUAL
@@ -1513,7 +1517,7 @@ export default class Player extends Schema implements IPlayer {
         slot,
         causes: pickNRandomIn(offeredCauses, INCANTATION_OPTIONS_SHOWN),
         effects: pickNRandomIn(offeredEffects, INCANTATION_OPTIONS_SHOWN),
-        bonuses: pickNRandomIn(bonuses, INCANTATION_OPTIONS_SHOWN),
+        bonuses: pickNRandomIn(offeredBonuses, INCANTATION_OPTIONS_SHOWN),
         strength: getIncantationStrength(kind, ghostLevel),
         context: kind === IncantationKind.FATED ? ritualTrigger : ""
       }

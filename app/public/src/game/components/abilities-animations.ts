@@ -3738,8 +3738,10 @@ function homingAnimation(options: {
   scale: number
   oriented?: boolean
   burst?: { ability: string; scale: number }
+  // shown on the receiver for the whole flight: fades in, spins, fades out
+  channel?: { ability: string; scale: number }
 }): AbilityAnimation {
-  const { ability, duration, scale, oriented, burst } = options
+  const { ability, duration, scale, oriented, burst, channel } = options
   return ({
     scene,
     pokemonsOnBoard,
@@ -3751,12 +3753,17 @@ function homingAnimation(options: {
     ap
   }) => {
     const start = transformEntityCoordinates(positionX, positionY, flip)
+    const source = spriteAt(pokemonsOnBoard, positionX, positionY)
     const receiver = spriteAt(pokemonsOnBoard, targetX, targetY)
     const receiverStart = transformEntityCoordinates(targetX, targetY, flip)
     const receiverPosition = () =>
       receiver?.active ? [receiver.x, receiver.y] : receiverStart
+    // both effects stay on their unit when it walks, not on the tile it left
     if (burst) {
-      addAbilitySprite(scene, burst.ability, ap, start, { scale: burst.scale })
+      const effect = addAbilitySprite(scene, burst.ability, ap, start, {
+        scale: burst.scale
+      })
+      if (effect && source) followUnit(scene, effect, source)
     }
     const flying = addAbilitySprite(scene, ability, ap, start, {
       scale,
@@ -3764,6 +3771,30 @@ function homingAnimation(options: {
       animOptions: { repeat: -1 }
     })
     if (!flying) return
+    const channeling =
+      channel && receiver?.active
+        ? addAbilitySprite(scene, channel.ability, ap, receiverPosition(), {
+            scale: channel.scale,
+            alpha: 0,
+            destroyOnComplete: false,
+            animOptions: { repeat: -1 }
+          })
+        : null
+    if (channeling && receiver) {
+      followUnit(scene, channeling, receiver)
+      channeling.once(Phaser.GameObjects.Events.DESTROY, () =>
+        scene.tweens.killTweensOf(channeling)
+      )
+      scene.tweens.add({ targets: channeling, alpha: 1, duration: 350 })
+      if (!REDUCED_MOTION) {
+        scene.tweens.add({
+          targets: channeling,
+          angle: 360,
+          duration,
+          repeat: -1
+        })
+      }
+    }
     scene.tweens.addCounter({
       from: 0,
       to: 1,
@@ -3780,11 +3811,13 @@ function homingAnimation(options: {
       },
       onComplete: () => {
         flying.destroy()
-        if (burst) {
-          addAbilitySprite(scene, burst.ability, ap, receiverPosition(), {
-            scale: burst.scale
-          })
-        }
+        if (!channeling) return
+        scene.tweens.add({
+          targets: channeling,
+          alpha: 0,
+          duration: 450,
+          onComplete: () => channeling.destroy()
+        })
       }
     })
   }
@@ -7998,12 +8031,19 @@ export const AbilitiesAnimations: {
   [Ability.TRICK_ROOM]: trickRoomCastAnimation(),
   ["TRICK_ROOM_SLOW"]: trickRoomSlowAnimation(),
   // the hexed enemy is the "caster" and the reaper the "target"
+  // Reap's orange curse, carrying the stolen stats to the reaper
   ["REAP"]: homingAnimation({
-    ability: "WISP",
+    ability: "CURSE_OF_WEAKNESS",
     duration: 800,
     scale: 1.5,
-    oriented: true,
-    burst: { ability: Ability.SPECTRAL_THIEF, scale: 2 }
+    burst: { ability: Ability.SPECTRAL_THIEF, scale: 2 },
+    channel: { ability: Ability.SPECTRAL_THIEF, scale: 2 }
+  }),
+  // the same orange curse, carrying the CRIT_POWER to every ally
+  ["REAP_CRIT_POWER"]: homingAnimation({
+    ability: "CURSE_OF_WEAKNESS",
+    duration: 800,
+    scale: 1.5
   }),
   ["PLAGUE"]: homingAnimation({
     ability: "CURSE_OF_TORMENT",
