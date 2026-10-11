@@ -464,6 +464,11 @@ Smeargle Scribbles do not change your Elo.
 
 Every balance change on this server, newest first.
 
+### 12 October 2026
+
+**Interface**
+- Rainbow Trail | unlocks with 8 different Eeveelutions instead of 9, Mafia Eevee is no longer needed
+
 ### 11 October 2026
 
 **Pokémon**

@@ -65,9 +65,8 @@ export function CosmeticsTab() {
                           <>
                             With the{" "}
                             <strong>{t("blessing.RAINBOW_HOUR.name")}</strong>{" "}
-                            Wish, field all 9 Eeveelutions at the same time
-                            (Vaporeon, Jolteon, Flareon, Espeon, Umbreon,
-                            Leafeon, Glaceon, Sylveon and Mafia Eevee).
+                            Wish, field 8 different Eeveelutions at the same
+                            time.
                           </>
                         ) : (
                           <>
