@@ -3811,7 +3811,7 @@
 	"no": "否",
 	"title_label": "头衔",
 	"auth": {
-		"pokemon_auto_chess": "宝可梦自走棋",
+		"pokemon_auto_chess": "John Auto Chess",
 		"mobile_warning": "此游戏并未适配移动端，请用电脑游戏",
 		"nintendo_warning": "非盈利开源项目，所有权利归The Pokemon Company®所有",
 		"authenticated_as": "当前登录账号",

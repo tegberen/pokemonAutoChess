@@ -15,6 +15,7 @@ aside.sidebar {
 
 .sidebar-logo img {
   width: 54px;
+  flex-shrink: 0;
   margin: 8px 0px 8px 4px;
 }
 

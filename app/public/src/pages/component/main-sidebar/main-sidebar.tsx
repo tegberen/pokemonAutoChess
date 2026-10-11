@@ -151,7 +151,7 @@ export function MainSidebar(props: MainSidebarProps) {
     >
       <Menu>
         <div className="sidebar-logo" onClick={() => setCollapsed(!collapsed)}>
-          <img src={`assets/ui/colyseus-icon.png`} />
+          <img src={`assets/ui/arcanine_logo.svg`} />
           <div>
             <h1>John Auto Chess</h1>
           </div>

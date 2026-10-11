@@ -452,6 +452,9 @@ export default function ServerGuide({
                   <>
                     <section className="my-box guide-welcome">
                       <p>
+                        A modded Pokémon Auto Chess experience. Huge thanks to Keldaan &amp; Curry, whose work this is built on.
+                      </p>
+                      <p>
                         Explains the differences from the main server and assumes you know the basics of Pokémon Auto Chess. New players are encouraged to start on the main server.
                       </p>
                     </section>
