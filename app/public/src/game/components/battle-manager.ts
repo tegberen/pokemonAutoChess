@@ -854,7 +854,7 @@ export default class BattleManager {
           break
 
         case "awakening":
-          // Awakened Pokémon keep their crystalline glow during the fight.
+          // Awakened Pokémon keep their crystal during the fight.
           if (pokemon.awakening !== Awakening.NONE) {
             pkmSprite.setAwakening(3, "", pokemon.awakening)
           }

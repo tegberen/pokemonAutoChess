@@ -2,6 +2,7 @@ import Phaser from "phaser"
 import MoveToPlugin from "phaser4-rex-plugins/plugins/moveto-plugin"
 import { useCallback, useEffect, useRef, useState } from "react"
 import { Orientation } from "../../../../../types/enum/Game"
+import type { Item } from "../../../../../types/enum/Item"
 import { Pkm } from "../../../../../types/enum/Pokemon"
 import type { Status } from "../../../../../types/enum/Status"
 import { DebugScene } from "../../../game/scenes/debug-scene"
@@ -14,6 +15,7 @@ export default function DebugSceneContainer({
   animationType = "Idle",
   shiny,
   status,
+  awakening = "",
   height = 100,
   width = 100
 }: {
@@ -22,6 +24,7 @@ export default function DebugSceneContainer({
   animationType?: string
   shiny: boolean
   status: Status | ""
+  awakening?: Item | ""
   height?: number
   width?: number
 }) {
@@ -43,9 +46,10 @@ export default function DebugSceneContainer({
       orientation,
       animationType,
       status,
-      shiny
+      shiny,
+      awakening
     )
-  }, [animationType, orientation, pkm, status, shiny])
+  }, [animationType, orientation, pkm, status, shiny, awakening])
 
   useEffect(() => {
     if (!initialized.current) {
@@ -80,10 +84,11 @@ export default function DebugSceneContainer({
         orientation,
         animationType,
         status,
-        shiny
+        shiny,
+        awakening
       )
     }
-  }, [pkm, orientation, animationType, status, loaded, shiny])
+  }, [pkm, orientation, animationType, status, loaded, shiny, awakening])
 
   return (
     <div id="debug-scene">

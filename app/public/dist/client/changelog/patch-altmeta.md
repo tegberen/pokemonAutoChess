@@ -483,6 +483,7 @@ Every balance change on this server, newest first.
 
 **Interface**
 - Double Up chat | account level required 100 → 42
+- Awakening | new crystal look
 
 ### 10 October 2026
 

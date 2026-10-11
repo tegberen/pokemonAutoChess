@@ -2,11 +2,13 @@ import { t } from "i18next"
 import { useState } from "react"
 import { useNavigate } from "react-router"
 import { Orientation } from "../../../types/enum/Game"
+import type { Item } from "../../../types/enum/Item"
 import { Pkm } from "../../../types/enum/Pokemon"
 import { Status } from "../../../types/enum/Status"
 import {
   hasMegaEvolutionAnimation
 } from "../game/components/mega-evolution-animation"
+import PokemonSprite from "../game/components/pokemon"
 import { Checkbox } from "./component/checkbox/checkbox"
 import DebugScene from "./component/debug/debug-scene"
 import { MainSidebar } from "./component/main-sidebar/main-sidebar"
@@ -22,6 +24,7 @@ export function SpriteDebug() {
   )
   const [animationType, setAnimType] = useState<string>("Idle")
   const [status, setStatus] = useState<Status | "">("")
+  const [awakening, setAwakening] = useState<Item | "">("")
   const isMegaEvolution = animationType === "MegaEvolution"
   const pokemonOptions = Object.values(Pkm)
     .filter((option) => !isMegaEvolution || hasMegaEvolutionAnimation(option))
@@ -116,6 +119,22 @@ export function SpriteDebug() {
             <option value="BOOST/SPEED">Boost Speed</option>
             <option value="BOOST/AP">Boost AP</option>
           </select>
+
+          <label htmlFor="sprite-viewer-awakening">Awakening</label>
+          <select
+            id="sprite-viewer-awakening"
+            value={awakening}
+            onChange={(e) => setAwakening(e.currentTarget.value as Item | "")}
+          >
+            <option value="">None</option>
+            {(Object.keys(PokemonSprite.AWAKENING_COLORS) as Item[]).map(
+              (rock) => (
+                <option value={rock} key={rock}>
+                  {t(`item.${rock}`)}
+                </option>
+              )
+            )}
+          </select>
         </div>
         <div className="sprite-viewer-sprite">
           <DebugScene
@@ -124,6 +143,7 @@ export function SpriteDebug() {
             animationType={animationType}
             shiny={shiny}
             status={status}
+            awakening={awakening}
             width={1950}
             height={1000}
           />

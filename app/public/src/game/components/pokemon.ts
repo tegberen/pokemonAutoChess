@@ -233,6 +233,8 @@ export default class PokemonSprite extends DraggableObject {
   megaCooldownBadge: GameObjects.Container | undefined
   awakeningGlow: Phaser.Filters.Glow | undefined
   awakeningGlowTween: Phaser.Tweens.Tween | undefined
+  awakenedCrystalShellLayers: GameObjects.Sprite[] | undefined
+  awakenedCrystalShellRock: Item | undefined
   awakeningCrystal: GameObjects.Sprite | undefined
   awakeningSurgeTimer: Phaser.Time.TimerEvent | undefined
   awakeningBar: GameObjects.Graphics | undefined
@@ -1547,22 +1549,48 @@ export default class PokemonSprite extends DraggableObject {
     // a Crystal Guardian Onix charges a new rock while already awakened, and
     // the charging bar takes priority over the awakened look until it completes
     const awakened = awakening !== Awakening.NONE && rock === ""
-    if (!awakened && rock === "") {
+    if (awakened) {
+      const color =
+        PokemonSprite.AWAKENING_COLORS[awakening as Item] ?? 0x8ef6ff
+      this.removeAwakeningCharge()
+      this.applyAwakenedCrystalShell(awakening as Item)
+      this.showAwakeningGlow(color, 3, 0.25)
+      return
+    }
+    if (rock === "") {
       this.awakeningGlowTween?.remove()
       this.awakeningGlowTween = undefined
       if (this.awakeningGlow) this.awakeningGlow.outerStrength = 0
       this.removeAwakeningCharge()
+      this.removeAwakenedCrystalShell()
       return
     }
-    const level = awakened ? segments : Math.max(0, Math.min(segments, charge))
-    const color = awakened
-      ? (PokemonSprite.AWAKENING_COLORS[awakening as Item] ?? 0x8ef6ff)
-      : PokemonSprite.CRYSTALLISE_COLOR
+    this.removeAwakenedCrystalShell()
+    const level = Math.max(0, Math.min(segments, charge))
+    const color = PokemonSprite.CRYSTALLISE_COLOR
 
     /* glow scaled by progress rather than raw charge, so a shorter
        crystallisation still peaks just as bright */
-    const outerStrength = awakened ? 3 : 1 + (level / segments) * 4 // 1 → 5
-    const scale = awakened ? 0.25 : 0.15
+    const outerStrength = 1 + (level / segments) * 4 // 1 → 5
+    const scale = 0.15
+    this.showAwakeningGlow(color, outerStrength, scale)
+
+    // Weather rock to the left of the charge bar, below the Pokémon
+    const rockX = -46
+    const rockY = 37
+    const rockScale = 0.32
+    if (!this.awakeningCrystal) {
+      this.awakeningCrystal = this.scene.add
+        .sprite(rockX, rockY, "item", `${rock}.png`)
+        .setScale(rockScale)
+      this.add(this.awakeningCrystal)
+      this.bringToTop(this.awakeningCrystal)
+      this.startAwakeningRockAnim(rockScale)
+    }
+    this.drawAwakeningBar(level, color, segments)
+  }
+
+  showAwakeningGlow(color: number, outerStrength: number, scale: number) {
     this.sprite.enableFilters()
     if (!this.awakeningGlow) {
       this.awakeningGlow =
@@ -1608,24 +1636,168 @@ export default class PokemonSprite extends DraggableObject {
         }
       })
     }
+  }
 
-    // Weather rock to the left of the charge bar, below the Pokémon
-    if (rock !== "" && !awakened) {
-      const rockX = -46
-      const rockY = 37
-      const rockScale = 0.32
-      if (!this.awakeningCrystal) {
-        this.awakeningCrystal = this.scene.add
-          .sprite(rockX, rockY, "item", `${rock}.png`)
-          .setScale(rockScale)
-        this.add(this.awakeningCrystal)
-        this.bringToTop(this.awakeningCrystal)
-        this.startAwakeningRockAnim(rockScale)
-      }
-      this.drawAwakeningBar(level, color, segments)
-    } else {
-      this.removeAwakeningCharge()
+  // each glow color keeps its own hue and brightness, but strong ones like
+  // purple stop here so the crystal never overpowers the unit inside it
+  static readonly AWAKENED_CRYSTAL_MAX_SATURATION = 0.5
+
+  // these rocks' glow colors turn olive, dull or washed out as crystal, so they
+  // get a hand-picked gem color that skips the saturation cap
+  static readonly AWAKENED_CRYSTAL_COLORS: Partial<Record<Item, number>> = {
+    [Item.SMOOTH_ROCK]: 0xffbb55,
+    [Item.ELECTRIC_QUARTZ]: 0xfff38a,
+    [Item.SMELLY_CLAY]: 0x7fd320,
+    [Item.METAL_ALLOY]: 0x5b8fd9,
+    [Item.STICKY_GLOB]: 0xe8b000,
+    [Item.DISTORTION_SLATE]: 0x7d6e9e,
+    [Item.FOSSIL_FRAGMENT]: 0xd9741a,
+    [Item.BLOSSOM_SHARD]: 0xff7fb5,
+    [Item.HEAT_ROCK]: 0xff5a1f,
+    [Item.CLOUD_ORB]: 0x9d8cff
+  }
+
+  // a different tint for the unit inside the crystal, like Electric Quartz's
+  // dark royal-blue core inside a luminous pale yellow crystal
+  static readonly AWAKENED_CRYSTAL_INNER_COLORS: Partial<Record<Item, number>> =
+    {
+      [Item.ELECTRIC_QUARTZ]: 0x1c3fae
     }
+
+  // hard light also lightens the sprite's dark outline under a bright color,
+  // so these shells use overlay, which keeps dark pixels dark: the inner lines
+  // and the shell's edge stay sharp
+  static readonly AWAKENED_CRYSTAL_OVERLAY_SHELL_ROCKS: Item[] = [
+    Item.ELECTRIC_QUARTZ,
+    Item.STICKY_GLOB,
+    Item.SMOOTH_ROCK,
+    Item.FLOAT_STONE,
+    Item.BLOSSOM_SHARD
+  ]
+
+  // a hard light tint colors the shell like gem glass but keeps the sprite's
+  // light and dark, which reads as facets; a faint same-size copy over the
+  // unit makes it read as inside the crystal without touching its own tint
+  static readonly AWAKENED_CRYSTAL_SHELL_LAYERS = [
+    { scale: 1.45, alpha: 0.45, whiteness: 0.15, overUnit: false },
+    { scale: 1, alpha: 0.3, whiteness: 0, overUnit: true }
+  ]
+
+  // a larger crystal copy of the unit stands behind it, like a Terastal or a
+  // Susanoo; it copies every animation frame so it moves with the unit
+  applyAwakenedCrystalShell(awakening: Item) {
+    if (
+      this.awakenedCrystalShellLayers &&
+      this.awakenedCrystalShellRock === awakening
+    ) {
+      return
+    }
+    this.removeAwakenedCrystalShell()
+    const handPickedColor = PokemonSprite.AWAKENED_CRYSTAL_COLORS[awakening]
+    const rock = Phaser.Display.Color.IntegerToColor(
+      handPickedColor ?? PokemonSprite.AWAKENING_COLORS[awakening] ?? 0x8ef6ff
+    )
+    const crystalColor =
+      handPickedColor !== undefined
+        ? rock
+        : (Phaser.Display.Color.HSVToRGB(
+            rock.h,
+            Math.min(PokemonSprite.AWAKENED_CRYSTAL_MAX_SATURATION, rock.s),
+            rock.v,
+            new Phaser.Display.Color()
+          ) as Phaser.Display.Color)
+    const towardWhite = (amount: number) =>
+      Phaser.Display.Color.GetColor(
+        Math.round(crystalColor.red + (255 - crystalColor.red) * amount),
+        Math.round(crystalColor.green + (255 - crystalColor.green) * amount),
+        Math.round(crystalColor.blue + (255 - crystalColor.blue) * amount)
+      )
+    // tints, unlike filters, stay pixel-crisp when the shell is scaled up
+    this.awakenedCrystalShellLayers =
+      PokemonSprite.AWAKENED_CRYSTAL_SHELL_LAYERS.map(
+        ({ scale, alpha, whiteness, overUnit }) => {
+          const layer = new GameObjects.Sprite(
+            this.scene,
+            0,
+            0,
+            this.sprite.texture.key,
+            this.sprite.frame.name
+          )
+            .setTint(
+              (overUnit &&
+                PokemonSprite.AWAKENED_CRYSTAL_INNER_COLORS[awakening]) ||
+                towardWhite(whiteness)
+            )
+            .setTintMode(
+              !overUnit &&
+                PokemonSprite.AWAKENED_CRYSTAL_OVERLAY_SHELL_ROCKS.includes(
+                  awakening
+                )
+                ? Phaser.TintModes.OVERLAY
+                : Phaser.TintModes.HARD_LIGHT
+            )
+            .setAlpha(alpha)
+            .setData("shellScale", scale)
+          this.addAt(layer, this.getIndex(this.sprite) + (overUnit ? 1 : 0))
+          return layer
+        }
+      )
+    this.awakenedCrystalShellRock = awakening
+    this.syncAwakenedCrystalShell()
+    this.sprite.on(
+      Phaser.Animations.Events.ANIMATION_UPDATE,
+      this.syncAwakenedCrystalShell
+    )
+    this.sprite.on(
+      Phaser.Animations.Events.ANIMATION_START,
+      this.syncAwakenedCrystalShell
+    )
+  }
+
+  // frames are trimmed atlas entries whose body sits off-center in a padded
+  // frame, so each layer grows around the body box instead of the frame
+  syncAwakenedCrystalShell = () => {
+    const frame = this.sprite.frame
+    const bodyCenterX = frame.x + frame.width / 2
+    const facingBodyCenterX = this.sprite.flipX
+      ? frame.realWidth - bodyCenterX
+      : bodyCenterX
+    const bodyOffsetX =
+      (facingBodyCenterX - this.sprite.originX * frame.realWidth) *
+      this.sprite.scaleX
+    const bodyOffsetY =
+      (frame.y + frame.height / 2 - this.sprite.originY * frame.realHeight) *
+      this.sprite.scaleY
+    // a dig hides only the body, so the crystal must not hover over the hole
+    const bodyShown = this.sprite.visible && this.sprite.alpha > 0
+    this.awakenedCrystalShellLayers?.forEach((layer) => {
+      const scale: number = layer.getData("shellScale")
+      layer
+        .setVisible(bodyShown)
+        .setTexture(this.sprite.texture.key, frame.name)
+        .setFlipX(this.sprite.flipX)
+        .setOrigin(this.sprite.originX, this.sprite.originY)
+        .setScale(this.sprite.scaleX * scale, this.sprite.scaleY * scale)
+        .setPosition(
+          this.sprite.x + bodyOffsetX * (1 - scale),
+          this.sprite.y + bodyOffsetY * (1 - scale)
+        )
+    })
+  }
+
+  removeAwakenedCrystalShell() {
+    if (!this.awakenedCrystalShellLayers) return
+    this.sprite.off(
+      Phaser.Animations.Events.ANIMATION_UPDATE,
+      this.syncAwakenedCrystalShell
+    )
+    this.sprite.off(
+      Phaser.Animations.Events.ANIMATION_START,
+      this.syncAwakenedCrystalShell
+    )
+    this.awakenedCrystalShellLayers.forEach((layer) => layer.destroy())
+    this.awakenedCrystalShellLayers = undefined
+    this.awakenedCrystalShellRock = undefined
   }
 
   // Periodic throb of the weather rock

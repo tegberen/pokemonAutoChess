@@ -10,6 +10,7 @@ import { AnimationType } from "../../../../types/Animation"
 import delays from "../../../../types/delays.json"
 import type { DungeonPMDO } from "../../../../types/enum/Dungeon"
 import { Orientation, Stat } from "../../../../types/enum/Game"
+import type { Item } from "../../../../types/enum/Item"
 import { Pkm, PkmByIndex } from "../../../../types/enum/Pokemon"
 import { Status } from "../../../../types/enum/Status"
 import { Weather } from "../../../../types/enum/Weather"
@@ -106,7 +107,8 @@ export class DebugScene extends Phaser.Scene {
     orientation: Orientation,
     animationType: string,
     status: Status | "",
-    shiny: boolean
+    shiny: boolean,
+    awakening: Item | "" = ""
   ) {
     if (this.pokemonSprite) {
       this.pokemonSprite.destroy()
@@ -184,6 +186,9 @@ export class DebugScene extends Phaser.Scene {
         )
       }
       this.applyStatusAnimation(status)
+      if (awakening !== "") {
+        this.pokemonSprite?.setAwakening(3, "", awakening)
+      }
     })
   }
 
