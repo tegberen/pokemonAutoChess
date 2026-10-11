@@ -463,7 +463,11 @@ Every balance change on this server, newest first.
 **Hotfixes and Adjustments**
 - Life Price | at 1 HP, rerolls are free instead of blocked
 - All Fours, Safari Encounter, Pocket Daycare | SILVER_DOJO_TICKET → BRONZE_DOJO_TICKET
+- Potion | player HP healed 20 → 10
 - HEXING_INCANTATION | the second one can no longer use the same Effect as the first
+- HEXING_INCANTATION {{new}} | new Effect: when its target is KO'd, the target's team LOSES 10/20/30% CRIT_POWER, once per fight
+- FATED_INCANTATION | Two targets: each hexed enemy KO'd now triggers its When KO'd Effect, so a GOLD hex grants up to 6 GOLD
+- FATED_INCANTATION | chance to repeat the RITUAL_INCANTATION 40% → 25%
 - RITUAL_INCANTATION | the GOLD Bewitching is no longer a LUCK chance but a count: 1/1 GOLD every 10/5 GHOST casts or attack triggers, and 1/2 GOLD every 6/3 GHOST KO'd or every 8/4 enemies KO'd
 
 ### 10 October 2026

@@ -61,7 +61,7 @@ export interface IncantationSide {
   ritualStrength: number
   canEarnRewards: boolean
   ritualActivations: number
-  goldPaidHexSlots: Set<number>
+  koPaidHexes: Set<string>
   doomedHexSlots: Set<number>
 }
 
@@ -103,7 +103,7 @@ export function createIncantationSide(
     ritualStrength: getRitualStrength(ghostLevel),
     canEarnRewards,
     ritualActivations: 0,
-    goldPaidHexSlots: new Set(),
+    koPaidHexes: new Set(),
     doomedHexSlots: new Set()
   }
 }
@@ -377,17 +377,28 @@ export function reapplyHexStatuses(target: PokemonEntity) {
 }
 
 export function onHexedEnemyKnockedOut(enemy: PokemonEntity) {
+  if (enemy.isSpawn) return
   for (const hex of enemy.hexes) {
     const { side, incantation } = hex
+    const effect = incantation.effect as HexingEffect
     if (
-      incantation.effect === HexingEffect.GOLD_ON_KO &&
-      !enemy.isSpawn &&
-      !side.goldPaidHexSlots.has(hex.slot)
+      effect !== HexingEffect.GOLD_ON_KO &&
+      effect !== HexingEffect.CRIT_POWER_ON_KO
     ) {
-      side.goldPaidHexSlots.add(hex.slot)
-      grantIncantationGold(
-        side,
-        HEXING_EFFECT_VALUES[HexingEffect.GOLD_ON_KO][side.hexingStrength]
+      continue
+    }
+    // per hexed enemy, so Two targets pays twice, but a revive never does
+    const paidKey = `${hex.slot}:${enemy.id}`
+    if (side.koPaidHexes.has(paidKey)) continue
+    side.koPaidHexes.add(paidKey)
+    const value = HEXING_EFFECT_VALUES[effect][side.hexingStrength]
+    if (effect === HexingEffect.GOLD_ON_KO) {
+      grantIncantationGold(side, value)
+    } else {
+      const curser = getCurser(enemy.simulation, side)
+      if (!curser) continue
+      getTeamEntities(enemy.simulation, enemy.team).forEach((ally) =>
+        ally.addCritPower(-value, curser, 0, false)
       )
     }
   }

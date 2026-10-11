@@ -13,10 +13,11 @@ export enum HexingTarget {
 
 export enum HexingEffect {
   STAT = "STAT",
-  GOLD_ON_KO = "GOLD_ON_KO",
   LUCK = "LUCK",
+  MAX_HP = "MAX_HP",
   MAX_PP = "MAX_PP",
-  MAX_HP = "MAX_HP"
+  GOLD_ON_KO = "GOLD_ON_KO",
+  CRIT_POWER_ON_KO = "CRIT_POWER_ON_KO"
 }
 
 export enum HexingStatus {
@@ -69,7 +70,7 @@ export const RITUAL_ATTACKS_PER_TRIGGER = 8
 export const FATED_DOOM_DELAY = 8000
 export const INCANTATION_ANIMATION_DELAY = 500
 export const FATED_PLAGUE_SPREAD_MS = 700
-export const FATED_ECHO_CHANCE = 40
+export const FATED_ECHO_CHANCE = 25
 export const RITUAL_PERMANENT_STAT_CAP = 0.5
 export const FATED_SPAWN_RARITY_WEIGHTS = { COMMON: 50, UNCOMMON: 30, RARE: 20 }
 
@@ -113,6 +114,7 @@ export const HEXING_EFFECT_VALUES: {
   [loss in Exclude<HexingEffect, HexingEffect.STAT>]: number[]
 } = {
   [HexingEffect.GOLD_ON_KO]: [1, 2, 3],
+  [HexingEffect.CRIT_POWER_ON_KO]: [10, 20, 30],
   [HexingEffect.LUCK]: [10, 20, 30],
   [HexingEffect.MAX_PP]: [10, 20, 30],
   [HexingEffect.MAX_HP]: [10, 15, 20]

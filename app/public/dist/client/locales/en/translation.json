@@ -5238,7 +5238,7 @@
 		},
 		"POTION": {
 			"name": "Potion",
-			"description": "Gain 5 GOLD and heal 20 player HP. In Double Up, your partner is healed as well."
+			"description": "Gain 5 GOLD and heal 10 player HP. In Double Up, your partner is healed as well."
 		},
 		"POCKET_DAYCARE": {
 			"name": "Pocket Daycare",
@@ -6869,6 +6869,7 @@
 				"STAT_PERCENT": "LOSES {{value}}% {{stat}}",
 				"STAT_UNKNOWN": "LOSES the stat it was chosen for",
 				"GOLD_ON_KO": "GRANTS {{value}} GOLD when KO'd, once per fight",
+				"CRIT_POWER_ON_KO": "Makes its team LOSE {{value}}% CRIT_POWER when KO'd, once per fight",
 				"LUCK": "LOSES {{value}} LUCK",
 				"MAX_PP": "Has its max PP INCREASED by {{value}}%",
 				"MAX_HP": "LOSES {{value}}% max HP"
@@ -6942,6 +6943,7 @@
 			"STAT": "−{{value}} {{stat}}",
 			"STAT_PERCENT": "−{{value}}% {{stat}}",
 			"GOLD_ON_KO": "{{value}} GOLD on KO",
+			"CRIT_POWER_ON_KO": "−{{value}}% team CRIT_POWER on KO",
 			"LUCK": "−{{value}} LUCK",
 			"MAX_PP": "+{{value}}% max PP",
 			"MAX_HP": "−{{value}}% max HP",
@@ -7772,15 +7774,15 @@
 					"SPAWN_GHOST": "Chance to put a GHOST Pokémon costing 3 GOLD or less on your bench"
 				},
 				"all_causes": "Every Cause",
-				"hexing_reap_note": "Reap example, with Tier 3 hexes at GHOST 8: a target LOSES 60 AP, your STRONGEST GHOST Pokémon GAINS 60 AP. A target's max PP INCREASED by 30% lowers your GHOST Pokémon's max PP by 30%.",
-				"hexing_gold_note": "When a FATED_INCANTATION makes a HEXING_INCANTATION affect several enemies, each of them gets its debuff and NEGATIVE_STATUS, but its GOLD is still granted only once per fight: at most 3 GOLD per GOLD hex."
+				"hexing_reap_note": "Reap example, with Tier 3 hexes at GHOST 8: a target LOSES 60 AP, your STRONGEST GHOST Pokémon GAINS 60 AP. A target's max PP INCREASED by 30% lowers your GHOST Pokémon's max PP by 30%."
 			},
 			"hexing_effects": {
 				"STAT": "LOSES the stat of its Cause",
-				"GOLD_ON_KO": "GRANTS GOLD when KO'd, once per fight",
 				"LUCK": "LOSES LUCK",
-				"MAX_PP": "Max PP INCREASED",
-				"MAX_HP": "LOSES max HP"
+				"MAX_HP": "LOSES max HP",
+				"MAX_PP": "Has its max PP INCREASED",
+				"GOLD_ON_KO": "When KO'd, GRANTS you GOLD",
+				"CRIT_POWER_ON_KO": "When KO'd, its team LOSES CRIT_POWER"
 			},
 			"curse_duration": "Lasts the whole fight."
 		},

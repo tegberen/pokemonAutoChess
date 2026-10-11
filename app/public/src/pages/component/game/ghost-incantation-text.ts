@@ -215,7 +215,10 @@ export function describeHexingSummary(
     }
     lossText = t(`ghost_incantations.summary.${key}`, params)
     reapGain = t(`ghost_incantations.summary.reap.${key}`, params)
-  } else if (loss === HexingEffect.GOLD_ON_KO) {
+  } else if (
+    loss === HexingEffect.GOLD_ON_KO ||
+    loss === HexingEffect.CRIT_POWER_ON_KO
+  ) {
     lossText = t(`ghost_incantations.summary.${loss}`, {
       value: HEXING_EFFECT_VALUES[loss][strength]
     })

@@ -81,6 +81,7 @@ const HEXING_EFFECT_UNITS: {
   [loss in Exclude<HexingEffect, HexingEffect.STAT>]: string
 } = {
   GOLD_ON_KO: " GOLD",
+  CRIT_POWER_ON_KO: "%",
   LUCK: " LUCK",
   MAX_PP: "%",
   MAX_HP: "%"
@@ -587,9 +588,6 @@ export function WikiGhostIncantations() {
           </ul>
           <p className="wiki-ghost-example">
             {addIconsToDescription(t("wiki.ghost.fated.hexing_reap_note"))}
-          </p>
-          <p className="wiki-ghost-example">
-            {addIconsToDescription(t("wiki.ghost.fated.hexing_gold_note"))}
           </p>
         </section>
         <section className="wiki-ghost-step">
