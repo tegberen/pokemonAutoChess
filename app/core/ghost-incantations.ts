@@ -21,7 +21,8 @@ import {
   IncantationKind,
   RITUAL_BONUS_VALUES,
   RITUAL_EFFECT_VALUES,
-  RITUAL_GOLD_VALUES,
+  RITUAL_GOLD_EVERY,
+  RITUAL_GOLD_PAYOUT,
   RITUAL_PERMANENT_STAT_CAP,
   RITUAL_SILENCE_VALUES,
   RitualBonus,
@@ -523,11 +524,10 @@ function activateRitual(
   if (bonus === RitualBonus.GOLD_EVERY) {
     // a ghost fight must not move the real player's count
     if (!side.canEarnRewards) return
-    const { every, gold } = RITUAL_GOLD_VALUES[trigger]
     side.player.ritualGoldCount += 1
-    if (side.player.ritualGoldCount >= every[strength]) {
+    if (side.player.ritualGoldCount >= RITUAL_GOLD_EVERY[trigger][strength]) {
       side.player.ritualGoldCount = 0
-      grantIncantationGold(side, gold[strength] * rewardMultiplier)
+      grantIncantationGold(side, RITUAL_GOLD_PAYOUT * rewardMultiplier)
     }
     return
   }

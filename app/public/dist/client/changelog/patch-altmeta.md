@@ -465,7 +465,7 @@ Every balance change on this server, newest first.
 - Potion | player HP healed 20 → 10
 - HEXING_INCANTATION {{new}} | new Effect: when its target is KO'd, the target's team LOSES 10/20/30% CRIT_POWER<br>The two HEXING_INCANTATION can no longer share the same Effect or NEGATIVE_STATUS
 - FATED_INCANTATION | chance to repeat the RITUAL_INCANTATION 40% → 25%
-- RITUAL_INCANTATION | the GOLD Bewitching is no longer a LUCK chance but a count:<br>GHOST ally casts: 1/1 GOLD each 10/5 times<br>8 attacks by one GHOST ally: 1/1 GOLD each 10/5 times<br>GHOST ally KO'd: 1/2 GOLD each 6/3 times<br>Enemy KO'd: 1/2 GOLD each 8/4 times
+- RITUAL_INCANTATION | the GOLD Bewitching is no longer a LUCK chance but a count:<br>GHOST ally casts: 1 GOLD each 10/5 times<br>8 attacks by one GHOST ally: 1 GOLD each 10/5 times<br>GHOST ally KO'd: 1 GOLD each 6/3 times<br>Enemy KO'd: 1 GOLD each 8/4 times
 
 ### 10 October 2026
 

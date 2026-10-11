@@ -17,7 +17,8 @@ import {
   RITUAL_ATTACKS_PER_TRIGGER,
   RITUAL_BONUS_VALUES,
   RITUAL_EFFECT_VALUES,
-  RITUAL_GOLD_VALUES,
+  RITUAL_GOLD_EVERY,
+  RITUAL_GOLD_PAYOUT,
   RITUAL_SILENCE_VALUES,
   RitualBonus,
   RitualEffect,
@@ -185,20 +186,17 @@ const PERMANENT_RITUAL_BONUSES = [
   RitualBonus.PERMANENT_SPEED
 ] as const
 
-const ATTACK_GOLD = RITUAL_GOLD_VALUES[RitualTrigger.GHOST_ATTACKS]
+const ATTACK_GOLD_EVERY = RITUAL_GOLD_EVERY[RitualTrigger.GHOST_ATTACKS]
 
 const GOLD_ROWS = [
   {
     label: "gold_every",
     describe: (trigger: RitualTrigger) =>
-      addIconsToDescription(`[${RITUAL_GOLD_VALUES[trigger].every.join(",")}]`)
+      addIconsToDescription(`[${RITUAL_GOLD_EVERY[trigger].join(",")}]`)
   },
   {
     label: "gold_amount",
-    describe: (trigger: RitualTrigger) =>
-      addIconsToDescription(
-        `[${RITUAL_GOLD_VALUES[trigger].gold.join(",")}] GOLD`
-      )
+    describe: () => addIconsToDescription(`${RITUAL_GOLD_PAYOUT} GOLD`)
   }
 ]
 
@@ -534,11 +532,11 @@ export function WikiGhostIncantations() {
             {addIconsToDescription(
               t("wiki.ghost.ritual.gold_example", {
                 attacks: RITUAL_ATTACKS_PER_TRIGGER,
-                gold: ATTACK_GOLD.gold[0],
-                every: ATTACK_GOLD.every[0],
-                strongerEvery: ATTACK_GOLD.every[1],
-                total: RITUAL_ATTACKS_PER_TRIGGER * ATTACK_GOLD.every[0],
-                strongerTotal: RITUAL_ATTACKS_PER_TRIGGER * ATTACK_GOLD.every[1]
+                gold: RITUAL_GOLD_PAYOUT,
+                every: ATTACK_GOLD_EVERY[0],
+                strongerEvery: ATTACK_GOLD_EVERY[1],
+                total: RITUAL_ATTACKS_PER_TRIGGER * ATTACK_GOLD_EVERY[0],
+                strongerTotal: RITUAL_ATTACKS_PER_TRIGGER * ATTACK_GOLD_EVERY[1]
               })
             )}
           </p>

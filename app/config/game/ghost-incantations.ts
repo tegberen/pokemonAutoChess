@@ -170,15 +170,13 @@ export const RITUAL_SILENCE_VALUES: ByRitualTrigger<{
 }
 
 // a counter, not a chance: LUCK the ritual itself grants would snowball a roll
-export const RITUAL_GOLD_VALUES: ByRitualTrigger<{
-  every: number[]
-  gold: number[]
-}> = {
-  [RitualTrigger.GHOST_CASTS]: { every: [10, 5], gold: [1, 1] },
-  [RitualTrigger.GHOST_ATTACKS]: { every: [10, 5], gold: [1, 1] },
-  [RitualTrigger.GHOST_KOD]: { every: [6, 3], gold: [1, 2] },
-  [RitualTrigger.ENEMY_KOD]: { every: [8, 4], gold: [1, 2] }
+export const RITUAL_GOLD_EVERY: ByRitualTrigger<number[]> = {
+  [RitualTrigger.GHOST_CASTS]: [10, 5],
+  [RitualTrigger.GHOST_ATTACKS]: [10, 5],
+  [RitualTrigger.GHOST_KOD]: [6, 3],
+  [RitualTrigger.ENEMY_KOD]: [8, 4]
 }
+export const RITUAL_GOLD_PAYOUT = 1
 
 export const RITUAL_BONUS_VALUES: {
   [bonus in Exclude<RitualBonus, RitualBonus.GOLD_EVERY>]: RitualValues

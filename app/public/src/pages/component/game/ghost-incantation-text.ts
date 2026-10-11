@@ -14,7 +14,8 @@ import {
   RITUAL_ATTACKS_PER_TRIGGER,
   RITUAL_BONUS_VALUES,
   RITUAL_EFFECT_VALUES,
-  RITUAL_GOLD_VALUES,
+  RITUAL_GOLD_EVERY,
+  RITUAL_GOLD_PAYOUT,
   RITUAL_SILENCE_VALUES,
   RitualBonus,
   RitualEffect,
@@ -99,12 +100,10 @@ function describeRitualBonus(
   rewardMultiplier: number
 ) {
   if (bonus === RitualBonus.GOLD_EVERY) {
-    const gold = trigger
-      ? RITUAL_GOLD_VALUES[trigger as RitualTrigger]
-      : null
+    const every = trigger ? RITUAL_GOLD_EVERY[trigger as RitualTrigger] : null
     return {
-      every: gold ? gold.every.join(",") : UNKNOWN_VALUE,
-      gold: multipliedTiers(gold?.gold, rewardMultiplier)
+      every: every ? every.join(",") : UNKNOWN_VALUE,
+      gold: multipliedTiers([RITUAL_GOLD_PAYOUT], rewardMultiplier)
     }
   }
   const values = trigger
