@@ -6867,9 +6867,9 @@
 			"1": {
 				"STAT": "LOSES {{value}} {{stat}}",
 				"STAT_PERCENT": "LOSES {{value}}% {{stat}}",
-				"STAT_UNKNOWN": "LOSES the stat it was chosen for",
-				"GOLD_ON_KO": "GRANTS {{value}} GOLD when KO'd, once per fight",
-				"CRIT_POWER_ON_KO": "Makes its team LOSE {{value}}% CRIT_POWER when KO'd, once per fight",
+				"STAT_UNKNOWN": "LOSES the stat of its Cause",
+				"GOLD_ON_KO": "GRANTS you {{value}} GOLD when KO'd",
+				"CRIT_POWER_ON_KO": "Makes its team LOSE {{value}}% CRIT_POWER when KO'd",
 				"LUCK": "LOSES {{value}} LUCK",
 				"MAX_PP": "Has its max PP INCREASED by {{value}}%",
 				"MAX_HP": "LOSES {{value}}% max HP"
@@ -6889,9 +6889,9 @@
 				"2": "Bewitching"
 			},
 			"0": {
-				"GHOST_CASTS": "When a GHOST Pokémon casts its ability",
-				"GHOST_ATTACKS": "When a GHOST Pokémon attacks {{count}} times",
-				"GHOST_KOD": "When a GHOST Pokémon is KO'd",
+				"GHOST_CASTS": "When an allied GHOST Pokémon casts its ability",
+				"GHOST_ATTACKS": "Every {{count}} attacks by one allied GHOST Pokémon",
+				"GHOST_KOD": "When an allied GHOST Pokémon is KO'd",
 				"ENEMY_KOD": "When an enemy is KO'd"
 			},
 			"1": {
@@ -7733,7 +7733,7 @@
 				"intro": "Your BUFF at GHOST 6. Each time the Cause happens, the Effect and the Bewitching trigger.",
 				"causes": {
 					"GHOST_CASTS": "GHOST casts",
-					"GHOST_ATTACKS": "Every {{count}} attacks by one GHOST Pokémon",
+					"GHOST_ATTACKS": "{{count}} attacks by one GHOST",
 					"GHOST_KOD": "GHOST KO'd",
 					"ENEMY_KOD": "Enemy KO'd"
 				},
@@ -7760,7 +7760,7 @@
 				"gold_every": "Times needed",
 				"gold_amount": "Amount",
 				"permanent_cap_note": "Each Pokémon can gain up to half its base HP, max PP and base SPEED from the \"permanent HP\", \"permanent starting PP\" and \"permanent SPEED\" Bewitchings. When several allies tie on that stat, the STRONGEST one is chosen. Once a Pokémon reaches its cap, the next best ally gains them instead. Example: a Pokémon with 200 base HP, 100 max PP and 60 base SPEED can gain at most 100 HP, 50 starting PP and 30 SPEED.",
-				"gold_example": "Example: the Cause \"Every {{attacks}} attacks by one GHOST Pokémon\" has to happen {{every}} times before you GAIN {{gold}} GOLD: {{total}} GHOST attacks ({{attacks}} × {{every}}). Once it is STRONGER, it only has to happen {{strongerEvery}} times: {{strongerTotal}} GHOST attacks ({{attacks}} × {{strongerEvery}}). All your GHOST Pokémon count together. Each Pokémon's attacks restart at 0 every fight, but the times it happened carry over."
+				"gold_example": "Example with the \"After enough times, you GAIN GOLD\" Bewitching: the Cause \"Every {{attacks}} attacks by one allied GHOST Pokémon\" has to happen {{every}} times before you GAIN {{gold}} GOLD: {{total}} GHOST attacks ({{attacks}} × {{every}}). Once it is STRONGER, it only has to happen {{strongerEvery}} times: {{strongerTotal}} GHOST attacks ({{attacks}} × {{strongerEvery}}). All your GHOST Pokémon count together. Each Pokémon's attacks restart at 0 every fight, but the times it happened carry over."
 			},
 			"fated": {
 				"title": "Fated Incantation",
@@ -7774,7 +7774,8 @@
 					"SPAWN_GHOST": "Chance to put a GHOST Pokémon costing 3 GOLD or less on your bench"
 				},
 				"all_causes": "Every Cause",
-				"hexing_reap_note": "Reap example, with Tier 3 hexes at GHOST 8: a target LOSES 60 AP, your STRONGEST GHOST Pokémon GAINS 60 AP. A target's max PP INCREASED by 30% lowers your GHOST Pokémon's max PP by 30%."
+				"hexing_reap_note": "Reap example, with Tier 3 hexes at GHOST 8: a target LOSES 60 AP, your STRONGEST GHOST Pokémon GAINS 60 AP. A target's max PP INCREASED by 30% lowers your GHOST Pokémon's max PP by 30%.",
+				"hexing_doom_note": "If both HEXING_INCANTATION hex the same enemy, it gets CURSE twice: the second CURSE KOs it at once."
 			},
 			"hexing_effects": {
 				"STAT": "LOSES the stat of its Cause",

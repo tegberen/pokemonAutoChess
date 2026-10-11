@@ -589,6 +589,9 @@ export function WikiGhostIncantations() {
           <p className="wiki-ghost-example">
             {addIconsToDescription(t("wiki.ghost.fated.hexing_reap_note"))}
           </p>
+          <p className="wiki-ghost-example">
+            {addIconsToDescription(t("wiki.ghost.fated.hexing_doom_note"))}
+          </p>
         </section>
         <section className="wiki-ghost-step">
           <h4>
