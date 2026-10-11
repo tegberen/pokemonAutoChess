@@ -153,7 +153,7 @@ const giftRandomPokemonByRarity = (toPlayer: Player, rarity: Rarity): boolean =>
     const nbOfSynergies =
         rarity === Rarity.LEGENDARY ? 4 : rarity === Rarity.ULTRA ? 3 : 1
     let wantedSynergy = toPlayer.synergies.getTopSynergies(nbOfSynergies)
-    if (wantedSynergy.includes(Synergy.BABY)) {
+    if (rarity !== Rarity.ULTRA && wantedSynergy.includes(Synergy.BABY)) {
         wantedSynergy = toPlayer.synergies.getTopSynergies(nbOfSynergies + 1)
         wantedSynergy.splice(wantedSynergy.indexOf(Synergy.BABY), 1)
     }
