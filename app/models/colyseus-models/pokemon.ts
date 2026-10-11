@@ -3976,7 +3976,7 @@ export class Duskull extends Pokemon {
   speed = 39
   def = 10
   speDef = 10
-  maxPP = 80
+  maxPP = 100
   range = 2
   skill = Ability.TRICK_ROOM
 }
@@ -3995,7 +3995,7 @@ export class Dusclops extends Pokemon {
   speed = 39
   def = 20
   speDef = 20
-  maxPP = 80
+  maxPP = 100
   range = 2
   skill = Ability.TRICK_ROOM
 }
@@ -4013,7 +4013,7 @@ export class Dusknoir extends Pokemon {
   speed = 39
   def = 30
   speDef = 30
-  maxPP = 80
+  maxPP = 100
   range = 2
   skill = Ability.TRICK_ROOM
 }

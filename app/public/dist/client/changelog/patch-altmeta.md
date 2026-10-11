@@ -466,15 +466,20 @@ Every balance change on this server, newest first.
 
 ### 11 October 2026
 
-**Hotfixes and Adjustments**
-- All Fours, Safari Encounter, Pocket Daycare | SILVER_DOJO_TICKET → BRONZE_DOJO_TICKET
-- Potion | player HP healed 20 → 10
+**Pokémon**
+- Duskull Line | PP 80 → 100
 - Scyther | fixed Scyther not appearing in a ROCK region, but Kleavor instead
+
+**Synergies**
 - HEXING_INCANTATION {{new}} | new Effect: when its target is KO'd, the target's team LOSES 10/20/30% CRIT_POWER<br>The two HEXING_INCANTATION can no longer share the same Effect or NEGATIVE_STATUS
 - SPIRIT_COIN Spirit Coin {{new}} | replaces GOLD from incantations to lower its value: worth 1 GOLD, 1 free shop reroll or 1 XP, decided at the start of each game, the same for every player
 - HEXING_INCANTATION | the GOLD Effect now GRANTS 1/2/3 SPIRIT_COIN instead of GOLD when its target is KO'd
 - FATED_INCANTATION | chance to repeat the RITUAL_INCANTATION 40% → 25%
 - RITUAL_INCANTATION | the GOLD Bewitching now GRANTS SPIRIT_COIN instead, and is no longer a LUCK chance but a count:<br>GHOST ally casts: 1 SPIRIT_COIN each 10/5 times<br>8 attacks by one GHOST ally: 1 SPIRIT_COIN each 10/5 times<br>GHOST ally KO'd: 1 SPIRIT_COIN each 6/3 times<br>Enemy KO'd: 1 SPIRIT_COIN each 8/4 times
+
+**Wishes**
+- All Fours, Safari Encounter, Pocket Daycare | SILVER_DOJO_TICKET → BRONZE_DOJO_TICKET
+- Potion | player HP healed 20 → 10
 
 ### 10 October 2026
 
