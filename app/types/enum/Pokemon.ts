@@ -3851,7 +3851,6 @@ export const PkmRegionalVariants: { [key in Pkm]?: readonly Pkm[] } = {
   [Pkm.SLOWPOKE]: [Pkm.GALARIAN_SLOWPOKE],
   [Pkm.WEEZING]: [Pkm.GALARIAN_WEEZING],
   [Pkm.SUICUNE]: [Pkm.WALKING_WAKE],
-  [Pkm.SCYTHER]: [Pkm.SCIZOR, Pkm.KLEAVOR],
   [Pkm.TAUROS]: [
     Pkm.TAUROS_COMBAT_BREED,
     Pkm.TAUROS_BLAZE_BREED,

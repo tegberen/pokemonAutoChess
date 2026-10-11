@@ -469,6 +469,7 @@ Every balance change on this server, newest first.
 **Hotfixes and Adjustments**
 - All Fours, Safari Encounter, Pocket Daycare | SILVER_DOJO_TICKET → BRONZE_DOJO_TICKET
 - Potion | player HP healed 20 → 10
+- Scyther | fixed Scyther not appearing in a ROCK region, but Kleavor instead
 - HEXING_INCANTATION {{new}} | new Effect: when its target is KO'd, the target's team LOSES 10/20/30% CRIT_POWER<br>The two HEXING_INCANTATION can no longer share the same Effect or NEGATIVE_STATUS
 - SPIRIT_COIN Spirit Coin {{new}} | replaces GOLD from incantations to lower its value: worth 1 GOLD, 1 free shop reroll or 1 XP, decided at the start of each game, the same for every player
 - HEXING_INCANTATION | the GOLD Effect now GRANTS 1/2/3 SPIRIT_COIN instead of GOLD when its target is KO'd
