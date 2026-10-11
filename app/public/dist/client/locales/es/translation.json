@@ -3038,7 +3038,6 @@
 		"ENAMORUS": "Cambia el clima a MISTY o WINDY basado en tu sinergia dominante entre FAIRY y FLYING",
 		"AIRLOCK": "Neutraliza los efectos del clima, volviendo a NEUTRAL",
 		"SHARED_VISION": "Visión compartida: todos los Pokémon con visión compartida atacarán al mismo objetivo, si están a distancia.",
-		"WATER_SPRING": "Cada vez que un enemigo usa su habilidad, gana 5 PP",
 		"MAGIKARP": "8 Magikarp evolucionan en Gyarados",
 		"FEEBAS": "6 $t(pkm.FEEBAS) evolucionan en $t(pkm.MILOTIC)",
 		"WISHIWASHI": "3 Wishiwashi evolucionan a la forma Banco",

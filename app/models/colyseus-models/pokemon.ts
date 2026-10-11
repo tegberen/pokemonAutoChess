@@ -4622,16 +4622,7 @@ export class Mudkip extends Pokemon {
   maxPP = 60
   range = 1
   skill = Ability.MUD_BUBBLE
-  passive = Passive.WATER_SPRING
   regional = true
-
-  beforeSimulationStart({
-    opponentEffects
-  }: {
-    opponentEffects: Set<EffectEnum>
-  }) {
-    opponentEffects.add(EffectEnum.WATER_SPRING)
-  }
 }
 
 export class Marshtomp extends Pokemon {
@@ -4647,16 +4638,7 @@ export class Marshtomp extends Pokemon {
   maxPP = 60
   range = 1
   skill = Ability.MUD_BUBBLE
-  passive = Passive.WATER_SPRING
   regional = true
-
-  beforeSimulationStart({
-    opponentEffects
-  }: {
-    opponentEffects: Set<EffectEnum>
-  }) {
-    opponentEffects.add(EffectEnum.WATER_SPRING)
-  }
 }
 
 export class Swampert extends Pokemon {
@@ -4671,16 +4653,7 @@ export class Swampert extends Pokemon {
   maxPP = 60
   range = 1
   skill = Ability.MUD_BUBBLE
-  passive = Passive.WATER_SPRING
   regional = true
-
-  beforeSimulationStart({
-    opponentEffects
-  }: {
-    opponentEffects: Set<EffectEnum>
-  }) {
-    opponentEffects.add(EffectEnum.WATER_SPRING)
-  }
 }
 
 export class Torchic extends Pokemon {

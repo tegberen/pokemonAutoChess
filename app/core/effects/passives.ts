@@ -11,7 +11,8 @@ import { RemovableItems, Transfer } from "../../types"
 import { Ability } from "../../types/enum/Ability"
 import {
   Blessing,
-  JUNGLE_CACOPHONY_PP_BURN_BY_STAR
+  JUNGLE_CACOPHONY_PP_BURN_BY_STAR,
+  SWAMP_FATHER_PP_PER_ENEMY_CAST
 } from "../../types/enum/Blessing"
 import { EffectEnum } from "../../types/enum/Effect"
 import { Emotion } from "../../types/enum/Emotion"
@@ -346,12 +347,15 @@ const QwilfishPassiveEffect = new OnDamageReceivedEffect(
 
 export const WaterSpringEffect = new OnAbilityCastEffect((pokemon, board) => {
   board.forEach((x, y, pkm) => {
-    if (pkm?.passive === Passive.WATER_SPRING && pkm.team !== pokemon.team) {
-      pkm.addPP(5, pkm, 0, false)
+    if (
+      pkm?.heroBlessings.has(Blessing.SWAMP_FATHER) &&
+      pkm.team !== pokemon.team
+    ) {
+      pkm.addPP(SWAMP_FATHER_PP_PER_ENEMY_CAST, pkm, 0, false)
       pkm.broadcastAbility({ skill: pkm.skill })
     }
   })
-}, Passive.WATER_SPRING)
+}, EffectEnum.WATER_SPRING)
 
 const MimikuBustedTransformEffect = new OnDamageReceivedEffect(
   ({ pokemon }) => {

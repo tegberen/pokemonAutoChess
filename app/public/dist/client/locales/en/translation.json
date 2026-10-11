@@ -3638,7 +3638,6 @@
 		"AIRLOCK": "Change weather to NEUTRAL",
 		"SHARED_VISION": "Shared Vision: All Pokémon with Shared Vision will attack the same target, if at range.",
 		"SHARED_VISION_2": "Shared Vision: All Pokémon with Shared Vision will attack the same target, if at range.",
-		"WATER_SPRING": "Whenever an enemy uses their ability, gain 5 PP",
 		"SOBBLE": "\"gain mana from flood wave instead of push- my sniping 5 cost is worthless when it gets 1st wave pushed INTO MY FRONTLINE AS A BACKLINER SNIPER\"*\n\n*Immune to FLOOD knockback. FLOOD heals twice as much and also gives that much PP.",
 		"MAGIKARP": "8 Magikarp evolve in Gyarados",
 		"FEEBAS": "6 Feebas evolve in Milotic",
@@ -6546,7 +6545,7 @@
 		},
 		"SWAMP_FATHER": {
 			"name": "Swamp Father",
-			"description": "Gain a Mudkip and move to a random Mudkip region if not in one. Your Mudkip gains GRASS synergy. At the start of combat, your STRONGEST Mudkip hydrates ADJACENT GRASS allies: they become AQUATIC and gain all the effects of active AQUATIC synergy. It permanently gains 5 AP for each berry it eats."
+			"description": "Gain a Mudkip and move to a random Mudkip region if not in one. Your Mudkip gains GRASS synergy. At the start of combat, your STRONGEST Mudkip hydrates ADJACENT GRASS allies: they become AQUATIC and gain all the effects of active AQUATIC synergy. It gains 5 PP whenever an enemy uses its ability."
 		},
 		"ROLLING_SNOWBALL": {
 			"name": "Rolling Snowball",

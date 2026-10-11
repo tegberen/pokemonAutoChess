@@ -3249,7 +3249,6 @@
 		"RAIN_OR_STORM": "Change la météo en RAIN ou STORM selon votre synergie dominante entre WATER et ELECTRIC.",
 		"AIRLOCK": "Neutralise tous les effets météorologiques, retourne à une météo NEUTRAL.",
 		"SHARED_VISION": "Vision Partagée : Tous les Pokémon avec le passif Vision Partagée attaqueront la même cible, si elle est à portée.",
-		"WATER_SPRING": "À chaque fois qu'un ennemi utilise sa capacité, gagne 5 PP.",
 		"MAGIKARP": "8 $t(pkm.MAGIKARP) évoluent en Léviator.",
 		"FEEBAS": "6 $t(pkm.FEEBAS) évoluent en $t(pkm.MILOTIC).",
 		"WISHIWASHI": "3 $t(pkm.WISHIWASHI) forment un $t(pkm.WISHIWASHI_SCHOOL).",

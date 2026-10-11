@@ -5027,6 +5027,11 @@ export default class Simulation extends Schema implements ISimulation {
 
     const swampFatherChampion = championOf.get(Blessing.SWAMP_FATHER)
     if (swampFatherChampion) {
+      this.board.forEach((x, y, unit) => {
+        if (unit && unit.team !== swampFatherChampion.team) {
+          this.applyEffect(unit, EffectEnum.WATER_SPRING)
+        }
+      })
       const activeAquaticEffects = SynergyTiers[Synergy.AQUATIC].filter(
         (aquaticEffect) => teamEffects.has(aquaticEffect)
       )

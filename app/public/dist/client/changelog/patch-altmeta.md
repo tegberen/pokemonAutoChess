@@ -468,6 +468,7 @@ Every balance change on this server, newest first.
 
 **Pokémon**
 - Duskull Line | PP 80 → 100
+- Mudkip Line | removed passive: gain 5 PP whenever an enemy uses its ability, moved to Swamp Father Wish
 - Scyther | fixed Scyther not appearing in a ROCK region, but Kleavor instead
 
 **Synergies**
@@ -480,6 +481,7 @@ Every balance change on this server, newest first.
 **Wishes**
 - All Fours, Safari Encounter, Pocket Daycare | SILVER_DOJO_TICKET → BRONZE_DOJO_TICKET
 - Potion | player HP healed 20 → 10
+- Swamp Father | your STRONGEST Mudkip gains 5 PP whenever an enemy uses its ability, instead of 5 permanent AP per berry eaten
 
 **Interface**
 - Double Up chat | account level required 100 → 42

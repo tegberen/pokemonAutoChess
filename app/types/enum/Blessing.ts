@@ -841,7 +841,7 @@ export const CURSED_COFFIN_PP_DRAIN = 5
 export const CURSED_COFFIN_DRAIN_INTERVAL = 1000
 export const ROLLING_SNOWBALL_SHIELD = 20
 export const ROLLING_SNOWBALL_PP = 50
-export const SWAMP_FATHER_AP_PER_BERRY = 5
+export const SWAMP_FATHER_PP_PER_ENEMY_CAST = 5
 // lets the client show the fight before the bubble launches
 export const SWAMP_FATHER_BUBBLE_DELAY = 300
 export const SWAMP_FATHER_HOP_TIME = 300
