@@ -3734,7 +3734,6 @@
 		"MEGA_SABLEYE": "Mega Sableye gains RUNE_PROTECT for the entire fight",
 		"MELMETAL": "Melmetal can't gain SPEED. Bonus SPEED is converted into ATK (10 SPEED: 5 ATK)",
 		"SKARMORY": "BOARD_EFFECT: At the start of the fight, Skarmory scatters SPIKES around the field.",
-		"SKARMORY_PRE": "Gains a stack for each KO. Mega evolves after 20 stacks",
 		"DURANT": "Durant basic attacks deals 1 extra TRUE for each BUG ally on your board",
 		"OGERPON_TEAL": "Ogerpon can wear TEAL_MASK, HEARTHFLAME_MASK, WELLSPRING_MASK and CORNERSTONE_MASK to change its appearance.\nUpon casting, gain [6,6,6,6,SP] ATK for each ADJACENT enemy.",
 		"OGERPON_WELLSPRING": "Ogerpon can wear TEAL_MASK, HEARTHFLAME_MASK, WELLSPRING_MASK and CORNERSTONE_MASK to change its appearance.\nUpon casting, gives [50,50,50,50,SP] HP and [25,25,25,25,SP] PP to ADJACENT allies.",

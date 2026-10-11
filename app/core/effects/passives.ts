@@ -2349,14 +2349,6 @@ export const PassiveEffects: Partial<
       })
     })
   ],
-  [Passive.SKARMORY_PRE]: [
-    new OnKillEffect(({ attacker }) => {
-      if (attacker.isGhostOpponent) return
-      if (!attacker.player) return
-      attacker.addStack()
-
-    })
-  ],
   [Passive.ZERAORA]: [
     new OnKillEffect(({ attacker }) => {
       if (attacker.isGhostOpponent) return

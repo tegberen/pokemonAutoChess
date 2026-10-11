@@ -470,6 +470,7 @@ Every balance change on this server, newest first.
 - Duskull Line | PP 80 → 100
 - Mudkip Line | removed passive: gain 5 PP whenever an enemy uses its ability, moved to Swamp Father Wish
 - Scyther | fixed Scyther not appearing in a ROCK region, but Kleavor instead
+- Skarmory | now scatters SPIKES at the start of the fight like Mega Skarmory, HP 200 → 190, ATK 20 → 19
 
 **Synergies**
 - HEXING_INCANTATION {{new}} | new Effect: when its target is KO'd, the target's team LOSES 10/20/30% CRIT_POWER<br>The two HEXING_INCANTATION can no longer share the same Effect or NEGATIVE_STATUS

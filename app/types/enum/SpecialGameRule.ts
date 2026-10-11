@@ -71,7 +71,6 @@ const MEGA_STACK_PASSIVES: Passive[] = [
   Passive.AERODACTYL,
   Passive.HOUNDOOM,
   Passive.SABLEYE,
-  Passive.SKARMORY_PRE,
   Passive.DRAGALGE,
   Passive.EELEKTROSS,
   Passive.EXCADRILL

@@ -17877,23 +17877,23 @@ export class Skarmory extends Pokemon {
   evolutionRule = { type: EvolutionRuleType.STACK } as const
   stacksRequired = 20
   stars = 3
-  hp = 200
-  atk = 20
+  hp = 190
+  atk = 19
   speed = 47
   def = 16
   speDef = 8
   maxPP = 80
   range = 1
   skill = Ability.ROAR
-  passive = Passive.SKARMORY_PRE
+  passive = Passive.SKARMORY
 }
 
 export class MegaSkarmory extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.STEEL, Synergy.FLYING])
   rarity = Rarity.UNIQUE
   stars = 4
-  hp = 350
-  atk = 35
+  hp = 340
+  atk = 33
   speed = 47
   def = 16
   speDef = 8
