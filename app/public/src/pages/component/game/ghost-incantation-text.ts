@@ -6,15 +6,15 @@ import {
   FatedHexing,
   FatedRitual,
   type GhostIncantation,
-  HEXING_LOSS_VALUES,
+  HEXING_EFFECT_VALUES,
   HEXING_STAT_LOSS_VALUES,
-  HexingLoss,
+  HexingEffect,
   type HexingTarget,
   IncantationKind,
   RITUAL_ATTACKS_PER_TRIGGER,
   RITUAL_BONUS_VALUES,
   RITUAL_EFFECT_VALUES,
-  RITUAL_GOLD_CHANCE_VALUES,
+  RITUAL_GOLD_VALUES,
   RITUAL_SILENCE_VALUES,
   RitualBonus,
   RitualEffect,
@@ -44,9 +44,9 @@ function tiers(values: readonly number[] | undefined) {
   return values ? `[${values.join(",")}]` : UNKNOWN_VALUE
 }
 
-function describeHexingLoss(loss: HexingLoss, target: string | null) {
-  if (loss !== HexingLoss.STAT) {
-    return { key: loss, params: { value: tiers(HEXING_LOSS_VALUES[loss]) } }
+function describeHexingEffect(loss: HexingEffect, target: string | null) {
+  if (loss !== HexingEffect.STAT) {
+    return { key: loss, params: { value: tiers(HEXING_EFFECT_VALUES[loss]) } }
   }
   if (!target) return { key: "STAT_UNKNOWN", params: {} }
   const statLoss = HEXING_STAT_LOSS_VALUES[target as HexingTarget]
@@ -98,12 +98,12 @@ function describeRitualBonus(
   trigger: string | null,
   rewardMultiplier: number
 ) {
-  if (bonus === RitualBonus.GOLD_CHANCE) {
+  if (bonus === RitualBonus.GOLD_EVERY) {
     const gold = trigger
-      ? RITUAL_GOLD_CHANCE_VALUES[trigger as RitualTrigger]
+      ? RITUAL_GOLD_VALUES[trigger as RitualTrigger]
       : null
     return {
-      chance: gold ? gold.chance.join(",") : UNKNOWN_VALUE,
+      every: gold ? gold.every.join(",") : UNKNOWN_VALUE,
       gold: multipliedTiers(gold?.gold, rewardMultiplier)
     }
   }
@@ -166,7 +166,10 @@ export function describeIncantationOption(
   const base = `ghost_incantations.${kind}.${column}.${option}`
   if (kind === IncantationKind.HEXING) {
     if (column === 1) {
-      const { key, params } = describeHexingLoss(option as HexingLoss, cause)
+      const { key, params } = describeHexingEffect(
+        option as HexingEffect,
+        cause
+      )
       return t(`ghost_incantations.${kind}.1.${key}`, params)
     }
     return t(base)
@@ -199,10 +202,10 @@ export function describeHexingSummary(
   strength: number,
   fated: string | null = null
 ) {
-  const loss = hexing.effect as HexingLoss
+  const loss = hexing.effect as HexingEffect
   let lossText: string
   let reapGain: string | null = null
-  if (loss === HexingLoss.STAT) {
+  if (loss === HexingEffect.STAT) {
     const target = hexing.cause as HexingTarget
     const statLoss = HEXING_STAT_LOSS_VALUES[target]
     const key = statLoss.isPercent ? "STAT_PERCENT" : "STAT"
@@ -212,12 +215,12 @@ export function describeHexingSummary(
     }
     lossText = t(`ghost_incantations.summary.${key}`, params)
     reapGain = t(`ghost_incantations.summary.reap.${key}`, params)
-  } else if (loss === HexingLoss.GOLD_ON_KO) {
+  } else if (loss === HexingEffect.GOLD_ON_KO) {
     lossText = t(`ghost_incantations.summary.${loss}`, {
-      value: HEXING_LOSS_VALUES[loss][strength]
+      value: HEXING_EFFECT_VALUES[loss][strength]
     })
   } else {
-    const params = { value: HEXING_LOSS_VALUES[loss][strength] }
+    const params = { value: HEXING_EFFECT_VALUES[loss][strength] }
     lossText = t(`ghost_incantations.summary.${loss}`, params)
     reapGain = t(`ghost_incantations.summary.reap.${loss}`, params)
   }

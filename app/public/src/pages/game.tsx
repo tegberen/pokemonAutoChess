@@ -1534,6 +1534,16 @@ export default function Game() {
             )
           })
         })
+        // listen("gameStats") misses changes inside it, like the reroll count
+        $player.gameStats.onChange(() => {
+          dispatch(
+            changePlayer({
+              id: player.id,
+              field: "gameStats",
+              value: player.gameStats
+            })
+          )
+        })
 
         const updateSynergies = () => {
           dispatch(setSynergies({ id: player.id, value: player.synergies }))

@@ -11,9 +11,9 @@ import {
   type GhostIncantation,
   getHexingStrength,
   getRitualStrength,
-  HEXING_LOSS_VALUES,
+  HEXING_EFFECT_VALUES,
   HEXING_STAT_LOSS_VALUES,
-  HexingLoss,
+  HexingEffect,
   HexingStatus,
   HexingTarget,
   INCANTATION_ANIMATION_DELAY,
@@ -21,7 +21,7 @@ import {
   IncantationKind,
   RITUAL_BONUS_VALUES,
   RITUAL_EFFECT_VALUES,
-  RITUAL_GOLD_CHANCE_VALUES,
+  RITUAL_GOLD_VALUES,
   RITUAL_PERMANENT_STAT_CAP,
   RITUAL_SILENCE_VALUES,
   RitualBonus,
@@ -206,8 +206,8 @@ function applyHexStatLoss(
   reaper?: PokemonEntity
 ) {
   const strength = side.hexingStrength
-  const loss = incantation.effect as HexingLoss
-  if (loss === HexingLoss.STAT) {
+  const loss = incantation.effect as HexingEffect
+  if (loss === HexingEffect.STAT) {
     const cause = incantation.cause as HexingTarget
     const { values, isPercent } = HEXING_STAT_LOSS_VALUES[cause]
     const value = values[strength]
@@ -227,13 +227,13 @@ function applyHexStatLoss(
       target.addSpeed(-value, curser, 0, false)
       reaper?.addSpeed(value, reaper, 0, false)
     }
-  } else if (loss === HexingLoss.LUCK) {
-    const luckLoss = HEXING_LOSS_VALUES[loss][strength]
+  } else if (loss === HexingEffect.LUCK) {
+    const luckLoss = HEXING_EFFECT_VALUES[loss][strength]
     target.addLuck(-luckLoss, curser, 0, false)
     reaper?.addLuck(luckLoss, reaper, 0, false)
-  } else if (loss === HexingLoss.MAX_HP) {
+  } else if (loss === HexingEffect.MAX_HP) {
     const hpLoss = Math.round(
-      (target.maxHP * HEXING_LOSS_VALUES[loss][strength]) / 100
+      (target.maxHP * HEXING_EFFECT_VALUES[loss][strength]) / 100
     )
     target.addMaxHP(-hpLoss, curser, 0, false)
     reaper?.addMaxHP(hpLoss, reaper, 0, false)
@@ -271,8 +271,9 @@ function applyHex(
   reaper?: PokemonEntity
 ) {
   applyHexStatLoss(side, incantation, target, curser, reaper)
-  if (incantation.effect === HexingLoss.MAX_PP) {
-    const increase = HEXING_LOSS_VALUES[HexingLoss.MAX_PP][side.hexingStrength]
+  if (incantation.effect === HexingEffect.MAX_PP) {
+    const increase =
+      HEXING_EFFECT_VALUES[HexingEffect.MAX_PP][side.hexingStrength]
     target.maxPP = Math.min(
       255,
       Math.round((target.maxPP * (100 + increase)) / 100)
@@ -379,14 +380,14 @@ export function onHexedEnemyKnockedOut(enemy: PokemonEntity) {
   for (const hex of enemy.hexes) {
     const { side, incantation } = hex
     if (
-      incantation.effect === HexingLoss.GOLD_ON_KO &&
+      incantation.effect === HexingEffect.GOLD_ON_KO &&
       !enemy.isSpawn &&
       !side.goldPaidHexSlots.has(hex.slot)
     ) {
       side.goldPaidHexSlots.add(hex.slot)
       grantIncantationGold(
         side,
-        HEXING_LOSS_VALUES[HexingLoss.GOLD_ON_KO][side.hexingStrength]
+        HEXING_EFFECT_VALUES[HexingEffect.GOLD_ON_KO][side.hexingStrength]
       )
     }
   }
@@ -496,9 +497,13 @@ function activateRitual(
   const rewardMultiplier =
     side.fated?.effect === FatedRitual.DOUBLE_REWARDS ? 2 : 1
   const bonus = ritual.bonus as RitualBonus
-  if (bonus === RitualBonus.GOLD_CHANCE) {
-    const { chance: goldChance, gold } = RITUAL_GOLD_CHANCE_VALUES[trigger]
-    if (chance(goldChance[strength] / 100, context.source)) {
+  if (bonus === RitualBonus.GOLD_EVERY) {
+    // a ghost fight must not move the real player's count
+    if (!side.canEarnRewards) return
+    const { every, gold } = RITUAL_GOLD_VALUES[trigger]
+    side.player.ritualGoldCount += 1
+    if (side.player.ritualGoldCount >= every[strength]) {
+      side.player.ritualGoldCount = 0
       grantIncantationGold(side, gold[strength] * rewardMultiplier)
     }
     return

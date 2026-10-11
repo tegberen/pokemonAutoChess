@@ -464,6 +464,9 @@ function patchLogCover(day: string, isNewest: boolean) {
   return figure
 }
 
+// mixes Pokémon and Wish rows, so it gets the icons Fixes rows get
+const HOTFIX_CATEGORY = "Hotfixes and Adjustments"
+
 export function formatPatchLog(html: string, wishes: PatchLogWish[]) {
   const matchers = wishIconMatchers(wishes)
   const root = document.createElement("div")
@@ -559,7 +562,7 @@ export function formatPatchLog(html: string, wishes: PatchLogWish[]) {
         const [firstPokemon] = matchPokemons(subjectText)
         if (firstPokemon) row.dataset.rarity = getPokemonData(firstPokemon).rarity
         subject.prepend(pokemonPortraits(subjectText))
-      } else if (category === "Fixes") {
+      } else if (category === "Fixes" || category === HOTFIX_CATEGORY) {
         const subjectText = subject.textContent ?? ""
         const portraits = pokemonPortraits(subjectText)
         const icons = wishIcons(subjectText, matchers)

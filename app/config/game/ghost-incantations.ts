@@ -11,7 +11,7 @@ export enum HexingTarget {
   HIGHEST_SPEED = "HIGHEST_SPEED"
 }
 
-export enum HexingLoss {
+export enum HexingEffect {
   STAT = "STAT",
   GOLD_ON_KO = "GOLD_ON_KO",
   LUCK = "LUCK",
@@ -43,7 +43,7 @@ export enum RitualEffect {
 }
 
 export enum RitualBonus {
-  GOLD_CHANCE = "GOLD_CHANCE",
+  GOLD_EVERY = "GOLD_EVERY",
   PERMANENT_HP = "PERMANENT_HP",
   PERMANENT_PP = "PERMANENT_PP",
   PERMANENT_SPEED = "PERMANENT_SPEED"
@@ -109,13 +109,13 @@ export const HEXING_STAT_LOSS_VALUES: {
   [HexingTarget.HIGHEST_SPEED]: { values: [15, 30, 45], isPercent: false }
 }
 
-export const HEXING_LOSS_VALUES: {
-  [loss in Exclude<HexingLoss, HexingLoss.STAT>]: number[]
+export const HEXING_EFFECT_VALUES: {
+  [loss in Exclude<HexingEffect, HexingEffect.STAT>]: number[]
 } = {
-  [HexingLoss.GOLD_ON_KO]: [1, 2, 3],
-  [HexingLoss.LUCK]: [10, 20, 30],
-  [HexingLoss.MAX_PP]: [10, 20, 30],
-  [HexingLoss.MAX_HP]: [10, 15, 20]
+  [HexingEffect.GOLD_ON_KO]: [1, 2, 3],
+  [HexingEffect.LUCK]: [10, 20, 30],
+  [HexingEffect.MAX_PP]: [10, 20, 30],
+  [HexingEffect.MAX_HP]: [10, 15, 20]
 }
 
 type ByRitualTrigger<T> = { [trigger in RitualTrigger]: T }
@@ -167,18 +167,19 @@ export const RITUAL_SILENCE_VALUES: ByRitualTrigger<{
   [RitualTrigger.ENEMY_KOD]: { targets: [2, 3], seconds: [2, 3] }
 }
 
-export const RITUAL_GOLD_CHANCE_VALUES: ByRitualTrigger<{
-  chance: number[]
+// a counter, not a chance: LUCK the ritual itself grants would snowball a roll
+export const RITUAL_GOLD_VALUES: ByRitualTrigger<{
+  every: number[]
   gold: number[]
 }> = {
-  [RitualTrigger.GHOST_CASTS]: { chance: [5, 8], gold: [1, 2] },
-  [RitualTrigger.GHOST_ATTACKS]: { chance: [8, 12], gold: [1, 2] },
-  [RitualTrigger.GHOST_KOD]: { chance: [15, 25], gold: [1, 2] },
-  [RitualTrigger.ENEMY_KOD]: { chance: [10, 20], gold: [1, 2] }
+  [RitualTrigger.GHOST_CASTS]: { every: [10, 5], gold: [1, 1] },
+  [RitualTrigger.GHOST_ATTACKS]: { every: [10, 5], gold: [1, 1] },
+  [RitualTrigger.GHOST_KOD]: { every: [6, 3], gold: [1, 2] },
+  [RitualTrigger.ENEMY_KOD]: { every: [8, 4], gold: [1, 2] }
 }
 
 export const RITUAL_BONUS_VALUES: {
-  [bonus in Exclude<RitualBonus, RitualBonus.GOLD_CHANCE>]: RitualValues
+  [bonus in Exclude<RitualBonus, RitualBonus.GOLD_EVERY>]: RitualValues
 } = {
   [RitualBonus.PERMANENT_HP]: {
     [RitualTrigger.GHOST_CASTS]: [1, 2],
@@ -240,7 +241,7 @@ export const INCANTATION_COLUMNS: {
 } = {
   [IncantationKind.HEXING]: [
     Object.values(HexingTarget),
-    Object.values(HexingLoss),
+    Object.values(HexingEffect),
     Object.values(HexingStatus)
   ],
   [IncantationKind.RITUAL]: [

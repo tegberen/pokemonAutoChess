@@ -1916,7 +1916,6 @@ export class OnShopRerollCommand extends Command<GameRoom, string> {
     const lifePriceDue =
       paysWithLife &&
       (player.lifePriceRerolls + 1) % LIFE_PRICE_REROLLS_PER_LIFE === 0
-    if (lifePriceDue && player.life <= 1) return
 
     if (canRoll) {
       if (paysWithLife) {

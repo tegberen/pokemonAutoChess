@@ -33,7 +33,7 @@ import { Money } from "../icons/money"
 // kept outside the component so a remount keeps the Transcendence count
 const shopRefreshTrackers = new Map<
   string,
-  { shop: Pkm[]; rerollCount: number; refreshes: number }
+  { wasUnownShop: boolean; rerollCount: number; refreshes: number }
 >()
 
 export default function GameRefresh() {
@@ -112,31 +112,25 @@ export default function GameRefresh() {
   useEffect(() => {
     if (!connectedPlayerId) return
     const previous = shopRefreshTrackers.get(connectedPlayerId)
-    // shop refreshes, not rerolls: buying a Unown also refreshes the shop.
-    // Like the server, nothing is counted below PSYCHIC 7
+    // mirrors shopsSinceLastUnownShop: rerolls, plus buying from a Unown shop
     const isNewGame =
       previous !== undefined && rerollCount < previous.rerollCount
     let refreshes = isNewGame ? 0 : (previous?.refreshes ?? 0)
-    if (hasTranscendence) {
-      if (hasUnownShop) refreshes = 0
-      else if (previous && !isNewGame) {
+    if (hasUnownShop) refreshes = 0
+    else if (hasTranscendence) {
+      if (previous && !isNewGame) {
         const rerolls = rerollCount - previous.rerollCount
-        const swapped = previous.shop.some(
-          (pkm, index) =>
-            pkm !== Pkm.DEFAULT &&
-            shop[index] !== Pkm.DEFAULT &&
-            shop[index] !== pkm
-        )
-        refreshes += Math.max(rerolls, swapped ? 1 : 0)
+        const leftUnownShopByBuying = previous.wasUnownShop && rerolls === 0
+        refreshes += rerolls + (leftUnownShopByBuying ? 1 : 0)
       } else refreshes = 0
     }
     shopRefreshTrackers.set(connectedPlayerId, {
-      shop: [...shop],
+      wasUnownShop: hasUnownShop,
       rerollCount,
       refreshes
     })
     if (refreshes !== previous?.refreshes) rerender()
-  }, [connectedPlayerId, hasTranscendence, hasUnownShop, shop, rerollCount])
+  }, [connectedPlayerId, hasTranscendence, hasUnownShop, rerollCount])
   const rerollsUntilUnown = (interval: number) =>
     interval - ((stageLevel + rerollCount) % interval)
   const unownCountdowns = [

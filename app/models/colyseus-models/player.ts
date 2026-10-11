@@ -404,6 +404,7 @@ export default class Player extends Schema implements IPlayer {
   gloriousBattleReward: Item | null = null
   gloriousBattleWins = 0
   seaCrystalGoldSold = 0
+  ritualGoldCount = 0
   // server-only: STARTER_CHOICE's pick, and how many round-starts still owe a copy
   starterChoicePokemon: Pkm | null = null
   starterChoiceRoundsLeft: number = 0
@@ -1492,11 +1493,15 @@ export default class Player extends Schema implements IPlayer {
   rollGhostIncantationChoice(slot: number, ghostLevel: number) {
     const { kind } = GHOST_INCANTATION_SLOTS[slot]
     const [causes, effects, bonuses = []] = INCANTATION_COLUMNS[kind]
-    const firstHexCause = this.ghostIncantations.find(
+    const firstHex = this.ghostIncantations.find(
       (written) => written.kind === IncantationKind.HEXING
-    )?.cause
+    )
     const offeredCauses =
-      slot === 1 ? causes.filter((cause) => cause !== firstHexCause) : causes
+      slot === 1 ? causes.filter((cause) => cause !== firstHex?.cause) : causes
+    const offeredEffects =
+      slot === 1
+        ? effects.filter((effect) => effect !== firstHex?.effect)
+        : effects
     const ritualTrigger =
       this.ghostIncantations.find(
         (written) => written.kind === IncantationKind.RITUAL
@@ -1507,7 +1512,7 @@ export default class Player extends Schema implements IPlayer {
         kind,
         slot,
         causes: pickNRandomIn(offeredCauses, INCANTATION_OPTIONS_SHOWN),
-        effects: pickNRandomIn(effects, INCANTATION_OPTIONS_SHOWN),
+        effects: pickNRandomIn(offeredEffects, INCANTATION_OPTIONS_SHOWN),
         bonuses: pickNRandomIn(bonuses, INCANTATION_OPTIONS_SHOWN),
         strength: getIncantationStrength(kind, ghostLevel),
         context: kind === IncantationKind.FATED ? ritualTrigger : ""

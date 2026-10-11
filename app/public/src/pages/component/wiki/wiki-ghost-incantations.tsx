@@ -8,16 +8,16 @@ import {
   GHOST_INCANTATION_SLOTS,
   getHexingStrength,
   getRitualStrength,
-  HEXING_LOSS_VALUES,
+  HEXING_EFFECT_VALUES,
   HEXING_STAT_LOSS_VALUES,
-  HexingLoss,
+  HexingEffect,
   HexingStatus,
   HexingTarget,
   IncantationKind,
   RITUAL_ATTACKS_PER_TRIGGER,
   RITUAL_BONUS_VALUES,
   RITUAL_EFFECT_VALUES,
-  RITUAL_GOLD_CHANCE_VALUES,
+  RITUAL_GOLD_VALUES,
   RITUAL_SILENCE_VALUES,
   RitualBonus,
   RitualEffect,
@@ -77,8 +77,8 @@ const HEXING_TARGET_STAT_TOKENS: { [target in HexingTarget]: string } = {
   HIGHEST_SPEED: "SPEED"
 }
 
-const HEXING_LOSS_UNITS: {
-  [loss in Exclude<HexingLoss, HexingLoss.STAT>]: string
+const HEXING_EFFECT_UNITS: {
+  [loss in Exclude<HexingEffect, HexingEffect.STAT>]: string
 } = {
   GOLD_ON_KO: " GOLD",
   LUCK: " LUCK",
@@ -184,19 +184,19 @@ const PERMANENT_RITUAL_BONUSES = [
   RitualBonus.PERMANENT_SPEED
 ] as const
 
-const GOLD_CHANCE_ROWS = [
+const ATTACK_GOLD = RITUAL_GOLD_VALUES[RitualTrigger.GHOST_ATTACKS]
+
+const GOLD_ROWS = [
   {
-    label: "gold_chance",
+    label: "gold_every",
     describe: (trigger: RitualTrigger) =>
-      addIconsToDescription(
-        `[${RITUAL_GOLD_CHANCE_VALUES[trigger].chance.join(",")},LK]%`
-      )
+      addIconsToDescription(`[${RITUAL_GOLD_VALUES[trigger].every.join(",")}]`)
   },
   {
     label: "gold_amount",
     describe: (trigger: RitualTrigger) =>
       addIconsToDescription(
-        `[${RITUAL_GOLD_CHANCE_VALUES[trigger].gold.join(",")}] GOLD`
+        `[${RITUAL_GOLD_VALUES[trigger].gold.join(",")}] GOLD`
       )
   }
 ]
@@ -303,7 +303,11 @@ export function WikiGhostIncantations() {
               sentence: describeIncantationSentence(
                 t,
                 IncantationKind.HEXING,
-                [HexingTarget.HIGHEST_AP, HexingLoss.STAT, HexingStatus.FLINCH],
+                [
+                  HexingTarget.HIGHEST_AP,
+                  HexingEffect.STAT,
+                  HexingStatus.FLINCH
+                ],
                 ""
               )
             })
@@ -360,8 +364,8 @@ export function WikiGhostIncantations() {
                     </tr>
                   )
                 })}
-                {Object.values(HexingLoss)
-                  .filter((loss) => loss !== HexingLoss.STAT)
+                {Object.values(HexingEffect)
+                  .filter((loss) => loss !== HexingEffect.STAT)
                   .map((loss) => (
                     <tr key={loss}>
                       <th scope="row">
@@ -371,8 +375,8 @@ export function WikiGhostIncantations() {
                       </th>
                       <td>
                         {tierValues(
-                          HEXING_LOSS_VALUES[loss],
-                          HEXING_LOSS_UNITS[loss]
+                          HEXING_EFFECT_VALUES[loss],
+                          HEXING_EFFECT_UNITS[loss]
                         )}
                       </td>
                     </tr>
@@ -416,7 +420,7 @@ export function WikiGhostIncantations() {
                 [
                   RitualTrigger.ENEMY_KOD,
                   RitualEffect.GHOST_SPEED,
-                  RitualBonus.GOLD_CHANCE
+                  RitualBonus.GOLD_EVERY
                 ],
                 ""
               )
@@ -491,11 +495,11 @@ export function WikiGhostIncantations() {
                     colSpan={RITUAL_TRIGGERS.length + 1}
                   >
                     {addIconsToDescription(
-                      t("wiki.ghost.ritual.bonuses.GOLD_CHANCE")
+                      t("wiki.ghost.ritual.bonuses.GOLD_EVERY")
                     )}
                   </th>
                 </tr>
-                {GOLD_CHANCE_ROWS.map(({ label, describe }) => (
+                {GOLD_ROWS.map(({ label, describe }) => (
                   <tr key={label} className="wiki-ghost-group-member">
                     <th scope="row">
                       {addIconsToDescription(t(`wiki.ghost.ritual.${label}`))}
@@ -524,6 +528,18 @@ export function WikiGhostIncantations() {
           </div>
           <p className="wiki-ghost-example">
             {addIconsToDescription(t("wiki.ghost.ritual.permanent_cap_note"))}
+          </p>
+          <p className="wiki-ghost-example">
+            {addIconsToDescription(
+              t("wiki.ghost.ritual.gold_example", {
+                attacks: RITUAL_ATTACKS_PER_TRIGGER,
+                gold: ATTACK_GOLD.gold[0],
+                every: ATTACK_GOLD.every[0],
+                strongerEvery: ATTACK_GOLD.every[1],
+                total: RITUAL_ATTACKS_PER_TRIGGER * ATTACK_GOLD.every[0],
+                strongerTotal: RITUAL_ATTACKS_PER_TRIGGER * ATTACK_GOLD.every[1]
+              })
+            )}
           </p>
         </section>
       </div>

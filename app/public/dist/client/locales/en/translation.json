@@ -5242,7 +5242,7 @@
 		},
 		"POCKET_DAYCARE": {
 			"name": "Pocket Daycare",
-			"description": "Gain an Egg and a SILVER_DOJO_TICKET."
+			"description": "Gain an Egg and a BRONZE_DOJO_TICKET."
 		},
 		"TRANSFORM": {
 			"name": "Transform",
@@ -5478,7 +5478,7 @@
 		},
 		"SAFARI_ENCOUNTER": {
 			"name": "Safari Encounter",
-			"description": "Gain a SILVER_DOJO_TICKET and a random additional Pokémon matching your highest synergy, chosen from those not yet in the additional pool."
+			"description": "Gain a BRONZE_DOJO_TICKET and a random additional Pokémon matching your highest synergy, chosen from those not yet in the additional pool."
 		},
 		"GYARODOS_TRES_QUATRO": {
 			"name": "Gyarodos, Tres, Quatro",
@@ -5870,7 +5870,7 @@
 		},
 		"LIFE_PRICE": {
 			"name": "Life Price",
-			"description": "Rerolling your shop no longer costs GOLD. Instead, every 2 rerolls cost you 1 HP, and your partner too in Double Up. It cannot bring either of you below 1 HP."
+			"description": "Rerolling your shop no longer costs GOLD. Instead, every 2 rerolls cost you 1 HP, and your partner too in Double Up. It cannot bring either of you below 1 HP: at 1 HP, rerolls are free."
 		},
 		"SHADY_PRICE": {
 			"name": "Shady Price",
@@ -6422,7 +6422,7 @@
 		},
 		"ALL_FOURS": {
 			"name": "All Fours",
-			"description": "Open a shop of all Epic Pokémon. The first one you buy is free. Gain a SILVER_DOJO_TICKET."
+			"description": "Open a shop of all Epic Pokémon. The first one you buy is free. Gain a BRONZE_DOJO_TICKET."
 		},
 		"BEING_OF_KNOWLEDGE": {
 			"name": "Being of Knowledge",
@@ -6906,7 +6906,7 @@
 				"GHOST_MAX_HP": "GHOST Pokémon GAIN {{value}} max HP"
 			},
 			"2": {
-				"GOLD_CHANCE": "You have a [{{chance}},LK]% chance to GAIN {{gold}} GOLD",
+				"GOLD_EVERY": "Each [{{every}}] times it happens, you GAIN {{gold}} GOLD",
 				"PERMANENT_HP": "The ally with the highest max HP GAINS {{value}} permanent HP, up to half its base HP",
 				"PERMANENT_PP": "The ally with the highest AP GAINS {{value}} permanent starting PP, up to half its max PP",
 				"PERMANENT_SPEED": "The ally with the highest ATK GAINS {{value}} permanent SPEED, up to half its base SPEED"
@@ -7724,14 +7724,14 @@
 			},
 			"hexing": {
 				"title": "Hexing Incantations",
-				"intro": "Your DEBUFF at GHOST 2 and 4. At the start of each fight, the enemy chosen by the Cause gets the Effect and the NEGATIVE_STATUS for the whole fight. When several enemies tie on that stat, the STRONGEST one is chosen. Your second HEXING_INCANTATION cannot use the same Cause as the first."
+				"intro": "Your DEBUFF at GHOST 2 and 4. At the start of each fight, the enemy chosen by the Cause gets the Effect and the NEGATIVE_STATUS for the whole fight. When several enemies tie on that stat, the STRONGEST one is chosen. Your second HEXING_INCANTATION cannot use the same Cause or Effect as the first."
 			},
 			"ritual": {
 				"title": "Ritual Incantation",
 				"intro": "Your BUFF at GHOST 6. Each time the Cause happens, the Effect and the Bewitching trigger.",
 				"causes": {
 					"GHOST_CASTS": "GHOST casts",
-					"GHOST_ATTACKS": "Every {{count}} GHOST attacks",
+					"GHOST_ATTACKS": "Every {{count}} attacks by one GHOST Pokémon",
 					"GHOST_KOD": "GHOST KO'd",
 					"ENEMY_KOD": "Enemy KO'd"
 				},
@@ -7746,7 +7746,7 @@
 					"GHOST_MAX_HP": "max HP"
 				},
 				"bonuses": {
-					"GOLD_CHANCE": "You have a chance to GAIN GOLD",
+					"GOLD_EVERY": "After enough times, you GAIN GOLD",
 					"PERMANENT_HP": "Highest max HP ally GAINS permanent HP",
 					"PERMANENT_PP": "Highest AP ally GAINS permanent starting PP",
 					"PERMANENT_SPEED": "Highest ATK ally GAINS permanent SPEED"
@@ -7755,9 +7755,10 @@
 				"silence_behind_target": "Enemies in a line behind the target for {{seconds}} seconds",
 				"silence_nearest": "{{targets}} nearest for {{seconds}} seconds",
 				"silence_adjacent": "{{targets}} ADJACENT for {{seconds}} seconds",
-				"gold_chance": "Chance",
+				"gold_every": "Times needed",
 				"gold_amount": "Amount",
-				"permanent_cap_note": "Each Pokémon can gain up to half its base HP, max PP and base SPEED from these bonuses. When several allies tie on that stat, the STRONGEST one is chosen. Once a Pokémon reaches its cap, the next best ally gains them instead. Example: a Pokémon with 200 base HP, 100 max PP and 60 base SPEED can gain at most 100 HP, 50 starting PP and 30 SPEED."
+				"permanent_cap_note": "Each Pokémon can gain up to half its base HP, max PP and base SPEED from the \"permanent HP\", \"permanent starting PP\" and \"permanent SPEED\" Bewitchings. When several allies tie on that stat, the STRONGEST one is chosen. Once a Pokémon reaches its cap, the next best ally gains them instead. Example: a Pokémon with 200 base HP, 100 max PP and 60 base SPEED can gain at most 100 HP, 50 starting PP and 30 SPEED.",
+				"gold_example": "Example: the Cause \"Every {{attacks}} attacks by one GHOST Pokémon\" has to happen {{every}} times before you GAIN {{gold}} GOLD: {{total}} GHOST attacks ({{attacks}} × {{every}}). Once it is STRONGER, it only has to happen {{strongerEvery}} times: {{strongerTotal}} GHOST attacks ({{attacks}} × {{strongerEvery}}). All your GHOST Pokémon count together. Each Pokémon's attacks restart at 0 every fight, but the times it happened carry over."
 			},
 			"fated": {
 				"title": "Fated Incantation",

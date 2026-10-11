@@ -458,6 +458,14 @@ Smeargle Scribbles do not change your Elo.
 
 Every balance change on this server, newest first.
 
+### 11 October 2026
+
+**Hotfixes and Adjustments**
+- Life Price | at 1 HP, rerolls are free instead of blocked
+- All Fours, Safari Encounter, Pocket Daycare | SILVER_DOJO_TICKET → BRONZE_DOJO_TICKET
+- HEXING_INCANTATION | the second one can no longer use the same Effect as the first
+- RITUAL_INCANTATION | the GOLD Bewitching is no longer a LUCK chance but a count: 1/1 GOLD every 10/5 GHOST casts or attack triggers, and 1/2 GOLD every 6/3 GHOST KO'd or every 8/4 enemies KO'd
+
 ### 10 October 2026
 
 **Pokémon**

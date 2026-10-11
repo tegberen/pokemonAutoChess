@@ -3300,7 +3300,7 @@ export const blessingEffectService: {
 
   [Blessing.ALL_FOURS]: (player, state) => {
     state.shop.assignAllEpicShop(player, state)
-    player.items.push(Item.SILVER_DOJO_TICKET)
+    player.items.push(Item.BRONZE_DOJO_TICKET)
     player.allFoursFreeBuyPending = true
     // the themed shop can be rolled away without paying for it
     player.shopFreeRolls += 1
@@ -3543,7 +3543,7 @@ export const blessingEffectService: {
     const encountered = pickRandomIn(candidates)
     state.shop.addAdditionalPokemon(encountered, state, true)
     if (!giftPokemonIfBenchHasRoom(player, encountered)) return false
-    player.items.push(Item.SILVER_DOJO_TICKET)
+    player.items.push(Item.BRONZE_DOJO_TICKET)
     return true
   },
 
@@ -3555,7 +3555,7 @@ export const blessingEffectService: {
 
   [Blessing.POCKET_DAYCARE]: (player, state) => {
     if (giveRandomEgg(player, false, state) == null) return false
-    player.items.push(Item.SILVER_DOJO_TICKET)
+    player.items.push(Item.BRONZE_DOJO_TICKET)
     return true
   },
 
