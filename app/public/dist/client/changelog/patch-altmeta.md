@@ -481,6 +481,9 @@ Every balance change on this server, newest first.
 - All Fours, Safari Encounter, Pocket Daycare | SILVER_DOJO_TICKET → BRONZE_DOJO_TICKET
 - Potion | player HP healed 20 → 10
 
+**Interface**
+- Double Up chat | account level required 100 → 42
+
 ### 10 October 2026
 
 **Pokémon**
