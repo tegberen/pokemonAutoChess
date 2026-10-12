@@ -969,6 +969,7 @@ export const CURSE_OF_CORAL_LAST_STAGE = 12
 export const CHOSEN_ONES_COUNT = 3
 export const CHOSEN_ONES_MAX_HP_GAIN = 10
 export const KINGDOM_SPEED = 1
+export const KINGDOM_ATTACK = 1
 export const BASTION_DEFENSE = 1
 export const PALACE_ABILITY_POWER = 2
 export const KINGDOM_PALACE_MAX_HP = 4

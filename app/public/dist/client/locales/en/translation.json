@@ -6276,7 +6276,7 @@
 		},
 		"KINGDOM": {
 			"name": "High Tower Castle",
-			"description": "At the start of each fight, all allies on the board gain 1 SPEED and 4 HP permanently."
+			"description": "At the start of each fight, all allies on the board gain 1 SPEED, 1 ATK and 4 HP permanently."
 		},
 		"BASTION": {
 			"name": "Training Ground",
