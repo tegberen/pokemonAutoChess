@@ -6215,7 +6215,7 @@ export class GalarianZapdos extends Pokemon {
   ])
   rarity = Rarity.LEGENDARY
   stars = 3
-  hp = 300
+  hp = 250
   atk = 27
   speed = 57
   def = 10
@@ -6362,10 +6362,10 @@ export class Moltres extends Pokemon {
 }
 
 export class GalarianMoltres extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.DARK, Synergy.FLYING])
+  types = new SetSchema<Synergy>([Synergy.DARK, Synergy.FLYING, Synergy.LIGHT])
   rarity = Rarity.LEGENDARY
   stars = 3
-  hp = 300
+  hp = 250
   atk = 28
   speed = 54
   def = 6
@@ -6373,13 +6373,14 @@ export class GalarianMoltres extends Pokemon {
   maxPP = 100
   range = 2
   skill = Ability.FIERY_WRATH
-  // regional = false
+  regional = true
   isInRegion(map: DungeonPMDO) {
     const regionSynergies = RegionDetails[map]?.synergies
     return (
       regionSynergies.includes(Synergy.DARK) ||
       regionSynergies.includes(Synergy.PSYCHIC) ||
-      regionSynergies.includes(Synergy.GHOST)
+      regionSynergies.includes(Synergy.GHOST) ||
+      regionSynergies.includes(Synergy.LIGHT)
     )
   }
 }
@@ -6414,10 +6415,14 @@ export class Articuno extends Pokemon {
 }
 
 export class GalarianArticuno extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.PSYCHIC, Synergy.FLYING])
+  types = new SetSchema<Synergy>([
+    Synergy.PSYCHIC,
+    Synergy.FLYING,
+    Synergy.GHOST
+  ])
   rarity = Rarity.LEGENDARY
   stars = 3
-  hp = 300
+  hp = 250
   atk = 27
   speed = 55
   def = 6
@@ -6431,7 +6436,8 @@ export class GalarianArticuno extends Pokemon {
     return (
       regionSynergies.includes(Synergy.PSYCHIC) ||
       regionSynergies.includes(Synergy.FAIRY) ||
-      regionSynergies.includes(Synergy.DARK)
+      regionSynergies.includes(Synergy.DARK) ||
+      regionSynergies.includes(Synergy.GHOST)
     )
   }
 }

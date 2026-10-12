@@ -391,6 +391,8 @@ At the beginning of each battle, TIGHT_BELT is replaced by 2 random items. The h
 
 - Diancie: Legendary Pokémon.
 - Galarian Zapdos: has WILD.
+- Galarian Moltres: has LIGHT.
+- Galarian Articuno: has GHOST.
 - Glastrier: has WILD.
 - Ho-Oh: allied FIRE Pokémon with Resurrection revive Ignited.
 - Landorus, Thunderus, Tornadus, Enamorus, Marcus: have HUMAN
@@ -471,6 +473,11 @@ Smeargle Scribbles do not change your Elo.
 Every balance change on this server, newest first.
 
 ### 12 October 2026
+
+**Pokémon**
+- Galarian Moltres | DARK / FLYING → DARK / FLYING / LIGHT, HP 300 → 250, now regional, also appears in LIGHT regions
+- Galarian Articuno | PSYCHIC / FLYING → PSYCHIC / FLYING / GHOST, HP 300 → 250, also appears in GHOST regions
+- Galarian Zapdos | HP 300 → 250
 
 **Game Mode**
 - Double Up | a draw now damages both players, like in solo
