@@ -3,6 +3,7 @@ import { useAppSelector } from "../../../hooks"
 import GamePlayer from "./game-player"
 import "./game-players.css"
 import { sortPlayersByRankAndTeam } from "./sort-players"
+import { useNextOpponentChances } from "./use-next-opponent-chances"
 import type CSS from "csstype"
 
 const style: CSS.Properties = {
@@ -18,6 +19,7 @@ export default function GamePlayers(props: { click: (id: string) => void }) {
   const gameMode = useAppSelector((state) => state.game.gameMode)
   const finalistIds = useAppSelector((state) => state.game.finalistIds)
   const isFinale = finalistIds.length > 0
+  const nextOpponentChances = useNextOpponentChances()
 
   const DOUBLE_UP_TEAM_COLORS = ["#f9e07f", "#f4a7b9", "#a8e6e6", "#b8e6a0"]
 
@@ -45,6 +47,7 @@ const sortedPlayers = sortPlayersByRankAndTeam(players, gameMode).filter(
           index={i}
           teamColor={gameMode === "DOUBLE_UP" ? teamColorMap.get(p.doubleUpTeamId) : undefined}
           hideLife={isFinale}
+          nextOpponentChance={nextOpponentChances.get(p.id)}
         />
       ))}
     </div>

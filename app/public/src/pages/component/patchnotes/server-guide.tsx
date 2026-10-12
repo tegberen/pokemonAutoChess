@@ -21,6 +21,7 @@ import {
   addIconsToHtml,
   getGhostSpiritCoinSentence
 } from "../../utils/descriptions"
+import { getNextOpponentStripesPath } from "../game/game-player"
 import { GamePokemonDetailTooltip } from "../game/game-pokemon-detail"
 import { ItemDetailTooltip } from "../../../game/components/item-detail"
 import { Modal } from "../modal/modal"
@@ -96,6 +97,12 @@ function resolveGuideTokens(markdown: string) {
     .replace(
       /\{\{meeple\}\}/g,
       '<img class="guide-inline-icon" src="assets/ui/planned.png" alt="Meeple">'
+    )
+    .replace(/\{\{stripes:([1-3])\}\}/g, (_, stripes) =>
+      [
+        '<svg class="guide-stripes-icon" viewBox="0 0 10 14">',
+        `<path d="${getNextOpponentStripesPath(Number(stripes))}"/></svg>`
+      ].join("")
     )
     .replace(/\{\{scribble:([A-Z_]+)\}\}/g, (token, name) => {
       const rule = Object.values(SpecialGameRule).find(

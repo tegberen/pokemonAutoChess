@@ -481,6 +481,7 @@ Every balance change on this server, newest first.
 
 **Game Mode**
 - Double Up | a draw now damages both players, like in solo
+- Victory scene | Purple Kecleon, Unown, outlaws and other wandering Pokémon no longer walk in once the game is over
 
 **Wishes**
 - Panic Button | Unown-Q's draw no longer deals 4 player damage to your opponent
@@ -497,7 +498,7 @@ Every balance change on this server, newest first.
 
 **Interface**
 - Rainbow Trail | unlocks with 8 different Eeveelutions instead of 9, Mafia Eevee is no longer needed
-
+- Next opponent {{new}} | stripes by a player's life show if you can fight them next round: {{stripes:3}} certain, {{stripes:2}} likely, {{stripes:1}} possible. Replaces the clock
 ### 11 October 2026
 
 **Pokémon**

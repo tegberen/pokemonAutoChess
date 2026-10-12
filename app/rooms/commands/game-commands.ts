@@ -3094,7 +3094,8 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
     ]
     if (
       giftShopPreviewStages.includes(this.state.stageLevel) &&
-      this.state.gameMode === GameMode.DOUBLE_UP
+      this.state.gameMode === GameMode.DOUBLE_UP &&
+      !this.state.gameFinished
     ) {
       this.state.players.forEach((player: Player) => {
         if (player.alive && !player.isBot) {
@@ -4042,10 +4043,6 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
 
         bluePlayer.simulationId = simulationId
         bluePlayer.team = Team.BLUE_TEAM
-        bluePlayer.opponents.set(
-          redPlayer.id,
-          (bluePlayer.opponents.get(redPlayer.id) ?? 0) + 1
-        )
         bluePlayer.opponentId = redPlayer.id
         bluePlayer.opponentName = matchup.ghost
           ? `Ghost of ${redPlayer.name}`
@@ -4056,10 +4053,6 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
         if (!matchup.ghost) {
           redPlayer.simulationId = simulationId
           redPlayer.team = Team.RED_TEAM
-          redPlayer.opponents.set(
-            bluePlayer.id,
-            (redPlayer.opponents.get(bluePlayer.id) ?? 0) + 1
-          )
           redPlayer.opponentId = bluePlayer.id
           redPlayer.opponentName = bluePlayer.name
           redPlayer.opponentAvatar = bluePlayer.avatar
@@ -4130,6 +4123,7 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
   }
 
   spawnWanderingPokemons() {
+    if (this.state.gameFinished) return
     const isPVE = isPveStage(this.state, this.state.stageLevel)
 
     this.state.players.forEach((player: Player) => {

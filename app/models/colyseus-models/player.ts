@@ -263,7 +263,6 @@ export default class Player extends Schema implements IPlayer {
   ultraUnlockPool: Pkm[] = new Array<Pkm>()
   legendaryUnlockPool: Pkm[] = new Array<Pkm>()
   isBot: boolean
-  opponents: Map<string, number> = new Map<string, number>()
   titles: Set<Title> = new Set<Title>()
   sinnohsCoolestRewardGranted = false
   thunderAndLightningFormGranted = false
