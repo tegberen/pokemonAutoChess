@@ -864,6 +864,12 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
     crit: boolean,
     permanent = false
   ) {
+    // converted before any boost, so addAttack applies Big Eater Belt once
+    if (this.items.has(Item.NULLIFY_BANDANNA)) {
+      this.addAttack(Math.round(0.2 * value), caster, 0, false)
+      return
+    }
+
     value = Math.round(
       value * (1 + (apBoost * caster.ap) / 100) * (crit ? caster.critPower : 1)
     )
@@ -874,12 +880,7 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
       target.ap = min(-100)(target.ap + value)
     }
 
-    if (this.items.has(Item.NULLIFY_BANDANNA)) {
-      this.addShield(value, caster, 0, false) // AP is gained as shield instead
-    } else {
-      update(this)
-    }
-
+    update(this)
     if (permanent && !this.isGhostOpponent) {
       update(this.refToBoardPokemon)
     }

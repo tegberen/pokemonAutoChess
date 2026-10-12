@@ -3528,7 +3528,7 @@
 		"LUCKY_RIBBON": "Holder has 20% more LUCK. Negates critical bonus damage from all incoming critical hits.",
 		"COVER_BAND": "If an ADJACENT ally is about to get KO with some incoming damage, the wearer takes the damage instead.",
 		"EFFICIENT_BANDANNA": "The holder and allies ADJACENT_IN_THE_SAME_ROW have their max PP reduced by 15%.",
-		"NULLIFY_BANDANNA": "Holder can no longer cast its ability. AP is converted to SHIELD, and PP are converted to bonus SPECIAL on next attack.",
+		"NULLIFY_BANDANNA": "Holder can no longer cast its ability. AP is converted to ATK (5:1), and PP are converted to bonus SPECIAL on next attack.",
 		"WANTED_NOTICE": "Wanted: Fainted or Alive\n Reward: 10 GOLD",
 		"POKE_RADAR": "Drag onto one of your Pokémon to let your partner know you are looking for more copies of it.",
 		"TATSUGIRI_CURLY": "Can command a Dondozo.",

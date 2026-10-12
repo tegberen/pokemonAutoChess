@@ -71,7 +71,7 @@ import { isUnderZenith } from "../utils/weather"
 import { count } from "../utils/array"
 import { distanceC, distanceM, spacesBetween } from "../utils/distance"
 import { logger } from "../utils/logger"
-import { clamp, max, min } from "../utils/number"
+import { max, min } from "../utils/number"
 import { chance, pickRandomIn } from "../utils/random"
 import type { Board, Cell } from "./board"
 import {
@@ -339,7 +339,7 @@ export default abstract class PokemonState {
       }
 
       if (pokemon.items.has(Item.NULLIFY_BANDANNA)) {
-        specialDamage += clamp(pokemon.pp, 0, pokemon.maxPP)
+        specialDamage += min(0)(pokemon.pp)
         pokemon.pp = 0
       }
 
