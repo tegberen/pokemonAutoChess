@@ -296,18 +296,27 @@ export const FAIRY_WANDS_BY_SYNERGY_LEVEL = [
   [Item.TUNNEL_WAND, Item.WHIRLWIND_WAND, Item.SWITCHER_WAND, Item.WARP_WAND]
 ]
 
-// longer than the 2s wand statuses, so 100 LUCK cannot chain them into a lock
-export const WAND_PROC_COOLDOWN_MS = 4000
-export const WANDS_WITH_PROC_COOLDOWN = [
-  Item.CONFUSE_WAND,
-  Item.PETRIFY_WAND,
-  Item.SLOW_WAND,
-  Item.SLUMBER_WAND,
-  Item.WARP_WAND,
-  Item.SWITCHER_WAND,
-  Item.WHIRLWIND_WAND,
-  Item.TUNNEL_WAND
-]
+// crowd control wands wait longer than their 2s statuses, so 100 LUCK cannot
+// chain them into a lock (TUNNEL_WAND shares their tier and cooldown). The
+// others only stop 100 LUCK from triggering on every hit, e.g. HP_SWAP_WAND
+// stealing max HP
+const CROWD_CONTROL_WAND_COOLDOWN_MS = 4000
+const WAND_COOLDOWN_MS = 2000
+export const WAND_PROC_COOLDOWN_MS_BY_WAND: Partial<Record<Item, number>> = {
+  [Item.HP_SWAP_WAND]: WAND_COOLDOWN_MS,
+  [Item.SPIRIT_WAND]: WAND_COOLDOWN_MS,
+  [Item.GUIDING_WAND]: WAND_COOLDOWN_MS,
+  [Item.SURROUND_WAND]: WAND_COOLDOWN_MS,
+  [Item.POUNCE_WAND]: WAND_COOLDOWN_MS,
+  [Item.CONFUSE_WAND]: CROWD_CONTROL_WAND_COOLDOWN_MS,
+  [Item.PETRIFY_WAND]: CROWD_CONTROL_WAND_COOLDOWN_MS,
+  [Item.SLOW_WAND]: CROWD_CONTROL_WAND_COOLDOWN_MS,
+  [Item.SLUMBER_WAND]: CROWD_CONTROL_WAND_COOLDOWN_MS,
+  [Item.WARP_WAND]: CROWD_CONTROL_WAND_COOLDOWN_MS,
+  [Item.SWITCHER_WAND]: CROWD_CONTROL_WAND_COOLDOWN_MS,
+  [Item.WHIRLWIND_WAND]: CROWD_CONTROL_WAND_COOLDOWN_MS,
+  [Item.TUNNEL_WAND]: CROWD_CONTROL_WAND_COOLDOWN_MS
+}
 
 export const UNOWN_ENCOUNTER_CHANCE = 0.033
 export const SHINY_UNOWN_ENCOUNTER_CHANCE = 0.05

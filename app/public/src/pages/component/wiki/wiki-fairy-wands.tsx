@@ -4,19 +4,23 @@ import { SynergyTiersThresholds } from "../../../../../config"
 import {
   FAIRY_WANDS_BY_SYNERGY_LEVEL,
   SynergyTiers,
-  WAND_PROC_COOLDOWN_MS,
-  WANDS_WITH_PROC_COOLDOWN
+  WAND_PROC_COOLDOWN_MS_BY_WAND
 } from "../../../../../config/game/synergies"
+import type { Item } from "../../../../../types/enum/Item"
 import { Synergy } from "../../../../../types/enum/Synergy"
 import { addIconsToDescription } from "../../utils/descriptions"
 import "./wiki-fairy-wands.css"
+
+function formatWandCooldown(wand: Item) {
+  const cooldownMs = WAND_PROC_COOLDOWN_MS_BY_WAND[wand]
+  return cooldownMs === undefined ? "-" : `${cooldownMs / 1000}s`
+}
 
 export function WikiFairyWands() {
   const { t: tBase } = useTranslation()
   const t = tBase as any
   const fairyTiers = SynergyTiers[Synergy.FAIRY]
   const fairyThresholds = SynergyTiersThresholds[Synergy.FAIRY]
-  const cooldownSeconds = WAND_PROC_COOLDOWN_MS / 1000
 
   return (
     <section className="my-box wiki-fairy-wands">
@@ -46,9 +50,7 @@ export function WikiFairyWands() {
                     {addIconsToDescription(t(`wiki.fairy.effects.${wand}`))}
                   </td>
                   <td className="wiki-fairy-wands-cooldown">
-                    {WANDS_WITH_PROC_COOLDOWN.includes(wand)
-                      ? `${cooldownSeconds}s`
-                      : "-"}
+                    {formatWandCooldown(wand)}
                   </td>
                 </tr>
               ))}

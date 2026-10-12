@@ -480,6 +480,12 @@ Every balance change on this server, newest first.
 - High Tower Castle | allies also gain 1 ATK permanently at the start of each fight
 - Bubble Rescue {{new}} | Stage 4. Gain a Marill. Your STRONGEST Azurill rescues the enemies it KOs: they join your team with 20/30/40% HP and keep their items
 
+**Items**
+- All Fairy wands | additional SPECIAL now scales on ATK instead of attack damage, so critical hits no longer multiply it
+- HP_SWAP_WAND, SPIRIT_WAND, GUIDING_WAND, SURROUND_WAND, POUNCE_WAND | now trigger at most once every 2 seconds
+- BLAST_WAND on critical hit | 40% → 50%
+- TWO_EDGED_WAND | 40% → 50%
+
 **Interface**
 - Rainbow Trail | unlocks with 8 different Eeveelutions instead of 9, Mafia Eevee is no longer needed
 

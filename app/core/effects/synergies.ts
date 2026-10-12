@@ -29,7 +29,7 @@ import {
   SynergyTiers,
   GOLDEN_BERRY_TREE_TYPES,
   VESPIQUEN_CLONE,
-  WAND_PROC_COOLDOWN_MS
+  WAND_PROC_COOLDOWN_MS_BY_WAND
 } from "../../config/game/synergies"
 import type Player from "../../models/colyseus-models/player"
 import { getSynergyTier } from "../../models/colyseus-models/synergies"
@@ -881,7 +881,7 @@ function rollWandProc(
   const lastProcTime = lastProcTimeByWand.get(wand)
   if (
     lastProcTime !== undefined &&
-    Date.now() - lastProcTime < WAND_PROC_COOLDOWN_MS
+    Date.now() - lastProcTime < (WAND_PROC_COOLDOWN_MS_BY_WAND[wand] ?? 0)
   )
     return false
   if (!chance(wandProcChance, attacker)) return false
@@ -906,7 +906,6 @@ export function getMystoganWands(player: Player): Item[] {
 export function applyWandEffects(
   pokemon: PokemonEntity,
   target: PokemonEntity,
-  attackDamage: number,
   crit: boolean
 ): { takenDamage: number; death: boolean } {
   const board = pokemon.simulation.board
@@ -965,20 +964,20 @@ export function applyWandEffects(
       }
       case Item.BLAST_WAND: {
         if (crit) {
-          specialDamageFactor += 0.2
+          specialDamageFactor += 0.3
           pokemon.broadcastAbility({ skill: "PUFF_PINK" })
         }
         break
       }
       case Item.SPIRIT_WAND: {
         specialDamageFactor += pokemon.count.ult * 0.05
-        if (chance(0.2, pokemon)) {
+        if (rollWandProc(pokemon, wand, 0.2)) {
           pokemon.addPP(5, pokemon, 0, false)
         }
         break
       }
       case Item.GUIDING_WAND: {
-        if (chance(0.5, pokemon)) {
+        if (rollWandProc(pokemon, wand, 0.5)) {
           const lowestHpAdjacentEnemy = board
             .getAdjacentCells(target.positionX, target.positionY)
             .filter((cell) => cell.value && cell.value.team !== pokemon.team)
@@ -1009,13 +1008,13 @@ export function applyWandEffects(
         break
       }
       case Item.TWO_EDGED_WAND: {
-        specialDamageFactor += 0.2
+        specialDamageFactor += 0.3
         break
       }
     }
   }
 
-  const specialDamage = specialDamageFactor * attackDamage
+  const specialDamage = specialDamageFactor * pokemon.atk
   let { takenDamage, death } = target.handleSpecialDamage(
     specialDamage,
     board,
@@ -1029,7 +1028,7 @@ export function applyWandEffects(
   for (const { wand } of wands) {
     switch (wand) {
       case Item.HP_SWAP_WAND: {
-        if (chance(0.2, pokemon)) {
+        if (rollWandProc(pokemon, wand, 0.2)) {
           target.addMaxHP(-Math.floor(takenDamage), pokemon, 0, false)
           if (target.items.has(Item.TWIST_BAND) === false) {
             pokemon.addMaxHP(Math.floor(takenDamage), pokemon, 0, false)
@@ -1038,7 +1037,7 @@ export function applyWandEffects(
         break
       }
       case Item.SURROUND_WAND: {
-        if (chance(0.1, pokemon)) {
+        if (rollWandProc(pokemon, wand, 0.1)) {
           const adjacentEnemies = board
             .getAdjacentCells(pokemon.positionX, pokemon.positionY)
             .filter(
@@ -1199,7 +1198,7 @@ export const pounceWandEffect = new OnAttackReceivedEffect(
     if (
       pokemon.fairySplashCooldown === 0 &&
       attacker &&
-      (crit || chance(0.1, pokemon))
+      rollWandProc(pokemon, Item.POUNCE_WAND, crit ? 1 : 0.1)
     ) {
       const shockDamageFactor = 0.3
       const shockDamage = min(1)(Math.round(shockDamageFactor * totalDamage))

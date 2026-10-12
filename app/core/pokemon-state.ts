@@ -326,12 +326,7 @@ export default abstract class PokemonState {
 
       if (isAttackSuccessful && pokemon.types.has(Synergy.FAIRY)) {
         pokemon.isResolvingOnHitEffects = true
-        const { takenDamage, death } = applyWandEffects(
-          pokemon,
-          target,
-          damage,
-          crit
-        )
+        const { takenDamage, death } = applyWandEffects(pokemon, target, crit)
         pokemon.isResolvingOnHitEffects = false
         totalTakenDamage += takenDamage
         if (death) hasAttackKilled = true
