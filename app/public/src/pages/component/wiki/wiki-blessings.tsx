@@ -78,9 +78,37 @@ const BlessingCard = memo(function BlessingCard(props: {
   )
 })
 
+/* grouped like a family, but only in the wiki: a real family would also cap
+   how many of them a player is offered at once */
+const WIKI_ONLY_GROUPS = {
+  SONG: [
+    Blessing.HEATRANS_SONG,
+    Blessing.RAYQUAZAS_SONG,
+    Blessing.MEWS_SONG,
+    Blessing.GROUDONS_SONG,
+    Blessing.ARTICUNOS_SONG,
+    Blessing.GIRATINAS_SONG,
+    Blessing.KYOGRES_SONG
+  ],
+  MISSION: [
+    Blessing.QUEST_EVOLVE,
+    Blessing.QUEST_DESTROY,
+    Blessing.QUEST_LEVEL_UP,
+    Blessing.QUEST_DIVERSIFY,
+    Blessing.QUEST_PROSPER
+  ]
+} as const
+type WikiOnlyGroup = keyof typeof WIKI_ONLY_GROUPS
+
+function getWikiOnlyGroup(blessing: Blessing): WikiOnlyGroup | undefined {
+  return (Object.keys(WIKI_ONLY_GROUPS) as WikiOnlyGroup[]).find((group) =>
+    (WIKI_ONLY_GROUPS[group] as readonly Blessing[]).includes(blessing)
+  )
+}
+
 // a closed family renders none of its cards, there are dozens per family
 function BlessingFamilyCard(props: {
-  family: BlessingFamily
+  family: BlessingFamily | WikiOnlyGroup
   members: Blessing[]
 }) {
   const { t } = useTranslation()
@@ -584,6 +612,7 @@ export default function WikiBlessings() {
                 .filter(
                   (blessing) =>
                     Blessings[blessing].family === undefined &&
+                    getWikiOnlyGroup(blessing) === undefined &&
                     getBlessingCategory(blessing) === category
                 )
                 .sort(
@@ -599,7 +628,25 @@ export default function WikiBlessings() {
                         getBlessingCategory(blessing) === "combo"
                     )
                   : []
-              if (members.length === 0 && category !== "synergy") return null
+              const wikiGroups = [
+                ...new Set(
+                  blessings
+                    .filter(
+                      (blessing) => getBlessingCategory(blessing) === category
+                    )
+                    .map(getWikiOnlyGroup)
+                    .filter(
+                      (group): group is WikiOnlyGroup => group !== undefined
+                    )
+                )
+              ]
+              if (
+                members.length === 0 &&
+                wikiGroups.length === 0 &&
+                category !== "synergy"
+              ) {
+                return null
+              }
               return (
                 <section key={category} className="wiki-blessings-category">
                   <h3>
@@ -628,6 +675,15 @@ export default function WikiBlessings() {
                           )}
                         />
                       ))}
+                    {wikiGroups.map((group) => (
+                      <BlessingFamilyCard
+                        key={group}
+                        family={group}
+                        members={blessings.filter(
+                          (blessing) => getWikiOnlyGroup(blessing) === group
+                        )}
+                      />
+                    ))}
                     {members.map((blessing) => (
                       <BlessingCard key={blessing} blessing={blessing} />
                     ))}

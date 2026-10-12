@@ -1,11 +1,23 @@
 import { useTranslation } from "react-i18next"
 import { Blessings } from "../../../../../config/game/blessings"
-import type { Blessing } from "../../../../../types/enum/Blessing"
+import {
+  Blessing,
+  HERO_BLESSING_GIFT,
+  HERO_BLESSING_POKEMON
+} from "../../../../../types/enum/Blessing"
 import { addIconsToDescription } from "../../utils/descriptions"
 import "./blessing-description.css"
 
-const TRAILING_POKEMON_GRANT = /^([\s\S]*?\S)\s+(Gain [^.\n]*\.)$/
+const TRAILING_POKEMON_GRANT = /^([\s\S]*?\S)\s+((?:Gain|Unlock) [^.\n]*\.)$/
 const GYM_TRAINER_GRANT = /^([\s\S]*?\S)\s+(Gain [\s\S]*)$/
+
+function hasPokemonGrant(blessing: Blessing) {
+  return (
+    blessing in HERO_BLESSING_GIFT ||
+    blessing in HERO_BLESSING_POKEMON ||
+    blessing === Blessing.WEATHER_INSTITUTE
+  )
+}
 
 export function BlessingDescription({ blessing }: { blessing: Blessing }) {
   const { t } = useTranslation()
@@ -14,7 +26,7 @@ export function BlessingDescription({ blessing }: { blessing: Blessing }) {
   const parts =
     family === "GYM_TRAINER"
       ? description.match(GYM_TRAINER_GRANT)
-      : synergy !== undefined
+      : synergy !== undefined || hasPokemonGrant(blessing)
         ? description.match(TRAILING_POKEMON_GRANT)
         : null
 

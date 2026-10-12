@@ -5716,7 +5716,7 @@
 		},
 		"STAR_CROSSED_SEAS": {
 			"name": "Star-Crossed Seas",
-			"description": "Gain both kinds of Shellos and move to an AMORPHOUS region, where you can find both. Fielding both grants each 50 HP and 25 AP."
+			"description": "Move to an AMORPHOUS region, where you can find both kinds of Shellos. Fielding both grants each 50 HP and 25 AP. Gain both kinds of Shellos."
 		},
 		"ABSOLUTE_DARKNESS": {
 			"name": "Absolute Darkness",
@@ -5740,15 +5740,15 @@
 		},
 		"OLIVE_GARDEN": {
 			"name": "Olive Garden",
-			"description": "Gain a Smoliv. Your STRONGEST Smoliv starts combat with GRASS_FIELD, or with PSYCHIC_FIELD, FAIRY_FIELD or ELECTRIC_FIELD instead if you give it that synergy with a stone, picked at random if it has several."
+			"description": "Your STRONGEST Smoliv starts combat with GRASS_FIELD, or with PSYCHIC_FIELD, FAIRY_FIELD or ELECTRIC_FIELD instead if you give it that synergy with a stone, picked at random if it has several. Gain a Smoliv."
 		},
 		"ORBITAL_STRIKE": {
 			"name": "Orbital Strike",
-			"description": "Gain a Dottler. At the start of combat, your STRONGEST Blipbug gets +2 RANGE. Your other STRONGEST Pokémon with 1 RANGE starts the combat with PSYCHIC_FIELD."
+			"description": "At the start of combat, your STRONGEST Blipbug gets +2 RANGE. Your other STRONGEST Pokémon with 1 RANGE starts the combat with PSYCHIC_FIELD. Gain a Dottler."
 		},
 		"ROOSTING_FLOCK": {
 			"name": "Roosting Flock",
-			"description": "Gain a Tranquill and move to a random Pidove region if not in one. When your STRONGEST Pidove casts its ability, ADJACENT FLYING allies cast Roost as well."
+			"description": "Move to a random Pidove region if not in one. When your STRONGEST Pidove casts its ability, ADJACENT FLYING allies cast Roost as well. Gain a Tranquill."
 		},
 		"MONSTER_KING": {
 			"name": "King of the Monsters",
@@ -6104,7 +6104,7 @@
 		},
 		"LANCES_ACE": {
 			"name": "Lance's Ace",
-			"description": "Gain a Dratini. Your STRONGEST Dratini has +2 RANGE, its Ability is replaced with Hyperbeam, and it permanently gains 1 AP each time it KO's an enemy"
+			"description": "Your STRONGEST Dratini has +2 RANGE, its Ability is replaced with Hyperbeam, and it permanently gains 1 AP each time it KO's an enemy. Gain a Dratini."
 		},
 		"PANIC_BUTTON": {
 			"name": "Panic Button",
@@ -6116,11 +6116,11 @@
 		},
 		"TRASH_TO_TREASURE": {
 			"name": "Trash to Treasure",
-			"description": "Gain a Trubbish, a Beldum and 1 to 3 TRASH. Each Beldum, Metang, or Metagross holding TRASH independently recycles it into a random Tool after 3/2/1 rounds at 1/2/3 STAR."
+			"description": "Each Beldum, Metang, or Metagross holding TRASH independently recycles it into a random Tool after 3/2/1 rounds at 1/2/3 STAR. Gain a Trubbish, a Beldum and 1 to 3 TRASH."
 		},
 		"CHARGING_MY_BUG": {
 			"name": "Charging My Bug",
-			"description": "Gain a Grubbin. Your STRONGEST Grubbin gains 1 permanent ATK when starting combat in a fully dug hole on board, 2 at 3 STAR."
+			"description": "Your STRONGEST Grubbin gains 1 permanent ATK when starting combat in a fully dug hole on board, 2 at 3 STAR. Gain a Grubbin."
 		},
 		"NEUROFORCE": {
 			"name": "Neuroforce",
@@ -6128,11 +6128,11 @@
 		},
 		"SINNOHS_COOLEST": {
 			"name": "Sinnoh's Coolest",
-			"description": "Gain a Staravia and move to a random Starly region if you are not currently in one. The first time you get a Staraptor, gain SAFETY_GOGGLES."
+			"description": "Move to a random Starly region if you are not currently in one. The first time you get a Staraptor, gain SAFETY_GOGGLES. Gain a Staravia."
 		},
 		"AXE_BLAST": {
 			"name": "Axe Blast",
-			"description": "Gain a strong Axew. It gains +1 RANGE and its Ability is replaced with Axe Blast."
+			"description": "Your STRONGEST Axew gains +1 RANGE and its Ability is replaced with Axe Blast. Gain a strong Axew."
 		},
 		"SWEET_TREATS": {
 			"name": "Sweet Treats",
@@ -6140,91 +6140,91 @@
 		},
 		"SNIFFER_DOG": {
 			"name": "Sniffer Dog",
-			"description": "Gain a strong Lillipup. While Lillipup is fielded and GROUND is active, benched GROUND allies dig holes. When the STRONGEST Lillipup casts its Ability, a random Pokémon on a fully dug bench hole enters battle through a fully dug board hole."
+			"description": "While Lillipup is fielded and GROUND is active, benched GROUND allies dig holes. When the STRONGEST Lillipup casts its Ability, a random Pokémon on a fully dug bench hole enters battle through a fully dug board hole. Gain a strong Lillipup."
 		},
 		"JESTER": {
 			"name": "Jester",
-			"description": "Gain a strong Sprigatito. When your STRONGEST Sprigatito casts its Ability, a Substitute with full PP appears nearby. It casts very lucky Metronome at 1 STAR and gains 1 STAR for each additional 50% CRIT_POWER of the caster, up to 4 STAR."
+			"description": "When your STRONGEST Sprigatito casts its Ability, a Substitute with full PP appears nearby. It casts very lucky Metronome at 1 STAR and gains 1 STAR for each additional 50% CRIT_POWER of the caster, up to 4 STAR. Gain a strong Sprigatito."
 		},
 		"TOXIC_RESONANCE": {
 			"name": "Toxic Resonance",
-			"description": "Gain a strong Tympole. Your STRONGEST Tympole resonates every 3 seconds. Each beat spreads 1 tile further than the last. Pokémon caught in the wave are POISONNED for 3 seconds, allies included. Poisoned allies gain 10 PP. The 4th beat covers the whole board and gives 30 PP instead. The cycle then restarts."
+			"description": "Your STRONGEST Tympole resonates every 3 seconds. Each beat spreads 1 tile further than the last. Pokémon caught in the wave are POISONNED for 3 seconds, allies included. Poisoned allies gain 10 PP. The 4th beat covers the whole board and gives 30 PP instead. The cycle then restarts. Gain a strong Tympole."
 		},
 		"GRAND_IGNITION": {
 			"name": "Grand Ignition",
-			"description": "Gain a strong Fennekin. When your STRONGEST Fennekin casts its Ability, it throws a torch to a random corner of the board and reduces its own max PP by 10%. Once all four corners are lit, the battlefield ignites: every enemy permanently loses 10% of its max HP and suffers double BURN damage for the rest of the fight, which cannot be reduced or cleansed."
+			"description": "When your STRONGEST Fennekin casts its Ability, it throws a torch to a random corner of the board and reduces its own max PP by 10%. Once all four corners are lit, the battlefield ignites: every enemy permanently loses 10% of its max HP and suffers double BURN damage for the rest of the fight, which cannot be reduced or cleansed. Gain a strong Fennekin."
 		},
 		"VALOR": {
 			"name": "Valor",
-			"description": "Gain a Pignite. At the start of combat, your STRONGEST Tepig gains 1 ATK and 10 SHIELD for each WILD STAR on your bench, and the same again for each ally KO'd during the fight."
+			"description": "At the start of combat, your STRONGEST Tepig gains 1 ATK and 10 SHIELD for each WILD STAR on your bench, and the same again for each ally KO'd during the fight. Gain a Pignite."
 		},
 		"COLONY": {
 			"name": "Colony",
-			"description": "Gain a strong Scatterbug. When your STRONGEST Vivillon KO's its target, a Spewpa joins your bench. It evolves after 2 rounds into a Vivillon form you do not have yet, and sells for 0 GOLD. Only one Spewpa is attracted at a time, so it must evolve before the next arrives. Every Vivillon contributes its own synergies. The swarm has grown fond of you and refuses to be sent to your partner."
+			"description": "When your STRONGEST Vivillon KO's its target, a Spewpa joins your bench. It evolves after 2 rounds into a Vivillon form you do not have yet, and sells for 0 GOLD. Only one Spewpa is attracted at a time, so it must evolve before the next arrives. Every Vivillon contributes its own synergies. The swarm has grown fond of you and refuses to be sent to your partner. Gain a strong Scatterbug."
 		},
 		"SAND_BUDDIES": {
 			"name": "Sand Buddies",
-			"description": "Gain a strong Sandile. When your STRONGEST Sandile fails to KO its target with its Ability, a Trapinch with full PP appears nearby, at the same STAR level."
+			"description": "When your STRONGEST Sandile fails to KO its target with its Ability, a Trapinch with full PP appears nearby, at the same STAR level. Gain a strong Sandile."
 		},
 		"ROLLOUT_RALLY": {
 			"name": "Rollout Rally",
-			"description": "Gain a Venipede. Your STRONGEST Venipede's ability bounces: after reaching the farthest enemy, it rolls again to the enemy farthest from there, dealing 40% less damage each bounce. +1 bounce per 40 SPEED. Allies it rolls over gain 5 SPEED."
+			"description": "Your STRONGEST Venipede's ability bounces: after reaching the farthest enemy, it rolls again to the enemy farthest from there, dealing 40% less damage each bounce. +1 bounce per 40 SPEED. Allies it rolls over gain 5 SPEED. Gain a Venipede."
 		},
 		"ITS_GOING_DOWN": {
 			"name": "It's Going Down",
-			"description": "Gain a Timburr. Your STRONGEST Timburr gains 2 RANGE, and after each throw it tosses a new pillar to a safe spot, with 50 more HP for each throw this fight. Its thrown pillars deal their remaining HP as PHYSICAL instead of SPECIAL, +15% per tile travelled."
+			"description": "Your STRONGEST Timburr gains 2 RANGE, and after each throw it tosses a new pillar to a safe spot, with 50 more HP for each throw this fight. Its thrown pillars deal their remaining HP as PHYSICAL instead of SPECIAL, +15% per tile travelled. Gain a Timburr."
 		},
 		"STONE_SADDLE": {
 			"name": "Stone Saddle",
-			"description": "Gain a Rhyhorn. Your STRONGEST Rhyhorn's ability is replaced with Headlong Rush and set to 80 PP, and executes enemies in its path below 20% max HP. At the start of the fight, it carries your farthest ally on the bench into combat, gaining its base HP, ATK, DEF and SPE_DEF. When Rhyhorn is KO'd, the ally fights on its own."
+			"description": "Your STRONGEST Rhyhorn's ability is replaced with Headlong Rush and set to 80 PP, and executes enemies in its path below 20% max HP. At the start of the fight, it carries your farthest ally on the bench into combat, gaining its base HP, ATK, DEF and SPE_DEF. When Rhyhorn is KO'd, the ally fights on its own. Gain a Rhyhorn."
 		},
 		"INFINITE_CONVERSION": {
 			"name": "Infinite Conversion",
-			"description": "Gain a Porygon. After winning a player combat, your STRONGEST Porygon permanently keeps the synergy it copied in that combat. Once per opponent."
+			"description": "After winning a player combat, your STRONGEST Porygon permanently keeps the synergy it copied in that combat. Once per opponent. Gain a Porygon."
 		},
 		"APEX_PREDATOR": {
 			"name": "Apex Predator",
-			"description": "Gain a Shinx. Your STRONGEST Shinx's ability inflicts BLINDED and WOUND on the enemy it dashes to for 4 seconds. When it arrives, every other enemy within 2 tiles gets FEAR for 2 seconds."
+			"description": "Your STRONGEST Shinx's ability inflicts BLINDED and WOUND on the enemy it dashes to for 4 seconds. When it arrives, every other enemy within 2 tiles gets FEAR for 2 seconds. Gain a Shinx."
 		},
 		"KINGS_GAMBIT": {
 			"name": "King's Gambit",
-			"description": "Gain a Pawniard. Your STRONGEST Pawniard disappears at the start of combat and rejoins the fight when 4 allies have been KO'd, or when you have no other units left. It gains 50% of the total ATK and HP of its fallen allies, and 50 SPEED."
+			"description": "Your STRONGEST Pawniard disappears at the start of combat and rejoins the fight when 4 allies have been KO'd, or when you have no other units left. It gains 50% of the total ATK and HP of its fallen allies, and 50 SPEED. Gain a Pawniard."
 		},
 		"HONEY_EXPLORATION": {
 			"name": "Honey Exploration",
-			"description": "Gain a Teddiursa. At the start of each fight, Teddiursa on your bench go exploring for 3/2/1 stages at 1/2/3 STAR. They return with HONEY and strong friends they met along the way, which also have WILD synergy. Eating HONEY also permanently grants 5 DEF and SPE_DEF."
+			"description": "At the start of each fight, Teddiursa on your bench go exploring for 3/2/1 stages at 1/2/3 STAR. They return with HONEY and strong friends they met along the way, which also have WILD synergy. Eating HONEY also permanently grants 5 DEF and SPE_DEF. Gain a Teddiursa."
 		},
 		"JUNGLE_CACOPHONY": {
 			"name": "Jungle Cacophony",
-			"description": "Gain a Grookey. Your STRONGEST Grookey drums instead of attacking, even with enemies in RANGE. Its drum beats reach all allies within RANGE instead of only ADJACENT ones, and burn 2/4/8 PP from each enemy within RANGE."
+			"description": "Your STRONGEST Grookey drums instead of attacking, even with enemies in RANGE. Its drum beats reach all allies within RANGE instead of only ADJACENT ones, and burn 2/4/8 PP from each enemy within RANGE. Gain a Grookey."
 		},
 		"DECELERATE": {
 			"name": "Decelerate",
-			"description": "Gain a Duskull. While a Duskull is on your board, enemies start combat with at most 30 SPEED. Your STRONGEST Duskull's ability also applies FATIGUE and BLINDED to the enemies it damages."
+			"description": "While a Duskull is on your board, enemies start combat with at most 30 SPEED. Your STRONGEST Duskull's ability also applies FATIGUE and BLINDED to the enemies it damages. Gain a Duskull."
 		},
 		"MULTISHOT": {
 			"name": "Multishot",
-			"description": "Gain a Sobble. Your STRONGEST Sobble's ability fires 2 additional shots through random enemies, each dealing 25% damage. Each cast increases the number of additional shots by 1."
+			"description": "Your STRONGEST Sobble's ability fires 2 additional shots through random enemies, each dealing 25% damage. Each cast increases the number of additional shots by 1. Gain a Sobble."
 		},
 		"GALE_WINGS": {
 			"name": "Gale Wings",
-			"description": "Gain a Fletchling. Your STRONGEST Fletchling starts combat with max PP. After combat, collect any EMBER remaining on the field, gaining 1 GOLD for every 5/4/3 EMBER collected at 1/2/3 STAR, and a FIRE_SHARD if at least 10 are collected. FIRE_SHARD gained this way do not count towards your max total."
+			"description": "Your STRONGEST Fletchling starts combat with max PP. After combat, collect any EMBER remaining on the field, gaining 1 GOLD for every 5/4/3 EMBER collected at 1/2/3 STAR, and a FIRE_SHARD if at least 10 are collected. FIRE_SHARD gained this way do not count towards your max total. Gain a Fletchling."
 		},
 		"CELL_BRAWLER": {
 			"name": "Cell Brawler",
-			"description": "Gain a Solosis. Your STRONGEST Solosis gains 50% HP, DEF and SPE_DEF, but its RANGE is set to 1. It heals for 50% of the damage dealt by its ability, with 50% of overheal gained as max HP."
+			"description": "Your STRONGEST Solosis gains 50% HP, DEF and SPE_DEF, but its RANGE is set to 1. It heals for 50% of the damage dealt by its ability, with 50% of overheal gained as max HP. Gain a Solosis."
 		},
 		"MOTHER_YARN": {
 			"name": "Mother Yarn",
-			"description": "Gain a Sewaddle and move to a random Sewaddle region. Sewaddle gains NORMAL and returns its items when benched. After 3/2/1 stages at 1/2/3 STAR, your STRONGEST Sewaddle on board completes its held component with a SILK_SCARF, and permanently gains the crafted item's stats (SHIELD counts as HP)."
+			"description": "Move to a random Sewaddle region. Sewaddle gains NORMAL and returns its items when benched. After 3/2/1 stages at 1/2/3 STAR, your STRONGEST Sewaddle on board completes its held component with a SILK_SCARF, and permanently gains the crafted item's stats (SHIELD counts as HP). Gain a Sewaddle."
 		},
 		"MOUNTAIN_EGG": {
 			"name": "Mountain Egg",
-			"description": "Gain a Happiny and 10 free rerolls. The NUTRITIOUS_EGG of your STRONGEST Happiny also grants the dish effects of all your GOURMET Pokémon. Each dish counts once, and permanent dish effects are not copied."
+			"description": "The NUTRITIOUS_EGG of your STRONGEST Happiny also grants the dish effects of all your GOURMET Pokémon. Each dish counts once, and permanent dish effects are not copied. Gain a Happiny and 10 free rerolls."
 		},
 		"GLAIVE_STRIKE": {
 			"name": "Glaive Strike",
-			"description": "Gain a Frigibax. When your STRONGEST Frigibax casts its ability, it marks every enemy it hits. After 2 seconds, an Ice Sword falls on each mark, dealing [200,SP]% of ATK + SPE_DEF as SPECIAL, then shatters, dealing the same to ADJACENT enemies."
+			"description": "When your STRONGEST Frigibax casts its ability, it marks every enemy it hits. After 2 seconds, an Ice Sword falls on each mark, dealing [200,SP]% of ATK + SPE_DEF as SPECIAL, then shatters, dealing the same to ADJACENT enemies. Gain a Frigibax."
 		},
 		"YOU_FORGOT_SOMETHING": {
 			"name": "You Forgot Something!",
@@ -6460,79 +6460,79 @@
 		},
 		"SOUL_DRAIN": {
 			"name": "Soul Drain",
-			"description": "Gain a strong Litwick. Your STRONGEST Litwick's ability cast pulls a Soul Fragment from the target, healing allies it travels through for [20,SP] HP. Two Fragments are pulled if the ability KO's the target."
+			"description": "Your STRONGEST Litwick's ability cast pulls a Soul Fragment from the target, healing allies it travels through for [20,SP] HP. Two Fragments are pulled if the ability KO's the target. Gain a strong Litwick."
 		},
 		"FLOWER_QUEEN": {
 			"name": "Flower Queen",
-			"description": "Gain a METRONOME and a Floette. Your STRONGEST Flabebe reduces its max PP by 4 after each cast."
+			"description": "Your STRONGEST Flabebe reduces its max PP by 4 after each cast. Gain a METRONOME and a Floette."
 		},
 		"LEAF_TORNADO": {
 			"name": "Leaf Tornado",
-			"description": "Gain a strong Snivy. Your STRONGEST Snivy's attacks ricochet to up to 2 additional enemies, applying ON_HIT effects, the damage halving with each bounce."
+			"description": "Your STRONGEST Snivy's attacks ricochet to up to 2 additional enemies, applying ON_HIT effects, the damage halving with each bounce. Gain a strong Snivy."
 		},
 		"MARIACHI_MAYHEM": {
 			"name": "Mariachi Mayhem",
-			"description": "Gain a strong Lotad. When your STRONGEST Lotad casts its ability, all enemies within its RANGE suffer CONFUSION for 2 seconds."
+			"description": "When your STRONGEST Lotad casts its ability, all enemies within its RANGE suffer CONFUSION for 2 seconds. Gain a strong Lotad."
 		},
 		"HIGH_BREACHING": {
 			"name": "High Breaching",
-			"description": "Gain a Wailmer. Your STRONGEST Wailmer's ability is replaced with High Breaching."
+			"description": "Your STRONGEST Wailmer's ability is replaced with High Breaching. Gain a Wailmer."
 		},
 		"ICEBREAKER": {
 			"name": "Icebreaker",
-			"description": "Gain a strong Piplup. Your STRONGEST Piplup's ability executes FREEZE enemies. On a KO, it gains the SHIELD again, 20 LUCK and 30 SPEED."
+			"description": "Your STRONGEST Piplup's ability executes FREEZE enemies. On a KO, it gains the SHIELD again, 20 LUCK and 30 SPEED. Gain a strong Piplup."
 		},
 		"RAMPAGE": {
 			"name": "Rampage",
-			"description": "Gain a strong Deino. Your STRONGEST Deino's ability can critically strike. Each time it KO's an ADJACENT enemy, the ability lasts 2 seconds longer and it gains 20% CRIT_POWER."
+			"description": "Your STRONGEST Deino's ability can critically strike. Each time it KO's an ADJACENT enemy, the ability lasts 2 seconds longer and it gains 20% CRIT_POWER. Gain a strong Deino."
 		},
 		"FROST_BURST": {
 			"name": "Frost Burst",
-			"description": "Gain a Snover and move to a random Snover region if not in one. When your STRONGEST Snover's ability KO's an enemy, 50% of the damage is dealt to ADJACENT enemies, which can also execute at half the chance. This effect cannot chain."
+			"description": "Move to a random Snover region if not in one. When your STRONGEST Snover's ability KO's an enemy, 50% of the damage is dealt to ADJACENT enemies, which can also execute at half the chance. This effect cannot chain. Gain a Snover."
 		},
 		"THIRD_EYE": {
 			"name": "Third Eye",
-			"description": "Gain a Meditite. The ability Meditate is doubled under ZEN_ZONE."
+			"description": "The ability Meditate is doubled under ZEN_ZONE. Gain a Meditite."
 		},
 		"AURORA_BOREALIS": {
 			"name": "Aurora Borealis",
-			"description": "Unlock Amaura. While you field an Amaura, your team takes 10% less PHYSICAL and SPECIAL, increased to 15% in SNOW or NIGHT, plus 1% per active synergy."
+			"description": "While you field an Amaura, your team takes 10% less PHYSICAL and SPECIAL, increased to 15% in SNOW or NIGHT, plus 1% per active synergy. Unlock Amaura."
 		},
 		"RADIANCE": {
 			"name": "Radiance",
-			"description": "Gain a Larvesta. Your STRONGEST Larvesta gains the LIGHT synergy, and while LIGHT is active it starts combat with its own spotlight."
+			"description": "Your STRONGEST Larvesta gains the LIGHT synergy, and while LIGHT is active it starts combat with its own spotlight. Gain a Larvesta."
 		},
 		"PACK_ATTACK": {
 			"name": "Pack Attack",
-			"description": "Gain a Houndour. Each Houndour summoned by your STRONGEST Houndour's ability has a 15% chance to be a Houndoom instead."
+			"description": "Each Houndour summoned by your STRONGEST Houndour's ability has a 15% chance to be a Houndoom instead. Gain a Houndour."
 		},
 		"MOLE_MAZE": {
 			"name": "Mole Maze",
-			"description": "Gain a Drilbur. Your STRONGEST Drilbur's ability is replaced with Mole Maze, and it permanently gains 1 AP each time it KO's an enemy."
+			"description": "Your STRONGEST Drilbur's ability is replaced with Mole Maze, and it permanently gains 1 AP each time it KO's an enemy. Gain a Drilbur."
 		},
 		"SEASONAL_HERD": {
 			"name": "Seasonal Herd",
-			"description": "Gain a Deerling of the current season. Each time you start a fight with its season's synergy at 4 (spring FLORA, summer GOURMET, autumn WILD, winter ICE), gain the next season's Deerling. Your Deerling and Sawsbuck gain 40 HP per Sawsbuck in play. With all 4 Sawsbuck fielded, they gain 1 STAR."
+			"description": "Each time you start a fight with your newest Deerling's season synergy at 4 (spring FLORA, summer GOURMET, autumn WILD, winter ICE), gain the next season's Deerling. Your Deerling and Sawsbuck gain 40 HP per Sawsbuck in play. With all 4 Sawsbuck fielded, they gain 1 STAR. Gain a Deerling of the current season."
 		},
 		"PURRFECT_PLAN": {
 			"name": "Purrfect Plan",
-			"description": "Gain a Glameow. CONFUSION enemies never target your STRONGEST Glameow unless it is the only target in RANGE, and always crit their allies while it is alive. Your Unique options always include Spinda or Chatot."
+			"description": "CONFUSION enemies never target your STRONGEST Glameow unless it is the only target in RANGE, and always crit their allies while it is alive. Your Unique options always include Spinda or Chatot. Gain a Glameow."
 		},
 		"ROYAL_ROMANCE": {
 			"name": "Royal Romance",
-			"description": "Gain a Nidoran♂. At the start of each fight, your STRONGEST Nidoran♂ has a [50,LK]% chance to attract a catchable Nidoran♀ when no Nidoqueen is on the board."
+			"description": "At the start of each fight, your STRONGEST Nidoran♂ has a [50,LK]% chance to attract a catchable Nidoran♀ when no Nidoqueen is on the board. Gain a Nidoran♂."
 		},
 		"CAPTAINS_BOUNTY": {
 			"name": "Captain's Bounty",
-			"description": "Gain a Raboot. At the start of each fight, your STRONGEST Scorbunny gains your GOLD as CRIT_CHANCE. Raboot evolves into Pirate Cinderace."
+			"description": "At the start of each fight, your STRONGEST Scorbunny gains your GOLD as CRIT_CHANCE. Raboot evolves into Pirate Cinderace. Gain a Raboot."
 		},
 		"INFILTRATOR": {
 			"name": "Infiltrator",
-			"description": "Gain a Golbat. Your STRONGEST Zubat steals [3,4,5] PP and destroys PROTECT, Magic Bounce and Reflect ON_ATTACK."
+			"description": "Your STRONGEST Zubat steals [3,4,5] PP and destroys PROTECT, Magic Bounce and Reflect ON_ATTACK. Gain a Golbat."
 		},
 		"JOLLY_ROGER": {
 			"name": "Jolly Roger",
-			"description": "Gain a Totodile. When your STRONGEST Totodile KO's an enemy, steal 1 GOLD from the opponent, or 2 GOLD with its ability. Croconaw evolves into Pirate Feraligatr."
+			"description": "When your STRONGEST Totodile KO's an enemy, steal 1 GOLD from the opponent, or 2 GOLD with its ability. Croconaw evolves into Pirate Feraligatr. Gain a Totodile."
 		},
 		"BUBBLE_RESCUE": {
 			"name": "Bubble Rescue",
@@ -6540,111 +6540,111 @@
 		},
 		"SPOOKY_SCARECROW": {
 			"name": "Spooky Scarecrow",
-			"description": "Gain a Cacnea. Your STRONGEST Cacnea cannot move or attack, and its ability is replaced with Spiky Shield. Each time an ally that was not summoned is KO'd, it gains 5 DEF and summons a Murkrow with full PP. When it is KO'd itself, it summons 3 Murkrow instead."
+			"description": "Your STRONGEST Cacnea cannot move or attack, and its ability is replaced with Spiky Shield. Each time an ally that was not summoned is KO'd, it gains 5 DEF and summons a Murkrow with full PP. When it is KO'd itself, it summons 3 Murkrow instead. Gain a Cacnea."
 		},
 		"BONEMERANG_RANGER": {
 			"name": "Bonemerang Ranger",
-			"description": "Gain a Cubone. Your STRONGEST Cubone gains 2 RANGE and its ability is replaced with Torment. Its attacks throw a bonemerang that hits every enemy in a line on the way out and back. Each hit after the first deals 20% less PHYSICAL, down to 20%, and only the first triggers ON_ATTACK and ON_HIT effects."
+			"description": "Your STRONGEST Cubone gains 2 RANGE and its ability is replaced with Torment. Its attacks throw a bonemerang that hits every enemy in a line on the way out and back. Each hit after the first deals 20% less PHYSICAL, down to 20%, and only the first triggers ON_ATTACK and ON_HIT effects. Gain a Cubone."
 		},
 		"SWAMP_FATHER": {
 			"name": "Swamp Father",
-			"description": "Gain a Mudkip and move to a random Mudkip region if not in one. Your Mudkip gains GRASS synergy. At the start of combat, your STRONGEST Mudkip hydrates ADJACENT GRASS allies: they become AQUATIC and gain all the effects of active AQUATIC synergy. It gains 5 PP whenever an enemy uses its ability."
+			"description": "Move to a random Mudkip region if not in one. Your Mudkip gains GRASS synergy. At the start of combat, your STRONGEST Mudkip hydrates ADJACENT GRASS allies: they become AQUATIC and gain all the effects of active AQUATIC synergy. It gains 5 PP whenever an enemy uses its ability. Gain a Mudkip."
 		},
 		"ROLLING_SNOWBALL": {
 			"name": "Rolling Snowball",
-			"description": "Gain a Spheal. When your STRONGEST Spheal's Ice Ball KO's its target, it rolls through to the cell behind it and gains 20 SHIELD and 50 PP."
+			"description": "When your STRONGEST Spheal's Ice Ball KO's its target, it rolls through to the cell behind it and gains 20 SHIELD and 50 PP. Gain a Spheal."
 		},
 		"CURSED_COFFIN": {
 			"name": "Cursed Coffin",
-			"description": "Gain a Yamask. Your STRONGEST Yamask no longer attacks. Instead, every second it drains 15 HP and 5 PP from each ADJACENT enemy. Its Spite drains from the target and all ADJACENT enemies, and heals it for the PP drained."
+			"description": "Your STRONGEST Yamask no longer attacks. Instead, every second it drains 15 HP and 5 PP from each ADJACENT enemy. Its Spite drains from the target and all ADJACENT enemies, and heals it for the PP drained. Gain a Yamask."
 		},
 		"LIGHT_OF_OLIVINE": {
 			"name": "Light of Olivine",
-			"description": "Gain a Flaaffy. When your STRONGEST Mareep KO's an enemy with its ability, it gains your LIGHT spot's effects. If it already has them, your STRONGEST ally without them gains them instead."
+			"description": "When your STRONGEST Mareep KO's an enemy with its ability, it gains your LIGHT spot's effects. If it already has them, your STRONGEST ally without them gains them instead. Gain a Flaaffy."
 		},
 		"UNSEALED_GOLEMANCY": {
 			"name": "Unsealed Golemancy",
-			"description": "Gain a Golett. Your Golett gains MONSTER synergy. When your STRONGEST Golett KO's an enemy, it summons a Golett for a 1 STAR target, a Golurk for 2 STAR, and once per fight a random Regi for 3 STAR."
+			"description": "Your Golett gains MONSTER synergy. When your STRONGEST Golett KO's an enemy, it summons a Golett for a 1 STAR target, a Golurk for 2 STAR, and once per fight a random Regi for 3 STAR. Gain a Golett."
 		},
 		"SHINTO_SHRINE_MIRROR": {
 			"name": "Shinto Shrine Mirror",
-			"description": "Gain an Impidimp and move to a random Impidimp region if not in one. Your STRONGEST Impidimp uses Reflect at the start of combat. Every 6 seconds, it uses Reflect if it has taken more PHYSICAL than SPECIAL this fight, otherwise Magic Bounce."
+			"description": "Move to a random Impidimp region if not in one. Your STRONGEST Impidimp uses Reflect at the start of combat. Every 6 seconds, it uses Reflect if it has taken more PHYSICAL than SPECIAL this fight, otherwise Magic Bounce. Gain an Impidimp."
 		},
 		"LUNARIAN": {
 			"name": "Lunarian",
-			"description": "Gain a Clefairy and move to a random Cleffa region if not in one. Your STRONGEST Cleffa's Metronome casts legendary abilities in a set order: an attack, then a disruption, then a utility, on repeat. Its LUCK no longer affects the ability picked, but gives a [10,LK]% chance to cast it 1 STAR higher."
+			"description": "Move to a random Cleffa region if not in one. Your STRONGEST Cleffa's Metronome casts legendary abilities in a set order: an attack, then a disruption, then a utility, on repeat. Its LUCK no longer affects the ability picked, but gives a [10,LK]% chance to cast it 1 STAR higher. Gain a Clefairy."
 		},
 		"FLEUR_DE_LURE": {
 			"name": "Fleur de Lure",
-			"description": "Gain a strong Fomantis. Once per cast, when your STRONGEST Fomantis reaches 80% PP, the 3 closest enemies are CHARM for 3 seconds. Its Solar Blade always crits CHARM enemies, and executes CHARM BUG enemies."
+			"description": "Once per cast, when your STRONGEST Fomantis reaches 80% PP, the 3 closest enemies are CHARM for 3 seconds. Its Solar Blade always crits CHARM enemies, and executes CHARM BUG enemies. Gain a strong Fomantis."
 		},
 		"CRYSTAL_GUARDIAN": {
 			"name": "Crystal Guardian",
-			"description": "Gain an Onix. Your STRONGEST Onix can crystallise again with other weather rocks: only its first crystal grants an awakening effect, each further one adds its synergy. It permanently gains 20 max HP for every crystallisation it completes. The first time you get a Steelix, gain 3 random weather rocks."
+			"description": "Your STRONGEST Onix can crystallise again with other weather rocks: only its first crystal grants an awakening effect, each further one adds its synergy. It permanently gains 20 max HP for every crystallisation it completes. The first time you get a Steelix, gain 3 random weather rocks. Gain an Onix."
 		},
 		"GOOEY_GLOBULES": {
 			"name": "Gooey Globules",
-			"description": "Gain a Sliggoo. When your STRONGEST Goomy is hit by an attack, it has a [50,LK]% chance to throw a blob at a random ADJACENT Pokémon. Enemies hit take TRUE equal to its DEF and lose 20 SPEED; allies hit heal 50 HP."
+			"description": "When your STRONGEST Goomy is hit by an attack, it has a [50,LK]% chance to throw a blob at a random ADJACENT Pokémon. Enemies hit take TRUE equal to its DEF and lose 20 SPEED; allies hit heal 50 HP. Gain a Sliggoo."
 		},
 		"THUNDER_AND_LIGHTNING": {
 			"name": "Thunder and Lightning",
-			"description": "Gain a Toxel and move to a random Toxel region if not in one. The first time a Toxel evolves, also gain the other Toxtricity form, and both forms count towards your synergies. Each of your SOUND Pokémon casts Electrify on itself after its first ability of the fight."
+			"description": "Move to a random Toxel region if not in one. The first time a Toxel evolves, also gain the other Toxtricity form, and both forms count towards your synergies. Each of your SOUND Pokémon casts Electrify on itself after its first ability of the fight. Gain a Toxel."
 		},
 		"WINDY_SANDS": {
 			"name": "Windy Sands",
-			"description": "Gain a Hippopotas. Your STRONGEST Hippopotas heals for 50% of the SANDSTORM_DAMAGE taken by enemies within 4 tiles. When it casts its ability, enemies caught in it are pulled 1 tile towards it."
+			"description": "Your STRONGEST Hippopotas heals for 50% of the SANDSTORM_DAMAGE taken by enemies within 4 tiles. When it casts its ability, enemies caught in it are pulled 1 tile towards it. Gain a Hippopotas."
 		},
 		"CLANGOROUS_SOULBLAZE": {
 			"name": "Clangorous Soulblaze",
-			"description": "Gain a Jangmo-o and move to a random Jangmo-o region if not in one. Your STRONGEST Jangmo-o's ability only affects itself, but grants twice the stats. When it is KO'd, it passes the stats it gained this way to allies within its RANGE."
+			"description": "Move to a random Jangmo-o region if not in one. Your STRONGEST Jangmo-o's ability only affects itself, but grants twice the stats. When it is KO'd, it passes the stats it gained this way to allies within its RANGE. Gain a Jangmo-o."
 		},
 		"WICKED_HUNTER": {
 			"name": "Wicked Hunter",
-			"description": "Gain a Hisuian Sneasel and move to a random Hisuian Sneasel region if not in one. Your STRONGEST Hisuian Sneasel's ability inflicts all 3 statuses, and has a [10,LK]% chance per negative status the target already has to execute it. The stats your allies gain from MONSTER are increased by 10% for each negative status on the KO'd enemy, rounded down."
+			"description": "Move to a random Hisuian Sneasel region if not in one. Your STRONGEST Hisuian Sneasel's ability inflicts all 3 statuses, and has a [10,LK]% chance per negative status the target already has to execute it. The stats your allies gain from MONSTER are increased by 10% for each negative status on the KO'd enemy, rounded down. Gain a Hisuian Sneasel."
 		},
 		"CYBER_BLADE": {
 			"name": "Cyber Blade",
-			"description": "Gain a Honedge. After your STRONGEST Honedge casts King's Shield, its ability is replaced with Laser Blade, which it casts right away. Its max PP is set to 50."
+			"description": "After your STRONGEST Honedge casts King's Shield, its ability is replaced with Laser Blade, which it casts right away. Its max PP is set to 50. Gain a Honedge."
 		},
 		"SALT_SHAKER": {
 			"name": "Salt Shaker",
-			"description": "Gain a Nacli. Your STRONGEST Nacli's Salt Cure reaches [2,3,4] tiles. When a BURN enemy is KO'd within that range, the closest ally without RUNE_PROTECT gains the effect of ROCK_SALT."
+			"description": "Your STRONGEST Nacli's Salt Cure reaches [2,3,4] tiles. When a BURN enemy is KO'd within that range, the closest ally without RUNE_PROTECT gains the effect of ROCK_SALT. Gain a Nacli."
 		},
 		"PRIMAL_RAMPAGE": {
 			"name": "Primal Rampage",
-			"description": "Unlock Cranidos. Your STRONGEST Cranidos's ability is replaced with Torment. Each time it KO's an enemy, it takes 20 PHYSICAL retaliation damage and regains 40 PP."
+			"description": "Your STRONGEST Cranidos's ability is replaced with Torment. Each time it KO's an enemy, it takes 20 PHYSICAL retaliation damage and regains 40 PP. Unlock Cranidos."
 		},
 		"DREEPY_DEPLOYMENT": {
 			"name": "Dreepy Deployment",
-			"description": "Gain a Dreepy and move to a random Dreepy region if not in one. Each dart of your STRONGEST Dreepy has a [10,LK]% chance to deploy a Dreepy with full PP 2 tiles from the target, or always if the ability KO's the target."
+			"description": "Move to a random Dreepy region if not in one. Each dart of your STRONGEST Dreepy has a [10,LK]% chance to deploy a Dreepy with full PP 2 tiles from the target, or always if the ability KO's the target. Gain a Dreepy."
 		},
 		"PRIMAL_MAGNETISM": {
 			"name": "Primal Magnetism",
-			"description": "Gain a Magnemite. Your Magnemite gains FOSSIL synergy. Your STRONGEST Magnemite casts Magnetic Absorption on the first enemy it attacks, then after every third cast of its own ability. Your Unique options always include Sandy Shocks."
+			"description": "Your Magnemite gains FOSSIL synergy. Your STRONGEST Magnemite casts Magnetic Absorption on the first enemy it attacks, then after every third cast of its own ability. Your Unique options always include Sandy Shocks. Gain a Magnemite."
 		},
 		"GALVANIC_RAIN": {
 			"name": "Galvanic Rain",
-			"description": "Gain an Alolan Graveler and move to a random ELECTRIC region if not in one. Your STRONGEST Alolan Geodude's ability is replaced with Electric Surge, it gets +2 RANGE, and its attacks have a [10,LK]% chance to throw an Alolan Geodude with full PP next to the target."
+			"description": "Move to a random ELECTRIC region if not in one. Your STRONGEST Alolan Geodude's ability is replaced with Electric Surge, it gets +2 RANGE, and its attacks have a [10,LK]% chance to throw an Alolan Geodude with full PP next to the target. Gain an Alolan Graveler."
 		},
 		"SILVER_SPOON": {
 			"name": "Prismatic Spoon",
-			"description": "Gain an Abra and 2 random components. An Abra holding a component bends it into a TWISTED_SPOON after 3/2/1 rounds at 1/2/3 STAR. Benching it returns held items. Pokémon holding a TWISTED_SPOON or item made from it cast Teleport on their next attack after using their ability."
+			"description": "An Abra holding a component bends it into a TWISTED_SPOON after 3/2/1 rounds at 1/2/3 STAR. Benching it returns held items. Pokémon holding a TWISTED_SPOON or item made from it cast Teleport on their next attack after using their ability. Gain an Abra and 2 random components."
 		},
 		"ICE_SPEAR": {
 			"name": "Ice Spear",
-			"description": "Gain a Vanillite. Your STRONGEST Vanillite's missiles cannot miss, and refund 20 PP upon KO'ing an enemy."
+			"description": "Your STRONGEST Vanillite's missiles cannot miss, and refund 20 PP upon KO'ing an enemy. Gain a Vanillite."
 		},
 		"FROST_GEAR": {
 			"name": "Frost Gear",
-			"description": "Gain a Shellder. Your STRONGEST Shellder has +3 RANGE, its PP set to 70, and its Shell Smash ATK gain scales with AP."
+			"description": "Your STRONGEST Shellder has +3 RANGE, its PP set to 70, and its Shell Smash ATK gain scales with AP. Gain a Shellder."
 		},
 		"SHUTTLE_BUS": {
 			"name": "Shuttle Bus",
-			"description": "Gain a Skiddo. Your STRONGEST Skiddo has its PP set to 110, but starts combat with full PP."
+			"description": "Your STRONGEST Skiddo has its PP set to 110, but starts combat with full PP. Gain a Skiddo."
 		},
 		"PLUNDER": {
 			"name": "Plunder",
-			"description": "Gain a Galarian Meowth and move to a random STEEL region if not in one. Upon winning combat, gain double the GOLD your STRONGEST Galarian Meowth spent with its ability that combat."
+			"description": "Move to a random STEEL region if not in one. Upon winning combat, gain double the GOLD your STRONGEST Galarian Meowth spent with its ability that combat. Gain a Galarian Meowth."
 		},
 		"EMERALD_ORB": {
 			"name": "Emerald Orb",
@@ -6808,7 +6808,7 @@
 		},
 		"SHELL_ARMOR_BLESSING": {
 			"name": "Shell Armor",
-			"description": "Gain a Grotle and move to a random Turtwig region if not in one. Your STRONGEST Turtwig's passive also grants it 1/3/6 SPE_DEF upon receiving critical attacks."
+			"description": "Move to a random Turtwig region if not in one. Your STRONGEST Turtwig's passive also grants it 1/3/6 SPE_DEF upon receiving critical attacks. Gain a Grotle."
 		},
 		"SHOW_OFF": {
 			"name": "Show Off",
@@ -8048,6 +8048,10 @@
 			"family_CREST_hint": "Gain that synergy gem and 2 random 1 STAR Uncommon Pokémon of that synergy. One exists for every synergy.",
 			"family_CROWN_name": "Synergy Crowns",
 			"family_CROWN_hint": "Gain two items and a Pokémon chosen for that synergy. One exists for every synergy.",
+			"family_SONG_name": "Legendary Songs",
+			"family_SONG_hint": "Gain a legendary instrument. On stage 17, gain a Pokémon that matches it. One exists for each instrument.",
+			"family_MISSION_name": "Missions",
+			"family_MISSION_hint": "Gain a mission order and a random 2 STAR common Pokémon. Complete the order for its reward. One exists for each order.",
 			"family_GYM_TRAINER_name": "Gym Trainers",
 			"family_GYM_TRAINER_hint": "Gain two Pokémon sharing a pair of synergies, and a guaranteed Unique of that pair in your Unique selection.",
 			"combos_hint": "At stage 12, a Combo is only offered if you own a Unique with one of its two synergies, on your board or bench.",
