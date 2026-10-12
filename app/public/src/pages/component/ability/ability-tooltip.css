@@ -101,6 +101,11 @@ h3 .description-icon > img {
   color: var(--color-fg-positive);
 }
 
+.fated-label {
+  color: var(--color-rarity-epic);
+  font-weight: 500;
+}
+
 .item-label {
   color: var(--color-fg-secondary);
   font-weight: 500;

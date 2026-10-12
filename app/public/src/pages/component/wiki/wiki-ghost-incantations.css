@@ -35,10 +35,34 @@
   line-height: 1.5;
 }
 
+/* the title stays pinned while you scroll through its card, so the long page
+   always shows which incantation you are reading. Like the Wish filters, it
+   pulls into the scroll panel's 0.35em top padding, here in its own 1.5em */
 .wiki-ghost-kind-heading {
+  position: sticky;
+  top: calc(-0.35em / 1.5);
+  z-index: 1;
   display: flex;
   align-items: center;
   gap: 0.5em;
+  padding: 0.25em 0 0.35em;
+  border-bottom: 1px solid
+    color-mix(in srgb, var(--color-fg-primary) 25%, transparent);
+  font-size: 1.5em;
+  background-color: var(--color-bg-secondary);
+}
+
+/* each title also takes the color its kind already has in the text */
+.wiki-ghost-card.hexing .wiki-ghost-kind-heading {
+  color: var(--color-fg-negative);
+}
+
+.wiki-ghost-card.ritual .wiki-ghost-kind-heading {
+  color: var(--color-fg-positive);
+}
+
+.wiki-ghost-card.fated .wiki-ghost-kind-heading {
+  color: var(--color-rarity-epic);
 }
 
 .wiki-ghost-header-icon {

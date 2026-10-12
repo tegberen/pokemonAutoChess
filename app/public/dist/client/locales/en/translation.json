@@ -7734,11 +7734,11 @@
 			},
 			"hexing": {
 				"title": "Hexing Incantations",
-				"intro": "Your DEBUFF at GHOST 2 and 4. At the start of each fight, the enemy chosen by the Cause gets the Effect and the NEGATIVE_STATUS for the whole fight. When several enemies tie on that stat, the STRONGEST one is chosen. Your second HEXING_INCANTATION cannot use the same Cause, Effect or NEGATIVE_STATUS as the first."
+				"intro": "Your DEBUFF at GHOST 2 and 4. At the start of each fight, the enemy chosen by the DEBUFF_CAUSE gets the DEBUFF_EFFECT and the NEGATIVE_STATUS for the whole fight. When several enemies tie on that stat, the STRONGEST one is chosen. Your second HEXING_INCANTATION cannot use the same Cause, Effect or negative status as the first."
 			},
 			"ritual": {
 				"title": "Ritual Incantation",
-				"intro": "Your BUFF at GHOST 6. Each time the Cause happens, the Effect and the Bewitching trigger.",
+				"intro": "Your BUFF at GHOST 6. Each time the BUFF_CAUSE happens, the BUFF_EFFECT and the BUFF_BEWITCHING trigger.",
 				"causes": {
 					"GHOST_CASTS": "GHOST ally casts",
 					"GHOST_ATTACKS": "{{count}} attacks by one GHOST ally",
@@ -7772,7 +7772,7 @@
 			},
 			"fated": {
 				"title": "Fated Incantation",
-				"intro": "Written at GHOST 8 to empower your other incantations. Pick one way to empower each kind.",
+				"intro": "Written at GHOST 8 to FATED_EMPOWER your other incantations. Pick one way to FATED_EMPOWER each kind.",
 				"hexing_heading": "Empower both HEXING_INCANTATION",
 				"ritual_heading": "Empower your RITUAL_INCANTATION",
 				"rituals": {
@@ -8106,6 +8106,12 @@
 		"spinning": "Spinning",
 		"results": "Results",
 		"number_to_draw": "Number to draw"
+	},
+	"incantation_terms": {
+		"CAUSE": "Cause",
+		"EFFECT": "Effect",
+		"BEWITCHING": "Bewitching",
+		"EMPOWER": "empower"
 	},
 	"technical_terms": {
 		"title": "Technical Terms",

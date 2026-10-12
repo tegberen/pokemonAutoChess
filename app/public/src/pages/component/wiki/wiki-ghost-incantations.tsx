@@ -292,7 +292,7 @@ export function WikiGhostIncantations() {
         </section>
       </div>
 
-      <div className="my-box wiki-ghost-card">
+      <div className="my-box wiki-ghost-card hexing">
         <KindHeading
           kind={IncantationKind.HEXING}
           title={t("wiki.ghost.hexing.title")}
@@ -406,7 +406,7 @@ export function WikiGhostIncantations() {
         </section>
       </div>
 
-      <div className="my-box wiki-ghost-card">
+      <div className="my-box wiki-ghost-card ritual">
         <KindHeading
           kind={IncantationKind.RITUAL}
           title={t("wiki.ghost.ritual.title")}
@@ -548,7 +548,7 @@ export function WikiGhostIncantations() {
         </section>
       </div>
 
-      <div className="my-box wiki-ghost-card">
+      <div className="my-box wiki-ghost-card fated">
         <KindHeading
           kind={IncantationKind.FATED}
           title={t("wiki.ghost.fated.title")}

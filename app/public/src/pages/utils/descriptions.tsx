@@ -36,6 +36,15 @@ const Items = keys(Item)
 // colored words that tell a GHOST hexing debuff apart from a ritual buff
 const DebuffWords = ["DEBUFF", "LOSE", "LOSES", "INCREASED"] as const
 const BuffWords = ["BUFF", "GAIN", "GAINS", "GRANTS"] as const
+// incantation terms keep their capital and take the color of their kind
+const IncantationTermTokens = {
+  DEBUFF_CAUSE: { term: "CAUSE", className: "status-label" },
+  DEBUFF_EFFECT: { term: "EFFECT", className: "status-label" },
+  BUFF_CAUSE: { term: "CAUSE", className: "status-label positive" },
+  BUFF_EFFECT: { term: "EFFECT", className: "status-label positive" },
+  BUFF_BEWITCHING: { term: "BEWITCHING", className: "status-label positive" },
+  FATED_EMPOWER: { term: "EMPOWER", className: "fated-label" }
+} as const
 
 const IncantationKindByTechnicalTerm: { [term: string]: IncantationKind } = {
   [TechnicalTerm.HEXING_INCANTATION]: IncantationKind.HEXING,
@@ -95,6 +104,7 @@ export const iconRegExp = new RegExp(
     ...TechnicalTerms,
     ...DebuffWords,
     ...BuffWords,
+    ...Object.keys(IncantationTermTokens),
     "GOLD",
     "XP",
     "STAR",
@@ -258,6 +268,12 @@ export function addIconsToDescription(
             <SynergyIcon type={token as Synergy} />
             <span className="synergy-label">{t(`synergy.${token}`)}</span>
           </span>
+        )
+      } else if (token in IncantationTermTokens) {
+        const { term, className } =
+          IncantationTermTokens[token as keyof typeof IncantationTermTokens]
+        icon = (
+          <span className={className}>{t(`incantation_terms.${term}`)}</span>
         )
       } else if (isIn(DebuffWords, token) || isIn(BuffWords, token)) {
         const word = token.toLowerCase()
@@ -478,6 +494,11 @@ export function addIconsToHtml(
             <img src="assets/types/${token}.svg" style="width: 1.5em; height: 1.5em;" />
             <span class="synergy-label">${t(`synergy.${token}`)}</span>
           </span>`
+        } else if (token in IncantationTermTokens) {
+          const { term, className } =
+            IncantationTermTokens[token as keyof typeof IncantationTermTokens]
+          const label = t(`incantation_terms.${term}`)
+          iconHTML = `<span class="${className}">${label}</span>`
         } else if (isIn(DebuffWords, token) || isIn(BuffWords, token)) {
           const isBuff = isIn(BuffWords, token)
           iconHTML = `<span class="status-label${isBuff ? " positive" : ""}">${token.toLowerCase()}</span>`
