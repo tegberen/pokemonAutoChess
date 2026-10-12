@@ -10,26 +10,39 @@ export type Matchup = {
   redPlayer: Player
   count: number
   distance: number
+  rematch: boolean
   ghost?: boolean
+}
+
+// builds every matchup, so count, distance and rematch are always filled in
+function createMatchup(
+  bluePlayer: Player,
+  redPlayer: Player,
+  ghost = false
+): Matchup {
+  return {
+    bluePlayer,
+    redPlayer,
+    ghost,
+    count: getCount(bluePlayer, redPlayer, ghost),
+    distance: getDistance(bluePlayer, redPlayer, ghost),
+    rematch: isRematch(bluePlayer, redPlayer, ghost)
+  }
 }
 
 function getAllPossibleMatchups(remainingPlayers: Player[]): Matchup[] {
   const matchups: Matchup[] = []
   for (let i = 0; i < remainingPlayers.length; i++) {
     for (let j = i + 1; j < remainingPlayers.length; j++) {
-      const bluePlayer = remainingPlayers[i],
-        redPlayer = remainingPlayers[j]
-      matchups.push({
-        bluePlayer,
-        redPlayer,
-        count: getCount(bluePlayer, redPlayer, false),
-        distance: getDistance(bluePlayer, redPlayer, false)
-      })
+      matchups.push(createMatchup(remainingPlayers[i], remainingPlayers[j]))
     }
   }
   return matchups
 }
 
+// recursively lists every way to pair up all the players: each call adds one
+// matchup between two players not yet paired in the combination, until
+// everyone has an opponent
 function completeMatchupCombination(
   combination: Matchup[],
   matchups: Matchup[],
@@ -38,194 +51,151 @@ function completeMatchupCombination(
   const remainingPlayers: Player[] = players.filter(
     (p) => !combination.some((m) => m.bluePlayer === p || m.redPlayer === p)
   )
-  if (remainingPlayers.length === 0)
-    return [combination] // combination is complete
-  else if (remainingPlayers.length === 1) {
-    // player count is odd, so we need to add one ghost matchup at the end of each combination
+  // combination is complete
+  if (remainingPlayers.length === 0) return [combination]
+  if (remainingPlayers.length === 1) {
+    // player count is odd, so we need to add one ghost matchup at the end of
+    // each combination
     const remainingPlayer = remainingPlayers[0]
-    const ghostMatchups = matchups
+    return matchups
       .filter(
         (m) =>
           m.bluePlayer === remainingPlayer || m.redPlayer === remainingPlayer
       )
-      .map((matchup) => {
+      .map((m) => {
         const playerToGhost =
-          matchup.bluePlayer === remainingPlayer
-            ? matchup.redPlayer
-            : matchup.bluePlayer
-        const ghostMatchup: Matchup = {
-          ghost: true,
-          bluePlayer: remainingPlayer, // ensure remaining player is blue player and ghost is red player in ghost matchups
-          redPlayer: playerToGhost,
-          count: getCount(remainingPlayer, playerToGhost, true),
-          distance: getDistance(remainingPlayer, playerToGhost, true)
-        }
-        return ghostMatchup
+          m.bluePlayer === remainingPlayer ? m.redPlayer : m.bluePlayer
+        // ensure remaining player is blue player and ghost is red player in
+        // ghost matchups
+        return [
+          ...combination,
+          createMatchup(remainingPlayer, playerToGhost, true)
+        ]
       })
-
-    return ghostMatchups.map((m) => [...combination, m])
-  } else {
-    const remainingMatchups = matchups.filter(
-      (m) =>
-        remainingPlayers.includes(m.bluePlayer) &&
-        remainingPlayers.includes(m.redPlayer)
-    )
-    if (remainingMatchups.length === 0) {
-      // no more matchups, need to complete with a ghost matchup
-      return []
-    }
-    return remainingMatchups.flatMap((m) =>
-      completeMatchupCombination([...combination, m], matchups, players)
-    )
   }
+  // if no matchup is left among the remaining players, no combination is
+  // returned
+  const remainingMatchups = matchups.filter(
+    (m) =>
+      remainingPlayers.includes(m.bluePlayer) &&
+      remainingPlayers.includes(m.redPlayer)
+  )
+  return remainingMatchups.flatMap((m) =>
+    completeMatchupCombination([...combination, m], matchups, players)
+  )
+}
+
+// keeps every combination tied for the lowest score, so the next step can
+// break the tie
+function keepLowest(
+  combinations: Matchup[][],
+  score: (combination: Matchup[]) => number
+): Matchup[][] {
+  const scores = combinations.map(score)
+  const lowestScore = Math.min(...scores)
+  return combinations.filter((_, index) => scores[index] === lowestScore)
+}
+
+// steps 2 to 6, shared by selectMatchups and selectDoubleUpMatchups
+function selectBestCombination(
+  players: Player[],
+  matchups: Matchup[]
+): Matchup[] {
+  // step 2) establish all the matchup combinations possible
+  let combinations = completeMatchupCombination([], matchups, players)
+
+  // step 3) get matchup combinations that have the fewest back-to-back
+  // rematches. This step is new: steps 4 and 5 compare totals over the whole
+  // lobby, so they could still pick a rematch whenever it lowered the total.
+  // A ghost matchup only counts one side, so its count is lower and it was
+  // the most frequent rematch
+  combinations = keepLowest(
+    combinations,
+    (combination) => combination.filter((m) => m.rematch).length
+  )
+
+  // step 4) get matchup combinations that have the lowest total count
+  combinations = keepLowest(combinations, (combination) =>
+    sum(combination.map((m) => m.count))
+  )
+
+  // step 5) get matchup combinations that have the largest total distance.
+  // The distance is negated, so keeping the lowest keeps the largest
+  combinations = keepLowest(
+    combinations,
+    (combination) => -sum(combination.map((m) => m.distance))
+  )
+
+  // step 6) pick a random matchup combination among the remaining ones
+  return pickRandomIn(combinations)
+}
+
+// shuffled so blue and red sides, and the order of tied combinations, are
+// random
+function getAlivePlayersInRandomOrder(state: GameState): Player[] {
+  return shuffleArray(schemaValues(state.players).filter((p) => p.alive))
 }
 
 export function selectDoubleUpMatchups(state: GameState): Matchup[] {
-  const players = shuffleArray(
-    schemaValues(state.players).filter((p) => p.alive)
-  )
+  const players = getAlivePlayersInRandomOrder(state)
   if (players.length <= 1) return []
 
+  // the finale is a single duel between the last two players
   if (state.finale) {
     const [bluePlayer, redPlayer] = players
-    return [
-      {
-        bluePlayer,
-        redPlayer,
-        count: getCount(bluePlayer, redPlayer, false),
-        distance: getDistance(bluePlayer, redPlayer, false)
-      }
-    ]
+    return [createMatchup(bluePlayer, redPlayer)]
   }
 
-  // Same pipeline as selectMatchups, but teammates are never paired
+  // step 1) establish all the matchups possible with players alive, the same
+  // as selectMatchups, but teammates are never paired
   const matchups = getAllPossibleMatchups(players).filter(
     (m) => m.bluePlayer.doubleUpTeamId !== m.redPlayer.doubleUpTeamId
   )
-
-  const matchupCombinations: Matchup[][] = completeMatchupCombination(
-    [],
-    matchups,
-    players
-  )
-
-  const matchupCombinationsCount = matchupCombinations.map((combination) =>
-    sum(combination.map((m) => m.count))
-  )
-  const lowestTotalCount = Math.min(...matchupCombinationsCount)
-  const lowestTotalCountMatchupCombinations = matchupCombinations.filter(
-    (matchups, index) => matchupCombinationsCount[index] === lowestTotalCount
-  )
-
-  const matchupCombinationsDistance = lowestTotalCountMatchupCombinations.map(
-    (combination) => sum(combination.map((m) => m.distance))
-  )
-  const maxDistance = Math.max(...matchupCombinationsDistance)
-  const mostDistantMatchups = lowestTotalCountMatchupCombinations.filter(
-    (matchups, index) => matchupCombinationsDistance[index] === maxDistance
-  )
-
-  return pickRandomIn(mostDistantMatchups)
+  return selectBestCombination(players, matchups)
 }
 
 export function selectMatchups(state: GameState): Matchup[] {
-  /* step 1) establish all the matchups possible with players alive and their associated count
-  count = number of times A fought B or his ghost) + (number of times B fought A or his ghost) */
-  const players = shuffleArray(
-    schemaValues(state.players).filter((p) => p.alive)
-  )
+  const players = getAlivePlayersInRandomOrder(state)
   if (players.length <= 1) return []
-  const matchups = getAllPossibleMatchups(players)
 
-  /* step 2) establish all the matchup combinations possible */
-  const matchupCombinations: Matchup[][] = completeMatchupCombination(
-    [],
-    matchups,
-    players
-  )
-
-  /* step 3) get matchup combinations that have the lowest total count */
-  const matchupCombinationsCount = matchupCombinations.map((combination) =>
-    sum(combination.map((m) => m.count))
-  )
-  const lowestTotalCount = Math.min(...matchupCombinationsCount)
-  const lowestTotalCountMatchupCombinations = matchupCombinations.filter(
-    (matchups, index) => matchupCombinationsCount[index] === lowestTotalCount
-  )
-
-  /* step 4) get matchup combinations that have the largest total distance */
-  const matchupCombinationsDistance = lowestTotalCountMatchupCombinations.map(
-    (combination) => sum(combination.map((m) => m.distance))
-  )
-  const maxDistance = Math.max(...matchupCombinationsDistance)
-  const mostDistantMatchups = lowestTotalCountMatchupCombinations.filter(
-    (matchups, index) => matchupCombinationsDistance[index] === maxDistance
-  )
-
-  /* step 5) pick a random matchup combination among the most distant and the lowest count */
-  const selectedMatchups = pickRandomIn(mostDistantMatchups)
-  /*
-  logger.debug("Matchmaking round " + state.stageLevel)
-  logger.debug(
-    "Eliminated: " +
-      values(state.players)
-        .filter((p) => !p.alive)
-        .map((p) => p.name)
-  )
-  logger.debug(
-    `${matchups.length} matchups:`,
-    matchups
-      .map(
-        (m) =>
-          `${m.bluePlayer.name} - ${m.redPlayer.name} (count: ${m.count}, distance: ${m.distance})`
-      )
-      .join("\n")
-  )
-  logger.debug(
-    `${matchupCombinations.length} matchup combinations:`,
-    matchupCombinations
-      .map(
-        (c) =>
-          c
-            .map((m) => `${m.bluePlayer.name} - ${m.redPlayer.name}`)
-            .join(" ; ") +
-          ` (total count: ${sum(c.map((m) => m.count))}, total distance: ${sum(
-            c.map((m) => m.distance)
-          )})`
-      )
-      .join("\n")
-  )
-  logger.debug("Selected matchups:")
-  selectedMatchups.forEach((matchup) => {
-    logger.debug(
-      `${matchup.bluePlayer.name} - ${matchup.redPlayer.name} (count: ${
-        matchup.count
-      }, distance: ${matchup.distance}) (${matchup.ghost ? "ghost" : "pvp"})`
-    )
-  })
-*/
-  return selectedMatchups
+  // step 1) establish all the matchups possible with players alive and their
+  // associated count, distance and rematch
+  return selectBestCombination(players, getAllPossibleMatchups(players))
 }
 
+// PvE rounds are skipped, so a PvE round in between does not reset a rematch
+function getLastPvpOpponentId(player: IPlayer): string | undefined {
+  const index = player.history.findLastIndex((h) => h.id !== "pve")
+  return index === -1 ? undefined : player.history[index].id
+}
+
+// rematch(A,B) = (B or his ghost was A's last PvP opponent) or (A or his ghost
+// was B's last PvP opponent). Against a ghost only A is checked, since B is
+// not really fighting
+function isRematch(a: IPlayer, b: IPlayer, bIsGhost: boolean): boolean {
+  return (
+    getLastPvpOpponentId(a) === b.id ||
+    (!bIsGhost && getLastPvpOpponentId(b) === a.id)
+  )
+}
+
+// count(A,B) = (number of times A fought B or his ghost) + (number of times B
+// fought A or his ghost). A ghost fight is recorded under the ghost owner's
+// id, so it is already included in opponents. Against a ghost only A's side
+// counts, which makes a ghost matchup look cheaper than a real one
 export function getCount(a: IPlayer, b: IPlayer, bIsGhost: boolean): number {
-  // count(A,B) = (number of times A fought B or his ghost) + (number of times B fought A or his ghost)
-  const countA =
-    (a.opponents.get(b.id) ?? 0) + (a.opponents.get("ghost-" + b.id) ?? 0)
-  const countB =
-    (b.opponents.get(a.id) ?? 0) + (b.opponents.get("ghost-" + a.id) ?? 0)
-
-  if (bIsGhost) return countA
-  else return countA + countB
+  const countA = a.opponents.get(b.id) ?? 0
+  const countB = b.opponents.get(a.id) ?? 0
+  return bIsGhost ? countA : countA + countB
 }
 
+// distance(A,B) = (number of stages ago A fought B or his ghost) + (number of
+// stages ago B fought A or his ghost). Two players who never fought get the
+// whole history length plus one, so they always count as the most distant
 export function getDistance(a: IPlayer, b: IPlayer, bIsGhost: boolean): number {
-  // distance(A,B) = (number of stages ago A fought B or his ghost) + (number of stages ago B fought A or his ghost)
   const distanceA =
-    a.history.length -
-    a.history.findLastIndex((h) => h.id === b.id || h.id === "ghost-" + b.id)
+    a.history.length - a.history.findLastIndex((h) => h.id === b.id)
   const distanceB =
-    b.history.length -
-    b.history.findLastIndex((h) => h.id === a.id || h.id === "ghost-" + a.id)
-  if (bIsGhost) return distanceA
-  else return distanceA + distanceB
+    b.history.length - b.history.findLastIndex((h) => h.id === a.id)
+  return bIsGhost ? distanceA : distanceA + distanceB
 }
