@@ -2,6 +2,7 @@ import { t } from "i18next"
 import type Phaser from "phaser"
 import { GameObjects } from "phaser"
 import {
+  HALLOWEEN_GHOST_GOLD_REWARD,
   OUTLAW_GOLD_REWARD,
   SHARDS_PER_SHINY_UNOWN_WANDERER,
   SHARDS_PER_UNOWN_WANDERER
@@ -27,6 +28,7 @@ const DEFAULT_WANDERER_SPEED = 0.25
 /*
 List of wanderers:
 - Unowns: give shard when caught
+- Halloween Ghost: replaces the Unowns in October, gives gold when caught
 - Others: from Gotta catch em all scribble, added to bench when caught
 */
 
@@ -55,7 +57,25 @@ export default class WanderersManager {
       this.addOutlawWanderer(wanderer)
     } else if (wanderer.type === WandererType.CROAGUNK_TRADE) {
       this.addCroagunkTrader(wanderer)
+    } else if (wanderer.type === WandererType.HALLOWEEN_GHOST) {
+      this.addHalloweenGhostWanderer(wanderer)
     }
+  }
+
+  addHalloweenGhostWanderer(wanderer: Wanderer) {
+    this.addWandererPokemonSprite({
+      wanderer,
+      onClick: (wanderer, sprite, pointer) => {
+        this.scene.room?.send(Transfer.WANDERER_CLICKED, { id: wanderer.id })
+        this.scene.displayMoneyGain(
+          pointer.x,
+          pointer.y,
+          HALLOWEEN_GHOST_GOLD_REWARD
+        )
+        sprite.destroy()
+        return true
+      }
+    })
   }
 
   addWanderingUnown(wanderer: Wanderer) {

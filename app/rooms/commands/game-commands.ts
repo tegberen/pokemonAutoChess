@@ -26,6 +26,9 @@ import {
   EvolutionLabRewardKinds,
   getItemCapacity,
   getRerollCostForBlessings,
+  HALLOWEEN_GHOST_GOLD_REWARD,
+  HALLOWEEN_GHOST_WANDERER,
+  isHalloweenGhostSeason,
   MAX_PLAYERS_PER_GAME,
   OUTLAW_GOLD_REWARD,
   PkmsWithAltForms,
@@ -598,6 +601,8 @@ export class OnPokemonCatchCommand extends Command<
       }
       player.addMoney(OUTLAW_GOLD_REWARD, true, null)
       removeInArray(player.items, Item.WANTED_NOTICE)
+    } else if (wanderer.type === WandererType.HALLOWEEN_GHOST) {
+      player.addMoney(HALLOWEEN_GHOST_GOLD_REWARD, true, null)
     }
   }
 }
@@ -4134,13 +4139,24 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
         if (!client) return
 
         if (chance(UNOWN_ENCOUNTER_CHANCE)) {
-          player.spawnWanderingPokemon({
-            pkm: pickRandomIn(Unowns),
-            shiny: chance(SHINY_UNOWN_ENCOUNTER_CHANCE),
-            type: WandererType.UNOWN,
-            behavior: WandererBehavior.RUN_THROUGH,
-            delay: Math.round((5 + 15 * Math.random()) * 1000)
-          })
+          if (isHalloweenGhostSeason()) {
+            player.spawnWanderingPokemon({
+              pkm: HALLOWEEN_GHOST_WANDERER,
+              // the Ghost has no shiny sprite
+              shiny: false,
+              type: WandererType.HALLOWEEN_GHOST,
+              behavior: WandererBehavior.RUN_THROUGH,
+              delay: Math.round((5 + 15 * Math.random()) * 1000)
+            })
+          } else {
+            player.spawnWanderingPokemon({
+              pkm: pickRandomIn(Unowns),
+              shiny: chance(SHINY_UNOWN_ENCOUNTER_CHANCE),
+              type: WandererType.UNOWN,
+              behavior: WandererBehavior.RUN_THROUGH,
+              delay: Math.round((5 + 15 * Math.random()) * 1000)
+            })
+          }
         }
 
         if (this.state.outlawStage != null) {

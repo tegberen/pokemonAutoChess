@@ -115,6 +115,14 @@ export function getCarouselPokemonRarities(
 
 export const OUTLAW_GOLD_REWARD = 10
 
+// in October, until Halloween, the Ghost wanders instead of the Unowns
+export const HALLOWEEN_GHOST_WANDERER = Pkm.GHOST
+export const HALLOWEEN_GHOST_GOLD_REWARD = 1
+
+export function isHalloweenGhostSeason(date = new Date()): boolean {
+  return date.getMonth() === 9
+}
+
 export const TREASURE_BOX_LIFE_THRESHOLD = 40
 export type TreasureBoxReward =
   | "gold"

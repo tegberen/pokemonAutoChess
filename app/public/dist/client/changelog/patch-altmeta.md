@@ -499,6 +499,7 @@ Every balance change on this server, newest first.
 **Interface**
 - Rainbow Trail | unlocks with 8 different Eeveelutions instead of 9, Mafia Eevee is no longer needed
 - Next opponent {{new}} | stripes by a player's life show if you can fight them next round: {{stripes:3}} certain, {{stripes:2}} likely, {{stripes:1}} possible. Replaces the clock
+
 ### 11 October 2026
 
 **Pokémon**
