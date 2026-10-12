@@ -295,19 +295,10 @@ interface OnAttackEffectArgs {
   specialDamage: number
   trueDamage: number
   totalDamage: number
+  totalTakenDamage: number
   crit: boolean
   isTripleAttack?: boolean
   hasAttackKilled?: boolean
-}
-
-export class BeforeAttackEffect extends Effect {
-  override apply(args: OnAttackEffectArgs) {}
-  constructor(
-    effect?: (args: OnAttackEffectArgs) => void,
-    origin?: EffectOrigin
-  ) {
-    super(effect, origin)
-  }
 }
 
 export class OnAttackEffect extends Effect {

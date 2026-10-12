@@ -138,7 +138,6 @@ import {
   getUnitScore
 } from "../unit-score"
 import {
-  BeforeAttackEffect,
   type Effect,
   OnAbilityCastEffect,
   OnAttackEffect,
@@ -359,6 +358,9 @@ export const loadedDiceOnAttackEffect = new OnAttackEffect(
           targetX: secondHitTarget.positionX,
           targetY: secondHitTarget.positionY
         })
+        if (pokemon.items.has(Item.RAZOR_FANG)) {
+          secondHitTarget.status.triggerArmorReduction(2000, secondHitTarget)
+        }
 
         alreadyBounced.add(secondHitTarget.id)
         if (!isBlessed) break
@@ -1126,9 +1128,9 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
   ],
 
   [Item.BLACK_BELT]: [
-    new OnAttackEffect(({ pokemon, totalDamage, crit }) => {
+    new OnAttackEffect(({ pokemon, totalTakenDamage, crit }) => {
       if (crit) {
-        pokemon.addShield(Math.ceil(0.33 * totalDamage), pokemon, 0, false)
+        pokemon.addShield(Math.ceil(0.33 * totalTakenDamage), pokemon, 0, false)
       }
     })
   ],
@@ -1850,11 +1852,6 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
   ],
 
   [Item.RAZOR_FANG]: [
-    new BeforeAttackEffect(({ target, crit }) => {
-      if (crit && target) {
-        target.status.triggerArmorReduction(2000, target)
-      }
-    }),
     () => {
       let isFollowUpAttack = false
       return new OnAttackEffect(({ pokemon, target, board, crit }) => {

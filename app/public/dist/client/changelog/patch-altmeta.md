@@ -485,6 +485,8 @@ Every balance change on this server, newest first.
 - HP_SWAP_WAND, SPIRIT_WAND, GUIDING_WAND, SURROUND_WAND, POUNCE_WAND | now trigger at most once every 2 seconds
 - BLAST_WAND on critical hit | 40% → 50%
 - TWO_EDGED_WAND | 40% → 50%
+- RAZOR_FANG | CRIT_POWER 100% → 50%, all attacks now apply ARMOR_BREAK for 2 seconds, not only critical ones, including LOADED_DICE bounces
+- BLACK_BELT | CRIT_CHANCE 20% → 30%, SHIELD is now based on the damage dealt after DEF and SPE_DEF, as described
 
 **Interface**
 - Rainbow Trail | unlocks with 8 different Eeveelutions instead of 9, Mafia Eevee is no longer needed
