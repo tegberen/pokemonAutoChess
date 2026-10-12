@@ -4946,13 +4946,6 @@ export default class Simulation extends Schema implements ISimulation {
 
     championOf.get(Blessing.BUBBLE_RESCUE)?.effectsSet.add(
       new OnKillEffect(({ attacker, target }) => {
-        if (
-          attacker.simulation.redPlayerId === "pve" ||
-          target.isSpawn ||
-          getPokemonData(target.name).rarity === Rarity.LEGENDARY
-        ) {
-          return
-        }
         const hpRatios = BUBBLE_RESCUE_HP_RATIO_BY_STAR
         const hpRatio = hpRatios[Math.min(attacker.stars, hpRatios.length) - 1]
         const rescuedName = target.name

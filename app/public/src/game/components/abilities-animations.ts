@@ -891,6 +891,72 @@ function popSwampFatherBubble(
 const BUBBLE_RESCUE_RADIUS = 34
 const BUBBLE_RESCUE_GROW_MS = 250
 const BUBBLE_RESCUE_HOLD_MS = 500
+// the HYDRO_PUMP bubble palette, so the drawn bubble matches the sprites
+const BUBBLE_RESCUE_BASE = 0x849cff
+const BUBBLE_RESCUE_LIGHT = 0xb5ceff
+const BUBBLE_RESCUE_SHADE = 0x5263b5
+
+function arcPoints(radius: number, fromDegrees: number, toDegrees: number) {
+  const steps = Math.max(8, Math.round(radius / 2))
+  return Array.from({ length: steps + 1 }, (_, step) => {
+    const angle =
+      ((fromDegrees + ((toDegrees - fromDegrees) * step) / steps) * Math.PI) /
+      180
+    return { x: Math.cos(angle) * radius, y: Math.sin(angle) * radius }
+  })
+}
+
+// redrawn at each radius instead of scaled, so the pixels stay on the grid
+function drawPixelBubble(
+  graphics: Phaser.GameObjects.Graphics,
+  radius: number
+) {
+  const pixel = VFX_PIXEL
+  const snapped = Math.round(radius / pixel) * pixel
+  graphics.clear()
+  graphics.fillStyle(BUBBLE_RESCUE_BASE, 0.2)
+  const halfRows = Math.floor(snapped / pixel)
+  for (let row = -halfRows; row <= halfRows; row++) {
+    const halfCells = Math.floor(
+      Math.sqrt(Math.max(0, snapped ** 2 - (row * pixel) ** 2)) / pixel
+    )
+    graphics.fillRect(
+      (-halfCells - 0.5) * pixel,
+      (row - 0.5) * pixel,
+      (halfCells * 2 + 1) * pixel,
+      pixel
+    )
+  }
+  const layer = (color: number) => [
+    { grid: pixel, size: pixel, color, alpha: 1 }
+  ]
+  const lit = arcPoints(snapped, 110, 340)
+  const shaded = arcPoints(snapped, -20, 110)
+  drawPixelPath(graphics, lit, layer(BUBBLE_RESCUE_LIGHT))
+  drawPixelPath(graphics, shaded, layer(BUBBLE_RESCUE_SHADE))
+  const shine = snapped - pixel * 3
+  drawPixelPath(graphics, arcPoints(shine, 200, 240), layer(0xffffff))
+  graphics.fillStyle(0xffffff, 1)
+  graphics.fillRect(
+    Math.round((Math.cos(Math.PI * 1.42) * shine) / pixel) * pixel + pixel,
+    Math.round((Math.sin(Math.PI * 1.42) * shine) / pixel) * pixel + pixel,
+    pixel,
+    pixel
+  )
+}
+
+// a tiny pixel sphere like the HYDRO_PUMP bubbles
+function drawPixelMiniBubble(
+  graphics: Phaser.GameObjects.Graphics,
+  radius: number
+) {
+  const pixel = VFX_PIXEL
+  drawPixelDisc(graphics, radius, pixel, BUBBLE_RESCUE_BASE)
+  graphics.fillStyle(BUBBLE_RESCUE_SHADE, 1)
+  graphics.fillRect(0, pixel / 2, pixel, pixel)
+  graphics.fillStyle(0xffffff, 1)
+  graphics.fillRect(-pixel * 1.5, -pixel * 1.5, pixel, pixel)
+}
 
 // the rescued unit spawns on the same tick as this message, so its sprite is
 // looked up every frame in the live board list and the bubble follows it
@@ -899,39 +965,88 @@ function bubbleRescueAppearAnimation(args: AbilityAnimationArgs) {
   const [startX, startY] = transformEntityCoordinates(positionX, positionY, flip)
   const pixel = VFX_PIXEL
   const radius = BUBBLE_RESCUE_RADIUS
-  const bubble = scene.add.graphics().setDepth(DEPTH.ABILITY)
-  scene.abilitiesVfxGroup?.add(bubble)
-  bubble.fillStyle(0x8fd0ff, 0.25)
-  bubble.fillCircle(0, 0, radius)
-  bubble.lineStyle(pixel, 0xbfe6ff, 1)
-  bubble.strokeCircle(0, 0, radius)
-  bubble.fillStyle(0xffffff, 0.9)
-  bubble.fillRect(-radius / 2, -radius / 2 - pixel, pixel * 3, pixel)
-  bubble.setPosition(startX, startY - 10).setScale(0.6)
+  // everything sits in one holder, so the mini bubbles follow the unit too
+  const holder = scene.add
+    .container(startX, startY - 10)
+    .setDepth(DEPTH.ABILITY)
+  scene.abilitiesVfxGroup?.add(holder)
+  const bubble = scene.add.graphics()
+  holder.add(bubble)
+  drawPixelBubble(bubble, radius * 0.5)
 
   const followRescued = () => {
     const rescued = pokemonsOnBoard.find((sprite) => sprite.id === casterId)
-    if (rescued?.active) bubble.setPosition(rescued.x, rescued.y - 10)
+    if (rescued?.active) holder.setPosition(rescued.x, rescued.y - 10)
   }
-  scene.tweens.add({
-    targets: bubble,
-    scale: 1,
+
+  const riseMiniBubbles = () => {
+    if (REDUCED_MOTION) return
+    ;[
+      { x: -12, size: pixel * 1.5, delay: 0 },
+      { x: 9, size: pixel * 2, delay: 140 },
+      { x: -3, size: pixel * 1.5, delay: 280 }
+    ].forEach(({ x, size, delay }) => {
+      const mini = scene.add.graphics()
+      drawPixelMiniBubble(mini, size)
+      mini.setPosition(x, radius * 0.45)
+      holder.add(mini)
+      scene.tweens.add({
+        targets: mini,
+        y: -radius * 0.45,
+        alpha: 0,
+        delay,
+        duration: BUBBLE_RESCUE_HOLD_MS - delay,
+        ease: "sine.out",
+        onComplete: () => mini.destroy()
+      })
+    })
+  }
+
+  const pop = () => {
+    if (!holder.active) return
+    const ring = scene.add
+      .graphics()
+      .setDepth(DEPTH.ABILITY)
+      .setPosition(holder.x, holder.y)
+    scene.abilitiesVfxGroup?.add(ring)
+    scene.tweens.addCounter({
+      from: radius,
+      to: radius * 1.35,
+      duration: 300,
+      ease: "quad.out",
+      onUpdate: (tween) => {
+        const ringRadius = tween.getValue() ?? radius
+        drawPixelRing(ring, ringRadius, pixel, BUBBLE_RESCUE_LIGHT)
+        ring.setAlpha(1 - tween.progress)
+      },
+      onComplete: () => ring.destroy()
+    })
+    popSwampFatherBubble(scene, holder.x, holder.y, radius)
+    holder.destroy()
+  }
+
+  scene.tweens.addCounter({
+    from: radius * 0.5,
+    to: radius,
     duration: BUBBLE_RESCUE_GROW_MS,
     ease: "back.out",
-    onUpdate: followRescued,
+    onUpdate: (tween) => {
+      followRescued()
+      if (bubble.active) drawPixelBubble(bubble, tween.getValue() ?? radius)
+    },
     onComplete: () => {
-      scene.tweens.add({
-        targets: bubble,
-        scale: REDUCED_MOTION ? 1 : 1.06,
+      riseMiniBubbles()
+      scene.tweens.addCounter({
+        from: radius,
+        to: REDUCED_MOTION ? radius : radius + pixel,
         duration: BUBBLE_RESCUE_HOLD_MS / 2,
         yoyo: true,
         ease: "sine.inOut",
-        onUpdate: followRescued,
-        onComplete: () => {
-          if (!bubble.active) return
-          popSwampFatherBubble(scene, bubble.x, bubble.y, radius)
-          bubble.destroy()
-        }
+        onUpdate: (tween) => {
+          followRescued()
+          if (bubble.active) drawPixelBubble(bubble, tween.getValue() ?? radius)
+        },
+        onComplete: pop
       })
     }
   })

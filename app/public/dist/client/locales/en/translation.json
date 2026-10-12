@@ -6108,7 +6108,7 @@
 		},
 		"PANIC_BUTTON": {
 			"name": "Panic Button",
-			"description": "Now and after each PvE round, gain an Unown-Q. Its max PP is set to 10, and the draw it casts now deals 4 player damage to your opponent."
+			"description": "Now and after each PvE round, gain an Unown-Q. Its max PP is set to 10."
 		},
 		"HAIL_TO_THE_KING": {
 			"name": "Hail to the King",
@@ -6536,7 +6536,7 @@
 		},
 		"BUBBLE_RESCUE": {
 			"name": "Bubble Rescue",
-			"description": "Your STRONGEST Azurill rescues the opponent's Pokémon it KOs: they join your team with [20,30,40]% HP and keep their items. Gain a Marill."
+			"description": "Your STRONGEST Azurill rescues the enemies it KOs: they join your team with [20,30,40]% HP and keep their items. Gain a Marill."
 		},
 		"SPOOKY_SCARECROW": {
 			"name": "Spooky Scarecrow",

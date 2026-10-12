@@ -55,11 +55,13 @@ export default function PreparationSettings() {
     // turns it on. The server ignores this unless the picker is an admin
     if (blessings.length > 0) setBlessingsEnabled(true)
   }
-  /* the server starts every room with an empty list, so the remembered
-     selection has to be pushed again on joining or it is shown but not applied */
+  /* the server starts every room with an empty list and Wishes off, so the
+     remembered selection has to be pushed again on joining, turning Wishes on,
+     or it is shown but not applied */
   useEffect(() => {
     if (isDevMode && blessingsUnderTest.length > 0) {
       setBlessingsUnderTestNetwork(blessingsUnderTest)
+      setBlessingsEnabled(true)
     }
   }, [])
   const filteredBlessings = (Object.keys(Blessings) as Blessing[]).filter(

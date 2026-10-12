@@ -419,6 +419,12 @@ At the beginning of each battle, TIGHT_BELT is replaced by 2 random items. The h
 
 Team up with your partner and outlast every other duo!
 
+#### Draws
+
+A draw hurts both sides, like in solo: each player takes damage from the other side's surviving Pokémon. It sends no reinforcements to your partner, but if your partner wins first, their survivors can still join your fight and break the draw.
+
+Your team shares the lower life of the two partners, so when both of you take damage, only the bigger hit counts.
+
 [Double Up guide](#wiki/double-up)
 
 ### Tournament
@@ -466,8 +472,12 @@ Every balance change on this server, newest first.
 
 ### 12 October 2026
 
+**Game Mode**
+- Double Up | a draw now damages both players, like in solo
+
 **Wishes**
-- Bubble Rescue {{new}} | Gold, stage 4. Gain a Marill. Your STRONGEST Azurill rescues the opponent's Pokémon it KOs: they join your team with 20/30/40% HP and keep their items
+- Panic Button | Unown-Q's draw no longer deals 4 player damage to your opponent
+- Bubble Rescue {{new}} | Gold, stage 4. Gain a Marill. Your STRONGEST Azurill rescues the enemies it KOs: they join your team with 20/30/40% HP and keep their items
 
 **Interface**
 - Rainbow Trail | unlocks with 8 different Eeveelutions instead of 9, Mafia Eevee is no longer needed

@@ -3727,26 +3727,33 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
       if (sim.isGhostBattle) return
       if (sim.redPlayerId === "pve") return
 
-      const loserIsBlue = sim.winnerId === sim.redPlayerId
-      const loserIsRed = sim.winnerId === sim.bluePlayerId
-      if (!loserIsBlue && !loserIsRed) return // draw
-
-      const losingPlayer = loserIsBlue ? sim.bluePlayer : sim.redPlayer
-      const winningTeam = loserIsBlue ? sim.redTeam : sim.blueTeam
-      if (!losingPlayer || !losingPlayer.alive) return
-
-      const damage = this.room.computeRoundDamage(
-        winningTeam,
-        this.state.stageLevel
-      )
-      losingPlayer.life -= damage
-      if (damage > 0) {
-        const client = this.room.clients.find(
-          (c) => c.auth.uid === losingPlayer.id
-        )
-        client?.send(Transfer.PLAYER_DAMAGE, damage)
+      const isDraw = !sim.winnerId
+      // a draw hurts both sides, as in solo
+      if (isDraw || sim.winnerId === sim.redPlayerId) {
+        this.applyDoubleUpLossDamage(sim.bluePlayer, sim.redTeam)
+      }
+      if (isDraw || sim.winnerId === sim.bluePlayerId) {
+        this.applyDoubleUpLossDamage(sim.redPlayer, sim.blueTeam)
       }
     })
+  }
+
+  applyDoubleUpLossDamage(
+    losingPlayer: Player | undefined,
+    opposingTeam: Simulation["blueTeam"]
+  ) {
+    if (!losingPlayer || !losingPlayer.alive) return
+    const damage = this.room.computeRoundDamage(
+      opposingTeam,
+      this.state.stageLevel
+    )
+    losingPlayer.life -= damage
+    if (damage > 0) {
+      const client = this.room.clients.find(
+        (c) => c.auth.uid === losingPlayer.id
+      )
+      client?.send(Transfer.PLAYER_DAMAGE, damage)
+    }
   }
 
   syncTeamLife() {
