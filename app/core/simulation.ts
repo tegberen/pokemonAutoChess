@@ -811,9 +811,10 @@ export default class Simulation extends Schema implements ISimulation {
           team,
           true
         )
+        // a Double Up reinforcement copies this effect into the partner's fight
         fish.effectsSet.add(
           new OnDeathEffect(({ pokemon }) =>
-            this.summonSharkBaitPredator(pokemon, player)
+            pokemon.simulation.summonSharkBaitPredator(pokemon, player)
           )
         )
       }
