@@ -865,7 +865,8 @@ function swampFatherBubbleAnimation(args: AbilityAnimationArgs) {
 function popSwampFatherBubble(
   scene: GameScene | DebugScene,
   x: number,
-  y: number
+  y: number,
+  radius = SWAMP_FATHER_BUBBLE_RADIUS
 ) {
   const pixel = VFX_PIXEL
   const shards = 10
@@ -877,14 +878,63 @@ function popSwampFatherBubble(
     scene.abilitiesVfxGroup?.add(droplet)
     scene.tweens.add({
       targets: droplet,
-      x: x + Math.cos(angle) * SWAMP_FATHER_BUBBLE_RADIUS * 2,
-      y: y + Math.sin(angle) * SWAMP_FATHER_BUBBLE_RADIUS * 2 + 12,
+      x: x + Math.cos(angle) * radius * 2,
+      y: y + Math.sin(angle) * radius * 2 + 12,
       alpha: 0,
       duration: 260,
       ease: "quad.out",
       onComplete: () => droplet.destroy()
     })
   }
+}
+
+const BUBBLE_RESCUE_RADIUS = 34
+const BUBBLE_RESCUE_GROW_MS = 250
+const BUBBLE_RESCUE_HOLD_MS = 500
+
+// the rescued unit spawns on the same tick as this message, so its sprite is
+// looked up every frame in the live board list and the bubble follows it
+function bubbleRescueAppearAnimation(args: AbilityAnimationArgs) {
+  const { scene, positionX, positionY, flip, casterId, pokemonsOnBoard } = args
+  const [startX, startY] = transformEntityCoordinates(positionX, positionY, flip)
+  const pixel = VFX_PIXEL
+  const radius = BUBBLE_RESCUE_RADIUS
+  const bubble = scene.add.graphics().setDepth(DEPTH.ABILITY)
+  scene.abilitiesVfxGroup?.add(bubble)
+  bubble.fillStyle(0x8fd0ff, 0.25)
+  bubble.fillCircle(0, 0, radius)
+  bubble.lineStyle(pixel, 0xbfe6ff, 1)
+  bubble.strokeCircle(0, 0, radius)
+  bubble.fillStyle(0xffffff, 0.9)
+  bubble.fillRect(-radius / 2, -radius / 2 - pixel, pixel * 3, pixel)
+  bubble.setPosition(startX, startY - 10).setScale(0.6)
+
+  const followRescued = () => {
+    const rescued = pokemonsOnBoard.find((sprite) => sprite.id === casterId)
+    if (rescued?.active) bubble.setPosition(rescued.x, rescued.y - 10)
+  }
+  scene.tweens.add({
+    targets: bubble,
+    scale: 1,
+    duration: BUBBLE_RESCUE_GROW_MS,
+    ease: "back.out",
+    onUpdate: followRescued,
+    onComplete: () => {
+      scene.tweens.add({
+        targets: bubble,
+        scale: REDUCED_MOTION ? 1 : 1.06,
+        duration: BUBBLE_RESCUE_HOLD_MS / 2,
+        yoyo: true,
+        ease: "sine.inOut",
+        onUpdate: followRescued,
+        onComplete: () => {
+          if (!bubble.active) return
+          popSwampFatherBubble(scene, bubble.x, bubble.y, radius)
+          bubble.destroy()
+        }
+      })
+    }
+  })
 }
 
 const WATER_SHURIKEN_CURVE = 30
@@ -6702,6 +6752,7 @@ export const AbilitiesAnimations: {
   ["SALT_SHAKER_ROCK_SALT"]: saltShakerRockSaltAnimation,
   ["GOOEY_GLOBULES_BLOB"]: gooeyGlobulesBlobAnimation,
   ["SWAMP_FATHER_BUBBLE"]: swampFatherBubbleAnimation,
+  ["BUBBLE_RESCUE_APPEAR"]: bubbleRescueAppearAnimation,
   ["SWAMP_FATHER_RAIN"]: onTarget({
     ability: Ability.MUDDY_WATER,
     origin: [0.5, 1],

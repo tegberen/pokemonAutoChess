@@ -3460,6 +3460,8 @@ export const blessingEffectService: {
     heroBlessingEffect(Blessing.INFILTRATOR, player, state, room),
   [Blessing.JOLLY_ROGER]: (player, state, room) =>
     heroBlessingEffect(Blessing.JOLLY_ROGER, player, state, room),
+  [Blessing.BUBBLE_RESCUE]: (player, state, room) =>
+    heroBlessingEffect(Blessing.BUBBLE_RESCUE, player, state, room),
 
   [Blessing.SEASONAL_HERD]: (player, state) => {
     const deerling =

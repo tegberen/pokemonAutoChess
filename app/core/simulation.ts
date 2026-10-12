@@ -152,6 +152,8 @@ import {
   ROYAL_ROMANCE_ATTRACT_CHANCE,
   INFILTRATOR_PP_STOLEN_BY_STAR,
   JOLLY_ROGER_ATTACK_KO_GOLD,
+  BUBBLE_RESCUE_DELAY,
+  BUBBLE_RESCUE_HP_RATIO_BY_STAR,
   BONEMERANG_RANGER_DAMAGE_LOSS_PER_HIT,
   BONEMERANG_RANGER_MIN_DAMAGE_RATIO,
   BONEMERANG_RANGER_RETURN_DELAY,
@@ -4939,6 +4941,51 @@ export default class Simulation extends Schema implements ISimulation {
         if (target && hasAttackKilled) {
           stealGoldOnKO(pokemon, target, JOLLY_ROGER_ATTACK_KO_GOLD)
         }
+      })
+    )
+
+    championOf.get(Blessing.BUBBLE_RESCUE)?.effectsSet.add(
+      new OnKillEffect(({ attacker, target }) => {
+        if (
+          attacker.simulation.redPlayerId === "pve" ||
+          target.isSpawn ||
+          getPokemonData(target.name).rarity === Rarity.LEGENDARY
+        ) {
+          return
+        }
+        const hpRatios = BUBBLE_RESCUE_HP_RATIO_BY_STAR
+        const hpRatio = hpRatios[Math.min(attacker.stars, hpRatios.length) - 1]
+        const rescuedName = target.name
+        const rescuedItems = [...target.items]
+        attacker.commands.push(
+          new DelayedCommand(() => {
+            const simulation = attacker.simulation
+            const coord = simulation.getClosestFreeCellTo(
+              attacker.positionX,
+              attacker.positionY,
+              attacker.team
+            )
+            if (!coord) return
+            const pokemon = PokemonFactory.createPokemonFromName(
+              rescuedName,
+              attacker.player
+            )
+            rescuedItems.forEach((item) => pokemon.items.add(item))
+            const rescued = simulation.addPokemon(
+              pokemon,
+              coord.x,
+              coord.y,
+              attacker.team,
+              true
+            )
+            rescued.hp = Math.max(1, Math.round(rescued.maxHP * hpRatio))
+            rescued.pp = 0
+            rescued.broadcastAbility({
+              skill: "BUBBLE_RESCUE_APPEAR",
+              casterId: rescued.id
+            })
+          }, BUBBLE_RESCUE_DELAY)
+        )
       })
     )
 

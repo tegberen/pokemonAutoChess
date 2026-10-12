@@ -6534,6 +6534,10 @@
 			"name": "Jolly Roger",
 			"description": "Gain a Totodile. When your STRONGEST Totodile KO's an enemy, steal 1 GOLD from the opponent, or 2 GOLD with its ability. Croconaw evolves into Pirate Feraligatr."
 		},
+		"BUBBLE_RESCUE": {
+			"name": "Bubble Rescue",
+			"description": "Your STRONGEST Azurill rescues the opponent's Pokémon it KOs: they join your team with [20,30,40]% HP and keep their items. Gain a Marill."
+		},
 		"SPOOKY_SCARECROW": {
 			"name": "Spooky Scarecrow",
 			"description": "Gain a Cacnea. Your STRONGEST Cacnea cannot move or attack, and its ability is replaced with Spiky Shield. Each time an ally that was not summoned is KO'd, it gains 5 DEF and summons a Murkrow with full PP. When it is KO'd itself, it summons 3 Murkrow instead."

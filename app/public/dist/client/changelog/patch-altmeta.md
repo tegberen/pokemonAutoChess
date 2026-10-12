@@ -466,6 +466,9 @@ Every balance change on this server, newest first.
 
 ### 12 October 2026
 
+**Wishes**
+- Bubble Rescue {{new}} | Gold, stage 4. Gain a Marill. Your STRONGEST Azurill rescues the opponent's Pokémon it KOs: they join your team with 20/30/40% HP and keep their items
+
 **Interface**
 - Rainbow Trail | unlocks with 8 different Eeveelutions instead of 9, Mafia Eevee is no longer needed
 

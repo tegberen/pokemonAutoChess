@@ -2160,6 +2160,12 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     icon: "jolly_roger",
     grantsPokemonImmediately: true
   },
+  [Blessing.BUBBLE_RESCUE]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: [4],
+    icon: "bubble_rescue",
+    grantsPokemonImmediately: true
+  },
   [Blessing.SEASONAL_HERD]: {
     tier: BlessingTier.PRISMATIC,
     availableAtStages: [4],
