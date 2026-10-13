@@ -474,6 +474,9 @@ Every balance change on this server, newest first.
 
 ### 13 October 2026
 
+**Pokémon**
+- Gastly Line | Nightmare: the bonus damage hits enemies suffering under a HEXING_INCANTATION, POISONNED or SILENCE, instead of any NEGATIVE_STATUS
+
 **Wishes**
 - HUMAN Crest, HUMAN Crown | HUMAN_GEM → WISE_GLASSES
 - Human Horror | 2 SPELL_TAG → SPELL_TAG and WISE_GLASSES
