@@ -91,7 +91,6 @@ import { schemaValues } from "../../../../utils/schemas"
 import { GamePokemonDetailDOMWrapper } from "../../pages/component/game/game-pokemon-detail"
 import { getGameContainer } from "../../pages/game"
 import { fadeToMusic, playMusic, preloadMusic } from "../../pages/utils/audio"
-import { showDoubleUpVictory, type VictoryWinner } from "./double-up-victory"
 import {
   transformBoardCoordinates,
   transformEntityCoordinates
@@ -140,6 +139,13 @@ const VICTORY_MUSIC_FADE_IN_MS = 3000
 const VICTORY_MUSIC_VOLUME_SCALE = 0.6
 const VICTORY_SCENE_FADE_OUT_MS = 700
 const VICTORY_SCENE_FADE_IN_MS = 1000
+
+export type VictoryScene = {
+  // draws the scene in the town and returns how to remove it
+  show: (scene: GameScene) => () => void
+  // the Daily Duel brings its new top 3 onto the podium in place of the old
+  replacesTownPodium: boolean
+}
 
 /* The scene is 1950x1000 and scaled to FIT, so these are world coordinates. The
    readable middle of it: clear of the left sidebar and the item column, of the
@@ -1682,17 +1688,17 @@ export default class BoardManager {
     this.scene.load.start()
   }
 
-  transitionToVictory(winners: VictoryWinner[], onTownShown: () => void) {
+  transitionToVictory(victoryScene: VictoryScene, onTownShown: () => void) {
     this.startVictoryMusic()
     const camera = this.scene.cameras.main
     camera.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => {
-      this.victoryMode(winners)
+      this.victoryMode(victoryScene)
       onTownShown()
     })
     camera.fadeOut(VICTORY_SCENE_FADE_OUT_MS)
   }
 
-  victoryMode(winners: VictoryWinner[]) {
+  victoryMode(victoryScene: VictoryScene) {
     this.mode = BoardMode.VICTORY
     this.stopScribblePainting()
     this.scene.setMap("town")
@@ -1727,12 +1733,12 @@ export default class BoardManager {
     }
     this.scene.minigameManager?.addVillagers(
       null,
-      store.getState().game.podium,
+      victoryScene.replacesTownPodium ? [] : store.getState().game.podium,
       store.getState().game.doubleUpChampions,
       store.getState().game.smeargleScribbleChampion
     )
     this.removeVictoryScene?.()
-    this.removeVictoryScene = showDoubleUpVictory(this.scene, winners)
+    this.removeVictoryScene = victoryScene.show(this.scene)
   }
 
   exitVictoryMode() {

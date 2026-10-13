@@ -55,6 +55,7 @@ export default class MinigameManager {
   display: boolean
   animationManager: AnimationManager
   villagers: PokemonSpecial[] = []
+  eventNpcVillager: PokemonSpecial | null = null
   townDecorations: Phaser.GameObjects.Sprite[] = []
   encounterDescription: GameDialog | null = null
 
@@ -93,6 +94,7 @@ export default class MinigameManager {
       }
     })
     this.villagers = []
+    this.eventNpcVillager = null
     this.townDecorations.forEach((decoration) => decoration?.destroy())
     this.townDecorations = []
     this.encounterDescription?.destroy()
@@ -714,6 +716,8 @@ export default class MinigameManager {
             emotion: (eventNpc.emotion as Emotion) || undefined
           })
         : null
+    // it stands on the bridge, so the Daily Duel scene hides it for the walk
+    this.eventNpcVillager = eventNpcVillager
 
     const championsX = 32.8 * 48 // move the pair left/right
     const championsY = 9.1 * 48 // move the pair up/down

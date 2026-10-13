@@ -4585,6 +4585,8 @@
 	"partner_chat_placeholder": "Be respectful, don't spam · Esc to close",
 	"double_up_victory": "VICTORY",
 	"double_up_victory_subtitle": "Won the Double Up",
+	"daily_duel_victory": "VICTORY",
+	"daily_duel_victory_subtitle": "Won the Daily Duel",
 	"double_up_victory_show_board": "Board",
 	"double_up_victory_leave": "Leave",
 	"double_up_finale": "Finale",

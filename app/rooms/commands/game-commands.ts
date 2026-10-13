@@ -2499,6 +2499,18 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
         finaleAvailable: !this.room.metadata?.tournamentId
       })
     }
+    if (this.room.dailyDuel && winners.length > 0) {
+      // the eliminated keep the rank they died with, so the next two by rank
+      // stand beside the winner
+      const runnersUp = schemaValues(this.state.players)
+        .filter((player) => !winners.includes(player))
+        .sort((a, b) => a.rank - b.rank)
+      this.room.broadcast(Transfer.DAILY_DUEL_VICTORY, {
+        podiumIds: [winners[0], ...runnersUp]
+          .slice(0, 3)
+          .map((player) => player.id)
+      })
+    }
     winners.forEach((winner) => {
       const client = this.room.clients.find(
         (cli) => cli.auth.uid === winner.id

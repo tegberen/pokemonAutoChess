@@ -11,6 +11,7 @@ import {
   SynergyTiersThresholds
 } from "../../../config"
 import type { IPokemonRecord } from "../../../models/colyseus-models/game-record"
+import type Player from "../../../models/colyseus-models/player"
 import { sortSynergiesForDisplay } from "../../../models/colyseus-models/synergies"
 import type { Wanderer } from "../../../models/colyseus-models/wanderer"
 import { isPveStage } from "../../../core/guide/guide-stage"
@@ -51,7 +52,12 @@ import type { ErrorMessage } from "../../../types/strings/ErrorMessage"
 import { getAvatarString, getPortraitSrc } from "../../../utils/avatar"
 import { logger } from "../../../utils/logger"
 import { schemaValues } from "../../../utils/schemas"
-import type { VictoryWinner } from "../game/components/double-up-victory"
+import type { VictoryScene } from "../game/components/board-manager"
+import {
+  type DailyDuelFinisher,
+  showDailyDuelVictory
+} from "../game/components/daily-duel-victory"
+import { showDoubleUpVictory } from "../game/components/double-up-victory"
 import GameContainer from "../game/game-container"
 import GuideOverlay from "./component/guide/guide-overlay"
 import type GameScene from "../game/scenes/game-scene"
@@ -239,12 +245,12 @@ export default function Game() {
   const [isWinnerWaitingForVictory, setWinnerWaitingForVictory] =
     useState<boolean>(false)
   const playVictoryScene = (
-    winners: VictoryWinner[],
+    victoryScene: VictoryScene,
     results: VictoryResult[],
     isWinner: boolean
   ) => {
     setWinnerWaitingForVictory(isWinner)
-    getGameScene()?.board?.transitionToVictory(winners, () => {
+    getGameScene()?.board?.transitionToVictory(victoryScene, () => {
       // cleared only now so the stage and HP don't flash back during the fade
       dispatch(setFinalistIds([]))
       setVictoryResults(results)
@@ -679,7 +685,10 @@ export default function Game() {
           ]
         })
         playVictoryScene(
-          winners,
+          {
+            show: (scene) => showDoubleUpVictory(scene, winners),
+            replacesTownPodium: false
+          },
           results,
           winnerIds.includes(store.getState().network.uid)
         )
@@ -707,6 +716,30 @@ export default function Game() {
           winnerIds: string[]
           finaleAvailable: boolean
         }) => startDoubleUpVictory(winnerIds, finaleAvailable)
+      )
+      const toDailyDuelFinisher = (player: Player): DailyDuelFinisher => ({
+        name: player.name,
+        avatar: player.avatar,
+        team: schemaValues(player.board).filter((p) => p.positionY > 0)
+      })
+      room.onMessage(
+        Transfer.DAILY_DUEL_VICTORY,
+        ({ podiumIds }: { podiumIds: string[] }) => {
+          if (victorySceneShown.current) return
+          victorySceneShown.current = true
+          const finishers = podiumIds.flatMap((id) => {
+            const player = room.state.players.get(id)
+            return player ? [toDailyDuelFinisher(player)] : []
+          })
+          playVictoryScene(
+            {
+              show: (scene) => showDailyDuelVictory(scene, finishers),
+              replacesTownPodium: true
+            },
+            [],
+            podiumIds[0] === store.getState().network.uid
+          )
+        }
       )
 
       room.onMessage(
