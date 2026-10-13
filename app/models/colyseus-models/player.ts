@@ -72,7 +72,6 @@ import {
   Item,
   type MissionOrder,
   NonSpecialBerries,
-  type ScarfItem,
   Seeds,
   SynergyGemsBuried,
   SynergyGivenByItem,
@@ -263,6 +262,7 @@ export default class Player extends Schema implements IPlayer {
   ultraUnlockPool: Pkm[] = new Array<Pkm>()
   legendaryUnlockPool: Pkm[] = new Array<Pkm>()
   isBot: boolean
+  stashedScarfCrafts: Item[] = []
   titles: Set<Title> = new Set<Title>()
   sinnohsCoolestRewardGranted = false
   thunderAndLightningFormGranted = false
@@ -1242,70 +1242,95 @@ export default class Player extends Schema implements IPlayer {
     return needsRecomputingSynergiesAgain
   }
 
-  getScarvesItemsWithNbScarves(n: number): Item[] {
-    let i = 0
-    const scarves: Item[] = []
-    while (n > 0) {
-      const scarf = this.scarvesItems[i] ?? Item.SILK_SCARF
-      n -= scarf === Item.NULLIFY_BANDANNA ? 2 : 1
-      if (n >= 0) {
-        scarves.push(scarf)
-        i++
-      }
-    }
-    return scarves
-  }
-
+  // each NORMAL tier is one scarf. A tier change adds or removes exactly that
+  // many scarves, whatever they came from: tying crafts to tier slots let a
+  // scarf from elsewhere, or NULLIFY_BANDANNA's 2 scarves, get a craft copied
+  // by a later tier gain
   updateScarves(
     previousSynergies: Map<Synergy, number>,
     updatedSynergies: Map<Synergy, number>
   ): boolean {
-    let needsRecomputingSynergiesAgain = false
-    const previousNbNormalScarves = getSynergyTier(
-      previousSynergies,
-      Synergy.NORMAL
-    )
-    const previousScarves = this.getScarvesItemsWithNbScarves(
-      previousNbNormalScarves
-    )
-    const newNbNormalScarves = getSynergyTier(updatedSynergies, Synergy.NORMAL)
-    const newScarves = this.getScarvesItemsWithNbScarves(newNbNormalScarves)
-
-    if (newScarves.length > previousScarves.length) {
-      // some scarves are gained
-      const gainedScarves = newScarves.slice(
-        previousScarves.length,
-        newScarves.length
-      )
-      gainedScarves.forEach((item) => {
-        this.items.push(item)
-      })
-    } else if (newScarves.length < previousScarves.length) {
-      // some scarves are lost
-      const lostScarves = [...previousScarves]
-      newScarves.forEach((s) => removeInArray(lostScarves, s))
-      const removeScarf = (item: ScarfItem) => {
-        // first check held items
-        const pokemons = schemaValues(this.board)
-        for (const pokemon of pokemons) {
-          if (pokemon.items.has(item)) {
-            pokemon.removeItem(item, this)
-
-            if (item in SynergyGivenByItem && !isOnBench(pokemon)) {
-              needsRecomputingSynergiesAgain = true
-            }
-            return // break for loop to remove only one
-          }
-        }
-
-        // if not found check player item bench
-        removeInArray<Item>(this.items, item)
-      }
-
-      lostScarves.forEach(removeScarf)
+    const scarfChange =
+      getSynergyTier(updatedSynergies, Synergy.NORMAL) -
+      getSynergyTier(previousSynergies, Synergy.NORMAL)
+    if (scarfChange > 0) {
+      this.gainScarves(scarfChange)
+      return false
     }
+    if (scarfChange < 0) return this.loseScarves(-scarfChange)
+    return false
+  }
 
+  // crafts taken by a tier loss come back first, the newest first
+  gainScarves(scarvesToGain: number) {
+    while (scarvesToGain > 0 && this.stashedScarfCrafts.length > 0) {
+      const craft = this.stashedScarfCrafts.at(-1)!
+      if (getScarvesUsedBy(craft) > scarvesToGain) {
+        // a NULLIFY_BANDANNA owed 1 scarf comes back for a plain one
+        if (!this.removeOwnedItem(Item.SILK_SCARF, true).removed) break
+        scarvesToGain += 1
+      }
+      this.stashedScarfCrafts.pop()
+      this.items.push(craft)
+      this.scarvesItems.push(craft)
+      scarvesToGain -= getScarvesUsedBy(craft)
+    }
+    for (; scarvesToGain > 0; scarvesToGain--) {
+      this.items.push(Item.SILK_SCARF)
+    }
+  }
+
+  // plain scarves go first, then the newest crafts, which are stashed so the
+  // tier gives them back. Returns whether a fielded unit lost a synergy item
+  loseScarves(scarvesToLose: number): boolean {
+    let needsRecomputingSynergiesAgain = false
+    while (
+      scarvesToLose > 0 &&
+      this.removeOwnedItem(Item.SILK_SCARF, true).removed
+    ) {
+      scarvesToLose--
+    }
+    while (scarvesToLose > 0 && this.scarvesItems.length > 0) {
+      const craft = this.scarvesItems.pop()!
+      const { removed, changedSynergies } = this.removeOwnedItem(craft, false)
+      // a craft gone by other means, like a trade, is just forgotten
+      if (!removed) continue
+      if (changedSynergies) needsRecomputingSynergiesAgain = true
+      this.stashedScarfCrafts.push(craft)
+      if (getScarvesUsedBy(craft) > scarvesToLose) {
+        // a NULLIFY_BANDANNA owed for 1 scarf leaves a plain one behind
+        this.items.push(Item.SILK_SCARF)
+        scarvesToLose = 0
+      } else {
+        scarvesToLose -= getScarvesUsedBy(craft)
+      }
+    }
     return needsRecomputingSynergiesAgain
+  }
+
+  removeOwnedItem(
+    item: Item,
+    inventoryFirst: boolean
+  ): { removed: boolean; changedSynergies: boolean } {
+    if (inventoryFirst && this.items.includes(item)) {
+      removeInArray<Item>(this.items, item)
+      return { removed: true, changedSynergies: false }
+    }
+    const holder = schemaValues(this.board).find((pokemon) =>
+      pokemon.items.has(item)
+    )
+    if (holder) {
+      holder.removeItem(item, this)
+      return {
+        removed: true,
+        changedSynergies: item in SynergyGivenByItem && !isOnBench(holder)
+      }
+    }
+    if (this.items.includes(item)) {
+      removeInArray<Item>(this.items, item)
+      return { removed: true, changedSynergies: false }
+    }
+    return { removed: false, changedSynergies: false }
   }
 
   updateWeatherRocks() {
@@ -2052,6 +2077,10 @@ export default class Player extends Schema implements IPlayer {
     }, delay)
     return wanderer
   }
+}
+
+function getScarvesUsedBy(craft: Item): number {
+  return craft === Item.NULLIFY_BANDANNA ? 2 : 1
 }
 
 function pickRandomTMs() {

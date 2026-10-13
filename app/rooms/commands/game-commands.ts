@@ -1283,13 +1283,7 @@ export class OnDragDropCombineCommand extends Command<
 
     {
       if (itemA === Item.SILK_SCARF || itemB === Item.SILK_SCARF) {
-        const nbScarvesBasedOnNormalSynergy = getSynergyTier(
-          player.synergies,
-          Synergy.NORMAL
-        )
-        if (player.scarvesItems.length < nbScarvesBasedOnNormalSynergy) {
-          player.scarvesItems.push(result)
-        }
+        player.scarvesItems.push(result)
       }
 
       player.items.push(result)
@@ -1748,13 +1742,7 @@ export class OnDragDropItemCommand extends Command<
       }
 
       if (recipe[1].includes(Item.SILK_SCARF)) {
-        const nbScarvesBasedOnNormalSynergy = getSynergyTier(
-          player.synergies,
-          Synergy.NORMAL
-        )
-        if (player.scarvesItems.length < nbScarvesBasedOnNormalSynergy) {
-          player.scarvesItems.push(itemCombined)
-        }
+        player.scarvesItems.push(itemCombined)
       }
 
       pokemon.items.delete(existingBasicItemToCombine)
