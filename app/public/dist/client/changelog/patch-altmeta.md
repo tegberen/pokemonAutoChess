@@ -478,6 +478,9 @@ Every balance change on this server, newest first.
 - Gastly Line | Nightmare: the bonus damage hits enemies suffering under a HEXING_INCANTATION, POISONNED or SILENCE, instead of any NEGATIVE_STATUS
 
 **Synergies**
+- HEXING_INCANTATION | Effects adjusted:<br>DEF and SPE_DEF loss: 6/9/12 → 3/6/9<br>SPEED loss: 15/30/45 → 10/20/40<br>AP loss: 20/40/60 → 10/20/40<br>max PP increase: 10/20/30% → 10/15/20%<br>team CRIT_POWER loss on KO: 10/20/30% → 10/15/20%<br>SPIRIT_COIN on KO: 1/2/3 → 1
+- RITUAL_INCANTATION | Effects adjusted, by Cause:<br>GHOST ally casts: LUCK gain and loss 2/3 → 2/2, SPEED and PP 4/5 → 3/5, max HP 5/8 → 3/5<br>8 attacks by one GHOST ally: LUCK gain and loss 2/3 → 2/2, SPEED and PP 6/8 → 5/7, max HP 8/12 → 6/10<br>GHOST ally KO'd: LUCK gain and loss 4/8 → 3/6, SPEED and PP 12/20 → 10/15, max HP 15/25 → 12/18<br>Enemy KO'd: LUCK gain and loss 3/5 → 2/4, SPEED and PP 8/15 → 5/10, max HP 10/20 → 5/10
+- RITUAL_INCANTATION | permanent Bewitchings adjusted, by Cause:<br>GHOST ally KO'd: HP 4/6 → 3/5, starting PP and SPEED 3/5 → 2/4<br>Enemy KO'd: HP 3/5 → 2/4, starting PP and SPEED 2/3 → 1/2
 - FATED_INCANTATION | the CURSE Fate gives only one CURSE to an enemy picked by both HEXING_INCANTATION, instead of a second one that KO'd it at once
 
 **Wishes**

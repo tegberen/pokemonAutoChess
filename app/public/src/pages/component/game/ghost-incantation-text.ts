@@ -42,7 +42,9 @@ const HEXING_TARGET_STAT: { [target in HexingTarget]: string } = {
 }
 
 function tiers(values: readonly number[] | undefined) {
-  return values ? `[${values.join(",")}]` : UNKNOWN_VALUE
+  if (!values) return UNKNOWN_VALUE
+  const sameAtEveryTier = values.every((value) => value === values[0])
+  return `[${sameAtEveryTier ? values[0] : values.join(",")}]`
 }
 
 function describeHexingEffect(loss: HexingEffect, target: string | null) {

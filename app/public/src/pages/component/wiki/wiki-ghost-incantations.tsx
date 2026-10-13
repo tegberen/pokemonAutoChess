@@ -148,7 +148,9 @@ function RitualMatrixHead({ t }: { t: Translate }) {
 }
 
 function tierValues(values: readonly number[], unit = "") {
-  return addIconsToDescription(`[${values.join(",")}]${unit}`)
+  const sameAtEveryTier = values.every((value) => value === values[0])
+  const text = sameAtEveryTier ? values[0] : values.join(",")
+  return addIconsToDescription(`[${text}]${unit}`)
 }
 
 function describeSilence(t: Translate, trigger: RitualTrigger) {

@@ -110,19 +110,19 @@ export function getIncantationStrength(
 export const HEXING_STAT_LOSS_VALUES: {
   [target in HexingTarget]: { values: number[]; isPercent: boolean }
 } = {
-  [HexingTarget.HIGHEST_DEFENSES]: { values: [6, 9, 12], isPercent: false },
-  [HexingTarget.HIGHEST_AP]: { values: [20, 40, 60], isPercent: false },
+  [HexingTarget.HIGHEST_DEFENSES]: { values: [3, 6, 9], isPercent: false },
+  [HexingTarget.HIGHEST_AP]: { values: [10, 20, 40], isPercent: false },
   [HexingTarget.HIGHEST_ATK]: { values: [10, 20, 30], isPercent: true },
-  [HexingTarget.HIGHEST_SPEED]: { values: [15, 30, 45], isPercent: false }
+  [HexingTarget.HIGHEST_SPEED]: { values: [10, 20, 40], isPercent: false }
 }
 
 export const HEXING_EFFECT_VALUES: {
   [loss in Exclude<HexingEffect, HexingEffect.STAT>]: number[]
 } = {
-  [HexingEffect.SPIRIT_COIN_ON_KO]: [1, 2, 3],
-  [HexingEffect.CRIT_POWER_ON_KO]: [10, 20, 30],
+  [HexingEffect.SPIRIT_COIN_ON_KO]: [1, 1, 1],
+  [HexingEffect.CRIT_POWER_ON_KO]: [10, 15, 20],
   [HexingEffect.LUCK]: [10, 20, 30],
-  [HexingEffect.MAX_PP]: [10, 20, 30],
+  [HexingEffect.MAX_PP]: [10, 15, 20],
   [HexingEffect.MAX_HP]: [10, 15, 20]
 }
 
@@ -133,34 +133,34 @@ export const RITUAL_EFFECT_VALUES: {
   [effect in Exclude<RitualEffect, RitualEffect.SILENCE>]: RitualValues
 } = {
   [RitualEffect.GHOST_LUCK]: {
-    [RitualTrigger.GHOST_CASTS]: [2, 3],
-    [RitualTrigger.GHOST_ATTACKS]: [2, 3],
-    [RitualTrigger.GHOST_KOD]: [4, 8],
-    [RitualTrigger.ENEMY_KOD]: [3, 5]
+    [RitualTrigger.GHOST_CASTS]: [2, 2],
+    [RitualTrigger.GHOST_ATTACKS]: [2, 2],
+    [RitualTrigger.GHOST_KOD]: [3, 6],
+    [RitualTrigger.ENEMY_KOD]: [2, 4]
   },
   [RitualEffect.ENEMY_LUCK_LOSS]: {
-    [RitualTrigger.GHOST_CASTS]: [2, 3],
-    [RitualTrigger.GHOST_ATTACKS]: [2, 3],
-    [RitualTrigger.GHOST_KOD]: [4, 8],
-    [RitualTrigger.ENEMY_KOD]: [3, 5]
+    [RitualTrigger.GHOST_CASTS]: [2, 2],
+    [RitualTrigger.GHOST_ATTACKS]: [2, 2],
+    [RitualTrigger.GHOST_KOD]: [3, 6],
+    [RitualTrigger.ENEMY_KOD]: [2, 4]
   },
   [RitualEffect.GHOST_SPEED]: {
-    [RitualTrigger.GHOST_CASTS]: [4, 5],
-    [RitualTrigger.GHOST_ATTACKS]: [6, 8],
-    [RitualTrigger.GHOST_KOD]: [12, 20],
-    [RitualTrigger.ENEMY_KOD]: [8, 15]
+    [RitualTrigger.GHOST_CASTS]: [3, 5],
+    [RitualTrigger.GHOST_ATTACKS]: [5, 7],
+    [RitualTrigger.GHOST_KOD]: [10, 15],
+    [RitualTrigger.ENEMY_KOD]: [5, 10]
   },
   [RitualEffect.GHOST_PP]: {
-    [RitualTrigger.GHOST_CASTS]: [4, 5],
-    [RitualTrigger.GHOST_ATTACKS]: [6, 8],
-    [RitualTrigger.GHOST_KOD]: [12, 20],
-    [RitualTrigger.ENEMY_KOD]: [8, 15]
+    [RitualTrigger.GHOST_CASTS]: [3, 5],
+    [RitualTrigger.GHOST_ATTACKS]: [5, 7],
+    [RitualTrigger.GHOST_KOD]: [10, 15],
+    [RitualTrigger.ENEMY_KOD]: [5, 10]
   },
   [RitualEffect.GHOST_MAX_HP]: {
-    [RitualTrigger.GHOST_CASTS]: [5, 8],
-    [RitualTrigger.GHOST_ATTACKS]: [8, 12],
-    [RitualTrigger.GHOST_KOD]: [15, 25],
-    [RitualTrigger.ENEMY_KOD]: [10, 20]
+    [RitualTrigger.GHOST_CASTS]: [3, 5],
+    [RitualTrigger.GHOST_ATTACKS]: [6, 10],
+    [RitualTrigger.GHOST_KOD]: [12, 18],
+    [RitualTrigger.ENEMY_KOD]: [5, 10]
   }
 }
 
@@ -190,20 +190,20 @@ export const RITUAL_BONUS_VALUES: {
   [RitualBonus.PERMANENT_HP]: {
     [RitualTrigger.GHOST_CASTS]: [1, 2],
     [RitualTrigger.GHOST_ATTACKS]: [2, 3],
-    [RitualTrigger.GHOST_KOD]: [4, 6],
-    [RitualTrigger.ENEMY_KOD]: [3, 5]
+    [RitualTrigger.GHOST_KOD]: [3, 5],
+    [RitualTrigger.ENEMY_KOD]: [2, 4]
   },
   [RitualBonus.PERMANENT_PP]: {
     [RitualTrigger.GHOST_CASTS]: [1, 2],
     [RitualTrigger.GHOST_ATTACKS]: [1, 2],
-    [RitualTrigger.GHOST_KOD]: [3, 5],
-    [RitualTrigger.ENEMY_KOD]: [2, 3]
+    [RitualTrigger.GHOST_KOD]: [2, 4],
+    [RitualTrigger.ENEMY_KOD]: [1, 2]
   },
   [RitualBonus.PERMANENT_SPEED]: {
     [RitualTrigger.GHOST_CASTS]: [1, 2],
     [RitualTrigger.GHOST_ATTACKS]: [1, 2],
-    [RitualTrigger.GHOST_KOD]: [3, 5],
-    [RitualTrigger.ENEMY_KOD]: [2, 3]
+    [RitualTrigger.GHOST_KOD]: [2, 4],
+    [RitualTrigger.ENEMY_KOD]: [1, 2]
   }
 }
 
