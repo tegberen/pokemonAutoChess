@@ -315,7 +315,6 @@ import {
   CHOSEN_ONES_COUNT,
   CHOSEN_ONES_MAX_HP_GAIN,
   KINGDOM_SPEED,
-  KINGDOM_ATTACK,
   BASTION_DEFENSE,
   BASTION_MAX_HP,
   PALACE_ABILITY_POWER,
@@ -2507,7 +2506,6 @@ export default class Simulation extends Schema implements ISimulation {
       if (blessings.includes(Blessing.KINGDOM)) {
         ownUnits.forEach((ally) => {
           ally.addSpeed(KINGDOM_SPEED, ally, 0, false, true)
-          ally.addAttack(KINGDOM_ATTACK, ally, 0, false, true)
           ally.addMaxHP(KINGDOM_PALACE_MAX_HP, ally, 0, false, true)
         })
       }

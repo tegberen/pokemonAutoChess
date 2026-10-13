@@ -500,7 +500,6 @@ Every balance change on this server, newest first.
 
 **Wishes**
 - Panic Button | Unown-Q's draw no longer deals 4 player damage to your opponent
-- High Tower Castle | allies also gain 1 ATK permanently at the start of each fight
 - Bubble Rescue {{new}} | Stage 4. Gain a Marill. Your STRONGEST Azurill rescues the enemies it KOs: they join your team with 20/30/40% HP and keep their items
 
 **Items**
