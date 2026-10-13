@@ -568,7 +568,7 @@ const COMBO_BLESSING_ITEMS: { [blessing in Blessing]?: [Item, Item] } = {
   [Blessing.FROZEN_OCEAN]: [Item.ICE_STONE, Item.SURFBOARD],
   [Blessing.MAGICAL_METAL]: [Item.METAL_COAT, Item.MOON_STONE],
   [Blessing.FURY_UNLEASHED]: [Item.WHITE_FLUTE, Item.MACHO_BRACE],
-  [Blessing.HUMAN_HORROR]: [Item.SPELL_TAG, Item.SPELL_TAG],
+  [Blessing.HUMAN_HORROR]: [Item.SPELL_TAG, Item.WISE_GLASSES],
   [Blessing.HYDRATED_CELLS]: [Item.WATER_STONE, Item.WATER_STONE],
   [Blessing.SYMBIOTIC_SYMPHONY]: [Item.LEAF_STONE, Item.METRONOME],
   [Blessing.EARTHEN_BARRIER]: [Item.EXPLORER_KIT, Item.FRIEND_BOW],
@@ -852,7 +852,7 @@ const CrownBlessingContent: {
     pokemon: Pkm.GLALIE
   },
   [Blessing.HUMAN_CROWN_BLESSING]: {
-    items: [Item.HUMAN_GEM, Item.MUSCLE_BAND],
+    items: [Item.WISE_GLASSES, Item.MUSCLE_BAND],
     pokemon: Pkm.MACHOKE
   },
   [Blessing.DRAGON_CROWN_BLESSING]: {

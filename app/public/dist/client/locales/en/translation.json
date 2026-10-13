@@ -2878,6 +2878,7 @@
 		"INCENSE": "Incense",
 		"EXP_SHARE": "Exp. Share",
 		"TERRAIN_EXTENDER": "Terrain Extender",
+		"WISE_GLASSES": "Wise Glasses",
 		"POKERUS_VIAL": "Pokérus Vial",
 		"MAX_ELIXIR": "Max Elixir",
 		"SPELL_TAG": "Spell Tag",
@@ -3296,6 +3297,7 @@
 		"PROTECTOR": "Gives ROCK synergy.",
 		"EXPLORER_KIT": "Gives GROUND synergy. Increase the [LK] chance to find gold buried in the ground.",
 		"INCENSE": "Gives FLORA synergy. Each Pokémon in shop has an additional 5% chance to share a common synergy with the holder.",
+		"WISE_GLASSES": "Gives HUMAN synergy, but not the ability to learn TMs. The holder gains +1 RANGE, and its basic attacks deal SPECIAL and scale with AP.",
 		"TERRAIN_EXTENDER": "At the start of the fight, holder gains either ELECTRIC_FIELD, GRASS_FIELD, PSYCHIC_FIELD or FAIRY_FIELD based on its synergies. When casting its ability, spread the field effect to all allies sharing the field's synergy.",
 		"EXP_SHARE": "Get the best ATK, AP, DEF and SPE_DEF values of allies ADJACENT_IN_THE_SAME_ROW.",
 		"POKERUS_VIAL": "Gives POISON synergy. Infects the holder with POKERUS, gaining 1 ATK and 10 AP every 2.5 seconds and transmitting to allies.",
@@ -4996,7 +4998,7 @@
 		},
 		"HUMAN_CREST_BLESSING": {
 			"name": "HUMAN Crest",
-			"description": "Gain a HUMAN_GEM, a random 1 STAR Uncommon and a random 1 STAR Rare HUMAN Pokémon."
+			"description": "Gain WISE_GLASSES, a random 1 STAR Uncommon and a random 1 STAR Rare HUMAN Pokémon."
 		},
 		"DRAGON_BADGE_BLESSING": {
 			"name": "DRAGON Badge",
@@ -5136,7 +5138,7 @@
 		},
 		"HUMAN_CROWN_BLESSING": {
 			"name": "HUMAN Crown",
-			"description": "Gain a HUMAN_GEM, a MUSCLE_BAND, a LAPRAS_PASSPORT and a Machoke."
+			"description": "Gain WISE_GLASSES, a MUSCLE_BAND, a LAPRAS_PASSPORT and a Machoke."
 		},
 		"DRAGON_CROWN_BLESSING": {
 			"name": "DRAGON Crown",
@@ -5332,7 +5334,7 @@
 		},
 		"HUMAN_HORROR": {
 			"name": "Human Horror",
-			"description": "Gain 2 SPELL_TAG. Your GHOST Pokémon can learn moves from TMs. When a GHOST ally knowing a TM is KO'd, the attacker is POSSESSED for 2 seconds, plus 1 for each level of HUMAN active. It will immediately cast a random TM ability, scaling with your active HUMAN synergy."
+			"description": "Gain a SPELL_TAG and WISE_GLASSES. Your GHOST Pokémon can learn moves from TMs. When a GHOST ally knowing a TM is KO'd, the attacker is POSSESSED for 2 seconds, plus 1 for each level of HUMAN active. It will immediately cast a random TM ability, scaling with your active HUMAN synergy."
 		},
 		"HYDRATED_CELLS": {
 			"name": "Hydrated Cells",

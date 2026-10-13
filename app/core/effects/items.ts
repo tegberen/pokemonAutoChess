@@ -5,6 +5,9 @@ import { getSynergyTier } from "../../models/colyseus-models/synergies"
 import type Player from "../../models/colyseus-models/player"
 import type { Pokemon } from "../../models/colyseus-models/pokemon"
 import PokemonFactory from "../../models/pokemon-factory"
+import {
+  getPokemonData
+} from "../../models/precomputed/precomputed-pokemon-data"
 import { PVEStages } from "../../models/pve-stages"
 import { Title, Transfer } from "../../types"
 import { EvolutionRuleType } from "../../types/EvolutionRules"
@@ -980,10 +983,16 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
       [
         new OnItemDroppedEffect(({ pokemon, player, item }) => {
           const ability = AbilityPerTM[item]
+          // the HUMAN of WISE_GLASSES counts for no TM: any Pokémon could hold
+          // them, and unloading them later would leave a TM on a non-HUMAN,
+          // duplicated under MOVE_TUTOR, even on a HUMAN_HORROR GHOST
+          const isHumanOnlyByWiseGlasses =
+            pokemon.items.has(Item.WISE_GLASSES) &&
+            !getPokemonData(pokemon.name).types.includes(Synergy.HUMAN)
           /* HUMAN_HORROR lets GHOST study the discs as well; without it TMs stay
              a HUMAN-only trick */
           const canLearnTM =
-            pokemon.types.has(Synergy.HUMAN) ||
+            (pokemon.types.has(Synergy.HUMAN) && !isHumanOnlyByWiseGlasses) ||
             (pokemon.types.has(Synergy.GHOST) &&
               player.blessings?.includes(Blessing.HUMAN_HORROR) === true)
           if (!ability || !canLearnTM) return false
@@ -994,7 +1003,8 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
             : 100
           const keepsTM =
             player.blessings?.includes(Blessing.MOVE_TUTOR) === true &&
-            pokemon.types.has(Synergy.HUMAN)
+            pokemon.types.has(Synergy.HUMAN) &&
+            !isHumanOnlyByWiseGlasses
           if (!keepsTM) removeInArray(player.items, item)
           return false
         })
@@ -1545,6 +1555,12 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
       if (target && pokemon.count.attackCount % 3 === 0) {
         target.status.triggerParalysis(2000, target, pokemon)
       }
+    })
+  ],
+
+  [Item.WISE_GLASSES]: [
+    new OnItemGainedEffect((pokemon) => {
+      pokemon.effects.add(EffectEnum.SPECIAL_ATTACKS)
     })
   ],
 

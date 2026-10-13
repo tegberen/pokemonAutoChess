@@ -472,6 +472,15 @@ Smeargle Scribbles do not change your Elo.
 
 Every balance change on this server, newest first.
 
+### 13 October 2026
+
+**Wishes**
+- HUMAN Crest, HUMAN Crown | HUMAN_GEM → WISE_GLASSES
+- Human Horror | 2 SPELL_TAG → SPELL_TAG and WISE_GLASSES
+
+**Items**
+- WISE_GLASSES {{new}} | ARTIFICIAL tool. Gives HUMAN synergy, but not the ability to learn TMs. The holder gains +1 RANGE, and its basic attacks deal SPECIAL and scale with AP. *"It's kinda funny to think of a pokemon putting on glasses to pretend it's human, but still not being able to learn any of the TMs because it's a pretender" — H. Kane*
+
 ### 12 October 2026
 
 **Pokémon**
@@ -499,7 +508,7 @@ Every balance change on this server, newest first.
 
 **Interface**
 - Rainbow Trail | unlocks with 8 different Eeveelutions instead of 9, Mafia Eevee is no longer needed
-- Next opponent {{new}} | stripes by a player's life show if you can fight them next round: {{stripes:3}} certain, {{stripes:2}} likely, {{stripes:1}} possible. Replaces the clock
+- Next opponent {{new}} | stripes by a player's life show if you can fight them next round: {{stripes:3}} certain, {{stripes:2}} likely, {{stripes:1}} possible. Replaces the clock *With the GHOST changes, relying on SAFETY_GOGGLES alone won't be enough anymore. I hope this helps you keep an eye on your next opponent, so you can spread out or group up your board accordingly.*
 
 ### 11 October 2026
 

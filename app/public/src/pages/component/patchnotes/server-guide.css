@@ -729,6 +729,14 @@
   background: var(--color-bg-primary);
 }
 
+/* italics inside a row are a minor comment on that change */
+.server-guide .guide-patchlog-table td em {
+  display: block;
+  margin-top: 0.2em;
+  font-size: 0.85em;
+  color: var(--color-fg-secondary);
+}
+
 .server-guide .guide-patchlog-subject {
   width: 32%;
   min-width: 11em;

@@ -118,6 +118,7 @@ export enum Item {
   INCENSE = "INCENSE",
   EXP_SHARE = "EXP_SHARE",
   TERRAIN_EXTENDER = "TERRAIN_EXTENDER",
+  WISE_GLASSES = "WISE_GLASSES",
   POKERUS_VIAL = "POKERUS_VIAL",
   SPELL_TAG = "SPELL_TAG",
   SHED_SHELL = "SHED_SHELL",
@@ -736,6 +737,7 @@ export const Tools = [
   Item.MAX_ELIXIR,
   Item.EXP_SHARE,
   Item.TERRAIN_EXTENDER,
+  Item.WISE_GLASSES,
   Item.WHITE_FLUTE,
   Item.HEAVY_DUTY_BOOTS
 ] satisfies Item[]
@@ -755,7 +757,8 @@ export const ArtificialItems = [
   Item.COOKING_POT,
   Item.MAX_ELIXIR,
   Item.EXP_SHARE,
-  Item.TERRAIN_EXTENDER
+  Item.TERRAIN_EXTENDER,
+  Item.WISE_GLASSES
 ] satisfies Tool[]
 
 export const ShinyItems = [
@@ -982,6 +985,7 @@ export const SynergyGivenByItem = {
   [Item.METAL_COAT]: Synergy.STEEL,
   [Item.ELECTIRIZER]: Synergy.ELECTRIC,
   [Item.MAGMARIZER]: Synergy.FIRE,
+  [Item.WISE_GLASSES]: Synergy.HUMAN,
   [Item.AIR_BALLOON]: Synergy.FLYING,
   [Item.PROTECTOR]: Synergy.ROCK,
   [Item.EXPLORER_KIT]: Synergy.GROUND,
