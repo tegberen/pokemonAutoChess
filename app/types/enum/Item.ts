@@ -1025,7 +1025,7 @@ export const SynergyGivenByItem = {
   [Item.DRAGON_MEMORY]: Synergy.DRAGON,
   [Item.FLORA_MEMORY]: Synergy.FLORA,
   [Item.WHITE_FLUTE]: Synergy.WILD
-} satisfies Record<(typeof SynergyItems)[number], Synergy>
+} satisfies Record<(typeof SynergyItems)[number] | Item.WISE_GLASSES, Synergy>
 
 export const SynergyGivenByGem: Record<(typeof SynergyGems)[number], Synergy> =
   {
