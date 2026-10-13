@@ -477,6 +477,9 @@ Every balance change on this server, newest first.
 **Pokémon**
 - Gastly Line | Nightmare: the bonus damage hits enemies suffering under a HEXING_INCANTATION, POISONNED or SILENCE, instead of any NEGATIVE_STATUS
 
+**Synergies**
+- FATED_INCANTATION | the CURSE Fate gives only one CURSE to an enemy picked by both HEXING_INCANTATION, instead of a second one that KO'd it at once
+
 **Wishes**
 - HUMAN Crest, HUMAN Crown | HUMAN_GEM → WISE_GLASSES
 - Human Horror | 2 SPELL_TAG → SPELL_TAG and WISE_GLASSES

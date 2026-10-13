@@ -331,9 +331,11 @@ function applyHex(
   if (slot === 0) target.status.hexFirst = true
   else target.status.hexSecond = true
 
+  // a second curse on a cursed target would KO it at once
   if (
     side.fated?.cause === FatedHexing.DOOM &&
-    !side.doomedHexSlots.has(slot)
+    !side.doomedHexSlots.has(slot) &&
+    !target.status.curseFate
   ) {
     side.doomedHexSlots.add(slot)
     target.status.curseFate = true
