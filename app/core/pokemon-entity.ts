@@ -34,6 +34,7 @@ import {
 import { EvolutionRuleType } from "../types/EvolutionRules"
 import { Ability } from "../types/enum/Ability"
 import {
+  applyHeroBlessingRange,
   Blessing,
   DRAGON_KING_ABILITY_POWER_PER_STAR,
   DRAGON_KING_SHIELD_PER_STAR,
@@ -2158,6 +2159,7 @@ flyAway(
     this.critPower = cloneReference.critPower
     this.dodge = cloneReference.dodge
     this.range = cloneReference.range
+    applyHeroBlessingRange(this)
     this.luck = cloneReference.luck
     // AP and ATK are rebuilt, so no storm owes this unit what it lost before
     this.simulation.leafStorms.forEach((storm) => storm.losses.delete(this))

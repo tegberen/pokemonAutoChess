@@ -17,6 +17,10 @@ import {
   HitSprite
 } from "../../../../types/Animation"
 import {
+  ANCIENT_POWER_CHARGE_MS,
+  ANCIENT_POWER_LAUNCH_STAGGER_MS,
+  ANCIENT_POWER_ROCK_FLIGHT_MS,
+  ANCIENT_POWER_ROCKS_BY_STAR,
   DRAGON_DARTS_DART_FLIGHT_MS,
   LEAF_STORM_GROWTH_MS,
   LEAF_STORM_START_RADIUS,
@@ -1483,6 +1487,1045 @@ function leafStormDive(
   })
 }
 
+const ANCIENT_POWER_POP_START_MS = 120
+const ANCIENT_POWER_POP_STAGGER_MS = 50
+const ANCIENT_POWER_POP_MS = 450
+const ANCIENT_POWER_HOVER_RISE_MS = 250
+const ANCIENT_POWER_GLOW_START_MS = 400
+const ANCIENT_POWER_ARCS_START_MS = 450
+const ANCIENT_POWER_UNTHROWN_LINGER_MS = 400
+const ANCIENT_POWER_STEP_MS = 70
+const ANCIENT_POWER_RISE_FRAME_RATE = 60
+const ANCIENT_POWER_BURST_FRAME_RATE = 30
+// lighter hits skip the burst's sparkle frames, so the volley never flashes
+const ANCIENT_POWER_DUST_START_FRAME = 6
+// a rock is about half the caster's width, and the circle about three times it
+const ANCIENT_POWER_ROCK_SCALE = 0.95
+// where the rising sprite's rock ends up above its anchor, in source pixels
+const ANCIENT_POWER_RISEN_ROCK_HEIGHT = 26
+const ANCIENT_POWER_RING_RADIUS = 90
+const ANCIENT_POWER_ROCK_RING_RADIUS = 78
+// from near the ground to above the head, so the rocks never clump together
+const ANCIENT_POWER_HOVER_HEIGHTS = [10, 44, 24, 56, 16, 36]
+const ANCIENT_POWER_GROUND_SQUASH = 0.45
+const ANCIENT_POWER_FEET_OFFSET = 18
+const ANCIENT_POWER_GLYPHS = 16
+const ANCIENT_POWER_GLYPH_PIXEL = 4
+const ANCIENT_POWER_ORBIT_RADIANS_PER_MS = 0.0006
+const ANCIENT_POWER_BOB_PX = 3
+const ANCIENT_POWER_BOB_MS = 600
+const ANCIENT_POWER_SPARKLES = 22
+const ANCIENT_POWER_ARC_LIFT = 30
+const ANCIENT_POWER_ARC_SPREAD = 44
+const ANCIENT_POWER_TRAIL_LENGTH = 9
+const ANCIENT_POWER_WHITE = 0xffffff
+const ANCIENT_POWER_PALE = 0xfff4c0
+const ANCIENT_POWER_GOLD = 0xffd65a
+const ANCIENT_POWER_AMBER = 0xe0902c
+const ANCIENT_POWER_SPARK_CYAN = 0xbff6ff
+const ANCIENT_POWER_DIRT = 0x8a5a2b
+const ANCIENT_POWER_DIRT_LIGHT = 0xc08a4a
+// ground effects are outlined and not blended additively, or they vanish on
+// bright maps like the desert
+const ANCIENT_POWER_OUTLINE = 0x6b3f12
+const ANCIENT_POWER_ROCK_FRAME = "ANCIENT_POWER_ROCK/000.png"
+const ANCIENT_POWER_STONE_TINT = 0xa07850
+const ANCIENT_POWER_STONE = 0x8a6438
+const ANCIENT_POWER_STONE_DARK = 0x5a3d20
+const ANCIENT_POWER_FOSSIL_GOLD = 0xf3d58a
+const ANCIENT_POWER_FOSSIL_SHADOW = 0x4a2e14
+const ANCIENT_POWER_FOSSIL_PIXEL = 2
+const ANCIENT_POWER_AURA_RADIUS = 18
+const ANCIENT_POWER_AURA_DEEP = 0x5b1fb0
+const ANCIENT_POWER_AURA_VIOLET = 0xc070ff
+const ANCIENT_POWER_AURA_EDGE = 0xffa040
+const ANCIENT_POWER_AURA_SPARK = 0xffd6ff
+const ANCIENT_POWER_DUST_PUFFS = 12
+const ANCIENT_POWER_DUST = 0x9c7a50
+const ANCIENT_POWER_DUST_DARK = 0x7a5a38
+const ANCIENT_POWER_SPEED_LINE_OFFSET = 9
+// an ammonite, a shell, a trilobite and a fern
+const ANCIENT_POWER_FOSSILS = [
+  [".XXXXX.", "X.....X", "X.XXX.X", "X.X.X.X", "X.X...X", "X..XXX.", ".X....."],
+  ["X.X.X.X", "X.X.X.X", "X.X.X.X", ".XXXXX.", "..XXX..", "...X...", "......."],
+  ["..XXX..", ".X.X.X.", "XXXXXXX", ".X.X.X.", "XXXXXXX", ".X.X.X.", "..X.X.."],
+  ["...X...", "X..X..X", ".X.X.X.", "..XXX..", "X..X..X", ".X.X.X.", "..XXX.."]
+]
+const ANCIENT_POWER_GLYPH_PATTERNS = [
+  ["010", "111", "010"],
+  ["110", "010", "011"],
+  ["000", "111", "000"],
+  ["101", "010", "101"]
+]
+
+type AncientPowerCast = {
+  scene: AbilityAnimationArgs["scene"]
+  castStart: number
+  chestPosition: () => Point
+  feetPosition: () => Point
+  isCasterGone: () => boolean
+  rockPositions: (Point | null)[]
+  hoveringRocks: HoveringAncientPowerRock[]
+}
+
+function ellipsePoints(radius: number) {
+  return ringPoints(radius).map(({ x, y }) => ({
+    x,
+    y: y * ANCIENT_POWER_GROUND_SQUASH
+  }))
+}
+
+function snapToVfxPixel(value: number) {
+  return Math.round(value / VFX_PIXEL) * VFX_PIXEL
+}
+
+function followEveryFrame(
+  scene: AbilityAnimationArgs["scene"],
+  object: Phaser.GameObjects.Components.Transform &
+    Phaser.GameObjects.GameObject,
+  position: () => Point
+) {
+  const follow = () => {
+    if (!object.active) return
+    const { x, y } = position()
+    object.setPosition(x, y)
+  }
+  follow()
+  scene.events.on(Phaser.Scenes.Events.UPDATE, follow)
+  object.once(Phaser.GameObjects.Events.DESTROY, () =>
+    scene.events.off(Phaser.Scenes.Events.UPDATE, follow)
+  )
+}
+
+function zigzagPoints(
+  from: Point,
+  to: Point,
+  segments: number,
+  jitter: number
+) {
+  const length = Math.hypot(to.x - from.x, to.y - from.y) || 1
+  const normal = {
+    x: -(to.y - from.y) / length,
+    y: (to.x - from.x) / length
+  }
+  return Array.from({ length: segments + 1 }, (_, index) => {
+    const t = index / segments
+    const isEnd = index === 0 || index === segments
+    const offset = isEnd ? 0 : (Math.random() - 0.5) * 2 * jitter
+    return {
+      x: from.x + (to.x - from.x) * t + normal.x * offset,
+      y: from.y + (to.y - from.y) * t + normal.y * offset
+    }
+  })
+}
+
+function playAncientPowerRipple(
+  scene: AbilityAnimationArgs["scene"],
+  position: () => Point,
+  fromRadius: number,
+  toRadius: number,
+  delay: number,
+  duration: number
+) {
+  const ripple = scene.add.graphics().setDepth(DEPTH.ABILITY_GROUND_LEVEL)
+  scene.abilitiesVfxGroup?.add(ripple)
+  followEveryFrame(scene, ripple, position)
+  scene.tweens.addCounter({
+    from: 0,
+    to: 1,
+    delay,
+    duration,
+    ease: "Cubic.easeOut",
+    onUpdate: (tween) => {
+      if (!ripple.active) return
+      const progress = tween.getValue() ?? 0
+      const radius = Phaser.Math.Linear(fromRadius, toRadius, progress)
+      ripple.clear()
+      drawPixelPath(ripple, ellipsePoints(radius), [
+        {
+          grid: VFX_PIXEL,
+          size: VFX_PIXEL,
+          color: ANCIENT_POWER_WHITE,
+          alpha: 0.85 * (1 - progress)
+        }
+      ])
+    },
+    onComplete: () => ripple.destroy()
+  })
+}
+
+function drawAncientPowerGlyph(
+  graphics: Phaser.GameObjects.Graphics,
+  pattern: string[],
+  center: Point,
+  alpha: number
+) {
+  const pixel = ANCIENT_POWER_GLYPH_PIXEL
+  const snappedX = Math.round(center.x / pixel) * pixel
+  const snappedY = Math.round(center.y / pixel) * pixel
+  const cells = pattern.flatMap((row, rowIndex) =>
+    [...row].flatMap((cell, columnIndex) =>
+      cell === "1"
+        ? [
+            {
+              x: snappedX + (columnIndex - 1.5) * pixel,
+              y: snappedY + (rowIndex - 1.5) * pixel
+            }
+          ]
+        : []
+    )
+  )
+  graphics.fillStyle(ANCIENT_POWER_OUTLINE, alpha * 0.5)
+  cells.forEach(({ x, y }) =>
+    graphics.fillRect(x - 1, y - 1, pixel + 2, pixel + 2)
+  )
+  graphics.fillStyle(ANCIENT_POWER_GOLD, alpha)
+  cells.forEach(({ x, y }) => graphics.fillRect(x, y, pixel, pixel))
+}
+
+// the circle is drawn around once, then its runes turn in visible steps like
+// a PMD effect, while the whole circle follows the caster every frame
+function playAncientPowerRunes(cast: AncientPowerCast) {
+  const { scene } = cast
+  const runes = scene.add.graphics().setDepth(DEPTH.ABILITY_GROUND_LEVEL)
+  scene.abilitiesVfxGroup?.add(runes)
+  followEveryFrame(scene, runes, cast.feetPosition)
+  const duration = ANCIENT_POWER_CHARGE_MS + ANCIENT_POWER_ROCK_FLIGHT_MS * 2
+  const outerRing = ellipsePoints(ANCIENT_POWER_RING_RADIUS)
+  const innerRing = ellipsePoints(ANCIENT_POWER_RING_RADIUS * 0.72)
+  let lastStep = -1
+  scene.tweens.addCounter({
+    from: 0,
+    to: duration,
+    duration,
+    onUpdate: (tween) => {
+      if (!runes.active) return
+      const elapsed = tween.getValue() ?? 0
+      const step = Math.floor(elapsed / ANCIENT_POWER_STEP_MS)
+      if (step === lastStep) return
+      lastStep = step
+      const drawn = Math.min(1, elapsed / 250)
+      const progress = elapsed / duration
+      const fade = cast.isCasterGone()
+        ? 0
+        : progress < 0.75
+          ? 1
+          : (1 - progress) / 0.25
+      const turn = REDUCED_MOTION ? 0 : step * 0.06
+      runes.clear()
+      const drawnPart = (ring: Point[]) =>
+        ring.slice(0, Math.max(2, Math.ceil(ring.length * drawn)))
+      drawPixelPath(runes, drawnPart(outerRing), [
+        { grid: 3, size: 6, color: ANCIENT_POWER_OUTLINE, alpha: fade * 0.5 },
+        { grid: 3, size: 3, color: ANCIENT_POWER_GOLD, alpha: fade * 0.95 }
+      ])
+      drawPixelPath(runes, drawnPart(innerRing), [
+        { grid: 3, size: 5, color: ANCIENT_POWER_OUTLINE, alpha: fade * 0.3 },
+        { grid: 3, size: 3, color: ANCIENT_POWER_PALE, alpha: fade * 0.8 }
+      ])
+      const shownGlyphs = Math.floor(ANCIENT_POWER_GLYPHS * drawn)
+      for (let glyph = 0; glyph < shownGlyphs; glyph++) {
+        const angle = turn + (glyph / ANCIENT_POWER_GLYPHS) * Math.PI * 2
+        const distance = ANCIENT_POWER_RING_RADIUS * 0.86
+        drawAncientPowerGlyph(
+          runes,
+          ANCIENT_POWER_GLYPH_PATTERNS[glyph % 4],
+          {
+            x: Math.cos(angle) * distance,
+            y: Math.sin(angle) * distance * ANCIENT_POWER_GROUND_SQUASH
+          },
+          fade
+        )
+      }
+    },
+    onComplete: () => runes.destroy()
+  })
+}
+
+function playAncientPowerAura(cast: AncientPowerCast) {
+  const { scene } = cast
+  const aura = scene.add
+    .graphics()
+    .setDepth(DEPTH.ABILITY_BELOW_POKEMON)
+    .setBlendMode(Phaser.BlendModes.ADD)
+    .setAlpha(0)
+  fillPixelDisc(aura, 40, 6, ANCIENT_POWER_AMBER, 0.18)
+  fillPixelDisc(aura, 29, 6, ANCIENT_POWER_GOLD, 0.22)
+  fillPixelDisc(aura, 16, 3, ANCIENT_POWER_PALE, 0.3)
+  scene.abilitiesVfxGroup?.add(aura)
+  followEveryFrame(scene, aura, cast.chestPosition)
+  scene.tweens.add({
+    targets: aura,
+    alpha: 1,
+    delay: 150,
+    duration: ANCIENT_POWER_CHARGE_MS - 150,
+    ease: "Sine.easeIn",
+    onComplete: () =>
+      scene.tweens.add({
+        targets: aura,
+        alpha: 0,
+        scale: REDUCED_MOTION ? 1 : 1.6,
+        duration: 300,
+        ease: "Cubic.easeOut",
+        onComplete: () => aura.destroy()
+      })
+  })
+}
+
+function playAncientPowerSparkles(cast: AncientPowerCast) {
+  if (REDUCED_MOTION) return
+  const { scene } = cast
+  const colors = [
+    ANCIENT_POWER_WHITE,
+    ANCIENT_POWER_SPARK_CYAN,
+    ANCIENT_POWER_GOLD
+  ]
+  for (let index = 0; index < ANCIENT_POWER_SPARKLES; index++) {
+    const angle = Math.random() * Math.PI * 2
+    const distance = Math.random() * ANCIENT_POWER_ROCK_RING_RADIUS
+    const offsetX = Math.cos(angle) * distance
+    const offsetY = Math.sin(angle) * distance * ANCIENT_POWER_GROUND_SQUASH
+    const rise = 30 + Math.random() * 40
+    const drift = (Math.random() - 0.5) * 12
+    const size = index % 4 === 0 ? VFX_PIXEL * 2 : VFX_PIXEL
+    const sparkle = scene.add
+      .rectangle(0, 0, size, size, colors[index % colors.length])
+      .setDepth(DEPTH.ABILITY)
+      .setAlpha(0)
+    scene.abilitiesVfxGroup?.add(sparkle)
+    scene.tweens.addCounter({
+      from: 0,
+      to: 1,
+      delay: 150 + Math.random() * (ANCIENT_POWER_CHARGE_MS - 150),
+      duration: 500 + Math.random() * 300,
+      onUpdate: (tween) => {
+        if (!sparkle.active) return
+        const progress = tween.getValue() ?? 0
+        const { x, y } = cast.feetPosition()
+        sparkle
+          .setPosition(
+            snapToVfxPixel(x + offsetX + drift * progress),
+            snapToVfxPixel(y + offsetY - rise * progress)
+          )
+          .setAlpha(Math.sin(progress * Math.PI))
+      },
+      onComplete: () => sparkle.destroy()
+    })
+  }
+}
+
+function playAncientPowerArcs(cast: AncientPowerCast) {
+  if (REDUCED_MOTION) return
+  const { scene } = cast
+  const arcs = scene.add.graphics().setDepth(DEPTH.ABILITY)
+  scene.abilitiesVfxGroup?.add(arcs)
+  const duration = ANCIENT_POWER_CHARGE_MS - ANCIENT_POWER_ARCS_START_MS
+  let lastStep = -1
+  scene.tweens.addCounter({
+    from: 0,
+    to: duration,
+    delay: ANCIENT_POWER_ARCS_START_MS,
+    duration,
+    onUpdate: (tween) => {
+      if (!arcs.active) return
+      const step = Math.floor((tween.getValue() ?? 0) / ANCIENT_POWER_STEP_MS)
+      if (step === lastStep) return
+      lastStep = step
+      arcs.clear()
+      if (cast.isCasterGone()) return
+      for (let link = 0; link < 2; link++) {
+        const rockCount = cast.rockPositions.length
+        const first = (step + link * 3) % rockCount
+        const from = cast.rockPositions[first]
+        const to = cast.rockPositions[(first + 1) % rockCount]
+        if (!from || !to) continue
+        drawPixelPath(arcs, zigzagPoints(from, to, 5, 6), [
+          { grid: 3, size: 6, color: ANCIENT_POWER_OUTLINE, alpha: 0.45 },
+          { grid: 3, size: 3, color: ANCIENT_POWER_PALE, alpha: 0.95 }
+        ])
+      }
+    },
+    onComplete: () => arcs.destroy()
+  })
+}
+
+function playAncientPowerDebris(
+  scene: AbilityAnimationArgs["scene"],
+  from: Point,
+  count: number,
+  colors: number[]
+) {
+  for (let index = 0; index < count; index++) {
+    const angle = -Math.PI / 2 + (Math.random() - 0.5) * Math.PI * 1.4
+    const distance = 14 + Math.random() * 18
+    const endX = from.x + Math.cos(angle) * distance
+    const peakY = from.y + Math.sin(angle) * distance
+    const chip = scene.add
+      .rectangle(
+        snapToVfxPixel(from.x),
+        snapToVfxPixel(from.y),
+        VFX_PIXEL,
+        VFX_PIXEL,
+        colors[index % colors.length]
+      )
+      .setDepth(DEPTH.ABILITY)
+    scene.abilitiesVfxGroup?.add(chip)
+    scene.tweens.addCounter({
+      from: 0,
+      to: 1,
+      duration: 360 + Math.random() * 120,
+      onUpdate: (tween) => {
+        if (!chip.active) return
+        const t = tween.getValue() ?? 0
+        const x = Phaser.Math.Linear(from.x, endX, t)
+        const y = from.y + (peakY - from.y) * Math.sin(t * Math.PI) + 10 * t
+        chip
+          .setPosition(snapToVfxPixel(x), snapToVfxPixel(y))
+          .setAlpha(1 - t * t)
+      },
+      onComplete: () => chip.destroy()
+    })
+  }
+}
+
+function drawAncientPowerComet(
+  graphics: Phaser.GameObjects.Graphics,
+  history: Point[]
+) {
+  graphics.clear()
+  const samples =
+    history.length > 1 ? samplePolyline(history, VFX_PIXEL) : history
+  const last = Math.max(1, samples.length - 1)
+  for (let index = samples.length - 1; index >= 0; index--) {
+    const along = index / last
+    // about half the rock's width at its head
+    const size = Math.max(VFX_PIXEL, snapToVfxPixel(12 - 9 * along))
+    const x = snapToVfxPixel(samples[index].x)
+    const y = snapToVfxPixel(samples[index].y)
+    // samples overlap, so each halo square stays faint
+    const halo = size * 1.4
+    graphics.fillStyle(ANCIENT_POWER_PALE, 0.05 * (1 - along))
+    graphics.fillRect(x - halo / 2, y - halo / 2, halo, halo)
+    graphics.fillStyle(
+      along < 0.2
+        ? ANCIENT_POWER_WHITE
+        : along < 0.55
+          ? ANCIENT_POWER_PALE
+          : ANCIENT_POWER_GOLD,
+      0.55 * (1 - along)
+    )
+    graphics.fillRect(x - size / 2, y - size / 2, size, size)
+  }
+}
+
+type FossilRock = {
+  container: Phaser.GameObjects.Container
+  glow: Phaser.GameObjects.Sprite
+  imprint: Phaser.GameObjects.Graphics
+}
+
+type AncientPowerImpactTarget = {
+  sprite: PokemonSprite | undefined
+  position: () => Point
+  feetPosition: () => Point
+}
+
+type HoveringAncientPowerRock = {
+  isHeavy: boolean
+  take: () => FossilRock | null
+}
+
+// the rocks each caster has raised, thrown one by one as the server throws
+// them, so every rock lands with its own hit
+const hoveringAncientPowerRocks = new WeakMap<
+  PokemonSprite,
+  HoveringAncientPowerRock[]
+>()
+
+function atFeetOf(position: () => Point) {
+  return () => {
+    const { x, y } = position()
+    return { x, y: y + ANCIENT_POWER_FEET_OFFSET }
+  }
+}
+
+function drawFossilImprint(
+  graphics: Phaser.GameObjects.Graphics,
+  pattern: string[]
+) {
+  const pixel = ANCIENT_POWER_FOSSIL_PIXEL
+  const half = (pattern.length * pixel) / 2
+  const cells = pattern.flatMap((row, rowIndex) =>
+    [...row].flatMap((cell, columnIndex) =>
+      cell === "X"
+        ? [{ x: columnIndex * pixel - half, y: rowIndex * pixel - half }]
+        : []
+    )
+  )
+  graphics.fillStyle(ANCIENT_POWER_FOSSIL_SHADOW, 0.7)
+  cells.forEach(({ x, y }) => graphics.fillRect(x + 1, y + 1, pixel, pixel))
+  graphics.fillStyle(ANCIENT_POWER_FOSSIL_GOLD, 1)
+  cells.forEach(({ x, y }) => graphics.fillRect(x, y, pixel, pixel))
+}
+
+// moves on every step so it crackles without ever changing its brightness
+function drawFossilAura(graphics: Phaser.GameObjects.Graphics, step: number) {
+  graphics.clear()
+  fillPixelDisc(
+    graphics,
+    ANCIENT_POWER_AURA_RADIUS + 3,
+    VFX_PIXEL,
+    ANCIENT_POWER_AURA_DEEP,
+    0.16
+  )
+  const ring = Array.from({ length: 49 }, (_, index) => {
+    const angle = (index / 48) * Math.PI * 2
+    const radius =
+      ANCIENT_POWER_AURA_RADIUS +
+      Math.sin(angle * 5 + step * 1.7) * 2 +
+      Math.sin(angle * 3 - step) * 1.5
+    return { x: Math.cos(angle) * radius, y: Math.sin(angle) * radius }
+  })
+  drawPixelPath(graphics, ring, [
+    { grid: VFX_PIXEL, size: 6, color: ANCIENT_POWER_AURA_DEEP, alpha: 0.45 },
+    {
+      grid: VFX_PIXEL,
+      size: VFX_PIXEL,
+      color: ANCIENT_POWER_AURA_VIOLET,
+      alpha: 0.95
+    }
+  ])
+  const edgeStart = (step * 7) % (ring.length - 12)
+  drawPixelPath(graphics, ring.slice(edgeStart, edgeStart + 12), [
+    {
+      grid: VFX_PIXEL,
+      size: VFX_PIXEL,
+      color: ANCIENT_POWER_AURA_EDGE,
+      alpha: 0.9
+    }
+  ])
+  for (let spark = 0; spark < 2; spark++) {
+    const base = ring[(step * 11 + spark * 23) % (ring.length - 1)]
+    const distance = Math.hypot(base.x, base.y) || 1
+    const tip = {
+      x: base.x * (1 + 7 / distance),
+      y: base.y * (1 + 7 / distance)
+    }
+    drawPixelPath(graphics, zigzagPoints(base, tip, 2, 2), [
+      { grid: 2, size: 2, color: ANCIENT_POWER_AURA_SPARK, alpha: 0.9 }
+    ])
+  }
+}
+
+// the glow is an additive copy of the stone, so it lights up as it charges
+function addFossilRock(
+  scene: AbilityAnimationArgs["scene"],
+  position: Point,
+  fossil: number
+): FossilRock | null {
+  if (
+    !scene.textures.exists("abilities") ||
+    !scene.textures.get("abilities").has(ANCIENT_POWER_ROCK_FRAME)
+  ) {
+    logger.warn(`Missing frame "${ANCIENT_POWER_ROCK_FRAME}" in "abilities"`)
+    return null
+  }
+  const stone = scene.add
+    .sprite(0, 0, "abilities", ANCIENT_POWER_ROCK_FRAME)
+    .setScale(ANCIENT_POWER_ROCK_SCALE)
+    .setTint(ANCIENT_POWER_STONE_TINT)
+  const glow = scene.add
+    .sprite(0, 0, "abilities", ANCIENT_POWER_ROCK_FRAME)
+    .setScale(ANCIENT_POWER_ROCK_SCALE)
+    .setBlendMode(Phaser.BlendModes.ADD)
+    .setAlpha(0)
+  const imprint = scene.add.graphics().setAlpha(0.6)
+  drawFossilImprint(
+    imprint,
+    ANCIENT_POWER_FOSSILS[fossil % ANCIENT_POWER_FOSSILS.length]
+  )
+  const aura = scene.add.graphics()
+  const container = scene.add
+    .container(position.x, position.y, [aura, stone, glow, imprint])
+    .setDepth(DEPTH.ABILITY)
+  scene.abilitiesVfxGroup?.add(container)
+  let lastStep = -1
+  const crackle = () => {
+    const step = REDUCED_MOTION
+      ? 0
+      : Math.floor(scene.time.now / ANCIENT_POWER_STEP_MS)
+    if (step === lastStep || !aura.active) return
+    lastStep = step
+    drawFossilAura(aura, step)
+  }
+  crackle()
+  scene.events.on(Phaser.Scenes.Events.UPDATE, crackle)
+  container.once(Phaser.GameObjects.Events.DESTROY, () =>
+    scene.events.off(Phaser.Scenes.Events.UPDATE, crackle)
+  )
+  return { container, glow, imprint }
+}
+
+function playAncientPowerDust(
+  scene: AbilityAnimationArgs["scene"],
+  feetPosition: () => Point,
+  puffs: number,
+  spread: number,
+  firstDelay: number,
+  lastDelay: number
+) {
+  const count = REDUCED_MOTION ? Math.ceil(puffs / 3) : puffs
+  for (let index = 0; index < count; index++) {
+    const angle = Math.random() * Math.PI * 2
+    const distance = Math.random() * spread
+    const offsetX = Math.cos(angle) * distance
+    const offsetY = Math.sin(angle) * distance * ANCIENT_POWER_GROUND_SQUASH
+    const rise = 8 + Math.random() * 14
+    const drift = Math.cos(angle) * 8
+    const puff = scene.add
+      .graphics()
+      .setDepth(offsetY < 0 ? DEPTH.ABILITY_BELOW_POKEMON : DEPTH.ABILITY_MINOR)
+      .setAlpha(0)
+    fillPixelDisc(
+      puff,
+      4 + Math.random() * 5,
+      VFX_PIXEL,
+      index % 2 === 0 ? ANCIENT_POWER_DUST : ANCIENT_POWER_DUST_DARK,
+      1
+    )
+    scene.abilitiesVfxGroup?.add(puff)
+    scene.tweens.addCounter({
+      from: 0,
+      to: 1,
+      delay: Phaser.Math.Linear(firstDelay, lastDelay, Math.random()),
+      duration: 600 + Math.random() * 400,
+      ease: "Sine.easeOut",
+      onUpdate: (tween) => {
+        if (!puff.active) return
+        const progress = tween.getValue() ?? 0
+        const { x, y } = feetPosition()
+        puff
+          .setPosition(
+            snapToVfxPixel(x + offsetX + drift * progress),
+            snapToVfxPixel(y + offsetY - rise * progress)
+          )
+          .setScale(1 + progress * 0.6)
+          .setAlpha(Math.sin(progress * Math.PI) * 0.55)
+      },
+      onComplete: () => puff.destroy()
+    })
+  }
+}
+
+function drawAncientPowerSpeedLines(
+  graphics: Phaser.GameObjects.Graphics,
+  history: Point[]
+) {
+  if (history.length < 3) return
+  const head = history[0]
+  const tail = history[history.length - 1]
+  const length = Math.hypot(head.x - tail.x, head.y - tail.y) || 1
+  const normal = {
+    x: -(head.y - tail.y) / length,
+    y: (head.x - tail.x) / length
+  }
+  for (const side of [-1, 1]) {
+    const offset = side * ANCIENT_POWER_SPEED_LINE_OFFSET
+    drawPixelPath(
+      graphics,
+      [
+        { x: head.x + normal.x * offset, y: head.y + normal.y * offset },
+        { x: tail.x + normal.x * offset, y: tail.y + normal.y * offset }
+      ],
+      [{ grid: 2, size: 2, color: ANCIENT_POWER_WHITE, alpha: 0.5 }]
+    )
+  }
+}
+
+function playAncientPowerImpact(
+  scene: AbilityAnimationArgs["scene"],
+  impact: AncientPowerImpactTarget,
+  isHeavyHit: boolean
+) {
+  const { x, y } = impact.position()
+  const burst = addAbilitySprite(scene, "ANCIENT_POWER_BURST", 0, [x, y], {
+    scale: isHeavyHit ? 0.8 : 0.55,
+    animOptions: {
+      frameRate: ANCIENT_POWER_BURST_FRAME_RATE,
+      startFrame: isHeavyHit ? 0 : ANCIENT_POWER_DUST_START_FRAME
+    }
+  })
+  if (burst && impact.sprite?.active) followUnit(scene, burst, impact.sprite)
+  playAncientPowerRipple(
+    scene,
+    impact.feetPosition,
+    8,
+    isHeavyHit ? 34 : 24,
+    0,
+    320
+  )
+  if (isHeavyHit) {
+    playPixelCircle(scene, {
+      x,
+      y,
+      color: ANCIENT_POWER_WHITE,
+      fromRadius: 8,
+      toRadius: 24,
+      fromAlpha: 0.7,
+      toAlpha: 0,
+      pixelSize: VFX_PIXEL,
+      additive: true,
+      duration: 220,
+      ease: "Cubic.easeOut"
+    })
+  }
+  playAncientPowerDebris(scene, { x, y }, isHeavyHit ? 8 : 4, [
+    ANCIENT_POWER_STONE,
+    ANCIENT_POWER_STONE_DARK,
+    ANCIENT_POWER_FOSSIL_GOLD
+  ])
+  playAncientPowerDust(
+    scene,
+    impact.feetPosition,
+    isHeavyHit ? 5 : 2,
+    20,
+    0,
+    120
+  )
+}
+
+// rocks on the left of the caster bow out to the left, and the other way round
+function launchAncientPowerRock(
+  scene: AbilityAnimationArgs["scene"],
+  rock: FossilRock,
+  side: number,
+  impact: AncientPowerImpactTarget,
+  isHeavyHit: boolean
+) {
+  const from = { x: rock.container.x, y: rock.container.y }
+  rock.container.setDepth(DEPTH.ABILITY)
+  scene.tweens.add({ targets: rock.glow, alpha: 0.6, duration: 120 })
+  // not additive: on bright maps an additive tail turns into a white bar
+  const trail = scene.add.graphics().setDepth(DEPTH.ABILITY)
+  scene.abilitiesVfxGroup?.add(trail)
+  const history: Point[] = []
+  scene.tweens.addCounter({
+    from: 0,
+    to: 1,
+    duration: ANCIENT_POWER_ROCK_FLIGHT_MS,
+    ease: "Quad.easeIn",
+    onUpdate: (tween) => {
+      if (!rock.container.active || !trail.active) return
+      const t = tween.getValue() ?? 0
+      const to = impact.position()
+      const length = Math.hypot(to.x - from.x, to.y - from.y) || 1
+      const normalSign = to.y > from.y ? -1 : 1
+      const normal = {
+        x: (-(to.y - from.y) / length) * normalSign,
+        y: ((to.x - from.x) / length) * normalSign
+      }
+      const bow = side * ANCIENT_POWER_ARC_SPREAD
+      const control = {
+        x: (from.x + to.x) / 2 + normal.x * bow,
+        y: (from.y + to.y) / 2 + normal.y * bow - ANCIENT_POWER_ARC_LIFT
+      }
+      const point = quadraticBezierPoint(from, control, to, t)
+      rock.container.setPosition(point.x, point.y)
+      history.unshift(point)
+      if (history.length > ANCIENT_POWER_TRAIL_LENGTH) history.pop()
+      drawAncientPowerComet(trail, history)
+      drawAncientPowerSpeedLines(trail, history)
+    },
+    onComplete: () => {
+      if (!rock.container.active) {
+        trail.destroy()
+        return
+      }
+      rock.container.destroy()
+      scene.tweens.add({
+        targets: trail,
+        alpha: 0,
+        duration: 140,
+        onComplete: () => trail.destroy()
+      })
+      playAncientPowerImpact(scene, impact, isHeavyHit)
+    }
+  })
+}
+
+function hoverAncientPowerRock(
+  cast: AncientPowerCast,
+  index: number,
+  groundPoint: () => Point,
+  depthNow: () => number
+) {
+  const { scene } = cast
+  const rockCount = cast.rockPositions.length
+  const lift = {
+    height: ANCIENT_POWER_RISEN_ROCK_HEIGHT * ANCIENT_POWER_ROCK_SCALE
+  }
+  const rock = addFossilRock(scene, groundPoint(), index)
+  if (!rock) return
+  scene.tweens.add({
+    targets: lift,
+    height:
+      ANCIENT_POWER_HOVER_HEIGHTS[index % ANCIENT_POWER_HOVER_HEIGHTS.length],
+    duration: ANCIENT_POWER_HOVER_RISE_MS,
+    ease: "Back.easeOut"
+  })
+  const elapsed = scene.time.now - cast.castStart
+  const chargeDelay = Math.max(0, ANCIENT_POWER_GLOW_START_MS - elapsed)
+  const chargeDuration = ANCIENT_POWER_CHARGE_MS - ANCIENT_POWER_GLOW_START_MS
+  scene.tweens.add({
+    targets: rock.glow,
+    alpha: 0.5,
+    delay: chargeDelay,
+    duration: chargeDuration,
+    ease: "Sine.easeIn"
+  })
+  scene.tweens.add({
+    targets: rock.imprint,
+    alpha: 1,
+    delay: chargeDelay,
+    duration: chargeDuration
+  })
+  let isThrown = false
+  let isCrumbling = false
+  const crumble = () => {
+    if (isThrown || isCrumbling || !rock.container.active) return
+    isCrumbling = true
+    scene.tweens.add({
+      targets: rock.container,
+      alpha: 0,
+      duration: 150,
+      onComplete: () => rock.container.destroy()
+    })
+  }
+  const bobPhase = index * 1.3
+  const bobOffset = () => {
+    if (REDUCED_MOTION) return 0
+    const turn = (scene.time.now / ANCIENT_POWER_BOB_MS) * Math.PI * 2
+    return Math.sin(turn + bobPhase) * ANCIENT_POWER_BOB_PX
+  }
+  const place = () => {
+    if (isThrown || !rock.container.active) return
+    if (cast.isCasterGone()) crumble()
+    const ground = groundPoint()
+    const position = {
+      x: ground.x,
+      y: ground.y - lift.height + bobOffset()
+    }
+    rock.container.setPosition(position.x, position.y).setDepth(depthNow())
+    cast.rockPositions[index] = position
+  }
+  place()
+  const hovering: HoveringAncientPowerRock = {
+    isHeavy: index === 0 || index === rockCount - 1,
+    take: () => {
+      if (isCrumbling || !rock.container.active) return null
+      isThrown = true
+      cast.rockPositions[index] = null
+      return rock
+    }
+  }
+  cast.hoveringRocks.push(hovering)
+  scene.events.on(Phaser.Scenes.Events.UPDATE, place)
+  rock.container.once(Phaser.GameObjects.Events.DESTROY, () => {
+    scene.events.off(Phaser.Scenes.Events.UPDATE, place)
+    cast.rockPositions[index] = null
+    const queued = cast.hoveringRocks.indexOf(hovering)
+    if (queued >= 0) cast.hoveringRocks.splice(queued, 1)
+  })
+  // a rock the server never throws, because its caster was KO'd, crumbles
+  const lastThrow =
+    ANCIENT_POWER_CHARGE_MS + rockCount * ANCIENT_POWER_LAUNCH_STAGGER_MS
+  scene.time.delayedCall(
+    lastThrow + ANCIENT_POWER_UNTHROWN_LINGER_MS - elapsed,
+    crumble
+  )
+}
+
+function raiseAncientPowerRock(cast: AncientPowerCast, index: number) {
+  const { scene } = cast
+  const baseAngle = (index / cast.rockPositions.length) * Math.PI * 2 + 0.25
+  const angleNow = () =>
+    baseAngle +
+    (REDUCED_MOTION
+      ? 0
+      : (scene.time.now - cast.castStart) * ANCIENT_POWER_ORBIT_RADIANS_PER_MS)
+  const groundPoint = () => {
+    const angle = angleNow()
+    const { x, y } = cast.feetPosition()
+    return {
+      x: x + Math.cos(angle) * ANCIENT_POWER_ROCK_RING_RADIUS,
+      y:
+        y +
+        Math.sin(angle) *
+          ANCIENT_POWER_ROCK_RING_RADIUS *
+          ANCIENT_POWER_GROUND_SQUASH
+    }
+  }
+  // rocks on the far side of the circle pass behind the caster
+  const depthNow = () =>
+    Math.sin(angleNow()) < 0 ? DEPTH.ABILITY_BELOW_POKEMON : DEPTH.ABILITY
+  const popDelay =
+    ANCIENT_POWER_POP_START_MS + index * ANCIENT_POWER_POP_STAGGER_MS
+  scene.time.delayedCall(popDelay, () => {
+    if (cast.isCasterGone()) return
+    const start = groundPoint()
+    playAncientPowerRipple(scene, groundPoint, 4, 22, 0, 260)
+    playAncientPowerDebris(scene, start, 3, [
+      ANCIENT_POWER_DIRT,
+      ANCIENT_POWER_DIRT_LIGHT
+    ])
+    const rising = addAbilitySprite(
+      scene,
+      "ANCIENT_POWER_RISE",
+      0,
+      [start.x, start.y],
+      {
+        origin: [0.5, 1],
+        scale: ANCIENT_POWER_ROCK_SCALE,
+        depth: depthNow(),
+        tint: ANCIENT_POWER_STONE_TINT,
+        destroyOnComplete: false,
+        animOptions: { frameRate: ANCIENT_POWER_RISE_FRAME_RATE }
+      }
+    )
+    if (!rising) return
+    followEveryFrame(scene, rising, groundPoint)
+    scene.time.delayedCall(ANCIENT_POWER_POP_MS, () => {
+      if (!rising.active) return
+      rising.destroy()
+      if (cast.isCasterGone()) return
+      hoverAncientPowerRock(cast, index, groundPoint, depthNow)
+    })
+  })
+}
+
+// positions are only a fallback for messages sent without the caster id
+function findAncientPowerCaster(args: AbilityAnimationArgs) {
+  return (
+    args.pokemonsOnBoard.find((sprite) => sprite.id === args.casterId) ??
+    spriteAt(args.pokemonsOnBoard, args.positionX, args.positionY)
+  )
+}
+
+function ancientPowerAnimation(args: AbilityAnimationArgs) {
+  const { scene, flip } = args
+  const caster = findAncientPowerCaster(args)
+  const [casterStartX, casterStartY] = transformEntityCoordinates(
+    args.positionX,
+    args.positionY,
+    flip
+  )
+  const chestPosition = () =>
+    caster?.active
+      ? { x: caster.x, y: caster.y }
+      : { x: casterStartX, y: casterStartY }
+  const rockCount =
+    ANCIENT_POWER_ROCKS_BY_STAR[(caster?.pokemon.stars ?? 1) - 1] ??
+    ANCIENT_POWER_ROCKS_BY_STAR[ANCIENT_POWER_ROCKS_BY_STAR.length - 1]
+  const hoveringRocks = (caster && hoveringAncientPowerRocks.get(caster)) ?? []
+  if (caster) hoveringAncientPowerRocks.set(caster, hoveringRocks)
+  const cast: AncientPowerCast = {
+    scene,
+    castStart: scene.time.now,
+    chestPosition,
+    feetPosition: atFeetOf(chestPosition),
+    // a KO'd caster fades out before it is removed, and its volley never lands
+    isCasterGone: () =>
+      caster !== undefined && (!caster.active || caster.alpha < 0.99),
+    rockPositions: Array.from({ length: rockCount }, () => null),
+    hoveringRocks
+  }
+
+  playAncientPowerRunes(cast)
+  playAncientPowerRipple(
+    scene,
+    cast.feetPosition,
+    6,
+    ANCIENT_POWER_RING_RADIUS * 0.7,
+    80,
+    420
+  )
+  if (!REDUCED_MOTION) {
+    playAncientPowerRipple(
+      scene,
+      cast.feetPosition,
+      6,
+      ANCIENT_POWER_RING_RADIUS * 0.7,
+      320,
+      420
+    )
+  }
+  playAncientPowerDust(
+    scene,
+    cast.feetPosition,
+    ANCIENT_POWER_DUST_PUFFS,
+    ANCIENT_POWER_ROCK_RING_RADIUS * 0.8,
+    ANCIENT_POWER_POP_START_MS,
+    ANCIENT_POWER_CHARGE_MS - 200
+  )
+  playAncientPowerAura(cast)
+  playAncientPowerSparkles(cast)
+  playAncientPowerArcs(cast)
+  for (let index = 0; index < rockCount; index++) {
+    raiseAncientPowerRock(cast, index)
+  }
+}
+
+// one rock of the volley, thrown at whoever the server aimed it at
+function ancientPowerRockAnimation(args: AbilityAnimationArgs) {
+  const { scene, flip } = args
+  const caster = findAncientPowerCaster(args)
+  const target = spriteAt(args.pokemonsOnBoard, args.targetX, args.targetY)
+  const [casterStartX, casterStartY] = transformEntityCoordinates(
+    args.positionX,
+    args.positionY,
+    flip
+  )
+  const [targetStartX, targetStartY] = transformEntityCoordinates(
+    args.targetX,
+    args.targetY,
+    flip
+  )
+  const position = () =>
+    target?.active
+      ? { x: target.x, y: target.y }
+      : { x: targetStartX, y: targetStartY }
+  const casterX = caster?.active ? caster.x : casterStartX
+  const casterY = caster?.active ? caster.y : casterStartY
+  const hovering = caster
+    ? hoveringAncientPowerRocks.get(caster)?.shift()
+    : undefined
+  const randomFossil = Math.floor(Math.random() * ANCIENT_POWER_FOSSILS.length)
+  const rock =
+    hovering?.take() ??
+    addFossilRock(scene, { x: casterX, y: casterY }, randomFossil)
+  if (!rock) return
+  playPixelCircle(scene, {
+    x: rock.container.x,
+    y: rock.container.y,
+    color: ANCIENT_POWER_PALE,
+    fromRadius: 6,
+    toRadius: 18,
+    fromAlpha: 0.8,
+    toAlpha: 0,
+    pixelSize: VFX_PIXEL,
+    hollow: true,
+    duration: 200,
+    ease: "Cubic.easeOut"
+  })
+  launchAncientPowerRock(
+    scene,
+    rock,
+    rock.container.x < casterX ? -1 : 1,
+    { sprite: target, position, feetPosition: atFeetOf(position) },
+    hovering?.isHeavy ?? false
+  )
+}
+
 const WATER_SHURIKEN_CURVE = 30
 const WATER_SHURIKEN_TRAIL_INTERVAL = 28
 
@@ -2286,7 +3329,17 @@ function drawPixelDisc(
   color: number
 ) {
   graphics.clear()
-  graphics.fillStyle(color, 1)
+  fillPixelDisc(graphics, radius, pixelSize, color, 1)
+}
+
+function fillPixelDisc(
+  graphics: Phaser.GameObjects.Graphics,
+  radius: number,
+  pixelSize: number,
+  color: number,
+  alpha: number
+) {
+  graphics.fillStyle(color, alpha)
   const halfRows = Math.floor(radius / pixelSize)
   for (let row = -halfRows; row <= halfRows; row++) {
     const halfCells = Math.floor(
@@ -8843,7 +9896,8 @@ export const AbilitiesAnimations: {
     }),
     onTarget({ ability: "FIGHTING_KNOCKBACK", scale: 2, tint: 0x80ff90 })
   ],
-  [Ability.ANCIENT_POWER]: projectile({ duration: 1000 }),
+  [Ability.ANCIENT_POWER]: ancientPowerAnimation,
+  ["ANCIENT_POWER_ROCK"]: ancientPowerRockAnimation,
   [Ability.LEAF_STORM]: leafStormAnimation,
   ["LEAF_STORM_RELEASE"]: leafStormReleaseAnimation,
   ["LEAF_STORM_STRIKE"]: leafStormStrikeAnimation,

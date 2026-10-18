@@ -29,6 +29,13 @@ export const LEAF_STORM_GROWTH_MS = 1000
 export const LEAF_STORM_START_RADIUS = 1
 export const LEAF_STORM_STRIKE_FLIGHT_MS = 300
 
+// Ancient Power raises its rocks first, then throws them one by one, and each
+// rock hits as it lands
+export const ANCIENT_POWER_CHARGE_MS = 900
+export const ANCIENT_POWER_ROCK_FLIGHT_MS = 260
+export const ANCIENT_POWER_LAUNCH_STAGGER_MS = 90
+export const ANCIENT_POWER_ROCKS_BY_STAR = [2, 4, 6, 8]
+
 export const InimitableAbilities: Ability[] = [
   Ability.ASSIST,
   Ability.AURA_WHEEL,

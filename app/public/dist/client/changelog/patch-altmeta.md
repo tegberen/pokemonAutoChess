@@ -474,10 +474,19 @@ Every balance change on this server, newest first.
 
 ### 20 October 2026
 
+**Wishes**
+- Ancient Power {{new}} | Stage 4. Gain a Piloswine. Your STRONGEST Swinub gains 2 RANGE and its ability is replaced with Ancient Power, set to 70 PP
+
+**Abilities**
+- Ancient Power | reworked: raises 2/4/6/8 rocks around the user and hurls them one by one, each dealing 20 SPECIAL instead of one hit of 40/80/120/200 SPECIAL. If the target is KO'd, the remaining rocks fly at the closest enemy. The 25 AP is gained after the last rock
+
 **Game Mode**
 - Organizer {{new}} | new role given to AgentAvocado, Trix, Leaf and Kirbstagoon
 - Misfits Tournament {{new}} | a Solo tournament format played under the Misfits Scribble rule
 - The Misfit {{new}} | title for the winner of a Misfits Tournament
+
+**Fixes**
+- Hero Wishes | a revived hero keeps the RANGE its Wish gives: Axe Blast, Orbital Strike, Galvanic Rain, Cell Brawler, It's Going Down, Frost Gear, Bonemerang Ranger and Lance's Ace
 
 ### 19 October 2026
 

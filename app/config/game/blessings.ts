@@ -2166,6 +2166,12 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     icon: "bubble_rescue",
     grantsPokemonImmediately: true
   },
+  [Blessing.ANCIENT_POWER]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: [4],
+    icon: "ancient_power",
+    grantsPokemonImmediately: true
+  },
   [Blessing.SEASONAL_HERD]: {
     tier: BlessingTier.PRISMATIC,
     availableAtStages: [4],

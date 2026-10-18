@@ -115,6 +115,7 @@ import {
   VAMPIRIC_HEAL_RATIO,
   HERO_BLESSING_FAMILY,
   HERO_BLESSINGS_WITHOUT_CHAMPION,
+  applyHeroBlessingRange,
   AURORA_BOREALIS_REDUCTION_PER_ACTIVE_SYNERGY,
   FLEXIBILITY_HP_PER_SYNERGY_ITEM,
   FLOWER_QUEEN_MAX_PP_REDUCTION,
@@ -123,10 +124,7 @@ import {
   LEAF_TORNADO_DAMAGE_RATIO,
   MARIACHI_MAYHEM_CONFUSION_DURATION,
   FROST_GEAR_MAX_PP,
-  FROST_GEAR_RANGE_BONUS,
   HIGH_BREACHING_MAX_PP,
-  ORBITAL_STRIKE_RANGE_BONUS,
-  GALVANIC_RAIN_RANGE_BONUS,
   GALVANIC_RAIN_THROW_CHANCE,
   GALVANIC_RAIN_THROW_FLIGHT_MS,
   PRIMAL_MAGNETISM_CASTS_PER_ABSORPTION,
@@ -148,12 +146,12 @@ import {
   GOOEY_GLOBULES_SPEED_LOSS,
   GOOEY_GLOBULES_ALLY_HEAL,
   PRIMAL_RAMPAGE_KO_PP,
-  BONEMERANG_RANGER_RANGE_BONUS,
   ROYAL_ROMANCE_ATTRACT_CHANCE,
   INFILTRATOR_PP_STOLEN_BY_STAR,
   JOLLY_ROGER_ATTACK_KO_GOLD,
   BUBBLE_RESCUE_DELAY,
   BUBBLE_RESCUE_HP_RATIO_BY_STAR,
+  ANCIENT_POWER_MAX_PP,
   BONEMERANG_RANGER_DAMAGE_LOSS_PER_HIT,
   BONEMERANG_RANGER_MIN_DAMAGE_RATIO,
   BONEMERANG_RANGER_RETURN_DELAY,
@@ -169,7 +167,6 @@ import {
   KINGS_GAMBIT_SPEED,
   KINGS_GAMBIT_ENTRANCE_DELAY,
   STONE_SADDLE_MAX_PP,
-  ITS_GOING_DOWN_RANGE,
   SHUTTLE_BUS_MAX_PP,
   POTENTIAL_ENERGY_SHIELD,
   POTENTIAL_ENERGY_SPEED,
@@ -889,17 +886,15 @@ export default class Simulation extends Schema implements ISimulation {
           }
         }
         if (player.blessings?.includes(Blessing.LANCES_ACE)) {
-          const dratiniFamily = [...team.values()].filter(
-            (entity): entity is PokemonEntity =>
+          // its hero was already chosen and given its RANGE at combat start
+          const lancesAce = [...team.values()].find(
+            (entity) =>
               entity.hp > 0 &&
-              !entity.isSpawn &&
               entity.player === player &&
-              PkmFamily[entity.name] === Pkm.DRATINI
+              entity.heroBlessings.has(Blessing.LANCES_ACE)
           )
-          if (dratiniFamily.length > 0) {
-            const lancesAce = getStrongestUnit(dratiniFamily)
+          if (lancesAce) {
             lancesAce.isLancesAceThisFight = true
-            lancesAce.range += 2
             lancesAce.skill = Ability.HYPER_BEAM
           }
         }
@@ -4300,6 +4295,7 @@ export default class Simulation extends Schema implements ISimulation {
       champion.isBlessedHero = true
       championOf.set(blessing, champion)
     })
+    new Set(championOf.values()).forEach(applyHeroBlessingRange)
 
     const axeBlastChampion = championOf.get(Blessing.AXE_BLAST)
     if (axeBlastChampion) {
@@ -4312,7 +4308,6 @@ export default class Simulation extends Schema implements ISimulation {
           .filter((entity) => !entity.isSpawn)
           .reduce((sum, entity) => sum + entity.stars, 0)
       axeBlastChampion.skill = Ability.AXE_BLAST
-      axeBlastChampion.range += 1
       const alliedStars = totalStars(alliedTeam)
       const opposingStars = totalStars(opposingTeam)
       player.blessingsRef?.questProgress.set(
@@ -4599,8 +4594,8 @@ export default class Simulation extends Schema implements ISimulation {
 
     const orbitalStrikeChampion = championOf.get(Blessing.ORBITAL_STRIKE)
     if (orbitalStrikeChampion) {
-      /* the melee unit is picked before the range buff, and never the Blipbug
-         itself: it is the one meant to be standing among enemies */
+      // never the Blipbug itself: the melee unit is the one meant to be
+      // standing among enemies
       const meleeAllies = ownUnits.filter(
         (ally) => ally.range === 1 && ally !== orbitalStrikeChampion
       )
@@ -4608,13 +4603,11 @@ export default class Simulation extends Schema implements ISimulation {
         const fieldSpreader = getStrongestUnit(meleeAllies)
         fieldSpreader.status.addPsychicField(fieldSpreader)
       }
-      orbitalStrikeChampion.range += ORBITAL_STRIKE_RANGE_BONUS
     }
 
     const galvanicRainChampion = championOf.get(Blessing.GALVANIC_RAIN)
     if (galvanicRainChampion) {
       galvanicRainChampion.skill = Ability.ELECTRIC_SURGE
-      galvanicRainChampion.range += GALVANIC_RAIN_RANGE_BONUS
       // Grip Claw rolls a second throw in the same tick, before the first
       // Geodude exists, so both would otherwise aim at the same free cell
       const landingsInFlight = new Set<string>()
@@ -4874,7 +4867,6 @@ export default class Simulation extends Schema implements ISimulation {
         0,
         false
       )
-      cellBrawlerChampion.range = 1
     }
 
     const galeWingsChampion = championOf.get(Blessing.GALE_WINGS)
@@ -4892,11 +4884,6 @@ export default class Simulation extends Schema implements ISimulation {
       this.mountStoneSaddleRider(stoneSaddleChampion, player)
     }
 
-    const itsGoingDownChampion = championOf.get(Blessing.ITS_GOING_DOWN)
-    if (itsGoingDownChampion) {
-      itsGoingDownChampion.range += ITS_GOING_DOWN_RANGE
-    }
-
     const highBreachingChampion = championOf.get(Blessing.HIGH_BREACHING)
     if (highBreachingChampion) {
       highBreachingChampion.skill = Ability.HIGH_BREACHING
@@ -4908,7 +4895,6 @@ export default class Simulation extends Schema implements ISimulation {
 
     const frostGearChampion = championOf.get(Blessing.FROST_GEAR)
     if (frostGearChampion) {
-      frostGearChampion.range += FROST_GEAR_RANGE_BONUS
       frostGearChampion.maxPP = FROST_GEAR_MAX_PP
       frostGearChampion.effects.add(EffectEnum.ABILITY_CRIT)
     }
@@ -5014,7 +5000,6 @@ export default class Simulation extends Schema implements ISimulation {
 
     const bonemerangRangerChampion = championOf.get(Blessing.BONEMERANG_RANGER)
     if (bonemerangRangerChampion) {
-      bonemerangRangerChampion.range += BONEMERANG_RANGER_RANGE_BONUS
       bonemerangRangerChampion.skill = Ability.TORMENT
       bonemerangRangerChampion.effectsSet.add(
         new OnAttackEffect(({ pokemon, target, board, crit }) => {
@@ -5071,6 +5056,12 @@ export default class Simulation extends Schema implements ISimulation {
           })
         })
       )
+    }
+
+    const ancientPowerChampion = championOf.get(Blessing.ANCIENT_POWER)
+    if (ancientPowerChampion) {
+      ancientPowerChampion.skill = Ability.ANCIENT_POWER
+      ancientPowerChampion.maxPP = ANCIENT_POWER_MAX_PP
     }
 
     const swampFatherChampion = championOf.get(Blessing.SWAMP_FATHER)

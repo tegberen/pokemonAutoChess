@@ -218,6 +218,7 @@ export enum Blessing {
   INFILTRATOR = "INFILTRATOR",
   JOLLY_ROGER = "JOLLY_ROGER",
   BUBBLE_RESCUE = "BUBBLE_RESCUE",
+  ANCIENT_POWER = "ANCIENT_POWER",
   SEASONAL_HERD = "SEASONAL_HERD",
   LIFE_PRICE = "LIFE_PRICE",
   SILVER_SPOON = "SILVER_SPOON",
@@ -802,6 +803,8 @@ export const ABSOLUTE_DARKNESS_BLIND_DURATION = 3000
 export const EXHAUSTING_FLAME_DAMAGE_MULTIPLIER = 0.8
 export const EXHAUSTING_FLAME_LUCK_PER_STAR = 5
 export const ETERNAL_RAGE_DURATION_PER_STAR = 1000
+export const AXE_BLAST_RANGE_BONUS = 1
+export const LANCES_ACE_RANGE_BONUS = 2
 export const ORBITAL_STRIKE_RANGE_BONUS = 2
 export const GALVANIC_RAIN_RANGE_BONUS = 2
 export const GALVANIC_RAIN_THROW_CHANCE = 0.1
@@ -862,6 +865,8 @@ export const JOLLY_ROGER_ATTACK_KO_GOLD = 1
 export const JOLLY_ROGER_ABILITY_KO_GOLD = 2
 export const BUBBLE_RESCUE_HP_RATIO_BY_STAR = [0.2, 0.3, 0.4]
 export const BUBBLE_RESCUE_DELAY = 2000
+export const ANCIENT_POWER_RANGE_BONUS = 2
+export const ANCIENT_POWER_MAX_PP = 70
 // the three herd lists share one index per season: spring, summer, autumn, winter
 export const SEASONAL_HERD_DEERLINGS: Pkm[] = [
   Pkm.DEERLING_SPRING,
@@ -1428,7 +1433,8 @@ export const HERO_BLESSING_GIFT: { [blessing in Blessing]?: Pkm } = {
   [Blessing.CAPTAINS_BOUNTY]: Pkm.RABOOT,
   [Blessing.INFILTRATOR]: Pkm.GOLBAT,
   [Blessing.JOLLY_ROGER]: Pkm.TOTODILE,
-  [Blessing.BUBBLE_RESCUE]: Pkm.MARILL
+  [Blessing.BUBBLE_RESCUE]: Pkm.MARILL,
+  [Blessing.ANCIENT_POWER]: Pkm.PILOSWINE
 }
 
 export const HERO_BLESSING_POKEMON: { [blessing in Blessing]?: Pkm[] } = {
@@ -1542,7 +1548,33 @@ export const HERO_BLESSING_FAMILY: { [blessing in Blessing]?: Pkm } = {
   [Blessing.CAPTAINS_BOUNTY]: Pkm.SCORBUNNY,
   [Blessing.INFILTRATOR]: Pkm.ZUBAT,
   [Blessing.JOLLY_ROGER]: Pkm.TOTODILE,
-  [Blessing.BUBBLE_RESCUE]: Pkm.AZURILL
+  [Blessing.BUBBLE_RESCUE]: Pkm.AZURILL,
+  [Blessing.ANCIENT_POWER]: Pkm.SWINUB
+}
+
+export const HERO_BLESSING_RANGE_BONUS: { [blessing in Blessing]?: number } = {
+  [Blessing.AXE_BLAST]: AXE_BLAST_RANGE_BONUS,
+  [Blessing.LANCES_ACE]: LANCES_ACE_RANGE_BONUS,
+  [Blessing.ORBITAL_STRIKE]: ORBITAL_STRIKE_RANGE_BONUS,
+  [Blessing.GALVANIC_RAIN]: GALVANIC_RAIN_RANGE_BONUS,
+  [Blessing.ITS_GOING_DOWN]: ITS_GOING_DOWN_RANGE,
+  [Blessing.FROST_GEAR]: FROST_GEAR_RANGE_BONUS,
+  [Blessing.BONEMERANG_RANGER]: BONEMERANG_RANGER_RANGE_BONUS,
+  [Blessing.ANCIENT_POWER]: ANCIENT_POWER_RANGE_BONUS
+}
+
+// resurrect() rebuilds RANGE from scratch, so a revive calls this again
+export function applyHeroBlessingRange(hero: {
+  range: number
+  heroBlessings: Set<Blessing>
+}) {
+  if (hero.heroBlessings.has(Blessing.CELL_BRAWLER)) {
+    hero.range = 1
+    return
+  }
+  hero.heroBlessings.forEach((blessing) => {
+    hero.range += HERO_BLESSING_RANGE_BONUS[blessing] ?? 0
+  })
 }
 
 // hero Wishes whose effect is not tied to one unit: they keep their family for
