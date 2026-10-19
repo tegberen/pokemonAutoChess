@@ -472,6 +472,22 @@ Smeargle Scribbles do not change your Elo.
 
 Every balance change on this server, newest first.
 
+### 19 October 2026
+
+**Pokémon**
+- Exeggcute Line | Epic → Ultra and in the regular pool instead of an additional pick, evolves from Exeggcute to Exeggutor to Alolan Exeggutor, FLORA PSYCHIC and GOURMET at every stage, Egg Bomb → Leaf Storm, PP 100 → 150, every stage cooks COCONUT_MALASADA
+- Exeggcute | HP 110 → 150, RANGE 3 → 1
+- Alolan Exeggutor | no longer regional and now the 3 STAR evolution, DRAGON → PSYCHIC, HP 350 → 600, DEF 6 → 14, SPE_DEF 6 → 14
+
+**Abilities**
+- Leaf Storm {{new}} | summon a leaf storm around the user that grows by 1 tile every second. Each second, enemies inside lose [10,20,30] AP and allies inside heal [10,20,30] HP. Once it covers the whole board, it deals [100,SP]% of all the AP it drained as SPECIAL, split between the remaining enemies, who then get their AP back. A new storm can only start once the previous one has ended, and it fades out if the user is KO'd
+
+**Items**
+- COCONUT_MILK | no longer cooked by any GOURMET Pokémon
+
+**Fixes**
+- Ability animations | no longer grow huge and flipped when a caster below 0 AP lands a critical cast
+
 ### 13 October 2026
 
 **Pokémon**

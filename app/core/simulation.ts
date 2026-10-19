@@ -421,6 +421,7 @@ import {
   getUnitScore
 } from "./unit-score"
 import { stealGoldOnKO } from "./jolly-roger"
+import type { LeafStorm } from "./leaf-storm"
 import { SeedEffects } from "./seeds"
 import { getAltFormForPlayer } from "../config/game/pokemons"
 
@@ -561,6 +562,7 @@ export default class Simulation extends Schema implements ISimulation {
     fallenAttack: number
     fallenMaxHP: number
   }[] = []
+  leafStorms: LeafStorm[] = []
   // flags each marched-in unit had before, so stop() restores them exactly
   reveilleLockedPokemon = new Map<
     string,
@@ -1177,6 +1179,11 @@ export default class Simulation extends Schema implements ISimulation {
         })
       }
     })
+  }
+
+  updateLeafStorms(dt: number) {
+    this.leafStorms.forEach((storm) => storm.update(dt, this))
+    this.leafStorms = this.leafStorms.filter((storm) => !storm.finished)
   }
 
   updateForgottenReinforcements(dt: number) {
@@ -6088,6 +6095,7 @@ export default class Simulation extends Schema implements ISimulation {
     this.checkCombatQuestThresholds()
     if (!this.finished) this.updateForgottenReinforcements(dt)
     if (!this.finished) this.updateReveilleReinforcements(dt)
+    if (!this.finished) this.updateLeafStorms(dt)
 
     this.blueTeam.forEach((pkm, key) => {
       this.blueDpsMeter
@@ -6695,6 +6703,9 @@ export default class Simulation extends Schema implements ISimulation {
   onFinish() {
     this.finishedAt = Date.now()
     this.finished = true
+    // storms are no longer updated once the fight ends, so none can fade later
+    this.leafStorms.forEach((storm) => storm.fade())
+    this.leafStorms = []
 
     if (this.blueTeam.size === 0 && this.redTeam.size > 0) {
       this.winnerId = this.redPlayerId

@@ -305,6 +305,7 @@ import { LaserBladeStrategy } from "./laser-blade"
 import { LastRespectsStrategy } from "./last-respects"
 import { LavaPlumeStrategy } from "./lava-plume"
 import { LeafBladeStrategy } from "./leaf-blade"
+import { LeafStormStrategy } from "./leaf-storm"
 import { LeechLifeStrategy } from "./leech-life"
 import { LeechSeedStrategy } from "./leech-seed"
 import { LickStrategy } from "./lick"
@@ -1093,6 +1094,7 @@ export const AbilityStrategies: { [key in Ability]: AbilityStrategy } = {
   [Ability.LAST_RESPECTS]: new LastRespectsStrategy(),
   [Ability.LAVA_PLUME]: new LavaPlumeStrategy(),
   [Ability.LEAF_BLADE]: new LeafBladeStrategy(),
+  [Ability.LEAF_STORM]: new LeafStormStrategy(),
   [Ability.LEECH_LIFE]: new LeechLifeStrategy(),
   [Ability.LEECH_SEED]: new LeechSeedStrategy(),
   [Ability.LICK]: new LickStrategy(),

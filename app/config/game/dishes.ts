@@ -80,7 +80,8 @@ export const DishByPkm: { [pkm in Pkm]?: Item | null } = {
   [Pkm.VICTINI]: Item.TABASCO,
   [Pkm.MORPEKO]: Item.ELECTRIC_SEED,
   [Pkm.MORPEKO_HANGRY]: Item.ELECTRIC_SEED,
-  [Pkm.EXEGGUTOR]: Item.COCONUT_MILK,
+  [Pkm.EXEGGCUTE]: Item.COCONUT_MALASADA,
+  [Pkm.EXEGGUTOR]: Item.COCONUT_MALASADA,
   [Pkm.ALOLAN_EXEGGUTOR]: Item.COCONUT_MALASADA,
   [Pkm.TANGELA]: Item.BIG_ROOT,
   [Pkm.TANGROWTH]: Item.BIG_ROOT

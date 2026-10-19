@@ -417,7 +417,17 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
       !this.status.silence &&
       this.sandTombVortexes === 0 &&
       !this.items.has(Item.NULLIFY_BANDANNA) &&
-      !this.effects.has(EffectEnum.TELEPORT_NEXT_ATTACK)
+      !this.effects.has(EffectEnum.TELEPORT_NEXT_ATTACK) &&
+      !this.isWaitingForOwnLeafStorm
+    )
+  }
+
+  get isWaitingForOwnLeafStorm(): boolean {
+    return (
+      this.skill === Ability.LEAF_STORM &&
+      this.simulation.leafStorms.some(
+        (storm) => storm.caster === this && !storm.finished
+      )
     )
   }
 
@@ -2149,6 +2159,8 @@ flyAway(
     this.dodge = cloneReference.dodge
     this.range = cloneReference.range
     this.luck = cloneReference.luck
+    // AP and ATK are rebuilt, so no storm owes this unit what it lost before
+    this.simulation.leafStorms.forEach((storm) => storm.losses.delete(this))
 
     // Reset stacking items and effects counts
     this.count.machRibbonCount = 0

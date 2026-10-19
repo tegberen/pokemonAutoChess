@@ -18,6 +18,9 @@ import {
 } from "../../../../types/Animation"
 import {
   DRAGON_DARTS_DART_FLIGHT_MS,
+  LEAF_STORM_GROWTH_MS,
+  LEAF_STORM_START_RADIUS,
+  LEAF_STORM_STRIKE_FLIGHT_MS,
   LIGHT_OF_RUIN_CHARGE_MS,
   MUD_BUBBLE_HOP_MS,
   SHADOW_PUNCH_FLIGHT_MS,
@@ -1049,6 +1052,434 @@ function bubbleRescueAppearAnimation(args: AbilityAnimationArgs) {
         onComplete: pop
       })
     }
+  })
+}
+
+type Point = { x: number; y: number }
+
+function quadraticBezierPoint(
+  from: Point,
+  control: Point,
+  to: Point,
+  t: number
+): Point {
+  const along = (start: number, middle: number, end: number) =>
+    (1 - t) ** 2 * start + 2 * (1 - t) * t * middle + t ** 2 * end
+  return {
+    x: along(from.x, control.x, to.x),
+    y: along(from.y, control.y, to.y)
+  }
+}
+
+const LEAF_STORM_SQUASH = 0.5
+const LEAF_STORM_LEAVES_AT_START = 12
+const LEAF_STORM_LEAVES_PER_TILE = 7
+const LEAF_STORM_MAX_LEAVES = 64
+const LEAF_STORM_SPIN_RADIANS_PER_MS = 0.0024
+const LEAF_STORM_WIND_STREAKS = 12
+const LEAF_STORM_STEP_MS = 70
+const LEAF_STORM_GROW_TWEEN_MS = 350
+const LEAF_STORM_FADE_IN_MS = 300
+const LEAF_STORM_RELEASE_MS = 380
+const LEAF_STORM_FADE_MS = 700
+// in case the release or fade message was missed
+const LEAF_STORM_MAX_MS = 12000
+// the strikes arrive just after the release and claim their leaves first
+const LEAF_STORM_CLAIM_WINDOW_MS = 60
+const LEAF_STORM_LEAVES_PER_STRIKE = 3
+const LEAF_STORM_PIECE_SCALE = 2
+const LEAF_STORM_EYE_SCALE = 2.2
+const LEAF_STORM_EYE_FRAME_RATE = 20
+const LEAF_STORM_HIT_SCALE = 2.5
+const LEAF_STORM_HIT_FRAME_RATE = 16
+const LEAF_STORM_SHREDS = 4
+const LEAF_STORM_WIND_PALE = 0xe8ffd0
+const LEAF_STORM_WIND_GREEN = 0x5fae3c
+// rows are sizes, big to small; columns are angles: flat, diagonal, upright
+const LEAF_STORM_LEAF_FRAMES = [
+  [0, 1, 2],
+  [3, 4, 5],
+  [6, 7, 8]
+]
+
+type StormLeaf = {
+  sprite: Phaser.GameObjects.Sprite
+  angle: number
+  band: number
+  lift: number
+  phase: number
+  size: number
+  tumbleMs: number
+  claimed: boolean
+}
+
+type LeafStormView = {
+  release: () => void
+  fade: () => void
+  claimLeaves: (count: number, near: Point) => Phaser.GameObjects.Sprite[]
+}
+
+const activeLeafStorms = new Map<string, LeafStormView>()
+
+// half a tile past the radius, so every tile the storm holds is inside it
+function leafStormReach(radiusInTiles: number) {
+  return (radiusInTiles + 0.5) * CELL_WIDTH
+}
+
+function leafStormFrame(size: number, angle: number) {
+  const frame = LEAF_STORM_LEAF_FRAMES[size][angle]
+  return `LEAF_STORM_LEAF/${String(frame).padStart(3, "0")}.png`
+}
+
+function addLeafStormPiece(
+  scene: AbilityAnimationArgs["scene"],
+  position: Point,
+  size: number
+) {
+  const frame = leafStormFrame(size, 0)
+  if (!scene.textures.get("abilities").has(frame)) {
+    logger.warn(`Missing frame "${frame}" in "abilities"`)
+    return null
+  }
+  const sprite = scene.add
+    .sprite(position.x, position.y, "abilities", frame)
+    .setScale(LEAF_STORM_PIECE_SCALE)
+    .setDepth(DEPTH.ABILITY)
+  scene.abilitiesVfxGroup?.add(sprite)
+  return sprite
+}
+
+function tumbleLeaf(
+  sprite: Phaser.GameObjects.Sprite,
+  size: number,
+  step: number
+) {
+  const turn = REDUCED_MOTION ? 0 : step % 4
+  sprite
+    .setFrame(leafStormFrame(size, turn === 3 ? 1 : turn))
+    .setFlipX(turn === 3)
+}
+
+function leafStormAnimation(args: AbilityAnimationArgs) {
+  const { scene, flip } = args
+  const [x, y] = transformEntityCoordinates(
+    args.positionX,
+    args.positionY,
+    flip
+  )
+  const castStart = scene.time.now
+  let lastFrame = castStart
+  const casterSprite = args.pokemonsOnBoard.find(
+    (pokemon) => pokemon.id === args.casterId
+  )
+  const reach = { radius: leafStormReach(LEAF_STORM_START_RADIUS) }
+  const eye = addAbilitySprite(scene, "LEAF_STORM_EYE", 0, [x, y], {
+    scale: [LEAF_STORM_EYE_SCALE, LEAF_STORM_EYE_SCALE * LEAF_STORM_SQUASH],
+    depth: DEPTH.ABILITY_GROUND_LEVEL,
+    alpha: 0.85,
+    destroyOnComplete: false,
+    animOptions: { frameRate: LEAF_STORM_EYE_FRAME_RATE, repeat: -1 }
+  })
+  const wind = scene.add
+    .graphics()
+    .setPosition(x, y)
+    .setDepth(DEPTH.ABILITY_GROUND_LEVEL)
+  scene.abilitiesVfxGroup?.add(wind)
+  const streaks = Array.from({ length: LEAF_STORM_WIND_STREAKS }, () => ({
+    angle: Math.random() * Math.PI * 2,
+    band: 0.55 + Math.random() * 0.45,
+    span: 0.35 + Math.random() * 0.35,
+    born: castStart - Math.random() * 900,
+    lifeMs: 700 + Math.random() * 500
+  }))
+  const leaves: StormLeaf[] = []
+  let hasLeafFrames = true
+  const addLeaf = (atEdge: boolean) => {
+    const size = Math.random() < 0.25 ? 0 : Math.random() < 0.6 ? 1 : 2
+    const sprite = addLeafStormPiece(scene, { x, y }, size)
+    if (!sprite) {
+      hasLeafFrames = false
+      return
+    }
+    sprite.setAlpha(0)
+    scene.tweens.add({
+      targets: sprite,
+      alpha: 1,
+      duration: LEAF_STORM_FADE_IN_MS
+    })
+    leaves.push({
+      sprite,
+      angle: Math.random() * Math.PI * 2,
+      band: atEdge ? 0.8 + Math.random() * 0.2 : 0.15 + Math.random() * 0.85,
+      lift: 6 + Math.random() * 40,
+      phase: Math.random() * 1000,
+      size,
+      tumbleMs: 90 + Math.random() * 90,
+      claimed: false
+    })
+  }
+  for (let index = 0; index < LEAF_STORM_LEAVES_AT_START; index++) {
+    addLeaf(false)
+  }
+  let isReleased = false
+  let lastStep = -1
+  const update = () => {
+    if (!wind.active) return
+    const now = scene.time.now
+    const dt = now - lastFrame
+    lastFrame = now
+    const motion = REDUCED_MOTION ? 0.3 : 1
+    const tiles = Math.round(reach.radius / CELL_WIDTH - 0.5)
+    const wanted = Math.min(
+      LEAF_STORM_MAX_LEAVES,
+      LEAF_STORM_LEAVES_AT_START + tiles * LEAF_STORM_LEAVES_PER_TILE
+    )
+    if (!isReleased && hasLeafFrames && leaves.length < wanted) addLeaf(true)
+    for (const leaf of leaves) {
+      if (leaf.claimed || !leaf.sprite.active) continue
+      leaf.angle +=
+        dt * LEAF_STORM_SPIN_RADIANS_PER_MS * (1.35 - 0.8 * leaf.band) * motion
+      const sway = REDUCED_MOTION ? 0 : 1
+      const drift = sway * 0.1 * Math.sin(now * 0.0011 + leaf.phase)
+      const bob = sway * 10 * Math.sin(now * 0.0023 + leaf.phase)
+      const distance = reach.radius * (leaf.band + drift)
+      leaf.sprite
+        .setPosition(
+          Math.round(x + Math.cos(leaf.angle) * distance),
+          Math.round(
+            y +
+              Math.sin(leaf.angle) * distance * LEAF_STORM_SQUASH -
+              leaf.lift -
+              bob
+          )
+        )
+        .setDepth(
+          Math.sin(leaf.angle) < 0
+            ? DEPTH.ABILITY_BELOW_POKEMON
+            : DEPTH.ABILITY
+        )
+      tumbleLeaf(
+        leaf.sprite,
+        leaf.size,
+        Math.floor((now + leaf.phase) / leaf.tumbleMs)
+      )
+    }
+    const step = Math.floor(now / LEAF_STORM_STEP_MS)
+    if (step === lastStep) return
+    lastStep = step
+    wind.clear()
+    for (const streak of streaks) {
+      const age = (now - streak.born) / streak.lifeMs
+      if (age >= 1) {
+        streak.angle = Math.random() * Math.PI * 2
+        streak.band = 0.55 + Math.random() * 0.45
+        streak.born = now
+        continue
+      }
+      const turn =
+        streak.angle +
+        (now - castStart) * LEAF_STORM_SPIN_RADIANS_PER_MS * 0.6 * motion
+      const points = Array.from({ length: 9 }, (_, index) => {
+        const angle = turn + (index / 8) * streak.span
+        const distance = reach.radius * streak.band
+        return {
+          x: Math.cos(angle) * distance,
+          y: Math.sin(angle) * distance * LEAF_STORM_SQUASH
+        }
+      })
+      const fade = Math.sin(age * Math.PI)
+      drawPixelPath(wind, points, [
+        { grid: 3, size: 5, color: LEAF_STORM_WIND_GREEN, alpha: fade * 0.3 },
+        { grid: 3, size: 3, color: LEAF_STORM_WIND_PALE, alpha: fade * 0.7 }
+      ])
+    }
+  }
+  update()
+  scene.events.on(Phaser.Scenes.Events.UPDATE, update)
+  const growth = scene.time.addEvent({
+    delay: LEAF_STORM_GROWTH_MS,
+    loop: true,
+    callback: () => {
+      if (!wind.active) return
+      // the server's fade is not shown while the tab is hidden
+      if (casterSprite && !casterSprite.active) {
+        view.fade()
+        return
+      }
+      const elapsed = scene.time.now - castStart
+      const grown = Math.round(elapsed / LEAF_STORM_GROWTH_MS)
+      scene.tweens.add({
+        targets: reach,
+        radius: leafStormReach(LEAF_STORM_START_RADIUS + grown),
+        duration: LEAF_STORM_GROW_TWEEN_MS,
+        ease: "Cubic.easeOut"
+      })
+    }
+  })
+  wind.once(Phaser.GameObjects.Events.DESTROY, () => {
+    scene.events.off(Phaser.Scenes.Events.UPDATE, update)
+    growth.remove()
+  })
+  const endStorm = (isFading: boolean) => {
+    if (args.casterId && activeLeafStorms.get(args.casterId) === view) {
+      activeLeafStorms.delete(args.casterId)
+    }
+    for (const leaf of leaves) {
+      if (leaf.claimed || !leaf.sprite.active) continue
+      leaf.claimed = true
+      const outward = Math.atan2(leaf.sprite.y - y, leaf.sprite.x - x)
+      const push = isFading ? 0 : 70
+      scene.tweens.add({
+        targets: leaf.sprite,
+        x: leaf.sprite.x + Math.cos(outward) * push,
+        y:
+          leaf.sprite.y +
+          (isFading ? leaf.lift : Math.sin(outward) * push * LEAF_STORM_SQUASH),
+        alpha: 0,
+        duration: isFading ? LEAF_STORM_FADE_MS : LEAF_STORM_RELEASE_MS,
+        ease: isFading ? "Sine.easeIn" : "Cubic.easeOut",
+        onComplete: () => leaf.sprite.destroy()
+      })
+    }
+    const ground = [wind, eye].filter(
+      (object): object is NonNullable<typeof object> => !!object?.active
+    )
+    scene.tweens.add({
+      targets: ground,
+      alpha: 0,
+      duration: isFading ? LEAF_STORM_FADE_MS : LEAF_STORM_RELEASE_MS,
+      onComplete: () => ground.forEach((object) => object.destroy())
+    })
+  }
+  const view: LeafStormView = {
+    release: () => {
+      if (isReleased) return
+      isReleased = true
+      growth.remove()
+      scene.time.delayedCall(LEAF_STORM_CLAIM_WINDOW_MS, () => endStorm(false))
+    },
+    fade: () => {
+      if (isReleased) return
+      isReleased = true
+      growth.remove()
+      endStorm(true)
+    },
+    claimLeaves: (count, near) =>
+      leaves
+        .filter((leaf) => !leaf.claimed && leaf.sprite.active)
+        .sort(
+          (a, b) =>
+            Math.hypot(a.sprite.x - near.x, a.sprite.y - near.y) -
+            Math.hypot(b.sprite.x - near.x, b.sprite.y - near.y)
+        )
+        .slice(0, count)
+        .map((leaf) => {
+          leaf.claimed = true
+          return leaf.sprite
+        })
+  }
+  scene.time.delayedCall(LEAF_STORM_MAX_MS, view.release)
+  if (args.casterId) activeLeafStorms.set(args.casterId, view)
+}
+
+function leafStormReleaseAnimation(args: AbilityAnimationArgs) {
+  if (args.casterId) activeLeafStorms.get(args.casterId)?.release()
+}
+
+function leafStormFadeAnimation(args: AbilityAnimationArgs) {
+  if (args.casterId) activeLeafStorms.get(args.casterId)?.fade()
+}
+
+function playLeafStormHit(
+  scene: AbilityAnimationArgs["scene"],
+  at: Point,
+  target: PokemonSprite | undefined
+) {
+  const hit = addAbilitySprite(scene, "LEAF_STORM_HIT", 0, [at.x, at.y], {
+    scale: LEAF_STORM_HIT_SCALE,
+    animOptions: { frameRate: LEAF_STORM_HIT_FRAME_RATE }
+  })
+  if (hit && target?.active) followUnit(scene, hit, target)
+  for (let index = 0; index < LEAF_STORM_SHREDS; index++) {
+    const shred = addLeafStormPiece(scene, at, 2)
+    if (!shred) continue
+    const angle = Math.random() * Math.PI * 2
+    const reachOut = 20 + Math.random() * 16
+    tumbleLeaf(shred, 2, index)
+    scene.tweens.add({
+      targets: shred,
+      x: at.x + Math.cos(angle) * reachOut,
+      y: at.y + Math.sin(angle) * reachOut * LEAF_STORM_SQUASH + 8,
+      alpha: 0,
+      duration: 360 + Math.random() * 120,
+      ease: "Quad.easeOut",
+      onComplete: () => shred.destroy()
+    })
+  }
+}
+
+function leafStormStrikeAnimation(args: AbilityAnimationArgs) {
+  const { scene, flip } = args
+  const target = spriteAt(args.pokemonsOnBoard, args.targetX, args.targetY)
+  const [targetStartX, targetStartY] = transformEntityCoordinates(
+    args.targetX,
+    args.targetY,
+    flip
+  )
+  const destination = () =>
+    target?.active
+      ? { x: target.x, y: target.y }
+      : { x: targetStartX, y: targetStartY }
+  const storm = args.casterId ? activeLeafStorms.get(args.casterId) : undefined
+  const divers =
+    storm?.claimLeaves(LEAF_STORM_LEAVES_PER_STRIKE, destination()) ?? []
+  if (divers.length === 0) {
+    const [centerX, centerY] = transformEntityCoordinates(
+      args.positionX,
+      args.positionY,
+      flip
+    )
+    const sprite = addLeafStormPiece(scene, { x: centerX, y: centerY }, 0)
+    if (!sprite) return
+    divers.push(sprite)
+  }
+  leafStormDive(scene, divers, target, destination)
+}
+
+function leafStormDive(
+  scene: AbilityAnimationArgs["scene"],
+  divers: Phaser.GameObjects.Sprite[],
+  target: PokemonSprite | undefined,
+  destination: () => Point
+) {
+  divers.forEach((sprite, index) => {
+    const from = { x: sprite.x, y: sprite.y }
+    const bow = (index % 2 === 0 ? 1 : -1) * (40 + index * 18)
+    sprite.setDepth(DEPTH.ABILITY).setAlpha(1)
+    scene.tweens.addCounter({
+      from: 0,
+      to: 1,
+      duration: LEAF_STORM_STRIKE_FLIGHT_MS,
+      ease: "Quad.easeIn",
+      onUpdate: (tween) => {
+        if (!sprite.active) return
+        const to = destination()
+        const length = Math.hypot(to.x - from.x, to.y - from.y) || 1
+        const control = {
+          x: (from.x + to.x) / 2 - ((to.y - from.y) / length) * bow,
+          y: (from.y + to.y) / 2 + ((to.x - from.x) / length) * bow
+        }
+        const t = tween.getValue() ?? 0
+        const point = quadraticBezierPoint(from, control, to, t)
+        sprite.setPosition(Math.round(point.x), Math.round(point.y))
+        tumbleLeaf(sprite, 0, Math.floor(t * 12) + index)
+      },
+      onComplete: () => {
+        if (!sprite.active) return
+        sprite.destroy()
+        if (index === 0) playLeafStormHit(scene, destination(), target)
+      }
+    })
   })
 }
 
@@ -8413,6 +8844,10 @@ export const AbilitiesAnimations: {
     onTarget({ ability: "FIGHTING_KNOCKBACK", scale: 2, tint: 0x80ff90 })
   ],
   [Ability.ANCIENT_POWER]: projectile({ duration: 1000 }),
+  [Ability.LEAF_STORM]: leafStormAnimation,
+  ["LEAF_STORM_RELEASE"]: leafStormReleaseAnimation,
+  ["LEAF_STORM_STRIKE"]: leafStormStrikeAnimation,
+  ["LEAF_STORM_FADE"]: leafStormFadeAnimation,
   [Ability.MOON_DREAM]: projectile({
     startPositionOffset: [0, -100],
     endCoords: "caster",
@@ -9721,7 +10156,9 @@ export const AbilitiesAnimations: {
     })(args)
 }
 
-export function displayAbility(args: AbilityAnimationArgs) {
+// a crit multiplies the AP sent, so a drained caster can send far below -100
+export function displayAbility(unclampedArgs: AbilityAnimationArgs) {
+  const args = { ...unclampedArgs, ap: min(-100)(unclampedArgs.ap) }
   const anims = AbilitiesAnimations[args.ability]
   if (Array.isArray(anims)) {
     anims.forEach((anim) => anim(args))

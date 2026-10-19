@@ -14036,28 +14036,22 @@ export class Heliolisk extends Pokemon {
 }
 
 export class Exeggcute extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.FLORA, Synergy.PSYCHIC])
-  rarity = Rarity.EPIC
+  types = new SetSchema<Synergy>([
+    Synergy.FLORA,
+    Synergy.PSYCHIC,
+    Synergy.GOURMET
+  ])
+  rarity = Rarity.ULTRA
   stars = 1
-  evolutions = [Pkm.EXEGGUTOR, Pkm.ALOLAN_EXEGGUTOR]
-  evolutionRule = {
-    type: EvolutionRuleType.COUNT,
-    numberRequired: 3,
-    divergentEvolution: (pokemon: IPokemon, player: IPlayer) => {
-      if (player.regionalPokemons.includes(Pkm.ALOLAN_EXEGGUTOR))
-        return Pkm.ALOLAN_EXEGGUTOR
-      else return Pkm.EXEGGUTOR
-    }
-  } satisfies CountEvolutionRule
-  hp = 110
+  evolution = Pkm.EXEGGUTOR
+  hp = 150
   atk = 9
   speed = 38
   def = 6
   speDef = 6
-  maxPP = 100
-  range = 3
-  skill = Ability.EGG_BOMB
-  additional = true
+  maxPP = 150
+  range = 1
+  skill = Ability.LEAF_STORM
 }
 
 export class Exeggutor extends Pokemon {
@@ -14066,44 +14060,35 @@ export class Exeggutor extends Pokemon {
     Synergy.PSYCHIC,
     Synergy.GOURMET
   ])
-  rarity = Rarity.EPIC
+  rarity = Rarity.ULTRA
   stars = 2
+  evolution = Pkm.ALOLAN_EXEGGUTOR
   hp = 300
   atk = 22
   speed = 38
   def = 10
   speDef = 10
-  maxPP = 100
+  maxPP = 150
   range = 1
-  skill = Ability.EGG_BOMB
-  additional = true
+  skill = Ability.LEAF_STORM
 }
 
 export class AlolanExeggutor extends Pokemon {
   types = new SetSchema<Synergy>([
-    Synergy.DRAGON,
     Synergy.FLORA,
+    Synergy.PSYCHIC,
     Synergy.GOURMET
   ])
-  rarity = Rarity.EPIC
-  stars = 2
-  hp = 350
+  rarity = Rarity.ULTRA
+  stars = 3
+  hp = 600
   atk = 26
   speed = 38
-  def = 6
-  speDef = 6
-  maxPP = 100
+  def = 14
+  speDef = 14
+  maxPP = 150
   range = 1
-  skill = Ability.EGG_BOMB
-  regional = true
-  additional = true
-  isInRegion(map: DungeonPMDO, state?: GameState) {
-    const regionSynergies = RegionDetails[map]?.synergies
-    return (
-      (!state || state.additionalPokemons.includes(Pkm.EXEGGCUTE)) &&
-      regionSynergies.includes(Synergy.DRAGON)
-    )
-  }
+  skill = Ability.LEAF_STORM
 }
 
 export class Bidoof extends Pokemon {
