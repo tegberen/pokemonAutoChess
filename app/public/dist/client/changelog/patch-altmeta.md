@@ -486,6 +486,7 @@ Every balance change on this server, newest first.
 - The Misfit {{new}} | title for the winner of a Misfits Tournament
 
 **Fixes**
+- COVERT_CLOAK | no longer gives AP back to enemies below 0 AP: it stole their negative AP, raising them to 0 and draining the holder
 - Hero Wishes | a revived hero keeps the RANGE its Wish gives: Axe Blast, Orbital Strike, Galvanic Rain, Cell Brawler, It's Going Down, Frost Gear, Bonemerang Ranger and Lance's Ace
 
 ### 19 October 2026

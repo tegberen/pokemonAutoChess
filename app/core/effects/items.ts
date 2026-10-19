@@ -931,8 +931,10 @@ export class CovertCloakEffect extends PeriodicEffect {
           .forEach((cell) => {
             if (!cell.value || cell.value.team === pokemon.team) return
             const enemy = cell.value
-            const apSteal = Math.min(5, enemy.ap)
-            if (enemy.items.has(Item.TWIST_BAND) === false) {
+            // an enemy at or below 0 AP has nothing to steal, or a negative
+            // steal would hand it AP back
+            const apSteal = Math.max(0, Math.min(5, enemy.ap))
+            if (apSteal > 0 && enemy.items.has(Item.TWIST_BAND) === false) {
               enemy.addAbilityPower(-apSteal, pokemon, 0, false)
               pokemon.addAbilityPower(apSteal, pokemon, 0, false)
             }
