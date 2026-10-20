@@ -481,11 +481,12 @@ Every balance change on this server, newest first.
 - Ancient Power | reworked: raises 2/4/6/8 rocks around the user and hurls them one by one, each dealing 20 SPECIAL instead of one hit of 40/80/120/200 SPECIAL. If the target is KO'd, the remaining rocks fly at the closest enemy. The 25 AP is gained after the last rock
 
 **Game Mode**
-- Organizer {{new}} | new role given to AgentAvocado, Trix, Leaf and Kirbstagoon
+- Organizer {{new}} | new role given to AgentAvocado, Trix, Leaf and Kirbstagoon, who will host the tournaments while I am away. *I hope the tournament system holds up in the meantime. Best of luck to every future participant, and thank you to the Organizers for taking on the job of running them.*
 - Misfits Tournament {{new}} | a Solo tournament format played under the Misfits Scribble rule
 - The Misfit {{new}} | title for the winner of a Misfits Tournament
 
 **Fixes**
+- Mamoswine | no longer always finds an AIR_BALLOON when it finishes digging a hole. *This started as an easter egg back when the game was mostly played against bots, and it is one of the reasons the Swinub line does so well, so it is gone. As compensation, the Swinub line gets its own hero Wish, Ancient Power.*
 - COVERT_CLOAK | no longer gives AP back to enemies below 0 AP: it stole their negative AP, raising them to 0 and draining the holder
 - Hero Wishes | a revived hero keeps the RANGE its Wish gives: Axe Blast, Orbital Strike, Galvanic Rain, Cell Brawler, It's Going Down, Frost Gear, Bonemerang Ranger and Lance's Ace
 

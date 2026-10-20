@@ -1762,18 +1762,6 @@ export const groundDigEffect = new OnStageStartEffect(({ player, room }) => {
               : null
           if (
             !diggingOnBench &&
-            isReachingMaxDepth &&
-            pokemon.name === Pkm.MAMOSWINE
-          ) {
-            const alreadyHasBalloon = [...player.board.values()].some((p) =>
-              p.items.has(Item.AIR_BALLOON)
-            )
-            if (!alreadyHasBalloon) {
-              buriedItem = Item.AIR_BALLOON
-            }
-          }
-          if (
-            !diggingOnBench &&
             pokemon.items.has(Item.EXPLORER_KIT) &&
             isReachingMaxDepth &&
             !buriedItem
