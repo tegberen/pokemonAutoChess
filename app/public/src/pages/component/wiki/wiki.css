@@ -1,62 +1,32 @@
 #wiki-page {
-  --wiki-index-bg: color-mix(in srgb, var(--color-bg-primary) 72%, #000 28%);
-  --wiki-topic-bg: color-mix(
-    in srgb,
-    var(--color-bg-tertiary) 45%,
-    var(--color-bg-primary)
-  );
-  --wiki-subnav-bg: color-mix(
-    in srgb,
-    var(--color-bg-tertiary) 24%,
-    transparent
-  );
+  --wiki-topic-bg: var(--color-bg-secondary);
   color: var(--color-fg-primary);
   width: min(95vw, 1800px);
   max-width: 100%;
 }
 
 #wiki-page .wiki-navigation {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  margin: 0.45em 0.5em 0;
-  padding: 0.35em 0.35em 0;
-  overflow: hidden;
-  background: var(--wiki-index-bg);
-  border: 1px solid color-mix(in srgb, var(--color-bg-tertiary) 75%, #000);
-  border-bottom: 3px solid var(--color-bg-tertiary);
-  border-radius: 8px 8px 4px 4px;
-  box-shadow: 0 3px 0 #00000028;
-}
-
-#wiki-page .wiki-index-heading {
-  align-self: center;
-  padding: 0.45em 1em 0.4em 0.65em;
-  color: var(--color-fg-secondary);
-  font-size: 0.85rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  cursor: default;
-  user-select: none;
-}
-
-#wiki-page .wiki-index-heading::after {
-  content: ":";
+  position: relative;
+  z-index: 1;
+  display: flex;
+  margin: 0.45em 0.5em -2px;
+  padding: 0 0.6em;
 }
 
 #wiki-page .wiki-section-list {
   display: flex;
   flex-wrap: wrap;
+  gap: 4px;
 }
 
 #wiki-page .wiki-section {
-  position: relative;
-  padding: 0.45em 1em;
+  padding: 0.4em 1.1em 0.35em;
   color: var(--color-fg-secondary);
   background: transparent;
-  border: 0;
-  border-right: 1px solid var(--color-bg-tertiary);
-  border-radius: 0;
+  border: var(--border-thin);
+  border-color: transparent;
+  border-radius: 10px 10px 0 0;
+  text-shadow: 1px 1px 0 #00000080;
   cursor: var(--cursor-hover);
   transition:
     color 120ms ease,
@@ -65,13 +35,14 @@
 
 #wiki-page .wiki-section:hover {
   color: var(--color-fg-primary);
-  background: color-mix(in srgb, var(--color-bg-tertiary) 55%, transparent);
+  background: color-mix(in srgb, var(--wiki-topic-bg) 55%, transparent);
 }
 
 #wiki-page .wiki-section.is-active {
   color: var(--color-fg-primary);
-  background: color-mix(in srgb, var(--color-bg-primary) 70%, transparent);
-  box-shadow: inset 0 -4px var(--color-fg-green);
+  background: var(--wiki-topic-bg);
+  border: var(--border-thin);
+  border-bottom-color: var(--wiki-topic-bg);
 }
 
 #wiki-page .wiki-section > span {
@@ -81,55 +52,80 @@
 
 #wiki-page .wiki-topic-list {
   display: flex;
-  min-height: 2.4em;
+  gap: 2px;
   margin: 0 0.5em;
-  padding: 0;
+  padding: 0.3em 0.4em;
   overflow-x: auto;
   overflow-y: hidden;
   background: var(--wiki-topic-bg);
-  border-bottom: 3px solid
-    color-mix(in srgb, var(--color-bg-tertiary) 80%, #000);
-  border-radius: 0 0 6px 6px;
-  box-shadow: 0 2px 0 #00000020;
+  border: var(--border-thin);
+  border-radius: 10px;
 }
 
-#wiki-page .wiki-topic-tab {
+#wiki-page .wiki-topic-list > li.wiki-topic-tab {
   display: inline-flex;
   flex: 0 0 auto;
   align-items: center;
-  gap: 0.3em;
-  margin: 0;
-  padding: 0.6em 0.9em;
+  gap: 0.35em;
   color: var(--color-fg-secondary);
+}
+
+#wiki-page
+  :is(.wiki-topic-list, .wiki-pokemons > .react-tabs__tab-list)
+  > li.react-tabs__tab {
+  margin: 0;
+  padding: 0.3em 0.75em;
   background: transparent;
-  border: 0;
-  border-right: 1px solid var(--color-bg-tertiary);
-  border-radius: 0;
-  font-size: 0.9rem;
+  border: var(--border-thin);
+  border-color: transparent;
+  border-radius: 10px;
+  font-size: 1rem;
   font-weight: 600;
-  letter-spacing: 0.05em;
+  text-shadow: 1px 1px 0 #000000a0;
+  text-transform: none;
   white-space: nowrap;
 }
 
-#wiki-page .wiki-topic-tab:hover {
+#wiki-page
+  :is(.wiki-topic-list, .wiki-pokemons > .react-tabs__tab-list)
+  > li.react-tabs__tab:not(.react-tabs__tab--selected):hover {
   color: var(--color-fg-primary);
-  background: color-mix(in srgb, var(--color-bg-tertiary) 55%, transparent);
 }
 
-#wiki-page .wiki-topic-tab.react-tabs__tab--selected {
+#wiki-page
+  :is(.wiki-topic-list, .wiki-pokemons > .react-tabs__tab-list)
+  > li.react-tabs__tab--selected {
   color: var(--color-fg-primary);
-  background: color-mix(in srgb, var(--color-bg-primary) 70%, transparent);
+  border: var(--border-thin);
+  box-shadow: 0 2px 0 #00000050;
 }
 
-#wiki-page .wiki-topic-tab.react-tabs__tab--selected::after {
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 3px;
-  background: var(--color-fg-green);
+#wiki-page .wiki-topic-list > li.react-tabs__tab:hover {
+  background: color-mix(in srgb, var(--color-bg-primary) 50%, transparent);
 }
 
-#wiki-page .wiki-topic-tab--hidden {
+#wiki-page .wiki-topic-list > li.wiki-topic-tab.react-tabs__tab--selected {
+  background: var(--color-bg-primary);
+}
+
+#wiki-page .wiki-pokemons > .react-tabs__tab-list > li.react-tabs__tab:hover {
+  background: color-mix(in srgb, var(--color-bg-secondary) 60%, transparent);
+}
+
+#wiki-page
+  .wiki-pokemons
+  > .react-tabs__tab-list
+  > li.react-tabs__tab.react-tabs__tab--selected {
+  background: var(--color-bg-secondary);
+}
+
+#wiki-page
+  :is(.wiki-topic-list, .wiki-pokemons > .react-tabs__tab-list)
+  > li.react-tabs__tab--selected::after {
+  content: none;
+}
+
+#wiki-page .wiki-topic-list > li.wiki-topic-tab--hidden {
   display: none;
 }
 
@@ -171,85 +167,64 @@
 #wiki-page :is(.wiki-types, .wiki-pokemons) > .react-tabs__tab-list {
   display: flex;
   flex-wrap: nowrap;
+  gap: 2px;
   margin: 0 0.5em;
-  padding-left: 0.3em;
+  padding: 0 0.4em 0.5em;
   overflow-x: auto;
   overflow-y: hidden;
-  background: var(--wiki-subnav-bg);
-  border: 1px solid color-mix(in srgb, var(--color-bg-tertiary) 75%, #000);
-  border-bottom: 2px solid
-    color-mix(in srgb, var(--color-bg-tertiary) 70%, #000);
-  border-radius: 6px;
-  box-shadow: 0 2px 0 #00000018;
+  border: 0;
 }
 
-#wiki-page
-  :is(.wiki-types, .wiki-pokemons)
-  > .react-tabs__tab-list
-  > .react-tabs__tab:first-child {
-  border-radius: 5px 0 0 5px;
-}
-
-#wiki-page
-  :is(.wiki-types, .wiki-pokemons)
-  > .react-tabs__tab-list
-  > .react-tabs__tab:last-child {
-  border-right: 0;
-  border-radius: 0 5px 5px 0;
-}
-
-#wiki-page
-  :is(.wiki-types, .wiki-pokemons)
-  > .react-tabs__tab-list
-  > .react-tabs__tab {
+#wiki-page .wiki-types > .react-tabs__tab-list > .react-tabs__tab {
   flex: 0 0 auto;
   margin: 0;
   background: transparent;
-  border: 0;
-  border-right: 1px solid var(--color-bg-tertiary);
-  border-radius: 0;
+  border: var(--border-thin);
+  border-color: transparent;
+  border-radius: 10px;
+}
+
+#wiki-page .wiki-types > .react-tabs__tab-list > .react-tabs__tab:hover {
+  background: color-mix(in srgb, var(--color-bg-secondary) 60%, transparent);
+}
+
+#wiki-page .wiki-types > .react-tabs__tab-list > .react-tabs__tab--selected {
+  background: var(--color-bg-secondary);
+  border: var(--border-thin);
+  box-shadow: 0 3px 0 #00000050;
 }
 
 #wiki-page
-  :is(.wiki-types, .wiki-pokemons)
-  > .react-tabs__tab-list
-  > .react-tabs__tab:hover {
-  background: color-mix(in srgb, var(--color-bg-tertiary) 55%, transparent);
-}
-
-#wiki-page
-  :is(.wiki-types, .wiki-pokemons)
-  > .react-tabs__tab-list
-  > .react-tabs__tab--selected {
-  background: color-mix(in srgb, var(--color-bg-primary) 70%, transparent);
-}
-
-#wiki-page
-  :is(.wiki-types, .wiki-pokemons)
+  .wiki-types
   > .react-tabs__tab-list
   > .react-tabs__tab--selected::after {
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 2px;
-  background: var(--color-fg-green);
+  content: none;
+}
+
+#wiki-page .wiki-pokemons {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+}
+
+#wiki-page .wiki-pokemons > .react-tabs__tab-list {
+  grid-area: 1 / 1;
+  padding-block: 0.3em;
 }
 
 #wiki-page .wiki-pokemons > .filters {
+  grid-area: 1 / 2;
   float: none;
-  justify-content: flex-end;
-  min-height: 2.25em;
-  margin-right: 0.5em;
-  margin-left: 0.5em;
-  padding: 0.3em 0.5em;
-  background: var(--wiki-subnav-bg);
-  border-bottom: 1px solid var(--color-bg-tertiary);
+  margin: 0 0.5em;
+}
+
+#wiki-page .wiki-pokemons > .react-tabs__tab-panel {
+  grid-column: 1 / -1;
 }
 
 #wiki-page :is(.wiki-types, .wiki-pokemons) > .react-tabs__tab-panel--selected {
   padding-right: 1em;
   padding-left: 1em;
-  border-top: 2px solid #00000030;
 }
 
 #wiki-page .wiki-types > .react-tabs__tab-panel--selected > div {
@@ -289,7 +264,7 @@
 
 #wiki-page > .react-tabs > .react-tabs__tab-panel {
   height: 75vh;
-  padding: 0.35em 0 0;
+  padding: 0.75em 0 0;
   overflow-y: auto;
 }
 
@@ -865,11 +840,6 @@
 
 .wiki-letter-delivery-card .wiki-letter-delivery-header {
   grid-area: rewards-header;
-  padding: 0.65em 0.75em;
-  border: var(--border-thin);
-  border-left: 6px solid var(--color-fg-primary);
-  border-radius: 6px;
-  background: color-mix(in srgb, var(--color-bg-primary) 80%, #000);
 }
 
 .wiki-letter-delivery-seed-heading {
@@ -882,14 +852,6 @@
   flex: none;
   width: 1.75em;
   height: 1.75em;
-}
-
-.wiki-letter-delivery-seed-callout {
-  padding: 0.65em 0.75em;
-  border: var(--border-thin);
-  border-left: 6px solid var(--color-fg-primary);
-  border-radius: 6px;
-  background: color-mix(in srgb, var(--color-bg-primary) 80%, #000);
 }
 
 .wiki-letter-delivery-card .wiki-letter-delivery-table-wrap {
@@ -971,10 +933,6 @@
   padding: 0;
 }
 
-/* the panel is far wider than a table wants to be: full-width rows put the
-   row label and its last figure a screen apart. Constrained on the container
-   so headings, rules and cards cannot drift out of line with each other.
-   Matches the specificity of the tab-panel margin rule above it. */
 #wiki-page
   > .react-tabs
   > .react-tabs__tab-panel--selected
@@ -984,105 +942,80 @@
 }
 
 #wiki-data > h2 {
-  margin-block: 1.4em 0.6em;
-  padding-bottom: 0.35em;
-  border-bottom: 3px solid
-    color-mix(in srgb, var(--color-bg-tertiary) 75%, #000);
+  margin-block: 1.2em 0.4em;
 }
 
 #wiki-data > h2:first-of-type {
-  margin-top: 0.4em;
+  margin-top: 0.6em;
 }
 
 .wiki-data-intro {
   margin: 0;
-  color: var(--color-fg-secondary);
 }
 
 .wiki-data-list {
   display: grid;
-  gap: 0.75em;
-}
-
-/* only the formula cards pair up: they are the one group where every card
-   holds the same kind of content, so a row of them stays even */
-.wiki-data-list-pair {
-  grid-template-columns: repeat(2, 1fr);
+  gap: 0.5em;
 }
 
 .wiki-data-entry {
-  display: flex;
-  flex-direction: column;
-  padding: 0.9em 1.1em 1em;
+  padding: 0.5em 0.75em 0.65em;
   overflow-x: auto;
 }
 
 .wiki-data-entry > h3 {
-  margin: 0 0 0.25em;
-  font-size: 1.2em;
+  margin: 0 0 0.15em;
+  font-size: 1.15em;
 }
 
 .wiki-data-entry > p {
-  margin: 0 0 0.9em;
   max-width: 70ch;
-  font-size: 0.92em;
-  line-height: 1.5;
-  color: var(--color-fg-secondary);
+  margin: 0 0 0.5em;
+  line-height: 1.45;
 }
 
 .wiki-data-entry > table {
   width: 100%;
-  margin-top: auto;
 }
 
 .wiki-data-entry > .wiki-data-formula {
-  margin: 0 0 0.6em;
-  padding: 0.5em 0.8em;
-  border-radius: 8px;
-  border-left: 3px solid var(--color-fg-gold);
-  background-color: var(--color-bg-primary);
-  color: var(--color-fg-primary);
-  font-family: monospace;
-  font-size: 1em;
+  font-size: 1.1em;
+  font-weight: 700;
 }
 
 .wiki-data-entry > .wiki-data-example {
   margin: 0;
-  font-size: 0.88em;
+  color: var(--color-fg-secondary);
 }
 
-/* the letter delivery card renders its own header, so match the others */
 .wiki-data-entry .wiki-letter-delivery-header h3 {
-  font-size: 1.2em;
+  font-size: 1.15em;
 }
 
 .wiki-data-entry .wiki-letter-delivery-header p {
   max-width: 70ch;
-  font-size: 0.92em;
-  line-height: 1.5;
-  color: var(--color-fg-secondary);
+  line-height: 1.45;
 }
 
-/* a row label needs the room a percentage column does not */
 #wiki-data-special-pokemons-rate td:first-child {
   width: 45%;
   text-align: left;
 }
 
-/* a branching table: the stage 4 cell spans its three stage 12 outcomes, so
-   each tier is tinted and the cells are ruled into a grid to show the nesting */
 #wiki-data-wish-tier-odds :is(th, td) {
-  border: 1px solid color-mix(in srgb, var(--color-fg-primary) 18%, transparent);
   text-align: left;
-  vertical-align: middle;
+  vertical-align: top;
 }
 
 #wiki-data-wish-tier-odds tbody tr:nth-child(odd) {
   background-color: transparent;
 }
 
-/* the fixed layout takes its columns from the header row, which is the only
-   row that always has all three cells: the others sit under a rowspan */
+#wiki-data-wish-tier-odds tbody tr:nth-child(3n + 1) td {
+  border-top: 1px solid
+    color-mix(in srgb, var(--color-fg-primary) 25%, transparent);
+}
+
 #wiki-data-wish-tier-odds thead th:nth-child(1) {
   width: 36%;
 }
@@ -1098,39 +1031,6 @@
 
 .wiki-data-tier-name {
   opacity: 0.75;
-}
-
-/* tinted against the darkest panel colour rather than over the card, so the
-   bands read as recessed. The tier is identified by the text colour, so these
-   only need to group the rows, not name the tier. */
-.wiki-tier-cell-silver {
-  background-color: color-mix(
-    in srgb,
-    var(--color-rarity-common) 8%,
-    var(--color-bg-tertiary)
-  );
-}
-
-.wiki-tier-cell-gold {
-  background-color: color-mix(
-    in srgb,
-    var(--color-fg-gold) 10%,
-    var(--color-bg-tertiary)
-  );
-}
-
-.wiki-tier-cell-prismatic {
-  background-color: color-mix(
-    in srgb,
-    var(--color-rarity-epic) 15%,
-    var(--color-bg-tertiary)
-  );
-}
-
-@media (width <= 800px) {
-  .wiki-data-list-pair {
-    grid-template-columns: 1fr;
-  }
 }
 
 #wiki-data table,
@@ -1149,16 +1049,13 @@
 .wiki-letter-delivery th,
 #wiki-data td,
 .wiki-letter-delivery td {
-  padding: 0.55em 0.75em;
+  padding: 0.45em 0.7em;
   line-height: 1.4;
 }
 
 #wiki-data thead th,
 .wiki-letter-delivery thead th {
-  font-size: 0.78em;
   font-weight: bold;
-  letter-spacing: 0.07em;
-  text-transform: uppercase;
 }
 
 #wiki-data tbody tr:nth-child(odd),
@@ -1166,16 +1063,12 @@
   background-color: var(--color-bg-primary);
 }
 
-/* the first cell of these tables names the row rather than reporting a figure,
-   so it reads as a label and is ruled off from the numbers beside it */
 #wiki-data-tiers-by-level tbody :is(th, td):first-child,
 #wiki-data-fishing-rarity-rate tbody :is(th, td):first-child,
 #wiki-data-special-pokemons-rate tbody :is(th, td):first-child,
 #wiki-data-experience-by-rank tbody :is(th, td):first-child,
 #wiki-data-explorer-bonus-rate tbody :is(th, td):first-child {
   text-align: left;
-  border-right: 1px solid
-    color-mix(in srgb, var(--color-fg-primary) 25%, transparent);
 }
 
 #wiki-data-fishing-rarity-rate :is(th, td):first-child {
@@ -1191,7 +1084,6 @@
   width: 10ch;
 }
 
-/* level and XP are 1 to 3 characters, so they take half a rarity column */
 #wiki-data-tiers-by-level :is(th, td):nth-child(-n + 2) {
   width: 5ch;
 }
@@ -1237,15 +1129,6 @@
 }
 
 @media (width <= 720px) {
-  #wiki-page .wiki-navigation {
-    grid-template-columns: 1fr;
-  }
-
-  #wiki-page .wiki-index-heading {
-    justify-self: start;
-    padding: 0.25em 0.5em;
-  }
-
   #wiki-page .wiki-section-list {
     flex-wrap: nowrap;
     overflow-x: auto;

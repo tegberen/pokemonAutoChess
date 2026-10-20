@@ -10,34 +10,20 @@
   font-size: 0.85em;
 }
 
-/* the gate that comes before every condition below: darker, squarer and wider
-   set than the cards, so it reads as the system requirement rather than one
-   more unlock */
-.wiki-fossil-entry {
+.wiki-fossil-unlocks > .wiki-fossil-entry {
   display: flex;
   align-items: center;
   gap: 0.75em;
-  margin: 0 0 1.4em;
-  padding: 0.75em 1em;
-  border: var(--border-thin);
-  border-left: 6px solid var(--fossil-accent, #d2d35b);
-  border-radius: 6px;
-  color: var(--color-fg-secondary);
-  background: color-mix(in srgb, var(--color-bg-primary) 80%, #000);
-  font-size: 0.98em;
-  line-height: 1.4;
+  margin: 0 0 1em;
+  padding: 0.55em 0.9em;
+  font-size: 1em;
+  line-height: 1.45;
 }
 
 .wiki-fossil-entry > img {
   flex: none;
   width: 1.4em;
   height: 1.4em;
-  opacity: 0.85;
-}
-
-.wiki-fossil-entry strong {
-  color: var(--color-fg-primary);
-  font-weight: 700;
 }
 
 .wiki-fossil-unlocks ul {
@@ -49,44 +35,43 @@
   list-style: none;
 }
 
-/* the rarity reaches the card through one variable, set inline per card, so the
-   frame stays neutral and only the accents carry colour */
 .wiki-fossil-unlocks li {
-  position: relative;
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr);
   align-items: start;
-  gap: 0.7em;
-  padding: 0.5em 0.6em 0.55em 0.75em;
+  gap: 0.45em;
+  padding: 0.55em 0.65em;
   overflow: hidden;
   border: var(--border-thin);
-  border-radius: 10px;
+  border-radius: 12px;
   background: var(--color-bg-secondary);
 }
 
-/* a rarity spine rather than a coloured card: readable, and still scannable */
-.wiki-fossil-unlocks li::before {
-  content: "";
-  position: absolute;
-  inset: 0 auto 0 0;
-  width: 3px;
-  background: var(--rarity-color);
+.wiki-fossil-card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.6em;
+  padding-bottom: 0.4em;
+  border-bottom: var(--border-thin);
 }
 
-.wiki-fossil-unlocks li > img {
+.wiki-fossil-unlocks li > img,
+.wiki-fossil-card-header > img {
   width: 44px;
   height: 44px;
-  border: 1px solid #000;
-  border-radius: 6px;
-  background: color-mix(in srgb, var(--rarity-color) 18%, #000);
+  border: var(--border-thin);
+  border-radius: 8px;
+  background: var(--rarity-color);
+  box-shadow: 2px 2px 0 #00000060;
   image-rendering: pixelated;
 }
 
 .wiki-fossil-unlocks h4 {
   display: flex;
-  align-items: baseline;
-  gap: 0.5em;
-  margin: 0 0 0.45em;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.15em;
+  margin: 0;
   color: var(--color-fg-primary);
   font-size: 1.05em;
   line-height: 1.1;
@@ -96,12 +81,9 @@
 .wiki-fossil-unlocks h4 em {
   flex: none;
   color: var(--rarity-color);
-  font-size: 0.62em;
+  font-size: 0.8em;
   font-style: normal;
   font-weight: 700;
-  letter-spacing: 0.09em;
-  text-transform: uppercase;
-  text-shadow: none;
 }
 
 /* an unlock only reachable while holding a blessing. Shaped like the LEVEL gate
@@ -123,8 +105,7 @@
 
 .wiki-fossil-unlocks li p {
   margin: 0;
-  color: color-mix(in srgb, var(--color-fg-primary) 82%, transparent);
-  font-size: 0.82em;
+  font-size: 0.92em;
   line-height: 1.45;
 }
 
@@ -168,6 +149,5 @@
 .wiki-fossil-restorations h4 {
   display: block;
   min-width: 0;
-  margin: 0;
   overflow-wrap: anywhere;
 }

@@ -235,10 +235,7 @@ export default function WikiData() {
                 blessingTiers.map((second, index) => (
                   <tr key={`${first}-${second}`}>
                     {index === 0 && (
-                      <td
-                        rowSpan={blessingTiers.length}
-                        className={`wiki-tier-cell-${first.toLowerCase()}`}
-                      >
+                      <td rowSpan={blessingTiers.length}>
                         <TierOdds
                           tier={first}
                           chance={percentage.format(
@@ -247,7 +244,7 @@ export default function WikiData() {
                         />
                       </td>
                     )}
-                    <td className={`wiki-tier-cell-${second.toLowerCase()}`}>
+                    <td>
                       <TierOdds
                         tier={second}
                         chance={percentage.format(
@@ -316,7 +313,7 @@ export default function WikiData() {
       </div>
 
       <h2>{t("wiki.data.group_formulas")}</h2>
-      <div className="wiki-data-list wiki-data-list-pair">
+      <div className="wiki-data-list">
         <DataEntry
           title={addIconsToDescription(t("wiki.data.defense_calculation"))}
         >

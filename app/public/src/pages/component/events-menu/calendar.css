@@ -86,9 +86,7 @@
 .calendar-event-card.news {
   min-height: 12em;
   background-color: #1f4f86;
-  background-image:
-    radial-gradient(ellipse at 0% 0%, rgb(8 62 92 / 55%), transparent 65%),
-    url("assets/ui/cards/news_card.jpg");
+  background-image: url("assets/ui/cards/news_card.jpg");
   background-position: 85% 30%;
   background-size: cover;
 }

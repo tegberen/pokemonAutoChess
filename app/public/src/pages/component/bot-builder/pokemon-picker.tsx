@@ -396,6 +396,7 @@ function PokemonPickerTab(props: {
               src="assets/ui/planned.png"
               alt=""
             />
+            {props.isMarked ? t("unmark") : t("mark")}
           </button>
         )}
         {ingame && (

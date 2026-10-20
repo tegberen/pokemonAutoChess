@@ -32,23 +32,17 @@
   white-space: nowrap;
 }
 
-.interface-options {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
 .interface-options__selectors {
   display: grid;
-  gap: 16px;
+  gap: 12px;
 }
 
 .interface-options__field,
 .interface-options__renderer {
   padding: 10px 12px;
-  border: 1px solid rgb(255 255 255 / 12%);
-  border-radius: 8px;
-  background: rgb(255 255 255 / 4%);
+  border: var(--border-thin);
+  border-radius: 12px;
+  background: var(--color-bg-secondary);
 }
 
 .interface-options__field > label,
@@ -64,23 +58,24 @@
   min-width: 130px;
 }
 
-.game-options-modal .modal-body p.interface-options__hint {
+.game-options-modal .modal-body p.interface-options__hint,
+.game-options-modal .modal-body .interface-options__renderer > p.info {
   margin: 7px 0 0;
-  color: rgb(255 255 255 / 65%);
+  color: var(--color-fg-secondary);
 }
 
 .interface-options__toggles {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   padding: 5px;
-  border: 1px solid rgb(255 255 255 / 12%);
-  border-radius: 8px;
-  background: rgb(255 255 255 / 4%);
+  border: var(--border-thin);
+  border-radius: 12px;
+  background: var(--color-bg-secondary);
 }
 
 .interface-options__selectors + .interface-options__toggles,
 .interface-options__toggles + .interface-options__renderer {
-  margin-top: 16px;
+  margin-top: 12px;
 }
 
 .game-options-modal .modal-body .interface-options__toggles > p {
@@ -91,20 +86,15 @@
 }
 
 .interface-options__toggles > p:nth-child(even) {
-  border-left: 1px solid rgb(255 255 255 / 9%);
+  border-left: 1px solid var(--color-bg-tertiary);
 }
 
 .interface-options__toggles > p:not(:nth-last-child(-n + 2)) {
-  border-bottom: 1px solid rgb(255 255 255 / 9%);
+  border-bottom: 1px solid var(--color-bg-tertiary);
 }
 
 .interface-options__toggles .checkbox-container {
   width: 100%;
-}
-
-.interface-options__renderer > p.info {
-  margin: 7px 0 0;
-  color: rgb(255 255 255 / 65%);
 }
 
 @media (max-width: 620px) {
@@ -117,7 +107,7 @@
   }
 
   .interface-options__toggles > p:not(:last-child) {
-    border-bottom: 1px solid rgb(255 255 255 / 9%);
+    border-bottom: 1px solid var(--color-bg-tertiary);
   }
 
   .game-options-modal .react-tabs__tab {

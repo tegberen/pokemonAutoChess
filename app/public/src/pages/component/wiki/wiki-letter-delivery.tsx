@@ -60,7 +60,7 @@ export function WikiLetterDelivery(props: {
       {props.showSeeds && (
         <div className="wiki-letter-delivery-seeds">
           <hr />
-          <div className="wiki-letter-delivery-seed-callout">
+          <div>
             <div className="wiki-letter-delivery-seed-heading">
               <img
                 className="wiki-letter-delivery-seed-icon"

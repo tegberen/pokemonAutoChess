@@ -21,7 +21,7 @@ export function WikiFossilUnlocks() {
     <section className="wiki-fossil-unlocks">
       <h3>{t("fossil_unlocks.title")}</h3>
       <p className="help">{t("fossil_unlocks.subtitle")}</p>
-      <p className="wiki-fossil-entry">
+      <p className="my-box wiki-fossil-entry">
         <img src="/assets/icons/FOSSIL_PIN_ICON.svg" alt="" />
         <span>
           {/* the locale string marks its emphasis with **...**, so translators
@@ -47,26 +47,26 @@ export function WikiFossilUnlocks() {
                 { "--rarity-color": RarityColor[pokemon.rarity] } as CSSProperties
               }
             >
-              <img
-                src={getPortraitSrc(pokemon.index)}
-                alt={t(`pkm.${unlock.pokemon}`)}
-                data-tooltip-id="game-pokemon-detail-tooltip"
-                data-tooltip-content={unlock.pokemon}
-              />
-              <div>
+              <div className="wiki-fossil-card-header">
+                <img
+                  src={getPortraitSrc(pokemon.index)}
+                  alt={t(`pkm.${unlock.pokemon}`)}
+                  data-tooltip-id="game-pokemon-detail-tooltip"
+                  data-tooltip-content={unlock.pokemon}
+                />
                 <h4>
                   {t(`pkm.${unlock.pokemon}`)}
                   <em>{t(`rarity.${pokemon.rarity}`)}</em>
                 </h4>
-                <p>
-                  {unlock.requiresBlessing && (
-                    <b className="wiki-fossil-blessing">
-                      {t(`blessing.${unlock.requiresBlessing}.name`)}
-                    </b>
-                  )}
-                  <FossilUnlockCondition conditionKey={unlock.conditionKey} />
-                </p>
               </div>
+              <p>
+                {unlock.requiresBlessing && (
+                  <b className="wiki-fossil-blessing">
+                    {t(`blessing.${unlock.requiresBlessing}.name`)}
+                  </b>
+                )}
+                <FossilUnlockCondition conditionKey={unlock.conditionKey} />
+              </p>
             </li>
           )
         })}
@@ -83,7 +83,7 @@ export function WikiFossilRestorations() {
   return (
     <section className="wiki-fossil-unlocks wiki-fossil-restorations">
       <h3>{t("fossil_unlocks.restoration_title")}</h3>
-      <p className="wiki-fossil-entry">
+      <p className="my-box wiki-fossil-entry">
         {t("fossil_unlocks.restoration_source", {
           fights: FOSSIL_RESTORATION_FIGHTS_PER_DISCOVERY
         })

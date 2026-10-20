@@ -103,7 +103,7 @@ export default function GameOptionsModal(props: {
           </p>
         </TabPanel>
 
-        <TabPanel className="interface-options">
+        <TabPanel>
           <div className="interface-options__selectors">
           {props.page === "main_lobby" && (
             <div className="interface-options__field">

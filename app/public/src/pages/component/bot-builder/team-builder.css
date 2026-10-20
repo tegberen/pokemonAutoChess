@@ -84,18 +84,24 @@
   image-rendering: pixelated;
 }
 
+#team-editor td > div {
+  position: relative;
+  width: fit-content;
+  line-height: 0;
+}
+
 #team-editor td .pokemon-items {
   position: absolute;
-  bottom: 0;
+  bottom: 1px;
+  left: calc(var(--team-editor-cell) * 3 / 84 - 2px);
   display: flex;
-  justify-content: space-evenly;
   gap: 1px;
   user-select: none;
 }
 
 #team-editor td .pokemon-items > img {
-  height: 26px;
-  width: 26px;
+  width: calc(var(--team-editor-cell) * 26 / 84);
+  height: calc(var(--team-editor-cell) * 26 / 84);
   object-fit: contain;
   border-radius: 50%;
   border: var(--border-thin);
@@ -420,13 +426,13 @@
 }
 
 #team-builder #pokemon-picker .mark-synergy-button {
-  display: grid;
-  place-content: center;
-  width: 2.5em;
-  height: 2.5em;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3em;
   margin-right: auto;
-  padding: 0;
-  font-size: 1em;
+  padding-inline: 0.7em;
+  font-size: clamp(0.8rem, 1vw, 1.1rem);
+  white-space: nowrap;
 }
 
 #team-builder .actions .unmark-all-button > img {
@@ -435,8 +441,8 @@
 }
 
 #team-builder #pokemon-picker .mark-synergy-button > .mark-synergy-pawn {
-  width: 1.5em;
-  height: 1.5em;
+  width: 1.2em;
+  height: 1.2em;
   margin: 0;
 }
 

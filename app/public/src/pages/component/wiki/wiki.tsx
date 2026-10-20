@@ -134,9 +134,6 @@ export default function Wiki({
     <div id="wiki-page">
       <Tabs selectedIndex={selectedIndex} onSelect={(index) => selectTab(index)}>
         <nav className="wiki-navigation" aria-label={t("wiki.title", "Wiki")}>
-          <div className="wiki-index-heading">
-            {t("wiki.nav.index_label", { defaultValue: "Index" })}
-          </div>
           <div className="wiki-section-list">
             {groups.map((group) => (
               <button
