@@ -16,6 +16,7 @@ import {
   MAX_CONCURRENT_PLAYERS_ON_SERVER,
   TOURNAMENT_CLEANUP_DELAY
 } from "../config"
+import { TOURNAMENT_RULES } from "../core/tournament-swiss"
 import Message from "../models/colyseus-models/message"
 import { TournamentSchema } from "../models/colyseus-models/tournament"
 import ChatV2 from "../models/mongo-models/chat-v2"
@@ -32,6 +33,7 @@ import { MaintenanceOrder } from "../types/enum/MaintenanceOrder"
 import type { TournamentFormat } from "../types/interfaces/Tournament"
 import type { IUserMetadataMongo } from "../types/interfaces/UserMetadata"
 import { logger } from "../utils/logger"
+import { hasModeratorRights } from "../utils/roles"
 import {
   BanUserCommand,
   ChangeAvatarCommand,
@@ -65,7 +67,6 @@ import {
   RemakeTournamentLobbyCommand,
   RenameTournamentCommand,
   ReplaceTournamentPlayerCommand,
-  SetTournamentWishesCommand,
   SimulateTournamentRoundCommand,
   StartTournamentCommand,
   StartTournamentLobbyNowCommand,
@@ -226,7 +227,9 @@ export default class CustomLobbyRoom extends Room {
           client,
           name: message.name,
           startDate: message.startDate,
-          format: message.format === "solo" ? "solo" : "duo"
+          format: Object.hasOwn(TOURNAMENT_RULES, message.format)
+            ? message.format
+            : "duo"
         })
       }
     )
@@ -275,17 +278,6 @@ export default class CustomLobbyRoom extends Room {
           client,
           tournamentId: message.tournamentId,
           name: message.name
-        })
-      }
-    )
-
-    this.onMessage(
-      Transfer.SET_TOURNAMENT_WISHES,
-      (client, message: { tournamentId: string; enabled: boolean }) => {
-        this.dispatcher.dispatch(new SetTournamentWishesCommand(), {
-          client,
-          tournamentId: message.tournamentId,
-          enabled: message.enabled
         })
       }
     )
@@ -462,7 +454,15 @@ export default class CustomLobbyRoom extends Room {
           doubleUpEnabled,
           doubleUpTitle,
           doubleUpMessage,
-          doubleUpDate
+          doubleUpDate,
+          newsEnabled,
+          newsTitle,
+          newsMessage,
+          newsDate,
+          misfitsEnabled,
+          misfitsTitle,
+          misfitsMessage,
+          misfitsDate
         }: {
           enabled: boolean
           pokemon: string
@@ -479,6 +479,14 @@ export default class CustomLobbyRoom extends Room {
           doubleUpTitle: string
           doubleUpMessage: string
           doubleUpDate: string
+          newsEnabled: boolean
+          newsTitle: string
+          newsMessage: string
+          newsDate: string
+          misfitsEnabled: boolean
+          misfitsTitle: string
+          misfitsMessage: string
+          misfitsDate: string
         }
       ) => {
         this.dispatcher.dispatch(new SetEventNpcCommand(), {
@@ -497,7 +505,15 @@ export default class CustomLobbyRoom extends Room {
           doubleUpEnabled,
           doubleUpTitle,
           doubleUpMessage,
-          doubleUpDate
+          doubleUpDate,
+          newsEnabled,
+          newsTitle,
+          newsMessage,
+          newsDate,
+          misfitsEnabled,
+          misfitsTitle,
+          misfitsMessage,
+          misfitsDate
         })
       }
     )
@@ -660,8 +676,7 @@ export default class CustomLobbyRoom extends Room {
       } else if (
         (this.state.ccu > MAX_CONCURRENT_PLAYERS_ON_SERVER ||
           this.clients.length > MAX_CONCURRENT_PLAYERS_ON_LOBBY) &&
-        user?.role !== Role.ADMIN &&
-        user?.role !== Role.MODERATOR
+        !hasModeratorRights(user?.role)
       ) {
         throw new Error(
           "This server is currently at maximum capacity. Please try again later or join another server."
@@ -761,7 +776,6 @@ export default class CustomLobbyRoom extends Room {
               tournament.teams,
               tournament.stage,
               tournament.roundNumber,
-              tournament.wishesEnabled,
               tournament.format
             )
           )

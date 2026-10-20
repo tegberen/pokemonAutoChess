@@ -35,6 +35,14 @@ export interface IEventNpcState {
   doubleUpTitle: string
   doubleUpMessage: string
   doubleUpDate: string
+  newsEnabled: boolean
+  newsTitle: string
+  newsMessage: string
+  newsDate: string
+  misfitsEnabled: boolean
+  misfitsTitle: string
+  misfitsMessage: string
+  misfitsDate: string
 }
 
 export interface IUserLobbyState {
@@ -87,7 +95,15 @@ const initialState: IUserLobbyState = {
     doubleUpEnabled: false,
     doubleUpTitle: "Double Up Tournament",
     doubleUpMessage: "",
-    doubleUpDate: ""
+    doubleUpDate: "",
+    newsEnabled: false,
+    newsTitle: "News",
+    newsMessage: "",
+    newsDate: "",
+    misfitsEnabled: false,
+    misfitsTitle: "Misfits Tournament",
+    misfitsMessage: "",
+    misfitsDate: ""
   }
 }
 

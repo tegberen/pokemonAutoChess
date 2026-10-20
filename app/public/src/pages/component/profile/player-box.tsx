@@ -2,13 +2,13 @@ import { useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
 import type { IGameRecord } from "../../../../../models/colyseus-models/game-record"
 import { getPokemonData } from "../../../../../models/precomputed/precomputed-pokemon-data"
-import { Role } from "../../../../../types"
 import { type Pkm, PkmIndex } from "../../../../../types/enum/Pokemon"
 import type { Synergy } from "../../../../../types/enum/Synergy"
 import type {
   IUserMetadataClient,
   IUserMetadataUnpacked
 } from "../../../../../types/interfaces/UserMetadata"
+import { hasModeratorRights } from "../../../../../utils/roles"
 import { useAppSelector } from "../../../hooks"
 import SynergyIcon from "../icons/synergy-icon"
 import PokemonPortrait from "../pokemon-portrait"
@@ -133,7 +133,7 @@ export default function PlayerBox(props: {
           ))}
         </p>
       </div>
-      {(role === Role.ADMIN || role === Role.MODERATOR) && (
+      {hasModeratorRights(role) && (
         <p style={{ color: "#aaa", fontSize: "60%" }}>
           {t("profile.account.user_id")}: {props.user.uid}
         </p>

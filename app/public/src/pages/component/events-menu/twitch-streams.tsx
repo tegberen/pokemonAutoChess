@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
-import { Role } from "../../../../../types"
+import { hasModeratorRights } from "../../../../../utils/roles"
 import { useAppSelector } from "../../../hooks"
 import { addTwitchBlacklist } from "../../../network"
 import { RemoveButton } from "../buttons/remove-button"
@@ -56,7 +56,7 @@ export function TwitchStreams() {
   const [isDeleting, setIsDeleting] = useState(false)
 
   const canModerateStreams =
-    user?.role === Role.ADMIN || user?.role === Role.MODERATOR
+    hasModeratorRights(user?.role)
 
   const fetchStreams = useCallback(async () => {
     try {

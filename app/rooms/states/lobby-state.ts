@@ -30,6 +30,14 @@ export default class LobbyState extends Schema {
   @type("string") doubleUpTitle = ""
   @type("string") doubleUpMessage = ""
   @type("string") doubleUpDate = ""
+  @type("boolean") newsEnabled = false
+  @type("string") newsTitle = ""
+  @type("string") newsMessage = ""
+  @type("string") newsDate = ""
+  @type("boolean") misfitsEnabled = false
+  @type("string") misfitsTitle = ""
+  @type("string") misfitsMessage = ""
+  @type("string") misfitsDate = ""
 
   addMessage(
     payload: string,
@@ -94,7 +102,6 @@ export default class LobbyState extends Schema {
       teams: new Map(),
       stage: "registration",
       roundNumber: 0,
-      wishesEnabled: false,
       finished: false
     } as unknown as Partial<ITournament>)
   }
@@ -125,6 +132,14 @@ export default class LobbyState extends Schema {
     this.doubleUpTitle = config.doubleUpTitle
     this.doubleUpMessage = config.doubleUpMessage
     this.doubleUpDate = config.doubleUpDate
+    this.newsEnabled = config.newsEnabled
+    this.newsTitle = config.newsTitle
+    this.newsMessage = config.newsMessage
+    this.newsDate = config.newsDate
+    this.misfitsEnabled = config.misfitsEnabled
+    this.misfitsTitle = config.misfitsTitle
+    this.misfitsMessage = config.misfitsMessage
+    this.misfitsDate = config.misfitsDate
     await eventNpc.findOneAndUpdate({}, config, { upsert: true })
   }
 
@@ -146,6 +161,14 @@ export default class LobbyState extends Schema {
       this.doubleUpTitle = doc.doubleUpTitle ?? "Double Up Tournament"
       this.doubleUpMessage = doc.doubleUpMessage ?? ""
       this.doubleUpDate = doc.doubleUpDate ?? ""
+      this.newsEnabled = doc.newsEnabled ?? false
+      this.newsTitle = doc.newsTitle ?? "News"
+      this.newsMessage = doc.newsMessage ?? ""
+      this.newsDate = doc.newsDate ?? ""
+      this.misfitsEnabled = doc.misfitsEnabled ?? false
+      this.misfitsTitle = doc.misfitsTitle ?? "Misfits Tournament"
+      this.misfitsMessage = doc.misfitsMessage ?? ""
+      this.misfitsDate = doc.misfitsDate ?? ""
     }
   }
 }

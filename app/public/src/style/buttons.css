@@ -223,7 +223,8 @@ button {
 /* Themed buttons: a theme that defines --theme-button repaints the main
    action buttons with it, New Game, every preparation room button, the
    room lists' Join / Reconnect / Spectate, the after-game Back to Lobby, the
-   Wish Quiz, the wiki's Wish stage filters and the lobby chat's Send.
+   Wish Quiz, the wiki's Wish stage filters, the lobby chat's Send and the
+   staff panels' main actions.
    A confirmed Ready ✓ takes --theme-ready. theme.ts sets
    data-themed-buttons once such a theme loaded */
 :root[data-themed-buttons] .lobby .play-button.bubbly.green,
@@ -237,7 +238,11 @@ button {
 :root[data-themed-buttons] .tournament-item .actions > .bubbly.blue,
 :root[data-themed-buttons] .wish-quiz-modal .bubbly.blue,
 :root[data-themed-buttons] .wiki-blessings-filters .bubbly.blue,
-:root[data-themed-buttons] .announcements-container .bubbly.blue {
+:root[data-themed-buttons] .announcements-container .bubbly.blue,
+:root[data-themed-buttons] .tournaments-admin .bubbly.blue,
+:root[data-themed-buttons] .tournaments-admin .bubbly.green,
+:root[data-themed-buttons] .calendar-admin .bubbly.blue,
+:root[data-themed-buttons] .profile-staff-tools .bubbly.blue {
   background: var(--theme-button);
   color: var(--theme-button-text);
   text-shadow: var(--theme-button-text-shadow);
@@ -257,7 +262,11 @@ button {
 :root[data-themed-buttons] .tournament-item .actions > .bubbly.blue:not([disabled]):hover,
 :root[data-themed-buttons] .wish-quiz-modal .bubbly.blue:not([disabled]):hover,
 :root[data-themed-buttons] .wiki-blessings-filters .bubbly.blue:not([disabled]):hover,
-:root[data-themed-buttons] .announcements-container .bubbly.blue:not([disabled]):hover {
+:root[data-themed-buttons] .announcements-container .bubbly.blue:not([disabled]):hover,
+:root[data-themed-buttons] .tournaments-admin .bubbly.blue:not([disabled]):hover,
+:root[data-themed-buttons] .tournaments-admin .bubbly.green:not([disabled]):hover,
+:root[data-themed-buttons] .calendar-admin .bubbly.blue:not([disabled]):hover,
+:root[data-themed-buttons] .profile-staff-tools .bubbly.blue:not([disabled]):hover {
   background: var(--theme-button-hover);
 }
 
@@ -272,7 +281,11 @@ button {
 :root[data-themed-buttons] .tournament-item .actions > .bubbly.blue:not([disabled]):active,
 :root[data-themed-buttons] .wish-quiz-modal .bubbly.blue:not([disabled]):active,
 :root[data-themed-buttons] .wiki-blessings-filters .bubbly.blue:not([disabled]):active,
-:root[data-themed-buttons] .announcements-container .bubbly.blue:not([disabled]):active {
+:root[data-themed-buttons] .announcements-container .bubbly.blue:not([disabled]):active,
+:root[data-themed-buttons] .tournaments-admin .bubbly.blue:not([disabled]):active,
+:root[data-themed-buttons] .tournaments-admin .bubbly.green:not([disabled]):active,
+:root[data-themed-buttons] .calendar-admin .bubbly.blue:not([disabled]):active,
+:root[data-themed-buttons] .profile-staff-tools .bubbly.blue:not([disabled]):active {
   background: var(--theme-button);
   box-shadow:
     inset 6px 6px 0px 0px #00000040,

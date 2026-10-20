@@ -1,15 +1,21 @@
 import firebase from "firebase/compat/app"
 import type React from "react"
-import { useCallback, useRef, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { Tab, TabList, TabPanel, Tabs } from "react-tabs"
 import type { IGameRecord } from "../../../../../models/colyseus-models/game-record"
 import { type ISuggestionUser, Role, Title } from "../../../../../types"
 import type { IUserMetadataUnpacked } from "../../../../../types/interfaces/UserMetadata"
 import { debounce } from "../../../../../utils/function"
+import {
+  canManageTournaments,
+  getGivableTitles,
+  hasModeratorRights
+} from "../../../../../utils/roles"
 import { useAppDispatch, useAppSelector } from "../../../hooks"
 import {
   ban,
+  giveRole,
   giveTitle,
   searchById,
   setDoubleUpChampion,
@@ -27,6 +33,14 @@ import { SearchBar } from "./search-bar"
 import SearchResults from "./search-results"
 import { TitleTab } from "./title-tab"
 import "./profile.css"
+
+// Admin and Bot are never handed out by hand
+const GIVABLE_ROLES = [
+  Role.BASIC,
+  Role.MODERATOR,
+  Role.ORGANIZER,
+  Role.BOT_MANAGER
+]
 
 export default function Profile() {
   const { t } = useTranslation()
@@ -184,188 +198,184 @@ function OtherProfileActions(props: {
   const currentUid = useAppSelector((state) => state.network.profile?.uid)
   const role = useAppSelector((state) => state.network.profile?.role)
   const user = useAppSelector((state) => state.lobby.searchedUser)
-  const [title, setTitle] = useState<Title>(user?.title || Title.ACE_TRAINER)
-  // const [profileRole, setProfileRole] = useState<Role>(user?.role ?? Role.BASIC)
+  const givableTitles = getGivableTitles(role)
+  const [title, setTitle] = useState<Title>(
+    givableTitles.includes(user?.title as Title)
+      ? (user?.title as Title)
+      : (givableTitles[0] ?? Title.ACE_TRAINER)
+  )
+  const [roleToGive, setRoleToGive] = useState<Role>(user?.role ?? Role.BASIC)
+  useEffect(
+    () => setRoleToGive(user?.role ?? Role.BASIC),
+    [user?.uid, user?.role]
+  )
 
-  // const giveButton =
-  //   user && role && role === Role.ADMIN ? (
-  //     <button
-  //       className="bubbly green"
-  //       onClick={() => {
-  //         giveBooster({
-  //           numberOfBoosters: Number(prompt("How many boosters ?")) || 1,
-  //           uid: user.uid
-  //         })
-  //       }}
-  //     >
-  //       {t("give_boosters")}
-  //     </button>
-  //   ) : null
-
-  const banButton =
-    user && role && (role === Role.ADMIN || role === Role.MODERATOR) ? (
-      <button
-        className="bubbly red"
-        onClick={() => {
-          const reason = prompt(`Reason for the ban:`)
-          ban({ uid: user.uid, reason: reason ?? "" })
-        }}
-      >
-        {t("ban_user")}
-      </button>
-    ) : null
-
-  const unbanButton =
-    user && role && (role === Role.ADMIN || role === Role.MODERATOR) ? (
-      <button
-        className="bubbly red"
-        onClick={() => {
-          const reason = prompt(`Reason for the unban:`)
-          unban({ uid: user.uid, reason: reason ?? "" })
-        }}
-      >
-        {t("unban_user")}
-      </button>
-    ) : null
-
-  const chatHistoryButton =
-    user && role && (role === Role.ADMIN || role === Role.MODERATOR) ? (
-      <button
-        className="bubbly blue"
-        onClick={() => {
-          props.setRightPanel("chat")
-        }}
-      >
-        {t("see_chat_history")}
-      </button>
-    ) : null
-
-  const gameHistoryButton =
-    user && role && (role === Role.ADMIN || role === Role.MODERATOR) ? (
-      <button
-        className="bubbly blue"
-        onClick={() => {
-          props.setRightPanel("game")
-        }}
-      >
-        {t("see_game_history")}
-      </button>
-    ) : null
-
-  // const roleButton =
-  //   user && role && role === Role.ADMIN ? (
-  //     <div className="my-input-group">
-  //       <button
-  //         className="bubbly orange"
-  //         onClick={() => {
-  //           giveRole({ uid: user.uid, role: profileRole })
-  //           alert(`Role ${profileRole} given to ${user.displayName}`)
-  //         }}
-  //       >
-  //         {t("give_role")}
-  //       </button>
-  //       <select
-  //         value={profileRole}
-  //         onChange={(e) => {
-  //           setProfileRole(e.target.value as Role)
-  //         }}
-  //       >
-  //         {Object.keys(Role).map((r) => (
-  //           <option key={r} value={r}>
-  //             {t("role." + r).toUpperCase()}
-  //           </option>
-  //         ))}
-  //       </select>
-  //     </div>
-  //   ) : null
-
-  const titleButton =
-    user && role && role === Role.ADMIN ? (
-      <div className="my-input-group">
-        <button
-          className="bubbly blue"
-          onClick={() => {
-            giveTitle({ uid: user.uid, title: title })
-            alert(`Title ${title} given to ${user.displayName}`)
-          }}
-        >
-          {t("give_title")}
-        </button>
-        <select
-          value={title}
-          onChange={(e) => {
-            setTitle(e.target.value as Title)
-          }}
-        >
-          {Object.keys(Title).map((ti) => (
-            <option key={ti} value={ti}>
-              {ti}
-            </option>
-          ))}
-        </select>
-      </div>
-    ) : null
-
-  const championButtons =
-    user && role && role === Role.ADMIN ? (
-      <div className="my-input-group">
-        <button
-          className="bubbly blue"
-          onClick={() => {
-            setDoubleUpChampion({ uid: user.uid, slot: 0 })
-            alert(`${user.displayName} set as Double-Up Champion (Left)`)
-          }}
-        >
-          {t("set_double_up_champion_left")}
-        </button>
-        <button
-          className="bubbly blue"
-          onClick={() => {
-            setDoubleUpChampion({ uid: user.uid, slot: 1 })
-            alert(`${user.displayName} set as Double-Up Champion (Right)`)
-          }}
-        >
-          {t("set_double_up_champion_right")}
-        </button>
-        <button
-          className="bubbly blue"
-          onClick={() => {
-            setSmeargleScribbleChampion({ uid: user.uid })
-            alert(`${user.displayName} set as Smeargle Scribble Champion`)
-          }}
-        >
-          {t("set_smeargle_scribble_champion")}
-        </button>
-      </div>
-    ) : null
+  if (!user) return null
+  const isAdmin = role === Role.ADMIN
+  const isOtherPlayer = !!currentUid && user.uid !== currentUid
 
   return (
     <>
-      {user && (
-        <Tabs>
-          <TabList>
-            <Tab>Record</Tab>
-          </TabList>
-          <TabPanel>
-            <EloTab user={user} gameHistory={props.gameHistory} />
-          </TabPanel>
-        </Tabs>
-      )}
-      {(role === Role.ADMIN || role === Role.MODERATOR) && (
-        <>
-          {titleButton}
-          {championButtons}
-          {user?.banned ? unbanButton : banButton}
-          {props.rightPanel === "game" ? chatHistoryButton : gameHistoryButton}
-          {currentUid && user && user.uid !== currentUid && (
+      <Tabs>
+        <TabList>
+          <Tab>Record</Tab>
+        </TabList>
+        <TabPanel>
+          <EloTab user={user} gameHistory={props.gameHistory} />
+        </TabPanel>
+      </Tabs>
+      {hasModeratorRights(role) && (
+        <div className="profile-staff-tools my-container">
+          {isOtherPlayer && (
             <button
-              className="bubbly blue"
+              className="profile-back-link"
               onClick={() => searchById(currentUid)}
             >
-              {t("back_to_my_profile")}
+              ← {t("back_to_my_profile")}
             </button>
           )}
-        </>
+
+          <div className="profile-staff-row">
+            <span className="profile-staff-label">Moderation</span>
+            <div className="profile-staff-controls">
+              {props.rightPanel === "game" ? (
+                <button
+                  className="bubbly blue"
+                  onClick={() => props.setRightPanel("chat")}
+                >
+                  {t("see_chat_history")}
+                </button>
+              ) : (
+                <button
+                  className="bubbly blue"
+                  onClick={() => props.setRightPanel("game")}
+                >
+                  {t("see_game_history")}
+                </button>
+              )}
+              {user.banned ? (
+                <button
+                  className="bubbly red"
+                  onClick={() => {
+                    const reason = prompt("Reason for the unban:")
+                    if (reason === null) return
+                    unban({ uid: user.uid, reason })
+                  }}
+                >
+                  {t("unban_user")}
+                </button>
+              ) : (
+                <button
+                  className="bubbly red"
+                  onClick={() => {
+                    const reason = prompt("Reason for the ban:")
+                    if (reason === null) return
+                    ban({ uid: user.uid, reason })
+                  }}
+                >
+                  {t("ban_user")}
+                </button>
+              )}
+            </div>
+          </div>
+
+          {isAdmin && (
+            <div className="profile-staff-row">
+              <span className="profile-staff-label">Role</span>
+              <div className="profile-staff-controls">
+                <select
+                  value={roleToGive}
+                  onChange={(e) => setRoleToGive(e.target.value as Role)}
+                >
+                  {GIVABLE_ROLES.map((r) => (
+                    <option key={r} value={r}>
+                      {t(`role.${r}`)}
+                    </option>
+                  ))}
+                </select>
+                <button
+                  className="bubbly blue"
+                  disabled={roleToGive === user.role}
+                  onClick={() => {
+                    giveRole({ uid: user.uid, role: roleToGive })
+                    const roleName = t(`role.${roleToGive}`)
+                    alert(`${roleName} given to ${user.displayName}`)
+                  }}
+                >
+                  Give
+                </button>
+              </div>
+            </div>
+          )}
+
+          {canManageTournaments(role) && (
+            <>
+              <div className="profile-staff-row">
+                <span className="profile-staff-label">Title</span>
+                <div className="profile-staff-controls">
+                  <select
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value as Title)}
+                  >
+                    {givableTitles.map((ti) => (
+                      <option key={ti} value={ti}>
+                        {ti}
+                      </option>
+                    ))}
+                  </select>
+                  <button
+                    className="bubbly blue"
+                    onClick={() => {
+                      giveTitle({ uid: user.uid, title })
+                      alert(`Title ${title} given to ${user.displayName}`)
+                    }}
+                  >
+                    Give
+                  </button>
+                </div>
+              </div>
+
+              <div className="profile-staff-row">
+                <span className="profile-staff-label">Champion</span>
+                <div className="profile-staff-controls">
+                  <button
+                    className="bubbly dark"
+                    onClick={() => {
+                      setDoubleUpChampion({ uid: user.uid, slot: 0 })
+                      alert(
+                        `${user.displayName} set as Double-Up Champion (Left)`
+                      )
+                    }}
+                  >
+                    Double Up left
+                  </button>
+                  <button
+                    className="bubbly dark"
+                    onClick={() => {
+                      setDoubleUpChampion({ uid: user.uid, slot: 1 })
+                      alert(
+                        `${user.displayName} set as Double-Up Champion (Right)`
+                      )
+                    }}
+                  >
+                    Double Up right
+                  </button>
+                  <button
+                    className="bubbly dark"
+                    onClick={() => {
+                      setSmeargleScribbleChampion({ uid: user.uid })
+                      alert(
+                        `${user.displayName} set as Smeargle Scribble Champion`
+                      )
+                    }}
+                  >
+                    Smeargle Scribble
+                  </button>
+                </div>
+              </div>
+            </>
+          )}
+        </div>
       )}
     </>
   )

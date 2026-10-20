@@ -86,6 +86,58 @@
   background-color: var(--color-bg-secondary);
 }
 
+.profile-actions > .profile-staff-tools {
+  display: grid;
+  gap: 0.5em;
+  height: auto;
+  margin-top: 0.5em;
+  padding: 0.6em 0.8em;
+}
+
+.profile-back-link {
+  justify-self: start;
+  padding: 0.1em 0.3em;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--color-fg-secondary);
+  font: inherit;
+  cursor: var(--cursor-hover);
+}
+
+.profile-back-link:hover,
+.profile-back-link:focus-visible {
+  background: rgb(255 255 255 / 15%);
+  color: var(--color-fg-primary);
+}
+
+.profile-staff-row {
+  display: grid;
+  grid-template-columns: 7em 1fr;
+  align-items: center;
+  gap: 0.75em;
+}
+
+.profile-staff-label {
+  color: var(--color-fg-secondary);
+  font-weight: 600;
+}
+
+.profile-staff-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4em;
+}
+
+.profile-staff-controls .bubbly {
+  font-size: 100%;
+}
+
+.profile-staff-controls select {
+  min-width: 10em;
+}
+
 .profile-actions .elo-tab {
   display: grid;
   grid-template-columns: minmax(120px, 42%) 1fr;
@@ -332,8 +384,7 @@
   }
 }
 
-.profile-actions > button,
-.profile-actions > .my-input-group {
+.profile-actions > button {
   margin: 0.25em;
 }
 

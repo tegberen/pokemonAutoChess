@@ -6,6 +6,7 @@ import {
   getTeamStandings,
   getTeamTournamentStage,
   getTournamentRules,
+  isSoloTournament,
   makeTeamBrackets
 } from "../../core/tournament-logic"
 import {
@@ -23,7 +24,6 @@ import { Tournament } from "../../models/mongo-models/tournament"
 import UserMetadata from "../../models/mongo-models/user-metadata"
 import { Role, Transfer } from "../../types"
 import { GameMode } from "../../types/enum/Game"
-import { SpecialGameRule } from "../../types/enum/SpecialGameRule"
 import type {
   ITournament,
   ITournamentBracket,
@@ -31,6 +31,7 @@ import type {
 } from "../../types/interfaces/Tournament"
 import { logger } from "../../utils/logger"
 import { shuffleArray } from "../../utils/random"
+import { canManageTournaments } from "../../utils/roles"
 import { convertSchemaToRawObject, schemaValues } from "../../utils/schemas"
 import type CustomLobbyRoom from "../custom-lobby-room"
 
@@ -51,7 +52,7 @@ export class OnCreateTournamentCommand extends Command<
   }) {
     try {
       const user = this.room.users.get(client.auth.uid)
-      if (user && user.role && user.role === Role.ADMIN) {
+      if (canManageTournaments(user?.role)) {
         await this.state.createTournament(name, startDate, format)
         await this.room.fetchTournaments()
         this.room.presence.publish(
@@ -72,7 +73,7 @@ export class DeleteTournamentCommand extends Command<
   execute({ client, tournamentId }: { client: Client; tournamentId: string }) {
     try {
       const user = this.room.users.get(client.auth.uid)
-      if (user && user.role && user.role === Role.ADMIN) {
+      if (canManageTournaments(user?.role)) {
         this.state.removeTournament(tournamentId)
       }
     } catch (error) {
@@ -96,7 +97,7 @@ export class RenameTournamentCommand extends Command<
   }) {
     try {
       const user = this.room.users.get(client.auth.uid)
-      if (!user || user.role !== Role.ADMIN) return
+      if (!user || !canManageTournaments(user.role)) return
       const tournament = this.state.tournaments.find(
         (t) => t.id === tournamentId
       )
@@ -107,40 +108,6 @@ export class RenameTournamentCommand extends Command<
       const mongoTournament = await Tournament.findById(tournamentId)
       if (mongoTournament) {
         mongoTournament.name = trimmed
-        mongoTournament.save()
-      }
-    } catch (error) {
-      logger.error(error)
-    }
-  }
-}
-
-// takes effect on the next lobbies opened, not on ones already waiting
-export class SetTournamentWishesCommand extends Command<
-  CustomLobbyRoom,
-  { client: Client; tournamentId: string; enabled: boolean }
-> {
-  async execute({
-    client,
-    tournamentId,
-    enabled
-  }: {
-    client: Client
-    tournamentId: string
-    enabled: boolean
-  }) {
-    try {
-      const user = this.room.users.get(client.auth.uid)
-      if (!user || user.role !== Role.ADMIN) return
-      const tournament = this.state.tournaments.find(
-        (t) => t.id === tournamentId
-      )
-      if (!tournament) return
-
-      tournament.wishesEnabled = enabled === true
-      const mongoTournament = await Tournament.findById(tournamentId)
-      if (mongoTournament) {
-        mongoTournament.wishesEnabled = tournament.wishesEnabled
         mongoTournament.save()
       }
     } catch (error) {
@@ -307,7 +274,7 @@ export class RegisterTournamentTeamsCommand extends Command<
   }) {
     try {
       const user = this.room.users.get(client.auth.uid)
-      if (!user || user.role !== Role.ADMIN) {
+      if (!user || !canManageTournaments(user.role)) {
         return client.send(
           Transfer.ALERT,
           "Registering teams failed: you are not recognised as an admin in this lobby. Reload the page and try again."
@@ -331,7 +298,7 @@ export class RegisterTournamentTeamsCommand extends Command<
           "Teams can only be registered before the tournament starts."
         )
       }
-      if (tournament.format === "solo") {
+      if (isSoloTournament(tournament)) {
         return client.send(
           Transfer.ALERT,
           "A Solo tournament has no teams to register: every participant plays alone."
@@ -423,7 +390,7 @@ export class TournamentPartnerCommand extends Command<
       )
       if (!tournament)
         return logger.error(`Tournament not found: ${tournamentId}`)
-      if (tournament.format === "solo") return
+      if (isSoloTournament(tournament)) return
       if (tournament.stage !== "registration") {
         return client.send(
           Transfer.ALERT,
@@ -501,7 +468,7 @@ export class KickTournamentParticipantCommand extends Command<
   }) {
     try {
       const user = this.room.users.get(client.auth.uid)
-      if (!user || user.role !== Role.ADMIN) return
+      if (!user || !canManageTournaments(user.role)) return
 
       const tournament = this.state.tournaments.find(
         (t) => t.id === tournamentId
@@ -557,7 +524,7 @@ export class ReplaceTournamentPlayerCommand extends Command<
   }) {
     try {
       const user = this.room.users.get(client.auth.uid)
-      if (!user || user.role !== Role.ADMIN) return
+      if (!user || !canManageTournaments(user.role)) return
 
       const tournament = this.state.tournaments.find(
         (t) => t.id === tournamentId
@@ -622,7 +589,7 @@ export class StartTournamentLobbyNowCommand extends Command<
 > {
   execute({ client, bracketId }: { client: Client; bracketId: string }) {
     const user = this.room.users.get(client.auth.uid)
-    if (!user || user.role !== Role.ADMIN) return
+    if (!user || !canManageTournaments(user.role)) return
     this.room.presence.publish("tournament-lobby-start", { bracketId })
   }
 }
@@ -645,7 +612,7 @@ export class StartTournamentCommand extends Command<
   execute({ client, tournamentId }: { client: Client; tournamentId: string }) {
     try {
       const user = this.room.users.get(client.auth.uid)
-      if (!user || user.role !== Role.ADMIN) return
+      if (!user || !canManageTournaments(user.role)) return
 
       const tournament = this.state.tournaments.find(
         (t) => t.id === tournamentId
@@ -660,7 +627,7 @@ export class StartTournamentCommand extends Command<
         )
       }
       const { teamsPerLobby } = getTournamentRules(tournament)
-      if (tournament.format === "solo") {
+      if (isSoloTournament(tournament)) {
         if (tournament.players.size % teamsPerLobby !== 0) {
           return client.send(
             Transfer.ALERT,
@@ -729,17 +696,16 @@ async function createTournamentLobby(
   bracket: ITournamentBracket
 ) {
   // a Solo Scribble room is a custom lobby with its rule fixed:
-  // GameMode.SCRIBBLE would roll a random rule instead of Smeargle Pack
-  const isSolo = tournament.format === "solo"
+  // GameMode.SCRIBBLE would roll a random rule instead
+  const rules = getTournamentRules(tournament)
   const lobby = await matchMaker.createRoom("preparation", {
-    gameMode: isSolo ? GameMode.CUSTOM_LOBBY : GameMode.DOUBLE_UP,
-    specialGameRule: isSolo ? SpecialGameRule.SMEARGLE_PACK : undefined,
+    gameMode: rules.solo ? GameMode.CUSTOM_LOBBY : GameMode.DOUBLE_UP,
+    specialGameRule: rules.specialGameRule,
     noElo: true,
     ownerId: null,
     roomName: bracket.name,
     autoStartDelayInSeconds: TOURNAMENT_LOBBY_START_DELAY_IN_SECONDS,
-    // Wishes and Scribble are mutually exclusive modifications
-    blessingsEnabled: isSolo ? false : tournament.wishesEnabled,
+    blessingsEnabled: false,
     whitelist: [...bracket.playersId],
     tournamentTeams: lobbyTeams(tournament, bracket.teamsId),
     tournamentId: tournament.id,
@@ -764,7 +730,7 @@ export class CreateTournamentLobbiesCommand extends Command<
     try {
       if (client) {
         const user = this.room.users.get(client.auth.uid)
-        if (!user || !user.role || user.role !== Role.ADMIN) {
+        if (!user || !canManageTournaments(user.role)) {
           return
         }
       }
@@ -831,7 +797,7 @@ export class RemakeTournamentLobbyCommand extends Command<
     try {
       if (client) {
         const user = this.room.users.get(client.auth.uid)
-        if (!user || !user.role || user.role !== Role.ADMIN) {
+        if (!user || !canManageTournaments(user.role)) {
           return
         }
       }

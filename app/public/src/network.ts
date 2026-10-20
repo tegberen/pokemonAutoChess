@@ -462,13 +462,6 @@ export function renameTournament(params: {
   rooms.lobby?.send(Transfer.RENAME_TOURNAMENT, params)
 }
 
-export function setTournamentWishes(params: {
-  tournamentId: string
-  enabled: boolean
-}) {
-  rooms.lobby?.send(Transfer.SET_TOURNAMENT_WISHES, params)
-}
-
 export function startTournamentLobby(params: { bracketId: string }) {
   rooms.lobby?.send(Transfer.START_TOURNAMENT_LOBBY, params)
 }
@@ -667,6 +660,14 @@ export function setEventNpc(params: {
   doubleUpTitle: string
   doubleUpMessage: string
   doubleUpDate: string
+  newsEnabled: boolean
+  newsTitle: string
+  newsMessage: string
+  newsDate: string
+  misfitsEnabled: boolean
+  misfitsTitle: string
+  misfitsMessage: string
+  misfitsDate: string
 }) {
   rooms.lobby?.send(Transfer.SET_EVENT_NPC, params)
 }

@@ -106,7 +106,6 @@ export class TournamentSchema extends Schema implements ITournament {
     new MapSchema<TournamentBracketSchema>()
   @type("string") stage: TournamentStage
   @type("number") roundNumber: number
-  @type("boolean") wishesEnabled: boolean
   @type("boolean") finished: boolean
   pendingLobbiesCreation: boolean = false
 
@@ -120,7 +119,6 @@ export class TournamentSchema extends Schema implements ITournament {
     teams?: MapSchema<ITournamentTeam, string>,
     stage: TournamentStage = "registration",
     roundNumber: number = 0,
-    wishesEnabled: boolean = false,
     format: TournamentFormat = "duo"
   ) {
     super()
@@ -131,7 +129,6 @@ export class TournamentSchema extends Schema implements ITournament {
     this.finished = finished
     this.stage = stage
     this.roundNumber = roundNumber
-    this.wishesEnabled = wishesEnabled
 
     if (players && players.size) {
       players.forEach((p, key) => {

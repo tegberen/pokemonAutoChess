@@ -19,6 +19,7 @@ import { TOURNAMENT_LOBBY_START_DELAY_IN_SECONDS } from "../../../../../core/tou
 import { formatMinMaxRanks } from "../../../../../utils/elo"
 import { throttle } from "../../../../../utils/function"
 import { max } from "../../../../../utils/number"
+import { hasModeratorRights } from "../../../../../utils/roles"
 import { hasCustomRoomName } from "../../../../../utils/room-name"
 import { setTitleNotificationIcon } from "../../../../../utils/window"
 import { useAppSelector } from "../../../hooks"
@@ -253,7 +254,7 @@ export default function PreparationMenu() {
 
   // one click from the lobby, since picking a mode is the most common setup step
   const canPickModification =
-    (isOwner || isAdmin || user?.role === Role.MODERATOR) &&
+    (isOwner || hasModeratorRights(user?.role)) &&
     (gameMode === GameMode.CUSTOM_LOBBY || gameMode === GameMode.DOUBLE_UP) &&
     !isTournamentLobby
   const modificationSwitch = canPickModification && (

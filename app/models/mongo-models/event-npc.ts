@@ -17,6 +17,14 @@ export interface IEventNpc {
   doubleUpTitle: string
   doubleUpMessage: string
   doubleUpDate: string
+  newsEnabled: boolean
+  newsTitle: string
+  newsMessage: string
+  newsDate: string
+  misfitsEnabled: boolean
+  misfitsTitle: string
+  misfitsMessage: string
+  misfitsDate: string
 }
 
 const eventNpcSchema = new Schema<IEventNpc>({
@@ -34,7 +42,15 @@ const eventNpcSchema = new Schema<IEventNpc>({
   doubleUpEnabled: { type: Boolean, default: false },
   doubleUpTitle: { type: String, default: "Double Up Tournament" },
   doubleUpMessage: { type: String, default: "" },
-  doubleUpDate: { type: String, default: "" }
+  doubleUpDate: { type: String, default: "" },
+  newsEnabled: { type: Boolean, default: false },
+  newsTitle: { type: String, default: "News" },
+  newsMessage: { type: String, default: "" },
+  newsDate: { type: String, default: "" },
+  misfitsEnabled: { type: Boolean, default: false },
+  misfitsTitle: { type: String, default: "Misfits Tournament" },
+  misfitsMessage: { type: String, default: "" },
+  misfitsDate: { type: String, default: "" }
 })
 
 export const EventNpc = model<IEventNpc>("EventNpc", eventNpcSchema)

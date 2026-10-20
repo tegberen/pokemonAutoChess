@@ -1,9 +1,10 @@
 import type { RoomAvailable } from "@colyseus/sdk"
-import { useState } from "react"
+import { useRef, useState } from "react"
 import {
   getTeamFinalRanking,
   getTeamTournamentStage,
-  getTournamentRules
+  getTournamentRules,
+  isSoloTournament
 } from "../../../../../core/tournament-logic"
 import { TOURNAMENT_RULES } from "../../../../../core/tournament-swiss"
 import type {
@@ -18,14 +19,14 @@ import {
   remakeTournamentLobby,
   renameTournament,
   replaceTournamentPlayer,
-  setTournamentWishes,
   simulateTournamentRound,
   startTournamentLobby
 } from "../../../network"
-import { cc } from "../../utils/jsx"
 import {
   TournamentSoloAdmin,
-  TournamentTeamsAdmin
+  TournamentSteps,
+  TournamentTeamsAdmin,
+  useTournamentTestTools
 } from "./tournament-teams-admin"
 import "./tournament-admin.css"
 
@@ -33,6 +34,7 @@ export function TournamentsAdmin() {
   const [tournamentName, setTournamentName] = useState<string>("")
   const [format, setFormat] = useState<TournamentFormat>("duo")
   const tournaments = useAppSelector((state) => state.lobby.tournaments)
+  const suggestedName = `${TOURNAMENT_RULES[format].suggestedName} Nr. X`
 
   function createNewTournament(event) {
     event.preventDefault()
@@ -48,32 +50,48 @@ export function TournamentsAdmin() {
   return (
     <div className="tournaments-admin">
       <form className="tournament-form my-box" onSubmit={createNewTournament}>
-        <input
-          type="text"
-          required
-          placeholder="Tournament name"
-          value={tournamentName}
-          onChange={(event) => setTournamentName(event.target.value)}
-        />
-        <select
-          value={format}
-          onChange={(event) =>
-            setFormat(event.target.value as TournamentFormat)
-          }
-        >
-          {(Object.keys(TOURNAMENT_RULES) as TournamentFormat[]).map(
-            (option) => (
-              <option key={option} value={option}>
-                {TOURNAMENT_RULES[option].label}
-              </option>
-            )
-          )}
-        </select>
-        <button type="submit" className="bubbly blue">
-          Create tournament
-        </button>
+        <h2>New tournament</h2>
+        <div className="tournament-form-fields">
+          <label>
+            Name
+            <input
+              type="text"
+              required
+              placeholder={`e.g. ${suggestedName}`}
+              value={tournamentName}
+              onChange={(event) => setTournamentName(event.target.value)}
+            />
+          </label>
+          <label>
+            Format
+            <select
+              value={format}
+              onChange={(event) =>
+                setFormat(event.target.value as TournamentFormat)
+              }
+            >
+              {(Object.keys(TOURNAMENT_RULES) as TournamentFormat[]).map(
+                (option) => (
+                  <option key={option} value={option}>
+                    {TOURNAMENT_RULES[option].label} ·{" "}
+                    {TOURNAMENT_RULES[option].gameMode}
+                  </option>
+                )
+              )}
+            </select>
+          </label>
+          <button type="submit" className="bubbly blue">
+            Create
+          </button>
+        </div>
+        <p className="help">
+          Players sign up from the tournament page. Nothing starts until you
+          press Start the tournament.
+        </p>
       </form>
-      {tournaments.length === 0 && <p>No tournament yet.</p>}
+      {tournaments.length === 0 && (
+        <p className="help">No tournament yet. Create one above.</p>
+      )}
       <ul>
         {tournaments.map((tournament) => (
           <li key={tournament.id}>
@@ -87,56 +105,27 @@ export function TournamentsAdmin() {
 
 function TournamentAdminItem(props: { tournament: ITournament }) {
   const { tournament } = props
-  const isSolo = tournament.format === "solo"
-  const stage =
+  const isSolo = isSoloTournament(tournament)
+  const rules = getTournamentRules(tournament)
+  // the step bar already says Registration, later stages add the round
+  const stageDetail =
     tournament.stage === "registration"
-      ? "Registration"
+      ? ""
       : getTeamTournamentStage(tournament)
 
   return (
     <div className="my-box tournament-admin-item">
       <header>
-        <h2>{tournament.name}</h2>
-        <span className="tournament-admin-stage">
-          {getTournamentRules(tournament).label} · {stage}
+        <TournamentNameEditor tournament={tournament} />
+        <span className="tournament-admin-format">
+          <small>{rules.label}</small>
+          <b>{rules.gameMode}</b>
         </span>
-        <div className="spacer" />
-        {!isSolo && (
-          <button
-            className={cc("bubbly", tournament.wishesEnabled ? "green" : "")}
-            title="Applies to the lobbies opened from now on"
-            onClick={() =>
-              setTournamentWishes({
-                tournamentId: tournament.id,
-                enabled: !tournament.wishesEnabled
-              })
-            }
-          >
-            Wishes {tournament.wishesEnabled ? "on" : "off"}
-          </button>
+        {stageDetail && (
+          <span className="tournament-admin-stage">{stageDetail}</span>
         )}
-        <button
-          className="bubbly blue"
-          onClick={() => {
-            const name = prompt("Tournament name", tournament.name)
-            if (name && name.trim() && name !== tournament.name) {
-              renameTournament({ tournamentId: tournament.id, name })
-            }
-          }}
-        >
-          Rename
-        </button>
-        <button
-          className="bubbly red"
-          onClick={() => {
-            if (confirm(`Delete "${tournament.name}" and all registrations ?`)) {
-              deleteTournament({ id: tournament.id })
-            }
-          }}
-        >
-          Delete
-        </button>
       </header>
+      <TournamentSteps tournament={tournament} />
       {tournament.stage === "registration" &&
         (isSolo ? (
           <TournamentSoloAdmin tournament={tournament} />
@@ -153,10 +142,84 @@ function TournamentAdminItem(props: { tournament: ITournament }) {
         <p>
           Won by{" "}
           <strong>{getTeamFinalRanking(tournament)[0]?.name ?? "-"}</strong>.
-          Titles are yours to hand out.
         </p>
       )}
+      <footer className="tournament-admin-danger">
+        <button
+          className="bubbly dark"
+          onClick={() => {
+            if (
+              confirm(
+                `Delete "${tournament.name}" and all its registrations? ` +
+                  "This cannot be undone."
+              )
+            ) {
+              deleteTournament({ id: tournament.id })
+            }
+          }}
+        >
+          Delete tournament
+        </button>
+      </footer>
     </div>
+  )
+}
+
+function TournamentNameEditor(props: { tournament: ITournament }) {
+  const { tournament } = props
+  const [draftName, setDraftName] = useState<string | null>(null)
+  // the input can blur while it unmounts, after Enter or Escape already ended
+  // the edit
+  const editEnded = useRef(false)
+
+  function startEditing() {
+    editEnded.current = false
+    setDraftName(tournament.name)
+  }
+
+  function endEditing(save: boolean) {
+    if (editEnded.current) return
+    editEnded.current = true
+    const name = draftName?.trim()
+    if (save && name && name !== tournament.name) {
+      renameTournament({ tournamentId: tournament.id, name })
+    }
+    setDraftName(null)
+  }
+
+  if (draftName === null) {
+    return (
+      <button
+        className="tournament-admin-name"
+        title="Rename"
+        onClick={startEditing}
+      >
+        {tournament.name}
+        <span className="tournament-admin-name-pencil" aria-hidden="true">
+          ✎
+        </span>
+      </button>
+    )
+  }
+
+  return (
+    <input
+      className="tournament-admin-name-input"
+      autoFocus
+      value={draftName}
+      aria-label="Tournament name"
+      onChange={(e) => setDraftName(e.target.value)}
+      onBlur={() => endEditing(true)}
+      onKeyDown={(e) => {
+        if (e.key === "Enter") endEditing(true)
+        if (e.key === "Escape") {
+          // only cancels the edit, the modal stays open
+          e.preventDefault()
+          e.stopPropagation()
+          endEditing(false)
+        }
+      }}
+    />
   )
 }
 
@@ -186,6 +249,7 @@ function TournamentLobbiesAdmin(props: { tournament: ITournament }) {
   )
   const gameRooms = useAppSelector((state) => state.lobby.gameRooms)
   const brackets = schemaEntries(props.tournament.brackets)
+  const showTestTools = useTournamentTestTools()
 
   return (
     <section>
@@ -269,15 +333,17 @@ function TournamentLobbiesAdmin(props: { tournament: ITournament }) {
         >
           Remake all lobbies
         </button>
-        <button
-          className="bubbly"
-          title="Test tool: ends every open lobby with random placements"
-          onClick={() =>
-            simulateTournamentRound({ tournamentId: props.tournament.id })
-          }
-        >
-          Simulate round
-        </button>
+        {showTestTools && (
+          <button
+            className="bubbly"
+            title="Test tool: ends every open lobby with random placements"
+            onClick={() =>
+              simulateTournamentRound({ tournamentId: props.tournament.id })
+            }
+          >
+            Simulate round
+          </button>
+        )}
       </div>
     </section>
   )

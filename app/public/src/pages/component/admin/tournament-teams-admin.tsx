@@ -1,289 +1,463 @@
-import { useEffect, useRef, useState } from "react"
-import { TOURNAMENT_RULES } from "../../../../../core/tournament-swiss"
-import type { ITournament } from "../../../../../types/interfaces/Tournament"
+import { useEffect, useState } from "react"
+import { getTournamentRules } from "../../../../../core/tournament-logic"
+import {
+  SWISS_ROUNDS,
+  TOURNAMENT_RULES
+} from "../../../../../core/tournament-swiss"
+import { Role } from "../../../../../types"
+import type {
+  ITournament,
+  TournamentStage
+} from "../../../../../types/interfaces/Tournament"
+import { shuffleArray } from "../../../../../utils/random"
 import { schemaEntries } from "../../../../../utils/schemas"
+import { useAppSelector } from "../../../hooks"
 import {
   addTournamentTestPlayers,
   kickTournamentParticipant,
   registerTournamentTeams,
   startTournament
 } from "../../../network"
+import { cc } from "../../utils/jsx"
 
 type Participant = { id: string; name: string }
+type ReadyCheck = { tone: "ok" | "warn" | "block"; text: string }
 
 const DUO_TEAMS_PER_LOBBY = TOURNAMENT_RULES.duo.teamsPerLobby
+// stand-in players and simulated rounds are only for an admin testing locally
+export function useTournamentTestTools(): boolean {
+  const role = useAppSelector((state) => state.network.profile?.role)
+  return process.env.MODE === "dev" && role === Role.ADMIN
+}
+
+const STEPS: { label: string; stages: TournamentStage[] }[] = [
+  { label: "Registration", stages: ["registration"] },
+  { label: "Qualification", stages: ["qualification"] },
+  { label: "Finals", stages: ["semifinals", "final"] },
+  { label: "Results", stages: ["finished"] }
+]
+
+export function TournamentSteps(props: { tournament: ITournament }) {
+  const stage = props.tournament.finished ? "finished" : props.tournament.stage
+  const currentStep = STEPS.findIndex((step) => step.stages.includes(stage))
+  return (
+    <ol className="tournament-steps">
+      {STEPS.map((step, index) => (
+        <li
+          key={step.label}
+          className={cc({
+            done: index < currentStep,
+            current: index === currentStep
+          })}
+        >
+          <span className="tournament-step-dot" />
+          {step.label}
+        </li>
+      ))}
+    </ol>
+  )
+}
+
+function participantsOf(tournament: ITournament): Participant[] {
+  return schemaEntries(tournament.players).map(([id, player]) => ({
+    id,
+    name: player.name
+  }))
+}
+
+function teamsKey(teams: string[][]): string {
+  return teams
+    .map((team) => [...team].sort().join("+"))
+    .sort()
+    .join("|")
+}
+
+function lobbySizeCheck(
+  teamCount: number,
+  teamsPerLobby: number,
+  noun: string
+): ReadyCheck {
+  const leftOver = teamCount % teamsPerLobby
+  if (teamCount === 0) {
+    return { tone: "block", text: `No ${noun} yet.` }
+  }
+  if (leftOver !== 0) {
+    return {
+      tone: "block",
+      text: `Lobbies hold ${teamsPerLobby} ${noun}: add ${
+        teamsPerLobby - leftOver
+      } more or remove ${leftOver}.`
+    }
+  }
+  const lobbies = teamCount / teamsPerLobby
+  return {
+    tone: "ok",
+    text: `${teamCount} ${noun} fill ${lobbies} ${
+      lobbies === 1 ? "lobby" : "lobbies"
+    } exactly: eligible to Start the tournament.`
+  }
+}
 
 export function TournamentTeamsAdmin(props: { tournament: ITournament }) {
+  const { tournament } = props
   // not memoised: the MapSchema mutates in place and never changes identity
-  const participants: Participant[] = schemaEntries(
-    props.tournament.players
-  ).map(([id, player]) => ({ id, name: player.name }))
-  const registered = schemaEntries(props.tournament.teams)
-  const [pairs, setPairs] = useState<string[][]>([])
-  const [justRegistered, setJustRegistered] = useState(false)
-  const registeredCount = registered.length
-  const previousCount = useRef(registeredCount)
-
-  // cleared only once the teams come back synced, so a rejected registration
-  // keeps the pairing intact
-  useEffect(() => {
-    if (registeredCount > 0 && registeredCount !== previousCount.current) {
-      setPairs([])
-      setJustRegistered(true)
-      const timer = setTimeout(() => setJustRegistered(false), 4000)
-      previousCount.current = registeredCount
-      return () => clearTimeout(timer)
-    }
-    previousCount.current = registeredCount
-  }, [registeredCount])
-
-  const assignedIds = new Set([
-    ...pairs.flat(),
-    ...registered.flatMap(([, team]) => [...team.playersId]),
-    ...schemaEntries(props.tournament.players)
-      .filter(([, player]) => player.partnerId)
-      .map(([id]) => id)
+  const participants = participantsOf(tournament)
+  const registeredTeams = schemaEntries(tournament.teams).map(([, team]) => [
+    ...team.playersId
   ])
-  const unpaired = participants.filter((p) => !assignedIds.has(p.id))
+  const registeredKey = teamsKey(registeredTeams)
+  const [draftTeams, setDraftTeams] = useState<string[][] | null>(null)
+
+  // dropped only once the teams come back synced, so a rejected save keeps
+  // the edits
+  useEffect(() => setDraftTeams(null), [registeredKey])
+
+  // a player removed meanwhile cannot stay in an unsaved team
+  const teams = (draftTeams ?? registeredTeams).filter((team) =>
+    team.every((id) => tournament.players.has(id))
+  )
+  const hasUnsavedChanges =
+    draftTeams !== null && teamsKey(teams) !== registeredKey
   const nameOf = (id: string) =>
     participants.find((p) => p.id === id)?.name ?? id
 
-  // registering replaces the whole set, so edits start from the registered teams
-  const workingPairs = () =>
-    pairs.length > 0 ? pairs : registered.map(([, team]) => [...team.playersId])
+  const inTeam = new Set(teams.flat())
+  const agreedPairs: string[][] = []
+  schemaEntries(tournament.players).forEach(([id, player]) => {
+    const partnerId = player.partnerId
+    if (!partnerId || inTeam.has(id) || inTeam.has(partnerId)) return
+    if (agreedPairs.some((pair) => pair.includes(id))) return
+    agreedPairs.push([id, partnerId])
+  })
+  const inAgreedPair = new Set(agreedPairs.flat())
+  const notInTeam = participants.filter((p) => !inTeam.has(p.id))
+  // agreed pairs stay together, so random and hand pairing skip them
+  const withoutTeam = notInTeam.filter((p) => !inAgreedPair.has(p.id))
 
-  function addPair(a: string, b: string) {
-    if (!a || !b || a === b) return
-    setPairs([...workingPairs(), [a, b]])
+  function editTeams(next: string[][]) {
+    setDraftTeams(next)
   }
 
-  function useConfirmedPairs() {
-    const seen = new Set<string>()
-    const confirmed: string[][] = []
-    schemaEntries(props.tournament.players).forEach(([id, player]) => {
-      if (!player.partnerId || seen.has(id)) return
-      seen.add(id)
-      seen.add(player.partnerId)
-      confirmed.push([id, player.partnerId])
-    })
-    const base = workingPairs()
-    const alreadyPaired = new Set(base.flat())
-    setPairs([
-      ...base,
-      ...confirmed.filter((pair) => !pair.some((id) => alreadyPaired.has(id)))
-    ])
-  }
-
-  const confirmedPairCount =
-    schemaEntries(props.tournament.players).filter(
-      ([, player]) => player.partnerId
-    ).length / 2
-
-  function autoPair() {
+  function pairTheRestRandomly() {
+    const shuffled = shuffleArray([...withoutTeam])
     const next: string[][] = []
-    for (let i = 0; i + 1 < unpaired.length; i += 2) {
-      next.push([unpaired[i].id, unpaired[i + 1].id])
+    for (let i = 0; i + 1 < shuffled.length; i += 2) {
+      next.push([shuffled[i].id, shuffled[i + 1].id])
     }
-    setPairs([...workingPairs(), ...next])
+    editTeams([...teams, ...next])
   }
 
-  const fillsLobbies = pairs.length > 0 && pairs.length % DUO_TEAMS_PER_LOBBY === 0
-  const canStart =
-    registered.length > 0 && registered.length % DUO_TEAMS_PER_LOBBY === 0
+  const checks: ReadyCheck[] = [
+    lobbySizeCheck(teams.length, DUO_TEAMS_PER_LOBBY, "teams")
+  ]
+  if (agreedPairs.length > 0) {
+    checks.push({
+      tone: "warn",
+      text: `${agreedPairs.length} ${
+        agreedPairs.length === 1 ? "pair" : "pairs"
+      } agreed by the players ${
+        agreedPairs.length === 1 ? "is" : "are"
+      } not in a team yet.`
+    })
+  }
+  if (withoutTeam.length > 0) {
+    checks.push({
+      tone: "warn",
+      text: `${withoutTeam.length} ${
+        withoutTeam.length === 1 ? "player has" : "players have"
+      } no team. They wait on the bench as substitutes.`
+    })
+  }
+  if (hasUnsavedChanges) {
+    checks.push({ tone: "block", text: "Save the teams to start." })
+  }
+  const canStart = !checks.some((check) => check.tone === "block")
+  // the server only accepts whole lobbies, an empty list clears the teams
+  const canSave =
+    hasUnsavedChanges && teams.length % DUO_TEAMS_PER_LOBBY === 0
+  const registeredLobbies = registeredTeams.length / DUO_TEAMS_PER_LOBBY
 
   return (
-    <div className="tournament-teams-admin">
-      <p className="tournament-teams-summary">
-        {participants.length} participants · {registered.length} teams
-        registered ({registered.length * 2} players) · {confirmedPairCount}{" "}
-        pairs agreed by players
-        {pairs.length > 0 && ` · ${pairs.length} pending, not registered yet`}
-        {justRegistered && (
-          <span className="tournament-registered-flash">
-            {" "}
-            · {registered.length} teams registered
-          </span>
-        )}
-      </p>
-
-      {registered.length > 0 && (
-        <section>
-          <h3>Registered teams</h3>
-          <ol className="tournament-team-list">
-            {registered.map(([teamId, team]) => (
-              <li key={teamId}>{team.name}</li>
-            ))}
-          </ol>
-        </section>
-      )}
+    <div className="tournament-registration">
+      <RegistrationOverview
+        metrics={[
+          { value: participants.length, label: "players signed up" },
+          { value: teams.length, label: "teams" },
+          {
+            value: Math.floor(teams.length / DUO_TEAMS_PER_LOBBY),
+            label: `lobbies of ${DUO_TEAMS_PER_LOBBY} teams`
+          }
+        ]}
+        checks={checks}
+      />
 
       <section>
-        <h3>{registered.length > 0 ? "Edit teams" : "Build teams"}</h3>
-        <PairPicker participants={unpaired} onPair={addPair} />
-        <div className="actions">
-          <button
-            className="bubbly blue"
-            disabled={confirmedPairCount === 0}
-            title="Take the teams players agreed between themselves"
-            onClick={useConfirmedPairs}
-          >
-            Use {confirmedPairCount} agreed pairs
-          </button>
-          <button
-            className="bubbly blue"
-            disabled={unpaired.length < 2}
-            onClick={autoPair}
-          >
-            Pair the rest randomly
-          </button>
-        </div>
-
-        {pairs.length > 0 && (
-          <>
-            <ol className="tournament-team-list pending">
-              {pairs.map((pair, index) => (
-                <li key={pair.join()}>
-                  <button
-                    className="remove-btn bubbly red"
-                    title="Remove this team"
-                    onClick={() =>
-                      setPairs(pairs.filter((_, i) => i !== index))
-                    }
-                  >
-                    x
-                  </button>
-                  {nameOf(pair[0])} &amp; {nameOf(pair[1])}
-                </li>
-              ))}
-            </ol>
-            <div className="actions">
+        <header className="tournament-section-header">
+          <h3>Teams ({teams.length})</h3>
+          <div className="actions">
+            {agreedPairs.length > 0 && (
               <button
-                className="bubbly green"
-                disabled={!fillsLobbies}
-                title={
-                  fillsLobbies
-                    ? unpaired.length > 0
-                      ? `${unpaired.length} participants stay on the bench`
-                      : ""
-                    : `Lobbies hold ${DUO_TEAMS_PER_LOBBY} teams: add ${
-                        DUO_TEAMS_PER_LOBBY - (pairs.length % DUO_TEAMS_PER_LOBBY)
-                      } more or remove ${pairs.length % DUO_TEAMS_PER_LOBBY}`
-                }
-                onClick={() =>
-                  registerTournamentTeams({
-                    tournamentId: props.tournament.id,
-                    pairs
-                  })
-                }
+                className="bubbly blue"
+                onClick={() => editTeams([...teams, ...agreedPairs])}
               >
-                {registered.length > 0 ? "Replace with" : "Register"}{" "}
-                {pairs.length} teams ({pairs.length * 2} players)
+                Add {agreedPairs.length} agreed{" "}
+                {agreedPairs.length === 1 ? "pair" : "pairs"}
               </button>
-              <button className="bubbly red" onClick={() => setPairs([])}>
-                Discard changes
-              </button>
-              {!fillsLobbies && (
-                <span className="tournament-teams-warning">
-                  Needs a multiple of {DUO_TEAMS_PER_LOBBY} teams
+            )}
+            <button
+              className="bubbly blue"
+              disabled={withoutTeam.length < 2}
+              onClick={pairTheRestRandomly}
+            >
+              Pair the rest at random
+            </button>
+          </div>
+        </header>
+        <PairPicker
+          participants={withoutTeam}
+          onPair={(a, b) => editTeams([...teams, [a, b]])}
+        />
+
+        {teams.length > 0 ? (
+          <ol className="tournament-team-list">
+            {teams.map((team, index) => (
+              <li key={team.join()}>
+                <span className="tournament-team-number">{index + 1}</span>
+                <span className="tournament-team-players">
+                  <span>{nameOf(team[0])}</span>
+                  <span>{nameOf(team[1])}</span>
                 </span>
-              )}
-            </div>
-          </>
+                <RemoveButton
+                  title="Split this team"
+                  onClick={() =>
+                    editTeams(teams.filter((_, i) => i !== index))
+                  }
+                />
+              </li>
+            ))}
+          </ol>
+        ) : (
+          <p className="help">
+            No teams yet. Add the pairs players agreed on, pair players at
+            random, or pick two players above.
+          </p>
         )}
 
-        {pairs.length === 0 && registered.length > 0 && (
-          <div className="actions">
+        {hasUnsavedChanges && (
+          <div className="tournament-save-bar">
+            <span>You have unsaved changes.</span>
             <button
-              className="bubbly red"
-              title="Clear the registered teams and pair again"
-              onClick={() => {
-                if (confirm(`Unregister all ${registered.length} teams ?`)) {
-                  registerTournamentTeams({
-                    tournamentId: props.tournament.id,
-                    pairs: []
-                  })
-                }
-              }}
+              className="bubbly dark"
+              onClick={() => setDraftTeams(null)}
             >
-              Unregister all teams
+              Undo
+            </button>
+            <button
+              className="bubbly green"
+              disabled={!canSave}
+              onClick={() =>
+                registerTournamentTeams({
+                  tournamentId: tournament.id,
+                  pairs: teams
+                })
+              }
+            >
+              Save teams
             </button>
           </div>
         )}
       </section>
 
-      {unpaired.length > 0 && (
-        <details className="tournament-unassigned">
-          <summary>
-            {unpaired.length} without a team: they sit on the bench as
-            substitutes
-          </summary>
-          <ul>
-            {unpaired.map((p) => (
-              <li key={p.id}>
-                {p.name}
-                <button
-                  className="remove-btn bubbly red"
-                  title="Remove from the tournament"
-                  onClick={() =>
-                    kickTournamentParticipant({
-                      tournamentId: props.tournament.id,
-                      playerId: p.id
-                    })
-                  }
-                >
-                  x
-                </button>
-              </li>
-            ))}
-          </ul>
-        </details>
+      {notInTeam.length > 0 && (
+        <BenchList
+          tournamentId={tournament.id}
+          players={notInTeam}
+          title="Not in a team"
+        />
       )}
 
-      <footer className="actions">
+      <StartTournamentPanel
+        tournament={tournament}
+        canStart={canStart}
+        description={
+          `Opens the ${registeredLobbies} ${
+            registeredLobbies === 1 ? "lobby" : "lobbies"
+          } of qualification round 1 of ${SWISS_ROUNDS} for the ` +
+          `${registeredTeams.length} saved teams. Registration closes, and ` +
+          "players on the bench can still come in as substitutes."
+        }
+        confirmText={`Start the tournament with ${
+          registeredTeams.length
+        } teams?`}
+        participantCount={participants.length}
+      />
+    </div>
+  )
+}
+
+// Solo needs no pairing: every participant is a team of one, built on start
+export function TournamentSoloAdmin(props: { tournament: ITournament }) {
+  const { tournament } = props
+  const participants = participantsOf(tournament)
+  const { teamsPerLobby } = getTournamentRules(tournament)
+  const check = lobbySizeCheck(participants.length, teamsPerLobby, "players")
+  const lobbies = participants.length / teamsPerLobby
+
+  return (
+    <div className="tournament-registration">
+      <RegistrationOverview
+        metrics={[
+          { value: participants.length, label: "players signed up" },
+          {
+            value: Math.floor(lobbies),
+            label: `lobbies of ${teamsPerLobby} players`
+          }
+        ]}
+        checks={[check]}
+      />
+
+      {participants.length > 0 && (
+        <BenchList
+          tournamentId={tournament.id}
+          players={participants}
+          title="Players"
+        />
+      )}
+
+      <StartTournamentPanel
+        tournament={tournament}
+        canStart={check.tone === "ok"}
+        description={`Opens the ${lobbies} ${
+          lobbies === 1 ? "lobby" : "lobbies"
+        } of qualification round 1 of ${SWISS_ROUNDS}. Registration closes.`}
+        confirmText={`Start the tournament with ${
+          participants.length
+        } players?`}
+        participantCount={participants.length}
+      />
+    </div>
+  )
+}
+
+function RegistrationOverview(props: {
+  metrics: { value: number; label: string }[]
+  checks: ReadyCheck[]
+}) {
+  return (
+    <section className="tournament-overview">
+      <div className="tournament-metrics">
+        {props.metrics.map((metric) => (
+          <div key={metric.label} className="tournament-metric">
+            <strong>{metric.value}</strong>
+            <span>{metric.label}</span>
+          </div>
+        ))}
+      </div>
+      <ul className="tournament-checks">
+        {props.checks.map((check) => (
+          <li key={check.text} className={check.tone}>
+            {check.text}
+          </li>
+        ))}
+      </ul>
+    </section>
+  )
+}
+
+function BenchList(props: {
+  tournamentId: string
+  players: Participant[]
+  title: string
+}) {
+  return (
+    <section>
+      <h3>
+        {props.title} ({props.players.length})
+      </h3>
+      <ul className="tournament-team-list">
+        {props.players.map((p) => (
+          <li key={p.id}>
+            <span>{p.name}</span>
+            <RemoveButton
+              title="Remove from the tournament"
+              onClick={() => {
+                if (confirm(`Remove ${p.name} from the tournament?`)) {
+                  kickTournamentParticipant({
+                    tournamentId: props.tournamentId,
+                    playerId: p.id
+                  })
+                }
+              }}
+            />
+          </li>
+        ))}
+      </ul>
+    </section>
+  )
+}
+
+function RemoveButton(props: { title: string; onClick: () => void }) {
+  return (
+    <button
+      className="tournament-remove"
+      title={props.title}
+      aria-label={props.title}
+      onClick={props.onClick}
+    >
+      🗙
+    </button>
+  )
+}
+
+function StartTournamentPanel(props: {
+  tournament: ITournament
+  canStart: boolean
+  description: string
+  confirmText: string
+  participantCount: number
+}) {
+  const showTestTools = useTournamentTestTools()
+  return (
+    <footer className="tournament-start">
+      <div>
         <button
           className="bubbly green"
-          disabled={!canStart}
-          title={
-            canStart
-              ? "Open the lobbies of the first round now"
-              : `Register a multiple of ${DUO_TEAMS_PER_LOBBY} teams first`
-          }
+          disabled={!props.canStart}
           onClick={() => {
-            if (
-              confirm(`Start the tournament with ${registered.length} teams ?`)
-            ) {
+            if (confirm(props.confirmText)) {
               startTournament({ tournamentId: props.tournament.id })
             }
           }}
         >
-          Start tournament
+          Start the tournament
         </button>
-        {!canStart && (
-          <span className="tournament-teams-warning">
-            {pairs.length > 0
-              ? `Register the ${pairs.length} teams above first`
-              : `Register a multiple of ${DUO_TEAMS_PER_LOBBY} teams first`}
-          </span>
-        )}
-        <div className="spacer" />
-        {[16, 32].map((target) => (
-          <button
-            key={target}
-            className="bubbly"
-            title="Test tool: adds stand-in participants"
-            disabled={participants.length >= target}
-            onClick={() =>
-              addTournamentTestPlayers({
-                tournamentId: props.tournament.id,
-                count: target - participants.length
-              })
-            }
-          >
-            Fill to {target}
-          </button>
-        ))}
-      </footer>
-    </div>
+        <p className="help">
+          {props.canStart
+            ? props.description
+            : "Fix the red points above to start."}
+        </p>
+      </div>
+      {showTestTools && (
+        <div className="actions">
+          {[16, 32].map((target) => (
+            <button
+              key={target}
+              className="bubbly"
+              title="Test tool: adds stand-in participants"
+              disabled={props.participantCount >= target}
+              onClick={() =>
+                addTournamentTestPlayers({
+                  tournamentId: props.tournament.id,
+                  count: target - props.participantCount
+                })
+              }
+            >
+              Fill to {target}
+            </button>
+          ))}
+        </div>
+      )}
+    </footer>
   )
 }
 
@@ -325,95 +499,6 @@ function PairPicker(props: {
       >
         Add team
       </button>
-    </div>
-  )
-}
-
-// Solo needs no pairing: every participant is a team of one, built on start
-export function TournamentSoloAdmin(props: { tournament: ITournament }) {
-  const participants: Participant[] = schemaEntries(
-    props.tournament.players
-  ).map(([id, player]) => ({ id, name: player.name }))
-  const { teamsPerLobby } = TOURNAMENT_RULES.solo
-  const leftOver = participants.length % teamsPerLobby
-  const canStart = participants.length > 0 && leftOver === 0
-
-  return (
-    <div className="tournament-teams-admin">
-      <p className="tournament-teams-summary">
-        {participants.length} participants · lobbies hold {teamsPerLobby}{" "}
-        players
-      </p>
-
-      {participants.length > 0 && (
-        <section>
-          <h3>Participants</h3>
-          <ol className="tournament-team-list">
-            {participants.map((p) => (
-              <li key={p.id}>
-                <button
-                  className="remove-btn bubbly red"
-                  title="Remove from the tournament"
-                  onClick={() =>
-                    kickTournamentParticipant({
-                      tournamentId: props.tournament.id,
-                      playerId: p.id
-                    })
-                  }
-                >
-                  x
-                </button>
-                {p.name}
-              </li>
-            ))}
-          </ol>
-        </section>
-      )}
-
-      <footer className="actions">
-        <button
-          className="bubbly green"
-          disabled={!canStart}
-          title={
-            canStart
-              ? "Open the lobbies of the first round now"
-              : `Needs a multiple of ${teamsPerLobby} participants`
-          }
-          onClick={() => {
-            if (
-              confirm(
-                `Start the tournament with ${participants.length} players ?`
-              )
-            ) {
-              startTournament({ tournamentId: props.tournament.id })
-            }
-          }}
-        >
-          Start tournament
-        </button>
-        {!canStart && participants.length > 0 && (
-          <span className="tournament-teams-warning">
-            Add {teamsPerLobby - leftOver} or remove {leftOver} participants
-          </span>
-        )}
-        <div className="spacer" />
-        {[16, 32].map((target) => (
-          <button
-            key={target}
-            className="bubbly"
-            title="Test tool: adds stand-in participants"
-            disabled={participants.length >= target}
-            onClick={() =>
-              addTournamentTestPlayers({
-                tournamentId: props.tournament.id,
-                count: target - participants.length
-              })
-            }
-          >
-            Fill to {target}
-          </button>
-        ))}
-      </footer>
     </div>
   )
 }

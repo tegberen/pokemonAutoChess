@@ -1,6 +1,7 @@
 :root {
   --color-role-admin: #28a745;
   --color-role-moderator: #007bff;
+  --color-role-organizer: #8a63d2;
   --color-role-basic: #6c757d;
   --color-role-bot: #6c757d;
   --color-role-bot-manager: #dc3545;
@@ -24,6 +25,9 @@
 }
 .badge.moderator {
   background-color: var(--color-role-moderator);
+}
+.badge.organizer {
+  background-color: var(--color-role-organizer);
 }
 .badge.basic {
   background-color: var(--color-role-basic);

@@ -39,6 +39,7 @@ import { logger } from "../../utils/logger"
 import { max } from "../../utils/number"
 import { cleanProfanity } from "../../utils/profanity-filter"
 import { pickRandomIn, shuffleArray } from "../../utils/random"
+import { hasModeratorRights } from "../../utils/roles"
 import { getDefaultRoomName } from "../../utils/room-name"
 import { schemaEntries, schemaValues } from "../../utils/schemas"
 import type PreparationRoom from "../preparation-room"
@@ -482,7 +483,7 @@ export class RemoveMessageCommand extends Command<
       if (
         user &&
         user.role &&
-        (user.role === Role.ADMIN || user.role === Role.MODERATOR)
+        hasModeratorRights(user.role)
       ) {
         this.state.removeMessage(messageId)
       }
@@ -506,7 +507,7 @@ export class OnRoomNameCommand extends Command<
       if (
         this.state.name != roomName &&
         (client.auth?.uid == this.state.ownerId ||
-          (user && [Role.ADMIN, Role.MODERATOR].includes(user.role)))
+          (user && hasModeratorRights(user.role)))
       ) {
         this.room.setName(roomName)
         this.state.name = roomName
@@ -764,8 +765,7 @@ export class OnChangeWhimsyCommand extends Command<
       const user = this.state.users.get(client.auth?.uid ?? "")
       const isAllowed =
         (client.auth?.uid === this.state.ownerId ||
-          user?.role === Role.ADMIN ||
-          user?.role === Role.MODERATOR) &&
+          hasModeratorRights(user?.role)) &&
         this.state.gameMode === GameMode.DOUBLE_UP
       if (isAllowed && this.state.whimsy !== whimsy) {
         // the room keeps a name the owner typed, but follows the toggle otherwise
@@ -806,8 +806,7 @@ export class OnChangeGameModificationCommand extends Command<
       const user = this.state.users.get(client.auth?.uid ?? "")
       const isAllowed =
         (client.auth?.uid === this.state.ownerId ||
-          user?.role === Role.ADMIN ||
-          user?.role === Role.MODERATOR) &&
+          hasModeratorRights(user?.role)) &&
         (this.state.gameMode === GameMode.CUSTOM_LOBBY ||
           this.state.gameMode === GameMode.DOUBLE_UP) &&
         Object.values(GameModification).includes(modification)
@@ -889,7 +888,7 @@ export class OnKickPlayerCommand extends Command<
       const user = this.state.users.get(client.auth?.uid)
       if (
         client.auth?.uid === this.state.ownerId ||
-        (user && [Role.ADMIN, Role.MODERATOR].includes(user.role))
+        (user && hasModeratorRights(user.role))
       ) {
         this.room.clients.forEach((cli) => {
           if (cli.auth?.uid === userId && this.state.users.has(userId)) {

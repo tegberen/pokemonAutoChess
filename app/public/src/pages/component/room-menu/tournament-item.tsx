@@ -54,7 +54,7 @@ export default function TournamentItem(props: {
   const rules = getTournamentRules(props.tournament)
   // in Solo every team is one player, so the teams tab would repeat the
   // participants and "team" reads as "player"
-  const isSolo = props.tournament.format === "solo"
+  const isSolo = rules.solo
   const entrant = isSolo ? "player" : "team"
   const teams = schemaValues(props.tournament.teams)
   const teamPlayerIds = new Set(teams.flatMap((team) => [...team.playersId]))
@@ -296,7 +296,9 @@ export default function TournamentItem(props: {
         />
         {props.tournament.name}
       </span>
-      <p className="tournament-format">{rules.label}</p>
+      <p className="tournament-format">
+        {rules.label} · {rules.gameMode}
+      </p>
       {tournamentFinished ? (
         <p>
           Congratulations to <strong>{rankedTeams[0]?.name}</strong> for the

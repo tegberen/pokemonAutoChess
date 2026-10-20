@@ -1,3 +1,4 @@
+import { SpecialGameRule } from "../types/enum/SpecialGameRule"
 import type { TournamentFormat } from "../types/interfaces/Tournament"
 import { shuffleArray } from "../utils/random"
 
@@ -6,6 +7,11 @@ import { shuffleArray } from "../utils/random"
 
 export type TournamentRules = {
   label: string
+  gameMode: string
+  suggestedName: string
+  // every team is one player, playing a fixed Scribble rule
+  solo: boolean
+  specialGameRule?: SpecialGameRule
   teamsPerLobby: number
   placementPoints: { [placement: number]: number }
   // two semifinal lobbies, so twice the lobby size
@@ -14,13 +20,30 @@ export type TournamentRules = {
 
 export const TOURNAMENT_RULES: Record<TournamentFormat, TournamentRules> = {
   duo: {
-    label: "Duo · Classic",
+    label: "Duo",
+    gameMode: "Classic",
+    suggestedName: "Double Up Tournament",
+    solo: false,
     teamsPerLobby: 4,
     placementPoints: { 1: 8, 2: 4, 3: 2, 4: 1 },
     semifinalists: 8
   },
   solo: {
-    label: "Solo · Scribble: Smeargle Pack",
+    label: "Solo",
+    gameMode: "Scribble: Smeargle Pack",
+    suggestedName: "Smeargle Pack Tournament",
+    solo: true,
+    specialGameRule: SpecialGameRule.SMEARGLE_PACK,
+    teamsPerLobby: 8,
+    placementPoints: { 1: 8, 2: 7, 3: 6, 4: 5, 5: 4, 6: 3, 7: 2, 8: 1 },
+    semifinalists: 16
+  },
+  misfits: {
+    label: "Solo",
+    gameMode: "Scribble: Misfits",
+    suggestedName: "Misfits Tournament",
+    solo: true,
+    specialGameRule: SpecialGameRule.MISFITS,
     teamsPerLobby: 8,
     placementPoints: { 1: 8, 2: 7, 3: 6, 4: 5, 5: 4, 6: 3, 7: 2, 8: 1 },
     semifinalists: 16

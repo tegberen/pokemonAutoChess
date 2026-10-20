@@ -166,6 +166,14 @@ export async function joinLobbyRoom(
           $state.listen("doubleUpTitle", (value) => dispatch(setEventNpc({ doubleUpTitle: value })))
           $state.listen("doubleUpMessage", (value) => dispatch(setEventNpc({ doubleUpMessage: value })))
           $state.listen("doubleUpDate", (value) => dispatch(setEventNpc({ doubleUpDate: value })))
+          $state.listen("newsEnabled", (value) => dispatch(setEventNpc({ newsEnabled: value })))
+          $state.listen("newsTitle", (value) => dispatch(setEventNpc({ newsTitle: value })))
+          $state.listen("newsMessage", (value) => dispatch(setEventNpc({ newsMessage: value })))
+          $state.listen("newsDate", (value) => dispatch(setEventNpc({ newsDate: value })))
+          $state.listen("misfitsEnabled", (value) => dispatch(setEventNpc({ misfitsEnabled: value })))
+          $state.listen("misfitsTitle", (value) => dispatch(setEventNpc({ misfitsTitle: value })))
+          $state.listen("misfitsMessage", (value) => dispatch(setEventNpc({ misfitsMessage: value })))
+          $state.listen("misfitsDate", (value) => dispatch(setEventNpc({ misfitsDate: value })))
 
           $state.tournaments.onAdd((tournament) => {
             dispatch(addTournament(tournament))
@@ -176,7 +184,6 @@ export async function joinLobbyRoom(
               "startDate",
               "stage",
               "roundNumber",
-              "wishesEnabled",
               "finished"
             ] satisfies NonFunctionPropNames<TournamentSchema>[]
 

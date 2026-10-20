@@ -20,17 +20,23 @@ function formatEventCountdown(milliseconds: number): string {
   return days > 0 ? `${days}d ${hours}h` : `${hours}h`
 }
 
+export type CalendarCardVariant =
+  | "smeargle"
+  | "doubleup"
+  | "misfits"
+  | "news"
+
 type CalendarEvent = {
   id: string
   name: string
   description: string
   image: string
-  variant: "smeargle" | "doubleup"
-  start: Date
+  variant: CalendarCardVariant
+  start: Date | null
   showCountdown: boolean
 }
 
-function CalendarEventCard(props: Omit<CalendarEvent, "id"> & {
+export function CalendarEventCard(props: Omit<CalendarEvent, "id"> & {
   now: Date
 }) {
   const { t } = useTranslation()
@@ -42,21 +48,23 @@ function CalendarEventCard(props: Omit<CalendarEvent, "id"> & {
           <h3>{props.name}</h3>
           <p>{props.description}</p>
         </div>
-        <div className="calendar-event-timer">
-          {props.showCountdown && (
-            <img className="calendar-clock" src="assets/ui/clock.png" alt="" aria-hidden="true" />
-          )}
-          <div>
+        {props.start && (
+          <div className="calendar-event-timer">
             {props.showCountdown && (
-              <p>
-                {t("event_starts_in", {
-                  time: formatEventCountdown(props.start.getTime() - props.now.getTime())
-                })}
-              </p>
+              <img className="calendar-clock" src="assets/ui/clock.png" alt="" aria-hidden="true" />
             )}
-            <time>{formatDate(props.start, { dateStyle: "long", timeStyle: undefined })}</time>
+            <div>
+              {props.showCountdown && (
+                <p>
+                  {t("event_starts_in", {
+                    time: formatEventCountdown(props.start.getTime() - props.now.getTime())
+                  })}
+                </p>
+              )}
+              <time>{formatDate(props.start, { dateStyle: "long", timeStyle: undefined })}</time>
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </article>
   )
@@ -96,7 +104,34 @@ export function Calendar() {
     })
   }
 
-  events.sort((a, b) => a.start.getTime() - b.start.getTime())
+  if (tournament.misfitsEnabled) {
+    events.push({
+      id: "misfits",
+      name: tournament.misfitsTitle || "Misfits Tournament",
+      description: tournament.misfitsMessage,
+      image: "",
+      variant: "misfits",
+      start: tournament.misfitsDate ? new Date(tournament.misfitsDate) : null,
+      showCountdown: false
+    })
+  }
+
+  if (tournament.newsEnabled) {
+    events.push({
+      id: "news",
+      name: tournament.newsTitle || "News",
+      description: tournament.newsMessage,
+      image: "",
+      variant: "news",
+      start: tournament.newsDate ? new Date(tournament.newsDate) : null,
+      showCountdown: false
+    })
+  }
+
+  // undated news stays on top
+  events.sort(
+    (a, b) => (a.start?.getTime() ?? 0) - (b.start?.getTime() ?? 0)
+  )
 
   return (
     <div className="events-calendar">

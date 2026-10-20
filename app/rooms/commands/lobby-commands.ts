@@ -42,6 +42,11 @@ import { logger } from "../../utils/logger"
 import { generateRandomName } from "../../utils/name-generation"
 import { cleanProfanity } from "../../utils/profanity-filter"
 import { pickRandomIn } from "../../utils/random"
+import {
+  canManageTournaments,
+  getGivableTitles,
+  hasModeratorRights
+} from "../../utils/roles"
 import { getDefaultRoomName } from "../../utils/room-name"
 import type CustomLobbyRoom from "../custom-lobby-room"
 
@@ -176,7 +181,7 @@ export class GiveTitleCommand extends Command<
       const u = this.room.users.get(client.auth.uid)
       const targetUser = this.room.users.get(uid)
 
-      if (u && u.role && u.role === Role.ADMIN) {
+      if (getGivableTitles(u?.role).includes(title)) {
         const user = await UserMetadata.findOne({ uid })
         if (user && user.titles && !user.titles.includes(title)) {
           user.titles.push(title)
@@ -212,6 +217,14 @@ export class SetEventNpcCommand extends Command<
     doubleUpTitle: string
     doubleUpMessage: string
     doubleUpDate: string
+    newsEnabled: boolean
+    newsTitle: string
+    newsMessage: string
+    newsDate: string
+    misfitsEnabled: boolean
+    misfitsTitle: string
+    misfitsMessage: string
+    misfitsDate: string
   }
 > {
   async execute({
@@ -230,7 +243,15 @@ export class SetEventNpcCommand extends Command<
     doubleUpEnabled,
     doubleUpTitle,
     doubleUpMessage,
-    doubleUpDate
+    doubleUpDate,
+    newsEnabled,
+    newsTitle,
+    newsMessage,
+    newsDate,
+    misfitsEnabled,
+    misfitsTitle,
+    misfitsMessage,
+    misfitsDate
   }: {
     client: Client
     enabled: boolean
@@ -248,28 +269,46 @@ export class SetEventNpcCommand extends Command<
     doubleUpTitle: string
     doubleUpMessage: string
     doubleUpDate: string
+    newsEnabled: boolean
+    newsTitle: string
+    newsMessage: string
+    newsDate: string
+    misfitsEnabled: boolean
+    misfitsTitle: string
+    misfitsMessage: string
+    misfitsDate: string
   }) {
     try {
       const u = this.room.users.get(client.auth.uid)
-      if (u && u.role && u.role === Role.ADMIN) {
-        await this.state.setEventNpc({
-          enabled: !!enabled,
-          pokemon: pokemon ?? "",
-          title: title ?? "",
-          message: message ?? "",
-          orientation: orientation ?? "",
-          animation: animation ?? "",
-          emotion: emotion ?? "",
-          tournamentEnabled: !!tournamentEnabled,
-          tournamentTitle: tournamentTitle ?? "Smeargle Pack Tournament",
-          tournamentMessage: tournamentMessage ?? "",
-          tournamentDate: tournamentDate ?? "",
-          doubleUpEnabled: !!doubleUpEnabled,
-          doubleUpTitle: doubleUpTitle ?? "Double Up Tournament",
-          doubleUpMessage: doubleUpMessage ?? "",
-          doubleUpDate: doubleUpDate ?? ""
-        })
-      }
+      if (!u || !canManageTournaments(u.role)) return
+      // an Organizer only edits the tournament cards, the event NPC stays
+      const isAdmin = u.role === Role.ADMIN
+      const { state } = this
+      await state.setEventNpc({
+        enabled: isAdmin ? !!enabled : state.eventNpcEnabled,
+        pokemon: isAdmin ? (pokemon ?? "") : state.eventNpcPokemon,
+        title: isAdmin ? (title ?? "") : state.eventNpcTitle,
+        message: isAdmin ? (message ?? "") : state.eventNpcMessage,
+        orientation: isAdmin ? (orientation ?? "") : state.eventNpcOrientation,
+        animation: isAdmin ? (animation ?? "") : state.eventNpcAnimation,
+        emotion: isAdmin ? (emotion ?? "") : state.eventNpcEmotion,
+        tournamentEnabled: !!tournamentEnabled,
+        tournamentTitle: tournamentTitle ?? "Smeargle Pack Tournament",
+        tournamentMessage: tournamentMessage ?? "",
+        tournamentDate: tournamentDate ?? "",
+        doubleUpEnabled: !!doubleUpEnabled,
+        doubleUpTitle: doubleUpTitle ?? "Double Up Tournament",
+        doubleUpMessage: doubleUpMessage ?? "",
+        doubleUpDate: doubleUpDate ?? "",
+        newsEnabled: !!newsEnabled,
+        newsTitle: newsTitle ?? "News",
+        newsMessage: newsMessage ?? "",
+        newsDate: newsDate ?? "",
+        misfitsEnabled: !!misfitsEnabled,
+        misfitsTitle: misfitsTitle ?? "Misfits Tournament",
+        misfitsMessage: misfitsMessage ?? "",
+        misfitsDate: misfitsDate ?? ""
+      })
     } catch (error) {
       logger.error(error)
     }
@@ -291,7 +330,7 @@ export class SetDoubleUpChampionCommand extends Command<
   }) {
     try {
       const u = this.room.users.get(client.auth.uid)
-      if (u && u.role && u.role === Role.ADMIN && (slot === 0 || slot === 1)) {
+      if (canManageTournaments(u?.role) && (slot === 0 || slot === 1)) {
         await setDoubleUpChampionUid(slot, uid)
         // refresh the cached champions so /leaderboards reflects the change immediately
         await fetchDoubleUpChampions()
@@ -309,7 +348,7 @@ export class SetSmeargleScribbleChampionCommand extends Command<
   async execute({ client, uid }: { client: Client; uid: string }) {
     try {
       const u = this.room.users.get(client.auth.uid)
-      if (u && u.role && u.role === Role.ADMIN) {
+      if (canManageTournaments(u?.role)) {
         await setSmeargleScribbleChampionUid(uid)
         // refresh the cached champion so /leaderboards reflects the change immediately
         await fetchSmeargleScribbleChampion()
@@ -415,7 +454,7 @@ export class OnNewMessageCommand extends Command<
       const user = this.room.users.get(client.auth.uid)
       if (
         user &&
-        [Role.ADMIN, Role.MODERATOR, Role.BASIC].includes(user.role) &&
+        (hasModeratorRights(user.role) || user.role === Role.BASIC) &&
         message != ""
       ) {
         this.state.addMessage(message, user.uid, user.displayName, user.avatar)
@@ -436,7 +475,7 @@ export class RemoveMessageCommand extends Command<
       if (
         user &&
         user.role &&
-        (user.role === Role.ADMIN || user.role === Role.MODERATOR)
+        hasModeratorRights(user.role)
       ) {
         this.state.removeMessage(messageId)
       }
@@ -566,7 +605,7 @@ export class BanUserCommand extends Command<
       if (
         user &&
         bannedUser &&
-        (user.role === Role.ADMIN || user.role === Role.MODERATOR) &&
+        hasModeratorRights(user.role) &&
         bannedUser.role !== Role.ADMIN
       ) {
         const res = await UserMetadata.updateOne({ uid }, { banned: true })
@@ -619,7 +658,7 @@ export class UnbanUserCommand extends Command<
       if (
         unbannedUser &&
         user &&
-        (user.role === Role.ADMIN || user.role === Role.MODERATOR)
+        hasModeratorRights(user.role)
       ) {
         const res = await UserMetadata.updateOne({ uid }, { banned: false })
         if (res.modifiedCount > 0) {

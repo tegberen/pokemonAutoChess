@@ -472,6 +472,13 @@ Smeargle Scribbles do not change your Elo.
 
 Every balance change on this server, newest first.
 
+### 20 October 2026
+
+**Game Mode**
+- Organizer {{new}} | new role given to AgentAvocado, Trix, Leaf and Kirbstagoon
+- Misfits Tournament {{new}} | a Solo tournament format played under the Misfits Scribble rule
+- The Misfit {{new}} | title for the winner of a Misfits Tournament
+
 ### 19 October 2026
 
 **Pokémon**

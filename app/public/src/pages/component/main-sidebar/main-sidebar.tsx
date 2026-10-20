@@ -5,6 +5,10 @@ import { useNavigate } from "react-router"
 import { GADGETS } from "../../../../../config/game/gadgets"
 import { Role } from "../../../../../types"
 import {
+  canManageTournaments,
+  hasModeratorRights
+} from "../../../../../utils/roles"
+import {
   selectConnectedPlayer,
   useAppDispatch,
   useAppSelector
@@ -14,6 +18,7 @@ import { setSearchedUser } from "../../../stores/LobbyStore"
 import { toggleFullScreen } from "../../utils/fullscreen"
 import { cc } from "../../utils/jsx"
 import AdminPanel from "../admin/admin-panel"
+import TournamentsPanel from "../admin/tournaments-panel"
 import Booster from "../booster/booster"
 import TeamBuilderModal from "../bot-builder/team-builder-modal"
 import PokemonCollection from "../collection/pokemon-collection"
@@ -311,8 +316,25 @@ export function MainSidebar(props: MainSidebarProps) {
             </NavLink>
           )}
 
+        {page !== "game" && canManageTournaments(profileRole) && (
+          <NavLink
+            location="tournaments"
+            icon={
+              <img
+                width={32}
+                height={32}
+                src="assets/icons/fire_week_streak.svg"
+                alt=""
+              />
+            }
+            handleClick={changeModal}
+          >
+            Tournaments
+          </NavLink>
+        )}
+
         {page !== "game" &&
-          (profileRole === Role.MODERATOR || profileRole === Role.ADMIN) && (
+          hasModeratorRights(profileRole) && (
             <NavLink
               svg="hammer"
               location="moderation"
@@ -483,6 +505,7 @@ export type Modals =
   | "booster"
   | "moderation"
   | "admin"
+  | "tournaments"
   | "collection"
   | "jukebox"
   | "keybinds"
@@ -622,6 +645,13 @@ function Modals({
       </Modal>
       <Modal onClose={closeModal} show={modal === "admin"} header="Admin">
         <AdminPanel />
+      </Modal>
+      <Modal
+        onClose={closeModal}
+        show={modal === "tournaments"}
+        header="Tournaments"
+      >
+        <TournamentsPanel />
       </Modal>
       <Jukebox show={modal === "jukebox"} handleClose={closeModal} />
       <PokeGuesser show={modal === "pokeguesser"} handleClose={closeModal} />

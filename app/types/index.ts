@@ -58,6 +58,7 @@ export interface PkmWithCustom extends PkmCustom {
 export enum Role {
   ADMIN = "ADMIN",
   MODERATOR = "MODERATOR",
+  ORGANIZER = "ORGANIZER",
   BASIC = "BASIC",
   BOT = "BOT",
   BOT_MANAGER = "BOT_MANAGER"
@@ -134,7 +135,6 @@ export enum Transfer {
   REPLACE_TOURNAMENT_PLAYER = "REPLACE_TOURNAMENT_PLAYER",
   START_TOURNAMENT_LOBBY = "START_TOURNAMENT_LOBBY",
   RENAME_TOURNAMENT = "RENAME_TOURNAMENT",
-  SET_TOURNAMENT_WISHES = "SET_TOURNAMENT_WISHES",
   GIVE_BOOSTER = "GIVE_BOOSTER",
   SET_ROLE = "SET_ROLE",
   GIVE_TITLE = "GIVE_TITLE",
@@ -895,6 +895,7 @@ export enum Title {
   STARRY = "STARRY",
   PRIDE = "PRIDE",
   THE_SCRIBBLER = "THE_SCRIBBLER",
+  THE_MISFIT = "THE_MISFIT",
   SHOW_OFF = "SHOW_OFF",
   ULTRA = "ULTRA",
   // given by hand to the championship winner, never unlocked in game

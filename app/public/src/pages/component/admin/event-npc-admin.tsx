@@ -97,7 +97,15 @@ export function EventNpcAdmin() {
       doubleUpEnabled: eventNpc.doubleUpEnabled,
       doubleUpTitle: eventNpc.doubleUpTitle,
       doubleUpMessage: eventNpc.doubleUpMessage,
-      doubleUpDate: eventNpc.doubleUpDate
+      doubleUpDate: eventNpc.doubleUpDate,
+      newsEnabled: eventNpc.newsEnabled,
+      newsTitle: eventNpc.newsTitle,
+      newsMessage: eventNpc.newsMessage,
+      newsDate: eventNpc.newsDate,
+      misfitsEnabled: eventNpc.misfitsEnabled,
+      misfitsTitle: eventNpc.misfitsTitle,
+      misfitsMessage: eventNpc.misfitsMessage,
+      misfitsDate: eventNpc.misfitsDate
     })
     setApplied(true)
   }

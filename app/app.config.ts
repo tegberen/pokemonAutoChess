@@ -85,6 +85,7 @@ import type {
   IVictoryWinner
 } from "./types/interfaces/RecentVictory"
 import { logger } from "./utils/logger"
+import { hasModeratorRights } from "./utils/roles"
 
 const clientSrc = __dirname.includes("server")
   ? path.join(__dirname, "..", "..", "client")
@@ -820,7 +821,7 @@ export const server = defineServer({
         if (!userAuth) return
         const user = await UserMetadata.findOne({ uid: userAuth.uid })
         const showBanned =
-          user?.role === Role.ADMIN || user?.role === Role.MODERATOR
+          hasModeratorRights(user?.role)
 
         const users = await UserMetadata.find(
           {
@@ -1107,7 +1108,7 @@ export const server = defineServer({
       const userAuth = await authUser(req, res)
       if (!userAuth) return
       const user = await UserMetadata.findOne({ uid: userAuth.uid })
-      if (!user || (user.role !== Role.ADMIN && user.role !== Role.MODERATOR)) {
+      if (!user || !hasModeratorRights(user.role)) {
         res.status(403).send("Unauthorized")
         return
       }
@@ -1137,7 +1138,7 @@ export const server = defineServer({
       const userAuth = await authUser(req, res)
       if (!userAuth) return
       const user = await UserMetadata.findOne({ uid: userAuth.uid })
-      if (!user || (user.role !== Role.ADMIN && user.role !== Role.MODERATOR)) {
+      if (!user || !hasModeratorRights(user.role)) {
         res.status(403).send("Unauthorized")
         return
       }
@@ -1155,7 +1156,7 @@ export const server = defineServer({
       const userAuth = await authUser(req, res)
       if (!userAuth) return
       const user = await UserMetadata.findOne({ uid: userAuth.uid })
-      if (!user || (user.role !== Role.ADMIN && user.role !== Role.MODERATOR)) {
+      if (!user || !hasModeratorRights(user.role)) {
         res.status(403).send("Unauthorized")
         return
       }
@@ -1207,7 +1208,7 @@ export const server = defineServer({
         const user = await UserMetadata.findOne({ uid: userAuth.uid })
         if (
           !user ||
-          (user.role !== Role.ADMIN && user.role !== Role.MODERATOR)
+          !hasModeratorRights(user.role)
         ) {
           res.status(403).send("Unauthorized")
           return
@@ -1246,7 +1247,7 @@ export const server = defineServer({
       const caller = await UserMetadata.findOne({ uid: userAuth.uid })
       if (
         !caller ||
-        (caller.role !== Role.ADMIN && caller.role !== Role.MODERATOR)
+        !hasModeratorRights(caller.role)
       ) {
         res.status(403).send("Unauthorized")
         return

@@ -12,9 +12,10 @@ export type TournamentStage =
   | "final"
   | "finished"
 
-// duo plays Double Up Classic in teams of 2; solo plays Smeargle Pack Scribble
-// with every player as a team of 1
-export type TournamentFormat = "duo" | "solo"
+// duo plays Double Up Classic in teams of 2; solo and misfits play a Scribble
+// rule with every player as a team of 1. "solo" predates Misfits and stays the
+// Smeargle Pack format
+export type TournamentFormat = "duo" | "solo" | "misfits"
 
 export interface ITournament {
   id: string
@@ -26,7 +27,6 @@ export interface ITournament {
   brackets: MapSchema<TournamentBracketSchema>
   stage: TournamentStage
   roundNumber: number
-  wishesEnabled: boolean
   finished: boolean
 }
 

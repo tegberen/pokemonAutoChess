@@ -1,7 +1,7 @@
 import type { CSSProperties } from "react"
 import { useTranslation } from "react-i18next"
 import type { IGameUser } from "../../../../../models/colyseus-models/game-user"
-import { Role } from "../../../../../types"
+import { hasModeratorRights } from "../../../../../utils/roles"
 import { useAppSelector } from "../../../hooks"
 import { kick, removeBot } from "../../../network"
 import { RemoveButton } from "../buttons/remove-button"
@@ -22,7 +22,7 @@ export default function PreparationMenuUser(props: {
   const { t } = useTranslation()
   const user = useAppSelector((state) => state.preparation.user)
   const canKick =
-    props.isOwner || (user && [Role.MODERATOR, Role.ADMIN].includes(user.role))
+    props.isOwner || (user && hasModeratorRights(user.role))
 
   const removeButton = props.user.isBot ? (
     <RemoveButton

@@ -6,6 +6,7 @@ import { Tab, TabList, TabPanel, Tabs } from "react-tabs"
 import { type IPreparationMetadata, Role, Transfer } from "../../../../../types"
 import { GameMode, type RoomRequest } from "../../../../../types/enum/Game"
 import { block, throttle } from "../../../../../utils/function"
+import { hasModeratorRights } from "../../../../../utils/roles"
 import { joinExistingPreparationRoom } from "../../../game/lobby-logic"
 import { useAppDispatch, useAppSelector } from "../../../hooks"
 import { rooms } from "../../../network"
@@ -48,8 +49,7 @@ export default function RoomMenu() {
       let password: string | undefined
       if (
         passwordProtected &&
-        user?.role !== Role.ADMIN &&
-        user?.role !== Role.MODERATOR
+        !hasModeratorRights(user?.role)
       ) {
         const inputPassword = prompt(t("room_menu.room_is_private"))
         if (!inputPassword) return

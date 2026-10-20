@@ -47,7 +47,6 @@ const tournamentSchema = new Schema({
   },
   stage: { type: String, default: "registration" },
   roundNumber: { type: Number, default: 0 },
-  wishesEnabled: { type: Boolean, default: false },
   finished: Boolean
 })
 

@@ -9,6 +9,7 @@ import {
   getGameModification
 } from "../../../../../types/enum/Game"
 import { SpecialGameRule } from "../../../../../types/enum/SpecialGameRule"
+import { hasModeratorRights } from "../../../../../utils/roles"
 import { getDefaultRoomName } from "../../../../../utils/room-name"
 import { keys } from "../../../../../utils/object"
 import { useAppSelector } from "../../../hooks"
@@ -99,8 +100,7 @@ export default function PreparationSettings() {
   )
 
   const isAdmin = user?.role === Role.ADMIN
-  const isModerator = user?.role === Role.MODERATOR
-  const canEditRoom = isOwner || isModerator || isAdmin
+  const canEditRoom = isOwner || hasModeratorRights(user?.role)
   const isCustomLobby = gameMode === GameMode.CUSTOM_LOBBY
   // Double Up gets the custom-room controls, minus the rule picker: its scribble
   // rule is rolled at game start, unless an admin pins one. A tournament lobby

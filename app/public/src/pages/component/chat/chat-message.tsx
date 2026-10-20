@@ -1,4 +1,5 @@
-import { type IChatV2, Role } from "../../../../../types"
+import type { IChatV2 } from "../../../../../types"
+import { hasModeratorRights } from "../../../../../utils/roles"
 import { useAppSelector } from "../../../hooks"
 import { type ChatRoom, removeMessage, searchById } from "../../../network"
 import { cc } from "../../utils/jsx"
@@ -38,7 +39,7 @@ export default function ChatMessage(props: {
             <span className="chat-message-author">{props.message.author}</span>
             <span className="chat-message-time">{time}</span>
           </div>
-          {role && (role === Role.MODERATOR || role === Role.ADMIN) && (
+          {role && hasModeratorRights(role) && (
             <button
               className="remove-chat bubbly red"
               title="Remove message"

@@ -17,7 +17,11 @@ import {
 
 // tournaments saved before Solo existed have no format and are all Duo
 export function getTournamentRules(tournament: ITournament): TournamentRules {
-  return TOURNAMENT_RULES[tournament.format ?? "duo"]
+  return TOURNAMENT_RULES[tournament.format] ?? TOURNAMENT_RULES.duo
+}
+
+export function isSoloTournament(tournament: ITournament): boolean {
+  return getTournamentRules(tournament).solo
 }
 
 type RankedTeam = SwissTeam & { name: string; eliminated: boolean }
