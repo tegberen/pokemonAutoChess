@@ -175,7 +175,12 @@ export default class PreparationRoom extends Room<{ state: PreparationState }> {
       whimsy: options.whimsy ?? false,
       blessingsEnabled: this.state.blessingsEnabled,
       specialGameRule: this.state.specialGameRule,
-      dailyDuel: options.dailyDuel ?? false
+      dailyDuel: options.dailyDuel ?? false,
+      autoStartAt: options.autoStartDelayInSeconds
+        ? new Date(
+            Date.now() + options.autoStartDelayInSeconds * 1000
+          ).toISOString()
+        : null
     })
     this.maxClients = 8
     if (

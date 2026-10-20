@@ -382,29 +382,179 @@
   font-size: 1.15em;
 }
 
-.tournament-lobbies {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.tournament-lobbies th,
-.tournament-lobbies td {
-  padding: 0.3em 0.5em;
-  text-align: left;
-  vertical-align: middle;
-}
-
-.tournament-lobbies thead th {
-  color: var(--color-fg-secondary);
-  border-bottom: 1px solid rgb(255 255 255 / 20%);
-}
-
-.tournament-lobbies tbody tr + tr td {
-  border-top: 1px solid rgb(255 255 255 / 8%);
-}
-
-.tournament-lobby-actions {
-  display: flex;
+.tournament-lobby-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(15em, 1fr));
   gap: 0.5em;
-  justify-content: end;
+  margin: 0;
+  padding: 0;
+}
+
+.tournament-lobby-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+  padding: 0.6em 0.75em;
+  border-radius: 6px;
+  background: var(--color-bg-primary);
+  list-style: none;
+}
+
+.tournament-lobby-card > header {
+  display: grid;
+  gap: 0.15em;
+}
+
+.tournament-lobby-card > .bubbly {
+  align-self: flex-start;
+  margin-top: auto;
+  font-size: 85%;
+}
+
+.tournament-lobby-status {
+  font-weight: 600;
+}
+
+.tournament-lobby-status.waiting {
+  color: var(--color-fg-primary);
+}
+
+.tournament-lobby-card > header small {
+  color: var(--color-fg-secondary);
+}
+
+.tournament-lobby-status.playing {
+  color: var(--color-fg-accent);
+}
+
+.tournament-lobby-status.finished {
+  color: var(--color-fg-green);
+}
+
+.tournament-lobby-status.lost {
+  color: var(--color-fg-red);
+}
+
+.tournament-lobby-teams {
+  display: grid;
+  gap: 0.1em;
+  margin: 0;
+  padding: 0;
+  color: var(--color-fg-secondary);
+}
+
+.tournament-lobby-teams li {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  list-style: none;
+}
+
+.tournament-troubleshooting summary {
+  color: var(--color-fg-secondary);
+  cursor: var(--cursor-hover);
+}
+
+.tournament-troubleshooting[open] {
+  display: grid;
+  gap: 0.5em;
+}
+
+.tournament-standings {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(16em, 1fr));
+  gap: 0.25em 1.5em;
+  margin: 0;
+  padding: 0;
+}
+
+.tournament-standings li {
+  display: grid;
+  grid-template-columns: 2em 4em 1fr;
+  align-items: baseline;
+  gap: 0.4em;
+  min-width: 0;
+  list-style: none;
+}
+
+.tournament-standings-rank {
+  color: var(--color-fg-secondary);
+  text-align: right;
+}
+
+.tournament-standings-points {
+  color: var(--color-fg-gold);
+  font-weight: 600;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.tournament-standings-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tournament-standings li.eliminated {
+  color: var(--color-fg-secondary);
+}
+
+.tournament-standings li.eliminated .tournament-standings-name {
+  text-decoration: line-through;
+}
+
+.tournament-standings li.eliminated .tournament-standings-points {
+  color: inherit;
+}
+
+.tournament-standings.no-points li {
+  grid-template-columns: 2em 1fr;
+}
+
+.tournament-podium {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(14em, 1fr));
+  gap: 0.5em;
+  margin: 0;
+  padding: 0;
+}
+
+.tournament-podium li {
+  display: grid;
+  gap: 0.15em;
+  min-width: 0;
+  padding: 0.6em 0.75em;
+  border-radius: 6px;
+  background: var(--color-bg-primary);
+  list-style: none;
+}
+
+.tournament-podium-place {
+  color: var(--color-fg-secondary);
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.tournament-podium .place-1 .tournament-podium-place {
+  color: var(--color-fg-gold);
+}
+
+.tournament-podium-name {
+  overflow: hidden;
+  font-size: 1.1em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tournament-substitute-form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: 0.75em;
+}
+
+.tournament-substitute-form label {
+  display: grid;
+  gap: 0.25em;
+  font-weight: 600;
 }
