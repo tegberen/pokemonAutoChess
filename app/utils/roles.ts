@@ -1,9 +1,12 @@
 import { Role, Title } from "../types"
 
-// an Organizer also moderates, on top of running tournaments
+// Organizers and Bot Managers also moderate, on top of their own duties
 export function hasModeratorRights(role: Role | undefined): boolean {
   return (
-    role === Role.ADMIN || role === Role.MODERATOR || role === Role.ORGANIZER
+    role === Role.ADMIN ||
+    role === Role.MODERATOR ||
+    role === Role.ORGANIZER ||
+    role === Role.BOT_MANAGER
   )
 }
 
