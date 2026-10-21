@@ -117,7 +117,8 @@ import {
   GameMode,
   GamePhaseState,
   PokemonActionState,
-  Rarity
+  Rarity,
+  Stat
 } from "../types/enum/Game"
 import {
   Item,
@@ -943,6 +944,19 @@ export default class GameRoom extends Room<{ state: GameState }> {
           logger.error("error removing flower pot items", error)
         }
       }
+    })
+
+    this.onMessage(Transfer.SWITCH_TRAINING_BAG, (client) => {
+      if (this.state.gameFinished || !client.auth) return
+      if (this.state.phase !== GamePhaseState.PICK) return
+      const playerId = client.auth.uid
+      if (!this.state.players.get(playerId)?.alive) return
+      const trainsAbilityPower =
+        this.state.trainingBagStatByPlayerId.get(playerId) === Stat.AP
+      this.state.trainingBagStatByPlayerId.set(
+        playerId,
+        trainsAbilityPower ? Stat.ATK : Stat.AP
+      )
     })
 
     this.onMessage(

@@ -1202,6 +1202,12 @@ export default function Game() {
         dispatch(setBlessingsEnabled(value))
       })
 
+      $state.trainingBagStatByPlayerId.onChange((_stat, playerId) => {
+        if (playerId === store.getState().game.playerIdSpectated) {
+          getGameScene()?.board?.renderTrainingBag()
+        }
+      })
+
       $state.blessingsByPlayerId.onAdd((playerBlessings, playerId) => {
         let previousBlessingGoldEarned = playerBlessings.goldEarned
         const dispatchBlessings = () =>

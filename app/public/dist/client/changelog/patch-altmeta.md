@@ -407,7 +407,6 @@ At the beginning of each battle, TIGHT_BELT is replaced by 2 random items. The h
 - Heatran: has MONSTER
 - Ogerpon: becomes MONSTER with TEAL_MASK, WELLSPRING_MASK, HEARTHFLAME_MASK or CORNERSTONE_MASK,
 - Celebi: has FAIRY
-- Urshifu (Single Strike): teaches its style, so the training bag and pillars also grant 10 AP permanently.
 - Urshifu (Rapid Strike): teaches its style, so the training bag and pillars also grant 5 SPEED permanently.
 
 ### Special
@@ -489,6 +488,7 @@ Every balance change on this server, newest first.
 - Mamoswine | no longer always finds an AIR_BALLOON when it finishes digging a hole. *This started as an easter egg back when the game was mostly played against bots, and it is one of the reasons the Swinub line does so well, so it is gone. As compensation, the Swinub line gets its own hero Wish, Ancient Power.*
 - COVERT_CLOAK | no longer gives AP back to enemies below 0 AP: it stole their negative AP, raising them to 0 and draining the holder
 - Hero Wishes | a revived hero keeps the RANGE its Wish gives: Axe Blast, Orbital Strike, Galvanic Rain, Cell Brawler, It's Going Down, Frost Gear, Bonemerang Ranger and Lance's Ace
+- Training Bag | was not clickable
 
 ### 19 October 2026
 
@@ -1122,7 +1122,6 @@ for a little chat and gossip. Cheers!*
 - Crests | two 1 STAR Uncommons → one 1 STAR Uncommon and one 1 STAR Rare
 
 **Pokémon**
-- Urshifu (Single Strike) | training grants 10 AP.
 - Urshifu (Rapid Strike) | training grants 5 SPEED.
 
 **Fixes**

@@ -153,6 +153,9 @@ export type VictoryScene = {
    bar, and of the shop along the bottom. */
 const GUIDE_MESSAGE_MAX_WIDTH = 520
 const SCRIBBLE_BLOCKED_TINT = 0xff4444
+const REDUCED_MOTION =
+  typeof window !== "undefined" &&
+  window.matchMedia?.("(prefers-reduced-motion: reduce)").matches === true
 const GUIDE_MESSAGE_AREA = {
   left: 540,
   right: 1740,
@@ -208,6 +211,8 @@ export default class BoardManager {
   groundHoles: Phaser.GameObjects.Sprite[]
   trainingBag: Phaser.GameObjects.Sprite | null = null
   trainingRack: Phaser.GameObjects.Sprite | null = null
+  isTrainingBagSwinging = false
+  trainingBagShown: { playerId: string; stat: Stat } | null = null
   portal: Portal | undefined
   removeVictoryScene: (() => void) | null = null
   smeargle: PokemonSprite | null = null
@@ -1247,29 +1252,94 @@ export default class BoardManager {
     this.trainingBag?.destroy()
     this.trainingRack = null
     this.trainingBag = null
+    this.isTrainingBagSwinging = false
   }
 
   renderTrainingBag() {
+    const wasTraining = this.isTrainingBagSwinging
     this.hideTrainingBag()
     const fightingTier = getSynergyTier(this.player.synergies, Synergy.FIGHTING)
     const hasMuscleBandBlessing = this.state.blessingsByPlayerId
       .get(this.player.id)
       ?.blessings.includes(Blessing.MUSCLE_BAND_BLESSING)
     if (fightingTier >= 4 || hasMuscleBandBlessing) {
-      this.trainingRack = this.scene.add
-        .sprite(605, 775, "training_bag", "rack.png")
+      const stat =
+        this.state.trainingBagStatByPlayerId.get(this.player.id) ?? Stat.ATK
+      const trainsAbilityPower = stat === Stat.AP
+      this.trainingRack = (
+        trainsAbilityPower
+          ? this.scene.add.sprite(605, 775, "training_rack_blue")
+          : this.scene.add.sprite(605, 775, "training_bag", "rack.png")
+      )
         .setScale(1.5)
         .setDepth(DEPTH.INANIMATE_OBJECTS)
-      this.trainingBag = this.scene.add
-        .sprite(621, 750, "training_bag", "bag.png")
+      this.trainingBag = (
+        trainsAbilityPower
+          ? this.scene.add.sprite(621, 750, "training_bag_blue")
+          : this.scene.add.sprite(621, 750, "training_bag", "bag.png")
+      )
         .setScale(1.5)
         .setOrigin(35 / 48, 19 / 72)
         .setDepth(DEPTH.INANIMATE_OBJECTS + 0.1)
+      if (this.player.id === this.scene.uid) {
+        this.trainingBag
+          .setInteractive()
+          .on("pointerdown", (pointer: Phaser.Input.Pointer) => {
+            if (pointer.leftButtonDown() && this.mode === BoardMode.PICK) {
+              this.scene.room?.send(Transfer.SWITCH_TRAINING_BAG)
+            }
+          })
+      }
+      const shownBefore = this.trainingBagShown
+      this.trainingBagShown = { playerId: this.player.id, stat }
+      if (wasTraining && this.mode === BoardMode.BATTLE) {
+        this.animateTrainingBag()
+      } else if (
+        shownBefore?.playerId === this.player.id &&
+        shownBefore.stat !== stat
+      ) {
+        this.punchTrainingBag()
+        this.popTrainingBagStat(stat)
+      }
     }
+  }
+
+  popTrainingBagStat(stat: Stat) {
+    const icon = this.scene.add
+      .image(548, 790, `stat-${stat}`)
+      .setDepth(DEPTH.TEXT)
+    this.scene.tweens.add({
+      targets: icon,
+      duration: 900,
+      alpha: { getStart: () => 1, getEnd: () => 0, ease: "Cubic.easeIn" },
+      y: { getStart: () => 790, getEnd: () => 765, ease: "Quad.easeOut" },
+      onComplete: () => icon.destroy()
+    })
+  }
+
+  punchTrainingBag() {
+    if (!this.trainingBag) return
+    const swings = REDUCED_MOTION ? [-8, 0] : [-28, 16, -8, 3, 0]
+    this.scene.tweens.chain({
+      targets: this.trainingBag,
+      tweens: swings.map((angle, index) => ({
+        angle,
+        duration: index === 0 ? 110 : 190,
+        ease: index === 0 ? "Quad.easeOut" : "Sine.easeInOut"
+      }))
+    })
+  }
+
+  stopTrainingBagSwing() {
+    this.isTrainingBagSwinging = false
+    if (!this.trainingBag) return
+    this.scene.tweens.killTweensOf(this.trainingBag)
+    this.trainingBag.setAngle(0)
   }
 
   animateTrainingBag() {
     if (!this.trainingBag) return
+    this.isTrainingBagSwinging = true
     this.scene.tweens.add({
       targets: this.trainingBag,
       angle: {
@@ -1957,6 +2027,12 @@ export default class BoardManager {
             pokemon.positionX === 0
           ) {
             this.animateTrainingBag()
+          } else if (
+            this.isTrainingBagSwinging &&
+            pokemon.positionX === 0 &&
+            pokemon.positionY === 0
+          ) {
+            this.stopTrainingBagSwing()
           }
           if (value === PokemonActionState.EXPLORING) {
             pokemonSprite.orientation = Orientation.DOWN

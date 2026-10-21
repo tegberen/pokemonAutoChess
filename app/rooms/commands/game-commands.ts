@@ -38,6 +38,8 @@ import {
   SHARDS_PER_UNOWN_WANDERER,
   SHINY_UNOWN_ENCOUNTER_CHANCE,
   StageDuration,
+  TRAINING_BAG_ABILITY_POWER,
+  TRAINING_BAG_ATTACK,
   TREASURE_BOX_LIFE_THRESHOLD,
   UNOWN_ENCOUNTER_CHANCE
 } from "../../config"
@@ -238,7 +240,7 @@ import {
 import {
   Passive,
   URSHIFU_RAPID_TRAINING_SPEED,
-  URSHIFU_SINGLE_TRAINING_ABILITY_POWER
+  URSHIFU_SINGLE_TRAINING_CRIT_POWER
 } from "../../types/enum/Passive"
 import {
   Pkm,
@@ -3668,34 +3670,36 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
             if (pokemon.action === PokemonActionState.TRAINING) {
               // the masters coach from anywhere they are owned, bench included
               const coaches = schemaValues(player.board)
-              const coachedAbilityPower = coaches.some(
+              const coachedCritPower = coaches.some(
                 (p) => p.passive === Passive.URSHIFU_SINGLE
               )
-                ? URSHIFU_SINGLE_TRAINING_ABILITY_POWER
+                ? URSHIFU_SINGLE_TRAINING_CRIT_POWER
                 : 0
               const coachedSpeed = coaches.some(
                 (p) => p.passive === Passive.URSHIFU_RAPID
               )
                 ? URSHIFU_RAPID_TRAINING_SPEED
                 : 0
+              const trainsAbilityPower =
+                this.state.trainingBagStatByPlayerId.get(player.id) === Stat.AP
+              const train = (trainee: Pokemon) => {
+                if (trainsAbilityPower) {
+                  trainee.addAbilityPower(TRAINING_BAG_ABILITY_POWER)
+                } else {
+                  trainee.addAttack(TRAINING_BAG_ATTACK)
+                }
+                trainee.addMaxHP(
+                  Math.ceil(0.1 * getPokemonData(trainee.name).hp)
+                )
+                trainee.addCritPower(coachedCritPower)
+                trainee.addSpeed(coachedSpeed)
+              }
               if (pokemon.name === Pkm.PIKACHU) {
-                const libre = player.transformPokemon(
-                  pokemon,
-                  Pkm.PIKACHU_LIBRE
-                )
-                libre.addAttack(4)
-                libre.addMaxHP(
-                  Math.ceil(0.1 * getPokemonData(Pkm.PIKACHU_LIBRE).hp)
-                )
-                // the transform returns a new unit, so it claims the coaching
-                libre.addAbilityPower(coachedAbilityPower)
-                libre.addSpeed(coachedSpeed)
+                // the transform returns a new unit, so it claims the training
+                train(player.transformPokemon(pokemon, Pkm.PIKACHU_LIBRE))
                 return
               }
-              pokemon.addAttack(4)
-              pokemon.addMaxHP(Math.ceil(0.1 * getPokemonData(pokemon.name).hp))
-              pokemon.addAbilityPower(coachedAbilityPower)
-              pokemon.addSpeed(coachedSpeed)
+              train(pokemon)
               pokemon.action = PokemonActionState.IDLE
             }
           })

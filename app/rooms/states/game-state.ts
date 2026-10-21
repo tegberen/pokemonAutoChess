@@ -27,7 +27,7 @@ import { PVEStages } from "../../models/pve-stages"
 import Shop from "../../models/shop"
 import type { Blessing, BlessingTier } from "../../types/enum/Blessing"
 import type { EloRank } from "../../types/enum/EloRank"
-import { GameMode, GamePhaseState } from "../../types/enum/Game"
+import { GameMode, GamePhaseState, type Stat } from "../../types/enum/Game"
 import type { Item } from "../../types/enum/Item"
 import type { Pkm } from "../../types/enum/Pokemon"
 import { SpecialGameRule } from "../../types/enum/SpecialGameRule"
@@ -101,6 +101,8 @@ export default class GameState extends Schema {
   @type("string") spiritCoinReward = pickRandomIn(
     Object.values(SpiritCoinReward)
   )
+  // ATK or AP, the stat each player's training bag gives, kept last
+  @type({ map: "string" }) trainingBagStatByPlayerId = new MapSchema<Stat>()
   // server-only cursor recording which step already handed out its grants
   guideStepEntered = -1
   // server-only: true while a guide stage is being replayed with a different

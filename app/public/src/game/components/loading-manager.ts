@@ -215,6 +215,14 @@ export function loadEnvironmentMultiAtlas(scene: Phaser.Scene) {
     "/assets/environment/training_bag.json",
     "/assets/environment/"
   )
+  scene.load.image(
+    "training_bag_blue",
+    "/assets/environment/training_bag/bag_blue.png"
+  )
+  scene.load.image(
+    "training_rack_blue",
+    "/assets/environment/training_bag/rack_blue.png"
+  )
 }
 
 export function preloadPortraits(scene: Phaser.Scene, player: Player) {
