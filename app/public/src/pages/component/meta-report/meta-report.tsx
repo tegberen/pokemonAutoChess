@@ -1,6 +1,4 @@
-import { useTranslation } from "react-i18next"
 import { Tab, TabList, TabPanel, Tabs } from "react-tabs"
-import { ActivityReport } from "./activity-report"
 import { BindingBandGuide } from "./binding-band-guide"
 import { ItemizationTheory } from "./itemization-theory"
 import { TempoGuide } from "./tempo-guide"
@@ -9,13 +7,10 @@ import "./meta-report.css"
 const tabKeys = [
   "itemization-theory",
   "tempo-guide",
-  "binding-band-guide",
-  "activity-report"
+  "binding-band-guide"
 ]
 
 export default function MetaReport({ initialTab }: { initialTab?: string }) {
-  const { t } = useTranslation()
-
   return (
     <div id="meta-report">
       <Tabs defaultIndex={Math.max(0, tabKeys.indexOf(initialTab ?? ""))}>
@@ -37,9 +32,6 @@ export default function MetaReport({ initialTab }: { initialTab?: string }) {
             />
             Binding Band Guide
           </Tab>
-          <Tab key="activity-report">
-            {t("game_activity", { defaultValue: "Game Activity" })}
-          </Tab>
         </TabList>
 
         <TabPanel>
@@ -50,9 +42,6 @@ export default function MetaReport({ initialTab }: { initialTab?: string }) {
         </TabPanel>
         <TabPanel>
           <BindingBandGuide />
-        </TabPanel>
-        <TabPanel>
-          <ActivityReport />
         </TabPanel>
       </Tabs>
     </div>

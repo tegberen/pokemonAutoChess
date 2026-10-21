@@ -89,18 +89,18 @@ export function ActivityReport() {
             <ComposedChart data={activity!.days} margin={CHART_MARGIN}>
               <CartesianGrid
                 strokeDasharray="3 3"
-                stroke="rgba(255,255,255,0.1)"
+                stroke="var(--color-bg-tertiary)"
               />
               <XAxis
                 dataKey="date"
                 angle={-35}
                 textAnchor="end"
                 height={60}
-                tick={{ fill: "#ddd", fontSize: 10 }}
+                tick={{ fill: "var(--color-fg-secondary)", fontSize: 10 }}
                 interval="preserveStartEnd"
               />
               <YAxis
-                tick={{ fill: "#ddd", fontSize: 11 }}
+                tick={{ fill: "var(--color-fg-secondary)", fontSize: 11 }}
                 allowDecimals={false}
                 tickFormatter={(v: number) =>
                   v >= 1000 ? `${(v / 1000).toFixed(1)}k` : String(v)
@@ -111,15 +111,21 @@ export function ActivityReport() {
                 wrapperStyle={{ outline: "none" }}
                 animationDuration={0}
               />
-              <Legend wrapperStyle={{ color: "#ccc", fontSize: "0.85em" }} />
+              <Legend
+                wrapperStyle={{
+                  color: "var(--color-fg-secondary)",
+                  fontSize: "0.85em"
+                }}
+              />
               <Area
                 type="monotone"
                 dataKey="gameCount"
                 name={t("game_count", { defaultValue: "Games" })}
-                stroke="#6ba3ff"
-                fill="rgba(107,163,255,0.35)"
+                stroke="var(--color-bg-accent)"
+                fill="var(--color-bg-accent)"
+                fillOpacity={0.3}
                 strokeWidth={3}
-                dot={{ fill: "#6ba3ff", r: 4 }}
+                dot={{ fill: "var(--color-bg-accent)", r: 4 }}
                 activeDot={{ r: 6 }}
               />
             </ComposedChart>

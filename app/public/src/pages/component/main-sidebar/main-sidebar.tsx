@@ -24,6 +24,7 @@ import TeamBuilderModal from "../bot-builder/team-builder-modal"
 import PokemonCollection from "../collection/pokemon-collection"
 import Jukebox from "../jukebox/jukebox"
 import MetaReport from "../meta-report/meta-report"
+import { Report } from "../meta-report/report"
 import { Modal } from "../modal/modal"
 import ModerationPanel from "../moderation/moderation-panel"
 import GameOptionsModal from "../options/game-options-modal"
@@ -222,6 +223,11 @@ export function MainSidebar(props: MainSidebarProps) {
         >
           {t("guide.bookmark_tab")}
         </NavLink>
+        {page !== "game" && (
+          <NavLink svg="meta" location="report" handleClick={changeModal}>
+            Report
+          </NavLink>
+        )}
 
         {profileLevel >= GADGETS.team_planner.levelRequired && (
           <NavLink
@@ -521,6 +527,7 @@ export type Modals =
   | "tier-list"
   | "wiki"
   | "wish-quiz"
+  | "report"
 
 function Modals({
   modal,
@@ -609,6 +616,9 @@ function Modals({
         onClose={closeModal}
       >
         <MetaReport key={metaTab ?? "default"} initialTab={metaTab} />
+      </Modal>
+      <Modal show={modal === "report"} header="Report" onClose={closeModal}>
+        <Report />
       </Modal>
       <Modal
         onClose={closeModal}

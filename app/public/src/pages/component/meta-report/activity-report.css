@@ -30,28 +30,28 @@
 #activity-report .chart-shell {
   flex: 1;
   min-height: 450px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
   padding: 1em;
+  border: var(--border-thin);
+  border-radius: 12px;
+  background-color: var(--color-bg-secondary);
 }
 
 #activity-report .error {
-  color: #ff8b8b;
+  color: var(--color-fg-red);
 }
 
 .activity-report-tooltip {
-  background: #1e1f29;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 6px;
-  padding: 0.5em 0.75em;
   min-width: 200px;
+  padding: 0.5em 0.75em;
+  border: var(--border-thin);
+  border-radius: 8px;
+  background-color: var(--color-bg-secondary);
 }
 
 .activity-report-tooltip h3 {
   margin: 0 0 0.4em;
   font-size: 0.95em;
-  color: #eee;
+  color: var(--color-fg-primary);
 }
 
 .activity-report-tooltip p {

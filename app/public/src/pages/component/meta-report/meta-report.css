@@ -1,5 +1,4 @@
 @import "./player-report.css";
-@import "./activity-report.css";
 
 #meta-report {
   height: calc(95vh - 6rem);
@@ -9,6 +8,16 @@
 
 #meta-report h2 {
   margin: 0;
+}
+
+#meta-report .react-tabs__tab {
+  border: var(--border-thin);
+  border-color: transparent;
+}
+
+#meta-report .react-tabs__tab--selected {
+  border: var(--border-thin);
+  border-bottom-color: transparent;
 }
 
 /* Only some of these tabs carry an icon, so nothing inside a tab is allowed to

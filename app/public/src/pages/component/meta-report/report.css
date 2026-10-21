@@ -1,0 +1,29 @@
+#report {
+  display: flex;
+  flex-direction: column;
+  width: min(94vw, 80em);
+  height: calc(94vh - 5rem);
+  color: var(--color-fg-primary);
+}
+
+#report > .react-tabs {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+}
+
+#report > .react-tabs > .react-tabs__tab-panel--selected {
+  flex: 1;
+  min-height: 0;
+}
+
+#report .react-tabs__tab {
+  border: var(--border-thin);
+  border-color: transparent;
+}
+
+#report .react-tabs__tab--selected {
+  border: var(--border-thin);
+  border-bottom-color: transparent;
+}

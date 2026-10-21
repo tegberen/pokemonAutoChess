@@ -1,3 +1,4 @@
+import { Blessings } from "../config/game/blessings"
 import Dendrogram from "../models/mongo-models/dendrogram"
 import DetailledStatisticV2 from "../models/mongo-models/detailled-statistic-v2"
 import ItemsStatistic from "../models/mongo-models/items-statistic-v2"
@@ -7,7 +8,9 @@ import RegionStatistic from "../models/mongo-models/regions-statistic"
 import ReportMetadata from "../models/mongo-models/report-metadata"
 import UserMetadata from "../models/mongo-models/user-metadata"
 import { getPokemonData } from "../models/precomputed/precomputed-pokemon-data"
+import type { Blessing, BlessingTier } from "../types/enum/Blessing"
 import type { EloRank } from "../types/enum/EloRank"
+import { GameMode } from "../types/enum/Game"
 import type { Synergy } from "../types/enum/Synergy"
 import type { ITypeStatistics } from "../types/meta"
 import type { IDendrogram } from "../types/models/dendrogram"
@@ -24,6 +27,11 @@ import type {
 import type { IPokemonsStatisticV2 } from "../types/models/pokemons-statistic-v2"
 import type { IRegionStatistic } from "../types/models/regions-statistic"
 import type { IReportMetadata } from "../types/models/report-metadata"
+import type {
+  IWishReport,
+  IWishReportMode,
+  IWishReportRow
+} from "../types/models/wish-report"
 import { logger } from "../utils/logger"
 import { mapToObj } from "../utils/map"
 
@@ -41,7 +49,8 @@ export async function fetchMetaReports() {
     fetchMetaV2(),
     fetchDendrogramData(),
     fetchPlayerRankDistribution(),
-    fetchGameActivity()
+    fetchGameActivity(),
+    fetchWishReport()
   ])
   logger.info("Meta reports refreshed")
   return data
@@ -56,6 +65,13 @@ let dendrogram: IDendrogram | null = null
 let gameActivity: IGameActivity = {
   updatedAt: new Date(0).toISOString(),
   days: []
+}
+const emptyWishReportMode: IWishReportMode = { games: 0, players: 0, rows: [] }
+let wishReport: IWishReport = {
+  updatedAt: new Date(0).toISOString(),
+  since: new Date(0).toISOString(),
+  solo: emptyWishReportMode,
+  duo: emptyWishReportMode
 }
 let playerRankDistribution: IPlayerRankDistribution = {
   updatedAt: new Date(0).toISOString(),
@@ -279,6 +295,117 @@ async function fetchGameActivity() {
   }
 
   return gameActivity
+}
+
+const WISH_REPORT_DAYS = 30
+// placements are only comparable between lobbies of the same size
+const WISH_REPORT_PLAYERS = 8
+
+type WishReportGame = {
+  gameMode: GameMode
+  players: { rank: number; blessings: Blessing[] | null }[]
+}
+
+export function getWishReport() {
+  return wishReport
+}
+
+async function fetchWishReport() {
+  const since = Date.now() - WISH_REPORT_DAYS * 24 * 60 * 60 * 1000
+  const startedAt = Date.now()
+  try {
+    // records exist for humans only, so a game had no bots when its record
+    // count equals its player count; Scribble and Guide games are not recorded
+    const games: WishReportGame[] = await DetailledStatisticV2.aggregate([
+      {
+        $match: {
+          time: { $gte: since },
+          gameId: { $type: "string" },
+          nbplayers: WISH_REPORT_PLAYERS,
+          specialGameRule: null,
+          gameMode: { $nin: [GameMode.SCRIBBLE, GameMode.GUIDE] }
+        }
+      },
+      {
+        $group: {
+          _id: "$gameId",
+          records: { $sum: 1 },
+          gameMode: { $first: "$gameMode" },
+          wishes: { $sum: { $size: { $ifNull: ["$blessings", []] } } },
+          players: { $push: { rank: "$rank", blessings: "$blessings" } }
+        }
+      },
+      {
+        $match: {
+          records: WISH_REPORT_PLAYERS,
+          wishes: { $gt: 0 }
+        }
+      },
+      { $project: { _id: 0, gameMode: 1, players: 1 } }
+    ])
+      .allowDiskUse(true)
+      .exec()
+
+    wishReport = {
+      updatedAt: new Date().toISOString(),
+      since: new Date(since).toISOString(),
+      solo: summarizeWishes(
+        games.filter((game) => game.gameMode !== GameMode.DOUBLE_UP)
+      ),
+      duo: summarizeWishes(
+        games.filter((game) => game.gameMode === GameMode.DOUBLE_UP)
+      )
+    }
+    logger.info(
+      `Wish report: ${games.length} games in ${Date.now() - startedAt}ms`
+    )
+  } catch (error) {
+    logger.error(
+      "Failed to refresh wish report; keeping previous snapshot",
+      error
+    )
+  }
+
+  return wishReport
+}
+
+// a lobby is offered one tier at a time, so a pick rate compares Wishes of the
+// same tier
+function summarizeWishes(games: WishReportGame[]): IWishReportMode {
+  const totals = new Map<
+    Blessing,
+    { picks: number; placeSum: number; firsts: number }
+  >()
+  const picksByTier = new Map<BlessingTier, number>()
+  let players = 0
+  games.forEach((game) =>
+    game.players.forEach(({ rank, blessings }) => {
+      players++
+      new Set(blessings ?? []).forEach((blessing) => {
+        if (!Blessings[blessing]) return
+        const total = totals.get(blessing) ?? {
+          picks: 0,
+          placeSum: 0,
+          firsts: 0
+        }
+        total.picks++
+        total.placeSum += rank
+        if (rank === 1) total.firsts++
+        totals.set(blessing, total)
+        const tier = Blessings[blessing].tier
+        picksByTier.set(tier, (picksByTier.get(tier) ?? 0) + 1)
+      })
+    })
+  )
+
+  const rows: IWishReportRow[] = [...totals].map(([blessing, total]) => ({
+    blessing,
+    picks: total.picks,
+    pickRate: total.picks / (picksByTier.get(Blessings[blessing].tier) ?? 1),
+    averagePlace: total.placeSum / total.picks,
+    firstRate: total.firsts / total.picks
+  }))
+  return { games: games.length, players, rows }
 }
 
 async function fetchDendrogramData() {

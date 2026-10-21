@@ -471,6 +471,11 @@ Smeargle Scribbles do not change your Elo.
 
 Every balance change on this server, newest first.
 
+### 21 October 2026
+
+**Interface**
+- Report {{new}} | added Report for Wishes. *The upcoming Tournaments will be hosted in Classic. Next year, once everything is fully balanced out, tournaments will be played with Wishes.*
+
 ### 20 October 2026
 
 **Wishes**
