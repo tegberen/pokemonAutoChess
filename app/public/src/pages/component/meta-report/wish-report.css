@@ -1,16 +1,14 @@
 #wish-report {
   display: flex;
   flex-direction: column;
-  gap: 0.8em;
+  gap: 0.5em;
   height: 100%;
-  padding: 0.25em 0;
-  box-sizing: border-box;
 }
 
 #wish-report header {
   display: flex;
   align-items: center;
-  gap: 1.2em;
+  gap: 0.8em;
   flex-wrap: wrap;
 }
 
@@ -23,23 +21,23 @@
 
 #wish-report .wish-report-tiers {
   display: flex;
-  gap: 0.6em;
+  gap: 0.5em;
 }
 
 #wish-report header > select,
-#wish-report header .bubbly,
-#wish-report header input[type="search"] {
+#wish-report header .bubbly {
   box-sizing: border-box;
-  height: 2.6rem;
+  height: 2rem;
 }
 
 #wish-report header .bubbly {
   display: inline-flex;
   align-items: center;
+  font-size: 100%;
 }
 
-#wish-report .react-tabs__tab-panel--selected {
-  padding: 0.5em 0 0;
+#wish-report header .bubbly.unselected {
+  opacity: 0.55;
 }
 
 #wish-report section {
@@ -47,15 +45,15 @@
 }
 
 #wish-report section h3 {
-  margin: 1.8em 0 0.6em;
+  margin: 1.2em 0 0.4em;
 }
 
 #wish-report section:first-of-type h3 {
-  margin-top: 0.4em;
+  margin-top: 0;
 }
 
 #wish-report .wish-report-count {
-  margin: 1.2em 0 0;
+  margin-left: auto;
   color: var(--color-fg-secondary);
   font-size: 0.95em;
 }
@@ -63,7 +61,7 @@
 #wish-report .wish-report-notes {
   display: grid;
   gap: 0.2em;
-  margin: 0.6em 0 0.5em;
+  margin: 0.8em 0 0.5em;
   padding: 0;
   list-style: none;
   color: var(--color-fg-secondary);
@@ -86,7 +84,7 @@
 
 #wish-report th,
 #wish-report td {
-  padding: 0.55em 1em;
+  padding: 0.3em 0.8em;
   text-align: right;
   white-space: nowrap;
 }
@@ -113,20 +111,13 @@
 }
 
 #wish-report .wish-report-name {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 0.7em;
+  gap: 0.6em;
 }
 
 #wish-report .wish-report-name .blessing-panel-icon {
-  width: 32px;
-  height: 32px;
-  padding: 2px;
-}
-
-#wish-report .wish-report-info {
-  margin: 0;
-  text-align: center;
-  color: var(--color-fg-secondary);
-  font-size: 0.9em;
+  width: 24px;
+  height: 24px;
+  padding: 1px;
 }

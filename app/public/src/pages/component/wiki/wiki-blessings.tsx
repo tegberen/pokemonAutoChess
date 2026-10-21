@@ -1,4 +1,4 @@
-import { memo, useEffect, useMemo, useRef, useState } from "react"
+import { memo, useMemo, useState } from "react"
 import { useTranslation } from "react-i18next"
 import {
   type BlessingFamily,
@@ -15,13 +15,9 @@ import { addIconsToDescription } from "../../utils/descriptions"
 import { BlessingDescription } from "../synergy/blessing-description"
 import { cc } from "../../utils/jsx"
 import SynergyIcon from "../icons/synergy-icon"
+import { SearchInput } from "../search-input/search-input"
 import { compareBlessingsBySynergy } from "../tier-list/blessing-short-label"
 import "./wiki-blessings.css"
-
-/* "/" is the web convention, "f" the one asked for. F is also the Buy XP
-   keybinding, so the handler stops the event rather than letting both run */
-const SEARCH_SHORTCUT_KEYS = ["/", "f"]
-const SEARCH_SHORTCUT_LABEL = "F"
 
 const TIER_ORDER = [
   BlessingTier.SILVER,
@@ -426,36 +422,6 @@ export default function WikiBlessings() {
     exclusive: boolean
   } | null>(null)
   const [query, setQuery] = useState("")
-  const searchRef = useRef<HTMLInputElement>(null)
-
-  /* the key alone, no modifier: it must not fire while the user is typing into
-     this or any other field, and must leave browser shortcuts like ctrl+f alone */
-  useEffect(() => {
-    const focusSearch = (event: KeyboardEvent) => {
-      if (
-        !SEARCH_SHORTCUT_KEYS.includes(event.key.toLowerCase()) ||
-        event.ctrlKey ||
-        event.metaKey ||
-        event.altKey
-      )
-        return
-      const active = document.activeElement
-      if (
-        active instanceof HTMLInputElement ||
-        active instanceof HTMLTextAreaElement ||
-        (active instanceof HTMLElement && active.isContentEditable)
-      )
-        return
-      event.preventDefault()
-      // or F would buy experience in the game running behind the wiki
-      event.stopPropagation()
-      searchRef.current?.focus()
-    }
-    /* capture phase on window: the sidebar and the phaser scene both listen for
-       keydown and would otherwise consume it first */
-    window.addEventListener("keydown", focusSearch, true)
-    return () => window.removeEventListener("keydown", focusSearch, true)
-  }, [])
   const setStageFilterAtTop = (filter: typeof stageFilter) => {
     const scrollPanel = document.querySelector<HTMLElement>(
       "#wiki-page > .react-tabs > .react-tabs__tab-panel--selected"
@@ -553,19 +519,6 @@ export default function WikiBlessings() {
             </button>
           </div>
         )}
-        <div className="wiki-blessings-search">
-          <input
-            ref={searchRef}
-            type="search"
-            value={query}
-            placeholder={t("search")}
-            title={t("wiki.blessings.search_shortcut_hint")}
-            onChange={(event) => setQuery(event.target.value)}
-          />
-          {query === "" && (
-            <kbd aria-hidden="true">{SEARCH_SHORTCUT_LABEL}</kbd>
-          )}
-        </div>
         <div className="wiki-blessings-tier-shortcuts">
           {[BlessingTier.SILVER, BlessingTier.GOLD, BlessingTier.PRISMATIC].map(
             (tier) => (
@@ -582,6 +535,7 @@ export default function WikiBlessings() {
             )
           )}
         </div>
+        <SearchInput value={query} onChange={setQuery} />
       </div>
 
       {TIER_ORDER.map((tier) => {

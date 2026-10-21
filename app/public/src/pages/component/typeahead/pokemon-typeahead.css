@@ -12,3 +12,42 @@
 .pokemon-typeahead .form-control::placeholder {
   color: #ccc;
 }
+
+.pokemon-search-suggestions {
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  z-index: 10;
+  box-sizing: border-box;
+  width: max(100%, 16em);
+  max-height: 22em;
+  margin: 0;
+  padding: 0.3em;
+  overflow-y: auto;
+  list-style: none;
+  border: var(--border-thin);
+  border-radius: 12px;
+  background-color: white;
+  color: black;
+  text-align: left;
+}
+
+.pokemon-search-suggestions > li {
+  display: flex;
+  align-items: center;
+  gap: 0.6em;
+  padding: 0.25em 0.4em;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: var(--cursor-hover);
+}
+
+.pokemon-search-suggestions > li.active {
+  background-color: #00000014;
+}
+
+.pokemon-search-suggestions .pokemon-portrait {
+  flex: none;
+  border: var(--border-thin);
+  border-radius: 4px;
+}

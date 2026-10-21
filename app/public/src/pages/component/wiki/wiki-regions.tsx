@@ -18,7 +18,7 @@ import {
 import { GamePokemonDetailTooltip } from "../game/game-pokemon-detail"
 import SynergyIcon from "../icons/synergy-icon"
 import PokemonPortrait from "../pokemon-portrait"
-import { PokemonTypeahead } from "../typeahead/pokemon-typeahead"
+import { PokemonSearch } from "../typeahead/pokemon-typeahead"
 
 const MIN_COL_WIDTH = 360
 const ROW_HEIGHT = 340
@@ -87,7 +87,7 @@ export default function WikiRegions() {
   return (
     <div id="wiki-regions">
       <div className="filters" style={{ marginBottom: "0.5em" }}>
-        <PokemonTypeahead
+        <PokemonSearch
           options={regionalMons}
           value={selectedPkm}
           onChange={(pkm) => setSelectedPkm(pkm)}

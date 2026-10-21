@@ -20,6 +20,7 @@ import { ItemDetailTooltip } from "../../../game/components/item-detail"
 import { addIconsToDescription } from "../../utils/descriptions"
 import jsxTextContent, { cc } from "../../utils/jsx"
 import { GamePokemonDetailTooltip } from "../game/game-pokemon-detail"
+import { SearchInput } from "../search-input/search-input"
 
 const MIN_COL_WIDTH = 320
 const ROW_HEIGHT = 200
@@ -93,13 +94,7 @@ export default function WikiAbility() {
   return (
     <div id="wiki-ability">
       <div className="actions">
-        <input
-          type="search"
-          placeholder={t("search")}
-          onInput={(event) =>
-            setSearchQuery((event.target as HTMLInputElement).value)
-          }
-        />
+        <SearchInput value={searchQuery} onChange={setSearchQuery} />
       </div>
       <div style={{ flex: 1, minHeight: 0 }}>
         <AutoSizer

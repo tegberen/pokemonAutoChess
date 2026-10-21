@@ -23,7 +23,7 @@ import {
   PokemonFilters
 } from "../pokemon-filters/pokemon-filters"
 import PokemonPortrait from "../pokemon-portrait"
-import { PokemonTypeahead } from "../typeahead/pokemon-typeahead"
+import { PokemonSearch } from "../typeahead/pokemon-typeahead"
 import WikiPokemonDetail from "./wiki-pokemon-detail"
 
 export default function WikiPokemons() {
@@ -53,7 +53,7 @@ export default function WikiPokemons() {
     >
       <div className="filters">
         <PokemonFilters />
-        <PokemonTypeahead
+        <PokemonSearch
           value={selectedPkm}
           onChange={(pkm) => setSelectedPkm(pkm)}
         />

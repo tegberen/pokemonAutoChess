@@ -240,11 +240,11 @@ function GameHistoryRow({
 }
 
 export function BlessingHistoryTooltip(
-  props: { portalRoot?: Element | null } = {}
+  props: { portalRoot?: Element | null; id?: string } = {}
 ) {
   return (
     <Tooltip
-      id="blessing-history-tooltip"
+      id={props.id ?? "blessing-history-tooltip"}
       className="custom-theme-tooltip blessing-panel-tooltip"
       portalRoot={props.portalRoot}
       render={({ content }) => {

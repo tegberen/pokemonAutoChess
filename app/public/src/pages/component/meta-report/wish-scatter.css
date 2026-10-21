@@ -1,0 +1,44 @@
+.wish-scatter {
+  box-sizing: border-box;
+  height: 100%;
+  min-height: 20rem;
+  padding: 0.5em;
+  border: var(--border-thin);
+  border-radius: 12px;
+  background-color: var(--color-bg-secondary);
+}
+
+.wish-scatter :focus {
+  outline: none;
+}
+
+.wish-scatter-point {
+  overflow: visible;
+}
+
+.wish-scatter-point .tier-list-blessing-icon {
+  transform: scale(var(--wish-scatter-scale));
+  transform-origin: top left;
+}
+
+.wish-scatter-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  margin: 0.35em 0 0.45em;
+  padding-bottom: 0.35em;
+  border-bottom: 1px solid
+    color-mix(in srgb, var(--color-fg-primary) 22%, transparent);
+  line-height: 1.25;
+  text-align: center;
+}
+
+.wish-scatter-stats dt {
+  color: var(--color-fg-secondary);
+  font-size: 0.72em;
+}
+
+.wish-scatter-stats dd {
+  margin: 0;
+  font-size: 0.9em;
+  font-weight: 700;
+}

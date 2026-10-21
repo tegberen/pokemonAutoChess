@@ -54,6 +54,7 @@ export function BlessingStages(props: { blessing: Blessing }) {
 /* children slot in below the description for live in-game values */
 export function BlessingTooltipCard(props: {
   blessing: Blessing
+  beforeDescription?: React.ReactNode
   children?: React.ReactNode
 }) {
   const { t } = useTranslation()
@@ -68,6 +69,7 @@ export function BlessingTooltipCard(props: {
         <h3>
           <span>{addIconsToDescription(t(`blessing.${blessing}.name`))}</span>
         </h3>
+        {props.beforeDescription}
         <BlessingDescription blessing={blessing} />
         {props.children}
       </div>

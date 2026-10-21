@@ -420,6 +420,12 @@
   height: 100%;
 }
 
+#wiki-ability > .actions {
+  display: flex;
+  justify-content: flex-end;
+  margin: 0.5em 0;
+}
+
 #wiki-ability > ul > .my-box {
   display: flex;
   flex-direction: column;
@@ -430,6 +436,10 @@
   display: flex;
   flex-direction: column;
   height: 100%;
+}
+
+#wiki-regions > .filters {
+  align-self: flex-end;
 }
 
 #wiki-regions > ul > .my-box {
@@ -1086,12 +1096,6 @@
 
 #wiki-data-tiers-by-level :is(th, td):nth-child(-n + 2) {
   width: 5ch;
-}
-
-#wiki-page input[type="search"] {
-  display: block;
-  margin: 0.5em 0 0.5em auto;
-  width: auto;
 }
 
 @media (width <= 960px) {

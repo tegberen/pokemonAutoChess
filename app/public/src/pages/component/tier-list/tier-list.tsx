@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { Tooltip } from "react-tooltip"
-import { Blessings } from "../../../../../config/game/blessings"
 import { Emotion, type PkmWithCustom } from "../../../../../types"
 import { Blessing } from "../../../../../types/enum/Blessing"
 import type { Item } from "../../../../../types/enum/Item"
@@ -13,9 +12,7 @@ import { getPortraitSrc } from "../../../../../utils/avatar"
 import { ItemDetailTooltipContent } from "../../../game/components/item-detail"
 import { GamePokemonDetail } from "../game/game-pokemon-detail"
 import SynergyIcon from "../icons/synergy-icon"
-import { blessingTierClass } from "../synergy/blessing-tooltip-card"
-import { getBlessingShortLabel } from "./blessing-short-label"
-import { BlessingSynergyBadges } from "./blessing-synergy-badges"
+import { BlessingTile } from "./blessing-tile"
 import { type TierListSymbol, TierListSymbols } from "./tier-list-symbols"
 import "./tier-list.css"
 
@@ -352,17 +349,7 @@ export default function TierList(props: {
         />
       )
     } else if (isBlessing(item)) {
-      const shortLabel = getBlessingShortLabel(item)
-      return (
-        <div className={`tier-list-blessing-icon ${blessingTierClass(item)}`}>
-          <img
-            src={`/assets/blessings/${Blessings[item].icon}.svg`}
-            alt={item}
-          />
-          <BlessingSynergyBadges blessing={item} />
-          {shortLabel && <span>{shortLabel}</span>}
-        </div>
-      )
+      return <BlessingTile blessing={item} />
     } else if (isSynergy(item)) {
       return (
         <div className="tier-list-synergy-icon">

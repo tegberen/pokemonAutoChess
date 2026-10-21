@@ -1,6 +1,5 @@
 import { memo, useDeferredValue, useEffect, useMemo, useState } from "react"
 import { useTranslation } from "react-i18next"
-import { Tab, TabList, TabPanel, Tabs } from "react-tabs"
 import { Blessings } from "../../../../../config/game/blessings"
 import { type Blessing, BlessingTier } from "../../../../../types/enum/Blessing"
 import {
@@ -9,10 +8,12 @@ import {
   type IWishReportMode,
   type IWishReportRow
 } from "../../../models/wish-report"
-import { formatDate } from "../../utils/date"
 import { addIconsToDescription } from "../../utils/descriptions"
 import { cc } from "../../utils/jsx"
+import { BlessingHistoryTooltip } from "../profile/game-history"
+import { SearchInput } from "../search-input/search-input"
 import { BlessingIcon } from "../synergy/blessing-tooltip-card"
+import { WishScatter } from "./wish-scatter"
 import "./wish-report.css"
 
 const REDUCED_MOTION =
@@ -20,6 +21,8 @@ const REDUCED_MOTION =
   window.matchMedia?.("(prefers-reduced-motion: reduce)").matches === true
 
 const TIERS = [BlessingTier.SILVER, BlessingTier.GOLD, BlessingTier.PRISMATIC]
+
+const WISH_TOOLTIP_ID = "wish-report-tooltip"
 
 const TierColor: { [tier in BlessingTier]: string } = {
   [BlessingTier.SILVER]: "var(--color-fg-secondary)",
@@ -32,6 +35,8 @@ const OfferedWishes = (Object.keys(Blessings) as Blessing[]).filter(
 )
 
 type SortKey = "averagePlace" | "pickRate" | "firstRate"
+type View = "table" | "chart"
+type ReportMode = "duo" | "solo"
 
 const COLUMNS: { label: string; sortKey?: SortKey }[] = [
   { label: "Wish" },
@@ -57,6 +62,9 @@ export function WishReport() {
   const [report, setReport] = useState<IWishReport | null>(null)
   const [error, setError] = useState("")
   const [sortKey, setSortKey] = useState<SortKey>("averagePlace")
+  const [view, setView] = useState<View>("table")
+  const [reportMode, setReportMode] = useState<ReportMode>("duo")
+  const [chartTier, setChartTier] = useState(BlessingTier.SILVER)
   const [query, setQuery] = useState("")
   // typing stays responsive while the long tables catch up
   const deferredQuery = useDeferredValue(query)
@@ -71,19 +79,35 @@ export function WishReport() {
     <div id="wish-report">
       <header>
         <select
-          value={sortKey}
-          onChange={(e) => setSortKey(e.target.value as SortKey)}
+          value={view}
+          onChange={(e) => setView(e.target.value as View)}
         >
-          <option value="averagePlace">
-            {t("rank")} {t("by_average_place")}
-          </option>
-          <option value="pickRate">
-            {t("rank")} {t("by_popularity")}
-          </option>
-          <option value="firstRate">
-            {t("rank")} {t("by_winrate")}
-          </option>
+          <option value="table">Table</option>
+          <option value="chart">Chart</option>
         </select>
+        <select
+          value={reportMode}
+          onChange={(e) => setReportMode(e.target.value as ReportMode)}
+        >
+          <option value="duo">Duo</option>
+          <option value="solo">Solo</option>
+        </select>
+        {view === "table" && (
+          <select
+            value={sortKey}
+            onChange={(e) => setSortKey(e.target.value as SortKey)}
+          >
+            <option value="averagePlace">
+              {t("rank")} {t("by_average_place")}
+            </option>
+            <option value="pickRate">
+              {t("rank")} {t("by_popularity")}
+            </option>
+            <option value="firstRate">
+              {t("rank")} {t("by_winrate")}
+            </option>
+          </select>
+        )}
         <nav className="wish-report-tiers">
           {TIERS.map((tier) => (
             <button
@@ -91,48 +115,38 @@ export function WishReport() {
               type="button"
               className={cc(
                 "bubbly wiki-blessings-tier-shortcut",
-                tier.toLowerCase()
+                tier.toLowerCase(),
+                { unselected: view === "chart" && tier !== chartTier }
               )}
-              onClick={() => jumpToTier(tier)}
+              onClick={() =>
+                view === "chart" ? setChartTier(tier) : jumpToTier(tier)
+              }
             >
               {t(`blessing_tier.${tier}`)}
             </button>
           ))}
         </nav>
-        <div className="wiki-blessings-search">
-          <input
-            type="search"
-            value={query}
-            placeholder={t("search")}
-            onChange={(event) => setQuery(event.target.value)}
-          />
-        </div>
+        {report && (
+          <span className="wish-report-count">
+            {report[reportMode].games} games, {report[reportMode].players}{" "}
+            players
+          </span>
+        )}
+        <SearchInput value={query} onChange={setQuery} />
       </header>
 
       <div className="wish-report-body">
         {error && <p className="error">{error}</p>}
         {!report && !error && <p>Loading</p>}
         {report && (
-          <Tabs>
-            <TabList>
-              <Tab>Solo</Tab>
-              <Tab>Duo</Tab>
-            </TabList>
-            <TabPanel>
-              <WishTables
-                mode={report.solo}
-                sortKey={sortKey}
-                query={deferredQuery}
-              />
-            </TabPanel>
-            <TabPanel>
-              <WishTables
-                mode={report.duo}
-                sortKey={sortKey}
-                query={deferredQuery}
-              />
-            </TabPanel>
-          </Tabs>
+          <WishTables
+            mode={report[reportMode]}
+            places={reportMode === "duo" ? 4 : 8}
+            view={view}
+            chartTier={chartTier}
+            sortKey={sortKey}
+            query={deferredQuery}
+          />
         )}
         {report && (
           <ul className="wish-report-notes">
@@ -150,20 +164,7 @@ export function WishReport() {
           </ul>
         )}
       </div>
-      {report && (
-        <p className="wish-report-info">
-          {t("meta_report_info", {
-            report_date: formatDate(new Date(report.updatedAt), {
-              dateStyle: "medium"
-            }),
-            time_limit: formatDate(new Date(report.since), {
-              dateStyle: "medium"
-            }),
-            count: report.solo.games + report.duo.games
-          })}{" "}
-          - Full lobbies of 8 humans
-        </p>
-      )}
+      <BlessingHistoryTooltip id={WISH_TOOLTIP_ID} />
     </div>
   )
 }
@@ -172,10 +173,16 @@ type TierRow = IWishReportRow & { searchName: string }
 
 function WishTables({
   mode,
+  places,
+  view,
+  chartTier,
   sortKey,
   query
 }: {
   mode: IWishReportMode
+  places: number
+  view: View
+  chartTier: BlessingTier
   sortKey: SortKey
   query: string
 }) {
@@ -216,14 +223,27 @@ function WishTables({
   if (mode.games === 0) return <p>No data available</p>
 
   const search = query.trim().toLowerCase()
+  const matching = (rows: TierRow[]) =>
+    search === ""
+      ? rows
+      : rows.filter((row) => row.searchName.includes(search))
+
+  if (view === "chart") {
+    // a Wish nobody picked has no place to plot
+    const chartRows = matching(
+      rowsByTier.find(({ tier }) => tier === chartTier)?.rows ?? []
+    ).filter((row) => row.picks > 0)
+    return chartRows.length > 0 ? (
+      <WishScatter rows={chartRows} places={places} />
+    ) : (
+      <p>No data available</p>
+    )
+  }
 
   return (
     <>
       {rowsByTier.map(({ tier, rows }) => {
-        const tierRows =
-          search === ""
-            ? rows
-            : rows.filter((row) => row.searchName.includes(search))
+        const tierRows = matching(rows)
         if (tierRows.length === 0) return null
         return (
           <section key={tier} id={`wish-report-${tier}`}>
@@ -252,9 +272,6 @@ function WishTables({
           </section>
         )
       })}
-      <p className="wish-report-count">
-        {mode.games} games, {mode.players} players
-      </p>
     </>
   )
 }
@@ -270,10 +287,16 @@ const WishRow = memo(function WishRow({
   const isPicked = row.picks > 0
   return (
     <tr>
-      <td className="wish-report-name">
-        <BlessingIcon blessing={row.blessing} />
-        <span>
-          {addIconsToDescription(t(`blessing.${row.blessing}.name`))}
+      <td>
+        <span
+          className="wish-report-name"
+          data-tooltip-id={WISH_TOOLTIP_ID}
+          data-tooltip-content={row.blessing}
+        >
+          <BlessingIcon blessing={row.blessing} />
+          <span>
+            {addIconsToDescription(t(`blessing.${row.blessing}.name`))}
+          </span>
         </span>
       </td>
       <td>{row.picks}</td>
