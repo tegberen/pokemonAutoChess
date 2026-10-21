@@ -305,11 +305,10 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 0.5em;
+  gap: 0.25em;
   margin-bottom: 0.5em;
 }
 
-.server-guide .guide-section-nav .bubbly,
 .server-guide .guide-article .bubbly {
   font-size: 1em;
 }
@@ -530,16 +529,15 @@
   min-width: 9em;
   margin-right: 0.5em;
   color: var(--color-fg-secondary);
-  font-size: 0.8em;
+  font-size: 0.9em;
   font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
 }
 .server-guide .guide-patchlog-day {
   min-width: 2.2em;
   padding: 0.2em 0.4em;
-  border: 0;
-  border-radius: 6px;
+  border: var(--border-thin);
+  border-color: transparent;
+  border-radius: 8px;
   background: transparent;
   color: var(--color-fg-primary);
   font: inherit;
@@ -547,47 +545,59 @@
   cursor: var(--cursor-hover);
 }
 .server-guide .guide-patchlog-day:hover {
-  background: var(--color-bg-tertiary);
+  background: color-mix(in srgb, var(--color-bg-primary) 50%, transparent);
 }
 .server-guide .guide-patchlog-day[aria-pressed="true"] {
-  background: var(--color-bg-tertiary);
-  box-shadow: inset 0 -2px 0 var(--color-fg-primary);
+  background: var(--color-bg-primary);
+  border: var(--border-thin);
+  box-shadow: 0 2px 0 #00000050;
 }
 .server-guide .guide-patchlog-day:focus-visible {
   outline: 2px solid var(--color-fg-primary);
   outline-offset: 1px;
 }
+/* the Wiki's rarity tabs: coloured text, with a raised pill once selected */
 .server-guide .guide-section-button {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
   gap: 0.35em;
-  min-height: 2.5em;
+  margin: 0;
+  padding: 0.3em 0.75em;
+  background: transparent;
+  border: var(--border-thin);
+  border-color: transparent;
+  border-radius: 10px;
   color: var(--guide-section-color);
-  border-bottom: 4px solid var(--guide-section-color);
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 600;
+  text-shadow: 1px 1px 0 #000000a0;
+  white-space: nowrap;
+  cursor: var(--cursor-hover);
+}
+.server-guide .guide-section-button:hover {
+  background: color-mix(in srgb, var(--color-bg-primary) 50%, transparent);
 }
 .server-guide .guide-section-button[aria-pressed="true"] {
-  background: var(--color-bg-tertiary);
-  outline: 2px solid var(--guide-section-color);
-  outline-offset: 1px;
+  background: var(--color-bg-primary);
+  border: var(--border-thin);
+  box-shadow: 0 2px 0 #00000050;
 }
 .server-guide .guide-section-button:focus-visible {
   outline: 2px solid var(--color-fg-primary);
   outline-offset: 2px;
 }
 .server-guide .guide-section-button > img:first-child {
-  width: 24px;
-  height: 24px;
+  width: 1.15em;
+  height: 1.15em;
   margin: 0;
 }
-.server-guide .guide-rarity-mark {
-  width: 0.5em;
-  height: 0.5em;
-  background: var(--guide-section-color);
-  border: var(--border-extra-thin);
-}
 
+/* a jump moves focus to its heading, framed only when reached by keyboard */
 .server-guide .guide-article [tabindex="-1"]:focus {
+  outline: none;
+}
+.server-guide .guide-article [tabindex="-1"]:focus-visible {
   outline: 2px solid var(--color-fg-accent);
   outline-offset: 2px;
 }

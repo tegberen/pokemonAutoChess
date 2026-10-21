@@ -562,7 +562,7 @@ export default function ServerGuide({
                               : "var(--color-fg-primary)"
                           return (
                             <button
-                              className="bubbly guide-section-button"
+                              className="guide-section-button"
                               key={section.id}
                               style={
                                 {
@@ -578,12 +578,6 @@ export default function ServerGuide({
                                 <img
                                   src={`assets/types/${synergy}.svg`}
                                   alt=""
-                                />
-                              )}
-                              {rarity && (
-                                <span
-                                  className="guide-rarity-mark"
-                                  aria-hidden="true"
                                 />
                               )}
                               <span>
