@@ -100,7 +100,6 @@ import {
   RAINBOW_HOUR_EEVEELUTIONS_TARGET,
   RAINBOW_HOUR_FOSSIL_STONES,
   RAINBOW_HOUR_GOLD_REWARD,
-  RAINBOW_HOUR_TRAIL_EEVEELUTIONS_TARGET,
   PARK_BENCH_FULL_BENCH_EXPERIENCE,
   PARK_BENCH_WATER_POKEMONS,
   PARK_BENCH_FOSSILS,
@@ -1708,7 +1707,7 @@ export function checkConvergentParadoxRewards(player: Player) {
 
 export function checkRainbowHourReward(player: Player) {
   if (
-    (player.rainbowHourRewarded && player.rainbowTrailEarned) ||
+    player.rainbowHourRewarded ||
     !player.blessings?.includes(Blessing.RAINBOW_HOUR)
   )
     return
@@ -1721,16 +1720,10 @@ export function checkRainbowHourReward(player: Player) {
       .map((pokemon) => pokemon.name)
   )
   fieldedEeveelutions.delete(Pkm.EEVEE)
-  if (
-    !player.rainbowHourRewarded &&
-    fieldedEeveelutions.size >= RAINBOW_HOUR_EEVEELUTIONS_TARGET
-  ) {
+  if (fieldedEeveelutions.size >= RAINBOW_HOUR_EEVEELUTIONS_TARGET) {
     player.rainbowHourRewarded = true
     player.addMoney(RAINBOW_HOUR_GOLD_REWARD, true, null)
     player.titles.add(Title.PRIDE)
-  }
-  if (fieldedEeveelutions.size >= RAINBOW_HOUR_TRAIL_EEVEELUTIONS_TARGET) {
-    player.rainbowTrailEarned = true
   }
 }
 

@@ -548,7 +548,11 @@ export default function GameChoice() {
                     className="blessing-cosmetic-marker"
                     src="/assets/icons/blessing_stats.svg"
                     alt=""
-                    title="Win a game with this Wish to unlock an avatar cosmetic"
+                    title={
+                      blessing === Blessing.RAINBOW_HOUR
+                        ? "Earn the Pride title with this Wish to unlock an avatar cosmetic"
+                        : "Win a game with this Wish to unlock an avatar cosmetic"
+                    }
                   />
                 )}
               </div>

@@ -63,10 +63,7 @@ export function CosmeticsTab() {
                           "Always available."
                         ) : cosmetic.id === "rainbow-trail" ? (
                           <>
-                            With the{" "}
-                            <strong>{t("blessing.RAINBOW_HOUR.name")}</strong>{" "}
-                            Wish, field 8 different Eeveelutions at the same
-                            time.
+                            Earn the <strong>{t("title.PRIDE")}</strong> title.
                           </>
                         ) : (
                           <>

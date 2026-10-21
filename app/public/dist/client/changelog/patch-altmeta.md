@@ -475,6 +475,7 @@ Every balance change on this server, newest first.
 
 **Interface**
 - Report {{new}} | added Report for Wishes. *The upcoming Tournaments will be hosted in Classic. Next year, once everything is fully balanced out, tournaments will be played with Wishes.*
+- Rainbow Trail | unlocks with the Pride title instead of fielding 8 different Eeveelutions
 
 ### 20 October 2026
 

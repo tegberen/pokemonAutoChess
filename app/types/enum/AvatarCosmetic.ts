@@ -36,11 +36,12 @@ export const AVATAR_COSMETIC_BLESSINGS: Record<
 export const AVATAR_COSMETIC_TITLES: Partial<
   Record<Exclude<AvatarCosmeticId, "none">, Title>
 > = {
-  "confetti-trail": Title.SHOW_OFF
+  "confetti-trail": Title.SHOW_OFF,
+  "rainbow-trail": Title.PRIDE
 }
 
-// the trails shipped after players had already earned these titles, so the
-// title stands in for the win that would have unlocked the trail
+// read from the saved titles, so a title earned before its trail shipped
+// unlocks it too
 export function getUnlockedAvatarCosmetics(
   profile?: {
     unlockedAvatarCosmetics?: AvatarCosmeticId[]

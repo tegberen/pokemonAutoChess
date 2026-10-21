@@ -1392,11 +1392,6 @@ export default class GameRoom extends Room<{ state: GameState }> {
          hand out a free win and inflate the games played. */
       const countsAsAGame = this.state.gameMode !== GameMode.GUIDE
       if (countsAsAGame) usr.games += 1
-      if (player.rainbowTrailEarned) {
-        const unlocked = new Set(usr.unlockedAvatarCosmetics ?? [])
-        unlocked.add("rainbow-trail")
-        usr.unlockedAvatarCosmetics = [...unlocked]
-      }
       if (this.dailyDuel && !player.isBot) {
         if (rank <= 3) {
           this.dailyDuelPodiumUids[rank - 1] = player.id
