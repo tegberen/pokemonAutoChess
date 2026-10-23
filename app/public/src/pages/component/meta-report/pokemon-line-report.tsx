@@ -33,7 +33,7 @@ import { ReportScatter } from "./wish-scatter"
 import "./wish-report.css"
 import "./pokemon-line-report.css"
 
-type SortKey = "averagePlace" | "picks"
+type SortKey = "averagePlace" | "picks" | "averageItems"
 type View = "table" | "chart"
 type ReportMode = "duo" | "solo"
 
@@ -160,7 +160,7 @@ export function PokemonLineReport() {
     return lines.sort((a, b) =>
       sortKey === "averagePlace"
         ? a.averagePlace - b.averagePlace
-        : b.picks - a.picks
+        : b[sortKey] - a[sortKey]
     )
   }, [mode, sortKey, synergy, rarity, pool, stars, deferredQuery, t])
 
@@ -193,6 +193,9 @@ export function PokemonLineReport() {
             </option>
             <option value="picks">
               {t("rank")} {t("by_popularity")}
+            </option>
+            <option value="averageItems">
+              {t("rank")} {t("by_average_held_items")}
             </option>
           </select>
         )}
@@ -273,6 +276,10 @@ export function PokemonLineReport() {
             <li>
               <b>Winrate</b>: how often those players finished 1st
             </li>
+            <li>
+              <b>Held items</b>: the average number of items on each copy
+              of this Pokémon
+            </li>
           </ul>
         )}
       </div>
@@ -318,6 +325,9 @@ function PokemonLineContent({
           <th className={cc({ sorted: sortKey === "picks" })}>Count</th>
           <th className={cc({ sorted: sortKey === "averagePlace" })}>Top</th>
           <th>Winrate</th>
+          <th className={cc({ sorted: sortKey === "averageItems" })}>
+            Held items
+          </th>
           {itemsMode && (
             <th>
               Items (
@@ -412,6 +422,9 @@ const PokemonLineRow = memo(function PokemonLineRow({
           {row.averagePlace.toFixed(2)}
         </td>
         <td>{percent(row.firstRate)}</td>
+        <td className={cc({ sorted: sortKey === "averageItems" })}>
+          {row.averageItems.toFixed(2)}
+        </td>
         {itemsMode && (
           <td>
             <TopItems items={itemsMode.lines[row.pkm]} />
@@ -436,6 +449,9 @@ const PokemonLineRow = memo(function PokemonLineRow({
             <td>{form.picks}</td>
             <td>{form.averagePlace.toFixed(2)}</td>
             <td>{percent(form.firstRate)}</td>
+            <td className={cc({ sorted: sortKey === "averageItems" })}>
+              {form.averageItems.toFixed(2)}
+            </td>
             {itemsMode && (
               <td>
                 <TopItems items={itemsMode.forms[form.pkm]} />

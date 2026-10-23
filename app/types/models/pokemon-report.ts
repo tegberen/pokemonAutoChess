@@ -6,6 +6,7 @@ export interface IPokemonReportForm {
   picks: number
   averagePlace: number
   firstRate: number
+  averageItems: number
 }
 
 export interface IPokemonReportLine extends IPokemonReportForm {

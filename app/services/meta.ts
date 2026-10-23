@@ -515,6 +515,8 @@ function addPick<Key>(totals: Map<Key, PickTotal>, key: Key, rank: number) {
   totals.set(key, total)
 }
 
+type CopyTotal = { copies: number; items: number }
+
 function toPickStats(total: PickTotal) {
   return {
     picks: total.picks,
@@ -552,23 +554,36 @@ function summarizeItems(games: WishReportGame[]): IWishItemReportMode {
   return { games: games.length, players, rows }
 }
 
+function averageItems(total: CopyTotal | undefined) {
+  return total && total.copies > 0 ? total.items / total.copies : 0
+}
+
 function isReportablePokemon(name: Pkm) {
   return PkmFamily[name] !== undefined && !NonPkm.includes(name)
 }
 
 // a Pokémon counts once per player however many copies they fielded, and a
-// line adds up its forms, so a player with two forms counts twice in it
+// line adds up its forms, so a player with two forms counts twice in it.
+// Held items are averaged over every copy
 function summarizePokemons(games: WishReportGame[]): IPokemonReportMode {
   const formTotals = new Map<Pkm, PickTotal>()
+  const copyTotals = new Map<Pkm, CopyTotal>()
   let players = 0
   games.forEach((game) =>
     game.players.forEach(({ rank, pokemons }) => {
       players++
-      new Set(
-        (pokemons ?? [])
-          .map((pokemon) => pokemon.name)
-          .filter(isReportablePokemon)
-      ).forEach((name) => addPick(formTotals, name, rank))
+      const fielded = (pokemons ?? []).filter((pokemon) =>
+        isReportablePokemon(pokemon.name)
+      )
+      new Set(fielded.map((pokemon) => pokemon.name)).forEach((name) =>
+        addPick(formTotals, name, rank)
+      )
+      fielded.forEach(({ name, items }) => {
+        const total = copyTotals.get(name) ?? { copies: 0, items: 0 }
+        total.copies++
+        total.items += items?.length ?? 0
+        copyTotals.set(name, total)
+      })
     })
   )
 
@@ -577,12 +592,23 @@ function summarizePokemons(games: WishReportGame[]): IPokemonReportMode {
     const family = PkmFamily[pkm]
     formsByFamily.set(family, [
       ...(formsByFamily.get(family) ?? []),
-      { pkm, ...toPickStats(total) }
+      {
+        pkm,
+        ...toPickStats(total),
+        averageItems: averageItems(copyTotals.get(pkm))
+      }
     ])
   })
   const lines: IPokemonReportLine[] = [...formsByFamily].map(
     ([family, forms]) => {
       const picks = forms.reduce((sum, form) => sum + form.picks, 0)
+      const lineCopies = forms.reduce(
+        (total, form) => ({
+          copies: total.copies + (copyTotals.get(form.pkm)?.copies ?? 0),
+          items: total.items + (copyTotals.get(form.pkm)?.items ?? 0)
+        }),
+        { copies: 0, items: 0 }
+      )
       return {
         pkm: family,
         picks,
@@ -592,6 +618,7 @@ function summarizePokemons(games: WishReportGame[]): IPokemonReportMode {
         firstRate:
           forms.reduce((sum, form) => sum + form.firstRate * form.picks, 0) /
           picks,
+        averageItems: averageItems(lineCopies),
         forms: forms.sort(
           (a, b) =>
             getPokemonData(a.pkm).stars - getPokemonData(b.pkm).stars ||
