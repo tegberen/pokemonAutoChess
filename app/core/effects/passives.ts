@@ -2245,18 +2245,18 @@ export const PassiveEffects: Partial<
   [Passive.MEWTWO]: [MewtwoOnKillEffect],
   [Passive.SLITHER_WING]: [
     new OnSimulationStartEffect(({ entity, simulation }) => {
+      if (entity.isSpawn) return
       simulation.board.getAdjacentCells(entity.positionX, entity.positionY).forEach((cell) => {
         if (cell.value && cell.value.team === entity.team) {
-          const weatherMultiplier = simulation.weather === Weather.DROUGHT ? 2 : 1
           if (cell.value.types.has(Synergy.FIGHTING)) {
-            entity.addDefense(2 * weatherMultiplier, entity, 0, false)
+            entity.addDefense(1, entity, 0, false)
           }
           if (cell.value.types.has(Synergy.FOSSIL)) {
-            entity.addMaxHP(4 * weatherMultiplier, entity, 0, false)
+            entity.addMaxHP(2, entity, 0, false)
             entity.hp = entity.maxHP
           }
           if (cell.value.types.has(Synergy.BUG)) {
-            entity.addAttack(2 * weatherMultiplier, entity, 0, false)
+            entity.addAttack(1, entity, 0, false)
           }
         }
       })

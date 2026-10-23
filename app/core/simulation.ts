@@ -248,7 +248,6 @@ import {
   TIDAL_GUARDIAN_WHIRLPOOL_TARGETS,
   FOGBOUND_LAKE_FIREFLIES,
   OVERLOAD_CAST_INTERVAL,
-  OVERLOAD_FIRST_CAST_DELAY,
   VICTORIOUS_CAST_DELAY,
   BULL_LEAPING_FOLLOW_UP_DELAY,
   BULL_LEAPING_ARRIVAL_CHECK_INTERVAL,
@@ -299,7 +298,6 @@ import {
   STAR_GUARD_DEFENSE_PER_STAR,
   STAR_GUARD_SHIELD_PER_STAR,
   STEAM_ENGINE_SPEED_ON_ATTACK,
-  FROZEN_OCEAN_WAVE_RATIO,
   BLIGHTED_GARDEN_POKERUS_MULCH,
   HUMAN_HORROR_POSSESSION_DURATION,
   HUMAN_HORROR_POSSESSION_PER_HUMAN_TIER,
@@ -3406,22 +3404,21 @@ export default class Simulation extends Schema implements ISimulation {
 
       if (blessings.includes(Blessing.OVERLOAD)) {
         ownUnits.forEach((unit) => {
-          const pulse = new PeriodicEffect(
-            (pokemon) => {
-              /* every ally carries the timer so it survives deaths, but only
-                 one of them drives the pulse */
-              const conductor = [...team.values()]
-                .filter((entity) => entity.player === player && entity.hp > 0)
-                .sort((a, b) => a.id.localeCompare(b.id))[0]
-              if (!conductor || conductor.id !== pokemon.id) return
-              this.castOverloadVoltSurge(team, player)
-            },
-            Ability.VOLT_SURGE,
-            OVERLOAD_CAST_INTERVAL
+          unit.effectsSet.add(
+            new PeriodicEffect(
+              (pokemon) => {
+                /* every ally carries the timer so it survives deaths, but
+                   only one of them drives the pulse */
+                const conductor = [...team.values()]
+                  .filter((entity) => entity.player === player && entity.hp > 0)
+                  .sort((a, b) => a.id.localeCompare(b.id))[0]
+                if (!conductor || conductor.id !== pokemon.id) return
+                this.castOverloadVoltSurge(team, player)
+              },
+              Ability.VOLT_SURGE,
+              OVERLOAD_CAST_INTERVAL
+            )
           )
-          // the first pulse comes early, then the interval counts from it
-          pulse.timer = OVERLOAD_FIRST_CAST_DELAY
-          unit.effectsSet.add(pulse)
         })
       }
 
@@ -7564,12 +7561,7 @@ export default class Simulation extends Schema implements ISimulation {
       )
       pokemon.pp = ppBeforeCast
     }
-    pokemon.addPP(
-      Math.round(FROZEN_OCEAN_WAVE_RATIO * pokemon.maxPP),
-      pokemon,
-      0,
-      false
-    )
+    pokemon.addPP(pokemon.maxPP - pokemon.pp, pokemon, 0, false)
     pokemon.addSpecialDefense(pokemon.speDef, pokemon, 0, false)
   }
 

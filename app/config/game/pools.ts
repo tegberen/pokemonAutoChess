@@ -208,6 +208,7 @@ export const LegendaryPool = new Array<PkmProposition>(
   Pkm.CHI_YU,
   Pkm.TYPE_NULL,
   Pkm.BLACEPHALON,
-  PkmDuo.BUZZWOLE_PHEROMOSA,
+  Pkm.BUZZWOLE,
+  Pkm.PHEROMOSA,
   Pkm.PRIMAL_DIALGA
 )

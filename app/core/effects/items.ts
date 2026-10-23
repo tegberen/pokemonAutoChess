@@ -1117,7 +1117,7 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
   [Item.SHELL_BELL]: [
     new OnDamageDealtEffect(({ pokemon, damage, target }) => {
       if (target.id === pokemon.id) return // prevent healing from self-inflicted damage (e.g. Flame Orb)
-      pokemon.handleHeal(Math.ceil(0.33 * damage), pokemon, 0, false)
+      pokemon.handleHeal(Math.ceil(0.4 * damage), pokemon, 0, false)
     }),
     new OnSimulationStartEffect(({ entity, simulation }) => {
       if (!hasBlessing(entity, Blessing.SHELL_BELL_BLESSING)) return

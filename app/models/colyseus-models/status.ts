@@ -498,7 +498,7 @@ export default class Status extends Schema implements IStatus {
         pkm.addDefense(20, pkm, 0, false)
       }
       if (pkm.items.has(Item.MAGMARIZER) && !alreadyBurning) {
-        pkm.addSpeed(30, pkm, 0, false)
+        pkm.addSpeed(20, pkm, 0, false)
       }
 
       if (pkm.items.has(Item.RAWST_BERRY)) {
@@ -596,7 +596,7 @@ export default class Status extends Schema implements IStatus {
       pkm.addDefense(-20, pkm, 0, false)
     }
     if (pkm.items.has(Item.MAGMARIZER)) {
-      pkm.addSpeed(-30, pkm, 0, false)
+      pkm.addSpeed(-20, pkm, 0, false)
     }
   }
 

@@ -6,8 +6,8 @@ export class BulkUpStrategy extends AbilityStrategy {
   requiresTarget = false
   process(pokemon: PokemonEntity, board: Board, target: null, crit: boolean) {
     super.process(pokemon, board, target, crit)
-    // Increase base Attack and base Defense by [50,50,50,100]%
-    const boostPercent = [0.5, 0.5, 0.5, 1][pokemon.stars - 1] ?? 1
+    // Increase base Attack and base Defense by [25,50,100]%
+    const boostPercent = [0.25, 0.5, 1, 1][pokemon.stars - 1] ?? 1
     const atkBoost = Math.ceil(boostPercent * pokemon.baseAtk)
     const defBoost = Math.ceil(boostPercent * pokemon.baseDef)
     pokemon.addAttack(atkBoost, pokemon, 1, crit)

@@ -7134,6 +7134,15 @@ const onTarget: AbilityAnimationMaker = (options) => (args) => {
   return staticAnimation({ x, y, ...options })(args)
 }
 
+// the first frames of the sprite are the tail wipe, the rest is the dust
+const DRAGON_TAIL_WIPE_LAST_FRAME = 6
+const dragonTailDust: AbilityAnimation = (args) =>
+  onTarget({
+    ability: Ability.DRAGON_TAIL,
+    scale: 2,
+    animOptions: { startFrame: DRAGON_TAIL_WIPE_LAST_FRAME }
+  })({ ...args, ap: 0 })
+
 const onCasterScale1 = onCaster({ scale: 1 })
 const onCasterScale2 = onCaster({ scale: 2 })
 const onCasterScale3 = onCaster({ scale: 3 })
@@ -8761,7 +8770,27 @@ export const AbilitiesAnimations: {
   [Ability.ROCK_SMASH]: onTargetScale2,
   [Ability.BLAZE_KICK]: onTarget({ positionOffset: [0, -35] }),
   [Ability.BITE]: onTargetScale2,
-  [Ability.DRAGON_TAIL]: onTargetScale2,
+  [Ability.DRAGON_TAIL]: (args) => {
+    const [x, y] = transformEntityCoordinates(
+      args.positionX,
+      args.positionY,
+      args.flip
+    )
+    const wipe = addAbilitySprite(args.scene, Ability.DRAGON_TAIL, 0, [x, y], {
+      scale: 2
+    })
+    wipe?.on(
+      Phaser.Animations.Events.ANIMATION_UPDATE,
+      (_: unknown, animFrame: Phaser.Animations.AnimationFrame) => {
+        if (animFrame.index <= DRAGON_TAIL_WIPE_LAST_FRAME) return
+        wipe.setVisible(false)
+        // not destroyed inside the animation update, it would break the loop
+        setTimeout(() => wipe.destroy(), 0)
+      }
+    )
+    dragonTailDust(args)
+  },
+  ["DRAGON_TAIL_DUST"]: dragonTailDust,
   [Ability.SOAK]: onTargetScale2,
   [Ability.IRON_TAIL]: onTargetScale2,
   [Ability.ICICLE_CRASH]: onTargetScale2,

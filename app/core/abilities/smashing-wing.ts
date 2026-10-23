@@ -1,5 +1,4 @@
 import { AttackType, Team } from "../../types/enum/Game"
-import { Synergy } from "../../types/enum/Synergy"
 import type { Board } from "../board"
 import type { PokemonEntity } from "../pokemon-entity"
 import { DelayedCommand } from "../simulation-command"
@@ -33,13 +32,13 @@ export class SmashingWingStrategy extends AbilityStrategy {
           })
           board.getAdjacentCells(pokemon.positionX, pokemon.positionY).forEach((cell) => {
             if (cell.value && cell.value.team !== pokemon.team) {
-              const isArtificialOrSteel = 
-                cell.value.types.has(Synergy.ARTIFICIAL) ||
-                cell.value.types.has(Synergy.STEEL)
-              const attackType = isArtificialOrSteel
-                ? AttackType.TRUE
-                : AttackType.SPECIAL
-              cell.value.handleSpecialDamage(damage, board, attackType, pokemon, crit)
+              cell.value.handleSpecialDamage(
+                damage,
+                board,
+                AttackType.SPECIAL,
+                pokemon,
+                crit
+              )
               cell.value.addAbilityPower(-20, pokemon, 0, false)
             }
           })

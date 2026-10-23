@@ -243,7 +243,7 @@ const RELIC_FRAGMENT_GOLD = 5
 const CROAGUNKS_AID_EXCHANGE_TICKETS = 2
 const CROAGUNKS_AID_GOLD_GAINED = 10
 const ADDITIONAL_RETHINK_GOLD = { I: 5, II: 10 }
-const BAG_OF_SWEETS_AMOUNT = 10
+const BAG_OF_SWEETS_AMOUNT = 8
 const BANANA_BUSINESS_NANAB_BERRIES = 3
 const WOBBUFFETS_SILVER_PRIZE_RECYCLE_TICKETS = 2
 const TREASURE_HUNT_I_GEMS = 2
@@ -258,7 +258,8 @@ const POTION_GOLD_GAINED = 5
 const TRANSFORM_STAGE = 20
 const TAXES_GOLD_GAINED = 8
 const MUNCHLAX_DELIVERY_GOLD_GAINED = 5
-const FREE_COUPON_GOLD_GAINED = 5
+const FREE_COUPON_GOLD_GAINED = 8
+const HYPER_HYPER_ROLL_FREE_ROLLS = 10
 const QUICK_CLAW_GOLD_GAINED = 5
 const TAXES_GOLD_TAKEN_FROM_OTHERS = 1
 const BABYLESS_STAGE = 14
@@ -2428,7 +2429,7 @@ export const blessingEffectService: {
     return true
   },
   [Blessing.VAMPIRIC]: (player) =>
-    giftPokemonIfBenchHasRoom(player, Pkm.CHIMCHAR),
+    giftPokemonIfBenchHasRoom(player, Pkm.MACHOP),
   [Blessing.PROTECT_THE_WEAK]: () => true,
   [Blessing.STURDY]: () => true,
   [Blessing.ALL_FOR_ONE]: (player, state, room) =>
@@ -2931,6 +2932,14 @@ export const blessingEffectService: {
     return true
   },
   [Blessing.LIFE_PRICE]: () => true,
+  [Blessing.SYNCHRONISED_SPEED_I]: (player) => {
+    player.items.push(Item.MAGNET)
+    return true
+  },
+  [Blessing.SYNCHRONISED_SPEED_II]: (player) => {
+    player.items.push(Item.MAGNET)
+    return true
+  },
   [Blessing.MAGIC_SHIELD_I]: () => true,
   [Blessing.MAGIC_SHIELD_II]: () => true,
   [Blessing.BRUTE_SHIELD_I]: () => true,
@@ -3308,6 +3317,7 @@ export const blessingEffectService: {
 
   [Blessing.HYPER_HYPER_ROLL]: (player) => {
     player.hyperHyperRollPending = true
+    player.shopFreeRolls += HYPER_HYPER_ROLL_FREE_ROLLS
     return true
   },
 

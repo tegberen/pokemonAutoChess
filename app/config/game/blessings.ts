@@ -458,7 +458,7 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     isAvailable: (player: Player) => player.streak <= 4
   },
   [Blessing.VAMPIRIC]: {
-    tier: BlessingTier.SILVER,
+    tier: BlessingTier.GOLD,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "vampiric",
     grantsPokemonImmediately: true,

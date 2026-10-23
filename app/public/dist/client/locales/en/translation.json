@@ -1961,7 +1961,7 @@
 		"SHOCKWAVE": "Deal [30,60,120,240,SP] SPECIAL to all enemies in a 2-range radius, +1 range if user is in an ELECTRIC_FIELD, -20% damage per tile from the user.",
 		"BITE": "Deal [40,80,120,200,SP] SPECIAL to the target and heal the user for 30% of the damage dealt. Cause the target to FLINCH for 5 seconds.",
 		"AQUA_TAIL": "Deal [30,60,100,200,SP] SPECIAL to the target and gain [30,60,100,200,SP] SHIELD.",
-		"DRAGON_TAIL": "Deal [30,60,100,150,SP] SPECIAL to the target and increase the user's DEF and SPE_DEF by [2,4,6,10,SP].",
+		"DRAGON_TAIL": "Swap the target with the farthest enemy, then gain [2,4,8,16,SP] DEF and SPE_DEF by the STAR level of the swapped enemy. If they cannot be swapped, deal [30,60,100,150,SP] SPECIAL to the target instead.",
 		"DRAGON_BREATH": "Deal [25,50,100,200,SP] SPECIAL to the target and an enemy directly behind it.",
 		"ICICLE_CRASH": "Deal [20,40,80,160,SP] SPECIAL to the target and enemy Pokémon ADJACENT to it.",
 		"INGRAIN": "Heal allies for [10,20,40,80,SP] HP within RANGE, and make enemies LOCKED for 4s. Each tile of distance weakens the heal by 20% and shortens LOCKED by 1s, down to 1s.",
@@ -2306,8 +2306,8 @@
 		"YAWN": "Gain [15,30,60,120,SP] SHIELD. Enemy Pokémon targeting the user are inflicted with FATIGUE for 3 seconds and lose 20 AP.",
 		"WISE_YAWN": "Grant the lowest HP ally [15,30,60,120,SP] SHIELD. Enemies attacking that ally suffer FATIGUE for 3 seconds and lose 20 AP.",
 		"FIERY_DANCE": "Cloaked in flames, the user dances and flaps its wings dealing [25,50,100,200,SP] SPECIAL to the target and raises their own AP by 30.",
-		"ANACHRONISM_REPULSOR": "Grants PROTECT to the user and all allies sharing a synergy type for 2 seconds. All protected allies deal [10,10,10,20,SP] SPECIAL for each protected Pokémon to ADJACENT enemies. Deals TRUE instead against FOSSIL or AQUATIC enemies.",
-		"SMASHING_WING": "Dashes into the largest group of enemies, dealing [15, 30, 60, 120, SP] SPECIAL and reducing their AP by 20. Deals TRUE instead against ARTIFICIAL or STEEL targets.",
+		"ANACHRONISM_REPULSOR": "Grants PROTECT to the user and all allies sharing a synergy type for 2 seconds. All protected allies deal [10,10,10,20,SP] SPECIAL for each protected Pokémon to ADJACENT enemies.",
+		"SMASHING_WING": "Dashes into the largest group of enemies, dealing [15, 30, 60, 120, SP] SPECIAL and reducing their AP by 20.",
 		"BIDE": "After 3 seconds, deal SPECIAL to ADJACENT enemy Pokémon equal to [100,150,200,400,SP]% of the damage received during this period.",
 		"SHORE_UP": "Heal for [20,25,40,80,SP]% HP, +10% if the weather is SANDSTORM.",
 		"POISON_STING": "Inflict the target with [2,3,4,5] stacks of POISONNED. Every stack over the max immediately deals [25,50,100,150,SP] SPECIAL.",
@@ -2332,7 +2332,7 @@
 		"BRICK_BREAK": "Deal [150,150,150,300,SP]% of ATK as TRUE. Breaks target's PROTECT and Magic Bounce. Inflict ARMOR_BREAK on the target for 4 seconds.",
 		"RETURN": "Deal [20,40,80,160,SP] SPECIAL to the target, then gain 2 AP permanently.",
 		"TAUNT": "Gain [25,25,25,50,SP=0.5]% of max HP as SHIELD, and force enemies at attack range to choose the user as target",
-		"BULK_UP": "Increase base ATK and base DEF by [50,50,50,100,SP]%",
+		"BULK_UP": "Increase base ATK and base DEF by [25,50,100,100,SP]%",
 		"CUT": "Deal [20,30,40,80,SP]% of target max HP as SPECIAL. Inflicts WOUND for 5 seconds.",
 		"FLY": "Rise in the air and fall on the farthest target after 1 second, dealing [400,400,400,800,SP]% of ATK as SPECIAL.",
 		"SURF": "A wave pushes the user and enemies in the path into the enemy backline. All enemies hit take [20,40,80,160,SP] SPECIAL.",
@@ -2636,8 +2636,8 @@
 		"STEEL_SPIKE": "Deal 66% of ATK as TRUE",
 		"CORKSCREW_CRASH": "Deal 100% of ATK as TRUE",
 		"MAX_MELTDOWN": "Deal 125% of ATK as TRUE",
-		"TILLER": "Gain from +1 to +5 DEF and SPE_DEF and +3 ATK at max depth",
-		"DIGGER": "Gain from +2 to +10 DEF and SPE_DEF and +5 ATK at max depth",
+		"TILLER": "Gain from +1 to +5 DEF and SPE_DEF and +4 ATK at max depth",
+		"DIGGER": "Gain from +2 to +10 DEF and SPE_DEF and +6 ATK at max depth",
 		"DRILLER": "Gain from +3 to +15 DEF and SPE_DEF and +8 ATK at max depth",
 		"DEEP_MINER": "Gain 5 extra DEF and SPE_DEF for each fully dug row and +8 ATK when your half of the board is fully dug",
 		"POISONOUS": "[30,LK]% chance to POISONNED ON_HIT.",
@@ -3231,7 +3231,7 @@
 		"REAPER_CLOTH": "The holder's ability can now critically strike based on CRIT_CHANCE. If the ability can already critically strike by default, increase CRIT_POWER by 50% instead.",
 		"POKEMONOMICON": "When the holder deals SPECIAL, they BURN the target for 3 seconds and reduce its SPE_DEF by 1.",
 		"POWER_LENS": "The amount of SPECIAL blocked by SPE_DEF is inflicted back to the attacker",
-		"SHELL_BELL": "Holder heals for 33% of all damages inflicted",
+		"SHELL_BELL": "Holder heals for 40% of all damages inflicted",
 		"HEAVY_DUTY_BOOTS": "Holder is immune to any BOARD_EFFECT, forced displacement and LOCKED.",
 		"RELIC_CROWN": "When an ally within a 2-tile radius is KO'd, gain +5 DEF, +5 SPE_DEF and +10 AP. The user heals and increase its HP for 10% of the KO'd ally's max HP.",
 		"RELIC_STATUE": "Your strongest ally gains 100 HP, 10 ATK, 10 DEF, 10 SPE_DEF and 10 SPEED. When it is KO'd, all other allies are cursed to be KO'd after 1 second.",
@@ -3289,7 +3289,7 @@
 		"GOLDEN_NANAB_BERRY": "Consumed once below 50% HP, heal 50% of max HP and player gains 5 GOLD.",
 		"COMFEY": "Wears $t(pkm.COMFEY) and get its ability and its max HP, ATK, DEF, and SPE_DEF as bonus stats.",
 		"ELECTIRIZER": "Gives ELECTRIC synergy. Every third attack inflicts PARALYSIS for 2 seconds ON_HIT.",
-		"MAGMARIZER": "Gives FIRE synergy. The holder doesn't suffer from BURN. Instead, it gains 30 SPEED when burning.",
+		"MAGMARIZER": "Gives FIRE synergy. The holder doesn't suffer from BURN. Instead, it gains 20 SPEED when burning.",
 		"MACHO_BRACE": "Gives FIGHTING synergy.",
 		"LIGHT_BALL": "Gives LIGHT synergy.",
 		"DRAGON_SCALE": "Gives DRAGON synergy as first synergy.",
@@ -3323,7 +3323,7 @@
 		"RARE_CANDY": "Immediately make a Pokémon evolve. Can only be given to Pokémon that can evolve, and reduce its sell price to its previous tier.",
 		"EVIOLITE": "Holder gets a bunch of stats, but can no longer evolve. Can only be given to non-fully evolved Pokémon.",
 		"GOLD_MASK": "At the start of the fight, spawn 3 Pokémon that share a type with the holder. Rarity and tier scale with stage level.",
-		"WHITE_FLUTE": "Gives WILD synergy. If the user has more SPEED than the target, [30, LK]% chance to inflict ARMOR_BREAK for 3 seconds on attack.",
+		"WHITE_FLUTE": "Gives WILD synergy. If the user has more SPEED than the target, [30, LK]% chance to inflict ARMOR_BREAK for 3 seconds ON_ATTACK.",
 		"GOLD_BOTTLE_CAP": "+1 ATK per 3 GOLD you have. Gain 1 GOLD per KO. If eliminating the last enemy, get a Jackpot that doubles the amount gained during the round.",
 		"ABSORB_BULB": "All the damage reduction is absorbed by the bulb. Once under 50% HP, bulb explodes, dealing all damage absorbed to ADJACENT enemy units as SPECIAL.",
 		"SACRED_ASH": "Gives RESURRECTION. After resurrecting, up to 3 allies KO are resurrected as well, but without items.",
@@ -3858,7 +3858,7 @@
 		"SUPER_LUCK": "Increase allies CRIT_CHANCE by +10.",
 		"PALKIA": "Palkia switches between its Altered Form and Origin Form through the use of the LUSTROUS_GLOBE.",
 		"DIALGA": "Dialga switches between its Altered Form and Origin Form through the use of the ADAMANT_CRYSTAL.",
-		"SLITHER_WING": "At the start of fight, for each ADJACENT ally:\nFIGHTING grants +2 DEF,\nFOSSIL grants +4 HP,\nBUG grants +2 ATK. Doubled in DROUGHT.",
+		"SLITHER_WING": "At the start of fight, for each ADJACENT ally:\nFIGHTING grants +1 DEF,\nFOSSIL grants +2 HP,\nBUG grants +1 ATK.",
 		"DANCER": "At the start of the fight, start dancing with allies ADJACENT_IN_THE_SAME_ROW. Each second gain [1,2,3] SPEED and ATK until half the PP bar is filled or enemies are in RANGE.",
 		"EXCADRILL": "Gain one stack for each KO. Mega evolves after 10 stacks.",
 		"DRAGALGE": "Gain one stack for each KO, two if under SMOG. Mega evolves after 15 stacks.",
@@ -4006,7 +4006,7 @@
 		"PSYCHIC": "PSYCHIC Pokémon gain additional AP and attract Unowns.",
 		"DARK": "DARK Pokémon's critical hits are more powerful and more frequent. Melee Dark Pokémon jump to the farthest target reachable. The STRONGEST Melee  DARK Pokémon leaps away with the target once below 50% max HP. One more Pokémon triggering this effect for each synergy step.",
 		"STEEL": "STEEL Pokémon deal a percentage of their damage as TRUE and give 3 DEF to your whole team when activated.",
-		"GROUND": "GROUND Pokémon dig holes on board in between stages, and gain stats based on the depth of the hole they start in. They sometimes find buried items at max depth (5 stages).",
+		"GROUND": "GROUND Pokémon dig a hole between stages. The deeper the hole they start in, the more DEF and SPE_DEF they gain. At max depth (5 stages) they also gain ATK and may find a buried item.",
 		"POISON": "POISON Pokémon have a chance to POISONNED their target for 4 seconds ON_HIT, and gain extra PP ON_ATTACK. When POISON Pokémon KO an enemy, it bursts and deals part of its remaining PP as SPECIAL to all ADJACENT enemies.",
 		"DRAGON": "DRAGON Pokémon amplify synergies and gain more stats when fully evolved.{{additionalInfo}}",
 		"FIELD": "When a FIELD Pokémon is KO'd, all the other FIELD Pokémon are healed and gain SPEED",
@@ -4311,7 +4311,7 @@
 	},
 	"weather_description": {
 		"NEUTRAL": "Normal weather. No effects.",
-		"ZENITH": "+30% healing from all sources\n-30% SLEEP duration",
+		"ZENITH": "+20% healing from all sources\n-30% SLEEP duration",
 		"DROUGHT": "+30% BURN damage\n-30% FREEZE duration\n-3 PP per second",
 		"WINDY": "+10 SPEED (+20 if FLYING)",
 		"RAIN": "+3 PP per second\n-30% BURN and POISONNED damage",
@@ -4780,7 +4780,7 @@
 		},
 		"BAG_OF_SWEETS": {
 			"name": "Bag of Sweets",
-			"description": "Gain 10 random SWEETS."
+			"description": "Gain 8 random SWEETS."
 		},
 		"WOBBUFFETS_SILVER_PRIZE": {
 			"name": "Silver Kit",
@@ -5180,7 +5180,7 @@
 		},
 		"PARTING_GIFT": {
 			"name": "Parting Gift",
-			"description": "When a fully itemized allied Pokémon is KO'd, it transfers one of its items to a random ally within 2 tiles, which also gains 100 SHIELD."
+			"description": "When an allied Pokémon holding 2 or more items is KO'd, it transfers one of its items to a random ally within 2 tiles, which also gains 100 SHIELD."
 		},
 		"REVEILLE": {
 			"name": "Reveille",
@@ -5332,7 +5332,7 @@
 		},
 		"FROZEN_OCEAN": {
 			"name": "Frozen Ocean",
-			"description": "Gain an ICE_STONE and a SURFBOARD. When hit by a TIDAL_WAVE, allies with both AQUATIC and ICE cast Deep Freeze at their own STAR level, restore 20% of their max PP and double their SPE_DEF."
+			"description": "Gain an ICE_STONE and a SURFBOARD. When hit by a TIDAL_WAVE, allies with both AQUATIC and ICE cast Deep Freeze at their own STAR level, restore all their PP and double their SPE_DEF."
 		},
 		"MAGICAL_METAL": {
 			"name": "Magic Metals",
@@ -5532,11 +5532,11 @@
 		},
 		"SYNCHRONISED_SPEED_I": {
 			"name": "Synchronised Speed I",
-			"description": "The first time the ally with the highest base SPEED gets a KO, all other allies raise their base SPEED to match it."
+			"description": "The first time the ally with the highest base SPEED gets a KO, all other allies raise their base SPEED to match it. Gain a MAGNET."
 		},
 		"SYNCHRONISED_SPEED_II": {
 			"name": "Synchronised Speed II",
-			"description": "The first time the ally with the highest SPEED gets a KO, all other allies raise their SPEED to match its current SPEED."
+			"description": "The first time the ally with the highest SPEED gets a KO, all other allies raise their SPEED to match its current SPEED. Gain a MAGNET."
 		},
 		"POTENTIAL_ENERGY_I": {
 			"name": "Potential Energy I",
@@ -5884,11 +5884,11 @@
 		},
 		"LIFE_PRICE": {
 			"name": "Life Price",
-			"description": "Rerolling your shop no longer costs GOLD. Instead, every 2 rerolls cost you 1 HP, and your partner too in Double Up. It cannot bring either of you below 1 HP: at 1 HP, rerolls are free."
+			"description": "Rerolling your shop no longer costs GOLD. Instead, every 3 rerolls cost you 1 HP, and your partner too in Double Up. It cannot bring either of you below 1 HP: at 1 HP, rerolls are free."
 		},
 		"SHADY_PRICE": {
 			"name": "Shady Price",
-			"description": "Gain 32 Rerolls. Once they are spent, rerolling your shop costs 4 GOLD for the rest of the game."
+			"description": "Gain 42 Rerolls. Once they are spent, rerolling your shop costs 4 GOLD for the rest of the game."
 		},
 		"RANK_UP": {
 			"name": "Rank Up",
@@ -5944,7 +5944,7 @@
 		},
 		"OVERLOAD": {
 			"name": "Overload",
-			"description": "4 seconds into combat, then every 12 seconds, Volt Surge empowers your STRONGEST ELECTRIC Pokémon that isn't empowered yet: it gains ELECTRIC_FIELD, 20 SPEED and bonus HP, and every 3rd attack chains lightning to 4 enemies. Gain a Grubbin."
+			"description": "Every 10 seconds, Volt Surge empowers your STRONGEST ELECTRIC Pokémon that isn't empowered yet: it gains ELECTRIC_FIELD, 20 SPEED and bonus HP, and every 3rd attack chains lightning to 4 enemies. Gain a Grubbin."
 		},
 		"FOGBOUND_LAKE": {
 			"name": "Fogbound Lake",
@@ -6088,7 +6088,7 @@
 		},
 		"VAMPIRIC": {
 			"name": "Vampiric",
-			"description": "In combat, allied Pokémon heal for 20% of the damage they deal. Between rounds, you heal 1 player HP for every 10 player damage you deal, rounded up. Gain a Chimchar."
+			"description": "In combat, allied Pokémon heal for 20% of the damage they deal. Between rounds, you heal 1 player HP for every 10 player damage you deal, rounded up. Gain a Machop."
 		},
 		"PROTECT_THE_WEAK": {
 			"name": "Protect the Weak",
@@ -6196,7 +6196,7 @@
 		},
 		"APEX_PREDATOR": {
 			"name": "Apex Predator",
-			"description": "Your STRONGEST Shinx's ability inflicts BLINDED and WOUND on the enemy it dashes to for 4 seconds. When it arrives, every other enemy within 2 tiles gets FEAR for 2 seconds. Gain a Shinx."
+			"description": "Your STRONGEST Shinx's ability inflicts BLINDED and WOUND on the enemy it dashes to for 5 seconds. When it arrives, every other enemy within 2 tiles gets FEAR for 3 seconds. Gain a Shinx."
 		},
 		"KINGS_GAMBIT": {
 			"name": "King's Gambit",
@@ -6444,7 +6444,7 @@
 		},
 		"HYPER_HYPER_ROLL": {
 			"name": "Hyper Hyper Roll",
-			"description": "The next common Pokémon you buy immediately evolves to 3 STAR."
+			"description": "Gain 10 free Rerolls. The next common Pokémon you buy immediately evolves to 3 STAR."
 		},
 		"BEAUTY_CONTEST": {
 			"name": "Beauty Contest",
@@ -6468,7 +6468,7 @@
 		},
 		"FREE_COUPON": {
 			"name": "Gift Bag",
-			"description": "Gain 5 GOLD. Take your item from carousel shops for free. If any player has this Wish, a shop encounter is guaranteed by stage 22."
+			"description": "Gain 8 GOLD. Take your item from carousel shops for free. If any player has this Wish, a shop encounter is guaranteed by stage 22."
 		},
 		"SOUL_DRAIN": {
 			"name": "Soul Drain",
@@ -6476,7 +6476,7 @@
 		},
 		"FLOWER_QUEEN": {
 			"name": "Flower Queen",
-			"description": "Your STRONGEST Flabebe reduces its max PP by 4 after each cast. Gain a METRONOME and a Floette."
+			"description": "Your STRONGEST Flabebe reduces its max PP by 5 after each cast. Gain a METRONOME and a Floette."
 		},
 		"LEAF_TORNADO": {
 			"name": "Leaf Tornado",
@@ -6568,7 +6568,7 @@
 		},
 		"ROLLING_SNOWBALL": {
 			"name": "Rolling Snowball",
-			"description": "When your STRONGEST Spheal's Ice Ball KO's its target, it rolls through to the cell behind it and gains 20 SHIELD and 50 PP. Gain a Spheal."
+			"description": "When your STRONGEST Spheal's Ice Ball KO's its target, it rolls through to the cell behind it and gains 20 SHIELD and 40 PP. Gain a Spheal."
 		},
 		"CURSED_COFFIN": {
 			"name": "Cursed Coffin",
@@ -6592,7 +6592,7 @@
 		},
 		"FLEUR_DE_LURE": {
 			"name": "Fleur de Lure",
-			"description": "Once per cast, when your STRONGEST Fomantis reaches 80% PP, the 3 closest enemies are CHARM for 3 seconds. Its Solar Blade always crits CHARM enemies, and executes CHARM BUG enemies. Gain a strong Fomantis."
+			"description": "Once per cast, when your STRONGEST Fomantis reaches 80% PP, the 3 closest enemies are CHARM for 2 seconds. Its Solar Blade always crits CHARM enemies, and deals double damage to CHARM BUG enemies. Gain a strong Fomantis."
 		},
 		"CRYSTAL_GUARDIAN": {
 			"name": "Crystal Guardian",
@@ -6708,7 +6708,7 @@
 		},
 		"AQUA_EGG_BLESSING": {
 			"name": "Blessing of Phione",
-			"description": "Gain an AQUA_EGG. After the holder's first ability cast, summon a Phione. That Phione grants 3 PP to all allies whenever it casts its ability."
+			"description": "Gain an AQUA_EGG. After the holder's first ability cast, summon a Phione. That Phione grants 2 PP to all allies whenever it casts its ability."
 		},
 		"STAR_DUST_BLESSING": {
 			"name": "Star Dust Veil",

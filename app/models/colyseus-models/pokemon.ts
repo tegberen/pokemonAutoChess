@@ -2632,7 +2632,7 @@ export class Turtwig extends Pokemon {
   speed = 43
   def = 4
   speDef = 4
-  maxPP = 100
+  maxPP = 80
   range = 1
   skill = Ability.BULLDOZE
   regional = true
@@ -2659,7 +2659,7 @@ export class Grotle extends Pokemon {
   speed = 43
   def = 8
   speDef = 6
-  maxPP = 100
+  maxPP = 80
   range = 1
   skill = Ability.BULLDOZE
   regional = true
@@ -2685,7 +2685,7 @@ export class Torterra extends Pokemon {
   speed = 43
   def = 16
   speDef = 8
-  maxPP = 100
+  maxPP = 80
   range = 1
   skill = Ability.BULLDOZE
   regional = true
@@ -3976,7 +3976,7 @@ export class Duskull extends Pokemon {
   speed = 39
   def = 10
   speDef = 10
-  maxPP = 100
+  maxPP = 120
   range = 2
   skill = Ability.TRICK_ROOM
 }
@@ -3995,7 +3995,7 @@ export class Dusclops extends Pokemon {
   speed = 39
   def = 20
   speDef = 20
-  maxPP = 100
+  maxPP = 120
   range = 2
   skill = Ability.TRICK_ROOM
 }
@@ -4013,7 +4013,7 @@ export class Dusknoir extends Pokemon {
   speed = 39
   def = 30
   speDef = 30
-  maxPP = 100
+  maxPP = 120
   range = 2
   skill = Ability.TRICK_ROOM
 }
@@ -4249,7 +4249,7 @@ export class Venipede extends Pokemon {
   stars = 1
   evolution = Pkm.WHIRLIPEDE
   hp = 100
-  atk = 12
+  atk = 10
   speed = 72
   def = 6
   speDef = 4
@@ -4264,7 +4264,7 @@ export class Whirlipede extends Pokemon {
   stars = 2
   evolution = Pkm.SCOLIPEDE
   hp = 200
-  atk = 24
+  atk = 22
   speed = 72
   def = 10
   speDef = 8
@@ -4278,7 +4278,7 @@ export class Scolipede extends Pokemon {
   rarity = Rarity.ULTRA
   stars = 3
   hp = 400
-  atk = 36
+  atk = 34
   speed = 72
   def = 14
   speDef = 12
@@ -5750,7 +5750,7 @@ export class Seedot extends Pokemon {
   speed = 51
   def = 4
   speDef = 2
-  maxPP = 100
+  maxPP = 90
   range = 1
   skill = Ability.RAZOR_LEAF
   isInRegion(map: DungeonPMDO, state: GameState) {
@@ -5769,7 +5769,7 @@ export class Nuzleaf extends Pokemon {
   speed = 51
   def = 6
   speDef = 3
-  maxPP = 100
+  maxPP = 90
   range = 1
   skill = Ability.RAZOR_LEAF
   isInRegion(map: DungeonPMDO, state: GameState) {
@@ -5787,7 +5787,7 @@ export class Shiftry extends Pokemon {
   speed = 51
   def = 8
   speDef = 4
-  maxPP = 100
+  maxPP = 90
   range = 1
   skill = Ability.RAZOR_LEAF
   isInRegion(map: DungeonPMDO, state: GameState) {
@@ -8251,7 +8251,7 @@ export class Celebi extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.GRASS, Synergy.FAIRY, Synergy.FLORA])
   rarity = Rarity.LEGENDARY
   stars = 3
-  hp = 250
+  hp = 220
   atk = 20
   speed = 57
   def = 10
@@ -9687,7 +9687,7 @@ export class Shedinja extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.BUG, Synergy.GHOST])
   rarity = Rarity.EPIC
   stars = 2
-  hp = 100
+  hp = 80
   atk = 14
   speed = 38
   def = 0
@@ -12243,7 +12243,7 @@ export class Nosepass extends Pokemon {
   speed = 38
   def = 10
   speDef = 10
-  maxPP = 90
+  maxPP = 100
   range = 2
   skill = Ability.MAGNET_RISE
   additional = true
@@ -12263,7 +12263,7 @@ export class Probopass extends Pokemon {
   speed = 38
   def = 20
   speDef = 22
-  maxPP = 90
+  maxPP = 100
   range = 2
   skill = Ability.MAGNET_RISE
   additional = true
@@ -13395,7 +13395,7 @@ export class Mimikyu extends Pokemon {
   ])
   rarity = Rarity.UNIQUE
   stars = 3
-  hp = 180
+  hp = 150
   atk = 14
   speed = 56
   def = 10
@@ -13414,7 +13414,7 @@ export class MimikyuBusted extends Pokemon {
   ])
   rarity = Rarity.UNIQUE
   stars = 3
-  hp = 180
+  hp = 150
   atk = 24
   speed = 56
   def = 10
@@ -13700,7 +13700,7 @@ export class Plusle extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.ELECTRIC, Synergy.FIELD])
   rarity = Rarity.UNIQUE
   stars = 3
-  hp = 140
+  hp = 120
   atk = 12
   speed = 61
   def = 6
@@ -13714,7 +13714,7 @@ export class Minun extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.ELECTRIC, Synergy.FIELD])
   rarity = Rarity.UNIQUE
   stars = 3
-  hp = 140
+  hp = 120
   atk = 12
   speed = 61
   def = 6
@@ -14127,7 +14127,7 @@ export class Spinda extends Pokemon {
   rarity = Rarity.UNIQUE
   stars = 3
   hp = 200
-  atk = 20
+  atk = 16
   speed = 44
   def = 10
   speDef = 10
@@ -14381,7 +14381,7 @@ export class Illumise extends Pokemon {
   speed = 52
   def = 4
   speDef = 4
-  maxPP = 90
+  maxPP = 100
   range = 1
   skill = Ability.STRUGGLE_BUG
   passive = Passive.ILLUMISE_VOLBEAT
@@ -14396,7 +14396,7 @@ export class Volbeat extends Pokemon {
   speed = 52
   def = 4
   speDef = 4
-  maxPP = 90
+  maxPP = 100
   range = 1
   skill = Ability.TAIL_GLOW
   passive = Passive.ILLUMISE_VOLBEAT
@@ -15062,7 +15062,7 @@ export class Minior extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.FLYING, Synergy.ROCK, Synergy.LIGHT])
   rarity = Rarity.UNIQUE
   stars = 3
-  hp = 180
+  hp = 150
   atk = 14
   speed = 44
   def = 10
@@ -15077,7 +15077,7 @@ export class MiniorKernelBlue extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.FLYING, Synergy.ROCK, Synergy.LIGHT])
   rarity = Rarity.UNIQUE
   stars = 3
-  hp = 180
+  hp = 150
   atk = 14
   speed = 44
   def = 10
@@ -15092,7 +15092,7 @@ export class MiniorKernelRed extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.FLYING, Synergy.ROCK, Synergy.LIGHT])
   rarity = Rarity.UNIQUE
   stars = 3
-  hp = 180
+  hp = 150
   atk = 14
   speed = 44
   def = 10
@@ -15107,7 +15107,7 @@ export class MiniorKernelOrange extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.FLYING, Synergy.ROCK, Synergy.LIGHT])
   rarity = Rarity.UNIQUE
   stars = 3
-  hp = 180
+  hp = 150
   atk = 14
   speed = 44
   def = 10
@@ -15122,7 +15122,7 @@ export class MiniorKernelGreen extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.FLYING, Synergy.ROCK, Synergy.LIGHT])
   rarity = Rarity.UNIQUE
   stars = 3
-  hp = 180
+  hp = 150
   atk = 14
   speed = 44
   def = 10
@@ -15327,7 +15327,7 @@ export class Pheromosa extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.BUG, Synergy.FIGHTING])
   rarity = Rarity.LEGENDARY
   stars = 3
-  hp = 200
+  hp = 250
   atk = 27
   speed = 73
   def = 10
@@ -17528,7 +17528,7 @@ export class Luvdisc extends Pokemon {
   rarity = Rarity.UNIQUE
   stars = 3
   hp = 150
-  atk = 14
+  atk = 10
   speed = 56
   def = 6
   speDef = 10
@@ -20331,7 +20331,7 @@ export class Furfrou extends Pokemon {
   rarity = Rarity.UNIQUE
   stars = 3
   hp = 200
-  atk = 16
+  atk = 20
   speed = 65
   def = 8
   speDef = 10
@@ -20840,7 +20840,7 @@ export class Buzzwole extends Pokemon {
   speed = 50
   def = 15
   speDef = 6
-  maxPP = 100
+  maxPP = 125
   range = 1
   skill = Ability.BULK_UP
 }
@@ -21064,7 +21064,7 @@ export class Wimpod extends Pokemon {
   rarity = Rarity.COMMON
   stars = 1
   evolution = Pkm.GOLISOPOD
-  hp = 40
+  hp = 35
   atk = 2
   speed = 38
   def = 2
@@ -21080,7 +21080,7 @@ export class Golisopod extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.FOSSIL, Synergy.BUG, Synergy.WATER])
   rarity = Rarity.COMMON
   stars = 2
-  hp = 80
+  hp = 70
   atk = 8
   speed = 38
   def = 4

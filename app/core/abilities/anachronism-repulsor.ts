@@ -1,6 +1,5 @@
 import { Ability } from "../../types/enum/Ability"
 import { AttackType } from "../../types/enum/Game"
-import { Synergy } from "../../types/enum/Synergy"
 import type { Board } from "../board"
 import type { PokemonEntity } from "../pokemon-entity"
 import { AbilityStrategy } from "./ability-strategy"
@@ -36,16 +35,10 @@ export class AnachronismRepulsorStrategy extends AbilityStrategy {
       ) {
         board.getAdjacentCells(ally.positionX, ally.positionY).forEach((cell) => {
           if (cell.value && cell.value.team !== ally.team) {
-            const isFossilOrAquatic =
-              cell.value.types.has(Synergy.AQUATIC) ||
-              cell.value.types.has(Synergy.FOSSIL)
-            const attackType = isFossilOrAquatic
-              ? AttackType.TRUE
-              : AttackType.SPECIAL
             cell.value.handleSpecialDamage(
               baseDamage,
               board,
-              attackType,
+              AttackType.SPECIAL,
               ally,
               crit
             )

@@ -548,7 +548,7 @@ export default abstract class PokemonState {
         heal *= 0.5
       }
       if (isUnderZenith(pokemon)) {
-        heal *= 1.3
+        heal *= 1.2
       }
 
       heal = Math.round(heal)

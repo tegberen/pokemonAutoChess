@@ -11,9 +11,32 @@ export class DragonTailStrategy extends AbilityStrategy {
     crit: boolean
   ) {
     super.process(pokemon, board, target, crit)
-    const damage = [30, 60, 100, 150][pokemon.stars - 1] ?? 150
-    const defenseBuff = [2, 4, 6, 10][pokemon.stars - 1] ?? 10
-    target.handleSpecialDamage(damage, board, AttackType.SPECIAL, pokemon, crit)
+    const swappedTarget = pokemon.state.getFarthestTarget(pokemon, board)
+    if (
+      !swappedTarget ||
+      swappedTarget.id === target.id ||
+      !swappedTarget.canBeMoved ||
+      !target.canBeMoved
+    ) {
+      const damage = [30, 60, 100, 150][pokemon.stars - 1] ?? 150
+      target.handleSpecialDamage(
+        damage,
+        board,
+        AttackType.SPECIAL,
+        pokemon,
+        crit
+      )
+      return
+    }
+    // the cast plays the wipe on the user and the dust on the target, this adds
+    // the dust on the other end
+    pokemon.broadcastAbility({
+      skill: "DRAGON_TAIL_DUST",
+      targetX: swappedTarget.positionX,
+      targetY: swappedTarget.positionY
+    })
+    target.moveTo(swappedTarget.positionX, swappedTarget.positionY, board, true)
+    const defenseBuff = [2, 4, 8, 16][swappedTarget.stars - 1] ?? 16
     pokemon.addDefense(defenseBuff, pokemon, 1, crit)
     pokemon.addSpecialDefense(defenseBuff, pokemon, 1, crit)
   }

@@ -58,18 +58,10 @@ export class SolarBladeStrategy extends AbilityStrategy {
                 damage * (1 - SOLAR_BLADE_LOSS_PER_TILE) ** tilesBehind
               )
               const isInfatuated = isFleurDeLure && cell.value.status.charm
-              if (isInfatuated && cell.value.types.has(Synergy.BUG)) {
-                cell.value.handleSpecialDamage(
-                  9999,
-                  board,
-                  AttackType.TRUE,
-                  pokemon,
-                  crit
-                )
-                return
-              }
+              const isDoubled =
+                isInfatuated && cell.value.types.has(Synergy.BUG)
               cell.value.handleSpecialDamage(
-                damageAtDepth,
+                isDoubled ? damageAtDepth * 2 : damageAtDepth,
                 board,
                 AttackType.TRUE,
                 pokemon,

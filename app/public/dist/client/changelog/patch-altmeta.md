@@ -396,7 +396,6 @@ At the beginning of each battle, TIGHT_BELT is replaced by 2 random items. The h
 - Glastrier: has WILD.
 - Ho-Oh: allied FIRE Pokémon with Resurrection revive Ignited.
 - Landorus, Thunderus, Tornadus, Enamorus, Marcus: have HUMAN
-- Buzzwole and Pheromosa: Legendary Duo.
 - Victini: has GOURMET, TABASCO
 - Guzzlord: 400 HP
 - Spectrier: Range 2
@@ -472,6 +471,68 @@ Smeargle Scribbles do not change your Elo.
 Every balance change on this server, newest first.
 
 ### 23 October 2026
+
+*Balance changes based on the Not Meta data from Double Up games played with Wishes.*
+
+**Pokémon**
+- Wimpod line | HP [40,80] → [35,70]
+- Venipede line | ATK [12,24,36] → [10,22,34]
+- Buzzwole | max PP 100 → 125
+- Pheromosa | HP 200 → 250
+- Buzzwole and Pheromosa | no longer a Legendary Duo, proposed separately
+- Shedinja | HP 100 → 80
+- Turtwig line | max PP 100 → 80
+- Duskull line | max PP 100 → 120
+- Nosepass line | max PP 90 → 100
+- Plusle and Minun | HP 140 → 120
+- Spinda | ATK 20 → 16
+- Illumise and Volbeat | max PP 90 → 100
+- Furfrou | ATK 16 → 20
+- Celebi | HP 250 → 220
+- Minior | HP 180 → 150
+- Mimikyu | HP 180 → 150
+- Luvdisc | ATK 14 → 10
+- Seedot line | max PP 100 → 90
+- Slither Wing | ADJACENT ally bonuses +2/+4/+2 → +1/+2/+1, no longer doubled in DROUGHT, and its clones do not get them
+
+**Weather**
+- ZENITH | revert healing bonus +30% → +20%
+
+**Synergies**
+- GROUND (2) | ATK at max depth 3 → 4
+- GROUND (4) | ATK at max depth 5 → 6
+
+**Abilities**
+- Dragon Tail | reworked: swaps the target with the farthest enemy, then the user gains [2,4,8,16] DEF and SPE_DEF by the STAR level of the swapped enemy, instead of [2,4,6,10] by its own STAR level. If they cannot be swapped, it still deals [30,60,100,150] SPECIAL to the target
+- Nasty Plot | no longer has a cooldown after casting
+- Smashing Wing | no longer deals TRUE against ARTIFICIAL or STEEL targets
+- Anachronism Repulsor | no longer deals TRUE against FOSSIL or AQUATIC enemies
+- Bulk Up | 50/50/50% → 25/50/100% of base ATK and DEF
+
+**Wishes**
+- Vampiric | Silver → Gold. Gains a Machop instead of a Chimchar
+- Bag of Sweets | 10 → 8 SWEETS
+- Shady Price | 32 → 42 Rerolls
+- Fleur de Lure | CHARM duration 3 → 2 seconds. Solar Blade deals double damage to CHARM BUG enemies instead of executing them
+- Overload | Volt Surge no longer fires 4 seconds into combat, and every 12 → 10 seconds
+- Gift Bag | 5 → 8 GOLD
+- Parting Gift | needs an ally holding 2 or more items instead of fully itemized
+- Synchronised Speed I, Synchronised Speed II | also gain a MAGNET
+- Rolling Snowball | PP gained 50 → 40
+- Life Price | every 2 → 3 rerolls cost 1 HP
+- Frozen Ocean | restores all PP instead of 20% of max PP
+- Flower Queen | max PP reduction per cast 4 → 5
+- Apex Predator | BLINDED and WOUND 4 → 5 seconds, FEAR 2 → 3 seconds
+- Hyper Hyper Roll | also gain 10 free Rerolls
+- Blessing of Phione | PP granted by Phione 3 → 2
+
+**Items**
+- SOUL_DEW | now gives 10 base AP and 10 base PP
+- SHELL_BELL | healing 33% → 40%
+- METRONOME | PP 5 → 10
+- MAX_ELIXIR | now gives 10 base PP
+- MAGMARIZER | SPEED when burning 30 → 20
+- WHITE_FLUTE | SPEED 15 → 5
 
 **Interface**
 - Not Meta {{new}} | Report renamed and expanded, for Wish games

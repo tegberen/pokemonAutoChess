@@ -8,6 +8,6 @@ export class NastyPlotStrategy extends AbilityStrategy {
     super.process(pokemon, board, target, crit)
     const buff = [4, 7, 10, 20][pokemon.stars - 1] ?? 20
     pokemon.addAttack(buff, pokemon, 1, crit)
-    pokemon.resetCooldown(250)
+    pokemon.resetCooldown(0)
   }
 }
