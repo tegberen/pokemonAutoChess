@@ -30,8 +30,31 @@
   margin: 0 0.25em;
 }
 
+#game-stage-info .stage-extras {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+}
+
+#game-stage-info:not(.finale) .stage-extras:empty {
+  display: none;
+}
+
+#game-stage-info.finale .stage-information,
+#game-stage-info.finale .stage-extras {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+#game-stage-info.finale .stage-information {
+  text-align: left;
+}
+
+#game-stage-info.finale .stage-extras {
+  justify-content: flex-end;
+}
+
 #game-stage-info .finale-matchup {
-  flex: 1;
   display: flex;
   justify-content: center;
   align-items: center;
