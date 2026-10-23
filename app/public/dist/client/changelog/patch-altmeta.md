@@ -471,6 +471,11 @@ Smeargle Scribbles do not change your Elo.
 
 Every balance change on this server, newest first.
 
+### 23 October 2026
+
+**Interface**
+- Not Meta {{new}} | Report renamed and expanded, for Wish games
+
 ### 21 October 2026
 
 **Interface**

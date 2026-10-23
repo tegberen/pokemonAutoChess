@@ -225,7 +225,7 @@ export function MainSidebar(props: MainSidebarProps) {
         </NavLink>
         {page !== "game" && (
           <NavLink svg="meta" location="report" handleClick={changeModal}>
-            Report
+            Not Meta
           </NavLink>
         )}
 
@@ -617,7 +617,7 @@ function Modals({
       >
         <MetaReport key={metaTab ?? "default"} initialTab={metaTab} />
       </Modal>
-      <Modal show={modal === "report"} header="Report" onClose={closeModal}>
+      <Modal show={modal === "report"} header="Not Meta" onClose={closeModal}>
         <Report />
       </Modal>
       <Modal

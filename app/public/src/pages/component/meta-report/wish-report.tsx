@@ -34,7 +34,7 @@ const OfferedWishes = (Object.keys(Blessings) as Blessing[]).filter(
   (blessing) => Blessings[blessing].availableAtStages.length > 0
 )
 
-type SortKey = "averagePlace" | "pickRate" | "firstRate"
+type SortKey = "averagePlace" | "pickRate"
 type View = "table" | "chart"
 type ReportMode = "duo" | "solo"
 
@@ -43,7 +43,7 @@ const COLUMNS: { label: string; sortKey?: SortKey }[] = [
   { label: "Count" },
   { label: "Pick rate", sortKey: "pickRate" },
   { label: "Top", sortKey: "averagePlace" },
-  { label: "Winrate", sortKey: "firstRate" }
+  { label: "Winrate" }
 ]
 
 function percent(value: number) {
@@ -103,9 +103,6 @@ export function WishReport() {
             <option value="pickRate">
               {t("rank")} {t("by_popularity")}
             </option>
-            <option value="firstRate">
-              {t("rank")} {t("by_winrate")}
-            </option>
           </select>
         )}
         <nav className="wish-report-tiers">
@@ -150,6 +147,7 @@ export function WishReport() {
         )}
         {report && (
           <ul className="wish-report-notes">
+            <li>{t("pokemon_report_footer")}</li>
             <li>
               <b>Pick rate</b>: the share of all picks in its tier that went
               to this Wish
@@ -306,9 +304,7 @@ const WishRow = memo(function WishRow({
       <td className={cc({ sorted: sortKey === "averagePlace" })}>
         {isPicked ? row.averagePlace.toFixed(2) : "–"}
       </td>
-      <td className={cc({ sorted: sortKey === "firstRate" })}>
-        {isPicked ? percent(row.firstRate) : "–"}
-      </td>
+      <td>{isPicked ? percent(row.firstRate) : "–"}</td>
     </tr>
   )
 })

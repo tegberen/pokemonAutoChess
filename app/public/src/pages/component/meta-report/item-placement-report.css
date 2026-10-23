@@ -1,0 +1,17 @@
+#wish-report.item-placement-report .wish-report-body {
+  padding-bottom: 0.75em;
+}
+
+.item-placement-tooltip {
+  display: flex;
+  gap: 0.6em;
+  align-items: center;
+}
+
+.item-placement-tooltip .wish-scatter-stats {
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.8em;
+  margin: 0;
+  padding: 0;
+  border: none;
+}

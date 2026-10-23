@@ -64,6 +64,9 @@ import {
   getMetaRegions,
   getMetaV2,
   getPlayerRankDistribution,
+  getPokemonItemsReport,
+  getPokemonReport,
+  getWishItemReport,
   getWishReport
 } from "./services/meta"
 import { getCachedSpriteGapData } from "./services/sprite-gap-scanner"
@@ -522,6 +525,21 @@ export const server = defineServer({
     app.get("/meta/wishes", async (req, res) => {
       setCacheControl(res, 86400)
       res.send(getWishReport())
+    })
+
+    app.get("/meta/wish-pokemons", async (req, res) => {
+      setCacheControl(res, 86400)
+      res.send(getPokemonReport())
+    })
+
+    app.get("/meta/wish-items", async (req, res) => {
+      setCacheControl(res, 86400)
+      res.send(getWishItemReport())
+    })
+
+    app.get("/meta/pokemon-items", async (req, res) => {
+      setCacheControl(res, 86400)
+      res.send(getPokemonItemsReport())
     })
 
     app.get("/tilemap/:map", async (req, res) => {

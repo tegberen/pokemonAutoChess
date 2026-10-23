@@ -11,6 +11,13 @@ import { getPokemonData } from "../models/precomputed/precomputed-pokemon-data"
 import type { Blessing, BlessingTier } from "../types/enum/Blessing"
 import type { EloRank } from "../types/enum/EloRank"
 import { GameMode } from "../types/enum/Game"
+import {
+  CraftableItems,
+  type Item,
+  ShinyItems,
+  Tools
+} from "../types/enum/Item"
+import { NonPkm, type Pkm, PkmFamily } from "../types/enum/Pokemon"
 import type { Synergy } from "../types/enum/Synergy"
 import type { ITypeStatistics } from "../types/meta"
 import type { IDendrogram } from "../types/models/dendrogram"
@@ -24,9 +31,22 @@ import type {
   IPlayerRankDistribution,
   IPlayerRankDistributionBucket
 } from "../types/models/player-rank-distribution"
+import type {
+  IPokemonItemsMode,
+  IPokemonItemsReport,
+  IPokemonReport,
+  IPokemonReportForm,
+  IPokemonReportLine,
+  IPokemonReportMode
+} from "../types/models/pokemon-report"
 import type { IPokemonsStatisticV2 } from "../types/models/pokemons-statistic-v2"
 import type { IRegionStatistic } from "../types/models/regions-statistic"
 import type { IReportMetadata } from "../types/models/report-metadata"
+import type {
+  IWishItemReport,
+  IWishItemReportMode,
+  IWishItemReportRow
+} from "../types/models/wish-item-report"
 import type {
   IWishReport,
   IWishReportMode,
@@ -72,6 +92,34 @@ let wishReport: IWishReport = {
   since: new Date(0).toISOString(),
   solo: emptyWishReportMode,
   duo: emptyWishReportMode
+}
+const emptyPokemonReportMode: IPokemonReportMode = {
+  games: 0,
+  players: 0,
+  lines: []
+}
+let pokemonReport: IPokemonReport = {
+  updatedAt: new Date(0).toISOString(),
+  since: new Date(0).toISOString(),
+  solo: emptyPokemonReportMode,
+  duo: emptyPokemonReportMode
+}
+const emptyPokemonItemsMode: IPokemonItemsMode = { forms: {}, lines: {} }
+let pokemonItemsReport: IPokemonItemsReport = {
+  updatedAt: new Date(0).toISOString(),
+  solo: emptyPokemonItemsMode,
+  duo: emptyPokemonItemsMode
+}
+const emptyWishItemReportMode: IWishItemReportMode = {
+  games: 0,
+  players: 0,
+  rows: []
+}
+let wishItemReport: IWishItemReport = {
+  updatedAt: new Date(0).toISOString(),
+  since: new Date(0).toISOString(),
+  solo: emptyWishItemReportMode,
+  duo: emptyWishItemReportMode
 }
 let playerRankDistribution: IPlayerRankDistribution = {
   updatedAt: new Date(0).toISOString(),
@@ -301,13 +349,31 @@ const WISH_REPORT_DAYS = 30
 // placements are only comparable between lobbies of the same size
 const WISH_REPORT_PLAYERS = 8
 
+const POKEMON_REPORT_TOP_ITEMS = 3
+
 type WishReportGame = {
   gameMode: GameMode
-  players: { rank: number; blessings: Blessing[] | null }[]
+  players: {
+    rank: number
+    blessings: Blessing[] | null
+    pokemons: { name: Pkm; items: Item[] | null }[] | null
+  }[]
 }
 
 export function getWishReport() {
   return wishReport
+}
+
+export function getWishItemReport() {
+  return wishItemReport
+}
+
+export function getPokemonReport() {
+  return pokemonReport
+}
+
+export function getPokemonItemsReport() {
+  return pokemonItemsReport
 }
 
 async function fetchWishReport() {
@@ -332,7 +398,19 @@ async function fetchWishReport() {
           records: { $sum: 1 },
           gameMode: { $first: "$gameMode" },
           wishes: { $sum: { $size: { $ifNull: ["$blessings", []] } } },
-          players: { $push: { rank: "$rank", blessings: "$blessings" } }
+          players: {
+            $push: {
+              rank: "$rank",
+              blessings: "$blessings",
+              pokemons: {
+                $map: {
+                  input: { $ifNull: ["$pokemons", []] },
+                  as: "pokemon",
+                  in: { name: "$$pokemon.name", items: "$$pokemon.items" }
+                }
+              }
+            }
+          }
         }
       },
       {
@@ -346,15 +424,34 @@ async function fetchWishReport() {
       .allowDiskUse(true)
       .exec()
 
+    const soloGames = games.filter(
+      (game) => game.gameMode !== GameMode.DOUBLE_UP
+    )
+    const duoGames = games.filter(
+      (game) => game.gameMode === GameMode.DOUBLE_UP
+    )
     wishReport = {
       updatedAt: new Date().toISOString(),
       since: new Date(since).toISOString(),
-      solo: summarizeWishes(
-        games.filter((game) => game.gameMode !== GameMode.DOUBLE_UP)
-      ),
-      duo: summarizeWishes(
-        games.filter((game) => game.gameMode === GameMode.DOUBLE_UP)
-      )
+      solo: summarizeWishes(soloGames),
+      duo: summarizeWishes(duoGames)
+    }
+    pokemonReport = {
+      updatedAt: wishReport.updatedAt,
+      since: wishReport.since,
+      solo: summarizePokemons(soloGames),
+      duo: summarizePokemons(duoGames)
+    }
+    wishItemReport = {
+      updatedAt: wishReport.updatedAt,
+      since: wishReport.since,
+      solo: summarizeItems(soloGames),
+      duo: summarizeItems(duoGames)
+    }
+    pokemonItemsReport = {
+      updatedAt: wishReport.updatedAt,
+      solo: summarizePokemonItems(soloGames),
+      duo: summarizePokemonItems(duoGames)
     }
     logger.info(
       `Wish report: ${games.length} games in ${Date.now() - startedAt}ms`
@@ -406,6 +503,170 @@ function summarizeWishes(games: WishReportGame[]): IWishReportMode {
     firstRate: total.firsts / total.picks
   }))
   return { games: games.length, players, rows }
+}
+
+type PickTotal = { picks: number; placeSum: number; firsts: number }
+
+function addPick<Key>(totals: Map<Key, PickTotal>, key: Key, rank: number) {
+  const total = totals.get(key) ?? { picks: 0, placeSum: 0, firsts: 0 }
+  total.picks++
+  total.placeSum += rank
+  if (rank === 1) total.firsts++
+  totals.set(key, total)
+}
+
+function toPickStats(total: PickTotal) {
+  return {
+    picks: total.picks,
+    averagePlace: total.placeSum / total.picks,
+    firstRate: total.firsts / total.picks
+  }
+}
+
+const REPORTED_ITEMS = new Set<Item>([
+  ...CraftableItems,
+  ...Tools,
+  ...ShinyItems
+])
+
+// an item counts once per player team, whichever Pokémon held it
+function summarizeItems(games: WishReportGame[]): IWishItemReportMode {
+  const totals = new Map<Item, PickTotal>()
+  let players = 0
+  games.forEach((game) =>
+    game.players.forEach(({ rank, pokemons }) => {
+      players++
+      const held = new Set<Item>()
+      ;(pokemons ?? []).forEach((pokemon) =>
+        (pokemon.items ?? []).forEach((item) => held.add(item))
+      )
+      held.forEach((item) => {
+        if (REPORTED_ITEMS.has(item)) addPick(totals, item, rank)
+      })
+    })
+  )
+  const rows: IWishItemReportRow[] = [...totals].map(([item, total]) => ({
+    item,
+    ...toPickStats(total)
+  }))
+  return { games: games.length, players, rows }
+}
+
+function isReportablePokemon(name: Pkm) {
+  return PkmFamily[name] !== undefined && !NonPkm.includes(name)
+}
+
+// a Pokémon counts once per player however many copies they fielded, and a
+// line adds up its forms, so a player with two forms counts twice in it
+function summarizePokemons(games: WishReportGame[]): IPokemonReportMode {
+  const formTotals = new Map<Pkm, PickTotal>()
+  let players = 0
+  games.forEach((game) =>
+    game.players.forEach(({ rank, pokemons }) => {
+      players++
+      new Set(
+        (pokemons ?? [])
+          .map((pokemon) => pokemon.name)
+          .filter(isReportablePokemon)
+      ).forEach((name) => addPick(formTotals, name, rank))
+    })
+  )
+
+  const formsByFamily = new Map<Pkm, IPokemonReportForm[]>()
+  formTotals.forEach((total, pkm) => {
+    const family = PkmFamily[pkm]
+    formsByFamily.set(family, [
+      ...(formsByFamily.get(family) ?? []),
+      { pkm, ...toPickStats(total) }
+    ])
+  })
+  const lines: IPokemonReportLine[] = [...formsByFamily].map(
+    ([family, forms]) => {
+      const picks = forms.reduce((sum, form) => sum + form.picks, 0)
+      return {
+        pkm: family,
+        picks,
+        averagePlace:
+          forms.reduce((sum, form) => sum + form.averagePlace * form.picks, 0) /
+          picks,
+        firstRate:
+          forms.reduce((sum, form) => sum + form.firstRate * form.picks, 0) /
+          picks,
+        forms: forms.sort(
+          (a, b) =>
+            getPokemonData(a.pkm).stars - getPokemonData(b.pkm).stars ||
+            b.picks - a.picks
+        )
+      }
+    }
+  )
+  return { games: games.length, players, lines }
+}
+
+function summarizePokemonItems(games: WishReportGame[]): IPokemonItemsMode {
+  const formHolders = new Map<Pkm, number>()
+  const lineHolders = new Map<Pkm, number>()
+  const formItems = new Map<Pkm, Map<Item, number>>()
+  const lineItems = new Map<Pkm, Map<Item, number>>()
+  const bump = <Key>(map: Map<Key, number>, key: Key) =>
+    map.set(key, (map.get(key) ?? 0) + 1)
+  const bumpItem = (
+    owners: Map<Pkm, Map<Item, number>>,
+    owner: Pkm,
+    item: Item
+  ) => {
+    const counts = owners.get(owner) ?? new Map<Item, number>()
+    bump(counts, item)
+    owners.set(owner, counts)
+  }
+
+  games.forEach((game) =>
+    game.players.forEach(({ pokemons }) => {
+      const formsSeen = new Set<Pkm>()
+      const linesSeen = new Set<Pkm>()
+      const formItemsSeen = new Set<string>()
+      const lineItemsSeen = new Set<string>()
+      ;(pokemons ?? []).forEach(({ name, items }) => {
+        if (!isReportablePokemon(name)) return
+        const family = PkmFamily[name]
+        if (!formsSeen.has(name)) bump(formHolders, name)
+        if (!linesSeen.has(family)) bump(lineHolders, family)
+        formsSeen.add(name)
+        linesSeen.add(family)
+        new Set(items ?? []).forEach((item) => {
+          if (!formItemsSeen.has(`${name}|${item}`)) {
+            bumpItem(formItems, name, item)
+            formItemsSeen.add(`${name}|${item}`)
+          }
+          if (!lineItemsSeen.has(`${family}|${item}`)) {
+            bumpItem(lineItems, family, item)
+            lineItemsSeen.add(`${family}|${item}`)
+          }
+        })
+      })
+    })
+  )
+
+  const topItems = (
+    owners: Map<Pkm, Map<Item, number>>,
+    holders: Map<Pkm, number>
+  ) =>
+    Object.fromEntries(
+      [...owners].map(([owner, counts]) => [
+        owner,
+        [...counts]
+          .sort((a, b) => b[1] - a[1])
+          .slice(0, POKEMON_REPORT_TOP_ITEMS)
+          .map(([item, count]) => ({
+            item,
+            share: count / (holders.get(owner) ?? 1)
+          }))
+      ])
+    )
+  return {
+    forms: topItems(formItems, formHolders),
+    lines: topItems(lineItems, lineHolders)
+  }
 }
 
 async function fetchDendrogramData() {

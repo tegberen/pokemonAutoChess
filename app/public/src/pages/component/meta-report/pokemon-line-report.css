@@ -1,0 +1,80 @@
+#wish-report.pokemon-line-report .wish-report-body {
+  padding-bottom: 0.75em;
+}
+
+#wish-report .pokemon-line-expandable {
+  cursor: pointer;
+}
+
+#wish-report .pokemon-line-expandable:hover {
+  background-color: color-mix(
+    in srgb,
+    var(--color-fg-primary) 10%,
+    var(--color-bg-secondary)
+  );
+}
+
+#wish-report .pokemon-line-expandable:focus-visible {
+  outline: none;
+  background-color: color-mix(
+    in srgb,
+    var(--color-fg-primary) 10%,
+    var(--color-bg-secondary)
+  );
+}
+
+#wish-report .pokemon-line-chevron {
+  flex: none;
+  width: 0.5em;
+  height: 0.5em;
+  margin-left: 0.2em;
+  border-right: 2px solid var(--color-fg-primary);
+  border-bottom: 2px solid var(--color-fg-primary);
+  transform: rotate(45deg) translate(-2px, -2px);
+  transition: transform 0.15s ease-out;
+}
+
+#wish-report .pokemon-line-chevron.open {
+  transform: rotate(-135deg) translate(-2px, -2px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #wish-report .pokemon-line-chevron {
+    transition: none;
+  }
+}
+
+#wish-report .pokemon-line-form td:first-child {
+  padding-left: 2.2em;
+}
+
+#wish-report .pokemon-line-items-warning {
+  color: #e76e55;
+  font-weight: 900;
+}
+
+#wish-report .pokemon-line-items {
+  display: inline-flex;
+  gap: 0.8em;
+  align-items: center;
+}
+
+#wish-report .pokemon-line-items span {
+  display: inline-flex;
+  gap: 0.25em;
+  align-items: center;
+}
+
+.pokemon-line-tooltip {
+  display: flex;
+  gap: 0.6em;
+  align-items: center;
+}
+
+.pokemon-line-tooltip .wish-scatter-stats {
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.8em;
+  margin: 0;
+  padding: 0;
+  border: none;
+}

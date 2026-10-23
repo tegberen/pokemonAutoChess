@@ -1,4 +1,4 @@
-import { type CSSProperties, memo, useMemo } from "react"
+import { type CSSProperties, memo, type ReactNode, useMemo } from "react"
 import {
   CartesianGrid,
   ResponsiveContainer,
@@ -25,15 +25,19 @@ function percent(value: number) {
   return `${(value * 100).toFixed(1)}%`
 }
 
-const WishScatterPoint = memo(
-  function WishScatterPoint({
+type ScatterRow = { averagePlace: number; picks: number }
+
+const ReportScatterPoint = memo(
+  function ReportScatterPoint({
     cx = 0,
     cy = 0,
-    payload
+    payload,
+    renderPoint
   }: {
     cx?: number
     cy?: number
-    payload?: IWishReportRow
+    payload?: ScatterRow
+    renderPoint: (row: ScatterRow) => ReactNode
   }) {
     if (!payload) return null
     return (
@@ -49,53 +53,62 @@ const WishScatterPoint = memo(
           } as CSSProperties
         }
       >
-        <BlessingTile blessing={payload.blessing} />
+        {renderPoint(payload)}
       </foreignObject>
     )
   },
   (before, after) =>
     before.cx === after.cx &&
     before.cy === after.cy &&
-    before.payload?.blessing === after.payload?.blessing
+    before.payload === after.payload
 )
 
-function WishScatterTooltip({
+function ReportScatterTooltip<Row extends ScatterRow>({
   active,
-  payload
+  payload,
+  renderTooltip
 }: {
   active?: boolean
-  payload?: { payload: IWishReportRow }[]
+  payload?: { payload: Row }[]
+  renderTooltip: (row: Row) => ReactNode
 }) {
   if (!active || !payload?.length) return null
-  const row = payload[0].payload
   return (
     <div className="custom-theme-tooltip blessing-panel-tooltip">
-      <BlessingTooltipCard
-        blessing={row.blessing}
-        beforeDescription={
-          <dl className="wish-scatter-stats">
-            <div>
-              <dt>Count</dt>
-              <dd>{row.picks}</dd>
-            </div>
-            <div>
-              <dt>Pick rate</dt>
-              <dd>{percent(row.pickRate)}</dd>
-            </div>
-            <div>
-              <dt>Top</dt>
-              <dd>{row.averagePlace.toFixed(2)}</dd>
-            </div>
-            <div>
-              <dt>Winrate</dt>
-              <dd>{percent(row.firstRate)}</dd>
-            </div>
-          </dl>
-        }
-      />
+      {renderTooltip(payload[0].payload)}
     </div>
   )
 }
+
+const renderWishPoint = (row: IWishReportRow) => (
+  <BlessingTile blessing={row.blessing} />
+)
+
+const renderWishTooltip = (row: IWishReportRow) => (
+  <BlessingTooltipCard
+    blessing={row.blessing}
+    beforeDescription={
+      <dl className="wish-scatter-stats">
+        <div>
+          <dt>Count</dt>
+          <dd>{row.picks}</dd>
+        </div>
+        <div>
+          <dt>Pick rate</dt>
+          <dd>{percent(row.pickRate)}</dd>
+        </div>
+        <div>
+          <dt>Top</dt>
+          <dd>{row.averagePlace.toFixed(2)}</dd>
+        </div>
+        <div>
+          <dt>Winrate</dt>
+          <dd>{percent(row.firstRate)}</dd>
+        </div>
+      </dl>
+    }
+  />
+)
 
 export function WishScatter({
   rows,
@@ -103,6 +116,27 @@ export function WishScatter({
 }: {
   rows: IWishReportRow[]
   places: number
+}) {
+  return (
+    <ReportScatter
+      rows={rows}
+      places={places}
+      renderPoint={renderWishPoint}
+      renderTooltip={renderWishTooltip}
+    />
+  )
+}
+
+export function ReportScatter<Row extends ScatterRow>({
+  rows,
+  places,
+  renderPoint,
+  renderTooltip
+}: {
+  rows: Row[]
+  places: number
+  renderPoint: (row: Row) => ReactNode
+  renderTooltip: (row: Row) => ReactNode
 }) {
   const { placeDomain, placeTicks, countDomain, countTicks } = useMemo(() => {
     const averagePlaces = rows.map((row) => row.averagePlace)
@@ -170,14 +204,18 @@ export function WishScatter({
             }}
           />
           <Tooltip
-            content={<WishScatterTooltip />}
+            content={<ReportScatterTooltip renderTooltip={renderTooltip} />}
             cursor={{ strokeDasharray: "3 3" }}
             wrapperStyle={{ outline: "none", zIndex: 1 }}
             animationDuration={0}
           />
           <Scatter
             data={rows}
-            shape={<WishScatterPoint />}
+            shape={
+              <ReportScatterPoint
+                renderPoint={renderPoint as (row: ScatterRow) => ReactNode}
+              />
+            }
             isAnimationActive={false}
           />
         </ScatterChart>
