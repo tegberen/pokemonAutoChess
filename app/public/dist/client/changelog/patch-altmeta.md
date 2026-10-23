@@ -492,6 +492,7 @@ Every balance change on this server, newest first.
 - Minior | HP 180 → 150
 - Mimikyu | HP 180 → 150
 - Luvdisc | ATK 14 → 10
+- Illumise and Volbeat | HP 130 → 120
 - Seedot line | max PP 100 → 90
 - Slither Wing | ADJACENT ally bonuses +2/+4/+2 → +1/+2/+1, no longer doubled in DROUGHT, and its clones do not get them
 
@@ -512,6 +513,34 @@ Every balance change on this server, newest first.
 **Wishes**
 - Vampiric | Silver → Gold. Gains a Machop instead of a Chimchar
 - Bag of Sweets | 10 → 8 SWEETS
+- Layered Armor, Morph Ball, Orb Wand | no longer gain 4 Rerolls
+- Heart Shield I | HP per ally 5 → 4
+- Heart Shield II | HP per ally 10 → 8
+- Critical Rush I | SPEED 20 → 15
+- Critical Rush II | SPEED 40 → 30
+- Scorching Tome | damage bonus 30% → 20%
+- Starter Choice | no longer gives a BRONZE_DOJO_TICKET
+- Seizing Claw | CRIT_POWER per attack +10% → +5%
+- Archeological Site | no longer unearths a legendary when the whole board is dug
+- Fast Delivery | ATK per Seed 2 → 1
+- Honey Exploration | eating HONEY no longer grants DEF and SPE_DEF
+- Blighted Garden | RICH_MULCH from a KO'd allied POKERUS FLORA Pokémon is now a [40,LK]% chance instead of guaranteed
+- Rollout Rally | damage lost per bounce 40% → 50%, +1 bounce per 40 → 50 SPEED
+- Prismatic Quest | no longer gives 10 GOLD
+- Amazing Gardening | Prismatic → Gold. No longer gives a base AMAZE_MULCH, only one per fully evolved flower
+- Sniffer Dog | the Pokémon entering battle gains full PP
+- Zap! | chain damage 40% → 50% of the initial damage
+- Echo Chamber | PP to all allies 4 → 5
+- Crystal Guardian | max HP per crystallisation 20 → 40
+- Shinto Shrine Mirror | Gold → Silver. Only offered at stage 4
+- Roosting Flock | Gold → Silver
+- Shuttle Bus | Gold → Silver
+- Colour Change, Azure Flute | now also give a LAPRAS_PASSPORT
+- Guard Formation | one leader, the ally with the highest combined DEF and SPE_DEF, shares both with ADJACENT_IN_THE_SAME_ROW allies
+- Deep Investments | bonus GOLD 30 → 35
+- Frost Burst | Gold → Silver. Splash damage 50% → 30%
+- Gyarodos, Tres, Quatro | each Magikarp and Gyarados on the board now contributes its synergies to your total
+- Gimmighoul's Treasure | your Unique selection is guaranteed to offer a Gimmighoul
 - Shady Price | 32 → 42 Rerolls
 - Fleur de Lure | CHARM duration 3 → 2 seconds. Solar Blade deals double damage to CHARM BUG enemies instead of executing them
 - Overload | Volt Surge no longer fires 4 seconds into combat, and every 12 → 10 seconds

@@ -904,7 +904,7 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     synergy: Synergy.FLORA
   },
   [Blessing.AMAZING_GARDENING]: {
-    tier: BlessingTier.PRISMATIC,
+    tier: BlessingTier.GOLD,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "water_tank",
     grantsPokemonImmediately: false,
@@ -1771,7 +1771,7 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     grantsPokemonImmediately: true
   },
   [Blessing.ROOSTING_FLOCK]: {
-    tier: BlessingTier.GOLD,
+    tier: BlessingTier.SILVER,
     availableAtStages: [4],
     icon: "roosting_flock",
     grantsPokemonImmediately: true
@@ -1963,7 +1963,7 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     grantsPokemonImmediately: true
   },
   [Blessing.FROST_BURST]: {
-    tier: BlessingTier.GOLD,
+    tier: BlessingTier.SILVER,
     availableAtStages: [12],
     icon: "frost_burst",
     grantsPokemonImmediately: true
@@ -2083,8 +2083,8 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     grantsPokemonImmediately: true
   },
   [Blessing.SHINTO_SHRINE_MIRROR]: {
-    tier: BlessingTier.GOLD,
-    availableAtStages: BLESSING_SELECTION_STAGES,
+    tier: BlessingTier.SILVER,
+    availableAtStages: [4],
     icon: "shinto_shrine_mirror",
     grantsPokemonImmediately: true
   },
@@ -2197,7 +2197,7 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     grantsPokemonImmediately: true
   },
   [Blessing.SHUTTLE_BUS]: {
-    tier: BlessingTier.GOLD,
+    tier: BlessingTier.SILVER,
     availableAtStages: [12],
     icon: "shuttle_bus",
     grantsPokemonImmediately: true

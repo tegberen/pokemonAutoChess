@@ -973,6 +973,15 @@ export default class Shop {
       pokemonsProposed[3] = Pkm.SANDY_SHOCKS
     }
 
+    // slot 4, clear of the slots above and the Paradox last one
+    if (
+      stageLevel === PortalCarouselStages[1] &&
+      player.blessings?.includes(Blessing.GIMMIGHOULS_TREASURE) &&
+      !pokemonsProposed.includes(Pkm.GIMMIGHOUL)
+    ) {
+      pokemonsProposed[4] = Pkm.GIMMIGHOUL
+    }
+
     /* CONVERGENT_PARADOX promises a Paradox among the Unique and Legendary
        options, so one slot is swapped when the roll produced none */
     const paradoxRoster =

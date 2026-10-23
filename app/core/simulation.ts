@@ -298,7 +298,7 @@ import {
   STAR_GUARD_DEFENSE_PER_STAR,
   STAR_GUARD_SHIELD_PER_STAR,
   STEAM_ENGINE_SPEED_ON_ATTACK,
-  BLIGHTED_GARDEN_POKERUS_MULCH,
+  BLIGHTED_GARDEN_POKERUS_MULCH_CHANCE,
   HUMAN_HORROR_POSSESSION_DURATION,
   HUMAN_HORROR_POSSESSION_PER_HUMAN_TIER,
   HUMAN_HORROR_ABILITIES_BY_TIER,
@@ -2441,8 +2441,12 @@ export default class Simulation extends Schema implements ISimulation {
           )
           ally.effectsSet.add(
             new OnDeathEffect(({ pokemon }) => {
-              if (pokemon.types.has(Synergy.FLORA) && pokemon.status.pokerus) {
-                player.collectMulch(BLIGHTED_GARDEN_POKERUS_MULCH)
+              if (
+                pokemon.types.has(Synergy.FLORA) &&
+                pokemon.status.pokerus &&
+                chance(BLIGHTED_GARDEN_POKERUS_MULCH_CHANCE, pokemon)
+              ) {
+                player.collectMulch(1)
               }
             })
           )
@@ -3721,37 +3725,27 @@ export default class Simulation extends Schema implements ISimulation {
         })
       }
 
-      if (blessings.includes(Blessing.GUARD_FORMATION)) {
-        const shareHighestStatInRow = (
-          row: number,
-          statOf: (ally: PokemonEntity) => number,
-          grant: (ally: PokemonEntity, amount: number) => void
-        ) => {
-          const rowAllies = allies.filter((ally) => ally.positionY === row)
-          if (rowAllies.length === 0) return
-          const leader = rowAllies.reduce((best, ally) =>
-            statOf(ally) > statOf(best) ? ally : best
-          )
-          const shared = Math.round(
-            statOf(leader) * GUARD_FORMATION_SHARE_RATIO
-          )
-          rowAllies
-            .filter(
-              (ally) => Math.abs(ally.positionX - leader.positionX) === 1
-            )
-            .forEach((ally) => grant(ally, shared))
-        }
-        const isRed = teamIndex === Team.RED_TEAM
-        shareHighestStatInRow(
-          isRed ? 3 : 2,
-          (ally) => ally.def,
-          (ally, amount) => ally.addDefense(amount, ally, 0, false)
+      if (blessings.includes(Blessing.GUARD_FORMATION) && allies.length > 0) {
+        const combinedDefenses = (ally: PokemonEntity) => ally.def + ally.speDef
+        const leader = allies.reduce((best, ally) =>
+          combinedDefenses(ally) > combinedDefenses(best) ? ally : best
         )
-        shareHighestStatInRow(
-          isRed ? 4 : 1,
-          (ally) => ally.speDef,
-          (ally, amount) => ally.addSpecialDefense(amount, ally, 0, false)
+        const sharedDefense = Math.round(
+          leader.def * GUARD_FORMATION_SHARE_RATIO
         )
+        const sharedSpecialDefense = Math.round(
+          leader.speDef * GUARD_FORMATION_SHARE_RATIO
+        )
+        allies
+          .filter(
+            (ally) =>
+              ally.positionY === leader.positionY &&
+              Math.abs(ally.positionX - leader.positionX) === 1
+          )
+          .forEach((ally) => {
+            ally.addDefense(sharedDefense, ally, 0, false)
+            ally.addSpecialDefense(sharedSpecialDefense, ally, 0, false)
+          })
       }
 
       if (blessings.includes(Blessing.BRAVE_FORMATION)) {
@@ -4389,7 +4383,7 @@ export default class Simulation extends Schema implements ISimulation {
                       caster.team
                     )
               if (!coord) return
-              this.addPokemon(
+              const arrived = this.addPokemon(
                 reinforcement,
                 coord.x,
                 coord.y,
@@ -4398,6 +4392,7 @@ export default class Simulation extends Schema implements ISimulation {
                 false,
                 owner
               )
+              arrived.addPP(arrived.maxPP - arrived.pp, arrived, 0, false)
             }, 1250)
           )
         })

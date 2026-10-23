@@ -298,9 +298,8 @@ export default class Player extends Schema implements IPlayer {
   berserkerLastShopKey = -1
   // server-only: dig rows already paid out by GEM_RUSH, so they pay once
   gemRushRowsRewarded: number[] = []
-  // ARCHEOLOGY: rows already paid out, and whether the full board reward is spent
+  // ARCHEOLOGY: rows already paid out
   archeologyRowsRewarded: number[] = []
-  archeologyBoardRewarded: boolean = false
   // RAINBOW_DROPLET: the gem is only ever handed out once
   rainbowDropletGranted: boolean = false
   // FOGBOUND_LAKE: whether the BUG 8 bonus to LIGHT is currently applied
@@ -874,6 +873,9 @@ export default class Player extends Schema implements IPlayer {
         ...(this.blessings?.includes(Blessing.RAINBOW_HOUR) ? [Pkm.EEVEE] : []),
         ...(this.blessings?.includes(Blessing.BEAUTY_CONTEST)
           ? [Pkm.FEEBAS]
+          : []),
+        ...(this.blessings?.includes(Blessing.GYARODOS_TRES_QUATRO)
+          ? [Pkm.MAGIKARP]
           : []),
         ...(this.blessings?.includes(Blessing.COLONY) ? [Pkm.SCATTERBUG] : []),
         ...(this.blessings?.includes(Blessing.THUNDER_AND_LIGHTNING)

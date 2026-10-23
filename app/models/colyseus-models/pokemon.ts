@@ -14376,7 +14376,7 @@ export class Illumise extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.BUG, Synergy.LIGHT, Synergy.FLYING])
   rarity = Rarity.UNIQUE
   stars = 3
-  hp = 130
+  hp = 120
   atk = 12
   speed = 52
   def = 4
@@ -14391,7 +14391,7 @@ export class Volbeat extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.BUG, Synergy.LIGHT, Synergy.FLYING])
   rarity = Rarity.UNIQUE
   stars = 3
-  hp = 130
+  hp = 120
   atk = 12
   speed = 52
   def = 4

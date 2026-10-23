@@ -4804,7 +4804,7 @@
 		},
 		"GIMMIGHOULS_TREASURE": {
 			"name": "Gimmighoul's Treasure",
-			"description": "Gain an AMULET_COIN and 2 GIMMIGHOUL_COIN."
+			"description": "Gain an AMULET_COIN and 2 GIMMIGHOUL_COIN. Your Unique selection is guaranteed to offer a Gimmighoul."
 		},
 		"INSTANT_HYPER_ROLL": {
 			"name": "Instant Hyper Roll",
@@ -5192,11 +5192,11 @@
 		},
 		"CRITICAL_RUSH_I": {
 			"name": "Critical Rush I",
-			"description": "The first time a Pokémon lands a critical hit, it gains 20 SPEED for 10 seconds."
+			"description": "The first time a Pokémon lands a critical hit, it gains 15 SPEED for 10 seconds."
 		},
 		"CRITICAL_RUSH_II": {
 			"name": "Critical Rush II",
-			"description": "The first time a Pokémon lands a critical hit, it gains 40 SPEED for 15 seconds. Each further critical hit during that time grants 5 SPEED for the rest of combat."
+			"description": "The first time a Pokémon lands a critical hit, it gains 30 SPEED for 15 seconds. Each further critical hit during that time grants 5 SPEED for the rest of combat."
 		},
 		"CRITICAL_PATH_I": {
 			"name": "Critical Path I",
@@ -5236,7 +5236,7 @@
 		},
 		"GUARD_FORMATION": {
 			"name": "Guard Formation",
-			"description": "At the start of combat, the ally with the highest DEF in the front row grants allies ADJACENT_IN_THE_SAME_ROW 50% of its DEF. The ally with the highest SPE_DEF in the middle row does the same with its SPE_DEF."
+			"description": "At the start of combat, the ally with the highest combined DEF and SPE_DEF grants allies ADJACENT_IN_THE_SAME_ROW 50% of its DEF and SPE_DEF."
 		},
 		"BRAVE_FORMATION": {
 			"name": "Brave Formation",
@@ -5320,7 +5320,7 @@
 		},
 		"BLIGHTED_GARDEN": {
 			"name": "Blighted Garden",
-			"description": "Gain an INCENSE and a POKERUS_VIAL. When FLORA is active, and a POISONNED enemy is KO'd, collect RICH_MULCH based on the enemy's STAR level. When an allied FLORA Pokémon with POKERUS is KO'd, collect 1 additional RICH_MULCH."
+			"description": "Gain an INCENSE and a POKERUS_VIAL. When FLORA is active, and a POISONNED enemy is KO'd, collect RICH_MULCH based on the enemy's STAR level. When an allied FLORA Pokémon with POKERUS is KO'd, [40,LK]% chance to collect 1 additional RICH_MULCH."
 		},
 		"MONSTROUS_GLUTTONY": {
 			"name": "Monstrous Gluttony",
@@ -5364,7 +5364,7 @@
 		},
 		"NORMAL_FAIRY_GYM_TRAINER": {
 			"name": "NORMAL FAIRY Gym Trainer",
-			"description": "You cannot move on the stage 10 carousel, but your Unique Pokémon selection is guaranteed to include a Tandemaus. Gain an Igglybuff and a Togepi. Your Togepi is locked and sells for 0 GOLD until stage 9."
+			"description": "Gain a LAPRAS_PASSPORT. You cannot move on the stage 10 carousel, but your Unique Pokémon selection is guaranteed to include a Tandemaus. Gain an Igglybuff and a Togepi. Your Togepi is locked and sells for 0 GOLD until stage 9."
 		},
 		"FLYING_AQUATIC_GYM_TRAINER": {
 			"name": "FLYING AQUATIC Gym Trainer",
@@ -5472,7 +5472,7 @@
 		},
 		"DEEP_INVESTMENTS": {
 			"name": "Deep Investments",
-			"description": "Lose all your GOLD. At the start of stage 16, regain all the lost GOLD plus 30 more."
+			"description": "Lose all your GOLD. At the start of stage 16, regain all the lost GOLD plus 35 more."
 		},
 		"CINCCINOS_GIFTS_III": {
 			"name": "Cinccino's Gifts III",
@@ -5496,7 +5496,7 @@
 		},
 		"GYARODOS_TRES_QUATRO": {
 			"name": "Gyarodos, Tres, Quatro",
-			"description": "When WATER is active, you are guaranteed to fish a Magikarp, regardless of which rod you have."
+			"description": "When WATER is active, you are guaranteed to fish a Magikarp, regardless of which rod you have. Each Magikarp and Gyarados on the board contributes its synergies to your total."
 		},
 		"FORECAST": {
 			"name": "Forecast",
@@ -5620,7 +5620,7 @@
 		},
 		"AMAZING_GARDENING": {
 			"name": "Amazing Gardening",
-			"description": "Gain an AMAZE_MULCH, plus another for each fully evolved flower. Gain a Gossifleur."
+			"description": "Gain an AMAZE_MULCH for each fully evolved flower. Gain a Gossifleur."
 		},
 		"FLYTRAP": {
 			"name": "Flytrap",
@@ -5644,7 +5644,7 @@
 		},
 		"ECHO_CHAMBER": {
 			"name": "Echo Chamber",
-			"description": "When a SOUND Pokémon casts, your STRONGEST SOUND Pokémon gains 2 PP. When your STRONGEST SOUND Pokémon casts, all allies gain 4 PP. Gain an Igglybuff."
+			"description": "When a SOUND Pokémon casts, your STRONGEST SOUND Pokémon gains 2 PP. When your STRONGEST SOUND Pokémon casts, all allies gain 5 PP. Gain an Igglybuff."
 		},
 		"LANGUAGE_BARRIER": {
 			"name": "Language Barrier",
@@ -5656,7 +5656,7 @@
 		},
 		"ZAP": {
 			"name": "Zap!",
-			"description": "ELECTRIC triple attacks chain to a random ADJACENT enemy, dealing 40% of the initial damage and applying ON_HIT effects. Gain a Grubbin."
+			"description": "ELECTRIC triple attacks chain to a random ADJACENT enemy, dealing 50% of the initial damage and applying ON_HIT effects. Gain a Grubbin."
 		},
 		"SEEING_TRIPLE": {
 			"name": "Seeing Triple",
@@ -5776,7 +5776,7 @@
 		},
 		"ARCHEOLOGY": {
 			"name": "Archeological Site",
-			"description": "FOSSIL Pokémon dig every round even without GROUND active. Fully digging a hole unearths a random FOSSIL Pokémon. Fully digging a row unearths a FOSSIL unique, and the whole board a FOSSIL legendary. Gain a Piloswine."
+			"description": "FOSSIL Pokémon dig every round even without GROUND active. Fully digging a hole unearths a random FOSSIL Pokémon. Fully digging a row unearths a FOSSIL unique. Gain a Piloswine."
 		},
 		"LIMIT_BREAKER": {
 			"name": "Limit Breaker",
@@ -5864,23 +5864,23 @@
 		},
 		"HEART_SHIELD_I": {
 			"name": "Heart Shield I",
-			"description": "At the start of combat, each of your Pokémon gains 5 HP for every other ally sharing a synergy with it."
+			"description": "At the start of combat, each of your Pokémon gains 4 HP for every other ally sharing a synergy with it."
 		},
 		"HEART_SHIELD_II": {
 			"name": "Heart Shield II",
-			"description": "At the start of combat, each of your Pokémon gains 10 HP for every other ally sharing a synergy with it."
+			"description": "At the start of combat, each of your Pokémon gains 8 HP for every other ally sharing a synergy with it."
 		},
 		"LAYERED_ARMOR": {
 			"name": "Layered Armor",
-			"description": "Gain 4 Rerolls. At the start of combat, your fully itemized Pokémon gain 2 SHIELD for each shop roll you have done this game, up to 100 SHIELD."
+			"description": "At the start of combat, your fully itemized Pokémon gain 2 SHIELD for each shop roll you have done this game, up to 100 SHIELD."
 		},
 		"MORPH_BALL": {
 			"name": "Morph Ball",
-			"description": "Gain 4 Rerolls. At the start of combat, your fully itemized Pokémon gain 1 SPEED for each shop roll you have done this game, up to 50 SPEED."
+			"description": "At the start of combat, your fully itemized Pokémon gain 1 SPEED for each shop roll you have done this game, up to 50 SPEED."
 		},
 		"ORB_WAND": {
 			"name": "Orb Wand",
-			"description": "Gain 4 Rerolls. At the start of combat, your fully itemized Pokémon gain 2 AP for each shop roll you have done this game, up to 100 AP."
+			"description": "At the start of combat, your fully itemized Pokémon gain 2 AP for each shop roll you have done this game, up to 100 AP."
 		},
 		"LIFE_PRICE": {
 			"name": "Life Price",
@@ -5972,7 +5972,7 @@
 		},
 		"FAST_DELIVERY": {
 			"name": "Fast Delivery",
-			"description": "FLYING Pokémon always deliver the LETTER in 1 turn. At the start of combat, your FLYING Pokémon gain 2 ATK and 5 LUCK for each Seed you have collected. Gain a Quaxly."
+			"description": "FLYING Pokémon always deliver the LETTER in 1 turn. At the start of combat, your FLYING Pokémon gain 1 ATK and 5 LUCK for each Seed you have collected. Gain a Quaxly."
 		},
 		"MOLECULAR_CORROSION": {
 			"name": "Molecular Corrosion",
@@ -6152,7 +6152,7 @@
 		},
 		"SNIFFER_DOG": {
 			"name": "Sniffer Dog",
-			"description": "While Lillipup is fielded and GROUND is active, benched GROUND allies dig holes. When the STRONGEST Lillipup casts its Ability, a random Pokémon on a fully dug bench hole enters battle through a fully dug board hole. Gain a strong Lillipup."
+			"description": "While Lillipup is fielded and GROUND is active, benched GROUND allies dig holes. When the STRONGEST Lillipup casts its Ability, a random Pokémon on a fully dug bench hole enters battle with its items and full PP through a fully dug board hole. Gain a strong Lillipup."
 		},
 		"JESTER": {
 			"name": "Jester",
@@ -6180,7 +6180,7 @@
 		},
 		"ROLLOUT_RALLY": {
 			"name": "Rollout Rally",
-			"description": "Your STRONGEST Venipede's ability bounces: after reaching the farthest enemy, it rolls again to the enemy farthest from there, dealing 40% less damage each bounce. +1 bounce per 40 SPEED. Allies it rolls over gain 5 SPEED. Gain a Venipede."
+			"description": "Your STRONGEST Venipede's ability bounces: after reaching the farthest enemy, it rolls again to the enemy farthest from there, dealing 50% less damage each bounce. +1 bounce per 50 SPEED. Allies it rolls over gain 5 SPEED. Gain a Venipede."
 		},
 		"ITS_GOING_DOWN": {
 			"name": "It's Going Down",
@@ -6204,7 +6204,7 @@
 		},
 		"HONEY_EXPLORATION": {
 			"name": "Honey Exploration",
-			"description": "At the start of each fight, Teddiursa on your bench go exploring for 3/2/1 stages at 1/2/3 STAR. They return with HONEY and strong friends they met along the way, which also have WILD synergy. Eating HONEY also permanently grants 5 DEF and SPE_DEF. Gain a Teddiursa."
+			"description": "At the start of each fight, Teddiursa on your bench go exploring for 3/2/1 stages at 1/2/3 STAR. They return with HONEY and strong friends they met along the way, which also have WILD synergy. Gain a Teddiursa."
 		},
 		"JUNGLE_CACOPHONY": {
 			"name": "Jungle Cacophony",
@@ -6392,7 +6392,7 @@
 		},
 		"PRISMATIC_QUEST": {
 			"name": "Prismatic Quest",
-			"description": "Gain 10 GOLD and unlock the Quest Panel."
+			"description": "Unlock the Quest Panel."
 		},
 		"QUEST_PROSPER": {
 			"name": "Mission: Prosper",
@@ -6408,7 +6408,7 @@
 		},
 		"STARTER_CHOICE": {
 			"name": "Starter Choice",
-			"description": "Choose between 3 common Pokémon that evolve to 3 STAR. Gain a copy now and at the start of the next 8 rounds. Gain a BRONZE_DOJO_TICKET."
+			"description": "Choose between 3 common Pokémon that evolve to 3 STAR. Gain a copy now and at the start of the next 8 rounds."
 		},
 		"SINGULARITY_I": {
 			"name": "Singularity I",
@@ -6460,7 +6460,7 @@
 		},
 		"AZURE_FLUTE": {
 			"name": "Azure Flute",
-			"description": "You cannot move on the stage 20 carousel, but your Legendary pick options are guaranteed to include Arceus."
+			"description": "Gain a LAPRAS_PASSPORT. You cannot move on the stage 20 carousel, but your Legendary pick options are guaranteed to include Arceus."
 		},
 		"ADDITIONAL_RETHINK_II": {
 			"name": "Additional Rethink II",
@@ -6500,7 +6500,7 @@
 		},
 		"FROST_BURST": {
 			"name": "Frost Burst",
-			"description": "Move to a random Snover region if not in one. When your STRONGEST Snover's ability KO's an enemy, 50% of the damage is dealt to ADJACENT enemies, which can also execute at half the chance. This effect cannot chain. Gain a Snover."
+			"description": "Move to a random Snover region if not in one. When your STRONGEST Snover's ability KO's an enemy, 30% of the damage is dealt to ADJACENT enemies, which can also execute at half the chance. This effect cannot chain. Gain a Snover."
 		},
 		"THIRD_EYE": {
 			"name": "Third Eye",
@@ -6596,7 +6596,7 @@
 		},
 		"CRYSTAL_GUARDIAN": {
 			"name": "Crystal Guardian",
-			"description": "Your STRONGEST Onix can crystallise again with other weather rocks: only its first crystal grants an awakening effect, each further one adds its synergy. It permanently gains 20 max HP for every crystallisation it completes. The first time you get a Steelix, gain 3 random weather rocks. Gain an Onix."
+			"description": "Your STRONGEST Onix can crystallise again with other weather rocks: only its first crystal grants an awakening effect, each further one adds its synergy. It permanently gains 40 max HP for every crystallisation it completes. The first time you get a Steelix, gain 3 random weather rocks. Gain an Onix."
 		},
 		"GOOEY_GLOBULES": {
 			"name": "Gooey Globules",
@@ -6768,7 +6768,7 @@
 		},
 		"POKEMONOMICON_BLESSING": {
 			"name": "Scorching Tome",
-			"description": "Gain a POKEMONOMICON. The holder also applies WOUND for 3 seconds, and enemies affected by BURN or WOUND take 30% increased damage from your attacks and abilities."
+			"description": "Gain a POKEMONOMICON. The holder also applies WOUND for 3 seconds, and enemies affected by BURN or WOUND take 20% increased damage from your attacks and abilities."
 		},
 		"DESTINY_KNOT_BLESSING": {
 			"name": "Red Thread",
@@ -6800,7 +6800,7 @@
 		},
 		"GRIP_CLAW_BLESSING": {
 			"name": "Seizing Claw",
-			"description": "Gain a GRIP_CLAW. Attacks from a GRIP_CLAW holder also grant +10% CRIT_POWER (stackable), stolen from the target while it has any left."
+			"description": "Gain a GRIP_CLAW. Attacks from a GRIP_CLAW holder also grant +5% CRIT_POWER (stackable), stolen from the target while it has any left."
 		},
 		"CHOICE_SPECS_BLESSING": {
 			"name": "Shared Vision",

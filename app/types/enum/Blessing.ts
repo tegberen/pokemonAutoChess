@@ -589,11 +589,11 @@ export const ALL_FOR_ONE_MAX_HP_RATIO = 1
 export const RESURGENCE_SPEED = 25
 export const RESURGENCE_LEGENDARY_SPEED = 35
 export const ECHO_CHAMBER_PP_TO_LEADER = 2
-export const ECHO_CHAMBER_PP_TO_ALLIES = 4
+export const ECHO_CHAMBER_PP_TO_ALLIES = 5
 export const LANGUAGE_BARRIER_SHIELD = 30
 export const LANGUAGE_BARRIER_UNOWNS_GRANTED = 2
 export const MOVE_TUTOR_MAX_PP = 70
-export const ZAP_CHAIN_DAMAGE_RATIO = 0.4
+export const ZAP_CHAIN_DAMAGE_RATIO = 0.5
 // on top of the clone the BUG synergy already makes, for three copies in total
 export const BUG_CLONE_TRIPLE = 1
 export const DRAGON_KING_SHIELD_PER_STAR = 10
@@ -784,7 +784,7 @@ export const FERTILE_SOIL_ABSORB_ROUNDS = 5
 export const DEEP_WOUNDS_ARMOR_BREAK_DURATION = 5000
 export const DEEP_WOUNDS_DEFENSE_LOSS = 4
 export const DEEP_WOUNDS_DEFENSE_LOSS_CHANCE = 0.3
-export const FAST_DELIVERY_ATTACK_PER_SEED = 2
+export const FAST_DELIVERY_ATTACK_PER_SEED = 1
 export const FAST_DELIVERY_LUCK_PER_SEED = 5
 export const FAST_DELIVERY_RETURN_DELAY = 1
 export const BERRY_GROWTH_PERMANENT_HP = 20
@@ -824,7 +824,7 @@ export const GOOEY_GLOBULES_THROW_CHANCE = 0.5
 export const GOOEY_GLOBULES_SPEED_LOSS = 20
 export const GOOEY_GLOBULES_ALLY_HEAL = 50
 export const CRYSTAL_GUARDIAN_ROCKS_GRANTED = 3
-export const CRYSTAL_GUARDIAN_MAX_HP_PER_CRYSTAL = 20
+export const CRYSTAL_GUARDIAN_MAX_HP_PER_CRYSTAL = 40
 export const FLEUR_DE_LURE_PP_THRESHOLD = 0.8
 export const FLEUR_DE_LURE_TARGETS = 3
 export const FLEUR_DE_LURE_CHARM_DURATION = 2000
@@ -900,7 +900,6 @@ export const MULTISHOT_SHOT_INTERVAL = 150
 export const DECELERATE_SPEED_CAP = 30
 export const JUNGLE_CACOPHONY_PP_BURN_BY_STAR = [2, 4, 8] as const
 export const HONEY_EXPLORATION_STAGES_BY_STAR = [3, 2, 1] as const
-export const HONEY_EXPLORATION_HONEY_DEFENSES = 5
 // the friend's possible rarities by the stage the explorer returns at, latest first
 export const HONEY_EXPLORATION_FRIEND_RARITIES: {
   fromStage: number
@@ -925,9 +924,9 @@ export const ITS_GOING_DOWN_RANGE = 2
 export const ITS_GOING_DOWN_DAMAGE_PER_TILE_THROWN = 0.15
 export const ITS_GOING_DOWN_PILLAR_HP_PER_THROW = 50
 export const MOUNTAIN_EGG_FREE_ROLLS = 10
-export const ROLLOUT_RALLY_SPEED_PER_BOUNCE = 40
+export const ROLLOUT_RALLY_SPEED_PER_BOUNCE = 50
 export const ROLLOUT_RALLY_BOUNCE_DELAY = 400
-export const ROLLOUT_RALLY_BOUNCE_DAMAGE_RATIO = 0.6
+export const ROLLOUT_RALLY_BOUNCE_DAMAGE_RATIO = 0.5
 export const ROLLOUT_RALLY_ALLY_SPEED = 5
 
 export const BLESSINGS_WITH_PICK_SONG = [
@@ -1057,7 +1056,7 @@ export const ICEBREAKER_SPEED_ON_KO = 30
 export const RAMPAGE_DURATION_EXTENSION = 2000
 export const RAMPAGE_CRIT_POWER_ON_KO = 20
 
-export const FROST_BURST_SPLASH_RATIO = 0.5
+export const FROST_BURST_SPLASH_RATIO = 0.3
 export const FROST_BURST_EXECUTE_CHANCE_RATIO = 0.5
 export const AURORA_BOREALIS_DAMAGE_REDUCTION = 0.1
 export const AURORA_BOREALIS_DAMAGE_REDUCTION_IN_SNOW_OR_NIGHT = 0.15
@@ -1105,9 +1104,7 @@ export const SURGE_SPEED_RATIO = 0.25
 export const EMPOWER_DAMAGE_AMP = { I: 0.25, II: 0.3 }
 export const EMPOWER_DELAY = 8000
 export const GEAR_SHIELD_PER_ITEM = { I: 20, II: 30 }
-export const HEART_SHIELD_MAX_HP_PER_ALLY = { I: 5, II: 10 }
-// free rolls count towards rerollCount, so these part-fund their own scaling
-export const ROLL_SCALING_FREE_ROLLS = 4
+export const HEART_SHIELD_MAX_HP_PER_ALLY = { I: 4, II: 8 }
 export const ROLL_SCALING_ITEMS_REQUIRED = 3
 export const LAYERED_ARMOR_SHIELD_PER_ROLL = 2
 export const LAYERED_ARMOR_SHIELD_MAX = 100
@@ -1233,7 +1230,7 @@ export const PULSE_SHIELD_ALLY_SPEED = { I: 5, II: 10 }
 export const MINIMALIST_PP_PER_EMPTY_SLOT = { I: 10, II: 20 } // in % of max PP
 export const MINIMALIST_NO_ITEM_AP = { I: 30, II: 40 }
 
-export const CRITICAL_RUSH_SPEED = { I: 20, II: 40 }
+export const CRITICAL_RUSH_SPEED = { I: 15, II: 30 }
 export const CRITICAL_RUSH_DURATION = { I: 10000, II: 15000 }
 export const CRITICAL_RUSH_II_STACK_SPEED = 5
 // matches REAPER_CLOTH, for abilities that already critically strike
@@ -1742,12 +1739,12 @@ export const CLEAR_AMULET_BLESSED_RADIUS = 2
 export const PUNCHING_GLOVE_ATTACKS_PER_FOCUS_PUNCH = 10
 export const RAZOR_CLAW_ATTACK_ON_CRIT = 2
 export const POKEMONOMICON_WOUND_DURATION = 3000
-export const POKEMONOMICON_DAMAGE_BONUS = 1.3
+export const POKEMONOMICON_DAMAGE_BONUS = 1.2
 export const UPGRADE_BLESSED_STACKS_REQUIRED = 10
 export const UPGRADE_BLESSED_SPEED_RATIO = 0.2
 export const WONDER_BOX_BLESSED_ITEMS = 3
 export const GRIP_CLAW_ADDITIONAL_ATTACK_CHANCE = 0.2
-export const GRIP_CLAW_CRIT_POWER = 10
+export const GRIP_CLAW_CRIT_POWER = 5
 // a target down to this has no crit bonus left to give
 export const GRIP_CLAW_MIN_TARGET_CRIT_POWER = 1
 export const COVERT_CLOAK_VANISH_DURATION = 1000
@@ -1766,7 +1763,7 @@ export const SYMBIOTIC_SYMPHONY_GRASS_MAX_HP_PER_CRY = 10
 export const SYMBIOTIC_SYMPHONY_SOUND_PP_PER_HEAL = 4
 
 
-export const BLIGHTED_GARDEN_POKERUS_MULCH = 1
+export const BLIGHTED_GARDEN_POKERUS_MULCH_CHANCE = 0.4
 
 export const FURY_UNLEASHED_RAGE_DURATION = 2000
 export const FURY_UNLEASHED_RAGE_PER_WILD_TIER = 1000

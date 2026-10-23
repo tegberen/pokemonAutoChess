@@ -1,5 +1,4 @@
 import {
-  BOARD_SIDE_HEIGHT,
   BOARD_WIDTH,
   FAIRY_WANDS_BY_SYNERGY_LEVEL,
   getHighestReachableSynergyTier,
@@ -106,7 +105,6 @@ import {
   RANK_UP_EXPERIENCE,
   RANK_UP_LAST_STAGE,
   ROCKY_BEGINNINGS_POKEMONS,
-  ROLL_SCALING_FREE_ROLLS,
   SELECTIVE_GENETICS_BABIES_GRANTED,
   SELECTIVE_GENETICS_GOLDEN_EGG_CHANCE,
   SELECTIVE_GENETICS_MAX_COST,
@@ -179,7 +177,6 @@ import {
   Unowns
 } from "../types/enum/Pokemon"
 import {
-  PRISMATIC_QUEST_GOLD,
   PrismaticQuest,
   PrismaticQuestDefinitions,
   PrismaticQuestsInOrder,
@@ -252,7 +249,7 @@ const GIMMIGHOULS_TREASURE_COINS = 2
 const GIMMIGHOUL_COIN_GOLD_ON_ACQUIRE = 5
 const LEGENDARY_GAMBIT_STAGE = 20
 const DEEP_INVESTMENTS_PAYOUT_STAGE = 16
-const DEEP_INVESTMENTS_PROFIT = 30
+const DEEP_INVESTMENTS_PROFIT = 35
 const POTION_LIFE_HEALED = 10
 const POTION_GOLD_GAINED = 5
 const TRANSFORM_STAGE = 20
@@ -1340,8 +1337,8 @@ function pickArcheologyFossil(rarity: Rarity, stars?: number): Pkm | null {
   return candidates.length > 0 ? pickRandomIn(candidates) : null
 }
 
-/* digging out a hole unearths a fossil, a whole row a fossil unique, and the
-   whole board a fossil legendary. Each row and the board only ever pay once */
+/* digging out a hole unearths a fossil, a whole row a fossil unique.
+   Each row only ever pays once */
 export function grantArcheologyRewards(player: Player, index: number) {
   if (player.blessings?.includes(Blessing.ARCHEOLOGY) !== true) return
 
@@ -1360,15 +1357,6 @@ export function grantArcheologyRewards(player: Player, index: number) {
     player.archeologyRowsRewarded.push(row)
     const unique = pickArcheologyFossil(Rarity.UNIQUE)
     if (unique) giftPokemonIfBenchHasRoom(player, unique)
-  }
-
-  const isBoardDug = player.groundHoles
-    .slice(0, BOARD_WIDTH * (BOARD_SIDE_HEIGHT - 1))
-    .every((hole) => hole === 5)
-  if (isBoardDug && player.archeologyBoardRewarded === false) {
-    player.archeologyBoardRewarded = true
-    const legendary = pickArcheologyFossil(Rarity.LEGENDARY)
-    if (legendary) giftPokemonIfBenchHasRoom(player, legendary)
   }
 }
 
@@ -2915,18 +2903,9 @@ export const blessingEffectService: {
   [Blessing.GEAR_SHIELD_II]: () => true,
   [Blessing.HEART_SHIELD_I]: () => true,
   [Blessing.HEART_SHIELD_II]: () => true,
-  [Blessing.LAYERED_ARMOR]: (player) => {
-    player.shopFreeRolls += ROLL_SCALING_FREE_ROLLS
-    return true
-  },
-  [Blessing.MORPH_BALL]: (player) => {
-    player.shopFreeRolls += ROLL_SCALING_FREE_ROLLS
-    return true
-  },
-  [Blessing.ORB_WAND]: (player) => {
-    player.shopFreeRolls += ROLL_SCALING_FREE_ROLLS
-    return true
-  },
+  [Blessing.LAYERED_ARMOR]: () => true,
+  [Blessing.MORPH_BALL]: () => true,
+  [Blessing.ORB_WAND]: () => true,
   [Blessing.SHADY_PRICE]: (player) => {
     player.shopFreeRolls += SHADY_PRICE_FREE_ROLLS
     return true
@@ -3149,10 +3128,7 @@ export const blessingEffectService: {
   [Blessing.QUEST_PROSPER]: (player) =>
     grantMissionOrderQuest(player, Item.MISSION_ORDER_GOLD),
 
-  [Blessing.PRISMATIC_QUEST]: (player) => {
-    player.addMoney(PRISMATIC_QUEST_GOLD, true, null)
-    return true
-  },
+  [Blessing.PRISMATIC_QUEST]: () => true,
 
   [Blessing.KINGDOM]: () => true,
   [Blessing.BASTION]: () => true,
@@ -3278,7 +3254,6 @@ export const blessingEffectService: {
         pokemons: pickNRandomIn(commons, STARTER_CHOICE_OPTIONS)
       })
     )
-    player.items.push(Item.BRONZE_DOJO_TICKET)
     return true
   },
 
@@ -3515,7 +3490,7 @@ export const blessingEffectService: {
     const fullyEvolvedFlowers = getUnlockedFlowerPots(player).filter(
       (pot) => pot.evolution === Pkm.DEFAULT
     ).length
-    for (let i = 0; i < 1 + fullyEvolvedFlowers; i++) {
+    for (let i = 0; i < fullyEvolvedFlowers; i++) {
       player.items.push(Item.AMAZE_MULCH)
     }
     return true
@@ -3524,6 +3499,16 @@ export const blessingEffectService: {
   [Blessing.NOT_THE_BEES]: () => true,
 
   [Blessing.RIVALRY]: () => true,
+
+  [Blessing.COLOUR_CHANGE]: (player) => {
+    player.items.push(Item.LAPRAS_PASSPORT)
+    return true
+  },
+
+  [Blessing.AZURE_FLUTE]: (player) => {
+    player.items.push(Item.LAPRAS_PASSPORT)
+    return true
+  },
 
   [Blessing.SAFARI_ENCOUNTER]: (player, state) => {
     const encounterables = (Object.keys(PkmFamily) as Pkm[]).filter((pkm) => {

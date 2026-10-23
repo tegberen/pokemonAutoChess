@@ -22,8 +22,6 @@ export interface PrismaticQuestDefinition {
   tracksBest?: boolean
 }
 
-export const PRISMATIC_QUEST_GOLD = 10
-
 export const PrismaticQuestDefinitions: {
   [quest in PrismaticQuest]: PrismaticQuestDefinition
 } = {
