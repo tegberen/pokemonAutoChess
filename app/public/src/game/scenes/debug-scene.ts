@@ -568,7 +568,8 @@ export class DebugScene extends Phaser.Scene {
     const showAbilityAnim = () => {
       displayAbility({
         scene: this,
-        pokemonsOnBoard: [this.target!],
+        pokemonsOnBoard: [this.target!, this.pokemonSprite!],
+        casterId: this.pokemonSprite!.id,
         ability: this.pokemonSprite!.pokemon.skill,
         orientation: this.pokemonSprite!.orientation,
         positionX: this.pokemonSprite!.positionX,

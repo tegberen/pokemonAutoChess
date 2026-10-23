@@ -7385,51 +7385,59 @@ const poppingIcon: AbilityAnimationMaker<
     tweenProps: { scale: options?.maxScale ?? 3, ...(options.tweenProps ?? {}) }
   })(args)
 
-function earthQuakeAnim(stars: number) {
-  return ({ scene, positionX, positionY, flip, ap }) => {
-    const [x, y] = transformEntityCoordinates(positionX, positionY, flip)
-    const CELL_SIZE = 96
-    const radius = stars
+const EARTH_QUAKE_MAX_RADIUS = 3
+const EARTH_QUAKE_CELL_DELAY = 20
+const EARTH_QUAKE_FRAME_RATE = 4
 
-    const center = scene.add
-      .sprite(x, y, "abilities", `${Ability.EARTH_QUAKE}/000.png`)
-      ?.setScale(2 * (1 + ap / 600))
-    center.anims.play({ key: Ability.EARTH_QUAKE, frameRate: 4 })
-    scene.abilitiesVfxGroup?.add(center)
-    center.on(Phaser.Animations.Events.ANIMATION_COMPLETE, () => center.destroy())
+const earthQuakeAnim: AbilityAnimation = ({
+  scene,
+  positionX,
+  positionY,
+  flip,
+  ap,
+  casterId,
+  pokemonsOnBoard
+}) => {
+  const [x, y] = transformEntityCoordinates(positionX, positionY, flip)
+  const stars =
+    pokemonsOnBoard.find((sprite) => sprite.id === casterId)?.pokemon.stars ?? 1
+  const radius = Math.min(stars, EARTH_QUAKE_MAX_RADIUS)
 
-    const rings = new Map<number, Array<{dx: number, dy: number}>>()
-    for (let dy = -radius; dy <= radius; dy++) {
-      for (let dx = -radius; dx <= radius; dx++) {
-        if (dx === 0 && dy === 0) continue
-        const dist = Math.sqrt(dx * dx + dy * dy)
-        if (dist < radius + 0.5) {
-          const ring = Math.round(dist)
-          if (!rings.has(ring)) rings.set(ring, [])
-          rings.get(ring)!.push({ dx, dy })
-        }
-      }
-    }
-
-    const cells: {dx: number, dy: number}[] = []
-    Array.from(rings.keys()).sort((a, b) => a - b).forEach(ring => {
-      const shuffled = Phaser.Utils.Array.Shuffle(rings.get(ring)!)
-      cells.push(...shuffled)
+  const spawnCrack = (crackX: number, crackY: number) => {
+    const crack = scene.add
+      .sprite(crackX, crackY, "abilities", `${Ability.EARTH_QUAKE}/000.png`)
+      .setScale(2 * (1 + ap / 600))
+    crack.anims.play({
+      key: Ability.EARTH_QUAKE,
+      frameRate: EARTH_QUAKE_FRAME_RATE
     })
-
-    cells.forEach(({ dx, dy }, i) => {
-      const offsetX = x + dx * CELL_SIZE
-      const offsetY = y + dy * CELL_SIZE
-      scene.time.delayedCall(i * 20, () => {
-        const sprite = scene.add
-          .sprite(offsetX, offsetY, "abilities", `${Ability.EARTH_QUAKE}/000.png`)
-          ?.setScale(2 * (1 + ap / 600))
-        sprite.anims.play({ key: Ability.EARTH_QUAKE, frameRate: 4 })
-        scene.abilitiesVfxGroup?.add(sprite)
-        sprite.on(Phaser.Animations.Events.ANIMATION_COMPLETE, () => sprite.destroy())
-      })
-    })
+    scene.abilitiesVfxGroup?.add(crack)
+    crack.once(Phaser.Animations.Events.ANIMATION_COMPLETE, () =>
+      crack.destroy()
+    )
   }
+
+  spawnCrack(x, y)
+
+  // cracks spread outwards ring by ring, in random order inside a ring
+  const rings = new Map<number, { dx: number; dy: number }[]>()
+  for (let dy = -radius; dy <= radius; dy++) {
+    for (let dx = -radius; dx <= radius; dx++) {
+      const distance = Math.sqrt(dx * dx + dy * dy)
+      if ((dx === 0 && dy === 0) || distance >= radius + 0.5) continue
+      const ring = Math.round(distance)
+      rings.set(ring, [...(rings.get(ring) ?? []), { dx, dy }])
+    }
+  }
+  const cells = [...rings.keys()]
+    .sort((a, b) => a - b)
+    .flatMap((ring) => Phaser.Utils.Array.Shuffle(rings.get(ring)!))
+
+  cells.forEach(({ dx, dy }, index) => {
+    scene.time.delayedCall(index * EARTH_QUAKE_CELL_DELAY, () =>
+      spawnCrack(x + dx * CELL_WIDTH, y + dy * CELL_WIDTH)
+    )
+  })
 }
 
 const FLAMETHROWER_JET_LENGTH = CELL_WIDTH * 8
@@ -8452,9 +8460,10 @@ export const AbilitiesAnimations: {
     scale: 1.5,
     positionOffset: [+5, -15]
   }),
-  [`${Ability.EARTH_QUAKE}_1`]: [earthQuakeAnim(1), shakeCamera({ duration: 800, intensity: 0.004 })],
-  [`${Ability.EARTH_QUAKE}_2`]: [earthQuakeAnim(2), shakeCamera({ duration: 800, intensity: 0.004 })],
-  [`${Ability.EARTH_QUAKE}_3`]: [earthQuakeAnim(3), shakeCamera({ duration: 800, intensity: 0.004 })],
+  [Ability.EARTH_QUAKE]: [
+    earthQuakeAnim,
+    shakeCamera({ duration: 800, intensity: 0.004 })
+  ],
   [Ability.FORESTS_CURSE]: onTarget({
     scale: 2,
     depth: DEPTH.ABILITY_BELOW_POKEMON

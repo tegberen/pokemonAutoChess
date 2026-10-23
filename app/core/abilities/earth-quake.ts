@@ -27,6 +27,9 @@ export class EarthQuakeStrategy extends AbilityStrategy {
           )
         }
       })
-    pokemon.broadcastAbility({ skill: `${Ability.EARTH_QUAKE}_${pokemon.stars}` })
+    pokemon.broadcastAbility({
+      skill: Ability.EARTH_QUAKE,
+      casterId: pokemon.id
+    })
   }
 }
