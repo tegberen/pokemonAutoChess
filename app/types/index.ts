@@ -693,6 +693,7 @@ export interface IPokemonEntity {
   focusPunchCharge: number
   trueDamageMarkTimer: number
   isSpawn: boolean
+  hydratedCellsPPPerSecond: number
   commands: ISimulationCommand[]
   effectsSet: Set<EffectClass>
   inSpotlight: boolean

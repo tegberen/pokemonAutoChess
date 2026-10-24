@@ -138,6 +138,7 @@ export const DishEffects: Record<(typeof Dishes)[number], Effect[]> = {
     })
   ],
   [Item.HERBA_MYSTICA_SALTY]: [runeProtectForNextFight],
+  [Item.HONEY]: [],
   [Item.LARGE_LEEK]: [
     new OnSpawnEffect((entity) => {
       entity.effects.add(EffectEnum.ABILITY_CRIT)
