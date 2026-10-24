@@ -2081,7 +2081,7 @@
 		"FIRE_SPIN": "Deal [75,150,200,400,SP]% of ATK as SPECIAL to the target and ADJACENT enemy Pokémon and BURN them for 3 seconds.",
 		"SEARING_SHOT": "An inferno of scarlet flames torches everything around Victini. Deal [30,40,50,100,SP] SPECIAL to all enemy Pokémon within 2 tiles of the user and BURN them for [3,3,3,6] seconds.",
 		"SPLASH": "The user just flops and splashes around to no effect at all...",
-		"PECK": "Deal [10,30,50,100,SP] SPECIAL to the target.",
+		"PECK": "Call a Spearow ([50,100,SP]% HP, no items).",
 		"COUNTER": "The user lashes out at ADJACENT enemy Pokémon dealing [50,50,50,100,SP]% of its missing HP as SPECIAL.",
 		"COSMIC_POWER_MOON": "Increase the AP of all allied Pokémon other than the user by [25,25,25,50,SP].",
 		"COSMIC_POWER_SUN": "Increase the base ATK of all allied Pokémon other than the user by [25,25,25,50,SP]%.",
@@ -2137,7 +2137,7 @@
 		"HIDDEN_POWER_EM": "Summon 4 random Unown, one at each corner of the battlefield.",
 		"POISON_JAB": "Deal [30,60,120,240,SP] SPECIAL, swap places with the target, and inflict both the target and the caster with POISONNED for 3 seconds.",
 		"SHELL_SMASH": "Deal [25,50,100,200,SP] SPECIAL to ADJACENT enemy Pokémon. Gain 5 ATK, 25 AP and 25 SPEED and lose 5 DEF and 5 SPE_DEF.",
-		"HELPING_HAND": "Grant [30,60,100,200,SP] SHIELD to the 2 nearest allied Pokémon and double the damage of their next ability.",
+		"HELPING_HAND": "Grant [30,60,100,200,SP] SHIELD to the [2,3] nearest allied Pokémon and double the damage of their next ability.",
 		"ASTRAL_BARRAGE": "Rush to a safe spot in the backline while sending [3,5,7,13,SP] small ghosts toward random enemy Pokémon, each dealing 20 SPECIAL.",
 		"WATERFALL": "Gain [50,100,150,300,SP] SHIELD, cure any negative status conditions and clear the tile of all BOARD_EFFECT.",
 		"PYRO_BALL": "Ignites a small stone and launches it as a fiery ball at the farthest enemy Pokémon, dealing [10,20,40,80,SP] SPECIAL and applying BURN for 2 seconds to all enemy Pokémon in its path.",
@@ -5348,7 +5348,7 @@
 		},
 		"HYDRATED_CELLS": {
 			"name": "Hydrated Cells",
-			"description": "Gain 2 WATER_STONE. Your WATER Pokémon gain AP equal to the HP they gain from AMORPHOUS synergy."
+			"description": "Gain 2 WATER_STONE. Your WATER Pokémon gain AP equal to the HP they gain from AMORPHOUS synergy. Your AMORPHOUS Pokémon gain 50% of the PP per second from the active WATER synergy."
 		},
 		"SYMBIOTIC_SYMPHONY": {
 			"name": "Symbiotic Symphony",
@@ -6500,7 +6500,7 @@
 		},
 		"FROST_BURST": {
 			"name": "Frost Burst",
-			"description": "Move to a random Snover region if not in one. When your STRONGEST Snover's ability KO's an enemy, 30% of the damage is dealt to ADJACENT enemies, which can also execute at half the chance. This effect cannot chain. Gain a Snover."
+			"description": "Move to a random Snover region if not in one. When your STRONGEST Snover's ability KO's an enemy, 25% of the damage is dealt to ADJACENT enemies, which can also execute at half the chance. This effect cannot chain. Gain a Snover."
 		},
 		"THIRD_EYE": {
 			"name": "Third Eye",
@@ -6588,7 +6588,7 @@
 		},
 		"LUNARIAN": {
 			"name": "Lunarian",
-			"description": "Move to a random Cleffa region if not in one. Your STRONGEST Cleffa's Metronome casts legendary abilities in a set order: an attack, then a disruption, then a utility, on repeat. Its LUCK no longer affects the ability picked, but gives a [10,LK]% chance to cast it 1 STAR higher. Gain a Clefairy."
+			"description": "Move to a random Cleffa region if not in one. Your STRONGEST Cleffa has its PP set to 80, and its Metronome casts legendary abilities in a set order: an attack, then a disruption, then a utility, on repeat. Its LUCK no longer affects the ability picked, but gives a [10,LK]% chance to cast it 1 STAR higher. Gain a Clefairy."
 		},
 		"FLEUR_DE_LURE": {
 			"name": "Fleur de Lure",

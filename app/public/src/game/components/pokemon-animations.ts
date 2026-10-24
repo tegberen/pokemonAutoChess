@@ -1647,21 +1647,21 @@ export const PokemonAnimations: {
     attack: AnimationType.Shoot,
     ability: AnimationType.RearUp,
     emote: AnimationType.Shoot,
-    attackSprite: AttackSprite.GROUND_MELEE,
+    attackSprite: AttackSprite.FIRE_RANGE,
     hitSprite: HitSprite.GROUND_HIT
   },
   [Pkm.CAMERUPT]: {
     attack: AnimationType.Rotate,
     ability: AnimationType.RearUp,
     emote: AnimationType.Shoot,
-    attackSprite: AttackSprite.GROUND_MELEE,
+    attackSprite: AttackSprite.FIRE_RANGE,
     hitSprite: HitSprite.GROUND_HIT
   },
   [Pkm.MEGA_CAMERUPT]: {
     attack: AnimationType.Attack,
     ability: AnimationType.Attack,
     emote: AnimationType.Shoot,
-    attackSprite: AttackSprite.GROUND_MELEE,
+    attackSprite: AttackSprite.FIRE_RANGE,
   },
   [Pkm.DARKRAI]: {
     attack: AnimationType.Attack,
@@ -7086,14 +7086,14 @@ export const PokemonAnimations: {
     attack: AnimationType.Attack,
     ability: AnimationType.Shoot,
     emote: AnimationType.Pose,
-    attackSprite: AttackSprite.FAIRY_MELEE,
+    attackSprite: AttackSprite.FAIRY_RANGE,
     hitSprite: HitSprite.FAIRY_HIT
   },
   [Pkm.SLURPUFF]: {
     attack: AnimationType.Attack,
     ability: AnimationType.Shoot,
     emote: AnimationType.Shoot,
-    attackSprite: AttackSprite.FAIRY_MELEE,
+    attackSprite: AttackSprite.FAIRY_RANGE,
     hitSprite: HitSprite.FAIRY_HIT
   },
   [Pkm.GULPIN]: {

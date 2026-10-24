@@ -1530,6 +1530,9 @@ export default abstract class PokemonState {
     if (pokemon.effects.has(EffectEnum.PRIMORDIAL_SEA)) {
       pokemon.addPP(12, pokemon, 0, false)
     }
+    if (pokemon.hydratedCellsPPPerSecond > 0) {
+      pokemon.addPP(pokemon.hydratedCellsPPPerSecond, pokemon, 0, false)
+    }
 
     if (pokemon.simulation.weather === Weather.RAIN) {
       const nbDampRocks = pokemon.player

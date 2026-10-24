@@ -8,7 +8,7 @@ export class HelpingHandStrategy extends AbilityStrategy {
   requiresTarget = false
   process(pokemon: PokemonEntity, board: Board, target: null, crit: boolean) {
     super.process(pokemon, board, target, crit)
-    const nbAlliesBuffed = 2
+    const nbAlliesBuffed = [2, 3][pokemon.stars - 1] ?? 3
     const shield = [30, 60, 100, 200][pokemon.stars - 1] ?? 200
     const allies = new Array<{ pkm: PokemonEntity; distance: number }>()
     board.forEach((x, y, cell) => {

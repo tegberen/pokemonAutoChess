@@ -272,6 +272,7 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
   timeTravelLifeHealedThisFight: number = 0
   isSynchronisedSpeedLeaderThisFight: boolean = false
   isEchoChamberLeaderThisFight: boolean = false
+  hydratedCellsPPPerSecond: number = 0
   isDragonKingChampionThisFight: boolean = false
   isMegaSolAuraSource: boolean = false
   // items handed over by a blessing at spawn: part of the effect, not loot to steal

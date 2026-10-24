@@ -168,6 +168,9 @@ import {
   KINGS_GAMBIT_ENTRANCE_DELAY,
   STONE_SADDLE_MAX_PP,
   SHUTTLE_BUS_MAX_PP,
+  LUNARIAN_MAX_PP,
+  HYDRATED_CELLS_WATER_PP_RATIO,
+  WATER_PP_PER_SECOND_BY_TIER,
   POTENTIAL_ENERGY_SHIELD,
   POTENTIAL_ENERGY_SPEED,
   QUIET_STRENGTH_LOW_LIFE_THRESHOLD,
@@ -4891,6 +4894,9 @@ export default class Simulation extends Schema implements ISimulation {
       frostGearChampion.effects.add(EffectEnum.ABILITY_CRIT)
     }
 
+    const lunarianChampion = championOf.get(Blessing.LUNARIAN)
+    if (lunarianChampion) lunarianChampion.maxPP = LUNARIAN_MAX_PP
+
     const shuttleBusChampion = championOf.get(Blessing.SHUTTLE_BUS)
     if (shuttleBusChampion) {
       shuttleBusChampion.maxPP = SHUTTLE_BUS_MAX_PP
@@ -5809,6 +5815,16 @@ export default class Simulation extends Schema implements ISimulation {
           player?.blessings?.includes(Blessing.HYDRATED_CELLS)
         ) {
           pokemon.addAbilityPower(amorphousMaxHp, pokemon, 0, false)
+        }
+        if (
+          player?.blessings?.includes(Blessing.HYDRATED_CELLS) &&
+          !types.has(Synergy.WATER)
+        ) {
+          const waterTier = getSynergyTier(player.synergies, Synergy.WATER)
+          pokemon.hydratedCellsPPPerSecond = Math.round(
+            (WATER_PP_PER_SECOND_BY_TIER[waterTier] ?? 0) *
+              HYDRATED_CELLS_WATER_PP_RATIO
+          )
         }
         break
       }

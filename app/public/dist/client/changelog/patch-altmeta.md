@@ -472,13 +472,24 @@ Every balance change on this server, newest first.
 
 ### 23 October 2026
 
-*Balance changes based on the Not Meta data from Double Up games played with Wishes.*
+*Balance changes based on the Not Meta report.*
 
 **Pokémon**
 - Wimpod line | HP [40,80] → [35,70]
 - Venipede line | ATK [12,24,36] → [10,22,34]
 - Buzzwole | max PP 100 → 125
 - Pheromosa | HP 200 → 250
+- Alolan Vulpix line | max PP 80 → 60
+- Kingler line | max PP 100 → 60
+- Bunnelby line | max PP 100 → 80
+- Tatsugiri line | now DRAGON/GOURMET/WATER
+- Dondozo | HP 250 → 200
+- Dondozo | Tatsugiri bonus ATK 8 → 10, DEF 8 → 10, SPEED 25 → 30
+- Numel line | DEF and SPE_DEF halved, RANGE 1 → 2
+- Swirlix line | HP [80,190] → [60,170], RANGE 1 → 2
+- Spearow line | max PP 100 → 110
+- Slakoth line | max PP 140 → 120
+- Galarian Slowpoke line | max PP 100 → 80
 - Buzzwole and Pheromosa | no longer a Legendary Duo, proposed separately
 - Shedinja | HP 100 → 80
 - Turtwig line | max PP 100 → 80
@@ -504,6 +515,8 @@ Every balance change on this server, newest first.
 - GROUND (4) | ATK at max depth 5 → 6
 
 **Abilities**
+- Peck | reworked: calls a Spearow ([50,100,SP]% HP, no items) instead of dealing [10,30,50,100,SP] SPECIAL
+- Helping Hand | nearest allies affected 2 → [2,3]
 - Dragon Tail | reworked: swaps the target with the farthest enemy, then the user gains [2,4,8,16] DEF and SPE_DEF by the STAR level of the swapped enemy, instead of [2,4,6,10] by its own STAR level. If they cannot be swapped, it still deals [30,60,100,150] SPECIAL to the target
 - Nasty Plot | no longer has a cooldown after casting
 - Smashing Wing | no longer deals TRUE against ARTIFICIAL or STEEL targets
@@ -535,10 +548,12 @@ Every balance change on this server, newest first.
 - Shinto Shrine Mirror | Gold → Silver. Only offered at stage 4
 - Roosting Flock | Gold → Silver
 - Shuttle Bus | Gold → Silver
+- Hydrated Cells | AMORPHOUS Pokémon also gain 50% of the PP per second from the active WATER synergy
+- Lunarian | the hero Cleffa now has its PP set to 80
 - Colour Change, Azure Flute | now also give a LAPRAS_PASSPORT
 - Guard Formation | one leader, the ally with the highest combined DEF and SPE_DEF, shares both with ADJACENT_IN_THE_SAME_ROW allies
 - Deep Investments | bonus GOLD 30 → 35
-- Frost Burst | Gold → Silver. Splash damage 50% → 30%
+- Frost Burst | Gold → Silver. Snover hero splash damage 50% → 25%
 - Gyarodos, Tres, Quatro | each Magikarp and Gyarados on the board now contributes its synergies to your total
 - Gimmighoul's Treasure | your Unique selection is guaranteed to offer a Gimmighoul
 - Shady Price | 32 → 42 Rerolls

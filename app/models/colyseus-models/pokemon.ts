@@ -1314,10 +1314,10 @@ export class Numel extends Pokemon {
   hp = 120
   atk = 10
   speed = 38
-  def = 6
-  speDef = 6
+  def = 3
+  speDef = 3
   maxPP = 120
-  range = 1
+  range = 2
   skill = Ability.ERUPTION
   regional = true
 }
@@ -1332,10 +1332,10 @@ export class Camerupt extends Pokemon {
   hp = 210
   atk = 15
   speed = 38
-  def = 14
-  speDef = 14
+  def = 7
+  speDef = 7
   maxPP = 120
-  range = 1
+  range = 2
   skill = Ability.ERUPTION
   regional = true
   passive = Passive.CAMERUPT
@@ -1348,10 +1348,10 @@ export class MegaCamerupt extends Pokemon {
   hp = 360
   atk = 30
   speed = 38
-  def = 14
-  speDef = 14
+  def = 7
+  speDef = 7
   maxPP = 120
-  range = 1
+  range = 2
   skill = Ability.ERUPTION
   regional = true
 }
@@ -1982,7 +1982,7 @@ export class Slakoth extends Pokemon {
   speed = 57
   def = 10
   speDef = 8
-  maxPP = 140
+  maxPP = 120
   range = 1
   skill = Ability.SLACK_OFF
   regional = true
@@ -1998,7 +1998,7 @@ export class Vigoroth extends Pokemon {
   speed = 57
   def = 10
   speDef = 8
-  maxPP = 140
+  maxPP = 120
   range = 1
   skill = Ability.SLACK_OFF
   passive = Passive.VIGOROTH
@@ -2014,7 +2014,7 @@ export class Slaking extends Pokemon {
   speed = 57
   def = 14
   speDef = 10
-  maxPP = 140
+  maxPP = 120
   range = 1
   skill = Ability.SLACK_OFF
   passive = Passive.SLAKING
@@ -4933,7 +4933,7 @@ export class GalarianSlowpoke extends Pokemon {
   speed = 35
   def = 6
   speDef = 4
-  maxPP = 100
+  maxPP = 80
   range = 1
   skill = Ability.EERIE_SPELL
   regional = true
@@ -4957,7 +4957,7 @@ export class GalarianSlowbro extends Pokemon {
   speed = 35
   def = 10
   speDef = 6
-  maxPP = 100
+  maxPP = 80
   range = 1
   skill = Ability.SHELL_SIDE_ARM
   regional = true
@@ -4980,7 +4980,7 @@ export class GalarianSlowking extends Pokemon {
   speed = 35
   def = 8
   speDef = 6
-  maxPP = 110
+  maxPP = 80
   range = 3
   skill = Ability.EERIE_SPELL
   regional = true
@@ -6068,7 +6068,7 @@ export class Spearow extends Pokemon {
   speed = 57
   def = 2
   speDef = 2
-  maxPP = 100
+  maxPP = 110
   range = 1
   skill = Ability.PECK
 }
@@ -6082,7 +6082,7 @@ export class Fearow extends Pokemon {
   speed = 57
   def = 4
   speDef = 4
-  maxPP = 100
+  maxPP = 110
   range = 1
   skill = Ability.PECK
 }
@@ -11603,7 +11603,7 @@ export class AlolanVulpix extends Pokemon {
   speed = 60
   def = 4
   speDef = 4
-  maxPP = 80
+  maxPP = 60
   range = 2
   skill = Ability.AURORA_VEIL
   regional = true
@@ -11627,7 +11627,7 @@ export class AlolanNinetales extends Pokemon {
   speed = 60
   def = 10
   speDef = 10
-  maxPP = 80
+  maxPP = 60
   range = 2
   skill = Ability.AURORA_VEIL
   regional = true
@@ -18371,7 +18371,7 @@ export class Krabby extends Pokemon {
   speed = 49
   def = 8
   speDef = 2
-  maxPP = 100
+  maxPP = 60
   range = 1
   skill = Ability.VISE_GRIP
   additional = true
@@ -18386,7 +18386,7 @@ export class Kingler extends Pokemon {
   speed = 49
   def = 14
   speDef = 4
-  maxPP = 100
+  maxPP = 60
   range = 1
   skill = Ability.VISE_GRIP
   additional = true
@@ -19078,13 +19078,13 @@ export class Swirlix extends Pokemon {
   rarity = Rarity.RARE
   stars = 1
   evolution = Pkm.SLURPUFF
-  hp = 80
+  hp = 60
   atk = 9
   speed = 48
   def = 4
   speDef = 4
   maxPP = 80
-  range = 1
+  range = 2
   skill = Ability.SWEET_SCENT
   additional = true
 }
@@ -19093,13 +19093,13 @@ export class Slurpuff extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.FAIRY, Synergy.GOURMET])
   rarity = Rarity.RARE
   stars = 2
-  hp = 190
+  hp = 170
   atk = 21
   speed = 48
   def = 8
   speDef = 8
   maxPP = 80
-  range = 1
+  range = 2
   skill = Ability.SWEET_SCENT
   additional = true
 }
@@ -21442,7 +21442,7 @@ export class Bunnelby extends Pokemon {
   speed = 50
   def = 4
   speDef = 4
-  maxPP = 100
+  maxPP = 80
   range = 1
   skill = Ability.EAR_DIG
   additional = true
@@ -21457,7 +21457,7 @@ export class Diggersby extends Pokemon {
   speed = 50
   def = 8
   speDef = 8
-  maxPP = 100
+  maxPP = 80
   range = 1
   skill = Ability.EAR_DIG
   additional = true
@@ -22109,7 +22109,7 @@ export class Dondozo extends Pokemon {
   ])
   rarity = Rarity.UNIQUE
   stars = 3
-  hp = 250
+  hp = 200
   atk = 15
   speed = 30
   def = 20
@@ -22121,7 +22121,11 @@ export class Dondozo extends Pokemon {
 
 export class TatsugiriCurly extends Pokemon {
   canHoldItems = false
-  types = new SetSchema<Synergy>([Synergy.WATER, Synergy.GOURMET])
+  types = new SetSchema<Synergy>([
+    Synergy.DRAGON,
+    Synergy.GOURMET,
+    Synergy.WATER
+  ])
   rarity = Rarity.SPECIAL
   stars = 1
   hp = 80
@@ -22137,7 +22141,11 @@ export class TatsugiriCurly extends Pokemon {
 
 export class TatsugiriDroopy extends Pokemon {
   canHoldItems = false
-  types = new SetSchema<Synergy>([Synergy.WATER, Synergy.GOURMET])
+  types = new SetSchema<Synergy>([
+    Synergy.DRAGON,
+    Synergy.GOURMET,
+    Synergy.WATER
+  ])
   rarity = Rarity.SPECIAL
   stars = 1
   hp = 80
@@ -22153,7 +22161,11 @@ export class TatsugiriDroopy extends Pokemon {
 
 export class TatsugiriStretchy extends Pokemon {
   canHoldItems = false
-  types = new SetSchema<Synergy>([Synergy.WATER, Synergy.GOURMET])
+  types = new SetSchema<Synergy>([
+    Synergy.DRAGON,
+    Synergy.GOURMET,
+    Synergy.WATER
+  ])
   rarity = Rarity.SPECIAL
   stars = 1
   hp = 80
