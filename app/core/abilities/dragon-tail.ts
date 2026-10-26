@@ -36,7 +36,8 @@ export class DragonTailStrategy extends AbilityStrategy {
       targetY: swappedTarget.positionY
     })
     target.moveTo(swappedTarget.positionX, swappedTarget.positionY, board, true)
-    const defenseBuff = [2, 4, 8, 16][swappedTarget.stars - 1] ?? 16
+    const defenseBuff =
+      ([2, 4, 8, 16][pokemon.stars - 1] ?? 16) * swappedTarget.stars
     pokemon.addDefense(defenseBuff, pokemon, 1, crit)
     pokemon.addSpecialDefense(defenseBuff, pokemon, 1, crit)
   }

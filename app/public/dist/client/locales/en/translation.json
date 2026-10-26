@@ -1961,7 +1961,7 @@
 		"SHOCKWAVE": "Deal [30,60,120,240,SP] SPECIAL to all enemies in a 2-range radius, +1 range if user is in an ELECTRIC_FIELD, -20% damage per tile from the user.",
 		"BITE": "Deal [40,80,120,200,SP] SPECIAL to the target and heal the user for 30% of the damage dealt. Cause the target to FLINCH for 5 seconds.",
 		"AQUA_TAIL": "Deal [30,60,100,200,SP] SPECIAL to the target and gain [30,60,100,200,SP] SHIELD.",
-		"DRAGON_TAIL": "Swap the target with the farthest enemy, then gain [2,4,8,16,SP] DEF and SPE_DEF by the STAR level of the swapped enemy. If they cannot be swapped, deal [30,60,100,150,SP] SPECIAL to the target instead.",
+		"DRAGON_TAIL": "Swap the target with the farthest enemy, then gain [2,4,8,16,SP] DEF and SPE_DEF per STAR of the swapped enemy. If they cannot be swapped, deal [30,60,100,150,SP] SPECIAL to the target instead.",
 		"DRAGON_BREATH": "Deal [25,50,100,200,SP] SPECIAL to the target and an enemy directly behind it.",
 		"ICICLE_CRASH": "Deal [20,40,80,160,SP] SPECIAL to the target and enemy Pokémon ADJACENT to it.",
 		"INGRAIN": "Heal allies for [10,20,40,80,SP] HP within RANGE, and make enemies LOCKED for 4s. Each tile of distance weakens the heal by 20% and shortens LOCKED by 1s, down to 1s.",

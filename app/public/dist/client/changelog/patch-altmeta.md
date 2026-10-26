@@ -517,7 +517,7 @@ Every balance change on this server, newest first.
 **Abilities**
 - Peck | reworked: calls a Spearow ([50,100,SP]% HP, no items) instead of dealing [10,30,50,100,SP] SPECIAL
 - Helping Hand | nearest allies affected 2 → [2,3]
-- Dragon Tail | reworked: swaps the target with the farthest enemy, then the user gains [2,4,8,16] DEF and SPE_DEF by the STAR level of the swapped enemy, instead of [2,4,6,10] by its own STAR level. If they cannot be swapped, it still deals [30,60,100,150] SPECIAL to the target
+- Dragon Tail | reworked: swaps the target with the farthest enemy, then the user gains [2,4,8,16] DEF and SPE_DEF per STAR of the swapped enemy. If they cannot be swapped, it still deals [30,60,100,150] SPECIAL to the target
 - Nasty Plot | no longer has a cooldown after casting
 - Smashing Wing | no longer deals TRUE against ARTIFICIAL or STEEL targets
 - Anachronism Repulsor | no longer deals TRUE against FOSSIL or AQUATIC enemies
