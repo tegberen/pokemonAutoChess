@@ -46,7 +46,8 @@ import {
   approveBot,
   deleteBotFromDatabase,
   fetchBot,
-  fetchBotsList
+  fetchBotsList,
+  setBotElo
 } from "./services/bots"
 import {
   buyEmotionForUser,
@@ -1125,6 +1126,37 @@ export const server = defineServer({
       } catch (error) {
         logger.error("Error approving bot", error)
         res.status(500).send("Error approving bot")
+      }
+    })
+
+    app.post("/bots/:id/elo", async (req, res) => {
+      const userRecord = await authUser(req, res)
+      if (!userRecord) return
+      const user = await UserMetadata.findOne({ uid: userRecord.uid })
+      if (
+        !user ||
+        (user.role !== Role.BOT_MANAGER && user.role !== Role.ADMIN)
+      ) {
+        res.status(403).send("Unauthorized")
+        return
+      }
+
+      const elo = Number(req.body.elo)
+      if (!Number.isInteger(elo) || elo < 0 || elo > 5000) {
+        res.status(400).send("Elo must be a whole number between 0 and 5000")
+        return
+      }
+
+      try {
+        const updateResult = await setBotElo(req.params.id, elo, user)
+        if (updateResult.matchedCount === 0) {
+          res.status(404).send("Bot not found")
+          return
+        }
+        res.status(200).send()
+      } catch (error) {
+        logger.error("Error setting bot elo", error)
+        res.status(500).send("Error setting bot elo")
       }
     })
 

@@ -144,3 +144,12 @@ export async function approveBot(
 
   return result
 }
+
+export async function setBotElo(
+  botId: string,
+  elo: number,
+  user: IUserMetadataMongo
+): Promise<mongo.UpdateResult> {
+  logger.info(`${user.displayName} set the elo of bot ${botId} to ${elo}`)
+  return BotV2.updateOne({ id: botId }, { $set: { elo } })
+}

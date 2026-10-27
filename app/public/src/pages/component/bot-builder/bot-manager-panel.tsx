@@ -153,6 +153,24 @@ function BotsList(props: {
     } else alert(res.statusText)
   }
 
+  async function updateBotElo(botId: string, elo: number) {
+    const token = await firebase.auth().currentUser?.getIdToken()
+    const res = await fetch(`/bots/${botId}/elo`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ elo })
+    })
+    if (res.ok) {
+      setBots(
+        (bots) =>
+          bots?.map((bot) => (bot.id === botId ? { ...bot, elo } : bot)) ?? []
+      )
+    } else alert(await res.text())
+  }
+
   function handleSort(column: string) {
     if (sortColumn === column) {
       setSortDirection(sortDirection === "asc" ? "desc" : "asc")
@@ -278,7 +296,8 @@ function BotsList(props: {
                       filteredBots,
                       navigate,
                       onApprove: approveBot,
-                      onDelete: deleteBot
+                      onDelete: deleteBot,
+                      onEloChange: updateBotElo
                     }}
                   />
                 )
@@ -296,6 +315,7 @@ type BotRowData = {
   navigate: (path: string) => void
   onApprove: (botId: string, approved: boolean) => Promise<void>
   onDelete: (bot: IBotLight) => Promise<void>
+  onEloChange: (botId: string, elo: number) => Promise<void>
 }
 
 function BotRow({
@@ -304,7 +324,8 @@ function BotRow({
   filteredBots,
   navigate,
   onApprove,
-  onDelete
+  onDelete,
+  onEloChange
 }: {
   ariaAttributes: object
   index: number
@@ -322,7 +343,28 @@ function BotRow({
       </span>
       <span>{t(`pkm.${b.name}`)}</span>
       <span>{b.author}</span>
-      <span>{b.elo}</span>
+      <span>
+        <input
+          key={`${b.id}-${b.elo}`}
+          type="number"
+          style={{ width: "80px" }}
+          defaultValue={b.elo}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") e.currentTarget.blur()
+          }}
+          onBlur={(e) => {
+            const input = e.currentTarget
+            const elo = Number(input.value)
+            const isValid =
+              input.value !== "" &&
+              Number.isInteger(elo) &&
+              elo >= 0 &&
+              elo <= 5000
+            if (!isValid) input.value = String(b.elo)
+            else if (elo !== b.elo) onEloChange(b.id, elo)
+          }}
+        />
+      </span>
       <span style={{ color: "#999", fontSize: "80%" }}>{b.id}</span>
       <span>
         {b.approved ? (
