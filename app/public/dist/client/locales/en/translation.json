@@ -2602,8 +2602,8 @@
 		"LUNCH_BREAK": "Lunch Break",
 		"BANQUET": "Banquet",
 		"KINDERGARTEN": "Kindergarten",
-		"GESTALT": "Gestalt",
-		"WUNDERKIND": "Wunderkind"
+		"WUNDERKIND": "Wunderkind",
+		"GESTALT": "Gestalt"
 	},
 	"effect_description": {
 		"STAMINA": "5 SHIELD per ally. Get a SILK_SCARF.",
@@ -2748,8 +2748,8 @@
 		"LUNCH_BREAK": "The Chef cook two dishes and feed the two STRONGEST ADJACENT allies after every round.",
 		"BANQUET": "Gain a second CHEF_HAT.",
 		"KINDERGARTEN": "Each egg you get brings your eggs and Hatch Pokémon one round closer to hatching and evolving.",
-		"GESTALT": "For each unit of this synergy on board, gain a [8,LK]% chance to cast the ability one STAR higher.",
-		"WUNDERKIND": "At the start of combat, benched PRODIGY Pokémon join the fight."
+		"WUNDERKIND": "For each unit of this synergy on board, gain a [8,LK]% chance to cast the ability one STAR higher.",
+		"GESTALT": "At the start of combat, benched PRODIGY Pokémon join the fight."
 	},
 	"armory": {
 		"POTION": "Potion",
@@ -4047,7 +4047,7 @@
 		"AMORPHOUS": "AMORPHOUS Pokémon are extremely flexible and lack their own shape. Your team gains HP and SPEED by activating a wide variety of synergies.",
 		"GOURMET": "GOURMET Pokémon can be equipped with a CHEF_HAT. Chefs will cook up their Signature Dish between fights and feed ADJACENT allies, giving them various buffs and effects.",
 		"PRODIGY": "Unlocked by the Hatchery Wish, shared by Exeggcute and Hatch Pokémon.",
-		"PRODIGY_GESTALT_CHANCE": "Current chance: {{chance}}%"
+		"PRODIGY_WUNDERKIND_CHANCE": "Current chance: {{chance}}%"
 	},
 	"title": {
 		"no_title": "No Title",
@@ -6537,7 +6537,7 @@
 		},
 		"HATCHERY": {
 			"name": "Hatchery",
-			"description": "Exeggcute and Hatch Pokémon gain the PRODIGY synergy. Enemies KO'd inside your STRONGEST Exeggcute's Leaf Storm have a [25,LK]% chance to give you an egg that hatches next round, up to once per fight. Gain an Exeggcute."
+			"description": "Exeggcute and Hatch Pokémon gain the PRODIGY synergy. Enemies KO'd inside your STRONGEST Exeggcute's Leaf Storm have a [25,LK]% chance to give you an egg that hatches next round. Gain an Exeggcute."
 		},
 		"PURRFECT_PLAN": {
 			"name": "Purrfect Plan",

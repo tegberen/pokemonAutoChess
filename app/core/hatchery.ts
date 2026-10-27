@@ -5,9 +5,6 @@ import { giveRandomEgg } from "./eggs"
 import { getHatchTime } from "./evolution-logic/hatch-time"
 import type { PokemonEntity } from "./pokemon-entity"
 
-// entities live for one fight, so marking the caster caps it at one egg a fight
-const castersThatGaveAnEgg = new WeakSet<PokemonEntity>()
-
 export function grantHatcheryEggOnLeafStormKO(fallen: PokemonEntity) {
   // the release marks a storm finished before its strike lands, so the
   // struck targets are matched by name rather than by radius
@@ -26,10 +23,8 @@ export function grantHatcheryEggOnLeafStormKO(fallen: PokemonEntity) {
   )
   const owner = storm?.caster.player
   if (!storm || !owner || storm.caster.isGhostOpponent) return
-  if (castersThatGaveAnEgg.has(storm.caster)) return
   if (!chance(HATCHERY_EGG_CHANCE_PER_KO, storm.caster)) return
   const egg = giveRandomEgg(owner, false, fallen.simulation.room.state)
   if (!egg) return
-  castersThatGaveAnEgg.add(storm.caster)
   egg.stacks = getHatchTime(egg, owner) - 1
 }

@@ -738,7 +738,7 @@ export default class Simulation extends Schema implements ISimulation {
       [this.redPlayer, Team.RED_TEAM, this.redEffects]
     ]
     sides.forEach(([player, team, effects]) => {
-      if (!player || !effects.has(EffectEnum.WUNDERKIND)) return
+      if (!player || !effects.has(EffectEnum.GESTALT)) return
       // a ghost's bench belongs to a player fighting their own battle
       const isOwnBench = !(team === Team.RED_TEAM && this.isGhostBattle)
       const backRow = team === Team.BLUE_TEAM ? 0 : BOARD_HEIGHT - 1

@@ -181,8 +181,8 @@ export const SynergyTiers = {
   ],
   [Synergy.PRODIGY]: [
     EffectEnum.KINDERGARTEN,
-    EffectEnum.GESTALT,
-    EffectEnum.WUNDERKIND
+    EffectEnum.WUNDERKIND,
+    EffectEnum.GESTALT
   ]
 } satisfies { [key in Synergy]: readonly EffectEnum[] }
 

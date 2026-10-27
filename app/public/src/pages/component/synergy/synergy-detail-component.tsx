@@ -273,7 +273,7 @@ export default function SynergyDetailComponent(props: {
             (prodigyTier >= prodigyThresholds[2] || !isOnBench(pokemon))
         ).length
       : 0
-  const gestaltChance = roundToNDigits(
+  const wunderkindChance = roundToNDigits(
     prodigiesInCombat * PRODIGY_HIGHER_STAR_CAST_CHANCE_PER_UNIT * 100,
     1
   )
@@ -328,10 +328,10 @@ export default function SynergyDetailComponent(props: {
               ({SynergyTiersThresholds[props.type][i]}) {t(`effect.${tier}`)}
             </h4>
             <SynergyTierDescription tier={tier} />
-            {tier === EffectEnum.GESTALT && prodigiesInCombat > 0 && (
+            {tier === EffectEnum.WUNDERKIND && prodigiesInCombat > 0 && (
               <p style={{ margin: 0 }}>
-                {t("synergy_description.PRODIGY_GESTALT_CHANCE", {
-                  chance: gestaltChance
+                {t("synergy_description.PRODIGY_WUNDERKIND_CHANCE", {
+                  chance: wunderkindChance
                 })}
               </p>
             )}
