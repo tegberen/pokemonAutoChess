@@ -2223,6 +2223,9 @@ export default class GameRoom extends Room<{ state: GameState }> {
       }
       owned.blessings.push(blessing)
       player.blessings.push(blessing)
+      // the effect ran before the push, so a Wish granting a synergy to its
+      // gift would only show it after the next board change
+      player.updateSynergies()
       grantGambleReward(player, this.state, this, blessing)
       if (blessing === Blessing.GOLDEN_FLIP) this.tossGoldenFlip(player)
       const moneyGained = player.money - moneyBeforeBlessing

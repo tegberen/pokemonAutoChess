@@ -31,7 +31,7 @@ import { GameMode, GamePhaseState, type Stat } from "../../types/enum/Game"
 import type { Item } from "../../types/enum/Item"
 import type { Pkm } from "../../types/enum/Pokemon"
 import { SpecialGameRule } from "../../types/enum/SpecialGameRule"
-import { Synergy } from "../../types/enum/Synergy"
+import { isWishOnlySynergy, Synergy } from "../../types/enum/Synergy"
 import type { TownEncounter } from "../../types/enum/TownEncounter"
 import { Weather } from "../../types/enum/Weather"
 import { pickRandomIn, randomBetween } from "../../utils/random"
@@ -185,7 +185,9 @@ export default class GameState extends Schema {
 
     if (this.specialGameRule === SpecialGameRule.AVATAR) {
       this.avatarSynergy = pickRandomIn(
-        Object.values(Synergy).filter((s) => s !== Synergy.BABY)
+        Object.values(Synergy).filter(
+          (s) => s !== Synergy.BABY && !isWishOnlySynergy(s)
+        )
       )
     }
 

@@ -11,6 +11,7 @@ import {
 } from "../../../../../config/game/ghost-incantations"
 import {
   GHOST_NIGHT_SHADE_THRESHOLD,
+  PRODIGY_HIGHER_STAR_CAST_CHANCE_PER_UNIT,
   type SynergyTier,
   SynergyTiers
 } from "../../../../../config/game/synergies"
@@ -261,6 +262,22 @@ export default function SynergyDetailComponent(props: {
     additionalInfo = getGhostSpiritCoinSentence()
   }
 
+  const prodigyThresholds = SynergyTiersThresholds[Synergy.PRODIGY]
+  const prodigyTier =
+    props.type === Synergy.PRODIGY ? (thresholdReached ?? 0) : 0
+  const prodigiesInCombat =
+    spectatedPlayer && prodigyTier >= prodigyThresholds[1]
+      ? getBoardPokemons(spectatedPlayer).filter(
+          (pokemon) =>
+            pokemon.types.has(Synergy.PRODIGY) &&
+            (prodigyTier >= prodigyThresholds[2] || !isOnBench(pokemon))
+        ).length
+      : 0
+  const gestaltChance = roundToNDigits(
+    prodigiesInCombat * PRODIGY_HIGHER_STAR_CAST_CHANCE_PER_UNIT * 100,
+    1
+  )
+
   if (props.type === Synergy.FAIRY && spectatedPlayer) {
     additionalInfo = t("synergy_description.FAIRY_WANDS", {
       wands: spectatedPlayer.fairyWands.join(" ")
@@ -311,6 +328,13 @@ export default function SynergyDetailComponent(props: {
               ({SynergyTiersThresholds[props.type][i]}) {t(`effect.${tier}`)}
             </h4>
             <SynergyTierDescription tier={tier} />
+            {tier === EffectEnum.GESTALT && prodigiesInCombat > 0 && (
+              <p style={{ margin: 0 }}>
+                {t("synergy_description.PRODIGY_GESTALT_CHANCE", {
+                  chance: gestaltChance
+                })}
+              </p>
+            )}
             {props.type === Synergy.GHOST && writtenIncantations?.[i] && (
               <WrittenIncantation
                 encoded={writtenIncantations[i]}

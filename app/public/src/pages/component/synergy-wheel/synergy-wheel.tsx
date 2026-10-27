@@ -1,11 +1,13 @@
 import { type Dispatch, type SetStateAction, useRef, useState } from "react"
 import { useTranslation } from "react-i18next"
-import { Synergy } from "../../../../../types/enum/Synergy"
+import { isWishOnlySynergy, Synergy } from "../../../../../types/enum/Synergy"
 import SynergyIcon from "../icons/synergy-icon"
 import { Modal } from "../modal/modal"
 import "./synergy-wheel.css"
 
-const SYNERGIES = Object.values(Synergy)
+const SYNERGIES = Object.values(Synergy).filter(
+  (synergy) => !isWishOnlySynergy(synergy)
+)
 
 export default function SynergyWheelModal(props: {
   show: boolean

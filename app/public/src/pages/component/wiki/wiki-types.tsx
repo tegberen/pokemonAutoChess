@@ -2,7 +2,10 @@ import { Fragment, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { Tab, TabList, TabPanel, Tabs } from "react-tabs"
 import { RarityColor, SynergyTiersThresholds } from "../../../../../config"
-import { SynergyTiers } from "../../../../../config/game/synergies"
+import {
+  isProdigyPokemon,
+  SynergyTiers
+} from "../../../../../config/game/synergies"
 import { FlowerMonByPot } from "../../../../../core/flower-pots"
 import { getPokemonData } from "../../../../../models/precomputed/precomputed-pokemon-data"
 import { PRECOMPUTED_POKEMONS_PER_TYPE } from "../../../../../models/precomputed/precomputed-types"
@@ -39,6 +42,11 @@ import {
 } from "./wiki-fossil-unlocks"
 import { WikiGhostIncantations } from "./wiki-ghost-incantations"
 import { WikiLetterDelivery } from "./wiki-letter-delivery"
+
+// PRODIGY is granted by the Hatchery Wish, never part of a Pokemon's own types
+const PRODIGY_POKEMONS = (Object.values(Pkm) as Pkm[]).filter((pkm) =>
+  isProdigyPokemon(getPokemonData(pkm))
+)
 
 const flowerPotByPokemon = new Map(
   FlowerPots.flatMap((pot) => FlowerMonByPot[pot].map((pkm) => [pkm, pot] as const))
@@ -94,7 +102,9 @@ export function WikiType(props: { type: Synergy; onGoToWeather?: () => void }) {
   const synergyTiers = SynergyTiers[props.type]
 
   const pokemons = filterPokemonsAccordingToPreferences(
-    PRECOMPUTED_POKEMONS_PER_TYPE[props.type],
+    props.type === Synergy.PRODIGY
+      ? PRODIGY_POKEMONS
+      : PRECOMPUTED_POKEMONS_PER_TYPE[props.type],
     preferences
   )
     .map((p) => getPokemonData(p))
@@ -278,6 +288,7 @@ export function WikiAllTypes() {
     for (const type of p.types) {
       pokemonsPerType[type].push(p)
     }
+    if (isProdigyPokemon(p)) pokemonsPerType[Synergy.PRODIGY].push(p)
   }
   pokemonsPerType["protean"] = [
     getPokemonData(Pkm.KECLEON),

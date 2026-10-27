@@ -1,7 +1,7 @@
 import { EffectEnum } from "../../types/enum/Effect"
 import { GameMode, Rarity } from "../../types/enum/Game"
 import { type FishingRod, Item, type ShinyItem } from "../../types/enum/Item"
-import { Pkm } from "../../types/enum/Pokemon"
+import { Pkm, PkmFamily } from "../../types/enum/Pokemon"
 import { Synergy } from "../../types/enum/Synergy"
 
 // a cloned queen hatches a pair of Combees rather than a second queen
@@ -178,10 +178,23 @@ export const SynergyTiers = {
     EffectEnum.APPETIZER,
     EffectEnum.LUNCH_BREAK,
     EffectEnum.BANQUET
+  ],
+  [Synergy.PRODIGY]: [
+    EffectEnum.KINDERGARTEN,
+    EffectEnum.GESTALT,
+    EffectEnum.WUNDERKIND
   ]
 } satisfies { [key in Synergy]: readonly EffectEnum[] }
 
 export const GHOST_NIGHT_SHADE_THRESHOLD = 10
+export const PRODIGY_HIGHER_STAR_CAST_CHANCE_PER_UNIT = 0.08
+
+export function isProdigyPokemon(pokemon: { name: Pkm; rarity: Rarity }) {
+  return (
+    PkmFamily[pokemon.name] === Pkm.EXEGGCUTE ||
+    pokemon.rarity === Rarity.HATCH
+  )
+}
 
 export type SynergyTier<T extends Synergy = Synergy> =
   (typeof SynergyTiers)[T][number]
@@ -217,7 +230,8 @@ export const SynergyTiersThresholds: { [key in Synergy]: number[] } = {
   [Synergy.LIGHT]: [2, 3, 4, 5],
   [Synergy.WILD]: [2, 4, 6, 8],
   [Synergy.AMORPHOUS]: [3, 5, 7],
-  [Synergy.GOURMET]: [3, 4, 5]
+  [Synergy.GOURMET]: [3, 4, 5],
+  [Synergy.PRODIGY]: [2, 3, 5]
 }
 
 export function getHighestReachableSynergyTier(
@@ -378,7 +392,8 @@ export const SYNERGY_COLORS: Record<Synergy, `#${string}`> = {
   LIGHT: "#FFF896",
   GOURMET: "#FF8473",
   FOSSIL: "#D2D35B",
-  ARTIFICIAL: "#EDEDED"
+  ARTIFICIAL: "#EDEDED",
+  PRODIGY: "#D6AC68"
 }
 
 // Flora amps every ally's damage by this fraction per free cell separating them from their victim

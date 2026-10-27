@@ -27,7 +27,7 @@ import { DungeonPMDO } from "../../types/enum/Dungeon"
 import { Rarity } from "../../types/enum/Game"
 import type { Pkm } from "../../types/enum/Pokemon"
 import { SpecialGameRule } from "../../types/enum/SpecialGameRule"
-import { Synergy } from "../../types/enum/Synergy"
+import { isWishOnlySynergy, Synergy } from "../../types/enum/Synergy"
 import { randomWeighted, shuffleArray } from "../../utils/random"
 
 export type BlessingFamily = "BADGE" | "CREST" | "CROWN" | "GYM_TRAINER"
@@ -225,7 +225,7 @@ export const CrownBlessingBySynergy: { [synergy in Synergy]?: Blessing } = {
 }
 
 export const SYNERGIES_WITH_BLESSINGS = Object.values(Synergy).filter(
-  (synergy) => synergy !== Synergy.BABY
+  (synergy) => synergy !== Synergy.BABY && !isWishOnlySynergy(synergy)
 )
 
 function synergyFamilyDefinitions(
@@ -2134,6 +2134,12 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     tier: BlessingTier.GOLD,
     availableAtStages: [4],
     icon: "purrfect_plan",
+    grantsPokemonImmediately: true
+  },
+  [Blessing.HATCHERY]: {
+    tier: BlessingTier.PRISMATIC,
+    availableAtStages: [12],
+    icon: "hatchery",
     grantsPokemonImmediately: true
   },
   [Blessing.ROYAL_ROMANCE]: {

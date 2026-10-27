@@ -186,7 +186,8 @@ import {
   CRYSTAL_GUARDIAN_MAX_HP_PER_CRYSTAL,
   GRUDGE_SUBSTITUTE_SELL_COST,
   isGrudgeSubstitute,
-  SIMULATION_SCOPED_HERO_BLESSINGS
+  SIMULATION_SCOPED_HERO_BLESSINGS,
+  WISH_GRANTED_FAMILY_SYNERGIES
 } from "../../types/enum/Blessing"
 import {
   checkConvergentParadoxRewards,
@@ -609,6 +610,17 @@ export class OnPokemonCatchCommand extends Command<
   }
 }
 
+// the receiver's updateSynergies adds back the ones their own Wishes grant
+function stripWishGrantedTypes(pokemon: Pokemon) {
+  const nativeTypes = getPokemonData(pokemon.name).types
+  WISH_GRANTED_FAMILY_SYNERGIES.forEach(({ family, synergy }) => {
+    if (PkmFamily[pokemon.name] !== family) return
+    if (nativeTypes.includes(synergy)) return
+    pokemon.types.delete(synergy)
+  })
+  pokemon.types.delete(Synergy.PRODIGY)
+}
+
 function sendPokemonToPartner(
   state: GameState,
   room: GameRoom,
@@ -668,6 +680,7 @@ function sendPokemonToPartner(
 
     pokemon.positionX = freeX
     pokemon.positionY = 0
+    stripWishGrantedTypes(pokemon)
     partner.board.set(pokemon.id, pokemon)
     // A Prison Bottle transfer is an acquisition for the receiving player too.
     // Keep it on the same lifecycle as shop/pick rewards before resolving merges.

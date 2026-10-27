@@ -1,4 +1,7 @@
 import { RitualTrigger } from "../../config/game/ghost-incantations"
+import {
+  PRODIGY_HIGHER_STAR_CAST_CHANCE_PER_UNIT
+} from "../../config/game/synergies"
 import PokemonFactory from "../../models/pokemon-factory"
 import { Awakening } from "../../types/enum/Awakening"
 import {
@@ -20,6 +23,34 @@ import { OnAbilityCastEffect } from "../effects/effect"
 import { getIncantationSideOf, triggerRitual } from "../ghost-incantations"
 import type { PokemonEntity } from "../pokemon-entity"
 import type { AbilityStrategy } from "./ability-strategy"
+
+const MAX_STARS = 5
+
+function rollsProdigyHigherStarCast(pokemon: PokemonEntity, board: Board) {
+  if (
+    !pokemon.effects.has(EffectEnum.GESTALT) &&
+    !pokemon.effects.has(EffectEnum.WUNDERKIND)
+  ) {
+    return false
+  }
+  let prodigiesOnBoard = 0
+  board.forEach((x, y, unit) => {
+    if (
+      unit &&
+      unit.hp > 0 &&
+      !unit.isSpawn &&
+      unit.team === pokemon.team &&
+      unit.player === pokemon.player &&
+      unit.types.has(Synergy.PRODIGY)
+    ) {
+      prodigiesOnBoard++
+    }
+  })
+  return chance(
+    PRODIGY_HIGHER_STAR_CAST_CHANCE_PER_UNIT * prodigiesOnBoard,
+    pokemon
+  )
+}
 
 export function applyAbilityEffect(
   abilityStrategy: AbilityStrategy,
@@ -55,7 +86,11 @@ export function castAbility(
   const previousSummoningCaster = pokemon.simulation.summoningCaster
   pokemon.simulation.summoningCaster = pokemon
   pokemon.isProcessingAbility = true
+  const castsOneStarHigher =
+    pokemon.stars < MAX_STARS && rollsProdigyHigherStarCast(pokemon, board)
+  if (castsOneStarHigher) pokemon.stars += 1
   abilityStrategy.process(pokemon, board, target, crit, preventDefaultAnim)
+  if (castsOneStarHigher) pokemon.stars -= 1
   pokemon.isProcessingAbility = false
   pokemon.simulation.summoningCaster = previousSummoningCaster
   triggerRitual(

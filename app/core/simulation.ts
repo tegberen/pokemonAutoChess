@@ -724,10 +724,41 @@ export default class Simulation extends Schema implements ISimulation {
       }
     })
 
+    this.sendProdigyBenchIntoCombat()
     this.summonWeatherInstituteCastforms()
     this.summonLechonkBanks()
     this.summonSharkBaitFish()
     this.applyPostEffects(bluePlayer.board, redBoard)
+  }
+
+  sendProdigyBenchIntoCombat() {
+    const sides: [Player | undefined, Team, Set<EffectEnum>][] = [
+      [this.bluePlayer, Team.BLUE_TEAM, this.blueEffects],
+      [this.bluePartnerPlayer, Team.BLUE_TEAM, this.bluePartnerEffects],
+      [this.redPlayer, Team.RED_TEAM, this.redEffects]
+    ]
+    sides.forEach(([player, team, effects]) => {
+      if (!player || !effects.has(EffectEnum.WUNDERKIND)) return
+      // a ghost's bench belongs to a player fighting their own battle
+      const isOwnBench = !(team === Team.RED_TEAM && this.isGhostBattle)
+      const backRow = team === Team.BLUE_TEAM ? 0 : BOARD_HEIGHT - 1
+      schemaValues(player.board)
+        .filter(
+          (pokemon) =>
+            isOnBench(pokemon) &&
+            pokemon.types.has(Synergy.PRODIGY) &&
+            !pokemon.supportiveSoul &&
+            !isGrudgeSubstitute(pokemon)
+        )
+        .forEach((pokemon) => {
+          const coord =
+            this.getClosestFreeCellTo(pokemon.positionX, backRow, team) ??
+            this.getFirstFreeCell(team)
+          if (!coord) return
+          if (isOwnBench) this.lockReveilleUnit(pokemon)
+          this.addPokemon(pokemon, coord.x, coord.y, team, false, false, player)
+        })
+    })
   }
 
   /* WEATHER_INSTITUTE blessing: a Castform matching the current weather joins the
@@ -6053,6 +6084,13 @@ export default class Simulation extends Schema implements ISimulation {
         }
         break
       }
+
+      case EffectEnum.GESTALT:
+      case EffectEnum.WUNDERKIND:
+        if (types.has(Synergy.PRODIGY)) {
+          pokemon.effects.add(effect)
+        }
+        break
 
       default:
         break

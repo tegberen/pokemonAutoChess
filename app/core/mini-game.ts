@@ -65,7 +65,11 @@ import {
   MISFITS_EXCLUDED_ENCOUNTERS,
   SpecialGameRule
 } from "../types/enum/SpecialGameRule"
-import { Synergy, SynergyArray } from "../types/enum/Synergy"
+import {
+  isWishOnlySynergy,
+  Synergy,
+  SynergyArray
+} from "../types/enum/Synergy"
 import { type TownEncounter, TownEncounters } from "../types/enum/TownEncounter"
 import type { NpcDialog } from "../types/strings/NpcDialog"
 import { isIn } from "../utils/array"
@@ -827,7 +831,7 @@ export class MiniGame {
   pickRandomSynergySymbols(stageLevel: number, room: GameRoom) {
     if (stageLevel === 0) {
       const symbols = pickNRandomIn(
-        SynergyArray,
+        SynergyArray.filter((type) => !isWishOnlySynergy(type)),
         3 * ((this.avatars?.size ?? 8) + 1)
       )
       //logger.debug(`symbols chosen for player ${player.name}`, symbols)
@@ -840,7 +844,7 @@ export class MiniGame {
         const player = this.alivePlayers.find((p) => p.id === avatar.id)!
         const synergiesUsable = Object.values(Synergy).filter((type) => {
           if (type === Synergy.BABY && stageLevel === 20) return false // no baby legendaries
-          return true
+          return !isWishOnlySynergy(type)
         })
         const synergiesTiers: [Synergy, number][] = Array.from(
           player.synergies

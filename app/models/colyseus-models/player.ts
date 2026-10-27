@@ -5,6 +5,7 @@ import {
   FAIRY_WANDS_BY_SYNERGY_LEVEL,
   GHOST_NIGHT_SHADE_THRESHOLD,
   getHighestReachableSynergyTier,
+  isProdigyPokemon,
   RegionDetails,
   SynergyTiersThresholds
 } from "../../config"
@@ -50,7 +51,8 @@ import {
   LUNCH_MONEY_GOLD,
   getSynergiesGivenByItem,
   HERO_BLESSING_EXTRA_REGION_SYNERGY,
-  HERO_BLESSING_FAMILY
+  HERO_BLESSING_FAMILY,
+  WISH_GRANTED_FAMILY_SYNERGIES
 } from "../../types/enum/Blessing"
 import { ROCK_AWAKENING_TIER } from "../../types/enum/Awakening"
 import { PlayerBlessings } from "./player-blessings"
@@ -824,39 +826,15 @@ export default class Player extends Schema implements IPlayer {
 
   updateSynergies() {
     const pokemons: Pokemon[] = schemaValues(this.board)
-    if (this.blessings?.includes(Blessing.RADIANCE)) {
+    WISH_GRANTED_FAMILY_SYNERGIES.forEach(({ blessing, family, synergy }) => {
+      if (!this.blessings?.includes(blessing)) return
       pokemons.forEach((pokemon) => {
-        if (PkmFamily[pokemon.name] === Pkm.LARVESTA) {
-          pokemon.types.add(Synergy.LIGHT)
-        }
+        if (PkmFamily[pokemon.name] === family) pokemon.types.add(synergy)
       })
-    }
-    if (this.blessings?.includes(Blessing.MOTHER_YARN)) {
+    })
+    if (this.blessings?.includes(Blessing.HATCHERY)) {
       pokemons.forEach((pokemon) => {
-        if (PkmFamily[pokemon.name] === Pkm.SEWADDLE) {
-          pokemon.types.add(Synergy.NORMAL)
-        }
-      })
-    }
-    if (this.blessings?.includes(Blessing.SWAMP_FATHER)) {
-      pokemons.forEach((pokemon) => {
-        if (PkmFamily[pokemon.name] === Pkm.MUDKIP) {
-          pokemon.types.add(Synergy.GRASS)
-        }
-      })
-    }
-    if (this.blessings?.includes(Blessing.PRIMAL_MAGNETISM)) {
-      pokemons.forEach((pokemon) => {
-        if (PkmFamily[pokemon.name] === Pkm.MAGNEMITE) {
-          pokemon.types.add(Synergy.FOSSIL)
-        }
-      })
-    }
-    if (this.blessings?.includes(Blessing.UNSEALED_GOLEMANCY)) {
-      pokemons.forEach((pokemon) => {
-        if (PkmFamily[pokemon.name] === Pkm.GOLETT) {
-          pokemon.types.add(Synergy.MONSTER)
-        }
+        if (isProdigyPokemon(pokemon)) pokemon.types.add(Synergy.PRODIGY)
       })
     }
     pokemons.forEach((pokemon) => {
@@ -979,6 +957,12 @@ export default class Player extends Schema implements IPlayer {
       if (babyCount > babyCap) {
         updatedSynergies.set(Synergy.BABY, babyCap)
       }
+    }
+
+    // effects raising every synergy, such as RAINBOW_DROPLET, would otherwise
+    // show PRODIGY to players who never unlocked it
+    if (!this.blessings?.includes(Blessing.HATCHERY)) {
+      updatedSynergies.set(Synergy.PRODIGY, 0)
     }
 
     // pots are not board units, so only the synergies their items grant are counted.

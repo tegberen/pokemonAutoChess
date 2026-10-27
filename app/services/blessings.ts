@@ -3430,6 +3430,8 @@ export const blessingEffectService: {
 
   [Blessing.PURRFECT_PLAN]: (player, state, room) =>
     heroBlessingEffect(Blessing.PURRFECT_PLAN, player, state, room),
+  [Blessing.HATCHERY]: (player, state, room) =>
+    heroBlessingEffect(Blessing.HATCHERY, player, state, room),
   [Blessing.ROYAL_ROMANCE]: (player, state, room) =>
     heroBlessingEffect(Blessing.ROYAL_ROMANCE, player, state, room),
   [Blessing.CAPTAINS_BOUNTY]: (player, state, room) =>

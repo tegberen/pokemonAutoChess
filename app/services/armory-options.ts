@@ -13,7 +13,7 @@ import { FreeOptions, PaidOptions, ArmoryOptions } from "../types/enum/ArmoryOpt
 import { Rarity } from "../types/enum/Game"
 import { Pkm, Unowns } from "../types/enum/Pokemon"
 import { isMegaEvolutionLocked } from "../types/enum/SpecialGameRule"
-import { Synergy } from "../types/enum/Synergy"
+import { isWishOnlySynergy, Synergy } from "../types/enum/Synergy"
 import { getFirstAvailablePositionInBench, getFreeSpaceOnBench,
   getBenchSize
 } from "../utils/board"
@@ -152,11 +152,15 @@ const giftRandomPokemonByRarity = (toPlayer: Player, rarity: Rarity): boolean =>
 
     const nbOfSynergies =
         rarity === Rarity.LEGENDARY ? 4 : rarity === Rarity.ULTRA ? 3 : 1
-    let wantedSynergy = toPlayer.synergies.getTopSynergies(nbOfSynergies)
-    if (rarity !== Rarity.ULTRA && wantedSynergy.includes(Synergy.BABY)) {
-        wantedSynergy = toPlayer.synergies.getTopSynergies(nbOfSynergies + 1)
-        wantedSynergy.splice(wantedSynergy.indexOf(Synergy.BABY), 1)
-    }
+    // no Pokemon has a Wish-only synergy among its own types to match on
+    const wantedSynergy = toPlayer.synergies
+        .getTopSynergies(Object.keys(Synergy).length)
+        .filter(
+            (synergy) =>
+                !isWishOnlySynergy(synergy) &&
+                (rarity === Rarity.ULTRA || synergy !== Synergy.BABY)
+        )
+        .slice(0, nbOfSynergies)
 
     const matchesBundle = (p: Pkm, regionalOrAdditional: boolean): boolean => {
         const pkmData = getPokemonData(p)

@@ -29,7 +29,15 @@ export enum Synergy {
   LIGHT = "LIGHT",
   GOURMET = "GOURMET",
   FOSSIL = "FOSSIL",
-  ARTIFICIAL = "ARTIFICIAL"
+  ARTIFICIAL = "ARTIFICIAL",
+  PRODIGY = "PRODIGY"
 }
 
 export const SynergyArray = Object.values(Synergy)
+
+// only reachable through a Wish, so never rolled for random synergy pickers
+export const WishOnlySynergies: readonly Synergy[] = [Synergy.PRODIGY]
+
+export function isWishOnlySynergy(synergy: Synergy) {
+  return WishOnlySynergies.includes(synergy)
+}

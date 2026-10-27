@@ -1287,7 +1287,8 @@ export const SynergyFlavors = {
   [Synergy.WILD]: Item.RUBY_SWIRL_FLAVOR,
   [Synergy.BABY]: Item.RAINBOW_SWIRL_FLAVOR,
   [Synergy.AMORPHOUS]: Item.RAINBOW_SWIRL_FLAVOR,
-  [Synergy.GOURMET]: Item.VANILLA_FLAVOR
+  [Synergy.GOURMET]: Item.VANILLA_FLAVOR,
+  [Synergy.PRODIGY]: Item.RAINBOW_SWIRL_FLAVOR
 } satisfies { [key in Synergy]: (typeof Flavors)[number] }
 
 export const Sweets = [

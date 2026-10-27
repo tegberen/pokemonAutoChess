@@ -213,6 +213,7 @@ export enum Blessing {
   BONEMERANG_RANGER = "BONEMERANG_RANGER",
   SPOOKY_SCARECROW = "SPOOKY_SCARECROW",
   PURRFECT_PLAN = "PURRFECT_PLAN",
+  HATCHERY = "HATCHERY",
   ROYAL_ROMANCE = "ROYAL_ROMANCE",
   CAPTAINS_BOUNTY = "CAPTAINS_BOUNTY",
   INFILTRATOR = "INFILTRATOR",
@@ -862,6 +863,7 @@ export const BONEMERANG_RANGER_RETURN_DELAY = 500
 export const SPOOKY_SCARECROW_MURKROWS_ON_OWN_KO = 3
 export const SPOOKY_SCARECROW_DEF_PER_ALLY_KO = 5
 export const PURRFECT_PLAN_UNIQUES: Pkm[] = [Pkm.SPINDA, Pkm.CHATOT]
+export const HATCHERY_EGG_CHANCE_PER_KO = 0.25
 export const ROYAL_ROMANCE_ATTRACT_CHANCE = 0.5
 export const INFILTRATOR_PP_STOLEN_BY_STAR = [3, 4, 5]
 export const JOLLY_ROGER_ATTACK_KO_GOLD = 1
@@ -954,7 +956,8 @@ export const PRISMATIC_ULTRA_HEROES = [
   Blessing.INFINITE_CONVERSION,
   Blessing.STONE_SADDLE,
   Blessing.ITS_GOING_DOWN,
-  Blessing.ROLLOUT_RALLY
+  Blessing.ROLLOUT_RALLY,
+  Blessing.HATCHERY
 ]
 
 export const SHELL_ARMOR_SPE_DEF_BY_STARS = [1, 3, 6]
@@ -1428,6 +1431,7 @@ export const HERO_BLESSING_GIFT: { [blessing in Blessing]?: Pkm } = {
   [Blessing.BONEMERANG_RANGER]: Pkm.CUBONE,
   [Blessing.SPOOKY_SCARECROW]: Pkm.CACNEA,
   [Blessing.PURRFECT_PLAN]: Pkm.GLAMEOW,
+  [Blessing.HATCHERY]: Pkm.EXEGGCUTE,
   [Blessing.ROYAL_ROMANCE]: Pkm.NIDORANM,
   [Blessing.CAPTAINS_BOUNTY]: Pkm.RABOOT,
   [Blessing.INFILTRATOR]: Pkm.GOLBAT,
@@ -1461,6 +1465,7 @@ export const HERO_BLESSING_EXTRA_SYNERGIES: {
   [Blessing.SCHOOL_BUS]: [Synergy.MONSTER, Synergy.AMORPHOUS],
   [Blessing.TRASH_TO_TREASURE]: [Synergy.GROUND, Synergy.GRASS],
   [Blessing.SWAMP_FATHER]: [Synergy.GRASS],
+  [Blessing.HATCHERY]: [Synergy.PRODIGY],
   [Blessing.PLUNDER]: [Synergy.WILD, Synergy.DARK],
   [Blessing.GLAIVE_STRIKE]: [Synergy.ROCK],
   [Blessing.STONE_SADDLE]: [Synergy.ICE, Synergy.FOSSIL],
@@ -1543,6 +1548,7 @@ export const HERO_BLESSING_FAMILY: { [blessing in Blessing]?: Pkm } = {
   [Blessing.BONEMERANG_RANGER]: Pkm.CUBONE,
   [Blessing.SPOOKY_SCARECROW]: Pkm.CACNEA,
   [Blessing.PURRFECT_PLAN]: Pkm.GLAMEOW,
+  [Blessing.HATCHERY]: Pkm.EXEGGCUTE,
   [Blessing.ROYAL_ROMANCE]: Pkm.NIDORANM,
   [Blessing.CAPTAINS_BOUNTY]: Pkm.SCORBUNNY,
   [Blessing.INFILTRATOR]: Pkm.ZUBAT,
@@ -1607,6 +1613,40 @@ export const HERO_BLESSING_EXTRA_REGION_SYNERGY: {
 } = {
   [Blessing.SWAMP_FATHER]: Synergy.GRASS
 }
+
+// the owner's units of this family carry the extra synergy; a unit sent to a
+// Double Up partner without the Wish loses it again
+export const WISH_GRANTED_FAMILY_SYNERGIES: {
+  blessing: Blessing
+  family: Pkm
+  synergy: Synergy
+}[] = [
+  {
+    blessing: Blessing.RADIANCE,
+    family: Pkm.LARVESTA,
+    synergy: Synergy.LIGHT
+  },
+  {
+    blessing: Blessing.MOTHER_YARN,
+    family: Pkm.SEWADDLE,
+    synergy: Synergy.NORMAL
+  },
+  {
+    blessing: Blessing.SWAMP_FATHER,
+    family: Pkm.MUDKIP,
+    synergy: Synergy.GRASS
+  },
+  {
+    blessing: Blessing.PRIMAL_MAGNETISM,
+    family: Pkm.MAGNEMITE,
+    synergy: Synergy.FOSSIL
+  },
+  {
+    blessing: Blessing.UNSEALED_GOLEMANCY,
+    family: Pkm.GOLETT,
+    synergy: Synergy.MONSTER
+  }
+]
 
 /* these hero blessings keep their state on the simulation rather than on the
    unit, so a reinforcement crossing into the partner's fight cannot bring them

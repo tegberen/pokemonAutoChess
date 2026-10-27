@@ -1,6 +1,7 @@
+import { isProdigyPokemon } from "../../config/game/synergies"
 import { Rarity } from "../../types/enum/Game"
 import { type Pkm, PkmFamily } from "../../types/enum/Pokemon"
-import type { Synergy } from "../../types/enum/Synergy"
+import { Synergy } from "../../types/enum/Synergy"
 import { precomputedPokemonsImplemented } from "./precomputed-pokemons"
 
 console.time("precompute-types-and-categories")
@@ -20,7 +21,10 @@ const data: Partial<
 > = {}
 
 precomputedPokemonsImplemented.forEach((pokemon) => {
-  pokemon.types.forEach((type: Synergy) => {
+  const types: Synergy[] = [...pokemon.types]
+  // PRODIGY comes from the Hatchery Wish rather than the Pokemon's own types
+  if (isProdigyPokemon(pokemon)) types.push(Synergy.PRODIGY)
+  types.forEach((type: Synergy) => {
     if (type in data === false) {
       data[type] = {
         pokemons: [],
