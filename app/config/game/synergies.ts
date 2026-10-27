@@ -244,6 +244,44 @@ export function getHighestReachableSynergyTier(
     : thresholds[thresholds.length - 1]
 }
 
+export const SCHOLAR_EXCLUDED_SYNERGIES: readonly Synergy[] = [
+  Synergy.BABY,
+  Synergy.PRODIGY
+]
+export const ScholarSynergies = Object.values(Synergy).filter(
+  (synergy) => !SCHOLAR_EXCLUDED_SYNERGIES.includes(synergy)
+)
+export const SCHOLAR_FINISHES_PER_SYNERGY = 3
+export const SCHOLAR_HUMANS_REQUIRED = 8
+
+export function getScholarMaxRank(gameMode: GameMode) {
+  return gameMode === GameMode.DOUBLE_UP ? 2 : 4
+}
+
+export function getMaxedScholarSynergies(synergies: {
+  get(synergy: Synergy): number | undefined
+}): Synergy[] {
+  return ScholarSynergies.filter(
+    (synergy) =>
+      (synergies.get(synergy) ?? 0) >= SynergyTiersThresholds[synergy].at(-1)!
+  )
+}
+
+export function countScholarFinishes(
+  scholarFinishes: readonly Synergy[],
+  synergy: Synergy
+): number {
+  return scholarFinishes.filter((finish) => finish === synergy).length
+}
+
+export function hasCompletedScholar(scholarFinishes: readonly Synergy[]) {
+  return ScholarSynergies.every(
+    (synergy) =>
+      countScholarFinishes(scholarFinishes, synergy) >=
+      SCHOLAR_FINISHES_PER_SYNERGY
+  )
+}
+
 export const FishRarityProbability: {
   [rod in FishingRod]: {
     [key in Rarity]?: number

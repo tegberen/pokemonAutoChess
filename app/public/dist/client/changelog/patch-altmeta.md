@@ -478,6 +478,9 @@ Every balance change on this server, newest first.
 **Items**
 - DEEP_SEA_TOOTH | the 15 PP refund on KO now also triggers on ability KOs, once per cast. *A Solosis that knocks out 4 enemies with one cast gains 15 PP, not 4 × 15 PP.*
 
+**Titles**
+- Scholar | now earned by finishing top 4 in solo or top 2 in Double Up three times with each synergy maxed out, in lobbies of 8 players without bots. Track your progress under the title.
+
 **Fixes**
 - Double Up | a Pokémon sent to your partner no longer keeps the synergy your Radiance, Mother Yarn, Swamp Father, Primal Magnetism or Unsealed Golemancy Wish gave it
 

@@ -123,6 +123,7 @@ const userMetadataSchema = new Schema({
     }
   ],
   guideLessonsCompleted: [{ type: String, enum: Synergy }],
+  scholarFinishes: [{ type: String, enum: Synergy }],
   ultraHeroesWon: [{ type: String, enum: Blessing }],
   dailyDuelWins: {
     type: Number,

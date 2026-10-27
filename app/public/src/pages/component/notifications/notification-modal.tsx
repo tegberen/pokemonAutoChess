@@ -145,9 +145,9 @@ export function NotificationModal({
   const getIllustrationSrc = (notification: INotification): string | null => {
     switch (notification.type) {
       case "new_title": {
-        /* A lesson title is badged with the synergy it was earned for, and the
-           one for finishing every lesson with the guide's own icon - neither
-           has a file under assets/titles. */
+        /* A lesson title is badged with the synergy it was earned for, and
+           SCHOLAR with the guide's icon - neither has a file under
+           assets/titles. */
         if (notification.message === Title.SCHOLAR) {
           return "/assets/ui/guide_lobby.svg"
         }

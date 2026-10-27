@@ -29,8 +29,9 @@ interface IUserMetadata {
   eventFinishTime: Date | null
   booster: number
   titles: Title[]
-  // synergies whose lesson has been completed, for the SCHOLAR title
   guideLessonsCompleted?: Synergy[]
+  // one entry per top finish with that synergy maxed, for the SCHOLAR title
+  scholarFinishes?: Synergy[]
   // Prismatic Ultra Hero Wishes won a game with, for the ULTRA title
   ultraHeroesWon?: Blessing[]
   dailyDuelWins?: number

@@ -631,6 +631,12 @@ ul.titles > li.selected .title-name {
   filter: none;
 }
 
+.title-scholar-synergy {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .search-suggestions {
   display: flex;
   padding: 0;

@@ -12,11 +12,15 @@ import {
   ALLOWED_GAME_RECONNECTION_TIME,
   BOARD_SIDE_HEIGHT,
   BOARD_WIDTH,
+  countScholarFinishes,
   EVOLUTION_LAB_REWARD_EXP,
   EVOLUTION_LAB_REWARD_GOLD,
   EVOLUTION_LAB_REWARD_REROLLS,
   ExpPlace,
   getCurrentGameEvent,
+  getMaxedScholarSynergies,
+  getScholarMaxRank,
+  hasCompletedScholar,
   MAX_LOADING_TIME,
   MAX_SIMULATION_DELTA_TIME,
   MinStageForGameToCount,
@@ -24,6 +28,8 @@ import {
   PARTNER_CHAT_LEVEL_REQUIRED,
   PARTNER_MESSAGE_COOLDOWN_MS,
   PARTNER_MESSAGE_MAX_LENGTH,
+  SCHOLAR_FINISHES_PER_SYNERGY,
+  SCHOLAR_HUMANS_REQUIRED,
   THEME_BY_TITLE,
   TITLES_UNLOCKING_THEMES,
   VICTORY_ROAD_MAX_EVENT_POINTS,
@@ -152,7 +158,7 @@ import {
   getGuideForcedProposition,
   getGuideLesson
 } from "../core/guide/guide-stage"
-import { type Synergy, SynergyArray } from "../types/enum/Synergy"
+import type { Synergy } from "../types/enum/Synergy"
 import { GameEvent } from "../types/events"
 import type { IPokemonCollectionItemMongo } from "../types/interfaces/UserMetadata"
 import type { IDetailledPokemon } from "../types/models/bot-v2"
@@ -1738,9 +1744,7 @@ export default class GameRoom extends Room<{ state: GameState }> {
       }
 
       /* A finished lesson pays a title, added to player.titles so it rides the
-         same persistence and notification path as every other one. The synergy
-         is recorded too, so SCHOLAR can be worked out once every synergy has a
-         lesson written and completed.
+         same persistence and notification path as every other one.
 
          gameFinished as well as the stage: the counter reaches the last stage
          when its picking phase opens, so the stage check alone would pay out
@@ -1756,7 +1760,27 @@ export default class GameRoom extends Room<{ state: GameState }> {
         const taught = new Set(usr.guideLessonsCompleted ?? [])
         taught.add(lesson.synergy)
         usr.guideLessonsCompleted = [...taught]
-        if (taught.size >= SynergyArray.length) {
+      }
+
+      const isFullHumanLobby =
+        humans.length === SCHOLAR_HUMANS_REQUIRED && bots.length === 0
+      if (
+        eligibleToELO &&
+        isFullHumanLobby &&
+        !hasLeftBeforeEnd &&
+        rank <= getScholarMaxRank(this.state.gameMode)
+      ) {
+        const scholarFinishes = [...(usr.scholarFinishes ?? [])]
+        for (const synergy of getMaxedScholarSynergies(player.synergies)) {
+          if (
+            countScholarFinishes(scholarFinishes, synergy) <
+            SCHOLAR_FINISHES_PER_SYNERGY
+          ) {
+            scholarFinishes.push(synergy)
+          }
+        }
+        usr.scholarFinishes = scholarFinishes
+        if (hasCompletedScholar(scholarFinishes)) {
           player.titles.add(Title.SCHOLAR)
         }
       }

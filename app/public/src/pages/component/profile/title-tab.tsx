@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
 import {
+  countScholarFinishes,
+  SCHOLAR_FINISHES_PER_SYNERGY,
+  ScholarSynergies,
   THEME_BY_TITLE,
   TITLES_UNLOCKING_THEMES,
   type TitleUnlockingTheme
@@ -27,7 +30,8 @@ const HIDDEN_TITLES = new Set<Title>([
   Title.ACE_TRAINER,
   Title.VANQUISHER,
   Title.DENTIST,
-  Title.ARCHEOLOGIST
+  Title.ARCHEOLOGIST,
+  Title.BOTANIST
 ])
 
 const EASTER_EGG_TITLES = new Set<Title>([Title.SHADY])
@@ -47,7 +51,6 @@ const JAC_TITLES = new Set<Title>([
   Title.PRIDE,
   Title.STARRY,
   Title.WHIMSY,
-  Title.BOTANIST,
   Title.SCHOLAR,
   Title.DERPY,
   Title.ARTIST,
@@ -59,10 +62,13 @@ const JAC_TITLES = new Set<Title>([
 export function TitleTab() {
   const [showUnlocked, setShowUnlocked] = useState<boolean>(true)
   const [showUltraHeroes, setShowUltraHeroes] = useState<boolean>(false)
+  const [showScholarSynergies, setShowScholarSynergies] =
+    useState<boolean>(false)
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
   const user = useAppSelector((state) => state.network.profile)
   const ultraHeroesWon = user?.ultraHeroesWon ?? []
+  const scholarFinishes = user?.scholarFinishes ?? []
   const [titles, setTitles] = useState<ITitleStatistic[]>([])
   const visibleTitleNames = Object.values(Title).filter(
     (title) =>
@@ -128,7 +134,52 @@ export function TitleTab() {
                 ^
               </button>
             )}
+            {title.name === Title.SCHOLAR && (
+              <button
+                type="button"
+                className={cc("title-ultra-toggle", {
+                  open: showScholarSynergies
+                })}
+                onClick={(event) => {
+                  event.stopPropagation()
+                  setShowScholarSynergies(!showScholarSynergies)
+                }}
+              >
+                ^
+              </button>
+            )}
           </p>
+          {title.name === Title.SCHOLAR && showScholarSynergies && (
+            <div className="title-ultra-heroes">
+              <span>
+                {scholarFinishes.length}/
+                {ScholarSynergies.length * SCHOLAR_FINISHES_PER_SYNERGY}
+              </span>
+              {ScholarSynergies.map((synergy) => {
+                const finishes = countScholarFinishes(scholarFinishes, synergy)
+                const synergyName = t(`synergy.${synergy}`)
+                const progress = `${finishes}/${SCHOLAR_FINISHES_PER_SYNERGY}`
+                return (
+                  <span
+                    key={synergy}
+                    className="title-scholar-synergy"
+                    title={`${synergyName} ${progress}`}
+                  >
+                    <img
+                      src={`/assets/types/${synergy}.svg`}
+                      alt={synergyName}
+                      width="32"
+                      height="32"
+                      className={cc({
+                        won: finishes >= SCHOLAR_FINISHES_PER_SYNERGY
+                      })}
+                    />
+                    <small>{finishes}</small>
+                  </span>
+                )
+              })}
+            </div>
+          )}
           {title.name === Title.ULTRA && showUltraHeroes && (
             <div className="title-ultra-heroes">
               <span>
