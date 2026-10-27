@@ -262,6 +262,7 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
   axeBlastExecuteChance: number = 0
   metronomeForcedRarity: Rarity | null = null
   isResolvingOnHitEffects: boolean = false
+  isResolvingBasicAttack: boolean = false
   hasSheddingScalesRerolled: boolean = false
   // EMPOWER: extra share of every point of damage this unit deals, while active
   damageAmp: number = 0

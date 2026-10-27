@@ -3246,7 +3246,7 @@
 		"SCOPE_LENS": "Critical attacks steal 10 PP from the target ON_HIT.",
 		"STAR_DUST": "After casting ability, gain 50% of max PP as SHIELD. The holder is immune to BURN.",
 		"GREEN_ORB": "Holder and ADJACENT allies regain 5% of their max HP every 2 seconds. 30% of overheal is converted to PP.",
-		"DEEP_SEA_TOOTH": "Holder restore 5 additional PP ON_ATTACK. If the attack knocks out the target, restore 15 additional PP.",
+		"DEEP_SEA_TOOTH": "The holder restores 5 additional PP ON_ATTACK. If the attack or ability (once per cast) knocks out the target, it restores 15 additional PP.",
 		"SMOKE_BALL": "Once below 40% max HP, drop the smoke ball, gain 70 SHIELD and jump to a tile away. Every ADJACENT enemy is PARALYSIS and BLINDED for 4 seconds.",
 		"XRAY_VISION": "Holder is immune to SLEEP and their attacks can no longer miss. Attacks inflict FLINCH for 2 seconds ON_HIT.",
 		"RAZOR_FANG": "Attacks apply ARMOR_BREAK for 2 seconds ON_HIT.",
@@ -6729,7 +6729,7 @@
 		},
 		"DEEP_SEA_TOOTH_BLESSING": {
 			"name": "Abyssal Fang",
-			"description": "Gain a DEEP_SEA_TOOTH. Attacks deal double damage against enemies below 50% of their max HP and restore 30 PP intead of 15 PP when knocking out the target."
+			"description": "Gain a DEEP_SEA_TOOTH. Attacks deal double damage against enemies below 50% of their max HP and restore 30 PP instead of 15 PP when knocking out the target."
 		},
 		"SCOPE_LENS_BLESSING": {
 			"name": "Lock-On Lens",

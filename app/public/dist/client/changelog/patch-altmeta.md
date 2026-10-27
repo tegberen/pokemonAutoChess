@@ -475,6 +475,9 @@ Every balance change on this server, newest first.
 **Wishes**
 - Hatchery | added the Exeggcute hero. *A needed addition to the game for the people going for the Ultra title.*
 
+**Items**
+- DEEP_SEA_TOOTH | the 15 PP refund on KO now also triggers on ability KOs, once per cast. *A Solosis that knocks out 4 enemies with one cast gains 15 PP, not 4 × 15 PP.*
+
 **Fixes**
 - Double Up | a Pokémon sent to your partner no longer keeps the synergy your Radiance, Mother Yarn, Swamp Father, Primal Magnetism or Unsealed Golemancy Wish gave it
 

@@ -966,6 +966,20 @@ export class CovertCloakEffect extends PeriodicEffect {
   }
 }
 
+const deepSeaToothRefundedCast = new WeakMap<PokemonEntity, number>()
+
+function refundDeepSeaToothKill(pokemon: PokemonEntity) {
+  pokemon.broadcastAbility({ skill: "DEEP_SEA_TOOTH", ap: 0 })
+  pokemon.addPP(
+    hasBlessing(pokemon, Blessing.DEEP_SEA_TOOTH_BLESSING)
+      ? DEEP_SEA_TOOTH_PP_ON_KILL
+      : 15,
+    pokemon,
+    0,
+    false
+  )
+}
+
 export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
   ...Object.fromEntries(
     SynergyStones.map((stone) => [
@@ -1480,19 +1494,16 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
   ],
 
   [Item.DEEP_SEA_TOOTH]: [
-    new OnAttackEffect(({ pokemon, target, board, hasAttackKilled }) => {
+    new OnAttackEffect(({ pokemon, hasAttackKilled }) => {
       pokemon.addPP(5, pokemon, 0, false)
-
-      if (hasAttackKilled) {
-        pokemon.addPP(
-          hasBlessing(pokemon, Blessing.DEEP_SEA_TOOTH_BLESSING)
-            ? DEEP_SEA_TOOTH_PP_ON_KILL
-            : 15,
-          pokemon,
-          0,
-          false
-        )
-      }
+      if (hasAttackKilled) refundDeepSeaToothKill(pokemon)
+    }),
+    new OnKillEffect(({ attacker }) => {
+      if (attacker.isResolvingBasicAttack) return
+      // one refund per cast, or chaining AoE casters refill instantly
+      if (deepSeaToothRefundedCast.get(attacker) === attacker.count.ult) return
+      deepSeaToothRefundedCast.set(attacker, attacker.count.ult)
+      refundDeepSeaToothKill(attacker)
     })
   ],
 

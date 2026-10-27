@@ -280,6 +280,7 @@ export default abstract class PokemonState {
 
       let isAttackSuccessful = true
       let hasAttackKilled = false
+      pokemon.isResolvingBasicAttack = true
       let dodgeChance = target.dodge
       if (pokemon.status.blinded) {
         dodgeChance += 0.5
@@ -479,6 +480,7 @@ export default abstract class PokemonState {
         totalTakenDamage += takenDamage
         if (death) hasAttackKilled = true
       }
+      pokemon.isResolvingBasicAttack = false
 
       pokemon.onAttack({
         target,

@@ -1755,7 +1755,6 @@ export const RAZOR_FANG_FOLLOW_UP_ATTACK_RATIO = 0.25
 export const STAR_DUST_ADJACENT_SHIELD_RATIO = 0.5
 export const DEEP_SEA_TOOTH_EXECUTE_HP_RATIO = 0.5
 export const DEEP_SEA_TOOTH_DAMAGE_MULTIPLIER = 2
-// replaces the 15 PP the unblessed tooth refunds on a kill
 export const DEEP_SEA_TOOTH_PP_ON_KILL = 30
 export const SCOPE_LENS_MARK_DURATION = 4000
 export const SHINY_CHARM_MARK_DURATION = 4000

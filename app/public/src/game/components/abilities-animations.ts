@@ -9683,6 +9683,12 @@ export const AbilitiesAnimations: {
   [Ability.TAUNT]: onCaster({ positionOffset: [0, -30] }),
   ["TAUNT_HIT"]: onTarget({ positionOffset: [0, -30] }),
   ["SMOKE_BALL"]: onCasterScale3,
+  ["DEEP_SEA_TOOTH"]: (args) => {
+    const holder = args.pokemonsOnBoard.find(
+      (p) => p.positionX === args.positionX && p.positionY === args.positionY
+    )
+    if (holder) displayBoost(holder, Stat.PP)
+  },
   [Ability.EXPANDING_FORCE]: onCaster({
     ability: Ability.PSYCHIC,
     tint: 0xff90d0,
