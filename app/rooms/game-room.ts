@@ -22,6 +22,7 @@ import {
   MinStageForGameToCount,
   PARTNER_CHAT_HISTORY_SIZE,
   PARTNER_CHAT_LEVEL_REQUIRED,
+  PARTNER_MESSAGE_COOLDOWN_MS,
   PARTNER_MESSAGE_MAX_LENGTH,
   THEME_BY_TITLE,
   TITLES_UNLOCKING_THEMES,
@@ -227,6 +228,7 @@ export default class GameRoom extends Room<{ state: GameState }> {
   private unlockedAvatarCosmetics = new Map<string, Set<AvatarCosmeticId>>()
   private accountLevels = new Map<string, number>()
   private partnerChatHistory = new Map<string, IChatV2[]>()
+  private lastPartnerMessageAt = new Map<string, number>()
   dailyDuel = false
   private dailyDuelPodiumUids: string[] = []
   private dailyDuelPodiumSave: Promise<void> = Promise.resolve()
@@ -783,10 +785,14 @@ export default class GameRoom extends Room<{ state: GameState }> {
       const available = player ? this.isPartnerChatAvailable(player) : false
       client.send(Transfer.PARTNER_CHAT_AVAILABLE, available)
       if (player && available) {
-        client.send(
-          Transfer.PARTNER_CHAT_HISTORY,
-          this.partnerChatHistory.get(getPartnerChatKey(player)) ?? []
-        )
+        try {
+          client.send(
+            Transfer.PARTNER_CHAT_HISTORY,
+            this.partnerChatHistory.get(getPartnerChatKey(player)) ?? []
+          )
+        } catch (error) {
+          logger.error("partner chat history send error", error)
+        }
       }
     })
 
@@ -797,23 +803,34 @@ export default class GameRoom extends Room<{ state: GameState }> {
         payload.substring(0, PARTNER_MESSAGE_MAX_LENGTH)
       ).trim()
       if (!sender || !this.isPartnerChatAvailable(sender) || text === "") return
+      const now = Date.now()
+      const lastSentAt = this.lastPartnerMessageAt.get(sender.id) ?? 0
+      if (now - lastSentAt < PARTNER_MESSAGE_COOLDOWN_MS) return
+      this.lastPartnerMessageAt.set(sender.id, now)
       const message: IChatV2 = {
         id: crypto.randomUUID(),
         payload: text,
         authorId: sender.id,
         author: sender.name,
         avatar: sender.avatar,
-        time: Date.now()
+        time: now
       }
+      // clients stamp their own receive time, and a millisecond timestamp
+      // packs as a float64, which crashed the server in msgpack once
+      const wireMessage: IChatV2 = { ...message, time: 0 }
       this.clients.forEach((recipient) => {
         const uid = recipient.auth?.uid
         if (uid === sender.id || uid === sender.doubleUpPartnerId) {
-          recipient.send(Transfer.NEW_MESSAGE, message)
+          try {
+            recipient.send(Transfer.NEW_MESSAGE, wireMessage)
+          } catch (error) {
+            logger.error("partner chat message send error", error)
+          }
         }
       })
       const chatKey = getPartnerChatKey(sender)
       const history = this.partnerChatHistory.get(chatKey) ?? []
-      history.push(message)
+      history.push(wireMessage)
       if (history.length > PARTNER_CHAT_HISTORY_SIZE) history.shift()
       this.partnerChatHistory.set(chatKey, history)
       chatV2
@@ -1108,7 +1125,11 @@ export default class GameRoom extends Room<{ state: GameState }> {
     const available = this.isPartnerChatAvailable(player)
     this.clients.forEach((client) => {
       if (client.auth?.uid === partner.id) {
-        client.send(Transfer.PARTNER_CHAT_AVAILABLE, available)
+        try {
+          client.send(Transfer.PARTNER_CHAT_AVAILABLE, available)
+        } catch (error) {
+          logger.error("partner chat availability send error", error)
+        }
       }
     })
   }

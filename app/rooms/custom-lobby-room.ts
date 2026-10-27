@@ -212,7 +212,7 @@ export default class CustomLobbyRoom extends Room {
       (client, message: { id: string }) => {
         this.dispatcher.dispatch(new RemoveMessageCommand(), {
           client,
-          messageId: message.id
+          messageId: message?.id
         })
       }
     )
