@@ -1,0 +1,139 @@
+:root {
+  --color-bg-primary: #163a2a;
+  --color-bg-secondary: #1f4d37;
+  --color-bg-tertiary: #1b4431;
+  --see-through-primary: #0f2c20;
+  --see-through-secondary: #1a4430;
+  --see-through-tertiary: #163a29;
+  --color-bg-accent: #f29a2e;
+
+  --border-thick: 2px solid #07160f;
+  --border-thin: 1px solid #07160f;
+  --border-extra-thin: 1px solid #07160f;
+
+  --theme-button: linear-gradient(
+    180deg,
+    #fff7d6 0 20%,
+    #ffcf4a 20% 58%,
+    #f08a24 58% 100%
+  );
+  --theme-button-hover: linear-gradient(
+    180deg,
+    #fffbe8 0 20%,
+    #ffda6b 20% 58%,
+    #f59a3c 58% 100%
+  );
+  --theme-ready: linear-gradient(
+    180deg,
+    #f4ffe0 0 20%,
+    #9be35f 20% 58%,
+    #3f9e33 58% 100%
+  );
+  --theme-progress: #76cf4e;
+  --theme-ready-hover: linear-gradient(
+    180deg,
+    #f9ffee 0 20%,
+    #aeea78 20% 58%,
+    #4cad3e 58% 100%
+  );
+  --theme-button-text: #3a1c00;
+  --theme-button-text-shadow: 1px 1px 0 #fff7d680;
+}
+
+.custom-bg {
+  background-image: url("/assets/theme/newjourney/custombg.webp");
+  background-size: cover;
+  background-position: center 30%;
+}
+
+.lobby h2 {
+  text-shadow: 0px 3px 6px black;
+}
+
+.draggable-window.my-container,
+.game-shop .information > div,
+#game-stage-info,
+.game-spectate-player-info.my-container,
+.team-builder-modal.my-container,
+.game-shop.my-container {
+  background-color: color-mix(
+    in srgb,
+    var(--see-through-primary) 65%,
+    transparent
+  );
+}
+
+.after-menu .my-container,
+.leaderboard .my-container,
+.room-menu.my-container,
+.events-menu .my-container {
+  background-color: color-mix(
+    in srgb,
+    var(--see-through-primary) 60%,
+    transparent
+  );
+}
+
+.leaderboard [data-react-window-index]:nth-child(odd) .my-box {
+  background: color-mix(
+    in srgb,
+    var(--see-through-secondary) 70%,
+    transparent
+  );
+}
+
+.leaderboard [data-react-window-index]:nth-child(even) .my-box {
+  background: color-mix(
+    in srgb,
+    var(--see-through-tertiary) 60%,
+    transparent
+  );
+}
+
+.newspaper-card.my-box {
+  background-color: color-mix(
+    in srgb,
+    var(--see-through-secondary) 70%,
+    transparent
+  );
+}
+
+.room-folder {
+  --room-folder-bg: color-mix(
+    in srgb,
+    var(--see-through-secondary) 70%,
+    transparent
+  );
+}
+
+.react-tabs__tab--selected {
+  background-color: var(--color-bg-secondary);
+}
+
+.react-tabs__tab--selected:after {
+  background: var(--color-bg-accent);
+}
+
+.game-incantation-option:hover,
+.game-incantation-option.selected {
+  color: var(--theme-button-text);
+}
+
+.game-incantation-option:hover
+  :is(.status-label, .stat-label, .item-label, .technical-term-label),
+.game-incantation-option.selected
+  :is(.status-label, .stat-label, .item-label, .technical-term-label) {
+  color: inherit;
+}
+
+.game-incantation-option:hover .ability-value,
+.game-incantation-option:hover .ability-value .active,
+.game-incantation-option.selected .ability-value,
+.game-incantation-option.selected .ability-value .active {
+  color: inherit;
+}
+
+.game-incantation-option:hover .ability-value > :not(.active),
+.game-incantation-option.selected .ability-value > :not(.active) {
+  opacity: 0.6;
+}

@@ -106,8 +106,11 @@ export default function RoomItem(props: {
   // Solo tournaments play Smeargle Pack custom games, Duo ones Double Up
   const isScribbleTournament =
     isTournament && metadata?.gameMode === GameMode.CUSTOM_LOBBY
-  const isEvent = isDailyDuel || isTournament
-  const folderRef = useFolderGlowGeometry<HTMLDivElement>(isScribbleTournament)
+  const isRainbowFinale = metadata?.rainbowFinale === true
+  const isEvent = isDailyDuel || isTournament || isRainbowFinale
+  // the Rainbow Hours finale wears the Scribble tournament's rainbow stripes
+  const hasRainbowStripes = isScribbleTournament || isRainbowFinale
+  const folderRef = useFolderGlowGeometry<HTMLDivElement>(hasRainbowStripes)
 
   return (
     <div
@@ -115,7 +118,7 @@ export default function RoomItem(props: {
       className={cc("room-folder", {
         "event-folder": isEvent,
         "tournament-folder": isTournament,
-        "scribble-tournament-folder": isScribbleTournament
+        "scribble-tournament-folder": hasRainbowStripes
       })}
       title={title}
     >
@@ -160,7 +163,11 @@ export default function RoomItem(props: {
             alt=""
             aria-hidden="true"
             className="event-icon"
-            src="/assets/icons/fire_week_streak.svg"
+            src={
+              isRainbowFinale
+                ? "/assets/ui/game_modes/scribble_icon.svg"
+                : "/assets/icons/fire_week_streak.svg"
+            }
           />
         )}
         <span className="room-info">

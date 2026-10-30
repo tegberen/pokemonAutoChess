@@ -61,3 +61,13 @@
   scale: 1.08;
   z-index: 10;
 }
+
+.boosters-content {
+  flex: 1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 40px;
+  position: relative;
+  width: 100%;
+}

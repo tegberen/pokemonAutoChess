@@ -237,7 +237,7 @@
 }
 
 /* its rainbow glow is two rings drawn behind it (index.css), not a filter */
-.room-folder.tournament-folder.scribble-tournament-folder {
+.room-folder.scribble-tournament-folder {
   filter: none;
 }
 
@@ -311,6 +311,44 @@
 
 .daily-duel-countdown-label {
   flex: 1;
+}
+
+.rainbow-hours-countdown.my-box {
+  background-color: var(--scribble-tournament-bg);
+  background-image: var(--scribble-tournament-stripes);
+}
+
+.rainbow-hours-countdown .icon {
+  object-fit: contain;
+}
+
+/* a dark tint the stripes show through, instead of the Daily Duel's gold */
+.rainbow-hours-countdown .icon,
+.rainbow-hours-countdown .daily-duel-countdown-time {
+  background-color: rgb(8 6 11 / 40%);
+}
+
+/* the letters themselves in rainbow; a text-shadow would paint over a
+   text-clipped gradient, so the outline is a drop-shadow */
+.rainbow-hours-title {
+  background-image: linear-gradient(
+    90deg,
+    #ff6b6b,
+    #ffb347,
+    #ffe66d,
+    #7ee081,
+    #5fd3ff,
+    #b18cff
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  font-weight: 700;
+  white-space: nowrap;
+  text-shadow: none;
+  filter: drop-shadow(1px 1px 1px #05090f);
+  /* the italic slant leans into the next word */
+  margin-right: 0.3em;
 }
 
 .daily-duel-countdown-time {

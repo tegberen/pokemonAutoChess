@@ -462,13 +462,39 @@ Smeargle Scribbles do not change your Elo.
 
 ## Misc
 
-- The full collection is unlocked, with all nine emotions when available. Boosters are exclusive to the Smeargle Pack Scribble.
+- Pokémon emotes are unlocked by opening boosters from Wigglytuff's Guild.
 - There is no Elo decay.
 - Shop-upgrade outlines and Walking Avatar are under [Options > Interface](#options/interface).
+
+### Art credits
+
+- Calendar news card art by tintinteal.
+- Entei, Raikou, Suicune and Melmetal card backgrounds are cropped from official Pokémon TCG illustrations. Entei by Shigenori Negishi, Suicune by Atsushi Furusawa.
 
 ## Patch Log
 
 Every balance change on this server, newest first.
+
+### 1 November 2026
+
+Last month, we struggled to fill lobbies again, sorry about that... *sigh. wcyd.*
+
+The other day, I went for a walk and realised something: people don't mind working towards goals instead of having everything handed to them. It's like Minecraft, where Survival Mode is still fun even though Creative Mode exists. Progression itself is part of the fun.
+
+So, I've removed the free collection and am introducing Wigglytuff's Guild. I hope this will help keep players around. A currency also gives us room to plan events, from daily and weekly challenges to tournaments.
+
+The collection will start over: boosters will unlock your emotes again. Every registered account will start with 10 boosters and a Shiny Wonder Pick. Shinies are now turbo-rare and almost exclusive to Shiny Wonder Picks. The regular dopamine hit from finding Shinies on the main will be replaced by Holos. At least, that's the hope.
+
+Wigglytuff will hand out stuff daily (you just need to log in), which you can then spend at Kecleon's or Croagunk's shop. There's also a small gacha minigame called Chimecho's Wonder Pick. It's free and resets every four hours, on the hour (UTC).
+
+Some people would like to play but can't find a lobby. The hope is that this gives everyone a reason to drop by the server every now and then, so the lobbies fill up. Cheers, and have fun collecting!
+
+**Events**
+- Rainbow Hours | new, Monday to Friday 20:00 to 24:00 UTC: every game started in that window and played to stage 14 pays 20 Tickets, and a win 30 more. Games played at the same time pay once.
+- Smeargle Pack for a Pack | new solo Smeargle Pack lobby at 00:00 UTC that closes each Rainbow Hours: everyone who plays to stage 14 gets 1 Wonder Pick, the winner 1 booster.
+
+**Wishes**
+- Further Beyond | Gold → Prismatic
 
 ### 27 October 2026
 

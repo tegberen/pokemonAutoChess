@@ -1,5 +1,6 @@
 import Phaser from "phaser"
 import { useCallback, useEffect, useState } from "react"
+import { isHalloweenGhostSeason } from "../../config/game/town-encounters"
 import { removeInArray } from "../../utils/array"
 import type { AvatarCosmeticId } from "./cosmetics/avatar-cosmetics"
 import { LocalStoreKeys, localStore } from "./pages/utils/store"
@@ -21,7 +22,7 @@ export type Keybindings = {
   chat: string
 }
 // changing it switches every player to it once, then they can pick again
-const FORCED_THEME = "halloween"
+const FORCED_THEME = isHalloweenGhostSeason() ? "halloween" : "newjourney"
 
 export interface IPreferencesState {
   musicVolume: number

@@ -12,7 +12,10 @@ import { useAppDispatch, useAppSelector } from "../../../hooks"
 import { rooms } from "../../../network"
 import { IngameRoomsList } from "./game-rooms-menu"
 import RoomItem from "./room-item"
-import { DailyDuelCountdown } from "./daily-duel-countdown"
+import {
+  DailyDuelCountdown,
+  RainbowHoursCountdown
+} from "./daily-duel-countdown"
 import { RoomSelectionMenu } from "./room-selection-menu"
 import "./room-menu.css"
 
@@ -122,6 +125,7 @@ export default function RoomMenu() {
       {!user && <p className="subtitle">{t("loading")}</p>}
 
       <TabPanel>
+        <RainbowHoursCountdown />
         {!hasDailyDuelLobby && <DailyDuelCountdown />}
         <RoomList onRoomAction={onRoomAction} />
       </TabPanel>

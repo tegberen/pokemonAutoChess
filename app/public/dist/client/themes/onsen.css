@@ -1,0 +1,134 @@
+:root {
+  --color-bg-primary: #24130e;
+  --color-bg-secondary: #3a2018;
+  --color-bg-tertiary: #2f1a13;
+  --see-through-primary: #1a0d09;
+  --see-through-secondary: #331b13;
+  --see-through-tertiary: #28150f;
+  --color-bg-accent: #e8662a;
+
+  --border-thick: 2px solid #120805;
+  --border-thin: 1px solid #120805;
+  --border-extra-thin: 1px solid #120805;
+
+  --onsen-wood-grain: repeating-linear-gradient(
+    176deg,
+    transparent 0 5px,
+    #5a1e0614 5px 6px,
+    transparent 6px 11px,
+    #fff3e00f 11px 12px
+  );
+  --theme-button:
+    var(--onsen-wood-grain),
+    linear-gradient(180deg, #ffe7c9 0 20%, #ec8a3d 20% 58%, #b9441c 58% 100%);
+  --theme-button-hover:
+    var(--onsen-wood-grain),
+    linear-gradient(180deg, #fff3e2 0 20%, #f29d55 20% 58%, #c9532a 58% 100%);
+  --theme-ready:
+    var(--onsen-wood-grain),
+    linear-gradient(180deg, #fff6d8 0 20%, #f1c04c 20% 58%, #b5741d 58% 100%);
+  --theme-progress: #f1c04c;
+  --theme-ready-hover:
+    var(--onsen-wood-grain),
+    linear-gradient(180deg, #fffbea 0 20%, #f5cd67 20% 58%, #c4842a 58% 100%);
+  --theme-button-text: #3a1307;
+  --theme-button-text-shadow: 1px 1px 0 #ffe7c980;
+}
+
+.custom-bg {
+  background-image: url("/assets/theme/onsen/custombg.jpg");
+  background-size: cover;
+  background-position: center 45%;
+}
+
+.lobby h2 {
+  text-shadow: 0px 3px 6px black;
+}
+
+.draggable-window.my-container,
+.game-shop .information > div,
+#game-stage-info,
+.game-spectate-player-info.my-container,
+.team-builder-modal.my-container,
+.game-shop.my-container {
+  background-color: color-mix(
+    in srgb,
+    var(--see-through-primary) 65%,
+    transparent
+  );
+}
+
+.after-menu .my-container,
+.leaderboard .my-container,
+.room-menu.my-container,
+.events-menu .my-container {
+  background-color: color-mix(
+    in srgb,
+    var(--see-through-primary) 60%,
+    transparent
+  );
+}
+
+.leaderboard [data-react-window-index]:nth-child(odd) .my-box {
+  background: color-mix(
+    in srgb,
+    var(--see-through-secondary) 70%,
+    transparent
+  );
+}
+
+.leaderboard [data-react-window-index]:nth-child(even) .my-box {
+  background: color-mix(
+    in srgb,
+    var(--see-through-tertiary) 60%,
+    transparent
+  );
+}
+
+.newspaper-card.my-box {
+  background-color: color-mix(
+    in srgb,
+    var(--see-through-secondary) 70%,
+    transparent
+  );
+}
+
+.room-folder {
+  --room-folder-bg: color-mix(
+    in srgb,
+    var(--see-through-secondary) 70%,
+    transparent
+  );
+}
+
+.react-tabs__tab--selected {
+  background-color: var(--color-bg-secondary);
+}
+
+.react-tabs__tab--selected:after {
+  background: var(--color-bg-accent);
+}
+
+.game-incantation-option:hover,
+.game-incantation-option.selected {
+  color: var(--theme-button-text);
+}
+
+.game-incantation-option:hover
+  :is(.status-label, .stat-label, .item-label, .technical-term-label),
+.game-incantation-option.selected
+  :is(.status-label, .stat-label, .item-label, .technical-term-label) {
+  color: inherit;
+}
+
+.game-incantation-option:hover .ability-value,
+.game-incantation-option:hover .ability-value .active,
+.game-incantation-option.selected .ability-value,
+.game-incantation-option.selected .ability-value .active {
+  color: inherit;
+}
+
+.game-incantation-option:hover .ability-value > :not(.active),
+.game-incantation-option.selected .ability-value > :not(.active) {
+  opacity: 0.6;
+}

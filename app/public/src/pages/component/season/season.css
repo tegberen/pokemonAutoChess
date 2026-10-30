@@ -1,0 +1,2729 @@
+.season-modal .modal-body {
+  padding: 0.6em;
+  scrollbar-gutter: stable;
+}
+
+.season-page,
+.season-collection-modal {
+  --season-surface: color-mix(in srgb, var(--color-bg-secondary) 80%, #0e0b12);
+  --season-surface-deep: color-mix(
+    in srgb,
+    var(--color-bg-tertiary) 72%,
+    #0e0b12
+  );
+  --season-line: color-mix(in srgb, #000000 45%, var(--season-surface));
+  --season-accent: var(--color-bg-accent);
+  --season-accent-edge: color-mix(in srgb, var(--season-accent) 60%, #000000);
+  --season-accent-ink: color-mix(in srgb, var(--season-accent) 22%, #000000);
+  /* what you earned or filled, apart from the accent of what you click: the
+     colour of a confirmed Ready ✔, or a solid stop of it when it is a
+     gradient */
+  --season-progress: var(--theme-progress, var(--theme-ready, #6cbf45));
+  --season-progress-edge: color-mix(
+    in srgb,
+    var(--season-progress) 65%,
+    #000000
+  );
+  --season-progress-ink: color-mix(
+    in srgb,
+    var(--season-progress) 20%,
+    #000000
+  );
+  --season-channel: color-mix(
+    in srgb,
+    #000000 55%,
+    var(--season-surface-deep)
+  );
+  --season-hexagon: polygon(
+    25% 0,
+    75% 0,
+    100% 50%,
+    75% 100%,
+    25% 100%,
+    0 50%
+  );
+  --season-cell: color-mix(in srgb, var(--color-fg-secondary) 9%, transparent);
+  --season-shade: rgb(0 0 0 / 45%);
+}
+
+.season-page {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6em;
+  width: min(1400px, 92vw);
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.season-page
+  :is(
+    input,
+    textarea,
+    select,
+    [contenteditable="true"],
+    [contenteditable=""],
+    [contenteditable="plaintext-only"]
+  ) {
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+@supports (color: oklch(from red l c h)) {
+  .season-page,
+  .season-collection-modal {
+    --season-accent: oklch(
+      from var(--color-bg-accent) min(l, 0.7) calc(c * 1.3) h
+    );
+  }
+}
+
+:root:not([data-themed-buttons]) .season-page,
+:root:not([data-themed-buttons]) .season-collection-modal {
+  --season-accent: #109fff;
+  --season-accent-edge: #006bb3;
+  --season-accent-ink: #ffffff;
+}
+
+.season-page h2,
+.season-page h3,
+.season-page p {
+  margin: 0;
+}
+
+.season-muted {
+  color: var(--color-fg-secondary);
+  font-size: 0.9em;
+}
+
+.season-frame {
+  border-radius: 4px;
+  border: var(--border-thin);
+  background-color: var(--season-surface);
+  box-shadow:
+    inset 0 0 0 3px var(--season-surface),
+    inset 0 0 0 5px var(--season-line);
+  color: var(--color-fg-primary);
+}
+
+.season-empty {
+  padding: 2em;
+  text-align: center;
+}
+
+.season-heading {
+  display: flex;
+  align-items: center;
+  gap: 0.6em;
+  font-size: 0.95em;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.season-heading::after {
+  content: "";
+  order: 1;
+  flex: 1;
+  height: 2px;
+  background-color: var(--season-line);
+}
+
+.season-heading > span {
+  order: 2;
+  text-transform: none;
+  letter-spacing: normal;
+}
+
+.season-stage {
+  padding: 0 0.6em 0.6em;
+}
+
+.season-stage-panels {
+  display: grid;
+  margin-top: 0.6em;
+}
+
+.season-stage-panel {
+  display: flex;
+  flex-direction: column;
+  grid-area: 1 / 1;
+  min-width: 0;
+}
+
+.season-stage-panel[hidden] {
+  display: none;
+}
+
+.season-stage-banner {
+  position: relative;
+  isolation: isolate;
+  justify-content: center;
+  background-size: cover;
+  background-position: center 40%;
+}
+
+.season-stage-banner::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-color: var(--season-shade);
+}
+
+.season-stage-banner > .season-shop {
+  background: none;
+  box-shadow: none;
+}
+
+.season-stage-banner > .season-stage-panels {
+  flex: 1;
+}
+
+.season-stage-banner .season-stage-panel > .season-wonder {
+  flex: 1;
+}
+
+.season-hero {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: 2.5em;
+  padding: 1.4em 2em;
+  background-size: cover;
+  background-position: center 40%;
+  text-shadow: 1px 1px 2px #000000;
+}
+
+.season-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-color: var(--season-shade);
+}
+
+.season-hero-info,
+.season-hero-reward {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.4em;
+}
+
+.season-title {
+  display: flex;
+  align-items: center;
+  gap: 1.1em;
+}
+
+.season-title > div {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5em;
+}
+
+.season-title > img {
+  flex-shrink: 0;
+  border: 3px solid #08060b;
+  border-radius: 6px;
+  box-shadow: 0 0 0 2px var(--season-line);
+  image-rendering: pixelated;
+}
+
+.season-title h2 {
+  font-size: 2em;
+  line-height: 1.05;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.season-days-left {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  padding: 0.2em 0.75em;
+  border: 1px solid #08060b;
+  border-radius: 999px;
+  background-color: rgb(0 0 0 / 55%);
+  color: var(--color-fg-primary);
+  font-variant-numeric: tabular-nums;
+  text-shadow: none;
+}
+
+.season-days-left > img {
+  image-rendering: pixelated;
+}
+
+.season-challenge-bar > span {
+  border-radius: 1px;
+  background-color: var(--season-cell);
+}
+
+.season-challenge-bar > span.filled {
+  background-color: var(--season-progress);
+}
+
+.season-hero-art,
+.season-hero-art-ring,
+.season-hero-art-face {
+  display: grid;
+  box-sizing: border-box;
+  clip-path: var(--season-hexagon);
+}
+
+.season-hero-art {
+  width: 180px;
+  height: 156px;
+  padding: 5px;
+  background-color: var(--season-line);
+}
+
+.season-hero-art-ring {
+  padding: 6px;
+  background-color: var(--season-surface-deep);
+}
+
+.season-hero-art-face {
+  place-content: center;
+  background-color: var(--season-surface-deep);
+}
+
+.season-hero-art-face > img {
+  width: 88px;
+  height: 88px;
+  object-fit: contain;
+}
+
+.season-hero-reward h3 {
+  font-size: 1.35em;
+  line-height: 1.15;
+}
+
+.season-track-box {
+  position: relative;
+  padding: 0.35em 1em;
+}
+
+.season-track {
+  display: flex;
+  align-items: flex-end;
+  margin: 0;
+  padding: 1.6em 0 1.4em;
+  list-style: none;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.season-track::-webkit-scrollbar {
+  display: none;
+}
+
+.season-track-arrow {
+  border-radius: 4px;
+  position: absolute;
+  top: 50%;
+  z-index: 1;
+  translate: 0 -50%;
+  display: grid;
+  place-content: center;
+  width: 32px;
+  height: 48px;
+  padding: 0;
+  border: var(--border-thin);
+  background-color: var(--season-surface-deep);
+  box-shadow: inset 0 0 0 2px var(--season-line);
+  cursor: var(--cursor-hover);
+}
+
+.season-track-arrow:hover {
+  background-color: var(--season-surface-deep);
+}
+
+.season-track-arrow.left {
+  left: 6px;
+}
+
+.season-track-arrow.right {
+  right: 6px;
+}
+
+.season-step {
+  position: relative;
+  flex: 1 0 60px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5em;
+  padding: 0 0.25em;
+}
+
+.season-step::before {
+  content: "";
+  position: absolute;
+  bottom: 8px;
+  right: 50%;
+  width: calc(100% + 1px);
+  height: 4px;
+  background-color: var(--season-channel);
+  box-shadow:
+    0 -1px 0 #08060b,
+    0 1px 0 #08060b;
+}
+
+.season-step:first-child::before {
+  display: none;
+}
+
+.season-step.reached::before {
+  background-color: var(--season-progress);
+}
+
+/* today's walk toward the next step: part solid, then stripes fading out */
+.season-step.next::before {
+  background-image:
+    linear-gradient(90deg, var(--season-progress) 0 40%, transparent 40%),
+    linear-gradient(90deg, transparent 40%, var(--season-channel) 95%),
+    repeating-linear-gradient(
+      115deg,
+      var(--season-progress) 0 3px,
+      transparent 3px 7px
+    );
+}
+
+.season-step-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 72px;
+  aspect-ratio: 1;
+  box-sizing: border-box;
+  padding: 0;
+  border-radius: 3px;
+  border: 2px solid var(--season-line);
+  background-color: var(--season-surface-deep);
+  box-shadow:
+    inset 0 0 0 2px var(--season-surface-deep),
+    inset 0 0 0 4px var(--season-line);
+  color: var(--color-fg-primary);
+  font: inherit;
+  cursor: var(--cursor-hover);
+  transition: transform 150ms ease-out;
+}
+
+.season-step-card > img {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+}
+
+.season-step-card:hover {
+  transform: translateY(-3px);
+}
+
+.season-step.milestone .season-step-card {
+  box-shadow:
+    inset 0 0 0 2px var(--season-surface-deep),
+    inset 0 0 0 4px var(--season-line),
+    inset 0 0 0 6px var(--season-surface-deep),
+    inset 0 0 0 7px var(--season-line);
+}
+
+.season-step.selected .season-step-card {
+  background-color: color-mix(
+    in srgb,
+    var(--color-fg-primary) 7%,
+    var(--season-surface-deep)
+  );
+}
+
+.season-step.claimed .season-step-card {
+  border-color: var(--season-line);
+  background-color: var(--season-surface);
+  box-shadow: none;
+  opacity: 0.45;
+  filter: grayscale(0.6);
+}
+
+.season-step-badge {
+  margin-top: -2px;
+  font-size: 0.7em;
+  line-height: 1;
+  text-shadow: 1px 1px 0 var(--color-shadow);
+}
+
+.season-step-node {
+  --plate-fill: var(--season-channel);
+  --plate-edge: #00000066;
+  position: relative;
+  z-index: 1;
+  isolation: isolate;
+  min-width: 32px;
+  height: 20px;
+  padding: 0 0.5em 2px;
+  box-sizing: border-box;
+  display: grid;
+  place-content: center;
+  color: var(--color-fg-secondary);
+  font-size: 0.75em;
+  font-weight: 600;
+}
+
+.season-step-node::before,
+.season-step-node::after {
+  content: "";
+  position: absolute;
+  clip-path: polygon(
+    7px 0,
+    calc(100% - 7px) 0,
+    100% 50%,
+    calc(100% - 7px) 100%,
+    7px 100%,
+    0 50%
+  );
+}
+
+.season-step-node::before {
+  inset: -1.5px;
+  z-index: -2;
+  background-color: #08060b;
+}
+
+.season-step-node::after {
+  inset: 0;
+  z-index: -1;
+  background: var(--plate-fill);
+  box-shadow: inset 0 -3px 0 var(--plate-edge);
+}
+
+.season-step.reached .season-step-node {
+  --plate-fill: var(--season-progress);
+  --plate-edge: var(--season-progress-edge);
+  color: var(--season-progress-ink);
+}
+
+.season-step.claimed .season-step-node {
+  --plate-fill: var(--season-progress);
+  --plate-edge: var(--season-progress-edge);
+  color: var(--season-progress-ink);
+}
+
+.season-step.current .season-step-node {
+  scale: 1.2;
+}
+
+.season-step .season-step-claim {
+  --plate-fill: var(--theme-button, var(--season-accent));
+  min-width: 40px;
+  pointer-events: none;
+}
+
+.season-step:has(.season-step-card:hover) .season-step-claim {
+  --plate-fill: var(--theme-button-hover, var(--season-accent));
+}
+
+.season-step-claim > img {
+  width: 14px;
+  height: 14px;
+  filter: brightness(0);
+}
+
+.season-step.bonus .season-step-card {
+  border-style: dashed;
+  background-color: transparent;
+  box-shadow: none;
+}
+
+.season-step.bonus.selected .season-step-card {
+  background-color: var(--season-cell);
+}
+
+.season-panels {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+  gap: 0.6em;
+}
+
+.season-panels-hidden {
+  display: none;
+}
+
+.season-hero-action {
+  display: flex;
+  align-items: center;
+  min-height: 2.6em;
+}
+
+.season-panels > section {
+  padding: 0.7em 1em;
+}
+
+.season-panels ul {
+  margin: 0.3em 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.season-panels li {
+  padding: 0.45em 0;
+}
+
+.season-panels li + li {
+  border-top: 2px solid var(--season-line);
+}
+
+.season-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2em;
+  flex-shrink: 0;
+  color: var(--color-fg-secondary);
+  font-size: 0.9em;
+}
+
+.season-challenge {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3em;
+}
+
+.season-challenge-top {
+  display: flex;
+  align-items: center;
+  gap: 0.6em;
+}
+
+.season-challenge-period {
+  flex-shrink: 0;
+  min-width: 4.5em;
+  color: var(--color-fg-secondary);
+  font-size: 0.7em;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.season-challenge-label {
+  flex: 1;
+}
+
+.season-challenge-label > :is(img, .synergy-icon) {
+  vertical-align: middle;
+}
+
+.season-challenge-item {
+  image-rendering: pixelated;
+}
+
+.season-challenge-progress {
+  display: flex;
+  align-items: center;
+  gap: 0.6em;
+}
+
+.season-challenge-progress > span {
+  min-width: 2.5em;
+  text-align: right;
+  font-size: 0.8em;
+  color: var(--color-fg-secondary);
+}
+
+.season-challenge-bar {
+  flex: 1;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  gap: 2px;
+  height: 8px;
+  box-sizing: border-box;
+  padding: 1px;
+  border: 1px solid #08060b;
+  background-color: var(--season-channel);
+}
+
+.season-poke {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+}
+
+.season-shop-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  width: 100%;
+  margin-top: auto;
+  padding: 0.5em 0 0;
+  border: none;
+  border-top: 2px solid var(--season-line);
+  background: none;
+  color: var(--color-fg-secondary);
+  font: inherit;
+  text-align: left;
+  cursor: var(--cursor-hover);
+}
+
+.season-shop-row:hover {
+  color: var(--color-fg-primary);
+}
+
+.season-shop-row > span {
+  flex: 1;
+}
+
+.season-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 0.5em 0.25em 0;
+  border-bottom: 2px solid var(--season-line);
+}
+
+.season-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  margin-bottom: -2px;
+  padding: 0.45em 1.2em;
+  border: 2px solid var(--season-line);
+  border-radius: 4px 4px 0 0;
+  background-color: var(--season-surface-deep);
+  color: var(--color-fg-secondary);
+  font: inherit;
+  font-size: 1.05em;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: var(--cursor-hover);
+}
+
+.season-tab:not(.active):hover {
+  color: var(--color-fg-primary);
+}
+
+.season-tab.active {
+  padding-bottom: calc(0.45em + 2px);
+  border-bottom: none;
+  background-color: var(--season-surface);
+  color: var(--color-fg-primary);
+}
+
+.season-tab > img {
+  object-fit: contain;
+}
+
+.season-tab-portrait {
+  border: 2px solid #08060b;
+  border-radius: 3px;
+}
+
+.season-shop {
+  display: flex;
+  align-items: center;
+  gap: 1em;
+  padding: 1.4em 0.8em;
+}
+
+.season-shop-offers {
+  display: grid;
+  flex: 1;
+  grid-template-columns: repeat(auto-fit, minmax(132px, 1fr));
+  gap: 0.8em;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.season-shop-offer {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35em;
+  width: 100%;
+  padding: 0.6em 0.4em 0.5em;
+  border: 2px solid var(--season-line);
+  border-radius: 3px;
+  background-color: var(--season-surface-deep);
+  box-shadow:
+    inset 0 0 0 2px var(--season-surface-deep),
+    inset 0 0 0 4px var(--season-line);
+  color: var(--color-fg-primary);
+  font: inherit;
+  cursor: var(--cursor-hover);
+  transition: transform 150ms ease-out;
+}
+
+.season-shop-offer:not([disabled]):hover {
+  transform: translateY(-3px);
+}
+
+.season-shop-offer[disabled] {
+  cursor: default;
+}
+
+.season-shop-offer[disabled] .season-shop-offer-art,
+.season-shop-offer[disabled] .season-shop-price {
+  opacity: 0.45;
+}
+
+.season-shop-offer-art {
+  position: relative;
+  display: grid;
+  place-content: center;
+  width: 76px;
+  height: 76px;
+}
+
+.season-shop-offer-art > img {
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+
+.season-shop-offer-name {
+  font-size: 0.8em;
+  text-align: center;
+}
+
+.season-shop-price {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25em;
+  font-weight: 600;
+}
+
+.season-shop-offer.confirming {
+  background-color: color-mix(
+    in srgb,
+    var(--color-fg-primary) 7%,
+    var(--season-surface-deep)
+  );
+}
+
+.season-shop-offer.confirming .season-shop-price {
+  color: var(--season-accent);
+}
+
+.season-shop-offer.owned .season-shop-price {
+  color: var(--color-fg-secondary);
+  font-size: 0.75em;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.season-shop-owned-count {
+  position: absolute;
+  top: -4px;
+  right: -6px;
+  display: grid;
+  place-content: center;
+  min-width: 20px;
+  height: 20px;
+  box-sizing: border-box;
+  padding: 0 4px;
+  border: 2px solid #08060b;
+  border-radius: 10px;
+  background-color: var(--season-progress);
+  color: var(--season-progress-ink);
+  font-size: 0.75em;
+  font-weight: 700;
+}
+
+.season-shop-dock {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.9em;
+  align-self: stretch;
+  justify-content: flex-start;
+  min-width: 132px;
+  padding: 1.4em 0.6em 0 1.4em;
+  border-left: 2px solid var(--season-line);
+}
+
+.season-tabs-balance {
+  display: flex;
+  align-items: center;
+  gap: 1em;
+  margin-left: auto;
+  padding: 0 0.25em 6px;
+}
+
+.season-tabs-balance > span {
+  display: flex;
+  align-items: center;
+  gap: 0.35em;
+  font-size: 1.05em;
+  font-weight: 700;
+}
+
+.season-shop-dock-booster {
+  position: relative;
+}
+
+.season-shop-dock-booster > img {
+  display: block;
+  object-fit: contain;
+}
+
+.season-shop-open {
+  min-width: 6em;
+  padding: 0.3em 1em 0.4em;
+  border: var(--border-thin);
+  border-radius: 10px;
+  background: var(--theme-button, var(--season-accent));
+  box-shadow:
+    inset -4px -4px 0 #00000040,
+    var(--shadow-clickable);
+  color: var(--theme-button-text, var(--season-accent-ink));
+  font: inherit;
+  font-weight: 700;
+  cursor: var(--cursor-hover);
+}
+
+.season-shop-open:not([disabled]):hover {
+  background: var(--theme-button-hover, var(--season-accent));
+}
+
+.season-shop-open[disabled] {
+  opacity: 0.45;
+  cursor: default;
+}
+
+/* the green of a confirmed Ready ✔ in the preparation room */
+.season-shop-open.is-current-avatar {
+  opacity: 1;
+  background: var(--theme-ready, #92cc41);
+  box-shadow:
+    inset -4px -4px 0 #65a013,
+    var(--shadow-clickable);
+  color: var(--theme-button-text, #ffffff);
+  animation: season-avatar-set 300ms ease-out;
+}
+
+:root[data-themed-buttons] .season-shop-open.is-current-avatar {
+  box-shadow:
+    inset -4px -4px 0 #00000040,
+    var(--shadow-clickable);
+}
+
+@keyframes season-avatar-set {
+  40% {
+    transform: scale(1.08);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .season-shop-open.is-current-avatar {
+    animation: none;
+  }
+}
+
+.season-shop-back {
+  display: grid;
+  place-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 2px solid var(--season-line);
+  border-radius: 50%;
+  background-color: var(--season-surface-deep);
+  cursor: var(--cursor-hover);
+  transition: translate 120ms ease-out;
+}
+
+.season-wonder-next {
+  position: relative;
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  animation: season-wonder-emote-in 300ms ease-out 1200ms both;
+}
+
+.season-shop-back:hover {
+  background-color: var(--season-cell);
+  translate: -2px 0;
+}
+
+.season-wonder-next:hover {
+  translate: 2px 0;
+}
+
+.season-shop-back > img {
+  width: 16px;
+  height: 16px;
+}
+
+.season-booster-reveal {
+  display: grid;
+  flex: 1;
+  grid-template-columns: repeat(5, minmax(0, 136px));
+  justify-content: center;
+  gap: 1em;
+}
+
+.season-booster-card {
+  position: relative;
+  container-type: inline-size;
+  --booster-card-color: #2c3044;
+  --booster-ink: #eef1f8;
+  --booster-inner-line: #08060b;
+  width: 100%;
+  aspect-ratio: 120 / 168;
+  padding: 0;
+  border: none;
+  background: none;
+  perspective: 600px;
+  cursor: var(--cursor-hover);
+  -webkit-user-select: none;
+  user-select: none;
+  touch-action: pan-y;
+  animation: season-booster-deal 420ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  transition:
+    --holo-x 250ms ease-out,
+    --holo-y 250ms ease-out,
+    --holo-tilt-x 250ms ease-out,
+    --holo-tilt-y 250ms ease-out;
+}
+
+.season-booster-card.flipped {
+  cursor: default;
+}
+
+.season-booster-card:is(.shiny, .holo).flipped {
+  z-index: 1;
+}
+
+.season-theme-reveal {
+  position: relative;
+  z-index: 1;
+  width: min(440px, 80vw);
+  aspect-ratio: 4 / 3;
+  margin-top: 0.5em;
+  animation: season-theme-reveal-in 700ms ease-out both;
+}
+
+.season-theme-reveal > img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  border: 3px solid #08060b;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+@keyframes season-theme-reveal-in {
+  from {
+    opacity: 0;
+    scale: 0.96;
+  }
+  to {
+    opacity: 1;
+    scale: 1;
+  }
+}
+
+.season-theme-reveal-footer {
+  display: flex;
+  align-items: center;
+  gap: 1em;
+  font-size: 1.2em;
+  font-weight: 700;
+  animation: season-wonder-emote-in 300ms ease-out 700ms both;
+}
+
+.season-mystery-reveal {
+  display: flex;
+  justify-content: center;
+  padding-top: 0.5em;
+}
+
+.season-mystery-reveal .season-booster-card {
+  width: 170px;
+}
+
+.season-mystery-reveal .season-booster-card.flipped {
+  animation: season-shiny-pop 700ms ease-out
+    calc(var(--flip-delay, 0ms) + 350ms) both;
+}
+
+/* a shiny turns over one and a half times in the same direction as every
+   other flip, fast then settling: one motion instead of a flip and a spin.
+   It runs on the flipping layer, so the card back shows on each half turn */
+.season-booster-reveal
+  .season-booster-card:is(.shiny, .holo).flipped
+  .season-booster-card-inner,
+.season-wonder-card.picked .season-booster-card-inner {
+  animation: season-shiny-turn var(--shiny-turn-duration, 1200ms)
+    cubic-bezier(0.25, 0.8, 0.25, 1) var(--flip-delay, 0ms) both;
+}
+
+.season-wonder-card.picked {
+  --shiny-landed-lift: -6px;
+}
+
+@keyframes season-shiny-turn {
+  from {
+    transform: translateY(var(--shiny-landed-lift, 0px)) rotateY(540deg);
+  }
+  to {
+    transform: translateY(var(--shiny-landed-lift, 0px)) rotateY(0deg);
+  }
+}
+
+.season-sparkle-burst {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 2;
+  clip-path: polygon(
+    50% 0,
+    56% 44%,
+    100% 50%,
+    56% 56%,
+    50% 100%,
+    44% 56%,
+    0 50%,
+    44% 44%
+  );
+  pointer-events: none;
+  opacity: 0;
+  animation: season-sparkle-burst 1000ms cubic-bezier(0.2, 0.7, 0.3, 1) both;
+}
+
+/* each star appears at the card edge and flies out while it fades */
+@keyframes season-sparkle-burst {
+  0% {
+    opacity: 0;
+    transform: translate(
+        calc(-50% + var(--burst-x) * 0.5),
+        calc(-50% + var(--burst-y) * 0.5)
+      )
+      scale(0) rotate(0deg);
+  }
+  18% {
+    opacity: 1;
+    transform: translate(
+        calc(-50% + var(--burst-x) * 0.7),
+        calc(-50% + var(--burst-y) * 0.7)
+      )
+      scale(1) rotate(60deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(
+        calc(-50% + var(--burst-x)),
+        calc(-50% + var(--burst-y))
+      )
+      scale(0.3) rotate(160deg);
+  }
+}
+
+@keyframes season-shiny-pop {
+  0% {
+    scale: 1;
+  }
+  35% {
+    scale: 1.12;
+  }
+  100% {
+    scale: 1.04;
+  }
+}
+
+.season-booster-stage {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  gap: 1em;
+}
+
+.season-booster-stage > .season-booster-reveal {
+  width: 100%;
+}
+
+/* kept from the start of a reveal, two emote rows tall, so the panel never
+   grows when a shiny's emotes appear */
+.season-booster-emotes-slot {
+  display: grid;
+  place-items: center;
+  min-height: 104px;
+}
+
+.season-booster-shiny-emotes {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.season-booster-shiny-emotes > li {
+  animation: season-wonder-emote-in 300ms ease-out both;
+}
+
+.season-booster-shiny-emotes img {
+  display: block;
+  border: 2px solid #08060b;
+  border-radius: 4px;
+  image-rendering: pixelated;
+}
+
+.season-booster-duplicate {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 3px;
+  min-height: 18px;
+  margin-top: auto;
+  font-size: 0.8em;
+  font-weight: 700;
+}
+
+.season-inventory {
+  display: flex;
+  gap: 0.6em;
+}
+
+.season-panels .season-inventory > li {
+  position: relative;
+  display: grid;
+  place-content: center;
+  width: 56px;
+  height: 56px;
+  padding: 0;
+  box-sizing: border-box;
+  border: 2px solid var(--season-line);
+  border-radius: 3px;
+  background-color: var(--season-surface-deep);
+}
+
+.season-inventory img {
+  object-fit: contain;
+}
+
+.season-level-rewards {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35em;
+  padding-top: 0.5em;
+  border-top: 2px solid var(--season-line);
+}
+
+.season-level-rewards-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5em;
+  font-size: 0.9em;
+  font-weight: 600;
+}
+
+.season-level-rewards-bar {
+  height: 8px;
+  box-sizing: border-box;
+  padding: 1px;
+  border: 1px solid #08060b;
+  background-color: var(--season-channel);
+}
+
+.season-level-rewards-bar > span {
+  display: block;
+  height: 100%;
+  background-color: var(--season-progress);
+}
+
+.season-croagunk {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 2.5em;
+  padding: 1.8em 2em;
+  text-shadow: 1px 1px 2px #000000;
+}
+
+.season-croagunk-title {
+  flex: 0 1 auto;
+  min-width: 240px;
+}
+
+.season-croagunk-deal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6em;
+  width: 240px;
+  padding: 1.2em 1.6em;
+  border: 2px solid var(--season-line);
+  border-radius: 3px;
+  background-color: var(--season-surface-deep);
+  box-shadow:
+    inset 0 0 0 2px var(--season-surface-deep),
+    inset 0 0 0 4px var(--season-line);
+  text-shadow: none;
+}
+
+.season-croagunk-offer {
+  position: relative;
+  display: grid;
+  place-content: center;
+  width: 72px;
+  height: 72px;
+}
+
+.season-croagunk-offer > img {
+  object-fit: contain;
+}
+
+.season-croagunk-amount {
+  position: absolute;
+  right: -4px;
+  bottom: -2px;
+  padding: 0 4px;
+  border: 2px solid #08060b;
+  border-radius: 8px;
+  background-color: var(--season-progress);
+  color: var(--season-progress-ink);
+  font-size: 0.8em;
+  font-weight: 700;
+}
+
+.season-croagunk-name {
+  font-weight: 600;
+  text-align: center;
+}
+
+.season-croagunk-price {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25em;
+  font-weight: 700;
+}
+
+.season-croagunk-button {
+  min-width: 6em;
+  padding: 0.3em 1em 0.4em;
+  border: var(--border-thin);
+  border-radius: 10px;
+  background: var(--theme-button, var(--season-accent));
+  box-shadow:
+    inset -4px -4px 0 #00000040,
+    var(--shadow-clickable);
+  color: var(--theme-button-text, var(--season-accent-ink));
+  font: inherit;
+  font-weight: 700;
+  cursor: var(--cursor-hover);
+}
+
+.season-croagunk-button:not([disabled]):hover {
+  background: var(--theme-button-hover, var(--season-accent));
+}
+
+.season-croagunk-button[disabled] {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.season-croagunk-status {
+  color: var(--color-fg-secondary);
+  font-size: 0.8em;
+  text-align: center;
+}
+
+@keyframes season-booster-deal {
+  from {
+    opacity: 0;
+    translate: 0 -18px;
+    scale: 0.94;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+    scale: 1;
+  }
+}
+
+.season-booster-card-inner {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  transform: rotateY(180deg);
+  transform-style: preserve-3d;
+  transition: transform 440ms cubic-bezier(0.2, 0.9, 0.3, 1);
+  will-change: transform;
+}
+
+.season-booster-card.flipped .season-booster-card-inner {
+  transform: none;
+}
+
+.season-booster-card:not(.flipped):hover .season-booster-card-inner {
+  transform: rotateY(180deg) translateY(-4px);
+}
+
+.season-booster-card-back,
+.season-booster-card-front {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  border: 2px solid #08060b;
+  border-radius: 8px;
+  backface-visibility: hidden;
+}
+
+.season-booster-card-back {
+  transform: rotateY(180deg);
+  background-color: #08060b;
+  object-fit: cover;
+}
+
+.season-booster-card-front {
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 11px 11px 9px;
+  overflow: hidden;
+  background-color: color-mix(
+    in srgb,
+    var(--rarity-color, #000000) 42%,
+    var(--booster-card-color)
+  );
+  background-image: repeating-linear-gradient(
+    135deg,
+    transparent 0px,
+    transparent 14px,
+    #ffffff14 14px,
+    #ffffff14 28px
+  );
+  background-size: 39.598px 39.598px;
+  color: var(--booster-ink);
+}
+
+.season-booster-card-front::before {
+  content: "";
+  position: absolute;
+  inset: 6px;
+  z-index: -1;
+  border: 1px solid var(--booster-inner-line);
+  border-radius: 6px;
+  background-color: #1b1e2b;
+  background-image: var(--card-art);
+  background-position: var(--card-art-pos, 50%) center;
+  background-size: cover;
+}
+
+.season-booster-card-name {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
+  font-family: PokemonClassic, sans-serif;
+  font-size: 6.1cqw;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.season-booster-card-name > span:first-child {
+  overflow: hidden;
+  padding-inline: 0.12em;
+  color: #08060b;
+  text-overflow: ellipsis;
+  text-shadow:
+    0 0.1em 0 #fff,
+    0.1em 0 0 #fff,
+    -0.1em 0 0 #fff,
+    0 -0.1em 0 #fff,
+    0.1em 0.1em 0 #fff,
+    -0.1em 0.1em 0 #fff,
+    0.1em -0.1em 0 #fff,
+    -0.1em -0.1em 0 #fff;
+}
+
+.season-booster-card-art {
+  display: block;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border: 3px solid #08060b;
+  border-radius: 6px;
+  background-color: #1b1e2b;
+}
+
+.season-booster-card-art > img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  image-rendering: pixelated;
+}
+
+.season-booster-card-types {
+  display: flex;
+  justify-content: flex-start;
+  gap: 3px;
+  margin-top: auto;
+  filter: drop-shadow(0 1px 2px #08060b);
+}
+
+/* --card-color-1..5 come inline from SPECIAL_CARD_PALETTES */
+.season-booster-card.shiny {
+  --card-badge: url("assets/ui/wrapping-star.svg");
+}
+
+.season-booster-card.holo {
+  --card-badge: url("assets/ui/star-swirl.svg");
+}
+
+.season-booster-card:is(.shiny, .holo) {
+  --card-stripes: repeating-linear-gradient(
+    135deg,
+    var(--card-color-1) 0px,
+    var(--card-color-1) 8px,
+    var(--card-color-2) 8px,
+    var(--card-color-2) 16px,
+    var(--card-color-3) 16px,
+    var(--card-color-3) 24px,
+    var(--card-color-4) 24px,
+    var(--card-color-4) 32px,
+    var(--card-color-5) 32px,
+    var(--card-color-5) 40px
+  );
+  --card-band: linear-gradient(
+    90deg,
+    var(--card-color-1),
+    var(--card-color-2),
+    var(--card-color-3),
+    var(--card-color-4),
+    var(--card-color-5)
+  );
+}
+
+.season-booster-card.shiny .season-booster-card-front {
+  background-image: var(--card-stripes);
+  background-size: var(--card-stripe-tile) var(--card-stripe-tile);
+}
+
+.season-booster-card.shiny .season-booster-card-art {
+  background-color: var(--card-color-1);
+  box-shadow: inset 0 0 0 100px #2a1f40a6;
+}
+
+.season-booster-card:is(.shiny, .holo) .season-booster-card-front::after {
+  content: "";
+  position: absolute;
+  inset: 2px;
+  border: 2px solid rgb(0 0 0 / 45%);
+  border-radius: 6px;
+  pointer-events: none;
+}
+
+.season-page,
+.season-collection-modal {
+  --wonder-card-color: #f6f2ff;
+  --wonder-ink: #2b303b;
+  --card-stripe-tile: 56.5685px;
+}
+
+.season-wonder,
+.season-shop {
+  box-sizing: border-box;
+  min-height: 380px;
+}
+
+.season-wonder {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+  gap: 1.4em;
+  padding: 1.2em 0 1.6em;
+}
+
+.season-wonder-cards {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.9em;
+}
+
+.season-wonder-modes {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  padding: 1.1em 0 0.2em;
+}
+
+.season-wonder-mode {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  padding: 0.35em 1em;
+  border: 2px solid var(--season-line);
+  border-radius: 4px;
+  background-color: var(--season-surface-deep);
+  color: var(--color-fg-secondary);
+  font: inherit;
+  cursor: var(--cursor-hover);
+}
+
+.season-wonder-mode.active {
+  border-color: var(--season-accent-edge);
+  color: var(--color-fg-primary);
+}
+
+.season-wonder-status {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.7em;
+  padding-top: 0.5em;
+  color: var(--color-fg-secondary);
+  font-size: 0.85em;
+}
+
+.season-wonder-pips {
+  display: flex;
+  gap: 5px;
+}
+
+.season-wonder-shiny-icon {
+  width: 20px;
+  height: 28px;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+
+.season-wonder-pips > img {
+  width: 20px;
+  height: 28px;
+  box-sizing: border-box;
+  border: 2px solid #08060b;
+  border-radius: 3px;
+  object-fit: cover;
+  opacity: 0.28;
+  image-rendering: pixelated;
+}
+
+.season-wonder-pips > img.filled {
+  opacity: 1;
+}
+
+.season-wonder-refill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35em;
+  color: var(--color-fg-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.season-wonder-clock {
+  position: absolute;
+  top: 0.8em;
+  right: 0.8em;
+  z-index: 1;
+}
+
+.season-wonder-info {
+  display: inline-grid;
+  place-content: center;
+  width: 18px;
+  height: 18px;
+  opacity: 0.7;
+  cursor: help;
+}
+
+.season-wonder-info:hover,
+.season-wonder-info:focus-visible {
+  opacity: 1;
+}
+
+.season-wonder-info > img {
+  width: 100%;
+  height: 100%;
+}
+
+.season-wonder.casual {
+  --booster-card-color: #2c3044;
+  --booster-ink: #eef1f8;
+}
+
+.season-wonder.casual .season-shop-open {
+  position: relative;
+  font-size: 1.15em;
+}
+
+/* Wonder Pick slots are SeasonCards: only their size and pick states differ */
+.season-wonder-card {
+  width: 172px;
+  animation: none;
+}
+
+.season-wonder-card:disabled {
+  cursor: default;
+}
+
+.season-wonder-cards:not(.shuffled)
+  .season-wonder-card.face-down
+  .season-booster-card-inner {
+  transform: rotateY(180deg);
+}
+
+.season-wonder-cards.shuffled .season-booster-card-inner {
+  transition: transform 120ms ease-out;
+}
+
+.season-wonder-cards.shuffled
+  .season-wonder-card:hover
+  .season-booster-card-inner {
+  transform: rotateY(180deg) translateY(-8px);
+}
+
+.season-wonder-card.picked .season-booster-card-inner {
+  transform: translateY(-6px);
+}
+
+.season-wonder-cards.shuffled .season-wonder-card {
+  cursor: var(--cursor-hover);
+}
+
+.season-wonder-card.picked {
+  z-index: 1;
+}
+
+.season-wonder-sparkle {
+  position: absolute;
+  z-index: 2;
+  clip-path: polygon(
+    50% 0,
+    56% 44%,
+    100% 50%,
+    56% 56%,
+    50% 100%,
+    44% 56%,
+    0 50%,
+    44% 44%
+  );
+  pointer-events: none;
+  animation: season-wonder-sparkle 900ms ease-out both;
+}
+
+@keyframes season-wonder-sparkle {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0) rotate(0deg);
+  }
+  35% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1) rotate(30deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0) rotate(90deg);
+  }
+}
+
+.season-wonder-cards.picked .season-wonder-card.face-down,
+.season-wonder-card.missed {
+  opacity: 0.45;
+}
+
+.season-wonder-stars {
+  display: flex;
+  flex-shrink: 0;
+}
+
+.season-wonder-stars > img {
+  width: 11px;
+  height: 11px;
+}
+
+.season-wonder-cards.unavailable .season-wonder-card.face-down {
+  opacity: 0.55;
+}
+
+.season-wonder-actions {
+  display: flex;
+  align-items: center;
+  gap: 1em;
+}
+
+.season-wonder-reroll {
+  position: relative;
+  display: grid;
+  place-content: center;
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  border: var(--border-thin);
+  border-radius: 50%;
+  background-color: var(--season-surface-deep);
+  box-shadow:
+    inset -3px -4px 0 #00000059,
+    var(--shadow-clickable);
+  cursor: var(--cursor-hover);
+}
+
+.season-wonder-reroll:not([disabled]):hover {
+  background-color: var(--season-surface);
+}
+
+.season-wonder-reroll[disabled] {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.season-wonder-reroll-count {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  display: grid;
+  place-content: center;
+  min-width: 20px;
+  height: 20px;
+  box-sizing: border-box;
+  border: 2px solid #08060b;
+  border-radius: 10px;
+  background-color: #c6a6f5;
+  color: var(--wonder-ink);
+  font-size: 0.75em;
+  font-weight: 700;
+}
+
+.season-wonder-pick-button {
+  position: relative;
+  padding: 0.35em 1.4em 0.5em;
+  border: var(--border-thin);
+  border-radius: 14px;
+  background-color: var(--wonder-card-color);
+  box-shadow:
+    inset -6px -6px 0 #0000002e,
+    var(--shadow-clickable);
+  color: var(--wonder-ink);
+  font: inherit;
+  font-size: 1.25em;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  cursor: var(--cursor-hover);
+  transition: transform 120ms ease-out;
+}
+
+.season-wonder-pick-button > .season-shop-owned-count {
+  top: -8px;
+  right: -8px;
+}
+
+.season-wonder-pick-button[disabled] {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.season-wonder-pick-button:not([disabled]):hover {
+  transform: translateY(-2px);
+}
+
+.season-wonder-pick-button:not([disabled]):active {
+  transform: translateY(0);
+  box-shadow:
+    inset 6px 6px 0 #00000040,
+    var(--shadow-clickable);
+}
+
+.season-wonder-footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1em;
+  height: 112px;
+}
+
+.season-wonder-emotes {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.4em;
+  max-width: 760px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.season-wonder-emotes > li {
+  animation: season-wonder-emote-in 300ms ease-out both;
+}
+
+.season-wonder-emotes img {
+  display: block;
+  border: 2px solid #08060b;
+  border-radius: 4px;
+  image-rendering: pixelated;
+}
+
+@keyframes season-wonder-emote-in {
+  from {
+    opacity: 0;
+    translate: 0 6px;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+.season-collection .season-tabs {
+  align-items: flex-end;
+}
+
+.season-collection-total {
+  align-self: center;
+  margin-left: 1em;
+  color: var(--color-fg-secondary);
+}
+
+.season-collection-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  margin-left: auto;
+  padding-bottom: 6px;
+}
+
+.season-collection-favorite {
+  display: grid;
+  place-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 2px solid var(--season-line);
+  border-radius: 50%;
+  background-color: var(--season-surface-deep);
+  cursor: var(--cursor-hover);
+}
+
+.season-collection-favorite > img {
+  filter: grayscale(1);
+  opacity: 0.5;
+}
+
+.season-collection-favorite.active > img {
+  filter: none;
+  opacity: 1;
+  animation: season-favorite-pop 180ms ease-out;
+}
+
+@keyframes season-favorite-pop {
+  from {
+    scale: 1.35;
+  }
+  to {
+    scale: 1;
+  }
+}
+
+.season-collection-body {
+  padding: 0.35em 1em 1em;
+}
+
+.season-collection-synergies {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+  padding: 0.5em 0 0.4em;
+}
+
+.season-collection-synergies > button {
+  display: grid;
+  place-content: center;
+  min-width: 28px;
+  height: 28px;
+  padding: 0 0.5em;
+  border: 2px solid var(--season-line);
+  border-radius: 3px;
+  background-color: var(--season-surface-deep);
+  color: var(--color-fg-secondary);
+  font: inherit;
+  font-size: 0.85em;
+  cursor: var(--cursor-hover);
+}
+
+.season-collection-synergies > button:not(.active) > * {
+  opacity: 0.55;
+}
+
+.season-collection-synergies > button.active {
+  background-color: var(--season-surface);
+  border-color: var(--season-accent);
+  color: var(--color-fg-primary);
+}
+
+.season-collection-synergies > button {
+  transition:
+    scale 120ms ease-out,
+    border-color 120ms ease-out;
+}
+
+.season-collection-synergies > button:hover {
+  position: relative;
+  z-index: 1;
+  scale: 1.15;
+  border-color: var(--season-accent);
+}
+
+.season-collection-synergies > button:hover > * {
+  opacity: 1;
+}
+
+.season-collection-grid {
+  height: calc(90vh - 170px);
+}
+
+.season-collection-grid.showcase {
+  box-sizing: border-box;
+  padding-top: 0.9em;
+}
+
+.season-collection-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  box-sizing: border-box;
+  padding: 6px;
+}
+
+.season-collection-grid.compact .season-collection-cell {
+  gap: 4px;
+  padding: 3px;
+}
+
+.season-collection .season-booster-card {
+  width: 100%;
+  animation: none;
+}
+
+.season-collection .season-booster-card-types {
+  gap: 5px;
+  margin-bottom: 6px;
+}
+
+.season-collection .season-wonder-stars > img {
+  width: 14px;
+  height: 14px;
+}
+
+.season-collection .season-booster-card-inner {
+  transition: transform 150ms ease-out;
+}
+
+.season-collection .season-booster-card:hover .season-booster-card-inner {
+  transform: translateY(-3px);
+}
+
+.season-collection-played {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  color: var(--color-fg-secondary);
+  font-size: 0.7em;
+  font-weight: 700;
+  opacity: 0.85;
+  pointer-events: none;
+}
+
+.season-collection-detail-played {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--color-fg-secondary);
+  font-size: 0.85em;
+  font-weight: 700;
+}
+
+@property --holo-x {
+  syntax: "<percentage>";
+  inherits: true;
+  initial-value: 50%;
+}
+
+@property --holo-y {
+  syntax: "<percentage>";
+  inherits: true;
+  initial-value: 50%;
+}
+
+@property --holo-tilt-x {
+  syntax: "<angle>";
+  inherits: true;
+  initial-value: 0deg;
+}
+
+@property --holo-tilt-y {
+  syntax: "<angle>";
+  inherits: true;
+  initial-value: 0deg;
+}
+
+.season-booster-card.flipped .season-booster-card-front {
+  transform: rotateX(var(--holo-tilt-x, 0deg))
+    rotateY(var(--holo-tilt-y, 0deg));
+}
+
+.season-booster-card:is(.shiny, .holo) .season-booster-card-name,
+.season-booster-card:is(.shiny, .holo) .season-booster-card-art,
+.season-booster-card:is(.shiny, .holo) .season-booster-card-types {
+  position: relative;
+  z-index: 1;
+}
+
+.season-holo-foil {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background-image: repeating-linear-gradient(
+    115deg,
+    var(--card-color-1) 0%,
+    var(--card-color-2) 4%,
+    var(--card-color-3) 8%,
+    var(--card-color-4) 12%,
+    var(--card-color-5) 16%,
+    var(--card-color-1) 20%
+  );
+  background-size: 300% 300%;
+  background-position: var(--holo-x, 50%) var(--holo-y, 50%);
+  mix-blend-mode: screen;
+  opacity: 0;
+  mask-image: radial-gradient(
+    farthest-corner circle at var(--holo-x, 50%) var(--holo-y, 30%),
+    #000000 0%,
+    rgb(0 0 0 / 45%) 70%
+  );
+  transition: opacity 250ms ease-out;
+}
+
+.season-booster-card[data-holo-pressed] .season-holo-foil {
+  opacity: 0.9;
+}
+
+/* the pastel shiny palette screened toward white; overlay keeps contrast */
+.season-booster-card.shiny .season-holo-foil {
+  background-image: repeating-linear-gradient(
+    115deg,
+    #ff4fa0 0%,
+    #ffb340 4%,
+    #f5ff5c 8%,
+    #4dffb0 12%,
+    #3ab8ff 16%,
+    #a35cff 20%,
+    #ff4fa0 24%
+  );
+  mix-blend-mode: overlay;
+}
+
+.season-booster-card.shiny[data-holo-pressed] .season-holo-foil {
+  opacity: 1;
+}
+
+/* a tight hotspot where the light hits and a darker far side, like foil */
+.season-shiny-glare {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  border-radius: inherit;
+  pointer-events: none;
+  background-image:
+    radial-gradient(
+      farthest-corner circle at var(--holo-x, 50%) var(--holo-y, 50%),
+      rgb(255 255 255 / 75%) 0%,
+      rgb(255 255 255 / 0%) 18%
+    ),
+    radial-gradient(
+      farthest-corner circle at var(--holo-x, 50%) var(--holo-y, 50%),
+      transparent 30%,
+      rgb(20 0 40 / 35%) 90%
+    );
+  mix-blend-mode: overlay;
+  opacity: 0;
+  transition: opacity 250ms ease-out;
+}
+
+.season-booster-card[data-holo-pressed] .season-shiny-glare {
+  opacity: 1;
+}
+
+/* three cards wide and slid with transform, so the sweep runs on the GPU
+   instead of repainting every shiny and holo card each frame. The card
+   front clips it */
+.season-holo-sheen {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 300%;
+  pointer-events: none;
+  background-image: linear-gradient(
+    115deg,
+    transparent 38%,
+    var(--card-color-1) 42%,
+    var(--card-color-2) 46%,
+    var(--card-color-3) 50%,
+    var(--card-color-4) 54%,
+    var(--card-color-5) 58%,
+    transparent 62%
+  );
+  transform: translateX(-86.667%);
+  mix-blend-mode: screen;
+  opacity: 0.55;
+  animation: season-holo-sheen linear infinite;
+}
+
+.season-booster-card:not(.flipped) .season-holo-sheen {
+  animation: none;
+}
+
+@keyframes season-holo-sheen {
+  0% {
+    transform: translateX(-86.667%);
+  }
+  14%,
+  100% {
+    transform: translateX(20%);
+  }
+}
+
+.season-holo-badge {
+  position: absolute;
+  right: 9px;
+  bottom: 9px;
+  z-index: 2;
+  width: 17px;
+  height: 17px;
+  background-image: var(--card-band);
+  mask: var(--card-badge) center / contain no-repeat;
+  pointer-events: none;
+}
+
+/* one-shot radiant burst when a Shiny card is first revealed */
+.season-booster-card.shiny .season-holo-sheen {
+  background-image: linear-gradient(
+    115deg,
+    transparent 28%,
+    #ff4fa0 38%,
+    #ffb340 43%,
+    #f5ff5c 48%,
+    #4dffb0 53%,
+    #3ab8ff 58%,
+    #a35cff 63%,
+    transparent 72%
+  );
+  mix-blend-mode: overlay;
+  opacity: 0.6;
+}
+
+/* etched foil like textured TCG cards: a fine crosshatch lit around the
+   light point, kept behind the portrait so the pixel art stays clean */
+.season-shiny-etch {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background-image:
+    repeating-linear-gradient(
+      45deg,
+      rgb(255 255 255 / 60%) 0 1px,
+      transparent 1px 3px
+    ),
+    repeating-linear-gradient(
+      -45deg,
+      rgb(255 255 255 / 40%) 0 1px,
+      transparent 1px 3px
+    );
+  mix-blend-mode: overlay;
+  opacity: 0.5;
+  mask-image: radial-gradient(
+    farthest-corner circle at var(--holo-x, 30%) var(--holo-y, 20%),
+    #000000 0%,
+    rgb(0 0 0 / 30%) 75%
+  );
+  transition: opacity 250ms ease-out;
+}
+
+.season-booster-card[data-holo-pressed] .season-shiny-etch {
+  opacity: 0.9;
+}
+
+.season-card-spotlight {
+  position: fixed;
+  inset: 0;
+  z-index: 2;
+  background-color: rgb(8 6 11 / 70%);
+  pointer-events: none;
+  opacity: 0;
+  animation: season-card-spotlight 3400ms ease-in-out both;
+}
+
+@keyframes season-card-spotlight {
+  0% {
+    opacity: 0;
+  }
+  7%,
+  70% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.season-booster-card.spotlit.flipped {
+  z-index: 3;
+}
+
+.season-shop-exclusive {
+  position: absolute;
+  right: 10px;
+  bottom: 9px;
+  image-rendering: pixelated;
+}
+
+.menu-item.season-nav a.ps-menu-button {
+  background: var(--color-bg-accent);
+}
+
+.menu-item.season-nav a.ps-menu-button:hover {
+  background: color-mix(in srgb, var(--color-bg-accent) 82%, #ffffff);
+}
+
+.season-collection-reset-all {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  height: 34px;
+  padding: 0 0.6em;
+  border: 2px solid var(--season-line);
+  border-radius: 17px;
+  background-color: var(--season-surface-deep);
+  color: var(--season-accent);
+  font: inherit;
+  font-weight: 700;
+  cursor: var(--cursor-hover);
+}
+
+.season-collection-reset-all:not([disabled]):hover {
+  background-color: var(--season-cell);
+}
+
+.season-collection-reset-all[disabled] {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.season-collection-views {
+  display: grid;
+  place-content: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 2px solid var(--season-line);
+  border-radius: 50%;
+  background-color: var(--season-surface-deep);
+  cursor: var(--cursor-hover);
+}
+
+.season-collection-views > img {
+  filter: grayscale(1);
+  opacity: 0.55;
+}
+
+.season-collection-views:not(.active):hover > img {
+  opacity: 0.8;
+}
+
+.season-collection-views.active {
+  border-color: var(--season-accent);
+  background-color: var(--season-surface);
+}
+
+.season-collection-views.active > img {
+  filter: none;
+  opacity: 1;
+}
+
+.season-booster-card.missing .season-booster-card-front {
+  filter: grayscale(1) brightness(0.55);
+}
+
+.season-collection-progress {
+  width: 150px;
+  max-width: 100%;
+  height: 8px;
+  box-sizing: border-box;
+  border: 1px solid #08060b;
+  background-color: var(--season-channel);
+}
+
+.season-collection-progress > span {
+  display: block;
+  height: 100%;
+  background-color: var(--season-progress);
+}
+
+.season-collection-modal.modal {
+  border: var(--border-thin);
+  border-radius: 4px;
+  background-color: var(--season-surface);
+  box-shadow:
+    inset 0 0 0 3px var(--season-surface),
+    inset 0 0 0 5px var(--season-line);
+  color: var(--color-fg-primary);
+}
+
+.season-collection-modal .modal-body {
+  padding: 1.2em;
+  scrollbar-gutter: stable;
+}
+
+.season-collection-detail {
+  display: flex;
+  align-items: stretch;
+  gap: 1.6em;
+}
+
+.season-collection-detail > .season-booster-card {
+  align-self: flex-start;
+  width: 224px;
+  flex-shrink: 0;
+  animation: none;
+  cursor: default;
+}
+
+.season-collection-detail .season-wonder-stars > img {
+  width: 15px;
+  height: 15px;
+}
+
+.season-collection-detail .season-booster-card-types {
+  gap: 6px;
+  margin-bottom: 6px;
+}
+
+.season-collection-detail-side {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8em;
+  width: min(610px, 60vw);
+}
+
+.season-collection-detail-header {
+  display: flex;
+  align-items: center;
+  gap: 0.8em;
+}
+
+.season-collection-detail-header > h2 {
+  flex: 1;
+  margin: 0;
+  font-size: 1.6em;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.season-collection-close {
+  display: grid;
+  place-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 2px solid var(--season-line);
+  border-radius: 50%;
+  background-color: var(--season-surface-deep);
+  cursor: var(--cursor-hover);
+}
+
+.season-collection-close:hover,
+.season-collection-reset:not([disabled]):hover {
+  background-color: var(--season-cell);
+}
+
+.season-collection-reset {
+  display: grid;
+  place-content: center;
+  width: 40px;
+  height: 40px;
+  margin-right: auto;
+  padding: 0;
+  border: 2px solid var(--season-line);
+  border-radius: 50%;
+  background-color: var(--season-surface-deep);
+  cursor: var(--cursor-hover);
+}
+
+.season-collection-reset[disabled] {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.season-collection-close > img {
+  filter: brightness(0) invert(0.85);
+}
+
+.season-collection-detail-side > .season-collection-progress {
+  width: 100%;
+}
+
+.season-collection-emotions {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(74px, 1fr));
+  gap: 9px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.season-collection-emotions button {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 2px solid #08060b;
+  border-radius: 4px;
+  background: none;
+  cursor: default;
+}
+
+.season-collection-emotions button.owned {
+  cursor: var(--cursor-hover);
+}
+
+.season-collection-emotions button.selected {
+  border-color: var(--season-accent);
+}
+
+.season-collection-emotions button:not(.owned) > img {
+  filter: grayscale(1) brightness(0.45);
+}
+
+.season-collection-emotions img {
+  display: block;
+  width: 100%;
+  height: auto;
+  image-rendering: pixelated;
+}
+
+.season-collection-forms {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.season-collection-forms button {
+  display: block;
+  padding: 0;
+  border: 2px solid #08060b;
+  border-radius: 4px;
+  background: none;
+  cursor: var(--cursor-hover);
+}
+
+.season-collection-forms button.selected {
+  border-color: var(--season-accent);
+}
+
+.season-collection-forms button:not(.owned) > img {
+  filter: grayscale(1) brightness(0.45);
+}
+
+.season-collection-forms img {
+  display: block;
+  image-rendering: pixelated;
+}
+
+/* a family of alt forms shows as a small pile of cards */
+.season-collection .season-booster-card.stacked {
+  isolation: isolate;
+}
+
+.season-collection .season-booster-card.stacked::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border: 2px solid #08060b;
+  border-radius: 8px;
+  background-color: var(--booster-card-color);
+  translate: 5px -5px;
+}
+
+.season-collection-subheading {
+  margin: 0.2em 0 0;
+  color: var(--color-fg-secondary);
+  font-size: 0.85em;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.season-collection-detail-actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 0.6em;
+  margin-top: auto;
+  padding-top: 0.8em;
+  border-top: 2px solid var(--season-line);
+}
+
+@media (width < 900px) {
+  .season-hero {
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 1em;
+  }
+
+  .season-hero-info {
+    grid-column: 1 / -1;
+  }
+
+  .season-hero-art {
+    width: 140px;
+    height: 122px;
+  }
+
+  .season-hero-art-face > img {
+    width: 68px;
+    height: 68px;
+  }
+}
+
+@media (width < 600px) {
+  .season-modal .modal-body {
+    padding: 0.4em;
+  }
+
+  .season-page {
+    width: 90vw;
+  }
+
+  .season-hero {
+    padding: 0.9em;
+  }
+
+  .season-title h2 {
+    font-size: 1.3em;
+  }
+
+  .season-title > img {
+    width: 56px;
+    height: 56px;
+  }
+
+  .season-hero-art {
+    width: 110px;
+    height: 96px;
+    padding: 4px;
+  }
+
+  .season-hero-art-ring {
+    padding: 4px;
+  }
+
+  .season-hero-art-face > img {
+    width: 52px;
+    height: 52px;
+  }
+
+  .season-panels {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .season-collection-detail {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .season-collection-detail-side {
+    width: 80vw;
+  }
+
+  .season-shop {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .season-shop-dock {
+    flex-direction: row;
+    order: -1;
+    padding: 0 0 0.6em;
+    border-left: none;
+    border-bottom: 2px solid var(--season-line);
+  }
+
+  .season-tab {
+    padding-inline: 0.5em;
+    font-size: 0.8em;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .season-holo-sheen {
+    animation: none;
+  }
+
+  .season-booster-card.flipped .season-booster-card-front {
+    transform: none;
+  }
+
+  .season-step-card,
+  .season-collection-synergies > button,
+  .season-wonder-pick-button,
+  .season-shop-offer,
+  .season-shop-back,
+  .season-collection .season-booster-card-inner,
+  .season-booster-card-inner {
+    transition: none;
+  }
+
+  .season-booster-card,
+  .season-mystery-reveal .season-booster-card.flipped,
+  .season-booster-reveal .season-booster-card:is(.shiny, .holo).flipped,
+  .season-theme-reveal,
+  .season-theme-reveal-footer,
+  .season-collection-favorite.active > img,
+  .season-booster-shiny-emotes > li,
+  .season-wonder-next,
+  .season-wonder-emotes > li {
+    animation: none;
+  }
+
+  .season-wonder-sparkle {
+    display: none;
+  }
+
+  .season-card-spotlight {
+    display: none;
+  }
+
+  .season-booster-reveal
+    .season-booster-card:is(.shiny, .holo).flipped
+    .season-booster-card-inner,
+  .season-wonder-card.picked .season-booster-card-inner {
+    animation: none;
+  }
+
+  .season-sparkle-burst {
+    display: none;
+  }
+}

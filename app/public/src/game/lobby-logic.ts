@@ -30,7 +30,6 @@ import {
 } from "../network"
 import { LocalStoreKeys, localStore } from "../pages/utils/store"
 import type { AppDispatch } from "../stores"
-import { resetBoosters } from "../stores/BoostersStore"
 import {
   addRoom,
   addTournament,
@@ -121,7 +120,6 @@ export async function joinLobbyRoom(
                 dispatch(setErrorAlertMessage(t(`errors.${errorMessage}`)))
               }
               dispatch(resetLobby())
-              dispatch(resetBoosters())
               navigate("/")
             }
           })
@@ -381,7 +379,6 @@ export async function joinExistingPreparationRoom(
       joinPreparation(room, 30)
       leaveRoom("lobby")
       dispatch(resetLobby())
-      dispatch(resetBoosters())
       navigate("/preparation")
     }
   } catch (error: any) {

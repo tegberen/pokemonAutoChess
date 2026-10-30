@@ -2191,14 +2191,7 @@
 		"sign_out": "Отписване"
 	},
 	"collection": {
-		"title": "колекция",
-		"show_all": "Покажи всички",
-		"show_locked": "Показване заключено",
-		"show_unlockable": "Показване за отключване",
-		"show_unlocked": "Покажи отключено",
-		"normal_emotions": "Нормални емоции",
-		"shiny_emotions": "Блестящи емоции",
-		"buy_booster": "Купете нов бустер за {{cost}}"
+		"title": "колекция"
 	},
 	"bot_builder": "BOT Builder",
 	"meta": "Мета",
@@ -2228,10 +2221,6 @@
 	"leaderboard": "Класиране",
 	"rooms": "Стаи",
 	"online": "На линия",
-	"shards": "осколки",
-	"boosters_hint": "Играи мачове да вдигнеш ниво и да спечелиш нови бустери",
-	"open_boosters_hint": "Отвори бустери за нови аватари и допълни колекцията си !",
-	"open_booster": "Отвори Бустер",
 	"lobby": "Лоби",
 	"delete": "Изтрий",
 	"load": "Заредете",
@@ -2264,7 +2253,6 @@
 	"chat_disabled_anonymous": "Чатът е деактивиран за анонимни потребители",
 	"type_here": "Пиши тук ...",
 	"send_message": "Изпрати съобщение",
-	"shiny_hunter": "Блестящ ловец",
 	"close": "Близо",
 	"additional_pokemon_hint": "Всеки играч избра допълнителни покемона, които да бъдат налични в магазина на всички играчи за тази игра.",
 	"game_stats": {
@@ -2560,6 +2548,5 @@
 	"players": "Играчи",
 	"players_one": "{{count}} играч",
 	"players_other": "{{count}} играчи",
-	"played_times": "Изиграни {{count}} пъти",
 	"announcements": "Съобщения"
 }

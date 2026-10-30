@@ -78,9 +78,10 @@
     0 0 7px color-mix(in srgb, var(--color-rarity-epic) 50%, transparent);
 }
 
-/* Solo Smeargle Pack tournament games wear their rooms' rainbow stripes
-   instead of Duo Classic's purple, without a glow */
-.game-history.my-box.tournament-game.scribble-tournament-game {
+/* Solo Smeargle Pack tournament games and the Rainbow Hours finale wear their
+   rooms' rainbow stripes instead of Duo Classic's purple, without a glow */
+.game-history.my-box.tournament-game.scribble-tournament-game,
+.game-history.my-box.event-game.rainbow-finale-game {
   background-color: var(--scribble-tournament-bg);
   background-image: var(--scribble-tournament-stripes);
   box-shadow: none;

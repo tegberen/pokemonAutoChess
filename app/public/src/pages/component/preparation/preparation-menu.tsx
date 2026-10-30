@@ -5,6 +5,11 @@ import {
   EloRankThreshold,
   MAX_PLAYERS_PER_GAME
 } from "../../../../../config"
+import {
+  RAINBOW_FINALE_ROOM_NAME,
+  RAINBOW_FINALE_WINNER_BOOSTERS,
+  RAINBOW_FINALE_WONDER_PICKS
+} from "../../../../../config/game/rainbow-hours"
 import type { IGameUser } from "../../../../../models/colyseus-models/game-user"
 import { Role } from "../../../../../types"
 import { EloRank } from "../../../../../types/enum/EloRank"
@@ -72,6 +77,9 @@ export default function PreparationMenu() {
     (state) => state.preparation.whimsy
   )
   const dailyDuel = useAppSelector((state) => state.preparation.dailyDuel)
+  const rainbowFinale = useAppSelector(
+    (state) => state.preparation.rainbowFinale
+  )
   const blessingsEnabled = useAppSelector(
     (state) => state.preparation.blessingsEnabled
   )
@@ -126,7 +134,35 @@ export default function PreparationMenu() {
     }
   }, 1000)
 
-  const headerMessage = dailyDuel ? (
+  const headerMessage = rainbowFinale ? (
+    <div className="rule-banner event-banner scribble-tournament-banner my-box">
+      <img
+        className="rule-banner-icon"
+        src="/assets/ui/game_modes/solo_scribble_smack.png"
+        alt=""
+        aria-hidden="true"
+      />
+      <div className="rule-banner-text">
+        <h3>{RAINBOW_FINALE_ROOM_NAME}</h3>
+        <p className="rainbow-finale-rewards">
+          {t("rainbow_hours.everyone_gets", {
+            count: RAINBOW_FINALE_WONDER_PICKS
+          })}{" "}
+          <img
+            className="wonder-pick"
+            src="/assets/ui/pokecard.png"
+            alt=""
+          />{" "}
+          {t("rainbow_hours.wonder_pick")},{" "}
+          {t("rainbow_hours.winner_gets", {
+            count: RAINBOW_FINALE_WINNER_BOOSTERS
+          })}{" "}
+          <img className="booster" src="/assets/ui/booster.png" alt="" />{" "}
+          {t("rainbow_hours.booster")}.
+        </p>
+      </div>
+    </div>
+  ) : dailyDuel ? (
     <div className="rule-banner event-banner my-box">
       <img
         className="rule-banner-icon"
@@ -294,7 +330,7 @@ export default function PreparationMenu() {
       className={cc("preparation-menu my-container is-centered custom-bg", {
         "daily-duel": dailyDuel,
         tournament: isTournamentLobby && !isScribbleTournament,
-        "scribble-tournament": isScribbleTournament
+        "scribble-tournament": isScribbleTournament || rainbowFinale
       })}
     >
       <header>

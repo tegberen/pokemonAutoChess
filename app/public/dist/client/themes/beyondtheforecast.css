@@ -32,6 +32,7 @@
     #8db564 75%,
     #6fa266 100%
   );
+  --theme-progress: #8db564;
   --theme-ready-hover: linear-gradient(
     105deg,
     #d8dc78 0%,

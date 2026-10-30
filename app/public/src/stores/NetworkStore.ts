@@ -10,7 +10,10 @@ import type {
   IUserMetadataUnpacked
 } from "../../../types/interfaces/UserMetadata"
 import type { INotification } from "../../../types/notifications"
-import { getAvatarString } from "../../../utils/avatar"
+import {
+  getAvatarString,
+  getSeasonPortraitAvatar
+} from "../../../utils/avatar"
 import { leaveAllRooms, rooms } from "../network.js"
 
 export interface INetwork {
@@ -84,6 +87,14 @@ export const networkSlice = createSlice({
         )
       rooms.lobby?.send(Transfer.CHANGE_AVATAR, action.payload)
     },
+    changeAvatarToSeasonPortrait: (state, action: PayloadAction<string>) => {
+      if (state.profile) {
+        state.profile.avatar = getSeasonPortraitAvatar(action.payload)
+      }
+      rooms.lobby?.send(Transfer.CHANGE_AVATAR, {
+        seasonPortraitId: action.payload
+      })
+    },
     setTitle: (state, action: PayloadAction<Title | "">) => {
       if (state.profile) state.profile.title = action.payload
       rooms.lobby?.send(Transfer.SET_TITLE, action.payload)
@@ -120,6 +131,7 @@ export const {
   clearNotification,
   changeName,
   changeAvatar,
+  changeAvatarToSeasonPortrait,
   setTitle,
   selectLanguage,
   setConnectionStatus,

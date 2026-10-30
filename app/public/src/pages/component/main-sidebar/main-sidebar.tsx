@@ -19,9 +19,7 @@ import { toggleFullScreen } from "../../utils/fullscreen"
 import { cc } from "../../utils/jsx"
 import AdminPanel from "../admin/admin-panel"
 import TournamentsPanel from "../admin/tournaments-panel"
-import Booster from "../booster/booster"
 import TeamBuilderModal from "../bot-builder/team-builder-modal"
-import PokemonCollection from "../collection/pokemon-collection"
 import Jukebox from "../jukebox/jukebox"
 import MetaReport from "../meta-report/meta-report"
 import { Report } from "../meta-report/report"
@@ -33,6 +31,8 @@ import { usePatchVersion } from "../patchnotes/usePatchVersion"
 import PokeGuesser from "../pokeguesser/pokeguesser"
 import WishQuiz from "../wish-quiz/wish-quiz"
 import Profile from "../profile/profile"
+import Season from "../season/season"
+import SeasonCollection from "../season/season-collection"
 import ServersList from "../servers/servers-list"
 import SpriteTrackerModal from "../sprite-tracker/sprite-tracker-modal"
 import SynergyWheelModal from "../synergy-wheel/synergy-wheel"
@@ -190,10 +190,21 @@ export function MainSidebar(props: MainSidebarProps) {
           </NavLink>
         )}
 
+        {page === "main_lobby" && (
+          <NavLink
+            location="season"
+            svg="season"
+            className="blue season-nav"
+            handleClick={changeModal}
+          >
+            Guild
+          </NavLink>
+        )}
+
         {page === "main_lobby" && profileLevel >= GADGETS.bag.levelRequired && (
           <NavLink
             location="collection"
-            svg="collection"
+            svg="binder"
             className="blue"
             handleClick={changeModal}
           >
@@ -508,7 +519,6 @@ function NavLink(props: NavLinkProps) {
 
 export type Modals =
   | "announcement"
-  | "booster"
   | "moderation"
   | "admin"
   | "tournaments"
@@ -520,6 +530,7 @@ export type Modals =
   | "options"
   | "pokeguesser"
   | "profile"
+  | "season"
   | "servers"
   | "sprite-tracker"
   | "synergy-wheel"
@@ -591,16 +602,17 @@ function Modals({
         onClose={closeModal}
         show={modal === "collection"}
         header={t("collection.title")}
-        className="anchor-top"
+        className="anchor-top season-modal"
       >
-        <PokemonCollection />
+        <SeasonCollection />
       </Modal>
       <Modal
         onClose={closeModal}
-        show={modal === "booster"}
-        className="custom-bg boosters-modal"
+        show={modal === "season"}
+        header="Guild"
+        className="anchor-top season-modal"
       >
-        <Booster />
+        <Season />
       </Modal>
       <Modal
         onClose={closeModal}

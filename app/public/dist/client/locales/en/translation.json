@@ -4412,26 +4412,7 @@
 	},
 	"collection": {
 		"title": "Collection",
-		"menu_title": "Avatars",
-		"show_all": "Show all",
-		"show_locked": "Show locked",
-		"show_unlockable": "Show unlockable",
-		"show_unlocked": "Show unlocked",
-		"show_refundable": "Show refundable",
-		"show_newly_obtained": "Show newly obtained",
-		"show_favorites": "Show favorites",
-		"sort_by_index": "Sort by index",
-		"sort_by_shards": "Sort by shards",
-		"sort_by_played": "Sort by played times",
-		"sort_by_emotes_unlocked": "Sort by emotes unlocked",
-		"normal_emotions": "Normal Emotions",
-		"shiny_emotions": "Shiny Emotions",
-		"reset_emotion": "Reset to default portrait",
-		"buy_booster": "Buy a new booster for {{cost}} shards ",
-		"choose_as_avatar": "Choose as player avatar",
-		"chosen_as_avatar": "✓ Chosen as player avatar",
-		"add_to_favorites": "Add to favorites",
-		"remove_from_favorites": "Remove from favorites"
+		"menu_title": "Collection"
 	},
 	"bot_builder": "Bot Builder",
 	"meta": "Meta",
@@ -4535,14 +4516,17 @@
 	"daily_duel_no_results": "No Daily Duel has been played in the last 2 days.",
 	"daily_duel_next": "Next Daily Duel · {{time}}",
 	"daily_duel_in": "in {{time}}",
+	"rainbow_hours": {
+		"title": "Rainbow Hours",
+		"settings_locked": "Event lobbies use fixed settings",
+		"everyone_gets": "Everyone who plays gets {{count}}",
+		"winner_gets": "the winner {{count}}",
+		"wonder_pick": "Wonder Pick",
+		"booster": "booster"
+	},
 	"players_one": "{{count}} player",
 	"players_other": "{{count}} players",
 	"online": "Online",
-	"shards": "shards",
-	"played_times": "Played {{count}} times",
-	"boosters_hint": "Play more games to level up and earn new boosters.",
-	"open_boosters_hint": "Open boosters to unlock new avatars and complete your collection !",
-	"open_booster": "Open a Booster",
 	"lobby": "Lobby",
 	"announcements": "Announcements",
 	"feedback": "Feedback",
@@ -4613,9 +4597,6 @@
 	"chat_disabled_anonymous": "Chat disabled for anonymous users",
 	"type_here": "Type here ...",
 	"send_message": "Send message",
-	"shiny_hunter": "Shiny Hunter",
-	"pokedex": "Pokédex",
-	"alt_forms": "Alternative Forms",
 	"unlocked": "Unlocked",
 	"show_evolutions": "Show evolutions",
 	"show_weather_rocks": "Show weather rocks",
@@ -4727,6 +4708,8 @@
 		"artist": "Artist's Studio",
 		"duelist": "Duelist's Arena",
 		"halloween": "Halloween",
+		"onsen": "Autumn Onsen",
+		"newjourney": "A New Journey",
 		"origin": "Origin"
 	},
 	"jukebox": {
@@ -7711,7 +7694,7 @@
 		"berry_tree": "Playing Grass ? Don't forget to take care of the berry trees next to your character.",
 		"spriters": "Many of the game's animations are the work of independent artists. Some take commissions, so you can sponsor them. More info on Discord",
 		"wiki": "The game has a complete wiki accessible from the side menu, don't miss it!",
-		"avatar": "To change your player avatar, play games to earn XP and level up. Each level grants you a booster which when opened gives you new avatars that can be chosen in the Collection menu."
+		"avatar": "To change your player avatar, open boosters to unlock Pokémon emotions, then pick one in the Collection menu."
 	},
 	"wiki": {
 		"title": "Wiki",
@@ -7854,11 +7837,11 @@
 			"income": "How does the income work ?",
 			"income_answer": "You get 5 gold per round whether you draw, win or lose. You get 1 bonus income per 10 gold saved. A maximum of 5 bonus income accrued at 50 saved gold. You get 1 bonus gold if you win. If you win multiple times, you will also gain extra gold; one bonus gold for every victory/defeat, up to 5 bonus gold for 5 streak wins / 5 streak defeat. Wins/Defeats during PvE stages are not taken into account.",
 			"collection": "What is the purpose of the collection/boosters ?",
-			"collection_answer": "When opening boosters, you unlock Pokémon emotes in your personal collection. In case you find duplicates, you get shards instead that you can spend to buy other emotes of that Pokémon in the Collection tab. Emotes are customizations that you can use to incarnate a Pokémon as your avatar, change its default portrait or use to communicate with other players ingame. Everyone will see the emotes that you picked for your Pokémon. Moreover, if you have selected a shiny emotion, the Pokémon will appear shiny to everyone else.",
+			"collection_answer": "When opening boosters, you unlock Pokémon emotes in your personal collection. A booster only gives emotes you don't own yet, starting with each Pokémon's Normal portrait; once a Pokémon is complete, a duplicate pays Tickets instead. Emotes are customizations that you can use to incarnate a Pokémon as your avatar, change its default portrait or use to communicate with other players ingame. Everyone will see the emotes that you picked for your Pokémon. Moreover, if you have selected a shiny emotion, the Pokémon will appear shiny to everyone else.",
 			"avatars": "How do I get new avatars ?",
 			"avatars_answer": "When unlocking a Pokémon emotion, it will be available in your profile avatar list. You will be able to select it as your avatar.",
 			"boosters": "How do I gain boosters ?",
-			"boosters_answer": "You gain boosters each time you level up.",
+			"boosters_answer": "You gain boosters in Wigglytuff's Guild: from daily logins, challenges, Kecleon's Shop and the Croagunk Swap. Every player gets a welcome bundle of 10 boosters and 1 Shiny Wonder Pick.",
 			"level": "How do I level up ?",
 			"level_answer": "You gain experience each time you finish a game. The better your final rank, the more experience you will gain.",
 			"mythical": "How do I get unique / legendary Pokémon ?",
@@ -8002,7 +7985,7 @@
 			"tiers_by_level_title": "Tiers by level",
 			"tiers_by_level_description": "The odds of finding a given rarity in your shop change with your player level. The higher the level, the higher the rarity and the cost in the shop.",
 			"experience_by_rank": "Experience by rank",
-			"experience_by_rank_description": "You gain experience points at the end of each game based on your final rank. Every 1000 XP, you level up and gain one booster.",
+			"experience_by_rank_description": "You gain experience points at the end of each game based on your final rank. Every 1000 XP, you level up; every 100 levels, you earn a Shiny Wonder Pick.",
 			"special_pokemons_rate": "Special Pokémon",
 			"ditto_rate": "Chance to find Ditto in shop",
 			"kecleon_rate": "Chance to find Kecleon in stage 10 propositions",
@@ -8461,7 +8444,7 @@
 	"notification": {
 		"info_title": "Information",
 		"level_up_title": "Level Up!",
-		"level_up_message": "Congratulations!\nYou've reached level {{level}} and earned a booster pack!",
+		"level_up_message": "Congratulations!\nYou've reached level {{level}}!",
 		"new_title_title": "New Title Unlocked!",
 		"new_title_message": "You've unlocked a new title:\n{{title}}: {{description}}",
 		"new_gadget_title": "New Gadget Unlocked!",
@@ -8496,7 +8479,7 @@
 		},
 		"avatar": {
 			"change_avatar": "Change Avatar",
-			"play_more_games_hint": "Play more games to earn boosters and unlock new avatars !"
+			"play_more_games_hint": "Open boosters to unlock new avatars !"
 		},
 		"titles": {
 			"jac": "JAC Titles",

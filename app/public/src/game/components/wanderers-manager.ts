@@ -3,9 +3,7 @@ import type Phaser from "phaser"
 import { GameObjects } from "phaser"
 import {
   HALLOWEEN_GHOST_GOLD_REWARD,
-  OUTLAW_GOLD_REWARD,
-  SHARDS_PER_SHINY_UNOWN_WANDERER,
-  SHARDS_PER_UNOWN_WANDERER
+  OUTLAW_GOLD_REWARD
 } from "../../../../config"
 import type { Wanderer } from "../../../../models/colyseus-models/wanderer"
 import PokemonFactory from "../../../../models/pokemon-factory"
@@ -83,10 +81,9 @@ export default class WanderersManager {
       wanderer,
       onClick: (wanderer, unownSprite, pointer) => {
         this.scene.room?.send(Transfer.WANDERER_CLICKED, { id: wanderer.id })
-        this.displayShardGain(
+        this.displayUnownCatch(
           [pointer.x, pointer.y],
-          unownSprite.pokemon.index,
-          unownSprite.pokemon.shiny
+          unownSprite.pokemon.index
         )
         unownSprite.destroy()
         return true
@@ -331,42 +328,20 @@ export default class WanderersManager {
     return sprite
   }
 
-  displayShardGain(coordinates: number[], index: string, shiny: boolean) {
-    const textStyle = {
-      fontSize: "25px",
-      fontFamily: "Verdana",
-      color: shiny ? "#ffd700" : "#fff",
-      align: "center",
-      strokeThickness: 2,
-      stroke: "#000"
-    }
-
+  displayUnownCatch(coordinates: number[], index: string) {
     const image = this.scene.add.existing(
       new GameObjects.Image(this.scene, 0, 0, `portrait-${index}`)
         .setScale(0.5, 0.5)
         .setOrigin(0, 0)
     )
-    const text = this.scene.add.existing(
-      new GameObjects.Text(
-        this.scene,
-        25,
-        0,
-        (shiny
-          ? SHARDS_PER_SHINY_UNOWN_WANDERER
-          : SHARDS_PER_UNOWN_WANDERER
-        ).toString(),
-        textStyle
-      )
-    )
     image.setDepth(DEPTH.TEXT_MINOR)
-    text.setDepth(DEPTH.TEXT)
 
     const container = this.scene.add.existing(
       new GameObjects.Container(
         this.scene,
         coordinates[0],
         coordinates[1] - 50,
-        [text, image]
+        [image]
       )
     )
 

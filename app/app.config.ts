@@ -40,7 +40,25 @@ import AfterGameRoom from "./rooms/after-game-room"
 import CustomLobbyRoom from "./rooms/custom-lobby-room"
 import GameRoom from "./rooms/game-room"
 import PreparationRoom from "./rooms/preparation-room"
-import { buyBoosterForUser, openBoosterForUser } from "./services/booster"
+import {
+  buyCroagunkTrade,
+  getOrCreateCroagunkTrade
+} from "./services/croagunk"
+import {
+  claimSeasonSteps,
+  claimSeasonWonderPickGift,
+  recordSeasonLogin
+} from "./services/season"
+import {
+  buySeasonOffer,
+  getOrCreateCasualPick,
+  getOrCreateWonderPickDraw,
+  openSeasonBooster,
+  pickCasualPick,
+  pickWonderPick,
+  rerollCasualPick,
+  rerollWonderPickDraw
+} from "./services/season-shop"
 import {
   addBotToDatabase,
   approveBot,
@@ -50,9 +68,8 @@ import {
   setBotElo
 } from "./services/bots"
 import {
-  buyEmotionForUser,
   changeSelectedEmotionForUser,
-  migrateShardsOfAltForms
+  resetSelectedEmotionsForUser
 } from "./services/collection"
 import { getLeaderboard } from "./services/leaderboard"
 import {
@@ -134,7 +151,8 @@ function toVictoryWinner(record: IDetailledStatistic): IVictoryWinner {
       record.blessings,
       record.specialGameRule,
       record.dailyDuel,
-      record.tournament
+      record.tournament,
+      record.rainbowFinale
     )
   }
 }
@@ -718,7 +736,7 @@ export const server = defineServer({
 
       const stats = await DetailledStatistic.find(
         params,
-        ["pokemons", "time", "rank", "elo", "gameMode", "whimsy", "specialGameRule", "dailyDuel", "tournament", "unholdableItems", "blessings"],
+        ["pokemons", "time", "rank", "elo", "gameMode", "whimsy", "specialGameRule", "dailyDuel", "tournament", "rainbowFinale", "unholdableItems", "blessings"],
         { limit: limit, skip: skip, sort: { time: -1 } }
       )
       if (stats) {
@@ -735,7 +753,8 @@ export const server = defineServer({
               record.blessings,
               record.specialGameRule,
               record.dailyDuel,
-              record.tournament
+              record.tournament,
+              record.rainbowFinale
             )
         )
 
@@ -927,7 +946,6 @@ export const server = defineServer({
         if (!userAuth) return
         const mongoUser = await UserMetadata.findOne({ uid: userAuth.uid })
         if (!mongoUser) return res.status(404).send("User not found")
-        await migrateShardsOfAltForms(mongoUser) // TEMPORARY migration; to be removed in future
         if (!isDevelopment) {
           res.set("Cache-Control", "no-cache")
         }
@@ -938,50 +956,244 @@ export const server = defineServer({
       }
     })
 
-    app.post("/boosters/open", async (req, res) => {
+    app.post("/season/login", async (req, res) => {
       try {
         const userAuth = await authUser(req, res)
         if (!userAuth) return
+        const userDoc = await recordSeasonLogin(userAuth.uid)
+        if (!userDoc) {
+          res.status(404).json({ error: "User not found" })
+          return
+        }
+        res.status(200).json({ user: toUserMetadataJSON(userDoc) })
+      } catch (error) {
+        logger.error("Error recording season login", error)
+        res.status(500).json({ error: "Error recording season login" })
+      }
+    })
 
-        const result = await openBoosterForUser(userAuth.uid)
+    app.post("/season/claim-steps", async (req, res) => {
+      try {
+        const userAuth = await authUser(req, res)
+        if (!userAuth) return
+        const steps = req.body?.steps
+        if (
+          !Array.isArray(steps) ||
+          !steps.every((step) => typeof step === "number")
+        ) {
+          res.status(400).json({ error: "steps must be an array of numbers" })
+          return
+        }
+        const userDoc = await claimSeasonSteps(userAuth.uid, steps)
+        if (!userDoc) {
+          res.status(409).json({ error: "No claimable steps" })
+          return
+        }
+        res.status(200).json({ user: toUserMetadataJSON(userDoc) })
+      } catch (error) {
+        logger.error("Error claiming season steps", error)
+        res.status(500).json({ error: "Error claiming season steps" })
+      }
+    })
+
+    app.post("/season/buy", async (req, res) => {
+      try {
+        const userAuth = await authUser(req, res)
+        if (!userAuth) return
+        const userDoc = await buySeasonOffer(userAuth.uid, req.body?.offerId)
+        if (!userDoc) {
+          res.status(409).json({ error: "Offer not available" })
+          return
+        }
+        res.status(200).json({ user: toUserMetadataJSON(userDoc) })
+      } catch (error) {
+        logger.error("Error buying season offer", error)
+        res.status(500).json({ error: "Error buying season offer" })
+      }
+    })
+
+    app.post("/season/croagunk/open", async (req, res) => {
+      try {
+        const userAuth = await authUser(req, res)
+        if (!userAuth) return
+        const userDoc = await getOrCreateCroagunkTrade(userAuth.uid)
+        if (!userDoc) {
+          res.status(404).json({ error: "User not found" })
+          return
+        }
+        res.status(200).json({ user: toUserMetadataJSON(userDoc) })
+      } catch (error) {
+        logger.error("Error opening Croagunk trade", error)
+        res.status(500).json({ error: "Error opening Croagunk trade" })
+      }
+    })
+
+    app.post("/season/croagunk/buy", async (req, res) => {
+      try {
+        const userAuth = await authUser(req, res)
+        if (!userAuth) return
+        const userDoc = await buyCroagunkTrade(userAuth.uid)
+        if (!userDoc) {
+          res.status(409).json({ error: "Trade not available" })
+          return
+        }
+        res.status(200).json({ user: toUserMetadataJSON(userDoc) })
+      } catch (error) {
+        logger.error("Error buying Croagunk trade", error)
+        res.status(500).json({ error: "Error buying Croagunk trade" })
+      }
+    })
+
+    app.post("/season/open-booster", async (req, res) => {
+      try {
+        const userAuth = await authUser(req, res)
+        if (!userAuth) return
+        const result = await openSeasonBooster(userAuth.uid)
         if (!result) {
           res.status(409).json({ error: "No boosters available" })
           return
         }
-
         res.status(200).json({
-          boosterContent: result.boosterContent,
+          cards: result.cards,
           user: toUserMetadataJSON(result.userDoc)
         })
       } catch (error) {
-        logger.error("Error opening booster", error)
-        res.status(500).json({ error: "Error opening booster" })
+        logger.error("Error opening season booster", error)
+        res.status(500).json({ error: "Error opening season booster" })
       }
     })
 
-    app.post("/boosters/buy", async (req, res) => {
+    app.post("/season/wonder-pick/draw", async (req, res) => {
       try {
         const userAuth = await authUser(req, res)
         if (!userAuth) return
-
-        const index = req.body?.index
-        if (!index || typeof index !== "string") {
-          res.status(400).json({ error: "index is required" })
+        const userDoc = await getOrCreateWonderPickDraw(userAuth.uid)
+        if (!userDoc) {
+          res.status(409).json({ error: "No Wonder Pick candidates left" })
           return
         }
+        res.status(200).json({ user: toUserMetadataJSON(userDoc) })
+      } catch (error) {
+        logger.error("Error drawing Wonder Pick", error)
+        res.status(500).json({ error: "Error drawing Wonder Pick" })
+      }
+    })
 
-        const result = await buyBoosterForUser(userAuth.uid, index)
+    app.post("/season/wonder-pick/reroll", async (req, res) => {
+      try {
+        const userAuth = await authUser(req, res)
+        if (!userAuth) return
+        const userDoc = await rerollWonderPickDraw(userAuth.uid)
+        if (!userDoc) {
+          res.status(409).json({ error: "No reroll available" })
+          return
+        }
+        res.status(200).json({ user: toUserMetadataJSON(userDoc) })
+      } catch (error) {
+        logger.error("Error rerolling Wonder Pick", error)
+        res.status(500).json({ error: "Error rerolling Wonder Pick" })
+      }
+    })
+
+    app.post("/season/wonder-pick/pick", async (req, res) => {
+      try {
+        const userAuth = await authUser(req, res)
+        if (!userAuth) return
+        const result = await pickWonderPick(userAuth.uid)
         if (!result) {
-          res.status(409).json({ error: "Not enough dust or invalid pokemon" })
+          res.status(409).json({ error: "Wonder Pick not available" })
           return
         }
-
         res.status(200).json({
+          picked: result.picked,
           user: toUserMetadataJSON(result.userDoc)
         })
       } catch (error) {
-        logger.error("Error buying booster", error)
-        res.status(500).json({ error: "Error buying booster" })
+        logger.error("Error picking Wonder Pick", error)
+        res.status(500).json({ error: "Error picking Wonder Pick" })
+      }
+    })
+
+    app.post("/season/casual-pick/draw", async (req, res) => {
+      try {
+        const userAuth = await authUser(req, res)
+        if (!userAuth) return
+        const userDoc = await getOrCreateCasualPick(userAuth.uid)
+        if (!userDoc) {
+          res.status(404).json({ error: "User not found" })
+          return
+        }
+        res.status(200).json({ user: toUserMetadataJSON(userDoc) })
+      } catch (error) {
+        logger.error("Error drawing casual Wonder Pick", error)
+        res.status(500).json({ error: "Error drawing casual Wonder Pick" })
+      }
+    })
+
+    app.post("/season/casual-pick/reroll", async (req, res) => {
+      try {
+        const userAuth = await authUser(req, res)
+        if (!userAuth) return
+        const userDoc = await rerollCasualPick(userAuth.uid)
+        if (!userDoc) {
+          res.status(409).json({ error: "No reroll available" })
+          return
+        }
+        res.status(200).json({ user: toUserMetadataJSON(userDoc) })
+      } catch (error) {
+        logger.error("Error rerolling casual Wonder Pick", error)
+        res.status(500).json({ error: "Error rerolling casual Wonder Pick" })
+      }
+    })
+
+    app.post("/season/casual-pick/pick", async (req, res) => {
+      try {
+        const userAuth = await authUser(req, res)
+        if (!userAuth) return
+        const result = await pickCasualPick(userAuth.uid)
+        if (!result) {
+          res.status(409).json({ error: "No casual Wonder Pick available" })
+          return
+        }
+        res.status(200).json({
+          card: result.card,
+          user: toUserMetadataJSON(result.userDoc)
+        })
+      } catch (error) {
+        logger.error("Error picking casual Wonder Pick", error)
+        res.status(500).json({ error: "Error picking casual Wonder Pick" })
+      }
+    })
+
+    app.post("/season/claim-wonder-pick-gift", async (req, res) => {
+      try {
+        const userAuth = await authUser(req, res)
+        if (!userAuth) return
+        const userDoc = await claimSeasonWonderPickGift(userAuth.uid)
+        if (!userDoc) {
+          res.status(409).json({ error: "Wonder Pick gift not claimable" })
+          return
+        }
+        res.status(200).json({ user: toUserMetadataJSON(userDoc) })
+      } catch (error) {
+        logger.error("Error claiming Wonder Pick gift", error)
+        res.status(500).json({ error: "Error claiming Wonder Pick gift" })
+      }
+    })
+
+    app.post("/collection/reset-selected-emotions", async (req, res) => {
+      try {
+        const userAuth = await authUser(req, res)
+        if (!userAuth) return
+        const result = await resetSelectedEmotionsForUser(userAuth.uid)
+        if (!result) {
+          res.status(404).json({ error: "User not found" })
+          return
+        }
+        res.status(200).json({ user: toUserMetadataJSON(result.userDoc) })
+      } catch (error) {
+        logger.error("Error resetting selected emotions", error)
+        res.status(500).json({ error: "Error resetting selected emotions" })
       }
     })
 
@@ -1023,46 +1235,6 @@ export const server = defineServer({
       } catch (error) {
         logger.error("Error changing selected emotion", error)
         res.status(500).json({ error: "Error changing selected emotion" })
-      }
-    })
-
-    app.post("/collection/buy-emotion", async (req, res) => {
-      try {
-        const userAuth = await authUser(req, res)
-        if (!userAuth) return
-
-        const index = req.body?.index
-        const emotion = req.body?.emotion as Emotion
-        const shiny = req.body?.shiny
-
-        if (!index || typeof index !== "string") {
-          res.status(400).json({ error: "index is required" })
-          return
-        }
-        if (!emotion || !Object.values(Emotion).includes(emotion)) {
-          res.status(400).json({ error: "emotion is invalid" })
-          return
-        }
-        if (typeof shiny !== "boolean") {
-          res.status(400).json({ error: "shiny must be a boolean" })
-          return
-        }
-
-        const result = await buyEmotionForUser(
-          userAuth.uid,
-          index,
-          emotion,
-          shiny
-        )
-        if (!result) {
-          res.status(409).json({ error: "Not enough dust or invalid state" })
-          return
-        }
-
-        res.status(200).json({ user: toUserMetadataJSON(result.userDoc) })
-      } catch (error) {
-        logger.error("Error buying emotion", error)
-        res.status(500).json({ error: "Error buying emotion" })
       }
     })
 

@@ -32,6 +32,7 @@ export interface IDetailledStatistic {
   specialGameRule?: SpecialGameRule | null
   dailyDuel?: boolean
   tournament?: boolean
+  rainbowFinale?: boolean
   unholdableItems: Item[]
   blessings: Blessing[]
 }
@@ -101,6 +102,9 @@ const statisticSchema = new Schema({
     type: Boolean
   },
   tournament: {
+    type: Boolean
+  },
+  rainbowFinale: {
     type: Boolean
   },
   unholdableItems: [

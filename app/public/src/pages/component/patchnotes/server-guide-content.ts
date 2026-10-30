@@ -408,6 +408,11 @@ const PATCH_LOG_COVERS: {
     credit?: string
   }
 } = {
+  "1 November 2026": {
+    name: "A New Journey",
+    theme: "newjourney",
+    focus: "50% 22%"
+  },
   "10 October 2026": {
     name: "Midnight Séance",
     tagline:

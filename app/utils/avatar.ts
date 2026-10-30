@@ -1,3 +1,4 @@
+import { getSeasonPortrait } from "../config/game/season"
 import { Emotion, type PkmWithCustom } from "../types"
 import { Pkm, PkmByIndex, PkmIndex } from "../types/enum/Pokemon"
 
@@ -28,7 +29,20 @@ export function getPkmFromPortraitSrc(src: string): PkmWithCustom | null {
   return getPokemonCustomFromAvatar(match[1])
 }
 
+const SEASON_PORTRAIT_AVATAR_PREFIX = "season/"
+
+export function getSeasonPortraitAvatar(portraitId: string) {
+  return `${SEASON_PORTRAIT_AVATAR_PREFIX}${portraitId}`
+}
+
+function getSeasonPortraitFromAvatar(avatar: string) {
+  if (!avatar.startsWith(SEASON_PORTRAIT_AVATAR_PREFIX)) return undefined
+  return getSeasonPortrait(avatar.slice(SEASON_PORTRAIT_AVATAR_PREFIX.length))
+}
+
 export function getAvatarSrc(avatar: string) {
+  const seasonPortrait = getSeasonPortraitFromAvatar(avatar)
+  if (seasonPortrait) return `/${seasonPortrait.src}`
   return `/assets/portraits/${avatar.replace(/(\d+)\-/g, "$1/")}.png`
 }
 
@@ -49,6 +63,14 @@ export function getAvatarString(
 }
 
 export function getPokemonCustomFromAvatar(avatar: string): PkmWithCustom {
+  const seasonPortrait = getSeasonPortraitFromAvatar(avatar)
+  if (seasonPortrait) {
+    return {
+      emotion: Emotion.NORMAL,
+      shiny: false,
+      name: seasonPortrait.pokemon
+    }
+  }
   let emotion = Emotion.NORMAL
   let shiny = false
   let index = "0019"

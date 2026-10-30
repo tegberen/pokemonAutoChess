@@ -8,7 +8,6 @@ import { DEPTH } from "../../../game/depths"
 import { pickChoice, rerollChoice } from "../../../network"
 import { playSound, SOUNDS } from "../../utils/audio"
 import { BoosterCard } from "../booster/booster-card"
-import "../booster/booster.css"
 import "./game-smeargle-pack.css"
 
 export default function GameSmearglePack(props: {

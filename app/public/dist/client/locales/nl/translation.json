@@ -1691,14 +1691,7 @@
 		"sign_out": "Afmelden"
 	},
 	"collection": {
-		"title": "Verzameling",
-		"show_all": "Toon alles",
-		"show_locked": "Toon vergrendeld",
-		"show_unlockable": "Toon ontgrendelbaar",
-		"show_unlocked": "Toon ontgrendeld",
-		"normal_emotions": "Normale emoties",
-		"shiny_emotions": "Glanzende emoties",
-		"buy_booster": "Koop een nieuwe booster voor {{cost}}"
+		"title": "Verzameling"
 	},
 	"bot_builder": "BOT-bouwer",
 	"meta": "Meta",	
@@ -1728,10 +1721,6 @@
 	"leaderboard": "Scorebord",
 	"rooms": "Kamers",
 	"online": "Online",
-	"shards": "scherven",
-	"boosters_hint": "Speel meer games om een level omhoog te gaan en nieuwe boosters te verdienen.",
-	"open_boosters_hint": "Open boosters om nieuwe avatars te ontgrendelen en je verzameling compleet te maken!",
-	"open_booster": "Open een booster",
 	"lobby": "Lobby",
 	"delete": "Verwijderen",
 	"load": "Laden",
@@ -1764,7 +1753,6 @@
 	"chat_disabled_anonymous": "Chat uitgeschakeld voor anonieme gebruikers",
 	"type_here": "Typ hier ...",
 	"send_message": "Bericht versturen",
-	"shiny_hunter": "Glanzende jager",
 	"close": "Dichtbij",
 	"additional_pokemon_hint": "Elke speler koos extra Pokemon om beschikbaar te zijn in de winkel van alle spelers voor dit spel.",
 	"game_stats": {

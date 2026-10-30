@@ -20,6 +20,7 @@ import type { Blessing } from "../../../../../types/enum/Blessing"
 import type { Synergy } from "../../../../../types/enum/Synergy"
 import { ItemDetailTooltip } from "../../../game/components/item-detail"
 import { formatDate } from "../../utils/date"
+import { cc } from "../../utils/jsx"
 import Team from "../after/team"
 import { GamePokemonDetailTooltip } from "../game/game-pokemon-detail"
 import { GameModeIcon } from "../icons/game-mode-icon"
@@ -173,7 +174,9 @@ function GameHistoryRow({
     ? t("game_event_tag.DAILY_DUEL")
     : r.tournament
       ? t("game_event_tag.TOURNAMENT")
-      : null
+      : r.rainbowFinale
+        ? t("rainbow_hours.title")
+        : null
   // Solo tournaments play Smeargle Pack custom games, Duo ones Double Up
   const isScribbleTournament =
     r.tournament === true && r.gameMode === GameMode.CUSTOM_LOBBY
@@ -181,7 +184,12 @@ function GameHistoryRow({
   return (
     <div style={style}>
       <div
-        className={`my-box game-history${eventTag ? " event-game" : ""}${r.tournament ? " tournament-game" : ""}${isScribbleTournament ? " scribble-tournament-game" : ""}`}
+        className={cc("my-box game-history", {
+          "event-game": eventTag !== null,
+          "tournament-game": r.tournament ?? false,
+          "scribble-tournament-game": isScribbleTournament,
+          "rainbow-finale-game": r.rainbowFinale ?? false
+        })}
       >
         <div className="game-meta">
           <span className="result">

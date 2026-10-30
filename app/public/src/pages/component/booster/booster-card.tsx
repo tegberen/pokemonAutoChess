@@ -1,14 +1,9 @@
 import type React from "react"
 import { useTranslation } from "react-i18next"
-import {
-  DUST_PER_BOOSTER,
-  DUST_PER_SHINY,
-  RarityColor
-} from "../../../../../config"
+import { RarityColor } from "../../../../../config"
 import { getPokemonData } from "../../../../../models/precomputed/precomputed-pokemon-data"
 import type { BoosterCard } from "../../../../../types/Booster"
 import { PkmIndex } from "../../../../../types/enum/Pokemon"
-import { getPortraitSrc } from "../../../../../utils/avatar"
 import { cc } from "../../utils/jsx"
 import PokemonPortrait from "../pokemon-portrait"
 import "./booster-card.css"
@@ -17,7 +12,7 @@ interface BoosterCardProps {
   card: BoosterCard
   flipped: boolean
   onFlip: () => void
-  // hide the collection-only "+X shards" / "new" footer (e.g. in-game picks)
+  // hide the collection-only "new" footer (e.g. in-game picks)
   hideReward?: boolean
 }
 
@@ -61,18 +56,7 @@ export function BoosterCard({
               {t(`emotion.${card.emotion}`)}
             </span>
           </p>
-          {hideReward ? null : card.new ? (
-            <p className="new">{t("new")}</p>
-          ) : (
-            <p className="dust">
-              +{card.shiny ? DUST_PER_SHINY : DUST_PER_BOOSTER} {t("shards")}{" "}
-              <img
-                src={getPortraitSrc(PkmIndex[card.name])}
-                className="dust"
-                alt="dust"
-              />
-            </p>
-          )}
+          {!hideReward && card.new && <p className="new">{t("new")}</p>}
         </div>
       </div>
     </div>

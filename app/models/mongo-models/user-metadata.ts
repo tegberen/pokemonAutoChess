@@ -1,6 +1,7 @@
-import { model, Schema } from "mongoose"
+import { type HydratedDocument, model, Schema } from "mongoose"
 import { ExpThreshold } from "../../config"
 import { GADGETS_UNLOCKED_BY_LEVEL } from "../../config/game/gadgets"
+import { THEMES } from "../../config/game/theme"
 import { CollectionUtils } from "../../core/collection"
 import { notificationsService } from "../../services/notifications"
 import { Emotion, Role, Title } from "../../types"
@@ -130,6 +131,83 @@ const userMetadataSchema = new Schema({
     default: 0
   },
   unlockedAvatarCosmetics: [{ type: String, enum: AVATAR_COSMETIC_IDS }],
+  seasonTickets: {
+    type: Number,
+    default: 0
+  },
+  rainbowHoursRewardedUntil: {
+    type: Number
+  },
+  shinyTickets: {
+    type: Number,
+    default: 0
+  },
+  wonderPicks: {
+    type: Number,
+    default: 0
+  },
+  unlockedThemes: [{ type: String, enum: THEMES }],
+  seasonPortraits: [{ type: String }],
+  holoIndexes: [{ type: String }],
+  casualPick: {
+    type: new Schema(
+      {
+        charges: { type: Number, default: 0 },
+        chargeWindow: { type: Number, default: 0 },
+        candidates: [
+          {
+            _id: false,
+            pokemon: { type: String, enum: Pkm },
+            holo: { type: Boolean, default: false }
+          }
+        ],
+        rerollsLeft: { type: Number, default: 0 }
+      },
+      { _id: false }
+    )
+  },
+  wonderPickDraw: {
+    type: new Schema(
+      {
+        candidates: [{ type: String, enum: Pkm }],
+        rerollsLeft: { type: Number, default: 0 }
+      },
+      { _id: false }
+    )
+  },
+  croagunkTrade: {
+    type: new Schema(
+      {
+        offerId: { type: String, required: true },
+        chosenAt: { type: Number, required: true },
+        expiresAt: { type: Number, required: true },
+        purchasedAt: { type: Number }
+      },
+      { _id: false }
+    )
+  },
+  // no default: undefined means the tier was never set and is not back-paid
+  shinyPickMilestonesClaimed: {
+    type: Number
+  },
+  season: {
+    type: new Schema(
+      {
+        id: { type: String, required: true },
+        loginDays: { type: Number, default: 0 },
+        lastLoginDay: { type: String, default: "" },
+        claimedSteps: [{ type: Number }],
+        wonderPickGiftClaimed: { type: Boolean, default: false },
+        purchasedOfferIds: [{ type: String }],
+        challengeRevision: { type: Number, default: 0 },
+        dailyKey: { type: String, default: "" },
+        dailyProgress: { type: Schema.Types.Mixed, default: {} },
+        weeklyKey: { type: String, default: "" },
+        weeklyProgress: { type: Number, default: 0 }
+      },
+      { _id: false }
+    )
+  },
   pokemonCollection: {
     type: Map,
     of: {
@@ -257,10 +335,12 @@ export function toUserMetadataJSON(user): IUserMetadataJSON {
   }
 }
 
-export function giveUserExp(user: IUserMetadataMongo, exp: number) {
+export function giveUserExp(
+  user: HydratedDocument<IUserMetadataMongo>,
+  exp: number
+) {
   if (user.exp + exp >= ExpThreshold) {
     user.level += 1
-    user.booster += 1
     user.exp = user.exp + exp - ExpThreshold
 
     if (user.level <= 2) {

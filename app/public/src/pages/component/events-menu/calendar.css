@@ -27,8 +27,8 @@
   background-color: #f8fae4;
   background-image:
     radial-gradient(ellipse at 0% 0%, rgb(22 44 58 / 72%), transparent 80%),
-    url("assets/ui/cards/tournament_card.png");
-  background-position: right center;
+    url("assets/ui/cards/smeargle_card.webp");
+  background-position: center 30%;
   background-size: cover;
   color: #273946;
 }
@@ -86,8 +86,10 @@
 .calendar-event-card.news {
   min-height: 12em;
   background-color: #1f4f86;
-  background-image: url("assets/ui/cards/news_card.jpg");
-  background-position: 85% 30%;
+  background-image:
+    radial-gradient(ellipse at 0% 0%, rgb(18 40 26 / 78%), transparent 75%),
+    url("assets/ui/cards/news_card_2.webp");
+  background-position: center 55%;
   background-size: cover;
 }
 

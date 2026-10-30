@@ -768,6 +768,7 @@ export interface IPreparationMetadata {
   blessingsEnabled: boolean
   specialGameRule: SpecialGameRule | null
   dailyDuel: boolean
+  rainbowFinale: boolean
   // when the lobby starts by itself, so staff can show a countdown
   autoStartAt: string | null
 }

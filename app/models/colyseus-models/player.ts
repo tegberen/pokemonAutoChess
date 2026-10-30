@@ -401,6 +401,8 @@ export default class Player extends Schema implements IPlayer {
   victoriousCastPending = false
   gloriousBattleReward: Item | null = null
   gloriousBattleWins = 0
+  // server-only: counted for the season's weekly "Evolve to 3 stars" challenge
+  seasonThreeStarEvolutions = 0
   seaCrystalGoldSold = 0
   ritualSpiritCoinCount = 0
   // server-only: STARTER_CHOICE's pick, and how many round-starts still owe a copy

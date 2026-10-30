@@ -45,6 +45,8 @@ import {
   STARTER_CHOICE_EXTRA_ROUNDS
 } from "../types/enum/Blessing"
 import { GADGETS } from "../config/game/gadgets"
+import { isRainbowHours } from "../config/game/rainbow-hours"
+import { SEASON_MIN_STAGE_FOR_CHALLENGES } from "../config/game/season"
 import {
   getScribbleShapeCellsAt,
   type ScribbleShapeType
@@ -88,7 +90,10 @@ import { PRECOMPUTED_POKEMONS_PER_RARITY } from "../models/precomputed/precomput
 import { getSellPrice } from "../models/shop"
 import { updatePlayerTitlesAfterGame } from "../models/titles"
 import { fetchEventLeaderboard } from "../services/leaderboard"
+import { syncLevelRewards } from "../services/level-rewards"
+import { grantRainbowHoursRewards } from "../services/rainbow-hours"
 import { notificationsService } from "../services/notifications"
+import { recordSeasonGame } from "../services/season"
 import {
   getScribbleQuizValues,
   grantRandomScribbleShape,
@@ -123,6 +128,7 @@ import type { EloRank } from "../types/enum/EloRank"
 import {
   GameMode,
   GamePhaseState,
+  getGameModification,
   PokemonActionState,
   Rarity,
   Stat
@@ -236,6 +242,10 @@ export default class GameRoom extends Room<{ state: GameState }> {
   private partnerChatHistory = new Map<string, IChatV2[]>()
   private lastPartnerMessageAt = new Map<string, number>()
   dailyDuel = false
+  rainbowFinale = false
+  // games started in the window pay their Rainbow Hours Tickets even if they
+  // end after midnight
+  startedInRainbowHours = false
   private dailyDuelPodiumUids: string[] = []
   private dailyDuelPodiumSave: Promise<void> = Promise.resolve()
   private matchAvatarCosmetics = new Map<string, AvatarCosmeticId>()
@@ -271,7 +281,8 @@ export default class GameRoom extends Room<{ state: GameState }> {
     tournamentId,
     bracketId,
     guideSynergy,
-    dailyDuel
+    dailyDuel,
+    rainbowFinale
   }: {
     users: Record<string, IGameUser>
     preparationId: string
@@ -290,9 +301,12 @@ export default class GameRoom extends Room<{ state: GameState }> {
     bracketId: string | null
     guideSynergy?: Synergy | null
     dailyDuel?: boolean
+    rainbowFinale?: boolean
   }) {
     logger.info("Create Game ", this.roomId)
     this.dailyDuel = dailyDuel ?? false
+    this.rainbowFinale = rainbowFinale ?? false
+    this.startedInRainbowHours = isRainbowHours()
 
     this.onRoomDeleted = this.onRoomDeleted.bind(this)
     this.presence.subscribe("room-deleted", this.onRoomDeleted)
@@ -1705,6 +1719,7 @@ export default class GameRoom extends Room<{ state: GameState }> {
           specialGameRule: this.state.specialGameRule,
           dailyDuel: this.dailyDuel,
           tournament: !!this.metadata?.tournamentId,
+          rainbowFinale: this.rainbowFinale,
           regions: player.regions,
           blessings: player.blessings ?? []
         })
@@ -1820,6 +1835,46 @@ export default class GameRoom extends Room<{ state: GameState }> {
       //logger.debug(usr);
       //usr.markModified('metadata');
       await usr.save()
+
+      await syncLevelRewards(player.id).catch((error) =>
+        logger.error("Error syncing level rewards", error)
+      )
+
+      // after the save: a document write could overwrite a reward $inc
+      const stageReached = Math.min(
+        this.state.stageLevel,
+        player.doubleUpEliminationRound
+      )
+      if (countsAsAGame && this.state.players.size >= 2) {
+        await recordSeasonGame(player.id, {
+          modification: getGameModification(this.state),
+          isDoubleUp: this.state.gameMode === GameMode.DOUBLE_UP,
+          rank,
+          stageReached,
+          threeStarEvolutions: player.seasonThreeStarEvolutions,
+          maxedSynergies: getMaxedScholarSynergies(player.synergies),
+          finalItems: [
+            ...player.items,
+            ...schemaValues(player.board).flatMap((pokemon) =>
+              schemaValues(pokemon.items)
+            )
+          ]
+        }).catch((error) => logger.error("Error recording season game", error))
+      }
+      if (
+        countsAsAGame &&
+        this.state.players.size >= 2 &&
+        stageReached >= SEASON_MIN_STAGE_FOR_CHALLENGES &&
+        (this.startedInRainbowHours || this.rainbowFinale)
+      ) {
+        await grantRainbowHoursRewards(player.id, {
+          rank,
+          isFinale: this.rainbowFinale,
+          gameStartedAt: this.state.startTime
+        }).catch((error) =>
+          logger.error("Error granting Rainbow Hours rewards", error)
+        )
+      }
       if (shouldRefetchEventLeaderboard) {
         await fetchEventLeaderboard()
         //client.send(Transfer.USER_PROFILE, toUserMetadataJSON(usr))

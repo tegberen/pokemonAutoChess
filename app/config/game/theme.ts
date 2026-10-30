@@ -2,6 +2,8 @@ import { Title } from "../../types"
 import type { IUserMetadataUnpacked } from "../../types/interfaces/UserMetadata"
 import { invertKeysValues, values } from "../../utils/object"
 import { GADGETS } from "./gadgets"
+import { SEASONS } from "./season"
+import { isHalloweenGhostSeason } from "./town-encounters"
 
 export const THEMES = [
   "default",
@@ -30,7 +32,9 @@ export const THEMES = [
   "derpy",
   "artist",
   "duelist",
-  "halloween"
+  "halloween",
+  "onsen",
+  "newjourney"
 ] as const
 
 export type Theme = (typeof THEMES)[number]
@@ -67,10 +71,17 @@ export const THEME_BY_TITLE = invertKeysValues(TITLE_BY_THEME)
 export const TITLES_UNLOCKING_THEMES = values(TITLE_BY_THEME)
 export type TitleUnlockingTheme = (typeof TITLES_UNLOCKING_THEMES)[number]
 
+const PURCHASABLE_THEMES: Theme[] = SEASONS.map(
+  (season) => season.mysteryTheme
+)
+
 export function isThemeUnlocked(
   theme: Theme,
   profile: IUserMetadataUnpacked
 ): boolean {
+  if (theme === "halloween" && !isHalloweenGhostSeason()) return false
+  if (profile.unlockedThemes?.includes(theme)) return true
+  if (PURCHASABLE_THEMES.includes(theme)) return false
   if (profile.level < GADGETS.palette.levelRequired) return false
   const requiredTitle = TITLE_BY_THEME[theme]
   if (!requiredTitle) return true

@@ -2656,14 +2656,7 @@
 		"sign_out": "サインアウト"
 	},
 	"collection": {
-		"title": "コレクション",
-		"show_all": "すべて表示する",
-		"show_locked": "ロックされた状態を表示",
-		"show_unlockable": "ロック解除可能を表示",
-		"show_unlocked": "ロック解除された状態を表示",
-		"normal_emotions": "通常の感情",
-		"shiny_emotions": "輝く感情",
-		"buy_booster": "新しいブースターを{{cost}}で購入する"
+		"title": "コレクション"
 	},
 	"bot_builder": "ボットビルダー",
 	"meta": "メタ",	
@@ -2693,10 +2686,6 @@
 	"leaderboard": "リーダーボード",
 	"rooms": "部屋",
 	"online": "オンライン",
-	"shards": "破片",
-	"boosters_hint": "もっとゲームをプレイしてレベルアップし、新しいブースターを獲得してください。",
-	"open_boosters_hint": "ブースターを開いて新しいアバターのロックを解除し、コレクションを完成させましょう!",
-	"open_booster": "ブースターを開く",
 	"lobby": "ロビー",
 	"delete": "消去",
 	"load": "ロード",
@@ -2729,7 +2718,6 @@
 	"chat_disabled_anonymous": "匿名ユーザーに対してチャットが無効になっています",
 	"type_here": "ここに入力 ...",
 	"send_message": "メッセージを送る",
-	"shiny_hunter": "シャイニーハンター",	
 	"close": "近い",
 	"additional_pokemon_hint": "各プレイヤーは、このゲームのすべてのプレイヤーのショップで入手できる追加のポケモンを 3 匹選びました。",
 	"game_stats": {

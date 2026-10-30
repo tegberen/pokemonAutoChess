@@ -1609,7 +1609,7 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     grantsPokemonImmediately: false
   },
   [Blessing.FURTHER_BEYOND]: {
-    tier: BlessingTier.GOLD,
+    tier: BlessingTier.PRISMATIC,
     availableAtStages: [12],
     icon: "further_beyond",
     grantsPokemonImmediately: false

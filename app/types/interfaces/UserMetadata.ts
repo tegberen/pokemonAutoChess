@@ -3,6 +3,9 @@ import type { Blessing } from "../enum/Blessing"
 import type { Language } from "../enum/Language"
 import type { Synergy } from "../enum/Synergy"
 import type { AvatarCosmeticId } from "../enum/AvatarCosmetic"
+import type { Pkm } from "../enum/Pokemon"
+import type { SeasonChallengeId } from "../../config/game/season"
+import type { Theme } from "../../config/game/theme"
 
 interface IUserMetadata {
   uid: string
@@ -39,7 +42,53 @@ interface IUserMetadata {
   title: "" | Title
   role: Role
   banned?: boolean
+  seasonTickets?: number
+  rainbowHoursRewardedUntil?: number
+  shinyTickets?: number
+  wonderPicks?: number
+  unlockedThemes?: Theme[]
+  seasonPortraits?: string[]
+  holoIndexes?: string[]
+  wonderPickDraw?: IWonderPickDraw
+  casualPick?: ICasualPick
+  croagunkTrade?: ICroagunkTrade
+  shinyPickMilestonesClaimed?: number
+  season?: ISeasonProgress
   pokemonCollection: Map<string, IPokemonCollectionItem>
+}
+
+export interface ICroagunkTrade {
+  offerId: string
+  chosenAt: number
+  expiresAt: number
+  purchasedAt?: number
+}
+
+export interface ICasualPick {
+  charges: number
+  chargeWindow: number
+  candidates: { pokemon: Pkm; holo: boolean }[]
+  rerollsLeft: number
+}
+
+// kept outside the season so a draw survives the season rollover
+export interface IWonderPickDraw {
+  candidates: Pkm[]
+  rerollsLeft: number
+}
+
+export interface ISeasonProgress {
+  id: string
+  loginDays: number
+  lastLoginDay: string
+  claimedSteps: number[]
+  wonderPickGiftClaimed: boolean
+  purchasedOfferIds: string[]
+  challengeRevision: number
+  dailyKey: string
+  dailyProgress: Partial<Record<SeasonChallengeId, number>>
+  weeklyKey: string
+  weeklyProgress: number
 }
 
 interface IPokemonCollectionItem {

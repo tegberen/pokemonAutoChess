@@ -39,6 +39,7 @@ export interface IGameRecord {
   specialGameRule?: SpecialGameRule | "" | null
   dailyDuel?: boolean
   tournament?: boolean
+  rainbowFinale?: boolean
   unholdableItems: Item[]
   blessings: Blessing[]
 }
@@ -58,6 +59,7 @@ export class GameRecord extends Schema implements IGameRecord {
   @type("string") specialGameRule: SpecialGameRule | "" = ""
   @type("boolean") dailyDuel = false
   @type("boolean") tournament = false
+  @type("boolean") rainbowFinale = false
 
   constructor(
     time: number,
@@ -70,7 +72,8 @@ export class GameRecord extends Schema implements IGameRecord {
     blessings: Blessing[] = [],
     specialGameRule: SpecialGameRule | null = null,
     dailyDuel = false,
-    tournament = false
+    tournament = false,
+    rainbowFinale = false
   ) {
     super()
     this.time = time
@@ -82,6 +85,7 @@ export class GameRecord extends Schema implements IGameRecord {
     this.dailyDuel = dailyDuel
     // older tournament games still carry the retired TOURNAMENT mode
     this.tournament = tournament || gameMode === GameMode.TOURNAMENT
+    this.rainbowFinale = rainbowFinale
     this.unholdableItems.push(...(unholdableItems ?? []))
     this.blessings.push(...(blessings ?? []))
 

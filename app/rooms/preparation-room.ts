@@ -140,6 +140,7 @@ export default class PreparationRoom extends Room<{ state: PreparationState }> {
     whimsy?: boolean
     guideSynergy?: Synergy
     dailyDuel?: boolean
+    rainbowFinale?: boolean
   }) {
     logger.info("create Preparation ", this.roomId)
     // logger.debug(options);
@@ -176,6 +177,7 @@ export default class PreparationRoom extends Room<{ state: PreparationState }> {
       blessingsEnabled: this.state.blessingsEnabled,
       specialGameRule: this.state.specialGameRule,
       dailyDuel: options.dailyDuel ?? false,
+      rainbowFinale: options.rainbowFinale ?? false,
       autoStartAt: options.autoStartDelayInSeconds
         ? new Date(
             Date.now() + options.autoStartDelayInSeconds * 1000
@@ -186,7 +188,8 @@ export default class PreparationRoom extends Room<{ state: PreparationState }> {
     if (
       options.gameMode === GameMode.TOURNAMENT ||
       options.tournamentId ||
-      options.dailyDuel
+      options.dailyDuel ||
+      options.rainbowFinale
     ) {
       this.autoDispose = false
     }

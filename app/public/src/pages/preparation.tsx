@@ -47,6 +47,7 @@ import {
   setBlessingsEnabled,
   setWhimsy,
   setDailyDuel,
+  setRainbowFinale,
   setTournamentTeams,
   setUser,
   setWhiteList
@@ -70,6 +71,9 @@ export default function Preparation() {
   const gameMode = useAppSelector((state) => state.preparation.gameMode)
   const isTournamentLobby = useAppSelector(
     (state) => state.preparation.tournamentTeams.length > 0
+  )
+  const rainbowFinale = useAppSelector(
+    (state) => state.preparation.rainbowFinale
   )
   const initialized = useRef<boolean>(false)
   const connectingToGame = useRef<boolean>(false)
@@ -206,6 +210,10 @@ export default function Preparation() {
 
       $state.listen("dailyDuel", (value) => {
         dispatch(setDailyDuel(value))
+      })
+
+      $state.listen("rainbowFinale", (value) => {
+        dispatch(setRainbowFinale(value))
       })
 
       $state.users.onAdd((user) => {
@@ -386,11 +394,13 @@ export default function Preparation() {
                 {t("chat")}
               </Tab>
               <Tab
-                disabled={isTournamentLobby}
+                disabled={isTournamentLobby || rainbowFinale}
                 title={
                   isTournamentLobby
                     ? t("tournament.lobby_settings_locked")
-                    : undefined
+                    : rainbowFinale
+                      ? t("rainbow_hours.settings_locked")
+                      : undefined
                 }
               >
                 <img

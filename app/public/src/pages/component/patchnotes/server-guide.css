@@ -846,6 +846,17 @@
   font-size: 1.5em;
   font-weight: normal;
   line-height: 1.3;
+  color: #08060b;
+  /* the outlined lettering of the Guild card names */
+  text-shadow:
+    0 0.1em 0 #fff,
+    0.1em 0 0 #fff,
+    -0.1em 0 0 #fff,
+    0 -0.1em 0 #fff,
+    0.1em 0.1em 0 #fff,
+    -0.1em 0.1em 0 #fff,
+    0.1em -0.1em 0 #fff,
+    -0.1em -0.1em 0 #fff;
 }
 
 .server-guide .guide-patch-cover figcaption em {

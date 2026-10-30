@@ -153,15 +153,6 @@
   color: var(--color-fg-gold);
 }
 
-.booster-card img.dust {
-  width: 40px;
-  height: 40px;
-  margin: 0 0.5em;
-  image-rendering: pixelated;
-  border-radius: 50%;
-  border: 1px solid black;
-}
-
 .booster-card .new {
   background: linear-gradient(
     45deg,

@@ -6,7 +6,12 @@ import {
   MAX_PLAYERS_PER_GAME,
   USERNAME_REGEXP
 } from "../../config"
+import {
+  WELCOME_BUNDLE_BOOSTERS,
+  WELCOME_BUNDLE_WONDER_PICKS
+} from "../../config/game/experience"
 import { GADGETS } from "../../config/game/gadgets"
+import { getSeasonPortrait } from "../../config/game/season"
 import { CollectionUtils } from "../../core/collection"
 import { getPendingGame } from "../../core/pending-game-manager"
 import { setDoubleUpChampionUid } from "../../models/mongo-models/double-up-champions"
@@ -18,6 +23,7 @@ import {
   fetchSmeargleScribbleChampion
 } from "../../services/leaderboard"
 import { notificationsService } from "../../services/notifications"
+import { recordSeasonLogin } from "../../services/season"
 import { Emotion, Role, type Title, Transfer } from "../../types"
 import { CloseCodes } from "../../types/enum/CloseCodes"
 import { EloRank } from "../../types/enum/EloRank"
@@ -36,7 +42,7 @@ import type {
   IPokemonCollectionItemMongo,
   IUserMetadataMongo
 } from "../../types/interfaces/UserMetadata"
-import { getPortraitSrc } from "../../utils/avatar"
+import { getPortraitSrc, getSeasonPortraitAvatar } from "../../utils/avatar"
 import { getRank } from "../../utils/elo"
 import { logger } from "../../utils/logger"
 import { generateRandomName } from "../../utils/name-generation"
@@ -93,7 +99,7 @@ export class OnJoinCommand extends Command<
         }
       } else {
         // create new user account
-        const starterBoosters = 555
+        const starterBoosters = WELCOME_BUNDLE_BOOSTERS
         const starterPokemon = pickRandomIn(Starters)
         const randomName = generateRandomName(starterPokemon)
         const starterAvatar = PkmIndex[starterPokemon] + "/Normal"
@@ -118,6 +124,8 @@ export class OnJoinCommand extends Command<
           displayName: randomName,
           avatar: starterAvatar,
           booster: starterBoosters,
+          wonderPicks: WELCOME_BUNDLE_WONDER_PICKS,
+          shinyPickMilestonesClaimed: 0,
           pokemonCollection: starterCollection
         })
         const newUser: IUserMetadataMongo = {
@@ -136,12 +144,18 @@ export class OnJoinCommand extends Command<
           eventFinishTime: null,
           pokemonCollection: starterCollection,
           booster: starterBoosters,
+          wonderPicks: WELCOME_BUNDLE_WONDER_PICKS,
+          shinyPickMilestonesClaimed: 0,
           titles: [],
           title: "",
           role: Role.BASIC
         }
         this.room.users.set(client.auth.uid, newUser)
       }
+
+      recordSeasonLogin(client.auth.uid).catch((error) =>
+        logger.error("Error recording season login", error)
+      )
     } catch (error) {
       logger.error(error)
     }
@@ -395,7 +409,7 @@ export class GiveBoostersCommand extends Command<
       if (u && u.role && u.role === Role.ADMIN) {
         const user = await UserMetadata.findOne({ uid: uid })
         if (user) {
-          user.booster += numberOfBoosters
+          user.$inc("booster", numberOfBoosters)
           user.save()
 
           if (targetUser) {
@@ -534,24 +548,46 @@ export class ChangeTitleCommand extends Command<
 
 export class ChangeAvatarCommand extends Command<
   CustomLobbyRoom,
-  { client: Client; index: string; emotion: Emotion; shiny: boolean }
+  {
+    client: Client
+    index: string
+    emotion: Emotion
+    shiny: boolean
+    seasonPortraitId?: unknown
+  }
 > {
   async execute({
     client,
     index,
     emotion,
-    shiny
+    shiny,
+    seasonPortraitId
   }: {
     client: Client
     index: string
     emotion: Emotion
     shiny: boolean
+    seasonPortraitId?: unknown
   }) {
     try {
       const user = this.room.users.get(client.auth.uid)
       const mongoUser = await UserMetadata.findOne({ uid: client.auth.uid })
       if (!user) return
       if (!mongoUser) return
+      if (seasonPortraitId !== undefined) {
+        if (
+          typeof seasonPortraitId !== "string" ||
+          !getSeasonPortrait(seasonPortraitId) ||
+          !mongoUser.seasonPortraits?.includes(seasonPortraitId)
+        ) {
+          return
+        }
+        const seasonAvatar = getSeasonPortraitAvatar(seasonPortraitId)
+        user.avatar = seasonAvatar
+        mongoUser.avatar = seasonAvatar
+        mongoUser.save()
+        return
+      }
       const collectionItem = mongoUser.pokemonCollection.get(index)
       if (
         !collectionItem ||

@@ -3451,24 +3451,7 @@
 		"signing_out": "Wird abgemeldet..."
 	},
 	"collection": {
-		"title": "Sammlung",
-		"show_all": "Zeige alles",
-		"show_locked": "Show gesperrt",
-		"show_unlockable": "Freischaltbares anzeigen",
-		"show_unlocked": "Show entsperrt",
-		"show_refundable": "Rückerstattbar",		
-		"sort_by_index": "Sortieren nach Index",
-		"sort_by_shards": "Nach Scherben sortieren",
-		"sort_by_played": "Nach gespielten Runden sortieren",
-		"sort_by_emotes_unlocked": "Nach freigeschaltenen Emotionen sortieren",
-		"normal_emotions": "Normale Emotionen",
-		"shiny_emotions": "Schillernde Emotionen",
-		"reset_emotion": "Zu Standardporträt zurücksetzen",
-		"buy_booster": "Kaufe einen neuen Booster für {{cost}}",
-		"choose_as_avatar": "Wähle einen Spieler Avatar aus",
-		"chosen_as_avatar": "✓ Als Spieleravatar ausgewählt",
-		"add_to_favorites": "Zu den Favoriten hinzugefügt",
-		"remove_from_favorites": "Aus den Favoriten entfernt"
+		"title": "Sammlung"
 	},
 	"bot_builder": "BOT-Builder",
 	"meta": "Meta",
@@ -3536,11 +3519,6 @@
 	"players_one": "{{count}} Spieler",
 	"players_other": "{{count}} Spieler",
 	"online": "Online",
-	"shards": "Scherben",
-	"played_times": "{{count}} gespielt",
-	"boosters_hint": "Spielen Sie mehr Spiele, um ein höheres Level zu erreichen und neue Booster zu verdienen.",
-	"open_boosters_hint": "Öffne Booster, um neue Avatare freizuschalten und deine Sammlung zu vervollständigen!",
-	"open_booster": "Öffnen Sie einen Booster",
 	"lobby": "Empfangshalle",
 	"announcements": "Ankündigungen",
 	"chat": "Chat",
@@ -3586,8 +3564,6 @@
 	"chat_disabled_anonymous": "Chat für anonyme Benutzer deaktiviert",
 	"type_here": "Gebe hier ein ...",
 	"send_message": "Nachricht senden",
-	"shiny_hunter": "Shiny Hunter",
-	"pokedex": "Pokédex",
 	"show_evolutions": "Zeige Entwicklungen",
 	"show_only_available_picks": "Zeige nur verfügbare Zusatzwahlen / Regionale Pokémon",
 	"close": "Schließen",
@@ -4369,6 +4345,5 @@
 		"level_up_title": "Levelaufstieg!"
 	},
 	"bench": "Bank",
-	"alt_forms": "Alternative Formen",	
 	"gold_needed_to_level_up": "Gold benötigt zum Levelaufstieg:"
 }

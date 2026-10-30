@@ -8,7 +8,8 @@ import type GameState from "../../rooms/states/game-state"
 import type LobbyState from "../../rooms/states/lobby-state"
 import type PreparationState from "../../rooms/states/preparation-state"
 import { type Emotion, type Role, type Title, Transfer } from "../../types"
-import type { Booster } from "../../types/Booster"
+import type { SeasonBoosterCard } from "../../types/Booster"
+import type { Pkm } from "../../types/enum/Pokemon"
 import { CloseCodes } from "../../types/enum/CloseCodes"
 import type { Item } from "../../types/enum/Item"
 import type { EloRank } from "../../types/enum/EloRank"
@@ -21,7 +22,6 @@ import { logger } from "../../utils/logger"
 import type { IBot } from "./models/bot-v2"
 import { LocalStoreKeys, localStore } from "./pages/utils/store.js"
 import store from "./stores"
-import { setBoosterContent } from "./stores/BoostersStore"
 import { logIn, setProfile } from "./stores/NetworkStore"
 import type { GalarFossil } from "../../types/enum/FossilUnlock"
 import type { PrismaticQuest } from "../../types/enum/PrismaticQuest"
@@ -310,21 +310,93 @@ export function setSpecialRule(rule: SpecialGameRule | null) {
   rooms.preparation?.send(Transfer.CHANGE_SPECIAL_RULE, rule)
 }
 
-export async function buyEmotion(params: {
-  index: string
-  emotion: Emotion
-  shiny: boolean
-}) {
+async function postSeasonAction<ExtraPayload extends object = object>(
+  path: string,
+  body: object = {}
+) {
   const token = await firebase.auth().currentUser?.getIdToken()
   if (!token) throw new Error("User not authenticated")
 
-  const res = await fetch("/collection/buy-emotion", {
+  const res = await fetch(`/season/${path}`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`
     },
-    body: JSON.stringify(params)
+    body: JSON.stringify(body)
+  })
+
+  if (!res.ok) {
+    const errorBody = await res.json().catch(() => ({}))
+    throw new Error(errorBody.error ?? res.statusText)
+  }
+
+  const payload = (await res.json()) as {
+    user: IUserMetadataJSON
+  } & ExtraPayload
+  store.dispatch(setProfile(payload.user))
+  return payload
+}
+
+export function recordSeasonLogin() {
+  return postSeasonAction("login")
+}
+
+export function claimSeasonSteps(steps: number[]) {
+  return postSeasonAction("claim-steps", { steps })
+}
+
+export function claimSeasonWonderPickGift() {
+  return postSeasonAction("claim-wonder-pick-gift")
+}
+
+export function buySeasonOffer(offerId: string) {
+  return postSeasonAction("buy", { offerId })
+}
+
+export function openCroagunkTrade() {
+  return postSeasonAction("croagunk/open")
+}
+
+export function buyCroagunkTrade() {
+  return postSeasonAction("croagunk/buy")
+}
+
+export function openSeasonBooster() {
+  return postSeasonAction<{ cards: SeasonBoosterCard[] }>("open-booster")
+}
+
+export function drawWonderPick() {
+  return postSeasonAction("wonder-pick/draw")
+}
+
+export function rerollWonderPick() {
+  return postSeasonAction("wonder-pick/reroll")
+}
+
+export function pickWonderPick() {
+  return postSeasonAction<{ picked: Pkm }>("wonder-pick/pick")
+}
+
+export function drawCasualPick() {
+  return postSeasonAction("casual-pick/draw")
+}
+
+export function rerollCasualPick() {
+  return postSeasonAction("casual-pick/reroll")
+}
+
+export function pickCasualPick() {
+  return postSeasonAction<{ card: SeasonBoosterCard }>("casual-pick/pick")
+}
+
+export async function resetSelectedEmotions() {
+  const token = await firebase.auth().currentUser?.getIdToken()
+  if (!token) throw new Error("User not authenticated")
+
+  const res = await fetch("/collection/reset-selected-emotions", {
+    method: "POST",
+    headers: { Authorization: `Bearer ${token}` }
   })
 
   if (!res.ok) {
@@ -361,54 +433,6 @@ export async function changeSelectedEmotion(params: {
 
   const payload = (await res.json()) as { user: IUserMetadataJSON }
   store.dispatch(setProfile(payload.user))
-  return payload
-}
-
-export async function buyBooster(params: { index: string }) {
-  const token = await firebase.auth().currentUser?.getIdToken()
-  if (!token) throw new Error("User not authenticated")
-
-  const res = await fetch("/boosters/buy", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`
-    },
-    body: JSON.stringify(params)
-  })
-
-  if (!res.ok) {
-    const body = await res.json().catch(() => ({}))
-    throw new Error(body.error ?? res.statusText)
-  }
-
-  const payload = (await res.json()) as { user: IUserMetadataJSON }
-  store.dispatch(setProfile(payload.user))
-  return payload
-}
-
-export async function openBooster() {
-  const token = await firebase.auth().currentUser?.getIdToken()
-  const res = await fetch("/boosters/open", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${token}`
-    }
-  })
-
-  if (!res.ok) {
-    const body = await res.json().catch(() => ({}))
-    throw new Error(body.error ?? res.statusText)
-  }
-
-  const payload = (await res.json()) as {
-    boosterContent: Booster
-    user: IUserMetadataJSON
-  }
-
-  store.dispatch(setBoosterContent(payload.boosterContent))
-  store.dispatch(setProfile(payload.user))
-
   return payload
 }
 

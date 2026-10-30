@@ -34,8 +34,6 @@ import {
   PkmsWithAltForms,
   PORTAL_CAROUSEL_BASE_DURATION,
   PortalCarouselStages,
-  SHARDS_PER_SHINY_UNOWN_WANDERER,
-  SHARDS_PER_UNOWN_WANDERER,
   SHINY_UNOWN_ENCOUNTER_CHANCE,
   StageDuration,
   TRAINING_BAG_ABILITY_POWER,
@@ -79,6 +77,7 @@ import { unlockNextSeasonalHerdDeerling } from "../../core/seasonal-herd"
 import { ScribbleShapeType } from "../../config/game/scribble-shapes"
 import { PlayerBlessings } from "../../models/colyseus-models/player-blessings"
 import { rollScribbleQuiz } from "../../services/scribble-quiz"
+import { catchUnownWanderer } from "../../services/season-shop"
 import { WATER_FOUNTAIN_REROLL_INTERVAL } from "../../config/game/water-ponds"
 import { AbilityStrategies } from "../../core/abilities/abilities"
 import { castAbility } from "../../core/abilities/cast"
@@ -130,7 +129,6 @@ import Synergies, {
   getSynergyTier
 } from "../../models/colyseus-models/synergies"
 import { Effects } from "../../models/effects"
-import UserMetadata from "../../models/mongo-models/user-metadata"
 import { openMysteryBox } from "../../models/mystery-box"
 import PokemonFactory, {
   getPokemonBaseline
@@ -139,7 +137,6 @@ import { getPokemonData } from "../../models/precomputed/precomputed-pokemon-dat
 import { getBuyPrice, getSellPrice } from "../../models/shop"
 import { updatePlayerTitlesAfterFight } from "../../models/titles"
 import {
-  Emotion,
   type IClient,
   type IDragDropCombineMessage,
   type IDragDropItemMessage,
@@ -557,28 +554,11 @@ export class OnPokemonCatchCommand extends Command<
     player.wanderers.delete(id)
 
     if (wanderer.type === WandererType.UNOWN) {
-      const unownIndex = PkmIndex[wanderer.pkm]
       if (client.auth) {
-        const shardsGained = wanderer.shiny
-          ? SHARDS_PER_SHINY_UNOWN_WANDERER
-          : SHARDS_PER_UNOWN_WANDERER
-        const u = await UserMetadata.findOne({ uid: client.auth.uid })
-        if (u) {
-          const c = u.pokemonCollection.get(unownIndex)
-          if (c) {
-            c.dust += shardsGained
-          } else {
-            u.pokemonCollection.set(unownIndex, {
-              id: unownIndex,
-              unlocked: Buffer.alloc(5, 0),
-              dust: shardsGained,
-              selectedEmotion: Emotion.NORMAL,
-              selectedShiny: false,
-              played: 0
-            })
-          }
-          u.save()
-        }
+        const { uid } = client.auth
+        catchUnownWanderer(uid, wanderer.pkm, wanderer.shiny).catch((error) =>
+          logger.error("Error catching Unown wanderer", error)
+        )
       }
     } else if (wanderer.type === WandererType.CATCHABLE) {
       const pokemon = PokemonFactory.createPokemonFromName(wanderer.pkm, player)

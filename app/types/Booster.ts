@@ -6,3 +6,7 @@ export type BoosterCard = PkmWithCustom & {
   emotion: Emotion
   new: boolean
 }
+export type SeasonBoosterCard = BoosterCard & {
+  unlockedEmotions: Emotion[]
+  holo?: boolean
+}

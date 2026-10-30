@@ -103,7 +103,7 @@ export enum LocalStoreKeys {
   TEAM_PLANNER_MARKED_SYNERGIES = "team_planner_marked_synergies",
   TIER_LIST = "tier_list",
   LAST_PATCH_READ = "last_patch_read",
-  COLLECTION_FILTER = "collection_filter",
+  COLLECTION_COMPACT_VIEW = "collection_compact_view",
   TRANSLATION_EDITS = "translation_edits",
   LAST_TAB_OPENED_PICKER = "last_tab_opened_picker",
   BLESSINGS_UNDER_TEST = "blessings_under_test",

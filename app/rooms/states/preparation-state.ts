@@ -66,6 +66,7 @@ export default class PreparationState
   /** the Scribble game modification, rolling a random rule unless one is pinned */
   @type("boolean") whimsy = false
   @type("boolean") dailyDuel = false
+  @type("boolean") rainbowFinale = false
   /** GUIDE: which synergy the run about to start teaches. */
   @type("string") guideSynergy: Synergy | null = null
   // replaced whole rather than edited, so the client's listen() sees the change
@@ -89,6 +90,7 @@ export default class PreparationState
     tournamentTeams?: TournamentLobbyTeamOption[]
     blessingsEnabled?: boolean
     dailyDuel?: boolean
+    rainbowFinale?: boolean
   }) {
     super()
     if (params.blessingsEnabled !== undefined) {
@@ -96,6 +98,7 @@ export default class PreparationState
     }
     this.whimsy = params.whimsy ?? false
     this.dailyDuel = params.dailyDuel ?? false
+    this.rainbowFinale = params.rainbowFinale ?? false
     // Wishes and Scribble are mutually exclusive modifications
     if (this.whimsy) this.blessingsEnabled = false
     // a lesson teaches the base game, never a modification

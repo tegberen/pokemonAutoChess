@@ -11,11 +11,13 @@ import admin from "firebase-admin"
 import {
   DAILY_DUEL_LOBBY_CRON,
   DAILY_DUEL_ROOM_NAME,
+  RAINBOW_FINALE_LOBBY_CRON,
   INACTIVITY_TIMEOUT,
   MAX_CONCURRENT_PLAYERS_ON_LOBBY,
   MAX_CONCURRENT_PLAYERS_ON_SERVER,
   TOURNAMENT_CLEANUP_DELAY
 } from "../config"
+import { RAINBOW_FINALE_ROOM_NAME } from "../config/game/rainbow-hours"
 import { TOURNAMENT_RULES } from "../core/tournament-swiss"
 import Message from "../models/colyseus-models/message"
 import { TournamentSchema } from "../models/colyseus-models/tournament"
@@ -30,6 +32,7 @@ import { CloseCodes } from "../types/enum/CloseCodes"
 import { GameMode, type RoomRequest } from "../types/enum/Game"
 import type { Language } from "../types/enum/Language"
 import { MaintenanceOrder } from "../types/enum/MaintenanceOrder"
+import { SpecialGameRule } from "../types/enum/SpecialGameRule"
 import type { TournamentFormat } from "../types/interfaces/Tournament"
 import type { IUserMetadataMongo } from "../types/interfaces/UserMetadata"
 import { logger } from "../utils/logger"
@@ -571,14 +574,21 @@ export default class CustomLobbyRoom extends Room {
         {
           index,
           emotion,
-          shiny
-        }: { index: string; emotion: Emotion; shiny: boolean }
+          shiny,
+          seasonPortraitId
+        }: {
+          index: string
+          emotion: Emotion
+          shiny: boolean
+          seasonPortraitId?: unknown
+        }
       ) => {
         this.dispatcher.dispatch(new ChangeAvatarCommand(), {
           client,
           index,
           emotion,
-          shiny
+          shiny,
+          seasonPortraitId
         })
       }
     )
@@ -861,6 +871,14 @@ export default class CustomLobbyRoom extends Room {
       start: true
     })
     this.cleanUpCronJobs.push(dailyDuelJob)
+
+    const rainbowFinaleJob = CronJob.from({
+      cronTime: RAINBOW_FINALE_LOBBY_CRON,
+      timeZone: "UTC",
+      onTick: () => this.openRainbowFinaleLobby(),
+      start: true
+    })
+    this.cleanUpCronJobs.push(rainbowFinaleJob)
   }
 
   async openDailyDuelLobby() {
@@ -877,6 +895,23 @@ export default class CustomLobbyRoom extends Room {
       roomName: DAILY_DUEL_ROOM_NAME,
       blessingsEnabled: true,
       dailyDuel: true
+    })
+  }
+
+  async openRainbowFinaleLobby() {
+    const alreadyWaiting = this.rooms?.some(
+      (room) =>
+        room.metadata?.type === "preparation" &&
+        room.metadata?.rainbowFinale === true &&
+        room.metadata?.gameStartedAt == null
+    )
+    if (alreadyWaiting) return
+    await matchMaker.createRoom("preparation", {
+      gameMode: GameMode.SCRIBBLE,
+      noElo: true,
+      roomName: RAINBOW_FINALE_ROOM_NAME,
+      specialGameRule: SpecialGameRule.SMEARGLE_PACK,
+      rainbowFinale: true
     })
   }
 }

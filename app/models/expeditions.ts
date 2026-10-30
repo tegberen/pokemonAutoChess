@@ -1,3 +1,4 @@
+import type { HydratedDocument } from "mongoose"
 import { getBaseAltForm } from "../config"
 import { ExpPerExpeditionRank } from "../config/game/expeditions"
 import { getExpeditionData, getPlayerExpeditions } from "../core/expeditions"
@@ -18,7 +19,7 @@ import { giveUserExp } from "./mongo-models/user-metadata"
 
 export function updatePlayerExpeditionsAfterGame(
   player: IPlayer,
-  usr: IUserMetadataMongo
+  usr: HydratedDocument<IUserMetadataMongo>
 ): boolean {
   const expeditions = getPlayerExpeditions(usr)
   let hasCompletedExpeditions = false

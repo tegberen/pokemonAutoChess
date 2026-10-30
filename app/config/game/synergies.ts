@@ -371,9 +371,7 @@ export const WAND_PROC_COOLDOWN_MS_BY_WAND: Partial<Record<Item, number>> = {
 }
 
 export const UNOWN_ENCOUNTER_CHANCE = 0.033
-export const SHINY_UNOWN_ENCOUNTER_CHANCE = 0.05
-export const SHARDS_PER_UNOWN_WANDERER = 50
-export const SHARDS_PER_SHINY_UNOWN_WANDERER = 250
+export const SHINY_UNOWN_ENCOUNTER_CHANCE = 1 / 1024
 
 export const GRASS_BERRY_HARVEST_EXPERIENCE = 2
 

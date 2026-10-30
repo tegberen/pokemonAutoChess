@@ -136,6 +136,9 @@ export const EvolutionManager = {
     ...additionalArgs: unknown[]
   ) {
     player.updateSynergies()
+    if (pokemonEvolved.stars === 3 && pokemonBeforeEvolution.stars < 3) {
+      player.seasonThreeStarEvolutions++
+    }
     if (pokemonBeforeEvolution.supercharged) pokemonEvolved.supercharged = true // preserve supercharged state on evolution
 
     if (

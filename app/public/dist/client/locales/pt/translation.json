@@ -3864,26 +3864,7 @@
 		"hover_to_reveal": "Passe o cursor para revelar"
 	},
 	"collection": {
-		"title": "Coleção",
-		"show_all": "Mostrar tudo",
-		"show_locked": "Mostrar bloqueados",
-		"show_unlockable": "Mostrar desbloqueáveis",
-		"show_unlocked": "Mostrar desbloqueados",
-		"show_refundable": "Mostrar reembolsáveis",
-		"show_newly_obtained": "Mostrar obtidos recentemente",
-		"show_favorites": "Mostrar favorittos",
-		"sort_by_index": "Ordenar por index",
-		"sort_by_shards": "Ordenar por fragmentos",
-		"sort_by_played": "Ordenar por vezes jogadas",
-		"sort_by_emotes_unlocked": "Ordenar por emotes desbloqueados",
-		"normal_emotions": "Emotes Normais",
-		"shiny_emotions": "Emotes Shiny",
-		"buy_booster": "Compre um novo booster por {{cost}}",
-		"reset_emotion": "Redefinir para retrato padrão",
-		"choose_as_avatar": "Escolher como avatar de jogador",
-		"chosen_as_avatar": "✓ Escolhido como avatar de jogador",
-		"add_to_favorites": "Adicionar ao favoritos",
-		"remove_from_favorites": "Remover dos favoritos"
+		"title": "Coleção"
 	},
 	"bot_builder": "Construtor de Bots",
 	"meta": "Meta",
@@ -3917,10 +3898,6 @@
 	"leaderboard": "Tabela de Classificação",
 	"rooms": "Salas",
 	"online": "Online",
-	"shards": "Fragmentos",
-	"boosters_hint": "Jogue mais partidas para subir de nível e ganhar novos pacotes.",
-	"open_boosters_hint": "Abra pacotes para desbloquear novos avatares e completar sua coleção!",
-	"open_booster": "Abra um Pacote",
 	"lobby": "Lobby",
 	"edit": "Ver/Editar",
 	"delete": "Excluir",
@@ -3956,7 +3933,6 @@
 	"chat_disabled_anonymous": "Chat desativado para usuários anônimos",
 	"type_here": "Digite aqui ...",
 	"send_message": "Enviar mensagem",
-	"shiny_hunter": "Caçador Shiny",
 	"close": "Fechar",
 	"additional_pokemon_hint": "Cada jogador escolheu Pokémon adicionais para estarem disponíveis na loja de todos os jogadores para este jogo.",
 	"game_stats": {
@@ -4860,7 +4836,6 @@
 	"players": "Jogadores",
 	"players_one": "{{count}} jogador",
 	"players_other": "{{count}} jogadores",
-	"played_times": "Jogado {{count}} vezes",
 	"announcements": "Anúncios",
 	"chat": "Chat",
 	"approve": "Aprovar",
@@ -4872,8 +4847,6 @@
 	"servers_list": {
 		"title": "Servidores da Comunidade"
 	},
-	"pokedex": "Pokédex",
-	"alt_forms": "Formas Aternativas",
 	"show_evolutions": "Mostrar evoluções",
 	"show_alt_forms": "Mostrar formas alternativas",
 	"show_only_available_picks": "Mostrar apenas opções adicionais/regionais",

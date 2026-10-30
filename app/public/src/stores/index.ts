@@ -1,7 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit"
 import { enableMapSet } from "immer"
 import afterReducer from "./AfterGameStore"
-import boostersReducer from "./BoostersStore"
 import gameReducer from "./GameStore"
 import lobbyReducer from "./LobbyStore"
 import networkReducer from "./NetworkStore"
@@ -12,7 +11,6 @@ enableMapSet()
 const store = configureStore({
   reducer: {
     lobby: lobbyReducer,
-    boosters: boostersReducer,
     network: networkReducer,
     preparation: preparationReducer,
     game: gameReducer,

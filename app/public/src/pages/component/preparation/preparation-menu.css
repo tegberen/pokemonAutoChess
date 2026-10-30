@@ -600,3 +600,17 @@
   font-size: 1.05em;
   line-height: 1.4;
 }
+
+.rainbow-finale-rewards > img {
+  width: 1.5em;
+  height: 1.5em;
+  object-fit: contain;
+  vertical-align: middle;
+  image-rendering: pixelated;
+}
+
+/* the Wonder Pick's card fills its square, so it reads larger */
+.rainbow-finale-rewards > img.wonder-pick {
+  width: 1.32em;
+  height: 1.32em;
+}
