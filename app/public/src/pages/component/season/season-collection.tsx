@@ -882,11 +882,11 @@ function SeasonCollectionModal(props: {
             <header className="season-collection-detail-header">
               <h2>{t(`pkm.${entry.pokemon}`)}</h2>
               <button
-                className="season-collection-close"
+                className="close-btn"
                 aria-label="Close"
                 onClick={props.onClose}
               >
-                <img src="assets/ui/cross.svg" width={14} height={14} alt="" />
+                🗙
               </button>
             </header>
             <span className="season-collection-progress">
@@ -1039,7 +1039,10 @@ function SeasonCollectionModal(props: {
                   )
                 }
               >
-                {isCurrentAvatar ? "Your avatar" : "Set as avatar"}
+                <span className="season-avatar-button-labels">
+                  <span hidden={isCurrentAvatar}>Set as avatar</span>
+                  <span hidden={!isCurrentAvatar}>Your avatar</span>
+                </span>
               </button>
             </div>
           </div>

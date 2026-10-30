@@ -54,7 +54,7 @@ export function CosmeticsTab() {
                 return (
                   <li
                     key={cosmetic.id}
-                    className={`cosmetics-row${isEquipped ? " is-equipped" : ""}`}
+                    className="cosmetics-row"
                   >
                     <div className="cosmetics-details">
                       <h4>{cosmetic.name}</h4>

@@ -892,15 +892,26 @@
   cursor: default;
 }
 
-/* already the avatar: a quiet status in the panel's own inset colours, not a
-   second call to action */
+/* both labels share one cell, the hidden one still taking its width, so
+   the button never resizes when it switches */
+.season-avatar-button-labels {
+  display: inline-grid;
+}
+
+.season-avatar-button-labels > span {
+  grid-area: 1 / 1;
+}
+
+.season-avatar-button-labels > span[hidden] {
+  display: block;
+  visibility: hidden;
+}
+
+/* already the avatar: the button keeps its theme's own bands, stripes and
+   bevel, only greyed out */
 .season-shop-open.is-current-avatar {
-  border-color: var(--season-line);
-  background: var(--season-surface-deep);
-  box-shadow: none;
-  color: var(--color-fg-secondary);
-  text-shadow: none;
-  opacity: 1;
+  filter: grayscale(1);
+  opacity: 0.6;
 }
 
 .season-shop-back {
@@ -1651,6 +1662,11 @@
   cursor: var(--cursor-hover);
 }
 
+.season-wonder-mode:not(.active):hover {
+  background-color: var(--season-surface);
+  color: var(--color-fg-primary);
+}
+
 .season-wonder-mode.active {
   border-color: var(--season-accent-edge);
   color: var(--color-fg-primary);
@@ -1982,15 +1998,44 @@
   padding-bottom: 6px;
 }
 
+/* bubbly like the game's selects and inputs (custom-inputs.css): theme fill,
+   thin border and a bevel that presses in on click or while toggled on */
+.season-collection-favorite,
+.season-collection-reset,
+.season-collection-views,
+.season-collection-reset-all {
+  border: var(--border-thin);
+  background-color: var(--color-bg-secondary);
+  box-shadow:
+    inset -4px -4px 0 #00000030,
+    var(--shadow-clickable);
+}
+
+/* the hover colour of .bubbly (buttons.css) */
+.season-collection-favorite:not([disabled]):hover,
+.season-collection-reset:not([disabled]):hover,
+.season-collection-views:hover,
+.season-collection-reset-all:not([disabled]):hover {
+  background-color: var(--color-bg-primary);
+}
+
+.season-collection-favorite:not([disabled]):active,
+.season-collection-reset:not([disabled]):active,
+.season-collection-views:active,
+.season-collection-views.active,
+.season-collection-reset-all:not([disabled]):active {
+  box-shadow:
+    inset 4px 4px 0 #00000030,
+    var(--shadow-clickable);
+}
+
 .season-collection-favorite {
   display: grid;
   place-content: center;
   width: 40px;
   height: 40px;
   padding: 0;
-  border: 2px solid var(--season-line);
   border-radius: 50%;
-  background-color: var(--season-surface-deep);
   cursor: var(--cursor-hover);
 }
 
@@ -2398,21 +2443,16 @@
   gap: 0.4em;
   height: 34px;
   padding: 0 0.6em;
-  border: 2px solid var(--season-line);
   border-radius: 17px;
-  background-color: var(--season-surface-deep);
   color: var(--season-accent);
   font: inherit;
   font-weight: 700;
   cursor: var(--cursor-hover);
 }
 
-.season-collection-reset-all:not([disabled]):hover {
-  background-color: var(--season-cell);
-}
-
 .season-collection-reset-all[disabled] {
-  opacity: 0.4;
+  filter: grayscale(1);
+  opacity: 0.6;
   cursor: default;
 }
 
@@ -2422,9 +2462,7 @@
   width: 34px;
   height: 34px;
   padding: 0;
-  border: 2px solid var(--season-line);
   border-radius: 50%;
-  background-color: var(--season-surface-deep);
   cursor: var(--cursor-hover);
 }
 
@@ -2435,11 +2473,6 @@
 
 .season-collection-views:not(.active):hover > img {
   opacity: 0.8;
-}
-
-.season-collection-views.active {
-  border-color: var(--season-accent);
-  background-color: var(--season-surface);
 }
 
 .season-collection-views.active > img {
@@ -2526,23 +2559,6 @@
   letter-spacing: 0.04em;
 }
 
-.season-collection-close {
-  display: grid;
-  place-content: center;
-  width: 32px;
-  height: 32px;
-  padding: 0;
-  border: 2px solid var(--season-line);
-  border-radius: 50%;
-  background-color: var(--season-surface-deep);
-  cursor: var(--cursor-hover);
-}
-
-.season-collection-close:hover,
-.season-collection-reset:not([disabled]):hover {
-  background-color: var(--season-cell);
-}
-
 .season-collection-reset {
   display: grid;
   place-content: center;
@@ -2550,19 +2566,14 @@
   height: 40px;
   margin-right: auto;
   padding: 0;
-  border: 2px solid var(--season-line);
   border-radius: 50%;
-  background-color: var(--season-surface-deep);
   cursor: var(--cursor-hover);
 }
 
 .season-collection-reset[disabled] {
-  opacity: 0.4;
+  filter: grayscale(1);
+  opacity: 0.6;
   cursor: default;
-}
-
-.season-collection-close > img {
-  filter: brightness(0) invert(0.85);
 }
 
 .season-collection-detail-side > .season-collection-progress {
