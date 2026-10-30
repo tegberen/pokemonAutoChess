@@ -53,21 +53,38 @@
   image-rendering: pixelated;
 }
 
-.smeargle-pack-page .booster-card {
-  transition: scale 0.12s ease-out;
-}
+/* two rows of five Guild cards, sized so both rows fit the panel's height:
+   68vh minus the hint and the open button, split over two cards of 120:168 */
+.season-booster-reveal.smeargle-pack-cards {
+  --smeargle-card-width: min(180px, calc((68vh - 12em) / 2.9));
 
-.smeargle-pack-page .booster-card:hover {
-  scale: 1.08;
-  z-index: 10;
-}
-
-.boosters-content {
   flex: 1;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 40px;
-  position: relative;
+  align-content: center;
+  grid-template-columns: repeat(5, var(--smeargle-card-width));
+  gap: 1.2em 1.6em;
   width: 100%;
+}
+
+/* the card under the cursor brightens; the filter sits on the faces, since
+   one on the card would flatten its 3D flip */
+.smeargle-pack-cards .season-booster-card :is(
+    .season-booster-card-front,
+    .season-booster-card-back
+  ) {
+  transition: filter 120ms ease-out;
+}
+
+.smeargle-pack-cards
+  .season-booster-card:hover
+  :is(.season-booster-card-front, .season-booster-card-back) {
+  filter: brightness(1.15);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .smeargle-pack-cards .season-booster-card :is(
+      .season-booster-card-front,
+      .season-booster-card-back
+    ) {
+    transition: none;
+  }
 }

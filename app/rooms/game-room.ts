@@ -2103,7 +2103,6 @@ export default class GameRoom extends Room<{ state: GameState }> {
     player.choices[index] = new PlayerChoice({
       type: "starter",
       pokemons: pack.map((card) => card.name),
-      shinies: pack.map((card) => card.shiny),
       emotions: pack.map((card) => card.emotion),
       canReroll: false
     })
@@ -2511,10 +2510,10 @@ export default class GameRoom extends Room<{ state: GameState }> {
         }
         if (this.state.specialGameRule === SpecialGameRule.SMEARGLE_PACK) {
           const starter = pokemonsObtained[0]
-          // keep the shiny/emotion the player saw on the card
-          const shiny = choice.shinies[choiceIndex] ?? false
+          // never shiny in this Scribble, even with a shiny portrait selected
+          // in the collection, and with the emotion the player saw on the card
+          starter.shiny = false
           const emotion = choice.emotions[choiceIndex]
-          starter.shiny = shiny
           if (emotion) starter.emotion = emotion
           // apply the DIAY balancing (nerf/buff by power score) to the picked unit
           applyScribbleStarterStats(
@@ -2522,10 +2521,6 @@ export default class GameRoom extends Room<{ state: GameState }> {
             player,
             getScribbleStarterPowerScore(starter.name)
           )
-          // bonus reward for picking a shiny card
-          if (shiny) {
-            player.addMoney(10, true, null)
-          }
         }
       }
 

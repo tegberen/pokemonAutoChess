@@ -9,7 +9,6 @@ import { type Pokemon, PokemonClasses } from "../models/colyseus-models/pokemon"
 import { getAvailableEmotions } from "../models/precomputed/precomputed-emotions"
 import { getPokemonData } from "../models/precomputed/precomputed-pokemon-data"
 import { PRECOMPUTED_POKEMONS_PER_RARITY } from "../models/precomputed/precomputed-rarity"
-import { PokemonAnimations } from "../public/src/game/components/pokemon-animations"
 import type GameState from "../rooms/states/game-state"
 import { Ability } from "../types/enum/Ability"
 import { Emotion } from "../types/enum/Emotion"
@@ -23,7 +22,7 @@ import {
   Unowns
 } from "../types/enum/Pokemon"
 import { min } from "../utils/number"
-import { chance, pickRandomIn, randomWeighted, simpleHashSeededCoinFlip } from "../utils/random"
+import { pickRandomIn, randomWeighted, simpleHashSeededCoinFlip } from "../utils/random"
 import { getUnitPowerScore } from "./bot-logic"
 
 export function applyScribbleStarterStats(
@@ -78,7 +77,6 @@ export const SMEARGLE_PACK_SIZE = 10
 
 export type SmearglePackCard = {
   name: Pkm
-  shiny: boolean
   emotion: Emotion
 }
 
@@ -131,10 +129,8 @@ export function createSmearglePackPropositions(
     if (families.has(family)) continue
     families.add(family)
 
-    // shiny + emotion picked exactly like a real collection booster card
-    const shiny =
-      chance(0.05) && PokemonAnimations[pkm]?.shinyUnavailable !== true
-    const availableEmotions = getAvailableEmotions(PkmIndex[pkm], shiny)
+    // a random portrait for the card, rarer emotions less often
+    const availableEmotions = getAvailableEmotions(PkmIndex[pkm], false)
     const emotion =
       randomWeighted<Emotion>(
         availableEmotions.reduce(
@@ -143,7 +139,7 @@ export function createSmearglePackPropositions(
         )
       ) ?? Emotion.NORMAL
 
-    propositions.push({ name: pkm, shiny, emotion })
+    propositions.push({ name: pkm, emotion })
   }
 
   return propositions

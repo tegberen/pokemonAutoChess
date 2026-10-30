@@ -45,7 +45,6 @@ export class PlayerChoice extends Schema {
   @type(["uint16"]) quizValues: number[] = []
   @type(["string"]) galarFossils: GalarFossil[] = []
   @type(["string"]) rewards: string[] = []
-  @type(["boolean"]) shinies: boolean[] = []
   @type(["string"]) emotions: Emotion[] = []
   @type(["string"]) blessings: Blessing[] = []
   @type(["string"]) rerollCandidates: Blessing[] = []
@@ -71,7 +70,6 @@ export class PlayerChoice extends Schema {
     quizStat?: string
     galarFossils?: GalarFossil[]
     rewards?: string[]
-    shinies?: boolean[]
     emotions?: Emotion[]
     blessings?: Blessing[]
     rerollCandidates?: Blessing[]
@@ -99,7 +97,6 @@ export class PlayerChoice extends Schema {
     if (args.quizStat) this.quizStat = args.quizStat
     if (args.galarFossils) this.galarFossils = args.galarFossils
     if (args.rewards) this.rewards = args.rewards
-    if (args.shinies) this.shinies = args.shinies
     if (args.emotions) this.emotions = args.emotions
     if (args.blessings) this.blessings = args.blessings
     if (args.rerollCandidates) this.rerollCandidates = args.rerollCandidates

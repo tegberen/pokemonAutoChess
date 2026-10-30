@@ -756,7 +756,6 @@ export default class Shop {
         new PlayerChoice({
           type: "starter",
           pokemons: pack.map((card) => card.name),
-          shinies: pack.map((card) => card.shiny),
           emotions: pack.map((card) => card.emotion),
           canReroll: true // one reroll = 2 packs total
         })
