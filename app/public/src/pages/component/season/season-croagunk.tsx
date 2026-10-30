@@ -48,12 +48,18 @@ function getAvatarReactions(profile: IUserMetadataUnpacked | undefined) {
   const avatar = getPokemonCustomFromAvatar(profile.avatar)
   const index = PkmIndex[avatar.name]
   if (!index) return null
-  const shiny = avatar.shiny ?? false
   const item = profile.pokemonCollection.get(index)
-  const owned = (shiny ? item?.shinyEmotions : item?.emotions) ?? []
-  const missing = getAvailableEmotions(index, shiny).filter(
-    (emotion) => !owned.includes(emotion)
-  )
+  const getMissing = (shiny: boolean) => {
+    const owned = (shiny ? item?.shinyEmotions : item?.emotions) ?? []
+    return getAvailableEmotions(index, shiny).filter(
+      (emotion) => !owned.includes(emotion)
+    )
+  }
+  // same rule as the server: a complete shiny avatar reacts with its regular
+  // emotes instead
+  const shinyMissing = avatar.shiny ? getMissing(true) : []
+  const shiny = shinyMissing.length > 0
+  const missing = shiny ? shinyMissing : getMissing(false)
   return { index, shiny, missing }
 }
 
@@ -189,10 +195,7 @@ export default function SeasonCroagunk(props: {
         <span className="season-croagunk-line">
           {isPurchased
             ? "Meh-heh-heh! Pleasure doing business."
-            : dishPhase === "eating"
-              ? "Nom nom nom..."
-              : "Meh-heh-heh... Spinda just came by from the café and " +
-                "gave me this. Want to trade?"}
+            : "Spinda left this. Want to swap?"}
         </span>
         {!isPurchased && (
           <span
@@ -277,6 +280,11 @@ export default function SeasonCroagunk(props: {
           renderDishDeal()
         ) : offer && offer.item !== "spinda-dish" ? (
           <>
+            <span className="season-croagunk-line">
+              {isPurchased
+                ? "Meh-heh-heh! Pleasure doing business."
+                : "Meh-heh-heh... Want to swap?"}
+            </span>
             <span className="season-croagunk-offer">
               <img
                 src={ITEM_ART[offer.item]}

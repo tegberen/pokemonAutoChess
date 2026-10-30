@@ -15,6 +15,7 @@ import {
 import { useAppDispatch, useAppSelector } from "../../../hooks"
 import {
   ban,
+  givePartyInvitation,
   giveRole,
   giveTitle,
   searchById,
@@ -374,6 +375,29 @@ function OtherProfileActions(props: {
                 </div>
               </div>
             </>
+          )}
+
+          {isAdmin && (
+            <div className="profile-staff-row">
+              <span className="profile-staff-label">Party</span>
+              <div className="profile-staff-controls">
+                <button
+                  className="bubbly blue"
+                  onClick={() => {
+                    const isConfirmed = confirm(
+                      "Send a Victory Party invitation to " +
+                        `${user.displayName}? They can invite any Pokémon ` +
+                        "and get all its shiny emotes. This can't be undone."
+                    )
+                    if (!isConfirmed) return
+                    givePartyInvitation({ uid: user.uid })
+                    alert(`Party invitation sent to ${user.displayName}`)
+                  }}
+                >
+                  Send invitation
+                </button>
+              </div>
+            </div>
           )}
         </div>
       )}

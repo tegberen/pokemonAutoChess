@@ -616,6 +616,43 @@ async function pickWonderPickNow(uid: string) {
   return null
 }
 
+const INVITABLE_POKEMONS = new Set<string>(
+  ALL_COLLECTIBLE_BASE_FORMS.flatMap(withAltForms).filter(canBeShiny)
+)
+
+// a party invitation, admin-given: the guest the player invites brings every
+// one of its shiny emotes
+export function sendPartyInvitation(uid: string, guest: unknown) {
+  return queueCollectionUpdate(uid, () => sendPartyInvitationNow(uid, guest))
+}
+
+async function sendPartyInvitationNow(uid: string, guest: unknown) {
+  if (typeof guest !== "string" || !INVITABLE_POKEMONS.has(guest)) return null
+  const pokemon = guest as Pkm
+  for (let attempt = 0; attempt < MAX_COLLECTION_UPDATE_ATTEMPTS; attempt++) {
+    const user = await UserMetadata.findOne({
+      uid,
+      partyInvitations: { $gt: 0 }
+    }).lean<IUserMetadataLean>()
+    if (!user) return null
+
+    const draft = new CollectionDraft(user)
+    if (!draft.isMissingShinies(pokemon)) return null
+    const card = unlockAllShinyEmotions(draft, pokemon)
+
+    const userDoc = await UserMetadata.findOneAndUpdate(
+      { uid, partyInvitations: { $gt: 0 }, ...draft.getGuards() },
+      draft.toUpdate({ partyInvitations: -1 }),
+      { returnDocument: "after" }
+    )
+    if (userDoc) {
+      await checkTitlesAfterUnlocks(userDoc, [card])
+      return { userDoc, card }
+    }
+  }
+  return null
+}
+
 function drawCasualPickCandidates(draft: CollectionDraft) {
   const regularCount =
     SEASON_WONDER_PICK_CARD_COUNT - SEASON_CASUAL_PICK_HOLO_CARDS

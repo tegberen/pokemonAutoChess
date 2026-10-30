@@ -46,17 +46,22 @@ function getAvatarReactions(user: IUserMetadataLean) {
   const avatar = getPokemonCustomFromAvatar(user.avatar ?? "")
   const index = avatar.name ? PkmIndex[avatar.name] : undefined
   if (!index) return null
-  const shiny = avatar.shiny ?? false
   const item = user.pokemonCollection?.[index]
   const original = item ? toBuffer(item.unlocked) : undefined
   const mask = original ? Buffer.from(original) : Buffer.alloc(5, 0)
-  const missing = getAvailableEmotions(index, shiny).filter((emotion) => {
-    const emotionBit = CollectionUtils.getEmotionMask(
-      shiny ? [] : [emotion],
-      shiny ? [emotion] : []
-    )
-    return emotionBit.every((byte, i) => (mask[i] & byte) === 0)
-  })
+  const getMissing = (shiny: boolean) =>
+    getAvailableEmotions(index, shiny).filter((emotion) => {
+      const emotionBit = CollectionUtils.getEmotionMask(
+        shiny ? [] : [emotion],
+        shiny ? [emotion] : []
+      )
+      return emotionBit.every((byte, i) => (mask[i] & byte) === 0)
+    })
+  // a shiny avatar with every shiny emote, from a Shiny Wonder Pick, reacts
+  // with its regular emotes instead
+  const shinyMissing = avatar.shiny ? getMissing(true) : []
+  const shiny = shinyMissing.length > 0
+  const missing = shiny ? shinyMissing : getMissing(false)
   return { pokemon: avatar.name, index, shiny, item, original, mask, missing }
 }
 

@@ -362,6 +362,12 @@ export function buyCroagunkTrade(reaction?: Emotion) {
   return postSeasonAction("croagunk/buy", { reaction })
 }
 
+export function sendPartyInvitation(guest: Pkm) {
+  return postSeasonAction<{ card: SeasonBoosterCard }>("party-invitation", {
+    guest
+  })
+}
+
 export function openSeasonBooster() {
   return postSeasonAction<{ cards: SeasonBoosterCard[] }>("open-booster")
 }
@@ -546,6 +552,10 @@ export function deleteAccount() {
 
 export function giveRole(params: { uid: string; role: Role }) {
   rooms.lobby?.send(Transfer.SET_ROLE, params)
+}
+
+export function givePartyInvitation(params: { uid: string }) {
+  rooms.lobby?.send(Transfer.GIVE_PARTY_INVITATION, params)
 }
 
 export function giveTitle(params: { uid: string; title: Title }) {

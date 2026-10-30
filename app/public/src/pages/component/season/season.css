@@ -1421,6 +1421,59 @@
   }
 }
 
+/* Pelipper Post, the secret party invitation tab: laid out like Croagunk's,
+   its letter one fixed size from the invitation to the guest's arrival */
+.season-pelipper {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 2.5em;
+  padding: 1.8em 2em;
+  text-shadow: 1px 1px 2px #000000;
+}
+
+.season-pelipper-title {
+  flex: 0 1 auto;
+  min-width: 240px;
+}
+
+.season-pelipper-line {
+  font-size: 0.9em;
+  font-style: italic;
+  text-align: center;
+}
+
+.season-pelipper-letter {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8em;
+  width: min(460px, 100%);
+  /* the arrival with three rows of photos is the tallest state */
+  min-height: 520px;
+  padding: 1.2em 1.6em;
+  box-sizing: border-box;
+  border: 2px solid var(--season-line);
+  border-radius: 3px;
+  background-color: var(--season-surface-deep);
+  box-shadow:
+    inset 0 0 0 2px var(--season-surface-deep),
+    inset 0 0 0 4px var(--season-line);
+  text-shadow: none;
+}
+
+.season-pelipper-card {
+  display: block;
+  flex: none;
+  width: 150px;
+}
+
+.season-pelipper-letter .season-booster-emotes-slot {
+  width: 100%;
+}
+
 @keyframes season-booster-deal {
   from {
     opacity: 0;

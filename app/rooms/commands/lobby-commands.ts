@@ -423,6 +423,21 @@ export class GiveBoostersCommand extends Command<
   }
 }
 
+export class GivePartyInvitationCommand extends Command<
+  CustomLobbyRoom,
+  { client: Client; uid: string }
+> {
+  async execute({ client, uid }: { client: Client; uid: string }) {
+    try {
+      const sender = this.room.users.get(client.auth.uid)
+      if (sender?.role !== Role.ADMIN || typeof uid !== "string") return
+      await UserMetadata.updateOne({ uid }, { $inc: { partyInvitations: 1 } })
+    } catch (error) {
+      logger.error(error)
+    }
+  }
+}
+
 export class GiveRoleCommand extends Command<
   CustomLobbyRoom,
   { client: Client; uid: string; role: Role }

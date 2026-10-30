@@ -29,6 +29,7 @@ import { setErrorAlertMessage } from "../../../stores/NetworkStore"
 import { cc } from "../../utils/jsx"
 import SynergyIcon from "../icons/synergy-icon"
 import SeasonCroagunk from "./season-croagunk"
+import SeasonPelipper from "./season-pelipper"
 import SeasonShop from "./season-shop"
 import {
   getSeasonView,
@@ -145,8 +146,11 @@ function SeasonGuild(props: {
     nextStepIndex > lastStepIndex ? bonusStepIndex : nextStepIndex
   )
   const [trackTab, setTrackTab] = useState<
-    "pass" | "wonder-pick" | "croagunk" | "shop"
+    "pass" | "wonder-pick" | "croagunk" | "shop" | "pelipper"
   >("pass")
+  // a secret tab: only there while an invitation waits, or while it is open
+  const isPelipperShown =
+    (profile.partyInvitations ?? 0) > 0 || trackTab === "pelipper"
   const [wonderPickVariant, setWonderPickVariant] =
     useState<WonderPickVariant>("casual")
   const trackRef = useRef<HTMLOListElement>(null)
@@ -303,6 +307,21 @@ function SeasonGuild(props: {
             />
             Kecleon Shop
           </button>
+          {isPelipperShown && (
+            <button
+              className={cc("season-tab", { active: trackTab === "pelipper" })}
+              onClick={() => setTrackTab("pelipper")}
+            >
+              <img
+                src={getPortraitSrc(PkmIndex[Pkm.PELIPPER])}
+                className="season-tab-portrait"
+                width={26}
+                height={26}
+                alt=""
+              />
+              Pelipper Post
+            </button>
+          )}
           <div className="season-tabs-balance">
             <span title="Tickets">
               <img src={POKE_ICON} width={24} height={24} alt="" />
@@ -621,13 +640,27 @@ function SeasonGuild(props: {
           >
             <SeasonShop season={season} />
           </div>
+          {isPelipperShown && (
+            <div
+              className="season-stage-panel season-stage-banner"
+              hidden={trackTab !== "pelipper"}
+              inert={trackTab !== "pelipper"}
+              style={{
+                backgroundImage: 'url("assets/ui/pelipper-post.webp")'
+              }}
+            >
+              <SeasonPelipper profile={profile} />
+            </div>
+          )}
         </div>
       </section>
 
       <div
         className={cc("season-panels", {
           "season-panels-hidden":
-            trackTab === "wonder-pick" || trackTab === "shop"
+            trackTab === "wonder-pick" ||
+            trackTab === "shop" ||
+            trackTab === "pelipper"
         })}
       >
         <section className="season-challenges season-frame">

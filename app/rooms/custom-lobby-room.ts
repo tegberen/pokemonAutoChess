@@ -45,6 +45,7 @@ import {
   DeleteAccountCommand,
   DeleteRoomCommand,
   GiveBoostersCommand,
+  GivePartyInvitationCommand,
   GiveRoleCommand,
   GiveTitleCommand,
   JoinOrOpenRoomCommand,
@@ -406,6 +407,16 @@ export default class CustomLobbyRoom extends Room {
           client,
           uid,
           numberOfBoosters: Number(numberOfBoosters) || 1
+        })
+      }
+    )
+
+    this.onMessage(
+      Transfer.GIVE_PARTY_INVITATION,
+      (client, { uid }: { uid: string }) => {
+        this.dispatcher.dispatch(new GivePartyInvitationCommand(), {
+          client,
+          uid
         })
       }
     )

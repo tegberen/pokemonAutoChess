@@ -135,6 +135,11 @@ const userMetadataSchema = new Schema({
     type: Number,
     default: 0
   },
+  // admin-given only: each invites any Pokemon, whose shiny portraits it gives
+  partyInvitations: {
+    type: Number,
+    default: 0
+  },
   rainbowHoursRewardedUntil: {
     type: Number
   },

@@ -57,7 +57,8 @@ import {
   pickCasualPick,
   pickWonderPick,
   rerollCasualPick,
-  rerollWonderPickDraw
+  rerollWonderPickDraw,
+  sendPartyInvitation
 } from "./services/season-shop"
 import {
   addBotToDatabase,
@@ -1165,6 +1166,28 @@ export const server = defineServer({
       } catch (error) {
         logger.error("Error picking casual Wonder Pick", error)
         res.status(500).json({ error: "Error picking casual Wonder Pick" })
+      }
+    })
+
+    app.post("/season/party-invitation", async (req, res) => {
+      try {
+        const userAuth = await authUser(req, res)
+        if (!userAuth) return
+        const result = await sendPartyInvitation(
+          userAuth.uid,
+          req.body?.guest
+        )
+        if (!result) {
+          res.status(409).json({ error: "Invitation not available" })
+          return
+        }
+        res.status(200).json({
+          card: result.card,
+          user: toUserMetadataJSON(result.userDoc)
+        })
+      } catch (error) {
+        logger.error("Error sending party invitation", error)
+        res.status(500).json({ error: "Error sending party invitation" })
       }
     })
 

@@ -44,6 +44,7 @@ interface IUserMetadata {
   role: Role
   banned?: boolean
   seasonTickets?: number
+  partyInvitations?: number
   rainbowHoursRewardedUntil?: number
   shinyTickets?: number
   wonderPicks?: number
