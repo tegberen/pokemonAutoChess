@@ -892,33 +892,15 @@
   cursor: default;
 }
 
-/* the green of a confirmed Ready ✔ in the preparation room */
+/* already the avatar: a quiet status in the panel's own inset colours, not a
+   second call to action */
 .season-shop-open.is-current-avatar {
+  border-color: var(--season-line);
+  background: var(--season-surface-deep);
+  box-shadow: none;
+  color: var(--color-fg-secondary);
+  text-shadow: none;
   opacity: 1;
-  background: var(--theme-ready, #92cc41);
-  box-shadow:
-    inset -4px -4px 0 #65a013,
-    var(--shadow-clickable);
-  color: var(--theme-button-text, #ffffff);
-  animation: season-avatar-set 300ms ease-out;
-}
-
-:root[data-themed-buttons] .season-shop-open.is-current-avatar {
-  box-shadow:
-    inset -4px -4px 0 #00000040,
-    var(--shadow-clickable);
-}
-
-@keyframes season-avatar-set {
-  40% {
-    transform: scale(1.08);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .season-shop-open.is-current-avatar {
-    animation: none;
-  }
 }
 
 .season-shop-back {
@@ -1332,6 +1314,100 @@
   color: var(--color-fg-secondary);
   font-size: 0.8em;
   text-align: center;
+}
+
+.season-croagunk-line {
+  font-size: 0.85em;
+  font-style: italic;
+  text-align: center;
+}
+
+.season-croagunk-dish > img {
+  image-rendering: pixelated;
+}
+
+/* gone in three bites: steps instead of a smooth fade reads as chewing */
+.season-croagunk-dish.eaten > img {
+  animation: season-croagunk-eat 700ms steps(3, end) both;
+}
+
+@keyframes season-croagunk-eat {
+  to {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+}
+
+/* room for an avatar's full row of emotes, from the dish on: the box keeps
+   one width instead of jumping when the reactions appear */
+.season-croagunk-deal.dish-deal {
+  justify-content: center;
+  width: min(420px, 100%);
+  min-height: 340px;
+}
+
+/* a recessed tray like the panel's inset wells, its portraits framed like
+   the collection's emote picker */
+.season-croagunk-reactions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  margin: 0;
+  padding: 10px;
+  box-sizing: border-box;
+  border: 2px solid var(--season-line);
+  border-radius: 4px;
+  background-color: var(--season-channel);
+  list-style: none;
+  animation: season-croagunk-reactions-in 200ms ease-out both;
+}
+
+.season-croagunk-reactions button {
+  display: block;
+  padding: 0;
+  border: 2px solid #08060b;
+  border-radius: 4px;
+  background: none;
+  cursor: var(--cursor-hover);
+  transition:
+    border-color 120ms ease-out,
+    filter 120ms ease-out;
+}
+
+.season-croagunk-reactions button:not([disabled]):hover,
+.season-croagunk-reactions button:focus-visible {
+  border-color: var(--season-accent);
+  filter: brightness(1.1);
+  outline: none;
+}
+
+.season-croagunk-reactions button[disabled] {
+  cursor: default;
+  opacity: 0.6;
+}
+
+.season-croagunk-reactions img {
+  display: block;
+  image-rendering: pixelated;
+}
+
+@keyframes season-croagunk-reactions-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .season-croagunk-dish.eaten > img,
+  .season-croagunk-reactions {
+    animation: none;
+  }
+
+  .season-croagunk-reactions button {
+    transition: none;
+  }
 }
 
 @keyframes season-booster-deal {
@@ -1805,6 +1881,15 @@
   border: var(--border-thin);
   border-radius: 14px;
   background-color: var(--wonder-card-color);
+  /* the shiny card palette (SPECIAL_CARD_PALETTES.shiny) */
+  background-image: repeating-linear-gradient(
+    135deg,
+    #f7a8d8 0 10px,
+    #9fe6d6 10px 20px,
+    #ffe08a 20px 30px,
+    #ffb36b 30px 40px,
+    #9ecbff 40px 50px
+  );
   box-shadow:
     inset -6px -6px 0 #0000002e,
     var(--shadow-clickable);

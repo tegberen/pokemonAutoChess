@@ -1039,7 +1039,7 @@ function SeasonCollectionModal(props: {
                   )
                 }
               >
-                {isCurrentAvatar ? "Your avatar ✔" : "Set as avatar"}
+                {isCurrentAvatar ? "Your avatar" : "Set as avatar"}
               </button>
             </div>
           </div>

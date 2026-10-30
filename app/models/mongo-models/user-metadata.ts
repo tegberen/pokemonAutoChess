@@ -181,7 +181,8 @@ const userMetadataSchema = new Schema({
         offerId: { type: String, required: true },
         chosenAt: { type: Number, required: true },
         expiresAt: { type: Number, required: true },
-        purchasedAt: { type: Number }
+        purchasedAt: { type: Number },
+        dish: { type: String }
       },
       { _id: false }
     )

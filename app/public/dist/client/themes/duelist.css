@@ -12,33 +12,29 @@
      short buttons do not read as two halves; Ready ✓ runs violet into the
      theme's cyan */
   --theme-button: linear-gradient(
-    105deg,
-    #b3263a 0%,
-    #a52c52 40%,
-    #90377e 70%,
-    #7a45c2 100%
+    135deg,
+    #b3263a 0 33.33%,
+    #90377e 33.33% 66.66%,
+    #7a45c2 66.66% 100%
   );
   --theme-button-hover: linear-gradient(
-    105deg,
-    #c8344a 0%,
-    #b93a63 40%,
-    #a2458f 70%,
-    #8c56d6 100%
+    135deg,
+    #c8344a 0 33.33%,
+    #a2458f 33.33% 66.66%,
+    #8c56d6 66.66% 100%
   );
   --theme-ready: linear-gradient(
-    105deg,
-    #7a45c2 0%,
-    #5f58c0 40%,
-    #3f7fb6 70%,
-    #2f9a9c 100%
+    135deg,
+    #7a45c2 0 33.33%,
+    #3f7fb6 33.33% 66.66%,
+    #2f9a9c 66.66% 100%
   );
   --theme-progress: #2f9a9c;
   --theme-ready-hover: linear-gradient(
-    105deg,
-    #8c56d6 0%,
-    #7069d2 40%,
-    #5090c8 70%,
-    #3fabad 100%
+    135deg,
+    #8c56d6 0 33.33%,
+    #5090c8 33.33% 66.66%,
+    #3fabad 66.66% 100%
   );
   --theme-button-text: #ffffff;
   --theme-button-text-shadow: 2px 2px 2px #00000040;

@@ -358,8 +358,8 @@ export function openCroagunkTrade() {
   return postSeasonAction("croagunk/open")
 }
 
-export function buyCroagunkTrade() {
-  return postSeasonAction("croagunk/buy")
+export function buyCroagunkTrade(reaction?: Emotion) {
+  return postSeasonAction("croagunk/buy", { reaction })
 }
 
 export function openSeasonBooster() {

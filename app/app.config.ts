@@ -1032,7 +1032,10 @@ export const server = defineServer({
       try {
         const userAuth = await authUser(req, res)
         if (!userAuth) return
-        const userDoc = await buyCroagunkTrade(userAuth.uid)
+        const userDoc = await buyCroagunkTrade(
+          userAuth.uid,
+          req.body?.reaction
+        )
         if (!userDoc) {
           res.status(409).json({ error: "Trade not available" })
           return

@@ -12,36 +12,32 @@
      through olive into storm grey (or Rayquaza green once ready), angled so
      short buttons do not read as two halves */
   --theme-button: linear-gradient(
-    105deg,
-    #cbd05c 0%,
-    #bec565 45%,
-    #a3ab76 75%,
-    #8f9a88 100%
+    135deg,
+    #cbd05c 0 33.33%,
+    #a3ab76 33.33% 66.66%,
+    #8f9a88 66.66% 100%
   );
   --theme-button-hover: linear-gradient(
-    105deg,
-    #d8dc78 0%,
-    #cbd180 45%,
-    #b2ba8c 75%,
-    #a0aa9a 100%
+    135deg,
+    #d8dc78 0 33.33%,
+    #b2ba8c 33.33% 66.66%,
+    #a0aa9a 66.66% 100%
   );
   --theme-ready: linear-gradient(
-    105deg,
-    #cbd05c 0%,
-    #b5c560 45%,
-    #8db564 75%,
-    #6fa266 100%
+    135deg,
+    #cbd05c 0 33.33%,
+    #8db564 33.33% 66.66%,
+    #6fa266 66.66% 100%
   );
   --theme-progress: #8db564;
   --theme-ready-hover: linear-gradient(
-    105deg,
-    #d8dc78 0%,
-    #c3d27a 45%,
-    #9fc47c 75%,
-    #83b27c 100%
+    135deg,
+    #d8dc78 0 33.33%,
+    #9fc47c 33.33% 66.66%,
+    #83b27c 66.66% 100%
   );
   --theme-button-text: #151a23;
-  --theme-button-text-shadow: none;
+  --theme-button-text-shadow: 1px 1px 0 #ffffff80;
 }
 
 .custom-bg {

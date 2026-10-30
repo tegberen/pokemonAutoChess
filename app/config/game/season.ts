@@ -1,7 +1,7 @@
 import { GameModification } from "../../types/enum/Game"
 import {
   CraftableItems,
-  type Item,
+  Item,
   ItemComponentsNoFossilOrScarf,
   ItemRecipe
 } from "../../types/enum/Item"
@@ -85,6 +85,7 @@ export type SeasonCroagunkTradeItem =
   | "shiny-ticket"
   | "booster"
   | "casual-pick"
+  | "spinda-dish"
 
 export interface SeasonCroagunkTradeOffer {
   id: string
@@ -117,7 +118,35 @@ export const SEASON_CROAGUNK_OFFERS: SeasonCroagunkTradeOffer[] = [
     label: "Wonder Picks",
     price: 100,
     amount: 3
+  },
+  // eaten on the spot: the reaction it gets, an emote of the player's avatar,
+  // is what the Tickets buy
+  {
+    id: "spinda-dish",
+    item: "spinda-dish",
+    label: "Spinda's Café Dish",
+    price: 100,
+    amount: 1
   }
+]
+
+export const SPINDA_CAFE_DISHES: Item[] = [
+  Item.TEA,
+  Item.CURRY,
+  Item.POFFIN,
+  Item.CASTELIACONE,
+  Item.WHIPPED_DREAM,
+  Item.HONEY,
+  Item.FRUIT_JUICE,
+  Item.MOOMOO_MILK,
+  Item.SPINDA_COCKTAIL,
+  Item.BERRY_JUICE,
+  Item.BINDING_MOCHI,
+  Item.STRAWBERRY_SWEET,
+  Item.LOVE_SWEET,
+  Item.BERRY_SWEET,
+  Item.SANDWICH,
+  Item.HEARTY_STEW
 ]
 
 export function getCroagunkTradeOffer(id: string | undefined) {
@@ -312,7 +341,8 @@ export const SEASONS: SeasonDefinition[] = [
     name: "Wigglytuff's Guild",
     mascot: Pkm.WIGGLYTUFF,
     bannerSrc: "/assets/theme/newjourney/custombg.webp",
-    startsAt: Date.UTC(2026, 10, 1),
+    // opens with the patch release, two days before its 1 November Patch Log
+    startsAt: Date.UTC(2026, 9, 30),
     endsAt: Date.UTC(2026, 11, 1),
     stepRewards: DEFAULT_STEP_REWARDS,
     mysteryGiftPortraitIds: ["ancient-mew", "ancient-mew-special"],

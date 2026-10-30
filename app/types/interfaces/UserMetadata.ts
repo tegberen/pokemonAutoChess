@@ -3,6 +3,7 @@ import type { Blessing } from "../enum/Blessing"
 import type { Language } from "../enum/Language"
 import type { Synergy } from "../enum/Synergy"
 import type { AvatarCosmeticId } from "../enum/AvatarCosmetic"
+import type { Item } from "../enum/Item"
 import type { Pkm } from "../enum/Pokemon"
 import type { SeasonChallengeId } from "../../config/game/season"
 import type { Theme } from "../../config/game/theme"
@@ -62,6 +63,7 @@ export interface ICroagunkTrade {
   chosenAt: number
   expiresAt: number
   purchasedAt?: number
+  dish?: Item
 }
 
 export interface ICasualPick {
