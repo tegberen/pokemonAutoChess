@@ -50,14 +50,38 @@ function getTiltOffset(position: number) {
   return Math.sign(offset) * eased
 }
 
+interface CardPress {
+  box: DOMRect
+  pointerX: number
+  pointerY: number
+  frame: number | null
+}
+
+// the card is measured once per press, untilted, and redrawn at most once
+// per frame: pointer events fire faster than frames on high rate mice
+const cardPresses = new WeakMap<HTMLButtonElement, CardPress>()
+
+function queueHoloTilt(event: PointerEvent<HTMLButtonElement>) {
+  const card = event.currentTarget
+  const press = cardPresses.get(card)
+  if (!press) return
+  press.pointerX = event.clientX
+  press.pointerY = event.clientY
+  if (press.frame !== null) return
+  press.frame = requestAnimationFrame(() => {
+    press.frame = null
+    tiltHoloTowardPointer(card, press)
+  })
+}
+
 // the pressed side comes toward the viewer, like TCG Pocket
-function tiltHoloTowardPointer(event: PointerEvent<HTMLButtonElement>) {
-  const box = event.currentTarget.getBoundingClientRect()
-  const x = (event.clientX - box.left) / box.width
-  const y = (event.clientY - box.top) / box.height
+function tiltHoloTowardPointer(card: HTMLButtonElement, press: CardPress) {
+  const { box } = press
+  const x = (press.pointerX - box.left) / box.width
+  const y = (press.pointerY - box.top) / box.height
   // a captured pointer can leave the card: the light stays on it, or the foil
   // layers would show their seams
-  const style = event.currentTarget.style
+  const style = card.style
   style.setProperty("--holo-x", `${clamp(x, 0, 1) * 100}%`)
   style.setProperty("--holo-y", `${clamp(y, 0, 1) * 100}%`)
   style.setProperty(
@@ -70,9 +94,9 @@ function tiltHoloTowardPointer(event: PointerEvent<HTMLButtonElement>) {
   )
 }
 
-function resetHoloLight(event: PointerEvent<HTMLButtonElement>) {
+function resetHoloLight(card: HTMLButtonElement) {
   for (const property of HOLO_LIGHT_PROPERTIES) {
-    event.currentTarget.style.removeProperty(property)
+    card.style.removeProperty(property)
   }
 }
 
@@ -83,10 +107,16 @@ const cardTiltHandlers = {
     card.setPointerCapture(event.pointerId)
     card.dataset.holoPressed = String(Date.now())
     delete card.dataset.holoHeld
-    tiltHoloTowardPointer(event)
+    cardPresses.set(card, {
+      box: card.getBoundingClientRect(),
+      pointerX: event.clientX,
+      pointerY: event.clientY,
+      frame: null
+    })
+    queueHoloTilt(event)
   },
   onPointerMove(event: PointerEvent<HTMLButtonElement>) {
-    if (event.currentTarget.dataset.holoPressed) tiltHoloTowardPointer(event)
+    if (event.currentTarget.dataset.holoPressed) queueHoloTilt(event)
   },
   onPointerUp(event: PointerEvent<HTMLButtonElement>) {
     endCardPress(event)
@@ -107,7 +137,10 @@ function endCardPress(event: PointerEvent<HTMLButtonElement>) {
     card.dataset.holoHeld = ""
   }
   delete card.dataset.holoPressed
-  resetHoloLight(event)
+  const press = cardPresses.get(card)
+  if (press?.frame != null) cancelAnimationFrame(press.frame)
+  cardPresses.delete(card)
+  resetHoloLight(card)
 }
 
 // true once after a long press, so that press does not also click the card

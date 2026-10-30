@@ -4,6 +4,7 @@ import { getAvailableEmotions } from "../../../../../models/precomputed/precompu
 import { getPokemonData } from "../../../../../models/precomputed/precomputed-pokemon-data"
 import type { SeasonBoosterCard } from "../../../../../types/Booster"
 import { Ability } from "../../../../../types/enum/Ability"
+import { Emotion } from "../../../../../types/enum/Emotion"
 import { Pkm, PkmIndex, Unowns } from "../../../../../types/enum/Pokemon"
 import type { IUserMetadataUnpacked } from "../../../../../types/interfaces/UserMetadata"
 import { getPortraitSrc } from "../../../../../utils/avatar"
@@ -17,8 +18,6 @@ import SeasonCard, { SHINY_LANDING_MS } from "./season-card"
 import SeasonSparkles, { SeasonSparkleBurst } from "./season-sparkles"
 
 const CONFIRM_TIMEOUT_MS = 3000
-// the guest's card waits face down a moment, then turns like a booster shiny
-const GUEST_ARRIVAL_MS = 300
 const SHINY_SHEEN_AFTER_LANDING_MS = 100
 const GOLDEN_BURST_AFTER_LANDING_MS = 150
 const SHINY_TWINKLES_AFTER_LANDING_MS = 350
@@ -56,7 +55,6 @@ export default function SeasonPelipper(props: {
   const [isConfirming, setIsConfirming] = useState(false)
   const [isWaiting, setIsWaiting] = useState(false)
   const [arrivedGuest, setArrivedGuest] = useState<SeasonBoosterCard>()
-  const [hasGuestArrived, setHasGuestArrived] = useState(false)
   const invitations = profile.partyInvitations ?? 0
   const guests = useMemo(
     () => getInvitableGuests(profile),
@@ -72,15 +70,17 @@ export default function SeasonPelipper(props: {
     return () => clearTimeout(timeout)
   }, [isConfirming])
 
-  useEffect(() => {
-    if (!arrivedGuest) return
-    const timeout = setTimeout(() => setHasGuestArrived(true), GUEST_ARRIVAL_MS)
-    return () => clearTimeout(timeout)
-  }, [arrivedGuest])
-
+  // the guest's shiny photos load and decode while the player decides, so
+  // none of that work lands on the arrival spin
   function chooseGuest(pokemon: Pkm | "") {
     setGuest(pokemon)
     setIsConfirming(false)
+    if (!pokemon) return
+    for (const emotion of getAvailableEmotions(PkmIndex[pokemon], true)) {
+      const photo = new Image()
+      photo.src = getPortraitSrc(PkmIndex[pokemon], true, emotion)
+      photo.decode().catch(() => {})
+    }
   }
 
   async function sendInvitation() {
@@ -91,11 +91,20 @@ export default function SeasonPelipper(props: {
     }
     setIsConfirming(false)
     setIsWaiting(true)
+    // the guest arrives at once: the server unlocks exactly the guest and all
+    // its shiny emotes, so the spin hides the round trip instead of waiting on
+    // it. A refusal takes the guest back
+    setArrivedGuest({
+      name: guest,
+      shiny: true,
+      emotion: Emotion.NORMAL,
+      new: true,
+      unlockedEmotions: getAvailableEmotions(PkmIndex[guest], true)
+    })
     try {
-      const { card } = await sendPartyInvitation(guest)
-      setHasGuestArrived(false)
-      setArrivedGuest(card)
+      await sendPartyInvitation(guest)
     } catch (error) {
+      setArrivedGuest(undefined)
       dispatch(setErrorAlertMessage((error as Error).message))
     } finally {
       setIsWaiting(false)
@@ -104,10 +113,12 @@ export default function SeasonPelipper(props: {
 
   function startNextInvitation() {
     setArrivedGuest(undefined)
-    setHasGuestArrived(false)
     setGuest("")
   }
 
+  // the count only drops with the server's reply: until then the invitation
+  // just sent would still look available
+  const canSendAnotherInvitation = invitations > 0 && !isWaiting
   const pelipperLine = arrivedGuest
     ? `${t(`pkm.${arrivedGuest.name}`)} came to your party!`
     : "Who do you invite to your victory party?"
@@ -134,72 +145,60 @@ export default function SeasonPelipper(props: {
         <span className="season-pelipper-line">{pelipperLine}</span>
         {arrivedGuest ? (
           <>
-            <div className="season-booster-reveal season-pelipper-card">
+            <div className="season-pelipper-card arrival">
               <SeasonCard
                 pokemon={arrivedGuest.name}
                 shiny
-                isFaceUp={hasGuestArrived}
                 backSrc="assets/ui/pokecard-prismatic.png"
                 sheenDelayMs={SHINY_LANDING_MS + SHINY_SHEEN_AFTER_LANDING_MS}
                 synergyIconSize="22px"
               >
-                {hasGuestArrived && (
-                  <>
-                    <SeasonSparkleBurst delayMs={SHINY_LANDING_MS} />
-                    <SeasonSparkleBurst
-                      delayMs={
-                        SHINY_LANDING_MS + GOLDEN_BURST_AFTER_LANDING_MS
-                      }
-                      isGolden
-                    />
-                    <SeasonSparkles
-                      delayMs={
-                        SHINY_LANDING_MS + SHINY_TWINKLES_AFTER_LANDING_MS
-                      }
-                    />
-                  </>
-                )}
+                <SeasonSparkleBurst delayMs={SHINY_LANDING_MS} />
+                <SeasonSparkleBurst
+                  delayMs={SHINY_LANDING_MS + GOLDEN_BURST_AFTER_LANDING_MS}
+                  isGolden
+                />
+                <SeasonSparkles
+                  delayMs={SHINY_LANDING_MS + SHINY_TWINKLES_AFTER_LANDING_MS}
+                />
               </SeasonCard>
             </div>
             <div className="season-booster-emotes-slot">
-              {hasGuestArrived && (
-                <ul
-                  className="season-booster-shiny-emotes"
-                  style={{
-                    gridTemplateColumns: `repeat(${photoColumns}, auto)`
-                  }}
-                >
-                  {arrivedGuest.unlockedEmotions.map((emotion, i) => (
-                    <li
-                      key={emotion}
-                      style={{
-                        animationDelay: `${
-                          SHINY_LANDING_MS +
-                          PHOTOS_AFTER_LANDING_MS +
-                          i * PHOTO_STAGGER_MS
-                        }ms`
-                      }}
-                    >
-                      <img
-                        src={getPortraitSrc(
-                          PkmIndex[arrivedGuest.name],
-                          true,
-                          emotion
-                        )}
-                        width={44}
-                        height={44}
-                        alt={emotion}
-                        title={emotion}
-                      />
-                    </li>
-                  ))}
-                </ul>
-              )}
+              <ul
+                className="season-booster-shiny-emotes"
+                style={{
+                  gridTemplateColumns: `repeat(${photoColumns}, auto)`
+                }}
+              >
+                {arrivedGuest.unlockedEmotions.map((emotion, i) => (
+                  <li
+                    key={emotion}
+                    style={{
+                      animationDelay: `${
+                        SHINY_LANDING_MS +
+                        PHOTOS_AFTER_LANDING_MS +
+                        i * PHOTO_STAGGER_MS
+                      }ms`
+                    }}
+                  >
+                    <img
+                      src={getPortraitSrc(
+                        PkmIndex[arrivedGuest.name],
+                        true,
+                        emotion
+                      )}
+                      width={44}
+                      height={44}
+                      alt={emotion}
+                      title={emotion}
+                    />
+                  </li>
+                ))}
+              </ul>
             </div>
-            {invitations > 0 && (
+            {canSendAnotherInvitation && (
               <button
                 className="season-shop-open"
-                disabled={!hasGuestArrived}
                 onClick={startNextInvitation}
               >
                 Send another invitation

@@ -363,9 +363,7 @@ export function buyCroagunkTrade(reaction?: Emotion) {
 }
 
 export function sendPartyInvitation(guest: Pkm) {
-  return postSeasonAction<{ card: SeasonBoosterCard }>("party-invitation", {
-    guest
-  })
+  return postSeasonAction("party-invitation", { guest })
 }
 
 export function openSeasonBooster() {
