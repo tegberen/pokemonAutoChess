@@ -17,7 +17,9 @@ import { logger } from "../app/utils/logger"
 
 // Dry run unless called with --apply
 const APPLY = process.argv.includes("--apply")
-const BATCH_SIZE = 500
+// each account resets ~225 collection entries: 500 per batch overflows the
+// driver's ~17 MB request buffer
+const BATCH_SIZE = 50
 
 async function main() {
   dotenv.config()
