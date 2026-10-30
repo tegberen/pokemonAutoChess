@@ -77,6 +77,8 @@ export interface ICasualPick {
 export interface IWonderPickDraw {
   candidates: Pkm[]
   rerollsLeft: number
+  // the UTC day it was drawn: a new day draws a fresh set
+  dayKey?: string
 }
 
 export interface ISeasonProgress {

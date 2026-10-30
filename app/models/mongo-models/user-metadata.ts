@@ -170,7 +170,8 @@ const userMetadataSchema = new Schema({
     type: new Schema(
       {
         candidates: [{ type: String, enum: Pkm }],
-        rerollsLeft: { type: Number, default: 0 }
+        rerollsLeft: { type: Number, default: 0 },
+        dayKey: { type: String }
       },
       { _id: false }
     )

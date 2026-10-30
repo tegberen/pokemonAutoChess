@@ -232,7 +232,8 @@ function SeasonGuild(props: {
     "Shiny Pokémon are incredibly rare. The only way to obtain them is " +
     "through Shiny Wonder Pick (or a super lucky Booster). There is one " +
     "guaranteed Shiny Wonder Pick per season and per " +
-    `${SHINY_WONDER_PICK_LEVEL_STEP} user levels.`
+    `${SHINY_WONDER_PICK_LEVEL_STEP} user levels. The cards change every ` +
+    "day at 00:00 UTC."
 
   const bonusStep: SeasonStep = {
     index: bonusStepIndex,

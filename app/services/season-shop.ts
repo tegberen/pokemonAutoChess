@@ -11,7 +11,8 @@ import {
   SEASON_SHOP_OFFERS,
   SEASON_WONDER_PICK_CARD_COUNT,
   SEASON_WONDER_PICK_FREE_REROLLS,
-  getCasualPickCharges
+  getCasualPickCharges,
+  getUtcDayKey
 } from "../config/game/season"
 import { BoosterRarityProbability } from "../config/game/shop"
 import { CollectionUtils } from "../core/collection"
@@ -506,20 +507,31 @@ function drawWonderPickCandidates(draft: CollectionDraft, exclude: Pkm[]) {
   )
 }
 
-export async function getOrCreateWonderPickDraw(uid: string) {
+// saved picks do not freeze the offer: every UTC day draws a fresh set, with a
+// fresh reroll
+export async function getOrCreateWonderPickDraw(uid: string, now = Date.now()) {
   const user = await UserMetadata.findOne({ uid }).lean<IUserMetadataLean>()
   if (!user) return null
-  if (!user.wonderPickDraw?.candidates?.length) {
+  const draw = user.wonderPickDraw
+  const today = getUtcDayKey(now)
+  if (!draw?.candidates?.length || draw.dayKey !== today) {
     const draft = new CollectionDraft(user)
-    const candidates = drawWonderPickCandidates(draft, [])
+    const candidates = drawWonderPickCandidates(
+      draft,
+      draw?.candidates ?? []
+    )
     if (candidates.length === 0) return null
+    // guarded by the draw it read, so two tabs never draw twice
     await UserMetadata.updateOne(
-      { uid, wonderPickDraw: null },
+      draw
+        ? { uid, "wonderPickDraw.candidates": draw.candidates }
+        : { uid, wonderPickDraw: null },
       {
         $set: {
           wonderPickDraw: {
             candidates,
-            rerollsLeft: SEASON_WONDER_PICK_FREE_REROLLS
+            rerollsLeft: SEASON_WONDER_PICK_FREE_REROLLS,
+            dayKey: today
           }
         }
       }
@@ -544,7 +556,10 @@ export async function rerollWonderPickDraw(uid: string) {
       "wonderPickDraw.rerollsLeft": { $gt: 0 }
     },
     {
-      $set: { "wonderPickDraw.candidates": candidates },
+      $set: {
+        "wonderPickDraw.candidates": candidates,
+        "wonderPickDraw.dayKey": getUtcDayKey()
+      },
       $inc: { "wonderPickDraw.rerollsLeft": -1 }
     },
     { returnDocument: "after" }

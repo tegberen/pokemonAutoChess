@@ -163,10 +163,13 @@ export default function SeasonWonderPick(props: {
   const hasNoDraw = props.candidates.length === 0
   const hasPicks = props.picks > 0
 
+  // a Shiny Wonder Pick set expires each UTC day, so its tab always asks: the
+  // server keeps today's set and only draws a new one after midnight
+  const shouldAskForDraw = hasNoDraw || isShiny
   useEffect(() => {
-    if (!hasPicks || phase !== "choose" || !hasNoDraw) return
+    if (!hasPicks || phase !== "choose" || !shouldAskForDraw) return
     onDraw().catch(() => {})
-  }, [hasPicks, phase, hasNoDraw, onDraw])
+  }, [hasPicks, phase, shouldAskForDraw, onDraw])
 
   async function runServerAction<T>(action: () => Promise<T>) {
     if (isWaitingForServer) return null
