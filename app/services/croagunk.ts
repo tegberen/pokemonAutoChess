@@ -65,21 +65,21 @@ function getAvatarReactions(user: IUserMetadataLean) {
   return { pokemon: avatar.name, index, shiny, item, original, mask, missing }
 }
 
-function pickOffer(previousOfferId: string | undefined, canReact: boolean) {
-  const eligible = SEASON_CROAGUNK_OFFERS.filter(
-    (offer) => offer.item !== "spinda-dish" || canReact
+// Spinda's dish is a surprise and rolls for everyone: a player whose avatar
+// already has every emote is told to switch avatar, not skipped
+function pickOffer(previousOfferId: string | undefined) {
+  const pool = SEASON_CROAGUNK_OFFERS.filter(
+    (offer) => offer.id !== previousOfferId
   )
-  const pool = eligible.filter((offer) => offer.id !== previousOfferId)
-  const offers = pool.length > 0 ? pool : eligible
+  const offers = pool.length > 0 ? pool : SEASON_CROAGUNK_OFFERS
   return offers[Math.floor(Math.random() * offers.length)]
 }
 
 function createTrade(
   now: number,
-  previousOfferId: string | undefined,
-  canReact: boolean
+  previousOfferId: string | undefined
 ): ICroagunkTrade {
-  const offer = pickOffer(previousOfferId, canReact)
+  const offer = pickOffer(previousOfferId)
   return {
     offerId: offer.id,
     chosenAt: now,
@@ -102,8 +102,7 @@ export async function getOrCreateCroagunkTrade(
     return UserMetadata.findOne({ uid })
   }
 
-  const canReact = (getAvatarReactions(user)?.missing.length ?? 0) > 0
-  const next = createTrade(now, trade?.offerId, canReact)
+  const next = createTrade(now, trade?.offerId)
   const updatedUser = await UserMetadata.findOneAndUpdate(
     {
       uid,

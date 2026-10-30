@@ -157,7 +157,11 @@ export default function SeasonWonderPick(props: {
   const [pickResult, setPickResult] = useState<WonderPickResult>()
   const [isWaitingForServer, setIsWaitingForServer] = useState(false)
   const [areOthersRevealed, setAreOthersRevealed] = useState(false)
+  const [isRerolling, setIsRerolling] = useState(false)
   const cardsRef = useRef<HTMLDivElement>(null)
+  // read after the reroll's await, when this render's props are stale
+  const latestCandidatesRef = useRef(props.candidates)
+  latestCandidatesRef.current = props.candidates
   const candidates = shownCandidates ?? props.candidates
   const hasCandidates = candidates.length > 0
   const hasNoDraw = props.candidates.length === 0
@@ -192,15 +196,42 @@ export default function SeasonWonderPick(props: {
     setPhase("choose")
   }
 
-  function reroll() {
-    if (props.rerollsLeft === 0 || props.picks === 0 || phase !== "choose") {
+  // the cards turn face down at once and the server answers meanwhile; the
+  // new faces load before they turn back up, so the round trip never shows
+  async function reroll() {
+    if (
+      props.rerollsLeft === 0 ||
+      props.picks === 0 ||
+      phase !== "choose" ||
+      isRerolling
+    ) {
       return
     }
-    runServerAction(props.onReroll)
+    setShownCandidates(props.candidates)
+    setIsRerolling(true)
+    const flipDown = wait(FLIP_DURATION_MS + FLIP_STAGGER_MS * (CARD_COUNT - 1))
+    await runServerAction(props.onReroll)
+    await flipDown
+    await Promise.all(
+      latestCandidatesRef.current.map(({ pokemon }) => {
+        const portrait = new Image()
+        portrait.src = getPortraitSrc(PkmIndex[pokemon], isShiny)
+        return portrait.decode().catch(() => {})
+      })
+    )
+    setShownCandidates(undefined)
+    setIsRerolling(false)
   }
 
   async function startWonderPick() {
-    if (phase !== "choose" || props.picks === 0 || !hasCandidates) return
+    if (
+      phase !== "choose" ||
+      props.picks === 0 ||
+      !hasCandidates ||
+      isRerolling
+    ) {
+      return
+    }
     setShownCandidates(props.candidates)
     setPhase("shuffling")
     await wait(FLIP_DURATION_MS + FLIP_STAGGER_MS * (CARD_COUNT - 1))
@@ -292,7 +323,7 @@ export default function SeasonWonderPick(props: {
           const isFaceUp =
             isPicked ||
             isRevealedOther ||
-            (!isUnplayable && phase === "choose")
+            (!isUnplayable && phase === "choose" && !isRerolling)
           return (
             <SeasonCard
               key={slot}
@@ -314,7 +345,7 @@ export default function SeasonWonderPick(props: {
                   : undefined
               }
               flipDelayMs={
-                phase === "shuffling" || isRevealedOther
+                phase === "shuffling" || isRerolling || isRevealedOther
                   ? slot * FLIP_STAGGER_MS
                   : isPicked
                     ? pickRevealDelayMs
@@ -372,7 +403,8 @@ export default function SeasonWonderPick(props: {
               disabled={
                 props.rerollsLeft === 0 ||
                 props.picks === 0 ||
-                isWaitingForServer
+                isWaitingForServer ||
+                isRerolling
               }
               title="Reroll"
               onClick={reroll}
@@ -386,7 +418,7 @@ export default function SeasonWonderPick(props: {
               className={
                 isShiny ? "season-wonder-pick-button" : "season-shop-open"
               }
-              disabled={props.picks === 0 || !hasCandidates}
+              disabled={props.picks === 0 || !hasCandidates || isRerolling}
               onClick={startWonderPick}
             >
               Wonder Pick
@@ -417,16 +449,14 @@ export default function SeasonWonderPick(props: {
 
         {phase === "picked" && (
           <button
-            className="season-shop-back season-wonder-next"
+            className={cc(
+              isShiny ? "season-wonder-pick-button" : "season-shop-open",
+              "season-wonder-next"
+            )}
             aria-label="Next Wonder Pick"
             onClick={startNextWonderPick}
           >
-            <img
-              src="assets/ui/arrow-right.svg"
-              width={20}
-              height={20}
-              alt=""
-            />
+            <span className="season-arrow-icon right" />
             <span className="season-shop-owned-count">{props.picks}</span>
           </button>
         )}

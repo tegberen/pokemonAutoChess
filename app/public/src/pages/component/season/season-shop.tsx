@@ -136,6 +136,7 @@ export default function SeasonShop(props: { season: SeasonState }) {
 
   function closeReveal() {
     setOpenedCards([])
+    setFlippedCards([])
     setIsMysteryGiftOpen(false)
     setIsMysteryThemeOpen(false)
   }
@@ -397,16 +398,16 @@ export default function SeasonShop(props: { season: SeasonState }) {
         </button>
         {isRevealing && (
           <button
-            className="season-shop-back"
+            className="bubbly blue season-shop-back"
             aria-label="Back to shop"
+            // like Open, it waits for the last card to be turned by hand
+            disabled={
+              !areAllCardsFlipped ||
+              (isMysteryGiftOpen && !isMysteryGiftFlipped)
+            }
             onClick={closeReveal}
           >
-            <img
-              src="assets/ui/arrow-left.svg"
-              width={20}
-              height={20}
-              alt=""
-            />
+            <span className="season-arrow-icon left" />
           </button>
         )}
       </div>

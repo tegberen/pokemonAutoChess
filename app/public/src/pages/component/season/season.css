@@ -1,24 +1,30 @@
+/* only the body scrolls, inside its reserved gutter: the dialog itself is
+   kept within the screen, so taller tabs never add a second scrollbar */
+.modal.season-modal[open] {
+  display: flex;
+  flex-direction: column;
+  max-height: 95vh;
+  overflow: hidden;
+}
+
 .season-modal .modal-body {
+  flex: 1;
+  min-height: 0;
+  max-height: none;
   padding: 0.6em;
   scrollbar-gutter: stable;
 }
 
 .season-page,
 .season-collection-modal {
-  --season-surface: color-mix(in srgb, var(--color-bg-secondary) 80%, #0e0b12);
-  --season-surface-deep: color-mix(
-    in srgb,
-    var(--color-bg-tertiary) 72%,
-    #0e0b12
-  );
-  --season-line: color-mix(in srgb, #000000 45%, var(--season-surface));
+  --season-surface: var(--color-bg-secondary);
+  --season-surface-deep: var(--color-bg-tertiary);
+  --season-line: var(--color-shadow);
   --season-accent: var(--color-bg-accent);
-  --season-accent-edge: color-mix(in srgb, var(--season-accent) 60%, #000000);
   --season-accent-ink: color-mix(in srgb, var(--season-accent) 22%, #000000);
-  /* what you earned or filled, apart from the accent of what you click: the
-     colour of a confirmed Ready ✔, or a solid stop of it when it is a
-     gradient */
-  --season-progress: var(--theme-progress, var(--theme-ready, #6cbf45));
+  /* what you earned or filled: the in-game stage timer's yellow in every
+     theme, since green and the theme colours are for buttons */
+  --season-progress: #f7d51d;
   --season-progress-edge: color-mix(
     in srgb,
     var(--season-progress) 65%,
@@ -29,27 +35,18 @@
     var(--season-progress) 20%,
     #000000
   );
-  --season-channel: color-mix(
-    in srgb,
-    #000000 55%,
-    var(--season-surface-deep)
-  );
-  --season-hexagon: polygon(
-    25% 0,
-    75% 0,
-    100% 50%,
-    75% 100%,
-    25% 100%,
-    0 50%
-  );
+  --season-channel: var(--color-bg-input);
   --season-cell: color-mix(in srgb, var(--color-fg-secondary) 9%, transparent);
   --season-shade: rgb(0 0 0 / 45%);
+  /* the Pass banner's height: Croagunk's and Pelipper's titles are centred
+     on its middle, so all three sit at the same spot */
+  --season-hero-height: 324px;
 }
 
 .season-page {
   display: flex;
   flex-direction: column;
-  gap: 0.6em;
+  gap: 1em;
   width: min(1400px, 92vw);
   -webkit-user-select: none;
   user-select: none;
@@ -68,19 +65,8 @@
   user-select: text;
 }
 
-@supports (color: oklch(from red l c h)) {
-  .season-page,
-  .season-collection-modal {
-    --season-accent: oklch(
-      from var(--color-bg-accent) min(l, 0.7) calc(c * 1.3) h
-    );
-  }
-}
-
 :root:not([data-themed-buttons]) .season-page,
 :root:not([data-themed-buttons]) .season-collection-modal {
-  --season-accent: #109fff;
-  --season-accent-edge: #006bb3;
   --season-accent-ink: #ffffff;
 }
 
@@ -95,13 +81,11 @@
   font-size: 0.9em;
 }
 
+/* the game's .my-container and .my-box: one black border, no inner ring */
 .season-frame {
-  border-radius: 4px;
-  border: var(--border-thin);
-  background-color: var(--season-surface);
-  box-shadow:
-    inset 0 0 0 3px var(--season-surface),
-    inset 0 0 0 5px var(--season-line);
+  border-radius: 12px;
+  border: var(--border-thick);
+  background-color: var(--color-bg-primary);
   color: var(--color-fg-primary);
 }
 
@@ -110,36 +94,43 @@
   text-align: center;
 }
 
+/* the wiki's three sizes: titles 1.5em like its h2, text 1em, secondary
+   text 0.9em in --color-fg-secondary. A panel title is centred, its count
+   in its own column on the right, so the two never overlap */
 .season-heading {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
   gap: 0.6em;
-  font-size: 0.95em;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
+  margin: 0 0 0.3em;
+  font-size: 1.5em;
 }
 
-.season-heading::after {
+.season-heading::before {
   content: "";
-  order: 1;
-  flex: 1;
-  height: 2px;
-  background-color: var(--season-line);
 }
 
 .season-heading > span {
-  order: 2;
-  text-transform: none;
-  letter-spacing: normal;
+  justify-self: end;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  font-size: 0.6em;
 }
 
+.season-heading > span > img {
+  image-rendering: pixelated;
+}
+
+/* a size container: the banners below are scaled from its width */
 .season-stage {
-  padding: 0 0.6em 0.6em;
+  container-type: inline-size;
+  padding: 0 1em 1em;
 }
 
 .season-stage-panels {
   display: grid;
-  margin-top: 0.6em;
+  margin-top: 1em;
 }
 
 .season-stage-panel {
@@ -153,12 +144,39 @@
   display: none;
 }
 
+/* the banner tabs keep their hidden siblings in the grid, so Croagunk, Kecleon
+   and Pelipper are as tall as Chimecho and the Guild never resizes between
+   them */
+.season-stage-panels:has(> .season-stage-banner:not([hidden]))
+  > .season-stage-banner[hidden] {
+  display: flex;
+  visibility: hidden;
+}
+
+/* every tab shows the banner at the same scale and from the same offset,
+   both taken from the Guild's width: "cover" scaled it to each tab's height,
+   so it zoomed and slid on every tab switch. A taller tab only shows more of
+   the picture's lower part */
+.season-stage-banner,
+.season-hero {
+  background-color: var(--season-surface-deep);
+  background-repeat: no-repeat;
+  background-size: 100% auto;
+  background-position: center -12cqw;
+}
+
 .season-stage-banner {
   position: relative;
   isolation: isolate;
   justify-content: center;
-  background-size: cover;
-  background-position: center 40%;
+}
+
+/* rounded like the frame around them */
+.season-stage-banner,
+.season-hero,
+.season-stage-banner::before,
+.season-hero::before {
+  border-radius: 8px;
 }
 
 .season-stage-banner::before {
@@ -189,9 +207,9 @@
   grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
   align-items: center;
   gap: 2.5em;
+  box-sizing: border-box;
+  min-height: var(--season-hero-height);
   padding: 1.4em 2em;
-  background-size: cover;
-  background-position: center 40%;
   text-shadow: 1px 1px 2px #000000;
 }
 
@@ -224,19 +242,19 @@
   gap: 0.5em;
 }
 
-.season-title > img {
+/* the game's .pokemon-portrait frame */
+.season-title > img,
+.season-tab-portrait {
   flex-shrink: 0;
-  border: 3px solid #08060b;
-  border-radius: 6px;
-  box-shadow: 0 0 0 2px var(--season-line);
+  border: 1px solid #000000;
+  border-radius: 4px;
+  box-shadow: 2px 2px 0 #00000060;
   image-rendering: pixelated;
 }
 
 .season-title h2 {
   font-size: 2em;
   line-height: 1.05;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
 }
 
 .season-days-left {
@@ -265,32 +283,27 @@
   background-color: var(--season-progress);
 }
 
-.season-hero-art,
-.season-hero-art-ring,
-.season-hero-art-face {
-  display: grid;
-  box-sizing: border-box;
-  clip-path: var(--season-hexagon);
-}
-
 .season-hero-art {
+  position: relative;
+  display: grid;
+  place-content: center;
   width: 180px;
   height: 156px;
-  padding: 5px;
-  background-color: var(--season-line);
 }
 
-.season-hero-art-ring {
-  padding: 6px;
-  background-color: var(--season-surface-deep);
+/* one shape with a black border as thick as --border-thick everywhere */
+.season-hero-art-shape {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  fill: var(--season-surface-deep);
+  stroke: #000000;
+  stroke-width: 3px;
 }
 
-.season-hero-art-face {
-  place-content: center;
-  background-color: var(--season-surface-deep);
-}
-
-.season-hero-art-face > img {
+.season-hero-art > img {
+  position: relative;
   width: 88px;
   height: 88px;
   object-fit: contain;
@@ -306,11 +319,31 @@
   padding: 0.35em 1em;
 }
 
+/* the track fades out under an arrow, so a cut card reads as "more this
+   way" instead of a mistake */
+.season-track-box.more-left .season-track {
+  mask-image: linear-gradient(to right, transparent, #000 72px);
+}
+
+.season-track-box.more-right .season-track {
+  mask-image: linear-gradient(to left, transparent, #000 72px);
+}
+
+.season-track-box.more-left.more-right .season-track {
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 72px,
+    #000 calc(100% - 72px),
+    transparent
+  );
+}
+
 .season-track {
   display: flex;
   align-items: flex-end;
   margin: 0;
-  padding: 1.6em 0 1.4em;
+  padding: 0.8em 0 0.6em;
   list-style: none;
   overflow-x: auto;
   scrollbar-width: none;
@@ -320,38 +353,47 @@
   display: none;
 }
 
-.season-track-arrow {
-  border-radius: 4px;
+/* a bubbly button, since it moves the track; only placed and sized here */
+/* centred on the cards, not on the cards and numbers together */
+.bubbly.season-track-arrow {
   position: absolute;
-  top: 50%;
+  top: calc(1.15em + 36px);
   z-index: 1;
   translate: 0 -50%;
   display: grid;
   place-content: center;
-  width: 32px;
-  height: 48px;
-  padding: 0;
-  border: var(--border-thin);
-  background-color: var(--season-surface-deep);
-  box-shadow: inset 0 0 0 2px var(--season-line);
-  cursor: var(--cursor-hover);
+  width: 44px;
+  height: 44px;
+  padding: 0 3px 3px 0;
 }
 
-.season-track-arrow:hover {
-  background-color: var(--season-surface-deep);
+/* drawn in the button's text colour: black on a light theme button, white
+   on blue */
+.season-arrow-icon {
+  display: block;
+  width: 20px;
+  height: 20px;
+  background-color: currentColor;
+  mask: url("assets/ui/arrow-left.svg") center / contain no-repeat;
+}
+
+.season-arrow-icon.right {
+  mask-image: url("assets/ui/arrow-right.svg");
 }
 
 .season-track-arrow.left {
-  left: 6px;
+  left: 0.6em;
 }
 
 .season-track-arrow.right {
-  right: 6px;
+  right: 0.6em;
 }
 
+/* wide enough for a 64px card: the icon and its count never overlap, and the
+   track scrolls instead */
 .season-step {
   position: relative;
-  flex: 1 0 60px;
+  flex: 1 0 72px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -362,7 +404,7 @@
 .season-step::before {
   content: "";
   position: absolute;
-  bottom: 8px;
+  bottom: 9px;
   right: 50%;
   width: calc(100% + 1px);
   height: 4px;
@@ -399,20 +441,18 @@
   align-items: center;
   justify-content: center;
   width: 100%;
+  min-width: 64px;
   max-width: 72px;
   aspect-ratio: 1;
   box-sizing: border-box;
   padding: 0;
-  border-radius: 3px;
-  border: 2px solid var(--season-line);
-  background-color: var(--season-surface-deep);
-  box-shadow:
-    inset 0 0 0 2px var(--season-surface-deep),
-    inset 0 0 0 4px var(--season-line);
+  border-radius: 10px;
+  border: var(--border-thin);
+  background-color: var(--season-surface);
+  box-shadow: var(--shadow-clickable);
   color: var(--color-fg-primary);
   font: inherit;
   cursor: var(--cursor-hover);
-  transition: transform 150ms ease-out;
 }
 
 .season-step-card > img {
@@ -421,29 +461,18 @@
   object-fit: contain;
 }
 
+/* like the game's choice boxes: a clickable .my-box turns accent blue on
+   hover only; the selected one is lighter, like an active tab */
 .season-step-card:hover {
-  transform: translateY(-3px);
-}
-
-.season-step.milestone .season-step-card {
-  box-shadow:
-    inset 0 0 0 2px var(--season-surface-deep),
-    inset 0 0 0 4px var(--season-line),
-    inset 0 0 0 6px var(--season-surface-deep),
-    inset 0 0 0 7px var(--season-line);
+  background-color: var(--color-bg-accent);
 }
 
 .season-step.selected .season-step-card {
-  background-color: color-mix(
-    in srgb,
-    var(--color-fg-primary) 7%,
-    var(--season-surface-deep)
-  );
+  background-color: var(--color-bg-primary);
 }
 
 .season-step.claimed .season-step-card {
-  border-color: var(--season-line);
-  background-color: var(--season-surface);
+  background-color: var(--season-surface-deep);
   box-shadow: none;
   opacity: 0.45;
   filter: grayscale(0.6);
@@ -462,9 +491,9 @@
   position: relative;
   z-index: 1;
   isolation: isolate;
-  min-width: 32px;
-  height: 20px;
-  padding: 0 0.5em 2px;
+  width: 36px;
+  height: 22px;
+  padding-bottom: 2px;
   box-sizing: border-box;
   display: grid;
   place-content: center;
@@ -477,14 +506,9 @@
 .season-step-node::after {
   content: "";
   position: absolute;
-  clip-path: polygon(
-    7px 0,
-    calc(100% - 7px) 0,
-    100% 50%,
-    calc(100% - 7px) 100%,
-    7px 100%,
-    0 50%
-  );
+  /* drawn for this exact size, so the rounded points never stretch */
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 36 22' preserveAspectRatio='none'%3E%3Cpath d='M11 0H25Q28 0 29.76 2.43L34.24 8.57Q36 11 34.24 13.43L29.76 19.57Q28 22 25 22H11Q8 22 6.24 19.57L1.76 13.43Q0 11 1.76 8.57L6.24 2.43Q8 0 11 0Z'/%3E%3C/svg%3E")
+    center / 100% 100% no-repeat;
 }
 
 .season-step-node::before {
@@ -518,7 +542,6 @@
 
 .season-step .season-step-claim {
   --plate-fill: var(--theme-button, var(--season-accent));
-  min-width: 40px;
   pointer-events: none;
 }
 
@@ -545,7 +568,7 @@
 .season-panels {
   display: grid;
   grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
-  gap: 0.6em;
+  gap: 1em;
 }
 
 .season-panels-hidden {
@@ -559,7 +582,7 @@
 }
 
 .season-panels > section {
-  padding: 0.7em 1em;
+  padding: 0.8em 1.2em;
 }
 
 .season-panels ul {
@@ -568,12 +591,18 @@
   list-style: none;
 }
 
-.season-panels li {
-  padding: 0.45em 0;
+/* each challenge its own flat .my-box, like a glossary term */
+.season-challenges ul {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
 }
 
-.season-panels li + li {
-  border-top: 2px solid var(--season-line);
+.season-challenges li {
+  padding: 0.4em 0.75em;
+  border: var(--border-thin);
+  border-radius: 12px;
+  background-color: var(--color-bg-secondary);
 }
 
 .season-chip {
@@ -585,25 +614,26 @@
   font-size: 0.9em;
 }
 
+/* one row per challenge, its bar on the right, so the Pass fits unscrolled */
 .season-challenge {
   display: flex;
-  flex-direction: column;
-  gap: 0.3em;
+  align-items: center;
+  gap: 1.2em;
 }
 
 .season-challenge-top {
   display: flex;
+  flex: 1;
   align-items: center;
   gap: 0.6em;
+  min-width: 0;
 }
 
 .season-challenge-period {
   flex-shrink: 0;
   min-width: 4.5em;
   color: var(--color-fg-secondary);
-  font-size: 0.7em;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  font-size: 0.9em;
 }
 
 .season-challenge-label {
@@ -620,6 +650,7 @@
 
 .season-challenge-progress {
   display: flex;
+  flex: 0 0 11em;
   align-items: center;
   gap: 0.6em;
 }
@@ -627,7 +658,7 @@
 .season-challenge-progress > span {
   min-width: 2.5em;
   text-align: right;
-  font-size: 0.8em;
+  font-size: 0.9em;
   color: var(--color-fg-secondary);
 }
 
@@ -648,6 +679,12 @@
   display: flex;
   flex-direction: column;
   gap: 0.5em;
+}
+
+/* the items sit in the middle of the space above the shop link */
+.season-poke .season-inventory {
+  flex: 1;
+  align-items: center;
 }
 
 .season-shop-row {
@@ -674,63 +711,64 @@
   flex: 1;
 }
 
+/* the same tabs as the lobby's react-tabs (style/react-tabs.css) */
 .season-tabs {
   display: flex;
   flex-wrap: wrap;
-  gap: 4px;
-  padding: 0.5em 0.25em 0;
-  border-bottom: 2px solid var(--season-line);
+  padding: 0.9em 0 0;
+  border-bottom: 1px solid #aaa;
 }
 
 .season-tab {
+  position: relative;
   display: inline-flex;
   align-items: center;
   gap: 0.5em;
-  margin-bottom: -2px;
-  padding: 0.45em 1.2em;
-  border: 2px solid var(--season-line);
-  border-radius: 4px 4px 0 0;
-  background-color: var(--season-surface-deep);
-  color: var(--color-fg-secondary);
+  margin: 0 2px;
+  padding: 6px 12px;
+  border: 1px solid transparent;
+  border-bottom: none;
+  border-radius: 12px 12px 0 0;
+  background-color: var(--color-bg-tertiary);
+  color: var(--color-fg-primary);
+  text-shadow: 2px 2px 2px #00000040;
   font: inherit;
-  font-size: 1.05em;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  font-size: 1.2rem;
+  font-weight: 600;
   cursor: var(--cursor-hover);
 }
 
-.season-tab:not(.active):hover {
-  color: var(--color-fg-primary);
+.season-tab.active {
+  border-color: #aaa;
+  background-color: var(--color-bg-primary);
 }
 
-.season-tab.active {
-  padding-bottom: calc(0.45em + 2px);
-  border-bottom: none;
-  background-color: var(--season-surface);
-  color: var(--color-fg-primary);
+.season-tab.active::after {
+  content: "";
+  position: absolute;
+  left: -1px;
+  right: -1px;
+  bottom: -3px;
+  height: 3px;
+  background: #fff;
 }
 
 .season-tab > img {
   object-fit: contain;
 }
 
-.season-tab-portrait {
-  border: 2px solid #08060b;
-  border-radius: 3px;
-}
-
 .season-shop {
   display: flex;
   align-items: center;
-  gap: 1em;
-  padding: 1.4em 0.8em;
+  gap: 1.4em;
+  padding: 1.4em 1.6em;
 }
 
 .season-shop-offers {
   display: grid;
   flex: 1;
   grid-template-columns: repeat(auto-fit, minmax(132px, 1fr));
-  gap: 0.8em;
+  gap: 0.5em;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -744,29 +782,29 @@
   gap: 0.35em;
   width: 100%;
   padding: 0.6em 0.4em 0.5em;
-  border: 2px solid var(--season-line);
-  border-radius: 3px;
-  background-color: var(--season-surface-deep);
-  box-shadow:
-    inset 0 0 0 2px var(--season-surface-deep),
-    inset 0 0 0 4px var(--season-line);
+  border: var(--border-thin);
+  border-radius: 12px;
+  background-color: var(--season-surface);
+  box-shadow: var(--shadow-clickable);
   color: var(--color-fg-primary);
   font: inherit;
   cursor: var(--cursor-hover);
-  transition: transform 150ms ease-out;
 }
 
 .season-shop-offer:not([disabled]):hover {
-  transform: translateY(-3px);
+  background-color: var(--color-bg-accent);
 }
 
+.season-shop-offer.confirming {
+  background-color: var(--color-bg-primary);
+}
+
+/* not buyable: flat like a static box, and greyed out */
 .season-shop-offer[disabled] {
+  box-shadow: none;
+  filter: grayscale(1);
+  opacity: 0.6;
   cursor: default;
-}
-
-.season-shop-offer[disabled] .season-shop-offer-art,
-.season-shop-offer[disabled] .season-shop-price {
-  opacity: 0.45;
 }
 
 .season-shop-offer-art {
@@ -783,7 +821,6 @@
 }
 
 .season-shop-offer-name {
-  font-size: 0.8em;
   text-align: center;
 }
 
@@ -791,19 +828,8 @@
   display: inline-flex;
   align-items: center;
   gap: 0.25em;
+  font-size: 1.1em;
   font-weight: 600;
-}
-
-.season-shop-offer.confirming {
-  background-color: color-mix(
-    in srgb,
-    var(--color-fg-primary) 7%,
-    var(--season-surface-deep)
-  );
-}
-
-.season-shop-offer.confirming .season-shop-price {
-  color: var(--season-accent);
 }
 
 .season-shop-offer.owned .season-shop-price {
@@ -823,7 +849,7 @@
   height: 20px;
   box-sizing: border-box;
   padding: 0 4px;
-  border: 2px solid #08060b;
+  border: var(--border-thin);
   border-radius: 10px;
   background-color: var(--season-progress);
   color: var(--season-progress-ink);
@@ -837,9 +863,10 @@
   align-items: center;
   gap: 0.9em;
   align-self: stretch;
-  justify-content: flex-start;
+  /* centred on the offers beside it, not hanging at the top */
+  justify-content: center;
   min-width: 132px;
-  padding: 1.4em 0.6em 0 1.4em;
+  padding: 0 0 0 1.4em;
   border-left: 2px solid var(--season-line);
 }
 
@@ -872,7 +899,7 @@
   min-width: 6em;
   padding: 0.3em 1em 0.4em;
   border: var(--border-thin);
-  border-radius: 10px;
+  border-radius: 12px;
   background: var(--theme-button, var(--season-accent));
   box-shadow:
     inset -4px -4px 0 #00000040,
@@ -885,6 +912,12 @@
 
 .season-shop-open:not([disabled]):hover {
   background: var(--theme-button-hover, var(--season-accent));
+}
+
+/* without a theme there is no hover colour, so it brightens like a bubbly */
+:root:not([data-themed-buttons])
+  :is(.season-shop-open, .season-croagunk-button):not([disabled]):hover {
+  filter: brightness(1.1);
 }
 
 .season-shop-open[disabled] {
@@ -907,6 +940,16 @@
   visibility: hidden;
 }
 
+/* the New Game green, or the theme's button colour like New Game */
+.season-shop-open.set-avatar {
+  background: var(--theme-button, #92cc41);
+  color: var(--theme-button-text, #ffffff);
+}
+
+.season-shop-open.set-avatar:not([disabled]):hover {
+  background: var(--theme-button-hover, #76c442);
+}
+
 /* already the avatar: the button keeps its theme's own bands, stripes and
    bevel, only greyed out */
 .season-shop-open.is-current-avatar {
@@ -914,39 +957,25 @@
   opacity: 0.6;
 }
 
-.season-shop-back {
+/* a plain bubbly button, like the track arrows, the same size as Open
+   above it: its 6em width and one line of text plus padding */
+.bubbly.season-shop-back {
   display: grid;
   place-content: center;
-  width: 32px;
-  height: 32px;
-  padding: 0;
-  border: 2px solid var(--season-line);
-  border-radius: 50%;
-  background-color: var(--season-surface-deep);
-  cursor: var(--cursor-hover);
-  transition: translate 120ms ease-out;
+  box-sizing: border-box;
+  width: 6em;
+  height: calc(2.15em + 4px);
+  padding: 0 3px 3px 0;
+  font-size: 1em;
 }
 
+/* the same bubbly button as Wonder Pick, since it starts the next one */
 .season-wonder-next {
   position: relative;
+  display: grid;
+  place-content: center;
   flex-shrink: 0;
-  width: 44px;
-  height: 44px;
   animation: season-wonder-emote-in 300ms ease-out 1200ms both;
-}
-
-.season-shop-back:hover {
-  background-color: var(--season-cell);
-  translate: -2px 0;
-}
-
-.season-wonder-next:hover {
-  translate: 2px 0;
-}
-
-.season-shop-back > img {
-  width: 16px;
-  height: 16px;
 }
 
 .season-booster-reveal {
@@ -1003,7 +1032,7 @@
   width: 100%;
   height: 100%;
   box-sizing: border-box;
-  border: 3px solid #08060b;
+  border: var(--border-thin);
   border-radius: 10px;
   object-fit: cover;
 }
@@ -1161,8 +1190,8 @@
 
 .season-booster-shiny-emotes img {
   display: block;
-  border: 2px solid #08060b;
-  border-radius: 4px;
+  border: var(--border-thin);
+  border-radius: 8px;
   image-rendering: pixelated;
 }
 
@@ -1190,13 +1219,16 @@
   height: 56px;
   padding: 0;
   box-sizing: border-box;
-  border: 2px solid var(--season-line);
-  border-radius: 3px;
-  background-color: var(--season-surface-deep);
 }
 
 .season-inventory img {
   object-fit: contain;
+}
+
+/* nothing left of it: greyed out like any empty slot */
+.season-panels .season-inventory > li.empty {
+  filter: grayscale(1);
+  opacity: 0.6;
 }
 
 .season-level-rewards {
@@ -1230,33 +1262,38 @@
 }
 
 /* Croagunk Swap and Pelipper Post: the title in the same spot as the Pass
-   tab's (its 2em side padding, centred in a banner about 230px tall), the
-   deal or letter box on the right. On narrow screens, where the title would
-   cover the box, they sit side by side instead */
+   tab's (its 2em side padding, centred on the banner's middle), the deal or
+   letter box on the right. On narrow screens, where the title would cover
+   the box, they sit side by side instead */
 .season-croagunk,
 .season-pelipper {
   position: relative;
   display: flex;
+  flex: 1;
   flex-wrap: wrap;
-  align-items: center;
+  align-items: flex-start;
   justify-content: flex-end;
   gap: 2.5em;
-  padding: 1.8em 8% 1.8em 2em;
+  /* fills the panel from its top, so the title's offset is the banner's;
+     the box starts level with the top of the title beside it */
+  padding: calc(var(--season-hero-height) / 2 - 53px) 8% 2em 2em;
   text-shadow: 1px 1px 2px #000000;
 }
 
 .season-croagunk-title,
 .season-pelipper-title {
   position: absolute;
-  top: 4em;
+  top: calc(var(--season-hero-height) / 2);
   left: 2em;
+  translate: 0 -50%;
 }
 
 @media (max-width: 1200px) {
   .season-croagunk,
   .season-pelipper {
+    align-items: center;
     justify-content: center;
-    padding-right: 2em;
+    padding: 1.8em 2em;
   }
 
   .season-croagunk-title,
@@ -1264,6 +1301,7 @@
     position: static;
     flex: 0 1 auto;
     min-width: 240px;
+    translate: none;
   }
 }
 
@@ -1274,13 +1312,17 @@
   gap: 0.6em;
   width: 240px;
   padding: 1.2em 1.6em;
-  border: 2px solid var(--season-line);
-  border-radius: 3px;
+  border: var(--border-thin);
+  border-radius: 12px;
   background-color: var(--season-surface-deep);
-  box-shadow:
-    inset 0 0 0 2px var(--season-surface-deep),
-    inset 0 0 0 4px var(--season-line);
   text-shadow: none;
+}
+
+/* a used deal looks spent until the next one, like a claimed step */
+.season-croagunk-deal.swapped
+  :is(.season-croagunk-offer, .season-croagunk-name, .season-croagunk-price) {
+  filter: grayscale(1);
+  opacity: 0.6;
 }
 
 .season-croagunk-offer {
@@ -1300,7 +1342,7 @@
   right: -4px;
   bottom: -2px;
   padding: 0 4px;
-  border: 2px solid #08060b;
+  border: var(--border-thin);
   border-radius: 8px;
   background-color: var(--season-progress);
   color: var(--season-progress-ink);
@@ -1324,7 +1366,7 @@
   min-width: 6em;
   padding: 0.3em 1em 0.4em;
   border: var(--border-thin);
-  border-radius: 10px;
+  border-radius: 12px;
   background: var(--theme-button, var(--season-accent));
   box-shadow:
     inset -4px -4px 0 #00000040,
@@ -1350,10 +1392,22 @@
   text-align: center;
 }
 
-.season-croagunk-line {
-  font-size: 0.85em;
+/* always two lines tall: a message that wraps onto a second line must not
+   grow the box and shake the page below it */
+.season-croagunk-line,
+.season-pelipper-line {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  height: calc(2 * 1.3em);
+  line-height: 1.3;
   font-style: italic;
   text-align: center;
+}
+
+.season-croagunk-line {
+  font-size: 0.85em;
 }
 
 .season-croagunk-dish > img {
@@ -1362,7 +1416,7 @@
 
 /* gone in three bites: steps instead of a smooth fade reads as chewing */
 .season-croagunk-dish.eaten > img {
-  animation: season-croagunk-eat 700ms steps(3, end) both;
+  animation: season-croagunk-eat 1300ms steps(3, end) both;
 }
 
 @keyframes season-croagunk-eat {
@@ -1404,8 +1458,8 @@
   margin: 0;
   padding: 10px;
   box-sizing: border-box;
-  border: 2px solid var(--season-line);
-  border-radius: 4px;
+  border: var(--border-thin);
+  border-radius: 12px;
   background-color: var(--season-channel);
   list-style: none;
   animation: season-croagunk-reactions-in 200ms ease-out both;
@@ -1414,8 +1468,8 @@
 .season-croagunk-reactions button {
   display: block;
   padding: 0;
-  border: 2px solid #08060b;
-  border-radius: 4px;
+  border: var(--border-thin);
+  border-radius: 8px;
   background: none;
   cursor: var(--cursor-hover);
   transition:
@@ -1433,6 +1487,12 @@
 .season-croagunk-reactions button[disabled] {
   cursor: default;
   opacity: 0.6;
+}
+
+/* a face the avatar has already made: greyed out, like the game's disabled
+   buttons */
+.season-croagunk-reactions button.made > img {
+  filter: grayscale(1);
 }
 
 .season-croagunk-reactions img {
@@ -1458,35 +1518,35 @@
 }
 
 .season-pelipper-line {
+  grid-area: line;
   font-size: 0.9em;
-  font-style: italic;
-  text-align: center;
 }
 
-/* line, card and a fixed-height details area: the same height in every
-   state, so the centred letter never moves anything between the invitation
-   and the arrival */
+/* line on top, then the card beside a fixed-height details area: the same
+   height in every state, so nothing moves between the invitation and the
+   arrival. Side by side, the letter stays under Chimecho's height, which
+   every banner tab shares */
 .season-pelipper-letter {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-areas:
+    "line line"
+    "card details";
   align-items: center;
-  justify-content: center;
-  gap: 0.8em;
-  width: min(460px, 100%);
+  justify-items: center;
+  gap: 0.8em 1.4em;
+  width: min(600px, 100%);
   padding: 1.2em 1.6em;
   box-sizing: border-box;
-  border: 2px solid var(--season-line);
-  border-radius: 3px;
+  border: var(--border-thin);
+  border-radius: 12px;
   background-color: var(--season-surface-deep);
-  box-shadow:
-    inset 0 0 0 2px var(--season-surface-deep),
-    inset 0 0 0 4px var(--season-line);
   text-shadow: none;
 }
 
 .season-pelipper-card {
   display: block;
-  flex: none;
+  grid-area: card;
   width: 150px;
 }
 
@@ -1520,6 +1580,7 @@
 
 /* sized for the tallest content, three rows of photos and their button */
 .season-pelipper-details {
+  grid-area: details;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1576,7 +1637,7 @@
   width: 100%;
   height: 100%;
   box-sizing: border-box;
-  border: 2px solid #08060b;
+  border: var(--border-thin);
   border-radius: 8px;
   backface-visibility: hidden;
 }
@@ -1755,7 +1816,7 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 0.9em;
+  gap: 0.5em;
 }
 
 .season-wonder-modes {
@@ -1765,27 +1826,9 @@
   padding: 1.1em 0 0.2em;
 }
 
+/* under the tabs in the hierarchy: smaller than them */
 .season-wonder-mode {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5em;
-  padding: 0.35em 1em;
-  border: 2px solid var(--season-line);
-  border-radius: 4px;
-  background-color: var(--season-surface-deep);
-  color: var(--color-fg-secondary);
-  font: inherit;
-  cursor: var(--cursor-hover);
-}
-
-.season-wonder-mode:not(.active):hover {
-  background-color: var(--season-surface);
-  color: var(--color-fg-primary);
-}
-
-.season-wonder-mode.active {
-  border-color: var(--season-accent-edge);
-  color: var(--color-fg-primary);
+  font-size: 0.95em;
 }
 
 .season-wonder-status {
@@ -1815,7 +1858,7 @@
   width: 20px;
   height: 28px;
   box-sizing: border-box;
-  border: 2px solid #08060b;
+  border: var(--border-thin);
   border-radius: 3px;
   object-fit: cover;
   opacity: 0.28;
@@ -1999,7 +2042,7 @@
   min-width: 20px;
   height: 20px;
   box-sizing: border-box;
-  border: 2px solid #08060b;
+  border: var(--border-thin);
   border-radius: 10px;
   background-color: #c6a6f5;
   color: var(--wonder-ink);
@@ -2007,11 +2050,13 @@
   font-weight: 700;
 }
 
+/* the same size as the casual Wonder Pick button (.season-shop-open) */
 .season-wonder-pick-button {
   position: relative;
-  padding: 0.35em 1.4em 0.5em;
+  min-width: 6em;
+  padding: 0.3em 1em 0.4em;
   border: var(--border-thin);
-  border-radius: 14px;
+  border-radius: 12px;
   background-color: var(--wonder-card-color);
   /* the shiny card palette (SPECIAL_CARD_PALETTES.shiny) */
   background-image: repeating-linear-gradient(
@@ -2023,20 +2068,14 @@
     #9ecbff 40px 50px
   );
   box-shadow:
-    inset -6px -6px 0 #0000002e,
+    inset -4px -4px 0 #0000002e,
     var(--shadow-clickable);
   color: var(--wonder-ink);
   font: inherit;
-  font-size: 1.25em;
+  font-size: 1.15em;
   font-weight: 700;
-  letter-spacing: 0.03em;
   cursor: var(--cursor-hover);
   transition: transform 120ms ease-out;
-}
-
-.season-wonder-pick-button > .season-shop-owned-count {
-  top: -8px;
-  right: -8px;
 }
 
 .season-wonder-pick-button[disabled] {
@@ -2045,13 +2084,13 @@
 }
 
 .season-wonder-pick-button:not([disabled]):hover {
-  transform: translateY(-2px);
+  filter: brightness(1.1);
 }
 
 .season-wonder-pick-button:not([disabled]):active {
   transform: translateY(0);
   box-shadow:
-    inset 6px 6px 0 #00000040,
+    inset 4px 4px 0 #00000040,
     var(--shadow-clickable);
 }
 
@@ -2080,8 +2119,8 @@
 
 .season-wonder-emotes img {
   display: block;
-  border: 2px solid #08060b;
-  border-radius: 4px;
+  border: var(--border-thin);
+  border-radius: 8px;
   image-rendering: pixelated;
 }
 
@@ -2114,55 +2153,31 @@
   padding-bottom: 6px;
 }
 
-/* bubbly like the game's selects and inputs (custom-inputs.css): theme fill,
-   thin border and a bevel that presses in on click or while toggled on */
-.season-collection-favorite,
-.season-collection-reset,
-.season-collection-views,
-.season-collection-reset-all {
-  border: var(--border-thin);
-  background-color: var(--color-bg-secondary);
-  box-shadow:
-    inset -4px -4px 0 #00000030,
-    var(--shadow-clickable);
-}
-
-/* the hover colour of .bubbly (buttons.css) */
-.season-collection-favorite:not([disabled]):hover,
-.season-collection-reset:not([disabled]):hover,
-.season-collection-views:hover,
-.season-collection-reset-all:not([disabled]):hover {
-  background-color: var(--color-bg-primary);
-}
-
-.season-collection-favorite:not([disabled]):active,
-.season-collection-reset:not([disabled]):active,
-.season-collection-views:active,
-.season-collection-views.active,
-.season-collection-reset-all:not([disabled]):active {
-  box-shadow:
-    inset 4px 4px 0 #00000030,
-    var(--shadow-clickable);
-}
-
-.season-collection-favorite {
+/* plain bubbly buttons, only sized here: the bevel, hover and press come
+   from .bubbly, and the views toggle turns blue while on */
+.bubbly:is(
+    .season-collection-favorite,
+    .season-collection-reset,
+    .season-collection-views
+  ) {
   display: grid;
   place-content: center;
   width: 40px;
   height: 40px;
-  padding: 0;
-  border-radius: 50%;
-  cursor: var(--cursor-hover);
+  padding: 0 3px 3px 0;
+  font-size: 1em;
 }
 
-.season-collection-favorite > img {
-  filter: grayscale(1);
-  opacity: 0.5;
+.season-favorite-icon {
+  display: block;
+  width: 20px;
+  height: 20px;
+  background-color: var(--color-fg-secondary);
+  mask: url("assets/ui/favorite.svg") center / contain no-repeat;
 }
 
-.season-collection-favorite.active > img {
-  filter: none;
-  opacity: 1;
+.season-collection-favorite.active > .season-favorite-icon {
+  background-color: var(--color-fg-red);
   animation: season-favorite-pop 180ms ease-out;
 }
 
@@ -2192,12 +2207,12 @@
   min-width: 28px;
   height: 28px;
   padding: 0 0.5em;
-  border: 2px solid var(--season-line);
-  border-radius: 3px;
+  border: var(--border-thin);
+  border-radius: 8px;
   background-color: var(--season-surface-deep);
   color: var(--color-fg-secondary);
   font: inherit;
-  font-size: 0.85em;
+  font-size: 0.9em;
   cursor: var(--cursor-hover);
 }
 
@@ -2205,23 +2220,16 @@
   opacity: 0.55;
 }
 
+/* like the wiki's synergy filter: the selected one a lighter fill, hover
+   the accent, nothing grows */
 .season-collection-synergies > button.active {
-  background-color: var(--season-surface);
-  border-color: var(--season-accent);
+  background-color: var(--color-bg-primary);
   color: var(--color-fg-primary);
 }
 
-.season-collection-synergies > button {
-  transition:
-    scale 120ms ease-out,
-    border-color 120ms ease-out;
-}
-
 .season-collection-synergies > button:hover {
-  position: relative;
-  z-index: 1;
-  scale: 1.15;
-  border-color: var(--season-accent);
+  background-color: var(--color-bg-accent);
+  color: var(--color-fg-primary);
 }
 
 .season-collection-synergies > button:hover > * {
@@ -2550,50 +2558,17 @@
 }
 
 .menu-item.season-nav a.ps-menu-button:hover {
-  background: color-mix(in srgb, var(--color-bg-accent) 82%, #ffffff);
+  background: var(--color-fg-accent);
 }
 
-.season-collection-reset-all {
+.bubbly.season-collection-reset-all {
   display: inline-flex;
   align-items: center;
   gap: 0.4em;
-  height: 34px;
-  padding: 0 0.6em;
-  border-radius: 17px;
-  color: var(--season-accent);
-  font: inherit;
+  height: 40px;
+  padding: 0 calc(0.6em + 3px) 3px 0.6em;
+  font-size: 1em;
   font-weight: 700;
-  cursor: var(--cursor-hover);
-}
-
-.season-collection-reset-all[disabled] {
-  filter: grayscale(1);
-  opacity: 0.6;
-  cursor: default;
-}
-
-.season-collection-views {
-  display: grid;
-  place-content: center;
-  width: 34px;
-  height: 34px;
-  padding: 0;
-  border-radius: 50%;
-  cursor: var(--cursor-hover);
-}
-
-.season-collection-views > img {
-  filter: grayscale(1);
-  opacity: 0.55;
-}
-
-.season-collection-views:not(.active):hover > img {
-  opacity: 0.8;
-}
-
-.season-collection-views.active > img {
-  filter: none;
-  opacity: 1;
 }
 
 .season-booster-card.missing .season-booster-card-front {
@@ -2617,11 +2592,8 @@
 
 .season-collection-modal.modal {
   border: var(--border-thin);
-  border-radius: 4px;
+  border-radius: 12px;
   background-color: var(--season-surface);
-  box-shadow:
-    inset 0 0 0 3px var(--season-surface),
-    inset 0 0 0 5px var(--season-line);
   color: var(--color-fg-primary);
 }
 
@@ -2670,26 +2642,11 @@
 .season-collection-detail-header > h2 {
   flex: 1;
   margin: 0;
-  font-size: 1.6em;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
+  font-size: 1.5em;
 }
 
-.season-collection-reset {
-  display: grid;
-  place-content: center;
-  width: 40px;
-  height: 40px;
+.bubbly.season-collection-reset {
   margin-right: auto;
-  padding: 0;
-  border-radius: 50%;
-  cursor: var(--cursor-hover);
-}
-
-.season-collection-reset[disabled] {
-  filter: grayscale(1);
-  opacity: 0.6;
-  cursor: default;
 }
 
 .season-collection-detail-side > .season-collection-progress {
@@ -2709,8 +2666,8 @@
   display: block;
   width: 100%;
   padding: 0;
-  border: 2px solid #08060b;
-  border-radius: 4px;
+  border: var(--border-thin);
+  border-radius: 8px;
   background: none;
   cursor: default;
 }
@@ -2719,8 +2676,15 @@
   cursor: var(--cursor-hover);
 }
 
-.season-collection-emotions button.selected {
-  border-color: var(--season-accent);
+/* a portrait fills its button, so there is no fill to change: hover is the
+   accent border, the chosen one a white border */
+:is(.season-collection-emotions, .season-collection-forms)
+  button:not([disabled]):hover {
+  border-color: var(--color-bg-accent);
+}
+
+:is(.season-collection-emotions, .season-collection-forms) button.selected {
+  border-color: var(--color-fg-primary);
 }
 
 .season-collection-emotions button:not(.owned) > img {
@@ -2746,14 +2710,10 @@
 .season-collection-forms button {
   display: block;
   padding: 0;
-  border: 2px solid #08060b;
-  border-radius: 4px;
+  border: var(--border-thin);
+  border-radius: 8px;
   background: none;
   cursor: var(--cursor-hover);
-}
-
-.season-collection-forms button.selected {
-  border-color: var(--season-accent);
 }
 
 .season-collection-forms button:not(.owned) > img {
@@ -2775,7 +2735,7 @@
   position: absolute;
   inset: 0;
   z-index: -1;
-  border: 2px solid #08060b;
+  border: var(--border-thin);
   border-radius: 8px;
   background-color: var(--booster-card-color);
   translate: 5px -5px;
@@ -2783,10 +2743,7 @@
 
 .season-collection-subheading {
   margin: 0.2em 0 0;
-  color: var(--color-fg-secondary);
-  font-size: 0.85em;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  font-size: 1.1em;
 }
 
 .season-collection-detail-actions {
@@ -2814,13 +2771,21 @@
     height: 122px;
   }
 
-  .season-hero-art-face > img {
+  .season-hero-art > img {
     width: 68px;
     height: 68px;
   }
 }
 
 @media (width < 600px) {
+  .season-pelipper-letter {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "line"
+      "card"
+      "details";
+  }
+
   .season-modal .modal-body {
     padding: 0.4em;
   }
@@ -2845,14 +2810,9 @@
   .season-hero-art {
     width: 110px;
     height: 96px;
-    padding: 4px;
   }
 
-  .season-hero-art-ring {
-    padding: 4px;
-  }
-
-  .season-hero-art-face > img {
+  .season-hero-art > img {
     width: 52px;
     height: 52px;
   }
@@ -2885,7 +2845,7 @@
 
   .season-tab {
     padding-inline: 0.5em;
-    font-size: 0.8em;
+    font-size: 14px;
   }
 }
 
@@ -2913,7 +2873,7 @@
   .season-booster-reveal .season-booster-card:is(.shiny, .holo).flipped,
   .season-theme-reveal,
   .season-theme-reveal-footer,
-  .season-collection-favorite.active > img,
+  .season-collection-favorite.active > .season-favorite-icon,
   .season-booster-shiny-emotes > li,
   .season-wonder-next,
   .season-wonder-emotes > li {

@@ -17,7 +17,8 @@ import type { SeasonState } from "./season-view"
 
 const MS_PER_HOUR = 3_600_000
 const MS_PER_MINUTE = 60_000
-const DISH_EATEN_MS = 700
+// matches the three bites in season.css; "Nom nom nom..." shows meanwhile
+const DISH_EATEN_MS = 1300
 const CROAGUNK_EMOTIONS = getAvailableEmotions(PkmIndex[Pkm.CROAGUNK], false)
 
 const ITEM_ART: Record<
@@ -38,10 +39,6 @@ function formatTimeLeft(msLeft: number) {
   return `${minutes}m`
 }
 
-function prefersReducedMotion() {
-  return window.matchMedia("(prefers-reduced-motion: reduce)").matches
-}
-
 // the emotes the player's current avatar does not own yet
 function getAvatarReactions(profile: IUserMetadataUnpacked | undefined) {
   if (!profile) return null
@@ -60,7 +57,8 @@ function getAvatarReactions(profile: IUserMetadataUnpacked | undefined) {
   const shinyMissing = avatar.shiny ? getMissing(true) : []
   const shiny = shinyMissing.length > 0
   const missing = shiny ? shinyMissing : getMissing(false)
-  return { index, shiny, missing }
+  const available = getAvailableEmotions(index, shiny)
+  return { index, shiny, missing, available }
 }
 
 export default function SeasonCroagunk(props: {
@@ -106,7 +104,7 @@ export default function SeasonCroagunk(props: {
     if (dishPhase !== "eating") return
     const timeout = setTimeout(
       () => setDishPhase("reacting"),
-      prefersReducedMotion() ? 0 : DISH_EATEN_MS
+      DISH_EATEN_MS
     )
     return () => clearTimeout(timeout)
   }, [dishPhase])
@@ -130,7 +128,7 @@ export default function SeasonCroagunk(props: {
   // the portraits load while the dish is eaten, so the reactions appear whole
   function startEatingDish() {
     if (reactions) {
-      for (const emotion of reactions.missing) {
+      for (const emotion of reactions.available) {
         new Image().src = getPortraitSrc(
           reactions.index,
           reactions.shiny,
@@ -165,17 +163,30 @@ export default function SeasonCroagunk(props: {
         <span className="season-croagunk-line">
           {isPurchased
             ? "Meh-heh-heh! Pleasure doing business."
-            : isReacting
-              ? "How do you react?"
-              : "Spinda left this. Want to swap?"}
+            : dishPhase === "eating"
+              ? "Nom nom nom..."
+              : !isReacting
+                ? "Spinda left this. Want to swap?"
+                : canReact
+                  ? "How do you react?"
+                  : "Meh-heh-heh... You've made every face there is. " +
+                    "Come back as someone else!"}
         </span>
         <div className="season-croagunk-details">
           {isReacting ? (
+            // every face of the avatar: the ones still to make react, the ones
+            // already made are greyed out. With none left, nothing is charged
+            // and switching avatar opens new faces in place
             <ul className="season-croagunk-reactions">
-              {reactions.missing.map((emotion) => (
+              {reactions.available.map((emotion) => (
                 <li key={emotion}>
                   <button
-                    disabled={isWaiting}
+                    className={cc({
+                      made: !reactions.missing.includes(emotion)
+                    })}
+                    disabled={
+                      isWaiting || !reactions.missing.includes(emotion)
+                    }
                     title={emotion}
                     onClick={() => buy(emotion)}
                   >
@@ -226,18 +237,9 @@ export default function SeasonCroagunk(props: {
                   disabled={
                     // stays while the dish is eaten, so the box keeps its
                     // height
-                    isWaiting ||
-                    !canAfford ||
-                    !canReact ||
-                    dishPhase !== "offered"
+                    isWaiting || !canAfford || dishPhase !== "offered"
                   }
-                  title={
-                    !canReact
-                      ? "Your avatar already has every emote"
-                      : canAfford
-                        ? undefined
-                        : "Not enough Tickets"
-                  }
+                  title={canAfford ? undefined : "Not enough Tickets"}
                   onClick={startEatingDish}
                 >
                   Trade
@@ -271,7 +273,8 @@ export default function SeasonCroagunk(props: {
       </div>
       <div
         className={cc("season-croagunk-deal", {
-          "dish-deal": isDishOffer && !isExpired
+          "dish-deal": isDishOffer && !isExpired,
+          swapped: isPurchased && !isExpired
         })}
       >
         {offer && isDishOffer && !isExpired ? (

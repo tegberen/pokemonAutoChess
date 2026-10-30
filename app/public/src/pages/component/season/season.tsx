@@ -49,6 +49,12 @@ const REWARD_ICONS: Record<SeasonRewardKind, string> = {
   poke: "assets/icons/season_poke.svg",
   ticket: "assets/icons/season_ticket.svg"
 }
+// a rounded hexagon, drawn with a real stroke so its border is even all
+// around
+const HERO_HEXAGON_PATH =
+  "M34 0L66 0Q75 0 79.5 7.79L95.5 35.51Q100 43.3 95.5 51.09L79.5 78.81" +
+  "Q75 86.6 66 86.6L34 86.6Q25 86.6 20.5 78.81L4.5 51.09Q0 43.3 4.5 35.51" +
+  "L20.5 7.79Q25 0 34 0Z"
 const POKE_ICON = REWARD_ICONS.poke
 const TICKET_ICON = REWARD_ICONS.ticket
 const MS_PER_MINUTE = 60_000
@@ -138,6 +144,8 @@ function SeasonGuild(props: {
     return emotions[Math.floor(Math.random() * emotions.length)]
   })
   const lastStepIndex = season.steps.length
+  const nextShinyPickInfo =
+    `Next Shiny Wonder Pick at level ${season.nextShinyPickLevel}`
   const currentStepIndex = Math.min(season.stepsReached, lastStepIndex)
   // tomorrow's step anchors the hero: what the next login brings
   const nextStepIndex = season.stepsReached + 1
@@ -371,16 +379,23 @@ function SeasonGuild(props: {
               </div>
 
               <div className={cc("season-hero-art", selectedStepStatus)}>
-                <div className="season-hero-art-ring">
-                  <div className="season-hero-art-face">
-                    <img
-                      src={REWARD_ICONS[selectedStep.reward.kind]}
-                      width={112}
-                      height={112}
-                      alt=""
-                    />
-                  </div>
-                </div>
+                <svg
+                  className="season-hero-art-shape"
+                  viewBox="-2 -2 104 90.6"
+                  preserveAspectRatio="none"
+                  aria-hidden
+                >
+                  <path
+                    d={HERO_HEXAGON_PATH}
+                    vectorEffect="non-scaling-stroke"
+                  />
+                </svg>
+                <img
+                  src={REWARD_ICONS[selectedStep.reward.kind]}
+                  width={112}
+                  height={112}
+                  alt=""
+                />
               </div>
 
               <div className="season-hero-reward">
@@ -402,33 +417,28 @@ function SeasonGuild(props: {
                 </div>
               </div>
             </div>
-            <div className="season-track-box">
+            <div
+              className={cc("season-track-box", {
+                "more-left": trackOverflow.left,
+                "more-right": trackOverflow.right
+              })}
+            >
               {trackOverflow.left && (
                 <button
-                  className="season-track-arrow left"
+                  className="bubbly blue season-track-arrow left"
                   onClick={() => scrollTrack(-1)}
                   aria-label="Previous steps"
                 >
-                  <img
-                    src="assets/ui/arrow-left.svg"
-                    width={20}
-                    height={20}
-                    alt=""
-                  />
+                  <span className="season-arrow-icon left" />
                 </button>
               )}
               {trackOverflow.right && (
                 <button
-                  className="season-track-arrow right"
+                  className="bubbly blue season-track-arrow right"
                   onClick={() => scrollTrack(1)}
                   aria-label="Next steps"
                 >
-                  <img
-                    src="assets/ui/arrow-right.svg"
-                    width={20}
-                    height={20}
-                    alt=""
-                  />
+                  <span className="season-arrow-icon right" />
                 </button>
               )}
               <ol
@@ -457,7 +467,7 @@ function SeasonGuild(props: {
                 ))}
                 <li
                   className={cc(
-                    "season-step milestone season-step-gift",
+                    "season-step",
                     wonderPickGiftStatus,
                     { reached: isLastStepReached }
                   )}
@@ -482,7 +492,9 @@ function SeasonGuild(props: {
                       <img src="assets/ui/exclamationmark.svg" alt="" />
                     </span>
                   ) : (
-                    <span className="season-step-node">{lastStepIndex}</span>
+                    // reached together with the last step, so it shares no
+                    // number with it
+                    <span className="season-step-node">★</span>
                   )}
                 </li>
                 <li
@@ -525,17 +537,19 @@ function SeasonGuild(props: {
               )}
             <div className="season-wonder-modes">
               <button
-                className={cc("season-wonder-mode", {
-                  active: wonderPickVariant === "casual"
-                })}
+                className={cc(
+                  "bubbly season-wonder-mode",
+                  wonderPickVariant === "casual" ? "blue" : ""
+                )}
                 onClick={() => setWonderPickVariant("casual")}
               >
                 Wonder Pick
               </button>
               <button
-                className={cc("season-wonder-mode", {
-                  active: wonderPickVariant === "shiny"
-                })}
+                className={cc(
+                  "bubbly season-wonder-mode",
+                  wonderPickVariant === "shiny" ? "blue" : ""
+                )}
                 onClick={() => setWonderPickVariant("shiny")}
               >
                 Shiny Wonder Pick
@@ -657,16 +671,14 @@ function SeasonGuild(props: {
 
       <div
         className={cc("season-panels", {
-          "season-panels-hidden":
-            trackTab === "wonder-pick" ||
-            trackTab === "shop" ||
-            trackTab === "pelipper"
+          "season-panels-hidden": trackTab !== "pass"
         })}
       >
         <section className="season-challenges season-frame">
           <h3 className="season-heading">
             Challenges
             <span className="season-muted">
+              <img src="assets/ui/clock.png" width={13} height={18} alt="" />
               Daily {formatTimeLeft(season.dailyResetsAt)}, weekly{" "}
               {formatTimeLeft(season.weeklyResetsAt)}
             </span>
@@ -681,17 +693,26 @@ function SeasonGuild(props: {
         <section className="season-poke season-frame">
           <h3 className="season-heading">Inventory</h3>
           <ul className="season-inventory">
-            <li title="Boosters">
+            <li
+              title="Boosters"
+              className={cc({ empty: season.boosterBalance === 0 })}
+            >
               <img src={REWARD_ICONS.booster} width={40} height={40} alt="" />
               <span className="season-shop-owned-count">
                 {season.boosterBalance}
               </span>
             </li>
-            <li title={`${pluralize(casualPicks, "Wonder Pick")} ready`}>
+            <li
+              title={`${pluralize(casualPicks, "Wonder Pick")} ready`}
+              className={cc({ empty: casualPicks === 0 })}
+            >
               <img src="assets/ui/pokecard.png" width={40} height={40} alt="" />
               <span className="season-shop-owned-count">{casualPicks}</span>
             </li>
-            <li title="Shiny Wonder Pick">
+            <li
+              title="Shiny Wonder Pick"
+              className={cc({ empty: season.extraWonderPicks === 0 })}
+            >
               <img
                 src="assets/ui/pokecard-prismatic.png"
                 width={40}
@@ -706,7 +727,14 @@ function SeasonGuild(props: {
           <div className="season-level-rewards">
             <div className="season-level-rewards-top">
               <span>Level {season.level}</span>
-              <em>Next Shiny Wonder Pick at {season.nextShinyPickLevel}</em>
+              <span
+                className="season-wonder-info"
+                tabIndex={0}
+                title={nextShinyPickInfo}
+                aria-label={nextShinyPickInfo}
+              >
+                <img src="assets/ui/help.svg" width={16} height={16} alt="" />
+              </span>
             </div>
             <div className="season-level-rewards-bar">
               <span
@@ -757,7 +785,6 @@ function SeasonStepTile(props: {
   return (
     <li
       className={cc("season-step", status, {
-        milestone: step.milestone,
         current: props.isCurrent,
         next: props.isNext,
         reached: props.isReached,

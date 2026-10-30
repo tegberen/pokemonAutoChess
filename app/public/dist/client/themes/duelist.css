@@ -29,7 +29,6 @@
     #3f7fb6 33.33% 66.66%,
     #2f9a9c 66.66% 100%
   );
-  --theme-progress: #2f9a9c;
   --theme-ready-hover: linear-gradient(
     135deg,
     #8c56d6 0 33.33%,

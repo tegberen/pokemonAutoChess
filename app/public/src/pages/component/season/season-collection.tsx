@@ -532,9 +532,10 @@ export default function SeasonCollection() {
           </button>
           <div className="season-collection-controls">
             <button
-              className={cc("season-collection-views", {
-                active: isCompactView
-              })}
+              className={cc(
+                "bubbly season-collection-views",
+                isCompactView ? "blue" : ""
+              )}
               title={isCompactView ? "Large cards" : "Small cards"}
               aria-pressed={isCompactView}
               onClick={() => setIsCompactView(!isCompactView)}
@@ -542,7 +543,7 @@ export default function SeasonCollection() {
               <img src="assets/ui/binder.svg" width={18} height={18} alt="" />
             </button>
             <button
-              className={cc("season-collection-reset-all", {
+              className={cc("bubbly season-collection-reset-all", {
                 confirming: isConfirmingResetAll
               })}
               title="Reset all to default portrait"
@@ -995,7 +996,7 @@ function SeasonCollectionModal(props: {
             )}
             <div className="season-collection-detail-actions">
               <button
-                className="season-collection-reset"
+                className="bubbly season-collection-reset"
                 title="Reset to default"
                 disabled={!props.chosenEmotion && !chosenSeasonPortraitId}
                 onClick={() => {
@@ -1011,17 +1012,17 @@ function SeasonCollectionModal(props: {
                 />
               </button>
               <button
-                className={cc("season-collection-favorite", {
+                className={cc("bubbly season-collection-favorite", {
                   active: props.isFavorite
                 })}
                 title="Favorite"
                 aria-pressed={props.isFavorite}
                 onClick={props.onToggleFavorite}
               >
-                <img src="assets/ui/heart.png" width={20} height={20} alt="" />
+                <span className="season-favorite-icon" />
               </button>
               <button
-                className={cc("season-shop-open", {
+                className={cc("season-shop-open set-avatar", {
                   "is-current-avatar": isCurrentAvatar
                 })}
                 disabled={

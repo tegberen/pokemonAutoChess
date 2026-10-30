@@ -27,7 +27,6 @@
   --theme-ready:
     var(--onsen-wood-grain),
     linear-gradient(180deg, #fff6d8 0 20%, #f1c04c 20% 58%, #b5741d 58% 100%);
-  --theme-progress: #f1c04c;
   --theme-ready-hover:
     var(--onsen-wood-grain),
     linear-gradient(180deg, #fffbea 0 20%, #f5cd67 20% 58%, #c4842a 58% 100%);
