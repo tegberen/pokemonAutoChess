@@ -159,95 +159,93 @@ export default function SeasonCroagunk(props: {
 
   function renderDishDeal() {
     if (!offer || !trade?.dish) return null
-    if (dishPhase === "reacting" && reactions && !isPurchased) {
-      return (
-        <>
-          <span className="season-croagunk-line">
-            How do you react?
-          </span>
-          <ul className="season-croagunk-reactions">
-            {reactions.missing.map((emotion) => (
-              <li key={emotion}>
-                <button
-                  disabled={isWaiting}
-                  title={emotion}
-                  onClick={() => buy(emotion)}
-                >
-                  <img
-                    src={getPortraitSrc(
-                      reactions.index,
-                      reactions.shiny,
-                      emotion
-                    )}
-                    width={48}
-                    height={48}
-                    alt={emotion}
-                  />
-                </button>
-              </li>
-            ))}
-          </ul>
-        </>
-      )
-    }
+    const isReacting = dishPhase === "reacting" && reactions && !isPurchased
     return (
       <>
         <span className="season-croagunk-line">
           {isPurchased
             ? "Meh-heh-heh! Pleasure doing business."
-            : "Spinda left this. Want to swap?"}
+            : isReacting
+              ? "How do you react?"
+              : "Spinda left this. Want to swap?"}
         </span>
-        {!isPurchased && (
-          <span
-            className={cc("season-croagunk-offer season-croagunk-dish", {
-              eaten: dishPhase === "eating"
-            })}
-          >
-            <img
-              src={`assets/item/${trade.dish}.png`}
-              width={64}
-              height={64}
-              alt={dishName}
-              title={dishName}
-            />
-          </span>
-        )}
-        {!isPurchased && (
-          <span className="season-croagunk-name">{dishName}</span>
-        )}
-        {!isPurchased && (
-          <>
-            <span className="season-croagunk-price">
-              {offer.price}
-              <img
-                src="assets/icons/season_poke.svg"
-                width={18}
-                height={18}
-                alt="Tickets"
-              />
-            </span>
-            <button
-              className="season-croagunk-button"
-              disabled={
-                // stays while the dish is eaten, so the box keeps its height
-                isWaiting || !canAfford || !canReact || dishPhase !== "offered"
-              }
-              title={
-                !canReact
-                  ? "Your avatar already has every emote"
-                  : canAfford
-                    ? undefined
-                    : "Not enough Tickets"
-              }
-              onClick={startEatingDish}
-            >
-              Trade
-            </button>
-          </>
-        )}
-        {isPurchased && (
-          <span className="season-croagunk-status">Swapped</span>
-        )}
+        <div className="season-croagunk-details">
+          {isReacting ? (
+            <ul className="season-croagunk-reactions">
+              {reactions.missing.map((emotion) => (
+                <li key={emotion}>
+                  <button
+                    disabled={isWaiting}
+                    title={emotion}
+                    onClick={() => buy(emotion)}
+                  >
+                    <img
+                      src={getPortraitSrc(
+                        reactions.index,
+                        reactions.shiny,
+                        emotion
+                      )}
+                      width={48}
+                      height={48}
+                      alt={emotion}
+                    />
+                  </button>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <>
+              <span
+                className={cc("season-croagunk-offer season-croagunk-dish", {
+                  eaten: dishPhase === "eating"
+                })}
+              >
+                <img
+                  src={`assets/item/${trade.dish}.png`}
+                  width={64}
+                  height={64}
+                  alt={dishName}
+                  title={dishName}
+                />
+              </span>
+              <span className="season-croagunk-name">{dishName}</span>
+              <span className="season-croagunk-price">
+                {offer.price}
+                <img
+                  src="assets/icons/season_poke.svg"
+                  width={18}
+                  height={18}
+                  alt="Tickets"
+                />
+              </span>
+              {isPurchased ? (
+                <span className="season-croagunk-status">Swapped</span>
+              ) : (
+                <button
+                  className="season-croagunk-button"
+                  disabled={
+                    // stays while the dish is eaten, so the box keeps its
+                    // height
+                    isWaiting ||
+                    !canAfford ||
+                    !canReact ||
+                    dishPhase !== "offered"
+                  }
+                  title={
+                    !canReact
+                      ? "Your avatar already has every emote"
+                      : canAfford
+                        ? undefined
+                        : "Not enough Tickets"
+                  }
+                  onClick={startEatingDish}
+                >
+                  Trade
+                </button>
+              )}
+            </>
+          )}
+        </div>
       </>
     )
   }
@@ -285,58 +283,64 @@ export default function SeasonCroagunk(props: {
                 ? "Meh-heh-heh! Pleasure doing business."
                 : "Meh-heh-heh... Want to swap?"}
             </span>
-            <span className="season-croagunk-offer">
-              <img
-                src={ITEM_ART[offer.item]}
-                width={64}
-                height={64}
-                alt=""
-              />
-              <span className="season-croagunk-amount">×{offer.amount}</span>
+            <div className="season-croagunk-details">
+              <span className="season-croagunk-offer">
+                <img
+                  src={ITEM_ART[offer.item]}
+                  width={64}
+                  height={64}
+                  alt=""
+                />
+                <span className="season-croagunk-amount">
+                  ×{offer.amount}
+                </span>
+              </span>
+              <span className="season-croagunk-name">{offer.label}</span>
+              <span className="season-croagunk-price">
+                {offer.price}
+                <img
+                  src="assets/icons/season_poke.svg"
+                  width={18}
+                  height={18}
+                  alt="Tickets"
+                />
+              </span>
+              {isExpired ? (
+                <button
+                  className="season-croagunk-button"
+                  disabled={isWaiting}
+                  onClick={refresh}
+                >
+                  New deal
+                </button>
+              ) : isPurchased ? (
+                <span className="season-croagunk-status">Swapped</span>
+              ) : (
+                <button
+                  className="season-croagunk-button"
+                  disabled={isWaiting || !canAfford}
+                  title={canAfford ? undefined : "Not enough Tickets"}
+                  onClick={() => buy()}
+                >
+                  Trade
+                </button>
+              )}
+            </div>
+          </>
+        ) : (
+          <>
+            <span className="season-croagunk-line">
+              Looking for a deal...
             </span>
-            <span className="season-croagunk-name">{offer.label}</span>
-            <span className="season-croagunk-price">
-              {offer.price}
-              <img
-                src="assets/icons/season_poke.svg"
-                width={18}
-                height={18}
-                alt="Tickets"
-              />
-            </span>
-            {isExpired ? (
+            <div className="season-croagunk-details">
               <button
                 className="season-croagunk-button"
                 disabled={isWaiting}
                 onClick={refresh}
               >
-                New deal
+                Try again
               </button>
-            ) : isPurchased ? (
-              <span className="season-croagunk-status">Swapped</span>
-            ) : (
-              <button
-                className="season-croagunk-button"
-                disabled={isWaiting || !canAfford}
-                title={canAfford ? undefined : "Not enough Tickets"}
-                onClick={() => buy()}
-              >
-                Trade
-              </button>
-            )}
-          </>
-        ) : (
-          <>
-            <span className="season-croagunk-status">
-              Looking for a deal...
-            </span>
-            <button
-              className="season-croagunk-button"
-              disabled={isWaiting}
-              onClick={refresh}
-            >
-              Try again
-            </button>
+            </div>
           </>
         )}
       </div>

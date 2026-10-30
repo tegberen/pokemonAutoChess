@@ -163,55 +163,52 @@ export default function SeasonPelipper(props: {
                 />
               </SeasonCard>
             </div>
-            <div className="season-booster-emotes-slot">
-              <ul
-                className="season-booster-shiny-emotes"
-                style={{
-                  gridTemplateColumns: `repeat(${photoColumns}, auto)`
-                }}
-              >
-                {arrivedGuest.unlockedEmotions.map((emotion, i) => (
-                  <li
-                    key={emotion}
-                    style={{
-                      animationDelay: `${
-                        SHINY_LANDING_MS +
-                        PHOTOS_AFTER_LANDING_MS +
-                        i * PHOTO_STAGGER_MS
-                      }ms`
-                    }}
-                  >
-                    <img
-                      src={getPortraitSrc(
-                        PkmIndex[arrivedGuest.name],
-                        true,
-                        emotion
-                      )}
-                      width={44}
-                      height={44}
-                      alt={emotion}
-                      title={emotion}
-                    />
-                  </li>
-                ))}
-              </ul>
+            <div className="season-pelipper-details">
+              <div className="season-booster-emotes-slot">
+                <ul
+                  className="season-booster-shiny-emotes"
+                  style={{
+                    gridTemplateColumns: `repeat(${photoColumns}, auto)`
+                  }}
+                >
+                  {arrivedGuest.unlockedEmotions.map((emotion, i) => (
+                    <li
+                      key={emotion}
+                      style={{
+                        animationDelay: `${
+                          SHINY_LANDING_MS +
+                          PHOTOS_AFTER_LANDING_MS +
+                          i * PHOTO_STAGGER_MS
+                        }ms`
+                      }}
+                    >
+                      <img
+                        src={getPortraitSrc(
+                          PkmIndex[arrivedGuest.name],
+                          true,
+                          emotion
+                        )}
+                        width={44}
+                        height={44}
+                        alt={emotion}
+                        title={emotion}
+                      />
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              {canSendAnotherInvitation && (
+                <button
+                  className="season-shop-open"
+                  onClick={startNextInvitation}
+                >
+                  Send another invitation
+                </button>
+              )}
             </div>
-            {canSendAnotherInvitation && (
-              <button
-                className="season-shop-open"
-                onClick={startNextInvitation}
-              >
-                Send another invitation
-              </button>
-            )}
           </>
         ) : invitations > 0 ? (
           <>
-            <PokemonTypeahead
-              value={guest}
-              options={guests}
-              onChange={chooseGuest}
-            />
             <div className="season-pelipper-card">
               <SeasonCard
                 pokemon={guest || Pkm.PELIPPER}
@@ -221,16 +218,23 @@ export default function SeasonPelipper(props: {
                 synergyIconSize="22px"
               />
             </div>
-            <button
-              className="season-shop-open"
-              disabled={!guest || isWaiting}
-              onClick={sendInvitation}
-            >
-              <span className="season-avatar-button-labels">
-                <span hidden={isConfirming}>Send invitation</span>
-                <span hidden={!isConfirming}>Confirm</span>
-              </span>
-            </button>
+            <div className="season-pelipper-details">
+              <PokemonTypeahead
+                value={guest}
+                options={guests}
+                onChange={chooseGuest}
+              />
+              <button
+                className="season-shop-open"
+                disabled={!guest || isWaiting}
+                onClick={sendInvitation}
+              >
+                <span className="season-avatar-button-labels">
+                  <span hidden={isConfirming}>Send invitation</span>
+                  <span hidden={!isConfirming}>Confirm</span>
+                </span>
+              </button>
+            </div>
           </>
         ) : null}
       </div>

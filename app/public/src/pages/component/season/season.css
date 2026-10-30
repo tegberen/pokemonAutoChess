@@ -1229,19 +1229,42 @@
   background-color: var(--season-progress);
 }
 
-.season-croagunk {
+/* Croagunk Swap and Pelipper Post: the title in the same spot as the Pass
+   tab's (its 2em side padding, centred in a banner about 230px tall), the
+   deal or letter box on the right. On narrow screens, where the title would
+   cover the box, they sit side by side instead */
+.season-croagunk,
+.season-pelipper {
+  position: relative;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-end;
   gap: 2.5em;
-  padding: 1.8em 2em;
+  padding: 1.8em 8% 1.8em 2em;
   text-shadow: 1px 1px 2px #000000;
 }
 
-.season-croagunk-title {
-  flex: 0 1 auto;
-  min-width: 240px;
+.season-croagunk-title,
+.season-pelipper-title {
+  position: absolute;
+  top: 4em;
+  left: 2em;
+}
+
+@media (max-width: 1200px) {
+  .season-croagunk,
+  .season-pelipper {
+    justify-content: center;
+    padding-right: 2em;
+  }
+
+  .season-croagunk-title,
+  .season-pelipper-title {
+    position: static;
+    flex: 0 1 auto;
+    min-width: 240px;
+  }
 }
 
 .season-croagunk-deal {
@@ -1349,12 +1372,25 @@
   }
 }
 
-/* room for an avatar's full row of emotes, from the dish on: the box keeps
-   one width instead of jumping when the reactions appear */
-.season-croagunk-deal.dish-deal {
+/* the line, then a fixed-height area for what changes (the offer, the
+   reactions, "Swapped"): one box height in every state, so nothing moves */
+.season-croagunk-details {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   justify-content: center;
+  gap: 0.6em;
+  width: 100%;
+  height: 200px;
+}
+
+/* wide enough for five reactions a row, tall enough for four rows */
+.season-croagunk-deal.dish-deal {
   width: min(420px, 100%);
-  min-height: 340px;
+}
+
+.season-croagunk-deal.dish-deal .season-croagunk-details {
+  height: 260px;
 }
 
 /* a recessed tray like the panel's inset wells, its portraits framed like
@@ -1421,29 +1457,15 @@
   }
 }
 
-/* Pelipper Post, the secret party invitation tab: laid out like Croagunk's,
-   its letter one fixed size from the invitation to the guest's arrival */
-.season-pelipper {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-  gap: 2.5em;
-  padding: 1.8em 2em;
-  text-shadow: 1px 1px 2px #000000;
-}
-
-.season-pelipper-title {
-  flex: 0 1 auto;
-  min-width: 240px;
-}
-
 .season-pelipper-line {
   font-size: 0.9em;
   font-style: italic;
   text-align: center;
 }
 
+/* line, card and a fixed-height details area: the same height in every
+   state, so the centred letter never moves anything between the invitation
+   and the arrival */
 .season-pelipper-letter {
   display: flex;
   flex-direction: column;
@@ -1451,8 +1473,6 @@
   justify-content: center;
   gap: 0.8em;
   width: min(460px, 100%);
-  /* the arrival with three rows of photos is the tallest state */
-  min-height: 520px;
   padding: 1.2em 1.6em;
   box-sizing: border-box;
   border: 2px solid var(--season-line);
@@ -1496,6 +1516,21 @@
   .season-pelipper-card.arrival .season-booster-card-inner {
     animation: none;
   }
+}
+
+/* sized for the tallest content, three rows of photos and their button */
+.season-pelipper-details {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8em;
+  width: 100%;
+  height: 230px;
+}
+
+.season-pelipper-details > .season-shop-open {
+  margin-top: 0.6em;
 }
 
 .season-pelipper-letter .season-booster-emotes-slot {
