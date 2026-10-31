@@ -422,7 +422,7 @@ export function getSeasonDailyLearnGoal(now = Date.now()): SeasonLearnGoal {
   }
 }
 
-function getUtcWeekIndex(now: number) {
+export function getUtcWeekIndex(now: number) {
   return Math.floor(Date.parse(getUtcWeekKey(now)) / MS_PER_DAY / 7)
 }
 

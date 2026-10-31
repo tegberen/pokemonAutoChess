@@ -5,6 +5,7 @@ import type { Synergy } from "../enum/Synergy"
 import type { AvatarCosmeticId } from "../enum/AvatarCosmetic"
 import type { Pkm } from "../enum/Pokemon"
 import type { SeasonChallengeId } from "../../config/game/season"
+import type { SpindaGuestSlot } from "../../config/game/spinda-guest"
 import type { Theme } from "../../config/game/theme"
 
 interface IUserMetadata {
@@ -68,6 +69,12 @@ export interface ICroagunkTrade {
 
 export interface ISpindaCafe {
   tastedDayKey?: string
+  // the weekend the guest points and claims below belong to
+  guestWeekKey?: string
+  guestPoints?: Partial<Record<SpindaGuestSlot, number>>
+  guestClaimed?: Partial<Record<SpindaGuestSlot, boolean>>
+  // when the last game that earned a guest point ended
+  guestCountedUntil?: number
 }
 
 export interface ICasualPick {

@@ -3,6 +3,7 @@ import type { User } from "@firebase/auth-types"
 import firebase from "firebase/compat/app"
 import type { server } from "../../app.config.ts"
 import { FIREBASE_CONFIG } from "../../config"
+import type { SpindaGuestSlot } from "../../config/game/spinda-guest"
 import type AfterGameState from "../../rooms/states/after-game-state"
 import type GameState from "../../rooms/states/game-state"
 import type LobbyState from "../../rooms/states/lobby-state"
@@ -364,6 +365,10 @@ export function buyCroagunkTrade() {
 
 export function tasteSpindaDish(reaction: Emotion) {
   return postSeasonAction("spinda/taste", { reaction })
+}
+
+export function claimSpindaGuest(slot: SpindaGuestSlot) {
+  return postSeasonAction("spinda/guest/claim", { slot })
 }
 
 export function sendPartyInvitation(guest: Pkm) {

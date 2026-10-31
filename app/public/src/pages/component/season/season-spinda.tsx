@@ -18,25 +18,15 @@ import {
 import { useAppDispatch } from "../../../hooks"
 import { tasteSpindaDish } from "../../../network"
 import { setErrorAlertMessage } from "../../../stores/NetworkStore"
+import { formatTimeLeft } from "../../utils/date"
 import { cc } from "../../utils/jsx"
+import SpindaGuests from "./season-spinda-guests"
 
-const MS_PER_DAY = 86_400_000
-const MS_PER_HOUR = 3_600_000
-const MS_PER_MINUTE = 60_000
 // matches the three bites in season.css; "Nom nom nom..." shows meanwhile
 const DISH_EATEN_MS = 1300
 const SPINDA_EMOTIONS = getAvailableEmotions(PkmIndex[Pkm.SPINDA], false)
 
 type DishPhase = "offered" | "eating" | "reacting"
-
-function formatTimeLeft(msLeft: number) {
-  const days = Math.floor(msLeft / MS_PER_DAY)
-  const hours = Math.floor((msLeft % MS_PER_DAY) / MS_PER_HOUR)
-  const minutes = Math.floor((msLeft % MS_PER_HOUR) / MS_PER_MINUTE)
-  if (days > 0) return `${days}d ${hours}h`
-  if (hours > 0) return `${hours}h ${minutes}m`
-  return `${minutes}m`
-}
 
 // the emotes the player's current avatar does not own yet
 function getAvatarReactions(profile: IUserMetadataUnpacked) {
@@ -145,6 +135,7 @@ export default function SeasonSpinda(props: {
     <div className="season-croagunk">
       <div className="season-title season-croagunk-title">
         <img
+          className={cc({ "spinda-closed-portrait": !isOpen })}
           src={getPortraitSrc(PkmIndex[Pkm.SPINDA], false, spindaEmotion)}
           width={84}
           height={84}
@@ -158,7 +149,7 @@ export default function SeasonSpinda(props: {
               ? isSunday
                 ? `Closes in ${formatTimeLeft(msUntilChange)}`
                 : `Next dish in ${formatTimeLeft(msUntilChange)}`
-              : `Opens in ${formatTimeLeft(msUntilChange)}`}
+              : `Closed · Opens in ${formatTimeLeft(msUntilChange)}`}
           </span>
         </div>
       </div>
@@ -234,6 +225,9 @@ export default function SeasonSpinda(props: {
             </>
           )}
         </div>
+      </div>
+      <div className="spinda-guest-column">
+        <SpindaGuests profile={profile} now={now} />
       </div>
     </div>
   )

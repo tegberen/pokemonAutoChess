@@ -12,8 +12,16 @@ import {
   SEASON_WONDER_PICK_CARD_COUNT,
   SEASON_WONDER_PICK_FREE_REROLLS,
   getCasualPickCharges,
-  getUtcDayKey
+  getUtcDayKey,
+  getUtcWeekKey,
+  isSpindaCafeOpen
 } from "../config/game/season"
+import {
+  getSpindaGuests,
+  SPINDA_GUEST_DUPLICATE_BOOSTERS,
+  SPINDA_GUEST_SLOTS,
+  type SpindaGuestSlot
+} from "../config/game/spinda-guest"
 import { BoosterRarityProbability } from "../config/game/shop"
 import { CollectionUtils } from "../core/collection"
 import UserMetadata from "../models/mongo-models/user-metadata"
@@ -648,6 +656,74 @@ async function sendPartyInvitationNow(uid: string, guest: unknown) {
     if (userDoc) {
       await checkTitlesAfterUnlocks(userDoc, [card])
       return { userDoc, card }
+    }
+  }
+  return null
+}
+
+export function claimSpindaGuest(
+  uid: string,
+  slot: unknown,
+  now = Date.now()
+) {
+  if (!SPINDA_GUEST_SLOTS.includes(slot as SpindaGuestSlot)) return null
+  return queueCollectionUpdate(uid, () =>
+    claimSpindaGuestNow(uid, slot as SpindaGuestSlot, now)
+  )
+}
+
+// the holo and every regular emote of the guest; an owner of all of it gets
+// boosters instead
+async function claimSpindaGuestNow(
+  uid: string,
+  slot: SpindaGuestSlot,
+  now: number
+) {
+  if (!isSpindaCafeOpen(now)) return null
+  const weekKey = getUtcWeekKey(now)
+  const { pokemon: guest, goalPoints } = getSpindaGuests(now)[slot]
+  const emotions = getAvailableEmotions(PkmIndex[guest], false)
+  const claimedPath = `spindaCafe.guestClaimed.${slot}`
+  const claimable = {
+    uid,
+    "spindaCafe.guestWeekKey": weekKey,
+    [`spindaCafe.guestPoints.${slot}`]: { $gte: goalPoints },
+    [claimedPath]: { $ne: true }
+  }
+  for (let attempt = 0; attempt < MAX_COLLECTION_UPDATE_ATTEMPTS; attempt++) {
+    const user = await UserMetadata.findOne(claimable).lean<IUserMetadataLean>()
+    if (!user) return null
+
+    const draft = new CollectionDraft(user)
+    const unlockedEmotions = emotions.filter(
+      (emotion) => !draft.owns(guest, emotion, false)
+    )
+    const hadHolo = draft.hasHolo(guest)
+    if (!hadHolo) draft.addHolo(guest)
+    for (const emotion of unlockedEmotions) draft.unlock(guest, emotion, false)
+    const isDuplicate = hadHolo && unlockedEmotions.length === 0
+
+    const update = draft.toUpdate(
+      isDuplicate ? { booster: SPINDA_GUEST_DUPLICATE_BOOSTERS } : {}
+    )
+    update.$set = { ...(update.$set as object), [claimedPath]: true }
+    const userDoc = await UserMetadata.findOneAndUpdate(
+      { ...claimable, ...draft.getGuards() },
+      update,
+      { returnDocument: "after" }
+    )
+    if (userDoc) {
+      await checkTitlesAfterUnlocks(userDoc, [
+        {
+          name: guest,
+          shiny: false,
+          emotion: Emotion.NORMAL,
+          new: true,
+          holo: true,
+          unlockedEmotions
+        }
+      ])
+      return userDoc
     }
   }
   return null

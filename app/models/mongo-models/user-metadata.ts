@@ -196,7 +196,21 @@ const userMetadataSchema = new Schema({
   spindaCafe: {
     type: new Schema(
       {
-        tastedDayKey: { type: String }
+        tastedDayKey: { type: String },
+        guestWeekKey: { type: String },
+        guestPoints: {
+          type: new Schema(
+            { saturday: { type: Number }, sunday: { type: Number } },
+            { _id: false }
+          )
+        },
+        guestClaimed: {
+          type: new Schema(
+            { saturday: { type: Boolean }, sunday: { type: Boolean } },
+            { _id: false }
+          )
+        },
+        guestCountedUntil: { type: Number }
       },
       { _id: false }
     )

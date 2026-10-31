@@ -11,6 +11,10 @@ import {
   type SeasonLearnGoal,
   type SeasonRewardKind
 } from "../../../../../config/game/season"
+import {
+  canClaimSpindaGuest,
+  SPINDA_GUEST_SLOTS
+} from "../../../../../config/game/spinda-guest"
 import { getAvailableEmotions } from "../../../../../models/precomputed/precomputed-emotions"
 import { Pkm, PkmIndex } from "../../../../../types/enum/Pokemon"
 import type { IUserMetadataUnpacked } from "../../../../../types/interfaces/UserMetadata"
@@ -181,9 +185,14 @@ function SeasonGuild(props: {
     "pass" | "wonder-pick" | "croagunk" | "spinda" | "shop" | "pelipper"
   >("pass")
   // the café's free dish of the day is still on the table
+  // or one of the weekend's guests is ready to be claimed
+  const canClaimAnySpindaGuest = SPINDA_GUEST_SLOTS.some((slot) =>
+    canClaimSpindaGuest(profile.spindaCafe, slot, now)
+  )
   const canTasteSpindaDish =
-    isSpindaCafeOpen(now) &&
-    profile.spindaCafe?.tastedDayKey !== getUtcDayKey(now)
+    (isSpindaCafeOpen(now) &&
+      profile.spindaCafe?.tastedDayKey !== getUtcDayKey(now)) ||
+    canClaimAnySpindaGuest
   // a secret tab: only there while an invitation waits, or while it is open
   const isPelipperShown =
     (profile.partyInvitations ?? 0) > 0 || trackTab === "pelipper"

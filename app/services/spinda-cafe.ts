@@ -1,5 +1,15 @@
 import type { HydratedDocument } from "mongoose"
-import { getUtcDayKey, isSpindaCafeOpen } from "../config/game/season"
+import {
+  getUtcDayKey,
+  getUtcWeekKey,
+  isSpindaCafeOpen,
+  SEASON_MIN_STAGE_FOR_CHALLENGES
+} from "../config/game/season"
+import {
+  getCurrentSpindaGuestSlot,
+  getSpindaGuestGamePoints,
+  getSpindaGuests
+} from "../config/game/spinda-guest"
 import { CollectionUtils } from "../core/collection"
 import UserMetadata from "../models/mongo-models/user-metadata"
 import { getAvailableEmotions } from "../models/precomputed/precomputed-emotions"
@@ -112,6 +122,59 @@ export async function tasteSpindaDish(
     }
   }
   return null
+}
+
+// a weekend game adds points to that day's guest; the guards make a
+// concurrent game end retry instead of overwriting
+export async function recordSpindaGuestGame(
+  uid: string,
+  result: {
+    stageReached: number
+    finalPokemon: Pkm[]
+    gameStartedAt: number
+  },
+  now = Date.now()
+) {
+  const slot = getCurrentSpindaGuestSlot(now)
+  if (!slot || result.stageReached < SEASON_MIN_STAGE_FOR_CHALLENGES) return
+  const weekKey = getUtcWeekKey(now)
+  const guest = getSpindaGuests(now)[slot]
+  const gain = getSpindaGuestGamePoints(guest, result.finalPokemon)
+  const pointsPath = `spindaCafe.guestPoints.${slot}`
+
+  for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
+    const user = await UserMetadata.findOne({ uid }).lean<IUserMetadataLean>()
+    if (!user) return
+    const cafe = user.spindaCafe
+    // games played side by side count once: a game only counts if it started
+    // after the last counted game ended
+    if ((cafe?.guestCountedUntil ?? 0) > result.gameStartedAt) return
+    const isSameWeek = cafe?.guestWeekKey === weekKey
+    const pointsBefore = isSameWeek ? (cafe.guestPoints?.[slot] ?? 0) : 0
+    if (pointsBefore >= guest.goalPoints) return
+    const pointsAfter = Math.min(guest.goalPoints, pointsBefore + gain)
+
+    const sets: Record<string, unknown> = {
+      "spindaCafe.guestCountedUntil": now
+    }
+    if (isSameWeek) {
+      sets[pointsPath] = pointsAfter
+    } else {
+      sets["spindaCafe.guestWeekKey"] = weekKey
+      sets["spindaCafe.guestPoints"] = { [slot]: pointsAfter }
+      sets["spindaCafe.guestClaimed"] = {}
+    }
+    const updatedUser = await UserMetadata.findOneAndUpdate(
+      {
+        uid,
+        "spindaCafe.guestWeekKey": cafe?.guestWeekKey ?? null,
+        [pointsPath]: cafe?.guestPoints?.[slot] ?? null,
+        "spindaCafe.guestCountedUntil": cafe?.guestCountedUntil ?? null
+      },
+      { $set: sets }
+    )
+    if (updatedUser) return
+  }
 }
 
 async function checkTitlesAfterReaction(

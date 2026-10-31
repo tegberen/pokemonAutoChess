@@ -51,6 +51,7 @@ import {
 } from "./services/season"
 import {
   buySeasonOffer,
+  claimSpindaGuest,
   getOrCreateCasualPick,
   getOrCreateWonderPickDraw,
   openSeasonBooster,
@@ -1062,6 +1063,22 @@ export const server = defineServer({
       } catch (error) {
         logger.error("Error tasting Spinda's dish", error)
         res.status(500).json({ error: "Error tasting Spinda's dish" })
+      }
+    })
+
+    app.post("/season/spinda/guest/claim", async (req, res) => {
+      try {
+        const userAuth = await authUser(req, res)
+        if (!userAuth) return
+        const userDoc = await claimSpindaGuest(userAuth.uid, req.body?.slot)
+        if (!userDoc) {
+          res.status(409).json({ error: "Nothing to claim" })
+          return
+        }
+        res.status(200).json({ user: toUserMetadataJSON(userDoc) })
+      } catch (error) {
+        logger.error("Error claiming Spinda's guest", error)
+        res.status(500).json({ error: "Error claiming Spinda's guest" })
       }
     })
 

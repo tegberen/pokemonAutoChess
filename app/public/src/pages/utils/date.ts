@@ -60,3 +60,16 @@ export function formatDuration(seconds: number) {
   }
   return `${days > 0 ? days + " days" : ""}${hours > 0 ? hours + " hours" : ""}${minutes > 0 ? minutes + " min" : ""}${seconds > 0 ? seconds + " s" : ""}`.trim()
 }
+
+const MS_PER_MINUTE = 60_000
+const MS_PER_HOUR = 3_600_000
+const MS_PER_DAY = 86_400_000
+
+export function formatTimeLeft(msLeft: number) {
+  const days = Math.floor(msLeft / MS_PER_DAY)
+  const hours = Math.floor((msLeft % MS_PER_DAY) / MS_PER_HOUR)
+  const minutes = Math.floor((msLeft % MS_PER_HOUR) / MS_PER_MINUTE)
+  if (days > 0) return `${days}d ${hours}h`
+  if (hours > 0) return `${hours}h ${minutes}m`
+  return `${minutes}m`
+}

@@ -94,6 +94,7 @@ import { syncLevelRewards } from "../services/level-rewards"
 import { grantRainbowHoursRewards } from "../services/rainbow-hours"
 import { notificationsService } from "../services/notifications"
 import { recordSeasonGame } from "../services/season"
+import { recordSpindaGuestGame } from "../services/spinda-cafe"
 import {
   getScribbleQuizValues,
   grantRandomScribbleShape,
@@ -1866,6 +1867,15 @@ export default class GameRoom extends Room<{ state: GameState }> {
             )
           ]
         }).catch((error) => logger.error("Error recording season game", error))
+        await recordSpindaGuestGame(player.id, {
+          stageReached,
+          gameStartedAt: this.state.startTime,
+          finalPokemon: schemaValues(player.board).map(
+            (pokemon) => pokemon.name
+          )
+        }).catch((error) =>
+          logger.error("Error recording Spinda guest game", error)
+        )
       }
       if (
         countsAsAGame &&
