@@ -1171,12 +1171,14 @@
 .season-booster-reveal
   .season-booster-card:is(.shiny, .holo).flipped
   .season-booster-card-inner,
-.season-wonder-card.picked .season-booster-card-inner {
+.season-wonder-card.picked .season-booster-card-inner,
+.spinda-guest-card.joined .season-booster-card-inner {
   animation: season-shiny-turn var(--shiny-turn-duration, 1200ms)
     cubic-bezier(0.25, 0.8, 0.25, 1) var(--flip-delay, 0ms) both;
 }
 
-.season-wonder-card.picked {
+.season-wonder-card.picked,
+.spinda-guest-card.joined {
   --shiny-landed-lift: -6px;
 }
 
@@ -1678,6 +1680,10 @@
 
 .spinda-guest-deck .spinda-guest-card.season-booster-card {
   z-index: 2;
+}
+
+.spinda-guest-deck .spinda-guest-card.joined.season-booster-card {
+  z-index: 3;
 }
 
 .spinda-guest-peek {
@@ -3246,7 +3252,8 @@
   .season-booster-reveal
     .season-booster-card:is(.shiny, .holo).flipped
     .season-booster-card-inner,
-  .season-wonder-card.picked .season-booster-card-inner {
+  .season-wonder-card.picked .season-booster-card-inner,
+  .spinda-guest-card.joined .season-booster-card-inner {
     animation: none;
   }
 

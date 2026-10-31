@@ -24,9 +24,16 @@ import { useAppDispatch } from "../../../hooks"
 import { claimSpindaGuest } from "../../../network"
 import { setErrorAlertMessage } from "../../../stores/NetworkStore"
 import { formatTimeLeft } from "../../utils/date"
-import SeasonCard from "./season-card"
+import { cc } from "../../utils/jsx"
+import SeasonCard, {
+  SHINY_LANDING_MS,
+  SPECIAL_CARD_PALETTES
+} from "./season-card"
+import SeasonSparkles, { SeasonSparkleBurst } from "./season-sparkles"
 
 const MS_PER_DAY = 86_400_000
+const JOIN_SPOTLIGHT_LEAD_MS = 250
+const JOIN_TWINKLES_AFTER_LANDING_MS = 350
 
 const SLOT_LABELS: Record<SpindaGuestSlot, string> = {
   saturday: "Saturday",
@@ -66,7 +73,9 @@ export default function SpindaGuests(props: {
   }))
   const currentSlot = getCurrentSpindaGuestSlot(now)
   const [pickedSlot, setPickedSlot] = useState<SpindaGuestSlot | null>(null)
+  const [joinedSlot, setJoinedSlot] = useState<SpindaGuestSlot | null>(null)
   const slot = pickedSlot ?? currentSlot ?? "saturday"
+  const isJoining = joinedSlot === slot
   const otherSlot = slot === "saturday" ? "sunday" : "saturday"
   const guest = guests[slot]
   const other = guests[otherSlot]
@@ -118,6 +127,7 @@ export default function SpindaGuests(props: {
     setIsWaiting(true)
     try {
       await claimSpindaGuest(slot)
+      setJoinedSlot(slot)
     } catch (error) {
       dispatch(setErrorAlertMessage((error as Error).message))
     } finally {
@@ -136,16 +146,38 @@ export default function SpindaGuests(props: {
             emotion={faceOf(otherSlot)}
             isFaceUp
             isTiltable={false}
-            onClick={() => setPickedSlot(otherSlot)}
+            onClick={() => {
+              setPickedSlot(otherSlot)
+              setJoinedSlot(null)
+            }}
           />
         )}
         <SeasonCard
-          className="spinda-guest-card"
+          className={cc("spinda-guest-card", { joined: isJoining })}
           pokemon={guest.pokemon}
           holo
           emotion={faceOf(slot)}
           isFaceUp
-        />
+          flipDelayMs={isJoining ? JOIN_SPOTLIGHT_LEAD_MS : undefined}
+        >
+          {isJoining && (
+            <>
+              <SeasonSparkleBurst
+                delayMs={JOIN_SPOTLIGHT_LEAD_MS + SHINY_LANDING_MS}
+                colors={SPECIAL_CARD_PALETTES.holo}
+              />
+              <SeasonSparkles
+                delayMs={
+                  JOIN_SPOTLIGHT_LEAD_MS +
+                  SHINY_LANDING_MS +
+                  JOIN_TWINKLES_AFTER_LANDING_MS
+                }
+                colors={SPECIAL_CARD_PALETTES.holo}
+              />
+            </>
+          )}
+        </SeasonCard>
+        {isJoining && <span className="season-card-spotlight" aria-hidden />}
       </div>
       <div className="spinda-guest-info">
         <h3 className="spinda-guest-title">
