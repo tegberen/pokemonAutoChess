@@ -13,11 +13,10 @@ let hashIndexPlugin = {
     build.onStart(() => {
       const files = fs.readdirSync("app/public/dist/client")
       files.forEach((file) => {
-        // remove old files
-        if (file.startsWith("index-") && file.endsWith(".js")) {
-          fs.unlinkSync(`app/public/dist/client/${file}`)
-        }
-        if (file.startsWith("index-") && file.endsWith(".css")) {
+        // remove old files, their source maps too, or every build leaves one
+        const isOldOutput =
+          file.startsWith("index-") && /\.(js|css)(\.map)?$/.test(file)
+        if (isOldOutput) {
           fs.unlinkSync(`app/public/dist/client/${file}`)
         }
       })
@@ -39,7 +38,11 @@ context({
   external: ["assets/*"],
   bundle: true,
   metafile: true,
-  minify: isProdBuild,
+  // dev keeps readable names but drops whitespace and dead syntax: the
+  // unminified bundle took over a second to parse on every refresh
+  minifyWhitespace: true,
+  minifySyntax: true,
+  minifyIdentifiers: isProdBuild,
   sourcemap: isProdBuild,
   plugins: [hashIndexPlugin],
   target: "es2016",
