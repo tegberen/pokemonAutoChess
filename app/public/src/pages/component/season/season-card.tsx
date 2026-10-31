@@ -152,18 +152,30 @@ function consumeHeldPress(card: HTMLElement) {
 
 export type SpecialCardKind = "shiny" | "holo"
 
-// sampled from each kind's background artwork
+// the shiny one sampled from its background artwork; the holo one is the
+// foil's rainbow
 export const SPECIAL_CARD_PALETTES: Record<SpecialCardKind, string[]> = {
   shiny: ["#f7a8d8", "#9fe6d6", "#ffe08a", "#ffb36b", "#9ecbff"],
   holo: ["#ff4d8d", "#33c7f0", "#ffe14d", "#2b4bd8", "#ff8a3d"]
 }
 
-const CARD_BACKGROUNDS_BY_KIND: Record<SpecialCardKind, string[]> = {
-  shiny: ["assets/ui/card-bg/shiny.avif"],
-  holo: [
-    "assets/ui/card-bg/holo-1.avif",
-    "assets/ui/card-bg/holo-2.avif",
-    "assets/ui/card-bg/holo-3.avif"
+const SHINY_CARD_BACKGROUND = "assets/ui/card-bg/shiny.avif"
+// a Mega shares its family's scene with its 3★ form, so it gets an abstract
+// burst of its own instead, always framed on the burst's centre
+const MEGA_CARD_BACKGROUNDS = [
+  { src: "assets/ui/card-bg/mega-1.avif", crop: "44%" },
+  { src: "assets/ui/card-bg/mega-2.avif", crop: "40%" },
+  { src: "assets/ui/card-bg/mega-3.avif", crop: "50%" }
+]
+
+function isMega(pokemon: Pkm) {
+  return pokemon.startsWith("MEGA_")
+}
+
+function getMegaCardBackground(kind: SpecialCardKind | null, pokemon: Pkm) {
+  if (kind === "shiny" || !isMega(pokemon)) return null
+  return MEGA_CARD_BACKGROUNDS[
+    getFamilyHash(pokemon) % MEGA_CARD_BACKGROUNDS.length
   ]
 }
 
@@ -271,12 +283,12 @@ function getPkmCrop(pokemon: Pkm) {
   return CARD_ART_CROPS[stars - 1]
 }
 
-// fixed per family, so a card always shows the same backdrop and crop
+// fixed per family, so a card always shows the same backdrop and crop. A
+// holo is its regular card printed on foil, like a reverse holo
 function getCardBackground(kind: SpecialCardKind | null, pokemon: Pkm) {
-  if (kind) {
-    const backgrounds = CARD_BACKGROUNDS_BY_KIND[kind]
-    return backgrounds[getFamilyHash(pokemon) % backgrounds.length]
-  }
+  if (kind === "shiny") return SHINY_CARD_BACKGROUND
+  const megaBackground = getMegaCardBackground(kind, pokemon)
+  if (megaBackground) return megaBackground.src
   if (Unowns.includes(pokemon)) return getRegularCardBackground(UNOWN_SCENE)
   const familyScene = SCENE_BY_FAMILY[PkmFamily[pokemon]]
   if (familyScene) return getRegularCardBackground(familyScene)
@@ -299,10 +311,29 @@ function getSpecialCardStyle(kind: SpecialCardKind) {
 function getCardArtStyle(kind: SpecialCardKind | null, pokemon: Pkm) {
   return {
     "--card-art": `url("${getCardBackground(kind, pokemon)}")`,
-    "--card-art-pos": getPkmCrop(pokemon),
+    "--card-art-pos":
+      getMegaCardBackground(kind, pokemon)?.crop ?? getPkmCrop(pokemon),
+    // the metallic ring's tilt: a step of 47deg spreads neighbouring indexes
+    // far apart
+    ...(kind === "holo" && {
+      "--card-holo-angle": `${(getPkmHash(pokemon) * 47) % 360}deg`
+    }),
     ...(kind ? getSpecialCardStyle(kind) : {})
   }
 }
+
+// spread over the card, each on its own beat; only those near the light
+// show, so they glint where the pointer is
+const HOLO_TWINKLES = [
+  { left: 14, top: 18, size: 16, delayMs: 0 },
+  { left: 86, top: 24, size: 12, delayMs: 500 },
+  { left: 30, top: 44, size: 14, delayMs: 900 },
+  { left: 72, top: 50, size: 18, delayMs: 300 },
+  { left: 50, top: 12, size: 12, delayMs: 1200 },
+  { left: 20, top: 78, size: 16, delayMs: 700 },
+  { left: 82, top: 82, size: 14, delayMs: 1000 },
+  { left: 55, top: 70, size: 12, delayMs: 200 }
+]
 
 // one sweep per cycle; without a delay each card starts at a random point
 const SHEEN_CYCLE_MS = 9000
@@ -320,6 +351,24 @@ function SeasonCardShine(props: {
           <span className="season-shiny-etch" aria-hidden />
           <span className="season-shiny-glare" aria-hidden />
         </>
+      )}
+      {props.kind === "holo" && (
+        <span className="season-holo-twinkles" aria-hidden>
+          {HOLO_TWINKLES.map((twinkle, i) => (
+            <span
+              key={i}
+              className="season-holo-twinkle"
+              style={{
+                left: `${twinkle.left}%`,
+                top: `${twinkle.top}%`,
+                width: twinkle.size,
+                height: twinkle.size,
+                backgroundColor: `var(--card-color-${(i % 5) + 1})`,
+                animationDelay: `${twinkle.delayMs}ms`
+              }}
+            />
+          ))}
+        </span>
       )}
       <span
         className="season-holo-sheen"
@@ -377,6 +426,11 @@ export default function SeasonCard(props: {
         flipped: props.isFaceUp ?? true,
         shiny: props.shiny ?? false,
         holo: props.holo ?? false,
+        // the rarest holos get a metallic ring: legendaries, 6% of booster
+        // cards, and Megas, so a grid only ever shows a few
+        metallic:
+          (props.holo ?? false) &&
+          (data.rarity === Rarity.LEGENDARY || isMega(pokemon)),
         missing: props.isMissing ?? false
       })}
       style={

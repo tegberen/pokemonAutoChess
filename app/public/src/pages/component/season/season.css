@@ -1775,6 +1775,103 @@
   background-size: var(--card-stripe-tile) var(--card-stripe-tile);
 }
 
+/* a legendary or Mega holo has a metallic ring: the thin ring inside the
+   card's black edge keeps its grey (translucent black, so it takes the
+   card's tint) with one faint stretch of blue into purple, which complements
+   the gold of legendary frames, tilted per Pokemon by
+   --card-holo-angle. On tilt a rainbow hotspot lights it at the pointer, the
+   same point as the foil. The edge and the scene and portrait lines stay
+   black */
+.season-booster-card.metallic {
+  --card-line-light: linear-gradient(transparent, transparent);
+  --card-metal-line: linear-gradient(
+    var(--card-holo-angle, 115deg),
+    rgb(0 0 0 / 45%) 0%,
+    rgb(0 0 0 / 30%) 25%,
+    color-mix(in srgb, var(--card-color-4) 45%, transparent) 38%,
+    color-mix(in srgb, var(--color-rarity-epic) 45%, transparent) 50%,
+    rgb(0 0 0 / 30%) 63%,
+    rgb(0 0 0 / 45%) 100%
+  );
+}
+
+.season-booster-card.metallic[data-holo-pressed] {
+  --card-line-light: radial-gradient(
+    farthest-corner circle at var(--holo-x, 50%) var(--holo-y, 50%),
+    #ffffff 0%,
+    var(--card-color-3) 8%,
+    var(--card-color-1) 16%,
+    var(--card-color-2) 24%,
+    var(--card-color-4) 32%,
+    transparent 45%
+  );
+}
+
+/* the ring: a 2px band cut out of a filled box, with the prefixed mask too
+   so it never covers the whole frame; .holo too, so it beats the plain ring
+   rule further down */
+.season-booster-card.holo.metallic .season-booster-card-front::after {
+  border: none;
+  padding: 2px;
+  background-image: var(--card-line-light), var(--card-metal-line);
+  -webkit-mask:
+    linear-gradient(#000000 0 0) content-box,
+    linear-gradient(#000000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000000 0 0) content-box exclude,
+    linear-gradient(#000000 0 0);
+}
+
+/* tilting a holo makes small stars glint in the foil's colours, only near
+   the light: the layer is masked around the pointer like the foil. Slow
+   enough to stay far under the flash limit */
+.season-holo-twinkles {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  mask-image: radial-gradient(
+    circle at var(--holo-x, 50%) var(--holo-y, 50%),
+    #000000 0%,
+    #000000 25%,
+    transparent 60%
+  );
+}
+
+.season-holo-twinkle {
+  position: absolute;
+  clip-path: polygon(
+    50% 0,
+    58% 42%,
+    100% 50%,
+    58% 58%,
+    50% 100%,
+    42% 58%,
+    0 50%,
+    42% 42%
+  );
+  opacity: 0;
+  pointer-events: none;
+  translate: -50% -50%;
+}
+
+.season-booster-card[data-holo-pressed] .season-holo-twinkle {
+  animation: season-holo-twinkle 1600ms ease-in-out infinite;
+}
+
+@keyframes season-holo-twinkle {
+  0%,
+  100% {
+    opacity: 0;
+    transform: scale(0.2) rotate(0deg);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1) rotate(45deg);
+  }
+}
+
 .season-booster-card.shiny .season-booster-card-art {
   background-color: var(--card-color-1);
   box-shadow: inset 0 0 0 100px #2a1f40a6;
@@ -2441,10 +2538,19 @@
   mix-blend-mode: screen;
   opacity: 0.55;
   animation: season-holo-sheen linear infinite;
+  transition: opacity 200ms ease-out;
 }
 
 .season-booster-card:not(.flipped) .season-holo-sheen {
   animation: none;
+}
+
+/* the idle sweep is light from nowhere: once the card is held, the light
+   follows the pointer instead, so the sweep fades out */
+.season-booster-card[data-holo-pressed]
+  .season-booster-card-front
+  > .season-holo-sheen {
+  opacity: 0;
 }
 
 @keyframes season-holo-sheen {
@@ -2850,6 +2956,11 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .season-booster-card[data-holo-pressed] .season-holo-twinkle {
+    animation: none;
+    opacity: 0.8;
+  }
+
   .season-holo-sheen {
     animation: none;
   }
