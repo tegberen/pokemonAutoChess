@@ -493,11 +493,13 @@ export default function SeasonCard(props: {
               ))}
             </span>
           )}
-          {specialKind && (
+          {specialKind ? (
             <SeasonCardShine
               kind={specialKind}
               sheenDelayMs={props.sheenDelayMs}
             />
+          ) : (
+            <span className="season-card-glare" aria-hidden />
           )}
           {props.cornerBadge}
         </span>

@@ -1684,6 +1684,27 @@
   background-size: cover;
 }
 
+/* a regular card catches the light as plain white on matte paper; colour
+   stays the mark of holo and shiny cards */
+.season-card-glare {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background-image: radial-gradient(
+    farthest-corner circle at var(--holo-x, 50%) var(--holo-y, 50%),
+    rgb(255 255 255 / 6%) 0%,
+    transparent 110%
+  );
+  opacity: 0;
+  transition: opacity 250ms ease-out;
+}
+
+.season-booster-card[data-holo-pressed] .season-card-glare {
+  opacity: 1;
+}
+
 .season-booster-card-name {
   display: flex;
   align-items: center;
