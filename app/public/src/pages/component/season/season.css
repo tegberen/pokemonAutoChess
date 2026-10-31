@@ -795,6 +795,11 @@
   object-fit: contain;
 }
 
+/* a free dish waits at the café: the same "!" as a claimable Pass step */
+.season-tab-badge {
+  filter: brightness(0) invert(1);
+}
+
 /* this tab opens another window, so it ends with the » of the other links */
 .season-tab-leave {
   width: 14px;

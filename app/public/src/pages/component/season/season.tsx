@@ -4,6 +4,8 @@ import { SHINY_WONDER_PICK_LEVEL_STEP } from "../../../../../config/game/experie
 import {
   getCasualPickCharges,
   getNextCasualPickChargeAt,
+  getUtcDayKey,
+  isSpindaCafeOpen,
   SEASON_CASUAL_PICK_INTERVAL_MS,
   SEASON_CASUAL_PICK_MAX_CHARGES,
   type SeasonLearnGoal,
@@ -30,6 +32,7 @@ import { cc } from "../../utils/jsx"
 import SynergyIcon from "../icons/synergy-icon"
 import SeasonCroagunk from "./season-croagunk"
 import SeasonPelipper from "./season-pelipper"
+import SeasonSpinda from "./season-spinda"
 import SeasonShop from "./season-shop"
 import {
   getSeasonView,
@@ -175,8 +178,12 @@ function SeasonGuild(props: {
     nextStepIndex > lastStepIndex ? bonusStepIndex : nextStepIndex
   )
   const [trackTab, setTrackTab] = useState<
-    "pass" | "wonder-pick" | "croagunk" | "shop" | "pelipper"
+    "pass" | "wonder-pick" | "croagunk" | "spinda" | "shop" | "pelipper"
   >("pass")
+  // the café's free dish of the day is still on the table
+  const canTasteSpindaDish =
+    isSpindaCafeOpen(now) &&
+    profile.spindaCafe?.tastedDayKey !== getUtcDayKey(now)
   // a secret tab: only there while an invitation waits, or while it is open
   const isPelipperShown =
     (profile.partyInvitations ?? 0) > 0 || trackTab === "pelipper"
@@ -316,6 +323,23 @@ function SeasonGuild(props: {
           >
             <SeasonTabPortrait pokemon={Pkm.CROAGUNK} />
             Swap
+          </button>
+          <button
+            className={cc("season-tab", { active: trackTab === "spinda" })}
+            title="Spinda Café"
+            onClick={() => setTrackTab("spinda")}
+          >
+            <SeasonTabPortrait pokemon={Pkm.SPINDA} />
+            Café
+            {canTasteSpindaDish && (
+              <img
+                className="season-tab-badge"
+                src="assets/ui/exclamationmark.svg"
+                width={14}
+                height={14}
+                alt="A free dish is waiting"
+              />
+            )}
           </button>
           <button
             className={cc("season-tab", { active: trackTab === "shop" })}
@@ -668,6 +692,14 @@ function SeasonGuild(props: {
             style={{ backgroundImage: `url("${season.bannerSrc}")` }}
           >
             <SeasonCroagunk season={season} now={now} />
+          </div>
+          <div
+            className="season-stage-panel season-stage-banner"
+            hidden={trackTab !== "spinda"}
+            inert={trackTab !== "spinda"}
+            style={{ backgroundImage: 'url("assets/ui/spinda-cafe.webp")' }}
+          >
+            <SeasonSpinda profile={profile} now={now} />
           </div>
           <div
             className="season-stage-panel season-stage-banner"

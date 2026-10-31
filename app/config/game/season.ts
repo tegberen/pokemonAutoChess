@@ -85,7 +85,6 @@ export type SeasonCroagunkTradeItem =
   | "shiny-ticket"
   | "booster"
   | "casual-pick"
-  | "spinda-dish"
 
 export interface SeasonCroagunkTradeOffer {
   id: string
@@ -118,15 +117,6 @@ export const SEASON_CROAGUNK_OFFERS: SeasonCroagunkTradeOffer[] = [
     label: "Wonder Picks",
     price: 100,
     amount: 3
-  },
-  // eaten on the spot: the reaction it gets, an emote of the player's avatar,
-  // is what the Tickets buy
-  {
-    id: "spinda-dish",
-    item: "spinda-dish",
-    label: "Spinda's Café Dish",
-    price: 100,
-    amount: 1
   }
 ]
 
@@ -376,6 +366,31 @@ export function getSeasonStepsReached(
 
 export function getUtcDayKey(now = Date.now()) {
   return new Date(now).toISOString().slice(0, 10)
+}
+
+const SATURDAY = 6
+const SUNDAY = 0
+
+// Spinda's Café opens on weekends: one free tasting a UTC day
+export function isSpindaCafeOpen(now = Date.now()) {
+  const day = new Date(now).getUTCDay()
+  return day === SATURDAY || day === SUNDAY
+}
+
+// the coming Saturday 00:00 UTC, read while the café is closed
+export function getNextSpindaCafeOpening(now = Date.now()) {
+  const daysUntilSaturday = (SATURDAY - new Date(now).getUTCDay() + 7) % 7
+  return getNextUtcMidnight(now) + (daysUntilSaturday - 1) * MS_PER_DAY
+}
+
+// the same dish all day for a player, a different one for each player
+export function getSpindaCafeDish(uid: string, now = Date.now()): Item {
+  const seed = `${uid}:${getUtcDayKey(now)}`
+  let hash = 0
+  for (const character of seed) {
+    hash = (hash * 31 + character.charCodeAt(0)) >>> 0
+  }
+  return SPINDA_CAFE_DISHES[hash % SPINDA_CAFE_DISHES.length]
 }
 
 export function getUtcWeekKey(now = Date.now()) {

@@ -1,15 +1,9 @@
 import { useEffect, useRef, useState } from "react"
-import { useTranslation } from "react-i18next"
 import type { SeasonCroagunkTradeItem } from "../../../../../config/game/season"
 import { getAvailableEmotions } from "../../../../../models/precomputed/precomputed-emotions"
-import type { Emotion } from "../../../../../types/enum/Emotion"
 import { Pkm, PkmIndex } from "../../../../../types/enum/Pokemon"
-import type { IUserMetadataUnpacked } from "../../../../../types/interfaces/UserMetadata"
-import {
-  getPokemonCustomFromAvatar,
-  getPortraitSrc
-} from "../../../../../utils/avatar"
-import { useAppDispatch, useAppSelector } from "../../../hooks"
+import { getPortraitSrc } from "../../../../../utils/avatar"
+import { useAppDispatch } from "../../../hooks"
 import { buyCroagunkTrade, openCroagunkTrade } from "../../../network"
 import { setErrorAlertMessage } from "../../../stores/NetworkStore"
 import { cc } from "../../utils/jsx"
@@ -17,20 +11,13 @@ import type { SeasonState } from "./season-view"
 
 const MS_PER_HOUR = 3_600_000
 const MS_PER_MINUTE = 60_000
-// matches the three bites in season.css; "Nom nom nom..." shows meanwhile
-const DISH_EATEN_MS = 1300
 const CROAGUNK_EMOTIONS = getAvailableEmotions(PkmIndex[Pkm.CROAGUNK], false)
 
-const ITEM_ART: Record<
-  Exclude<SeasonCroagunkTradeItem, "spinda-dish">,
-  string
-> = {
+const ITEM_ART: Record<SeasonCroagunkTradeItem, string> = {
   "shiny-ticket": "assets/icons/season_ticket.svg",
   booster: "assets/ui/booster.png",
   "casual-pick": "assets/ui/pokecard.png"
 }
-
-type DishPhase = "offered" | "eating" | "reacting"
 
 function formatTimeLeft(msLeft: number) {
   const hours = Math.floor(msLeft / MS_PER_HOUR)
@@ -39,50 +26,22 @@ function formatTimeLeft(msLeft: number) {
   return `${minutes}m`
 }
 
-// the emotes the player's current avatar does not own yet
-function getAvatarReactions(profile: IUserMetadataUnpacked | undefined) {
-  if (!profile) return null
-  const avatar = getPokemonCustomFromAvatar(profile.avatar)
-  const index = PkmIndex[avatar.name]
-  if (!index) return null
-  const item = profile.pokemonCollection.get(index)
-  const getMissing = (shiny: boolean) => {
-    const owned = (shiny ? item?.shinyEmotions : item?.emotions) ?? []
-    return getAvailableEmotions(index, shiny).filter(
-      (emotion) => !owned.includes(emotion)
-    )
-  }
-  // same rule as the server: a complete shiny avatar reacts with its regular
-  // emotes instead
-  const shinyMissing = avatar.shiny ? getMissing(true) : []
-  const shiny = shinyMissing.length > 0
-  const missing = shiny ? shinyMissing : getMissing(false)
-  const available = getAvailableEmotions(index, shiny)
-  return { index, shiny, missing, available }
-}
-
 export default function SeasonCroagunk(props: {
   season: SeasonState
   now: number
 }) {
   const { season, now } = props
-  const { t } = useTranslation()
   const dispatch = useAppDispatch()
-  const profile = useAppSelector((state) => state.network.profile)
   const [isWaiting, setIsWaiting] = useState(false)
-  const [croagunkEmotion, setCroagunkEmotion] = useState(
+  const [croagunkEmotion] = useState(
     () =>
       CROAGUNK_EMOTIONS[Math.floor(Math.random() * CROAGUNK_EMOTIONS.length)]
   )
-  const [dishPhase, setDishPhase] = useState<DishPhase>("offered")
   const lastOpenedExpiryRef = useRef<number | null>(null)
   const trade = season.croagunkTrade
   const offer = season.croagunkOffer
   const isExpired = !trade || trade.expiresAt <= now
   const isPurchased = trade?.purchasedAt != null
-  const isDishOffer = offer?.item === "spinda-dish" && trade?.dish != null
-  const reactions = getAvatarReactions(profile)
-  const canReact = (reactions?.missing.length ?? 0) > 0
 
   const showError = (error: Error) =>
     dispatch(setErrorAlertMessage(error.message))
@@ -95,48 +54,16 @@ export default function SeasonCroagunk(props: {
     openCroagunkTrade().catch(showError)
   }, [isExpired, trade?.expiresAt])
 
-  // a new deal starts over from the dish on the counter
-  useEffect(() => {
-    setDishPhase("offered")
-  }, [trade?.chosenAt])
-
-  useEffect(() => {
-    if (dishPhase !== "eating") return
-    const timeout = setTimeout(
-      () => setDishPhase("reacting"),
-      DISH_EATEN_MS
-    )
-    return () => clearTimeout(timeout)
-  }, [dishPhase])
-
-  async function buy(reaction?: Emotion) {
+  async function buy() {
     if (isWaiting || !offer || isExpired || isPurchased) return
     setIsWaiting(true)
     try {
-      await buyCroagunkTrade(reaction)
-      // Croagunk answers with the same face, when Croagunk has that portrait
-      if (reaction && CROAGUNK_EMOTIONS.includes(reaction)) {
-        setCroagunkEmotion(reaction)
-      }
+      await buyCroagunkTrade()
     } catch (error) {
       showError(error as Error)
     } finally {
       setIsWaiting(false)
     }
-  }
-
-  // the portraits load while the dish is eaten, so the reactions appear whole
-  function startEatingDish() {
-    if (reactions) {
-      for (const emotion of reactions.available) {
-        new Image().src = getPortraitSrc(
-          reactions.index,
-          reactions.shiny,
-          emotion
-        )
-      }
-    }
-    setDishPhase("eating")
   }
 
   async function refresh() {
@@ -153,104 +80,6 @@ export default function SeasonCroagunk(props: {
 
   const msUntilNextDeal = Math.max(0, (trade?.expiresAt ?? now) - now)
   const canAfford = offer ? season.pokeBalance >= offer.price : false
-  const dishName = trade?.dish ? t(`item.${trade.dish}`) : ""
-
-  function renderDishDeal() {
-    if (!offer || !trade?.dish) return null
-    const isReacting = dishPhase === "reacting" && reactions && !isPurchased
-    return (
-      <>
-        <span className="season-croagunk-line">
-          {isPurchased
-            ? "Meh-heh-heh! Pleasure doing business."
-            : dishPhase === "eating"
-              ? "Nom nom nom..."
-              : !isReacting
-                ? "Spinda left this. Want to swap?"
-                : canReact
-                  ? "How do you react?"
-                  : "Meh-heh-heh... You've made every face there is. " +
-                    "Come back as someone else!"}
-        </span>
-        <div className="season-croagunk-details">
-          {isReacting ? (
-            // every face of the avatar: the ones still to make react, the ones
-            // already made are greyed out. With none left, nothing is charged
-            // and switching avatar opens new faces in place
-            <ul className="season-croagunk-reactions">
-              {reactions.available.map((emotion) => (
-                <li key={emotion}>
-                  <button
-                    className={cc({
-                      made: !reactions.missing.includes(emotion)
-                    })}
-                    disabled={
-                      isWaiting || !reactions.missing.includes(emotion)
-                    }
-                    title={emotion}
-                    onClick={() => buy(emotion)}
-                  >
-                    <img
-                      src={getPortraitSrc(
-                        reactions.index,
-                        reactions.shiny,
-                        emotion
-                      )}
-                      width={48}
-                      height={48}
-                      alt={emotion}
-                    />
-                  </button>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <>
-              <span
-                className={cc("season-croagunk-offer season-croagunk-dish", {
-                  eaten: dishPhase === "eating"
-                })}
-              >
-                <img
-                  src={`assets/item/${trade.dish}.png`}
-                  width={64}
-                  height={64}
-                  alt={dishName}
-                  title={dishName}
-                />
-              </span>
-              <span className="season-croagunk-name">{dishName}</span>
-              <span className="season-croagunk-price">
-                {offer.price}
-                <img
-                  src="assets/icons/season_poke.svg"
-                  width={18}
-                  height={18}
-                  alt="Tickets"
-                />
-              </span>
-              {isPurchased ? (
-                <span className="season-croagunk-status">Swapped</span>
-              ) : (
-                <button
-                  className="season-croagunk-button"
-                  disabled={
-                    // stays while the dish is eaten, so the box keeps its
-                    // height
-                    isWaiting || !canAfford || dishPhase !== "offered"
-                  }
-                  title={canAfford ? undefined : "Not enough Tickets"}
-                  onClick={startEatingDish}
-                >
-                  Trade
-                </button>
-              )}
-            </>
-          )}
-        </div>
-      </>
-    )
-  }
 
   return (
     <div className="season-croagunk">
@@ -273,13 +102,10 @@ export default function SeasonCroagunk(props: {
       </div>
       <div
         className={cc("season-croagunk-deal", {
-          "dish-deal": isDishOffer && !isExpired,
           swapped: isPurchased && !isExpired
         })}
       >
-        {offer && isDishOffer && !isExpired ? (
-          renderDishDeal()
-        ) : offer && offer.item !== "spinda-dish" ? (
+        {offer ? (
           <>
             <span className="season-croagunk-line">
               {isPurchased
@@ -323,7 +149,7 @@ export default function SeasonCroagunk(props: {
                   className="season-croagunk-button"
                   disabled={isWaiting || !canAfford}
                   title={canAfford ? undefined : "Not enough Tickets"}
-                  onClick={() => buy()}
+                  onClick={buy}
                 >
                   Trade
                 </button>

@@ -1,72 +1,25 @@
-import type { HydratedDocument } from "mongoose"
 import {
   getCasualPickCharges,
   getCroagunkTradeOffer,
   SEASON_CASUAL_PICK_INTERVAL_MS,
   SEASON_CROAGUNK_OFFERS,
   SEASON_CROAGUNK_TRADE_INTERVAL_MS,
-  type SeasonCroagunkTradeItem,
-  SPINDA_CAFE_DISHES
+  type SeasonCroagunkTradeItem
 } from "../config/game/season"
-import { CollectionUtils } from "../core/collection"
 import UserMetadata from "../models/mongo-models/user-metadata"
-import { getAvailableEmotions } from "../models/precomputed/precomputed-emotions"
-import { Emotion } from "../types/enum/Emotion"
-import { type Pkm, PkmIndex } from "../types/enum/Pokemon"
 import type {
   ICroagunkTrade,
-  IPokemonCollectionItemLean,
-  IPokemonCollectionItemMongo,
-  IUserMetadataLean,
-  IUserMetadataMongo
+  IUserMetadataLean
 } from "../types/interfaces/UserMetadata"
-import { getPokemonCustomFromAvatar } from "../utils/avatar"
-import { pickRandomIn } from "../utils/random"
-import { checkTitlesAfterEmotionUnlocked } from "./booster"
 
 const MAX_ATTEMPTS = 3
 
 const PROFILE_FIELD_BY_ITEM: Record<SeasonCroagunkTradeItem, string | null> = {
   "shiny-ticket": "shinyTickets",
   booster: "booster",
-  "casual-pick": null,
-  "spinda-dish": null
+  "casual-pick": null
 }
 
-function toBuffer(unlocked: IPokemonCollectionItemLean["unlocked"]) {
-  if (unlocked === undefined) return undefined
-  if (unlocked instanceof Uint8Array) return Buffer.from(unlocked)
-  return Buffer.from(unlocked.buffer)
-}
-
-// the emotes the player's current avatar can still react with; read from the
-// bits, since CollectionUtils.hasUnlocked owns everything under
-// UNLOCK_ALL_COLLECTION
-function getAvatarReactions(user: IUserMetadataLean) {
-  const avatar = getPokemonCustomFromAvatar(user.avatar ?? "")
-  const index = avatar.name ? PkmIndex[avatar.name] : undefined
-  if (!index) return null
-  const item = user.pokemonCollection?.[index]
-  const original = item ? toBuffer(item.unlocked) : undefined
-  const mask = original ? Buffer.from(original) : Buffer.alloc(5, 0)
-  const getMissing = (shiny: boolean) =>
-    getAvailableEmotions(index, shiny).filter((emotion) => {
-      const emotionBit = CollectionUtils.getEmotionMask(
-        shiny ? [] : [emotion],
-        shiny ? [emotion] : []
-      )
-      return emotionBit.every((byte, i) => (mask[i] & byte) === 0)
-    })
-  // a shiny avatar with every shiny emote, from a Shiny Wonder Pick, reacts
-  // with its regular emotes instead
-  const shinyMissing = avatar.shiny ? getMissing(true) : []
-  const shiny = shinyMissing.length > 0
-  const missing = shiny ? shinyMissing : getMissing(false)
-  return { pokemon: avatar.name, index, shiny, item, original, mask, missing }
-}
-
-// Spinda's dish is a surprise and rolls for everyone: a player whose avatar
-// already has every emote is told to switch avatar, not skipped
 function pickOffer(previousOfferId: string | undefined) {
   const pool = SEASON_CROAGUNK_OFFERS.filter(
     (offer) => offer.id !== previousOfferId
@@ -83,10 +36,7 @@ function createTrade(
   return {
     offerId: offer.id,
     chosenAt: now,
-    expiresAt: now + SEASON_CROAGUNK_TRADE_INTERVAL_MS,
-    ...(offer.item === "spinda-dish" && {
-      dish: pickRandomIn(SPINDA_CAFE_DISHES)
-    })
+    expiresAt: now + SEASON_CROAGUNK_TRADE_INTERVAL_MS
   }
 }
 
@@ -129,11 +79,7 @@ export async function getOrCreateCroagunkTrade(
   return fallback ?? UserMetadata.findOne({ uid })
 }
 
-export async function buyCroagunkTrade(
-  uid: string,
-  reaction: unknown,
-  now = Date.now()
-) {
+export async function buyCroagunkTrade(uid: string, now = Date.now()) {
   for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
     const user = await UserMetadata.findOne({ uid }).lean<IUserMetadataLean>()
     if (!user) return null
@@ -176,37 +122,6 @@ export async function buyCroagunkTrade(
       )
     }
 
-    // the dish is paid for with the reaction it gets: one of the avatar's
-    // emotes the player does not own yet
-    const reactions =
-      offer.item === "spinda-dish" ? getAvatarReactions(user) : null
-    if (offer.item === "spinda-dish") {
-      if (!reactions || !reactions.missing.includes(reaction as Emotion)) {
-        return null
-      }
-      const path = `pokemonCollection.${reactions.index}`
-      CollectionUtils.unlockEmotion(
-        reactions.mask,
-        reaction as Emotion,
-        reactions.shiny
-      )
-      if (reactions.item) {
-        filter[`${path}.unlocked`] = reactions.original
-        sets[`${path}.unlocked`] = reactions.mask
-      } else {
-        filter[path] = { $exists: false }
-        const newItem: IPokemonCollectionItemMongo = {
-          id: reactions.index,
-          unlocked: reactions.mask,
-          dust: 0,
-          selectedEmotion: Emotion.NORMAL,
-          selectedShiny: false,
-          played: 0
-        }
-        sets[path] = newItem
-      }
-    }
-
     const updatedUser = await UserMetadata.findOneAndUpdate(
       filter,
       {
@@ -218,27 +133,7 @@ export async function buyCroagunkTrade(
       },
       { returnDocument: "after" }
     )
-    if (updatedUser) {
-      if (reactions) {
-        await checkTitlesAfterReaction(
-          updatedUser,
-          reactions.pokemon,
-          reaction as Emotion,
-          reactions.shiny
-        )
-      }
-      return updatedUser
-    }
+    if (updatedUser) return updatedUser
   }
   return null
-}
-
-async function checkTitlesAfterReaction(
-  userDoc: HydratedDocument<IUserMetadataMongo>,
-  pokemon: Pkm,
-  emotion: Emotion,
-  shiny: boolean
-) {
-  checkTitlesAfterEmotionUnlocked(userDoc, [{ name: pokemon, emotion, shiny }])
-  await userDoc.save()
 }

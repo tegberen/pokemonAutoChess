@@ -187,8 +187,16 @@ const userMetadataSchema = new Schema({
         offerId: { type: String, required: true },
         chosenAt: { type: Number, required: true },
         expiresAt: { type: Number, required: true },
-        purchasedAt: { type: Number },
-        dish: { type: String }
+        purchasedAt: { type: Number }
+      },
+      { _id: false }
+    )
+  },
+  // the UTC day of the last free tasting at Spinda's Café
+  spindaCafe: {
+    type: new Schema(
+      {
+        tastedDayKey: { type: String }
       },
       { _id: false }
     )

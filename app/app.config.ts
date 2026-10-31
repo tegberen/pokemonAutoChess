@@ -60,6 +60,7 @@ import {
   rerollWonderPickDraw,
   sendPartyInvitation
 } from "./services/season-shop"
+import { tasteSpindaDish } from "./services/spinda-cafe"
 import {
   addBotToDatabase,
   approveBot,
@@ -1033,10 +1034,7 @@ export const server = defineServer({
       try {
         const userAuth = await authUser(req, res)
         if (!userAuth) return
-        const userDoc = await buyCroagunkTrade(
-          userAuth.uid,
-          req.body?.reaction
-        )
+        const userDoc = await buyCroagunkTrade(userAuth.uid)
         if (!userDoc) {
           res.status(409).json({ error: "Trade not available" })
           return
@@ -1045,6 +1043,25 @@ export const server = defineServer({
       } catch (error) {
         logger.error("Error buying Croagunk trade", error)
         res.status(500).json({ error: "Error buying Croagunk trade" })
+      }
+    })
+
+    app.post("/season/spinda/taste", async (req, res) => {
+      try {
+        const userAuth = await authUser(req, res)
+        if (!userAuth) return
+        const userDoc = await tasteSpindaDish(
+          userAuth.uid,
+          req.body?.reaction
+        )
+        if (!userDoc) {
+          res.status(409).json({ error: "No dish to taste" })
+          return
+        }
+        res.status(200).json({ user: toUserMetadataJSON(userDoc) })
+      } catch (error) {
+        logger.error("Error tasting Spinda's dish", error)
+        res.status(500).json({ error: "Error tasting Spinda's dish" })
       }
     })
 

@@ -358,8 +358,12 @@ export function openCroagunkTrade() {
   return postSeasonAction("croagunk/open")
 }
 
-export function buyCroagunkTrade(reaction?: Emotion) {
-  return postSeasonAction("croagunk/buy", { reaction })
+export function buyCroagunkTrade() {
+  return postSeasonAction("croagunk/buy")
+}
+
+export function tasteSpindaDish(reaction: Emotion) {
+  return postSeasonAction("spinda/taste", { reaction })
 }
 
 export function sendPartyInvitation(guest: Pkm) {

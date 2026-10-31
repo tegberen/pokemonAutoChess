@@ -485,7 +485,7 @@ So, I've removed the free collection and am introducing Wigglytuff's Guild. I ho
 
 The collection will start over: boosters will unlock your emotes again. Every registered account will start with 10 boosters and a Shiny Wonder Pick. Shinies are now turbo-rare and almost exclusive to Shiny Wonder Picks. The regular dopamine hit from finding Shinies on the main will be replaced by Holos. At least, that's the hope.
 
-Wigglytuff will hand out stuff daily (you just need to log in), which you can then spend at Kecleon's or Croagunk's shop. There's also a small gacha minigame called Chimecho's Wonder Pick. It's free and resets every four hours, on the hour (UTC).
+Wigglytuff will hand out stuff daily (you just need to log in), which you can then spend at Kecleon's or Croagunk's shop. There's also a small gacha minigame called Chimecho's Wonder Pick. It's free and resets every four hours, on the hour (UTC). On weekends, Spinda's Café serves a free dish each day: the face you make tasting it joins your avatar's emotes.
 
 Some people would like to play but can't find a lobby. The hope is that this gives everyone a reason to drop by the server every now and then, so the lobbies fill up. Cheers, and have fun collecting!
 
