@@ -6,6 +6,7 @@ node_modules/
 .env.production
 app/public/dist/server/**/*.js
 app/public/dist/server/**/*.js.map
+app/public/dist/server/.tsbuildinfo
 app/public/dist/**/*.d.ts
 app/public/dist/client/index.html
 app/public/dist/client/index*.js
