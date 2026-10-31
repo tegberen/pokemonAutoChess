@@ -55,6 +55,7 @@ interface IUserMetadata {
   casualPick?: ICasualPick
   croagunkTrade?: ICroagunkTrade
   spindaCafe?: ISpindaCafe
+  communityGoal?: ICommunityGoal
   shinyPickMilestonesClaimed?: number
   season?: ISeasonProgress
   pokemonCollection: Map<string, IPokemonCollectionItem>
@@ -65,6 +66,15 @@ export interface ICroagunkTrade {
   chosenAt: number
   expiresAt: number
   purchasedAt?: number
+}
+
+// the games this player added to the weekly community goal
+export interface ICommunityGoal {
+  weekKey?: string
+  games?: number
+  claimed?: boolean
+  // when the last game that counted ended
+  countedUntil?: number
 }
 
 export interface ISpindaCafe {

@@ -95,6 +95,7 @@ import { grantRainbowHoursRewards } from "../services/rainbow-hours"
 import { notificationsService } from "../services/notifications"
 import { recordSeasonGame } from "../services/season"
 import { recordSpindaGuestGame } from "../services/spinda-cafe"
+import { recordCommunityGoalGame } from "../services/community-goal"
 import {
   getScribbleQuizValues,
   grantRandomScribbleShape,
@@ -1876,6 +1877,14 @@ export default class GameRoom extends Room<{ state: GameState }> {
         }).catch((error) =>
           logger.error("Error recording Spinda guest game", error)
         )
+        if (stageReached >= SEASON_MIN_STAGE_FOR_CHALLENGES) {
+          await recordCommunityGoalGame(
+            player.id,
+            this.state.startTime
+          ).catch((error) =>
+            logger.error("Error recording community goal game", error)
+          )
+        }
       }
       if (
         countsAsAGame &&

@@ -40,7 +40,7 @@ const GUEST_RULES =
   "points. A Unique, Legendary or Hatch guest on your final team gives all " +
   `${SPINDA_GUEST_GOAL_POINTS} points at once. Games played at the same ` +
   `time count once. ${SPINDA_GUEST_GOAL_POINTS} points unlock the guest's ` +
-  "Holo and all its regular emotes."
+  "Holo and every single regular emote."
 
 function pickRandomFace(guest: SpindaGuest) {
   const emotions = getAvailableEmotions(PkmIndex[guest.pokemon], false)

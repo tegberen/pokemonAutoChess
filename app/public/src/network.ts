@@ -3,6 +3,7 @@ import type { User } from "@firebase/auth-types"
 import firebase from "firebase/compat/app"
 import type { server } from "../../app.config.ts"
 import { FIREBASE_CONFIG } from "../../config"
+import type { ICommunityGoalStatus } from "../../config/game/community-goal"
 import type { SpindaGuestSlot } from "../../config/game/spinda-guest"
 import type AfterGameState from "../../rooms/states/after-game-state"
 import type GameState from "../../rooms/states/game-state"
@@ -365,6 +366,20 @@ export function buyCroagunkTrade() {
 
 export function tasteSpindaDish(reaction: Emotion) {
   return postSeasonAction("spinda/taste", { reaction })
+}
+
+export async function fetchCommunityGoalStatus(): Promise<
+  ICommunityGoalStatus
+> {
+  const response = await fetch("/season/community")
+  if (!response.ok) {
+    throw new Error(`Failed to fetch the community goal: ${response.status}`)
+  }
+  return response.json()
+}
+
+export function claimCommunityGoal() {
+  return postSeasonAction("community/claim")
 }
 
 export function claimSpindaGuest(slot: SpindaGuestSlot) {

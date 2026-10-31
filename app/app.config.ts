@@ -61,6 +61,10 @@ import {
   rerollWonderPickDraw,
   sendPartyInvitation
 } from "./services/season-shop"
+import {
+  claimCommunityGoal,
+  getCommunityGoalStatus
+} from "./services/community-goal"
 import { tasteSpindaDish } from "./services/spinda-cafe"
 import {
   addBotToDatabase,
@@ -1079,6 +1083,31 @@ export const server = defineServer({
       } catch (error) {
         logger.error("Error claiming Spinda's guest", error)
         res.status(500).json({ error: "Error claiming Spinda's guest" })
+      }
+    })
+
+    app.get("/season/community", async (req, res) => {
+      try {
+        res.status(200).json(await getCommunityGoalStatus())
+      } catch (error) {
+        logger.error("Error reading the community goal", error)
+        res.status(500).json({ error: "Error reading the community goal" })
+      }
+    })
+
+    app.post("/season/community/claim", async (req, res) => {
+      try {
+        const userAuth = await authUser(req, res)
+        if (!userAuth) return
+        const userDoc = await claimCommunityGoal(userAuth.uid)
+        if (!userDoc) {
+          res.status(409).json({ error: "Nothing to claim" })
+          return
+        }
+        res.status(200).json({ user: toUserMetadataJSON(userDoc) })
+      } catch (error) {
+        logger.error("Error claiming the community goal", error)
+        res.status(500).json({ error: "Error claiming the community goal" })
       }
     })
 

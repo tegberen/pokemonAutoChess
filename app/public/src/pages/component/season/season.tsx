@@ -36,6 +36,7 @@ import { cc } from "../../utils/jsx"
 import SynergyIcon from "../icons/synergy-icon"
 import SeasonCroagunk from "./season-croagunk"
 import SeasonPelipper from "./season-pelipper"
+import SeasonCommunityGoal from "./season-community-goal"
 import SeasonSpinda from "./season-spinda"
 import SeasonShop from "./season-shop"
 import {
@@ -751,6 +752,11 @@ function SeasonGuild(props: {
             {season.challenges.map((challenge) => (
               <ChallengeRow key={challenge.id} challenge={challenge} />
             ))}
+            <SeasonCommunityGoal
+              profile={profile}
+              now={now}
+              rewardIcon={POKE_ICON}
+            />
           </ul>
         </section>
 

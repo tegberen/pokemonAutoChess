@@ -215,6 +215,17 @@ const userMetadataSchema = new Schema({
       { _id: false }
     )
   },
+  communityGoal: {
+    type: new Schema(
+      {
+        weekKey: { type: String },
+        games: { type: Number },
+        claimed: { type: Boolean },
+        countedUntil: { type: Number }
+      },
+      { _id: false }
+    )
+  },
   // no default: undefined means the tier was never set and is not back-paid
   shinyPickMilestonesClaimed: {
     type: Number

@@ -22,7 +22,7 @@ export type SpindaGuestSlot = "saturday" | "sunday"
 
 export const SPINDA_GUEST_SLOTS: SpindaGuestSlot[] = ["saturday", "sunday"]
 
-export const SPINDA_GUEST_GOAL_POINTS = 3
+export const SPINDA_GUEST_GOAL_POINTS = 4
 export const SPINDA_GUEST_POINTS_PER_GAME = 1
 export const SPINDA_GUEST_POINTS_WITH_GUEST_ON_TEAM = 2
 export const SPINDA_GUEST_DUPLICATE_BOOSTERS = 2

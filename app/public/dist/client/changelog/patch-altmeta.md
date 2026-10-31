@@ -492,7 +492,8 @@ Some people would like to play but can't find a lobby. The hope is that this giv
 **Events**
 - Rainbow Hours | new, Monday to Friday 20:00 to 24:00 UTC: every game started in that window and played to stage 14 pays 20 Tickets, and a win 30 more. Games played at the same time pay once.
 - Smeargle Pack for a Pack | new solo Smeargle Pack lobby at 00:00 UTC that closes each Rainbow Hours: everyone who plays to stage 14 gets 1 Wonder Pick, the winner 1 booster.
-- Spinda's Café guests | new, a Pokémon visits on Saturday and another on Sunday: a game played to stage 14 that day gives 1 point, 2 with its family on your final team. 3 points unlock its Holo and every regular emote. A Unique, Legendary or Hatch guest on your final team gives all 3 points at once. Games played at the same time count once.
+- Spinda's Café guests | new, a Pokémon visits on Saturday and another on Sunday: a game played to stage 14 that day gives 1 point, 2 with its family on your final team. 4 points unlock its Holo and every single regular emote. A Unique, Legendary or Hatch guest on your final team gives all 4 points at once. Games played at the same time count once.
+- Community goal | added a weekly community challenge
 
 **Wishes**
 - Further Beyond | Gold → Prismatic

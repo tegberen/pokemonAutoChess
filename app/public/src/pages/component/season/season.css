@@ -669,7 +669,7 @@
 
 .season-challenge-period {
   flex-shrink: 0;
-  min-width: 4.5em;
+  min-width: 5.5em;
   color: var(--color-fg-secondary);
   font-size: 0.9em;
 }
@@ -711,6 +711,44 @@
   padding: 1px;
   border: 1px solid #08060b;
   background-color: var(--season-channel);
+}
+
+/* the count slot is as wide as the community row's Claim button, so every
+   row's bar starts on the same line */
+.season-challenges .season-challenge-progress {
+  --count-slot-width: 5.5rem;
+  flex-basis: 13em;
+}
+
+.season-challenges .season-challenge-progress > span {
+  min-width: var(--count-slot-width);
+}
+
+/* the rules mark and Claim share one slot, as wide as the other rows' count */
+.season-community-slot {
+  display: grid;
+  flex: none;
+  align-items: center;
+  justify-items: end;
+  width: var(--count-slot-width);
+}
+
+.season-community-slot > * {
+  grid-area: 1 / 1;
+}
+
+.season-community-slot > .hidden {
+  visibility: hidden;
+}
+
+.season-community-goal.done .season-challenge-bar > span.filled {
+  background-color: var(--color-fg-green);
+}
+
+.season-community-goal .season-community-claim {
+  width: var(--count-slot-width);
+  min-width: 0;
+  padding: 0.1em 0 0.2em;
 }
 
 .season-poke {
