@@ -640,6 +640,7 @@ export default function SeasonCollection(props: { onOpenGuild?: () => void }) {
                         chosenEmotions,
                         synergyIconSize,
                         showPlayCount: sort === "played",
+                        showProgress: sort === "progress",
                         onSelect: selectCollectionCard
                       }}
                     />
@@ -794,6 +795,7 @@ interface CollectionCellProps {
   chosenEmotions: ChosenEmotions
   synergyIconSize: string
   showPlayCount: boolean
+  showProgress: boolean
   onSelect: (pokemon: Pkm) => void
 }
 
@@ -806,6 +808,7 @@ function CollectionCell({
   chosenEmotions,
   synergyIconSize,
   showPlayCount,
+  showProgress,
   onSelect
 }: {
   ariaAttributes: object
@@ -835,7 +838,14 @@ function CollectionCell({
           )
         }
       />
-      <span className="season-collection-progress">
+      <span
+        className={cc("season-collection-progress", {
+          complete:
+            entry.totalEmotions > 0 &&
+            entry.totalOwnedEmotions === entry.totalEmotions,
+          hidden: !showProgress
+        })}
+      >
         <span
           style={{
             width: `${(entry.totalOwnedEmotions / entry.totalEmotions) * 100}%`
@@ -910,7 +920,11 @@ function SeasonCollectionModal(props: {
                 🗙
               </button>
             </header>
-            <span className="season-collection-progress">
+            <span
+              className={cc("season-collection-progress", {
+                complete: progress === 100
+              })}
+            >
               <span style={{ width: `${progress}%` }} />
             </span>
             <span className="season-collection-detail-played" title="Played">
