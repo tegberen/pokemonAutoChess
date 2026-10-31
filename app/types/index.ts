@@ -782,6 +782,7 @@ export interface IGameMetadata {
   blessingsEnabled: boolean
   specialGameRule: SpecialGameRule | null
   dailyDuel: boolean
+  rainbowFinale?: boolean
   playerIds: string[]
   playersInfo: string[]
   stageLevel: number

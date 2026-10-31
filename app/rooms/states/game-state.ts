@@ -177,7 +177,9 @@ export default class GameState extends Schema {
     this.maxRank = maxRank
     this.weather = Weather.NEUTRAL
 
-    if (gameMode === GameMode.SCRIBBLE || whimsy) {
+    // a Scribble room that fixed its rule, like Smeargle Pack for a Pack,
+    // keeps it; only an open Scribble rolls one
+    if ((gameMode === GameMode.SCRIBBLE && !specialGameRule) || whimsy) {
       this.specialGameRule = pickRandomIn(Object.values(SpecialGameRule))
     } else {
       this.specialGameRule = specialGameRule

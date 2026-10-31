@@ -57,3 +57,10 @@ section.room-menu .room-menu > ul {
   grid-auto-rows: min-content;
   gap: 8px;
 }
+
+/* while the Rainbow Hours finale is being played, the In Game tab wears its
+   room's rainbow stripes, selected or not */
+.room-menu .react-tabs__tab.rainbow-tab {
+  background-color: var(--scribble-tournament-bg);
+  background-image: var(--scribble-tournament-stripes);
+}

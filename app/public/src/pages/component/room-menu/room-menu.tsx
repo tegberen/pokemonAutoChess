@@ -10,6 +10,7 @@ import { hasModeratorRights } from "../../../../../utils/roles"
 import { joinExistingPreparationRoom } from "../../../game/lobby-logic"
 import { useAppDispatch, useAppSelector } from "../../../hooks"
 import { rooms } from "../../../network"
+import { cc } from "../../utils/jsx"
 import { IngameRoomsList } from "./game-rooms-menu"
 import RoomItem from "./room-item"
 import {
@@ -92,6 +93,9 @@ export default function RoomMenu() {
       r.metadata.gameMode === GameMode.CUSTOM_LOBBY && !r.metadata.tournamentId
   )
   const hasDailyDuelLobby = preparationRooms.some((r) => r.metadata?.dailyDuel)
+  const isRainbowFinalePlaying = gameRooms.some(
+    (r) => r.metadata?.rainbowFinale
+  )
 
   return (
     <Tabs className="my-container room-menu custom-bg hidden-scrollable">
@@ -102,7 +106,12 @@ export default function RoomMenu() {
       </p>
       <TabList>
         <Tab>{t("available_rooms")}</Tab>
-        <Tab>
+        <Tab
+          // the Rainbow Hours finale in progress paints its tab like its room
+          className={cc("react-tabs__tab", {
+            "rainbow-tab": isRainbowFinalePlaying
+          })}
+        >
           <span>{t("in_game")}</span>
         </Tab>
 

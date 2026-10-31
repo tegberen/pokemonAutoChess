@@ -331,6 +331,7 @@ export default class GameRoom extends Room<{ state: GameState }> {
       gameMode,
       whimsy: whimsy ?? false,
       dailyDuel: this.dailyDuel,
+      rainbowFinale: this.rainbowFinale,
       playerIds: Object.keys(users).filter((id) => users[id].isBot === false),
       playersInfo: Object.keys(users).map(
         (u) => `${users[u].name} [${users[u].elo}]`
