@@ -32,6 +32,7 @@ import PokeGuesser from "../pokeguesser/pokeguesser"
 import WishQuiz from "../wish-quiz/wish-quiz"
 import Profile from "../profile/profile"
 import Season from "../season/season"
+import KangaskhanStorageHeader from "../season/kangaskhan-storage-header"
 import SeasonCollection from "../season/season-collection"
 import ServersList from "../servers/servers-list"
 import SpriteTrackerModal from "../sprite-tracker/sprite-tracker-modal"
@@ -601,10 +602,10 @@ function Modals({
       <Modal
         onClose={closeModal}
         show={modal === "collection"}
-        header={t("collection.title")}
+        header={<KangaskhanStorageHeader />}
         className="anchor-top season-modal"
       >
-        <SeasonCollection />
+        <SeasonCollection onOpenGuild={() => setModal("season")} />
       </Modal>
       <Modal
         onClose={closeModal}
@@ -612,7 +613,7 @@ function Modals({
         header="Guild"
         className="anchor-top season-modal"
       >
-        <Season />
+        <Season onOpenStorage={() => setModal("collection")} />
       </Modal>
       <Modal
         onClose={closeModal}

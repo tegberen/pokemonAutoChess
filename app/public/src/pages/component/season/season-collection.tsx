@@ -45,6 +45,8 @@ import { LocalStoreKeys, useLocalStore } from "../../utils/store"
 import SynergyIcon from "../icons/synergy-icon"
 import { Modal } from "../modal/modal"
 import { PokemonTypeahead } from "../typeahead/pokemon-typeahead"
+import { reactInKangaskhanStorage } from "./kangaskhan-storage-header"
+import { SeasonTabPortrait } from "./season"
 import SeasonCard from "./season-card"
 import SeasonSparkles from "./season-sparkles"
 import "./season.css"
@@ -337,7 +339,7 @@ function SparkleBurstSlot(props: {
   return <SeasonSparkles key={burstId} delayMs={0} isContained />
 }
 
-export default function SeasonCollection() {
+export default function SeasonCollection(props: { onOpenGuild?: () => void }) {
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
   const profile = useAppSelector((state) => state.network.profile)
@@ -530,6 +532,18 @@ export default function SeasonCollection() {
           >
             Holo Pokémon
           </button>
+          {props.onOpenGuild && (
+            // a shortcut back, the mirror of the Guild's Storage tab
+            <button
+              className="season-tab"
+              title="Wigglytuff's Guild"
+              onClick={props.onOpenGuild}
+            >
+              <SeasonTabPortrait pokemon={Pkm.WIGGLYTUFF} />
+              Guild Hall
+              <span className="season-arrow-icon right season-tab-leave" />
+            </button>
+          )}
           <div className="season-collection-controls">
             <button
               className={cc(
@@ -672,6 +686,7 @@ export default function SeasonCollection() {
             chooseEmotion(selected.pokemon, selected.shiny, emotion)
           }
           onSetAvatar={(choice) => {
+            reactInKangaskhanStorage("avatar")
             if (choice.seasonPortraitId) {
               dispatch(changeAvatarToSeasonPortrait(choice.seasonPortraitId))
             } else {
@@ -685,7 +700,12 @@ export default function SeasonCollection() {
             }
           }}
           isFavorite={favorites.includes(selectedEntry.pokemon)}
-          onToggleFavorite={() => toggleFavorite(selectedEntry.pokemon)}
+          onToggleFavorite={() => {
+            if (!favorites.includes(selectedEntry.pokemon)) {
+              reactInKangaskhanStorage("favorite")
+            }
+            toggleFavorite(selectedEntry.pokemon)
+          }}
           onClose={() => setSelected(undefined)}
         />
       )}

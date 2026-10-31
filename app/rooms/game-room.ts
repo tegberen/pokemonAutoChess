@@ -1788,10 +1788,15 @@ export default class GameRoom extends Room<{ state: GameState }> {
       ) {
         const scholarFinishes = [...(usr.scholarFinishes ?? [])]
         for (const synergy of getMaxedScholarSynergies(player.synergies)) {
-          if (
-            countScholarFinishes(scholarFinishes, synergy) <
-            SCHOLAR_FINISHES_PER_SYNERGY
-          ) {
+          const finishesMissing = Math.max(
+            0,
+            SCHOLAR_FINISHES_PER_SYNERGY -
+              countScholarFinishes(scholarFinishes, synergy)
+          )
+          // a win with it maxed out completes that synergy at once
+          const finishesEarned =
+            rank === 1 ? finishesMissing : Math.min(1, finishesMissing)
+          for (let i = 0; i < finishesEarned; i++) {
             scholarFinishes.push(synergy)
           }
         }

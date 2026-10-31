@@ -7,6 +7,22 @@
   overflow: hidden;
 }
 
+/* the Guild and the Storage open into each other: a quick fade in place
+   instead of the modal's slide from above, so switching reads as turning to
+   another room rather than a new window dropping in */
+.modal.season-modal[open] {
+  animation: season-modal-fade-in 180ms ease-out;
+}
+
+@keyframes season-modal-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 .season-modal .modal-body {
   flex: 1;
   min-height: 0;
@@ -423,14 +439,36 @@
 }
 
 /* today's walk toward the next step: part solid, then stripes fading out */
+/* the solid part and the stripes share one gradient along the stripes'
+   slant, so the solid part ends on the same "/" and its gap is exactly one
+   stripe gap, whatever the line's width */
 .season-step.next::before {
   background-image:
-    linear-gradient(90deg, var(--season-progress) 0 40%, transparent 40%),
     linear-gradient(90deg, transparent 40%, var(--season-channel) 95%),
-    repeating-linear-gradient(
+    linear-gradient(
       115deg,
-      var(--season-progress) 0 3px,
-      transparent 3px 7px
+      var(--season-progress) 0 40%,
+      transparent 40% calc(40% + 4px),
+      var(--season-progress) calc(40% + 4px) calc(40% + 7px),
+      transparent calc(40% + 7px) calc(40% + 11px),
+      var(--season-progress) calc(40% + 11px) calc(40% + 14px),
+      transparent calc(40% + 14px) calc(40% + 18px),
+      var(--season-progress) calc(40% + 18px) calc(40% + 21px),
+      transparent calc(40% + 21px) calc(40% + 25px),
+      var(--season-progress) calc(40% + 25px) calc(40% + 28px),
+      transparent calc(40% + 28px) calc(40% + 32px),
+      var(--season-progress) calc(40% + 32px) calc(40% + 35px),
+      transparent calc(40% + 35px) calc(40% + 39px),
+      var(--season-progress) calc(40% + 39px) calc(40% + 42px),
+      transparent calc(40% + 42px) calc(40% + 46px),
+      var(--season-progress) calc(40% + 46px) calc(40% + 49px),
+      transparent calc(40% + 49px) calc(40% + 53px),
+      var(--season-progress) calc(40% + 53px) calc(40% + 56px),
+      transparent calc(40% + 56px) calc(40% + 60px),
+      var(--season-progress) calc(40% + 60px) calc(40% + 63px),
+      transparent calc(40% + 63px) calc(40% + 67px),
+      var(--season-progress) calc(40% + 67px) calc(40% + 70px),
+      transparent calc(40% + 70px)
     );
 }
 
@@ -755,6 +793,18 @@
 
 .season-tab > img {
   object-fit: contain;
+}
+
+/* this tab opens another window, so it ends with the » of the other links */
+.season-tab-leave {
+  width: 14px;
+  height: 14px;
+}
+
+.kangaskhan-storage-header {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
 }
 
 .season-shop {
@@ -2257,6 +2307,11 @@
   align-items: flex-end;
 }
 
+/* its text tabs as tall as the Guild shortcut with its portrait */
+.season-collection .season-tab {
+  align-self: stretch;
+}
+
 .season-collection-total {
   align-self: center;
   margin-left: 1em;
@@ -2977,6 +3032,10 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .modal.season-modal[open] {
+    animation: none;
+  }
+
   .season-booster-card[data-holo-pressed] .season-holo-twinkle {
     animation: none;
     opacity: 0.8;

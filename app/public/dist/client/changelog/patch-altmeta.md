@@ -499,6 +499,9 @@ Some people would like to play but can't find a lobby. The hope is that this giv
 **Game Mode**
 - Smeargle Pack | no more shiny cards, and no 10 GOLD for picking one. Updated card style and corrected its description: you pick one starter, not two
 
+**Titles**
+- Scholar | a win with a synergy maxed out now completes that synergy at once, instead of counting as one of its three finishes
+
 ### 27 October 2026
 
 **Wishes**

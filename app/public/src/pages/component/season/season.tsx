@@ -107,7 +107,7 @@ async function pickShinyCard(): Promise<WonderPickResult> {
   }
 }
 
-export default function Season() {
+export default function Season(props: { onOpenStorage?: () => void }) {
   const profile = useAppSelector((state) => state.network.profile)
   const [now, setNow] = useState(Date.now())
 
@@ -127,13 +127,34 @@ export default function Season() {
       </div>
     )
   }
-  return <SeasonGuild season={season} profile={profile} now={now} />
+  return (
+    <SeasonGuild
+      season={season}
+      profile={profile}
+      now={now}
+      onOpenStorage={props.onOpenStorage}
+    />
+  )
+}
+
+// the keeper's portrait names each tab, so only its place is written
+export function SeasonTabPortrait(props: { pokemon: Pkm }) {
+  return (
+    <img
+      src={getPortraitSrc(PkmIndex[props.pokemon])}
+      className="season-tab-portrait"
+      width={32}
+      height={32}
+      alt=""
+    />
+  )
 }
 
 function SeasonGuild(props: {
   season: SeasonState
   profile: IUserMetadataUnpacked
   now: number
+  onOpenStorage?: () => void
 }) {
   const { season, profile, now } = props
   const dispatch = useAppDispatch()
@@ -199,6 +220,8 @@ function SeasonGuild(props: {
 
   const msUntilSeasonEnds = Math.max(0, new Date(season.endsAt).getTime() - now)
   const msUntilNextCasualPick = getNextCasualPickChargeAt(now) - now
+  // the Shiny Wonder Pick cards are drawn again each UTC day
+  const msUntilShinyCardsRefresh = MS_PER_DAY - (now % MS_PER_DAY)
 
   function getStepStatus(step: SeasonStep): StepStatus {
     if (season.claimedSteps.includes(step.index)) return "claimed"
@@ -272,62 +295,56 @@ function SeasonGuild(props: {
         <div className="season-tabs">
           <button
             className={cc("season-tab", { active: trackTab === "pass" })}
+            title="Wigglytuff's Guild"
             onClick={() => setTrackTab("pass")}
           >
-            Pass
+            <SeasonTabPortrait pokemon={Pkm.WIGGLYTUFF} />
+            Guild Hall
           </button>
           <button
             className={cc("season-tab", { active: trackTab === "wonder-pick" })}
+            title="Chimecho Assembly"
             onClick={() => setTrackTab("wonder-pick")}
           >
-            <img
-              src={getPortraitSrc(PkmIndex[Pkm.CHIMECHO])}
-              className="season-tab-portrait"
-              width={26}
-              height={26}
-              alt=""
-            />
-            Chimecho Assembly
+            <SeasonTabPortrait pokemon={Pkm.CHIMECHO} />
+            Assembly
           </button>
           <button
             className={cc("season-tab", { active: trackTab === "croagunk" })}
+            title="Croagunk Swap"
             onClick={() => setTrackTab("croagunk")}
           >
-            <img
-              src={getPortraitSrc(PkmIndex[Pkm.CROAGUNK])}
-              className="season-tab-portrait"
-              width={26}
-              height={26}
-              alt=""
-            />
-            Croagunk Swap
+            <SeasonTabPortrait pokemon={Pkm.CROAGUNK} />
+            Swap
           </button>
           <button
             className={cc("season-tab", { active: trackTab === "shop" })}
+            title="Kecleon Shop"
             onClick={() => setTrackTab("shop")}
           >
-            <img
-              src={getPortraitSrc(PkmIndex[Pkm.KECLEON])}
-              className="season-tab-portrait"
-              width={26}
-              height={26}
-              alt=""
-            />
-            Kecleon Shop
+            <SeasonTabPortrait pokemon={Pkm.KECLEON} />
+            Shop
           </button>
+          {props.onOpenStorage && (
+            // a shortcut, not a panel: it opens the storage window
+            <button
+              className="season-tab"
+              title="Kangaskhan Storage"
+              onClick={props.onOpenStorage}
+            >
+              <SeasonTabPortrait pokemon={Pkm.KANGASKHAN} />
+              Storage
+              <span className="season-arrow-icon right season-tab-leave" />
+            </button>
+          )}
           {isPelipperShown && (
             <button
               className={cc("season-tab", { active: trackTab === "pelipper" })}
+              title="Pelipper Post"
               onClick={() => setTrackTab("pelipper")}
             >
-              <img
-                src={getPortraitSrc(PkmIndex[Pkm.PELIPPER])}
-                className="season-tab-portrait"
-                width={26}
-                height={26}
-                alt=""
-              />
-              Pelipper Post
+              <SeasonTabPortrait pokemon={Pkm.PELIPPER} />
+              Post
             </button>
           )}
           <div className="season-tabs-balance">
@@ -532,9 +549,15 @@ function SeasonGuild(props: {
                     height={18}
                     alt=""
                   />
-                  Next free pick in {formatCountdown(msUntilNextCasualPick)}
+                  Next pick in {formatCountdown(msUntilNextCasualPick)}
                 </span>
               )}
+            {wonderPickVariant === "shiny" && (
+              <span className="season-days-left season-wonder-clock">
+                <img src="assets/ui/clock.png" width={13} height={18} alt="" />
+                New cards in {formatCountdown(msUntilShinyCardsRefresh)}
+              </span>
+            )}
             <div className="season-wonder-modes">
               <button
                 className={cc(
