@@ -3019,7 +3019,8 @@
   width: 100%;
   padding: 0;
   border: var(--border-thin);
-  border-radius: 8px;
+  border-width: 3px;
+  border-radius: 6px;
   background: none;
   cursor: default;
 }
@@ -3029,7 +3030,8 @@
 }
 
 /* a portrait fills its button, so there is no fill to change: hover is the
-   accent border, the chosen one a white border */
+   accent border, the chosen one a white border. Every button has the card
+   portrait's 3px frame, as the thin one vanished on light portraits */
 :is(.season-collection-emotions, .season-collection-forms)
   button:not([disabled]):hover {
   border-color: var(--color-bg-accent);
@@ -3063,7 +3065,8 @@
   display: block;
   padding: 0;
   border: var(--border-thin);
-  border-radius: 8px;
+  border-width: 3px;
+  border-radius: 6px;
   background: none;
   cursor: var(--cursor-hover);
 }
