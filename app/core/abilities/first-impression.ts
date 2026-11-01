@@ -3,7 +3,7 @@ import { getPokemonData } from "../../models/precomputed/precomputed-pokemon-dat
 import { PRECOMPUTED_POKEMONS_PER_RARITY } from "../../models/precomputed/precomputed-rarity"
 import { Ability } from "../../types/enum/Ability"
 import { AttackType } from "../../types/enum/Game"
-import type { Pkm } from "../../types/enum/Pokemon"
+import { type Pkm, PkmFamily } from "../../types/enum/Pokemon"
 import { Synergy } from "../../types/enum/Synergy"
 import { pickRandomIn } from "../../utils/random"
 import type { Board } from "../board"
@@ -51,7 +51,8 @@ export class FirstImpressionStrategy extends AbilityStrategy {
             return (
               data.stars === 1 &&
               data.skill !== Ability.DEFAULT &&
-              data.types.includes(Synergy.BUG)
+              data.types.includes(Synergy.BUG) &&
+              PkmFamily[pkm] !== PkmFamily[pokemon.name]
             )
           })
 

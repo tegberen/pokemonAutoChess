@@ -508,6 +508,9 @@ Some people would like to play but can't find a lobby. The hope is that this giv
 **Titles**
 - Scholar | a win with a synergy maxed out now completes that synergy at once, instead of counting as one of its three finishes
 
+**Fixes**
+- Wimpod | First Impression no longer summons another Wimpod
+
 ### 27 October 2026
 
 **Wishes**
