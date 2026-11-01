@@ -1,4 +1,9 @@
-import { getBaseAltForm, PkmAltForms, PkmAltFormsByPkm } from "../config"
+import {
+  getBaseAltForm,
+  PkmAltForms,
+  PkmAltFormsByPkm,
+  sharesFormUnlocks
+} from "../config"
 import { CollectionUtils } from "../core/collection"
 import {
   CollectionEmotions,
@@ -6,7 +11,13 @@ import {
   type PkmWithCustom,
   Title
 } from "../types"
-import { NonPkm, Pkm, PkmIndex, Unowns } from "../types/enum/Pokemon"
+import {
+  NonPkm,
+  Pkm,
+  PkmByIndex,
+  PkmIndex,
+  Unowns
+} from "../types/enum/Pokemon"
 import type { IUserMetadataMongo } from "../types/interfaces/UserMetadata"
 
 export function checkTitlesAfterEmotionUnlocked(
@@ -15,11 +26,22 @@ export function checkTitlesAfterEmotionUnlocked(
 ) {
   const newTitles: Title[] = []
   if (!mongoUser.titles.includes(Title.SHINY_SEEKER)) {
-    let numberOfShinies = 0
-    mongoUser.pokemonCollection.forEach((c) => {
+    // a family sharing its form unlocks counts once
+    const shiniesByFamily = new Map<string, number>()
+    mongoUser.pokemonCollection.forEach((c, index) => {
       const { shinyEmotions } = CollectionUtils.getEmotionsUnlocked(c)
-      numberOfShinies += shinyEmotions.length
+      const pokemon = PkmByIndex[index]
+      const family =
+        pokemon && sharesFormUnlocks(pokemon) ? getBaseAltForm(pokemon) : index
+      shiniesByFamily.set(
+        family,
+        Math.max(shiniesByFamily.get(family) ?? 0, shinyEmotions.length)
+      )
     })
+    const numberOfShinies = [...shiniesByFamily.values()].reduce(
+      (total, count) => total + count,
+      0
+    )
     if (numberOfShinies >= 30) {
       newTitles.push(Title.SHINY_SEEKER)
     }

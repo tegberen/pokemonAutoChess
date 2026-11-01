@@ -438,6 +438,57 @@ export function getAllAltForms(pkm: Pkm): Pkm[] {
     : [pkm]
 }
 
+// colour forms that share every collection unlock: a card of one form gives
+// its emote, holo or shinies to all of them, and shows the base form
+export const PkmsSharingFormUnlocks: readonly Pkm[] = [
+  Pkm.ARCEUS,
+  Pkm.SILVALLY,
+  Pkm.MINIOR,
+  Pkm.VIVILLON,
+  Pkm.ALCREMIE_VANILLA,
+  Pkm.FLABEBE,
+  Pkm.FLOETTE,
+  Pkm.FLORGES
+]
+
+export function sharesFormUnlocks(pkm: Pkm) {
+  return PkmsSharingFormUnlocks.includes(getBaseAltForm(pkm))
+}
+
+export function getFormsSharingUnlocks(pkm: Pkm): Pkm[] {
+  return sharesFormUnlocks(pkm) ? getAllAltForms(pkm) : [pkm]
+}
+
+const SeasonalForms: Pkm[][] = [
+  [
+    Pkm.DEERLING_SPRING,
+    Pkm.DEERLING_SUMMER,
+    Pkm.DEERLING_AUTUMN,
+    Pkm.DEERLING_WINTER
+  ],
+  [
+    Pkm.SAWSBUCK_SPRING,
+    Pkm.SAWSBUCK_SUMMER,
+    Pkm.SAWSBUCK_AUTUMN,
+    Pkm.SAWSBUCK_WINTER
+  ]
+]
+const MONTHS_PER_SEASON = 3
+const MARCH = 2
+
+// Deerling and Sawsbuck only drop in the form of the current UTC season,
+// spring starting in March as in the games
+function getCurrentSeasonalForm(pkm: Pkm, now: number): Pkm {
+  const forms = SeasonalForms.find((seasonForms) => seasonForms.includes(pkm))
+  if (!forms) return pkm
+  const monthsSinceMarch = (new Date(now).getUTCMonth() - MARCH + 12) % 12
+  return forms[Math.floor(monthsSinceMarch / MONTHS_PER_SEASON)]
+}
+
+export function isOutOfSeason(pkm: Pkm, now = Date.now()) {
+  return getCurrentSeasonalForm(pkm, now) !== pkm
+}
+
 export type PkmWithTroopers =
   | Pkm.FALINKS_BRASS
   | Pkm.AVALUGG

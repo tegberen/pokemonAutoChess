@@ -495,6 +495,10 @@ Some people would like to play but can't find a lobby. The hope is that this giv
 - Spinda's Café guests | new, a Pokémon visits on Saturday and another on Sunday: a game played to stage 14 that day gives 1 point, 2 with its family on your final team. 4 points unlock its Holo and every single regular emote. A Unique, Legendary or Hatch guest on your final team gives all 4 points at once. Games played at the same time count once.
 - Community goal | added a weekly community challenge
 
+**Collection**
+- Colour forms | an Arceus, Silvally, Minior, Vivillon, Alcremie, Flabébé, Floette or Florges card unlocks its emote, Holo or Shinies on every form, and their forms no longer drop more often than other Pokémon
+- Deerling, Sawsbuck | only drop in the form of the current season
+
 **Wishes**
 - Further Beyond | Gold → Prismatic
 

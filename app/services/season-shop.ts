@@ -1,5 +1,12 @@
 import type { HydratedDocument } from "mongoose"
-import { getBaseAltForm, PkmAltFormsByPkm } from "../config"
+import {
+  getBaseAltForm,
+  getFormsSharingUnlocks,
+  isOutOfSeason,
+  PkmAltFormsByPkm,
+  PkmsSharingFormUnlocks,
+  sharesFormUnlocks
+} from "../config"
 import {
   type SeasonCurrency,
   SEASON_BOOSTER_CARD_COUNT,
@@ -106,11 +113,74 @@ function withAltForms(pokemon: Pkm): Pkm[] {
   return [pokemon, ...(PkmAltFormsByPkm[pokemon] ?? [])]
 }
 
+function inSeason(pokemons: Pkm[]) {
+  return pokemons.filter((pokemon) => !isOutOfSeason(pokemon))
+}
+
 function canBeShiny(pokemon: Pkm) {
   return (
     PokemonAnimations[pokemon]?.shinyUnavailable !== true &&
     getAvailableEmotions(PkmIndex[pokemon], true).length > 0
   )
+}
+
+function hasEmotion(pokemon: Pkm, emotion: Emotion, shiny: boolean) {
+  return (
+    (!shiny || canBeShiny(pokemon)) &&
+    getAvailableEmotions(PkmIndex[pokemon], shiny).includes(emotion)
+  )
+}
+
+// the forms an unlock of this emote reaches: every form of a family sharing
+// its unlocks that has the emote, or the Pokemon alone when none has it
+function getFormsReachedBy(pokemon: Pkm, emotion: Emotion, shiny: boolean) {
+  const forms = getFormsSharingUnlocks(pokemon).filter((form) =>
+    hasEmotion(form, emotion, shiny)
+  )
+  return forms.length > 0 ? forms : [pokemon]
+}
+
+function getFamilyEmotions(pokemon: Pkm, shiny: boolean) {
+  const emotions = new Set<Emotion>()
+  for (const form of getFormsSharingUnlocks(pokemon)) {
+    if (shiny && !canBeShiny(form)) continue
+    for (const emotion of getAvailableEmotions(PkmIndex[form], shiny)) {
+      emotions.add(emotion)
+    }
+  }
+  return [...emotions]
+}
+
+function getFormsHoldingHolo(pokemon: Pkm) {
+  return getFormsSharingUnlocks(pokemon).filter(
+    (form) =>
+      form === pokemon ||
+      getAvailableEmotions(PkmIndex[form], false).length > 0
+  )
+}
+
+// a family sharing its unlocks is one candidate, shown as its base form unless
+// that form lacks what the candidate is for
+function getEligibleForms(
+  pokemons: Pkm[],
+  isEligible: (pokemon: Pkm) => boolean
+) {
+  return pokemons.flatMap((pokemon) => {
+    if (!sharesFormUnlocks(pokemon)) {
+      return withAltForms(pokemon).filter(isEligible)
+    }
+    const shownForm = withAltForms(pokemon).find(isEligible)
+    return shownForm ? [shownForm] : []
+  })
+}
+
+function pickCardForm(pokemon: Pkm) {
+  const hasPortraits = (form: Pkm) =>
+    getAvailableEmotions(PkmIndex[form], false).length > 0
+  if (sharesFormUnlocks(pokemon)) {
+    return withAltForms(pokemon).find(hasPortraits) ?? pokemon
+  }
+  return pickRandomIn(withAltForms(pokemon).filter(hasPortraits)) ?? pokemon
 }
 
 // reads the bits directly: CollectionUtils.hasUnlocked reports every emote as
@@ -158,32 +228,46 @@ class CollectionDraft {
   }
 
   owns(pokemon: Pkm, emotion: Emotion, shiny: boolean) {
-    return ownsEmotion(this.getMask(PkmIndex[pokemon]), emotion, shiny)
+    return getFormsReachedBy(pokemon, emotion, shiny).every((form) =>
+      this.ownsOnThisFormOnly(form, emotion, shiny)
+    )
+  }
+
+  ownsOnThisFormOnly(form: Pkm, emotion: Emotion, shiny: boolean) {
+    return ownsEmotion(this.getMask(PkmIndex[form]), emotion, shiny)
   }
 
   isMissingShinies(pokemon: Pkm) {
-    return getAvailableEmotions(PkmIndex[pokemon], true).some(
+    return getFamilyEmotions(pokemon, true).some(
       (emotion) => !this.owns(pokemon, emotion, true)
     )
   }
 
   hasHolo(pokemon: Pkm) {
-    const index = PkmIndex[pokemon]
-    return (
-      this.ownedHoloIndexes.includes(index) || this.newHoloIndexes.has(index)
-    )
+    return getFormsHoldingHolo(pokemon).every((form) => {
+      const index = PkmIndex[form]
+      return (
+        this.ownedHoloIndexes.includes(index) || this.newHoloIndexes.has(index)
+      )
+    })
   }
 
   addHolo(pokemon: Pkm) {
-    this.newHoloIndexes.add(PkmIndex[pokemon])
+    for (const form of getFormsHoldingHolo(pokemon)) {
+      const index = PkmIndex[form]
+      // the guard refuses the whole update if a new holo is already owned
+      if (!this.ownedHoloIndexes.includes(index)) this.newHoloIndexes.add(index)
+    }
   }
 
   unlock(pokemon: Pkm, emotion: Emotion, shiny: boolean) {
-    CollectionUtils.unlockEmotion(
-      this.getMask(PkmIndex[pokemon]),
-      emotion,
-      shiny
-    )
+    for (const form of getFormsReachedBy(pokemon, emotion, shiny)) {
+      CollectionUtils.unlockEmotion(
+        this.getMask(PkmIndex[form]),
+        emotion,
+        shiny
+      )
+    }
   }
 
   getGuards() {
@@ -219,6 +303,8 @@ class CollectionDraft {
     for (const [index, mask] of this.workingMasks) {
       const original = this.originalMasks.get(index)
       if (original && original.equals(mask)) continue
+      // a form only read to check a family stays out of the collection
+      if (!original && mask.every((byte) => byte === 0)) continue
       if (this.existingIndexes.has(index)) {
         sets[`pokemonCollection.${index}.unlocked`] = mask
       } else {
@@ -235,6 +321,30 @@ class CollectionDraft {
     }
     return sets
   }
+}
+
+// for collections from before families shared their unlocks: whatever one form
+// holds goes to the whole family, guarded like any other unlock
+export function shareOwnedFormUnlocks(user: IUserMetadataLean) {
+  const draft = new CollectionDraft(user)
+  const ownedHoloIndexes = user.holoIndexes ?? []
+  for (const family of PkmsSharingFormUnlocks) {
+    for (const shiny of [false, true]) {
+      for (const emotion of getFamilyEmotions(family, shiny)) {
+        const isOwnedOnAnyForm = getFormsReachedBy(family, emotion, shiny).some(
+          (form) => draft.ownsOnThisFormOnly(form, emotion, shiny)
+        )
+        if (isOwnedOnAnyForm) draft.unlock(family, emotion, shiny)
+      }
+    }
+    const holdsAnyHolo = getFormsHoldingHolo(family).some((form) =>
+      ownedHoloIndexes.includes(PkmIndex[form])
+    )
+    if (holdsAnyHolo) draft.addHolo(family)
+  }
+  const update = draft.toUpdate()
+  if (Object.keys(update).length === 0) return null
+  return { guards: draft.getGuards(), update }
 }
 
 async function checkTitlesAfterUnlocks(
@@ -303,9 +413,10 @@ function drawShinyCard(
 ): SeasonBoosterCard | null {
   const isEligible = (pokemon: Pkm) =>
     canBeShiny(pokemon) && draft.isMissingShinies(pokemon)
-  let candidates = pool.flatMap(withAltForms).filter(isEligible)
+  let candidates = getEligibleForms(pool, isEligible)
   if (candidates.length === 0) {
-    candidates = ALL_COLLECTIBLE_BASE_FORMS.flatMap(withAltForms).filter(
+    candidates = getEligibleForms(
+      inSeason(ALL_COLLECTIBLE_BASE_FORMS),
       isEligible
     )
   }
@@ -317,8 +428,10 @@ function unlockAllShinyEmotions(
   draft: CollectionDraft,
   pokemon: Pkm
 ): SeasonBoosterCard {
+  for (const emotion of getFamilyEmotions(pokemon, true)) {
+    draft.unlock(pokemon, emotion, true)
+  }
   const emotions = getAvailableEmotions(PkmIndex[pokemon], true)
-  for (const emotion of emotions) draft.unlock(pokemon, emotion, true)
   return {
     name: pokemon,
     shiny: true,
@@ -332,25 +445,23 @@ function drawNormalCard(
   draft: CollectionDraft,
   pool: Pkm[]
 ): SeasonBoosterCard {
-  return unlockNextNormalEmotion(
-    draft,
-    pickRandomIn(withAltForms(pickRandomIn(pool)))
-  )
+  return unlockNextNormalEmotion(draft, pickCardForm(pickRandomIn(pool)))
 }
 
 function unlockNextNormalEmotion(
   draft: CollectionDraft,
   pokemon: Pkm
 ): SeasonBoosterCard {
-  const emotions = getAvailableEmotions(PkmIndex[pokemon], false)
-  const newEmotions = emotions.filter(
+  const newEmotions = getFamilyEmotions(pokemon, false).filter(
     (emotion) => !draft.owns(pokemon, emotion, false)
   )
   if (newEmotions.length === 0) {
     return {
       name: pokemon,
       shiny: false,
-      emotion: pickRandomIn(emotions) ?? Emotion.NORMAL,
+      emotion:
+        pickRandomIn(getAvailableEmotions(PkmIndex[pokemon], false)) ??
+        Emotion.NORMAL,
       new: false,
       unlockedEmotions: []
     }
@@ -359,8 +470,12 @@ function unlockNextNormalEmotion(
     ? Emotion.NORMAL
     : pickRandomIn(newEmotions)
   draft.unlock(pokemon, emotion, false)
+  // the card shows a form that has the emote, so its portrait exists
+  const shownForm = hasEmotion(pokemon, emotion, false)
+    ? pokemon
+    : getFormsReachedBy(pokemon, emotion, false)[0]
   return {
-    name: pokemon,
+    name: shownForm,
     shiny: false,
     emotion,
     new: true,
@@ -372,9 +487,10 @@ function pickHoloPokemon(draft: CollectionDraft, pool: Pkm[]): Pkm | null {
   const isEligible = (pokemon: Pkm) =>
     !draft.hasHolo(pokemon) &&
     getAvailableEmotions(PkmIndex[pokemon], false).length > 0
-  let candidates = pool.flatMap(withAltForms).filter(isEligible)
+  let candidates = getEligibleForms(pool, isEligible)
   if (candidates.length === 0) {
-    candidates = ALL_COLLECTIBLE_BASE_FORMS.flatMap(withAltForms).filter(
+    candidates = getEligibleForms(
+      inSeason(ALL_COLLECTIBLE_BASE_FORMS),
       isEligible
     )
   }
@@ -407,10 +523,14 @@ function unlockHolo(draft: CollectionDraft, pokemon: Pkm): SeasonBoosterCard {
 function pickBoosterSlotPool(isLastSlot: boolean) {
   const rarity =
     randomWeighted<Rarity>(BoosterRarityProbability) ?? Rarity.COMMON
-  const rarityPool = isLastSlot
-    ? LAST_CARD_BASE_FORMS
-    : (COLLECTIBLE_BASE_FORMS_BY_RARITY.get(rarity) ?? [])
-  return rarityPool.length > 0 ? rarityPool : ALL_COLLECTIBLE_BASE_FORMS
+  const rarityPool = inSeason(
+    isLastSlot
+      ? LAST_CARD_BASE_FORMS
+      : (COLLECTIBLE_BASE_FORMS_BY_RARITY.get(rarity) ?? [])
+  )
+  return rarityPool.length > 0
+    ? rarityPool
+    : inSeason(ALL_COLLECTIBLE_BASE_FORMS)
 }
 
 function drawSeasonBooster(draft: CollectionDraft): SeasonBoosterCard[] {
@@ -505,7 +625,8 @@ async function catchUnownWandererNow(
 }
 
 function drawWonderPickCandidates(draft: CollectionDraft, exclude: Pkm[]) {
-  const eligible = ALL_COLLECTIBLE_BASE_FORMS.flatMap(withAltForms).filter(
+  const eligible = getEligibleForms(
+    inSeason(ALL_COLLECTIBLE_BASE_FORMS),
     (pokemon) => canBeShiny(pokemon) && draft.isMissingShinies(pokemon)
   )
   const fresh = eligible.filter((pokemon) => !exclude.includes(pokemon))
@@ -682,7 +803,7 @@ async function claimSpindaGuestNow(
   if (!isSpindaCafeOpen(now)) return null
   const weekKey = getUtcWeekKey(now)
   const { pokemon: guest, goalPoints } = getSpindaGuests(now)[slot]
-  const emotions = getAvailableEmotions(PkmIndex[guest], false)
+  const emotions = getFamilyEmotions(guest, false)
   const claimedPath = `spindaCafe.guestClaimed.${slot}`
   const claimable = {
     uid,
@@ -734,8 +855,7 @@ function drawCasualPickCandidates(draft: CollectionDraft) {
     SEASON_WONDER_PICK_CARD_COUNT - SEASON_CASUAL_PICK_HOLO_CARDS
   const candidates: ICasualPick["candidates"] = []
   for (let i = 0; i < regularCount; i++) {
-    const pool = pickBoosterSlotPool(false)
-    const pokemon = pickRandomIn(withAltForms(pickRandomIn(pool)))
+    const pokemon = pickCardForm(pickRandomIn(pickBoosterSlotPool(false)))
     candidates.push({ pokemon, holo: false })
   }
   for (let i = 0; i < SEASON_CASUAL_PICK_HOLO_CARDS; i++) {

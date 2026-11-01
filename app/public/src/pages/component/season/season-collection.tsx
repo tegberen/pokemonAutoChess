@@ -10,7 +10,7 @@ import {
 import { useTranslation } from "react-i18next"
 import { AutoSizer } from "react-virtualized-auto-sizer"
 import { getScrollbarSize, Grid } from "react-window"
-import { getBaseAltForm } from "../../../../../config"
+import { getBaseAltForm, sharesFormUnlocks } from "../../../../../config"
 import {
   getSeasonPortrait,
   SEASON_PORTRAITS
@@ -229,6 +229,18 @@ function buildCollection(
   })
 }
 
+// its forms unlock together, so one card stands for the family and the detail
+// lists the other forms
+function showSharedFamiliesOnce(pokemons: Pkm[]) {
+  return [
+    ...new Set(
+      pokemons.map((pokemon) =>
+        sharesFormUnlocks(pokemon) ? getBaseAltForm(pokemon) : pokemon
+      )
+    )
+  ]
+}
+
 function findCollectionEntry(collection: CollectionEntry[], pokemon: Pkm) {
   return collection.find((entry) =>
     entry.forms.some((form) => form.pokemon === pokemon)
@@ -354,18 +366,22 @@ export default function SeasonCollection(props: { onOpenGuild?: () => void }) {
   )
   const shinyPokemons = useMemo(
     () =>
-      collection
-        .flatMap((entry) => entry.forms)
-        .filter((form) => form.ownedShinyEmotions.length > 0)
-        .map((form) => form.pokemon),
+      showSharedFamiliesOnce(
+        collection
+          .flatMap((entry) => entry.forms)
+          .filter((form) => form.ownedShinyEmotions.length > 0)
+          .map((form) => form.pokemon)
+      ),
     [collection]
   )
   const holoPokemons = useMemo(
     () =>
-      (profile?.holoIndexes ?? [])
-        .filter((index) => PkmByIndex[index])
-        .sort((a, b) => a.localeCompare(b))
-        .map((index) => PkmByIndex[index]),
+      showSharedFamiliesOnce(
+        (profile?.holoIndexes ?? [])
+          .filter((index) => PkmByIndex[index])
+          .sort((a, b) => a.localeCompare(b))
+          .map((index) => PkmByIndex[index])
+      ),
     [profile?.holoIndexes]
   )
   const [tab, setTab] = useState<CollectionTab>("collection")
@@ -584,7 +600,14 @@ export default function SeasonCollection(props: { onOpenGuild?: () => void }) {
             <PokemonTypeahead
               value=""
               onChange={(pokemon) =>
-                pokemon && setSelected({ pokemon, shiny: false })
+                pokemon &&
+                setSelected({
+                  pokemon,
+                  shiny: tab === "shiny",
+                  holo:
+                    tab === "holo" &&
+                    (profile?.holoIndexes ?? []).includes(PkmIndex[pokemon])
+                })
               }
             />
           </div>
