@@ -903,7 +903,7 @@ export const GALE_WINGS_EMBERS_FOR_FIRE_SHARD = 10
 export const MULTISHOT_BASE_EXTRA_SHOTS = 2
 export const MULTISHOT_DAMAGE_RATIO = 0.25
 export const MULTISHOT_SHOT_INTERVAL = 150
-export const DECELERATE_SPEED_CAP = 30
+export const DECELERATE_BASE_SPEED = 30
 export const JUNGLE_CACOPHONY_PP_BURN_BY_STAR = [2, 4, 8] as const
 export const HONEY_EXPLORATION_STAGES_BY_STAR = [3, 2, 1] as const
 // the friend's possible rarities by the stage the explorer returns at, latest first

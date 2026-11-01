@@ -161,7 +161,7 @@ import {
   LECHONK_BANK_GOLD,
   ALL_ABOARD_GOLD,
   QUICK_STREAK_STEP,
-  DECELERATE_SPEED_CAP,
+  DECELERATE_BASE_SPEED,
   KINGS_GAMBIT_ALLIES_FALLEN,
   KINGS_GAMBIT_FALLEN_STATS_RATIO,
   KINGS_GAMBIT_SPEED,
@@ -522,6 +522,7 @@ export default class Simulation extends Schema implements ISimulation {
   entities: IPokemonEntity[] = []
   finishedAt: number = 0
   reinforcementsSent: boolean = false
+  decelerateActive: boolean = false
   reinforcementPortalOpened = false
   robinGemsRewardProcessed = false
   snifferDogPulledPokemonIds = new Set<string>()
@@ -1313,6 +1314,7 @@ export default class Simulation extends Schema implements ISimulation {
     pokemonEntity.getEffects(OnSpawnEffect).forEach((effect) => {
       effect.apply(pokemonEntity, player, isSpawn)
     })
+    if (this.decelerateActive) this.applyDecelerateBaseSpeed(pokemonEntity)
 
     if (isSpawn && this.weather === Weather.BLOSSOM) {
       const isFlora = pokemonEntity.types.has(Synergy.FLORA)
@@ -2376,6 +2378,10 @@ export default class Simulation extends Schema implements ISimulation {
     }
   }
 
+  applyDecelerateBaseSpeed(unit: PokemonEntity) {
+    unit.rebaseSpeed(DECELERATE_BASE_SPEED)
+  }
+
   applyCombatStartBlessings(
     sides: { teamIndex: Team; player: Player | undefined }[]
   ) {
@@ -2397,23 +2403,15 @@ export default class Simulation extends Schema implements ISimulation {
 
       const missingPlayerLife = Math.max(0, player.maxLife - player.life)
 
-      // runs after spawn-time weather, so MAGNET_STORM's speed reset cannot undo it
+      // runs after spawn-time weather, so it overrides MAGNET_STORM's base too
       if (
+        !this.decelerateActive &&
         blessings.includes(Blessing.DECELERATE) &&
         ownUnits.some((unit) => PkmFamily[unit.name] === Pkm.DUSKULL)
       ) {
-        const enemyTeam =
-          teamIndex === Team.BLUE_TEAM ? this.redTeam : this.blueTeam
-        enemyTeam.forEach((enemy) => {
-          if (enemy.speed > DECELERATE_SPEED_CAP) {
-            enemy.addSpeed(
-              DECELERATE_SPEED_CAP - enemy.speed,
-              "environment",
-              0,
-              false
-            )
-          }
-        })
+        this.decelerateActive = true
+        this.blueTeam.forEach((unit) => this.applyDecelerateBaseSpeed(unit))
+        this.redTeam.forEach((unit) => this.applyDecelerateBaseSpeed(unit))
       }
 
       if (blessings.includes(Blessing.SILVER_SPOON)) {
@@ -5954,6 +5952,7 @@ export default class Simulation extends Schema implements ISimulation {
           pokemon.types.has(Synergy.STEEL) && pokemon.baseSpeed > 50
         if (!isFastSteel) {
           pokemon.addSpeed(50 - pokemon.baseSpeed, "environment", 0, false)
+          pokemon.speedBaseInUse = 50
         }
         break
       }

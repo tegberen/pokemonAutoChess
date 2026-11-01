@@ -6204,7 +6204,7 @@
 		},
 		"DECELERATE": {
 			"name": "Decelerate",
-			"description": "While a Duskull is on your board, enemies start combat with at most 30 SPEED. Your STRONGEST Duskull's ability also applies FATIGUE and BLINDED to the enemies it damages. Gain a Duskull."
+			"description": "While a Duskull is on your board, every Pokémon in combat has 30 base SPEED. Your STRONGEST Duskull's ability also applies FATIGUE and BLINDED to the enemies it damages. Gain a Duskull."
 		},
 		"MULTISHOT": {
 			"name": "Multishot",

@@ -501,6 +501,7 @@ Some people would like to play but can't find a lobby. The hope is that this giv
 
 **Wishes**
 - Further Beyond | Gold → Prismatic
+- Decelerate | every Pokémon on both sides, summons included, now has 30 base SPEED and keeps its SPEED bonuses, instead of enemies being capped at 30 SPEED
 
 **Game Mode**
 - Smeargle Pack | no more shiny cards, and no 10 GOLD for picking one. Updated card style and corrected its description: you pick one starter, not two

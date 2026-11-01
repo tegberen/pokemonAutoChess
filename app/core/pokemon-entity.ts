@@ -216,6 +216,8 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
   baseRange: number
   baseHP: number
   baseSpeed: number
+  // the base a field rule (MAGNET_STORM, Decelerate) swapped baseSpeed for
+  speedBaseInUse: number
   dodge: number
   physicalDamage: number
   specialDamage: number
@@ -325,6 +327,7 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
     this.baseHP = pokemon.hp
     const PkmClass = PokemonClasses[PkmByIndex[pokemon.index]]
     this.baseSpeed = PkmClass ? new PkmClass(pokemon.name).speed : DEFAULT_SPEED
+    this.speedBaseInUse = this.baseSpeed
     this.atk = pokemon.atk
     this.def = pokemon.def
     this.speDef = pokemon.speDef
@@ -1001,6 +1004,17 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
     if (permanent && !this.isGhostOpponent) {
       update(this.refToBoardPokemon)
     }
+  }
+
+  // swaps the base only, so every bonus already gained stays on top of it.
+  // Not through addSpeed: TWIST_BAND or BIG_EATER_BELT would bend the swap
+  rebaseSpeed(newBase: number) {
+    this.speed = clamp(
+      this.speed + newBase - this.speedBaseInUse,
+      0,
+      MAX_SPEED
+    )
+    this.speedBaseInUse = newBase
   }
 
   addSpeed(
@@ -2159,6 +2173,10 @@ flyAway(
     this.speDef = cloneReference.speDef
     this.ap = cloneReference.ap
     this.speed = cloneReference.speed
+    this.speedBaseInUse = cloneReference.speedBaseInUse
+    if (this.simulation.decelerateActive) {
+      this.simulation.applyDecelerateBaseSpeed(this)
+    }
     this.critChance = cloneReference.critChance
     this.critPower = cloneReference.critPower
     this.dodge = cloneReference.dodge
