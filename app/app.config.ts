@@ -91,6 +91,7 @@ import {
   getPlayerRankDistribution,
   getPokemonItemsReport,
   getPokemonReport,
+  getSynergyReport,
   getWishItemReport,
   getWishReport
 } from "./services/meta"
@@ -551,6 +552,11 @@ export const server = defineServer({
     app.get("/meta/wishes", async (req, res) => {
       setCacheControl(res, 86400)
       res.send(getWishReport())
+    })
+
+    app.get("/meta/synergies", async (req, res) => {
+      setCacheControl(res, 86400)
+      res.send(getSynergyReport())
     })
 
     app.get("/meta/wish-pokemons", async (req, res) => {

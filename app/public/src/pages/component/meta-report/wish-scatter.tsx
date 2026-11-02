@@ -1,6 +1,7 @@
 import { type CSSProperties, memo, type ReactNode, useMemo } from "react"
 import {
   CartesianGrid,
+  ReferenceLine,
   ResponsiveContainer,
   Scatter,
   ScatterChart,
@@ -127,17 +128,30 @@ export function WishScatter({
   )
 }
 
+export type ScatterQuadrantLabels = {
+  popularStrong: string
+  popularWeak: string
+  rareStrong: string
+  rareWeak: string
+}
+
 export function ReportScatter<Row extends ScatterRow>({
   rows,
   places,
   renderPoint,
-  renderTooltip
+  renderTooltip,
+  quadrantLabels
 }: {
   rows: Row[]
   places: number
   renderPoint: (row: Row) => ReactNode
   renderTooltip: (row: Row) => ReactNode
+  quadrantLabels?: ScatterQuadrantLabels
 }) {
+  const medianPicks = useMemo(() => {
+    const sortedPicks = rows.map((row) => row.picks).sort((a, b) => a - b)
+    return sortedPicks[Math.floor(sortedPicks.length / 2)] ?? 1
+  }, [rows])
   const { placeDomain, placeTicks, countDomain, countTicks } = useMemo(() => {
     const averagePlaces = rows.map((row) => row.averagePlace)
     // zoomed to the Wishes on show, on quarter-place steps
@@ -153,20 +167,33 @@ export function ReportScatter<Row extends ScatterRow>({
     const xTicks: number[] = []
     for (let tick = low; tick <= high + 1e-9; tick += step) xTicks.push(tick)
     const mostPicks = Math.max(...rows.map((row) => row.picks))
+    const fewestPicks = Math.min(...rows.map((row) => row.picks))
     const topTick = COUNT_TICKS.find((tick) => tick >= mostPicks) ?? mostPicks
+    const bottomTick =
+      COUNT_TICKS.findLast((tick) => tick <= fewestPicks) ?? COUNT_TICKS[0]
     // past the end ticks, so a Wish on 1st or last place clears the axis
     const placePadding = (high - low) * 0.02
     return {
       placeDomain: [low - placePadding, high + placePadding],
       placeTicks: xTicks,
-      // below 1, so a Wish picked once sits above the axis instead of on it
-      countDomain: [0.7, topTick],
-      countTicks: COUNT_TICKS.filter((tick) => tick <= topTick)
+      // below the lowest tick, so the rarest point sits above the axis
+      countDomain: [bottomTick * 0.7, topTick],
+      countTicks: COUNT_TICKS.filter(
+        (tick) => tick >= bottomTick && tick <= topTick
+      )
     }
   }, [rows, places])
 
   return (
     <div className="wish-scatter">
+      {quadrantLabels && (
+        <div className="wish-scatter-quadrants" aria-hidden="true">
+          <span className="popular-strong">{quadrantLabels.popularStrong}</span>
+          <span className="popular-weak">{quadrantLabels.popularWeak}</span>
+          <span className="rare-strong">{quadrantLabels.rareStrong}</span>
+          <span className="rare-weak">{quadrantLabels.rareWeak}</span>
+        </div>
+      )}
       <ResponsiveContainer width="100%" height="100%">
         <ScatterChart margin={{ top: 12, right: 24, left: 8, bottom: 24 }}>
           <CartesianGrid
@@ -203,6 +230,20 @@ export function ReportScatter<Row extends ScatterRow>({
               ...AXIS_TICK
             }}
           />
+          {quadrantLabels && (
+            <>
+              <ReferenceLine
+                x={(places + 1) / 2}
+                stroke="var(--color-fg-secondary)"
+                strokeDasharray="6 4"
+              />
+              <ReferenceLine
+                y={medianPicks}
+                stroke="var(--color-fg-secondary)"
+                strokeDasharray="6 4"
+              />
+            </>
+          )}
           <Tooltip
             content={<ReportScatterTooltip renderTooltip={renderTooltip} />}
             cursor={{ strokeDasharray: "3 3" }}

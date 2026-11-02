@@ -20,9 +20,9 @@
 }
 
 .preparation-menu-user.ready {
-  --ready-state-color: #92cc41;
+  --ready-state-color: var(--color-ready);
 }
 
 .preparation-menu-user.not-ready {
-  --ready-state-color: #e76e55;
+  --ready-state-color: var(--color-not-ready);
 }

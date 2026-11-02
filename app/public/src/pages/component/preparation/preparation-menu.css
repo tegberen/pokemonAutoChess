@@ -274,7 +274,7 @@
 }
 
 .lobby-setting .room-password .private-word {
-  color: #e76e55;
+  color: var(--color-not-ready);
   font-weight: bold;
 }
 

@@ -1,4 +1,5 @@
 import { Blessings } from "../config/game/blessings"
+import { SynergyTiersThresholds } from "../config/game/synergies"
 import Dendrogram from "../models/mongo-models/dendrogram"
 import DetailledStatisticV2 from "../models/mongo-models/detailled-statistic-v2"
 import ItemsStatistic from "../models/mongo-models/items-statistic-v2"
@@ -42,6 +43,12 @@ import type {
 import type { IPokemonsStatisticV2 } from "../types/models/pokemons-statistic-v2"
 import type { IRegionStatistic } from "../types/models/regions-statistic"
 import type { IReportMetadata } from "../types/models/report-metadata"
+import type {
+  ISynergyReport,
+  ISynergyReportMode,
+  ISynergyReportRow,
+  ISynergyReportStats
+} from "../types/models/synergy-report"
 import type {
   IWishItemReport,
   IWishItemReportMode,
@@ -120,6 +127,17 @@ let wishItemReport: IWishItemReport = {
   since: new Date(0).toISOString(),
   solo: emptyWishItemReportMode,
   duo: emptyWishItemReportMode
+}
+const emptySynergyReportMode: ISynergyReportMode = {
+  games: 0,
+  players: 0,
+  rows: []
+}
+let synergyReport: ISynergyReport = {
+  updatedAt: new Date(0).toISOString(),
+  since: new Date(0).toISOString(),
+  solo: emptySynergyReportMode,
+  duo: emptySynergyReportMode
 }
 let playerRankDistribution: IPlayerRankDistribution = {
   updatedAt: new Date(0).toISOString(),
@@ -357,6 +375,7 @@ type WishReportGame = {
     rank: number
     blessings: Blessing[] | null
     pokemons: { name: Pkm; items: Item[] | null }[] | null
+    synergies: Partial<Record<Synergy, number>> | null
   }[]
 }
 
@@ -402,6 +421,7 @@ async function fetchWishReport() {
             $push: {
               rank: "$rank",
               blessings: "$blessings",
+              synergies: "$synergies",
               pokemons: {
                 $map: {
                   input: { $ifNull: ["$pokemons", []] },
@@ -453,6 +473,12 @@ async function fetchWishReport() {
       solo: summarizePokemonItems(soloGames),
       duo: summarizePokemonItems(duoGames)
     }
+    synergyReport = {
+      updatedAt: wishReport.updatedAt,
+      since: wishReport.since,
+      solo: summarizeSynergies(soloGames, WISH_REPORT_PLAYERS),
+      duo: summarizeSynergies(duoGames, WISH_REPORT_PLAYERS / 2)
+    }
     logger.info(
       `Wish report: ${games.length} games in ${Date.now() - startedAt}ms`
     )
@@ -464,6 +490,78 @@ async function fetchWishReport() {
   }
 
   return wishReport
+}
+
+export function getSynergyReport() {
+  return synergyReport
+}
+
+type SynergyTotal = {
+  boards: number
+  placeSum: number
+  boardsPerPlace: number[]
+}
+
+function addSynergyBoard(total: SynergyTotal, rank: number) {
+  total.boards++
+  total.placeSum += rank
+  total.boardsPerPlace[rank - 1]++
+}
+
+// a board counts once per active synergy, under the highest tier it reached
+function summarizeSynergies(
+  games: WishReportGame[],
+  places: number
+): ISynergyReportMode {
+  const newTotal = (): SynergyTotal => ({
+    boards: 0,
+    placeSum: 0,
+    boardsPerPlace: new Array(places).fill(0)
+  })
+  const totals = new Map<Synergy, SynergyTotal>()
+  const tierTotals = new Map<Synergy, SynergyTotal[]>()
+  let players = 0
+  games.forEach((game) =>
+    game.players.forEach(({ rank, synergies }) => {
+      if (rank < 1 || rank > places) return
+      players++
+      for (const [synergy, count] of Object.entries(synergies ?? {}) as [
+        Synergy,
+        number
+      ][]) {
+        const thresholds = SynergyTiersThresholds[synergy]
+        if (!thresholds) continue
+        const reachedTiers = thresholds.filter(
+          (threshold) => count >= threshold
+        ).length
+        if (reachedTiers === 0) continue
+        if (!totals.has(synergy)) {
+          totals.set(synergy, newTotal())
+          tierTotals.set(synergy, thresholds.map(newTotal))
+        }
+        addSynergyBoard(totals.get(synergy)!, rank)
+        addSynergyBoard(tierTotals.get(synergy)![reachedTiers - 1], rank)
+      }
+    })
+  )
+
+  const toStats = (total: SynergyTotal): ISynergyReportStats => ({
+    boards: total.boards,
+    playRate: players > 0 ? total.boards / players : 0,
+    averagePlace:
+      total.boards > 0 ? total.placeSum / total.boards : Number.NaN,
+    firstRate: total.boards > 0 ? total.boardsPerPlace[0] / total.boards : 0,
+    boardsPerPlace: total.boardsPerPlace
+  })
+  const rows: ISynergyReportRow[] = [...totals].map(([synergy, total]) => ({
+    synergy,
+    ...toStats(total),
+    tiers: tierTotals.get(synergy)!.map((tierTotal, index) => ({
+      threshold: SynergyTiersThresholds[synergy][index],
+      ...toStats(tierTotal)
+    }))
+  }))
+  return { games: games.length, players, rows }
 }
 
 // a lobby is offered one tier at a time, so a pick rate compares Wishes of the

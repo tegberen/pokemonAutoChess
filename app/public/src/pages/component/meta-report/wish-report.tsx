@@ -148,6 +148,7 @@ export function WishReport() {
         {report && (
           <ul className="wish-report-notes">
             <li>{t("pokemon_report_footer")}</li>
+            <li>Balance changes show up slowly, and new comps not at all</li>
             <li>
               <b>Pick rate</b>: the share of all picks in its tier that went
               to this Wish

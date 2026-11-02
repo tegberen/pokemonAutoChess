@@ -1,0 +1,190 @@
+#synergy-placement-report {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+  height: 100%;
+}
+
+#synergy-placement-report header {
+  display: flex;
+  align-items: center;
+  gap: 0.8em;
+  flex-wrap: wrap;
+}
+
+#synergy-placement-report header > select {
+  box-sizing: border-box;
+  height: 2rem;
+}
+
+#synergy-placement-report .synergy-placement-count {
+  margin-left: auto;
+  color: var(--color-fg-secondary);
+  font-size: 0.95em;
+}
+
+#synergy-placement-report .synergy-placement-body {
+  flex: 1;
+  min-height: 0;
+  padding-right: 0.75em;
+  overflow-y: auto;
+}
+
+#synergy-placement-report .synergy-placement-chart {
+  height: 28rem;
+  margin-bottom: 0.8em;
+}
+
+#synergy-placement-report .error {
+  color: var(--color-fg-red);
+}
+
+.synergy-placement-point {
+  display: block;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.synergy-placement-point .synergy-icon {
+  display: block;
+}
+
+.synergy-placement-point.low-sample {
+  opacity: 0.4;
+}
+
+.synergy-placement-tooltip p {
+  display: flex;
+  align-items: center;
+  gap: 0.4em;
+  margin: 0;
+  font-weight: 700;
+}
+
+.synergy-placement-tooltip .synergy-placement-bars {
+  display: flex;
+  width: 100%;
+  height: 28px;
+}
+
+#synergy-placement-report table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: var(--color-bg-secondary);
+}
+
+#synergy-placement-report th,
+#synergy-placement-report td {
+  padding: 0.3em 0.8em;
+  text-align: right;
+  white-space: nowrap;
+}
+
+#synergy-placement-report :is(th, td):first-child {
+  text-align: left;
+}
+
+#synergy-placement-report thead {
+  border-bottom: 2px solid currentColor;
+}
+
+#synergy-placement-report :is(th, td):not(:first-child) {
+  color: var(--color-fg-secondary);
+}
+
+#synergy-placement-report :is(th, td).sorted {
+  color: var(--color-fg-primary);
+  font-weight: 700;
+}
+
+#synergy-placement-report .synergy-placement-row {
+  cursor: pointer;
+}
+
+#synergy-placement-report .synergy-placement-row:nth-of-type(odd) {
+  background-color: var(--color-bg-primary);
+}
+
+#synergy-placement-report .synergy-placement-row:hover {
+  background-color: var(--color-bg-accent);
+}
+
+#synergy-placement-report .synergy-placement-tier-row {
+  background-color: var(--color-bg-tertiary);
+  font-size: 0.92em;
+}
+
+#synergy-placement-report .synergy-placement-tier-row td:first-child {
+  padding-left: 2.6em;
+}
+
+#synergy-placement-report tr.low-sample > td {
+  opacity: 0.45;
+}
+
+#synergy-placement-report .synergy-placement-name {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+}
+
+#synergy-placement-report .synergy-placement-chevron {
+  display: inline-block;
+  width: 0.6em;
+  color: var(--color-fg-secondary);
+  font-weight: 700;
+}
+
+#synergy-placement-report .expanded .synergy-placement-chevron {
+  transform: rotate(90deg);
+}
+
+.synergy-placement-bars {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 2px;
+  width: 6.5em;
+  height: 1.3em;
+  vertical-align: middle;
+}
+
+.synergy-placement-bars > span {
+  flex: 1;
+  min-height: 2px;
+  border-radius: 2px 2px 0 0;
+  background-color: var(--color-fg-secondary);
+}
+
+#synergy-placement-report.colour-coded td.better-place {
+  color: var(--color-ready);
+}
+
+#synergy-placement-report.colour-coded td.worse-place {
+  color: var(--color-not-ready);
+}
+
+.colour-coded .synergy-placement-bars > span {
+  background-color: var(--color-not-ready);
+}
+
+.colour-coded .synergy-placement-bars > span.top-half {
+  background-color: var(--color-ready);
+}
+
+#synergy-placement-report .synergy-placement-notes {
+  display: grid;
+  gap: 0.2em;
+  margin: 0.8em 0 0.5em;
+  padding: 0;
+  list-style: none;
+  color: var(--color-fg-secondary);
+  font-size: 0.9em;
+}
+
+#synergy-placement-report .synergy-placement-notes b {
+  color: var(--color-fg-primary);
+}

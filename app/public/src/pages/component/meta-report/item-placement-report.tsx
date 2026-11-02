@@ -182,6 +182,7 @@ export function ItemPlacementReport() {
         {mode && (
           <ul className="wish-report-notes">
             <li>{t("pokemon_report_footer")}</li>
+            <li>Balance changes show up slowly, and new comps not at all</li>
             <li>
               <b>Count</b>: players whose team held this item at the end of
               the game, once each

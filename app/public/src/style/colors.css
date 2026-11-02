@@ -17,6 +17,8 @@
   --color-fg-invert: #000000;
   --color-fg-positive: #a9f5ad;
   --color-fg-negative: #f5a9a9;
+  --color-ready: #92cc41;
+  --color-not-ready: #e76e55;
   --color-shadow: #2d334b;
   /* the default --color-bg-secondary and --color-bg-tertiary, kept apart so a
      theme recolouring those cannot tint the blessing tier stripes over them */
