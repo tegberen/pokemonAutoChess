@@ -1,5 +1,9 @@
 import { Fragment, useEffect, useMemo, useState } from "react"
 import { useTranslation } from "react-i18next"
+import {
+  getHighestReachableSynergyTier
+} from "../../../../../config/game/synergies"
+import { GameMode } from "../../../../../types/enum/Game"
 import type { Synergy } from "../../../../../types/enum/Synergy"
 import {
   fetchSynergyReport,
@@ -15,7 +19,7 @@ import { ReportScatter, type ScatterQuadrantLabels } from "./wish-scatter"
 import "./synergy-placement-report.css"
 
 // fewer boards than this and a row is mostly luck, so it is faded
-const LOW_SAMPLE_BOARDS = 20
+const LOW_SAMPLE_BOARDS = 50
 // within this distance of the middle place, a synergy counts as even
 const EVEN_PLACE_MARGIN = 0.15
 const COLOUR_CODED_STORAGE_KEY = "synergy-report-colour-coded"
@@ -29,7 +33,9 @@ const QUADRANT_LABELS: ScatterQuadrantLabels = {
 
 type SortKey = "averagePlace" | "playRate"
 type ReportMode = "duo" | "solo"
-type ScatterRow = ISynergyReportRow & { picks: number }
+type TierView = "all" | "lowest" | "highest"
+type ViewRow = ISynergyReportRow & { threshold?: number }
+type ScatterRow = ViewRow & { picks: number }
 
 function readColourCoded() {
   try {
@@ -49,6 +55,7 @@ export function SynergyPlacementReport() {
   const [error, setError] = useState("")
   const [sortKey, setSortKey] = useState<SortKey>("averagePlace")
   const [reportMode, setReportMode] = useState<ReportMode>("duo")
+  const [tierView, setTierView] = useState<TierView>("all")
   const [expanded, setExpanded] = useState<Set<Synergy>>(new Set())
   const [colourCoded, setColourCoded] = useState(readColourCoded)
 
@@ -103,6 +110,14 @@ export function SynergyPlacementReport() {
             {t("rank")} {t("by_popularity")}
           </option>
         </select>
+        <select
+          value={tierView}
+          onChange={(e) => setTierView(e.target.value as TierView)}
+        >
+          <option value="all">All tiers</option>
+          <option value="lowest">Min tier</option>
+          <option value="highest">Max tier</option>
+        </select>
         <Checkbox
           checked={colourCoded}
           onToggle={toggleColourCoded}
@@ -123,8 +138,12 @@ export function SynergyPlacementReport() {
         {report && (
           <SynergyPlacementContent
             mode={report[reportMode]}
+            gameMode={
+              reportMode === "duo" ? GameMode.DOUBLE_UP : GameMode.CLASSIC
+            }
             places={reportMode === "duo" ? 4 : 8}
             sortKey={sortKey}
+            tierView={tierView}
             expanded={expanded}
             onToggle={toggleExpanded}
             onChartClick={openFromChart}
@@ -139,6 +158,10 @@ export function SynergyPlacementReport() {
               tier it reached. Click a row to see its tiers.
             </li>
             <li>
+              <b>Min tier</b> / <b>Max tier</b>: only the boards that
+              stopped at that tier
+            </li>
+            <li>
               <b>Play rate</b>: the share of boards with this synergy active
             </li>
             <li>
@@ -148,7 +171,8 @@ export function SynergyPlacementReport() {
               <b>Winrate</b>: how often those boards finished 1st
             </li>
             <li>
-              Faded rows have fewer than {LOW_SAMPLE_BOARDS} boards
+              Faded rows have fewer than {LOW_SAMPLE_BOARDS} boards and are
+              left out of the chart
             </li>
           </ul>
         )}
@@ -159,32 +183,60 @@ export function SynergyPlacementReport() {
 
 function SynergyPlacementContent({
   mode,
+  gameMode,
   places,
   sortKey,
+  tierView,
   expanded,
   onToggle,
   onChartClick
 }: {
   mode: ISynergyReportMode
+  gameMode: GameMode
   places: number
   sortKey: SortKey
+  tierView: TierView
   expanded: Set<Synergy>
   onToggle: (synergy: Synergy) => void
   onChartClick: (synergy: Synergy) => void
 }) {
   const { t } = useTranslation()
+  const viewRows: ViewRow[] = useMemo(
+    () =>
+      mode.rows.map((row) => {
+        if (tierView === "all") return row
+        if (tierView === "lowest") return { ...row, ...row.tiers[0] }
+        const highestThreshold = getHighestReachableSynergyTier(
+          row.synergy,
+          gameMode
+        )
+        const highestTier =
+          row.tiers.find(
+            (candidate) => candidate.threshold === highestThreshold
+          ) ?? row.tiers[row.tiers.length - 1]
+        return { ...row, ...highestTier }
+      }),
+    [mode, tierView, gameMode]
+  )
   const sortedRows = useMemo(
     () =>
-      [...mode.rows].sort((a, b) =>
-        sortKey === "averagePlace"
+      [...viewRows].sort((a, b) => {
+        // a tier nobody reached has no place, so it trails whatever the sort
+        if ((a.boards === 0) !== (b.boards === 0)) {
+          return a.boards === 0 ? 1 : -1
+        }
+        return sortKey === "averagePlace"
           ? a.averagePlace - b.averagePlace
           : b.playRate - a.playRate
-      ),
-    [mode, sortKey]
+      }),
+    [viewRows, sortKey]
   )
   const scatterRows: ScatterRow[] = useMemo(
-    () => mode.rows.map((row) => ({ ...row, picks: row.boards })),
-    [mode]
+    () =>
+      viewRows
+        .filter((row) => row.boards >= LOW_SAMPLE_BOARDS)
+        .map((row) => ({ ...row, picks: row.boards })),
+    [viewRows]
   )
 
   if (mode.games === 0) return <p>{t("no_data_available")}</p>
@@ -192,9 +244,7 @@ function SynergyPlacementContent({
   const renderPoint = (row: ScatterRow) => (
     <button
       type="button"
-      className={cc("synergy-placement-point", {
-        "low-sample": row.boards < LOW_SAMPLE_BOARDS
-      })}
+      className="synergy-placement-point"
       onClick={() => onChartClick(row.synergy)}
     >
       <SynergyIcon type={row.synergy} size="20px" />
@@ -206,6 +256,7 @@ function SynergyPlacementContent({
       <p>
         <SynergyIcon type={row.synergy} size="24px" />
         {t(`synergy.${row.synergy}`)}
+        {row.threshold && ` ${row.threshold}`}
       </p>
       <dl className="wish-scatter-stats">
         <div>
@@ -232,13 +283,19 @@ function SynergyPlacementContent({
   return (
     <>
       <div className="synergy-placement-chart">
-        <ReportScatter
-          rows={scatterRows}
-          places={places}
-          renderPoint={renderPoint}
-          renderTooltip={renderTooltip}
-          quadrantLabels={QUADRANT_LABELS}
-        />
+        {scatterRows.length > 0 ? (
+          <ReportScatter
+            rows={scatterRows}
+            places={places}
+            renderPoint={renderPoint}
+            renderTooltip={renderTooltip}
+            quadrantLabels={QUADRANT_LABELS}
+          />
+        ) : (
+          <p className="synergy-placement-chart-empty">
+            No synergy has {LOW_SAMPLE_BOARDS} boards at this tier yet
+          </p>
+        )}
       </div>
       <table>
         <thead>
@@ -271,6 +328,7 @@ function SynergyPlacementContent({
                     <span className="synergy-placement-chevron">›</span>
                     <SynergyIcon type={row.synergy} size="24px" />
                     {t(`synergy.${row.synergy}`)}
+                    {row.threshold && ` ${row.threshold}`}
                   </span>
                 </td>
                 <StatCells stats={row} places={places} sortKey={sortKey} />

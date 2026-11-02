@@ -35,6 +35,19 @@
   margin-bottom: 0.8em;
 }
 
+#synergy-placement-report .synergy-placement-chart-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  height: 100%;
+  margin: 0;
+  border: var(--border-thin);
+  border-radius: 12px;
+  background-color: var(--color-bg-secondary);
+  color: var(--color-fg-secondary);
+}
+
 #synergy-placement-report .error {
   color: var(--color-fg-red);
 }
@@ -51,10 +64,6 @@
 
 .synergy-placement-point .synergy-icon {
   display: block;
-}
-
-.synergy-placement-point.low-sample {
-  opacity: 0.4;
 }
 
 .synergy-placement-tooltip p {
