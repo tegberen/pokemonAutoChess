@@ -658,6 +658,7 @@ export interface IPokemonEntity {
   baseDef: number
   baseSpeDef: number
   baseSpeed: number
+  speedBaseInUse: number
   hp: number
   shield: number
   team: number
