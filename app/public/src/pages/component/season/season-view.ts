@@ -107,7 +107,7 @@ function getChallengeLabel(
     case "daily-learn": {
       const learnGoal = getSeasonDailyLearnGoal(now)
       return learnGoal.kind === "synergy"
-        ? `Finish a game with ${t(`synergy.${learnGoal.synergy}`)} synergy ` +
+        ? `Finish a game with ${t(`synergy.${learnGoal.synergy}`)} ` +
           "at its highest tier"
         : `Finish a game holding a ${t(`item.${learnGoal.item}`)}`
     }

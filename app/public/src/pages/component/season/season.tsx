@@ -897,7 +897,7 @@ function LearnGoalLabel({ goal }: { goal: SeasonLearnGoal }) {
     return (
       <>
         Finish a game with <SynergyIcon type={goal.synergy} size="20px" />{" "}
-        synergy at its highest tier
+        {t(`synergy.${goal.synergy}`)} at its highest tier
       </>
     )
   }
@@ -915,6 +915,19 @@ function LearnGoalLabel({ goal }: { goal: SeasonLearnGoal }) {
   )
 }
 
+function ChallengeLabel({ challenge }: { challenge: SeasonChallenge }) {
+  if (challenge.learnGoal) return <LearnGoalLabel goal={challenge.learnGoal} />
+  if (challenge.id === "weekly-three-stars") {
+    return (
+      <>
+        Evolve {challenge.goal} Pokémon to 3{" "}
+        <img src="assets/ui/star.svg" width={20} height={20} alt="stars" />
+      </>
+    )
+  }
+  return <>{challenge.label}</>
+}
+
 function ChallengeRow({ challenge }: { challenge: SeasonChallenge }) {
   const isDone = challenge.progress >= challenge.goal
   return (
@@ -924,11 +937,7 @@ function ChallengeRow({ challenge }: { challenge: SeasonChallenge }) {
           {challenge.period === "daily" ? "Daily" : "Weekly"}
         </span>
         <span className="season-challenge-label" title={challenge.label}>
-          {challenge.learnGoal ? (
-            <LearnGoalLabel goal={challenge.learnGoal} />
-          ) : (
-            challenge.label
-          )}
+          <ChallengeLabel challenge={challenge} />
         </span>
         <span className="season-chip">
           +{challenge.reward.amount}
