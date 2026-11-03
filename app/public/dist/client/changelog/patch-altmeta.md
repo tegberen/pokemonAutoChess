@@ -483,6 +483,9 @@ Every balance change on this server, newest first.
 **Game Mode**
 - Smeargle Pack | your starter now comes with a random component, like a normal starter pick
 
+**Themes**
+- Modern Classic | removed; if you used it, you are back on the default theme
+
 ### 1 November 2026
 
 Last month, we struggled to fill lobbies again, sorry about that... *sigh. wcyd.*

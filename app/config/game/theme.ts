@@ -7,7 +7,6 @@ import { isHalloweenGhostSeason } from "./town-encounters"
 
 export const THEMES = [
   "default",
-  "modernclassic",
   "super",
   "lilac",
   "rainbow",

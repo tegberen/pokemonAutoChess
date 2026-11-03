@@ -1,5 +1,6 @@
 import Phaser from "phaser"
 import { useCallback, useEffect, useState } from "react"
+import { THEMES } from "../../config/game/theme"
 import { isHalloweenGhostSeason } from "../../config/game/town-encounters"
 import { removeInArray } from "../../utils/array"
 import type { AvatarCosmeticId } from "./cosmetics/avatar-cosmetics"
@@ -151,7 +152,10 @@ function loadPreferences(): IPreferencesState {
     const stored = localStore.get(LocalStoreKeys.PREFERENCES)
 
     const { migrated, changed } = migrateLegacyKeybindings(stored)
-    const mustForceTheme = migrated?.lastForcedTheme !== FORCED_THEME
+    // a theme that was removed would load no stylesheet
+    const mustForceTheme =
+      migrated?.lastForcedTheme !== FORCED_THEME ||
+      !(THEMES as readonly string[]).includes(migrated?.theme)
     if (mustForceTheme) {
       migrated.theme = FORCED_THEME
       migrated.lastForcedTheme = FORCED_THEME
