@@ -10493,7 +10493,11 @@ export const AbilitiesAnimations: {
   ),
   [Ability.AMPING_BEAK]: onCaster({ ability: Ability.BOLT_BEAK }),
   [Ability.FROZEN_REND]: onCasterScale3,
-  [Ability.HARD_FACE]: onUnit(Ability.REFLECT, { tint: 0xc0a080, scale: 2.5 }),
+  [Ability.HARD_FACE]: onUnit(Ability.REFLECT, {
+    tint: 0xc0a080,
+    scale: 2.5,
+    animOptions: { repeat: 1 }
+  }),
   [Ability.SHELTER]: onCaster({
     ability: Ability.REFLECT,
     tint: 0xa080ff,
