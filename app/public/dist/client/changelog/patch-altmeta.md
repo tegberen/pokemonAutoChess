@@ -478,7 +478,7 @@ Every balance change on this server, newest first.
 ### 2 November 2026
 
 **Events**
-- Wild Card | new solo Scribble lobby at 04:00, 08:00, 12:00 and 16:00 UTC: Wonder Pick a leader from one rarity shared by the whole lobby, with 1 reroll, and gain a random component. It stays on your board all game, takes no slot and cannot be sold. Everyone who plays to stage 14 gets 1 Wonder Pick, the winner the Wild title and its Wild Card theme.
+- Wild Card | new solo Scribble lobby at 04:00, 08:00, 12:00 and 16:00 UTC: Wonder Pick a leader from one rarity, from Common to Unique, shared by the whole lobby, with 1 reroll, and gain a random component. It stays on your board all game, takes no slot and cannot be sold. Everyone who plays to stage 14 gets 1 Wonder Pick, the winner the Wild title and its Wild Card theme.
 
 **Game Mode**
 - Smeargle Pack | your starter now comes with a random component, like a normal starter pick

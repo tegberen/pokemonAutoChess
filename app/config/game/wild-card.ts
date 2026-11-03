@@ -10,7 +10,9 @@ export const WILD_CARD_RARITIES = [
   Rarity.COMMON,
   Rarity.UNCOMMON,
   Rarity.RARE,
-  Rarity.EPIC
+  Rarity.EPIC,
+  Rarity.ULTRA,
+  Rarity.UNIQUE
 ]
 // the Wonder Pick result stays on screen this long before the choice closes
 export const WILD_CARD_REVEAL_DURATION = 3500

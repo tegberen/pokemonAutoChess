@@ -1,4 +1,4 @@
-import { getAltFormForPlayer, PkmsWithAltForms } from "../config"
+import { getAltFormForPlayer, PkmsWithAltForms, UniquePool } from "../config"
 import {
   WILD_CARD_CANDIDATES,
   WILD_CARD_RARITIES
@@ -13,8 +13,8 @@ import {
   PRECOMPUTED_POKEMONS_PER_RARITY
 } from "../models/precomputed/precomputed-rarity"
 import type GameState from "../rooms/states/game-state"
-import type { Rarity } from "../types/enum/Game"
-import type { Pkm } from "../types/enum/Pokemon"
+import { Rarity } from "../types/enum/Game"
+import { type Pkm, PkmDuos } from "../types/enum/Pokemon"
 import { pickNRandomIn } from "../utils/random"
 
 // deterministic per lobby, so every player draws from the same rarity
@@ -27,11 +27,13 @@ export function getWildCardRarity(state: GameState): Rarity {
 }
 
 export function pickWildCardCandidates(player: Player, state: GameState) {
-  const lines = PRECOMPUTED_POKEMONS_PER_RARITY[getWildCardRarity(state)]
-  const candidates: Pkm[] = [
-    ...getRegularsTier1(lines),
-    ...getAdditionalsTier1(lines)
-  ]
+  const rarity = getWildCardRarity(state)
+  const lines = PRECOMPUTED_POKEMONS_PER_RARITY[rarity]
+  // Uniques are single-stage, so they come from the carousel's own list
+  const candidates: Pkm[] =
+    rarity === Rarity.UNIQUE
+      ? UniquePool.filter((pkm): pkm is Pkm => !(pkm in PkmDuos))
+      : [...getRegularsTier1(lines), ...getAdditionalsTier1(lines)]
   return pickNRandomIn(candidates, WILD_CARD_CANDIDATES).map((pkm) =>
     PkmsWithAltForms.includes(pkm) ? getAltFormForPlayer(pkm, player) : pkm
   )

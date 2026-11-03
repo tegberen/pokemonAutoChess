@@ -74,13 +74,24 @@ ${metadata?.ownerName ? "Owner: " + metadata.ownerName : ""}\n${metadata?.player
           {metadata?.gameMode && <GameModeIcon gameMode={metadata.gameMode} />}
         </div>
         <div className="room-mode">
-          {showsModification && (
+          {showsModification ? (
             <img
               alt=""
               aria-hidden="true"
               className="modification-icon"
               src={GameModificationIcon[modification]}
             />
+          ) : (
+            // a scheduled event game has no mode icon: its own icon takes
+            // that spot beside the name
+            (isWildCard || isRainbowFinale) && (
+              <img
+                alt=""
+                aria-hidden="true"
+                className="modification-icon"
+                src={getEventRoomIcon(metadata ?? {})}
+              />
+            )
           )}
           <span className="room-name">
             {showsModification &&
@@ -103,7 +114,7 @@ ${metadata?.ownerName ? "Owner: " + metadata.ownerName : ""}\n${metadata?.player
         </div>
       </div>
       <div className={cc("room-item my-box", { "daily-duel": isEvent })}>
-        {isEvent && (
+        {hasEventTag && (
           <img
             alt=""
             aria-hidden="true"
