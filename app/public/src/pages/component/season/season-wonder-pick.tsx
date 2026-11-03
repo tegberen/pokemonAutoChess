@@ -141,6 +141,8 @@ export default function SeasonWonderPick(props: {
   candidates: WonderPickCandidate[]
   rerollsLeft: number
   picks: number
+  // played in game: a one-off pick, so no wallet count and no next pick
+  inGame?: boolean
   onDraw: () => Promise<unknown>
   onReroll: () => Promise<unknown>
   onPick: () => Promise<WonderPickResult>
@@ -422,7 +424,9 @@ export default function SeasonWonderPick(props: {
               onClick={startWonderPick}
             >
               Wonder Pick
-              <span className="season-shop-owned-count">{props.picks}</span>
+              {!props.inGame && (
+                <span className="season-shop-owned-count">{props.picks}</span>
+              )}
             </button>
           </div>
         )}
@@ -447,7 +451,7 @@ export default function SeasonWonderPick(props: {
           </ul>
         )}
 
-        {phase === "picked" && (
+        {phase === "picked" && !props.inGame && (
           <button
             className={cc(
               isShiny ? "season-wonder-pick-button" : "season-shop-open",

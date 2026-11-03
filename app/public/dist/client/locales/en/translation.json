@@ -4175,6 +4175,7 @@
 		"ARTIST": "Paint the whole canvas in Science & Arts",
 		"SHINY": "Complete all 12 Prismatic Quests in a single game",
 		"META": "Win with a Pokémon holding MUSCLE_BAND, SOUL_DEW and SHELL_BELL",
+		"WILD": "Win a Wild Card game",
 		"BOTANIST": "Complete the GRASS lesson in Slowking's School of Synergies",
 		"SCHOLAR": "With each synergy maxed out, finish Top 4 in solo or Top 2 in Double Up three times, or win once. Only counts in lobbies of 8 players without bots",
 		"NOVICE": "Play your first game",
@@ -4518,11 +4519,23 @@
 	"daily_duel_in": "in {{time}}",
 	"rainbow_hours": {
 		"title": "Rainbow Hours",
+		"finale_in": "Finale in {{time}}",
+		"banner_hint": "Live now: every game pays {{ticketsPerGame}} tickets, a win {{ticketsPerWin}} more. Then {{finale}}: everyone gets {{wonderPicks}} Wonder Pick, the winner {{boosters}} booster.",
 		"settings_locked": "Event lobbies use fixed settings",
 		"everyone_gets": "Everyone who plays gets {{count}}",
 		"winner_gets": "the winner {{count}}",
 		"wonder_pick": "Wonder Pick",
 		"booster": "booster"
+	},
+	"daily_events": {
+		"live": "Live",
+		"every_day": "Every day",
+		"podium": "Podium",
+		"win": "Win",
+		"wild_card_reward": "Everyone gets {{wonderPicks}} Wonder Pick.",
+		"rainbow_hours_reward": "Every game pays {{ticketsPerGame}} Tickets, a win {{ticketsPerWin}} more.",
+		"rainbow_finale_reward": "Everyone gets {{wonderPicks}} Wonder Pick, the winner {{boosters}} booster.",
+		"daily_duel_reward": "The top 3 take the town podium."
 	},
 	"players_one": "{{count}} player",
 	"players_other": "{{count}} players",
@@ -4707,6 +4720,7 @@
 		"derpy": "Derpy",
 		"artist": "Artist's Studio",
 		"duelist": "Duelist's Arena",
+		"wild": "Wild Card",
 		"halloween": "Halloween",
 		"onsen": "Autumn Onsen",
 		"newjourney": "A New Journey",
@@ -4729,6 +4743,7 @@
 		"choose_item": "Choose one item from the following",
 		"choose_add_pick": "Choose an additional Pokémon. It will be available to everyone.",
 		"choose_starter": "Choose your starter Pokémon",
+		"wild_card_hint": "Wonder Pick your leader: it stays on your board all game",
 		"choose_mission_order": "Choose your mission",
 		"choose_unique": "Choose one Unique for your team. You only get to choose once, make it count!",
 		"choose_legendary": "Choose one Legendary for your team. You only get to choose once, make it count!",
@@ -7095,6 +7110,7 @@
 	},
 	"additional_picks": "Additional picks",
 	"wish_picks": "Added by Wishes",
+	"wonder_pick_picks": "Added through Wonder Pick",
 	"regional_pokemons": "Regional Pokémon",
 	"unique_picks": "Unique picks",
 	"stages": "Stages",
@@ -7585,7 +7601,8 @@
 		"BAZAAR": "The Bazaar",
 		"QUEST_BOARD": "Quest Board",
 		"MISFITS": "Misfits",
-		"MEGA_EVOLUTION": "Mega Evolution"
+		"MEGA_EVOLUTION": "Mega Evolution",
+		"WILD_CARD": "Wild Card"
 	},
 	"scribble_description": {
 		"OMELETTE_COOK": "Get a Pokémon Egg after stage 1, 2 and 3. When one of those eggs hatches, gain that Pokémon's Prismatic Wish.",
@@ -7604,7 +7621,8 @@
 		"BAZAAR": "The Bazaar visits the town! Shops have a chance to contain Hatch at stages 0-10, Unique at stages 10-20 and Legendary after stage 20.",
 		"QUEST_BOARD": "The Explorers Guild is here! Everyone gets a Quest Panel and keeps every reward they earn.",
 		"MISFITS": "At the start of each fight, units with no active synergy gain a very strong bonus, scaling with each STAR. Gain a surprise haul of {{gold}} GOLD.",
-		"MEGA_EVOLUTION": "Start with a KEY_STONE. The first carousel offers Pokemon that can Mega Evolve."
+		"MEGA_EVOLUTION": "Start with a KEY_STONE. The first carousel offers Pokemon that can Mega Evolve.",
+		"WILD_CARD": "Wonder Pick your leader. It stays on your board all game, takes no slot and cannot be sold. Everyone draws from the same rarity."
 	},
 	"scribble_shape": {
 		"WALL": "Wall",

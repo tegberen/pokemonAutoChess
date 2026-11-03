@@ -439,6 +439,7 @@ export interface IPokemon {
   manifestationLocked: boolean
   festivePicnicDish: Item | null
   supportiveSoul: boolean
+  wildCardLeader: boolean
   chosenOne: boolean
   trashToTreasureRounds: number
   honeyExplorationFriend: boolean
@@ -701,6 +702,7 @@ export interface IPokemonEntity {
   inSpotlight: boolean
   isBlessedHero: boolean
   isChosenOne: boolean
+  isWildCardLeader: boolean
   isOnCriticalPath: boolean
   stoneSaddleRiderIndex: string
   hasFallenBelowHalfHp: boolean
@@ -919,7 +921,8 @@ export enum Title {
   DERPY = "DERPY",
   ARTIST = "ARTIST",
   SHINY = "SHINY",
-  META = "META"
+  META = "META",
+  WILD = "WILD"
 }
 
 export interface IBoardEvent {

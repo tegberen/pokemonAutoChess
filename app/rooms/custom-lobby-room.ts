@@ -12,12 +12,14 @@ import {
   DAILY_DUEL_LOBBY_CRON,
   DAILY_DUEL_ROOM_NAME,
   RAINBOW_FINALE_LOBBY_CRON,
+  WILD_CARD_LOBBY_CRON,
   INACTIVITY_TIMEOUT,
   MAX_CONCURRENT_PLAYERS_ON_LOBBY,
   MAX_CONCURRENT_PLAYERS_ON_SERVER,
   TOURNAMENT_CLEANUP_DELAY
 } from "../config"
 import { RAINBOW_FINALE_ROOM_NAME } from "../config/game/rainbow-hours"
+import { WILD_CARD_ROOM_NAME } from "../config/game/wild-card"
 import { TOURNAMENT_RULES } from "../core/tournament-swiss"
 import Message from "../models/colyseus-models/message"
 import { TournamentSchema } from "../models/colyseus-models/tournament"
@@ -890,6 +892,14 @@ export default class CustomLobbyRoom extends Room {
       start: true
     })
     this.cleanUpCronJobs.push(rainbowFinaleJob)
+
+    const wildCardJob = CronJob.from({
+      cronTime: WILD_CARD_LOBBY_CRON,
+      timeZone: "UTC",
+      onTick: () => this.openWildCardLobby(),
+      start: true
+    })
+    this.cleanUpCronJobs.push(wildCardJob)
   }
 
   async openDailyDuelLobby() {
@@ -923,6 +933,22 @@ export default class CustomLobbyRoom extends Room {
       roomName: RAINBOW_FINALE_ROOM_NAME,
       specialGameRule: SpecialGameRule.SMEARGLE_PACK,
       rainbowFinale: true
+    })
+  }
+
+  async openWildCardLobby() {
+    const alreadyWaiting = this.rooms?.some(
+      (room) =>
+        room.metadata?.type === "preparation" &&
+        room.metadata?.specialGameRule === SpecialGameRule.WILD_CARD &&
+        room.metadata?.gameStartedAt == null
+    )
+    if (alreadyWaiting) return
+    await matchMaker.createRoom("preparation", {
+      gameMode: GameMode.SCRIBBLE,
+      noElo: true,
+      roomName: WILD_CARD_ROOM_NAME,
+      specialGameRule: SpecialGameRule.WILD_CARD
     })
   }
 }

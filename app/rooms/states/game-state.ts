@@ -30,7 +30,10 @@ import type { EloRank } from "../../types/enum/EloRank"
 import { GameMode, GamePhaseState, type Stat } from "../../types/enum/Game"
 import type { Item } from "../../types/enum/Item"
 import type { Pkm } from "../../types/enum/Pokemon"
-import { SpecialGameRule } from "../../types/enum/SpecialGameRule"
+import {
+  ScheduledOnlyRules,
+  SpecialGameRule
+} from "../../types/enum/SpecialGameRule"
 import { isWishOnlySynergy, Synergy } from "../../types/enum/Synergy"
 import type { TownEncounter } from "../../types/enum/TownEncounter"
 import { Weather } from "../../types/enum/Weather"
@@ -103,6 +106,8 @@ export default class GameState extends Schema {
   )
   // ATK or AP, the stat each player's training bag gives, kept last
   @type({ map: "string" }) trainingBagStatByPlayerId = new MapSchema<Stat>()
+  // WILD_CARD: lines a leader added to the pool
+  @type(["string"]) wonderPickAdditionalPokemons = new ArraySchema<Pkm>()
   // server-only cursor recording which step already handed out its grants
   guideStepEntered = -1
   // server-only: true while a guide stage is being replayed with a different
@@ -180,7 +185,11 @@ export default class GameState extends Schema {
     // a Scribble room that fixed its rule, like Smeargle Pack for a Pack,
     // keeps it; only an open Scribble rolls one
     if ((gameMode === GameMode.SCRIBBLE && !specialGameRule) || whimsy) {
-      this.specialGameRule = pickRandomIn(Object.values(SpecialGameRule))
+      this.specialGameRule = pickRandomIn(
+        Object.values(SpecialGameRule).filter(
+          (rule) => !ScheduledOnlyRules.includes(rule)
+        )
+      )
     } else {
       this.specialGameRule = specialGameRule
     }

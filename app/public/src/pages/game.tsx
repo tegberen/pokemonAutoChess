@@ -86,6 +86,7 @@ import {
   removePlayer,
   setAdditionalPokemons,
   setWishAdditionalPokemons,
+  setWonderPickAdditionalPokemons,
   setPlayerBlessings,
   setPlayerFossilUnlocks,
   setPlayerGhostIncantations,
@@ -1198,6 +1199,14 @@ export default function Game() {
         )
       })
 
+      $state.wonderPickAdditionalPokemons.onChange(() => {
+        dispatch(
+          setWonderPickAdditionalPokemons(
+            schemaValues(room.state.wonderPickAdditionalPokemons)
+          )
+        )
+      })
+
       $state.listen("blessingsEnabled", (value) => {
         dispatch(setBlessingsEnabled(value))
       })
@@ -1429,6 +1438,8 @@ export default function Game() {
             dispatchChoices()
             // SCRIBBLE_QUIZ: answering only changes fields inside the choice
             $(choice).listen("quizAnswerIndex", dispatchChoices)
+            // WILD_CARD: the draw only changes a field inside the choice
+            $(choice).listen("wonderPickResultIndex", dispatchChoices)
           })
           $player.choices.onRemove(dispatchChoices)
         }

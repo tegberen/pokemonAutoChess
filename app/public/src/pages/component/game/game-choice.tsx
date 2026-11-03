@@ -51,6 +51,7 @@ import { GameIncantationChoice } from "./game-incantation-choice"
 import GamePokemonDuoPortrait from "./game-pokemon-duo-portrait"
 import GamePokemonPortrait, { getCachedPortrait } from "./game-pokemon-portrait"
 import GameSmearglePack from "./game-smeargle-pack"
+import GameWildCardPick from "./game-wild-card-pick"
 import "./game-choice.css"
 import { ArmoryOptions, ArmoryOptionsPrice } from "../../../../../types/enum/ArmoryOptions"
 
@@ -408,6 +409,12 @@ export default function GameChoice() {
         disabled={isBenchFull}
       />
     )
+  }
+
+  // keyed by type, not id: a reroll replaces the choice and must not remount
+  // the cards mid-flip
+  if (choice.type === "wild_card") {
+    return <GameWildCardPick key="wild-card" choice={choice} />
   }
 
   let message: string | null = null

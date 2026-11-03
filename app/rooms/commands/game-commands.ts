@@ -1817,6 +1817,7 @@ export class OnSellPokemonCommand extends Command<
 
     if (
       pokemon.supportiveSoul ||
+      pokemon.wildCardLeader ||
       pokemon.chosenOne ||
       canSell(pokemon.name) === false
     ) {
@@ -2747,9 +2748,11 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
     this.applyGuideStageSetup()
     this.handOutKeyStones()
 
+    // the booster or the Wonder Pick is opened, rerolled and played out first
     if (
       this.state.stageLevel === 1 &&
-      this.state.specialGameRule === SpecialGameRule.SMEARGLE_PACK
+      (this.state.specialGameRule === SpecialGameRule.SMEARGLE_PACK ||
+        this.state.specialGameRule === SpecialGameRule.WILD_CARD)
     ) {
       this.state.time += 10000
     }
@@ -3508,7 +3511,8 @@ export class OnUpdatePhaseCommand extends Command<GameRoom> {
         "blessing",
         "singularity",
         "glorious_battle",
-        "starter_choice"
+        "starter_choice",
+        "wild_card"
       ]
       player.choices
         .filter((choice) => autoPickChoices.includes(choice.type))

@@ -46,6 +46,10 @@ import {
 } from "../types/enum/Blessing"
 import { GADGETS } from "../config/game/gadgets"
 import { isRainbowHours } from "../config/game/rainbow-hours"
+import {
+  WILD_CARD_REVEAL_DURATION,
+  WILD_CARD_WONDER_PICKS
+} from "../config/game/wild-card"
 import { SEASON_MIN_STAGE_FOR_CHALLENGES } from "../config/game/season"
 import {
   getScribbleShapeCellsAt,
@@ -60,6 +64,7 @@ import {
   createSmearglePackPropositions,
   getScribbleStarterPowerScore
 } from "../core/scribbles"
+import { makeWildCardLeader, pickWildCardCandidates } from "../core/wild-card"
 import {
   clearPendingGame,
   clearPendingGamesOnRoomDispose,
@@ -91,6 +96,7 @@ import { getSellPrice } from "../models/shop"
 import { updatePlayerTitlesAfterGame } from "../models/titles"
 import { fetchEventLeaderboard } from "../services/leaderboard"
 import { syncLevelRewards } from "../services/level-rewards"
+import { grantCasualPicks } from "../services/casual-pick"
 import { grantRainbowHoursRewards } from "../services/rainbow-hours"
 import { notificationsService } from "../services/notifications"
 import { recordSeasonGame } from "../services/season"
@@ -137,6 +143,7 @@ import {
 } from "../types/enum/Game"
 import {
   Item,
+  ItemComponentsNoFossilOrScarf,
   ItemComponentsNoScarf,
   Seeds,
   SynergyGems,
@@ -174,6 +181,7 @@ import { isIn, removeInArray } from "../utils/array"
 import { getAvatarString } from "../utils/avatar"
 import {
   getFirstAvailablePositionInBench,
+  getFirstAvailablePositionOnBoard,
   getFreeSpaceOnBench,
   getBenchSize
 } from "../utils/board"
@@ -1808,6 +1816,14 @@ export default class GameRoom extends Room<{ state: GameState }> {
         }
       }
 
+      if (
+        rank === 1 &&
+        this.state.players.size >= 2 &&
+        this.state.specialGameRule === SpecialGameRule.WILD_CARD
+      ) {
+        player.titles.add(Title.WILD)
+      }
+
       updatePlayerTitlesAfterGame(player, usr, rank)
 
       if (usr.titles === undefined) {
@@ -1898,6 +1914,19 @@ export default class GameRoom extends Room<{ state: GameState }> {
           gameStartedAt: this.state.startTime
         }).catch((error) =>
           logger.error("Error granting Rainbow Hours rewards", error)
+        )
+      }
+      if (
+        countsAsAGame &&
+        this.state.players.size >= 2 &&
+        stageReached >= SEASON_MIN_STAGE_FOR_CHALLENGES &&
+        this.state.specialGameRule === SpecialGameRule.WILD_CARD
+      ) {
+        await grantCasualPicks(
+          { uid: player.id },
+          WILD_CARD_WONDER_PICKS
+        ).catch((error) =>
+          logger.error("Error granting the Wild Card Wonder Pick", error)
         )
       }
       if (shouldRefetchEventLeaderboard) {
@@ -2116,6 +2145,16 @@ export default class GameRoom extends Room<{ state: GameState }> {
       return
     }
 
+    if (choice.type === "wild_card") {
+      if (!choice.canReroll || choice.wonderPickResultIndex !== -1) return
+      player.choices[index] = new PlayerChoice({
+        type: "wild_card",
+        pokemons: pickWildCardCandidates(player, this.state),
+        canReroll: false
+      })
+      return
+    }
+
     if (
       !choice.canReroll ||
       this.state.specialGameRule !== SpecialGameRule.SMEARGLE_PACK
@@ -2299,6 +2338,18 @@ export default class GameRoom extends Room<{ state: GameState }> {
       this.clock.setTimeout(
         () => removeInArray(player.choices, choice),
         SCRIBBLE_QUIZ_FEEDBACK_DURATION
+      )
+      return
+    }
+
+    if (choice.type === "wild_card") {
+      if (choice.wonderPickResultIndex !== -1) return
+      const resultIndex = Math.floor(Math.random() * choice.pokemons.length)
+      this.grantWildCardLeader(player, choice.pokemons[resultIndex] as Pkm)
+      choice.wonderPickResultIndex = resultIndex
+      this.clock.setTimeout(
+        () => removeInArray(player.choices, choice),
+        WILD_CARD_REVEAL_DURATION
       )
       return
     }
@@ -2546,6 +2597,8 @@ export default class GameRoom extends Room<{ state: GameState }> {
             player,
             getScribbleStarterPowerScore(starter.name)
           )
+          // the component a normal starter pick comes with
+          player.items.push(pickRandomIn(ItemComponentsNoFossilOrScarf))
         }
       }
 
@@ -2609,6 +2662,32 @@ export default class GameRoom extends Room<{ state: GameState }> {
     }
 
     removeInArray(player.choices, choice)
+  }
+
+  grantWildCardLeader(player: Player, pkm: Pkm) {
+    const leader = PokemonFactory.createPokemonFromName(pkm, player)
+    makeWildCardLeader(leader)
+    const position = getFirstAvailablePositionOnBoard(
+      player.board,
+      leader.range
+    )
+    if (!position) return
+    if (
+      getPokemonData(pkm).additional &&
+      !this.state.additionalPokemons.includes(pkm)
+    ) {
+      this.state.shop.addAdditionalPokemon(pkm, this.state)
+      this.state.wonderPickAdditionalPokemons.push(pkm)
+    }
+    leader.positionX = position[0]
+    leader.positionY = position[1]
+    player.board.set(leader.id, leader)
+    leader.onAcquired(player)
+    // the component a normal starter pick comes with
+    player.items.push(pickRandomIn(ItemComponentsNoFossilOrScarf))
+    player.firstPartner = leader.name
+    player.updateSynergies()
+    player.boardSize = this.getTeamSize(player.board, player.blessings)
   }
 
   // without a position the shape is erased

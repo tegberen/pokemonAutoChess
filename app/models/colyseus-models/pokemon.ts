@@ -147,6 +147,7 @@ export class Pokemon extends Schema implements IPokemon {
   // HONEY_EXPLORATION friends and MEGA_EVOLUTION carousel Pokemon; synced for
   // the sell price shown
   @type("boolean") sellsForFree: boolean = false
+  @type("boolean") wildCardLeader: boolean = false
   dodge: number = 0
   deathCount: number = 0
   killCount: number = 0
@@ -230,6 +231,7 @@ export class Pokemon extends Schema implements IPokemon {
   get doesCountForTeamSize(): boolean {
     return (
       this.countsForTeamSize &&
+      !this.wildCardLeader &&
       this.passive !== Passive.INANIMATE &&
       this.passive !== Passive.FIGHTING_SUBSTITUTE &&
       // covers Supportive Soul's companion and the one All for One fuses the

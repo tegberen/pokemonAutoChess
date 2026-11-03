@@ -28,6 +28,8 @@ export type PlayerChoiceType =
   | "starter_choice"
   | "galar_fossil"
   | "incantation"
+  // WILD_CARD: the server draws one of `pokemons`, whichever card is clicked
+  | "wild_card"
 
 export class PlayerChoice extends Schema {
   @type("string") id: string
@@ -58,6 +60,8 @@ export class PlayerChoice extends Schema {
   @type(["string"]) incantationBonuses: string[] = []
   @type("uint8") incantationStrength: number = 0
   @type("string") incantationContext: string = ""
+  // kept briefly after the draw so the card can show it
+  @type("int8") wonderPickResultIndex: number = -1
   isPveReward = false
   incantationSlot = -1
 

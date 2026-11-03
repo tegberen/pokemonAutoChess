@@ -10,6 +10,7 @@ import {
   RAINBOW_FINALE_WINNER_BOOSTERS,
   RAINBOW_FINALE_WONDER_PICKS
 } from "../../../../../config/game/rainbow-hours"
+import { WILD_CARD_ROOM_NAME } from "../../../../../config/game/wild-card"
 import type { IGameUser } from "../../../../../models/colyseus-models/game-user"
 import { Role } from "../../../../../types"
 import { EloRank } from "../../../../../types/enum/EloRank"
@@ -44,6 +45,7 @@ import {
   GameModificationIcon,
   useGameModificationLabel
 } from "./game-modification-banner"
+import { WILD_CARD_MASCOT } from "../room-menu/daily-events"
 import PreparationMenuUser from "./preparation-menu-user"
 import "./preparation-menu.css"
 
@@ -160,6 +162,21 @@ export default function PreparationMenu() {
           <img className="booster" src="/assets/ui/booster.png" alt="" />{" "}
           {t("rainbow_hours.booster")}.
         </p>
+      </div>
+    </div>
+  ) : specialGameRule === SpecialGameRule.WILD_CARD ? (
+    <div className="rule-banner event-banner wild-card-banner my-box">
+      <img
+        className="rule-banner-icon"
+        src={WILD_CARD_MASCOT}
+        width={64}
+        height={64}
+        alt=""
+        aria-hidden="true"
+      />
+      <div className="rule-banner-text">
+        <h3>{WILD_CARD_ROOM_NAME}</h3>
+        <p>{t("scribble_description.WILD_CARD")}</p>
       </div>
     </div>
   ) : dailyDuel ? (

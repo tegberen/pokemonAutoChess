@@ -8,7 +8,10 @@ import {
   GameModification,
   getGameModification
 } from "../../../../../types/enum/Game"
-import { SpecialGameRule } from "../../../../../types/enum/SpecialGameRule"
+import {
+  ScheduledOnlyRules,
+  SpecialGameRule
+} from "../../../../../types/enum/SpecialGameRule"
 import { hasModeratorRights } from "../../../../../utils/roles"
 import { getDefaultRoomName } from "../../../../../utils/room-name"
 import { keys } from "../../../../../utils/object"
@@ -251,7 +254,11 @@ export default function PreparationSettings() {
     SpecialGameRule.SMEARGLE_PACK,
     ...[...keys(SpecialGameRule)]
       .reverse()
-      .filter((rule) => rule !== SpecialGameRule.SMEARGLE_PACK)
+      .filter(
+        (rule) =>
+          rule !== SpecialGameRule.SMEARGLE_PACK &&
+          !(ScheduledOnlyRules as string[]).includes(rule)
+      )
   ]
   const filteredRules = orderedRules.filter((rule) => {
     const q = ruleQuery.trim().toLowerCase()

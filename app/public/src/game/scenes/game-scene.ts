@@ -743,6 +743,7 @@ export default class GameScene extends Scene {
           if (
             this.sellZone &&
             !gameObject.supportiveSoul &&
+            !gameObject.wildCardLeader &&
             !gameObject.chosenOne &&
             this.canSellPokemon(this.pokemonDragged.name as Pkm)
           ) {
@@ -777,7 +778,8 @@ export default class GameScene extends Scene {
             } else if (inBench) {
               visible =
                 pokemon.canBeBenched &&
-                this.pokemonDragged?.supportiveSoul !== true
+                this.pokemonDragged?.supportiveSoul !== true &&
+                this.pokemonDragged?.wildCardLeader !== true
             } else if (this.room?.state.phase === GamePhaseState.PICK) {
               visible = true
             }
@@ -786,6 +788,7 @@ export default class GameScene extends Scene {
           if (
             this.sellZone?.visible === false &&
             this.pokemonDragged?.supportiveSoul !== true &&
+            this.pokemonDragged?.wildCardLeader !== true &&
             this.pokemonDragged?.chosenOne !== true &&
             this.canSellPokemon(this.pokemonDragged.name as Pkm)
           ) {

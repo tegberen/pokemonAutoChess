@@ -5,10 +5,12 @@ import {
   GameMode,
   getGameModification
 } from "../../../../../types/enum/Game"
+import { SpecialGameRule } from "../../../../../types/enum/SpecialGameRule"
 import { hasCustomRoomName } from "../../../../../utils/room-name"
 import { useAppSelector } from "../../../hooks"
 import { cc } from "../../utils/jsx"
 import { GameModeIcon } from "../icons/game-mode-icon"
+import { getEventRoomIcon } from "./daily-events"
 import { useFolderGlowGeometry } from "./use-folder-glow-geometry"
 import { GameModificationIcon } from "../preparation/game-modification-banner"
 import "./room-item.css"
@@ -48,9 +50,13 @@ ${metadata?.ownerName ? "Owner: " + metadata.ownerName : ""}\n${metadata?.player
   // Solo tournaments play Smeargle Pack custom games, Duo ones Double Up
   const isScribbleTournament =
     isTournament && metadata?.gameMode === GameMode.CUSTOM_LOBBY
-  // Daily Duels and tournaments share the striped, sheened event look
-  const isEvent = metadata?.dailyDuel === true || isTournament
-  const folderRef = useFolderGlowGeometry<HTMLDivElement>(isScribbleTournament)
+  const isWildCard = metadata?.specialGameRule === SpecialGameRule.WILD_CARD
+  const isRainbowFinale = metadata?.rainbowFinale === true
+  const hasEventTag = metadata?.dailyDuel === true || isTournament
+  // every event game shares the striped, sheened look of its lobby room
+  const isEvent = hasEventTag || isWildCard || isRainbowFinale
+  const hasRainbowStripes = isScribbleTournament || isRainbowFinale
+  const folderRef = useFolderGlowGeometry<HTMLDivElement>(hasRainbowStripes)
 
   return (
     <div
@@ -58,7 +64,8 @@ ${metadata?.ownerName ? "Owner: " + metadata.ownerName : ""}\n${metadata?.player
       className={cc("room-folder", {
         "event-folder": isEvent,
         "tournament-folder": isTournament,
-        "scribble-tournament-folder": isScribbleTournament
+        "scribble-tournament-folder": hasRainbowStripes,
+        "wild-card-folder": isWildCard
       })}
       title={title}
     >
@@ -86,7 +93,7 @@ ${metadata?.ownerName ? "Owner: " + metadata.ownerName : ""}\n${metadata?.player
               ? modificationLabel
               : metadata?.name}
           </span>
-          {isEvent && (
+          {hasEventTag && (
             <span className="game-event-tag">
               {metadata?.dailyDuel
                 ? t("game_event_tag.DAILY_DUEL")
@@ -101,7 +108,7 @@ ${metadata?.ownerName ? "Owner: " + metadata.ownerName : ""}\n${metadata?.player
             alt=""
             aria-hidden="true"
             className="event-icon"
-            src="/assets/icons/fire_week_streak.svg"
+            src={getEventRoomIcon(metadata ?? {})}
           />
         )}
         <span className="room-info">

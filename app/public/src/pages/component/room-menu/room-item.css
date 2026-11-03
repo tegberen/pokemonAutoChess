@@ -111,8 +111,9 @@
 /* a lighter take on the card's text shadow, so the icon sits in the same style */
 .room-folder > .room-item .event-icon {
   flex: none;
-  width: 1.5em;
-  height: 1.5em;
+  width: 2em;
+  height: 2em;
+  object-fit: contain;
   filter: drop-shadow(1px 1px 1px color-mix(in srgb, #05090f 60%, transparent));
 }
 
@@ -321,6 +322,43 @@
 .rainbow-hours-countdown .icon {
   object-fit: contain;
 }
+.wild-card-countdown.my-box {
+  background-color: var(--wild-card-bg);
+  background-image: var(--wild-card-stripes);
+}
+
+.wild-card-countdown .icon {
+  object-fit: contain;
+}
+
+.wild-card-countdown .icon,
+.wild-card-countdown .daily-duel-countdown-time {
+  background-color: rgb(8 8 14 / 60%);
+}
+
+.wild-card-title {
+  color: var(--wild-card-yellow);
+  font-weight: 700;
+  font-style: normal;
+  white-space: nowrap;
+}
+
+.rainbow-hours-rewards {
+  display: flex;
+  align-items: center;
+  gap: 0.8em;
+}
+
+.rainbow-hours-reward {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25em;
+  white-space: nowrap;
+}
+
+.rainbow-hours-reward img {
+  object-fit: contain;
+}
 
 /* a dark tint the stripes show through, instead of the Daily Duel's gold */
 .rainbow-hours-countdown .icon,
@@ -362,4 +400,29 @@
   );
   font-weight: bold;
   white-space: nowrap;
+}
+
+/* Wild Card: its own stripes and glow, and a flat yellow name */
+.room-folder.wild-card-folder {
+  filter: var(--wild-card-glow);
+}
+
+.room-folder.wild-card-folder .room-folder-tab,
+.room-folder.wild-card-folder > .room-item.daily-duel {
+  background-color: var(--wild-card-bg);
+  background-image: var(--wild-card-stripes);
+}
+
+/* the stripes darkened, so the room name keeps its contrast, and anchored to
+   the viewport so they run on across the seams */
+.room-folder.wild-card-folder .room-mode {
+  background-color: var(--wild-card-bg);
+  background-image:
+    linear-gradient(rgb(0 0 0 / 20%), rgb(0 0 0 / 20%)),
+    var(--wild-card-stripes);
+  background-attachment: fixed;
+}
+
+.room-folder.wild-card-folder .room-name {
+  color: var(--wild-card-yellow);
 }

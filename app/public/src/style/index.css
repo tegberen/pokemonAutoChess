@@ -69,6 +69,28 @@
       color-mix(in srgb, #2f6fd8 34%, transparent) 64px 80px,
       color-mix(in srgb, #e35fb0 34%, transparent) 80px 96px
     );
+  /* Wild Card: thin electric neon-yellow lines on near black, so it reads
+     futuristic instead of like the Daily Duel's gold */
+  --wild-card-bg: #0d0e12;
+  --wild-card-yellow: #e6ff2e;
+  --wild-card-stripes:
+    linear-gradient(rgb(0 0 0 / 12%), rgb(0 0 0 / 12%)),
+    repeating-linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--wild-card-yellow) 50%, transparent) 0 7px,
+      transparent 7px 22px,
+      color-mix(in srgb, var(--wild-card-yellow) 22%, transparent) 22px 26px,
+      transparent 26px 40px,
+      color-mix(in srgb, #4a5200 45%, transparent) 40px 52px,
+      transparent 52px 64px
+    );
+  --wild-card-glow:
+    drop-shadow(
+      0 0 2px color-mix(in srgb, var(--wild-card-yellow) 80%, transparent)
+    )
+    drop-shadow(
+      0 0 7px color-mix(in srgb, var(--wild-card-yellow) 45%, transparent)
+    );
   --daily-duel-glow:
     drop-shadow(0 0 2px color-mix(in srgb, #ffc107 80%, transparent))
     drop-shadow(0 0 7px color-mix(in srgb, #ffc107 45%, transparent));

@@ -58,9 +58,147 @@ section.room-menu .room-menu > ul {
   gap: 8px;
 }
 
-/* while the Rainbow Hours finale is being played, the In Game tab wears its
-   room's rainbow stripes, selected or not */
-.room-menu .react-tabs__tab.rainbow-tab {
-  background-color: var(--scribble-tournament-bg);
-  background-image: var(--scribble-tournament-stripes);
+/* the next event's banner and the schedule button share one line; the
+   schedule opens over the room list instead of pushing it down */
+.room-menu .event-banner-row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+.room-menu .event-banner-row .daily-duel-countdown {
+  flex: 1;
+  margin-bottom: 0;
+}
+
+.events-schedule-button {
+  display: block;
+  margin-left: auto;
+  padding: 6px;
+  /* the same frame as the Victory Road buttons beside it, which keep 2px
+     where --border-thin drops to 1px */
+  border: 2px solid black;
+  border-radius: 10px;
+  background-color: var(--color-bg-secondary);
+  cursor: var(--cursor-hover);
+}
+
+.events-schedule-button:hover {
+  border-color: var(--color-fg-primary);
+  background-color: var(--color-bg-accent);
+}
+
+.events-schedule-button img {
+  display: block;
+  object-fit: contain;
+}
+
+.events-schedule-popup {
+  position: absolute;
+  top: calc(100% + 0.4em);
+  right: 0;
+  z-index: 10;
+  width: min(32em, 100%);
+  padding: 0.5em 0.8em;
+}
+
+.events-schedule-popup ul {
+  display: grid;
+  gap: 0.7em;
+  margin: 0;
+  padding: 0.2em 0;
+  list-style: none;
+}
+
+.events-schedule-popup li {
+  display: grid;
+  grid-template-columns: 46px minmax(0, 1fr) auto;
+  column-gap: 0.7em;
+  row-gap: 0.15em;
+}
+
+.events-schedule-icon {
+  grid-row: span 3;
+  align-self: start;
+  box-sizing: border-box;
+  width: 46px;
+  height: 46px;
+  padding: 0.35em;
+  border: var(--border-thin);
+  border-radius: 8px;
+  background-color: rgb(8 6 11 / 40%);
+  object-fit: contain;
+}
+
+.events-schedule-popup b {
+  font-size: 1.05em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* framed like the banner's countdown pill */
+.events-schedule-countdown,
+.events-schedule-live {
+  justify-self: end;
+  align-self: center;
+  padding: 0 0.7em;
+  border: var(--border-thin);
+  border-radius: 999px;
+  background-color: rgb(8 6 11 / 40%);
+  font-size: 0.85em;
+  white-space: nowrap;
+}
+
+.events-schedule-countdown:has(.events-schedule-live) {
+  padding: 0;
+  border: none;
+  background: none;
+}
+
+.events-schedule-live {
+  display: inline-block;
+  background-color: var(--color-ready);
+  color: #173404;
+  font-weight: 600;
+}
+
+/* the when and the what, each behind its own small icon */
+.events-schedule-popup p {
+  display: flex;
+  align-items: center;
+  gap: 0.4em;
+  grid-column: 2 / span 2;
+  margin: 0.1em 0 0;
+  color: var(--color-fg-secondary);
+  font-size: 0.92em;
+}
+
+.events-schedule-popup p img {
+  flex: none;
+  width: 1.35em;
+  height: 1.35em;
+  object-fit: contain;
+}
+
+.events-schedule-reward {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2em;
+  margin-right: 0.6em;
+  color: var(--color-fg-primary);
+  font-weight: 600;
+}
+
+.events-schedule-win {
+  margin-right: 0.15em;
+  color: var(--color-fg-secondary);
+  font-weight: normal;
+}
+
+.events-schedule-reward img {
+  width: 1.2em;
+  height: 1.2em;
 }

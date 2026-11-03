@@ -205,6 +205,8 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
   @type("uint8") trueDamageMarkTimer: number = 0
   @type("boolean") isOnCriticalPath: boolean = false
   @type("string") stoneSaddleRiderIndex: string = ""
+  // WILD_CARD: drawn with the leader's tattoo in fights too
+  @type("boolean") isWildCardLeader = false
   cooldown = 500
   oneSecondCooldown = 1000
   state: PokemonState
@@ -305,6 +307,7 @@ export class PokemonEntity extends Schema implements IPokemonEntity {
     super()
     this.state = new MovingState()
     this.refToBoardPokemon = pokemon
+    this.isWildCardLeader = pokemon.wildCardLeader
     pokemon.items.forEach((it) => {
       this.items.add(it)
     })

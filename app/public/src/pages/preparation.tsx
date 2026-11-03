@@ -11,6 +11,7 @@ import { Transfer } from "../../../types"
 import { CloseCodes, CloseCodesMessages } from "../../../types/enum/CloseCodes"
 import { ConnectionStatus } from "../../../types/enum/ConnectionStatus"
 import { GameMode } from "../../../types/enum/Game"
+import { SpecialGameRule } from "../../../types/enum/SpecialGameRule"
 import type { NonFunctionPropNames } from "../../../types/HelperTypes"
 import { logger } from "../../../utils/logger"
 import { useAppDispatch, useAppSelector } from "../hooks"
@@ -74,6 +75,10 @@ export default function Preparation() {
   )
   const rainbowFinale = useAppSelector(
     (state) => state.preparation.rainbowFinale
+  )
+  const isWildCardLobby = useAppSelector(
+    (state) =>
+      state.preparation.specialGameRule === SpecialGameRule.WILD_CARD
   )
   const initialized = useRef<boolean>(false)
   const connectingToGame = useRef<boolean>(false)
@@ -394,11 +399,13 @@ export default function Preparation() {
                 {t("chat")}
               </Tab>
               <Tab
-                disabled={isTournamentLobby || rainbowFinale}
+                disabled={
+                  isTournamentLobby || rainbowFinale || isWildCardLobby
+                }
                 title={
                   isTournamentLobby
                     ? t("tournament.lobby_settings_locked")
-                    : rainbowFinale
+                    : rainbowFinale || isWildCardLobby
                       ? t("rainbow_hours.settings_locked")
                       : undefined
                 }

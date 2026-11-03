@@ -56,7 +56,8 @@ const JAC_TITLES = new Set<Title>([
   Title.ARTIST,
   Title.SHINY,
   Title.META,
-  Title.SHADY
+  Title.SHADY,
+  Title.WILD
 ])
 
 export function TitleTab() {

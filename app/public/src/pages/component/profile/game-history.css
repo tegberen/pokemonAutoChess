@@ -87,6 +87,12 @@
   box-shadow: none;
 }
 
+.game-history.my-box.event-game.wild-card-game {
+  background-color: var(--wild-card-bg);
+  background-image: var(--wild-card-stripes);
+  box-shadow: none;
+}
+
 /* the Wish cards' holo sweep (blessing-sheen, game-choice.css) on every
    Daily Duel and tournament game */
 .game-history.event-game {

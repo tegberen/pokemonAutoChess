@@ -120,6 +120,11 @@ export default class LoadingManager {
       width: 64,
       height: 64
     })
+    // WILD_CARD: star tattooed under the leader
+    scene.load.svg("wild-card-leader", "/assets/ui/star.svg", {
+      width: 64,
+      height: 64
+    })
 
     scene.load.spritesheet({
       key: "cell",

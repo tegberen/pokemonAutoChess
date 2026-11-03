@@ -1,0 +1,115 @@
+:root {
+  --color-bg-primary: #121318;
+  --color-bg-secondary: #1d1f27;
+  --color-bg-tertiary: #262832;
+  --color-bg-accent: #6f7d0a;
+
+  --border-thick: 2px solid #050507;
+  --border-thin: 1px solid #050507;
+  --border-extra-thin: 1px solid #050507;
+
+  /* button stripes: neon yellow down to olive, dark text like the key art's
+     logo; Ready ✓ runs the olive into a deep electric green */
+  --theme-button: linear-gradient(
+    135deg,
+    #e6ff2e 0 33.33%,
+    #c3d81c 33.33% 66.66%,
+    #9fb312 66.66% 100%
+  );
+  --theme-button-hover: linear-gradient(
+    135deg,
+    #f0ff6a 0 33.33%,
+    #d2e631 33.33% 66.66%,
+    #b0c51e 66.66% 100%
+  );
+  --theme-ready: linear-gradient(
+    135deg,
+    #9fb312 0 33.33%,
+    #6f9e1c 33.33% 66.66%,
+    #3f8a2a 66.66% 100%
+  );
+  --theme-ready-hover: linear-gradient(
+    135deg,
+    #b0c51e 0 33.33%,
+    #80b02a 33.33% 66.66%,
+    #4f9c38 66.66% 100%
+  );
+  --theme-button-text: #0d0e12;
+  --theme-button-text-shadow: none;
+}
+
+.custom-bg {
+  background-image: url("/assets/theme/wild/custombg.webp");
+  background-size: cover;
+  background-position: center 40%;
+}
+
+.lobby h2 {
+  text-shadow: 0px 3px 6px black;
+}
+
+.draggable-window.my-container,
+.game-shop .information > div,
+#game-stage-info,
+.game-spectate-player-info.my-container,
+.team-builder-modal.my-container,
+.game-shop.my-container {
+  background-color: color-mix(
+    in srgb,
+    var(--color-bg-primary) 55%,
+    transparent
+  );
+  backdrop-filter: blur(4px);
+}
+
+.after-menu .my-container,
+.leaderboard .my-container,
+.room-menu.my-container,
+.events-menu .my-container {
+  background-color: color-mix(
+    in srgb,
+    var(--color-bg-primary) 50%,
+    transparent
+  );
+  backdrop-filter: blur(4px);
+}
+
+.leaderboard [data-react-window-index]:nth-child(odd) .my-box {
+  background: color-mix(
+    in srgb,
+    var(--color-bg-secondary) 60%,
+    transparent
+  );
+}
+
+.leaderboard [data-react-window-index]:nth-child(even) .my-box {
+  background: color-mix(
+    in srgb,
+    var(--color-bg-tertiary) 50%,
+    transparent
+  );
+}
+
+.newspaper-card.my-box {
+  background-color: color-mix(
+    in srgb,
+    var(--color-bg-secondary) 60%,
+    transparent
+  );
+}
+
+.room-folder {
+  --room-folder-bg: color-mix(
+    in srgb,
+    var(--color-bg-secondary) 60%,
+    transparent
+  );
+}
+
+.react-tabs__tab--selected {
+  background-color: var(--color-bg-secondary);
+}
+
+.react-tabs__tab--selected:after {
+  background: #e6ff2e;
+}

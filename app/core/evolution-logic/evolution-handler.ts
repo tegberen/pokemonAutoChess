@@ -12,6 +12,7 @@ import { Stat } from "../../types/enum/Game"
 import type { Pkm } from "../../types/enum/Pokemon"
 import { sum } from "../../utils/array"
 import { pickRandomIn } from "../../utils/random"
+import { makeWildCardLeader } from "../wild-card"
 
 export abstract class EvolutionHandler<AdditionalArgs extends any[] = []> {
   abstract canEvolve(
@@ -79,6 +80,10 @@ export function carryOverPermanentStats(
       pp: Stat.PP
     }
     pokemonEvolved.applyStat(statMapping[stat], sumOfPermaStatsModifier) // can be negative or positive
+  }
+
+  if (pokemonsBeforeEvolution.some((p) => p.wildCardLeader)) {
+    makeWildCardLeader(pokemonEvolved)
   }
 
   // carry over TM

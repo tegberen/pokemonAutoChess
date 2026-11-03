@@ -40,6 +40,7 @@ import {
   createSmearglePackPropositions,
   pickJuggernautChampions
 } from "../core/scribbles"
+import { pickWildCardCandidates } from "../core/wild-card"
 import type GameState from "../rooms/states/game-state"
 import type { IPokemon, IPokemonEntity } from "../types"
 import { EffectEnum } from "../types/enum/Effect"
@@ -758,6 +759,20 @@ export default class Shop {
           pokemons: pack.map((card) => card.name),
           emotions: pack.map((card) => card.emotion),
           canReroll: true // one reroll = 2 packs total
+        })
+      )
+      return
+    }
+
+    if (
+      stageLevel === PortalCarouselStages[0] &&
+      state.specialGameRule === SpecialGameRule.WILD_CARD
+    ) {
+      player.choices.push(
+        new PlayerChoice({
+          type: "wild_card",
+          pokemons: pickWildCardCandidates(player, state),
+          canReroll: true
         })
       )
       return

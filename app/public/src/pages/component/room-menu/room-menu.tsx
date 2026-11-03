@@ -10,13 +10,13 @@ import { hasModeratorRights } from "../../../../../utils/roles"
 import { joinExistingPreparationRoom } from "../../../game/lobby-logic"
 import { useAppDispatch, useAppSelector } from "../../../hooks"
 import { rooms } from "../../../network"
-import { cc } from "../../utils/jsx"
 import { IngameRoomsList } from "./game-rooms-menu"
 import RoomItem from "./room-item"
 import {
-  DailyDuelCountdown,
+  NextEventCountdown,
   RainbowHoursCountdown
 } from "./daily-duel-countdown"
+import { EventsSchedule } from "./events-schedule"
 import { RoomSelectionMenu } from "./room-selection-menu"
 import "./room-menu.css"
 
@@ -92,10 +92,6 @@ export default function RoomMenu() {
     (r) =>
       r.metadata.gameMode === GameMode.CUSTOM_LOBBY && !r.metadata.tournamentId
   )
-  const hasDailyDuelLobby = preparationRooms.some((r) => r.metadata?.dailyDuel)
-  const isRainbowFinalePlaying = gameRooms.some(
-    (r) => r.metadata?.rainbowFinale
-  )
 
   return (
     <Tabs className="my-container room-menu custom-bg hidden-scrollable">
@@ -106,12 +102,7 @@ export default function RoomMenu() {
       </p>
       <TabList>
         <Tab>{t("available_rooms")}</Tab>
-        <Tab
-          // the Rainbow Hours finale in progress paints its tab like its room
-          className={cc("react-tabs__tab", {
-            "rainbow-tab": isRainbowFinalePlaying
-          })}
-        >
+        <Tab>
           <span>{t("in_game")}</span>
         </Tab>
 
@@ -134,8 +125,11 @@ export default function RoomMenu() {
       {!user && <p className="subtitle">{t("loading")}</p>}
 
       <TabPanel>
-        <RainbowHoursCountdown />
-        {!hasDailyDuelLobby && <DailyDuelCountdown />}
+        <div className="event-banner-row">
+          <RainbowHoursCountdown />
+          <NextEventCountdown />
+          <EventsSchedule />
+        </div>
         <RoomList onRoomAction={onRoomAction} />
       </TabPanel>
       <TabPanel>

@@ -32,7 +32,8 @@
 }
 
 .season-page,
-.season-collection-modal {
+.season-collection-modal,
+.wild-card-pick {
   --season-surface: var(--color-bg-secondary);
   --season-surface-deep: var(--color-bg-tertiary);
   --season-line: var(--color-shadow);

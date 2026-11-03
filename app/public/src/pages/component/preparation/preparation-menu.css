@@ -68,6 +68,15 @@
   background-image: var(--scribble-tournament-stripes);
 }
 
+.rule-banner.event-banner.wild-card-banner.my-box {
+  background-color: var(--wild-card-bg);
+  background-image: var(--wild-card-stripes);
+}
+
+.rule-banner.event-banner.wild-card-banner h3 {
+  color: var(--wild-card-yellow);
+}
+
 .rule-banner.event-banner::after {
   content: "";
   position: absolute;

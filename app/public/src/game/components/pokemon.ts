@@ -372,6 +372,10 @@ export default class PokemonSprite extends DraggableObject {
       this.addManifestationLockIcon(scene)
     }
 
+    if (!isEntity(pokemon) && pokemon.wildCardLeader) {
+      this.addBlessedHeroMark("wild-card-leader")
+    }
+
     if (isEntity(pokemon)) {
       this.setLifeBar(pokemon, scene)
     } else {
@@ -447,6 +451,10 @@ export default class PokemonSprite extends DraggableObject {
 
   get supportiveSoul(): boolean {
     return !isEntity(this.pokemon) && this.pokemon.supportiveSoul
+  }
+
+  get wildCardLeader(): boolean {
+    return !isEntity(this.pokemon) && this.pokemon.wildCardLeader
   }
 
   get chosenOne(): boolean {
@@ -1938,6 +1946,8 @@ export default class PokemonSprite extends DraggableObject {
       this.addBlessedHeroMark()
     } else if (pokemon.isChosenOne) {
       this.addBlessedHeroMark("chosen-one")
+    } else if (pokemon.isWildCardLeader) {
+      this.addBlessedHeroMark("wild-card-leader")
     }
     if (pokemon.status.light) {
       this.addLight(pokemon.status.lightTint)
@@ -2692,8 +2702,10 @@ export default class PokemonSprite extends DraggableObject {
     this.add(icon)
   }
 
-  // CHOSEN_ONES reuses the hero spot with its own Wish icon
-  addBlessedHeroMark(texture: "blessed-hero" | "chosen-one" = "blessed-hero") {
+  // CHOSEN_ONES and the WILD_CARD leader reuse the hero spot with their icon
+  addBlessedHeroMark(
+    texture: "blessed-hero" | "chosen-one" | "wild-card-leader" = "blessed-hero"
+  ) {
     if (this.blessedHeroMark) return
     this.blessedHeroMark = new GameObjects.Image(this.scene, 0, -14, texture)
       .setScale(BLESSED_HERO_MARK_SCALE)

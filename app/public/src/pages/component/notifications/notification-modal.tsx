@@ -13,7 +13,8 @@ import type { ExpeditionType } from "../../../../../types/enum/Expedition"
 import { cc } from "../../utils/jsx"
 
 const TITLE_ILLUSTRATION_EXTENSION: { [title in Title]?: string } = {
-  [Title.SHINY]: "webp"
+  [Title.SHINY]: "webp",
+  [Title.WILD]: "webp"
 }
 
 interface NotificationModalProps {

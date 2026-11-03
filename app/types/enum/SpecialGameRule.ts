@@ -19,8 +19,12 @@ export enum SpecialGameRule {
   BAZAAR = "BAZAAR",
   QUEST_BOARD = "QUEST_BOARD",
   MISFITS = "MISFITS",
-  MEGA_EVOLUTION = "MEGA_EVOLUTION"
+  MEGA_EVOLUTION = "MEGA_EVOLUTION",
+  WILD_CARD = "WILD_CARD"
 }
+
+// only their scheduled lobby plays them: never rolled, never picked by hand
+export const ScheduledOnlyRules: SpecialGameRule[] = [SpecialGameRule.WILD_CARD]
 
 export const RulesWithAllPokemonsAvailable: SpecialGameRule[] = [
   SpecialGameRule.EVOLUTION_LAB

@@ -13,7 +13,7 @@ import UserMetadata from "../models/mongo-models/user-metadata"
 import { type IPreparationMetadata, Role, Transfer } from "../types"
 import { CloseCodes } from "../types/enum/CloseCodes"
 import type { EloRank } from "../types/enum/EloRank"
-import type { SpecialGameRule } from "../types/enum/SpecialGameRule"
+import { SpecialGameRule } from "../types/enum/SpecialGameRule"
 import {
   type BotDifficulty,
   GameMode,
@@ -189,7 +189,8 @@ export default class PreparationRoom extends Room<{ state: PreparationState }> {
       options.gameMode === GameMode.TOURNAMENT ||
       options.tournamentId ||
       options.dailyDuel ||
-      options.rainbowFinale
+      options.rainbowFinale ||
+      options.specialGameRule === SpecialGameRule.WILD_CARD
     ) {
       this.autoDispose = false
     }

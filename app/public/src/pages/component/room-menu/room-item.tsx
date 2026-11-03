@@ -5,6 +5,7 @@ import { EloRankThreshold, MAX_PLAYERS_PER_GAME } from "../../../../../config"
 import { GADGETS } from "../../../../../config/game/gadgets"
 import { type IPreparationMetadata, Role } from "../../../../../types"
 import type { EloRank } from "../../../../../types/enum/EloRank"
+import { SpecialGameRule } from "../../../../../types/enum/SpecialGameRule"
 import {
   GameMode,
   getGameModification
@@ -14,6 +15,7 @@ import { hasCustomRoomName } from "../../../../../utils/room-name"
 import { useAppSelector } from "../../../hooks"
 import { cc } from "../../utils/jsx"
 import { GameModeIcon } from "../icons/game-mode-icon"
+import { getEventRoomIcon } from "./daily-events"
 import { useFolderGlowGeometry } from "./use-folder-glow-geometry"
 import { GameModificationIcon } from "../preparation/game-modification-banner"
 import "./room-item.css"
@@ -107,7 +109,8 @@ export default function RoomItem(props: {
   const isScribbleTournament =
     isTournament && metadata?.gameMode === GameMode.CUSTOM_LOBBY
   const isRainbowFinale = metadata?.rainbowFinale === true
-  const isEvent = isDailyDuel || isTournament || isRainbowFinale
+  const isWildCard = metadata?.specialGameRule === SpecialGameRule.WILD_CARD
+  const isEvent = isDailyDuel || isTournament || isRainbowFinale || isWildCard
   // the Rainbow Hours finale wears the Scribble tournament's rainbow stripes
   const hasRainbowStripes = isScribbleTournament || isRainbowFinale
   const folderRef = useFolderGlowGeometry<HTMLDivElement>(hasRainbowStripes)
@@ -118,7 +121,8 @@ export default function RoomItem(props: {
       className={cc("room-folder", {
         "event-folder": isEvent,
         "tournament-folder": isTournament,
-        "scribble-tournament-folder": hasRainbowStripes
+        "scribble-tournament-folder": hasRainbowStripes,
+        "wild-card-folder": isWildCard
       })}
       title={title}
     >
@@ -163,11 +167,7 @@ export default function RoomItem(props: {
             alt=""
             aria-hidden="true"
             className="event-icon"
-            src={
-              isRainbowFinale
-                ? "/assets/ui/game_modes/scribble_icon.svg"
-                : "/assets/icons/fire_week_streak.svg"
-            }
+            src={getEventRoomIcon(metadata ?? {})}
           />
         )}
         <span className="room-info">

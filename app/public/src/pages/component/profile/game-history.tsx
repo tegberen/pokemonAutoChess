@@ -7,6 +7,7 @@ import { AutoSizer } from "react-virtualized-auto-sizer"
 import { List, useDynamicRowHeight } from "react-window"
 import { SynergyTiersThresholds } from "../../../../../config"
 import { Blessings } from "../../../../../config/game/blessings"
+import { WILD_CARD_ROOM_NAME } from "../../../../../config/game/wild-card"
 import type {
   IGameRecord,
   IPokemonRecord
@@ -17,6 +18,7 @@ import {
 } from "../../../../../models/colyseus-models/synergies"
 import PokemonFactory from "../../../../../models/pokemon-factory"
 import type { Blessing } from "../../../../../types/enum/Blessing"
+import { SpecialGameRule } from "../../../../../types/enum/SpecialGameRule"
 import type { Synergy } from "../../../../../types/enum/Synergy"
 import { ItemDetailTooltip } from "../../../game/components/item-detail"
 import { formatDate } from "../../utils/date"
@@ -176,7 +178,9 @@ function GameHistoryRow({
       ? t("game_event_tag.TOURNAMENT")
       : r.rainbowFinale
         ? t("rainbow_hours.title")
-        : null
+        : r.specialGameRule === SpecialGameRule.WILD_CARD
+          ? WILD_CARD_ROOM_NAME
+          : null
   // Solo tournaments play Smeargle Pack custom games, Duo ones Double Up
   const isScribbleTournament =
     r.tournament === true && r.gameMode === GameMode.CUSTOM_LOBBY
@@ -188,7 +192,8 @@ function GameHistoryRow({
           "event-game": eventTag !== null,
           "tournament-game": r.tournament ?? false,
           "scribble-tournament-game": isScribbleTournament,
-          "rainbow-finale-game": r.rainbowFinale ?? false
+          "rainbow-finale-game": r.rainbowFinale ?? false,
+          "wild-card-game": r.specialGameRule === SpecialGameRule.WILD_CARD
         })}
       >
         <div className="game-meta">

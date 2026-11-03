@@ -77,8 +77,13 @@ export function GameAdditionalPokemons() {
   const wishAdditionalPokemons = useAppSelector(
     (state) => state.game.wishAdditionalPokemons
   )
+  const wonderPickAdditionalPokemons = useAppSelector(
+    (state) => state.game.wonderPickAdditionalPokemons
+  )
   const carouselPokemons = additionalPokemons.filter(
-    (pokemon) => !wishAdditionalPokemons.includes(pokemon)
+    (pokemon) =>
+      !wishAdditionalPokemons.includes(pokemon) &&
+      !wonderPickAdditionalPokemons.includes(pokemon)
   )
 
   if (
@@ -110,6 +115,15 @@ export function GameAdditionalPokemons() {
           <>
             <h2>{t("wish_picks")}</h2>
             <PokemonPortraitGrid pokemons={wishAdditionalPokemons} compact />
+          </>
+        )}
+        {wonderPickAdditionalPokemons.length > 0 && (
+          <>
+            <h2>{t("wonder_pick_picks")}</h2>
+            <PokemonPortraitGrid
+              pokemons={wonderPickAdditionalPokemons}
+              compact
+            />
           </>
         )}
       </div>
