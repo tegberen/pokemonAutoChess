@@ -1,6 +1,7 @@
 import { t } from "i18next"
 import {
   getCroagunkTradeOffer,
+  getGymLeadersPair,
   getNextUtcMidnight,
   getNextUtcMonday,
   getSeasonDailyLearnGoal,
@@ -17,6 +18,7 @@ import {
   SEASON_SHOP_OFFERS,
   SEASON_SOLO_TOP_RANK,
   SEASON_TICKETS_PER_LOGIN_AFTER_LAST_STEP,
+  type GymLeadersPair,
   type SeasonChallengeDefinition,
   type SeasonChallengePeriod,
   type SeasonCroagunkTradeOffer,
@@ -30,8 +32,10 @@ import {
   getShinyWonderPickMilestones,
   SHINY_WONDER_PICK_LEVEL_STEP
 } from "../../../../../config/game/experience"
+import { SynergyTiersThresholds } from "../../../../../config/game/synergies"
 import type { Theme } from "../../../../../config/game/theme"
 import type { Pkm } from "../../../../../types/enum/Pokemon"
+import type { Synergy } from "../../../../../types/enum/Synergy"
 import type {
   ICroagunkTrade,
   IUserMetadataUnpacked
@@ -52,6 +56,7 @@ export interface SeasonChallenge {
   period: SeasonChallengePeriod
   label: string
   learnGoal?: SeasonLearnGoal
+  gymLeaders?: { pair: GymLeadersPair; info: string }
   progress: number
   goal: number
   reward: SeasonReward
@@ -97,11 +102,35 @@ function getRewardLabel(reward: SeasonReward) {
   return reward.kind === "poke" ? `1 ${singular}` : singular
 }
 
+function getGymLeadersView(uid: string, now: number) {
+  const pair = getGymLeadersPair(uid, now)
+  const [first, second] = pair
+  const describeSide = (highest: Synergy, lowest: Synergy) =>
+    `${t(`synergy.${highest}`)} ` +
+    `min ${SynergyTiersThresholds[highest].at(-1)}, ` +
+    `${t(`synergy.${lowest}`)} ` +
+    `min ${SynergyTiersThresholds[lowest][0]}`
+  const info =
+    "Gym Leaders: win a Duo game with your pair or your partner's. One " +
+    "partner needs the highest tier of one synergy and the lowest tier of " +
+    "the other, the other partner the reverse.\n\n" +
+    `A: ${describeSide(first, second)}\nB: ${describeSide(second, first)}`
+  return { pair, info }
+}
+
 function getChallengeLabel(
   challenge: SeasonChallengeDefinition,
+  uid: string,
   now: number
 ) {
   switch (challenge.id) {
+    case "gym-leaders": {
+      const [first, second] = getGymLeadersPair(uid, now)
+      return (
+        `Win a Duo game with ${t(`synergy.${first}`)} ` +
+        `and ${t(`synergy.${second}`)} or your partner's pair`
+      )
+    }
     case "daily-play":
       return "Play a game"
     case "daily-learn": {
@@ -147,10 +176,14 @@ export function getSeasonView(
     ...SEASON_DAILY_CHALLENGES.map((challenge) => ({
       id: challenge.id,
       period: challenge.period,
-      label: getChallengeLabel(challenge, now),
+      label: getChallengeLabel(challenge, profile.uid, now),
       learnGoal:
         challenge.id === "daily-learn"
           ? getSeasonDailyLearnGoal(now)
+          : undefined,
+      gymLeaders:
+        challenge.id === "gym-leaders"
+          ? getGymLeadersView(profile.uid, now)
           : undefined,
       progress: isToday ? (progress.dailyProgress?.[challenge.id] ?? 0) : 0,
       goal: challenge.goal,
@@ -159,7 +192,7 @@ export function getSeasonView(
     {
       id: weeklyChallenge.id,
       period: weeklyChallenge.period,
-      label: getChallengeLabel(weeklyChallenge, now),
+      label: getChallengeLabel(weeklyChallenge, profile.uid, now),
       progress: isThisWeek ? progress.weeklyProgress : 0,
       goal: weeklyChallenge.goal,
       reward: weeklyChallenge.reward

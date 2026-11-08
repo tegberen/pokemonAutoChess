@@ -917,6 +917,16 @@ function LearnGoalLabel({ goal }: { goal: SeasonLearnGoal }) {
 
 function ChallengeLabel({ challenge }: { challenge: SeasonChallenge }) {
   if (challenge.learnGoal) return <LearnGoalLabel goal={challenge.learnGoal} />
+  if (challenge.gymLeaders) {
+    return (
+      <>
+        Win a Duo game with{" "}
+        <SynergyIcon type={challenge.gymLeaders.pair[0]} size="20px" />{" "}
+        <SynergyIcon type={challenge.gymLeaders.pair[1]} size="20px" /> or your
+        partner's pair
+      </>
+    )
+  }
   if (challenge.id === "weekly-three-stars") {
     return (
       <>
@@ -928,17 +938,33 @@ function ChallengeLabel({ challenge }: { challenge: SeasonChallenge }) {
   return <>{challenge.label}</>
 }
 
+const CHALLENGE_PERIOD_LABELS: Record<SeasonChallenge["period"], string> = {
+  daily: "Daily",
+  weekly: "Weekly",
+  gym: "Gym"
+}
+
 function ChallengeRow({ challenge }: { challenge: SeasonChallenge }) {
   const isDone = challenge.progress >= challenge.goal
   return (
     <li className={cc("season-challenge", { done: isDone })}>
       <div className="season-challenge-top">
         <span className={cc("season-challenge-period", challenge.period)}>
-          {challenge.period === "daily" ? "Daily" : "Weekly"}
+          {CHALLENGE_PERIOD_LABELS[challenge.period]}
         </span>
         <span className="season-challenge-label" title={challenge.label}>
           <ChallengeLabel challenge={challenge} />
         </span>
+        {challenge.gymLeaders && (
+          <span
+            className="season-wonder-info"
+            tabIndex={0}
+            title={challenge.gymLeaders.info}
+            aria-label={challenge.gymLeaders.info}
+          >
+            <img src="assets/ui/help.svg" width={16} height={16} alt="" />
+          </span>
+        )}
         <span className="season-chip">
           +{challenge.reward.amount}
           <img

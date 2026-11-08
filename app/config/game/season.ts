@@ -11,7 +11,7 @@ import type {
   ICasualPick,
   ISeasonProgress
 } from "../../types/interfaces/UserMetadata"
-import { ScholarSynergies } from "./synergies"
+import { ScholarSynergies, SynergyTiersThresholds } from "./synergies"
 import type { Theme } from "./theme"
 
 export type SeasonRewardKind = "booster" | "poke" | "ticket"
@@ -216,12 +216,13 @@ export const SEASON_MIN_STAGE_FOR_CHALLENGES = 14
 export const SEASON_SOLO_TOP_RANK = 4
 export const SEASON_DUO_TOP_RANK = 2
 
-export type SeasonChallengePeriod = "daily" | "weekly"
+export type SeasonChallengePeriod = "daily" | "weekly" | "gym"
 
 export type SeasonChallengeId =
   | "daily-play"
   | "daily-learn"
   | "daily-top"
+  | "gym-leaders"
   | "weekly-games"
   | "weekly-three-stars"
   | "weekly-win"
@@ -253,6 +254,12 @@ export const SEASON_DAILY_CHALLENGES: SeasonChallengeDefinition[] = [
     period: "daily",
     goal: 1,
     reward: { kind: "poke", amount: 20 }
+  },
+  {
+    id: "gym-leaders",
+    period: "gym",
+    goal: 1,
+    reward: { kind: "booster", amount: 2 }
   }
 ]
 
@@ -292,6 +299,17 @@ const SEASON_LEARN_ITEMS = CraftableItems.filter((item) =>
   )
 )
 
+export type GymLeadersPair = [Synergy, Synergy]
+
+type SynergyCounts = { get(synergy: Synergy): number | undefined }
+
+export interface GymLeadersTeam {
+  partnerId: string
+  gameStartedAt: number
+  synergies: SynergyCounts
+  partnerSynergies: SynergyCounts
+}
+
 export interface SeasonGameResult {
   modification: GameModification
   isDoubleUp: boolean
@@ -300,6 +318,7 @@ export interface SeasonGameResult {
   threeStarEvolutions: number
   maxedSynergies: Synergy[]
   finalItems: Item[]
+  gymLeadersTeam: GymLeadersTeam | null
 }
 
 const DEFAULT_STEP_REWARDS: SeasonReward[] = [
@@ -391,6 +410,55 @@ export function getSpindaCafeDish(uid: string, now = Date.now()): Item {
     hash = (hash * 31 + character.charCodeAt(0)) >>> 0
   }
   return SPINDA_CAFE_DISHES[hash % SPINDA_CAFE_DISHES.length]
+}
+
+// a multiply-only hash like the Spinda dish's walks through the synergies one
+// step a day, the shift is what makes each day a real reroll
+export function getGymLeadersPair(
+  uid: string,
+  now = Date.now()
+): GymLeadersPair {
+  let hash = 2166136261
+  const mix = (value: number) => {
+    hash = Math.imul(hash ^ value, 16777619)
+    hash ^= hash >>> 15
+    return hash >>> 0
+  }
+  for (const character of `${uid}:${getUtcDayKey(now)}`) {
+    mix(character.charCodeAt(0))
+  }
+  const synergyCount = ScholarSynergies.length
+  const firstIndex = mix(0) % synergyCount
+  const offsetToSecond = 1 + (mix(1) % (synergyCount - 1))
+  return [
+    ScholarSynergies[firstIndex],
+    ScholarSynergies[(firstIndex + offsetToSecond) % synergyCount]
+  ]
+}
+
+function holdsGymLeadersSide(
+  synergies: SynergyCounts,
+  synergyAtHighestTier: Synergy,
+  synergyAtLowestTier: Synergy
+) {
+  return (
+    (synergies.get(synergyAtHighestTier) ?? 0) >=
+      SynergyTiersThresholds[synergyAtHighestTier].at(-1)! &&
+    (synergies.get(synergyAtLowestTier) ?? 0) >=
+      SynergyTiersThresholds[synergyAtLowestTier][0]
+  )
+}
+
+export function isGymLeadersPairCompleted(
+  [first, second]: GymLeadersPair,
+  { synergies, partnerSynergies }: GymLeadersTeam
+) {
+  return (
+    (holdsGymLeadersSide(synergies, first, second) &&
+      holdsGymLeadersSide(partnerSynergies, second, first)) ||
+    (holdsGymLeadersSide(synergies, second, first) &&
+      holdsGymLeadersSide(partnerSynergies, first, second))
+  )
 }
 
 export function getUtcWeekKey(now = Date.now()) {

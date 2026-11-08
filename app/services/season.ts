@@ -1,11 +1,13 @@
 import {
   getActiveSeason,
+  getGymLeadersPair,
   getSeasonDailyLearnGoal,
   getSeasonWeeklyWinGoal,
   getSeasonWeeklyChallenge,
   getUpcomingSeason,
   getUtcDayKey,
   getUtcWeekKey,
+  isGymLeadersPairCompleted,
   SEASON_DAILY_CHALLENGES,
   SEASON_DUO_TOP_RANK,
   SEASON_MIN_STAGE_FOR_CHALLENGES,
@@ -185,12 +187,28 @@ export async function claimSeasonWonderPickGift(
   )
 }
 
+// the pairs of the day the game started: a win just after 00:00 UTC was built
+// for those, not for the ones that rolled mid-game
+function isGymLeadersGoalMet(uid: string, result: SeasonGameResult) {
+  const team = result.gymLeadersTeam
+  if (!team || !result.isDoubleUp || result.rank !== 1) return false
+  return [uid, team.partnerId].some((teamMemberUid) =>
+    isGymLeadersPairCompleted(
+      getGymLeadersPair(teamMemberUid, team.gameStartedAt),
+      team
+    )
+  )
+}
+
 function getChallengeProgressGain(
   challengeId: SeasonChallengeId,
+  uid: string,
   result: SeasonGameResult,
   now: number
 ): number {
   switch (challengeId) {
+    case "gym-leaders":
+      return isGymLeadersGoalMet(uid, result) ? 1 : 0
     case "daily-play":
     case "weekly-games":
       return 1
@@ -247,7 +265,7 @@ export async function recordSeasonGame(
 
     const rewardIncrements: Record<string, number> = {}
     const advance = (challenge: SeasonChallengeDefinition, before: number) => {
-      const gain = getChallengeProgressGain(challenge.id, result, now)
+      const gain = getChallengeProgressGain(challenge.id, uid, result, now)
       const after = Math.min(challenge.goal, before + Math.max(0, gain))
       if (before < challenge.goal && after >= challenge.goal) {
         const field = PROFILE_FIELD_BY_REWARD_KIND[challenge.reward.kind]

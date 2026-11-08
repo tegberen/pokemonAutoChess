@@ -1870,6 +1870,7 @@ export default class GameRoom extends Room<{ state: GameState }> {
         player.doubleUpEliminationRound
       )
       if (countsAsAGame && this.state.players.size >= 2) {
+        const partner = this.state.players.get(player.doubleUpPartnerId)
         await recordSeasonGame(player.id, {
           modification: getGameModification(this.state),
           isDoubleUp: this.state.gameMode === GameMode.DOUBLE_UP,
@@ -1882,7 +1883,15 @@ export default class GameRoom extends Room<{ state: GameState }> {
             ...schemaValues(player.board).flatMap((pokemon) =>
               schemaValues(pokemon.items)
             )
-          ]
+          ],
+          gymLeadersTeam: partner
+            ? {
+                partnerId: partner.id,
+                gameStartedAt: this.state.startTime,
+                synergies: player.synergies,
+                partnerSynergies: partner.synergies
+              }
+            : null
         }).catch((error) => logger.error("Error recording season game", error))
         await recordSpindaGuestGame(player.id, {
           stageReached,
