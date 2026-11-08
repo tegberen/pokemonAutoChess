@@ -807,6 +807,15 @@ export default class Shop {
       allCandidates = allCandidates.filter((p) => p !== Pkm.COSMOG)
     }
 
+    // WILD_CARD: a Unique leader is never offered to its own player again,
+    // in any of its forms
+    const leader = player.firstPartner
+    if (state.specialGameRule === SpecialGameRule.WILD_CARD && leader) {
+      allCandidates = allCandidates.filter(
+        (p) => PkmFamily[p as Pkm] !== PkmFamily[leader]
+      )
+    }
+
     // ensure we have at least one synergy per proposition
     if (portalSynergies.length > NB_UNIQUE_PROPOSITIONS) {
       portalSynergies = pickNRandomIn(portalSynergies, NB_UNIQUE_PROPOSITIONS)

@@ -478,7 +478,7 @@ Every balance change on this server, newest first.
 ### 2 November 2026
 
 **Events**
-- Wild Card | new solo Scribble lobby at 04:00, 08:00, 12:00 and 16:00 UTC: Wonder Pick a leader from one rarity, from Common to Unique, shared by the whole lobby, with 1 reroll, and gain a random component. It stays on your board all game, takes no slot and cannot be sold. Everyone who plays to stage 14 gets 1 Wonder Pick, the winner the Wild title and its Wild Card theme.
+- Wild Card | new solo Scribble lobby at 04:00, 08:00, 12:00 and 16:00 UTC: Wonder Pick a leader from one rarity, from Common to Unique, shared by the whole lobby, with 1 reroll, and gain a random component. It stays on your board all game, takes no slot and cannot be sold, and a Unique leader is never offered to you again. Everyone who plays to stage 14 gets 1 Wonder Pick, the winner the Wild title and its Wild Card theme.
 - Gym Leaders | new daily Duo challenge: every player rolls a random pair of synergies each day. Win a game where one partner has the highest tier of one synergy and the lowest tier of the other, and the other partner the reverse. Your pair or your partner's counts, and it pays both partners 2 boosters, once a day.
 
 **Game Mode**
