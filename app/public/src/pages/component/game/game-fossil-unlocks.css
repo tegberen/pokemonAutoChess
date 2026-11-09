@@ -374,19 +374,9 @@
   letter-spacing: 0.01em;
   text-shadow: 2px 2px 0 #000;
 }
-/* a hairline under the name separates it from the condition without a divider
-   element, and picks up the accent on cards that are already unlocked */
 .fossil-unlock-title-row {
   padding-bottom: 0.45em;
-  border-bottom: 1px solid
-    color-mix(in srgb, var(--color-fg-secondary) 25%, transparent);
-}
-.fossil-unlock-card.is-unlocked .fossil-unlock-title-row {
-  border-bottom-color: color-mix(
-    in srgb,
-    var(--fossil-accent) 45%,
-    transparent
-  );
+  border-bottom: var(--border-thin);
 }
 .fossil-unlock-title-row ul {
   display: flex;

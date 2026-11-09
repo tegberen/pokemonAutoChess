@@ -332,6 +332,8 @@ export enum Item {
   AQUATIC_MEMORY = "AQUATIC_MEMORY",
   DRAGON_MEMORY = "DRAGON_MEMORY",
   FLORA_MEMORY = "FLORA_MEMORY",
+  HUMAN_MEMORY = "HUMAN_MEMORY",
+  WILD_MEMORY = "WILD_MEMORY",
   MISSION_ORDER_PINK = "MISSION_ORDER_PINK",
   MISSION_ORDER_RED = "MISSION_ORDER_RED",
   MISSION_ORDER_BLUE = "MISSION_ORDER_BLUE",
@@ -428,7 +430,9 @@ export const MemoryDiscs = [
   Item.MONSTER_MEMORY,
   Item.AQUATIC_MEMORY,
   Item.DRAGON_MEMORY,
-  Item.FLORA_MEMORY
+  Item.FLORA_MEMORY,
+  Item.HUMAN_MEMORY,
+  Item.WILD_MEMORY
 ] satisfies Item[]
 
 export const MemoryDiscsBySynergy: {
@@ -459,7 +463,9 @@ export const MemoryDiscsBySynergy: {
   [Synergy.MONSTER]: Item.MONSTER_MEMORY,
   [Synergy.AQUATIC]: Item.AQUATIC_MEMORY,
   [Synergy.DRAGON]: Item.DRAGON_MEMORY,
-  [Synergy.FLORA]: Item.FLORA_MEMORY
+  [Synergy.FLORA]: Item.FLORA_MEMORY,
+  [Synergy.HUMAN]: Item.HUMAN_MEMORY,
+  [Synergy.WILD]: Item.WILD_MEMORY
 }
 
 export const MissionOrders = [
@@ -750,14 +756,14 @@ export const ArtificialItems = [
   Item.METAL_COAT,
   Item.MACHO_BRACE,
   Item.SPELL_TAG,
-  Item.SHED_SHELL,
+  Item.BERSERK_GENE,
   Item.MAGMARIZER,
   Item.ELECTIRIZER,
   Item.POKERUS_VIAL,
   Item.COOKING_POT,
   Item.MAX_ELIXIR,
-  Item.EXP_SHARE,
-  Item.TERRAIN_EXTENDER,
+  Item.EXPLORER_KIT,
+  Item.HEAVY_DUTY_BOOTS,
   Item.WISE_GLASSES
 ] satisfies Tool[]
 
@@ -1024,6 +1030,8 @@ export const SynergyGivenByItem = {
   [Item.AQUATIC_MEMORY]: Synergy.AQUATIC,
   [Item.DRAGON_MEMORY]: Synergy.DRAGON,
   [Item.FLORA_MEMORY]: Synergy.FLORA,
+  [Item.HUMAN_MEMORY]: Synergy.HUMAN,
+  [Item.WILD_MEMORY]: Synergy.WILD,
   [Item.WHITE_FLUTE]: Synergy.WILD
 } satisfies Record<(typeof SynergyItems)[number] | Item.WISE_GLASSES, Synergy>
 

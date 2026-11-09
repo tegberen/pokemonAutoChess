@@ -35,7 +35,7 @@ const fossilUnlocks = [
   {
     pokemon: Pkm.SHIELDON,
     conditionKey: "shieldon",
-    target: 120,
+    target: 4,
     minLevel: 7,
     roundScoped: true
   },
@@ -57,7 +57,8 @@ const fossilUnlocks = [
     pokemon: Pkm.REGIGIGAS,
     conditionKey: "regigigas",
     target: 1,
-    minLevel: 9
+    minLevel: 9,
+    requiresBlessing: Blessing.ANCIENT_POWER
   },
   {
     pokemon: Pkm.GENESECT,
@@ -68,9 +69,12 @@ const fossilUnlocks = [
   }
 ] as const
 
-/* CONVERGENT_PARADOX grants Genesect, so it is only listed for the players
-   holding that blessing and is left out of the ANCIENT roster count */
-export const FOSSIL_UNLOCKS_OUTSIDE_ANCIENT: Pkm[] = [Pkm.GENESECT]
+// gated behind a Wish, so these are only listed for the players holding it and
+// are left out of the ANCIENT roster count
+export const FOSSIL_UNLOCKS_OUTSIDE_ANCIENT: Pkm[] = [
+  Pkm.GENESECT,
+  Pkm.REGIGIGAS
+]
 
 export const ANCIENT_TITLE_UNLOCKS_REQUIRED = fossilUnlocks.filter(
   (unlock) => !FOSSIL_UNLOCKS_OUTSIDE_ANCIENT.includes(unlock.pokemon)

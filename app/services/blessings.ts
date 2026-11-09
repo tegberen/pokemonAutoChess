@@ -109,6 +109,7 @@ import {
   SELECTIVE_GENETICS_GOLDEN_EGG_CHANCE,
   SELECTIVE_GENETICS_MAX_COST,
   SHADY_PRICE_FREE_ROLLS,
+  SHADY_PRICE_MAX_LEVEL,
   SIX_SEVEN_GOLD,
   SIX_SEVEN_LIFE_COST,
   SPINDA_CASINO_JACKPOT_GOLD,
@@ -2908,6 +2909,7 @@ export const blessingEffectService: {
   [Blessing.ORB_WAND]: () => true,
   [Blessing.SHADY_PRICE]: (player) => {
     player.shopFreeRolls += SHADY_PRICE_FREE_ROLLS
+    player.experienceManager.lockMaxLevel(SHADY_PRICE_MAX_LEVEL)
     return true
   },
   [Blessing.LIFE_PRICE]: () => true,
@@ -3285,7 +3287,7 @@ export const blessingEffectService: {
   },
 
   [Blessing.BEING_OF_KNOWLEDGE]: (player) => {
-    player.experienceManager.maxLevel = BEING_OF_KNOWLEDGE_MAX_LEVEL
+    player.experienceManager.raiseMaxLevel(BEING_OF_KNOWLEDGE_MAX_LEVEL)
     player.tryGrantBeingOfKnowledgeUxie(true)
     return true
   },
@@ -3305,7 +3307,7 @@ export const blessingEffectService: {
   },
 
   [Blessing.CLIMBING_THE_LADDER]: (player) => {
-    player.experienceManager.maxLevel = CLIMBING_THE_LADDER_MAX_LEVEL
+    player.experienceManager.raiseMaxLevel(CLIMBING_THE_LADDER_MAX_LEVEL)
     player.experienceManager.expDiscount = CLIMBING_THE_LADDER_EXP_DISCOUNT
     if (player.experienceManager.level < CLIMBING_THE_LADDER_MIN_LEVEL) {
       player.experienceManager.level = CLIMBING_THE_LADDER_MIN_LEVEL
@@ -3444,6 +3446,8 @@ export const blessingEffectService: {
     heroBlessingEffect(Blessing.BUBBLE_RESCUE, player, state, room),
   [Blessing.ANCIENT_POWER]: (player, state, room) =>
     heroBlessingEffect(Blessing.ANCIENT_POWER, player, state, room),
+  [Blessing.OCEAN_KING]: (player, state, room) =>
+    heroBlessingEffect(Blessing.OCEAN_KING, player, state, room),
 
   [Blessing.SEASONAL_HERD]: (player, state) => {
     const deerling =

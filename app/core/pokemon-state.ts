@@ -1061,7 +1061,7 @@ export default abstract class PokemonState {
         death = false
         takenDamage = 0
         residualDamage = 0
-        pokemon.addPP(50, pokemon, 0, false)
+        pokemon.addPP(20, pokemon, 0, false)
         pokemon.status.triggerProtect(1500)
         if (pokemon.player?.blessings?.includes(Blessing.SHINY_CHARM_BLESSING)) {
           board
@@ -1555,14 +1555,6 @@ export default abstract class PokemonState {
       if (nbSunStones > 0) {
         pokemon.handleHeal(5 * nbSunStones, pokemon, 0, false)
       }
-    }
-
-    if (pokemon.passive === Passive.ILLUMISE_VOLBEAT) {
-      board.forEach((x, y, p) => {
-        if (p && p.passive === Passive.ILLUMISE_VOLBEAT && p !== pokemon) {
-          pokemon.addPP(5, pokemon, 0, false)
-        }
-      })
     }
 
     if (

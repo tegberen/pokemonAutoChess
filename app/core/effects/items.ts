@@ -962,7 +962,6 @@ export class CovertCloakEffect extends PeriodicEffect {
       Item.COVERT_CLOAK,
       4000
     )
-    this.timer = 0
   }
 }
 
@@ -999,16 +998,17 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
       [
         new OnItemDroppedEffect(({ pokemon, player, item }) => {
           const ability = AbilityPerTM[item]
-          // the HUMAN of WISE_GLASSES counts for no TM: any Pokémon could hold
-          // them, and unloading them later would leave a TM on a non-HUMAN,
-          // duplicated under MOVE_TUTOR, even on a HUMAN_HORROR GHOST
-          const isHumanOnlyByWiseGlasses =
-            pokemon.items.has(Item.WISE_GLASSES) &&
+          // the HUMAN of WISE_GLASSES or HUMAN_MEMORY counts for no TM:
+          // unloading them later would leave a TM on a non-HUMAN, duplicated
+          // under MOVE_TUTOR, even on a HUMAN_HORROR GHOST
+          const isHumanOnlyByItem =
+            (pokemon.items.has(Item.WISE_GLASSES) ||
+              pokemon.items.has(Item.HUMAN_MEMORY)) &&
             !getPokemonData(pokemon.name).types.includes(Synergy.HUMAN)
           /* HUMAN_HORROR lets GHOST study the discs as well; without it TMs stay
              a HUMAN-only trick */
           const canLearnTM =
-            (pokemon.types.has(Synergy.HUMAN) && !isHumanOnlyByWiseGlasses) ||
+            (pokemon.types.has(Synergy.HUMAN) && !isHumanOnlyByItem) ||
             (pokemon.types.has(Synergy.GHOST) &&
               player.blessings?.includes(Blessing.HUMAN_HORROR) === true)
           if (!ability || !canLearnTM) return false
@@ -1020,7 +1020,7 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
           const keepsTM =
             player.blessings?.includes(Blessing.MOVE_TUTOR) === true &&
             pokemon.types.has(Synergy.HUMAN) &&
-            !isHumanOnlyByWiseGlasses
+            !isHumanOnlyByItem
           if (!keepsTM) removeInArray(player.items, item)
           return false
         })

@@ -5091,6 +5091,9 @@ export default class Simulation extends Schema implements ISimulation {
       ancientPowerChampion.maxPP = ANCIENT_POWER_MAX_PP
     }
 
+    const oceanKingChampion = championOf.get(Blessing.OCEAN_KING)
+    if (oceanKingChampion) oceanKingChampion.skill = Ability.HORN_DRILL
+
     const swampFatherChampion = championOf.get(Blessing.SWAMP_FATHER)
     if (swampFatherChampion) {
       this.board.forEach((x, y, unit) => {
@@ -5969,9 +5972,10 @@ export default class Simulation extends Schema implements ISimulation {
               target.handleDamage({
                 damage: nbAllies,
                 board,
-                attackType: pokemon.types.has(Synergy.BUG)
-                  ? AttackType.TRUE
-                  : AttackType.SPECIAL,
+                attackType:
+                  pokemon.types.has(Synergy.BUG) && pokemon.items.size > 0
+                    ? AttackType.TRUE
+                    : AttackType.SPECIAL,
                 attacker: pokemon,
                 shouldTargetGainMana: true
               })

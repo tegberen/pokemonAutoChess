@@ -13,6 +13,8 @@ export default class ExperienceManager
   @type("uint8") expNeeded: number
   @type("uint8") maxLevel: number
   @type("uint8") expDiscount = 0
+  // server-only: SHADY_PRICE's cap outranks anything that would raise it
+  maxLevelLocked = false
 
   constructor() {
     super()
@@ -31,6 +33,15 @@ export default class ExperienceManager
 
   canLevelUp() {
     return this.level < this.maxLevel
+  }
+
+  raiseMaxLevel(maxLevel: number) {
+    if (!this.maxLevelLocked) this.maxLevel = maxLevel
+  }
+
+  lockMaxLevel(maxLevel: number) {
+    this.maxLevel = Math.max(maxLevel, this.level)
+    this.maxLevelLocked = true
   }
 
   addExperience(quantity: number) {

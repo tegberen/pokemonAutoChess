@@ -1543,7 +1543,6 @@ const ANCIENT_POWER_AURA_SPARK = 0xffd6ff
 const ANCIENT_POWER_DUST_PUFFS = 12
 const ANCIENT_POWER_DUST = 0x9c7a50
 const ANCIENT_POWER_DUST_DARK = 0x7a5a38
-const ANCIENT_POWER_SPEED_LINE_OFFSET = 9
 // an ammonite, a shell, a trilobite and a fern
 const ANCIENT_POWER_FOSSILS = [
   [".XXXXX.", "X.....X", "X.XXX.X", "X.X.X.X", "X.X...X", "X..XXX.", ".X....."],
@@ -1888,7 +1887,7 @@ function playAncientPowerDebris(
   }
 }
 
-function drawAncientPowerComet(
+function drawAncientPowerTrail(
   graphics: Phaser.GameObjects.Graphics,
   history: Point[]
 ) {
@@ -1898,22 +1897,10 @@ function drawAncientPowerComet(
   const last = Math.max(1, samples.length - 1)
   for (let index = samples.length - 1; index >= 0; index--) {
     const along = index / last
-    // about half the rock's width at its head
-    const size = Math.max(VFX_PIXEL, snapToVfxPixel(12 - 9 * along))
+    const size = Math.max(VFX_PIXEL, snapToVfxPixel(10 - 8 * along))
     const x = snapToVfxPixel(samples[index].x)
     const y = snapToVfxPixel(samples[index].y)
-    // samples overlap, so each halo square stays faint
-    const halo = size * 1.4
-    graphics.fillStyle(ANCIENT_POWER_PALE, 0.05 * (1 - along))
-    graphics.fillRect(x - halo / 2, y - halo / 2, halo, halo)
-    graphics.fillStyle(
-      along < 0.2
-        ? ANCIENT_POWER_WHITE
-        : along < 0.55
-          ? ANCIENT_POWER_PALE
-          : ANCIENT_POWER_GOLD,
-      0.55 * (1 - along)
-    )
+    graphics.fillStyle(ANCIENT_POWER_DUST, 0.5 * (1 - along))
     graphics.fillRect(x - size / 2, y - size / 2, size, size)
   }
 }
@@ -2117,31 +2104,6 @@ function playAncientPowerDust(
   }
 }
 
-function drawAncientPowerSpeedLines(
-  graphics: Phaser.GameObjects.Graphics,
-  history: Point[]
-) {
-  if (history.length < 3) return
-  const head = history[0]
-  const tail = history[history.length - 1]
-  const length = Math.hypot(head.x - tail.x, head.y - tail.y) || 1
-  const normal = {
-    x: -(head.y - tail.y) / length,
-    y: (head.x - tail.x) / length
-  }
-  for (const side of [-1, 1]) {
-    const offset = side * ANCIENT_POWER_SPEED_LINE_OFFSET
-    drawPixelPath(
-      graphics,
-      [
-        { x: head.x + normal.x * offset, y: head.y + normal.y * offset },
-        { x: tail.x + normal.x * offset, y: tail.y + normal.y * offset }
-      ],
-      [{ grid: 2, size: 2, color: ANCIENT_POWER_WHITE, alpha: 0.5 }]
-    )
-  }
-}
-
 function playAncientPowerImpact(
   scene: AbilityAnimationArgs["scene"],
   impact: AncientPowerImpactTarget,
@@ -2233,8 +2195,7 @@ function launchAncientPowerRock(
       rock.container.setPosition(point.x, point.y)
       history.unshift(point)
       if (history.length > ANCIENT_POWER_TRAIL_LENGTH) history.pop()
-      drawAncientPowerComet(trail, history)
-      drawAncientPowerSpeedLines(trail, history)
+      drawAncientPowerTrail(trail, history)
     },
     onComplete: () => {
       if (!rock.container.active) {

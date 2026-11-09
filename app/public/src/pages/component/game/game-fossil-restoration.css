@@ -15,7 +15,7 @@
   justify-items: center;
   gap: 0.25em;
   padding-bottom: 0.7em;
-  border-bottom: 1px solid var(--fossil-accent-muted);
+  border-bottom: var(--border-thin);
 }
 
 .fossil-restoration-header h3 {
@@ -154,11 +154,16 @@
   border-radius: 8px;
   background: var(--color-bg-tertiary);
   cursor: var(--cursor-hover);
-  transition: transform 100ms ease;
 }
 
 .fossil-restoration-fossil:hover {
-  transform: translateY(-2px);
+  background: var(--color-bg-accent);
+}
+
+.fossil-restoration-fossil.is-slotted {
+  cursor: default;
+  filter: grayscale(1);
+  opacity: 0.6;
 }
 
 .fossil-restoration-fossil img {
@@ -174,8 +179,9 @@
   opacity: 0.35;
 }
 
-.fossil-restoration-fossil.is-undiscovered:hover {
-  transform: none;
+.fossil-restoration-fossil.is-undiscovered:hover,
+.fossil-restoration-fossil.is-slotted:hover {
+  background: var(--color-bg-tertiary);
 }
 
 .fossil-restoration-fossil.is-undiscovered img {

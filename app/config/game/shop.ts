@@ -1,7 +1,4 @@
-import {
-  Blessing,
-  SHADY_PRICE_REROLL_COST
-} from "../../types/enum/Blessing"
+import { Blessing } from "../../types/enum/Blessing"
 import { Rarity } from "../../types/enum/Game"
 import { SpecialGameRule } from "../../types/enum/SpecialGameRule"
 
@@ -41,7 +38,6 @@ export function getRerollCostForBlessings(
   stageLevel = 0
 ): number {
   if (blessings?.includes(Blessing.LIFE_PRICE)) return 0
-  if (blessings?.includes(Blessing.SHADY_PRICE)) return SHADY_PRICE_REROLL_COST
   return getRerollCost(specialGameRule, stageLevel)
 }
 

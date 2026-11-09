@@ -1,3 +1,7 @@
+import {
+  Blessing,
+  OCEAN_KING_SHIELD_PER_ATK
+} from "../../types/enum/Blessing"
 import { AttackType } from "../../types/enum/Game"
 import { min } from "../../utils/number"
 import { chance } from "../../utils/random"
@@ -13,6 +17,9 @@ export class HornDrillStrategy extends AbilityStrategy {
     crit: boolean
   ) {
     super.process(pokemon, board, target, crit)
+    if (pokemon.heroBlessings.has(Blessing.OCEAN_KING)) {
+      convertShieldToAttack(pokemon)
+    }
     const damageFactor = [3, 4, 5, 10][pokemon.stars - 1] ?? 10
     let damage = pokemon.atk * damageFactor
     const executeChance =
@@ -22,4 +29,11 @@ export class HornDrillStrategy extends AbilityStrategy {
     }
     target.handleSpecialDamage(damage, board, AttackType.SPECIAL, pokemon, crit)
   }
+}
+
+function convertShieldToAttack(pokemon: PokemonEntity) {
+  const attackGained = Math.floor(pokemon.shield / OCEAN_KING_SHIELD_PER_ATK)
+  if (attackGained <= 0) return
+  pokemon.shield -= attackGained * OCEAN_KING_SHIELD_PER_ATK
+  pokemon.addAttack(attackGained, pokemon, 0, false)
 }

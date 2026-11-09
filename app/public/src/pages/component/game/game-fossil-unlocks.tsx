@@ -3,12 +3,10 @@ import { useTranslation } from "react-i18next"
 import { RarityColor } from "../../../../../config"
 import { getPokemonData } from "../../../../../models/precomputed/precomputed-pokemon-data"
 import {
-  FOSSIL_UNLOCKS_OUTSIDE_ANCIENT,
   FossilUnlocks,
   type FossilUnlockDefinition
 } from "../../../../../types/enum/FossilUnlock"
 import type { Pkm } from "../../../../../types/enum/Pokemon"
-import { Blessing } from "../../../../../types/enum/Blessing"
 import {
   selectConnectedPlayer,
   selectFossilUnlocks,
@@ -66,8 +64,8 @@ function FossilUnlocksModal(props: { show: boolean; onClose: () => void }) {
     const query = search.trim().toLowerCase()
     return FossilUnlocks.filter(
       (unlock) =>
-        (!FOSSIL_UNLOCKS_OUTSIDE_ANCIENT.includes(unlock.pokemon) ||
-          blessings.includes(Blessing.CONVERGENT_PARADOX)) &&
+        (!unlock.requiresBlessing ||
+          blessings.includes(unlock.requiresBlessing)) &&
         `${t(`pkm.${unlock.pokemon}`)} ${t(`fossil_unlocks.conditions.${unlock.conditionKey}`)}`
           .toLowerCase()
           .includes(query)

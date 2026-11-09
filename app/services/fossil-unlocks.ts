@@ -8,6 +8,7 @@ import { getPokemonData } from "../models/precomputed/precomputed-pokemon-data"
 import type GameState from "../rooms/states/game-state"
 import PokemonFactory from "../models/pokemon-factory"
 import { Title } from "../types"
+import { Blessing } from "../types/enum/Blessing"
 import {
   FOSSIL_RESTORATION_CHOICES,
   FOSSIL_RESTORATION_FIGHTS_PER_DISCOVERY,
@@ -26,7 +27,11 @@ import {
 import { Rarity } from "../types/enum/Game"
 import { Pkm, PkmFamily } from "../types/enum/Pokemon"
 import { Synergy } from "../types/enum/Synergy"
-import { getFirstAvailablePositionOnBoard, isOnBench } from "../utils/board"
+import {
+  getBenchSize,
+  getFirstAvailablePositionInBench,
+  isOnBench
+} from "../utils/board"
 import { clamp } from "../utils/number"
 import { pickNRandomIn } from "../utils/random"
 import { schemaValues } from "../utils/schemas"
@@ -262,25 +267,30 @@ export function onFossilUnlockTidalWave(player: Player | undefined) {
   advanceFossilUnlockProgress(player, Pkm.LILEEP)
 }
 
-// ARCHEN and SHIELDON, both scored over a single combat
+// ARCHEN, scored over a single combat
 export function onFossilUnlockRockExplosion(
   pokemon: PokemonEntity,
-  target: PokemonEntity,
-  damage: number
+  target: PokemonEntity
 ) {
   const player = pokemon.player
   if (!player || pokemon.isGhostOpponent) return
   player.fossilRockExplosionArmorBreakIds.add(target.id)
-  player.fossilRockExplosionTrueDamage += damage
   recordFossilUnlockBest(
     player,
     Pkm.ARCHEN,
     player.fossilRockExplosionArmorBreakIds.size
   )
+}
+
+// SHIELDON: a Set, so a unit that revives and falls again only counts once
+export function onFossilUnlockRockUnitExploded(pokemon: PokemonEntity) {
+  const player = pokemon.player
+  if (!player || pokemon.isGhostOpponent || pokemon.isSpawn) return
+  player.fossilRockUnitsExplodedIds.add(pokemon.id)
   recordFossilUnlockBest(
     player,
     Pkm.SHIELDON,
-    player.fossilRockExplosionTrueDamage
+    player.fossilRockUnitsExplodedIds.size
   )
 }
 
@@ -343,7 +353,7 @@ export function onFossilUnlockRoundStart(player: Player) {
 // ANORITH, plus the per-combat counters ARCHEN and SHIELDON accumulate into
 export function onFossilUnlockCombatStart(player: Player) {
   player.fossilRockExplosionArmorBreakIds.clear()
-  player.fossilRockExplosionTrueDamage = 0
+  player.fossilRockUnitsExplodedIds.clear()
   if (isFossilEntryPointFielded(player)) {
     player.fossilUnlockRevealPending = true
   }
@@ -415,8 +425,8 @@ export function discoverGalarFossil(player: Player, fossil: GalarFossil) {
   unlocks.galarFossils.push(fossil)
 }
 
-/* Only one restored Pokemon exists at a time: restoring again swaps the old one
-   off the board for the new one. It never costs a team slot. */
+// Only one restored Pokemon exists at a time: restoring again replaces the old
+// one on its tile. A first restore needs a free bench slot.
 export function restoreGalarFossilPokemon(
   player: Player,
   first: GalarFossil,
@@ -438,15 +448,17 @@ export function restoreGalarFossilPokemon(
   )
   const pokemon = PokemonFactory.createPokemonFromName(restored, player)
   // reusing the outgoing tile means a swap can never fail for lack of room
-  const position = previous
-    ? ([previous.positionX, previous.positionY] as const)
-    : getFirstAvailablePositionOnBoard(player.board, pokemon.range)
-  if (!position) return false
+  const benchX = previous
+    ? null
+    : getFirstAvailablePositionInBench(
+        player.board,
+        getBenchSize(player.blessings)
+      )
+  if (!previous && benchX === null) return false
   if (previous) player.board.delete(previous.id)
 
-  const [x, y] = position
-  pokemon.positionX = x
-  pokemon.positionY = y
+  pokemon.positionX = previous?.positionX ?? benchX ?? 0
+  pokemon.positionY = previous?.positionY ?? 0
   player.board.set(pokemon.id, pokemon)
   pokemon.onAcquired(player)
   unlocks.restoredPokemon = restored
@@ -463,7 +475,11 @@ export function onFossilUnlockFightWon(
     (entity) => entity.refToBoardPokemon.name === Pkm.MAMOSWINE
   )
   const fossilSynergy = player.synergies.get(Synergy.FOSSIL) ?? 0
-  if (mamoswineSurvived && fossilSynergy >= REGIGIGAS_FOSSIL_SYNERGY_REQUIRED) {
+  if (
+    player.blessings?.includes(Blessing.ANCIENT_POWER) &&
+    mamoswineSurvived &&
+    fossilSynergy >= REGIGIGAS_FOSSIL_SYNERGY_REQUIRED
+  ) {
     advanceFossilUnlockProgress(player, Pkm.REGIGIGAS)
   }
 }

@@ -215,7 +215,7 @@ Attacks have a [20,LK]% chance to hit the target again immediately. Extra attack
 
 #### COVERT_CLOAK
 
-At the start of the fight and every 4 seconds, steal 5 AP from all enemies within RANGE and deal 5 SPECIAL to them.
+Every 4 seconds, steal 5 AP from all enemies within RANGE and deal 5 SPECIAL to them.
 
 > This item is a way to make any 2 RANGE carry less vulnerable, by giving it +1 more RANGE. Try to pair it with POKEMONOMICON, or just use the 50 AP to deal alot of damage. The AP stealing can help against PSYCHIC, ARTIFICIAL or DRAGON comps!
 
@@ -475,11 +475,61 @@ Smeargle Scribbles do not change your Elo.
 
 Every balance change on this server, newest first.
 
+### 9 November 2026
+
+**Events**
+- Gym Leaders | new daily Duo challenge: each player gets a pair of synergies every day. Win a game with one partner at the highest tier of one synergy and the lowest tier of the other, and the other partner the opposite, using either partner's pair. Both partners earn 2 boosters, once a day
+
+**Pokémon**
+- Duskull Line | max PP 120 → 130
+- Exeggcute Line | max PP 150 → 130
+- Rhyhorn Line | max PP 130/120/110 → 120
+- Whismur Line | max PP 90 → 85
+- Slakoth Line | max PP 120 → 100
+- Bulbasaur Line | max PP 70 → 80
+- Celebi | HP 220 → 200
+- Komala | HP 170 → 190
+- Gligar Line | HP 100/170 → 120/190
+- Slither Wing | ATK 20 → 16
+- Wooper Line | gains FIELD
+- Illumise, Volbeat | passive removed
+- Shieldon | unlock is now 4 of your ROCK Pokémon exploding in the same round
+- Regigigas | unlock now needs the Ancient Power Wish, and no longer counts for the Ancient title
+
+**Abilities**
+- Earthquake | 20/40/80/160 → 25/50/100/200
+- Slack Off | no longer cures status conditions, heal 100% → 50% of max HP, now also gains 50% of base ATK
+
+**Items**
+- COVERT_CLOAK | no longer triggers at the start of the fight
+- SHINY_CHARM | PP 50 → 20
+- CASTELIACONE | now spawns a Vanillite with full PP near the Pokémon, with [15,LK]% chance to inflict FREEZE for 2 seconds ON_HIT
+- WHIPPED_DREAM | now spawns a Swirlix with full PP near the Pokémon, with [15,LK]% chance to inflict CHARM for 2 seconds ON_HIT
+- ARTIFICIAL pool | SHED_SHELL, TERRAIN_EXTENDER and EXP_SHARE replaced by BERSERK_GENE, EXPLORER_KIT and HEAVY_DUTY_BOOTS
+- HUMAN_MEMORY, WILD_MEMORY {{new}} | HUMAN_MEMORY does not allow learning TMs, like WISE_GLASSES
+
+**Wishes**
+- Cursed Coffin | Gold → Prismatic
+- Shark Bait | Silver → Gold
+- Victorious | Silver → Gold
+- Shady Price | Rerolls 42 → 32, rerolling no longer costs 4 GOLD afterwards. You cannot reach level 9 this game
+- Rolling Snowball | PP 40 → 20
+- Soul Drain | heal 20 → 15 HP
+- Ancient Power | max PP 70 → 80
+- Oceanking {{new}} | Your STRONGEST Goldeen gains 1 RANGE and its ability is replaced with Horn Drill. On each cast, it converts its SHIELD into ATK, 40 SHIELD for 1 ATK. Gain a Goldeen
+
+**Synergies**
+- GRASS | harvesting a berry gives 2 → 1 XP
+- ROCK | explosions no longer deal TRUE, only ARMOR_BREAK
+- FOSSIL 8 | restored Pokémon now appear on the bench and take a normal team slot
+
+**Weather**
+- PLAGUE | only BUG Pokémon holding an item deal TRUE
+
 ### 2 November 2026
 
 **Events**
 - Wild Card | new solo Scribble lobby at 04:00, 08:00, 12:00 and 16:00 UTC: Wonder Pick a leader from one rarity, from Common to Unique, shared by the whole lobby, with 1 reroll, and gain a random component. It stays on your board all game, takes no slot and cannot be sold, and a Unique leader is never offered to you again. Everyone who plays to stage 14 gets 1 Wonder Pick, the winner the Wild title and its Wild Card theme.
-- Gym Leaders | new daily Duo challenge: every player rolls a random pair of synergies each day. Win a game where one partner has the highest tier of one synergy and the lowest tier of the other, and the other partner the reverse. Your pair or your partner's counts, and it pays both partners 2 boosters, once a day.
 
 **Game Mode**
 - Smeargle Pack | your starter now comes with a random component, like a normal starter pick

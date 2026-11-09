@@ -1603,7 +1603,7 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     grantsPokemonImmediately: false
   },
   [Blessing.VICTORIOUS]: {
-    tier: BlessingTier.SILVER,
+    tier: BlessingTier.GOLD,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "victorious",
     grantsPokemonImmediately: false
@@ -1633,7 +1633,7 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     grantsPokemonImmediately: false
   },
   [Blessing.SHARK_BAIT]: {
-    tier: BlessingTier.SILVER,
+    tier: BlessingTier.GOLD,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "shark_bait",
     grantsPokemonImmediately: false
@@ -2101,7 +2101,7 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     grantsPokemonImmediately: true
   },
   [Blessing.CURSED_COFFIN]: {
-    tier: BlessingTier.GOLD,
+    tier: BlessingTier.PRISMATIC,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "cursed_coffin",
     grantsPokemonImmediately: true
@@ -2170,6 +2170,12 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     tier: BlessingTier.GOLD,
     availableAtStages: [4],
     icon: "bubble_rescue",
+    grantsPokemonImmediately: true
+  },
+  [Blessing.OCEAN_KING]: {
+    tier: BlessingTier.GOLD,
+    availableAtStages: [4],
+    icon: "ocean_king",
     grantsPokemonImmediately: true
   },
   [Blessing.ANCIENT_POWER]: {

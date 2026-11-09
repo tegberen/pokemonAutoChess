@@ -220,7 +220,7 @@ const evolveRandomPokemonInBoard = (toPlayer: Player): boolean => {
 }
 
 const giftExperienceAndRaiseLevelCap = (toPlayer: Player): boolean => {
-    toPlayer.experienceManager.maxLevel = 10
+    toPlayer.experienceManager.raiseMaxLevel(10)
     toPlayer.addExperience(32)
     return true
 }

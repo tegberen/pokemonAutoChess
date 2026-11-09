@@ -373,7 +373,7 @@ export const WAND_PROC_COOLDOWN_MS_BY_WAND: Partial<Record<Item, number>> = {
 export const UNOWN_ENCOUNTER_CHANCE = 0.033
 export const SHINY_UNOWN_ENCOUNTER_CHANCE = 1 / 1024
 
-export const GRASS_BERRY_HARVEST_EXPERIENCE = 2
+export const GRASS_BERRY_HARVEST_EXPERIENCE = 1
 
 export const GOLDEN_BERRY_TREE_TYPES = [
   Item.GOLDEN_RAZZ_BERRY,

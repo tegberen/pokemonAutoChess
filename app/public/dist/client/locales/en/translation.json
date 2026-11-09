@@ -1882,7 +1882,7 @@
 		"SURPRISING_HAND": "Copy as many items from the target as the user can carry, otherwise share them to ADJACENT allies with free item slots.",
 		"LUMINA_CRASH": "Deal [10,20,40,80,SP] + [200,400,800,1000,SP] % of targets SPE_DEF as SPECIAL to the target, then remove all SPE_DEF.",
 		"TREASURE_RUSH": "Deals [30,60,90,120,SP] SPECIAL to the target. Spends 1 GOLD and increase the user's ATK permanently by [1,2,3,4].",
-		"EARTH_QUAKE": "Deals [20,40,80,160,SP] SPECIAL to all Pokémon within a [1,2,3]-tile radius",
+		"EARTH_QUAKE": "Deals [25,50,100,200,SP] SPECIAL to all Pokémon within a [1,2,3]-tile radius",
 		"ESPER_WING": "Deal [50,100,200,400,SP]% of SPEED as SPECIAL to the target, then increase the user's SPEED by [5,10,20,40]. Can crit by default.",
 		"PSYBLADE": "Deal [20, 40, 60, 120, SP]% of the user's max HP as SPECIAL in a CONE. Bonus effects based on active field:\n- GRASS_FIELD: heal for 100% of damage dealt\n- PSYCHIC_FIELD: gain 3% of its max HP as PP",
 		"CURSED_LAND": "Grants [25,25,25,50,SP] AP to all allies within a 2-tile radius, then torments all enemies in the same radius with one of the following effects:\n- deal [50,50,50,75,SP]% of their max HP as SPECIAL\n- inflict SILENCE for [2,2,2,2,SP] seconds.",
@@ -2065,7 +2065,7 @@
 		"SPECTRAL_THIEF": "Disappear and reappear, dealing [30,40,50,100,SP] SPECIAL and steal all stat boosts from the target.",
 		"GEOMANCY": "Gain [15,15,15,30,SP] ATK, [10,10,10,20,SP] SPE_DEF and 20 SPEED.",
 		"DEATH_WING": "Jump to the backline, then fire a beam in a line dealing [100,SP] SPECIAL to all enemy Pokémon. Heal for 75% of the damage dealt. Will stay in the backline with increased RANGE for 3 seconds.",
-		"SLACK_OFF": "Cure all negative status conditions, heal [100,SP]% of max HP and put the user to SLEEP for 3 seconds.",
+		"SLACK_OFF": "Heal [50,SP]% of max HP, gain [50,SP]% of base ATK and put the user to SLEEP for 3 seconds.",
 		"DARK_VOID": "Deal [10,20,30,60,120,SP] SPECIAL to all enemy Pokémon in a 4-tile radius around target, with [80,LK]% chance to cause SLEEP for 2 seconds.",
 		"OVERHEAT": "Deal [12,25,50,100,SP] SPECIAL to all enemy Pokémon in a 4-tile radius around user, +30% if they suffer from BURN. Unfreeze all FREEZE Pokémon in that area.",
 		"HYPNOSIS": "Put the farthest enemy Pokémon to SLEEP for [2,3.5,6,12,SP=0.5] seconds.",
@@ -2627,7 +2627,7 @@
 		"GUTS": "Blocks 3 damage",
 		"STURDY": "Blocks 6 damage",
 		"DEFIANT": "Blocks 9 damage",
-		"COACHING": "Blocks 12 damage. FIGHTING Pokémon cannot take more than 40% of their max HP in a single instance of PHYSICAL.\nGet a Training Bag: each stage, FIGHTING Pokémon on the bench with the Training Bag or a pillar on their left train and gain 4 ATK or 15 AP and 10% base max HP permanently.",
+		"COACHING": "Blocks 12 damage. FIGHTING Pokémon cannot take more than 40% of their max HP in a single instance of PHYSICAL.\nGet a Training Bag: each stage, FIGHTING Pokémon on the bench with the Training Bag or a pillar on their left train and gain 10% base max HP and 4 ATK or 15 AP permanently. Click the Training Bag to switch between ATK and AP.",
 		"PRECOGNITION": "+40 AP. A Unown appears every 5 shops.",
 		"AURA": "+80 AP. A Unown appears every 3 shops.",
 		"TRANSCENDENCE": "+120 AP. Get a Unown shop and a free shop reroll after every fight and every 10 shop rerolls.",
@@ -2676,9 +2676,9 @@
 		"FLYCATCHER": "Get a Bellsprout Flower Pot",
 		"FRAGRANT": "Get a Chikorita Flower Pot",
 		"FLOWER_POWER": "Get an Oddish Flower Pot. If all your pots are fully grown, get a Bellossom Flower Pot and receive AMAZE_MULCH instead.",
-		"BATTLE_ARMOR": "Gain 10 DEF, receive -30% critical damage. On explosion deal: 5 TRUE and 1 second ARMOR_BREAK. Collect one weather rock when the weather changes.",
-		"MOUTAIN_RESISTANCE": "Gain 20 DEF, receive -50% critical damage. On explosion deal: 10 TRUE and 2 seconds ARMOR_BREAK. Collect up to 2 weather rocks.",
-		"DIAMOND_STORM": "Gain 40 DEF, receive -70% critical damage. On explosion deal: 20 TRUE and 3 seconds ARMOR_BREAK. Collect up to 3 weather rocks.",
+		"BATTLE_ARMOR": "Gain 10 DEF, receive -30% critical damage. On explosion: 1 second ARMOR_BREAK. Collect one weather rock when the weather changes.",
+		"MOUTAIN_RESISTANCE": "Gain 20 DEF, receive -50% critical damage. On explosion: 2 seconds ARMOR_BREAK. Collect up to 2 weather rocks.",
+		"DIAMOND_STORM": "Gain 40 DEF, receive -70% critical damage. On explosion: 3 seconds ARMOR_BREAK. Collect up to 3 weather rocks.",
 		"CRYSTALLISATION": "Expose a ROCK Pokémon on the board to a Weather Rock to start its Crystallisation. Once awakened, it gains a powerful effect and the Weather Rock's synergy.",
 		"CRYSTALLISE_SUN_STONE": "Every 3 seconds, gain +5 AP and +2 ATK. Once below 30% max HP, shed all ATK and AP buffs to heal 50% max HP.",
 		"CRYSTALLISE_HEAT_ROCK": "Gain +4 ATK ON_ATTACK. Upon reaching 1000% of base ATK, the user is RAGE for 4 seconds, then KO's itself as retalation effect. On ROCK explosion, deal bonus TRUE equal to 50% of its current ATK.",
@@ -3096,6 +3096,8 @@
 		"AQUATIC_MEMORY": "Aquatic Memory",
 		"DRAGON_MEMORY": "Dragon Memory",
 		"FLORA_MEMORY": "Flora Memory",
+		"HUMAN_MEMORY": "Human Memory",
+		"WILD_MEMORY": "Wild Memory",
 		"MISSION_ORDER_BLUE": "Mission Order - Level up!",
 		"MISSION_ORDER_RED": "Mission Order - Destroy!",
 		"MISSION_ORDER_GREEN": "Mission Order - Diversify!",
@@ -3209,7 +3211,7 @@
 		"DESTINY_KNOT": "Once the holder is KO, the STRONGEST ally gains the users current LUCK and base ATK for the rest of the fight.",
 		"LUCKY_PUNCH": "If the target has an ally directly behind it, the attack knocks a random held item from the target to that ally. When an item is knocked off, [30, LK]% chance to inflict CONFUSION for 2 seconds.",
 		"GRIP_CLAW": "Attacks have a [20,LK]% chance to hit the target again immediately. Extra attacks from any source cannot trigger this.",
-		"COVERT_CLOAK": "The holder gains +1 RANGE. At the start of the fight, and every 4 seconds, steal 5 AP from all enemies within RANGE and deal 5 SPECIAL to them.",
+		"COVERT_CLOAK": "The holder gains +1 RANGE. Every 4 seconds, steal 5 AP from all enemies within RANGE and deal 5 SPECIAL to them.",
 		"FLUFFY_TAIL": "Gains [15,LK]% dodge chance. The holder is immune to ARMOR_BREAK.",
 		"EVER_STONE": "The holder gains the ROCK type",
 		"TIGHT_BELT": "At the beginning of each battle, TIGHT_BELT is replaced by 2 random items. The holder is PARALYSIS during the entire fight.",
@@ -3261,7 +3263,7 @@
 		"RAZOR_CLAW": "The holder gains +50% CRIT_CHANCE",
 		"SAFETY_GOGGLES": "Holder is immune to all negative status effects and to sandstorm damage",
 		"KINGS_ROCK": "+100 HP. 30% of max HP are gained as SHIELD when combat begins.",
-		"SHINY_CHARM": "Prevents damage and give PROTECT for 1.5 seconds and 50 PP the first time the holder gets below 30% HP",
+		"SHINY_CHARM": "Prevents damage and give PROTECT for 1.5 seconds and 20 PP the first time the holder gets below 30% HP",
 		"GRACIDEA_FLOWER": "When combat begins, the holder and allies ADJACENT_IN_THE_SAME_ROW gain +20 SPEED",
 		"FLAME_ORB": "Holder increases its base ATK by 100% and is immune to FREEZE, but suffers from BURN during the entire fight.",
 		"ASSAULT_VEST": "+40 SPE_DEF. Reduce BURN and POISONNED damage by 50%",
@@ -3420,8 +3422,8 @@
 		"RAGE_CANDY_BAR": "Gain 15 ATK at the start of the next fight.",
 		"TEA": "In the next fight, gain 10 PP for each attack.",
 		"CURRY": "Start the next fight RAGE for 3 seconds.",
-		"CASTELIACONE": "The first attack in the next fight will inflict FREEZE for 5 seconds ON_HIT.",
-		"WHIPPED_DREAM": "The first attack in the next fight will inflict CHARM for 5 seconds ON_HIT.",
+		"CASTELIACONE": "At the start of the next fight, a Vanillite with full PP spawns near the Pokémon. It has [15,LK]% chance to inflict FREEZE for 2 seconds ON_HIT.",
+		"WHIPPED_DREAM": "At the start of the next fight, a Swirlix with full PP spawns near the Pokémon. It has [15,LK]% chance to inflict CHARM for 2 seconds ON_HIT.",
 		"BERRY_JUICE": "Gain 100 SHIELD at the start of the next fight and every time a berry is consumed.",
 		"TART_APPLE": "In the next fight, each attack by this Pokémon will remove 2 DEF from the target. Will turn into a SWEET_APPLE after one round.",
 		"SWEET_APPLE": "In the next fight, each attack by this Pokémon will remove 2 SPE_DEF from the target. Will turn into a SIRUPY_APPLE after one round.",
@@ -3518,6 +3520,8 @@
 		"AQUATIC_MEMORY": "Can be equipped on $t(pkm.SILVALLY) to get AQUATIC type.",
 		"DRAGON_MEMORY": "Can be equipped on $t(pkm.SILVALLY) to get DRAGON type.",
 		"FLORA_MEMORY": "Can be equipped on $t(pkm.SILVALLY) to get FLORA type.",
+		"HUMAN_MEMORY": "Can be equipped on $t(pkm.SILVALLY) to get HUMAN type.",
+		"WILD_MEMORY": "Can be equipped on $t(pkm.SILVALLY) to get WILD type.",
 		"MISSION_ORDER_PINK": "Complete this mission to earn 30 GOLD:\n get 4 STAR STAR STAR Pokémon on board",
 		"MISSION_ORDER_RED": "Complete this mission to earn 30 GOLD:\n inflict 100 damage to other players",
 		"MISSION_ORDER_BLUE": "Complete this mission to earn 30 GOLD:\n reach level 9",
@@ -3674,7 +3678,6 @@
 		"STENCH": "BOARD_EFFECT: Leaves behind a stinky POISON_GAS that POISONNED any unit that breathes it",
 		"AQUA_VEIL": "Give RUNE_PROTECT under RAIN",
 		"MOXIE": "Every time an enemy Pokémon is KO, it gains ATK equal to its stars",
-		"ILLUMISE_VOLBEAT": "Illumise and Volbeat gain 5 PP per second for each other member of their species alive on the board",
 		"PRISM": "Necrozma switches between its Ultra form and Normal form depending on its exposure to LIGHT",
 		"BLOSSOM": "Change weather to BLOSSOM",
 		"ZEN_ZONE": "Change weather to ZEN_ZONE",
@@ -4005,7 +4008,7 @@
 	"synergy_description": {
 		"NORMAL": "When combat starts, NORMAL Pokémon give allied Pokémon SHIELD for each ally on the board. NORMAL Pokémon can craft various scarves.{{additionalInfo}}",
 		"NORMAL_SCARVES": "\nScarves made: {{scarves}}",
-		"GRASS": "GRASS Pokémon heal and produce berries over time. Harvesting a berry gives 2 XP. 40% of overheal is gained as max HP.",
+		"GRASS": "GRASS Pokémon heal and produce berries over time. Harvesting a berry gives 1 XP. 40% of overheal is gained as max HP.",
 		"FIRE": "FIRE Pokémon have a chance to BURN their enemies, and gain ATK after every attack.",
 		"WATER": "WATER Pokémon generate more PP and can be fished with a rod.",
 		"ELECTRIC": "ELECTRIC Pokémon basic attacks can trigger two additional attacks.{{additionalInfo}}",
@@ -4025,7 +4028,7 @@
 		"FLORA": "When a FLORA Pokémon is KO'd, a Flower Pot blossoms and you collect RICH_MULCH. Higher STAR units give more mulch, which can be used to evolve your Flower Pots. They can be itemized.",
 		"FAIRY": "FAIRY Pokémon use wands to deal additional SPECIAL and various effects with their attacks.{{additionalInfo}}",
 		"FAIRY_WANDS": "\nWands equipped: {{wands}}",
-		"ROCK": "ROCK Pokémon gain DEF, better resist to critical attacks, and can adapt to weather. When ROCK Pokémon are KO'd they explode, deal TRUE and ARMOR_BREAK all ADJACENT enemies",
+		"ROCK": "ROCK Pokémon gain DEF, better resist to critical attacks, and can adapt to weather. When ROCK Pokémon are KO'd they explode and ARMOR_BREAK all ADJACENT enemies",
 		"GHOST": "GHOST lets you write incantations: a HEXING_INCANTATION DEBUFF at 2 and 4, a RITUAL_INCANTATION BUFF at 6 and a FATED_INCANTATION at 8. GHOST Pokémon have a [15,LK]% chance to dodge attacks and apply SILENCE for 2s ON_HIT, more against negative LUCK.{{additionalInfo}}",
 		"GHOST_SPIRIT_COIN": " A SPIRIT_COIN is worth 1 GOLD, 1 free shop reroll or 1 XP, decided at the start of each game.",
 		"GHOST_SPIRIT_COIN_GOLD": " This game, a SPIRIT_COIN is worth 1 GOLD.",
@@ -4334,7 +4337,7 @@
 		"SMOG": "-15% accuracy\n+30% POISONNED duration",
 		"MURKY": "-10 LUCK (GHOST are immune)\n+30% SILENCE duration",
 		"MAGNET_STORM": "Sets base SPEED to 50 (STEEL Pokémon above 50 base SPEED are unaffected)",
-		"PLAGUE": "Attacks deal 1 SPECIAL per ally (TRUE if BUG)\n+30% PARALYSIS duration",
+		"PLAGUE": "Attacks deal 1 SPECIAL per ally (TRUE if an itemized BUG)\n+30% PARALYSIS duration",
 		"ECLIPSE": "-10% max PP\n-30% FATIGUE and SILENCE duration",
 		"FLOOD": "Every 3 seconds, small waves flood in, knocking all Pokémon back 3 tiles and dealing 3% max HP as TRUE (heals AQUATIC instead).",
 		"ELDER_STORM": "Every 2 seconds, +1 SPEED and +2 AP (+5 SHIELD if DRAGON)",
@@ -5894,7 +5897,7 @@
 		},
 		"SHADY_PRICE": {
 			"name": "Shady Price",
-			"description": "Gain 42 Rerolls. Once they are spent, rerolling your shop costs 4 GOLD for the rest of the game."
+			"description": "Gain 32 Rerolls. You cannot reach level 9 this game."
 		},
 		"RANK_UP": {
 			"name": "Rank Up",
@@ -6478,7 +6481,7 @@
 		},
 		"SOUL_DRAIN": {
 			"name": "Soul Drain",
-			"description": "Your STRONGEST Litwick's ability cast pulls a Soul Fragment from the target, healing allies it travels through for [20,SP] HP. Two Fragments are pulled if the ability KO's the target. Gain a strong Litwick."
+			"description": "Your STRONGEST Litwick's ability cast pulls a Soul Fragment from the target, healing allies it travels through for [15,SP] HP. Two Fragments are pulled if the ability KO's the target. Gain a strong Litwick."
 		},
 		"FLOWER_QUEEN": {
 			"name": "Flower Queen",
@@ -6562,7 +6565,7 @@
 		},
 		"ANCIENT_POWER": {
 			"name": "Ancient Power",
-			"description": "Your STRONGEST Swinub gains 2 RANGE and its ability is replaced with Ancient Power, set to 70 PP. Gain a Piloswine."
+			"description": "Your STRONGEST Swinub gains 2 RANGE and its ability is replaced with Ancient Power, set to 80 PP. Regigigas can now be unlocked. Gain a Piloswine."
 		},
 		"SPOOKY_SCARECROW": {
 			"name": "Spooky Scarecrow",
@@ -6576,9 +6579,13 @@
 			"name": "Swamp Father",
 			"description": "Move to a random Mudkip region if not in one. Your Mudkip gains GRASS synergy. At the start of combat, your STRONGEST Mudkip hydrates ADJACENT GRASS allies: they become AQUATIC and gain all the effects of active AQUATIC synergy. It gains 5 PP whenever an enemy uses its ability. Gain a Mudkip."
 		},
+		"OCEAN_KING": {
+			"name": "Oceanking",
+			"description": "Your STRONGEST Goldeen gains 1 RANGE and its ability is replaced with Horn Drill. On each cast, it converts its SHIELD into ATK, 40 SHIELD for 1 ATK. Gain a Goldeen."
+		},
 		"ROLLING_SNOWBALL": {
 			"name": "Rolling Snowball",
-			"description": "When your STRONGEST Spheal's Ice Ball KO's its target, it rolls through to the cell behind it and gains 20 SHIELD and 40 PP. Gain a Spheal."
+			"description": "When your STRONGEST Spheal's Ice Ball KO's its target, it rolls through to the cell behind it and gains 20 SHIELD and 20 PP. Gain a Spheal."
 		},
 		"CURSED_COFFIN": {
 			"name": "Cursed Coffin",
@@ -7085,7 +7092,7 @@
 		"combine": "Combine",
 		"restoration_title": "Restoration",
 		"restoration_source": "Your first fight at **FOSSIL (8)** grants a Galarian Fossil, and **every {{fights}} fights** after that grants another.",
-		"restoration_hint": "Pair two Galar fossils to restore one Pokemon. Restoring again replaces the one on your board. Left click a Galar fossil (or drag it) to put it in, and click a slot to take it back.",
+		"restoration_hint": "Pair two Galar fossils to restore one Pokemon on your bench, while FOSSIL (8) stays active. Restoring again replaces it. Left click a Galar fossil (or drag it) to put it in, and click a slot to take it back.",
 		"restore": "Restore",
 		"already_restored": "Already restored",
 		"conditions": {
@@ -7100,7 +7107,7 @@
 			"archen": "Level 5 + During combat, ARMOR_BREAK 6 different Pokémon with ROCK explosions.",
 			"clamperl": "Level 5 + Fish up 6 GOLD worth of Pokémon.",
 			"cranidos": "Level 7 + Start a fight with a total of 7 DRAGON STAR on the board.",
-			"shieldon": "Level 7 + During combat, deal a total of 120 TRUE with ROCK explosions.",
+			"shieldon": "Level 7 + Have 4 of your ROCK Pokémon explode in the same round.",
 			"amaura": "Level 7 + With LIGHT active, have a FOSSIL or ICE Pokémon under the Lightspot cast their ability twice during combat.",
 			"tyrunt": "Level 7 + Reroll 15 times in a single preparation phase with DRAGON or ROCK active.",
 			"regigigas": "Level 9 + Win a fight with Mamoswine alongside 8 FOSSIL Pokémon, with Mamoswine surviving.",

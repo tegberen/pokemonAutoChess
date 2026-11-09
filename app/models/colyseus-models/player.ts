@@ -351,7 +351,7 @@ export default class Player extends Schema implements IPlayer {
   fossilUnlocksRef: PlayerFossilUnlocks | null = null
   // server-only, reset each combat: ARCHEN and SHIELDON score within one fight
   fossilRockExplosionArmorBreakIds: Set<string> = new Set<string>()
-  fossilRockExplosionTrueDamage: number = 0
+  fossilRockUnitsExplodedIds: Set<string> = new Set<string>()
   // server-only, reset each preparation phase: TYRUNT counts rerolls within one
   fossilRerollsThisPickPhase: number = 0
   /* server-only: an evolved Swinub was fielded when this combat started, so the

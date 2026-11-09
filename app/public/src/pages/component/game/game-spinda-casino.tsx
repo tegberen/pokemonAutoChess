@@ -83,7 +83,10 @@ export default function GameSpindaCasino() {
   if (!pulls || !slot) return null
 
   return (
-    <div className="game-spinda-casino" style={{ zIndex: DEPTH.MODAL }}>
+    <div
+      className="my-container game-spinda-casino"
+      style={{ zIndex: DEPTH.MODAL }}
+    >
       <h2>{t("blessing.SPINDA_CASINO.name")}</h2>
       <div className="spinda-slot-machine">
         {reels.map((symbols, reel) => (
@@ -97,7 +100,14 @@ export default function GameSpindaCasino() {
             <div className="spinda-reel-symbols">
               {symbols.map((symbol, index) => (
                 <div key={index} className="spinda-symbol">
-                  <img src={SLOT_ICONS[symbol]} alt="" />
+                  {symbol === "JACKPOT" ? (
+                    <img src={SLOT_ICONS[symbol]} alt="" />
+                  ) : (
+                    <span
+                      className="spinda-symbol-icon"
+                      style={{ maskImage: `url(${SLOT_ICONS[symbol]})` }}
+                    />
+                  )}
                 </div>
               ))}
             </div>

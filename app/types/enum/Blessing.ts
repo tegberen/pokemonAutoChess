@@ -220,6 +220,7 @@ export enum Blessing {
   JOLLY_ROGER = "JOLLY_ROGER",
   BUBBLE_RESCUE = "BUBBLE_RESCUE",
   ANCIENT_POWER = "ANCIENT_POWER",
+  OCEAN_KING = "OCEAN_KING",
   SEASONAL_HERD = "SEASONAL_HERD",
   LIFE_PRICE = "LIFE_PRICE",
   SILVER_SPOON = "SILVER_SPOON",
@@ -848,7 +849,7 @@ export const CURSED_COFFIN_HP_DRAIN = 15
 export const CURSED_COFFIN_PP_DRAIN = 5
 export const CURSED_COFFIN_DRAIN_INTERVAL = 1000
 export const ROLLING_SNOWBALL_SHIELD = 20
-export const ROLLING_SNOWBALL_PP = 40
+export const ROLLING_SNOWBALL_PP = 20
 export const SWAMP_FATHER_PP_PER_ENEMY_CAST = 5
 // lets the client show the fight before the bubble launches
 export const SWAMP_FATHER_BUBBLE_DELAY = 300
@@ -871,7 +872,9 @@ export const JOLLY_ROGER_ABILITY_KO_GOLD = 2
 export const BUBBLE_RESCUE_HP_RATIO_BY_STAR = [0.2, 0.3, 0.4]
 export const BUBBLE_RESCUE_DELAY = 2000
 export const ANCIENT_POWER_RANGE_BONUS = 2
-export const ANCIENT_POWER_MAX_PP = 70
+export const ANCIENT_POWER_MAX_PP = 80
+export const OCEAN_KING_RANGE_BONUS = 1
+export const OCEAN_KING_SHIELD_PER_ATK = 40
 // the three herd lists share one index per season: spring, summer, autumn, winter
 export const SEASONAL_HERD_DEERLINGS: Pkm[] = [
   Pkm.DEERLING_SPRING,
@@ -1045,7 +1048,7 @@ export const CLIMBING_THE_LADDER_EXP_DISCOUNT = 4
 export const CLIMBING_THE_LADDER_DISCOUNT_FROM_LEVEL = 4
 export const FREE_COUPON_GUARANTEED_SHOP_STAGE = 22
 
-export const SOUL_DRAIN_HEAL = 20
+export const SOUL_DRAIN_HEAL = 15
 export const SOUL_DRAIN_FRAGMENTS_ON_KILL = 2
 export const FLOWER_QUEEN_MAX_PP_REDUCTION = 5
 export const FLOWER_QUEEN_MIN_MAX_PP = 10
@@ -1124,8 +1127,8 @@ export const SPIKY_GUARD_DEFENSE_RATIO = 0.15
 export const SPIKY_GUARD_SHIELD_PER_FREE_CELL = 10
 
 
-export const SHADY_PRICE_FREE_ROLLS = 42
-export const SHADY_PRICE_REROLL_COST = 4
+export const SHADY_PRICE_FREE_ROLLS = 32
+export const SHADY_PRICE_MAX_LEVEL = 8
 export const SIX_SEVEN_GOLD = 67
 export const SIX_SEVEN_LIFE_COST = 67
 export const LECHONK_BANK_GOLD = 1
@@ -1437,7 +1440,8 @@ export const HERO_BLESSING_GIFT: { [blessing in Blessing]?: Pkm } = {
   [Blessing.INFILTRATOR]: Pkm.GOLBAT,
   [Blessing.JOLLY_ROGER]: Pkm.TOTODILE,
   [Blessing.BUBBLE_RESCUE]: Pkm.MARILL,
-  [Blessing.ANCIENT_POWER]: Pkm.PILOSWINE
+  [Blessing.ANCIENT_POWER]: Pkm.PILOSWINE,
+  [Blessing.OCEAN_KING]: Pkm.GOLDEEN
 }
 
 export const HERO_BLESSING_POKEMON: { [blessing in Blessing]?: Pkm[] } = {
@@ -1554,7 +1558,8 @@ export const HERO_BLESSING_FAMILY: { [blessing in Blessing]?: Pkm } = {
   [Blessing.INFILTRATOR]: Pkm.ZUBAT,
   [Blessing.JOLLY_ROGER]: Pkm.TOTODILE,
   [Blessing.BUBBLE_RESCUE]: Pkm.AZURILL,
-  [Blessing.ANCIENT_POWER]: Pkm.SWINUB
+  [Blessing.ANCIENT_POWER]: Pkm.SWINUB,
+  [Blessing.OCEAN_KING]: Pkm.GOLDEEN
 }
 
 export const HERO_BLESSING_RANGE_BONUS: { [blessing in Blessing]?: number } = {
@@ -1565,7 +1570,8 @@ export const HERO_BLESSING_RANGE_BONUS: { [blessing in Blessing]?: number } = {
   [Blessing.ITS_GOING_DOWN]: ITS_GOING_DOWN_RANGE,
   [Blessing.FROST_GEAR]: FROST_GEAR_RANGE_BONUS,
   [Blessing.BONEMERANG_RANGER]: BONEMERANG_RANGER_RANGE_BONUS,
-  [Blessing.ANCIENT_POWER]: ANCIENT_POWER_RANGE_BONUS
+  [Blessing.ANCIENT_POWER]: ANCIENT_POWER_RANGE_BONUS,
+  [Blessing.OCEAN_KING]: OCEAN_KING_RANGE_BONUS
 }
 
 // resurrect() rebuilds RANGE from scratch, so a revive calls this again
@@ -1679,7 +1685,8 @@ export const HERO_BLESSING_ADDS_TO_POOL: Blessing[] = [
   Blessing.CURSED_COFFIN,
   Blessing.BONEMERANG_RANGER,
   Blessing.SPOOKY_SCARECROW,
-  Blessing.PURRFECT_PLAN
+  Blessing.PURRFECT_PLAN,
+  Blessing.OCEAN_KING
 ]
 
 // Item blessings all follow the same shape: picking one hands the player the

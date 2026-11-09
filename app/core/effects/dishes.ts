@@ -19,10 +19,40 @@ import {
   OnDamageDealtEffect
 } from "./../effects/effect"
 import { AttackType } from "../../types/enum/Game"
+import PokemonFactory from "../../models/pokemon-factory"
+import type { PokemonEntity } from "../pokemon-entity"
 
 const runeProtectForNextFight = new OnSpawnEffect((entity) => {
   entity.status.triggerRuneProtect(FIGHTING_PHASE_DURATION, entity, entity)
 })
+
+const DISH_COMPANION_STATUS_CHANCE = 0.15
+const DISH_COMPANION_STATUS_MS = 2000
+
+function spawnDishCompanion(
+  entity: PokemonEntity,
+  companion: Pkm,
+  dish: Item,
+  inflictStatus: (target: PokemonEntity, attacker: PokemonEntity) => void
+) {
+  const coord = entity.simulation.getClosestFreeCellToPokemonEntity(entity)
+  if (!coord) return
+  const spawned = entity.simulation.addPokemon(
+    PokemonFactory.createPokemonFromName(companion, entity.player),
+    coord.x,
+    coord.y,
+    entity.team,
+    true
+  )
+  spawned.pp = spawned.maxPP
+  spawned.effectsSet.add(
+    new OnHitEffect(({ attacker, target }) => {
+      if (chance(DISH_COMPANION_STATUS_CHANCE, attacker)) {
+        inflictStatus(target, attacker)
+      }
+    }, dish)
+  )
+}
 
 export const DishEffects: Record<(typeof Dishes)[number], Effect[]> = {
   [Item.BERRY_JUICE]: [
@@ -82,14 +112,18 @@ export const DishEffects: Record<(typeof Dishes)[number], Effect[]> = {
     })
   ],
   [Item.CASTELIACONE]: [
-    new OnSpawnEffect((entity) => {
-      entity.effects.add(EffectEnum.CASTELIACONE)
-    }),
-    new OnHitEffect(({ attacker, target }) => {
-      if (attacker.effects.has(EffectEnum.CASTELIACONE)) {
-        target.status.triggerFreeze(5000, target, attacker)
-        attacker.effects.delete(EffectEnum.CASTELIACONE)
-      }
+    new OnSimulationStartEffect(({ entity }) => {
+      spawnDishCompanion(
+        entity,
+        Pkm.VANILLITE,
+        Item.CASTELIACONE,
+        (target, attacker) =>
+          target.status.triggerFreeze(
+            DISH_COMPANION_STATUS_MS,
+            target,
+            attacker
+          )
+      )
     })
   ],
   [Item.CURRY]: [
@@ -330,14 +364,18 @@ export const DishEffects: Record<(typeof Dishes)[number], Effect[]> = {
     })
   ],
   [Item.WHIPPED_DREAM]: [
-    new OnSpawnEffect((entity) => {
-      entity.effects.add(EffectEnum.WHIPPED_DREAM)
-    }),
-    new OnHitEffect(({ attacker, target }) => {
-      if (attacker.effects.has(EffectEnum.WHIPPED_DREAM)) {
-        target.status.triggerCharm(5000, target, attacker)
-        attacker.effects.delete(EffectEnum.WHIPPED_DREAM)
-      }
+    new OnSimulationStartEffect(({ entity }) => {
+      spawnDishCompanion(
+        entity,
+        Pkm.SWIRLIX,
+        Item.WHIPPED_DREAM,
+        (target, attacker) =>
+          target.status.triggerCharm(
+            DISH_COMPANION_STATUS_MS,
+            target,
+            attacker
+          )
+      )
     })
   ],
   [Item.SWEETS]: [],

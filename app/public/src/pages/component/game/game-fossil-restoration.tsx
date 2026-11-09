@@ -43,7 +43,7 @@ function decodeDrag(
 
 /* The Restoration half of the Fossil Unlock menu: pair two discovered Galar
    fossils to bring one Pokemon back. Only one restored Pokemon exists at a time,
-   so restoring again swaps the board one out. Drag and drop is plain HTML5 DnD
+   so restoring again replaces it. Drag and drop is plain HTML5 DnD
    rather than the board's phaser drag system, since nothing here leaves the
    modal; left click a fossil to slot it and a slot to take it back, or drag it
    around. Right click on a slot takes it back too. */
@@ -100,27 +100,27 @@ export function GameFossilRestoration() {
         <div className="fossil-restoration-panel">
           <h4>{t("fossil_unlocks.your_fossils")}</h4>
           <ul className="fossil-restoration-inventory">
-            {Object.values(GalarFossil)
-              .filter((fossil) => !slots.includes(fossil))
-              .map((fossil) => {
-                const discovered = galarFossils.includes(fossil)
-                return (
-                  <li
-                    key={fossil}
-                    className={`fossil-restoration-fossil ${discovered ? "" : "is-undiscovered"}`}
-                    draggable={discovered}
-                    onDragStart={(event) =>
-                      event.dataTransfer.setData(
-                        "text/plain",
-                        encodeDrag(fossil, "tray")
-                      )
-                    }
-                    onClick={() => discovered && placeInFirstFreeSlot(fossil)}
-                  >
-                    <img src={`assets/item/${fossil}.webp`} alt={fossil} />
-                  </li>
-                )
-              })}
+            {Object.values(GalarFossil).map((fossil) => {
+              const discovered = galarFossils.includes(fossil)
+              const slotted = slots.includes(fossil)
+              const available = discovered && !slotted
+              return (
+                <li
+                  key={fossil}
+                  className={`fossil-restoration-fossil ${discovered ? "" : "is-undiscovered"} ${slotted ? "is-slotted" : ""}`}
+                  draggable={available}
+                  onDragStart={(event) =>
+                    event.dataTransfer.setData(
+                      "text/plain",
+                      encodeDrag(fossil, "tray")
+                    )
+                  }
+                  onClick={() => available && placeInFirstFreeSlot(fossil)}
+                >
+                  <img src={`assets/item/${fossil}.webp`} alt={fossil} />
+                </li>
+              )
+            })}
           </ul>
         </div>
 

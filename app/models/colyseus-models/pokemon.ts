@@ -167,9 +167,6 @@ export class Pokemon extends Schema implements IPokemon {
   festivePicnicDish: Item | null = null
   canBeBenched = true
   canBeSold = true
-  /* restored Galar fossils are granted on top of the board, so they do not
-     spend one of the player's team slots */
-  countsForTeamSize = true
   baseSkill: Ability = Ability.DEFAULT
   baseMaxPP: number = 100
   boosterEnergyCount: number = 0
@@ -230,7 +227,6 @@ export class Pokemon extends Schema implements IPokemon {
 
   get doesCountForTeamSize(): boolean {
     return (
-      this.countsForTeamSize &&
       !this.wildCardLeader &&
       this.passive !== Passive.INANIMATE &&
       this.passive !== Passive.FIGHTING_SUBSTITUTE &&
@@ -1984,7 +1980,7 @@ export class Slakoth extends Pokemon {
   speed = 57
   def = 10
   speDef = 8
-  maxPP = 120
+  maxPP = 100
   range = 1
   skill = Ability.SLACK_OFF
   regional = true
@@ -2000,7 +1996,7 @@ export class Vigoroth extends Pokemon {
   speed = 57
   def = 10
   speDef = 8
-  maxPP = 120
+  maxPP = 100
   range = 1
   skill = Ability.SLACK_OFF
   passive = Passive.VIGOROTH
@@ -2016,7 +2012,7 @@ export class Slaking extends Pokemon {
   speed = 57
   def = 14
   speDef = 10
-  maxPP = 120
+  maxPP = 100
   range = 1
   skill = Ability.SLACK_OFF
   passive = Passive.SLAKING
@@ -3424,7 +3420,7 @@ export class Rhyhorn extends Pokemon {
   speed = 38
   def = 12
   speDef = 4
-  maxPP = 130
+  maxPP = 120
   range = 1
   skill = Ability.HORN_DRILL
 }
@@ -3461,7 +3457,7 @@ export class Rhyperior extends Pokemon {
   speed = 38
   def = 30
   speDef = 8
-  maxPP = 110
+  maxPP = 120
   range = 1
   skill = Ability.HORN_DRILL
 }
@@ -3524,7 +3520,7 @@ export class Whismur extends Pokemon {
   speed = 47
   def = 2
   speDef = 2
-  maxPP = 90
+  maxPP = 85
   range = 2
   skill = Ability.UPROAR
 }
@@ -3542,7 +3538,7 @@ export class Loudred extends Pokemon {
   speed = 47
   def = 4
   speDef = 4
-  maxPP = 90
+  maxPP = 85
   range = 2
   skill = Ability.UPROAR
 }
@@ -3560,7 +3556,7 @@ export class Exploud extends Pokemon {
   speed = 47
   def = 6
   speDef = 6
-  maxPP = 90
+  maxPP = 85
   range = 2
   skill = Ability.UPROAR
 }
@@ -3883,7 +3879,7 @@ export class Bulbasaur extends Pokemon {
   speed = 51
   def = 4
   speDef = 8
-  maxPP = 70
+  maxPP = 80
   range = 2
   skill = Ability.FRENZY_PLANT
 }
@@ -3898,7 +3894,7 @@ export class Ivysaur extends Pokemon {
   speed = 51
   def = 8
   speDef = 12
-  maxPP = 70
+  maxPP = 80
   range = 2
   skill = Ability.FRENZY_PLANT
 }
@@ -3912,7 +3908,7 @@ export class Venusaur extends Pokemon {
   speed = 51
   def = 12
   speDef = 16
-  maxPP = 70
+  maxPP = 80
   range = 2
   skill = Ability.FRENZY_PLANT
 }
@@ -3978,7 +3974,7 @@ export class Duskull extends Pokemon {
   speed = 39
   def = 10
   speDef = 10
-  maxPP = 120
+  maxPP = 130
   range = 2
   skill = Ability.TRICK_ROOM
 }
@@ -3997,7 +3993,7 @@ export class Dusclops extends Pokemon {
   speed = 39
   def = 20
   speDef = 20
-  maxPP = 120
+  maxPP = 130
   range = 2
   skill = Ability.TRICK_ROOM
 }
@@ -4015,7 +4011,7 @@ export class Dusknoir extends Pokemon {
   speed = 39
   def = 30
   speDef = 30
-  maxPP = 120
+  maxPP = 130
   range = 2
   skill = Ability.TRICK_ROOM
 }
@@ -7212,7 +7208,7 @@ export class SlitherWing extends Pokemon {
   rarity = Rarity.UNIQUE
   stars = 3
   hp = 180
-  atk = 20
+  atk = 16
   speed = 51
   def = 6
   speDef = 8
@@ -8253,7 +8249,7 @@ export class Celebi extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.GRASS, Synergy.FAIRY, Synergy.FLORA])
   rarity = Rarity.LEGENDARY
   stars = 3
-  hp = 220
+  hp = 200
   atk = 20
   speed = 57
   def = 10
@@ -9049,7 +9045,7 @@ export class Gligar extends Pokemon {
   rarity = Rarity.EPIC
   stars = 1
   evolution = Pkm.GLISCOR
-  hp = 100
+  hp = 120
   atk = 11
   speed = 55
   def = 6
@@ -9069,7 +9065,7 @@ export class Gliscor extends Pokemon {
   ])
   rarity = Rarity.EPIC
   stars = 2
-  hp = 170
+  hp = 190
   atk = 22
   speed = 55
   def = 12
@@ -14051,7 +14047,7 @@ export class Exeggcute extends Pokemon {
   speed = 38
   def = 6
   speDef = 6
-  maxPP = 150
+  maxPP = 130
   range = 1
   skill = Ability.LEAF_STORM
 }
@@ -14070,7 +14066,7 @@ export class Exeggutor extends Pokemon {
   speed = 38
   def = 10
   speDef = 10
-  maxPP = 150
+  maxPP = 130
   range = 1
   skill = Ability.LEAF_STORM
 }
@@ -14088,7 +14084,7 @@ export class AlolanExeggutor extends Pokemon {
   speed = 38
   def = 14
   speDef = 14
-  maxPP = 150
+  maxPP = 130
   range = 1
   skill = Ability.LEAF_STORM
 }
@@ -14386,7 +14382,6 @@ export class Illumise extends Pokemon {
   maxPP = 100
   range = 1
   skill = Ability.STRUGGLE_BUG
-  passive = Passive.ILLUMISE_VOLBEAT
 }
 
 export class Volbeat extends Pokemon {
@@ -14401,7 +14396,6 @@ export class Volbeat extends Pokemon {
   maxPP = 100
   range = 1
   skill = Ability.TAIL_GLOW
-  passive = Passive.ILLUMISE_VOLBEAT
 }
 
 export class Necrozma extends Pokemon {
@@ -15356,12 +15350,9 @@ export class Dracovish extends Pokemon {
   range = 1
   skill = Ability.FISHIOUS_REND
   passive = Passive.DRACOVISH
-  /* restored from two Galar fossils onto the board: it is a gift on top
-     of the team, never traded, equipped or benched */
+  // restored from two Galar fossils: a gift, never traded or equipped
   canHoldItems = false
   canBeSold = false
-  canBeBenched = false
-  countsForTeamSize = false
 }
 
 export class Dracozolt extends Pokemon {
@@ -15381,12 +15372,9 @@ export class Dracozolt extends Pokemon {
   range = 1
   skill = Ability.AMPING_BEAK
   passive = Passive.DRACOZOLT
-  /* restored from two Galar fossils onto the board: it is a gift on top
-     of the team, never traded, equipped or benched */
+  // restored from two Galar fossils: a gift, never traded or equipped
   canHoldItems = false
   canBeSold = false
-  canBeBenched = false
-  countsForTeamSize = false
 }
 
 export class Arctozolt extends Pokemon {
@@ -15406,12 +15394,9 @@ export class Arctozolt extends Pokemon {
   range = 1
   skill = Ability.FROZEN_BEAK
   passive = Passive.ARCTOZOLT
-  /* restored from two Galar fossils onto the board: it is a gift on top
-     of the team, never traded, equipped or benched */
+  // restored from two Galar fossils: a gift, never traded or equipped
   canHoldItems = false
   canBeSold = false
-  canBeBenched = false
-  countsForTeamSize = false
 }
 
 export class Arctovish extends Pokemon {
@@ -15427,12 +15412,9 @@ export class Arctovish extends Pokemon {
   range = 1
   skill = Ability.FROZEN_REND
   passive = Passive.ARCTOVISH
-  /* restored from two Galar fossils onto the board: it is a gift on top
-     of the team, never traded, equipped or benched */
+  // restored from two Galar fossils: a gift, never traded or equipped
   canHoldItems = false
   canBeSold = false
-  canBeBenched = false
-  countsForTeamSize = false
 }
 
 export class Bruxish extends Pokemon {
@@ -16713,7 +16695,11 @@ export class Mothim extends Pokemon {
 }
 
 export class Wooper extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.AQUATIC, Synergy.GROUND])
+  types = new SetSchema<Synergy>([
+    Synergy.AQUATIC,
+    Synergy.GROUND,
+    Synergy.FIELD
+  ])
   rarity = Rarity.RARE
   evolution = Pkm.QUAGSIRE
   stars = 1
@@ -16729,7 +16715,11 @@ export class Wooper extends Pokemon {
 }
 
 export class Quagsire extends Pokemon {
-  types = new SetSchema<Synergy>([Synergy.AQUATIC, Synergy.GROUND])
+  types = new SetSchema<Synergy>([
+    Synergy.AQUATIC,
+    Synergy.GROUND,
+    Synergy.FIELD
+  ])
   rarity = Rarity.RARE
   stars = 2
   hp = 190
@@ -22436,7 +22426,7 @@ export class Komala extends Pokemon {
   types = new SetSchema<Synergy>([Synergy.NORMAL, Synergy.SOUND, Synergy.GRASS])
   rarity = Rarity.UNIQUE
   stars = 3
-  hp = 170
+  hp = 190
   atk = 20
   speed = 45
   def = 7
