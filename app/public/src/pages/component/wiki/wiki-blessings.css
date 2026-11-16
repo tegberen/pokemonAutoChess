@@ -356,8 +356,7 @@
   font-size: 1em;
   line-height: 1.2;
   padding-bottom: 0.4em;
-  border-bottom: 1px solid
-    color-mix(in srgb, var(--color-fg-primary) 22%, transparent);
+  border-bottom: var(--divider);
 }
 
 .wiki-blessing-body h3 + p {

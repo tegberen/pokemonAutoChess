@@ -46,8 +46,7 @@
   align-items: center;
   gap: 0.5em;
   padding: 0.25em 0 0.35em;
-  border-bottom: 1px solid
-    color-mix(in srgb, var(--color-fg-primary) 25%, transparent);
+  border-bottom: var(--divider);
   font-size: 1.5em;
   background-color: var(--color-bg-secondary);
 }
@@ -111,8 +110,7 @@
 
 .wiki-ghost-card tbody th {
   text-align: left;
-  border-right: 1px solid
-    color-mix(in srgb, var(--color-fg-primary) 25%, transparent);
+  border-right: var(--divider);
 }
 
 .wiki-ghost-example {
@@ -143,8 +141,7 @@
 
 .wiki-ghost-card thead .wiki-ghost-span-header {
   padding-bottom: 0.3em;
-  border-bottom: 1px solid
-    color-mix(in srgb, var(--color-fg-primary) 25%, transparent);
+  border-bottom: var(--divider);
   color: var(--color-fg-secondary);
 }
 

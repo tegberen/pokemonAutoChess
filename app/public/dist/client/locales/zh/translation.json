@@ -4186,15 +4186,6 @@
 	"make_room_public_hint": "移除房间的密码",
 	"change_room_name": "修改房间名",
 	"add_bot": "添加机器人",
-	"bot_difficulty": {
-		"BEGINNER": "新手 (<850)",
-		"EASY":  "简单 (850-999)",
-		"MEDIUM": "普通 (1000-1149)",
-		"HARD": "困难 (1150-1299)",
-		"EXTREME": "极限 (1300-1449)",
-		"MASTER": "大师 (>1450)",
-		"CUSTOM": "自定义"
-	},
 	"room_leader": "房主",
 	"room_password": "本房间为私人房间，密码是",
 	"ready": "准备",

@@ -3743,15 +3743,6 @@
 	"make_room_public_hint": "Entferne Passwort für diesen Raum",
 	"change_room_name": "Raumnamen ändern",
 	"add_bot": "Bot hinzufügen",
-	"bot_difficulty": {
-		"BEGINNER": "Beginner (<850)",
-		"EASY":  "Einfach (850-999)",
-		"MEDIUM": "Medium (1000-1149)",
-		"HARD": "Schwer (1150-1299)",
-		"EXTREME": "Extrem (1300-1449)",
-		"MASTER": "Master (>1450)",
-		"CUSTOM": "Benutzerdefiniert"
-	},
 	"room_leader": "Raumleiter",
 	"room_password": "Raum Passwort",
 	"ready": "Bereit",

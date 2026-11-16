@@ -9,18 +9,12 @@ import {
   RAINBOW_HOURS_TICKETS_PER_GAME,
   RAINBOW_HOURS_TICKETS_PER_WIN
 } from "../../../../../config/game/rainbow-hours"
-import {
-  getNextWildCardTime,
-  WILD_CARD_ROOM_NAME,
-  WILD_CARD_WONDER_PICKS
-} from "../../../../../config/game/wild-card"
 import { cc } from "../../utils/jsx"
 import {
-  DAILY_DUEL_ICON,
+  type DailyEvent,
   formatLocalTime,
-  getNextDailyDuel,
-  RAINBOW_HOURS_ICON,
-  WILD_CARD_ICON
+  getDailyEvents,
+  RAINBOW_HOURS_ICON
 } from "./daily-events"
 
 const TICKETS_ICON = "/assets/icons/season_poke.svg"
@@ -105,57 +99,48 @@ export function RainbowHoursCountdown() {
   )
 }
 
-// whichever comes first: the next Wild Card or the next Daily Duel
+const EVENT_BANNER_STYLES: Partial<
+  Record<DailyEvent["id"], { bannerClass: string; titleClass: string }>
+> = {
+  "wild-card": {
+    bannerClass: "wild-card-countdown",
+    titleClass: "wild-card-title"
+  },
+  "rainbow-hours": {
+    bannerClass: "rainbow-hours-countdown",
+    titleClass: "rainbow-hours-title"
+  }
+}
+
+// the soonest upcoming event of the schedule; at a tie the one listed first
 export function NextEventCountdown() {
   const { t } = useTranslation()
   const now = useMinuteClock()
   if (isRainbowHours(now)) return null
 
-  const nextWildCard = getNextWildCardTime(now)
-  const nextDailyDuel = getNextDailyDuel(now)
-  const timeUntil = (date: Date) =>
-    formatTimeUntil(date.getTime() - now.getTime())
-
-  if (nextWildCard < nextDailyDuel) {
-    return (
-      <EventBanner
-        className="wild-card-countdown"
-        title={t("daily_events.wild_card_reward", {
-          wonderPicks: WILD_CARD_WONDER_PICKS
-        })}
-      >
-        <img
-          alt=""
-          aria-hidden="true"
-          className="icon"
-          width={32}
-          height={32}
-          src={WILD_CARD_ICON}
-        />
-        <em className="wild-card-title">{WILD_CARD_ROOM_NAME}</em>
-        <span className="daily-duel-countdown-label">
-          {formatLocalTime(nextWildCard)}
-        </span>
-        <span className="daily-duel-countdown-time">
-          {t("daily_duel_in", { time: timeUntil(nextWildCard) })}
-        </span>
-      </EventBanner>
-    )
-  }
+  const nextEvent = getDailyEvents(now).find((event) => event.start > now)
+  if (!nextEvent) return null
+  const style = EVENT_BANNER_STYLES[nextEvent.id]
+  const startTime = formatLocalTime(nextEvent.start)
 
   return (
-    <EventBanner title={t("daily_duel_hint")}>
+    <EventBanner className={style?.bannerClass} title={nextEvent.reward}>
       <img
         alt=""
         aria-hidden="true"
         className="icon"
-        src={DAILY_DUEL_ICON}
+        width={32}
+        height={32}
+        src={nextEvent.icon}
       />
+      {style && <em className={style.titleClass}>{nextEvent.name}</em>}
       <span className="daily-duel-countdown-label">
-        {t("daily_duel_next", { time: formatLocalTime(nextDailyDuel) })}
+        {style ? startTime : `${nextEvent.name} · ${startTime}`}
       </span>
       <span className="daily-duel-countdown-time">
-        {t("daily_duel_in", { time: timeUntil(nextDailyDuel) })}
+        {t("daily_duel_in", {
+          time: formatTimeUntil(nextEvent.start.getTime() - now.getTime())
+        })}
       </span>
     </EventBanner>
   )

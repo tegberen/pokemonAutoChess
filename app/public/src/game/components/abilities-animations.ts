@@ -576,9 +576,6 @@ const MAGNETOSPHERE_ATTRACT_INTENSITY = 1.4
 
 const UNISON_NOVA_WHITE = 0xfffdf0
 const UNISON_NOVA_GOLD = 0xffb03c
-const UNISON_NOVA_DEEP = 0xff5a1e
-const UNISON_CONSTELLATION_RAYS = 20
-const UNISON_IMPACT_SHARDS = 10
 
 const GLAIVE_ICE_WHITE = 0xf0fbff
 const GLAIVE_ICE_CYAN = 0x7fdcff
@@ -596,72 +593,46 @@ function unisonBeamAnimation(): AbilityAnimation {
   }: AbilityAnimationArgs) => {
     const [fromX, fromY] = transformEntityCoordinates(positionX, positionY, flip)
     const [toX, toY] = transformEntityCoordinates(targetX, targetY, flip)
-    const runner = scene.add
-      .graphics()
-      .setDepth(DEPTH.ABILITY_GROUND_LEVEL)
-      .setBlendMode(Phaser.BlendModes.ADD)
-    scene.abilitiesVfxGroup?.add(runner)
-
-    const TAIL = 24
-    const head = { t: 0 }
-    scene.tweens.add({
-      targets: head,
-      t: 1,
-      duration: 1300,
-      ease: "Sine.easeInOut",
-      onUpdate: () => {
-        runner.clear()
-        const travel = Math.min(1, head.t * 2)
-        const constellationFade =
-          head.t < 0.78 ? 1 : Math.max(0, (1 - head.t) / 0.22)
-        drawPixelPath(
-          runner,
-          [
-            { x: fromX, y: fromY },
-            {
-              x: fromX + (toX - fromX) * travel,
-              y: fromY + (toY - fromY) * travel
-            }
-          ],
-          [
-            {
-              grid: 8,
-              size: 9,
-              color: UNISON_NOVA_DEEP,
-              alpha: constellationFade * 0.25
-            },
-            {
-              grid: 4,
-              size: 4,
-              color: UNISON_NOVA_GOLD,
-              alpha: constellationFade * 0.7
-            }
-          ]
-        )
-        for (let step = 0; step < TAIL; step++) {
-          const t = travel - step * 0.027
-          if (t < 0) continue
-          const fade = 1 - step / TAIL
-          const pulse = 0.8 + Math.sin(head.t * Math.PI * 8 - step * 0.4) * 0.2
-          const size = VFX_PIXEL * (step === 0 ? 6 : (1.5 + fade * 3) * pulse)
-          runner.fillStyle(
-            step === 0
-              ? UNISON_NOVA_WHITE
-              : step < 5
-                ? UNISON_NOVA_GOLD
-                : UNISON_NOVA_DEEP,
-            fade * constellationFade
+    const pointAt = (along: number) => ({
+      x: fromX + (toX - fromX) * along,
+      y: fromY + (toY - fromY) * along
+    })
+    const TAIL = 6
+    playPixelFrames(
+      scene,
+      { x: 0, y: 0, duration: 1300, depth: DEPTH.ABILITY_GROUND_LEVEL },
+      (graphics, linear) => {
+        const progress = Phaser.Math.Easing.Sine.InOut(linear)
+        const travel = Math.min(1, progress * 2)
+        // the line retracts toward the target instead of fading
+        const retract = progress < 0.78 ? 0 : (progress - 0.78) / 0.22
+        if (travel > retract) {
+          strokePixelPath(
+            graphics,
+            [pointAt(retract), pointAt(travel)],
+            UNISON_NOVA_GOLD
           )
-          runner.fillRect(
-            fromX + (toX - fromX) * t - size / 2,
-            fromY + (toY - fromY) * t - size / 2,
+        }
+        for (let step = TAIL - 1; step >= 0; step--) {
+          const along = travel - step * 0.03
+          if (along < retract) continue
+          const cells = step === 0 ? 3 : 3 - (step * 2) / TAIL
+          const size = Math.round(cells * (1 - retract)) * VFX_PIXEL
+          if (size <= 0) continue
+          const point = pointAt(along)
+          graphics.fillStyle(
+            step === 0 ? UNISON_NOVA_WHITE : UNISON_NOVA_GOLD,
+            1
+          )
+          graphics.fillRect(
+            snapToVfxPixel(point.x) - size / 2,
+            snapToVfxPixel(point.y) - size / 2,
             size,
             size
           )
         }
-      },
-      onComplete: () => runner.destroy()
-    })
+      }
+    )
   }
 }
 
@@ -674,102 +645,54 @@ function unisonNovaAnimation(): AbilityAnimation {
     )
     const allies = Math.max(1, ap)
     const radius = 72 + allies * 11
-    const constellation = scene.add
-      .graphics({ x: centerX, y: centerY - 86 })
-      .setDepth(DEPTH.ABILITY)
-      .setBlendMode(Phaser.BlendModes.ADD)
-    scene.abilitiesVfxGroup?.add(constellation)
-    scene.tweens.addCounter({
-      from: 0,
-      to: 1,
-      duration: 700,
-      ease: "Cubic.easeInOut",
-      onUpdate: (tween) => {
-        const progress = (tween.getValue() ?? 0) as number
-        const size = radius * Math.min(1, progress * 1.6)
-        const fade = progress < 0.72 ? 1 : (1 - progress) / 0.28
+    const NOVA_MS = 700
+    playPixelFrames(
+      scene,
+      { x: centerX, y: centerY - 86, duration: NOVA_MS },
+      (graphics, linear) => {
+        const progress = Phaser.Math.Easing.Cubic.InOut(linear)
+        // the star shrinks to its centre instead of fading
+        const shrink = progress < 0.72 ? 1 : (1 - progress) / 0.28
+        const size = radius * Math.min(1, progress * 1.6) * shrink
         const points = Array.from({ length: 10 }, (_, index) => {
           const angle = -Math.PI / 2 + index * (Math.PI / 5)
           const pointRadius = index % 2 === 0 ? size : size * 0.4
           return {
             x: Math.cos(angle) * pointRadius,
-            y: Math.sin(angle) * pointRadius
+            y: Math.sin(angle) * pointRadius,
+            angle
           }
         })
-        points.push(points[0])
-        constellation.clear()
-        drawPixelPath(constellation, points, [
-          { grid: 10, size: 12, color: UNISON_NOVA_DEEP, alpha: fade * 0.3 },
-          { grid: 5, size: 6, color: UNISON_NOVA_GOLD, alpha: fade * 0.8 },
-          { grid: 3, size: 3, color: UNISON_NOVA_WHITE, alpha: fade }
-        ])
-        drawPixelPath(constellation, ringPoints(size * 0.62), [
-          { grid: 7, size: 7, color: UNISON_NOVA_GOLD, alpha: fade * 0.5 },
-          { grid: 3, size: 3, color: UNISON_NOVA_WHITE, alpha: fade * 0.75 }
-        ])
+        const outline = [...points, points[0]]
+        strokePixelPath(graphics, outline, UNISON_NOVA_GOLD, VFX_PIXEL * 2)
+        strokePixelPath(graphics, outline, UNISON_NOVA_WHITE)
         const rayGrowth = Math.max(0, (progress - 0.35) / 0.65)
-        for (let ray = 0; ray < UNISON_CONSTELLATION_RAYS; ray++) {
-          const angle = (ray / UNISON_CONSTELLATION_RAYS) * Math.PI * 2
-          const alternatingLength = ray % 2 === 0 ? 1 : 0.58
-          const inner = size * 0.74
-          const outer =
-            inner + (34 + allies * 4) * rayGrowth * alternatingLength
-          drawPixelPath(
-            constellation,
-            [
-              { x: Math.cos(angle) * inner, y: Math.sin(angle) * inner },
-              { x: Math.cos(angle) * outer, y: Math.sin(angle) * outer }
-            ],
-            [
-              {
-                grid: 7,
-                size: 8,
-                color: UNISON_NOVA_GOLD,
-                alpha: fade * 0.55
-              },
-              {
-                grid: 3,
-                size: 4,
-                color: UNISON_NOVA_WHITE,
-                alpha: fade
-              }
-            ]
-          )
-        }
-        points.slice(0, -1).forEach((point, index) => {
+        points.forEach((point, index) => {
           if (index % 2 !== 0) return
-          constellation.fillStyle(UNISON_NOVA_GOLD, fade * 0.55)
-          constellation.fillCircle(point.x, point.y, 10 + allies * 0.5)
-          constellation.fillStyle(UNISON_NOVA_WHITE, fade)
-          constellation.fillCircle(point.x, point.y, 4 + allies * 0.25)
-        })
-        constellation.fillStyle(UNISON_NOVA_WHITE, fade)
-        constellation.fillCircle(0, 0, 8 + allies)
-      },
-      onComplete: () => {
-        constellation.destroy()
-        const flash = scene.add
-          .rectangle(
-            centerX,
-            centerY,
-            CELL_WIDTH * (BOARD_WIDTH + 2),
-            CELL_HEIGHT * (BOARD_HEIGHT + 2),
-            UNISON_NOVA_GOLD,
-            0.28
+          const rayLength = (16 + allies * 2) * rayGrowth * shrink
+          const rayStart = size + VFX_PIXEL * 3
+          if (rayLength >= VFX_PIXEL) {
+            strokePixelPath(
+              graphics,
+              [
+                rotatePixelPoint({ x: rayStart, y: 0 }, point.angle),
+                rotatePixelPoint({ x: rayStart + rayLength, y: 0 }, point.angle)
+              ],
+              UNISON_NOVA_GOLD
+            )
+          }
+          drawPixelPlusStar(
+            graphics,
+            point,
+            Math.round(2 * shrink * Math.min(1, progress * 2)),
+            UNISON_NOVA_WHITE
           )
-          .setDepth(DEPTH.BOARD_EFFECT_AIR_LEVEL)
-          .setBlendMode(Phaser.BlendModes.ADD)
-        scene.abilitiesVfxGroup?.add(flash)
-        scene.tweens.add({
-          targets: flash,
-          alpha: 0,
-          duration: 420,
-          ease: "Cubic.easeOut",
-          onComplete: () => flash.destroy()
         })
-        scene.shakeCamera({ duration: 360, intensity: 0.006 })
       }
-    })
+    )
+    scene.time.delayedCall(NOVA_MS, () =>
+      scene.shakeCamera({ duration: 360, intensity: 0.006 })
+    )
   }
 }
 
@@ -2699,13 +2622,20 @@ function burstWaterShurikenHit(
 const LIGHT_OF_RUIN_DURATION = 950
 const LIGHT_OF_RUIN_LENGTH = 1800
 const LIGHT_OF_RUIN_FRONT = 30
-const LIGHT_OF_RUIN_BASE_FADE = 70
 const LIGHT_OF_RUIN_HAZE = 0xff8fd0
 const LIGHT_OF_RUIN_BODY = 0xff3fa0
 const LIGHT_OF_RUIN_DEEP = 0xd81b86
 const LIGHT_OF_RUIN_CORE = 0xffd6ec
 const LIGHT_OF_RUIN_THUNDER = 0x2a0f2c
-const LIGHT_OF_RUIN_WIND = 0xf6d3e6
+const LIGHT_OF_RUIN_WHITE = 0xffffff
+const LIGHT_OF_RUIN_SOURCE_WIDTH = 8
+const LIGHT_OF_RUIN_FULL_WIDTH = 90
+const LIGHT_OF_RUIN_SPREAD = 600
+const LIGHT_OF_RUIN_PIXEL = 2
+
+function snapToLightOfRuinPixel(value: number) {
+  return Math.round(value / LIGHT_OF_RUIN_PIXEL) * LIGHT_OF_RUIN_PIXEL
+}
 
 // aimed at the exact angle the server's effectInLine hits along
 const CROSS_CHOP_BEAM_LENGTH = 92
@@ -2759,91 +2689,74 @@ function crossChopBeamOutline(halfLength: number, halfThickness: number) {
   ]
 }
 
-// normal blending keeps the colour bands from summing to white
-function addCrossChopBeam(
-  scene: AbilityAnimationArgs["scene"],
-  x: number,
-  y: number,
-  rotation: number,
-  halfLength: number,
-  halfWidth: number,
-  centerColor: number,
-  tipColor: number,
-  growsFromTip = false
+// lengthScale grows the beam from one tip, widthScale thins it away
+function drawCrossChopBeam(
+  graphics: Phaser.GameObjects.Graphics,
+  beam: {
+    rotation: number
+    halfLength: number
+    halfWidth: number
+    centerColor: number
+    tipColor: number
+    lengthScale: number
+    widthScale: number
+  }
 ) {
-  const body = scene.add.graphics()
+  if (beam.lengthScale <= 0 || beam.widthScale <= 0) return
+  const place = (outline: PixelPoint[]) =>
+    outline.map((point) =>
+      rotatePixelPoint(
+        {
+          x:
+            -beam.halfLength +
+            (point.x + beam.halfLength) * beam.lengthScale,
+          y: point.y * beam.widthScale
+        },
+        beam.rotation
+      )
+    )
   for (let band = 0; band < CROSS_CHOP_COLOR_BANDS; band++) {
     const ratio = band / (CROSS_CHOP_COLOR_BANDS - 1)
-    body.fillStyle(mixCrossChopColor(tipColor, centerColor, ratio), 0.95)
-    body.fillPoints(
-      crossChopBeamOutline(halfLength * (1 - ratio * 0.7), halfWidth),
-      true
+    fillPixelPolygon(
+      graphics,
+      place(
+        crossChopBeamOutline(
+          beam.halfLength * (1 - ratio * 0.7),
+          beam.halfWidth
+        )
+      ),
+      VFX_PIXEL,
+      mixCrossChopColor(beam.tipColor, beam.centerColor, ratio),
+      1
     )
   }
-  const core = scene.add.graphics().setBlendMode(Phaser.BlendModes.ADD)
-  core.fillStyle(0xffffff, 1)
-  core.fillPoints(
-    crossChopBeamOutline(halfLength * 0.9, halfWidth * 0.35),
-    true
+  fillPixelPolygon(
+    graphics,
+    place(crossChopBeamOutline(beam.halfLength * 0.9, beam.halfWidth * 0.35)),
+    VFX_PIXEL,
+    0xffffff,
+    1
   )
-  const offset = growsFromTip ? halfLength : 0
-  body.x = offset
-  core.x = offset
-  const beam = scene.add
-    .container(
-      x - Math.cos(rotation) * offset,
-      y - Math.sin(rotation) * offset,
-      [body, core]
-    )
-    .setRotation(rotation)
-    .setDepth(DEPTH.ABILITY)
-  scene.abilitiesVfxGroup?.add(beam)
-  return beam
 }
 
-function addCrossChopBolt(
-  scene: AbilityAnimationArgs["scene"],
-  x: number,
-  y: number,
+function drawCrossChopBolt(
+  graphics: Phaser.GameObjects.Graphics,
   rotation: number,
-  halfLength: number
+  halfLength: number,
+  lengthScale: number
 ) {
-  const bolt = scene.add
-    .graphics()
-    .setPosition(
-      x - Math.cos(rotation) * halfLength,
-      y - Math.sin(rotation) * halfLength
-    )
-    .setRotation(rotation)
-    .setDepth(DEPTH.ABILITY)
-    .setBlendMode(Phaser.BlendModes.ADD)
   const segments = 9
-  const points: Phaser.Math.Vector2[] = []
-  for (let index = 0; index <= segments; index++) {
-    const along = (index / segments) * halfLength * 2
+  const points = Array.from({ length: segments + 1 }, (_, index) => {
     const isEnd = index === 0 || index === segments
-    const jitter = isEnd ? 0 : index % 2 === 0 ? -3 : 3
-    points.push(new Phaser.Math.Vector2(along, jitter))
-  }
-  bolt.lineStyle(3, 0xffffff, 1)
-  bolt.strokePoints(points)
-  scene.abilitiesVfxGroup?.add(bolt)
-  return bolt
-}
-
-function fadeOutCrossChopPart(
-  scene: AbilityAnimationArgs["scene"],
-  part: Phaser.GameObjects.GameObject,
-  delay: number,
-  duration: number
-) {
-  scene.tweens.add({
-    targets: part,
-    alpha: 0,
-    delay,
-    duration,
-    onComplete: () => part.destroy()
+    return rotatePixelPoint(
+      {
+        x: -halfLength + (index / segments) * halfLength * 2 * lengthScale,
+        y: isEnd ? 0 : index % 2 === 0 ? -3 : 3
+      },
+      rotation
+    )
   })
+  strokePixelPath(graphics, points, 0xffffff)
 }
 
 function playCrossChopFocus(
@@ -2851,44 +2764,33 @@ function playCrossChopFocus(
   casterX: number,
   casterY: number
 ) {
-  for (let index = 0; index < CROSS_CHOP_WIND_STREAKS; index++) {
-    const angle = (index / CROSS_CHOP_WIND_STREAKS) * Math.PI * 2 + 0.3
-    const streak = scene.add
-      .rectangle(
-        casterX + Math.cos(angle) * 42,
-        casterY + Math.sin(angle) * 42,
-        16,
-        2,
-        0xffffff
-      )
-      .setRotation(angle)
-      .setDepth(DEPTH.ABILITY)
-      .setAlpha(0)
-    scene.abilitiesVfxGroup?.add(streak)
-    scene.tweens.add({
-      targets: streak,
-      x: casterX + Math.cos(angle) * 12,
-      y: casterY + Math.sin(angle) * 12,
-      alpha: { from: 0.9, to: 0 },
-      delay: (index % 3) * 20,
-      duration: CROSS_CHOP_FOCUS_MS - 40,
-      ease: "Sine.easeIn",
-      onComplete: () => streak.destroy()
-    })
-  }
-  const focusRing = scene.add
-    .circle(casterX, casterY, 30)
-    .setStrokeStyle(2, 0xffffff, 0.8)
-    .setDepth(DEPTH.ABILITY)
-  scene.abilitiesVfxGroup?.add(focusRing)
-  scene.tweens.add({
-    targets: focusRing,
-    scale: 0.3,
-    alpha: 0,
-    duration: CROSS_CHOP_FOCUS_MS,
-    ease: "Sine.easeIn",
-    onComplete: () => focusRing.destroy()
-  })
+  playPixelFrames(
+    scene,
+    { x: casterX, y: casterY, duration: CROSS_CHOP_FOCUS_MS },
+    (graphics, progress) => {
+      const pull = Phaser.Math.Easing.Sine.In(progress)
+      for (let index = 0; index < CROSS_CHOP_WIND_STREAKS; index++) {
+        const angle = (index / CROSS_CHOP_WIND_STREAKS) * Math.PI * 2 + 0.3
+        const distance = 42 - 30 * pull
+        const length = 16 * (1 - progress)
+        strokePixelPath(
+          graphics,
+          [
+            rotatePixelPoint({ x: distance, y: 0 }, angle),
+            rotatePixelPoint({ x: distance + length, y: 0 }, angle)
+          ],
+          0xffffff
+        )
+      }
+      strokePixelBurst(graphics, {
+        radiusX: 30 - 21 * pull,
+        dashLength: 6,
+        color: 0xffffff,
+        rays: 8,
+        phase: Math.PI / 8
+      })
+    }
+  )
 }
 
 function playCrossChopHands(
@@ -2897,31 +2799,40 @@ function playCrossChopHands(
   y: number,
   scale: number
 ) {
-  for (const side of [-1, 1]) {
-    const hand = scene.add
-      .ellipse(x + side * 30 * scale, y - 34 * scale, 12, 26, CROSS_CHOP_HAND)
-      .setRotation(side * 0.5)
-      .setDepth(DEPTH.ABILITY)
-      .setBlendMode(Phaser.BlendModes.ADD)
-      .setAlpha(0)
-    scene.abilitiesVfxGroup?.add(hand)
-    scene.tweens.add({
-      targets: hand,
-      alpha: 1,
+  playPixelFrames(
+    scene,
+    {
+      x,
+      y,
       delay: CROSS_CHOP_HANDS_AT - 30,
-      duration: 90,
-      onComplete: () =>
-        scene.tweens.add({
-          targets: hand,
-          x,
-          y,
-          rotation: -side * 0.8,
-          duration: CROSS_CHOP_HANDS_MS - 50,
-          ease: "Cubic.easeIn",
-          onComplete: () => fadeOutCrossChopPart(scene, hand, 0, 110)
+      duration: CROSS_CHOP_HANDS_MS + 140
+    },
+    (graphics, _progress, elapsedMs) => {
+      const strike = Math.min(1, Math.max(0, (elapsedMs - 30) / 100))
+      const shrink = Math.max(0, (elapsedMs - 160) / 110)
+      if (shrink >= 1) return
+      const travel = Phaser.Math.Easing.Cubic.In(strike)
+      for (const side of [-1, 1]) {
+        const center = {
+          x: side * 30 * scale * (1 - travel),
+          y: -34 * scale * (1 - travel)
+        }
+        const rotation = side * 0.5 + (-side * 0.8 - side * 0.5) * travel
+        const radiusX = 6 * (1 - shrink)
+        const radiusY = 13 * (1 - shrink)
+        const outline = [
+          { x: -radiusX, y: -radiusY },
+          { x: radiusX, y: -radiusY },
+          { x: radiusX, y: radiusY },
+          { x: -radiusX, y: radiusY }
+        ].map((corner) => {
+          const point = rotatePixelPoint(corner, rotation)
+          return { x: center.x + point.x, y: center.y + point.y }
         })
-    })
-  }
+        fillPixelPolygon(graphics, outline, VFX_PIXEL, CROSS_CHOP_HAND, 1)
+      }
+    }
+  )
 }
 
 function playCrossChopFlameBurst(
@@ -2931,90 +2842,80 @@ function playCrossChopFlameBurst(
   scale: number,
   crit: boolean
 ) {
-  const burst = scene.add
-    .graphics()
-    .setPosition(x, y)
-    .setDepth(DEPTH.ABILITY)
-    .setBlendMode(Phaser.BlendModes.ADD)
-    .setScale(0.3)
   const rayCount = crit ? CROSS_CHOP_RAYS * 2 : CROSS_CHOP_RAYS
-  for (let index = 0; index < rayCount; index++) {
-    const angle = (index / rayCount) * Math.PI * 2
-    const reach = (index % 2 === 0 ? 34 : 22) * scale
-    burst.fillStyle(CROSS_CHOP_FLAME_GLOW, 0.9)
-    burst.fillTriangle(
-      Math.cos(angle - 0.12) * 6,
-      Math.sin(angle - 0.12) * 6,
-      Math.cos(angle) * reach,
-      Math.sin(angle) * reach,
-      Math.cos(angle + 0.12) * 6,
-      Math.sin(angle + 0.12) * 6
-    )
-  }
-  burst.fillStyle(CROSS_CHOP_FLAME_EDGE, 0.6)
-  burst.fillCircle(0, 0, 14 * scale)
-  burst.fillStyle(0xffffff, 1)
-  burst.fillCircle(0, 0, 8 * scale)
-  scene.abilitiesVfxGroup?.add(burst)
-  scene.tweens.add({
-    targets: burst,
-    scale: crit ? 1.5 : 1.15,
-    alpha: { from: 1, to: 0 },
-    duration: crit ? 290 : 220,
-    ease: "Cubic.easeOut",
-    onComplete: () => burst.destroy()
-  })
+  const maxScale = crit ? 1.5 : 1.15
+  playPixelFrames(
+    scene,
+    { x, y, duration: crit ? 290 : 220 },
+    (graphics, progress) => {
+      const size =
+        0.3 + (maxScale - 0.3) * Phaser.Math.Easing.Cubic.Out(progress)
+      // rays leave the centre as they end, so the burst flies apart
+      for (let index = 0; index < rayCount; index++) {
+        const angle = (index / rayCount) * Math.PI * 2
+        const reach = (index % 2 === 0 ? 34 : 22) * scale * size
+        const root = Math.max(6 * size, reach * progress)
+        strokePixelStreak(graphics, angle, root, reach, CROSS_CHOP_FLAME_GLOW)
+      }
+      const shrink = Math.max(0, 1 - progress * 1.6)
+      fillPixelBlob(graphics, 14 * scale * size * shrink, CROSS_CHOP_FLAME_EDGE)
+      drawPixelPlusStar(
+        graphics,
+        { x: 0, y: 0 },
+        Math.round((8 * scale * size * shrink) / VFX_PIXEL),
+        0xffffff
+      )
+    }
+  )
 
   const streakCount = crit
     ? CROSS_CHOP_SPEED_STREAKS * 1.5
     : CROSS_CHOP_SPEED_STREAKS
-  for (let index = 0; index < streakCount; index++) {
-    const angle = (index / streakCount) * Math.PI * 2 + Math.random() * 0.2
-    const streak = scene.add
-      .rectangle(
-        x + Math.cos(angle) * 12,
-        y + Math.sin(angle) * 12,
-        (18 + Math.random() * 14) * scale,
-        2,
-        index % 3 === 0 ? 0xffffff : CROSS_CHOP_FLAME_GLOW
-      )
-      .setRotation(angle)
-      .setDepth(DEPTH.ABILITY)
-      .setBlendMode(Phaser.BlendModes.ADD)
-    scene.abilitiesVfxGroup?.add(streak)
-    const reach = (70 + Math.random() * 30) * scale
-    scene.tweens.add({
-      targets: streak,
-      x: x + Math.cos(angle) * reach,
-      y: y + Math.sin(angle) * reach,
-      alpha: { from: 1, to: 0 },
-      duration: 170 + Math.random() * 70,
-      ease: "Quad.easeOut",
-      onComplete: () => streak.destroy()
-    })
-  }
-
+  const streaks = Array.from({ length: streakCount }, (_, index) => ({
+    angle: (index / streakCount) * Math.PI * 2 + Math.random() * 0.2,
+    length: (18 + Math.random() * 14) * scale,
+    reach: (70 + Math.random() * 30) * scale,
+    color: index % 3 === 0 ? 0xffffff : CROSS_CHOP_FLAME_GLOW
+  }))
   const emberCount = crit ? CROSS_CHOP_EMBERS * 2 : CROSS_CHOP_EMBERS
-  for (let index = 0; index < emberCount; index++) {
-    const angle = Math.random() * Math.PI * 2
-    const distance = (26 + Math.random() * 26) * scale
-    const ember = scene.add
-      .ellipse(x, y, 7, 4, CROSS_CHOP_FLAME_EDGE)
-      .setRotation(angle)
-      .setDepth(DEPTH.ABILITY)
-      .setBlendMode(Phaser.BlendModes.ADD)
-    scene.abilitiesVfxGroup?.add(ember)
-    scene.tweens.add({
-      targets: ember,
-      x: x + Math.cos(angle) * distance,
-      y: y + Math.sin(angle) * distance,
-      alpha: { from: 1, to: 0 },
-      scaleX: { from: 1.4, to: 0.4 },
-      duration: 240 + Math.random() * 100,
-      ease: "Quad.easeOut",
-      onComplete: () => ember.destroy()
-    })
-  }
+  const embers = Array.from({ length: emberCount }, () => ({
+    angle: Math.random() * Math.PI * 2,
+    distance: (26 + Math.random() * 26) * scale
+  }))
+  playPixelFrames(
+    scene,
+    { x, y, duration: 300 },
+    (graphics, progress) => {
+      const fly = Phaser.Math.Easing.Quadratic.Out(progress)
+      streaks.forEach((streak) => {
+        const distance = 12 + (streak.reach - 12) * fly
+        const length = streak.length * (1 - progress)
+        if (length < VFX_PIXEL) return
+        strokePixelPath(
+          graphics,
+          [
+            rotatePixelPoint({ x: distance, y: 0 }, streak.angle),
+            rotatePixelPoint({ x: distance + length, y: 0 }, streak.angle)
+          ],
+          streak.color
+        )
+      })
+      embers.forEach((ember) => {
+        const distance = ember.distance * fly
+        const length = 7 * (1 - progress)
+        if (length < VFX_PIXEL) return
+        strokePixelPath(
+          graphics,
+          [
+            rotatePixelPoint({ x: distance, y: 0 }, ember.angle),
+            rotatePixelPoint({ x: distance + length, y: 0 }, ember.angle)
+          ],
+          CROSS_CHOP_FLAME_EDGE,
+          VFX_PIXEL * 2
+        )
+      })
+    }
+  )
 }
 
 function playCrossChopEnergyBall(
@@ -3024,41 +2925,37 @@ function playCrossChopEnergyBall(
   scale: number,
   crit: boolean
 ) {
-  const ball = scene.add
-    .graphics()
-    .setPosition(x, y)
-    .setDepth(DEPTH.ABILITY)
-    .setBlendMode(Phaser.BlendModes.ADD)
-    .setScale(0.2)
-    .setAlpha(0)
-  scene.tweens.add({
-    targets: ball,
-    alpha: 1,
-    duration: 140,
-    ease: "Sine.easeOut"
-  })
-  ball.fillStyle(CROSS_CHOP_FLAME_EDGE, 0.45)
-  ball.fillCircle(0, 0, 20 * scale)
-  ball.fillStyle(CROSS_CHOP_FLAME_GLOW, 0.8)
-  ball.fillCircle(0, 0, 14 * scale)
-  ball.fillStyle(0xffffff, 1)
-  ball.fillCircle(0, 0, 8 * scale)
-  scene.abilitiesVfxGroup?.add(ball)
-  scene.tweens.add({
-    targets: ball,
-    scale: 1,
-    duration: CROSS_CHOP_FINISH_AT - CROSS_CHOP_STRIKE_AT,
-    ease: "Back.easeOut",
-    onComplete: () =>
-      scene.tweens.add({
-        targets: ball,
-        scale: crit ? 2 : 1.7,
-        alpha: 0,
-        duration: crit ? 260 : 220,
-        ease: "Sine.easeOut",
-        onComplete: () => ball.destroy()
+  const growMs = CROSS_CHOP_FINISH_AT - CROSS_CHOP_STRIKE_AT
+  const burstMs = crit ? 260 : 220
+  const burstScale = crit ? 2 : 1.7
+  playPixelFrames(
+    scene,
+    { x, y, duration: growMs + burstMs },
+    (graphics, _progress, elapsedMs) => {
+      if (elapsedMs < growMs) {
+        const size =
+          0.2 + 0.8 * Phaser.Math.Easing.Back.Out(elapsedMs / growMs)
+        fillPixelBlob(graphics, 20 * scale * size, CROSS_CHOP_FLAME_EDGE)
+        fillPixelBlob(graphics, 14 * scale * size, CROSS_CHOP_FLAME_GLOW)
+        drawPixelPlusStar(
+          graphics,
+          { x: 0, y: 0 },
+          Math.round((8 * scale * size) / VFX_PIXEL),
+          0xffffff
+        )
+        return
+      }
+      // the ball bursts into dashes flying out and shortening away
+      const burst = (elapsedMs - growMs) / burstMs
+      const radius = 20 * scale * (1 + (burstScale - 1) * burst)
+      strokePixelBurst(graphics, {
+        radiusX: radius,
+        dashLength: 14 * scale * (1 - burst),
+        color: CROSS_CHOP_FLAME_EDGE,
+        size: VFX_PIXEL * 2
       })
-  })
+    }
+  )
 }
 
 function crossChopAnimation(args: AbilityAnimationArgs, crit: boolean) {
@@ -3081,85 +2978,73 @@ function crossChopAnimation(args: AbilityAnimationArgs, crit: boolean) {
     const untilHarden = CROSS_CHOP_HARDEN_AT - CROSS_CHOP_STRIKE_AT
     playCrossChopEnergyBall(scene, x, centerY, scale, crit)
     CROSS_CHOP_SLASH_ANGLES.forEach((rotation, slash) => {
-      const thunder = addCrossChopBeam(
+      const start = slash * CROSS_CHOP_SECOND_SLASH_DELAY
+      const thinMs = 190
+      playPixelFrames(
         scene,
-        x,
-        centerY,
-        rotation,
-        halfLength,
-        halfWidth,
-        CROSS_CHOP_THUNDER_CENTER,
-        CROSS_CHOP_BEAM_TIP,
-        true
+        {
+          x,
+          y: centerY,
+          delay: start,
+          duration: untilHarden - start + thinMs
+        },
+        (graphics, _progress, elapsedMs) => {
+          const grow = Phaser.Math.Easing.Quadratic.Out(
+            Math.min(1, elapsedMs / CROSS_CHOP_SLASH_MS)
+          )
+          // thins away instead of fading once the flames take over
+          const thin = Math.max(0, (elapsedMs - (untilHarden - start)) / thinMs)
+          drawCrossChopBeam(graphics, {
+            rotation,
+            halfLength,
+            halfWidth,
+            centerColor: CROSS_CHOP_THUNDER_CENTER,
+            tipColor: CROSS_CHOP_BEAM_TIP,
+            lengthScale: grow,
+            widthScale: 1 - thin
+          })
+          if (thin < 0.5) {
+            drawCrossChopBolt(graphics, rotation, halfLength, grow)
+          }
+        }
       )
-        .setScale(0, 1)
-        .setAlpha(0)
-      const bolt = addCrossChopBolt(
-        scene,
-        x,
-        centerY,
-        rotation,
-        halfLength
-      )
-        .setScale(0, 1)
-        .setAlpha(0)
-      scene.tweens.add({
-        targets: [thunder, bolt],
-        scaleX: 1,
-        delay: slash * CROSS_CHOP_SECOND_SLASH_DELAY,
-        duration: CROSS_CHOP_SLASH_MS,
-        ease: "Quad.easeOut"
-      })
-      scene.tweens.add({
-        targets: [thunder, bolt],
-        alpha: 1,
-        delay: slash * CROSS_CHOP_SECOND_SLASH_DELAY,
-        duration: CROSS_CHOP_SLASH_MS + 40,
-        ease: "Sine.easeOut"
-      })
-      fadeOutCrossChopPart(scene, thunder, untilHarden, 190)
-      fadeOutCrossChopPart(scene, bolt, untilHarden - 25, 150)
     })
   })
 
-  scene.time.delayedCall(CROSS_CHOP_HARDEN_AT, () => {
-    for (const rotation of CROSS_CHOP_DIAGONALS) {
-      const flame = addCrossChopBeam(
-        scene,
-        x,
-        centerY,
-        rotation,
-        halfLength,
-        halfWidth,
-        CROSS_CHOP_FLAME_CENTER,
-        CROSS_CHOP_BEAM_TIP
-      ).setAlpha(0)
-      scene.tweens.add({
-        targets: flame,
-        alpha: 1,
-        duration: 160,
-        ease: "Sine.easeInOut"
-      })
-      const burstDelay = CROSS_CHOP_FINISH_AT - CROSS_CHOP_HARDEN_AT
-      const burstDuration = crit ? 300 : 250
-      scene.tweens.add({
-        targets: flame,
-        scaleX: crit ? 1.15 : 1.1,
-        duration: burstDelay + burstDuration,
-        ease: "Sine.easeOut"
-      })
-      scene.tweens.add({
-        targets: flame,
-        scaleY: 0,
-        alpha: 0,
-        delay: burstDelay,
-        duration: burstDuration,
-        ease: "Sine.easeIn",
-        onComplete: () => flame.destroy()
-      })
+  const burstDelay = CROSS_CHOP_FINISH_AT - CROSS_CHOP_HARDEN_AT
+  const burstMs = crit ? 300 : 250
+  playPixelFrames(
+    scene,
+    {
+      x,
+      y: centerY,
+      delay: CROSS_CHOP_HARDEN_AT,
+      duration: burstDelay + burstMs
+    },
+    (graphics, progress, elapsedMs) => {
+      const stretch =
+        1 + (crit ? 0.15 : 0.1) * Phaser.Math.Easing.Sine.Out(progress)
+      const appear = Math.min(1, elapsedMs / 60)
+      const thin =
+        elapsedMs < burstDelay
+          ? 0
+          : Phaser.Math.Easing.Sine.In((elapsedMs - burstDelay) / burstMs)
+      for (const rotation of CROSS_CHOP_DIAGONALS) {
+        drawCrossChopBeam(graphics, {
+          rotation,
+          halfLength: halfLength * stretch,
+          halfWidth,
+          centerColor: CROSS_CHOP_FLAME_CENTER,
+          tipColor: CROSS_CHOP_BEAM_TIP,
+          lengthScale: 1,
+          widthScale: appear * (1 - thin)
+        })
+      }
     }
+  )
+  scene.time.delayedCall(CROSS_CHOP_HARDEN_AT, () =>
     playCrossChopFlameBurst(scene, x, centerY, scale, crit)
-  })
+  )
 }
 
 const SHADOW_PUNCH_FIST_SIZE = 64
@@ -3192,53 +3077,107 @@ const SHADOW_PUNCH_SPARK_COLORS = [
   SHADOW_PUNCH_GOLD
 ]
 
-function addShadowPunchFist(
-  scene: AbilityAnimationArgs["scene"],
-  x: number,
-  y: number,
+function drawShadowPunchFist(
+  graphics: Phaser.GameObjects.Graphics,
+  center: PixelPoint,
   rotation: number,
   size: number
 ) {
   const unit = size / 20
-  const outline = Math.max(2, unit * 0.9)
-  const fist = scene.add
-    .graphics()
-    .setPosition(x, y)
-    .setRotation(rotation)
-    .setDepth(DEPTH.ABILITY)
-    .setBlendMode(Phaser.BlendModes.ADD)
+  const rectangle = (
+    shape: { x: number; y: number; width: number; height: number }
+  ) =>
+    [
+      { x: shape.x, y: shape.y },
+      { x: shape.x + shape.width, y: shape.y },
+      { x: shape.x + shape.width, y: shape.y + shape.height },
+      { x: shape.x, y: shape.y + shape.height }
+    ].map((corner) => {
+      const point = rotatePixelPoint(
+        { x: corner.x * unit, y: corner.y * unit },
+        rotation
+      )
+      return { x: center.x + point.x, y: center.y + point.y }
+    })
   const shapes = [
-    { x: -9, y: -7, width: 10, height: 14, radius: 3 },
-    { x: 0, y: -7, width: 7, height: 3.6, radius: 1.6 },
-    { x: 0.5, y: -3.5, width: 7.5, height: 3.6, radius: 1.6 },
-    { x: 0.5, y: 0, width: 7.5, height: 3.6, radius: 1.6 },
-    { x: 0, y: 3.5, width: 7, height: 3.6, radius: 1.6 },
-    { x: -6, y: 5.5, width: 8, height: 3.4, radius: 1.6 }
+    { x: -9, y: -7, width: 10, height: 14 },
+    { x: 0, y: -7, width: 7, height: 3.6 },
+    { x: 0.5, y: -3.5, width: 7.5, height: 3.6 },
+    { x: 0.5, y: 0, width: 7.5, height: 3.6 },
+    { x: 0, y: 3.5, width: 7, height: 3.6 },
+    { x: -6, y: 5.5, width: 8, height: 3.4 }
   ]
-  fist.fillStyle(SHADOW_PUNCH_BLUE, 0.3)
-  fist.lineStyle(outline, SHADOW_PUNCH_CYAN, 1)
-  for (const shape of shapes) {
-    fist.fillRoundedRect(
-      shape.x * unit,
-      shape.y * unit,
-      shape.width * unit,
-      shape.height * unit,
-      shape.radius * unit
+  shapes.forEach((shape) =>
+    fillPixelPolygon(
+      graphics,
+      rectangle(shape),
+      VFX_PIXEL,
+      SHADOW_PUNCH_BLUE,
+      1
     )
-    fist.strokeRoundedRect(
-      shape.x * unit,
-      shape.y * unit,
-      shape.width * unit,
-      shape.height * unit,
-      shape.radius * unit
-    )
+  )
+  shapes.forEach((shape) => {
+    const corners = rectangle(shape)
+    strokePixelPath(graphics, [...corners, corners[0]], SHADOW_PUNCH_CYAN)
+  })
+  const knuckle = rectangle({ x: -7, y: -5, width: 6, height: 10 })
+  strokePixelPath(graphics, [...knuckle, knuckle[0]], 0xffffff)
+  const thumb = rectangle({ x: -5, y: 6, width: 6, height: 2 })
+  strokePixelPath(graphics, [...thumb, thumb[0]], SHADOW_PUNCH_GOLD)
+}
+
+// the fist flies and grows, then shrinks away instead of fading
+function flyShadowPunchFist(
+  scene: AbilityAnimationArgs["scene"],
+  flight: {
+    fromX: number
+    fromY: number
+    toX: number
+    toY: number
+    fromSize: number
+    toSize: number
+    delay?: number
+    duration: number
+    ease: (progress: number) => number
+    onArrive: () => void
   }
-  fist.lineStyle(outline * 0.6, 0xffffff, 0.9)
-  fist.strokeRoundedRect(-7 * unit, -5 * unit, 6 * unit, 10 * unit, 2 * unit)
-  fist.lineStyle(outline * 0.6, SHADOW_PUNCH_GOLD, 0.8)
-  fist.strokeRoundedRect(-5 * unit, 6 * unit, 6 * unit, 2 * unit, unit)
-  scene.abilitiesVfxGroup?.add(fist)
-  return fist
+) {
+  const rotation = Math.atan2(
+    flight.toY - flight.fromY,
+    flight.toX - flight.fromX
+  )
+  const SHRINK_MS = 160
+  let arrived = false
+  playPixelFrames(
+    scene,
+    {
+      x: flight.fromX,
+      y: flight.fromY,
+      delay: flight.delay,
+      duration: flight.duration + SHRINK_MS
+    },
+    (graphics, _progress, elapsedMs) => {
+      const travel = flight.ease(Math.min(1, elapsedMs / flight.duration))
+      if (elapsedMs >= flight.duration && !arrived) {
+        arrived = true
+        flight.onArrive()
+      }
+      const shrink = Math.max(0, (elapsedMs - flight.duration) / SHRINK_MS)
+      const size =
+        (flight.fromSize + (flight.toSize - flight.fromSize) * travel) *
+        (1 - shrink)
+      if (size <= VFX_PIXEL * 2) return
+      drawShadowPunchFist(
+        graphics,
+        {
+          x: (flight.toX - flight.fromX) * travel,
+          y: (flight.toY - flight.fromY) * travel
+        },
+        rotation,
+        size
+      )
+    }
+  )
 }
 
 function playShadowPunchBlast(
@@ -3293,6 +3232,252 @@ function drawPixelDisc(
   fillPixelDisc(graphics, radius, pixelSize, color, 1)
 }
 
+// drawn effects redraw at a sprite's frame rate and fade in alpha steps, so
+// they read like the spritesheet abilities around them
+const VFX_FRAME_MS = 1000 / 15
+const VFX_ALPHA_STEPS = 8
+
+function stepVfxAlpha(alpha: number) {
+  const clamped = Math.max(0, Math.min(1, alpha))
+  return Math.ceil(clamped * VFX_ALPHA_STEPS) / VFX_ALPHA_STEPS
+}
+
+// scanline fill snapped to the grid, so a convex shape stays made of square
+// pixels at any angle instead of an anti-aliased edge
+function fillPixelPolygon(
+  graphics: Phaser.GameObjects.Graphics,
+  points: { x: number; y: number }[],
+  pixelSize: number,
+  color: number,
+  alpha: number
+) {
+  const steppedAlpha = stepVfxAlpha(alpha)
+  if (steppedAlpha <= 0 || points.length < 3) return
+  graphics.fillStyle(color, steppedAlpha)
+  const ys = points.map((point) => point.y)
+  const topRow = Math.round(Math.min(...ys) / pixelSize)
+  const bottomRow = Math.round(Math.max(...ys) / pixelSize)
+  for (let row = topRow; row <= bottomRow; row++) {
+    const y = row * pixelSize
+    let left = Number.POSITIVE_INFINITY
+    let right = Number.NEGATIVE_INFINITY
+    points.forEach((from, index) => {
+      const to = points[(index + 1) % points.length]
+      if ((from.y > y && to.y > y) || (from.y < y && to.y < y)) return
+      const xs =
+        from.y === to.y
+          ? [from.x, to.x]
+          : [from.x + ((y - from.y) / (to.y - from.y)) * (to.x - from.x)]
+      xs.forEach((x) => {
+        left = Math.min(left, x)
+        right = Math.max(right, x)
+      })
+    })
+    if (left > right) continue
+    const leftCell = Math.round(left / pixelSize)
+    const rightCell = Math.round(right / pixelSize)
+    graphics.fillRect(
+      (leftCell - 0.5) * pixelSize,
+      (row - 0.5) * pixelSize,
+      (rightCell - leftCell + 1) * pixelSize,
+      pixelSize
+    )
+  }
+}
+
+type PixelPoint = { x: number; y: number }
+
+function strokePixelPath(
+  graphics: Phaser.GameObjects.Graphics,
+  points: PixelPoint[],
+  color: number,
+  size = VFX_PIXEL
+) {
+  drawPixelPath(graphics, points, [{ grid: VFX_PIXEL, size, color, alpha: 1 }])
+}
+
+// drawn effects never use circles or triangles: energy is a blocky clump
+// with pushed corners, a ring is a burst of radial dashes, a point of light
+// is a plus star
+const PIXEL_BLOB_BUMPS = [1, 0.8, 1.1, 0.85, 1, 0.78, 1.12, 0.88]
+
+function fillPixelBlob(
+  graphics: Phaser.GameObjects.Graphics,
+  radius: number,
+  color: number,
+  center: PixelPoint = { x: 0, y: 0 },
+  pixelSize = VFX_PIXEL,
+  alpha = 1
+) {
+  if (radius < pixelSize / 2) return
+  // a few pixels of octagon read as a plus sign, so a tiny clump is a square
+  if (radius < pixelSize * 2.5) {
+    const side = radius < pixelSize * 1.5 ? pixelSize : pixelSize * 2
+    graphics.fillStyle(color, alpha)
+    graphics.fillRect(
+      Math.round(center.x / pixelSize) * pixelSize - side / 2,
+      Math.round(center.y / pixelSize) * pixelSize - side / 2,
+      side,
+      side
+    )
+    return
+  }
+  fillPixelPolygon(
+    graphics,
+    PIXEL_BLOB_BUMPS.map((bump, index) => {
+      const angle = (index / PIXEL_BLOB_BUMPS.length) * Math.PI * 2 + 0.4
+      return {
+        x: center.x + Math.cos(angle) * radius * bump,
+        y: center.y + Math.sin(angle) * radius * bump
+      }
+    }),
+    pixelSize,
+    color,
+    alpha
+  )
+}
+
+function strokePixelBurst(
+  graphics: Phaser.GameObjects.Graphics,
+  burst: {
+    radiusX: number
+    radiusY?: number
+    dashLength: number
+    color: number
+    rays?: number
+    size?: number
+    pixelSize?: number
+    phase?: number
+  }
+) {
+  if (burst.dashLength <= 0) return
+  const rays = burst.rays ?? 12
+  const radiusY = burst.radiusY ?? burst.radiusX
+  const squash = radiusY / burst.radiusX
+  const pixelSize = burst.pixelSize ?? VFX_PIXEL
+  for (let ray = 0; ray < rays; ray++) {
+    const angle = (ray / rays) * Math.PI * 2 + (burst.phase ?? 0)
+    const reach = (radius: number) => ({
+      x: Math.cos(angle) * radius,
+      y: Math.sin(angle) * radius * squash
+    })
+    drawPixelPath(
+      graphics,
+      [reach(burst.radiusX), reach(burst.radiusX + burst.dashLength)],
+      [
+        {
+          grid: pixelSize,
+          size: burst.size ?? pixelSize,
+          color: burst.color,
+          alpha: 1
+        }
+      ]
+    )
+  }
+}
+
+function drawPixelPlusStar(
+  graphics: Phaser.GameObjects.Graphics,
+  center: PixelPoint,
+  arms: number,
+  color: number,
+  pixelSize = VFX_PIXEL
+) {
+  if (arms <= 0) return
+  const x = Math.round(center.x / pixelSize) * pixelSize
+  const y = Math.round(center.y / pixelSize) * pixelSize
+  graphics.fillStyle(color, 1)
+  graphics.fillRect(
+    x - (arms + 0.5) * pixelSize,
+    y - pixelSize / 2,
+    (arms * 2 + 1) * pixelSize,
+    pixelSize
+  )
+  graphics.fillRect(
+    x - pixelSize / 2,
+    y - (arms + 0.5) * pixelSize,
+    pixelSize,
+    (arms * 2 + 1) * pixelSize
+  )
+}
+
+// a radial pixel streak, thick at its root and thin at its tip
+function strokePixelStreak(
+  graphics: Phaser.GameObjects.Graphics,
+  angle: number,
+  from: number,
+  to: number,
+  color: number
+) {
+  if (to - from < VFX_PIXEL) return
+  const middle = (from + to) / 2
+  strokePixelPath(
+    graphics,
+    [
+      rotatePixelPoint({ x: from, y: 0 }, angle),
+      rotatePixelPoint({ x: middle, y: 0 }, angle)
+    ],
+    color,
+    VFX_PIXEL * 2
+  )
+  strokePixelPath(
+    graphics,
+    [
+      rotatePixelPoint({ x: middle, y: 0 }, angle),
+      rotatePixelPoint({ x: to, y: 0 }, angle)
+    ],
+    color
+  )
+}
+
+function rotatePixelPoint(point: PixelPoint, rotation: number): PixelPoint {
+  return {
+    x: point.x * Math.cos(rotation) - point.y * Math.sin(rotation),
+    y: point.x * Math.sin(rotation) + point.y * Math.cos(rotation)
+  }
+}
+
+// one unrotated layer redrawn at sprite frame rate: shapes are rotated point
+// by point and snapped, since rotating the Graphics would tilt its pixels
+function playPixelFrames(
+  scene: AbilityAnimationArgs["scene"],
+  options: {
+    x: number
+    y: number
+    duration: number
+    delay?: number
+    depth?: number
+  },
+  draw: (
+    graphics: Phaser.GameObjects.Graphics,
+    progress: number,
+    elapsedMs: number
+  ) => void
+) {
+  const graphics = scene.add
+    .graphics()
+    .setPosition(snapToVfxPixel(options.x), snapToVfxPixel(options.y))
+    .setDepth(options.depth ?? DEPTH.ABILITY)
+  scene.abilitiesVfxGroup?.add(graphics)
+  let lastFrame = -1
+  scene.tweens.addCounter({
+    from: 0,
+    to: options.duration,
+    delay: options.delay ?? 0,
+    duration: options.duration,
+    onUpdate: (tween) => {
+      const elapsedMs = (tween.getValue() ?? 0) as number
+      const frame = Math.floor(elapsedMs / VFX_FRAME_MS)
+      if (frame === lastFrame) return
+      lastFrame = frame
+      const frameMs = Math.min(options.duration, frame * VFX_FRAME_MS)
+      graphics.clear()
+      draw(graphics, frameMs / options.duration, frameMs)
+    },
+    onComplete: () => graphics.destroy()
+  })
+}
+
 function fillPixelDisc(
   graphics: Phaser.GameObjects.Graphics,
   radius: number,
@@ -3341,7 +3526,6 @@ function playPixelCircle(
     .setDepth(DEPTH.ABILITY)
   if (options.additive) circle.setBlendMode(Phaser.BlendModes.ADD)
   scene.abilitiesVfxGroup?.add(circle)
-  const drawCircle = options.hollow ? drawPixelRing : drawPixelDisc
   scene.tweens.addCounter({
     from: 0,
     to: 1,
@@ -3351,12 +3535,28 @@ function playPixelCircle(
     onUpdate: (tween) => {
       if (!circle.scene) return
       const progress = tween.getValue() ?? 0
-      drawCircle(
-        circle,
-        Phaser.Math.Linear(options.fromRadius, options.toRadius, progress),
-        options.pixelSize,
-        options.color
+      const radius = Phaser.Math.Linear(
+        options.fromRadius,
+        options.toRadius,
+        progress
       )
+      circle.clear()
+      if (options.hollow) {
+        strokePixelBurst(circle, {
+          radiusX: radius,
+          dashLength: Math.max(options.pixelSize * 2, radius * 0.25),
+          color: options.color,
+          pixelSize: options.pixelSize
+        })
+      } else {
+        fillPixelBlob(
+          circle,
+          radius,
+          options.color,
+          { x: 0, y: 0 },
+          options.pixelSize
+        )
+      }
       circle
         .setAlpha(
           Phaser.Math.Linear(options.fromAlpha, options.toAlpha, progress)
@@ -3412,62 +3612,43 @@ function playShadowPunchImpact(
     })
   }
 
-  const shards = scene.add
-    .graphics()
-    .setPosition(x, y)
-    .setDepth(DEPTH.ABILITY)
-    .setBlendMode(Phaser.BlendModes.ADD)
-    .setScale(0.4)
-  for (let index = 0; index < SHADOW_PUNCH_SHARDS; index++) {
-    const angle = (index / SHADOW_PUNCH_SHARDS) * Math.PI * 2 + index * 0.37
-    const reach = (index % 2 === 0 ? 46 : 30) * scale
-    shards.fillStyle(
-      SHADOW_PUNCH_SHARD_COLORS[index % SHADOW_PUNCH_SHARD_COLORS.length],
-      0.55
-    )
-    shards.fillTriangle(
-      Math.cos(angle - 0.16) * 8,
-      Math.sin(angle - 0.16) * 8,
-      Math.cos(angle) * reach,
-      Math.sin(angle) * reach,
-      Math.cos(angle + 0.16) * 8,
-      Math.sin(angle + 0.16) * 8
-    )
-  }
-  scene.abilitiesVfxGroup?.add(shards)
-  scene.tweens.add({
-    targets: shards,
-    scale: 1.2,
-    alpha: { from: 0.7, to: 0 },
-    duration: 300,
-    ease: "Cubic.easeOut",
-    onComplete: () => shards.destroy()
-  })
-
-  for (let index = 0; index < SHADOW_PUNCH_SPARKS; index++) {
-    const angle = Math.random() * Math.PI * 2
-    const distance = (34 + Math.random() * 30) * scale
-    const spark = scene.add
-      .rectangle(
-        x,
-        y,
-        4,
-        4,
-        SHADOW_PUNCH_SPARK_COLORS[index % SHADOW_PUNCH_SPARK_COLORS.length]
+  const sparks = Array.from({ length: SHADOW_PUNCH_SPARKS }, (_, index) => ({
+    angle: Math.random() * Math.PI * 2,
+    distance: (34 + Math.random() * 30) * scale,
+    color: SHADOW_PUNCH_SPARK_COLORS[index % SHADOW_PUNCH_SPARK_COLORS.length]
+  }))
+  playPixelFrames(scene, { x, y, duration: 320 }, (graphics, progress) => {
+    const burst = Phaser.Math.Easing.Cubic.Out(progress)
+    const size = 0.4 + 0.8 * burst
+    // shards leave the centre as they end, so the burst flies apart
+    for (let index = 0; index < SHADOW_PUNCH_SHARDS; index++) {
+      const angle = (index / SHADOW_PUNCH_SHARDS) * Math.PI * 2 + index * 0.37
+      const reach = (index % 2 === 0 ? 46 : 30) * scale * size
+      const root = Math.max(8 * size, reach * progress)
+      strokePixelStreak(
+        graphics,
+        angle,
+        root,
+        reach,
+        SHADOW_PUNCH_SHARD_COLORS[index % SHADOW_PUNCH_SHARD_COLORS.length]
       )
-      .setDepth(DEPTH.ABILITY)
-      .setBlendMode(Phaser.BlendModes.ADD)
-    scene.abilitiesVfxGroup?.add(spark)
-    scene.tweens.add({
-      targets: spark,
-      x: x + Math.cos(angle) * distance,
-      y: y + Math.sin(angle) * distance,
-      alpha: { from: 0.7, to: 0 },
-      duration: 260 + Math.random() * 120,
-      ease: "Quad.easeOut",
-      onComplete: () => spark.destroy()
+    }
+    const sparkSize = progress < 0.5 ? VFX_PIXEL * 2 : VFX_PIXEL
+    const sparkTravel = Phaser.Math.Easing.Quadratic.Out(progress)
+    sparks.forEach((spark) => {
+      const point = rotatePixelPoint(
+        { x: spark.distance * sparkTravel, y: 0 },
+        spark.angle
+      )
+      graphics.fillStyle(spark.color, 1)
+      graphics.fillRect(
+        snapToVfxPixel(point.x) - sparkSize / 2,
+        snapToVfxPixel(point.y) - sparkSize / 2,
+        sparkSize,
+        sparkSize
+      )
     })
-  }
+  })
 }
 
 function addShadowPunchTrail(
@@ -3480,43 +3661,41 @@ function addShadowPunchTrail(
   duration: number
 ) {
   const trailLayers = [
-    { color: SHADOW_PUNCH_VIOLET, thickness: 18, alpha: 0.35 },
-    { color: SHADOW_PUNCH_PURPLE, thickness: 10, alpha: 0.55 },
-    { color: SHADOW_PUNCH_PINK, thickness: 5, alpha: 0.6 },
-    { color: SHADOW_PUNCH_CYAN, thickness: 2, alpha: 0.9 }
+    { color: SHADOW_PUNCH_VIOLET, thickness: 18 },
+    { color: SHADOW_PUNCH_PURPLE, thickness: 10 },
+    { color: SHADOW_PUNCH_PINK, thickness: 5 },
+    { color: SHADOW_PUNCH_CYAN, thickness: 2 }
   ]
-  for (const layer of trailLayers) {
-    const trail = scene.add
-      .rectangle(
-        fromX,
-        fromY,
-        Math.hypot(toX - fromX, toY - fromY),
-        layer.thickness,
-        layer.color,
-        layer.alpha
+  const rotation = Math.atan2(toY - fromY, toX - fromX)
+  const length = Math.hypot(toX - fromX, toY - fromY)
+  const THIN_MS = 180
+  playPixelFrames(
+    scene,
+    { x: fromX, y: fromY, delay, duration: duration + THIN_MS },
+    (graphics, _progress, elapsedMs) => {
+      const grow = Phaser.Math.Easing.Quadratic.Out(
+        Math.min(1, elapsedMs / duration)
       )
-      .setOrigin(0, 0.5)
-      .setRotation(Math.atan2(toY - fromY, toX - fromX))
-      .setScale(0, 1)
-      .setDepth(DEPTH.ABILITY)
-      .setBlendMode(Phaser.BlendModes.ADD)
-    scene.abilitiesVfxGroup?.add(trail)
-    scene.tweens.add({
-      targets: trail,
-      scaleX: 1,
-      delay,
-      duration,
-      ease: "Quad.easeOut",
-      onComplete: () =>
-        scene.tweens.add({
-          targets: trail,
-          scaleY: 0,
-          alpha: 0,
-          duration: 180,
-          onComplete: () => trail.destroy()
-        })
-    })
-  }
+      // thins away once the fist lands instead of fading
+      const thin = Math.max(0, (elapsedMs - duration) / THIN_MS)
+      trailLayers.forEach((layer) => {
+        const half = (layer.thickness * (1 - thin)) / 2
+        if (half <= 0) return
+        fillPixelPolygon(
+          graphics,
+          [
+            rotatePixelPoint({ x: 0, y: -half }, rotation),
+            rotatePixelPoint({ x: length * grow, y: -half }, rotation),
+            rotatePixelPoint({ x: length * grow, y: half }, rotation),
+            rotatePixelPoint({ x: 0, y: half }, rotation)
+          ],
+          VFX_PIXEL,
+          layer.color,
+          1
+        )
+      })
+    }
+  )
 }
 
 function shadowPunchAnimation(args: AbilityAnimationArgs) {
@@ -3577,24 +3756,18 @@ function shadowPunchAnimation(args: AbilityAnimationArgs) {
   scene.time.delayedCall(SHADOW_PUNCH_WINDUP_MS, () => {
     playShadowPunchBlast(scene, muzzleX, muzzleY, rotation, 1.2)
     scene.shakeCamera({ intensity: 0.004, duration: 120 })
-    const fist = addShadowPunchFist(
-      scene,
-      muzzleX,
-      muzzleY,
-      rotation,
-      SHADOW_PUNCH_FIST_SIZE
-    ).setScale(0.6)
-    scene.tweens.add({
-      targets: fist,
-      x: targetX,
-      y: toY,
-      scale: 1,
+    flyShadowPunchFist(scene, {
+      fromX: muzzleX,
+      fromY: muzzleY,
+      toX: targetX,
+      toY,
+      fromSize: SHADOW_PUNCH_FIST_SIZE * 0.6,
+      toSize: SHADOW_PUNCH_FIST_SIZE,
       duration: SHADOW_PUNCH_FLIGHT_MS,
-      ease: "Quad.easeIn",
-      onComplete: () => {
+      ease: Phaser.Math.Easing.Quadratic.In,
+      onArrive: () => {
         playShadowPunchImpact(scene, targetX, toY, 1.2)
         scene.shakeCamera({ intensity: 0.007, duration: 180 })
-        fadeOutCrossChopPart(scene, fist, 40, 160)
       }
     })
   })
@@ -3622,23 +3795,16 @@ function shadowPunchLaunchAnimation(args: AbilityAnimationArgs) {
     flip
   )
   addShadowPunchTrail(scene, fromX, fromY - 12, toX, toY - 12, 0, 220)
-  const fist = addShadowPunchFist(
-    scene,
+  flyShadowPunchFist(scene, {
     fromX,
-    fromY - 12,
-    Math.atan2(toY - fromY, toX - fromX),
-    SHADOW_PUNCH_FIST_SIZE * 0.8
-  )
-  scene.tweens.add({
-    targets: fist,
-    x: toX,
-    y: toY - 12,
+    fromY: fromY - 12,
+    toX,
+    toY: toY - 12,
+    fromSize: SHADOW_PUNCH_FIST_SIZE * 0.8,
+    toSize: SHADOW_PUNCH_FIST_SIZE * 0.8,
     duration: SHADOW_PUNCH_LAUNCH_MS,
-    ease: "Quad.easeOut",
-    onComplete: () => {
-      playShadowPunchImpact(scene, toX, toY - 12, 0.7)
-      fadeOutCrossChopPart(scene, fist, 0, 160)
-    }
+    ease: Phaser.Math.Easing.Quadratic.Out,
+    onArrive: () => playShadowPunchImpact(scene, toX, toY - 12, 0.7)
   })
 }
 
@@ -3655,31 +3821,26 @@ function shadowPunchCatapultAnimation(args: AbilityAnimationArgs) {
     flip
   )
   playShadowPunchImpact(scene, fromX, fromY - 12, 0.5)
-  const orb = scene.add
-    .circle(fromX, fromY - 12, 7, SHADOW_PUNCH_PURPLE, 0.9)
-    .setDepth(DEPTH.ABILITY)
-    .setBlendMode(Phaser.BlendModes.ADD)
-  scene.abilitiesVfxGroup?.add(orb)
-  scene.tweens.addCounter({
-    from: 0,
-    to: 1,
-    duration: 300,
-    ease: "Sine.easeOut",
-    onUpdate: (tween) => {
-      const progress = tween.getValue() ?? 0
-      orb.setPosition(
-        fromX + (toX - fromX) * progress,
-        fromY -
-          12 +
-          (toY - fromY) * progress -
-          Math.sin(progress * Math.PI) * 40
+  playPixelFrames(
+    scene,
+    { x: fromX, y: fromY - 12, duration: 300 },
+    (graphics, progress) => {
+      const travel = Phaser.Math.Easing.Sine.Out(progress)
+      const center = {
+        x: (toX - fromX) * travel,
+        y: (toY - fromY) * travel - Math.sin(travel * Math.PI) * 40
+      }
+      graphics.setPosition(
+        snapToVfxPixel(fromX + center.x),
+        snapToVfxPixel(fromY - 12 + center.y)
       )
-    },
-    onComplete: () => {
-      playShadowPunchImpact(scene, toX, toY - 12, 0.4)
-      orb.destroy()
+      fillPixelBlob(graphics, 7, SHADOW_PUNCH_PURPLE)
+      drawPixelPlusStar(graphics, { x: 0, y: 0 }, 1, SHADOW_PUNCH_PINK)
     }
-  })
+  )
+  scene.time.delayedCall(300, () =>
+    playShadowPunchImpact(scene, toX, toY - 12, 0.4)
+  )
 }
 
 function lightOfRuinAnimation(args: AbilityAnimationArgs) {
@@ -3695,26 +3856,66 @@ function lightOfRuinAnimation(args: AbilityAnimationArgs) {
     flip
   )
   const angle = Math.atan2(aimY - casterY, aimX - casterX)
-  const originX = casterX + Math.cos(angle) * LIGHT_OF_RUIN_FRONT
-  const originY = casterY - 14 + Math.sin(angle) * LIGHT_OF_RUIN_FRONT
+  const originX = snapToLightOfRuinPixel(
+    casterX + Math.cos(angle) * LIGHT_OF_RUIN_FRONT
+  )
+  const originY = snapToLightOfRuinPixel(
+    casterY - 14 + Math.sin(angle) * LIGHT_OF_RUIN_FRONT
+  )
+  // never rotated: a rotated Graphics would tilt its pixels, so every shape
+  // is placed along the aim by alongBeam and snapped to the grid instead
   const beam = scene.add
     .graphics()
     .setPosition(originX, originY)
-    .setRotation(angle)
     .setDepth(DEPTH.ABILITY)
   const burst = scene.add
     .graphics()
     .setPosition(originX, originY)
     .setDepth(DEPTH.ABILITY)
-  // the swirl ring is drawn flat, then tilted like a ring seen from the side
-  const ring = scene.add
-    .graphics()
-    .setPosition(originX, originY)
-    .setRotation(Phaser.Math.DegToRad(-24))
-    .setDepth(DEPTH.ABILITY)
   scene.abilitiesVfxGroup?.add(beam)
   scene.abilitiesVfxGroup?.add(burst)
-  scene.abilitiesVfxGroup?.add(ring)
+
+  const pixel = LIGHT_OF_RUIN_PIXEL
+  const alongBeam = (along: number, across: number) => ({
+    x: along * Math.cos(angle) - across * Math.sin(angle),
+    y: along * Math.sin(angle) + across * Math.cos(angle)
+  })
+  const atAngle = (pointAngle: number, distance: number) => ({
+    x: Math.cos(pointAngle) * distance,
+    y: Math.sin(pointAngle) * distance
+  })
+  const arcPoints = (
+    radius: number,
+    from: number,
+    to: number,
+    squash = 1,
+    tilt = 0
+  ) =>
+    Array.from({ length: 17 }, (_, step) => {
+      const arcAngle = from + ((to - from) * step) / 16
+      const x = Math.cos(arcAngle) * radius
+      const y = Math.sin(arcAngle) * radius * squash
+      return {
+        x: x * Math.cos(tilt) - y * Math.sin(tilt),
+        y: x * Math.sin(tilt) + y * Math.cos(tilt)
+      }
+    })
+  const strokePixels = (
+    graphics: Phaser.GameObjects.Graphics,
+    points: { x: number; y: number }[],
+    color: number,
+    size = pixel
+  ) => drawPixelPath(graphics, points, [{ grid: pixel, size, color, alpha: 1 }])
+  const fillPolygon = (
+    graphics: Phaser.GameObjects.Graphics,
+    points: { x: number; y: number }[],
+    color: number
+  ) => fillPixelPolygon(graphics, points, pixel, color, 1)
+  const fillDisc = (
+    graphics: Phaser.GameObjects.Graphics,
+    radius: number,
+    color: number
+  ) => fillPixelBlob(graphics, radius, color, { x: 0, y: 0 }, pixel)
 
   const inwardStreaks = Array.from({ length: 18 }, () => ({
     angle: Math.random() * Math.PI * 2,
@@ -3722,33 +3923,19 @@ function lightOfRuinAnimation(args: AbilityAnimationArgs) {
     delay: Math.random() * 0.5,
     length: randomBetween(18, 34)
   }))
-  const rayColors = [
-    LIGHT_OF_RUIN_CORE,
-    LIGHT_OF_RUIN_HAZE,
-    LIGHT_OF_RUIN_BODY
-  ]
-  const rays = Array.from({ length: 16 }, (_, index) => ({
-    spread: randomBetween(-60, 60) / 1000,
-    length: randomBetween(55, 100) / 100,
-    thickness: randomBetween(3, 11),
-    color: rayColors[index % rayColors.length],
-    flicker: Math.random() * Math.PI * 2
-  }))
-  const spikes = Array.from({ length: 12 }, (_, index) => ({
-    angle: (index / 12) * Math.PI * 2 + Math.random() * 0.3,
-    length: randomBetween(28, 62),
-    color: index % 2 === 0 ? LIGHT_OF_RUIN_CORE : LIGHT_OF_RUIN_BODY
-  }))
-  const crescents = [
-    { from: -150, sweep: 110, radius: 44, delay: 0 },
-    { from: 40, sweep: 120, radius: 60, delay: 0.08 },
-    { from: 160, sweep: 90, radius: 76, delay: 0.16 }
-  ]
-  const sparkles = Array.from({ length: 14 }, () => ({
+  const sparkles = Array.from({ length: 14 }, (_, index) => ({
     along: randomBetween(30, 700),
-    offset: randomBetween(-40, 40),
-    size: randomBetween(4, 9),
+    side: index % 2 === 0 ? 1 : -1,
+    jitter: randomBetween(-6, 6),
+    arms: Math.random() < 0.4 ? 3 : 2,
     twinkle: Math.random() * Math.PI * 2
+  }))
+  const lightStreaks = Array.from({ length: 26 }, (_, index) => ({
+    lane: randomBetween(-50, 50) / 100,
+    phase: Math.random(),
+    length: randomBetween(12, 36),
+    speed: randomBetween(150, 250) / 100,
+    color: index % 3 === 0 ? LIGHT_OF_RUIN_HAZE : LIGHT_OF_RUIN_CORE
   }))
   const swirlSlashes = Array.from({ length: 5 }, (_, index) => ({
     radius: 34 + index * 9,
@@ -3756,73 +3943,71 @@ function lightOfRuinAnimation(args: AbilityAnimationArgs) {
     sweep: randomBetween(70, 130),
     speed: (index % 2 === 0 ? 1 : -1) * randomBetween(8, 12)
   }))
-  const shards = Array.from({ length: 9 }, () => ({
-    angle:
-      angle +
-      Math.PI +
-      (Math.random() < 0.5 ? -1 : 1) * (randomBetween(20, 150) / 100),
-    length: randomBetween(44, 98),
-    width: randomBetween(10, 18)
-  }))
-  const gusts = Array.from({ length: 4 }, (_, index) => ({
-    tilt: (index - 1.5) * 0.35,
-    sweep: randomBetween(60, 100),
-    delay: index * 0.05,
-    strokes: 2 + (index % 2)
-  }))
-  const debris = Array.from({ length: 10 }, () => ({
-    angle: angle + randomBetween(-90, 90) / 100,
-    speed: randomBetween(120, 220),
-    delay: Math.random() * 0.2
-  }))
   let lastThunder = -1
-  let thunderBolts: number[][][] = []
+  let thunderBolts: { x: number; y: number }[][] = []
 
-  const drawSparkle = (x: number, y: number, size: number, alpha: number) => {
-    beam.fillStyle(LIGHT_OF_RUIN_CORE, alpha)
-    beam.fillTriangle(x - size, y, x, y - 1.5, x, y + 1.5)
-    beam.fillTriangle(x + size, y, x, y - 1.5, x, y + 1.5)
-    beam.fillTriangle(x, y - size, x - 1.5, y, x + 1.5, y)
-    beam.fillTriangle(x, y + size, x - 1.5, y, x + 1.5, y)
+  const drawStar = (x: number, y: number, arms: number) => {
+    if (arms <= 0) return
+    const centerX = snapToLightOfRuinPixel(x)
+    const centerY = snapToLightOfRuinPixel(y)
+    beam.fillStyle(LIGHT_OF_RUIN_CORE, 1)
+    beam.fillRect(
+      centerX - (arms + 0.5) * pixel,
+      centerY - pixel / 2,
+      (arms * 2 + 1) * pixel,
+      pixel
+    )
+    beam.fillRect(
+      centerX - pixel / 2,
+      centerY - (arms + 0.5) * pixel,
+      pixel,
+      (arms * 2 + 1) * pixel
+    )
+    for (let step = 1; step < arms; step++) {
+      ;[
+        [step, step],
+        [step, -step],
+        [-step, step],
+        [-step, -step]
+      ].forEach(([dx, dy]) =>
+        beam.fillRect(
+          centerX + (dx - 0.5) * pixel,
+          centerY + (dy - 0.5) * pixel,
+          pixel,
+          pixel
+        )
+      )
+    }
   }
 
   // jagged dark bolts, rebuilt a few times a second so they crackle
-  const strokeThunder = (
-    graphics: Phaser.GameObjects.Graphics,
-    alpha: number
-  ) => {
+  const strokeThunder = (graphics: Phaser.GameObjects.Graphics) =>
     thunderBolts.forEach((bolt) => {
-      const strokes: [number, number, number][] = [
-        [3, LIGHT_OF_RUIN_THUNDER, alpha],
-        [1, LIGHT_OF_RUIN_DEEP, alpha * 0.9]
-      ]
-      strokes.forEach(([width, color, strokeAlpha]) => {
-        graphics.lineStyle(width, color, strokeAlpha)
-        graphics.beginPath()
-        bolt.forEach(([x, y], index) =>
-          index === 0 ? graphics.moveTo(x, y) : graphics.lineTo(x, y)
-        )
-        graphics.strokePath()
-      })
+      strokePixels(graphics, bolt, LIGHT_OF_RUIN_THUNDER, pixel * 2)
+      strokePixels(graphics, bolt, LIGHT_OF_RUIN_DEEP)
     })
-  }
   const crackleAround = (radius: number) =>
     Array.from({ length: 4 }, () => {
       const startAngle = Math.random() * Math.PI * 2
-      return Array.from({ length: 6 }, (_, step) => {
-        const boltAngle = startAngle + step * 0.3
-        const reach = radius * 1.35 + randomBetween(-7, 7)
-        return [Math.cos(boltAngle) * reach, Math.sin(boltAngle) * reach]
-      })
+      return Array.from({ length: 6 }, (_, step) =>
+        atAngle(
+          startAngle + step * 0.3,
+          radius * 1.35 + randomBetween(-7, 7)
+        )
+      )
     })
-  const crackleAlongBeam = (reach: number, width: number) =>
-    Array.from({ length: 5 }, () => {
-      const start = randomBetween(20, Math.max(40, Math.min(reach, 700)))
+  const crackleAlongCone = (reach: number, fade: number) =>
+    Array.from({ length: 3 }, () => {
+      const start = randomBetween(30, Math.max(60, Math.min(reach, 900)))
       const side = Math.random() < 0.5 ? -1 : 1
-      return Array.from({ length: 7 }, (_, step) => [
-        start + step * randomBetween(12, 20),
-        side * (width * 0.7 + randomBetween(-4, 6))
-      ])
+      const lane = randomBetween(45, 105) / 100
+      return Array.from({ length: 8 }, (_, step) => {
+        const along = start + step * randomBetween(12, 22)
+        return alongBeam(
+          along,
+          side * (lane * coneHalfWidth(along, fade) + randomBetween(-8, 8))
+        )
+      })
     })
 
   const drawCharge = (chargeProgress: number) => {
@@ -3834,278 +4019,258 @@ function lightOfRuinAnimation(args: AbilityAnimationArgs) {
       const local = (chargeProgress - streak.delay) / (1 - streak.delay)
       if (local <= 0 || local >= 1) return
       const distance = radius + (streak.start - radius) * (1 - local)
-      const tipX = Math.cos(streak.angle) * distance
-      const tipY = Math.sin(streak.angle) * distance
-      const tailX = Math.cos(streak.angle) * (distance + streak.length)
-      const tailY = Math.sin(streak.angle) * (distance + streak.length)
-      const side = streak.angle + Math.PI / 2
-      burst.fillStyle(LIGHT_OF_RUIN_CORE, 0.7 * local)
-      burst.fillTriangle(
-        tailX + Math.cos(side) * 1.5,
-        tailY + Math.sin(side) * 1.5,
-        tailX - Math.cos(side) * 1.5,
-        tailY - Math.sin(side) * 1.5,
-        tipX,
-        tipY
+      strokePixels(
+        burst,
+        [
+          atAngle(streak.angle, distance),
+          atAngle(streak.angle, distance + streak.length)
+        ],
+        LIGHT_OF_RUIN_CORE
       )
     })
 
-    burst.fillStyle(LIGHT_OF_RUIN_DEEP, 0.4)
-    burst.fillCircle(0, 0, radius * 1.25 * pulse)
-    burst.fillStyle(LIGHT_OF_RUIN_BODY, 0.7)
-    burst.fillCircle(0, 0, radius * pulse)
-    burst.lineStyle(1.5, LIGHT_OF_RUIN_DEEP, 0.8)
-    burst.strokeCircle(0, 0, radius * pulse)
-    burst.fillStyle(LIGHT_OF_RUIN_CORE, 0.8)
-    burst.fillCircle(0, 0, radius * 0.5 * pulse)
+    swirlSlashes.forEach((slash) => {
+      const from = slash.start + chargeProgress * slash.speed
+      const to = from + Phaser.Math.DegToRad(slash.sweep)
+      const slashRadius = slash.radius * (0.6 + 0.6 * chargeProgress)
+      const points = arcPoints(slashRadius, from, to)
+      strokePixels(burst, points, LIGHT_OF_RUIN_HAZE, pixel * 2)
+      strokePixels(burst, points, LIGHT_OF_RUIN_CORE)
+    })
+
+    // the swirl ring is a flat ellipse tilted like a ring seen from the side
+    const ringRadius = radius * 2.2
+    const ringTilt = Phaser.Math.DegToRad(-24)
+    const spin = chargeProgress * Math.PI * 4
+    strokePixels(
+      burst,
+      arcPoints(ringRadius, spin, spin + Math.PI * 0.8, 0.35, ringTilt),
+      LIGHT_OF_RUIN_CORE
+    )
+
+    fillDisc(burst, radius * 1.25 * pulse, LIGHT_OF_RUIN_DEEP)
+    fillDisc(burst, radius * pulse, LIGHT_OF_RUIN_BODY)
+    fillDisc(burst, radius * 0.5 * pulse, LIGHT_OF_RUIN_CORE)
 
     const thunderFrame = Math.floor(chargeProgress * 14)
     if (thunderFrame !== lastThunder) {
       lastThunder = thunderFrame
       thunderBolts = crackleAround(radius)
     }
-    strokeThunder(burst, 0.9)
-
-    swirlSlashes.forEach((slash) => {
-      const from = slash.start + chargeProgress * slash.speed
-      const to = from + Phaser.Math.DegToRad(slash.sweep)
-      const slashRadius = slash.radius * (0.6 + 0.6 * chargeProgress)
-      burst.lineStyle(5, LIGHT_OF_RUIN_HAZE, 0.5 * chargeProgress)
-      burst.beginPath()
-      burst.arc(0, 0, slashRadius, from, to)
-      burst.strokePath()
-      burst.lineStyle(2, LIGHT_OF_RUIN_CORE, 0.85 * chargeProgress)
-      burst.beginPath()
-      burst.arc(0, 0, slashRadius, from, to)
-      burst.strokePath()
-    })
-
-    const ringRadius = radius * 2.2
-    const spin = chargeProgress * Math.PI * 4
-    ring.lineStyle(4, LIGHT_OF_RUIN_HAZE, 0.6)
-    ring.strokeEllipse(0, 0, ringRadius * 2, ringRadius * 0.7)
-    ring.lineStyle(2, LIGHT_OF_RUIN_CORE, 0.8)
-    ring.beginPath()
-    for (let step = 0; step <= 12; step++) {
-      const ringAngle = spin + (step / 12) * Math.PI * 0.8
-      const x = Math.cos(ringAngle) * ringRadius
-      const y = Math.sin(ringAngle) * ringRadius * 0.35
-      if (step === 0) ring.moveTo(x, y)
-      else ring.lineTo(x, y)
-    }
-    ring.strokePath()
+    strokeThunder(burst)
   }
 
-  // a wedge whose first stretch fades in from the origin, so the beam has no
-  // hard edge where it leaves the burst
-  const drawFadingWedge = (
-    halfWidth: number,
-    length: number,
-    color: number,
-    alpha: number
+  const orbBlades = [
+    { radius: 34, tilt: -30, squash: 0.55, start: 0, spin: 1 },
+    { radius: 40, tilt: 25, squash: 0.7, start: 1.6, spin: -1 },
+    { radius: 30, tilt: 70, squash: 0.45, start: 3.1, spin: 1 },
+    { radius: 46, tilt: -65, squash: 0.6, start: 4.4, spin: -1 },
+    { radius: 38, tilt: 5, squash: 0.85, start: 2.3, spin: 1 }
+  ]
+  const orbSparks = Array.from({ length: 12 }, (_, index) => ({
+    angle: Math.random() * Math.PI * 2,
+    reach: randomBetween(50, 110),
+    phase: Math.random(),
+    color: index % 2 === 0 ? LIGHT_OF_RUIN_BODY : LIGHT_OF_RUIN_WHITE
+  }))
+  const edgeStreaks = Array.from({ length: 48 }, (_, index) => ({
+    side: index % 2 === 0 ? 1 : -1,
+    lane: randomBetween(65, 125) / 100,
+    phase: Math.random(),
+    length: randomBetween(40, 150),
+    speed: randomBetween(120, 220) / 100,
+    thick: Math.random() < 0.3,
+    color: [LIGHT_OF_RUIN_BODY, LIGHT_OF_RUIN_HAZE, LIGHT_OF_RUIN_DEEP][
+      index % 3
+    ]
+  }))
+
+  const coneHalfWidth = (along: number, fade: number) =>
+    fade *
+    (LIGHT_OF_RUIN_SOURCE_WIDTH +
+      (LIGHT_OF_RUIN_FULL_WIDTH - LIGHT_OF_RUIN_SOURCE_WIDTH) *
+        Math.min(1, Math.max(0, along) / LIGHT_OF_RUIN_SPREAD))
+
+  // short segments with a rippling width, so the edges flow instead of
+  // running dead straight
+  const CONE_SEGMENT = 24
+  const fillConeBand = (
+    band: { widthScale: number; ripple: number; phase: number; color: number },
+    reach: number,
+    fade: number,
+    progress: number
   ) => {
-    if (length <= LIGHT_OF_RUIN_BASE_FADE) return
-    const fadeEnd = LIGHT_OF_RUIN_BASE_FADE
-    const widthAtFadeEnd = halfWidth * (1 - fadeEnd / length)
-    beam.fillGradientStyle(color, color, color, color, 0, alpha, 0, alpha)
-    beam.fillTriangle(0, -halfWidth, fadeEnd, -widthAtFadeEnd, 0, halfWidth)
-    beam.fillGradientStyle(color, color, color, color, alpha, alpha, 0, alpha)
-    beam.fillTriangle(
-      fadeEnd,
-      -widthAtFadeEnd,
-      fadeEnd,
-      widthAtFadeEnd,
-      0,
-      halfWidth
-    )
-    beam.fillStyle(color, alpha)
-    beam.fillTriangle(
-      fadeEnd,
-      -widthAtFadeEnd,
-      fadeEnd,
-      widthAtFadeEnd,
-      length,
-      0
-    )
+    const halfWidth = (along: number, sign: number) => {
+      const wave = Math.sin(
+        along * 0.025 - progress * 24 + band.phase + (sign > 0 ? 1.7 : 0)
+      )
+      const tipFlare =
+        along > reach - 60
+          ? 1 + 0.15 * ((along - (reach - 60)) / 60) * (0.5 + 0.5 * wave)
+          : 1
+      return (
+        coneHalfWidth(along, fade) *
+        band.widthScale *
+        (1 + band.ripple * wave) *
+        tipFlare
+      )
+    }
+    for (let from = 0; from < reach; from += CONE_SEGMENT) {
+      const to = Math.min(reach, from + CONE_SEGMENT)
+      fillPolygon(
+        beam,
+        [
+          alongBeam(from, -halfWidth(from, -1)),
+          alongBeam(to, -halfWidth(to, -1)),
+          alongBeam(to, halfWidth(to, 1)),
+          alongBeam(from, halfWidth(from, 1))
+        ],
+        band.color
+      )
+    }
   }
+  const coneBands = [
+    { widthScale: 1, ripple: 0.03, phase: 0, color: LIGHT_OF_RUIN_DEEP },
+    { widthScale: 0.85, ripple: 0.04, phase: 2.1, color: LIGHT_OF_RUIN_BODY },
+    { widthScale: 0.68, ripple: 0.04, phase: 4.3, color: LIGHT_OF_RUIN_HAZE },
+    { widthScale: 0.52, ripple: 0.05, phase: 1.2, color: LIGHT_OF_RUIN_CORE },
+    { widthScale: 0.32, ripple: 0.06, phase: 3.4, color: LIGHT_OF_RUIN_WHITE }
+  ]
 
   const drawBeam = (progress: number) => {
     // shoots out almost at once, matching the damage landing as it fires
     const reach = LIGHT_OF_RUIN_LENGTH * Math.min(1, progress / 0.08)
-    const fade = progress < 0.6 ? 1 : 1 - (progress - 0.6) / 0.4
+    // the end narrows in steps instead of fading, like a sprite's last frames
+    const fade =
+      progress < 0.6 ? 1 : Math.ceil((1 - (progress - 0.6) / 0.4) * 4) / 4
+    if (fade <= 0) return
 
-    if (progress < 0.15) {
-      const flash = progress / 0.15
-      burst.fillStyle(LIGHT_OF_RUIN_CORE, 0.7 * (1 - flash))
-      burst.fillCircle(0, 0, 40 + flash * 80)
-    }
+    coneBands.forEach((band) => fillConeBand(band, reach, fade, progress))
 
-    const coreWidth = 38 * fade
-    drawFadingWedge(coreWidth * 1.7, reach, LIGHT_OF_RUIN_HAZE, 0.14 * fade)
-    drawFadingWedge(coreWidth, reach, LIGHT_OF_RUIN_DEEP, 0.45 * fade)
-    const rimStart = coreWidth * (1 - LIGHT_OF_RUIN_BASE_FADE / reach)
-    beam.lineStyle(2, LIGHT_OF_RUIN_THUNDER, 0.35 * fade)
-    beam.lineBetween(LIGHT_OF_RUIN_BASE_FADE, -rimStart, reach, 0)
-    beam.lineBetween(LIGHT_OF_RUIN_BASE_FADE, rimStart, reach, 0)
-    drawFadingWedge(coreWidth * 0.6, reach, LIGHT_OF_RUIN_BODY, 0.65 * fade)
-    drawFadingWedge(
-      coreWidth * 0.25,
-      reach * 0.7,
-      LIGHT_OF_RUIN_CORE,
-      0.75 * fade
-    )
-
-    rays.forEach((ray) => {
-      const flicker = 0.85 + 0.15 * Math.sin(progress * 30 + ray.flicker)
-      const rayLength = reach * ray.length * flicker
-      const half = (ray.thickness * fade) / 2
-      // invisible at the origin, so rays grow out of the burst
-      const color = ray.color
-      beam.fillGradientStyle(color, color, color, color, 0, 0, 0.55 * fade, 0)
-      beam.fillTriangle(0, -half, 0, half, rayLength, rayLength * ray.spread)
-    })
-
-    sparkles.forEach((sparkle) => {
-      if (sparkle.along > reach) return
-      const twinkle = 0.5 + 0.5 * Math.sin(progress * 24 + sparkle.twinkle)
-      drawSparkle(
-        sparkle.along,
-        sparkle.offset * (0.4 + progress),
-        sparkle.size * twinkle,
-        0.8 * fade
+    edgeStreaks.forEach((streak) => {
+      const along = ((streak.phase + progress * streak.speed) % 1) * reach
+      const across = streak.side * streak.lane * coneHalfWidth(along, fade)
+      strokePixels(
+        beam,
+        [
+          alongBeam(along, across),
+          alongBeam(Math.min(reach, along + streak.length), across)
+        ],
+        streak.color,
+        streak.thick ? pixel * 2 : pixel
       )
     })
 
     const thunderFrame = 100 + Math.floor(progress * 16)
     if (thunderFrame !== lastThunder) {
       lastThunder = thunderFrame
-      thunderBolts = crackleAlongBeam(reach, coreWidth)
+      thunderBolts = crackleAlongCone(reach, fade)
     }
-    strokeThunder(beam, 0.85 * fade)
+    strokeThunder(beam)
 
-    gusts.forEach((gust) => {
-      const local = Math.max(0, Math.min(1, (progress - gust.delay) / 0.55))
-      if (local <= 0 || local >= 1) return
-      const middle = angle + gust.tilt
-      const half = Phaser.Math.DegToRad(gust.sweep) / 2
-      for (let stroke = 0; stroke < gust.strokes; stroke++) {
-        const radius = 40 + local * 140 + stroke * 6
-        burst.lineStyle(2, LIGHT_OF_RUIN_WIND, 0.55 * (1 - local))
-        burst.beginPath()
-        burst.arc(0, 0, radius, middle - half, middle + half)
-        burst.strokePath()
-      }
-    })
-    debris.forEach((piece) => {
-      const local = Math.max(0, (progress - piece.delay) / 0.6)
-      if (local >= 1) return
-      const distance = 20 + local * piece.speed
-      const headX = Math.cos(piece.angle) * distance
-      const headY = Math.sin(piece.angle) * distance
-      burst.lineStyle(2, LIGHT_OF_RUIN_WIND, 0.7 * (1 - local))
-      burst.lineBetween(
-        headX,
-        headY,
-        headX - Math.cos(piece.angle) * 8,
-        headY - Math.sin(piece.angle) * 8
+    lightStreaks.forEach((streak) => {
+      const along = ((streak.phase + progress * streak.speed) % 1) * reach
+      const coreWidth = coneHalfWidth(along, fade) * 0.5
+      if (coreWidth < pixel * 2) return
+      const across = streak.lane * coreWidth
+      strokePixels(
+        beam,
+        [
+          alongBeam(along, across),
+          alongBeam(Math.min(reach, along + streak.length), across)
+        ],
+        LIGHT_OF_RUIN_HAZE
       )
     })
 
-    const shardGrowth = Math.min(1, progress / 0.1)
-    shards.forEach((shard) => {
-      const length = shard.length * shardGrowth
-      const side = shard.angle + Math.PI / 2
-      const corners = [
-        new Phaser.Math.Vector2(
-          Math.cos(side) * shard.width * 0.5,
-          Math.sin(side) * shard.width * 0.5
-        ),
-        new Phaser.Math.Vector2(
-          Math.cos(shard.angle) * length,
-          Math.sin(shard.angle) * length
-        ),
-        new Phaser.Math.Vector2(
-          -Math.cos(side) * shard.width * 0.5,
-          -Math.sin(side) * shard.width * 0.5
+    sparkles.forEach((sparkle) => {
+      if (sparkle.along > reach) return
+      const twinkle = 0.5 + 0.5 * Math.sin(progress * 24 + sparkle.twinkle)
+      const position = alongBeam(
+        sparkle.along,
+        sparkle.side *
+          (coneHalfWidth(sparkle.along, fade) * 1.1 + sparkle.jitter)
+      )
+      drawStar(
+        position.x,
+        position.y,
+        Math.max(1, Math.round(sparkle.arms * twinkle))
+      )
+    })
+
+    const pulse = Math.floor(progress * 16) % 2 === 0 ? pixel : 0
+    const orbRadius = 22 * fade
+    fillDisc(burst, orbRadius + pixel, LIGHT_OF_RUIN_DEEP)
+    fillDisc(burst, orbRadius, LIGHT_OF_RUIN_THUNDER)
+    fillDisc(burst, orbRadius * 0.6 + pulse, LIGHT_OF_RUIN_BODY)
+    fillDisc(burst, orbRadius * 0.42 + pulse, LIGHT_OF_RUIN_HAZE)
+    fillDisc(burst, orbRadius * 0.26 + pulse, LIGHT_OF_RUIN_WHITE)
+
+    orbSparks.forEach((spark) => {
+      const local = (spark.phase + progress * 1.8) % 1
+      const distance = orbRadius + local * spark.reach * fade
+      const length = (24 - 14 * local) * fade
+      const bend = 0.25 * (1 - local)
+      strokePixels(
+        burst,
+        [
+          atAngle(spark.angle - bend, distance),
+          atAngle(spark.angle - bend / 2, distance + length / 2),
+          atAngle(spark.angle, distance + length)
+        ],
+        spark.color,
+        local < 0.4 ? pixel * 2 : pixel
+      )
+    })
+
+    // each blade is stacked arcs that shorten inward, so it is thick in the
+    // middle and sharp at both tips
+    const BLADE_LAYERS = 4
+    orbBlades.forEach((blade) => {
+      const radius = blade.radius * fade
+      const tilt = angle + Phaser.Math.DegToRad(blade.tilt)
+      const middle = blade.start + blade.spin * progress * Math.PI * 3
+      const halfSpan = Math.PI * 0.42
+      for (let layer = 0; layer < BLADE_LAYERS; layer++) {
+        const span = halfSpan * (1 - layer / BLADE_LAYERS)
+        strokePixels(
+          burst,
+          arcPoints(
+            radius - layer * pixel,
+            middle - span,
+            middle + span,
+            blade.squash,
+            tilt
+          ),
+          layer === BLADE_LAYERS - 1 ? LIGHT_OF_RUIN_HAZE : LIGHT_OF_RUIN_WHITE
         )
-      ]
-      const [leftBase, tip, rightBase] = corners
-      burst.fillStyle(LIGHT_OF_RUIN_BODY, 0.85 * fade)
-      burst.fillTriangle(0, 0, leftBase.x, leftBase.y, tip.x, tip.y)
-      burst.fillStyle(LIGHT_OF_RUIN_DEEP, 0.85 * fade)
-      burst.fillTriangle(0, 0, tip.x, tip.y, rightBase.x, rightBase.y)
-      burst.lineStyle(1.5, LIGHT_OF_RUIN_THUNDER, 0.9 * fade)
-      burst.strokePoints(corners, true)
-    })
-
-    spikes.forEach((spike) => {
-      const spikeAngle = spike.angle + progress * 0.8
-      const length = spike.length * (0.7 + 0.3 * fade)
-      const side = Math.PI / 2
-      burst.fillStyle(spike.color, 0.8 * fade)
-      burst.fillTriangle(
-        Math.cos(spikeAngle + side) * 4,
-        Math.sin(spikeAngle + side) * 4,
-        Math.cos(spikeAngle - side) * 4,
-        Math.sin(spikeAngle - side) * 4,
-        Math.cos(spikeAngle) * length,
-        Math.sin(spikeAngle) * length
-      )
-    })
-    burst.fillStyle(LIGHT_OF_RUIN_HAZE, 0.2 * fade)
-    burst.fillCircle(0, 0, 34 * fade)
-    burst.fillStyle(LIGHT_OF_RUIN_BODY, 0.7 * fade)
-    burst.fillCircle(0, 0, 21 * fade)
-    burst.lineStyle(1.5, LIGHT_OF_RUIN_DEEP, 0.8 * fade)
-    burst.strokeCircle(0, 0, 21 * fade)
-    burst.fillStyle(LIGHT_OF_RUIN_CORE, 0.85 * fade)
-    burst.fillCircle(0, 0, 13 * fade)
-
-    crescents.forEach((crescent) => {
-      const local = Math.max(
-        0,
-        Math.min(1, (progress - crescent.delay) / 0.5)
-      )
-      if (local <= 0 || local >= 1) return
-      const radius = crescent.radius * (0.6 + 0.6 * local)
-      const from = Phaser.Math.DegToRad(crescent.from) + angle
-      const to = from + Phaser.Math.DegToRad(crescent.sweep) * local
-      burst.lineStyle(
-        5 * (1 - local) + 1,
-        LIGHT_OF_RUIN_HAZE,
-        0.8 * (1 - local)
-      )
-      burst.beginPath()
-      burst.arc(0, 0, radius, from, to)
-      burst.strokePath()
-      burst.lineStyle(2, LIGHT_OF_RUIN_CORE, 0.8 * (1 - local))
-      burst.beginPath()
-      burst.arc(0, 0, radius, from, to)
-      burst.strokePath()
+      }
     })
   }
 
+  const totalMs = LIGHT_OF_RUIN_CHARGE_MS + LIGHT_OF_RUIN_DURATION
+  let lastFrame = -1
   scene.tweens.addCounter({
     from: 0,
-    to: LIGHT_OF_RUIN_CHARGE_MS + LIGHT_OF_RUIN_DURATION,
-    duration: LIGHT_OF_RUIN_CHARGE_MS + LIGHT_OF_RUIN_DURATION,
+    to: totalMs,
+    duration: totalMs,
     onUpdate: (tween) => {
-      const elapsed = (tween.getValue() ?? 0) as number
+      const elapsedMs = (tween.getValue() ?? 0) as number
+      const frame = Math.floor(elapsedMs / VFX_FRAME_MS)
+      if (frame === lastFrame) return
+      lastFrame = frame
+      const elapsed = Math.min(totalMs, frame * VFX_FRAME_MS)
       beam.clear()
       burst.clear()
-      ring.clear()
       if (elapsed < LIGHT_OF_RUIN_CHARGE_MS) {
         drawCharge(elapsed / LIGHT_OF_RUIN_CHARGE_MS)
       } else {
-        const beamProgress =
-          (elapsed - LIGHT_OF_RUIN_CHARGE_MS) / LIGHT_OF_RUIN_DURATION
-        drawBeam(beamProgress)
+        drawBeam((elapsed - LIGHT_OF_RUIN_CHARGE_MS) / LIGHT_OF_RUIN_DURATION)
       }
     },
     onComplete: () => {
       beam.destroy()
       burst.destroy()
-      ring.destroy()
     }
   })
 }
@@ -4318,88 +4483,59 @@ function sandTombAnimation(): AbilityAnimation {
 function unisonStarfallAnimation(): AbilityAnimation {
   return ({ scene, positionX, positionY, flip }: AbilityAnimationArgs) => {
     const [x, y] = transformEntityCoordinates(positionX, positionY, flip)
-    const warning = scene.add
-      .graphics({ x, y })
-      .setDepth(DEPTH.ABILITY)
-      .setBlendMode(Phaser.BlendModes.ADD)
-    scene.abilitiesVfxGroup?.add(warning)
-    scene.tweens.addCounter({
-      from: 0,
-      to: 1,
-      duration: UNISON_STARFALL_WARNING,
-      ease: "Quint.easeIn",
-      onUpdate: (tween) => {
-        const progress = (tween.getValue() ?? 0) as number
+    playPixelFrames(
+      scene,
+      { x, y, duration: UNISON_STARFALL_WARNING },
+      (graphics, linear) => {
+        const progress = Phaser.Math.Easing.Quintic.In(linear)
         const starY = -300 + progress * 300
-        warning.clear()
-        warning.fillStyle(UNISON_NOVA_GOLD, 0.3 + progress * 0.5)
-        warning.fillRect(-3, -300, 6, 300)
-        warning.fillStyle(UNISON_NOVA_WHITE, 1)
-        warning.fillTriangle(0, starY - 15, 8, starY, 0, starY + 15)
-        warning.fillTriangle(0, starY - 15, -8, starY, 0, starY + 15)
-        drawPixelPath(warning, ringPoints(58 - progress * 38), [
-          { grid: 5, size: 5, color: UNISON_NOVA_WHITE, alpha: progress }
-        ])
-      },
-      onComplete: () => warning.destroy()
-    })
+        strokePixelPath(
+          graphics,
+          [
+            { x: 0, y: -300 },
+            { x: 0, y: starY }
+          ],
+          UNISON_NOVA_GOLD
+        )
+        drawPixelPlusStar(graphics, { x: 0, y: starY }, 3, UNISON_NOVA_WHITE)
+      }
+    )
 
-    const light = scene.add
-      .graphics({ x, y })
-      .setDepth(DEPTH.ABILITY)
-      .setBlendMode(Phaser.BlendModes.ADD)
-    scene.abilitiesVfxGroup?.add(light)
-    scene.tweens.addCounter({
-      from: 0,
-      to: 1,
-      duration: 720,
-      delay: UNISON_STARFALL_WARNING,
-      ease: "Quint.easeOut",
-      onUpdate: (tween) => {
-        const progress = (tween.getValue() ?? 0) as number
-        const fade = 1 - progress
-        const width = 18 + progress * 58
-        light.clear()
-        light.fillStyle(UNISON_NOVA_DEEP, fade * 0.22)
-        light.fillTriangle(-width * 1.8, 22, width * 1.8, 22, 0, -420)
-        light.fillStyle(UNISON_NOVA_GOLD, fade * 0.55)
-        light.fillTriangle(-width, 16, width, 16, 0, -420)
-        light.fillStyle(UNISON_NOVA_WHITE, fade)
-        light.fillRect(-width * 0.24, -420, width * 0.48, 430)
-        drawPixelPath(light, ringPoints(progress * 105), [
-          { grid: 8, size: 10, color: UNISON_NOVA_GOLD, alpha: fade * 0.8 },
-          { grid: 4, size: 5, color: UNISON_NOVA_WHITE, alpha: fade }
-        ])
-        for (let shard = 0; shard < UNISON_IMPACT_SHARDS; shard++) {
-          const angle =
-            (shard / UNISON_IMPACT_SHARDS) * Math.PI * 2 + Math.PI / 10
-          const inner = progress * 52
-          const outer = inner + 48 * fade
-          drawPixelPath(
-            light,
+    playPixelFrames(
+      scene,
+      { x, y, delay: UNISON_STARFALL_WARNING, duration: 720 },
+      (graphics, linear) => {
+        const progress = Phaser.Math.Easing.Quintic.Out(linear)
+        // the column narrows away in its second half instead of fading
+        const narrow = linear < 0.5 ? 1 : 1 - (linear - 0.5) * 2
+        const width = (6 + progress * 12) * narrow
+        const column = (halfWidth: number, top: number, color: number) =>
+          fillPixelPolygon(
+            graphics,
             [
-              { x: Math.cos(angle) * inner, y: Math.sin(angle) * inner },
-              { x: Math.cos(angle) * outer, y: Math.sin(angle) * outer }
+              { x: -halfWidth, y: top },
+              { x: halfWidth, y: top },
+              { x: halfWidth, y: 10 },
+              { x: -halfWidth, y: 10 }
             ],
-            [
-              {
-                grid: 6,
-                size: 7,
-                color: UNISON_NOVA_GOLD,
-                alpha: fade * 0.75
-              },
-              {
-                grid: 3,
-                size: 4,
-                color: UNISON_NOVA_WHITE,
-                alpha: fade
-              }
-            ]
+            VFX_PIXEL,
+            color,
+            1
           )
+        if (width >= VFX_PIXEL / 2) {
+          column(width, -420, UNISON_NOVA_GOLD)
+          column(width * 1.5, -140, UNISON_NOVA_GOLD)
+          column(width * 0.45, -420, UNISON_NOVA_WHITE)
         }
-      },
-      onComplete: () => light.destroy()
-    })
+        strokePixelBurst(graphics, {
+          radiusX: 20 + progress * 70,
+          dashLength: 14 * (1 - progress),
+          color: UNISON_NOVA_GOLD,
+          rays: 8,
+          phase: Math.PI / 8
+        })
+      }
+    )
   }
 }
 
@@ -7523,22 +7659,16 @@ function flamethrowerEruptAnimation(args: AbilityAnimationArgs) {
     depth: DEPTH.HIT_FX_ABOVE_POKEMON
   })
 
-  const shockwave = scene.add
-    .graphics({ x, y })
-    .setDepth(DEPTH.ABILITY)
-    .setBlendMode(Phaser.BlendModes.ADD)
-  shockwave
-    .lineStyle(VFX_PIXEL * 1.5, FLAMETHROWER_EMBER_TINT, 1)
-    .strokeCircle(0, 0, CELL_WIDTH * 0.75)
-  scene.abilitiesVfxGroup?.add(shockwave)
-  scene.tweens.add({
-    targets: shockwave,
-    scaleX: 3.6,
-    scaleY: 2.1,
-    alpha: 0,
-    duration: 380,
-    ease: Phaser.Math.Easing.Cubic.Out,
-    onComplete: () => shockwave.destroy()
+  playPixelFrames(scene, { x, y, duration: 380 }, (graphics, progress) => {
+    const spread = Phaser.Math.Easing.Cubic.Out(progress)
+    strokePixelBurst(graphics, {
+      radiusX: CELL_WIDTH * 0.75 * (1 + 2.6 * spread),
+      radiusY: CELL_WIDTH * 0.75 * (1 + 1.1 * spread),
+      dashLength: 24 * (1 - progress),
+      color: FLAMETHROWER_EMBER_TINT,
+      rays: 14,
+      size: VFX_PIXEL * 2
+    })
   })
 
   const EMBERS = 12
@@ -8240,21 +8370,19 @@ const tropKick = (isFinisher: boolean) =>
 
 function tropKickShockwave(scene: GameScene | DebugScene, x: number, y: number) {
   TROP_KICK_PETAL_COLORS.forEach((color, index) => {
-    const ring = scene.add
-      .graphics({ x, y })
-      .lineStyle(3, color, 1)
-      .strokeCircle(0, 0, 20)
-      .setDepth(DEPTH.ABILITY_MINOR)
-      .setScale(0.3)
-    scene.tweens.add({
-      targets: ring,
-      scale: 2.2,
-      alpha: 0,
-      delay: index * 70,
-      duration: 420,
-      ease: "cubic.out",
-      onComplete: () => ring.destroy()
-    })
+    playPixelFrames(
+      scene,
+      { x, y, delay: index * 70, duration: 420, depth: DEPTH.ABILITY_MINOR },
+      (graphics, progress) => {
+        const radius = 20 * (0.3 + 1.9 * Phaser.Math.Easing.Cubic.Out(progress))
+        strokePixelBurst(graphics, {
+          radiusX: radius,
+          dashLength: 12 * (1 - progress),
+          color,
+          phase: index * 0.3
+        })
+      }
+    )
   })
 }
 

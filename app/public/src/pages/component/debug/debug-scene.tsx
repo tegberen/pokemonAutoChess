@@ -16,6 +16,9 @@ export default function DebugSceneContainer({
   shiny,
   status,
   awakening = "",
+  timeScale = 1,
+  showBoard = false,
+  effect = "",
   height = 100,
   width = 100
 }: {
@@ -25,6 +28,9 @@ export default function DebugSceneContainer({
   shiny: boolean
   status: Status | ""
   awakening?: Item | ""
+  timeScale?: number
+  showBoard?: boolean
+  effect?: string
   height?: number
   width?: number
 }) {
@@ -41,6 +47,9 @@ export default function DebugSceneContainer({
 
   const onComplete = useCallback(() => {
     setLoaded(true)
+    debugScene.current?.setReplayTimeScale(timeScale)
+    debugScene.current?.showTownBoard(showBoard)
+    if (debugScene.current) debugScene.current.effectOverride = effect
     debugScene.current?.updateSprite(
       pkm,
       orientation,
@@ -49,7 +58,17 @@ export default function DebugSceneContainer({
       shiny,
       awakening
     )
-  }, [animationType, orientation, pkm, status, shiny, awakening])
+  }, [
+    animationType,
+    orientation,
+    pkm,
+    status,
+    shiny,
+    awakening,
+    timeScale,
+    showBoard,
+    effect
+  ])
 
   useEffect(() => {
     if (!initialized.current) {
@@ -79,6 +98,9 @@ export default function DebugSceneContainer({
 
   useEffect(() => {
     if (initialized.current === true && loaded === true) {
+      debugScene.current?.setReplayTimeScale(timeScale)
+      debugScene.current?.showTownBoard(showBoard)
+      if (debugScene.current) debugScene.current.effectOverride = effect
       debugScene.current?.updateSprite(
         pkm,
         orientation,
@@ -88,7 +110,18 @@ export default function DebugSceneContainer({
         awakening
       )
     }
-  }, [pkm, orientation, animationType, status, loaded, shiny, awakening])
+  }, [
+    pkm,
+    orientation,
+    animationType,
+    status,
+    loaded,
+    shiny,
+    awakening,
+    timeScale,
+    showBoard,
+    effect
+  ])
 
   return (
     <div id="debug-scene">

@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { useTranslation } from "react-i18next"
-import { BOTS_ENABLED } from "../../../../../config"
+import { BOTS_ENABLED, MAX_PLAYERS_PER_GAME } from "../../../../../config"
 import { Role } from "../../../../../types"
 import {
   BotDifficulty,
@@ -17,7 +17,6 @@ import { getDefaultRoomName } from "../../../../../utils/room-name"
 import { keys } from "../../../../../utils/object"
 import { useAppSelector } from "../../../hooks"
 import {
-  addBot,
   changeRoomName,
   changeRoomPassword,
   setBlessingsEnabled,
@@ -33,6 +32,8 @@ import { BlessingDescription } from "../synergy/blessing-description"
 import { cc } from "../../utils/jsx"
 import { LocalStoreKeys, localStore } from "../../utils/store"
 import { Modal } from "../modal/modal"
+import { DEFAULT_BOT_DIFFICULTY } from "../../../../../config/game/bots"
+import { BotAdder } from "./bot-adder"
 import { BotSelectModal } from "./bot-select-modal"
 import "./preparation-menu.css"
 
@@ -76,11 +77,15 @@ export default function PreparationSettings() {
     }
   )
   const [ruleQuery, setRuleQuery] = useState("")
-  const [botDifficulty, setBotDifficulty] = useState<BotDifficulty>(
-    BotDifficulty.REGULAR
+  const [customBotDifficulty, setCustomBotDifficulty] = useState<BotDifficulty>(
+    DEFAULT_BOT_DIFFICULTY
   )
 
   const users = useAppSelector((state) => state.preparation.users)
+  const seatedBotIds = useMemo(
+    () => users.filter((u) => u.isBot).map((u) => u.uid),
+    [users]
+  )
   const user = useAppSelector((state) => state.preparation.user)
   const name = useAppSelector((state) => state.preparation.name)
   const password = useAppSelector((state) => state.preparation.password)
@@ -423,39 +428,14 @@ export default function PreparationSettings() {
     (BOTS_ENABLED || isAdmin) && (
       <div className="lobby-setting">
         <span className="setting-label">{t("add_bot")}</span>
-        <div className="setting-control">
-          <select
-            value={botDifficulty}
-            onChange={(e) => setBotDifficulty(parseInt(e.target.value, 10))}
-          >
-            <option value={BotDifficulty.REGULAR}>{t("regular_bot")}</option>
-            <option value={BotDifficulty.NEWBIE}>{t("newbie_bot")}</option>
-            <option value={BotDifficulty.EASY}>{t("easy_bot")}</option>
-            <option value={BotDifficulty.MEDIUM}>{t("normal_bot")}</option>
-            <option value={BotDifficulty.HARD}>{t("hard_bot")}</option>
-            <option value={BotDifficulty.EXTREME}>{t("extreme_bot")}</option>
-            <option value={BotDifficulty.MASTER}>
-              {t("bot_difficulty.MASTER")}
-            </option>
-            <option value={BotDifficulty.SHINY}>{t("shiny_bot")}</option>
-            <option value={BotDifficulty.UNREALISTIC}>
-              {t("unrealistic_bot")}
-            </option>
-            <option value={BotDifficulty.CUSTOM}>{t("custom_bot")}</option>
-          </select>
-          <button
-            className="bubbly blue"
-            onClick={() => {
-              if (botDifficulty === BotDifficulty.CUSTOM) {
-                setShowBotSelectModal(true)
-              } else {
-                addBot(botDifficulty)
-              }
-            }}
-          >
-            {t("add")}
-          </button>
-        </div>
+        <BotAdder
+          seatedBotIds={seatedBotIds}
+          seatsLeft={MAX_PLAYERS_PER_GAME - users.length}
+          onPickCustom={(difficulty) => {
+            setCustomBotDifficulty(difficulty)
+            setShowBotSelectModal(true)
+          }}
+        />
       </div>
     )
 
@@ -487,7 +467,9 @@ export default function PreparationSettings() {
 
       {isOwner && showBotSelectModal && (
         <BotSelectModal
-          botsSelected={users.filter((u) => u.isBot).map((u) => u.uid)}
+          botsSelected={seatedBotIds}
+          initialDifficulty={customBotDifficulty}
+          seatsLeft={MAX_PLAYERS_PER_GAME - users.length}
           close={() => setShowBotSelectModal(false)}
         />
       )}

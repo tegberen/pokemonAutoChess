@@ -447,7 +447,13 @@ export default class PreparationRoom extends Room<{ state: PreparationState }> {
 
     this.onMessage(
       Transfer.ADD_BOT,
-      (client: Client, botType: IBot | BotDifficulty) => {
+      (
+        client: Client,
+        botType:
+          | IBot
+          | BotDifficulty
+          | { difficulty: BotDifficulty; count: number }
+      ) => {
         logger.info(Transfer.ADD_BOT, this.roomName)
         try {
           const user = this.state.users.get(client.auth.uid)

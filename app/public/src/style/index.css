@@ -16,6 +16,7 @@
   --border-thick: 4px solid black;
   --border-thin: 2px solid black;
   --border-extra-thin: 1px solid black;
+  --divider: 2px solid var(--color-bg-primary);
   --shadow-clickable: #2d334b 2px 2px 0px;
 
   /* the Daily Duel and tournament looks, shared by the lobby rooms, the

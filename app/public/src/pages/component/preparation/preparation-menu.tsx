@@ -10,12 +10,12 @@ import {
   RAINBOW_FINALE_WINNER_BOOSTERS,
   RAINBOW_FINALE_WONDER_PICKS
 } from "../../../../../config/game/rainbow-hours"
+import { DEFAULT_BOT_DIFFICULTY } from "../../../../../config/game/bots"
 import { WILD_CARD_ROOM_NAME } from "../../../../../config/game/wild-card"
 import type { IGameUser } from "../../../../../models/colyseus-models/game-user"
 import { Role } from "../../../../../types"
 import { EloRank } from "../../../../../types/enum/EloRank"
 import {
-  BotDifficulty,
   GameMode,
   GameModification,
   getGameModification
@@ -299,7 +299,7 @@ export default function PreparationMenu() {
     users.length < MAX_PLAYERS_PER_GAME && (
       <button
         className="bubbly blue"
-        onClick={() => addBot(BotDifficulty.MEDIUM)}
+        onClick={() => addBot(DEFAULT_BOT_DIFFICULTY)}
       >
         {t("add_bot")}
       </button>

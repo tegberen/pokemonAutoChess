@@ -623,3 +623,31 @@
   width: 1.32em;
   height: 1.32em;
 }
+
+.bot-difficulty-toggles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5em;
+}
+
+.bot-difficulty-toggles .bubbly {
+  flex: 1 1 0;
+}
+
+.bot-difficulty-count {
+  margin-left: 0.4em;
+}
+
+.bot-adder {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5em;
+}
+
+.bot-adder .bot-difficulty-toggles {
+  display: contents;
+}
+
+.bot-adder .bubbly {
+  min-width: 0;
+}

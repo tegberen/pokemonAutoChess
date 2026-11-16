@@ -3,12 +3,15 @@ import { useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { AutoSizer } from "react-virtualized-auto-sizer"
 import { Grid } from "react-window"
+import { getBotEloRange, isEloInRange } from "../../../../../config/game/bots"
+import type { BotDifficulty } from "../../../../../types/enum/Game"
 import type { IBot } from "../../../models/bot-v2"
 import { addBot } from "../../../network"
 import { cc } from "../../utils/jsx"
 import { Modal } from "../modal/modal"
 import { EloBadge } from "../profile/elo-badge"
 import { InlineAvatar } from "../profile/inline-avatar"
+import { BotDifficultyToggles } from "./bot-adder"
 import "./bot-select-modal.css"
 
 const MIN_COL_WIDTH = 360
@@ -16,8 +19,12 @@ const ROW_HEIGHT = 58
 
 export function BotSelectModal(props: {
   botsSelected: string[]
+  initialDifficulty: BotDifficulty
+  seatsLeft: number
   close: () => void
 }) {
+  const [difficultyFilter, setDifficultyFilter] =
+    useState<BotDifficulty | null>(props.initialDifficulty)
   const [sortBotsOrder, setSortBotsOrder] = useState<boolean>(false)
   const [sortBotsCriteria, setSortBotsCriteria] = useState<string>("name")
   const [queryBot, setQueryBot] = useState<string>("")
@@ -52,6 +59,11 @@ export function BotSelectModal(props: {
         !props.botsSelected || props.botsSelected.includes(bot.id) === false
     )
     .filter((bot) => bot.name.toLowerCase().includes(queryBot.toLowerCase()))
+    .filter(
+      (bot) =>
+        difficultyFilter === null ||
+        isEloInRange(bot.elo, getBotEloRange(difficultyFilter))
+    )
     .sort(
       (a, b) =>
         (a[sortBotsCriteria] < b[sortBotsCriteria] ? -1 : 1) *
@@ -94,6 +106,24 @@ export function BotSelectModal(props: {
       }
       body={
         <>
+          <div className="bot-select-filters">
+            <button
+              type="button"
+              className={cc("bubbly", { blue: difficultyFilter === null })}
+              onClick={() => setDifficultyFilter(null)}
+            >
+              {t("all")}
+            </button>
+            <BotDifficultyToggles
+              value={difficultyFilter}
+              onChange={setDifficultyFilter}
+            />
+            <span className="bot-select-seats">
+              {t("seats_left", {
+                count: Math.max(0, props.seatsLeft - botsSelection.size)
+              })}
+            </span>
+          </div>
           {loading && <p>{t("loading")}</p>}
           {!loading && botsListSorted.length === 0 && (
             <p>{t("no_bots_found")}</p>
@@ -123,7 +153,8 @@ export function BotSelectModal(props: {
                         botsListSorted,
                         columnCount,
                         botsSelection,
-                        setBotsSelection
+                        setBotsSelection,
+                        seatsLeft: props.seatsLeft
                       }}
                     />
                   )
@@ -164,6 +195,7 @@ type BotCellData = {
   columnCount: number
   botsSelection: Set<IBot>
   setBotsSelection: React.Dispatch<React.SetStateAction<Set<IBot>>>
+  seatsLeft: number
 }
 
 function BotCell({
@@ -173,7 +205,8 @@ function BotCell({
   botsListSorted,
   columnCount,
   botsSelection,
-  setBotsSelection
+  setBotsSelection,
+  seatsLeft
 }: {
   ariaAttributes: object
   columnIndex: number
@@ -192,7 +225,7 @@ function BotCell({
         onClick={() => {
           if (botsSelection.has(bot)) {
             botsSelection.delete(bot)
-          } else {
+          } else if (botsSelection.size < seatsLeft) {
             botsSelection.add(bot)
           }
           setBotsSelection(new Set([...botsSelection]))

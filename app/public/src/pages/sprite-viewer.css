@@ -19,6 +19,7 @@
   display: flex;
   align-items: baseline;
   justify-content: center;
+  flex-wrap: wrap;
   gap: 8px;
   margin: 0 auto;
   background-color: var(--color-bg-primary);
@@ -36,4 +37,9 @@
   display: flex;
   justify-content: center;
   width: 100%;
+}
+
+.sprite-viewer-speeds {
+  display: flex;
+  gap: 4px;
 }

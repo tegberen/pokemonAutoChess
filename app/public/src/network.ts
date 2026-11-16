@@ -208,6 +208,10 @@ export function addBot(bot: BotDifficulty | IBot) {
   rooms.preparation?.send(Transfer.ADD_BOT, bot)
 }
 
+export function fillWithBots(difficulty: BotDifficulty, count: number) {
+  rooms.preparation?.send(Transfer.ADD_BOT, { difficulty, count })
+}
+
 export function removeBot(id: string) {
   rooms.preparation?.send(Transfer.REMOVE_BOT, id)
 }

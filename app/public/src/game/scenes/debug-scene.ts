@@ -70,6 +70,10 @@ export class DebugScene extends Phaser.Scene {
   abilitiesVfxGroup: Phaser.GameObjects.Group | undefined
   landscape: Phaser.GameObjects.Sprite[] = []
   megaEvolutionLoop: Phaser.Time.TimerEvent | undefined
+  replayTimeScale = 1
+  casterCell = { x: 3, y: 3 }
+  // an animation that is no Pokemon's own ability, like a Unison follow-up
+  effectOverride = ""
 
   constructor(
     height: number,
@@ -102,6 +106,32 @@ export class DebugScene extends Phaser.Scene {
     this.weatherManager = new WeatherManager(this)
   }
 
+  // the town map without its music, so effects show on the real 6x8 board
+  showTownBoard(visible: boolean) {
+    // from the bottom left corner a cast crosses the whole board in view
+    this.casterCell = visible ? { x: 0, y: 0 } : { x: 3, y: 3 }
+    if (!this.map && visible) {
+      this.map = this.add.tilemap("town")
+      const tileset = this.map.addTilesetImage("town_tileset", "town_tileset")!
+      ;["layer0", "layer1", "layer2"].forEach((layer) =>
+        this.map
+          ?.createLayer(layer, tileset, 0, 0)
+          ?.setScale(2, 2)
+          .setDepth(DEPTH.GROUND)
+      )
+    }
+    this.map?.layers.forEach((layer) =>
+      layer.tilemapLayer?.setVisible(visible)
+    )
+  }
+
+  setReplayTimeScale(timeScale: number) {
+    this.replayTimeScale = timeScale
+    this.tweens.timeScale = timeScale
+    this.time.timeScale = timeScale
+    this.anims.globalTimeScale = timeScale
+  }
+
   updateSprite(
     pkm: Pkm,
     orientation: Orientation,
@@ -124,7 +154,11 @@ export class DebugScene extends Phaser.Scene {
       this.playMegaEvolutionLoop(pkm, orientation, shiny)
       return
     }
-    const [px, py] = transformEntityCoordinates(3, 3, false)
+    const [px, py] = transformEntityCoordinates(
+      this.casterCell.x,
+      this.casterCell.y,
+      false
+    )
     this.pokemonSprite = new PokemonSprite(
       this,
       px,
@@ -135,8 +169,8 @@ export class DebugScene extends Phaser.Scene {
       false
     )
     this.pokemonSprite.orientation = orientation
-    this.pokemonSprite.pokemon.positionX = 3
-    this.pokemonSprite.pokemon.positionY = 3
+    this.pokemonSprite.pokemon.positionX = this.casterCell.x
+    this.pokemonSprite.pokemon.positionY = this.casterCell.y
     this.pokemonSprite.setDepth(DEPTH.POKEMON)
 
     this.pokemonSprite.sprite.setTint(
@@ -561,7 +595,10 @@ export class DebugScene extends Phaser.Scene {
       )
     }
     attack()
-    this.attackAnimInterval = setInterval(attack, 2000)
+    this.attackAnimInterval = setInterval(
+      attack,
+      2000 / this.replayTimeScale
+    )
   }
 
   addAbilityAnim() {
@@ -570,7 +607,7 @@ export class DebugScene extends Phaser.Scene {
         scene: this,
         pokemonsOnBoard: [this.target!, this.pokemonSprite!],
         casterId: this.pokemonSprite!.id,
-        ability: this.pokemonSprite!.pokemon.skill,
+        ability: this.effectOverride || this.pokemonSprite!.pokemon.skill,
         orientation: this.pokemonSprite!.orientation,
         positionX: this.pokemonSprite!.positionX,
         positionY: this.pokemonSprite!.positionY,
@@ -581,7 +618,10 @@ export class DebugScene extends Phaser.Scene {
       })
     }
     showAbilityAnim()
-    this.attackAnimInterval = setInterval(showAbilityAnim, 2000)
+    this.attackAnimInterval = setInterval(
+      showAbilityAnim,
+      2000 / this.replayTimeScale
+    )
   }
 
   shakeCamera(options?: { intensity?: number; duration?: number }) {

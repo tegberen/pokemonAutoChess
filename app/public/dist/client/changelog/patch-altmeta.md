@@ -484,6 +484,7 @@ Every balance change on this server, newest first.
 
 **Pokémon**
 - Arcanine, Hisuian Arcanine | can no longer IGNITE every round
+- Eternal Floette | Light of Ruin charge time 0.7s → 1.0s
 
 **Wishes**
 - Selective Genetics | removed

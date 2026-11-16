@@ -2825,15 +2825,6 @@
 	"private_game": "プライベートロビー",
 	"change_room_name": "部屋名の変更",
 	"add_bot": "ボットの追加",
-	"bot_difficulty": {
-		"BEGINNER": "Beginner (<850)",
-		"EASY":  "Easy (850-999)",
-		"MEDIUM": "Medium (1000-1149)",
-		"HARD": "ハード (1150-1299)",
-		"EXTREME": "エクストリーム (1300-1449)",
-		"MASTER": "Master (>1450)",
-		"CUSTOM": "カスタム"
-	},
 	"room_leader": "ルームリーダー",
 	"room_password": "ルームパスワード",
 	"ready": "準備",

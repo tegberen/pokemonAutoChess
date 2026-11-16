@@ -1859,15 +1859,6 @@
 	"add_bot_or_wait_hint": "Voeg bots of wacht tot meer spelers je kamer binnenkomen",
 	"private_game": "Priv� spel",
 	"change_room_name": "Wijzig de naam van de kamer",
-	"bot_difficulty": {
-		"BEGINNER": "Beginner (<850)",
-		"EASY":  "Makkelijk (850-999)",
-		"MEDIUM": "Normaal (1000-1149)",
-		"HARD": "Moeilijk (1150-1299)",
-		"EXTREME": "Extreem (1300-1449)",
-		"MASTER": "Master (>1450)",
-		"CUSTOM": "Aangepast"
-	},
 	"add_bot": "Bot toevoegen",
 	"room_leader": "Kamer leider",
 	"room_password": "Kamer wachtwoord",

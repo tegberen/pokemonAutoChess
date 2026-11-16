@@ -7,7 +7,7 @@ export const DRAGON_DARTS_DART_FLIGHT_MS = 200
 export const MUD_BUBBLE_HOP_MS = 300
 
 // Light of Ruin fires once the user has charged it
-export const LIGHT_OF_RUIN_CHARGE_MS = 700
+export const LIGHT_OF_RUIN_CHARGE_MS = 1000
 
 // each Water Shuriken hits on arrival; the next one leaves a moment later
 export const WATER_SHURIKEN_FLIGHT_MS = 260

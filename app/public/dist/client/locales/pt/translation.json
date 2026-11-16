@@ -4949,14 +4949,5 @@
 		"BATTLE_WIN_STREAK_DESCRIPTION": "Consiga uma sequência de {{amount}} vitórias ou mais",
 		"DELIVERY_DESCRIPTION": "Obtenha {{quantity}} {{item}} no seu inventário ou equipado em um Pokémon ao final da partida",
 		"reward": "Recompensa: {{points}} XP"
-	},
-	"bot_difficulty": {
-		"BEGINNER": "Iniciante (<850)",
-		"EASY": "Fácil (850-999)",
-		"MEDIUM": "Médio (1000-1149)",
-		"HARD": "Difícil (1150-1299)",
-		"EXTREME": "Extremo (1300-1449)",
-		"MASTER": "Mestre (>1450)",
-		"CUSTOM": "Personalizado"
 	}
 }

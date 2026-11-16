@@ -46,3 +46,16 @@
 .bot-select-modal li.selected {
   background-color: #109fff;
 }
+
+.bot-select-filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.3em;
+  margin-bottom: 8px;
+}
+
+.bot-select-seats {
+  margin-left: auto;
+  font-weight: bold;
+}

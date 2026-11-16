@@ -1,34 +1,129 @@
 import { t } from "i18next"
-import { useState } from "react"
-import { useNavigate } from "react-router"
+import { useEffect, useMemo, useState } from "react"
+import { useNavigate, useSearchParams } from "react-router"
+import { PkmAltForms } from "../../../config"
+import { getPokemonData } from "../../../models/precomputed/precomputed-pokemon-data"
+import { Ability } from "../../../types/enum/Ability"
 import { Orientation } from "../../../types/enum/Game"
 import type { Item } from "../../../types/enum/Item"
 import { Pkm } from "../../../types/enum/Pokemon"
 import { Status } from "../../../types/enum/Status"
+import { values } from "../../../utils/object"
 import {
   hasMegaEvolutionAnimation
 } from "../game/components/mega-evolution-animation"
+import { AbilitiesAnimations } from "../game/components/abilities-animations"
 import PokemonSprite from "../game/components/pokemon"
 import { Checkbox } from "./component/checkbox/checkbox"
 import DebugScene from "./component/debug/debug-scene"
 import { MainSidebar } from "./component/main-sidebar/main-sidebar"
 import { PokemonTypeahead } from "./component/typeahead/pokemon-typeahead"
+import { cc } from "./utils/jsx"
 import "./sprite-viewer.css"
+
+const REPLAY_SPEEDS = [1, 0.5, 0.25]
+
+// animations no Pokemon casts as its own ability, like Unison follow-ups
+const EFFECT_ANIMATIONS = Object.keys(AbilitiesAnimations)
+  .filter((key) => !values(Ability).includes(key as Ability))
+  .sort()
+
+// one caster per ability, a regular form when there is one
+function getAbilityCasters() {
+  const casters = new Map<Exclude<Ability, Ability.DEFAULT>, Pkm>()
+  values(Pkm).forEach((pkm) => {
+    const ability = getPokemonData(pkm).skill
+    if (ability === Ability.DEFAULT) return
+    const current = casters.get(ability)
+    const replacesAltForm =
+      current !== undefined &&
+      PkmAltForms.includes(current) &&
+      !PkmAltForms.includes(pkm)
+    if (!current || replacesAltForm) casters.set(ability, pkm)
+  })
+  return casters
+}
+
+function readEnumParam<T extends string>(
+  value: string | null,
+  allowed: readonly T[],
+  fallback: T
+): T {
+  return value !== null && allowed.includes(value as T)
+    ? (value as T)
+    : fallback
+}
 
 export function SpriteDebug() {
   const navigate = useNavigate()
-  const [pkm, setPkm] = useState<Pkm>(Pkm.RATTATA)
-  const [shiny, setShiny] = useState<boolean>(false)
-  const [orientation, setOrientation] = useState<Orientation>(
-    Orientation.DOWNLEFT
+  // every setting lives in the URL, so a reload after a rebuild keeps the view
+  const [searchParams, setSearchParams] = useSearchParams()
+  const [pkm, setPkm] = useState<Pkm>(
+    readEnumParam(searchParams.get("pkm"), values(Pkm), Pkm.RATTATA)
   )
-  const [animationType, setAnimType] = useState<string>("Idle")
-  const [status, setStatus] = useState<Status | "">("")
-  const [awakening, setAwakening] = useState<Item | "">("")
+  const [shiny, setShiny] = useState<boolean>(
+    searchParams.get("shiny") === "1"
+  )
+  const [orientation, setOrientation] = useState<Orientation>(
+    readEnumParam(
+      searchParams.get("orientation"),
+      values(Orientation),
+      Orientation.UPRIGHT
+    )
+  )
+  const [animationType, setAnimType] = useState<string>(
+    searchParams.get("anim") ?? "Idle"
+  )
+  const [status, setStatus] = useState<Status | "">(
+    (searchParams.get("status") as Status | null) ?? ""
+  )
+  const [awakening, setAwakening] = useState<Item | "">(
+    (searchParams.get("awakening") as Item | null) ?? ""
+  )
+  const [replaySpeed, setReplaySpeed] = useState<number>(
+    Number(searchParams.get("speed")) || 1
+  )
+  const [showBoard, setShowBoard] = useState<boolean>(
+    searchParams.get("board") !== "0"
+  )
+  const [effect, setEffect] = useState<string>(
+    readEnumParam(searchParams.get("effect"), EFFECT_ANIMATIONS, "")
+  )
   const isMegaEvolution = animationType === "MegaEvolution"
   const pokemonOptions = Object.values(Pkm)
     .filter((option) => !isMegaEvolution || hasMegaEvolutionAnimation(option))
     .sort((a, b) => t(`pkm.${a}`).localeCompare(t(`pkm.${b}`)))
+  const abilityCasters = useMemo(getAbilityCasters, [])
+  const abilityOptions = useMemo(
+    () =>
+      [...abilityCasters.keys()].sort((a, b) =>
+        t(`ability.${a}`).localeCompare(t(`ability.${b}`))
+      ),
+    [abilityCasters]
+  )
+
+  useEffect(() => {
+    const params: Record<string, string> = { pkm, anim: animationType }
+    if (shiny) params.shiny = "1"
+    if (orientation !== Orientation.UPRIGHT) params.orientation = orientation
+    if (status) params.status = status
+    if (awakening) params.awakening = awakening
+    if (replaySpeed !== 1) params.speed = String(replaySpeed)
+    if (!showBoard) params.board = "0"
+    if (effect) params.effect = effect
+    setSearchParams(params, { replace: true })
+  }, [
+    effect,
+    pkm,
+    animationType,
+    shiny,
+    orientation,
+    status,
+    awakening,
+    replaySpeed,
+    showBoard,
+    setSearchParams
+  ])
 
   return (
     <div className="sprite-viewer-root">
@@ -46,9 +141,47 @@ export function SpriteDebug() {
             onChange={(pkm) => {
               if (pkm) {
                 setPkm(pkm)
+                setEffect("")
               }
             }}
           />
+          <label htmlFor="sprite-viewer-ability">Ability</label>
+          <select
+            id="sprite-viewer-ability"
+            value={effect || getPokemonData(pkm).skill}
+            onChange={(e) => {
+              const value = e.currentTarget.value
+              setAnimType("Ability")
+              if (EFFECT_ANIMATIONS.includes(value)) {
+                setEffect(value)
+                return
+              }
+              const caster = abilityCasters.get(
+                value as Exclude<Ability, Ability.DEFAULT>
+              )
+              if (!caster) return
+              setPkm(caster)
+              setEffect("")
+            }}
+          >
+            {getPokemonData(pkm).skill === Ability.DEFAULT && (
+              <option value={Ability.DEFAULT}>-</option>
+            )}
+            <optgroup label="Abilities">
+              {abilityOptions.map((ability) => (
+                <option value={ability} key={ability}>
+                  {t(`ability.${ability}`)}
+                </option>
+              ))}
+            </optgroup>
+            <optgroup label="Effects">
+              {EFFECT_ANIMATIONS.map((key) => (
+                <option value={key} key={key}>
+                  {key}
+                </option>
+              ))}
+            </optgroup>
+          </select>
           <Checkbox
             checked={shiny}
             onToggle={setShiny}
@@ -135,6 +268,26 @@ export function SpriteDebug() {
               )
             )}
           </select>
+
+          <Checkbox
+            checked={showBoard}
+            onToggle={setShowBoard}
+            label="Board"
+            isDark
+          />
+
+          <span className="sprite-viewer-speeds">
+            {REPLAY_SPEEDS.map((speed) => (
+              <button
+                key={speed}
+                type="button"
+                className={cc("bubbly", { blue: replaySpeed === speed })}
+                onClick={() => setReplaySpeed(speed)}
+              >
+                {speed === 1 ? "1×" : `${speed}×`}
+              </button>
+            ))}
+          </span>
         </div>
         <div className="sprite-viewer-sprite">
           <DebugScene
@@ -144,6 +297,9 @@ export function SpriteDebug() {
             shiny={shiny}
             status={status}
             awakening={awakening}
+            timeScale={replaySpeed}
+            showBoard={showBoard}
+            effect={animationType === "Ability" ? effect : ""}
             width={1950}
             height={1000}
           />

@@ -3864,15 +3864,6 @@
 	"make_room_public_hint": "Eliminar contraseña de esta sala",
 	"change_room_name": "Cambiar el nombre de la Sala",
 	"add_bot": "Agregar Bot",
-	"bot_difficulty": {
-		"BEGINNER": "Principiante (<850)",
-		"EASY": "Fácil (850-999)",
-		"MEDIUM": "Medium (1000-1149)",
-		"HARD": "Difícil (1150-1299)",
-		"EXTREME": "Extremo (1300-1449)",
-		"MASTER": "Maestro (>1450)",
-		"CUSTOM": "Personalizado"
-	},
 	"room_leader": "Líder de sala",
 	"room_password": "Contraseña de la Sala",
 	"ready": "Listo",

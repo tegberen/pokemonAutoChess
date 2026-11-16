@@ -2348,15 +2348,6 @@
 	"private_game": "Частно фоайе",
 	"change_room_name": "Променете името на стаята",
 	"add_bot": "Добавете бот",
-	"bot_difficulty": {
-		"BEGINNER": "Beginner (<850)",
-		"EASY": "Лесно (850-999)",
-		"MEDIUM": "Нормално (1000-1149)",
-		"HARD": "Твърд (1150-1299)",
-		"EXTREME": "Екстремен (1300-1449)",
-		"MASTER": "Master (>1450)",
-		"CUSTOM": "Персонализиран"
-	},
 	"room_leader": "Лидер на стаята",
 	"room_password": "Парола за стаята",
 	"ready": "Готов",

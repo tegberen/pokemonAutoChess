@@ -1238,15 +1238,6 @@
 	"make_room_public_hint": "ลบรหัสล็อคห้อง",
 	"change_room_name": "เปลี่ยนชื่อห้อง",
 	"add_bot": "เพิ่มบอท",
-	"bot_difficulty": {
-		"BEGINNER": "Beginner (<850)",
-		"EASY":  "ง่าย (850-999)",
-		"MEDIUM": "ปานกลาง (1000-1149)",
-		"HARD": "ยาก (1150-1299)",
-		"EXTREME": "ยากมาก (1300-1449)",
-		"MASTER": "Master (>1450)",
-		"CUSTOM": "เลือก"
-	},
 	"room_leader": "เจ้าของห้อง",
 	"room_password": "รหัสห้อง",
 	"ready": "พร้อม",

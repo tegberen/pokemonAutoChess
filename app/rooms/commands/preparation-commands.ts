@@ -3,7 +3,6 @@ import { setTimeout } from "node:timers/promises"
 import { Command } from "@colyseus/command"
 import { type Client, matchMaker } from "colyseus"
 import type { UserRecord } from "firebase-admin/lib/auth/user-record"
-import type { QueryFilter } from "mongoose"
 import {
   EloRankThreshold,
   MAX_PLAYERS_PER_GAME,
@@ -22,6 +21,11 @@ import {
   type IGameUser
 } from "../../models/colyseus-models/game-user"
 import { BotV2 } from "../../models/mongo-models/bot-v2"
+import {
+  distanceToEloRange,
+  getBotEloRange,
+  isEloInRange
+} from "../../config/game/bots"
 import UserMetadata from "../../models/mongo-models/user-metadata"
 import { Role } from "../../types"
 import { CloseCodes } from "../../types/enum/CloseCodes"
@@ -1137,131 +1141,99 @@ export class InitializeBotsCommand extends Command<
 }
 
 type OnAddBotPayload = {
-  type: IBot | BotDifficulty
+  type: IBot | BotDifficulty | { difficulty: BotDifficulty; count: number }
   user: IGameUser
 }
 
-const REGULAR_MIX_ELO = { $gte: 1100, $lt: 1700 }
+// an emptied range falls back to the bots closest to it, so a Beginner pick
+// never brings a 1500 Elo bot
+const CLOSEST_BOTS_FALLBACK = 3
 
 export class OnAddBotCommand extends Command<PreparationRoom, OnAddBotPayload> {
   async execute(data: OnAddBotPayload) {
     try {
       // a tournament lobby seats only its registered teams
       if (this.room.isTournamentLobby) return
-      if (this.state.users.size >= MAX_PLAYERS_PER_GAME) {
-        this.room.state.addMessage({
-          authorId: "server",
-          payload: "Room is full"
-        })
+      const { type } = data
+      if (typeof type === "object" && "difficulty" in type) {
+        // one after another, so each pick sees the bots already seated
+        const seatsLeft = MAX_PLAYERS_PER_GAME - this.state.users.size
+        const count = Math.max(0, Math.min(type.count, seatsLeft))
+        for (let added = 0; added < count; added++) {
+          const bot = await this.pickBotByDifficulty(type.difficulty)
+          if (!bot || !this.seatBot(bot)) return
+        }
         return
       }
-
-      const { type } = data
-      let bot: IBot | undefined
-      if (typeof type === "object") {
-        // pick a specific bot chosen by the user
-        bot = type
-      } else {
-        // pick a random bot per difficulty
-        const difficulty = type
-        let elo: QueryFilter<IBot>["elo"] | undefined
-
-        switch (difficulty) {
-          case BotDifficulty.NEWBIE:
-            elo = { $lt: 900 }
-            break
-          case BotDifficulty.EASY:
-            elo = { $gte: 900, $lt: 1150 }
-            break
-          case BotDifficulty.MEDIUM:
-            elo = { $gte: 1150, $lt: 1300 }
-            break
-          case BotDifficulty.HARD:
-            elo = { $gte: 1300, $lt: 1450 }
-            break
-          case BotDifficulty.EXTREME:
-            elo = { $gte: 1450, $lt: 1700 }
-            break
-          case BotDifficulty.MASTER:
-            elo = { $gte: 1700 }
-            break
-          case BotDifficulty.REGULAR:
-            elo = REGULAR_MIX_ELO
-            break
-          case BotDifficulty.SHINY:
-            elo = { $gte: 1700, $lt: 5000 }
-            break
-          case BotDifficulty.UNREALISTIC:
-            elo = { $gte: 9000 }
-            break
-          default:
-            elo = { $lt: 1700 }
-
-        }
-
-        const existingBots = new Array<string>()
-        this.state.users.forEach((value: GameUser, key: string) => {
-          if (value.isBot) {
-            existingBots.push(key)
-          }
-        })
-
-        let bots = await BotV2.find(
-          { id: { $nin: existingBots }, elo, approved: true },
-          ["avatar", "elo", "name", "id"]
-        )
-
-        // brackets can be empty depending on the bots in database
-        if (bots.length <= 0 && difficulty !== BotDifficulty.REGULAR) {
-          bots = await BotV2.find(
-            { id: { $nin: existingBots }, elo: REGULAR_MIX_ELO, approved: true },
-            ["avatar", "elo", "name", "id"]
-          )
-        }
-
-        if (bots.length <= 0) {
-          this.room.state.addMessage({
-            authorId: "server",
-            payload: "Error: No bots found"
-          })
-          return
-        }
-
-        bot = pickRandomIn(bots) as unknown as IBot
-      }
-
-      if (bot) {
-        // we checked again the lobby size because of the async request ahead
-        if (this.state.users.size >= MAX_PLAYERS_PER_GAME) {
-          this.room.state.addMessage({
-            authorId: "server",
-            payload: "Room is full"
-          })
-          return
-        }
-
-        this.state.users.set(
-          bot.id,
-          new GameUser(
-            bot.id,
-            bot.name,
-            bot.elo,
-            99, // arbitrary number of games played
-            bot.avatar,
-            true,
-            true,
-            "",
-            Role.BOT,
-            false
-          )
-        )
-
-        this.room.updatePlayersInfo()
-        autoAssignPartner(this.state, bot.id)
-      }
+      if (this.isRoomFull()) return
+      const bot =
+        typeof type === "object" ? type : await this.pickBotByDifficulty(type)
+      if (bot) this.seatBot(bot)
     } catch (error) {
       logger.error(error)
     }
+  }
+
+  isRoomFull() {
+    if (this.state.users.size < MAX_PLAYERS_PER_GAME) return false
+    this.room.state.addMessage({ authorId: "server", payload: "Room is full" })
+    return true
+  }
+
+  async pickBotByDifficulty(
+    difficulty: BotDifficulty
+  ): Promise<IBot | undefined> {
+    const seatedBots = new Array<string>()
+    this.state.users.forEach((value: GameUser, key: string) => {
+      if (value.isBot) seatedBots.push(key)
+    })
+    const range = getBotEloRange(difficulty)
+    const available = await BotV2.find(
+      { id: { $nin: seatedBots }, approved: true },
+      ["avatar", "elo", "name", "id"]
+    )
+    const inRange = available.filter((bot) => isEloInRange(bot.elo, range))
+    const candidates =
+      inRange.length > 0
+        ? inRange
+        : available
+            .sort(
+              (a, b) =>
+                distanceToEloRange(a.elo, range) -
+                distanceToEloRange(b.elo, range)
+            )
+            .slice(0, CLOSEST_BOTS_FALLBACK)
+    if (candidates.length <= 0) {
+      this.room.state.addMessage({
+        authorId: "server",
+        payload: "Error: No bots found"
+      })
+      return undefined
+    }
+    return pickRandomIn(candidates) as unknown as IBot
+  }
+
+  seatBot(bot: IBot) {
+    // checked again because of the async request ahead
+    if (this.isRoomFull()) return false
+    this.state.users.set(
+      bot.id,
+      new GameUser(
+        bot.id,
+        bot.name,
+        bot.elo,
+        99, // arbitrary number of games played
+        bot.avatar,
+        true,
+        true,
+        "",
+        Role.BOT,
+        false
+      )
+    )
+    this.room.updatePlayersInfo()
+    autoAssignPartner(this.state, bot.id)
+    return true
   }
 }
 
