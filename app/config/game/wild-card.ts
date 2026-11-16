@@ -2,7 +2,7 @@ import { Rarity } from "../../types/enum/Game"
 
 export const WILD_CARD_ROOM_NAME = "Wild Card"
 // keep in sync with WILD_CARD_LOBBY_CRON
-export const WILD_CARD_LOBBY_HOURS_UTC = [4, 8, 12, 16]
+export const WILD_CARD_LOBBY_HOURS_UTC = [8, 12, 16]
 export const WILD_CARD_CANDIDATES = 5
 export const WILD_CARD_WONDER_PICKS = 1
 // the whole lobby draws its leaders from one of these, rolled per game

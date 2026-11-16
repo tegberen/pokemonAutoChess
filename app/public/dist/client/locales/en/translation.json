@@ -2617,7 +2617,7 @@
 		"FLAME_BODY": "Attacks have [30,LK]% chance to inflict BURN for 3 seconds",
 		"WILDFIRE": "+1 ATK after every hit",
 		"BLAZE": "+2 ATK after every hit. Get a FIRE_SHARD every round (max 1)",
-		"DESOLATE_LAND": "+4 ATK after every hit. Using a FIRE_SHARD can also IGNITE the Pokémon for 1 round, granting 50 SHIELD, 20 SPEED and heal 1 player HP on every KO. It is on cooldown and cannot IGNITE again for 2 rounds, but the FIRE_SHARD can still be used on the same Pokémon.",
+		"DESOLATE_LAND": "+4 ATK after every hit. Using a FIRE_SHARD can also IGNITE the Pokémon for 1 round, granting 50 SHIELD, 20 SPEED and heal 1 player HP on every KO. It is on cooldown and cannot IGNITE again for 3 rounds, but the FIRE_SHARD can still be used on the same Pokémon.",
 		"RAIN_DANCE": "+4 PP per second. Get an Old Rod.",
 		"DRIZZLE": "+8 PP per second. Get a Good Rod.",
 		"PRIMORDIAL_SEA": "+12 PP per second. Get a Super Rod.",
@@ -3876,7 +3876,6 @@
 		"FERALIGATR": "Gain one stack for each KO. Mega evolves after 20 stacks.",
 		"MEGA_FERALIGATR": "Once per fight, when it KOs an enemy, permanently gain 1 AP and 1 SPEED for each STAR on your board, up to 100 of each.",
 		"INTIMIDATE": "When attacking, has a [30,LK]% chance to FLINCH the target for 3 seconds.",
-		"INTIMIDATE_EVERBURNING": "When attacking, has a [30,LK]% chance to FLINCH the target for 3 seconds. Its spirit can IGNITE every round.",
 		"STEELY_SPIRIT": "Allies ADJACENT_IN_THE_SAME_ROW deal 10% of their ATK as TRUE.",
 		"ZERAORA": "Gains a stack for each KO. Mega evolves after 20 stacks.",
 		"ICE_BODY": "Under SNOW, regain 20% of its max HP every 2 seconds.",
@@ -4029,7 +4028,7 @@
 		"FAIRY": "FAIRY Pokémon use wands to deal additional SPECIAL and various effects with their attacks.{{additionalInfo}}",
 		"FAIRY_WANDS": "\nWands equipped: {{wands}}",
 		"ROCK": "ROCK Pokémon gain DEF, better resist to critical attacks, and can adapt to weather. When ROCK Pokémon are KO'd they explode and ARMOR_BREAK all ADJACENT enemies",
-		"GHOST": "GHOST lets you write incantations: a HEXING_INCANTATION DEBUFF at 2 and 4, a RITUAL_INCANTATION BUFF at 6 and a FATED_INCANTATION at 8. GHOST Pokémon have a [15,LK]% chance to dodge attacks and apply SILENCE for 2s ON_HIT, more against negative LUCK.{{additionalInfo}}",
+		"GHOST": "GHOST lets you write incantations: a HEXING_INCANTATION DEBUFF at 2 and 4, a RITUAL_INCANTATION BUFF at 6 and a FATED_INCANTATION at 8. GHOST Pokémon have a [10,LK]% chance to dodge attacks and apply SILENCE for 2s ON_HIT, more against negative LUCK.{{additionalInfo}}",
 		"GHOST_SPIRIT_COIN": " A SPIRIT_COIN is worth 1 GOLD, 1 free shop reroll or 1 XP, decided at the start of each game.",
 		"GHOST_SPIRIT_COIN_GOLD": " This game, a SPIRIT_COIN is worth 1 GOLD.",
 		"GHOST_SPIRIT_COIN_REROLL": " This game, a SPIRIT_COIN is worth 1 free shop reroll.",
@@ -4691,7 +4690,7 @@
 			"wiki": "Open/close wiki",
 			"meta_report": "Open/close meta report",
 			"team_planner": "Open/close team planner",
-			"chat": "Chat with your Double Up partner [Level 42+]",
+			"chat": "Chat with your Double Up partner [Level 10+]",
 			"avatar_emotes": "Toggle emote menu",
 			"avatar_show_emote": "Trigger emote"
 		},
@@ -5571,10 +5570,6 @@
 			"name": "Baby Opener",
 			"description": "Gain 3 random different BABY Pokémon costing 2 or less. Each time you obtain an egg, gain 4 player HP."
 		},
-		"SELECTIVE_GENETICS": {
-			"name": "Selective Genetics",
-			"description": "When a Golden Egg hatches, it opens up a choice of 3 shiny items to obtain instead of its usual reward. Gain 3 random BABY Pokémon costing 4 or less that you don't currently have, with a 5% chance for one of them to be a Golden Egg."
-		},
 		"REPLICATOR": {
 			"name": "Replicator",
 			"description": "Gain a DUBIOUS_DISC_BLESSING_ITEM. This item can be consumed to make a copy of any tool you have, which remains in your inventory regardless of your ARTIFICIAL level. Gain a Klink."
@@ -6345,15 +6340,15 @@
 		},
 		"VIKING_HELMET": {
 			"name": "Viking Helmet",
-			"description": "Gain a random HEART_SCALE, NEVER_MELT_ICE or MIRACLE_SEED. At the start of combat, Pokémon holding 3 items, one of them made with one of these, gain 40% of their max HP."
+			"description": "Gain a random HEART_SCALE, NEVER_MELT_ICE or MIRACLE_SEED. At the start of combat, Pokémon holding 3 items, one of them made with one of these, gain 30% of their max HP."
 		},
 		"RUNE_SWORD": {
 			"name": "Rune Sword",
-			"description": "Gain a random CHARCOAL, BLACK_GLASSES or MAGNET. At the start of combat, Pokémon holding 3 items, one of them made with one of these, gain 40% of their base ATK."
+			"description": "Gain a random CHARCOAL, BLACK_GLASSES or MAGNET. At the start of combat, Pokémon holding 3 items, one of them made with one of these, gain 30% of their base ATK."
 		},
 		"RUNE_STONE": {
 			"name": "Rune Stone",
-			"description": "Gain a random MYSTIC_WATER, TWISTED_SPOON or BINDING_BAND. At the start of combat, Pokémon holding 3 items, one of them made with one of these, gain 40% of their max PP as starting PP."
+			"description": "Gain a random MYSTIC_WATER, TWISTED_SPOON or BINDING_BAND. At the start of combat, Pokémon holding 3 items, one of them made with one of these, gain 30% of their max PP as starting PP."
 		},
 		"UNITY_CORE": {
 			"name": "Unity Core",
@@ -6589,7 +6584,7 @@
 		},
 		"CURSED_COFFIN": {
 			"name": "Cursed Coffin",
-			"description": "Your STRONGEST Yamask no longer attacks. Instead, every second it drains 15 HP and 5 PP from each ADJACENT enemy. Its Spite drains from the target and all ADJACENT enemies, and heals it for the PP drained. Gain a Yamask."
+			"description": "Your STRONGEST Yamask no longer attacks. Instead, every second it drains 10 HP and 5 PP from each ADJACENT enemy. Its Spite drains from the target and all ADJACENT enemies, and heals it for the PP drained. Gain a Yamask."
 		},
 		"LIGHT_OF_OLIVINE": {
 			"name": "Light of Olivine",
@@ -8304,6 +8299,7 @@
 		"delete_row": "Delete row",
 		"symbols": "Symbols",
 		"rank_wishes": "Rank Wishes",
+		"rank_synergies": "Rank Synergies",
 		"all_tiers": "All",
 		"all_sorted": "Nothing left to sort",
 		"skip": "Skip",

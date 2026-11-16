@@ -13,7 +13,9 @@ import {
 } from "../synergy/blessing-tooltip-card"
 import TierList from "./tier-list"
 import "./tier-list-maker.css"
-import TierListRapidSorter from "./tier-list-rapid-sorter"
+import TierListRapidSorter, {
+  type RapidSorterMode
+} from "./tier-list-rapid-sorter"
 
 const PREVIEW_WIDTH = 620
 const PREVIEW_GAP = 6
@@ -41,7 +43,7 @@ export default function TierListMaker() {
     localStore.set(LocalStoreKeys.TIER_LIST, tierList)
   }, [tierList])
 
-  const [sorting, setSorting] = useState(false)
+  const [sorting, setSorting] = useState<RapidSorterMode | null>(null)
   const makerRef = useRef<HTMLDivElement>(null)
   const previewRef = useRef<HTMLDivElement>(null)
   const [preview, setPreview] = useState<{
@@ -184,14 +186,24 @@ export default function TierListMaker() {
     <div id="tier-list-maker" ref={makerRef}>
       <div className="actions">
         {!sorting && (
-          <button
-            className="bubbly green tier-list-rapid-sort"
-            onClick={() => setSorting(true)}
-            type="button"
-          >
-            <img src="assets/icons/blessing_stats.svg" alt="" />{" "}
-            {t("tier_list.rank_wishes")}
-          </button>
+          <>
+            <button
+              className="bubbly green tier-list-rapid-sort"
+              onClick={() => setSorting("blessing")}
+              type="button"
+            >
+              <img src="assets/icons/blessing_stats.svg" alt="" />{" "}
+              {t("tier_list.rank_wishes")}
+            </button>
+            <button
+              className="bubbly green tier-list-rapid-sort"
+              onClick={() => setSorting("synergy")}
+              type="button"
+            >
+              <img src="assets/icons/synergy_stats.svg" alt="" />{" "}
+              {t("tier_list.rank_synergies")}
+            </button>
+          </>
         )}
         <button
           className="bubbly tier-list-add-row"
@@ -234,9 +246,11 @@ export default function TierListMaker() {
       )}
       {sorting ? (
         <TierListRapidSorter
+          key={sorting}
+          mode={sorting}
           tierList={tierList}
           onUpdate={setTierList}
-          onClose={() => setSorting(false)}
+          onClose={() => setSorting(null)}
         />
       ) : (
         <>

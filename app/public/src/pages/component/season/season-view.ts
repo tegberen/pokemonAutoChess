@@ -111,7 +111,7 @@ function getGymLeadersView(uid: string, now: number) {
     `${t(`synergy.${lowest}`)} ` +
     `min ${SynergyTiersThresholds[lowest][0]}`
   const info =
-    "Gym Leaders: win a Duo game with your pair or your partner's. One " +
+    "Elite Duo Challenge: win a Duo game with your pair or your partner's. One " +
     "partner needs the highest tier of one synergy and the lowest tier of " +
     "the other, the other partner the reverse.\n\n" +
     `A: ${describeSide(first, second)}\nB: ${describeSide(second, first)}`

@@ -11,19 +11,17 @@ import {
   type StackEvolutionRule,
   type StateEvolutionRule
 } from "../../types/EvolutionRules"
-import { PlayerChoice } from "../../models/colyseus-models/player-choice"
 import {
   Blessing,
   CRYSTAL_GUARDIAN_ROCKS_GRANTED,
   HERO_BLESSING_FAMILY,
-  LUMINOUS_SPRING_GOLD_BY_STAR,
-  SELECTIVE_GENETICS_SHINY_ITEM_OPTIONS
+  LUMINOUS_SPRING_GOLD_BY_STAR
 } from "../../types/enum/Blessing"
 import { PrismaticQuest } from "../../types/enum/PrismaticQuest"
 import { isMegaEvolutionLocked } from "../../types/enum/SpecialGameRule"
 import { PokemonActionState } from "../../types/enum/Game"
-import { Item, ShinyItems, WeatherRocks } from "../../types/enum/Item"
-import { pickNRandomIn, pickRandomIn } from "../../utils/random"
+import { Item, WeatherRocks } from "../../types/enum/Item"
+import { pickRandomIn } from "../../utils/random"
 import { Passive } from "../../types/enum/Passive"
 import { Pkm, PkmFamily } from "../../types/enum/Pokemon"
 import { OnEvolutionEffect } from "../effects/effect"
@@ -202,22 +200,6 @@ export const EvolutionManager = {
         player.blessings.push(heroBlessing)
         player.blessingsRef?.blessings.push(heroBlessing)
       }
-    }
-
-    if (
-      pokemonBeforeEvolution.name === Pkm.EGG &&
-      pokemonBeforeEvolution.shiny &&
-      player.blessings?.includes(Blessing.SELECTIVE_GENETICS)
-    ) {
-      player.choices.push(
-        new PlayerChoice({
-          type: "item",
-          items: pickNRandomIn(
-            ShinyItems.filter((item) => item !== Item.RED_SCALE),
-            SELECTIVE_GENETICS_SHINY_ITEM_OPTIONS
-          )
-        })
-      )
     }
 
     if (pokemonEvolved.passive in PassiveEffects) {

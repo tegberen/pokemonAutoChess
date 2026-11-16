@@ -3,14 +3,25 @@ import { useMemo, useState } from "react"
 import { useTranslation } from "react-i18next"
 import { Tooltip } from "react-tooltip"
 import { Blessings } from "../../../../../config/game/blessings"
+import {
+  SynergyTiers,
+  SynergyTiersThresholds
+} from "../../../../../config/game/synergies"
 import { Blessing } from "../../../../../types/enum/Blessing"
+import { Synergy, SynergyArray } from "../../../../../types/enum/Synergy"
 import type { ITierList } from "../../../../../types/interfaces/TierList"
+import {
+  addIconsToDescription,
+  getGhostSpiritCoinSentence
+} from "../../utils/descriptions"
 import { cc } from "../../utils/jsx"
+import SynergyIcon from "../icons/synergy-icon"
 import {
   BlessingStages,
   BlessingTooltipCard,
   blessingTierClass
 } from "../synergy/blessing-tooltip-card"
+import { SynergyTierDescription } from "../synergy/synergy-tier-description"
 import {
   BLESSING_TIER_ORDER,
   compareBlessingsBySynergy,
@@ -25,9 +36,44 @@ const TOOLTIP_ID = "tier-list-rapid-sorter-tooltip"
 
 type TierFilter = (typeof TIER_FILTERS)[number]
 
-type SorterStep = { blessing: Blessing; queueIndex: number }
+export type RapidSorterMode = "blessing" | "synergy"
+
+type SorterEntry = Blessing | Synergy
+
+type SorterStep = { entry: SorterEntry; queueIndex: number }
+
+function SynergySorterCard(props: { synergy: Synergy }) {
+  const { t } = useTranslation()
+  const { synergy } = props
+  const synergyTiers = SynergyTiers[synergy]
+  return (
+    <div className="tier-list-rapid-sorter-synergy-card">
+      <h3>
+        <SynergyIcon type={synergy} size="2.5rem" /> {t(`synergy.${synergy}`)}
+      </h3>
+      <p>
+        {addIconsToDescription(
+          t(`synergy_description.${synergy}`, {
+            additionalInfo:
+              synergy === Synergy.GHOST ? getGhostSpiritCoinSentence() : ""
+          })
+        )}
+      </p>
+      {synergyTiers.map((tier: (typeof synergyTiers)[number], i) => (
+        <div key={tier} className="tier-list-rapid-sorter-synergy-tier">
+          <span>
+            ({SynergyTiersThresholds[synergy][i]}) {t(`effect.${tier}`)}
+            :&nbsp;
+          </span>
+          <SynergyTierDescription tier={tier} />
+        </div>
+      ))}
+    </div>
+  )
+}
 
 export default function TierListRapidSorter(props: {
+  mode: RapidSorterMode
   tierList: ITierList
   onUpdate: (tierList: ITierList) => void
   onClose: () => void
@@ -37,8 +83,9 @@ export default function TierListRapidSorter(props: {
   const [index, setIndex] = useState(0)
   const [history, setHistory] = useState<SorterStep[]>([])
   const [dragging, setDragging] = useState(false)
+  const isSynergyMode = props.mode === "synergy"
 
-  // which row each blessing currently sits in, read back from the list itself so
+  // which row each entry currently sits in, read back from the list itself so
   // re-filing an entry never leaves a duplicate behind
   const placement = useMemo(() => {
     const map = new Map<string, number>()
@@ -53,50 +100,51 @@ export default function TierListRapidSorter(props: {
   // the whole category stays in the queue, sorted entries included, so the strip
   // below always shows what is done and what is still coming. tier leads the sort
   // so walking the queue follows the strip: all silver, then gold, then prismatic
-  const queue = useMemo(
+  const queue: SorterEntry[] = useMemo(
     () =>
-      (Object.values(Blessing) as Blessing[])
-        .filter(
-          (blessing) => !tierFilter || Blessings[blessing].tier === tierFilter
-        )
-        .sort(
-          (a, b) =>
-            BLESSING_TIER_ORDER.indexOf(Blessings[a].tier) -
-              BLESSING_TIER_ORDER.indexOf(Blessings[b].tier) ||
-            compareBlessingsBySynergy(a, b)
-        ),
-    [tierFilter]
+      isSynergyMode
+        ? [...SynergyArray]
+        : (Object.values(Blessing) as Blessing[])
+            .filter(
+              (blessing) =>
+                !tierFilter || Blessings[blessing].tier === tierFilter
+            )
+            .sort(
+              (a, b) =>
+                BLESSING_TIER_ORDER.indexOf(Blessings[a].tier) -
+                  BLESSING_TIER_ORDER.indexOf(Blessings[b].tier) ||
+                compareBlessingsBySynergy(a, b)
+            ),
+    [tierFilter, isSynergyMode]
   )
 
-  const current: Blessing | undefined = queue[index]
-  const sortedCount = queue.filter((blessing) =>
-    placement.has(blessing)
-  ).length
+  const current: SorterEntry | undefined = queue[index]
+  const sortedCount = queue.filter((entry) => placement.has(entry)).length
 
   function nextUnsortedFrom(from: number) {
     const at = queue.findIndex(
-      (blessing, i) => i >= from && !placement.has(blessing)
+      (entry, i) => i >= from && !placement.has(entry)
     )
     return at === -1 ? queue.length : at
   }
 
-  function withoutBlessing(rows: ITierList["rows"], blessing: Blessing) {
-    const rowIndex = placement.get(blessing)
+  function withoutEntry(rows: ITierList["rows"], entry: SorterEntry) {
+    const rowIndex = placement.get(entry)
     if (rowIndex === undefined) return rows
     return rows.map((row, i) =>
       i === rowIndex
-        ? { ...row, items: row.items.filter((item) => item !== blessing) }
+        ? { ...row, items: row.items.filter((item) => item !== entry) }
         : row
     )
   }
 
   function assign(rowIndex: number) {
     if (!current || !props.tierList.rows[rowIndex]) return
-    const rows = withoutBlessing(props.tierList.rows, current).map((row, i) =>
+    const rows = withoutEntry(props.tierList.rows, current).map((row, i) =>
       i === rowIndex ? { ...row, items: [...row.items, current] } : row
     )
     props.onUpdate({ ...props.tierList, rows })
-    setHistory((steps) => [...steps, { blessing: current, queueIndex: index }])
+    setHistory((steps) => [...steps, { entry: current, queueIndex: index }])
     setIndex(nextUnsortedFrom(index + 1))
   }
 
@@ -105,9 +153,9 @@ export default function TierListRapidSorter(props: {
     setIndex(nextUnsortedFrom(index + 1))
   }
 
-  function dragBlessing(e: React.DragEvent, blessing: Blessing) {
+  function dragEntry(e: React.DragEvent, entry: SorterEntry) {
     e.stopPropagation()
-    e.dataTransfer.setData("text/plain", `blessing,${blessing}`)
+    e.dataTransfer.setData("text/plain", `${props.mode},${entry}`)
     setDragging(true)
   }
 
@@ -116,7 +164,7 @@ export default function TierListRapidSorter(props: {
     if (!last) return
     props.onUpdate({
       ...props.tierList,
-      rows: withoutBlessing(props.tierList.rows, last.blessing)
+      rows: withoutEntry(props.tierList.rows, last.entry)
     })
     setHistory((steps) => steps.slice(0, -1))
     setIndex(last.queueIndex)
@@ -136,35 +184,85 @@ export default function TierListRapidSorter(props: {
     )
   }
 
+  function queueChoice(entry: SorterEntry, queueIndex: number) {
+    const rowIndex = placement.get(entry)
+    return (
+      <div
+        key={entry}
+        className={cc(
+          isSynergyMode
+            ? "tier-list-blessing-choice tier-list-synergy-choice"
+            : `tier-list-blessing-choice ${blessingTierClass(entry as Blessing)}`,
+          {
+            sorted: rowIndex !== undefined,
+            current: queueIndex === index
+          }
+        )}
+        // a sorted card wears its row colour instead of a caption,
+        // since the corner already holds the short label
+        style={
+          rowIndex === undefined
+            ? undefined
+            : {
+                boxShadow: `inset 0 0 0 3px ${props.tierList.rows[rowIndex].color}`
+              }
+        }
+        draggable
+        onDragStart={(e) => dragEntry(e, entry)}
+        onDragEnd={() => setDragging(false)}
+        data-tooltip-id={isSynergyMode ? undefined : TOOLTIP_ID}
+        data-tooltip-content={entry}
+        onClick={() => setIndex(queueIndex)}
+      >
+        {isSynergyMode ? (
+          <SynergyIcon type={entry as Synergy} size="100%" />
+        ) : (
+          blessingCardIcon(entry as Blessing)
+        )}
+      </div>
+    )
+  }
+
   return (
     <section className="tier-list-rapid-sorter my-box">
       <header>
         <h2>
-          <img src="assets/icons/blessing_stats.svg" alt="" />
-          {t("tier_list.rank_wishes")}
+          <img
+            src={
+              isSynergyMode
+                ? "assets/icons/synergy_stats.svg"
+                : "assets/icons/blessing_stats.svg"
+            }
+            alt=""
+          />
+          {t(
+            isSynergyMode ? "tier_list.rank_synergies" : "tier_list.rank_wishes"
+          )}
         </h2>
-        <div className="tier-list-rapid-sorter-filters">
-          {TIER_FILTERS.map((filter) => (
-            <button
-              key={filter ?? "all"}
-              type="button"
-              className={cc(
-                "bubbly",
-                filter
-                  ? `tier-filter blessing-tier-${filter.toLowerCase()}`
-                  : "dark",
-                { selected: tierFilter === filter }
-              )}
-              onClick={() => {
-                setTierFilter(filter)
-                setIndex(0)
-                setHistory([])
-              }}
-            >
-              {filter ?? t("tier_list.all_tiers")}
-            </button>
-          ))}
-        </div>
+        {!isSynergyMode && (
+          <div className="tier-list-rapid-sorter-filters">
+            {TIER_FILTERS.map((filter) => (
+              <button
+                key={filter ?? "all"}
+                type="button"
+                className={cc(
+                  "bubbly",
+                  filter
+                    ? `tier-filter blessing-tier-${filter.toLowerCase()}`
+                    : "dark",
+                  { selected: tierFilter === filter }
+                )}
+                onClick={() => {
+                  setTierFilter(filter)
+                  setIndex(0)
+                  setHistory([])
+                }}
+              >
+                {filter ?? t("tier_list.all_tiers")}
+              </button>
+            ))}
+          </div>
+        )}
         <span className="tier-list-rapid-sorter-progress">
           {sortedCount} / {queue.length}
         </span>
@@ -209,15 +307,19 @@ export default function TierListRapidSorter(props: {
         <div
           className={cc(
             "tier-list-rapid-sorter-card",
-            blessingTierClass(current)
+            isSynergyMode ? "" : blessingTierClass(current as Blessing)
           )}
           draggable
-          onDragStart={(e) => dragBlessing(e, current)}
+          onDragStart={(e) => dragEntry(e, current)}
           onDragEnd={() => setDragging(false)}
         >
-          <BlessingTooltipCard blessing={current}>
-            <BlessingStages blessing={current} />
-          </BlessingTooltipCard>
+          {isSynergyMode ? (
+            <SynergySorterCard synergy={current as Synergy} />
+          ) : (
+            <BlessingTooltipCard blessing={current as Blessing}>
+              <BlessingStages blessing={current as Blessing} />
+            </BlessingTooltipCard>
+          )}
         </div>
       ) : (
         <p className="tier-list-rapid-sorter-done">
@@ -226,49 +328,26 @@ export default function TierListRapidSorter(props: {
       )}
 
       <div className="tier-list-blessings tier-list-rapid-sorter-queue">
-        {BLESSING_TIER_ORDER.filter(
-          (tier) => !tierFilter || tier === tierFilter
-        ).map((tier) => (
-          <section key={tier} className="tier-list-blessing-tier">
-            <h3>{tier}</h3>
-            <div>
-              {queue.map((blessing, queueIndex) => {
-                if (Blessings[blessing].tier !== tier) return null
-                const rowIndex = placement.get(blessing)
-                return (
-                  <div
-                    key={blessing}
-                    className={cc(
-                      "tier-list-blessing-choice",
-                      blessingTierClass(blessing),
-                      {
-                        sorted: rowIndex !== undefined,
-                        current: queueIndex === index
-                      }
-                    )}
-                    // a sorted card wears its row colour instead of a caption,
-                    // since the corner already holds the short label
-                    style={
-                      rowIndex === undefined
-                        ? undefined
-                        : {
-                            boxShadow: `inset 0 0 0 3px ${props.tierList.rows[rowIndex].color}`
-                          }
-                    }
-                    draggable
-                    onDragStart={(e) => dragBlessing(e, blessing)}
-                    onDragEnd={() => setDragging(false)}
-                    data-tooltip-id={TOOLTIP_ID}
-                    data-tooltip-content={blessing}
-                    onClick={() => setIndex(queueIndex)}
-                  >
-                    {blessingCardIcon(blessing)}
-                  </div>
-                )
-              })}
-            </div>
+        {isSynergyMode ? (
+          <section className="tier-list-blessing-tier">
+            <div>{queue.map(queueChoice)}</div>
           </section>
-        ))}
+        ) : (
+          BLESSING_TIER_ORDER.filter(
+            (tier) => !tierFilter || tier === tierFilter
+          ).map((tier) => (
+            <section key={tier} className="tier-list-blessing-tier">
+              <h3>{tier}</h3>
+              <div>
+                {queue.map((entry, queueIndex) =>
+                  Blessings[entry as Blessing].tier === tier
+                    ? queueChoice(entry, queueIndex)
+                    : null
+                )}
+              </div>
+            </section>
+          ))
+        )}
       </div>
 
       <Tooltip

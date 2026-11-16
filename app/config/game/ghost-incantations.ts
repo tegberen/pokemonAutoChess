@@ -177,8 +177,8 @@ export const RITUAL_SILENCE_VALUES: ByRitualTrigger<{
 
 // a counter, not a chance: LUCK the ritual itself grants would snowball a roll
 export const RITUAL_SPIRIT_COIN_EVERY: ByRitualTrigger<number[]> = {
-  [RitualTrigger.GHOST_CASTS]: [10, 5],
-  [RitualTrigger.GHOST_ATTACKS]: [10, 5],
+  [RitualTrigger.GHOST_CASTS]: [12, 6],
+  [RitualTrigger.GHOST_ATTACKS]: [12, 6],
   [RitualTrigger.GHOST_KOD]: [6, 3],
   [RitualTrigger.ENEMY_KOD]: [8, 4]
 }

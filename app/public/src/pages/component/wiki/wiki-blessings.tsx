@@ -156,7 +156,6 @@ const HATCH_BLESSINGS = new Set<Blessing>([
   Blessing.BABYLESS,
   Blessing.BABY_OPENER,
   Blessing.NEST_EGGS,
-  Blessing.SELECTIVE_GENETICS,
   Blessing.ADOPTION,
   Blessing.COLONY
 ])

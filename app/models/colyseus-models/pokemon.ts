@@ -10569,7 +10569,7 @@ export class Arcanine extends Pokemon {
   range = 1
   skill = Ability.FIRE_FANG
   additional = true
-  passive = Passive.INTIMIDATE_EVERBURNING
+  passive = Passive.INTIMIDATE
 }
 
 export class HisuiGrowlithe extends Pokemon {
@@ -10618,7 +10618,7 @@ export class HisuiArcanine extends Pokemon {
       regionSynergies.includes(Synergy.ROCK)
     )
   }
-  passive = Passive.INTIMIDATE_EVERBURNING
+  passive = Passive.INTIMIDATE
 }
 
 export class Smoochum extends Pokemon {

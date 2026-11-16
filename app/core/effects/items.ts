@@ -2130,8 +2130,7 @@ export const ItemEffects: { [i in Item]?: (Effect | (() => Effect))[] } = {
         if (
           isIgnitionActive(player) &&
           player.ignitedPokemonIds.includes(pokemon.id) === false &&
-          (pokemon.ignitionCooldown === 0 ||
-            canIgniteEveryRound(player, pokemon.passive))
+          (pokemon.ignitionCooldown === 0 || canIgniteEveryRound(player))
         ) {
           player.ignitedPokemonIds.push(pokemon.id)
           pokemon.setIgnited(true)

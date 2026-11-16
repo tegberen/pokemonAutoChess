@@ -96,7 +96,6 @@ export enum Blessing {
   SLIPSTREAM = "SLIPSTREAM",
   SHAPELESS_SYNERGIES = "SHAPELESS_SYNERGIES",
   BABY_OPENER = "BABY_OPENER",
-  SELECTIVE_GENETICS = "SELECTIVE_GENETICS",
   REPLICATOR = "REPLICATOR",
   FIND_A_LOST_WAND = "FIND_A_LOST_WAND",
   FAST_FOOD_DELIVERY = "FAST_FOOD_DELIVERY",
@@ -612,10 +611,6 @@ export const SACRIFICE_EXECUTE_DAMAGE = 9999
 export const BABY_OPENER_BABIES_GRANTED = 3
 export const BABY_OPENER_MAX_COST = 2
 export const BABY_OPENER_LIFE_PER_EGG = 4
-export const SELECTIVE_GENETICS_BABIES_GRANTED = 3
-export const SELECTIVE_GENETICS_MAX_COST = 4
-export const SELECTIVE_GENETICS_SHINY_ITEM_OPTIONS = 3
-export const SELECTIVE_GENETICS_GOLDEN_EGG_CHANCE = 0.05
 export const FAST_FOOD_DELIVERY_ROUNDS_BEFORE_ROTTING = 3
 /* CHEFS_GREED lends every chef Snorlax's Glutton growth, so all three places
    that grow max HP on eating ask this rather than the passive directly */
@@ -775,9 +770,9 @@ export const FIRE_SHARD_LIFE_COST = 2
 export const IGNITION_SHIELD = 50
 export const IGNITION_SPEED = 20
 export const IGNITION_LIFE_HEAL_ON_KO = 1
-/* rounds of waiting after an ignition: ignite on round 1, wait rounds 2 and 3,
-   ignite again on round 4. Soul Blaze and Arcanine's passive skip the wait */
-export const IGNITION_COOLDOWN_ROUNDS = 2
+// rounds of waiting after an ignition: ignite on round 1, wait rounds 2 to 4,
+// ignite again on round 5. Soul Blaze skips the wait
+export const IGNITION_COOLDOWN_ROUNDS = 3
 export const SOUL_BLAZE_FIRE_SHARDS = 5
 export const AUTO_CRAFTING_COMPONENTS = 3
 export const FERTILE_SOIL_DIG_PERMANENT_HP = 5
@@ -845,7 +840,7 @@ export const UNSEALED_GOLEMANCY_REGIS: Pkm[] = [
   Pkm.REGIELEKI,
   Pkm.REGIDRAGO
 ]
-export const CURSED_COFFIN_HP_DRAIN = 15
+export const CURSED_COFFIN_HP_DRAIN = 10
 export const CURSED_COFFIN_PP_DRAIN = 5
 export const CURSED_COFFIN_DRAIN_INTERVAL = 1000
 export const ROLLING_SNOWBALL_SHIELD = 20
@@ -1159,19 +1154,19 @@ export const VIKING_HELMET_COMPONENTS = [
   Item.NEVER_MELT_ICE,
   Item.MIRACLE_SEED
 ]
-export const VIKING_HELMET_MAX_HP_RATIO = 0.4
+export const VIKING_HELMET_MAX_HP_RATIO = 0.3
 export const RUNE_SWORD_COMPONENTS = [
   Item.CHARCOAL,
   Item.BLACK_GLASSES,
   Item.MAGNET
 ]
-export const RUNE_SWORD_BASE_ATK_RATIO = 0.4
+export const RUNE_SWORD_BASE_ATK_RATIO = 0.3
 export const RUNE_STONE_COMPONENTS = [
   Item.MYSTIC_WATER,
   Item.TWISTED_SPOON,
   Item.BINDING_BAND
 ]
-export const RUNE_STONE_MAX_PP_RATIO = 0.4
+export const RUNE_STONE_MAX_PP_RATIO = 0.3
 export const UNITY_CORE_DAMAGE_AMP_PER_SYNERGY = 0.02
 export const UNITY_CORE_MAX_HP_PER_SYNERGY = 4
 export const CORE_REACTOR_DAMAGE_AMP_PER_FRONT_ROW_ENEMY = 0.02

@@ -19,7 +19,6 @@ import {
   MIX_AND_MATCH_II_UNIQUES,
   NEST_EGGS_GRANTED,
   ROCKY_BEGINNINGS_POKEMONS,
-  SELECTIVE_GENETICS_BABIES_GRANTED,
   getGymTrainerRoster,
   PARK_BENCH_WATER_POKEMONS
 } from "../../types/enum/Blessing"
@@ -540,7 +539,7 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
   },
   [Blessing.SWEET_TREATS]: {
     tier: BlessingTier.SILVER,
-    availableAtStages: BLESSING_SELECTION_STAGES,
+    availableAtStages: [12],
     icon: "sweet_treats",
     grantsPokemonImmediately: false
   },
@@ -946,19 +945,11 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     synergy: Synergy.FLORA
   },
   [Blessing.BABY_OPENER]: {
-    tier: BlessingTier.SILVER,
+    tier: BlessingTier.GOLD,
     availableAtStages: [4],
     icon: "baby_opener",
     grantsPokemonImmediately: true,
     benchSlotsRequired: BABY_OPENER_BABIES_GRANTED
-  },
-  [Blessing.SELECTIVE_GENETICS]: {
-    tier: BlessingTier.GOLD,
-    availableAtStages: [12],
-    icon: "dna_string",
-    grantsPokemonImmediately: true,
-    benchSlotsRequired: SELECTIVE_GENETICS_BABIES_GRANTED,
-    synergy: Synergy.BABY
   },
   [Blessing.REPLICATOR]: {
     tier: BlessingTier.SILVER,
@@ -2161,7 +2152,7 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     grantsPokemonImmediately: true
   },
   [Blessing.JOLLY_ROGER]: {
-    tier: BlessingTier.GOLD,
+    tier: BlessingTier.PRISMATIC,
     availableAtStages: [4],
     icon: "jolly_roger",
     grantsPokemonImmediately: true
@@ -2481,7 +2472,7 @@ export const Blessings: { [blessing in Blessing]: BlessingDefinition } = {
     grantsPokemonImmediately: false
   },
   [Blessing.SHADY_PRICE]: {
-    tier: BlessingTier.SILVER,
+    tier: BlessingTier.GOLD,
     availableAtStages: BLESSING_SELECTION_STAGES,
     icon: "shady_price",
     grantsPokemonImmediately: false

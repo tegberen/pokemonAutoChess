@@ -475,10 +475,39 @@ Smeargle Scribbles do not change your Elo.
 
 Every balance change on this server, newest first.
 
+### 16 November 2026
+
+**Synergies**
+- FIRE | IGNITE cooldown 2 → 3 rounds
+- GHOST | dodge and SILENCE ON_HIT chance 15% → 10%
+- Bewitching | Spirit Coin from Ghost casts and attacks 10/5 → 12/6
+
+**Pokémon**
+- Arcanine, Hisuian Arcanine | can no longer IGNITE every round
+
+**Wishes**
+- Selective Genetics | removed
+- Jolly Roger | Gold → Prismatic
+- Shady Price | Silver → Gold
+- Baby Opener | Silver → Gold
+- Viking Helmet | max HP 40% → 30%
+- Rune Sword | base ATK 40% → 30%
+- Rune Stone | max PP 40% → 30%
+- Sweet Treats | offered at stages 4 and 12 → 12
+- Cursed Coffin | HP drained per second 15 → 10
+
+**Events**
+- Daily Duel | 20:00 → 21:00 UTC
+- Rainbow Hours | every day instead of Monday to Friday, in two windows: 21:00–24:00 and 03:00–06:00 UTC, each ending in its own Smeargle Pack for a Pack
+- Wild Card | lobbies at 08:00, 12:00 and 16:00 UTC, the 04:00 one is removed
+
+**Interface**
+- Double Up chat | account level required 42 → 10
+
 ### 9 November 2026
 
 **Events**
-- Gym Leaders | new daily Duo challenge: each player gets a pair of synergies every day. Win a game with one partner at the highest tier of one synergy and the lowest tier of the other, and the other partner the opposite, using either partner's pair. Both partners earn 2 boosters, once a day
+- Elite Duo Challenge | new daily Duo challenge: each player gets a pair of synergies every day. Win a game with one partner at the highest tier of one synergy and the lowest tier of the other, and the other partner the opposite, using either partner's pair. Both partners earn 2 boosters, once a day
 
 **Pokémon**
 - Duskull Line | max PP 120 → 130

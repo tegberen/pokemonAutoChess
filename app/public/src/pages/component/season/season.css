@@ -637,6 +637,10 @@
   gap: 0.5em;
 }
 
+.season-challenges .season-elite-duo-heading {
+  margin-top: 0.8em;
+}
+
 .season-challenges li {
   padding: 0.4em 0.75em;
   border: var(--border-thin);

@@ -5867,7 +5867,7 @@ export default class Simulation extends Schema implements ISimulation {
       case EffectEnum.CURSE_OF_FATE:
         if (pokemon.types.has(Synergy.GHOST)) {
           pokemon.effects.add(effect)
-          pokemon.addDodgeChance(0.15, pokemon, 0, false)
+          pokemon.addDodgeChance(0.1, pokemon, 0, false)
         }
         break
 

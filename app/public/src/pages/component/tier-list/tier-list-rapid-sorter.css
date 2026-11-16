@@ -185,3 +185,34 @@
 .tier-list-rapid-sorter-queue .tier-list-blessing-choice.current > img {
   opacity: 1;
 }
+
+.tier-list-rapid-sorter .tier-list-blessing-choice.tier-list-synergy-choice {
+  background-color: var(--color-bg-primary);
+  background-image: none;
+}
+
+.tier-list-rapid-sorter-synergy-card {
+  padding: var(--sorter-gap);
+  border-radius: var(--sorter-radius);
+  background-color: var(--color-bg-primary);
+}
+
+.tier-list-rapid-sorter-synergy-card h3 {
+  display: flex;
+  align-items: center;
+  gap: var(--sorter-gap-sm);
+  margin: 0 0 var(--sorter-gap-sm);
+}
+
+.tier-list-rapid-sorter-synergy-card > p {
+  margin: 0 0 var(--sorter-gap-sm);
+}
+
+.tier-list-rapid-sorter-synergy-tier {
+  display: flex;
+  align-items: flex-start;
+}
+
+.tier-list-rapid-sorter-synergy-tier > span {
+  white-space: nowrap;
+}

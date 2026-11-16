@@ -105,9 +105,6 @@ import {
   RANK_UP_EXPERIENCE,
   RANK_UP_LAST_STAGE,
   ROCKY_BEGINNINGS_POKEMONS,
-  SELECTIVE_GENETICS_BABIES_GRANTED,
-  SELECTIVE_GENETICS_GOLDEN_EGG_CHANCE,
-  SELECTIVE_GENETICS_MAX_COST,
   SHADY_PRICE_FREE_ROLLS,
   SHADY_PRICE_MAX_LEVEL,
   SIX_SEVEN_GOLD,
@@ -1000,21 +997,11 @@ function grantSongReinforcement(player: Player, blessing: Blessing): boolean {
 function giftBabiesUnderCost(
   player: Player,
   maxCost: number,
-  count: number,
-  excludeOwned = false
+  count: number
 ): boolean {
   if (getFreeSpaceOnBench(player.board, getBenchSize(player.blessings)) < count) return false
-  const owned = new Set(
-    [...player.board.values()].map((pokemon) => PkmFamily[pokemon.name])
-  )
   const candidates = (PRECOMPUTED_POKEMONS_PER_TYPE[Synergy.BABY] ?? []).filter(
-    (pkm) => {
-      const data = getPokemonData(pkm)
-      return (
-        RarityCost[data.rarity] <= maxCost &&
-        (excludeOwned === false || owned.has(PkmFamily[pkm]) === false)
-      )
-    }
+    (pkm) => RarityCost[getPokemonData(pkm).rarity] <= maxCost
   )
   if (candidates.length === 0) return false
   pickNRandomIn(candidates, Math.min(count, candidates.length)).forEach((pkm) =>
@@ -2637,22 +2624,6 @@ export const blessingEffectService: {
       BABY_OPENER_MAX_COST,
       BABY_OPENER_BABIES_GRANTED
     ),
-
-  [Blessing.SELECTIVE_GENETICS]: (player, state) => {
-    // at most one of the three babies is swapped for a Golden Egg
-    const golden = chance(SELECTIVE_GENETICS_GOLDEN_EGG_CHANCE)
-    const babies = SELECTIVE_GENETICS_BABIES_GRANTED - (golden ? 1 : 0)
-    if (getFreeSpaceOnBench(player.board, getBenchSize(player.blessings)) < SELECTIVE_GENETICS_BABIES_GRANTED) {
-      return false
-    }
-    if (golden) giveRandomEgg(player, true, state)
-    return giftBabiesUnderCost(
-      player,
-      SELECTIVE_GENETICS_MAX_COST,
-      babies,
-      true
-    )
-  },
 
   /* the gift goes first in every effect that also hands out an item: a refused
      pick is retried, and the item would be paid out on each attempt */

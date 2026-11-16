@@ -1,7 +1,7 @@
 import { type ReactNode, useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
 import {
-  getRainbowFinaleTime,
+  getNextRainbowHours,
   isRainbowHours,
   RAINBOW_FINALE_ROOM_NAME,
   RAINBOW_FINALE_WINNER_BOOSTERS,
@@ -61,7 +61,7 @@ export function RainbowHoursCountdown() {
   const { t } = useTranslation()
   const now = useMinuteClock()
   if (!isRainbowHours(now)) return null
-  const finale = getRainbowFinaleTime(now)
+  const finale = getNextRainbowHours(now).end
   return (
     <EventBanner
       className="rainbow-hours-countdown"

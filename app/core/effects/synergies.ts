@@ -1566,14 +1566,8 @@ export function isIgnitionActive(
   )
 }
 
-export function canIgniteEveryRound(
-  player: Pick<Player, "blessings">,
-  passive: Passive
-) {
-  return (
-    player.blessings?.includes(Blessing.SOUL_BLAZE) === true ||
-    passive === Passive.INTIMIDATE_EVERBURNING
-  )
+export function canIgniteEveryRound(player: Pick<Player, "blessings">) {
+  return player.blessings?.includes(Blessing.SOUL_BLAZE) === true
 }
 
 export function endIgnitionRound(player: Player) {
@@ -1585,7 +1579,7 @@ export function endIgnitionRound(player: Player) {
     if (!pokemon) return
     pokemon.setIgnited(false)
     // a Pokemon that never waits would only show a cooldown it ignores
-    if (!canIgniteEveryRound(player, pokemon.passive)) {
+    if (!canIgniteEveryRound(player)) {
       pokemon.ignitionCooldown = IGNITION_COOLDOWN_ROUNDS
     }
   })

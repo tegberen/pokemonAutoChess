@@ -923,7 +923,7 @@ const conversionEffect = new OnSimulationStartEffect(
 
     // when converting to ghost, get Dodge chance
     if (synergyCopied === Synergy.GHOST) {
-      entity.addDodgeChance(0.15, entity, 0, false)
+      entity.addDodgeChance(0.1, entity, 0, false)
     }
 
     // when converting to gourmet, get a Chef hat. Useless but funny
@@ -2320,15 +2320,6 @@ export const PassiveEffects: Partial<
   ],
   [Passive.MEGA_FERALIGATR]: [() => new MegaFeraligatrOnKillEffect()],
   [Passive.INTIMIDATE]: [
-    new OnAttackEffect(({ pokemon, target }) => {
-      if (!target) return
-      if (chance(0.3, pokemon)) {
-        target.status.triggerFlinch(3000, pokemon)
-      }
-    })
-  ],
-  // same as INTIMIDATE, plus SOUL_BLAZE can ignite the holder every round
-  [Passive.INTIMIDATE_EVERBURNING]: [
     new OnAttackEffect(({ pokemon, target }) => {
       if (!target) return
       if (chance(0.3, pokemon)) {

@@ -749,14 +749,26 @@ function SeasonGuild(props: {
             </span>
           </h3>
           <ul>
-            {season.challenges.map((challenge) => (
-              <ChallengeRow key={challenge.id} challenge={challenge} />
-            ))}
+            {season.challenges
+              .filter((challenge) => challenge.period !== "gym")
+              .map((challenge) => (
+                <ChallengeRow key={challenge.id} challenge={challenge} />
+              ))}
             <SeasonCommunityGoal
               profile={profile}
               now={now}
               rewardIcon={POKE_ICON}
             />
+          </ul>
+          <h3 className="season-heading season-elite-duo-heading">
+            Elite Duo Challenge
+          </h3>
+          <ul>
+            {season.challenges
+              .filter((challenge) => challenge.period === "gym")
+              .map((challenge) => (
+                <ChallengeRow key={challenge.id} challenge={challenge} />
+              ))}
           </ul>
         </section>
 
@@ -941,7 +953,7 @@ function ChallengeLabel({ challenge }: { challenge: SeasonChallenge }) {
 const CHALLENGE_PERIOD_LABELS: Record<SeasonChallenge["period"], string> = {
   daily: "Daily",
   weekly: "Weekly",
-  gym: "Gym"
+  gym: "Daily"
 }
 
 function ChallengeRow({ challenge }: { challenge: SeasonChallenge }) {

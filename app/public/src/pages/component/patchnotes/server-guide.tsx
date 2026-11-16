@@ -144,6 +144,7 @@ function listPatchLogWishes(): PatchLogWish[] {
     { name: "Abnormality", icon: "spread_shield" },
     { name: "Curse of Two", icon: "ghost_spectre" },
     { name: "Hex Maniac", icon: "hex_maniac" },
+    { name: "Selective Genetics", icon: "dna_string" },
     { name: "Pearl", icon: "pearl" },
     { name: "Gold Bar", icon: "gold_bar" },
     { name: "Nugget", icon: "gold_bar" },
